@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MEDIUM, "seeker", "seeker", "T.A.G. Seeker");
+REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", "T.A.G. Seeker");
 #else
 //.float speed; = switchweapon
 //.float proxytime; = autoswitch
@@ -8,7 +8,7 @@ REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 void Seeker_Missile_Explode ()
 {
 	self.event_damage = SUB_Null;
-	RadiusDamage (self, self.owner, cvar("g_balance_seeker_missile_damage"), cvar("g_balance_seeker_missile_edgedamage"), cvar("g_balance_seeker_missile_radius"), world, cvar("g_balance_seeker_missile_force"), self.projectiledeathtype, other, WEP_SEEKER);
+	RadiusDamage (self, self.owner, cvar("g_balance_seeker_missile_damage"), cvar("g_balance_seeker_missile_edgedamage"), cvar("g_balance_seeker_missile_radius"), world, cvar("g_balance_seeker_missile_force"), self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -187,7 +187,6 @@ void Seeker_Fire_Missile(vector f_diff)
 	missile.nextthink       = time;// + 0.2;// + cvar("g_balance_seeker_missile_activate_delay");
 	missile.cnt             = time + cvar("g_balance_seeker_missile_lifetime");
 	missile.enemy           = self.enemy;
-	missile.switchweapon           = cvar("g_balance_seeker_missile_speed");
 	missile.solid           = SOLID_BBOX;
 	missile.scale           = 2;
 	missile.takedamage          = DAMAGE_YES;
@@ -203,8 +202,7 @@ void Seeker_Fire_Missile(vector f_diff)
 
 	missile.flags       = FL_PROJECTILE;
 
-	missile.velocity    = (w_shotdir + '0 0 0.45') * missile.switchweapon;
-	W_SetupProjectileVelocity(missile);
+	W_SETUPPROJECTILEVELOCITY_UP(missile, g_balance_seeker_missile);
 
 	missile.switchweapon = vlen(missile.velocity);
 	missile.angles = vectoangles (missile.velocity);
@@ -344,9 +342,8 @@ void Seeker_Fire_Tag()
 
 	missile.flags       = FL_PROJECTILE;
 
-	missile.velocity    = w_shotdir  * cvar("g_balance_seeker_tag_speed");
 	missile.movetype    = MOVETYPE_FLY;
-	W_SetupProjectileVelocity(missile);
+	W_SETUPPROJECTILEVELOCITY(missile, g_balance_seeker_tag);
 	missile.angles = vectoangles (missile.velocity);
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_TAG, FALSE); // has sound
@@ -357,7 +354,7 @@ void Seeker_Flac_Explode ()
 {
 	self.event_damage = SUB_Null;
 
-	RadiusDamage (self, self.owner, cvar("g_balance_seeker_flac_damage"), cvar("g_balance_seeker_flac_edgedamage"), cvar("g_balance_seeker_flac_radius"), world, cvar("g_balance_seeker_flac_force"), self.projectiledeathtype, other, WEP_SEEKER);
+	RadiusDamage (self, self.owner, cvar("g_balance_seeker_flac_damage"), cvar("g_balance_seeker_flac_edgedamage"), cvar("g_balance_seeker_flac_radius"), world, cvar("g_balance_seeker_flac_force"), self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -417,10 +414,7 @@ void Seeker_Fire_Flac()
 	missile.projectiledeathtype = WEP_SEEKER | HITTYPE_SECONDARY;
 
 	missile.movetype = MOVETYPE_FLY;
-	w_shotdir = w_shotdir + '0 0 0.3';
-	missile.velocity    = (w_shotdir  + randomvec() * cvar("g_balance_seeker_flac_spread")) * cvar("g_balance_seeker_flac_speed");
-
-	W_SetupProjectileVelocity(missile);
+	W_SETUPPROJECTILEVELOCITY_UP(missile, g_balance_seeker_flac);
 
 	missile.angles = vectoangles (missile.velocity);
 	missile.flags = FL_PROJECTILE;
