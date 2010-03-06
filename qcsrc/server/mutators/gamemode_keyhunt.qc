@@ -929,7 +929,7 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 	return f;
 }
 
-void kh_init()  // sets up th KH environment
+void kh_Initialize()  // sets up th KH environment
 {
 	precache_sound(kh_sound_capture);
 	precache_sound(kh_sound_destroy);
@@ -1011,4 +1011,67 @@ void kh_update_state()
 			key.owner.kh_state |= pow(32, key.count) * 31;
 	}
 	//print(ftos((nextent(world)).kh_state), "\n");
+}
+
+
+
+
+// register this as a mutator
+
+MUTATOR_HOOKFUNCTION(kh_Key_DropAll)
+{
+	kh_Key_DropAll(self, TRUE);
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(kh_PlayerDies)
+{
+	if(self == other)
+		kh_Key_DropAll(self, TRUE);
+	else if(other.classname == "player" || other.classname == "gib")
+		kh_Key_DropAll(self, FALSE);
+	else
+		kh_Key_DropAll(self, TRUE);
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(kh_GiveFragsForKill)
+{
+	frag_score = kh_HandleFrags(frag_attacker, frag_target, frag_score);
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(kh_finalize)
+{
+	kh_finalize();
+	return 0;
+}
+
+MUTATOR_DEFINITION(gamemode_keyhunt)
+{
+	MUTATOR_HOOK(MakePlayerObserver, kh_Key_DropAll, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MakePlayerSpectator, kh_Key_DropAll, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ClientDisconnect, kh_Key_DropAll, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, kh_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GiveFragsForKill, kh_GiveFragsForKill, CBC_ORDER_EXCLUSIVE);
+	MUTATOR_HOOK(MatchEnd, kh_finalize, CBC_ORDER_ANY);
+
+	MUTATOR_ONADD
+	{
+		g_keyhunt = 1;
+		kh_Initialize();
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		g_keyhunt = 0;
+		error("This is a game type and it cannot be removed at runtime.");
+	}
+
+	return 0;
+}
+
+void kh_init()
+{
+	MUTATOR_ADD(gamemode_keyhunt);
 }

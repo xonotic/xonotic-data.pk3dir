@@ -633,12 +633,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
 		DropAllRunes(self);
-		if(self == attacker)
-			kh_Key_DropAll(self, TRUE);
-		else if(attacker.classname == "player" || attacker.classname == "gib")
-			kh_Key_DropAll(self, FALSE);
-		else
-			kh_Key_DropAll(self, TRUE);
+		frag_attacker = attacker; MUTATOR_CALLHOOK(PlayerDies);
 		if(self.flagcarried)
 		{
 			if(attacker.classname != "player" && attacker.classname != "gib")

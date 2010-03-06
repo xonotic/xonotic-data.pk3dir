@@ -582,7 +582,7 @@ void PutObserverInServer (void)
 	}
 
 	DropAllRunes(self);
-	kh_Key_DropAll(self, TRUE);
+	MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	Portal_ClearAll(self);
 
@@ -1578,7 +1578,7 @@ void ClientDisconnect (void)
 	SoundEntity_Detach(self);
 
 	DropAllRunes(self);
-	kh_Key_DropAll(self, TRUE);
+	MUTATOR_CALLHOOK(ClientDisconnect);
 
 	Portal_ClearAll(self);
 

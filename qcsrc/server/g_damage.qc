@@ -146,7 +146,14 @@ void GiveFrags (entity attacker, entity targ, float f)
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)
-	if(g_runematch)
+	frag_attacker = attacker;
+	frag_target = targ;
+	frag_score = f;
+	if(MUTATOR_CALLHOOK(GiveFragsForKill))
+	{
+		f = frag_score;
+	}
+	else if(g_runematch)
 	{
 		f = RunematchHandleFrags(attacker, targ, f);
 	}
