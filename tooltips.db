@@ -1,24 +1,24 @@
 0
-\NexuizSingleplayerDialog\Play the singleplayer campaign or instant action matches against bots
+\XonoticSingleplayerDialog\Play the singleplayer campaign or instant action matches against bots
 
 
-\NexuizMultiplayerDialog\Play online, against your friends in LAN, view demos or change player settings
-\NexuizMultiplayerDialog/Servers\Find servers to play on
+\XonoticMultiplayerDialog\Play online, against your friends in LAN, view demos or change player settings
+\XonoticMultiplayerDialog/Servers\Find servers to play on
 \menu_slist_showempty\Show empty servers
 \menu_slist_showfull\Show full servers that have no slots available
 \net_slist_pause\Pause updating the server list to prevent servers from "jumping around"
-\NexuizMultiplayerDialog/Info\Show more information about the currently highlighted server
-\NexuizMultiplayerDialog/Bookmark\Bookmark the currently highlighted server so that it's faster to find in the future
-\NexuizMultiplayerDialog/Havoc\Change to Havoc mode which has some modifications to the gameplay
-\NexuizMultiplayerDialog/Create\Host your own game
-\NexuizMultiplayerDialog/Demos\Browse and view demos
-\NexuizMultiplayerDialog/Player Setup\Customize your player settings
+\XonoticMultiplayerDialog/Info\Show more information about the currently highlighted server
+\XonoticMultiplayerDialog/Bookmark\Bookmark the currently highlighted server so that it's faster to find in the future
+\XonoticMultiplayerDialog/Havoc\Change to Havoc mode which has some modifications to the gameplay
+\XonoticMultiplayerDialog/Create\Host your own game
+\XonoticMultiplayerDialog/Demos\Browse and view demos
+\XonoticMultiplayerDialog/Player Setup\Customize your player settings
 
-\NexuizTeamSelectDialog/join 'best' team (auto-select)\Autoselect team (recommended)
-\NexuizTeamSelectDialog/red\Join the red team
-\NexuizTeamSelectDialog/blue\Join the blue team
-\NexuizTeamSelectDialog/yellow\Join the yellow team
-\NexuizTeamSelectDialog/pink\Join the pink team
+\XonoticTeamSelectDialog/join 'best' team (auto-select)\Autoselect team (recommended)
+\XonoticTeamSelectDialog/red\Join the red team
+\XonoticTeamSelectDialog/blue\Join the blue team
+\XonoticTeamSelectDialog/yellow\Join the yellow team
+\XonoticTeamSelectDialog/pink\Join the pink team
 
 \timelimit_override\Timelimit in minutes that when hit, will end the match
 \fraglimit_override\The amount of frags needed before the match will end
@@ -27,8 +27,8 @@
 \skill\Specify how experienced the bots will be
 \g_maplist_votable\Number of maps that are shown in the map voting at the end of a match
 \sv_vote_simple_majority_factor\Simple majority wins a vote
-\NexuizMultiplayerDialog/Advanced settings...\Advanced server settings
-\NexuizMultiplayerDialog/Mutators...\Mutators and weapon arenas
+\XonoticMultiplayerDialog/Advanced settings...\Advanced server settings
+\XonoticMultiplayerDialog/Mutators...\Mutators and weapon arenas
 \g_cloaked\All players are almost invisible
 \g_footsteps\Enable footstep sounds
 \g_midair\Only possible to inflict damage on your enemy while he's airborn
@@ -43,20 +43,20 @@
 \g_weaponarena\Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.
 \menu_weaponarena_with_laser\Also enable the laser in the weapon arena
 \g_minstagib\Players will be given the Minstanex, which is a railgun with infinite damage. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode is a laser which does not inflict any damage and is good for doing trickjumps.
-\g_nixnex\No items Nexuiz - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon.
+\g_nixnex\No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon.
 \g_nixnex_with_laser\Always carry the laser as an additional weapon in NixNex
-\NexuizMultiplayerDialog/All\Select all maps
-\NexuizMultiplayerDialog/None\Unselect all maps
+\XonoticMultiplayerDialog/All\Select all maps
+\XonoticMultiplayerDialog/None\Unselect all maps
 
 
-\NexuizMultiplayerDialog/Timedemo\Benchmark how fast your computer can run the highlighted demo
+\XonoticMultiplayerDialog/Timedemo\Benchmark how fast your computer can run the highlighted demo
 
 \fov\Field of vision in degrees from 60 to 130, default is 90
 \cl_bobcycle\View bobbing frequency, disable for no bobbing
 \cl_zoomfactor\How big the zoom factor is when the zoom button is pressed
 \cl_zoomsensitivity\How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)
 \cl_zoomspeed\How fast the view will be zoomed, disable to zoom instantly
-\NexuizMultiplayerDialog/Weapon settings...\Set your most preferred weapons, autoswitch and weapon model settings
+\XonoticMultiplayerDialog/Weapon settings...\Set your most preferred weapons, autoswitch and weapon model settings
 
 \cl_weaponpriority_useforcycling\Make use of the list above when cycling through weapons with the mouse wheel
 \cl_autoswitch\Automatically switch to newly picked up weapons if they are better than what you are carrying
@@ -71,26 +71,26 @@
 \crosshair_color_green\Green color component of the crosshair color
 \crosshair_color_blue\Blue color component of the crosshair color
 \sbar_hudselector\Use the old HUD layout
-\NexuizMultiplayerDialog/Radar, HUD & Waypoints...\Adjust the radar, HUD and waypoints
+\XonoticMultiplayerDialog/Radar, HUD & Waypoints...\Adjust the radar, HUD and waypoints
 \_cl_name\Name under which you will appear in the game
 
-\NexuizSettingsDialog\Change the game settings
-\NexuizCreditsDialog\The Nexuiz credits
-\NexuizTeamSelectDialog\-
-\NexuizMutatorsDialog\-
-\NexuizMapInfoDialog\-
-\NexuizUserbindEditDialog\-
-\NexuizWinnerDialog\-
-\NexuizWeaponsDialog\-
-\NexuizRadarDialog\-
-\NexuizServerInfoDialog\-
-\NexuizCvarsDialog\-
+\XonoticSettingsDialog\Change the game settings
+\XonoticCreditsDialog\The Xonotic credits
+\XonoticTeamSelectDialog\-
+\XonoticMutatorsDialog\-
+\XonoticMapInfoDialog\-
+\XonoticUserbindEditDialog\-
+\XonoticWinnerDialog\-
+\XonoticWeaponsDialog\-
+\XonoticRadarDialog\-
+\XonoticServerInfoDialog\-
+\XonoticCvarsDialog\-
 
-\NexuizQuitDialog\Quit the game
-\NexuizQuitDialog/Yes\Back to work...
-\NexuizQuitDialog/No\I got some more fragging to do!
+\XonoticQuitDialog\Quit the game
+\XonoticQuitDialog/Yes\Back to work...
+\XonoticQuitDialog/No\I got some more fragging to do!
 
-\NexuizSettingsDialog/Input\Input settings
+\XonoticSettingsDialog/Input\Input settings
 \sensitivity\Mouse speed multiplier
 \menu_mouse_speed\Mouse speed multiplier in the menu, does not affect aiming in the game
 \m_filter\Smoothes the mouse movement, but makes aiming slightly less responsive
@@ -100,7 +100,7 @@
 \sbar_showbinds\Display actions / bound keys in the strings shown during the game
 \cl_showpressedkeys\Show which movement keys the player is pressing
 
-\NexuizSettingsDialog/Video\Video settings
+\XonoticSettingsDialog/Video\Video settings
 \vid_width\Screen resolution
 \vid_bitsperpixel\How many bits per pixel (BPP) to render at, 32 is recommended
 \vid_fullscreen\Enable fullscreen mode (default: enabled)
@@ -121,7 +121,7 @@
 \vid_samples\Enable antialiasing, which smooths the edges of 3D geometry. Note that it might decrease performance by quite a lot (default: disabled)
 \v_flipped\Poor man's left handed mode (default: off)
 
-\NexuizSettingsDialog/Effects\Effect settings
+\XonoticSettingsDialog/Effects\Effect settings
 \r_subdivisions_tolerance\Change the smoothness of the curves on the map (default: normal)
 \gl_picmip\Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry. (default: good)
 \r_picmipworld\If set, only reduce the texture quality of models (default: enabled)
@@ -155,7 +155,7 @@
 \r_motionblur\Motion blur strength - 0.5 recommended
 \r_damageblur\Amount of motion blur when hurt - 0.4 recommended
 
-\NexuizSettingsDialog/Audio\Audio settings
+\XonoticSettingsDialog/Audio\Audio settings
 \bgmvolume\-
 \volume\-
 \snd_staticvolume\-
@@ -177,7 +177,7 @@
 \cl_hitsound\Play a hit indicator sound when your shot hits an enemy
 \menu_sounds\Play sounds when clicking or hovering over menu items
 
-\NexuizSettingsDialog/Network\Network settings
+\XonoticSettingsDialog/Network\Network settings
 \cl_movement\Enable clientside movement prediction
 \cl_nolerp\Enable network update smoothing
 \shownetgraph\Show a graph of packet sizes and other information
@@ -187,7 +187,7 @@
 \cl_curl_maxspeed\Maximum download speed
 \cl_port\Force client to use chosen port unless it is set to 0
 
-\NexuizSettingsDialog/Misc\Misc settings
+\XonoticSettingsDialog/Misc\Misc settings
 \showtime\Show current time of day, useful on screenshots
 \showdate\Show current date, useful on screenshots
 \showfps\Show your rendered frames per second
@@ -196,7 +196,7 @@
 \cl_showacceleration\Show the acceleration of the player
 \cl_showacceleration_scale\Excaggerate the accelerometer by this scale multiplier
 
-\NexuizSettingsDialog/Advanced settings...\Advanced settings where you can tweak every single variable of the game
+\XonoticSettingsDialog/Advanced settings...\Advanced settings where you can tweak every single variable of the game
 \g_friendlyfire\Percentage of damage dealt to teammates
 \g_mirrordamage\Percentage of teamdamage that will be mirrored to you
 \g_tdm_teams_override\Override the default amount of teams in teamgames

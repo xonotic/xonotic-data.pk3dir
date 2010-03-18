@@ -104,7 +104,7 @@ textures/shad/shad
 }
 
 //Corona for lud_Corona.tga
-//This shader is for DarkPlaces Engine - Nexuiz
+//This shader is for DarkPlaces Engine - Xonotic
 
 textures/Reaptxt/lud_Corona
 {
@@ -122,7 +122,7 @@ textures/Reaptxt/lud_Corona
 }
 
 //Water for Q3texture, temp use.
-//This shader is for DarkPlaces Engine - Nexuiz
+//This shader is for DarkPlaces Engine - Xonotic
 
 textures/water/pool3d_5e
 {
@@ -142,7 +142,7 @@ textures/water/pool3d_5e
 }
 
 //Water for Q3texture, temp use.
-//This shader is for DarkPlaces Engine - Nexuiz
+//This shader is for DarkPlaces Engine - Xonotic
 
 textures/liquids/slime1
 {
@@ -179,7 +179,7 @@ textures/liquids/protolava
 }
 
 //Corona for HRglow01.tga
-//This shader is for DarkPlaces Engine - Nexuiz
+//This shader is for DarkPlaces Engine - Xonotic
 
 textures/Reaptxt/HRglow01
 {
@@ -197,7 +197,7 @@ textures/Reaptxt/HRglow01
 }
 
 //Corona for HRglow02.tga
-//This shader is for DarkPlaces Engine - Nexuiz
+//This shader is for DarkPlaces Engine - Xonotic
 
 textures/Reaptxt/HRglow02
 {
@@ -215,7 +215,7 @@ textures/Reaptxt/HRglow02
 }
 
 //Corona for HRglow03.tga
-//This shader is for DarkPlaces Engine - Nexuiz
+//This shader is for DarkPlaces Engine - Xonotic
 
 textures/Reaptxt/HRglow03
 {
@@ -233,7 +233,7 @@ textures/Reaptxt/HRglow03
 }
 
 //Corona for HRsun01.tga
-//This shader is for DarkPlaces Engine - Nexuiz
+//This shader is for DarkPlaces Engine - Xonotic
 
 textures/Reaptxt/HRsun01
 {

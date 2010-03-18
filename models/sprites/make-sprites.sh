@@ -37,7 +37,7 @@ pngsprite()
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    sodipodi:docname="template.svg"
-   sodipodi:docbase="/home/rpolzer/software/games/nexuiz/data/models/sprites"
+   sodipodi:docbase="/home/rpolzer/software/games/xonotic/data/models/sprites"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    sodipodi:modified="true">
   <defs

@@ -14,7 +14,7 @@ FTEQCCFLAGS_MENU ?=
 # It will automagically add an engine check with -TID and then change back to -TFTE
 FTEQCCFLAGS_CSPROGS ?= 
 
-# nexuiz svn build system overrides this by command line argument
+# xonotic svn build system overrides this by command line argument
 NEX_BUILDSYSTEM =
 
 all: qc
@@ -22,7 +22,7 @@ all: qc
 .PHONY: update-cvarcount
 update-cvarcount:
 	[ "$(NEX_BUILDSYSTEM)" = "" ] || [ "$(NEX_BUILDSYSTEM)" = "1" ]
-	[ "$(NEX_BUILDSYSTEM)" != "" ] || { ! [ -f ../misc/netradiant-NexuizPack/nexuiz.game/data/entities.def ] || $(DIFF) scripts/entities.def ../misc/netradiant-NexuizPack/nexuiz.game/data/entities.def || { echo entities.def mismatch, please merge ../misc/netradiant-NexuizPack/nexuiz.game/data/entities.def and scripts/entities.def; exit 1; }; }
+	[ "$(NEX_BUILDSYSTEM)" != "" ] || { ! [ -f ../misc/netradiant-XonoticPack/xonotic.game/data/entities.def ] || $(DIFF) scripts/entities.def ../misc/netradiant-XonoticPack/xonotic.game/data/entities.def || { echo entities.def mismatch, please merge ../misc/netradiant-XonoticPack/xonotic.game/data/entities.def and scripts/entities.def; exit 1; }; }
 	[ "$(NEX_BUILDSYSTEM)" != "" ] || { DO_NOT_RUN_MAKE=1 sh update-cvarcount.sh; }
 
 .PHONY: qc
@@ -79,7 +79,7 @@ $(PK3NAME): qc
 				ABSPK3NAME=$$PWD/$$ABSPK3NAME; \
 				;; \
 		esac; \
-		TDIR=`mktemp -d -t nexuizpk3.XXXXXX`; \
+		TDIR=`mktemp -d -t xonoticpk3.XXXXXX`; \
 		cp -v progs.dat csprogs.dat menu.dat $$TDIR/; \
 		svn export --force . $$TDIR; \
 		cd $$TDIR; \
@@ -131,7 +131,7 @@ git-update:
 git-commit:
 	git commit -a || true
 	if echo -n 'Also send to server? Hit Enter for yes, ^C for no. '; read -r L; then \
-		git config svn-remote.svn.url svn://svn.icculus.org/nexuiz; \
+		git config svn-remote.svn.url svn://svn.icculus.org/xonotic; \
 		git config svn-remote.svn.fetch trunk:refs/remotes/origin/master; \
 		git svn dcommit; \
 	fi

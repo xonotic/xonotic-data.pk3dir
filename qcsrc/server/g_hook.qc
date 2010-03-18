@@ -1,6 +1,6 @@
 /*============================================
 
-      Wazat's Nexuiz Grappling Hook
+      Wazat's Xonotic Grappling Hook
 
         Contact: Wazat1@gmail.com
 
@@ -326,7 +326,7 @@ void FireGrapplingHook (void)
 
 //  void GrapplingHookFrame()
 //  {
-//         // this function has been modified for Nexuiz
+//         // this function has been modified for Xonotic
 // -       if (self.BUTTON_HOOK && g_grappling_hook)
 //         {
 // -               if (!self.hook && self.hook_time <= time && !self.button6_pressed_before)
@@ -441,7 +441,7 @@ void GrappleHookInit()
 
 void SetGrappleHookBindings()
 {
-	// this function has been modified for Nexuiz
+	// this function has been modified for Xonotic
 	// don't remove these lines! old server or demos coud overwrite the new aliases
 	stuffcmd(self, "alias +hook +button6\n");
 	stuffcmd(self, "alias -hook -button6\n");

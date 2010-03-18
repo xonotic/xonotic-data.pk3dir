@@ -212,7 +212,7 @@ void teamradar_loadcvars()
 		cl_teamradar_zoommode = cvar("cl_teamradar_zoommode");
 
 		// others default to 0
-		// match this to defaultNexuiz.cfg!
+		// match this to defaultXonotic.cfg!
 		if(!cl_teamradar_scale) cl_teamradar_scale = 4096;
 		if(!cl_teamradar_background_alpha) cl_teamradar_background_alpha = 0.4 * sbar_alpha_fg;
 		if(!cl_teamradar_foreground_alpha) cl_teamradar_foreground_alpha = 0.8 * sbar_alpha_fg;

@@ -1,5 +1,5 @@
 //Water for Q3texture, temp use.
-//This shader is for DarkPlaces Engine - Nexuiz
+//This shader is for DarkPlaces Engine - Xonotic
 
 textures/sav-liquids/slime1
 {

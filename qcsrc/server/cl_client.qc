@@ -453,8 +453,8 @@ float Client_customizeentityforclient()
 	modelsource = self;
 
 #ifdef ALLOW_FORCEMODELS
-	if(other.cvar_cl_forceplayermodelsfromnexuiz)
-		if not(self.modelindex_lod0_from_nexuiz)
+	if(other.cvar_cl_forceplayermodelsfromxonotic)
+		if not(self.modelindex_lod0_from_xonotic)
 			modelsource = other;
 	if(other.cvar_cl_forceplayermodels && sv_clforceplayermodels)
 		modelsource = other;
@@ -549,7 +549,7 @@ void setmodel_lod(entity e, string modelname)
 	}
 
 	s = whichpack(self.model);
-	self.modelindex_lod0_from_nexuiz = ((s == "") || (substring(s, 0, 4) == "data"));
+	self.modelindex_lod0_from_xonotic = ((s == "") || (substring(s, 0, 4) == "data"));
 
 	player_setupanimsformodel();
 	UpdatePlayerSounds();
@@ -2446,29 +2446,29 @@ void PlayerPreThink (void)
 
 	// version nagging
 	if(self.version_nagtime)
-		if(self.cvar_g_nexuizversion)
+		if(self.cvar_g_xonoticversion)
 			if(time > self.version_nagtime)
 			{
-				if(strstr(self.cvar_g_nexuizversion, "svn", 0) < 0)
+				if(strstr(self.cvar_g_xonoticversion, "svn", 0) < 0)
 				{
-					if(strstr(cvar_string("g_nexuizversion"), "svn", 0) >= 0)
+					if(strstr(cvar_string("g_xonoticversion"), "svn", 0) >= 0)
 					{
-						dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Nexuiz ", cvar_string("g_nexuizversion"), " (beta)^7, you have ^3Nexuiz ", self.cvar_g_nexuizversion, "^1\n");
-						sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Nexuiz ", cvar_string("g_nexuizversion"), " (beta)^7, you have ^3Nexuiz ", self.cvar_g_nexuizversion, "^1\n"));
+						dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", cvar_string("g_xonoticversion"), " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
+						sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Xonotic ", cvar_string("g_xonoticversion"), " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n"));
 					}
 					else
 					{
 						float r;
-						r = vercmp(self.cvar_g_nexuizversion, cvar_string("g_nexuizversion"));
+						r = vercmp(self.cvar_g_xonoticversion, cvar_string("g_xonoticversion"));
 						if(r < 0)
 						{
-							dprint("^1NOTE^7 to ", self.netname, "^7 - ^3Nexuiz ", cvar_string("g_nexuizversion"), "^7 is out, and you still have ^3Nexuiz ", self.cvar_g_nexuizversion, "^1 - get the update from ^4http://www.nexuiz.com/^1!\n");
-							sprint(self, strcat("\{1}^1NOTE: ^3Nexuiz ", cvar_string("g_nexuizversion"), "^7 is out, and you still have ^3Nexuiz ", self.cvar_g_nexuizversion, "^1 - get the update from ^4http://www.nexuiz.com/^1!\n"));
+							dprint("^1NOTE^7 to ", self.netname, "^7 - ^3Xonotic ", cvar_string("g_xonoticversion"), "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.com/^1!\n");
+							sprint(self, strcat("\{1}^1NOTE: ^3Xonotic ", cvar_string("g_xonoticversion"), "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.com/^1!\n"));
 						}
 						else if(r > 0)
 						{
-							dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Nexuiz ", cvar_string("g_nexuizversion"), "^7, you have ^3Nexuiz ", self.cvar_g_nexuizversion, "^1\n");
-							sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Nexuiz ", cvar_string("g_nexuizversion"), "^7, you have ^3Nexuiz ", self.cvar_g_nexuizversion, "^1\n"));
+							dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", cvar_string("g_xonoticversion"), "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
+							sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Xonotic ", cvar_string("g_xonoticversion"), "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n"));
 						}
 					}
 				}

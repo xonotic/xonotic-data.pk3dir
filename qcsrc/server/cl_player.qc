@@ -134,7 +134,7 @@ void CopyBody(float keepvelocity)
 	self.model = oldself.model;
 	self.modelindex = oldself.modelindex;
 	self.modelindex_lod0 = oldself.modelindex_lod0;
-	self.modelindex_lod0_from_nexuiz = oldself.modelindex_lod0_from_nexuiz;
+	self.modelindex_lod0_from_xonotic = oldself.modelindex_lod0_from_xonotic;
 	self.modelindex_lod1 = oldself.modelindex_lod1;
 	self.modelindex_lod2 = oldself.modelindex_lod2;
 	self.skinindex = oldself.skinindex;

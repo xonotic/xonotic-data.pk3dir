@@ -1246,7 +1246,7 @@ float race_GetFractionalLapCount(entity e)
 	// scoreboard, immediately updates when overtaking
 	//
 	// requires the track to be built so you never get farther away from the
-	// next checkpoint, though, and current Nexuiz race maps are not built that
+	// next checkpoint, though, and current Xonotic race maps are not built that
 	// way
 	//
 	// also, this code is slow and would need optimization (i.e. "next CP"

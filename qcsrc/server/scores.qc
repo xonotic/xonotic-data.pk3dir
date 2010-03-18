@@ -367,7 +367,7 @@ void WinningConditionHelper()
 	entity sk;
 
 	s = GetGametype();
-	s = strcat(s, ":", cvar_string("g_nexuizversion"));
+	s = strcat(s, ":", cvar_string("g_xonoticversion"));
 	s = strcat(s, "::", GetPlayerScoreString(world, 2)); // make this 1 once we can
 
 	fullstatus = cvar("g_full_getstatus_responses");

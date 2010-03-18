@@ -9,4 +9,4 @@ and
 
   sparks1.ogg
 
-from the Nexuiz data pk3
+from the Xonotic data pk3

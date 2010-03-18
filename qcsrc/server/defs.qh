@@ -324,12 +324,12 @@ float default_weapon_alpha;
 .float cvar_cl_playerdetailreduction;
 .float cvar_scr_centertime;
 .float cvar_cl_shownames;
-.string cvar_g_nexuizversion;
+.string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];
 #ifdef ALLOW_FORCEMODELS
 .float cvar_cl_forceplayermodels;
-.float cvar_cl_forceplayermodelsfromnexuiz;
+.float cvar_cl_forceplayermodelsfromxonotic;
 float sv_clforceplayermodels;
 #endif
 float sv_loddistance1;
@@ -343,7 +343,7 @@ void AnnounceTo(entity e, string snd);
 .float version_nagtime;
 
 .float modelindex_lod0;
-.float modelindex_lod0_from_nexuiz;
+.float modelindex_lod0_from_xonotic;
 .float skinindex;
 .float modelindex_lod1;
 .float modelindex_lod2;

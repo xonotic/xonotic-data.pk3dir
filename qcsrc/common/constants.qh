@@ -352,7 +352,7 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 #define SP_SCORE 3
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 
-// this assignment must match menu/nexuiz/dialog_settings_misc.c!
+// this assignment must match menu/xonotic/dialog_settings_misc.c!
 float	CHAN_AUTO				= 0;
 	// on world: announcers, ...                     INFO
 	// on players: item pickup                       ITEMS

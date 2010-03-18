@@ -87,7 +87,7 @@ void PlayerJump (void)
 		self.velocity_z = max(cvar("sv_jumpvelocity") * cvar("sv_jumpspeedcap_min"), self.velocity_z);
 	if(cvar_string("sv_jumpspeedcap_max") != "") {
 		if(trace_fraction < 1 && trace_plane_normal_z < 0.98 && cvar("sv_jumpspeedcap_max_disable_on_ramps")) {
-			// don't do jump speedcaps on ramps to preserve old nexuiz ramjump style
+			// don't do jump speedcaps on ramps to preserve old xonotic ramjump style
 			//print("Trace plane normal z: ", ftos(trace_plane_normal_z), ", disabling speed cap!\n");
 		}
 		else

@@ -1348,8 +1348,8 @@ airfriction 12
 
 // electro trail
 // glowing vapor trail
-// used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_NEXUIZPLASMA"), from, to)
-effect TR_NEXUIZPLASMA
+// used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_XONOTICPLASMA"), from, to)
+effect TR_XONOTICPLASMA
 trailspacing 1
 type static
 color 0x283880 0x283880
@@ -1362,7 +1362,7 @@ lighttime 0
 lightcolor 1.5 3 6
 velocitymultiplier -0.1
 // bright sparks
-effect TR_NEXUIZPLASMA
+effect TR_XONOTICPLASMA
 trailspacing 6
 count 3
 type snow
