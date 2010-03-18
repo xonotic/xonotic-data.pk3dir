@@ -77,8 +77,7 @@ void fillXonoticSingleplayerDialog(entity me)
 			me.campaignBox.campaignGo(me.campaignBox, 0);
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, 2, e = makeXonoticModButton("Singleplayer"));
-		me.TD(me, 1, me.columns - 2 , e = makeXonoticButton("Start Singleplayer!", '0 0 0'));
+		me.TD(me, 1, me.columns, e = makeXonoticButton("Start Singleplayer!", '0 0 0'));
 			e.onClick = CampaignList_LoadMap;
 			e.onClickEntity = me.campaignBox;
 }

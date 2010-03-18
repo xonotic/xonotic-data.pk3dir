@@ -67,8 +67,7 @@ void fillXonoticServerListTab(entity me)
 			e.onClickEntity = slist;
 			slist.infoButton = e;
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticModButton("Multiplayer_Join"));
-		me.TD(me, 1, me.columns - 2, e = makeXonoticButton("Join!", '0 0 0'));
+		me.TD(me, 1, me.columns, e = makeXonoticButton("Join!", '0 0 0'));
 			e.onClick = ServerList_Connect_Click;
 			e.onClickEntity = slist;
 			slist.connectButton = e;
