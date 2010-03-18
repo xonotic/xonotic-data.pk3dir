@@ -1,0 +1,19 @@
+.float iflags;
+#define IFLAG_VELOCITY 1
+#define IFLAG_ANGLES 2
+#define IFLAG_AUTOANGLES 4
+#define IFLAG_VALID 8
+#define IFLAG_PREVALID 16
+#define IFLAG_INTERNALMASK (IFLAG_VALID | IFLAG_PREVALID)
+
+// call this BEFORE reading an entity update
+void InterpolateOrigin_Undo();
+
+// call this AFTER receiving an entity update
+void InterpolateOrigin_Note();
+
+// call this when the entity got teleported, before InterpolateOrigin_Note
+void InterpolateOrigin_Reset();
+
+// call this BEFORE drawing
+void InterpolateOrigin_Do();

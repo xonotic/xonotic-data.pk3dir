@@ -1,0 +1,23 @@
+#Factory Interior
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "box01.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "box01.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "pallet01.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "pallet01.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "newspaper01.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "newspaper01.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "newspaper02.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "newspaper02.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "newspaper03.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "newspaper03.bsp"
+
+#Hut Interior
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 4 "table01.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "table01.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "chair01.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "chair01.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 4 "bed01.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "bed01.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 4 "closet01.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "closet01.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "logs01.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "logs01.bsp"

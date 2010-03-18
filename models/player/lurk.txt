@@ -1,0 +1,10 @@
+Lurk
+models/player/lurk
+0
+models/player/lurk.zym
+species alien
+
+Reptilian Combatant
+
+Weight: 84 kg
+Age: 47

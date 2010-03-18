@@ -1,0 +1,111 @@
+float BOT_PICKUP_RATING_LOW	= 2500;
+float BOT_PICKUP_RATING_MID	= 5000;
+float BOT_PICKUP_RATING_HIGH	= 10000;
+
+float WEP_TYPE_OTHER	= 0x00;	// e.g: Hook, Port-o-launch, etc
+float WEP_TYPE_SPLASH	= 0x01;
+float WEP_TYPE_HITSCAN	= 0x02;
+float WEP_TYPEMASK      = 0x0F;
+float WEP_FLAG_CANCLIMB = 0x10;
+float WEP_FLAG_NORMAL   = 0x20;
+float WEP_FLAG_HIDDEN   = 0x40;
+
+float	IT_UNLIMITED_WEAPON_AMMO  = 1;
+// when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
+float	IT_UNLIMITED_SUPERWEAPONS = 2;
+// when this bit is set, using a superweapon does not throw it away. Checkpoints can give this powerup.
+float	IT_CTF_SHIELDED           = 4; // set for the flag shield
+// using jetpack
+float   IT_USING_JETPACK          = 8; // confirmation that button is pressed
+float   IT_JETPACK                = 16; // actual item
+float	IT_FUEL_REGEN             = 32; // fuel regeneration trigger
+float	IT_SHELLS				= 256;
+float	IT_NAILS				= 512;
+float	IT_ROCKETS				= 1024;
+float	IT_CELLS				= 2048;
+float	IT_SUPERWEAPON			= 4096;
+float	IT_FUEL					= 128;
+float	IT_STRENGTH				= 8192;
+float	IT_INVINCIBLE			= 16384;
+float	IT_HEALTH				= 32768;
+// union:
+	// for items:
+	float	IT_KEY1					= 131072;
+	float	IT_KEY2					= 262144;
+	// for players:
+	float	IT_RED_FLAG_TAKEN		= 32768;
+	float	IT_RED_FLAG_LOST		= 65536;
+	float	IT_RED_FLAG_CARRING		= 98304;
+	float	IT_BLUE_FLAG_TAKEN		= 131072;
+	float	IT_BLUE_FLAG_LOST		= 262144;
+	float	IT_BLUE_FLAG_CARRING	= 393216;
+// end
+float	IT_5HP					= 524288;
+float	IT_25HP					= 1048576;
+float	IT_ARMOR_SHARD			= 2097152;
+float	IT_ARMOR				= 4194304;
+
+float	IT_AMMO					= 8064; // IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_SUPERWEAPON | IT_FUEL;
+float	IT_PICKUPMASK           = 51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
+float	IT_UNLIMITED_AMMO       = 3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
+
+// variables:
+string weaponpriority_hudselector_0;
+string weaponpriority_hudselector_1;
+
+// functions:
+entity get_weaponinfo(float id);
+string W_FixWeaponOrder(string order, float complete);
+string W_NameWeaponOrder(string order);
+string W_NumberWeaponOrder(string order);
+
+// entity properties of weaponinfo:
+.float weapon; // WEP_...
+.float weapons; // WEPBIT_...
+.string netname; // short name
+.string message; // human readable name
+.float items; // IT_...
+.float(float) weapon_func; // w_...
+.string mdl; // modelname without g_, v_, w_
+.string model; // full name of g_ model
+.float spawnflags; // WEPSPAWNFLAG_... combined
+.float impulse; // weapon impulse
+.float bot_pickupbasevalue; // bot weapon priority
+.string model2; // wpn- sprite name
+
+
+
+// dynamic weapon adding
+float w_null(float dummy);
+void register_weapon(float id, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname);
+void register_weapons_done();
+
+float WEP_COUNT;
+float WEP_FIRST = 1;
+float WEP_LAST;
+#define WEP_MAXCOUNT 24
+float WEPBIT_ALL;
+#define REGISTER_WEAPON_2(id,bit,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
+	float id; \
+	float bit; \
+	float func(float); \
+	void RegisterWeapons_##id() \
+	{ \
+		WEP_LAST = (id = WEP_FIRST + WEP_COUNT); \
+		WEPBIT_ALL |= (bit = power2of(WEP_COUNT)); \
+		++WEP_COUNT; \
+		register_weapon(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname); \
+	} \
+	ACCUMULATE_FUNCTION(RegisterWeapons, RegisterWeapons_##id)
+#ifdef SVQC
+#define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
+	REGISTER_WEAPON_2(WEP_##id,WEPBIT_##id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
+#else
+#define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
+	REGISTER_WEAPON_2(WEP_##id,WEPBIT_##id,w_null,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
+#endif
+
+#include "../server/w_all.qc"
+
+#undef REGISTER_WEAPON
+ACCUMULATE_FUNCTION(RegisterWeapons, register_weapons_done)

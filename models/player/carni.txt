@@ -1,0 +1,10 @@
+Carni
+models/player/carni
+0
+models/player/carni.zym
+species alien
+
+Mutated Warrior
+
+Sex: Male
+Weight: 107 kg

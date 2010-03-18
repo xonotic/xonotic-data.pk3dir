@@ -1,0 +1,46 @@
+#define localcmd cmd
+
+#define NULL (null_entity)
+#define world NULL
+
+// constants
+
+const vector eX = '1 0 0';
+const vector eY = '0 1 0';
+const vector eZ = '0 0 1';
+
+const float GAME_ISSERVER 	= 1;
+const float GAME_CONNECTED	= 2;
+const float GAME_DEVELOPER	= 4;
+
+// prototypes
+
+float Menu_Active;
+float gamestatus;
+
+const float S_SHIFT = 1;
+const float S_CTRL = 2;
+const float S_ALT = 4;
+
+float frametime;
+float time;
+
+entity anim;
+entity main;
+void m_hide();
+void m_display();
+void m_goto(string name);
+void m_goto_skin_selector();
+void m_goto_video_settings();
+.string name;
+
+entity keyGrabber;
+.void(entity me, float key, float ascii) keyGrabbed;
+
+float conwidth, conheight; // "virtual" conwidth/height values for other stuff to assume for scaling
+
+void SUB_Null();
+
+float preMenuInit(); // you have to define this for pre-menu initialization. Return 0 if initialization needs to be retried a frame later, 1 if it succeeded.
+void preMenuDraw(); // this is run before the menu is drawn. You may put some stuff there that has to be done every frame.
+void postMenuDraw(); // this is run just after the menu is drawn (or not). Useful to draw something over everything else.

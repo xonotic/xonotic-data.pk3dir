@@ -1,0 +1,98 @@
+
+// entity 0
+{
+"classname" "worldspawn"
+"message" "Created for the Desert Factory map project"
+"author" "sev"
+"license" "GNU GPL version 2 or any later version"
+// brush 0
+{
+( 56 96 20 ) ( 56 -96 20 ) ( 48 96 20 ) desertfactory_wood/wood04 0 0 90 2 1 0 0 0
+( 56 96 64 ) ( 48 96 64 ) ( 56 96 -64 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( 56 96 64 ) ( 56 96 -64 ) ( 56 -96 64 ) desertfactory_wood/wood04 0 0 180 2 1 0 0 0
+( 48 -96 4 ) ( 56 -96 4 ) ( 48 96 4 ) desertfactory_wood/wood04 0 0 90 2 1 0 0 0
+( 48 -96 -64 ) ( 48 -96 64 ) ( 56 -96 -64 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( 48 -96 -64 ) ( 48 96 -64 ) ( 48 -96 64 ) desertfactory_wood/wood04 0 0 180 2 1 0 0 0
+}
+// brush 1
+{
+( -48 96 20 ) ( -48 -96 20 ) ( -56 96 20 ) desertfactory_wood/wood04 0 0 90 2 1 0 0 0
+( -48 96 64 ) ( -56 96 64 ) ( -48 96 -64 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -48 96 64 ) ( -48 96 -64 ) ( -48 -96 64 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -56 -96 4 ) ( -48 -96 4 ) ( -56 96 4 ) desertfactory_wood/wood04 0 0 90 2 1 0 0 0
+( -56 -96 -64 ) ( -56 -96 64 ) ( -48 -96 -64 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -56 -96 -64 ) ( -56 96 -64 ) ( -56 -96 64 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+}
+// brush 2
+{
+( -54 86 4 ) ( -54 58 4 ) ( -64 86 4 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -54 86 4 ) ( -64 86 4 ) ( -54 86 -12 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( 64 92 4 ) ( 64 92 -12 ) ( 64 64 4 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 58 0 ) ( -54 58 0 ) ( -64 86 0 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 58 -12 ) ( -64 58 4 ) ( -54 58 -12 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 58 -12 ) ( -64 86 -12 ) ( -64 58 4 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+}
+// brush 3
+{
+( -54 -2 24 ) ( -54 -30 24 ) ( -64 -2 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -54 -2 24 ) ( -64 -2 24 ) ( -54 -2 8 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( 64 4 24 ) ( 64 4 8 ) ( 64 -24 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -30 20 ) ( -54 -30 20 ) ( -64 -2 20 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -26 8 ) ( -64 -26 24 ) ( -54 -26 8 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -30 8 ) ( -64 -2 8 ) ( -64 -30 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+}
+// brush 4
+{
+( -54 86 24 ) ( -54 58 24 ) ( -64 86 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -54 86 24 ) ( -64 86 24 ) ( -54 86 8 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( 64 92 24 ) ( 64 92 8 ) ( 64 64 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 58 20 ) ( -54 58 20 ) ( -64 86 20 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 58 8 ) ( -64 58 24 ) ( -54 58 8 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 58 8 ) ( -64 86 8 ) ( -64 58 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+}
+// brush 5
+{
+( -54 26 24 ) ( -54 -2 24 ) ( -64 26 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -54 26 24 ) ( -64 26 24 ) ( -54 26 8 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( 64 32 24 ) ( 64 32 8 ) ( 64 4 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -2 20 ) ( -54 -2 20 ) ( -64 26 20 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 2 8 ) ( -64 2 24 ) ( -54 2 8 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -2 8 ) ( -64 26 8 ) ( -64 -2 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+}
+// brush 6
+{
+( -54 54 24 ) ( -54 26 24 ) ( -64 54 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -54 54 24 ) ( -64 54 24 ) ( -54 54 8 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( 64 60 24 ) ( 64 60 8 ) ( 64 32 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 26 20 ) ( -54 26 20 ) ( -64 54 20 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 30 8 ) ( -64 30 24 ) ( -54 30 8 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 26 8 ) ( -64 54 8 ) ( -64 26 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+}
+// brush 7
+{
+( -54 -30 24 ) ( -54 -58 24 ) ( -64 -30 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -54 -30 24 ) ( -64 -30 24 ) ( -54 -30 8 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( 64 -24 24 ) ( 64 -24 8 ) ( 64 -52 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -58 20 ) ( -54 -58 20 ) ( -64 -30 20 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -54 8 ) ( -64 -54 24 ) ( -54 -54 8 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -58 8 ) ( -64 -30 8 ) ( -64 -58 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+}
+// brush 8
+{
+( -54 -58 24 ) ( -54 -86 24 ) ( -64 -58 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -54 -58 24 ) ( -64 -58 24 ) ( -54 -58 8 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( 64 -52 24 ) ( 64 -52 8 ) ( 64 -80 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -86 20 ) ( -54 -86 20 ) ( -64 -58 20 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -86 8 ) ( -64 -86 24 ) ( -54 -86 8 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -86 8 ) ( -64 -58 8 ) ( -64 -86 24 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+}
+// brush 9
+{
+( -54 -58 4 ) ( -54 -86 4 ) ( -64 -58 4 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -54 -58 4 ) ( -64 -58 4 ) ( -54 -58 -12 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( 64 -52 4 ) ( 64 -52 -12 ) ( 64 -80 4 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -86 0 ) ( -54 -86 0 ) ( -64 -58 0 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -86 -12 ) ( -64 -86 4 ) ( -54 -86 -12 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+( -64 -86 -12 ) ( -64 -58 -12 ) ( -64 -86 4 ) desertfactory_wood/wood04 0 0 0 2 1 0 0 0
+}
+}

@@ -1,0 +1,11 @@
+Insurrectionist
+models/player/insurrectionist
+0
+models/player/insurrectionist.zym
+species human
+
+Warrior
+
+Sex: Male
+Weight: 87 kg
+Age: 56

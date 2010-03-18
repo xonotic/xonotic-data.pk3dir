@@ -1,0 +1,11 @@
+Armored Carni
+models/player/carniarmor
+1
+models/player/carni.zym
+species alien
+
+Mutated Warrior
+
+Sex: Male
+Weight: 107 kg
+Age: 15

@@ -1,0 +1,10 @@
+Mulder
+models/player/mulder
+1
+models/player/nexus.zym
+species robot_solid
+
+Nexuiz's Soldier
+
+Weight: 282 kg
+Age: 313

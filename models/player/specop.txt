@@ -1,0 +1,11 @@
+Specop
+models/player/specop
+0
+models/player/specop.zym
+species human
+
+Solo Warrior
+
+Sex: Female
+Weight: 61 kg
+Age: 31

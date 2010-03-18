@@ -1,0 +1,173 @@
+#pragma flag off fastarrays // make dp behave with new fteqcc versions. remove when dp bug with fteqcc fastarrays is fixed
+
+//////////////////////////////////////////////////////////
+// sys globals
+
+entity self;
+
+/////////////////////////////////////////////////////////
+void		end_sys_globals;
+/////////////////////////////////////////////////////////
+// sys fields
+
+/////////////////////////////////////////////////////////
+void		end_sys_fields;
+/////////////////////////////////////////////////////////
+// sys functions
+
+void() m_init;
+void(float keynr, float ascii) m_keydown;
+void() m_draw;
+void() m_display; 	// old NG Menu
+void() m_toggle;
+void() m_hide;		// old NG Menu
+void() m_shutdown;
+
+/////////////////////////////////////////////////////////
+// sys constants
+
+///////////////////////////
+// key dest constants
+
+float KEY_UNKNOWN	= 	-1;
+float KEY_GAME 		=	0;
+float KEY_MENU		=	2;
+float KEY_MENU_GRABBED = 3;
+
+///////////////////////////
+// file constants
+
+float FILE_READ = 0;
+float FILE_APPEND = 1;
+float FILE_WRITE = 2;
+
+///////////////////////////
+// logical constants (just for completeness)
+
+float TRUE 	= 1;
+float FALSE = 0;
+
+///////////////////////////
+// boolean constants
+
+float true  = 1;
+float false = 0;
+
+///////////////////////////
+// msg constants
+
+float MSG_BROADCAST		= 0;		// unreliable to all
+float MSG_ONE			= 1;		// reliable to one (msg_entity)
+float MSG_ALL			= 2;		// reliable to all
+float MSG_INIT			= 3;		// write to the init string
+
+/////////////////////////////
+// mouse target constants
+
+float MT_MENU = 1;
+float MT_CLIENT = 2;
+
+/////////////////////////
+// client state constants
+
+float CS_DEDICATED 		= 0;
+float CS_DISCONNECTED 	= 1;
+float CS_CONNECTED		= 2;
+
+///////////////////////////
+// blend flags
+
+float DRAWFLAG_NORMAL		= 0;
+float DRAWFLAG_ADDITIVE 	= 1;
+float DRAWFLAG_MODULATE 	= 2;
+float DRAWFLAG_2XMODULATE   = 3;
+
+
+///////////////////////////
+// server list constants
+
+float SLIST_HOSTCACHEVIEWCOUNT  = 0;
+float SLIST_HOSTCACHETOTALCOUNT = 1;
+float SLIST_MASTERQUERYCOUNT 	= 2;
+float SLIST_MASTERREPLYCOUNT 	= 3;
+float SLIST_SERVERQUERYCOUNT 	= 4;
+float SLIST_SERVERREPLYCOUNT 	= 5;
+float SLIST_SORTFIELD		= 6;
+float SLIST_SORTDESCENDING	= 7;
+
+float SLIST_LEGACY_LINE1 	= 1024;
+float SLIST_LEGACY_LINE2 	= 1025;
+
+float SLIST_TEST_CONTAINS	= 0;
+float SLIST_TEST_NOTCONTAIN	= 1;
+float SLIST_TEST_LESSEQUAL	= 2;
+float SLIST_TEST_LESS		= 3;
+float SLIST_TEST_EQUAL		= 4;
+float SLIST_TEST_GREATER	= 5;
+float SLIST_TEST_GREATEREQUAL	= 6;
+float SLIST_TEST_NOTEQUAL	= 7;
+float SLIST_TEST_STARTSWITH	= 8;
+float SLIST_TEST_NOTSTARTSWITH	= 9;
+
+float SLIST_MASK_AND = 0;
+float SLIST_MASK_OR  = 512;
+
+float NET_CURRENTPROTOCOL = 3;
+
+////////////////////////////////
+// cinematic action constants
+
+float CINE_PLAY 	= 1;
+float CINE_LOOP 	= 2;
+float CINE_PAUSE 	= 3;
+float CINE_FIRSTFRAME 	= 4;
+float CINE_RESETONWAKEUP= 5;
+
+///////////////////////////
+// null entity (actually it is the same like the world entity)
+
+entity null_entity;
+
+///////////////////////////
+// error constants
+
+// file handling
+float ERR_CANNOTOPEN			= -1; // fopen
+float ERR_NOTENOUGHFILEHANDLES 	= -2; // fopen
+float ERR_INVALIDMODE 			= -3; // fopen
+float ERR_BADFILENAME 			= -4; // fopen
+
+// drawing functions
+
+float ERR_NULLSTRING			= -1;
+float ERR_BADDRAWFLAG			= -2;
+float ERR_BADSCALE			= -3;
+//float ERR_BADSIZE			= ERR_BADSCALE;
+float ERR_NOTCACHED			= -4;
+
+float GECKO_BUTTON_DOWN 		= 0;
+float GECKO_BUTTON_UP 			= 1;
+// either use down and up or just press but not all of them!
+float GECKO_BUTTON_PRESS 		= 2;
+// use this for mouse events if needed?
+float GECKO_BUTTON_DOUBLECLICK 	= 3;
+
+/* not supported at the moment
+///////////////////////////
+// os constants
+
+float OS_WINDOWS	= 0;
+float OS_LINUX		= 1;
+float OS_MAC		= 2;
+*/
+
+float drawfont; // set this to one of the following for draw text routines to work with another font
+float FONT_DEFAULT     = 0;
+float FONT_CONSOLE     = 1;
+float FONT_SBAR        = 2;
+float FONT_NOTIFY      = 3;
+float FONT_CHAT        = 4;
+float FONT_CENTERPRINT = 5;
+float FONT_INFOBAR     = 6;
+float FONT_MENU        = 7;
+float FONT_USER        = 8; // add to this the index, like FONT_USER+3 = user3. At least 8 of them are supported.

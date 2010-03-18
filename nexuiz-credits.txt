@@ -1,0 +1,201 @@
+**Team Leaders:
+
+Lee Vermeulen
+*Project Founder and Co-Designer
+
+Forest "LordHavoc" Hale
+*Lead Programmer and Co-Designer
+
+Rudolf "div0" Polzer
+*Programmer
+
+
+**Project maintainers:
+
+Kristian "morfar" Johansson
+
+Maik "SavageX" Merten
+
+
+**Development Team:
+
+Andreas "Black" Kirsch
+*Programmer
+
+Paul "Strahlemann" Evers
+*Level Designer
+
+Peter "Morphed" Pielak
+*Artist
+
+Samual Lenks
+*Programmer
+
+Rasmus "FruitieX" Eskola
+*Artist and Programmer
+
+Saulo "mand1nga" Gil
+*Programmer
+
+Stephan "esteel" Stahl
+*Programmer
+
+Jakob "tZork" Markstrom Grohn
+*Programmer and Artist
+
+Tyler "-z-" Mulligan
+*Web Developer and Interaction Designer
+
+Wolfgang "Blub\0" Bumiller
+*Programmer
+
+Merlijn Hofstra
+*Programmer and server admin
+
+
+
+**Past Team Members
+*In alphabetical order
+*(nickname or surname)
+
+Kurt Dereli
+*Artist
+
+Yves "EviLair" Allaire
+*Artist
+
+Fabien "H. Reaper" Tschirhart
+*Level Designer
+
+"Innovati"
+*Artist
+
+KadaverJack
+*Programmer
+
+William Libert
+* Level Designer
+
+MauveBib
+*Bot Programmer
+
+Rick "Rat" Kelley
+*Lead Animator, Skinner
+
+Michael "Tenshihan" Quinn
+*Sound FX and Player-Voices
+
+Gottfried "Toddd" Hofmann
+*Sound FX
+
+Marko "Urre" Permanto
+*Bot Programmer
+
+Dan "Wazat" Hale
+*Programmer
+
+Garth "Zombie" Hendy
+*Level Designer
+
+
+
+**Special Thanks:
+*In alphabetical order
+*(nickname or surname)
+
+Robert "ai" Kuroto
+*Various models
+
+Chris "amethyst7" Matz
+*Level design
+
+blkrbt
+*Music
+
+Gerd "Elysis" Raudenbusch
+*Music
+
+Marius "GreEn`mArine" Shekow
+*Programmer
+
+Braden "meoblast001" Walters
+*Music
+
+Alexander "motorsep" Zubov
+*Weapon animation
+
+Eric "Munyul Verminard" Sambach
+*Level design
+
+Severin "sev" Meyer
+*Artist
+
+Simon O'Callaghan
+*egyptsoc texture set
+
+Michael "Tenshihan" Quinn
+*Sound effects
+
+Amos "torus" Dudley
+*Announcer voices
+
+Mattrew "Tronyn" Rye
+*Level design
+
+Henning "Tymo" Janssen
+*Level design
+
+Kevin "Tyrann" Shanahan
+*Level design
+
+William "Willis" Weilep
+*Master server host
+
+
+**Thanks:
+
+Attila "WW3" Houtkooper
+BigMac
+Brain Younds
+Christian Ice
+Clinton "Kaziganthe" Freeman
+Dan "Digger" Korostelev
+Donkey
+Dustin Geeraert
+Edgenetwork
+Edward "Ed" Holness
+FrikaC
+Jitspoe
+Jody Gallagher
+Juergen "LowDragon" Timm
+Lee David Ash
+Mathieu "Elric" Olivier
+Mephisto
+MirceaKitsune
+MrBougo
+Munyul
+Netzwerg
+NoelCower
+Parapraxis
+Petithomme
+Q1 Retexturing Project
+Qantourisc
+Ronan
+Sajt
+Shaggy
+Shank
+SomeGuy
+Spike
+Spirit
+Steve Vermeulen
+Supajoe
+Tei
+Tomaz
+Ulrich Galbraith
+Vortex
+Zenex
+dstrek
+lcatlnx
+leileilol
+michaelb
+terencehill

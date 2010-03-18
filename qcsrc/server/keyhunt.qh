@@ -1,0 +1,34 @@
+.float kh_state;
+float kh_teams;
+float kh_tracking_enabled;
+.entity kh_next, kh_prev;
+
+void kh_Scores_Event(entity player, entity key, string what, float frags_player, float frags_owner);
+void kh_Key_Attach(entity key);
+void kh_Key_Detach(entity key);
+void kh_Key_AssignTo(entity key, entity player);
+void kh_Key_Spawn(entity initial_owner, float angle, float idx);
+void kh_Key_Remove(entity key);
+void kh_Key_Collect(entity key, entity player);
+void kh_Key_DropAll(entity player, float suicide);
+void kh_Key_Touch();
+void kh_Key_Think();
+void kh_WinnerTeam(float teem);
+void kh_LoserTeam(float teem, entity lostkey);
+void kh_FinishRound();
+void kh_StartRound();
+void kh_EnableTrackingDevice();
+void kh_init();
+void kh_finalize();
+float kh_KeyCarrier_waypointsprite_visible_for_player(entity e);
+float kh_Key_waypointsprite_visible_for_player(entity e);
+float kh_HandleFrags(entity attacker, entity targ, float f);
+float kh_Key_AllOwnedByWhichTeam();
+
+void kh_update_state();
+
+#define STR_ITEM_KH_KEY "item_kh_key"
+typedef void(void) kh_Think_t;
+var kh_Think_t kh_Controller_Thinkfunc;
+void kh_Controller_SetThink(float t, string msg, kh_Think_t func)
+void kh_Key_Remove(entity key)

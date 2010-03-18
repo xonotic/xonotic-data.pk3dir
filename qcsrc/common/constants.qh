@@ -1,0 +1,502 @@
+// COMMIT-TODO: Update if necessary before committing
+// Revision 1: additional statistics sent (flag caps, returns, deaths)
+// Revision 2: Mapvote preview pictures
+// Revision 3: optimized map vote protocol
+// Revision 4: CSQC config var system
+// Revision 5: mapvote time fix
+// Revision 6: more robust against packet loss/delays, also show not yet connected clients
+// Revision 7: packet loss column
+// Revision 8: race
+// Revision 9: race delta
+// Revision 10: scoreboard force
+// Revision 11: scoreboard unforce; spectator support beginning
+// Revision 12: smaller scores updates (SERVER: requires new engine)
+// Revision 13: pointparticles
+// Revision 14: laser
+// Revision 15: zoom
+// Revision 16: multi-weapons
+// Revision 17: multi-weaponimpulses
+// Revision 18: warmup
+// Revision 19: fog
+// Revision 20: naggers
+// Revision 21: entcs for players optimized (position data down from 12 to 7 bytes); waypointsprites in csqc for team radar
+// Revision 22: hook shot origin
+#define CSQC_REVISION 22
+
+// probably put these in common/
+// so server/ and client/ can be synced better
+const float GAME_DEATHMATCH		= 1;
+const float GAME_TEAM_DEATHMATCH	= 2;
+const float GAME_DOMINATION		= 3;
+const float GAME_CTF			= 4;
+const float GAME_RUNEMATCH		= 5;
+const float GAME_LMS			= 6;
+const float GAME_ARENA		= 7;
+const float GAME_KEYHUNT		= 8;
+const float GAME_ASSAULT		= 9;
+const float GAME_ONSLAUGHT	= 10;
+const float GAME_RACE	= 11;
+const float GAME_NEXBALL = 12;
+const float GAME_CTS = 13;
+const float GAME_CA		= 14;
+
+const float AS_STRING		= 1;
+const float AS_INT		= 2;
+const float AS_FLOAT_TRUNCATED	= 2;
+const float AS_FLOAT		= 8;
+
+const float TE_CSQC_PICTURE = 100;
+const float TE_CSQC_RACE = 101;
+const float TE_CSQC_SPAWN = 102;
+const float TE_CSQC_ZCURVEPARTICLES = 103;
+const float TE_CSQC_NEXGUNBEAMPARTICLE = 104;
+const float TE_CSQC_LIGHTNINGARC = 105;
+const float TE_CSQC_TEAMNAGGER = 106;
+const float TE_CSQC_PINGPLREPORT = 107;
+const float TE_CSQC_VOTE = 108;
+const float TE_CSQC_VOTERESET = 109;
+const float TE_CSQC_ANNOUNCE = 110;
+
+const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
+const float RACE_NET_CHECKPOINT_CLEAR = 1;
+const float RACE_NET_CHECKPOINT_NEXT_QUALIFYING = 2; // byte nextcheckpoint, short recordtime, string recordholder
+const float RACE_NET_CHECKPOINT_HIT_RACE = 3; // byte checkpoint, short delta, byte lapsdelta, string opponent
+const float RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT = 4; // byte checkpoint, short delta, byte lapsdelta, string opponent
+const float RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING = 5; // byte nextcheckpoint, float laptime, short recordtime, string recordholder
+const float RACE_NET_PENALTY_RACE = 6; // byte penaltytime, string reason
+const float RACE_NET_PENALTY_QUALIFYING = 7; // byte penaltytime, string reason
+const float RACE_NET_SERVER_RECORD = 8; // server record, sent to client
+const float RACE_NET_SPEED_AWARD = 9; // speed award, sent to client
+const float RACE_NET_SPEED_AWARD_BEST = 10; // all time best speed award, sent to client
+const float RACE_NET_SERVER_RANKINGS = 11;
+const float RACE_NET_SERVER_STATUS = 12;
+const float RANKINGS_CNT = 15;
+
+const float ENT_CLIENT = 0;
+const float ENT_CLIENT_DEAD = 1;
+const float ENT_CLIENT_ENTCS = 2;
+const float ENT_CLIENT_SCORES_INFO = 3;
+const float ENT_CLIENT_SCORES = 4;
+const float ENT_CLIENT_TEAMSCORES = 5;
+const float ENT_CLIENT_POINTPARTICLES = 6;
+const float ENT_CLIENT_RAINSNOW = 7;
+const float ENT_CLIENT_LASER = 8;
+const float ENT_CLIENT_NAGGER = 9; // flags [votecalledvote]
+const float ENT_CLIENT_WAYPOINT = 10; // flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable]
+const float ENT_CLIENT_RADARLINK = 11; // flags [startorigin] [endorigin] [startcolor+16*endcolor]
+const float ENT_CLIENT_PROJECTILE = 12;
+const float ENT_CLIENT_GIBSPLASH = 13;
+const float ENT_CLIENT_DAMAGEINFO = 14;
+const float ENT_CLIENT_CASING = 15;
+const float ENT_CLIENT_INIT = 16;
+const float ENT_CLIENT_MAPVOTE = 17;
+const float ENT_CLIENT_CLIENTDATA = 18;
+const float ENT_CLIENT_RANDOMSEED = 19;
+const float ENT_CLIENT_WALL = 20;
+const float ENT_CLIENT_SPIDERBOT = 21;
+const float ENT_CLIENT_MODELEFFECT = 22;
+const float ENT_CLIENT_TUBANOTE = 23;
+const float ENT_CLIENT_WARPZONE = 24;
+const float ENT_CLIENT_WARPZONE_CAMERA = 25;
+
+const float ENT_CLIENT_TURRET = 40;
+
+const float SPRITERULE_DEFAULT = 0;
+const float SPRITERULE_TEAMPLAY = 1;
+
+const float RADARICON_FLAG = 1;
+const float RADARICON_FLAGCARRIER = 1;
+const float RADARICON_HERE = 1; // TODO make these 3 and 4, and make images for them
+const float RADARICON_DANGER = 1;
+const float RADARICON_WAYPOINT = 1;
+const float RADARICON_HELPME = 1;
+const float RADARICON_CONTROLPOINT = 1;
+const float RADARICON_GENERATOR = 1;
+const float RADARICON_OBJECTIVE = 1;
+const float RADARICON_DOMPOINT = 1;
+const float RADARICON_POWERUP = 1;
+
+///////////////////////////
+// key constants
+
+//
+// these are the key numbers that should be passed to Key_Event
+//
+const float K_TAB			=	9;
+const float K_ENTER		=	13;
+const float K_ESCAPE		=	27;
+const float K_SPACE		=	32;
+
+// normal keys should be passed as lowercased ascii
+
+const float K_BACKSPACE	=	127;
+const float K_UPARROW		=	128;
+const float K_DOWNARROW	=	129;
+const float K_LEFTARROW	=	130;
+const float K_RIGHTARROW	=	131;
+
+const float K_ALT		=	132;
+const float K_CTRL	=	133;
+const float K_SHIFT	=	134;
+const float K_F1		=	135;
+const float K_F2		=	136;
+const float K_F3		=	137;
+const float K_F4		=	138;
+const float K_F5		=	139;
+const float K_F6		=	140;
+const float K_F7		=	141;
+const float K_F8		=	142;
+const float K_F9		=	143;
+const float K_F10		=	144;
+const float K_F11		=	145;
+const float K_F12		=	146;
+const float K_INS		=	147;
+const float K_DEL		=	148;
+const float K_PGDN	=	149;
+const float K_PGUP	=	150;
+const float K_HOME	=	151;
+const float K_END		=	152;
+
+const float K_KP_HOME			=	160;
+const float K_KP_UPARROW		=	161;
+const float K_KP_PGUP			=	162;
+const float K_KP_LEFTARROW	=	163;
+const float K_KP_5			=	164;
+const float K_KP_RIGHTARROW	=	165;
+const float K_KP_END			=	166;
+const float K_KP_DOWNARROW	=	167;
+const float K_KP_PGDN			=	168;
+const float K_KP_ENTER		=	169;
+const float K_KP_INS   		=	170;
+const float K_KP_DEL			=	171;
+const float K_KP_SLASH		=	172;
+const float K_KP_MINUS		=	173;
+const float K_KP_PLUS			=	174;
+
+const float K_PAUSE		=	255;
+
+//
+// joystick buttons
+//
+const float K_JOY1		=	768;
+const float K_JOY2		=	769;
+const float K_JOY3		=	770;
+const float K_JOY4		=	771;
+
+//
+// aux keys are for multi-buttoned joysticks to generate so they can use
+// the normal binding process
+//
+const float K_AUX1		=	772;
+const float K_AUX2		=	773;
+const float K_AUX3		=	774;
+const float K_AUX4		=	775;
+const float K_AUX5		=	776;
+const float K_AUX6		=	777;
+const float K_AUX7		=	778;
+const float K_AUX8		=	779;
+const float K_AUX9		=	780;
+const float K_AUX10		=	781;
+const float K_AUX11		=	782;
+const float K_AUX12		=	783;
+const float K_AUX13		=	784;
+const float K_AUX14		=	785;
+const float K_AUX15		=	786;
+const float K_AUX16		=	787;
+const float K_AUX17		=	788;
+const float K_AUX18		=	789;
+const float K_AUX19		=	790;
+const float K_AUX20		=	791;
+const float K_AUX21		=	792;
+const float K_AUX22		=	793;
+const float K_AUX23		=	794;
+const float K_AUX24		=	795;
+const float K_AUX25		=	796;
+const float K_AUX26		=	797;
+const float K_AUX27		=	798;
+const float K_AUX28		=	799;
+const float K_AUX29		=	800;
+const float K_AUX30		=	801;
+const float K_AUX31		=	802;
+const float K_AUX32		=	803;
+
+//
+// mouse buttons generate virtual keys
+//
+const float K_MOUSE1		=	512;
+const float K_MOUSE2		=	513;
+const float K_MOUSE3		=	514;
+const float K_MWHEELUP	=	515;
+const float K_MWHEELDOWN	=	516;
+const float K_MOUSE4		=	517;
+const float K_MOUSE5		=	518;
+const float K_MOUSE6		=	519;
+const float K_MOUSE7		=	520;
+const float K_MOUSE8		=	521;
+const float K_MOUSE9		=	522;
+const float K_MOUSE10		=	523;
+const float K_MOUSE11		=	524;
+const float K_MOUSE12		=	525;
+const float K_MOUSE13		=	526;
+const float K_MOUSE14		=	527;
+const float K_MOUSE15		=	528;
+const float K_MOUSE16		=	529;
+
+///////////////////////////
+// keys pressed
+const float KEY_FORWARD		=	1;
+const float KEY_BACKWARD	=	2;
+const float KEY_LEFT		=	4;
+const float KEY_RIGHT		=	8;
+const float KEY_JUMP		=	16;
+const float KEY_CROUCH		=	32;
+
+///////////////////////////
+// cvar constants
+
+float CVAR_SAVE 	= 1;
+float CVAR_NOTIFY 	= 2;
+float CVAR_READONLY	= 4;
+
+///////////////////////////
+// csqc communication stuff
+
+const float STAT_KH_KEYS = 32;
+const float STAT_CTF_STATE = 33;
+const float STAT_WEAPONS = 35;
+const float STAT_SWITCHWEAPON = 36;
+const float STAT_GAMESTARTTIME = 37;
+const float STAT_STRENGTH_FINISHED = 38;
+const float STAT_INVINCIBLE_FINISHED = 39;
+const float STAT_DAMAGE_HITS = 40; // Used by the weapon stats code, represents the total amount of damage done to other players
+const float STAT_DAMAGE_FIRED = 41;// Used by the weapon stats code, represents the total amount of potential damage fired
+const float STAT_PRESSED_KEYS = 42;
+const float STAT_ALLOW_OLDNEXBEAM = 43; // this stat could later contain some other bits of info, like, more server-side particle config
+const float STAT_FUEL = 44;
+const float STAT_NB_METERSTART = 45;
+const float STAT_SHOTORG = 46; // compressShotOrigin
+const float STAT_LEADLIMIT = 47;
+const float STAT_BULLETS_LOADED = 48;
+const float CTF_STATE_ATTACK = 1;
+const float CTF_STATE_DEFEND = 2;
+const float CTF_STATE_COMMANDER = 3;
+
+const float STAT_HUD = 50;
+const float HUD_NORMAL = 0;
+const float HUD_SPIDERBOT = 10;
+const float HUD_WAKIZASHI = 11;
+
+const float STAT_VEHICLESTAT_HEALTH  = 60;
+const float STAT_VEHICLESTAT_SHIELD  = 61;
+const float STAT_VEHICLESTAT_ENERGY  = 62;
+const float STAT_VEHICLESTAT_AMMO1   = 63;
+const float STAT_VEHICLESTAT_RELOAD1 = 64;
+const float STAT_VEHICLESTAT_AMMO2   = 65;
+const float STAT_VEHICLESTAT_RELOAD2 = 66;
+
+//const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
+//const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin
+
+
+
+
+// moved that here so the client knows the max.
+// # of maps, I'll use arrays for them :P
+#define MAPVOTE_COUNT 10
+
+/**
+ * Lower scores are better (e.g. suicides)
+ */
+#define SFL_LOWER_IS_BETTER     1
+
+/**
+ * Don't show zero values as scores
+ */
+#define SFL_HIDE_ZERO           2
+
+/**
+ * Allow a column to be hidden (do not automatically add it even if it is a sorting key)
+ */
+#define SFL_ALLOW_HIDE         16
+
+/**
+ * Display as a rank (with st, nd, rd, th suffix)
+ */
+#define SFL_RANK               32
+
+/**
+ * Display as mm:ss.s, value is stored as 10ths of a second (AND 0 is the worst possible value!)
+ */
+#define SFL_TIME               64
+
+// not an extra constant yet
+#define SFL_ZERO_IS_WORST SFL_TIME
+
+/**
+ * Scoring priority (NOTE: PRIMARY is used for fraglimit)
+ */
+#define SFL_SORT_PRIO_SECONDARY 4
+#define SFL_SORT_PRIO_PRIMARY   8
+#define SFL_SORT_PRIO_MASK     12
+
+/**
+ * Score indices
+ */
+#define MAX_SCORE 10
+#define MAX_TEAMSCORE 2
+
+#define ST_SCORE 0
+#define SP_KILLS 0
+#define SP_DEATHS 1
+#define SP_SUICIDES 2
+#define SP_SCORE 3
+// game mode specific indices are not in common/, but in server/scores_rules.qc!
+
+// this assignment must match menu/nexuiz/dialog_settings_misc.c!
+float	CHAN_AUTO				= 0;
+	// on world: announcers, ...                     INFO
+	// on players: item pickup                       ITEMS
+	// on entities: UNUSED
+	// on csqc: UNUSED
+float	CHAN_WEAPON				= 1; // Weapon fire
+	// on world: UNUSED
+	// on players: weapon firing                     WEAPONS
+	// on entities: turret firing                    WEAPONS
+	// on csqc: UNUSED
+float	CHAN_VOICE				= 2; // Voice/Radio
+	// on world: UNUSED
+	// on players: voice                             VOICE
+	// on entities: ambient                          AMBIENT
+	// on csqc: UNUSED
+float	CHAN_TRIGGER			= 3; // Triggers/Items
+	// on world: UNUSED
+	// on players: item pickup                       ITEMS
+	// on entities: platforms moving etc.            ITEMS
+	// on csqc: UNUSED
+float	CHAN_PROJECTILE			= 4; // Projectiles
+	// on world: UNUSED
+	// on players: projectiles hitting player        SHOTS
+	// on entities: projectiles                      SHOTS
+	// on csqc: projectile sounds                    SHOTS
+float	CHAN_WEAPON2			= 5; // Nex fire (separated as it is a very long sound)
+	// on world: UNUSED
+	// on players: weapon firing                     WEAPONS
+	// on entities: turret firing                    WEAPONS
+	// on csqc: UNUSED
+float	CHAN_PAIN				= 6; // Pain
+	// on world: UNUSED
+	// on players: pain                              PAIN
+	// on entities: projectiles flying               SHOTS
+	// on csqc: player pain                          PAIN
+float	CHAN_PLAYER				= 7; // Player body
+	// on world: UNUSED
+	// on players: player sounds                     PLAYER
+	// on entities: player sounds                    PLAYER
+	// on csqc: UNUSED
+
+float	ATTN_NONE				= 0;
+float	ATTN_MIN				= 0.015625;
+float	ATTN_NORM				= 0.5;
+float	ATTN_IDLE				= 2;
+float	ATTN_STATIC				= 3;
+float	ATTN_MAX   				= 3.984375;
+
+#define VOL_BASE 0.7
+#define VOL_BASEVOICE 1.0
+
+// this sets sounds and other properties of the projectiles in csqc
+float PROJECTILE_ELECTRO = 1;
+float PROJECTILE_ROCKET = 2;
+float PROJECTILE_BULLET = 4;
+float PROJECTILE_CRYLINK = 5;
+float PROJECTILE_ELECTRO_BEAM = 6;
+float PROJECTILE_GRENADE = 7;
+float PROJECTILE_GRENADE_BOUNCING = 8;
+float PROJECTILE_LASER = 9;
+float PROJECTILE_HLAC = 10;
+float PROJECTILE_PORTO_RED = 13;
+float PROJECTILE_PORTO_BLUE = 14;
+float PROJECTILE_HOOKBOMB = 15;
+float PROJECTILE_HAGAR = 16;
+float PROJECTILE_HAGAR_BOUNCING = 17;
+float PROJECTILE_BULLET_GLOWING = 18;
+float PROJECTILE_CRYLINK_BOUNCING = 19;
+float PROJECTILE_FIREBALL = 20;
+float PROJECTILE_FIREMINE = 21;
+float PROJECTILE_BULLET_GLOWING_TRACER = 22;
+
+float SPECIES_HUMAN        =  0;
+float SPECIES_ROBOT_SOLID  =  1;
+float SPECIES_ALIEN        =  2;
+float SPECIES_ANIMAL       =  3;
+float SPECIES_ROBOT_RUSTY  =  4;
+float SPECIES_ROBOT_SHINY  =  5;
+float SPECIES_RESERVED     = 15;
+
+// Deathtypes (weapon deathtypes are the IT_* constants below)
+// NOTE: when adding death types, please add an explanation to Docs/spamlog.txt too.
+float DEATH_SPECIAL_START = 10000;
+float DEATH_FALL = 10000;
+float DEATH_TELEFRAG = 10001;
+float DEATH_DROWN = 10002;
+float DEATH_HURTTRIGGER = 10003;
+float DEATH_LAVA = 10004;
+float DEATH_SLIME = 10005;
+float DEATH_KILL = 10006;
+float DEATH_NOAMMO = 10007;
+float DEATH_SWAMP = 10008;
+float DEATH_TEAMCHANGE = 10009;
+float DEATH_AUTOTEAMCHANGE = 10010;
+float DEATH_CAMP = 10011;
+float DEATH_SHOOTING_STAR = 10012;
+float DEATH_ROT = 10013;
+float DEATH_MIRRORDAMAGE = 10014;
+float DEATH_TOUCHEXPLODE = 10015;
+float DEATH_CHEAT = 10016;
+float DEATH_FIRE = 10017;
+float DEATH_TURRET = 10020;
+float DEATH_QUIET = 10021;
+
+float DEATH_SBMINIGUN = 10030;
+float DEATH_SBROCKET  = 10031;
+float DEATH_SBCRUSH   = 10032;
+float DEATH_SBBLOWUP  = 10033;
+
+float DEATH_WAKIGUN    = 10040;
+float DEATH_WAKIROCKET = 10041;
+float DEATH_WAKIBLOWUP = 10042;
+
+float DEATH_CUSTOM = 10300;
+
+
+float DEATH_WEAPONMASK = 0xFF;
+float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
+float HITTYPE_SECONDARY = 0x100;
+float HITTYPE_SPLASH = 0x200;
+float HITTYPE_BOUNCE = 0x400;
+float HITTYPE_HEADSHOT = 0x800;
+float HITTYPE_RESERVED = 0x1000; // unused yet
+
+// macros to access these
+#define DEATH_ISSPECIAL(t)            ((t) >= DEATH_SPECIAL_START)
+#define DEATH_WEAPONOFWEAPONDEATH(t)  ((t) & DEATH_WEAPONMASK)
+#define DEATH_ISWEAPON(t,w)           (!DEATH_ISSPECIAL(t) && DEATH_WEAPONOFWEAPONDEATH(t) == (w))
+#define DEATH_WEAPONOF(t)             (DEATH_ISSPECIAL(t) ? 0 : DEATH_WEAPONOFWEAPONDEATH(t))
+#define WEP_VALID(w)                  ((w) >= WEP_FIRST && (w) <= WEP_LAST)
+
+#define FRAGS_PLAYER 0
+#define FRAGS_SPECTATOR -666
+#define FRAGS_LMS_LOSER -616
+#define FRAGS_PLAYER_NONSOLID -616
+// we can use this frags value for both
+
+//misc. stuff
+#define NEWLINES "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+
+// water levels
+float WATERLEVEL_NONE = 0;
+float WATERLEVEL_WETFEET = 1;
+float WATERLEVEL_SWIMMING = 2;
+float WATERLEVEL_SUBMERGED = 3;
+
+float MAX_SHOT_DISTANCE = 32768;

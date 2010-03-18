@@ -1,0 +1,26 @@
+float votecalled;
+string votecalledvote;
+string votecalledvote_display;
+float votecalledmaster;
+entity votecaller;
+float votefinished;
+.float vote_master;
+.float vote_next;
+.float vote_vote;
+
+float VoteCheckNasty(string cmd);
+entity GetKickVoteVictim(string vote, string cmd, entity caller);
+float GameCommand_Vote(string s, entity e);
+void VoteHelp(entity e);
+string VoteNetname(entity e);
+string ValidateMap(string m, entity e);
+void VoteThink();
+string VoteParse(string s, float tokens);
+float VoteAllowed(string vote, string cmd);
+void VoteReset();
+void VoteAccept();
+void VoteReject();
+void VoteTimeout();
+void VoteStop(entity stopper);
+void VoteSpam(float yescount, float nocount, float abstaincount, float notvoters, float mincount, string result);
+void VoteCount();

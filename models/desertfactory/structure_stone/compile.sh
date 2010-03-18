@@ -1,0 +1,33 @@
+#Gates and Holes
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 8 "gate01.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "gate01.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 16 "gate02.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "gate02.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "hole04.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "hole04.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "bricks01.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "bricks01.bsp"
+
+#archs
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "v1r1_arch01_1.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "v1r1_arch01_1.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "v1r1_arch01_2.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "v1r1_arch01_2.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "v1r1_arch02_1.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "v1r1_arch02_1.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "v1r1_arch02_2.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "v1r1_arch02_2.bsp"
+
+#Sand
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 16 "sand01.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "sand01.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 4 "sand02.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "sand02.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 64 "sand03.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "sand03.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 8 "sand04.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "sand04.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 4 "sand05.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "sand05.bsp"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -meta -patchmeta -subdivisions 4 "sand06.map"
+~/netradiant/install/q3map2.x86 -game quake3 -fs_basepath "~/.nexuiz" -convert ase "sand06.bsp"

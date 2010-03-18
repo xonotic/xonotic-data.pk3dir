@@ -1,0 +1,12 @@
+Grunt
+models/player/grunt
+0
+models/player/grunt.zym
+species robot_solid
+
+Half Mechanical 
+Human Fighter
+
+Sex: Male
+Weight: 170 kg
+Age: 53

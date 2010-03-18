@@ -1,0 +1,10 @@
+Nexus
+models/player/nexus
+0
+models/player/nexus.zym
+species human
+
+Nexuiz's Soldier
+
+Weight: 282 kg
+Age: 313

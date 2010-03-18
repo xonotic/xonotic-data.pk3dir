@@ -1,0 +1,10 @@
+Xolar
+models/player/xolar
+0
+models/player/xolar.dpm
+species robot_solid
+
+Heavy Nexuiz's Soldier
+
+Weight: 582 kg
+Age: 439

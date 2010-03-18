@@ -1,0 +1,11 @@
+Marine
+models/player/marine
+0
+models/player/marine.zym
+species human
+
+Service Man
+
+Sex: Male
+Weight: 93 kg
+Age: 35

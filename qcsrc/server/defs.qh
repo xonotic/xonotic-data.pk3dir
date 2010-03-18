@@ -1,0 +1,639 @@
+#define INDEPENDENT_ATTACK_FINISHED
+
+float require_spawnfunc_prefix; // if this float exists, only functions with spawnfunc_ name prefix qualify as spawn functions
+
+#define BUTTON_ATCK   button0
+#define BUTTON_JUMP   button2
+#define BUTTON_ATCK2  button3
+#define BUTTON_ZOOM   button4
+#define BUTTON_CROUCH button5
+#define BUTTON_HOOK   button6
+#define BUTTON_INFO   button7
+#define BUTTON_CHAT   buttonchat
+#define BUTTON_USE    buttonuse
+#define BUTTON_DRAG   button8
+
+// Globals
+
+float ctf_score_value(string parameter);
+
+float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_arena, g_ca, g_lms, g_runematch, g_race, g_nexball, g_cts;
+float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_laserguided_missile, g_midair, g_minstagib, g_nixnex, g_nixnex_with_laser, g_pinata, g_norecoil, g_vampire, g_minstagib_invis_alpha, g_bloodloss;
+float g_warmup_limit;
+float g_warmup_allguns;
+float g_warmup_allow_timeout;
+float g_ctf_win_mode;
+float g_ctf_ignore_frags;
+float g_ctf_reverse;
+float g_race_qualifying;
+float inWarmupStage;
+float g_pickup_respawntime_weapon;
+float g_pickup_respawntime_ammo;
+float g_pickup_respawntime_short;
+float g_pickup_respawntime_medium;
+float g_pickup_respawntime_long;
+float g_pickup_respawntime_powerup;
+float g_pickup_respawntimejitter_weapon;
+float g_pickup_respawntimejitter_ammo;
+float g_pickup_respawntimejitter_short;
+float g_pickup_respawntimejitter_medium;
+float g_pickup_respawntimejitter_long;
+float g_pickup_respawntimejitter_powerup;
+float g_jetpack;
+
+float sv_clones;
+float sv_gentle;
+float sv_foginterval;
+
+entity	activator;
+
+float player_count;
+float currentbots;
+float bots_would_leave;
+float lms_lowest_lives;
+float lms_next_place;
+float LMS_NewPlayerLives();
+
+void UpdateFrags(entity player, float f);
+.float totalfrags;
+
+float team1_score, team2_score, team3_score, team4_score;
+
+float maxclients;
+
+// Fields
+
+.void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) event_damage;
+
+//.string	wad;
+//.string	map;
+
+//.float	worldtype;
+.float	delay;
+.float	wait;
+.float	lip;
+//.float	light_lev;
+.float	speed;
+//.float	style;
+//.float	skill;
+.float	sounds;
+
+.string killtarget;
+
+.vector	pos1, pos2;
+.vector	mangle;
+
+.float cvar_cl_hitsound;
+
+.float	pain_finished;			//Added by Supajoe
+.float	pain_frame;			//"
+.float	statdraintime;			// record the one-second intervals between draining health and armour when they're over 100
+.float  crouch;	// Crouching or not?
+
+.float	strength_finished;
+//.float	speed_finished;
+.float	invincible_finished;
+//.float	slowmo_finished;
+
+.vector		finaldest, finalangle; 		//plat.qc stuff
+.void()		think1;
+.float state;
+.float		t_length, t_width;
+
+.vector destvec;		// for rain
+.float cnt;		// for rain
+.float count;
+//.float cnt2;
+
+.float play_time;
+.float death_time;
+.float dead_frame;
+.float fade_time;
+.float fade_rate;
+
+// player animation state
+.float animstate_startframe;
+.float animstate_numframes;
+.float animstate_framerate;
+.float animstate_starttime;
+.float animstate_endtime;
+.float animstate_override;
+.float animstate_looping;
+
+// player animation data for this model
+// each vector is as follows:
+// _x = startframe
+// _y = numframes
+// _z = framerate
+.vector anim_die1; // player dies
+.vector anim_die2; // player dies differently
+.vector anim_draw; // player pulls out a weapon
+.vector anim_duck; // player crouches (from idle to duckidle)
+.vector anim_duckwalk; // player walking while crouching
+.vector anim_duckjump; // player jumping from a crouch
+.vector anim_duckidle; // player idling while crouching
+.vector anim_idle; // player standing
+.vector anim_jump; // player jump
+.vector anim_pain1; // player flinches from pain
+.vector anim_pain2; // player flinches from pain, differently
+.vector anim_shoot; // player shoots
+.vector anim_taunt; // player taunts others (FIXME: no code references this)
+.vector anim_run; // player running forward
+.vector anim_runbackwards; // player running backward
+.vector anim_strafeleft; // player shuffling left quickly
+.vector anim_straferight; // player shuffling right quickly
+.vector anim_dead1; // player dead (must be identical to last frame of die1)
+.vector anim_dead2; // player dead (must be identical to last frame of die2)
+.vector anim_forwardright; // player running forward and right
+.vector anim_forwardleft; // player running forward and left
+.vector anim_backright; // player running backward and right
+.vector anim_backleft; // player running back and left
+
+// weapon animation vectors:
+.vector anim_fire1;
+.vector anim_fire2;
+.vector anim_idle;
+.vector anim_reload;
+
+void() player_setupanimsformodel;
+void setanim(entity e, vector anim, float looping, float override, float restart);
+
+.string mdl;
+
+.string playermodel;
+.string playerskin;
+
+.float species;
+
+.float	respawntime;
+.float	respawntimejitter;
+//.float	chasecam;
+
+.float	damageforcescale;
+
+//.float          gravity;
+
+.float		dmg;
+
+// for railgun damage (hitting multiple enemies)
+.float railgunhit;
+.float railgunhitsolidbackup;
+.vector railgunhitloc;
+
+.float		air_finished;
+.float		dmgtime;
+
+.float		killcount;
+.float hitsound, typehitsound;
+
+.float watersound_finished;
+.float iscreature;
+.vector oldvelocity;
+
+.float pauseregen_finished;
+.float pauserothealth_finished;
+.float pauserotarmor_finished;
+.float pauserotfuel_finished;
+.string item_pickupsound;
+
+// definitions for weaponsystem
+
+.entity weaponentity;
+.entity exteriorweaponentity;
+.float switchweapon;
+.float autoswitch;
+float weapon_action(float wpn, float wrequest);
+float client_hasweapon(entity cl, float wpn, float andammo, float complain);
+void w_clear();
+void w_ready();
+// VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
+.float weapon_nextthink;
+.void() weapon_think;
+
+//float	PLAYER_WEAPONSELECTION_DELAY = );
+float	PLAYER_WEAPONSELECTION_SPEED = 18;
+vector	PLAYER_WEAPONSELECTION_RANGE = '0 20 -40';
+
+// weapon states (self.weaponentity.state)
+float WS_CLEAR			= 0; // no weapon selected
+float WS_RAISE			= 1; // raise frame
+float WS_DROP			= 2; // deselecting frame
+float WS_INUSE			= 3; // fire state
+float WS_READY			= 4; // idle frame
+
+// weapon requests
+float WR_SETUP		    = 1; // setup weapon data
+float WR_THINK		    = 2; // logic to run every frame
+float WR_CHECKAMMO1	    = 3; // checks ammo for weapon
+float WR_CHECKAMMO2	    = 4; // checks ammo for weapon
+float WR_AIM		    = 5; // runs bot aiming code for this weapon
+float WR_PRECACHE	    = 6; // precaches models/sounds used by this weapon
+float WR_SUICIDEMESSAGE = 7; // sets w_deathtypestring or leaves it alone (and may inspect w_deathtype for details)
+float WR_KILLMESSAGE    = 8; // sets w_deathtypestring or leaves it alone
+float WR_RELOAD         = 9; // does not need to do anything
+float WR_RESETPLAYER    = 10; // does not need to do anything
+
+void weapon_defaultspawnfunc(float wpn);
+
+string w_deathtypestring;
+float w_deathtype;
+
+void(entity client, string s) centerprint_builtin = #73;
+.vector dest1, dest2;
+
+float gameover;
+float intermission_running;
+float intermission_exittime;
+float alreadychangedlevel;
+
+
+.float runes;
+
+
+.float welcomemessage_time;
+.float version;
+
+// Laser target for laser-guided weapons
+.entity lasertarget;
+.float laser_on;
+
+// minstagib vars
+.float jump_interval;    // laser refire
+
+//swamp
+.float in_swamp;              // bool
+.entity swampslug;            // Uses this to release from swamp ("untouch" fix)
+
+// footstep interval
+.float nextstep;
+
+.float ready;
+#define RESTART_COUNTDOWN 10
+float restart_mapalreadyrestarted; //bool, indicates whether reset_map() was already executed
+entity restartTimer;
+void restartTimer_Think();
+float blockSpectators; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
+.float spectatortime; //point in time since the client is spectating or observing
+void checkSpectatorBlock();
+
+.float winning;
+.float jointime;
+
+float isJoinAllowed();
+#define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
+
+//sv_timeout: pauses the game by setting the gamespeed to a really low value (see TIMEOUT_SLOWMO_VALUE)
+#define TIMEOUT_SLOWMO_VALUE 0.0001
+float sys_frametime; // gets initialised in worlspawn, saves the value from cvar("sys_ticrate")
+float remainingTimeoutTime; // contains the time in seconds that the active timeout has left
+float remainingLeadTime; // contains the number of seconds left of the leadtime (before the timeout starts)
+float timeoutStatus; // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
+.float allowedTimeouts; // contains the number of allowed timeouts for each player
+entity timeoutInitiator; // contains the entity of the player who started the last timeout
+float orig_slowmo; // contains the value of cvar("slowmo") so that, after timeout finished, it isn't set to slowmo 1 necessarily
+.vector lastV_angle; //used when pausing the game in order to force the player to keep his old view angle fixed
+entity timeoutHandler; //responsible for centerprinting the timeout countdowns and playing sounds
+void timeoutHandler_Think();
+void evaluateTimeout();
+void evaluateTimein();
+string getTimeoutText(float addOneSecond);
+
+.float spawnshieldtime;
+
+.float lms_nextcheck;
+.float lms_traveled_distance;
+
+.entity flagcarried;
+
+.entity lastrocket;
+
+.float playerid;
+float playerid_last;
+.float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
+
+.vector spawnorigin;
+
+.vector death_origin;
+.vector killer_origin;
+
+float default_player_alpha;
+float default_weapon_alpha;
+
+.float() customizeentityforclient;
+.float cvar_cl_handicap;
+.float cvar_cl_playerdetailreduction;
+.float cvar_scr_centertime;
+.float cvar_cl_shownames;
+.string cvar_g_nexuizversion;
+.string cvar_cl_weaponpriority;
+.string cvar_cl_weaponpriorities[10];
+#ifdef ALLOW_FORCEMODELS
+.float cvar_cl_forceplayermodels;
+.float cvar_cl_forceplayermodelsfromnexuiz;
+float sv_clforceplayermodels;
+#endif
+float sv_loddistance1;
+float sv_loddistance2;
+.float cvar_cl_gunalign;
+.float cvar_cl_noantilag;
+
+void Announce(string snd);
+void AnnounceTo(entity e, string snd);
+
+.float version_nagtime;
+
+.float modelindex_lod0;
+.float modelindex_lod0_from_nexuiz;
+.float skinindex;
+.float modelindex_lod1;
+.float modelindex_lod2;
+
+#define NUM_JUMPPADSUSED 3
+.float jumppadcount;
+.entity jumppadsused[NUM_JUMPPADSUSED];
+
+string gamemode_name;
+float teams_matter;
+
+float startitem_failed;
+
+void DropFlag(entity flag, entity penalty_receiver, entity attacker);
+void DropBall(entity ball, vector org, vector vel);
+void DropAllRunes(entity pl);
+
+
+typedef .float floatfield;
+floatfield Item_CounterField(float it);
+
+float W_AmmoItemCode(float wpn);
+float W_WeaponBit(float wpn);
+string W_Name(float weaponid);
+
+void UpdateSelectedPlayer();
+void ClearSelectedPlayer();
+.entity selected_player;
+.entity last_selected_player;
+.float selected_player_time; // when this player has been selected
+.float selected_player_count; // how long this player has been directly pointed to
+.float selected_player_display_needs_update; // are regular updates necessary? (health)
+.float selected_player_display_timeout; // when the selection will time out
+
+void FixIntermissionClient(entity e);
+void FixClientCvars(entity e);
+
+float weaponsInMap;
+
+void centerprint_atprio(entity e, float prio, string s);
+void centerprint_expire(entity e, float prio);
+void centerprint(entity e, string s);
+
+.float respawn_countdown; // next number to count
+
+float bot_waypoints_for_items;
+
+.float attack_finished_for[WEP_MAXCOUNT];
+.float attack_finished_single;
+#ifdef INDEPENDENT_ATTACK_FINISHED
+#define ATTACK_FINISHED_FOR(ent,w) ((ent).(attack_finished_for[(w) - WEP_FIRST]))
+#else
+#define ATTACK_FINISHED_FOR(ent,w) ((ent).attack_finished_single)
+#endif
+#define ATTACK_FINISHED(ent) ATTACK_FINISHED_FOR(ent,(ent).weapon)
+
+// assault game mode: Which team is attacking in this round?
+float assault_attacker_team;
+
+// speedrun: when 1, player auto teleports back when capture timeout happens
+.float speedrunning;
+
+// Q3 support
+.float notteam;
+.float notsingle;
+.float notfree;
+.float notq3a;
+float q3acompat_machineshotgunswap;
+
+// database
+float ServerProgsDB;
+float TemporaryDB;
+
+.float team_saved;
+
+float some_spawn_has_been_used;
+float have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
+
+// set when showing a kill countdown
+.entity killindicator;
+.float killindicator_teamchange;
+
+void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+
+float lockteams;
+
+.float parm_idlesince;
+float sv_maxidle;
+float sv_maxidle_spectatorsareidle;
+
+float sv_pogostick;
+float sv_doublejump;
+float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
+
+float next_pingtime;
+
+.float Version;
+.float SendFlags;
+.float(entity to, float sendflags) SendEntity;
+
+// player sounds, voice messages
+// TODO implemented fall and falling
+#define ALLPLAYERSOUNDS \
+		_VOICEMSG(death) \
+		_VOICEMSG(drown) \
+		_VOICEMSG(gasp) \
+		_VOICEMSG(jump) \
+		_VOICEMSG(pain25) \
+		_VOICEMSG(pain50) \
+		_VOICEMSG(pain75) \
+		_VOICEMSG(pain100)
+#define ALLVOICEMSGS \
+		_VOICEMSG(attack) \
+		_VOICEMSG(attackinfive) \
+		_VOICEMSG(meet) \
+		_VOICEMSG(seenflag) \
+		_VOICEMSG(taunt) \
+		_VOICEMSG(teamshoot)
+
+#define _VOICEMSG(m) .string playersound_##m;
+ALLPLAYERSOUNDS
+ALLVOICEMSGS
+#undef _VOICEMSG
+
+// reserved sound names for the future (models lack sounds for them):
+//		_VOICEMSG(affirmative) \
+//		_VOICEMSG(attacking) \
+//		_VOICEMSG(defending) \
+//		_VOICEMSG(roaming) \
+//		_VOICEMSG(onmyway) \
+//		_VOICEMSG(droppedflag) \
+//		_VOICEMSG(flagcarriertakingdamage) \
+//		_VOICEMSG(negative) \
+//		_VOICEMSG(seenenemy) \
+//		_VOICEMSG(fall) \
+//		_VOICEMSG(getflag) \
+//		_VOICEMSG(incoming) \
+//		_VOICEMSG(coverme) \
+//		_VOICEMSG(needhelp) \
+//		_VOICEMSG(defend) \
+//		_VOICEMSG(freelance) \
+//		_VOICEMSG(falling) \
+
+string globalsound_fall;
+string globalsound_metalfall;
+string globalsound_step;
+string globalsound_metalstep;
+
+#define VOICETYPE_PLAYERSOUND 10
+#define VOICETYPE_TEAMRADIO 11
+#define VOICETYPE_LASTATTACKER 12
+#define VOICETYPE_LASTATTACKER_ONLY 13
+#define VOICETYPE_AUTOTAUNT 14
+#define VOICETYPE_TAUNT 15
+
+void PrecachePlayerSounds(string f);
+void PrecacheGlobalSound(string samplestring);
+void UpdatePlayerSounds();
+void ClearPlayerSounds();
+void PlayerSound(.string samplefield, float channel, float voicetype);
+void GlobalSound(string samplestring, float channel, float voicetype);
+void VoiceMessage(string type, string message);
+
+// autotaunt system
+.float cvar_cl_autotaunt;
+.float cvar_cl_voice_directional;
+.float cvar_cl_voice_directional_taunt_attenuation;
+
+.float version_mismatch;
+
+float independent_players;
+#define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
+#define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER) + ((e).frags = FRAGS_PLAYER_NONSOLID))
+// we're using + here instead of , because fteqcc sucks
+
+string clientstuff;
+.float phase;
+.float weapons;
+.float pressedkeys;
+
+.float porto_forbidden;
+
+.string fog;
+
+string cvar_changes;
+
+float game_starttime; //point in time when the countdown is over
+.float stat_game_starttime;
+
+void W_Porto_Remove (entity p);
+
+.float projectiledeathtype;
+
+.string message2;
+
+vector railgun_start, railgun_end; // filled by FireRailgunBullet, used by damage code for head shot
+.float stat_allow_oldnexbeam;
+
+// reset to 0 on weapon switch
+// may be useful to all weapons
+.float bulletcounter;
+
+void target_voicescript_next(entity pl);
+void target_voicescript_clear(entity pl);
+
+.string target2;
+.string target3;
+.string target4;
+.float trigger_reverse;
+
+// Nexball
+.entity ballcarried;
+.float metertime;
+float g_nexball_meter_period;
+
+void SUB_DontUseTargets();
+void SUB_UseTargets();
+
+.void() reset; // if set, an entity is reset using this
+.void() reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
+
+void ClientData_Touch(entity e);
+
+vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
+
+// the QC VM sucks
+#define BITXOR(v,b)        ((v) + (b) - 2 * ((v) & (b)))
+#define BITXOR_ASSIGN(v,b) ((v) += ((b) - 2 * ((v) & (b))))
+
+.float wasplayer;
+
+float servertime, serverprevtime, serverframetime;
+
+.entity soundentity;
+
+.float ammo_fuel;
+
+.vector prevorigin;
+
+//flood fields
+.float nickspamtime; // time of last nick change
+.float nickspamcount;
+.float floodcontrol_chat;
+.float floodcontrol_chatteam;
+.float floodcontrol_chattell;
+.float floodcontrol_voice;
+.float floodcontrol_voiceteam;
+
+.float stat_shotorg; // networked stat for trueaim HUD
+
+string matchid;
+.float hitplotfh;
+.string noise4;
+
+.float stat_hit;
+.float stat_fired;
+.float stat_count;
+
+.float stats_hit[WEP_MAXCOUNT];  // for hitscan bullets hit
+.float stats_fired[WEP_MAXCOUNT];  // for hitscan bullets fired
+
+FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_hit);
+FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_fired);
+
+.float stat_leadlimit;
+
+float radar_showennemies;
+
+#ifdef PROFILING
+float client_cefc_accumulator;
+float client_cefc_accumulatortime;
+#endif
+
+.float campingrifle_bulletcounter;
+
+#define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
+// when doing this, hagar can go through clones
+// #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX
+
+.float spectatee_status;
+.float zoomstate;
+.float bloodloss_timer;
+.float restriction;
+
+.entity clientdata;
+.entity personal;
+
+string deathmessage;
+
+.float just_joined;
+
+.float cvar_cl_accuracy_data_share;
+.float cvar_cl_accuracy_data_receive;
