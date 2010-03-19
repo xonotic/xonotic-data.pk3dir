@@ -186,7 +186,7 @@ MUTATOR_HOOKFUNCTION(nix_OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(nix_PlayerPreThink)
 {
 	if(!intermission_running)
-	if(self.deadflag != DEAD_NO)
+	if(self.deadflag == DEAD_NO)
 	if(self.classname == "player")
 		NIX_GiveCurrentWeapon();
 	return 0;

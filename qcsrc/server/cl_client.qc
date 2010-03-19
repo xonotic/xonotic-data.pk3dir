@@ -2490,6 +2490,8 @@ void PlayerPreThink (void)
 		return;
 #endif
 
+	MUTATOR_CALLHOOK(PlayerPreThink);
+
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
 //			bprint(self.classname, "\n");
