@@ -1069,7 +1069,7 @@ MUTATOR_DEFINITION(gamemode_keyhunt)
 	MUTATOR_HOOK(PlayerDies, kh_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, kh_GiveFragsForKill, CBC_ORDER_EXCLUSIVE);
 	MUTATOR_HOOK(MatchEnd, kh_finalize, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetTeamCount, kh_finalize, CBC_ORDER_EXCLUSIVE);
+	MUTATOR_HOOK(GetTeamCount, kh_GetTeamCount, CBC_ORDER_EXCLUSIVE);
 	MUTATOR_HOOK(SpectateCopy, kh_SpectateCopy, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
