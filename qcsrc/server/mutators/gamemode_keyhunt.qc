@@ -1074,6 +1074,8 @@ MUTATOR_DEFINITION(gamemode_keyhunt)
 
 	MUTATOR_ONADD
 	{
+		if(time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
 		g_keyhunt = 1;
 		kh_Initialize();
 	}
