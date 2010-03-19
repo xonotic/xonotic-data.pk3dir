@@ -539,6 +539,11 @@ void spawnfunc_worldspawn (void)
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
 		s = ":gameinfo:mutators:LIST";
+
+		ret_string = s;
+		MUTATOR_CALLHOOK(BuildMutatorsString);
+		s = ret_string;
+
 		if(cvar("g_grappling_hook"))
 			s = strcat(s, ":grappling_hook");
 		if(!cvar("g_use_ammunition"))
@@ -547,8 +552,6 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":no_pickup_items");
 		if(cvar_string("g_weaponarena") != "0")
 			s = strcat(s, ":", cvar_string("g_weaponarena"), " arena");
-		if(cvar("g_nixnex"))
-			s = strcat(s, ":nixnex");
 		if(cvar("g_vampire"))
 			s = strcat(s, ":vampire");
 		if(cvar("g_laserguided_missile"))

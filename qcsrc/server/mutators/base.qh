@@ -38,9 +38,17 @@ void Mutator_Remove(float(float) func); // calls error() on fail
 // register all possible hooks here
 MUTATOR_HOOKABLE(MakePlayerObserver);
 MUTATOR_HOOKABLE(MakePlayerSpectator);
+MUTATOR_HOOKABLE(PlayerSpawn);
 MUTATOR_HOOKABLE(ClientDisconnect);
 MUTATOR_HOOKABLE(PlayerDies); entity other; entity frag_attacker;
 MUTATOR_HOOKABLE(GiveFragsForKill); entity frag_attacker, frag_target; float frag_score;
 MUTATOR_HOOKABLE(MatchEnd);
 MUTATOR_HOOKABLE(GetTeamCount); float ret_float;
 MUTATOR_HOOKABLE(SpectateCopy); entity other;
+MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon);
+MUTATOR_HOOKABLE(SetStartItems);
+MUTATOR_HOOKABLE(BuildMutatorsString); string ret_string;
+MUTATOR_HOOKABLE(BuildMutatorsPrettyString); string ret_string;
+MUTATOR_HOOKABLE(FilterItem); // return error to request removal, or change self.items or self.weapons
+MUTATOR_HOOKABLE(OnEntityPreSpawn); // return error to prevent entity spawn, or modify the entity
+MUTATOR_HOOKABLE(PlayerPreThink);

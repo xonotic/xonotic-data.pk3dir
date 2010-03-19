@@ -582,7 +582,6 @@ void PutObserverInServer (void)
 	}
 
 	DropAllRunes(self);
-	MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	Portal_ClearAll(self);
 
@@ -697,6 +696,8 @@ void PutObserverInServer (void)
 	}
 	else
 		self.frags = FRAGS_SPECTATOR;
+
+	MUTATOR_CALLHOOK(MakePlayerObserver);
 }
 
 float RestrictSkin(float s)
@@ -993,7 +994,6 @@ void PutClientInServer (void)
 		}
 
 		self.cnt = WEP_LASER;
-		self.nixnex_lastchange_id = -1;
 
 		CL_SpawnWeaponentity();
 		self.alpha = default_player_alpha;
@@ -1028,8 +1028,8 @@ void PutClientInServer (void)
 		target_voicescript_clear(self);
 
 		// reset fields the weapons may use
-        for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-            weapon_action(j, WR_RESETPLAYER);
+		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+			weapon_action(j, WR_RESETPLAYER);
 
 		oldself = self;
 		self = spot;
@@ -1037,6 +1037,8 @@ void PutClientInServer (void)
 				SUB_UseTargets();
 			activator = world;
 		self = oldself;
+
+		MUTATOR_CALLHOOK(PlayerSpawn);
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
 		PutObserverInServer ();
 	}
@@ -2508,8 +2510,6 @@ void PlayerPreThink (void)
 			self.teleport_time = 0;
 			self.effects = self.effects - (self.effects & EF_NODRAW);
 		}
-
-		Nixnex_GiveCurrentWeapon();
 
 		if(frametime > 0) // don't do this in cl_movement frames, just in server ticks
 			UpdateSelectedPlayer();

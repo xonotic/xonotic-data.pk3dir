@@ -21,6 +21,7 @@ constants.qh
 defs.qh		// Should rename this, it has fields and globals
 
 mutators/base.qh
+mutators/mutators.qh
 mutators/gamemode_keyhunt.qh // TODO fix this
 
 //// tZork Turrets ////
@@ -171,6 +172,7 @@ cheats.qc
 
 mutators/base.qc
 mutators/gamemode_keyhunt.qc
+mutators/mutator_nix.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

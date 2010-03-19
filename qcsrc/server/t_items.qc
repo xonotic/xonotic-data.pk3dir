@@ -709,6 +709,19 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 	else
 	{
+		self.items = itemid;
+		self.weapons = weaponid;
+
+		if(MUTATOR_CALLHOOK(FilterItem)) // error means we do not want the item
+		{
+			startitem_failed = TRUE;
+			remove(self);
+			return;
+		}
+
+		itemid = self.items;
+		weaponid = self.weapons;
+
 		self.reset = Item_Reset;
 		// it's a level item
 		if(self.spawnflags & 1)
@@ -815,35 +828,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 				return;
 			}
 		}
-		else if (g_nixnex)
-		{
-			local float rm;
-
-			rm = 1;
-			switch (itemid)
-			{
-				case IT_HEALTH:
-				case IT_5HP:
-				case IT_25HP:
-				case IT_ARMOR:
-				case IT_ARMOR_SHARD:
-					if (cvar("g_nixnex_with_healtharmor"))
-						rm = 0;
-					break;
-				case IT_STRENGTH:
-				case IT_INVINCIBLE:
-					if (cvar("g_nixnex_with_powerups"))
-						rm = 0;
-					break;
-			}
-
-			if(rm)
-			{
-				startitem_failed = TRUE;
-				remove (self);
-				return;
-			}
-		}
 		else if (!cvar("g_pickup_items") && itemid != IT_STRENGTH && itemid != IT_INVINCIBLE && itemid != IT_HEALTH)
 		{
 			startitem_failed = TRUE;
@@ -877,8 +861,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.respawntimejitter = defaultrespawntimejitter;
 	}
 	self.netname = itemname;
-	self.items = itemid;
-	self.weapons = weaponid;
 	self.flags = FL_ITEM | itemflags;
 	self.touch = Item_Touch;
 	setmodel (self, self.mdl); // precision set below
@@ -1369,13 +1351,6 @@ void spawnfunc_target_items (void)
 {
 	float n, i, j;
 	entity e;
-
-	if(g_nixnex)
-	{
-		// items triggers cannot work in nixnex (as they change weapons/ammo)
-		remove(self);
-		return;
-	}
 
 	self.use = target_items_use;
 	if(!self.strength_finished)

@@ -489,11 +489,12 @@ void PrintWelcomeMessage(entity pl)
 	}
 
 :normal
-	modifications = "";
+	ret_string = "";
+	MUTATOR_CALLHOOK(BuildMutatorsPrettyString);
+	modifications = ret_string;
+	
 	if(g_minstagib)
 		modifications = strcat(modifications, ", MinstaGib");
-	if(g_nixnex)
-		modifications = strcat(modifications, ", NixNex");
 	if(g_weaponarena)
 	{
 		if(g_weaponarena_random)

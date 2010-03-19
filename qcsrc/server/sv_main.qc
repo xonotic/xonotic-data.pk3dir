@@ -395,4 +395,10 @@ void SV_OnEntityPreSpawnFunction()
 		self.angles_z = self.angles_z + (random() * 2 - 1) * self.anglesjitter_z;
 	if(self.anglejitter != 0)
 		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglejitter;
+
+	if(MUTATOR_CALLHOOK(OnEntityPreSpawn))
+	{
+		remove(self);
+		return;
+	}
 }

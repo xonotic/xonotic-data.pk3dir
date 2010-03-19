@@ -542,7 +542,6 @@ void PM_AirAccelerate(vector wishdir, float wishspeed)
 .vector v_angle_old;
 .string lastclassname;
 
-void Nixnex_GiveCurrentWeapon();
 .float() PlayerPhysplug;
 
 string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
