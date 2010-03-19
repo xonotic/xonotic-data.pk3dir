@@ -899,9 +899,6 @@ void PutClientInServer (void)
 			self.weapons = randombits(self.weapons, g_weaponarena_random, FALSE);
 
 		self.items = start_items;
-		self.switchweapon = w_getbestweapon(self);
-		self.cnt = self.switchweapon;
-		self.weapon = 0;
 		self.jump_interval = time;
 
 		self.spawnshieldtime = time + cvar("g_spawnshieldtime");
@@ -1039,6 +1036,10 @@ void PutClientInServer (void)
 		self = oldself;
 
 		MUTATOR_CALLHOOK(PlayerSpawn);
+
+		self.switchweapon = w_getbestweapon(self);
+		self.cnt = self.switchweapon;
+		self.weapon = 0;
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
 		PutObserverInServer ();
 	}

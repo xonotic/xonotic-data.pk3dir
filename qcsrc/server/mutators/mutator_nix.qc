@@ -126,6 +126,14 @@ void NIX_GiveCurrentWeapon()
 				W_SwitchWeapon(nix_weapon);
 }
 
+void NIX_precache()
+{
+	float i;
+	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
+		if (NIX_CanChooseWeapon(i))
+			weapon_action(i, WR_PRECACHE);
+}
+
 MUTATOR_HOOKFUNCTION(nix_ForbidThrowCurrentWeapon)
 {
 	return 1; // no throwing in NIX
@@ -133,12 +141,10 @@ MUTATOR_HOOKFUNCTION(nix_ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(nix_SetStartItems)
 {
-	float i;
-	start_weapons = 0; // will be done later, when player spawns
-	warmup_start_weapons = 0; // will be done later, when player spawns
-	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-		if (NIX_CanChooseWeapon(i))
-			weapon_action(i, WR_PRECACHE);
+	NIX_precache();
+	// we do NOT change the start weapons any more, so we can later turn off the mutator!
+	//   start_weapons = 0; // will be done later, when player spawns
+	//   warmup_start_weapons = 0; // will be done later, when player spawns
 	return 0;
 }
 
@@ -195,6 +201,7 @@ MUTATOR_HOOKFUNCTION(nix_PlayerPreThink)
 MUTATOR_HOOKFUNCTION(nix_PlayerSpawn)
 {
 	self.nix_lastchange_id = -1;
+	NIX_GiveCurrentWeapon(); // overrides the weapons you got when spawning
 	return 0;
 }
 
@@ -215,12 +222,15 @@ MUTATOR_DEFINITION(mutator_nix)
 		g_nix_with_laser = cvar("g_nix_with_laser");
 
 		nix_nextchange = time;
+		nix_nextweapon = 0;
+
+		NIX_precache();
 	}
 
 	MUTATOR_ONREMOVE
 	{
-		error("NIX currently cannot be shut down.");
 		g_nix = 0;
+		// as the PlayerSpawn hook will no longer run, NIX is turned off by this!
 	}
 
 	return 0;
