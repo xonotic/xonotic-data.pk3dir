@@ -2115,7 +2115,8 @@ void SpectateCopy(entity spectatee) {
 	} else
 		update_stats (0, spectatee.cvar_cl_accuracy_data_share * spectatee.stat_hit, spectatee.cvar_cl_accuracy_data_share * spectatee.stat_fired);
 
-	self.kh_state = spectatee.kh_state;
+	other = spectatee;
+	MUTATOR_CALLHOOK(SpectateCopy);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
 	self.ammo_cells = spectatee.ammo_cells;

@@ -312,7 +312,7 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = cvar("g_keyhunt_point_limit");
 		leadlimit_override = cvar("g_keyhunt_point_leadlimit");
-		kh_init();
+		MUTATOR_ADD(gamemode_keyhunt);
 	}
 
 	if(g_assault)
@@ -647,12 +647,14 @@ void CheckAllowedTeams (entity for_whom)
 	else
 	{
 		// cover anything else by treating it like tdm with no teams spawned
-		if(g_keyhunt)
-			dm = kh_teams;
-		else if(g_race)
+		if(g_race)
 			dm = race_teams;
 		else
 			dm = 2;
+
+		ret_float = dm;
+		MUTATOR_CALLHOOK(GetTeamCount);
+		dm = ret_float;
 
 		if(dm >= 4)
 			c1 = c2 = c3 = c4 = 0;

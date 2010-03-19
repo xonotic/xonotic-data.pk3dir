@@ -157,10 +157,6 @@ void GiveFrags (entity attacker, entity targ, float f)
 	{
 		f = RunematchHandleFrags(attacker, targ, f);
 	}
-	else if(g_keyhunt)
-	{
-		f = kh_HandleFrags(attacker, targ, f);
-	}
 	else if(g_lms)
 	{
 		// remove a life
