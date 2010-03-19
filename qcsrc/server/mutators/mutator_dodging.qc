@@ -12,6 +12,7 @@ void dodging_Initialize() {
 
 MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	print("dodging_hook\n");
+	print(ftos(g_dodging), "\n");
 	return 0;
 }
 
@@ -19,7 +20,7 @@ MUTATOR_DEFINITION(dodging)
 {
 	// we need to be called before GetPressedKey does its thing so we can
 	// detect state changes..
-	MUTATOR_HOOK(GetPressedKeys, dodging_GetPressedKeys, CBC_ORDER_FIRST);
+	MUTATOR_HOOK(GetPressedKeys, dodging_GetPressedKeys, CBC_ORDER_ANY);
 
 	// this just turns on the cvar. TODO: implement :D
 	MUTATOR_ONADD
