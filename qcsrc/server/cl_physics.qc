@@ -593,6 +593,8 @@ void SV_PlayerPhysics()
 	float not_allowed_to_move;
 	string c;
 
+	MUTATOR_CALLHOOK(PlayerPhysics);
+
     if(self.PlayerPhysplug)
         if(self.PlayerPhysplug())
             return;

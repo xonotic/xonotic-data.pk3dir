@@ -53,3 +53,4 @@ MUTATOR_HOOKABLE(FilterItem); // return error to request removal, or change self
 MUTATOR_HOOKABLE(OnEntityPreSpawn); // return error to prevent entity spawn, or modify the entity
 MUTATOR_HOOKABLE(PlayerPreThink);
 MUTATOR_HOOKABLE(GetPressedKeys);
+MUTATOR_HOOKABLE(PlayerPhysics);
