@@ -1,3 +1,5 @@
 MUTATOR_DECLARATION(gamemode_keyhunt);
 
 MUTATOR_DECLARATION(mutator_nix);
+
+MUTATOR_DECLARATION(dodging);

@@ -52,3 +52,4 @@ MUTATOR_HOOKABLE(BuildMutatorsPrettyString); string ret_string;
 MUTATOR_HOOKABLE(FilterItem); // return error to request removal, or change self.items or self.weapons
 MUTATOR_HOOKABLE(OnEntityPreSpawn); // return error to prevent entity spawn, or modify the entity
 MUTATOR_HOOKABLE(PlayerPreThink);
+MUTATOR_HOOKABLE(GetPressedKeys);
