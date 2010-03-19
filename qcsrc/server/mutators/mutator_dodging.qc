@@ -28,9 +28,18 @@ void dodging_Initialize() {
 }
 
 MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
+	float length;
+
 	// print("physics hook\n");
 	if (g_dodging == 0)
 		return 0;
+
+	length += self.dodging_direction_x * self.dodging_direction_x;
+	length += self.dodging_direction_y * self.dodging_direction_y;
+	length = sqrt(length);
+
+	self.dodging_direction_x *= 1/length;
+	self.dodging_direction_y *= 1/length;
 
 	// ramp up dodging speed by adding some velocity each frame..
 	if (self.dodging_action == 1) {
