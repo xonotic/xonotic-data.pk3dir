@@ -28,17 +28,18 @@ void dodging_Initialize() {
 }
 
 MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
+	makevectors(self.angles);
 	// print("physics hook\n");
 	if (g_dodging == 0)
 		return 0;
 
 	// ramp up dodging speed by adding some velocity each frame.. TODO: do it! :D
 	if (self.dodging_action == 1) {
-		//print(vtos(self.v_up), "\n");
-		//self.velocity_z = self.velocity_z + cvar("sv_dodging_up_speed") * v_up;
-		//self.velocity_x = self.velocity_x + self.dodging_direction_x * cvar("sv_dodging_horiz_speed") * v_forward;
-		//self.velocity_y = self.velocity_y + self.dodging_direction_y * cvar("sv_dodging_horiz_speed") * v_right;
-		self.velocity = self.velocity + ((self.dodging_direction_y * cvar("sv_dodging_horiz_speed")) * v_right) + ((self.dodging_direction_x * cvar("sv_dodging_horiz_speed")) * v_forward) + (cvar("sv_dodging_up_speed") * v_up);
+		self.velocity = 
+			  self.velocity 
+			+ ((self.dodging_direction_y * cvar("sv_dodging_horiz_speed")) * v_right) 
+			+ ((self.dodging_direction_x * cvar("sv_dodging_horiz_speed")) * v_forward) 
+			+ (cvar("sv_dodging_up_speed") * v_up);
 
 		// reset state so next dodge can be done correctly
 		self.dodging_action = 0;
@@ -62,14 +63,19 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		return 0;
 
 	dodge_detected = 0;
-	if (self.movement_x > 0) // get if movement keys are pressed
-   {       // forward key pressed
-   	if (!(self.pressedkeys & KEY_FORWARD)) {        // is this a state change?
- 			if ( // are we allowed to dodge?
-				((time - self.last_FORWARD_KEY_time) < self.cvar_cl_dodging_timeout) &&
-				(self.lastflags & FL_ONGROUND) &&
-				((time - self.last_dodging_time) > cvar("sv_dodging_delay"))
- 			) { 
+
+	// common checks
+	if ((time - self.last_dodging_time) < cvar("sv_dodging_delay"))
+		return 0;
+
+	if (!(self.lastflags & FL_ONGROUND))
+		return 0;
+
+
+	if (self.movement_x > 0) {
+		// is this a state change?
+   	if (!(self.pressedkeys & KEY_FORWARD)) {
+ 			if ((time - self.last_FORWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
 				self.dodging_action = 1;
 				self.dodging_direction_x = 1.0;
@@ -79,14 +85,10 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
  		}
 	}
 
-	if (self.movement_x < 0) 
-   {
-		if (!(self.pressedkeys & KEY_BACKWARD)) {        // is this a state change?
- 			if ( // are we allowed to dodge?
-				((time - self.last_BACKWARD_KEY_time) < self.cvar_cl_dodging_timeout) &&
-				(self.lastflags & FL_ONGROUND) &&
-				((time - self.last_dodging_time) > cvar("sv_dodging_delay"))
- 			) { 
+	if (self.movement_x < 0) {
+		// is this a state change?
+   	if (!(self.pressedkeys & KEY_BACKWARD)) {
+ 			if ((time - self.last_BACKWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
 				self.dodging_action = 1;
 				self.dodging_direction_x = -1.0;
@@ -96,17 +98,44 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
  		}
 	}
 
+	if (self.movement_y > 0) {
+		// is this a state change?
+   	if (!(self.pressedkeys & KEY_RIGHT)) {
+ 			if ((time - self.last_RIGHT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
+				dodge_detected = 1;
+				self.dodging_action = 1;
+				self.dodging_direction_y = 1.0;
+				self.last_dodging_time = time;
+			}
+ 			self.last_RIGHT_KEY_time = time;
+ 		}
+	}
 
-//	if (dodge_detected == 1) {
-//		// normalize the dodging_direction vector.. 
-//		length = length + self.dodging_direction_x * self.dodging_direction_x;
-//		length = length + self.dodging_direction_y * self.dodging_direction_y;
-//		length = sqrt(length);
-//
-//		self.dodging_direction_x = self.dodging_direction_x * 1.0/length;
-//		self.dodging_direction_y = self.dodging_direction_y * 1.0/length;
-//	}
-//
+	if (self.movement_y < 0) {
+		// is this a state change?
+   	if (!(self.pressedkeys & KEY_LEFT)) {
+ 			if ((time - self.last_LEFT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
+				dodge_detected = 1;
+				self.dodging_action = 1;
+				self.dodging_direction_y = -1.0;
+				self.last_dodging_time = time;
+			}
+ 			self.last_LEFT_KEY_time = time;
+ 		}
+	}
+
+
+
+	if (dodge_detected == 1) {
+		// normalize the dodging_direction vector.. 
+		length = length + self.dodging_direction_x * self.dodging_direction_x;
+		length = length + self.dodging_direction_y * self.dodging_direction_y;
+		length = sqrt(length);
+
+		self.dodging_direction_x = self.dodging_direction_x * 1.0/length;
+		self.dodging_direction_y = self.dodging_direction_y * 1.0/length;
+	}
+
 	return 0;
 }
 
