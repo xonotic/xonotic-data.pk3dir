@@ -593,6 +593,8 @@ float w_getbestweapon(entity e);
 void GetCvars(float f)
 {
 	string s;
+	MUTATOR_CALLHOOK(GetCvars);
+
 	if (f > 0)
 		s = strcat1(argv(f));
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
@@ -619,7 +621,6 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_hitsound, "cl_hitsound");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_share, "cl_accuracy_data_share");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_receive, "cl_accuracy_data_receive");
-	GetCvars_handleFloat(s, f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
 
 	self.cvar_cl_accuracy_data_share = boolean(self.cvar_cl_accuracy_data_share);
 	self.cvar_cl_accuracy_data_receive = boolean(self.cvar_cl_accuracy_data_receive);

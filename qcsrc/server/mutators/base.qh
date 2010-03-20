@@ -54,3 +54,4 @@ MUTATOR_HOOKABLE(OnEntityPreSpawn); // return error to prevent entity spawn, or 
 MUTATOR_HOOKABLE(PlayerPreThink);
 MUTATOR_HOOKABLE(GetPressedKeys);
 MUTATOR_HOOKABLE(PlayerPhysics);
+MUTATOR_HOOKABLE(GetCvars);

@@ -1,4 +1,7 @@
 
+.float cvar_cl_dodging_timeout;
+
+
 // these are used to store the last key press time for each of the keys..
 .float last_FORWARD_KEY_time;
 .float last_BACKWARD_KEY_time;
@@ -29,6 +32,14 @@ void dodging_Initialize() {
 	self.dodging_single_action = 0;
 	self.dodging_direction_x = 0;
 	self.dodging_direction_y = 0;
+}
+
+MUTATOR_HOOKFUNCTION(dodging_GetCvars) {
+	string s;
+	float f;
+
+	GetCvars_handleFloat(s, f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
+	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {

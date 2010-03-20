@@ -637,5 +637,3 @@ string deathmessage;
 
 .float cvar_cl_accuracy_data_share;
 .float cvar_cl_accuracy_data_receive;
-
-.float cvar_cl_dodging_timeout;
