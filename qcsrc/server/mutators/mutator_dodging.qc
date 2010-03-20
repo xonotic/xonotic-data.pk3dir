@@ -37,13 +37,7 @@ void dodging_Initialize() {
 }
 
 MUTATOR_HOOKFUNCTION(dodging_GetCvars) {
-	// print("dodging_GetCvars\n");
-
-	string s;
-	s = strcat1(argv(get_cvars_f));
-
-	GetCvars_handleFloat(s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
-
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
 	return 0;
 }
 

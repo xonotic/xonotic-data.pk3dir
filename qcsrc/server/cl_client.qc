@@ -2848,7 +2848,6 @@ void PlayerPostThink (void)
 			ImpulseCommands();
 		if (intermission_running)
 			return;		// intermission or finale
-
 		GetPressedKeys();
 	} else if (self.classname == "observer") {
 		//do nothing
