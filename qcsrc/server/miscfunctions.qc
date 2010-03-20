@@ -594,11 +594,11 @@ void GetCvars(float f)
 {
 	string s;
 
-	get_cvars_f = f;
-	MUTATOR_CALLHOOK(GetCvars);
-
 	if (f > 0)
 		s = strcat1(argv(f));
+
+	get_cvars_f = f;
+	MUTATOR_CALLHOOK(GetCvars);
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
 	GetCvars_handleFloat(s, f, cvar_scr_centertime, "scr_centertime");

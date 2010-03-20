@@ -593,8 +593,6 @@ void SV_PlayerPhysics()
 	float not_allowed_to_move;
 	string c;
 
-	MUTATOR_CALLHOOK(PlayerPhysics);
-
     if(self.PlayerPhysplug)
         if(self.PlayerPhysplug())
             return;
@@ -690,6 +688,8 @@ void SV_PlayerPhysics()
 		bot_think();
 	}
 	
+	MUTATOR_CALLHOOK(PlayerPhysics);
+
 	self.items &~= IT_USING_JETPACK;
 
 	if(self.classname == "player")

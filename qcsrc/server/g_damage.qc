@@ -146,37 +146,44 @@ void GiveFrags (entity attacker, entity targ, float f)
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)
-	frag_attacker = attacker;
+	entity oldself;
+	oldself = self;
+	self = attacker;
 	frag_target = targ;
 	frag_score = f;
 	if(MUTATOR_CALLHOOK(GiveFragsForKill))
 	{
 		f = frag_score;
+		self = oldself;
 	}
-	else if(g_runematch)
+	else
 	{
-		f = RunematchHandleFrags(attacker, targ, f);
-	}
-	else if(g_lms)
-	{
-		// remove a life
-		float tl;
-		tl = PlayerScore_Add(targ, SP_LMS_LIVES, -1);
-		if(tl < lms_lowest_lives)
-			lms_lowest_lives = tl;
-		if(tl <= 0)
+		self = oldself;
+		if(g_runematch)
 		{
-			if(!lms_next_place)
-				lms_next_place = player_count;
-			PlayerScore_Add(targ, SP_LMS_RANK, lms_next_place); // won't ever spawn again
-			--lms_next_place;
+			f = RunematchHandleFrags(attacker, targ, f);
 		}
-		f = 0;
-	}
-	else if(g_ctf)
-	{
-		if(g_ctf_ignore_frags)
+		else if(g_lms)
+		{
+			// remove a life
+			float tl;
+			tl = PlayerScore_Add(targ, SP_LMS_LIVES, -1);
+			if(tl < lms_lowest_lives)
+				lms_lowest_lives = tl;
+			if(tl <= 0)
+			{
+				if(!lms_next_place)
+					lms_next_place = player_count;
+				PlayerScore_Add(targ, SP_LMS_RANK, lms_next_place); // won't ever spawn again
+				--lms_next_place;
+			}
 			f = 0;
+		}
+		else if(g_ctf)
+		{
+			if(g_ctf_ignore_frags)
+				f = 0;
+		}
 	}
 
 	attacker.totalfrags += f;
