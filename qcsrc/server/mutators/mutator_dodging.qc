@@ -23,6 +23,8 @@
 .float dodging_single_action;
 
 void dodging_Initialize() {
+	// print("dodging_Initialize\n");
+
 	self.last_FORWARD_KEY_time = 0;
 	self.last_BACKWARD_KEY_time = 0;
 	self.last_RIGHT_KEY_time = 0;
@@ -35,14 +37,19 @@ void dodging_Initialize() {
 }
 
 MUTATOR_HOOKFUNCTION(dodging_GetCvars) {
-	string s;
-	float f;
+	// print("dodging_GetCvars\n");
 
-	GetCvars_handleFloat(s, f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
+	string s;
+	s = strcat1(argv(get_cvars_f));
+
+	GetCvars_handleFloat(s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
+
 	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
+	// print("dodging_PlayerPhysics\n");
+
 	float common_factor;
 
 	// is dodging enabled at all? if not, do nothing..
@@ -92,9 +99,10 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 }
 
 MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
+	// print("dodging_PlayerPhysics\n");
+
 	float length;
 	float dodge_detected;
-	//print("dodging_hook\n");
 
 	if (g_dodging == 0)
 		return 0;
@@ -109,6 +117,9 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	if (!(self.lastflags & FL_ONGROUND))
 		return 0;
 
+
+	// TODO: fix!
+	// self.cvar_cl_dodging_timeout = 0.2;
 
 	if (self.movement_x > 0) {
 		// is this a state change?
@@ -184,6 +195,8 @@ MUTATOR_DEFINITION(dodging)
 
 	// in the physics hook we actually implement the dodge..
 	MUTATOR_HOOK(PlayerPhysics, dodging_PlayerPhysics, CBC_ORDER_ANY);
+
+	MUTATOR_HOOK(GetCvars, dodging_GetCvars, CBC_ORDER_ANY);
 
 	// this just turns on the cvar.
 	MUTATOR_ONADD

@@ -593,6 +593,8 @@ float w_getbestweapon(entity e);
 void GetCvars(float f)
 {
 	string s;
+
+	get_cvars_f = f;
 	MUTATOR_CALLHOOK(GetCvars);
 
 	if (f > 0)
