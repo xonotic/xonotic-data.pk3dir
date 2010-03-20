@@ -71,6 +71,9 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 	// ramp up dodging speed by adding some velocity each frame.. TODO: do it! :D
 	if (self.dodging_action == 1) {
+		//disable jump key during dodge accel phase
+		if (self.movement_z > 0) self.movement_z = 0;
+
 		self.velocity = 
 			  self.velocity 
 			+ (common_factor * (self.dodging_direction_y * cvar("sv_dodging_horiz_speed")) * v_right) 
@@ -103,23 +106,36 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	float length;
 	float dodge_detected;
+	vector trace_start;
+	vector trace_end;
+	float height_above_ground;
 
 	if (g_dodging == 0)
 		return 0;
 
 	dodge_detected = 0;
 
+	// no dodging and jumping at the same time..
+	if (self.BUTTON_JUMP)
+		return 0;
+
 	// first check if the last dodge is far enough back in time so we can dodge again
 	if ((time - self.last_dodging_time) < cvar("sv_dodging_delay"))
 		return 0;
 
-	// check if our feet are on the ground :D
-	if (!(self.lastflags & FL_ONGROUND))
+	// determine height above ground is below a threshold
+	trace_start = self.origin;
+	trace_end = self.origin - (100*v_up);
+
+	traceline(trace_start, trace_end, TRUE, self);
+	height_above_ground = self.origin_z - trace_endpos_z;
+
+	if (height_above_ground > (fabs(PL_MIN_z) + cvar("sv_dodging_height_threshold")))
 		return 0;
 
-
-	// TODO: fix!
-	// self.cvar_cl_dodging_timeout = 0.2;
+	// check if our feet are on the ground or at least close :D
+	//if (!(self.lastflags & FL_ONGROUND))
+	//	return 0;
 
 	if (self.movement_x > 0) {
 		// is this a state change?
@@ -127,7 +143,6 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 			if ((time - self.last_FORWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
 				self.dodging_direction_x = 1.0;
-				self.last_dodging_time = time;
 			}
  			self.last_FORWARD_KEY_time = time;
  		}
@@ -139,7 +154,6 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 			if ((time - self.last_BACKWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
 				self.dodging_direction_x = -1.0;
-				self.last_dodging_time = time;
 			}
  			self.last_BACKWARD_KEY_time = time;
  		}
@@ -151,7 +165,6 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 			if ((time - self.last_RIGHT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
 				self.dodging_direction_y = 1.0;
-				self.last_dodging_time = time;
 			}
  			self.last_RIGHT_KEY_time = time;
  		}
@@ -163,7 +176,6 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 			if ((time - self.last_LEFT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
 				self.dodging_direction_y = -1.0;
-				self.last_dodging_time = time;
 			}
  			self.last_LEFT_KEY_time = time;
  		}
@@ -172,6 +184,11 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 
 	if (dodge_detected == 1) {
+		if (self.movement_z > 0)
+			self.movement_z = 0;
+
+		self.last_dodging_time = time;
+
 		self.dodging_action = 1;
 		self.dodging_single_action = 1;
 
