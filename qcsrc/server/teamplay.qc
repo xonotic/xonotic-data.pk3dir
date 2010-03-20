@@ -208,7 +208,6 @@ void InitGameplayMode()
 	fraglimit_override = cvar("fraglimit_override");
 	leadlimit_override = cvar("leadlimit_override");
 
-	// g_dodging = cvar("g_dodging");
 	if(cvar("g_dodging"))
 		MUTATOR_ADD(dodging);
 	
