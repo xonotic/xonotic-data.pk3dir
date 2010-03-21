@@ -29,6 +29,10 @@ float sv_warsowbunny_backtosideratio;
 .float wasFlying;
 .float spectatorspeed;
 
+.float multijump_count;
+.float multijump_delay;
+.float multijump_ready;
+
 /*
 =============
 PlayerJump
@@ -53,7 +57,27 @@ void PlayerJump (void)
 		return;
 	}
 
-	if (!(self.flags & FL_ONGROUND))
+	if (cvar("g_multijump"))
+	{
+		if ((self.flags & FL_JUMPRELEASED) && !(self.flags & FL_ONGROUND))
+			self.multijump_ready = TRUE;  // this is necessary to check that we released the jump button and pressed it again
+		else if (self.flags & FL_ONGROUND)
+		{
+			if (cvar("g_multijump") > 0)
+				self.multijump_count = 0;
+			else
+				self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
+			self.multijump_ready = FALSE;
+		}
+	}
+
+	if(self.multijump_ready && time > self.multijump_delay && self.multijump_count < cvar("g_multijump") && self.velocity_z > cvar("g_multijump_speed"))
+	{
+		if (cvar("g_multijump") > 0)
+			self.multijump_count += 1;
+		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
+	}
+	else if (!(self.flags & FL_ONGROUND))
 		return;
 
 	if(!sv_pogostick)
@@ -113,6 +137,9 @@ void PlayerJump (void)
 
 	self.flags &~= FL_ONGROUND;
 	self.flags &~= FL_JUMPRELEASED;
+
+	if (cvar("g_multijump"))
+		self.multijump_delay = time + cvar("g_multijump_delay");
 
 	if (self.crouch)
 		setanim(self, self.anim_duckjump, FALSE, TRUE, TRUE);
