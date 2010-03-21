@@ -113,26 +113,22 @@ float check_close_to_wall(float threshold) {
 
 
 	trace_end = self.origin + (1000*v_right);
-	traceline(trace_start, trace_end, TRUE, self);
-
+	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
 		return 1;
 
 	trace_end = self.origin - (1000*v_right);
-	traceline(trace_start, trace_end, TRUE, self);
-
+	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
 		return 1;
 
 	trace_end = self.origin + (1000*v_forward);
-	traceline(trace_start, trace_end, TRUE, self);
-
+	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
 		return 1;
 
 	trace_end = self.origin - (1000*v_forward);
-	traceline(trace_start, trace_end, TRUE, self);
-
+	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
 		return 1;
 
@@ -165,7 +161,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	trace_start = self.origin;
 	trace_end = self.origin - (1000*v_up);
 
-	traceline(trace_start, trace_end, TRUE, self);
+	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
 
 	// check if the trace hit anything at all
 	if (trace_fraction > 1)
