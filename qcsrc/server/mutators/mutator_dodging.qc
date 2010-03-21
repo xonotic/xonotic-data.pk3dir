@@ -83,6 +83,8 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 		if (cvar("sv_dodging_sound") == 1)
 			PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
 
+		setanim(self, self.anim_jump, TRUE, FALSE, TRUE);
+
 		self.dodging_single_action = 0;
 	}
 
@@ -107,10 +109,7 @@ float check_close_to_wall(float threshold) {
 	vector trace_start;
 	vector trace_end;
 
-	float distance;
-
 	trace_start = self.origin;
-
 
 	trace_end = self.origin + (1000*v_right);
 	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
