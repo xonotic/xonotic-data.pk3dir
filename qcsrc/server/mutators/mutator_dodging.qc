@@ -168,7 +168,8 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	height_above_ground = self.origin_z - trace_endpos_z;
 
-	// check if our feet are on the ground or at least close :D
+	// check if our feet are on the ground or at least close or we are
+	// near a wall,,,
 	if ((height_above_ground > (fabs(PL_MIN_z) + cvar("sv_dodging_height_threshold")))
 		&& (check_close_to_wall(cvar("sv_dodging_wall_distance_threshold")) != 1))
 		return 0;
