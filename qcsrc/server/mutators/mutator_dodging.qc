@@ -124,12 +124,9 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	traceline(trace_start, trace_end, TRUE, self);
 	height_above_ground = self.origin_z - trace_endpos_z;
 
+	// check if our feet are on the ground or at least close :D
 	if (height_above_ground > (fabs(PL_MIN_z) + cvar("sv_dodging_height_threshold")))
 		return 0;
-
-	// check if our feet are on the ground or at least close :D
-	//if (!(self.lastflags & FL_ONGROUND))
-	//	return 0;
 
 	if (self.movement_x > 0) {
 		// is this a state change?
