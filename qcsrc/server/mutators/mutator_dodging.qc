@@ -80,6 +80,9 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 			  self.velocity 
 			+ (cvar("sv_dodging_up_speed") * v_up);
 
+		if (cvar("sv_dodging_sound") == 1)
+			PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+
 		self.dodging_single_action = 0;
 	}
 
