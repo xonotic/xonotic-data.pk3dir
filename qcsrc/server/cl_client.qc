@@ -2527,8 +2527,7 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			if(cvar("gameversion") >= 20600) // only do this for 2.6 and above FIXME remove this check when making 2.6
-				self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+			self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
 			player_powerups();
 		}
 
