@@ -133,9 +133,9 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 	Net_LinkEntity(self, TRUE, 0, g_clientmodel_genericsendentity);
 
 // non-solid model entities:
-void spawnfunc_misc_gamemodel()         { G_MODEL_INIT      (SOLID_NOT) } // model entity
-void spawnfunc_misc_clientmodel()       { G_CLIENTMODEL_INIT(SOLID_NOT) } // model entity
-void spawnfunc_misc_models()            { G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old compat entity with confusing name, do not use
+void spawnfunc_misc_gamemodel()         { self.angles_x = -self.angles_x; G_MODEL_INIT      (SOLID_NOT) } // model entity
+void spawnfunc_misc_clientmodel()       { self.angles_x = -self.angles_x; G_CLIENTMODEL_INIT(SOLID_NOT) } // model entity
+void spawnfunc_misc_models()            { self.angles_x = -self.angles_x; G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old compat entity with confusing name, do not use
 
 // non-solid brush entities:
 void spawnfunc_func_illusionary()       { G_MODEL_INIT      (SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
