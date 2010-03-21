@@ -98,6 +98,47 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	return 0;
 }
 
+
+// returns 1 if the player is close to a wall
+float check_close_to_wall(float threshold) {
+	if (cvar("sv_dodging_wall_dodging") == 0)
+		return 0;
+
+	vector trace_start;
+	vector trace_end;
+
+	float distance;
+
+	trace_start = self.origin;
+
+
+	trace_end = self.origin + (1000*v_right);
+	traceline(trace_start, trace_end, TRUE, self);
+
+	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
+		return 1;
+
+	trace_end = self.origin - (1000*v_right);
+	traceline(trace_start, trace_end, TRUE, self);
+
+	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
+		return 1;
+
+	trace_end = self.origin + (1000*v_forward);
+	traceline(trace_start, trace_end, TRUE, self);
+
+	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
+		return 1;
+
+	trace_end = self.origin - (1000*v_forward);
+	traceline(trace_start, trace_end, TRUE, self);
+
+	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
+		return 1;
+
+	return 0;
+}
+
 MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	// print("dodging_PlayerPhysics\n");
 
@@ -122,13 +163,19 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	// determine height above ground is below a threshold
 	trace_start = self.origin;
-	trace_end = self.origin - (100*v_up);
+	trace_end = self.origin - (1000*v_up);
 
 	traceline(trace_start, trace_end, TRUE, self);
+
+	// check if the trace hit anything at all
+	if (trace_fraction > 1)
+		return 0;
+
 	height_above_ground = self.origin_z - trace_endpos_z;
 
 	// check if our feet are on the ground or at least close :D
-	if (height_above_ground > (fabs(PL_MIN_z) + cvar("sv_dodging_height_threshold")))
+	if ((height_above_ground > (fabs(PL_MIN_z) + cvar("sv_dodging_height_threshold")))
+		&& (check_close_to_wall(cvar("sv_dodging_wall_distance_threshold")) != 1))
 		return 0;
 
 	if (self.movement_x > 0) {
