@@ -207,6 +207,7 @@ MUTATOR_DEFINITION(dodging)
 	// in the physics hook we actually implement the dodge..
 	MUTATOR_HOOK(PlayerPhysics, dodging_PlayerPhysics, CBC_ORDER_ANY);
 
+	// get timeout information from the client, so the client can configure it..
 	MUTATOR_HOOK(GetCvars, dodging_GetCvars, CBC_ORDER_ANY);
 
 	// this just turns on the cvar.
