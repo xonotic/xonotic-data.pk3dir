@@ -598,6 +598,7 @@ void GetCvars(float f)
 		s = strcat1(argv(f));
 
 	get_cvars_f = f;
+	get_cvars_s = s;
 	MUTATOR_CALLHOOK(GetCvars);
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
