@@ -2049,6 +2049,7 @@ void SetZoomState(float z)
 }
 
 void GetPressedKeys(void) {
+	MUTATOR_CALLHOOK(GetPressedKeys);
 	if (self.movement_x > 0) // get if movement keys are pressed
 	{	// forward key pressed
 		self.pressedkeys |= KEY_FORWARD;
@@ -2526,8 +2527,7 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			if(cvar("gameversion") >= 20600) // only do this for 2.6 and above FIXME remove this check when making 2.6
-				self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+			self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
 			player_powerups();
 		}
 
@@ -2847,7 +2847,6 @@ void PlayerPostThink (void)
 			ImpulseCommands();
 		if (intermission_running)
 			return;		// intermission or finale
-
 		GetPressedKeys();
 	} else if (self.classname == "observer") {
 		//do nothing

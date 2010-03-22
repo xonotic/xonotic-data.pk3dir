@@ -208,6 +208,9 @@ void InitGameplayMode()
 	fraglimit_override = cvar("fraglimit_override");
 	leadlimit_override = cvar("leadlimit_override");
 
+	if(cvar("g_dodging"))
+		MUTATOR_ADD(dodging);
+	
 	if(g_dm)
 	{
 		game = GAME_DEATHMATCH;

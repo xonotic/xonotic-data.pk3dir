@@ -48,8 +48,7 @@ float Item_Customize()
 	if(self.weapons != (self.weapons & other.weapons))
 	{
 		self.colormod = '0 0 0';
-		if(cvar("gameversion") >= 20600) // only do this for 2.6 and above FIXME remove this check when making 2.6
-			self.glowmod = self.colormod;
+		self.glowmod = self.colormod;
 		self.alpha = 0.5 + 0.5 * g_ghost_items; // halfway more alpha
 		return TRUE;
 	}
@@ -58,8 +57,7 @@ float Item_Customize()
 		if(g_ghost_items)
 		{
 			self.colormod = stov(cvar_string("g_ghost_items_color"));
-			if(cvar("gameversion") >= 20600) // only do this for 2.6 and above FIXME remove this check when making 2.6
-				self.glowmod = self.colormod;
+			self.glowmod = self.colormod;
 			self.alpha = g_ghost_items;
 			return TRUE;
 		}
@@ -77,8 +75,7 @@ void Item_Show (entity e, float mode)
 		e.model = e.mdl;
 		e.solid = SOLID_TRIGGER;
 		e.colormod = '0 0 0';
-		if(cvar("gameversion") >= 20600) // only do this for 2.6 and above FIXME remove this check when making 2.6
-			self.glowmod = self.colormod;
+		self.glowmod = self.colormod;
 		e.alpha = 0;
 		e.customizeentityforclient = func_null;
 
@@ -90,8 +87,7 @@ void Item_Show (entity e, float mode)
 		e.model = string_null;
 		e.solid = SOLID_NOT;
 		e.colormod = '0 0 0';
-		if(cvar("gameversion") >= 20600) // only do this for 2.6 and above FIXME remove this check when making 2.6
-			self.glowmod = self.colormod;
+		self.glowmod = self.colormod;
 		e.alpha = 0;
 		e.customizeentityforclient = func_null;
 
@@ -103,8 +99,7 @@ void Item_Show (entity e, float mode)
 		e.model = e.mdl;
 		e.solid = SOLID_TRIGGER; // can STILL be picked up!
 		e.colormod = '0 0 0';
-		if(cvar("gameversion") >= 20600) // only do this for 2.6 and above FIXME remove this check when making 2.6
-			self.glowmod = self.colormod;
+		self.glowmod = self.colormod;
 		e.effects |= EF_STARDUST;
 		e.customizeentityforclient = Item_Customize;
 
@@ -116,8 +111,7 @@ void Item_Show (entity e, float mode)
 		e.model = e.mdl;
 		e.solid = SOLID_NOT;
 		e.colormod = stov(cvar_string("g_ghost_items_color"));
-		if(cvar("gameversion") >= 20600) // only do this for 2.6 and above FIXME remove this check when making 2.6
-			self.glowmod = self.colormod;
+		self.glowmod = self.colormod;
 		e.alpha = g_ghost_items;
 		e.customizeentityforclient = func_null;
 
@@ -129,8 +123,7 @@ void Item_Show (entity e, float mode)
 		e.model = string_null;
 		e.solid = SOLID_NOT;
 		e.colormod = stov(cvar_string("g_ghost_items_color"));
-		if(cvar("gameversion") >= 20600) // only do this for 2.6 and above FIXME remove this check when making 2.6
-			self.glowmod = self.colormod;
+		self.glowmod = self.colormod;
 		e.alpha = 0;
 		e.customizeentityforclient = func_null;
 

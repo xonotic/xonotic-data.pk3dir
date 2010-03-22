@@ -64,6 +64,8 @@ string toStringXonoticMutatorsDialog(entity me)
 {
 	string s;
 	s = "";
+	if(cvar("g_dodging"))
+		s = strcat(s, ", Dodging");
 	if(cvar("g_minstagib"))
 		s = strcat(s, ", MinstaGib");
 	if(cvar("g_nix"))
@@ -162,6 +164,9 @@ void fillXonoticMutatorsDialog(entity me)
 	string str, hstr;
 	me.TR(me);
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, "Gameplay mutators:"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_dodging", "Dodging"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_cloaked", "Cloaked"));

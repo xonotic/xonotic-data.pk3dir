@@ -1064,10 +1064,9 @@ MUTATOR_HOOKFUNCTION(kh_SpectateCopy)
 MUTATOR_DEFINITION(gamemode_keyhunt)
 {
 	MUTATOR_HOOK(MakePlayerObserver, kh_Key_DropAll, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MakePlayerSpectator, kh_Key_DropAll, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, kh_Key_DropAll, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, kh_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GiveFragsForKill, kh_GiveFragsForKill, CBC_ORDER_EXCLUSIVE);
+	MUTATOR_HOOK(GiveFragsForKill, kh_GiveFragsForKill, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(MatchEnd, kh_finalize, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, kh_GetTeamCount, CBC_ORDER_EXCLUSIVE);
 	MUTATOR_HOOK(SpectateCopy, kh_SpectateCopy, CBC_ORDER_ANY);
