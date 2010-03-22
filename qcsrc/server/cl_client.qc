@@ -13,10 +13,13 @@ void Announce(string snd) {
 }
 
 void AnnounceTo(entity e, string snd) {
-	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_ANNOUNCE);
-	WriteString(MSG_ONE, snd);
+	if (clienttype(e) == CLIENTTYPE_REAL)
+	{
+		msg_entity = e;
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_ANNOUNCE);
+		WriteString(MSG_ONE, snd);
+	}
 }
 
 float ClientData_Send(entity to, float sf)
