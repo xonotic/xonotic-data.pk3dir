@@ -1752,6 +1752,13 @@ targetname: must be pointed to by another trigger_warpzone. Should be pointed to
 killtarget: should point to a target_position entity, or
 */
 
+/*QUAKED trigger_warpzone_reconnect (1 .5 1) (-8 -8 -8) (8 8 8)
+Reconnects (randomly) all warpzones with matching target when triggered
+-------- KEYS --------
+target: must point to multiple trigger_warpzones, or be not set (then all warpzones may get changed)
+targetname: name that identifies this entity so it can be triggered
+*/
+
 /*QUAKED misc_warpzone_position (1 .5 .25) (-8 -8 -8) (8 8 8) 
 Orientation specification for a trigger_warpzone
 -------- KEYS --------

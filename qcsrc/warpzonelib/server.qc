@@ -426,6 +426,7 @@ void WarpZone_InitStep_FinalizeTransform()
 
 	WarpZone_SetUp(self, self.warpzone_origin, self.warpzone_angles, self.enemy.warpzone_origin, self.enemy.warpzone_angles);
 	self.touch = WarpZone_Touch;
+	self.SendFlags = 0xFFFFFF;
 }
 
 float warpzone_initialized;
@@ -551,6 +552,7 @@ void target_warpzone_reconnect_use()
 	for(self = warpzone_first; self; self = self.warpzone_next)
 		if(e.target == "" || self.target == e.target || self.enemy.target == e.target)
 			WarpZone_InitStep_FinalizeTransform();
+	self = e;
 }
 
 void trigger_warpzone_reconnect()
