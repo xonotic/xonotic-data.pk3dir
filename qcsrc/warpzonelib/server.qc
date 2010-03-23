@@ -402,7 +402,7 @@ void WarpZone_InitStep_FindTarget()
 	if(self.target != "")
 	{
 		e2 = world;
-		for(e = world; (e = find(world, targetname, self.target)); )
+		for(e = world; (e = find(e, targetname, self.target)); )
 			if(!e.enemy)
 				if(random() * ++i < 1)
 					e2 = e;
