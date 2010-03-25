@@ -718,6 +718,9 @@ void turret_walker_dinit()
         return;
     }
 
+    if (!turret_tag_setup())
+        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+
     self.damage_flags |= TFL_DMG_DEATH_NOGIBS;
     self.target_select_flags   = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
