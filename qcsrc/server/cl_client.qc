@@ -405,6 +405,7 @@ string CheckPlayerModel(string plyermodel) {
 	{
 		if(substring(plyermodel,-4,4) != ".zym")
 		if(substring(plyermodel,-4,4) != ".dpm")
+		if(substring(plyermodel,-4,4) != ".iqm")
 		if(substring(plyermodel,-4,4) != ".md3")
 		if(substring(plyermodel,-4,4) != ".psk")
 			return FallbackPlayerModel;
