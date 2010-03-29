@@ -36,6 +36,7 @@ void W_SwitchWeapon_Force(entity e, float w)
 {
 	e.cnt = e.switchweapon;
 	e.switchweapon = w;
+	e.selectweapon = w;
 }
 
 .float antilag_debug;
