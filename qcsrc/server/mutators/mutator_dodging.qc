@@ -7,6 +7,7 @@
 .float last_BACKWARD_KEY_time;
 .float last_LEFT_KEY_time;
 .float last_RIGHT_KEY_time;
+.float last_JUMP_KEY_time;
 
 // these store the movement direction at the time of the dodge action happening.
 .float dodging_direction_x;
@@ -29,6 +30,7 @@ void dodging_Initialize() {
 	self.last_BACKWARD_KEY_time = 0;
 	self.last_RIGHT_KEY_time = 0;
 	self.last_LEFT_KEY_time = 0;
+	self.last_JUMP_KEY_time = 0;
 	self.last_dodging_time = 0;
 	self.dodging_action = 0;
 	self.dodging_single_action = 0;
@@ -46,11 +48,18 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 	float common_factor;
 
+	float clean_up_and_do_nothing;
+
+	clean_up_and_do_nothing = 0;
+
 	if (g_dodging == 0)
-		return 0;
+		clean_up_and_do_nothing = 1;
 
 	// when swimming, no dodging allowed..
-	if (self.waterlevel >= WATERLEVEL_SWIMMING) {
+	if (self.waterlevel >= WATERLEVEL_SWIMMING)
+		clean_up_and_do_nothing = 1;
+
+	if (clean_up_and_do_nothing != 0) {
 		self.dodging_action = 0;
 		return 0;
 	}
@@ -182,6 +191,11 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		&& check_close_to_wall(cvar("sv_dodging_wall_distance_threshold")) != 1)
 		return 0;
 
+	// remember last jump key time, so we can check in dodging code, if it
+	// was pressed between the two dodges..
+	if (self.BUTTON_JUMP)
+		self.last_JUMP_KEY_time = time;
+
 	if (self.movement_x > 0) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_FORWARD)) {
@@ -229,6 +243,11 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 
 	if (dodge_detected == 1) {
+		// If the player pressed JUMP between the two taps, disallow dodging,
+		// cause he obviously wants to jump instead
+		if ((time - self.last_JUMP_KEY_time) < self.cvar_cl_dodging_timeout)
+			return 0;
+
 		self.last_dodging_time = time;
 
 		self.dodging_action = 1;
