@@ -175,6 +175,12 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	// print("dodging_PlayerPhysics\n");
 
 	float length;
+	float move_direction_x;
+	float move_direction_y;
+
+	move_direction_x = 0;
+	move_direction_y = 0;
+
 	float dodge_detected;
 	if (g_dodging == 0)
 		return 0;
@@ -199,44 +205,44 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		self.last_JUMP_KEY_time = time;
 
 	if (self.movement_x > 0) {
+		move_direction_x = 1.0;
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_FORWARD)) {
 			if ((time - self.last_FORWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
-				self.dodging_direction_x = 1.0;
 			}
  			self.last_FORWARD_KEY_time = time;
  		}
 	}
 
 	if (self.movement_x < 0) {
+		move_direction_x = -1.0;
 		// is this a state change?
  		if (!(self.pressedkeys & KEY_BACKWARD)) {
 			if ((time - self.last_BACKWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
-				self.dodging_direction_x = -1.0;
 			}
  			self.last_BACKWARD_KEY_time = time;
  		}
 	}
 
 	if (self.movement_y > 0) {
+		move_direction_y = 1.0;
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_RIGHT)) {
 			if ((time - self.last_RIGHT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
-				self.dodging_direction_y = 1.0;
 			}
  			self.last_RIGHT_KEY_time = time;
  		}
 	}
 
 	if (self.movement_y < 0) {
+		move_direction_y = -1.0;
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_LEFT)) {
 			if ((time - self.last_LEFT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
-				self.dodging_direction_y = -1.0;
 			}
  			self.last_LEFT_KEY_time = time;
  		}
@@ -254,6 +260,9 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 		self.dodging_action = 1;
 		self.dodging_single_action = 1;
+
+		self.dodging_direction_x = move_direction_x;
+		self.dodging_direction_y = move_direction_y;
 
 		// normalize the dodging_direction vector.. (unlike UT99) XD
 		length = length + self.dodging_direction_x * self.dodging_direction_x;
