@@ -46,9 +46,14 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 	float common_factor;
 
-	// is dodging enabled at all? if not, do nothing..
 	if (g_dodging == 0)
 		return 0;
+
+	// when swimming, no dodging allowed..
+	if (self.waterlevel >= WATERLEVEL_SWIMMING) {
+		self.dodging_action = 0;
+		return 0;
+	}
 
 	// make sure v_up, v_right and v_forward are sane
 	makevectors(self.angles);
