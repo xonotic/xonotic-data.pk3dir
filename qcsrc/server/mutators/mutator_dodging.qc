@@ -229,9 +229,6 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 
 	if (dodge_detected == 1) {
-		if (self.movement_z > 0)
-			self.movement_z = 0;
-
 		self.last_dodging_time = time;
 
 		self.dodging_action = 1;
