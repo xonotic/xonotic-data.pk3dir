@@ -61,6 +61,8 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 	if (clean_up_and_do_nothing != 0) {
 		self.dodging_action = 0;
+		self.dodging_direction_x = 0;
+		self.dodging_direction_y = 0;
 		return 0;
 	}
 
