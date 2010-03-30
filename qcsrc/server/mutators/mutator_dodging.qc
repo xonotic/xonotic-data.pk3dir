@@ -190,11 +190,11 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	// print("dodging_PlayerPhysics\n");
 
 	float length;
-	float move_direction_x;
-	float move_direction_y;
+	float tap_direction_x;
+	float tap_direction_y;
 
-	move_direction_x = 0;
-	move_direction_y = 0;
+	tap_direction_x = 0;
+	tap_direction_y = 0;
 
 	float dodge_detected;
 	if (g_dodging == 0)
@@ -220,10 +220,10 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		self.last_JUMP_KEY_time = time;
 
 	if (self.movement_x > 0) {
-		move_direction_x = 1.0;
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_FORWARD)) {
 			if ((time - self.last_FORWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
+				tap_direction_x = 1.0;
 				dodge_detected = 1;
 			}
  			self.last_FORWARD_KEY_time = time;
@@ -231,9 +231,9 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	}
 
 	if (self.movement_x < 0) {
-		move_direction_x = -1.0;
 		// is this a state change?
  		if (!(self.pressedkeys & KEY_BACKWARD)) {
+			tap_direction_x = -1.0;
 			if ((time - self.last_BACKWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
 			}
@@ -242,9 +242,9 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	}
 
 	if (self.movement_y > 0) {
-		move_direction_y = 1.0;
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_RIGHT)) {
+			tap_direction_y = 1.0;
 			if ((time - self.last_RIGHT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
 			}
@@ -253,9 +253,9 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	}
 
 	if (self.movement_y < 0) {
-		move_direction_y = -1.0;
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_LEFT)) {
+			tap_direction_y = -1.0;
 			if ((time - self.last_LEFT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
 			}
@@ -278,8 +278,8 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 		self.dodging_velocity_gain = cvar("sv_dodging_horiz_speed");
 
-		self.dodging_direction_x = move_direction_x;
-		self.dodging_direction_y = move_direction_y;
+		self.dodging_direction_x = tap_direction_x;
+		self.dodging_direction_y = tap_direction_y;
 
 		// normalize the dodging_direction vector.. (unlike UT99) XD
 		length = length + self.dodging_direction_x * self.dodging_direction_x;
