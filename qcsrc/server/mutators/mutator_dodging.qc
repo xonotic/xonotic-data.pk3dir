@@ -20,6 +20,11 @@
 // set to 1 to indicate dodging has started.. reset by physics hook after dodge has been done..
 .float dodging_action;
 
+// This is the velocity gain to be added over the ramp time.
+// It will decrease from frame to frame during dodging_action = 1
+// until it's 0.
+.float dodging_velocity_gain;
+
 // the jump part of the dodge cannot be ramped
 .float dodging_single_action;
 
@@ -33,6 +38,7 @@ void dodging_Initialize() {
 	self.last_JUMP_KEY_time = 0;
 	self.last_dodging_time = 0;
 	self.dodging_action = 0;
+	self.dodging_velocity_gain = 0;
 	self.dodging_single_action = 0;
 	self.dodging_direction_x = 0;
 	self.dodging_direction_y = 0;
@@ -47,9 +53,11 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	// print("dodging_PlayerPhysics\n");
 
 	float common_factor;
-
+	float new_velocity_gain;
+	float velocity_difference;
 	float clean_up_and_do_nothing;
 
+	new_velocity_gain = 0;
 	clean_up_and_do_nothing = 0;
 
 	if (g_dodging == 0)
@@ -78,6 +86,11 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	if (common_factor > 1) 
 		common_factor = 1;
 
+	new_velocity_gain = self.dodging_velocity_gain - (common_factor * cvar("sv_dodging_horiz_speed"));
+	if (new_velocity_gain < 0)
+		new_velocity_gain = 0;
+
+	velocity_difference = self.dodging_velocity_gain - new_velocity_gain;
 
 	// ramp up dodging speed by adding some velocity each frame.. TODO: do it! :D
 	if (self.dodging_action == 1) {
@@ -86,8 +99,10 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 		self.velocity = 
 			  self.velocity 
-			+ (common_factor * (self.dodging_direction_y * cvar("sv_dodging_horiz_speed")) * v_right) 
-			+ (common_factor * (self.dodging_direction_x * cvar("sv_dodging_horiz_speed")) * v_forward);
+			+ ((self.dodging_direction_y * velocity_difference) * v_right)
+			+ ((self.dodging_direction_x * velocity_difference) * v_forward);
+
+		self.dodging_velocity_gain = self.dodging_velocity_gain - velocity_difference;
 	}
 
 	// the up part of the dodge is a single shot action
@@ -260,6 +275,8 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 		self.dodging_action = 1;
 		self.dodging_single_action = 1;
+
+		self.dodging_velocity_gain = cvar("sv_dodging_horiz_speed");
 
 		self.dodging_direction_x = move_direction_x;
 		self.dodging_direction_y = move_direction_y;
