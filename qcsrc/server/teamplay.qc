@@ -625,7 +625,7 @@ void CheckAllowedTeams (entity for_whom)
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 
-	if(g_campaign && pl && clienttype(pl) == CLIENTTYPE_REAL)
+	if(cvar("g_campaign") && for_whom && clienttype(for_whom) == CLIENTTYPE_REAL)
 	{
 		c1 = 0; // only allow RED team for player joining
 	}
@@ -804,7 +804,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	if(totalteams <= 1)
 	{
-		if(g_campaign && pl && clienttype(pl) == CLIENTTYPE_REAL)
+		if(cvar("g_campaign") && pl && clienttype(pl) == CLIENTTYPE_REAL)
 			return 1; // special case for campaign and player joining
 		else if(g_domination)
 			error("Too few teams available for domination\n");
