@@ -50,55 +50,43 @@ void spiderbot_rocket_touch()
     spiderbot_rocket_explode();
 }
 
-void spiderbot_rocket_guided()
-{
-    vector newdir,olddir;
-
-    self.nextthink  = time;
-    if (self.owner.deadflag != DEAD_NO || self.cnt < time)
-    {
-        spiderbot_rocket_explode();
-        return;
-    }
-
-    if not (self.owner.vehicle)
-    {
-        UpdateCSQCProjectile(self);
-        return;
-    }
-
-    olddir = normalize(self.velocity);
-    crosshair_trace(self.owner);
-    newdir = normalize(trace_endpos - self.origin) + randomvec() * cvar("g_vehicle_spiderbot_rocket_noise");
-    self.velocity = normalize(olddir + newdir * cvar("g_vehicle_spiderbot_rocket_turnrate")) * cvar("g_vehicle_spiderbot_rocket_speed");
-
-    UpdateCSQCProjectile(self);
-}
-
 void spiderbot_rocket_unguided()
 {
     vector newdir,olddir;
 
     self.nextthink  = time;
-    if (self.owner.deadflag != DEAD_NO || self.cnt < time)
-    {
-        spiderbot_rocket_explode();
-        return;
-    }
 
-    if not (self.owner.vehicle)
-    {
-        UpdateCSQCProjectile(self);
-        return;
-    }
 
     olddir = normalize(self.velocity);
     newdir = normalize(self.pos1 - self.origin) + randomvec() * cvar("g_vehicle_spiderbot_rocket_noise");
     self.velocity = normalize(olddir + newdir * cvar("g_vehicle_spiderbot_rocket_turnrate")) * cvar("g_vehicle_spiderbot_rocket_speed");
 
     UpdateCSQCProjectile(self);
+
+    if (self.owner.deadflag != DEAD_NO || self.cnt < time)
+        spiderbot_rocket_explode();
+
 }
 
+void spiderbot_rocket_guided()
+{
+    vector newdir, olddir;
+
+    self.nextthink  = time;
+
+    if not (self.owner.vehicle)
+        self.think = spiderbot_rocket_unguided;
+
+    crosshair_trace(self.owner);
+    olddir = normalize(self.velocity);
+    newdir = normalize(trace_endpos - self.origin) + randomvec() * cvar("g_vehicle_spiderbot_rocket_noise");
+    self.velocity = normalize(olddir + newdir * cvar("g_vehicle_spiderbot_rocket_turnrate")) * cvar("g_vehicle_spiderbot_rocket_speed");
+
+    UpdateCSQCProjectile(self);
+
+    if (self.owner.deadflag != DEAD_NO || self.cnt < time)
+        spiderbot_rocket_explode();
+}
 
 void spiderbot_rocket_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -311,19 +299,16 @@ void spiderbot_miniguns_do()
         return;
     }
 }
-#define SBS_IDLE  0
-#define SBS_JUMP  1
-#define SBS_WALK  2
-#define SBS_BACK  3
-#define SBS_LEFT  4
-#define SBS_RIGHT 5
-.float state;
 
 float spiderbot_pplug()
 {
     vector ad;
     entity player,spider;
     float ftmp;
+
+    if not (self.owner)
+    {
+    }
 
     player = self;
     spider = self.vehicle;
@@ -366,8 +351,9 @@ float spiderbot_pplug()
     self = spider;
     if(spider.flags & FL_ONGROUND)
     {
-        if(player.BUTTON_JUMP)
+        if(player.BUTTON_JUMP && self.tur_head.wait < time)
         {
+            self.tur_head.wait = time + 2;
             player.BUTTON_JUMP = 0;
             spider.velocity   = v_forward * 700 + v_up * 600;
             spider.frame = 4;
@@ -432,7 +418,6 @@ float spiderbot_pplug()
     else
         player.vehicle_reload2 = 1 - ((spider.gun2.cnt - time) / spider.attack_finished_single);
 
-    //setorigin(spider,spider.origin);
     setorigin(player,spider.origin + '0 0 64');
     player.velocity = spider.velocity;
 
@@ -444,10 +429,7 @@ float spiderbot_pplug()
 void spiderbot_think()
 {
     if(self.flags & FL_ONGROUND)
-    {
         movelib_beak_simple(cvar("g_vehicle_spiderbot_speed_stop"));
-        //movelib_groundalign4point(300,100);
-    }
 
     self.nextthink = time;
 }
@@ -648,6 +630,7 @@ void spiderbot_spawn()
 
     setsize(self,spiderbot_MIN,spiderbot_MAX);
 
+    self.owner = world;
     self.velocity = '0 0 0';
     self.vehicle_health = CCVAR("_health");
     self.vehicle_shield = CCVAR("_shield");
