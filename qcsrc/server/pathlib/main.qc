@@ -28,7 +28,7 @@ entity pathlib_mknode(vector where,entity parent)
     node = pathlib_nodeatpoint(where);
     if(node)
     {
-        mark_error(where,60);
+        mark_error(where, 60);
         return node;
     }
 
@@ -40,19 +40,12 @@ entity pathlib_mknode(vector where,entity parent)
     node.owner        = openlist;
     node.path_prev    = parent;
 
-    setmodel(node,"models/pathlib/square.md3");
-    setsize(node,'0 0 0','0 0 0');
-    node.colormod = randomvec() * 2;
-    node.alpha = 0.25;
-    node.scale     = pathlib_gridsize / 512.001;
 
-    //pathlib_showsquare2(node,'1 1 1',0);//(node.medium & CONTENT_EMPTY));
+    setsize(node, '0 0 0', '0 0 0');
+
     setorigin(node, where);
     node.medium = pointcontents(where);
-
-    mark_info(where,60);
-    //pathlib_showsquare(where,1,30);
-
+    pathlib_showsquare(where, 1 ,15);
 
     ++pathlib_made_cnt;
     ++pathlib_open_cnt;
@@ -70,6 +63,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
 
     if(inwater(parent.origin))
     {
+        dprint("FromWater\n");
         pathlib_expandnode = pathlib_expandnode_box;
         pathlib_movenode   = pathlib_swimnode;
     }
@@ -77,11 +71,13 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     {
         if(inwater(to))
         {
+            dprint("ToWater\n");
             pathlib_expandnode = pathlib_expandnode_box;
             pathlib_movenode   = pathlib_walknode;
         }
         else
         {
+            dprint("LandToLoand\n");
             //if(edge_check(parent.origin))
             //    return 0;
 
@@ -94,6 +90,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     node = pathlib_nodeatpoint(to);
     if(node)
     {
+        dprint("NodeAtPoint\n");
         ++pathlib_merge_cnt;
 
         if(node.owner == openlist)
@@ -120,9 +117,17 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
         return 1;
     }
 
-    where = pathlib_movenode(parent.origin,to,0);
+    where = pathlib_movenode(parent.origin, to, 0);
+
     if not(pathlib_movenode_goodnode)
+    {
+        //pathlib_showsquare(where, 0 ,30);
+        //pathlib_showsquare(parent.origin, 1 ,30);
+        dprint("pathlib_movenode_goodnode = 0\n");
         return 0;
+    }
+
+    //pathlib_showsquare(where, 1 ,30);
 
     if(pathlib_nodeatpoint(where))
     {
@@ -132,14 +137,19 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
         return 0;
     }
 
+
     if(doedge)
         if not (tile_check(where))
+        {
+            dprint("tile_check fail\n");
+            pathlib_showsquare(where, 0 ,30);
             return 0;
+        }
+
 
     h = pathlib_heuristic(where,goal);
     g = pathlib_cost(parent,where,cost);
     f = g + h;
-
 
     /*
     node = findradius(where,pathlib_gridsize * 0.5);
@@ -175,7 +185,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     }
     */
 
-    node = pathlib_mknode(where,parent);
+    node = pathlib_mknode(where, parent);
     node.pathlib_node_h = h;
     node.pathlib_node_g = g;
     node.pathlib_node_f = f;
@@ -358,17 +368,23 @@ entity pathlib_astar(vector from,vector to)
 
     // Select water<->land capable node make/link
     pathlib_makenode     = pathlib_makenode_adaptive;
+
     // Select XYZ cost estimate
     //pathlib_heuristic    = pathlib_h_diagonal3;
     pathlib_heuristic    = pathlib_h_diagonal;
+
     // Select distance + waterfactor cost
     pathlib_cost         = pathlib_g_euclidean_water;
+
     // Select star expander
     pathlib_expandnode   = pathlib_expandnode_star;
+
     // Select walk simulation movement test
     pathlib_movenode     = pathlib_walknode;
+
     // Filter final nodes by direction
     buildpath_nodefilter = buildpath_nodefilter_directional;
+
     // Filter tiles with cross pattern
     tile_check = tile_check_cross;
 
@@ -400,31 +416,37 @@ entity pathlib_astar(vector from,vector to)
     pathlib_gridsize       = 128;
     pathlib_movecost       = pathlib_gridsize;
     pathlib_movecost_diag  = vlen(('1 1 0' * pathlib_gridsize));
-    pathlib_movecost_waterfactor = 1;
+    pathlib_movecost_waterfactor = 25000000;
     pathlib_foundgoal      = 0;
 
-    movenode_boxmax   = self.maxs * 1.25;
-    movenode_boxmin   = self.mins * 1.25;
+    movenode_boxmax   = self.maxs * 1.1;
+    movenode_boxmin   = self.mins * 1.1;
 
-    movenode_stepsize = 32;
+    movenode_stepsize = pathlib_gridsize * 0.25;
 
-    tile_check_size = 65;
+    tile_check_size = pathlib_gridsize * 0.5;
+    tile_check_up   = '0 0 2' * pathlib_gridsize;
     tile_check_up   = '0 0 128';
-    tile_check_down = '0 0 128';
+    tile_check_down = '0 0 3' * pathlib_gridsize;
+    tile_check_down = '0 0 256';
 
+    //movenode_stepup   = '0 0 128';
     movenode_stepup   = '0 0 36';
-    movenode_maxdrop  = '0 0 128';
+    movenode_maxdrop  = '0 0 512';
+    //movenode_maxdrop  = '0 0 512';
     movenode_boxup    = '0 0 72';
 
-    from_x = fsnap(from_x,pathlib_gridsize);
-    from_y = fsnap(from_y,pathlib_gridsize);
+    from_x = fsnap(from_x, pathlib_gridsize);
+    from_y = fsnap(from_y, pathlib_gridsize);
+    //from_z += 32;
 
-    to_x = fsnap(to_x,pathlib_gridsize);
-    to_y = fsnap(to_y,pathlib_gridsize);
+    to_x = fsnap(to_x, pathlib_gridsize);
+    to_y = fsnap(to_y, pathlib_gridsize);
+    //to_z += 32;
 
     dprint("AStar init\n");
-    path = pathlib_mknode(from,world);
-    pathlib_close_node(path,to);
+    path = pathlib_mknode(from, world);
+    pathlib_close_node(path, to);
     if(pathlib_foundgoal)
     {
         dprint("AStar: Goal found on first node!\n");
@@ -439,7 +461,7 @@ entity pathlib_astar(vector from,vector to)
         return open;
     }
 
-    if(pathlib_expandnode(path,from,to) <= 0)
+    if(pathlib_expandnode(path, from, to) <= 0)
     {
         dprint("AStar path fail.\n");
         pathlib_cleanup();
@@ -449,11 +471,11 @@ entity pathlib_astar(vector from,vector to)
 
     best_open_node = pathlib_getbestopen();
     n = best_open_node;
-    pathlib_close_node(best_open_node,to);
+    pathlib_close_node(best_open_node, to);
     if(inwater(n.origin))
-        pathlib_expandnode_box(n,from,to);
+        pathlib_expandnode_box(n, from, to);
     else
-        pathlib_expandnode_star(n,from,to);
+        pathlib_expandnode_star(n, from, to);
 
     while(pathlib_open_cnt)
     {
