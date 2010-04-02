@@ -7,6 +7,7 @@
 .float last_BACKWARD_KEY_time;
 .float last_LEFT_KEY_time;
 .float last_RIGHT_KEY_time;
+.float last_JUMP_KEY_time;
 
 // these store the movement direction at the time of the dodge action happening.
 .float dodging_direction_x;
@@ -19,6 +20,11 @@
 // set to 1 to indicate dodging has started.. reset by physics hook after dodge has been done..
 .float dodging_action;
 
+// This is the velocity gain to be added over the ramp time.
+// It will decrease from frame to frame during dodging_action = 1
+// until it's 0.
+.float dodging_velocity_gain;
+
 // the jump part of the dodge cannot be ramped
 .float dodging_single_action;
 
@@ -29,8 +35,10 @@ void dodging_Initialize() {
 	self.last_BACKWARD_KEY_time = 0;
 	self.last_RIGHT_KEY_time = 0;
 	self.last_LEFT_KEY_time = 0;
+	self.last_JUMP_KEY_time = 0;
 	self.last_dodging_time = 0;
 	self.dodging_action = 0;
+	self.dodging_velocity_gain = 0;
 	self.dodging_single_action = 0;
 	self.dodging_direction_x = 0;
 	self.dodging_direction_y = 0;
@@ -45,10 +53,26 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	// print("dodging_PlayerPhysics\n");
 
 	float common_factor;
+	float new_velocity_gain;
+	float velocity_difference;
+	float clean_up_and_do_nothing;
 
-	// is dodging enabled at all? if not, do nothing..
+	new_velocity_gain = 0;
+	clean_up_and_do_nothing = 0;
+
 	if (g_dodging == 0)
+		clean_up_and_do_nothing = 1;
+
+	// when swimming, no dodging allowed..
+	if (self.waterlevel >= WATERLEVEL_SWIMMING)
+		clean_up_and_do_nothing = 1;
+
+	if (clean_up_and_do_nothing != 0) {
+		self.dodging_action = 0;
+		self.dodging_direction_x = 0;
+		self.dodging_direction_y = 0;
 		return 0;
+	}
 
 	// make sure v_up, v_right and v_forward are sane
 	makevectors(self.angles);
@@ -62,6 +86,11 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	if (common_factor > 1) 
 		common_factor = 1;
 
+	new_velocity_gain = self.dodging_velocity_gain - (common_factor * cvar("sv_dodging_horiz_speed"));
+	if (new_velocity_gain < 0)
+		new_velocity_gain = 0;
+
+	velocity_difference = self.dodging_velocity_gain - new_velocity_gain;
 
 	// ramp up dodging speed by adding some velocity each frame.. TODO: do it! :D
 	if (self.dodging_action == 1) {
@@ -70,8 +99,10 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 		self.velocity = 
 			  self.velocity 
-			+ (common_factor * (self.dodging_direction_y * cvar("sv_dodging_horiz_speed")) * v_right) 
-			+ (common_factor * (self.dodging_direction_x * cvar("sv_dodging_horiz_speed")) * v_forward);
+			+ ((self.dodging_direction_y * velocity_difference) * v_right)
+			+ ((self.dodging_direction_x * velocity_difference) * v_forward);
+
+		self.dodging_velocity_gain = self.dodging_velocity_gain - velocity_difference;
 	}
 
 	// the up part of the dodge is a single shot action
@@ -159,6 +190,12 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	// print("dodging_PlayerPhysics\n");
 
 	float length;
+	float tap_direction_x;
+	float tap_direction_y;
+
+	tap_direction_x = 0;
+	tap_direction_y = 0;
+
 	float dodge_detected;
 	if (g_dodging == 0)
 		return 0;
@@ -177,12 +214,17 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		&& check_close_to_wall(cvar("sv_dodging_wall_distance_threshold")) != 1)
 		return 0;
 
+	// remember last jump key time, so we can check in dodging code, if it
+	// was pressed between the two dodges..
+	if (self.BUTTON_JUMP)
+		self.last_JUMP_KEY_time = time;
+
 	if (self.movement_x > 0) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_FORWARD)) {
 			if ((time - self.last_FORWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
+				tap_direction_x = 1.0;
 				dodge_detected = 1;
-				self.dodging_direction_x = 1.0;
 			}
  			self.last_FORWARD_KEY_time = time;
  		}
@@ -191,9 +233,9 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	if (self.movement_x < 0) {
 		// is this a state change?
  		if (!(self.pressedkeys & KEY_BACKWARD)) {
+			tap_direction_x = -1.0;
 			if ((time - self.last_BACKWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
-				self.dodging_direction_x = -1.0;
 			}
  			self.last_BACKWARD_KEY_time = time;
  		}
@@ -202,9 +244,9 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	if (self.movement_y > 0) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_RIGHT)) {
+			tap_direction_y = 1.0;
 			if ((time - self.last_RIGHT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
-				self.dodging_direction_y = 1.0;
 			}
  			self.last_RIGHT_KEY_time = time;
  		}
@@ -213,9 +255,9 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	if (self.movement_y < 0) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_LEFT)) {
+			tap_direction_y = -1.0;
 			if ((time - self.last_LEFT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
-				self.dodging_direction_y = -1.0;
 			}
  			self.last_LEFT_KEY_time = time;
  		}
@@ -224,13 +266,20 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 
 	if (dodge_detected == 1) {
-		if (self.movement_z > 0)
-			self.movement_z = 0;
+		// If the player pressed JUMP between the two taps, disallow dodging,
+		// cause he obviously wants to jump instead
+		if ((time - self.last_JUMP_KEY_time) < self.cvar_cl_dodging_timeout)
+			return 0;
 
 		self.last_dodging_time = time;
 
 		self.dodging_action = 1;
 		self.dodging_single_action = 1;
+
+		self.dodging_velocity_gain = cvar("sv_dodging_horiz_speed");
+
+		self.dodging_direction_x = tap_direction_x;
+		self.dodging_direction_y = tap_direction_y;
 
 		// normalize the dodging_direction vector.. (unlike UT99) XD
 		length = length + self.dodging_direction_x * self.dodging_direction_x;
