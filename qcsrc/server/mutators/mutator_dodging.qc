@@ -105,6 +105,8 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 	// the up part of the dodge is a single shot action
 	if (self.dodging_single_action == 1) {
+		self.flags &~= FL_ONGROUND;
+
 		self.velocity = 
 			  self.velocity 
 			+ (cvar("sv_dodging_up_speed") * v_up);
@@ -243,8 +245,6 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	if (dodge_detected == 1) {
 		self.last_dodging_time = time;
-
-		self.flags &~= FL_ONGROUND;
 
 		self.dodging_action = 1;
 		self.dodging_single_action = 1;
