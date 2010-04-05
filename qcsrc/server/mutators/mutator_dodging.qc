@@ -7,7 +7,6 @@
 .float last_BACKWARD_KEY_time;
 .float last_LEFT_KEY_time;
 .float last_RIGHT_KEY_time;
-.float last_JUMP_KEY_time;
 
 // these store the movement direction at the time of the dodge action happening.
 .float dodging_direction_x;
@@ -35,7 +34,6 @@ void dodging_Initialize() {
 	self.last_BACKWARD_KEY_time = 0;
 	self.last_RIGHT_KEY_time = 0;
 	self.last_LEFT_KEY_time = 0;
-	self.last_JUMP_KEY_time = 0;
 	self.last_dodging_time = 0;
 	self.dodging_action = 0;
 	self.dodging_velocity_gain = 0;
@@ -107,6 +105,8 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 	// the up part of the dodge is a single shot action
 	if (self.dodging_single_action == 1) {
+		self.flags &~= FL_ONGROUND;
+
 		self.velocity = 
 			  self.velocity 
 			+ (cvar("sv_dodging_up_speed") * v_up);
@@ -166,20 +166,7 @@ float check_close_to_wall(float threshold) {
 }
 
 float check_close_to_ground(float threshold) {
-	vector trace_start;
-	vector trace_end;
-
-	// determine height above ground is below a threshold
-	trace_start = self.origin;
-	trace_end = self.origin - (1000*v_up);
-
-	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
-
-	// check if the trace hit anything at all
-	if (trace_fraction > 1)
-		return 0;
-
-	if(self.origin_z - trace_endpos_z < threshold) 
+	if (self.flags & FL_ONGROUND)
 		return 1;
 
 	return 0;
@@ -202,10 +189,6 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	dodge_detected = 0;
 
-	// no dodging and jumping at the same time..
-	if (self.BUTTON_JUMP)
-		return 0;
-
 	// first check if the last dodge is far enough back in time so we can dodge again
 	if ((time - self.last_dodging_time) < cvar("sv_dodging_delay"))
 		return 0;
@@ -213,11 +196,6 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	if (check_close_to_ground(cvar("sv_dodging_height_threshold")) != 1 
 		&& check_close_to_wall(cvar("sv_dodging_wall_distance_threshold")) != 1)
 		return 0;
-
-	// remember last jump key time, so we can check in dodging code, if it
-	// was pressed between the two dodges..
-	if (self.BUTTON_JUMP)
-		self.last_JUMP_KEY_time = time;
 
 	if (self.movement_x > 0) {
 		// is this a state change?
@@ -266,11 +244,6 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 
 	if (dodge_detected == 1) {
-		// If the player pressed JUMP between the two taps, disallow dodging,
-		// cause he obviously wants to jump instead
-		if ((time - self.last_JUMP_KEY_time) < self.cvar_cl_dodging_timeout)
-			return 0;
-
 		self.last_dodging_time = time;
 
 		self.dodging_action = 1;
