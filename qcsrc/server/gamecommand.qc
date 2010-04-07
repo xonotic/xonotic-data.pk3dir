@@ -1333,6 +1333,17 @@ void GameCommand(string command)
 		return;
 	}
 
+	if(argv(0) == "showtraceline")
+	{
+		vector src, dst;
+		src = stov(argv(1));
+		dst = stov(argv(2));
+		traceline(src, dst, MOVE_NORMAL, world);
+		trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), src, trace_endpos);
+		trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dst);
+		return;
+	}
+
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 }
 
