@@ -956,6 +956,7 @@ string(string format, ...) sprintf = #627;
 //    ouxXc take a float if no length is specified or h is, and an int/entity if l is specified as length, and cast it to an unsigned int
 //    eEfFgG take a float if no length is specified or h is, and an int/entity if l is specified as length, and cast it to a double
 //    s takes a string
+//    vV takes a vector, and processes the three components as if it were a gG for all three components, separated by space
 //    For conversions s and c, the flag # makes precision and width interpreted
 //      as byte count, by default it is interpreted as character count in UTF-8
 //      enabled engines. No other conversions can create wide characters, and #
