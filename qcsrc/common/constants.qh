@@ -285,6 +285,7 @@ const float STAT_HUD = 50;
 const float HUD_NORMAL = 0;
 const float HUD_SPIDERBOT = 10;
 const float HUD_WAKIZASHI = 11;
+const float HUD_RAPTOR    = 12;
 
 const float STAT_VEHICLESTAT_HEALTH  = 60;
 const float STAT_VEHICLESTAT_SHIELD  = 61;
