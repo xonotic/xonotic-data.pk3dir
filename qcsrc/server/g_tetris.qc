@@ -8,6 +8,7 @@ compile with -DTETRIS
 
 #ifdef TETRIS
 
+float autocvar_g_bastet;
 .vector tet_org;
 
 float tet_vs_current_id;
@@ -26,6 +27,7 @@ float tet_vs_current_timeout;
 
 var float tet_high_score = 0;
 
+vector TET_START_PIECE_POS = '5 1 0';
 float TET_LINES = 20;
 float TET_WIDTH = 10;
 //character values
@@ -408,6 +410,11 @@ void Draw_Tetris()
 	entity head;
 	msg_entity = self;
 	WriteChar(MSG_ONE, SVC_CENTERPRINTa);
+	if(autocvar_g_bastet)
+	{
+		WriteTetrisString("NEVER GONNA GIVE YOU");
+		WriteChar(MSG_ONE, 10);
+	}
 	// decoration
 	for (i = 1; i <= (TET_WIDTH + 2); i = i + 1)
 		WriteChar(MSG_ONE, TET_BORDER);
@@ -423,7 +430,7 @@ void Draw_Tetris()
 		else
 			DrawLine(i);
 		if (i == 1)
-			WriteTetrisString(" NEXT ");
+			WriteTetrisString(autocvar_g_bastet ? " THAT " : " NEXT ");
 		else if (i == 3)
 			DrawPiece(self.next_piece, 1);
 		else if (i == 4)
@@ -518,6 +525,206 @@ void Tet_GameExit()
 	self.movetype = MOVETYPE_WALK;
 };
 
+float PrintField()
+{
+	float l;
+	float r, c;
+	for(r = 1; r <= TET_LINES; ++r)
+	{
+		l = GetLine(r);
+		print(">");
+		for(c = 1; c <= TET_WIDTH; ++c)
+		{
+			print(ftos(GetXBlock(c, l)));
+		}
+		print("\n");
+	}
+}
+
+float BastetEvaluate()
+{
+	float height;
+	float score;
+	float occupied;
+	float occupied_count;
+	float l, lines;
+	float score_save, occupied_save, occupied_count_save;
+	float i, j, line;
+
+	score = 0;
+
+	// adds a bonus for each free dot above the occupied blocks profile
+	occupied_count = TET_WIDTH;
+	height = 0;
+	lines = 0;
+	for(i = 1; i <= TET_LINES; ++i)
+	{
+		l = GetLine(i);
+		if(l == 0)
+		{
+			height = i;
+			continue;
+		}
+		line = 1;
+		occupied_save = occupied;
+		occupied_count_save = occupied_count;
+		score_save = score;
+		for(j = 1; j <= TET_WIDTH; ++j)
+		{
+			if(GetXBlock(j, l))
+			{
+				if(!GetXBlock(j, occupied))
+				{
+					occupied = SetXBlock(j, occupied, 1);
+					--occupied_count;
+				}
+			}
+			else
+				line = 0;
+			score += 10000 * occupied_count;
+		}
+		if(line)
+		{
+			occupied = occupied_save;
+			occupied_count = occupied_count_save;
+			score = score_save + 100000000 + 10000 * TET_WIDTH + 1000;
+			++lines;
+		}
+	}
+
+	score += 1000 * height;
+
+	return score;
+}
+
+float CheckMetrics(float piece, float orgx, float orgy, float rot);
+void ClearPiece(float piece, float orgx, float orgy, float rot);
+void CementPiece(float piece, float orgx, float orgy, float rot);
+float BastetSearch(float buf, float pc, float x, float y, float rot, float move_bias)
+// returns best score, or -1 if position is impossible
+{
+	string r;
+	float b;
+	float s, sm;
+
+	if(move_bias < 0)
+		return 0; // DO NOT WANT
+
+	if(x < 1 || x > TET_WIDTH || y < 1 || y > TET_LINES)
+		return -1; // impossible
+	if(rot < 0) rot = 3;
+	if(rot > 3) rot = 0;
+
+	// did we already try?
+	b = x + (TET_WIDTH+2) * (y + (TET_LINES+2) * rot);
+	r = bufstr_get(buf, b);
+	if(r != "") // already tried
+		return stof(r);
+
+	bufstr_set(buf, b, "0"); // in case we READ that, not that bad - we already got that value in another branch then anyway
+
+	if(CheckMetrics(pc, x, y, rot))
+	{
+		// try all moves
+		sm = 1;
+		s = BastetSearch(buf, pc, x-1, y, rot, move_bias - 1); if(s > sm) sm = s;
+		s = BastetSearch(buf, pc, x+1, y, rot, move_bias - 1); if(s > sm) sm = s;
+		s = BastetSearch(buf, pc, x, y, rot+1, move_bias - 1); if(s > sm) sm = s;
+		s = BastetSearch(buf, pc, x, y, rot-1, move_bias - 1); if(s > sm) sm = s;
+		s = BastetSearch(buf, pc, x, y+1, rot, move_bias + 2); if(s > sm) sm = s;
+
+		if(s < 0)
+		{
+			//print(sprintf("MAY CEMENT AT: %d %d %d\n", x, y, rot));
+			// moving down did not work - that means we can fixate the block here
+			CementPiece(pc, x, y, rot);
+			s = BastetEvaluate();
+			ClearPiece(pc, x, y, rot);
+			if(s > sm) sm = s;
+		}
+	}
+	else
+		sm = -1; // impassible
+
+	bufstr_set(buf, b, ftos(sm));
+
+	return sm;
+}
+
+float bastet_piece[7];
+float bastet_score[7];
+float bastet_piecetime[7];
+float BastetPiece()
+{
+	float b;
+
+	var float t1 = gettime(GETTIME_HIRES);
+
+	b = buf_create(); bastet_piece[0] = 1; bastet_score[0] = BastetSearch(b, 1, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[0]; buf_del(b);
+	b = buf_create(); bastet_piece[1] = 2; bastet_score[1] = BastetSearch(b, 2, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[1]; buf_del(b);
+	b = buf_create(); bastet_piece[2] = 3; bastet_score[2] = BastetSearch(b, 3, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[2]; buf_del(b);
+	b = buf_create(); bastet_piece[3] = 4; bastet_score[3] = BastetSearch(b, 4, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[3]; buf_del(b);
+	b = buf_create(); bastet_piece[4] = 5; bastet_score[4] = BastetSearch(b, 5, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[4]; buf_del(b);
+	b = buf_create(); bastet_piece[5] = 6; bastet_score[5] = BastetSearch(b, 6, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[5]; buf_del(b);
+	b = buf_create(); bastet_piece[6] = 7; bastet_score[6] = BastetSearch(b, 7, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[6]; buf_del(b);
+
+	var float t2 = gettime(GETTIME_HIRES);
+	dprint(sprintf("Time taken: %.6f seconds\n", t2 - t1));
+
+	// sort
+	float i, j, k, p, s;
+
+/*
+	for(i = 0; i < 7; ++i)
+	{
+		print(sprintf("piece %s value = %d\n", substring("OJLIZST", bastet_piece[i]-1, 1), bastet_score[i]));
+	}
+*
+
+	for(i = 0; i < 7; ++i)
+	{
+		k = i;
+		p = bastet_piece[k];
+		s = bastet_score[k];
+		for(j = i + 1; j < 7; ++j)
+		{
+			if(bastet_score[j] < s)
+			{
+				k = j;
+				s = bastet_score[k];
+				p = bastet_piece[k];
+			}
+		}
+		if(k != i)
+		{
+			bastet_score[k] = bastet_score[i];
+			bastet_piece[k] = bastet_piece[i];
+			bastet_score[i] = s;
+			bastet_piece[i] = p;
+		}
+	}
+
+	b = random();
+	if(b < 0.8)
+		j = 0;
+	else if(b < 0.92)
+		j = 1;
+	else if(b < 0.98)
+		j = 2;
+	else
+		j = 3;
+	j = bastet_piece[j];
+
+	for(i = 0; i < 7; ++i)
+	{
+		if(i == j-1)
+			bastet_piecetime[i] = 0.2 * bastet_piecetime[i];
+		else
+			bastet_piecetime[i] = 1.8 * bastet_piecetime[i] + 1000;
+	}
+
+	return j;
+}
 
 
 /*
@@ -534,6 +741,7 @@ float RandomPiece()
 	float p, q;
 	float b;
 	float seen;
+
 	if(self.tet_piece_bucket > 1)
 	{
 		p = mod(self.tet_piece_bucket, 7);
@@ -725,12 +933,21 @@ void HandleGame(float keyss)
 
 	if (self.piece_type == 0)
 	{
-		self.piece_pos = '5 1 0'; // that's about middle top, we count from 1 ARGH
-		if (self.next_piece)
-			self.piece_type = self.next_piece;
+		self.piece_pos = TET_START_PIECE_POS; // that's about middle top, we count from 1 ARGH
+
+		if(autocvar_g_bastet)
+		{
+			self.piece_type = BastetPiece();
+			self.next_piece = bastet_piece[6];
+		}
 		else
-			self.piece_type = RandomPiece();
-		self.next_piece =  RandomPiece();
+		{
+			if (self.next_piece)
+				self.piece_type = self.next_piece;
+			else
+				self.piece_type = RandomPiece();
+			self.next_piece =  RandomPiece();
+		}
 		keyss = 0; // no movement first frame
 		self.tet_autodown = time + 0.2;
 		brand_new = 1;
