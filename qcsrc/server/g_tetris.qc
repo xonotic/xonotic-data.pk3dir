@@ -525,7 +525,7 @@ void Tet_GameExit()
 	self.movetype = MOVETYPE_WALK;
 };
 
-float PrintField()
+void PrintField()
 {
 	float l;
 	float r, c;
@@ -600,6 +600,7 @@ float BastetEvaluate()
 float CheckMetrics(float piece, float orgx, float orgy, float rot);
 void ClearPiece(float piece, float orgx, float orgy, float rot);
 void CementPiece(float piece, float orgx, float orgy, float rot);
+float bastet_profile_evaluate_time;
 float BastetSearch(float buf, float pc, float x, float y, float rot, float move_bias)
 // returns best score, or -1 if position is impossible
 {
@@ -623,7 +624,10 @@ float BastetSearch(float buf, float pc, float x, float y, float rot, float move_
 
 	bufstr_set(buf, b, "0"); // in case we READ that, not that bad - we already got that value in another branch then anyway
 
+#define ALWAYS_CHECK_METRICS
+#ifdef ALWAYS_CHECK_METRICS
 	if(CheckMetrics(pc, x, y, rot))
+#endif
 	{
 		// try all moves
 		sm = 1;
@@ -631,20 +635,38 @@ float BastetSearch(float buf, float pc, float x, float y, float rot, float move_
 		s = BastetSearch(buf, pc, x+1, y, rot, move_bias - 1); if(s > sm) sm = s;
 		s = BastetSearch(buf, pc, x, y, rot+1, move_bias - 1); if(s > sm) sm = s;
 		s = BastetSearch(buf, pc, x, y, rot-1, move_bias - 1); if(s > sm) sm = s;
-		s = BastetSearch(buf, pc, x, y+1, rot, move_bias + 2); if(s > sm) sm = s;
+	
+#ifndef ALWAYS_CHECK_METRICS
+		if(CheckMetrics(pc, x, y+1, rot))
+		{
+#endif
+			s = BastetSearch(buf, pc, x, y+1, rot, move_bias + 2); if(s > sm) sm = s;
+#ifndef ALWAYS_CHECK_METRICS
+		}
+		else
+			s = -1;
+#endif
 
 		if(s < 0)
 		{
 			//print(sprintf("MAY CEMENT AT: %d %d %d\n", x, y, rot));
 			// moving down did not work - that means we can fixate the block here
+			var float t1 = gettime(GETTIME_HIRES);
+
 			CementPiece(pc, x, y, rot);
 			s = BastetEvaluate();
 			ClearPiece(pc, x, y, rot);
+
+			var float t2 = gettime(GETTIME_HIRES);
+			bastet_profile_evaluate_time += (t2 - t1);
+
 			if(s > sm) sm = s;
 		}
 	}
+#ifdef ALWAYS_CHECK_METRICS
 	else
 		sm = -1; // impassible
+#endif
 
 	bufstr_set(buf, b, ftos(sm));
 
@@ -658,6 +680,7 @@ float BastetPiece()
 {
 	float b;
 
+	bastet_profile_evaluate_time = 0;
 	var float t1 = gettime(GETTIME_HIRES);
 
 	b = buf_create(); bastet_piece[0] = 1; bastet_score[0] = BastetSearch(b, 1, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[0]; buf_del(b);
@@ -669,7 +692,7 @@ float BastetPiece()
 	b = buf_create(); bastet_piece[6] = 7; bastet_score[6] = BastetSearch(b, 7, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[6]; buf_del(b);
 
 	var float t2 = gettime(GETTIME_HIRES);
-	dprint(sprintf("Time taken: %.6f seconds\n", t2 - t1));
+	dprint(sprintf("Time taken: %.6f seconds (of this, ev = %.2f%%)\n", t2 - t1, 100 * bastet_profile_evaluate_time / (t2 - t1)));
 
 	// sort
 	float i, j, k, p, s;
@@ -679,7 +702,7 @@ float BastetPiece()
 	{
 		print(sprintf("piece %s value = %d\n", substring("OJLIZST", bastet_piece[i]-1, 1), bastet_score[i]));
 	}
-*
+*/
 
 	for(i = 0; i < 7; ++i)
 	{
