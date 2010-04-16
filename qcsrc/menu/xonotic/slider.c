@@ -53,8 +53,7 @@ void setValueXonoticSlider(entity me, float val)
 {
 	if(val != me.value)
 	{
-		makeHostedEasing(me, setValueSlider, easingQuadInOut, 1, me.value, val);
-		me.value = val;
+		setValueSlider( me, val );
 		me.saveCvars(me);
 	}
 }

@@ -13,10 +13,12 @@ CLASS(Slider) EXTENDS(Label)
 	METHOD(Slider, valueToText, string(entity, float))
 	METHOD(Slider, toString, string(entity))
 	METHOD(Slider, setValue, void(entity, float))
+	METHOD(Slider, setSliderValue, void(entity, float))
 	METHOD(Slider, showNotify, void(entity))
 	ATTRIB(Slider, src, string, string_null)
 	ATTRIB(Slider, focusable, float, 1)
 	ATTRIB(Slider, value, float, 0)
+	ATTRIB(Slider, sliderValue, float, 0)
 	ATTRIB(Slider, valueMin, float, 0)
 	ATTRIB(Slider, valueMax, float, 0)
 	ATTRIB(Slider, valueStep, float, 0)
@@ -43,7 +45,13 @@ ENDCLASS(Slider)
 #ifdef IMPLEMENTATION
 void setValueSlider(entity me, float val)
 {
+	//me.setSliderValue(me, val);
+	makeHostedEasing(me, setSliderValueSlider, easingQuadInOut, 1, me.value, val);
 	me.value = val;
+}
+void setSliderValueSlider(entity me, float val)
+{
+	me.sliderValue = val;
 }
 string toStringSlider(entity me)
 {
@@ -70,6 +78,7 @@ void configureSliderVisualsSlider(entity me, float sz, float theAlign, float the
 void configureSliderValuesSlider(entity me, float theValueMin, float theValue, float theValueMax, float theValueStep, float theValueKeyStep, float theValuePageStep)
 {
 	me.value = theValue;
+	me.sliderValue = theValue;
 	me.valueStep = theValueStep;
 	me.valueMin = theValueMin;
 	me.valueMax = theValueMax;
@@ -236,9 +245,9 @@ void drawSlider(entity me)
 	if(me.disabled)
 		draw_alpha *= me.disabledAlpha;
 	draw_ButtonPicture('0 0 0', strcat(me.src, "_s"), eX * (1 - me.textSpace) + eY, me.color2, 1);
-	if(almost_in_bounds(me.valueMin, me.value, me.valueMax))
+	if(almost_in_bounds(me.valueMin, me.sliderValue, me.valueMax))
 	{
-		controlLeft = (me.value - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.textSpace - me.controlWidth);
+		controlLeft = (me.sliderValue - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.textSpace - me.controlWidth);
 		if(me.disabled)
 			draw_Picture(eX * controlLeft, strcat(me.src, "_d"), eX * me.controlWidth + eY, me.colorD, 1);
 		else if(me.pressed)
