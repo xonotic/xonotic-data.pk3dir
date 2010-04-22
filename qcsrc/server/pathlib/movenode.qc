@@ -66,10 +66,21 @@ vector pathlib_flynode(vector start,vector end)
     return end;
 }
 
+void a_think()
+{
+    te_lightning1(self,self.origin, self.pos1);
+    if(self.cnt < time)
+        remove(self);
+    else
+        self.nextthink = time + 0.2;
+}
+
 vector pathlib_walknode(vector start,vector end,float doedge)
 {
     vector direction,point,last_point,s,e;
     float steps, distance, i;
+
+    dprint("Walking node from ", vtos(start), " to ", vtos(end), "\n");
 
     pathlib_movenode_goodnode = 0;
 
@@ -79,9 +90,21 @@ vector pathlib_walknode(vector start,vector end,float doedge)
     start_y = fsnap(start_y,pathlib_gridsize);
 
     // Find the floor
-    traceline(start + movenode_stepup, start - movenode_maxdrop,MOVE_WORLDONLY,self);
+    traceline(start + movenode_stepup, start - movenode_maxdrop, MOVE_WORLDONLY, self);
     if(trace_fraction == 1.0)
+    {
+        entity a;
+        a = spawn();
+        a.think = a_think;
+        a.nextthink = time;
+        setorigin(a,start + movenode_stepup);
+        a.pos1 = trace_endpos;
+        //start - movenode_maxdrop
+        a.cnt = time + 10;
+
+        dprint("I cant walk on air!\n");
         return trace_endpos;
+    }
 
     start = trace_endpos;
 
