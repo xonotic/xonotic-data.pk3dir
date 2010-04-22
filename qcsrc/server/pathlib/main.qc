@@ -327,6 +327,11 @@ float buildpath_nodefilter_moveskip(vector n,vector c,vector p)
     return 0;
 }
 
+float buildpath_nodefilter_none(vector n,vector c,vector p)
+{
+    return 0;
+}
+
 entity path_build(entity next, vector where, entity prev, entity start)
 {
     entity path;
