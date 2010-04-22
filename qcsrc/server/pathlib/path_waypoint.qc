@@ -1,45 +1,68 @@
-.entity list;
-
-entity pathlib_wpp_goal;
-entity pathlib_wpp_start;
+var float pathlib_wpp_open(entity wp, entity child, float cost);
 
 void pathlib_wpp_close(entity wp)
 {
     --pathlib_open_cnt;
     ++pathlib_closed_cnt;
 
-    wp.list = closedlist;
-    wp.colormod = '0 1 1';
+    wp.pathlib_list = closedlist;
 
     if(wp == best_open_node)
         best_open_node = world;
 
-    if(wp == pathlib_wpp_goal)
+    if(wp == goal_node)
         pathlib_foundgoal = TRUE;
 }
 
-float pathlib_wpp_open(entity wp, entity child, float cost)
+float pathlib_wpp_opencb(entity wp, entity child, float cost)
 {
-    float g, h, f;
 
-    if(child.list == closedlist)
+    if(child.pathlib_list == closedlist)
         return FALSE;
 
-    g = wp.pathlib_node_g + vlen(child.origin - wp.origin); //cost;
-    h = vlen(child.origin - pathlib_wpp_goal.origin);
-    f = g + h;
+	// FIXME! wp.wp##mincost is NOT distance. Make it distance or add a field for distance to be used here (for better speed)
+	cost = vlen(child.origin - wp.origin);
+	
+    child.path_prev 	 = wp;
+    child.pathlib_list   = openlist;
+    child.pathlib_node_g = wp.pathlib_node_g + cost;
+    child.pathlib_node_h = pathlib_heuristic(child.origin, goal_node.origin);
+    child.pathlib_node_c = pathlib_wpp_waypointcallback(child, wp);
+    child.pathlib_node_f = child.pathlib_node_g + child.pathlib_node_h + child.pathlib_node_c;
+    
 
-
-    child.colormod = '1 0 1';
-    child.path_prev = wp;
-    child.list = openlist;
-    child.pathlib_node_g = g;
-    child.pathlib_node_h = h;
-    child.pathlib_node_f = f;
+    if(child == goal_node)
+        pathlib_foundgoal = TRUE;
 
     ++pathlib_open_cnt;
 
-    if(best_open_node.pathlib_node_f > f)
+    if(best_open_node.pathlib_node_f > child.pathlib_node_f)
+        best_open_node = child;
+
+    return TRUE;
+}
+
+float pathlib_wpp_openncb(entity wp, entity child, float cost)
+{
+
+    if(child.pathlib_list == closedlist)
+        return FALSE;
+
+	// FIXME! wp.wp##mincost is NOT distance. Make it distance or add a field for distance to be used here (for better speed)
+	cost = vlen(child.origin - wp.origin);
+	
+    child.path_prev 	 = wp;
+    child.pathlib_list   = openlist;
+    child.pathlib_node_g = wp.pathlib_node_g + cost;
+    child.pathlib_node_h = pathlib_heuristic(child.origin, goal_node.origin); 
+    child.pathlib_node_f = child.pathlib_node_g + child.pathlib_node_h;
+
+    if(child == goal_node)
+        pathlib_foundgoal = TRUE;
+
+    ++pathlib_open_cnt;
+
+    if(best_open_node.pathlib_node_f > child.pathlib_node_f)
         best_open_node = child;
 
     return TRUE;
@@ -47,7 +70,6 @@ float pathlib_wpp_open(entity wp, entity child, float cost)
 
 float pathlib_wpp_expand(entity wp)
 {
-
     if(wp.wp00) pathlib_wpp_open(wp,wp.wp00,wp.wp00mincost); else return 0;
     if(wp.wp01) pathlib_wpp_open(wp,wp.wp01,wp.wp01mincost); else return 1;
     if(wp.wp02) pathlib_wpp_open(wp,wp.wp02,wp.wp02mincost); else return 2;
@@ -80,7 +102,8 @@ float pathlib_wpp_expand(entity wp)
     if(wp.wp29) pathlib_wpp_open(wp,wp.wp29,wp.wp29mincost); else return 29;
     if(wp.wp30) pathlib_wpp_open(wp,wp.wp30,wp.wp30mincost); else return 30;
     if(wp.wp31) pathlib_wpp_open(wp,wp.wp31,wp.wp31mincost); else return 31;
-
+    
+    return 32;
 }
 
 entity pathlib_wpp_bestopen()
@@ -90,15 +113,7 @@ entity pathlib_wpp_bestopen()
     if(best_open_node)
         return best_open_node;
 
-    n = findchainentity(list, openlist);
-    /*
-    if not(n)
-    {
-        dprint("pathlib_waypointpath: No more open nodes, path fail.\n");
-        return world;
-    }
-    */
-
+    n = findchainentity(pathlib_list, openlist);
     best = n;
     while(n)
     {
@@ -112,15 +127,26 @@ entity pathlib_wpp_bestopen()
 
 }
 
-entity pathlib_waypointpath(entity from, entity to)
+entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
 {
     entity n;
     float ptime;
 
-
-    ptime = gettime(GETTIME_REALTIME);
-    pathlib_starttime = ptime;
-
+    ptime 					= gettime(GETTIME_REALTIME);
+    pathlib_starttime 		= ptime;	
+	pathlib_movecost 		= 300;
+	pathlib_movecost_diag  	= vlen('1 1 0' * pathlib_movecost);
+	
+	if not (pathlib_wpp_waypointcallback) 
+		callback = FALSE;
+		
+	if (callback)
+		pathlib_wpp_open = pathlib_wpp_opencb;
+	else
+		pathlib_wpp_open = pathlib_wpp_openncb;
+	
+	pathlib_heuristic = pathlib_h_none;
+	
     if not(openlist)
         openlist       = spawn();
 
@@ -130,34 +156,31 @@ entity pathlib_waypointpath(entity from, entity to)
     pathlib_closed_cnt       = 0;
     pathlib_open_cnt         = 0;
     pathlib_searched_cnt     = 0;
-
     pathlib_foundgoal      = FALSE;
-
 
     dprint("pathlib_waypointpath init\n");
 
     // Initialize waypoint grid
-    n = findchainentity(owner, waypoint_master);
-    while (n)
+    // FIXME! presisted chain for better preformance
+    for(n = findchain(classname, "waypoint"); n; n = n.chain)
     {
-        n.list = world;
+        n.pathlib_list = world;
         n.pathlib_node_g = 0;
         n.pathlib_node_f = 0;
         n.pathlib_node_h = 0;
-
-        setmodel(n, "models/runematch/rune.mdl");
-        n.effects = EF_LOWPRECISION;
-        n.colormod = '0 0 0';
-        n.scale = 1;
-
-        n = n.chain;
+        
+        //setmodel(n, "models/runematch/rune.mdl");
+        //n.effects = EF_LOWPRECISION;
+        //n.colormod = '0 0 0';
+        //n.scale = 1;
+        
     }
 
-    pathlib_wpp_goal  = to;
-    pathlib_wpp_start = from;
+    goal_node  = wp_to;
+    start_node = wp_from;
 
-    from.list = closedlist;
-    bprint("Expanding ",ftos(pathlib_wpp_expand(from))," links\n");
+    start_node.pathlib_list = closedlist;
+    dprint("Expanding ",ftos(pathlib_wpp_expand(start_node))," links\n");
     if(pathlib_open_cnt <= 0)
     {
         dprint("pathlib_waypointpath: Start waypoint not linked! aborting.\n");
@@ -171,46 +194,40 @@ entity pathlib_waypointpath_step()
 {
     entity n;
 
-
-    /*
-    if((gettime(GETTIME_REALTIME) - pathlib_starttime) > pathlib_maxtime)
-    {
-        dprint("pathlib_waypointpath: Path took to long to compute!\n");
-        return world;
-    }
-    */
-
     n = pathlib_wpp_bestopen();
     if(!n)
     {
-        bprint("Cannot find best open node, abort.\n");
+        dprint("Cannot find best open node, abort.\n");
         return world;
     }
     pathlib_wpp_close(n);
-
+	dprint("Expanding ",ftos(pathlib_wpp_expand(n))," links\n");
+	
     if(pathlib_foundgoal)
     {
-        bprint("Target found. Rebuilding and filtering path...\n");
-        // to-do rebuild (follow path_prev from n untill it hits from) and return path.
-
-        n = pathlib_wpp_goal;
-        while(n != pathlib_wpp_start)
-        {
-            n.scale = 3;
-            n = n.path_prev;
-        }
-        pathlib_wpp_start.colormod = '0 0 1';
-        pathlib_wpp_goal.colormod = '1 0 0';
-
-        return n;
+        entity start, end, open, ln;
+        
+        dprint("Target found. Rebuilding and filtering path...\n");
+        
+		buildpath_nodefilter = buildpath_nodefilter_none;
+		start = path_build(world, start_node.origin, world, world);
+		end   = path_build(world, goal_node.origin, world, start);
+		ln    = end;
+		
+		for(open = goal_node; open.path_prev != start_node; open = open.path_prev)
+		{
+			n    = path_build(ln,open.origin,open.path_prev,start);
+			ln.path_prev = n;
+			ln = n;
+		}
+		start.path_next = n;
+		n.path_prev = start;		
+		
+        return start;
     }
-
-    bprint("Expanding ",ftos(pathlib_wpp_expand(n))," links\n");
-
 
     return world;
 }
-
 void plas_think()
 {
     pathlib_waypointpath_step();
@@ -226,92 +243,3 @@ void pathlib_waypointpath_autostep()
     n.think = plas_think;
     n.nextthink = time + 0.1;
 }
-
-/*
-entity pathlib_wpp_goal;
-entity pathlib_wpp_start;
-entity pathlib_waypointpath(entity from, entity to)
-{
-    entity path, start, end, open, n, ln;
-    float ptime, ftime, ctime;
-
-
-    ptime = gettime(GETTIME_REALTIME);
-    pathlib_starttime = ptime;
-
-    if not(openlist)
-        openlist       = spawn();
-
-    if not(closedlist)
-        closedlist     = spawn();
-
-    pathlib_closed_cnt       = 0;
-    pathlib_open_cnt         = 0;
-    pathlib_searched_cnt     = 0;
-
-    pathlib_foundgoal      = FALSE;
-
-
-    dprint("pathlib_waypointpath init\n");
-
-    // Initialize waypoint grid
-    n = findchainentity(owner, waypoint_master);
-    while (n)
-    {
-        n.list = world;
-        n.pathlib_node_g = 0;
-        n.pathlib_node_f = 0;
-        n.pathlib_node_h = 0;
-        setmodel(n, "models/runematch/rune.mdl");
-        n.effects = EF_LOWPRECISION;
-        n.colormod = '1 1 1';
-        n.scale = 1;
-    }
-
-    pathlib_wpp_goal = to;
-    pathlib_wpp_start = from;
-
-    from.list = closedlist;
-    pathlib_wpp_expand(from);
-    if(pathlib_open_cnt <= 0)
-    {
-        dprint("pathlib_waypointpath: Start waypoint not linked! aborting.\n");
-        return world;
-    }
-
-    while(pathlib_open_cnt)
-    {
-        if((gettime(GETTIME_REALTIME) - pathlib_starttime) > pathlib_maxtime)
-        {
-            dprint("pathlib_waypointpath: Path took to long to compute!\n");
-            return world;
-        }
-
-        n = findentity(world, list, openlist);
-        if not(n)
-        {
-            dprint("pathlib_waypointpath: No more open nodes, path fail.\n");
-            return world;
-        }
-
-        pathlib_wpp_close(n);
-        pathlib_wpp_expand(n);
-
-        if(pathlib_foundgoal)
-        {
-            dprint("Target found. Rebuilding and filtering path...\n");
-            // to-do rebuild (follow path_prev from n untill it hits from) and return path.
-            n = to;
-            do
-            {
-                n.scale = 3;
-                n = n.path_prev;
-            }while(n != from);
-
-            return world;
-        }
-    }
-
-    return world;
-}
-*/
