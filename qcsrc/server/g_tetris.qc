@@ -28,7 +28,8 @@ float tet_vs_current_timeout;
 var float tet_high_score = 0;
 
 vector TET_START_PIECE_POS = '5 1 0';
-float TET_LINES = 20;
+float TET_LINES = 22;
+float TET_DISPLAY_LINES = 20;
 float TET_WIDTH = 10;
 //character values
 float TET_BORDER = 139;
@@ -50,7 +51,7 @@ float PIECES = 7;
 
 .float line1, line2, line3, line4, line5, line6, line7,
 line8, line9, line10, line11, line12, line13, line14, line15,
-line16, line17, line18, line19, line20;
+line16, line17, line18, line19, line20, line21, line22;
 
 
 float	SVC_CENTERPRINTa		= 26;
@@ -114,6 +115,10 @@ void SetLine(float ln, float vl)
 		self.line19 = vl;
 	else if (ln == 20)
 		self.line20 = vl;
+	else if (ln == 21)
+		self.line21 = vl;
+	else if (ln == 22)
+		self.line22 = vl;
 };
 
 float GetLine(float ln)
@@ -158,6 +163,10 @@ float GetLine(float ln)
 		return self.line19;
 	else if (ln == 20)
 		return self.line20;
+	else if (ln == 21)
+		return self.line21;
+	else if (ln == 22)
+		return self.line22;
 	else
 		return 0;
 };
@@ -232,11 +241,11 @@ void SetSquare(float x, float y, float val)
 vector PieceShape(float pc)
 {
 	if (pc == 1)
-		return '5 5 0'; // O
+		return '20 20 0'; // O
 	else if (pc == 2)
 		return '1 21 0'; // J
 	else if (pc == 3)
-		return '21 1 0'; // L
+		return '16 21 0'; // L
 	else if (pc == 4)
 		return '85 0 0'; // I
 	else if (pc == 5)
@@ -252,11 +261,11 @@ vector PieceShape(float pc)
 vector PieceCenter(float pc)
 {
 	if(pc == 1)
-		return '1.5 1.5 0'; // O
+		return '2.5 1.5 0'; // O
 	else if (pc == 2)
 		return '2 2 0'; // J
 	else if (pc == 3)
-		return '2 1 0'; // L
+		return '2 2 0'; // L
 	else if (pc == 4)
 		return '2.5 1.5 0'; // I
 	else if (pc == 5)
@@ -363,7 +372,7 @@ void DrawLine(float ln)
 
 	for (x = 1; x <= TET_WIDTH; x = x + 1)
 	{
-		d = GetSquare(x, ln);
+		d = GetSquare(x, ln + TET_LINES - TET_DISPLAY_LINES);
 		if (d)
 		{
 			WriteChar(MSG_ONE, '^');
@@ -421,7 +430,7 @@ void Draw_Tetris()
 	WriteTetrisString("      ");
 	WriteUnterminatedString(MSG_ONE, TET_PADDING_RIGHT);
 	WriteChar(MSG_ONE, 10);
-	for (i = 1; i <= TET_LINES; i = i + 1)
+	for (i = 1; i <= TET_DISPLAY_LINES; i = i + 1)
 	{
 		if(self.tetris_on == 2)
 			WriteTetrisString(" GAME  OVER ");
@@ -810,9 +819,9 @@ float CheckMetrics(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 	orgx = orgx - 1;
 	orgy = orgy - 1;
 
-	for (y = 0; y < 5; y = y + 1)
+	for (y = 1; y < 5; y = y + 1)
 	{
-		for (x = 0; x < 5; x = x + 1)
+		for (x = 1; x < 5; x = x + 1)
 		{
 			if (PieceMetric(x, y, rot, piece))
 			{
@@ -834,9 +843,9 @@ void ClearPiece(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 	orgx = orgx - 1;
 	orgy = orgy - 1;
 
-	for (y = 0; y < 5; y = y + 1)
+	for (y = 1; y < 5; y = y + 1)
 	{
-		for (x = 0; x < 5; x = x + 1)
+		for (x = 1; x < 5; x = x + 1)
 		{
 			if (PieceMetric(x, y, rot, piece))
 			{
@@ -855,9 +864,9 @@ void CementPiece(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 
 	pcolor = mod(piece, 3) + 1;
 
-	for (y = 0; y < 5; y = y + 1)
+	for (y = 1; y < 5; y = y + 1)
 	{
-		for (x = 0; x < 5; x = x + 1)
+		for (x = 1; x < 5; x = x + 1)
 		{
 			if (PieceMetric(x, y, rot, piece))
 			{
