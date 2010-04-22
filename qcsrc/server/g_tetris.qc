@@ -257,7 +257,25 @@ vector PieceShape(float pc)
 	else
 		return '0 0 0';
 }
-
+vector PieceSize(float pc)
+{
+	if (pc == 1)
+		return '2 2 0'; // O
+	else if (pc == 2)
+		return '3 2 0'; // J
+	else if (pc == 3)
+		return '3 2 0'; // L
+	else if (pc == 4)
+		return '4 1 0'; // I
+	else if (pc == 5)
+		return '3 2 0'; // Z
+	else if (pc == 6)
+		return '3 2 0'; // S
+	else if (pc == 7)
+		return '3 2 0'; // T
+	else
+		return '0 0 0';
+}
 vector PieceCenter(float pc)
 {
 	if(pc == 1)
@@ -282,12 +300,10 @@ vector PieceCenter(float pc)
 float PieceMetric(float x, float y, float rot, float pc)
 {
 	float t;
-	vector piece_dat;
-	float wid;
+	vector ce;
 
 	// return bits of a piece
-	wid = piece_dat_z + 1;
-	piece_dat = PieceCenter(pc);
+	ce = PieceCenter(pc);
 	if (rot == 1) // 90 degrees
 	{
 		// x+cx, y+cy -> -y+cx, x+cy
@@ -295,13 +311,13 @@ float PieceMetric(float x, float y, float rot, float pc)
 		//   x = X-cx
 		//   y = Y-cy
 		t = y;
-		y = x - piece_dat_x + piece_dat_y;
-		x = -t + piece_dat_x + piece_dat_y;
+		y = x - ce_x + ce_y;
+		x = -t + ce_x + ce_y;
 	}
 	else if (rot == 2)//180
 	{
-		x = 2 * piece_dat_x - x;
-		y = 2 * piece_dat_y - y;
+		x = 2 * ce_x - x;
+		y = 2 * ce_y - y;
 	}
 	else if (rot == 3) // 270
 	{
@@ -310,19 +326,86 @@ float PieceMetric(float x, float y, float rot, float pc)
 		//   x = X-cx
 		//   y = Y-cy
 		t = y;
-		y = -x + piece_dat_y + piece_dat_x;
-		x =  t - piece_dat_y + piece_dat_x;
+		y = -x + ce_y + ce_x;
+		x =  t - ce_y + ce_x;
 	}
 	if (x < 1 || y < 1 || x > 4 || y > 2)
 		return 0;
-	piece_dat = PieceShape(pc);
+	ce = PieceShape(pc);
 	if (y == 1)
-		return GetXBlock(x, piece_dat_x); // first row
+		return GetXBlock(x, ce_x); // first row
 	else if (y == 2)
-		return GetXBlock(x, piece_dat_y); // second row
+		return GetXBlock(x, ce_y); // second row
 	else
 		return 0; // illegal parms
 };
+vector tet_piecemins;
+vector tet_piecemaxs;
+void PieceMinsMaxs(float rot, float pc)
+{
+	vector sz, ce;
+	float t;
+	vector v;
+
+	sz = PieceSize(pc);
+	ce = PieceCenter(pc);
+	// 1 = 2..2
+	// 2 = 2..3
+	// 3 = 1..3
+	// 4 = 1..4
+	tet_piecemins_x = floor(2.5 - sz_x * 0.5);
+	tet_piecemaxs_x = floor(2.0 + sz_x * 0.5);
+	tet_piecemins_y = 1;
+	tet_piecemaxs_y = sz_y;
+	if (rot == 1) // 90 degrees
+	{
+		t = tet_piecemins_y;
+		tet_piecemins_y = -tet_piecemins_x + ce_y + ce_x;
+		tet_piecemins_x = t - ce_y + ce_x;
+		t = tet_piecemaxs_y;
+		tet_piecemaxs_y = -tet_piecemaxs_x + ce_y + ce_x;
+		tet_piecemaxs_x = t - ce_y + ce_x;
+		// swap mins_y, maxs_y
+		t = tet_piecemins_y;
+		tet_piecemins_y = tet_piecemaxs_y;
+		tet_piecemaxs_y = t;
+		// TODO OPTIMIZE
+	}
+	else if (rot == 2)//180
+	{
+		v = tet_piecemins;
+		tet_piecemins = 2 * ce - tet_piecemaxs;
+		tet_piecemaxs = 2 * ce - v;
+	}
+	else if (rot == 3) // 270
+	{
+		t = tet_piecemins_y;
+		tet_piecemins_y = tet_piecemins_x - ce_x + ce_y;
+		tet_piecemins_x = -t + ce_x + ce_y;
+		t = tet_piecemaxs_y;
+		tet_piecemaxs_y = tet_piecemaxs_x - ce_x + ce_y;
+		tet_piecemaxs_x = -t + ce_x + ce_y;
+		// swap mins_x, maxs_x
+		t = tet_piecemins_x;
+		tet_piecemins_x = tet_piecemaxs_x;
+		tet_piecemaxs_x = t;
+		// TODO OPTIMIZE
+	}
+#ifdef VERIFY
+	print(vtos(tet_piecemins), "-");
+	print(vtos(tet_piecemaxs), "\n");
+	if(tet_piecemins_x > tet_piecemaxs_x)
+		error("inconsistent mins/maxs");
+	if(tet_piecemins_y > tet_piecemaxs_y)
+		error("inconsistent mins/maxs");
+	float i, j;
+	for(i = 1; i <= 4; ++i)
+		for(j = 1; j <= 4; ++j)
+			if(PieceMetric(i, j, rot, pc))
+				if(i < tet_piecemins_x || i > tet_piecemaxs_x || j < tet_piecemins_y || j > tet_piecemaxs_y)
+					error(sprintf("incorrect mins/maxs: %d %d in %d rot %d mins %v maxs %v\n", i, j, rot, pc, tet_piecemins, tet_piecemaxs));
+#endif
+}
 /*
 *********************************
 
@@ -610,12 +693,14 @@ float CheckMetrics(float piece, float orgx, float orgy, float rot);
 void ClearPiece(float piece, float orgx, float orgy, float rot);
 void CementPiece(float piece, float orgx, float orgy, float rot);
 float bastet_profile_evaluate_time;
+float bastet_profile_checkmetrics_time;
 float BastetSearch(float buf, float pc, float x, float y, float rot, float move_bias)
 // returns best score, or -1 if position is impossible
 {
 	string r;
 	float b;
 	float s, sm;
+	float t1, t2;
 
 	if(move_bias < 0)
 		return 0; // DO NOT WANT
@@ -633,49 +718,43 @@ float BastetSearch(float buf, float pc, float x, float y, float rot, float move_
 
 	bufstr_set(buf, b, "0"); // in case we READ that, not that bad - we already got that value in another branch then anyway
 
-#define ALWAYS_CHECK_METRICS
-#ifdef ALWAYS_CHECK_METRICS
+
+
+	t1 = gettime(GETTIME_HIRES);
 	if(CheckMetrics(pc, x, y, rot))
-#endif
 	{
+		t2 = gettime(GETTIME_HIRES);
+		bastet_profile_checkmetrics_time += (t2 - t1);
 		// try all moves
 		sm = 1;
 		s = BastetSearch(buf, pc, x-1, y, rot, move_bias - 1); if(s > sm) sm = s;
 		s = BastetSearch(buf, pc, x+1, y, rot, move_bias - 1); if(s > sm) sm = s;
 		s = BastetSearch(buf, pc, x, y, rot+1, move_bias - 1); if(s > sm) sm = s;
 		s = BastetSearch(buf, pc, x, y, rot-1, move_bias - 1); if(s > sm) sm = s;
-	
-#ifndef ALWAYS_CHECK_METRICS
-		if(CheckMetrics(pc, x, y+1, rot))
-		{
-#endif
-			s = BastetSearch(buf, pc, x, y+1, rot, move_bias + 2); if(s > sm) sm = s;
-#ifndef ALWAYS_CHECK_METRICS
-		}
-		else
-			s = -1;
-#endif
 
+		s = BastetSearch(buf, pc, x, y+1, rot, move_bias + 2); if(s > sm) sm = s;
 		if(s < 0)
 		{
 			//print(sprintf("MAY CEMENT AT: %d %d %d\n", x, y, rot));
 			// moving down did not work - that means we can fixate the block here
-			var float t1 = gettime(GETTIME_HIRES);
+			t1 = gettime(GETTIME_HIRES);
 
 			CementPiece(pc, x, y, rot);
 			s = BastetEvaluate();
 			ClearPiece(pc, x, y, rot);
 
-			var float t2 = gettime(GETTIME_HIRES);
+			t2 = gettime(GETTIME_HIRES);
 			bastet_profile_evaluate_time += (t2 - t1);
 
 			if(s > sm) sm = s;
 		}
 	}
-#ifdef ALWAYS_CHECK_METRICS
 	else
+	{
+		t2 = gettime(GETTIME_HIRES);
+		bastet_profile_checkmetrics_time += (t2 - t1);
 		sm = -1; // impassible
-#endif
+	}
 
 	bufstr_set(buf, b, ftos(sm));
 
@@ -690,6 +769,7 @@ float BastetPiece()
 	float b;
 
 	bastet_profile_evaluate_time = 0;
+	bastet_profile_checkmetrics_time = 0;
 	var float t1 = gettime(GETTIME_HIRES);
 
 	b = buf_create(); bastet_piece[0] = 1; bastet_score[0] = BastetSearch(b, 1, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[0]; buf_del(b);
@@ -701,7 +781,7 @@ float BastetPiece()
 	b = buf_create(); bastet_piece[6] = 7; bastet_score[6] = BastetSearch(b, 7, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[6]; buf_del(b);
 
 	var float t2 = gettime(GETTIME_HIRES);
-	dprint(sprintf("Time taken: %.6f seconds (of this, ev = %.2f%%)\n", t2 - t1, 100 * bastet_profile_evaluate_time / (t2 - t1)));
+	dprint(sprintf("Time taken: %.6f seconds (of this, ev = %.2f%%, cm = %.2f%%)\n", t2 - t1, 100 * bastet_profile_evaluate_time / (t2 - t1), 100 * bastet_profile_checkmetrics_time / (t2 - t1)));
 
 	// sort
 	float i, j, k, p, s;
@@ -814,18 +894,20 @@ float CheckMetrics(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 {
 	// check to see if the piece, if moved to the locations will overlap
 
-	float x, y;
+	float x, y, l;
 	// why did I start counting from 1, damnit
 	orgx = orgx - 1;
 	orgy = orgy - 1;
 
-	for (y = 1; y < 5; y = y + 1)
+	PieceMinsMaxs(rot, piece);
+	for (y = tet_piecemins_y; y <= tet_piecemaxs_y; y = y + 1)
 	{
-		for (x = 1; x < 5; x = x + 1)
+		l = GetLine(y + orgy);
+		for (x = tet_piecemins_x; x <= tet_piecemaxs_x; x = x + 1)
 		{
 			if (PieceMetric(x, y, rot, piece))
 			{
-				if (GetSquare(x + orgx, y + orgy))
+				if (GetXBlock(x + orgx, l))
 					return FALSE; // uhoh, gonna hit something.
 				if (x+orgx<1 || x+orgx > TET_WIDTH || y+orgy<1 || y+orgy> TET_LINES)
 					return FALSE; // ouside the level
@@ -837,15 +919,15 @@ float CheckMetrics(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 
 void ClearPiece(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 {
-
 	float x, y;
 	// why did I start counting from 1, damnit
 	orgx = orgx - 1;
 	orgy = orgy - 1;
 
-	for (y = 1; y < 5; y = y + 1)
+	PieceMinsMaxs(rot, piece);
+	for (y = tet_piecemins_y; y <= tet_piecemaxs_y; y = y + 1)
 	{
-		for (x = 1; x < 5; x = x + 1)
+		for (x = tet_piecemins_x; x <= tet_piecemaxs_x; x = x + 1)
 		{
 			if (PieceMetric(x, y, rot, piece))
 			{
@@ -864,9 +946,10 @@ void CementPiece(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 
 	pcolor = mod(piece, 3) + 1;
 
-	for (y = 1; y < 5; y = y + 1)
+	PieceMinsMaxs(rot, piece);
+	for (y = tet_piecemins_y; y <= tet_piecemaxs_y; y = y + 1)
 	{
-		for (x = 1; x < 5; x = x + 1)
+		for (x = tet_piecemins_x; x <= tet_piecemaxs_x; x = x + 1)
 		{
 			if (PieceMetric(x, y, rot, piece))
 			{
