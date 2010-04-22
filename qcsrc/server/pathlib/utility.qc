@@ -90,28 +90,29 @@ float tile_check_cross(vector where)
     f = PLIB_FORWARD * tile_check_size;
     r = PLIB_RIGHT   * tile_check_size;
 
+
     // forward-right
     p = where + f + r;
-    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
-    if not (location_isok(trace_endpos,1,0))
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    if not (location_isok(trace_endpos, 1, 0))
         return 0;
 
     // Forward-left
     p = where + f - r;
-    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
-    if not (location_isok(trace_endpos,1,0))
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    if not (location_isok(trace_endpos, 1, 0))
         return 0;
 
     // Back-right
     p = where - f + r;
-    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
-    if not (location_isok(trace_endpos,1,0))
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    if not (location_isok(trace_endpos, 1 ,0))
         return 0;
 
     //Back-left
     p = where - f - r;
-    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
-    if not (location_isok(trace_endpos,1,0))
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    if not (location_isok(trace_endpos, 1, 0))
         return 0;
 
     return 1;
@@ -130,12 +131,12 @@ float tile_check_plus(vector where)
     if not (location_isok(trace_endpos,1,0))
         return 0;
 
+
     //left
     p = where - r;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
     if not (location_isok(trace_endpos,1,0))
         return 0;
-
 
     // Right
     p = where + r;
@@ -150,6 +151,100 @@ float tile_check_plus(vector where)
         return 0;
 
     return 1;
+}
+
+float tile_check_plus2(vector where)
+{
+    vector p,f,r;
+    float i,e;
+
+    f = PLIB_FORWARD * pathlib_gridsize;
+    r = PLIB_RIGHT   * pathlib_gridsize;
+
+//#define pathlib_node_edgeflag_left    2
+//#define pathlib_node_edgeflag_right   4
+//#define pathlib_node_edgeflag_forward 8
+//#define pathlib_node_edgeflag_back    16
+
+    // forward
+    p = where + f;
+    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
+    if (location_isok(trace_endpos,1,0))
+    {
+       ++i;
+       e |= pathlib_node_edgeflag_forward;
+    }
+
+
+    //left
+    p = where - r;
+    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
+    if (location_isok(trace_endpos,1,0))
+    {
+       ++i;
+       e |= pathlib_node_edgeflag_left;
+    }
+
+
+    // Right
+    p = where + r;
+    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
+    if (location_isok(trace_endpos,1,0))
+    {
+       ++i;
+       e |= pathlib_node_edgeflag_right;
+    }
+
+    //Back
+    p = where - f;
+    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
+    if (location_isok(trace_endpos,1,0))
+    {
+       ++i;
+       e |= pathlib_node_edgeflag_back;
+    }
+
+    // forward-right
+    p = where + f + r;
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    if (location_isok(trace_endpos, 1, 0))
+    {
+       ++i;
+       e |= pathlib_node_edgeflag_forwardright;
+    }
+
+    // Forward-left
+    p = where + f - r;
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    if (location_isok(trace_endpos, 1, 0))
+    {
+       ++i;
+       e |= pathlib_node_edgeflag_forwardleft;
+    }
+
+    // Back-right
+    p = where - f + r;
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    if (location_isok(trace_endpos, 1 ,0))
+    {
+       ++i;
+       e |= pathlib_node_edgeflag_backright;
+    }
+
+    //Back-left
+    p = where - f - r;
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    if (location_isok(trace_endpos, 1, 0))
+    {
+       ++i;
+       e |= pathlib_node_edgeflag_backleft;
+    }
+
+
+    if(i == 0)
+        e = pathlib_node_edgeflag_none;
+
+    return e;
 }
 
 float tile_check_star(vector where)
