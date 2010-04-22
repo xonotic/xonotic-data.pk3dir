@@ -365,7 +365,7 @@ void PieceMinsMaxs(float rot, float pc)
 		tet_piecemins_y = 1;
 		tet_piecemaxs_y = sz_y;
 	}
-	print(sprintf("ce%v sz%v mi%v ma%v\n", ce, sz, tet_piecemins, tet_piecemaxs));
+	//print(sprintf("ce%v sz%v mi%v ma%v\n", ce, sz, tet_piecemins, tet_piecemaxs));
 	if (rot == 1) // 90 degrees
 	{
 		t = tet_piecemins_y;
