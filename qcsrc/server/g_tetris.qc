@@ -247,7 +247,7 @@ vector PieceShape(float pc)
 	else if (pc == 3)
 		return '16 21 0'; // L
 	else if (pc == 4)
-		return '85 0 0'; // I
+		return '0 85 0'; // I
 	else if (pc == 5)
 		return '5 20 0'; // Z
 	else if (pc == 6)
@@ -285,7 +285,7 @@ vector PieceCenter(float pc)
 	else if (pc == 3)
 		return '2 2 0'; // L
 	else if (pc == 4)
-		return '2.5 1.5 0'; // I
+		return '2.5 2.5 0'; // I
 	else if (pc == 5)
 		return '2 2 0'; // Z
 	else if (pc == 6)
@@ -353,10 +353,19 @@ void PieceMinsMaxs(float rot, float pc)
 	// 2 = 2..3
 	// 3 = 1..3
 	// 4 = 1..4
-	tet_piecemins_x = floor(2.5 - sz_x * 0.5);
+	tet_piecemins_x = floor(3.0 - sz_x * 0.5);
 	tet_piecemaxs_x = floor(2.0 + sz_x * 0.5);
-	tet_piecemins_y = 1;
-	tet_piecemaxs_y = sz_y;
+	if(sz_y == 1)
+	{
+		// special case for "I"
+		tet_piecemins_y = tet_piecemaxs_y = 2;
+	}
+	else
+	{
+		tet_piecemins_y = 1;
+		tet_piecemaxs_y = sz_y;
+	}
+	print(sprintf("ce%v sz%v mi%v ma%v\n", ce, sz, tet_piecemins, tet_piecemaxs));
 	if (rot == 1) // 90 degrees
 	{
 		t = tet_piecemins_y;
@@ -399,11 +408,20 @@ void PieceMinsMaxs(float rot, float pc)
 	if(tet_piecemins_y > tet_piecemaxs_y)
 		error("inconsistent mins/maxs");
 	float i, j;
+	vector realmins, realmaxs;
+	realmins = '4 4 0';
+	realmaxs = '1 1 0';
 	for(i = 1; i <= 4; ++i)
 		for(j = 1; j <= 4; ++j)
 			if(PieceMetric(i, j, rot, pc))
-				if(i < tet_piecemins_x || i > tet_piecemaxs_x || j < tet_piecemins_y || j > tet_piecemaxs_y)
-					error(sprintf("incorrect mins/maxs: %d %d in %d rot %d mins %v maxs %v\n", i, j, rot, pc, tet_piecemins, tet_piecemaxs));
+			{
+				realmins_x = min(realmins_x, i);
+				realmins_y = min(realmins_y, j);
+				realmaxs_x = max(realmaxs_x, i);
+				realmaxs_y = max(realmaxs_y, j);
+			}
+	if(realmins != tet_piecemins || realmaxs != tet_piecemaxs)
+		error(sprintf("incorrect mins/maxs: %v %v in %d rot %d mins %v maxs %v\n", realmins, realmaxs, rot, pc, tet_piecemins, tet_piecemaxs));
 #endif
 }
 /*
@@ -900,19 +918,16 @@ float CheckMetrics(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 	orgy = orgy - 1;
 
 	PieceMinsMaxs(rot, piece);
+	if (tet_piecemins_x+orgx<1 || tet_piecemaxs_x+orgx > TET_WIDTH || tet_piecemins_y+orgy<1 || tet_piecemaxs_y+orgy> TET_LINES)
+		return FALSE; // ouside the level
 	for (y = tet_piecemins_y; y <= tet_piecemaxs_y; y = y + 1)
 	{
 		l = GetLine(y + orgy);
+		if(l)
 		for (x = tet_piecemins_x; x <= tet_piecemaxs_x; x = x + 1)
-		{
 			if (PieceMetric(x, y, rot, piece))
-			{
 				if (GetXBlock(x + orgx, l))
 					return FALSE; // uhoh, gonna hit something.
-				if (x+orgx<1 || x+orgx > TET_WIDTH || y+orgy<1 || y+orgy> TET_LINES)
-					return FALSE; // ouside the level
-			}
-		}
 	}
 	return TRUE;
 }
