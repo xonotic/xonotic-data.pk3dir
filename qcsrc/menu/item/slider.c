@@ -18,6 +18,7 @@ CLASS(Slider) EXTENDS(Label)
 	ATTRIB(Slider, src, string, string_null)
 	ATTRIB(Slider, focusable, float, 1)
 	ATTRIB(Slider, value, float, 0)
+	ATTRIB(Slider, animated, float, 1)
 	ATTRIB(Slider, sliderValue, float, 0)
 	ATTRIB(Slider, valueMin, float, 0)
 	ATTRIB(Slider, valueMax, float, 0)
@@ -45,8 +46,11 @@ ENDCLASS(Slider)
 #ifdef IMPLEMENTATION
 void setValueSlider(entity me, float val)
 {
-	//me.setSliderValue(me, val);
-	makeHostedEasing(me, setSliderValueSlider, easingQuadInOut, 1, me.value, val);
+	if (me.animated) {
+		makeHostedEasing(me, setSliderValueSlider, easingQuadInOut, 1, me.sliderValue, val);
+	} else {
+		me.setSliderValue(me, val);
+	}
 	me.value = val;
 }
 void setSliderValueSlider(entity me, float val)
@@ -146,9 +150,11 @@ float keyDownSlider(entity me, float key, float ascii, float shift)
 float mouseDragSlider(entity me, vector pos)
 {
 	float hit;
-	float v;
+	float v, anim;
 	if(me.disabled)
 		return 0;
+	anim = me.animated;
+	me.animated = false;
 	if(me.pressed)
 	{
 		hit = 1;
@@ -166,6 +172,7 @@ float mouseDragSlider(entity me, vector pos)
 		else
 			me.setValue(me, me.previousValue);
 	}
+	me.animated = anim;
 	return 1;
 }
 float mousePressSlider(entity me, vector pos)
