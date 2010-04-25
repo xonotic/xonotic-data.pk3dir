@@ -1145,7 +1145,7 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 	if (sb_showscores)
 	{
 		Sbar_DrawScoreboard();
-		Sbar_DrawCenterPrint();
+		HUD_DrawCenterPrint();
 	}
 
 }
