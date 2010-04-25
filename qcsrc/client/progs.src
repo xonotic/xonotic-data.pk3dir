@@ -21,6 +21,7 @@ autocvars.qh
 
 interpolate.qh
 teamradar.qh
+hud.qh
 waypointsprites.qh
 movetypes.qh
 prandom.qh
@@ -34,7 +35,9 @@ teamplay.qc
 
 ctf.qc
 
-sbar.qc
+teamradar.qc
+hud.qc
+scoreboard.qc
 mapvoting.qc
 
 rubble.qc
@@ -54,7 +57,6 @@ tuba.qc
 Main.qc
 View.qc
 interpolate.qc
-teamradar.qc
 waypointsprites.qc
 movetypes.qc
 prandom.qc

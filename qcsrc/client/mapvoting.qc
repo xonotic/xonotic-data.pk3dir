@@ -71,8 +71,8 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	pos_x = pos_x + text_size*0.5 - img_size_x*0.5;
 	pos_y = pos_y - img_size_y;
 
-	pos += sbar_border_thickness * '1 1 0';
-	img_size -= (sbar_border_thickness * 2) * '1 1 0';
+	pos += hud_border_thickness * '1 1 0';
+	img_size -= (hud_border_thickness * 2) * '1 1 0';
 	if(pic == "")
 	{
 		drawfill(pos, img_size, '.5 .5 .5', .7, DRAWFLAG_NORMAL);
@@ -86,12 +86,12 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	if(id == mv_ownvote || pic == "")
 	{
-		drawborderlines(sbar_border_thickness, pos, img_size, rgb, 1, DRAWFLAG_NORMAL);
+		drawborderlines(hud_border_thickness, pos, img_size, rgb, 1, DRAWFLAG_NORMAL);
 		drawpic(pos + '1 0 0', strcat("gfx/hud/num_", ftos(id+1)), (img_size_y / 5) * '1 1 0', rgb, 0.6, DRAWFLAG_NORMAL);
 	}
 	else
 	{
-		drawborderlines(sbar_border_thickness, pos, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
+		drawborderlines(hud_border_thickness, pos, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
 		drawpic(pos + '1 0 0', strcat("gfx/hud/num_", ftos(id+1)), (img_size_y / 5) * '1 1 0', '1 1 1', 0.6, DRAWFLAG_NORMAL);
 	}
 }
@@ -249,7 +249,7 @@ void MapVote_Draw()
 		MapVote_DrawAbstain(pos, isize, xmax - xmin, tmp, i);
 	}
 
-	drawpic(mv_mousepos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor.tga"), '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(mv_mousepos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor.tga"), '32 32 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void Cmd_MapVote_MapDownload(float argc)

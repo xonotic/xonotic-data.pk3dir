@@ -1,0 +1,26 @@
+void CSQC_kh_hudreset();
+void CSQC_kh_hud();
+void CSQC_ctf_hudreset();
+void CSQC_ctf_hud();
+void CSQC_nb_hud();
+void CSQC_race_hud();
+const float MARIGIN_MULTIPLIER = 0.25;
+float hud_color_bg_team;
+float scoreboard_bottom;
+float weapon_hits[WEP_MAXCOUNT];
+float weapon_fired[WEP_MAXCOUNT];
+float weapon_number;
+
+float ps_primary, ps_secondary;
+float ts_primary, ts_secondary;
+
+float last_weapon;
+float weapontime;
+
+float teamnagger;
+float hud_alpha_fg;
+float hud_alpha_bg;
+float hud_hudselector;
+float hud_accuracy_hud;
+float hud_border_thickness;
+float hud_accuracy_border_thickness;
