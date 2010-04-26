@@ -588,7 +588,7 @@ void EffectIndexDump()
 	db_put(d, "TR_KNIGHTSPIKE", "1"); print("effect TR_KNIGHTSPIKE is ", ftos(particleeffectnum("TR_KNIGHTSPIKE")), "\n");
 	db_put(d, "TR_VORESPIKE", "1"); print("effect TR_VORESPIKE is ", ftos(particleeffectnum("TR_VORESPIKE")), "\n");
 	db_put(d, "TR_NEHAHRASMOKE", "1"); print("effect TR_NEHAHRASMOKE is ", ftos(particleeffectnum("TR_NEHAHRASMOKE")), "\n");
-	db_put(d, "TR_XONOTICPLASMA", "1"); print("effect TR_XONOTICPLASMA is ", ftos(particleeffectnum("TR_XONOTICPLASMA")), "\n");
+	db_put(d, "TR_NEXUIZPLASMA", "1"); print("effect TR_NEXUIZPLASMA is ", ftos(particleeffectnum("TR_NEXUIZPLASMA")), "\n");
 	db_put(d, "TR_GLOWTRAIL", "1"); print("effect TR_GLOWTRAIL is ", ftos(particleeffectnum("TR_GLOWTRAIL")), "\n");
 	db_put(d, "SVC_PARTICLE", "1"); print("effect SVC_PARTICLE is ", ftos(particleeffectnum("SVC_PARTICLE")), "\n");
 
@@ -1330,6 +1330,17 @@ void GameCommand(string command)
 	if(argv(0) == "delrec")
 	{
 		race_DeleteTime(stof(argv(1)));
+		return;
+	}
+
+	if(argv(0) == "showtraceline")
+	{
+		vector src, dst;
+		src = stov(argv(1));
+		dst = stov(argv(2));
+		traceline(src, dst, MOVE_NORMAL, world);
+		trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), src, trace_endpos);
+		trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dst);
 		return;
 	}
 

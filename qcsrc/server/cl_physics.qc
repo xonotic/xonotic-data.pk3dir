@@ -715,6 +715,8 @@ void SV_PlayerPhysics()
 		bot_think();
 	}
 	
+	MUTATOR_CALLHOOK(PlayerPhysics);
+
 	self.items &~= IT_USING_JETPACK;
 
 	if(self.classname == "player")

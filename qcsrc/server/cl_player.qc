@@ -633,7 +633,11 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
 		DropAllRunes(self);
-		frag_attacker = attacker; MUTATOR_CALLHOOK(PlayerDies);
+
+		frag_attacker = attacker;
+		frag_inflictor = inflictor;
+		MUTATOR_CALLHOOK(PlayerDies);
+
 		if(self.flagcarried)
 		{
 			if(attacker.classname != "player" && attacker.classname != "gib")
@@ -881,23 +885,26 @@ void UpdateSelectedPlayer()
 }
 
 .float muted; // to be used by prvm_edictset server playernumber muted 1
-void Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol)
+float Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol)
+// message "": do not say, just test flood control
+// return value:
+//   1 = accept
+//   0 = reject
+//  -1 = fake accept
 {
 	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, privatemsgprefix;
 	float flood, privatemsgprefixlen;
 	entity head;
+	float ret;
 
 	if(Ban_MaybeEnforceBan(source))
-		return;
+		return 0;
 
 	if(!teamsay && !privatesay)
 		if(substring(msgin, 0, 1) == " ")
 			msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
 
 	msgin = formatmessage(msgin);
-
-	if(msgin == "")
-		return;
 
 	if(source.classname != "player")
 		colorstr = "^0"; // black for spectators
@@ -909,9 +916,8 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 	if(intermission_running)
 		teamsay = FALSE;
 
-	msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);
-	if(msgin == "")
-		return;
+	if(msgin != "")
+		msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);
 
 	/*
 	 * using bprint solves this... me stupid
@@ -929,29 +935,36 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 	else
 		namestr = source.netname;
 
-	if(privatesay)
+	if(msgin != "")
 	{
-		msgstr = strcat("\{1}\{13}* ^3", namestr, "^3 tells you: ^7");
-		privatemsgprefixlen = strlen(msgstr);
-		msgstr = strcat(msgstr, msgin);
-		cmsgstr = strcat(colorstr, "^3", namestr, "^3 tells you:\n^7", msgin);
-		if(cvar("g_chat_teamcolors"))
-			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
+		if(privatesay)
+		{
+			msgstr = strcat("\{1}\{13}* ^3", namestr, "^3 tells you: ^7");
+			privatemsgprefixlen = strlen(msgstr);
+			msgstr = strcat(msgstr, msgin);
+			cmsgstr = strcat(colorstr, "^3", namestr, "^3 tells you:\n^7", msgin);
+			if(cvar("g_chat_teamcolors"))
+				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
+			else
+				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", privatesay.netname, ": ^7");
+		}
+		else if(teamsay)
+		{
+			msgstr = strcat("\{1}\{13}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
+			cmsgstr = strcat(colorstr, "(^3", namestr, colorstr, ")\n^7", msgin);
+		}
 		else
-			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", privatesay.netname, ": ^7");
-	}
-	else if(teamsay)
-	{
-		msgstr = strcat("\{1}\{13}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
-		cmsgstr = strcat(colorstr, "(^3", namestr, colorstr, ")\n^7", msgin);
+		{
+			msgstr = strcat("\{1}", namestr, "^7: ", msgin);
+			cmsgstr = "";
+		}
+		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
 	}
 	else
 	{
-		msgstr = strcat("\{1}", namestr, "^7: ", msgin);
-		cmsgstr = "";
+		msgstr = cmsgstr = "";
 	}
 
-	msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
 	fullmsgstr = msgstr;
 	fullcmsgstr = cmsgstr;
 
@@ -989,37 +1002,47 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 		// to match explanation in default.cfg, a value of 3 must allow three-line bursts and not four!
 
 		// do flood control for the default line size
-		getWrappedLine_remaining = msgstr;
-		msgstr = "";
-		lines = 0;
-		while(getWrappedLine_remaining && (!flood_lmax || lines <= flood_lmax))
+		if(msgstr != "")
 		{
-			msgstr = strcat(msgstr, " ", getWrappedLineLen(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
-			++lines;
-		}
-		msgstr = substring(msgstr, 1, strlen(msgstr) - 1);
+			getWrappedLine_remaining = msgstr;
+			msgstr = "";
+			lines = 0;
+			while(getWrappedLine_remaining && (!flood_lmax || lines <= flood_lmax))
+			{
+				msgstr = strcat(msgstr, " ", getWrappedLineLen(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
+				++lines;
+			}
+			msgstr = substring(msgstr, 1, strlen(msgstr) - 1);
 
-		if(getWrappedLine_remaining != "")
-		{
-			msgstr = strcat(msgstr, "\n");
-			flood = 2;
-		}
+			if(getWrappedLine_remaining != "")
+			{
+				msgstr = strcat(msgstr, "\n");
+				flood = 2;
+			}
 
-		if(time >= source.flood_field)
-		{
-			source.flood_field = max(time - flood_burst * flood_spl, source.flood_field) + lines * flood_spl;
+			if(time >= source.flood_field)
+			{
+				source.flood_field = max(time - flood_burst * flood_spl, source.flood_field) + lines * flood_spl;
+			}
+			else
+			{
+				flood = 1;
+				msgstr = fullmsgstr;
+			}
 		}
 		else
 		{
-			flood = 1;
-			msgstr = fullmsgstr;
+			if(time >= source.flood_field)
+				source.flood_field = max(time - flood_burst * flood_spl, source.flood_field) + flood_spl;
+			else
+				flood = 1;
 		}
 	}
 
 	if (timeoutStatus == 2) //when game is paused, no flood protection
 		source.flood_field = flood = 0;
 
-	if(flood == 2)
+	if(flood == 2) // cannot happen for empty msgstr
 	{
 		if(cvar("g_chat_flood_notify_flooder"))
 		{
@@ -1056,57 +1079,70 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 	if(source.muted)
 	{
 		// always fake the message
-		sprint(source, sourcemsgstr);
-		if(cmsgstr != "" && !privatesay)
-			centerprint(source, sourcecmsgstr);
+		ret = -1;
 	}
 	else if(flood == 1)
 	{
 		if(cvar("g_chat_flood_notify_flooder"))
-			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.flood_field - time), "^3 seconds\n"));
-		else
 		{
-			sprint(source, sourcemsgstr);
-			if(cmsgstr != "" && !privatesay)
-				centerprint(source, sourcecmsgstr);
+			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.flood_field - time), "^3 seconds\n"));
+			ret = 0;
 		}
-	}
-	else if(privatesay)
-	{
-		sprint(source, sourcemsgstr);
-		sprint(privatesay, msgstr);
-		if(cmsgstr != "")
-			centerprint(privatesay, cmsgstr);
-	}
-	else if(teamsay > 0)
-	{
-		sprint(source, sourcemsgstr);
-		if(sourcecmsgstr != "")
-			centerprint(source, sourcecmsgstr);
-		FOR_EACH_REALPLAYER(head) if(head.team == source.team)
-			if(head != source)
-			{
-				sprint(head, msgstr);
-				if(cmsgstr != "")
-					centerprint(head, cmsgstr);
-			}
-	}
-	else if(teamsay < 0)
-	{
-		sprint(source, sourcemsgstr);
-		FOR_EACH_REALCLIENT(head) if(head.classname != "player")
-			if(head != source)
-				sprint(head, msgstr);
-	}
-	else if(sourcemsgstr != msgstr)
-	{
-		sprint(source, sourcemsgstr);
-		FOR_EACH_REALCLIENT(head)
-			if(head != source)
-				sprint(head, msgstr);
+		else
+			ret = -1;
 	}
 	else
-		bprint(msgstr);
+	{
+		ret = 1;
+	}
+
+	if(sourcemsgstr != "" && ret != 0)
+	{
+		if(ret < 0) // fake
+		{
+			sprint(source, sourcemsgstr);
+			if(sourcecmsgstr != "" && !privatesay)
+				centerprint(source, sourcecmsgstr);
+		}
+		else if(privatesay)
+		{
+			sprint(source, sourcemsgstr);
+			sprint(privatesay, msgstr);
+			if(cmsgstr != "")
+				centerprint(privatesay, cmsgstr);
+		}
+		else if(teamsay > 0)
+		{
+			sprint(source, sourcemsgstr);
+			if(sourcecmsgstr != "")
+				centerprint(source, sourcecmsgstr);
+			FOR_EACH_REALPLAYER(head) if(head.team == source.team)
+				if(head != source)
+				{
+					sprint(head, msgstr);
+					if(cmsgstr != "")
+						centerprint(head, cmsgstr);
+				}
+		}
+		else if(teamsay < 0)
+		{
+			sprint(source, sourcemsgstr);
+			FOR_EACH_REALCLIENT(head) if(head.classname != "player")
+				if(head != source)
+					sprint(head, msgstr);
+		}
+		else if(sourcemsgstr != msgstr)
+		{
+			sprint(source, sourcemsgstr);
+			FOR_EACH_REALCLIENT(head)
+				if(head != source)
+					sprint(head, msgstr);
+		}
+		else
+			bprint(msgstr);
+	}
+
+	return ret;
 }
 
 float GetVoiceMessageVoiceType(string type)
@@ -1238,6 +1274,81 @@ void UpdatePlayerSounds()
 	LoadPlayerSounds(strcat(self.model, ".sounds"), 0);
 }
 
+void FakeGlobalSound(string sample, float chan, float voicetype)
+{
+	float n;
+	float tauntrand;
+
+	if(sample == "")
+		return;
+
+	tokenize_console(sample);
+	n = stof(argv(1));
+	if(n > 0)
+		sample = strcat(argv(0), ftos(floor(random() * n + 1)), ".wav"); // randomization
+	else
+		sample = strcat(argv(0), ".wav"); // randomization
+
+	switch(voicetype)
+	{
+		case VOICETYPE_LASTATTACKER_ONLY:
+			break;
+		case VOICETYPE_LASTATTACKER:
+			if(self.pusher)
+			{
+				msg_entity = self;
+				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
+			}
+			break;
+		case VOICETYPE_TEAMRADIO:
+			msg_entity = self;
+			if(msg_entity.cvar_cl_voice_directional == 1)
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+			else
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+			break;
+		case VOICETYPE_AUTOTAUNT:
+			if(!sv_autotaunt)
+				break;
+			if(!sv_taunt)
+				break;
+			if(sv_gentle)
+				break;
+			tauntrand = random();
+			msg_entity = self;
+			if (tauntrand < msg_entity.cvar_cl_autotaunt)
+			{
+				if (msg_entity.cvar_cl_voice_directional >= 1)
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+				else
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+			}
+			break;
+		case VOICETYPE_TAUNT:
+			if(self.classname == "player")
+				if(self.deadflag == DEAD_NO)
+					setanim(self, self.anim_taunt, FALSE, TRUE, TRUE);
+			if(!sv_taunt)
+				break;
+			if(sv_gentle)
+				break;
+			msg_entity = self;
+			if (msg_entity.cvar_cl_voice_directional >= 1)
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+			else
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+			break;
+		case VOICETYPE_PLAYERSOUND:
+			msg_entity = self;
+			soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NORM);
+			break;
+		default:
+			backtrace("Invalid voice type!");
+			break;
+	}
+}
+
 void GlobalSound(string sample, float chan, float voicetype)
 {
 	float n;
@@ -1257,34 +1368,32 @@ void GlobalSound(string sample, float chan, float voicetype)
 	{
 		case VOICETYPE_LASTATTACKER_ONLY:
 			if(self.pusher)
-				if(self.pusher.team == self.team)
+			{
+				msg_entity = self.pusher;
+				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
 				{
-					msg_entity = self.pusher;
-					if(clienttype(msg_entity) == CLIENTTYPE_REAL)
-					{
-						if(msg_entity.cvar_cl_voice_directional == 1)
-							soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
-						else
-							soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
-					}
+					if(msg_entity.cvar_cl_voice_directional == 1)
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+					else
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
 				}
+			}
 			break;
 		case VOICETYPE_LASTATTACKER:
 			if(self.pusher)
-				if(self.pusher.team == self.team)
+			{
+				msg_entity = self.pusher;
+				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
 				{
-					msg_entity = self.pusher;
-					if(clienttype(msg_entity) == CLIENTTYPE_REAL)
-					{
-						if(msg_entity.cvar_cl_voice_directional == 1)
-							soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
-						else
-							soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
-					}
-					msg_entity = self;
-					if(clienttype(msg_entity) == CLIENTTYPE_REAL)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
+					if(msg_entity.cvar_cl_voice_directional == 1)
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+					else
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
 				}
+				msg_entity = self;
+				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
+			}
 			break;
 		case VOICETYPE_TEAMRADIO:
 			FOR_EACH_REALCLIENT(msg_entity)
@@ -1328,6 +1437,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 				else
 					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
 			}
+			break;
 		case VOICETYPE_PLAYERSOUND:
 			sound(self, chan, sample, VOL_BASE, ATTN_NORM);
 			break;
@@ -1339,15 +1449,14 @@ void GlobalSound(string sample, float chan, float voicetype)
 
 void PlayerSound(.string samplefield, float chan, float voicetype)
 {
-	string sample;
-	sample = self.samplefield;
-	GlobalSound(sample, chan, voicetype);
+	GlobalSound(self.samplefield, chan, voicetype);
 }
 
 void VoiceMessage(string type, string msg)
 {
 	var .string sample;
-	var float voicetype, ownteam;
+	float voicetype, ownteam;
+	float flood;
 	sample = GetVoiceMessageSampleField(type);
 
 	if(GetPlayerSoundSampleField_notFound)
@@ -1359,35 +1468,12 @@ void VoiceMessage(string type, string msg)
 	voicetype = GetVoiceMessageVoiceType(type);
 	ownteam = (voicetype == VOICETYPE_TEAMRADIO);
 
-	float flood;
-	float flood_spv;
-	var .float flood_field;
+	flood = Say(self, ownteam, world, msg, 1);
 
-	flood = 0;
-	if(ownteam)
-	{
-		flood_spv = cvar("g_voice_flood_spv_team");
-		flood_field = floodcontrol_voiceteam;
-	}
-	else
-	{
-		flood_spv = cvar("g_voice_flood_spv");
-		flood_field = floodcontrol_voice;
-	}
-
-	if(time >= self.flood_field)
-		self.flood_field = max(time, self.flood_field) + flood_spv;
-	else
-		flood = 1;
-
-	if (timeoutStatus == 2) //when game is paused, no flood protection
-		self.flood_field = flood = 0;
-
-	if (msg != "")
-		Say(self, ownteam, world, msg, 0);
-
-	if (!flood)
-		PlayerSound(sample, CHAN_VOICE, voicetype);
+	if (flood > 0)
+		GlobalSound(self.sample, CHAN_VOICE, voicetype);
+	else if (flood < 0)
+		FakeGlobalSound(self.sample, CHAN_VOICE, voicetype);
 }
 
 void MoveToTeam(entity client, float team_colour, float type, float show_message)

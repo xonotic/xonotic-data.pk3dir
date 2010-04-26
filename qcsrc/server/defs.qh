@@ -505,6 +505,7 @@ void UpdatePlayerSounds();
 void ClearPlayerSounds();
 void PlayerSound(.string samplefield, float channel, float voicetype);
 void GlobalSound(string samplestring, float channel, float voicetype);
+void FakeGlobalSound(string samplestring, float channel, float voicetype);
 void VoiceMessage(string type, string message);
 
 // autotaunt system
@@ -637,3 +638,6 @@ string deathmessage;
 
 .float cvar_cl_accuracy_data_share;
 .float cvar_cl_accuracy_data_receive;
+
+.float cvar_cl_weaponimpulsemode;
+.float selectweapon; // last selected weapon of the player

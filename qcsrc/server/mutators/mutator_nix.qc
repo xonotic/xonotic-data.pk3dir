@@ -1,4 +1,4 @@
-float g_nix, g_nix_with_laser;
+float g_nix_with_laser;
 
 float nix_weapon;
 float nix_weapon_ammo;
@@ -8,6 +8,13 @@ float nix_nextweapon_ammo;
 .float nix_lastchange_id;
 .float nix_lastinfotime;
 .float nix_nextincr;
+
+.float nix_save_cells;
+.float nix_save_shells;
+.float nix_save_nails;
+.float nix_save_rockets;
+.float nix_save_fuel;
+.float nix_save_weapons;
 
 float NIX_CanChooseWeapon(float wpn)
 {
@@ -207,6 +214,8 @@ MUTATOR_HOOKFUNCTION(nix_PlayerSpawn)
 
 MUTATOR_DEFINITION(mutator_nix)
 {
+	entity e;
+
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nix_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, nix_SetStartItems, CBC_ORDER_EXCLUSIVE);
 	MUTATOR_HOOK(BuildMutatorsString, nix_BuildMutatorsString, CBC_ORDER_ANY);
@@ -218,19 +227,51 @@ MUTATOR_DEFINITION(mutator_nix)
 
 	MUTATOR_ONADD
 	{
-		g_nix = 1;
 		g_nix_with_laser = cvar("g_nix_with_laser");
 
 		nix_nextchange = time;
 		nix_nextweapon = 0;
 
 		NIX_precache();
+
+		FOR_EACH_PLAYER(e)
+		{
+			if(e.deadflag == DEAD_NO)
+			{
+				e.nix_save_cells = e.ammo_cells;
+				e.nix_save_shells = e.ammo_shells;
+				e.nix_save_nails = e.ammo_nails;
+				e.nix_save_rockets = e.ammo_rockets;
+				e.nix_save_fuel = e.ammo_fuel;
+				e.nix_save_weapons = e.weapons;
+			}
+			else
+			{
+				e.nix_save_cells = 0;
+				e.nix_save_shells = 0;
+				e.nix_save_nails = 0;
+				e.nix_save_rockets = 0;
+				e.nix_save_fuel = 0;
+				e.nix_save_weapons = 0;
+			}
+		}
 	}
 
 	MUTATOR_ONREMOVE
 	{
-		g_nix = 0;
 		// as the PlayerSpawn hook will no longer run, NIX is turned off by this!
+
+		FOR_EACH_PLAYER(e) if(e.deadflag == DEAD_NO)
+		{
+			e.ammo_cells = max(start_ammo_cells, e.nix_save_cells);
+			e.ammo_shells = max(start_ammo_shells, e.nix_save_shells);
+			e.ammo_nails = max(start_ammo_nails, e.nix_save_nails);
+			e.ammo_rockets = max(start_ammo_rockets, e.nix_save_rockets);
+			e.ammo_fuel = max(start_ammo_fuel, e.nix_save_fuel);
+			e.weapons = (start_weapons | e.nix_save_weapons);
+			if(!client_hasweapon(e, e.weapon, TRUE, FALSE))
+				e.switchweapon = w_getbestweapon(self);
+		}
 	}
 
 	return 0;

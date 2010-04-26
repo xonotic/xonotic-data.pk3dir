@@ -36,8 +36,8 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 .entity vehicle_viewport;
 .entity vehicle_hudmodel;
 
-.float anim_start;
-.float anim_end;
+//.float anim_start;
+//.float anim_end;
 
 .float dmg_time;
 
@@ -51,7 +51,9 @@ var .void() vehicle_spawn;
 //var .float(float message) vehicle_message;
 
 #include "vehicles.qc"
+
 #include "spiderbot.qc"
 #include "racer.qc"
+#include "raptor.qc"
 
 #endif

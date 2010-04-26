@@ -252,10 +252,8 @@ float WarpZone_Projectile_Touch()
 	return FALSE;
 }
 
-void WarpZone_InitStep_FindTarget()
+void WarpZone_InitStep_FindOriginTarget()
 {
-	entity e;
-
 	if(self.killtarget != "")
 	{
 		self.aiment = find(world, targetname, self.killtarget);
@@ -265,23 +263,10 @@ void WarpZone_InitStep_FindTarget()
 			return;
 		}
 	}
-
-	// this way only one of the two ents needs to target
-	if(self.target != "")
-	{
-		e = find(world, targetname, self.target);
-		if(e)
-		{
-			self.enemy = e;
-			self.enemy.enemy = self;
-		}
-	}
 }
 
 void WarpZonePosition_InitStep_FindTarget()
 {
-	entity e;
-
 	if(self.target == "")
 	{
 		error("Warp zone position with no target");
@@ -304,8 +289,6 @@ void WarpZonePosition_InitStep_FindTarget()
 
 void WarpZoneCamera_InitStep_FindTarget()
 {
-	entity e;
-
 	if(self.target == "")
 	{
 		error("Camera with no target");
@@ -326,12 +309,6 @@ void WarpZone_InitStep_UpdateTransform()
 	vector tri, a, b, c, p, q, n;
 	float i_s, i_t, n_t;
 	string tex;
-
-	if(!self.enemy || self.enemy.enemy != self)
-	{
-		error("Invalid warp zone detected. Killed.");
-		return;
-	}
 
 	org = self.origin;
 	if(org == '0 0 0')
@@ -408,10 +385,48 @@ void WarpZone_InitStep_UpdateTransform()
 	self.warpzone_origin = org;
 	self.warpzone_angles = ang;
 }
+
+void WarpZone_InitStep_ClearTarget()
+{
+	if(self.enemy)
+		self.enemy.enemy = world;
+	self.enemy = world;
+}
+
+void WarpZone_InitStep_FindTarget()
+{
+	float i;
+	entity e, e2;
+
+	// this way only one of the two ents needs to target
+	if(self.target != "")
+	{
+		e2 = world;
+		for(e = world; (e = find(e, targetname, self.target)); )
+			if(!e.enemy)
+				if(random() * ++i < 1)
+					e2 = e;
+		if(!e2)
+		{
+			error("Warpzone with non-existing target");
+			return;
+		}
+		self.enemy = e2;
+		e2.enemy = self;
+	}
+}
+
 void WarpZone_InitStep_FinalizeTransform()
 {
+	if(!self.enemy || self.enemy.enemy != self)
+	{
+		error("Invalid warp zone detected. Killed.");
+		return;
+	}
+
 	WarpZone_SetUp(self, self.warpzone_origin, self.warpzone_angles, self.enemy.warpzone_origin, self.enemy.warpzone_angles);
 	self.touch = WarpZone_Touch;
+	self.SendFlags = 0xFFFFFF;
 }
 
 float warpzone_initialized;
@@ -487,6 +502,19 @@ void spawnfunc_func_camera(void)
 	self.warpzone_next = warpzone_camera_first;
 	warpzone_camera_first = self;
 }
+void WarpZones_Reconnect()
+{
+	entity e;
+	e = self;
+	for(self = warpzone_first; self; self = self.warpzone_next)
+		WarpZone_InitStep_ClearTarget();
+	for(self = warpzone_first; self; self = self.warpzone_next)
+		WarpZone_InitStep_FindTarget();
+	for(self = warpzone_first; self; self = self.warpzone_next)
+		WarpZone_InitStep_FinalizeTransform();
+	self = e;
+}
+
 void WarpZone_StartFrame()
 {
 	entity e;
@@ -495,17 +523,39 @@ void WarpZone_StartFrame()
 		warpzone_initialized = 1;
 		e = self;
 		for(self = warpzone_first; self; self = self.warpzone_next)
-			WarpZone_InitStep_FindTarget();
+			WarpZone_InitStep_FindOriginTarget();
 		for(self = warpzone_position_first; self; self = self.warpzone_next)
 			WarpZonePosition_InitStep_FindTarget();
 		for(self = warpzone_camera_first; self; self = self.warpzone_next)
 			WarpZoneCamera_InitStep_FindTarget();
 		for(self = warpzone_first; self; self = self.warpzone_next)
 			WarpZone_InitStep_UpdateTransform();
-		for(self = warpzone_first; self; self = self.warpzone_next)
-			WarpZone_InitStep_FinalizeTransform();
 		self = e;
+		WarpZones_Reconnect();
 	}
 	for(e = world; (e = nextent(e)); )
 		WarpZone_StoreProjectileData(e);
+}
+
+void target_warpzone_reconnect_use()
+{
+	entity e;
+	e = self;
+	// NOTE: this matches for target, not targetname, but of course
+	// targetname must be set too on the other entities
+	for(self = warpzone_first; self; self = self.warpzone_next)
+		if(e.target == "" || self.target == e.target)
+			WarpZone_InitStep_ClearTarget();
+	for(self = warpzone_first; self; self = self.warpzone_next)
+		if(e.target == "" || self.target == e.target)
+			WarpZone_InitStep_FindTarget();
+	for(self = warpzone_first; self; self = self.warpzone_next)
+		if(e.target == "" || self.target == e.target || self.enemy.target == e.target)
+			WarpZone_InitStep_FinalizeTransform();
+	self = e;
+}
+
+void trigger_warpzone_reconnect()
+{
+	self.use = target_warpzone_reconnect_use;
 }

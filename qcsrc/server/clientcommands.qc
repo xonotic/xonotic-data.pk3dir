@@ -225,7 +225,6 @@ void SV_ParseClientCommand(string s) {
 				DropFlag(self.flagcarried, world, world);
 			if(self.ballcarried)
 				DropBall(self.ballcarried, self.origin, self.velocity);
-			MUTATOR_CALLHOOK(MakePlayerSpectator);
 			WaypointSprite_PlayerDead();
 			self.classname = "observer";
 			if(g_ca)

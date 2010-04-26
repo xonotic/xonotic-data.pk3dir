@@ -13,10 +13,13 @@ void Announce(string snd) {
 }
 
 void AnnounceTo(entity e, string snd) {
-	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_ANNOUNCE);
-	WriteString(MSG_ONE, snd);
+	if (clienttype(e) == CLIENTTYPE_REAL)
+	{
+		msg_entity = e;
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_ANNOUNCE);
+		WriteString(MSG_ONE, snd);
+	}
 }
 
 float ClientData_Send(entity to, float sf)
@@ -405,6 +408,7 @@ string CheckPlayerModel(string plyermodel) {
 	{
 		if(substring(plyermodel,-4,4) != ".zym")
 		if(substring(plyermodel,-4,4) != ".dpm")
+		if(substring(plyermodel,-4,4) != ".iqm")
 		if(substring(plyermodel,-4,4) != ".md3")
 		if(substring(plyermodel,-4,4) != ".psk")
 			return FallbackPlayerModel;
@@ -2049,6 +2053,7 @@ void SetZoomState(float z)
 }
 
 void GetPressedKeys(void) {
+	MUTATOR_CALLHOOK(GetPressedKeys);
 	if (self.movement_x > 0) // get if movement keys are pressed
 	{	// forward key pressed
 		self.pressedkeys |= KEY_FORWARD;
@@ -2526,8 +2531,7 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			if(cvar("gameversion") >= 20600) // only do this for 2.6 and above FIXME remove this check when making 2.6
-				self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+			self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
 			player_powerups();
 		}
 
@@ -2847,7 +2851,6 @@ void PlayerPostThink (void)
 			ImpulseCommands();
 		if (intermission_running)
 			return;		// intermission or finale
-
 		GetPressedKeys();
 	} else if (self.classname == "observer") {
 		//do nothing

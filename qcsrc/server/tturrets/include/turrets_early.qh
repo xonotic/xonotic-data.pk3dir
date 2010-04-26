@@ -28,6 +28,7 @@ vector real_origin(entity ent);
 .string cvar_basename;
 
 //.float spawnflags
+#define TSF_SUSPENDED     1
 /// Spawn a pillar model under the turret to make it look ok on uneven ground surfaces
 #define TSF_TERRAINBASE   2
 /// Disable builtin ammo regeneration

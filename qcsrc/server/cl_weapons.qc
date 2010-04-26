@@ -12,6 +12,8 @@ void W_SwitchWeapon(float imp)
 	{
 		if (client_hasweapon(self, imp, TRUE, TRUE))
 			W_SwitchWeapon_Force(self, imp);
+		else
+			self.selectweapon = imp; // update selectweapon ANYWAY
 	}
 	else
 	{
@@ -20,7 +22,7 @@ void W_SwitchWeapon(float imp)
 };
 
 .float weaponcomplainindex;
-float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain)
+float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing)
 {
 	// We cannot tokenize in this function, as GiveItems calls this
 	// function. Thus we must use car/cdr.
@@ -28,6 +30,12 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	string rest;
 	switchtonext = switchtolast = 0;
 	first_valid = prev_valid = 0;
+	float weaponcur;
+
+	if(skipmissing || pl.selectweapon == 0)
+		weaponcur = pl.switchweapon;
+	else
+		weaponcur = pl.selectweapon;
 
 	if(dir == 0)
 		switchtonext = 1;
@@ -44,13 +52,13 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 
 		++c;
 
-		if(client_hasweapon(pl, weaponwant, TRUE, FALSE))
+		if(!skipmissing || client_hasweapon(pl, weaponwant, TRUE, FALSE))
 		{
 			if(switchtonext)
 				return weaponwant;
 			if(!first_valid)
 				first_valid = weaponwant;
-			if(weaponwant == pl.switchweapon)
+			if(weaponwant == weaponcur)
 			{
 				if(dir >= 0)
 					switchtonext = 1;
@@ -96,7 +104,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 void W_CycleWeapon(string weaponorder, float dir)
 {
 	float w;
-	w = W_GetCycleWeapon(self, weaponorder, dir, -1, 1);
+	w = W_GetCycleWeapon(self, weaponorder, dir, -1, 1, TRUE);
 	if(w > 0)
 		W_SwitchWeapon(w);
 }
@@ -104,7 +112,7 @@ void W_CycleWeapon(string weaponorder, float dir)
 void W_NextWeaponOnImpulse(float imp)
 {
 	float w;
-	w = W_GetCycleWeapon(self, self.cvar_cl_weaponpriority, +1, imp, 1);
+	w = W_GetCycleWeapon(self, self.cvar_cl_weaponpriority, +1, imp, 1, (self.cvar_cl_weaponimpulsemode == 0));
 	if(w > 0)
 		W_SwitchWeapon(w);
 }
@@ -145,7 +153,7 @@ string W_FixWeaponOrder_ForceComplete(string order)
 
 float w_getbestweapon(entity e)
 {
-	return W_GetCycleWeapon(e, e.cvar_cl_weaponpriority, 0, -1, 0);
+	return W_GetCycleWeapon(e, e.cvar_cl_weaponpriority, 0, -1, FALSE, TRUE);
 };
 
 // generic weapons table

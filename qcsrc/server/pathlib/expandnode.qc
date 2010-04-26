@@ -40,7 +40,7 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
     for(i=0;i < 8; ++i)
     {
         t = plib_points[i];
-        fc  = pathlib_heuristic(t,goal) + pathlib_cost(node,t,pathlib_gridsize);
+        fc  = pathlib_heuristic(t,goal) + pathlib_cost(node, t, pathlib_gridsize);
         plib_fvals[i] = fc;
 
     }
@@ -77,11 +77,11 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
         */
     }
 
-    pathlib_makenode(node,start,bp,goal,pathlib_gridsize);
+    pathlib_makenode(node, start, bp, goal, pathlib_gridsize);
 
     for(i = 0; i < 3; ++i)
     {
-        pathlib_makenode(node,start,plib_points2[i],goal,pathlib_gridsize);
+        pathlib_makenode(node, start, plib_points2[i], goal, pathlib_gridsize);
     }
 
     return pathlib_open_cnt;
@@ -89,44 +89,79 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
 
 float pathlib_expandnode_star(entity node, vector start, vector goal)
 {
-    vector point,where,f,r;
+    vector point, where, f, r;
 
     where = node.origin;
 
     f = PLIB_FORWARD * pathlib_gridsize;
     r = PLIB_RIGHT   * pathlib_gridsize;
 
+    if (node.pathlib_node_edgeflags == pathlib_node_edgeflag_unknown)
+        node.pathlib_node_edgeflags = tile_check_plus2(node.origin);
+
+    if(node.pathlib_node_edgeflags == pathlib_node_edgeflag_none)
+    {
+        dprint("Node at ", vtos(node.origin), " not expanable");
+        return pathlib_open_cnt;
+    }
+
     // Forward
-    point = where + f;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost);
+    if (node.pathlib_node_edgeflags & pathlib_node_edgeflag_forward)
+    {
+        point = where + f;
+        pathlib_makenode(node, start, point, goal, pathlib_movecost);
+    }
 
     // Back
-    point = where - f;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost);
+    if (node.pathlib_node_edgeflags & pathlib_node_edgeflag_back)
+    {
+        point = where - f;
+        pathlib_makenode(node, start, point, goal, pathlib_movecost);
+    }
 
     // Right
-    point = where + r;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost);
+        if (node.pathlib_node_edgeflags & pathlib_node_edgeflag_right)
+    {
+        point = where + r;
+        pathlib_makenode(node, start, point, goal, pathlib_movecost);
+    }
 
     // Left
-    point = where - r;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost);
+    if (node.pathlib_node_edgeflags & pathlib_node_edgeflag_left)
+    {
+        point = where - r;
+        pathlib_makenode(node, start, point, goal, pathlib_movecost);
+
+    }
 
     // Forward-right
-    point = where + f + r;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost_diag);
+    if (node.pathlib_node_edgeflags & pathlib_node_edgeflag_forwardright)
+    {
+        point = where + f + r;
+        pathlib_makenode(node, start, point, goal, pathlib_movecost_diag);
+    }
 
     // Forward-left
-    point = where + f - r;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost_diag);
+    if (node.pathlib_node_edgeflags & pathlib_node_edgeflag_forwardleft)
+    {
+        point = where + f - r;
+        pathlib_makenode(node, start, point, goal, pathlib_movecost_diag);
+
+    }
 
     // Back-right
-    point = where - f + r;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost_diag);
+    if (node.pathlib_node_edgeflags & pathlib_node_edgeflag_backright)
+    {
+        point = where - f + r;
+        pathlib_makenode(node, start, point, goal, pathlib_movecost_diag);
+    }
 
     // Back-left
-    point = where - f - r;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost_diag);
+    if (node.pathlib_node_edgeflags & pathlib_node_edgeflag_backleft)
+    {
+        point = where - f - r;
+        pathlib_makenode(node, start, point, goal, pathlib_movecost_diag);
+    }
 
     return pathlib_open_cnt;
 }
@@ -142,40 +177,40 @@ float pathlib_expandnode_octagon(entity node, vector start, vector goal)
 
     // Forward
     point = where + f;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost);
+    pathlib_makenode(node, start, point, goal, pathlib_movecost);
 
     // Back
     point = where - f;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost);
+    pathlib_makenode(node, start, point, goal, pathlib_movecost);
 
     // Right
     point = where + r;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost);
+    pathlib_makenode(node, start, point, goal, pathlib_movecost);
 
     // Left
     point = where - r;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost);
+    pathlib_makenode(node, start, point, goal, pathlib_movecost);
 
     f = PLIB_FORWARD * pathlib_gridsize * 0.5;
     r = PLIB_RIGHT   * pathlib_gridsize * 0.5;
 
     // Forward-right
     point = where + f + r;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost);
+    pathlib_makenode(node, start, point, goal, pathlib_movecost);
 
 
     // Forward-left
     point = where + f - r;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost);
+    pathlib_makenode(node, start, point, goal, pathlib_movecost);
 
 
     // Back-right
     point = where - f + r;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost);
+    pathlib_makenode(node, start, point, goal, pathlib_movecost);
 
     // Back-left
     point = where - f - r;
-    pathlib_makenode(node,start,point,goal,pathlib_movecost);
+    pathlib_makenode(node, start, point, goal, pathlib_movecost);
 
     return pathlib_open_cnt;
 }
