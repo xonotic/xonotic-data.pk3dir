@@ -167,6 +167,7 @@ float player_getspecies()
 {
 	local float glob, i, j, fh, len, s, sk;
 	local string fn, l;
+	local float tokens;
 
 	s = -1;
 
@@ -186,6 +187,9 @@ float player_getspecies()
 			if(sk == (j ? 0 : self.skinindex)) // 2nd pass skips the skin test
 			if(fgets(fh) == self.model)
 			{
+				tokens = tokenizebyseparator(fn, ".");
+				UpdatePlayerSounds(argv(0));
+
 				l = fgets(fh);
 				len = tokenize_console(l);
 				if (len != 2)
@@ -1264,14 +1268,15 @@ void LoadPlayerSounds(string f, float first)
 }
 
 .float modelindex_for_playersound;
-void UpdatePlayerSounds()
+void UpdatePlayerSounds(string filename)
 {
 	if(self.modelindex == self.modelindex_for_playersound)
 		return;
 	self.modelindex_for_playersound = self.modelindex;
 	ClearPlayerSounds();
 	LoadPlayerSounds("sound/player/default.sounds", 1);
-	LoadPlayerSounds(strcat(self.model, ".sounds"), 0);
+	if(filename != "")
+		LoadPlayerSounds(strcat(filename, ".sounds"), 0);
 }
 
 void FakeGlobalSound(string sample, float chan, float voicetype)
