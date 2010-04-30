@@ -1,0 +1,12 @@
+#define DLG_REPLACE 1
+void showCommandLineDialog(float arg_min, float arg_count);
+string cmd_dialog_prefix;
+// on closing dialog:
+//   if the dialog has an input entry field, cvar_string(cmd_dialog_prefix) will be the entered value
+//   also, cmd_dialog_prefix_$buttonnumber is called when the dialog is closed (i.e. with 1, 2, 3 for the buttons, or 0 for the close button)
+float cmd_dialog_flags;
+string cmd_dialog_title;
+string cmd_dialog_message;
+string cmd_dialog_button1;
+string cmd_dialog_button2;
+string cmd_dialog_button3;

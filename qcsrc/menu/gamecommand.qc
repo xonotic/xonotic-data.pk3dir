@@ -87,6 +87,13 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if(argv(0) == "dialog")
+	{
+		if(!isdemo()) // don't allow this command in demos
+			showCommandLineDialog(1, argc-1);
+		return;
+	}
+
 #if 0
 	if(argv(0) == "tokentest")
 	{
