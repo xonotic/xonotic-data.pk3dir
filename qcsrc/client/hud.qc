@@ -553,6 +553,17 @@ string HUD_Panel_GetName(float id)
 	}
 }
 
+vector HUD_Panel_CheckLimitSize(float id, vector mySize)
+{
+	switch(id) {
+		case 0: 
+			mySize_x = max(mySize_y * (1/10), mySize_x); // at least 1/10 * height
+			mySize_y = max(mySize_x * (1/26), mySize_y); // at least 1/26 * width
+			break;
+	}
+	return mySize;
+}
+
 // return active status of panel
 float HUD_Panel_CheckActive(float id)
 {
@@ -688,14 +699,19 @@ float HUD_Panel_SetSize(float id, vector mySize)
 	vector myPos;
 	myPos = HUD_Panel_GetPos(id);
 
+	// check for collisions
 	mySize = HUD_Panel_CheckResize(id, HUD_Panel_GetPos(id), mySize);
 
 	mySize_x = bound(0.025 * vid_conwidth, mySize_x, vid_conwidth - myPos_x);
 	mySize_y = bound(0.025 * vid_conheight, mySize_y, vid_conheight - myPos_y);
 
+	// cap against panel's own limits
+	mySize = HUD_Panel_CheckLimitSize(id, mySize);
+
 	//mySize_x = bound(0.025 * vid_conwidth, mySize_x, vid_conwidth);
 	//mySize_y = bound(0.025 * vid_conheight, mySize_y, vid_conheight);
 
+	// TODO: is this needed?
 	// this is to check if (and how) SetPos should be called
 	if(mySize_x == oldSize_x && mySize_y == oldSize_y)
 		didntresize = 3; // didnt resize either
@@ -959,14 +975,14 @@ void HUD_WeaponIcons_Clear()
 void HUD_WeaponIcons()
 {
 	float alpha, height, marigin, accuracybar_height, stat_weapons; // "constants"
-	vector pos, color, accuracy_color;
+	vector pos, mySize, mysize, mypos, color, accuracy_color;
 	float i, id, fade, weapon_stats, weapon_hit, weapon_damage, weapon_cnt; // variables
 
-	pos = HUD_Panel_GetPos(0);
-	height = cvar_or("hud_weaponicons_height", 12);
 	marigin = HUD_Panel_GetMarigin(0);
-	accuracybar_height = cvar_or("hud_weaponicons_accuracybar_height", 3);
+	pos = HUD_Panel_GetPos(0);
+	mySize = HUD_Panel_GetSize(0);
 	color = HUD_Panel_GetColor(0);
+	accuracybar_height = cvar_or("hud_weaponicons_accuracybar_height", 3);
 
 	stat_weapons = getstati(STAT_WEAPONS);
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -977,7 +993,7 @@ void HUD_WeaponIcons()
 	}
 
 	if(HUD_Panel_GetBgActive(0) && weapon_cnt)
-		draw_BorderPicture(pos - '1 1 0' * marigin, "gfx/hud/border", eX * (height * 2 * weapon_cnt + 2 * marigin) + eY * (height + 2 * marigin), color, hud_alpha_bg, '1 1 0' * (1/marigin));
+		draw_BorderPicture(pos - '1 1 0' * marigin, "gfx/hud/border", mySize + '1 1 0' * 2 * marigin, color, hud_alpha_bg, '1 1 0' * (marigin/MARIGIN_MULTIPLIER));
 
 	// hits
 	weapon_stats = getstati(STAT_DAMAGE_HITS);
@@ -998,10 +1014,38 @@ void HUD_WeaponIcons()
 
 	HUD_WeaponIcons_Clear();
 
+	float rows, columns;
+	//TODO: yuck. there must be a better way :)
+	//rows = ceil(4 * mySize_y/mySize_x);
+	if(mySize_y/mySize_x < 0.08)
+		rows = 1;
+	else if(mySize_y/mySize_x < 0.25)
+		rows = 2;
+	else if(mySize_y/mySize_x < 0.5)
+		rows = 3;
+	else if(mySize_y/mySize_x < 0.7)
+		rows = 4;
+	else if(mySize_y/mySize_x < 0.9)
+		rows = 5;
+	else if(mySize_y/mySize_x < 1.25)
+		rows = 6;
+	else if(mySize_y/mySize_x < 1.7)
+		rows = 7;
+	else if(mySize_y/mySize_x < 2.5)
+		rows = 8;
+	else if(mySize_y/mySize_x < 4)
+		rows = 12;
+	else if(mySize_y/mySize_x < 6)
+		rows = 14;
+	else
+		rows = 16;
+
+	columns = ceil(16/rows);
+	float row, column;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		self = get_weaponinfo(i);
-		if(self.weapons && self.impulse >= 0 && stat_weapons & self.weapons)
+		if((self.weapons && self.impulse >= 0 && stat_weapons & self.weapons) || cvar("_hud_configure"))
 		{
 			id = self.impulse;
 
@@ -1015,11 +1059,11 @@ void HUD_WeaponIcons()
 				id = --id;
 
 			if(id+1 == activeweapon)
-				drawpic(pos, "gfx/hud/sb_ammobg", eX * (2 * height) + eY * height, color, fade * hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic(pos, strcat("gfx/hud/inv_weapon", self.netname), eX * 2 * height + eY * height, '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
-			//pos_y += size * 1/6; TODO: support for vertical mode
+				drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "gfx/hud/sb_ammobg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), color, fade * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("gfx/hud/inv_weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
+
 			if(cvar_or("hud_weaponicons_number", 1))
-				drawstring(pos, ftos(id+1), '1 1 0' * 0.5 * height, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), ftos(id+1), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 			// draw the weapon accuracy on the HUD
 			if(hud_accuracy_hud && !(gametype == GAME_RACE || gametype == GAME_CTS))
@@ -1029,11 +1073,16 @@ void HUD_WeaponIcons()
 
 				accuracy_color = HUD_AccuracyColor(weapon_stats);
 				if(weapon_damage)
-					drawpic(pos - '2 0 0' + eY * (height - accuracybar_height), "gfx/hud/sb_accuracy_bar.tga", eX * 2 * height + eY * accuracybar_height, accuracy_color, hud_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) - '2 0 0' + eY * (mySize_y/rows - accuracybar_height), "gfx/hud/sb_accuracy_bar.tga", eX * mySize_x*(1/columns) + eY * accuracybar_height, accuracy_color, hud_alpha_fg, DRAWFLAG_NORMAL);
 			}
-			pos_x += height * 2;
 		}
 
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			++column;
+		}
 	}
 
 }
