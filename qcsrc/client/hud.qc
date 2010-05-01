@@ -601,6 +601,7 @@ float HUD_Panel_GetBgActive(float id)
 	return cvar_or(strcat("hud_", HUD_Panel_GetName(id), "_bg"), 1);
 }
 
+float resizeCorner; // 1 = topleft, 2 = topright, 3 = bottomleft, 4 = bottomright
 // check if resize will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector
 vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize)
 {
@@ -608,9 +609,6 @@ vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize)
 
 	vector myTarget;
 	myTarget = mySize;
-
-	myPos = myPos - '1 1 0' * HUD_Panel_GetMarigin(id);
-	mySize = mySize + '1 1 0' * HUD_Panel_GetMarigin(id);
 
 	vector targPos;
 	vector targSize;
@@ -624,6 +622,9 @@ vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize)
 		targPos = HUD_Panel_GetPos(i);
 		targSize = HUD_Panel_GetSize(i);
 
+		targPos = HUD_Panel_GetPos(i) - '1 1 0' * HUD_Panel_GetMarigin(id);
+		targSize = HUD_Panel_GetSize(i) + '2 2 0' * HUD_Panel_GetMarigin(id);
+
 		if(myPos_y + mySize_y < targPos_y)
 			continue;
 		if(myPos_y > targPos_y + targSize_y)
@@ -634,6 +635,8 @@ vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize)
 		if(myPos_x > targPos_x + targSize_x)
 			continue;
 
+		// OK, there IS a collision.
+
 		myCenter_x = myPos_x + 0.5 * mySize_x;
 		myCenter_y = myPos_y + 0.5 * mySize_y;
 
@@ -641,31 +644,33 @@ vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize)
 		targCenter_y = targPos_y + 0.5 * targSize_y;
 
 		float k, y;
-		k = (targCenter_y - targPos_y) / (targPos_x + targSize_x - targCenter_x);
-		y = k * (targCenter_x - myCenter_x) + targCenter_y;
-		if(y > myCenter_y)
+		if(myCenter_x < targCenter_x && myCenter_y < targCenter_y && resizeCorner != 1) // top left (of target panel)
 		{
-			y = k * (myCenter_x - targCenter_x) + targCenter_y;
-			if(y < myCenter_y)
-			{
+			if(myPos_x + mySize_x - targPos_x < myPos_y + mySize_y - targPos_y) // push it to the side
 				myTarget_x = targPos_x - myPos_x;
-			}
-			else
-			{
+			else // push it upwards
 				myTarget_y = targPos_y - myPos_y;
-			}
 		}
-		else
+		else if(myCenter_x > targCenter_x && myCenter_y < targCenter_y && resizeCorner != 2) // top right
 		{
-			y = k * (myCenter_x - targCenter_x) + targCenter_y;
-			if(y < myCenter_y)
-			{
-				myTarget_y = targPos_y + targSize_y;
-			}
-			else
-			{
+			if(targPos_x + targSize_x - myPos_x < myPos_y + mySize_y - targPos_y) // push it to the side
 				myTarget_x = targPos_x + targSize_x;
-			}
+			else // push it upwards
+				myTarget_y = targPos_y - myPos_y;
+		}
+		else if(myCenter_x < targCenter_x && myCenter_y > targCenter_y) // bottom left
+		{
+			if(myPos_x + mySize_x - targPos_x < targPos_y + targSize_y - myPos_y) // push it to the side
+				myTarget_x = targPos_x - myPos_x;
+			else // push it downwards
+				myTarget_y = targPos_y + targSize_y;
+		}
+		else if(myCenter_x > targCenter_x && myCenter_y > targCenter_y) // bottom right
+		{
+			if(targPos_x + targSize_x - myPos_x < targPos_y + targSize_y - myPos_y) // push it to the side
+				myTarget_x = targPos_x + targSize_x;
+			else // push it downwards
+				myTarget_y = targPos_y + targSize_y;
 		}
 	}
 
@@ -680,13 +685,16 @@ float HUD_Panel_SetSize(float id, vector mySize)
 	vector oldSize;
 	oldSize = stov(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_size")));
 
-	mySize_x = bound(0.025 * vid_conwidth, mySize_x, vid_conwidth);
-	mySize_y = bound(0.025 * vid_conheight, mySize_y, vid_conheight);
+	vector myPos;
+	myPos = HUD_Panel_GetPos(id);
 
 	mySize = HUD_Panel_CheckResize(id, HUD_Panel_GetPos(id), mySize);
 
-	mySize_x = bound(0.025 * vid_conwidth, mySize_x, vid_conwidth);
-	mySize_y = bound(0.025 * vid_conheight, mySize_y, vid_conheight);
+	mySize_x = bound(0.025 * vid_conwidth, mySize_x, vid_conwidth - myPos_x);
+	mySize_y = bound(0.025 * vid_conheight, mySize_y, vid_conheight - myPos_y);
+
+	//mySize_x = bound(0.025 * vid_conwidth, mySize_x, vid_conwidth);
+	//mySize_y = bound(0.025 * vid_conheight, mySize_y, vid_conheight);
 
 	// this is to check if (and how) SetPos should be called
 	if(mySize_x == oldSize_x && mySize_y == oldSize_y)
@@ -710,9 +718,6 @@ vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 	vector myTarget;
 	myTarget = myPos;
 
-	myPos = myPos - '1 1 ' * HUD_Panel_GetMarigin(id);
-	mySize = mySize + '1 1 0' * HUD_Panel_GetMarigin(id);
-
 	vector targPos;
 	vector targSize;
 	vector myCenter;
@@ -722,8 +727,8 @@ vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 		if(i == id || !HUD_Panel_CheckActive(i))
 			continue;
 
-		targPos = HUD_Panel_GetPos(i);
-		targSize = HUD_Panel_GetSize(i);
+		targPos = HUD_Panel_GetPos(i) - '1 1 0' * HUD_Panel_GetMarigin(id);
+		targSize = HUD_Panel_GetSize(i) + '2 2 0' * HUD_Panel_GetMarigin(id);
 
 		if(myPos_y + mySize_y < targPos_y)
 			continue;
@@ -735,6 +740,8 @@ vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 		if(myPos_x > targPos_x + targSize_x)
 			continue;
 
+		// OK, there IS a collision.
+
 		myCenter_x = myPos_x + 0.5 * mySize_x;
 		myCenter_y = myPos_y + 0.5 * mySize_y;
 
@@ -742,31 +749,33 @@ vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 		targCenter_y = targPos_y + 0.5 * targSize_y;
 
 		float k, y;
-		k = (targCenter_y - targPos_y) / (targPos_x + targSize_x - targCenter_x);
-		y = k * (targCenter_x - myCenter_x) + targCenter_y;
-		if(y > myCenter_y)
+		if(myCenter_x < targCenter_x && myCenter_y < targCenter_y) // top left (of the target panel)
 		{
-			y = k * (myCenter_x - targCenter_x) + targCenter_y;
-			if(y < myCenter_y)
-			{
+			if(myPos_x + mySize_x - targPos_x < myPos_y + mySize_y - targPos_y) // push it to the side
 				myTarget_x = targPos_x - mySize_x;
-			}
-			else
-			{
-				myTarget_y = targPos_y - mySize_y ;
-			}
+			else // push it upwards
+				myTarget_y = targPos_y - mySize_y;
 		}
-		else
+		else if(myCenter_x > targCenter_x && myCenter_y < targCenter_y) // top right
 		{
-			y = k * (myCenter_x - targCenter_x) + targCenter_y;
-			if(y < myCenter_y)
-			{
-				myTarget_y = targPos_y + targSize_y + '1 0 0' * HUD_Panel_GetMarigin(id);
-			}
-			else
-			{
-				myTarget_x = targPos_x + targSize_x + '1 0 0' * HUD_Panel_GetMarigin(id);
-			}
+			if(targPos_x + targSize_x - myPos_x < myPos_y + mySize_y - targPos_y) // push it to the side
+				myTarget_x = targPos_x + targSize_x;
+			else // push it upwards
+				myTarget_y = targPos_y - mySize_y;
+		}
+		else if(myCenter_x < targCenter_x && myCenter_y > targCenter_y) // bottom left
+		{
+			if(myPos_x + mySize_x - targPos_x < targPos_y + targSize_y - myPos_y) // push it to the side
+				myTarget_x = targPos_x - mySize_x;
+			else // push it downwards
+				myTarget_y = targPos_y + targSize_y;
+		}
+		else if(myCenter_x > targCenter_x && myCenter_y > targCenter_y) // bottom right
+		{
+			if(targPos_x + targSize_x - myPos_x < targPos_y + targSize_y - myPos_y) // push it to the side
+				myTarget_x = targPos_x + targSize_x;
+			else // push it downwards
+				myTarget_y = targPos_y + targSize_y;
 		}
 	}
 
@@ -823,10 +832,11 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 }
 
 vector mousepos, mouseprevpos;
-vector mouseToPanelDistance;
+vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)
+vector panel_click_pos; // panel pos (saved only upon a click)
+vector panel_click_size; // panel size (saved only upon a click)
 float highlightedPanel;
 float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
-float resizeCorner; // 1 = topleft, 2 = topright, 3 = bottomleft, 4 = bottomright
 void HUD_Panel_Mouse()
 {
 	if(mouseClicked == 0) {
@@ -892,27 +902,32 @@ void HUD_Panel_Mouse()
 			if(highlightedPanel == i)
 			{
 				if(prevMouseClicked == 0)
-					mouseToPanelDistance = mousepos - panelPos;
+				{
+					panel_click_distance = mousepos - panelPos;
+					panel_click_pos = panelPos;
+					panel_click_size = panelSize;
+				}
 
 				if(highlightedAction == 1)
-					HUD_Panel_SetPos(i, mousepos - mouseToPanelDistance, 0);
+					HUD_Panel_SetPos(i, mousepos - panel_click_distance, 0);
 				else if(highlightedAction == 2)
 				{
 					float didntresize; // panel too big/too small, dont resize (also has to affect moving)
 					if(resizeCorner == 1) {
 						didntresize = HUD_Panel_SetSize(i, panelSize + mouseprevpos - mousepos);
-						HUD_Panel_SetPos(i, mousepos - mouseToPanelDistance, didntresize);
+						HUD_Panel_SetPos(i, mousepos - panel_click_distance, didntresize);
 					}
 					if(resizeCorner == 2) {
-						didntresize = HUD_Panel_SetSize(i, panelSize + eX * (mousepos_x - mouseprevpos_x) + eY * (mouseprevpos_y - mousepos_y));
-						HUD_Panel_SetPos(i, eX * panelPos_x + eY * (mousepos_y - mouseToPanelDistance_y), didntresize);
+						didntresize = HUD_Panel_SetSize(i, eY * panel_click_size_y + eX * (mousepos_x - panelPos_x - (panel_click_distance_x - panel_click_size_x))
+								+ eY * (panel_click_distance_y + (panel_click_pos_y - mousepos_y)));
+						HUD_Panel_SetPos(i, eX * panelPos_x + eY * (mousepos_y - panel_click_distance_y), didntresize);
 					}
 					if(resizeCorner == 3) {
 						didntresize = HUD_Panel_SetSize(i, panelSize + eX * (mouseprevpos_x - mousepos_x) + eY * (mousepos_y - mouseprevpos_y));
-						HUD_Panel_SetPos(i, eX * (mousepos_x - mouseToPanelDistance_x) + eY * panelPos_y, didntresize);
+						HUD_Panel_SetPos(i, eX * (mousepos_x - panel_click_distance_x) + eY * panelPos_y, didntresize);
 					}
 					if(resizeCorner == 4) {
-						HUD_Panel_SetSize(i, panelSize + mousepos - mouseprevpos);
+						HUD_Panel_SetSize(i, mousepos - panelPos - (panel_click_distance - panel_click_size));
 					}
 				}
 			}
