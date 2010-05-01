@@ -205,7 +205,7 @@ void HUD_DrawXNum (vector pos, float num, float digits, float showsign, float le
 }
 
 // color the number differently based on how big it is (used in the health/armor panel)
-void HUD_DrawXNum_Colored (vector pos, float x, float lettersize, float alpha)
+void HUD_DrawXNum_Colored (vector pos, float x, float digits, float lettersize, float alpha)
 {
 	vector color;
 	if(x > 200) {
@@ -238,7 +238,7 @@ void HUD_DrawXNum_Colored (vector pos, float x, float lettersize, float alpha)
 		color_y = 0;
 		color_z = 0;
 	}
-	HUD_DrawXNum(pos, x, 3, 0, lettersize, color, 0, 0, alpha, DRAWFLAG_NORMAL);
+	HUD_DrawXNum(pos, x, digits, 0, lettersize, color, 0, 0, alpha, DRAWFLAG_NORMAL);
 }
 
 float stringwidth_colors(string s, vector theSize)
@@ -1327,6 +1327,7 @@ void HUD_HealthArmor(void)
 	float armor, health, x;
 	armor = getstati(STAT_ARMOR);
 	health = getstati(STAT_HEALTH);
+	float numbers;
 
 	if(hud_hudselector == 2) // combined health and armor display
 	{
@@ -1349,7 +1350,7 @@ void HUD_HealthArmor(void)
 			drawpic(num_pos + '108 -4.5 0', "gfx/hud/sb_health", '20 20 0', '1 1 1', hud_alpha_fg * v_y / armor, DRAWFLAG_NORMAL);
 			drawpic(num_pos + '78 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
-		HUD_DrawXNum_Colored(num_pos, x, 24, hud_alpha_fg); // draw the combined health and armor
+		HUD_DrawXNum_Colored(num_pos, x, 3, 24, hud_alpha_fg); // draw the combined health and armor
 	}
 
 	else
@@ -1365,21 +1366,64 @@ void HUD_HealthArmor(void)
 			armor_pos = pos + eX * 0.5 * mySize_x;
 		}
 
-		// armor
-		x = armor;
-		if (x > 0)
-		{
-			if (x > 45)
-				drawpic(armor_pos + eX * 0.35 * mySize_x, "gfx/hud/sb_armor", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-			else
-				drawpic(armor_pos + eX * 0.35 * mySize_x, "gfx/hud/sb_armor", '1 1 0' *  mySize_y, '1 1 1', (x+10)/55 * hud_alpha_fg, DRAWFLAG_NORMAL);
-			HUD_DrawXNum_Colored(armor_pos + eY * 0.25 * mySize_y, x, 0.5 * mySize_y, hud_alpha_fg);
-		}
 
-		// health
-		x = health;
-		drawpic(health_pos + eX * 0.35 * mySize_x, "gfx/hud/sb_health", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-		HUD_DrawXNum_Colored(health_pos + eY * 0.25 * mySize_y, x, 0.5 * mySize_y, hud_alpha_fg);
+		if (mySize_x/mySize_y > 5)
+		{
+			// armor
+			x = armor;
+			if (x < 10)
+				numbers = 1;
+			else if (x < 100)
+				numbers = 2;
+			else
+				numbers = 3;
+
+			if (x > 0)
+			{
+				if (x > 45)
+					drawpic(pos, "gfx/hud/sb_armor", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				else
+					drawpic(pos, "gfx/hud/sb_armor", '1 1 0' * mySize_y, '1 1 1', (x+10)/55 * hud_alpha_fg, DRAWFLAG_NORMAL);
+				HUD_DrawXNum_Colored(pos + eX * mySize_y + eY * 0.25 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
+			}
+
+			// health
+			x = health;
+			drawpic(pos + eX * mySize_x - eX * mySize_y, "gfx/hud/sb_health", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+			HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * 2.25 * mySize_y + eY * 0.25 * mySize_y, x, 3, 0.5 * mySize_y, hud_alpha_fg);
+		}
+		else if (mySize_x/mySize_y > 3.2)
+		{
+			// armor
+			x = armor;
+			if (x < 10)
+				numbers = 1;
+			else if (x < 100)
+				numbers = 2;
+			else
+				numbers = 3;
+
+			if (x > 0)
+			{
+				if (x > 45)
+					drawpic(pos + eX * 0.4 * mySize_y, "gfx/hud/sb_armor", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				else
+					drawpic(pos + eX * 0.4 * mySize_y, "gfx/hud/sb_armor", '0.7 0.7 0' * mySize_y, '1 1 1', (x+10)/55 * hud_alpha_fg, DRAWFLAG_NORMAL);
+				HUD_DrawXNum_Colored(pos + eY * 0.55 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
+			}
+
+			// health
+			x = health;
+			if (x < 10)
+				numbers = 1;
+			else if (x < 100)
+				numbers = 2;
+			else
+				numbers = 3;
+
+			drawpic(pos + eX * mySize_x - eX * 1.22 * mySize_y, "gfx/hud/sb_health", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+			HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * numbers * 0.5 * mySize_y + eY * 0.55 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
+		}
 	}
 }
 
