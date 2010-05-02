@@ -1424,6 +1424,38 @@ void HUD_HealthArmor(void)
 			drawpic(pos + eX * mySize_x - eX * 1.22 * mySize_y, "gfx/hud/sb_health", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * numbers * 0.5 * mySize_y + eY * 0.55 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
 		}
+		else
+		{
+			// armor
+			x = armor;
+			if (x < 10)
+				numbers = 1;
+			else if (x < 100)
+				numbers = 2;
+			else
+				numbers = 3;
+
+			if (x > 0)
+			{
+				if (x > 45)
+					drawpic(pos + eX * 0.4 * mySize_y, "gfx/hud/sb_armor", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				else
+					drawpic(pos + eX * 0.4 * mySize_y, "gfx/hud/sb_armor", '0.7 0.7 0' * mySize_y, '1 1 1', (x+10)/55 * hud_alpha_fg, DRAWFLAG_NORMAL);
+				HUD_DrawXNum_Colored(pos + eY * 0.55 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
+			}
+
+			// health
+			x = health;
+			if (x < 10)
+				numbers = 1;
+			else if (x < 100)
+				numbers = 2;
+			else
+				numbers = 3;
+
+			drawpic(pos + eX * mySize_x - eX * 1.22 * mySize_y, "gfx/hud/sb_health", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+			HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * numbers * 0.5 * mySize_y + eY * 0.55 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
+		}
 	}
 }
 
