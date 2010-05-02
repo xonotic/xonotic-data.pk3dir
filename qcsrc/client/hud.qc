@@ -1431,6 +1431,7 @@ void HUD_HealthArmor(void)
 
 			if (x > 0)
 			{
+				drawpic(pos, "gfx/hud/statusbar", eX * mySize_x * min(1, x/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
 				if (x > 45)
 					drawpic(pos, "gfx/hud/sb_armor", '0.5 0.5 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				else
@@ -1442,6 +1443,7 @@ void HUD_HealthArmor(void)
 			x = health;
 			numbers = strlen(ftos(x));
 
+			drawpic(pos + eY * 0.5 * mySize_y, "gfx/hud/statusbar", eX * mySize_x * min(1, x/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor("health"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
 			drawpic(pos + eY * 0.5 * mySize_y, "gfx/hud/sb_health", '0.5 0.5 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum_Colored(pos + eX * 0.5 * mySize_y + eY * 0.5 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
 		}
