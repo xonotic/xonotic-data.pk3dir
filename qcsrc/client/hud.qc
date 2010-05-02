@@ -1163,8 +1163,10 @@ void HUD_Inventory()
 	for (i = 0; i < 4; ++i) {
 		float a;
 		a = getstati(GetAmmoStat(i)); // how much ammo do we have of type i?
+		if(cvar("_hud_configure"))
+			a = 100;
 
-		if(cvar("hud_ammo_onlycurrent")) { // force showing current ammo only with conwidths < 800
+		if(cvar("hud_ammo_onlycurrent")) {
 			if (stat_items & GetAmmoItemCode(i)) {
 				drawpic(pos - '1 1 0' * marigin, "gfx/hud/sb_ammobg", mysize + '1 1 0' * marigin, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				drawpic(pos + eX * mysize_x * 1.7, GetAmmoPicture(i), '24 24 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
@@ -1206,17 +1208,17 @@ void HUD_Inventory()
 
 				if (stat_items & GetAmmoItemCode(i))
 					drawpic(mypos, "gfx/hud/sb_ammobg", mysize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-				drawpic(mypos + eX * 0.66 * mysize_x + eY * 0.05 * mysize_y, GetAmmoPicture(i), '1 1 0' * 0.8 * mysize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(mypos + eY * 0.05 * mysize_y, GetAmmoPicture(i), '1 1 0' * 0.8 * mysize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				if (a < 10) {
 					if(stat_items & GetAmmoItemCode(i))
-						HUD_DrawXNum(mypos + '6 4.5 0', a, 3, 0, 16, '0.7 0 0', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+						HUD_DrawXNum(mypos + eX * 0.8 * mysize_y + eY * 0.25 * mysize_y, a, strlen(ftos(a)), 0, 0.5 * mysize_y, '0.7 0 0', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 					else
-						HUD_DrawXNum(mypos + '6 4.5 0', a, 3, 0, 16, '0.7 0 0', 0, 0, hud_alpha_fg * 0.7, DRAWFLAG_NORMAL);
+						HUD_DrawXNum(mypos + eX * 0.8 * mysize_y + eY * 0.25 * mysize_y, a, strlen(ftos(a)), 0, 0.5 * mysize_y, '0.7 0 0', 0, 0, hud_alpha_fg * 0.7, DRAWFLAG_NORMAL);
 				} else {
 					if(stat_items & GetAmmoItemCode(i))
-						HUD_DrawXNum(mypos + '1 1 0' * 0.26 * mysize_y, a, 3, 0, 0.5 * mysize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+						HUD_DrawXNum(mypos + eX * 0.8 * mysize_y + eY * 0.25 * mysize_y, a, strlen(ftos(a)), 0, 0.5 * mysize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 					else
-						HUD_DrawXNum(mypos + '1 1 0' * 0.26 * mysize_y, a, 3, 0, 0.5 * mysize_y, '0.7 0.7 0.7', 0, 0, hud_alpha_fg * 0.7, DRAWFLAG_NORMAL);
+						HUD_DrawXNum(mypos + eX * 0.8 * mysize_y + eY * 0.25 * mysize_y, a, strlen(ftos(a)), 0, 0.5 * mysize_y, '0.7 0.7 0.7', 0, 0, hud_alpha_fg * 0.7, DRAWFLAG_NORMAL);
 				}
 			}
 		}
@@ -1333,6 +1335,12 @@ void HUD_HealthArmor(void)
 	float armor, health, x;
 	armor = getstati(STAT_ARMOR);
 	health = getstati(STAT_HEALTH);
+	if(cvar("_hud_configure"))
+	{
+		armor = 150;
+		health = 100;
+	}
+
 	if(health <= 0)
 		return;
 
@@ -1574,7 +1582,7 @@ void HUD_RaceTimer (void) {
 		{
 			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 			//drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-			drawcolorcodedstring(pos, s, '1 1 0' * mySize_y, hud_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.25 * mySize_y) + eY * 0.75 * mySize_y, s, '1 1 0' * 0.25 * mySize_y, hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
 
 		if(race_penaltytime)
@@ -1593,7 +1601,7 @@ void HUD_RaceTimer (void) {
 		{
 			a = bound(0, (time - race_checkpointtime) / 0.5, 1);
 			//drawstring_expanding(m - '16 0 0' * stringwidth(forcetime, FALSE), forcetime, '32 32 0', '1 1 1', hud_alpha_fg, 0, a);
-			drawstring_expanding(pos - eX * stringwidth(forcetime, FALSE, '16 0 0'), forcetime, '32 32 0', '1 1 1', hud_alpha_fg, 0, a);
+			drawstring_expanding(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(forcetime, FALSE, '1 1 0' * 0.75 * mySize_y), forcetime, '1 1 0' * 0.75 * mySize_y, '1 1 1', hud_alpha_fg, 0, a);
 		}
 		else
 			a = 1;
@@ -1602,7 +1610,7 @@ void HUD_RaceTimer (void) {
 		{
 			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime));
 			//drawstring(m - '16 0 0' * stringwidth(s, FALSE), s, '32 32 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-			drawstring(pos - '0.5 0 0' * stringwidth(s, FALSE, '32 32 0'), s, '32 32 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, FALSE, '0.75 0.75 0' * mySize_y), s, '0.75 0.75 0' * mySize_y, '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
 	}
 	else
