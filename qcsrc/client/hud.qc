@@ -560,6 +560,12 @@ vector HUD_Panel_CheckLimitSize(float id, vector mySize)
 			mySize_x = max(mySize_y * (1/10), mySize_x); // at least 1/10 * height
 			mySize_y = max(mySize_x * (1/26), mySize_y); // at least 1/26 * width
 			break;
+		case 1: 
+			mySize_x = max(mySize_y * 0.7, mySize_x); // at least 0.7 * height
+			break;
+		case 3: 
+			mySize_x = max(mySize_y * 2, mySize_x); // at least 2 * height
+			break;
 	}
 	return mySize;
 }
@@ -1329,6 +1335,7 @@ void HUD_HealthArmor(void)
 	health = getstati(STAT_HEALTH);
 	float numbers;
 
+	// TODO!
 	if(hud_hudselector == 2) // combined health and armor display
 	{
 		vector v;
@@ -1357,11 +1364,11 @@ void HUD_HealthArmor(void)
 	{
 		vector health_pos, armor_pos;
 
+		// TODO!
 		if (hud_hudselector == 0) { // old style layout with armor left of health
 			armor_pos = pos;
 			health_pos = pos + eX * 0.5 * mySize_x;
-		}
-		else {
+		} else {
 			health_pos = pos;
 			armor_pos = pos + eX * 0.5 * mySize_x;
 		}
@@ -1371,12 +1378,7 @@ void HUD_HealthArmor(void)
 		{
 			// armor
 			x = armor;
-			if (x < 10)
-				numbers = 1;
-			else if (x < 100)
-				numbers = 2;
-			else
-				numbers = 3;
+			numbers = strlen(ftos(x));
 
 			if (x > 0)
 			{
@@ -1390,18 +1392,13 @@ void HUD_HealthArmor(void)
 			// health
 			x = health;
 			drawpic(pos + eX * mySize_x - eX * mySize_y, "gfx/hud/sb_health", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-			HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * 2.25 * mySize_y + eY * 0.25 * mySize_y, x, 3, 0.5 * mySize_y, hud_alpha_fg);
+			HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * 2.5 * mySize_y + eY * 0.25 * mySize_y, x, 3, 0.5 * mySize_y, hud_alpha_fg);
 		}
 		else if (mySize_x/mySize_y > 3.2)
 		{
 			// armor
 			x = armor;
-			if (x < 10)
-				numbers = 1;
-			else if (x < 100)
-				numbers = 2;
-			else
-				numbers = 3;
+			numbers = strlen(ftos(x));
 
 			if (x > 0)
 			{
@@ -1414,47 +1411,32 @@ void HUD_HealthArmor(void)
 
 			// health
 			x = health;
-			if (x < 10)
-				numbers = 1;
-			else if (x < 100)
-				numbers = 2;
-			else
-				numbers = 3;
+			numbers = strlen(ftos(x));
 
-			drawpic(pos + eX * mySize_x - eX * 1.22 * mySize_y, "gfx/hud/sb_health", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(pos + eX * mySize_x - eX * 1.1 * mySize_y, "gfx/hud/sb_health", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * numbers * 0.5 * mySize_y + eY * 0.55 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
 		}
 		else
 		{
 			// armor
 			x = armor;
-			if (x < 10)
-				numbers = 1;
-			else if (x < 100)
-				numbers = 2;
-			else
-				numbers = 3;
+			numbers = strlen(ftos(x));
 
 			if (x > 0)
 			{
 				if (x > 45)
-					drawpic(pos + eX * 0.4 * mySize_y, "gfx/hud/sb_armor", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic(pos, "gfx/hud/sb_armor", '0.5 0.5 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				else
-					drawpic(pos + eX * 0.4 * mySize_y, "gfx/hud/sb_armor", '0.7 0.7 0' * mySize_y, '1 1 1', (x+10)/55 * hud_alpha_fg, DRAWFLAG_NORMAL);
-				HUD_DrawXNum_Colored(pos + eY * 0.55 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
+					drawpic(pos, "gfx/hud/sb_armor", '0.5 0.5 0' * mySize_y, '1 1 1', (x+10)/55 * hud_alpha_fg, DRAWFLAG_NORMAL);
+				HUD_DrawXNum_Colored(pos + eX * 0.5 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
 			}
 
 			// health
 			x = health;
-			if (x < 10)
-				numbers = 1;
-			else if (x < 100)
-				numbers = 2;
-			else
-				numbers = 3;
+			numbers = strlen(ftos(x));
 
-			drawpic(pos + eX * mySize_x - eX * 1.22 * mySize_y, "gfx/hud/sb_health", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-			HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * numbers * 0.5 * mySize_y + eY * 0.55 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
+			drawpic(pos + eY * 0.5 * mySize_y, "gfx/hud/sb_health", '0.5 0.5 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+			HUD_DrawXNum_Colored(pos + eX * 0.5 * mySize_y + eY * 0.5 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
 		}
 	}
 }
