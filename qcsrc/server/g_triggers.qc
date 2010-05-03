@@ -533,7 +533,7 @@ void spawnfunc_trigger_heal()
 //
 //////////////////////////////////////////////////////////////
 
-.float triggergravity;
+.float trigger_gravity_active;
 .entity trigger_gravity_check;
 void trigger_gravity_check_think()
 {
@@ -542,9 +542,8 @@ void trigger_gravity_check_think()
 	// It the player has left the gravity trigger, this will be allowed to reach 0 and indicate that.
 	if(self.cnt <= 0)
 	{
-		dprint("XXXXXXXXXXXXXXXXXXXXXXXXXX "); // temporary execution test
 		self.owner.gravity = 0;
-		self.owner.triggergravity = 0;
+		self.owner.trigger_gravity_active = 0;
 		remove(self);
 	}
 	else
@@ -558,9 +557,9 @@ void trigger_gravity_touch()
 {
 	EXACTTRIGGER_TOUCH;
 
-	if(!other.triggergravity)
+	if(!other.trigger_gravity_active)
 	{
-		other.triggergravity = 1;
+		other.trigger_gravity_active = 1;
 		other.trigger_gravity_check = spawn();
 		other.trigger_gravity_check.owner = other;
 		other.trigger_gravity_check.think = trigger_gravity_check_think;
