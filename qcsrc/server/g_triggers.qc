@@ -553,8 +553,19 @@ void trigger_gravity_check_think()
 	}
 }
 
+void trigger_gravity_use()
+{
+	if(self.state == TRUE)
+		self.state = FALSE;
+	if(self.state == FALSE)
+		self.state = TRUE;
+}
+
 void trigger_gravity_touch()
 {
+	if(self.state != TRUE)
+		return;
+
 	EXACTTRIGGER_TOUCH;
 
 	if not(self.spawnflags & 1)
@@ -586,6 +597,14 @@ void spawnfunc_trigger_gravity()
 	self.touch = trigger_gravity_touch;
 	if(self.noise != "")
 		precache_sound(self.noise);
+
+	self.state = TRUE;
+	IFTARGETED
+	{
+		self.use = trigger_gravity_use;
+		if(self.spawnflags & 2)
+			self.state = FALSE;
+	}
 };
 
 //=============================================================================
