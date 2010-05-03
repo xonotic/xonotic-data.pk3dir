@@ -549,6 +549,7 @@ string HUD_Panel_GetName(float id)
 		case 6: return "radar"; break;
 		case 7: return "score"; break;
 		case 8: return "racetimer"; break;
+		case 9: return "vote"; break;
 		default: return "";
 	}
 }
@@ -1652,27 +1653,22 @@ void HUD_RaceTimer (void) {
 	drawfont = sbar_font;
 }
 
-
-
-
-
-
-
 // Notification area (#4)
-// OH MY GOOODDDDDD this thing is colossal :/
-// TODO
-float vote_yescount;
-float vote_nocount;
-float vote_needed;
-float vote_highlighted; // currently selected vote
-
-float vote_active; // is there an active vote?
-float vote_prev; // previous state of vote_active to check for a change
-float vote_alpha;
-float vote_change; // "time" when vote_active changed
-
-/*
+void HUD_Notify (void)
 {
+	float marigin;
+
+	vector pos, mySize, color;
+	marigin = HUD_Panel_GetMarigin(4);
+	pos = HUD_Panel_GetPos(4);
+	mySize = HUD_Panel_GetSize(4);
+	color = HUD_Panel_GetColor(4);
+
+	if(HUD_Panel_GetBgActive(4))
+		draw_BorderPicture(pos - '1 1 0' * marigin, "gfx/hud/border", mySize + '1 1 0' * 2 * marigin, color, hud_alpha_bg, '1 1 0' * (marigin/MARIGIN_MULTIPLIER));
+
+	string s;
+	entity tm;
 	if(spectatee_status && !intermission)
 	{
 		drawfont = sbar_bigfont;
@@ -1786,7 +1782,34 @@ float vote_change; // "time" when vote_active changed
 			}
 		}
 	}
+}
 
+// Vote window (#9)
+float vote_yescount;
+float vote_nocount;
+float vote_needed;
+float vote_highlighted; // currently selected vote
+
+float vote_active; // is there an active vote?
+float vote_prev; // previous state of vote_active to check for a change
+float vote_alpha;
+float vote_change; // "time" when vote_active changed
+
+void HUD_VoteWindow(void) 
+{
+	float marigin;
+
+	vector pos, mySize, color;
+	marigin = HUD_Panel_GetMarigin(9);
+	pos = HUD_Panel_GetPos(9);
+	mySize = HUD_Panel_GetSize(9);
+	color = HUD_Panel_GetColor(9);
+
+	if(HUD_Panel_GetBgActive(9))
+		draw_BorderPicture(pos - '1 1 0' * marigin, "gfx/hud/border", mySize + '1 1 0' * 2 * marigin, color, hud_alpha_bg, '1 1 0' * (marigin/MARIGIN_MULTIPLIER));
+
+	string s;
+	float a;
 	if(vote_active != vote_prev) {
 		vote_change = time;
 		vote_prev = bound(0, vote_active, 1);
@@ -1800,36 +1823,34 @@ float vote_change; // "time" when vote_active changed
 	if(vote_alpha) {
 		a = vote_alpha * bound(cvar_or("hud_vote_alreadyvoted_alpha", 0.75), 1 - vote_highlighted, 1);
 
-		vector voteorigin = bottomright - '290 135 0';
-		vector votesize = '280 70 0';
-		drawpic(voteorigin, "gfx/hud/voteprogress_back", votesize, HUD_GetBgColor(), a * hud_alpha_bg, DRAWFLAG_NORMAL);
+		drawpic(pos, "gfx/hud/voteprogress_back", mySize, HUD_GetBgColor(), a * hud_alpha_bg, DRAWFLAG_NORMAL);
 
 	        s = "A vote has been called for: ";
-		drawstring(voteorigin + '0.5 0 0' * votesize_x + '0 0.1 0' * votesize_y - eX * stringwidth(s, FALSE, '6 0 0'), s, '12 12 0', '1 1 1', a * hud_alpha_fg, DRAWFLAG_NORMAL);
-		s = textShortenToWidth(vote_called_vote, votesize_x * 0.96, '10 0 0', stringwidth_colors);
-		drawcolorcodedstring(voteorigin + '0.52 0 0' * votesize_x + '0 0.3 0' * votesize_y - eX * stringwidth(s, FALSE, '5 0 0'), s, '10 10 0', a * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + '0.5 0 0' * mySize_x + '0 0.1 0' * mySize_y - eX * stringwidth(s, FALSE, '6 0 0'), s, '12 12 0', '1 1 1', a * hud_alpha_fg, DRAWFLAG_NORMAL);
+		s = textShortenToWidth(vote_called_vote, mySize_x * 0.96, '10 0 0', stringwidth_colors);
+		drawcolorcodedstring(pos + '0.52 0 0' * mySize_x + '0 0.3 0' * mySize_y - eX * stringwidth(s, FALSE, '5 0 0'), s, '10 10 0', a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 		// print the yes/no counts
 		s = strcat("Yes: ", ftos(vote_yescount));
-		drawstring(voteorigin + '0 0.6 0' * votesize_y + '0.02 0 0' * votesize_x, s, '12 12 0', eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + '0 0.6 0' * mySize_y + '0.02 0 0' * mySize_x, s, '12 12 0', eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 		s = strcat("No: ", ftos(vote_nocount));
-		drawstring(voteorigin + '0 0.6 0' * votesize_y + '0.98 0 0' * votesize_x - eX * stringwidth(s, FALSE, '12 0 0'), s, '12 12 0', eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + '0 0.6 0' * mySize_y + '0.98 0 0' * mySize_x - eX * stringwidth(s, FALSE, '12 0 0'), s, '12 12 0', eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 		// draw the progress bars
-		drawsetcliparea(voteorigin_x, voteorigin_y, votesize_x * 0.5 * (vote_yescount/vote_needed), votesize_y);
-		drawpic(voteorigin, "gfx/hud/voteprogress_prog", votesize, eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawsetcliparea(pos_x, pos_y, mySize_x * 0.5 * (vote_yescount/vote_needed), mySize_y);
+		drawpic(pos, "gfx/hud/voteprogress_prog", mySize, eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
-		drawsetcliparea(voteorigin_x + votesize_x - votesize_x * 0.5 * (vote_nocount/vote_needed), voteorigin_y, votesize_x * 0.5, votesize_y);
-		drawpic(voteorigin, "gfx/hud/voteprogress_prog", votesize, eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawsetcliparea(pos_x + mySize_x - mySize_x * 0.5 * (vote_nocount/vote_needed), pos_y, mySize_x * 0.5, mySize_y);
+		drawpic(pos, "gfx/hud/voteprogress_prog", mySize, eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 		// draw the highlights
 		if(vote_highlighted == 1) {
-			drawsetcliparea(voteorigin_x, voteorigin_y, votesize_x * 0.5, votesize_y);
-			drawpic(voteorigin, "gfx/hud/voteprogress_voted", votesize, eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawsetcliparea(pos_x, pos_y, mySize_x * 0.5, mySize_y);
+			drawpic(pos, "gfx/hud/voteprogress_voted", mySize, eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 		else if(vote_highlighted == 2) {
-			drawsetcliparea(voteorigin_x + 0.5 * votesize_x, voteorigin_y, votesize_x * 0.5, votesize_y);
-			drawpic(voteorigin, "gfx/hud/voteprogress_voted", votesize, eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawsetcliparea(pos_x + 0.5 * mySize_x, pos_y, mySize_x * 0.5, mySize_y);
+			drawpic(pos, "gfx/hud/voteprogress_voted", mySize, eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 
 		drawresetcliparea();
@@ -1839,7 +1860,6 @@ float vote_change; // "time" when vote_active changed
 	}
 }
 
-*/
 // Awards system
 float race_status_time;
 float race_status_prev;
