@@ -588,6 +588,8 @@ void spawnfunc_trigger_gravity()
 		precache_sound(self.noise);
 };
 
+//=============================================================================
+
 // TODO add a way to do looped sounds with sound(); then complete this entity
 .float volume, atten;
 void target_speaker_use() {sound(self, CHAN_TRIGGER, self.noise, VOL_BASE * self.volume, self.atten);}
