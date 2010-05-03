@@ -533,7 +533,7 @@ void spawnfunc_trigger_heal()
 //
 //////////////////////////////////////////////////////////////
 
-.float triggergravity, oldgravity;
+.float triggergravity;
 .entity trigger_gravity_check;
 void trigger_gravity_check_think()
 {
@@ -543,7 +543,7 @@ void trigger_gravity_check_think()
 	if(self.cnt <= 0)
 	{
 		dprint("XXXXXXXXXXXXXXXXXXXXXXXXXX "); // temporary execution test
-		self.owner.gravity = self.owner.oldgravity;
+		self.owner.gravity = 0;
 		self.owner.triggergravity = 0;
 		remove(self);
 	}
@@ -570,7 +570,6 @@ void trigger_gravity_touch()
 
 	if (other.gravity != self.gravity)
 	{
-		other.oldgravity = other.gravity;
 		other.gravity = self.gravity;
 		if(self.noise != "")
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
