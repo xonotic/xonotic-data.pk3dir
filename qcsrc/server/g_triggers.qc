@@ -533,15 +533,15 @@ void spawnfunc_trigger_heal()
 //
 //////////////////////////////////////////////////////////////
 
-.float triggergravity, triggergravitytime;
+.float triggergravity, triggergravitytime, oldgravity;
 .entity trigger_gravity_check;
 void trigger_gravity_check_think()
 {
 	// Entity that spawns when you enter a gravity zone, and checks if you left it
-	if(self.owner.triggergravitytime < time - 0.01) // need to figure out a correct formula here
+	if(self.owner.triggergravitytime < time - 0.1) // need to figure out a correct formula here
 	{
 		dprint("XXXXXXXXXXXXXXXXXXXXXXXXXX ");
-		self.owner.gravity = 0;
+		self.owner.gravity = self.owner.oldgravity;
 		self.owner.triggergravity = 0;
 		remove(self);
 	}
@@ -557,7 +557,7 @@ void trigger_gravity_touch()
 	if (other.triggergravitytime < time)
 	{
 		EXACTTRIGGER_TOUCH;
-		other.triggergravitytime = time + 0.01;
+		other.triggergravitytime = time + 0.1;
 
 		if(!other.triggergravity)
 		{
@@ -570,6 +570,7 @@ void trigger_gravity_touch()
 
 		if (other.gravity != self.gravity)
 		{
+			other.oldgravity = other.gravity;
 			other.gravity = self.gravity;
 			if(self.noise != "")
 				sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
