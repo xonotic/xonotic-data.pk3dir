@@ -533,7 +533,43 @@ void spawnfunc_trigger_heal()
 //
 //////////////////////////////////////////////////////////////
 
+.float triggergravitytime;
+void trigger_gravity_think()
+{
+	dprint("XXXXXXXXXXXXXXXXXXXXXXXXXX ");
+	self.toucher.gravity = 0;
+	self.toucher = world;
+	self.nextthink = 0;
+}
 
+void trigger_gravity_touch()
+{
+	if(sv_gravity != 800)
+		return;
+	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
+	if (self.triggergravitytime < time)
+	{
+		EXACTTRIGGER_TOUCH;
+		self.triggergravitytime = time + 1;
+
+		if (other.gravity != self.gravity)
+		{
+			other.gravity = self.gravity;
+			if(self.noise != "")
+				sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+		}
+	}
+};
+
+void spawnfunc_trigger_gravity()
+{
+	if(!self.gravity)
+		return;
+	EXACTTRIGGER_INIT;
+	self.touch = trigger_gravity_touch;
+	if(self.noise != "")
+		precache_sound(self.noise);
+};
 
 // TODO add a way to do looped sounds with sound(); then complete this entity
 .float volume, atten;
