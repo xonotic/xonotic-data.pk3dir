@@ -1775,10 +1775,12 @@ Must target a target_position that indicates the view to be shown (and whose ang
 target: must point to a target_position
 */
 
-/*QUAKED trigger_gravity (.5 .5 1) ?
+/*QUAKED trigger_gravity (.5 .5 1) ? STICKY
 An area where gravity differs from the rest of the map.
 This acts as a modifier over the normal gravity (sv_gravity). eg: 0.5 is half the normal gravity, 2 is twice the normal gravity.
 -------- KEYS --------
 gravity: gravity offset in this area
 noise: sound to play when an entity enters the gravity zone, leave empty to disable
+-------- SPAWNFLAGS --------
+STICKY: entities keep their gravity after leaving the gravity zone
 */

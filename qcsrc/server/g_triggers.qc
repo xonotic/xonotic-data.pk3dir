@@ -557,15 +557,18 @@ void trigger_gravity_touch()
 {
 	EXACTTRIGGER_TOUCH;
 
-	if(!other.trigger_gravity_active)
+	if not(self.spawnflags & 1)
 	{
-		other.trigger_gravity_active = 1;
-		other.trigger_gravity_check = spawn();
-		other.trigger_gravity_check.owner = other;
-		other.trigger_gravity_check.think = trigger_gravity_check_think;
-		other.trigger_gravity_check.nextthink = time;
+		if(!other.trigger_gravity_active)
+		{
+			other.trigger_gravity_active = 1;
+			other.trigger_gravity_check = spawn();
+			other.trigger_gravity_check.owner = other;
+			other.trigger_gravity_check.think = trigger_gravity_check_think;
+			other.trigger_gravity_check.nextthink = time;
+		}
+		other.trigger_gravity_check.cnt = 2;
 	}
-	other.trigger_gravity_check.cnt = 2;
 
 	if (other.gravity != self.gravity)
 	{
