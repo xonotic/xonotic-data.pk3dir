@@ -555,10 +555,7 @@ void trigger_gravity_check_think()
 
 void trigger_gravity_use()
 {
-	if(self.state == TRUE)
-		self.state = FALSE;
-	if(self.state == FALSE)
-		self.state = TRUE;
+	self.state = !self.state;
 }
 
 void trigger_gravity_touch()
