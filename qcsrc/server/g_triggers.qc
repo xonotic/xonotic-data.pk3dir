@@ -533,48 +533,47 @@ void spawnfunc_trigger_heal()
 //
 //////////////////////////////////////////////////////////////
 
-.float triggergravity, triggergravitytime, oldgravity;
+.float triggergravity, oldgravity;
 .entity trigger_gravity_check;
 void trigger_gravity_check_think()
 {
-	// Entity that spawns when you enter a gravity zone, and checks if you left it
-	if(self.owner.triggergravitytime < time - 0.1) // need to figure out a correct formula here
+	// This spawns when a player enters the gravity zone and checks if he left.
+	// Each frame, self.cnt is set to 2 by trigger_gravity_touch() and decreased by 1 here.
+	// It the player has left the gravity trigger, this will be allowed to reach 0 and indicate that.
+	if(self.cnt <= 0)
 	{
-		dprint("XXXXXXXXXXXXXXXXXXXXXXXXXX ");
+		dprint("XXXXXXXXXXXXXXXXXXXXXXXXXX "); // temporary execution test
 		self.owner.gravity = self.owner.oldgravity;
 		self.owner.triggergravity = 0;
 		remove(self);
 	}
 	else
+	{
+		self.cnt -= 1;
 		self.nextthink = time;
+	}
 }
 
 void trigger_gravity_touch()
 {
-	if(sv_gravity != 800)
-		return;
-	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
-	if (other.triggergravitytime < time)
+	EXACTTRIGGER_TOUCH;
+
+	if(!other.triggergravity)
 	{
-		EXACTTRIGGER_TOUCH;
-		other.triggergravitytime = time + 0.1;
+		other.triggergravity = 1;
+		other.trigger_gravity_check = spawn();
+		other.trigger_gravity_check.owner = other;
+		other.trigger_gravity_check.think = trigger_gravity_check_think;
+		other.trigger_gravity_check.nextthink = time;
+	}
+	other.trigger_gravity_check.cnt = 2;
 
-		if(!other.triggergravity)
-		{
-			other.triggergravity = 1;
-			other.trigger_gravity_check = spawn();
-			other.trigger_gravity_check.owner = other;
-			other.trigger_gravity_check.think = trigger_gravity_check_think;
-			other.trigger_gravity_check.nextthink = time;
-		}
-
-		if (other.gravity != self.gravity)
-		{
-			other.oldgravity = other.gravity;
-			other.gravity = self.gravity;
-			if(self.noise != "")
-				sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
-		}
+	if (other.gravity != self.gravity)
+	{
+		other.oldgravity = other.gravity;
+		other.gravity = self.gravity;
+		if(self.noise != "")
+			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
 	}
 };
 
