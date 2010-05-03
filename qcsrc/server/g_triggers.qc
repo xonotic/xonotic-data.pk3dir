@@ -534,23 +534,15 @@ void spawnfunc_trigger_heal()
 //////////////////////////////////////////////////////////////
 
 .float triggergravitytime;
-void trigger_gravity_think()
-{
-	dprint("XXXXXXXXXXXXXXXXXXXXXXXXXX ");
-	self.toucher.gravity = 0;
-	self.toucher = world;
-	self.nextthink = 0;
-}
-
 void trigger_gravity_touch()
 {
 	if(sv_gravity != 800)
 		return;
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
-	if (self.triggergravitytime < time)
+	if (other.triggergravitytime < time)
 	{
 		EXACTTRIGGER_TOUCH;
-		self.triggergravitytime = time + 1;
+		other.triggergravitytime = time + 1;
 
 		if (other.gravity != self.gravity)
 		{
