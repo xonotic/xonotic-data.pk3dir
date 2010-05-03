@@ -533,7 +533,19 @@ void spawnfunc_trigger_heal()
 //
 //////////////////////////////////////////////////////////////
 
-.float triggergravitytime;
+.float triggergravity, triggergravitytime;
+.entity trigger_gravity_check;
+void trigger_gravity_check_think()
+{
+	if(self.owner.triggergravitytime < time + 0.1) // need to figure out a correct formula here
+	{
+		dprint("XXXXXXXXXXXXXXXXXXXXXXXXXX ");
+		self.owner.gravity = 0;
+		self.nextthink = self.owner.triggergravity = 0;
+		remove(self);
+	}
+}
+
 void trigger_gravity_touch()
 {
 	if(sv_gravity != 800)
@@ -543,6 +555,15 @@ void trigger_gravity_touch()
 	{
 		EXACTTRIGGER_TOUCH;
 		other.triggergravitytime = time + 1;
+
+		if(!other.triggergravity)
+		{
+			other.triggergravity = 1;
+			other.trigger_gravity_check = spawn();
+			other.trigger_gravity_check.owner = other;
+			other.trigger_gravity_check.think = trigger_gravity_check_think;
+			other.trigger_gravity_check.nextthink = time;
+		}
 
 		if (other.gravity != self.gravity)
 		{
