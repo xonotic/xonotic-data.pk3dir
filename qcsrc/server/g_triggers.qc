@@ -542,7 +542,7 @@ void trigger_gravity_check_think()
 	// It the player has left the gravity trigger, this will be allowed to reach 0 and indicate that.
 	if(self.cnt <= 0)
 	{
-		self.owner.gravity = 0;
+		self.owner.gravity = 1;
 		self.owner.trigger_gravity_active = FALSE;
 		remove(self);
 	}
@@ -551,12 +551,12 @@ void trigger_gravity_check_think()
 		self.cnt -= 1;
 		self.nextthink = time;
 	}
-}
+};
 
 void trigger_gravity_use()
 {
 	self.state = !self.state;
-}
+};
 
 void trigger_gravity_touch()
 {
@@ -588,8 +588,9 @@ void trigger_gravity_touch()
 
 void spawnfunc_trigger_gravity()
 {
-	if(!self.gravity)
+	if(self.gravity == 1)
 		return;
+
 	EXACTTRIGGER_INIT;
 	self.touch = trigger_gravity_touch;
 	if(self.noise != "")
