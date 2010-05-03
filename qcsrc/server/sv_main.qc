@@ -191,6 +191,7 @@ void StartFrame (void)
 	sv_airstrafeaccelerate = cvar("sv_airstrafeaccelerate");
 	sv_maxairstrafespeed = cvar("sv_maxairstrafespeed");
 	sv_aircontrol = cvar("sv_aircontrol");
+	sv_aircontrol_power = cvar("sv_aircontrol_power");
 	sv_warsowbunny_airforwardaccel = cvar("sv_warsowbunny_airforwardaccel");
 	sv_warsowbunny_accel = cvar("sv_warsowbunny_accel");
 	sv_warsowbunny_topspeed = cvar("sv_warsowbunny_topspeed");
