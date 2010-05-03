@@ -543,7 +543,7 @@ void trigger_gravity_check_think()
 	if(self.cnt <= 0)
 	{
 		self.owner.gravity = 0;
-		self.owner.trigger_gravity_active = 0;
+		self.owner.trigger_gravity_active = FALSE;
 		remove(self);
 	}
 	else
@@ -569,7 +569,7 @@ void trigger_gravity_touch()
 	{
 		if(!other.trigger_gravity_active)
 		{
-			other.trigger_gravity_active = 1;
+			other.trigger_gravity_active = TRUE;
 			other.trigger_gravity_check = spawn();
 			other.trigger_gravity_check.owner = other;
 			other.trigger_gravity_check.think = trigger_gravity_check_think;
