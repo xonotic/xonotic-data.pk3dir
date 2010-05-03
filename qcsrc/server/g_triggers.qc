@@ -537,13 +537,16 @@ void spawnfunc_trigger_heal()
 .entity trigger_gravity_check;
 void trigger_gravity_check_think()
 {
-	if(self.owner.triggergravitytime < time + 0.1) // need to figure out a correct formula here
+	// Entity that spawns when you enter a gravity zone, and checks if you left it
+	if(self.owner.triggergravitytime < time - 0.1) // need to figure out a correct formula here
 	{
 		dprint("XXXXXXXXXXXXXXXXXXXXXXXXXX ");
 		self.owner.gravity = 0;
 		self.nextthink = self.owner.triggergravity = 0;
 		remove(self);
 	}
+	else
+		self.nextthink = time + 0.1;
 }
 
 void trigger_gravity_touch()
