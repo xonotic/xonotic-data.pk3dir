@@ -546,7 +546,7 @@ void trigger_gravity_check_think()
 		remove(self);
 	}
 	else
-		self.nextthink = time + 0.01;
+		self.nextthink = time;
 }
 
 void trigger_gravity_touch()
