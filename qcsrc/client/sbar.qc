@@ -3397,8 +3397,12 @@ void CSQC_race_hud(void)
 
 	if(score && (score < t || !t)) {
 		db_put(ClientProgsDB, strcat(shortmapname, rr, "time"), ftos(score));
-		if(cvar("cl_autodemo_delete"))
-			cvar_set("cl_autodemo_delete", "3"); // don't delete demo with new record!
+		if(cvar("cl_autodemo_delete_keeprecords"))
+		{
+			f = cvar("cl_autodemo_delete");
+			f &~= 1;
+			cvar_set("cl_autodemo_delete", ftos(f)); // don't delete demo with new record!
+		}
 	}
 
 	if(t != crecordtime_prev) {
