@@ -167,7 +167,7 @@ float player_getspecies()
 {
 	local float glob, i, j, fh, len, s, sk;
 	local string fn, l;
-	local float tokens;
+	local float tokens, snd;
 
 	s = -1;
 
@@ -184,11 +184,14 @@ float player_getspecies()
 				continue;
 			fgets(fh); fgets(fh);
 			sk = stof(fgets(fh));
+
+			snd = tokenizebyseparator(self.model, "."); // don't use the .zym at the end
+			UpdatePlayerSounds(strcat(argv(0), ftos(sk)));
+
 			if(sk == (j ? 0 : self.skinindex)) // 2nd pass skips the skin test
 			if(fgets(fh) == self.model)
 			{
 				tokens = tokenizebyseparator(fn, ".");
-				UpdatePlayerSounds(argv(0));
 
 				l = fgets(fh);
 				len = tokenize_console(l);
