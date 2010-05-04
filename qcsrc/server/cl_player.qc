@@ -171,7 +171,6 @@ float player_getspecies()
 
 	file = substring(self.model, 0, -5); // remove the extension at the end
 	UpdatePlayerSounds(strcat(file, ftos(sk)));
-	dprint(strcat(" XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ", file, ftos(sk)));
 
 	s = -1;
 
