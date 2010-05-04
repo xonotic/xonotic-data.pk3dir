@@ -166,8 +166,12 @@ void CopyBody(float keepvelocity)
 float player_getspecies()
 {
 	local float glob, i, j, fh, len, s, sk;
-	local string fn, l;
-	local float tokens, snd;
+	local string fn, l, file;
+	local float tokens;
+
+	file = substring(self.model, 0, -5); // remove the extension at the end
+	UpdatePlayerSounds(strcat(file, ftos(sk)));
+	dprint(strcat(" XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ", file, ftos(sk)));
 
 	s = -1;
 
@@ -184,10 +188,6 @@ float player_getspecies()
 				continue;
 			fgets(fh); fgets(fh);
 			sk = stof(fgets(fh));
-
-			snd = tokenizebyseparator(self.model, "."); // don't use the .zym at the end
-			UpdatePlayerSounds(strcat(argv(0), ftos(sk)));
-
 			if(sk == (j ? 0 : self.skinindex)) // 2nd pass skips the skin test
 			if(fgets(fh) == self.model)
 			{
