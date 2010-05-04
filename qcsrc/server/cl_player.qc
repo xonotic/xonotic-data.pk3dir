@@ -169,8 +169,9 @@ float player_getspecies()
 	local string fn, l, file;
 	local float tokens;
 
-	file = substring(self.model, 0, -5); // remove the extension at the end
-	UpdatePlayerSounds(strcat(file, ftos(sk)));
+	file = strcat(substring(self.model, 0, -5), ftos(self.skinindex)); // remove the extension at the end
+	PrecachePlayerSounds(file);
+	UpdatePlayerSounds(file);
 
 	s = -1;
 
