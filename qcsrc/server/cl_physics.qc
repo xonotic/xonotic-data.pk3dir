@@ -14,6 +14,7 @@ float sv_airstopaccelerate;
 float sv_airstrafeaccelerate;
 float sv_maxairstrafespeed;
 float sv_aircontrol;
+float sv_aircontrol_power;
 float sv_warsowbunny_airforwardaccel;
 float sv_warsowbunny_accel;
 float sv_warsowbunny_topspeed;
@@ -416,10 +417,10 @@ void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
 	xyspeed = vlen(self.velocity); self.velocity = normalize(self.velocity);
 
 	dot = self.velocity * wishdir;
-	k *= sv_aircontrol*dot*dot*frametime;
 
 	if(dot > 0) // we can't change direction while slowing down
 	{
+		k *= fabs(sv_aircontrol)*pow(dot, sv_aircontrol_power)*frametime;
 		self.velocity = normalize(self.velocity * xyspeed + wishdir * k);
 	}
 
