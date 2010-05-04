@@ -1277,6 +1277,8 @@ void UpdatePlayerSounds(string filename)
 	LoadPlayerSounds("sound/player/default.sounds", 1);
 	if(filename != "")
 		LoadPlayerSounds(strcat(filename, ".sounds"), 0);
+	else
+		LoadPlayerSounds(strcat(self.model, ".sounds"), 0); // backwards compatibility
 }
 
 void FakeGlobalSound(string sample, float chan, float voicetype)
