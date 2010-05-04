@@ -1748,10 +1748,31 @@ void UpdateTeamBubble()
 	else self.colormod = '1 1 1';
 };*/
 
+.float oldcolormap;
 void respawn(void)
 {
+	if(self.modelindex != 0 && cvar("g_respawn_ghosts"))
+	{
+		self.solid = SOLID_NOT;
+		self.takedamage = DAMAGE_NO;
+		self.movetype = MOVETYPE_FLY;
+		self.velocity = '0 0 1' * cvar("g_respawn_ghosts_speed");
+		self.avelocity = randomvec() * cvar("g_respawn_ghosts_speed") * 3 - randomvec() * cvar("g_respawn_ghosts_speed") * 3;
+		self.effects |= EF_ADDITIVE;
+		self.oldcolormap = self.colormap;
+		self.colormap = 512;
+		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
+		if(cvar("g_respawn_ghosts_maxtime"))
+			SUB_SetFade (self, time + cvar("g_respawn_ghosts_maxtime") / 2 + random () * (cvar("g_respawn_ghosts_maxtime") - cvar("g_respawn_ghosts_maxtime") / 2), 1.5);
+	}
+
 	CopyBody(1);
 	self.effects |= EF_NODRAW; // prevent another CopyBody
+	if(self.oldcolormap)
+	{
+		self.colormap = self.oldcolormap;
+		self.oldcolormap = 0;
+	}
 	PutClientInServer();
 }
 
