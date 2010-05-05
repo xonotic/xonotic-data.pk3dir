@@ -11,11 +11,13 @@ void target_music_sendto(float to)
 	WriteByte(to, TE_CSQC_TARGET_MUSIC);
 	WriteByte(to, self.volume * 255.0);
 	WriteByte(to, self.fade_time * 16.0);
+	WriteByte(to, self.timeout);
 	WriteString(to, self.noise);
 }
 void target_music_reset()
 {
-	target_music_sendto(MSG_ALL);
+	if(self.targetname == "")
+		target_music_sendto(MSG_ALL);
 }
 void target_music_use()
 {
@@ -31,7 +33,8 @@ void spawnfunc_target_music()
 	precache_sound(self.noise);
 	if(!self.volume)
 		self.volume = 1;
-	target_music_sendto(MSG_INIT);
+	if(self.targetname == "")
+		target_music_sendto(MSG_INIT);
 }
 // values:
 //   volume
