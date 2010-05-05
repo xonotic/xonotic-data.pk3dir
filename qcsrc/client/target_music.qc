@@ -1,0 +1,141 @@
+entity music_default;
+entity music_target;
+entity music_trigger;
+
+.float state;
+
+void Net_AdvanceMusic()
+{
+	// run AFTER all the thinks!
+	entity best, e;
+	float s0;
+	best = music_default;
+	if(music_target && time < music_target.lifetime)
+		best = music_target;
+	if(music_trigger)
+		best = music_trigger;
+	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); )
+	{
+		s0 = e.state;
+		if(e == best)
+		{
+			// increase volume
+			if(e.fade_time > 0)
+				e.state = min(1, e.state + frametime / e.fade_time);
+			else
+				e.state = 1;
+		}
+		else
+		{
+			// decrease volume
+			if(e.fade_rate > 0)
+				e.state = max(1, e.state - frametime / e.fade_rate);
+			else
+				e.state = 0;
+		}
+		if(e.state != s0)
+			sound(e, CHAN_PROJECTILE, "", e.volume * e.state, ATTN_NONE);
+	}
+	music_trigger = world;
+}
+
+void Net_TargetMusic()
+{
+	float vol, fai, fao, tim, id;
+	string noi;
+	entity e;
+
+	id = ReadShort();
+	vol = ReadByte() / 255.0;
+	fai = ReadByte() / 16.0;
+	fao = ReadByte() / 16.0;
+	tim = ReadByte();
+	noi = ReadString();
+
+	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); )
+	{
+		if(e.count == id)
+			break;
+	}
+	if(!e)
+	{
+		e = spawn();
+		e.enttype = ENT_CLIENT_TRIGGER_MUSIC;
+		if(e.noise)
+			strunzone(e.noise);
+		e.noise = strzone(noi);
+		sound(e, CHAN_PROJECTILE, self.noise, 0, ATTN_NONE);
+	}
+	e.volume = vol;
+	e.fade_time = fai;
+	e.fade_rate = fao;
+	if(vol > 0)
+	{
+		if(tim == 0)
+		{
+			music_default = e;
+		}
+		else
+		{
+			music_target = e;
+			e.lifetime = time + tim;
+		}
+	}
+}
+
+void Ent_TriggerMusic_Think()
+{
+	if(WarpZoneLib_BoxTouchesBrush(pmove_org + pmove_mins, pmove_org + pmove_maxs, self, world))
+		music_trigger = self;
+	self.nextthink = time;
+}
+
+void Ent_TriggerMusic_Remove()
+{
+	if(self.noise)
+		strunzone(self.noise);
+	self.noise = string_null;
+}
+
+void Ent_ReadTriggerMusic()
+{
+	float f;
+	f = ReadByte();
+	if(f & 4)
+	{
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+	}
+	if(f & 1)
+	{
+		self.modelindex = ReadShort();
+		if(self.modelindex)
+		{
+			self.mins_x = ReadCoord();
+			self.mins_y = ReadCoord();
+			self.mins_z = ReadCoord();
+			self.maxs_x = ReadCoord();
+			self.maxs_y = ReadCoord();
+			self.maxs_z = ReadCoord();
+		}
+		else
+		{
+			self.mins    = '0 0 0';
+			self.maxs_x = ReadCoord();
+			self.maxs_y = ReadCoord();
+			self.maxs_z = ReadCoord();
+		}
+
+		self.volume = ReadByte() / 255.0;
+		self.fade_time = ReadByte() / 16.0;
+		self.fade_rate = ReadByte() / 16.0;
+		if(self.noise)
+			strunzone(self.noise);
+		self.noise = strzone(ReadString());
+	}
+
+	self.cnt = 1;
+	self.think = Ent_TriggerMusic_Think;
+	self.nextthink = time;
+}

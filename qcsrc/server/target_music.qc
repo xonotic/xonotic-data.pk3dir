@@ -1,40 +1,45 @@
+.float lifetime;
 // values:
 //   volume
 //   noise
 //   targetname
-//   timeout
+//   lifetime
 //   fade_time
-// when triggered, the music is overridden for activator until timeout (or forever, if timeout is 0)
+//   fade_rate
+// when triggered, the music is overridden for activator until lifetime (or forever, if lifetime is 0)
 // when targetname is not set, THIS ONE is default
-void target_music_sendto(float to)
+void target_music_sendto(float to, float is)
 {
 	WriteByte(to, TE_CSQC_TARGET_MUSIC);
-	WriteByte(to, self.volume * 255.0);
+	WriteShort(to, num_for_edict(self));
+	WriteByte(to, self.volume * 255.0 * is);
 	WriteByte(to, self.fade_time * 16.0);
-	WriteByte(to, self.timeout);
+	WriteByte(to, self.fade_rate * 16.0);
+	WriteByte(to, self.lifetime);
 	WriteString(to, self.noise);
 }
 void target_music_reset()
 {
 	if(self.targetname == "")
-		target_music_sendto(MSG_ALL);
+		target_music_sendto(MSG_ALL, 1);
 }
 void target_music_use()
 {
 	if(!activator)
 		return;
 	msg_entity = activator;
-	target_music_sendto(MSG_ONE);
+	target_music_sendto(MSG_ONE, 1);
 }
 void spawnfunc_target_music()
 {
 	self.use = target_music_use;
 	self.reset = target_music_reset;
-	precache_sound(self.noise);
 	if(!self.volume)
 		self.volume = 1;
 	if(self.targetname == "")
-		target_music_sendto(MSG_INIT);
+		target_music_sendto(MSG_INIT, 1);
+	else
+		target_music_sendto(MSG_INIT, 0);
 }
 // values:
 //   volume
@@ -78,6 +83,7 @@ float trigger_music_SendEntity(entity to, float sf)
 		}
 		WriteByte(MSG_ENTITY, self.volume * 255.0);
 		WriteByte(MSG_ENTITY, self.fade_time * 16.0);
+		WriteByte(MSG_ENTITY, self.fade_rate * 16.0);
 		WriteString(MSG_ENTITY, self.noise);
 	}
 	return 1;
@@ -96,7 +102,6 @@ void spawnfunc_trigger_music()
 {
 	if(self.model != "")
 		setmodel(self, self.model);
-	precache_sound (self.noise);
 	if(!self.volume)
 		self.volume = 1;
 	if(!self.modelindex)
