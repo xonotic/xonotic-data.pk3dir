@@ -85,7 +85,7 @@ void Net_TargetMusic()
 
 void Ent_TriggerMusic_Think()
 {
-	if(WarpZoneLib_BoxTouchesBrush(pmove_org + pmove_mins, pmove_org + pmove_maxs, self, world))
+	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, self, world))
 		music_trigger = self;
 	self.nextthink = time;
 }
