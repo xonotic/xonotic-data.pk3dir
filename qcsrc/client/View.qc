@@ -1133,8 +1133,12 @@ void CSQC_common_hud(void)
 	switch(hud)
 	{
 		case HUD_NORMAL:
+			// hud first
+			HUD_Main();
+
 			// is this needed?
 			//HUD_UpdatePlayerTeams();
+
 			if (intermission == 2) // map voting screen
 			{
 				if(sb_showaccuracy && spectatee_status != -1) {
@@ -1157,7 +1161,6 @@ void CSQC_common_hud(void)
 
 				HUD_Reset();
 			}
-			HUD_Main();
 			break;
 
 		case HUD_SPIDERBOT:
