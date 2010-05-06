@@ -265,7 +265,7 @@ void centerprint(string strMessage)
 	float i, j, n, hcount;
 	string s;
 
-	centerprint_fontsize = Sbar_GetFontsize("scr_centersize");
+	centerprint_fontsize = HUD_GetFontsize("scr_centersize");
 
 	centerprint_expire = min(centerprint_expire, time); // if any of the returns happens, this message will fade out
 
@@ -2721,8 +2721,8 @@ void HUD_Main (void)
 	hud_accuracy_border_thickness = bound(0, cvar_or("hud_accuracy_border_thickness", 1), 5);
 	hud_color_bg_team = cvar("hud_color_bg_team");
 
-	sbar_fontsize = Sbar_GetFontsize("sbar_fontsize");
-	sbar_fontsize_spec = Sbar_GetFontsize("sbar_fontsize_spec");
+	sbar_fontsize = HUD_GetFontsize("sbar_fontsize");
+	sbar_fontsize_spec = HUD_GetFontsize("sbar_fontsize_spec");
 
 	if(HUD_Panel_CheckActive(0))
 		HUD_WeaponIcons();
@@ -2750,63 +2750,20 @@ void HUD_Main (void)
 		if(spectatee_status > 0 || cvar("cl_showpressedkeys") >= 2 || cvar("_hud_configure"))
 			HUD_DrawPressedKeys();
 
-	/* these are right now taken care of in View.qc
-	if(HUD_Panel_CheckActive(0))
+	// TODO hud_'ify these
+	if (cvar("cl_showspeed"))
 		HUD_ShowSpeed();
-	if(HUD_Panel_CheckActive(0))
+	if (cvar("cl_showacceleration"))
 		HUD_ShowAcceleration();
-		*/
 
-	//Sbar_UpdatePlayerTeams();
-	// move this stuff to View.qc
-	if (intermission == 2) // map voting screen
-	{
-		if(sb_showaccuracy && spectatee_status != -1) {
-			//HUD_DrawAccuracyStats();
-			//HUD_Score();
-			//HUD_Timer();
-		}
-		else if(sb_showscores) {
-			//HUD_DrawScoreboard();
-                        //HUD_Score();
-                        //HUD_Timer();
-                }
-		else
-			//HUD_FinaleOverlay();
-
-		HUD_Reset();
-	}
-	else if (sb_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
-	{
-		//if(sb_showaccuracy && spectatee_status != -1)
-			//HUD_DrawAccuracyStats();
-		//else
-			//HUD_DrawScoreboard();
-		//HUD_Score();
-		//HUD_Timer();
-
-		//HUD_Reset();
-	}
-	else
-	{
-		//if(sb_showaccuracy && spectatee_status != -1)
-			//HUD_DrawAccuracyStats();
-		//else
-		//	HUD_DrawScoreboard();
-
-		// draw scores and timer
-		//HUD_Score();
-		//HUD_Timer();
-
-		// draw gametype specific icons
-		if(gametype == GAME_KEYHUNT)
-			CSQC_kh_hud();
-		else if(gametype == GAME_CTF)
-			CSQC_ctf_hud();
-		else if(gametype == GAME_NEXBALL)
-			CSQC_nb_hud();
-		else if(gametype == GAME_CTS || gametype == GAME_RACE)
-			CSQC_race_hud();
-	}
+	// TODO... well make them work in a panel etc
+	if(gametype == GAME_KEYHUNT)
+		CSQC_kh_hud();
+	else if(gametype == GAME_CTF)
+		CSQC_ctf_hud();
+	else if(gametype == GAME_NEXBALL)
+		CSQC_nb_hud();
+	else if(gametype == GAME_CTS || gametype == GAME_RACE)
+		CSQC_race_hud();
 	return;
 }

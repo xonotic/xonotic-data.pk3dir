@@ -308,7 +308,7 @@ void CSQC_CheckEngine()
 	sbar_bigfont = FONT_USER+2;
 }
 
-vector Sbar_GetFontsize(string cvarname)
+vector HUD_GetFontsize(string cvarname)
 {
 	vector v;
 	v = stov(cvar_string(cvarname));
@@ -320,7 +320,7 @@ vector Sbar_GetFontsize(string cvarname)
 	return v;
 }
 
-float Sbar_GetWidth(float teamcolumnwidth)
+float HUD_GetWidth(float teamcolumnwidth)
 {
 	float f;
 	f = cvar("sbar_width");

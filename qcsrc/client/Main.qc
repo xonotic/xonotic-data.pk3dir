@@ -321,9 +321,9 @@ void Playerchecker_Think()
 				e.ping_packetloss = 0;
 				e.ping_movementloss = 0;
 				//e.gotscores = 0; // we might already have the scores...
-				SetTeam(e, GetPlayerColor(i)); // will not hurt; later updates come with Sbar_UpdatePlayerTeams
+				SetTeam(e, GetPlayerColor(i)); // will not hurt; later updates come with HUD_UpdatePlayerTeams
 				RegisterPlayer(e);
-				Sbar_UpdatePlayerPos(e);
+				HUD_UpdatePlayerPos(e);
 			}
 		}
 	}
@@ -351,8 +351,8 @@ void PostInit(void)
 // CSQC_ConsoleCommand : Used to parse commands in the console that have been registered with the "registercmd" function
 // Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
 float button_zoom;
-void Cmd_Sbar_SetFields(float);
-void Cmd_Sbar_Help(float);
+void Cmd_HUD_SetFields(float);
+void Cmd_HUD_Help(float);
 float CSQC_ConsoleCommand(string strMessage)
 {
 	float argc;
@@ -527,10 +527,10 @@ void GameCommand(string msg)
 		ons_showmap = !ons_showmap;
 	}
 	else if(cmd == "sbar_columns_set") {
-		Cmd_Sbar_SetFields(argc);
+		Cmd_HUD_SetFields(argc);
 	}
 	else if(cmd == "sbar_columns_help") {
-		Cmd_Sbar_Help(argc);
+		Cmd_HUD_Help(argc);
 	}
 #ifdef BLURTEST
 	else if(cmd == "blurtest") {
@@ -721,7 +721,7 @@ void Ent_ReadPlayerScore()
 		}
 
 	if(o.sort_prev)
-		Sbar_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
+		HUD_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
 
 	self.entremove = Ent_RemovePlayerScore;
 }
@@ -752,7 +752,7 @@ void Ent_ReadTeamScore()
 				o.(teamscores[i]) = ReadChar();
 		}
 
-	Sbar_UpdateTeamPos(o);
+	HUD_UpdateTeamPos(o);
 }
 
 void Net_Reset()
@@ -999,7 +999,7 @@ void Ent_ScoresInfo()
 		teamscores_label[i] = strzone(ReadString());
 		teamscores_flags[i] = ReadByte();
 	}
-	Sbar_InitScores();
+	HUD_InitScores();
 	Gamemode_Init();
 }
 

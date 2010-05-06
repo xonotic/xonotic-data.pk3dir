@@ -336,7 +336,7 @@ void CSQC_kh_hud(void);
 void CSQC_ctf_hud(void);
 void PostInit(void);
 void CSQC_Demo_Camera();
-float Sbar_WouldDrawScoreboard ();
+float HUD_WouldDrawScoreboard ();
 float view_set;
 float camera_mode;
 string NextFrameCommand;
@@ -457,7 +457,7 @@ void CSQC_UpdateView(float w, float h)
 	if(f != teamplay)
 	{
 		teamplay = f;
-		Sbar_InitScores();
+		HUD_InitScores();
 	}
 
 	if(last_weapon != activeweapon) {
@@ -507,7 +507,7 @@ void CSQC_UpdateView(float w, float h)
 
 	// Draw the Crosshair
 	float scoreboard_active;
-	scoreboard_active = Sbar_WouldDrawScoreboard();
+	scoreboard_active = HUD_WouldDrawScoreboard();
 	R_SetView(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
 
 	// Draw the Engine Status Bar (the default Quake HUD)
@@ -563,11 +563,6 @@ void CSQC_UpdateView(float w, float h)
 
 	// draw sbar
 	if(cvar("r_letterbox") == 0) {
-		if (cvar("cl_showspeed"))
-			HUD_ShowSpeed();
-		if (cvar("cl_showacceleration"))
-			HUD_ShowAcceleration();
-
 		HUD_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
 	}
 
@@ -941,7 +936,7 @@ void CSQC_SPIDER_HUD()
 
 	if (sb_showscores)
 	{
-		Sbar_DrawScoreboard();
+		HUD_DrawScoreboard();
 		HUD_DrawCenterPrint();
 	}
 
@@ -1011,7 +1006,7 @@ void CSQC_RAPTOR_HUD()
 
 	if (sb_showscores)
 	{
-		Sbar_DrawScoreboard();
+		HUD_DrawScoreboard();
 		HUD_DrawCenterPrint();
 	}
 
@@ -1121,7 +1116,7 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 
 	if (sb_showscores)
 	{
-		Sbar_DrawScoreboard();
+		HUD_DrawScoreboard();
 		HUD_DrawCenterPrint();
 	}
 
@@ -1130,7 +1125,7 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 
 void CSQC_common_hud(void)
 {
-	// Sbar_SortFrags(); done in Sbar_Draw
+	// HUD_SortFrags(); done in HUD_Draw
 	float hud;
 	hud = getstati(STAT_HUD);
 
@@ -1138,6 +1133,30 @@ void CSQC_common_hud(void)
 	switch(hud)
 	{
 		case HUD_NORMAL:
+			// is this needed?
+			//HUD_UpdatePlayerTeams();
+			if (intermission == 2) // map voting screen
+			{
+				if(sb_showaccuracy && spectatee_status != -1) {
+					HUD_DrawAccuracyStats();
+				}
+				else if(sb_showscores) {
+					HUD_DrawScoreboard();
+				}
+				else
+					HUD_FinaleOverlay();
+
+				HUD_Reset();
+			}
+			else if (sb_showscores || sb_showaccuracy || sb_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
+			{
+				if(sb_showaccuracy && spectatee_status != -1)
+					HUD_DrawAccuracyStats();
+				else
+					HUD_DrawScoreboard();
+
+				HUD_Reset();
+			}
 			HUD_Main();
 			break;
 

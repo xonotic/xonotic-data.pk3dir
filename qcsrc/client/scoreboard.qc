@@ -12,7 +12,7 @@ void drawstringcenter(vector, string, vector, vector, float, float);
 float SCOREBOARD_OFFSET = 50;
 
 void MapVote_Draw();
-void Sbar_FinaleOverlay()
+void HUD_FinaleOverlay()
 {
 	/*vector pos;
 	pos_x = (vid_conwidth - 1)/2;
@@ -25,100 +25,8 @@ void Sbar_FinaleOverlay()
 	MapVote_Draw();
 }
 
-void Sbar_DrawXNum (vector pos, float num, float digits, float showminusplus, float lettersize, vector rgb, float highlighted, float stroke, float alpha, float dflags)
-{
-	float l, i;
-	string str, tmp, l_length;
-	float minus, plus;
-	vector vsize, num_color;
-
-	vsize_x = vsize_y = lettersize;
-	vsize_z = 0;
-
-	// showminusplus 1: always prefix with minus sign (useful in race distribution display)
-	// showminusplus 2: always prefix with plus sign (useful in race distribution display)
-	// showminusplus 3: prefix with minus sign if negative, plus sign if positive (useful in score distribution display)
-
-	if((showminusplus == 2 && num >= 0) || (num > 0 && showminusplus == 3))
-	{
-		plus = true;
-		pos_x -= lettersize;
-	} else
-		plus = false;
-
-	if(num < 0 || (num < 0 && showminusplus == 3) || (showminusplus == 1 && num <= 0))
-	{
-		minus = true;
-		num = -num;
-		pos_x -= lettersize;
-	} else
-		minus = false;
-
-	if(digits < 0)
-	{
-		tmp = ftos(num);
-		digits = -digits;
-		str = strcat(substring("0000000000", 0, digits - strlen(tmp)), tmp);
-	} else
-		str = ftos(num);
-
-	l = strlen(str);
-	l_length = ftos(l);
-
-	if(l > digits)
-	{
-		str = substring(str, l-digits, 999);
-		l = strlen(str);
-	} else if(l < digits)
-		pos_x += (digits-l) * lettersize;
-
-	if (highlighted == 1) {
-		vector hl_size;
-		hl_size_x = vsize_x * l + vsize_x * 0.2;
-		hl_size_y = vsize_y * 1.1;
-		hl_size_z = 0;
-		if(minus)
-			hl_size_x = hl_size_x + vsize_x;
-
-		vector hl_pos;
-		hl_pos_x = pos_x - lettersize/10;
-		hl_pos_y = pos_y - lettersize/20;
-		hl_pos_z = 0;
-
-		drawpic(hl_pos, strcat("gfx/hud/sb_highlight_", l_length), hl_size, '1 1 1', alpha, dflags);
-	}
-
-	if (stroke == 1)
-		num_color = '1 1 1';
-	else
-		num_color = rgb;
-
-	if(minus)
-	{
-		if (stroke == 1)
-			drawpic(pos, "gfx/hud/num_minus_stroke", vsize, rgb, alpha, dflags);
-		drawpic(pos, "gfx/hud/num_minus", vsize, num_color, alpha, dflags);
-		pos_x += lettersize;
-	} else if(plus)
-	{
-		if (stroke == 1)
-			drawpic(pos, "gfx/hud/num_plus_stroke", vsize, rgb, alpha, dflags);
-		drawpic(pos, "gfx/hud/num_plus", vsize, num_color, alpha, dflags);
-		pos_x += lettersize;
-	}
-
-	for(i = 0; i < l; ++i)
-	{
-		tmp = substring(str, i, 1);
-		if (stroke == 1)
-			drawpic(pos, strcat("gfx/hud/num_", tmp, "_stroke"), vsize, rgb, alpha, dflags);
-		drawpic(pos, strcat("gfx/hud/num_", tmp), vsize, num_color, alpha, dflags);
-		pos_x += lettersize;
-	}
-}
-
-void Cmd_Sbar_SetFields(float argc);
-void Sbar_InitScores()
+void Cmd_HUD_SetFields(float argc);
+void HUD_InitScores()
 {
 	float i, f;
 
@@ -145,13 +53,13 @@ void Sbar_InitScores()
 	if(ts_secondary == -1)
 		ts_secondary = ts_primary;
 
-	Cmd_Sbar_SetFields(0);
+	Cmd_HUD_SetFields(0);
 }
 
-void Sbar_UpdatePlayerPos(entity pl);
+void HUD_UpdatePlayerPos(entity pl);
 float SetTeam(entity pl, float Team);
 //float lastpnum;
-void Sbar_UpdatePlayerTeams()
+void HUD_UpdatePlayerTeams()
 {
 	float Team;
 	entity pl, tmp;
@@ -165,7 +73,7 @@ void Sbar_UpdatePlayerTeams()
 		if(SetTeam(pl, Team))
 		{
 			tmp = pl.sort_prev;
-			Sbar_UpdatePlayerPos(pl);
+			HUD_UpdatePlayerPos(pl);
 			if(tmp)
 				pl = tmp;
 			else
@@ -179,7 +87,7 @@ void Sbar_UpdatePlayerTeams()
 	*/
 }
 
-float Sbar_ComparePlayerScores(entity left, entity right)
+float HUD_ComparePlayerScores(entity left, entity right)
 {
 	float vl, vr;
 	vl = GetPlayerColor(left.sv_entnum);
@@ -235,19 +143,19 @@ float Sbar_ComparePlayerScores(entity left, entity right)
 	return false;
 }
 
-void Sbar_UpdatePlayerPos(entity player)
+void HUD_UpdatePlayerPos(entity player)
 {
-	for(other = player.sort_next; other && Sbar_ComparePlayerScores(player, other); other = player.sort_next)
+	for(other = player.sort_next; other && HUD_ComparePlayerScores(player, other); other = player.sort_next)
 	{
 		SORT_SWAP(player, other);
 	}
-	for(other = player.sort_prev; other != players && Sbar_ComparePlayerScores(other, player); other = player.sort_prev)
+	for(other = player.sort_prev; other != players && HUD_ComparePlayerScores(other, player); other = player.sort_prev)
 	{
 		SORT_SWAP(other, player);
 	}
 }
 
-float Sbar_CompareTeamScores(entity left, entity right)
+float HUD_CompareTeamScores(entity left, entity right)
 {
 	float vl, vr;
 
@@ -273,19 +181,19 @@ float Sbar_CompareTeamScores(entity left, entity right)
 	return false;
 }
 
-void Sbar_UpdateTeamPos(entity Team)
+void HUD_UpdateTeamPos(entity Team)
 {
-	for(other = Team.sort_next; other && Sbar_CompareTeamScores(Team, other); other = Team.sort_next)
+	for(other = Team.sort_next; other && HUD_CompareTeamScores(Team, other); other = Team.sort_next)
 	{
 		SORT_SWAP(Team, other);
 	}
-	for(other = Team.sort_prev; other != teams && Sbar_CompareTeamScores(other, Team); other = Team.sort_prev)
+	for(other = Team.sort_prev; other != teams && HUD_CompareTeamScores(other, Team); other = Team.sort_prev)
 	{
 		SORT_SWAP(other, Team);
 	}
 }
 
-void Cmd_Sbar_Help(float argc)
+void Cmd_HUD_Help(float argc)
 {
 	print("You can modify the scoreboard using the ^2sbar_columns_set command.\n");
 	print("^3|---------------------------------------------------------------|\n");
@@ -336,7 +244,7 @@ void Cmd_Sbar_Help(float argc)
 	print("other gamemodes except DM.\n");
 }
 
-string Sbar_DefaultColumnLayout()
+string HUD_DefaultColumnLayout()
 {
 	return strcat( // fteqcc sucks
 		"ping pl name | ",
@@ -349,7 +257,7 @@ string Sbar_DefaultColumnLayout()
 		"-lms,race,nexball/score");
 }
 
-void Cmd_Sbar_SetFields(float argc)
+void Cmd_HUD_SetFields(float argc)
 {
 	float i, j, slash;
 	string str, pattern;
@@ -361,12 +269,12 @@ void Cmd_Sbar_SetFields(float argc)
 		argc = tokenizebyseparator(strcat("x ", cvar_string("sbar_columns")), " ");
 
 	if(argc < 2)
-		argc = tokenizebyseparator(strcat("x ", Sbar_DefaultColumnLayout()), " ");
+		argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
 
 	if(argc == 2)
 	{
 		if(argv(1) == "default")
-			argc = tokenizebyseparator(strcat("x ", Sbar_DefaultColumnLayout()), " ");
+			argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
 		else if(argv(1) == "all")
 		{
 			string s;
@@ -539,7 +447,7 @@ vector sbar_field_icon2_rgb;
 float sbar_field_icon0_alpha;
 float sbar_field_icon1_alpha;
 float sbar_field_icon2_alpha;
-string Sbar_GetField(entity pl, float field)
+string HUD_GetField(entity pl, float field)
 {
 	float tmp, num, denom, f;
 	string str;
@@ -640,7 +548,7 @@ float sbar_fixscoreboardcolumnwidth_len;
 float sbar_fixscoreboardcolumnwidth_iconlen;
 float sbar_fixscoreboardcolumnwidth_marginlen;
 
-string Sbar_FixScoreboardColumnWidth(float i, string str)
+string HUD_FixScoreboardColumnWidth(float i, string str)
 {
 	float field, f;
 	vector sz;
@@ -705,7 +613,7 @@ string Sbar_FixScoreboardColumnWidth(float i, string str)
 	return str;
 }
 
-void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_number)
+void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_number)
 {
 	vector tmp, rgb;
 	rgb = GetTeamRGB(pl.team);
@@ -742,8 +650,8 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 			pos_x += sbar_size[i] + sbar_fontsize_x;
 			continue;
 		}
-		str = Sbar_GetField(pl, field);
-		str = Sbar_FixScoreboardColumnWidth(i, str);
+		str = HUD_GetField(pl, field);
+		str = HUD_FixScoreboardColumnWidth(i, str);
 
 		pos_x += sbar_size[i] + sbar_fontsize_x;
 
@@ -793,8 +701,8 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 				continue;
 			}
 
-			str = Sbar_GetField(pl, field);
-			str = Sbar_FixScoreboardColumnWidth(i, str);
+			str = HUD_GetField(pl, field);
+			str = HUD_FixScoreboardColumnWidth(i, str);
 
 			if(field == SP_NAME) {
 				tmp_x = sbar_fixscoreboardcolumnwidth_len; // left or right aligned? let's put it right...
@@ -832,12 +740,12 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 }
 
 /*
- * Sbar_Scoreboard_MakeTable
+ * HUD_Scoreboard_MakeTable
  *
  * Makes a table for a team (for all playing players in DM) and fills it
  */
 
-vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
+vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 {
 	float body_table_height, i;
 	vector tmp, column_dim;
@@ -940,7 +848,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 		{
 			if(pl.team != tm.team)
 				continue;
-			Sbar_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), i);
+			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), i);
 			pos_y += 1.25 * sbar_fontsize_y;
 			++i;
 		}
@@ -949,7 +857,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 		{
 			if(pl.team == COLOR_SPECTATOR)
 				continue;
-			Sbar_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), i);
+			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), i);
 			pos_y += 1.25 * sbar_fontsize_y;
 			++i;
 		}
@@ -961,7 +869,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 	return pos;
 }
 
-float Sbar_WouldDrawScoreboard() {
+float HUD_WouldDrawScoreboard() {
 	if (sb_showscores)
 		return 1;
 	else if (intermission == 1)
@@ -977,7 +885,7 @@ float Sbar_WouldDrawScoreboard() {
 
 float g_minstagib;
 float average_accuracy;
-vector Sbar_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
+vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
 	float i;
 	float weapon_hit, weapon_damage, weapon_stats;
@@ -1079,7 +987,7 @@ vector Sbar_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	return pos;
 }
 
-vector Sbar_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_size)
+vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_size)
 {
 	float i;
 	RANKINGS_RECEIVED_CNT = 0;
@@ -1132,11 +1040,11 @@ vector Sbar_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg
 
 float sb_fade_alpha;
 float sbar_woulddrawscoreboard_prev;
-float sbar_woulddrawscoreboard_change; // "time" at which Sbar_WouldDrawScoreboard() changed
-void Sbar_DrawScoreboard()
+float sbar_woulddrawscoreboard_change; // "time" at which HUD_WouldDrawScoreboard() changed
+void HUD_DrawScoreboard()
 {
 	float sbar_woulddrawscoreboard;
-	sbar_woulddrawscoreboard = Sbar_WouldDrawScoreboard();
+	sbar_woulddrawscoreboard = HUD_WouldDrawScoreboard();
 	if(sbar_woulddrawscoreboard != sbar_woulddrawscoreboard_prev) {
 		sbar_woulddrawscoreboard_change = time;
 		sbar_woulddrawscoreboard_prev = sbar_woulddrawscoreboard;
@@ -1170,7 +1078,7 @@ void Sbar_DrawScoreboard()
 	vector rgb, pos, tmp;
 	entity pl, tm;
 
-	sbwidth = Sbar_GetWidth(6.5 * sbar_fontsize_y);
+	sbwidth = HUD_GetWidth(6.5 * sbar_fontsize_y);
 
 	xmin = 0.5 * (vid_conwidth - sbwidth);
 	ymin = SCOREBOARD_OFFSET;
@@ -1204,12 +1112,12 @@ void Sbar_DrawScoreboard()
 				continue;
 
 			rgb = GetTeamRGB(tm.team);
-			Sbar_DrawXNum(pos - '9.5 0 0' * sbar_fontsize_y + '0 1 0' * sbar_fontsize_y, tm.(teamscores[ts_primary]), 6, 0, sbar_fontsize_y * 1.5, rgb, 0, 1, sb_alpha_fg, DRAWFLAG_NORMAL);
+			HUD_DrawXNum(pos - '9.5 0 0' * sbar_fontsize_y + '0 1 0' * sbar_fontsize_y, tm.(teamscores[ts_primary]), 6, 0, sbar_fontsize_y * 1.5, rgb, 0, 1, sb_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(ts_primary != ts_secondary)
-				Sbar_DrawXNum(pos - '7.5 0 0' * sbar_fontsize_y + '0 2.5 0' * sbar_fontsize_y, tm.(teamscores[ts_secondary]), 6, 0, sbar_fontsize_y * 1, rgb, 0, 1, sb_alpha_fg, DRAWFLAG_NORMAL);
+				HUD_DrawXNum(pos - '7.5 0 0' * sbar_fontsize_y + '0 2.5 0' * sbar_fontsize_y, tm.(teamscores[ts_secondary]), 6, 0, sbar_fontsize_y * 1, rgb, 0, 1, sb_alpha_fg, DRAWFLAG_NORMAL);
 
-			pos = Sbar_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
+			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
 		}
 	}
 	else
@@ -1223,7 +1131,7 @@ void Sbar_DrawScoreboard()
 			if(tm.team == COLOR_SPECTATOR)
 				continue;
 
-			pos = Sbar_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
+			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
 		}
 	}
 
@@ -1236,13 +1144,13 @@ void Sbar_DrawScoreboard()
 			drawcolorcodedstring(pos, strcat("All-time fastest: ", ftos(race_speedaward_alltimebest), " (", race_speedaward_alltimebest_holder, ")"), sbar_fontsize, sb_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * sbar_fontsize_y;
 		}
-		pos = Sbar_DrawScoreboardRankings(pos, pl, rgb, bg_size);
+		pos = HUD_DrawScoreboardRankings(pos, pl, rgb, bg_size);
 	}
 	else if(cvar("sbar_accuracy") && spectatee_status != -1) {
 		if(teamplay)
-			pos = Sbar_DrawScoreboardAccuracyStats(pos, GetTeamRGB(myteam), bg_size);
+			pos = HUD_DrawScoreboardAccuracyStats(pos, GetTeamRGB(myteam), bg_size);
 		else
-			pos = Sbar_DrawScoreboardAccuracyStats(pos, rgb, bg_size);
+			pos = HUD_DrawScoreboardAccuracyStats(pos, rgb, bg_size);
 	}
 
 	tmp = pos + '0 1.5 0' * sbar_fontsize_y;
@@ -1255,7 +1163,7 @@ void Sbar_DrawScoreboard()
 	{
 		if(pl.team != COLOR_SPECTATOR)
 			continue;
-		Sbar_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), specs);
+		HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), specs);
 		pos_y += 1.25 * sbar_fontsize_y;
 		++specs;
 	}
@@ -1338,7 +1246,7 @@ void Sbar_DrawScoreboard()
 	scoreboard_bottom = pos_y + 2 * sbar_fontsize_y;
 }
 
-void Sbar_DrawAccuracyStats_Description_Hitscan(vector position)
+void HUD_DrawAccuracyStats_Description_Hitscan(vector position)
 {
 	drawstring(position + '0 3 0' * sbar_fontsize_y, "Shots fired:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 	drawstring(position + '0 5 0' * sbar_fontsize_y, "Shots hit:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
@@ -1346,7 +1254,7 @@ void Sbar_DrawAccuracyStats_Description_Hitscan(vector position)
 	drawstring(position + '0 9 0' * sbar_fontsize_y, "Shots missed:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
-void Sbar_DrawAccuracyStats_Description_Splash(vector position)
+void HUD_DrawAccuracyStats_Description_Splash(vector position)
 {
 	drawstring(position + '0 3 0' * sbar_fontsize_y, "Maximum damage:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 	drawstring(position + '0 5 0' * sbar_fontsize_y, "Actual damage:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
@@ -1354,7 +1262,7 @@ void Sbar_DrawAccuracyStats_Description_Splash(vector position)
 	drawstring(position + '0 9 0' * sbar_fontsize_y, "Damage wasted:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
-void Sbar_DrawAccuracyStats()
+void HUD_DrawAccuracyStats()
 {
 	float i, count_hitscan, count_splash, row;  // count is the number of 'colums'
 	float weapon_hit, weapon_damage, weapon_stats;
@@ -1398,10 +1306,10 @@ void Sbar_DrawAccuracyStats()
 	}
 
 	float top_border_hitscan = SCOREBOARD_OFFSET + 55;  // position where the hitscan row starts: pixels down the screen
-	Sbar_DrawAccuracyStats_Description_Hitscan('1 0 0' * col_margin + '0 1 0' * top_border_hitscan);
+	HUD_DrawAccuracyStats_Description_Hitscan('1 0 0' * col_margin + '0 1 0' * top_border_hitscan);
 
 	float top_border_splash = SCOREBOARD_OFFSET + 175;  // position where the splash row starts: pixels down the screen
-	Sbar_DrawAccuracyStats_Description_Splash('1 0 0' * col_margin + '0 1 0' * top_border_splash);
+	HUD_DrawAccuracyStats_Description_Splash('1 0 0' * col_margin + '0 1 0' * top_border_splash);
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -1437,7 +1345,7 @@ void Sbar_DrawAccuracyStats()
 				{
 					count_splash = 0;
 					++row;
-					Sbar_DrawAccuracyStats_Description_Splash('1 0 0' * col_margin + '0 1 0' * (top_border_splash + row * (fill_size_y + row_margin)));
+					HUD_DrawAccuracyStats_Description_Splash('1 0 0' * col_margin + '0 1 0' * (top_border_splash + row * (fill_size_y + row_margin)));
 				}
 
 				pos_x = left_border + count_splash * (fill_size_x + col_margin);
@@ -1487,7 +1395,7 @@ void Sbar_DrawAccuracyStats()
 				{
 					count_hitscan = 0;
 					++row;
-					Sbar_DrawAccuracyStats_Description_Hitscan('1 0 0' * col_margin + '0 1 0' * (top_border_hitscan + row * (fill_size_y + row_margin)));
+					HUD_DrawAccuracyStats_Description_Hitscan('1 0 0' * col_margin + '0 1 0' * (top_border_hitscan + row * (fill_size_y + row_margin)));
 				}
 
 				pos_x = left_border + count_hitscan * (fill_size_x + col_margin);
