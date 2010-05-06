@@ -561,31 +561,8 @@ void CSQC_UpdateView(float w, float h)
 			self.draw2d();
 	self = e;
 
-	// draw radar
-	if(
-			ons_showmap
-			||
-			(
-			 !scoreboard_active
-			 &&
-			 cvar_string("cl_teamradar") != "0"
-			 &&
-			 (
-			  cvar("cl_teamradar") == 2
-			  ||
-			  teamplay
-			 )
-			)
-	  )
-		teamradar_view();
-
 	// draw sbar
 	if(cvar("r_letterbox") == 0) {
-		if (cvar("cl_showpressedkeys")) { // draw pressed keys when spectating and playing
-			if(spectatee_status > 0 || cvar("cl_showpressedkeys") >= 2)
-				HUD_DrawPressedKeys();
-		}
-
 		if (cvar("cl_showspeed"))
 			HUD_ShowSpeed();
 		if (cvar("cl_showacceleration"))

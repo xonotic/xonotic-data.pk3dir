@@ -1,4 +1,4 @@
-void teamradar_view();
+void HUD_Radar();
 
 #define MAX_TEAMRADAR_TIMES 32
 

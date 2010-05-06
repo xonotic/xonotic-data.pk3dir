@@ -575,7 +575,7 @@ vector HUD_Panel_CheckLimitSize(float id, vector mySize)
 			mySize_y = (1/4) * mySize_x; // 1/4 * width
 			break;
 		case 10: 
-			mySize_y = (1/2) * mySize_x; // 1/2 * width
+			mySize_y = 0.5898 * mySize_x; // 0.5898 * width, reason: bg has weird dimensions...
 			break;
 	}
 	return mySize;
@@ -2421,7 +2421,7 @@ void HUD_Timer()
 // Radar (#6)
 //
 
-void() teamradar_view =
+void HUD_Radar(void)
 {
 	float marigin;
 
@@ -2601,12 +2601,12 @@ void HUD_DrawPressedKeys(void)
 
 	pressedkeys = getstatf(STAT_PRESSED_KEYS);
 	drawpic(pos, "gfx/hud/keys/key_bg.tga",           mySize, '1 1 1', 0.1 * hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + eX * mySize_x - eX* (1/4) * mySize_x,       ((pressedkeys & KEY_CROUCH) ? "gfx/hud/keys/key_crouch_inv.tga" : "gfx/hud/keys/key_crouch.tga"),        '1 1 0' * (1/4) * mySize_x, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + eX * (1/2) * mySize_x - eX * (1/4),         ((pressedkeys & KEY_FORWARD) ? "gfx/hud/keys/key_forward_inv.tga" : "gfx/hud/keys/key_forward.tga"),     '1 1 0' * (1/2) * mySize_x, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos,                                              ((pressedkeys & KEY_JUMP) ? "gfx/hud/keys/key_jump_inv.tga" : "gfx/hud/keys/key_jump.tga"),              '1 1 0' * (1/4) * mySize_x, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + eY * 0.5 * mySize_y,                        ((pressedkeys & KEY_LEFT) ? "gfx/hud/keys/key_left_inv.tga" : "gfx/hud/keys/key_left.tga"),              '1 1 0' * (1/2) * mySize_x, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + eX * 0.25 * mySize_x + eY * 0.5 * mySize_y, ((pressedkeys & KEY_BACKWARD) ? "gfx/hud/keys/key_backward_inv.tga" : "gfx/hud/keys/key_backward.tga"),  '1 1 0' * (1/2) * mySize_x, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + eX * 0.75 * mySize_x + eY * 0.5 * mySize_y, ((pressedkeys & KEY_RIGHT) ? "gfx/hud/keys/key_right_inv.tga" : "gfx/hud/keys/key_right.tga"),           '1 1 0' * (1/2) * mySize_x, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + eX * mySize_x - eX * 0.22 * mySize_x +       eY * 0.195 * mySize_y, ((pressedkeys & KEY_CROUCH) ? "gfx/hud/keys/key_crouch_inv.tga" : "gfx/hud/keys/key_crouch.tga"),        '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.040 * mySize_y, ((pressedkeys & KEY_FORWARD) ? "gfx/hud/keys/key_forward_inv.tga" : "gfx/hud/keys/key_forward.tga"),     '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + eX * 0.023 * mySize_x +                      eY * 0.195 * mySize_y, ((pressedkeys & KEY_JUMP) ? "gfx/hud/keys/key_jump_inv.tga" : "gfx/hud/keys/key_jump.tga"),              '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + eX * 0.1 * mySize_x +                        eY * 0.486 * mySize_y, ((pressedkeys & KEY_LEFT) ? "gfx/hud/keys/key_left_inv.tga" : "gfx/hud/keys/key_left.tga"),              '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.486 * mySize_y, ((pressedkeys & KEY_BACKWARD) ? "gfx/hud/keys/key_backward_inv.tga" : "gfx/hud/keys/key_backward.tga"),  '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + eX * mySize_x - eX * 0.372 * mySize_x +      eY * 0.486 * mySize_y, ((pressedkeys & KEY_RIGHT) ? "gfx/hud/keys/key_right_inv.tga" : "gfx/hud/keys/key_right.tga"),           '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void HUD_ShowSpeed(void)
@@ -2724,28 +2724,38 @@ void HUD_Main (void)
 	sbar_fontsize = Sbar_GetFontsize("sbar_fontsize");
 	sbar_fontsize_spec = Sbar_GetFontsize("sbar_fontsize_spec");
 
-	if(cvar_or("hud_inventory", 1))
-		HUD_Inventory();
-	if(cvar_or("hud_weaponicons", 1))
+	if(HUD_Panel_CheckActive(0))
 		HUD_WeaponIcons();
-	if(cvar_or("hud_timer", 1))
-		HUD_Timer();
-	if(cvar_or("hud_powerups", 1))
+	if(HUD_Panel_CheckActive(1))
+		HUD_Inventory();
+	if(HUD_Panel_CheckActive(2))
 		HUD_Powerups();
-	if(cvar_or("hud_health", 1))
+	if(HUD_Panel_CheckActive(3))
 		HUD_HealthArmor();
-	if(cvar_or("hud_notify", 1))
+	if(HUD_Panel_CheckActive(4))
+		HUD_Notify();
+	if(HUD_Panel_CheckActive(5))
+		HUD_Timer();
+	if(HUD_Panel_CheckActive(6))
+		if(ons_showmap || cvar_string("cl_teamradar") != "0" && (cvar("cl_teamradar") == 2 || teamplay))
+			HUD_Radar();
+	if(HUD_Panel_CheckActive(7))
 		HUD_Score();
-	if((gametype == GAME_RACE || gametype == GAME_CTS) && cvar_or("hud_racetimer", 1))
-		HUD_RaceTimer();
-	if(cvar_or("hud_vote", 1))
+	if(HUD_Panel_CheckActive(8))
+		if(gametype == GAME_RACE || gametype == GAME_CTS || cvar("_hud_configure"))
+			HUD_RaceTimer();
+	if(HUD_Panel_CheckActive(9))
 		HUD_VoteWindow();
-	if(cvar("hud_pressedkeys"))
-		HUD_DrawPressedKeys();
-	if(cvar("hud_speed"))
+	if(HUD_Panel_CheckActive(10))
+		if(spectatee_status > 0 || cvar("cl_showpressedkeys") >= 2 || cvar("_hud_configure"))
+			HUD_DrawPressedKeys();
+
+	/* these are right now taken care of in View.qc
+	if(HUD_Panel_CheckActive(0))
 		HUD_ShowSpeed();
-	if(cvar("hud_acceleration"))
+	if(HUD_Panel_CheckActive(0))
 		HUD_ShowAcceleration();
+		*/
 
 	//Sbar_UpdatePlayerTeams();
 	// move this stuff to View.qc
