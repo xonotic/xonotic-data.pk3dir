@@ -1,3 +1,4 @@
+float music_disabled;
 entity music_default;
 entity music_target;
 entity music_trigger;
@@ -25,7 +26,7 @@ void TargetMusic_Advance()
 		{
 			// increase volume
 			if(e.fade_time > 0)
-				e.state = min(1, e.state + frametime / e.fade_time);
+				e.state = bound(0, e.state + frametime / e.fade_time, 1);
 			else
 				e.state = 1;
 		}
@@ -33,7 +34,7 @@ void TargetMusic_Advance()
 		{
 			// decrease volume
 			if(e.fade_rate > 0)
-				e.state = max(0, e.state - frametime / e.fade_rate);
+				e.state = bound(0, e.state - frametime / e.fade_rate, 1);
 			else
 				e.state = 0;
 		}
@@ -94,6 +95,12 @@ void Net_TargetMusic()
 		if(tim == 0)
 		{
 			music_default = e;
+			if(!music_disabled)
+			{
+				e.state = 2;
+				localcmd("cd stop\n"); // just in case
+				music_disabled = 1;
+			}
 		}
 		else
 		{
