@@ -1824,6 +1824,14 @@ void HUD_VoteWindow(void)
 	else
 		vote_alpha = bound(0, 1 - (time - vote_change) * 2, 1);
 
+	if(cvar("_hud_configure"))
+	{
+		vote_alpha = 1;
+		vote_yescount = 3;
+		vote_nocount = 2;
+		vote_needed = 4;
+	}
+
 	if(HUD_Panel_GetBgActive(9))
 		draw_BorderPicture(pos - '1 1 0' * marigin, "gfx/hud/border", mySize + '1 1 0' * 2 * marigin, color, hud_alpha_bg * vote_alpha, '1 1 0' * (marigin/MARIGIN_MULTIPLIER));
 
@@ -1835,6 +1843,8 @@ void HUD_VoteWindow(void)
 	        s = "A vote has been called for: ";
 		drawstring(pos + '0.5 0 0' * mySize_x + '0 0.1 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/5)), s, '1 1 0' * mySize_y*(1/5), '1 1 1', a * hud_alpha_fg, DRAWFLAG_NORMAL);
 		s = textShortenToWidth(vote_called_vote, mySize_x * 0.96, '10 0 0', stringwidth_colors);
+		if(cvar("_hud_configure"))
+			s = "Configure the HUD";
 		drawcolorcodedstring(pos + '0.52 0 0' * mySize_x + '0 0.3 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/6)), s, '1 1 0' * mySize_y*(1/6), a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 		// print the yes/no counts
