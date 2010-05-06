@@ -336,7 +336,7 @@ void CSQC_kh_hud(void);
 void CSQC_ctf_hud(void);
 void PostInit(void);
 void CSQC_Demo_Camera();
-float Sbar_WouldDrawScoreboard ();
+float HUD_WouldDrawScoreboard ();
 float view_set;
 float camera_mode;
 string NextFrameCommand;
@@ -390,6 +390,10 @@ void CSQC_UpdateView(float w, float h)
 		view_up = v_up;
 		view_set = 1;
 	}
+
+	hudconf_active = cvar("_hud_configure");
+	if(hudconf_active)
+		R_SetView(VF_ANGLES, self.angles); // TODO: this should freeze the view as it is, not change it to '0 0 0' or whatever it currently does...
 
 	vid_width = w;
 	vid_height = h;
@@ -457,17 +461,17 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	sbar_alpha_fg = cvar("sbar_alpha_fg" ) * (1 - cvar("_menu_alpha"));
-	sbar_currentammo = cvar("sbar_showcurrentammo");
-	sbar_hudselector = cvar("sbar_hudselector");
-	sbar_accuracy_hud = cvar_or("sbar_accuracy_hud", 1);
+	hud_alpha_fg = cvar_or("hud_alpha_fg", 1) * (1 - cvar("_menu_alpha"));
+	hud_currentammo = cvar("hud_showcurrentammo");
+	hud_hudselector = cvar("hud_hudselector");
+	hud_accuracy_hud = cvar_or("hud_accuracy_hud", 1);
 	ColorTranslateMode = cvar("cl_stripcolorcodes");
 	activeweapon = getstati(STAT_SWITCHWEAPON);
 	f = cvar("teamplay");
 	if(f != teamplay)
 	{
 		teamplay = f;
-		Sbar_InitScores();
+		HUD_InitScores();
 	}
 
 	if(last_weapon != activeweapon) {
@@ -517,15 +521,15 @@ void CSQC_UpdateView(float w, float h)
 
 	// Draw the Crosshair
 	float scoreboard_active;
-	scoreboard_active = Sbar_WouldDrawScoreboard();
+	scoreboard_active = HUD_WouldDrawScoreboard();
 	R_SetView(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
 
 	// Draw the Engine Status Bar (the default Quake HUD)
-	R_SetView(VF_DRAWENGINESBAR, 0);
+	R_SetView(VF_DRAWENGINEHUD, 0);
 
 	// fetch this one only once per frame
-	sbar_showbinds = cvar("sbar_showbinds");
-	sbar_showbinds_limit = cvar("sbar_showbinds_limit");
+	hud_showbinds = cvar("hud_showbinds");
+	hud_showbinds_limit = cvar("hud_showbinds_limit");
 
 	// Update the mouse position
 	/*
@@ -571,37 +575,9 @@ void CSQC_UpdateView(float w, float h)
 			self.draw2d();
 	self = e;
 
-	// draw radar
-	if(
-			ons_showmap
-			||
-			(
-			 !scoreboard_active
-			 &&
-			 cvar_string("cl_teamradar") != "0"
-			 &&
-			 (
-			  cvar("cl_teamradar") == 2
-			  ||
-			  teamplay
-			 )
-			)
-	  )
-		teamradar_view();
-
-	// draw sbar
+	// draw hud
 	if(cvar("r_letterbox") == 0) {
-		if (cvar("cl_showpressedkeys")) { // draw pressed keys when spectating and playing
-			if(spectatee_status > 0 || cvar("cl_showpressedkeys") >= 2)
-				Sbar_DrawPressedKeys();
-		}
-
-		if (cvar("cl_showspeed"))
-			Sbar_ShowSpeed();
-		if (cvar("cl_showacceleration"))
-			Sbar_ShowAcceleration();
-
-		Sbar_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
+		HUD_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
 	}
 
 	float hud;
@@ -621,7 +597,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !ons_showmap && !camera_active) {
+		if(!scoreboard_active && !ons_showmap && !camera_active && !hudconf_active) {
 			// TrueAim check
 			float shottype;
 			float bullets, ring_scale;
@@ -857,19 +833,19 @@ void CSQC_UpdateView(float w, float h)
 		cvar_set("vid_conheight", h0);
 	}
 
+	if(hudconf_active)
+		HUD_Panel_Mouse();
 	// be safe against triggerbots until everyone has the fixed engine
 	// this call is meant to overwrite the trace globals by something
 	// unsuspicious
 	traceline('0 0 0', '0 0 0', MOVE_WORLDONLY, world);
 }
 
-void Sbar_Draw();
 #define spider_h "gfx/vehicles/hud_bg.tga"
 #define spider_b "gfx/vehicles/sbot.tga"
 #define spider_r "gfx/vehicles/sbot_rpods.tga"
 #define spider_g "gfx/vehicles/sbot_mguns.tga"
 #define spider_s "gfx/vehicles/shiled.tga"
-
 #define spider_a1 "gfx/hud/sb_rocket.tga"
 #define spider_a2 "gfx/sb_bullets.tga"
 
@@ -974,8 +950,8 @@ void CSQC_SPIDER_HUD()
 
 	if (sb_showscores)
 	{
-		Sbar_DrawScoreboard();
-		Sbar_DrawCenterPrint();
+		HUD_DrawScoreboard();
+		HUD_DrawCenterPrint();
 	}
 
 }
@@ -1044,8 +1020,8 @@ void CSQC_RAPTOR_HUD()
 
 	if (sb_showscores)
 	{
-		Sbar_DrawScoreboard();
-		Sbar_DrawCenterPrint();
+		HUD_DrawScoreboard();
+		HUD_DrawCenterPrint();
 	}
 
 }
@@ -1154,8 +1130,8 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 
 	if (sb_showscores)
 	{
-		Sbar_DrawScoreboard();
-		Sbar_DrawCenterPrint();
+		HUD_DrawScoreboard();
+		HUD_DrawCenterPrint();
 	}
 
 }
@@ -1163,7 +1139,7 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 
 void CSQC_common_hud(void)
 {
-	// Sbar_SortFrags(); done in Sbar_Draw
+	// HUD_SortFrags(); done in HUD_Draw
 	float hud;
 	hud = getstati(STAT_HUD);
 
@@ -1171,7 +1147,34 @@ void CSQC_common_hud(void)
 	switch(hud)
 	{
 		case HUD_NORMAL:
-			Sbar_Draw();
+			// hud first
+			HUD_Main();
+
+			// is this needed?
+			//HUD_UpdatePlayerTeams();
+
+			if (intermission == 2) // map voting screen
+			{
+				if(sb_showaccuracy && spectatee_status != -1) {
+					HUD_DrawAccuracyStats();
+				}
+				else if(sb_showscores) {
+					HUD_DrawScoreboard();
+				}
+				else
+					HUD_FinaleOverlay();
+
+				HUD_Reset();
+			}
+			else if (sb_showscores || sb_showaccuracy || sb_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
+			{
+				if(sb_showaccuracy && spectatee_status != -1)
+					HUD_DrawAccuracyStats();
+				else
+					HUD_DrawScoreboard();
+
+				HUD_Reset();
+			}
 			break;
 
 		case HUD_SPIDERBOT:

@@ -105,14 +105,14 @@ void CSQC_Init(void)
 #ifndef CAMERATEST
 	}
 #endif
-	registercvar("sbar_usecsqc", "1");
-	registercvar("sbar_columns", "default", CVAR_SAVE);
+	registercvar("hud_usecsqc", "1");
+	registercvar("hud_columns", "default", CVAR_SAVE);
 
 	gametype = 0;
 
-	// sbar_fields uses strunzone on the titles!
-	for(i = 0; i < MAX_SBAR_FIELDS; ++i)
-		sbar_title[i] = strzone("(null)");
+	// hud_fields uses strunzone on the titles!
+	for(i = 0; i < MAX_HUD_FIELDS; ++i)
+		hud_title[i] = strzone("(null)");
 
 	postinit = false;
 
@@ -321,9 +321,9 @@ void Playerchecker_Think()
 				e.ping_packetloss = 0;
 				e.ping_movementloss = 0;
 				//e.gotscores = 0; // we might already have the scores...
-				SetTeam(e, GetPlayerColor(i)); // will not hurt; later updates come with Sbar_UpdatePlayerTeams
+				SetTeam(e, GetPlayerColor(i)); // will not hurt; later updates come with HUD_UpdatePlayerTeams
 				RegisterPlayer(e);
-				Sbar_UpdatePlayerPos(e);
+				HUD_UpdatePlayerPos(e);
 			}
 		}
 	}
@@ -335,7 +335,7 @@ void TrueAim_Init();
 void PostInit(void)
 {
 	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
-	localcmd(strcat("\nsbar_columns_set ", cvar_string("sbar_columns"), ";\n"));
+	localcmd(strcat("\nhud_columns_set ", cvar_string("hud_columns"), ";\n"));
 
 	entity playerchecker;
 	playerchecker = spawn();
@@ -351,8 +351,8 @@ void PostInit(void)
 // CSQC_ConsoleCommand : Used to parse commands in the console that have been registered with the "registercmd" function
 // Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
 float button_zoom;
-void Cmd_Sbar_SetFields(float);
-void Cmd_Sbar_Help(float);
+void Cmd_HUD_SetFields(float);
+void Cmd_HUD_Help(float);
 float CSQC_ConsoleCommand(string strMessage)
 {
 	float argc;
@@ -506,8 +506,8 @@ void GameCommand(string msg)
 		print("Usage: cl_cmd COMMAND..., where possible commands are:\n");
 		print("  settemp cvar value\n");
 		print("  radar\n");
-		print("  sbar_columns_set ...\n");
-		print("  sbar_columns_help\n");
+		print("  hud_columns_set ...\n");
+		print("  hud_columns_help\n");
 		GameCommand_Generic("help");
 		return;
 	}
@@ -526,11 +526,11 @@ void GameCommand(string msg)
 	else if(cmd == "radar") {
 		ons_showmap = !ons_showmap;
 	}
-	else if(cmd == "sbar_columns_set") {
-		Cmd_Sbar_SetFields(argc);
+	else if(cmd == "hud_columns_set") {
+		Cmd_HUD_SetFields(argc);
 	}
-	else if(cmd == "sbar_columns_help") {
-		Cmd_Sbar_Help(argc);
+	else if(cmd == "hud_columns_help") {
+		Cmd_HUD_Help(argc);
 	}
 #ifdef BLURTEST
 	else if(cmd == "blurtest") {
@@ -615,10 +615,15 @@ void GameCommand(string msg)
 // bInputType = 0 is key pressed, 1 is key released, 2 is mouse input.
 // In the case of keyboard input, nPrimary is the ascii code, and nSecondary is 0.
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
+float hudconf_active;
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	local float bSkipKey;
 	bSkipKey = false;
+
+	if(hudconf_active)
+		if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
+			return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
@@ -670,7 +675,7 @@ void Ent_ReadPlayerScore()
 	float isNew;
 	entity o;
 
-	// damnit -.- don't want to go change every single .sv_entnum in sbar.qc AGAIN
+	// damnit -.- don't want to go change every single .sv_entnum in hud.qc AGAIN
 	// (no I've never heard of M-x replace-string, sed, or anything like that)
 	isNew = !self.owner; // workaround for DP bug
 	n = ReadByte()-1;
@@ -716,7 +721,7 @@ void Ent_ReadPlayerScore()
 		}
 
 	if(o.sort_prev)
-		Sbar_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
+		HUD_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
 
 	self.entremove = Ent_RemovePlayerScore;
 }
@@ -747,7 +752,7 @@ void Ent_ReadTeamScore()
 				o.(teamscores[i]) = ReadChar();
 		}
 
-	Sbar_UpdateTeamPos(o);
+	HUD_UpdateTeamPos(o);
 }
 
 void Net_Reset()
@@ -995,7 +1000,7 @@ void Ent_ScoresInfo()
 		teamscores_label[i] = strzone(ReadString());
 		teamscores_flags[i] = ReadByte();
 	}
-	Sbar_InitScores();
+	HUD_InitScores();
 	Gamemode_Init();
 }
 
@@ -1298,7 +1303,7 @@ string getcommandkey(string text, string command)
 	string keys;
 	float n, j, k, l;
 
-	if (!sbar_showbinds)
+	if (!hud_showbinds)
 		return text;
 
 	keys = db_get(binddb, command);
@@ -1316,7 +1321,7 @@ string getcommandkey(string text, string command)
 					keys = strcat(keys, ", ", keynumtostring(k));
 
 				++l;
-				if (sbar_showbinds_limit > 0 && sbar_showbinds_limit >= l) break;
+				if (hud_showbinds_limit > 0 && hud_showbinds_limit >= l) break;
 			}
 
 		}
@@ -1324,12 +1329,12 @@ string getcommandkey(string text, string command)
 	}
 
 	if ("" == keys) {
-		if (sbar_showbinds > 1)
+		if (hud_showbinds > 1)
 			return strcat(text, " (not bound)");
 		else
 			return text;
 	}
-	else if (sbar_showbinds > 1)
+	else if (hud_showbinds > 1)
 		return strcat(text, " (", keys, ")");
 	else
 		return keys;

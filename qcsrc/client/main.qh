@@ -63,7 +63,7 @@ const float COLOR_SPECTATOR = 1337;
 // --------------------------------------------------------------------------
 // Scoreboard stuff
 
-#define MAX_SBAR_FIELDS 16
+#define MAX_HUD_FIELDS 16
 
 #define SP_END -1
 
@@ -76,13 +76,13 @@ const float COLOR_SPECTATOR = 1337;
 
 #define SP_SEPARATOR -100
 
-float sbar_field[MAX_SBAR_FIELDS + 1];
-float sbar_size[MAX_SBAR_FIELDS + 1];
-string sbar_title[MAX_SBAR_FIELDS + 1];
-float sbar_num_fields;
+float hud_field[MAX_HUD_FIELDS + 1];
+float hud_size[MAX_HUD_FIELDS + 1];
+string hud_title[MAX_HUD_FIELDS + 1];
+float hud_num_fields;
 
-float sbar_font;
-float sbar_bigfont;
+float hud_font;
+float hud_bigfont;
 
 string scores_label[MAX_SCORE];
 float scores_flags[MAX_SCORE];
@@ -95,9 +95,8 @@ float teamscores_flags[MAX_SCORE];
 #define IS_DECREASING(x) ( !((x)&SFL_LOWER_IS_BETTER) )
 
 
-vector sbar_fontsize;
-vector sbar_oldfontsize;
-vector sbar_fontsize_spec;
+vector hud_fontsize;
+vector hud_fontsize_spec;
 
 float RANKINGS_RECEIVED_CNT;
 string grecordholder[RANKINGS_CNT];
@@ -127,8 +126,8 @@ float ignore_minus_zoom;
 float warmup_stage;
 
 string getcommandkey(string text, string command);
-float sbar_showbinds;
-float sbar_showbinds_limit;
+float hud_showbinds;
+float hud_showbinds_limit;
 
 string vote_called_vote;
 float ready_waiting;

@@ -288,6 +288,9 @@ const float HUD_NORMAL = 0;
 const float HUD_SPIDERBOT = 10;
 const float HUD_WAKIZASHI = 11;
 const float HUD_RAPTOR    = 12;
+const vector eX = '1 0 0';
+const vector eY = '0 1 0';
+const vector eZ = '0 0 1';
 
 const float STAT_VEHICLESTAT_HEALTH  = 60;
 const float STAT_VEHICLESTAT_SHIELD  = 61;
@@ -503,3 +506,6 @@ float WATERLEVEL_SWIMMING = 2;
 float WATERLEVEL_SUBMERGED = 3;
 
 float MAX_SHOT_DISTANCE = 32768;
+
+// panel hud constants
+float panel_cnt = 11; // NOTE: IDs start from 0!
