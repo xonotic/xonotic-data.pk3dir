@@ -24,6 +24,7 @@ void fillXonoticAudioSettingsTab(entity me)
 
 	me.TR(me);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "bgmvolume");
+		makeMulti(s, "snd_csqcchannel2volume");
 		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(-1000000, 1, s, "Music:"));
 		me.TD(me, 1, 2, s);
 	me.TR(me);

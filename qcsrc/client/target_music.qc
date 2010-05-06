@@ -34,7 +34,7 @@ void Net_AdvanceMusic()
 				e.state = 0;
 		}
 		if(e.state != s0)
-			sound(e, CHAN_PROJECTILE, "", e.volume * e.state, ATTN_NONE);
+			sound(e, CHAN_VOICE, "", e.volume * e.state, ATTN_NONE);
 	}
 	music_trigger = world;
 }
@@ -64,7 +64,7 @@ void Net_TargetMusic()
 		if(e.noise)
 			strunzone(e.noise);
 		e.noise = strzone(noi);
-		sound(e, CHAN_PROJECTILE, self.noise, 0, ATTN_NONE);
+		sound(e, CHAN_VOICE, self.noise, 0, ATTN_NONE);
 	}
 	e.volume = vol;
 	e.fade_time = fai;

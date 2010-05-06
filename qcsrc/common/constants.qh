@@ -370,7 +370,7 @@ float	CHAN_VOICE				= 2; // Voice/Radio
 	// on world: UNUSED
 	// on players: voice                             VOICE
 	// on entities: ambient                          AMBIENT
-	// on csqc: UNUSED
+	// on csqc: background music                     BGM
 float	CHAN_TRIGGER			= 3; // Triggers/Items
 	// on world: UNUSED
 	// on players: item pickup                       ITEMS
