@@ -35,7 +35,7 @@ void TargetMusic_Advance()
 		}
 		if(e.state != s0)
 		{
-			sound(e, CHAN_VOICE, "", e.volume * e.state, ATTN_NONE);
+			sound(e, CHAN_VOICE, "", e.volume * e.state * cvar("bgmvolume"), ATTN_NONE);
 		}
 	}
 	music_trigger = world;
