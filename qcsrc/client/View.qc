@@ -448,7 +448,7 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	hud_alpha_fg = cvar_or("hud_alpha_fg", 1) * (1 - cvar("_menu_alpha"));
-	sbar_currentammo = cvar("hud_showcurrentammo");
+	hud_currentammo = cvar("hud_showcurrentammo");
 	hud_hudselector = cvar("hud_hudselector");
 	hud_accuracy_hud = cvar_or("hud_accuracy_hud", 1);
 	ColorTranslateMode = cvar("cl_stripcolorcodes");
@@ -511,11 +511,11 @@ void CSQC_UpdateView(float w, float h)
 	R_SetView(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
 
 	// Draw the Engine Status Bar (the default Quake HUD)
-	R_SetView(VF_DRAWENGINESBAR, 0);
+	R_SetView(VF_DRAWENGINEHUD, 0);
 
 	// fetch this one only once per frame
-	sbar_showbinds = cvar("sbar_showbinds");
-	sbar_showbinds_limit = cvar("sbar_showbinds_limit");
+	hud_showbinds = cvar("hud_showbinds");
+	hud_showbinds_limit = cvar("hud_showbinds_limit");
 
 	// Update the mouse position
 	/*
@@ -561,7 +561,7 @@ void CSQC_UpdateView(float w, float h)
 			self.draw2d();
 	self = e;
 
-	// draw sbar
+	// draw hud
 	if(cvar("r_letterbox") == 0) {
 		HUD_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
 	}

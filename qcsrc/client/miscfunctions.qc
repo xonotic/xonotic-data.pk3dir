@@ -304,8 +304,8 @@ entity GetTeam(float Team, float add)
 
 void CSQC_CheckEngine()
 {
-	sbar_font = FONT_USER+1;
-	sbar_bigfont = FONT_USER+2;
+	hud_font = FONT_USER+1;
+	hud_bigfont = FONT_USER+2;
 }
 
 vector HUD_GetFontsize(string cvarname)
@@ -323,7 +323,7 @@ vector HUD_GetFontsize(string cvarname)
 float HUD_GetWidth(float teamcolumnwidth)
 {
 	float f;
-	f = cvar("sbar_width");
+	f = cvar("hud_width");
 	if(f == 0)
 		f = 640;
 	if(f < 320)

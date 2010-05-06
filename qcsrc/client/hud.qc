@@ -631,7 +631,7 @@ float HUD_Panel_GetBgActive(float id)
 
 vector HUD_Panel_GetProgressBarColor(string item)
 {
-	return stov(cvar_string(strcat("hud_progressbar_", item, "_color")));
+	return stov(cvar_string(strcat("hud_progreshud_", item, "_color")));
 }
 
 float resizeCorner; // 1 = topleft, 2 = topright, 3 = bottomleft, 4 = bottomright
@@ -1401,7 +1401,7 @@ void HUD_HealthArmor(void)
 
 			if (x > 0)
 			{
-				drawpic(pos, "gfx/hud/statusbar", eX * 0.5 * mySize_x * min(1, x/200) + eY * mySize_y, HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+				drawpic(pos, "gfx/hud/statuhud", eX * 0.5 * mySize_x * min(1, x/200) + eY * mySize_y, HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progreshud_alpha"), DRAWFLAG_NORMAL);
 				if (x > 45)
 					drawpic(pos, "gfx/hud/sb_armor", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				else
@@ -1411,7 +1411,7 @@ void HUD_HealthArmor(void)
 
 			// health
 			x = health;
-			drawpic(pos + eX * mySize_x - eX * 0.5 * mySize_x * min(1, x/200), "gfx/hud/statusbar", eX * 0.5 * mySize_x * min(1, x/200) + eY * mySize_y, HUD_Panel_GetProgressBarColor("health"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+			drawpic(pos + eX * mySize_x - eX * 0.5 * mySize_x * min(1, x/200), "gfx/hud/statuhud", eX * 0.5 * mySize_x * min(1, x/200) + eY * mySize_y, HUD_Panel_GetProgressBarColor("health"), cvar("hud_progreshud_alpha"), DRAWFLAG_NORMAL);
 			drawpic(pos + eX * mySize_x - eX * mySize_y, "gfx/hud/sb_health", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * 2.5 * mySize_y + eY * 0.25 * mySize_y, x, 3, 0.5 * mySize_y, hud_alpha_fg);
 		}
@@ -1423,7 +1423,7 @@ void HUD_HealthArmor(void)
 
 			if (x > 0)
 			{
-				drawpic(pos + eY * mySize_y - eY * mySize_y * min(1, x/200), "gfx/hud/statusbar", eX * 0.5 * mySize_x + eY * mySize_y * min(1, x/200), HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+				drawpic(pos + eY * mySize_y - eY * mySize_y * min(1, x/200), "gfx/hud/statuhud", eX * 0.5 * mySize_x + eY * mySize_y * min(1, x/200), HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progreshud_alpha"), DRAWFLAG_NORMAL);
 				if (x > 45)
 					drawpic(pos + eX * 0.4 * mySize_y, "gfx/hud/sb_armor", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				else
@@ -1435,7 +1435,7 @@ void HUD_HealthArmor(void)
 			x = health;
 			numbers = strlen(ftos(x));
 
-			drawpic(pos + eX * 0.5 * mySize_x + eY * mySize_y - eY * mySize_y * min(1, x/200), "gfx/hud/statusbar", eX * 0.5 * mySize_x + eY * mySize_y * min(1, x/200), HUD_Panel_GetProgressBarColor("health"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+			drawpic(pos + eX * 0.5 * mySize_x + eY * mySize_y - eY * mySize_y * min(1, x/200), "gfx/hud/statuhud", eX * 0.5 * mySize_x + eY * mySize_y * min(1, x/200), HUD_Panel_GetProgressBarColor("health"), cvar("hud_progreshud_alpha"), DRAWFLAG_NORMAL);
 			drawpic(pos + eX * mySize_x - eX * 1.1 * mySize_y, "gfx/hud/sb_health", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * numbers * 0.5 * mySize_y + eY * 0.55 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
 		}
@@ -1447,7 +1447,7 @@ void HUD_HealthArmor(void)
 
 			if (x > 0)
 			{
-				drawpic(pos, "gfx/hud/statusbar", eX * mySize_x * min(1, x/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+				drawpic(pos, "gfx/hud/statuhud", eX * mySize_x * min(1, x/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progreshud_alpha"), DRAWFLAG_NORMAL);
 				if (x > 45)
 					drawpic(pos, "gfx/hud/sb_armor", '0.5 0.5 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				else
@@ -1459,7 +1459,7 @@ void HUD_HealthArmor(void)
 			x = health;
 			numbers = strlen(ftos(x));
 
-			drawpic(pos + eY * 0.5 * mySize_y, "gfx/hud/statusbar", eX * mySize_x * min(1, x/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor("health"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+			drawpic(pos + eY * 0.5 * mySize_y, "gfx/hud/statuhud", eX * mySize_x * min(1, x/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor("health"), cvar("hud_progreshud_alpha"), DRAWFLAG_NORMAL);
 			drawpic(pos + eY * 0.5 * mySize_y, "gfx/hud/sb_health", '0.5 0.5 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum_Colored(pos + eX * 0.5 * mySize_y + eY * 0.5 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
 		}
@@ -1553,7 +1553,7 @@ void HUD_RaceTimer (void) {
 	if(HUD_Panel_GetBgActive(8))
 		draw_BorderPicture(pos - '1 1 0' * marigin, "gfx/hud/border", mySize + '1 1 0' * 2 * marigin, color, hud_alpha_bg, '1 1 0' * (marigin/MARIGIN_MULTIPLIER));
 
-	drawfont = sbar_bigfont;
+	drawfont = hud_bigfont;
 	float a, t;
 	string s, forcetime;
 
@@ -1657,7 +1657,7 @@ void HUD_RaceTimer (void) {
 		}
 	}
 
-	drawfont = sbar_font;
+	drawfont = hud_font;
 }
 
 // Notification area (#4)
@@ -1678,17 +1678,17 @@ void HUD_Notify (void)
 	entity tm;
 	if(spectatee_status && !intermission)
 	{
-		drawfont = sbar_bigfont;
+		drawfont = hud_bigfont;
 		if(spectatee_status == -1)
 			s = "^1Observing";
 		else
 			s = GetPlayerName(spectatee_status - 1);
 		// spectated player name between HUD and chat area, aligned to the left
 		pos_x = 0;
-		pos_y = - 50 - sbar_fontsize_spec_y;
-		s = textShortenToWidth(s, vid_conwidth/2.5, sbar_fontsize_spec, stringwidth_colors);
-		drawcolorcodedstring(pos, s, sbar_fontsize_spec, hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawfont = sbar_font;
+		pos_y = - 50 - hud_fontsize_spec_y;
+		s = textShortenToWidth(s, vid_conwidth/2.5, hud_fontsize_spec, stringwidth_colors);
+		drawcolorcodedstring(pos, s, hud_fontsize_spec, hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawfont = hud_font;
 
 		// spectator text in the upper right corner
 		if(spectatee_status == -1)
@@ -2289,7 +2289,7 @@ void CSQC_race_hud(void)
 	if not((scores_flags[ps_primary] & SFL_TIME) && !teamplay) // race/cts record display on HUD
 		return; // no records in the actual race
 
-	drawfont = sbar_bigfont;
+	drawfont = hud_bigfont;
 	vector pos;
 	pos_x = 2;
 	pos_y = vid_conheight - 48;
@@ -2339,7 +2339,7 @@ void CSQC_race_hud(void)
 		drawstring_expanding(pos, "Server best ", '10 10 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL, f);
 		drawstring_expanding(pos + '0 10 0', TIME_ENCODED_TOSTRING(t),'14 14 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL, f);
 	}
-	drawfont = sbar_font;
+	drawfont = hud_font;
 }
 
 // Timer (#5)
@@ -2434,7 +2434,7 @@ void HUD_Radar(void)
 	if(HUD_Panel_GetBgActive(6))
 		draw_BorderPicture(pos - '1 1 0' * marigin, "gfx/hud/border", mySize + '1 1 0' * 2 * marigin, color, hud_alpha_bg, '1 1 0' * (marigin/MARIGIN_MULTIPLIER));
 
-	local float color1, color2; // color already declared as a global in sbar.qc
+	local float color1, color2; // color already declared as a global in hud.qc
 	local vector rgb;
 	local entity tm;
 	float scale2d, normalsize, bigsize;
@@ -2649,7 +2649,7 @@ void HUD_ShowSpeed(void)
 	numsize_x = numsize_y = cvar("cl_showspeed_size");
 	pos = (vid_conheight - numsize_y) * cvar("cl_showspeed_position");
 
-	drawfont = sbar_bigfont;
+	drawfont = hud_bigfont;
 	drawstringcenter(eX + pos * eY, speed, numsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 	if (cvar("cl_showspeed_z") == 1) {
@@ -2657,7 +2657,7 @@ void HUD_ShowSpeed(void)
 		drawstringcenter(eX + pos * eY + numsize_y * eY, zspeed, numsize * 0.5, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 	}
 
-	drawfont = sbar_font;
+	drawfont = hud_font;
 }
 
 vector acc_prevspeed;
@@ -2700,9 +2700,9 @@ void HUD_ShowAcceleration(void)
 	}
 
 	if (acceleration > 0)
-		drawpic(pos, "gfx/hud/statusbar", acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos, "gfx/hud/statuhud", acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 	else if (acceleration < 0)
-		drawpic(pos + acceleration * scale * '40 0 0', "gfx/hud/statusbar", -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos + acceleration * scale * '40 0 0', "gfx/hud/statuhud", -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void HUD_Reset (void)
@@ -2721,8 +2721,8 @@ void HUD_Main (void)
 	hud_accuracy_border_thickness = bound(0, cvar_or("hud_accuracy_border_thickness", 1), 5);
 	hud_color_bg_team = cvar("hud_color_bg_team");
 
-	sbar_fontsize = HUD_GetFontsize("sbar_fontsize");
-	sbar_fontsize_spec = HUD_GetFontsize("sbar_fontsize_spec");
+	hud_fontsize = HUD_GetFontsize("hud_fontsize");
+	hud_fontsize_spec = HUD_GetFontsize("hud_fontsize_spec");
 
 	if(HUD_Panel_CheckActive(0))
 		HUD_WeaponIcons();

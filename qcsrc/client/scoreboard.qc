@@ -21,7 +21,7 @@ void HUD_FinaleOverlay()
 
 	//drawpic(pos, "gfx/finale", '0 0 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
-	//drawstring(pos, "END", sbar_fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+	//drawstring(pos, "END", hud_fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 	MapVote_Draw();
 }
 
@@ -195,11 +195,11 @@ void HUD_UpdateTeamPos(entity Team)
 
 void Cmd_HUD_Help(float argc)
 {
-	print("You can modify the scoreboard using the ^2sbar_columns_set command.\n");
+	print("You can modify the scoreboard using the ^2hud_columns_set command.\n");
 	print("^3|---------------------------------------------------------------|\n");
 	print("Usage:\n");
-	print("^2sbar_columns_set default\n");
-	print("^2sbar_columns_set ^7filed1 field2 ...\n");
+	print("^2hud_columns_set default\n");
+	print("^2hud_columns_set ^7filed1 field2 ...\n");
 	print("The following field names are recognized (case insensitive):\n");
 	print("You can use a ^3|^7 to start the right-aligned fields.\n\n");
 
@@ -237,7 +237,7 @@ void Cmd_HUD_Help(float argc)
 	print("The special game type names 'teams' and 'noteams' can be used to\n");
 	print("include/exclude ALL teams/noteams game modes.\n\n");
 
-	print("Example: sbar_columns_set name ping pl | +ctf/field3 -dm/field4\n");
+	print("Example: hud_columns_set name ping pl | +ctf/field3 -dm/field4\n");
 	print("will display name, ping and pl aligned to the left, and the fields\n");
 	print("right of the vertical bar aligned to the right.\n");
 	print("'field3' will only be shown in CTF, and 'field4' will be shown in all\n");
@@ -266,7 +266,7 @@ void Cmd_HUD_SetFields(float argc)
 
 	// TODO: re enable with gametype dependant cvars?
 	if(argc < 2) // no arguments provided
-		argc = tokenizebyseparator(strcat("x ", cvar_string("sbar_columns")), " ");
+		argc = tokenizebyseparator(strcat("x ", cvar_string("hud_columns")), " ");
 
 	if(argc < 2)
 		argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
@@ -294,9 +294,9 @@ void Cmd_HUD_SetFields(float argc)
 	}
 
 
-	sbar_num_fields = 0;
+	hud_num_fields = 0;
 
-	drawfont = sbar_font;
+	drawfont = hud_font;
 
 	for(i = 0; i < argc - 1; ++i)
 	{
@@ -320,22 +320,22 @@ void Cmd_HUD_SetFields(float argc)
 				continue;
 		}
 
-		strunzone(sbar_title[sbar_num_fields]);
-		sbar_title[sbar_num_fields] = strzone(str);
-		sbar_size[sbar_num_fields] = stringwidth(str, FALSE, sbar_fontsize);
+		strunzone(hud_title[hud_num_fields]);
+		hud_title[hud_num_fields] = strzone(str);
+		hud_size[hud_num_fields] = stringwidth(str, FALSE, hud_fontsize);
 		str = strtolower(str);
 
 		if(str == "ping") {
-			sbar_field[sbar_num_fields] = SP_PING;
+			hud_field[hud_num_fields] = SP_PING;
 		} else if(str == "pl") {
-			sbar_field[sbar_num_fields] = SP_PL;
+			hud_field[hud_num_fields] = SP_PL;
 		} else if(str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
-			sbar_field[sbar_num_fields] = SP_KDRATIO;
+			hud_field[hud_num_fields] = SP_KDRATIO;
 		} else if(str == "name" || str == "nick") {
-			sbar_field[sbar_num_fields] = SP_NAME;
+			hud_field[hud_num_fields] = SP_NAME;
 			have_name = 1;
 		} else if(str == "|") {
-			sbar_field[sbar_num_fields] = SP_SEPARATOR;
+			hud_field[hud_num_fields] = SP_SEPARATOR;
 			have_separator = 1;
 		} else {
 			for(j = 0; j < MAX_SCORE; ++j)
@@ -353,14 +353,14 @@ void Cmd_HUD_SetFields(float argc)
 				continue;
 			}
 :found
-			sbar_field[sbar_num_fields] = j;
+			hud_field[hud_num_fields] = j;
 			if(j == ps_primary)
 				have_primary = 1;
 			if(j == ps_secondary)
 				have_secondary = 1;
 		}
-		++sbar_num_fields;
-		if(sbar_num_fields >= MAX_SBAR_FIELDS)
+		++hud_num_fields;
+		if(hud_num_fields >= MAX_HUD_FIELDS)
 			break;
 	}
 
@@ -372,95 +372,95 @@ void Cmd_HUD_SetFields(float argc)
 		have_secondary = 1;
 	missing = (!have_primary) + (!have_secondary) + (!have_separator) + (!have_name);
 
-	if(sbar_num_fields+missing < MAX_SBAR_FIELDS)
+	if(hud_num_fields+missing < MAX_HUD_FIELDS)
 	{
 		if(!have_name)
 		{
-			strunzone(sbar_title[sbar_num_fields]);
-			for(i = sbar_num_fields; i > 0; --i)
+			strunzone(hud_title[hud_num_fields]);
+			for(i = hud_num_fields; i > 0; --i)
 			{
-				sbar_title[i] = sbar_title[i-1];
-				sbar_size[i] = sbar_size[i-1];
-				sbar_field[i] = sbar_field[i-1];
+				hud_title[i] = hud_title[i-1];
+				hud_size[i] = hud_size[i-1];
+				hud_field[i] = hud_field[i-1];
 			}
-			sbar_title[0] = strzone("name");
-			sbar_field[0] = SP_NAME;
-			++sbar_num_fields;
+			hud_title[0] = strzone("name");
+			hud_field[0] = SP_NAME;
+			++hud_num_fields;
 			print("fixed missing field 'name'\n");
 
 			if(!have_separator)
 			{
-				strunzone(sbar_title[sbar_num_fields]);
-				for(i = sbar_num_fields; i > 1; --i)
+				strunzone(hud_title[hud_num_fields]);
+				for(i = hud_num_fields; i > 1; --i)
 				{
-					sbar_title[i] = sbar_title[i-1];
-					sbar_size[i] = sbar_size[i-1];
-					sbar_field[i] = sbar_field[i-1];
+					hud_title[i] = hud_title[i-1];
+					hud_size[i] = hud_size[i-1];
+					hud_field[i] = hud_field[i-1];
 				}
-				sbar_title[1] = strzone("|");
-				sbar_field[1] = SP_SEPARATOR;
-				sbar_size[1] = stringwidth("|", FALSE, sbar_fontsize);
-				++sbar_num_fields;
+				hud_title[1] = strzone("|");
+				hud_field[1] = SP_SEPARATOR;
+				hud_size[1] = stringwidth("|", FALSE, hud_fontsize);
+				++hud_num_fields;
 				print("fixed missing field '|'\n");
 			}
 		}
 		else if(!have_separator)
 		{
-			strunzone(sbar_title[sbar_num_fields]);
-			sbar_title[sbar_num_fields] = strzone("|");
-			sbar_size[sbar_num_fields] = stringwidth("|", FALSE, sbar_fontsize);
-			sbar_field[sbar_num_fields] = SP_SEPARATOR;
-			++sbar_num_fields;
+			strunzone(hud_title[hud_num_fields]);
+			hud_title[hud_num_fields] = strzone("|");
+			hud_size[hud_num_fields] = stringwidth("|", FALSE, hud_fontsize);
+			hud_field[hud_num_fields] = SP_SEPARATOR;
+			++hud_num_fields;
 			print("fixed missing field '|'\n");
 		}
 		if(!have_secondary)
 		{
-			strunzone(sbar_title[sbar_num_fields]);
-			sbar_title[sbar_num_fields] = strzone(scores_label[ps_secondary]);
-			sbar_size[sbar_num_fields] = stringwidth(sbar_title[sbar_num_fields], FALSE, sbar_fontsize);
-			sbar_field[sbar_num_fields] = ps_secondary;
-			++sbar_num_fields;
+			strunzone(hud_title[hud_num_fields]);
+			hud_title[hud_num_fields] = strzone(scores_label[ps_secondary]);
+			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
+			hud_field[hud_num_fields] = ps_secondary;
+			++hud_num_fields;
 			print("fixed missing field '", scores_label[ps_secondary], "'\n");
 		}
 		if(!have_primary)
 		{
-			strunzone(sbar_title[sbar_num_fields]);
-			sbar_title[sbar_num_fields] = strzone(scores_label[ps_primary]);
-			sbar_size[sbar_num_fields] = stringwidth(sbar_title[sbar_num_fields], FALSE, sbar_fontsize);
-			sbar_field[sbar_num_fields] = ps_primary;
-			++sbar_num_fields;
+			strunzone(hud_title[hud_num_fields]);
+			hud_title[hud_num_fields] = strzone(scores_label[ps_primary]);
+			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
+			hud_field[hud_num_fields] = ps_primary;
+			++hud_num_fields;
 			print("fixed missing field '", scores_label[ps_primary], "'\n");
 		}
 	}
 
-	sbar_field[sbar_num_fields] = SP_END;
+	hud_field[hud_num_fields] = SP_END;
 }
 
 // MOVEUP::
-vector sbar_field_rgb;
-string sbar_field_icon0;
-string sbar_field_icon1;
-string sbar_field_icon2;
-vector sbar_field_icon0_rgb;
-vector sbar_field_icon1_rgb;
-vector sbar_field_icon2_rgb;
-float sbar_field_icon0_alpha;
-float sbar_field_icon1_alpha;
-float sbar_field_icon2_alpha;
+vector hud_field_rgb;
+string hud_field_icon0;
+string hud_field_icon1;
+string hud_field_icon2;
+vector hud_field_icon0_rgb;
+vector hud_field_icon1_rgb;
+vector hud_field_icon2_rgb;
+float hud_field_icon0_alpha;
+float hud_field_icon1_alpha;
+float hud_field_icon2_alpha;
 string HUD_GetField(entity pl, float field)
 {
 	float tmp, num, denom, f;
 	string str;
-	sbar_field_rgb = '1 1 1';
-	sbar_field_icon0 = "";
-	sbar_field_icon1 = "";
-	sbar_field_icon2 = "";
-	sbar_field_icon0_rgb = '1 1 1';
-	sbar_field_icon1_rgb = '1 1 1';
-	sbar_field_icon2_rgb = '1 1 1';
-	sbar_field_icon0_alpha = 1;
-	sbar_field_icon1_alpha = 1;
-	sbar_field_icon2_alpha = 1;
+	hud_field_rgb = '1 1 1';
+	hud_field_icon0 = "";
+	hud_field_icon1 = "";
+	hud_field_icon2 = "";
+	hud_field_icon0_rgb = '1 1 1';
+	hud_field_icon1_rgb = '1 1 1';
+	hud_field_icon2_rgb = '1 1 1';
+	hud_field_icon0_alpha = 1;
+	hud_field_icon1_alpha = 1;
+	hud_field_icon2_alpha = 1;
 	switch(field)
 	{
 		case SP_PING:
@@ -471,7 +471,7 @@ string HUD_GetField(entity pl, float field)
 			if(f == 0)
 				return "N/A";
 			tmp = max(0, min(220, f-80)) / 220;
-			sbar_field_rgb = '1 1 1' - '0 1 1'*tmp;
+			hud_field_rgb = '1 1 1' - '0 1 1'*tmp;
 			return ftos(f);
 
 		case SP_PL:
@@ -485,23 +485,23 @@ string HUD_GetField(entity pl, float field)
 			if(tmp != 0)
 				str = strcat(str, "~", ftos(ceil(tmp * 100)));
 			tmp = bound(0, f / 0.2 + tmp / 0.04, 1); // 20% is REALLY BAD pl
-			sbar_field_rgb = '1 0.5 0.5' - '0 0.5 0.5'*tmp;
+			hud_field_rgb = '1 0.5 0.5' - '0 0.5 0.5'*tmp;
 			return str;
 
 		case SP_NAME:
 			if(ready_waiting && pl.ready)
 			{
-				sbar_field_icon0 = "gfx/sb_player_ready";
+				hud_field_icon0 = "gfx/sb_player_ready";
 			}
 			else if(!teamplay)
 			{
 				f = stof(getplayerkey(pl.sv_entnum, "colors"));
 				{
-					sbar_field_icon0 = "gfx/sb_playercolor_base";
-					sbar_field_icon1 = "gfx/sb_playercolor_shirt";
-					sbar_field_icon1_rgb = colormapPaletteColor(floor(f / 16), 0);
-					sbar_field_icon2 = "gfx/sb_playercolor_pants";
-					sbar_field_icon2_rgb = colormapPaletteColor(mod(f, 16), 1);
+					hud_field_icon0 = "gfx/sb_playercolor_base";
+					hud_field_icon1 = "gfx/sb_playercolor_shirt";
+					hud_field_icon1_rgb = colormapPaletteColor(floor(f / 16), 0);
+					hud_field_icon2 = "gfx/sb_playercolor_pants";
+					hud_field_icon2_rgb = colormapPaletteColor(mod(f, 16), 1);
 				}
 			}
 			return GetPlayerName(pl.sv_entnum);
@@ -516,10 +516,10 @@ string HUD_GetField(entity pl, float field)
 			denom = pl.(scores[SP_DEATHS]);
 
 			if(denom == 0) {
-				sbar_field_rgb = '0 1 0';
+				hud_field_rgb = '0 1 0';
 				str = ftos(num);
 			} else if(num <= 0) {
-				sbar_field_rgb = '1 0 0';
+				hud_field_rgb = '1 0 0';
 				str = ftos(num/denom);
 			} else
 				str = ftos(num/denom);
@@ -533,82 +533,82 @@ string HUD_GetField(entity pl, float field)
 			tmp = pl.(scores[field]);
 			f = scores_flags[field];
 			if(field == ps_primary)
-				sbar_field_rgb = '1 1 0';
+				hud_field_rgb = '1 1 0';
 			else if(field == ps_secondary)
-				sbar_field_rgb = '0 1 1';
+				hud_field_rgb = '0 1 1';
 			else
-				sbar_field_rgb = '1 1 1';
+				hud_field_rgb = '1 1 1';
 			return ScoreString(f, tmp);
 	}
 	//return "error";
 }
 
 float xmin, xmax, ymin, ymax, sbwidth;
-float sbar_fixscoreboardcolumnwidth_len;
-float sbar_fixscoreboardcolumnwidth_iconlen;
-float sbar_fixscoreboardcolumnwidth_marginlen;
+float hud_fixscoreboardcolumnwidth_len;
+float hud_fixscoreboardcolumnwidth_iconlen;
+float hud_fixscoreboardcolumnwidth_marginlen;
 
 string HUD_FixScoreboardColumnWidth(float i, string str)
 {
 	float field, f;
 	vector sz;
-	field = sbar_field[i];
+	field = hud_field[i];
 
-	sbar_fixscoreboardcolumnwidth_iconlen = 0;
+	hud_fixscoreboardcolumnwidth_iconlen = 0;
 
-	if(sbar_field_icon0 != "")
+	if(hud_field_icon0 != "")
 	{
-		sz = drawgetimagesize(sbar_field_icon0);
+		sz = drawgetimagesize(hud_field_icon0);
 		f = sz_x / sz_y;
-		if(sbar_fixscoreboardcolumnwidth_iconlen < f)
-			sbar_fixscoreboardcolumnwidth_iconlen = f;
+		if(hud_fixscoreboardcolumnwidth_iconlen < f)
+			hud_fixscoreboardcolumnwidth_iconlen = f;
 	}
 
-	if(sbar_field_icon1 != "")
+	if(hud_field_icon1 != "")
 	{
-		sz = drawgetimagesize(sbar_field_icon1);
+		sz = drawgetimagesize(hud_field_icon1);
 		f = sz_x / sz_y;
-		if(sbar_fixscoreboardcolumnwidth_iconlen < f)
-			sbar_fixscoreboardcolumnwidth_iconlen = f;
+		if(hud_fixscoreboardcolumnwidth_iconlen < f)
+			hud_fixscoreboardcolumnwidth_iconlen = f;
 	}
 
-	if(sbar_field_icon2 != "")
+	if(hud_field_icon2 != "")
 	{
-		sz = drawgetimagesize(sbar_field_icon2);
+		sz = drawgetimagesize(hud_field_icon2);
 		f = sz_x / sz_y;
-		if(sbar_fixscoreboardcolumnwidth_iconlen < f)
-			sbar_fixscoreboardcolumnwidth_iconlen = f;
+		if(hud_fixscoreboardcolumnwidth_iconlen < f)
+			hud_fixscoreboardcolumnwidth_iconlen = f;
 	}
 
-	sbar_fixscoreboardcolumnwidth_iconlen *= sbar_fontsize_y / sbar_fontsize_x; // fix icon aspect
+	hud_fixscoreboardcolumnwidth_iconlen *= hud_fontsize_y / hud_fontsize_x; // fix icon aspect
 
-	if(sbar_fixscoreboardcolumnwidth_iconlen != 0)
-		sbar_fixscoreboardcolumnwidth_marginlen = stringwidth(" ", FALSE, sbar_fontsize);
+	if(hud_fixscoreboardcolumnwidth_iconlen != 0)
+		hud_fixscoreboardcolumnwidth_marginlen = stringwidth(" ", FALSE, hud_fontsize);
 	else
-		sbar_fixscoreboardcolumnwidth_marginlen = 0;
+		hud_fixscoreboardcolumnwidth_marginlen = 0;
 
 	if(field == SP_NAME) // name gets all remaining space
 	{
 		float namesize, j;
-		namesize = sbwidth;// / sbar_fontsize_x;
-		for(j = 0; j < sbar_num_fields; ++j)
+		namesize = sbwidth;// / hud_fontsize_x;
+		for(j = 0; j < hud_num_fields; ++j)
 			if(j != i)
-				if (sbar_field[i] != SP_SEPARATOR)
-					namesize -= sbar_size[j] + 1;
+				if (hud_field[i] != SP_SEPARATOR)
+					namesize -= hud_size[j] + 1;
 		namesize += 1;
-		sbar_size[i] = namesize;
+		hud_size[i] = namesize;
 
-		if (sbar_fixscoreboardcolumnwidth_iconlen != 0)
-			namesize -= sbar_fixscoreboardcolumnwidth_marginlen + sbar_fixscoreboardcolumnwidth_iconlen;
-		str = textShortenToWidth(str, namesize, sbar_fontsize, stringwidth_colors);
-		sbar_fixscoreboardcolumnwidth_len = stringwidth(str, TRUE, sbar_fontsize);
+		if (hud_fixscoreboardcolumnwidth_iconlen != 0)
+			namesize -= hud_fixscoreboardcolumnwidth_marginlen + hud_fixscoreboardcolumnwidth_iconlen;
+		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
+		hud_fixscoreboardcolumnwidth_len = stringwidth(str, TRUE, hud_fontsize);
 	}
 	else
-		sbar_fixscoreboardcolumnwidth_len = stringwidth(str, FALSE, sbar_fontsize);
+		hud_fixscoreboardcolumnwidth_len = stringwidth(str, FALSE, hud_fontsize);
 
-	f = sbar_fixscoreboardcolumnwidth_len + sbar_fixscoreboardcolumnwidth_marginlen + sbar_fixscoreboardcolumnwidth_iconlen;
-	if(sbar_size[i] < f)
-		sbar_size[i] = f;
+	f = hud_fixscoreboardcolumnwidth_len + hud_fixscoreboardcolumnwidth_marginlen + hud_fixscoreboardcolumnwidth_iconlen;
+	if(hud_size[i] < f)
+		hud_size[i] = f;
 
 	return str;
 }
@@ -623,13 +623,13 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
 
 	if((rgb == '1 1 1') && (!is_spec)) {
-		rgb_x = cvar("sbar_color_bg_r") + 0.5;
-		rgb_y = cvar("sbar_color_bg_g") + 0.5;
-		rgb_z = cvar("sbar_color_bg_b") + 0.5; }
+		rgb_x = cvar("hud_color_bg_r") + 0.5;
+		rgb_y = cvar("hud_color_bg_g") + 0.5;
+		rgb_z = cvar("hud_color_bg_b") + 0.5; }
 
 	// Layout:
 	tmp_x = sbwidth;
-	tmp_y = sbar_fontsize_y * 1.25;
+	tmp_y = hud_fontsize_y * 1.25;
 	tmp_z = 0;
 
 	// alternated rows highlighting
@@ -640,64 +640,64 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 
 	tmp_y = 0;
 
-	for(i = 0; i < sbar_num_fields; ++i)
+	for(i = 0; i < hud_num_fields; ++i)
 	{
-		field = sbar_field[i];
+		field = hud_field[i];
 		if(field == SP_SEPARATOR)
 			break;
 
 		if(is_spec && field != SP_NAME && field != SP_PING) {
-			pos_x += sbar_size[i] + sbar_fontsize_x;
+			pos_x += hud_size[i] + hud_fontsize_x;
 			continue;
 		}
 		str = HUD_GetField(pl, field);
 		str = HUD_FixScoreboardColumnWidth(i, str);
 
-		pos_x += sbar_size[i] + sbar_fontsize_x;
+		pos_x += hud_size[i] + hud_fontsize_x;
 
 		if(field == SP_NAME) {
-			tmp_x = sbar_size[i] - sbar_fontsize_x*sbar_fixscoreboardcolumnwidth_iconlen - sbar_fixscoreboardcolumnwidth_marginlen + sbar_fontsize_x;
+			tmp_x = hud_size[i] - hud_fontsize_x*hud_fixscoreboardcolumnwidth_iconlen - hud_fixscoreboardcolumnwidth_marginlen + hud_fontsize_x;
 			if (is_self)
-				drawcolorcodedstring(pos - tmp, str, sbar_fontsize, sb_alpha_name_self, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos - tmp, str, hud_fontsize, sb_alpha_name_self, DRAWFLAG_NORMAL);
 			else
-				drawcolorcodedstring(pos - tmp, str, sbar_fontsize, sb_alpha_name, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos - tmp, str, hud_fontsize, sb_alpha_name, DRAWFLAG_NORMAL);
 		} else {
-			tmp_x = sbar_fixscoreboardcolumnwidth_len + sbar_fontsize_x;
+			tmp_x = hud_fixscoreboardcolumnwidth_len + hud_fontsize_x;
 			if (is_self)
-				drawstring(pos - tmp, str, sbar_fontsize, sbar_field_rgb, sb_alpha_name_self, DRAWFLAG_NORMAL);
+				drawstring(pos - tmp, str, hud_fontsize, hud_field_rgb, sb_alpha_name_self, DRAWFLAG_NORMAL);
 			else
-				drawstring(pos - tmp, str, sbar_fontsize, sbar_field_rgb, sb_alpha_name, DRAWFLAG_NORMAL);
+				drawstring(pos - tmp, str, hud_fontsize, hud_field_rgb, sb_alpha_name, DRAWFLAG_NORMAL);
 		}
 
-		tmp_x = sbar_size[i] + sbar_fontsize_x;
-		if(sbar_field_icon0 != "")
+		tmp_x = hud_size[i] + hud_fontsize_x;
+		if(hud_field_icon0 != "")
 			if (is_self)
-				drawpic(pos - tmp, sbar_field_icon0, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon0_alpha * sb_alpha_name_self, DRAWFLAG_NORMAL);
+				drawpic(pos - tmp, hud_field_icon0, '0 1 0' * hud_fontsize_y + '1 0 0' * hud_fontsize_x * hud_fixscoreboardcolumnwidth_iconlen, hud_field_icon1_rgb, hud_field_icon0_alpha * sb_alpha_name_self, DRAWFLAG_NORMAL);
 			else
-				drawpic(pos - tmp, sbar_field_icon0, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon0_alpha * sb_alpha_name, DRAWFLAG_NORMAL);
-		if(sbar_field_icon1 != "")
+				drawpic(pos - tmp, hud_field_icon0, '0 1 0' * hud_fontsize_y + '1 0 0' * hud_fontsize_x * hud_fixscoreboardcolumnwidth_iconlen, hud_field_icon1_rgb, hud_field_icon0_alpha * sb_alpha_name, DRAWFLAG_NORMAL);
+		if(hud_field_icon1 != "")
 			if (is_self)
-				drawpic(pos - tmp, sbar_field_icon1, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon1_alpha * sb_alpha_name_self, DRAWFLAG_NORMAL);
+				drawpic(pos - tmp, hud_field_icon1, '0 1 0' * hud_fontsize_y + '1 0 0' * hud_fontsize_x * hud_fixscoreboardcolumnwidth_iconlen, hud_field_icon1_rgb, hud_field_icon1_alpha * sb_alpha_name_self, DRAWFLAG_NORMAL);
 			else
-				drawpic(pos - tmp, sbar_field_icon1, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon1_alpha * sb_alpha_name, DRAWFLAG_NORMAL);
-		if(sbar_field_icon2 != "")
+				drawpic(pos - tmp, hud_field_icon1, '0 1 0' * hud_fontsize_y + '1 0 0' * hud_fontsize_x * hud_fixscoreboardcolumnwidth_iconlen, hud_field_icon1_rgb, hud_field_icon1_alpha * sb_alpha_name, DRAWFLAG_NORMAL);
+		if(hud_field_icon2 != "")
 			if (is_self)
-				drawpic(pos - tmp, sbar_field_icon2, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon2_rgb, sbar_field_icon2_alpha * sb_alpha_name_self, DRAWFLAG_NORMAL);
+				drawpic(pos - tmp, hud_field_icon2, '0 1 0' * hud_fontsize_y + '1 0 0' * hud_fontsize_x * hud_fixscoreboardcolumnwidth_iconlen, hud_field_icon2_rgb, hud_field_icon2_alpha * sb_alpha_name_self, DRAWFLAG_NORMAL);
 			else
-				drawpic(pos - tmp, sbar_field_icon2, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon2_rgb, sbar_field_icon2_alpha * sb_alpha_name, DRAWFLAG_NORMAL);
+				drawpic(pos - tmp, hud_field_icon2, '0 1 0' * hud_fontsize_y + '1 0 0' * hud_fontsize_x * hud_fixscoreboardcolumnwidth_iconlen, hud_field_icon2_rgb, hud_field_icon2_alpha * sb_alpha_name, DRAWFLAG_NORMAL);
 	}
 
-	if(sbar_field[i] == SP_SEPARATOR)
+	if(hud_field[i] == SP_SEPARATOR)
 	{
 		pos_x = xmax;
-		for(i = sbar_num_fields-1; i > 0; --i)
+		for(i = hud_num_fields-1; i > 0; --i)
 		{
-			field = sbar_field[i];
+			field = hud_field[i];
 			if(field == SP_SEPARATOR)
 				break;
 
 			if(is_spec && field != SP_NAME && field != SP_PING) {
-				pos_x -= sbar_size[i] + sbar_fontsize_x;
+				pos_x -= hud_size[i] + hud_fontsize_x;
 				continue;
 			}
 
@@ -705,36 +705,36 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 			str = HUD_FixScoreboardColumnWidth(i, str);
 
 			if(field == SP_NAME) {
-				tmp_x = sbar_fixscoreboardcolumnwidth_len; // left or right aligned? let's put it right...
+				tmp_x = hud_fixscoreboardcolumnwidth_len; // left or right aligned? let's put it right...
 				if(is_self)
-					drawcolorcodedstring(pos - tmp, str, sbar_fontsize, sb_alpha_name_self, DRAWFLAG_NORMAL);
+					drawcolorcodedstring(pos - tmp, str, hud_fontsize, sb_alpha_name_self, DRAWFLAG_NORMAL);
 				else
-					drawcolorcodedstring(pos - tmp, str, sbar_fontsize, sb_alpha_name, DRAWFLAG_NORMAL);
+					drawcolorcodedstring(pos - tmp, str, hud_fontsize, sb_alpha_name, DRAWFLAG_NORMAL);
 			} else {
-				tmp_x = sbar_fixscoreboardcolumnwidth_len;
+				tmp_x = hud_fixscoreboardcolumnwidth_len;
 				if(is_self)
-					drawstring(pos - tmp, str, sbar_fontsize, sbar_field_rgb, sb_alpha_name_self, DRAWFLAG_NORMAL);
+					drawstring(pos - tmp, str, hud_fontsize, hud_field_rgb, sb_alpha_name_self, DRAWFLAG_NORMAL);
 				else
-					drawstring(pos - tmp, str, sbar_fontsize, sbar_field_rgb, sb_alpha_name, DRAWFLAG_NORMAL);
+					drawstring(pos - tmp, str, hud_fontsize, hud_field_rgb, sb_alpha_name, DRAWFLAG_NORMAL);
 			}
 
-			tmp_x = sbar_size[i];
-			if(sbar_field_icon0 != "")
+			tmp_x = hud_size[i];
+			if(hud_field_icon0 != "")
 				if (is_self)
-					drawpic(pos - tmp, sbar_field_icon0, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon0_alpha * sb_alpha_name_self, DRAWFLAG_NORMAL);
+					drawpic(pos - tmp, hud_field_icon0, '0 1 0' * hud_fontsize_y + '1 0 0' * hud_fontsize_x * hud_fixscoreboardcolumnwidth_iconlen, hud_field_icon1_rgb, hud_field_icon0_alpha * sb_alpha_name_self, DRAWFLAG_NORMAL);
 				else
-					drawpic(pos - tmp, sbar_field_icon0, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon0_alpha * sb_alpha_name, DRAWFLAG_NORMAL);
-			if(sbar_field_icon1 != "")
+					drawpic(pos - tmp, hud_field_icon0, '0 1 0' * hud_fontsize_y + '1 0 0' * hud_fontsize_x * hud_fixscoreboardcolumnwidth_iconlen, hud_field_icon1_rgb, hud_field_icon0_alpha * sb_alpha_name, DRAWFLAG_NORMAL);
+			if(hud_field_icon1 != "")
 				if (is_self)
-					drawpic(pos - tmp, sbar_field_icon1, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon1_alpha * sb_alpha_name_self, DRAWFLAG_NORMAL);
+					drawpic(pos - tmp, hud_field_icon1, '0 1 0' * hud_fontsize_y + '1 0 0' * hud_fontsize_x * hud_fixscoreboardcolumnwidth_iconlen, hud_field_icon1_rgb, hud_field_icon1_alpha * sb_alpha_name_self, DRAWFLAG_NORMAL);
 				else
-					drawpic(pos - tmp, sbar_field_icon1, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon1_alpha * sb_alpha_name, DRAWFLAG_NORMAL);
-			if(sbar_field_icon2 != "")
+					drawpic(pos - tmp, hud_field_icon1, '0 1 0' * hud_fontsize_y + '1 0 0' * hud_fontsize_x * hud_fixscoreboardcolumnwidth_iconlen, hud_field_icon1_rgb, hud_field_icon1_alpha * sb_alpha_name, DRAWFLAG_NORMAL);
+			if(hud_field_icon2 != "")
 				if (is_self)
-					drawpic(pos - tmp, sbar_field_icon2, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon2_rgb, sbar_field_icon2_alpha * sb_alpha_name_self, DRAWFLAG_NORMAL);
+					drawpic(pos - tmp, hud_field_icon2, '0 1 0' * hud_fontsize_y + '1 0 0' * hud_fontsize_x * hud_fixscoreboardcolumnwidth_iconlen, hud_field_icon2_rgb, hud_field_icon2_alpha * sb_alpha_name_self, DRAWFLAG_NORMAL);
 				else
-					drawpic(pos - tmp, sbar_field_icon2, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon2_rgb, sbar_field_icon2_alpha * sb_alpha_name, DRAWFLAG_NORMAL);
-			pos_x -= sbar_size[i] + sbar_fontsize_x;
+					drawpic(pos - tmp, hud_field_icon2, '0 1 0' * hud_fontsize_y + '1 0 0' * hud_fontsize_x * hud_fixscoreboardcolumnwidth_iconlen, hud_field_icon2_rgb, hud_field_icon2_alpha * sb_alpha_name, DRAWFLAG_NORMAL);
+			pos_x -= hud_size[i] + hud_fontsize_x;
 		}
 	}
 }
@@ -751,12 +751,12 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	vector tmp, column_dim;
 	entity pl;
 
-	body_table_height = 1.25 * sbar_fontsize_y * max(1, tm.team_size); // no player? show 1 empty line
+	body_table_height = 1.25 * hud_fontsize_y * max(1, tm.team_size); // no player? show 1 empty line
 
 	pos -= '1 1 0';
 
 	tmp_x = sbwidth + 2;
-	tmp_y = 1.25 * sbar_fontsize_y;
+	tmp_y = 1.25 * hud_fontsize_y;
 
 	// rounded header
 	drawpic(pos, "gfx/hud/sb_scoreboard_tableheader", tmp, (rgb * hud_color_bg_team) + '0.5 0.5 0.5', sb_alpha_bg, DRAWFLAG_NORMAL);
@@ -767,7 +767,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	drawborderlines(hud_border_thickness, pos, tmp, '0 0 0', sb_alpha_bg, DRAWFLAG_NORMAL); // more transparency for the scoreboard
 
 	// separator header/table
-	pos_y += 1.25 * sbar_fontsize_y;
+	pos_y += 1.25 * hud_fontsize_y;
 	tmp_y = hud_border_thickness;
 	drawfill(pos, tmp, '0 0 0', sb_alpha_bg, DRAWFLAG_NORMAL);
 
@@ -781,64 +781,64 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	//drawfill(pos, tmp + '2 0 0', rgb, 0.1, DRAWFLAG_NORMAL);
 
 	// go back to the top to make alternated columns highlighting and to print the strings
-	pos_y -= 1.25 * sbar_fontsize_y;
+	pos_y -= 1.25 * hud_fontsize_y;
 	pos_y -= hud_border_thickness;
 
 	pos += '1 1 0';
 
 	if (sb_highlight)
 	{
-		column_dim_y = 1.25 * sbar_fontsize_y; // header
+		column_dim_y = 1.25 * hud_fontsize_y; // header
 		column_dim_y += hud_border_thickness;
 		column_dim_y += body_table_height;
 	}
 
 	// print the strings of the columns headers and draw the columns
-	for(i = 0; i < sbar_num_fields; ++i)
+	for(i = 0; i < hud_num_fields; ++i)
 	{
-		if(sbar_field[i] == SP_SEPARATOR)
+		if(hud_field[i] == SP_SEPARATOR)
 			break;
-		column_dim_x = sbar_size[i] + sbar_fontsize_x;
+		column_dim_x = hud_size[i] + hud_fontsize_x;
 		if (sb_highlight)
 		{
 			if (mod(i,2))
-				drawfill(pos - '0 1 0' - sbar_fontsize_x / 2 * '1 0 0', column_dim, '0 0 0', sb_alpha_bg * 0.2, DRAWFLAG_NORMAL);
+				drawfill(pos - '0 1 0' - hud_fontsize_x / 2 * '1 0 0', column_dim, '0 0 0', sb_alpha_bg * 0.2, DRAWFLAG_NORMAL);
 		}
-		drawstring(pos, sbar_title[i], sbar_fontsize, rgb * 1.5, sb_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos, hud_title[i], hud_fontsize, rgb * 1.5, sb_alpha_fg, DRAWFLAG_NORMAL);
 		pos_x += column_dim_x;
 	}
-	if(sbar_field[i] == SP_SEPARATOR)
+	if(hud_field[i] == SP_SEPARATOR)
 	{
 		pos_x = xmax;
 		tmp_y = 0;
-		for(i = sbar_num_fields-1; i > 0; --i)
+		for(i = hud_num_fields-1; i > 0; --i)
 		{
-			if(sbar_field[i] == SP_SEPARATOR)
+			if(hud_field[i] == SP_SEPARATOR)
 				break;
 
-			pos_x -= sbar_size[i];
+			pos_x -= hud_size[i];
 
 			if (sb_highlight)
 			{
 				if (!mod(i,2))
 				{
-					if (i == sbar_num_fields-1)
-						column_dim_x = sbar_size[i] + sbar_fontsize_x / 2 + 1;
+					if (i == hud_num_fields-1)
+						column_dim_x = hud_size[i] + hud_fontsize_x / 2 + 1;
 					else
-						column_dim_x = sbar_size[i] + sbar_fontsize_x;
-					drawfill(pos - '0 1 0' - sbar_fontsize_x / 2 * '1 0 0', column_dim, '0 0 0', sb_alpha_bg * 0.2, DRAWFLAG_NORMAL);
+						column_dim_x = hud_size[i] + hud_fontsize_x;
+					drawfill(pos - '0 1 0' - hud_fontsize_x / 2 * '1 0 0', column_dim, '0 0 0', sb_alpha_bg * 0.2, DRAWFLAG_NORMAL);
 				}
 			}
 
-			tmp_x = stringwidth(sbar_title[i], FALSE, sbar_fontsize);
-			tmp_x = (sbar_size[i] - tmp_x) * sbar_fontsize_x;
-			drawstring(pos + tmp, sbar_title[i], sbar_fontsize, rgb * 1.5, sb_alpha_fg, DRAWFLAG_NORMAL);
-			pos_x -= sbar_fontsize_x;
+			tmp_x = stringwidth(hud_title[i], FALSE, hud_fontsize);
+			tmp_x = (hud_size[i] - tmp_x) * hud_fontsize_x;
+			drawstring(pos + tmp, hud_title[i], hud_fontsize, rgb * 1.5, sb_alpha_fg, DRAWFLAG_NORMAL);
+			pos_x -= hud_fontsize_x;
 		}
 	}
 
 	pos_x = xmin;
-	pos_y += 1.25 * sbar_fontsize_y; // skip the header
+	pos_y += 1.25 * hud_fontsize_y; // skip the header
 	pos_y += hud_border_thickness;
 
 	// fill the table and draw the rows
@@ -849,7 +849,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 			if(pl.team != tm.team)
 				continue;
 			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), i);
-			pos_y += 1.25 * sbar_fontsize_y;
+			pos_y += 1.25 * hud_fontsize_y;
 			++i;
 		}
 	else
@@ -858,13 +858,13 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 			if(pl.team == COLOR_SPECTATOR)
 				continue;
 			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), i);
-			pos_y += 1.25 * sbar_fontsize_y;
+			pos_y += 1.25 * hud_fontsize_y;
 			++i;
 		}
 
 	if (i == 0)
-		pos_y += 1.25 * sbar_fontsize_y; // move to the end of the table
-	pos_y += 1.25 * sbar_fontsize_y; // move empty row (out of the table)
+		pos_y += 1.25 * hud_fontsize_y; // move to the end of the table
+	pos_y += 1.25 * hud_fontsize_y; // move empty row (out of the table)
 
 	return pos;
 }
@@ -892,7 +892,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float fontsize = 40 * 1/3;
 	float weapon_cnt = 12;
 	float rows;
-	if(cvar("sbar_accuracy_doublerows"))
+	if(cvar("hud_accuracy_doublerows"))
 		rows = 2;
 	else
 		rows = 1;
@@ -903,7 +903,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		return pos;
 	}
 
-	drawstring(pos, strcat("Accuracy stats (average ", ftos(average_accuracy), "%)"), sbar_fontsize, '1 1 1', sb_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(pos, strcat("Accuracy stats (average ", ftos(average_accuracy), "%)"), hud_fontsize, '1 1 1', sb_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += 18;
 	vector tmp;
 	tmp_x = sbwidth;
@@ -925,7 +925,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		drawfill(pos + '0 1 0' * height * (2/3) + '0 1 0' * height * i, '1 0 0' * sbwidth + '0 1 0' * fontsize, '1 1 1', sb_highlight_alpha, DRAWFLAG_NORMAL);
 	}
 
-	drawfont = sbar_bigfont;
+	drawfont = hud_bigfont;
 	average_accuracy = 0;
 	float weapons_with_stats;
 	weapons_with_stats = 0;
@@ -975,7 +975,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			pos_y += height;
 		}
 	}
-	drawfont = sbar_font;
+	drawfont = hud_font;
 
 	if(weapons_with_stats)
 		average_accuracy = floor(average_accuracy / weapons_with_stats);
@@ -1001,16 +1001,16 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	float is_spec;
 	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
 	vector hl_rgb;
-		hl_rgb_x = cvar("sbar_color_bg_r") + 0.5;
-		hl_rgb_y = cvar("sbar_color_bg_g") + 0.5;
-		hl_rgb_z = cvar("sbar_color_bg_b") + 0.5;
+		hl_rgb_x = cvar("hud_color_bg_r") + 0.5;
+		hl_rgb_y = cvar("hud_color_bg_g") + 0.5;
+		hl_rgb_z = cvar("hud_color_bg_b") + 0.5;
 
-	pos_y += sbar_fontsize_y;
-	drawstring(pos, strcat("Rankings"), sbar_fontsize, '1 1 1', sb_alpha_fg, DRAWFLAG_NORMAL);
-	pos_y += sbar_fontsize_y;
+	pos_y += hud_fontsize_y;
+	drawstring(pos, strcat("Rankings"), hud_fontsize, '1 1 1', sb_alpha_fg, DRAWFLAG_NORMAL);
+	pos_y += hud_fontsize_y;
 	vector tmp;
 	tmp_x = sbwidth;
-	tmp_y = sbar_fontsize_y * RANKINGS_RECEIVED_CNT;
+	tmp_y = hud_fontsize_y * RANKINGS_RECEIVED_CNT;
 
 	drawpic_tiled(pos, "gfx/hud/sb_scoreboard_bg", bg_size, tmp, rgb * hud_color_bg_team, sb_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(hud_border_thickness, pos, tmp, '0 0 0', sb_alpha_bg * 0.75, DRAWFLAG_NORMAL);
@@ -1026,41 +1026,41 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		n = grecordholder[i];
 		p = race_PlaceName(i+1);
 		if(grecordholder[i] == GetPlayerName(player_localentnum - 1))
-			drawfill(pos, '1 0 0' * sbwidth + '0 1 0' * sbar_fontsize_y, hl_rgb, sb_highlight_alpha_self, DRAWFLAG_NORMAL);
+			drawfill(pos, '1 0 0' * sbwidth + '0 1 0' * hud_fontsize_y, hl_rgb, sb_highlight_alpha_self, DRAWFLAG_NORMAL);
 		else if(!mod(i, 2) && sb_highlight)
-			drawfill(pos, '1 0 0' * sbwidth + '0 1 0' * sbar_fontsize_y, hl_rgb, sb_highlight_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos, p, sbar_fontsize, '1 1 1', sb_alpha_fg, DRAWFLAG_NORMAL);
-		drawstring(pos + '3 0 0' * sbar_fontsize_x, TIME_ENCODED_TOSTRING(t), sbar_fontsize, '1 1 1', sb_alpha_fg, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(pos + '8 0 0' * sbar_fontsize_x, n, sbar_fontsize, sb_alpha_fg, DRAWFLAG_NORMAL);
-		pos += '0 1 0' * sbar_fontsize_y;
+			drawfill(pos, '1 0 0' * sbwidth + '0 1 0' * hud_fontsize_y, hl_rgb, sb_highlight_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos, p, hud_fontsize, '1 1 1', sb_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + '3 0 0' * hud_fontsize_x, TIME_ENCODED_TOSTRING(t), hud_fontsize, '1 1 1', sb_alpha_fg, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + '8 0 0' * hud_fontsize_x, n, hud_fontsize, sb_alpha_fg, DRAWFLAG_NORMAL);
+		pos += '0 1 0' * hud_fontsize_y;
 	}
 
 	return pos;
 }
 
 float sb_fade_alpha;
-float sbar_woulddrawscoreboard_prev;
-float sbar_woulddrawscoreboard_change; // "time" at which HUD_WouldDrawScoreboard() changed
+float hud_woulddrawscoreboard_prev;
+float hud_woulddrawscoreboard_change; // "time" at which HUD_WouldDrawScoreboard() changed
 void HUD_DrawScoreboard()
 {
-	float sbar_woulddrawscoreboard;
-	sbar_woulddrawscoreboard = HUD_WouldDrawScoreboard();
-	if(sbar_woulddrawscoreboard != sbar_woulddrawscoreboard_prev) {
-		sbar_woulddrawscoreboard_change = time;
-		sbar_woulddrawscoreboard_prev = sbar_woulddrawscoreboard;
+	float hud_woulddrawscoreboard;
+	hud_woulddrawscoreboard = HUD_WouldDrawScoreboard();
+	if(hud_woulddrawscoreboard != hud_woulddrawscoreboard_prev) {
+		hud_woulddrawscoreboard_change = time;
+		hud_woulddrawscoreboard_prev = hud_woulddrawscoreboard;
 	}
 
 	float scoreboard_fadeinspeed = cvar_or("sb_fadeinspeed", 10);
 	float scoreboard_fadeoutspeed = cvar_or("sb_fadeoutspeed", 5);
-	if(sbar_woulddrawscoreboard) {
+	if(hud_woulddrawscoreboard) {
 		if (scoreboard_fadeinspeed)
-			sb_fade_alpha = bound (0, (time - sbar_woulddrawscoreboard_change) * scoreboard_fadeinspeed, 1);
+			sb_fade_alpha = bound (0, (time - hud_woulddrawscoreboard_change) * scoreboard_fadeinspeed, 1);
 		else
 			sb_fade_alpha = 1;
 	}
 	else
 		if (scoreboard_fadeoutspeed)
-			sb_fade_alpha = bound (0, (1/scoreboard_fadeoutspeed - (time - sbar_woulddrawscoreboard_change)) * scoreboard_fadeoutspeed, 1);
+			sb_fade_alpha = bound (0, (1/scoreboard_fadeoutspeed - (time - hud_woulddrawscoreboard_change)) * scoreboard_fadeoutspeed, 1);
 		else
 			sb_fade_alpha = 0;
 
@@ -1078,7 +1078,7 @@ void HUD_DrawScoreboard()
 	vector rgb, pos, tmp;
 	entity pl, tm;
 
-	sbwidth = HUD_GetWidth(6.5 * sbar_fontsize_y);
+	sbwidth = HUD_GetWidth(6.5 * hud_fontsize_y);
 
 	xmin = 0.5 * (vid_conwidth - sbwidth);
 	ymin = SCOREBOARD_OFFSET;
@@ -1092,13 +1092,13 @@ void HUD_DrawScoreboard()
 	pos_z = 0;
 
 	// Heading
-	drawfont = sbar_bigfont;
+	drawfont = hud_bigfont;
 	drawstringcenter('0 1 0' * ymin, "Scoreboard", '24 24 0', '1 1 1', sb_alpha_fg, DRAWFLAG_NORMAL);
 
 	pos_y += 24 + 4;
-	pos_y += sbar_fontsize_y;
+	pos_y += hud_fontsize_y;
 
-	drawfont = sbar_font;
+	drawfont = hud_font;
 
 	// Draw the scoreboard
 	vector bg_size;
@@ -1112,19 +1112,19 @@ void HUD_DrawScoreboard()
 				continue;
 
 			rgb = GetTeamRGB(tm.team);
-			HUD_DrawXNum(pos - '9.5 0 0' * sbar_fontsize_y + '0 1 0' * sbar_fontsize_y, tm.(teamscores[ts_primary]), 6, 0, sbar_fontsize_y * 1.5, rgb, 0, 1, sb_alpha_fg, DRAWFLAG_NORMAL);
+			HUD_DrawXNum(pos - '9.5 0 0' * hud_fontsize_y + '0 1 0' * hud_fontsize_y, tm.(teamscores[ts_primary]), 6, 0, hud_fontsize_y * 1.5, rgb, 0, 1, sb_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(ts_primary != ts_secondary)
-				HUD_DrawXNum(pos - '7.5 0 0' * sbar_fontsize_y + '0 2.5 0' * sbar_fontsize_y, tm.(teamscores[ts_secondary]), 6, 0, sbar_fontsize_y * 1, rgb, 0, 1, sb_alpha_fg, DRAWFLAG_NORMAL);
+				HUD_DrawXNum(pos - '7.5 0 0' * hud_fontsize_y + '0 2.5 0' * hud_fontsize_y, tm.(teamscores[ts_secondary]), 6, 0, hud_fontsize_y * 1, rgb, 0, 1, sb_alpha_fg, DRAWFLAG_NORMAL);
 
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
 		}
 	}
 	else
 	{
-		rgb_x = cvar("sbar_color_bg_r");
-		rgb_y = cvar("sbar_color_bg_g");
-		rgb_z = cvar("sbar_color_bg_b");
+		rgb_x = cvar("hud_color_bg_r");
+		rgb_y = cvar("hud_color_bg_g");
+		rgb_z = cvar("hud_color_bg_b");
 
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
@@ -1137,24 +1137,24 @@ void HUD_DrawScoreboard()
 
 	if(gametype == GAME_CTS || gametype == GAME_RACE) {
 		if(race_speedaward) {
-			drawcolorcodedstring(pos, strcat("Speed award: ", ftos(race_speedaward), " (", race_speedaward_holder, ")"), sbar_fontsize, sb_alpha_fg, DRAWFLAG_NORMAL);
-			pos_y += 1.25 * sbar_fontsize_y;
+			drawcolorcodedstring(pos, strcat("Speed award: ", ftos(race_speedaward), " (", race_speedaward_holder, ")"), hud_fontsize, sb_alpha_fg, DRAWFLAG_NORMAL);
+			pos_y += 1.25 * hud_fontsize_y;
 		}
 		if(race_speedaward_alltimebest) {
-			drawcolorcodedstring(pos, strcat("All-time fastest: ", ftos(race_speedaward_alltimebest), " (", race_speedaward_alltimebest_holder, ")"), sbar_fontsize, sb_alpha_fg, DRAWFLAG_NORMAL);
-			pos_y += 1.25 * sbar_fontsize_y;
+			drawcolorcodedstring(pos, strcat("All-time fastest: ", ftos(race_speedaward_alltimebest), " (", race_speedaward_alltimebest_holder, ")"), hud_fontsize, sb_alpha_fg, DRAWFLAG_NORMAL);
+			pos_y += 1.25 * hud_fontsize_y;
 		}
 		pos = HUD_DrawScoreboardRankings(pos, pl, rgb, bg_size);
 	}
-	else if(cvar("sbar_accuracy") && spectatee_status != -1) {
+	else if(cvar("hud_accuracy") && spectatee_status != -1) {
 		if(teamplay)
 			pos = HUD_DrawScoreboardAccuracyStats(pos, GetTeamRGB(myteam), bg_size);
 		else
 			pos = HUD_DrawScoreboardAccuracyStats(pos, rgb, bg_size);
 	}
 
-	tmp = pos + '0 1.5 0' * sbar_fontsize_y;
-	pos_y += 3 * sbar_fontsize_y;
+	tmp = pos + '0 1.5 0' * hud_fontsize_y;
+	pos_y += 3 * hud_fontsize_y;
 
 	// List spectators
 	float specs;
@@ -1164,12 +1164,12 @@ void HUD_DrawScoreboard()
 		if(pl.team != COLOR_SPECTATOR)
 			continue;
 		HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), specs);
-		pos_y += 1.25 * sbar_fontsize_y;
+		pos_y += 1.25 * hud_fontsize_y;
 		++specs;
 	}
 
 	if(specs)
-		drawstring(tmp, "Spectators", sbar_fontsize, '1 1 1', sb_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(tmp, "Spectators", hud_fontsize, '1 1 1', sb_alpha_fg, DRAWFLAG_NORMAL);
 
 	// Print info string
 	string str;
@@ -1240,26 +1240,26 @@ void HUD_DrawScoreboard()
 	}
 
 
-	pos_y += 1.2 * sbar_fontsize_y;
-	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, sbar_fontsize)), str, sbar_fontsize, sb_alpha_fg, DRAWFLAG_NORMAL);
+	pos_y += 1.2 * hud_fontsize_y;
+	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, sb_alpha_fg, DRAWFLAG_NORMAL);
 
-	scoreboard_bottom = pos_y + 2 * sbar_fontsize_y;
+	scoreboard_bottom = pos_y + 2 * hud_fontsize_y;
 }
 
 void HUD_DrawAccuracyStats_Description_Hitscan(vector position)
 {
-	drawstring(position + '0 3 0' * sbar_fontsize_y, "Shots fired:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawstring(position + '0 5 0' * sbar_fontsize_y, "Shots hit:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawstring(position + '0 7 0' * sbar_fontsize_y, "Accuracy:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawstring(position + '0 9 0' * sbar_fontsize_y, "Shots missed:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 3 0' * hud_fontsize_y, "Shots fired:", hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 5 0' * hud_fontsize_y, "Shots hit:", hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 7 0' * hud_fontsize_y, "Accuracy:", hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 9 0' * hud_fontsize_y, "Shots missed:", hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void HUD_DrawAccuracyStats_Description_Splash(vector position)
 {
-	drawstring(position + '0 3 0' * sbar_fontsize_y, "Maximum damage:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawstring(position + '0 5 0' * sbar_fontsize_y, "Actual damage:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawstring(position + '0 7 0' * sbar_fontsize_y, "Accuracy:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawstring(position + '0 9 0' * sbar_fontsize_y, "Damage wasted:", sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 3 0' * hud_fontsize_y, "Maximum damage:", hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 5 0' * hud_fontsize_y, "Actual damage:", hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 7 0' * hud_fontsize_y, "Accuracy:", hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 9 0' * hud_fontsize_y, "Damage wasted:", hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void HUD_DrawAccuracyStats()
@@ -1274,24 +1274,24 @@ void HUD_DrawAccuracyStats()
 	float col_margin = 20;  // pixels between the columns
 	float row_margin = 20;  // pixels between the rows
 
-	fill_size_x = 5 * sbar_fontsize_x;  // width of the background
-	fill_size_y = 10 * sbar_fontsize_y;  // height of the background
+	fill_size_x = 5 * hud_fontsize_x;  // width of the background
+	fill_size_y = 10 * hud_fontsize_y;  // height of the background
 
-	drawfont = sbar_bigfont;
+	drawfont = hud_bigfont;
 	pos_x = 0;
 	pos_y = SCOREBOARD_OFFSET;
 	pos_z = 0;
-	drawstringcenter(pos, "Weapon Accuracy", 2 * sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawstringcenter(pos, "Weapon Accuracy", 2 * hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
-	left_border = col_margin + 11 * sbar_fontsize_x;
+	left_border = col_margin + 11 * hud_fontsize_x;
 
-	drawfont = sbar_font;
+	drawfont = hud_font;
 
 	if(warmup_stage)
 	{
 		pos_y += 40;
 		if(mod(time, 1) >= 0.4)
-			drawstringcenter(pos, "Stats are not tracked during warmup stage", sbar_fontsize, '1 1 0', hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawstringcenter(pos, "Stats are not tracked during warmup stage", hud_fontsize, '1 1 0', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 		return;
 	}
@@ -1300,7 +1300,7 @@ void HUD_DrawAccuracyStats()
 	{
 		pos_y += 40;
 		if(mod(time, 1) >= 0.4)
-			drawstringcenter(pos, "Stats are not tracked in Race/CTS", sbar_fontsize, '1 1 0', hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawstringcenter(pos, "Stats are not tracked in Race/CTS", hud_fontsize, '1 1 0', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 		return;
 	}
@@ -1359,16 +1359,16 @@ void HUD_DrawAccuracyStats()
 				drawpic(pos, strcat("gfx/hud/inv_weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of shots fired or max damage
-				drawstringright(pos + '4.5 0 0' * sbar_fontsize_x + '0 3 0' * sbar_fontsize_y, ftos(weapon_damage), sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 3 0' * hud_fontsize_y, ftos(weapon_damage), hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of hits or actual damage
-				drawstringright(pos + '4.5 0 0' * sbar_fontsize_x + '0 5 0' * sbar_fontsize_y, ftos(weapon_hit), sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 5 0' * hud_fontsize_y, ftos(weapon_hit), hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the accuracy
-				drawstringright(pos + '4.5 0 0' * sbar_fontsize_x + '0 7 0' * sbar_fontsize_y, strcat(ftos(weapon_stats),"%"), sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 7 0' * hud_fontsize_y, strcat(ftos(weapon_stats),"%"), hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of shots missed or damage wasted
-				drawstringright(pos + '4.5 0 0' * sbar_fontsize_x + '0 9 0' * sbar_fontsize_y, ftos(max(0, weapon_damage - weapon_hit)), sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 9 0' * hud_fontsize_y, ftos(max(0, weapon_damage - weapon_hit)), hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 				++count_splash;
 			} else if (self.spawnflags & WEP_TYPE_HITSCAN) {
@@ -1409,16 +1409,16 @@ void HUD_DrawAccuracyStats()
 				drawpic(pos, strcat("gfx/hud/inv_weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of shots fired or max damage
-				drawstringright(pos + '4.5 0 0' * sbar_fontsize_x + '0 3 0' * sbar_fontsize_y, ftos(weapon_damage), sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 3 0' * hud_fontsize_y, ftos(weapon_damage), hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of hits or actual damage
-				drawstringright(pos + '4.5 0 0' * sbar_fontsize_x + '0 5 0' * sbar_fontsize_y, ftos(weapon_hit), sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 5 0' * hud_fontsize_y, ftos(weapon_hit), hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the accuracy
-				drawstringright(pos + '4.5 0 0' * sbar_fontsize_x + '0 7 0' * sbar_fontsize_y, strcat(ftos(weapon_stats),"%"), sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 7 0' * hud_fontsize_y, strcat(ftos(weapon_stats),"%"), hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of shots missed or damage wasted
-				drawstringright(pos + '4.5 0 0' * sbar_fontsize_x + '0 9 0' * sbar_fontsize_y, ftos(max(0, weapon_damage - weapon_hit)), sbar_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 9 0' * hud_fontsize_y, ftos(max(0, weapon_damage - weapon_hit)), hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 				++count_hitscan;
 			}
