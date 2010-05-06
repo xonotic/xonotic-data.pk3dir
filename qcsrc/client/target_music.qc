@@ -4,7 +4,7 @@ entity music_trigger;
 
 .float state;
 
-void Net_AdvanceMusic()
+void TargetMusic_Advance()
 {
 	// run AFTER all the thinks!
 	entity best, e;
@@ -29,12 +29,14 @@ void Net_AdvanceMusic()
 		{
 			// decrease volume
 			if(e.fade_rate > 0)
-				e.state = max(1, e.state - frametime / e.fade_rate);
+				e.state = max(0, e.state - frametime / e.fade_rate);
 			else
 				e.state = 0;
 		}
 		if(e.state != s0)
+		{
 			sound(e, CHAN_VOICE, "", e.volume * e.state, ATTN_NONE);
+		}
 	}
 	music_trigger = world;
 }
@@ -42,7 +44,7 @@ void Net_AdvanceMusic()
 void Net_TargetMusic()
 {
 	float vol, fai, fao, tim, id;
-	string noi;
+	string noi, s;
 	entity e;
 
 	id = ReadShort();
@@ -61,10 +63,15 @@ void Net_TargetMusic()
 	{
 		e = spawn();
 		e.enttype = ENT_CLIENT_TRIGGER_MUSIC;
-		if(e.noise)
-			strunzone(e.noise);
-		e.noise = strzone(noi);
-		sound(e, CHAN_VOICE, self.noise, 0, ATTN_NONE);
+	}
+	s = e.noise;
+	if(e.noise)
+		strunzone(e.noise);
+	e.noise = strzone(noi);
+	if(e.noise != s)
+	{
+		precache_sound(e.noise);
+		sound(e, CHAN_VOICE, e.noise, 0, ATTN_NONE);
 	}
 	e.volume = vol;
 	e.fade_time = fai;
@@ -86,7 +93,9 @@ void Net_TargetMusic()
 void Ent_TriggerMusic_Think()
 {
 	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, self, world))
+	{
 		music_trigger = self;
+	}
 	self.nextthink = time;
 }
 
@@ -100,6 +109,7 @@ void Ent_TriggerMusic_Remove()
 void Ent_ReadTriggerMusic()
 {
 	float f;
+	string s;
 	f = ReadByte();
 	if(f & 4)
 	{
@@ -130,11 +140,19 @@ void Ent_ReadTriggerMusic()
 		self.volume = ReadByte() / 255.0;
 		self.fade_time = ReadByte() / 16.0;
 		self.fade_rate = ReadByte() / 16.0;
+		s = self.noise;
 		if(self.noise)
 			strunzone(self.noise);
 		self.noise = strzone(ReadString());
+		if(self.noise != s)
+		{
+			precache_sound(self.noise);
+			sound(self, CHAN_VOICE, self.noise, 0, ATTN_NONE);
+		}
 	}
 
+	setorigin(self, self.origin);
+	setsize(self, self.mins, self.maxs);
 	self.cnt = 1;
 	self.think = Ent_TriggerMusic_Think;
 	self.nextthink = time;

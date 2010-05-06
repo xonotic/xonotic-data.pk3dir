@@ -10,6 +10,7 @@
 // when targetname is not set, THIS ONE is default
 void target_music_sendto(float to, float is)
 {
+	WriteByte(to, SVC_TEMPENTITY);
 	WriteByte(to, TE_CSQC_TARGET_MUSIC);
 	WriteShort(to, num_for_edict(self));
 	WriteByte(to, self.volume * 255.0 * is);
@@ -51,7 +52,7 @@ void spawnfunc_target_music()
 // when triggered, it is disabled/enabled for everyone
 float trigger_music_SendEntity(entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, TE_CSQC_TARGET_MUSIC);
+	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_MUSIC);
 	sf &~= 0x80;
 	if(self.cnt)
 		sf |= 0x80;
