@@ -2697,6 +2697,7 @@ float RedirectionThink()
 	return TRUE;
 }
 
+void TargetMusic_RestoreGame();
 void RestoreGame()
 {
 	// Loaded from a save game
@@ -2710,6 +2711,8 @@ void RestoreGame()
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 	WeaponStats_Init();
+
+	TargetMusic_RestoreGame();
 }
 
 void SV_Shutdown()

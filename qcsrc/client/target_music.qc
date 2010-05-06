@@ -14,7 +14,7 @@ void TargetMusic_Advance()
 		best = music_target;
 	if(music_trigger)
 		best = music_trigger;
-	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); )
+	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); ) if(e.noise)
 	{
 		s0 = e.state;
 		if(getsoundtime(e, CHAN_VOICE) < 0)
@@ -79,6 +79,12 @@ void Net_TargetMusic()
 	{
 		precache_sound(e.noise);
 		sound(e, CHAN_VOICE, e.noise, 0, ATTN_NONE);
+		if(getsoundtime(e, CHAN_VOICE) < 0)
+		{
+			print("Cannot initialize sound ", e.noise, "\n");
+			strunzone(e.noise);
+			e.noise = string_null;
+		}
 	}
 	e.volume = vol;
 	e.fade_time = fai;
@@ -155,6 +161,12 @@ void Ent_ReadTriggerMusic()
 		{
 			precache_sound(self.noise);
 			sound(self, CHAN_VOICE, self.noise, 0, ATTN_NONE);
+			if(getsoundtime(self, CHAN_VOICE) < 0)
+			{
+				print("Cannot initialize sound ", self.noise, "\n");
+				strunzone(self.noise);
+				self.noise = string_null;
+			}
 		}
 	}
 

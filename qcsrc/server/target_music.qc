@@ -42,6 +42,16 @@ void spawnfunc_target_music()
 	else
 		target_music_sendto(MSG_INIT, 0);
 }
+void TargetMusic_RestoreGame()
+{
+	for(self = world; (self = find(self, classname, "target_music")); )
+	{
+		if(self.targetname == "")
+			target_music_sendto(MSG_INIT, 1);
+		else
+			target_music_sendto(MSG_INIT, 0);
+	}
+}
 // values:
 //   volume
 //   noise
