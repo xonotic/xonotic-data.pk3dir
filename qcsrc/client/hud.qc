@@ -1404,7 +1404,7 @@ void HUD_HealthArmor(void)
 
 			if (x > 0)
 			{
-				drawpic(pos, "gfx/hud/statuhud", eX * 0.5 * mySize_x * min(1, x/200) + eY * mySize_y, HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+				drawpic(pos, "gfx/hud/statusbar", eX * 0.5 * mySize_x * min(1, x/200) + eY * mySize_y, HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
 				if (x > 45)
 					drawpic(pos, "gfx/hud/sb_armor", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				else
@@ -1414,7 +1414,7 @@ void HUD_HealthArmor(void)
 
 			// health
 			x = health;
-			drawpic(pos + eX * mySize_x - eX * 0.5 * mySize_x * min(1, x/200), "gfx/hud/statuhud", eX * 0.5 * mySize_x * min(1, x/200) + eY * mySize_y, HUD_Panel_GetProgressBarColor("health"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+			drawpic(pos + eX * mySize_x - eX * 0.5 * mySize_x * min(1, x/200), "gfx/hud/statusbar", eX * 0.5 * mySize_x * min(1, x/200) + eY * mySize_y, HUD_Panel_GetProgressBarColor("health"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
 			drawpic(pos + eX * mySize_x - eX * mySize_y, "gfx/hud/sb_health", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * 2.5 * mySize_y + eY * 0.25 * mySize_y, x, 3, 0.5 * mySize_y, hud_alpha_fg);
 		}
@@ -1426,7 +1426,7 @@ void HUD_HealthArmor(void)
 
 			if (x > 0)
 			{
-				drawpic(pos + eY * mySize_y - eY * mySize_y * min(1, x/200), "gfx/hud/statuhud", eX * 0.5 * mySize_x + eY * mySize_y * min(1, x/200), HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+				drawpic(pos + eY * mySize_y - eY * mySize_y * min(1, x/200), "gfx/hud/statusbar", eX * 0.5 * mySize_x + eY * mySize_y * min(1, x/200), HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
 				if (x > 45)
 					drawpic(pos + eX * 0.4 * mySize_y, "gfx/hud/sb_armor", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				else
@@ -1438,7 +1438,7 @@ void HUD_HealthArmor(void)
 			x = health;
 			numbers = strlen(ftos(x));
 
-			drawpic(pos + eX * 0.5 * mySize_x + eY * mySize_y - eY * mySize_y * min(1, x/200), "gfx/hud/statuhud", eX * 0.5 * mySize_x + eY * mySize_y * min(1, x/200), HUD_Panel_GetProgressBarColor("health"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+			drawpic(pos + eX * 0.5 * mySize_x + eY * mySize_y - eY * mySize_y * min(1, x/200), "gfx/hud/statusbar", eX * 0.5 * mySize_x + eY * mySize_y * min(1, x/200), HUD_Panel_GetProgressBarColor("health"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
 			drawpic(pos + eX * mySize_x - eX * 1.1 * mySize_y, "gfx/hud/sb_health", '0.7 0.7 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * numbers * 0.5 * mySize_y + eY * 0.55 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
 		}
@@ -1450,7 +1450,7 @@ void HUD_HealthArmor(void)
 
 			if (x > 0)
 			{
-				drawpic(pos, "gfx/hud/statuhud", eX * mySize_x * min(1, x/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+				drawpic(pos, "gfx/hud/statusbar", eX * mySize_x * min(1, x/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
 				if (x > 45)
 					drawpic(pos, "gfx/hud/sb_armor", '0.5 0.5 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				else
@@ -1462,7 +1462,7 @@ void HUD_HealthArmor(void)
 			x = health;
 			numbers = strlen(ftos(x));
 
-			drawpic(pos + eY * 0.5 * mySize_y, "gfx/hud/statuhud", eX * mySize_x * min(1, x/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor("health"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+			drawpic(pos + eY * 0.5 * mySize_y, "gfx/hud/statusbar", eX * mySize_x * min(1, x/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor("health"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
 			drawpic(pos + eY * 0.5 * mySize_y, "gfx/hud/sb_health", '0.5 0.5 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum_Colored(pos + eX * 0.5 * mySize_y + eY * 0.5 * mySize_y, x, numbers, 0.5 * mySize_y, hud_alpha_fg);
 		}
@@ -2727,9 +2727,9 @@ void HUD_ShowAcceleration(void)
 	}
 
 	if (acceleration > 0)
-		drawpic(pos, "gfx/hud/statuhud", acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos, "gfx/hud/statusbar", acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 	else if (acceleration < 0)
-		drawpic(pos + acceleration * scale * '40 0 0', "gfx/hud/statuhud", -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos + acceleration * scale * '40 0 0', "gfx/hud/statusbar", -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void HUD_Reset (void)
