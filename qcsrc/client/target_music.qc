@@ -17,6 +17,10 @@ void TargetMusic_Advance()
 	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); )
 	{
 		s0 = e.state;
+		if(getsoundtime(e, CHAN_VOICE) < 0)
+		{
+			s0 = -1;
+		}
 		if(e == best)
 		{
 			// increase volume
@@ -35,7 +39,10 @@ void TargetMusic_Advance()
 		}
 		if(e.state != s0)
 		{
-			sound(e, CHAN_VOICE, "", e.volume * e.state * cvar("bgmvolume"), ATTN_NONE);
+			if(s0 < 0)
+				sound(e, CHAN_VOICE, e.noise, e.volume * e.state * cvar("bgmvolume"), ATTN_NONE); // restart
+			else
+				sound(e, CHAN_VOICE, "", e.volume * e.state * cvar("bgmvolume"), ATTN_NONE);
 		}
 	}
 	music_trigger = world;
