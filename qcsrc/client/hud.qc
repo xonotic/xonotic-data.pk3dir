@@ -550,6 +550,7 @@ string HUD_Panel_GetName(float id)
 		case 7: return "score"; break;
 		case 8: return "racetimer"; break;
 		case 9: return "vote"; break;
+		case 10: return "pressedkeys"; break;
 		default: return "";
 	}
 }
@@ -569,6 +570,12 @@ vector HUD_Panel_CheckLimitSize(float id, vector mySize)
 			break;
 		case 5: 
 			mySize_x = max(mySize_y * 2, mySize_x); // at least 2 * height
+			break;
+		case 9: 
+			mySize_y = (1/4) * mySize_x; // 1/4 * width
+			break;
+		case 10: 
+			mySize_y = (1/2) * mySize_x; // 1/2 * width
 			break;
 	}
 	return mySize;
@@ -1805,9 +1812,6 @@ void HUD_VoteWindow(void)
 	mySize = HUD_Panel_GetSize(9);
 	color = HUD_Panel_GetColor(9);
 
-	if(HUD_Panel_GetBgActive(9))
-		draw_BorderPicture(pos - '1 1 0' * marigin, "gfx/hud/border", mySize + '1 1 0' * 2 * marigin, color, hud_alpha_bg, '1 1 0' * (marigin/MARIGIN_MULTIPLIER));
-
 	string s;
 	float a;
 	if(vote_active != vote_prev) {
@@ -1820,21 +1824,24 @@ void HUD_VoteWindow(void)
 	else
 		vote_alpha = bound(0, 1 - (time - vote_change) * 2, 1);
 
+	if(HUD_Panel_GetBgActive(9))
+		draw_BorderPicture(pos - '1 1 0' * marigin, "gfx/hud/border", mySize + '1 1 0' * 2 * marigin, color, hud_alpha_bg * vote_alpha, '1 1 0' * (marigin/MARIGIN_MULTIPLIER));
+
 	if(vote_alpha) {
 		a = vote_alpha * bound(cvar_or("hud_vote_alreadyvoted_alpha", 0.75), 1 - vote_highlighted, 1);
 
 		drawpic(pos, "gfx/hud/voteprogress_back", mySize, HUD_GetBgColor(), a * hud_alpha_bg, DRAWFLAG_NORMAL);
 
 	        s = "A vote has been called for: ";
-		drawstring(pos + '0.5 0 0' * mySize_x + '0 0.1 0' * mySize_y - eX * stringwidth(s, FALSE, '6 0 0'), s, '12 12 0', '1 1 1', a * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + '0.5 0 0' * mySize_x + '0 0.1 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/5)), s, '1 1 0' * mySize_y*(1/5), '1 1 1', a * hud_alpha_fg, DRAWFLAG_NORMAL);
 		s = textShortenToWidth(vote_called_vote, mySize_x * 0.96, '10 0 0', stringwidth_colors);
-		drawcolorcodedstring(pos + '0.52 0 0' * mySize_x + '0 0.3 0' * mySize_y - eX * stringwidth(s, FALSE, '5 0 0'), s, '10 10 0', a * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + '0.52 0 0' * mySize_x + '0 0.3 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/6)), s, '1 1 0' * mySize_y*(1/6), a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 		// print the yes/no counts
 		s = strcat("Yes: ", ftos(vote_yescount));
-		drawstring(pos + '0 0.6 0' * mySize_y + '0.02 0 0' * mySize_x, s, '12 12 0', eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + '0 0.6 0' * mySize_y + '0.02 0 0' * mySize_x, s, '1 1 0' * mySize_y*(1/6) , eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 		s = strcat("No: ", ftos(vote_nocount));
-		drawstring(pos + '0 0.6 0' * mySize_y + '0.98 0 0' * mySize_x - eX * stringwidth(s, FALSE, '12 0 0'), s, '12 12 0', eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + '0 0.6 0' * mySize_y + '0.98 0 0' * mySize_x - eX * stringwidth(s, FALSE, '1 1 0' * mySize_y*(1/6)), s, '1 1 0' * mySize_y*(1/6), eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 		// draw the progress bars
 		drawsetcliparea(pos_x, pos_y, mySize_x * 0.5 * (vote_yescount/vote_needed), mySize_y);
@@ -2579,25 +2586,27 @@ Main HUD system
 
 void HUD_DrawPressedKeys(void)
 {
-	vector pos, bgsize;
+	float marigin;
+
+	vector pos, mySize, color;
+	marigin = HUD_Panel_GetMarigin(10);
+	pos = HUD_Panel_GetPos(10);
+	mySize = HUD_Panel_GetSize(10);
+	color = HUD_Panel_GetColor(10);
+
+	if(HUD_Panel_GetBgActive(10))
+		draw_BorderPicture(pos - '1 1 0' * marigin, "gfx/hud/border", mySize + '1 1 0' * 2 * marigin, color, hud_alpha_bg, '1 1 0' * (marigin/MARIGIN_MULTIPLIER));
+
 	float pressedkeys;
 
-	pos = stov(cvar_string("cl_showpressedkeys_position"));
-
-	bgsize = '126 75 0';
-
-	pos = eX * (vid_conwidth - bgsize_x) * pos_x
-	    + eY * (vid_conheight - bgsize_y) * pos_y;
-	pos -= '-15 -6 0'; // adjust to the origin of these numbers
-
 	pressedkeys = getstatf(STAT_PRESSED_KEYS);
-	drawpic(pos + '-15   -6   0', "gfx/hud/keys/key_bg.tga",           bgsize, '1 1 1', 0.1 * hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + ' 83.5  9   0', ((pressedkeys & KEY_CROUCH) ? "gfx/hud/keys/key_crouch_inv.tga" : "gfx/hud/keys/key_crouch.tga"), ' 24 24 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + ' 32   -1.5 0', ((pressedkeys & KEY_FORWARD) ? "gfx/hud/keys/key_forward_inv.tga" : "gfx/hud/keys/key_forward.tga"),  ' 32 32 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + '-11.5  9   0', ((pressedkeys & KEY_JUMP) ? "gfx/hud/keys/key_jump_inv.tga" : "gfx/hud/keys/key_jump.tga"),     ' 24 24 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + ' -1   32   0', ((pressedkeys & KEY_LEFT) ? "gfx/hud/keys/key_left_inv.tga" : "gfx/hud/keys/key_left.tga"),     ' 32 32 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + ' 32   32   0', ((pressedkeys & KEY_BACKWARD) ? "gfx/hud/keys/key_backward_inv.tga" : "gfx/hud/keys/key_backward.tga"), ' 32 32 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + ' 65   32   0', ((pressedkeys & KEY_RIGHT) ? "gfx/hud/keys/key_right_inv.tga" : "gfx/hud/keys/key_right.tga"),    ' 32 32 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos, "gfx/hud/keys/key_bg.tga",           mySize, '1 1 1', 0.1 * hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + eX * mySize_x - eX* (1/4) * mySize_x,       ((pressedkeys & KEY_CROUCH) ? "gfx/hud/keys/key_crouch_inv.tga" : "gfx/hud/keys/key_crouch.tga"),        '1 1 0' * (1/4) * mySize_x, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + eX * (1/2) * mySize_x - eX * (1/4),         ((pressedkeys & KEY_FORWARD) ? "gfx/hud/keys/key_forward_inv.tga" : "gfx/hud/keys/key_forward.tga"),     '1 1 0' * (1/2) * mySize_x, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos,                                              ((pressedkeys & KEY_JUMP) ? "gfx/hud/keys/key_jump_inv.tga" : "gfx/hud/keys/key_jump.tga"),              '1 1 0' * (1/4) * mySize_x, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + eY * 0.5 * mySize_y,                        ((pressedkeys & KEY_LEFT) ? "gfx/hud/keys/key_left_inv.tga" : "gfx/hud/keys/key_left.tga"),              '1 1 0' * (1/2) * mySize_x, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + eX * 0.25 * mySize_x + eY * 0.5 * mySize_y, ((pressedkeys & KEY_BACKWARD) ? "gfx/hud/keys/key_backward_inv.tga" : "gfx/hud/keys/key_backward.tga"),  '1 1 0' * (1/2) * mySize_x, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos + eX * 0.75 * mySize_x + eY * 0.5 * mySize_y, ((pressedkeys & KEY_RIGHT) ? "gfx/hud/keys/key_right_inv.tga" : "gfx/hud/keys/key_right.tga"),           '1 1 0' * (1/2) * mySize_x, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void HUD_ShowSpeed(void)
@@ -2729,6 +2738,8 @@ void HUD_Main (void)
 		HUD_Score();
 	if((gametype == GAME_RACE || gametype == GAME_CTS) && cvar_or("hud_racetimer", 1))
 		HUD_RaceTimer();
+	if(cvar_or("hud_vote", 1))
+		HUD_VoteWindow();
 	if(cvar("hud_pressedkeys"))
 		HUD_DrawPressedKeys();
 	if(cvar("hud_speed"))

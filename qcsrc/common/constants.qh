@@ -506,4 +506,4 @@ float WATERLEVEL_SUBMERGED = 3;
 float MAX_SHOT_DISTANCE = 32768;
 
 // panel hud constants
-float panel_cnt = 10; // NOTE: IDs start from 0!
+float panel_cnt = 11; // NOTE: IDs start from 0!
