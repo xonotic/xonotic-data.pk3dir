@@ -571,6 +571,9 @@ vector HUD_Panel_CheckLimitSize(float id, vector mySize)
 		case 5: 
 			mySize_x = max(mySize_y * 2, mySize_x); // at least 2 * height
 			break;
+		case 8: 
+			mySize_y = (1/4) * mySize_x; // 1/4 * width
+			break;
 		case 9: 
 			mySize_y = (1/4) * mySize_x; // 1/4 * width
 			break;
@@ -1557,7 +1560,14 @@ void HUD_RaceTimer (void) {
 	float a, t;
 	string s, forcetime;
 
-	if(race_checkpointtime)
+	if(cvar("_hud_configure"))
+	{
+		s = "0:13:37";
+		drawstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, FALSE, '0.75 0.75 0' * mySize_y), s, '0.75 0.75 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+		s = "^1Intermediate 1 (+15.42)";
+		drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.25 * mySize_y) + eY * 0.75 * mySize_y, s, '1 1 0' * 0.25 * mySize_y, hud_alpha_fg, DRAWFLAG_NORMAL);
+	}
+	else if(race_checkpointtime)
 	{
 		a = bound(0, 2 - (time - race_checkpointtime), 1);
 		s = "";
@@ -2753,6 +2763,7 @@ void HUD_Main (void)
 		HUD_Notify();
 	if(HUD_Panel_CheckActive(5))
 		HUD_Timer();
+	// TODO hud'ify
 	if(HUD_Panel_CheckActive(6))
 		if(ons_showmap || cvar_string("cl_teamradar") != "0" && (cvar("cl_teamradar") == 2 || teamplay))
 			HUD_Radar();
@@ -2763,6 +2774,7 @@ void HUD_Main (void)
 			HUD_RaceTimer();
 	if(HUD_Panel_CheckActive(9))
 		HUD_VoteWindow();
+	// TODO hud'ify
 	if(HUD_Panel_CheckActive(10))
 		if(spectatee_status > 0 || cvar("cl_showpressedkeys") >= 2 || cvar("_hud_configure"))
 			HUD_DrawPressedKeys();
