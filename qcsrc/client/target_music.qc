@@ -52,7 +52,7 @@ void TargetMusic_Advance()
 void Net_TargetMusic()
 {
 	float vol, fai, fao, tim, id;
-	string noi, s;
+	string noi;
 	entity e;
 
 	id = ReadShort();
