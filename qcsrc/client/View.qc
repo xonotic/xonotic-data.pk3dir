@@ -363,17 +363,19 @@ void CSQC_UpdateView(float w, float h)
 	vo = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
 	warpzone_fixview_origin = pmove_org + vo;
-	warpzone_fixview_angles = input_angles;
+	warpzone_fixview_cl_viewangles = input_angles;
+	warpzone_fixview_angles = view_angles;
 	WarpZone_FixView();
 	pmove_org = warpzone_fixview_origin - vo;
-	input_angles = warpzone_fixview_angles;
+	input_angles = warpzone_fixview_cl_viewangles;
+	view_angles = warpzone_fixview_angles;
 
 	if(cvar("cl_lockview"))
 	{
-		pmove_org = warpzone_fixview_origin = freeze_pmove_org;
-		input_angles = freeze_input_angles;
+		pmove_org = freeze_pmove_org;
+		input_angles = view_angles = freeze_input_angles;
 		R_SetView(VF_ORIGIN, pmove_org + vo);
-		R_SetView(VF_ANGLES, input_angles);
+		R_SetView(VF_ANGLES, view_angles);
 		//R_SetView(VF_CL_VIEWANGLES, input_angles);
 	}
 	freeze_pmove_org = pmove_org;

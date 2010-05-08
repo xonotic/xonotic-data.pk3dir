@@ -112,22 +112,33 @@ void WarpZone_Outside()
 float warpzone_saved;
 vector warpzone_saved_origin;
 vector warpzone_saved_angles;
+vector warpzone_saved_cl_viewangles;
 #ifndef KEEP_ROLL
 var float autocvar_cl_rollkillspeed = 10;
 #endif
 void WarpZone_FixView()
 {
-	float pd;
+	float pd, f;
 	entity e;
 	warpzone_saved = 0;
 	warpzone_saved_origin = warpzone_fixview_origin;
 	warpzone_saved_angles = warpzone_fixview_angles;
+	warpzone_saved_cl_viewangles = warpzone_fixview_cl_viewangles;
 
 #ifndef KEEP_ROLL
-	if(autocvar_cl_rollkillspeed)
-		R_SetView(VF_CL_VIEWANGLES_Z, input_angles_z * max(0, (1 - frametime * autocvar_cl_rollkillspeed)));
-	else
-		R_SetView(VF_CL_VIEWANGLES_Z, 0);
+	if(warpzone_fixview_angles_z != 0 || warpzone_fixview_cl_viewangles_z != 0)
+	{
+		if(autocvar_cl_rollkillspeed)
+			f = max(0, (1 - frametime * autocvar_cl_rollkillspeed));
+		else
+			f = 0;
+		warpzone_fixview_angles_z *= f;
+		warpzone_fixview_cl_viewangles_z *= f;
+		warpzone_saved_angles_z *= f; // PERMANENTLY apply that change!
+		warpzone_saved_cl_viewangles_z *= f; // PERMANENTLY apply that change!
+		warpzone_saved = 2;
+		R_SetView(VF_CL_VIEWANGLES_Z, warpzone_fixview_angles_z);
+	}
 #endif
 
 	e = WarpZone_Find(warpzone_fixview_origin, warpzone_fixview_origin);
@@ -136,6 +147,7 @@ void WarpZone_FixView()
 		warpzone_saved = 1;
 		warpzone_fixview_origin = WarpZone_TransformOrigin(e, warpzone_fixview_origin);
 		warpzone_fixview_angles = WarpZone_TransformVAngles(e, warpzone_fixview_angles);
+		warpzone_fixview_cl_viewangles = WarpZone_TransformVAngles(e, warpzone_fixview_cl_viewangles);
 		WarpZone_Inside();
 	}
 	else
@@ -154,10 +166,10 @@ void WarpZone_FixView()
 		}
 	}
 
-	if(warpzone_saved)
+	if(warpzone_saved == 1)
 	{
 		R_SetView(VF_ORIGIN, warpzone_fixview_origin);
-		R_SetView(VF_ANGLES, warpzone_fixview_angles);
+		R_SetView(VF_ANGLES, warpzone_fixview_cl_viewangles);
 	}
 }
 void WarpZone_UnFixView()
@@ -166,8 +178,10 @@ void WarpZone_UnFixView()
 	{
 		warpzone_fixview_origin = warpzone_saved_origin;
 		warpzone_fixview_angles = warpzone_saved_angles;
+		warpzone_fixview_cl_viewangles = warpzone_saved_cl_viewangles;
 		R_SetView(VF_ORIGIN, warpzone_fixview_origin);
 		R_SetView(VF_ANGLES, warpzone_fixview_angles);
+		R_SetView(VF_CL_VIEWANGLES, warpzone_fixview_cl_viewangles);
 	}
 }
 
