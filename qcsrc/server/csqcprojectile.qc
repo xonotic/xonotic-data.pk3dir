@@ -3,7 +3,6 @@
 float CSQCProjectile_SendEntity(entity to, float sf)
 {
 	float ft, fr;
-	float s;
 
 	// note: flag 0x10 = no trail please
 	sf = sf & 0x1F;
@@ -22,13 +21,6 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 			sf |= 0x20;
 	}
 
-	// HACK: subflags for sendflags = 0x80
-
-	s = 0;
-
-	if (self.movetype == MOVETYPE_BOUNCEMISSILE || self.movetype == MOVETYPE_BOUNCE)
-		s |= 1;
-
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PROJECTILE);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -44,14 +36,6 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 			WriteCoord(MSG_ENTITY, self.velocity_y);
 			WriteCoord(MSG_ENTITY, self.velocity_z);
 			WriteCoord(MSG_ENTITY, self.gravity);
-
-			WriteByte(MSG_ENTITY, s);
-
-			if (s & 1)
-			{
-				WriteCoord(MSG_ENTITY, self.bouncefactor);
-				WriteCoord(MSG_ENTITY, self.bouncestop);
-			}
 		}
 
 		if(sf & 0x20)

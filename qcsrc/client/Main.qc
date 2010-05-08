@@ -1017,6 +1017,9 @@ void Ent_Init()
 
 	g_weaponswitchdelay = ReadByte() / 255.0;
 
+	g_balance_grenadelauncher_secondary_bouncefactor = ReadCoord();
+	g_balance_grenadelauncher_secondary_bouncestop = ReadCoord();
+
 	if(!postinit)
 		PostInit();
 }

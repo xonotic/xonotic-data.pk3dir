@@ -158,11 +158,9 @@ void Ent_RemoveProjectile()
 	}
 }
 
-.float bouncefactor;
-.float bouncestop;
 void Ent_Projectile()
 {
-	float f, s;
+	float f;
 
 	// projectile properties:
 	//   kind (interpolated, or clientside)
@@ -216,19 +214,8 @@ void Ent_Projectile()
 			self.velocity_y = ReadCoord();
 			self.velocity_z = ReadCoord();
 			self.gravity = ReadCoord();
-
-			s = ReadByte();
-
-			if (s & 1)
-			{
-				self.bouncefactor = ReadCoord();
-				self.bouncestop = ReadCoord();
-			}
-
 			self.move_origin = self.origin;
 			self.move_velocity = self.velocity;
-			self.move_bounce_factor = self.bouncefactor;
-			self.move_bounce_stopspeed = self.bouncestop;
 		}
 
 		if(time == self.spawntime || (self.count & 0x80) || (f & 0x10))
@@ -316,6 +303,8 @@ void Ent_Projectile()
 				self.maxs = '0 0 -3';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
+				self.move_bounce_factor = g_balance_grenadelauncher_secondary_bouncefactor;
+				self.move_bounce_stopspeed = g_balance_grenadelauncher_secondary_bouncestop;
 				break;
 			case PROJECTILE_PORTO_RED:
 				self.colormod = '2 1 1';
