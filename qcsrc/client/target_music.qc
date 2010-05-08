@@ -73,8 +73,7 @@ void Net_TargetMusic()
 		e.enttype = ENT_CLIENT_TRIGGER_MUSIC;
 		e.count = id;
 	}
-	s = e.noise;
-	if(e.noise != s)
+	if(e.noise != noi)
 	{
 		if(e.noise)
 			strunzone(e.noise);
