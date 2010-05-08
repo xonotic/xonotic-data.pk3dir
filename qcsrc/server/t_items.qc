@@ -682,6 +682,9 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 {
 	startitem_failed = FALSE;
 
+	self.items = itemid;
+	self.weapons = weaponid;
+
 	// is it a dropped weapon?
 	if (self.classname == "droppedweapon")
 	{
@@ -702,9 +705,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 	else
 	{
-		self.items = itemid;
-		self.weapons = weaponid;
-
 		if(MUTATOR_CALLHOOK(FilterItem)) // error means we do not want the item
 		{
 			startitem_failed = TRUE;

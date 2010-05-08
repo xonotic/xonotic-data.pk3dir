@@ -269,6 +269,12 @@ void target_spawn_use()
 		target_spawn_useon(e);
 		e.target_spawn_id = self.target_spawn_id;
 	}
+	else if(self.target == "*activator")
+	{
+		// edit entity
+		if(activator)
+			target_spawn_useon(activator);
+	}
 	else
 	{
 		// edit entity

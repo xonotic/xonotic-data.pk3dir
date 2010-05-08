@@ -1064,14 +1064,50 @@ float ClientInit_SendEntity(entity to, float sf)
 		WriteString(MSG_ENTITY, world.fog);
 	else
 		WriteString(MSG_ENTITY, "");
-	WriteByte(MSG_ENTITY, cvar("g_balance_armor_blockpercent") * 255.0);
-	WriteByte(MSG_ENTITY, cvar("g_balance_weaponswitchdelay") * 255.0);
+	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
+	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
+	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_secondary_bouncefactor
+	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_secondary_bouncestop
 	return TRUE;
+}
+
+void ClientInit_CheckUpdate()
+{
+	self.nextthink = time;
+	if(self.count != cvar("g_balance_armor_blockpercent"))
+	{
+		self.count = cvar("g_balance_armor_blockpercent");
+		self.SendFlags |= 1;
+	}
+	if(self.cnt != cvar("g_balance_weaponswitchdelay"))
+	{
+		self.cnt = cvar("g_balance_weaponswitchdelay");
+		self.SendFlags |= 1;
+	}
+	if(self.bouncefactor != cvar("g_balance_grenadelauncher_secondary_bouncefactor"))
+	{
+		self.bouncefactor = cvar("g_balance_grenadelauncher_secondary_bouncefactor");
+		self.SendFlags |= 1;
+	}
+	if(self.bouncestop != cvar("g_balance_grenadelauncher_secondary_bouncestop"))
+	{
+		self.bouncestop = cvar("g_balance_grenadelauncher_secondary_bouncestop");
+		self.SendFlags |= 1;
+	}
 }
 
 void ClientInit_Spawn()
 {
-	Net_LinkEntity(spawn(), FALSE, 0, ClientInit_SendEntity);
+	entity o;
+	entity e;
+	e.classname = "clientinit";
+	e.think = ClientInit_CheckUpdate;
+	e.nextthink = time;
+	Net_LinkEntity(e, FALSE, 0, ClientInit_SendEntity);
+	o = self;
+	self = e;
+	ClientInit_CheckUpdate();
+	self = o;
 }
 
 /*
@@ -1748,10 +1784,31 @@ void UpdateTeamBubble()
 	else self.colormod = '1 1 1';
 };*/
 
+.float oldcolormap;
 void respawn(void)
 {
+	if(self.modelindex != 0 && cvar("g_respawn_ghosts"))
+	{
+		self.solid = SOLID_NOT;
+		self.takedamage = DAMAGE_NO;
+		self.movetype = MOVETYPE_FLY;
+		self.velocity = '0 0 1' * cvar("g_respawn_ghosts_speed");
+		self.avelocity = randomvec() * cvar("g_respawn_ghosts_speed") * 3 - randomvec() * cvar("g_respawn_ghosts_speed") * 3;
+		self.effects |= EF_ADDITIVE;
+		self.oldcolormap = self.colormap;
+		self.colormap = 512;
+		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
+		if(cvar("g_respawn_ghosts_maxtime"))
+			SUB_SetFade (self, time + cvar("g_respawn_ghosts_maxtime") / 2 + random () * (cvar("g_respawn_ghosts_maxtime") - cvar("g_respawn_ghosts_maxtime") / 2), 1.5);
+	}
+
 	CopyBody(1);
 	self.effects |= EF_NODRAW; // prevent another CopyBody
+	if(self.oldcolormap)
+	{
+		self.colormap = self.oldcolormap;
+		self.oldcolormap = 0;
+	}
 	PutClientInServer();
 }
 

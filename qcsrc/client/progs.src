@@ -49,6 +49,7 @@ effects.qc
 wall.qc
 modeleffects.qc
 tuba.qc
+target_music.qc
 
 //vehicles/spiderbot.qc
 Main.qc

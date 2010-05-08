@@ -308,3 +308,5 @@ float PI      = 3.14159265358979323846264338327950288419716939937510582097494459
 float log(float f) = #532;
 
 void(entity e, entity ignore) tracetoss = #64;
+
+float(entity e, float ch) getsoundtime = #533; // (DP_SND_GETSOUNDTIME)
