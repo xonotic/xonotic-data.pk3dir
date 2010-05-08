@@ -533,7 +533,88 @@ void spawnfunc_trigger_heal()
 //
 //////////////////////////////////////////////////////////////
 
+.entity trigger_gravity_check;
+void trigger_gravity_check_think()
+{
+	// This spawns when a player enters the gravity zone and checks if he left.
+	// Each frame, self.cnt is set to 2 by trigger_gravity_touch() and decreased by 1 here.
+	// It the player has left the gravity trigger, this will be allowed to reach 0 and indicate that.
+	if(self.cnt <= 0)
+	{
+		UpdateCSQCProjectile(self.owner);
+		self.owner.gravity = self.gravity;
+		self.owner.trigger_gravity_check = world;
+		remove(self);
+	}
+	else
+	{
+		self.cnt -= 1;
+		self.nextthink = time;
+	}
+};
 
+void trigger_gravity_use()
+{
+	self.state = !self.state;
+};
+
+void trigger_gravity_touch()
+{
+	float g;
+
+	if(self.state != TRUE)
+		return;
+
+	EXACTTRIGGER_TOUCH;
+
+	g = self.gravity;
+
+	if not(self.spawnflags & 1)
+	{
+		if(other.trigger_gravity_check)
+		{
+			other.trigger_gravity_check.cnt = 2; // gravity one more frames...
+			return;
+		}
+		other.trigger_gravity_check = spawn();
+		other.trigger_gravity_check.owner = other;
+		other.trigger_gravity_check.gravity = other.gravity;
+		other.trigger_gravity_check.think = trigger_gravity_check_think;
+		other.trigger_gravity_check.nextthink = time;
+		other.trigger_gravity_check.cnt = 2;
+		if(other.gravity)
+			g *= other.gravity;
+	}
+
+	if (other.gravity != g)
+	{
+		other.gravity = g;
+		if(self.noise != "")
+			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+		UpdateCSQCProjectile(self.owner);
+	}
+};
+
+void spawnfunc_trigger_gravity()
+{
+	if(self.gravity == 1)
+		return;
+
+	EXACTTRIGGER_INIT;
+	self.touch = trigger_gravity_touch;
+	if(self.noise != "")
+		precache_sound(self.noise);
+
+	self.state = TRUE;
+	IFTARGETED
+	{
+		self.use = trigger_gravity_use;
+		if(self.spawnflags & 2)
+			self.state = FALSE;
+	}
+};
+
+//=============================================================================
 
 // TODO add a way to do looped sounds with sound(); then complete this entity
 .float volume, atten;

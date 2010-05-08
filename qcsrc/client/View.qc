@@ -413,6 +413,7 @@ void CSQC_UpdateView(float w, float h)
 	}
 #endif
 
+	TargetMusic_Advance();
 	Fog_Force();
 
 	drawframetime = max(0.000001, time - drawtime);
