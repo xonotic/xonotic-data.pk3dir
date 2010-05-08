@@ -242,14 +242,14 @@ void Ent_DamageInfo(float isNew)
 			case WEP_FIREBALL:
 				if(secondary)
 				{
+					// firemine goes out silently
+				}
+				else
+				{
 					org2 = org + backoff * 16;
 					pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
 					if(!issilent)
 						sound(self, CHAN_PROJECTILE, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
-				}
-				else
-				{
-					// firemine goes out silently
 				}
 				break;
 			default:

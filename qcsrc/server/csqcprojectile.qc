@@ -21,7 +21,7 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 			sf |= 0x20;
 	}
 
-	if(self.gravity != 0 && self.gravity != 1)
+	if(self.gravity != 0)
 		sf |= 0x10;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PROJECTILE);

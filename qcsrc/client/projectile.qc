@@ -216,7 +216,7 @@ void Ent_Projectile()
 			if(f & 0x10)
 				self.gravity = ReadCoord();
 			else
-				self.gravity = 0; // default
+				self.gravity = 0; // none
 			self.move_origin = self.origin;
 			self.move_velocity = self.velocity;
 		}
