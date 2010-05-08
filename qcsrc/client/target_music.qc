@@ -71,13 +71,14 @@ void Net_TargetMusic()
 	{
 		e = spawn();
 		e.enttype = ENT_CLIENT_TRIGGER_MUSIC;
+		e.count = id;
 	}
 	s = e.noise;
-	if(e.noise)
-		strunzone(e.noise);
-	e.noise = strzone(noi);
 	if(e.noise != s)
 	{
+		if(e.noise)
+			strunzone(e.noise);
+		e.noise = strzone(noi);
 		precache_sound(e.noise);
 		sound(e, CHAN_VOICE, e.noise, 0, ATTN_NONE);
 		if(getsoundtime(e, CHAN_VOICE) < 0)
