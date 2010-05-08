@@ -158,9 +158,11 @@ void Ent_RemoveProjectile()
 	}
 }
 
+.float bouncefactor;
+.float bouncestop;
 void Ent_Projectile()
 {
-	float f;
+	float f, s;
 
 	// projectile properties:
 	//   kind (interpolated, or clientside)
@@ -215,8 +217,18 @@ void Ent_Projectile()
 			self.velocity_z = ReadCoord();
 			self.gravity = ReadCoord();
 
+			s = ReadByte();
+
+			if (s & 1)
+			{
+				self.bouncefactor = ReadCoord();
+				self.bouncestop = ReadCoord();
+			}
+
 			self.move_origin = self.origin;
 			self.move_velocity = self.velocity;
+			self.move_bounce_factor = self.bouncefactor;
+			self.move_bounce_stopspeed = self.bouncestop;
 		}
 
 		if(time == self.spawntime || (self.count & 0x80) || (f & 0x10))
