@@ -156,6 +156,7 @@ portals.qc
 
 target_spawn.qc
 func_breakable.qc
+target_music.qc
 
 ../common/items.qc
 

@@ -4,8 +4,8 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 {
 	float ft, fr;
 
-	// note: flag 0x10 = no trail please
-	sf = sf & 0x1F;
+	// note: flag 0x08 = no trail please (teleport bit)
+	sf = sf & 0x0F;
 
 	if(self.csqcprojectile_clientanimate)
 		sf |= 0x80; // client animated, not interpolated
@@ -21,6 +21,9 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 			sf |= 0x20;
 	}
 
+	if(self.gravity != 0)
+		sf |= 0x10;
+
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PROJECTILE);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -35,7 +38,8 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 			WriteCoord(MSG_ENTITY, self.velocity_x);
 			WriteCoord(MSG_ENTITY, self.velocity_y);
 			WriteCoord(MSG_ENTITY, self.velocity_z);
-			WriteCoord(MSG_ENTITY, self.gravity);
+			if(sf & 0x10)
+				WriteCoord(MSG_ENTITY, self.gravity);
 		}
 
 		if(sf & 0x20)
@@ -85,7 +89,7 @@ void UpdateCSQCProjectile(entity e)
 	if(e.SendEntity == CSQCProjectile_SendEntity)
 	{
 		// send new origin data
-		e.SendFlags |= 1;
+		e.SendFlags |= 0x01;
 	}
 }
 
@@ -93,8 +97,10 @@ void UpdateCSQCProjectileAfterTeleport(entity e)
 {
 	if(e.SendEntity == CSQCProjectile_SendEntity)
 	{
-		// send new origin data and mark as teleported
-		e.SendFlags |= 0x11;
+		// send new origin data
+		e.SendFlags |= 0x01;
+		// mark as teleported
+		e.SendFlags |= 0x08;
 	}
 }
 

@@ -127,6 +127,8 @@ void W_Grenade_Attack2 (void)
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = cvar("g_balance_grenadelauncher_secondary_damage");
 	gren.movetype = MOVETYPE_BOUNCE;
+	gren.bouncefactor = cvar("g_balance_grenadelauncher_secondary_bouncefactor");
+	gren.bouncestop = cvar("g_balance_grenadelauncher_secondary_bouncestop");
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY;
 	setsize(gren, '0 0 -3', '0 0 -3');

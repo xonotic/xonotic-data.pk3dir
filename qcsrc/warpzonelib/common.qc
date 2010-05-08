@@ -150,7 +150,7 @@ void WarpZone_Trace_AddTransform(entity wz)
 
 void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb)
 {
-	float frac, sol;
+	float frac, sol, i;
 	vector o0, e0;
 	entity wz;
 	vector vf, vr, vu;
@@ -179,8 +179,14 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	WarpZone_MakeAllSolid();
 	sol = -1;
 	frac = 0;
+	i = 16;
 	for(;;)
 	{
+		if(--i < 1)
+		{
+			dprint("Too many warpzones in sequence, aborting trace.\n");
+			break;
+		}
 		tracebox(org, mi, ma, end, nomonsters, forent);
 		if(cb)
 			cb(org, trace_endpos, end);
@@ -225,7 +231,7 @@ void WarpZone_TraceLine(vector org, vector end, float nomonsters, entity forent)
 
 void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZone_trace_callback_t cb)
 {
-	float g, dt;
+	float g, dt, i;
 	vector vf, vr, vu, v0, o0;
 	entity wz;
 
@@ -254,8 +260,14 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	WarpZone_MakeAllSolid();
 	g = cvar("sv_gravity") * e.gravity;
 	WarpZone_tracetoss_time = 0;
+	i = 16;
 	for(;;)
 	{
+		if(--i < 1)
+		{
+			dprint("Too many warpzones in sequence, aborting trace.\n");
+			break;
+		}
 		tracetoss(e, forent);
 		if(cb)
 			cb(e.origin, trace_endpos, trace_endpos);
