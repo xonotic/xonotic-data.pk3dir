@@ -213,12 +213,15 @@ void Ent_Projectile()
 			self.velocity_x = ReadCoord();
 			self.velocity_y = ReadCoord();
 			self.velocity_z = ReadCoord();
-			self.gravity = ReadCoord();
+			if(f & 0x10)
+				self.gravity = ReadCoord();
+			else
+				self.gravity = 0; // default
 			self.move_origin = self.origin;
 			self.move_velocity = self.velocity;
 		}
 
-		if(time == self.spawntime || (self.count & 0x80) || (f & 0x10))
+		if(time == self.spawntime || (self.count & 0x80) || (f & 0x08))
 		{
 			self.trail_oldorigin = self.origin;
 			if(!(self.count & 0x80))
