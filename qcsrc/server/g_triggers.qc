@@ -533,7 +533,6 @@ void spawnfunc_trigger_heal()
 //
 //////////////////////////////////////////////////////////////
 
-.float trigger_gravity_active;
 .entity trigger_gravity_check;
 void trigger_gravity_check_think()
 {
@@ -542,8 +541,9 @@ void trigger_gravity_check_think()
 	// It the player has left the gravity trigger, this will be allowed to reach 0 and indicate that.
 	if(self.cnt <= 0)
 	{
-		self.owner.gravity = 1;
-		self.owner.trigger_gravity_active = FALSE;
+		UpdateCSQCProjectile(self.owner);
+		self.owner.gravity = self.gravity;
+		self.owner.trigger_gravity_check = world;
 		remove(self);
 	}
 	else
@@ -560,29 +560,38 @@ void trigger_gravity_use()
 
 void trigger_gravity_touch()
 {
+	float g;
+
 	if(self.state != TRUE)
 		return;
 
 	EXACTTRIGGER_TOUCH;
 
+	g = self.gravity;
+
 	if not(self.spawnflags & 1)
 	{
-		if(!other.trigger_gravity_active)
+		if(other.trigger_gravity_check)
 		{
-			other.trigger_gravity_active = TRUE;
-			other.trigger_gravity_check = spawn();
-			other.trigger_gravity_check.owner = other;
-			other.trigger_gravity_check.think = trigger_gravity_check_think;
-			other.trigger_gravity_check.nextthink = time;
+			other.trigger_gravity_check.cnt = 2; // gravity one more frames...
+			return;
 		}
+		other.trigger_gravity_check = spawn();
+		other.trigger_gravity_check.owner = other;
+		other.trigger_gravity_check.gravity = other.gravity;
+		other.trigger_gravity_check.think = trigger_gravity_check_think;
+		other.trigger_gravity_check.nextthink = time;
 		other.trigger_gravity_check.cnt = 2;
+		if(other.gravity)
+			g *= other.gravity;
 	}
 
-	if (other.gravity != self.gravity)
+	if (other.gravity != g)
 	{
-		other.gravity = self.gravity;
+		other.gravity = g;
 		if(self.noise != "")
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+		UpdateCSQCProjectile(self.owner);
 	}
 };
 
