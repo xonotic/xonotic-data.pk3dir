@@ -149,7 +149,7 @@ void Seeker_Missile_Animate()
 		self.think           = Seeker_Missile_Think;
 		self.nextthink       = time;// + cvar("g_balance_seeker_missile_activate_delay"); // cant dealy with csqc projectiles
 
-		if (cvar("g_balance_seeker_guided_proxy"))
+		if (cvar("g_balance_seeker_missile_proxy"))
 			self.movetype    = MOVETYPE_BOUNCEMISSILE;
 		else
 			self.movetype    = MOVETYPE_FLYMISSILE;
