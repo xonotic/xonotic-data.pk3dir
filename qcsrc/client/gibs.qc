@@ -160,7 +160,7 @@ void Ent_GibSplash(float isNew)
 			gentle_prefix = "";
 		else if(cvar("cl_gentle") == 3) 
 			gentle_prefix = "happy_";
-		else
+		else if(cvar("cl_gentle"))
 			gentle_prefix = "morphed_";
 	}
 	else if(cvar("cl_particlegibs"))

@@ -4,12 +4,13 @@ entity music_target;
 entity music_trigger;
 
 .float state;
+.float lastvol;
 
 void TargetMusic_Advance()
 {
 	// run AFTER all the thinks!
 	entity best, e;
-	float s0;
+	float vol, vol0;
 	best = music_default;
 	if(music_target && time < music_target.lifetime)
 		best = music_target;
@@ -17,10 +18,10 @@ void TargetMusic_Advance()
 		best = music_trigger;
 	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); ) if(e.noise)
 	{
-		s0 = e.state;
+		vol0 = e.lastvol;
 		if(getsoundtime(e, CHAN_VOICE) < 0)
 		{
-			s0 = -1;
+			vol0 = -1;
 		}
 		if(e == best)
 		{
@@ -38,12 +39,14 @@ void TargetMusic_Advance()
 			else
 				e.state = 0;
 		}
-		if(e.state != s0)
+		vol = e.state * e.volume * cvar("bgmvolume");
+		if(vol != vol0)
 		{
-			if(s0 < 0)
-				sound(e, CHAN_VOICE, e.noise, e.volume * e.state * cvar("bgmvolume"), ATTN_NONE); // restart
+			if(vol0 < 0)
+				sound(e, CHAN_VOICE, e.noise, vol, ATTN_NONE); // restart
 			else
-				sound(e, CHAN_VOICE, "", e.volume * e.state * cvar("bgmvolume"), ATTN_NONE);
+				sound(e, CHAN_VOICE, "", vol, ATTN_NONE);
+			e.lastvol = vol;
 		}
 	}
 	music_trigger = world;
