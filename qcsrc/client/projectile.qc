@@ -270,6 +270,9 @@ void Ent_Projectile()
 			case PROJECTILE_HAGAR_BOUNCING: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("TR_GRENADE"); self.scale = 0.4; break;
 			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("fireball"); break; // particle effect is good enough
 			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("firemine"); break; // particle effect is good enough
+			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_FLAC: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_SEEKER: setmodel(self, "models/tagrocket.md3"); self.scale = 2; self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
@@ -341,6 +344,19 @@ void Ent_Projectile()
 				self.mins = '-4 -4 -4';
 				self.maxs = '4 4 4';
 				break;
+			case PROJECTILE_TAG:
+				loopsound(self, CHAN_PROJECTILE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
+				self.mins = '-2 -2 -2';
+				self.maxs = '2 2 2';
+				break;
+			case PROJECTILE_FLAC:
+				self.mins = '-2 -2 -2';
+				self.maxs = '2 2 2';
+				break;
+			case PROJECTILE_SEEKER:
+				self.mins = '-4 -4 -4';
+				self.maxs = '4 4 4';
+				break;
 			default:
 				break;
 		}
@@ -378,9 +394,11 @@ void Projectile_Precache()
 	precache_model("models/laser.mdl");
 	precache_model("models/plasmatrail.mdl");
 	precache_model("models/rocket.md3");
+	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
 	precache_sound("weapons/electro_fly.wav");
 	precache_sound("weapons/rocket_fly.wav");
 	precache_sound("weapons/fireball_fly.wav");
 	precache_sound("weapons/fireball_fly2.wav");
+	precache_sound("weapons/tag_rocket_fly.wav");
 }
