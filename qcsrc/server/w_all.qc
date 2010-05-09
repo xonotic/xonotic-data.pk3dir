@@ -14,3 +14,4 @@
 #include "w_tuba.qc"
 #include "w_campingrifle.qc"
 #include "w_fireball.qc"
+#include "w_seeker.qc"
