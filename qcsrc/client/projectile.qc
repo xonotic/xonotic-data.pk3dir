@@ -31,6 +31,11 @@ void Projectile_DrawTrail(vector to)
 	self.trail_oldorigin = to;
 	self.trail_oldtime = time;
 
+	// force the effect even for stationary firemine
+	if(self.cnt == PROJECTILE_FIREMINE)
+		if(from == to)
+			from_z += 1;
+
 	if (self.traileffect)
 		trailparticles(self, self.traileffect, from, to);
 }
