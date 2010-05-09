@@ -47,7 +47,7 @@ void configureXonoticPlayerModelSelectorXonoticPlayerModelSelector(entity me)
 	float sortbuf, glob, i;
 	string fn;
 
-	me.configureXonoticImage(me, string_null, 263.0/360.0);
+	me.configureXonoticImage(me, string_null, -1);
 
 	sortbuf = buf_create();
 	glob = search_begin(get_model_datafilename(string_null, -1, "txt"), TRUE, TRUE);
@@ -131,6 +131,10 @@ void goXonoticPlayerModelSelector(entity me, float d)
 	me.currentSkin = stof(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_SKIN));
 	me.currentModel = strzone(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_MODEL));
 	me.currentModelDescription = strzone(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_DESC));
+
+	// fix the image
+	me.src = me.currentModelImage;
+	me.updateAspect(me);
 }
 
 void PlayerModelSelector_Next_Click(entity btn, entity me)
@@ -157,9 +161,7 @@ void drawXonoticPlayerModelSelector(entity me)
 	float i, n;
 	vector o;
 
-	me.src = me.currentModelImage;
 	drawImage(me);
-	me.src = string_null;
 
 	// draw text on the image, handle \n in the description
 	draw_CenterText('0.5 0 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);
