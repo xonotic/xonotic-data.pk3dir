@@ -911,28 +911,28 @@ void HUD_Panel_Mouse()
 					highlightedAction = 1;
 				}
 				// resize from topleft border
-				else if(mousepos_x >= panelPos_x - eX * marigin && mousepos_y >= panelPos_y - eX * marigin && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
+				else if(mousepos_x >= panelPos_x - marigin && mousepos_y >= panelPos_y - marigin && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
 				{
 					highlightedPanel = i;
 					highlightedAction = 2;
 					resizeCorner = 1;
 				}
 				// resize from topright border
-				else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y - eX * marigin && mousepos_x <= panelPos_x + panelSize_x + eX * marigin && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
+				else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y - marigin && mousepos_x <= panelPos_x + panelSize_x + marigin && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
 				{
 					highlightedPanel = i;
 					highlightedAction = 2;
 					resizeCorner = 2;
 				}
 				// resize from bottomleft border
-				else if(mousepos_x >= panelPos_x - eX * marigin && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + panelSize_y + eY * marigin)
+				else if(mousepos_x >= panelPos_x - marigin && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + panelSize_y + marigin)
 				{
 					highlightedPanel = i;
 					highlightedAction = 2;
 					resizeCorner = 3;
 				}
 				// resize from bottomright border
-				else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + panelSize_x + eX * marigin && mousepos_y <= panelPos_y + panelSize_y + eY * marigin)
+				else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + panelSize_x + marigin && mousepos_y <= panelPos_y + panelSize_y + marigin)
 				{
 					highlightedPanel = i;
 					highlightedAction = 2;
