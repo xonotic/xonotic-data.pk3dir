@@ -158,7 +158,7 @@ void fillXonoticEffectsSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_bloom", "Bloom"));
 			setDependent(e, "r_hdr", 0, 0);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_hdr", "High Dynamic Range (HDR)"));
+		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(2, 0, "r_hdr", "High Dynamic Range (HDR)"));
 	
 	me.TR(me);
 		s = makeXonoticSlider(0.1, 1, 0.1, "r_motionblur");
