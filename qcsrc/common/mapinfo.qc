@@ -324,6 +324,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					{ }
 				else if(startsWith(v, "weapon_"))
 					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
+				else if(v == "target_music" || v == "trigger_music")
+					_MapInfo_Map_worldspawn_music = string_null; // don't use regular BGM
 			}
 		}
 	}
@@ -630,7 +632,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 			else
 				fputs(fh, strcat("cdtrack ", _MapInfo_Map_worldspawn_music, "\n"));
 		}
-		else
+		else if(_MapInfo_Map_worldspawn_music)
 		{
 			n = tokenize_console(cvar_string("g_cdtracks_remaplist"));
 			s = strcat(" ", cvar_string("g_cdtracks_dontusebydefault"), " ");

@@ -1062,14 +1062,50 @@ float ClientInit_SendEntity(entity to, float sf)
 		WriteString(MSG_ENTITY, world.fog);
 	else
 		WriteString(MSG_ENTITY, "");
-	WriteByte(MSG_ENTITY, cvar("g_balance_armor_blockpercent") * 255.0);
-	WriteByte(MSG_ENTITY, cvar("g_balance_weaponswitchdelay") * 255.0);
+	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
+	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
+	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_secondary_bouncefactor
+	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_secondary_bouncestop
 	return TRUE;
+}
+
+void ClientInit_CheckUpdate()
+{
+	self.nextthink = time;
+	if(self.count != cvar("g_balance_armor_blockpercent"))
+	{
+		self.count = cvar("g_balance_armor_blockpercent");
+		self.SendFlags |= 1;
+	}
+	if(self.cnt != cvar("g_balance_weaponswitchdelay"))
+	{
+		self.cnt = cvar("g_balance_weaponswitchdelay");
+		self.SendFlags |= 1;
+	}
+	if(self.bouncefactor != cvar("g_balance_grenadelauncher_secondary_bouncefactor"))
+	{
+		self.bouncefactor = cvar("g_balance_grenadelauncher_secondary_bouncefactor");
+		self.SendFlags |= 1;
+	}
+	if(self.bouncestop != cvar("g_balance_grenadelauncher_secondary_bouncestop"))
+	{
+		self.bouncestop = cvar("g_balance_grenadelauncher_secondary_bouncestop");
+		self.SendFlags |= 1;
+	}
 }
 
 void ClientInit_Spawn()
 {
-	Net_LinkEntity(spawn(), FALSE, 0, ClientInit_SendEntity);
+	entity o;
+	entity e;
+	e.classname = "clientinit";
+	e.think = ClientInit_CheckUpdate;
+	e.nextthink = time;
+	Net_LinkEntity(e, FALSE, 0, ClientInit_SendEntity);
+	o = self;
+	self = e;
+	ClientInit_CheckUpdate();
+	self = o;
 }
 
 /*

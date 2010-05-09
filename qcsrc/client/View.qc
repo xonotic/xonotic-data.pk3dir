@@ -343,6 +343,8 @@ string NextFrameCommand;
 void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
 
+vector freeze_pmove_org, freeze_input_angles;
+
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -361,10 +363,23 @@ void CSQC_UpdateView(float w, float h)
 	vo = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
 	warpzone_fixview_origin = pmove_org + vo;
-	warpzone_fixview_angles = input_angles;
+	warpzone_fixview_cl_viewangles = input_angles;
+	warpzone_fixview_angles = view_angles;
 	WarpZone_FixView();
 	pmove_org = warpzone_fixview_origin - vo;
-	input_angles = warpzone_fixview_angles;
+	input_angles = warpzone_fixview_cl_viewangles;
+	view_angles = warpzone_fixview_angles;
+
+	if(cvar("cl_lockview"))
+	{
+		pmove_org = freeze_pmove_org;
+		input_angles = view_angles = freeze_input_angles;
+		R_SetView(VF_ORIGIN, pmove_org + vo);
+		R_SetView(VF_ANGLES, view_angles);
+		//R_SetView(VF_CL_VIEWANGLES, input_angles);
+	}
+	freeze_pmove_org = pmove_org;
+	freeze_input_angles = input_angles;
 
 	// Render the Scene
 	if(!intermission || !view_set)
@@ -400,6 +415,7 @@ void CSQC_UpdateView(float w, float h)
 	}
 #endif
 
+	TargetMusic_Advance();
 	Fog_Force();
 
 	drawframetime = max(0.000001, time - drawtime);
