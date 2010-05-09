@@ -16,6 +16,13 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 	// direction is perpendicular to the view normal, and perpendicular to the axis
 	thickdir = normalize(cross(axis, view_origin - from));
 
+/*
+	print("from ", vtos(from), "\n");
+	print("to ", vtos(to), "\n");
+	print("org ", vtos(view_origin), "\n");
+	print("dir ", vtos(thickdir), "\n");
+*/
+
 	A = from - thickdir * (thickness / 2);
 	B = from + thickdir * (thickness / 2);
 	C = to + thickdir * (thickness / 2);

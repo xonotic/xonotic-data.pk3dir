@@ -1059,7 +1059,6 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, hook_shotorigin_x);
 	WriteCoord(MSG_ENTITY, hook_shotorigin_y);
 	WriteCoord(MSG_ENTITY, hook_shotorigin_z);
-
 	if(sv_foginterval && world.fog != "")
 		WriteString(MSG_ENTITY, world.fog);
 	else
@@ -1100,10 +1099,11 @@ void ClientInit_Spawn()
 {
 	entity o;
 	entity e;
+	e = spawn();
 	e.classname = "clientinit";
 	e.think = ClientInit_CheckUpdate;
-	e.nextthink = time;
 	Net_LinkEntity(e, FALSE, 0, ClientInit_SendEntity);
+
 	o = self;
 	self = e;
 	ClientInit_CheckUpdate();
