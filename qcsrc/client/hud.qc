@@ -898,7 +898,7 @@ void HUD_Panel_Mouse()
 		vector panelPos;
 		vector panelSize;
 
-		for(i = 0; i <= panel_cnt; i++)
+		for(i = 0; i <= panel_cnt; ++i)
 		{
 			panelPos = HUD_Panel_GetPos(i);
 			panelSize = HUD_Panel_GetSize(i);
