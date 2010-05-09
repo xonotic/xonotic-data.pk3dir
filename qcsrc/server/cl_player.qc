@@ -1202,7 +1202,10 @@ void LoadPlayerSounds(string f, float first)
 	var .string field;
 	fh = fopen(f, FILE_READ);
 	if(fh < 0)
+	{
+		dprint("Player sound file not found: ", f, "\n");
 		return;
+	}
 	while((s = fgets(fh)))
 	{
 		if(tokenize_console(s) != 3)

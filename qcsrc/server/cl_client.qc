@@ -555,6 +555,7 @@ void setmodel_lod(entity e, string modelname)
 	self.modelindex_lod0_from_xonotic = ((s == "") || (substring(s, 0, 4) == "data"));
 
 	player_setupanimsformodel();
+	UpdatePlayerSounds();
 }
 
 /*
