@@ -1,0 +1,7 @@
+name Fricka
+species alien
+sex Female
+weight 57
+age 16
+
+Mutated Warrior

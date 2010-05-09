@@ -165,63 +165,14 @@ void CopyBody(float keepvelocity)
 
 float player_getspecies()
 {
-	local float glob, i, j, fh, len, s, sk;
-	local string fn, l, file;
-	local float tokens;
-
-	file = strcat(substring(self.model, 0, -5), ftos(self.skinindex)); // remove the extension at the end
-	PrecachePlayerSounds(file);
-	UpdatePlayerSounds(file);
-
-	s = -1;
-
-	glob = search_begin("models/player/*.txt", TRUE, TRUE);
-	if(glob < 0)
-		return s;
-	for(j = 0; j <= 1; ++j)
+	get_model_parameters(self.playermodel, self.skinindex);
+	if(get_model_parameters_species >= 0)
 	{
-		for(i = 0; i < search_getsize(glob); ++i)
-		{
-			fn = search_getfilename(glob, i);
-			fh = fopen(fn, FILE_READ);
-			if(fh < 0)
-				continue;
-			fgets(fh); fgets(fh);
-			sk = stof(fgets(fh));
-			if(sk == (j ? 0 : self.skinindex)) // 2nd pass skips the skin test
-			if(fgets(fh) == self.model)
-			{
-				tokens = tokenizebyseparator(fn, ".");
-
-				l = fgets(fh);
-				len = tokenize_console(l);
-				if (len != 2)
-					goto nospecies;
-				if (argv(0) != "species")
-					goto nospecies;
-				switch(argv(1))
-				{
-					case "human":       s = SPECIES_HUMAN;       break;
-					case "alien":       s = SPECIES_ALIEN;       break;
-					case "robot_shiny": s = SPECIES_ROBOT_SHINY; break;
-					case "robot_rusty": s = SPECIES_ROBOT_RUSTY; break;
-					case "robot_solid": s = SPECIES_ROBOT_SOLID; break;
-					case "animal":      s = SPECIES_ANIMAL;      break;
-					case "reserved":    s = SPECIES_RESERVED;    break;
-				}
-			}
-:nospecies
-			fclose(fh);
-		}
-		if (s >= 0)
-			break;
+		get_model_parameters(string_null, 0);
+		return get_model_parameters_species;
 	}
-	search_end(glob);
-
-	if (s < 0)
-		s = SPECIES_HUMAN;
-
-	return s;
+	get_model_parameters(string_null, 0);
+	return SPECIES_HUMAN;
 }
 
 void player_setupanimsformodel()
@@ -1271,17 +1222,17 @@ void LoadPlayerSounds(string f, float first)
 }
 
 .float modelindex_for_playersound;
-void UpdatePlayerSounds(string filename)
+.float skinindex_for_playersound;
+void UpdatePlayerSounds()
 {
 	if(self.modelindex == self.modelindex_for_playersound)
+	if(self.skinindex == self.skinindex_for_playersound)
 		return;
 	self.modelindex_for_playersound = self.modelindex;
+	self.skinindex_for_playersound = self.skinindex;
 	ClearPlayerSounds();
 	LoadPlayerSounds("sound/player/default.sounds", 1);
-	if(filename != "")
-		LoadPlayerSounds(strcat(filename, ".sounds"), 0);
-	else
-		LoadPlayerSounds(strcat(self.model, ".sounds"), 0); // backwards compatibility
+	LoadPlayerSounds(get_model_datafilename(self.playermodel, self.skinindex, "sounds"), 0);
 }
 
 void FakeGlobalSound(string sample, float chan, float voicetype)

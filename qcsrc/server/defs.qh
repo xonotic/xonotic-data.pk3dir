@@ -501,7 +501,7 @@ string globalsound_metalstep;
 
 void PrecachePlayerSounds(string f);
 void PrecacheGlobalSound(string samplestring);
-void UpdatePlayerSounds(string filename);
+void UpdatePlayerSounds();
 void ClearPlayerSounds();
 void PlayerSound(.string samplefield, float channel, float voicetype);
 void GlobalSound(string samplestring, float channel, float voicetype);

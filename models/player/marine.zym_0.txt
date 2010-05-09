@@ -1,0 +1,7 @@
+name Marine
+species human
+sex Male
+weight 93
+age 35
+
+Service Man

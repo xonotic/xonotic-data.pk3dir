@@ -7,16 +7,19 @@ CLASS(XonoticPlayerModelSelector) EXTENDS(XonoticImage)
 	METHOD(XonoticPlayerModelSelector, resizeNotify, void(entity, vector, vector, vector, vector))
 	ATTRIB(XonoticPlayerModelSelector, currentModel, string, string_null)
 	ATTRIB(XonoticPlayerModelSelector, currentSkin, float, 0)
-	ATTRIB(XonoticPlayerModelSelector, currentModelName, string, string_null)
+	ATTRIB(XonoticPlayerModelSelector, currentModelImage, string, string_null)
 	ATTRIB(XonoticPlayerModelSelector, currentModelTitle, string, string_null)
-	ATTRIB(XonoticPlayerModelSelector, currentModelTxtName, string, string_null)
 	ATTRIB(XonoticPlayerModelSelector, currentModelDescription, string, string_null)
 	METHOD(XonoticPlayerModelSelector, go, void(entity, float))
+	METHOD(XonoticPlayerModelSelector, destroy, void(entity))
 	ATTRIB(XonoticPlayerModelSelector, origin, vector, '0 0 0')
 	ATTRIB(XonoticPlayerModelSelector, size, vector, '0 0 0')
 	ATTRIB(XonoticPlayerModelSelector, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticPlayerModelSelector, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticPlayerModelSelector, titleFontSize, float, SKINFONTSIZE_TITLE)
+	ATTRIB(XonoticPlayerModelSelector, bufModels, float, -1)
+	ATTRIB(XonoticPlayerModelSelector, numModels, float, -1)
+	ATTRIB(XonoticPlayerModelSelector, idxModels, float, -1)
 ENDCLASS(XonoticPlayerModelSelector)
 entity makeXonoticPlayerModelSelector();
 void PlayerModelSelector_Next_Click(entity btn, entity me);
@@ -32,125 +35,102 @@ entity makeXonoticPlayerModelSelector()
 	return me;
 }
 
+#define BUFMODELS_TITLE 0
+#define BUFMODELS_IMAGE 1
+#define BUFMODELS_MODEL 2
+#define BUFMODELS_SKIN 3
+#define BUFMODELS_DESC 4
+#define BUFMODELS_COUNT 5
+
 void configureXonoticPlayerModelSelectorXonoticPlayerModelSelector(entity me)
 {
+	float sortbuf, glob, i;
+	string fn;
+
 	me.configureXonoticImage(me, string_null, 263.0/360.0);
+
+	sortbuf = buf_create();
+	glob = search_begin(get_model_datafilename(string_null, -1, "txt"), TRUE, TRUE);
+	for(i = 0; i < search_getsize(glob); ++i)
+	{
+		// select model #i!
+		fn = search_getfilename(glob, i);
+		if(!get_model_parameters(fn, -1))
+			continue;
+		bufstr_add(sortbuf, sprintf("%-128s%s", get_model_parameters_name, fn), 1);
+	}
+	search_end(glob);
+	buf_sort(sortbuf, 128, 0);
+	me.numModels = buf_getsize(sortbuf);
+	me.bufModels = buf_create();
+	for(i = 0; i < me.numModels; ++i)
+	{
+		fn = substring(bufstr_get(sortbuf, i), 128, -1);
+		if(!get_model_parameters(fn, -1))
+			error("But it JUST worked!");
+		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_TITLE, get_model_parameters_name);
+		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_IMAGE, strcat("/", substring(get_model_datafilename(get_model_parameters_modelname, get_model_parameters_modelskin, "tga"), 0, -5)));
+		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_MODEL, get_model_parameters_modelname);
+		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN, ftos(get_model_parameters_modelskin));
+		get_model_parameters_desc = strcat(get_model_parameters_desc, "\n");
+		if(get_model_parameters_sex)
+			get_model_parameters_desc = strcat(get_model_parameters_desc, "\nSex: ", get_model_parameters_sex);
+		if(get_model_parameters_weight)
+			get_model_parameters_desc = strcat(get_model_parameters_desc, "\nWeight: ", ftos(get_model_parameters_weight), " kg");
+		if(get_model_parameters_age)
+			get_model_parameters_desc = strcat(get_model_parameters_desc, "\nAge: ", ftos(get_model_parameters_age));
+		while(substring(get_model_parameters_desc, -1, 1) == "\n")
+			get_model_parameters_desc = substring(get_model_parameters_desc, 0, -2);
+		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_DESC, get_model_parameters_desc);
+	}
+	buf_del(sortbuf);
+	get_model_parameters(string_null, 0);
 	me.loadCvars(me);
+}
+void destroyXonoticPlayerModelSelector(entity me)
+{
+	buf_del(me.bufModels);
+	me.bufModels = -1;
 }
 
 void loadCvarsXonoticPlayerModelSelector(entity me)
 {
-	float glob, i, fh;
-	string fn;
-	string nm, t, l;
-
+	float i;
 	if(me.currentModel)
 		strunzone(me.currentModel);
-	if(me.currentModelTitle)
-		strunzone(me.currentModelTitle);
-	if(me.currentModelName)
-		strunzone(me.currentModelName);
-	if(me.currentModelTxtName)
-		strunzone(me.currentModelTxtName);
-	if(me.currentModelDescription)
-		strunzone(me.currentModelDescription);
 	me.currentSkin = cvar("_cl_playerskin");
 	me.currentModel = strzone(cvar_string("_cl_playermodel"));
-	me.currentModelName = string_null;
-	me.currentModelDescription = string_null;
-	me.currentModelTitle = string_null;
-	me.currentModelTxtName = string_null;
-
-	// lookup model name
-	glob = search_begin("models/player/*.txt", TRUE, TRUE);
-	if(glob < 0)
-		return;
-	for(i = 0; i < search_getsize(glob); ++i)
+	for(i = 0; i < me.numModels; ++i)
 	{
-		fn = search_getfilename(glob, i);
-		fh = fopen(fn, FILE_READ);
-		if(fh < 0)
-			continue;
-		t = fgets(fh);
-		nm = fgets(fh);
-		if(stof(fgets(fh)) == me.currentSkin)
-		if(fgets(fh) == me.currentModel)
-		{
-			me.currentModelName = strzone(strcat("/", nm));
-			me.currentModelTxtName = strzone(fn);
-			me.currentModelTitle = strzone(t);
-			me.currentModelDescription = "";
-			fgets(fh); // Skip species
-			while((l = fgets(fh)))
-			{
-				if(me.currentModelDescription != "")
-					me.currentModelDescription = strcat(me.currentModelDescription, "\n");
-				me.currentModelDescription = strcat(me.currentModelDescription, l);
-			}
-			me.currentModelDescription = strzone(me.currentModelDescription);
-			fclose(fh);
+		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_MODEL) == me.currentModel)
+		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN) == ftos(me.currentSkin))
 			break;
-		}
-		fclose(fh);
 	}
-	search_end(glob);
+	if(i >= me.numModels) // fail
+		i = 0;
+	me.idxModels = i;
+	me.go(me, 0); // this will set the other vars for currentSkin and currentModel
 }
 
 void goXonoticPlayerModelSelector(entity me, float d)
 {
-	float glob, i, fh;
-	string l;
-
-	glob = search_begin("models/player/*.txt", TRUE, TRUE);
-	if(glob < 0)
-		return;
-	for(i = 0; i < search_getsize(glob); ++i)
-		if(search_getfilename(glob, i) == me.currentModelTxtName)
-			break;
-	// now i is search_getsize(glob) if not found, and the right index if found.
-	if(i == search_getsize(glob))
-	{
-		if(d < 0)
-			i = search_getsize(glob) - 1;
-		else
-			i = 0;
-	}
-	else
-	{
-		i = mod(i + d + search_getsize(glob), search_getsize(glob));
-	}
+	me.idxModels = mod(me.idxModels + d + me.numModels, me.numModels);
 
 	if(me.currentModel)
 		strunzone(me.currentModel);
 	if(me.currentModelTitle)
 		strunzone(me.currentModelTitle);
-	if(me.currentModelName)
-		strunzone(me.currentModelName);
-	if(me.currentModelTxtName)
-		strunzone(me.currentModelTxtName);
+	if(me.currentModelImage)
+		strunzone(me.currentModelImage);
 	if(me.currentModelDescription)
 		strunzone(me.currentModelDescription);
 
 	// select model #i!
-	me.currentModelTxtName = strzone(search_getfilename(glob, i));
-	fh = fopen(me.currentModelTxtName, FILE_READ);
-	search_end(glob);
-	if(fh < 0)
-		return;
-	me.currentModelTitle = strzone(fgets(fh));
-	me.currentModelName = strzone(strcat("/", fgets(fh)));
-	me.currentSkin = stof(fgets(fh));
-	me.currentModel = strzone(fgets(fh));
-	me.currentModelDescription = "";
-	fgets(fh); // Skip species
-	while((l = fgets(fh)))
-	{
-		if(me.currentModelDescription != "")
-			me.currentModelDescription = strcat(me.currentModelDescription, "\n");
-		me.currentModelDescription = strcat(me.currentModelDescription, l);
-	}
-	me.currentModelDescription = strzone(me.currentModelDescription);
-	fclose(fh);
+	me.currentModelTitle = strzone(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_TITLE));
+	me.currentModelImage = strzone(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_IMAGE));
+	me.currentSkin = stof(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_SKIN));
+	me.currentModel = strzone(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_MODEL));
+	me.currentModelDescription = strzone(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_DESC));
 }
 
 void PlayerModelSelector_Next_Click(entity btn, entity me)
@@ -167,8 +147,9 @@ void PlayerModelSelector_Prev_Click(entity btn, entity me)
 
 void saveCvarsXonoticPlayerModelSelector(entity me)
 {
-	// TODO rather set the _cl ones and apply later?
-	localcmd(strcat("playermodel ", me.currentModel, "\nplayerskin ", ftos(me.currentSkin), "\n"));
+	// we can't immediately apply here because of flood control
+	cvar_set("_cl_playermodel", me.currentModel);
+	cvar_set("_cl_playerskin", ftos(me.currentSkin));
 }
 
 void drawXonoticPlayerModelSelector(entity me)
@@ -176,7 +157,7 @@ void drawXonoticPlayerModelSelector(entity me)
 	float i, n;
 	vector o;
 
-	me.src = me.currentModelName;
+	me.src = me.currentModelImage;
 	drawImage(me);
 	me.src = string_null;
 

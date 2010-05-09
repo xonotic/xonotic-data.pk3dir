@@ -1513,30 +1513,50 @@ void play2all(string samp)
 }
 
 void PrecachePlayerSounds(string f);
-void precache_all_models(string pattern)
+void precache_playermodel(string m)
 {
-    float globhandle, i, n;
-    string f;
+	float globhandle, i, n;
+	string f;
 
-    globhandle = search_begin(pattern, TRUE, FALSE);
-    if (globhandle < 0)
-        return;
-    n = search_getsize(globhandle);
-    for (i = 0; i < n; ++i)
-    {
+	if(substring(m, -9,5) == "_lod1")
+		return;
+	if(substring(m, -9,5) == "_lod2")
+		return;
+	precache_model(m);
+	if(sv_loddistance1)
+	{
+		precache_model(strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1)));
+		precache_model(strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1)));
+	}
+
+	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
+	if (globhandle < 0)
+		return;
+	n = search_getsize(globhandle);
+	for (i = 0; i < n; ++i)
+	{
 		//print(search_getfilename(globhandle, i), "\n");
 		f = search_getfilename(globhandle, i);
-		if(sv_loddistance1)
-			precache_model(f);
-		if(substring(f, -9,5) == "_lod1")
-			continue;
-		if(substring(f, -9,5) == "_lod2")
-			continue;
-		if(!sv_loddistance1)
-			precache_model(f);
-		PrecachePlayerSounds(strcat(f, ".sounds"));
-    }
-    search_end(globhandle);
+		PrecachePlayerSounds(f);
+	}
+	search_end(globhandle);
+}
+void precache_all_playermodels(string pattern)
+{
+	float globhandle, i, n;
+	string f;
+
+	globhandle = search_begin(pattern, TRUE, FALSE);
+	if (globhandle < 0)
+		return;
+	n = search_getsize(globhandle);
+	for (i = 0; i < n; ++i)
+	{
+		//print(search_getfilename(globhandle, i), "\n");
+		f = search_getfilename(globhandle, i);
+		precache_playermodel(f);
+	}
+	search_end(globhandle);
 }
 
 void precache()
@@ -1559,25 +1579,10 @@ void precache()
     if (cvar("sv_precacheplayermodels"))
     {
         PrecachePlayerSounds("sound/player/default.sounds");
-        precache_all_models("models/player/*.zym");
-        precache_all_models("models/player/*.dpm");
-        precache_all_models("models/player/*.md3");
-        precache_all_models("models/player/*.psk");
-        //precache_model("models/player/carni.zym");
-        //precache_model("models/player/crash.zym");
-        //precache_model("models/player/grunt.zym");
-        //precache_model("models/player/headhunter.zym");
-        //precache_model("models/player/insurrectionist.zym");
-        //precache_model("models/player/jeandarc.zym");
-        //precache_model("models/player/lurk.zym");
-        //precache_model("models/player/lycanthrope.zym");
-        //precache_model("models/player/marine.zym");
-        //precache_model("models/player/nexus.zym");
-        //precache_model("models/player/pyria.zym");
-        //precache_model("models/player/shock.zym");
-        //precache_model("models/player/skadi.zym");
-        //precache_model("models/player/specop.zym");
-        //precache_model("models/player/visitant.zym");
+        precache_all_playermodels("models/player/*.zym");
+        precache_all_playermodels("models/player/*.dpm");
+        precache_all_playermodels("models/player/*.md3");
+        precache_all_playermodels("models/player/*.psk");
     }
 
     if (cvar("sv_defaultcharacter"))
@@ -1585,34 +1590,19 @@ void precache()
         string s;
         s = cvar_string("sv_defaultplayermodel_red");
         if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
+            precache_playermodel(s);
         s = cvar_string("sv_defaultplayermodel_blue");
         if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
+            precache_playermodel(s);
         s = cvar_string("sv_defaultplayermodel_yellow");
         if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
+            precache_playermodel(s);
         s = cvar_string("sv_defaultplayermodel_pink");
         if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
+            precache_playermodel(s);
         s = cvar_string("sv_defaultplayermodel");
         if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
+            precache_playermodel(s);
     }
 
     if (g_footsteps)

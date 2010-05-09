@@ -1,0 +1,7 @@
+name Armored Carni
+species alien
+sex Male
+weight 107
+age 15
+
+Mutated Warrior

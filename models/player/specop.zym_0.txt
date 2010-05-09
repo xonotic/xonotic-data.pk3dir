@@ -1,0 +1,7 @@
+name Specop
+species human
+sex Female
+weight 61
+age 31
+
+Solo Warrior
