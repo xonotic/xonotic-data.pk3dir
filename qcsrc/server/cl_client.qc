@@ -508,7 +508,6 @@ float Client_customizeentityforclient()
 	return TRUE;
 }
 
-void UpdatePlayerSounds();
 void setmodel_lod(entity e, string modelname)
 {
 	string s;
@@ -1059,19 +1058,55 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, hook_shotorigin_x);
 	WriteCoord(MSG_ENTITY, hook_shotorigin_y);
 	WriteCoord(MSG_ENTITY, hook_shotorigin_z);
-
 	if(sv_foginterval && world.fog != "")
 		WriteString(MSG_ENTITY, world.fog);
 	else
 		WriteString(MSG_ENTITY, "");
-	WriteByte(MSG_ENTITY, cvar("g_balance_armor_blockpercent") * 255.0);
-	WriteByte(MSG_ENTITY, cvar("g_balance_weaponswitchdelay") * 255.0);
+	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
+	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
+	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_secondary_bouncefactor
+	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_secondary_bouncestop
 	return TRUE;
+}
+
+void ClientInit_CheckUpdate()
+{
+	self.nextthink = time;
+	if(self.count != cvar("g_balance_armor_blockpercent"))
+	{
+		self.count = cvar("g_balance_armor_blockpercent");
+		self.SendFlags |= 1;
+	}
+	if(self.cnt != cvar("g_balance_weaponswitchdelay"))
+	{
+		self.cnt = cvar("g_balance_weaponswitchdelay");
+		self.SendFlags |= 1;
+	}
+	if(self.bouncefactor != cvar("g_balance_grenadelauncher_secondary_bouncefactor"))
+	{
+		self.bouncefactor = cvar("g_balance_grenadelauncher_secondary_bouncefactor");
+		self.SendFlags |= 1;
+	}
+	if(self.bouncestop != cvar("g_balance_grenadelauncher_secondary_bouncestop"))
+	{
+		self.bouncestop = cvar("g_balance_grenadelauncher_secondary_bouncestop");
+		self.SendFlags |= 1;
+	}
 }
 
 void ClientInit_Spawn()
 {
-	Net_LinkEntity(spawn(), FALSE, 0, ClientInit_SendEntity);
+	entity o;
+	entity e;
+	e = spawn();
+	e.classname = "clientinit";
+	e.think = ClientInit_CheckUpdate;
+	Net_LinkEntity(e, FALSE, 0, ClientInit_SendEntity);
+
+	o = self;
+	self = e;
+	ClientInit_CheckUpdate();
+	self = o;
 }
 
 /*
@@ -2801,6 +2836,18 @@ Called every frame for each client after the physics are run
 =============
 */
 .float idlekick_lasttimeleft;
+.entity showheadshotbbox;
+void showheadshotbbox_think()
+{
+	if(self.owner.showheadshotbbox != self)
+	{
+		remove(self);
+		return;
+	}
+	self.nextthink = time;
+	setorigin(self, self.owner.origin);
+	setsize(self, GetHeadshotMins(self.owner), GetHeadshotMaxs(self.owner));
+}
 void PlayerPostThink (void)
 {
 	// Savage: Check for nameless players
@@ -2902,6 +2949,26 @@ void PlayerPostThink (void)
 	if(self.waypointsprite_attachedforcarrier)
 		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, cvar("g_balance_armor_blockpercent")));
 	
+	if(self.classname == "player" && self.deadflag == DEAD_NO && cvar("r_showbboxes"))
+	{
+		if(!self.showheadshotbbox)
+		{
+			self.showheadshotbbox = spawn();
+			self.showheadshotbbox.classname = "headshotbbox";
+			self.showheadshotbbox.owner = self;
+			self.showheadshotbbox.think = showheadshotbbox_think;
+			self.showheadshotbbox.nextthink = time;
+			self = self.showheadshotbbox;
+			self.think();
+			self = self.owner;
+		}
+	}
+	else
+	{
+		if(self.showheadshotbbox)
+			remove(self.showheadshotbbox);
+	}
+
 	playerdemo_write();
 
 	/*

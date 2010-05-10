@@ -1487,12 +1487,6 @@ void spawnfunc_item_jetpack(void)
 	StartItem ("models/items/g_jetpack.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Jet pack", IT_JETPACK, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
-// we no longer have the seeker
-void spawnfunc_weapon_seeker()
-{
-	spawnfunc_weapon_fireball();
-}
-
 
 #define OP_SET 0
 #define OP_MIN 1

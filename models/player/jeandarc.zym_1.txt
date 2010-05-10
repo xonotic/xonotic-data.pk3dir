@@ -1,0 +1,7 @@
+name Heroine
+species human
+sex Female
+weight 50
+age 23
+
+Solo Fighter
