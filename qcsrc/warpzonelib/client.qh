@@ -3,6 +3,7 @@ void WarpZone_Camera_Read(float bIsNewEntity);
 
 vector warpzone_fixview_origin;
 vector warpzone_fixview_angles;
+vector warpzone_fixview_cl_viewangles;
 void WarpZone_FixView(); // this saves the previous values
 void WarpZone_UnFixView(); // and restores them
 
