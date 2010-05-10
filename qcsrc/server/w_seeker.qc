@@ -162,7 +162,7 @@ void Seeker_Fire_Missile(vector f_diff)
 {
 	local entity missile;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - cvar("g_balance_seeker_missile_ammo");
 
 	makevectors(self.v_angle);
@@ -216,6 +216,7 @@ void Seeker_Vollycontroler_Think()
 	entity oldself,oldenemy;
 	self.cnt = self.cnt - 1;
 
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if ((self.owner.ammo_rockets < cvar("g_balance_seeker_missile_ammo")) || (self.cnt <= -1) || (self.owner.deadflag != DEAD_NO))
 	{
 		remove(self);
