@@ -1040,32 +1040,11 @@ void HUD_WeaponIcons()
 	HUD_WeaponIcons_Clear();
 
 	float rows, columns;
-	//TODO: yuck. there must be a better way :)
-	//rows = ceil(4 * mySize_y/mySize_x);
-	if(mySize_y/mySize_x < 0.08)
-		rows = 1;
-	else if(mySize_y/mySize_x < 0.25)
-		rows = 2;
-	else if(mySize_y/mySize_x < 0.5)
-		rows = 3;
-	else if(mySize_y/mySize_x < 0.7)
-		rows = 4;
-	else if(mySize_y/mySize_x < 0.9)
-		rows = 5;
-	else if(mySize_y/mySize_x < 1.25)
-		rows = 6;
-	else if(mySize_y/mySize_x < 1.7)
-		rows = 7;
-	else if(mySize_y/mySize_x < 2.5)
-		rows = 8;
-	else if(mySize_y/mySize_x < 4)
-		rows = 12;
-	else if(mySize_y/mySize_x < 6)
-		rows = 14;
-	else
-		rows = 16;
+	rows = mySize_y/mySize_x;
+	rows = bound(1, floor((sqrt(4 * (2/1) * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
+	//                               ^^^ weapon icon aspect goes here
 
-	columns = ceil(16/rows);
+	columns = ceil(WEP_COUNT/rows);
 	float row, column;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
