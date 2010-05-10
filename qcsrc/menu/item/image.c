@@ -4,6 +4,7 @@ CLASS(Image) EXTENDS(Item)
 	METHOD(Image, draw, void(entity))
 	METHOD(Image, toString, string(entity))
 	METHOD(Image, resizeNotify, void(entity, vector, vector, vector, vector))
+	METHOD(Image, updateAspect, void(entity))
 	ATTRIB(Image, src, string, string_null)
 	ATTRIB(Image, color, vector, '1 1 1')
 	ATTRIB(Image, forcedAspect, float, 0)
@@ -25,9 +26,11 @@ void drawImage(entity me)
 {
 	draw_Picture(me.imgOrigin, me.src, me.imgSize, me.color, 1);
 }
-void resizeNotifyImage(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void updateAspectImage(entity me)
 {
-	resizeNotifyItem(me, relOrigin, relSize, absOrigin, absSize);
+	float asp;
+	if(me.size_x <= 0 || me.size_y <= 0)
+		return;
 	if(me.forcedAspect == 0)
 	{
 		me.imgOrigin = '0 0 0';
@@ -35,17 +38,30 @@ void resizeNotifyImage(entity me, vector relOrigin, vector relSize, vector absOr
 	}
 	else
 	{
-		if(absSize_x > me.forcedAspect * absSize_y)
+		if(me.forcedAspect < 0)
+		{
+			vector sz;
+			sz = draw_PictureSize(me.src);
+			asp = sz_x / sz_y;
+		}
+		else
+			asp = me.forcedAspect;
+		if(me.size_x > asp * me.size_y)
 		{
 			// x too large, so center x-wise
-			me.imgSize = eY + eX * (absSize_y * me.forcedAspect / absSize_x);
+			me.imgSize = eY + eX * (me.size_y * asp / me.size_x);
 		}
 		else
 		{
 			// y too large, so center y-wise
-			me.imgSize = eX + eY * (absSize_x / (me.forcedAspect * absSize_y));
+			me.imgSize = eX + eY * (me.size_x / (asp * me.size_y));
 		}
 		me.imgOrigin = '0.5 0.5 0' - 0.5 * me.imgSize;
 	}
+}
+void resizeNotifyImage(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+{
+	resizeNotifyItem(me, relOrigin, relSize, absOrigin, absSize);
+	me.updateAspect(me);
 }
 #endif

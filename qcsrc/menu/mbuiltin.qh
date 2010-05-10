@@ -348,3 +348,5 @@ string(float, float) getgamedirinfo = #626;
 #define GETGAMEDIRINFO_NAME 0
 #define GETGAMEDIRINFO_DESCRIPTION 1
 float log(float f) = #532;
+
+string(string format, ...) sprintf = #627;

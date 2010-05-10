@@ -1,0 +1,7 @@
+name Lycanthrope
+species human
+sex Female
+weight 106
+age 24
+
+Monsterous Opponent

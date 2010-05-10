@@ -1,0 +1,6 @@
+name Lurk
+species alien
+weight 84
+age 47
+
+Reptilian Combatant

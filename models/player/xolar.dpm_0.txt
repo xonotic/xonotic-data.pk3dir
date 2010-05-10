@@ -1,0 +1,6 @@
+name Xolar
+species robot_solid
+weight 582
+age 439
+
+Heavy Nexuiz's Soldier
