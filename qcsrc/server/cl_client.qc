@@ -508,7 +508,6 @@ float Client_customizeentityforclient()
 	return TRUE;
 }
 
-void UpdatePlayerSounds();
 void setmodel_lod(entity e, string modelname)
 {
 	string s;

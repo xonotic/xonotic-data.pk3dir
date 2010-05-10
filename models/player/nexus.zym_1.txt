@@ -1,0 +1,6 @@
+name Mulder
+species robot_solid
+weight 282
+age 313
+
+Nexuiz's Soldier

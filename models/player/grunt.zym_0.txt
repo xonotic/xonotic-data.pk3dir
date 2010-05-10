@@ -1,0 +1,8 @@
+name Grunt
+species robot_solid
+sex Male
+weight 170
+age 53
+
+Half Mechanical 
+Human Fighter

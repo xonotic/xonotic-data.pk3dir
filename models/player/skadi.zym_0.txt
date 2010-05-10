@@ -1,0 +1,7 @@
+name Skadi
+species human
+sex Female
+weight 52
+age 63
+
+Necro Warrior
