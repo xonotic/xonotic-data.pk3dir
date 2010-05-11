@@ -1000,6 +1000,26 @@ void HUD_WeaponIcons_Clear()
 		weaponspace[idx] = 0;
 }
 
+entity weaponorder[WEP_MAXCOUNT];
+
+void weaponorder_swap(float i, float j, entity pass)
+{
+	entity h;
+	h = weaponorder[i];
+	weaponorder[i] = weaponorder[j];
+	weaponorder[j] = h;
+}
+
+float weaponorder_cmp(float i, float j, entity pass)
+{
+	float d, ii, ij;
+	d = mod(weaponorder[i].impulse + 9, 10) - mod(weaponorder[j].impulse + 9, 10);
+	if(d)
+		return d;
+	d = weaponorder[i].weapon - weaponorder[j].weapon;
+	return d;
+}
+
 void HUD_WeaponIcons()
 {
 	float alpha, height, border, accuracybar_height, stat_weapons; // "constants"
@@ -1016,9 +1036,13 @@ void HUD_WeaponIcons()
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		self = get_weaponinfo(i);
-		if(self.weapons && self.impulse >= 0 && stat_weapons & self.weapons)
+		if(self.weapons && (self.impulse >= 0) && (stat_weapons & self.weapons))
+		{
+			weaponorder[weapon_cnt] = self;
 			++weapon_cnt;
+		}
 	}
+	heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
 
 	if(HUD_Panel_GetBgActive(0) && weapon_cnt)
 		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg, '1 1 0' * (border/MARIGIN_MULTIPLIER));
@@ -1049,28 +1073,24 @@ void HUD_WeaponIcons()
 
 	columns = ceil(WEP_COUNT/rows);
 	float row, column;
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+	for(i = 0; i < weapon_cnt; ++i)
 	{
-		self = get_weaponinfo(i);
-		if((self.weapons && self.impulse >= 0 && stat_weapons & self.weapons) || cvar("_hud_configure"))
+		self = weaponorder[i];
+		if((self.weapons && (self.impulse >= 0) && (stat_weapons & self.weapons)) || cvar("_hud_configure"))
 		{
 			id = self.impulse;
 
-			alpha = (id == activeweapon) ? 1 : 0.6;
+			alpha = (self.weapon == activeweapon) ? 1 : 0.6;
 
 			weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
 			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
-			if(id == 0) // porto and hook should be last
-				id = 9;
-			else
-				id = --id;
 
-			if(id+1 == activeweapon)
+			if(self.weapon == activeweapon)
 				drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "gfx/hud/sb_ammobg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), color, fade * hud_alpha_fg, DRAWFLAG_NORMAL);
 			drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("gfx/hud/inv_weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(cvar_or("hud_weaponicons_number", 1))
-				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), ftos(id+1), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), ftos(id), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 			// draw the weapon accuracy on the HUD
 			if(hud_accuracy_hud && !(gametype == GAME_RACE || gametype == GAME_CTS))
