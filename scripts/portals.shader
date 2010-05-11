@@ -31,7 +31,7 @@ portals_inactive_vortex
 	}
 }
 
-textures/portals/portals_red
+portals/portals_red
 {
 	surfaceparm nonsolid
 	{
@@ -43,7 +43,7 @@ textures/portals/portals_red
 	}
 }
 
-textures/portals/portals_blue
+portals/portals_blue
 {
 	surfaceparm nonsolid
 	{
@@ -55,7 +55,7 @@ textures/portals/portals_blue
 	}
 }
 
-textures/portals/portals_inactive
+portals/portals_inactive
 {
 	surfaceparm nonsolid
 	{

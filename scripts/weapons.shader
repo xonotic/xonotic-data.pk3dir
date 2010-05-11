@@ -1,11 +1,3 @@
-textures/electro
-{
-	dpreflectcube cubemaps/default/sky
- 	{
-		map textures/electro.tga
-		rgbgen lightingDiffuse
-	}
-}
 electro
 {
 	dpreflectcube cubemaps/default/sky
@@ -14,7 +6,7 @@ electro
 		rgbgen lightingDiffuse
 	}
 }
-textures/nexgun.tga
+nexgun
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -22,15 +14,7 @@ textures/nexgun.tga
 		rgbgen lightingDiffuse
 	}
 }
-nexgun.tga
-{
-	dpreflectcube cubemaps/default/sky
- 	{
-		map textures/nexgun.tga
-		rgbgen lightingDiffuse
-	}
-}
-textures/uzi.tga
+uzi
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -38,7 +22,7 @@ textures/uzi.tga
 		rgbgen lightingDiffuse
 	}
 }
-textures/glauncher
+glauncher
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -46,7 +30,7 @@ textures/glauncher
 		rgbgen lightingDiffuse
 	}
 }
-textures/hagar2.tga
+hagar2
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -54,7 +38,7 @@ textures/hagar2.tga
 		rgbgen lightingDiffuse
 	}
 }
-textures/crylink.tga
+crylink
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -62,15 +46,7 @@ textures/crylink.tga
 		rgbgen lightingDiffuse
 	}
 }
-crylink.tga
-{
-	dpreflectcube cubemaps/default/sky
- 	{
-		map textures/crylink.tga
-		rgbgen lightingDiffuse
-	}
-}
-textures/hlac_body.tga
+hlac_body
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -78,7 +54,7 @@ textures/hlac_body.tga
 		rgbgen lightingDiffuse
 	}
 }
-textures/hlac_accessory.tga
+hlac_accessory
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -86,7 +62,7 @@ textures/hlac_accessory.tga
 		rgbgen lightingDiffuse
 	}
 }
-textures/shotgun2
+shotgun2
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -94,7 +70,7 @@ textures/shotgun2
 		rgbgen lightingDiffuse
 	}
 }
-textures/nex.tga
+nex
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -102,7 +78,7 @@ textures/nex.tga
 		rgbgen lightingDiffuse
 	}
 }
-textures/rl.tga
+rl
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -110,15 +86,7 @@ textures/rl.tga
 		rgbgen lightingDiffuse
 	}
 }
-marine
-{
-	dpreflectcube cubemaps/default/sky
- 	{
-		map textures/marine.tga
-		rgbgen lightingDiffuse
-	}
-}
-laser.tga
+laser
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -126,7 +94,7 @@ laser.tga
 		rgbgen lightingDiffuse
 	}
 }
-textures/hlac_accessory
+hlac_accessory
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -134,11 +102,19 @@ textures/hlac_accessory
 		rgbgen lightingDiffuse
 	}
 }
-textures/hlac_body
+hlac_body
 {
 	dpreflectcube cubemaps/default/sky
  	{
 		map textures/hlac_body.tga
+		rgbgen lightingDiffuse
+	}
+}
+seeker
+{
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/seeker.tga
 		rgbgen lightingDiffuse
 	}
 }
