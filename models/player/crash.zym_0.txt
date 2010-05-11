@@ -1,6 +1,0 @@
-name Quark
-species robot_shiny
-weight 138
-age 3
-
-Robot Fighter

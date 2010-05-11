@@ -1,7 +1,0 @@
-name Insurrectionist
-species human
-sex Male
-weight 87
-age 56
-
-Warrior
