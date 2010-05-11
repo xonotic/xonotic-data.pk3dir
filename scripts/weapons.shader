@@ -46,22 +46,6 @@ crylink
 		rgbgen lightingDiffuse
 	}
 }
-hlac_body
-{
-	dpreflectcube cubemaps/default/sky
- 	{
-		map textures/hlac_body.tga
-		rgbgen lightingDiffuse
-	}
-}
-hlac_accessory
-{
-	dpreflectcube cubemaps/default/sky
- 	{
-		map textures/hlac_accessory.tga
-		rgbgen lightingDiffuse
-	}
-}
 shotgun2
 {
 	dpreflectcube cubemaps/default/sky
