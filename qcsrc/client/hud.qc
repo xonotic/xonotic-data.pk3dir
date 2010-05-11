@@ -1036,7 +1036,7 @@ void HUD_WeaponIcons()
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		self = get_weaponinfo(i);
-		if(self.weapons && (self.impulse >= 0) && (stat_weapons & self.weapons))
+		if(self.weapons && (self.impulse >= 0) && (stat_weapons & self.weapons) || cvar("_hud_configure"))
 		{
 			weaponorder[weapon_cnt] = self;
 			++weapon_cnt;
