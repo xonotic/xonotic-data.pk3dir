@@ -574,6 +574,9 @@ vector HUD_Panel_CheckLimitSize(float id, vector mySize)
 		case 5: 
 			mySize_x = max(mySize_y * 2, mySize_x); // at least 2 * height
 			break;
+		case 7: 
+			mySize_y = (17/90) * mySize_x; // 17/90 * width
+			break;
 		case 8: 
 			mySize_y = (1/4) * mySize_x; // 1/4 * width
 			break;
@@ -1594,6 +1597,7 @@ void HUD_Score()
 		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg, '1 1 0' * (border/MARIGIN_MULTIPLIER));
 
 	float score, distribution, leader;
+	float score_len, distr_len;
 	vector score_pos, secondary_score_pos, distribution_color;
 	entity tm, pl, me;
 	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
@@ -1604,12 +1608,16 @@ void HUD_Score()
 		if(pl == me)
 			pl = pl.sort_next;
 
-		if(pl)
+		if(cvar("_hud_configure"))
+			distribution = 42;
+		else if(pl)
 			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
 		else
 			distribution = 0;
 
 		score = me.(scores[ps_primary]);
+		if(cvar("_hud_configure"))
+			score = 1337;
 
 		if(distribution >= 5) {
 			distribution_color = eY;
@@ -1622,8 +1630,13 @@ void HUD_Score()
 		else
 			distribution_color = eX;
 
-		HUD_DrawXNum(pos + eX * mySize_x - eX * 6 * 0.3  * mySize_y, distribution, 6, 3, 0.3 * mySize_y, distribution_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-		HUD_DrawXNum(pos + eX * mySize_x - eX * 6 * 0.75 * mySize_y + eY * 0.35 * mySize_y, score, 6, 0, 0.75 * mySize_y, distribution_color, leader, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+		score_len = strlen(ftos(score));
+		distr_len = strlen(ftos(distribution));
+
+		HUD_DrawXNum(pos + eX * mySize_x - eX * 4 * 0.33 * mySize_y, distribution, 4, 3, 0.33 * mySize_y, distribution_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+		if (leader)
+			drawpic(pos + eX * mySize_x - eX * score_len * mySize_y - eX * 4 * 0.33 * mySize_y, strcat("gfx/hud/sb_highlight_", ftos(score_len)), eX * score_len * mySize_y + eY * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+		HUD_DrawXNum(pos + eX * mySize_x - eX * 4 * mySize_y - eX * 4 * 0.33 * mySize_y, score, 4, 0, mySize_y, distribution_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 	} else { // teamgames
 		float max_fragcount;
 		max_fragcount = -999;
