@@ -617,25 +617,44 @@ vector HUD_Panel_GetPos(float id)
 	return pos;
 }
 
-float HUD_Panel_GetMarigin(float id)
+float HUD_Panel_GetBorder(float id)
 {
-	return bound(1, MARIGIN_MULTIPLIER * cvar_or(strcat("hud_", HUD_Panel_GetName(id), "_border"), 30), 200);
+	float border;
+	border = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_border"));
+	if(!border)
+		border = cvar("hud_bg_border");
+	return border;
 }
 
-vector HUD_Panel_GetColor(float id)
+// draw the background/borders
+void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 {
-	if(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_color")) != "")
-		return stov(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_color")));
-	else
-		return stov(cvar_string("hud_color"));
-}
+	if(!cvar("_hud_configure") && cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg")) == "0")
+		return;
 
-float HUD_Panel_GetBgActive(float id)
-{
-	if(cvar("_hud_configure"))
-		return 1;
+	string bg;
+	bg = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg"));
+	if(bg == "")
+		bg = cvar_string("hud_bg");
 
-	return cvar_or(strcat("hud_", HUD_Panel_GetName(id), "_bg"), 1);
+	if(bg != "0")
+	{
+		float border;
+		border = HUD_Panel_GetBorder(id);
+
+		vector color;
+		if(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color")) != "")
+			color = stov(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color")));
+		else
+			color = stov(cvar_string("hud_bg_color"));
+
+		float alpha;
+		alpha = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_alpha"));
+		if(!alpha)
+			alpha = cvar("hud_bg_alpha");
+
+		draw_BorderPicture(pos - '1 1 0' * border, strcat("gfx/hud/", bg), mySize + '1 1 0' * 2 * border, color, alpha, '1 1 0' * (border/BORDER_MULTIPLIER));
+	}
 }
 
 vector HUD_Panel_GetProgressBarColor(string item)
@@ -664,8 +683,8 @@ vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize)
 		targPos = HUD_Panel_GetPos(i);
 		targSize = HUD_Panel_GetSize(i);
 
-		targPos = HUD_Panel_GetPos(i) - '1 1 0' * HUD_Panel_GetMarigin(id);
-		targSize = HUD_Panel_GetSize(i) + '2 2 0' * HUD_Panel_GetMarigin(id);
+		targPos = HUD_Panel_GetPos(i) - '1 1 0' * HUD_Panel_GetBorder(id);
+		targSize = HUD_Panel_GetSize(i) + '2 2 0' * HUD_Panel_GetBorder(id);
 
 		if(myPos_y + mySize_y < targPos_y)
 			continue;
@@ -774,8 +793,8 @@ vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 		if(i == id || !HUD_Panel_CheckActive(i))
 			continue;
 
-		targPos = HUD_Panel_GetPos(i) - '1 1 0' * HUD_Panel_GetMarigin(id);
-		targSize = HUD_Panel_GetSize(i) + '2 2 0' * HUD_Panel_GetMarigin(id);
+		targPos = HUD_Panel_GetPos(i) - '1 1 0' * HUD_Panel_GetBorder(id);
+		targSize = HUD_Panel_GetSize(i) + '2 2 0' * HUD_Panel_GetBorder(id);
 
 		if(myPos_y + mySize_y < targPos_y)
 			continue;
@@ -908,7 +927,7 @@ void HUD_Panel_Mouse()
 		{
 			panelPos = HUD_Panel_GetPos(i);
 			panelSize = HUD_Panel_GetSize(i);
-			border = HUD_Panel_GetMarigin(i);
+			border = HUD_Panel_GetBorder(i);
 			if(prevMouseClicked == 0) {
 				// move
 				if(mousepos_x >= panelPos_x && mousepos_y >= panelPos_y && mousepos_x <= panelPos_x + panelSize_x && mousepos_y <= panelPos_y + panelSize_y)
@@ -1025,14 +1044,12 @@ float weaponorder_cmp(float i, float j, entity pass)
 
 void HUD_WeaponIcons()
 {
-	float alpha, height, border, accuracybar_height, stat_weapons; // "constants"
-	vector pos, mySize, mysize, mypos, color, accuracy_color;
+	float alpha, height, accuracybar_height, stat_weapons; // "constants"
+	vector pos, mySize, mysize, mypos, accuracy_color;
 	float i, id, fade, weapon_stats, weapon_hit, weapon_damage, weapon_cnt; // variables
 
-	border = HUD_Panel_GetMarigin(0);
 	pos = HUD_Panel_GetPos(0);
 	mySize = HUD_Panel_GetSize(0);
-	color = HUD_Panel_GetColor(0);
 	accuracybar_height = cvar_or("hud_weaponicons_accuracybar_height", 3);
 
 	stat_weapons = getstati(STAT_WEAPONS);
@@ -1047,8 +1064,7 @@ void HUD_WeaponIcons()
 	}
 	heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
 
-	if(HUD_Panel_GetBgActive(0) && weapon_cnt)
-		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg, '1 1 0' * (border/MARIGIN_MULTIPLIER));
+	HUD_Panel_DrawBg(0, pos, mySize);
 
 	// hits
 	weapon_stats = getstati(STAT_DAMAGE_HITS);
@@ -1089,7 +1105,7 @@ void HUD_WeaponIcons()
 			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
 
 			if(self.weapon == activeweapon)
-				drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "gfx/hud/sb_ammobg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), color, fade * hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "gfx/hud/sb_ammobg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
 			drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("gfx/hud/inv_weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(cvar_or("hud_weaponicons_number", 1))
@@ -1163,16 +1179,12 @@ void HUD_Inventory()
 {
 	float i;
 	float stat_items;
-	float border;
 
-	vector pos, mySize, mysize, mypos, color;
-	border = HUD_Panel_GetMarigin(1);
+	vector pos, mySize, mysize, mypos;
 	pos = HUD_Panel_GetPos(1);
 	mySize = HUD_Panel_GetSize(1);
-	color = HUD_Panel_GetColor(1);
 
-	if(HUD_Panel_GetBgActive(1))
-		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg, '1 1 0' * (border/MARIGIN_MULTIPLIER));
+	HUD_Panel_DrawBg(1, pos, mySize);
 
 	// ammo
 	stat_items = getstati(STAT_ITEMS);
@@ -1182,14 +1194,14 @@ void HUD_Inventory()
 		if(cvar("_hud_configure"))
 			a = 100;
 
-		if(cvar("hud_ammo_onlycurrent")) {
+		if(cvar("hud_inventory_onlycurrent")) {
 			if (stat_items & GetAmmoItemCode(i)) {
-				drawpic(pos - '1 1 0' * border, "gfx/hud/sb_ammobg", mysize + '1 1 0' * border, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-				drawpic(pos + eX * mysize_x * 1.7, GetAmmoPicture(i), '24 24 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(pos, "gfx/hud/sb_ammobg", mySize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(pos + eY * 0.05 * mySize_y, GetAmmoPicture(i), '1 1 0' * 0.8 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				if(a < 10)
-					HUD_DrawXNum(pos + '5 5 0', a, 3, 0, 24, '0.7 0 0', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+					HUD_DrawXNum(pos + eX * 0.8 * mySize_y + eY * 0.25 * mySize_y, a, strlen(ftos(a)), 0, 0.5 * mySize_y, '0.7 0 0', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 				else
-					HUD_DrawXNum(pos + '5 5 0', a, 3, 0, 24, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+					HUD_DrawXNum(pos + eX * 0.8 * mySize_y + eY * 0.25 * mySize_y, a, strlen(ftos(a)), 0, 0.5 * mySize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 			}
 		} else {
 			if (a > 0) {
@@ -1259,16 +1271,11 @@ void HUD_Powerups() {
 			return;
 	}
 
-	float border;
-
-	vector pos, mySize, color;
-	border = HUD_Panel_GetMarigin(2);
+	vector pos, mySize;
 	pos = HUD_Panel_GetPos(2);
 	mySize = HUD_Panel_GetSize(2);
-	color = HUD_Panel_GetColor(2);
 
-	if(HUD_Panel_GetBgActive(2))
-		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg, '1 1 0' * (border/MARIGIN_MULTIPLIER));
+	HUD_Panel_DrawBg(2, pos, mySize);
 
 	float strength_time, shield_time;
 
@@ -1413,16 +1420,11 @@ void HUD_Powerups() {
 //
 void HUD_HealthArmor(void)
 {
-	float border;
-
-	vector pos, mySize, color;
-	border = HUD_Panel_GetMarigin(3);
+	vector pos, mySize;
 	pos = HUD_Panel_GetPos(3);
 	mySize = HUD_Panel_GetSize(3);
-	color = HUD_Panel_GetColor(3);
 
-	if(HUD_Panel_GetBgActive(3))
-		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg, '1 1 0' * (border/MARIGIN_MULTIPLIER));
+	HUD_Panel_DrawBg(3, pos, mySize);
 
 	float armor, health, x;
 	armor = getstati(STAT_ARMOR);
@@ -1571,16 +1573,11 @@ void HUD_HealthArmor(void)
 //
 void HUD_Score()
 {
-	float border;
-
-	vector pos, mySize, color;
-	border = HUD_Panel_GetMarigin(7);
+	vector pos, mySize;
 	pos = HUD_Panel_GetPos(7);
 	mySize = HUD_Panel_GetSize(7);
-	color = HUD_Panel_GetColor(7);
 
-	if(HUD_Panel_GetBgActive(7))
-		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg, '1 1 0' * (border/MARIGIN_MULTIPLIER));
+	HUD_Panel_DrawBg(7, pos, mySize);
 
 	float score, distribution, leader;
 	float score_len, distr_len;
@@ -1662,16 +1659,11 @@ void HUD_Score()
 // Race timer (#8)
 //
 void HUD_RaceTimer (void) {
-	float border;
-
-	vector pos, mySize, color;
-	border = HUD_Panel_GetMarigin(8);
+	vector pos, mySize;
 	pos = HUD_Panel_GetPos(8);
 	mySize = HUD_Panel_GetSize(8);
-	color = HUD_Panel_GetColor(8);
 
-	if(HUD_Panel_GetBgActive(8))
-		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg, '1 1 0' * (border/MARIGIN_MULTIPLIER));
+	HUD_Panel_DrawBg(8, pos, mySize);
 
 	drawfont = hud_bigfont;
 	float a, t;
@@ -1790,16 +1782,11 @@ void HUD_RaceTimer (void) {
 // Notification area (#4)
 void HUD_Notify (void)
 {
-	float border;
-
-	vector pos, mySize, color;
-	border = HUD_Panel_GetMarigin(4);
+	vector pos, mySize;
 	pos = HUD_Panel_GetPos(4);
 	mySize = HUD_Panel_GetSize(4);
-	color = HUD_Panel_GetColor(4);
 
-	if(HUD_Panel_GetBgActive(4))
-		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg, '1 1 0' * (border/MARIGIN_MULTIPLIER));
+	HUD_Panel_DrawBg(4, pos, mySize);
 
 	string s;
 	entity tm;
@@ -1931,13 +1918,9 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
-	float border;
-
-	vector pos, mySize, color;
-	border = HUD_Panel_GetMarigin(9);
+	vector pos, mySize;
 	pos = HUD_Panel_GetPos(9);
 	mySize = HUD_Panel_GetSize(9);
-	color = HUD_Panel_GetColor(9);
 
 	string s;
 	float a;
@@ -1959,8 +1942,7 @@ void HUD_VoteWindow(void)
 		vote_needed = 4;
 	}
 
-	if(HUD_Panel_GetBgActive(9))
-		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg * vote_alpha, '1 1 0' * (border/MARIGIN_MULTIPLIER));
+	HUD_Panel_DrawBg(9, pos, mySize);
 
 	if(vote_alpha) {
 		a = vote_alpha * bound(cvar_or("hud_vote_alreadyvoted_alpha", 0.75), 1 - vote_highlighted, 1);
@@ -2490,16 +2472,11 @@ void CSQC_race_hud(void)
 //
 void HUD_Timer()
 {
-	float border;
-
-	vector pos, mySize, color;
-	border = HUD_Panel_GetMarigin(5);
+	vector pos, mySize;
 	pos = HUD_Panel_GetPos(5);
 	mySize = HUD_Panel_GetSize(5);
-	color = HUD_Panel_GetColor(5);
 
-	if(HUD_Panel_GetBgActive(5))
-		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg, '1 1 0' * (border/MARIGIN_MULTIPLIER));
+	HUD_Panel_DrawBg(5, pos, mySize);
 
 	float timelimit, elapsedTime, minutes, seconds, timeleft, minutesLeft, secondsLeft;
 
@@ -2567,16 +2544,11 @@ void HUD_Timer()
 
 void HUD_Radar(void)
 {
-	float border;
-
-	vector pos, mySize, color;
-	border = HUD_Panel_GetMarigin(6);
+	vector pos, mySize;
 	pos = HUD_Panel_GetPos(6);
 	mySize = HUD_Panel_GetSize(6);
-	color = HUD_Panel_GetColor(6);
 
-	if(HUD_Panel_GetBgActive(6))
-		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg, '1 1 0' * (border/MARIGIN_MULTIPLIER));
+	HUD_Panel_DrawBg(6, pos, mySize);
 
 	local float color1, color2; // color already declared as a global in hud.qc
 	local vector rgb;
@@ -2730,16 +2702,11 @@ Main HUD system
 
 void HUD_DrawPressedKeys(void)
 {
-	float border;
-
-	vector pos, mySize, color;
-	border = HUD_Panel_GetMarigin(10);
+	vector pos, mySize;
 	pos = HUD_Panel_GetPos(10);
 	mySize = HUD_Panel_GetSize(10);
-	color = HUD_Panel_GetColor(10);
 
-	if(HUD_Panel_GetBgActive(10))
-		draw_BorderPicture(pos - '1 1 0' * border, "gfx/hud/border", mySize + '1 1 0' * 2 * border, color, hud_alpha_bg, '1 1 0' * (border/MARIGIN_MULTIPLIER));
+	HUD_Panel_DrawBg(10, pos, mySize);
 
 	float pressedkeys;
 
@@ -2860,7 +2827,7 @@ void HUD_Reset (void)
 
 void HUD_Main (void)
 {
-	hud_alpha_bg = cvar_or("hud_alpha_bg", 0.8) * (1 - cvar("_menu_alpha"));
+	hud_alpha_bg = cvar_or("hud_bg_alpha", 0.8) * (1 - cvar("_menu_alpha"));
 	hud_border_thickness = bound(0, cvar("hud_border_thickness"), 5);
 	hud_accuracy_border_thickness = bound(0, cvar_or("hud_accuracy_border_thickness", 1), 5);
 	hud_color_bg_team = cvar("hud_color_bg_team");

@@ -467,7 +467,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	hud_alpha_fg = cvar_or("hud_alpha_fg", 1) * (1 - cvar("_menu_alpha"));
+	hud_alpha_fg = cvar_or("hud_fg_alpha", 1) * (1 - cvar("_menu_alpha"));
 	hud_currentammo = cvar("hud_showcurrentammo");
 	hud_hudselector = cvar("hud_hudselector");
 	hud_accuracy_hud = cvar_or("hud_accuracy_hud", 1);

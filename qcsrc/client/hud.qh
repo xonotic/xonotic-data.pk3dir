@@ -4,7 +4,7 @@ void CSQC_ctf_hudreset();
 void CSQC_ctf_hud();
 void CSQC_nb_hud();
 void CSQC_race_hud();
-const float MARIGIN_MULTIPLIER = 0.25;
+const float BORDER_MULTIPLIER = 0.25;
 float hud_color_bg_team;
 float scoreboard_bottom;
 float weapon_hits[WEP_MAXCOUNT];
