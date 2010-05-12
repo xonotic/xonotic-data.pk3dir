@@ -37,7 +37,22 @@ void Projectile_DrawTrail(vector to)
 			from_z += 1;
 
 	if (self.traileffect)
-		trailparticles(self, self.traileffect, from, to);
+	{
+		if(checkextension("DP_CSQC_BOXPARTICLES"))
+		{
+			/* looks good, but we can do better with particle count
+			particles_alphamin = particles_alphamax = self.alpha;
+			boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, 1, PARTICLES_USEALPHA);
+			*/
+			/* looks bad
+			boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, self.alpha, 0);
+			*/
+			particles_alphamin = particles_alphamax = sqrt(self.alpha);
+			boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, sqrt(self.alpha), PARTICLES_USEALPHA);
+		}
+		else
+			trailparticles(self, self.traileffect, from, to);
+	}
 }
 
 void Projectile_Draw()
@@ -102,8 +117,10 @@ void Projectile_Draw()
 	makevectors(ang);
 
 	a = 1 - (time - self.fade_time) * self.fade_rate;
-	if(a <= 0)
+	self.alpha = bound(0, self.alphamod * a, 1);
+	if(self.alpha <= 0)
 		drawn = 0;
+	self.renderflags = 0;
 
 	trailorigin = self.origin;
 	switch(self.cnt)
@@ -135,9 +152,6 @@ void Projectile_Draw()
 		default:
 			break;
 	}
-
-	self.alpha = self.alphamod * a;
-	self.renderflags = 0;
 
 	R_AddEntity(self);
 }
