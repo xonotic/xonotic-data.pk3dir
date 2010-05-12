@@ -3388,8 +3388,8 @@ trailspacing 128
 type spark
 color 0x800000 0xFF8020
 alpha 256 256 2560
-size 3 3
-stretchfactor 0.6
+size 1.5 1.5
+stretchfactor 1
 velocitymultiplier 0.7
 
 // smoke emitter for small pipes
@@ -4666,8 +4666,8 @@ trailspacing 128
 type spark
 color 0x800000 0xFF8020
 alpha 256 256 2560
-size 3 3
-stretchfactor 0.6
+size 1.5 1.5
+stretchfactor 1
 velocitymultiplier 0.7
 effect tr_rifle
 notunderwater
