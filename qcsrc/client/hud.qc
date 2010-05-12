@@ -1641,11 +1641,16 @@ void HUD_Score()
 		float max_fragcount;
 		max_fragcount = -999;
 
+		float teamnum;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
-			if(tm.team == COLOR_SPECTATOR || !tm.team_size) // no players? don't display
+			if(tm.team == COLOR_SPECTATOR || (!tm.team_size && !cvar("_hud_configure"))) // no players? don't display
 				continue;
 			score = tm.(teamscores[ts_primary]);
+			if(cvar("_hud_configure"))
+				score = 1337;
 			leader = 0;
+			
+			score_len = strlen(ftos(score));
 
 			if (score > max_fragcount)
 				max_fragcount = score;
@@ -1653,12 +1658,16 @@ void HUD_Score()
 			if(tm.team == myteam) {
 				if (max_fragcount == score)
 					leader = 1;
-				HUD_DrawXNum(score_pos, score, 4, 0, 34, GetTeamRGB(tm.team) * 0.8, leader, 1, hud_alpha_fg, DRAWFLAG_NORMAL);
+				if (leader)
+					drawpic(pos + eX * mySize_x - eX * score_len * mySize_y - eX * 4 * 0.33 * mySize_y, strcat("gfx/hud/sb_highlight_", ftos(score_len)), eX * score_len * mySize_y + eY * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				HUD_DrawXNum(pos + eX * mySize_x - eX * 4 * mySize_y - eX * 4 * 0.33 * mySize_y, score, 4, 0, mySize_y, GetTeamRGB(tm.team) * 0.8, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 			} else {
 				if (max_fragcount == score)
 					leader = 1;
-				HUD_DrawXNum(secondary_score_pos, score, 6, 0, 16, GetTeamRGB(tm.team) * 0.8, leader, 1, hud_alpha_fg, DRAWFLAG_NORMAL);
-				secondary_score_pos = secondary_score_pos + '0 16 0';
+				if (leader)
+					drawpic(pos + eX * mySize_x - eX * 0.33 * score_len * mySize_y + eY * 0.33 * mySize_y * teamnum, strcat("gfx/hud/sb_highlight_", ftos(score_len)), eX * 0.33 * score_len * mySize_y + eY * 0.33 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				HUD_DrawXNum(pos + eX * mySize_x - eX * 4 * 0.33 * mySize_y + eY * 0.33 * mySize_y * teamnum, score, 4, 0, 0.33 * mySize_y, GetTeamRGB(tm.team) * 0.8, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+				teamnum += 1;
 			}
 		}
 	}
