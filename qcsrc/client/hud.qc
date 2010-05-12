@@ -1239,20 +1239,6 @@ void HUD_Inventory()
 			}
 		}
 	}
-
-	// fuel ammo
-	a = getstati(GetAmmoStat(4)); // how much fuel do we have?
-
-	if (a > 0) { // if we have fuel, draw the amount
-		if(pos_x + 0.5 * mySize_x > 0.5 * vid_conwidth)
-			mypos_x += pos_x + mySize_x - 0; // TODO!
-
-		drawpic(mypos - '0 2 0' + '52 0 0', GetAmmoPicture(4), '20 20 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-		if (a > 10)
-			HUD_DrawXNum(mypos, a, 3, 0, 16, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-		else
-			HUD_DrawXNum(mypos, a, 3, 0, 16, '0.7 0 0', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-	}
 }
 
 
@@ -1495,7 +1481,7 @@ void HUD_HealthArmor(void)
 		float leftactive, rightactive;
 		float leftalpha, rightalpha;
 		// TODO!
-		if (cvar(strcat("hud_", HUD_Panel_GetName(3), "_flip"))) { // old style layout with armor left of health
+		if (cvar(strcat("hud_", HUD_Panel_GetName(3), "_flip"))) { // old style layout with armor left/top of health
 			leftname = "armor";
 			leftcnt = armor;
 			if(leftcnt)
@@ -1519,6 +1505,8 @@ void HUD_HealthArmor(void)
 			rightalpha = min((armor+10)/55, 1);
 		}
 
+		float fuel;
+		fuel = getstati(GetAmmoStat(4)); // how much fuel do we have?
 
 		if (mySize_x/mySize_y > 5)
 		{
@@ -1537,6 +1525,9 @@ void HUD_HealthArmor(void)
 				drawpic(pos + eX * mySize_x - eX * mySize_y, strcat("gfx/hud/sb_", rightname), '1 1 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 				HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * 2.5 * mySize_y + eY * 0.25 * mySize_y, rightcnt, 3, 0.5 * mySize_y, hud_alpha_fg);
 			}
+
+			if(fuel)
+				drawpic(pos, "gfx/hud/statusbar", eX * mySize_x * min(1, fuel/100) + eY * 0.2 * mySize_y, HUD_Panel_GetProgressBarColor("fuel"), hud_alpha_fg * 0.8, DRAWFLAG_NORMAL);
 		}
 		else if (mySize_x/mySize_y > 3.2)
 		{
@@ -1557,6 +1548,9 @@ void HUD_HealthArmor(void)
 				drawpic(pos + eX * mySize_x - eX * 1.1 * mySize_y, strcat("gfx/hud/sb_", rightname), '0.7 0.7 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 				HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * len * 0.5 * mySize_y - eX * ((3-len)/2) * 0.5 * mySize_y + eY * 0.55 * mySize_y, rightcnt, len, 0.5 * mySize_y, hud_alpha_fg);
 			}
+
+			if(fuel)
+				drawpic(pos, "gfx/hud/statusbar", eX * mySize_x * min(1, fuel/100) + eY * 0.15 * mySize_y, HUD_Panel_GetProgressBarColor("fuel"), hud_alpha_fg * 0.8, DRAWFLAG_NORMAL);
 		}
 		else
 		{
@@ -1577,6 +1571,9 @@ void HUD_HealthArmor(void)
 				drawpic(pos + eY * 0.5 * mySize_y, strcat("gfx/hud/sb_", rightname), '0.5 0.5 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 				HUD_DrawXNum_Colored(pos + eX * 0.5 * mySize_y + eY * 0.5 * mySize_y, rightcnt, len, 0.5 * mySize_y, hud_alpha_fg);
 			}
+
+			if(fuel)
+				drawpic(pos, "gfx/hud/statusbar", eX * mySize_x * min(1, fuel/100) + eY * 0.1 * mySize_y, HUD_Panel_GetProgressBarColor("fuel"), hud_alpha_fg * 0.8, DRAWFLAG_NORMAL);
 		}
 	}
 }
