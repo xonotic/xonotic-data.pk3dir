@@ -1640,8 +1640,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 				continue;
 			case "ALL":
 				got += GiveBit(e, items, IT_FUEL_REGEN, op, val);
-				got += GiveValue(e, strength_finished, op, time + val);
-				got += GiveValue(e, invincible_finished, op, time + val);
+				got += GiveValue(e, strength_finished, op, time);
+				got += GiveValue(e, invincible_finished, op, time);
 				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
 			case "all":
 				got += GiveBit(e, items, IT_JETPACK, op, val);

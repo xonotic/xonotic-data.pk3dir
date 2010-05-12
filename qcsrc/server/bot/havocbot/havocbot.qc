@@ -162,8 +162,8 @@ void havocbot_keyboard_movement(vector destorg)
 	self.havocbot_keyboardtime =
 		max(
 			self.havocbot_keyboardtime
-				+ bound(0,0.05/(sk+self.havocbot_keyboardskill),0.05)
-				+random()*bound(0,0.025/(skill+self.havocbot_keyboardskill),100)
+				+ 0.05/max(1, sk+self.havocbot_keyboardskill)
+				+ random()*0.025/max(0.00025, skill+self.havocbot_keyboardskill)
 		, time);
 	keyboard = self.movement * (1.0 / maxspeed);
 

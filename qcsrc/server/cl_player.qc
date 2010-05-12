@@ -165,14 +165,13 @@ void CopyBody(float keepvelocity)
 
 float player_getspecies()
 {
+	float s;
 	get_model_parameters(self.playermodel, self.skinindex);
-	if(get_model_parameters_species >= 0)
-	{
-		get_model_parameters(string_null, 0);
-		return get_model_parameters_species;
-	}
+	s = get_model_parameters_species;
 	get_model_parameters(string_null, 0);
-	return SPECIES_HUMAN;
+	if(s < 0)
+		return SPECIES_HUMAN;
+	return s;
 }
 
 void player_setupanimsformodel()
