@@ -752,7 +752,8 @@ float HUD_Panel_SetSize(float id, vector mySize)
 	myPos = HUD_Panel_GetPos(id);
 
 	// check for collisions
-	mySize = HUD_Panel_CheckResize(id, HUD_Panel_GetPos(id), mySize);
+	if(cvar("hud_configure_checkcollisions"))
+		mySize = HUD_Panel_CheckResize(id, HUD_Panel_GetPos(id), mySize);
 
 	mySize_x = bound(0.025 * vid_conwidth, mySize_x, vid_conwidth - myPos_x);
 	mySize_y = bound(0.025 * vid_conheight, mySize_y, vid_conheight - myPos_y);
@@ -864,7 +865,8 @@ void HUD_Panel_SetPos(float id, vector pos, float didntresize)
 	vector mySize;
 	mySize = HUD_Panel_GetSize(id);
 
-	pos = HUD_Panel_CheckMove(id, pos, mySize);
+	if(cvar("hud_configure_checkcollisions"))
+		pos = HUD_Panel_CheckMove(id, pos, mySize);
 
 	pos_x = bound(0, pos_x, vid_conwidth - mySize_x);
 	pos_y = bound(0, pos_y, vid_conheight - mySize_y);
