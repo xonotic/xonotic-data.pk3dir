@@ -2835,6 +2835,9 @@ void HUD_Main (void)
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 	hud_fontsize_spec = HUD_GetFontsize("hud_fontsize_spec");
 
+	if(cvar_string("hud_dock") != "0")
+		drawpic('0 0 0', strcat("gfx/hud/", cvar_string("hud_dock")), eX * vid_conwidth + eY * vid_conheight, stov(cvar_string("hud_dock_color")), cvar("hud_dock_alpha"), DRAWFLAG_NORMAL);
+
 	if(HUD_Panel_CheckActive(0))
 		HUD_WeaponIcons();
 	if(HUD_Panel_CheckActive(1))
