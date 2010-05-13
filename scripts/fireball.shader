@@ -1,4 +1,4 @@
-textures/fireball
+fireball
 {
 	{
 		map textures/fireball

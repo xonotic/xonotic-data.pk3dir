@@ -1,7 +1,0 @@
-name Headhunter
-species alien
-sex Male
-weight 115
-age 34
-
-Mutated Warrior
