@@ -153,7 +153,7 @@ void bot_setnameandstuff()
 	else bot_name = "Bot";
 
 	if(argv(1) != "") bot_model = argv(1);
-	else bot_model = "marine";
+	else bot_model = "";
 
 	if(argv(2) != "") bot_skin = argv(2);
 	else bot_skin = "0";
@@ -202,7 +202,7 @@ void bot_setnameandstuff()
 
 	// pick the model and skin
 	if(substring(bot_model, -4, 1) != ".")
-		bot_model = strcat(bot_model, ".zym");
+		bot_model = strcat(bot_model, ".iqm");
 	self.playermodel = self.playermodel_freeme = strzone(strcat("models/player/", bot_model));
 	self.playerskin = self.playerskin_freeme = strzone(bot_skin);
 
