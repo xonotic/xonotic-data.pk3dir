@@ -1,6 +1,0 @@
-name Carni
-species alien
-sex Male
-weight 107
-
-Mutated Warrior
