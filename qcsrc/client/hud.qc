@@ -566,7 +566,7 @@ vector HUD_Panel_CheckLimitSize(float id, vector mySize)
 			mySize_x = max(mySize_y * 0.7, mySize_x); // at least 0.7 * height
 			break;
 		case 2: 
-			mySize_x = max(mySize_y * 2, mySize_x); // at least 2 * height
+			mySize_x = max(mySize_y * 1.5, mySize_x); // at least 2 * height
 			break;
 		case 3: 
 			mySize_x = max(mySize_y * 2, mySize_x); // at least 2 * height
@@ -601,7 +601,12 @@ float HUD_Panel_CheckActive(float id)
 // return size of given panel
 vector HUD_Panel_GetSize(float id)
 {
-	return stov(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_size")));
+	vector mySize;
+	mySize = stov(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_size")));
+
+	mySize = eX * mySize_x * vid_conwidth + eY * mySize_y * vid_conheight;
+
+	return mySize;
 }
 
 // return pos of given panel
@@ -609,6 +614,8 @@ vector HUD_Panel_GetPos(float id)
 {
 	vector pos;
 	pos = stov(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_pos")));
+
+	pos = eX * pos_x * vid_conwidth + eY * pos_y * vid_conheight;
 
 	if (pos_x < 0)
 		pos_x = vid_conwidth + pos_x;
@@ -774,7 +781,7 @@ float HUD_Panel_SetSize(float id, vector mySize)
 		didntresize = 1; // resized X
 
 	string s;
-	s = strcat(ftos(mySize_x), " ", ftos(mySize_y));
+	s = strcat(ftos(mySize_x/vid_conwidth), " ", ftos(mySize_y/vid_conheight));
 	cvar_set(strcat("hud_", HUD_Panel_GetName(id), "_size"), s);
 	return didntresize;
 }
@@ -877,7 +884,7 @@ void HUD_Panel_SetPos(float id, vector pos, float didntresize)
 		pos_y = pos_y - vid_conheight;
 
 	string s;
-	s = strcat(ftos(pos_x), " ", ftos(pos_y));
+	s = strcat(ftos(pos_x/vid_conwidth), " ", ftos(pos_y/vid_conheight));
 
 	cvar_set(strcat("hud_", HUD_Panel_GetName(id), "_pos"), s);
 }
@@ -1283,8 +1290,8 @@ void HUD_Powerups() {
 
 	float strength_time, shield_time;
 
-	strength_time = bound(0, ceil(getstatf(STAT_STRENGTH_FINISHED) - time), 999);
-	shield_time = bound(0, ceil(getstatf(STAT_INVINCIBLE_FINISHED) - time), 999);
+	strength_time = bound(0, ceil(getstatf(STAT_STRENGTH_FINISHED) - time), 99);
+	shield_time = bound(0, ceil(getstatf(STAT_INVINCIBLE_FINISHED) - time), 99);
 
 	if(cvar("_hud_configure"))
 	{
