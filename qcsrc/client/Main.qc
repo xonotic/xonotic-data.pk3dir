@@ -584,12 +584,16 @@ void GameCommand(string msg)
 		localcmd("sv_cmd debug_shotorg\n");
 	}
 	else if(cmd == "sendcvar") {
-		s = cvar_string(argv(1));
-		if(argv(1) == "cl_weaponpriority")
+		// W_FixWeaponOrder will trash argv, so save what we need.
+		string cvar;
+		cvar = strzone(argv(1));
+		s = cvar_string(cvar);
+		if(cvar == "cl_weaponpriority")
 			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
-		else if(substring(argv(1), 0, 17) == "cl_weaponpriority" && strlen(argv(1)) == 18)
+		else if(substring(cvar, 0, 17) == "cl_weaponpriority" && strlen(cvar) == 18)
 			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
-		localcmd("cmd sentcvar ", argv(1), " \"", s, "\"\n");
+		localcmd("cmd sentcvar ", cvar, " \"", s, "\"\n");
+		strunzone(cvar);
 	}
 	else if(cmd == "spawn") {
 		s = argv(1);

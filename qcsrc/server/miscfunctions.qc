@@ -534,7 +534,7 @@ void GetCvars_handleString(string thisname, float f, .string field, string name)
 		}
 	}
 	else
-		stuffcmd(self, strcat("sendcvar ", name, "\n"));
+		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 }
 void GetCvars_handleString_Fixup(string thisname, float f, .string field, string name, string(string) func)
 {
@@ -562,7 +562,7 @@ void GetCvars_handleFloat(string thisname, float f, .float field, string name)
 			self.field = stof(argv(f + 1));
 	}
 	else
-		stuffcmd(self, strcat("sendcvar ", name, "\n"));
+		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 }
 void GetCvars_handleFloatOnce(string thisname, float f, .float field, string name)
 {
@@ -584,7 +584,7 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 	else
 	{
 		if(!self.field)
-			stuffcmd(self, strcat("sendcvar ", name, "\n"));
+			stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
 string W_FixWeaponOrder_ForceComplete(string s);
