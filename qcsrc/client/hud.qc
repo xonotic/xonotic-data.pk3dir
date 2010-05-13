@@ -2605,21 +2605,7 @@ void HUD_Radar(void)
 	scale2d = vlen_maxnorm2d(mi_picmax - mi_picmin);
 	teamradar_size2d = mySize;
 
-	teamradar_extraclip_mins = teamradar_extraclip_maxs = '0 0 0';
-	if(pos == eX * vid_conwidth)
-	{
-		if(cl_teamradar_nohudhack < 2)
-			pos_y += 25;
-		if(cl_teamradar_nohudhack < 1)
-			teamradar_extraclip_mins_y -= 25;
-	}
-	else if(pos == eY * vid_conheight || pos == eX * vid_conwidth + eY * vid_conheight)
-	{
-		if(cl_teamradar_nohudhack < 2)
-			pos_y -= 50;
-		//if(cl_teamradar_nohudhack < 1)
-			//teamradar_extraclip_size_y += 50; // don't, the HUD looks nice
-	}
+	teamradar_extraclip_mins = teamradar_extraclip_maxs = '0 0 0'; // we always center
 
 	// pixels per world qu to match the teamradar_size2d_x range in the longest dimension
 	if(cl_teamradar_rotation == 0)
@@ -2662,8 +2648,8 @@ void HUD_Radar(void)
 	drawsetcliparea(
 		pos_x,
 		pos_y,
-		pos_x + mySize_x,
-		pos_y + mySize_y
+		mySize_x,
+		mySize_y
 	);
 
 	draw_teamradar_background(cl_teamradar_background_alpha, cl_teamradar_foreground_alpha);
