@@ -1,0 +1,6 @@
+name Pyria
+species human
+weight 57
+age 53
+
+Necro Warrior

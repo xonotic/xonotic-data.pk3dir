@@ -1,4 +1,4 @@
-textures/tuba
+tuba
 {
 	{
 		map textures/tuba
@@ -8,7 +8,7 @@ textures/tuba
 		map $lightmap
 	}
 }
-textures/tuba_misc
+tuba_misc
 {
 	{
 		map textures/tuba

@@ -1,13 +1,10 @@
+(THIS FILE IS A HUGE TODO)
+(YES, REALLY, NOTHING HERE IS TRUE)
+(PLEASE FIX THIS FILE)
+
+
 **Team Leaders:
 
-Lee Vermeulen
-*Project Founder and Co-Designer
-
-Forest "LordHavoc" Hale
-*Lead Programmer and Co-Designer
-
-Rudolf "div0" Polzer
-*Programmer
 
 
 **Project maintainers:
@@ -18,6 +15,9 @@ Maik "SavageX" Merten
 
 
 **Development Team:
+
+Rudolf "div0" Polzer
+*Programmer
 
 Andreas "Black" Kirsch
 *Programmer
@@ -118,6 +118,9 @@ Gerd "Elysis" Raudenbusch
 Marius "GreEn`mArine" Shekow
 *Programmer
 
+Forest "LordHavoc" Hale
+*DarkPlaces Engine Programmer
+
 Braden "meoblast001" Walters
 *Music
 
@@ -169,6 +172,7 @@ Jitspoe
 Jody Gallagher
 Juergen "LowDragon" Timm
 Lee David Ash
+Lee Vermeulen
 Mathieu "Elric" Olivier
 Mephisto
 MirceaKitsune
