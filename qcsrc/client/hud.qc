@@ -652,6 +652,8 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 		alpha = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_alpha"));
 		if(!alpha)
 			alpha = cvar("hud_bg_alpha");
+		if(cvar("_hud_configure"))
+			alpha = max(cvar("hud_configure_bg_minalpha"), alpha);
 
 		draw_BorderPicture(pos - '1 1 0' * border, strcat("gfx/hud/", bg), mySize + '1 1 0' * 2 * border, color, alpha, '1 1 0' * (border/BORDER_MULTIPLIER));
 	}
