@@ -82,6 +82,8 @@ void CSQC_Init(void)
 	// localcmd("alias order \"cmd order $*\""); enable if ctf-command thingy is used
 	//registercmd("ctf_menu");
 	registercmd("ons_map");
+	registercmd("hud_configure");
+	registercmd("hud_save");
 	//registercmd("menu_action");
 
 	registercmd("+button3");
@@ -364,7 +366,18 @@ float CSQC_ConsoleCommand(string strMessage)
 	local string strCmd;
 	strCmd = argv(0);
 
-	if(strCmd == "+button4") { // zoom
+	if(strCmd == "hud_configure") { // config hud
+		cvar_set("_hud_configure", ftos(!cvar("_hud_configure")));
+		return true;
+	} else if(strCmd == "hud_save") { // save hud config
+		if(argv(1) == "" || argv(2)) {
+			print("Usage:\n");
+			print("hud_save configname   (saves to hud_skinname_configname.cfg)\n");
+		}
+		else
+			HUD_Panel_ExportCfg(argv(1));
+		return true;
+	} else if(strCmd == "+button4") { // zoom
 		// return false, because the message shall be sent to the server anyway (for demos/speccing)
 		if(ignore_plus_zoom)
 		{

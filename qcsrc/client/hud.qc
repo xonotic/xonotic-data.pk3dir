@@ -555,6 +555,31 @@ string HUD_Panel_GetName(float id)
 	}
 }
 
+// Save the config
+void HUD_Panel_ExportCfg(string cfgname)
+{
+	float fh;
+	fh = fopen(strcat("hud_", hud_skin, "_", cfgname, ".cfg"), FILE_WRITE);
+	if(fh >= 0)
+	{
+		float i;
+		for (i = 0; i < panel_cnt; ++i)
+		{
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), " ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i))))));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_pos \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_pos")), "\""));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_size \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_size")), "\""));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg")), "\""));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_color \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_color")), "\""));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_alpha ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_bg_alpha")))));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_border ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_bg_border")))));
+			fputs(fh, "");
+		}
+
+		print("^2Successfully exported to hud_", hud_skin, "_", cfgname, ".cfg");
+	}
+	fclose(fh);
+}
+
 vector HUD_Panel_CheckLimitSize(float id, vector mySize)
 {
 	switch(id) {
@@ -2846,6 +2871,10 @@ void HUD_Main (void)
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 	hud_fontsize_spec = HUD_GetFontsize("hud_fontsize_spec");
 
+	//hud_configure = cvar("_hud_configure");
+	hud_skin = cvar_string("hud_skin");
+
+	// Drawing stuff
 	if(cvar_string("hud_dock") != "0")
 		drawpic('0 0 0', strcat("gfx/hud/", cvar_string("hud_dock")), eX * vid_conwidth + eY * vid_conheight, stov(cvar_string("hud_dock_color")), cvar("hud_dock_alpha"), DRAWFLAG_NORMAL);
 
