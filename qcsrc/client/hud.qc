@@ -1652,6 +1652,342 @@ void HUD_HealthArmor(void)
 	}
 }
 
+// ___TODO___ !!!
+// Notification area (#4)
+void HUD_Notify (void)
+{
+	vector pos, mySize;
+	pos = HUD_Panel_GetPos(4);
+	mySize = HUD_Panel_GetSize(4);
+
+	HUD_Panel_DrawBg(4, pos, mySize);
+
+	string s;
+	entity tm;
+	if(spectatee_status && !intermission)
+	{
+		drawfont = hud_bigfont;
+		if(spectatee_status == -1)
+			s = "^1Observing";
+		else
+			s = GetPlayerName(spectatee_status - 1);
+		// spectated player name between HUD and chat area, aligned to the left
+		pos_x = 0;
+		pos_y = - 50 - hud_fontsize_spec_y;
+		s = textShortenToWidth(s, vid_conwidth/2.5, hud_fontsize_spec, stringwidth_colors);
+		drawcolorcodedstring(pos, s, hud_fontsize_spec, hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawfont = hud_font;
+
+		// spectator text in the upper right corner
+		if(spectatee_status == -1)
+			s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 to spectate");
+		else
+			s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 for another player");
+
+		if(spectatee_status == -1)
+			s = strcat("^1Use ^3", getcommandkey("next weapon", "weapnext"), "^1 or ^3", getcommandkey("previous weapon", "weapprev"), "^1 to change the speed");
+		else
+			s = strcat("^1Press ^3", getcommandkey("secondary fire", "+attack2"), "^1 to observe");
+
+		s = strcat("^1Press ^3", getcommandkey("server info", "+show_info"), "^1 for gamemode info");
+
+		if(gametype == GAME_ARENA)
+			s = "^1Wait for your turn to join";
+		else if(gametype == GAME_LMS)
+		{
+			entity sk;
+			sk = playerslots[player_localentnum - 1];
+			if(sk.(scores[ps_primary]) >= 666)
+				s = "^1Match has already begun";
+			else if(sk.(scores[ps_primary]) > 0)
+				s = "^1You have no more lives left";
+			else
+				s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
+		}
+		else
+			s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
+
+		//show restart countdown:
+		if (time < getstatf(STAT_GAMESTARTTIME)) {
+			float countdown;
+			//we need to ceil, otherwise the countdown would be off by .5 when using round()
+			countdown = ceil(getstatf(STAT_GAMESTARTTIME) - time);
+			s = strcat("^1Game starts in ^3", ftos(countdown), "^1 seconds");
+		}
+	}
+	if(warmup_stage && !intermission)
+	{
+		s = "^2Currently in ^1warmup^2 stage!";
+	}
+
+	// move more important stuff more to the middle so its more visible
+
+	string blinkcolor;
+	if(mod(time, 1) >= 0.5)
+		blinkcolor = "^1";
+	else
+		blinkcolor = "^3";
+
+	if(ready_waiting && !intermission && !spectatee_status)
+	{
+		if(ready_waiting_for_me)
+		{
+			if(warmup_stage)
+				s = strcat(blinkcolor, "Press ^3", getcommandkey("ready", "ready"), blinkcolor, " to end warmup");
+			else
+				s = strcat(blinkcolor, "Press ^3", getcommandkey("ready", "ready"), blinkcolor, " once you are ready");
+		}
+		else
+		{
+			if(warmup_stage)
+				s = strcat("^2Waiting for others to ready up to end warmup...");
+			else
+				s = strcat("^2Waiting for others to ready up...");
+		}
+	}
+	else if(warmup_stage && !intermission && !spectatee_status)
+	{
+		s = strcat("^2Press ^3", getcommandkey("ready", "ready"), "^2 to end warmup");
+	}
+
+	if(teamplay && !intermission && !spectatee_status && gametype != GAME_CA && teamnagger)
+	{
+		float ts_min, ts_max;
+		tm = teams.sort_next;
+		if (tm)
+		{
+			for(; tm.sort_next; tm = tm.sort_next)
+			{
+				if(!tm.team_size || tm.team == COLOR_SPECTATOR)
+					continue;
+				if(!ts_min) ts_min = tm.team_size;
+				else ts_min = min(ts_min, tm.team_size);
+				if(!ts_max) ts_max = tm.team_size;
+				else ts_max = max(ts_max, tm.team_size);
+			}
+			if ((ts_max - ts_min) > 1)
+			{
+				s = strcat(blinkcolor, "Teamnumbers are unbalanced!");
+				tm = GetTeam(myteam, false);
+				if (tm)
+				if (tm.team != COLOR_SPECTATOR)
+				if (tm.team_size == ts_max)
+					s = strcat(s, " Press ^3", getcommandkey("team menu", "menu_showteamselect"), blinkcolor, " to adjust");
+
+			}
+		}
+	}
+}
+
+// Timer (#5)
+//
+void HUD_Timer()
+{
+	vector pos, mySize;
+	pos = HUD_Panel_GetPos(5);
+	mySize = HUD_Panel_GetSize(5);
+
+	HUD_Panel_DrawBg(5, pos, mySize);
+
+	float timelimit, elapsedTime, minutes, seconds, timeleft, minutesLeft, secondsLeft;
+
+	timelimit = getstatf(STAT_TIMELIMIT);
+
+	timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
+	timeleft = ceil(timeleft);
+	minutesLeft = floor(timeleft / 60);
+	secondsLeft = timeleft - minutesLeft*60;
+
+	vector timer_color;
+	if(minutesLeft >= 5 || warmup_stage || timelimit == 0) //don't use red or yellow in warmup or when there is no timelimit
+		timer_color = '1 1 1'; //white
+	else if(minutesLeft >= 1)
+		timer_color = '1 1 0'; //yellow
+	else
+		timer_color = '1 0 0'; //red
+
+	if (cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
+		if (time < getstatf(STAT_GAMESTARTTIME)) {
+			//while restart is still active, show 00:00
+			minutes = seconds = 0;
+		} else {
+			elapsedTime = floor(time - getstatf(STAT_GAMESTARTTIME)); //127
+			minutes = floor(elapsedTime / 60);
+			seconds = elapsedTime - minutes*60;
+		}
+	} else {
+		minutes = minutesLeft;
+		seconds = secondsLeft;
+	}
+
+	if(mySize_x/mySize_y > 5.1)
+	{
+		if(minutes > 999)
+			seconds = 99;
+		minutes = min(minutes, 999);
+		if(minutesLeft >= 1 || cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
+			if(minutes < 100)
+				drawpic_skin(pos + eX * mySize_x - eX * 5.1 * mySize_y, "timer", '1 1 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
+			HUD_DrawXNum(pos + eX * mySize_x - eX * 5.1 * mySize_y, minutes, 3, 0, mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eX * mySize_x - eX * 2.57 * mySize_y, "num_colon", '1 1 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
+		}
+		HUD_DrawXNum(pos + eX * mySize_x - eX * 2 * mySize_y, seconds, -2, 0, mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+	}
+	else
+	{
+		if(minutes > 99)
+			seconds = 99;
+		minutes = min(minutes, 99);
+		if(minutesLeft >= 1 || cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
+			if(minutes < 100)
+				drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.5 * 0.5 * mySize_y, "timer", '0.5 0.5 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
+			HUD_DrawXNum(pos + eX * 0.5 * mySize_x - eX * mySize_y + eY * 0.5 * mySize_y, minutes, -2, 0, 0.5 * mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.5 * 0.5 * mySize_y + eY * 0.5 * mySize_y, "num_colon", '0.5 0.5 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
+		}
+		HUD_DrawXNum(pos + eX * 0.51 * mySize_x + eY * 0.5 * mySize_y, seconds, -2, 0, 0.5 * mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+	}
+}
+
+// Radar (#6)
+//
+void HUD_Radar(void)
+{
+	vector pos, mySize;
+	pos = HUD_Panel_GetPos(6);
+	mySize = HUD_Panel_GetSize(6);
+
+	HUD_Panel_DrawBg(6, pos, mySize);
+
+	local float color1, color2; // color already declared as a global in hud.qc
+	local vector rgb;
+	local entity tm;
+	float scale2d, normalsize, bigsize;
+	float f;
+
+	teamradar_origin2d = pos + 0.5 * mySize; // TODO: stupid compat, should be removed
+	teamradar_size2d = mySize;
+
+	if(minimapname == "" && !ons_showmap)
+		return;
+
+	teamradar_loadcvars();
+
+	switch(cl_teamradar_zoommode)
+	{
+		default:
+		case 0:
+			f = current_zoomfraction;
+			break;
+		case 1:
+			f = 1 - current_zoomfraction;
+			break;
+		case 2:
+			f = 0;
+			break;
+		case 3:
+			f = 1;
+			break;
+	}
+
+	switch(cl_teamradar_rotation)
+	{
+		case 0:
+			teamradar_angle = view_angles_y - 90;
+			break;
+		default:
+			teamradar_angle = 90 * cl_teamradar_rotation;
+			break;
+	}
+
+	scale2d = vlen_maxnorm2d(mi_picmax - mi_picmin);
+	teamradar_size2d = mySize;
+
+	teamradar_extraclip_mins = teamradar_extraclip_maxs = '0 0 0'; // we always center
+
+	// pixels per world qu to match the teamradar_size2d_x range in the longest dimension
+	if(cl_teamradar_rotation == 0)
+	{
+		// max-min distance must fit the radar in any rotation
+		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_max - mi_min));
+	}
+	else
+	{
+		vector c0, c1, c2, c3, span;
+		c0 = rotate(mi_min, teamradar_angle * DEG2RAD);
+		c1 = rotate(mi_max, teamradar_angle * DEG2RAD);
+		c2 = rotate('1 0 0' * mi_min_x + '0 1 0' * mi_max_y, teamradar_angle * DEG2RAD);
+		c3 = rotate('1 0 0' * mi_max_x + '0 1 0' * mi_min_y, teamradar_angle * DEG2RAD);
+		span = '0 0 0';
+		span_x = max4(c0_x, c1_x, c2_x, c3_x) - min4(c0_x, c1_x, c2_x, c3_x);
+		span_y = max4(c0_y, c1_y, c2_y, c3_y) - min4(c0_y, c1_y, c2_y, c3_y);
+
+		// max-min distance must fit the radar in x=x, y=y
+		bigsize = min(
+			teamradar_size2d_x * scale2d / (1.05 * span_x),
+			teamradar_size2d_y * scale2d / (1.05 * span_y)
+		);
+	}
+
+	normalsize = vlen_maxnorm2d(teamradar_size2d) * scale2d / cl_teamradar_scale;
+	if(bigsize > normalsize)
+		normalsize = bigsize;
+
+	teamradar_size =
+		  f * bigsize
+		+ (1 - f) * normalsize;
+	teamradar_origin3d_in_texcoord = teamradar_3dcoord_to_texcoord(
+		  f * (mi_min + mi_max) * 0.5
+		+ (1 - f) * view_origin);
+
+	color1 = GetPlayerColor(player_localentnum-1);
+	rgb = GetTeamRGB(color1);
+
+	drawsetcliparea(
+		pos_x,
+		pos_y,
+		mySize_x,
+		mySize_y
+	);
+
+	draw_teamradar_background(cl_teamradar_background_alpha, cl_teamradar_foreground_alpha);
+
+	if(ons_showmap)
+	{
+		drawresetcliparea();
+
+		vector frame_origin, frame_size;
+		frame_origin = frame_size = '0 0 0';
+
+		frame_origin_x = pos_x - teamradar_size2d_x * 0.55859375; // matches the picture
+		frame_origin_y = pos_y - teamradar_size2d_y * 0.55859375; // matches the picture
+		frame_size_x = pos_x * 1.1171875; // matches the picture
+		frame_size_y = pos_y * 1.1171875; // matches the picture
+		drawpic_skin(frame_origin, "gfx/ons-frame.tga", frame_size, '1 1 1', hud_alpha_fg, 0);
+		drawpic_skin(frame_origin, "gfx/ons-frame-team.tga", frame_size, rgb, hud_alpha_fg, 0);
+
+		drawsetcliparea(
+			pos_x - teamradar_size2d_x * 0.5,
+			pos_y - teamradar_size2d_y * 0.5,
+			teamradar_size2d_x,
+			teamradar_size2d_y
+		);
+	}
+
+	for(tm = world; (tm = find(tm, classname, "radarlink")); )
+		draw_teamradar_link(tm.origin, tm.velocity, tm.team);
+	for(tm = world; (tm = findflags(tm, teamradar_icon, 0xFFFFFF)); )
+		draw_teamradar_icon(tm.origin, tm.teamradar_icon, tm, tm.teamradar_color, hud_alpha_fg);
+	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
+	{
+		color2 = GetPlayerColor(tm.sv_entnum);
+		//if(color == COLOR_SPECTATOR || color == color2)
+			draw_teamradar_player(tm.origin, tm.angles, GetTeamRGB(color2));
+	}
+	draw_teamradar_player(view_origin, view_angles, '1 1 1');
+
+	drawresetcliparea();
+};
+
 // Score (#7)
 //
 void HUD_Score()
@@ -1860,133 +2196,6 @@ void HUD_RaceTimer (void) {
 	}
 
 	drawfont = hud_font;
-}
-
-// ___TODO___ !!!
-// Notification area (#4)
-void HUD_Notify (void)
-{
-	vector pos, mySize;
-	pos = HUD_Panel_GetPos(4);
-	mySize = HUD_Panel_GetSize(4);
-
-	HUD_Panel_DrawBg(4, pos, mySize);
-
-	string s;
-	entity tm;
-	if(spectatee_status && !intermission)
-	{
-		drawfont = hud_bigfont;
-		if(spectatee_status == -1)
-			s = "^1Observing";
-		else
-			s = GetPlayerName(spectatee_status - 1);
-		// spectated player name between HUD and chat area, aligned to the left
-		pos_x = 0;
-		pos_y = - 50 - hud_fontsize_spec_y;
-		s = textShortenToWidth(s, vid_conwidth/2.5, hud_fontsize_spec, stringwidth_colors);
-		drawcolorcodedstring(pos, s, hud_fontsize_spec, hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawfont = hud_font;
-
-		// spectator text in the upper right corner
-		if(spectatee_status == -1)
-			s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 to spectate");
-		else
-			s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 for another player");
-
-		if(spectatee_status == -1)
-			s = strcat("^1Use ^3", getcommandkey("next weapon", "weapnext"), "^1 or ^3", getcommandkey("previous weapon", "weapprev"), "^1 to change the speed");
-		else
-			s = strcat("^1Press ^3", getcommandkey("secondary fire", "+attack2"), "^1 to observe");
-
-		s = strcat("^1Press ^3", getcommandkey("server info", "+show_info"), "^1 for gamemode info");
-
-		if(gametype == GAME_ARENA)
-			s = "^1Wait for your turn to join";
-		else if(gametype == GAME_LMS)
-		{
-			entity sk;
-			sk = playerslots[player_localentnum - 1];
-			if(sk.(scores[ps_primary]) >= 666)
-				s = "^1Match has already begun";
-			else if(sk.(scores[ps_primary]) > 0)
-				s = "^1You have no more lives left";
-			else
-				s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
-		}
-		else
-			s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
-
-		//show restart countdown:
-		if (time < getstatf(STAT_GAMESTARTTIME)) {
-			float countdown;
-			//we need to ceil, otherwise the countdown would be off by .5 when using round()
-			countdown = ceil(getstatf(STAT_GAMESTARTTIME) - time);
-			s = strcat("^1Game starts in ^3", ftos(countdown), "^1 seconds");
-		}
-	}
-	if(warmup_stage && !intermission)
-	{
-		s = "^2Currently in ^1warmup^2 stage!";
-	}
-
-	// move more important stuff more to the middle so its more visible
-
-	string blinkcolor;
-	if(mod(time, 1) >= 0.5)
-		blinkcolor = "^1";
-	else
-		blinkcolor = "^3";
-
-	if(ready_waiting && !intermission && !spectatee_status)
-	{
-		if(ready_waiting_for_me)
-		{
-			if(warmup_stage)
-				s = strcat(blinkcolor, "Press ^3", getcommandkey("ready", "ready"), blinkcolor, " to end warmup");
-			else
-				s = strcat(blinkcolor, "Press ^3", getcommandkey("ready", "ready"), blinkcolor, " once you are ready");
-		}
-		else
-		{
-			if(warmup_stage)
-				s = strcat("^2Waiting for others to ready up to end warmup...");
-			else
-				s = strcat("^2Waiting for others to ready up...");
-		}
-	}
-	else if(warmup_stage && !intermission && !spectatee_status)
-	{
-		s = strcat("^2Press ^3", getcommandkey("ready", "ready"), "^2 to end warmup");
-	}
-
-	if(teamplay && !intermission && !spectatee_status && gametype != GAME_CA && teamnagger)
-	{
-		float ts_min, ts_max;
-		tm = teams.sort_next;
-		if (tm)
-		{
-			for(; tm.sort_next; tm = tm.sort_next)
-			{
-				if(!tm.team_size || tm.team == COLOR_SPECTATOR)
-					continue;
-				if(!ts_min) ts_min = tm.team_size;
-				else ts_min = min(ts_min, tm.team_size);
-				if(!ts_max) ts_max = tm.team_size;
-				else ts_max = max(ts_max, tm.team_size);
-			}
-			if ((ts_max - ts_min) > 1)
-			{
-				s = strcat(blinkcolor, "Teamnumbers are unbalanced!");
-				tm = GetTeam(myteam, false);
-				if (tm)
-				if (tm.team != COLOR_SPECTATOR)
-				if (tm.team_size == ts_max)
-					s = strcat(s, " Press ^3", getcommandkey("team menu", "menu_showteamselect"), blinkcolor, " to adjust");
-
-			}
-		}
-	}
 }
 
 // Vote window (#9)
@@ -2551,218 +2760,6 @@ void CSQC_race_hud(void)
 	}
 	drawfont = hud_font;
 }
-
-// Timer (#5)
-//
-void HUD_Timer()
-{
-	vector pos, mySize;
-	pos = HUD_Panel_GetPos(5);
-	mySize = HUD_Panel_GetSize(5);
-
-	HUD_Panel_DrawBg(5, pos, mySize);
-
-	float timelimit, elapsedTime, minutes, seconds, timeleft, minutesLeft, secondsLeft;
-
-	timelimit = getstatf(STAT_TIMELIMIT);
-
-	HUD_DrawRaceStatus(pos + '0 30 0');
-
-	timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
-	timeleft = ceil(timeleft);
-	minutesLeft = floor(timeleft / 60);
-	secondsLeft = timeleft - minutesLeft*60;
-
-	vector timer_color;
-	if(minutesLeft >= 5 || warmup_stage || timelimit == 0) //don't use red or yellow in warmup or when there is no timelimit
-		timer_color = '1 1 1'; //white
-	else if(minutesLeft >= 1)
-		timer_color = '1 1 0'; //yellow
-	else
-		timer_color = '1 0 0'; //red
-
-	if (cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
-		if (time < getstatf(STAT_GAMESTARTTIME)) {
-			//while restart is still active, show 00:00
-			minutes = seconds = 0;
-		} else {
-			elapsedTime = floor(time - getstatf(STAT_GAMESTARTTIME)); //127
-			minutes = floor(elapsedTime / 60);
-			seconds = elapsedTime - minutes*60;
-		}
-	} else {
-		minutes = minutesLeft;
-		seconds = secondsLeft;
-	}
-
-	if(mySize_x/mySize_y > 5.1)
-	{
-		if(minutes > 999)
-			seconds = 99;
-		minutes = min(minutes, 999);
-		if(minutesLeft >= 1 || cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
-			if(minutes < 100)
-				drawpic_skin(pos + eX * mySize_x - eX * 5.1 * mySize_y, "timer", '1 1 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
-			HUD_DrawXNum(pos + eX * mySize_x - eX * 5.1 * mySize_y, minutes, 3, 0, mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic_skin(pos + eX * mySize_x - eX * 2.57 * mySize_y, "num_colon", '1 1 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
-		}
-		HUD_DrawXNum(pos + eX * mySize_x - eX * 2 * mySize_y, seconds, -2, 0, mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-	}
-	else
-	{
-		if(minutes > 99)
-			seconds = 99;
-		minutes = min(minutes, 99);
-		if(minutesLeft >= 1 || cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
-			if(minutes < 100)
-				drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.5 * 0.5 * mySize_y, "timer", '0.5 0.5 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
-			HUD_DrawXNum(pos + eX * 0.5 * mySize_x - eX * mySize_y + eY * 0.5 * mySize_y, minutes, -2, 0, 0.5 * mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.5 * 0.5 * mySize_y + eY * 0.5 * mySize_y, "num_colon", '0.5 0.5 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
-		}
-		HUD_DrawXNum(pos + eX * 0.51 * mySize_x + eY * 0.5 * mySize_y, seconds, -2, 0, 0.5 * mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-	}
-}
-
-// Radar (#6)
-//
-
-void HUD_Radar(void)
-{
-	vector pos, mySize;
-	pos = HUD_Panel_GetPos(6);
-	mySize = HUD_Panel_GetSize(6);
-
-	HUD_Panel_DrawBg(6, pos, mySize);
-
-	local float color1, color2; // color already declared as a global in hud.qc
-	local vector rgb;
-	local entity tm;
-	float scale2d, normalsize, bigsize;
-	float f;
-
-	teamradar_origin2d = pos + 0.5 * mySize; // TODO: stupid compat, should be removed
-	teamradar_size2d = mySize;
-
-	if(minimapname == "" && !ons_showmap)
-		return;
-
-	teamradar_loadcvars();
-
-	switch(cl_teamradar_zoommode)
-	{
-		default:
-		case 0:
-			f = current_zoomfraction;
-			break;
-		case 1:
-			f = 1 - current_zoomfraction;
-			break;
-		case 2:
-			f = 0;
-			break;
-		case 3:
-			f = 1;
-			break;
-	}
-
-	switch(cl_teamradar_rotation)
-	{
-		case 0:
-			teamradar_angle = view_angles_y - 90;
-			break;
-		default:
-			teamradar_angle = 90 * cl_teamradar_rotation;
-			break;
-	}
-
-	scale2d = vlen_maxnorm2d(mi_picmax - mi_picmin);
-	teamradar_size2d = mySize;
-
-	teamradar_extraclip_mins = teamradar_extraclip_maxs = '0 0 0'; // we always center
-
-	// pixels per world qu to match the teamradar_size2d_x range in the longest dimension
-	if(cl_teamradar_rotation == 0)
-	{
-		// max-min distance must fit the radar in any rotation
-		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_max - mi_min));
-	}
-	else
-	{
-		vector c0, c1, c2, c3, span;
-		c0 = rotate(mi_min, teamradar_angle * DEG2RAD);
-		c1 = rotate(mi_max, teamradar_angle * DEG2RAD);
-		c2 = rotate('1 0 0' * mi_min_x + '0 1 0' * mi_max_y, teamradar_angle * DEG2RAD);
-		c3 = rotate('1 0 0' * mi_max_x + '0 1 0' * mi_min_y, teamradar_angle * DEG2RAD);
-		span = '0 0 0';
-		span_x = max4(c0_x, c1_x, c2_x, c3_x) - min4(c0_x, c1_x, c2_x, c3_x);
-		span_y = max4(c0_y, c1_y, c2_y, c3_y) - min4(c0_y, c1_y, c2_y, c3_y);
-
-		// max-min distance must fit the radar in x=x, y=y
-		bigsize = min(
-			teamradar_size2d_x * scale2d / (1.05 * span_x),
-			teamradar_size2d_y * scale2d / (1.05 * span_y)
-		);
-	}
-
-	normalsize = vlen_maxnorm2d(teamradar_size2d) * scale2d / cl_teamradar_scale;
-	if(bigsize > normalsize)
-		normalsize = bigsize;
-
-	teamradar_size =
-		  f * bigsize
-		+ (1 - f) * normalsize;
-	teamradar_origin3d_in_texcoord = teamradar_3dcoord_to_texcoord(
-		  f * (mi_min + mi_max) * 0.5
-		+ (1 - f) * view_origin);
-
-	color1 = GetPlayerColor(player_localentnum-1);
-	rgb = GetTeamRGB(color1);
-
-	drawsetcliparea(
-		pos_x,
-		pos_y,
-		mySize_x,
-		mySize_y
-	);
-
-	draw_teamradar_background(cl_teamradar_background_alpha, cl_teamradar_foreground_alpha);
-
-	if(ons_showmap)
-	{
-		drawresetcliparea();
-
-		vector frame_origin, frame_size;
-		frame_origin = frame_size = '0 0 0';
-
-		frame_origin_x = pos_x - teamradar_size2d_x * 0.55859375; // matches the picture
-		frame_origin_y = pos_y - teamradar_size2d_y * 0.55859375; // matches the picture
-		frame_size_x = pos_x * 1.1171875; // matches the picture
-		frame_size_y = pos_y * 1.1171875; // matches the picture
-		drawpic_skin(frame_origin, "gfx/ons-frame.tga", frame_size, '1 1 1', hud_alpha_fg, 0);
-		drawpic_skin(frame_origin, "gfx/ons-frame-team.tga", frame_size, rgb, hud_alpha_fg, 0);
-
-		drawsetcliparea(
-			pos_x - teamradar_size2d_x * 0.5,
-			pos_y - teamradar_size2d_y * 0.5,
-			teamradar_size2d_x,
-			teamradar_size2d_y
-		);
-	}
-
-	for(tm = world; (tm = find(tm, classname, "radarlink")); )
-		draw_teamradar_link(tm.origin, tm.velocity, tm.team);
-	for(tm = world; (tm = findflags(tm, teamradar_icon, 0xFFFFFF)); )
-		draw_teamradar_icon(tm.origin, tm.teamradar_icon, tm, tm.teamradar_color, hud_alpha_fg);
-	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
-	{
-		color2 = GetPlayerColor(tm.sv_entnum);
-		//if(color == COLOR_SPECTATOR || color == color2)
-			draw_teamradar_player(tm.origin, tm.angles, GetTeamRGB(color2));
-	}
-	draw_teamradar_player(view_origin, view_angles, '1 1 1');
-
-	drawresetcliparea();
-};
 
 /*
 ==================
