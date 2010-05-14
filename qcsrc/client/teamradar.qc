@@ -2,7 +2,7 @@ float teamradar_angle; // player yaw angle
 vector teamradar_origin3d_in_texcoord; // player origin
 vector teamradar_origin2d; // 2D origin
 vector teamradar_size2d; // 2D size
-vector teamradar_extraclip_mins, teamradar_extraclip_maxs; // don't even ask
+vector teamradar_extraclip_mins, teamradar_extraclip_maxs; // for non-centered radar display
 float teamradar_size; // 2D scale factor
 float cl_teamradar_scale; // window size = ...qu
 float cl_teamradar_nohudhack;

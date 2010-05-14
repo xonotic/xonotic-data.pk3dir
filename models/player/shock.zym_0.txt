@@ -1,7 +1,0 @@
-name Shock Trooper
-species human
-sex Male
-weight 66
-age 65
-
-Necro Warrior
