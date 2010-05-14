@@ -661,7 +661,7 @@ float HUD_Panel_GetBorder(float id)
 // draw the background/borders
 void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 {
-	if(!cvar("_hud_configure") && cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg")) == "0")
+	if(!hud_configure && cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg")) == "0")
 		return;
 
 	string bg;
@@ -684,7 +684,7 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 		alpha = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_alpha"));
 		if(!alpha)
 			alpha = cvar("hud_bg_alpha");
-		if(cvar("_hud_configure"))
+		if(hud_configure)
 			alpha = max(cvar("hud_configure_bg_minalpha"), alpha);
 
 		draw_BorderPicture(pos - '1 1 0' * border, strcat("gfx/hud/", bg), mySize + '1 1 0' * 2 * border, color, alpha, '1 1 0' * (border/BORDER_MULTIPLIER));
@@ -1092,7 +1092,7 @@ void HUD_WeaponIcons()
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		self = get_weaponinfo(i);
-		if(self.weapons && (self.impulse >= 0) && (stat_weapons & self.weapons) || cvar("_hud_configure"))
+		if(self.weapons && (self.impulse >= 0) && (stat_weapons & self.weapons) || hud_configure)
 		{
 			weaponorder[weapon_cnt] = self;
 			++weapon_cnt;
@@ -1131,7 +1131,7 @@ void HUD_WeaponIcons()
 	for(i = 0; i < weapon_cnt; ++i)
 	{
 		self = weaponorder[i];
-		if((self.weapons && (self.impulse >= 0) && (stat_weapons & self.weapons)) || cvar("_hud_configure"))
+		if((self.weapons && (self.impulse >= 0) && (stat_weapons & self.weapons)) || hud_configure)
 		{
 			id = self.impulse;
 
@@ -1227,7 +1227,7 @@ void HUD_Inventory()
 	for (i = 0; i < 4; ++i) {
 		float a;
 		a = getstati(GetAmmoStat(i)); // how much ammo do we have of type i?
-		if(cvar("_hud_configure"))
+		if(hud_configure)
 			a = 100;
 
 		if(cvar("hud_inventory_onlycurrent")) {
@@ -1297,7 +1297,7 @@ void HUD_Powerups() {
 	float stat_items;
 	stat_items = getstati(STAT_ITEMS);
 
-	if(!cvar("_hud_configure"))
+	if(!hud_configure)
 	{
 		if not(stat_items & IT_STRENGTH)
 			if not(stat_items & IT_INVINCIBLE)
@@ -1318,7 +1318,7 @@ void HUD_Powerups() {
 	strength_time = bound(0, ceil(getstatf(STAT_STRENGTH_FINISHED) - time), 99);
 	shield_time = bound(0, ceil(getstatf(STAT_INVINCIBLE_FINISHED) - time), 99);
 
-	if(cvar("_hud_configure"))
+	if(hud_configure)
 	{
 		strength_time = 15;
 		shield_time = 27;
@@ -1465,7 +1465,7 @@ void HUD_HealthArmor(void)
 	float armor, health, x;
 	armor = getstati(STAT_ARMOR);
 	health = getstati(STAT_HEALTH);
-	if(cvar("_hud_configure"))
+	if(hud_configure)
 	{
 		armor = 150;
 		health = 100;
@@ -1627,7 +1627,7 @@ void HUD_Score()
 		if(pl == me)
 			pl = pl.sort_next;
 
-		if(cvar("_hud_configure"))
+		if(hud_configure)
 			distribution = 42;
 		else if(pl)
 			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
@@ -1635,7 +1635,7 @@ void HUD_Score()
 			distribution = 0;
 
 		score = me.(scores[ps_primary]);
-		if(cvar("_hud_configure"))
+		if(hud_configure)
 			score = 123;
 
 		if(distribution >= 5) {
@@ -1662,10 +1662,10 @@ void HUD_Score()
 
 		float teamnum;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
-			if(tm.team == COLOR_SPECTATOR || (!tm.team_size && !cvar("_hud_configure"))) // no players? don't display
+			if(tm.team == COLOR_SPECTATOR || (!tm.team_size && !hud_configure)) // no players? don't display
 				continue;
 			score = tm.(teamscores[ts_primary]);
-			if(cvar("_hud_configure"))
+			if(hud_configure)
 				score = 123;
 			leader = 0;
 			
@@ -1705,7 +1705,7 @@ void HUD_RaceTimer (void) {
 	float a, t;
 	string s, forcetime;
 
-	if(cvar("_hud_configure"))
+	if(hud_configure)
 	{
 		s = "0:13:37";
 		drawstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, FALSE, '0.75 0.75 0' * mySize_y), s, '0.75 0.75 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
@@ -1970,7 +1970,7 @@ void HUD_VoteWindow(void)
 	else
 		vote_alpha = bound(0, 1 - (time - vote_change) * 2, 1);
 
-	if(cvar("_hud_configure"))
+	if(hud_configure)
 	{
 		vote_alpha = 1;
 		vote_yescount = 3;
@@ -1988,7 +1988,7 @@ void HUD_VoteWindow(void)
 	        s = "A vote has been called for: ";
 		drawstring(pos + '0.5 0 0' * mySize_x + '0 0.1 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/5)), s, '1 1 0' * mySize_y*(1/5), '1 1 1', a * hud_alpha_fg, DRAWFLAG_NORMAL);
 		s = textShortenToWidth(vote_called_vote, mySize_x * 0.96, '10 0 0', stringwidth_colors);
-		if(cvar("_hud_configure"))
+		if(hud_configure)
 			s = "Configure the HUD";
 		drawcolorcodedstring(pos + '0.52 0 0' * mySize_x + '0 0.3 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/6)), s, '1 1 0' * mySize_y*(1/6), a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
@@ -2871,7 +2871,7 @@ void HUD_Main (void)
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 	hud_fontsize_spec = HUD_GetFontsize("hud_fontsize_spec");
 
-	//hud_configure = cvar("_hud_configure");
+	hud_configure = cvar("_hud_configure");
 	hud_skin = cvar_string("hud_skin");
 
 	// Drawing stuff
@@ -2897,13 +2897,13 @@ void HUD_Main (void)
 	if(HUD_Panel_CheckActive(7))
 		HUD_Score();
 	if(HUD_Panel_CheckActive(8))
-		if(gametype == GAME_RACE || gametype == GAME_CTS || cvar("_hud_configure"))
+		if(gametype == GAME_RACE || gametype == GAME_CTS || hud_configure)
 			HUD_RaceTimer();
 	if(HUD_Panel_CheckActive(9))
 		HUD_VoteWindow();
 	// TODO hud'ify
 	if(HUD_Panel_CheckActive(10))
-		if(spectatee_status > 0 || cvar("cl_showpressedkeys") >= 2 || cvar("_hud_configure"))
+		if(spectatee_status > 0 || cvar("cl_showpressedkeys") >= 2 || hud_configure)
 			HUD_DrawPressedKeys();
 
 	// TODO hud_'ify these

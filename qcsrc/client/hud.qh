@@ -28,4 +28,4 @@ float hud_border_thickness;
 float hud_accuracy_border_thickness;
 
 string hud_skin;
-string hud_configure;
+float hud_configure;
