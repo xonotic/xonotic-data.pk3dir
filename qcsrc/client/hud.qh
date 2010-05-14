@@ -27,5 +27,4 @@ float hud_accuracy_hud;
 float hud_border_thickness;
 float hud_accuracy_border_thickness;
 
-string hud_skin;
 float hud_configure;

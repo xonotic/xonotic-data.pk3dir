@@ -77,7 +77,7 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 void drawpic_skin(vector pos, string pic, vector sz, vector color, float alpha, float drawflag) {
-	drawpic(pos, strcat("gfx/hud/", hud_skin, "/", pic), sz, color, alpha, drawflag);
+	drawpic(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/", pic), sz, color, alpha, drawflag);
 }
 
 // return HUD background color
@@ -564,7 +564,7 @@ string HUD_Panel_GetName(float id)
 void HUD_Panel_ExportCfg(string cfgname)
 {
 	float fh;
-	fh = fopen(strcat("hud_", hud_skin, "_", cfgname, ".cfg"), FILE_WRITE);
+	fh = fopen(strcat("hud_", cvar_string("hud_skin"), "_", cfgname, ".cfg"), FILE_WRITE);
 	if(fh >= 0)
 	{
 		float i;
@@ -580,7 +580,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 			fputs(fh, "");
 		}
 
-		print("^2Successfully exported to hud_", hud_skin, "_", cfgname, ".cfg");
+		print("^2Successfully exported to hud_", cvar_string("hud_skin"), "_", cfgname, ".cfg! (Note: It's saved in data/data/)\n");
 	}
 	fclose(fh);
 }
@@ -692,7 +692,7 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 		if(hud_configure)
 			alpha = max(cvar("hud_configure_bg_minalpha"), alpha);
 
-		draw_BorderPicture(pos - '1 1 0' * border, strcat("gfx/hud/", hud_skin, "/", bg), mySize + '1 1 0' * 2 * border, color, alpha, '1 1 0' * (border/BORDER_MULTIPLIER));
+		draw_BorderPicture(pos - '1 1 0' * border, strcat("gfx/hud/", cvar_string("hud_skin"), "/", bg), mySize + '1 1 0' * 2 * border, color, alpha, '1 1 0' * (border/BORDER_MULTIPLIER));
 	}
 }
 
@@ -2863,7 +2863,6 @@ void HUD_Main (void)
 	hud_fontsize_spec = HUD_GetFontsize("hud_fontsize_spec");
 
 	hud_configure = cvar("_hud_configure");
-	hud_skin = cvar_string("hud_skin");
 
 	// Drawing stuff
 	if(cvar("hud_dock"))
