@@ -58,12 +58,15 @@ clean:
 	rm -f progs.dat menu.dat csprogs.dat
 
 csprogs.dat: qcsrc/client/*.* qcsrc/common/*.* qcsrc/warpzonelib/*.*
+	@echo make[1]: Entering directory \`$(PWD)/qcsrc/client\'
 	cd qcsrc/client && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_CSPROGS)
 
 progs.dat: qcsrc/server/*.* qcsrc/common/*.* qcsrc/server/*/*.* qcsrc/server/*/*/*.* qcsrc/warpzonelib/*.*
+	@echo make[1]: Entering directory \`$(PWD)/qcsrc/server\'
 	cd qcsrc/server && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_PROGS)
 
 menu.dat: qcsrc/menu/*.* qcsrc/menu/*/*.* qcsrc/common/*.*
+	@echo make[1]: Entering directory \`$(PWD)/qcsrc/menu\'
 	cd qcsrc/menu && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_MENU)
 
 gfx/menu/default/skinvalues.txt: qcsrc/menu/skin-customizables.inc
