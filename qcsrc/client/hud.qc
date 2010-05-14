@@ -570,18 +570,18 @@ void HUD_Panel_ExportCfg(string cfgname)
 		fputs(fh, strcat("seta hud_skin \"", cvar_string("hud_skin"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg \"", cvar_string("hud_bg"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg_color \"", cvar_string("hud_bg_color"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg_alpha ", cvar("hud_bg_alpha"), "\n"));
-		fputs(fh, strcat("seta hud_bg_border ", cvar("hud_bg_border"), "\n"));
-		fputs(fh, strcat("seta hud_fg_alpha ", cvar("hud_fg_alpha"), "\n"));
-		fputs(fh, strcat("seta hud_accuracy_yellow ", cvar("hud_accuracy_yellow"), "\n"));
+		fputs(fh, strcat("seta hud_bg_alpha ", ftos(cvar("hud_bg_alpha")), "\n"));
+		fputs(fh, strcat("seta hud_bg_border ", ftos(cvar("hud_bg_border")), "\n"));
+		fputs(fh, strcat("seta hud_fg_alpha ", ftos(cvar("hud_fg_alpha")), "\n"));
+		fputs(fh, strcat("seta hud_accuracy_yellow ", ftos(cvar("hud_accuracy_yellow")), "\n"));
 		fputs(fh, "\n");
 
 		fputs(fh, strcat("seta hud_dock \"", cvar_string("hud_dock"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_dock_color \"", cvar_string("hud_dock_color"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_dock_alpha ", cvar("hud_dock_alpha"), "\n"));
+		fputs(fh, strcat("seta hud_dock_alpha ", ftos(cvar("hud_dock_alpha")), "\n"));
 		fputs(fh, "\n");
 
-		fputs(fh, strcat("seta hud_progressbar_alpha ", cvar("hud_progressbar_alpha"), "\n"));
+		fputs(fh, strcat("seta hud_progressbar_alpha ", ftos(cvar("hud_progressbar_alpha")), "\n"));
 		fputs(fh, strcat("seta hud_progressbar_strength_color \"", cvar_string("hud_progressbar_strength_color"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_progressbar_shield_color \"", cvar_string("hud_progressbar_shield_color"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_progressbar_health_color \"", cvar_string("hud_progressbar_health_color"), "\"", "\n"));
