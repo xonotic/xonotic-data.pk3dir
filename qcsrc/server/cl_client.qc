@@ -1393,6 +1393,10 @@ void ClientConnect (void)
 
 	DecodeLevelParms();
 
+#ifdef WATERMARK
+	sprint(self, strcat("^4SVQC Build information: ", WATERMARK(), "\n"));
+#endif
+
 	self.classname = "player_joining";
 
 	self.flags = FL_CLIENT;
