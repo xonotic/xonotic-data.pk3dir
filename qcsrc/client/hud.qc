@@ -1186,8 +1186,8 @@ void HUD_WeaponIcons()
 			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
 
 			if(self.weapon == activeweapon)
-				drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "ammobg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "weapon_current_bg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("gfx/weapons/weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(cvar_or("hud_weaponicons_number", 1))
 				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), ftos(id), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
@@ -1247,11 +1247,11 @@ string GetAmmoPicture(float i)
 {
 	switch(i)
 	{
-		case 0: return "shells";
-		case 1: return "bullets";
-		case 2: return "rocket";
-		case 3: return "cells";
-		case 4: return "fuel";
+		case 0: return "ammo_shells";
+		case 1: return "ammo_bullets";
+		case 2: return "ammo_rocket";
+		case 3: return "ammo_cells";
+		case 4: return "ammo_fuel";
 		default: return "";
 	}
 }
@@ -1277,7 +1277,7 @@ void HUD_Inventory()
 
 		if(cvar("hud_inventory_onlycurrent")) {
 			if (stat_items & GetAmmoItemCode(i)) {
-				drawpic_skin(pos, "ammobg", mySize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos, "ammo_current_bg", mySize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				drawpic_skin(pos + eY * 0.05 * mySize_y, GetAmmoPicture(i), '1 1 0' * 0.8 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				if(a < 10)
 					HUD_DrawXNum(pos + eX * 0.8 * mySize_y + eY * 0.25 * mySize_y, a, strlen(ftos(a)), 0, 0.5 * mySize_y, '0.7 0 0', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
@@ -1316,7 +1316,7 @@ void HUD_Inventory()
 				}
 
 				if (stat_items & GetAmmoItemCode(i))
-					drawpic_skin(mypos, "ammobg", mysize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic_skin(mypos, "ammo_current_bg", mysize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				drawpic_skin(mypos + eY * 0.05 * mysize_y, GetAmmoPicture(i), '1 1 0' * 0.8 * mysize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				if (a < 10) {
 					if(stat_items & GetAmmoItemCode(i))

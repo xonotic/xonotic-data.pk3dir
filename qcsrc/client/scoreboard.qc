@@ -759,7 +759,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	tmp_y = 1.25 * hud_fontsize_y;
 
 	// rounded header
-	drawpic(pos, "gfx/hud/sb_scoreboard_tableheader", tmp, (rgb * hud_color_bg_team) + '0.5 0.5 0.5', sb_alpha_bg, DRAWFLAG_NORMAL);
+	drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, (rgb * hud_color_bg_team) + '0.5 0.5 0.5', sb_alpha_bg, DRAWFLAG_NORMAL);
 
 	// table border
 	tmp_y += hud_border_thickness;
@@ -775,7 +775,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	// table background
 	tmp_y = body_table_height;
-	drawpic_tiled(pos, "gfx/hud/sb_scoreboard_bg", bg_size, tmp, rgb * hud_color_bg_team, sb_alpha_bg, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * hud_color_bg_team, sb_alpha_bg, DRAWFLAG_NORMAL);
 
 	// anyway, apply some color
 	//drawfill(pos, tmp + '2 0 0', rgb, 0.1, DRAWFLAG_NORMAL);
@@ -909,7 +909,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	tmp_x = sbwidth;
 	tmp_y = height * rows;
 
-	drawpic_tiled(pos, "gfx/hud/sb_scoreboard_bg", bg_size, tmp, rgb * hud_color_bg_team, sb_alpha_bg, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * hud_color_bg_team, sb_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(hud_accuracy_border_thickness, pos, tmp, '0 0 0', sb_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// column highlighting
@@ -954,7 +954,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			weapon_alpha = 0.2 * sb_alpha_fg;
 
 		// weapon icon
-		drawpic(pos, strcat("gfx/hud/inv_weapon", self.netname), '1 0 0' * sbwidth * (1/weapon_cnt) + '0 1 0' * height * (2/3), '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+		drawpic(pos, strcat("gfx/weapons/weapon", self.netname), '1 0 0' * sbwidth * (1/weapon_cnt) + '0 1 0' * height * (2/3), '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
 		if(weapon_damage) {
 			weapons_with_stats += 1;
@@ -1012,7 +1012,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	tmp_x = sbwidth;
 	tmp_y = hud_fontsize_y * RANKINGS_RECEIVED_CNT;
 
-	drawpic_tiled(pos, "gfx/hud/sb_scoreboard_bg", bg_size, tmp, rgb * hud_color_bg_team, sb_alpha_bg, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * hud_color_bg_team, sb_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(hud_border_thickness, pos, tmp, '0 0 0', sb_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// row highlighting
@@ -1352,11 +1352,11 @@ void HUD_DrawAccuracyStats()
 				pos_y = top_border_splash + row * (fill_size_y + row_margin);
 
 				// background
-				drawpic(pos, "gfx/hud/sb_accuracy", fill_size , fill_colour, hud_alpha_bg, DRAWFLAG_NORMAL);
+				drawpic(pos, "gfx/scoreboard/accuracy_bg", fill_size , fill_colour, hud_alpha_bg, DRAWFLAG_NORMAL);
 				drawborderlines(hud_border_thickness, pos, fill_size, border_colour, hud_alpha_bg, DRAWFLAG_NORMAL);
 
 				// the weapon
-				drawpic(pos, strcat("gfx/hud/inv_weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(pos, strcat("gfx/weapons/weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of shots fired or max damage
 				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 3 0' * hud_fontsize_y, ftos(weapon_damage), hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
@@ -1402,11 +1402,11 @@ void HUD_DrawAccuracyStats()
 				pos_y = top_border_hitscan + row * (fill_size_y + row_margin);
 
 				// background
-				drawpic(pos, "gfx/hud/sb_accuracy", fill_size , fill_colour, hud_alpha_bg, DRAWFLAG_NORMAL);
+				drawpic(pos, "gfx/scoreboard/accuracy_bg", fill_size , fill_colour, hud_alpha_bg, DRAWFLAG_NORMAL);
 				drawborderlines(hud_border_thickness, pos, fill_size, border_colour, hud_alpha_bg, DRAWFLAG_NORMAL);
 
 				// the weapon
-				drawpic(pos, strcat("gfx/hud/inv_weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(pos, strcat("gfx/weapons/weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of shots fired or max damage
 				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 3 0' * hud_fontsize_y, ftos(weapon_damage), hud_fontsize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
