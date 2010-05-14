@@ -491,16 +491,16 @@ string HUD_GetField(entity pl, float field)
 		case SP_NAME:
 			if(ready_waiting && pl.ready)
 			{
-				hud_field_icon0 = "gfx/sb_player_ready";
+				hud_field_icon0 = "gfx/scoreboard/player_ready";
 			}
 			else if(!teamplay)
 			{
 				f = stof(getplayerkey(pl.sv_entnum, "colors"));
 				{
-					hud_field_icon0 = "gfx/sb_playercolor_base";
-					hud_field_icon1 = "gfx/sb_playercolor_shirt";
+					hud_field_icon0 = "gfx/scoreboard/playercolor_base";
+					hud_field_icon1 = "gfx/scoreboard/playercolor_shirt";
 					hud_field_icon1_rgb = colormapPaletteColor(floor(f / 16), 0);
-					hud_field_icon2 = "gfx/sb_playercolor_pants";
+					hud_field_icon2 = "gfx/scoreboard/playercolor_pants";
 					hud_field_icon2_rgb = colormapPaletteColor(mod(f, 16), 1);
 				}
 			}
