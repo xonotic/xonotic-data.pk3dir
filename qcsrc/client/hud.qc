@@ -75,6 +75,11 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 	}
 }
 
+// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
+void drawpic_skin(vector pos, string pic, vector sz, vector color, float alpha, float drawflag) {
+	drawpic_skin(pos, strcat("gfx/hud/", hud_skin, "/", pic), sz, color, alpha, drawflag);
+}
+
 // return HUD background color
 vector HUD_GetBgColor()
 {
@@ -172,7 +177,7 @@ void HUD_DrawXNum (vector pos, float num, float digits, float showsign, float le
 		hl_pos_y = pos_y - lettersize/20;
 		hl_pos_z = 0;
 
-		drawpic(hl_pos, strcat("gfx/hud/sb_highlight_", l_length), hl_size, '1 1 1', alpha, dflags);
+		drawpic_skin(hl_pos, strcat("sb_highlight_", l_length), hl_size, '1 1 1', alpha, dflags);
 	}
 
 	if (stroke == 1)
@@ -183,14 +188,14 @@ void HUD_DrawXNum (vector pos, float num, float digits, float showsign, float le
 	if(minus)
 	{
 		if (stroke == 1)
-			drawpic(pos, "gfx/hud/num_minus_stroke", vsize, rgb, alpha, dflags);
-		drawpic(pos, "gfx/hud/num_minus", vsize, num_color, alpha, dflags);
+			drawpic_skin(pos, "num_minus_stroke", vsize, rgb, alpha, dflags);
+		drawpic_skin(pos, "num_minus", vsize, num_color, alpha, dflags);
 		pos_x += lettersize;
 	} else if(plus)
 	{
 		if (stroke == 1)
-			drawpic(pos, "gfx/hud/num_plus_stroke", vsize, rgb, alpha, dflags);
-		drawpic(pos, "gfx/hud/num_plus", vsize, num_color, alpha, dflags);
+			drawpic_skin(pos, "num_plus_stroke", vsize, rgb, alpha, dflags);
+		drawpic_skin(pos, "num_plus", vsize, num_color, alpha, dflags);
 		pos_x += lettersize;
 	}
 
@@ -198,8 +203,8 @@ void HUD_DrawXNum (vector pos, float num, float digits, float showsign, float le
 	{
 		tmp = substring(str, i, 1);
 		if (stroke == 1)
-			drawpic(pos, strcat("gfx/hud/num_", tmp, "_stroke"), vsize, rgb, alpha, dflags);
-		drawpic(pos, strcat("gfx/hud/num_", tmp), vsize, num_color, alpha, dflags);
+			drawpic_skin(pos, strcat("num_", tmp, "_stroke"), vsize, rgb, alpha, dflags);
+		drawpic_skin(pos, strcat("num_", tmp), vsize, num_color, alpha, dflags);
 		pos_x += lettersize;
 	}
 }
@@ -687,7 +692,7 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 		if(hud_configure)
 			alpha = max(cvar("hud_configure_bg_minalpha"), alpha);
 
-		draw_BorderPicture(pos - '1 1 0' * border, strcat("gfx/hud/", bg), mySize + '1 1 0' * 2 * border, color, alpha, '1 1 0' * (border/BORDER_MULTIPLIER));
+		draw_BorderPicture(pos - '1 1 0' * border, strcat("gfx/hud/", hud_skin, "/", bg), mySize + '1 1 0' * 2 * border, color, alpha, '1 1 0' * (border/BORDER_MULTIPLIER));
 	}
 }
 
@@ -951,7 +956,7 @@ void HUD_Panel_Mouse()
 	mousepos_x = bound(0, mousepos_x, vid_conwidth);
 	mousepos_y = bound(0, mousepos_y, vid_conheight);
 
-	drawpic(mousepos, "gfx/menu/default/cursor.tga", '32 32 0', '1 1 1', 1, hud_alpha_fg);
+	drawpic_skin(mousepos, "gfx/menu/default/cursor.tga", '32 32 0', '1 1 1', 1, hud_alpha_fg);
 
 	if(mouseClicked)
 	{
@@ -1141,8 +1146,8 @@ void HUD_WeaponIcons()
 			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
 
 			if(self.weapon == activeweapon)
-				drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "gfx/hud/sb_ammobg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("gfx/hud/inv_weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "sb_ammobg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("inv_weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(cvar_or("hud_weaponicons_number", 1))
 				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), ftos(id), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
@@ -1155,7 +1160,7 @@ void HUD_WeaponIcons()
 
 				accuracy_color = HUD_AccuracyColor(weapon_stats);
 				if(weapon_damage)
-					drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) - '2 0 0' + eY * (mySize_y/rows - accuracybar_height), "gfx/hud/sb_accuracy_bar.tga", eX * mySize_x*(1/columns) + eY * accuracybar_height, accuracy_color, hud_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) - '2 0 0' + eY * (mySize_y/rows - accuracybar_height), "sb_accuracy_bar.tga", eX * mySize_x*(1/columns) + eY * accuracybar_height, accuracy_color, hud_alpha_fg, DRAWFLAG_NORMAL);
 			}
 		}
 
@@ -1202,11 +1207,11 @@ string GetAmmoPicture(float i)
 {
 	switch(i)
 	{
-		case 0: return "gfx/hud/sb_shells";
-		case 1: return "gfx/hud/sb_bullets";
-		case 2: return "gfx/hud/sb_rocket";
-		case 3: return "gfx/hud/sb_cells";
-		case 4: return "gfx/hud/sb_fuel";
+		case 0: return "sb_shells";
+		case 1: return "sb_bullets";
+		case 2: return "sb_rocket";
+		case 3: return "sb_cells";
+		case 4: return "sb_fuel";
 		default: return "";
 	}
 }
@@ -1232,8 +1237,8 @@ void HUD_Inventory()
 
 		if(cvar("hud_inventory_onlycurrent")) {
 			if (stat_items & GetAmmoItemCode(i)) {
-				drawpic(pos, "gfx/hud/sb_ammobg", mySize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-				drawpic(pos + eY * 0.05 * mySize_y, GetAmmoPicture(i), '1 1 0' * 0.8 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos, "sb_ammobg", mySize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eY * 0.05 * mySize_y, GetAmmoPicture(i), '1 1 0' * 0.8 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				if(a < 10)
 					HUD_DrawXNum(pos + eX * 0.8 * mySize_y + eY * 0.25 * mySize_y, a, strlen(ftos(a)), 0, 0.5 * mySize_y, '0.7 0 0', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 				else
@@ -1271,8 +1276,8 @@ void HUD_Inventory()
 				}
 
 				if (stat_items & GetAmmoItemCode(i))
-					drawpic(mypos, "gfx/hud/sb_ammobg", mysize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-				drawpic(mypos + eY * 0.05 * mysize_y, GetAmmoPicture(i), '1 1 0' * 0.8 * mysize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic_skin(mypos, "sb_ammobg", mysize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(mypos + eY * 0.05 * mysize_y, GetAmmoPicture(i), '1 1 0' * 0.8 * mysize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				if (a < 10) {
 					if(stat_items & GetAmmoItemCode(i))
 						HUD_DrawXNum(mypos + eX * 0.8 * mysize_y + eY * 0.25 * mysize_y, a, strlen(ftos(a)), 0, 0.5 * mysize_y, '0.7 0 0', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
@@ -1350,15 +1355,15 @@ void HUD_Powerups() {
 		{
 			len = strlen(ftos(leftcnt));
 
-			drawpic(pos, "gfx/hud/statusbar", eX * 0.5 * mySize_x * min(1, leftcnt/30) + eY * mySize_y, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-			drawpic(pos, strcat("gfx/hud/sb_", leftname), '1 1 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos, "statusbar", eX * 0.5 * mySize_x * min(1, leftcnt/30) + eY * mySize_y, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+			drawpic_skin(pos, strcat("sb_", leftname), '1 1 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(pos + eX * mySize_y + eY * 0.25 * mySize_y, leftcnt, len, 0, 0.5 * mySize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 
 		if(rightcnt)
 		{
-			drawpic(pos + eX * mySize_x - eX * 0.5 * mySize_x * min(1, rightcnt/30), "gfx/hud/statusbar", eX * 0.5 * mySize_x * min(1, rightcnt/30) + eY * mySize_y, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-			drawpic(pos + eX * mySize_x - eX * mySize_y, strcat("gfx/hud/sb_", rightname), '1 1 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eX * mySize_x - eX * 0.5 * mySize_x * min(1, rightcnt/30), "statusbar", eX * 0.5 * mySize_x * min(1, rightcnt/30) + eY * mySize_y, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eX * mySize_x - eX * mySize_y, strcat("sb_", rightname), '1 1 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(pos + eX * mySize_x - eX * 2.5 * mySize_y + eY * 0.25 * mySize_y, rightcnt, 3, 0, 0.5 * mySize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 	}
@@ -1368,8 +1373,8 @@ void HUD_Powerups() {
 		{
 			len = strlen(ftos(leftcnt));
 
-			drawpic(pos + eY * mySize_y - eY * mySize_y * min(1, leftcnt/30), "gfx/hud/statusbar", eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/30), HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-			drawpic(pos + eX * 0.4 * mySize_y, strcat("gfx/hud/sb_", leftname), '0.7 0.7 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eY * mySize_y - eY * mySize_y * min(1, leftcnt/30), "statusbar", eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/30), HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eX * 0.4 * mySize_y, strcat("sb_", leftname), '0.7 0.7 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(pos + eX * ((3-len)/2) * 0.5 * mySize_y + eY * 0.55 * mySize_y, leftcnt, len, 0, 0.5 * mySize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 
@@ -1377,8 +1382,8 @@ void HUD_Powerups() {
 		{
 			len = strlen(ftos(rightcnt));
 			
-			drawpic(pos + eX * 0.5 * mySize_x + eY * mySize_y - eY * mySize_y * min(1, rightcnt/30), "gfx/hud/statusbar", eX * 0.5 * mySize_x + eY * mySize_y * min(1, rightcnt/30), HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-			drawpic(pos + eX * mySize_x - eX * 1.1 * mySize_y, strcat("gfx/hud/sb_", rightname), '0.7 0.7 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eX * 0.5 * mySize_x + eY * mySize_y - eY * mySize_y * min(1, rightcnt/30), "statusbar", eX * 0.5 * mySize_x + eY * mySize_y * min(1, rightcnt/30), HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eX * mySize_x - eX * 1.1 * mySize_y, strcat("sb_", rightname), '0.7 0.7 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(pos + eX * mySize_x - eX * len * 0.5 * mySize_y - eX * ((3-len)/2) * 0.5 * mySize_y + eY * 0.55 * mySize_y, rightcnt, len, 0, 0.5 * mySize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 	}
@@ -1388,8 +1393,8 @@ void HUD_Powerups() {
 		{
 			len = strlen(ftos(leftcnt));
 
-			drawpic(pos, "gfx/hud/statusbar", eX * mySize_x * min(1, leftcnt/30) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-			drawpic(pos, strcat("gfx/hud/sb_", leftname), '0.5 0.5 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos, "statusbar", eX * mySize_x * min(1, leftcnt/30) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+			drawpic_skin(pos, strcat("sb_", leftname), '0.5 0.5 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(pos + eX * 0.5 * mySize_y, leftcnt, len, 0, 0.5 * mySize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 
@@ -1397,8 +1402,8 @@ void HUD_Powerups() {
 		{
 			len = strlen(ftos(rightcnt));
 
-			drawpic(pos + eY * 0.5 * mySize_y, "gfx/hud/statusbar", eX * mySize_x * min(1, rightcnt/30) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-			drawpic(pos + eY * 0.5 * mySize_y, strcat("gfx/hud/sb_", rightname), '0.5 0.5 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eY * 0.5 * mySize_y, "statusbar", eX * mySize_x * min(1, rightcnt/30) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eY * 0.5 * mySize_y, strcat("sb_", rightname), '0.5 0.5 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(pos + eX * 0.5 * mySize_y + eY * 0.5 * mySize_y, rightcnt, len, 0, 0.5 * mySize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 	}
@@ -1411,18 +1416,18 @@ void HUD_Powerups() {
 		{
 			if(dt < 5)
 			{
-				drawpic_expanding_two(pos, "gfx/hud/sb_str", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE,
+				drawpic_expanding_two(pos, "sb_str", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE,
 					bound(0, (ceil(dt) - dt) / 0.5, 1));
 			}
 			else
 			{
-				drawpic(pos, "gfx/hud/sb_str", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
+				drawpic_skin(pos, "sb_str", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
 			}
 			HUD_DrawXNum(pos - '40 -2 0', ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 		else if(dt > -1)
 		{
-			drawpic_expanding(pos, "gfx/hud/sb_str", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE,
+			drawpic_expanding(pos, "sb_str", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE,
 				bound(0, -dt / 0.5, 1));
 		}
 	}
@@ -1434,18 +1439,18 @@ void HUD_Powerups() {
 		{
 			if(dt < 5)
 			{
-				drawpic_expanding_two(pos - '0 -22 0', "gfx/hud/sb_invinc", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE,
+				drawpic_expanding_two(pos - '0 -22 0', "sb_invinc", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE,
 					bound(0, (ceil(dt) - dt) / 0.5, 1));
 			}
 			else
 			{
-				drawpic(pos - '0 -22 0', "gfx/hud/sb_invinc", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
+				drawpic_skin(pos - '0 -22 0', "sb_invinc", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
 			}
 			HUD_DrawXNum(pos - '40 -24 0', ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 		else if(dt > -1)
 		{
-			drawpic_expanding(pos - '0 -22 0', "gfx/hud/sb_invinc", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE,
+			drawpic_expanding(pos - '0 -22 0', "sb_invinc", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE,
 				bound(0, -dt / 0.5, 1));
 		}
 	}
@@ -1490,13 +1495,13 @@ void HUD_HealthArmor(void)
 		if(v_z) // fully armored
 		{
 			// here, armorideal > armor
-			drawpic(num_pos + '78 -4.5 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic(num_pos + '108 -4.5 0', "gfx/hud/sb_armor", '20 20 0', '1 1 1', hud_alpha_fg * armor / v_y, DRAWFLAG_NORMAL);
+			drawpic_skin(num_pos + '78 -4.5 0', "sb_health", '32 32 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(num_pos + '108 -4.5 0', "sb_armor", '20 20 0', '1 1 1', hud_alpha_fg * armor / v_y, DRAWFLAG_NORMAL);
 		}
 		else
 		{
-			drawpic(num_pos + '108 -4.5 0', "gfx/hud/sb_health", '20 20 0', '1 1 1', hud_alpha_fg * v_y / armor, DRAWFLAG_NORMAL);
-			drawpic(num_pos + '78 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(num_pos + '108 -4.5 0', "sb_health", '20 20 0', '1 1 1', hud_alpha_fg * v_y / armor, DRAWFLAG_NORMAL);
+			drawpic_skin(num_pos + '78 -4.5 0', "sb_armor", '32 32 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 		HUD_DrawXNum_Colored(num_pos, x, 3, 24, hud_alpha_fg); // draw the combined health and armor
 	}
@@ -1541,20 +1546,20 @@ void HUD_HealthArmor(void)
 			{
 				len = strlen(ftos(leftcnt));
 
-				drawpic(pos, "gfx/hud/statusbar", eX * 0.5 * mySize_x * min(1, leftcnt/200) + eY * mySize_y, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-				drawpic(pos, strcat("gfx/hud/sb_", leftname), '1 1 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos, "statusbar", eX * 0.5 * mySize_x * min(1, leftcnt/200) + eY * mySize_y, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+				drawpic_skin(pos, strcat("sb_", leftname), '1 1 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 				HUD_DrawXNum_Colored(pos + eX * mySize_y + eY * 0.25 * mySize_y, leftcnt, len, 0.5 * mySize_y, hud_alpha_fg);
 			}
 
 			if(rightactive)
 			{
-				drawpic(pos + eX * mySize_x - eX * 0.5 * mySize_x * min(1, rightcnt/200), "gfx/hud/statusbar", eX * 0.5 * mySize_x * min(1, rightcnt/200) + eY * mySize_y, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-				drawpic(pos + eX * mySize_x - eX * mySize_y, strcat("gfx/hud/sb_", rightname), '1 1 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eX * mySize_x - eX * 0.5 * mySize_x * min(1, rightcnt/200), "statusbar", eX * 0.5 * mySize_x * min(1, rightcnt/200) + eY * mySize_y, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eX * mySize_x - eX * mySize_y, strcat("sb_", rightname), '1 1 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 				HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * 2.5 * mySize_y + eY * 0.25 * mySize_y, rightcnt, 3, 0.5 * mySize_y, hud_alpha_fg);
 			}
 
 			if(fuel)
-				drawpic(pos, "gfx/hud/statusbar", eX * mySize_x * min(1, fuel/100) + eY * 0.2 * mySize_y, HUD_Panel_GetProgressBarColor("fuel"), hud_alpha_fg * 0.8, DRAWFLAG_NORMAL);
+				drawpic_skin(pos, "statusbar", eX * mySize_x * min(1, fuel/100) + eY * 0.2 * mySize_y, HUD_Panel_GetProgressBarColor("fuel"), hud_alpha_fg * 0.8, DRAWFLAG_NORMAL);
 		}
 		else if (mySize_x/mySize_y > 3.2)
 		{
@@ -1562,8 +1567,8 @@ void HUD_HealthArmor(void)
 			{
 				len = strlen(ftos(leftcnt));
 
-				drawpic(pos + eY * mySize_y - eY * mySize_y * min(1, leftcnt/200), "gfx/hud/statusbar", eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/200), HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-				drawpic(pos + eX * 0.4 * mySize_y, strcat("gfx/hud/sb_", leftname), '0.7 0.7 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eY * mySize_y - eY * mySize_y * min(1, leftcnt/200), "statusbar", eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/200), HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eX * 0.4 * mySize_y, strcat("sb_", leftname), '0.7 0.7 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 				HUD_DrawXNum_Colored(pos + eX * ((3-len)/2) * 0.5 * mySize_y + eY * 0.55 * mySize_y, leftcnt, len, 0.5 * mySize_y, hud_alpha_fg);
 			}
 
@@ -1571,13 +1576,13 @@ void HUD_HealthArmor(void)
 			{
 				len = strlen(ftos(rightcnt));
 				
-				drawpic(pos + eX * 0.5 * mySize_x + eY * mySize_y - eY * mySize_y * min(1, rightcnt/200), "gfx/hud/statusbar", eX * 0.5 * mySize_x + eY * mySize_y * min(1, rightcnt/200), HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-				drawpic(pos + eX * mySize_x - eX * 1.1 * mySize_y, strcat("gfx/hud/sb_", rightname), '0.7 0.7 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eX * 0.5 * mySize_x + eY * mySize_y - eY * mySize_y * min(1, rightcnt/200), "statusbar", eX * 0.5 * mySize_x + eY * mySize_y * min(1, rightcnt/200), HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eX * mySize_x - eX * 1.1 * mySize_y, strcat("sb_", rightname), '0.7 0.7 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 				HUD_DrawXNum_Colored(pos + eX * mySize_x - eX * len * 0.5 * mySize_y - eX * ((3-len)/2) * 0.5 * mySize_y + eY * 0.55 * mySize_y, rightcnt, len, 0.5 * mySize_y, hud_alpha_fg);
 			}
 
 			if(fuel)
-				drawpic(pos, "gfx/hud/statusbar", eX * mySize_x * min(1, fuel/100) + eY * 0.15 * mySize_y, HUD_Panel_GetProgressBarColor("fuel"), hud_alpha_fg * 0.8, DRAWFLAG_NORMAL);
+				drawpic_skin(pos, "statusbar", eX * mySize_x * min(1, fuel/100) + eY * 0.15 * mySize_y, HUD_Panel_GetProgressBarColor("fuel"), hud_alpha_fg * 0.8, DRAWFLAG_NORMAL);
 		}
 		else
 		{
@@ -1585,8 +1590,8 @@ void HUD_HealthArmor(void)
 			{
 				len = strlen(ftos(leftcnt));
 
-				drawpic(pos, "gfx/hud/statusbar", eX * mySize_x * min(1, leftcnt/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-				drawpic(pos, strcat("gfx/hud/sb_", leftname), '0.5 0.5 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos, "statusbar", eX * mySize_x * min(1, leftcnt/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+				drawpic_skin(pos, strcat("sb_", leftname), '0.5 0.5 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 				HUD_DrawXNum_Colored(pos + eX * 0.5 * mySize_y, leftcnt, len, 0.5 * mySize_y, hud_alpha_fg);
 			}
 
@@ -1594,13 +1599,13 @@ void HUD_HealthArmor(void)
 			{
 				len = strlen(ftos(rightcnt));
 
-				drawpic(pos + eY * 0.5 * mySize_y, "gfx/hud/statusbar", eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-				drawpic(pos + eY * 0.5 * mySize_y, strcat("gfx/hud/sb_", rightname), '0.5 0.5 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eY * 0.5 * mySize_y, "statusbar", eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eY * 0.5 * mySize_y, strcat("sb_", rightname), '0.5 0.5 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 				HUD_DrawXNum_Colored(pos + eX * 0.5 * mySize_y + eY * 0.5 * mySize_y, rightcnt, len, 0.5 * mySize_y, hud_alpha_fg);
 			}
 
 			if(fuel)
-				drawpic(pos, "gfx/hud/statusbar", eX * mySize_x * min(1, fuel/100) + eY * 0.1 * mySize_y, HUD_Panel_GetProgressBarColor("fuel"), hud_alpha_fg * 0.8, DRAWFLAG_NORMAL);
+				drawpic_skin(pos, "statusbar", eX * mySize_x * min(1, fuel/100) + eY * 0.1 * mySize_y, HUD_Panel_GetProgressBarColor("fuel"), hud_alpha_fg * 0.8, DRAWFLAG_NORMAL);
 		}
 	}
 }
@@ -1654,7 +1659,7 @@ void HUD_Score()
 
 		HUD_DrawXNum(pos + eX * mySize_x - eX * 3 * 0.33 * mySize_y, distribution, 3, 3, 0.33 * mySize_y, distribution_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		if (leader)
-			drawpic(pos + eX * mySize_x - eX * score_len * mySize_y - eX * 3 * 0.33 * mySize_y, strcat("gfx/hud/sb_highlight_", ftos(score_len)), eX * score_len * mySize_y + eY * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eX * mySize_x - eX * score_len * mySize_y - eX * 3 * 0.33 * mySize_y, strcat("sb_highlight_", ftos(score_len)), eX * score_len * mySize_y + eY * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 		HUD_DrawXNum(pos + eX * mySize_x - eX * 3 * mySize_y - eX * 3 * 0.33 * mySize_y, score, 3, 0, mySize_y, distribution_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 	} else { // teamgames
 		float max_fragcount;
@@ -1678,13 +1683,13 @@ void HUD_Score()
 				if (max_fragcount == score)
 					leader = 1;
 				if (leader)
-					drawpic(pos + eX * mySize_x - eX * score_len * mySize_y - eX * 3 * 0.33 * mySize_y, strcat("gfx/hud/sb_highlight_", ftos(score_len)), eX * score_len * mySize_y + eY * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic_skin(pos + eX * mySize_x - eX * score_len * mySize_y - eX * 3 * 0.33 * mySize_y, strcat("sb_highlight_", ftos(score_len)), eX * score_len * mySize_y + eY * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				HUD_DrawXNum(pos + eX * mySize_x - eX * 3 * mySize_y - eX * 3 * 0.33 * mySize_y, score, 3, 0, mySize_y, GetTeamRGB(tm.team) * 0.8, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 			} else {
 				if (max_fragcount == score)
 					leader = 1;
 				if (leader)
-					drawpic(pos + eX * mySize_x - eX * 0.33 * score_len * mySize_y + eY * 0.33 * mySize_y * teamnum, strcat("gfx/hud/sb_highlight_", ftos(score_len)), eX * 0.33 * score_len * mySize_y + eY * 0.33 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic_skin(pos + eX * mySize_x - eX * 0.33 * score_len * mySize_y + eY * 0.33 * mySize_y * teamnum, strcat("sb_highlight_", ftos(score_len)), eX * 0.33 * score_len * mySize_y + eY * 0.33 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				HUD_DrawXNum(pos + eX * mySize_x - eX * 3 * 0.33 * mySize_y + eY * 0.33 * mySize_y * teamnum, score, 3, 0, 0.33 * mySize_y, GetTeamRGB(tm.team) * 0.8, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 				teamnum += 1;
 			}
@@ -1983,7 +1988,7 @@ void HUD_VoteWindow(void)
 	if(vote_alpha) {
 		a = vote_alpha * bound(cvar_or("hud_vote_alreadyvoted_alpha", 0.75), 1 - vote_highlighted, 1);
 
-		drawpic(pos, "gfx/hud/voteprogress_back", mySize, HUD_GetBgColor(), a * hud_alpha_bg, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_back", mySize, HUD_GetBgColor(), a * hud_alpha_bg, DRAWFLAG_NORMAL);
 
 	        s = "A vote has been called for: ";
 		drawstring(pos + '0.5 0 0' * mySize_x + '0 0.1 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/5)), s, '1 1 0' * mySize_y*(1/5), '1 1 1', a * hud_alpha_fg, DRAWFLAG_NORMAL);
@@ -2000,19 +2005,19 @@ void HUD_VoteWindow(void)
 
 		// draw the progress bars
 		drawsetcliparea(pos_x, pos_y, mySize_x * 0.5 * (vote_yescount/vote_needed), mySize_y);
-		drawpic(pos, "gfx/hud/voteprogress_prog", mySize, eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_prog", mySize, eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 		drawsetcliparea(pos_x + mySize_x - mySize_x * 0.5 * (vote_nocount/vote_needed), pos_y, mySize_x * 0.5, mySize_y);
-		drawpic(pos, "gfx/hud/voteprogress_prog", mySize, eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_prog", mySize, eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 		// draw the highlights
 		if(vote_highlighted == 1) {
 			drawsetcliparea(pos_x, pos_y, mySize_x * 0.5, mySize_y);
-			drawpic(pos, "gfx/hud/voteprogress_voted", mySize, eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos, "voteprogress_voted", mySize, eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 		else if(vote_highlighted == 2) {
 			drawsetcliparea(pos_x + 0.5 * mySize_x, pos_y, mySize_x * 0.5, mySize_y);
-			drawpic(pos, "gfx/hud/voteprogress_voted", mySize, eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos, "voteprogress_voted", mySize, eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 
 		drawresetcliparea();
@@ -2049,20 +2054,20 @@ void HUD_DrawRaceStatus(vector pos)
 	rankname = race_PlaceName(rank);
 
 	if(race_status == 0)
-		drawpic(pos, "gfx/hud/race/newfail", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "race/newfail", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 	else if(race_status == 1) {
-		drawpic(pos, "gfx/hud/race/newtime", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "race/newtime", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		drawcolorcodedstring(pos + '40 80 0' - eX * stringwidth(s, TRUE, '5 0 0'), s, '10 10 0', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		drawstring(pos + '40 20 0' - eX * stringwidth(rankname, TRUE, '7 0 0'), rankname, '14 14 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 	} else if(race_status == 2) {
 		if(race_status_name == GetPlayerName(player_localentnum -1) || !race_myrank || race_myrank < rank)
-			drawpic(pos, "gfx/hud/race/newrankgreen", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawpic_skin(pos, "race/newrankgreen", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		else
-			drawpic(pos, "gfx/hud/race/newrankyellow", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawpic_skin(pos, "race/newrankyellow", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		drawcolorcodedstring(pos + '40 80 0' - eX * stringwidth(s, TRUE, '5 0 0'), s, '10 10 0', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		drawstring(pos + '40 20 0' - eX * stringwidth(rankname, TRUE, '7 0 0'), rankname, '14 14 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 	} else if(race_status == 3) {
-		drawpic(pos, "gfx/hud/race/newrecordserver", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "race/newrecordserver", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		drawcolorcodedstring(pos + '40 80 0' - eX * stringwidth(s, TRUE, '5 0 0'), s, '10 10 0', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		drawstring(pos + '40 20 0' - eX * stringwidth(rankname, TRUE, '7 0 0'), rankname, '14 14 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 	}
@@ -2135,25 +2140,25 @@ void CSQC_ctf_hud(void)
 	float red_alpha, red_alpha_prevstatus;
 	red_alpha = red_alpha_prevstatus = 1;
 	switch(redflag) {
-		case 1: red_icon = "gfx/hud/sb_flag_red_taken"; break;
-		case 2: red_icon = "gfx/hud/sb_flag_red_lost"; break;
-		case 3: red_icon = "gfx/hud/sb_flag_red_carrying"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		case 1: red_icon = "sb_flag_red_taken"; break;
+		case 2: red_icon = "sb_flag_red_lost"; break;
+		case 3: red_icon = "sb_flag_red_carrying"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
 			if((stat_items & IT_CTF_SHIELDED) && (myteam == COLOR_TEAM2))
-				red_icon = "gfx/hud/sb_flag_red_shielded";
+				red_icon = "sb_flag_red_shielded";
 			else
 				red_icon = string_null;
 			break;
 	}
 	switch(redflag_prevstatus) {
-		case 1: red_icon_prevstatus = "gfx/hud/sb_flag_red_taken"; break;
-		case 2: red_icon_prevstatus = "gfx/hud/sb_flag_red_lost"; break;
-		case 3: red_icon_prevstatus = "gfx/hud/sb_flag_red_carrying"; red_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		case 1: red_icon_prevstatus = "sb_flag_red_taken"; break;
+		case 2: red_icon_prevstatus = "sb_flag_red_lost"; break;
+		case 3: red_icon_prevstatus = "sb_flag_red_carrying"; red_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
 			if(redflag == 3)
-				red_icon_prevstatus = "gfx/hud/sb_flag_red_carrying"; // make it more visible
+				red_icon_prevstatus = "sb_flag_red_carrying"; // make it more visible
 			else if((stat_items & IT_CTF_SHIELDED) && (myteam == COLOR_TEAM2))
-				red_icon_prevstatus = "gfx/hud/sb_flag_red_shielded";
+				red_icon_prevstatus = "sb_flag_red_shielded";
 			else
 				red_icon_prevstatus = string_null;
 			break;
@@ -2163,25 +2168,25 @@ void CSQC_ctf_hud(void)
 	float blue_alpha, blue_alpha_prevstatus;
 	blue_alpha = blue_alpha_prevstatus = 1;
 	switch(blueflag) {
-		case 1: blue_icon = "gfx/hud/sb_flag_blue_taken"; break;
-		case 2: blue_icon = "gfx/hud/sb_flag_blue_lost"; break;
-		case 3: blue_icon = "gfx/hud/sb_flag_blue_carrying"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		case 1: blue_icon = "sb_flag_blue_taken"; break;
+		case 2: blue_icon = "sb_flag_blue_lost"; break;
+		case 3: blue_icon = "sb_flag_blue_carrying"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
 			if((stat_items & IT_CTF_SHIELDED) && (myteam == COLOR_TEAM1))
-				blue_icon = "gfx/hud/sb_flag_blue_shielded";
+				blue_icon = "sb_flag_blue_shielded";
 			else
 				blue_icon = string_null;
 			break;
 	}
 	switch(blueflag_prevstatus) {
-		case 1: blue_icon_prevstatus = "gfx/hud/sb_flag_blue_taken"; break;
-		case 2: blue_icon_prevstatus = "gfx/hud/sb_flag_blue_lost"; break;
-		case 3: blue_icon_prevstatus = "gfx/hud/sb_flag_blue_carrying"; blue_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		case 1: blue_icon_prevstatus = "sb_flag_blue_taken"; break;
+		case 2: blue_icon_prevstatus = "sb_flag_blue_lost"; break;
+		case 3: blue_icon_prevstatus = "sb_flag_blue_carrying"; blue_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
 			if(blueflag == 3)
-				blue_icon_prevstatus = "gfx/hud/sb_flag_blue_carrying"; // make it more visible
+				blue_icon_prevstatus = "sb_flag_blue_carrying"; // make it more visible
 			else if((stat_items & IT_CTF_SHIELDED) && (myteam == COLOR_TEAM1))
-				blue_icon_prevstatus = "gfx/hud/sb_flag_blue_shielded";
+				blue_icon_prevstatus = "sb_flag_blue_shielded";
 			else
 				blue_icon_prevstatus = string_null;
 			break;
@@ -2201,13 +2206,13 @@ void CSQC_ctf_hud(void)
 	if(red_icon_prevstatus && f < 1)
 		drawpic_expanding(redflag_pos, red_icon_prevstatus, sz, '1 1 1', hud_alpha_fg * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(red_icon)
-		drawpic(redflag_pos, red_icon, sz, '1 1 1', hud_alpha_fg * red_alpha * f, DRAWFLAG_NORMAL);
+		drawpic_skin(redflag_pos, red_icon, sz, '1 1 1', hud_alpha_fg * red_alpha * f, DRAWFLAG_NORMAL);
 
 	f = bound(0, blueflag_statuschange_elapsedtime*2, 1);
 	if(blue_icon_prevstatus && f < 1)
 		drawpic_expanding(blueflag_pos, blue_icon_prevstatus, sz, '1 1 1', hud_alpha_fg * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(blue_icon)
-		drawpic(blueflag_pos, blue_icon, sz, '1 1 1', hud_alpha_fg * blue_alpha * f, DRAWFLAG_NORMAL);
+		drawpic_skin(blueflag_pos, blue_icon, sz, '1 1 1', hud_alpha_fg * blue_alpha * f, DRAWFLAG_NORMAL);
 }
 
 /*void HUD_Mod_Race (void) {
@@ -2251,18 +2256,18 @@ void CSQC_ctf_hud(void)
 			}
 			HUD_DrawXNum(bottomright - '0 48 0' - '16 0 0' * TIME_DECIMALS, distmsec, -TIME_DECIMALS, 0, 16, distribution_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(bottomright - '68 48 0' - '16 0 0' * TIME_DECIMALS, distsec, 4, minusplus, 16, distribution_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic(bottomright - '10 48 0' - '16 0 0' * TIME_DECIMALS, "gfx/hud/num_dot", '16 16 0', distribution_color, hud_alpha_fg, DRAWFLAG_ADDITIVE);
+			drawpic_skin(bottomright - '10 48 0' - '16 0 0' * TIME_DECIMALS, "num_dot", '16 16 0', distribution_color, hud_alpha_fg, DRAWFLAG_ADDITIVE);
 		}
 		// race record display
 		if (distribution <= 0 || distribution == score) // draw the highlight background behind the timer if we have the lead
-			drawpic(bottomright - '0 32 0' - '32 0 0' * (4 + TIME_DECIMALS), "gfx/hud/sb_highlight_4", '0 28 0' + '32 0 0' * (4 + TIME_DECIMALS), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(bottomright - '0 32 0' - '32 0 0' * (4 + TIME_DECIMALS), "sb_highlight_4", '0 28 0' + '32 0 0' * (4 + TIME_DECIMALS), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 		HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0', racemsec, -TIME_DECIMALS, 0, 30, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0'  - '66 0 0', racesec, -2, 0, 30, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawpic(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '18 0 0', "gfx/hud/num_dot", '30 30 0', '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
+		drawpic_skin(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '18 0 0', "num_dot", '30 30 0', '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
 
 		HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '132 0 0', racemin, -2, 0, 30, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawpic(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '84 0 0', "gfx/hud/num_colon", '30 30 0', '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
+		drawpic_skin(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '84 0 0', "num_colon", '30 30 0', '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
 	}
 }*/
 
@@ -2342,16 +2347,16 @@ void CSQC_kh_hud(void)
 			switch(keyteam)
 			{
 				case COLOR_TEAM1:
-					drawpic (pa, "gfx/hud/sb_kh_redarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic (pa, "sb_kh_redarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				case COLOR_TEAM2:
-					drawpic (pa, "gfx/hud/sb_kh_bluearrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic (pa, "sb_kh_bluearrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				case COLOR_TEAM3:
-					drawpic (pa, "gfx/hud/sb_kh_yellowarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic (pa, "sb_kh_yellowarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				case COLOR_TEAM4:
-					drawpic (pa, "gfx/hud/sb_kh_pinkarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic (pa, "sb_kh_pinkarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				default:
 					break;
@@ -2359,16 +2364,16 @@ void CSQC_kh_hud(void)
 			switch(i) // YAY! switch(i) inside a for loop for i. DailyWTF, here we come!
 			{
 				case 0:
-					drawpic (p, "gfx/hud/sb_kh_red", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic (p, "sb_kh_red", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				case 1:
-					drawpic (p, "gfx/hud/sb_kh_blue", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic (p, "sb_kh_blue", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				case 2:
-					drawpic (p, "gfx/hud/sb_kh_yellow", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic (p, "sb_kh_yellow", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				case 3:
-					drawpic (p, "gfx/hud/sb_kh_pink", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic (p, "sb_kh_pink", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 			}
 		}
@@ -2425,7 +2430,7 @@ void CSQC_nb_hud(void)
 	pos_y += 2; //vertical margin to the picture
 
 	if (stat_items & IT_KEY1)
-		drawpic(pos, "gfx/hud/sb_nexball_carrying", '80 34 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "sb_nexball_carrying", '80 34 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 }
 
 // Race/CTS HUD modicon section
@@ -2554,9 +2559,9 @@ void HUD_Timer()
 		minutes = min(minutes, 999);
 		if(minutesLeft >= 1 || cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
 			if(minutes < 100)
-				drawpic(pos + eX * mySize_x - eX * 5.1 * mySize_y, "gfx/hud/sb_timer", '1 1 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eX * mySize_x - eX * 5.1 * mySize_y, "sb_timer", '1 1 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(pos + eX * mySize_x - eX * 5.1 * mySize_y, minutes, 3, 0, mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic(pos + eX * mySize_x - eX * 2.57 * mySize_y, "gfx/hud/num_colon", '1 1 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eX * mySize_x - eX * 2.57 * mySize_y, "num_colon", '1 1 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 		HUD_DrawXNum(pos + eX * mySize_x - eX * 2 * mySize_y, seconds, -2, 0, mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 	}
@@ -2567,9 +2572,9 @@ void HUD_Timer()
 		minutes = min(minutes, 99);
 		if(minutesLeft >= 1 || cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
 			if(minutes < 100)
-				drawpic(pos + eX * 0.5 * mySize_x - eX * 0.5 * 0.5 * mySize_y, "gfx/hud/sb_timer", '0.5 0.5 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.5 * 0.5 * mySize_y, "sb_timer", '0.5 0.5 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(pos + eX * 0.5 * mySize_x - eX * mySize_y + eY * 0.5 * mySize_y, minutes, -2, 0, 0.5 * mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic(pos + eX * 0.5 * mySize_x - eX * 0.5 * 0.5 * mySize_y + eY * 0.5 * mySize_y, "gfx/hud/num_colon", '0.5 0.5 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.5 * 0.5 * mySize_y + eY * 0.5 * mySize_y, "num_colon", '0.5 0.5 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 		HUD_DrawXNum(pos + eX * 0.51 * mySize_x + eY * 0.5 * mySize_y, seconds, -2, 0, 0.5 * mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 	}
@@ -2704,8 +2709,8 @@ void HUD_Radar(void)
 		frame_origin_y = pos_y - teamradar_size2d_y * 0.55859375; // matches the picture
 		frame_size_x = pos_x * 1.1171875; // matches the picture
 		frame_size_y = pos_y * 1.1171875; // matches the picture
-		drawpic(frame_origin, "gfx/ons-frame.tga", frame_size, '1 1 1', hud_alpha_fg, 0);
-		drawpic(frame_origin, "gfx/ons-frame-team.tga", frame_size, rgb, hud_alpha_fg, 0);
+		drawpic_skin(frame_origin, "gfx/ons-frame.tga", frame_size, '1 1 1', hud_alpha_fg, 0);
+		drawpic_skin(frame_origin, "gfx/ons-frame-team.tga", frame_size, rgb, hud_alpha_fg, 0);
 
 		drawsetcliparea(
 			pos_x - teamradar_size2d_x * 0.5,
@@ -2747,13 +2752,13 @@ void HUD_DrawPressedKeys(void)
 	float pressedkeys;
 
 	pressedkeys = getstatf(STAT_PRESSED_KEYS);
-	drawpic(pos, "gfx/hud/keys/key_bg.tga",           mySize, '1 1 1', 0.1 * hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + eX * mySize_x - eX * 0.22 * mySize_x +       eY * 0.195 * mySize_y, ((pressedkeys & KEY_CROUCH) ? "gfx/hud/keys/key_crouch_inv.tga" : "gfx/hud/keys/key_crouch.tga"),        '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.040 * mySize_y, ((pressedkeys & KEY_FORWARD) ? "gfx/hud/keys/key_forward_inv.tga" : "gfx/hud/keys/key_forward.tga"),     '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + eX * 0.023 * mySize_x +                      eY * 0.195 * mySize_y, ((pressedkeys & KEY_JUMP) ? "gfx/hud/keys/key_jump_inv.tga" : "gfx/hud/keys/key_jump.tga"),              '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + eX * 0.1 * mySize_x +                        eY * 0.486 * mySize_y, ((pressedkeys & KEY_LEFT) ? "gfx/hud/keys/key_left_inv.tga" : "gfx/hud/keys/key_left.tga"),              '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.486 * mySize_y, ((pressedkeys & KEY_BACKWARD) ? "gfx/hud/keys/key_backward_inv.tga" : "gfx/hud/keys/key_backward.tga"),  '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos + eX * mySize_x - eX * 0.372 * mySize_x +      eY * 0.486 * mySize_y, ((pressedkeys & KEY_RIGHT) ? "gfx/hud/keys/key_right_inv.tga" : "gfx/hud/keys/key_right.tga"),           '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos, "keys/key_bg.tga",           mySize, '1 1 1', 0.1 * hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * mySize_x - eX * 0.22 * mySize_x +       eY * 0.195 * mySize_y, ((pressedkeys & KEY_CROUCH) ? "keys/key_crouch_inv.tga" : "keys/key_crouch.tga"),        '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.040 * mySize_y, ((pressedkeys & KEY_FORWARD) ? "keys/key_forward_inv.tga" : "keys/key_forward.tga"),     '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * 0.023 * mySize_x +                      eY * 0.195 * mySize_y, ((pressedkeys & KEY_JUMP) ? "keys/key_jump_inv.tga" : "keys/key_jump.tga"),              '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * 0.1 * mySize_x +                        eY * 0.486 * mySize_y, ((pressedkeys & KEY_LEFT) ? "keys/key_left_inv.tga" : "keys/key_left.tga"),              '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.486 * mySize_y, ((pressedkeys & KEY_BACKWARD) ? "keys/key_backward_inv.tga" : "keys/key_backward.tga"),  '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * mySize_x - eX * 0.372 * mySize_x +      eY * 0.486 * mySize_y, ((pressedkeys & KEY_RIGHT) ? "keys/key_right_inv.tga" : "keys/key_right.tga"),           '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void HUD_ShowSpeed(void)
@@ -2847,9 +2852,9 @@ void HUD_ShowAcceleration(void)
 	}
 
 	if (acceleration > 0)
-		drawpic(pos, "gfx/hud/statusbar", acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "statusbar", acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 	else if (acceleration < 0)
-		drawpic(pos + acceleration * scale * '40 0 0', "gfx/hud/statusbar", -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic_skin(pos + acceleration * scale * '40 0 0', "statusbar", -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void HUD_Reset (void)
@@ -2876,7 +2881,7 @@ void HUD_Main (void)
 
 	// Drawing stuff
 	if(cvar_string("hud_dock") != "0")
-		drawpic('0 0 0', strcat("gfx/hud/", cvar_string("hud_dock")), eX * vid_conwidth + eY * vid_conheight, stov(cvar_string("hud_dock_color")), cvar("hud_dock_alpha"), DRAWFLAG_NORMAL);
+		drawpic_skin('0 0 0', strcat("", cvar_string("hud_dock")), eX * vid_conwidth + eY * vid_conheight, stov(cvar_string("hud_dock_color")), cvar("hud_dock_alpha"), DRAWFLAG_NORMAL);
 
 	if(HUD_Panel_CheckActive(0))
 		HUD_WeaponIcons();
