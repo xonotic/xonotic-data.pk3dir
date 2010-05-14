@@ -570,14 +570,14 @@ void HUD_Panel_ExportCfg(string cfgname)
 		float i;
 		for (i = 0; i < panel_cnt; ++i)
 		{
-			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), " ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i))))));
-			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_pos \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_pos")), "\""));
-			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_size \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_size")), "\""));
-			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg")), "\""));
-			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_color \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_color")), "\""));
-			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_alpha ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_bg_alpha")))));
-			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_border ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_bg_border")))));
-			fputs(fh, "");
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), " ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i)))), "\n"));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_pos \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_pos")), "\"", "\n"));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_size \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_size")), "\"", "\n"));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg")), "\"", "\n"));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_color \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_color")), "\"", "\n"));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_alpha ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_bg_alpha"))), "\n"));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_border ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_bg_border"))), "\n"));
+			fputs(fh, "\n");
 		}
 
 		print("^2Successfully exported to hud_", cvar_string("hud_skin"), "_", cfgname, ".cfg! (Note: It's saved in data/data/)\n");
