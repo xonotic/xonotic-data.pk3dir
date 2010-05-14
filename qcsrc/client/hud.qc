@@ -99,7 +99,7 @@ vector HUD_GetBgColor()
 vector HUD_AccuracyColor(float accuracy)
 {
 	vector rgb;
-	float yellow_accuracy = cvar("hud_accuracy_yellow"); // value at which this function returns yellow
+	float yellow_accuracy = cvar("hud_weaponicons_accuracy_yellow"); // value at which this function returns yellow
 	if(accuracy >= 100) {
 		rgb_x = 0;
 		rgb_y = 1;
@@ -567,6 +567,29 @@ void HUD_Panel_ExportCfg(string cfgname)
 	fh = fopen(strcat("hud_", cvar_string("hud_skin"), "_", cfgname, ".cfg"), FILE_WRITE);
 	if(fh >= 0)
 	{
+		fputs(fh, strcat("seta hud_skin \"", cvar_string("hud_skin"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_bg \"", cvar_string("hud_bg"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_bg_color \"", cvar_string("hud_bg_color"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_bg_alpha ", cvar("hud_bg_alpha"), "\n"));
+		fputs(fh, strcat("seta hud_bg_border ", cvar("hud_bg_border"), "\n"));
+		fputs(fh, strcat("seta hud_fg_alpha ", cvar("hud_fg_alpha"), "\n"));
+		fputs(fh, strcat("seta hud_accuracy_yellow ", cvar("hud_accuracy_yellow"), "\n"));
+		fputs(fh, "\n");
+
+		fputs(fh, strcat("seta hud_dock \"", cvar_string("hud_dock"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_dock_color \"", cvar_string("hud_dock_color"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_dock_alpha ", cvar("hud_dock_alpha"), "\n"));
+		fputs(fh, "\n");
+
+		fputs(fh, strcat("seta hud_progressbar_alpha ", cvar("hud_progressbar_alpha"), "\n"));
+		fputs(fh, strcat("seta hud_progressbar_strength_color \"", cvar_string("hud_progressbar_strength_color"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_progressbar_shield_color \"", cvar_string("hud_progressbar_shield_color"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_progressbar_health_color \"", cvar_string("hud_progressbar_health_color"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_progressbar_armor_color \"", cvar_string("hud_progressbar_armor_color"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_progressbar_fuel_color \"", cvar_string("hud_progressbar_fuel_color"), "\"", "\n"));
+		fputs(fh, "\n");
+
+		// common cvars for all panels
 		float i;
 		for (i = 0; i < panel_cnt; ++i)
 		{
@@ -577,6 +600,24 @@ void HUD_Panel_ExportCfg(string cfgname)
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_color \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_color")), "\"", "\n"));
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_alpha ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_bg_alpha"))), "\n"));
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_border ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_bg_border"))), "\n"));
+			switch(i) {
+				case 0:
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_accuracy_height ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_accuracy_height"))), "\n"));
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_accuracy_yellow ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_accuracy_yellow"))), "\n"));
+					break;
+				case 1:
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_onlycurrent ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_onlycurrent"))), "\n"));
+					break;
+				case 2:
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_flip ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_flip"))), "\n"));
+					break;
+				case 3:
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_flip ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_flip"))), "\n"));
+					break;
+				case 9:
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_alreadyvoted_alpha ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_alreadyvoted_alpha"))), "\n"));
+					break;
+			}
 			fputs(fh, "\n");
 		}
 
@@ -1091,7 +1132,7 @@ void HUD_WeaponIcons()
 
 	pos = HUD_Panel_GetPos(0);
 	mySize = HUD_Panel_GetSize(0);
-	accuracybar_height = cvar_or("hud_weaponicons_accuracybar_height", 3);
+	accuracybar_height = cvar_or("hud_weaponicons_accuracy_height", 3);
 
 	stat_weapons = getstati(STAT_WEAPONS);
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -1482,6 +1523,7 @@ void HUD_HealthArmor(void)
 	float len;
 
 	// TODO!
+	/*
 	if(hud_hudselector == 2) // combined health and armor display
 	{
 		vector v;
@@ -1505,6 +1547,7 @@ void HUD_HealthArmor(void)
 		}
 		HUD_DrawXNum_Colored(num_pos, x, 3, 24, hud_alpha_fg); // draw the combined health and armor
 	}
+	*/
 
 	else
 	{
@@ -1820,6 +1863,7 @@ void HUD_RaceTimer (void) {
 	drawfont = hud_font;
 }
 
+// ___TODO___ !!!
 // Notification area (#4)
 void HUD_Notify (void)
 {
