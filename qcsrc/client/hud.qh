@@ -1,4 +1,4 @@
-float panel_cnt = 11; // NOTE: IDs start from 0!
+float panel_cnt = 12; // NOTE: IDs start from 0!
 
 void CSQC_kh_hudreset();
 void CSQC_kh_hud();

@@ -555,7 +555,8 @@ string HUD_Panel_GetName(float id)
 		case 7: return "score"; break;
 		case 8: return "racetimer"; break;
 		case 9: return "vote"; break;
-		case 10: return "pressedkeys"; break;
+		case 10: return "modicons"; break;
+		case 11: return "pressedkeys"; break;
 		default: return "";
 	}
 }
@@ -719,7 +720,7 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 	if(bg != "0")
 	{
 		float border;
-		border = HUD_Panel_GetBorder(id);
+		border = max(0.0000001, HUD_Panel_GetBorder(id)); // draw_BorderPicture does not like border = 0
 
 		vector color;
 		if(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color")) != "")
@@ -1096,7 +1097,6 @@ void HUD_Panel_Mouse()
 
 // Weapon icons (#0)
 //
-
 float weaponspace[10];
 void HUD_WeaponIcons_Clear()
 {
@@ -1226,7 +1226,6 @@ void HUD_WeaponIcons()
 
 // Inventory (#1)
 //
-
 float GetAmmoStat(float i)
 {
 	switch(i)
@@ -1354,6 +1353,7 @@ void HUD_Inventory()
 
 
 // Powerups (#2)
+//
 float shield_maxtime;
 float strength_maxtime;
 void HUD_Powerups() {
@@ -1862,6 +1862,7 @@ void HUD_HealthArmor(void)
 
 // ___TODO___ !!!
 // Notification area (#4)
+//
 void HUD_Notify (void)
 {
 	float id = 4;
@@ -2430,6 +2431,7 @@ void HUD_RaceTimer (void) {
 }
 
 // Vote window (#9)
+//
 float vote_yescount;
 float vote_nocount;
 float vote_needed;
@@ -2516,6 +2518,36 @@ void HUD_VoteWindow(void)
 	else if(!vote_active) {
 		vote_highlighted = 0;
 	}
+}
+
+// Draw pressed keys (#11)
+//
+void HUD_DrawPressedKeys(void)
+{
+	float id = 11;
+	vector pos, mySize;
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
+
+	HUD_Panel_DrawBg(id, pos, mySize);
+	float padding;
+	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	if(padding)
+	{
+		pos += '1 1 0' * padding;
+		mySize -= '2 2 0' * padding;
+	}
+
+	float pressedkeys;
+
+	pressedkeys = getstatf(STAT_PRESSED_KEYS);
+	drawpic_skin(pos, "key_bg.tga",           mySize, '1 1 1', 0.1 * hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * mySize_x - eX * 0.22 * mySize_x +       eY * 0.195 * mySize_y, ((pressedkeys & KEY_CROUCH) ? "key_crouch_inv.tga" : "key_crouch.tga"),        '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.040 * mySize_y, ((pressedkeys & KEY_FORWARD) ? "key_forward_inv.tga" : "key_forward.tga"),     '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * 0.023 * mySize_x +                      eY * 0.195 * mySize_y, ((pressedkeys & KEY_JUMP) ? "key_jump_inv.tga" : "key_jump.tga"),              '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * 0.1 * mySize_x +                        eY * 0.486 * mySize_y, ((pressedkeys & KEY_LEFT) ? "key_left_inv.tga" : "key_left.tga"),              '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.486 * mySize_y, ((pressedkeys & KEY_BACKWARD) ? "key_backward_inv.tga" : "key_backward.tga"),  '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * mySize_x - eX * 0.372 * mySize_x +      eY * 0.486 * mySize_y, ((pressedkeys & KEY_RIGHT) ? "key_right_inv.tga" : "key_right.tga"),           '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 // Awards system
@@ -3005,34 +3037,6 @@ void CSQC_race_hud(void)
 Main HUD system
 ==================
 */
-
-void HUD_DrawPressedKeys(void)
-{
-	float id = 10;
-	vector pos, mySize;
-	pos = HUD_Panel_GetPos(id);
-	mySize = HUD_Panel_GetSize(id);
-
-	HUD_Panel_DrawBg(id, pos, mySize);
-	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
-	if(padding)
-	{
-		pos += '1 1 0' * padding;
-		mySize -= '2 2 0' * padding;
-	}
-
-	float pressedkeys;
-
-	pressedkeys = getstatf(STAT_PRESSED_KEYS);
-	drawpic_skin(pos, "key_bg.tga",           mySize, '1 1 1', 0.1 * hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * mySize_x - eX * 0.22 * mySize_x +       eY * 0.195 * mySize_y, ((pressedkeys & KEY_CROUCH) ? "key_crouch_inv.tga" : "key_crouch.tga"),        '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.040 * mySize_y, ((pressedkeys & KEY_FORWARD) ? "key_forward_inv.tga" : "key_forward.tga"),     '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * 0.023 * mySize_x +                      eY * 0.195 * mySize_y, ((pressedkeys & KEY_JUMP) ? "key_jump_inv.tga" : "key_jump.tga"),              '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * 0.1 * mySize_x +                        eY * 0.486 * mySize_y, ((pressedkeys & KEY_LEFT) ? "key_left_inv.tga" : "key_left.tga"),              '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.486 * mySize_y, ((pressedkeys & KEY_BACKWARD) ? "key_backward_inv.tga" : "key_backward.tga"),  '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * mySize_x - eX * 0.372 * mySize_x +      eY * 0.486 * mySize_y, ((pressedkeys & KEY_RIGHT) ? "key_right_inv.tga" : "key_right.tga"),           '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-}
 
 void HUD_ShowSpeed(void)
 {
