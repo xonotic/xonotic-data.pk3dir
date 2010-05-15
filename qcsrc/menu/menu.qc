@@ -24,6 +24,10 @@ void() m_init =
 
 	check_unacceptable_compiler_bugs();
 
+#ifdef WATERMARK
+	print("^4MQC Build information: ", WATERMARK(), "\n");
+#endif
+
 	// list all game dirs (TEST)
 	if(cvar("developer"))
 	{

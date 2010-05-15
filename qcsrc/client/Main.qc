@@ -60,6 +60,10 @@ void CSQC_Init(void)
 	
 	check_unacceptable_compiler_bugs();
 
+#ifdef WATERMARK
+	print("^4CSQC Build information: ", WATERMARK(), "\n");
+#endif
+
 	float i;
 	CSQC_CheckEngine();
 
