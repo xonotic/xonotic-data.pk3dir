@@ -1127,12 +1127,13 @@ float weaponorder_cmp(float i, float j, entity pass)
 
 void HUD_WeaponIcons()
 {
+	float id = 0;
 	float alpha, height, accuracybar_height, stat_weapons; // "constants"
 	vector pos, mySize, mysize, mypos, accuracy_color;
-	float i, id, fade, weapon_stats, weapon_hit, weapon_damage, weapon_cnt; // variables
+	float i, weapid, fade, weapon_stats, weapon_hit, weapon_damage, weapon_cnt; // variables
 
-	pos = HUD_Panel_GetPos(0);
-	mySize = HUD_Panel_GetSize(0);
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
 	accuracybar_height = cvar_or("hud_weaponicons_accuracy_height", 3);
 
 	stat_weapons = getstati(STAT_WEAPONS);
@@ -1147,7 +1148,7 @@ void HUD_WeaponIcons()
 	}
 	heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
 
-	HUD_Panel_DrawBg(0, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize);
 
 	// hits
 	weapon_stats = getstati(STAT_DAMAGE_HITS);
@@ -1180,7 +1181,7 @@ void HUD_WeaponIcons()
 		self = weaponorder[i];
 		if((self.weapons && (self.impulse >= 0) && (stat_weapons & self.weapons)) || hud_configure)
 		{
-			id = self.impulse;
+			weapid = self.impulse;
 
 			alpha = (self.weapon == activeweapon) ? 1 : 0.6;
 
@@ -1192,7 +1193,7 @@ void HUD_WeaponIcons()
 			drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("gfx/weapons/weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(cvar_or("hud_weaponicons_number", 1))
-				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), ftos(id), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), ftos(weapid), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 			// draw the weapon accuracy on the HUD
 			if(hud_accuracy_hud && !(gametype == GAME_RACE || gametype == GAME_CTS))
@@ -1260,14 +1261,15 @@ string GetAmmoPicture(float i)
 
 void HUD_Inventory()
 {
+	float id = 1;
 	float i;
 	float stat_items;
 
 	vector pos, mySize, mysize, mypos;
-	pos = HUD_Panel_GetPos(1);
-	mySize = HUD_Panel_GetSize(1);
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(1, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize);
 
 	// ammo
 	stat_items = getstati(STAT_ITEMS);
@@ -1341,6 +1343,7 @@ void HUD_Inventory()
 float shield_maxtime;
 float strength_maxtime;
 void HUD_Powerups() {
+	float id = 2;
 	float stat_items;
 	stat_items = getstati(STAT_ITEMS);
 
@@ -1355,10 +1358,10 @@ void HUD_Powerups() {
 	}
 
 	vector pos, mySize;
-	pos = HUD_Panel_GetPos(2);
-	mySize = HUD_Panel_GetSize(2);
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(2, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize);
 
 	float strength_time, shield_time;
 
@@ -1380,7 +1383,7 @@ void HUD_Powerups() {
 	string leftname, rightname;
 	float leftcnt, rightcnt;
 	float leftalpha, rightalpha;
-	if (cvar(strcat("hud_", HUD_Panel_GetName(2), "_flip"))) {
+	if (cvar(strcat("hud_", HUD_Panel_GetName(id), "_flip"))) {
 		leftname = "strength";
 		leftcnt = strength_time;
 
@@ -1403,7 +1406,7 @@ void HUD_Powerups() {
 		{
 			len = strlen(ftos(leftcnt));
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(2), "_mirror"))) {
+			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 				barpos = pos + eX * 0.5 * mySize_x - eX * 0.5 * mySize_x * min(1, leftcnt/30);
 				barsize = eX * 0.5 * mySize_x * min(1, leftcnt/30) + eY * mySize_y;
 				picpos = pos + eX * 0.5 * mySize_x - eX * mySize_y;
@@ -1424,7 +1427,7 @@ void HUD_Powerups() {
 		{
 			len = strlen(ftos(rightcnt));
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(2), "_mirror"))) {
+			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 				barpos = pos + eX * 0.5 * mySize_x;
 				barsize = eX * 0.5 * mySize_x * min(1, rightcnt/30) + eY * mySize_y;
 				picpos = pos + eX * 0.5 * mySize_x;
@@ -1447,7 +1450,7 @@ void HUD_Powerups() {
 		{
 			len = strlen(ftos(leftcnt));
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(2), "_mirror"))) {
+			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 				barpos = pos + eX * mySize_x - eX * mySize_x * min(1, leftcnt/30);
 				barsize = eX * mySize_x * min(1, leftcnt/30) + eY * 0.5 * mySize_y;
 				picpos = pos + eX * mySize_x - eX * 0.5 * mySize_y;
@@ -1468,7 +1471,7 @@ void HUD_Powerups() {
 		{
 			len = strlen(ftos(rightcnt));
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(2), "_mirror"))) {
+			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 				barpos = pos + eX * mySize_x - eX * mySize_x * min(1, rightcnt/30) + eY * 0.5 * mySize_y;
 				barsize = eX * mySize_x * min(1, rightcnt/30) + eY * 0.5 * mySize_y;
 				picpos = pos + eX * mySize_x - eX * 0.5 * mySize_y + eY * 0.5 * mySize_y;
@@ -1491,7 +1494,7 @@ void HUD_Powerups() {
 		{
 			len = strlen(ftos(leftcnt));
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(2), "_mirror"))) {
+			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 				barpos = pos;
 				barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/30);
 				picpos = pos + eX * 0.05 * mySize_x;
@@ -1512,7 +1515,7 @@ void HUD_Powerups() {
 		{
 			len = strlen(ftos(rightcnt));
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(2), "_mirror"))) {
+			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 				barpos = pos + eX * 0.5 * mySize_x;
 				barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, rightcnt/30);
 				picpos = pos + eX * 0.05 * mySize_x + eX * 0.5 * mySize_x;
@@ -1583,11 +1586,12 @@ void HUD_Powerups() {
 //
 void HUD_HealthArmor(void)
 {
+	float id = 3;
 	vector pos, mySize;
-	pos = HUD_Panel_GetPos(3);
-	mySize = HUD_Panel_GetSize(3);
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(3, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize);
 
 	float armor, health, x;
 	armor = getstati(STAT_ARMOR);
@@ -1646,7 +1650,7 @@ void HUD_HealthArmor(void)
 	float leftactive, rightactive;
 	float leftalpha, rightalpha;
 	// TODO!
-	if (cvar(strcat("hud_", HUD_Panel_GetName(3), "_flip"))) { // old style layout with armor left/top of health
+	if (cvar(strcat("hud_", HUD_Panel_GetName(id), "_flip"))) { // old style layout with armor left/top of health
 		leftname = "armor";
 		leftcnt = armor;
 		if(leftcnt)
@@ -1677,7 +1681,7 @@ void HUD_HealthArmor(void)
 		{
 			len = strlen(ftos(leftcnt));
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(3), "_mirror"))) {
+			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 				barpos = pos + eX * 0.5 * mySize_x - eX * 0.5 * mySize_x * min(1, leftcnt/200);
 				barsize = eX * 0.5 * mySize_x * min(1, leftcnt/200) + eY * mySize_y;
 				picpos = pos + eX * 0.5 * mySize_x - eX * mySize_y;
@@ -1698,7 +1702,7 @@ void HUD_HealthArmor(void)
 		{
 			len = strlen(ftos(rightcnt));
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(3), "_mirror"))) {
+			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 				barpos = pos + eX * 0.5 * mySize_x;
 				barsize = eX * 0.5 * mySize_x * min(1, rightcnt/200) + eY * mySize_y;
 				picpos = pos + eX * 0.5 * mySize_x;
@@ -1724,7 +1728,7 @@ void HUD_HealthArmor(void)
 		{
 			len = strlen(ftos(leftcnt));
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(3), "_mirror"))) {
+			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 				barpos = pos + eX * mySize_x - eX * mySize_x * min(1, leftcnt/200);
 				barsize = eX * mySize_x * min(1, leftcnt/200) + eY * 0.5 * mySize_y;
 				picpos = pos + eX * mySize_x - eX * 0.5 * mySize_y;
@@ -1745,7 +1749,7 @@ void HUD_HealthArmor(void)
 		{
 			len = strlen(ftos(rightcnt));
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(3), "_mirror"))) {
+			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 				barpos = pos + eX * mySize_x - eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
 				barsize = eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
 				picpos = pos + eX * mySize_x - eX * 0.5 * mySize_y + eY * 0.5 * mySize_y;
@@ -1762,7 +1766,7 @@ void HUD_HealthArmor(void)
 			HUD_DrawXNum_Colored(numpos, rightcnt, len, 0.5 * mySize_y, hud_alpha_fg);
 		}
 
-		if(cvar(strcat("hud_", HUD_Panel_GetName(3), "_mirror"))) {
+		if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 			barpos = pos + eX * mySize_x - eX * mySize_x * min(1, fuel/100);
 			barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.1 * mySize_y;
 		} else {
@@ -1778,7 +1782,7 @@ void HUD_HealthArmor(void)
 		{
 			len = strlen(ftos(leftcnt));
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(3), "_mirror"))) {
+			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 				barpos = pos;
 				barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/200);
 				picpos = pos + eX * 0.05 * mySize_x;
@@ -1799,7 +1803,7 @@ void HUD_HealthArmor(void)
 		{
 			len = strlen(ftos(rightcnt));
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(3), "_mirror"))) {
+			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 				barpos = pos + eX * 0.5 * mySize_x;
 				barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, rightcnt/200);
 				picpos = pos + eX * 0.05 * mySize_x + eX * 0.5 * mySize_x;
@@ -1816,7 +1820,7 @@ void HUD_HealthArmor(void)
 			HUD_DrawXNum_Colored(numpos, rightcnt, len, 0.166 * mySize_x, hud_alpha_fg);
 		}
 
-		if(cvar(strcat("hud_", HUD_Panel_GetName(3), "_mirror"))) {
+		if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
 			barpos = pos;
 			barsize = eX * 0.05 * mySize_x + eY * mySize_y * min(1, fuel/100);
 		} else {
@@ -1832,11 +1836,12 @@ void HUD_HealthArmor(void)
 // Notification area (#4)
 void HUD_Notify (void)
 {
+	float id = 4;
 	vector pos, mySize;
-	pos = HUD_Panel_GetPos(4);
-	mySize = HUD_Panel_GetSize(4);
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(4, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize);
 
 	string s;
 	entity tm;
@@ -1959,11 +1964,12 @@ void HUD_Notify (void)
 //
 void HUD_Timer()
 {
+	float id = 5;
 	vector pos, mySize;
-	pos = HUD_Panel_GetPos(5);
-	mySize = HUD_Panel_GetSize(5);
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(5, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize);
 
 	float timelimit, elapsedTime, minutes, seconds, timeleft, minutesLeft, secondsLeft;
 
@@ -2010,11 +2016,12 @@ void HUD_Timer()
 //
 void HUD_Radar(void)
 {
+	float id = 6;
 	vector pos, mySize;
-	pos = HUD_Panel_GetPos(6);
-	mySize = HUD_Panel_GetSize(6);
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(6, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize);
 
 	local float color1, color2; // color already declared as a global in hud.qc
 	local vector rgb;
@@ -2150,11 +2157,12 @@ void HUD_Radar(void)
 //
 void HUD_Score()
 {
+	float id = 7;
 	vector pos, mySize;
-	pos = HUD_Panel_GetPos(7);
-	mySize = HUD_Panel_GetSize(7);
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(7, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize);
 
 	float score, distribution, leader;
 	float score_len, distr_len;
@@ -2236,11 +2244,12 @@ void HUD_Score()
 // Race timer (#8)
 //
 void HUD_RaceTimer (void) {
+	float id = 8;
 	vector pos, mySize;
-	pos = HUD_Panel_GetPos(8);
-	mySize = HUD_Panel_GetSize(8);
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(8, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize);
 
 	drawfont = hud_bigfont;
 	float a, t;
@@ -2289,6 +2298,7 @@ void HUD_RaceTimer (void) {
 			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.25 * mySize_y) + eY * 0.75 * mySize_y, s, '1 1 0' * 0.25 * mySize_y, hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
 
+		// ___ TODO!!!___
 		if(race_penaltytime)
 		{
 			a = bound(0, 2 - (time - race_penaltyeventtime), 1);
@@ -2369,9 +2379,10 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
+	float id = 9;
 	vector pos, mySize;
-	pos = HUD_Panel_GetPos(9);
-	mySize = HUD_Panel_GetSize(9);
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
 
 	string s;
 	float a;
@@ -2393,7 +2404,7 @@ void HUD_VoteWindow(void)
 		vote_needed = 4;
 	}
 
-	HUD_Panel_DrawBg(9, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize);
 
 	if(vote_alpha) {
 		a = vote_alpha * bound(cvar_or("hud_vote_alreadyvoted_alpha", 0.75), 1 - vote_highlighted, 1);
@@ -2927,11 +2938,12 @@ Main HUD system
 
 void HUD_DrawPressedKeys(void)
 {
+	float id = 10;
 	vector pos, mySize;
-	pos = HUD_Panel_GetPos(10);
-	mySize = HUD_Panel_GetSize(10);
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(10, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize);
 
 	float pressedkeys;
 
