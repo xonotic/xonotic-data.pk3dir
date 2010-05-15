@@ -657,6 +657,9 @@ vector HUD_Panel_CheckLimitSize(float id, vector mySize)
 			mySize_y = (1/4) * mySize_x; // 1/4 * width
 			break;
 		case 10: 
+			mySize_y = (1/2) * mySize_x; // 1/2 * width
+			break;
+		case 11: 
 			mySize_y = 0.5898 * mySize_x; // 0.5898 * width, reason: bg has weird dimensions...
 			break;
 	}
@@ -2203,6 +2206,63 @@ void HUD_Radar(void)
 	drawresetcliparea();
 };
 
+todo merge!
+void HUD_Mod_Race (void) {
+	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
+		pl = players.sort_next;
+		if(pl == me)
+			pl = pl.sort_next;
+		if(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)
+			if(pl.scores[ps_primary] == 0)
+				pl = world;
+
+		score = me.(scores[ps_primary]);
+
+		float racemin, racesec, racemsec;
+		float distsec, distmsec, minusplus;
+
+		racemin = floor(score/(60 * TIME_FACTOR));
+		racesec = floor((score - racemin*(60 * TIME_FACTOR))/TIME_FACTOR);
+		racemsec = score - racemin*60*TIME_FACTOR - racesec*TIME_FACTOR;
+
+		if (pl && ((!(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)) || score)) {
+			// distribution display
+			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
+
+			if (distribution < TIME_FACTOR && distribution > -TIME_FACTOR)
+				distmsec = fabs(distribution);
+			else {
+				distsec = floor(fabs(distribution)/TIME_FACTOR);
+				distmsec = fabs(distribution) - distsec*TIME_FACTOR;
+				if (distribution < 0)
+					distsec = -distsec;
+			}
+
+			if (distribution <= 0) {
+				distribution_color = eY;
+				minusplus = 1; // minusplus 1: always prefix with minus sign
+			}
+			else {
+				distribution_color = eX;
+				minusplus = 2; // minusplus 1: always prefix with plus sign
+			}
+			HUD_DrawXNum(bottomright - '0 48 0' - '16 0 0' * TIME_DECIMALS, distmsec, -TIME_DECIMALS, 0, 16, distribution_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+			HUD_DrawXNum(bottomright - '68 48 0' - '16 0 0' * TIME_DECIMALS, distsec, 4, minusplus, 16, distribution_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic_skin(bottomright - '10 48 0' - '16 0 0' * TIME_DECIMALS, "num_dot", '16 16 0', distribution_color, hud_alpha_fg, DRAWFLAG_ADDITIVE);
+		}
+		// race record display
+		if (distribution <= 0 || distribution == score) // draw the highlight background behind the timer if we have the lead
+			drawpic_skin(bottomright - '0 32 0' - '32 0 0' * (4 + TIME_DECIMALS), "highlight_4", '0 28 0' + '32 0 0' * (4 + TIME_DECIMALS), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+
+		HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0', racemsec, -TIME_DECIMALS, 0, 30, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+		HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0'  - '66 0 0', racesec, -2, 0, 30, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic_skin(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '18 0 0', "num_dot", '30 30 0', '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
+
+		HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '132 0 0', racemin, -2, 0, 30, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic_skin(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '84 0 0', "num_colon", '30 30 0', '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
+	}
+}
+
 // Score (#7)
 //
 void HUD_Score()
@@ -2520,81 +2580,23 @@ void HUD_VoteWindow(void)
 	}
 }
 
-// Mod icons/awards panel (#10)
+// Mod icons panel (#10)
 //
-
-float race_status_time;
-float race_status_prev;
-string race_status_name_prev;
-void HUD_DrawRaceStatus(vector pos)
-{
-	if (race_status != race_status_prev || race_status_name != race_status_name_prev) {
-		race_status_time = time + 5;
-		race_status_prev = race_status;
-		if (race_status_name_prev)
-			strunzone(race_status_name_prev);
-		race_status_name_prev = strzone(race_status_name);
-	}
-
-	float a;
-	a = bound(0, race_status_time - time, 1);
-
-	string s;
-	s = textShortenToWidth(race_status_name, 120, '10 10 0', stringwidth_colors);
-
-	float rank;
-	if(race_status > 0)
-		rank = race_CheckName(race_status_name);
-	string rankname;
-	rankname = race_PlaceName(rank);
-
-	if(race_status == 0)
-		drawpic_skin(pos, "race_newfail", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-	else if(race_status == 1) {
-		drawpic_skin(pos, "race_newtime", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(pos + '40 80 0' - eX * stringwidth(s, TRUE, '5 0 0'), s, '10 10 0', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-		drawstring(pos + '40 20 0' - eX * stringwidth(rankname, TRUE, '7 0 0'), rankname, '14 14 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-	} else if(race_status == 2) {
-		if(race_status_name == GetPlayerName(player_localentnum -1) || !race_myrank || race_myrank < rank)
-			drawpic_skin(pos, "race_newrankgreen", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-		else
-			drawpic_skin(pos, "race_newrankyellow", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(pos + '40 80 0' - eX * stringwidth(s, TRUE, '5 0 0'), s, '10 10 0', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-		drawstring(pos + '40 20 0' - eX * stringwidth(rankname, TRUE, '7 0 0'), rankname, '14 14 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-	} else if(race_status == 3) {
-		drawpic_skin(pos, "race_newrecordserver", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(pos + '40 80 0' - eX * stringwidth(s, TRUE, '5 0 0'), s, '10 10 0', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-		drawstring(pos + '40 20 0' - eX * stringwidth(rankname, TRUE, '7 0 0'), rankname, '14 14 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-	}
-
-	if (race_status_time - time <= 0) {
-		race_status_prev = -1;
-		race_status = -1;
-		if(race_status_name)
-			strunzone(race_status_name);
-		race_status_name = string_null;
-		if(race_status_name_prev)
-			strunzone(race_status_name_prev);
-		race_status_name_prev = string_null;
-	}
-}
 
 // CTF HUD modicon section
 float redflag_prevframe, blueflag_prevframe; // status during previous frame
 float redflag_prevstatus, blueflag_prevstatus; // last remembered status
 float redflag_statuschange_time, blueflag_statuschange_time; // time when the status changed
 
-void CSQC_ctf_hudreset(void)
+void HUD_Mod_CTF_Reset(void)
 {
 	redflag_prevstatus = blueflag_prevstatus = redflag_prevframe = blueflag_prevframe = redflag_statuschange_time = blueflag_statuschange_time = 0;
 }
 
-void CSQC_ctf_hud(void)
+void HUD_Mod_CTF(vector pos, vector mySize)
 {
-	vector bottomleft, redflag_pos, blueflag_pos, sz;
+	vector redflag_pos, blueflag_pos;
 	float f; // every function should have that
-	bottomleft_y = vid_conheight;
-	bottomleft_z = 0;
 
 	float redflag, blueflag; // current status
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime; // time since the status changed
@@ -2688,93 +2690,35 @@ void CSQC_ctf_hud(void)
 	}
 
 	if (myteam == COLOR_TEAM1) { // always draw own flag on left
-		redflag_pos = bottomleft - '-4 50 0';
-		blueflag_pos = bottomleft - '-62 50 0';
+		redflag_pos = pos;
+		blueflag_pos = pos + eX * mySize_y;
 	} else {
-		blueflag_pos = bottomleft - '-4 50 0';
-		redflag_pos = bottomleft - '-62 50 0';
+		blueflag_pos = pos;
+		redflag_pos = pos + eX * mySize_y;
 	}
-
-	sz = '52 52 0';
 
 	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
 	if(red_icon_prevstatus && f < 1)
-		drawpic_expanding(redflag_pos, red_icon_prevstatus, sz, '1 1 1', hud_alpha_fg * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		drawpic_expanding(redflag_pos, red_icon_prevstatus, '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(red_icon)
-		drawpic_skin(redflag_pos, red_icon, sz, '1 1 1', hud_alpha_fg * red_alpha * f, DRAWFLAG_NORMAL);
+		drawpic_skin(redflag_pos, red_icon, '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg * red_alpha * f, DRAWFLAG_NORMAL);
 
 	f = bound(0, blueflag_statuschange_elapsedtime*2, 1);
 	if(blue_icon_prevstatus && f < 1)
-		drawpic_expanding(blueflag_pos, blue_icon_prevstatus, sz, '1 1 1', hud_alpha_fg * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		drawpic_expanding(blueflag_pos, blue_icon_prevstatus, '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(blue_icon)
-		drawpic_skin(blueflag_pos, blue_icon, sz, '1 1 1', hud_alpha_fg * blue_alpha * f, DRAWFLAG_NORMAL);
+		drawpic_skin(blueflag_pos, blue_icon, '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg * blue_alpha * f, DRAWFLAG_NORMAL);
 }
-
-/*void HUD_Mod_Race (void) {
-	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
-		pl = players.sort_next;
-		if(pl == me)
-			pl = pl.sort_next;
-		if(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)
-			if(pl.scores[ps_primary] == 0)
-				pl = world;
-
-		score = me.(scores[ps_primary]);
-
-		float racemin, racesec, racemsec;
-		float distsec, distmsec, minusplus;
-
-		racemin = floor(score/(60 * TIME_FACTOR));
-		racesec = floor((score - racemin*(60 * TIME_FACTOR))/TIME_FACTOR);
-		racemsec = score - racemin*60*TIME_FACTOR - racesec*TIME_FACTOR;
-
-		if (pl && ((!(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)) || score)) {
-			// distribution display
-			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
-
-			if (distribution < TIME_FACTOR && distribution > -TIME_FACTOR)
-				distmsec = fabs(distribution);
-			else {
-				distsec = floor(fabs(distribution)/TIME_FACTOR);
-				distmsec = fabs(distribution) - distsec*TIME_FACTOR;
-				if (distribution < 0)
-					distsec = -distsec;
-			}
-
-			if (distribution <= 0) {
-				distribution_color = eY;
-				minusplus = 1; // minusplus 1: always prefix with minus sign
-			}
-			else {
-				distribution_color = eX;
-				minusplus = 2; // minusplus 1: always prefix with plus sign
-			}
-			HUD_DrawXNum(bottomright - '0 48 0' - '16 0 0' * TIME_DECIMALS, distmsec, -TIME_DECIMALS, 0, 16, distribution_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-			HUD_DrawXNum(bottomright - '68 48 0' - '16 0 0' * TIME_DECIMALS, distsec, 4, minusplus, 16, distribution_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic_skin(bottomright - '10 48 0' - '16 0 0' * TIME_DECIMALS, "num_dot", '16 16 0', distribution_color, hud_alpha_fg, DRAWFLAG_ADDITIVE);
-		}
-		// race record display
-		if (distribution <= 0 || distribution == score) // draw the highlight background behind the timer if we have the lead
-			drawpic_skin(bottomright - '0 32 0' - '32 0 0' * (4 + TIME_DECIMALS), "highlight_4", '0 28 0' + '32 0 0' * (4 + TIME_DECIMALS), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-
-		HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0', racemsec, -TIME_DECIMALS, 0, 30, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-		HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0'  - '66 0 0', racesec, -2, 0, 30, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawpic_skin(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '18 0 0', "num_dot", '30 30 0', '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
-
-		HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '132 0 0', racemin, -2, 0, 30, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawpic_skin(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '84 0 0', "num_colon", '30 30 0', '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
-	}
-}*/
 
 // Keyhunt HUD modicon section
 float kh_runheretime;
 
-void CSQC_kh_hudreset(void)
+void HUD_Mod_KH_Reset(void)
 {
 	kh_runheretime = 0;
 }
 
-void CSQC_kh_hud(void)
+void HUD_Mod_KH(void)
 {
 	float kh_keys;
 	float keyteam;
@@ -2887,7 +2831,7 @@ void CSQC_kh_hud(void)
 #define NBPB_IFLAG DRAWFLAG_NORMAL
 #define NBPB_IRGB '0.7 0.1 0'
 
-void CSQC_nb_hud(void)
+void HUD_Mod_NexBall(void)
 {
 	float stat_items, nb_pb_starttime, dt, p;
 	vector pos;
@@ -2928,6 +2872,64 @@ void CSQC_nb_hud(void)
 		drawpic_skin(pos, "nexball_carrying", '80 34 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 }
 
+float race_status_time;
+float race_status_prev;
+string race_status_name_prev;
+void HUD_DrawRaceStatus(vector pos)
+{
+	if (race_status != race_status_prev || race_status_name != race_status_name_prev) {
+		race_status_time = time + 5;
+		race_status_prev = race_status;
+		if (race_status_name_prev)
+			strunzone(race_status_name_prev);
+		race_status_name_prev = strzone(race_status_name);
+	}
+
+	float a;
+	a = bound(0, race_status_time - time, 1);
+
+	string s;
+	s = textShortenToWidth(race_status_name, 120, '10 10 0', stringwidth_colors);
+
+	float rank;
+	if(race_status > 0)
+		rank = race_CheckName(race_status_name);
+	string rankname;
+	rankname = race_PlaceName(rank);
+
+	if(race_status == 0)
+		drawpic_skin(pos, "race_newfail", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+	else if(race_status == 1) {
+		drawpic_skin(pos, "race_newtime", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + '40 80 0' - eX * stringwidth(s, TRUE, '5 0 0'), s, '10 10 0', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		drawstring(pos + '40 20 0' - eX * stringwidth(rankname, TRUE, '7 0 0'), rankname, '14 14 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+	} else if(race_status == 2) {
+		if(race_status_name == GetPlayerName(player_localentnum -1) || !race_myrank || race_myrank < rank)
+			drawpic_skin(pos, "race_newrankgreen", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		else
+			drawpic_skin(pos, "race_newrankyellow", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + '40 80 0' - eX * stringwidth(s, TRUE, '5 0 0'), s, '10 10 0', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		drawstring(pos + '40 20 0' - eX * stringwidth(rankname, TRUE, '7 0 0'), rankname, '14 14 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+	} else if(race_status == 3) {
+		drawpic_skin(pos, "race_newrecordserver", '80 80 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + '40 80 0' - eX * stringwidth(s, TRUE, '5 0 0'), s, '10 10 0', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		drawstring(pos + '40 20 0' - eX * stringwidth(rankname, TRUE, '7 0 0'), rankname, '14 14 0', '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+	}
+
+	if (race_status_time - time <= 0) {
+		race_status_prev = -1;
+		race_status = -1;
+		if(race_status_name)
+			strunzone(race_status_name);
+		race_status_name = string_null;
+		if(race_status_name_prev)
+			strunzone(race_status_name_prev);
+		race_status_name_prev = string_null;
+	}
+}
+
+foo
+// merge with above
 // Race/CTS HUD modicon section
 float crecordtime_prev; // last remembered crecordtime
 float crecordtime_change_time; // time when crecordtime last changed
@@ -3019,6 +3021,16 @@ void HUD_ModIcons(void)
 		pos += '1 1 0' * padding;
 		mySize -= '2 2 0' * padding;
 	}
+
+	// TODO... well make them work in a panel etc
+	if(gametype == GAME_KEYHUNT)
+		HUD_Mod_KH();
+	else if(gametype == GAME_CTF)
+		HUD_Mod_CTF(pos, mySize);
+	else if(gametype == GAME_NEXBALL)
+		HUD_Mod_NexBall();
+	else if(gametype == GAME_CTS || gametype == GAME_RACE)
+		HUD_Mod_Race();
 }
 
 // Draw pressed keys (#11)
@@ -3157,9 +3169,9 @@ void HUD_Reset (void)
 {
 	// reset gametype specific icons
 	if(gametype == GAME_KEYHUNT)
-		CSQC_kh_hudreset();
+		HUD_Mod_KH_Reset();
 	else if(gametype == GAME_CTF)
-		CSQC_ctf_hudreset();
+		HUD_Mod_CTF_Reset();
 }
 
 void HUD_Main (void)
@@ -3201,8 +3213,10 @@ void HUD_Main (void)
 			HUD_RaceTimer();
 	if(HUD_Panel_CheckActive(9))
 		HUD_VoteWindow();
+	if(HUD_Panel_CheckActive(9))
+		HUD_ModIcons();
 	// TODO hud'ify
-	if(HUD_Panel_CheckActive(10))
+	if(HUD_Panel_CheckActive(11))
 		if(spectatee_status > 0 || cvar("cl_showpressedkeys") >= 2 || hud_configure)
 			HUD_DrawPressedKeys();
 
@@ -3211,15 +3225,4 @@ void HUD_Main (void)
 		HUD_ShowSpeed();
 	if (cvar("cl_showacceleration"))
 		HUD_ShowAcceleration();
-
-	// TODO... well make them work in a panel etc
-	if(gametype == GAME_KEYHUNT)
-		CSQC_kh_hud();
-	else if(gametype == GAME_CTF)
-		CSQC_ctf_hud();
-	else if(gametype == GAME_NEXBALL)
-		CSQC_nb_hud();
-	else if(gametype == GAME_CTS || gametype == GAME_RACE)
-		CSQC_race_hud();
-	return;
 }
