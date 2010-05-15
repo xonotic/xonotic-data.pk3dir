@@ -228,7 +228,7 @@ float w_tuba(float req)
 	{
 		precache_model ("models/weapons/g_tuba.md3");
 		precache_model ("models/weapons/v_tuba.md3");
-		precache_model ("models/weapons/h_tuba.dpm");
+		precache_model ("models/weapons/h_tuba.iqm");
 
 		//float i;
 		//for(i = -18; i <= +27; ++i)
