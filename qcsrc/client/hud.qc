@@ -996,7 +996,7 @@ void HUD_Panel_Mouse()
 	mousepos_x = bound(0, mousepos_x, vid_conwidth);
 	mousepos_y = bound(0, mousepos_y, vid_conheight);
 
-	drawpic_skin(mousepos, "gfx/menu/default/cursor.tga", '32 32 0', '1 1 1', 1, hud_alpha_fg);
+	drawpic(mousepos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor.tga"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 
 	if(mouseClicked)
 	{
@@ -2778,13 +2778,13 @@ void HUD_DrawPressedKeys(void)
 	float pressedkeys;
 
 	pressedkeys = getstatf(STAT_PRESSED_KEYS);
-	drawpic_skin(pos, "keys/key_bg.tga",           mySize, '1 1 1', 0.1 * hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * mySize_x - eX * 0.22 * mySize_x +       eY * 0.195 * mySize_y, ((pressedkeys & KEY_CROUCH) ? "keys/key_crouch_inv.tga" : "keys/key_crouch.tga"),        '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.040 * mySize_y, ((pressedkeys & KEY_FORWARD) ? "keys/key_forward_inv.tga" : "keys/key_forward.tga"),     '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * 0.023 * mySize_x +                      eY * 0.195 * mySize_y, ((pressedkeys & KEY_JUMP) ? "keys/key_jump_inv.tga" : "keys/key_jump.tga"),              '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * 0.1 * mySize_x +                        eY * 0.486 * mySize_y, ((pressedkeys & KEY_LEFT) ? "keys/key_left_inv.tga" : "keys/key_left.tga"),              '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.486 * mySize_y, ((pressedkeys & KEY_BACKWARD) ? "keys/key_backward_inv.tga" : "keys/key_backward.tga"),  '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * mySize_x - eX * 0.372 * mySize_x +      eY * 0.486 * mySize_y, ((pressedkeys & KEY_RIGHT) ? "keys/key_right_inv.tga" : "keys/key_right.tga"),           '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos, "key_bg.tga",           mySize, '1 1 1', 0.1 * hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * mySize_x - eX * 0.22 * mySize_x +       eY * 0.195 * mySize_y, ((pressedkeys & KEY_CROUCH) ? "key_crouch_inv.tga" : "key_crouch.tga"),        '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.040 * mySize_y, ((pressedkeys & KEY_FORWARD) ? "key_forward_inv.tga" : "key_forward.tga"),     '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * 0.023 * mySize_x +                      eY * 0.195 * mySize_y, ((pressedkeys & KEY_JUMP) ? "key_jump_inv.tga" : "key_jump.tga"),              '1 1 0' * (1/3) * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * 0.1 * mySize_x +                        eY * 0.486 * mySize_y, ((pressedkeys & KEY_LEFT) ? "key_left_inv.tga" : "key_left.tga"),              '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.486 * mySize_y, ((pressedkeys & KEY_BACKWARD) ? "key_backward_inv.tga" : "key_backward.tga"),  '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * mySize_x - eX * 0.372 * mySize_x +      eY * 0.486 * mySize_y, ((pressedkeys & KEY_RIGHT) ? "key_right_inv.tga" : "key_right.tga"),           '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void HUD_ShowSpeed(void)
