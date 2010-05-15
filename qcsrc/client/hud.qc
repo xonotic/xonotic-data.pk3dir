@@ -786,6 +786,7 @@ float HUD_Panel_SetSize(float id, vector mySize)
 	return didntresize;
 }
 
+// check if the panel is enough close to central vertical/horizontal axis, and
 // check if move will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector
 vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 {
@@ -798,6 +799,29 @@ vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 	vector targSize;
 	vector myCenter;
 	vector targCenter;
+
+	vector snapDistance;
+	snapDistance_x = vid_conwidth / 64;
+	snapDistance_y = vid_conheight / 64;
+
+	myCenter = eX * (myPos_x + 0.5 * mySize_x);
+	targCenter = eX * (vid_conwidth * 0.5);
+	if (myCenter_x > targCenter_x - snapDistance_x && myCenter_x < targCenter_x + snapDistance_x)
+	{
+		// snap to central vertical axis
+		myTarget_x = targCenter_x - mySize_x * 0.5;
+		myTarget_y = myPos_y;
+	}
+	
+	myCenter = eY * (myPos_y + 0.5 * mySize_y);
+	targCenter = eY * (vid_conheight * 0.5);
+	if (myCenter_y > targCenter_y - snapDistance_y && myCenter_y < targCenter_y + snapDistance_y)
+	{
+		// snap to central horizontal axis
+		if (myTarget_x == 0)
+			myTarget_x = myPos_x;
+		myTarget_y = targCenter_y - mySize_y * 0.5;
+	}
 
 	for (i = 0; i < panel_cnt; ++i) {
 		if(i == id || !HUD_Panel_CheckActive(i))
