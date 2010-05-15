@@ -644,7 +644,7 @@ vector HUD_Panel_CheckLimitSize(float id, vector mySize)
 		//	mySize_x = max(mySize_y * 2, mySize_x); // at least 2 * height
 		//	break;
 		case 5: 
-			mySize_x = max(mySize_y * 2, mySize_x); // at least 2 * height
+			mySize_y = (1/4.1) * mySize_x; // 1/4.1 * width, trial and error...
 			break;
 		case 7: 
 			mySize_y = (1/4) * mySize_x; // 1/4 * width
@@ -1996,32 +1996,14 @@ void HUD_Timer()
 		seconds = secondsLeft;
 	}
 
-	if(mySize_x/mySize_y > 5.1)
-	{
-		if(minutes > 999)
-			seconds = 99;
-		minutes = min(minutes, 999);
-		if(minutesLeft >= 1 || cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
-			if(minutes < 100)
-				drawpic_skin(pos + eX * mySize_x - eX * 5.1 * mySize_y, "timer", '1 1 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
-			HUD_DrawXNum(pos + eX * mySize_x - eX * 5.1 * mySize_y, minutes, 3, 0, mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic_skin(pos + eX * mySize_x - eX * 2.57 * mySize_y, "num_colon", '1 1 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
-		}
-		HUD_DrawXNum(pos + eX * mySize_x - eX * 2 * mySize_y, seconds, -2, 0, mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+	if(minutes > 999)
+		seconds = 99;
+	minutes = min(minutes, 999);
+	if(minutesLeft >= 1 || cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
+		HUD_DrawXNum(pos + eX * mySize_x - eX * 5.1 * mySize_y, minutes, 3, 0, mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic_skin(pos + eX * mySize_x - eX * 2.57 * mySize_y, "num_colon", '1 1 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
 	}
-	else
-	{
-		if(minutes > 99)
-			seconds = 99;
-		minutes = min(minutes, 99);
-		if(minutesLeft >= 1 || cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
-			if(minutes < 100)
-				drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.5 * 0.5 * mySize_y, "timer", '0.5 0.5 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
-			HUD_DrawXNum(pos + eX * 0.5 * mySize_x - eX * mySize_y + eY * 0.5 * mySize_y, minutes, -2, 0, 0.5 * mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.5 * 0.5 * mySize_y + eY * 0.5 * mySize_y, "num_colon", '0.5 0.5 0' * mySize_y, timer_color, hud_alpha_fg, DRAWFLAG_NORMAL);
-		}
-		HUD_DrawXNum(pos + eX * 0.51 * mySize_x + eY * 0.5 * mySize_y, seconds, -2, 0, 0.5 * mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-	}
+	HUD_DrawXNum(pos + eX * mySize_x - eX * 2 * mySize_y, seconds, -2, 0, mySize_y, timer_color, 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 // Radar (#6)
