@@ -5,7 +5,3 @@ weight 61
 age 25
 
 Lightweight Xonotic Solider
-
-Sex: Female
-Weight: 61 kg
-Age: 25

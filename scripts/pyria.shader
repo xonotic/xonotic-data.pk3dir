@@ -1,11 +1,11 @@
-pyrianewhair
+pyriahair
 {
 
 	surfaceparm trans
 	cull none
 
 	{
-		map textures/pyrianewhair
+		map textures/pyriahair
 		alphaFunc GE128
 		blendFunc blend
 		rgbGen identity
