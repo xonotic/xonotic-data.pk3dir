@@ -440,8 +440,8 @@ void CL_Weaponentity_Think()
 			}
 			else
 			{
-				setmodel(self, strcat("models/weapons/h_", self.owner.weaponname, ".dpm")); // precision set below
-				animfilename = strcat("models/weapons/h_", self.owner.weaponname, ".dpm.animinfo");
+				setmodel(self, strcat("models/weapons/h_", self.owner.weaponname, ".iqm")); // precision set below
+				animfilename = strcat("models/weapons/h_", self.owner.weaponname, ".iqm.animinfo");
 				animfile = fopen(animfilename, FILE_READ);
 				// preset some defaults that work great for renamed zym files (which don't need an animinfo)
 				self.anim_fire1  = '0 1 0.01';

@@ -92,7 +92,7 @@ void fillXonoticEffectsSettingsTab(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Particle quality:"));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1.0, 0.05, "cl_particles_quality"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0.2, 1.0, 0.1, "cl_particles_quality"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Particle dist.:"));
 		me.TD(me, 1, 2, e = makeXonoticSlider(500, 2000, 100, "r_drawparticles_drawdistance"));

@@ -337,7 +337,7 @@ float w_fireball(float req)
 	{
 		precache_model ("models/weapons/g_fireball.md3");
 		precache_model ("models/weapons/v_fireball.md3");
-		precache_model ("models/weapons/h_fireball.dpm");
+		precache_model ("models/weapons/h_fireball.iqm");
 		precache_model ("models/sphere/sphere.md3");
 		precache_sound ("weapons/fireball_fire.wav");
 		precache_sound ("weapons/fireball_fire2.wav");

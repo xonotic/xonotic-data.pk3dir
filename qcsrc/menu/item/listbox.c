@@ -106,9 +106,9 @@ float mouseDragListBox(entity me, vector pos)
 		if(hit)
 		{
 			// calculate new pos to v
-			float delta;
-			delta = (pos_y - me.pressOffset) / (1 - (me.controlBottom - me.controlTop)) * (me.nItems * me.itemHeight - 1);
-			me.scrollPos = me.previousValue + delta;
+			float d;
+			d = (pos_y - me.pressOffset) / (1 - (me.controlBottom - me.controlTop)) * (me.nItems * me.itemHeight - 1);
+			me.scrollPos = me.previousValue + d;
 		}
 		else
 			me.scrollPos = me.previousValue;

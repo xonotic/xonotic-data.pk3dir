@@ -196,7 +196,7 @@ float w_hlac(float req)
 	{
         precache_model ("models/weapons/g_hlac.md3");
 		precache_model ("models/weapons/v_hlac.md3");
-		precache_model ("models/weapons/h_hlac.dpm");
+		precache_model ("models/weapons/h_hlac.iqm");
 		precache_sound ("weapons/lasergun_fire.wav");
 
 	}

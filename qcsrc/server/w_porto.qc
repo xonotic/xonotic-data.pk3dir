@@ -257,7 +257,7 @@ float w_porto(float req)
 	{
 		precache_model ("models/weapons/g_porto.md3");
 		precache_model ("models/weapons/v_porto.md3");
-		precache_model ("models/weapons/h_porto.dpm");
+		precache_model ("models/weapons/h_porto.iqm");
 		precache_model ("models/portal.md3");
 		precache_sound ("porto/bounce.wav");
 		precache_sound ("porto/create.wav");

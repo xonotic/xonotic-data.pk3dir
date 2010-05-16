@@ -520,7 +520,7 @@ float w_rlauncher(float req)
 		precache_model ("models/flash.md3");
 		precache_model ("models/weapons/g_rl.md3");
 		precache_model ("models/weapons/v_rl.md3");
-		precache_model ("models/weapons/h_rl.dpm");
+		precache_model ("models/weapons/h_rl.iqm");
 		precache_sound ("weapons/rocket_det.wav");
 		precache_sound ("weapons/rocket_fire.wav");
 		precache_sound ("weapons/rocket_mode.wav");
