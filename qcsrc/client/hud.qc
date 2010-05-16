@@ -2982,8 +2982,11 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	drawfont = hud_font;
 }
 
+// TODO: idea: alpha fade in/out empty panels
 void HUD_ModIcons(void)
 {
+	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && !hud_configure)
+		return;
 	float id = 10;
 	vector pos, mySize;
 	pos = HUD_Panel_GetPos(id);
@@ -3189,11 +3192,11 @@ void HUD_Main (void)
 			HUD_RaceTimer();
 	if(HUD_Panel_CheckActive(9))
 		HUD_VoteWindow();
-	if(HUD_Panel_CheckActive(9))
+	if(HUD_Panel_CheckActive(10))
 		HUD_ModIcons();
 	// TODO hud'ify
 	if(HUD_Panel_CheckActive(11))
-		if(spectatee_status > 0 || cvar("cl_showpressedkeys") >= 2 || hud_configure)
+		if(spectatee_status > 0 || cvar("hud_pressedkeys") >= 2 || hud_configure)
 			HUD_DrawPressedKeys();
 
 	// TODO hud_'ify these
