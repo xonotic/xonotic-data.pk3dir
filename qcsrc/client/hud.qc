@@ -80,6 +80,10 @@ void drawpic_skin(vector pos, string pic, vector sz, vector color, float alpha, 
 	drawpic(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/", pic), sz, color, alpha, drawflag);
 }
 
+void drawpic_skin_expanding(vector pos, string pic, vector sz, vector rgb, float alpha, float flag, float fadelerp) {
+	drawpic_expanding(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/", pic), sz, rgb, alpha, flag, fadelerp);
+}
+
 // return HUD background color
 vector HUD_GetBgColor()
 {
@@ -587,6 +591,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 		fputs(fh, strcat("seta hud_progressbar_health_color \"", cvar_string("hud_progressbar_health_color"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_progressbar_armor_color \"", cvar_string("hud_progressbar_armor_color"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_progressbar_fuel_color \"", cvar_string("hud_progressbar_fuel_color"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_progressbar_nexball_color \"", cvar_string("hud_progressbar_nexball_color"), "\"", "\n"));
 		fputs(fh, "\n");
 
 		// common cvars for all panels
@@ -2206,10 +2211,33 @@ void HUD_Radar(void)
 	drawresetcliparea();
 };
 
-todo merge!
-void HUD_Mod_Race (void) {
+// Score (#7)
+//
+void HUD_Score()
+{
+	float id = 7;
+	vector pos, mySize;
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
+
+	HUD_Panel_DrawBg(id, pos, mySize);
+	float padding;
+	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	if(padding)
+	{
+		pos += '1 1 0' * padding;
+		mySize -= '2 2 0' * padding;
+	}
+
+	float score, distribution, leader;
+	float score_len, distr_len;
+	vector score_pos, secondary_score_pos, distribution_color;
+	entity tm, pl, me;
+	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
+
+	// TODO... this (race part) still uses constant coordinates :/
 	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
-		pl = players.sort_next;
+		/*pl = players.sort_next;
 		if(pl == me)
 			pl = pl.sort_next;
 		if(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)
@@ -2260,34 +2288,8 @@ void HUD_Mod_Race (void) {
 
 		HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '132 0 0', racemin, -2, 0, 30, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		drawpic_skin(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '84 0 0', "num_colon", '30 30 0', '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
-	}
-}
-
-// Score (#7)
-//
-void HUD_Score()
-{
-	float id = 7;
-	vector pos, mySize;
-	pos = HUD_Panel_GetPos(id);
-	mySize = HUD_Panel_GetSize(id);
-
-	HUD_Panel_DrawBg(id, pos, mySize);
-	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
-	if(padding)
-	{
-		pos += '1 1 0' * padding;
-		mySize -= '2 2 0' * padding;
-	}
-
-	float score, distribution, leader;
-	float score_len, distr_len;
-	vector score_pos, secondary_score_pos, distribution_color;
-	entity tm, pl, me;
-	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
-
-	if (!teamplay) { // non-teamgames
+		*/
+	} else if (!teamplay) { // non-teamgames
 		// me vector := [team/connected frags id]
 		pl = players.sort_next;
 		if(pl == me)
@@ -2699,13 +2701,13 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 
 	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
 	if(red_icon_prevstatus && f < 1)
-		drawpic_expanding(redflag_pos, red_icon_prevstatus, '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		drawpic_skin_expanding(redflag_pos, red_icon_prevstatus, '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(red_icon)
 		drawpic_skin(redflag_pos, red_icon, '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg * red_alpha * f, DRAWFLAG_NORMAL);
 
 	f = bound(0, blueflag_statuschange_elapsedtime*2, 1);
 	if(blue_icon_prevstatus && f < 1)
-		drawpic_expanding(blueflag_pos, blue_icon_prevstatus, '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		drawpic_skin_expanding(blueflag_pos, blue_icon_prevstatus, '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(blue_icon)
 		drawpic_skin(blueflag_pos, blue_icon, '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg * blue_alpha * f, DRAWFLAG_NORMAL);
 }
@@ -2718,22 +2720,25 @@ void HUD_Mod_KH_Reset(void)
 	kh_runheretime = 0;
 }
 
-void HUD_Mod_KH(void)
+void HUD_Mod_KH(vector pos, vector mySize)
 {
 	float kh_keys;
 	float keyteam;
 	float a, aa;
 	vector p, pa, kh_size, kh_asize;
 
-	p_x = 6;
-	p_y = vid_conheight - 34 - 3;
-	p_z = 0;
+	p_x = pos_x;
+	p_y = pos_y + 0.25 * mySize_y;
 
 	kh_keys = getstati(STAT_KH_KEYS);
 
-	kh_size = '19 34 0';
-	kh_asize = '19 10 0';
-	pa = p + '0 -10 0';
+	kh_size_x = mySize_x * 0.25;
+	kh_size_y = 0.75 * mySize_y;
+
+	pa = p - eY * 0.25 * mySize_y;
+
+	kh_asize_x = mySize_x * 0.25;
+	kh_asize_y = mySize_y * 0.25;
 
 	float i, key;
 
@@ -2786,16 +2791,16 @@ void HUD_Mod_KH(void)
 			switch(keyteam)
 			{
 				case COLOR_TEAM1:
-					drawpic (pa, "kh_redarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_skin(pa, "kh_redarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				case COLOR_TEAM2:
-					drawpic (pa, "kh_bluearrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_skin(pa, "kh_bluearrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				case COLOR_TEAM3:
-					drawpic (pa, "kh_yellowarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_skin(pa, "kh_yellowarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				case COLOR_TEAM4:
-					drawpic (pa, "kh_pinkarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_skin(pa, "kh_pinkarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				default:
 					break;
@@ -2803,45 +2808,31 @@ void HUD_Mod_KH(void)
 			switch(i) // YAY! switch(i) inside a for loop for i. DailyWTF, here we come!
 			{
 				case 0:
-					drawpic (p, "kh_red", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_skin(p, "kh_red", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				case 1:
-					drawpic (p, "kh_blue", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_skin(p, "kh_blue", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				case 2:
-					drawpic (p, "kh_yellow", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_skin(p, "kh_yellow", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 				case 3:
-					drawpic (p, "kh_pink", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_skin(p, "kh_pink", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
 					break;
 			}
 		}
-		p_x += 24;
-		pa_x += 24;
+		p_x += 0.25 * mySize_x;
+		pa_x += 0.25 * mySize_x;
 	}
 }
 
-// Nexball HUD modicon section
-#define NBPB_SIZE '96 38 0'
-#define NBPB_BT 2                   //thickness
-#define NBPB_BRGB '1 1 1'
-#define NBPB_BALPH 1                //alpha
-#define NBPB_BFLAG DRAWFLAG_NORMAL
-#define NBPB_IALPH 0.4
-#define NBPB_IFLAG DRAWFLAG_NORMAL
-#define NBPB_IRGB '0.7 0.1 0'
-
-void HUD_Mod_NexBall(void)
+// Nexball HUD mod icon
+void HUD_Mod_NexBall(vector pos, vector mySize)
 {
 	float stat_items, nb_pb_starttime, dt, p;
-	vector pos;
 
 	stat_items = getstati(STAT_ITEMS);
 	nb_pb_starttime = getstatf(STAT_NB_METERSTART);
-
-	pos_x = 4;
-	pos_y = vid_conheight - 42;
-	pos_z = 0;
 
 	//Manage the progress bar if any
 	if (nb_pb_starttime > 0)
@@ -2853,30 +2844,90 @@ void HUD_Mod_NexBall(void)
 		if (p > 1)
 			p = 2 - p;
 
-		s = NBPB_SIZE;
 		//Draw the filling
-		drawfill(pos, p * s_x * eX + s_y * eY, NBPB_IRGB, NBPB_IALPH, NBPB_IFLAG);
-
-		//Draw the box
-		s = NBPB_SIZE;
-		drawline(NBPB_BT, pos    , pos + eX * s_x, NBPB_BRGB, NBPB_BALPH, NBPB_BFLAG);
-		drawline(NBPB_BT, pos    , pos + eY * s_y, NBPB_BRGB, NBPB_BALPH, NBPB_BFLAG);
-		drawline(NBPB_BT, pos + s, pos + eX * s_x, NBPB_BRGB, NBPB_BALPH, NBPB_BFLAG);
-		drawline(NBPB_BT, pos + s, pos + eY * s_y, NBPB_BRGB, NBPB_BALPH, NBPB_BFLAG);
+		drawpic_skin(pos, "statusbar", eX * p * mySize_x + eY * mySize_y, HUD_Panel_GetProgressBarColor("nexball"), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
 	}
 
-	pos_x += 12; //horizontal margin to the picture
-	pos_y += 2; //vertical margin to the picture
+	pos_x += 0.5 * mySize_x - 0.5 * mySize_y; //horizontal margin to the picture
 
 	if (stat_items & IT_KEY1)
-		drawpic_skin(pos, "nexball_carrying", '80 34 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "nexball_carrying", '1 1 0' * mySize_y, '1 1 1', 1, DRAWFLAG_NORMAL);
 }
+
+// Race/CTS HUD mod icons
+float crecordtime_prev; // last remembered crecordtime
+float crecordtime_change_time; // time when crecordtime last changed
+float srecordtime_prev; // last remembered srecordtime
+float srecordtime_change_time; // time when srecordtime last changed
 
 float race_status_time;
 float race_status_prev;
 string race_status_name_prev;
-void HUD_DrawRaceStatus(vector pos)
+void HUD_Mod_Race(vector pos, vector mySize)
 {
+	entity me;
+	me = playerslots[player_localentnum - 1];
+	float t, score;
+	float f; // yet another function has this
+	score = me.(scores[ps_primary]);
+
+	if not((scores_flags[ps_primary] & SFL_TIME) && !teamplay) // race/cts record display on HUD
+		return; // no records in the actual race
+
+	drawfont = hud_bigfont;
+
+	// clientside personal record
+	string rr;
+	if(gametype == GAME_CTS)
+		rr = CTS_RECORD;
+	else
+		rr = RACE_RECORD;
+	t = stof(db_get(ClientProgsDB, strcat(shortmapname, rr, "time")));
+
+	if(score && (score < t || !t)) {
+		db_put(ClientProgsDB, strcat(shortmapname, rr, "time"), ftos(score));
+		if(cvar("cl_autodemo_delete_keeprecords"))
+		{
+			f = cvar("cl_autodemo_delete");
+			f &~= 1;
+			cvar_set("cl_autodemo_delete", ftos(f)); // don't delete demo with new record!
+		}
+	}
+
+	if(t != crecordtime_prev) {
+		crecordtime_prev = t;
+		crecordtime_change_time = time;
+	}
+	f = time - crecordtime_change_time;
+
+	if (f > 1) {
+		drawstring(pos, "Personal best ", '1 1 0' * 0.15 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + eY * 0.2 * mySize_y, TIME_ENCODED_TOSTRING(t), '1 1 0' * 0.2 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	} else {
+		drawstring(pos, "Personal best ", '1 1 0' * 0.15 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + eY * 0.2 * mySize_y, TIME_ENCODED_TOSTRING(t), '1 1 0' * 0.2 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring_expanding(pos, "Personal best ", '1 1 0' * 0.15 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL, f);
+		drawstring_expanding(pos + eY * 0.2 * mySize_y, TIME_ENCODED_TOSTRING(t), '1 1 0' * 0.2 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL, f);
+	}
+
+	// server record
+	t = race_server_record;
+	if(t != srecordtime_prev) {
+		srecordtime_prev = t;
+		srecordtime_change_time = time;
+	}
+	f = time - srecordtime_change_time;
+
+	if (f > 1) {
+		drawstring(pos + eY * 0.5 * mySize_y, "Server best ", '1 1 0' * 0.15 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + eY * 0.5 * mySize_y + eY * 0.2 * mySize_y, TIME_ENCODED_TOSTRING(t),'1 1 0' * 0.2 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	} else {
+		drawstring(pos + eY * 0.5 * mySize_y, "Server best ", '1 1 0' * 0.15 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + eY * 0.5 * mySize_y + eY * 0.2 * mySize_y, TIME_ENCODED_TOSTRING(t),'1 1 0' * 0.2 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring_expanding(pos + eY * 0.5 * mySize_y, "Server best ", '1 1 0' * 0.15 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL, f);
+		drawstring_expanding(pos + eY * 0.5 * mySize_y + eY * 0.2 * mySize_y, TIME_ENCODED_TOSTRING(t),'1 1 0' * 0.2 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL, f);
+	}
+
 	if (race_status != race_status_prev || race_status_name != race_status_name_prev) {
 		race_status_time = time + 5;
 		race_status_prev = race_status;
@@ -2885,6 +2936,8 @@ void HUD_DrawRaceStatus(vector pos)
 		race_status_name_prev = strzone(race_status_name);
 	}
 
+	pos_x += mySize_x/2;
+	// race "awards"
 	float a;
 	a = bound(0, race_status_time - time, 1);
 
@@ -2926,83 +2979,6 @@ void HUD_DrawRaceStatus(vector pos)
 			strunzone(race_status_name_prev);
 		race_status_name_prev = string_null;
 	}
-}
-
-foo
-// merge with above
-// Race/CTS HUD modicon section
-float crecordtime_prev; // last remembered crecordtime
-float crecordtime_change_time; // time when crecordtime last changed
-float srecordtime_prev; // last remembered srecordtime
-float srecordtime_change_time; // time when srecordtime last changed
-void CSQC_race_hud(void)
-{
-	entity me;
-	me = playerslots[player_localentnum - 1];
-	float t, score;
-	float f; // yet another function has this
-	score = me.(scores[ps_primary]);
-
-	if not((scores_flags[ps_primary] & SFL_TIME) && !teamplay) // race/cts record display on HUD
-		return; // no records in the actual race
-
-	drawfont = hud_bigfont;
-	vector pos;
-	pos_x = 2;
-	pos_y = vid_conheight - 48;
-
-	// clientside personal record
-	string rr;
-	if(gametype == GAME_CTS)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-	t = stof(db_get(ClientProgsDB, strcat(shortmapname, rr, "time")));
-
-	if(score && (score < t || !t)) {
-		db_put(ClientProgsDB, strcat(shortmapname, rr, "time"), ftos(score));
-		if(cvar("cl_autodemo_delete_keeprecords"))
-		{
-			f = cvar("cl_autodemo_delete");
-			f &~= 1;
-			cvar_set("cl_autodemo_delete", ftos(f)); // don't delete demo with new record!
-		}
-	}
-
-	if(t != crecordtime_prev) {
-		crecordtime_prev = t;
-		crecordtime_change_time = time;
-	}
-	f = time - crecordtime_change_time;
-
-	if (f > 1) {
-		drawstring(pos, "Personal best ", '10 10 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawstring(pos + '0 10 0', TIME_ENCODED_TOSTRING(t),'14 14 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	} else {
-		drawstring(pos, "Personal best ", '10 10 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawstring(pos + '0 10 0', TIME_ENCODED_TOSTRING(t),'14 14 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawstring_expanding(pos, "Personal best ", '10 10 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL, f);
-		drawstring_expanding(pos + '0 10 0', TIME_ENCODED_TOSTRING(t),'14 14 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL, f);
-	}
-
-	// server record
-	pos_y += 26;
-	t = race_server_record;
-	if(t != srecordtime_prev) {
-		srecordtime_prev = t;
-		srecordtime_change_time = time;
-	}
-	f = time - srecordtime_change_time;
-
-	if (f > 1) {
-		drawstring(pos, "Server best ", '10 10 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawstring(pos + '0 10 0', TIME_ENCODED_TOSTRING(t),'14 14 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-	} else {
-		drawstring(pos, "Server best ", '10 10 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawstring(pos + '0 10 0', TIME_ENCODED_TOSTRING(t),'14 14 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawstring_expanding(pos, "Server best ", '10 10 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL, f);
-		drawstring_expanding(pos + '0 10 0', TIME_ENCODED_TOSTRING(t),'14 14 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL, f);
-	}
 	drawfont = hud_font;
 }
 
@@ -3024,13 +3000,13 @@ void HUD_ModIcons(void)
 
 	// TODO... well make them work in a panel etc
 	if(gametype == GAME_KEYHUNT)
-		HUD_Mod_KH();
+		HUD_Mod_KH(pos, mySize);
 	else if(gametype == GAME_CTF)
 		HUD_Mod_CTF(pos, mySize);
 	else if(gametype == GAME_NEXBALL)
-		HUD_Mod_NexBall();
+		HUD_Mod_NexBall(pos, mySize);
 	else if(gametype == GAME_CTS || gametype == GAME_RACE)
-		HUD_Mod_Race();
+		HUD_Mod_Race(pos, mySize);
 }
 
 // Draw pressed keys (#11)
