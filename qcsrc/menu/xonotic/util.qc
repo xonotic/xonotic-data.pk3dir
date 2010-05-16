@@ -332,7 +332,6 @@ void postMenuDraw()
 	if(autocvar_menu_watermark != "")
 	{
 		vector fs = '48 48 0';
-		float w;
 		draw_CenterText('0.5 0.1 0', autocvar_menu_watermark, globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
 	}
 }
