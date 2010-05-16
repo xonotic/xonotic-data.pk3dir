@@ -453,7 +453,7 @@ float w_seeker(float req)
 	{
 		precache_model ("models/weapons/g_seeker.md3");
 		precache_model ("models/weapons/v_seeker.md3");
-		precache_model ("models/weapons/h_seeker.dpm");
+		precache_model ("models/weapons/h_seeker.iqm");
 		precache_sound ("weapons/tag_fire.wav");
 		precache_sound ("weapons/flac_fire.wav");
 		precache_sound ("weapons/seeker_fire.wav");

@@ -167,7 +167,7 @@ float w_laser(float req)
 	{
 		precache_model ("models/weapons/g_laser.md3");
 		precache_model ("models/weapons/v_laser.md3");
-		precache_model ("models/weapons/h_laser.dpm");
+		precache_model ("models/weapons/h_laser.iqm");
 		precache_sound ("weapons/lasergun_fire.wav");
 		precache_sound ("weapons/gauntlet_fire.wav");
 	}
