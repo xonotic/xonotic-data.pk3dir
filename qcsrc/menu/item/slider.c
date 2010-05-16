@@ -150,10 +150,10 @@ float keyDownSlider(entity me, float key, float ascii, float shift)
 float mouseDragSlider(entity me, vector pos)
 {
 	float hit;
-	float v, anim;
+	float v, animed;
 	if(me.disabled)
 		return 0;
-	anim = me.animated;
+	animed = me.animated;
 	me.animated = false;
 	if(me.pressed)
 	{
@@ -172,7 +172,7 @@ float mouseDragSlider(entity me, vector pos)
 		else
 			me.setValue(me, me.previousValue);
 	}
-	me.animated = anim;
+	me.animated = animed;
 	return 1;
 }
 float mousePressSlider(entity me, vector pos)
