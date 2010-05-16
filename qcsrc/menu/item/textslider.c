@@ -40,7 +40,7 @@ void setValueFromIdentifierTextSlider(entity me, string id)
 			setValueSlider( me, i );
 			return;
 		}
-	me.value = -1;
+	setValueSlider( me, -1 );
 }
 string getIdentifierTextSlider(entity me)
 {

@@ -62,7 +62,7 @@ void loadCvarsXonoticSlider(entity me)
 	if not(me.cvarName)
 		return;
 
-	me.value = cvar(me.cvarName);
+	me.setValue( me, cvar(me.cvarName) );
 }
 void saveCvarsXonoticSlider(entity me)
 {
