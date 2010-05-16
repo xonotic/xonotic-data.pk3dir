@@ -2620,6 +2620,12 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
 	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
 
+	if(hud_configure)
+	{
+		redflag = 1;
+		blueflag = 2;
+	}
+
 	// when status CHANGES, set old status into prevstatus and current status into status
 	if (redflag != redflag_prevframe)
 	{
@@ -3016,7 +3022,7 @@ void HUD_ModIcons(void)
 	// TODO... well make them work in a panel etc
 	if(gametype == GAME_KEYHUNT)
 		HUD_Mod_KH(pos, mySize);
-	else if(gametype == GAME_CTF)
+	else if(gametype == GAME_CTF || hud_configure)
 		HUD_Mod_CTF(pos, mySize);
 	else if(gametype == GAME_NEXBALL)
 		HUD_Mod_NexBall(pos, mySize);
