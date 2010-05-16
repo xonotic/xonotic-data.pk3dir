@@ -852,6 +852,12 @@ float HUD_Panel_SetSize(float id, vector mySize)
 	//mySize_x = bound(0.025 * vid_conwidth, mySize_x, vid_conwidth);
 	//mySize_y = bound(0.025 * vid_conheight, mySize_y, vid_conheight);
 
+	if(cvar("hud_configure_grid"))
+	{
+		mySize_x = floor(mySize_x/cvar("hud_configure_grid_x") + 0.5) * cvar("hud_configure_grid_x");
+		mySize_y = floor(mySize_y/cvar("hud_configure_grid_y") + 0.5) * cvar("hud_configure_grid_y");
+	}
+
 	// TODO: is this needed?
 	// this is to check if (and how) SetPos should be called
 	if(mySize_x == oldSize_x && mySize_y == oldSize_y)
@@ -958,6 +964,12 @@ void HUD_Panel_SetPos(float id, vector pos, float didntresize)
 
 	pos_x = bound(0, pos_x, vid_conwidth - mySize_x);
 	pos_y = bound(0, pos_y, vid_conheight - mySize_y);
+
+	if(cvar("hud_configure_grid"))
+	{
+		pos_x = floor(pos_x/cvar("hud_configure_grid_x") + 0.5) * cvar("hud_configure_grid_x");
+		pos_y = floor(pos_y/cvar("hud_configure_grid_y") + 0.5) * cvar("hud_configure_grid_y");
+	}
 
 	if (pos_x + 0.5 * mySize_x > 0.5 * vid_conwidth)
 		pos_x = pos_x - vid_conwidth;
