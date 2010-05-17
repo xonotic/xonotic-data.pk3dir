@@ -47,6 +47,7 @@ ENDCLASS(Slider)
 void setValueSlider(entity me, float val)
 {
 	if (me.animated) {
+		anim.finishObjAnim(anim, me);
 		makeHostedEasing(me, setSliderValueSlider, easingQuadInOut, 1, me.sliderValue, val);
 	} else {
 		me.setSliderValue(me, val);
