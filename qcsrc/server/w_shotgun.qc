@@ -129,7 +129,7 @@ float w_shotgun(float req)
 		precache_model ("models/uziflash.md3");
 		precache_model ("models/weapons/g_shotgun.md3");
 		precache_model ("models/weapons/v_shotgun.md3");
-		precache_model ("models/weapons/h_shotgun.dpm");
+		precache_model ("models/weapons/h_shotgun.iqm");
 		precache_sound ("misc/itempickup.wav");
 		precache_sound ("weapons/shotgun_fire.wav");
 	}

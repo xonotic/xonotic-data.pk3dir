@@ -322,8 +322,18 @@ float preMenuInit()
 
 string campaign_name_previous;
 float campaign_won_previous;
+#ifdef WATERMARK
+var string autocvar_menu_watermark = WATERMARK();
+#else
+var string autocvar_menu_watermark = "";
+#endif
 void postMenuDraw()
 {
+	if(autocvar_menu_watermark != "")
+	{
+		vector fs = '48 48 0';
+		draw_CenterText('0.5 0.1 0', autocvar_menu_watermark, globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
+	}
 }
 void preMenuDraw()
 {

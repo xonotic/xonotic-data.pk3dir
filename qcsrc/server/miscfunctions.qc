@@ -1583,6 +1583,7 @@ void precache()
         precache_all_playermodels("models/player/*.dpm");
         precache_all_playermodels("models/player/*.md3");
         precache_all_playermodels("models/player/*.psk");
+        precache_all_playermodels("models/player/*.iqm");
     }
 
     if (cvar("sv_defaultcharacter"))
@@ -2325,7 +2326,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			{
 				// center
 				vecs_y = 0;
-				vecs_z -= 4;
+				vecs_z -= 2;
 			}
 			else
 			{
@@ -2338,7 +2339,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			{
 				// center
 				vecs_y = 0;
-				vecs_z -= 4;
+				vecs_z -= 2;
 			}
 			else
 			{
@@ -2376,7 +2377,7 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual)
 		else
 		{
 			vecs_y = 0;
-			vecs_z -= 4;
+			vecs_z -= 2;
 		}
 	}
 	else if ((s = cvar_string("g_shootfromfixedorigin")) != "")

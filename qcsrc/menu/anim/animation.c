@@ -27,11 +27,11 @@ void setterDummy(entity, float);
 #endif
 
 #ifdef IMPLEMENTATION
-void configureAnimationAnimation(entity me, entity obj, void(entity, float) setter, float startTime, float duration, float startValue, float end)
+void configureAnimationAnimation(entity me, entity obj, void(entity, float) objSetter, float animStartTime, float animDuration, float animStartValue, float animEndValue)
 {
-	me.setObjectSetter(me, obj, setter);
-	me.setTimeStartDuration(me, startTime, duration);
-	me.setValueStartEnd(me, startValue, end);
+	me.setObjectSetter(me, obj, objSetter);
+	me.setTimeStartDuration(me, animStartTime, animDuration);
+	me.setValueStartEnd(me, animStartValue, animEndValue);
 }
 
 void setTimeStartEndAnimation(entity me, float s, float e)
@@ -64,22 +64,22 @@ void setObjectSetterAnimation(entity me, entity o, void(entity, float) s)
 	me.setter = s;
 }
 
-void tickAnimation(entity me, float time)
+void tickAnimation(entity me, float tickTime)
 {
-	if (me.isStopped(me) || me.isFinished(me) || (time < me.startTime))
+	if (me.isStopped(me) || me.isFinished(me) || (tickTime < me.startTime))
 		return;
 
-	if (time >= (me.startTime + me.duration))
+	if (tickTime >= (me.startTime + me.duration))
 		me.finishAnim(me);
 	else
-		me.value = me.calcValue(me, (time - me.startTime), me.duration, me.startValue, me.delta);
+		me.value = me.calcValue(me, (tickTime - me.startTime), me.duration, me.startValue, me.delta);
 
 	me.setter(me.object, me.value);
 }
 
-float calcValueAnimation(entity me, float time, float duration, float startValue, float delta)
+float calcValueAnimation(entity me, float tickTime, float animDuration, float animStartValue, float animDelta)
 {
-	return startValue;
+	return animStartValue;
 }
 
 float isStoppedAnimation(entity me)
@@ -108,7 +108,7 @@ void finishAnimAnimation(entity me)
 	me.finished = TRUE;
 }
 
-void setterDummy(entity object, float value)
+void setterDummy(entity obj, float objValue)
 {
 }
 

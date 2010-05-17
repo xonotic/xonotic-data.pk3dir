@@ -1,6 +1,0 @@
-name Reptile
-species alien
-weight 80
-age 32
-
-Reptilian Combatant
