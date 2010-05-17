@@ -602,15 +602,15 @@ void GameCommand(string msg)
 	}
 	else if(cmd == "sendcvar") {
 		// W_FixWeaponOrder will trash argv, so save what we need.
-		string cvar;
-		cvar = strzone(argv(1));
-		s = cvar_string(cvar);
-		if(cvar == "cl_weaponpriority")
+		string thiscvar;
+		thiscvar = strzone(argv(1));
+		s = cvar_string(thiscvar);
+		if(thiscvar == "cl_weaponpriority")
 			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
-		else if(substring(cvar, 0, 17) == "cl_weaponpriority" && strlen(cvar) == 18)
+		else if(substring(thiscvar, 0, 17) == "cl_weaponpriority" && strlen(thiscvar) == 18)
 			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
-		localcmd("cmd sentcvar ", cvar, " \"", s, "\"\n");
-		strunzone(cvar);
+		localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
+		strunzone(thiscvar);
 	}
 	else if(cmd == "spawn") {
 		s = argv(1);

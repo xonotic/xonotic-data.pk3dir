@@ -336,8 +336,6 @@ float TrueAimCheck()
 
 void CSQC_common_hud(void);
 
-void CSQC_kh_hud(void);
-void CSQC_ctf_hud(void);
 void PostInit(void);
 void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard ();
@@ -966,6 +964,7 @@ void CSQC_SPIDER_HUD()
 #define raptor_g2 "gfx/vehicles/raptor_bombs.tga"
 #define raptor_s "gfx/vehicles/shiled.tga"
 
+// these are causing warnings!
 #define spider_a1 "gfx/hud/sb_rocket.tga"
 #define spider_a2 "gfx/sb_bullets.tga"
 

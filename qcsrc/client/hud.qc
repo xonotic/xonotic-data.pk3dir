@@ -765,6 +765,8 @@ vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize)
 	vector targSize;
 	vector myCenter;
 	vector targCenter;
+	myCenter = '0 0 0'; // shut up fteqcc, there IS a reference
+	targCenter = '0 0 0'; // shut up fteqcc, there IS a reference
 
 	for (i = 0; i < panel_cnt; ++i) {
 		if(i == id || !HUD_Panel_CheckActive(i))
@@ -794,7 +796,6 @@ vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize)
 		targCenter_x = targPos_x + 0.5 * targSize_x;
 		targCenter_y = targPos_y + 0.5 * targSize_y;
 
-		float k, y;
 		if(myCenter_x < targCenter_x && myCenter_y < targCenter_y && resizeCorner != 1) // top left (of target panel)
 		{
 			if(myPos_x + mySize_x - targPos_x < myPos_y + mySize_y - targPos_y) // push it to the side
@@ -885,6 +886,8 @@ vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 	vector targSize;
 	vector myCenter;
 	vector targCenter;
+	myCenter = '0 0 0'; // shut up fteqcc, there IS a reference
+	targCenter = '0 0 0'; // shut up fteqcc, there IS a reference
 
 	for (i = 0; i < panel_cnt; ++i) {
 		if(i == id || !HUD_Panel_CheckActive(i))
@@ -911,7 +914,6 @@ vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 		targCenter_x = targPos_x + 0.5 * targSize_x;
 		targCenter_y = targPos_y + 0.5 * targSize_y;
 
-		float k, y;
 		if(myCenter_x < targCenter_x && myCenter_y < targCenter_y) // top left (of the target panel)
 		{
 			if(myPos_x + mySize_x - targPos_x < myPos_y + mySize_y - targPos_y) // push it to the side
@@ -1137,7 +1139,7 @@ void weaponorder_swap(float i, float j, entity pass)
 
 float weaponorder_cmp(float i, float j, entity pass)
 {
-	float d, ii, ij;
+	float d;
 	d = mod(weaponorder[i].impulse + 9, 10) - mod(weaponorder[j].impulse + 9, 10);
 	if(d)
 		return d;
@@ -1148,8 +1150,8 @@ float weaponorder_cmp(float i, float j, entity pass)
 void HUD_WeaponIcons()
 {
 	float id = 0;
-	float alpha, height, accuracybar_height, stat_weapons; // "constants"
-	vector pos, mySize, mysize, mypos, accuracy_color;
+	float alpha, accuracybar_height, stat_weapons; // "constants"
+	vector pos, mySize, accuracy_color;
 	float i, weapid, fade, weapon_stats, weapon_hit, weapon_damage, weapon_cnt; // variables
 
 	pos = HUD_Panel_GetPos(id);
@@ -1374,8 +1376,6 @@ void HUD_Inventory()
 
 // Powerups (#2)
 //
-float shield_maxtime;
-float strength_maxtime;
 void HUD_Powerups() {
 	float id = 2;
 	float stat_items;
@@ -1641,7 +1641,7 @@ void HUD_HealthArmor(void)
 		mySize -= '2 2 0' * padding;
 	}
 
-	float armor, health, x;
+	float armor, health;
 	armor = getstati(STAT_ARMOR);
 	health = getstati(STAT_HEALTH);
 
@@ -2243,7 +2243,7 @@ void HUD_Score()
 
 	float score, distribution, leader;
 	float score_len, distr_len;
-	vector score_pos, secondary_score_pos, distribution_color;
+	vector distribution_color;
 	entity tm, pl, me;
 	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
 
@@ -2855,7 +2855,6 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 	//Manage the progress bar if any
 	if (nb_pb_starttime > 0)
 	{
-		vector s;
 		dt = mod(time - nb_pb_starttime, nb_pb_period);
 		// one period of positive triangle
 		p = 2 * dt / nb_pb_period;
