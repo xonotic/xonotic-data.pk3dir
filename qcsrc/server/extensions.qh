@@ -574,10 +574,8 @@ float(float a) tan = #475; // returns tangent value (which is simply sin(a)/cos(
 //changing the cvar or returning from progs is UNDEFINED. Writing to autocvar
 //globals is UNDEFINED. Accessing autocvar globals after cvar_set()ing that
 //cvar is IMPLEMENTATION DEFINED (an implementation may either yield the
-//previous, or the current, value). Whether autocvar globals, after restoring
-//a savegame, have the cvar's current value, or the original value at time of
-//saving, is UNDEFINED. Restoring a savegame however must not restore the
-//cvar values themselves. Writing to an autocvar global is NOT ALLOWED.
+//previous, or the current, value). Writing to an autocvar global is NOT
+//ALLOWED.
 //In case the cvar does NOT exist, then it is automatically created with the
 //value of the autocvar initializer, if given. This is possible with e.g.
 //frikqcc and fteqcc the following way:
