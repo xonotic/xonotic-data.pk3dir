@@ -746,6 +746,8 @@ float HUD_Panel_GetPadding(float id)
 // draw the background/borders
 void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 {
+	float alpha;
+
 	if(!hud_configure && cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg")) == "0")
 		return;
 
@@ -753,6 +755,11 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 	bg = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg"));
 	if(bg == "")
 		bg = cvar_string("hud_bg");
+
+	if(bg == "0" && hud_configure) {
+		bg = "border"; // we probably want to see a background in config mode at all times...
+		alpha = cvar("hud_configure_bg_minalpha");
+	}
 
 	if(bg != "0")
 	{
@@ -762,8 +769,8 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 		vector color;
 		color = HUD_Panel_GetColor(id);
 
-		float alpha;
-		alpha = HUD_Panel_GetAlpha(id);
+		if(!alpha)
+			alpha = HUD_Panel_GetAlpha(id);
 
 		draw_BorderPicture(pos - '1 1 0' * border, strcat("gfx/hud/", cvar_string("hud_skin"), "/", bg), mySize + '1 1 0' * 2 * border, color, alpha, '1 1 0' * (border/BORDER_MULTIPLIER));
 	}
