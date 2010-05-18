@@ -575,9 +575,10 @@ void HUD_Panel_ExportCfg(string cfgname)
 		fputs(fh, strcat("seta hud_skin \"", cvar_string("hud_skin"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg \"", cvar_string("hud_bg"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg_color \"", cvar_string("hud_bg_color"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg_alpha ", ftos(cvar("hud_bg_alpha")), "\n"));
-		fputs(fh, strcat("seta hud_bg_border ", ftos(cvar("hud_bg_border")), "\n"));
-		fputs(fh, strcat("seta hud_fg_alpha ", ftos(cvar("hud_fg_alpha")), "\n"));
+		fputs(fh, strcat("seta hud_bg_alpha ", cvar_string("hud_bg_alpha"), "\n"));
+		fputs(fh, strcat("seta hud_bg_border ", cvar_string("hud_bg_border"), "\n"));
+		fputs(fh, strcat("seta hud_bg_padding ", cvar_string("hud_bg_padding"), "\n"));
+		fputs(fh, strcat("seta hud_fg_alpha ", cvar_string("hud_fg_alpha"), "\n"));
 		fputs(fh, "\n");
 
 		fputs(fh, strcat("seta hud_dock \"", cvar_string("hud_dock"), "\"", "\n"));
@@ -603,8 +604,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_size \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_size")), "\"", "\n"));
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg")), "\"", "\n"));
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_color \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_color")), "\"", "\n"));
-			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_alpha ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_bg_alpha"))), "\n"));
-			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_border ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_bg_border"))), "\n"));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_alpha ", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_alpha")), "\n"));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_border ", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_border")), "\n"));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_padding ", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_padding")), "\n"));
 			switch(i) {
 				case 0:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_accuracy_height ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_accuracy_height"))), "\n"));
