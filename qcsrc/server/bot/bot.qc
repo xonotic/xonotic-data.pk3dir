@@ -200,6 +200,20 @@ void bot_setnameandstuff()
 	else
 		name = bot_name;
 
+	self.cleanname = strzone(name);
+
+	// number bots with identical names
+	float i;
+	i = 0;
+	FOR_EACH_CLIENT(p)
+	{
+		if(clienttype(p) == CLIENTTYPE_BOT)
+			if(p.cleanname == name)
+				++i;
+	}
+	if (i)
+		name = strcat(name, "(", ftos(i), ")");
+
 	// pick the model and skin
 	if(substring(bot_model, -4, 1) != ".")
 		bot_model = strcat(bot_model, ".iqm");
@@ -338,12 +352,15 @@ void bot_clientdisconnect()
 {
 	if (clienttype(self) != CLIENTTYPE_BOT)
 		return;
+	if(self.cleanname)
+		strunzone(self.cleanname);
 	if(self.netname_freeme)
 		strunzone(self.netname_freeme);
 	if(self.playermodel_freeme)
 		strunzone(self.playermodel_freeme);
 	if(self.playerskin_freeme)
 		strunzone(self.playerskin_freeme);
+	self.cleanname = string_null;
 	self.netname_freeme = string_null;
 	self.playermodel_freeme = string_null;
 	self.playerskin_freeme = string_null;
