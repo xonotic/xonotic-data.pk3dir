@@ -707,11 +707,38 @@ vector HUD_Panel_GetPos(float id)
 
 float HUD_Panel_GetBorder(float id)
 {
-	float border;
-	border = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_border"));
-	if(!border)
-		border = cvar("hud_bg_border");
-	return border;
+	string border;
+	border = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_border"));
+	if(border == "")
+		border = cvar_string("hud_bg_border");
+	return stof(border);
+}
+
+vector HUD_Panel_GetColor(float id)
+{
+	string color;
+	color = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color"));
+	if(color == "")
+		color = cvar_string("hud_bg_color");
+	return stov(color);
+}
+
+float HUD_Panel_GetAlpha(float id)
+{
+	string alpha;
+	alpha = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_alpha"));
+	if(alpha == "")
+		alpha = cvar_string("hud_bg_alpha");
+	return stof(alpha);
+}
+
+float HUD_Panel_GetPadding(float id)
+{
+	string padding;
+	padding = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	if(padding == "")
+		padding = cvar_string("hud_bg_padding");
+	return stof(padding);
 }
 
 // draw the background/borders
@@ -731,17 +758,10 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 		border = max(0.0000001, HUD_Panel_GetBorder(id)); // draw_BorderPicture does not like border = 0
 
 		vector color;
-		if(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color")) != "")
-			color = stov(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color")));
-		else
-			color = stov(cvar_string("hud_bg_color"));
+		color = HUD_Panel_GetColor(id);
 
 		float alpha;
-		alpha = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_alpha"));
-		if(!alpha)
-			alpha = cvar("hud_bg_alpha");
-		if(hud_configure)
-			alpha = max(cvar("hud_configure_bg_minalpha"), alpha);
+		alpha = HUD_Panel_GetAlpha(id);
 
 		draw_BorderPicture(pos - '1 1 0' * border, strcat("gfx/hud/", cvar_string("hud_skin"), "/", bg), mySize + '1 1 0' * 2 * border, color, alpha, '1 1 0' * (border/BORDER_MULTIPLIER));
 	}
