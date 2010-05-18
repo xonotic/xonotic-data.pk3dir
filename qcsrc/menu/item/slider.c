@@ -47,7 +47,8 @@ ENDCLASS(Slider)
 void setValueSlider(entity me, float val)
 {
 	if (me.animated) {
-		anim.finishObjAnim(anim, me);
+		anim.stopObjAnim(anim, me);
+		anim.removeObjAnim(anim, me);
 		makeHostedEasing(me, setSliderValueSlider, easingQuadInOut, 1, me.sliderValue, val);
 	} else {
 		me.setSliderValue(me, val);
@@ -154,8 +155,11 @@ float mouseDragSlider(entity me, vector pos)
 	float v, animed;
 	if(me.disabled)
 		return 0;
+
+	anim.finishObjAnim(anim, me);
 	animed = me.animated;
 	me.animated = false;
+
 	if(me.pressed)
 	{
 		hit = 1;
@@ -173,7 +177,9 @@ float mouseDragSlider(entity me, vector pos)
 		else
 			me.setValue(me, me.previousValue);
 	}
+
 	me.animated = animed;
+
 	return 1;
 }
 float mousePressSlider(entity me, vector pos)

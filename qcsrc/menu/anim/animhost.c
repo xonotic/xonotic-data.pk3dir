@@ -2,8 +2,12 @@
 CLASS(AnimHost) EXTENDS(Object)
 	METHOD(AnimHost, addAnim, void(entity, entity))
 	METHOD(AnimHost, removeAnim, void(entity, entity))
+	METHOD(AnimHost, removeAllAnim, void(entity))
+	METHOD(AnimHost, removeObjAnim, void(entity, entity))
 	METHOD(AnimHost, stopAllAnim, void(entity))
 	METHOD(AnimHost, stopObjAnim, void(entity, entity))
+	METHOD(AnimHost, resumeAllAnim, void(entity))
+	METHOD(AnimHost, resumeObjAnim, void(entity, entity))
 	METHOD(AnimHost, finishAllAnim, void(entity))
 	METHOD(AnimHost, finishObjAnim, void(entity, entity))
 	METHOD(AnimHost, tickAll, void(entity))
@@ -63,6 +67,31 @@ void removeAnimAnimHost(entity me, entity other)
 		me.lastChild = p;
 }
 
+void removeAllAnimAnimHost(entity me)
+{
+	entity e, tmp;
+	for(e = me.firstChild; e; e = e.nextSibling)
+	{
+		tmp = e;
+		e = tmp.prevSibling;
+		me.removeAnim(me, tmp);
+	}
+}
+
+void removeObjAnimAnimHost(entity me, entity obj)
+{
+	entity e, tmp;
+	for(e = me.firstChild; e; e = e.nextSibling)
+	{
+		if (e.object == obj)
+		{
+			tmp = e;
+			e = tmp.prevSibling;
+			me.removeAnim(me, tmp);
+		}
+	}
+}
+
 void stopAllAnimAnimHost(entity me)
 {
 	entity e;
@@ -80,6 +109,27 @@ void stopObjAnimAnimHost(entity me, entity obj)
 		if (e.object == obj)
 		{
 			e.stopAnim(e);
+		}
+	}
+}
+
+void resumeAllAnimAnimHost(entity me)
+{
+	entity e;
+	for(e = me.firstChild; e; e = e.nextSibling)
+	{
+		e.resumeAnim(e);
+	}
+}
+
+void resumeObjAnimAnimHost(entity me, entity obj)
+{
+	entity e;
+	for(e = me.firstChild; e; e = e.nextSibling)
+	{
+		if (e.object == obj)
+		{
+			e.resumeAnim(e);
 		}
 	}
 }
