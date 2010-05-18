@@ -1150,13 +1150,12 @@ float weaponorder_cmp(float i, float j, entity pass)
 void HUD_WeaponIcons()
 {
 	float id = 0;
-	float alpha, accuracybar_height, stat_weapons; // "constants"
+	float alpha, stat_weapons; // "constants"
 	vector pos, mySize, accuracy_color;
 	float i, weapid, fade, weapon_stats, weapon_hit, weapon_damage, weapon_cnt; // variables
 
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
-	accuracybar_height = cvar_or("hud_weaponicons_accuracy_height", 3);
 
 	stat_weapons = getstati(STAT_WEAPONS);
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -1217,12 +1216,9 @@ void HUD_WeaponIcons()
 			weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
 			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
 
+			// draw background behind currently selected weapon
 			if(self.weapon == activeweapon)
 				drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "weapon_current_bg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
-			drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("gfx/weapons/weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
-
-			if(cvar_or("hud_weaponicons_number", 1))
-				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), ftos(weapid), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 
 			// draw the weapon accuracy on the HUD
 			if(hud_accuracy_hud && !(gametype == GAME_RACE || gametype == GAME_CTS))
@@ -1232,8 +1228,14 @@ void HUD_WeaponIcons()
 
 				accuracy_color = HUD_AccuracyColor(weapon_stats);
 				if(weapon_damage)
-					drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) - '2 0 0' + eY * (mySize_y/rows - accuracybar_height), "accuracy_bar.tga", eX * mySize_x*(1/columns) + eY * accuracybar_height, accuracy_color, hud_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "weapon_accuracy", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), accuracy_color, hud_alpha_fg, DRAWFLAG_NORMAL);
 			}
+
+			// draw the weapon icon
+			drawpic(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("gfx/weapons/weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * hud_alpha_fg, DRAWFLAG_NORMAL);
+
+			if(cvar_or("hud_weaponicons_number", 1))
+				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), ftos(weapid), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 
 		++row;
