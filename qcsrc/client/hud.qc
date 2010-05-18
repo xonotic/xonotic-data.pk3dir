@@ -1318,7 +1318,6 @@ void HUD_Inventory()
 
 		if(cvar("hud_inventory_onlycurrent")) {
 			if (stat_items & GetAmmoItemCode(i)) {
-				drawpic_skin(pos, "ammo_current_bg", mySize, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				drawpic_skin(pos + eY * 0.05 * mySize_y, GetAmmoPicture(i), '1 1 0' * 0.8 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 				if(a < 10)
 					HUD_DrawXNum(pos + eX * 0.8 * mySize_y + eY * 0.25 * mySize_y, a, strlen(ftos(a)), 0, 0.5 * mySize_y, '0.7 0 0', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
