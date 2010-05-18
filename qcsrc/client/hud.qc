@@ -1200,7 +1200,7 @@ void HUD_WeaponIcons()
 
 	HUD_Panel_DrawBg(id, pos, mySize);
 	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = HUD_Panel_GetPadding(id);
 	if(padding)
 	{
 		pos += '1 1 0' * padding;
@@ -1330,7 +1330,7 @@ void HUD_Inventory()
 
 	HUD_Panel_DrawBg(id, pos, mySize);
 	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = HUD_Panel_GetPadding(id);
 	if(padding)
 	{
 		pos += '1 1 0' * padding;
@@ -1427,7 +1427,7 @@ void HUD_Powerups() {
 
 	HUD_Panel_DrawBg(id, pos, mySize);
 	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = HUD_Panel_GetPadding(id);
 	if(padding)
 	{
 		pos += '1 1 0' * padding;
@@ -1664,7 +1664,7 @@ void HUD_HealthArmor(void)
 
 	HUD_Panel_DrawBg(id, pos, mySize);
 	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = HUD_Panel_GetPadding(id);
 	if(padding)
 	{
 		pos += '1 1 0' * padding;
@@ -1922,7 +1922,7 @@ void HUD_Notify (void)
 
 	HUD_Panel_DrawBg(id, pos, mySize);
 	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = HUD_Panel_GetPadding(id);
 	if(padding)
 	{
 		pos += '1 1 0' * padding;
@@ -2057,7 +2057,7 @@ void HUD_Timer()
 
 	HUD_Panel_DrawBg(id, pos, mySize);
 	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = HUD_Panel_GetPadding(id);
 	if(padding)
 	{
 		pos += '1 1 0' * padding;
@@ -2116,7 +2116,7 @@ void HUD_Radar(void)
 
 	HUD_Panel_DrawBg(id, pos, mySize);
 	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = HUD_Panel_GetPadding(id);
 	if(padding)
 	{
 		pos += '1 1 0' * padding;
@@ -2264,7 +2264,7 @@ void HUD_Score()
 
 	HUD_Panel_DrawBg(id, pos, mySize);
 	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = HUD_Panel_GetPadding(id);
 	if(padding)
 	{
 		pos += '1 1 0' * padding;
@@ -2412,7 +2412,7 @@ void HUD_RaceTimer (void) {
 
 	HUD_Panel_DrawBg(id, pos, mySize);
 	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = HUD_Panel_GetPadding(id);
 	if(padding)
 	{
 		pos += '1 1 0' * padding;
@@ -2575,7 +2575,7 @@ void HUD_VoteWindow(void)
 
 	HUD_Panel_DrawBg(id, pos, mySize);
 	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = HUD_Panel_GetPadding(id);
 	if(padding)
 	{
 		pos += '1 1 0' * padding;
@@ -3041,7 +3041,7 @@ void HUD_ModIcons(void)
 
 	HUD_Panel_DrawBg(id, pos, mySize);
 	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = HUD_Panel_GetPadding(id);
 	if(padding)
 	{
 		pos += '1 1 0' * padding;
@@ -3070,7 +3070,7 @@ void HUD_DrawPressedKeys(void)
 
 	HUD_Panel_DrawBg(id, pos, mySize);
 	float padding;
-	padding = cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = HUD_Panel_GetPadding(id);
 	if(padding)
 	{
 		pos += '1 1 0' * padding;
