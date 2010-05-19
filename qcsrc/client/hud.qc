@@ -181,7 +181,7 @@ void HUD_DrawXNum (vector pos, float num, float digits, float showsign, float le
 		hl_pos_y = pos_y - lettersize/20;
 		hl_pos_z = 0;
 
-		drawpic_skin(hl_pos, strcat("highlight_", l_length), hl_size, '1 1 1', alpha, dflags);
+		drawpic_skin(hl_pos, strcat("num_leading_", l_length), hl_size, '1 1 1', alpha, dflags);
 	}
 
 	if (stroke == 1)
