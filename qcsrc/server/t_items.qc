@@ -40,6 +40,7 @@ string Item_CounterFieldName(float it)
 }
 
 .float max_armorvalue;
+.float pickup_anyway;
 
 float Item_Customize()
 {
@@ -429,14 +430,14 @@ float Item_GiveTo(entity item, entity player)
 			}
 
 			if (item.health)
-			if (player.health < item.max_health)
+			if ((player.health < item.max_health) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
 				player.health = min(player.health + item.health, item.max_health);
 				player.pauserothealth_finished = max(player.pauserothealth_finished, time + cvar("g_balance_pause_health_rot"));
 			}
 			if (item.armorvalue)
-			if (player.armorvalue < item.max_armorvalue)
+			if ((player.armorvalue < item.max_armorvalue) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
 				player.armorvalue = min(player.armorvalue + item.armorvalue, item.max_armorvalue);
@@ -1195,6 +1196,8 @@ void spawnfunc_item_armor_small (void) {
 		self.armorvalue = g_pickup_armorsmall;
 	if(!self.max_armorvalue)
 		self.max_armorvalue = g_pickup_armorsmall_max;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_armorsmall_anyway;
 	StartItem ("models/items/g_a1.md3", "misc/armor1.wav", g_pickup_respawntime_short, g_pickup_respawntimejitter_short, "5 Armor", IT_ARMOR_SHARD, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
@@ -1203,6 +1206,8 @@ void spawnfunc_item_armor_medium (void) {
 		self.armorvalue = g_pickup_armormedium;
 	if(!self.max_armorvalue)
 		self.max_armorvalue = g_pickup_armormedium_max;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_armormedium_anyway;
 	StartItem ("models/items/g_armormedium.md3", "misc/armor10.wav", g_pickup_respawntime_medium, g_pickup_respawntimejitter_medium, "25 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
@@ -1211,6 +1216,8 @@ void spawnfunc_item_armor_big (void) {
 		self.armorvalue = g_pickup_armorbig;
 	if(!self.max_armorvalue)
 		self.max_armorvalue = g_pickup_armorbig_max;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_armorbig_anyway;
 	StartItem ("models/items/g_a50.md3", "misc/armor17_5.wav", g_pickup_respawntime_long, g_pickup_respawntimejitter_long, "50 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, 20000);
 }
 
@@ -1219,6 +1226,8 @@ void spawnfunc_item_armor_large (void) {
 		self.armorvalue = g_pickup_armorlarge;
 	if(!self.max_armorvalue)
 		self.max_armorvalue = g_pickup_armorlarge_max;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_armorlarge_anyway;
 	StartItem ("models/items/g_a25.md3", "misc/armor25.wav", g_pickup_respawntime_long, g_pickup_respawntimejitter_long, "100 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 }
 
@@ -1227,6 +1236,8 @@ void spawnfunc_item_health_small (void) {
 		self.max_health = g_pickup_healthsmall_max;
 	if(!self.health)
 		self.health = g_pickup_healthsmall;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_healthsmall_anyway;
 	StartItem ("models/items/g_h1.md3", "misc/minihealth.wav", g_pickup_respawntime_short, g_pickup_respawntimejitter_short, "5 Health", IT_5HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
@@ -1235,6 +1246,8 @@ void spawnfunc_item_health_medium (void) {
 		self.max_health = g_pickup_healthmedium_max;
 	if(!self.health)
 		self.health = g_pickup_healthmedium;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_healthmedium_anyway;
 	StartItem ("models/items/g_h25.md3", "misc/mediumhealth.wav", g_pickup_respawntime_short, g_pickup_respawntimejitter_short, "25 Health", IT_25HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
@@ -1243,6 +1256,8 @@ void spawnfunc_item_health_large (void) {
 		self.max_health = g_pickup_healthlarge_max;
 	if(!self.health)
 		self.health = g_pickup_healthlarge;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_healthlarge_anyway;
 	StartItem ("models/items/g_h50.md3", "misc/mediumhealth.wav", g_pickup_respawntime_medium, g_pickup_respawntimejitter_medium, "50 Health", IT_25HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
@@ -1260,6 +1275,8 @@ void spawnfunc_item_health_mega (void) {
 			self.max_health = g_pickup_healthmega_max;
 		if(!self.health)
 			self.health = g_pickup_healthmega;
+		if(!self.pickup_anyway)
+			self.pickup_anyway = g_pickup_healthmega_anyway;
 		StartItem ("models/items/g_h100.md3", "misc/megahealth.wav", g_pickup_respawntime_long, g_pickup_respawntimejitter_long, "100 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 	}
 }
