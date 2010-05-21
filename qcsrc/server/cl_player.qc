@@ -142,6 +142,7 @@ void CopyBody(float keepvelocity)
 	self.movetype = oldself.movetype;
 	self.nextthink = oldself.nextthink;
 	self.solid = oldself.solid;
+	self.ballistics_density = oldself.ballistics_density;
 	self.takedamage = oldself.takedamage;
 	self.think = oldself.think;
 	self.customizeentityforclient = oldself.customizeentityforclient;
