@@ -621,6 +621,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.movetype = MOVETYPE_TOSS;
 		// shootable corpse
 		self.solid = SOLID_CORPSE;
+		self.ballistics_density = cvar("g_ballistics_density_corpse");
 		// don't stick to the floor
 		self.flags &~= FL_ONGROUND;
 		// dying animation
