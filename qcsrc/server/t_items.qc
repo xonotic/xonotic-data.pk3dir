@@ -326,7 +326,7 @@ float Item_GiveTo(entity item, entity player)
 			}
 
 			if (item.ammo_fuel)
-			if (player.ammo_fuel < g_pickup_fuel_max)
+			if (player.ammo_fuel < g_pickup_fuel_max) 
 			{
 				pickedup = TRUE;
 				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
@@ -365,31 +365,31 @@ float Item_GiveTo(entity item, entity player)
 		if(item.spawnshieldtime)
 		{
 			if (item.ammo_shells)
-			if (player.ammo_shells < g_pickup_shells_max)
+			if ((player.ammo_shells < g_pickup_shells_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
 				player.ammo_shells = min (player.ammo_shells + item.ammo_shells, g_pickup_shells_max);
 			}
 			if (item.ammo_nails)
-			if (player.ammo_nails < g_pickup_nails_max)
+			if ((player.ammo_nails < g_pickup_nails_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
 				player.ammo_nails = min (player.ammo_nails + item.ammo_nails, g_pickup_nails_max);
 			}
 			if (item.ammo_rockets)
-			if (player.ammo_rockets < g_pickup_rockets_max)
+			if ((player.ammo_rockets < g_pickup_rockets_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
 				player.ammo_rockets = min (player.ammo_rockets + item.ammo_rockets, g_pickup_rockets_max);
 			}
 			if (item.ammo_cells)
-			if (player.ammo_cells < g_pickup_cells_max)
+			if ((player.ammo_cells < g_pickup_cells_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
 				player.ammo_cells = min (player.ammo_cells + item.ammo_cells, g_pickup_cells_max);
 			}
 			if (item.ammo_fuel)
-			if (player.ammo_fuel < g_pickup_fuel_max)
+			if ((player.ammo_fuel < g_pickup_fuel_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
 				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
@@ -398,7 +398,7 @@ float Item_GiveTo(entity item, entity player)
 		}
 
 		if (item.flags & FL_WEAPON)
-		if ((it = item.weapons - (item.weapons & player.weapons)))
+		if ((it = item.weapons - (item.weapons & player.weapons)) || g_pickup_weapons_anyway)
 		{
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -1149,6 +1149,8 @@ void spawnfunc_weapon_rocketlauncher (void)
 void spawnfunc_item_rockets (void) {
 	if(!self.ammo_rockets)
 		self.ammo_rockets = g_pickup_rockets;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_ammo_anyway;
 	StartItem ("models/items/a_rockets.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "rockets", IT_ROCKETS, 0, 0, commodity_pickupevalfunc, 3000);
 }
 
@@ -1166,12 +1168,16 @@ void spawnfunc_item_bullets (void) {
 
 	if(!self.ammo_nails)
 		self.ammo_nails = g_pickup_nails;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_ammo_anyway;
 	StartItem ("models/items/a_bullets.mdl", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "bullets", IT_NAILS, 0, 0, commodity_pickupevalfunc, 2000);
 }
 
 void spawnfunc_item_cells (void) {
 	if(!self.ammo_cells)
 		self.ammo_cells = g_pickup_cells;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_ammo_anyway;
 	StartItem ("models/items/a_cells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "cells", IT_CELLS, 0, 0, commodity_pickupevalfunc, 2000);
 }
 
@@ -1188,6 +1194,8 @@ void spawnfunc_item_shells (void) {
 
 	if(!self.ammo_shells)
 		self.ammo_shells = g_pickup_shells;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_ammo_anyway;
 	StartItem ("models/items/a_shells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "shells", IT_SHELLS, 0, 0, commodity_pickupevalfunc, 500);
 }
 
@@ -1477,6 +1485,8 @@ void spawnfunc_item_fuel(void)
 {
 	if(!self.ammo_fuel)
 		self.ammo_fuel = g_pickup_fuel;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_ammo_anyway;
 	StartItem ("models/items/g_fuel.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "Fuel", IT_FUEL, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 

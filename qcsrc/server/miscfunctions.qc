@@ -847,6 +847,8 @@ float g_pickup_healthlarge_anyway;
 float g_pickup_healthmega;
 float g_pickup_healthmega_max;
 float g_pickup_healthmega_anyway;
+float g_pickup_ammo_anyway;
+float g_pickup_weapons_anyway;
 float g_weaponarena;
 float g_weaponarena_random;
 string g_weaponarena_list;
@@ -1292,6 +1294,9 @@ void readlevelcvars(void)
 	g_pickup_healthmega = cvar("g_pickup_healthmega");
 	g_pickup_healthmega_max = cvar("g_pickup_healthmega_max");
 	g_pickup_healthmega_anyway = cvar("g_pickup_healthmega_anyway");
+
+	g_pickup_ammo_anyway = cvar("g_pickup_ammo_anyway");
+	g_pickup_weapons_anyway = cvar("g_pickup_weapons_anyway");
 
 	g_pinata = cvar("g_pinata");
 
