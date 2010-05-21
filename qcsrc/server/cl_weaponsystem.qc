@@ -34,7 +34,6 @@ float W_WeaponRateFactor()
 
 void W_SwitchWeapon_Force(entity e, float w)
 {
-	backtrace("switch");
 	e.cnt = e.switchweapon;
 	e.switchweapon = w;
 	e.selectweapon = w;
