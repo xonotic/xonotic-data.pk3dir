@@ -1182,7 +1182,7 @@ void SV_PlayerPhysics()
 			if(sv_airstrafeaccelerate)
 				airaccel = GeomLerp(airaccel, strafity, sv_airstrafeaccelerate*maxspd_mod);
 			if(sv_airstrafeaccel_qw)
-				airaccelqw = sign((strafity > 0.5) ? sv_airstrafeaccel_qw : sv_airaccel_qw) * (1-GeomLerp(1-fabs(sv_airaccel_qw), strafity, 1-fabs(sv_airstrafeaccel_qw)));
+				airaccelqw = copysign(1-GeomLerp(1-fabs(sv_airaccel_qw), strafity, 1-fabs(sv_airstrafeaccel_qw)), ((strafity > 0.5) ? sv_airstrafeaccel_qw : sv_airaccel_qw));
 			// !CPM
 
 			if(sv_warsowbunny_turnaccel && accelerating && self.movement_y == 0 && self.movement_x != 0)
