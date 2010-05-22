@@ -1168,9 +1168,6 @@ void SV_PlayerPhysics()
 			if(sv_airstopaccelerate)
 				if(self.velocity * wishdir < 0)
 					airaccel = sv_airstopaccelerate*maxspd_mod;
-			// this doesn't play well with analog input, but can't r
-			// fixed like the AirControl can. So, don't set the maxa
-			// cvars when you want to support analog input.
 			// note that for straight forward jumping:
 			// step = accel * frametime * wishspeed0;
 			// accel  = bound(0, wishspeed - vel_xy_current, step) * accelqw + step * (1 - accelqw);
