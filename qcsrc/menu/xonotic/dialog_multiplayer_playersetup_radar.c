@@ -27,7 +27,7 @@ void fillXonoticRadarDialog(entity me)
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, "Radar settings:"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		sl = makeXonoticSlider(0.20, 1, 0.01, "cl_teamradar_background_alpha");
+		sl = makeXonoticSlider(0.20, 1, 0.01, "hud_radar_background_alpha");
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1, 1, sl, "Background:"));
 		me.TD(me, 1, 3, sl);
 	me.TR(me);
