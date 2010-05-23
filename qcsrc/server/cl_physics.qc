@@ -605,6 +605,7 @@ string GetMapname(void);
 float speedaward_lastupdate;
 float speedaward_lastsent;
 .float jumppadusetime;
+var float autocvar_g_movement_highspeed = 1;
 void SV_PlayerPhysics()
 {
 	local vector wishvel, wishdir, v;
@@ -613,6 +614,13 @@ void SV_PlayerPhysics()
 	float buttons_prev;
 	float not_allowed_to_move;
 	string c;
+
+	// fix physics stats for g_movement_highspeed
+	self.stat_sv_airaccel_qw = copysign(bound(0, 1-(1-fabs(sv_airaccel_qw))*autocvar_g_movement_highspeed, 1), sv_airaccel_qw);
+	if(sv_airstrafeaccel_qw)
+		self.stat_sv_airstrafeaccel_qw = copysign(bound(0.001, 1-(1-fabs(sv_airstrafeaccel_qw))*autocvar_g_movement_highspeed, 1), sv_airstrafeaccel_qw);
+	else
+		self.stat_sv_airstrafeaccel_qw = 0;
 
     if(self.PlayerPhysplug)
         if(self.PlayerPhysplug())
@@ -1160,7 +1168,7 @@ void SV_PlayerPhysics()
 			float airaccelqw;
 			float strafity;
 
-			airaccelqw = sv_airaccel_qw;
+			airaccelqw = self.stat_sv_airaccel_qw;
 			accelerating = (self.velocity * wishdir > 0);
 			wishspeed2 = wishspeed;
 
@@ -1181,8 +1189,8 @@ void SV_PlayerPhysics()
 				wishspeed = min(wishspeed, GeomLerp(sv_maxairspeed*maxspd_mod, strafity, sv_maxairstrafespeed*maxspd_mod));
 			if(sv_airstrafeaccelerate)
 				airaccel = GeomLerp(airaccel, strafity, sv_airstrafeaccelerate*maxspd_mod);
-			if(sv_airstrafeaccel_qw)
-				airaccelqw = copysign(1-GeomLerp(1-fabs(sv_airaccel_qw), strafity, 1-fabs(sv_airstrafeaccel_qw)), ((strafity > 0.5) ? sv_airstrafeaccel_qw : sv_airaccel_qw));
+			if(self.stat_sv_airstrafeaccel_qw)
+				airaccelqw = copysign(1-GeomLerp(1-fabs(self.stat_sv_airaccel_qw), strafity, 1-fabs(self.stat_sv_airstrafeaccel_qw)), ((strafity > 0.5) ? self.stat_sv_airstrafeaccel_qw : self.stat_sv_airaccel_qw));
 			// !CPM
 
 			if(sv_warsowbunny_turnaccel && accelerating && self.movement_y == 0 && self.movement_x != 0)
