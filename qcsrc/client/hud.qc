@@ -1311,7 +1311,7 @@ string GetAmmoPicture(float i)
 	{
 		case 0: return "ammo_shells";
 		case 1: return "ammo_bullets";
-		case 2: return "ammo_rocket";
+		case 2: return "ammo_rockets";
 		case 3: return "ammo_cells";
 		case 4: return "ammo_fuel";
 		default: return "";
