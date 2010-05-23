@@ -4,8 +4,8 @@ vector teamradar_origin2d; // 2D origin
 vector teamradar_size2d; // 2D size
 vector teamradar_extraclip_mins, teamradar_extraclip_maxs; // for non-centered radar display
 float teamradar_size; // 2D scale factor
-float cl_teamradar_scale; // window size = ...qu
-float cl_teamradar_nohudhack;
+float hud_radar_scale; // window size = ...qu
+float hud_radar_nohudhack;
 float v_flipped;
 
 float vlen2d(vector v)
@@ -177,47 +177,47 @@ void draw_teamradar_link(vector start, vector end, float colors)
 	R_EndPolygon();
 }
 
-float cl_teamradar_scale;
-float cl_teamradar_background_alpha;
-float cl_teamradar_foreground_alpha;
-float cl_teamradar_rotation;
-vector cl_teamradar_size;
-vector cl_teamradar_position;
-float cl_teamradar_zoommode;
+float hud_radar_scale;
+float hud_radar_background_alpha;
+float hud_radar_foreground_alpha;
+float hud_radar_rotation;
+vector hud_radar_size;
+vector hud_radar_position;
+float hud_radar_zoommode;
 
 void teamradar_loadcvars()
 {
 	v_flipped = cvar("v_flipped");
 	if(ons_showmap)
 	{
-		cl_teamradar_scale = 42; // dummy, not used (see zoommode)
-		cl_teamradar_background_alpha = 1 * (1 - cvar("_menu_alpha"));
-		cl_teamradar_foreground_alpha = 1 * (1 - cvar("_menu_alpha"));
-		cl_teamradar_rotation = cvar("cl_teamradar_rotation");
-		if(!cl_teamradar_rotation)
-			cl_teamradar_rotation = 4;
-		cl_teamradar_zoommode = 3;
-		cl_teamradar_nohudhack = 0;
+		hud_radar_scale = 42; // dummy, not used (see zoommode)
+		hud_radar_background_alpha = 1 * (1 - cvar("_menu_alpha"));
+		hud_radar_foreground_alpha = 1 * (1 - cvar("_menu_alpha"));
+		hud_radar_rotation = cvar("hud_radar_rotation");
+		if(!hud_radar_rotation)
+			hud_radar_rotation = 4;
+		hud_radar_zoommode = 3;
+		hud_radar_nohudhack = 0;
 	}
 	else
 	{
-		cl_teamradar_scale = cvar("cl_teamradar_scale");
-		cl_teamradar_background_alpha = cvar("cl_teamradar_background_alpha") * hud_alpha_fg;
-		cl_teamradar_foreground_alpha = cvar("cl_teamradar_foreground_alpha") * hud_alpha_fg;
-		cl_teamradar_rotation = cvar("cl_teamradar_rotation");
-		cl_teamradar_zoommode = cvar("cl_teamradar_zoommode");
+		hud_radar_scale = cvar("hud_radar_scale");
+		hud_radar_background_alpha = cvar("hud_radar_background_alpha") * hud_alpha_fg;
+		hud_radar_foreground_alpha = cvar("hud_radar_foreground_alpha") * hud_alpha_fg;
+		hud_radar_rotation = cvar("hud_radar_rotation");
+		hud_radar_zoommode = cvar("hud_radar_zoommode");
 
 		// others default to 0
 		// match this to defaultXonotic.cfg!
-		if(!cl_teamradar_scale) cl_teamradar_scale = 4096;
-		if(!cl_teamradar_background_alpha) cl_teamradar_background_alpha = 0.4 * hud_alpha_fg;
-		if(!cl_teamradar_foreground_alpha) cl_teamradar_foreground_alpha = 0.8 * hud_alpha_fg;
-		if(!cl_teamradar_size_x) cl_teamradar_size_x = 128;
-		if(!cl_teamradar_size_y) cl_teamradar_size_y = cl_teamradar_size_x;
+		if(!hud_radar_scale) hud_radar_scale = 4096;
+		if(!hud_radar_background_alpha) hud_radar_background_alpha = 0.4 * hud_alpha_fg;
+		if(!hud_radar_foreground_alpha) hud_radar_foreground_alpha = 0.8 * hud_alpha_fg;
+		if(!hud_radar_size_x) hud_radar_size_x = 128;
+		if(!hud_radar_size_y) hud_radar_size_y = hud_radar_size_x;
 
-		cl_teamradar_size_z = 0;
-		cl_teamradar_nohudhack = cl_teamradar_position_z;
-		cl_teamradar_position_z = 0;
+		hud_radar_size_z = 0;
+		hud_radar_nohudhack = hud_radar_position_z;
+		hud_radar_position_z = 0;
 	}
 }
 

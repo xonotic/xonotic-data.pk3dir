@@ -2129,7 +2129,7 @@ void HUD_Radar(void)
 	float scale2d, normalsize, bigsize;
 	float f;
 
-	teamradar_origin2d = pos + 0.5 * mySize; // TODO: stupid compat, should be removed
+	teamradar_origin2d = pos + 0.5 * mySize; // TODO: stupid compat, should be removed (hint: code seems to assume origin to be in center, where panelhud code uses pos as topleft pixel)
 	teamradar_size2d = mySize;
 
 	if(minimapname == "" && !ons_showmap)
@@ -2137,7 +2137,7 @@ void HUD_Radar(void)
 
 	teamradar_loadcvars();
 
-	switch(cl_teamradar_zoommode)
+	switch(hud_radar_zoommode)
 	{
 		default:
 		case 0:
@@ -2154,13 +2154,13 @@ void HUD_Radar(void)
 			break;
 	}
 
-	switch(cl_teamradar_rotation)
+	switch(hud_radar_rotation)
 	{
 		case 0:
 			teamradar_angle = view_angles_y - 90;
 			break;
 		default:
-			teamradar_angle = 90 * cl_teamradar_rotation;
+			teamradar_angle = 90 * hud_radar_rotation;
 			break;
 	}
 
@@ -2170,7 +2170,7 @@ void HUD_Radar(void)
 	teamradar_extraclip_mins = teamradar_extraclip_maxs = '0 0 0'; // we always center
 
 	// pixels per world qu to match the teamradar_size2d_x range in the longest dimension
-	if(cl_teamradar_rotation == 0)
+	if(hud_radar_rotation == 0)
 	{
 		// max-min distance must fit the radar in any rotation
 		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_max - mi_min));
@@ -2193,7 +2193,7 @@ void HUD_Radar(void)
 		);
 	}
 
-	normalsize = vlen_maxnorm2d(teamradar_size2d) * scale2d / cl_teamradar_scale;
+	normalsize = vlen_maxnorm2d(teamradar_size2d) * scale2d / hud_radar_scale;
 	if(bigsize > normalsize)
 		normalsize = bigsize;
 
@@ -2214,7 +2214,7 @@ void HUD_Radar(void)
 		mySize_y
 	);
 
-	draw_teamradar_background(cl_teamradar_background_alpha, cl_teamradar_foreground_alpha);
+	draw_teamradar_background(hud_radar_background_alpha, hud_radar_foreground_alpha);
 
 	if(ons_showmap)
 	{
@@ -3230,7 +3230,7 @@ void HUD_Main (void)
 		HUD_Timer();
 	// TODO hud'ify
 	if(HUD_Panel_CheckActive(6))
-		if(ons_showmap || cvar_string("cl_teamradar") != "0" && (cvar("cl_teamradar") == 2 || teamplay))
+		if(ons_showmap || cvar_string("hud_radar") != "0" && (cvar("hud_radar") == 2 || teamplay))
 			HUD_Radar();
 	if(HUD_Panel_CheckActive(7))
 		HUD_Score();
