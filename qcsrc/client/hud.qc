@@ -718,6 +718,7 @@ float HUD_Panel_GetBorder(float id)
 
 vector HUD_Panel_GetColor(float id)
 {
+	// TODO: idea: let user choose colors "pants", "shirt"
 	string color;
 	color = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color"));
 	if(color == "")
@@ -2563,11 +2564,11 @@ void HUD_VoteWindow(void)
 	if(vote_alpha) {
 		a = vote_alpha * bound(cvar_or("hud_vote_alreadyvoted_alpha", 0.75), 1 - vote_highlighted, 1);
 
-		drawpic_skin(pos, "voteprogress_back", mySize, HUD_GetBgColor(), a * hud_alpha_bg, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_back", mySize, HUD_Panel_GetColor(id), a * hud_alpha_bg, DRAWFLAG_NORMAL);
 
 	        s = "A vote has been called for: ";
 		drawstring(pos + '0.5 0 0' * mySize_x + '0 0.1 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/5)), s, '1 1 0' * mySize_y*(1/5), '1 1 1', a * hud_alpha_fg, DRAWFLAG_NORMAL);
-		s = textShortenToWidth(vote_called_vote, mySize_x * 0.96, '10 0 0', stringwidth_colors);
+		s = textShortenToWidth(vote_called_vote, mySize_x * 0.96, '10 0 0', stringwidth_colors); // TODO: broken?
 		if(hud_configure)
 			s = "Configure the HUD";
 		drawcolorcodedstring(pos + '0.52 0 0' * mySize_x + '0 0.3 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/6)), s, '1 1 0' * mySize_y*(1/6), a * hud_alpha_fg, DRAWFLAG_NORMAL);
