@@ -106,6 +106,7 @@ void finishAnimAnimation(entity me)
 {
 	me.value = me.delta + me.startValue;
 	me.finished = TRUE;
+	me.setter(me.object, me.value);
 }
 
 void setterDummy(entity obj, float objValue)
