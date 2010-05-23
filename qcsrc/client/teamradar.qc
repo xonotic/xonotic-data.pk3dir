@@ -188,37 +188,23 @@ float hud_radar_zoommode;
 void teamradar_loadcvars()
 {
 	v_flipped = cvar("v_flipped");
-	if(ons_showmap)
-	{
-		hud_radar_scale = 42; // dummy, not used (see zoommode)
-		hud_radar_background_alpha = 1 * (1 - cvar("_menu_alpha"));
-		hud_radar_foreground_alpha = 1 * (1 - cvar("_menu_alpha"));
-		hud_radar_rotation = cvar("hud_radar_rotation");
-		if(!hud_radar_rotation)
-			hud_radar_rotation = 4;
-		hud_radar_zoommode = 3;
-		hud_radar_nohudhack = 0;
-	}
-	else
-	{
-		hud_radar_scale = cvar("hud_radar_scale");
-		hud_radar_background_alpha = cvar("hud_radar_background_alpha") * hud_alpha_fg;
-		hud_radar_foreground_alpha = cvar("hud_radar_foreground_alpha") * hud_alpha_fg;
-		hud_radar_rotation = cvar("hud_radar_rotation");
-		hud_radar_zoommode = cvar("hud_radar_zoommode");
+	hud_radar_scale = cvar("hud_radar_scale");
+	hud_radar_background_alpha = cvar("hud_radar_background_alpha") * hud_alpha_fg;
+	hud_radar_foreground_alpha = cvar("hud_radar_foreground_alpha") * hud_alpha_fg;
+	hud_radar_rotation = cvar("hud_radar_rotation");
+	hud_radar_zoommode = cvar("hud_radar_zoommode");
 
-		// others default to 0
-		// match this to defaultXonotic.cfg!
-		if(!hud_radar_scale) hud_radar_scale = 4096;
-		if(!hud_radar_background_alpha) hud_radar_background_alpha = 0.4 * hud_alpha_fg;
-		if(!hud_radar_foreground_alpha) hud_radar_foreground_alpha = 0.8 * hud_alpha_fg;
-		if(!hud_radar_size_x) hud_radar_size_x = 128;
-		if(!hud_radar_size_y) hud_radar_size_y = hud_radar_size_x;
+	// others default to 0
+	// match this to defaultXonotic.cfg!
+	if(!hud_radar_scale) hud_radar_scale = 4096;
+	if(!hud_radar_background_alpha) hud_radar_background_alpha = 0.4 * hud_alpha_fg;
+	if(!hud_radar_foreground_alpha) hud_radar_foreground_alpha = 0.8 * hud_alpha_fg;
+	if(!hud_radar_size_x) hud_radar_size_x = 128;
+	if(!hud_radar_size_y) hud_radar_size_y = hud_radar_size_x;
 
-		hud_radar_size_z = 0;
-		hud_radar_nohudhack = hud_radar_position_z;
-		hud_radar_position_z = 0;
-	}
+	hud_radar_size_z = 0;
+	hud_radar_nohudhack = hud_radar_position_z;
+	hud_radar_position_z = 0;
 }
 
 // radar links

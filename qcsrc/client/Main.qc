@@ -522,7 +522,6 @@ void GameCommand(string msg)
 	{
 		print("Usage: cl_cmd COMMAND..., where possible commands are:\n");
 		print("  settemp cvar value\n");
-		print("  radar\n");
 		print("  hud_columns_set ...\n");
 		print("  hud_columns_help\n");
 		GameCommand_Generic("help");
@@ -539,9 +538,6 @@ void GameCommand(string msg)
 	}
 	else if(cmd == "settemp") {
 		cvar_clientsettemp(argv(1), argv(2));
-	}
-	else if(cmd == "radar") {
-		ons_showmap = !ons_showmap;
 	}
 	else if(cmd == "hud_columns_set") {
 		Cmd_HUD_SetFields(argc);

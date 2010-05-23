@@ -2132,7 +2132,7 @@ void HUD_Radar(void)
 	teamradar_origin2d = pos + 0.5 * mySize; // TODO: stupid compat, should be removed (hint: code seems to assume origin to be in center, where panelhud code uses pos as topleft pixel)
 	teamradar_size2d = mySize;
 
-	if(minimapname == "" && !ons_showmap)
+	if(minimapname == "")
 		return;
 
 	teamradar_loadcvars();
@@ -2215,28 +2215,6 @@ void HUD_Radar(void)
 	);
 
 	draw_teamradar_background(hud_radar_background_alpha, hud_radar_foreground_alpha);
-
-	if(ons_showmap)
-	{
-		drawresetcliparea();
-
-		vector frame_origin, frame_size;
-		frame_origin = frame_size = '0 0 0';
-
-		frame_origin_x = pos_x - teamradar_size2d_x * 0.55859375; // matches the picture
-		frame_origin_y = pos_y - teamradar_size2d_y * 0.55859375; // matches the picture
-		frame_size_x = pos_x * 1.1171875; // matches the picture
-		frame_size_y = pos_y * 1.1171875; // matches the picture
-		drawpic_skin(frame_origin, "gfx/ons-frame.tga", frame_size, '1 1 1', hud_alpha_fg, 0);
-		drawpic_skin(frame_origin, "gfx/ons-frame-team.tga", frame_size, rgb, hud_alpha_fg, 0);
-
-		drawsetcliparea(
-			pos_x - teamradar_size2d_x * 0.5,
-			pos_y - teamradar_size2d_y * 0.5,
-			teamradar_size2d_x,
-			teamradar_size2d_y
-		);
-	}
 
 	for(tm = world; (tm = find(tm, classname, "radarlink")); )
 		draw_teamradar_link(tm.origin, tm.velocity, tm.team);
@@ -3230,7 +3208,7 @@ void HUD_Main (void)
 		HUD_Timer();
 	// TODO hud'ify
 	if(HUD_Panel_CheckActive(6))
-		if(ons_showmap || cvar_string("hud_radar") != "0" && (cvar("hud_radar") == 2 || teamplay))
+		if(cvar_string("hud_radar") != "0" && (cvar("hud_radar") == 2 || teamplay))
 			HUD_Radar();
 	if(HUD_Panel_CheckActive(7))
 		HUD_Score();

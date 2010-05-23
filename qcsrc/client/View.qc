@@ -599,7 +599,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !ons_showmap && !camera_active && !hudconf_active) {
+		if(!scoreboard_active && !camera_active && !hudconf_active) {
 			// TrueAim check
 			float shottype;
 			float bullets, ring_scale;
