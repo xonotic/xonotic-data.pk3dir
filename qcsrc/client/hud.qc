@@ -3191,8 +3191,8 @@ void HUD_Main (void)
 	hud_configure = cvar("_hud_configure");
 
 	// Drawing stuff
-	if(cvar("hud_dock"))
-		drawpic_skin('0 0 0', "dock", eX * vid_conwidth + eY * vid_conheight, stov(cvar_string("hud_dock_color")), cvar("hud_dock_alpha"), DRAWFLAG_NORMAL);
+	if(cvar_string("hud_dock") != "")
+		drawpic_skin('0 0 0', cvar_string("hud_dock"), eX * vid_conwidth + eY * vid_conheight, stov(cvar_string("hud_dock_color")), cvar("hud_dock_alpha"), DRAWFLAG_NORMAL);
 
 	if(HUD_Panel_CheckActive(0))
 		HUD_WeaponIcons();
