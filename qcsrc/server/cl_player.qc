@@ -142,6 +142,7 @@ void CopyBody(float keepvelocity)
 	self.movetype = oldself.movetype;
 	self.nextthink = oldself.nextthink;
 	self.solid = oldself.solid;
+	self.ballistics_density = oldself.ballistics_density;
 	self.takedamage = oldself.takedamage;
 	self.think = oldself.think;
 	self.customizeentityforclient = oldself.customizeentityforclient;
@@ -621,6 +622,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.movetype = MOVETYPE_TOSS;
 		// shootable corpse
 		self.solid = SOLID_CORPSE;
+		self.ballistics_density = cvar("g_ballistics_density_corpse");
 		// don't stick to the floor
 		self.flags &~= FL_ONGROUND;
 		// dying animation

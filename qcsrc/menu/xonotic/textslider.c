@@ -46,7 +46,7 @@ void setValueXonoticTextSlider(entity me, float val)
 {
 	if(val != me.value)
 	{
-		me.value = val;
+		setValueSlider( me, val );
 		me.saveCvars(me);
 	}
 }

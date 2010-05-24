@@ -13,6 +13,7 @@ float sv_airaccel_qw;
 float sv_airstopaccelerate;
 float sv_airstrafeaccelerate;
 float sv_maxairstrafespeed;
+float sv_airstrafeaccel_qw;
 float sv_aircontrol;
 float sv_aircontrol_power;
 float sv_warsowbunny_airforwardaccel;
@@ -386,13 +387,32 @@ float IsMoveInDirection(vector mv, float angle) // key mix factor
 {
 	if(mv_x == 0 && mv_y == 0)
 		return 0; // avoid division by zero
-	angle = RAD2DEG * atan2(mv_y, mv_x);
+	angle -= RAD2DEG * atan2(mv_y, mv_x);
 	angle = remainder(angle, 360) / 45;
 	if(angle >  1)
 		return 0;
 	if(angle < -1)
 		return 0;
 	return 1 - fabs(angle);
+}
+
+float GeomLerp(float a, float lerp, float b)
+{
+	if(a == 0)
+	{
+		if(lerp < 1)
+			return 0;
+		else
+			return b;
+	}
+	if(b == 0)
+	{
+		if(lerp > 0)
+			return 0;
+		else
+			return a;
+	}
+	return a * pow(fabs(b / a), lerp);
 }
 
 void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
@@ -585,6 +605,7 @@ string GetMapname(void);
 float speedaward_lastupdate;
 float speedaward_lastsent;
 .float jumppadusetime;
+var float autocvar_g_movement_highspeed = 1;
 void SV_PlayerPhysics()
 {
 	local vector wishvel, wishdir, v;
@@ -593,6 +614,13 @@ void SV_PlayerPhysics()
 	float buttons_prev;
 	float not_allowed_to_move;
 	string c;
+
+	// fix physics stats for g_movement_highspeed
+	self.stat_sv_airaccel_qw = copysign(bound(0, 1-(1-fabs(sv_airaccel_qw))*autocvar_g_movement_highspeed, 1), sv_airaccel_qw);
+	if(sv_airstrafeaccel_qw)
+		self.stat_sv_airstrafeaccel_qw = copysign(bound(0.001, 1-(1-fabs(sv_airstrafeaccel_qw))*autocvar_g_movement_highspeed, 1), sv_airstrafeaccel_qw);
+	else
+		self.stat_sv_airstrafeaccel_qw = 0;
 
     if(self.PlayerPhysplug)
         if(self.PlayerPhysplug())
@@ -1138,8 +1166,9 @@ void SV_PlayerPhysics()
 			float accelerating;
 			float wishspeed2;
 			float airaccelqw;
+			float strafity;
 
-			airaccelqw = sv_airaccel_qw;
+			airaccelqw = self.stat_sv_airaccel_qw;
 			accelerating = (self.velocity * wishdir > 0);
 			wishspeed2 = wishspeed;
 
@@ -1147,24 +1176,21 @@ void SV_PlayerPhysics()
 			if(sv_airstopaccelerate)
 				if(self.velocity * wishdir < 0)
 					airaccel = sv_airstopaccelerate*maxspd_mod;
-			// this doesn't play well with analog input, but can't r
-			// fixed like the AirControl can. So, don't set the maxa
-			// cvars when you want to support analog input.
-			if(self.movement_x == 0 && self.movement_y != 0)
-			{
-				if(sv_maxairstrafespeed)
-				{
-					wishspeed = min(wishspeed, sv_maxairstrafespeed*maxspd_mod);
-					if(sv_maxairstrafespeed < sv_maxairspeed)
-						airaccelqw = 1;
-				}
-				if(sv_airstrafeaccelerate)
-				{
-					airaccel = sv_airstrafeaccelerate*maxspd_mod;
-					if(sv_airstrafeaccelerate > sv_airaccelerate)
-						airaccelqw = 1;
-				}
-			}
+			// note that for straight forward jumping:
+			// step = accel * frametime * wishspeed0;
+			// accel  = bound(0, wishspeed - vel_xy_current, step) * accelqw + step * (1 - accelqw);
+			// -->
+			// dv/dt = accel * maxspeed (when slow)
+			// dv/dt = accel * maxspeed * (1 - accelqw) (when fast)
+			// log dv/dt = logaccel + logmaxspeed (when slow)
+			// log dv/dt = logaccel + logmaxspeed + log(1 - accelqw) (when fast)
+			strafity = IsMoveInDirection(self.movement, -90) + IsMoveInDirection(self.movement, +90); // if one is nonzero, other is always zero
+			if(sv_maxairstrafespeed)
+				wishspeed = min(wishspeed, GeomLerp(sv_maxairspeed*maxspd_mod, strafity, sv_maxairstrafespeed*maxspd_mod));
+			if(sv_airstrafeaccelerate)
+				airaccel = GeomLerp(airaccel, strafity, sv_airstrafeaccelerate*maxspd_mod);
+			if(self.stat_sv_airstrafeaccel_qw)
+				airaccelqw = copysign(1-GeomLerp(1-fabs(self.stat_sv_airaccel_qw), strafity, 1-fabs(self.stat_sv_airstrafeaccel_qw)), ((strafity > 0.5) ? self.stat_sv_airstrafeaccel_qw : self.stat_sv_airaccel_qw));
 			// !CPM
 
 			if(sv_warsowbunny_turnaccel && accelerating && self.movement_y == 0 && self.movement_x != 0)

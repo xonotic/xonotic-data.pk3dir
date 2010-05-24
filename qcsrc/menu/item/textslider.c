@@ -37,10 +37,10 @@ void setValueFromIdentifierTextSlider(entity me, string id)
 	for(i = 0; i < me.nValues; ++i)
 		if(me.valueToIdentifier(me, i) == id)
 		{
-			me.value = i;
+			setValueSlider( me, i );
 			return;
 		}
-	me.value = -1;
+	setValueSlider( me, -1 );
 }
 string getIdentifierTextSlider(entity me)
 {

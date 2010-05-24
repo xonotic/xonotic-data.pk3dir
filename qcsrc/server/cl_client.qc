@@ -939,6 +939,7 @@ void PutClientInServer (void)
 		self.nextthink = 0;
 		self.hook_time = 0;
 		self.dmg_team = 0;
+		self.ballistics_density = cvar("g_ballistics_density_player");
 
 		self.metertime = 0;
 

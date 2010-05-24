@@ -534,6 +534,9 @@ string cvar_changes;
 float game_starttime; //point in time when the countdown is over
 .float stat_game_starttime;
 
+.float stat_sv_airaccel_qw;
+.float stat_sv_airstrafeaccel_qw;
+
 void W_Porto_Remove (entity p);
 
 .float projectiledeathtype;
@@ -641,3 +644,5 @@ string deathmessage;
 
 .float cvar_cl_weaponimpulsemode;
 .float selectweapon; // last selected weapon of the player
+
+.float ballistics_density; // wall piercing factor, larger = bullet can pass through more

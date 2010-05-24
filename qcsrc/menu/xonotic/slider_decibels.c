@@ -25,11 +25,11 @@ void loadCvarsXonoticDecibelsSlider(entity me)
 
 	v = cvar(me.cvarName);
 	if(v >= 0.98)
-		me.value = 0;
+		setValueSlider( me, 0 );
 	else if(v < 0.0005)
-		me.value = -1000000;
+		setValueSlider( me, -1000000 );
 	else
-		me.value = 0.1 * floor(0.5 + 10.0 * log10(cvar(me.cvarName)) * 10);
+		setValueSlider( me, 0.1 * floor(0.5 + 10.0 * log10(cvar(me.cvarName)) * 10) );
 }
 void saveCvarsXonoticDecibelsSlider(entity me)
 {
