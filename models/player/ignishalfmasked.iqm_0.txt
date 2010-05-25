@@ -1,0 +1,7 @@
+name Ignis - HalfMasked
+species human
+sex Male
+weight 90
+age 31
+
+Heavyweight Xonotic Solider

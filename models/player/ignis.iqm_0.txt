@@ -1,0 +1,7 @@
+name Ignis
+species human
+sex Male
+weight 88
+age 31
+
+Heavyweight Xonotic Solider
