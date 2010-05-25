@@ -198,6 +198,7 @@ void StartFrame (void)
 	sv_warsowbunny_topspeed = cvar("sv_warsowbunny_topspeed");
 	sv_warsowbunny_turnaccel = cvar("sv_warsowbunny_turnaccel");
 	sv_warsowbunny_backtosideratio = cvar("sv_warsowbunny_backtosideratio");
+	sv_speedlimit = cvar("sv_speedlimit");
 	teamplay = cvar ("teamplay");
 	sys_frametime = cvar("sys_ticrate") * cvar("slowmo");
 
