@@ -41,6 +41,15 @@ When you press the jump key
 void PlayerJump (void)
 {
 	float mjumpheight;
+	float doublejump;
+
+	doublejump = FALSE;
+	if (sv_doublejump)
+	{
+		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
+		if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
+			doublejump = TRUE;
+	}
 
 	mjumpheight = cvar("sv_jumpvelocity");
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
@@ -55,6 +64,7 @@ void PlayerJump (void)
 		return;
 	}
 
+	if (!doublejump)
 	if (!(self.flags & FL_ONGROUND))
 		return;
 
@@ -605,7 +615,6 @@ void race_send_speedaward_alltimebest(float msg)
 string GetMapname(void);
 float speedaward_lastupdate;
 float speedaward_lastsent;
-.float jumppadusetime;
 var float autocvar_g_movement_highspeed = 1;
 void SV_PlayerPhysics()
 {
@@ -859,14 +868,6 @@ void SV_PlayerPhysics()
 
 	if(self.classname == "player")
 	{
-		if(sv_doublejump && time - self.jumppadusetime > 2 * sys_frametime)
-		{
-			tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
-			self.flags &~= FL_ONGROUND;
-			if(trace_fraction < 1 && trace_plane_normal_z > 0.7)
-				self.flags |= FL_ONGROUND;
-		}
-
 		if (self.BUTTON_JUMP)
 			PlayerJump ();
 		else
