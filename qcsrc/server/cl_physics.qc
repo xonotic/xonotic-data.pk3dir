@@ -95,16 +95,34 @@ void PlayerJump (void)
 		mjumpheight = mjumpheight * cvar("g_minstagib_speed_jumpheight");
 	}
 
+	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
+	// velocity bounds.  Final velocity is bound between (jumpheight *
+	// min + jumpheight) and (jumpheight * max + jumpheight);
+
 	if(cvar_string("sv_jumpspeedcap_min") != "")
-		self.velocity_z = max(cvar("sv_jumpvelocity") * cvar("sv_jumpspeedcap_min"), self.velocity_z);
-	if(cvar_string("sv_jumpspeedcap_max") != "") {
+	{
+		float minjumpspeed;
+
+		minjumpspeed = mjumpheight * cvar("sv_jumpspeedcap_min");
+
+		if (self.velocity_z < minjumpspeed)
+			mjumpheight += minjumpspeed - self.velocity_z;
+	}
+
+	if(cvar_string("sv_jumpspeedcap_max") != "")
+	{
+		// don't do jump speedcaps on ramps to preserve old xonotic ramjump style
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
-		if(trace_fraction < 1 && trace_plane_normal_z < 0.98 && cvar("sv_jumpspeedcap_max_disable_on_ramps")) {
-			// don't do jump speedcaps on ramps to preserve old xonotic ramjump style
-			//print("Trace plane normal z: ", ftos(trace_plane_normal_z), ", disabling speed cap!\n");
+
+		if(!(trace_fraction < 1 && trace_plane_normal_z < 0.98 && cvar("sv_jumpspeedcap_max_disable_on_ramps")))
+		{
+			float maxjumpspeed;
+
+			maxjumpspeed = mjumpheight * cvar("sv_jumpspeedcap_max");
+
+			if (self.velocity_z > maxjumpspeed)
+				mjumpheight -= self.velocity_z - maxjumpspeed;
 		}
-		else
-			self.velocity_z = min(cvar("sv_jumpvelocity") * cvar("sv_jumpspeedcap_max"), self.velocity_z) + trace_ent.velocity_z;
 	}
 
 	if(!(self.lastflags & FL_ONGROUND))
