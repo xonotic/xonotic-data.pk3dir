@@ -77,7 +77,7 @@ void W_Hook_Attack2()
 	setsize(gren, '0 0 0', '0 0 0');
 
 	gren.nextthink = time + cvar("g_balance_hook_secondary_lifetime");
-	gren.think = adaptor_think2use;
+	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Hook_Explode2;
 	gren.touch = W_Hook_Touch2;
 

@@ -28,7 +28,10 @@ void Seeker_Missile_Think()
 	float dist;
 
 	if (time > self.cnt)
+	{
+		self.projectiledeathtype |= HITTYPE_SPLASH;
 		Seeker_Missile_Explode();
+	}
 
 	if (!self.switchweapon)
 		self.switchweapon = cvar("g_balance_seeker_missile_speed");
@@ -404,7 +407,7 @@ void Seeker_Fire_Flac()
 	missile.bot_dodgerating = cvar("g_balance_seeker_flac_damage");
 	missile.touch = Seeker_Flac_Explode;
 	missile.use = Seeker_Flac_Explode;
-	missile.think = Seeker_Flac_Explode;
+	missile.think = adaptor_think2use_hittype_splash;
 	missile.nextthink = time + cvar("g_balance_seeker_flac_lifetime") + cvar("g_balance_seeker_flac_lifetime_rand");
 	missile.solid = SOLID_BBOX;
 	missile.scale = 0.4; // BUG: the model is too big
