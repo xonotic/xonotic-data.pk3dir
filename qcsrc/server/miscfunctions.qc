@@ -1227,7 +1227,6 @@ void readlevelcvars(void)
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
 	sv_pogostick = cvar("sv_pogostick");
-	sv_doublejump = cvar("sv_doublejump");
 	g_ctf_reverse = cvar("g_ctf_reverse");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
@@ -1914,6 +1913,13 @@ void adaptor_think2use()
     self.use();
     other = o;
     activator = a;
+}
+
+void adaptor_think2use_hittype_splash() // for timed projectile detonation
+{
+	if not(self.flags & FL_ONGROUND) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
+		self.projectiledeathtype |= HITTYPE_SPLASH;
+	adaptor_think2use();
 }
 
 // deferred dropping

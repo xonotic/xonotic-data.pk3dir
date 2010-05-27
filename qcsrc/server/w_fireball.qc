@@ -98,6 +98,7 @@ void W_Fireball_Think()
 	if(time > self.pushltime)
 	{
 		self.cnt = 1;
+		self.projectiledeathtype |= HITTYPE_SPLASH;
 		W_Fireball_Explode();
 		return;
 	}
