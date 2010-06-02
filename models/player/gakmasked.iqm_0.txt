@@ -1,0 +1,7 @@
+name Gak Masked
+species alien
+sex Male
+weight 87
+age 18
+
+Mediumweight Xonotic Solider
