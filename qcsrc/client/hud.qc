@@ -654,7 +654,7 @@ vector HUD_Panel_CheckLimitSize(float id, vector mySize)
 			break;
 		case 3: 
 			if(cvar("hud_healtharmor") == 2)
-				mySize_y = 0.23 * mySize_x; // 0.32 * width, trial and error...
+				mySize_y = 0.23 * mySize_x; // 0.23 * width, trial and error...
 			break;
 		case 5: 
 			mySize_y = (1/4.1) * mySize_x; // 1/4.1 * width, trial and error...
@@ -723,12 +723,50 @@ float HUD_Panel_GetBorder(float id)
 
 vector HUD_Panel_GetColor(float id)
 {
-	// TODO: idea: let user choose colors "pants", "shirt"
+	float f;
+	vector color_vec;
 	string color;
 	color = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color"));
-	if(color == "")
+	color_vec = stov(color);
+	if(color == "") {
 		color = cvar_string("hud_bg_color");
-	return stov(color);
+		color_vec = stov(color);
+		if(color == "shirt") {
+			f = stof(getplayerkey(self.sv_entnum, "colors"));
+			color_vec = colormapPaletteColor(floor(f / 16), 0);
+		}
+		else if(color == "pants") {
+			f = stof(getplayerkey(self.sv_entnum, "colors"));
+			color_vec = colormapPaletteColor(mod(f, 16), 1);
+		}
+	}
+	else if(color == "shirt") {
+		f = stof(getplayerkey(self.sv_entnum, "colors"));
+		color_vec = colormapPaletteColor(floor(f / 16), 0);
+	}
+	else if(color == "pants") {
+		f = stof(getplayerkey(self.sv_entnum, "colors"));
+		color_vec = colormapPaletteColor(mod(f, 16), 1);
+	}
+	return color_vec;
+}
+
+vector HUD_Panel_Dock_GetColor(void)
+{
+	float f;
+	vector color_vec;
+	string color;
+	color = cvar_string("hud_dock_color");
+	color_vec = stov(color);
+	if(color == "shirt") {
+		f = stof(getplayerkey(self.sv_entnum, "colors"));
+		color_vec = colormapPaletteColor(floor(f / 16), 0);
+	}
+	else if(color == "pants") {
+		f = stof(getplayerkey(self.sv_entnum, "colors"));
+		color_vec = colormapPaletteColor(mod(f, 16), 1);
+	}
+	return color_vec;
 }
 
 float HUD_Panel_GetAlpha(float id)
@@ -3192,7 +3230,7 @@ void HUD_Main (void)
 
 	// Drawing stuff
 	if(cvar_string("hud_dock") != "")
-		drawpic_skin('0 0 0', cvar_string("hud_dock"), eX * vid_conwidth + eY * vid_conheight, stov(cvar_string("hud_dock_color")), cvar("hud_dock_alpha"), DRAWFLAG_NORMAL);
+		drawpic_skin('0 0 0', cvar_string("hud_dock"), eX * vid_conwidth + eY * vid_conheight, HUD_Panel_Dock_GetColor(), cvar("hud_dock_alpha"), DRAWFLAG_NORMAL);
 
 	if(HUD_Panel_CheckActive(0))
 		HUD_WeaponIcons();
