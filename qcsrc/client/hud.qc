@@ -84,6 +84,10 @@ void drawpic_skin_expanding(vector pos, string pic, vector sz, vector rgb, float
 	drawpic_expanding(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/", pic), sz, rgb, alpha, flag, fadelerp);
 }
 
+void drawpic_skin_expanding_two(vector pos, string pic, vector sz, vector rgb, float alpha, float flag, float fadelerp) {
+	drawpic_expanding_two(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/", pic), sz, rgb, alpha, flag, fadelerp);
+}
+
 // return HUD background color
 vector HUD_GetBgColor()
 {
@@ -1455,8 +1459,8 @@ void HUD_Powerups() {
 
 	float strength_time, shield_time;
 
-	strength_time = bound(0, ceil(getstatf(STAT_STRENGTH_FINISHED) - time), 99);
-	shield_time = bound(0, ceil(getstatf(STAT_INVINCIBLE_FINISHED) - time), 99);
+	strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
+	shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
 
 	if(hud_configure)
 	{
@@ -1472,22 +1476,27 @@ void HUD_Powerups() {
 
 	string leftname, rightname;
 	float leftcnt, rightcnt;
+	float leftexact, rightexact;
 	float leftalpha, rightalpha;
 	if (cvar(strcat("hud_", HUD_Panel_GetName(id), "_flip"))) {
 		leftname = "strength";
-		leftcnt = strength_time;
+		leftcnt = ceil(strength_time);
+		leftexact = strength_time;
 
 		rightname = "shield";
-		rightcnt = shield_time;
+		rightcnt = ceil(shield_time);
+		rightexact = shield_time;
 	} else {
 		leftname = "shield";
-		leftcnt = shield_time;
+		leftcnt = ceil(shield_time);
+		leftexact = shield_time;
 
 		rightname = "strength";
-		rightcnt = strength_time;
+		rightcnt = ceil(strength_time);
+		rightexact = strength_time;
 	}
-	leftalpha = bound(0, leftcnt, 1);
-	rightalpha = bound(0, rightcnt, 1);
+	leftalpha = bound(0, leftexact, 1);
+	rightalpha = bound(0, rightexact, 1);
 
 	if (mySize_x/mySize_y > 4)
 	{
@@ -1508,7 +1517,10 @@ void HUD_Powerups() {
 			}
 
 			HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-			drawpic_skin(picpos, leftname, '1 1 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+			if(leftcnt <= 5)
+				drawpic_skin_expanding_two(picpos, leftname, '1 1 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_ADDITIVE, bound(0, (leftcnt - leftexact) / 0.5, 1));
+			else
+				drawpic_skin(picpos, leftname, '1 1 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(numpos, leftcnt, 2, 0, 0.5 * mySize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 
@@ -1529,7 +1541,10 @@ void HUD_Powerups() {
 			}
 
 			HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-			drawpic_skin(picpos, rightname, '1 1 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+			if(rightcnt <= 5)
+				drawpic_skin_expanding_two(picpos, rightname, '1 1 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_ADDITIVE, bound(0, (rightcnt - rightexact) / 0.5, 1));
+			else
+				drawpic_skin(picpos, rightname, '1 1 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(numpos, rightcnt, 2, 0, 0.5 * mySize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 	}
@@ -1552,7 +1567,10 @@ void HUD_Powerups() {
 			}
 
 			HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-			drawpic_skin(picpos, leftname, '0.5 0.5 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+			if(leftcnt <= 5)
+				drawpic_skin_expanding_two(picpos, leftname, '0.5 0.5 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_ADDITIVE, bound(0, (leftcnt - leftexact) / 0.5, 1));
+			else
+				drawpic_skin(picpos, leftname, '0.5 0.5 0' * mySize_y, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(numpos, leftcnt, len, 0, 0.5 * mySize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 
@@ -1573,7 +1591,10 @@ void HUD_Powerups() {
 			}
 
 			HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-			drawpic_skin(picpos, rightname, '0.5 0.5 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+			if(rightcnt <= 5)
+				drawpic_skin_expanding_two(picpos, rightname, '0.5 0.5 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_ADDITIVE, bound(0, (rightcnt - rightexact) / 0.5, 1));
+			else
+				drawpic_skin(picpos, rightname, '0.5 0.5 0' * mySize_y, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(numpos, rightcnt, len, 0, 0.5 * mySize_y, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 	}
@@ -1596,7 +1617,10 @@ void HUD_Powerups() {
 			}
 
 			HUD_Panel_DrawProgressBar(barpos, 1, barsize, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-			drawpic_skin(picpos, leftname, '0.4 0.4 0' * mySize_x, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+			if(leftcnt <= 5)
+				drawpic_skin_expanding_two(picpos, leftname, '0.4 0.4 0' * mySize_x, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_ADDITIVE, bound(0, (leftcnt - leftexact) / 0.5, 1));
+			else
+				drawpic_skin(picpos, leftname, '0.4 0.4 0' * mySize_x, '1 1 1', leftalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(numpos, leftcnt, len, 0, 0.25 * mySize_x, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 
@@ -1617,58 +1641,13 @@ void HUD_Powerups() {
 			}
 
 			HUD_Panel_DrawProgressBar(barpos, 1, barsize, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha"), DRAWFLAG_NORMAL);
-			drawpic_skin(picpos, rightname, '0.4 0.4 0' * mySize_x, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
+			if(rightcnt <= 5)
+				drawpic_skin_expanding_two(picpos, rightname, '0.4 0.4 0' * mySize_x, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_ADDITIVE, bound(0, (rightcnt - rightexact) / 0.5, 1));
+			else
+				drawpic_skin(picpos, rightname, '0.4 0.4 0' * mySize_x, '1 1 1', rightalpha * hud_alpha_fg, DRAWFLAG_NORMAL);
 			HUD_DrawXNum(numpos, rightcnt, len, 0, 0.25 * mySize_x, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
 		}
 	}
-
-	/* TODO: add expand from old code!
-	//strength
-	if (strength_time) {
-		dt = strength_time - time;
-		if(dt > 0)
-		{
-			if(dt < 5)
-			{
-				drawpic_expanding_two(pos, "str", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE,
-					bound(0, (ceil(dt) - dt) / 0.5, 1));
-			}
-			else
-			{
-				drawpic_skin(pos, "str", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
-			}
-			HUD_DrawXNum(pos - '40 -2 0', ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-		}
-		else if(dt > -1)
-		{
-			drawpic_expanding(pos, "str", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE,
-				bound(0, -dt / 0.5, 1));
-		}
-	}
-
-	//invincibility
-	if (invincibility_time) {
-		dt = invincibility_time - time;
-		if(dt > 0)
-		{
-			if(dt < 5)
-			{
-				drawpic_expanding_two(pos - '0 -22 0', "invinc", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE,
-					bound(0, (ceil(dt) - dt) / 0.5, 1));
-			}
-			else
-			{
-				drawpic_skin(pos - '0 -22 0', "invinc", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE);
-			}
-			HUD_DrawXNum(pos - '40 -24 0', ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, 0, hud_alpha_fg, DRAWFLAG_NORMAL);
-		}
-		else if(dt > -1)
-		{
-			drawpic_expanding(pos - '0 -22 0', "invinc", '1 1 0' * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_ADDITIVE,
-				bound(0, -dt / 0.5, 1));
-		}
-	}
-	*/
 }
 
 // Health/armor (#3)
