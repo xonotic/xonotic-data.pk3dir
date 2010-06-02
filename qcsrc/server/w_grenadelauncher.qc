@@ -99,7 +99,7 @@ void W_Grenade_Attack (void)
 	setsize(gren, '0 0 -3', '0 0 -3');
 
 	gren.nextthink = time + cvar("g_balance_grenadelauncher_primary_lifetime");
-	gren.think = adaptor_think2use;
+	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Grenade_Explode;
 	gren.touch = W_Grenade_Touch1;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
@@ -135,7 +135,7 @@ void W_Grenade_Attack2 (void)
 	setorigin(gren, w_shotorg);
 
 	gren.nextthink = time + cvar("g_balance_grenadelauncher_secondary_lifetime");
-	gren.think = adaptor_think2use;
+	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Grenade_Explode2;
 	gren.touch = W_Grenade_Touch2;
 	gren.takedamage = DAMAGE_YES;

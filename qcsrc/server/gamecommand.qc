@@ -960,15 +960,25 @@ void GameCommand(string command)
 		if(argv(1) == "w")
 			setmodel(e, (nextent(world)).weaponentity.model);
 		else
+		{
+			precache_model(argv(1));
 			setmodel(e, argv(1));
+		}
 		e.frame = stof(argv(2));
-		i = gettagindex(e, argv(3));
+		if(substring(argv(3), 0, 1) == "#")
+			i = stof(substring(argv(3), 1, -1));
+		else
+			i = gettagindex(e, argv(3));
 		if(i)
 		{
 			v = gettaginfo(e, i);
-			print("model ", e.model, " frame ", ftos(e.frame), " tag ", argv(3));
-			print(" index = ", ftos(i));
+			print("model ", e.model, " frame ", ftos(e.frame), " tag ", gettaginfo_name);
+			print(" index ", ftos(i), " parent ", ftos(gettaginfo_parent), "\n");
 			print(" vector = ", ftos(v_x), " ", ftos(v_y), " ", ftos(v_z), "\n");
+			print(" offset = ", ftos(gettaginfo_offset_x), " ", ftos(gettaginfo_offset_y), " ", ftos(gettaginfo_offset_z), "\n");
+			print(" forward = ", ftos(gettaginfo_forward_x), " ", ftos(gettaginfo_forward_y), " ", ftos(gettaginfo_forward_z), "\n");
+			print(" right = ", ftos(gettaginfo_right_x), " ", ftos(gettaginfo_right_y), " ", ftos(gettaginfo_right_z), "\n");
+			print(" up = ", ftos(gettaginfo_up_x), " ", ftos(gettaginfo_up_y), " ", ftos(gettaginfo_up_z), "\n");
 			if(argc >= 6)
 			{
 				v_y = -v_y;

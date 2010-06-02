@@ -53,6 +53,7 @@ entity bot_list;
 entity player_list;
 .entity nextbot;
 .entity nextplayer;
+.string cleanname;
 .string netname_freeme;
 .string playermodel_freeme;
 .string playerskin_freeme;

@@ -1,0 +1,7 @@
+name Ignis - Masked
+species human
+sex Male
+weight 92
+age 31
+
+Heavyweight Xonotic Solider
