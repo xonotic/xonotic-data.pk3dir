@@ -1051,6 +1051,10 @@ void HUD_Panel_SetPosSize(float id, vector resizeorigin)
 	mySize_x = max(minSize_x * mySize_y, mySize_x);
 	mySize_y = max(minSize_y * mySize_x, mySize_y);
 
+	// minimum panel size cap
+	mySize_x = max(0.025 * vid_conwidth, mySize_x);
+	mySize_y = max(0.025 * vid_conheight, mySize_y);
+
 	// needed?
 	oldPos = HUD_Panel_GetPos(id);
 	oldSize = HUD_Panel_GetSize(id);
@@ -1078,8 +1082,8 @@ void HUD_Panel_SetPosSize(float id, vector resizeorigin)
 	mySize_y = min(myPos_y + mySize_y, mySize_y);
 
 	// bottom/right screen edges
-	mySize_x = bound(0.025 * vid_conwidth, mySize_x, vid_conwidth - myPos_x); // TODO: make this a min like above, move 0.025 stuff elsewhere
-	mySize_y = bound(0.025 * vid_conheight, mySize_y, vid_conheight - myPos_y);
+	mySize_x = min(vid_conwidth - myPos_x, mySize_x); 
+	mySize_y = min(vid_conheight - myPos_y, mySize_y); 
 
 	if(cvar("hud_configure_grid"))
 	{
