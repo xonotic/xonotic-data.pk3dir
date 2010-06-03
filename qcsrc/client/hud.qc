@@ -1030,7 +1030,7 @@ vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize)
 void HUD_Panel_SetPosSize(float id, vector resizeorigin)
 {
 	vector mySize, myPos;
-	vector oldSize, oldPos;
+	vector oldPos;
 
 	if(resizeCorner == 1) {
 		mySize_x = resizeorigin_x - (mousepos_x - panel_click_distance_x);
@@ -1056,10 +1056,6 @@ void HUD_Panel_SetPosSize(float id, vector resizeorigin)
 
 	mySize_x = max(minSize_x * mySize_y, mySize_x);
 	mySize_y = max(minSize_y * mySize_x, mySize_y);
-
-	// needed?
-	oldPos = HUD_Panel_GetPos(id);
-	oldSize = HUD_Panel_GetSize(id);
 
 	// collision testing|
 	// -----------------+
