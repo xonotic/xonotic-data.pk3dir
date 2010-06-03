@@ -1046,16 +1046,16 @@ void HUD_Panel_SetPosSize(float id, vector resizeorigin)
 		mySize_y = mousepos_y - (resizeorigin_y - panel_click_distance_y);
 	}
 
+	// minimum panel size cap
+	mySize_x = max(0.025 * vid_conwidth, mySize_x);
+	mySize_y = max(0.025 * vid_conheight, mySize_y);
+
 	// cap against panel's own limits
 	vector minSize;
 	minSize = HUD_Panel_GetMinSize(id); // mySize_x at least minSize_x * mySize_y, and vice versa
 
 	mySize_x = max(minSize_x * mySize_y, mySize_x);
 	mySize_y = max(minSize_y * mySize_x, mySize_y);
-
-	// minimum panel size cap
-	mySize_x = max(0.025 * vid_conwidth, mySize_x);
-	mySize_y = max(0.025 * vid_conheight, mySize_y);
 
 	// needed?
 	oldPos = HUD_Panel_GetPos(id);
