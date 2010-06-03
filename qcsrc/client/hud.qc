@@ -2199,7 +2199,7 @@ void HUD_Radar(void)
 	float scale2d, normalsize, bigsize;
 	float f;
 
-	teamradar_origin2d = pos + 0.5 * mySize; // TODO: stupid compat, should be removed (hint: code seems to assume origin to be in center, where panelhud code uses pos as topleft pixel)
+	teamradar_origin2d = pos + 0.5 * mySize;
 	teamradar_size2d = mySize;
 
 	if(minimapname == "")
