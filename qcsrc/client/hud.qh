@@ -3,6 +3,7 @@ float panel_cnt = 12; // NOTE: IDs start from 0!
 vector mousepos;
 vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)
 vector panel_click_resizeorigin; // coordinates for opposite point when resizing
+float resizeCorner; // 1 = topleft, 2 = topright, 3 = bottomleft, 4 = bottomright
 float highlightedPanel;
 float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
