@@ -1025,39 +1025,88 @@ vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize)
 	return myTarget;
 }
 
-void HUD_Panel_SetPosSize(float id, vector myPos, vector resizeorigin)
+void HUD_Panel_SetPosSize(float id, vector resizeorigin)
 {
+	vector mySize, myPos;
 	vector oldSize, oldPos;
 
-	vector mySize;
-	mySize = resizeorigin - myPos;
+	if(resizeCorner == 1) {
+		mySize_x = resizeorigin_x - (mousepos_x - panel_click_distance_x);
+		mySize_y = resizeorigin_y - (mousepos_y - panel_click_distance_y);
+	} else if(resizeCorner == 2) {		
+		mySize_x = mousepos_x + panel_click_distance_x - resizeorigin_x;
+		mySize_y = panel_click_distance_y + resizeorigin_y - mousepos_y;
+	} else if(resizeCorner == 3) {
+		mySize_x = resizeorigin_x + panel_click_distance_x - mousepos_x;
+		mySize_y = mousepos_y + panel_click_distance_y - resizeorigin_y;
+	} else { // resizeCorner == 4
+		mySize_x = mousepos_x - (resizeorigin_x - panel_click_distance_x);
+		mySize_y = mousepos_y - (resizeorigin_y - panel_click_distance_y);
+	}
 
 	// cap against panel's own limits
 	vector minSize;
-	minSize = HUD_Panel_GetMinSize(id); // mySize_x at least minSize_x * mySize_y, and vice versa // TODO: this likely fails at minlimit now
+	minSize = HUD_Panel_GetMinSize(id); // mySize_x at least minSize_x * mySize_y, and vice versa // TODO: this likely fails at minlimit now // hmm actually seems like it doesnt? :o
 
 	mySize_x = max(minSize_x * mySize_y, mySize_x);
 	mySize_y = max(minSize_y * mySize_x, mySize_y);
 
+	// needed?
 	oldPos = HUD_Panel_GetPos(id);
 	oldSize = HUD_Panel_GetSize(id);
 
-	myPos_x = resizeorigin_x - mySize_x;
-	myPos_y = resizeorigin_y - mySize_y;
-	/*
+	// collision testing|
+	// -----------------+
+
+	// we need to know pos at this stage, but it might still change later if we hit a screen edge/other panel (?)
+	if(resizeCorner == 1) {
+		myPos_x = resizeorigin_x - mySize_x;
+		myPos_y = resizeorigin_y - mySize_y;
+	} else if(resizeCorner == 2) {
+		myPos_x = resizeorigin_x;
+		myPos_y = resizeorigin_y - mySize_y;
+	} else if(resizeCorner == 3) {
+		myPos_x = resizeorigin_x - mySize_x;
+		myPos_y = resizeorigin_y;
+	} else { // resizeCorner == 4
+		myPos_x = resizeorigin_x;
+		myPos_y = resizeorigin_y;
+	}
+
+	// left/top screen edges
+	mySize_x = min(myPos_x + mySize_x, mySize_x);
+	mySize_y = min(myPos_y + mySize_y, mySize_y);
+
+	// bottom/right screen edges
+	mySize_x = bound(0.025 * vid_conwidth, mySize_x, vid_conwidth - myPos_x); // TODO: make this a min like above, move 0.025 stuff elsewhere
+	mySize_y = bound(0.025 * vid_conheight, mySize_y, vid_conheight - myPos_y);
+
 	if(cvar("hud_configure_grid"))
 	{
 		mySize_x = floor(mySize_x/cvar("hud_configure_grid_x") + 0.5) * cvar("hud_configure_grid_x");
 		mySize_y = floor(mySize_y/cvar("hud_configure_grid_y") + 0.5) * cvar("hud_configure_grid_y");
 	}
 
+	// do another pos check, as size might have changed by now
+	if(resizeCorner == 1) {
+		myPos_x = resizeorigin_x - mySize_x;
+		myPos_y = resizeorigin_y - mySize_y;
+	} else if(resizeCorner == 2) {
+		myPos_x = resizeorigin_x;
+		myPos_y = resizeorigin_y - mySize_y;
+	} else if(resizeCorner == 3) {
+		myPos_x = resizeorigin_x - mySize_x;
+		myPos_y = resizeorigin_y;
+	} else { // resizeCorner == 4
+		myPos_x = resizeorigin_x;
+		myPos_y = resizeorigin_y;
+	}
+	/*
+
 	if(cvar("hud_configure_checkcollisions")) {
 		mySize = HUD_Panel_CheckResize(id, myPos, mySize);
 		myPos = HUD_Panel_CheckMove(id, myPos, mySize);
 	}
-
-	mySize_x = bound(0.025 * vid_conwidth, mySize_x, vid_conwidth - myPos_x);
-	mySize_y = bound(0.025 * vid_conheight, mySize_y, vid_conheight - myPos_y);
 
 	if(oldSize_x == mySize_x)
 		myPos_x = oldPos_x;
@@ -1106,12 +1155,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	return false;
 }
 
-// get rid of mouseprevpos, it was a terrible idea TODO
-vector mousepos, mouseprevpos;
-vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)
-vector panel_click_resizeorigin; // coordinates for opposite point when resizing
-float highlightedPanel;
-float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 void HUD_Panel_Mouse()
 {
 	if(mouseClicked == 0) {
@@ -1178,28 +1221,35 @@ void HUD_Panel_Mouse()
 			{
 				if(prevMouseClicked == 0)
 				{
-					panel_click_distance = mousepos - panelPos;
-					if(highlightedAction == 2)
+					if(highlightedAction == 1)
+						panel_click_distance = mousepos - panelPos;
+					else if(highlightedAction == 2)
 					{
-						if(resizeCorner == 1)
+						if(resizeCorner == 1) {
+							panel_click_distance = mousepos - panelPos;
 							panel_click_resizeorigin = panelPos + panelSize;
-						else if(resizeCorner == 2)
+						} else if(resizeCorner == 2) {
+							panel_click_distance_x = panelSize_x - mousepos_x + panelPos_x;
+							panel_click_distance_y = mousepos_y - panelPos_y;
 							panel_click_resizeorigin = panelPos + eY * panelSize_y;
-						else if(resizeCorner == 3)
+						} else if(resizeCorner == 3) {
+							panel_click_distance_x = mousepos_x - panelPos_x;
+							panel_click_distance_y = panelSize_y - mousepos_y + panelPos_y;
 							panel_click_resizeorigin = panelPos + eX * panelSize_x;
-						else if(resizeCorner == 4)
+						} else if(resizeCorner == 4) {
+							panel_click_distance = panelSize - mousepos + panelPos;
 							panel_click_resizeorigin = panelPos;
+						}
 					}	
 				}
 
 				if(highlightedAction == 1)
 					HUD_Panel_SetPos(i, mousepos - panel_click_distance);
 				else if(highlightedAction == 2)
-					HUD_Panel_SetPosSize(i, mousepos - panel_click_distance, panel_click_resizeorigin);
+					HUD_Panel_SetPosSize(i, panel_click_resizeorigin);
 			}
 		}
 	}
-	mouseprevpos = mousepos;
 	prevMouseClicked = mouseClicked;
 }
 
