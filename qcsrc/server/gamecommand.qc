@@ -960,7 +960,10 @@ void GameCommand(string command)
 		if(argv(1) == "w")
 			setmodel(e, (nextent(world)).weaponentity.model);
 		else
+		{
+			precache_model(argv(1));
 			setmodel(e, argv(1));
+		}
 		e.frame = stof(argv(2));
 		if(substring(argv(3), 0, 1) == "#")
 			i = stof(substring(argv(3), 1, -1));

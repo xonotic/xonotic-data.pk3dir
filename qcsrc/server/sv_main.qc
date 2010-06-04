@@ -201,6 +201,7 @@ void StartFrame (void)
 	sv_speedlimit = cvar("sv_speedlimit");
 	teamplay = cvar ("teamplay");
 	sys_frametime = cvar("sys_ticrate") * cvar("slowmo");
+	sv_doublejump = cvar("sv_doublejump");
 
 	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
 		orig_slowmo = cvar("slowmo"); // slowmo will be restored after the timeout

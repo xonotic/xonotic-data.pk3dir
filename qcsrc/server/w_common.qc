@@ -1,3 +1,4 @@
+
 void W_GiveWeapon (entity e, float wep, string name)
 {
 	entity oldself;
