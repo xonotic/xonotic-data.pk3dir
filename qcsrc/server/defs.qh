@@ -536,6 +536,7 @@ float game_starttime; //point in time when the countdown is over
 
 .float stat_sv_airaccel_qw;
 .float stat_sv_airstrafeaccel_qw;
+.float stat_sv_airspeedlimit_nonqw;
 
 void W_Porto_Remove (entity p);
 
