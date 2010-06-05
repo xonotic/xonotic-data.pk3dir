@@ -281,6 +281,7 @@ const float STAT_LEADLIMIT = 47;
 const float STAT_BULLETS_LOADED = 48;
 
 // see DP source, quakedef.h
+const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
 const float STAT_MOVEVARS_AIRSTRAFEACCEL_QW = 223;
 const float STAT_MOVEVARS_AIRACCEL_QW = 254;
 
