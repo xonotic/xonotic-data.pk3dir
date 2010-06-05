@@ -1979,6 +1979,51 @@ void HUD_HealthArmor(void)
 // ___TODO___ !!!
 // Notification area (#4)
 //
+
+void HUD_KillNotify(string s1, string s2, float deathtype)
+{
+
+
+}
+
+#define DAMAGE_CENTERPRINT_SPACER NEWLINES
+
+void HUD_Centerprint(string s1, float deathtype)
+{
+	if (deathtype == DEATH_TEAMCHANGE) {
+		centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", s1));
+	} else if (deathtype == DEATH_AUTOTEAMCHANGE) {
+		centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "You have been moved into a different team to improve team balance\nYou are now on: ", s1));
+	} else if (deathtype == DEATH_CAMP) {
+		if(cvar("cl_gentle"))
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Reconsider your tactics, camper!"));
+		else
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Die camper!"));
+	} else if (deathtype == DEATH_NOAMMO) {
+		if(cvar("cl_gentle"))
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You are reinserted into the game for running out of ammo..."));
+		else
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were killed for running out of ammo..."));
+	} else if (deathtype == DEATH_ROT) {
+		if(cvar("cl_gentle"))
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to preserve your health"));
+		else
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You grew too old without taking your medicine"));
+	} else if (deathtype == DEATH_MIRRORDAMAGE) {
+		if(cvar("cl_gentle"))
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't go against team mates!"));
+		else
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't shoot your team mates!"));
+	} else if (deathtype == DEATH_QUIET) {
+		// do nothing
+	} else {
+		if(cvar("cl_gentle"))
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to be more careful!"));
+		else
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You killed your own dumb self!"));
+	}
+}
+
 void HUD_Notify (void)
 {
 	float id = 4;
@@ -1995,6 +2040,7 @@ void HUD_Notify (void)
 		mySize -= '2 2 0' * padding;
 	}
 
+	/* This will come later.
 	string s;
 	entity tm;
 	if(spectatee_status && !intermission)
@@ -2110,6 +2156,7 @@ void HUD_Notify (void)
 			}
 		}
 	}
+	*/
 }
 
 // Timer (#5)

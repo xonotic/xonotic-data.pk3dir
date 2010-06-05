@@ -1243,6 +1243,20 @@ void Net_VoteDialogReset() {
 	vote_active = 0;
 }
 
+void Net_Notify() {
+	float type;
+	type = ReadByte();
+
+	if(type == CSQC_KILLNOTIFY)
+	{
+		HUD_KillNotify(ReadString(), ReadString(), ReadByte());
+	}
+	else if(type == CSQC_CENTERPRINT)
+	{
+		HUD_Centerprint(ReadString(), ReadByte());
+	}
+}
+
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1307,6 +1321,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_ANNOUNCE:
 			announce_snd = strzone(ReadString());
+			bHandled = true;
+			break;
+		case TE_CSQC_NOTIFY:
+			Net_Notify();
 			bHandled = true;
 			break;
 		default:

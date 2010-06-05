@@ -245,9 +245,31 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	GameLogEcho(s);
 }
 
+void Send_KillNotification (string s1, string s2, float deathtype)
+{
+	WriteByte(MSG_ALL, SVC_TEMPENTITY);
+	WriteByte(MSG_ALL, TE_CSQC_NOTIFY);
+	WriteByte(MSG_ALL, CSQC_KILLNOTIFY);
+	WriteString(MSG_ALL, s1);
+	WriteString(MSG_ALL, s2);
+	WriteByte(MSG_ALL, deathtype);
+}
+
+// TODO: writespectatable?
+// Function is used to send a generic centerprint whose content CSQC gets to decide (gentle version or not in the below cases)
+void Send_CSQC_Centerprint(entity e, string s1, float deathtype)
+{
+	msg_entity = e;
+	WriteByte(MSG_ONE, SVC_TEMPENTITY);
+	WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
+	WriteByte(MSG_ONE, CSQC_CENTERPRINT);
+	WriteString(MSG_ONE, s1);
+	WriteByte(MSG_ONE, deathtype);
+}
+
 void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 {
-	string	s, a;
+	string	s, a, msg;
 	float p, w;
 
 	if (targ.classname == "player" || targ.classname == "corpse")
@@ -259,8 +281,11 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 		a = attacker.netname;
 
-		if (targ == attacker)
+		if (targ == attacker) // suicides
 		{
+			if (deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
+				msg = ColoredTeamName(targ.team); // TODO: check if needed?
+			/*
 			if (deathtype == DEATH_TEAMCHANGE) {
 				centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", ColoredTeamName(targ.team)));
 			} else if (deathtype == DEATH_AUTOTEAMCHANGE) {
@@ -294,6 +319,11 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				else
 					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You killed your own dumb self!"));
 			}
+			*/
+			Send_CSQC_Centerprint(targ, msg, deathtype);
+
+			// TODO: message
+			/*
 			if(sv_gentle) {
 				if (deathtype == DEATH_CAMP)
 					bprint ("^1",s, "^1 thought they found a nice camping ground\n");
@@ -343,6 +373,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				if (targ.killcount > 2)
 					bprint ("^1",s,"^1 ended it all after a ",ftos(targ.killcount)," kill spree\n");
 			}
+			*/
+			Send_KillNotification(s, msg, deathtype);
 		}
 		else if (attacker.classname == "player" || attacker.classname == "gib")
 		{
