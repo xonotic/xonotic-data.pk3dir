@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_CANCLIMB | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "minstanex", "minstanex", "MinstaNex");
 #else
+#ifdef SVQC
 .float minstanex_lasthit;
 
 void W_MinstaNex_Attack (void)
@@ -241,4 +242,7 @@ float w_minstanex(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+#endif
 #endif

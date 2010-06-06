@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", "T.A.G. Seeker");
 #else
+#ifdef SVQC
 //.float speed; = switchweapon
 //.float proxytime; = autoswitch
 //.float tl; = wait
@@ -478,4 +479,7 @@ float w_seeker(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+#endif
 #endif

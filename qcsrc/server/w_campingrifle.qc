@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(CAMPINGRIFLE, w_campingrifle, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "campingrifle", "campingrifle", "Rifle");
 #else
+#ifdef SVQC
 //Camping rifle Primary mode: manually operated bolt*, Secondary: full automatic**
 //* Manually operating the bolt means that all the power of the gas is used to propell the bullet. In this mode the bolt is prevented from moving backwards in response to the firing of the bullet.
 //** In fully automatic mode some of the gas is used to extract and reload the next cartrige, thus there is less power and range.
@@ -293,4 +294,7 @@ float w_campingrifle(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+#endif
 #endif

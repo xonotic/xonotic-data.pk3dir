@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "crylink", "crylink", "Crylink");
 #else
+#ifdef SVQC
 .float gravity;
 
 .entity realowner;
@@ -234,4 +235,7 @@ float w_crylink(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+#endif
 #endif

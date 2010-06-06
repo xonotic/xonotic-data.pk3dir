@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "gl", "grenadelauncher", "Mortar");
 #else
+#ifdef SVQC
 void W_Grenade_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
@@ -235,4 +236,7 @@ float w_glauncher(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+#endif
 #endif

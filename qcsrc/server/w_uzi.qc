@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "uzi", "uzi", "Machine Gun");
 #else
+#ifdef SVQC
 // leilei's fancy muzzleflash stuff
 void W_Uzi_Flash_Go() {
 	if (self.frame > 10){
@@ -136,4 +137,7 @@ float w_uzi(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+#endif
 #endif

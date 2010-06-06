@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(HOOK, w_hook, IT_CELLS|IT_FUEL, 0, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "hookgun", "hook", "Grappling Hook");
 #else
+#ifdef SVQC
 .float dmg;
 .float dmg_edge;
 .float dmg_radius;
@@ -248,4 +249,7 @@ float w_hook(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+#endif
 #endif

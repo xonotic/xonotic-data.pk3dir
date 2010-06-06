@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(NEX, w_nex, IT_CELLS, 7, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "nex", "nex", "Nex");
 #else
+#ifdef SVQC
 void SendCSQCNexBeamParticle() {
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
@@ -79,4 +80,7 @@ float w_nex(float req)
 		w_deathtypestring = "has been vaporized by";
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+#endif
 #endif
