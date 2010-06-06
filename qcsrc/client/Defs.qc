@@ -149,8 +149,8 @@ void		end_sys_fields;			// flag for structure dumping
 
 // Additional OPTIONAL Fields and Globals
 float		intermission;
-float		sb_showscores;
-float		sb_showaccuracy;
+float		scoreboard_showscores;
+float		scoreboard_showaccuracy;
 .string		message;
 .float renderflags;
 // float		coop;
@@ -211,7 +211,7 @@ float race_othercheckpointtime;
 float race_othercheckpointdelta;
 float race_othercheckpointlapsdelta;
 string race_othercheckpointenemy;
-float sb_showscores_force;
+float scoreboard_showscores_force;
 float race_status;
 string race_status_name;
 float race_myrank;

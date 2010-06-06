@@ -950,7 +950,7 @@ void CSQC_SPIDER_HUD()
 	}
 	*/
 
-	if (sb_showscores)
+	if (scoreboard_showscores)
 	{
 		HUD_DrawScoreboard();
 		HUD_DrawCenterPrint();
@@ -965,8 +965,8 @@ void CSQC_SPIDER_HUD()
 #define raptor_s "gfx/vehicles/shiled.tga"
 
 // these are causing warnings!
-#define spider_a1 "gfx/hud/sb_rocket.tga"
-#define spider_a2 "gfx/sb_bullets.tga"
+#define spider_a1 "gfx/hud/scoreboard_rocket.tga"
+#define spider_a2 "gfx/scoreboard_bullets.tga"
 
 void CSQC_RAPTOR_HUD()
 {
@@ -1021,7 +1021,7 @@ void CSQC_RAPTOR_HUD()
     drawpic(hudloc, raptor_g2, picsize, '1 1 1' * reload + '1 0 0' *  (1 - reload), 1, DRAWFLAG_NORMAL);
 
 
-	if (sb_showscores)
+	if (scoreboard_showscores)
 	{
 		HUD_DrawScoreboard();
 		HUD_DrawCenterPrint();
@@ -1131,7 +1131,7 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 
 
 
-	if (sb_showscores)
+	if (scoreboard_showscores)
 	{
 		HUD_DrawScoreboard();
 		HUD_DrawCenterPrint();
@@ -1153,31 +1153,22 @@ void CSQC_common_hud(void)
 			// hud first
 			HUD_Main();
 
-			// is this needed?
-			//HUD_UpdatePlayerTeams();
+			// scoreboard/accuracy
+			if(scoreboard_showaccuracy && spectatee_status != -1)
+				HUD_DrawAccuracyStats();
+			else
+				HUD_DrawScoreboard();
 
 			if (intermission == 2) // map voting screen
-			{
-				if(sb_showaccuracy && spectatee_status != -1) {
-					HUD_DrawAccuracyStats();
-				}
-				else if(sb_showscores) {
-					HUD_DrawScoreboard();
-				}
-				else
+				if(!scoreboard_showaccuracy && !scoreboard_showscores)
+				{
 					HUD_FinaleOverlay();
+					HUD_Reset();
+				}
 
+			else if (scoreboard_showscores || scoreboard_showaccuracy || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
 				HUD_Reset();
-			}
-			else if (sb_showscores || sb_showaccuracy || sb_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
-			{
-				if(sb_showaccuracy && spectatee_status != -1)
-					HUD_DrawAccuracyStats();
-				else
-					HUD_DrawScoreboard();
 
-				HUD_Reset();
-			}
 			break;
 
 		case HUD_SPIDERBOT:

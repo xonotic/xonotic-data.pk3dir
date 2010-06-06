@@ -331,9 +331,6 @@ void MapVote_Init()
 
 	precache_sound ("misc/invshot.wav");
 
-	registercmd("+showscores");
-	registercmd("-showscores");
-
 	mv_active = 1;
 
 	mv_mousepos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
