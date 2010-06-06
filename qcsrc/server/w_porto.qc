@@ -283,6 +283,14 @@ float w_porto(float req)
 #ifdef CSQC
 float w_porto(float req)
 {
+	if(req == WR_IMPACTEFFECT)
+	{
+		print("Since when does Porto send DamageInfo?\n");
+	}
+	else if(req == WR_PRECACHE)
+	{
+		// nothing to do
+	}
 	return TRUE;
 }
 #endif

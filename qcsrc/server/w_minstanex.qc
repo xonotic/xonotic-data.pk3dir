@@ -246,6 +246,18 @@ float w_minstanex(float req)
 #ifdef CSQC
 float w_minstanex(float req)
 {
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/neximpact.wav");
+	}
 	return TRUE;
 }
 #endif

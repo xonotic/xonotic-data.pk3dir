@@ -255,6 +255,14 @@ float w_tuba(float req)
 #ifdef CSQC
 float w_tuba(float req)
 {
+	if(req == WR_IMPACTEFFECT)
+	{
+		// nothing to do here; particles of tuba are handled differently
+	}
+	else if(req == WR_PRECACHE)
+	{
+		// nothing to do
+	}
 	return TRUE;
 }
 #endif

@@ -166,6 +166,27 @@ float w_hagar(float req)
 #ifdef CSQC
 float w_hagar(float req)
 {
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
+		if(!w_issilent)
+		{
+			if (w_random<0.15)
+				sound(self, CHAN_PROJECTILE, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
+			else if (w_random<0.7)
+				sound(self, CHAN_PROJECTILE, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
+			else
+				sound(self, CHAN_PROJECTILE, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/hagexp1.wav");
+		precache_sound("weapons/hagexp2.wav");
+		precache_sound("weapons/hagexp3.wav");
+	}
 	return TRUE;
 }
 #endif

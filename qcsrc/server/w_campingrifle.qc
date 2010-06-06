@@ -298,6 +298,27 @@ float w_campingrifle(float req)
 #ifdef CSQC
 float w_campingrifle(float req)
 {
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent)
+		{
+			if(w_random < 0.2)
+				sound(self, CHAN_PROJECTILE, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.4)
+				sound(self, CHAN_PROJECTILE, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.5)
+				sound(self, CHAN_PROJECTILE, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/ric1.wav");
+		precache_sound("weapons/ric2.wav");
+		precache_sound("weapons/ric3.wav");
+	}
 	return TRUE;
 }
 #endif

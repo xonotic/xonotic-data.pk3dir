@@ -253,6 +253,18 @@ float w_hook(float req)
 #ifdef CSQC
 float w_hook(float req)
 {
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		pointparticles(particleeffectnum("hookbomb_explode"), org2, '0 0 0', 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/hookbomb_impact.wav");
+	}
 	return TRUE;
 }
 #endif

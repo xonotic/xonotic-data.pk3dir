@@ -321,6 +321,38 @@ float w_electro(float req)
 #ifdef CSQC
 float w_electro(float req)
 {
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			pointparticles(particleeffectnum("electro_ballexplode"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+		}
+		else
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+			{
+				// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
+				pointparticles(particleeffectnum("electro_combo"), org2, '0 0 0', 1);
+				if(!w_issilent)
+					sound(self, CHAN_PROJECTILE, "weapons/electro_impact_combo.wav", VOL_BASE, ATTN_NORM);
+			}
+			else
+			{
+				pointparticles(particleeffectnum("electro_impact"), org2, '0 0 0', 1);
+				if(!w_issilent)
+					sound(self, CHAN_PROJECTILE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+			}
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/electro_impact.wav");
+		precache_sound("weapons/electro_impact_combo.wav");
+	}
 	return TRUE;
 }
 #endif

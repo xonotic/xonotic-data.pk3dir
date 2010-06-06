@@ -190,6 +190,18 @@ float w_laser(float req)
 #ifdef CSQC
 float w_laser(float req)
 {
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/laserimpact.wav");
+	}
 	return TRUE;
 }
 #endif

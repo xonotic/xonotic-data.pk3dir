@@ -396,6 +396,26 @@ float w_fireball(float req)
 #ifdef CSQC
 float w_fireball(float req)
 {
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			// firemine goes out silently
+		}
+		else
+		{
+			org2 = w_org + w_backoff * 16;
+			pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/fireball_impact.wav");
+		precache_sound("weapons/fireball_impact2.wav");
+	}
 	return TRUE;
 }
 #endif

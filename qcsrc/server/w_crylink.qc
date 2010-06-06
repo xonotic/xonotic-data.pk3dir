@@ -239,6 +239,28 @@ float w_crylink(float req)
 #ifdef CSQC
 float w_crylink(float req)
 {
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
+		}
+		else
+		{
+			pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/crylink_impact2.wav");
+		precache_sound("weapons/crylink_impact.wav");
+	}
 	return TRUE;
 }
 #endif
