@@ -1980,47 +1980,290 @@ void HUD_HealthArmor(void)
 // Notification area (#4)
 //
 
-void HUD_KillNotify(string s1, string s2, float deathtype)
+string Weapon_SuicideMessage(float id)
 {
+	switch (id)
+	{
+		case 1:
+			return "lasered himself to hell";
+		case 2:
+			return "did the impossible";
+		case 3:
+			return "did the impossible";
+		case 4:
+			if(id & HITTYPE_SECONDARY)
+				return "tried out his own grenade";
+			return "detonated";
+	}
+	// TODO: was blasted by?
+	return strcat("[no kill message for weapon ", ftos(id), "!]");
+}
 
+string Weapon_KillMessage(float id)
+{
+	switch (id)
+	{
+		case 1:
+			return "was lasered to death by";
+		case 2:
+			return "was gunned by";
+		case 3:
+			if(id & HITTYPE_SECONDARY)
+				return "was sniped by";
+			return "was riddled full of holes by";
+		case 4:
+			if(id & HITTYPE_BOUNCE)
+				return "didn't see #'s grenade";
+			return "almost dodged #'s grenade";
+	}
+	return strcat("[no suicide message for weapon ", ftos(id), "!]");
+}
 
+void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
+{
+	if(msg == MSG_SUICIDE) {
+		float w;
+		string w_typestring;
+
+		w = DEATH_WEAPONOF(type);
+		// TODO: cl_gentle
+		// TODO: way of finding out secondary?
+		if(type == DEATH_WEAPON)
+			print("^1", s1, "^1 ", Weapon_SuicideMessage(stof(s3)), "\n");
+		else if (type == DEATH_KILL)
+			print ("^1",s1, "^1 couldn't take it anymore\n");
+		else if (type == DEATH_ROT)
+			print ("^1",s1, "^1 died\n");
+		else if (type == DEATH_NOAMMO)
+			print ("^7",s1, "^7 committed suicide. What's the point of living without ammo?\n");
+		else if (type == DEATH_CAMP)
+			print ("^1",s1, "^1 thought they found a nice camping ground\n");
+		else if (type == DEATH_MIRRORDAMAGE)
+			print ("^1",s1, "^1 didn't become friends with the Lord of Teamplay\n");
+		else if (type == DEATH_CHEAT)
+			print ("^1",s1, "^1 unfairly eliminated themself\n");
+		else if (type == DEATH_FIRE)
+			print ("^1",s1, "^1 burned to death\n");
+		else if (type != DEATH_TEAMCHANGE && type != DEATH_QUIET)
+			print ("^1",s1, "^1 couldn't resist the urge to self-destruct\n");
+		if (stof(s2) > 2) // killcount > 2
+			print ("^1",s1,"^1 ended it all after a ",s2," kill spree\n");
+	} else if(msg == MSG_KILL) {
+		if(type == KILL_TEAM || type == KILL_TEAM_SPREE) {
+				if(cvar("cl_gentle")) {
+					print ("^1", s1, "^1 took action against a team mate\n");
+				} else {
+					print ("^1", s1, "^1 mows down a team mate\n");
+				}
+				if (stof(s2) > 2 && type == KILL_TEAM_SPREE) {
+					if(cvar("cl_gentle"))
+						print ("^1",s1,"^1 ended a ",s2," scoring spree by going against a team mate\n");
+					else
+						print ("^1",s1,"^1 ended a ",s2," kill spree by killing a team mate\n");
+				}
+				else if (stof(s2) > 2) {
+					if(cvar("cl_gentle"))
+						print ("^1",s1,"'s ^1",s2," scoring spree was ended by a team mate!\n");
+					else
+						print ("^1",s1,"'s ^1",s2," kill spree was ended by a team mate!\n");
+				}
+		}
+		else if(type == KILL_FIRST_BLOOD)
+			print("^1",s1, "^1 drew first blood", "\n");
+		else if (type == DEATH_WEAPON)
+			print("^1", s1, "^1 ", Weapon_KillMessage(stof(s3)), "\n");
+		else if (type == DEATH_TELEFRAG)
+			print ("^1",s1, "^1 was telefragged by ", s2, "\n");
+		else if (type == DEATH_DROWN)
+			print ("^1",s1, "^1 was drowned by ", s2, "\n");
+		else if (type == DEATH_SLIME)
+			print ("^1",s1, "^1 was slimed by ", s2, "\n");
+		else if (type == DEATH_LAVA)
+			print ("^1",s1, "^1 was cooked by ", s2, "\n");
+		else if (type == DEATH_FALL)
+			print ("^1",s1, "^1 was grounded by ", s2, "\n");
+		else if (type == DEATH_SHOOTING_STAR)
+			print ("^1",s1, "^1 was shot into space by ", s2, "\n");
+		else if (type == DEATH_SWAMP)
+			print ("^1",s1, "^1 was conserved by ", s2, "\n");
+		// TODO
+		/*else if (type == DEATH_HURTTRIGGER && inflictor.msg2 != "")
+		{
+			print("^1", s1, "^1 ", s2, "^1", s3, "\n");
+		}*/
+		else if(type == DEATH_SBCRUSH)
+			print ("^1",s1, "^1 was crushed by ^1", s2, "\n");
+		else if(type == DEATH_SBMINIGUN)
+			print ("^1",s1, "^1 got shredded by ^1", s2, "\n");
+		else if(type == DEATH_SBROCKET)
+			print ("^1",s1, "^1 was blased to bits by ^1", s2, "\n");
+		else if(type == DEATH_SBBLOWUP)
+			print ("^1",s1, "^1 got cought in the destruction of ^1", s2, "'s vehicle\n");
+
+		else if(type == DEATH_WAKIGUN)
+			print ("^1",s1, "^1 was bolted down by ^1", s2, "\n");
+		else if(type == DEATH_WAKIROCKET)
+			print ("^1",s1, "^1 could find no shelter from ^1", s2, "'s rockets\n");
+		else if(type == DEATH_WAKIBLOWUP)
+			print ("^1",s1, "^1 dies when ^1", s2, "'s wakizashi dies.\n");
+
+		else if(type == DEATH_TURRET)
+			print ("^1",s1, "^1 was pushed into the line of fire by ^1", s2, "\n");
+		else if(type == DEATH_TOUCHEXPLODE)
+			print ("^1",s1, "^1 was pushed into an accident by ^1", s2, "\n");
+		else if(type == DEATH_CHEAT)
+			print ("^1",s1, "^1 was unfairly eliminated by ^1", s2, "\n");
+		else if (type == DEATH_FIRE)
+			print ("^1",s1, "^1 was burnt to death by ^1", s2, "\n");
+		else if (type == DEATH_CUSTOM)
+			print ("^1",s1, "^1 ", s2, "\n");
+		else
+			print ("^1",s1, "^1 was fragged by ", s2, "\n");
+	} else if(msg == MSG_SPREE) {
+		if(type == KILL_END_SPREE) {
+			if(cvar("cl_gentle"))
+				print ("^1",s1,"'s ^1", s2, " scoring spree was ended by ", s3, "\n");
+			else
+				print ("^1",s1,"'s ^1", s2, " kill spree was ended by ", s3, "\n");
+		} else if(type == KILL_SPREE) {
+			if(cvar("cl_gentle"))
+				print ("^1",s1,"^1 made ",s2," scores in a row\n");
+			else
+				print ("^1",s1,"^1 has ",s2," frags in a row\n");
+		} else if(type == KILL_SPREE_3) {
+			if(cvar("cl_gentle"))
+				print (s1,"^7 made a ^1TRIPLE SCORE\n");
+			else
+				print (s1,"^7 made a ^1TRIPLE FRAG\n");
+		} else if(type == KILL_SPREE_5) {
+			if(cvar("cl_gentle"))
+				print (s1,"^7 unleashes ^1SCORING RAGE\n");
+			else
+				print (s1,"^7 unleashes ^1RAGE\n");
+		} else if(type == KILL_SPREE_10) {
+			if(cvar("cl_gentle"))
+				print (s1,"^7 made ^1TEN SCORES IN A ROW!\n");
+			else
+				print (s1,"^7 starts the ^1MASSACRE!\n");
+		} else if(type == KILL_SPREE_15) {
+			if(cvar("cl_gentle"))
+				print (s1,"^7 made ^1FIFTEEN SCORES IN A ROW!\n");
+			else
+				print (s1,"^7 executes ^1MAYHEM!\n");
+		} else if(type == KILL_SPREE_20) {
+			if(cvar("cl_gentle"))
+				print (s1,"^7 made ^1TWENTY SCORES IN A ROW!\n");
+			else
+				print (s1,"^7 is a ^1BERSERKER!\n");
+		} else if(type == KILL_SPREE_25) {
+			if(cvar("cl_gentle"))
+				print (s1,"^7 made ^1TWENTY FIFE SCORES IN A ROW!\n");
+			else
+				print (s1,"^7 inflicts ^1CARNAGE!\n");
+		} else if(type == KILL_SPREE_30) {
+			if(cvar("cl_gentle"))
+				print (s1,"^7 made ^1THIRTY SCORES IN A ROW!\n");
+			else
+				print (s1,"^7 unleashes ^1ARMAGEDDON!\n");
+		}
+	} else if(msg == MSG_KILL_ACTION) { // wtf is this? isnt it basically the same as MSG_SUICIDE?
+		if (type == DEATH_DROWN) {
+			if(cvar("cl_gentle"))
+				print ("^1",s1, "^1 was in the water for too long\n");
+			else
+				print ("^1",s1, "^1 drowned\n");
+		}
+		else if (type == DEATH_SLIME)
+			print ("^1",s1, "^1 was slimed\n");
+		else if (type == DEATH_LAVA) {
+			if(cvar("cl_gentle"))
+				print ("^1",s1, "^1 found a hot place\n");
+			else
+				print ("^1",s1, "^1 turned into hot slag\n");
+		}
+		else if (type == DEATH_FALL) {
+			if(cvar("cl_gentle"))
+				print ("^1",s1, "^1 tested gravity (and it worked)\n");
+			else
+				print ("^1",s1, "^1 hit the ground with a crunch\n");
+		}
+		else if (type == DEATH_SHOOTING_STAR)
+			print ("^1",s1, "^1 became a shooting star\n");
+		else if (type == DEATH_SWAMP) {
+			if(cvar("cl_gentle"))
+				print ("^1",s1, "^1 discovered a swamp\n");
+			else
+				print ("^1",s1, "^1 is now conserved for centuries to come\n");
+		}
+		else if(type == DEATH_TURRET)
+			print ("^1",s1, "^1 was mowed down by a turret \n");
+		else if (type == DEATH_CUSTOM)
+			print ("^1",s1, "^1 ", s2, "\n");
+		else if(type == DEATH_TOUCHEXPLODE)
+			print ("^1",s1, "^1 died in an accident\n");
+		else if(type == DEATH_CHEAT)
+			print ("^1",s1, "^1 was unfairly eliminated\n");
+		else if(type == DEATH_FIRE) {
+			if(cvar("cl_gentle"))
+				print ("^1",s1, "^1 felt a little hot\n");
+			else
+				print ("^1",s1, "^1 burnt to death\n");
+		}
+		else {
+			if(cvar("cl_gentle"))
+				print ("^1",s1, "^1 needs a restart\n");
+			else
+				print ("^1",s1, "^1 died\n");
+		}
+	} else if(msg == MSG_KILL_ACTION_SPREE) {
+		if(cvar("cl_gentle"))
+			print ("^1",s1,"^1 needs a restart after a ",s2," scoring spree\n");
+		else
+			print ("^1",s1,"^1 died with a ",s2," kill spree\n");
+	}
 }
 
 #define DAMAGE_CENTERPRINT_SPACER NEWLINES
 
-void HUD_Centerprint(string s1, float deathtype)
+void HUD_Centerprint(string s1, float type)
 {
-	if (deathtype == DEATH_TEAMCHANGE) {
+	if (type == DEATH_TEAMCHANGE) {
 		centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", s1));
-	} else if (deathtype == DEATH_AUTOTEAMCHANGE) {
+	} else if (type == DEATH_AUTOTEAMCHANGE) {
 		centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "You have been moved into a different team to improve team balance\nYou are now on: ", s1));
-	} else if (deathtype == DEATH_CAMP) {
+	} else if (type == DEATH_CAMP) {
 		if(cvar("cl_gentle"))
 			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Reconsider your tactics, camper!"));
 		else
 			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Die camper!"));
-	} else if (deathtype == DEATH_NOAMMO) {
+	} else if (type == DEATH_NOAMMO) {
 		if(cvar("cl_gentle"))
 			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You are reinserted into the game for running out of ammo..."));
 		else
 			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were killed for running out of ammo..."));
-	} else if (deathtype == DEATH_ROT) {
+	} else if (type == DEATH_ROT) {
 		if(cvar("cl_gentle"))
 			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to preserve your health"));
 		else
 			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You grew too old without taking your medicine"));
-	} else if (deathtype == DEATH_MIRRORDAMAGE) {
+	} else if (type == DEATH_MIRRORDAMAGE) {
 		if(cvar("cl_gentle"))
 			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't go against team mates!"));
 		else
 			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't shoot your team mates!"));
-	} else if (deathtype == DEATH_QUIET) {
+	} else if (type == DEATH_QUIET) {
 		// do nothing
-	} else {
+	} else if (type == DEATH_KILL) {
 		if(cvar("cl_gentle"))
 			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to be more careful!"));
 		else
 			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You killed your own dumb self!"));
+	} else if (type == KILL_TEAM) {
+		if(cvar("cl_gentle")) {
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You went against a team mate!"));
+		} else {
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You fragged ", s1, ", a team mate!"));
+		}
 	}
 }
 

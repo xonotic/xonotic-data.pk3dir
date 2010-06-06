@@ -485,6 +485,8 @@ float DEATH_WAKIGUN    = 10040;
 float DEATH_WAKIROCKET = 10041;
 float DEATH_WAKIBLOWUP = 10042;
 
+float DEATH_WEAPON = 10100;
+
 float DEATH_CUSTOM = 10300;
 
 
@@ -519,3 +521,28 @@ float WATERLEVEL_SWIMMING = 2;
 float WATERLEVEL_SUBMERGED = 3;
 
 float MAX_SHOT_DISTANCE = 32768;
+
+// CSQC centerprint/notify message types
+float MSG_SUICIDE = 0;
+float MSG_KILL = 1;
+float MSG_SPREE = 2;
+float MSG_KILL_ACTION = 3;
+float MSG_KILL_ACTION_SPREE = 4;
+
+float KILL_TEAM = 0;
+float KILL_TEAM_SPREE = 1;
+float KILL_FIRST_BLOOD = 2;
+float KILL_FIRST_VICTIM = 3;
+float KILL_TYPEFRAG = 4;
+float KILL_TYPEFRAGGED = 5;
+float KILL_FRAG = 6;
+float KILL_FRAGGED = 7;
+float KILL_SPREE = 8;
+float KILL_END_SPREE = 9;
+float KILL_SPREE_3 = 10;
+float KILL_SPREE_5 = 11;
+float KILL_SPREE_10 = 12;
+float KILL_SPREE_15 = 13;
+float KILL_SPREE_20 = 14;
+float KILL_SPREE_25 = 15;
+float KILL_SPREE_30 = 16;

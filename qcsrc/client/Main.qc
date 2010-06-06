@@ -1249,7 +1249,7 @@ void Net_Notify() {
 
 	if(type == CSQC_KILLNOTIFY)
 	{
-		HUD_KillNotify(ReadString(), ReadString(), ReadByte());
+		HUD_KillNotify(ReadString(), ReadString(), ReadString(), ReadByte(), ReadByte());
 	}
 	else if(type == CSQC_CENTERPRINT)
 	{
