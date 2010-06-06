@@ -3276,6 +3276,23 @@ void HUD_Main (void)
 	hud_configure = cvar("_hud_configure");
 
 	// Drawing stuff
+
+	// HUD configure visible grid
+	if(hud_configure && cvar("hud_configure_grid") && cvar("hud_configure_grid_alpha"))
+	{
+		float i;
+		// x-axis
+		for(i = 0; i < vid_conwidth/cvar("hud_configure_grid_x"); ++i)
+		{
+			drawfill(eX * i * cvar("hud_configure_grid_x"), eX + eY * vid_conheight, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
+		}
+		// y-axis
+		for(i = 0; i < vid_conheight/cvar("hud_configure_grid_y"); ++i)
+		{
+			drawfill(eY * i * cvar("hud_configure_grid_y"), eY + eX * vid_conwidth, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
+		}
+	}
+
 	if(cvar_string("hud_dock") != "")
 		drawpic_skin('0 0 0', cvar_string("hud_dock"), eX * vid_conwidth + eY * vid_conheight, HUD_Panel_Dock_GetColor(), cvar("hud_dock_alpha"), DRAWFLAG_NORMAL);
 
