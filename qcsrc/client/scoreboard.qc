@@ -1050,8 +1050,8 @@ void HUD_DrawScoreboard()
 		hud_woulddrawscoreboard_prev = hud_woulddrawscoreboard;
 	}
 
-	float scoreboard_fadeinspeed = cvar_or("sb_fadeinspeed", 10);
-	float scoreboard_fadeoutspeed = cvar_or("sb_fadeoutspeed", 5);
+	float scoreboard_fadeinspeed = cvar_or("scoreboard_fadeinspeed", 10);
+	float scoreboard_fadeoutspeed = cvar_or("scoreboard_fadeoutspeed", 5);
 	if(hud_woulddrawscoreboard) {
 		if (scoreboard_fadeinspeed)
 			sb_fade_alpha = bound (0, (time - hud_woulddrawscoreboard_change) * scoreboard_fadeinspeed, 1);
@@ -1067,13 +1067,13 @@ void HUD_DrawScoreboard()
 	if not(sb_fade_alpha)
 		return;
 
-	sb_alpha_bg = cvar("sb_alpha_bg") * sb_fade_alpha;
-	sb_alpha_fg = cvar_or("sb_alpha_fg", 1.0) * sb_fade_alpha;
-	sb_highlight = cvar("sb_highlight");
-	sb_highlight_alpha = cvar_or("sb_highlight_alpha", 0.10) * sb_alpha_fg;
-	sb_highlight_alpha_self = cvar_or("sb_highlight_alpha_self", 0.25) * sb_alpha_fg;
-	sb_alpha_name = cvar_or("sb_alpha_name", 0.9) * sb_alpha_fg;
-	sb_alpha_name_self = cvar_or("sb_alpha_name_self", 1) * sb_alpha_fg;
+	sb_alpha_bg = cvar("scoreboard_alpha_bg") * sb_fade_alpha;
+	sb_alpha_fg = cvar_or("scoreboard_alpha_fg", 1.0) * sb_fade_alpha;
+	sb_highlight = cvar("scoreboard_highlight");
+	sb_highlight_alpha = cvar_or("scoreboard_highlight_alpha", 0.10) * sb_alpha_fg;
+	sb_highlight_alpha_self = cvar_or("scoreboard_highlight_alpha_self", 0.25) * sb_alpha_fg;
+	sb_alpha_name = cvar_or("scoreboard_alpha_name", 0.9) * sb_alpha_fg;
+	sb_alpha_name_self = cvar_or("scoreboard_alpha_name_self", 1) * sb_alpha_fg;
 
 	vector rgb, pos, tmp;
 	entity pl, tm;
