@@ -253,5 +253,9 @@ float w_tuba(float req)
 };
 #endif
 #ifdef CSQC
+float w_tuba(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

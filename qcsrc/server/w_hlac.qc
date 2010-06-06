@@ -215,5 +215,9 @@ float w_hlac(float req)
 };
 #endif
 #ifdef CSQC
+float w_hlac(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

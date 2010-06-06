@@ -164,5 +164,9 @@ float w_hagar(float req)
 };
 #endif
 #ifdef CSQC
+float w_hagar(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

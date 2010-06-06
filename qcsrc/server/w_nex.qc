@@ -82,5 +82,9 @@ float w_nex(float req)
 };
 #endif
 #ifdef CSQC
+float w_nex(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

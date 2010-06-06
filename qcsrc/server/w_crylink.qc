@@ -237,5 +237,9 @@ float w_crylink(float req)
 };
 #endif
 #ifdef CSQC
+float w_crylink(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

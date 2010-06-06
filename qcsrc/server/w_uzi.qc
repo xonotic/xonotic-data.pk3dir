@@ -139,5 +139,9 @@ float w_uzi(float req)
 };
 #endif
 #ifdef CSQC
+float w_uzi(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

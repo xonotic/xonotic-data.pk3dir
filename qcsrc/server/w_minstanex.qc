@@ -244,5 +244,9 @@ float w_minstanex(float req)
 };
 #endif
 #ifdef CSQC
+float w_minstanex(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

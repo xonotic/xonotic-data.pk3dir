@@ -188,5 +188,9 @@ float w_laser(float req)
 };
 #endif
 #ifdef CSQC
+float w_laser(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

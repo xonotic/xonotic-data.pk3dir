@@ -150,5 +150,9 @@ float w_shotgun(float req)
 };
 #endif
 #ifdef CSQC
+float w_shotgun(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

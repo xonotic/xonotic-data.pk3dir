@@ -563,5 +563,9 @@ float w_rlauncher(float req)
 };
 #endif
 #ifdef CSQC
+float w_rlauncher(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

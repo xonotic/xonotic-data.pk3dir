@@ -296,5 +296,9 @@ float w_campingrifle(float req)
 };
 #endif
 #ifdef CSQC
+float w_campingrifle(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

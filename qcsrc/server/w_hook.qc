@@ -251,5 +251,9 @@ float w_hook(float req)
 };
 #endif
 #ifdef CSQC
+float w_hook(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

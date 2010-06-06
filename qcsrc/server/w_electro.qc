@@ -319,5 +319,9 @@ float w_electro(float req)
 };
 #endif
 #ifdef CSQC
+float w_electro(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

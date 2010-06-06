@@ -238,5 +238,9 @@ float w_glauncher(float req)
 };
 #endif
 #ifdef CSQC
+float w_glauncher(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

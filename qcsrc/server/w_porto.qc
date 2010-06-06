@@ -281,5 +281,9 @@ float w_porto(float req)
 };
 #endif
 #ifdef CSQC
+float w_porto(float req)
+{
+	return TRUE;
+}
 #endif
 #endif

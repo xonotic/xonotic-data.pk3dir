@@ -481,5 +481,9 @@ float w_seeker(float req)
 };
 #endif
 #ifdef CSQC
+float w_seeker(float req)
+{
+	return TRUE;
+}
 #endif
 #endif
