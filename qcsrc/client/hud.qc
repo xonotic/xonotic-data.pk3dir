@@ -2019,17 +2019,35 @@ string Weapon_KillMessage(float id)
 	return strcat("[no suicide message for weapon ", ftos(id), "!]");
 }
 
+float killnotify_times[10];
+float killnotify_weapons[10];
+string killnotify_attackers[10];
+string killnotify_victims[10];
+void HUD_KillNotify_Push(string attacker, string victim, float wpn)
+{
+	float i;
+	for (i = 9; i > 0; --i) {
+		killnotify_times[i] = killnotify_times[i-1];
+		killnotify_weapons[i] = killnotify_weapons[i-1];
+		killnotify_attackers[i] = killnotify_attackers[i-1];
+		killnotify_victims[i] = killnotify_victims[i-1];
+	}
+	killnotify_times[0] = time;
+	killnotify_weapons[0] = wpn;
+	killnotify_attackers[0] = attacker;
+	killnotify_victims[0] = victim;
+}
+
 void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 {
 	if(msg == MSG_SUICIDE) {
-		float w;
-		string w_typestring;
-
-		w = DEATH_WEAPONOF(type);
 		// TODO: cl_gentle
 		// TODO: way of finding out secondary?
-		if(type == DEATH_WEAPON)
-			print("^1", s1, "^1 ", Weapon_SuicideMessage(stof(s3)), "\n");
+		if(type == DEATH_WEAPON) {
+			HUD_KillNotify_Push(s1, "", stof(s3));
+			if (!HUD_Panel_CheckActive(4) || cvar("hud_notify_print"))
+				print("^1", s1, "^1 ", Weapon_SuicideMessage(stof(s3)), "\n");
+		}
 		else if (type == DEATH_KILL)
 			print ("^1",s1, "^1 couldn't take it anymore\n");
 		else if (type == DEATH_ROT)
@@ -2070,8 +2088,11 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		}
 		else if(type == KILL_FIRST_BLOOD)
 			print("^1",s1, "^1 drew first blood", "\n");
-		else if (type == DEATH_WEAPON)
-			print("^1", s1, "^1 ", Weapon_KillMessage(stof(s3)), "\n");
+		else if (type == DEATH_WEAPON) {
+			HUD_KillNotify_Push(s1, s2, stof(s3));
+			if (!HUD_Panel_CheckActive(4) || cvar("hud_notify_print"))
+				print("^1", s1, "^1 ", Weapon_KillMessage(stof(s3)), "\n");
+		}
 		else if (type == DEATH_TELEFRAG)
 			print ("^1",s1, "^1 was telefragged by ", s2, "\n");
 		else if (type == DEATH_DROWN)
@@ -2283,6 +2304,15 @@ void HUD_Notify (void)
 		mySize -= '2 2 0' * padding;
 	}
 
+	float entries;
+	entries = 4 * mySize_y/mySize_x;
+	float i;
+	for(i = 0; i <= entries; ++i)
+	{
+		drawcolorcodedstring(pos + eY * i * (mySize_y/entries),killnotify_attackers[i], '1 1 0' * (mySize_y/entries), hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + eX * 0.35 * mySize_x + eY * i * (mySize_y/entries),ftos(killnotify_weapons[i]), '1 1 0' * (mySize_y/entries), hud_alpha_fg, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + eX * 0.75 * mySize_x + eY * i * (mySize_y/entries),killnotify_victims[i], '1 1 0' * (mySize_y/entries), hud_alpha_fg, DRAWFLAG_NORMAL);
+	}
 	/* This will come later.
 	string s;
 	entity tm;

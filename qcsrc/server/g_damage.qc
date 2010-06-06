@@ -363,10 +363,11 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			}
 			*/
 
-			w = DEATH_WEAPONOF(deathtype);
-			if(!(WEP_VALID(w)))
+			//w = DEATH_WEAPONOF(deathtype);
+			bprint("deathtype: ", ftos(deathtype), "\n");
+			if(WEP_VALID(w))
 			{
-				w = -1;
+				deathtype = DEATH_WEAPON;
 			}
 
 			// TODO: wut is this?
@@ -504,6 +505,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					else if(deathtype == DEATH_SBROCKET)
                         bprint ("^1",s, "^1 was blased to bits by ^1", a, "\n");
 					else if(deathtype == DEATH_SBBLOWUP)
+					[
                         bprint ("^1",s, "^1 got cought in the destruction of ^1", a, "'s vehicle\n");
 
 					else if(deathtype == DEATH_WAKIGUN)
@@ -527,10 +529,11 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						bprint ("^1",s, "^1 was fragged by ", a, "\n");
 					*/
 
-					w = DEATH_WEAPONOF(deathtype);
-					if(!(WEP_VALID(w)))
+					//w = DEATH_WEAPONOF(deathtype);
+					bprint("deathtype: ", ftos(deathtype), "\n");
+					if(WEP_VALID(w))
 					{
-						w = -1;
+						deathtype = DEATH_WEAPON;
 					}
 
 					msg = a;
