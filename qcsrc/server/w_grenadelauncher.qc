@@ -99,7 +99,7 @@ void W_Grenade_Attack (void)
 	setsize(gren, '0 0 -3', '0 0 -3');
 
 	gren.nextthink = time + cvar("g_balance_grenadelauncher_primary_lifetime");
-	gren.think = adaptor_think2use;
+	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Grenade_Explode;
 	gren.touch = W_Grenade_Touch1;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
@@ -127,13 +127,15 @@ void W_Grenade_Attack2 (void)
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = cvar("g_balance_grenadelauncher_secondary_damage");
 	gren.movetype = MOVETYPE_BOUNCE;
+	gren.bouncefactor = cvar("g_balance_grenadelauncher_secondary_bouncefactor");
+	gren.bouncestop = cvar("g_balance_grenadelauncher_secondary_bouncestop");
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY;
 	setsize(gren, '0 0 -3', '0 0 -3');
 	setorigin(gren, w_shotorg);
 
 	gren.nextthink = time + cvar("g_balance_grenadelauncher_secondary_lifetime");
-	gren.think = adaptor_think2use;
+	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Grenade_Explode2;
 	gren.touch = W_Grenade_Touch2;
 	gren.takedamage = DAMAGE_YES;
@@ -199,7 +201,7 @@ float w_glauncher(float req)
 	{
 		precache_model ("models/weapons/g_gl.md3");
 		precache_model ("models/weapons/v_gl.md3");
-		precache_model ("models/weapons/h_gl.dpm");
+		precache_model ("models/weapons/h_gl.iqm");
 		precache_sound ("weapons/grenade_bounce1.wav");
 		precache_sound ("weapons/grenade_bounce2.wav");
 		precache_sound ("weapons/grenade_bounce3.wav");

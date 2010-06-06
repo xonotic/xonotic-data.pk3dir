@@ -163,3 +163,6 @@ float calledhooks;
 #define HOOK_END      2
 
 .float ping, ping_packetloss, ping_movementloss;
+
+float g_balance_grenadelauncher_secondary_bouncefactor;
+float g_balance_grenadelauncher_secondary_bouncestop;

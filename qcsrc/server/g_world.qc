@@ -539,6 +539,11 @@ void spawnfunc_worldspawn (void)
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
 		s = ":gameinfo:mutators:LIST";
+
+		ret_string = s;
+		MUTATOR_CALLHOOK(BuildMutatorsString);
+		s = ret_string;
+
 		if(cvar("g_grappling_hook"))
 			s = strcat(s, ":grappling_hook");
 		if(!cvar("g_use_ammunition"))
@@ -547,8 +552,6 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":no_pickup_items");
 		if(cvar_string("g_weaponarena") != "0")
 			s = strcat(s, ":", cvar_string("g_weaponarena"), " arena");
-		if(cvar("g_nixnex"))
-			s = strcat(s, ":nixnex");
 		if(cvar("g_vampire"))
 			s = strcat(s, ":vampire");
 		if(cvar("g_laserguided_missile"))
@@ -631,6 +634,11 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
 	addstat(STAT_BULLETS_LOADED, AS_INT, campingrifle_bulletcounter);
+
+	// g_movementspeed hack
+	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
+	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
+	addstat(STAT_MOVEVARS_AIRSTRAFEACCEL_QW, AS_FLOAT, stat_sv_airstrafeaccel_qw);
 
 	next_pingtime = time + 5;
 	InitializeEntity(self, cvar_changes_init, INITPRIO_CVARS);
@@ -2694,6 +2702,7 @@ float RedirectionThink()
 	return TRUE;
 }
 
+void TargetMusic_RestoreGame();
 void RestoreGame()
 {
 	// Loaded from a save game
@@ -2707,6 +2716,8 @@ void RestoreGame()
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 	WeaponStats_Init();
+
+	TargetMusic_RestoreGame();
 }
 
 void SV_Shutdown()

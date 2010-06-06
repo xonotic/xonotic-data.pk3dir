@@ -77,7 +77,7 @@ void W_Hook_Attack2()
 	setsize(gren, '0 0 0', '0 0 0');
 
 	gren.nextthink = time + cvar("g_balance_hook_secondary_lifetime");
-	gren.think = adaptor_think2use;
+	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Hook_Explode2;
 	gren.touch = W_Hook_Touch2;
 
@@ -217,7 +217,7 @@ float w_hook(float req)
 	{
 		precache_model ("models/weapons/g_hookgun.md3");
 		precache_model ("models/weapons/v_hookgun.md3");
-		precache_model ("models/weapons/h_hookgun.dpm");
+		precache_model ("models/weapons/h_hookgun.iqm");
 		precache_sound ("weapons/hook_impact.wav"); // done by g_hook.qc
 		precache_sound ("weapons/hook_fire.wav");
 		precache_sound ("weapons/hookbomb_fire.wav");

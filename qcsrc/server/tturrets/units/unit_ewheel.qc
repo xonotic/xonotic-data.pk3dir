@@ -171,6 +171,13 @@ void ewheel_postthink()
     float vz;
     vector wish_angle,real_angle;
 
+    /*
+    if(self.enemy)
+        dprint("enemy!\n");
+    else
+        dprint("nothign =(!\n");
+    */
+
     vz = self.velocity_z;
 
     self.angles_x = anglemods(self.angles_x);
@@ -190,7 +197,8 @@ void ewheel_postthink()
     self.angles_y = (self.angles_y + real_angle_y);
 
     // Simulate banking
-    self.angles_z = bound(-45,real_angle_y * -2.5,45);
+    self.angles_z -= self.angles_z * frametime * 2;
+    self.angles_z = bound(-45,self.angles_z  + ((real_angle_y * -25) * frametime),45);
 
     if(self.enemy)
         ewheel_move_enemy();
@@ -207,7 +215,10 @@ void ewheel_respawnhook()
 {
     entity e;
 
-    setorigin(self,self.pos1);
+    self.velocity = '0 0 0';
+    self.enemy = world;
+
+    setorigin(self, self.pos1);
 
     if (self.target != "")
     {
@@ -230,23 +241,14 @@ void ewheel_respawnhook()
 
 void ewheel_diehook()
 {
-    turret_trowgib2(self.origin,self.velocity + '0 0 400', '-0.6 -0.2 -02', self, 3 + time + random() * 2);
-
     self.velocity = '0 0 0';
+
+    turret_trowgib2(self.origin, self.velocity + '0 0 400', '-0.6 -0.2 -02', self, 3 + time + random() * 2);
 
     if (self.pathcurrent)
         pathlib_deletepath(self.pathcurrent.owner);
 
     self.pathcurrent = world;
-
-    /*
-    if (self.damage_flags & TFL_DMG_DEATH_NORESPAWN)
-    {
-        verbstack_flush(self.verbs_move);
-        remove(self.verbs_move);
-    }
-    */
-
 }
 
 void turret_ewheel_dinit()
@@ -291,11 +293,10 @@ void turret_ewheel_dinit()
     self.solid      = SOLID_SLIDEBOX;
     self.takedamage = DAMAGE_AIM;
 
-    setsize(self,'-32 -32 0', '32 32 48');
+    setsize(self, '-32 -32 0', '32 32 48');
+    self.idle_aim = '0 0 0';
 
     self.pos1 = self.origin;
-
-    self.idle_aim = '0 0 0';
 
     // Our fire routine
     self.turret_firefunc  = ewheel_attack;
@@ -306,6 +307,10 @@ void turret_ewheel_dinit()
     self.tur_head.aim_speed = cvar("g_turrets_unit_ewheel_turnrate");
     self.tur_head.aim_speed = self.tur_head.aim_speed / (1 / self.ticrate);
 
+    if (!turret_tag_setup())
+        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+
+    //setorigin(self,self.origin + '0 0 128');
     if (self.target != "")
     {
         e = find(world,targetname,self.target);
@@ -319,7 +324,7 @@ void turret_ewheel_dinit()
             dprint("Warning: not a turrret path\n");
         else
         {
-            self.pathcurrent = WALKER_PATH(self.origin,e.origin);
+            self.pathcurrent = WALKER_PATH(self.origin, e.origin);
             self.pathgoal = e;
         }
     }
@@ -331,6 +336,10 @@ void spawnfunc_turret_ewheel()
 
     precache_model ("models/turrets/ewheel-base2.md3");
     precache_model ("models/turrets/ewheel-gun1.md3");
+
+    precache_model ("models/pathlib/goodsquare.md3");
+    precache_model ("models/pathlib/badsquare.md3");
+    precache_model ("models/pathlib/square.md3");
 
     turret_ewheel_loadcvars();
 

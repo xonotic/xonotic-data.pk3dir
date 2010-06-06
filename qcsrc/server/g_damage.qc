@@ -86,6 +86,15 @@ float IsFlying(entity a)
 	return 1;
 }
 
+vector GetHeadshotMins(entity targ)
+{
+	return '0.6 0 0' * targ.mins_x + '0 0.6 0' * targ.mins_y + '0 0 1' * (1.3 * targ.view_ofs_z - 0.3 * targ.maxs_z);
+}
+vector GetHeadshotMaxs(entity targ)
+{
+	return '0.6 0 0' * targ.maxs_x + '0 0.6 0' * targ.maxs_y + '0 0 1' * targ.maxs_z;
+}
+
 void UpdateFrags(entity player, float f)
 {
 	PlayerTeamScore_AddScore(player, f);
@@ -146,34 +155,45 @@ void GiveFrags (entity attacker, entity targ, float f)
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)
-	if(g_runematch)
+	entity oldself;
+	oldself = self;
+	self = attacker;
+	frag_attacker = attacker;
+	frag_target = targ;
+	frag_score = f;
+	if(MUTATOR_CALLHOOK(GiveFragsForKill))
 	{
-		f = RunematchHandleFrags(attacker, targ, f);
+		f = frag_score;
+		self = oldself;
 	}
-	else if(g_keyhunt)
+	else
 	{
-		f = kh_HandleFrags(attacker, targ, f);
-	}
-	else if(g_lms)
-	{
-		// remove a life
-		float tl;
-		tl = PlayerScore_Add(targ, SP_LMS_LIVES, -1);
-		if(tl < lms_lowest_lives)
-			lms_lowest_lives = tl;
-		if(tl <= 0)
+		self = oldself;
+		if(g_runematch)
 		{
-			if(!lms_next_place)
-				lms_next_place = player_count;
-			PlayerScore_Add(targ, SP_LMS_RANK, lms_next_place); // won't ever spawn again
-			--lms_next_place;
+			f = RunematchHandleFrags(attacker, targ, f);
 		}
-		f = 0;
-	}
-	else if(g_ctf)
-	{
-		if(g_ctf_ignore_frags)
+		else if(g_lms)
+		{
+			// remove a life
+			float tl;
+			tl = PlayerScore_Add(targ, SP_LMS_LIVES, -1);
+			if(tl < lms_lowest_lives)
+				lms_lowest_lives = tl;
+			if(tl <= 0)
+			{
+				if(!lms_next_place)
+					lms_next_place = player_count;
+				PlayerScore_Add(targ, SP_LMS_RANK, lms_next_place); // won't ever spawn again
+				--lms_next_place;
+			}
 			f = 0;
+		}
+		else if(g_ctf)
+		{
+			if(g_ctf_ignore_frags)
+				f = 0;
+		}
 	}
 
 	attacker.totalfrags += f;
@@ -861,8 +881,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				// if above view_ofs and below maxs, and also in the middle half of the bbox, it is head shot
 				vector headmins, headmaxs, org;
 				org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(attacker));
-				headmins = org + '0.6 0 0' * targ.mins_x + '0 0.6 0' * targ.mins_y + '0 0 1' * (1.3 * targ.view_ofs_z - 0.3 * targ.maxs_z);
-				headmaxs = org + '0.6 0 0' * targ.maxs_x + '0 0.6 0' * targ.maxs_y + '0 0 1' * targ.maxs_z;
+				headmins = org + GetHeadshotMins(targ);
+				headmaxs = org + GetHeadshotMaxs(targ);
 				if(trace_hits_box(railgun_start, railgun_end, headmins, headmaxs))
 				{
 					deathtype |= HITTYPE_HEADSHOT;

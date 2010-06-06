@@ -13,10 +13,13 @@ void Announce(string snd) {
 }
 
 void AnnounceTo(entity e, string snd) {
-	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_ANNOUNCE);
-	WriteString(MSG_ONE, snd);
+	if (clienttype(e) == CLIENTTYPE_REAL)
+	{
+		msg_entity = e;
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_ANNOUNCE);
+		WriteString(MSG_ONE, snd);
+	}
 }
 
 float ClientData_Send(entity to, float sf)
@@ -395,8 +398,15 @@ Checks if the argument string can be a valid playermodel.
 Returns a valid one in doubt.
 =============
 */
-string FallbackPlayerModel = "models/player/marine.zym";
+string FallbackPlayerModel;
 string CheckPlayerModel(string plyermodel) {
+	if(FallbackPlayerModel != cvar_defstring("_cl_playermodel"))
+	{
+		// note: we cannot summon Don Strunzone here, some player may
+		// still have the model string set. In case anyone manages how
+		// to change a cvar default, we'll have a small leak here.
+		FallbackPlayerModel = strzone(cvar_defstring("_cl_playermodel"));
+	}
 	if(strlen(plyermodel) < 4)
 		return FallbackPlayerModel;
 	if( substring(plyermodel,0,14) != "models/player/")
@@ -405,6 +415,7 @@ string CheckPlayerModel(string plyermodel) {
 	{
 		if(substring(plyermodel,-4,4) != ".zym")
 		if(substring(plyermodel,-4,4) != ".dpm")
+		if(substring(plyermodel,-4,4) != ".iqm")
 		if(substring(plyermodel,-4,4) != ".md3")
 		if(substring(plyermodel,-4,4) != ".psk")
 			return FallbackPlayerModel;
@@ -504,7 +515,6 @@ float Client_customizeentityforclient()
 	return TRUE;
 }
 
-void UpdatePlayerSounds();
 void setmodel_lod(entity e, string modelname)
 {
 	string s;
@@ -582,7 +592,6 @@ void PutObserverInServer (void)
 	}
 
 	DropAllRunes(self);
-	kh_Key_DropAll(self, TRUE);
 
 	Portal_ClearAll(self);
 
@@ -697,6 +706,8 @@ void PutObserverInServer (void)
 	}
 	else
 		self.frags = FRAGS_SPECTATOR;
+
+	MUTATOR_CALLHOOK(MakePlayerObserver);
 }
 
 float RestrictSkin(float s)
@@ -898,9 +909,6 @@ void PutClientInServer (void)
 			self.weapons = randombits(self.weapons, g_weaponarena_random, FALSE);
 
 		self.items = start_items;
-		self.switchweapon = w_getbestweapon(self);
-		self.cnt = self.switchweapon;
-		self.weapon = 0;
 		self.jump_interval = time;
 
 		self.spawnshieldtime = time + cvar("g_spawnshieldtime");
@@ -931,6 +939,7 @@ void PutClientInServer (void)
 		self.nextthink = 0;
 		self.hook_time = 0;
 		self.dmg_team = 0;
+		self.ballistics_density = cvar("g_ballistics_density_player");
 
 		self.metertime = 0;
 
@@ -993,7 +1002,6 @@ void PutClientInServer (void)
 		}
 
 		self.cnt = WEP_LASER;
-		self.nixnex_lastchange_id = -1;
 
 		CL_SpawnWeaponentity();
 		self.alpha = default_player_alpha;
@@ -1028,8 +1036,8 @@ void PutClientInServer (void)
 		target_voicescript_clear(self);
 
 		// reset fields the weapons may use
-        for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-            weapon_action(j, WR_RESETPLAYER);
+		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+			weapon_action(j, WR_RESETPLAYER);
 
 		oldself = self;
 		self = spot;
@@ -1037,6 +1045,12 @@ void PutClientInServer (void)
 				SUB_UseTargets();
 			activator = world;
 		self = oldself;
+
+		MUTATOR_CALLHOOK(PlayerSpawn);
+
+		self.switchweapon = w_getbestweapon(self);
+		self.cnt = self.switchweapon;
+		self.weapon = 0;
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
 		PutObserverInServer ();
 	}
@@ -1052,19 +1066,55 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, hook_shotorigin_x);
 	WriteCoord(MSG_ENTITY, hook_shotorigin_y);
 	WriteCoord(MSG_ENTITY, hook_shotorigin_z);
-
 	if(sv_foginterval && world.fog != "")
 		WriteString(MSG_ENTITY, world.fog);
 	else
 		WriteString(MSG_ENTITY, "");
-	WriteByte(MSG_ENTITY, cvar("g_balance_armor_blockpercent") * 255.0);
-	WriteByte(MSG_ENTITY, cvar("g_balance_weaponswitchdelay") * 255.0);
+	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
+	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
+	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_secondary_bouncefactor
+	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_secondary_bouncestop
 	return TRUE;
+}
+
+void ClientInit_CheckUpdate()
+{
+	self.nextthink = time;
+	if(self.count != cvar("g_balance_armor_blockpercent"))
+	{
+		self.count = cvar("g_balance_armor_blockpercent");
+		self.SendFlags |= 1;
+	}
+	if(self.cnt != cvar("g_balance_weaponswitchdelay"))
+	{
+		self.cnt = cvar("g_balance_weaponswitchdelay");
+		self.SendFlags |= 1;
+	}
+	if(self.bouncefactor != cvar("g_balance_grenadelauncher_secondary_bouncefactor"))
+	{
+		self.bouncefactor = cvar("g_balance_grenadelauncher_secondary_bouncefactor");
+		self.SendFlags |= 1;
+	}
+	if(self.bouncestop != cvar("g_balance_grenadelauncher_secondary_bouncestop"))
+	{
+		self.bouncestop = cvar("g_balance_grenadelauncher_secondary_bouncestop");
+		self.SendFlags |= 1;
+	}
 }
 
 void ClientInit_Spawn()
 {
-	Net_LinkEntity(spawn(), FALSE, 0, ClientInit_SendEntity);
+	entity o;
+	entity e;
+	e = spawn();
+	e.classname = "clientinit";
+	e.think = ClientInit_CheckUpdate;
+	Net_LinkEntity(e, FALSE, 0, ClientInit_SendEntity);
+
+	o = self;
+	self = e;
+	ClientInit_CheckUpdate();
+	self = o;
 }
 
 /*
@@ -1344,6 +1394,10 @@ void ClientConnect (void)
 
 	DecodeLevelParms();
 
+#ifdef WATERMARK
+	sprint(self, strcat("^4SVQC Build information: ", WATERMARK(), "\n"));
+#endif
+
 	self.classname = "player_joining";
 
 	self.flags = FL_CLIENT;
@@ -1578,7 +1632,7 @@ void ClientDisconnect (void)
 	SoundEntity_Detach(self);
 
 	DropAllRunes(self);
-	kh_Key_DropAll(self, TRUE);
+	MUTATOR_CALLHOOK(ClientDisconnect);
 
 	Portal_ClearAll(self);
 
@@ -1741,10 +1795,31 @@ void UpdateTeamBubble()
 	else self.colormod = '1 1 1';
 };*/
 
+.float oldcolormap;
 void respawn(void)
 {
+	if(self.modelindex != 0 && cvar("g_respawn_ghosts"))
+	{
+		self.solid = SOLID_NOT;
+		self.takedamage = DAMAGE_NO;
+		self.movetype = MOVETYPE_FLY;
+		self.velocity = '0 0 1' * cvar("g_respawn_ghosts_speed");
+		self.avelocity = randomvec() * cvar("g_respawn_ghosts_speed") * 3 - randomvec() * cvar("g_respawn_ghosts_speed") * 3;
+		self.effects |= EF_ADDITIVE;
+		self.oldcolormap = self.colormap;
+		self.colormap = 512;
+		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
+		if(cvar("g_respawn_ghosts_maxtime"))
+			SUB_SetFade (self, time + cvar("g_respawn_ghosts_maxtime") / 2 + random () * (cvar("g_respawn_ghosts_maxtime") - cvar("g_respawn_ghosts_maxtime") / 2), 1.5);
+	}
+
 	CopyBody(1);
 	self.effects |= EF_NODRAW; // prevent another CopyBody
+	if(self.oldcolormap)
+	{
+		self.colormap = self.oldcolormap;
+		self.oldcolormap = 0;
+	}
 	PutClientInServer();
 }
 
@@ -2046,6 +2121,7 @@ void SetZoomState(float z)
 }
 
 void GetPressedKeys(void) {
+	MUTATOR_CALLHOOK(GetPressedKeys);
 	if (self.movement_x > 0) // get if movement keys are pressed
 	{	// forward key pressed
 		self.pressedkeys |= KEY_FORWARD;
@@ -2115,7 +2191,8 @@ void SpectateCopy(entity spectatee) {
 	} else
 		update_stats (0, spectatee.cvar_cl_accuracy_data_share * spectatee.stat_hit, spectatee.cvar_cl_accuracy_data_share * spectatee.stat_fired);
 
-	self.kh_state = spectatee.kh_state;
+	other = spectatee;
+	MUTATOR_CALLHOOK(SpectateCopy);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
 	self.ammo_cells = spectatee.ammo_cells;
@@ -2487,6 +2564,8 @@ void PlayerPreThink (void)
 		return;
 #endif
 
+	MUTATOR_CALLHOOK(PlayerPreThink);
+
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
 //			bprint(self.classname, "\n");
@@ -2508,8 +2587,6 @@ void PlayerPreThink (void)
 			self.effects = self.effects - (self.effects & EF_NODRAW);
 		}
 
-		Nixnex_GiveCurrentWeapon();
-
 		if(frametime > 0) // don't do this in cl_movement frames, just in server ticks
 			UpdateSelectedPlayer();
 
@@ -2522,8 +2599,7 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			if(cvar("gameversion") >= 20600) // only do this for 2.6 and above FIXME remove this check when making 2.6
-				self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+			self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
 			player_powerups();
 		}
 
@@ -2772,6 +2848,18 @@ Called every frame for each client after the physics are run
 =============
 */
 .float idlekick_lasttimeleft;
+.entity showheadshotbbox;
+void showheadshotbbox_think()
+{
+	if(self.owner.showheadshotbbox != self)
+	{
+		remove(self);
+		return;
+	}
+	self.nextthink = time;
+	setorigin(self, self.owner.origin);
+	setsize(self, GetHeadshotMins(self.owner), GetHeadshotMaxs(self.owner));
+}
 void PlayerPostThink (void)
 {
 	// Savage: Check for nameless players
@@ -2843,7 +2931,6 @@ void PlayerPostThink (void)
 			ImpulseCommands();
 		if (intermission_running)
 			return;		// intermission or finale
-
 		GetPressedKeys();
 	} else if (self.classname == "observer") {
 		//do nothing
@@ -2874,6 +2961,26 @@ void PlayerPostThink (void)
 	if(self.waypointsprite_attachedforcarrier)
 		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, cvar("g_balance_armor_blockpercent")));
 	
+	if(self.classname == "player" && self.deadflag == DEAD_NO && cvar("r_showbboxes"))
+	{
+		if(!self.showheadshotbbox)
+		{
+			self.showheadshotbbox = spawn();
+			self.showheadshotbbox.classname = "headshotbbox";
+			self.showheadshotbbox.owner = self;
+			self.showheadshotbbox.think = showheadshotbbox_think;
+			self.showheadshotbbox.nextthink = time;
+			self = self.showheadshotbbox;
+			self.think();
+			self = self.owner;
+		}
+	}
+	else
+	{
+		if(self.showheadshotbbox)
+			remove(self.showheadshotbbox);
+	}
+
 	playerdemo_write();
 
 	/*

@@ -56,7 +56,7 @@ void pathlib_showsquare2(entity node ,vector ncolor,float align)
 
     if(align)
     {
-        traceline(node.origin + '0 0 32',node.origin - '0 0 128',MOVE_WORLDONLY,node);
+        traceline(node.origin + '0 0 32', node.origin - '0 0 128', MOVE_WORLDONLY, node);
         node.angles = vectoangles(trace_plane_normal);
         node.angles_x -= 90;
     }

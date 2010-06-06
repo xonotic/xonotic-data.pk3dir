@@ -36,6 +36,7 @@ void W_SwitchWeapon_Force(entity e, float w)
 {
 	e.cnt = e.switchweapon;
 	e.switchweapon = w;
+	e.selectweapon = w;
 }
 
 .float antilag_debug;
@@ -439,8 +440,8 @@ void CL_Weaponentity_Think()
 			}
 			else
 			{
-				setmodel(self, strcat("models/weapons/h_", self.owner.weaponname, ".dpm")); // precision set below
-				animfilename = strcat("models/weapons/h_", self.owner.weaponname, ".dpm.animinfo");
+				setmodel(self, strcat("models/weapons/h_", self.owner.weaponname, ".iqm")); // precision set below
+				animfilename = strcat("models/weapons/h_", self.owner.weaponname, ".iqm.animinfo");
 				animfile = fopen(animfilename, FILE_READ);
 				// preset some defaults that work great for renamed zym files (which don't need an animinfo)
 				self.anim_fire1  = '0 1 0.01';
@@ -1030,26 +1031,36 @@ void weapon_setup(float windex)
 };
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
-.float race_penalty;
-float weapon_prepareattack(float secondary, float attacktime)
+void W_SwitchToOtherWeapon(entity pl)
 {
-	//if sv_ready_restart_after_countdown is set, don't allow the player to shoot
-	//if all players readied up and the countdown is running
-	if(time < game_starttime || time < self.race_penalty) {
-		return FALSE;
-	}
-
+	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
+	float w, ww;
+	w = W_WeaponBit(pl.weapon);
+	pl.weapons &~= w;
+	ww = w_getbestweapon(pl);
+	pl.weapons |= w;
+	if(ww)
+		W_SwitchWeapon_Force(pl, ww);
+}
+float weapon_prepareattack_checkammo(float secondary)
+{
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
-		// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
-		float w, ww;
-		w = W_WeaponBit(self.weapon);
-		self.weapons &~= w;
-		ww = w_getbestweapon(self);
-		self.weapons |= w;
-		if(ww)
-			W_SwitchWeapon_Force(self, ww);
+		W_SwitchToOtherWeapon(self);
+		return FALSE;
+	}
+	return TRUE;
+}
+.float race_penalty;
+float weapon_prepareattack_check(float secondary, float attacktime)
+{
+	if(!weapon_prepareattack_checkammo(secondary))
+		return FALSE;
+
+	//if sv_ready_restart_after_countdown is set, don't allow the player to shoot
+	//if all players readied up and the countdown is running
+	if(time < game_starttime || time < self.race_penalty) {
 		return FALSE;
 	}
 
@@ -1069,6 +1080,11 @@ float weapon_prepareattack(float secondary, float attacktime)
 		if (self.weaponentity.state != WS_READY)
 			return FALSE;
 	}
+
+	return TRUE;
+}
+float weapon_prepareattack_do(float secondary, float attacktime)
+{
 	self.weaponentity.state = WS_INUSE;
 
 	self.spawnshieldtime = min(self.spawnshieldtime, time); // kill spawn shield when you fire
@@ -1086,7 +1102,17 @@ float weapon_prepareattack(float secondary, float attacktime)
 	self.bulletcounter += 1;
 	//dprint("attack finished ", ftos(ATTACK_FINISHED(self)), "\n");
 	return TRUE;
-};
+}
+float weapon_prepareattack(float secondary, float attacktime)
+{
+	if(weapon_prepareattack_check(secondary, attacktime))
+	{
+		weapon_prepareattack_do(secondary, attacktime);
+		return TRUE;
+	}
+	else
+		return FALSE;
+}
 
 void weapon_thinkf(float fr, float t, void() func)
 {

@@ -22,6 +22,8 @@ float racer_turnroll;
 float racer_speed_forward;
 float racer_speed_strafe;
 
+float racer_afterburn_cost;
+
 float  jetfromtag_power;
 float  jetfromtag_normpower;
 vector jetfromtag_origin;
@@ -40,6 +42,8 @@ void racer_loadsettings()
     racer_turnroll          = cvar("g_vehicle_racer_turnroll");
     racer_speed_forward     = cvar("g_vehicle_racer_speed_forward");
     racer_speed_strafe      = cvar("g_vehicle_racer_speed_strafe");
+
+    racer_afterburn_cost    = cvar("g_vehicle_racer_afterburn_cost");
 
     racer_healthmax = cvar("g_vehicle_racer_health");
     racer_shieldmax = cvar("g_vehicle_racer_shield");
@@ -203,7 +207,6 @@ void racer_fire_cannon(string tagname)
 	// FIXME this uses prydon cursor
     v = normalize(self.owner.cursor_trace_endpos - bolt.origin);
     v_forward_z = v_z * 0.5;
-    //v_forward_z *= 0.5;
 
     bolt.velocity = v_forward * cvar("g_vehicle_racer_laser_speed");
 
@@ -355,7 +358,6 @@ float racer_pplug()
     float ftmp, ftmp2;
     vector df;
 
-
     if(cvar("g_vehicle_racer_reload"))
     {
         racer_loadsettings();
@@ -395,13 +397,13 @@ float racer_pplug()
     ftmp = racer_turnspeed * sys_frametime;
     ftmp2 = ftmp * -1;
 
-    ftmp = bound(ftmp2,shortangle_f(player.v_angle_y - racer.angles_y,racer.angles_y),ftmp);
+    ftmp = bound(ftmp2, shortangle_f(player.v_angle_y - racer.angles_y, racer.angles_y), ftmp);
     ftmp2 = safeangle(racer.angles_y + ftmp);
 
     // Roll
-    ftmp = bound(-45,shortangle_f(player.v_angle_z + ((racer.angles_y - ftmp2) * racer_turnroll), racer.angles_z),45);
+    ftmp = bound(-45, shortangle_f(player.v_angle_z + ((racer.angles_y - ftmp2) * racer_turnroll), racer.angles_z), 45);
     ftmp = safeangle(racer.angles_z + ftmp);
-    racer.angles_z = bound(-85,ftmp,85);
+    racer.angles_z = bound(-85, ftmp, 85);
 
     // Turn
     racer.angles_y = ftmp2;
@@ -414,7 +416,7 @@ float racer_pplug()
     racer.angles_x = safeangle(racer.angles_x + ftmp);
     racer.angles_x *= -1;
 
-    df = racer.velocity * -1;
+    df = racer.velocity * -0.5;
 
     if(player.movement_x != 0)
     {
@@ -438,12 +440,11 @@ float racer_pplug()
 
 
     // Afterburn
-    //if (jetfromtag_groundcontact)
     if (player.BUTTON_JUMP)
-    if(racer.vehicle_energy >= (cvar("g_vehicle_racer_speed_afterburn_cost") * frametime))
+    if(racer.vehicle_energy >= (racer_afterburn_cost * frametime))
     {
         racer.wait = time + cvar("g_vehicle_racer_energy_usepause");
-        racer.vehicle_energy -= cvar("g_vehicle_racer_speed_afterburn_cost") * frametime;
+        racer.vehicle_energy -= racer_afterburn_cost * frametime;
         df += (v_forward * cvar("g_vehicle_racer_speed_afterburn"));
     }
 
@@ -494,8 +495,6 @@ float racer_pplug()
     }
 
     player.vehicle_reload1 = (time - racer.lip) / (racer.delay-racer.lip);
-    //player.vehicle_energy = racer.vehicle_energy;
-
     vehicle_stdproc_shiledregen(racer_shieldmax, frametime);
     vehicle_stdproc_healthregen(racer_healthmax, frametime);
 
@@ -714,16 +713,6 @@ void racer_touch()
 
     racer_enter();
 }
-
-/*
-float racer_customizeentityforclient()
-{
-    if(self.deadflag == DEAD_DEAD)
-        return FALSE;
-
-    return TRUE;
-}
-*/
 
 void racer_spawn()
 {

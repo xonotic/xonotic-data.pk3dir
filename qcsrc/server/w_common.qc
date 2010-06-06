@@ -1,3 +1,4 @@
+
 void W_GiveWeapon (entity e, float wep, string name)
 {
 	entity oldself;
@@ -301,14 +302,20 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 
 void W_BallisticBullet_Touch (void)
 {
+	float density;
+
 	if(self.think == W_BallisticBullet_LeaveSolid_think) // skip this!
 		return;
 
 	PROJECTILE_TOUCH;
 	W_BallisticBullet_Hit ();
 
+	density = other.ballistics_density;
+	if(density == 0)
+		density = 1;
+
 	// go through solid!
-	if(!W_BallisticBullet_LeaveSolid(self, self.velocity, self.dmg_radius))
+	if(!W_BallisticBullet_LeaveSolid(self, self.velocity, self.dmg_radius * density))
 	{
 		remove(self);
 		return;
@@ -332,7 +339,7 @@ void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
 
 void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 {
-	float lag, dt, savetime;
+	float lag, dt, savetime, density;
 	entity pl, oldself;
 
 	entity proj;
@@ -438,8 +445,12 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 				W_BallisticBullet_Hit();
 			}
 
+			density = other.ballistics_density;
+			if(density == 0)
+				density = 1;
+
 			// go through solid!
-			if(!W_BallisticBullet_LeaveSolid(self, self.velocity, self.dmg_radius))
+			if(!W_BallisticBullet_LeaveSolid(self, self.velocity, self.dmg_radius * density))
 				break;
 
 			W_BallisticBullet_LeaveSolid_think();

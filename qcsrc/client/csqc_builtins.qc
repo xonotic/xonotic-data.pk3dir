@@ -308,3 +308,11 @@ float PI      = 3.14159265358979323846264338327950288419716939937510582097494459
 float log(float f) = #532;
 
 void(entity e, entity ignore) tracetoss = #64;
+
+float(entity e, float ch) getsoundtime = #533; // (DP_SND_GETSOUNDTIME)
+
+#define PARTICLES_USEALPHA 1
+float particles_alphamin, particles_alphamax;
+#define PARTICLES_USECOLOR 2
+vector particles_colormin, particles_colormax;
+void(float effectindex, entity own, vector org_from, vector org_to, vector dir_from, vector dir_to, float countmultiplier, float flags)	boxparticles = #502;

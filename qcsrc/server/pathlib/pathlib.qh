@@ -1,3 +1,4 @@
+.entity pathlib_list;
 .entity path_next;
 .entity path_prev;
 
@@ -17,12 +18,28 @@ void pathlib_showpath2(entity path);
 
 entity openlist;
 entity closedlist;
+entity edgelist;
+
 entity goal_node;
+entity start_node;
 
 .float is_path_node;
 .float pathlib_node_g;
 .float pathlib_node_h;
 .float pathlib_node_f;
+.float pathlib_node_c;
+
+#define pathlib_node_edgeflag_unknown        0
+#define pathlib_node_edgeflag_left           2
+#define pathlib_node_edgeflag_right          4
+#define pathlib_node_edgeflag_forward        8
+#define pathlib_node_edgeflag_back           16
+#define pathlib_node_edgeflag_backleft       32
+#define pathlib_node_edgeflag_backright      64
+#define pathlib_node_edgeflag_forwardleft    128
+#define pathlib_node_edgeflag_forwardright   256
+#define pathlib_node_edgeflag_none           512
+.float pathlib_node_edgeflags;
 
 float pathlib_open_cnt;
 float pathlib_closed_cnt;
@@ -39,17 +56,17 @@ float pathlib_movecost_waterfactor;
 float pathlib_foundgoal;
 
 float pathlib_starttime;
-#define pathlib_maxtime 5
+#define pathlib_maxtime 60
 
 entity best_open_node;
 
 vector tile_check_up;
 vector tile_check_down;
 float  tile_check_size;
-float      tile_check_cross(vector where);
-float      tile_check_plus(vector where);
-float      tile_check_star(vector where);
-var float  tile_check(vector where);
+float     tile_check_cross(vector where);
+float     tile_check_plus(vector where);
+float     tile_check_star(vector where);
+var float tile_check(vector where);
 
 float  movenode_stepsize;
 vector movenode_stepup;
@@ -82,14 +99,17 @@ float      pathlib_h_euclidean(vector a,vector b);
 float      pathlib_h_diagonal2(vector a, vector b);
 float      pathlib_h_diagonal3(vector a, vector b);
 float      pathlib_h_diagonal2sdp(vector preprev, vector prev, vector point, vector end);
+float      pathlib_h_none(vector preprev, vector prev) { return 0; }
 var float  pathlib_heuristic(vector from, vector to);
 
 var float  pathlib_makenode(entity parent,vector start, vector to, vector goal,float cost);
 var float  buildpath_nodefilter(vector n,vector c,vector p);
 
+var float  pathlib_wpp_waypointcallback(entity wp, entity wp_prev);
+var const float pathlib_wpp_wpcb_null();
 
 #ifdef DEBUGPATHING
-#include "debug.qc"
+	#include "debug.qc"
 #endif
 
 #include "utility.qc"
@@ -97,3 +117,4 @@ var float  buildpath_nodefilter(vector n,vector c,vector p);
 #include "costs.qc"
 #include "expandnode.qc"
 #include "main.qc"
+#include "path_waypoint.qc"

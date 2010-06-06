@@ -60,6 +60,10 @@ void CSQC_Init(void)
 	
 	check_unacceptable_compiler_bugs();
 
+#ifdef WATERMARK
+	print("^4CSQC Build information: ", WATERMARK(), "\n");
+#endif
+
 	float i;
 	CSQC_CheckEngine();
 
@@ -584,12 +588,16 @@ void GameCommand(string msg)
 		localcmd("sv_cmd debug_shotorg\n");
 	}
 	else if(cmd == "sendcvar") {
-		s = cvar_string(argv(1));
-		if(argv(1) == "cl_weaponpriority")
+		// W_FixWeaponOrder will trash argv, so save what we need.
+		string cvar;
+		cvar = strzone(argv(1));
+		s = cvar_string(cvar);
+		if(cvar == "cl_weaponpriority")
 			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
-		else if(substring(argv(1), 0, 17) == "cl_weaponpriority" && strlen(argv(1)) == 18)
+		else if(substring(cvar, 0, 17) == "cl_weaponpriority" && strlen(cvar) == 18)
 			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
-		localcmd("cmd sentcvar ", argv(1), " \"", s, "\"\n");
+		localcmd("cmd sentcvar ", cvar, " \"", s, "\"\n");
+		strunzone(cvar);
 	}
 	else if(cmd == "spawn") {
 		s = argv(1);
@@ -902,6 +910,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_TUBANOTE: Ent_TubaNote(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE: WarpZone_Read(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE_CAMERA: WarpZone_Camera_Read(bIsNewEntity); break;
+		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
 		default:
 			error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
 			break;
@@ -1015,6 +1024,9 @@ void Ent_Init()
 	armorblockpercent = ReadByte() / 255.0;
 
 	g_weaponswitchdelay = ReadByte() / 255.0;
+
+	g_balance_grenadelauncher_secondary_bouncefactor = ReadCoord();
+	g_balance_grenadelauncher_secondary_bouncestop = ReadCoord();
 
 	if(!postinit)
 		PostInit();
@@ -1231,6 +1243,10 @@ float CSQC_Parse_TempEntity()
 		// NOTE: Could just do return instead of break...
 	switch(nTEID)
 	{
+		case TE_CSQC_TARGET_MUSIC:
+			Net_TargetMusic();
+			bHandled = true;
+			break;
 		case TE_CSQC_PICTURE:
 			Net_MapVote_Picture();
 			bHandled = true;

@@ -567,7 +567,8 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
     if (validate_flags & TFL_TARGETSELECT_LOS)
     {
         v_tmp = real_origin(e_target) + ((e_target.mins + e_target.maxs) * 0.5);
-        traceline(e_turret.tur_shotorg,v_tmp,0,e_turret);
+
+        traceline(e_turret.tur_shotorg, v_tmp, 0, e_turret);
 
         if (e_turret.aim_firetolerance_dist < vlen(v_tmp - trace_endpos))
             return -19;
@@ -926,8 +927,8 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         v = gettaginfo(e,gettagindex(e,"tag_fire"));
         if(v == '0 0 0')
         {
-            objerror("^1ERROR: Engine is borken! Turrets will NOT work. force g_turrets to 0 to run maps with turrets anyway.");
-            crash();
+            //objerror("^1ERROR: Engine is borken! Turrets will NOT work. force g_turrets to 0 to run maps with turrets anyway.");
+            //crash();
         }
         setmodel(e,"");
 
@@ -941,6 +942,9 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         dprint("WARNING: turret requested csqc_shared but this is not implemented. Expect strange things to happen.\n");
         csqc_shared = 0;
     }
+
+    if not (self.spawnflags & TSF_SUSPENDED)
+        droptofloor_builtin();
 
     // Terrainbase spawnflag. This puts a enlongated model
     // under the turret, so it looks ok on uneaven surfaces.

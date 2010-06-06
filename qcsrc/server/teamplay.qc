@@ -208,6 +208,9 @@ void InitGameplayMode()
 	fraglimit_override = cvar("fraglimit_override");
 	leadlimit_override = cvar("leadlimit_override");
 
+	if(cvar("g_dodging"))
+		MUTATOR_ADD(dodging);
+	
 	if(g_dm)
 	{
 		game = GAME_DEATHMATCH;
@@ -312,7 +315,7 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = cvar("g_keyhunt_point_limit");
 		leadlimit_override = cvar("g_keyhunt_point_leadlimit");
-		kh_init();
+		MUTATOR_ADD(gamemode_keyhunt);
 	}
 
 	if(g_assault)
@@ -489,11 +492,12 @@ void PrintWelcomeMessage(entity pl)
 	}
 
 :normal
-	modifications = "";
+	ret_string = "";
+	MUTATOR_CALLHOOK(BuildMutatorsPrettyString);
+	modifications = ret_string;
+	
 	if(g_minstagib)
 		modifications = strcat(modifications, ", MinstaGib");
-	if(g_nixnex)
-		modifications = strcat(modifications, ", NixNex");
 	if(g_weaponarena)
 	{
 		if(g_weaponarena_random)
@@ -621,7 +625,11 @@ void CheckAllowedTeams (entity for_whom)
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 
-	if(g_onslaught)
+	if(cvar("g_campaign") && for_whom && clienttype(for_whom) == CLIENTTYPE_REAL)
+	{
+		c1 = 0; // only allow RED team for player joining
+	}
+	else if(g_onslaught)
 	{
 		// onslaught is special
 		head = findchain(classname, "onslaught_generator");
@@ -647,12 +655,14 @@ void CheckAllowedTeams (entity for_whom)
 	else
 	{
 		// cover anything else by treating it like tdm with no teams spawned
-		if(g_keyhunt)
-			dm = kh_teams;
-		else if(g_race)
+		if(g_race)
 			dm = race_teams;
 		else
 			dm = 2;
+
+		ret_float = dm;
+		MUTATOR_CALLHOOK(GetTeamCount);
+		dm = ret_float;
 
 		if(dm >= 4)
 			c1 = c2 = c3 = c4 = 0;
@@ -794,7 +804,9 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	if(totalteams <= 1)
 	{
-		if(g_domination)
+		if(cvar("g_campaign") && pl && clienttype(pl) == CLIENTTYPE_REAL)
+			return 1; // special case for campaign and player joining
+		else if(g_domination)
 			error("Too few teams available for domination\n");
 		else if(g_ctf)
 			error("Too few teams available for ctf\n");
@@ -841,9 +853,9 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	{
 		// 1: use team count, if equal prefer own team
 		if(c1 >= 0) RandomSelection_Add(world, 1, string_null, 1, (maxc - c1) + (self.team == COLOR_TEAM1) / 512.0);
-		if(c2 >= 0) RandomSelection_Add(world, 1, string_null, 1, (maxc - c1) + (self.team == COLOR_TEAM2) / 512.0);
-		if(c3 >= 0) RandomSelection_Add(world, 1, string_null, 1, (maxc - c1) + (self.team == COLOR_TEAM3) / 512.0);
-		if(c4 >= 0) RandomSelection_Add(world, 1, string_null, 1, (maxc - c1) + (self.team == COLOR_TEAM4) / 512.0);
+		if(c2 >= 0) RandomSelection_Add(world, 2, string_null, 1, (maxc - c1) + (self.team == COLOR_TEAM2) / 512.0);
+		if(c3 >= 0) RandomSelection_Add(world, 3, string_null, 1, (maxc - c1) + (self.team == COLOR_TEAM3) / 512.0);
+		if(c4 >= 0) RandomSelection_Add(world, 4, string_null, 1, (maxc - c1) + (self.team == COLOR_TEAM4) / 512.0);
 	}
 	else if(balance_type == 3)
 	{

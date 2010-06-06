@@ -16,13 +16,6 @@ entity makeXonoticImage(string theImage, float theAspect)
 void configureXonoticImageXonoticImage(entity me, string theImage, float theAspect)
 {
 	me.configureImage(me, theImage);
-	if(theAspect < 0) // use image aspect
-	{
-		vector sz;
-		sz = draw_PictureSize(theImage);
-		me.forcedAspect = sz_x / sz_y;
-	}
-	else
-		me.forcedAspect = theAspect;
+	me.forcedAspect = theAspect;
 }
 #endif

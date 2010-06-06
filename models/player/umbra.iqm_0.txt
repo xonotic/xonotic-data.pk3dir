@@ -1,0 +1,7 @@
+name Umbra
+species human
+sex Female
+weight 61
+age 25
+
+Lightweight Xonotic Solider

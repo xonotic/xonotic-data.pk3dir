@@ -92,7 +92,7 @@ void fillXonoticEffectsSettingsTab(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Particle quality:"));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1.0, 0.05, "cl_particles_quality"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0.2, 1.0, 0.1, "cl_particles_quality"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Particle dist.:"));
 		me.TD(me, 1, 2, e = makeXonoticSlider(500, 2000, 100, "r_drawparticles_drawdistance"));
@@ -158,7 +158,7 @@ void fillXonoticEffectsSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_bloom", "Bloom"));
 			setDependent(e, "r_hdr", 0, 0);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_hdr", "High Dynamic Range (HDR)"));
+		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(2, 0, "r_hdr", "High Dynamic Range (HDR)"));
 	
 	me.TR(me);
 		s = makeXonoticSlider(0.1, 1, 0.1, "r_motionblur");

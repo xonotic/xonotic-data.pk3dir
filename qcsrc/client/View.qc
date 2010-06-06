@@ -291,6 +291,10 @@ float TrueAimCheck()
 			mi = '-16 -16 -16';
 			ma = '16 16 16';
 			break;
+		case WEP_SEEKER: // projectile has a size!
+			mi = '-2 -2 -2';
+			ma = '2 2 2';
+			break;
 		case WEP_ELECTRO: // projectile has a size!
 			mi = '0 0 -3';
 			ma = '0 0 -3';
@@ -341,6 +345,10 @@ float view_set;
 float camera_mode;
 string NextFrameCommand;
 void CSQC_SPIDER_HUD();
+void CSQC_RAPTOR_HUD();
+
+vector freeze_pmove_org, freeze_input_angles;
+
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -359,10 +367,23 @@ void CSQC_UpdateView(float w, float h)
 	vo = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
 	warpzone_fixview_origin = pmove_org + vo;
-	warpzone_fixview_angles = input_angles;
+	warpzone_fixview_cl_viewangles = input_angles;
+	warpzone_fixview_angles = view_angles;
 	WarpZone_FixView();
 	pmove_org = warpzone_fixview_origin - vo;
-	input_angles = warpzone_fixview_angles;
+	input_angles = warpzone_fixview_cl_viewangles;
+	view_angles = warpzone_fixview_angles;
+
+	if(cvar("cl_lockview"))
+	{
+		pmove_org = freeze_pmove_org;
+		input_angles = view_angles = freeze_input_angles;
+		R_SetView(VF_ORIGIN, pmove_org + vo);
+		R_SetView(VF_ANGLES, view_angles);
+		//R_SetView(VF_CL_VIEWANGLES, input_angles);
+	}
+	freeze_pmove_org = pmove_org;
+	freeze_input_angles = input_angles;
 
 	// Render the Scene
 	if(!intermission || !view_set)
@@ -398,6 +419,7 @@ void CSQC_UpdateView(float w, float h)
 	}
 #endif
 
+	TargetMusic_Advance();
 	Fog_Force();
 
 	drawframetime = max(0.000001, time - drawtime);
@@ -596,6 +618,8 @@ void CSQC_UpdateView(float w, float h)
 	}
 	else if(hud == HUD_WAKIZASHI)
         CSQC_WAKIZASHI_HUD();
+    else if(hud == HUD_RAPTOR)
+        CSQC_RAPTOR_HUD();
 	else
 	{
 		if(cvar("r_letterbox") == 0)
@@ -857,13 +881,13 @@ void Sbar_Draw();
 
 void CSQC_SPIDER_HUD()
 {
-	float rockets, reload, heat, hp, shield, i;
+	float rockets, reload, heat, hp, shield;
 	vector picsize, hudloc;
 
     // Fetch health & ammo stats
     hp      = bound(0,getstatf(STAT_VEHICLESTAT_HEALTH), 1);
 	shield  = bound(0,getstatf(STAT_VEHICLESTAT_SHIELD), 1);
-	heat    = min(getstatf(STAT_VEHICLESTAT_RELOAD1), 1);
+	heat    = min(getstatf(STAT_VEHICLESTAT_RELOAD1), 2);
 	rockets =     getstati(STAT_VEHICLESTAT_AMMO2);
 	reload  = min(getstatf(STAT_VEHICLESTAT_RELOAD2), 1);
 
@@ -882,10 +906,8 @@ void CSQC_SPIDER_HUD()
     picsize = drawgetimagesize(spider_a2) * 0.5;
     drawpic(hudloc + '120 96  0', spider_a2, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 
-
     drawstring(hudloc + '145 19  0', strcat(ftos(rint(hp * 100)), "%"),'15 15 0','0 1 0', 1, DRAWFLAG_NORMAL);
     drawstring(hudloc + '175 34  0', strcat(ftos(rint(shield * 100)), "%"),'15 15 0','0 0 1', 1, DRAWFLAG_NORMAL);
-
     drawstring(hudloc + '136 102  0', strcat(ftos(100 - rint(heat * 100)), "%"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
 
     picsize = drawgetimagesize(spider_a1) * 0.85;
@@ -955,6 +977,76 @@ void CSQC_SPIDER_HUD()
 		}
 	}
 	*/
+
+	if (sb_showscores)
+	{
+		Sbar_DrawScoreboard();
+		Sbar_DrawCenterPrint();
+	}
+
+}
+
+#define raptor_h "gfx/vehicles/hud_bg.tga"
+#define raptor_b "gfx/vehicles/raptor.tga"
+#define raptor_g1 "gfx/vehicles/raptor_guns.tga"
+#define raptor_g2 "gfx/vehicles/raptor_bombs.tga"
+#define raptor_s "gfx/vehicles/shiled.tga"
+
+#define spider_a1 "gfx/hud/sb_rocket.tga"
+#define spider_a2 "gfx/sb_bullets.tga"
+
+void CSQC_RAPTOR_HUD()
+{
+	float rockets, reload, heat, hp, shield, energy;
+	vector picsize, hudloc;
+
+    // Fetch health & ammo stats
+    hp      = bound(0,getstatf(STAT_VEHICLESTAT_HEALTH), 1);
+	shield  = bound(0,getstatf(STAT_VEHICLESTAT_SHIELD), 1);
+	reload  = min(getstatf(STAT_VEHICLESTAT_RELOAD1), 1);
+	energy  = min(getstatf(STAT_VEHICLESTAT_ENERGY),  1);
+
+    // Draw the crosshairs
+    picsize = drawgetimagesize(SPIDER_CROSS);
+    picsize_x *= cvar_or("cl_vehicle_spiderbot_cross_size", 1);
+    picsize_y *= cvar_or("cl_vehicle_spiderbot_cross_size", 1);
+    drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', cvar_or("cl_vehicle_spiderbot_cross_alpha",0.6), DRAWFLAG_NORMAL);
+
+    hudloc_y =  4;
+    hudloc_x = 4;
+
+    picsize = drawgetimagesize(raptor_h) * 0.5;
+    drawpic(hudloc, raptor_h, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+
+    picsize = drawgetimagesize(spider_a2) * 0.5;
+    drawpic(hudloc + '120 96  0', spider_a2, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+
+    drawstring(hudloc + '145 19  0', strcat(ftos(rint(hp * 100)), "%"),'15 15 0','0 1 0', 1, DRAWFLAG_NORMAL);
+    drawstring(hudloc + '175 34  0', strcat(ftos(rint(shield * 100)), "%"),'15 15 0','0 0 1', 1, DRAWFLAG_NORMAL);
+    drawstring(hudloc + '136 102 0', strcat(ftos(rint(energy * 100)), "%"),'15 15 0','0.5 0.5 1', 1, DRAWFLAG_NORMAL);
+
+
+    picsize = drawgetimagesize(spider_a1) * 0.85;
+    if(reload == 1)
+    {
+        drawpic(hudloc + '132 54  0', spider_a1, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+        drawstring(hudloc + '179 69  0', strcat(ftos(rint(reload * 100)), "%"),'14 14 0','0 1 0', 0.5, DRAWFLAG_NORMAL);
+    }
+    else
+    {
+        drawpic(hudloc + '132 54  0', spider_a1, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+        drawstring(hudloc + '179 69  0', strcat(ftos(rint(reload * 100)), "%"),'14 14 0','0 0 1', 1, DRAWFLAG_NORMAL);
+    }
+
+    picsize = drawgetimagesize(raptor_b) * 0.5;
+    hudloc_y = 10.5;
+    hudloc_x = 10.5;
+
+    drawpic(hudloc, raptor_s, picsize, '1 1 1', shield, DRAWFLAG_NORMAL);
+    drawpic(hudloc, raptor_b, picsize, '0 1 0' * hp + '1 0 0' * (1 - hp), 1, DRAWFLAG_NORMAL);
+    drawpic(hudloc, raptor_g1, picsize, '1 1 1' * energy + '1 0 0' * (1 - energy), 1, DRAWFLAG_NORMAL);
+    drawpic(hudloc, raptor_g2, picsize, '1 1 1' * reload + '1 0 0' *  (1 - reload), 1, DRAWFLAG_NORMAL);
+
 
 	if (sb_showscores)
 	{

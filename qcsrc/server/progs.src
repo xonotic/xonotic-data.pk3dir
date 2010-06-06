@@ -20,6 +20,11 @@ constants.qh
 
 defs.qh		// Should rename this, it has fields and globals
 
+mutators/base.qh
+mutators/mutators.qh
+mutators/gamemode_keyhunt.qh // TODO fix this
+mutators/mutator_dodging.qh
+
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
 
@@ -43,8 +48,6 @@ scores.qh
 ipban.qh
 
 race.qh
-
-keyhunt.qh
 
 antilag.qh
 
@@ -127,8 +130,6 @@ campaign.qc
 ../common/gamecommand.qc
 gamecommand.qc
 
-keyhunt.qc
-
 assault.qc
 
 ipban.qc
@@ -155,6 +156,7 @@ portals.qc
 
 target_spawn.qc
 func_breakable.qc
+target_music.qc
 
 ../common/items.qc
 
@@ -169,6 +171,11 @@ playerdemo.qc
 
 anticheat.qc
 cheats.qc
+
+mutators/base.qc
+mutators/gamemode_keyhunt.qc
+mutators/mutator_nix.qc
+mutators/mutator_dodging.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

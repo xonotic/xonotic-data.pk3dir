@@ -588,7 +588,7 @@ void EffectIndexDump()
 	db_put(d, "TR_KNIGHTSPIKE", "1"); print("effect TR_KNIGHTSPIKE is ", ftos(particleeffectnum("TR_KNIGHTSPIKE")), "\n");
 	db_put(d, "TR_VORESPIKE", "1"); print("effect TR_VORESPIKE is ", ftos(particleeffectnum("TR_VORESPIKE")), "\n");
 	db_put(d, "TR_NEHAHRASMOKE", "1"); print("effect TR_NEHAHRASMOKE is ", ftos(particleeffectnum("TR_NEHAHRASMOKE")), "\n");
-	db_put(d, "TR_XONOTICPLASMA", "1"); print("effect TR_XONOTICPLASMA is ", ftos(particleeffectnum("TR_XONOTICPLASMA")), "\n");
+	db_put(d, "TR_NEXUIZPLASMA", "1"); print("effect TR_NEXUIZPLASMA is ", ftos(particleeffectnum("TR_NEXUIZPLASMA")), "\n");
 	db_put(d, "TR_GLOWTRAIL", "1"); print("effect TR_GLOWTRAIL is ", ftos(particleeffectnum("TR_GLOWTRAIL")), "\n");
 	db_put(d, "SVC_PARTICLE", "1"); print("effect SVC_PARTICLE is ", ftos(particleeffectnum("SVC_PARTICLE")), "\n");
 
@@ -960,15 +960,25 @@ void GameCommand(string command)
 		if(argv(1) == "w")
 			setmodel(e, (nextent(world)).weaponentity.model);
 		else
+		{
+			precache_model(argv(1));
 			setmodel(e, argv(1));
+		}
 		e.frame = stof(argv(2));
-		i = gettagindex(e, argv(3));
+		if(substring(argv(3), 0, 1) == "#")
+			i = stof(substring(argv(3), 1, -1));
+		else
+			i = gettagindex(e, argv(3));
 		if(i)
 		{
 			v = gettaginfo(e, i);
-			print("model ", e.model, " frame ", ftos(e.frame), " tag ", argv(3));
-			print(" index = ", ftos(i));
+			print("model ", e.model, " frame ", ftos(e.frame), " tag ", gettaginfo_name);
+			print(" index ", ftos(i), " parent ", ftos(gettaginfo_parent), "\n");
 			print(" vector = ", ftos(v_x), " ", ftos(v_y), " ", ftos(v_z), "\n");
+			print(" offset = ", ftos(gettaginfo_offset_x), " ", ftos(gettaginfo_offset_y), " ", ftos(gettaginfo_offset_z), "\n");
+			print(" forward = ", ftos(gettaginfo_forward_x), " ", ftos(gettaginfo_forward_y), " ", ftos(gettaginfo_forward_z), "\n");
+			print(" right = ", ftos(gettaginfo_right_x), " ", ftos(gettaginfo_right_y), " ", ftos(gettaginfo_right_z), "\n");
+			print(" up = ", ftos(gettaginfo_up_x), " ", ftos(gettaginfo_up_y), " ", ftos(gettaginfo_up_z), "\n");
 			if(argc >= 6)
 			{
 				v_y = -v_y;
@@ -1330,6 +1340,17 @@ void GameCommand(string command)
 	if(argv(0) == "delrec")
 	{
 		race_DeleteTime(stof(argv(1)));
+		return;
+	}
+
+	if(argv(0) == "showtraceline")
+	{
+		vector src, dst;
+		src = stov(argv(1));
+		dst = stov(argv(2));
+		traceline(src, dst, MOVE_NORMAL, world);
+		trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), src, trace_endpos);
+		trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dst);
 		return;
 	}
 

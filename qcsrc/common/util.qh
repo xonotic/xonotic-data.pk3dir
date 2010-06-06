@@ -199,3 +199,14 @@ string cdr(string s); // returns all but first word
 float matchacl(string acl, string str); // matches str against ACL acl (with entries +foo*, +foo, +*foo, +*foo*, and same with - for forbidding)
 float startsWith(string haystack, string needle);
 float startsWithNocase(string haystack, string needle);
+
+string get_model_datafilename(string mod, float skn, string fil); // skin -1 will return wildcard, mod string_null will also put wildcard there
+string get_model_parameters_modelname;
+float get_model_parameters_modelskin;
+string get_model_parameters_name;
+float get_model_parameters_species;
+string get_model_parameters_sex;
+float get_model_parameters_weight;
+float get_model_parameters_age;
+string get_model_parameters_desc;
+float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split
