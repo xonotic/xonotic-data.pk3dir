@@ -1154,19 +1154,17 @@ void CSQC_common_hud(void)
 			HUD_Main();
 
 			// scoreboard/accuracy
-			if(scoreboard_showaccuracy && spectatee_status != -1)
+			if (intermission == 2 && !scoreboard_showaccuracy && !scoreboard_showscores) // map voting screen
+			{
+				HUD_FinaleOverlay();
+				HUD_Reset();
+			}
+			else if(scoreboard_showaccuracy && spectatee_status != -1)
 				HUD_DrawAccuracyStats();
 			else
 				HUD_DrawScoreboard();
 
-			if (intermission == 2) // map voting screen
-				if(!scoreboard_showaccuracy && !scoreboard_showscores)
-				{
-					HUD_FinaleOverlay();
-					HUD_Reset();
-				}
-
-			else if (scoreboard_showscores || scoreboard_showaccuracy || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
+			if (scoreboard_showscores || scoreboard_showaccuracy || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
 				HUD_Reset();
 
 			break;
