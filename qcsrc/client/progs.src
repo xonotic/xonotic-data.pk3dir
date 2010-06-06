@@ -67,6 +67,7 @@ bgmscript.qc
 ../common/gamecommand.qc
 ../common/mapinfo.qc
 ../common/items.qc
+../server/w_all.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

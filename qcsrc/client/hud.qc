@@ -2046,7 +2046,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		if(type == DEATH_WEAPON) {
 			HUD_KillNotify_Push(s1, "", stof(s3));
 			if (!HUD_Panel_CheckActive(4) || cvar("hud_notify_print"))
-				print("^1", s1, "^1 ", Weapon_SuicideMessage(stof(s3)), "\n");
+				print("^1", s1, "^1 ", Weapon_SuicideMessage(stof(s2)), "\n");
 		}
 		else if (type == DEATH_KILL)
 			print ("^1",s1, "^1 couldn't take it anymore\n");

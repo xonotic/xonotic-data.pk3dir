@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(HOOK, w_hook, IT_CELLS|IT_FUEL, 0, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "hookgun", "hook", "Grappling Hook");
 #else
+#ifdef SVQC
 .float dmg;
 .float dmg_edge;
 .float dmg_radius;
@@ -248,4 +249,23 @@ float w_hook(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+float w_hook(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		pointparticles(particleeffectnum("hookbomb_explode"), org2, '0 0 0', 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/hookbomb_impact.wav");
+	}
+	return TRUE;
+}
+#endif
 #endif

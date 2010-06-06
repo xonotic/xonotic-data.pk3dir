@@ -363,10 +363,11 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			}
 			*/
 
-			//w = DEATH_WEAPONOF(deathtype);
+			w = DEATH_WEAPONOF(deathtype);
 			bprint("deathtype: ", ftos(deathtype), "\n");
 			if(WEP_VALID(w))
 			{
+				msg = ftos(deathtype);
 				deathtype = DEATH_WEAPON;
 			}
 
