@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(CAMPINGRIFLE, w_campingrifle, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "campingrifle", "campingrifle", "Rifle");
 #else
+#ifdef SVQC
 //Camping rifle Primary mode: manually operated bolt*, Secondary: full automatic**
 //* Manually operating the bolt means that all the power of the gas is used to propell the bullet. In this mode the bolt is prevented from moving backwards in response to the firing of the bullet.
 //** In fully automatic mode some of the gas is used to extract and reload the next cartrige, thus there is less power and range.
@@ -293,4 +294,32 @@ float w_campingrifle(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+float w_campingrifle(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent)
+		{
+			if(w_random < 0.2)
+				sound(self, CHAN_PROJECTILE, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.4)
+				sound(self, CHAN_PROJECTILE, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.5)
+				sound(self, CHAN_PROJECTILE, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/ric1.wav");
+		precache_sound("weapons/ric2.wav");
+		precache_sound("weapons/ric3.wav");
+	}
+	return TRUE;
+}
+#endif
 #endif

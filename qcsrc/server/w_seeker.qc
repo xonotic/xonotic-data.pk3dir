@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", "T.A.G. Seeker");
 #else
+#ifdef SVQC
 //.float speed; = switchweapon
 //.float proxytime; = autoswitch
 //.float tl; = wait
@@ -478,4 +479,76 @@ float w_seeker(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+float w_seeker(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			pointparticles(particleeffectnum("flac_explode"), org2, '0 0 0', 1);
+			if(!w_issilent)
+			{
+				if (w_random<0.15)
+					sound(self, CHAN_PROJECTILE, "weapons/flacexp1.wav", 1, ATTN_NORM);
+				else if (w_random<0.7)
+					sound(self, CHAN_PROJECTILE, "weapons/flacexp2.wav", 1, ATTN_NORM);
+				else
+					sound(self, CHAN_PROJECTILE, "weapons/flacexp3.wav", 1, ATTN_NORM);
+			}
+		}
+		else
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+			{
+				pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
+				if(!w_issilent)
+				{
+					if (w_random<0.15)
+						sound(self, CHAN_PROJECTILE, "weapons/tagexp1.wav", 1, ATTN_NORM);
+					else if (w_random<0.7)
+						sound(self, CHAN_PROJECTILE, "weapons/tagexp2.wav", 1, ATTN_NORM);
+					else
+						sound(self, CHAN_PROJECTILE, "weapons/tagexp3.wav", 1, ATTN_NORM);
+				}
+			}
+			else if(w_deathtype & HITTYPE_HEADSHOT)
+			{
+				if(!w_issilent)
+					sound(self, CHAN_PROJECTILE, "weapons/tag_impact.wav", 1, ATTN_NORM);
+			}
+			else
+			{
+				pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
+				if(!w_issilent)
+				{
+					if (w_random<0.15)
+						sound(self, CHAN_PROJECTILE, "weapons/seekerexp1.wav", 1, ATTN_NORM);
+					else if (w_random<0.7)
+						sound(self, CHAN_PROJECTILE, "weapons/seekerexp2.wav", 1, ATTN_NORM);
+					else
+						sound(self, CHAN_PROJECTILE, "weapons/seekerexp3.wav", 1, ATTN_NORM);
+				}
+			}
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/flacexp1.wav");
+		precache_sound("weapons/flacexp2.wav");
+		precache_sound("weapons/flacexp3.wav");
+		precache_sound("weapons/seekerexp1.wav");
+		precache_sound("weapons/seekerexp2.wav");
+		precache_sound("weapons/seekerexp3.wav");
+		precache_sound("weapons/tagexp1.wav");
+		precache_sound("weapons/tagexp2.wav");
+		precache_sound("weapons/tagexp3.wav");
+		precache_sound("weapons/tag_impact.wav");
+	}
+	return TRUE;
+}
+#endif
 #endif

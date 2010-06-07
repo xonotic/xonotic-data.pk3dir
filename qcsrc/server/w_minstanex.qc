@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_CANCLIMB | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "minstanex", "minstanex", "MinstaNex");
 #else
+#ifdef SVQC
 .float minstanex_lasthit;
 
 void W_MinstaNex_Attack (void)
@@ -241,4 +242,23 @@ float w_minstanex(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+float w_minstanex(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/neximpact.wav");
+	}
+	return TRUE;
+}
+#endif
 #endif

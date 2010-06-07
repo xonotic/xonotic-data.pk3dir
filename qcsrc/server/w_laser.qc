@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(LASER, w_laser, 0, 1, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "laser", "laser", "Laser");
 #else
+#ifdef SVQC
 void(float imp) W_SwitchWeapon;
 
 void W_Laser_Touch (void)
@@ -185,4 +186,23 @@ float w_laser(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+float w_laser(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/laserimpact.wav");
+	}
+	return TRUE;
+}
+#endif
 #endif

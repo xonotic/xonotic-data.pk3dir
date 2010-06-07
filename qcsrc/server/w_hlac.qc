@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hlac", "hlac", "Heavy Laser Assault Cannon");
 #else
+#ifdef SVQC
 .float HLAC_bulletcounter;
 void W_HLAC_Touch (void)
 {
@@ -212,4 +213,23 @@ float w_hlac(float req)
 		w_deathtypestring = "was cut down by";
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+float w_hlac(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/laserimpact.wav");
+	}
+	return TRUE;
+}
+#endif
 #endif
