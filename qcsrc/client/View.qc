@@ -372,7 +372,7 @@ void CSQC_UpdateView(float w, float h)
 	input_angles = warpzone_fixview_cl_viewangles;
 	view_angles = warpzone_fixview_angles;
 
-	if(cvar("cl_lockview"))
+	if(cvar("cl_lockview") || hud_configure)
 	{
 		pmove_org = freeze_pmove_org;
 		input_angles = view_angles = freeze_input_angles;
@@ -394,10 +394,6 @@ void CSQC_UpdateView(float w, float h)
 		view_up = v_up;
 		view_set = 1;
 	}
-
-	hudconf_active = cvar("_hud_configure");
-	if(hudconf_active)
-		R_SetView(VF_ANGLES, self.angles); // TODO: this should freeze the view as it is, not change it to '0 0 0' or whatever it currently does...
 
 	vid_width = w;
 	vid_height = h;
@@ -599,7 +595,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !camera_active && !hudconf_active) {
+		if(!scoreboard_active && !camera_active) {
 			// TrueAim check
 			float shottype;
 			float bullets, ring_scale;
@@ -835,7 +831,7 @@ void CSQC_UpdateView(float w, float h)
 		cvar_set("vid_conheight", h0);
 	}
 
-	if(hudconf_active)
+	if(hud_configure)
 		HUD_Panel_Mouse();
 	// be safe against triggerbots until everyone has the fixed engine
 	// this call is meant to overwrite the trace globals by something
