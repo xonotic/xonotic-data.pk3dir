@@ -321,7 +321,7 @@ void WarpZone_InitStep_UpdateTransform()
 		tex = getsurfacetexture(self, i_s);
 		if not(tex)
 			break; // this is beyond the last one
-		if(tex != "textures/common/warpzone")
+		if(tex == "textures/common/trigger")
 			continue;
 		n_t = getsurfacenumtriangles(self, i_s);
 		for(i_t = 0; i_t < n_t; ++i_t)
