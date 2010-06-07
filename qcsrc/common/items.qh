@@ -97,12 +97,12 @@ float WEPBIT_ALL;
 		register_weapon(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterWeapons, RegisterWeapons_##id)
-#ifdef SVQC
-#define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPBIT_##id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
-#else
+#ifdef MENUQC
 #define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
 	REGISTER_WEAPON_2(WEP_##id,WEPBIT_##id,w_null,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
+#else
+#define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
+	REGISTER_WEAPON_2(WEP_##id,WEPBIT_##id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
 #endif
 
 #include "../server/w_all.qc"

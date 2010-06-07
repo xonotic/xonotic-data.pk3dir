@@ -221,18 +221,6 @@ float WS_DROP			= 2; // deselecting frame
 float WS_INUSE			= 3; // fire state
 float WS_READY			= 4; // idle frame
 
-// weapon requests
-float WR_SETUP		    = 1; // setup weapon data
-float WR_THINK		    = 2; // logic to run every frame
-float WR_CHECKAMMO1	    = 3; // checks ammo for weapon
-float WR_CHECKAMMO2	    = 4; // checks ammo for weapon
-float WR_AIM		    = 5; // runs bot aiming code for this weapon
-float WR_PRECACHE	    = 6; // precaches models/sounds used by this weapon
-float WR_SUICIDEMESSAGE = 7; // sets w_deathtypestring or leaves it alone (and may inspect w_deathtype for details)
-float WR_KILLMESSAGE    = 8; // sets w_deathtypestring or leaves it alone
-float WR_RELOAD         = 9; // does not need to do anything
-float WR_RESETPLAYER    = 10; // does not need to do anything
-
 void weapon_defaultspawnfunc(float wpn);
 
 string w_deathtypestring;
@@ -536,6 +524,7 @@ float game_starttime; //point in time when the countdown is over
 
 .float stat_sv_airaccel_qw;
 .float stat_sv_airstrafeaccel_qw;
+.float stat_sv_airspeedlimit_nonqw;
 
 void W_Porto_Remove (entity p);
 
