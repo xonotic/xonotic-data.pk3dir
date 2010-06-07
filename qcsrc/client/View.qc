@@ -964,10 +964,6 @@ void CSQC_SPIDER_HUD()
 #define raptor_g2 "gfx/vehicles/raptor_bombs.tga"
 #define raptor_s "gfx/vehicles/shiled.tga"
 
-// these are causing warnings!
-#define spider_a1 "gfx/hud/scoreboard_rocket.tga"
-#define spider_a2 "gfx/scoreboard_bullets.tga"
-
 void CSQC_RAPTOR_HUD()
 {
 	float rockets, reload, heat, hp, shield, energy;
