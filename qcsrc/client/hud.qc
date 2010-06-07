@@ -579,6 +579,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 		fputs(fh, strcat("seta hud_skin \"", cvar_string("hud_skin"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg \"", cvar_string("hud_bg"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg_color \"", cvar_string("hud_bg_color"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_bg_color_team \"", cvar_string("hud_bg_color_team"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg_alpha \"", cvar_string("hud_bg_alpha"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg_border \"", cvar_string("hud_bg_border"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg_padding \"", cvar_string("hud_bg_padding"), "\"", "\n"));
@@ -587,6 +588,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 
 		fputs(fh, strcat("seta hud_dock \"", cvar_string("hud_dock"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_dock_color \"", cvar_string("hud_dock_color"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_dock_color_team \"", cvar_string("hud_dock_color_team"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_dock_alpha \"", ftos(cvar("hud_dock_alpha")), "\"", "\n"));
 		fputs(fh, "\n");
 
@@ -608,6 +610,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_size \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_size")), "\"", "\n"));
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg")), "\"", "\n"));
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_color \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_color")), "\"", "\n"));
+			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_color_team \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_color_team")), "\"", "\n"));
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_alpha \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_alpha")), "\"", "\n"));
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_border \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_border")), "\"", "\n"));
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_padding \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_padding")), "\"", "\n"));
@@ -730,12 +733,24 @@ vector HUD_Panel_GetColor(float id)
 	float f;
 	vector color_vec;
 	string color;
-	color = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color"));
+
+	// fetch per-panel color
+	if(teamplay && cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color_team")) != "") {
+		f = stof(getplayerkey(self.sv_entnum, "colors"));
+		color = vtos(colormapPaletteColor(mod(f, 16), 1) * cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_color_team")));
+	}
+	else
+		color = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color"));
 	color_vec = stov(color);
-	if(color == "") {
+
+	if(color == "") { // fetch default color
 		color = cvar_string("hud_bg_color");
 		color_vec = stov(color);
-		if(color == "shirt") {
+		if(teamplay && cvar(strcat("hud_bg_color_team"))) {
+			f = stof(getplayerkey(self.sv_entnum, "colors"));
+			color_vec = colormapPaletteColor(mod(f, 16), 1) * cvar("hud_bg_color_team");
+		}
+		else if(color == "shirt") {
 			f = stof(getplayerkey(self.sv_entnum, "colors"));
 			color_vec = colormapPaletteColor(floor(f / 16), 0);
 		}
@@ -762,7 +777,11 @@ vector HUD_Panel_Dock_GetColor(void)
 	string color;
 	color = cvar_string("hud_dock_color");
 	color_vec = stov(color);
-	if(color == "shirt") {
+	if(teamplay && cvar(strcat("hud_dock_color_team"))) {
+		f = stof(getplayerkey(self.sv_entnum, "colors"));
+		color_vec = colormapPaletteColor(mod(f, 16), 1) * cvar("hud_dock_color_team");
+	}
+	else if(color == "shirt") {
 		f = stof(getplayerkey(self.sv_entnum, "colors"));
 		color_vec = colormapPaletteColor(floor(f / 16), 0);
 	}
@@ -3577,6 +3596,23 @@ void HUD_Main (void)
 	hud_configure = cvar("_hud_configure");
 
 	// Drawing stuff
+
+	// HUD configure visible grid
+	if(hud_configure && cvar("hud_configure_grid") && cvar("hud_configure_grid_alpha"))
+	{
+		float i;
+		// x-axis
+		for(i = 0; i < vid_conwidth/cvar("hud_configure_grid_x"); ++i)
+		{
+			drawfill(eX * i * cvar("hud_configure_grid_x"), eX + eY * vid_conheight, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
+		}
+		// y-axis
+		for(i = 0; i < vid_conheight/cvar("hud_configure_grid_y"); ++i)
+		{
+			drawfill(eY * i * cvar("hud_configure_grid_y"), eY + eX * vid_conwidth, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
+		}
+	}
+
 	if(cvar_string("hud_dock") != "")
 		drawpic_skin('0 0 0', cvar_string("hud_dock"), eX * vid_conwidth + eY * vid_conheight, HUD_Panel_Dock_GetColor(), cvar("hud_dock_alpha"), DRAWFLAG_NORMAL);
 

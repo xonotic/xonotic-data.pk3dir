@@ -94,6 +94,7 @@ void CSQC_Init(void)
 	registercmd("-button3");
 	registercmd("+button4");
 	registercmd("-button4");
+	registercmd("+showscores");registercmd("-showscores");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
 
 #ifndef CAMERATEST
@@ -405,16 +406,16 @@ float CSQC_ConsoleCommand(string strMessage)
 		button_attack2 = 0;
 		return false;
 	} else if(strCmd == "+showscores") {
-		sb_showscores = true;
+		scoreboard_showscores = true;
 		return true;
 	} else if(strCmd == "-showscores") {
-		sb_showscores = false;
+		scoreboard_showscores = false;
 		return true;
 	} else if(strCmd == "+showaccuracy") {
-		sb_showaccuracy = true;
+		scoreboard_showaccuracy = true;
 		return true;
 	} else if(strCmd == "-showaccuracy") {
-		sb_showaccuracy = false;
+		scoreboard_showaccuracy = false;
 		return true;
 	}
 
@@ -632,13 +633,12 @@ void GameCommand(string msg)
 // bInputType = 0 is key pressed, 1 is key released, 2 is mouse input.
 // In the case of keyboard input, nPrimary is the ascii code, and nSecondary is 0.
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
-float hudconf_active;
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	local float bSkipKey;
 	bSkipKey = false;
 
-	if(hudconf_active)
+	if(hud_configure)
 		if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
 			return true;
 
@@ -783,7 +783,7 @@ void Ent_ClientData()
 
 	f = ReadByte();
 
-	sb_showscores_force = (f & 1);
+	scoreboard_showscores_force = (f & 1);
 
 	if(f & 2)
 	{
@@ -963,9 +963,6 @@ void Gamemode_Init()
 		precache_pic("gfx/ons-cp-blue.tga");
 		precache_pic("gfx/ons-frame.tga");
 		precache_pic("gfx/ons-frame-team.tga");
-	} else if(gametype == GAME_KEYHUNT) {
-		precache_pic("gfx/sb_key_carrying");
-		precache_pic("gfx/sb_key_carrying_outline");
 	}
 
 	if not(isdemo())
