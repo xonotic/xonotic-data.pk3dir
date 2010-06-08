@@ -2045,7 +2045,7 @@ string Weapon_KillMessage(float deathtype)
 }
 
 float killnotify_times[10];
-float killnotify_weapons[10];
+float killnotify_deathtype[10];
 string killnotify_attackers[10];
 string killnotify_victims[10];
 void HUD_KillNotify_Push(string attacker, string victim, float wpn)
@@ -2053,27 +2053,33 @@ void HUD_KillNotify_Push(string attacker, string victim, float wpn)
 	float i;
 	for (i = 9; i > 0; --i) {
 		killnotify_times[i] = killnotify_times[i-1];
-		killnotify_weapons[i] = killnotify_weapons[i-1];
-		killnotify_attackers[i] = killnotify_attackers[i-1];
-		killnotify_victims[i] = killnotify_victims[i-1];
+		killnotify_deathtype[i] = killnotify_deathtype[i-1];
+		if(killnotify_attackers[i])
+			strunzone(killnotify_attackers[i]);
+		killnotify_attackers[i] = strzone(killnotify_attackers[i-1]);
+		if(killnotify_victims[i])
+			strunzone(killnotify_victims[i]);
+		killnotify_victims[i] = strzone(killnotify_victims[i-1]);
 	}
 	killnotify_times[0] = time;
-	killnotify_weapons[0] = wpn;
-	killnotify_attackers[0] = attacker;
-	killnotify_victims[0] = victim;
+	killnotify_deathtype[0] = wpn;
+	if(killnotify_attackers[0])
+		strunzone(killnotify_attackers[0]);
+	killnotify_attackers[0] = strzone(attacker);
+	if(killnotify_victims[0])
+		strunzone(killnotify_victims[0]);
+	killnotify_victims[0] = strzone(victim);
 }
 
 void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 {
 	float w;
 	if(msg == MSG_SUICIDE) {
-		// TODO: cl_gentle
-		// TODO: way of finding out secondary?
-		print("deathtype: ", ftos(type), "\n");
+		HUD_KillNotify_Push(s1, "", DEATH_KILL);
 
+		// TODO: cl_gentle
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			HUD_KillNotify_Push(s1, "", w);
 			if (!HUD_Panel_CheckActive(4) || cvar("hud_notify_print"))
 				print("^1", s1, "^1 ", Weapon_SuicideMessage(type), "\n");
 		}
@@ -2096,11 +2102,9 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		if (stof(s2) > 2) // killcount > 2
 			print ("^1",s1,"^1 ended it all after a ",s2," kill spree\n");
 	} else if(msg == MSG_KILL) {
-		print("deathtype: ", ftos(type), "\n");
-
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			HUD_KillNotify_Push(s1, s2, w);
+			HUD_KillNotify_Push(s2, s1, w);
 			if (!HUD_Panel_CheckActive(4) || cvar("hud_notify_print"))
 				print("^1", s1, "^1 ", Weapon_KillMessage(type), "\n");
 		}
@@ -2267,7 +2271,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 				print ("^1",s1, "^1 needs a restart\n");
 			else
 				print ("^1",s1, "^1 died\n");
-		}
+	}
 	} else if(msg == MSG_KILL_ACTION_SPREE) {
 		if(cvar("cl_gentle"))
 			print ("^1",s1,"^1 needs a restart after a ",s2," scoring spree\n");
@@ -2336,14 +2340,32 @@ void HUD_Notify (void)
 		mySize -= '2 2 0' * padding;
 	}
 
-	float entries;
-	entries = 4 * mySize_y/mySize_x;
+	float entries, height;
+	entries = 8 * mySize_y/mySize_x;
+	height = mySize_y/entries;
+	
+	vector fontsize;
+	fontsize = '0.33 0.33 0' * height;
+
+	float a;
+	float when;
+	when = 5;
+	float fadetime;
+	fadetime = 2;
+
 	float i;
 	for(i = 0; i <= entries; ++i)
 	{
-		drawcolorcodedstring(pos + eY * i * (mySize_y/entries),killnotify_attackers[i], '1 1 0' * (mySize_y/entries), hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(pos + eX * 0.35 * mySize_x + eY * i * (mySize_y/entries),ftos(killnotify_weapons[i]), '1 1 0' * (mySize_y/entries), hud_alpha_fg, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(pos + eX * 0.75 * mySize_x + eY * i * (mySize_y/entries),killnotify_victims[i], '1 1 0' * (mySize_y/entries), hud_alpha_fg, DRAWFLAG_NORMAL);
+		a = bound(0, when + (fadetime - (time - killnotify_times[i]))/fadetime, 1);
+		drawcolorcodedstring(pos + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[i], 0.5 * mySize_x - height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + eY * 0.33 * height + eX * 0.5 * mySize_x + eX * height + eY * i * height, textShortenToWidth(killnotify_victims[i], 0.5 * mySize_x - height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		
+		if(WEP_VALID(killnotify_deathtype[i]))
+		{
+			self = get_weaponinfo(killnotify_deathtype[i]);
+			drawpic_skin(pos + eX * 0.5 * mySize_x - eX * (mySize_y/entries) + eY * i * (mySize_y/entries), strcat("weapon", self.netname), '2 1 0' * (mySize_y/entries), '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
+		}
+		else if(killnotify_deathtype[i] == DEATH_KILL)
 	}
 	/* This will come later.
 	string s;
