@@ -2033,11 +2033,11 @@ string Weapon_KillMessage(float deathtype)
 		case 2:
 			return "was gunned by";
 		case 3:
-			if(id & HITTYPE_SECONDARY)
+			if(deathtype & HITTYPE_SECONDARY)
 				return "was sniped by";
 			return "was riddled full of holes by";
 		case 4:
-			if(id & HITTYPE_BOUNCE)
+			if(deathtype & HITTYPE_BOUNCE)
 				return "didn't see #'s grenade";
 			return "almost dodged #'s grenade";
 	}
@@ -2065,12 +2065,12 @@ void HUD_KillNotify_Push(string attacker, string victim, float wpn)
 
 void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 {
+	float w;
 	if(msg == MSG_SUICIDE) {
 		// TODO: cl_gentle
 		// TODO: way of finding out secondary?
 		print("deathtype: ", ftos(type), "\n");
 
-		float w;
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
 			HUD_KillNotify_Push(s1, "", w);
@@ -2098,7 +2098,6 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 	} else if(msg == MSG_KILL) {
 		print("deathtype: ", ftos(type), "\n");
 
-		float w;
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
 			HUD_KillNotify_Push(s1, s2, w);

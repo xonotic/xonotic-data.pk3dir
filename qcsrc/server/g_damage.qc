@@ -253,7 +253,7 @@ void Send_KillNotification (string s1, string s2, string s3, float msg, float ty
 	WriteString(MSG_ALL, s1);
 	WriteString(MSG_ALL, s2);
 	WriteString(MSG_ALL, s3);
-	WriteByte(MSG_ALL, msg);
+	WriteShort(MSG_ALL, msg);
 	WriteByte(MSG_ALL, type);
 }
 
