@@ -1999,9 +1999,12 @@ void HUD_HealthArmor(void)
 // Notification area (#4)
 //
 
-string Weapon_SuicideMessage(float id)
+string Weapon_SuicideMessage(float deathtype)
 {
-	switch (id)
+	float w;
+	w = DEATH_WEAPONOF(deathtype);
+
+	switch (w)
 	{
 		case 1:
 			return "lasered himself to hell";
@@ -2010,17 +2013,20 @@ string Weapon_SuicideMessage(float id)
 		case 3:
 			return "did the impossible";
 		case 4:
-			if(id & HITTYPE_SECONDARY)
+			if(deathtype & HITTYPE_SECONDARY)
 				return "tried out his own grenade";
 			return "detonated";
 	}
 	// TODO: was blasted by?
-	return strcat("[no kill message for weapon ", ftos(id), "!]");
+	return strcat("[no kill message for weapon ", ftos(w), "!]");
 }
 
-string Weapon_KillMessage(float id)
+string Weapon_KillMessage(float deathtype)
 {
-	switch (id)
+	float w;
+	w = DEATH_WEAPONOF(deathtype);
+
+	switch (w)
 	{
 		case 1:
 			return "was lasered to death by";
@@ -2035,7 +2041,7 @@ string Weapon_KillMessage(float id)
 				return "didn't see #'s grenade";
 			return "almost dodged #'s grenade";
 	}
-	return strcat("[no suicide message for weapon ", ftos(id), "!]");
+	return strcat("[no suicide message for weapon ", ftos(w), "!]");
 }
 
 float killnotify_times[10];
@@ -2062,10 +2068,14 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 	if(msg == MSG_SUICIDE) {
 		// TODO: cl_gentle
 		// TODO: way of finding out secondary?
-		if(type == DEATH_WEAPON) {
-			HUD_KillNotify_Push(s1, "", stof(s3));
+		print("deathtype: ", ftos(type), "\n");
+
+		float w;
+		w = DEATH_WEAPONOF(type);
+		if(WEP_VALID(w)) {
+			HUD_KillNotify_Push(s1, "", w);
 			if (!HUD_Panel_CheckActive(4) || cvar("hud_notify_print"))
-				print("^1", s1, "^1 ", Weapon_SuicideMessage(stof(s2)), "\n");
+				print("^1", s1, "^1 ", Weapon_SuicideMessage(type), "\n");
 		}
 		else if (type == DEATH_KILL)
 			print ("^1",s1, "^1 couldn't take it anymore\n");
@@ -2086,7 +2096,16 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		if (stof(s2) > 2) // killcount > 2
 			print ("^1",s1,"^1 ended it all after a ",s2," kill spree\n");
 	} else if(msg == MSG_KILL) {
-		if(type == KILL_TEAM || type == KILL_TEAM_SPREE) {
+		print("deathtype: ", ftos(type), "\n");
+
+		float w;
+		w = DEATH_WEAPONOF(type);
+		if(WEP_VALID(w)) {
+			HUD_KillNotify_Push(s1, s2, w);
+			if (!HUD_Panel_CheckActive(4) || cvar("hud_notify_print"))
+				print("^1", s1, "^1 ", Weapon_KillMessage(type), "\n");
+		}
+		else if(type == KILL_TEAM || type == KILL_TEAM_SPREE) {
 				if(cvar("cl_gentle")) {
 					print ("^1", s1, "^1 took action against a team mate\n");
 				} else {
@@ -2107,11 +2126,6 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		}
 		else if(type == KILL_FIRST_BLOOD)
 			print("^1",s1, "^1 drew first blood", "\n");
-		else if (type == DEATH_WEAPON) {
-			HUD_KillNotify_Push(s1, s2, stof(s3));
-			if (!HUD_Panel_CheckActive(4) || cvar("hud_notify_print"))
-				print("^1", s1, "^1 ", Weapon_KillMessage(stof(s3)), "\n");
-		}
 		else if (type == DEATH_TELEFRAG)
 			print ("^1",s1, "^1 was telefragged by ", s2, "\n");
 		else if (type == DEATH_DROWN)

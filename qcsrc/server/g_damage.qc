@@ -363,14 +363,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			}
 			*/
 
-			w = DEATH_WEAPONOF(deathtype);
-			bprint("deathtype: ", ftos(deathtype), "\n");
-			if(WEP_VALID(w))
-			{
-				msg = ftos(deathtype);
-				deathtype = DEATH_WEAPON;
-			}
-
 			// TODO: wut is this?
 			// givefrags for logging apparently?
 			if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
@@ -531,16 +523,10 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					*/
 
 					//w = DEATH_WEAPONOF(deathtype);
-					bprint("deathtype: ", ftos(deathtype), "\n");
-					if(WEP_VALID(w))
-					{
-						deathtype = DEATH_WEAPON;
-					}
 
-					msg = a;
 					if (deathtype == DEATH_CUSTOM)
 						msg = strcat(deathmessage, " by ^1", msg);
-					Send_KillNotification(s, msg, ftos(w), deathtype, MSG_KILL);
+					Send_KillNotification(s, a, msg, deathtype, MSG_KILL);
 				//}
 
 				if(g_ctf && targ.flagcarried)
