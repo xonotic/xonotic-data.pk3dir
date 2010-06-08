@@ -195,11 +195,11 @@ void HUD_UpdateTeamPos(entity Team)
 
 void Cmd_HUD_Help(float argc)
 {
-	print("You can modify the scoreboard using the ^2hud_columns_set command.\n");
+	print("You can modify the scoreboard using the ^2scoreboard_columns_set command.\n");
 	print("^3|---------------------------------------------------------------|\n");
 	print("Usage:\n");
-	print("^2hud_columns_set default\n");
-	print("^2hud_columns_set ^7filed1 field2 ...\n");
+	print("^2scoreboard_columns_set default\n");
+	print("^2scoreboard_columns_set ^7filed1 field2 ...\n");
 	print("The following field names are recognized (case insensitive):\n");
 	print("You can use a ^3|^7 to start the right-aligned fields.\n\n");
 
@@ -237,7 +237,7 @@ void Cmd_HUD_Help(float argc)
 	print("The special game type names 'teams' and 'noteams' can be used to\n");
 	print("include/exclude ALL teams/noteams game modes.\n\n");
 
-	print("Example: hud_columns_set name ping pl | +ctf/field3 -dm/field4\n");
+	print("Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n");
 	print("will display name, ping and pl aligned to the left, and the fields\n");
 	print("right of the vertical bar aligned to the right.\n");
 	print("'field3' will only be shown in CTF, and 'field4' will be shown in all\n");
@@ -266,7 +266,7 @@ void Cmd_HUD_SetFields(float argc)
 
 	// TODO: re enable with gametype dependant cvars?
 	if(argc < 2) // no arguments provided
-		argc = tokenizebyseparator(strcat("x ", cvar_string("hud_columns")), " ");
+		argc = tokenizebyseparator(strcat("x ", cvar_string("scoreboard_columns")), " ");
 
 	if(argc < 2)
 		argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
@@ -623,9 +623,9 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
 
 	if((rgb == '1 1 1') && (!is_spec)) {
-		rgb_x = cvar("hud_color_bg_r") + 0.5;
-		rgb_y = cvar("hud_color_bg_g") + 0.5;
-		rgb_z = cvar("hud_color_bg_b") + 0.5; }
+		rgb_x = cvar("scoreboard_color_bg_r") + 0.5;
+		rgb_y = cvar("scoreboard_color_bg_g") + 0.5;
+		rgb_z = cvar("scoreboard_color_bg_b") + 0.5; }
 
 	// Layout:
 	tmp_x = sbwidth;
@@ -892,7 +892,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float fontsize = 40 * 1/3;
 	float weapon_cnt = 12;
 	float rows;
-	if(cvar("hud_accuracy_doublerows"))
+	if(cvar("scoreboard_accuracy_doublerows"))
 		rows = 2;
 	else
 		rows = 1;
@@ -1001,9 +1001,9 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	float is_spec;
 	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
 	vector hl_rgb;
-		hl_rgb_x = cvar("hud_color_bg_r") + 0.5;
-		hl_rgb_y = cvar("hud_color_bg_g") + 0.5;
-		hl_rgb_z = cvar("hud_color_bg_b") + 0.5;
+		hl_rgb_x = cvar("scoreboard_color_bg_r") + 0.5;
+		hl_rgb_y = cvar("scoreboard_color_bg_g") + 0.5;
+		hl_rgb_z = cvar("scoreboard_color_bg_b") + 0.5;
 
 	pos_y += hud_fontsize_y;
 	drawstring(pos, strcat("Rankings"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
@@ -1124,9 +1124,9 @@ void HUD_DrawScoreboard()
 	}
 	else
 	{
-		rgb_x = cvar("hud_color_bg_r");
-		rgb_y = cvar("hud_color_bg_g");
-		rgb_z = cvar("hud_color_bg_b");
+		rgb_x = cvar("scoreboard_color_bg_r");
+		rgb_y = cvar("scoreboard_color_bg_g");
+		rgb_z = cvar("scoreboard_color_bg_b");
 
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
@@ -1148,7 +1148,7 @@ void HUD_DrawScoreboard()
 		}
 		pos = HUD_DrawScoreboardRankings(pos, pl, rgb, bg_size);
 	}
-	else if(cvar("hud_accuracy") && spectatee_status != -1) {
+	else if(cvar("scoreboard_accuracy") && spectatee_status != -1) {
 		if(teamplay)
 			pos = HUD_DrawScoreboardAccuracyStats(pos, GetTeamRGB(myteam), bg_size);
 		else

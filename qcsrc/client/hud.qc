@@ -2398,17 +2398,30 @@ void HUD_Notify (void)
 
 	float a;
 	float when;
-	when = 5;
+	when = cvar("hud_notify_time");
 	float fadetime;
-	fadetime = 2;
+	fadetime = cvar("hud_notify_fadetime");
 
 	string s;
 
 	float i;
 	for(i = 0; i < entries; ++i)
 	{
-		a = bound(0, when + (fadetime - (time - killnotify_times[i]))/fadetime, 1);
-		
+		if(fadetime)
+		{
+			if(killnotify_times[i] + when > time)
+				a = 1;
+			else
+				a = bound(0, (killnotify_times[i] + when + fadetime - time) / fadetime, 1);
+		}
+		else
+		{
+			if(killnotify_times[i] + when > time)
+				a = 1;
+			else
+				a = 0;
+		}
+
 		// X [did action to] Y
 		if(WEP_VALID(killnotify_deathtype[i]))
 		{

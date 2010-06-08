@@ -113,7 +113,7 @@ void CSQC_Init(void)
 	}
 #endif
 	registercvar("hud_usecsqc", "1");
-	registercvar("hud_columns", "default", CVAR_SAVE);
+	registercvar("scoreboard_columns", "default", CVAR_SAVE);
 
 	gametype = 0;
 
@@ -342,7 +342,7 @@ void TrueAim_Init();
 void PostInit(void)
 {
 	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
-	localcmd(strcat("\nhud_columns_set ", cvar_string("hud_columns"), ";\n"));
+	localcmd(strcat("\nscoreboard_columns_set ", cvar_string("scoreboard_columns"), ";\n"));
 
 	entity playerchecker;
 	playerchecker = spawn();
@@ -523,8 +523,8 @@ void GameCommand(string msg)
 	{
 		print("Usage: cl_cmd COMMAND..., where possible commands are:\n");
 		print("  settemp cvar value\n");
-		print("  hud_columns_set ...\n");
-		print("  hud_columns_help\n");
+		print("  scoreboard_columns_set ...\n");
+		print("  scoreboard_columns_help\n");
 		GameCommand_Generic("help");
 		return;
 	}
@@ -540,10 +540,10 @@ void GameCommand(string msg)
 	else if(cmd == "settemp") {
 		cvar_clientsettemp(argv(1), argv(2));
 	}
-	else if(cmd == "hud_columns_set") {
+	else if(cmd == "scoreboard_columns_set") {
 		Cmd_HUD_SetFields(argc);
 	}
-	else if(cmd == "hud_columns_help") {
+	else if(cmd == "scoreboard_columns_help") {
 		Cmd_HUD_Help(argc);
 	}
 #ifdef BLURTEST
