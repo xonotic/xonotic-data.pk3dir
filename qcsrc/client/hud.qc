@@ -2404,71 +2404,76 @@ void HUD_Notify (void)
 
 	string s;
 
-	float i;
-	for(i = 0; i < entries; ++i)
+	float i, j;
+	for(j = 0; j < entries; ++j)
 	{
+		if(cvar("hud_notify_flip"))
+			i = j;
+		else // rather nasty hack for ordering items from the bottom up
+			i = entries - j - 1;
+
 		if(fadetime)
 		{
-			if(killnotify_times[i] + when > time)
+			if(killnotify_times[j] + when > time)
 				a = 1;
 			else
-				a = bound(0, (killnotify_times[i] + when + fadetime - time) / fadetime, 1);
+				a = bound(0, (killnotify_times[j] + when + fadetime - time) / fadetime, 1);
 		}
 		else
 		{
-			if(killnotify_times[i] + when > time)
+			if(killnotify_times[j] + when > time)
 				a = 1;
 			else
 				a = 0;
 		}
 
 		// X [did action to] Y
-		if(WEP_VALID(killnotify_deathtype[i]))
+		if(WEP_VALID(killnotify_deathtype[j]))
 		{
-			self = get_weaponinfo(killnotify_deathtype[i]);
+			self = get_weaponinfo(killnotify_deathtype[j]);
 			drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.5 * height + eY * 0.25 * height + eY * i * height, strcat("weapon", self.netname), '1 0.5 0' * height, '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
-			drawcolorcodedstring(pos + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[i], 0.5 * mySize_x - 0.5 * height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
-			drawcolorcodedstring(pos + eY * 0.33 * height + eX * 0.5 * mySize_x + eX * 0.5 * height + eY * i * height, textShortenToWidth(killnotify_victims[i], 0.5 * mySize_x - 0.5 * height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[j], 0.5 * mySize_x - 0.5 * height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eY * 0.33 * height + eX * 0.5 * mySize_x + eX * 0.5 * height + eY * i * height, textShortenToWidth(killnotify_victims[j], 0.5 * mySize_x - 0.5 * height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
-		else if(killnotify_deathtype[i] == DEATH_FALL)
+		else if(killnotify_deathtype[j] == DEATH_FALL)
 		{
 			drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.5 * height + eY * 0.25 * height + eY * i * height, "notify_pushoffedge", '1 0.5 0' * height, '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);	
-			drawcolorcodedstring(pos + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[i], 0.5 * mySize_x - 0.5 * height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
-			drawcolorcodedstring(pos + eY * 0.33 * height + eX * 0.5 * mySize_x + eX * 0.5 * height + eY * i * height, textShortenToWidth(killnotify_victims[i], 0.5 * mySize_x - 0.5 * height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[j], 0.5 * mySize_x - 0.5 * height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eY * 0.33 * height + eX * 0.5 * mySize_x + eX * 0.5 * height + eY * i * height, textShortenToWidth(killnotify_victims[j], 0.5 * mySize_x - 0.5 * height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
 
 		// Y [used by] X
-		else if(killnotify_deathtype[i] == DEATH_KILL)
+		else if(killnotify_deathtype[j] == DEATH_KILL)
 		{
 			drawpic_skin(pos + eY * 0.25 * height + eY * i * height, "notify_selfkill", '1 0.5 0' * height, '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);	
-			drawcolorcodedstring(pos + eX * height + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[i], mySize_x - height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * height + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[j], mySize_x - height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
-		else if(killnotify_deathtype[i] == INFO_GOTFLAG)
+		else if(killnotify_deathtype[j] == INFO_GOTFLAG)
 		{
-			if(killnotify_victims[i] == "^1RED^7 flag")
+			if(killnotify_victims[j] == "^1RED^7 flag")
 				s = "red";
 			else
 				s = "blue";
 			drawpic_skin(pos + eY * i * height, strcat("flag_", s, "_carrying"), '1 1 0' * height, '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);	
-			drawcolorcodedstring(pos + eX * height + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[i], mySize_x - height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * height + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[j], mySize_x - height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
-		else if(killnotify_deathtype[i] == INFO_RETURNFLAG)
+		else if(killnotify_deathtype[j] == INFO_RETURNFLAG)
 		{
-			if(killnotify_victims[i] == "^1RED^7 flag")
+			if(killnotify_victims[j] == "^1RED^7 flag")
 				s = "red";
 			else
 				s = "blue";
 			drawpic_skin(pos + eY * i * height, strcat("flag_", s, "_taken"), '1 1 0' * height, '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);	
-			drawcolorcodedstring(pos + eX * height + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[i], mySize_x - height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * height + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[j], mySize_x - height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
-		else if(killnotify_deathtype[i] == INFO_LOSTFLAG)
+		else if(killnotify_deathtype[j] == INFO_LOSTFLAG)
 		{
-			if(killnotify_victims[i] == "^1RED^7 flag")
+			if(killnotify_victims[j] == "^1RED^7 flag")
 				s = "red";
 			else
 				s = "blue";
 			drawpic_skin(pos + eY * i * height, strcat("flag_", s, "_lost"), '1 1 0' * height, '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);	
-			drawcolorcodedstring(pos + eX * height + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[i], mySize_x - height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * height + eY * 0.33 * height + eY * i * height, textShortenToWidth(killnotify_attackers[j], mySize_x - height, fontsize, stringwidth_colors), fontsize, hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
 	}
 	/* This will come later.
