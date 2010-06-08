@@ -661,6 +661,10 @@ vector HUD_Panel_GetMinSize(float id)
 			if(cvar("hud_healtharmor") == 2)
 				mySize_y = 0.23; // 0.23 * width, trial and error...
 			break;
+		case 4: 
+			mySize_x = 0.8; // 8/10 * height, as panel cant support more than 10 entries...
+			mySize_y = 1/8; // 1/8 * width
+			break;
 		case 5: 
 			mySize_y = 1/4.1; // 1/4.1 * width, trial and error...
 			break;
@@ -2386,7 +2390,7 @@ void HUD_Notify (void)
 	}
 
 	float entries, height;
-	entries = 8 * mySize_y/mySize_x;
+	entries = bound(1, floor(8 * mySize_y/mySize_x), 10);
 	height = mySize_y/entries;
 	
 	vector fontsize;
@@ -2401,7 +2405,7 @@ void HUD_Notify (void)
 	string s;
 
 	float i;
-	for(i = 0; i <= entries; ++i)
+	for(i = 0; i < entries; ++i)
 	{
 		a = bound(0, when + (fadetime - (time - killnotify_times[i]))/fadetime, 1);
 		
