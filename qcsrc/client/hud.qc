@@ -630,6 +630,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_flip ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_flip"))), "\n"));
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_mirror ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_mirror"))), "\n"));
 					break;
+				case 4:
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_flip ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_flip"))), "\n"));
+					break;
 				case 9:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_alreadyvoted_alpha ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_alreadyvoted_alpha"))), "\n"));
 					break;
