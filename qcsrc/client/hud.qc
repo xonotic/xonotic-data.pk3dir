@@ -2001,47 +2001,16 @@ void HUD_HealthArmor(void)
 
 string Weapon_SuicideMessage(float deathtype)
 {
-	float w;
-	w = DEATH_WEAPONOF(deathtype);
-
-	switch (w)
-	{
-		case 1:
-			return "lasered himself to hell";
-		case 2:
-			return "did the impossible";
-		case 3:
-			return "did the impossible";
-		case 4:
-			if(deathtype & HITTYPE_SECONDARY)
-				return "tried out his own grenade";
-			return "detonated";
-	}
-	// TODO: was blasted by?
-	return strcat("[no kill message for weapon ", ftos(w), "!]");
+	w_deathtype = deathtype;
+	get_weaponinfo(DEATH_WEAPONOF(deathtype)).weapon_func(WR_SUICIDEMESSAGE);
+	return w_deathtypestring;
 }
 
 string Weapon_KillMessage(float deathtype)
 {
-	float w;
-	w = DEATH_WEAPONOF(deathtype);
-
-	switch (w)
-	{
-		case 1:
-			return "was lasered to death by";
-		case 2:
-			return "was gunned by";
-		case 3:
-			if(deathtype & HITTYPE_SECONDARY)
-				return "was sniped by";
-			return "was riddled full of holes by";
-		case 4:
-			if(deathtype & HITTYPE_BOUNCE)
-				return "didn't see #'s grenade";
-			return "almost dodged #'s grenade";
-	}
-	return strcat("[no suicide message for weapon ", ftos(w), "!]");
+	w_deathtype = deathtype;
+	get_weaponinfo(DEATH_WEAPONOF(deathtype)).weapon_func(WR_KILLMESSAGE);
+	return w_deathtypestring;
 }
 
 float killnotify_times[10];

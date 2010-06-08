@@ -351,6 +351,36 @@ float w_fireball(float req)
 		return self.ammo_fuel >= cvar("g_balance_fireball_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_fuel >= cvar("g_balance_fireball_secondary_ammo");
+	else if (req == WR_RESETPLAYER)
+	{
+		self.fireball_primarytime = time;
+	}
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_fireball(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			// firemine goes out silently
+		}
+		else
+		{
+			org2 = w_org + w_backoff * 16;
+			pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/fireball_impact.wav");
+		precache_sound("weapons/fireball_impact2.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
@@ -385,36 +415,6 @@ float w_fireball(float req)
 			else
 				w_deathtypestring = "tasted #'s fireball";
 		}
-	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.fireball_primarytime = time;
-	}
-	return TRUE;
-};
-#endif
-#ifdef CSQC
-float w_fireball(float req)
-{
-	if(req == WR_IMPACTEFFECT)
-	{
-		vector org2;
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			// firemine goes out silently
-		}
-		else
-		{
-			org2 = w_org + w_backoff * 16;
-			pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
-			if(!w_issilent)
-				sound(self, CHAN_PROJECTILE, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
-		}
-	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/fireball_impact.wav");
-		precache_sound("weapons/fireball_impact2.wav");
 	}
 	return TRUE;
 }

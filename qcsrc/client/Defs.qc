@@ -248,3 +248,11 @@ float ticrate;
 // only for Porto
 float angles_held_status;
 vector angles_held;
+
+// weapons
+.float silent;
+
+float w_deathtype, w_issilent, w_random;
+string w_deathtypestring;
+vector w_org, w_backoff;
+
