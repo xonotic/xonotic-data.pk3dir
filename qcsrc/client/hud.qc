@@ -2131,23 +2131,39 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 			print("^1",s1, "^1 drew first blood", "\n");
 		else if (type == DEATH_TELEFRAG)
 			print ("^1",s1, "^1 was telefragged by ", s2, "\n");
-		else if (type == DEATH_DROWN)
+		else if (type == DEATH_DROWN) {
+			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
 			print ("^1",s1, "^1 was drowned by ", s2, "\n");
-		else if (type == DEATH_SLIME)
+		}
+		else if (type == DEATH_SLIME) {
+			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
 			print ("^1",s1, "^1 was slimed by ", s2, "\n");
-		else if (type == DEATH_LAVA)
+		}
+		else if (type == DEATH_LAVA) {
+			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
 			print ("^1",s1, "^1 was cooked by ", s2, "\n");
-		else if (type == DEATH_FALL)
+		}
+		else if (type == DEATH_FALL) {
+			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
 			print ("^1",s1, "^1 was grounded by ", s2, "\n");
-		else if (type == DEATH_SHOOTING_STAR)
+		}
+		else if (type == DEATH_SHOOTING_STAR) {
+			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
 			print ("^1",s1, "^1 was shot into space by ", s2, "\n");
-		else if (type == DEATH_SWAMP)
+		}
+		else if (type == DEATH_SWAMP) {
+			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
 			print ("^1",s1, "^1 was conserved by ", s2, "\n");
-		// TODO
-		/*else if (type == DEATH_HURTTRIGGER && inflictor.msg2 != "")
+		}
+		else if (type == DEATH_HURTTRIGGER && s3 != "")
 		{
-			print("^1", s1, "^1 ", s2, "^1", s3, "\n");
-		}*/
+			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
+			// p ?!?! :o
+			//if(p < 0)
+				print("^1", s1, "^1 ", s3, " ", s2, "\n");
+			//else
+			//	bprint("^1", s1, "^1 ", substring(s3, 0, p), s2, "^1", substring(s3, p+1, strlen(s3) - (p+1)), "\n");
+		}
 		else if(type == DEATH_SBCRUSH)
 			print ("^1",s1, "^1 was crushed by ^1", s2, "\n");
 		else if(type == DEATH_SBMINIGUN)
@@ -2224,6 +2240,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 				print (s1,"^7 unleashes ^1ARMAGEDDON!\n");
 		}
 	} else if(msg == MSG_KILL_ACTION) { // wtf is this? isnt it basically the same as MSG_SUICIDE?
+		HUD_KillNotify_Push(s1, "", DEATH_KILL);
 		if (type == DEATH_DROWN) {
 			if(cvar("cl_gentle"))
 				print ("^1",s1, "^1 was in the water for too long\n");
@@ -2273,6 +2290,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 				print ("^1",s1, "^1 died\n");
 	}
 	} else if(msg == MSG_KILL_ACTION_SPREE) {
+		HUD_KillNotify_Push(s1, "", DEATH_KILL);
 		if(cvar("cl_gentle"))
 			print ("^1",s1,"^1 needs a restart after a ",s2," scoring spree\n");
 		else
@@ -2366,6 +2384,13 @@ void HUD_Notify (void)
 			drawpic_skin(pos + eX * 0.5 * mySize_x - eX * (mySize_y/entries) + eY * i * (mySize_y/entries), strcat("weapon", self.netname), '2 1 0' * (mySize_y/entries), '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);
 		}
 		else if(killnotify_deathtype[i] == DEATH_KILL)
+		{
+			drawpic_skin(pos + eX * 0.5 * mySize_x - eX * (mySize_y/entries) + eY * i * (mySize_y/entries), "notify_selfkill", '2 1 0' * (mySize_y/entries), '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);	
+		}
+		else if(killnotify_deathtype[i] == DEATH_FALL)
+		{
+			drawpic_skin(pos + eX * 0.5 * mySize_x - eX * (mySize_y/entries) + eY * i * (mySize_y/entries), "notify_pushoffedge", '2 1 0' * (mySize_y/entries), '1 1 1', hud_alpha_fg * a, DRAWFLAG_NORMAL);	
+		}
 	}
 	/* This will come later.
 	string s;
