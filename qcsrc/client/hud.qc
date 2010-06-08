@@ -2300,45 +2300,88 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 
 #define DAMAGE_CENTERPRINT_SPACER NEWLINES
 
-void HUD_Centerprint(string s1, float type)
+void HUD_Centerprint(string s1, float type, float msg)
 {
-	if (type == DEATH_TEAMCHANGE) {
-		centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", s1));
-	} else if (type == DEATH_AUTOTEAMCHANGE) {
-		centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "You have been moved into a different team to improve team balance\nYou are now on: ", s1));
-	} else if (type == DEATH_CAMP) {
-		if(cvar("cl_gentle"))
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Reconsider your tactics, camper!"));
-		else
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Die camper!"));
-	} else if (type == DEATH_NOAMMO) {
-		if(cvar("cl_gentle"))
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You are reinserted into the game for running out of ammo..."));
-		else
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were killed for running out of ammo..."));
-	} else if (type == DEATH_ROT) {
-		if(cvar("cl_gentle"))
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to preserve your health"));
-		else
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You grew too old without taking your medicine"));
-	} else if (type == DEATH_MIRRORDAMAGE) {
-		if(cvar("cl_gentle"))
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't go against team mates!"));
-		else
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't shoot your team mates!"));
-	} else if (type == DEATH_QUIET) {
-		// do nothing
-	} else if (type == DEATH_KILL) {
-		if(cvar("cl_gentle"))
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to be more careful!"));
-		else
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You killed your own dumb self!"));
-	} else if (type == KILL_TEAM) {
-		if(cvar("cl_gentle")) {
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You went against a team mate!"));
-		} else {
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You fragged ", s1, ", a team mate!"));
+	if(msg == MSG_SUICIDE) {
+		if (type == DEATH_TEAMCHANGE) {
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", s1));
+		} else if (type == DEATH_AUTOTEAMCHANGE) {
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "You have been moved into a different team to improve team balance\nYou are now on: ", s1));
+		} else if (type == DEATH_CAMP) {
+			if(cvar("cl_gentle"))
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Reconsider your tactics, camper!"));
+			else
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Die camper!"));
+		} else if (type == DEATH_NOAMMO) {
+			if(cvar("cl_gentle"))
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You are reinserted into the game for running out of ammo..."));
+			else
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were killed for running out of ammo..."));
+		} else if (type == DEATH_ROT) {
+			if(cvar("cl_gentle"))
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to preserve your health"));
+			else
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You grew too old without taking your medicine"));
+		} else if (type == DEATH_MIRRORDAMAGE) {
+			if(cvar("cl_gentle"))
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't go against team mates!"));
+			else
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't shoot your team mates!"));
+		} else if (type == DEATH_QUIET) {
+			// do nothing
+		} else if (type == DEATH_KILL) {
+			if(cvar("cl_gentle"))
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to be more careful!"));
+			else
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You killed your own dumb self!"));
 		}
+	} else if(msg == MSG_KILL) {
+		if (type == KILL_TEAM) {
+			if(cvar("cl_gentle")) {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You went against a team mate!"));
+			} else {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You fragged ", s1, ", a team mate!"));
+			}
+		} else if (type == KILL_FIRST_BLOOD) {
+			if(cvar("cl_gentle")) {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1First score"));
+			} else {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1First blood"));
+			}
+		} else if (type == KILL_FIRST_VICTIM) {
+			if(cvar("cl_gentle")) {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1First casualty"));
+			} else {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1First victim"));
+			}
+		} else if (type == KILL_TYPEFRAG) {
+			if(cvar("cl_gentle")) {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You scored against ^7", s1, "^7 who was typing!"));
+			} else {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You typefragged ^7", s1));
+			}
+		} else if (type == KILL_TYPEFRAGGED) {
+			if(cvar("cl_gentle")) {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were scored against by ^7", s1, "^7 while you were typing!"));
+			} else {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were typefragged by ^7", s1));
+			}
+		} else if (type == KILL_FRAG) {
+			if(cvar("cl_gentle")) {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You scored against ^7", s1));
+			} else {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You fragged ^7", s1));
+			}
+		} else if (type == KILL_FRAGGED) {
+			if(cvar("cl_gentle")) {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You were scored against by ^7", s1));
+			} else {
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You were fragged by ^7", s1));
+			}
+		}
+	} else if(msg == MSG_KILL_ACTION) {
+		// TODO: invent more centerprints here?
+		centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Watch your step!", s1));
 	}
 }
 

@@ -1250,7 +1250,7 @@ void Net_Notify() {
 	}
 	else if(type == CSQC_CENTERPRINT)
 	{
-		HUD_Centerprint(ReadString(), ReadByte());
+		HUD_Centerprint(ReadString(), ReadShort(), ReadByte());
 	}
 }
 
