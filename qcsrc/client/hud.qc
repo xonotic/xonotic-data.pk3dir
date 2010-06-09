@@ -824,10 +824,8 @@ float HUD_Panel_GetPadding(float id)
 }
 
 // draw the background/borders
-void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
+void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
 {
-	float alpha;
-
 	if(!hud_configure && cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg")) == "0")
 		return;
 
@@ -838,7 +836,6 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 
 	if(bg == "0" && hud_configure) {
 		bg = "border"; // we probably want to see a background in config mode at all times...
-		alpha = cvar("hud_configure_bg_minalpha");
 	}
 
 	if(bg != "0")
@@ -851,6 +848,9 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize)
 
 		if(!alpha)
 			alpha = HUD_Panel_GetAlpha(id);
+
+		if(hud_configure)
+			alpha = max(cvar("hud_configure_bg_minalpha"), alpha);
 
 		draw_BorderPicture(pos - '1 1 0' * border, strcat("gfx/hud/", cvar_string("hud_skin"), "/", bg), mySize + '1 1 0' * 2 * border, color, alpha, '1 1 0' * (border/BORDER_MULTIPLIER));
 	}
@@ -1326,7 +1326,7 @@ void HUD_WeaponIcons()
 	}
 	heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
@@ -1456,7 +1456,7 @@ void HUD_Inventory()
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
@@ -1553,7 +1553,7 @@ void HUD_Powerups() {
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
@@ -1764,7 +1764,7 @@ void HUD_HealthArmor(void)
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
@@ -2395,7 +2395,7 @@ void HUD_Notify (void)
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
@@ -2619,7 +2619,7 @@ void HUD_Timer()
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
@@ -2678,7 +2678,7 @@ void HUD_Radar(void)
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
@@ -2804,7 +2804,7 @@ void HUD_Score()
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
@@ -2952,7 +2952,7 @@ void HUD_RaceTimer (void) {
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
@@ -3099,23 +3099,27 @@ void HUD_VoteWindow(void)
 	float a;
 	if(vote_active != vote_prev) {
 		vote_change = time;
-		vote_prev = bound(0, vote_active, 1);
+		vote_prev = vote_active;
 	}
 
-	if(vote_active)
+	if(vote_active || hud_configure)
 		vote_alpha = bound(0, (time - vote_change) * 2, 1);
 	else
 		vote_alpha = bound(0, 1 - (time - vote_change) * 2, 1);
 
 	if(hud_configure)
 	{
-		vote_alpha = 1;
 		vote_yescount = 3;
 		vote_nocount = 2;
 		vote_needed = 4;
 	}
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	if(!vote_alpha)
+		return;
+
+	a = vote_alpha * bound(cvar_or("hud_vote_alreadyvoted_alpha", 0.75), 1 - vote_highlighted, 1);
+
+	HUD_Panel_DrawBg(id, pos, mySize, a * hud_alpha_bg);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
@@ -3124,44 +3128,41 @@ void HUD_VoteWindow(void)
 		mySize -= '2 2 0' * padding;
 	}
 
-	if(vote_alpha) {
-		a = vote_alpha * bound(cvar_or("hud_vote_alreadyvoted_alpha", 0.75), 1 - vote_highlighted, 1);
+	drawpic_skin(pos, "voteprogress_back", mySize, '1 1 1', a * hud_alpha_bg, DRAWFLAG_NORMAL);
 
-		drawpic_skin(pos, "voteprogress_back", mySize, '1 1 1', a * hud_alpha_bg, DRAWFLAG_NORMAL);
+	s = "A vote has been called for: ";
+	drawstring(pos + '0.5 0 0' * mySize_x + '0 0.1 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/5)), s, '1 1 0' * mySize_y*(1/5), '1 1 1', a * hud_alpha_fg, DRAWFLAG_NORMAL);
+	s = textShortenToWidth(vote_called_vote, mySize_x * 0.96, '1 1 0' * mySize_y*(1/5), stringwidth_colors); // TODO: broken?
+	if(hud_configure)
+		s = "Configure the HUD";
+	drawcolorcodedstring(pos + '0.52 0 0' * mySize_x + '0 0.3 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/6)), s, '1 1 0' * mySize_y*(1/6), a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
-	        s = "A vote has been called for: ";
-		drawstring(pos + '0.5 0 0' * mySize_x + '0 0.1 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/5)), s, '1 1 0' * mySize_y*(1/5), '1 1 1', a * hud_alpha_fg, DRAWFLAG_NORMAL);
-		s = textShortenToWidth(vote_called_vote, mySize_x * 0.96, '10 0 0', stringwidth_colors); // TODO: broken?
-		if(hud_configure)
-			s = "Configure the HUD";
-		drawcolorcodedstring(pos + '0.52 0 0' * mySize_x + '0 0.3 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/6)), s, '1 1 0' * mySize_y*(1/6), a * hud_alpha_fg, DRAWFLAG_NORMAL);
+	// print the yes/no counts
+	s = strcat("Yes: ", ftos(vote_yescount));
+	drawstring(pos + '0 0.6 0' * mySize_y + '0.02 0 0' * mySize_x, s, '1 1 0' * mySize_y*(1/6) , eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+	s = strcat("No: ", ftos(vote_nocount));
+	drawstring(pos + '0 0.6 0' * mySize_y + '0.98 0 0' * mySize_x - eX * stringwidth(s, FALSE, '1 1 0' * mySize_y*(1/6)), s, '1 1 0' * mySize_y*(1/6), eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
-		// print the yes/no counts
-		s = strcat("Yes: ", ftos(vote_yescount));
-		drawstring(pos + '0 0.6 0' * mySize_y + '0.02 0 0' * mySize_x, s, '1 1 0' * mySize_y*(1/6) , eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
-		s = strcat("No: ", ftos(vote_nocount));
-		drawstring(pos + '0 0.6 0' * mySize_y + '0.98 0 0' * mySize_x - eX * stringwidth(s, FALSE, '1 1 0' * mySize_y*(1/6)), s, '1 1 0' * mySize_y*(1/6), eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+	// draw the progress bars
+	drawsetcliparea(pos_x, pos_y, mySize_x * 0.5 * (vote_yescount/vote_needed), mySize_y);
+	drawpic_skin(pos, "voteprogress_prog", mySize, eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
-		// draw the progress bars
-		drawsetcliparea(pos_x, pos_y, mySize_x * 0.5 * (vote_yescount/vote_needed), mySize_y);
-		drawpic_skin(pos, "voteprogress_prog", mySize, eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawsetcliparea(pos_x + mySize_x - mySize_x * 0.5 * (vote_nocount/vote_needed), pos_y, mySize_x * 0.5, mySize_y);
+	drawpic_skin(pos, "voteprogress_prog", mySize, eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 
-		drawsetcliparea(pos_x + mySize_x - mySize_x * 0.5 * (vote_nocount/vote_needed), pos_y, mySize_x * 0.5, mySize_y);
-		drawpic_skin(pos, "voteprogress_prog", mySize, eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
-
-		// draw the highlights
-		if(vote_highlighted == 1) {
-			drawsetcliparea(pos_x, pos_y, mySize_x * 0.5, mySize_y);
-			drawpic_skin(pos, "voteprogress_voted", mySize, eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
-		}
-		else if(vote_highlighted == 2) {
-			drawsetcliparea(pos_x + 0.5 * mySize_x, pos_y, mySize_x * 0.5, mySize_y);
-			drawpic_skin(pos, "voteprogress_voted", mySize, eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
-		}
-
-		drawresetcliparea();
+	// draw the highlights
+	if(vote_highlighted == 1) {
+		drawsetcliparea(pos_x, pos_y, mySize_x * 0.5, mySize_y);
+		drawpic_skin(pos, "voteprogress_voted", mySize, eY, a * hud_alpha_fg, DRAWFLAG_NORMAL);
 	}
-	else if(!vote_active) {
+	else if(vote_highlighted == 2) {
+		drawsetcliparea(pos_x + 0.5 * mySize_x, pos_y, mySize_x * 0.5, mySize_y);
+		drawpic_skin(pos, "voteprogress_voted", mySize, eX, a * hud_alpha_fg, DRAWFLAG_NORMAL);
+	}
+
+	drawresetcliparea();
+
+	if(!vote_active) {
 		vote_highlighted = 0;
 	}
 }
@@ -3581,7 +3582,7 @@ void HUD_ModIcons(void)
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
@@ -3610,7 +3611,7 @@ void HUD_DrawPressedKeys(void)
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
@@ -3641,7 +3642,7 @@ void HUD_Chat(void)
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
 
-	HUD_Panel_DrawBg(id, pos, mySize);
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
 	padding = HUD_Panel_GetPadding(id);
 	if(padding)
