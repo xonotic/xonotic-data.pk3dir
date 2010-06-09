@@ -19,7 +19,7 @@ void HUD_FinaleOverlay()
 	pos_y = 16;
 	pos_z = 0;*/
 
-	//drawpic(pos, "gfx/finale", '0 0 0', '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+	//drawpic(pos, "gfx/finale", '0 0 0', '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 	//drawstring(pos, "END", hud_fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 	MapVote_Draw();
@@ -1069,8 +1069,8 @@ void HUD_DrawScoreboard()
 	if not(scoreboard_fade_alpha)
 		return;
 
-	scoreboard_alpha_bg = cvar("scoreboard_alpha_bg") * scoreboard_fade_alpha;
-	scoreboard_alpha_fg = cvar_or("scoreboard_alpha_fg", 1.0) * scoreboard_fade_alpha;
+	scoreboard_alpha_bg = cvar("scoreboard_alpha_bg") * scoreboard_fade_alpha * (1 - cvar("_menu_alpha"));
+	scoreboard_alpha_fg = cvar_or("scoreboard_alpha_fg", 1.0) * scoreboard_fade_alpha * (1 - cvar("_menu_alpha"));
 	scoreboard_highlight = cvar("scoreboard_highlight");
 	scoreboard_highlight_alpha = cvar_or("scoreboard_highlight_alpha", 0.10) * scoreboard_alpha_fg;
 	scoreboard_highlight_alpha_self = cvar_or("scoreboard_highlight_alpha_self", 0.25) * scoreboard_alpha_fg;
@@ -1250,18 +1250,18 @@ void HUD_DrawScoreboard()
 
 void HUD_DrawAccuracyStats_Description_Hitscan(vector position)
 {
-	drawstring(position + '0 3 0' * hud_fontsize_y, "Shots fired:", hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
-	drawstring(position + '0 5 0' * hud_fontsize_y, "Shots hit:", hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
-	drawstring(position + '0 7 0' * hud_fontsize_y, "Accuracy:", hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
-	drawstring(position + '0 9 0' * hud_fontsize_y, "Shots missed:", hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring(position + '0 3 0' * hud_fontsize_y, "Shots fired:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 5 0' * hud_fontsize_y, "Shots hit:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 7 0' * hud_fontsize_y, "Accuracy:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 9 0' * hud_fontsize_y, "Shots missed:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void HUD_DrawAccuracyStats_Description_Splash(vector position)
 {
-	drawstring(position + '0 3 0' * hud_fontsize_y, "Maximum damage:", hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
-	drawstring(position + '0 5 0' * hud_fontsize_y, "Actual damage:", hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
-	drawstring(position + '0 7 0' * hud_fontsize_y, "Accuracy:", hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
-	drawstring(position + '0 9 0' * hud_fontsize_y, "Damage wasted:", hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring(position + '0 3 0' * hud_fontsize_y, "Maximum damage:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 5 0' * hud_fontsize_y, "Actual damage:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 7 0' * hud_fontsize_y, "Accuracy:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(position + '0 9 0' * hud_fontsize_y, "Damage wasted:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void HUD_DrawAccuracyStats()
@@ -1283,7 +1283,7 @@ void HUD_DrawAccuracyStats()
 	pos_x = 0;
 	pos_y = SCOREBOARD_OFFSET;
 	pos_z = 0;
-	drawstringcenter(pos, "Weapon Accuracy", 2 * hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+	drawstringcenter(pos, "Weapon Accuracy", 2 * hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 	left_border = col_margin + 11 * hud_fontsize_x;
 
@@ -1293,7 +1293,7 @@ void HUD_DrawAccuracyStats()
 	{
 		pos_y += 40;
 		if(mod(time, 1) >= 0.4)
-			drawstringcenter(pos, "Stats are not tracked during warmup stage", hud_fontsize, '1 1 0', hud_fg_alpha, DRAWFLAG_NORMAL);
+			drawstringcenter(pos, "Stats are not tracked during warmup stage", hud_fontsize, '1 1 0', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 		return;
 	}
@@ -1302,7 +1302,7 @@ void HUD_DrawAccuracyStats()
 	{
 		pos_y += 40;
 		if(mod(time, 1) >= 0.4)
-			drawstringcenter(pos, "Stats are not tracked in Race/CTS", hud_fontsize, '1 1 0', hud_fg_alpha, DRAWFLAG_NORMAL);
+			drawstringcenter(pos, "Stats are not tracked in Race/CTS", hud_fontsize, '1 1 0', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 		return;
 	}
@@ -1354,23 +1354,23 @@ void HUD_DrawAccuracyStats()
 				pos_y = top_border_splash + row * (fill_size_y + row_margin);
 
 				// background
-				drawpic(pos, "gfx/scoreboard/accuracy_bg", fill_size , fill_colour, hud_bg_alpha, DRAWFLAG_NORMAL);
-				drawborderlines(hud_border_thickness, pos, fill_size, border_colour, hud_bg_alpha, DRAWFLAG_NORMAL);
+				drawpic(pos, "gfx/scoreboard/accuracy_bg", fill_size , fill_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+				drawborderlines(hud_border_thickness, pos, fill_size, border_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
 				// the weapon
-				drawpic(pos, strcat("gfx/weapons/weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+				drawpic(pos, strcat("gfx/weapons/weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of shots fired or max damage
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 3 0' * hud_fontsize_y, ftos(weapon_damage), hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 3 0' * hud_fontsize_y, ftos(weapon_damage), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of hits or actual damage
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 5 0' * hud_fontsize_y, ftos(weapon_hit), hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 5 0' * hud_fontsize_y, ftos(weapon_hit), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the accuracy
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 7 0' * hud_fontsize_y, strcat(ftos(weapon_stats),"%"), hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 7 0' * hud_fontsize_y, strcat(ftos(weapon_stats),"%"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of shots missed or damage wasted
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 9 0' * hud_fontsize_y, ftos(max(0, weapon_damage - weapon_hit)), hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 9 0' * hud_fontsize_y, ftos(max(0, weapon_damage - weapon_hit)), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 				++count_splash;
 			} else if (self.spawnflags & WEP_TYPE_HITSCAN) {
@@ -1404,23 +1404,23 @@ void HUD_DrawAccuracyStats()
 				pos_y = top_border_hitscan + row * (fill_size_y + row_margin);
 
 				// background
-				drawpic(pos, "gfx/scoreboard/accuracy_bg", fill_size , fill_colour, hud_bg_alpha, DRAWFLAG_NORMAL);
-				drawborderlines(hud_border_thickness, pos, fill_size, border_colour, hud_bg_alpha, DRAWFLAG_NORMAL);
+				drawpic(pos, "gfx/scoreboard/accuracy_bg", fill_size , fill_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+				drawborderlines(hud_border_thickness, pos, fill_size, border_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
 				// the weapon
-				drawpic(pos, strcat("gfx/weapons/weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+				drawpic(pos, strcat("gfx/weapons/weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of shots fired or max damage
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 3 0' * hud_fontsize_y, ftos(weapon_damage), hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 3 0' * hud_fontsize_y, ftos(weapon_damage), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of hits or actual damage
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 5 0' * hud_fontsize_y, ftos(weapon_hit), hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 5 0' * hud_fontsize_y, ftos(weapon_hit), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the accuracy
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 7 0' * hud_fontsize_y, strcat(ftos(weapon_stats),"%"), hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 7 0' * hud_fontsize_y, strcat(ftos(weapon_stats),"%"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 				// the amount of shots missed or damage wasted
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 9 0' * hud_fontsize_y, ftos(max(0, weapon_damage - weapon_hit)), hud_fontsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 9 0' * hud_fontsize_y, ftos(max(0, weapon_damage - weapon_hit)), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 				++count_hitscan;
 			}

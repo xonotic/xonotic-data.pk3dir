@@ -3822,7 +3822,6 @@ void HUD_Reset (void)
 
 void HUD_Main (void)
 {
-	hud_bg_alpha = cvar("hud_bg_alpha") * (1 - cvar("_menu_alpha")); // this is really only useful for scoreboard, rest of hud code all use the GetAlpha function
 	hud_fg_alpha = cvar("hud_fg_alpha") * (1 - cvar("_menu_alpha"));
 
 	hud_border_thickness = bound(0, cvar("hud_border_thickness"), 5);
