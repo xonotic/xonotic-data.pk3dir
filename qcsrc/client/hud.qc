@@ -2445,7 +2445,14 @@ void HUD_Notify (void)
 		}
 
 		// X [did action to] Y
-		if(WEP_VALID(killnotify_deathtype[j]))
+
+		if(hud_configure) // example actions for config mode
+		{
+			drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.5 * height + eY * 0.25 * height + eY * i * height, strcat("weapon", "electro"), '1 0.5 0' * height, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eY * 0.33 * height + eY * i * height, textShortenToWidth("Player1", 0.5 * mySize_x - 0.5 * height, fontsize, stringwidth_colors), fontsize, hud_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eY * 0.33 * height + eX * 0.5 * mySize_x + eX * 0.5 * height + eY * i * height, textShortenToWidth("Player2", 0.5 * mySize_x - 0.5 * height, fontsize, stringwidth_colors), fontsize, hud_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		else if(WEP_VALID(killnotify_deathtype[j]))
 		{
 			self = get_weaponinfo(killnotify_deathtype[j]);
 			drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.5 * height + eY * 0.25 * height + eY * i * height, strcat("weapon", self.netname), '1 0.5 0' * height, '1 1 1', hud_fg_alpha * a, DRAWFLAG_NORMAL);
