@@ -3961,4 +3961,8 @@ void HUD_Main (void)
 		HUD_ShowSpeed();
 	if (cvar("cl_showacceleration"))
 		HUD_ShowAcceleration();
+
+	if (hud_configure && spectatee_status) // try to join if we are in hud_configure mode, but still spectating (in order to get rid of motd and such)
+		localcmd("cmd selectteam auto; cmd join\n");
+
 }
