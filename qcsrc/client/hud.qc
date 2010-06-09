@@ -3805,14 +3805,14 @@ void HUD_Main (void)
 	{
 		float i;
 		// x-axis
-		for(i = 0; i < vid_conwidth/cvar("hud_configure_grid_x"); ++i)
+		for(i = 0; i < vid_conwidth/max(2, cvar("hud_configure_grid_x")); ++i)
 		{
-			drawfill(eX * i * cvar("hud_configure_grid_x"), eX + eY * vid_conheight, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
+			drawfill(eX * i * max(2, cvar("hud_configure_grid_x")), eX + eY * vid_conheight, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
 		}
 		// y-axis
-		for(i = 0; i < vid_conheight/cvar("hud_configure_grid_y"); ++i)
+		for(i = 0; i < vid_conheight/max(2, cvar("hud_configure_grid_y")); ++i)
 		{
-			drawfill(eY * i * cvar("hud_configure_grid_y"), eY + eX * vid_conwidth, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
+			drawfill(eY * i * max(2, cvar("hud_configure_grid_y")), eY + eX * vid_conwidth, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
 		}
 	}
 
