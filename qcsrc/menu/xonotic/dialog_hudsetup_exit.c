@@ -16,6 +16,6 @@ void fillXonoticHUDExitDialog(entity me)
 {
 	entity e;
 	me.TR(me);
-		me.TD(me, 2, 1, makeXonoticCommandButton("Exit Setup", '1 0.5 0.5', "_hud_configure 0", 1));
+		me.TD(me, 2, 1, makeXonoticCommandButton("Exit Setup", '1 1 1', "_hud_configure 0", 1));
 }
 #endif

@@ -189,41 +189,9 @@ void HUDSetup_Join_Click(entity me, entity btn)
 	if(! (gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
 	{
 		localcmd("map hudsetup", "\n");
-		/*float glob, i, n, fh;
-		string s;
-		glob = search_begin("maps/*.instantaction", TRUE, TRUE);
-		if(glob < 0)
-			return;
-		i = ceil(random() * search_getsize(glob)) - 1;
-		fh = fopen(search_getfilename(glob, i), FILE_READ);
-		search_end(glob);
-		if(fh < 0)
-			return;
-		while((s = fgets(fh)))
-		{
-			if(substring(s, 0, 4) == "set ")
-				s = substring(s, 4, strlen(s) - 4);
-			n = tokenize_console(s);
-			if(argv(0) == "bot_number")
-				cvar_set("bot_number", argv(1));
-			else if(argv(0) == "skill")
-				cvar_set("skill", argv(1));
-			else if(argv(0) == "timelimit")
-				cvar_set("timelimit_override", argv(1));
-			else if(argv(0) == "fraglimit")
-				cvar_set("fraglimit_override", argv(1));
-			else if(argv(0) == "changelevel")
-			{
-				fclose(fh);
-				localcmd("\nmenu_loadmap_prepare\n");
-				MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH);
-				MapInfo_LoadMap(argv(1));
-				cvar_set("lastlevel", "1");
-				return;
-			}
-		}
-		fclose(fh);*/
 	}
+	else
+		localcmd("togglemenu\n");
 	localcmd("_hud_configure 1", "\n");
 }
 #endif
