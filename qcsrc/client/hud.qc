@@ -566,7 +566,6 @@ string HUD_Panel_GetName(float id)
 		case 10: return "modicons"; break;
 		case 11: return "pressedkeys"; break;
 		case 12: return "chat"; break;
-		case 13: return "connotify"; break;
 		default: return "";
 	}
 }
@@ -816,7 +815,12 @@ float HUD_Panel_GetPadding(float id)
 	padding = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
 	if(padding == "")
 		padding = cvar_string("hud_bg_padding");
-	return stof(padding);
+
+	vector mySize;
+	mySize = HUD_Panel_GetSize(id);
+	float smallestsize;
+	smallestsize = min(mySize_x, mySize_y);
+	return min(smallestsize/2, stof(padding));
 }
 
 // draw the background/borders
@@ -1077,6 +1081,12 @@ void HUD_Panel_SetPosSize(float id, vector resizeorigin)
 	// minimum panel size cap
 	mySize_x = max(0.025 * vid_conwidth, mySize_x);
 	mySize_y = max(0.025 * vid_conheight, mySize_y);
+
+	if(id == 12) // some panels have their own restrictions, like the chat panel (which actually only moves the engine chat print around). Looks bad if it's too small.
+	{
+		mySize_x = max(15 * cvar("con_chatsize"), mySize_x);
+		mySize_y = max(2 * cvar("con_chatsize") + 2 * HUD_Panel_GetPadding(id), mySize_y);
+	}
 
 	// cap against panel's own limits
 	vector minSize;
@@ -3117,7 +3127,7 @@ void HUD_VoteWindow(void)
 	if(vote_alpha) {
 		a = vote_alpha * bound(cvar_or("hud_vote_alreadyvoted_alpha", 0.75), 1 - vote_highlighted, 1);
 
-		drawpic_skin(pos, "voteprogress_back", mySize, HUD_Panel_GetColor(id), a * hud_alpha_bg, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_back", mySize, '1 1 1', a * hud_alpha_bg, DRAWFLAG_NORMAL);
 
 	        s = "A vote has been called for: ";
 		drawstring(pos + '0.5 0 0' * mySize_x + '0 0.1 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/5)), s, '1 1 0' * mySize_y*(1/5), '1 1 1', a * hud_alpha_fg, DRAWFLAG_NORMAL);
@@ -3646,20 +3656,23 @@ void HUD_Chat(void)
 	cvar_set("con_chatrect_y", ftos(pos_y/vid_conheight));
 
 	cvar_set("con_chatwidth", ftos(mySize_x/vid_conwidth));
-	cvar_set("con_chat", ftos(mySize_y/cvar("con_chatsize")));
+	cvar_set("con_chat", ftos(floor(mySize_y/cvar("con_chatsize") - 0.5)));
 
-	chat_prevtime = 0; // remove this when below is fixed, to shut up fteqcc
-	// TODO: fixme, how to escape this (\001) in qc?
-	/*
 	if(hud_configure)
 	{
-		if(chat_prevtime != floor(time/3))
+		if(chat_prevtime != floor(time/5))
 		{
-			chat_prevtime = floor(time/3);
-			print("\001", "Player: This is the chat area\n");
+			chat_prevtime = floor(time/5);
+
+			float sound_prev;
+			sound_prev = cvar("con_chatsound");
+
+			// disable chat bleep
+			cvar_set("con_chatsound", "0");
+			print("\x01Player^7: This is the chat area\n");
+			cvar_set("con_chatsound", ftos(sound_prev));
 		}
 	}
-	*/
 }
 
 /*
