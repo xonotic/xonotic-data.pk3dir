@@ -3648,14 +3648,17 @@ void HUD_Chat(void)
 	cvar_set("con_chatwidth", ftos(mySize_x/vid_conwidth));
 	cvar_set("con_chat", ftos(mySize_y/cvar("con_chatsize")));
 
+	// TODO: fixme, how to escape this (\001) in qc?
+	/*
 	if(hud_configure)
 	{
 		if(chat_prevtime != floor(time/3))
 		{
 			chat_prevtime = floor(time/3);
-			print("\001Player: This is the chat area\n");
+			print("\001", "Player: This is the chat area\n");
 		}
 	}
+	*/
 }
 
 /*
