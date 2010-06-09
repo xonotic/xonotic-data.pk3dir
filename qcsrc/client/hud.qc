@@ -565,6 +565,8 @@ string HUD_Panel_GetName(float id)
 		case 9: return "vote"; break;
 		case 10: return "modicons"; break;
 		case 11: return "pressedkeys"; break;
+		case 12: return "chat"; break;
+		case 13: return "connotify"; break;
 		default: return "";
 	}
 }
@@ -3619,6 +3621,43 @@ void HUD_DrawPressedKeys(void)
 	drawpic_skin(pos + eX * mySize_x - eX * 0.372 * mySize_x +      eY * 0.486 * mySize_y, ((pressedkeys & KEY_RIGHT) ? "key_right_inv.tga" : "key_right.tga"),           '1 1 0' * 0.46 * mySize_y, '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
 }
 
+// Handle chat as a panel (#12)
+//
+float chat_prevtime;
+void HUD_Chat(void)
+{
+	float id = 12;
+	vector pos, mySize;
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
+
+	HUD_Panel_DrawBg(id, pos, mySize);
+	float padding;
+	padding = HUD_Panel_GetPadding(id);
+	if(padding)
+	{
+		pos += '1 1 0' * padding;
+		mySize -= '2 2 0' * padding;
+	}
+
+	cvar_set("con_csqcpositioning", "1");
+
+	cvar_set("con_chatrect_x", ftos(pos_x/vid_conwidth));
+	cvar_set("con_chatrect_y", ftos(pos_y/vid_conheight));
+
+	cvar_set("con_chatwidth", ftos(mySize_x/vid_conwidth));
+	cvar_set("con_chat", ftos(mySize_y/cvar("con_chatsize")));
+
+	if(hud_configure)
+	{
+		if(chat_prevtime != floor(time/3))
+		{
+			chat_prevtime = floor(time/3);
+			print("\001Player: This is the chat area\n");
+		}
+	}
+}
+
 /*
 ==================
 Main HUD system
@@ -3792,6 +3831,10 @@ void HUD_Main (void)
 	if(HUD_Panel_CheckActive(11))
 		if(spectatee_status > 0 || cvar("hud_pressedkeys") >= 2 || hud_configure)
 			HUD_DrawPressedKeys();
+	if(HUD_Panel_CheckActive(12))
+		HUD_Chat();
+	else
+		cvar_set("con_csqcpositioning", "0");
 
 	// TODO hud_'ify these
 	if (cvar("cl_showspeed"))
