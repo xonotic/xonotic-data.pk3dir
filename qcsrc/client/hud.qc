@@ -1163,6 +1163,9 @@ float mouseClicked;
 float prevMouseClicked; // previous state
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
+	if(!hud_configure)
+		return false;
+
 	prevMouseClicked = mouseClicked;
 	if(nPrimary == K_MOUSE1)
 	{
@@ -1170,12 +1173,15 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			mouseClicked = 1;
 			return true;
 		}
-		if(bInputType == 1) {// key released
+		else if(bInputType == 1) {// key released
 			mouseClicked = 0;
 			return true;
 		}
 	}
-	return false;
+	else if(nPrimary == K_ESCAPE)
+		cvar_set("_hud_configure", "0");
+
+	return true; // Suppress ALL other input
 }
 
 void HUD_Panel_Mouse()
