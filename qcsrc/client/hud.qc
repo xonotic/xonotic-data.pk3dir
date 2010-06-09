@@ -1192,7 +1192,9 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		}
 	}
 	else if(nPrimary == K_ESCAPE)
-		cvar_set("_hud_configure", "0");
+	{
+		localcmd("menu_showhudexit\n");
+	}
 
 	else if(hit_con_bind)
 		return false;
