@@ -731,7 +731,7 @@ void CSQC_UpdateView(float w, float h)
 					bullets = 0;
 
 #define CROSSHAIR_DRAW_RING(i,j,sz,wcross_name,wcross_alpha) \
-				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/hud/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/hud/", cvar_string("hud_skin"), "/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
 				do \
