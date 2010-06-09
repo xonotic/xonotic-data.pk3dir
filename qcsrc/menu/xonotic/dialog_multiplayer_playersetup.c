@@ -188,7 +188,7 @@ void HUDSetup_Join_Click(entity me, entity btn)
 {
 	if(! (gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
 	{
-		localcmd("map hudtest", "\n");
+		localcmd("map hudsetup", "\n");
 		/*float glob, i, n, fh;
 		string s;
 		glob = search_begin("maps/*.instantaction", TRUE, TRUE);
