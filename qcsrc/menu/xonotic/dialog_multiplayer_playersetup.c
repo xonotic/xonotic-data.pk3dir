@@ -10,9 +10,12 @@ CLASS(XonoticPlayerSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticPlayerSettingsTab, playerNameLabelAlpha, float, 0)
 ENDCLASS(XonoticPlayerSettingsTab)
 entity makeXonoticPlayerSettingsTab();
+
+void HUDSetup_Join_Click(entity me, entity btn);
 #endif
 
 #ifdef IMPLEMENTATION
+
 entity makeXonoticPlayerSettingsTab()
 {
 	entity me;
@@ -148,9 +151,15 @@ void fillXonoticPlayerSettingsTab(entity me)
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "crosshair_hittest", "1.25", "Enemies"));
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 2.2, e = makeXonoticButton("Radar, HUD & Waypoints...", '0 0 0'));
+		me.TD(me, 1, 2.2, e = makeXonoticButton("Waypoints Setup", '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.radarDialog;
+			e.onClickEntity = main.waypointDialog;
+		me.TDempty(me, 0.5);
+	me.TR(me);
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 2.2, e = makeXonoticButton("HUD Setup", '0 0 0'));
+			e.onClick = HUDSetup_Join_Click;
+			e.onClickEntity = me;
 		me.TDempty(me, 0.5);
 	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS
@@ -174,5 +183,47 @@ void fillXonoticPlayerSettingsTab(entity me)
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton("Apply immediately", '0 0 0', "color -1 -1;name \"$_cl_name\";cl_cmd sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_forceplayermodelsfromxonotic;sendcvar cl_forceplayermodels;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
+}
+void HUDSetup_Join_Click(entity me, entity btn)
+{
+	if(! (gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
+	{
+		localcmd("map hudsetup", "\n");
+		/*float glob, i, n, fh;
+		string s;
+		glob = search_begin("maps/*.instantaction", TRUE, TRUE);
+		if(glob < 0)
+			return;
+		i = ceil(random() * search_getsize(glob)) - 1;
+		fh = fopen(search_getfilename(glob, i), FILE_READ);
+		search_end(glob);
+		if(fh < 0)
+			return;
+		while((s = fgets(fh)))
+		{
+			if(substring(s, 0, 4) == "set ")
+				s = substring(s, 4, strlen(s) - 4);
+			n = tokenize_console(s);
+			if(argv(0) == "bot_number")
+				cvar_set("bot_number", argv(1));
+			else if(argv(0) == "skill")
+				cvar_set("skill", argv(1));
+			else if(argv(0) == "timelimit")
+				cvar_set("timelimit_override", argv(1));
+			else if(argv(0) == "fraglimit")
+				cvar_set("fraglimit_override", argv(1));
+			else if(argv(0) == "changelevel")
+			{
+				fclose(fh);
+				localcmd("\nmenu_loadmap_prepare\n");
+				MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH);
+				MapInfo_LoadMap(argv(1));
+				cvar_set("lastlevel", "1");
+				return;
+			}
+		}
+		fclose(fh);*/
+	}
+	localcmd("_hud_configure 1", "\n");
 }
 #endif
