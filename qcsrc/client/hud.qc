@@ -3648,6 +3648,7 @@ void HUD_Chat(void)
 	cvar_set("con_chatwidth", ftos(mySize_x/vid_conwidth));
 	cvar_set("con_chat", ftos(mySize_y/cvar("con_chatsize")));
 
+	chat_prevtime = 0; // remove this when below is fixed, to shut up fteqcc
 	// TODO: fixme, how to escape this (\001) in qc?
 	/*
 	if(hud_configure)
