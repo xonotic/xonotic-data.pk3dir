@@ -461,7 +461,6 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	hud_alpha_fg = cvar_or("hud_fg_alpha", 1) * (1 - cvar("_menu_alpha"));
 	hud_accuracy_hud = cvar_or("hud_accuracy_hud", 1);
 	ColorTranslateMode = cvar("cl_stripcolorcodes");
 	activeweapon = getstati(STAT_SWITCHWEAPON);

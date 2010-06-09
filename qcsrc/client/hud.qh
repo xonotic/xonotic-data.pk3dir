@@ -21,8 +21,8 @@ float last_weapon;
 float weapontime;
 
 float teamnagger;
-float hud_alpha_fg;
-float hud_alpha_bg;
+float hud_fg_alpha;
+float hud_bg_alpha;
 float hud_accuracy_hud;
 float hud_border_thickness;
 float hud_accuracy_border_thickness;
