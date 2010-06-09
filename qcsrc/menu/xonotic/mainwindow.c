@@ -7,7 +7,7 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, mapInfoDialog, entity, NULL)
 	ATTRIB(MainWindow, userbindEditDialog, entity, NULL)
 	ATTRIB(MainWindow, winnerDialog, entity, NULL)
-	ATTRIB(MainWindow, radarDialog, entity, NULL)
+	ATTRIB(MainWindow, waypointDialog, entity, NULL)
 	ATTRIB(MainWindow, serverInfoDialog, entity, NULL)
 	ATTRIB(MainWindow, cvarsDialog, entity, NULL)
 	ATTRIB(MainWindow, mainNexposee, entity, NULL)
@@ -57,7 +57,7 @@ void configureMainWindowMainWindow(entity me)
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	me.radarDialog = i = spawnXonoticRadarDialog();
+	me.waypointDialog = i = spawnXonoticWaypointDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	

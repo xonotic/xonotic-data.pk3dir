@@ -77,7 +77,7 @@
 #include "xonotic/credits.c"
 #include "xonotic/dialog_multiplayer_playersetup_weapons.c"
 #include "xonotic/weaponslist.c"
-#include "xonotic/dialog_multiplayer_playersetup_radar.c"
+#include "xonotic/dialog_multiplayer_playersetup_waypoint.c"
 #include "xonotic/dialog_multiplayer_demo.c"
 #include "xonotic/demolist.c"
 #include "xonotic/colorpicker.c"
