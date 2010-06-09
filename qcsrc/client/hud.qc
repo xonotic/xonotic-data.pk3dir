@@ -1166,6 +1166,19 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if(!hud_configure)
 		return false;
 
+	// allow console bind to work
+	string con_keys;
+	float keys;
+	con_keys = findkeysforcommand("toggleconsole");
+	keys = tokenize(con_keys);
+
+	float hit_con_bind, i;
+	for (i = 0; i < keys; ++i)
+	{
+		if(nPrimary == stof(argv(i)))
+			hit_con_bind = 1;
+	}
+
 	prevMouseClicked = mouseClicked;
 	if(nPrimary == K_MOUSE1)
 	{
@@ -1180,6 +1193,9 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	}
 	else if(nPrimary == K_ESCAPE)
 		cvar_set("_hud_configure", "0");
+
+	else if(hit_con_bind)
+		return false;
 
 	return true; // Suppress ALL other input
 }

@@ -281,6 +281,7 @@ string(string info, string key) infoget = #227;
 string(string info, string key, string value, ...) infoadd = #226;
 string(string in) uri_escape = #510;
 
+float stringtokeynum(string keyname) = #341;
 string	keynumtostring(float keynum) = #520;
 string	findkeysforcommand(string command) = #521;
 
