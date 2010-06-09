@@ -1482,13 +1482,17 @@ void HUD_Inventory()
 			a = 100;
 
 		if(cvar("hud_inventory_onlycurrent")) {
-			if (stat_items & GetAmmoItemCode(i)) {
+			if(hud_configure)
+				i = 2;
+			if (stat_items & GetAmmoItemCode(i) || hud_configure) {
 				drawpic_skin(pos, GetAmmoPicture(i), '1 1 0' * mySize_y, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
 				if(a < 10)
 					HUD_DrawXNum(pos + eX * mySize_y + eY * 0.25 * mySize_y, a, strlen(ftos(a)), 0, 0.5 * mySize_y, '0.7 0 0', 0, 0, hud_fg_alpha, DRAWFLAG_NORMAL);
 				else
 					HUD_DrawXNum(pos + eX * mySize_y + eY * 0.25 * mySize_y, a, strlen(ftos(a)), 0, 0.5 * mySize_y, '1 1 1', 0, 0, hud_fg_alpha, DRAWFLAG_NORMAL);
 			}
+			if(hud_configure)
+				break;
 		} else {
 			if (a > 0) {
 				if(mySize_x/mySize_y >= 10) { // arrange horizontally
