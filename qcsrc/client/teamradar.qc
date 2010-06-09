@@ -57,15 +57,6 @@ void draw_teamradar_background(float bg, float fg)
 {
 	float fga;
 	vector fgc;
-	if(bg > 0)
-	{
-		R_BeginPolygon("", 0);
-		R_PolygonVertex('1 0 0' * (teamradar_origin2d_x - teamradar_size2d_x * 0.5 + teamradar_extraclip_mins_x) + '0 1 0' * (teamradar_origin2d_y - teamradar_size2d_y * 0.5 + teamradar_extraclip_mins_y), '0 0 0', '0 0 0', bg);
-		R_PolygonVertex('1 0 0' * (teamradar_origin2d_x + teamradar_size2d_x * 0.5 + teamradar_extraclip_maxs_x) + '0 1 0' * (teamradar_origin2d_y - teamradar_size2d_y * 0.5 + teamradar_extraclip_mins_y), '0 0 0', '0 0 0', bg);
-		R_PolygonVertex('1 0 0' * (teamradar_origin2d_x + teamradar_size2d_x * 0.5 + teamradar_extraclip_maxs_x) + '0 1 0' * (teamradar_origin2d_y + teamradar_size2d_y * 0.5 + teamradar_extraclip_maxs_y), '0 0 0', '0 0 0', bg);
-		R_PolygonVertex('1 0 0' * (teamradar_origin2d_x - teamradar_size2d_x * 0.5 + teamradar_extraclip_mins_x) + '0 1 0' * (teamradar_origin2d_y + teamradar_size2d_y * 0.5 + teamradar_extraclip_maxs_y), '0 0 0', '0 0 0', bg);
-		R_EndPolygon();
-	}
 
 	if(fg > 0 && minimapname != "")
 	{
