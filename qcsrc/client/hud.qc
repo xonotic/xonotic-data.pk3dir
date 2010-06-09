@@ -1179,7 +1179,9 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		}
 	}
 	else if(nPrimary == K_ESCAPE)
-		cvar_set("_hud_configure", "0");
+	{
+		localcmd("menu_showhudexit\n");
+	}
 
 	return true; // Suppress ALL other input
 }

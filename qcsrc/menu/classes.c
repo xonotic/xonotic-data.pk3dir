@@ -83,3 +83,4 @@
 #include "xonotic/colorpicker.c"
 #include "xonotic/cvarlist.c"
 #include "xonotic/dialog_settings_misc_cvars.c"
+#include "xonotic/dialog_hudsetup_exit.c"
