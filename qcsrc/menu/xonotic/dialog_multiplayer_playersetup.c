@@ -191,7 +191,7 @@ void HUDSetup_Join_Click(entity me, entity btn)
 		localcmd("map hudsetup", "\n");
 	}
 	else
-		localcmd("togglemenu\n");
+		localcmd("togglemenu 0\n");
 	localcmd("_hud_configure 1", "\n");
 }
 #endif
