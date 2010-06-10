@@ -17,7 +17,6 @@ void fillXonoticHUDExitDialog(entity me)
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, "Panel Settings:"));
-
 			me.TR(me);
 				me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_bg", "Panel Background"));
 			me.TR(me);
@@ -35,6 +34,7 @@ void fillXonoticHUDExitDialog(entity me)
 			me.TR(me);
 				me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_configure_checkcollisions", "Collision Check"));
 	me.TR(me);
+	
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, "Dock Settings:"));
 
@@ -45,6 +45,7 @@ void fillXonoticHUDExitDialog(entity me)
 				me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Dock Alpha:"));
 					me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.01, "hud_dock_alpha"));
 	me.TR(me);
+	
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, "Grid Settings:"));
 

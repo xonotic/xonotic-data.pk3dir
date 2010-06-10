@@ -1203,7 +1203,7 @@ void HUD_Panel_Mouse()
 		if(time - prevMouseClickedTime < 0.4 && prevMouseClicked == 0 && prevMouseClickedPos == mousepos)
 		{
 			mouseClicked = 0; // to prevent spam, I guess.
-			print("Doubleclick!\n");
+			localcmd("menu_showhudoptions\n");
 			return;
 		}
 

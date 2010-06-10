@@ -84,3 +84,4 @@
 #include "xonotic/cvarlist.c"
 #include "xonotic/dialog_settings_misc_cvars.c"
 #include "xonotic/dialog_hudsetup_exit.c"
+#include "xonotic/dialog_hudpanel_options.c"

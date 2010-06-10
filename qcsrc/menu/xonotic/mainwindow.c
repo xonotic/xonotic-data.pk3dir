@@ -36,6 +36,10 @@ void configureMainWindowMainWindow(entity me)
 	i = spawnXonoticHUDExitDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+	i = spawnXonoticHUDOptionsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	me.advancedDialog = i = spawnXonoticAdvancedDialog();
 	i.configureDialog(i);
