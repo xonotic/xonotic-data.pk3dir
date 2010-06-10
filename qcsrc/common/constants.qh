@@ -565,3 +565,19 @@ float WR_KILLMESSAGE    = 8; // (CSQC) sets w_deathtypestring or leaves it alone
 float WR_RELOAD         = 9; // (SVQC) does not need to do anything
 float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
 float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
+
+
+float HUD_PANEL_WEAPONICONS	= 0;
+float HUD_PANEL_INVENTORY	= 1;
+float HUD_PANEL_POWERUPS	= 2;
+float HUD_PANEL_HEALTHARMOR	= 3;
+float HUD_PANEL_NOTIFY		= 4;
+float HUD_PANEL_TIMER		= 5;
+float HUD_PANEL_RADAR		= 6;
+float HUD_PANEL_SCORE		= 7;
+float HUD_PANEL_RACETIMER	= 8;
+float HUD_PANEL_VOTE		= 9;
+float HUD_PANEL_MODICONS	= 10;
+float HUD_PANEL_PRESSEDKEYS	= 11;
+float HUD_PANEL_CHAT		= 12;
+float HUD_PANEL_NUM		= 13;

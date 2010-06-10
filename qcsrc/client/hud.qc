@@ -584,7 +584,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 
 		// common cvars for all panels
 		float i;
-		for (i = 0; i < panel_cnt; ++i)
+		for (i = 0; i < HUD_PANEL_NUM; ++i)
 		{
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), " ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i)))), "\n"));
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_pos \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_pos")), "\"", "\n"));
@@ -876,7 +876,7 @@ vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 	myCenter = '0 0 0'; // shut up fteqcc, there IS a reference
 	targCenter = '0 0 0'; // shut up fteqcc, there IS a reference
 
-	for (i = 0; i < panel_cnt; ++i) {
+	for (i = 0; i < HUD_PANEL_NUM; ++i) {
 		if(i == id || !HUD_Panel_CheckActive(i))
 			continue;
 
@@ -980,7 +980,7 @@ vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize)
 	myCenter = '0 0 0'; // shut up fteqcc, there IS a reference
 	targCenter = '0 0 0'; // shut up fteqcc, there IS a reference
 
-	for (i = 0; i < panel_cnt; ++i) {
+	for (i = 0; i < HUD_PANEL_NUM; ++i) {
 		if(i == id || !HUD_Panel_CheckActive(i))
 			continue;
 
@@ -1211,7 +1211,7 @@ void HUD_Panel_Mouse()
 		vector panelPos;
 		vector panelSize;
 
-		for(i = 0; i <= panel_cnt; ++i)
+		for(i = 0; i <= HUD_PANEL_NUM; ++i)
 		{
 			panelPos = HUD_Panel_GetPos(i);
 			panelSize = HUD_Panel_GetSize(i);
@@ -1324,7 +1324,7 @@ float weaponorder_cmp(float i, float j, entity pass)
 
 void HUD_WeaponIcons()
 {
-	float id = 0;
+	float id = HUD_PANEL_WEAPONICONS;
 	float alpha, stat_weapons; // "constants"
 	vector pos, mySize, accuracy_color;
 	float i, weapid, fade, weapon_stats, weapon_hit, weapon_damage, weapon_cnt; // variables
@@ -1466,7 +1466,7 @@ string GetAmmoPicture(float i)
 
 void HUD_Inventory()
 {
-	float id = 1;
+	float id = HUD_PANEL_INVENTORY;
 	float i;
 	float stat_items;
 
@@ -1557,7 +1557,7 @@ void HUD_Inventory()
 // Powerups (#2)
 //
 void HUD_Powerups() {
-	float id = 2;
+	float id = HUD_PANEL_POWERUPS;
 	float stat_items;
 	stat_items = getstati(STAT_ITEMS);
 
@@ -1781,7 +1781,7 @@ void HUD_Powerups() {
 //
 void HUD_HealthArmor(void)
 {
-	float id = 3;
+	float id = HUD_PANEL_HEALTHARMOR;
 	vector pos, mySize;
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
@@ -2412,7 +2412,7 @@ void HUD_Centerprint(string s1, float type, float msg)
 
 void HUD_Notify (void)
 {
-	float id = 4;
+	float id = HUD_PANEL_NOTIFY;
 	vector pos, mySize;
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
@@ -2678,7 +2678,7 @@ void HUD_Notify (void)
 //
 void HUD_Timer()
 {
-	float id = 5;
+	float id = HUD_PANEL_TIMER;
 	vector pos, mySize;
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
@@ -2737,7 +2737,7 @@ void HUD_Timer()
 //
 void HUD_Radar(void)
 {
-	float id = 6;
+	float id = HUD_PANEL_RADAR;
 	vector pos, mySize;
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
@@ -2863,7 +2863,7 @@ void HUD_Radar(void)
 //
 void HUD_Score()
 {
-	float id = 7;
+	float id = HUD_PANEL_SCORE;
 	vector pos, mySize;
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
@@ -3011,7 +3011,7 @@ void HUD_Score()
 // Race timer (#8)
 //
 void HUD_RaceTimer (void) {
-	float id = 8;
+	float id = HUD_PANEL_RACETIMER;
 	vector pos, mySize;
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
@@ -3154,7 +3154,7 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
-	float id = 9;
+	float id = HUD_PANEL_VOTE;
 	vector pos, mySize;
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
@@ -3660,7 +3660,7 @@ void HUD_ModIcons(void)
 	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && !hud_configure)
 		return;
 
-	float id = 10;
+	float id = HUD_PANEL_MODICONS;
 	vector pos, mySize;
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
@@ -3701,7 +3701,7 @@ void HUD_ModIcons(void)
 //
 void HUD_DrawPressedKeys(void)
 {
-	float id = 11;
+	float id = HUD_PANEL_PRESSEDKEYS;
 	vector pos, mySize;
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
@@ -3732,7 +3732,7 @@ void HUD_DrawPressedKeys(void)
 float chat_prevtime;
 void HUD_Chat(void)
 {
-	float id = 12;
+	float id = HUD_PANEL_CHAT;
 	vector pos, mySize;
 	pos = HUD_Panel_GetPos(id);
 	mySize = HUD_Panel_GetSize(id);
