@@ -1948,3 +1948,25 @@ float get_model_parameters(string m, float sk)
 
 	return 1;
 }
+
+// return name of given panel id
+string HUD_Panel_GetName(float id)
+{
+	switch(id) {
+		case 0: return "weaponicons"; break;
+		case 1: return "inventory"; break;
+		case 2: return "powerups"; break;
+		case 3: return "healtharmor"; break;
+		case 4: return "notify"; break;
+		case 5: return "timer"; break;
+		case 6: return "radar"; break;
+		case 7: return "score"; break;
+		case 8: return "racetimer"; break;
+		case 9: return "vote"; break;
+		case 10: return "modicons"; break;
+		case 11: return "pressedkeys"; break;
+		case 12: return "chat"; break;
+		default: return "";
+	}
+}
+
