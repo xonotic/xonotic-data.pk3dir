@@ -1,5 +1,3 @@
-void HUD_Radar();
-
 #define MAX_TEAMRADAR_TIMES 32
 
 // to make entities have dots on the team radar
