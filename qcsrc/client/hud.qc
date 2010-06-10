@@ -1161,6 +1161,8 @@ void HUD_Panel_SetPosSize(float id, vector resizeorigin)
 
 float mouseClicked;
 float prevMouseClicked; // previous state
+float prevMouseClickedTime; // time during previous mouse click, to check for doubleclicks
+vector prevMouseClickedPos; // pos during previous mouse click, to check for doubleclicks
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	if(!hud_configure)
@@ -1218,6 +1220,13 @@ void HUD_Panel_Mouse()
 
 	if(mouseClicked)
 	{
+		if(time - prevMouseClickedTime < 0.4 && prevMouseClicked == 0 && prevMouseClickedPos == mousepos)
+		{
+			mouseClicked = 0; // to prevent spam, I guess.
+			print("Doubleclick!\n");
+			return;
+		}
+
 		float i, border;
 		vector panelPos;
 		vector panelSize;
@@ -1228,6 +1237,9 @@ void HUD_Panel_Mouse()
 			panelSize = HUD_Panel_GetSize(i);
 			border = HUD_Panel_GetBorder(i);
 			if(prevMouseClicked == 0) {
+				prevMouseClickedTime = time;
+				prevMouseClickedPos = mousepos;
+
 				// move
 				if(mousepos_x >= panelPos_x && mousepos_y >= panelPos_y && mousepos_x <= panelPos_x + panelSize_x && mousepos_y <= panelPos_y + panelSize_y)
 				{
