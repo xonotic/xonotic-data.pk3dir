@@ -168,7 +168,6 @@ void fillXonoticPlayerSettingsTab(entity me)
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(2, "cl_forceplayermodelsfromxonotic", string_null, "Custom"));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(2, "cl_forceplayermodels", string_null, "All"));
 	#endif
-	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_gentle", "Disable gore effects"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Gibs:"));
