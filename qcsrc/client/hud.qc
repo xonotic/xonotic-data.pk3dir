@@ -1299,7 +1299,7 @@ void HUD_Panel_Mouse()
 		}
 
 		// doubleclick check
-		if(time - prevMouseClickedTime < 0.4 && prevMouseClicked == 0 && prevMouseClickedPos == mousepos)
+		if(time - prevMouseClickedTime < 0.4 && prevMouseClicked == 0 && prevMouseClickedPos == mousepos && highlightedPanel >= 0)
 		{
 			mouseClicked = 0; // to prevent spam, I guess.
 			disable_menu_alphacheck = 2;
