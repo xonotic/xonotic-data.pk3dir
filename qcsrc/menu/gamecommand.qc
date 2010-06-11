@@ -62,6 +62,16 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if(argv(0) == "directpanelhudmenu")
+	{
+		// switch to a menu item
+		m_goto("HUDOptions");
+		entity panelvar;
+		panelvar = findstring(NULL, name, "HUDOptions");
+		panelvar.change(panelvar, stof(argv(1)));
+		return;
+	}
+
 	if(argv(0) == "skinselect")
 	{
 		m_goto_skin_selector();

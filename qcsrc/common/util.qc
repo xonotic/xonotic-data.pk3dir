@@ -1969,4 +1969,3 @@ string HUD_Panel_GetName(float id)
 		default: return "";
 	}
 }
-
