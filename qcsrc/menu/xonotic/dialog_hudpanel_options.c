@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(XonoticHUDOptionsDialog) EXTENDS(XonoticRootDialog)
 	METHOD(XonoticHUDOptionsDialog, fill, void(entity))
-	METHOD(XonoticHUDOptionsDialog, change, void(entity, float))
+	METHOD(XonoticHUDOptionsDialog, change, void(entity))
 	ATTRIB(XonoticHUDOptionsDialog, title, string, "HUD Setup")
 	ATTRIB(XonoticHUDOptionsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDOptionsDialog, intendedWidth, float, 0.4)
@@ -52,12 +52,9 @@ void loadCvarsXonoticHUDOptionsDialog(entity me)
 }
 */
 
-void changeXonoticHUDOptionsDialog(entity me, float id)
+void changeXonoticHUDOptionsDialog(entity me)
 {
 	loadAllCvars(me);
-	highlightedPanel = id;
-	print("Yay!", ftos(id), "\n");
-
 }
 
 #endif
