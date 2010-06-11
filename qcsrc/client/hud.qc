@@ -824,7 +824,7 @@ float HUD_Panel_GetPadding(float id)
 	mySize = HUD_Panel_GetSize(id);
 	float smallestsize;
 	smallestsize = min(mySize_x, mySize_y);
-	return min(smallestsize/2, stof(padding));
+	return min(smallestsize/2 - 5, stof(padding));
 }
 
 // draw the background/borders
@@ -1242,7 +1242,7 @@ void HUD_Panel_Mouse()
 		vector panelPos;
 		vector panelSize;
 
-		for(i = 0; i <= HUD_PANEL_NUM; ++i)
+		for(i = 0; i < HUD_PANEL_NUM; ++i)
 		{
 			panelPos = HUD_Panel_GetPos(i);
 			panelSize = HUD_Panel_GetSize(i);
