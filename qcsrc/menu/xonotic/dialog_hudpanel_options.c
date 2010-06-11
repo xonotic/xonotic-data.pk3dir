@@ -15,14 +15,10 @@ ENDCLASS(XonoticHUDOptionsDialog)
 #ifdef IMPLEMENTATION
 void fillXonoticHUDOptionsDialog(entity me)
 {
-	entity e, s;
+	entity e;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCheckBoxHUDName(0, HUD_MENU_ENABLE, "Enable panel"));
-
-	me.TR(me);
-		//me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Alpha"));
-		s = makeXonoticSliderHUDName(0.25, 1.0, 0.01, HUD_MENU_ALPHA);
-		me.TD(me, 1, 2, e = makeXonoticSliderCheckBoxNull(0, s, "Alpha", HUD_MENU_ALPHA));
+	
+	me.TD(me, 1, 1, e = makeXonoticCheckBoxHUDName(0, HUD_MENU_ENABLE, "Enable panel"));
 }
 
 /* nvm these, i guess they wont be used
@@ -60,8 +56,10 @@ void loadCvarsXonoticHUDOptionsDialog(entity me)
 
 void changeXonoticHUDOptionsDialog(entity me, float id)
 {
+	loadAllCvars(me);
 	highlightedPanel = id;
-	loadAllCvars(main);
+	print("Yay!", ftos(id), "\n");
+
 }
 
 #endif

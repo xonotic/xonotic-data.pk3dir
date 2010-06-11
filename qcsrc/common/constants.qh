@@ -583,13 +583,3 @@ float HUD_PANEL_CHAT		= 12;
 float HUD_PANEL_NUM		= 13;
 
 float HUD_MENU_ENABLE		= 0;
-float HUD_MENU_ALPHA		= 1;
-float HUD_MENU_BORDER		= 2;
-float HUD_MENU_PADDING		= 3;
-float HUD_MENU_COLOR		= 4;
-float HUD_MENU_COLORTEAM	= 5;
-float HUD_MENU_FLIP		= 6;
-float HUD_MENU_MIRROR		= 7;
-float HUD_MENU_PRINT		= 8;
-float HUD_MENU_TIME		= 9;
-float HUD_MENU_FADETIME		= 10;

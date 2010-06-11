@@ -398,7 +398,6 @@ string HUD_Panel_GetSettingName(float theSetting)
 {
 	switch(theSetting) {
 		case HUD_MENU_ENABLE: return ""; break;
-		case HUD_MENU_ALPHA: return "_bg_alpha"; break;
 		default: return "";
 	}
 }
