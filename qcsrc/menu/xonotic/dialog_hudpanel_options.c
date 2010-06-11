@@ -17,8 +17,6 @@ void fillXonoticHUDOptionsDialog(entity me)
 {
 	entity e;
 	me.TR(me);
-	
-	me.TD(me, 1, 1, e = makeXonoticCheckBoxHUDName(0, HUD_MENU_ENABLE, "Enable panel"));
 }
 
 /* nvm these, i guess they wont be used

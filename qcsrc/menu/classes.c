@@ -41,7 +41,6 @@
 #include "xonotic/slider.c"
 #include "xonotic/slider_resolution.c"
 #include "xonotic/checkbox.c"
-#include "xonotic/checkbox_hudname.c"
 #include "xonotic/radiobutton.c"
 #include "xonotic/nexposee.c"
 #include "xonotic/rootdialog.c"
