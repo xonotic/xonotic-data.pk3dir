@@ -1305,7 +1305,7 @@ void HUD_Panel_Mouse()
 			disable_menu_alphacheck = 2;
 			menu_enabled = 1;
 			menu_enabled_time = time;
-			localcmd("menu_showhudoptions\n");
+			localcmd("menu_showhudoptions ", ftos(highlightedPanel), "\n");
 			return;
 		}
 		if(prevMouseClicked == 0)

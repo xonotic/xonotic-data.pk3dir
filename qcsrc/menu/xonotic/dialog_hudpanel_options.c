@@ -18,4 +18,10 @@ void fillXonoticHUDOptionsDialog(entity me)
 	me.TR(me);
 	
 }
+
+void changeXonoticHUDPanel(float id)
+{
+	print("Yay!", ftos(id), "\n");
+
+}
 #endif
