@@ -270,6 +270,9 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 
 void(string img, float a, string algn, float force1) drawBackground =
 {
+	if(main.mainNexposee.ModalController_state == 0)
+		return;
+
 	vector v;
 	float i, l;
 	string c;

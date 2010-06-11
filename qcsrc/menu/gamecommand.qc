@@ -66,7 +66,9 @@ void GameCommand(string theCommand)
 	{
 		// switch to a menu item
 		m_goto("HUDOptions");
-		changeXonoticHUDPanel(stof(argv(1)));
+		entity panelvar;
+		panelvar = findstring(NULL, name, "HUDOptions");
+		panelvar.change(panelvar, stof(argv(1)));
 		return;
 	}
 
