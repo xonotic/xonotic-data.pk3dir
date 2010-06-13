@@ -3834,7 +3834,6 @@ void HUD_DrawPressedKeys(void)
 
 // Handle chat as a panel (#12)
 //
-float chat_prevtime;
 void HUD_Chat(void)
 {
 	float id = HUD_PANEL_CHAT;
@@ -3861,17 +3860,11 @@ void HUD_Chat(void)
 
 	if(hud_configure)
 	{
-		if(chat_prevtime != floor(time/5))
+		cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over alpha and such
+		float i;
+		for(i = 0; i < cvar("con_chat"); ++i)
 		{
-			chat_prevtime = floor(time/5);
-
-			float sound_prev;
-			sound_prev = cvar("con_chatsound");
-
-			// disable chat bleep
-			cvar_set("con_chatsound", "0");
-			print("\x01Player^7: This is the chat area\n");
-			cvar_set("con_chatsound", ftos(sound_prev));
+			drawcolorcodedstring(pos + eY * i * cvar("con_chatsize"), "^3Player^7: This is the chat area.", '1 1 0' * cvar("con_chatsize"), HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 		}
 	}
 }
