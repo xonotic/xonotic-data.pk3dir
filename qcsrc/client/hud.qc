@@ -3865,11 +3865,17 @@ void HUD_Chat(void)
 
 	if(hud_configure)
 	{
+		float chatsize;
+		chatsize = cvar("con_chatsize");
 		cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over alpha and such
-		float i;
+		float i, a;
 		for(i = 0; i < cvar("con_chat"); ++i)
 		{
-			drawcolorcodedstring(pos + eY * i * cvar("con_chatsize"), "^3Player^7: This is the chat area.", '1 1 0' * cvar("con_chatsize"), HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+			if(i == cvar("con_chat") - 1)
+				a = HUD_Panel_GetFgAlpha(id);
+			else
+				a = HUD_Panel_GetFgAlpha(id) * floor(((i + 1) * 7 + cvar("con_chattime"))/45);
+			drawcolorcodedstring(pos + eY * i * chatsize, textShortenToWidth("^3Player^7: This is the chat area.", mySize_x, '1 1 0' * chatsize, stringwidth_colors), '1 1 0' * chatsize, a, DRAWFLAG_NORMAL);
 		}
 	}
 }
