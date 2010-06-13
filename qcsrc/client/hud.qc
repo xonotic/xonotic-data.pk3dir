@@ -2588,6 +2588,7 @@ void HUD_Notify (void)
 			{
 				attacker = textShortenToWidth("Player1", 0.5 * mySize_x - height, fontsize, stringwidth_colors);
 				victim = textShortenToWidth("Player2", 0.5 * mySize_x - height, fontsize, stringwidth_colors);
+				a = bound(0, (when - j) / 4, 1);
 			}
 			else
 			{
@@ -2602,9 +2603,9 @@ void HUD_Notify (void)
 
 			if(hud_configure) // example actions for config mode
 			{
-				drawpic_skin(weap_pos, strcat("weapon", "electro"), '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+				drawpic_skin(weap_pos, strcat("weapon", "electro"), '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 			}
 			else if(WEP_VALID(killnotify_deathtype[j]))
 			{
