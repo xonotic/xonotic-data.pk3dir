@@ -66,12 +66,7 @@ void GameCommand(string theCommand)
 	{
 		highlightedPanel = stof(argv(1));
 		// switch to a menu item
-		m_goto("HUDOptions");
-
-		// this is here to detect which id the HUDOptions dialog is, i could imagine you need a similar system for the per-panel dialogs...
-		entity panelvar;
-		panelvar = findstring(NULL, name, "HUDOptions");
-		panelvar.change(panelvar);
+		m_goto(strcat("HUD", HUD_Panel_GetName(highlightedPanel)));
 		return;
 	}
 
