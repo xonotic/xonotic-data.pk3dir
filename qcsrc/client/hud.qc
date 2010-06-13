@@ -3852,7 +3852,7 @@ void HUD_Chat(void)
 		mySize -= '2 2 0' * padding;
 	}
 
-	cvar_set("con_csqcpositioning", "1");
+	cvar_set("con_chatrect", "1");
 
 	cvar_set("con_chatrect_x", ftos(pos_x/vid_conwidth));
 	cvar_set("con_chatrect_y", ftos(pos_y/vid_conheight));
