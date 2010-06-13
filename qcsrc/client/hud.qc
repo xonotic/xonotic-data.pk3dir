@@ -689,6 +689,31 @@ vector HUD_Panel_GetSize(float id)
 
 	mySize = eX * mySize_x * vid_conwidth + eY * mySize_y * vid_conheight;
 
+	if(disable_menu_alphacheck == 2 && id == highlightedPanel)
+	{
+		vector menu_enable_maxsize, menu_enable_size;
+		menu_enable_maxsize = '0 0 0'; // shut up FTEQCC
+		menu_enable_maxsize_x = 0.3 * vid_conwidth;
+		menu_enable_maxsize_y = 0.18 * vid_conheight;
+		if(mySize_x > mySize_y)
+		{
+			if(mySize_y > menu_enable_maxsize_y)
+			{
+				menu_enable_size_y = menu_enable_maxsize_y;
+				menu_enable_size_x = mySize_x * (menu_enable_maxsize_y/mySize_y);
+				mySize = (1 - cvar("_menu_alpha")) * mySize + (cvar("_menu_alpha")) * menu_enable_size;
+			}
+		}
+		else
+		{
+			if(mySize_x > menu_enable_maxsize_x)
+			{
+				menu_enable_size_x = menu_enable_maxsize_x;
+				menu_enable_size_y = mySize_y * (menu_enable_maxsize_x/mySize_x);
+				mySize = (1 - cvar("_menu_alpha")) * mySize + (cvar("_menu_alpha")) * menu_enable_size;
+			}
+		}
+	}
 	return mySize;
 }
 
@@ -704,6 +729,17 @@ vector HUD_Panel_GetPos(float id)
 		pos_x = vid_conwidth + pos_x;
 	if (pos_y < 0)
 		pos_y = vid_conheight + pos_y;
+
+	if(disable_menu_alphacheck == 2 && id == highlightedPanel)
+	{
+		vector mySize, menu_enable_panelpos;
+		mySize = HUD_Panel_GetSize(id);
+		if(mySize_x > mySize_y)
+			menu_enable_panelpos = eX * 0.5 * vid_conwidth - eX * 0.5 * mySize_x + eY * 0.82 * vid_conheight;
+		else
+			menu_enable_panelpos = eY * 0.5 * vid_conheight - eY * 0.5 * mySize_y + eX * 0.7 * vid_conwidth;
+		pos = (1 - cvar("_menu_alpha")) * pos + (cvar("_menu_alpha")) * menu_enable_panelpos;
+	}
 	return pos;
 }
 

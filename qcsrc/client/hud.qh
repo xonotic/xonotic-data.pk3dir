@@ -28,4 +28,3 @@ float hud_configure;
 
 float disable_menu_alphacheck; // 0 = enable alpha check, 1 = disable for entire hud, 2 = disable for one panel
 float menu_fade_alpha;
-
