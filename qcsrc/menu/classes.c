@@ -96,3 +96,4 @@
 #include "xonotic/dialog_hudpanel_vote.c"
 #include "xonotic/dialog_hudpanel_modicons.c"
 #include "xonotic/dialog_hudpanel_chat.c"
+#include "xonotic/dialog_hudpanel_weaponicons.c"
