@@ -1124,7 +1124,7 @@ void HUD_Panel_SetPosSize(float id, vector resizeorigin)
 
 	if(id == 12) // some panels have their own restrictions, like the chat panel (which actually only moves the engine chat print around). Looks bad if it's too small.
 	{
-		mySize_x = max(15 * cvar("con_chatsize"), mySize_x);
+		mySize_x = max(17 * cvar("con_chatsize"), mySize_x);
 		mySize_y = max(2 * cvar("con_chatsize") + 2 * HUD_Panel_GetPadding(id), mySize_y);
 	}
 
