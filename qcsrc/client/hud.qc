@@ -643,8 +643,10 @@ vector HUD_Panel_GetMinSize(float id)
 			break;
 		case 3: 
 			if(cvar("hud_healtharmor") == 2)
+			{
 				mySize_x = 4.35; // 4.35 * height, trial and error...
 				mySize_y = 0.01; // "unlimited" ;)
+			}
 			break;
 		case 4: 
 			mySize_x = 1.2; // 12/10 * height, as panel cant support more than 10 entries...
