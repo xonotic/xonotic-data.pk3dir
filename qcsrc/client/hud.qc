@@ -643,7 +643,8 @@ vector HUD_Panel_GetMinSize(float id)
 			break;
 		case 3: 
 			if(cvar("hud_healtharmor") == 2)
-				mySize_y = 0.23; // 0.23 * width, trial and error...
+				mySize_x = 4.35; // 4.35 * height, trial and error...
+				mySize_y = 0.01; // "unlimited" ;)
 			break;
 		case 4: 
 			mySize_x = 1.2; // 12/10 * height, as panel cant support more than 10 entries...
@@ -1932,6 +1933,17 @@ void HUD_HealthArmor(void)
 				drawpic_skin(picpos, "armor", '1 1 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 		}
 		HUD_DrawXNum_Colored(numpos, x, 3, mySize_y, HUD_Panel_GetFgAlpha(id)); // draw the combined health and armor
+
+		// fuel
+		if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
+			barpos = pos + eX * mySize_x - eX * mySize_x * min(1, fuel/100);
+			barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.2 * mySize_y;
+		} else {
+			barpos = pos;
+			barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.2 * mySize_y;
+		}
+		if(fuel)
+			HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor("fuel"), HUD_Panel_GetFgAlpha(id) * 0.8, DRAWFLAG_NORMAL);
 	}
 
 	else
