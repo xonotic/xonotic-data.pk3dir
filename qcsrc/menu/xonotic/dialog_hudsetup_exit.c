@@ -16,7 +16,7 @@ void fillXonoticHUDExitDialog(entity me)
 {
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 4, makeXonoticTextLabel(0, "Panel Settings:"));
+		me.TD(me, 1, 4, makeXonoticTextLabel(0, "Panel Defaults:"));
 			me.TR(me);
 				me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_bg", "Panel Background"));
 			me.TR(me);

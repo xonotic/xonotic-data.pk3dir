@@ -1857,6 +1857,9 @@ void HUD_HealthArmor(void)
 		return;
 
 	float len;
+	vector barpos, barsize;
+	vector picpos;
+	vector numpos;
 
 	if(cvar("hud_healtharmor") == 2) // combined health and armor display
 	{
@@ -1866,27 +1869,37 @@ void HUD_HealthArmor(void)
 		float x;
 		x = floor(v_x + 1);
 
+		if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
+			barpos = pos + eX * mySize_x - eX * mySize_x * min(1, x/400);
+			barsize = eX * mySize_x * min(1, x/400) + eY * mySize_y;
+			picpos = pos;
+			numpos = picpos + eX * 1.5 * mySize_y;
+		} else {
+			barpos = pos;
+			barsize = eX * mySize_x * min(1, x/400) + eY * mySize_y;
+			picpos = pos + eX * 3 * mySize_y;
+			numpos = pos;
+		}
+
 		if(v_z) // NOT fully armored
 		{
-			drawpic_skin(pos + eX * 3 * mySize_y, "health", '1 1 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+			HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor("health"), cvar("hud_progressbar_alpha") * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+			drawpic_skin(picpos, "health", '1 1 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 			if(armor)
-				drawpic_skin(pos + eX * 4 * mySize_y, "armor", '0.5 0.5 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id) * armor / health, DRAWFLAG_NORMAL);
+				drawpic_skin(picpos + eX * mySize_y, "armor", '0.5 0.5 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id) * armor / health, DRAWFLAG_NORMAL);
 		}
 		else
 		{
-			drawpic_skin(pos + eX * 4 * mySize_y, "health", '0.5 0.5 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id) * health / armor, DRAWFLAG_NORMAL);
+			HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor("armor"), cvar("hud_progressbar_alpha") * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+			drawpic_skin(picpos + eX * mySize_y, "health", '0.5 0.5 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id) * health / armor, DRAWFLAG_NORMAL);
 			if(armor)
-				drawpic_skin(pos + eX * 3 * mySize_y, "armor", '1 1 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+				drawpic_skin(picpos, "armor", '1 1 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 		}
-		HUD_DrawXNum_Colored(pos, x, 3, mySize_y, HUD_Panel_GetFgAlpha(id)); // draw the combined health and armor
+		HUD_DrawXNum_Colored(numpos, x, 3, mySize_y, HUD_Panel_GetFgAlpha(id)); // draw the combined health and armor
 	}
 
 	else
 	{
-		vector barpos, barsize;
-		vector picpos;
-		vector numpos;
-
 		string leftname, rightname;
 		float leftcnt, rightcnt;
 		float leftactive, rightactive;
