@@ -826,7 +826,9 @@ float HUD_Panel_GetBgAlpha(float id)
 	if(alpha == "")
 		alpha = cvar_string("hud_bg_alpha");
 
-	if(hud_configure)
+	if(hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == id) // do not set a minalpha cap when showing the config dialog for this panel
+		alpha = ftos((1 - cvar("_menu_alpha")) * max(cvar("hud_configure_bg_minalpha"), stof(alpha)) + (cvar("_menu_alpha")) * stof(alpha));
+	else if(hud_configure)
 		alpha = ftos(max(cvar("hud_configure_bg_minalpha"), stof(alpha)));
 
 	if(hud_configure && !cvar(strcat("hud_", HUD_Panel_GetName(id)))) // ALWAYS show disabled panels at 0.25 alpha when in config mode
