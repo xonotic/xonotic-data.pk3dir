@@ -1,0 +1,7 @@
+name Gak
+species alien
+sex Male
+weight 85
+age 16
+
+Lightweight Xonotic Solider

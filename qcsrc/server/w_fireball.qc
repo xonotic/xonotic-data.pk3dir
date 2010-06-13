@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", "Fireball");
 #else
+#ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
 .float fireball_primarytime;
@@ -391,4 +392,31 @@ float w_fireball(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+float w_fireball(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			// firemine goes out silently
+		}
+		else
+		{
+			org2 = w_org + w_backoff * 16;
+			pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/fireball_impact.wav");
+		precache_sound("weapons/fireball_impact2.wav");
+	}
+	return TRUE;
+}
+#endif
 #endif

@@ -281,6 +281,7 @@ const float STAT_LEADLIMIT = 47;
 const float STAT_BULLETS_LOADED = 48;
 
 // see DP source, quakedef.h
+const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
 const float STAT_MOVEVARS_AIRSTRAFEACCEL_QW = 223;
 const float STAT_MOVEVARS_AIRACCEL_QW = 254;
 
@@ -511,3 +512,16 @@ float WATERLEVEL_SWIMMING = 2;
 float WATERLEVEL_SUBMERGED = 3;
 
 float MAX_SHOT_DISTANCE = 32768;
+
+// weapon requests
+float WR_SETUP		= 1; // (SVQC) setup weapon data
+float WR_THINK		= 2; // (SVQC) logic to run every frame
+float WR_CHECKAMMO1	= 3; // (SVQC) checks ammo for weapon
+float WR_CHECKAMMO2	= 4; // (SVQC) checks ammo for weapon
+float WR_AIM		= 5; // (SVQC) runs bot aiming code for this weapon
+float WR_PRECACHE	= 6; // (CSQC and SVQC) precaches models/sounds used by this weapon
+float WR_SUICIDEMESSAGE = 7; // (SVQC) sets w_deathtypestring or leaves it alone (and may inspect w_deathtype for details)
+float WR_KILLMESSAGE    = 8; // (SVQC) sets w_deathtypestring or leaves it alone
+float WR_RELOAD         = 9; // (SVQC) does not need to do anything
+float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
+float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
