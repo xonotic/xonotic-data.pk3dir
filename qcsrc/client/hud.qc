@@ -1960,7 +1960,7 @@ void HUD_HealthArmor(void)
 			}
 
 			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
-				barpos = pos - eX * mySize_x * min(1, fuel/100);
+				barpos = pos + eX * mySize_x - eX * mySize_x * min(1, fuel/100);
 				barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.2 * mySize_y;
 			} else {
 				barpos = pos;
