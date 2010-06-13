@@ -1,0 +1,7 @@
+name Seraphina - Masked
+species human
+sex Female
+weight 90
+age 31
+
+Heavyweight Xonotic Solider
