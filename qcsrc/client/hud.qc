@@ -669,7 +669,7 @@ vector HUD_Panel_GetMinSize(float id)
 			mySize_y = 0.5898; // 0.5898 * width, reason: bg has weird dimensions...
 			break;
 	}
-	if(!mySize_x)
+	if(!mySize_x && mySize_y)
 		mySize_x = 1/mySize_y;
 	return mySize;
 }
