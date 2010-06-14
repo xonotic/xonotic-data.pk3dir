@@ -580,6 +580,7 @@ float HUD_PANEL_VOTE		= 9;
 float HUD_PANEL_MODICONS	= 10;
 float HUD_PANEL_PRESSEDKEYS	= 11;
 float HUD_PANEL_CHAT		= 12;
-float HUD_PANEL_NUM		= 13;
+float HUD_PANEL_ENGINEINFO	= 13;
+float HUD_PANEL_NUM		= 14; // always last panel id + 1, please increment when adding a new panel
 
 float HUD_MENU_ENABLE		= 0;

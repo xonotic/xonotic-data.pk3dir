@@ -217,31 +217,30 @@ void HUD_DrawXNum (vector pos, float num, float digits, float showsign, float le
 	}
 }
 
-// color the number differently based on how big it is (used in the health/armor panel)
-void HUD_DrawXNum_Colored (vector pos, float x, float digits, float lettersize, float alpha)
+vector HUD_Get_Num_Color (float x, float maxvalue)
 {
 	vector color;
-	if(x > 200) {
+	if(x > maxvalue) {
 		color_x = 0;
 		color_y = 1;
 		color_z = 0;
 	}
-	else if(x > 150) {
+	else if(x > maxvalue * 0.75) {
 		color_x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
 		color_y = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
 		color_z = 0;
 	}
-	else if(x > 100) {
+	else if(x > maxvalue * 0.5) {
 		color_x = 1 - (x-100)*0.02 * 0.6; //red value between 1 -> 0.4
 		color_y = 1 - (x-100)*0.02 * 0.1; // green value between 1 -> 0.9
 		color_z = 1 - (x-100)*0.02; // blue value between 1 -> 0
 	}
-	else if(x > 50) {
+	else if(x > maxvalue * 0.25) {
 		color_x = 1;
 		color_y = 1;
 		color_z = 0.2 + (x-50)*0.02 * 0.8; // blue value between 0.2 -> 1
 	}
-	else if(x > 20) {
+	else if(x > maxvalue * 0.1) {
 		color_x = 1;
 		color_y = (x-20)*90/27/100; // green value between 0 -> 1
 		color_z = (x-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
@@ -251,6 +250,13 @@ void HUD_DrawXNum_Colored (vector pos, float x, float digits, float lettersize, 
 		color_y = 0;
 		color_z = 0;
 	}
+	return color;
+}
+// color the number differently based on how big it is (used in the health/armor panel)
+void HUD_DrawXNum_Colored (vector pos, float x, float digits, float lettersize, float alpha)
+{
+	vector color;
+	color = HUD_Get_Num_Color (x, 200);
 	HUD_DrawXNum(pos, x, digits, 0, lettersize, color, 0, 0, alpha, DRAWFLAG_NORMAL);
 }
 
@@ -670,6 +676,9 @@ vector HUD_Panel_GetMinSize(float id)
 			break;
 		case 11: 
 			mySize_y = 0.5898; // 0.5898 * width, reason: bg has weird dimensions...
+			break;
+		case 13: 
+			mySize_y = 0.25; // 0.25 * width, trial and error...
 			break;
 	}
 	if(!mySize_x && mySize_y)
@@ -3933,6 +3942,53 @@ void HUD_Chat(void)
 	}
 }
 
+// Engine info panel (#13)
+//
+float prevfps;
+float prevfps_time;
+float framecounter;
+void HUD_EngineInfo(void)
+{
+	float id = HUD_PANEL_ENGINEINFO;
+	vector pos, mySize;
+	pos = HUD_Panel_GetPos(id);
+	mySize = HUD_Panel_GetSize(id);
+
+	HUD_Panel_DrawBg(id, pos, mySize, 0);
+	float padding;
+	padding = HUD_Panel_GetPadding(id);
+	if(padding)
+	{
+		pos += '1 1 0' * padding;
+		mySize -= '2 2 0' * padding;
+	}
+
+	if(cvar("hud_engineinfo_framecounter_exponentialmovingaverage"))
+	{
+		float weight;
+		weight = cvar("hud_engineinfo_framecounter_exponentialmovingaverage_new_weight");
+		if(frametime > 0.0001) // filter out insane values which sometimes seem to occur and throw off the average? If you are getting 10,000 fps or more, then you don't need a framerate counter.
+		{
+			if(fabs(prevfps - (1/frametime)) > prevfps * cvar("hud_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold")) // if there was a big jump in fps, just force prevfps at current (1/frametime) to make big updates instant
+				prevfps = (1/frametime);
+			prevfps = (1 - weight) * prevfps + weight * (1/frametime);
+		}
+	}
+	else
+	{
+		framecounter += 1;
+		if(time - prevfps_time > cvar("hud_engineinfo_framecounter_time"))
+		{
+			prevfps = framecounter/cvar("hud_engineinfo_framecounter_time");
+			framecounter = 0;
+			prevfps_time = time;
+		}
+	}
+
+	vector color;
+	color = HUD_Get_Num_Color (prevfps, 100);
+	drawstring(pos, strcat("FPS: ", ftos_decimals(prevfps, 2)), '1 1 0' * 0.5 * mySize_y, color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+}
 /*
 ==================
 Main HUD system
@@ -4115,6 +4171,8 @@ void HUD_Main (void)
 		HUD_Chat();
 	else
 		cvar_set("con_csqcpositioning", "0");
+	if(HUD_Panel_CheckActive(HUD_PANEL_ENGINEINFO) || hud_configure)
+		HUD_EngineInfo();
 
 	// TODO hud_'ify these
 	if (cvar("cl_showspeed"))

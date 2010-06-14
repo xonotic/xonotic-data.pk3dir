@@ -1966,6 +1966,7 @@ string HUD_Panel_GetName(float id)
 		case HUD_PANEL_MODICONS: return "modicons"; break;
 		case HUD_PANEL_PRESSEDKEYS: return "pressedkeys"; break;
 		case HUD_PANEL_CHAT: return "chat"; break;
+		case HUD_PANEL_ENGINEINFO: return "engineinfo"; break;
 		default: return "";
 	}
 }
