@@ -162,7 +162,7 @@ float GameCommand_Vote(string s, entity e) {
 						print_to(e, "^1Your vote is empty. See 'vhelp' for more info.");
 					} else if(e
 						&& time < e.vote_next) {
-							print_to(e, strcat("^1You have to wait ^2", ftos(e.vote_next - time), "^1 seconds before you can again call a vote."));
+							print_to(e, strcat("^1You have to wait ^2", ftos(ceil(e.vote_next - time)), "^1 seconds before you can again call a vote."));
 					} else if(VoteCheckNasty(vote)) {
 						print_to(e, "Syntax error in command. See 'vhelp' for more info.");
 					} else if(RemapVote(vote, "vcall", e)) {
