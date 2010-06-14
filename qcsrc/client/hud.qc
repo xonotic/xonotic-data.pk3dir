@@ -1027,6 +1027,35 @@ void HUD_Panel_SetPos(float id, vector pos)
 	cvar_set(strcat("hud_", HUD_Panel_GetName(id), "_pos"), s);
 }
 
+float HUD_Panel_CheckValidity_of_ResizeSuggestion(float id, vector mySize)
+{
+	vector oldSize;
+	oldSize = mySize;
+
+	// copy pasta from SetPosSize:
+	// minimum panel size cap
+	mySize_x = max(0.025 * vid_conwidth, mySize_x);
+	mySize_y = max(0.025 * vid_conheight, mySize_y);
+
+	if(id == 12) // some panels have their own restrictions, like the chat panel (which actually only moves the engine chat print around). Looks bad if it's too small.
+	{
+		mySize_x = max(17 * cvar("con_chatsize"), mySize_x);
+		mySize_y = max(2 * cvar("con_chatsize") + 2 * HUD_Panel_GetPadding(id), mySize_y);
+	}
+
+	// cap against panel's own limits
+	vector minSize;
+	minSize = HUD_Panel_GetMinSize(id); // mySize_x at least minSize_x * mySize_y, and vice versa
+
+	mySize_x = max(minSize_x * mySize_y, mySize_x);
+	mySize_y = max(minSize_y * mySize_x, mySize_y);
+
+	if(mySize == oldSize)
+		return 1;
+	else
+		return 0;
+}
+
 // check if resize will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector
 vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize, vector resizeorigin)
 {
@@ -1057,6 +1086,22 @@ vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize, vector resiz
 			continue;
 
 		// OK, there IS a collision.
+		//
+
+		// Now check some special cases
+		// If the resizeorigin is too close to the target panel on either axis, we do not want to perform any collision avoidance on that axis
+		float Check_X, Check_Y;
+		Check_X = Check_Y = 1;
+		// check upper/left edges of targ panel
+		if(fabs(targPos_x - resizeorigin_x) < 0.025 * vid_conwidth)
+			Check_X = 0;
+		if(fabs(targPos_y - resizeorigin_y) < 0.025 * vid_conheight)
+			Check_Y = 0;
+		// check lower/right edges of targ panel
+		if(fabs(resizeorigin_x - (targPos_x + targSize_x)) < 0.025 * vid_conwidth)
+			Check_X = 0;
+		if(fabs(resizeorigin_y - (targPos_y + targSize_y)) < 0.025 * vid_conheight)
+			Check_Y = 0;
 
 		myCenter_x = myPos_x + 0.5 * mySize_x;
 		myCenter_y = myPos_y + 0.5 * mySize_y;
@@ -1066,30 +1111,42 @@ vector HUD_Panel_CheckResize(float id, vector myPos, vector mySize, vector resiz
 
 		if(myCenter_x < targCenter_x && myCenter_y < targCenter_y) // top left (of target panel)
 		{
-			if(myPos_x + mySize_x - targPos_x < myPos_y + mySize_y - targPos_y) // push it to the side
+			//if(!HUD_Panel_CheckValidity_of_ResizeSuggestion(id, eX * (targPos_x - myPos_x) + eY * (targPos_y - resizeorigin_y)))
+			//	continue;
+
+			if(myPos_x + mySize_x - targPos_x < myPos_y + mySize_y - targPos_y && Check_X) // push it to the side
 				mySize_x = targPos_x - myPos_x;
-			else // push it upwards
+			else if(Check_Y) // push it upwards
 				mySize_y = targPos_y - resizeorigin_y;
 		}
 		else if(myCenter_x > targCenter_x && myCenter_y < targCenter_y) // top right
 		{
-			if(targPos_x + targSize_x - myPos_x < myPos_y + mySize_y - targPos_y) // push it to the side
+			//if(!HUD_Panel_CheckValidity_of_ResizeSuggestion(id, eX * (resizeorigin_x - (targPos_x + targSize_x)) + eY * (targPos_y - resizeorigin_y)))
+			//	continue;
+
+			if(targPos_x + targSize_x - myPos_x < myPos_y + mySize_y - targPos_y && Check_X) // push it to the side
 				mySize_x = resizeorigin_x - (targPos_x + targSize_x);
-			else // push it upwards
+			else if(Check_Y) // push it upwards
 				mySize_y = targPos_y - resizeorigin_y;
 		}
 		else if(myCenter_x < targCenter_x && myCenter_y > targCenter_y) // bottom left
 		{
-			if(myPos_x + mySize_x - targPos_x < targPos_y + targSize_y - myPos_y) // push it to the side
+			//if(!HUD_Panel_CheckValidity_of_ResizeSuggestion(id, eX * (targPos_x - resizeorigin_x) + eY * (resizeorigin_y - (targPos_y + targSize_y))))
+			//	continue;
+
+			if(myPos_x + mySize_x - targPos_x < targPos_y + targSize_y - myPos_y && Check_X) // push it to the side
 				mySize_x = targPos_x - resizeorigin_x;
-			else // push it downwards
+			else if(Check_Y) // push it upwards
 				mySize_y = resizeorigin_y - (targPos_y + targSize_y);
 		}
 		else if(myCenter_x > targCenter_x && myCenter_y > targCenter_y) // bottom right
 		{
-			if(targPos_x + targSize_x - myPos_x < targPos_y + targSize_y - myPos_y) // push it to the side
+			//if(!HUD_Panel_CheckValidity_of_ResizeSuggestion(id, eX * (resizeorigin_x - (targPos_x + targSize_x)) + eY * (resizeorigin_y - (targPos_y + targSize_y))))
+			//	continue;
+
+			if(targPos_x + targSize_x - myPos_x < targPos_y + targSize_y - myPos_y && Check_X) // push it to the side
 				mySize_x = resizeorigin_x - (targPos_x + targSize_x);
-			else // push it downwards
+			else if(Check_Y) // push it upwards
 				mySize_y = resizeorigin_y - (targPos_y + targSize_y);
 		}
 	}
