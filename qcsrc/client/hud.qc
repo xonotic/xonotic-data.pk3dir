@@ -3947,6 +3947,10 @@ void HUD_Chat(void)
 float prevfps;
 float prevfps_time;
 float framecounter;
+
+float frametimeavg;
+float frametimeavg1; // 1 frame ago
+float frametimeavg2; // 2 frames ago
 void HUD_EngineInfo(void)
 {
 	float id = HUD_PANEL_ENGINEINFO;
@@ -3965,13 +3969,17 @@ void HUD_EngineInfo(void)
 
 	if(cvar("hud_engineinfo_framecounter_exponentialmovingaverage"))
 	{
+		frametimeavg = (frametimeavg + frametimeavg1 + frametimeavg2 + frametime)/4; // average three frametimes into framecounter for slightly more stable fps readings :P
+		frametimeavg2 = frametimeavg1;
+		frametimeavg1 = frametimeavg;
+		
 		float weight;
 		weight = cvar("hud_engineinfo_framecounter_exponentialmovingaverage_new_weight");
 		if(frametime > 0.0001) // filter out insane values which sometimes seem to occur and throw off the average? If you are getting 10,000 fps or more, then you don't need a framerate counter.
 		{
-			if(fabs(prevfps - (1/frametime)) > prevfps * cvar("hud_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold")) // if there was a big jump in fps, just force prevfps at current (1/frametime) to make big updates instant
+			if(fabs(prevfps - (1/frametimeavg)) > prevfps * cvar("hud_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold")) // if there was a big jump in fps, just force prevfps at current (1/frametime) to make big updates instant
 				prevfps = (1/frametime);
-			prevfps = (1 - weight) * prevfps + weight * (1/frametime);
+			prevfps = (1 - weight) * prevfps + weight * (1/frametimeavg); // framecounter just used so there's no need for a new variable, think of it as "frametime average"
 		}
 	}
 	else
@@ -3987,7 +3995,7 @@ void HUD_EngineInfo(void)
 
 	vector color;
 	color = HUD_Get_Num_Color (prevfps, 100);
-	drawstring(pos, strcat("FPS: ", ftos_decimals(prevfps, 2)), '1 1 0' * 0.5 * mySize_y, color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawstring(pos, strcat("FPS: ", ftos_decimals(prevfps, cvar("hud_engineinfo_framecounter_decimals"))), '1 1 0' * 0.5 * mySize_y, color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 }
 /*
 ==================
