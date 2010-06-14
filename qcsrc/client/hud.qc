@@ -2594,6 +2594,7 @@ void HUD_Notify (void)
 	float entries, height;
 	entries = bound(1, floor(12 * mySize_y/mySize_x), 10);
 	height = mySize_y/entries;
+	entries -= 2; // top/bottom two lines reserved for info messaged, such as spec instructions
 	
 	vector fontsize;
 	fontsize = '0.5 0.5 0' * height;
@@ -2618,6 +2619,8 @@ void HUD_Notify (void)
 			i = j;
 		else // rather nasty hack for ordering items from the bottom up
 			i = entries - j - 1;
+		if(cvar("hud_notify_info_top"))
+			i += 2; // top/bottom two lines reserved for info messaged, such as spec instructions
 
 		if(fadetime)
 		{
@@ -2721,22 +2724,21 @@ void HUD_Notify (void)
 			}
 		}
 	}
-	/* This will come later.
-	string s;
+
+	// Info messages
+	//
 	entity tm;
 	if(spectatee_status && !intermission)
 	{
-		drawfont = hud_bigfont;
+		//drawfont = hud_bigfont;
 		if(spectatee_status == -1)
 			s = "^1Observing";
 		else
 			s = GetPlayerName(spectatee_status - 1);
-		// spectated player name between HUD and chat area, aligned to the left
-		pos_x = 0;
-		pos_y = - 50 - hud_fontsize_spec_y;
-		s = textShortenToWidth(s, vid_conwidth/2.5, hud_fontsize_spec, stringwidth_colors);
-		drawcolorcodedstring(pos, s, hud_fontsize_spec, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-		drawfont = hud_font;
+
+		//s = textShortenToWidth(s, mySize_y, 0.5 * height, stringwidth_colors);
+		//drawcolorcodedstring(pos + eY * 0.25 * height, s, 0.5 * height, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		//drawfont = hud_font;
 
 		// spectator text in the upper right corner
 		if(spectatee_status == -1)
@@ -2837,7 +2839,13 @@ void HUD_Notify (void)
 			}
 		}
 	}
-	*/
+	if(hud_configure)
+		s = strcat(s, "^7Press ^3ESC ^7to show HUD options.\n^3Doubleclick a panel for panel-specific options.");
+	//s = textShortenToWidth(s, mySize_y, 0.5 * height, stringwidth_colors);
+	if(cvar("hud_notify_info_top"))
+		drawcolorcodedstring(pos + eY * 0.25 * height, s, '1 1 0' * 0.5 * height, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	else
+		drawcolorcodedstring(pos + eY * mySize_y - eY * 1.75 * height, s, '1 1 0' * 0.5 * height, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 }
 
 // Timer (#5)
