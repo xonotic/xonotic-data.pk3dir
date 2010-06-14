@@ -597,7 +597,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_padding \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_padding")), "\"", "\n"));
 			switch(i) {
 				case 0:
-					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_accuracy_height ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_accuracy_height"))), "\n"));
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_accuracy_yellow ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_accuracy_yellow"))), "\n"));
 					break;
 				case 1:
@@ -614,6 +613,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case 4:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_flip ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_flip"))), "\n"));
 					break;
+				case 6:
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_foreground_alpha ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_foreground_alpha"))), "\n"));
 				case 9:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_alreadyvoted_alpha ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_alreadyvoted_alpha"))), "\n"));
 					break;
