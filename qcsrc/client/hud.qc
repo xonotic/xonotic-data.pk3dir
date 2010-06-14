@@ -3142,9 +3142,11 @@ void HUD_RaceTimer (void) {
 	if(hud_configure)
 	{
 		s = "0:13:37";
-		drawstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, FALSE, '0.75 0.75 0' * mySize_y), s, '0.75 0.75 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		drawstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, FALSE, '0.60 0.60 0' * mySize_y), s, '0.60 0.60 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 		s = "^1Intermediate 1 (+15.42)";
-		drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.25 * mySize_y) + eY * 0.75 * mySize_y, s, '1 1 0' * 0.25 * mySize_y, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.20 * mySize_y) + eY * 0.60 * mySize_y, s, '1 1 0' * 0.20 * mySize_y, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		s = strcat("^1PENALTY: ", ftos_decimals(20 * 0.1, 1), " (missing a checkpoint)");
+		drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.20 * mySize_y) + eY * 0.80 * mySize_y, s, '1 1 0' * 0.20 * mySize_y, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 	}
 	else if(race_checkpointtime)
 	{
@@ -3179,10 +3181,9 @@ void HUD_RaceTimer (void) {
 		{
 			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 			//drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.25 * mySize_y) + eY * 0.75 * mySize_y, s, '1 1 0' * 0.25 * mySize_y, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 		}
 
-		// ___ TODO!!!___
 		if(race_penaltytime)
 		{
 			a = bound(0, 2 - (time - race_penaltyeventtime), 1);
@@ -3191,7 +3192,7 @@ void HUD_RaceTimer (void) {
 				s = strcat("^1PENALTY: ", ftos_decimals(race_penaltytime * 0.1, 1), " (", race_penaltyreason, ")");
 				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 				//drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos - '0 32 0' - '0.5 0 0' * stringwidth(s, TRUE, '16 16 0'), s, '16 16 0', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.8 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 			}
 		}
 
@@ -3199,7 +3200,7 @@ void HUD_RaceTimer (void) {
 		{
 			a = bound(0, (time - race_checkpointtime) / 0.5, 1);
 			//drawstring_expanding(m - '16 0 0' * stringwidth(forcetime, FALSE), forcetime, '32 32 0', '1 1 1', HUD_Panel_GetFgAlpha(id), 0, a);
-			drawstring_expanding(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(forcetime, FALSE, '1 1 0' * 0.75 * mySize_y), forcetime, '1 1 0' * 0.75 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), 0, a);
+			drawstring_expanding(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(forcetime, FALSE, '1 1 0' * 0.6 * mySize_y), forcetime, '1 1 0' * 0.6 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), 0, a);
 		}
 		else
 			a = 1;
@@ -3208,7 +3209,7 @@ void HUD_RaceTimer (void) {
 		{
 			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime));
 			//drawstring(m - '16 0 0' * stringwidth(s, FALSE), s, '32 32 0', '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-			drawstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, FALSE, '0.75 0.75 0' * mySize_y), s, '0.75 0.75 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			drawstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, FALSE, '0.6 0.6 0' * mySize_y), s, '0.6 0.6 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 		}
 	}
 	else
@@ -3219,7 +3220,7 @@ void HUD_RaceTimer (void) {
 			s = MakeRaceString(race_mycheckpoint, TIME_DECODE(race_mycheckpointdelta), -!race_mycheckpointenemy, race_mycheckpointlapsdelta, race_mycheckpointenemy);
 			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 			//drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-			drawcolorcodedstring(pos - '0 16 0' - '0.5 0 0' * stringwidth(s, TRUE, '16 16 0'), s, '16 16 0', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 		}
 		if(race_othercheckpointtime && race_othercheckpointenemy != "")
 		{
@@ -3227,7 +3228,7 @@ void HUD_RaceTimer (void) {
 			s = MakeRaceString(race_othercheckpoint, -TIME_DECODE(race_othercheckpointdelta), -!race_othercheckpointenemy, race_othercheckpointlapsdelta, race_othercheckpointenemy);
 			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 			//drawcolorcodedstring(m - '0 0 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-			drawcolorcodedstring(pos - '0 0 0' - '0.5 0 0' * stringwidth(s, TRUE, '16 16 0'), s, '16 16 0', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 		}
 
 		if(race_penaltytime && !race_penaltyaccumulator)
@@ -3242,7 +3243,7 @@ void HUD_RaceTimer (void) {
 					s = strcat("^2PENALTY: 0.0 (", race_penaltyreason, ")");
 				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 				//drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos - '0 32 0' - '0.5 0 0' * stringwidth(s, TRUE, '16 16 0'), s, '16 16 0', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 			}
 		}
 	}
@@ -3721,7 +3722,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	a = bound(0, race_status_time - time, 1);
 
 	string s;
-	s = textShortenToWidth(race_status_name, 120, '10 10 0', stringwidth_colors);
+	s = textShortenToWidth(race_status_name, mySize_y, '1 1 0' * 0.1 * mySize_y, stringwidth_colors);
 
 	float rank;
 	if(race_status > 0)
@@ -3729,23 +3730,28 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	string rankname;
 	rankname = race_PlaceName(rank);
 
+	vector namepos;
+	namepos = pos + '0.5 0.9 0' * mySize_y - eX * stringwidth(s, TRUE, '1 1 0' * 0.1 * mySize_y);
+	vector rankpos;
+	rankpos = pos + '0.5 0.25 0' * mySize_y - eX * stringwidth(rankname, TRUE, '1 1 0' * 0.15 * mySize_y);
+
 	if(race_status == 0)
-		drawpic_skin(pos, "race_newfail", '80 80 0', '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "race_newfail", '1 1 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
 	else if(race_status == 1) {
-		drawpic_skin(pos, "race_newtime", '80 80 0', '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(pos + '40 80 0' - eX * stringwidth(s, TRUE, '5 0 0'), s, '10 10 0', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
-		drawstring(pos + '40 20 0' - eX * stringwidth(rankname, TRUE, '7 0 0'), rankname, '14 14 0', '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "race_newtime", '1 1 0' * 0.9 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(namepos, s, '1 1 0' * 0.1 * mySize_y, HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
+		drawstring(rankpos, rankname, '1 1 0' * 0.15 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
 	} else if(race_status == 2) {
 		if(race_status_name == GetPlayerName(player_localentnum -1) || !race_myrank || race_myrank < rank)
-			drawpic_skin(pos, "race_newrankgreen", '80 80 0', '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
+			drawpic_skin(pos, "race_newrankgreen", '1 1 0' * 0.9 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
 		else
-			drawpic_skin(pos, "race_newrankyellow", '80 80 0', '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(pos + '40 80 0' - eX * stringwidth(s, TRUE, '5 0 0'), s, '10 10 0', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
-		drawstring(pos + '40 20 0' - eX * stringwidth(rankname, TRUE, '7 0 0'), rankname, '14 14 0', '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
+			drawpic_skin(pos, "race_newrankyellow", '1 1 0' * 0.9 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(namepos, s, '1 1 0' * 0.1 * mySize_y, HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
+		drawstring(rankpos, rankname, '1 1 0' * 0.15 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
 	} else if(race_status == 3) {
-		drawpic_skin(pos, "race_newrecordserver", '80 80 0', '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(pos + '40 80 0' - eX * stringwidth(s, TRUE, '5 0 0'), s, '10 10 0', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
-		drawstring(pos + '40 20 0' - eX * stringwidth(rankname, TRUE, '7 0 0'), rankname, '14 14 0', '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "race_newrecordserver", '1 1 0' * 0.9 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(namepos, s, '1 1 0' * 0.1 * mySize_y, HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
+		drawstring(rankpos, rankname, '1 1 0' * 0.15 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * a, DRAWFLAG_NORMAL);
 	}
 
 	if (race_status_time - time <= 0) {
