@@ -355,7 +355,8 @@ void CSQC_UpdateView(float w, float h)
 	float fov;
 	float f, i, j;
 	vector v, vo;
-	vector recticle_pos, recticle_size;
+
+	vector reticle_pos, reticle_size;
 
 	WaypointSprite_Load();
 
@@ -579,14 +580,14 @@ void CSQC_UpdateView(float w, float h)
 	self = e;
 
 	// draw the aiming reticle for weapons that use it (eg. Nex)
-	recticle_pos_x = 0;
-	recticle_pos_y = 0;
-	recticle_size_x = vid_conwidth;
-	recticle_size_y = vid_conheight;
+	reticle_pos_x = 0;
+	reticle_pos_y = 0;
+	reticle_size_x = vid_conwidth;
+	reticle_size_y = vid_conheight;
 
-	if(cvar("cl_recticle_nex"))
+	if(cvar("cl_reticle_nex"))
 	if(button_attack2 && activeweapon == WEP_NEX)
-		drawpic(recticle_pos, "textures/reticle_nex", recticle_size, '1 1 1', cvar("cl_recticle_nex"), DRAWFLAG_NORMAL);
+		drawpic(reticle_pos, "textures/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_nex"), DRAWFLAG_NORMAL);
 
 	// draw radar
 	if(
