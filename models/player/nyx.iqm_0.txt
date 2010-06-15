@@ -1,0 +1,7 @@
+name Nyx
+species human
+sex Female
+weight 100
+age 24
+
+Heavyweight Xonotic Soldier
