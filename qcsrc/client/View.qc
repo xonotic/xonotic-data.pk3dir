@@ -355,6 +355,7 @@ void CSQC_UpdateView(float w, float h)
 	float fov;
 	float f, i, j;
 	vector v, vo;
+	vector recticle_pos, recticle_size;
 
 	WaypointSprite_Load();
 
@@ -828,6 +829,16 @@ void CSQC_UpdateView(float w, float h)
 			wcross_resolution_goal_prev = 0;
 			wcross_resolution_goal_prev_prev = 0;
 		}
+
+	// draw the aiming reticle for weapons that use zoom for alt fire (eg. nex)
+	recticle_pos_x = 0;
+	recticle_pos_y = 0;
+	recticle_size_x = vid_conwidth;
+	recticle_size_y = vid_conheight;
+
+	if(cvar("cl_recticle_nex"))
+	if(button_attack2 && activeweapon == WEP_NEX)
+		drawpic(recticle_pos, "textures/reticle_nex", recticle_size, '1 1 1', cvar("cl_recticle_nex"), DRAWFLAG_NORMAL);
 	}
 
 	if(NextFrameCommand)
