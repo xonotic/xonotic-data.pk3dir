@@ -2728,6 +2728,13 @@ void HUD_Notify (void)
 	// Info messages
 	//
 	entity tm;
+	vector o;
+	o = pos;
+	if(cvar("hud_notify_info_top"))
+		o = pos + eY;
+	else
+		o = pos + eY * mySize_y - eY * 2 * height;
+	
 	if(spectatee_status && !intermission)
 	{
 		//drawfont = hud_bigfont;
@@ -2745,13 +2752,19 @@ void HUD_Notify (void)
 			s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 to spectate");
 		else
 			s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 for another player");
+		drawcolorcodedstring(o, s, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
 
 		if(spectatee_status == -1)
 			s = strcat("^1Use ^3", getcommandkey("next weapon", "weapnext"), "^1 or ^3", getcommandkey("previous weapon", "weapprev"), "^1 to change the speed");
 		else
 			s = strcat("^1Press ^3", getcommandkey("secondary fire", "+attack2"), "^1 to observe");
+		drawcolorcodedstring(o, s, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
 
 		s = strcat("^1Press ^3", getcommandkey("server info", "+show_info"), "^1 for gamemode info");
+		drawcolorcodedstring(o, s, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
 
 		if(gametype == GAME_ARENA)
 			s = "^1Wait for your turn to join";
@@ -2768,6 +2781,8 @@ void HUD_Notify (void)
 		}
 		else
 			s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
+		drawcolorcodedstring(o, s, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
 
 		//show restart countdown:
 		if (time < getstatf(STAT_GAMESTARTTIME)) {
@@ -2775,14 +2790,16 @@ void HUD_Notify (void)
 			//we need to ceil, otherwise the countdown would be off by .5 when using round()
 			countdown = ceil(getstatf(STAT_GAMESTARTTIME) - time);
 			s = strcat("^1Game starts in ^3", ftos(countdown), "^1 seconds");
+			drawcolorcodedstring(o, s, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+			o += eY * fontsize_y;
 		}
 	}
 	if(warmup_stage && !intermission)
 	{
 		s = "^2Currently in ^1warmup^2 stage!";
+		drawcolorcodedstring(o, s, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
 	}
-
-	// move more important stuff more to the middle so its more visible
 
 	string blinkcolor;
 	if(mod(time, 1) >= 0.5)
@@ -2806,10 +2823,14 @@ void HUD_Notify (void)
 			else
 				s = strcat("^2Waiting for others to ready up...");
 		}
+		drawcolorcodedstring(o, s, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
 	}
 	else if(warmup_stage && !intermission && !spectatee_status)
 	{
 		s = strcat("^2Press ^3", getcommandkey("ready", "ready"), "^2 to end warmup");
+		drawcolorcodedstring(o, s, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
 	}
 
 	if(teamplay && !intermission && !spectatee_status && gametype != GAME_CA && teamnagger)
@@ -2836,16 +2857,20 @@ void HUD_Notify (void)
 				if (tm.team_size == ts_max)
 					s = strcat(s, " Press ^3", getcommandkey("team menu", "menu_showteamselect"), blinkcolor, " to adjust");
 
+				drawcolorcodedstring(o, s, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+				o += eY * fontsize_y;
 			}
 		}
 	}
 	if(hud_configure)
-		s = strcat(s, "^7Press ^3ESC ^7to show HUD options.\n^3Doubleclick a panel for panel-specific options.");
-	//s = textShortenToWidth(s, mySize_y, 0.5 * height, stringwidth_colors);
-	if(cvar("hud_notify_info_top"))
-		drawcolorcodedstring(pos + eY * 0.25 * height, s, '1 1 0' * 0.5 * height, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-	else
-		drawcolorcodedstring(pos + eY * mySize_y - eY * 1.75 * height, s, '1 1 0' * 0.5 * height, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	{
+		s = "^7Press ^3ESC ^7to show HUD options.";
+		drawcolorcodedstring(o, s, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
+		s = "^3Doubleclick a panel for panel-specific options.";
+		drawcolorcodedstring(o, s, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
+	}
 }
 
 // Timer (#5)
