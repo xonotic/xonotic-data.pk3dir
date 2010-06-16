@@ -50,8 +50,8 @@ float	IT_PICKUPMASK           = 51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED
 float	IT_UNLIMITED_AMMO       = 3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
 
 // variables:
-string weaponpriority_hudselector_0;
-string weaponpriority_hudselector_1;
+string weaponorder_byid;
+string weaponorder_byimpulse;
 
 // functions:
 entity get_weaponinfo(float id);

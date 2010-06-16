@@ -1453,14 +1453,13 @@ void weaponorder_swap(float i, float j, entity pass)
 	weaponorder[j] = h;
 }
 
+string weaponorder_cmp_str;
 float weaponorder_cmp(float i, float j, entity pass)
 {
-	float d;
-	d = mod(weaponorder[i].impulse + 9, 10) - mod(weaponorder[j].impulse + 9, 10);
-	if(d)
-		return d;
-	d = weaponorder[i].weapon - weaponorder[j].weapon;
-	return d;
+	float ai, aj;
+	ai = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[i].weapon), 0);
+	aj = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[j].weapon), 0);
+	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
 void HUD_WeaponIcons(void)
@@ -1483,6 +1482,9 @@ void HUD_WeaponIcons(void)
 			++weapon_cnt;
 		}
 	}
+
+	// TODO make this configurable
+	weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
 	heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
