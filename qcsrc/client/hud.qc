@@ -618,6 +618,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case 4:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_flip ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_flip"))), "\n"));
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_info_top ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_info_top"))), "\n"));
 					break;
 				case 6:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_foreground_alpha ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_foreground_alpha"))), "\n"));
@@ -656,7 +657,7 @@ vector HUD_Panel_GetMinSize(float id)
 			}
 			break;
 		case 4: 
-			mySize_x = 4/5; // 4/5 * height, trial and error...
+			mySize_x = 1.1; // 4/5 * height, trial and error...
 			mySize_y = 1/3; // 1/3 * width, trial and error...
 			break;
 		case 5: 
