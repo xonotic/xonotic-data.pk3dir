@@ -656,8 +656,8 @@ vector HUD_Panel_GetMinSize(float id)
 			}
 			break;
 		case 4: 
-			mySize_x = 1.2; // 12/10 * height, as panel cant support more than 10 entries...
-			mySize_y = 1/12; // 1/12 * width
+			mySize_x = 4/5; // 4/5 * height, trial and error...
+			mySize_y = 1/3; // 1/3 * width, trial and error...
 			break;
 		case 5: 
 			mySize_y = 1/4.1; // 1/4.1 * width, trial and error...
@@ -2678,7 +2678,7 @@ void HUD_Notify (void)
 	}
 
 	float entries, height;
-	entries = bound(1, floor(12 * mySize_y/mySize_x), 10);
+	entries = bound(1, floor(14 * mySize_y/mySize_x), 12);
 	height = mySize_y/entries;
 	entries -= 2; // top/bottom two lines reserved for info messaged, such as spec instructions
 	
