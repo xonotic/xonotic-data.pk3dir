@@ -317,3 +317,4 @@ float particles_alphamin, particles_alphamax;
 #define PARTICLES_USECOLOR 2
 vector particles_colormin, particles_colormax;
 void(float effectindex, entity own, vector org_from, vector org_to, vector dir_from, vector dir_to, float countmultiplier, float flags)	boxparticles = #502;
+string(string format, ...) sprintf = #627;
