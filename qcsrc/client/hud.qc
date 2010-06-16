@@ -2363,15 +2363,11 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 			if(alsoprint)
 				print ("^1",s1, "^1 was conserved by ", s2, "\n");
 		}
-		else if (type == DEATH_HURTTRIGGER && s3 != "")
+		else if (type == DEATH_HURTTRIGGER)
 		{
 			HUD_KillNotify_Push(s2, s1, 1, DEATH_HURTTRIGGER);
-			// p ?!?! :o
-			//if(p < 0)
 			if(alsoprint)
-				print("^1", s1, "^1 ", s3, " ", s2, "\n");
-			//else
-			//	bprint("^1", s1, "^1 ", substring(s3, 0, p), s2, "^1", substring(s3, p+1, strlen(s3) - (p+1)), "\n");
+				print("^1",s1, "^1 was thrown into a world of hurt by ", s2, "\n");
 		} else if(type == DEATH_SBCRUSH) {
 			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
 			if(alsoprint)
@@ -2482,12 +2478,11 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 				else
 					print ("^1",s1, "^1 drowned\n");
 			}
-		}
-		else if (type == DEATH_SLIME)
+		} else if (type == DEATH_SLIME) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_SLIME);
 			if(alsoprint)
 				print ("^1",s1, "^1 was slimed\n");
-		else if (type == DEATH_LAVA) {
+		} else if (type == DEATH_LAVA) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_LAVA);
 			if(alsoprint)
 			{
@@ -2496,8 +2491,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 				else
 					print ("^1",s1, "^1 turned into hot slag\n");
 			}
-		}
-		else if (type == DEATH_FALL) {
+		} else if (type == DEATH_FALL) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
@@ -2506,12 +2500,11 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 				else
 					print ("^1",s1, "^1 hit the ground with a crunch\n");
 			}
-		}
-		else if (type == DEATH_SHOOTING_STAR)
+		} else if (type == DEATH_SHOOTING_STAR) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_SHOOTING_STAR);
 			if(alsoprint)
 				print ("^1",s1, "^1 became a shooting star\n");
-		else if (type == DEATH_SWAMP) {
+		} else if (type == DEATH_SWAMP) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
@@ -2528,6 +2521,10 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 			HUD_KillNotify_Push(s1, "", 0, DEATH_CUSTOM);
 			if(alsoprint)
 				print ("^1",s1, "^1 ", s2, "\n");
+		} else if (type == DEATH_HURTTRIGGER) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_HURTTRIGGER);
+			if(alsoprint)
+				print ("^1",s1, "^1 was in the wrong place\n");
 		} else if(type == DEATH_TOUCHEXPLODE) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
@@ -2789,7 +2786,7 @@ void HUD_Notify (void)
 				drawpic_skin(weap_pos, "notify_shootingstar", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 			}
-			else if(killnotify_deathtype[j] == DEATH_CUSTOM)
+			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM)
 			{
 				drawpic_skin(weap_pos, "notify_void", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
