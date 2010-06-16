@@ -2490,7 +2490,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 
 #define DAMAGE_CENTERPRINT_SPACER NEWLINES
 
-void HUD_Centerprint(string s1, float type, float msg)
+void HUD_Centerprint(string s1, string s2, float type, float msg)
 {
 	if(msg == MSG_SUICIDE) {
 		if (type == DEATH_TEAMCHANGE) {
@@ -2544,29 +2544,29 @@ void HUD_Centerprint(string s1, float type, float msg)
 			} else {
 				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1First victim"));
 			}
-		} else if (type == KILL_TYPEFRAG) {
+		} else if (type == KILL_TYPEFRAG) { // s2 contains "advanced kill messages" such as ping, handicap...
 			if(cvar("cl_gentle")) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You scored against ^7", s1, "^7 who was typing!"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You scored against ^7", s1, "^7 who was typing!", s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You typefragged ^7", s1));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You typefragged ^7", s1, s2));
 			}
 		} else if (type == KILL_TYPEFRAGGED) {
 			if(cvar("cl_gentle")) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were scored against by ^7", s1, "^7 while you were typing!"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were scored against by ^7", s1, "^7 while you were typing!", s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were typefragged by ^7", s1));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were typefragged by ^7", s1, s2));
 			}
 		} else if (type == KILL_FRAG) {
 			if(cvar("cl_gentle")) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You scored against ^7", s1));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You scored against ^7", s1, s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You fragged ^7", s1));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You fragged ^7", s1, s2));
 			}
 		} else if (type == KILL_FRAGGED) {
 			if(cvar("cl_gentle")) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You were scored against by ^7", s1));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You were scored against by ^7", s1, s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You were fragged by ^7", s1));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You were fragged by ^7", s1, s2));
 			}
 		}
 	} else if(msg == MSG_KILL_ACTION) {

@@ -1249,7 +1249,7 @@ void Net_Notify() {
 	}
 	else if(type == CSQC_CENTERPRINT)
 	{
-		HUD_Centerprint(ReadString(), ReadShort(), ReadByte());
+		HUD_Centerprint(ReadString(), ReadString(), ReadShort(), ReadByte());
 	}
 }
 

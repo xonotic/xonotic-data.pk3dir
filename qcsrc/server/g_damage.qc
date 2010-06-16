@@ -259,7 +259,7 @@ void Send_KillNotification (string s1, string s2, string s3, float msg, float ty
 
 // TODO: writespectatable?
 // Function is used to send a generic centerprint whose content CSQC gets to decide (gentle version or not in the below cases)
-void Send_CSQC_Centerprint(entity e, string s1, float msg, float type)
+void Send_CSQC_Centerprint(entity e, string s1, string s2, float msg, float type)
 {
 	if (clienttype(e) == CLIENTTYPE_REAL)
 	{
@@ -268,6 +268,7 @@ void Send_CSQC_Centerprint(entity e, string s1, float msg, float type)
 		WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
 		WriteByte(MSG_ONE, CSQC_CENTERPRINT);
 		WriteString(MSG_ONE, s1);
+		WriteString(MSG_ONE, s2);
 		WriteShort(MSG_ONE, msg);
 		WriteByte(MSG_ONE, type);
 	}
@@ -291,7 +292,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		{
 			if (deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 				msg = ColoredTeamName(targ.team); // TODO: check if needed?
-			Send_CSQC_Centerprint(targ, msg, deathtype, MSG_SUICIDE);
+			Send_CSQC_Centerprint(targ, msg, "", deathtype, MSG_SUICIDE);
 
 			if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
 			{
@@ -336,7 +337,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				attacker.killcount = 0;
 
 				LogDeath("tk", deathtype, attacker, targ);
-				Send_CSQC_Centerprint(attacker, s, type, MSG_KILL);
+				Send_CSQC_Centerprint(attacker, s, "", type, MSG_KILL);
 				Send_KillNotification(a, msg, "", type, MSG_KILL);
 			}
 			else
@@ -347,17 +348,18 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					checkrules_firstblood = TRUE;
 					Send_KillNotification(a, "", "", KILL_FIRST_BLOOD, MSG_KILL);
 					// TODO: make these print at newline if they dont
-					Send_CSQC_Centerprint(attacker, "", KILL_FIRST_BLOOD, MSG_KILL);
-					Send_CSQC_Centerprint(targ, "", KILL_FIRST_VICTIM, MSG_KILL);
+					Send_CSQC_Centerprint(attacker, "", "", KILL_FIRST_BLOOD, MSG_KILL);
+					Send_CSQC_Centerprint(targ, "", "", KILL_FIRST_VICTIM, MSG_KILL);
 				}
 
 				if((cvar("sv_fragmessage_information_typefrag")) && (targ.BUTTON_CHAT)) {
-					Send_CSQC_Centerprint(attacker, s, KILL_TYPEFRAG, MSG_KILL);
-					Send_CSQC_Centerprint(targ, a, KILL_TYPEFRAGGED, MSG_KILL);
+					Send_CSQC_Centerprint(attacker, s, GetAdvancedDeathReports(targ), KILL_TYPEFRAG, MSG_KILL);
+					Send_CSQC_Centerprint(targ, a, GetAdvancedDeathReports(attacker), KILL_TYPEFRAGGED, MSG_KILL);
 				} else {
-					Send_CSQC_Centerprint(attacker, s, KILL_FRAG, MSG_KILL);
-					Send_CSQC_Centerprint(targ, a, KILL_FRAGGED, MSG_KILL);
+					Send_CSQC_Centerprint(attacker, s, GetAdvancedDeathReports(targ), KILL_FRAG, MSG_KILL);
+					Send_CSQC_Centerprint(targ, a, GetAdvancedDeathReports(attacker), KILL_FRAGGED, MSG_KILL);
 				}
+
 				attacker.taunt_soundtime = time + 1;
 
 				// TODO: fix this?
@@ -429,7 +431,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		}
 		else
 		{
-			Send_CSQC_Centerprint(targ, "", deathtype, MSG_KILL_ACTION);
+			Send_CSQC_Centerprint(targ, "", "", deathtype, MSG_KILL_ACTION);
 			if (deathtype == DEATH_HURTTRIGGER && inflictor.message != "")
 				msg = inflictor.message;
 			else if (deathtype == DEATH_CUSTOM)
