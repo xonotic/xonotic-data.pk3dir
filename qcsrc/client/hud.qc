@@ -2221,14 +2221,16 @@ string Weapon_KillMessage(float deathtype)
 
 float killnotify_times[10];
 float killnotify_deathtype[10];
+float killnotify_actiontype[10]; // 0 = "Y [used by] X", 1 = "X [did action to] Y"
 string killnotify_attackers[10];
 string killnotify_victims[10];
-void HUD_KillNotify_Push(string attacker, string victim, float wpn)
+void HUD_KillNotify_Push(string attacker, string victim, float actiontype, float wpn)
 {
 	float i;
 	for (i = 9; i > 0; --i) {
 		killnotify_times[i] = killnotify_times[i-1];
 		killnotify_deathtype[i] = killnotify_deathtype[i-1];
+		killnotify_actiontype[i] = killnotify_actiontype[i-1];
 		if(killnotify_attackers[i])
 			strunzone(killnotify_attackers[i]);
 		killnotify_attackers[i] = strzone(killnotify_attackers[i-1]);
@@ -2238,6 +2240,7 @@ void HUD_KillNotify_Push(string attacker, string victim, float wpn)
 	}
 	killnotify_times[0] = time;
 	killnotify_deathtype[0] = wpn;
+	killnotify_actiontype[0] = actiontype;
 	if(killnotify_attackers[0])
 		strunzone(killnotify_attackers[0]);
 	killnotify_attackers[0] = strzone(attacker);
@@ -2249,124 +2252,179 @@ void HUD_KillNotify_Push(string attacker, string victim, float wpn)
 void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 {
 	float w;
+	float alsoprint;
+	alsoprint = (cvar("hud_notify_print") || !HUD_Panel_CheckActive(4)); // print message to console if: notify panel disabled, or cvar to do so enabled
+	
 	if(msg == MSG_SUICIDE) {
-		HUD_KillNotify_Push(s1, "", DEATH_KILL);
-
 		// TODO: cl_gentle
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			if (!HUD_Panel_CheckActive(4) || cvar("hud_notify_print"))
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if (alsoprint)
 				print("^1", s1, "^1 ", Weapon_SuicideMessage(type), "\n");
-		}
-		else if (type == DEATH_KILL)
-			print ("^1",s1, "^1 couldn't take it anymore\n");
-		else if (type == DEATH_ROT)
-			print ("^1",s1, "^1 died\n");
-		else if (type == DEATH_NOAMMO)
-			print ("^7",s1, "^7 committed suicide. What's the point of living without ammo?\n");
-		else if (type == DEATH_CAMP)
-			print ("^1",s1, "^1 thought they found a nice camping ground\n");
-		else if (type == DEATH_MIRRORDAMAGE)
-			print ("^1",s1, "^1 didn't become friends with the Lord of Teamplay\n");
-		else if (type == DEATH_CHEAT)
-			print ("^1",s1, "^1 unfairly eliminated themself\n");
-		else if (type == DEATH_FIRE)
-			print ("^1",s1, "^1 burned to death\n");
-		else if (type != DEATH_TEAMCHANGE && type != DEATH_QUIET)
-			print ("^1",s1, "^1 couldn't resist the urge to self-destruct\n");
+		} else if (type == DEATH_KILL) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_KILL);
+			if (alsoprint)
+				print ("^1",s1, "^1 couldn't take it anymore\n");
+		} else if (type == DEATH_ROT) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if (alsoprint)
+				print ("^1",s1, "^1 died\n");
+		} else if (type == DEATH_NOAMMO) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_NOAMMO);
+			if (alsoprint)
+				print ("^7",s1, "^7 committed suicide. What's the point of living without ammo?\n");
+		} else if (type == DEATH_CAMP) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_CAMP);
+			if (alsoprint)
+				print ("^1",s1, "^1 thought they found a nice camping ground\n");
+		} else if (type == DEATH_MIRRORDAMAGE) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_MIRRORDAMAGE);
+			if (alsoprint)
+				print ("^1",s1, "^1 didn't become friends with the Lord of Teamplay\n");
+		} else if (type == DEATH_CHEAT) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if (alsoprint)
+				print ("^1",s1, "^1 unfairly eliminated themself\n");
+		} else if (type == DEATH_FIRE) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if (alsoprint)
+				print ("^1",s1, "^1 burned to death\n");
+		} else if (type != DEATH_TEAMCHANGE && type != DEATH_QUIET) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if (alsoprint)
+				print ("^1",s1, "^1 couldn't resist the urge to self-destruct\n");
+		} 
+		
 		if (stof(s2) > 2) // killcount > 2
 			print ("^1",s1,"^1 ended it all after a ",s2," kill spree\n");
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			HUD_KillNotify_Push(s2, s1, w);
-			if (!HUD_Panel_CheckActive(4) || cvar("hud_notify_print"))
+			HUD_KillNotify_Push(s2, s1, 1, w);
+			if (alsoprint)
 				print("^1", s1, "^1 ", Weapon_KillMessage(type), "\n");
 		}
 		else if(type == KILL_TEAM || type == KILL_TEAM_SPREE) {
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_MIRRORDAMAGE);
+			if(alsoprint)
+			{
 				if(cvar("cl_gentle")) {
 					print ("^1", s1, "^1 took action against a team mate\n");
 				} else {
 					print ("^1", s1, "^1 mows down a team mate\n");
 				}
-				if (stof(s2) > 2 && type == KILL_TEAM_SPREE) {
-					if(cvar("cl_gentle"))
-						print ("^1",s1,"^1 ended a ",s2," scoring spree by going against a team mate\n");
-					else
-						print ("^1",s1,"^1 ended a ",s2," kill spree by killing a team mate\n");
-				}
-				else if (stof(s2) > 2) {
-					if(cvar("cl_gentle"))
-						print ("^1",s1,"'s ^1",s2," scoring spree was ended by a team mate!\n");
-					else
-						print ("^1",s1,"'s ^1",s2," kill spree was ended by a team mate!\n");
-				}
+			}
+			if (stof(s2) > 2 && type == KILL_TEAM_SPREE) {
+				if(cvar("cl_gentle"))
+					print ("^1",s1,"^1 ended a ",s2," scoring spree by going against a team mate\n");
+				else
+					print ("^1",s1,"^1 ended a ",s2," kill spree by killing a team mate\n");
+			}
+			else if (stof(s2) > 2) {
+				if(cvar("cl_gentle"))
+					print ("^1",s1,"'s ^1",s2," scoring spree was ended by a team mate!\n");
+				else
+					print ("^1",s1,"'s ^1",s2," kill spree was ended by a team mate!\n");
+			}
 		}
 		else if(type == KILL_FIRST_BLOOD)
 			print("^1",s1, "^1 drew first blood", "\n");
+		// TODO: icon!
 		else if (type == DEATH_TELEFRAG)
 			print ("^1",s1, "^1 was telefragged by ", s2, "\n");
 		else if (type == DEATH_DROWN) {
-			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
-			print ("^1",s1, "^1 was drowned by ", s2, "\n");
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_DROWN);
+			if(alsoprint)
+				print ("^1",s1, "^1 was drowned by ", s2, "\n");
 		}
 		else if (type == DEATH_SLIME) {
-			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
-			print ("^1",s1, "^1 was slimed by ", s2, "\n");
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_SLIME);
+			if(alsoprint)
+				print ("^1",s1, "^1 was slimed by ", s2, "\n");
 		}
 		else if (type == DEATH_LAVA) {
-			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
-			print ("^1",s1, "^1 was cooked by ", s2, "\n");
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_LAVA);
+			if(alsoprint)
+				print ("^1",s1, "^1 was cooked by ", s2, "\n");
 		}
 		else if (type == DEATH_FALL) {
-			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
-			print ("^1",s1, "^1 was grounded by ", s2, "\n");
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_FALL);
+			if(alsoprint)
+				print ("^1",s1, "^1 was grounded by ", s2, "\n");
 		}
 		else if (type == DEATH_SHOOTING_STAR) {
-			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
-			print ("^1",s1, "^1 was shot into space by ", s2, "\n");
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_SHOOTING_STAR);
+			if(alsoprint)
+				print ("^1",s1, "^1 was shot into space by ", s2, "\n");
 		}
 		else if (type == DEATH_SWAMP) {
-			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
-			print ("^1",s1, "^1 was conserved by ", s2, "\n");
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 was conserved by ", s2, "\n");
 		}
 		else if (type == DEATH_HURTTRIGGER && s3 != "")
 		{
-			HUD_KillNotify_Push(s2, s1, DEATH_FALL);
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_HURTTRIGGER);
 			// p ?!?! :o
 			//if(p < 0)
+			if(alsoprint)
 				print("^1", s1, "^1 ", s3, " ", s2, "\n");
 			//else
 			//	bprint("^1", s1, "^1 ", substring(s3, 0, p), s2, "^1", substring(s3, p+1, strlen(s3) - (p+1)), "\n");
+		} else if(type == DEATH_SBCRUSH) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 was crushed by ^1", s2, "\n");
+		} else if(type == DEATH_SBMINIGUN) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 got shredded by ^1", s2, "\n");
+		} else if(type == DEATH_SBROCKET) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 was blased to bits by ^1", s2, "\n");
+		} else if(type == DEATH_SBBLOWUP) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 got caught in the destruction of ^1", s2, "'s vehicle\n");
+		} else if(type == DEATH_WAKIGUN) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 was bolted down by ^1", s2, "\n");
+		} else if(type == DEATH_WAKIROCKET) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 could find no shelter from ^1", s2, "'s rockets\n");
+		} else if(type == DEATH_WAKIBLOWUP) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 dies when ^1", s2, "'s wakizashi dies.\n");
+		} else if(type == DEATH_TURRET) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 was pushed into the line of fire by ^1", s2, "\n");
+		} else if(type == DEATH_TOUCHEXPLODE) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 was pushed into an accident by ^1", s2, "\n");
+		} else if(type == DEATH_CHEAT) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 was unfairly eliminated by ^1", s2, "\n");
+		} else if (type == DEATH_FIRE) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 was burnt to death by ^1", s2, "\n");
+		} else if (type == DEATH_CUSTOM) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_CUSTOM);
+			if(alsoprint)
+				print ("^1",s1, "^1 ", s2, "\n");
+		} else {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 was fragged by ", s2, "\n");
 		}
-		else if(type == DEATH_SBCRUSH)
-			print ("^1",s1, "^1 was crushed by ^1", s2, "\n");
-		else if(type == DEATH_SBMINIGUN)
-			print ("^1",s1, "^1 got shredded by ^1", s2, "\n");
-		else if(type == DEATH_SBROCKET)
-			print ("^1",s1, "^1 was blased to bits by ^1", s2, "\n");
-		else if(type == DEATH_SBBLOWUP)
-			print ("^1",s1, "^1 got cought in the destruction of ^1", s2, "'s vehicle\n");
-
-		else if(type == DEATH_WAKIGUN)
-			print ("^1",s1, "^1 was bolted down by ^1", s2, "\n");
-		else if(type == DEATH_WAKIROCKET)
-			print ("^1",s1, "^1 could find no shelter from ^1", s2, "'s rockets\n");
-		else if(type == DEATH_WAKIBLOWUP)
-			print ("^1",s1, "^1 dies when ^1", s2, "'s wakizashi dies.\n");
-
-		else if(type == DEATH_TURRET)
-			print ("^1",s1, "^1 was pushed into the line of fire by ^1", s2, "\n");
-		else if(type == DEATH_TOUCHEXPLODE)
-			print ("^1",s1, "^1 was pushed into an accident by ^1", s2, "\n");
-		else if(type == DEATH_CHEAT)
-			print ("^1",s1, "^1 was unfairly eliminated by ^1", s2, "\n");
-		else if (type == DEATH_FIRE)
-			print ("^1",s1, "^1 was burnt to death by ^1", s2, "\n");
-		else if (type == DEATH_CUSTOM)
-			print ("^1",s1, "^1 ", s2, "\n");
-		else
-			print ("^1",s1, "^1 was fragged by ", s2, "\n");
 	} else if(msg == MSG_SPREE) {
 		if(type == KILL_END_SPREE) {
 			if(cvar("cl_gentle"))
@@ -2415,77 +2473,108 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 				print (s1,"^7 unleashes ^1ARMAGEDDON!\n");
 		}
 	} else if(msg == MSG_KILL_ACTION) { // wtf is this? isnt it basically the same as MSG_SUICIDE?
-		HUD_KillNotify_Push(s1, "", DEATH_KILL);
 		if (type == DEATH_DROWN) {
-			if(cvar("cl_gentle"))
-				print ("^1",s1, "^1 was in the water for too long\n");
-			else
-				print ("^1",s1, "^1 drowned\n");
+			HUD_KillNotify_Push(s1, "", 0, DEATH_DROWN);
+			if(alsoprint)
+			{
+				if(cvar("cl_gentle"))
+					print ("^1",s1, "^1 was in the water for too long\n");
+				else
+					print ("^1",s1, "^1 drowned\n");
+			}
 		}
 		else if (type == DEATH_SLIME)
-			print ("^1",s1, "^1 was slimed\n");
+			HUD_KillNotify_Push(s1, "", 0, DEATH_SLIME);
+			if(alsoprint)
+				print ("^1",s1, "^1 was slimed\n");
 		else if (type == DEATH_LAVA) {
-			if(cvar("cl_gentle"))
-				print ("^1",s1, "^1 found a hot place\n");
-			else
-				print ("^1",s1, "^1 turned into hot slag\n");
+			HUD_KillNotify_Push(s1, "", 0, DEATH_LAVA);
+			if(alsoprint)
+			{
+				if(cvar("cl_gentle"))
+					print ("^1",s1, "^1 found a hot place\n");
+				else
+					print ("^1",s1, "^1 turned into hot slag\n");
+			}
 		}
 		else if (type == DEATH_FALL) {
-			if(cvar("cl_gentle"))
-				print ("^1",s1, "^1 tested gravity (and it worked)\n");
-			else
-				print ("^1",s1, "^1 hit the ground with a crunch\n");
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if(alsoprint)
+			{
+				if(cvar("cl_gentle"))
+					print ("^1",s1, "^1 tested gravity (and it worked)\n");
+				else
+					print ("^1",s1, "^1 hit the ground with a crunch\n");
+			}
 		}
 		else if (type == DEATH_SHOOTING_STAR)
-			print ("^1",s1, "^1 became a shooting star\n");
+			HUD_KillNotify_Push(s1, "", 0, DEATH_SHOOTING_STAR);
+			if(alsoprint)
+				print ("^1",s1, "^1 became a shooting star\n");
 		else if (type == DEATH_SWAMP) {
-			if(cvar("cl_gentle"))
-				print ("^1",s1, "^1 discovered a swamp\n");
-			else
-				print ("^1",s1, "^1 is now conserved for centuries to come\n");
-		}
-		else if(type == DEATH_TURRET)
-			print ("^1",s1, "^1 was mowed down by a turret \n");
-		else if (type == DEATH_CUSTOM)
-			print ("^1",s1, "^1 ", s2, "\n");
-		else if(type == DEATH_TOUCHEXPLODE)
-			print ("^1",s1, "^1 died in an accident\n");
-		else if(type == DEATH_CHEAT)
-			print ("^1",s1, "^1 was unfairly eliminated\n");
-		else if(type == DEATH_FIRE) {
-			if(cvar("cl_gentle"))
-				print ("^1",s1, "^1 felt a little hot\n");
-			else
-				print ("^1",s1, "^1 burnt to death\n");
-		}
-		else {
-			if(cvar("cl_gentle"))
-				print ("^1",s1, "^1 needs a restart\n");
-			else
-				print ("^1",s1, "^1 died\n");
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if(alsoprint)
+			{
+				if(cvar("cl_gentle"))
+					print ("^1",s1, "^1 discovered a swamp\n");
+				else
+					print ("^1",s1, "^1 is now conserved for centuries to come\n");
+			}
+		} else if(type == DEATH_TURRET) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 was mowed down by a turret \n");
+		} else if (type == DEATH_CUSTOM) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_CUSTOM);
+			if(alsoprint)
+				print ("^1",s1, "^1 ", s2, "\n");
+		} else if(type == DEATH_TOUCHEXPLODE) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 died in an accident\n");
+		} else if(type == DEATH_CHEAT) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if(alsoprint)
+				print ("^1",s1, "^1 was unfairly eliminated\n");
+		} else if(type == DEATH_FIRE) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if(alsoprint)
+			{
+				if(cvar("cl_gentle"))
+					print ("^1",s1, "^1 felt a little hot\n");
+				else
+					print ("^1",s1, "^1 burnt to death\n");
+				}
+		} else {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if(alsoprint)
+			{
+				if(cvar("cl_gentle"))
+					print ("^1",s1, "^1 needs a restart\n");
+				else
+					print ("^1",s1, "^1 died\n");
+			}
 		}
 	} else if(msg == MSG_KILL_ACTION_SPREE) {
-		HUD_KillNotify_Push(s1, "", DEATH_KILL);
 		if(cvar("cl_gentle"))
 			print ("^1",s1,"^1 needs a restart after a ",s2," scoring spree\n");
 		else
 			print ("^1",s1,"^1 died with a ",s2," kill spree\n");
 	} else if(msg == MSG_INFO) {
-		if(type == INFO_GOTFLAG) {
-			HUD_KillNotify_Push(s1, s2, INFO_GOTFLAG);
+		if(type == INFO_GOTFLAG) { // here, s2 is the flag name
+			HUD_KillNotify_Push(s1, s2, 0, INFO_GOTFLAG);
 			print(s1, "^7 got the ", s2, "\n");
 		} else if(type == INFO_LOSTFLAG) {
-			HUD_KillNotify_Push(s1, s2, INFO_LOSTFLAG);
+			HUD_KillNotify_Push(s1, s2, 0, INFO_LOSTFLAG);
 			print(s1, "^7 lost the ", s2, "\n");
 		} else if(type == INFO_PICKUPFLAG) {
-			HUD_KillNotify_Push(s1, s2, INFO_GOTFLAG);
+			HUD_KillNotify_Push(s1, s2, 0, INFO_GOTFLAG);
 			print(s1, "^7 picked up the ", s2, "\n");
 		} else if(type == INFO_RETURNFLAG) {
-			HUD_KillNotify_Push(s1, s2, INFO_RETURNFLAG);
+			HUD_KillNotify_Push(s1, s2, 0, INFO_RETURNFLAG);
 			print(s1, "^7 returned the ", s2, "\n");
 		}
 	}
-
 }
 
 #define DAMAGE_CENTERPRINT_SPACER NEWLINES
@@ -2639,9 +2728,102 @@ void HUD_Notify (void)
 
 		// TODO: maybe print in team colors?
 		// TODO: maybe this could be cleaned up somehow...
+		// TODO: less copypaste code below
 		//
+		// Y [used by] X
+		if(killnotify_actiontype[j] == 0 && !hud_configure) 
+		{
+			attacker = textShortenToWidth(killnotify_attackers[j], mySize_x - 2 * height, fontsize, stringwidth_colors);
+
+			width_attacker = stringwidth(attacker, TRUE, fontsize);
+			pos_attacker = pos + eX * 0.5 * (mySize_x - width_attacker + 2 * height) + eY * 0.5 * fontsize_y + eY * i * height;
+
+			weap_pos = pos + eX * 0.5 * (mySize_x - width_attacker) - eX * height + eY * i * height;
+			if(killnotify_deathtype[j] == DEATH_GENERIC)
+			{
+				drawpic_skin(weap_pos, "notify_death", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_NOAMMO)
+			{
+				drawpic_skin(weap_pos, "notify_outofammo", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_KILL)
+			{
+				drawpic_skin(weap_pos, "notify_selfkill", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_CAMP)
+			{
+				drawpic_skin(weap_pos, "notify_camping", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_MIRRORDAMAGE)
+			{
+				drawpic_skin(weap_pos, "notify_teamkill", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_DROWN)
+			{
+				drawpic_skin(weap_pos, "notify_water", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_SLIME)
+			{
+				drawpic_skin(weap_pos, "notify_slime", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_LAVA)
+			{
+				drawpic_skin(weap_pos, "notify_lava", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_FALL)
+			{
+				drawpic_skin(weap_pos, "notify_fall", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
+			{
+				drawpic_skin(weap_pos, "notify_shootingstar", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_CUSTOM)
+			{
+				drawpic_skin(weap_pos, "notify_void", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == INFO_GOTFLAG)
+			{
+				if(killnotify_victims[j] == "^1RED^7 flag")
+					s = "red";
+				else
+					s = "blue";
+				drawpic_skin(weap_pos, strcat("flag_", s, "_carrying"), '1 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == INFO_RETURNFLAG)
+			{
+				if(killnotify_victims[j] == "^1RED^7 flag")
+					s = "red";
+				else
+					s = "blue";
+				drawpic_skin(weap_pos, strcat("flag_", s, "_taken"), '1 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == INFO_LOSTFLAG)
+			{
+				if(killnotify_victims[j] == "^1RED^7 flag")
+					s = "red";
+				else
+					s = "blue";
+				drawpic_skin(weap_pos, strcat("flag_", s, "_lost"), '1 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+		}
 		// X [did action to] Y
-		if(hud_configure || WEP_VALID(killnotify_deathtype[j]) || killnotify_deathtype[j] == DEATH_FALL)
+		else
 		{
 			if(hud_configure)
 			{
@@ -2673,56 +2855,50 @@ void HUD_Notify (void)
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 			}
+			else if(killnotify_deathtype[j] == DEATH_MIRRORDAMAGE)
+			{
+				drawpic_skin(weap_pos, "notify_teamkill", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_DROWN)
+			{
+				drawpic_skin(weap_pos, "notify_water", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_SLIME)
+			{
+				drawpic_skin(weap_pos, "notify_slime", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_LAVA)
+			{
+				drawpic_skin(weap_pos, "notify_lava", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
 			else if(killnotify_deathtype[j] == DEATH_FALL)
 			{
-				drawpic_skin(weap_pos, "notify_pushoffedge", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawpic_skin(weap_pos, "notify_fall", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
+			{
+				drawpic_skin(weap_pos, "notify_shootingstar", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
+			{
+				drawpic_skin(weap_pos, "notify_void", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 			}
 		}
 
-		// Y [used by] X
-		else
-		{
-			attacker = textShortenToWidth(killnotify_attackers[j], mySize_x - 2 * height, fontsize, stringwidth_colors);
-
-			width_attacker = stringwidth(attacker, TRUE, fontsize);
-			pos_attacker = pos + eX * 0.5 * (mySize_x - width_attacker + 2 * height) + eY * 0.5 * fontsize_y + eY * i * height;
-
-			weap_pos = pos + eX * 0.5 * (mySize_x - width_attacker) - eX * height + eY * i * height;
-			if(killnotify_deathtype[j] == DEATH_KILL)
-			{
-				drawpic_skin(weap_pos, "notify_selfkill", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-			}
-			else if(killnotify_deathtype[j] == INFO_GOTFLAG)
-			{
-				if(killnotify_victims[j] == "^1RED^7 flag")
-					s = "red";
-				else
-					s = "blue";
-				drawpic_skin(weap_pos, strcat("flag_", s, "_carrying"), '1 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-			}
-			else if(killnotify_deathtype[j] == INFO_RETURNFLAG)
-			{
-				if(killnotify_victims[j] == "^1RED^7 flag")
-					s = "red";
-				else
-					s = "blue";
-				drawpic_skin(weap_pos, strcat("flag_", s, "_taken"), '1 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-			}
-			else if(killnotify_deathtype[j] == INFO_LOSTFLAG)
-			{
-				if(killnotify_victims[j] == "^1RED^7 flag")
-					s = "red";
-				else
-					s = "blue";
-				drawpic_skin(weap_pos, strcat("flag_", s, "_lost"), '1 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
-			}
-		}
 	}
 
 	// Info messages
