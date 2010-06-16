@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", "T.A.G. Seeker");
 #else
+#ifdef SVQC
 //.float speed; = switchweapon
 //.float proxytime; = autoswitch
 //.float tl; = wait
@@ -28,7 +29,10 @@ void Seeker_Missile_Think()
 	float dist;
 
 	if (time > self.cnt)
+	{
+		self.projectiledeathtype |= HITTYPE_SPLASH;
 		Seeker_Missile_Explode();
+	}
 
 	if (!self.switchweapon)
 		self.switchweapon = cvar("g_balance_seeker_missile_speed");
@@ -404,7 +408,7 @@ void Seeker_Fire_Flac()
 	missile.bot_dodgerating = cvar("g_balance_seeker_flac_damage");
 	missile.touch = Seeker_Flac_Explode;
 	missile.use = Seeker_Flac_Explode;
-	missile.think = Seeker_Flac_Explode;
+	missile.think = adaptor_think2use_hittype_splash;
 	missile.nextthink = time + cvar("g_balance_seeker_flac_lifetime") + cvar("g_balance_seeker_flac_lifetime_rand");
 	missile.solid = SOLID_BBOX;
 	missile.scale = 0.4; // BUG: the model is too big
@@ -453,7 +457,7 @@ float w_seeker(float req)
 	{
 		precache_model ("models/weapons/g_seeker.md3");
 		precache_model ("models/weapons/v_seeker.md3");
-		precache_model ("models/weapons/h_seeker.dpm");
+		precache_model ("models/weapons/h_seeker.iqm");
 		precache_sound ("weapons/tag_fire.wav");
 		precache_sound ("weapons/flac_fire.wav");
 		precache_sound ("weapons/seeker_fire.wav");
@@ -475,4 +479,76 @@ float w_seeker(float req)
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+float w_seeker(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			pointparticles(particleeffectnum("flac_explode"), org2, '0 0 0', 1);
+			if(!w_issilent)
+			{
+				if (w_random<0.15)
+					sound(self, CHAN_PROJECTILE, "weapons/flacexp1.wav", 1, ATTN_NORM);
+				else if (w_random<0.7)
+					sound(self, CHAN_PROJECTILE, "weapons/flacexp2.wav", 1, ATTN_NORM);
+				else
+					sound(self, CHAN_PROJECTILE, "weapons/flacexp3.wav", 1, ATTN_NORM);
+			}
+		}
+		else
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+			{
+				pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
+				if(!w_issilent)
+				{
+					if (w_random<0.15)
+						sound(self, CHAN_PROJECTILE, "weapons/tagexp1.wav", 1, ATTN_NORM);
+					else if (w_random<0.7)
+						sound(self, CHAN_PROJECTILE, "weapons/tagexp2.wav", 1, ATTN_NORM);
+					else
+						sound(self, CHAN_PROJECTILE, "weapons/tagexp3.wav", 1, ATTN_NORM);
+				}
+			}
+			else if(w_deathtype & HITTYPE_HEADSHOT)
+			{
+				if(!w_issilent)
+					sound(self, CHAN_PROJECTILE, "weapons/tag_impact.wav", 1, ATTN_NORM);
+			}
+			else
+			{
+				pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
+				if(!w_issilent)
+				{
+					if (w_random<0.15)
+						sound(self, CHAN_PROJECTILE, "weapons/seekerexp1.wav", 1, ATTN_NORM);
+					else if (w_random<0.7)
+						sound(self, CHAN_PROJECTILE, "weapons/seekerexp2.wav", 1, ATTN_NORM);
+					else
+						sound(self, CHAN_PROJECTILE, "weapons/seekerexp3.wav", 1, ATTN_NORM);
+				}
+			}
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/flacexp1.wav");
+		precache_sound("weapons/flacexp2.wav");
+		precache_sound("weapons/flacexp3.wav");
+		precache_sound("weapons/seekerexp1.wav");
+		precache_sound("weapons/seekerexp2.wav");
+		precache_sound("weapons/seekerexp3.wav");
+		precache_sound("weapons/tagexp1.wav");
+		precache_sound("weapons/tagexp2.wav");
+		precache_sound("weapons/tagexp3.wav");
+		precache_sound("weapons/tag_impact.wav");
+	}
+	return TRUE;
+}
+#endif
 #endif

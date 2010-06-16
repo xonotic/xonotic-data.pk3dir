@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "uzi", "uzi", "Machine Gun");
 #else
+#ifdef SVQC
 // leilei's fancy muzzleflash stuff
 void W_Uzi_Flash_Go() {
 	if (self.frame > 10){
@@ -116,7 +117,7 @@ float w_uzi(float req)
 		precache_model ("models/uziflash.md3");
 		precache_model ("models/weapons/g_uzi.md3");
 		precache_model ("models/weapons/v_uzi.md3");
-		precache_model ("models/weapons/h_uzi.dpm");
+		precache_model ("models/weapons/h_uzi.iqm");
 		precache_sound ("weapons/uzi_fire.wav");
 	}
 	else if (req == WR_SETUP)
@@ -125,6 +126,31 @@ float w_uzi(float req)
 		return self.ammo_nails >= cvar("g_balance_uzi_first_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_nails >= cvar("g_balance_uzi_first_ammo");
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_uzi(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent)
+			if(w_random < 0.05)
+				sound(self, CHAN_PROJECTILE, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.1)
+				sound(self, CHAN_PROJECTILE, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.2)
+				sound(self, CHAN_PROJECTILE, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/ric1.wav");
+		precache_sound("weapons/ric2.wav");
+		precache_sound("weapons/ric3.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE)
@@ -135,5 +161,6 @@ float w_uzi(float req)
 			w_deathtypestring = "was riddled full of holes by";
 	}
 	return TRUE;
-};
+}
+#endif
 #endif

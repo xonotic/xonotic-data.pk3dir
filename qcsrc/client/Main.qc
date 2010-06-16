@@ -60,6 +60,10 @@ void CSQC_Init(void)
 	
 	check_unacceptable_compiler_bugs();
 
+#ifdef WATERMARK
+	print("^4CSQC Build information: ", WATERMARK(), "\n");
+#endif
+
 	float i;
 	CSQC_CheckEngine();
 
@@ -82,12 +86,15 @@ void CSQC_Init(void)
 	// localcmd("alias order \"cmd order $*\""); enable if ctf-command thingy is used
 	//registercmd("ctf_menu");
 	registercmd("ons_map");
+	registercmd("hud_configure");
+	registercmd("hud_save");
 	//registercmd("menu_action");
 
 	registercmd("+button3");
 	registercmd("-button3");
 	registercmd("+button4");
 	registercmd("-button4");
+	registercmd("+showscores");registercmd("-showscores");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
 
 #ifndef CAMERATEST
@@ -106,7 +113,7 @@ void CSQC_Init(void)
 	}
 #endif
 	registercvar("hud_usecsqc", "1");
-	registercvar("hud_columns", "default", CVAR_SAVE);
+	registercvar("scoreboard_columns", "default", CVAR_SAVE);
 
 	gametype = 0;
 
@@ -122,8 +129,6 @@ void CSQC_Init(void)
 	players = Sort_Spawn();
 
 	GetTeam(COLOR_SPECTATOR, true); // add specs first
-
-	cvar_clientsettemp("_supports_weaponpriority", "1");
 
 	RegisterWeapons();
 
@@ -335,7 +340,7 @@ void TrueAim_Init();
 void PostInit(void)
 {
 	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
-	localcmd(strcat("\nhud_columns_set ", cvar_string("hud_columns"), ";\n"));
+	localcmd(strcat("\nscoreboard_columns_set ", cvar_string("scoreboard_columns"), ";\n"));
 
 	entity playerchecker;
 	playerchecker = spawn();
@@ -364,7 +369,18 @@ float CSQC_ConsoleCommand(string strMessage)
 	local string strCmd;
 	strCmd = argv(0);
 
-	if(strCmd == "+button4") { // zoom
+	if(strCmd == "hud_configure") { // config hud
+		cvar_set("_hud_configure", ftos(!cvar("_hud_configure")));
+		return true;
+	} else if(strCmd == "hud_save") { // save hud config
+		if(argv(1) == "" || argv(2)) {
+			print("Usage:\n");
+			print("hud_save configname   (saves to hud_skinname_configname.cfg)\n");
+		}
+		else
+			HUD_Panel_ExportCfg(argv(1));
+		return true;
+	} else if(strCmd == "+button4") { // zoom
 		// return false, because the message shall be sent to the server anyway (for demos/speccing)
 		if(ignore_plus_zoom)
 		{
@@ -388,16 +404,16 @@ float CSQC_ConsoleCommand(string strMessage)
 		button_attack2 = 0;
 		return false;
 	} else if(strCmd == "+showscores") {
-		sb_showscores = true;
+		scoreboard_showscores = true;
 		return true;
 	} else if(strCmd == "-showscores") {
-		sb_showscores = false;
+		scoreboard_showscores = false;
 		return true;
 	} else if(strCmd == "+showaccuracy") {
-		sb_showaccuracy = true;
+		scoreboard_showaccuracy = true;
 		return true;
 	} else if(strCmd == "-showaccuracy") {
-		sb_showaccuracy = false;
+		scoreboard_showaccuracy = false;
 		return true;
 	}
 
@@ -505,9 +521,8 @@ void GameCommand(string msg)
 	{
 		print("Usage: cl_cmd COMMAND..., where possible commands are:\n");
 		print("  settemp cvar value\n");
-		print("  radar\n");
-		print("  hud_columns_set ...\n");
-		print("  hud_columns_help\n");
+		print("  scoreboard_columns_set ...\n");
+		print("  scoreboard_columns_help\n");
 		GameCommand_Generic("help");
 		return;
 	}
@@ -523,13 +538,10 @@ void GameCommand(string msg)
 	else if(cmd == "settemp") {
 		cvar_clientsettemp(argv(1), argv(2));
 	}
-	else if(cmd == "radar") {
-		ons_showmap = !ons_showmap;
-	}
-	else if(cmd == "hud_columns_set") {
+	else if(cmd == "scoreboard_columns_set") {
 		Cmd_HUD_SetFields(argc);
 	}
-	else if(cmd == "hud_columns_help") {
+	else if(cmd == "scoreboard_columns_help") {
 		Cmd_HUD_Help(argc);
 	}
 #ifdef BLURTEST
@@ -585,15 +597,15 @@ void GameCommand(string msg)
 	}
 	else if(cmd == "sendcvar") {
 		// W_FixWeaponOrder will trash argv, so save what we need.
-		string cvar;
-		cvar = strzone(argv(1));
-		s = cvar_string(cvar);
-		if(cvar == "cl_weaponpriority")
+		string thiscvar;
+		thiscvar = strzone(argv(1));
+		s = cvar_string(thiscvar);
+		if(thiscvar == "cl_weaponpriority")
 			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
-		else if(substring(cvar, 0, 17) == "cl_weaponpriority" && strlen(cvar) == 18)
+		else if(substring(thiscvar, 0, 17) == "cl_weaponpriority" && strlen(thiscvar) == 18)
 			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
-		localcmd("cmd sentcvar ", cvar, " \"", s, "\"\n");
-		strunzone(cvar);
+		localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
+		strunzone(thiscvar);
 	}
 	else if(cmd == "spawn") {
 		s = argv(1);
@@ -619,15 +631,13 @@ void GameCommand(string msg)
 // bInputType = 0 is key pressed, 1 is key released, 2 is mouse input.
 // In the case of keyboard input, nPrimary is the ascii code, and nSecondary is 0.
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
-float hudconf_active;
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	local float bSkipKey;
 	bSkipKey = false;
 
-	if(hudconf_active)
-		if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
-			return true;
+	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
@@ -770,7 +780,7 @@ void Ent_ClientData()
 
 	f = ReadByte();
 
-	sb_showscores_force = (f & 1);
+	scoreboard_showscores_force = (f & 1);
 
 	if(f & 2)
 	{
@@ -950,9 +960,6 @@ void Gamemode_Init()
 		precache_pic("gfx/ons-cp-blue.tga");
 		precache_pic("gfx/ons-frame.tga");
 		precache_pic("gfx/ons-frame-team.tga");
-	} else if(gametype == GAME_KEYHUNT) {
-		precache_pic("gfx/sb_key_carrying");
-		precache_pic("gfx/sb_key_carrying_outline");
 	}
 
 	if not(isdemo())
@@ -1230,6 +1237,20 @@ void Net_VoteDialogReset() {
 	vote_active = 0;
 }
 
+void Net_Notify() {
+	float type;
+	type = ReadByte();
+
+	if(type == CSQC_KILLNOTIFY)
+	{
+		HUD_KillNotify(ReadString(), ReadString(), ReadString(), ReadShort(), ReadByte());
+	}
+	else if(type == CSQC_CENTERPRINT)
+	{
+		HUD_Centerprint(ReadString(), ReadString(), ReadShort(), ReadByte());
+	}
+}
+
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1294,6 +1315,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_ANNOUNCE:
 			announce_snd = strzone(ReadString());
+			bHandled = true;
+			break;
+		case TE_CSQC_NOTIFY:
+			Net_Notify();
 			bHandled = true;
 			break;
 		default:

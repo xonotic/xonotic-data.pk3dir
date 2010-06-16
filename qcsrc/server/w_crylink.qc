@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "crylink", "crylink", "Crylink");
 #else
+#ifdef SVQC
 .float gravity;
 
 .entity realowner;
@@ -209,7 +210,7 @@ float w_crylink(float req)
 	{
 		precache_model ("models/weapons/g_crylink.md3");
 		precache_model ("models/weapons/v_crylink.md3");
-		precache_model ("models/weapons/h_crylink.dpm");
+		precache_model ("models/weapons/h_crylink.iqm");
 		precache_sound ("weapons/crylink_fire.wav");
 		precache_sound ("weapons/crylink_fire2.wav");
 	}
@@ -219,6 +220,34 @@ float w_crylink(float req)
 		return self.ammo_cells >= cvar("g_balance_crylink_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_cells >= cvar("g_balance_crylink_secondary_ammo");
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_crylink(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
+		}
+		else
+		{
+			pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/crylink_impact2.wav");
+		precache_sound("weapons/crylink_impact.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		w_deathtypestring = "succeeded at self-destructing themself with the Crylink";
@@ -233,5 +262,6 @@ float w_crylink(float req)
 			w_deathtypestring = "took a close look at #'s Crylink"; // unchecked: SECONDARY
 	}
 	return TRUE;
-};
+}
+#endif
 #endif

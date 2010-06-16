@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hagar", "hagar", "Hagar");
 #else
+#ifdef SVQC
 // NO bounce protection, as bounces are limited!
 void W_Hagar_Explode (void)
 {
@@ -56,7 +57,7 @@ void W_Hagar_Attack (void)
 	missile.bot_dodgerating = cvar("g_balance_hagar_primary_damage");
 	missile.touch = W_Hagar_Touch;
 	missile.use = W_Hagar_Explode;
-	missile.think = adaptor_think2use;
+	missile.think = adaptor_think2use_hittype_splash;
 	missile.nextthink = time + cvar("g_balance_hagar_primary_lifetime");
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_HAGAR;
@@ -91,7 +92,7 @@ void W_Hagar_Attack2 (void)
 	missile.touch = W_Hagar_Touch2;
 	missile.cnt = 0;
 	missile.use = W_Hagar_Explode2;
-	missile.think = adaptor_think2use;
+	missile.think = adaptor_think2use_hittype_splash;
 	missile.nextthink = time + cvar("g_balance_hagar_secondary_lifetime_min") + random() * cvar("g_balance_hagar_secondary_lifetime_rand");
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_HAGAR | HITTYPE_SECONDARY;
@@ -141,7 +142,7 @@ float w_hagar(float req)
 	{
 		precache_model ("models/weapons/g_hagar.md3");
 		precache_model ("models/weapons/v_hagar.md3");
-		precache_model ("models/weapons/h_hagar.dpm");
+		precache_model ("models/weapons/h_hagar.iqm");
 		precache_sound ("weapons/hagar_fire.wav");
 	}
 	else if (req == WR_SETUP)
@@ -150,6 +151,33 @@ float w_hagar(float req)
 		return self.ammo_rockets >= cvar("g_balance_hagar_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_rockets >= cvar("g_balance_hagar_secondary_ammo");
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_hagar(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
+		if(!w_issilent)
+		{
+			if (w_random<0.15)
+				sound(self, CHAN_PROJECTILE, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
+			else if (w_random<0.7)
+				sound(self, CHAN_PROJECTILE, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
+			else
+				sound(self, CHAN_PROJECTILE, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/hagexp1.wav");
+		precache_sound("weapons/hagexp2.wav");
+		precache_sound("weapons/hagexp3.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "played with tiny rockets";
 	else if (req == WR_KILLMESSAGE)
@@ -160,5 +188,6 @@ float w_hagar(float req)
 			w_deathtypestring = "was pummeled by";
 	}
 	return TRUE;
-};
+}
+#endif
 #endif

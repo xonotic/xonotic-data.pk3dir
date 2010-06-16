@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "gl", "grenadelauncher", "Mortar");
 #else
+#ifdef SVQC
 void W_Grenade_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
@@ -99,7 +100,7 @@ void W_Grenade_Attack (void)
 	setsize(gren, '0 0 -3', '0 0 -3');
 
 	gren.nextthink = time + cvar("g_balance_grenadelauncher_primary_lifetime");
-	gren.think = adaptor_think2use;
+	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Grenade_Explode;
 	gren.touch = W_Grenade_Touch1;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
@@ -135,7 +136,7 @@ void W_Grenade_Attack2 (void)
 	setorigin(gren, w_shotorg);
 
 	gren.nextthink = time + cvar("g_balance_grenadelauncher_secondary_lifetime");
-	gren.think = adaptor_think2use;
+	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Grenade_Explode2;
 	gren.touch = W_Grenade_Touch2;
 	gren.takedamage = DAMAGE_YES;
@@ -201,7 +202,7 @@ float w_glauncher(float req)
 	{
 		precache_model ("models/weapons/g_gl.md3");
 		precache_model ("models/weapons/v_gl.md3");
-		precache_model ("models/weapons/h_gl.dpm");
+		precache_model ("models/weapons/h_gl.iqm");
 		precache_sound ("weapons/grenade_bounce1.wav");
 		precache_sound ("weapons/grenade_bounce2.wav");
 		precache_sound ("weapons/grenade_bounce3.wav");
@@ -216,6 +217,24 @@ float w_glauncher(float req)
 		return self.ammo_rockets >= cvar("g_balance_grenadelauncher_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_rockets >= cvar("g_balance_grenadelauncher_secondary_ammo");
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_glauncher(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 12;
+		pointparticles(particleeffectnum("grenade_explode"), org2, '0 0 0', 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/grenade_impact.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
@@ -234,5 +253,6 @@ float w_glauncher(float req)
 			w_deathtypestring = "ate #'s grenade";
 	}
 	return TRUE;
-};
+}
+#endif
 #endif

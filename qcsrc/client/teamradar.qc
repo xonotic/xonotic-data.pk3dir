@@ -4,8 +4,8 @@ vector teamradar_origin2d; // 2D origin
 vector teamradar_size2d; // 2D size
 vector teamradar_extraclip_mins, teamradar_extraclip_maxs; // for non-centered radar display
 float teamradar_size; // 2D scale factor
-float cl_teamradar_scale; // window size = ...qu
-float cl_teamradar_nohudhack;
+float hud_radar_scale; // window size = ...qu
+float hud_radar_nohudhack;
 float v_flipped;
 
 float vlen2d(vector v)
@@ -57,15 +57,6 @@ void draw_teamradar_background(float bg, float fg)
 {
 	float fga;
 	vector fgc;
-	if(bg > 0)
-	{
-		R_BeginPolygon("", 0);
-		R_PolygonVertex('1 0 0' * (teamradar_origin2d_x - teamradar_size2d_x * 0.5 + teamradar_extraclip_mins_x) + '0 1 0' * (teamradar_origin2d_y - teamradar_size2d_y * 0.5 + teamradar_extraclip_mins_y), '0 0 0', '0 0 0', bg);
-		R_PolygonVertex('1 0 0' * (teamradar_origin2d_x + teamradar_size2d_x * 0.5 + teamradar_extraclip_maxs_x) + '0 1 0' * (teamradar_origin2d_y - teamradar_size2d_y * 0.5 + teamradar_extraclip_mins_y), '0 0 0', '0 0 0', bg);
-		R_PolygonVertex('1 0 0' * (teamradar_origin2d_x + teamradar_size2d_x * 0.5 + teamradar_extraclip_maxs_x) + '0 1 0' * (teamradar_origin2d_y + teamradar_size2d_y * 0.5 + teamradar_extraclip_maxs_y), '0 0 0', '0 0 0', bg);
-		R_PolygonVertex('1 0 0' * (teamradar_origin2d_x - teamradar_size2d_x * 0.5 + teamradar_extraclip_mins_x) + '0 1 0' * (teamradar_origin2d_y + teamradar_size2d_y * 0.5 + teamradar_extraclip_maxs_y), '0 0 0', '0 0 0', bg);
-		R_EndPolygon();
-	}
 
 	if(fg > 0 && minimapname != "")
 	{
@@ -115,17 +106,17 @@ void(vector coord3d, vector pangles, vector rgb) draw_teamradar_player =
 		rgb2 = '1 1 1';
 
 	R_BeginPolygon("", 0);
-	R_PolygonVertex(coord+v_forward*3, '0 0 0', rgb2, hud_alpha_fg);
-	R_PolygonVertex(coord+v_right*4-v_forward*2.5, '0 1 0', rgb2, hud_alpha_fg);
-	R_PolygonVertex(coord-v_forward*2, '1 0 0', rgb2, hud_alpha_fg);
-	R_PolygonVertex(coord-v_right*4-v_forward*2.5, '1 1 0', rgb2, hud_alpha_fg);
+	R_PolygonVertex(coord+v_forward*3, '0 0 0', rgb2, hud_fg_alpha);
+	R_PolygonVertex(coord+v_right*4-v_forward*2.5, '0 1 0', rgb2, hud_fg_alpha);
+	R_PolygonVertex(coord-v_forward*2, '1 0 0', rgb2, hud_fg_alpha);
+	R_PolygonVertex(coord-v_right*4-v_forward*2.5, '1 1 0', rgb2, hud_fg_alpha);
 	R_EndPolygon();
 
 	R_BeginPolygon("", 0);
-	R_PolygonVertex(coord+v_forward*2, '0 0 0', rgb, hud_alpha_fg);
-	R_PolygonVertex(coord+v_right*3-v_forward*2, '0 1 0', rgb, hud_alpha_fg);
-	R_PolygonVertex(coord-v_forward, '1 0 0', rgb, hud_alpha_fg);
-	R_PolygonVertex(coord-v_right*3-v_forward*2, '1 1 0', rgb, hud_alpha_fg);
+	R_PolygonVertex(coord+v_forward*2, '0 0 0', rgb, hud_fg_alpha);
+	R_PolygonVertex(coord+v_right*3-v_forward*2, '0 1 0', rgb, hud_fg_alpha);
+	R_PolygonVertex(coord-v_forward, '1 0 0', rgb, hud_fg_alpha);
+	R_PolygonVertex(coord-v_right*3-v_forward*2, '1 1 0', rgb, hud_fg_alpha);
 	R_EndPolygon();
 };
 
@@ -170,55 +161,41 @@ void draw_teamradar_link(vector start, vector end, float colors)
 	c1 = colormapPaletteColor((colors & 0xF0) / 0x10, FALSE);
 
 	R_BeginPolygon("", 0);
-	R_PolygonVertex(start - norm, '0 0 0', c0, hud_alpha_fg);
-	R_PolygonVertex(start + norm, '0 1 0', c0, hud_alpha_fg);
-	R_PolygonVertex(end + norm, '1 1 0', c1, hud_alpha_fg);
-	R_PolygonVertex(end - norm, '1 0 0', c1, hud_alpha_fg);
+	R_PolygonVertex(start - norm, '0 0 0', c0, hud_fg_alpha);
+	R_PolygonVertex(start + norm, '0 1 0', c0, hud_fg_alpha);
+	R_PolygonVertex(end + norm, '1 1 0', c1, hud_fg_alpha);
+	R_PolygonVertex(end - norm, '1 0 0', c1, hud_fg_alpha);
 	R_EndPolygon();
 }
 
-float cl_teamradar_scale;
-float cl_teamradar_background_alpha;
-float cl_teamradar_foreground_alpha;
-float cl_teamradar_rotation;
-vector cl_teamradar_size;
-vector cl_teamradar_position;
-float cl_teamradar_zoommode;
+float hud_radar_scale;
+float hud_radar_background_alpha;
+float hud_radar_foreground_alpha;
+float hud_radar_rotation;
+vector hud_radar_size;
+vector hud_radar_position;
+float hud_radar_zoommode;
 
 void teamradar_loadcvars()
 {
 	v_flipped = cvar("v_flipped");
-	if(ons_showmap)
-	{
-		cl_teamradar_scale = 42; // dummy, not used (see zoommode)
-		cl_teamradar_background_alpha = 1 * (1 - cvar("_menu_alpha"));
-		cl_teamradar_foreground_alpha = 1 * (1 - cvar("_menu_alpha"));
-		cl_teamradar_rotation = cvar("cl_teamradar_rotation");
-		if(!cl_teamradar_rotation)
-			cl_teamradar_rotation = 4;
-		cl_teamradar_zoommode = 3;
-		cl_teamradar_nohudhack = 0;
-	}
-	else
-	{
-		cl_teamradar_scale = cvar("cl_teamradar_scale");
-		cl_teamradar_background_alpha = cvar("cl_teamradar_background_alpha") * hud_alpha_fg;
-		cl_teamradar_foreground_alpha = cvar("cl_teamradar_foreground_alpha") * hud_alpha_fg;
-		cl_teamradar_rotation = cvar("cl_teamradar_rotation");
-		cl_teamradar_zoommode = cvar("cl_teamradar_zoommode");
+	hud_radar_scale = cvar("hud_radar_scale");
+	hud_radar_background_alpha = cvar("hud_radar_background_alpha") * hud_fg_alpha;
+	hud_radar_foreground_alpha = cvar("hud_radar_foreground_alpha") * hud_fg_alpha;
+	hud_radar_rotation = cvar("hud_radar_rotation");
+	hud_radar_zoommode = cvar("hud_radar_zoommode");
 
-		// others default to 0
-		// match this to defaultXonotic.cfg!
-		if(!cl_teamradar_scale) cl_teamradar_scale = 4096;
-		if(!cl_teamradar_background_alpha) cl_teamradar_background_alpha = 0.4 * hud_alpha_fg;
-		if(!cl_teamradar_foreground_alpha) cl_teamradar_foreground_alpha = 0.8 * hud_alpha_fg;
-		if(!cl_teamradar_size_x) cl_teamradar_size_x = 128;
-		if(!cl_teamradar_size_y) cl_teamradar_size_y = cl_teamradar_size_x;
+	// others default to 0
+	// match this to defaultXonotic.cfg!
+	if(!hud_radar_scale) hud_radar_scale = 4096;
+	if(!hud_radar_background_alpha) hud_radar_background_alpha = 0.4 * hud_fg_alpha;
+	if(!hud_radar_foreground_alpha) hud_radar_foreground_alpha = 0.8 * hud_fg_alpha;
+	if(!hud_radar_size_x) hud_radar_size_x = 128;
+	if(!hud_radar_size_y) hud_radar_size_y = hud_radar_size_x;
 
-		cl_teamradar_size_z = 0;
-		cl_teamradar_nohudhack = cl_teamradar_position_z;
-		cl_teamradar_position_z = 0;
-	}
+	hud_radar_size_z = 0;
+	hud_radar_nohudhack = hud_radar_position_z;
+	hud_radar_position_z = 0;
 }
 
 // radar links

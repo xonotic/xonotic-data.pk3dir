@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", "Fireball");
 #else
+#ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
 .float fireball_primarytime;
@@ -98,6 +99,7 @@ void W_Fireball_Think()
 	if(time > self.pushltime)
 	{
 		self.cnt = 1;
+		self.projectiledeathtype |= HITTYPE_SPLASH;
 		W_Fireball_Explode();
 		return;
 	}
@@ -337,7 +339,7 @@ float w_fireball(float req)
 	{
 		precache_model ("models/weapons/g_fireball.md3");
 		precache_model ("models/weapons/v_fireball.md3");
-		precache_model ("models/weapons/h_fireball.dpm");
+		precache_model ("models/weapons/h_fireball.iqm");
 		precache_model ("models/sphere/sphere.md3");
 		precache_sound ("weapons/fireball_fire.wav");
 		precache_sound ("weapons/fireball_fire2.wav");
@@ -349,6 +351,36 @@ float w_fireball(float req)
 		return self.ammo_fuel >= cvar("g_balance_fireball_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_fuel >= cvar("g_balance_fireball_secondary_ammo");
+	else if (req == WR_RESETPLAYER)
+	{
+		self.fireball_primarytime = time;
+	}
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_fireball(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			// firemine goes out silently
+		}
+		else
+		{
+			org2 = w_org + w_backoff * 16;
+			pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/fireball_impact.wav");
+		precache_sound("weapons/fireball_impact2.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
@@ -384,10 +416,7 @@ float w_fireball(float req)
 				w_deathtypestring = "tasted #'s fireball";
 		}
 	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.fireball_primarytime = time;
-	}
 	return TRUE;
-};
+}
+#endif
 #endif

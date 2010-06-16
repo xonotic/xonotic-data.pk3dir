@@ -10,9 +10,12 @@ CLASS(XonoticPlayerSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticPlayerSettingsTab, playerNameLabelAlpha, float, 0)
 ENDCLASS(XonoticPlayerSettingsTab)
 entity makeXonoticPlayerSettingsTab();
+
+void HUDSetup_Join_Click(entity me, entity btn);
 #endif
 
 #ifdef IMPLEMENTATION
+
 entity makeXonoticPlayerSettingsTab()
 {
 	entity me;
@@ -148,9 +151,15 @@ void fillXonoticPlayerSettingsTab(entity me)
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "crosshair_hittest", "1.25", "Enemies"));
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 2.2, e = makeXonoticButton("Radar, HUD & Waypoints...", '0 0 0'));
+		me.TD(me, 1, 2.2, e = makeXonoticButton("Waypoints Setup", '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.radarDialog;
+			e.onClickEntity = main.waypointDialog;
+		me.TDempty(me, 0.5);
+	me.TR(me);
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 2.2, e = makeXonoticButton("HUD Setup", '0 0 0'));
+			e.onClick = HUDSetup_Join_Click;
+			e.onClickEntity = me;
 		me.TDempty(me, 0.5);
 	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS
@@ -159,7 +168,6 @@ void fillXonoticPlayerSettingsTab(entity me)
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(2, "cl_forceplayermodelsfromxonotic", string_null, "Custom"));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(2, "cl_forceplayermodels", string_null, "All"));
 	#endif
-	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_gentle", "Disable gore effects"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Gibs:"));
@@ -174,5 +182,15 @@ void fillXonoticPlayerSettingsTab(entity me)
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton("Apply immediately", '0 0 0', "color -1 -1;name \"$_cl_name\";cl_cmd sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_forceplayermodelsfromxonotic;sendcvar cl_forceplayermodels;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
+}
+void HUDSetup_Join_Click(entity me, entity btn)
+{
+	if(! (gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
+	{
+		localcmd("map hudsetup", "\n");
+	}
+	else
+		localcmd("togglemenu 0\n");
+	localcmd("_hud_configure 1", "\n");
 }
 #endif

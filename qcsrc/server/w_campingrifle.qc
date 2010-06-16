@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(CAMPINGRIFLE, w_campingrifle, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "campingrifle", "campingrifle", "Rifle");
 #else
+#ifdef SVQC
 //Camping rifle Primary mode: manually operated bolt*, Secondary: full automatic**
 //* Manually operating the bolt means that all the power of the gas is used to propell the bullet. In this mode the bolt is prevented from moving backwards in response to the firing of the bullet.
 //** In fully automatic mode some of the gas is used to extract and reload the next cartrige, thus there is less power and range.
@@ -31,24 +32,27 @@ void W_CampingRifle_ReloadedAndReady()
 	w_ready();
 }
 
-void W_CampingRifle_Reload()
+float W_CampingRifle_Reload()
 {
 	float t;
 
 	W_CampingRifle_CheckMaxBullets(TRUE);
-	if (self.campingrifle_bulletcounter >= cvar("g_balance_campingrifle_magazinecapacity"))
-		return;
 
-	if(self.ammo_nails < min(cvar("g_balance_campingrifle_primary_ammo"), cvar("g_balance_campingrifle_secondary_ammo")))
+	if(self.ammo_nails < min(cvar("g_balance_campingrifle_primary_ammo"), cvar("g_balance_campingrifle_secondary_ammo"))) // when we get here, bulletcounter must be 0 or -1
 	{
+		print("cannot reload... not enough bullets\n");
 		self.campingrifle_bulletcounter = -1; // reload later
-		return;
+		W_SwitchToOtherWeapon(self);
+		return 0;
 	}
 	
+	if (self.campingrifle_bulletcounter >= cvar("g_balance_campingrifle_magazinecapacity"))
+		return 0;
+
 	if (self.weaponentity)
 	{
 		if (self.weaponentity.wframe == WFRAME_RELOAD)
-			return;
+			return 0;
 
 		// allow to switch away while reloading, but this will cause a new reload!
 		self.weaponentity.state = WS_READY;
@@ -62,15 +66,16 @@ void W_CampingRifle_Reload()
 	weapon_thinkf(WFRAME_RELOAD, cvar("g_balance_campingrifle_reloadtime"), W_CampingRifle_ReloadedAndReady);
 
 	self.campingrifle_bulletcounter = -1;
+
+	return 1;
 }
 
 void W_CampingRifle_CheckReloadAndReady()
 {
 	w_ready();
-	if (self.campingrifle_bulletcounter <= 0)
-		W_CampingRifle_Reload();
-	else
-		w_ready();
+	if(self.campingrifle_bulletcounter <= 0)
+		if(W_CampingRifle_Reload())
+			return;
 }
 
 void W_CampingRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
@@ -116,6 +121,57 @@ void spawnfunc_weapon_campingrifle (void)
 	weapon_defaultspawnfunc(WEP_CAMPINGRIFLE);
 }
 
+.void(void) campingrifle_bullethail_attackfunc;
+.float campingrifle_bullethail_frame;
+.float campingrifle_bullethail_animtime;
+.float campingrifle_bullethail_refire;
+void W_CampingRifle_BulletHail_Continue()
+{
+	float r, sw, af;
+	W_CampingRifle_CheckReloadAndReady();
+	if(self.campingrifle_bulletcounter < 0)
+		return; // reloading, so we are done
+	sw = self.switchweapon; // make it not detect weapon changes as reason to abort firing
+	af = ATTACK_FINISHED(self);
+	self.switchweapon = self.weapon;
+	ATTACK_FINISHED(self) = time;
+	print(ftos(self.ammo_nails), "\n");
+	r = weapon_prepareattack(self.campingrifle_bullethail_frame == WFRAME_FIRE2, self.campingrifle_bullethail_refire);
+	if(self.switchweapon == self.weapon)
+		self.switchweapon = sw;
+	if(r)
+	{
+		self.campingrifle_bullethail_attackfunc();
+		weapon_thinkf(self.campingrifle_bullethail_frame, self.campingrifle_bullethail_animtime, W_CampingRifle_BulletHail_Continue);
+		print("thinkf set\n");
+	}
+	else
+	{
+		ATTACK_FINISHED(self) = af; // reset attack_finished if we didn't fire, so the last shot enforces the refire time
+		print("out of ammo... ", ftos(self.weaponentity.state), "\n");
+	}
+}
+
+void W_CampingRifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animtime, float refire)
+{
+	// if we get here, we have at least one bullet to fire
+	AttackFunc();
+	if(mode)
+	{
+		// continue hail
+		self.campingrifle_bullethail_attackfunc = AttackFunc;
+		self.campingrifle_bullethail_frame = fr;
+		self.campingrifle_bullethail_animtime = animtime;
+		self.campingrifle_bullethail_refire = refire;
+		weapon_thinkf(fr, animtime, W_CampingRifle_BulletHail_Continue);
+	}
+	else
+	{
+		// just one shot
+		weapon_thinkf(fr, animtime, W_CampingRifle_CheckReloadAndReady);
+	}
+}
+
 .float bot_secondary_campingriflemooth;
 float w_campingrifle(float req)
 {
@@ -155,19 +211,19 @@ float w_campingrifle(float req)
 		{
 			self.campingrifle_accumulator = bound(time - cvar("g_balance_campingrifle_bursttime"), self.campingrifle_accumulator, time);
 			if (self.BUTTON_ATCK)
+			if (weapon_prepareattack_check(0, cvar("g_balance_campingrifle_primary_refire")))
 			if (time >= self.campingrifle_accumulator + cvar("g_balance_campingrifle_primary_burstcost"))
-			if (weapon_prepareattack(0, cvar("g_balance_campingrifle_primary_refire")))
 			{
-				W_CampingRifle_Attack();
-				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_campingrifle_primary_animtime"), W_CampingRifle_CheckReloadAndReady);
+				weapon_prepareattack_do(0, cvar("g_balance_campingrifle_primary_refire"));
+				W_CampingRifle_BulletHail(cvar("g_balance_campingrifle_primary_bullethail"), W_CampingRifle_Attack, WFRAME_FIRE1, cvar("g_balance_campingrifle_primary_animtime"), cvar("g_balance_campingrifle_primary_refire"));
 				self.campingrifle_accumulator += cvar("g_balance_campingrifle_primary_burstcost");
 			}
 			if (self.BUTTON_ATCK2)
+			if (weapon_prepareattack_check(1, cvar("g_balance_campingrifle_secondary_refire")))
 			if (time >= self.campingrifle_accumulator + cvar("g_balance_campingrifle_secondary_burstcost"))
-			if (weapon_prepareattack(1, cvar("g_balance_campingrifle_secondary_refire")))
 			{
-				W_CampingRifle_Attack2();
-				weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_campingrifle_secondary_animtime"), W_CampingRifle_CheckReloadAndReady);
+				weapon_prepareattack_do(1, cvar("g_balance_campingrifle_secondary_refire"));
+				W_CampingRifle_BulletHail(cvar("g_balance_campingrifle_secondary_bullethail"), W_CampingRifle_Attack2, WFRAME_FIRE2, cvar("g_balance_campingrifle_secondary_animtime"), cvar("g_balance_campingrifle_primary_refire"));
 				self.campingrifle_accumulator += cvar("g_balance_campingrifle_secondary_burstcost");
 			}
 		}
@@ -176,7 +232,7 @@ float w_campingrifle(float req)
 	{		
 		precache_model ("models/weapons/g_campingrifle.md3");
 		precache_model ("models/weapons/v_campingrifle.md3");
-		precache_model ("models/weapons/h_campingrifle.dpm");
+		precache_model ("models/weapons/h_campingrifle.iqm");
 		precache_sound ("weapons/campingrifle_reload.wav");
 		precache_sound ("weapons/campingrifle_fire.wav");
 		precache_sound ("weapons/campingrifle_fire2.wav");
@@ -194,6 +250,43 @@ float w_campingrifle(float req)
 		return self.ammo_nails >= cvar("g_balance_campingrifle_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_nails >= cvar("g_balance_campingrifle_secondary_ammo");
+	else if (req == WR_RELOAD)
+	{
+		W_CampingRifle_Reload();
+	}
+	else if (req == WR_RESETPLAYER)
+	{
+		self.campingrifle_accumulator = time - cvar("g_balance_campingrifle_bursttime");
+		self.campingrifle_bulletcounter = cvar("g_balance_campingrifle_magazinecapacity");
+		W_CampingRifle_CheckMaxBullets(FALSE);
+	}
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_campingrifle(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent)
+		{
+			if(w_random < 0.2)
+				sound(self, CHAN_PROJECTILE, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.4)
+				sound(self, CHAN_PROJECTILE, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.5)
+				sound(self, CHAN_PROJECTILE, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/ric1.wav");
+		precache_sound("weapons/ric2.wav");
+		precache_sound("weapons/ric3.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
@@ -226,16 +319,7 @@ float w_campingrifle(float req)
 			}
 		}
 	}
-	else if (req == WR_RELOAD)
-	{
-		W_CampingRifle_Reload();
-	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.campingrifle_accumulator = time - cvar("g_balance_campingrifle_bursttime");
-		self.campingrifle_bulletcounter = cvar("g_balance_campingrifle_magazinecapacity");
-		W_CampingRifle_CheckMaxBullets(FALSE);
-	}
 	return TRUE;
-};
+}
+#endif
 #endif

@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(LASER, w_laser, 0, 1, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "laser", "laser", "Laser");
 #else
+#ifdef SVQC
 void(float imp) W_SwitchWeapon;
 
 void W_Laser_Touch (void)
@@ -167,7 +168,7 @@ float w_laser(float req)
 	{
 		precache_model ("models/weapons/g_laser.md3");
 		precache_model ("models/weapons/v_laser.md3");
-		precache_model ("models/weapons/h_laser.dpm");
+		precache_model ("models/weapons/h_laser.iqm");
 		precache_sound ("weapons/lasergun_fire.wav");
 		precache_sound ("weapons/gauntlet_fire.wav");
 	}
@@ -177,6 +178,24 @@ float w_laser(float req)
 		return TRUE;
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_laser(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/laserimpact.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "lasered themself to hell";
 	else if (req == WR_KILLMESSAGE)
@@ -184,5 +203,6 @@ float w_laser(float req)
 		w_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
 	}
 	return TRUE;
-};
+}
+#endif
 #endif

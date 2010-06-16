@@ -1,0 +1,7 @@
+name Erebus
+species human
+sex Male
+weight 105
+age 26
+
+Heavyweight Xonotic Solider

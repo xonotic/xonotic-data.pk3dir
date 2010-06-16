@@ -1,9 +1,10 @@
-void CSQC_kh_hudreset();
-void CSQC_kh_hud();
-void CSQC_ctf_hudreset();
-void CSQC_ctf_hud();
-void CSQC_nb_hud();
-void CSQC_race_hud();
+vector mousepos;
+vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)
+vector panel_click_resizeorigin; // coordinates for opposite point when resizing
+float resizeCorner; // 1 = topleft, 2 = topright, 3 = bottomleft, 4 = bottomright
+float highlightedPanel;
+float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
+
 const float BORDER_MULTIPLIER = 0.25;
 float hud_color_bg_team;
 float scoreboard_bottom;
@@ -18,9 +19,12 @@ float last_weapon;
 float weapontime;
 
 float teamnagger;
-float hud_alpha_fg;
-float hud_alpha_bg;
-float hud_hudselector;
+float hud_fg_alpha;
 float hud_accuracy_hud;
 float hud_border_thickness;
 float hud_accuracy_border_thickness;
+
+float hud_configure;
+
+float disable_menu_alphacheck; // 0 = enable alpha check, 1 = disable for entire hud, 2 = disable for one panel
+float menu_fade_alpha;

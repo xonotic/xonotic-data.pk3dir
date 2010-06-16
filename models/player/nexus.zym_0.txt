@@ -1,6 +1,0 @@
-name Nexus
-species human
-weight 282
-age 313
-
-Nexuiz's Soldier

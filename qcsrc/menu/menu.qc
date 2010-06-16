@@ -24,6 +24,10 @@ void() m_init =
 
 	check_unacceptable_compiler_bugs();
 
+#ifdef WATERMARK
+	print("^4MQC Build information: ", WATERMARK(), "\n");
+#endif
+
 	// list all game dirs (TEST)
 	if(cvar("developer"))
 	{
@@ -266,6 +270,9 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 
 void(string img, float a, string algn, float force1) drawBackground =
 {
+	if(main.mainNexposee.ModalController_state == 0)
+		return;
+
 	vector v;
 	float i, l;
 	string c;

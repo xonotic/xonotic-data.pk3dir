@@ -336,8 +336,6 @@ float TrueAimCheck()
 
 void CSQC_common_hud(void);
 
-void CSQC_kh_hud(void);
-void CSQC_ctf_hud(void);
 void PostInit(void);
 void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard ();
@@ -374,7 +372,7 @@ void CSQC_UpdateView(float w, float h)
 	input_angles = warpzone_fixview_cl_viewangles;
 	view_angles = warpzone_fixview_angles;
 
-	if(cvar("cl_lockview"))
+	if(cvar("cl_lockview") || hud_configure)
 	{
 		pmove_org = freeze_pmove_org;
 		input_angles = view_angles = freeze_input_angles;
@@ -396,10 +394,6 @@ void CSQC_UpdateView(float w, float h)
 		view_up = v_up;
 		view_set = 1;
 	}
-
-	hudconf_active = cvar("_hud_configure");
-	if(hudconf_active)
-		R_SetView(VF_ANGLES, self.angles); // TODO: this should freeze the view as it is, not change it to '0 0 0' or whatever it currently does...
 
 	vid_width = w;
 	vid_height = h;
@@ -467,9 +461,6 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	hud_alpha_fg = cvar_or("hud_fg_alpha", 1) * (1 - cvar("_menu_alpha"));
-	hud_currentammo = cvar("hud_showcurrentammo");
-	hud_hudselector = cvar("hud_hudselector");
 	hud_accuracy_hud = cvar_or("hud_accuracy_hud", 1);
 	ColorTranslateMode = cvar("cl_stripcolorcodes");
 	activeweapon = getstati(STAT_SWITCHWEAPON);
@@ -603,7 +594,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !ons_showmap && !camera_active && !hudconf_active) {
+		if(!scoreboard_active && !camera_active) {
 			// TrueAim check
 			float shottype;
 			float bullets, ring_scale;
@@ -739,7 +730,7 @@ void CSQC_UpdateView(float w, float h)
 					bullets = 0;
 
 #define CROSSHAIR_DRAW_RING(i,j,sz,wcross_name,wcross_alpha) \
-				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/hud/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/hud/", cvar_string("hud_skin"), "/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
 				do \
@@ -839,7 +830,7 @@ void CSQC_UpdateView(float w, float h)
 		cvar_set("vid_conheight", h0);
 	}
 
-	if(hudconf_active)
+	if(hud_configure)
 		HUD_Panel_Mouse();
 	// be safe against triggerbots until everyone has the fixed engine
 	// this call is meant to overwrite the trace globals by something
@@ -954,7 +945,7 @@ void CSQC_SPIDER_HUD()
 	}
 	*/
 
-	if (sb_showscores)
+	if (scoreboard_showscores)
 	{
 		HUD_DrawScoreboard();
 		HUD_DrawCenterPrint();
@@ -967,9 +958,6 @@ void CSQC_SPIDER_HUD()
 #define raptor_g1 "gfx/vehicles/raptor_guns.tga"
 #define raptor_g2 "gfx/vehicles/raptor_bombs.tga"
 #define raptor_s "gfx/vehicles/shiled.tga"
-
-#define spider_a1 "gfx/hud/sb_rocket.tga"
-#define spider_a2 "gfx/sb_bullets.tga"
 
 void CSQC_RAPTOR_HUD()
 {
@@ -1024,7 +1012,7 @@ void CSQC_RAPTOR_HUD()
     drawpic(hudloc, raptor_g2, picsize, '1 1 1' * reload + '1 0 0' *  (1 - reload), 1, DRAWFLAG_NORMAL);
 
 
-	if (sb_showscores)
+	if (scoreboard_showscores)
 	{
 		HUD_DrawScoreboard();
 		HUD_DrawCenterPrint();
@@ -1134,7 +1122,7 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 
 
 
-	if (sb_showscores)
+	if (scoreboard_showscores)
 	{
 		HUD_DrawScoreboard();
 		HUD_DrawCenterPrint();
@@ -1156,31 +1144,20 @@ void CSQC_common_hud(void)
 			// hud first
 			HUD_Main();
 
-			// is this needed?
-			//HUD_UpdatePlayerTeams();
-
-			if (intermission == 2) // map voting screen
+			// scoreboard/accuracy
+			if (intermission == 2 && !scoreboard_showaccuracy && !scoreboard_showscores) // map voting screen
 			{
-				if(sb_showaccuracy && spectatee_status != -1) {
-					HUD_DrawAccuracyStats();
-				}
-				else if(sb_showscores) {
-					HUD_DrawScoreboard();
-				}
-				else
-					HUD_FinaleOverlay();
-
+				HUD_FinaleOverlay();
 				HUD_Reset();
 			}
-			else if (sb_showscores || sb_showaccuracy || sb_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
-			{
-				if(sb_showaccuracy && spectatee_status != -1)
-					HUD_DrawAccuracyStats();
-				else
-					HUD_DrawScoreboard();
+			else if(scoreboard_showaccuracy && spectatee_status != -1)
+				HUD_DrawAccuracyStats();
+			else
+				HUD_DrawScoreboard();
 
+			if (scoreboard_showscores || scoreboard_showaccuracy || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
 				HUD_Reset();
-			}
+
 			break;
 
 		case HUD_SPIDERBOT:

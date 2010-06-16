@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "shotgun", "shotgun", "Shotgun");
 #else
+#ifdef SVQC
 void W_Shotgun_Attack (void)
 {
 	float	sc;
@@ -129,7 +130,7 @@ float w_shotgun(float req)
 		precache_model ("models/uziflash.md3");
 		precache_model ("models/weapons/g_shotgun.md3");
 		precache_model ("models/weapons/v_shotgun.md3");
-		precache_model ("models/weapons/h_shotgun.dpm");
+		precache_model ("models/weapons/h_shotgun.iqm");
 		precache_sound ("misc/itempickup.wav");
 		precache_sound ("weapons/shotgun_fire.wav");
 	}
@@ -139,6 +140,33 @@ float w_shotgun(float req)
 		return self.ammo_shells >= cvar("g_balance_shotgun_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_shells >= cvar("g_balance_shotgun_secondary_ammo") * 3;
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_shotgun(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		pointparticles(particleeffectnum("shotgun_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent)
+		{
+			if(w_random < 0.05)
+				sound(self, CHAN_PROJECTILE, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.1)
+				sound(self, CHAN_PROJECTILE, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.2)
+				sound(self, CHAN_PROJECTILE, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/ric1.wav");
+		precache_sound("weapons/ric2.wav");
+		precache_sound("weapons/ric3.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE)
@@ -146,5 +174,6 @@ float w_shotgun(float req)
 		w_deathtypestring = "was gunned by"; // unchecked: SECONDARY
 	}
 	return TRUE;
-};
+}
+#endif
 #endif

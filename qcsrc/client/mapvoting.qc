@@ -249,7 +249,7 @@ void MapVote_Draw()
 		MapVote_DrawAbstain(pos, isize, xmax - xmin, tmp, i);
 	}
 
-	drawpic(mv_mousepos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor.tga"), '32 32 0', '1 1 1', hud_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(mv_mousepos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor.tga"), '32 32 0', '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 void Cmd_MapVote_MapDownload(float argc)
@@ -330,9 +330,6 @@ void MapVote_Init()
 	string map, pk3, s;
 
 	precache_sound ("misc/invshot.wav");
-
-	registercmd("+showscores");
-	registercmd("-showscores");
 
 	mv_active = 1;
 

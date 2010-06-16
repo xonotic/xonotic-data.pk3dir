@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "tuba", "tuba", "@!#%'n Tuba");
 #else
+#ifdef SVQC
 //#define TUBA_NOTE(n) strcat("weapons/tuba_note", ftos(n), ".wav")
 .float tuba_notecount;
 .entity tuba_note;
@@ -228,7 +229,7 @@ float w_tuba(float req)
 	{
 		precache_model ("models/weapons/g_tuba.md3");
 		precache_model ("models/weapons/v_tuba.md3");
-		precache_model ("models/weapons/h_tuba.dpm");
+		precache_model ("models/weapons/h_tuba.iqm");
 
 		//float i;
 		//for(i = -18; i <= +27; ++i)
@@ -240,6 +241,20 @@ float w_tuba(float req)
 		return TRUE; // TODO use fuel?
 	else if (req == WR_CHECKAMMO2)
 		return TRUE; // TODO use fuel?
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_tuba(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		// nothing to do here; particles of tuba are handled differently
+	}
+	else if(req == WR_PRECACHE)
+	{
+		// nothing to do
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		w_deathtypestring = "hurt his own ears with the @!#%'n Tuba";
@@ -249,5 +264,6 @@ float w_tuba(float req)
 		w_deathtypestring = "died of #'s great playing on the @!#%'n Tuba";
 	}
 	return TRUE;
-};
+}
+#endif
 #endif

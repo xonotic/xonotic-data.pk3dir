@@ -31,7 +31,6 @@ vector mi_center;
 vector mi_scale;
 // Minimap
 string minimapname;
-float ons_showmap;
 
 // --------------------------------------------------------------------------
 // General stuff

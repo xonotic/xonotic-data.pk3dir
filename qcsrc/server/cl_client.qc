@@ -398,8 +398,15 @@ Checks if the argument string can be a valid playermodel.
 Returns a valid one in doubt.
 =============
 */
-string FallbackPlayerModel = "models/player/marine.zym";
+string FallbackPlayerModel;
 string CheckPlayerModel(string plyermodel) {
+	if(FallbackPlayerModel != cvar_defstring("_cl_playermodel"))
+	{
+		// note: we cannot summon Don Strunzone here, some player may
+		// still have the model string set. In case anyone manages how
+		// to change a cvar default, we'll have a small leak here.
+		FallbackPlayerModel = strzone(cvar_defstring("_cl_playermodel"));
+	}
 	if(strlen(plyermodel) < 4)
 		return FallbackPlayerModel;
 	if( substring(plyermodel,0,14) != "models/player/")
@@ -932,6 +939,7 @@ void PutClientInServer (void)
 		self.nextthink = 0;
 		self.hook_time = 0;
 		self.dmg_team = 0;
+		self.ballistics_density = cvar("g_ballistics_density_player");
 
 		self.metertime = 0;
 
@@ -1385,6 +1393,10 @@ void ClientConnect (void)
 		return;
 
 	DecodeLevelParms();
+
+#ifdef WATERMARK
+	sprint(self, strcat("^4SVQC Build information: ", WATERMARK(), "\n"));
+#endif
 
 	self.classname = "player_joining";
 

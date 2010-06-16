@@ -121,9 +121,9 @@ void W_NextWeaponOnImpulse(float imp)
 void W_NextWeapon(float list)
 {
 	if(list == 0)
-		W_CycleWeapon(weaponpriority_hudselector_0, -1);
+		W_CycleWeapon(weaponorder_byid, -1);
 	else if(list == 1)
-		W_CycleWeapon(weaponpriority_hudselector_1, -1);
+		W_CycleWeapon(weaponorder_byimpulse, -1);
 	else if(list == 2)
 		W_CycleWeapon(self.cvar_cl_weaponpriority, -1);
 }
@@ -132,9 +132,9 @@ void W_NextWeapon(float list)
 void W_PreviousWeapon(float list)
 {
 	if(list == 0)
-		W_CycleWeapon(weaponpriority_hudselector_0, +1);
+		W_CycleWeapon(weaponorder_byid, +1);
 	else if(list == 1)
-		W_CycleWeapon(weaponpriority_hudselector_1, +1);
+		W_CycleWeapon(weaponorder_byimpulse, +1);
 	else if(list == 2)
 		W_CycleWeapon(self.cvar_cl_weaponpriority, +1);
 }
@@ -292,6 +292,8 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	if(cvar("g_weapon_stay") == 1)
 		return;
 	if(!W_IsWeaponThrowable(w))
+		return;
+	if(self.weaponentity.state != WS_READY)
 		return;
 
 	wb = W_WeaponBit(w);

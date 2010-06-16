@@ -190,6 +190,7 @@ void StartFrame (void)
 	sv_airstopaccelerate = cvar("sv_airstopaccelerate");
 	sv_airstrafeaccelerate = cvar("sv_airstrafeaccelerate");
 	sv_maxairstrafespeed = cvar("sv_maxairstrafespeed");
+	sv_airstrafeaccel_qw = cvar("sv_airstrafeaccel_qw");
 	sv_aircontrol = cvar("sv_aircontrol");
 	sv_aircontrol_power = cvar("sv_aircontrol_power");
 	sv_warsowbunny_airforwardaccel = cvar("sv_warsowbunny_airforwardaccel");
@@ -197,8 +198,10 @@ void StartFrame (void)
 	sv_warsowbunny_topspeed = cvar("sv_warsowbunny_topspeed");
 	sv_warsowbunny_turnaccel = cvar("sv_warsowbunny_turnaccel");
 	sv_warsowbunny_backtosideratio = cvar("sv_warsowbunny_backtosideratio");
+	sv_airspeedlimit_nonqw = cvar("sv_airspeedlimit_nonqw");
 	teamplay = cvar ("teamplay");
 	sys_frametime = cvar("sys_ticrate") * cvar("slowmo");
+	sv_doublejump = cvar("sv_doublejump");
 
 	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
 		orig_slowmo = cvar("slowmo"); // slowmo will be restored after the timeout

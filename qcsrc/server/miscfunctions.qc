@@ -825,20 +825,30 @@ float g_pickup_fuel_jetpack;
 float g_pickup_fuel_max;
 float g_pickup_armorsmall;
 float g_pickup_armorsmall_max;
+float g_pickup_armorsmall_anyway;
 float g_pickup_armormedium;
 float g_pickup_armormedium_max;
+float g_pickup_armormedium_anyway;
 float g_pickup_armorbig;
 float g_pickup_armorbig_max;
+float g_pickup_armorbig_anyway;
 float g_pickup_armorlarge;
 float g_pickup_armorlarge_max;
+float g_pickup_armorlarge_anyway;
 float g_pickup_healthsmall;
 float g_pickup_healthsmall_max;
+float g_pickup_healthsmall_anyway;
 float g_pickup_healthmedium;
 float g_pickup_healthmedium_max;
+float g_pickup_healthmedium_anyway;
 float g_pickup_healthlarge;
 float g_pickup_healthlarge_max;
+float g_pickup_healthlarge_anyway;
 float g_pickup_healthmega;
 float g_pickup_healthmega_max;
+float g_pickup_healthmega_anyway;
+float g_pickup_ammo_anyway;
+float g_pickup_weapons_anyway;
 float g_weaponarena;
 float g_weaponarena_random;
 string g_weaponarena_list;
@@ -1217,7 +1227,6 @@ void readlevelcvars(void)
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
 	sv_pogostick = cvar("sv_pogostick");
-	sv_doublejump = cvar("sv_doublejump");
 	g_ctf_reverse = cvar("g_ctf_reverse");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
@@ -1262,20 +1271,31 @@ void readlevelcvars(void)
 	g_pickup_fuel_max = cvar("g_pickup_fuel_max");
 	g_pickup_armorsmall = cvar("g_pickup_armorsmall");
 	g_pickup_armorsmall_max = cvar("g_pickup_armorsmall_max");
+	g_pickup_armorsmall_anyway = cvar("g_pickup_armorsmall_anyway");
 	g_pickup_armormedium = cvar("g_pickup_armormedium");
 	g_pickup_armormedium_max = cvar("g_pickup_armormedium_max");
+	g_pickup_armormedium_anyway = cvar("g_pickup_armormedium_anyway");
 	g_pickup_armorbig = cvar("g_pickup_armorbig");
 	g_pickup_armorbig_max = cvar("g_pickup_armorbig_max");
+	g_pickup_armorbig_anyway = cvar("g_pickup_armorbig_anyway");
 	g_pickup_armorlarge = cvar("g_pickup_armorlarge");
 	g_pickup_armorlarge_max = cvar("g_pickup_armorlarge_max");
+	g_pickup_armorlarge_anyway = cvar("g_pickup_armorlarge_anyway");
 	g_pickup_healthsmall = cvar("g_pickup_healthsmall");
 	g_pickup_healthsmall_max = cvar("g_pickup_healthsmall_max");
+	g_pickup_healthsmall_anyway = cvar("g_pickup_healthsmall_anyway");
 	g_pickup_healthmedium = cvar("g_pickup_healthmedium");
 	g_pickup_healthmedium_max = cvar("g_pickup_healthmedium_max");
+	g_pickup_healthmedium_anyway = cvar("g_pickup_healthmedium_anyway");
 	g_pickup_healthlarge = cvar("g_pickup_healthlarge");
 	g_pickup_healthlarge_max = cvar("g_pickup_healthlarge_max");
+	g_pickup_healthlarge_anyway = cvar("g_pickup_healthlarge_anyway");
 	g_pickup_healthmega = cvar("g_pickup_healthmega");
 	g_pickup_healthmega_max = cvar("g_pickup_healthmega_max");
+	g_pickup_healthmega_anyway = cvar("g_pickup_healthmega_anyway");
+
+	g_pickup_ammo_anyway = cvar("g_pickup_ammo_anyway");
+	g_pickup_weapons_anyway = cvar("g_pickup_weapons_anyway");
 
 	g_pinata = cvar("g_pinata");
 
@@ -1583,6 +1603,7 @@ void precache()
         precache_all_playermodels("models/player/*.dpm");
         precache_all_playermodels("models/player/*.md3");
         precache_all_playermodels("models/player/*.psk");
+        precache_all_playermodels("models/player/*.iqm");
     }
 
     if (cvar("sv_defaultcharacter"))
@@ -1892,6 +1913,13 @@ void adaptor_think2use()
     self.use();
     other = o;
     activator = a;
+}
+
+void adaptor_think2use_hittype_splash() // for timed projectile detonation
+{
+	if not(self.flags & FL_ONGROUND) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
+		self.projectiledeathtype |= HITTYPE_SPLASH;
+	adaptor_think2use();
 }
 
 // deferred dropping
@@ -2325,7 +2353,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			{
 				// center
 				vecs_y = 0;
-				vecs_z -= 4;
+				vecs_z -= 2;
 			}
 			else
 			{
@@ -2338,7 +2366,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			{
 				// center
 				vecs_y = 0;
-				vecs_z -= 4;
+				vecs_z -= 2;
 			}
 			else
 			{
@@ -2376,7 +2404,7 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual)
 		else
 		{
 			vecs_y = 0;
-			vecs_z -= 4;
+			vecs_z -= 2;
 		}
 	}
 	else if ((s = cvar_string("g_shootfromfixedorigin")) != "")

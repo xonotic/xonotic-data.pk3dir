@@ -62,6 +62,14 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if(argv(0) == "directpanelhudmenu")
+	{
+		highlightedPanel = stof(argv(1));
+		// switch to a menu item
+		m_goto(strcat("HUD", HUD_Panel_GetName(highlightedPanel)));
+		return;
+	}
+
 	if(argv(0) == "skinselect")
 	{
 		m_goto_skin_selector();

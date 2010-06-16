@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hlac", "hlac", "Heavy Laser Assault Cannon");
 #else
+#ifdef SVQC
 .float HLAC_bulletcounter;
 void W_HLAC_Touch (void)
 {
@@ -196,7 +197,7 @@ float w_hlac(float req)
 	{
         precache_model ("models/weapons/g_hlac.md3");
 		precache_model ("models/weapons/v_hlac.md3");
-		precache_model ("models/weapons/h_hlac.dpm");
+		precache_model ("models/weapons/h_hlac.iqm");
 		precache_sound ("weapons/lasergun_fire.wav");
 
 	}
@@ -206,10 +207,29 @@ float w_hlac(float req)
 		return self.ammo_cells >= cvar("g_balance_hlac_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_cells >= cvar("g_balance_hlac_secondary_ammo");
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_hlac(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/laserimpact.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "should have used a smaller gun";
 	else if (req == WR_KILLMESSAGE)
 		w_deathtypestring = "was cut down by";
 	return TRUE;
-};
+}
+#endif
 #endif

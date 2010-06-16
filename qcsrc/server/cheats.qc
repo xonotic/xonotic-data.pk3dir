@@ -230,11 +230,8 @@ float CheatImpulse(float i)
 			IS_CHEAT(i, 0, 0);
 			FOR_EACH_PLAYER(e)
 			{
-				if( e.playermodel == "models/player/jeandarc.zym"
-						||  e.playermodel == "models/player/pyria.zym"
-						||  e.playermodel == "models/player/skadi.zym"
-						|| (e.playermodel == "models/player/specop.zym" && random() < 0.5) // you never know
-						||  e.playermodel == "models/player/visitant.zym")
+				get_model_parameters(e.playermodel, e.skinindex);
+				if(get_model_parameters_sex == "Female")
 				{
 					makevectors(e.angles);
 					traceline(e.origin, e.origin + v_right * 256, MOVE_NORMAL, e);

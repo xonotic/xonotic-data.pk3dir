@@ -18,3 +18,5 @@ void unloadTooltips();
 string getZonedTooltipForIdentifier(string s);
 
 string resolvemod(string m);
+
+string HUD_Panel_GetSettingName(float setting);

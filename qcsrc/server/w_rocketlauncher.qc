@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "rl", "rocketlauncher", "Rocket Launcher");
 #else
+#ifdef SVQC
 .float rl_release;
 .float rl_detonate_later;
 
@@ -520,7 +521,7 @@ float w_rlauncher(float req)
 		precache_model ("models/flash.md3");
 		precache_model ("models/weapons/g_rl.md3");
 		precache_model ("models/weapons/v_rl.md3");
-		precache_model ("models/weapons/h_rl.dpm");
+		precache_model ("models/weapons/h_rl.iqm");
 		precache_sound ("weapons/rocket_det.wav");
 		precache_sound ("weapons/rocket_fire.wav");
 		precache_sound ("weapons/rocket_mode.wav");
@@ -543,6 +544,28 @@ float w_rlauncher(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;
+	else if (req == WR_RESETPLAYER)
+	{
+		self.rl_release = 0;
+	}
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_rlauncher(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 12;
+		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/rocket_impact.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "exploded";
 	else if (req == WR_KILLMESSAGE)
@@ -554,10 +577,7 @@ float w_rlauncher(float req)
 		else
 			w_deathtypestring = "ate #'s rocket";
 	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.rl_release = 0;
-	}
 	return TRUE;
-};
+}
+#endif
 #endif

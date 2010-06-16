@@ -11,6 +11,7 @@ entity champion;
 float warmup;
 float allowed_to_spawn;
 float player_cnt;
+float required_ca_players;
 .float caplayer;
 
 void PutObserverInServer();
@@ -43,7 +44,7 @@ void reset_map(float dorespawn)
 	lms_next_place = player_count;
 
 	race_ReadyRestart();
-	
+
 	for(self = world; (self = nextent(self)); )
 	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
 	{
@@ -198,7 +199,7 @@ void Arena_Warmup()
 
 	allowed_to_spawn = 0;
 
-	if(g_ca && (player_cnt < 2 || inWarmupStage))
+	if(g_ca && (player_cnt < required_ca_players || inWarmupStage))
 		allowed_to_spawn = 1;
 
 	msg = NEWLINES;
@@ -280,13 +281,15 @@ void Spawnqueue_Check()
 			}
 		}
 
-		if(player_cnt < 2 && (redspawned && bluespawned)) {
+		required_ca_players = max(2, fabs(cvar("bot_vs_human") + 1));
+
+		if(player_cnt < required_ca_players && (redspawned && bluespawned)) {
 			reset_map(TRUE);
 		}
-		else if(player_cnt < 2) {
+		else if(player_cnt < required_ca_players) {
 			FOR_EACH_CLIENT(self) 
 			if(self.classname == "player")
-				centerprint(self, strcat("^1Need at least 2 players to play CA", "^7\n"));
+				centerprint(self, strcat("^1Need at least 1 player in each team to play CA", "^7\n"));
 
 			allowed_to_spawn = 1;
 			return;

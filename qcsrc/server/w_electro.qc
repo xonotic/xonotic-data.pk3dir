@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(ELECTRO, w_electro, IT_CELLS, 5, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "electro", "electro", "Electro");
 #else
+#ifdef SVQC
 .float electro_count;
 .float electro_secondarytime;
 
@@ -51,7 +52,6 @@ void W_Plasma_Explode (void)
 
 void W_Plasma_Explode_Combo (void)
 {
-
 	W_Plasma_TriggerCombo(self.origin, cvar("g_balance_electro_combo_comboradius"), self.owner);
 
 	self.event_damage = SUB_Null;
@@ -98,7 +98,7 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float dea
 		else
 		{
 			self.use = W_Plasma_Explode;
-			self.think = adaptor_think2use;
+			self.think = adaptor_think2use; // not _hittype_splash, as this runs "immediately"
 		}
 	}
 }
@@ -117,7 +117,7 @@ void W_Electro_Attack()
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = cvar("g_balance_electro_primary_damage");
 	proj.use = W_Plasma_Explode;
-	proj.think = adaptor_think2use;
+	proj.think = adaptor_think2use_hittype_splash;
 	proj.nextthink = time + cvar("g_balance_electro_primary_lifetime");
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_ELECTRO;
@@ -151,7 +151,7 @@ void W_Electro_Attack2()
 	proj.classname = "plasma";
 	proj.owner = self;
 	proj.use = W_Plasma_Explode;
-	proj.think = adaptor_think2use;
+	proj.think = adaptor_think2use_hittype_splash;
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = cvar("g_balance_electro_secondary_damage");
 	proj.nextthink = time + cvar("g_balance_electro_secondary_lifetime");
@@ -270,7 +270,7 @@ float w_electro(float req)
 	{
 		precache_model ("models/weapons/g_electro.md3");
 		precache_model ("models/weapons/v_electro.md3");
-		precache_model ("models/weapons/h_electro.dpm");
+		precache_model ("models/weapons/h_electro.iqm");
 		precache_sound ("weapons/electro_bounce.wav");
 		precache_sound ("weapons/electro_fire.wav");
 		precache_sound ("weapons/electro_fire2.wav");
@@ -285,6 +285,48 @@ float w_electro(float req)
 		return self.ammo_cells >= cvar("g_balance_electro_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_cells >= cvar("g_balance_electro_secondary_ammo");
+	else if (req == WR_RESETPLAYER)
+	{
+		self.electro_secondarytime = time;
+	}
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_electro(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			pointparticles(particleeffectnum("electro_ballexplode"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+		}
+		else
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+			{
+				// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
+				pointparticles(particleeffectnum("electro_combo"), org2, '0 0 0', 1);
+				if(!w_issilent)
+					sound(self, CHAN_PROJECTILE, "weapons/electro_impact_combo.wav", VOL_BASE, ATTN_NORM);
+			}
+			else
+			{
+				pointparticles(particleeffectnum("electro_impact"), org2, '0 0 0', 1);
+				if(!w_issilent)
+					sound(self, CHAN_PROJECTILE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+			}
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/electro_impact.wav");
+		precache_sound("weapons/electro_impact_combo.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
@@ -311,10 +353,7 @@ float w_electro(float req)
 				w_deathtypestring = "was blasted by #'s blue beam";
 		}
 	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.electro_secondarytime = time;
-	}
 	return TRUE;
-};
+}
+#endif
 #endif

@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_CANCLIMB | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "minstanex", "minstanex", "MinstaNex");
 #else
+#ifdef SVQC
 .float minstanex_lasthit;
 
 void W_MinstaNex_Attack (void)
@@ -210,7 +211,7 @@ float w_minstanex(float req)
 		precache_model ("models/nexflash.md3");
 		precache_model ("models/weapons/g_minstanex.md3");
 		precache_model ("models/weapons/v_minstanex.md3");
-		precache_model ("models/weapons/h_minstanex.dpm");
+		precache_model ("models/weapons/h_minstanex.iqm");
 		precache_sound ("weapons/minstanexfire.wav");
 		precache_sound ("weapons/nexwhoosh1.wav");
 		precache_sound ("weapons/nexwhoosh2.wav");
@@ -231,14 +232,33 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "has been vaporized by";
 	else if (req == WR_RESETPLAYER)
 	{
 		self.minstanex_lasthit = 0;
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+float w_minstanex(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/neximpact.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "did the impossible";
+	else if (req == WR_KILLMESSAGE)
+		w_deathtypestring = "has been vaporized by";
+	return TRUE;
+}
+#endif
 #endif

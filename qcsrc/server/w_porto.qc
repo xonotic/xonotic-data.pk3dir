@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(PORTO, w_porto, 0, 0, WEP_TYPE_OTHER, 0, "porto" , "porto", "Port-O-Launch");
 #else
+#ifdef SVQC
 .entity porto_current;
 .vector porto_v_angle; // holds "held" view angles
 .float porto_v_angle_held;
@@ -257,7 +258,7 @@ float w_porto(float req)
 	{
 		precache_model ("models/weapons/g_porto.md3");
 		precache_model ("models/weapons/v_porto.md3");
-		precache_model ("models/weapons/h_porto.dpm");
+		precache_model ("models/weapons/h_porto.iqm");
 		precache_model ("models/portal.md3");
 		precache_sound ("porto/bounce.wav");
 		precache_sound ("porto/create.wav");
@@ -268,14 +269,29 @@ float w_porto(float req)
 	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_PORTO);
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "felt # doing the impossible to him";
 	else if (req == WR_RESETPLAYER)
 	{
 		self.porto_current = world;
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+float w_porto(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		print("Since when does Porto send DamageInfo?\n");
+	}
+	else if(req == WR_PRECACHE)
+	{
+		// nothing to do
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "did the impossible";
+	else if (req == WR_KILLMESSAGE)
+		w_deathtypestring = "felt # doing the impossible to him";
+	return TRUE;
+}
+#endif
 #endif
