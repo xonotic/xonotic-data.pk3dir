@@ -15,7 +15,7 @@ ENDCLASS(InputContainer)
 #endif
 
 #ifdef IMPLEMENTATION
-void resizeNotifyInputContainer(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void InputContainer_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(InputContainer).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	/*
@@ -26,13 +26,13 @@ void resizeNotifyInputContainer(entity me, vector relOrigin, vector relSize, vec
 	*/
 }
 
-void focusLeaveInputContainer(entity me)
+void InputContainer_focusLeave(entity me)
 {
 	SUPER(InputContainer).focusLeave(me);
 	me.mouseFocusedChild = NULL;
 }
 
-float keyDownInputContainer(entity me, float scan, float ascii, float shift)
+float InputContainer_keyDown(entity me, float scan, float ascii, float shift)
 {
 	entity f, ff;
 	if(SUPER(InputContainer).keyDown(me, scan, ascii, shift))
@@ -102,7 +102,7 @@ float keyDownInputContainer(entity me, float scan, float ascii, float shift)
 	return 0;
 }
 
-float _changeFocusXYInputContainer(entity me, vector pos)
+float InputContainer__changeFocusXY(entity me, vector pos)
 {
 	entity e, ne;
 	e = me.mouseFocusedChild;
@@ -124,7 +124,7 @@ float _changeFocusXYInputContainer(entity me, vector pos)
 	return (ne != NULL);
 }
 
-float mouseDragInputContainer(entity me, vector pos)
+float InputContainer_mouseDrag(entity me, vector pos)
 {
 	if(SUPER(InputContainer).mouseDrag(me, pos))
 		return 1;
@@ -132,7 +132,7 @@ float mouseDragInputContainer(entity me, vector pos)
 		return 1;
 	return 0;
 }
-float mouseMoveInputContainer(entity me, vector pos)
+float InputContainer_mouseMove(entity me, vector pos)
 {
 	if(me._changeFocusXY(me, pos))
 		if(SUPER(InputContainer).mouseMove(me, pos))
@@ -141,7 +141,7 @@ float mouseMoveInputContainer(entity me, vector pos)
 		return 1;
 	return 0;
 }
-float mousePressInputContainer(entity me, vector pos)
+float InputContainer_mousePress(entity me, vector pos)
 {
 	me.mouseFocusedChild = NULL; // force focusing
 	if(me._changeFocusXY(me, pos))
@@ -151,7 +151,7 @@ float mousePressInputContainer(entity me, vector pos)
 		return 1;
 	return 0;
 }
-float mouseReleaseInputContainer(entity me, vector pos)
+float InputContainer_mouseRelease(entity me, vector pos)
 {
 	float r;
 	r = SUPER(InputContainer).mouseRelease(me, pos);

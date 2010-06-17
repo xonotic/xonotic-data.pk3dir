@@ -33,7 +33,7 @@ entity currentDialog;
 #endif
 
 #ifdef IMPLEMENTATION
-void configureDialogXonoticDialog(entity me)
+void XonoticDialog_configureDialog(entity me)
 {
 	currentDialog = me;
 	SUPER(XonoticDialog).configureDialog(me);

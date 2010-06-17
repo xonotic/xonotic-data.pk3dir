@@ -1,15 +1,15 @@
 // Andreas Kirsch Gecko item (to test it)
 #ifdef INTERFACE
 CLASS(Gecko) EXTENDS(Item)
-	METHOD( Gecko, configureBrowser, void( entity, string ) )
-	METHOD( Gecko, draw, void(entity))
-	METHOD( Gecko, keyDown, float(entity, float, float, float))
-	METHOD( Gecko, keyUp, float(entity, float, float, float))
-	METHOD( Gecko, mouseMove, float(entity, vector))
-	METHOD( Gecko, mouseDrag, float(entity, vector))
-	METHOD( Gecko, resizeNotify, void(entity, vector, vector, vector, vector))
-	ATTRIB( Gecko, texturePath, string, string_null )
-	ATTRIB( Gecko, textureExtent, vector, '0 0 0')
+	METHOD(Gecko, configureBrowser, void( entity, string ) )
+	METHOD(Gecko, draw, void(entity))
+	METHOD(Gecko, keyDown, float(entity, float, float, float))
+	METHOD(Gecko, keyUp, float(entity, float, float, float))
+	METHOD(Gecko, mouseMove, float(entity, vector))
+	METHOD(Gecko, mouseDrag, float(entity, vector))
+	METHOD(Gecko, resizeNotify, void(entity, vector, vector, vector, vector))
+	ATTRIB(Gecko, texturePath, string, string_null )
+	ATTRIB(Gecko, textureExtent, vector, '0 0 0')
 ENDCLASS(Gecko)
 #endif
 
@@ -17,7 +17,7 @@ ENDCLASS(Gecko)
 // define static members
 float _gecko_instanceNumber;
 
-void configureBrowserGecko( entity me, string URI ) {
+void Gecko_configureBrowser( entity me, string URI ) {
 	me.focusable = 1;
 
 	//create a new gecko object if needed
@@ -30,7 +30,7 @@ void configureBrowserGecko( entity me, string URI ) {
 	gecko_navigate( me.texturePath, URI );
 }
 
-void drawGecko(entity me)
+void Gecko_draw(entity me)
 {
 	vector drawSize;
   
@@ -50,7 +50,7 @@ void drawGecko(entity me)
 	}
 }
 
-float keyDownGecko(entity me, float scan, float ascii, float shift)
+float Gecko_keyDown(entity me, float scan, float ascii, float shift)
 {
 	if( scan == K_ESCAPE ) {
 		return 0;
@@ -61,7 +61,7 @@ float keyDownGecko(entity me, float scan, float ascii, float shift)
 		return gecko_keyevent( me.texturePath, scan, GECKO_BUTTON_DOWN );
 }
 
-float keyUpGecko(entity me, float scan, float ascii, float shift)
+float Gecko_keyUp(entity me, float scan, float ascii, float shift)
 {
 	if (ascii >= 32)
 		return gecko_keyevent( me.texturePath, ascii, GECKO_BUTTON_UP );
@@ -69,19 +69,19 @@ float keyUpGecko(entity me, float scan, float ascii, float shift)
 		return gecko_keyevent( me.texturePath, scan, GECKO_BUTTON_UP );
 }
 
-float mouseMoveGecko(entity me, vector pos)
+float Gecko_mouseMove(entity me, vector pos)
 {
 	gecko_mousemove( me.texturePath, pos_x, pos_y );
 	return 1;
 }
 
-float mouseDragGecko(entity me, vector pos)
+float Gecko_mouseDrag(entity me, vector pos)
 {
 	gecko_mousemove( me.texturePath, pos_x, pos_y );
 	return 1;
 }
 
-void resizeNotifyGecko(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void Gecko_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(Gecko).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	gecko_resize( me.texturePath, absSize_x, absSize_y );

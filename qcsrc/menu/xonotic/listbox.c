@@ -25,11 +25,11 @@ entity makeXonoticListBox()
 	me.configureXonoticListBox(me);
 	return me;
 }
-void configureXonoticListBoxXonoticListBox(entity me)
+void XonoticListBox_configureXonoticListBox(entity me)
 {
 	me.configureListBox(me, me.scrollbarWidth, 1); // item height gets set up later
 }
-void resizeNotifyXonoticListBox(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticListBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.itemHeight = me.rowsPerItem * me.fontSize / absSize_y;
 	SUPER(XonoticListBox).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);

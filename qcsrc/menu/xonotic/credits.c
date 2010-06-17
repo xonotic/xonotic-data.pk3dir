@@ -26,18 +26,18 @@ entity makeXonoticCreditsList()
 	me.configureXonoticCreditsList(me);
 	return me;
 }
-void configureXonoticCreditsListXonoticCreditsList(entity me)
+void XonoticCreditsList_configureXonoticCreditsList(entity me)
 {
 	me.configureXonoticListBox(me);
 	// load the file
 	me.bufferIndex = buf_load("xonotic-credits.txt");
 	me.nItems = buf_getsize(me.bufferIndex);
 }
-void destroyXonoticCreditsList(entity me)
+void XonoticCreditsList_destroy(entity me)
 {
 	buf_del(me.bufferIndex);
 }
-void drawXonoticCreditsList(entity me)
+void XonoticCreditsList_draw(entity me)
 {
 	float i;
 	if(me.scrolling)
@@ -49,7 +49,7 @@ void drawXonoticCreditsList(entity me)
 	}
 	SUPER(XonoticCreditsList).draw(me);
 }
-void resizeNotifyXonoticCreditsList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticCreditsList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(XonoticCreditsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
@@ -57,7 +57,7 @@ void resizeNotifyXonoticCreditsList(entity me, vector relOrigin, vector relSize,
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 }
-void drawListBoxItemXonoticCreditsList(entity me, float i, vector absSize, float isSelected)
+void XonoticCreditsList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	// layout: Ping, Credits name, Map name, NP, TP, MP
 	string s;
@@ -87,7 +87,7 @@ void drawListBoxItemXonoticCreditsList(entity me, float i, vector absSize, float
 	draw_CenterText(me.realUpperMargin * eY + 0.5 * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
 
-float keyDownXonoticCreditsList(entity me, float scan, float ascii, float shift)
+float XonoticCreditsList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	float i;
 	me.dragScrollTimer = time;

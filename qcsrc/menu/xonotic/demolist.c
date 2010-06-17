@@ -39,13 +39,13 @@ entity makeXonoticDemoList()
     return me;
 }
 
-void configureXonoticDemoListXonoticDemoList(entity me)
+void XonoticDemoList_configureXonoticDemoList(entity me)
 {
     me.configureXonoticListBox(me);
     me.getDemos(me);    
 }
 
-string demoNameXonoticDemoList(entity me, float i )
+string XonoticDemoList_demoName(entity me, float i )
 {
     string s;
     s = search_getfilename(me.listDemo, i);
@@ -54,7 +54,7 @@ string demoNameXonoticDemoList(entity me, float i )
 }
 
 
-void getDemosXonoticDemoList(entity me)
+void XonoticDemoList_getDemos(entity me)
 {
     string s;
     
@@ -74,12 +74,12 @@ void getDemosXonoticDemoList(entity me)
     	me.nItems=search_getsize(me.listDemo);				
 }
 
-void destroyXonoticDemoList(entity me)
+void XonoticDemoList_destroy(entity me)
 {
     search_end(me.listDemo);
 }
 
-void resizeNotifyXonoticDemoList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticDemoList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
     me.itemAbsSize = '0 0 0';
     SUPER(XonoticDemoList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
@@ -92,7 +92,7 @@ void resizeNotifyXonoticDemoList(entity me, vector relOrigin, vector relSize, ve
     me.columnNameSize = 1 - 2 * me.realFontSize_x;
 }
 
-void drawListBoxItemXonoticDemoList(entity me, float i, vector absSize, float isSelected)
+void XonoticDemoList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
     string s;
     if(isSelected)
@@ -103,7 +103,7 @@ void drawListBoxItemXonoticDemoList(entity me, float i, vector absSize, float is
     draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);		
 }
 
-void showNotifyXonoticDemoList(entity me)
+void XonoticDemoList_showNotify(entity me)
 {
     me.getDemos(me);
 }
@@ -121,7 +121,7 @@ void DemoList_Filter_Change(entity box, entity me)
     me.getDemos(me);
 }
 
-void startDemoXonoticDemoList(entity me)
+void XonoticDemoList_startDemo(entity me)
 {
     string s;
     s = me.demoName(me,me.selectedItem);
@@ -140,7 +140,7 @@ void TimeDemo_Click(entity btn, entity me)
     localcmd("timedemo demos/", s, ".dem\nwait\ntogglemenu\n");	
 }
 
-void clickListBoxItemXonoticDemoList(entity me, float i, vector where)
+void XonoticDemoList_clickListBoxItem(entity me, float i, vector where)
 {
     if(i == me.lastClickedDemo)
         if(time < me.lastClickedTime + 0.3)
@@ -153,7 +153,7 @@ void clickListBoxItemXonoticDemoList(entity me, float i, vector where)
     me.lastClickedTime = time;
 }
 
-float keyDownXonoticDemoList(entity me, float scan, float ascii, float shift)
+float XonoticDemoList_keyDown(entity me, float scan, float ascii, float shift)
 {
     if(scan == K_ENTER) {
         me.startDemo(me);

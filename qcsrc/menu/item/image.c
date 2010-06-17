@@ -14,19 +14,19 @@ ENDCLASS(Image)
 #endif
 
 #ifdef IMPLEMENTATION
-string toStringImage(entity me)
+string Image_toString(entity me)
 {
 	return me.src;
 }
-void configureImageImage(entity me, string path)
+void Image_configureImage(entity me, string path)
 {
 	me.src = path;
 }
-void drawImage(entity me)
+void Image_draw(entity me)
 {
 	draw_Picture(me.imgOrigin, me.src, me.imgSize, me.color, 1);
 }
-void updateAspectImage(entity me)
+void Image_updateAspect(entity me)
 {
 	float asp;
 	if(me.size_x <= 0 || me.size_y <= 0)
@@ -59,7 +59,7 @@ void updateAspectImage(entity me)
 		me.imgOrigin = '0.5 0.5 0' - 0.5 * me.imgSize;
 	}
 }
-void resizeNotifyImage(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void Image_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(Image).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	me.updateAspect(me);

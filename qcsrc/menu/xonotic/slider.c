@@ -31,7 +31,7 @@ entity makeXonoticSlider(float theValueMin, float theValueMax, float theValueSte
 	me.configureXonoticSlider(me, theValueMin, theValueMax, theValueStep, theCvar);
 	return me;
 }
-void configureXonoticSliderXonoticSlider(entity me, float theValueMin, float theValueMax, float theValueStep, string theCvar)
+void XonoticSlider_configureXonoticSlider(entity me, float theValueMin, float theValueMax, float theValueStep, string theCvar)
 {
 	float v, vk, vp;
 	v = theValueMin;
@@ -49,7 +49,7 @@ void configureXonoticSliderXonoticSlider(entity me, float theValueMin, float the
 			me.tooltip = getZonedTooltipForIdentifier(theCvar);
 	}
 }
-void setValueXonoticSlider(entity me, float val)
+void XonoticSlider_setValue(entity me, float val)
 {
 	if(val != me.value)
 	{
@@ -57,14 +57,14 @@ void setValueXonoticSlider(entity me, float val)
 		me.saveCvars(me);
 	}
 }
-void loadCvarsXonoticSlider(entity me)
+void XonoticSlider_loadCvars(entity me)
 {
 	if not(me.cvarName)
 		return;
 
 	me.setValue( me, cvar(me.cvarName) );
 }
-void saveCvarsXonoticSlider(entity me)
+void XonoticSlider_saveCvars(entity me)
 {
 	if not(me.cvarName)
 		return;

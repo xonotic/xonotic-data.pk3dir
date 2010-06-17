@@ -18,7 +18,7 @@ ENDCLASS(BorderImage)
 #endif
 
 #ifdef IMPLEMENTATION
-void resizeNotifyBorderImage(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void BorderImage_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.isNexposeeTitleBar = 0;
 	if(me.zoomedOutTitleBar)
@@ -48,14 +48,14 @@ void resizeNotifyBorderImage(entity me, vector relOrigin, vector relSize, vector
 		me.closeButton.colorF = me.color;
 	}
 }
-void configureBorderImageBorderImage(entity me, string theTitle, float sz, vector theColor, string path, float theBorderHeight)
+void BorderImage_configureBorderImage(entity me, string theTitle, float sz, vector theColor, string path, float theBorderHeight)
 {
 	me.configureLabel(me, theTitle, sz, 0.5);
 	me.src = path;
 	me.color = theColor;
 	me.borderHeight = theBorderHeight;
 }
-void drawBorderImage(entity me)
+void BorderImage_draw(entity me)
 {
 	//print(vtos(me.borderVec), "\n");
 

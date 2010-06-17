@@ -14,7 +14,7 @@ ENDCLASS(CheckBox)
 #endif
 
 #ifdef IMPLEMENTATION
-void setCheckedCheckBox(entity me, float val)
+void CheckBox_setChecked(entity me, float val)
 {
 	me.checked = val;
 }
@@ -22,16 +22,16 @@ void CheckBox_Click(entity me, entity other)
 {
 	me.setChecked(me, !me.checked);
 }
-string toStringCheckBox(entity me)
+string CheckBox_toString(entity me)
 {
 	return strcat(SUPER(CheckBox).toString(me), ", ", me.checked ? "checked" : "unchecked");
 }
-void configureCheckBoxCheckBox(entity me, string txt, float sz, string gfx)
+void CheckBox_configureCheckBox(entity me, string txt, float sz, string gfx)
 {
 	me.configureButton(me, txt, sz, gfx);
 	me.align = 0;
 }
-void drawCheckBox(entity me)
+void CheckBox_draw(entity me)
 {
 	float s;
 	s = me.pressed;

@@ -14,7 +14,7 @@ ENDCLASS(XonoticMutatorsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyXonoticMutatorsDialog(entity me)
+void XonoticMutatorsDialog_showNotify(entity me)
 {
 	loadAllCvars(me);
 }
@@ -60,7 +60,7 @@ string WeaponArenaString()
 	return weaponarenastring;
 }
 
-string toStringXonoticMutatorsDialog(entity me)
+string XonoticMutatorsDialog_toString(entity me)
 {
 	string s;
 	s = "";
@@ -157,7 +157,7 @@ void preDrawLaserWeaponArenaLaserButton(entity me)
 
 
 
-void fillXonoticMutatorsDialog(entity me)
+void XonoticMutatorsDialog_fill(entity me)
 {
 	entity e, s, w;
 	float i, j;
@@ -276,7 +276,7 @@ void fillXonoticMutatorsDialog(entity me)
 			e.onClickEntity = me;
 }
 
-void closeXonoticMutatorsDialog(entity me)
+void XonoticMutatorsDialog_close(entity me)
 {
 	if(me.refilterEntity)
 		me.refilterEntity.refilter(me.refilterEntity);

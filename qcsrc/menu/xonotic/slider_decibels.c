@@ -16,7 +16,7 @@ entity makeXonoticDecibelsSlider(float theValueMin, float theValueMax, float the
 	me.configureXonoticSlider(me, theValueMin, theValueMax, theValueStep, theCvar);
 	return me;
 }
-void loadCvarsXonoticDecibelsSlider(entity me)
+void XonoticDecibelsSlider_loadCvars(entity me)
 {
 	float v;
 
@@ -25,13 +25,13 @@ void loadCvarsXonoticDecibelsSlider(entity me)
 
 	v = cvar(me.cvarName);
 	if(v >= 0.98)
-		setValueSlider( me, 0 );
+		Slider_setValue( me, 0 );
 	else if(v < 0.0005)
-		setValueSlider( me, -1000000 );
+		Slider_setValue( me, -1000000 );
 	else
-		setValueSlider( me, 0.1 * floor(0.5 + 10.0 * log10(cvar(me.cvarName)) * 10) );
+		Slider_setValue( me, 0.1 * floor(0.5 + 10.0 * log10(cvar(me.cvarName)) * 10) );
 }
-void saveCvarsXonoticDecibelsSlider(entity me)
+void XonoticDecibelsSlider_saveCvars(entity me)
 {
 	if not(me.cvarName)
 		return;
@@ -44,7 +44,7 @@ void saveCvarsXonoticDecibelsSlider(entity me)
 		cvar_set(me.cvarName, ftos(pow(10, me.value / 10)));
 }
 
-string valueToTextXonoticDecibelsSlider(entity me, float v)
+string XonoticDecibelsSlider_valueToText(entity me, float v)
 {
 	if(v < -33)
 		return "OFF";

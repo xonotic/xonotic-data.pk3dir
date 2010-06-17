@@ -18,7 +18,7 @@
 
 #define CLASS(cname)                       entity spawn##cname() { entity me;
 #define EXTENDS(base)                      me = spawn##base (); entity basevtbl; basevtbl = vtbl##base;
-#define METHOD(cname,name,prototype)       me.name = name##cname;
+#define METHOD(cname,name,prototype)       me.name = cname##_##name;
 #define ATTRIB(cname,name,type,val)        me.name = val;
 #define ATTRIBARRAY(cname,name,type,cnt)   me.name = me.name;
 #define ENDCLASS(cname)                    me.instanceOf##cname = 1; me.classname = #cname; if(!vtbl##cname) vtbl##cname = spawnVtbl(me, basevtbl); return me; }

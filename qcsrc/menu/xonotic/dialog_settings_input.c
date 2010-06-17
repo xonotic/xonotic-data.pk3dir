@@ -17,7 +17,7 @@ entity makeXonoticInputSettingsTab()
 	me.configureDialog(me);
 	return me;
 }
-void fillXonoticInputSettingsTab(entity me)
+void XonoticInputSettingsTab_fill(entity me)
 {
 	entity e;
 	entity kb;

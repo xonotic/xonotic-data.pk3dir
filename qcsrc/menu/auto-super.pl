@@ -4,6 +4,7 @@ my %baseclass = ();
 my %methods = ();
 my %attrs = ();
 my %methodnames = ();
+my %old2new = ();
 
 print STDERR "Scanning...\n";
 for my $f(@ARGV)
@@ -19,7 +20,8 @@ for my $f(@ARGV)
 		if(/^\s*METHOD\(([^),]*),\s*([^),]*)/)
 		{
 			$methods{$1}{$2} = $1;
-			$methodnames{"$2$1"} = $f;
+			$methodnames{"$1"."_"."$2"} = $f;
+			$old2new{"$2$1"} = "$1"."_"."$2";
 		}
 		if(/^\s*ATTRIB(?:ARRAY)?\(([^),]*),\s*([^),]*)/)
 		{
@@ -66,6 +68,11 @@ for my $f(@ARGV)
 	my $class = $classoffile{$f};
 	my $base = $classes{$class};
 	next if not defined $base;
+
+	for(keys %old2new)
+	{
+		$s =~ s/\b$_\b/$old2new{$_}/g;
+	}
 
 	my @methods_super = map { [ $_ . $methods{$base}{$_}, "SUPER($class).$_" ]; } keys %{$methods{$base}};
 	for(@methods_super)

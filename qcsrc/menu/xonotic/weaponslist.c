@@ -25,11 +25,11 @@ entity makeXonoticWeaponsList()
 	me.configureXonoticWeaponsList(me);
 	return me;
 }
-void configureXonoticWeaponsListXonoticWeaponsList(entity me)
+void XonoticWeaponsList_configureXonoticWeaponsList(entity me)
 {
 	me.configureXonoticListBox(me);
 }
-void drawXonoticWeaponsList(entity me)
+void XonoticWeaponsList_draw(entity me)
 {
 	// read in cvar?
 	string s, t;
@@ -59,7 +59,7 @@ void WeaponsList_MoveDown_Click(entity box, entity me)
 		me.selectedItem += 1;
 	}
 }
-void resizeNotifyXonoticWeaponsList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(XonoticWeaponsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
@@ -67,7 +67,7 @@ void resizeNotifyXonoticWeaponsList(entity me, vector relOrigin, vector relSize,
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 }
-float mouseDragXonoticWeaponsList(entity me, vector pos)
+float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 {
 	float f, i;
 	i = me.selectedItem;
@@ -76,7 +76,7 @@ float mouseDragXonoticWeaponsList(entity me, vector pos)
 		cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, i));
 	return f;
 }
-string toStringXonoticWeaponsList(entity me)
+string XonoticWeaponsList_toString(entity me)
 {
 	float n, i;
 	string s;
@@ -90,7 +90,7 @@ string toStringXonoticWeaponsList(entity me)
 	}
 	return substring(s, 0, strlen(s) - 2);
 }
-void drawListBoxItemXonoticWeaponsList(entity me, float i, vector absSize, float isSelected)
+void XonoticWeaponsList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	entity e;
 	if(isSelected)
@@ -99,7 +99,7 @@ void drawListBoxItemXonoticWeaponsList(entity me, float i, vector absSize, float
 	draw_Text(me.realUpperMargin * eY, e.message, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
 
-float keyDownXonoticWeaponsList(entity me, float scan, float ascii, float shift)
+float XonoticWeaponsList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	if(ascii == 43) // +
 	{

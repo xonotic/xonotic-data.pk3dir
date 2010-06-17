@@ -12,15 +12,15 @@ ENDCLASS(XonoticRadarDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyXonoticRadarDialog(entity me)
+void XonoticRadarDialog_showNotify(entity me)
 {
         loadAllCvars(me);
 }
-string toStringXonoticRadarDialog(entity me)
+string XonoticRadarDialog_toString(entity me)
 {
 	return "XXX";
 }
-void fillXonoticRadarDialog(entity me)
+void XonoticRadarDialog_fill(entity me)
 {
 	entity e, sl;
 	me.TR(me);

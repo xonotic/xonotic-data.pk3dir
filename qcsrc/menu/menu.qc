@@ -792,7 +792,7 @@ void m_activate_window(entity wnd)
 		// nexposee (sorry for violating abstraction here)
 		par.selectedChild = wnd;
 		par.animationState = 1;
-		setFocusContainer(par, NULL);
+		Container_setFocus(par, NULL);
 	}
 	else if(par.instanceOfContainer)
 	{

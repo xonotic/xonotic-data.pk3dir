@@ -20,7 +20,7 @@ entity makeXonoticPlayerSettingsTab()
 	me.configureDialog(me);
 	return me;
 }
-void drawXonoticPlayerSettingsTab(entity me)
+void XonoticPlayerSettingsTab_draw(entity me)
 {
 	if(cvar_string("_cl_name") == "Player")
 		me.playerNameLabel.alpha = ((mod(time * 2, 2) < 1) ? 1 : 0);
@@ -28,7 +28,7 @@ void drawXonoticPlayerSettingsTab(entity me)
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
 	SUPER(XonoticPlayerSettingsTab).draw(me);
 }
-void fillXonoticPlayerSettingsTab(entity me)
+void XonoticPlayerSettingsTab_fill(entity me)
 {
 	entity e, pms, sl, label, e0, box;
 	float i, r, m, n;

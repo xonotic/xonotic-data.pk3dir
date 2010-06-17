@@ -24,13 +24,13 @@ entity makeXonoticColorpicker(entity theTextbox)
 	return me;
 }
 
-void configureXonoticColorpickerXonoticColorpicker(entity me, entity theTextbox)
+void XonoticColorpicker_configureXonoticColorpicker(entity me, entity theTextbox)
 {
 	me.controlledTextbox = theTextbox;
 	me.configureImage(me, me.image);
 }
 
-float mousePressXonoticColorpicker(entity me, vector coords)
+float XonoticColorpicker_mousePress(entity me, vector coords)
 {
 	me.mouseDrag(me, coords);
 	return 1;
@@ -51,7 +51,7 @@ vector hslimage_color(vector v, vector margin)
         return hsl_to_rgb(v_x * 6 * eX + eY + v_y / 0.875 * eZ);
 }
 
-float mouseDragXonoticColorpicker(entity me, vector coords)
+float XonoticColorpicker_mouseDrag(entity me, vector coords)
 {
 	float i;
 	for(;;)
@@ -97,21 +97,21 @@ float mouseDragXonoticColorpicker(entity me, vector coords)
 	return 1;
 }
 
-float mouseReleaseXonoticColorpicker(entity me, vector coords)
+float XonoticColorpicker_mouseRelease(entity me, vector coords)
 {
 	me.mouseDrag(me, coords);
 	return 1;
 }
 
-void focusLeaveXonoticColorpicker(entity me)
+void XonoticColorpicker_focusLeave(entity me)
 {
 	me.controlledTextbox.saveCvars(me.controlledTextbox);
 }
-float keyDownXonoticColorpicker(entity me, float key, float ascii, float shift)
+float XonoticColorpicker_keyDown(entity me, float key, float ascii, float shift)
 {
 	return me.controlledTextbox.keyDown(me.controlledTextbox, key, ascii, shift);
 }
-void drawXonoticColorpicker(entity me)
+void XonoticColorpicker_draw(entity me)
 {
 	SUPER(XonoticColorpicker).draw(me);
 

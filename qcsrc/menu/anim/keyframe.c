@@ -31,7 +31,7 @@ entity makeKeyframe(entity obj, void(entity, float) objSetter, float animDuratio
 	return me;
 }
 
-entity addEasingKeyframe(entity me, float animDurationTime, float animEnd, float(float, float, float, float) func)
+entity Keyframe_addEasing(entity me, float animDurationTime, float animEnd, float(float, float, float, float) func)
 {
 	entity other;
 	other = makeEasing(me.object, me.setter, func, getNewChildStart(me), getNewChildDuration(me, animDurationTime), getNewChildValue(me), animEnd);
@@ -65,7 +65,7 @@ float getNewChildValue(entity me)
 		return me.startValue;
 }
 
-void addAnimKeyframe(entity me, entity other)
+void Keyframe_addAnim(entity me, entity other)
 {
 	if(other.parent)
 		error("Can't add already added anim!");
@@ -92,7 +92,7 @@ void addAnimKeyframe(entity me, entity other)
 	me.lastChild = other;
 }
 
-float calcValueKeyframe(entity me, float tickTime, float animDuration, float animStartValue, float animDelta)
+float Keyframe_calcValue(entity me, float tickTime, float animDuration, float animStartValue, float animDelta)
 {
 	if (me.currentChild)
 		if (me.currentChild.isFinished(me.currentChild))

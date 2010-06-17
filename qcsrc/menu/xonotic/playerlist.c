@@ -34,7 +34,7 @@ entity makeXonoticPlayerList()
 	return me;
 }
 
-void setPlayerListXonoticPlayerList(entity me, string plist)
+void XonoticPlayerList_setPlayerList(entity me, string plist)
 {
 	dprint(plist,"------------\n");
 
@@ -71,12 +71,12 @@ void setPlayerListXonoticPlayerList(entity me, string plist)
 	me.playerList = buf;
 }
 
-string getPlayerListXonoticPlayerList(entity me, float i, float key)
+string XonoticPlayerList_getPlayerList(entity me, float i, float key)
 {
 	return bufstr_get(me.playerList, i * PLAYERPARM_COUNT + key);
 }
 
-void resizeNotifyXonoticPlayerList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticPlayerList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticPlayerList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
@@ -93,7 +93,7 @@ void resizeNotifyXonoticPlayerList(entity me, vector relOrigin, vector relSize, 
 	me.columnScoreOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize_x;
 }
 
-void drawListBoxItemXonoticPlayerList(entity me, float i, vector absSize, float isSelected)
+void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	string s;
 	string score;

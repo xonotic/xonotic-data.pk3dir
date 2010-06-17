@@ -30,7 +30,7 @@ entity makeXonoticSliderCheckBox(float theOffValue, float isInverted, entity the
 	me.configureXonoticSliderCheckBox(me, theOffValue, isInverted, theControlledSlider, theText);
 	return me;
 }
-void configureXonoticSliderCheckBoxXonoticSliderCheckBox(entity me, float theOffValue, float isInverted, entity theControlledSlider, string theText)
+void XonoticSliderCheckBox_configureXonoticSliderCheckBox(entity me, float theOffValue, float isInverted, entity theControlledSlider, string theText)
 {
 	me.offValue = theOffValue;
 	me.inverted = isInverted;
@@ -43,14 +43,14 @@ void configureXonoticSliderCheckBoxXonoticSliderCheckBox(entity me, float theOff
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
 	me.tooltip = theControlledSlider.tooltip;
 }
-void drawXonoticSliderCheckBox(entity me)
+void XonoticSliderCheckBox_draw(entity me)
 {
 	me.checked = ((me.controlledSlider.value == me.offValue) != me.inverted);
 	if(me.controlledSlider.value == median(me.controlledSlider.valueMin, me.controlledSlider.value, me.controlledSlider.valueMax))
 		me.savedValue = me.controlledSlider.value;
 	SUPER(XonoticSliderCheckBox).draw(me);
 }
-void setCheckedXonoticSliderCheckBox(entity me, float val)
+void XonoticSliderCheckBox_setChecked(entity me, float val)
 {
 	if(me.checked == val)
 		return;

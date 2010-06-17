@@ -50,14 +50,14 @@ entity makeXonoticSkinList()
 	return me;
 }
 
-void configureXonoticSkinListXonoticSkinList(entity me)
+void XonoticSkinList_configureXonoticSkinList(entity me)
 {
 	me.configureXonoticListBox(me);
 	me.getSkins(me);
 	me.loadCvars(me);
 }
 
-void loadCvarsXonoticSkinList(entity me)
+void XonoticSkinList_loadCvars(entity me)
 {
 	string s;
 	float i, n;
@@ -73,17 +73,17 @@ void loadCvarsXonoticSkinList(entity me)
 	}
 }
 
-void saveCvarsXonoticSkinList(entity me)
+void XonoticSkinList_saveCvars(entity me)
 {
 	cvar_set("menu_skin", me.skinParameter(me, me.selectedItem, SKINPARM_NAME));
 }
 
-string skinParameterXonoticSkinList(entity me, float i, float key)
+string XonoticSkinList_skinParameter(entity me, float i, float key)
 {
 	return bufstr_get(me.skinlist, i * SKINPARM_COUNT + key);
 }
 
-void getSkinsXonoticSkinList(entity me)
+void XonoticSkinList_getSkins(entity me)
 {
 	float glob, buf, i, n, fh;
 	string s;
@@ -128,12 +128,12 @@ void getSkinsXonoticSkinList(entity me)
 	me.nItems = n;
 }
 
-void destroyXonoticSkinList(entity me)
+void XonoticSkinList_destroy(entity me)
 {
 	buf_del(me.skinlist);
 }
 
-void resizeNotifyXonoticSkinList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticSkinList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticSkinList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
@@ -149,7 +149,7 @@ void resizeNotifyXonoticSkinList(entity me, vector relOrigin, vector relSize, ve
 	me.columnNameSize = 1 - me.columnPreviewSize - 2 * me.realFontSize_x;
 }
 
-void drawListBoxItemXonoticSkinList(entity me, float i, vector absSize, float isSelected)
+void XonoticSkinList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	string s;
 	
@@ -169,7 +169,7 @@ void drawListBoxItemXonoticSkinList(entity me, float i, vector absSize, float is
 	draw_Text(me.realUpperMargin2 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_SKINLIST_AUTHOR, SKINALPHA_TEXT, 0);
 }
 
-void setSkinXonoticSkinList(entity me)
+void XonoticSkinList_setSkin(entity me)
 {
 	me.saveCvars(me);
 	localcmd("\nmenu_restart\ntogglemenu\ndefer 0.1 \"menu_cmd skinselect\"\n");
@@ -180,7 +180,7 @@ void SetSkin_Click(entity btn, entity me)
 	me.setSkin(me);
 }
 
-void clickListBoxItemXonoticSkinList(entity me, float i, vector where)
+void XonoticSkinList_clickListBoxItem(entity me, float i, vector where)
 {
 	if(i == me.lastClickedSkin)
 		if(time < me.lastClickedTime + 0.3)
@@ -193,7 +193,7 @@ void clickListBoxItemXonoticSkinList(entity me, float i, vector where)
 	me.lastClickedTime = time;
 }
 
-float keyDownXonoticSkinList(entity me, float scan, float ascii, float shift)
+float XonoticSkinList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	if(scan == K_ENTER) {
 		me.setSkin(me);
