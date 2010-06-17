@@ -655,57 +655,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 	fclose(fh);
 }
 
-vector HUD_Panel_GetMinSize(float id)
-{
-	vector mySize;
-	// note: please only set mySize_y on aspect ratio forced panels
-	switch(id) {
-		case 0: 
-			mySize_x = 1/10; // at least 1/10 * height
-			mySize_y = 1/26; // at least 1/26 * width
-			break;
-		case 1: 
-			if(cvar("hud_inventory_onlycurrent"))
-				mySize_y = 2/5; //  2/5 width
-			else
-				mySize_x = 0.7; // at least 0.7 * height
-			break;
-		case 3: 
-			if(cvar("hud_healtharmor") == 2)
-			{
-				mySize_x = 4.35; // 4.35 * height, trial and error...
-				mySize_y = 0.01; // "unlimited" ;)
-			}
-			break;
-		case 4: 
-			mySize_x = 1.1; // 4/5 * height, trial and error...
-			mySize_y = 1/3; // 1/3 * width, trial and error...
-			break;
-		case 5: 
-			mySize_y = 1/4.1; // 1/4.1 * width, trial and error...
-			break;
-		case 7: 
-			mySize_y = 1/4; // 1/4 * width
-			break;
-		case 8: 
-			mySize_y = 1/4; // 1/4 * width
-			break;
-		case 9: 
-			mySize_y = 1/4; // 1/4 * width
-			break;
-		case 10: 
-			mySize_y = 1/2; // 1/2 * width
-			break;
-		case 11: 
-			mySize_y = 0.5898; // 0.5898 * width, reason: bg has weird dimensions...
-			break;
-		case 13: 
-			mySize_y = 0.2; // 0.25 * width, trial and error...
-			break;
-	}
-	return mySize;
-}
-
 // return active status of panel
 float HUD_Panel_CheckActive(float id)
 {
@@ -1048,7 +997,7 @@ void HUD_Panel_SetPos(float id, vector pos)
 }
 
 // check if resize will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector
-vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin, float ratio) {
+vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin) {
 	float i;
 
 	float targBorder;
@@ -1090,7 +1039,7 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin, float
 			// in this case resizeorigin (bottom-right point) and the bottom-right point of the panel
 			dist_x = resizeorigin_x - targEndPos_x;
 			dist_y = resizeorigin_y - targEndPos_y;
-			if (dist_y < 0 || dist_x / dist_y > ratio)
+			if (dist_y < 0)
 				mySize_x = min(mySize_x, dist_x);
 			else
 				mySize_y = min(mySize_y, dist_y);
@@ -1108,7 +1057,7 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin, float
 
 			dist_x = targPos_x - resizeorigin_x;
 			dist_y = resizeorigin_y - targEndPos_y;
-			if (dist_y < 0 || dist_x / dist_y > ratio)
+			if (dist_y < 0)
 				mySize_x = min(mySize_x, dist_x);
 			else
 				mySize_y = min(mySize_y, dist_y);
@@ -1126,7 +1075,7 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin, float
 
 			dist_x = resizeorigin_x - targEndPos_x;
 			dist_y = targPos_y - resizeorigin_y;
-			if (dist_y < 0 || dist_x / dist_y > ratio)
+			if (dist_y < 0)
 				mySize_x = min(mySize_x, dist_x);
 			else
 				mySize_y = min(mySize_y, dist_y);
@@ -1144,7 +1093,7 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin, float
 
 			dist_x = targPos_x - resizeorigin_x;
 			dist_y = targPos_y - resizeorigin_y;
-			if (dist_y < 0 || dist_x / dist_y > ratio)
+			if (dist_y < 0)
 				mySize_x = min(mySize_x, dist_x);
 			else
 				mySize_y = min(mySize_y, dist_y);
@@ -1184,30 +1133,6 @@ void HUD_Panel_SetPosSize(float id)
 	{
 		mySize_x = max(17 * cvar("con_chatsize"), mySize_x);
 		mySize_y = max(2 * cvar("con_chatsize") + 2 * HUD_Panel_GetPadding(id), mySize_y);
-	}
-
-	// cap against panel's own limits
-	vector minSize;
-	minSize = HUD_Panel_GetMinSize(id); // mySize_x at least minSize_x * mySize_y, and vice versa
-	float fixedRatio;
-	if(!minSize_x && minSize_y) // forced aspect ratio
-	{
-		minSize_x = 1/minSize_y;
-		fixedRatio = minSize_x;
-		mySize_x = max(minSize_x * mySize_y, mySize_x);
-		mySize_y = max(minSize_y * mySize_x, mySize_y);
-	}
-	else if(minSize_x && !minSize_y) // hybrid aspect ratio, currently supported only in one dimension
-	{
-		if (mySize_x/mySize_y < minSize_x) // resizing in x direction allows free aspect ratio
-		{
-			fixedRatio = minSize_x;
-			minSize_y = 1/minSize_x;
-			mySize_y = max(minSize_y * mySize_x, mySize_y);
-			mySize_x = max(minSize_x * mySize_y, mySize_x);
-		}
-		else
-			fixedRatio = -minSize_x; //negative so that it will be used ONLY after checkResize
 	}
 
 	// collision testing|
@@ -1250,51 +1175,22 @@ void HUD_Panel_SetPosSize(float id)
 		mySize_y = floor((mySize_y/vid_conheight)/bound(0.005, cvar("hud_configure_grid_y"), 0.2) + 0.5) * cvar("hud_configure_grid_y") * vid_conheight;
 	}
 
-	if (fixedRatio > 0)
-	{
-		// keep aspect ratio _MAXIMIZING_ the size
-		if (mySize_x / mySize_y > fixedRatio)
-			mySize_y = mySize_x / fixedRatio;
-		else
-			mySize_x = mySize_y * fixedRatio;
-	}
-
 	if(cvar("hud_configure_checkcollisions"))
 	{
-		if (fixedRatio > 0)
-		{
-			mySize = HUD_Panel_CheckResize(id, mySize, resizeorigin, fixedRatio);
+		mySize = HUD_Panel_CheckResize(id, mySize, resizeorigin);
 
-			// Make sure once more that we DON'T cross the screen edges
-			// left/top screen edges
-			if(myPos_x < 0)
-				mySize_x = mySize_x + myPos_x;
-			if(myPos_y < 0)
-				mySize_y = mySize_y + myPos_y;
+		// Make sure once more that we DON'T cross the screen edges
+		// left/top screen edges
+		if(myPos_x < 0)
+			mySize_x = mySize_x + myPos_x;
+		if(myPos_y < 0)
+			mySize_y = mySize_y + myPos_y;
 
-			// bottom/right screen edges
-			if(myPos_x + mySize_x > vid_conwidth)
-				mySize_x = vid_conwidth - myPos_x;
-			if(myPos_y + mySize_y > vid_conheight)
-				mySize_y = vid_conheight - myPos_y;
-
-			// restore again aspect ratio, _minimizing_ the size
-			if (mySize_x / mySize_y < fixedRatio)
-				mySize_y = mySize_x / fixedRatio;
-			else
-				mySize_x = mySize_y * fixedRatio;
-		}
-		else
-		{
-			mySize = HUD_Panel_CheckResize(id, mySize, resizeorigin, mySize_x / mySize_y);
-			if (fixedRatio < 0)
-			{
-				fixedRatio = -fixedRatio;
-				// restore again aspect ratio, _minimizing_ the size
-				if (mySize_x / mySize_y < fixedRatio)
-					mySize_y = mySize_x / fixedRatio;
-			}
-		}
+		// bottom/right screen edges
+		if(myPos_x + mySize_x > vid_conwidth)
+			mySize_x = vid_conwidth - myPos_x;
+		if(myPos_y + mySize_y > vid_conheight)
+			mySize_y = vid_conheight - myPos_y;
 	}
 
 	// minimum panel size cap, do this once more so we NEVER EVER EVER have a panel smaller than this, JUST IN CASE above code still makes the panel eg negative (impossible to resize back without changing cvars manually then)
