@@ -74,7 +74,7 @@ for my $f(@ARGV)
 		$s =~ s/\b$_\b/$old2new{$_}/g;
 	}
 
-	my @methods_super = map { [ $_ . $methods{$base}{$_}, "SUPER($class).$_" ]; } keys %{$methods{$base}};
+	my @methods_super = map { [ $methods{$base}{$_} . "_" . $_, "SUPER($class).$_" ]; } keys %{$methods{$base}};
 	for(@methods_super)
 	{
 		my ($search, $replace) = @$_;
