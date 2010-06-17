@@ -10,7 +10,7 @@ CLASS(Gecko) EXTENDS(Item)
 	METHOD( Gecko, resizeNotify, void(entity, vector, vector, vector, vector))
 	ATTRIB( Gecko, texturePath, string, string_null )
 	ATTRIB( Gecko, textureExtent, vector, '0 0 0')
-ENDCLASS(Item)
+ENDCLASS(Gecko)
 #endif
 
 #ifdef IMPLEMENTATION
