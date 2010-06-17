@@ -13,4 +13,7 @@
 #undef ATTRIB
 #undef ATTRIBARRAY
 #undef ENDCLASS
+#undef SUPER
 #endif
+
+#define SUPER(cname) (vtbl##cname.vtblbase)
