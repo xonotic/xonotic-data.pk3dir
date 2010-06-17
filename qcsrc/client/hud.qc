@@ -737,11 +737,6 @@ vector HUD_Panel_GetPos(float id)
 
 	pos = eX * pos_x * vid_conwidth + eY * pos_y * vid_conheight;
 
-	if (pos_x < 0)
-		pos_x = vid_conwidth + pos_x;
-	if (pos_y < 0)
-		pos_y = vid_conheight + pos_y;
-
 	if(disable_menu_alphacheck == 2 && id == highlightedPanel)
 	{
 		vector mySize, menu_enable_panelpos;
@@ -1024,11 +1019,6 @@ void HUD_Panel_SetPos(float id, vector pos)
 		pos_x = floor(pos_x/cvar("hud_configure_grid_x") + 0.5) * cvar("hud_configure_grid_x");
 		pos_y = floor(pos_y/cvar("hud_configure_grid_y") + 0.5) * cvar("hud_configure_grid_y");
 	}
-
-	if (pos_x + 0.5 * mySize_x > 0.5 * vid_conwidth)
-		pos_x = pos_x - vid_conwidth;
-	if (pos_y + 0.5 * mySize_y > 0.5 * vid_conheight)
-		pos_y = pos_y - vid_conheight;
 
 	string s;
 	s = strcat(ftos(pos_x/vid_conwidth), " ", ftos(pos_y/vid_conheight));
