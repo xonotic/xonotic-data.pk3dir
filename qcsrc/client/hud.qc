@@ -1529,7 +1529,7 @@ void HUD_WeaponIcons(void)
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		self = get_weaponinfo(i);
-		if(self.weapons && (self.impulse >= 0) && (stat_weapons & self.weapons) || hud_configure)
+		if(self.impulse >= 0)
 		{
 			weaponorder[weapon_cnt] = self;
 			++weapon_cnt;
@@ -1578,35 +1578,39 @@ void HUD_WeaponIcons(void)
 	for(i = 0; i < weapon_cnt; ++i)
 	{
 		self = weaponorder[i];
-		if((self.weapons && (self.impulse >= 0) && (stat_weapons & self.weapons)) || hud_configure)
+		weapid = self.impulse;
+
+		alpha = (self.weapon == activeweapon) ? 1 : 0.6;
+
+		weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
+		weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
+
+		// draw background behind currently selected weapon
+		if(self.weapon == activeweapon)
+			drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "weapon_current_bg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+
+		// draw the weapon accuracy on the HUD
+		if(hud_accuracy_hud && !(gametype == GAME_RACE || gametype == GAME_CTS))
 		{
-			weapid = self.impulse;
+			if(weapon_damage)
+				weapon_stats = floor(100 * weapon_hit / weapon_damage);
 
-			alpha = (self.weapon == activeweapon) ? 1 : 0.6;
+			accuracy_color = HUD_AccuracyColor(weapon_stats);
+			if(weapon_damage)
+				drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "weapon_accuracy", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), accuracy_color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		}
 
-			weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
-			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
-
-			// draw background behind currently selected weapon
-			if(self.weapon == activeweapon)
-				drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "weapon_current_bg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-
-			// draw the weapon accuracy on the HUD
-			if(hud_accuracy_hud && !(gametype == GAME_RACE || gametype == GAME_CTS))
-			{
-				if(weapon_damage)
-					weapon_stats = floor(100 * weapon_hit / weapon_damage);
-
-				accuracy_color = HUD_AccuracyColor(weapon_stats);
-				if(weapon_damage)
-					drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "weapon_accuracy", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), accuracy_color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-			}
-
-			// draw the weapon icon
+		// draw the weapon icon
+		if((self.impulse >= 0) && (stat_weapons & self.weapons))
+		{
 			drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 
 			if(cvar_or("hud_weaponicons_number", 1))
 				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), ftos(weapid), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		}
+		else
+		{
+			drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '0 0 0', HUD_Panel_GetFgAlpha(id) * 0.5, DRAWFLAG_NORMAL);
 		}
 
 		++row;
