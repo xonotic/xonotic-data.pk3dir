@@ -11,7 +11,7 @@ ENDCLASS(XonoticHUDPressedKeysDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticHUDPressedKeysDialog(entity me)
+void XonoticHUDPressedKeysDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

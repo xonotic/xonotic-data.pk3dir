@@ -11,7 +11,7 @@ ENDCLASS(XonoticHUDPowerupsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticHUDPowerupsDialog(entity me)
+void XonoticHUDPowerupsDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

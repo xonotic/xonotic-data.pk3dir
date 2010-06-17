@@ -11,7 +11,7 @@ ENDCLASS(XonoticHUDHealthArmorDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticHUDHealthArmorDialog(entity me)
+void XonoticHUDHealthArmorDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

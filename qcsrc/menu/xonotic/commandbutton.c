@@ -33,7 +33,7 @@ void XonoticCommandButton_Click(entity me, entity other)
 		m_goto(string_null);
 }
 
-void configureXonoticCommandButtonXonoticCommandButton(entity me, string theText, vector theColor, string theCommand, float theFlags)
+void XonoticCommandButton_configureXonoticCommandButton(entity me, string theText, vector theColor, string theCommand, float theFlags)
 {
 	me.configureXonoticButton(me, theText, theColor);
 	me.onClickCommand = theCommand;

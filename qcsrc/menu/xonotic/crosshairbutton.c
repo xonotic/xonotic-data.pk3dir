@@ -25,7 +25,7 @@ entity makeXonoticCrosshairButton(float theGroup, float theCrosshair)
 	me.configureXonoticCrosshairButton(me, theGroup, theCrosshair);
 	return me;
 }
-void configureXonoticCrosshairButtonXonoticCrosshairButton(entity me, float theGroup, float theCrosshair)
+void XonoticCrosshairButton_configureXonoticCrosshairButton(entity me, float theGroup, float theCrosshair)
 {
 	me.cvarName = "crosshair";
 	me.cvarValueFloat = theCrosshair;
@@ -34,7 +34,7 @@ void configureXonoticCrosshairButtonXonoticCrosshairButton(entity me, float theG
 	me.srcMulti = 1;
 	me.src3 = strzone(strcat("/gfx/crosshair", ftos(me.cvarValueFloat)));
 }
-void setCheckedXonoticCrosshairButton(entity me, float val)
+void XonoticCrosshairButton_setChecked(entity me, float val)
 {
 	if(val != me.checked)
 	{
@@ -42,14 +42,14 @@ void setCheckedXonoticCrosshairButton(entity me, float val)
 		me.saveCvars(me);
 	}
 }
-void loadCvarsXonoticCrosshairButton(entity me)
+void XonoticCrosshairButton_loadCvars(entity me)
 {
 	if not(me.cvarName)
 		return;
 
 	me.checked = (cvar(me.cvarName) == me.cvarValueFloat);
 }
-void saveCvarsXonoticCrosshairButton(entity me)
+void XonoticCrosshairButton_saveCvars(entity me)
 {
 	if not(me.cvarName)
 		return;
@@ -58,7 +58,7 @@ void saveCvarsXonoticCrosshairButton(entity me)
 		cvar_set(me.cvarName, ftos(me.cvarValueFloat));
 	// TODO on an apply button, read _cl_color and execute the color command for it
 }
-void drawXonoticCrosshairButton(entity me)
+void XonoticCrosshairButton_draw(entity me)
 {
 	vector sz, rgb;
 	float a;
@@ -72,7 +72,7 @@ void drawXonoticCrosshairButton(entity me)
 		rgb = '1 1 1';
 	}
 
-	drawCheckBox(me);
+	SUPER(XonoticCrosshairButton).draw(me);
 
 	sz = draw_PictureSize(me.src3);
 	sz = globalToBoxSize(sz, draw_scale);

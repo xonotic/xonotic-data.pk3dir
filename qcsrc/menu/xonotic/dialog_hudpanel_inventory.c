@@ -11,7 +11,7 @@ ENDCLASS(XonoticHUDInventoryDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticHUDInventoryDialog(entity me)
+void XonoticHUDInventoryDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

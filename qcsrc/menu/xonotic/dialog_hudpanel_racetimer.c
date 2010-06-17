@@ -11,7 +11,7 @@ ENDCLASS(XonoticHUDRaceTimerDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticHUDRaceTimerDialog(entity me)
+void XonoticHUDRaceTimerDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

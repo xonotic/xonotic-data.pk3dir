@@ -11,7 +11,7 @@ ENDCLASS(XonoticHUDChatDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticHUDChatDialog(entity me)
+void XonoticHUDChatDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

@@ -71,11 +71,11 @@ void Dialog_Close(entity button, entity me)
 	me.close(me);
 }
 
-void fillDialog(entity me)
+void Dialog_fill(entity me)
 {
 }
 
-void addItemSimpleDialog(entity me, float row, float col, float rowspan, float colspan, entity e, vector v)
+void Dialog_addItemSimple(entity me, float row, float col, float rowspan, float colspan, entity e, vector v)
 {
 	//print(vtos(me.itemSpacing), " ", vtos(me.itemSize), "\n");
 	vector o, s;
@@ -88,41 +88,41 @@ void addItemSimpleDialog(entity me, float row, float col, float rowspan, float c
 	me.addItem(me, e, o, s, 1);
 }
 
-void gotoRCDialog(entity me, float row, float col)
+void Dialog_gotoRC(entity me, float row, float col)
 {
 	me.currentRow = row;
 	me.currentColumn = col;
 }
 
-void TRDialog(entity me)
+void Dialog_TR(entity me)
 {
 	me.currentRow += 1;
 	me.currentColumn = me.firstColumn;
 }
 
-void TDDialog(entity me, float rowspan, float colspan, entity e)
+void Dialog_TD(entity me, float rowspan, float colspan, entity e)
 {
 	me.addItemSimple(me, me.currentRow, me.currentColumn, rowspan, colspan, e, '0 0 0');
 	me.currentColumn += colspan;
 }
 
-void TDNoMarginDialog(entity me, float rowspan, float colspan, entity e, vector v)
+void Dialog_TDNoMargin(entity me, float rowspan, float colspan, entity e, vector v)
 {
 	me.addItemSimple(me, me.currentRow, me.currentColumn, rowspan, colspan, e, v);
 	me.currentColumn += colspan;
 }
 
-void setFirstColumnDialog(entity me, float col)
+void Dialog_setFirstColumn(entity me, float col)
 {
 	me.firstColumn = col;
 }
 
-void TDemptyDialog(entity me, float colspan)
+void Dialog_TDempty(entity me, float colspan)
 {
 	me.currentColumn += colspan;
 }
 
-void configureDialogDialog(entity me)
+void Dialog_configureDialog(entity me)
 {
 	entity closebutton;
 	float absWidth, absHeight;
@@ -164,7 +164,7 @@ void configureDialogDialog(entity me)
 	me.frame.closeButton = closebutton;
 }
 
-void closeDialog(entity me)
+void Dialog_close(entity me)
 {
 	if(me.parent.instanceOfNexposee)
 	{
@@ -176,7 +176,7 @@ void closeDialog(entity me)
 	}
 }
 
-float keyDownDialog(entity me, float key, float ascii, float shift)
+float Dialog_keyDown(entity me, float key, float ascii, float shift)
 {
 	if(me.closable)
 	{
@@ -186,6 +186,6 @@ float keyDownDialog(entity me, float key, float ascii, float shift)
 			return 1;
 		}
 	}
-	return keyDownInputContainer(me, key, ascii, shift);
+	return SUPER(Dialog).keyDown(me, key, ascii, shift);
 }
 #endif

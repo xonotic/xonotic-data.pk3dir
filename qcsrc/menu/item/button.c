@@ -35,20 +35,20 @@ ENDCLASS(Button)
 #endif
 
 #ifdef IMPLEMENTATION
-void resizeNotifyButton(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void Button_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	if(me.srcMulti)
 		me.keepspaceLeft = 0;
 	else
 		me.keepspaceLeft = min(0.8, absSize_y / absSize_x);
-	resizeNotifyLabel(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(Button).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 }
-void configureButtonButton(entity me, string txt, float sz, string gfx)
+void Button_configureButton(entity me, string txt, float sz, string gfx)
 {
-	configureLabelLabel(me, txt, sz, me.srcMulti ? 0.5 : 0);
+	SUPER(Button).configureLabel(me, txt, sz, me.srcMulti ? 0.5 : 0);
 	me.src = gfx;
 }
-float keyDownButton(entity me, float key, float ascii, float shift)
+float Button_keyDown(entity me, float key, float ascii, float shift)
 {
 	if(key == K_ENTER || key == K_SPACE)
 	{
@@ -57,7 +57,7 @@ float keyDownButton(entity me, float key, float ascii, float shift)
 	}
 	return 0;
 }
-float mouseDragButton(entity me, vector pos)
+float Button_mouseDrag(entity me, vector pos)
 {
 	me.pressed = 1;
 	if(pos_x < 0) me.pressed = 0;
@@ -66,14 +66,14 @@ float mouseDragButton(entity me, vector pos)
 	if(pos_y >= 1) me.pressed = 0;
 	return 1;
 }
-float mousePressButton(entity me, vector pos)
+float Button_mousePress(entity me, vector pos)
 {
 	me.mouseDrag(me, pos); // verify coordinates
 	if(cvar("menu_sounds"))
 		localsound("sound/misc/menu2.wav");
 	return 1;
 }
-float mouseReleaseButton(entity me, vector pos)
+float Button_mouseRelease(entity me, vector pos)
 {
 	me.mouseDrag(me, pos); // verify coordinates
 	if(me.pressed)
@@ -84,12 +84,12 @@ float mouseReleaseButton(entity me, vector pos)
 	}
 	return 1;
 }
-void showNotifyButton(entity me)
+void Button_showNotify(entity me)
 {
 	me.focusable = !me.disabled;
 }
 .float playedfocus;
-void drawButton(entity me)
+void Button_draw(entity me)
 {
 	vector bOrigin, bSize;
 	float save;
@@ -150,7 +150,7 @@ void drawButton(entity me)
 
 	draw_alpha = save;
 
-	drawLabel(me);
+	SUPER(Button).draw(me);
 
 	if(me.clickTime > 0 && me.clickTime <= frametime)
 	{

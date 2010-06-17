@@ -11,7 +11,7 @@ ENDCLASS(XonoticHUDWeaponIconsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticHUDWeaponIconsDialog(entity me)
+void XonoticHUDWeaponIconsDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

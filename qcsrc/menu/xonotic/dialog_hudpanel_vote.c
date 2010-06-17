@@ -11,7 +11,7 @@ ENDCLASS(XonoticHUDVoteDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticHUDVoteDialog(entity me)
+void XonoticHUDVoteDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

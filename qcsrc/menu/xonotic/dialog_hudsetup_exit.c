@@ -12,7 +12,7 @@ ENDCLASS(XonoticHUDExitDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticHUDExitDialog(entity me)
+void XonoticHUDExitDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

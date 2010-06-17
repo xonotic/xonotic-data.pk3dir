@@ -11,7 +11,7 @@ ENDCLASS(XonoticHUDScoreDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticHUDScoreDialog(entity me)
+void XonoticHUDScoreDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

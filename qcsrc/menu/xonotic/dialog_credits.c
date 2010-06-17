@@ -12,7 +12,7 @@ ENDCLASS(XonoticCreditsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticCreditsDialog(entity me)
+void XonoticCreditsDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);
@@ -22,7 +22,7 @@ void fillXonoticCreditsDialog(entity me)
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
-void focusEnterXonoticCreditsDialog(entity me)
+void XonoticCreditsDialog_focusEnter(entity me)
 {
 	me.creditsList.scrolling = time + 1;
 }

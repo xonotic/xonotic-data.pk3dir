@@ -32,7 +32,7 @@ entity makeXonoticInputBox(float doEditColorCodes, string theCvar)
 	me.configureXonoticInputBox(me, doEditColorCodes, theCvar);
 	return me;
 }
-void configureXonoticInputBoxXonoticInputBox(entity me, float doEditColorCodes, string theCvar)
+void XonoticInputBox_configureXonoticInputBox(entity me, float doEditColorCodes, string theCvar)
 {
 	me.configureInputBox(me, "", 0, me.fontSize, me.image);
 	me.editColorCodes = doEditColorCodes;
@@ -44,33 +44,33 @@ void configureXonoticInputBoxXonoticInputBox(entity me, float doEditColorCodes, 
 	}
 	me.cursorPos = strlen(me.text);
 }
-void focusLeaveXonoticInputBox(entity me)
+void XonoticInputBox_focusLeave(entity me)
 {
 	me.saveCvars(me);
 }
-void setTextXonoticInputBox(entity me, string new)
+void XonoticInputBox_setText(entity me, string new)
 {
 	if(me.text != new)
 	{
-		setTextInputBox(me, new);
+		SUPER(XonoticInputBox).setText(me, new);
 		me.onChange(me, me.onChangeEntity);
 	}
 	else
-		setTextInputBox(me, new);
+		SUPER(XonoticInputBox).setText(me, new);
 }
-void loadCvarsXonoticInputBox(entity me)
+void XonoticInputBox_loadCvars(entity me)
 {
 	if not(me.cvarName)
 		return;
-	setTextInputBox(me, cvar_string(me.cvarName));
+	SUPER(XonoticInputBox).setText(me, cvar_string(me.cvarName));
 }
-void saveCvarsXonoticInputBox(entity me)
+void XonoticInputBox_saveCvars(entity me)
 {
 	if not(me.cvarName)
 		return;
 	cvar_set(me.cvarName, me.text);
 }
-float keyDownXonoticInputBox(entity me, float key, float ascii, float shift)
+float XonoticInputBox_keyDown(entity me, float key, float ascii, float shift)
 {
 	float r;
 	r = 0;
@@ -83,7 +83,7 @@ float keyDownXonoticInputBox(entity me, float key, float ascii, float shift)
 		}
 		me.onEnter(me, me.onEnterEntity);
 	}
-	if(keyDownInputBox(me, key, ascii, shift))
+	if(SUPER(XonoticInputBox).keyDown(me, key, ascii, shift))
 		r = 1;
 	return r;
 }
