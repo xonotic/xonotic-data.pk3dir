@@ -75,9 +75,30 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 	}
 }
 
+// drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
+void drawpic_aspect(vector pos, string pic, vector sz, vector color, float alpha, float drawflag) {
+	vector imgsize;
+	imgsize = drawgetimagesize(pic);
+	float imgaspect;
+	imgaspect = imgsize_x/imgsize_y;
+
+	vector oldsz;
+	oldsz = sz;
+	float aspect;
+	aspect = sz_x/sz_y;
+
+	if(aspect > imgaspect) {
+		sz_x = sz_y * imgaspect;
+		drawpic(pos + eX * (oldsz_x - sz_x) * 0.5, pic, sz, color, alpha, drawflag);
+	} else {
+		sz_y = sz_x / imgaspect; 
+		drawpic(pos + eY * (oldsz_y - sz_y) * 0.5, pic, sz, color, alpha, drawflag);
+	}
+}
+
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 void drawpic_skin(vector pos, string pic, vector sz, vector color, float alpha, float drawflag) {
-	drawpic(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/", pic), sz, color, alpha, drawflag);
+	drawpic_aspect(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/", pic), sz, color, alpha, drawflag);
 }
 
 void drawpic_skin_expanding(vector pos, string pic, vector sz, vector rgb, float alpha, float flag, float fadelerp) {
