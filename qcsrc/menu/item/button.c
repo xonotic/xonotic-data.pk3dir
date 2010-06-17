@@ -41,11 +41,11 @@ void resizeNotifyButton(entity me, vector relOrigin, vector relSize, vector absO
 		me.keepspaceLeft = 0;
 	else
 		me.keepspaceLeft = min(0.8, absSize_y / absSize_x);
-	resizeNotifyLabel(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(Button).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 }
 void configureButtonButton(entity me, string txt, float sz, string gfx)
 {
-	configureLabelLabel(me, txt, sz, me.srcMulti ? 0.5 : 0);
+	SUPER(Button).configureLabel(me, txt, sz, me.srcMulti ? 0.5 : 0);
 	me.src = gfx;
 }
 float keyDownButton(entity me, float key, float ascii, float shift)
@@ -150,7 +150,7 @@ void drawButton(entity me)
 
 	draw_alpha = save;
 
-	drawLabel(me);
+	SUPER(Button).draw(me);
 
 	if(me.clickTime > 0 && me.clickTime <= frametime)
 	{

@@ -161,7 +161,7 @@ void drawNexposee(entity me)
 			{
 				me.animationFactor = 1;
 				me.animationState = 2;
-				setFocusContainer(me, me.selectedChild);
+				SUPER(Nexposee).setFocus(me, me.selectedChild);
 			}
 			break;
 		case 2:
@@ -206,7 +206,7 @@ void drawNexposee(entity me)
 		e.Container_fontscale = globalToBoxSize(e.Container_size, e.Nexposee_initialSize);
 	}
 
-	drawContainer(me);
+	SUPER(Nexposee).draw(me);
 };
 
 float mousePressNexposee(entity me, vector pos)
@@ -218,7 +218,7 @@ float mousePressNexposee(entity me, vector pos)
 		if(me.mouseFocusedChild)
 		{
 			me.animationState = 1;
-			setFocusContainer(me, NULL);
+			SUPER(Nexposee).setFocus(me, NULL);
 		}
 		else
 			me.close(me);
@@ -226,10 +226,10 @@ float mousePressNexposee(entity me, vector pos)
 	}
 	else if(me.animationState == 2)
 	{
-		if not(mousePressContainer(me, pos))
+		if not(SUPER(Nexposee).mousePress(me, pos))
 		{
 			me.animationState = 3;
-			setFocusContainer(me, NULL);
+			SUPER(Nexposee).setFocus(me, NULL);
 		}
 		return 1;
 	}
@@ -239,14 +239,14 @@ float mousePressNexposee(entity me, vector pos)
 float mouseReleaseNexposee(entity me, vector pos)
 {
 	if(me.animationState == 2)
-		return mouseReleaseContainer(me, pos);
+		return SUPER(Nexposee).mouseRelease(me, pos);
 	return 0;
 }
 
 float mouseDragNexposee(entity me, vector pos)
 {
 	if(me.animationState == 2)
-		return mouseDragContainer(me, pos);
+		return SUPER(Nexposee).mouseDrag(me, pos);
 	return 0;
 }
 
@@ -257,7 +257,7 @@ float mouseMoveNexposee(entity me, vector pos)
 	e = me.mouseFocusedChild;
 	me.mouseFocusedChild = me.itemFromPoint(me, pos);
 	if(me.animationState == 2)
-		return mouseMoveContainer(me, pos);
+		return SUPER(Nexposee).mouseMove(me, pos);
 	if(me.animationState == 0)
 	{
 		if(me.mouseFocusedChild)
@@ -271,7 +271,7 @@ float mouseMoveNexposee(entity me, vector pos)
 float keyUpNexposee(entity me, float scan, float ascii, float shift)
 {
 	if(me.animationState == 2)
-		return keyUpContainer(me, scan, ascii, shift);
+		return SUPER(Nexposee).keyUp(me, scan, ascii, shift);
 	return 0;
 }
 
@@ -279,7 +279,7 @@ float keyDownNexposee(entity me, float scan, float ascii, float shift)
 {
 	float nexposeeKey;
 	if(me.animationState == 2)
-		if(keyDownContainer(me, scan, ascii, shift))
+		if(SUPER(Nexposee).keyDown(me, scan, ascii, shift))
 			return 1;
 	if(scan == K_TAB)
 	{
@@ -329,7 +329,7 @@ float keyDownNexposee(entity me, float scan, float ascii, float shift)
 			me.selectedChild = me.focusedChild;
 		if not(me.selectedChild)
 			me.animationState = 0;
-		setFocusContainer(me, NULL);
+		SUPER(Nexposee).setFocus(me, NULL);
 		return 1;
 	}
 	return 0;
@@ -337,7 +337,7 @@ float keyDownNexposee(entity me, float scan, float ascii, float shift)
 
 void addItemNexposee(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
 {
-	addItemContainer(me, other, theOrigin, theSize, theAlpha);
+	SUPER(Nexposee).addItem(me, other, theOrigin, theSize, theAlpha);
 	other.Nexposee_initialSize = other.Container_size;
 	other.Nexposee_initialOrigin = other.Container_origin;
 	other.Nexposee_initialAlpha = other.Container_alpha;
@@ -346,7 +346,7 @@ void addItemNexposee(entity me, entity other, vector theOrigin, vector theSize, 
 void focusEnterNexposee(entity me)
 {
 	if(me.animationState == 2)
-		setFocusContainer(me, me.selectedChild);
+		SUPER(Nexposee).setFocus(me, me.selectedChild);
 }
 
 void pullNexposeeNexposee(entity me, entity other, vector theAlign)

@@ -65,7 +65,7 @@ string toStringSlider(entity me)
 }
 void resizeNotifySlider(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyLabel(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(Slider).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	me.controlWidth = absSize_y / absSize_x;
 }
 string valueToTextSlider(entity me, float val)
@@ -76,7 +76,7 @@ string valueToTextSlider(entity me, float val)
 }
 void configureSliderVisualsSlider(entity me, float sz, float theAlign, float theTextSpace, string gfx)
 {
-	configureLabelLabel(me, string_null, sz, theAlign);
+	SUPER(Slider).configureLabel(me, string_null, sz, theAlign);
 	me.textSpace = theTextSpace;
 	me.keepspaceLeft = (theTextSpace == 0) ? 0 : (1 - theTextSpace);
 	me.src = gfx;
@@ -273,7 +273,7 @@ void drawSlider(entity me)
 	}
 	me.setText(me, me.valueToText(me, me.value));
 	draw_alpha = save;
-	drawLabel(me);
+	SUPER(Slider).draw(me);
 	me.text = string_null; // TEMPSTRING!
 }
 #endif

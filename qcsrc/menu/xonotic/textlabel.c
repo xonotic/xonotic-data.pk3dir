@@ -23,6 +23,6 @@ void configureXonoticTextLabelXonoticTextLabel(entity me, float theAlign, string
 }
 void drawXonoticTextLabel(entity me)
 {
-	drawLabel(me);
+	SUPER(XonoticTextLabel).draw(me);
 }
 #endif

@@ -222,7 +222,7 @@ void drawModalController(entity me)
 		me.setFocus(me, NULL);
 	else
 		me.setFocus(me, front);
-	drawContainer(me);
+	SUPER(ModalController).draw(me);
 };
 
 void addTabModalController(entity me, entity other, entity tabButton)
@@ -241,7 +241,7 @@ void addTabModalController(entity me, entity other, entity tabButton)
 
 void addItemModalController(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
 {
-	addItemContainer(me, other, theOrigin, theSize, (other == me.firstChild) ? theAlpha : 0);
+	SUPER(ModalController).addItem(me, other, theOrigin, theSize, (other == me.firstChild) ? theAlpha : 0);
 	other.ModalController_initialSize = other.Container_size;
 	other.ModalController_initialOrigin = other.Container_origin;
 	other.ModalController_initialAlpha = theAlpha; // hope Container never modifies this

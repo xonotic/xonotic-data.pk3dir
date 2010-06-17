@@ -73,6 +73,6 @@ void closeXonoticAdvancedDialog(entity me)
 {
 	if(me.refilterEntity)
 		me.refilterEntity.refilter(me.refilterEntity);
-	closeDialog(me);
+	SUPER(XonoticAdvancedDialog).close(me);
 }
 #endif

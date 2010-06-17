@@ -153,7 +153,7 @@ void setSelectedXonoticServerList(entity me, float i)
 {
 	float save;
 	save = me.selectedItem;
-	setSelectedListBox(me, i);
+	SUPER(XonoticServerList).setSelected(me, i);
 	/*
 	if(me.selectedItem == save)
 		return;
@@ -317,7 +317,7 @@ void drawXonoticServerList(entity me)
 		me.ipAddressBoxFocused = me.ipAddressBox.focused;
 	}
 
-	drawListBox(me);
+	SUPER(XonoticServerList).draw(me);
 }
 void ServerList_PingSort_Click(entity btn, entity me)
 {
@@ -449,7 +449,7 @@ void positionSortButtonXonoticServerList(entity me, entity btn, float theOrigin,
 }
 void resizeNotifyXonoticServerList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticServerList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
@@ -601,7 +601,7 @@ float keyDownXonoticServerList(entity me, float scan, float ascii, float shift)
 			me.ipAddressBoxFocused = -1;
 		}
 	}
-	else if(keyDownListBox(me, scan, ascii, shift))
+	else if(SUPER(XonoticServerList).keyDown(me, scan, ascii, shift))
 		return 1;
 	else if(!me.controlledTextbox)
 		return 0;

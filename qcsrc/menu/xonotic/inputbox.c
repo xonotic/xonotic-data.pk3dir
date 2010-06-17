@@ -52,17 +52,17 @@ void setTextXonoticInputBox(entity me, string new)
 {
 	if(me.text != new)
 	{
-		setTextInputBox(me, new);
+		SUPER(XonoticInputBox).setText(me, new);
 		me.onChange(me, me.onChangeEntity);
 	}
 	else
-		setTextInputBox(me, new);
+		SUPER(XonoticInputBox).setText(me, new);
 }
 void loadCvarsXonoticInputBox(entity me)
 {
 	if not(me.cvarName)
 		return;
-	setTextInputBox(me, cvar_string(me.cvarName));
+	SUPER(XonoticInputBox).setText(me, cvar_string(me.cvarName));
 }
 void saveCvarsXonoticInputBox(entity me)
 {
@@ -83,7 +83,7 @@ float keyDownXonoticInputBox(entity me, float key, float ascii, float shift)
 		}
 		me.onEnter(me, me.onEnterEntity);
 	}
-	if(keyDownInputBox(me, key, ascii, shift))
+	if(SUPER(XonoticInputBox).keyDown(me, key, ascii, shift))
 		r = 1;
 	return r;
 }

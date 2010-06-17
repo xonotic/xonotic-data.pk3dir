@@ -161,7 +161,7 @@ void drawXonoticPlayerModelSelector(entity me)
 	float i, n;
 	vector o;
 
-	drawImage(me);
+	SUPER(XonoticPlayerModelSelector).draw(me);
 
 	// draw text on the image, handle \n in the description
 	draw_CenterText('0.5 0 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);
@@ -176,7 +176,7 @@ void drawXonoticPlayerModelSelector(entity me)
 
 void resizeNotifyXonoticPlayerModelSelector(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyImage(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticPlayerModelSelector).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / absSize_y;
 	me.realFontSize_x = me.fontSize / absSize_x;
 }

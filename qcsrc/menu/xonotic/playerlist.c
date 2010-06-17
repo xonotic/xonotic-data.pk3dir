@@ -79,7 +79,7 @@ string getPlayerListXonoticPlayerList(entity me, float i, float key)
 void resizeNotifyXonoticPlayerList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.itemAbsSize = '0 0 0';
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticPlayerList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));

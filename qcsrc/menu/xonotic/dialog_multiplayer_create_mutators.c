@@ -280,6 +280,6 @@ void closeXonoticMutatorsDialog(entity me)
 {
 	if(me.refilterEntity)
 		me.refilterEntity.refilter(me.refilterEntity);
-	closeDialog(me);
+	SUPER(XonoticMutatorsDialog).close(me);
 }
 #endif

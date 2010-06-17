@@ -98,7 +98,7 @@ void resizeNotifyLieContainer(entity me, vector relOrigin, vector relSize, vecto
 			}
 	}
 	while(d);
-	resizeNotifyItem(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(Container).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 }
 
 void resizeNotifyContainer(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)

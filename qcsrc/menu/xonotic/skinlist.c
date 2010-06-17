@@ -136,7 +136,7 @@ void destroyXonoticSkinList(entity me)
 void resizeNotifyXonoticSkinList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.itemAbsSize = '0 0 0';
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticSkinList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
@@ -200,6 +200,6 @@ float keyDownXonoticSkinList(entity me, float scan, float ascii, float shift)
 		return 1;
 	}
 	else
-		return keyDownListBox(me, scan, ascii, shift);
+		return SUPER(XonoticSkinList).keyDown(me, scan, ascii, shift);
 }
 #endif

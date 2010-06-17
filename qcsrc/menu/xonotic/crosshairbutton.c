@@ -72,7 +72,7 @@ void drawXonoticCrosshairButton(entity me)
 		rgb = '1 1 1';
 	}
 
-	drawCheckBox(me);
+	SUPER(XonoticCrosshairButton).draw(me);
 
 	sz = draw_PictureSize(me.src3);
 	sz = globalToBoxSize(sz, draw_scale);

@@ -139,6 +139,6 @@ void drawXonoticCharmap(entity me)
 			draw_Picture(c, me.image2, '0.0625 0.1 0', '1 1 1', 1);
 		}
 	}
-	drawImage(me);
+	SUPER(XonoticCharmap).draw(me);
 }
 #endif

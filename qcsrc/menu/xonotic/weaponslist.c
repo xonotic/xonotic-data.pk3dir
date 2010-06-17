@@ -41,7 +41,7 @@ void drawXonoticWeaponsList(entity me)
 		cvar_set("cl_weaponpriority", W_NameWeaponOrder(t));
 	}
 	me.nItems = tokenize_console(t);
-	drawListBox(me);
+	SUPER(XonoticWeaponsList).draw(me);
 }
 void WeaponsList_MoveUp_Click(entity box, entity me)
 {
@@ -61,7 +61,7 @@ void WeaponsList_MoveDown_Click(entity box, entity me)
 }
 void resizeNotifyXonoticWeaponsList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticWeaponsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
@@ -71,7 +71,7 @@ float mouseDragXonoticWeaponsList(entity me, vector pos)
 {
 	float f, i;
 	i = me.selectedItem;
-	f = mouseDragListBox(me, pos);
+	f = SUPER(XonoticWeaponsList).mouseDrag(me, pos);
 	if(me.selectedItem != i)
 		cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, i));
 	return f;
@@ -111,7 +111,7 @@ float keyDownXonoticWeaponsList(entity me, float scan, float ascii, float shift)
 		WeaponsList_MoveDown_Click(NULL, me);
 		return 1;
 	}
-	else if(keyDownListBox(me, scan, ascii, shift))
+	else if(SUPER(XonoticWeaponsList).keyDown(me, scan, ascii, shift))
 		return 1;
 	return 0;
 }

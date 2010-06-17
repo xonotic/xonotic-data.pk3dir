@@ -186,6 +186,6 @@ float keyDownDialog(entity me, float key, float ascii, float shift)
 			return 1;
 		}
 	}
-	return keyDownInputContainer(me, key, ascii, shift);
+	return SUPER(Dialog).keyDown(me, key, ascii, shift);
 }
 #endif

@@ -50,7 +50,7 @@ string valueToTextXonoticDecibelsSlider(entity me, float v)
 		return "OFF";
 	else if(v >= -0.1)
 		return "MAX";
-	return strcat(valueToTextSlider(me, v), " dB");
+	return strcat(SUPER(XonoticDecibelsSlider).valueToText(me, v), " dB");
 }
 
 #endif

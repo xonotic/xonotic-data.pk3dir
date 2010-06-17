@@ -71,6 +71,6 @@ void saveCvarsXonoticColorButton(entity me)
 void drawXonoticColorButton(entity me)
 {
 	me.color2 = colormapPaletteColor(me.cvarValueFloat, me.cvarPart);
-	drawCheckBox(me);
+	SUPER(XonoticColorButton).draw(me);
 }
 #endif

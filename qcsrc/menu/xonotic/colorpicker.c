@@ -113,7 +113,7 @@ float keyDownXonoticColorpicker(entity me, float key, float ascii, float shift)
 }
 void drawXonoticColorpicker(entity me)
 {
-	drawImage(me);
+	SUPER(XonoticColorpicker).draw(me);
 
 	float B, C, aC;
 	C = cvar("r_textcontrast");

@@ -25,6 +25,6 @@ ENDCLASS(XonoticTab)
 void showNotifyXonoticTab(entity me)
 {
 	loadAllCvars(me);
-	showNotifyContainer(me);
+	SUPER(XonoticTab).showNotify(me);
 }
 #endif

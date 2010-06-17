@@ -26,7 +26,7 @@ void drawXonoticPlayerSettingsTab(entity me)
 		me.playerNameLabel.alpha = ((mod(time * 2, 2) < 1) ? 1 : 0);
 	else
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
-	drawContainer(me);
+	SUPER(XonoticPlayerSettingsTab).draw(me);
 }
 void fillXonoticPlayerSettingsTab(entity me)
 {

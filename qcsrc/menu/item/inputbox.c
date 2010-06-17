@@ -33,7 +33,7 @@ void InputBox_Clear_Click(entity btn, entity me);
 #ifdef IMPLEMENTATION
 void configureInputBoxInputBox(entity me, string theText, float theCursorPos, float theFontSize, string gfx)
 {
-	configureLabelLabel(me, theText, theFontSize, 0.0);
+	SUPER(InputBox).configureLabel(me, theText, theFontSize, 0.0);
 	me.src = gfx;
 	me.cursorPos = theCursorPos;
 }
@@ -42,7 +42,7 @@ void setTextInputBox(entity me, string txt)
 {
 	if(me.text)
 		strunzone(me.text);
-	setTextLabel(me, strzone(txt));
+	SUPER(InputBox).setText(me, strzone(txt));
 }
 
 void InputBox_Clear_Click(entity btn, entity me)
@@ -303,7 +303,7 @@ void drawInputBox(entity me)
 	}
 	else
 		draw_Text(me.realOrigin - eX * me.scrollPos, me.text, me.realFontSize, '1 1 1', 1, 0);
-		// skipping drawLabel(me);
+		// skipping SUPER(InputBox).draw(me);
 	if(!me.focused || (time - me.lastChangeTime) < floor(time - me.lastChangeTime) + 0.5)
 		draw_Text(me.realOrigin + eX * (cursorPosInWidths - me.scrollPos), CURSOR, me.realFontSize, '1 1 1', 1, 0);
 

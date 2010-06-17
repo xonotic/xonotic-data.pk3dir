@@ -117,13 +117,13 @@ void drawXonoticMapList(entity me)
 {
 	if(me.startButton)
 		me.startButton.disabled = ((me.selectedItem < 0) || (me.selectedItem >= me.nItems));
-	drawListBox(me);
+	SUPER(XonoticMapList).draw(me);
 }
 
 void resizeNotifyXonoticMapList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.itemAbsSize = '0 0 0';
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticMapList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
@@ -348,7 +348,7 @@ float keyDownXonoticMapList(entity me, float scan, float ascii, float shift)
 			me.setSelected(me, MapInfo_FindName_firstResult);
 	}
 	else
-		return keyDownListBox(me, scan, ascii, shift);
+		return SUPER(XonoticMapList).keyDown(me, scan, ascii, shift);
 	return 1;
 }
 

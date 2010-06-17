@@ -47,11 +47,11 @@ void drawXonoticCreditsList(entity me)
 		i = max(i, ceil(me.scrollPos / me.itemHeight));
 		me.setSelected(me, i);
 	}
-	drawListBox(me);
+	SUPER(XonoticCreditsList).draw(me);
 }
 void resizeNotifyXonoticCreditsList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticCreditsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
@@ -102,7 +102,7 @@ float keyDownXonoticCreditsList(entity me, float scan, float ascii, float shift)
 	else if(scan == K_DOWNARROW)
 		me.scrollPos = min(me.scrollPos + me.itemHeight, me.nItems * me.itemHeight - 1);
 	else
-		return keyDownListBox(me, scan, ascii, shift);
+		return SUPER(XonoticCreditsList).keyDown(me, scan, ascii, shift);
 
 	i = min(me.selectedItem, floor((me.scrollPos + 1) / me.itemHeight - 1));
 	i = max(i, ceil(me.scrollPos / me.itemHeight));

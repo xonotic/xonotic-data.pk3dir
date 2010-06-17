@@ -78,7 +78,7 @@ void configureXonoticKeyBinderXonoticKeyBinder(entity me)
 }
 void resizeNotifyXonoticKeyBinder(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticKeyBinder).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
@@ -231,7 +231,7 @@ void setSelectedXonoticKeyBinder(entity me, float i)
 		me.previouslySelected = i;
 	if(me.userbindEditButton)
 		me.userbindEditButton.disabled = (substring(Xonotic_KeyBinds_Descriptions[i], 0, 1) != "$");
-	setSelectedListBox(me, i);
+	SUPER(XonoticKeyBinder).setSelected(me, i);
 }
 float keyDownXonoticKeyBinder(entity me, float key, float ascii, float shift)
 {
@@ -248,7 +248,7 @@ float keyDownXonoticKeyBinder(entity me, float key, float ascii, float shift)
 			KeyBinder_Bind_Clear(me, me);
 			break;
 		default:
-			r = keyDownListBox(me, key, ascii, shift);
+			r = SUPER(XonoticKeyBinder).keyDown(me, key, ascii, shift);
 			break;
 	}
 	return r;

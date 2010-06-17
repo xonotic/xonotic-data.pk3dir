@@ -59,7 +59,7 @@ void setSelectedXonoticCvarList(entity me, float i)
 {
 	string s;
 
-	setSelectedListBox(me, i);
+	SUPER(XonoticCvarList).setSelected(me, i);
 	if(me.nItems == 0)
 		return;
 	
@@ -109,7 +109,7 @@ void CvarList_Filter_Change(entity box, entity me)
 }
 void resizeNotifyXonoticCvarList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticCvarList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
@@ -157,7 +157,7 @@ void drawListBoxItemXonoticCvarList(entity me, float i, vector absSize, float is
 
 float keyDownXonoticCvarList(entity me, float scan, float ascii, float shift)
 {
-	if(keyDownListBox(me, scan, ascii, shift))
+	if(SUPER(XonoticCvarList).keyDown(me, scan, ascii, shift))
 		return 1;
 	else if(!me.controlledTextbox)
 		return 0;

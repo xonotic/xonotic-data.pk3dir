@@ -89,7 +89,7 @@ void drawXonoticRadioButton(entity me)
 			if(!found)
 				me.setChecked(me, 1);
 		}
-	drawCheckBox(me);
+	SUPER(XonoticRadioButton).draw(me);
 }
 void saveCvarsXonoticRadioButton(entity me)
 {

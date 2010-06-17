@@ -48,7 +48,7 @@ void drawXonoticSliderCheckBox(entity me)
 	me.checked = ((me.controlledSlider.value == me.offValue) != me.inverted);
 	if(me.controlledSlider.value == median(me.controlledSlider.valueMin, me.controlledSlider.value, me.controlledSlider.valueMax))
 		me.savedValue = me.controlledSlider.value;
-	drawCheckBox(me);
+	SUPER(XonoticSliderCheckBox).draw(me);
 }
 void setCheckedXonoticSliderCheckBox(entity me, float val)
 {

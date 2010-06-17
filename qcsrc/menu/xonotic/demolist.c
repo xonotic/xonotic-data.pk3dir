@@ -82,7 +82,7 @@ void destroyXonoticDemoList(entity me)
 void resizeNotifyXonoticDemoList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
     me.itemAbsSize = '0 0 0';
-    resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+    SUPER(XonoticDemoList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
     me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
     me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
@@ -160,7 +160,7 @@ float keyDownXonoticDemoList(entity me, float scan, float ascii, float shift)
         return 1;
     }
     else
-        return keyDownListBox(me, scan, ascii, shift);
+        return SUPER(XonoticDemoList).keyDown(me, scan, ascii, shift);
 }
 #endif
 

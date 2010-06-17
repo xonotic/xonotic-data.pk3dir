@@ -207,13 +207,13 @@ void drawXonoticCampaignList(entity me)
 {
 	if(cvar(me.cvarName) != me.campaignIndex || cvar_string("g_campaign_name") != campaign_name)
 		me.loadCvars(me);
-	drawListBox(me);
+	SUPER(XonoticCampaignList).draw(me);
 }
 
 void resizeNotifyXonoticCampaignList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.itemAbsSize = '0 0 0';
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticCampaignList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
@@ -310,7 +310,7 @@ void CampaignList_LoadMap(entity btn, entity me)
 void setSelectedXonoticCampaignList(entity me, float i)
 {
 	// prevent too late items from being played
-	setSelectedListBox(me, min(i, me.campaignIndex));
+	SUPER(XonoticCampaignList).setSelected(me, min(i, me.campaignIndex));
 }
 
 float keyDownXonoticCampaignList(entity me, float scan, float ascii, float shift)
@@ -318,7 +318,7 @@ float keyDownXonoticCampaignList(entity me, float scan, float ascii, float shift
 	if(scan == K_ENTER || scan == K_SPACE)
 		CampaignList_LoadMap(me, me);
 	else
-		return keyDownListBox(me, scan, ascii, shift);
+		return SUPER(XonoticCampaignList).keyDown(me, scan, ascii, shift);
 	return 1;
 }
 #endif

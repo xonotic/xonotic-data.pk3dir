@@ -61,7 +61,7 @@ void updateAspectImage(entity me)
 }
 void resizeNotifyImage(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyItem(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(Image).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	me.updateAspect(me);
 }
 #endif
