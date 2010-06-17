@@ -759,8 +759,9 @@ void() m_shutdown =
 	m_hide();
 	for(e = NULL; (e = nextent(e)) != NULL; )
 	{
-		if(e.destroy)
-			e.destroy(e);
+		if(e.classname != "vtbl")
+			if(e.destroy)
+				e.destroy(e);
 	}
 };
 
