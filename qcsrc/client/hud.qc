@@ -1282,6 +1282,10 @@ void HUD_Panel_SetPosSize(float id)
 		}
 	}
 
+	// minimum panel size cap, do this once more so we NEVER EVER EVER have a panel smaller than this, JUST IN CASE above code still makes the panel eg negative (impossible to resize back without changing cvars manually then)
+	mySize_x = max(0.025 * vid_conwidth, mySize_x);
+	mySize_y = max(0.025 * vid_conheight, mySize_y);
+
 	// do another pos check, as size might have changed by now
 	if(resizeCorner == 1) {
 		myPos_x = resizeorigin_x - mySize_x;
