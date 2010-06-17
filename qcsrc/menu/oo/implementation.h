@@ -16,4 +16,4 @@
 #undef SUPER
 #endif
 
-#define SUPER(cname) (vtbl##cname.vtblbase)
+#define SUPER(cname) (cname##_vtbl.vtblbase)

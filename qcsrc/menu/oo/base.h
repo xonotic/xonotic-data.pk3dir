@@ -1,5 +1,5 @@
 .string classname;
-entity vtblObject;
+entity Object_vtbl;
 .string vtblname;
 .entity vtblbase;
 entity spawnVtbl(entity e, entity b)
@@ -20,7 +20,7 @@ entity spawnObject()
 	entity e;
 	e = spawn();
 	e.classname = "Object";
-	if(!vtblObject)
-		vtblObject = spawnVtbl(e, null_entity);
+	if(!Object_vtbl)
+		Object_vtbl = spawnVtbl(e, null_entity);
 	return e;
 }
