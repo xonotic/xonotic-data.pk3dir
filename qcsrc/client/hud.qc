@@ -4407,6 +4407,9 @@ void HUD_Main (void)
 	if(cvar_string("hud_dock") != "")
 		drawpic_skin('0 0 0', cvar_string("hud_dock"), eX * vid_conwidth + eY * vid_conheight, HUD_Panel_Dock_GetColor(), cvar("hud_dock_alpha") * menu_fade_alpha, DRAWFLAG_NORMAL);
 
+	if(HUD_Panel_CheckActive(HUD_PANEL_RADAR) || hud_configure)
+		if(cvar_string("hud_radar") != "0" && (cvar("hud_radar") == 2 || teamplay))
+			HUD_Radar();
 	if(HUD_Panel_CheckActive(HUD_PANEL_WEAPONICONS) || hud_configure)
 		HUD_WeaponIcons();
 	if(HUD_Panel_CheckActive(HUD_PANEL_INVENTORY) || hud_configure)
@@ -4419,10 +4422,6 @@ void HUD_Main (void)
 		HUD_Notify();
 	if(HUD_Panel_CheckActive(HUD_PANEL_TIMER) || hud_configure)
 		HUD_Timer();
-	// TODO hud'ify
-	if(HUD_Panel_CheckActive(HUD_PANEL_RADAR) || hud_configure)
-		if(cvar_string("hud_radar") != "0" && (cvar("hud_radar") == 2 || teamplay))
-			HUD_Radar();
 	if(HUD_Panel_CheckActive(HUD_PANEL_SCORE) || hud_configure)
 		HUD_Score();
 	if(HUD_Panel_CheckActive(HUD_PANEL_RACETIMER) || hud_configure)
@@ -4439,7 +4438,7 @@ void HUD_Main (void)
 	if(HUD_Panel_CheckActive(HUD_PANEL_CHAT) || hud_configure)
 		HUD_Chat();
 	else
-		cvar_set("con_csqcpositioning", "0");
+		cvar_set("con_chatrect", "0");
 	if(HUD_Panel_CheckActive(HUD_PANEL_ENGINEINFO) || hud_configure)
 		HUD_EngineInfo();
 
