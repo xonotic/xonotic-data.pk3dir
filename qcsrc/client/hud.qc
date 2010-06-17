@@ -570,7 +570,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 		fputs(fh, strcat("seta hud_bg_alpha \"", cvar_string("hud_bg_alpha"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg_border \"", cvar_string("hud_bg_border"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg_padding \"", cvar_string("hud_bg_padding"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_fg_alpha) \"", cvar_string("hud_fg_alpha"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_fg_alpha \"", cvar_string("hud_fg_alpha"), "\"", "\n"));
 		fputs(fh, "\n");
 
 		fputs(fh, strcat("seta hud_dock \"", cvar_string("hud_dock"), "\"", "\n"));
