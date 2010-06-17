@@ -1137,6 +1137,7 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin, float
 		if(cvar("hud_configure_checkcollisions_debug"))
 			drawfill(targPos + '1 1 0' * targBorder, targSize - '2 2 0' * targBorder, '1 1 0', .3, DRAWFLAG_NORMAL);
 	}
+
 	return mySize;
 }
 
@@ -1174,7 +1175,7 @@ void HUD_Panel_SetPosSize(float id)
 	vector minSize;
 	minSize = HUD_Panel_GetMinSize(id); // mySize_x at least minSize_x * mySize_y, and vice versa
 	float fixedRatio;
-	if(!minSize_x && minSize_y)
+	if(!minSize_x && minSize_y) // forced aspect ratio
 	{
 		minSize_x = 1/minSize_y;
 		fixedRatio = minSize_x;
@@ -1213,12 +1214,16 @@ void HUD_Panel_SetPosSize(float id)
 	}
 
 	// left/top screen edges
-	mySize_x = min(myPos_x + mySize_x, mySize_x);
-	mySize_y = min(myPos_y + mySize_y, mySize_y);
+	if(myPos_x < 0)
+		mySize_x = mySize_x + myPos_x;
+	if(myPos_y < 0)
+		mySize_y = mySize_y + myPos_y;
 
 	// bottom/right screen edges
-	mySize_x = min(vid_conwidth - myPos_x, mySize_x); 
-	mySize_y = min(vid_conheight - myPos_y, mySize_y); 
+	if(myPos_x + mySize_x > vid_conwidth)
+		mySize_x = vid_conwidth - myPos_x;
+	if(myPos_y + mySize_y > vid_conheight)
+		mySize_y = vid_conheight - myPos_y;
 
 	if(cvar("hud_configure_checkcollisions_debug"))
 		drawfill(myPos, mySize, '1 1 1', .2, DRAWFLAG_NORMAL);
@@ -1244,6 +1249,20 @@ void HUD_Panel_SetPosSize(float id)
 		if (fixedRatio > 0)
 		{
 			mySize = HUD_Panel_CheckResize(id, mySize, resizeorigin, fixedRatio);
+
+			// Make sure once more that we DON'T cross the screen edges
+			// left/top screen edges
+			if(myPos_x < 0)
+				mySize_x = mySize_x + myPos_x;
+			if(myPos_y < 0)
+				mySize_y = mySize_y + myPos_y;
+
+			// bottom/right screen edges
+			if(myPos_x + mySize_x > vid_conwidth)
+				mySize_x = vid_conwidth - myPos_x;
+			if(myPos_y + mySize_y > vid_conheight)
+				mySize_y = vid_conheight - myPos_y;
+
 			// restore again aspect ratio, _minimizing_ the size
 			if (mySize_x / mySize_y < fixedRatio)
 				mySize_y = mySize_x / fixedRatio;
