@@ -2337,8 +2337,8 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 			HUD_KillNotify_Push(s1, "", 0, DEATH_CAMP);
 			if (alsoprint)
 				print ("^1",s1, "^1 thought they found a nice camping ground\n");
-		} else if (type == DEATH_MIRRORDAMAGE) {
-			HUD_KillNotify_Push(s1, "", 0, DEATH_MIRRORDAMAGE);
+		} else if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
+			HUD_KillNotify_Push(s1, "", 0, type);
 			if (alsoprint)
 				print ("^1",s1, "^1 didn't become friends with the Lord of Teamplay\n");
 		} else if (type == DEATH_CHEAT) {
@@ -2364,8 +2364,8 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 			if (alsoprint)
 				print("^1", s1, "^1 ", Weapon_KillMessage(type), "\n");
 		}
-		else if(type == KILL_TEAM || type == KILL_TEAM_SPREE) {
-			HUD_KillNotify_Push(s1, s2, 1, DEATH_MIRRORDAMAGE);
+		else if(type == KILL_TEAM_RED || type == KILL_TEAM_BLUE || type == KILL_TEAM_SPREE) {
+			HUD_KillNotify_Push(s1, s2, 1, type);
 			if(alsoprint)
 			{
 				if(cvar("cl_gentle")) {
@@ -2376,15 +2376,15 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 			}
 			if (stof(s2) > 2 && type == KILL_TEAM_SPREE) {
 				if(cvar("cl_gentle"))
-					print ("^1",s1,"^1 ended a ",s2," scoring spree by going against a team mate\n");
+					print ("^1",s1,"^1 ended a ",s3," scoring spree by going against a team mate\n");
 				else
-					print ("^1",s1,"^1 ended a ",s2," kill spree by killing a team mate\n");
+					print ("^1",s1,"^1 ended a ",s3," kill spree by killing a team mate\n");
 			}
 			else if (stof(s2) > 2) {
 				if(cvar("cl_gentle"))
-					print ("^1",s1,"'s ^1",s2," scoring spree was ended by a team mate!\n");
+					print ("^1",s1,"'s ^1",s3," scoring spree was ended by a team mate!\n");
 				else
-					print ("^1",s1,"'s ^1",s2," kill spree was ended by a team mate!\n");
+					print ("^1",s1,"'s ^1",s3," kill spree was ended by a team mate!\n");
 			}
 		}
 		else if(type == KILL_FIRST_BLOOD)
@@ -2657,7 +2657,7 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to preserve your health"));
 			else
 				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You grew too old without taking your medicine"));
-		} else if (type == DEATH_MIRRORDAMAGE) {
+		} else if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(cvar("cl_gentle"))
 				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't go against team mates!"));
 			else
@@ -2671,9 +2671,9 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You killed your own dumb self!"));
 		}
 	} else if(msg == MSG_KILL) {
-		if (type == KILL_TEAM) {
+		if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(cvar("cl_gentle")) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You went against a team mate!"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You went against", s1, ",a team mate!"));
 			} else {
 				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You fragged ", s1, ", a team mate!"));
 			}
@@ -2691,13 +2691,13 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 			}
 		} else if (type == KILL_TYPEFRAG) { // s2 contains "advanced kill messages" such as ping, handicap...
 			if(cvar("cl_gentle")) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You scored against ^7", s1, "^7 who was typing!", s2));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You scored against ^7", s1, "^1 who was typing!", s2));
 			} else {
 				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You typefragged ^7", s1, s2));
 			}
 		} else if (type == KILL_TYPEFRAGGED) {
 			if(cvar("cl_gentle")) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were scored against by ^7", s1, "^7 while you were typing!", s2));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were scored against by ^7", s1, "^1 while you were typing!", s2));
 			} else {
 				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were typefragged by ^7", s1, s2));
 			}
@@ -2709,14 +2709,14 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 			}
 		} else if (type == KILL_FRAGGED) {
 			if(cvar("cl_gentle")) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You were scored against by ^7", s1, s2));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were scored against by ^7", s1, s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You were fragged by ^7", s1, s2));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were fragged by ^7", s1, s2));
 			}
 		}
 	} else if(msg == MSG_KILL_ACTION) {
 		// TODO: invent more centerprints here?
-		centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Watch your step!", s1));
+		centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Watch your step!"));
 	}
 }
 
@@ -2815,9 +2815,14 @@ void HUD_Notify (void)
 				drawpic_skin(weap_pos, "notify_camping", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 			}
-			else if(killnotify_deathtype[j] == DEATH_MIRRORDAMAGE)
+			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
 			{
-				drawpic_skin(weap_pos, "notify_teamkill", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawpic_skin(weap_pos, "notify_teamkill", '2 1 0' * height, '1 0 0', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
+			{
+				drawpic_skin(weap_pos, "notify_teamkill", '2 1 0' * height, '0 0 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 			}
 			else if(killnotify_deathtype[j] == DEATH_DROWN)
@@ -2911,9 +2916,15 @@ void HUD_Notify (void)
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 			}
-			else if(killnotify_deathtype[j] == DEATH_MIRRORDAMAGE)
+			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
 			{
-				drawpic_skin(weap_pos, "notify_teamkill", '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawpic_skin(weap_pos, "notify_teamkill", '2 1 0' * height, '1 0 0', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			}
+			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
+			{
+				drawpic_skin(weap_pos, "notify_teamkill", '2 1 0' * height, '0 0 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_victim, victim, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 			}

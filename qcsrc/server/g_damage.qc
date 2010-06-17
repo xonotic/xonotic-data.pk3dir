@@ -315,30 +315,42 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			if (targ.killcount > 2)
 				msg = ftos(targ.killcount);
+			if(teams_matter && attacker.team == targ.team)
+			{
+				if(attacker.team == COLOR_TEAM1)
+					deathtype = KILL_TEAM_RED;
+				else
+					deathtype = KILL_TEAM_BLUE;
+			}
+
 			Send_KillNotification(s, msg, ftos(w), deathtype, MSG_SUICIDE);
 		}
 		else if (attacker.classname == "player" || attacker.classname == "gib")
 		{
 			if(teams_matter && attacker.team == targ.team)
 			{
-				type = KILL_TEAM;
+				if(attacker.team == COLOR_TEAM1)
+					type = KILL_TEAM_RED;
+				else
+					type = KILL_TEAM_BLUE;
 
 				GiveFrags(attacker, targ, -1);
 
+				Send_CSQC_Centerprint(attacker, s, "", type, MSG_KILL);
+
 				if (targ.killcount > 2) {
 					msg = ftos(targ.killcount);
-					a = s;
 				}
+
 				if (attacker.killcount > 2) {
 					msg = ftos(attacker.killcount);
 					type = KILL_TEAM_SPREE;
 				}
+				Send_KillNotification(a, s, msg, type, MSG_KILL);
 
 				attacker.killcount = 0;
 
 				LogDeath("tk", deathtype, attacker, targ);
-				Send_CSQC_Centerprint(attacker, s, "", type, MSG_KILL);
-				Send_KillNotification(a, msg, "", type, MSG_KILL);
 			}
 			else
 			{
