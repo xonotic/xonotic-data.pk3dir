@@ -18,7 +18,7 @@ entity makeXonoticAudioSettingsTab()
 	return me;
 }
 
-void fillXonoticAudioSettingsTab(entity me)
+void XonoticAudioSettingsTab_fill(entity me)
 {
 	entity e, s, sl;
 

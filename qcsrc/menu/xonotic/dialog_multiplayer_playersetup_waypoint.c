@@ -12,15 +12,15 @@ ENDCLASS(XonoticWaypointDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyXonoticWaypointDialog(entity me)
+void XonoticWaypointDialog_showNotify(entity me)
 {
         loadAllCvars(me);
 }
-string toStringXonoticWaypointDialog(entity me)
+string XonoticWaypointDialog_toString(entity me)
 {
 	return "XXX";
 }
-void fillXonoticWaypointDialog(entity me)
+void XonoticWaypointDialog_fill(entity me)
 {
 	entity e, sl;
 	

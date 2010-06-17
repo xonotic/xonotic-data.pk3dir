@@ -41,21 +41,21 @@ ENDCLASS(ListBox)
 #endif
 
 #ifdef IMPLEMENTATION
-void setSelectedListBox(entity me, float i)
+void ListBox_setSelected(entity me, float i)
 {
 	me.selectedItem = floor(0.5 + bound(0, i, me.nItems - 1));
 }
-void resizeNotifyListBox(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void ListBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyItem(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(ListBox).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	me.controlWidth = me.scrollbarWidth / absSize_x;
 }
-void configureListBoxListBox(entity me, float theScrollbarWidth, float theItemHeight)
+void ListBox_configureListBox(entity me, float theScrollbarWidth, float theItemHeight)
 {
 	me.scrollbarWidth = theScrollbarWidth;
 	me.itemHeight = theItemHeight;
 }
-float keyDownListBox(entity me, float key, float ascii, float shift)
+float ListBox_keyDown(entity me, float key, float ascii, float shift)
 {
 	me.dragScrollTimer = time;
 	if(key == K_MWHEELUP)
@@ -90,7 +90,7 @@ float keyDownListBox(entity me, float key, float ascii, float shift)
 		return 0;
 	return 1;
 }
-float mouseDragListBox(entity me, vector pos)
+float ListBox_mouseDrag(entity me, vector pos)
 {
 	float hit;
 	float i;
@@ -124,7 +124,7 @@ float mouseDragListBox(entity me, vector pos)
 	}
 	return 1;
 }
-float mousePressListBox(entity me, vector pos)
+float ListBox_mousePress(entity me, vector pos)
 {
 	if(pos_x < 0) return 0;
 	if(pos_y < 0) return 0;
@@ -164,7 +164,7 @@ float mousePressListBox(entity me, vector pos)
 	}
 	return 1;
 }
-float mouseReleaseListBox(entity me, vector pos)
+float ListBox_mouseRelease(entity me, vector pos)
 {
 	vector absSize;
 	if(me.pressed == 1)
@@ -188,7 +188,7 @@ float mouseReleaseListBox(entity me, vector pos)
 	me.pressed = 0;
 	return 1;
 }
-void updateControlTopBottomListBox(entity me)
+void ListBox_updateControlTopBottom(entity me)
 {
 	float f;
 	// scrollPos is in 0..1 and indicates where the "page" currently shown starts.
@@ -238,7 +238,7 @@ void updateControlTopBottomListBox(entity me)
 		}
 	}
 }
-void drawListBox(entity me)
+void ListBox_draw(entity me)
 {
 	float i;
 	vector absSize, fillSize;
@@ -282,12 +282,12 @@ void drawListBox(entity me)
 	draw_ClearClip();
 }
 
-void clickListBoxItemListBox(entity me, float i, vector where)
+void ListBox_clickListBoxItem(entity me, float i, vector where)
 {
 	// itemclick, itemclick, does whatever itemclick does
 }
 
-void drawListBoxItemListBox(entity me, float i, vector absSize, float selected)
+void ListBox_drawListBoxItem(entity me, float i, vector absSize, float selected)
 {
 	draw_Text('0 0 0', strcat("Item ", ftos(i)), eX * (8 / absSize_x) + eY * (8 / absSize_y), (selected ? '0 1 0' : '1 1 1'), 1, 0);
 }

@@ -12,15 +12,15 @@ ENDCLASS(XonoticCvarsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyXonoticCvarsDialog(entity me)
+void XonoticCvarsDialog_showNotify(entity me)
 {
 	loadAllCvars(me);
 }
-string toStringXonoticCvarsDialog(entity me)
+string XonoticCvarsDialog_toString(entity me)
 {
 	return "XXX";
 }
-void fillXonoticCvarsDialog(entity me)
+void XonoticCvarsDialog_fill(entity me)
 {
 	entity e, cvarlist, btn;
 	cvarlist = makeXonoticCvarList();

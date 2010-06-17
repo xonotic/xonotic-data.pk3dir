@@ -25,7 +25,7 @@ void DemoButton_Click(entity me, entity other)
 		me.setText(me, "Do not press this button again!");
 }
 
-void configureMainWindowMainWindow(entity me)
+void MainWindow_configureMainWindow(entity me)
 {
 	entity n, i;
 

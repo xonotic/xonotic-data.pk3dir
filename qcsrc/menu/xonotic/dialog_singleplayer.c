@@ -50,7 +50,7 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 	fclose(fh);
 }
 
-void fillXonoticSingleplayerDialog(entity me)
+void XonoticSingleplayerDialog_fill(entity me)
 {
 	entity e, btnPrev, btnNext, lblTitle;
 

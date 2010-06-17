@@ -19,7 +19,7 @@ ENDCLASS(AnimHost)
 #endif
 
 #ifdef IMPLEMENTATION
-void addAnimAnimHost(entity me, entity other)
+void AnimHost_addAnim(entity me, entity other)
 {
 	if(other.parent)
 		error("Can't add already added anim!");
@@ -43,7 +43,7 @@ void addAnimAnimHost(entity me, entity other)
 	me.lastChild = other;
 }
 
-void removeAnimAnimHost(entity me, entity other)
+void AnimHost_removeAnim(entity me, entity other)
 {
 	if(other.parent != me)
 		error("Can't remove from wrong AnimHost!");
@@ -67,7 +67,7 @@ void removeAnimAnimHost(entity me, entity other)
 		me.lastChild = p;
 }
 
-void removeAllAnimAnimHost(entity me)
+void AnimHost_removeAllAnim(entity me)
 {
 	entity e, tmp;
 	for(e = me.firstChild; e; e = e.nextSibling)
@@ -78,7 +78,7 @@ void removeAllAnimAnimHost(entity me)
 	}
 }
 
-void removeObjAnimAnimHost(entity me, entity obj)
+void AnimHost_removeObjAnim(entity me, entity obj)
 {
 	entity e, tmp;
 	for(e = me.firstChild; e; e = e.nextSibling)
@@ -92,7 +92,7 @@ void removeObjAnimAnimHost(entity me, entity obj)
 	}
 }
 
-void stopAllAnimAnimHost(entity me)
+void AnimHost_stopAllAnim(entity me)
 {
 	entity e;
 	for(e = me.firstChild; e; e = e.nextSibling)
@@ -101,7 +101,7 @@ void stopAllAnimAnimHost(entity me)
 	}
 }
 
-void stopObjAnimAnimHost(entity me, entity obj)
+void AnimHost_stopObjAnim(entity me, entity obj)
 {
 	entity e;
 	for(e = me.firstChild; e; e = e.nextSibling)
@@ -113,7 +113,7 @@ void stopObjAnimAnimHost(entity me, entity obj)
 	}
 }
 
-void resumeAllAnimAnimHost(entity me)
+void AnimHost_resumeAllAnim(entity me)
 {
 	entity e;
 	for(e = me.firstChild; e; e = e.nextSibling)
@@ -122,7 +122,7 @@ void resumeAllAnimAnimHost(entity me)
 	}
 }
 
-void resumeObjAnimAnimHost(entity me, entity obj)
+void AnimHost_resumeObjAnim(entity me, entity obj)
 {
 	entity e;
 	for(e = me.firstChild; e; e = e.nextSibling)
@@ -134,7 +134,7 @@ void resumeObjAnimAnimHost(entity me, entity obj)
 	}
 }
 
-void finishAllAnimAnimHost(entity me)
+void AnimHost_finishAllAnim(entity me)
 {
 	entity e, tmp;
 	for(e = me.firstChild; e; e = e.nextSibling)
@@ -146,7 +146,7 @@ void finishAllAnimAnimHost(entity me)
 	}
 }
 
-void finishObjAnimAnimHost(entity me, entity obj)
+void AnimHost_finishObjAnim(entity me, entity obj)
 {
 	entity e, tmp;
 	for(e = me.firstChild; e; e = e.nextSibling)
@@ -161,7 +161,7 @@ void finishObjAnimAnimHost(entity me, entity obj)
 	}
 }
 
-void tickAllAnimHost(entity me)
+void AnimHost_tickAll(entity me)
 {
 	entity e, tmp;
 	for(e = me.firstChild; e; e = e.nextSibling)

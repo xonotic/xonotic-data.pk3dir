@@ -18,7 +18,7 @@ entity makeXonoticServerListTab()
 	me.configureDialog(me);
 	return me;
 }
-void fillXonoticServerListTab(entity me)
+void XonoticServerListTab_fill(entity me)
 {
 	entity e, slist, btn;
 

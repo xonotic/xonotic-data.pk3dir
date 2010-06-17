@@ -30,7 +30,7 @@ entity makeXonoticGametypeButton(float theGroup, string theCvar, string theText)
 	me.configureXonoticGametypeButton(me, theGroup, theCvar, theText);
 	return me;
 }
-void configureXonoticGametypeButtonXonoticGametypeButton(entity me, float theGroup, string theCvar, string theText)
+void XonoticGametypeButton_configureXonoticGametypeButton(entity me, float theGroup, string theCvar, string theText)
 {
 	if(theCvar)
 	{
@@ -43,7 +43,7 @@ void configureXonoticGametypeButtonXonoticGametypeButton(entity me, float theGro
 	me.onClick = GameTypeButton_Click;
 	me.onClickEntity = NULL;
 }
-void setCheckedXonoticGametypeButton(entity me, float val)
+void XonoticGametypeButton_setChecked(entity me, float val)
 {
 	if(val != me.checked)
 	{
@@ -51,14 +51,14 @@ void setCheckedXonoticGametypeButton(entity me, float val)
 		me.saveCvars(me);
 	}
 }
-void loadCvarsXonoticGametypeButton(entity me)
+void XonoticGametypeButton_loadCvars(entity me)
 {
 	if not(me.cvarName)
 		return;
 
 	me.checked = cvar(me.cvarName);
 }
-void saveCvarsXonoticGametypeButton(entity me)
+void XonoticGametypeButton_saveCvars(entity me)
 {
 	if not(me.cvarName)
 		return;

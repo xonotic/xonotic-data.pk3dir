@@ -10,7 +10,7 @@ ENDCLASS(XonoticQuitDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticQuitDialog(entity me)
+void XonoticQuitDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

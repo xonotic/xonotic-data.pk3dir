@@ -11,7 +11,7 @@ ENDCLASS(XonoticHUDModIconsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticHUDModIconsDialog(entity me)
+void XonoticHUDModIconsDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

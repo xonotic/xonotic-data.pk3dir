@@ -3,7 +3,7 @@ CLASS(XonoticBigCommandButton) EXTENDS(XonoticCommandButton)
 	METHOD(XonoticBigCommandButton, configureXonoticBigCommandButton, void(entity, string, vector, string, float))
 	ATTRIB(XonoticBigCommandButton, image, string, SKINGFX_BUTTON_BIG)
 	ATTRIB(XonoticBigCommandButton, grayImage, string, SKINGFX_BUTTON_BIG_GRAY)
-ENDCLASS(XonoticCommandButton)
+ENDCLASS(XonoticBigCommandButton)
 entity makeXonoticBigCommandButton(string theText, vector theColor, string theCommand, float closesMenu);
 #endif
 
@@ -16,7 +16,7 @@ entity makeXonoticBigCommandButton(string theText, vector theColor, string theCo
 	return me;
 }
 
-void configureXonoticBigCommandButtonXonoticBigCommandButton(entity me, string theText, vector theColor, string theCommand, float theFlags)
+void XonoticBigCommandButton_configureXonoticBigCommandButton(entity me, string theText, vector theColor, string theCommand, float theFlags)
 {
 	me.configureXonoticCommandButton(me, theText, theColor, theCommand, theFlags);
 }

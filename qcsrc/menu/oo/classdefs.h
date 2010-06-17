@@ -13,11 +13,13 @@
 #undef ATTRIB
 #undef ATTRIBARRAY
 #undef ENDCLASS
+#undef SUPER
 #endif
 
-#define CLASS(cname)                       entity spawn##cname();
+#define CLASS(cname)                       entity spawn##cname(); entity cname##_vtbl;
 #define EXTENDS(base)                
-#define METHOD(cname,name,prototype)       prototype name##cname; .prototype name;
+#define METHOD(cname,name,prototype)       prototype cname##_##name; .prototype name;
 #define ATTRIB(cname,name,type,val)        .type name;
 #define ATTRIBARRAY(cname,name,type,cnt)   .type name[cnt];
 #define ENDCLASS(cname)                    .float instanceOf##cname;
+#define SUPER(cname)

@@ -40,7 +40,7 @@ ENDCLASS(XonoticMapInfoDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void loadMapInfoXonoticMapInfoDialog(entity me, float i, entity mlb)
+void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
 {
 	me.currentMapIndex = i;
 	me.startButton.onClickEntity = mlb;
@@ -86,7 +86,7 @@ void loadMapInfoXonoticMapInfoDialog(entity me, float i, entity mlb)
 
 	MapInfo_ClearTemps();
 }
-void fillXonoticMapInfoDialog(entity me)
+void XonoticMapInfoDialog_fill(entity me)
 {
 	entity e;
 	float w, wgt;

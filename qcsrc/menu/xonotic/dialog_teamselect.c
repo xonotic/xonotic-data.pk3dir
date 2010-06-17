@@ -23,7 +23,7 @@ entity makeTeamButton(string theName, vector theColor, string commandtheName)
 	return b;
 }
 
-void showNotifyXonoticTeamSelectDialog(entity me)
+void XonoticTeamSelectDialog_showNotify(entity me)
 {
 	float teams, nTeams;
 	teams = cvar("_teams_available");
@@ -34,7 +34,7 @@ void showNotifyXonoticTeamSelectDialog(entity me)
 	me.team4.disabled = !(teams & 8); nTeams += !!(teams & 8);
 }
 
-void fillXonoticTeamSelectDialog(entity me)
+void XonoticTeamSelectDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

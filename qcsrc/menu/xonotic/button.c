@@ -23,7 +23,7 @@ entity makeXonoticButton(string theText, vector theColor)
 	return me;
 }
 
-void configureXonoticButtonXonoticButton(entity me, string theText, vector theColor)
+void XonoticButton_configureXonoticButton(entity me, string theText, vector theColor)
 {
 	if(theColor == '0 0 0')
 	{
