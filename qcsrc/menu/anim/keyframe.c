@@ -6,7 +6,7 @@ CLASS(Keyframe) EXTENDS(Animation)
 	ATTRIB(Keyframe, currentChild, entity, NULL)
 	ATTRIB(Keyframe, firstChild, entity, NULL)
 	ATTRIB(Keyframe, lastChild, entity, NULL)
-ENDCLASS(Animation)
+ENDCLASS(Keyframe)
 entity makeHostedKeyframe(entity, void(entity, float), float, float, float);
 entity makeKeyframe(entity, void(entity, float), float, float, float);
 float getNewChildStart(entity);
