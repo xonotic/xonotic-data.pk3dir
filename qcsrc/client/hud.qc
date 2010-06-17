@@ -679,7 +679,7 @@ vector HUD_Panel_GetMinSize(float id)
 			mySize_y = 0.5898; // 0.5898 * width, reason: bg has weird dimensions...
 			break;
 		case 13: 
-			mySize_y = 0.25; // 0.25 * width, trial and error...
+			mySize_y = 0.2; // 0.25 * width, trial and error...
 			break;
 	}
 	return mySize;
@@ -4256,7 +4256,7 @@ void HUD_EngineInfo(void)
 
 	vector color;
 	color = HUD_Get_Num_Color (prevfps, 100);
-	drawstring(pos, strcat("FPS: ", ftos_decimals(prevfps, cvar("hud_engineinfo_framecounter_decimals"))), '1 1 0' * 0.5 * mySize_y, color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawstring(pos, strcat("FPS: ", ftos_decimals(prevfps, cvar("hud_engineinfo_framecounter_decimals"))), '1 1 0' * mySize_y, color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 }
 /*
 ==================
