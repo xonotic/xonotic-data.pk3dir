@@ -1055,6 +1055,10 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin, float
 		targSize = HUD_Panel_GetSize(i) + '2 2 0' * targBorder;
 		targEndPos = targPos + targSize;
 
+		// resizeorigin is WITHIN target panel, just abort any collision testing against that particular panel to produce expected behaviour!
+		if(resizeorigin_x > targPos_x && resizeorigin_x < targPos_x + targSize_x && resizeorigin_y > targPos_y && resizeorigin_y < targPos_y + targSize_y)
+			continue;
+
 		if (resizeCorner == 1)
 		{
 			// check if this panel is on our way
