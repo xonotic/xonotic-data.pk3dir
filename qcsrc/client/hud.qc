@@ -1016,8 +1016,8 @@ void HUD_Panel_SetPos(float id, vector pos)
 
 	if(cvar("hud_configure_grid"))
 	{
-		pos_x = floor(pos_x/cvar("hud_configure_grid_x") + 0.5) * cvar("hud_configure_grid_x");
-		pos_y = floor(pos_y/cvar("hud_configure_grid_y") + 0.5) * cvar("hud_configure_grid_y");
+		pos_x = floor((pos_x/vid_conwidth)/bound(0.005, cvar("hud_configure_grid_x"), 0.2) + 0.5) * cvar("hud_configure_grid_x") * vid_conwidth;
+		pos_y = floor((pos_y/vid_conheight)/bound(0.005, cvar("hud_configure_grid_y"), 0.2) + 0.5) * cvar("hud_configure_grid_y") * vid_conheight;
 	}
 
 	string s;
@@ -1225,8 +1225,8 @@ void HUD_Panel_SetPosSize(float id)
 	// before checkresize, otherwise panel can be snapped partially inside another panel or panel aspect ratio can be broken
 	if(cvar("hud_configure_grid"))
 	{
-		mySize_x = floor(mySize_x/cvar("hud_configure_grid_x") + 0.5) * cvar("hud_configure_grid_x");
-		mySize_y = floor(mySize_y/cvar("hud_configure_grid_y") + 0.5) * cvar("hud_configure_grid_y");
+		mySize_x = floor((mySize_x/vid_conwidth)/bound(0.005, cvar("hud_configure_grid_x"), 0.2) + 0.5) * cvar("hud_configure_grid_x") * vid_conwidth;
+		mySize_y = floor((mySize_y/vid_conheight)/bound(0.005, cvar("hud_configure_grid_y"), 0.2) + 0.5) * cvar("hud_configure_grid_y") * vid_conheight;
 	}
 
 	if (fixedRatio > 0)
@@ -4393,14 +4393,14 @@ void HUD_Main (void)
 	{
 		float i;
 		// x-axis
-		for(i = 0; i < vid_conwidth/max(2, cvar("hud_configure_grid_x")); ++i)
+		for(i = 0; i < 1/bound(0.005, bound(0.005, cvar("hud_configure_grid_x"), 0.2), 0.2); ++i)
 		{
-			drawfill(eX * i * max(2, cvar("hud_configure_grid_x")), eX + eY * vid_conheight, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
+			drawfill(eX * i * vid_conwidth * bound(0.005, bound(0.005, cvar("hud_configure_grid_x"), 0.2), 0.2), eX + eY * vid_conheight, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
 		}
 		// y-axis
-		for(i = 0; i < vid_conheight/max(2, cvar("hud_configure_grid_y")); ++i)
+		for(i = 0; i < 1/bound(0.005, bound(0.005, cvar("hud_configure_grid_y"), 0.2), 0.2); ++i)
 		{
-			drawfill(eY * i * max(2, cvar("hud_configure_grid_y")), eY + eX * vid_conwidth, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
+			drawfill(eY * i * vid_conheight * bound(0.005, bound(0.005, cvar("hud_configure_grid_y"), 0.2), 0.2), eY + eX * vid_conwidth, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
 		}
 	}
 
