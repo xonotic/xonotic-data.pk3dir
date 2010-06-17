@@ -4337,7 +4337,7 @@ void HUD_Main (void)
 	}
 
 	if(cvar_string("hud_dock") != "")
-		drawpic_skin('0 0 0', cvar_string("hud_dock"), eX * vid_conwidth + eY * vid_conheight, HUD_Panel_Dock_GetColor(), cvar("hud_dock_alpha") * menu_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic('0 0 0', strcat("gfx/hud/", cvar_string("hud_skin"), "/", cvar_string("hud_dock")), eX * vid_conwidth + eY * vid_conheight, HUD_Panel_Dock_GetColor(), cvar("hud_dock_alpha") * menu_fade_alpha, DRAWFLAG_NORMAL); // no aspect ratio forcing on dock...
 
 	if(HUD_Panel_CheckActive(HUD_PANEL_RADAR) || hud_configure)
 		if(cvar_string("hud_radar") != "0" && (cvar("hud_radar") == 2 || teamplay))
