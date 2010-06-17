@@ -1058,13 +1058,13 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin, float
 		if (resizeCorner == 1)
 		{
 			// check if this panel is on our way
-			if (resizeorigin_x < targPos_x)
+			if (resizeorigin_x <= targPos_x)
 				continue;
-			if (resizeorigin_y < targPos_y)
+			if (resizeorigin_y <= targPos_y)
 				continue;
-			if (targEndPos_x < resizeorigin_x - mySize_x)
+			if (targEndPos_x <= resizeorigin_x - mySize_x)
 				continue;
-			if (targEndPos_y < resizeorigin_y - mySize_y)
+			if (targEndPos_y <= resizeorigin_y - mySize_y)
 				continue;
 
 			// there is a collision:
@@ -1082,13 +1082,13 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin, float
 		}
 		else if (resizeCorner == 2)
 		{
-			if (resizeorigin_x > targEndPos_x)
+			if (resizeorigin_x >= targEndPos_x)
 				continue;
-			if (resizeorigin_y < targPos_y)
+			if (resizeorigin_y <= targPos_y)
 				continue;
-			if (targPos_x > resizeorigin_x + mySize_x)
+			if (targPos_x >= resizeorigin_x + mySize_x)
 				continue;
-			if (targEndPos_y < resizeorigin_y - mySize_y)
+			if (targEndPos_y <= resizeorigin_y - mySize_y)
 				continue;
 
 			dist_x = targPos_x - resizeorigin_x;
@@ -1100,13 +1100,13 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin, float
 		}
 		else if (resizeCorner == 3)
 		{
-			if (resizeorigin_x < targPos_x)
+			if (resizeorigin_x <= targPos_x)
 				continue;
-			if (resizeorigin_y > targEndPos_y)
+			if (resizeorigin_y >= targEndPos_y)
 				continue;
-			if (targEndPos_x < resizeorigin_x - mySize_x)
+			if (targEndPos_x <= resizeorigin_x - mySize_x)
 				continue;
-			if (targPos_y > resizeorigin_y + mySize_y)
+			if (targPos_y >= resizeorigin_y + mySize_y)
 				continue;
 
 			dist_x = resizeorigin_x - targEndPos_x;
@@ -1118,13 +1118,13 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin, float
 		}
 		else if (resizeCorner == 4)
 		{
-			if (resizeorigin_x > targEndPos_x)
+			if (resizeorigin_x >= targEndPos_x)
 				continue;
-			if (resizeorigin_y > targEndPos_y)
+			if (resizeorigin_y >= targEndPos_y)
 				continue;
-			if (targPos_x > resizeorigin_x + mySize_x)
+			if (targPos_x >= resizeorigin_x + mySize_x)
 				continue;
-			if (targPos_y > resizeorigin_y + mySize_y)
+			if (targPos_y >= resizeorigin_y + mySize_y)
 				continue;
 
 			dist_x = targPos_x - resizeorigin_x;
