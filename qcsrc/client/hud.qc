@@ -3036,6 +3036,19 @@ void HUD_Notify (void)
 
 // Timer (#5)
 //
+string seconds_tostring(float sec)
+{
+	float minutes;
+	minutes = floor(sec / 60);
+
+	sec -= minutes * 60;
+
+	string s;
+	s = ftos(100 + sec);
+
+	return strcat(ftos(minutes), ":", substring(s, 1, 3));
+}
+
 void HUD_Timer(void)
 {
 	float id = HUD_PANEL_TIMER;
@@ -3052,14 +3065,15 @@ void HUD_Timer(void)
 		mySize -= '2 2 0' * padding;
 	}
 
-	float timelimit, elapsedTime, minutes, seconds, timeleft, minutesLeft, secondsLeft;
+	string timer;
+	float timelimit, elapsedTime, timeleft, minutesLeft;
 
 	timelimit = getstatf(STAT_TIMELIMIT);
 
 	timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
 	timeleft = ceil(timeleft);
+
 	minutesLeft = floor(timeleft / 60);
-	secondsLeft = timeleft - minutesLeft*60;
 
 	vector timer_color;
 	if(minutesLeft >= 5 || warmup_stage || timelimit == 0) //don't use red or yellow in warmup or when there is no timelimit
@@ -3072,25 +3086,16 @@ void HUD_Timer(void)
 	if (cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
 		if (time < getstatf(STAT_GAMESTARTTIME)) {
 			//while restart is still active, show 00:00
-			minutes = seconds = 0;
+			timer = seconds_tostring(0);
 		} else {
 			elapsedTime = floor(time - getstatf(STAT_GAMESTARTTIME)); //127
-			minutes = floor(elapsedTime / 60);
-			seconds = elapsedTime - minutes*60;
+			timer = seconds_tostring(elapsedTime);
 		}
 	} else {
-		minutes = minutesLeft;
-		seconds = secondsLeft;
+		timer = seconds_tostring(timeleft);
 	}
 
-	if(minutes > 999)
-		seconds = 99;
-	minutes = min(minutes, 999);
-	if(minutesLeft >= 1 || cvar("hud_timer_increment") || timelimit == 0 || warmup_stage) {
-		HUD_DrawXNum(pos + eX * mySize_x - eX * 5.1 * mySize_y, minutes, 3, 0, mySize_y, timer_color, 0, 0, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-		drawpic_skin(pos + eX * mySize_x - eX * 2.57 * mySize_y, "num_colon", '1 1 0' * mySize_y, timer_color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-	}
-	HUD_DrawXNum(pos + eX * mySize_x - eX * 2 * mySize_y, seconds, -2, 0, mySize_y, timer_color, 0, 0, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawstring_aspect(pos, timer, mySize, mySize_y, timer_color, HUD_Panel_GetFgAlpha(HUD_PANEL_TIMER), DRAWFLAG_NORMAL);
 }
 
 // Radar (#6)
