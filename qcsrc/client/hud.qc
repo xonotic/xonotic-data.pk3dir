@@ -4241,7 +4241,7 @@ void HUD_EngineInfo(void)
 
 	vector color;
 	color = HUD_Get_Num_Color (prevfps, 100);
-	drawstring(pos, strcat("FPS: ", ftos_decimals(prevfps, cvar("hud_engineinfo_framecounter_decimals"))), '1 1 0' * mySize_y, color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawstring_aspect(pos, strcat("FPS: ", ftos_decimals(prevfps, cvar("hud_engineinfo_framecounter_decimals"))), mySize, mySize_y, color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 }
 /*
 ==================
