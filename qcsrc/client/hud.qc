@@ -1180,6 +1180,7 @@ void HUD_Panel_SetPosSize(float id)
 	{
 		mySize = HUD_Panel_CheckResize(id, mySize, resizeorigin);
 
+		/*
 		// Make sure once more that we DON'T cross the screen edges
 		// left/top screen edges
 		if(myPos_x < 0)
@@ -1192,6 +1193,7 @@ void HUD_Panel_SetPosSize(float id)
 			mySize_x = vid_conwidth - myPos_x;
 		if(myPos_y + mySize_y > vid_conheight)
 			mySize_y = vid_conheight - myPos_y;
+			*/
 	}
 
 	// minimum panel size cap, do this once more so we NEVER EVER EVER have a panel smaller than this, JUST IN CASE above code still makes the panel eg negative (impossible to resize back without changing cvars manually then)
