@@ -4138,16 +4138,17 @@ void HUD_DrawPressedKeys(void)
 		mySize -= '2 2 0' * padding;
 	}
 
+	vector keysize;
+	keysize = eX * mySize_x * (1/3) + eY * mySize_y * 0.5;
 	float pressedkeys;
 
 	pressedkeys = getstatf(STAT_PRESSED_KEYS);
-	drawpic_skin(pos, "key_bg.tga",           mySize, '1 1 1', 0.1 * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * mySize_x - eX * 0.22 * mySize_x +       eY * 0.195 * mySize_y, ((pressedkeys & KEY_CROUCH) ? "key_crouch_inv.tga" : "key_crouch.tga"),        '1 1 0' * (1/3) * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.040 * mySize_y, ((pressedkeys & KEY_FORWARD) ? "key_forward_inv.tga" : "key_forward.tga"),     '1 1 0' * 0.46 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * 0.023 * mySize_x +                      eY * 0.195 * mySize_y, ((pressedkeys & KEY_JUMP) ? "key_jump_inv.tga" : "key_jump.tga"),              '1 1 0' * (1/3) * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * 0.1 * mySize_x +                        eY * 0.486 * mySize_y, ((pressedkeys & KEY_LEFT) ? "key_left_inv.tga" : "key_left.tga"),              '1 1 0' * 0.46 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * 0.5 * mySize_x - eX * 0.23 * mySize_y + eY * 0.486 * mySize_y, ((pressedkeys & KEY_BACKWARD) ? "key_backward_inv.tga" : "key_backward.tga"),  '1 1 0' * 0.46 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-	drawpic_skin(pos + eX * mySize_x - eX * 0.372 * mySize_x +      eY * 0.486 * mySize_y, ((pressedkeys & KEY_RIGHT) ? "key_right_inv.tga" : "key_right.tga"),           '1 1 0' * 0.46 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawpic_skin(pos, ((pressedkeys & KEY_CROUCH) ? "key_crouch_inv.tga" : "key_crouch.tga"), keysize, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * mySize_x * (1/3), ((pressedkeys & KEY_FORWARD) ? "key_forward_inv.tga" : "key_forward.tga"), keysize, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eX * mySize_x * (2/3), ((pressedkeys & KEY_JUMP) ? "key_jump_inv.tga" : "key_jump.tga"), keysize, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eY * 0.5 * mySize_y, ((pressedkeys & KEY_LEFT) ? "key_left_inv.tga" : "key_left.tga"), keysize, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eY * 0.5 * mySize_y + eX * mySize_x * (1/3), ((pressedkeys & KEY_BACKWARD) ? "key_backward_inv.tga" : "key_backward.tga"), keysize, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eY * 0.5 * mySize_y + eX * mySize_x * (2/3), ((pressedkeys & KEY_RIGHT) ? "key_right_inv.tga" : "key_right.tga"), keysize, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 }
 
 // Handle chat as a panel (#12)
