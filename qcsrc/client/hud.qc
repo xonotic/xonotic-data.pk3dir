@@ -101,6 +101,7 @@ void drawpic_skin(vector pos, string pic, vector sz, vector color, float alpha, 
 	drawpic_aspect(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/", pic), sz, color, alpha, drawflag);
 }
 
+// TODO: aspect!
 void drawpic_skin_expanding(vector pos, string pic, vector sz, vector rgb, float alpha, float flag, float fadelerp) {
 	drawpic_expanding(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/", pic), sz, rgb, alpha, flag, fadelerp);
 }
@@ -3609,6 +3610,7 @@ void HUD_Mod_CTF_Reset(void)
 void HUD_Mod_CTF(vector pos, vector mySize)
 {
 	vector redflag_pos, blueflag_pos;
+	vector flag_size;
 	float f; // every function should have that
 
 	float redflag, blueflag; // current status
@@ -3713,25 +3715,37 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 			break;
 	}
 
-	if (myteam == COLOR_TEAM1) { // always draw own flag on left
-		redflag_pos = pos;
-		blueflag_pos = pos + eX * mySize_y;
+	if(mySize_x > mySize_y) {
+		if (myteam == COLOR_TEAM1) { // always draw own flag on left
+			redflag_pos = pos;
+			blueflag_pos = pos + eX * 0.5 * mySize_x;
+		} else {
+			blueflag_pos = pos;
+			redflag_pos = pos + eX * 0.5 * mySize_x;
+		}
+		flag_size = eX * 0.5 * mySize_x + eY * mySize_y;
 	} else {
-		blueflag_pos = pos;
-		redflag_pos = pos + eX * mySize_y;
+		if (myteam == COLOR_TEAM1) { // always draw own flag on left
+			redflag_pos = pos;
+			blueflag_pos = pos + eY * 0.5 * mySize_y;
+		} else {
+			blueflag_pos = pos;
+			redflag_pos = pos + eY * 0.5 * mySize_y;
+		}
+		flag_size = eY * 0.5 * mySize_y + eX * mySize_x;
 	}
 
 	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
 	if(red_icon_prevstatus && f < 1)
-		drawpic_skin_expanding(redflag_pos, red_icon_prevstatus, '1 1 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		drawpic_skin_expanding(redflag_pos, red_icon_prevstatus, flag_size, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(red_icon)
-		drawpic_skin(redflag_pos, red_icon, '1 1 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * red_alpha * f, DRAWFLAG_NORMAL);
+		drawpic_skin(redflag_pos, red_icon, flag_size, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * red_alpha * f, DRAWFLAG_NORMAL);
 
 	f = bound(0, blueflag_statuschange_elapsedtime*2, 1);
 	if(blue_icon_prevstatus && f < 1)
-		drawpic_skin_expanding(blueflag_pos, blue_icon_prevstatus, '1 1 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		drawpic_skin_expanding(blueflag_pos, blue_icon_prevstatus, flag_size, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(blue_icon)
-		drawpic_skin(blueflag_pos, blue_icon, '1 1 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * blue_alpha * f, DRAWFLAG_NORMAL);
+		drawpic_skin(blueflag_pos, blue_icon, flag_size, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS) * blue_alpha * f, DRAWFLAG_NORMAL);
 }
 
 // Keyhunt HUD modicon section
@@ -3750,18 +3764,29 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	float a, aa;
 	vector p, pa, kh_size, kh_asize;
 
-	p_x = pos_x;
-	p_y = pos_y + 0.25 * mySize_y;
-
 	kh_keys = getstati(STAT_KH_KEYS);
 
-	kh_size_x = mySize_x * 0.25;
-	kh_size_y = 0.75 * mySize_y;
+	p_x = pos_x;
+	if(mySize_x > mySize_y)
+	{
+		p_y = pos_y + 0.25 * mySize_y;
+		pa = p - eY * 0.25 * mySize_y;
 
-	pa = p - eY * 0.25 * mySize_y;
+		kh_size_x = mySize_x * 0.25;
+		kh_size_y = 0.75 * mySize_y;
+		kh_asize_x = mySize_x * 0.25;
+		kh_asize_y = mySize_y * 0.25;
+	}
+	else
+	{
+		p_y = pos_y + 0.125 * mySize_y;
+		pa = p - eY * 0.125 * mySize_y;
 
-	kh_asize_x = mySize_x * 0.25;
-	kh_asize_y = mySize_y * 0.25;
+		kh_size_x = mySize_x * 0.5;
+		kh_size_y = 0.375 * mySize_y;
+		kh_asize_x = mySize_x * 0.5;
+		kh_asize_y = mySize_y * 0.125;
+	}
 
 	float i, key;
 
@@ -3845,8 +3870,26 @@ void HUD_Mod_KH(vector pos, vector mySize)
 					break;
 			}
 		}
-		p_x += 0.25 * mySize_x;
-		pa_x += 0.25 * mySize_x;
+		if(mySize_x > mySize_y)
+		{
+			p_x += 0.25 * mySize_x;
+			pa_x += 0.25 * mySize_x;
+		}
+		else
+		{
+			if(i == 1)
+			{
+				p_y = pos_y + 0.625 * mySize_y;
+				pa_y = pos_y + 0.5 * mySize_y;
+				p_x = pos_x;
+				pa_x = pos_x;
+			}
+			else
+			{
+				p_x += 0.5 * mySize_x;
+				pa_x += 0.5 * mySize_x;
+			}
+		}
 	}
 }
 
@@ -3873,13 +3916,23 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 			p = 2 - p;
 
 		//Draw the filling
-		HUD_Panel_DrawProgressBar(pos, 0, eX * p * mySize_x + eY * mySize_y, HUD_Panel_GetProgressBarColor("nexball"), cvar("hud_progressbar_alpha") * HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS), DRAWFLAG_NORMAL);
+		vector barsize;
+		float vertical;
+		if(mySize_x > mySize_y)
+		{
+			barsize = eX * p * mySize_x + eY * mySize_y;
+			vertical = 0;
+		}
+		else
+		{
+			barsize = eX * mySize_x + eY * p * mySize_y;
+			vertical = 1;
+		}
+		HUD_Panel_DrawProgressBar(pos, vertical, barsize, HUD_Panel_GetProgressBarColor("nexball"), cvar("hud_progressbar_alpha") * HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS), DRAWFLAG_NORMAL);
 	}
 
-	pos_x += 0.5 * mySize_x - 0.5 * mySize_y; //horizontal margin to the picture
-
 	if (stat_items & IT_KEY1)
-		drawpic_skin(pos, "nexball_carrying", '1 1 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS), DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "nexball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS), DRAWFLAG_NORMAL);
 }
 
 // Race/CTS HUD mod icons
@@ -3930,7 +3983,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	f = time - crecordtime_change_time;
 
 	if (f > 1) {
-		drawstring(pos, "Personal best ", '1 1 0' * 0.15 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS), DRAWFLAG_NORMAL);
+		drawstring_aspect(pos, "Personal best ", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, 0.15 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS), DRAWFLAG_NORMAL);
 		drawstring(pos + eY * 0.2 * mySize_y, TIME_ENCODED_TOSTRING(t), '1 1 0' * 0.2 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS), DRAWFLAG_NORMAL);
 	} else {
 		drawstring(pos, "Personal best ", '1 1 0' * 0.15 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_MODICONS), DRAWFLAG_NORMAL);

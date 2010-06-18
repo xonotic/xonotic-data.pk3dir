@@ -482,6 +482,28 @@ void drawpic_expanding_two(vector position, string pic, vector scale, vector rgb
 	drawpic(position, pic, scale, rgb, alpha * fadelerp, flag);
 }
 
+// drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
+void drawstring_aspect(vector pos, string text, vector sz, float fontsize, vector color, float alpha, float drawflag) {
+	vector textsize;
+	textsize = eX * stringwidth(text, FALSE, '1 1 0' * fontsize) + eY * fontsize;
+	
+	float textaspect;
+	textaspect = textsize_x/textsize_y;
+
+	vector oldsz;
+	oldsz = sz;
+	float aspect;
+	aspect = sz_x/sz_y;
+
+	if(aspect > textaspect) {
+		sz_x = sz_y * textaspect;
+		drawstring(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag);
+	} else {
+		sz_y = sz_x / textaspect; 
+		drawstring(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag);
+	}
+}
+
 vector drawfontscale;
 void drawstring_expanding(vector position, string text, vector scale, vector rgb, float alpha, float flag, float fadelerp)
 {
