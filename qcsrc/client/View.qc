@@ -551,6 +551,16 @@ void CSQC_UpdateView(float w, float h)
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
+	// draw the aiming reticle for weapons that use it (eg. Nex)
+	reticle_pos_x = 0;
+	reticle_pos_y = 0;
+	reticle_size_x = vid_conwidth;
+	reticle_size_y = vid_conheight;
+
+	if(cvar("cl_reticle_nex"))
+	if(button_attack2 && activeweapon == WEP_NEX)
+		drawpic(reticle_pos, "textures/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_nex"), DRAWFLAG_NORMAL);
+
 	// Draw the mouse cursor
 	// NOTE: drawpic must happen after R_RenderScene for some reason
 	//drawpic(getmousepos(), "gfx/cursor.tga", '11 14 0', '1 1 1', 1, 0);
