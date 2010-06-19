@@ -187,7 +187,7 @@ void HUDSetup_Join_Click(entity me, entity btn)
 {
 	if(! (gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
 	{
-		localcmd("map hudsetup", "\n");
+		localcmd("map hudsetup/hudsetup", "\n");
 	}
 	else
 		localcmd("togglemenu 0\n");
