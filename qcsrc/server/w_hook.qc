@@ -239,10 +239,6 @@ float w_hook(float req)
 	{
 		return self.ammo_cells >= cvar("g_balance_hook_secondary_ammo");
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "has run into #'s gravity bomb";
 	else if (req == WR_RESETPLAYER)
 	{
 		self.hook_refire = time;
@@ -265,6 +261,10 @@ float w_hook(float req)
 	{
 		precache_sound("weapons/hookbomb_impact.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "did the impossible";
+	else if (req == WR_KILLMESSAGE)
+		w_deathtypestring = "has run into #'s gravity bomb";
 	return TRUE;
 }
 #endif

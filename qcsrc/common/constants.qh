@@ -57,6 +57,7 @@ const float TE_CSQC_VOTE = 108;
 const float TE_CSQC_VOTERESET = 109;
 const float TE_CSQC_ANNOUNCE = 110;
 const float TE_CSQC_TARGET_MUSIC = 111;
+const float TE_CSQC_NOTIFY = 112;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -72,6 +73,9 @@ const float RACE_NET_SPEED_AWARD_BEST = 10; // all time best speed award, sent t
 const float RACE_NET_SERVER_RANKINGS = 11;
 const float RACE_NET_SERVER_STATUS = 12;
 const float RANKINGS_CNT = 15;
+
+const float CSQC_KILLNOTIFY = 0;
+const float CSQC_CENTERPRINT = 1;
 
 const float ENT_CLIENT = 0;
 const float ENT_CLIENT_DEAD = 1;
@@ -294,6 +298,9 @@ const float HUD_NORMAL = 0;
 const float HUD_SPIDERBOT = 10;
 const float HUD_WAKIZASHI = 11;
 const float HUD_RAPTOR    = 12;
+const vector eX = '1 0 0';
+const vector eY = '0 1 0';
+const vector eZ = '0 0 1';
 
 const float STAT_VEHICLESTAT_HEALTH  = 60;
 const float STAT_VEHICLESTAT_SHIELD  = 61;
@@ -478,6 +485,10 @@ float DEATH_WAKIGUN    = 10040;
 float DEATH_WAKIROCKET = 10041;
 float DEATH_WAKIBLOWUP = 10042;
 
+float DEATH_GENERIC = 10050;
+
+float DEATH_WEAPON = 10100;
+
 float DEATH_CUSTOM = 10300;
 
 
@@ -513,6 +524,38 @@ float WATERLEVEL_SUBMERGED = 3;
 
 float MAX_SHOT_DISTANCE = 32768;
 
+// CSQC centerprint/notify message types
+float MSG_SUICIDE = 0;
+float MSG_KILL = 1;
+float MSG_SPREE = 2;
+float MSG_KILL_ACTION = 3;
+float MSG_KILL_ACTION_SPREE = 4;
+float MSG_INFO = 5;
+
+float KILL_TEAM_RED = 10301;
+float KILL_TEAM_BLUE = 10302;
+float KILL_TEAM_SPREE = 10303;
+float KILL_FIRST_BLOOD = 10304;
+float KILL_FIRST_VICTIM = 10305;
+float KILL_TYPEFRAG = 10306;
+float KILL_TYPEFRAGGED = 10307;
+float KILL_FRAG = 10308;
+float KILL_FRAGGED = 10309;
+float KILL_SPREE = 10310;
+float KILL_END_SPREE = 10311;
+float KILL_SPREE_3 = 10312;
+float KILL_SPREE_5 = 10313;
+float KILL_SPREE_10 = 10314;
+float KILL_SPREE_15 = 10315;
+float KILL_SPREE_20 = 10316;
+float KILL_SPREE_25 = 10317;
+float KILL_SPREE_30 = 10318;
+
+float INFO_GOTFLAG = 10319;
+float INFO_PICKUPFLAG = 10320;
+float INFO_LOSTFLAG = 10321;
+float INFO_RETURNFLAG = 10322;
+
 // weapon requests
 float WR_SETUP		= 1; // (SVQC) setup weapon data
 float WR_THINK		= 2; // (SVQC) logic to run every frame
@@ -520,8 +563,27 @@ float WR_CHECKAMMO1	= 3; // (SVQC) checks ammo for weapon
 float WR_CHECKAMMO2	= 4; // (SVQC) checks ammo for weapon
 float WR_AIM		= 5; // (SVQC) runs bot aiming code for this weapon
 float WR_PRECACHE	= 6; // (CSQC and SVQC) precaches models/sounds used by this weapon
-float WR_SUICIDEMESSAGE = 7; // (SVQC) sets w_deathtypestring or leaves it alone (and may inspect w_deathtype for details)
-float WR_KILLMESSAGE    = 8; // (SVQC) sets w_deathtypestring or leaves it alone
+float WR_SUICIDEMESSAGE = 7; // (CSQC) sets w_deathtypestring or leaves it alone (and may inspect w_deathtype for details)
+float WR_KILLMESSAGE    = 8; // (CSQC) sets w_deathtypestring or leaves it alone
 float WR_RELOAD         = 9; // (SVQC) does not need to do anything
 float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
 float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
+
+
+float HUD_PANEL_WEAPONICONS	= 0;
+float HUD_PANEL_INVENTORY	= 1;
+float HUD_PANEL_POWERUPS	= 2;
+float HUD_PANEL_HEALTHARMOR	= 3;
+float HUD_PANEL_NOTIFY		= 4;
+float HUD_PANEL_TIMER		= 5;
+float HUD_PANEL_RADAR		= 6;
+float HUD_PANEL_SCORE		= 7;
+float HUD_PANEL_RACETIMER	= 8;
+float HUD_PANEL_VOTE		= 9;
+float HUD_PANEL_MODICONS	= 10;
+float HUD_PANEL_PRESSEDKEYS	= 11;
+float HUD_PANEL_CHAT		= 12;
+float HUD_PANEL_ENGINEINFO	= 13;
+float HUD_PANEL_NUM		= 14; // always last panel id + 1, please increment when adding a new panel
+
+float HUD_MENU_ENABLE		= 0;

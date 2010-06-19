@@ -1,8 +1,3 @@
-.float silent;
-
-float w_deathtype, w_issilent, w_random;
-vector w_org, w_backoff;
-
 void Ent_DamageInfo(float isNew)
 {
 	float dmg, rad, edge, thisdmg, forcemul;

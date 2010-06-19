@@ -15,7 +15,7 @@ ENDCLASS(TextSlider)
 #endif
 
 #ifdef IMPLEMENTATION
-string valueToIdentifierTextSlider(entity me, float val)
+string TextSlider_valueToIdentifier(entity me, float val)
 {
 	if(val >= me.nValues)
 		return "custom";
@@ -23,7 +23,7 @@ string valueToIdentifierTextSlider(entity me, float val)
 		return "custom";
 	return me.(valueIdentifiers[val]);
 }
-string valueToTextTextSlider(entity me, float val)
+string TextSlider_valueToText(entity me, float val)
 {
 	if(val >= me.nValues)
 		return "custom";
@@ -31,28 +31,28 @@ string valueToTextTextSlider(entity me, float val)
 		return "custom";
 	return me.(valueStrings[val]);
 }
-void setValueFromIdentifierTextSlider(entity me, string id)
+void TextSlider_setValueFromIdentifier(entity me, string id)
 {
 	float i;
 	for(i = 0; i < me.nValues; ++i)
 		if(me.valueToIdentifier(me, i) == id)
 		{
-			setValueSlider( me, i );
+			SUPER(TextSlider).setValue( me, i );
 			return;
 		}
-	setValueSlider( me, -1 );
+	SUPER(TextSlider).setValue( me, -1 );
 }
-string getIdentifierTextSlider(entity me)
+string TextSlider_getIdentifier(entity me)
 {
 	return me.valueToIdentifier(me, me.value);
 }
-void addValueTextSlider(entity me, string theString, string theIdentifier)
+void TextSlider_addValue(entity me, string theString, string theIdentifier)
 {
 	me.(valueStrings[me.nValues]) = theString;
 	me.(valueIdentifiers[me.nValues]) = theIdentifier;
 	me.nValues += 1;
 }
-void configureTextSliderValuesTextSlider(entity me, string theDefault)
+void TextSlider_configureTextSliderValues(entity me, string theDefault)
 {
 	me.configureSliderValues(me, 0, 0, me.nValues - 1, 1, 1, 1);
 	me.setValueFromIdentifier(me, theDefault);

@@ -26,18 +26,18 @@ entity makeXonoticCreditsList()
 	me.configureXonoticCreditsList(me);
 	return me;
 }
-void configureXonoticCreditsListXonoticCreditsList(entity me)
+void XonoticCreditsList_configureXonoticCreditsList(entity me)
 {
 	me.configureXonoticListBox(me);
 	// load the file
 	me.bufferIndex = buf_load("xonotic-credits.txt");
 	me.nItems = buf_getsize(me.bufferIndex);
 }
-void destroyXonoticCreditsList(entity me)
+void XonoticCreditsList_destroy(entity me)
 {
 	buf_del(me.bufferIndex);
 }
-void drawXonoticCreditsList(entity me)
+void XonoticCreditsList_draw(entity me)
 {
 	float i;
 	if(me.scrolling)
@@ -47,17 +47,17 @@ void drawXonoticCreditsList(entity me)
 		i = max(i, ceil(me.scrollPos / me.itemHeight));
 		me.setSelected(me, i);
 	}
-	drawListBox(me);
+	SUPER(XonoticCreditsList).draw(me);
 }
-void resizeNotifyXonoticCreditsList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticCreditsList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticCreditsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 }
-void drawListBoxItemXonoticCreditsList(entity me, float i, vector absSize, float isSelected)
+void XonoticCreditsList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	// layout: Ping, Credits name, Map name, NP, TP, MP
 	string s;
@@ -87,7 +87,7 @@ void drawListBoxItemXonoticCreditsList(entity me, float i, vector absSize, float
 	draw_CenterText(me.realUpperMargin * eY + 0.5 * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
 
-float keyDownXonoticCreditsList(entity me, float scan, float ascii, float shift)
+float XonoticCreditsList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	float i;
 	me.dragScrollTimer = time;
@@ -102,7 +102,7 @@ float keyDownXonoticCreditsList(entity me, float scan, float ascii, float shift)
 	else if(scan == K_DOWNARROW)
 		me.scrollPos = min(me.scrollPos + me.itemHeight, me.nItems * me.itemHeight - 1);
 	else
-		return keyDownListBox(me, scan, ascii, shift);
+		return SUPER(XonoticCreditsList).keyDown(me, scan, ascii, shift);
 
 	i = min(me.selectedItem, floor((me.scrollPos + 1) / me.itemHeight - 1));
 	i = max(i, ceil(me.scrollPos / me.itemHeight));

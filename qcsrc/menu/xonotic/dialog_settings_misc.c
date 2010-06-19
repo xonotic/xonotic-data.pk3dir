@@ -17,7 +17,7 @@ entity makeXonoticMiscSettingsTab()
 	me.configureDialog(me);
 	return me;
 }
-void fillXonoticMiscSettingsTab(entity me)
+void XonoticMiscSettingsTab_fill(entity me)
 {
 	entity e;
 	entity sk;

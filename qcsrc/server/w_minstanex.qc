@@ -232,10 +232,6 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "has been vaporized by";
 	else if (req == WR_RESETPLAYER)
 	{
 		self.minstanex_lasthit = 0;
@@ -258,6 +254,10 @@ float w_minstanex(float req)
 	{
 		precache_sound("weapons/neximpact.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "did the impossible";
+	else if (req == WR_KILLMESSAGE)
+		w_deathtypestring = "has been vaporized by";
 	return TRUE;
 }
 #endif

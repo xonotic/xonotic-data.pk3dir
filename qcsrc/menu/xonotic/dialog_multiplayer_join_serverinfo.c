@@ -45,7 +45,7 @@ void Join_Click(entity btn, entity me);
 #endif
 
 #ifdef IMPLEMENTATION
-void loadServerInfoXonoticServerInfoDialog(entity me, float i)
+void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 {
 	float m;
 	string s, typestr, versionstr, numh, maxp;
@@ -108,7 +108,7 @@ void loadServerInfoXonoticServerInfoDialog(entity me, float i)
 	me.pingLabel.setText(me.pingLabel, me.currentServerPing);
 }
 
-void fillXonoticServerInfoDialog(entity me)
+void XonoticServerInfoDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

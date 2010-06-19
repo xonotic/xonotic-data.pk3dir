@@ -290,7 +290,8 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 		dprint("FLAG: drop - owner is not carrying this flag??\n");
 		return;
 	}
-	bprint(p.netname, "^7 lost the ", e.netname, "\n");
+	//bprint(p.netname, "^7 lost the ", e.netname, "\n");
+	Send_KillNotification (p.netname, e.netname, "", INFO_LOSTFLAG, MSG_INFO);
 
 	if(penalty_receiver)
 		UpdateFrags(penalty_receiver, -ctf_score_value("penalty_suicidedrop"));
@@ -542,7 +543,8 @@ void FlagTouch()
 		other.flagcarried = self;
 		self.cnt = FLAG_CARRY;
 		self.angles = '0 0 0';
-		bprint(other.netname, "^7 got the ", self.netname, "\n");
+		//bprint(other.netname, "^7 got the ", self.netname, "\n");
+		Send_KillNotification (other.netname, self.netname, "", INFO_GOTFLAG, MSG_INFO);
 		UpdateFrags(other, ctf_score_value("score_pickup_base"));
 		self.dropperid = other.playerid;
 		PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
@@ -569,7 +571,8 @@ void FlagTouch()
 		if (other.team == self.team || (other.team != COLOR_TEAM1 && other.team != COLOR_TEAM2))
 		{
 			// return flag
-			bprint(other.netname, "^7 returned the ", self.netname, "\n");
+			Send_KillNotification (other.netname, self.netname, "", INFO_RETURNFLAG, MSG_INFO);
+			//bprint(other.netname, "^7 returned the ", self.netname, "\n");
 
 			// punish the player who last had it
 			FOR_EACH_PLAYER(player)
@@ -619,7 +622,8 @@ void FlagTouch()
 			self.owner = other;
 			other.flagcarried = self;
 			self.cnt = FLAG_CARRY;
-			bprint(other.netname, "^7 picked up the ", self.netname, "\n");
+			Send_KillNotification (other.netname, self.netname, "", INFO_PICKUPFLAG, MSG_INFO);
+			//bprint(other.netname, "^7 picked up the ", self.netname, "\n");
 
 			float f;
 			f = bound(0, (self.pain_finished - time) / cvar("g_ctf_flag_returntime"), 1);

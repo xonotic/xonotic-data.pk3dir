@@ -18,7 +18,7 @@ entity makeXonoticDemoBrowserTab()
 	me.configureDialog(me);
 	return me;
 }
-void fillXonoticDemoBrowserTab(entity me)
+void XonoticDemoBrowserTab_fill(entity me)
 {
 	entity e;
 	entity btn;

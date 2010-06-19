@@ -270,6 +270,9 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 
 void(string img, float a, string algn, float force1) drawBackground =
 {
+	if(main.mainNexposee.ModalController_state == 0)
+		return;
+
 	vector v;
 	float i, l;
 	string c;
@@ -759,8 +762,9 @@ void() m_shutdown =
 	m_hide();
 	for(e = NULL; (e = nextent(e)) != NULL; )
 	{
-		if(e.destroy)
-			e.destroy(e);
+		if(e.classname != "vtbl")
+			if(e.destroy)
+				e.destroy(e);
 	}
 };
 
@@ -792,7 +796,7 @@ void m_activate_window(entity wnd)
 		// nexposee (sorry for violating abstraction here)
 		par.selectedChild = wnd;
 		par.animationState = 1;
-		setFocusContainer(par, NULL);
+		Container_setFocus(par, NULL);
 	}
 	else if(par.instanceOfContainer)
 	{

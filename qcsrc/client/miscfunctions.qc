@@ -304,11 +304,11 @@ entity GetTeam(float Team, float add)
 
 void CSQC_CheckEngine()
 {
-	sbar_font = FONT_USER+1;
-	sbar_bigfont = FONT_USER+2;
+	hud_font = FONT_USER+1;
+	hud_bigfont = FONT_USER+2;
 }
 
-vector Sbar_GetFontsize(string cvarname)
+vector HUD_GetFontsize(string cvarname)
 {
 	vector v;
 	v = stov(cvar_string(cvarname));
@@ -320,10 +320,10 @@ vector Sbar_GetFontsize(string cvarname)
 	return v;
 }
 
-float Sbar_GetWidth(float teamcolumnwidth)
+float HUD_GetWidth(float teamcolumnwidth)
 {
 	float f;
-	f = cvar("sbar_width");
+	f = cvar("hud_width");
 	if(f == 0)
 		f = 640;
 	if(f < 320)
@@ -480,6 +480,28 @@ void drawpic_expanding_two(vector position, string pic, vector scale, vector rgb
 {
 	drawpic_expanding(position, pic, scale, rgb, alpha, flag, fadelerp);
 	drawpic(position, pic, scale, rgb, alpha * fadelerp, flag);
+}
+
+// drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
+void drawstring_aspect(vector pos, string text, vector sz, float fontsize, vector color, float alpha, float drawflag) {
+	vector textsize;
+	textsize = eX * stringwidth(text, FALSE, '1 1 0' * fontsize) + eY * fontsize;
+	
+	float textaspect;
+	textaspect = textsize_x/textsize_y;
+
+	vector oldsz;
+	oldsz = sz;
+	float aspect;
+	aspect = sz_x/sz_y;
+
+	if(aspect > textaspect) {
+		sz_x = sz_y * textaspect;
+		drawstring(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag);
+	} else {
+		sz_y = sz_x / textaspect; 
+		drawstring(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag);
+	}
 }
 
 vector drawfontscale;

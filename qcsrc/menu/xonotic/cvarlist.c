@@ -43,7 +43,7 @@ entity makeXonoticCvarList()
 	me.configureXonoticCvarList(me);
 	return me;
 }
-void configureXonoticCvarListXonoticCvarList(entity me)
+void XonoticCvarList_configureXonoticCvarList(entity me)
 {
 	me.configureXonoticListBox(me);
 
@@ -51,15 +51,15 @@ void configureXonoticCvarListXonoticCvarList(entity me)
 	buf_cvarlist(me.handle, "", "_");
 	me.nItems = buf_getsize(me.handle);
 }
-void destroyXonoticCvarList(entity me)
+void XonoticCvarList_destroy(entity me)
 {
 	buf_del(me.handle);
 }
-void setSelectedXonoticCvarList(entity me, float i)
+void XonoticCvarList_setSelected(entity me, float i)
 {
 	string s;
 
-	setSelectedListBox(me, i);
+	SUPER(XonoticCvarList).setSelected(me, i);
 	if(me.nItems == 0)
 		return;
 	
@@ -107,9 +107,9 @@ void CvarList_Filter_Change(entity box, entity me)
 
 	me.setSelected(me, 0);
 }
-void resizeNotifyXonoticCvarList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticCvarList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticCvarList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
@@ -122,7 +122,7 @@ void resizeNotifyXonoticCvarList(entity me, vector relOrigin, vector relSize, ve
 
 	me.setSelected(me, me.selectedItem);
 }
-void drawListBoxItemXonoticCvarList(entity me, float i, vector absSize, float isSelected)
+void XonoticCvarList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	string k, v, d;
 	float t;
@@ -155,9 +155,9 @@ void drawListBoxItemXonoticCvarList(entity me, float i, vector absSize, float is
 	draw_Text(me.realUpperMargin * eY + me.columnValueOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
 
-float keyDownXonoticCvarList(entity me, float scan, float ascii, float shift)
+float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(keyDownListBox(me, scan, ascii, shift))
+	if(SUPER(XonoticCvarList).keyDown(me, scan, ascii, shift))
 		return 1;
 	else if(!me.controlledTextbox)
 		return 0;

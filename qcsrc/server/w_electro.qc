@@ -285,32 +285,6 @@ float w_electro(float req)
 		return self.ammo_cells >= cvar("g_balance_electro_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_cells >= cvar("g_balance_electro_secondary_ammo");
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "could not remember where they put plasma";
-		else
-			w_deathtypestring = "played with plasma";
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			if(w_deathtype & HITTYPE_SPLASH) // unchecked: BOUNCE
-				w_deathtypestring = "just noticed #'s blue ball";
-			else // unchecked: BOUNCE
-				w_deathtypestring = "got in touch with #'s blue ball";
-		}
-		else
-		{
-			if(w_deathtype & HITTYPE_BOUNCE) // combo
-				w_deathtypestring = "felt the electrifying air of #'s combo";
-			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = "got too close to #'s blue beam";
-			else
-				w_deathtypestring = "was blasted by #'s blue beam";
-		}
-	}
 	else if (req == WR_RESETPLAYER)
 	{
 		self.electro_secondarytime = time;
@@ -352,6 +326,32 @@ float w_electro(float req)
 	{
 		precache_sound("weapons/electro_impact.wav");
 		precache_sound("weapons/electro_impact_combo.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			w_deathtypestring = "could not remember where they put plasma";
+		else
+			w_deathtypestring = "played with plasma";
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			if(w_deathtype & HITTYPE_SPLASH) // unchecked: BOUNCE
+				w_deathtypestring = "just noticed #'s blue ball";
+			else // unchecked: BOUNCE
+				w_deathtypestring = "got in touch with #'s blue ball";
+		}
+		else
+		{
+			if(w_deathtype & HITTYPE_BOUNCE) // combo
+				w_deathtypestring = "felt the electrifying air of #'s combo";
+			else if(w_deathtype & HITTYPE_SPLASH)
+				w_deathtypestring = "got too close to #'s blue beam";
+			else
+				w_deathtypestring = "was blasted by #'s blue beam";
+		}
 	}
 	return TRUE;
 }
