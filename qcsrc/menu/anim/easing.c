@@ -30,12 +30,12 @@ entity makeEasing(entity obj, void(entity, float) objSetter, float(float, float,
 	return me;
 }
 
-float calcValueEasing(entity me, float tickTime, float animDuration, float animStart, float animDelta)
+float Easing_calcValue(entity me, float tickTime, float animDuration, float animStart, float animDelta)
 {
 	return me.math(tickTime, animDuration, animStart, animDelta);
 }
 
-void setMathEasing(entity me, float(float, float, float, float) func)
+void Easing_setMath(entity me, float(float, float, float, float) func)
 {
 	me.math = func;
 }

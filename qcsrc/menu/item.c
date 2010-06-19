@@ -26,76 +26,76 @@ ENDCLASS(Item)
 #endif
 
 #ifdef IMPLEMENTATION
-void destroyItem(entity me)
+void Item_destroy(entity me)
 {
 	// free memory associated with me
 }
 
-void relinquishFocusItem(entity me)
+void Item_relinquishFocus(entity me)
 {
 	if(me.parent)
 		if(me.parent.instanceOfContainer)
 			me.parent.setFocus(me.parent, NULL);
 }
 
-void resizeNotifyItem(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void Item_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.origin = absOrigin;
 	me.size = absSize;
 	// me.tooltip = "The quick brown fox jumped over the lazy sleeping dog's back then sat on a tack. Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.";
 }
 
-void drawItem(entity me)
+void Item_draw(entity me)
 {
 }
 
-void showNotifyItem(entity me)
+void Item_showNotify(entity me)
 {
 }
 
-void hideNotifyItem(entity me)
+void Item_hideNotify(entity me)
 {
 }
 
-float keyDownItem(entity me, float scan, float ascii, float shift)
-{
-	return 0; // unhandled
-}
-
-float keyUpItem(entity me, float scan, float ascii, float shift)
+float Item_keyDown(entity me, float scan, float ascii, float shift)
 {
 	return 0; // unhandled
 }
 
-float mouseMoveItem(entity me, vector pos)
+float Item_keyUp(entity me, float scan, float ascii, float shift)
 {
 	return 0; // unhandled
 }
 
-float mousePressItem(entity me, vector pos)
+float Item_mouseMove(entity me, vector pos)
 {
 	return 0; // unhandled
 }
 
-float mouseDragItem(entity me, vector pos)
+float Item_mousePress(entity me, vector pos)
 {
 	return 0; // unhandled
 }
 
-float mouseReleaseItem(entity me, vector pos)
+float Item_mouseDrag(entity me, vector pos)
 {
 	return 0; // unhandled
 }
 
-void focusEnterItem(entity me)
+float Item_mouseRelease(entity me, vector pos)
+{
+	return 0; // unhandled
+}
+
+void Item_focusEnter(entity me)
 {
 }
 
-void focusLeaveItem(entity me)
+void Item_focusLeave(entity me)
 {
 }
 
-string toStringItem(entity me)
+string Item_toString(entity me)
 {
 	return string_null;
 }

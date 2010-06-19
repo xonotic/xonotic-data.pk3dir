@@ -13,12 +13,12 @@ ENDCLASS(XonoticAdvancedDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyXonoticAdvancedDialog(entity me)
+void XonoticAdvancedDialog_showNotify(entity me)
 {
 	loadAllCvars(me);
 }
 
-void fillXonoticAdvancedDialog(entity me)
+void XonoticAdvancedDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);
@@ -69,10 +69,10 @@ void fillXonoticAdvancedDialog(entity me)
 			e.onClickEntity = me;
 }
 
-void closeXonoticAdvancedDialog(entity me)
+void XonoticAdvancedDialog_close(entity me)
 {
 	if(me.refilterEntity)
 		me.refilterEntity.refilter(me.refilterEntity);
-	closeDialog(me);
+	SUPER(XonoticAdvancedDialog).close(me);
 }
 #endif

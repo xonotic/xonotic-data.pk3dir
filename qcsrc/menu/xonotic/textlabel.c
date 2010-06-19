@@ -17,12 +17,12 @@ entity makeXonoticTextLabel(float theAlign, string theText)
 	me.configureXonoticTextLabel(me, theAlign, theText);
 	return me;
 }
-void configureXonoticTextLabelXonoticTextLabel(entity me, float theAlign, string theText)
+void XonoticTextLabel_configureXonoticTextLabel(entity me, float theAlign, string theText)
 {
 	me.configureLabel(me, theText, me.fontSize, theAlign);
 }
-void drawXonoticTextLabel(entity me)
+void XonoticTextLabel_draw(entity me)
 {
-	drawLabel(me);
+	SUPER(XonoticTextLabel).draw(me);
 }
 #endif

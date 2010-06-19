@@ -56,7 +56,7 @@ entity makeXonoticCheckBoxEx(float theYesValue, float theNoValue, string theCvar
 	me.configureXonoticCheckBox(me, theYesValue, theNoValue, theCvar, theText);
 	return me;
 }
-void configureXonoticCheckBoxXonoticCheckBox(entity me, float theYesValue, float theNoValue, string theCvar, string theText)
+void XonoticCheckBox_configureXonoticCheckBox(entity me, float theYesValue, float theNoValue, string theCvar, string theText)
 {
 	me.yesValue = theYesValue;
 	me.noValue = theNoValue;
@@ -69,7 +69,7 @@ void configureXonoticCheckBoxXonoticCheckBox(entity me, float theYesValue, float
 	}
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
 }
-void setCheckedXonoticCheckBox(entity me, float val)
+void XonoticCheckBox_setChecked(entity me, float val)
 {
 	if(val != me.checked)
 	{
@@ -77,7 +77,7 @@ void setCheckedXonoticCheckBox(entity me, float val)
 		me.saveCvars(me);
 	}
 }
-void loadCvarsXonoticCheckBox(entity me)
+void XonoticCheckBox_loadCvars(entity me)
 {
 	float m, d;
 
@@ -88,7 +88,7 @@ void loadCvarsXonoticCheckBox(entity me)
 	d = (cvar(me.cvarName) - m) / (me.yesValue - m);
 	me.checked = (d > 0);
 }
-void saveCvarsXonoticCheckBox(entity me)
+void XonoticCheckBox_saveCvars(entity me)
 {
 	if not(me.cvarName)
 		return;

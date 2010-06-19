@@ -18,7 +18,7 @@ entity makeXonoticNetworkSettingsTab()
 	return me;
 }
 
-void fillXonoticNetworkSettingsTab(entity me)
+void XonoticNetworkSettingsTab_fill(entity me)
 {
 	entity e;
 

@@ -22,9 +22,9 @@ ENDCLASS(XonoticTab)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyXonoticTab(entity me)
+void XonoticTab_showNotify(entity me)
 {
 	loadAllCvars(me);
-	showNotifyContainer(me);
+	SUPER(XonoticTab).showNotify(me);
 }
 #endif

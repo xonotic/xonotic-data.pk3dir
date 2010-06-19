@@ -42,7 +42,7 @@ entity makeXonoticPlayerModelSelector()
 #define BUFMODELS_DESC 4
 #define BUFMODELS_COUNT 5
 
-void configureXonoticPlayerModelSelectorXonoticPlayerModelSelector(entity me)
+void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 {
 	float sortbuf, glob, i;
 	string fn;
@@ -87,13 +87,13 @@ void configureXonoticPlayerModelSelectorXonoticPlayerModelSelector(entity me)
 	get_model_parameters(string_null, 0);
 	me.loadCvars(me);
 }
-void destroyXonoticPlayerModelSelector(entity me)
+void XonoticPlayerModelSelector_destroy(entity me)
 {
 	buf_del(me.bufModels);
 	me.bufModels = -1;
 }
 
-void loadCvarsXonoticPlayerModelSelector(entity me)
+void XonoticPlayerModelSelector_loadCvars(entity me)
 {
 	float i;
 	if(me.currentModel)
@@ -112,7 +112,7 @@ void loadCvarsXonoticPlayerModelSelector(entity me)
 	me.go(me, 0); // this will set the other vars for currentSkin and currentModel
 }
 
-void goXonoticPlayerModelSelector(entity me, float d)
+void XonoticPlayerModelSelector_go(entity me, float d)
 {
 	me.idxModels = mod(me.idxModels + d + me.numModels, me.numModels);
 
@@ -149,19 +149,19 @@ void PlayerModelSelector_Prev_Click(entity btn, entity me)
 	me.saveCvars(me);
 }
 
-void saveCvarsXonoticPlayerModelSelector(entity me)
+void XonoticPlayerModelSelector_saveCvars(entity me)
 {
 	// we can't immediately apply here because of flood control
 	cvar_set("_cl_playermodel", me.currentModel);
 	cvar_set("_cl_playerskin", ftos(me.currentSkin));
 }
 
-void drawXonoticPlayerModelSelector(entity me)
+void XonoticPlayerModelSelector_draw(entity me)
 {
 	float i, n;
 	vector o;
 
-	drawImage(me);
+	SUPER(XonoticPlayerModelSelector).draw(me);
 
 	// draw text on the image, handle \n in the description
 	draw_CenterText('0.5 0 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);
@@ -174,9 +174,9 @@ void drawXonoticPlayerModelSelector(entity me)
 	}
 }
 
-void resizeNotifyXonoticPlayerModelSelector(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticPlayerModelSelector_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyImage(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticPlayerModelSelector).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / absSize_y;
 	me.realFontSize_x = me.fontSize / absSize_x;
 }

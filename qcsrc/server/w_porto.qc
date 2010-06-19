@@ -269,10 +269,6 @@ float w_porto(float req)
 	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_PORTO);
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "felt # doing the impossible to him";
 	else if (req == WR_RESETPLAYER)
 	{
 		self.porto_current = world;
@@ -291,6 +287,10 @@ float w_porto(float req)
 	{
 		// nothing to do
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "did the impossible";
+	else if (req == WR_KILLMESSAGE)
+		w_deathtypestring = "felt # doing the impossible to him";
 	return TRUE;
 }
 #endif

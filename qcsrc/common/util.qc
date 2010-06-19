@@ -1948,3 +1948,25 @@ float get_model_parameters(string m, float sk)
 
 	return 1;
 }
+
+// return name of given panel id
+string HUD_Panel_GetName(float id)
+{
+	switch(id) {
+		case HUD_PANEL_WEAPONICONS: return "weaponicons"; break;
+		case HUD_PANEL_INVENTORY: return "inventory"; break;
+		case HUD_PANEL_POWERUPS: return "powerups"; break;
+		case HUD_PANEL_HEALTHARMOR: return "healtharmor"; break;
+		case HUD_PANEL_NOTIFY: return "notify"; break;
+		case HUD_PANEL_TIMER: return "timer"; break;
+		case HUD_PANEL_RADAR: return "radar"; break;
+		case HUD_PANEL_SCORE: return "score"; break;
+		case HUD_PANEL_RACETIMER: return "racetimer"; break;
+		case HUD_PANEL_VOTE: return "vote"; break;
+		case HUD_PANEL_MODICONS: return "modicons"; break;
+		case HUD_PANEL_PRESSEDKEYS: return "pressedkeys"; break;
+		case HUD_PANEL_CHAT: return "chat"; break;
+		case HUD_PANEL_ENGINEINFO: return "engineinfo"; break;
+		default: return "";
+	}
+}

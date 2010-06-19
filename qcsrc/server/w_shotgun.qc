@@ -140,12 +140,6 @@ float w_shotgun(float req)
 		return self.ammo_shells >= cvar("g_balance_shotgun_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_shells >= cvar("g_balance_shotgun_secondary_ammo") * 3;
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
-	{
-		w_deathtypestring = "was gunned by"; // unchecked: SECONDARY
-	}
 	return TRUE;
 };
 #endif
@@ -172,6 +166,12 @@ float w_shotgun(float req)
 		precache_sound("weapons/ric1.wav");
 		precache_sound("weapons/ric2.wav");
 		precache_sound("weapons/ric3.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "did the impossible";
+	else if (req == WR_KILLMESSAGE)
+	{
+		w_deathtypestring = "was gunned by"; // unchecked: SECONDARY
 	}
 	return TRUE;
 }

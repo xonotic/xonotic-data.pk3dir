@@ -43,29 +43,29 @@ void register_weapons_done()
 	dummy_weapon_info.model2 = "";
 
 	float i;
-	weaponpriority_hudselector_0 = "";
+	weaponorder_byid = "";
 	for(i = 24; i >= 1; --i)
 		if(weapon_info[i-1])
-			weaponpriority_hudselector_0 = strcat(weaponpriority_hudselector_0, " ", ftos(i));
+			weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
 
 	float imp;
-	weaponpriority_hudselector_1 = "";
+	weaponorder_byimpulse = "";
 	for(i = 1; i <= 24; ++i)
 	{
 		wi = weapon_info[i-1];
 		if(wi && wi.impulse == 0)
-			weaponpriority_hudselector_1 = strcat(weaponpriority_hudselector_1, " ", ftos(i));
+			weaponorder_byimpulse = strcat(weaponorder_byimpulse, " ", ftos(i));
 	}
 	for(imp = 9; imp > 0; --imp)
 		for(i = 1; i <= 24; ++i)
 		{
 			wi = weapon_info[i-1];
 			if(wi && wi.impulse == imp)
-				weaponpriority_hudselector_1 = strcat(weaponpriority_hudselector_1, " ", ftos(i));
+				weaponorder_byimpulse = strcat(weaponorder_byimpulse, " ", ftos(i));
 		}
 
-	weaponpriority_hudselector_0 = strzone(substring(weaponpriority_hudselector_0, 1, strlen(weaponpriority_hudselector_0) - 1));
-	weaponpriority_hudselector_1 = strzone(substring(weaponpriority_hudselector_1, 1, strlen(weaponpriority_hudselector_1) - 1));
+	weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
+	weaponorder_byimpulse = strzone(substring(weaponorder_byimpulse, 1, strlen(weaponorder_byimpulse) - 1));
 }
 entity get_weaponinfo(float id)
 {

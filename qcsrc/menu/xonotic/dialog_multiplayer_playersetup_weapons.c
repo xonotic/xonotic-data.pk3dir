@@ -13,15 +13,15 @@ ENDCLASS(XonoticWeaponsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyXonoticWeaponsDialog(entity me)
+void XonoticWeaponsDialog_showNotify(entity me)
 {
         loadAllCvars(me);
 }
-string toStringXonoticWeaponsDialog(entity me)
+string XonoticWeaponsDialog_toString(entity me)
 {
 	return me.weaponsList.toString(me.weaponsList);
 }
-void fillXonoticWeaponsDialog(entity me)
+void XonoticWeaponsDialog_fill(entity me)
 {
 	entity e;
 

@@ -96,7 +96,7 @@ entity makeXonoticCampaignList()
 	me.configureXonoticCampaignList(me);
 	return me;
 }
-void configureXonoticCampaignListXonoticCampaignList(entity me)
+void XonoticCampaignList_configureXonoticCampaignList(entity me)
 {
 	me.configureXonoticListBox(me);
 	me.campaignGlob = search_begin("maps/campaign*.txt", TRUE, TRUE);
@@ -104,13 +104,13 @@ void configureXonoticCampaignListXonoticCampaignList(entity me)
 	me.campaignGo(me, 0); // takes care of enabling/disabling buttons too
 }
 
-void destroyXonoticCampaignList(entity me)
+void XonoticCampaignList_destroy(entity me)
 {
 	if(me.campaignGlob >= 0)
 		search_end(me.campaignGlob);
 }
 
-void loadCvarsXonoticCampaignList(entity me)
+void XonoticCampaignList_loadCvars(entity me)
 {
 	// read campaign cvars
 	if(campaign_name)
@@ -133,7 +133,7 @@ void loadCvarsXonoticCampaignList(entity me)
 		me.labelTitle.setText(me.labelTitle, campaign_title);
 }
 
-void saveCvarsXonoticCampaignList(entity me)
+void XonoticCampaignList_saveCvars(entity me)
 {
 	// write campaign cvars
 	// no reason to do this!
@@ -141,7 +141,7 @@ void saveCvarsXonoticCampaignList(entity me)
 	// cvar_set(me.cvarName, ftos(me.campaignIndex)); // NOTE: only server QC does that!
 }
 
-void campaignGoXonoticCampaignList(entity me, float step)
+void XonoticCampaignList_campaignGo(entity me, float step)
 {
 	float canNext, canPrev;
 	string s;
@@ -203,17 +203,17 @@ void MultiCampaign_Prev(entity btn, entity me)
 	me.campaignGo(me, -1);
 }
 
-void drawXonoticCampaignList(entity me)
+void XonoticCampaignList_draw(entity me)
 {
 	if(cvar(me.cvarName) != me.campaignIndex || cvar_string("g_campaign_name") != campaign_name)
 		me.loadCvars(me);
-	drawListBox(me);
+	SUPER(XonoticCampaignList).draw(me);
 }
 
-void resizeNotifyXonoticCampaignList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticCampaignList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.itemAbsSize = '0 0 0';
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticCampaignList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
@@ -233,7 +233,7 @@ void resizeNotifyXonoticCampaignList(entity me, vector relOrigin, vector relSize
 
 	rewrapCampaign(me.columnNameSize, me.rowsPerItem - 3, me.emptyLineHeight, me.realFontSize);
 }
-void clickListBoxItemXonoticCampaignList(entity me, float i, vector where)
+void XonoticCampaignList_clickListBoxItem(entity me, float i, vector where)
 {
 	if(i == me.lastClickedMap)
 		if(time < me.lastClickedTime + 0.3)
@@ -246,7 +246,7 @@ void clickListBoxItemXonoticCampaignList(entity me, float i, vector where)
 	me.lastClickedMap = i;
 	me.lastClickedTime = time;
 }
-void drawListBoxItemXonoticCampaignList(entity me, float i, vector absSize, float isSelected)
+void XonoticCampaignList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	string s;
 	float p;
@@ -307,18 +307,18 @@ void CampaignList_LoadMap(entity btn, entity me)
 	CampaignSetup(me.selectedItem);
 }
 
-void setSelectedXonoticCampaignList(entity me, float i)
+void XonoticCampaignList_setSelected(entity me, float i)
 {
 	// prevent too late items from being played
-	setSelectedListBox(me, min(i, me.campaignIndex));
+	SUPER(XonoticCampaignList).setSelected(me, min(i, me.campaignIndex));
 }
 
-float keyDownXonoticCampaignList(entity me, float scan, float ascii, float shift)
+float XonoticCampaignList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	if(scan == K_ENTER || scan == K_SPACE)
 		CampaignList_LoadMap(me, me);
 	else
-		return keyDownListBox(me, scan, ascii, shift);
+		return SUPER(XonoticCampaignList).keyDown(me, scan, ascii, shift);
 	return 1;
 }
 #endif

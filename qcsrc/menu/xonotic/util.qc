@@ -393,3 +393,11 @@ string resolvemod(string m)
 	else
 		return m;
 }
+
+string HUD_Panel_GetSettingName(float theSetting)
+{
+	switch(theSetting) {
+		case HUD_MENU_ENABLE: return ""; break;
+		default: return "";
+	}
+}

@@ -178,12 +178,6 @@ float w_laser(float req)
 		return TRUE;
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "lasered themself to hell";
-	else if (req == WR_KILLMESSAGE)
-	{
-		w_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
-	}
 	return TRUE;
 };
 #endif
@@ -201,6 +195,12 @@ float w_laser(float req)
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/laserimpact.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "lasered themself to hell";
+	else if (req == WR_KILLMESSAGE)
+	{
+		w_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
 	}
 	return TRUE;
 }

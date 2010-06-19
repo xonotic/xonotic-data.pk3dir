@@ -17,11 +17,11 @@ entity makeXonoticTabController(float theRows)
 	me.configureXonoticTabController(me, theRows);
 	return me;
 }
-void configureXonoticTabControllerXonoticTabController(entity me, float theRows)
+void XonoticTabController_configureXonoticTabController(entity me, float theRows)
 {
 	me.rows = theRows;
 }
-entity makeTabButtonXonoticTabController(entity me, string theTitle, entity tab)
+entity XonoticTabController_makeTabButton(entity me, string theTitle, entity tab)
 {
 	entity b;
 	if(me.rows != tab.rows)

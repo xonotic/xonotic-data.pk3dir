@@ -86,12 +86,15 @@ void CSQC_Init(void)
 	// localcmd("alias order \"cmd order $*\""); enable if ctf-command thingy is used
 	//registercmd("ctf_menu");
 	registercmd("ons_map");
+	registercmd("hud_configure");
+	registercmd("hud_save");
 	//registercmd("menu_action");
 
 	registercmd("+button3");
 	registercmd("-button3");
 	registercmd("+button4");
 	registercmd("-button4");
+	registercmd("+showscores");registercmd("-showscores");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
 
 #ifndef CAMERATEST
@@ -109,14 +112,14 @@ void CSQC_Init(void)
 #ifndef CAMERATEST
 	}
 #endif
-	registercvar("sbar_usecsqc", "1");
-	registercvar("sbar_columns", "default", CVAR_SAVE);
+	registercvar("hud_usecsqc", "1");
+	registercvar("scoreboard_columns", "default", CVAR_SAVE);
 
 	gametype = 0;
 
-	// sbar_fields uses strunzone on the titles!
-	for(i = 0; i < MAX_SBAR_FIELDS; ++i)
-		sbar_title[i] = strzone("(null)");
+	// hud_fields uses strunzone on the titles!
+	for(i = 0; i < MAX_HUD_FIELDS; ++i)
+		hud_title[i] = strzone("(null)");
 
 	postinit = false;
 
@@ -126,8 +129,6 @@ void CSQC_Init(void)
 	players = Sort_Spawn();
 
 	GetTeam(COLOR_SPECTATOR, true); // add specs first
-
-	cvar_clientsettemp("_supports_weaponpriority", "1");
 
 	RegisterWeapons();
 
@@ -325,9 +326,9 @@ void Playerchecker_Think()
 				e.ping_packetloss = 0;
 				e.ping_movementloss = 0;
 				//e.gotscores = 0; // we might already have the scores...
-				SetTeam(e, GetPlayerColor(i)); // will not hurt; later updates come with Sbar_UpdatePlayerTeams
+				SetTeam(e, GetPlayerColor(i)); // will not hurt; later updates come with HUD_UpdatePlayerTeams
 				RegisterPlayer(e);
-				Sbar_UpdatePlayerPos(e);
+				HUD_UpdatePlayerPos(e);
 			}
 		}
 	}
@@ -339,7 +340,7 @@ void TrueAim_Init();
 void PostInit(void)
 {
 	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
-	localcmd(strcat("\nsbar_columns_set ", cvar_string("sbar_columns"), ";\n"));
+	localcmd(strcat("\nscoreboard_columns_set ", cvar_string("scoreboard_columns"), ";\n"));
 
 	entity playerchecker;
 	playerchecker = spawn();
@@ -355,8 +356,8 @@ void PostInit(void)
 // CSQC_ConsoleCommand : Used to parse commands in the console that have been registered with the "registercmd" function
 // Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
 float button_zoom;
-void Cmd_Sbar_SetFields(float);
-void Cmd_Sbar_Help(float);
+void Cmd_HUD_SetFields(float);
+void Cmd_HUD_Help(float);
 float CSQC_ConsoleCommand(string strMessage)
 {
 	float argc;
@@ -368,7 +369,18 @@ float CSQC_ConsoleCommand(string strMessage)
 	local string strCmd;
 	strCmd = argv(0);
 
-	if(strCmd == "+button4") { // zoom
+	if(strCmd == "hud_configure") { // config hud
+		cvar_set("_hud_configure", ftos(!cvar("_hud_configure")));
+		return true;
+	} else if(strCmd == "hud_save") { // save hud config
+		if(argv(1) == "" || argv(2)) {
+			print("Usage:\n");
+			print("hud_save configname   (saves to hud_skinname_configname.cfg)\n");
+		}
+		else
+			HUD_Panel_ExportCfg(argv(1));
+		return true;
+	} else if(strCmd == "+button4") { // zoom
 		// return false, because the message shall be sent to the server anyway (for demos/speccing)
 		if(ignore_plus_zoom)
 		{
@@ -392,16 +404,16 @@ float CSQC_ConsoleCommand(string strMessage)
 		button_attack2 = 0;
 		return false;
 	} else if(strCmd == "+showscores") {
-		sb_showscores = true;
+		scoreboard_showscores = true;
 		return true;
 	} else if(strCmd == "-showscores") {
-		sb_showscores = false;
+		scoreboard_showscores = false;
 		return true;
 	} else if(strCmd == "+showaccuracy") {
-		sb_showaccuracy = true;
+		scoreboard_showaccuracy = true;
 		return true;
 	} else if(strCmd == "-showaccuracy") {
-		sb_showaccuracy = false;
+		scoreboard_showaccuracy = false;
 		return true;
 	}
 
@@ -509,9 +521,8 @@ void GameCommand(string msg)
 	{
 		print("Usage: cl_cmd COMMAND..., where possible commands are:\n");
 		print("  settemp cvar value\n");
-		print("  radar\n");
-		print("  sbar_columns_set ...\n");
-		print("  sbar_columns_help\n");
+		print("  scoreboard_columns_set ...\n");
+		print("  scoreboard_columns_help\n");
 		GameCommand_Generic("help");
 		return;
 	}
@@ -527,14 +538,11 @@ void GameCommand(string msg)
 	else if(cmd == "settemp") {
 		cvar_clientsettemp(argv(1), argv(2));
 	}
-	else if(cmd == "radar") {
-		ons_showmap = !ons_showmap;
+	else if(cmd == "scoreboard_columns_set") {
+		Cmd_HUD_SetFields(argc);
 	}
-	else if(cmd == "sbar_columns_set") {
-		Cmd_Sbar_SetFields(argc);
-	}
-	else if(cmd == "sbar_columns_help") {
-		Cmd_Sbar_Help(argc);
+	else if(cmd == "scoreboard_columns_help") {
+		Cmd_HUD_Help(argc);
 	}
 #ifdef BLURTEST
 	else if(cmd == "blurtest") {
@@ -589,15 +597,15 @@ void GameCommand(string msg)
 	}
 	else if(cmd == "sendcvar") {
 		// W_FixWeaponOrder will trash argv, so save what we need.
-		string cvar;
-		cvar = strzone(argv(1));
-		s = cvar_string(cvar);
-		if(cvar == "cl_weaponpriority")
+		string thiscvar;
+		thiscvar = strzone(argv(1));
+		s = cvar_string(thiscvar);
+		if(thiscvar == "cl_weaponpriority")
 			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
-		else if(substring(cvar, 0, 17) == "cl_weaponpriority" && strlen(cvar) == 18)
+		else if(substring(thiscvar, 0, 17) == "cl_weaponpriority" && strlen(thiscvar) == 18)
 			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
-		localcmd("cmd sentcvar ", cvar, " \"", s, "\"\n");
-		strunzone(cvar);
+		localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
+		strunzone(thiscvar);
 	}
 	else if(cmd == "spawn") {
 		s = argv(1);
@@ -627,6 +635,9 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	local float bSkipKey;
 	bSkipKey = false;
+
+	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
@@ -678,7 +689,7 @@ void Ent_ReadPlayerScore()
 	float isNew;
 	entity o;
 
-	// damnit -.- don't want to go change every single .sv_entnum in sbar.qc AGAIN
+	// damnit -.- don't want to go change every single .sv_entnum in hud.qc AGAIN
 	// (no I've never heard of M-x replace-string, sed, or anything like that)
 	isNew = !self.owner; // workaround for DP bug
 	n = ReadByte()-1;
@@ -724,7 +735,7 @@ void Ent_ReadPlayerScore()
 		}
 
 	if(o.sort_prev)
-		Sbar_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
+		HUD_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
 
 	self.entremove = Ent_RemovePlayerScore;
 }
@@ -755,7 +766,7 @@ void Ent_ReadTeamScore()
 				o.(teamscores[i]) = ReadChar();
 		}
 
-	Sbar_UpdateTeamPos(o);
+	HUD_UpdateTeamPos(o);
 }
 
 void Net_Reset()
@@ -769,7 +780,7 @@ void Ent_ClientData()
 
 	f = ReadByte();
 
-	sb_showscores_force = (f & 1);
+	scoreboard_showscores_force = (f & 1);
 
 	if(f & 2)
 	{
@@ -949,9 +960,6 @@ void Gamemode_Init()
 		precache_pic("gfx/ons-cp-blue.tga");
 		precache_pic("gfx/ons-frame.tga");
 		precache_pic("gfx/ons-frame-team.tga");
-	} else if(gametype == GAME_KEYHUNT) {
-		precache_pic("gfx/sb_key_carrying");
-		precache_pic("gfx/sb_key_carrying_outline");
 	}
 
 	if not(isdemo())
@@ -1003,7 +1011,7 @@ void Ent_ScoresInfo()
 		teamscores_label[i] = strzone(ReadString());
 		teamscores_flags[i] = ReadByte();
 	}
-	Sbar_InitScores();
+	HUD_InitScores();
 	Gamemode_Init();
 }
 
@@ -1229,6 +1237,20 @@ void Net_VoteDialogReset() {
 	vote_active = 0;
 }
 
+void Net_Notify() {
+	float type;
+	type = ReadByte();
+
+	if(type == CSQC_KILLNOTIFY)
+	{
+		HUD_KillNotify(ReadString(), ReadString(), ReadString(), ReadShort(), ReadByte());
+	}
+	else if(type == CSQC_CENTERPRINT)
+	{
+		HUD_Centerprint(ReadString(), ReadString(), ReadShort(), ReadByte());
+	}
+}
+
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1295,6 +1317,10 @@ float CSQC_Parse_TempEntity()
 			announce_snd = strzone(ReadString());
 			bHandled = true;
 			break;
+		case TE_CSQC_NOTIFY:
+			Net_Notify();
+			bHandled = true;
+			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;
@@ -1309,7 +1335,7 @@ string getcommandkey(string text, string command)
 	string keys;
 	float n, j, k, l;
 
-	if (!sbar_showbinds)
+	if (!hud_showbinds)
 		return text;
 
 	keys = db_get(binddb, command);
@@ -1327,7 +1353,7 @@ string getcommandkey(string text, string command)
 					keys = strcat(keys, ", ", keynumtostring(k));
 
 				++l;
-				if (sbar_showbinds_limit > 0 && sbar_showbinds_limit >= l) break;
+				if (hud_showbinds_limit > 0 && hud_showbinds_limit >= l) break;
 			}
 
 		}
@@ -1335,12 +1361,12 @@ string getcommandkey(string text, string command)
 	}
 
 	if ("" == keys) {
-		if (sbar_showbinds > 1)
+		if (hud_showbinds > 1)
 			return strcat(text, " (not bound)");
 		else
 			return text;
 	}
-	else if (sbar_showbinds > 1)
+	else if (hud_showbinds > 1)
 		return strcat(text, " (", keys, ")");
 	else
 		return keys;
