@@ -3,6 +3,7 @@ vector panel_click_distance; // mouse cursor distance from the top left corner o
 vector panel_click_resizeorigin; // coordinates for opposite point when resizing
 float resizeCorner; // 1 = topleft, 2 = topright, 3 = bottomleft, 4 = bottomright
 float highlightedPanel;
+float highlightedPanel_prev;
 float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 0.25;
