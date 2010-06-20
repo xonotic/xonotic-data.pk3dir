@@ -3230,7 +3230,7 @@ void HUD_Score(void)
 	}
 
 	float score, distribution, leader;
-	float score_len, distr_len;
+	float score_len;
 	vector distribution_color;
 	entity tm, pl, me;
 	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
@@ -3318,12 +3318,13 @@ void HUD_Score(void)
 			distribution_color = eX;
 
 		score_len = strlen(ftos(score));
-		distr_len = strlen(ftos(distribution));
 
-		HUD_DrawXNum(pos + eX * mySize_x - eX * 3 * 0.33 * mySize_y, distribution, 3, 3, 0.33 * mySize_y, distribution_color, 0, 0, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eX * 0.75 * mySize_x, ftos(distribution), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, (1/3) * mySize_y, distribution_color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 		if (leader)
-			drawpic_skin(pos + eX * mySize_x - eX * score_len * mySize_y - eX * 3 * 0.33 * mySize_y, strcat("num_leading_", ftos(score_len)), eX * score_len * mySize_y + eY * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-		HUD_DrawXNum(pos + eX * mySize_x - eX * 3 * mySize_y - eX * 3 * 0.33 * mySize_y, score, 3, 0, mySize_y, distribution_color, 0, 0, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+			drawpic_skin(pos, strcat("num_leading_", ftos(score_len)), eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		drawfont = hud_bigfont;
+		drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, mySize_y, distribution_color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+		drawfont = hud_font;
 	} else { // teamgames
 		float max_fragcount;
 		max_fragcount = -99;
@@ -3346,14 +3347,16 @@ void HUD_Score(void)
 				if (max_fragcount == score)
 					leader = 1;
 				if (leader)
-					drawpic_skin(pos + eX * mySize_x - eX * score_len * mySize_y - eX * 3 * 0.33 * mySize_y, strcat("num_leading_", ftos(score_len)), eX * score_len * mySize_y + eY * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				HUD_DrawXNum(pos + eX * mySize_x - eX * 3 * mySize_y - eX * 3 * 0.33 * mySize_y, score, 3, 0, mySize_y, GetTeamRGB(tm.team) * 0.8, 0, 0, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+					drawpic_skin(pos, strcat("num_leading_", ftos(score_len)), eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+				drawfont = hud_bigfont;
+				drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, mySize_y, GetTeamRGB(tm.team) * 0.8, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+				drawfont = hud_font;
 			} else {
 				if (max_fragcount == score)
 					leader = 1;
 				if (leader)
-					drawpic_skin(pos + eX * mySize_x - eX * 0.33 * score_len * mySize_y + eY * 0.33 * mySize_y * teamnum, strcat("num_leading_", ftos(score_len)), eX * 0.33 * score_len * mySize_y + eY * 0.33 * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				HUD_DrawXNum(pos + eX * mySize_x - eX * 3 * 0.33 * mySize_y + eY * 0.33 * mySize_y * teamnum, score, 3, 0, 0.33 * mySize_y, GetTeamRGB(tm.team) * 0.8, 0, 0, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+					drawpic_skin(pos + eX * 0.75 * mySize_x + eY * (1/3) * teamnum * mySize_y, strcat("num_leading_", ftos(score_len)), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+				drawstring_aspect(pos + eX * 0.75 * mySize_x + eY * (1/3) * teamnum * mySize_y, ftos(score), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, (1/3) * mySize_y, GetTeamRGB(tm.team) * 0.8, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 				teamnum += 1;
 			}
 		}
