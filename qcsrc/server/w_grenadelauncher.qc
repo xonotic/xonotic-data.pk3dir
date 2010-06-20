@@ -33,10 +33,56 @@ void W_Grenade_Explode2 (void)
 	remove (self);
 }
 
+void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if (self.health <= 0)
+		return;
+	self.health = self.health - damage;
+	if (self.health <= 0)
+	{
+		W_PrepareExplosionByDamage(attacker, self.think);
+	}
+}
+
 void W_Grenade_Touch1 (void)
 {
 	PROJECTILE_TOUCH;
-	W_Grenade_Explode ();
+	if(cvar("g_balance_grenadelauncher_primary_sticky") && other.takedamage != DAMAGE_AIM)
+	{
+		entity oldowner;
+		oldowner = self.owner;
+
+		vector temporigin;
+		temporigin = self.origin;
+
+		remove(self);
+		local entity gren;
+
+		gren = spawn ();
+		gren.owner = oldowner;
+		gren.classname = "grenade";
+		gren.bot_dodge = TRUE;
+		gren.bot_dodgerating = cvar("g_balance_grenadelauncher_primary_damage");
+		gren.movetype = MOVETYPE_NONE;
+		PROJECTILE_MAKETRIGGER(gren);
+		gren.projectiledeathtype = WEP_GRENADE_LAUNCHER;
+		setorigin(gren, temporigin);
+		setsize(gren, '0 0 -3', '0 0 -3');
+
+		gren.nextthink = time + cvar("g_balance_grenadelauncher_primary_lifetime2");
+		gren.think = adaptor_think2use_hittype_splash;
+		gren.use = W_Grenade_Explode;
+
+		gren.flags = FL_PROJECTILE;
+
+		gren.takedamage = DAMAGE_YES;
+		gren.health = cvar("g_balance_grenadelauncher_primary_health");
+		gren.event_damage = W_Grenade_Damage;
+
+		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);	
+	}
+	else
+		W_Grenade_Explode ();
 }
 
 void W_Grenade_Touch2 (void)
@@ -63,17 +109,6 @@ void W_Grenade_Touch2 (void)
 		else
 			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
-	}
-}
-
-void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
-{
-	if (self.health <= 0)
-		return;
-	self.health = self.health - damage;
-	if (self.health <= 0)
-	{
-		W_PrepareExplosionByDamage(attacker, self.think);
 	}
 }
 
