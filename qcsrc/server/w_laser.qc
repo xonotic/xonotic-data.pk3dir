@@ -105,9 +105,11 @@ void W_Laser_Attack2 (void) // gauntlet
 {
 	W_SetupShot (self, TRUE, 0, "weapons/gauntlet_fire.wav", cvar("g_balance_laser_primary_damage"));
 
-	WarpZone_traceline_antilag(self, w_shotorg, w_shotorg + w_shotdir * cvar("g_balance_laser_primary_radius"), FALSE, self, ANTILAG_LATENCY(self));
+	WarpZone_traceline_antilag(self, w_shotorg, w_shotorg + w_shotdir * (cvar("g_balance_laser_primary_radius") + vlen(eX * self.velocity_x + eY * self.velocity_y)/5), FALSE, self, ANTILAG_LATENCY(self));
 
-	pointparticles(particleeffectnum("laser_gauntlet"), w_shotorg + w_shotdir * cvar("g_balance_laser_primary_radius"), '0 0 0', 1);
+	pointparticles(particleeffectnum("laser_gauntletmuzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("laser_gauntlet"), w_shotorg + w_shotdir * (cvar("g_balance_laser_primary_radius") + vlen(eX * self.velocity_x + eY * self.velocity_y)/5), w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("laser_gauntlet"), w_shotorg + w_shotdir * (cvar("g_balance_laser_primary_radius") + vlen(eX * self.velocity_x + eY * self.velocity_y)/5) * 0.5, w_shotdir * 1000, 1);
 
 	if (trace_fraction < 1)
 		Damage(trace_ent, self, self, cvar("g_balance_laser_primary_damage"), WEP_LASER | HITTYPE_SECONDARY, trace_endpos, cvar("g_balance_laser_primary_force") * w_shotdir);
