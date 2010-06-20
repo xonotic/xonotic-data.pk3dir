@@ -25,6 +25,12 @@ float hud_border_thickness;
 float hud_accuracy_border_thickness;
 
 float hud_configure;
+float hud_configure_checkcollisions;
+
+float hudShiftState;
+const float S_SHIFT = 1;
+const float S_CTRL = 2;
+const float S_ALT = 4;
 
 float disable_menu_alphacheck; // 0 = enable alpha check, 1 = disable for entire hud, 2 = disable for one panel
 float menu_fade_alpha;

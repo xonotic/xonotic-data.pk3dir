@@ -979,7 +979,7 @@ void HUD_Panel_SetPos(float id, vector pos)
 	vector mySize;
 	mySize = HUD_Panel_GetSize(id);
 
-	if(cvar("hud_configure_checkcollisions"))
+	if(hud_configure_checkcollisions)
 		pos = HUD_Panel_CheckMove(id, pos, mySize);
 
 	pos_x = bound(0, pos_x, vid_conwidth - mySize_x);
@@ -1179,10 +1179,8 @@ void HUD_Panel_SetPosSize(float id)
 		mySize_y = floor((mySize_y/vid_conheight)/bound(0.005, cvar("hud_configure_grid_y"), 0.2) + 0.5) * bound(0.005, cvar("hud_configure_grid_y"), 0.2) * vid_conheight;
 	}
 
-	if(cvar("hud_configure_checkcollisions"))
-	{
+	if(hud_configure_checkcollisions)
 		mySize = HUD_Panel_CheckResize(id, mySize, resizeorigin);
-	}
 
 	// minimum panel size cap, do this once more so we NEVER EVER EVER have a panel smaller than this, JUST IN CASE above code still makes the panel eg negative (impossible to resize back without changing cvars manually then)
 	mySize_x = max(0.025 * vid_conwidth, mySize_x);
@@ -1204,7 +1202,6 @@ void HUD_Panel_SetPosSize(float id)
 	}
 
 	if(cvar("hud_configure_checkcollisions_debug"))
-	if(cvar("hud_configure_checkcollisions"))
 		drawfill(myPos, mySize, '0 1 0', .3, DRAWFLAG_NORMAL);
 
 	string s;
@@ -1240,6 +1237,17 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			hit_con_bind = 1;
 	}
 
+	if(bInputType == 0) {
+		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+	}
+	else if(bInputType == 1) {
+		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+	}
+
 	if(nPrimary == K_MOUSE1)
 	{
 		if(bInputType == 0) { // key pressed
@@ -1253,6 +1261,8 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	}
 	else if(nPrimary == K_ESCAPE)
 	{
+		if (bInputType == 1)
+			return true;
 		disable_menu_alphacheck = 1;
 		menu_enabled = 1;
 		menu_enabled_time = time;
@@ -1364,6 +1374,8 @@ void HUD_Panel_Mouse()
 						}
 					}	
 				}
+
+				hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && cvar("hud_configure_checkcollisions"));
 
 				if(cvar("hud_configure_checkcollisions_debug"))
 					drawfill(panelPos, panelSize, '1 0 0', .3, DRAWFLAG_NORMAL);
