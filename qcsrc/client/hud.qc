@@ -1005,7 +1005,10 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin) {
 	vector targPos;
 	vector targSize;
 	vector targEndPos;
+
 	vector dist;
+	float ratio;
+	ratio = mySize_x/mySize_y;
 
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
 		if(i == id || !HUD_Panel_CheckActive(i))
@@ -1017,7 +1020,7 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin) {
 		targEndPos = targPos + targSize;
 
 		// resizeorigin is WITHIN target panel, just abort any collision testing against that particular panel to produce expected behaviour!
-		if(resizeorigin_x > targPos_x && resizeorigin_x < targPos_x + targSize_x && resizeorigin_y > targPos_y && resizeorigin_y < targPos_y + targSize_y)
+		if(resizeorigin_x > targPos_x && resizeorigin_x < targEndPos_x && resizeorigin_y > targPos_y && resizeorigin_y < targEndPos_y)
 			continue;
 
 		if (resizeCorner == 1)
@@ -1040,7 +1043,7 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin) {
 			// in this case resizeorigin (bottom-right point) and the bottom-right point of the panel
 			dist_x = resizeorigin_x - targEndPos_x;
 			dist_y = resizeorigin_y - targEndPos_y;
-			if (dist_y < 0)
+			if (dist_y < 0 || dist_x / dist_y > ratio)
 				mySize_x = min(mySize_x, dist_x);
 			else
 				mySize_y = min(mySize_y, dist_y);
@@ -1058,7 +1061,7 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin) {
 
 			dist_x = targPos_x - resizeorigin_x;
 			dist_y = resizeorigin_y - targEndPos_y;
-			if (dist_y < 0)
+			if (dist_y < 0 || dist_x / dist_y > ratio)
 				mySize_x = min(mySize_x, dist_x);
 			else
 				mySize_y = min(mySize_y, dist_y);
@@ -1076,7 +1079,7 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin) {
 
 			dist_x = resizeorigin_x - targEndPos_x;
 			dist_y = targPos_y - resizeorigin_y;
-			if (dist_y < 0)
+			if (dist_y < 0 || dist_x / dist_y > ratio)
 				mySize_x = min(mySize_x, dist_x);
 			else
 				mySize_y = min(mySize_y, dist_y);
@@ -1094,7 +1097,7 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin) {
 
 			dist_x = targPos_x - resizeorigin_x;
 			dist_y = targPos_y - resizeorigin_y;
-			if (dist_y < 0)
+			if (dist_y < 0 || dist_x / dist_y > ratio)
 				mySize_x = min(mySize_x, dist_x);
 			else
 				mySize_y = min(mySize_y, dist_y);
