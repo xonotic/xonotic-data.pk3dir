@@ -1208,9 +1208,13 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 	float step;
 	if (nPrimary == K_UPARROW || nPrimary == K_DOWNARROW)
-		step = vid_conheight / 64;
+		step = vid_conheight;
 	else
-		step = vid_conwidth / 64;
+		step = vid_conwidth;
+	if (hudShiftState & S_SHIFT)
+		step = (step / 256); // more precision
+	else
+		step = (step / 64) * (1 + 2 * (time - pressed_key_time));
 
 	highlightedPanel = highlightedPanel_prev;
 
