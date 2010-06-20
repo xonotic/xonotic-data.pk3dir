@@ -1198,6 +1198,77 @@ void HUD_Panel_SetPosSize(float id, vector mySize)
 	cvar_set(strcat("hud_", HUD_Panel_GetName(id), "_pos"), s);
 }
 
+float pressed_key_time;
+void HUD_Panel_Arrow_Action(float nPrimary)
+{
+	if (highlightedPanel_prev == -1)
+		return;
+
+	hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && cvar("hud_configure_checkcollisions"));
+
+	float step;
+	if (nPrimary == K_UPARROW || nPrimary == K_DOWNARROW)
+		step = vid_conheight / 64;
+	else
+		step = vid_conwidth / 64;
+
+	highlightedPanel = highlightedPanel_prev;
+
+	if (hudShiftState & S_ALT) // resize
+	{
+		highlightedAction = 1;
+		if(nPrimary == K_UPARROW)
+			resizeCorner = 1;
+		else if(nPrimary == K_RIGHTARROW)
+			resizeCorner = 2;
+		else if(nPrimary == K_LEFTARROW)
+			resizeCorner = 3;
+		else // if(nPrimary == K_DOWNARROW)
+			resizeCorner = 4;
+
+		// ctrl+arrow reduces the size, instead of increasing it
+		// Note that ctrl disables collisions check too, but it's fine
+		// since we don't collide with anything reducing the size
+		if (hudShiftState & S_CTRL) {
+			step = -step;
+			resizeCorner = 5 - resizeCorner;
+		}
+
+		vector mySize;
+		mySize = HUD_Panel_GetSize(highlightedPanel);
+		panel_click_resizeorigin = HUD_Panel_GetPos(highlightedPanel);
+		if(resizeCorner == 1) {
+			panel_click_resizeorigin += mySize;
+			mySize_y += step;
+		} else if(resizeCorner == 2) {
+			panel_click_resizeorigin_y += mySize_y;
+			mySize_x += step;
+		} else if(resizeCorner == 3) {
+			panel_click_resizeorigin_x += mySize_x;
+			mySize_x += step;
+		} else { // resizeCorner == 4
+			mySize_y += step;
+		}
+		HUD_Panel_SetPosSize(highlightedPanel, mySize);
+	}
+	else // move
+	{
+		highlightedAction = 2;
+		vector pos;
+		pos = HUD_Panel_GetPos(highlightedPanel);
+		if(nPrimary == K_UPARROW)
+			pos_y -= step;
+		else if(nPrimary == K_DOWNARROW)
+			pos_y += step;
+		else if(nPrimary == K_LEFTARROW)
+			pos_x -= step;
+		else // if(nPrimary == K_RIGHTARROW)
+			pos_x += step;
+
+		HUD_Panel_SetPos(highlightedPanel, pos);
+	}
+}
+
 float mouseClicked;
 float prevMouseClicked; // previous state
 float prevMouseClickedTime; // time during previous mouse click, to check for doubleclicks
@@ -1254,7 +1325,18 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		menu_enabled_time = time;
 		localcmd("menu_showhudexit\n");
 	}
+	else if(nPrimary == K_UPARROW || nPrimary == K_DOWNARROW || nPrimary == K_LEFTARROW || nPrimary == K_RIGHTARROW)
+	{
+		if (bInputType == 1)
+		{
+			pressed_key_time = 0;
+			return true;
+		}
+		else if (pressed_key_time == 0)
+			pressed_key_time = time;
 
+		HUD_Panel_Arrow_Action(nPrimary); //move or resize panel
+	}
 	else if(hit_con_bind)
 		return false;
 
@@ -1340,7 +1422,8 @@ void HUD_Panel_Mouse()
 	print("Menu alpha: ", cvar_string("_menu_alpha"), "\n");
 	*/
 
-	if(mouseClicked == 0 && disable_menu_alphacheck != 2) { // don't reset these variables in disable_menu_alphacheck mode 2!
+	if(mouseClicked == 0 && disable_menu_alphacheck != 2 && highlightedPanel >= 0) { // don't reset these variables in disable_menu_alphacheck mode 2!
+		highlightedPanel_prev = highlightedPanel;
 		highlightedPanel = -1;
 		highlightedAction = 0;
 	}
