@@ -4970,3 +4970,46 @@ bounce 1.5
 airfriction 5
 liquidfriction 10
 velocityjitter 156 156 156
+
+
+
+// used in qcsrc/server/w_electro.qc:	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
+// used in qcsrc/server/w_electro.qc:	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
+effect electro_lightning
+countabsolute 1
+type smoke
+color 0x283880 0x283880 // 0x202020 0x404040
+tex 65 65
+size 10 10
+alpha 256 256 1500
+originjitter 1.5 1.5 1.5
+velocityjitter 6 6 6
+sizeincrease -20
+velocitymultiplier 0.01
+
+effect electro_lightning
+count 3
+type spark
+tex 8 15
+color 0xD9FDFF 0xD9FDFF
+size 3 7
+alpha 110 228 2024
+originjitter 1 1 1
+velocityjitter 150 150 150
+velocitymultiplier 0.5
+airfriction 2
+stretchfactor 1.5
+
+effect electro_lightning
+count 5
+type spark
+tex 41 41
+color 0xD9FDFF 0xD9FDFF
+size 3 4
+alpha 110 228 1500
+originjitter 1 1 1
+velocityjitter 350 350 350
+velocitymultiplier 2.5
+airfriction 8
+gravity 1.3
+stretchfactor 0.1

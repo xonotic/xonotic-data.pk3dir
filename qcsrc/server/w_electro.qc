@@ -187,16 +187,20 @@ void W_Electro_Attack2()
 // experimental lightning gun
 void W_Electro_Attack3 (void)
 {
-       if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-               self.ammo_cells = self.ammo_cells - cvar("g_balance_electro_primary_ammo");
-       W_SetupShot (self, TRUE, 0, "weapons/crylink_fire2.wav", cvar("g_balance_electro_primary_damage"));
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		self.ammo_cells = self.ammo_cells - cvar("g_balance_electro_primary_ammo");
+	W_SetupShot (self, TRUE, 0, "weapons/crylink_fire2.wav", cvar("g_balance_electro_primary_damage"));
 
-       traceline_antilag(self, w_shotorg, w_shotorg + w_shotdir * cvar("g_balance_electro_primary_radius"), FALSE, self, ANTILAG_LATENCY(self));
+	WarpZone_traceline_antilag(self, w_shotorg, w_shotorg + w_shotdir * cvar("g_balance_electro_primary_radius"), FALSE, self, ANTILAG_LATENCY(self));
 
-       te_lightning1(self, w_shotorg, trace_endpos);
+	float i;
+	for (i = 0; i < vlen(trace_endpos - w_shotorg)/25; ++i)
+	{
+		pointparticles(particleeffectnum("electro_lightning"), w_shotorg + (i / floor(vlen(w_shotorg - trace_endpos)/25)) * (trace_endpos - w_shotorg), w_shotdir * 1000, 1);
+	}
 
-       if (trace_fraction < 1)
-               Damage(trace_ent, self, self, cvar("g_balance_electro_primary_damage"), WEP_ELECTRO | HITTYPE_SECONDARY, trace_endpos, cvar("g_balance_electro_primary_force") * w_shotdir);
+	if (trace_fraction < 1)
+		Damage(trace_ent, self, self, cvar("g_balance_electro_primary_damage"), WEP_ELECTRO | HITTYPE_SECONDARY, trace_endpos, cvar("g_balance_electro_primary_force") * w_shotdir);
 }
 
 void spawnfunc_weapon_electro (void)
@@ -256,7 +260,7 @@ float w_electro(float req)
 				W_Electro_Attack();
 			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_electro_primary_animtime"), w_ready);
 		}
-		if (self.BUTTON_ATCK2 && !cvar("g_balance_electro_lightning"))
+		if (self.BUTTON_ATCK2)
 		if (time >= self.electro_secondarytime)
 		if (weapon_prepareattack(1, cvar("g_balance_electro_secondary_refire")))
 		{
