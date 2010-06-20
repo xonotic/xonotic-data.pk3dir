@@ -1109,25 +1109,11 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin) {
 	return mySize;
 }
 
-void HUD_Panel_SetPosSize(float id)
+void HUD_Panel_SetPosSize(float id, vector mySize)
 {
 	vector resizeorigin;
 	resizeorigin = panel_click_resizeorigin;
-	vector mySize, myPos;
-
-	if(resizeCorner == 1) {
-		mySize_x = resizeorigin_x - (mousepos_x - panel_click_distance_x);
-		mySize_y = resizeorigin_y - (mousepos_y - panel_click_distance_y);
-	} else if(resizeCorner == 2) {		
-		mySize_x = mousepos_x + panel_click_distance_x - resizeorigin_x;
-		mySize_y = panel_click_distance_y + resizeorigin_y - mousepos_y;
-	} else if(resizeCorner == 3) {
-		mySize_x = resizeorigin_x + panel_click_distance_x - mousepos_x;
-		mySize_y = mousepos_y + panel_click_distance_y - resizeorigin_y;
-	} else { // resizeCorner == 4
-		mySize_x = mousepos_x - (resizeorigin_x - panel_click_distance_x);
-		mySize_y = mousepos_y - (resizeorigin_y - panel_click_distance_y);
-	}
+	vector myPos;
 
 	// minimum panel size cap
 	mySize_x = max(0.025 * vid_conwidth, mySize_x);
@@ -1275,6 +1261,71 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	return true; // Suppress ALL other input
 }
 
+void HUD_Panel_Highlight()
+{
+	float i, border;
+	vector panelPos;
+	vector panelSize;
+
+	for(i = 0; i < HUD_PANEL_NUM; ++i)
+	{
+		panelPos = HUD_Panel_GetPos(i);
+		panelSize = HUD_Panel_GetSize(i);
+		border = HUD_Panel_GetBorder(i);
+
+		// move
+		if(mousepos_x >= panelPos_x && mousepos_y >= panelPos_y && mousepos_x <= panelPos_x + panelSize_x && mousepos_y <= panelPos_y + panelSize_y)
+		{
+			highlightedPanel = i;
+			highlightedAction = 1;
+			panel_click_distance = mousepos - panelPos;
+			return;
+		}
+		// resize from topleft border
+		else if(mousepos_x >= panelPos_x - border && mousepos_y >= panelPos_y - border && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
+		{
+			highlightedPanel = i;
+			highlightedAction = 2;
+			resizeCorner = 1;
+			panel_click_distance = mousepos - panelPos;
+			panel_click_resizeorigin = panelPos + panelSize;
+			return;
+		}
+		// resize from topright border
+		else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y - border && mousepos_x <= panelPos_x + panelSize_x + border && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
+		{
+			highlightedPanel = i;
+			highlightedAction = 2;
+			resizeCorner = 2;
+			panel_click_distance_x = panelSize_x - mousepos_x + panelPos_x;
+			panel_click_distance_y = mousepos_y - panelPos_y;
+			panel_click_resizeorigin = panelPos + eY * panelSize_y;
+			return;
+		}
+		// resize from bottomleft border
+		else if(mousepos_x >= panelPos_x - border && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + panelSize_y + border)
+		{
+			highlightedPanel = i;
+			highlightedAction = 2;
+			resizeCorner = 3;
+			panel_click_distance_x = mousepos_x - panelPos_x;
+			panel_click_distance_y = panelSize_y - mousepos_y + panelPos_y;
+			panel_click_resizeorigin = panelPos + eX * panelSize_x;
+			return;
+		}
+		// resize from bottomright border
+		else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + panelSize_x + border && mousepos_y <= panelPos_y + panelSize_y + border)
+		{
+			highlightedPanel = i;
+			highlightedAction = 2;
+			resizeCorner = 4;
+			panel_click_distance = panelSize - mousepos + panelPos;
+			panel_click_resizeorigin = panelPos;
+			return;
+		}
+	}
+}
+
 void HUD_Panel_Mouse()
 {
 	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
@@ -1303,88 +1354,30 @@ void HUD_Panel_Mouse()
 
 	if(mouseClicked)
 	{
-		float i, border;
-		vector panelPos;
-		vector panelSize;
+		if(prevMouseClicked == 0)
+			HUD_Panel_Highlight(); // sets highlightedPanel, highlightedAction, panel_click_distance, panel_click_resizeorigin
 
-		for(i = 0; i < HUD_PANEL_NUM; ++i)
+		hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && cvar("hud_configure_checkcollisions"));
+
+		if(highlightedAction == 1)
+			HUD_Panel_SetPos(highlightedPanel, mousepos - panel_click_distance);
+		else if(highlightedAction == 2)
 		{
-			panelPos = HUD_Panel_GetPos(i);
-			panelSize = HUD_Panel_GetSize(i);
-			border = HUD_Panel_GetBorder(i);
-			if(prevMouseClicked == 0) {
-				// move
-				if(mousepos_x >= panelPos_x && mousepos_y >= panelPos_y && mousepos_x <= panelPos_x + panelSize_x && mousepos_y <= panelPos_y + panelSize_y)
-				{
-					highlightedPanel = i;
-					highlightedAction = 1;
-				}
-				// resize from topleft border
-				else if(mousepos_x >= panelPos_x - border && mousepos_y >= panelPos_y - border && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
-				{
-					highlightedPanel = i;
-					highlightedAction = 2;
-					resizeCorner = 1;
-				}
-				// resize from topright border
-				else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y - border && mousepos_x <= panelPos_x + panelSize_x + border && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
-				{
-					highlightedPanel = i;
-					highlightedAction = 2;
-					resizeCorner = 2;
-				}
-				// resize from bottomleft border
-				else if(mousepos_x >= panelPos_x - border && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + panelSize_y + border)
-				{
-					highlightedPanel = i;
-					highlightedAction = 2;
-					resizeCorner = 3;
-				}
-				// resize from bottomright border
-				else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + panelSize_x + border && mousepos_y <= panelPos_y + panelSize_y + border)
-				{
-					highlightedPanel = i;
-					highlightedAction = 2;
-					resizeCorner = 4;
-				}
+			vector mySize;
+			if(resizeCorner == 1) {
+				mySize_x = panel_click_resizeorigin_x - (mousepos_x - panel_click_distance_x);
+				mySize_y = panel_click_resizeorigin_y - (mousepos_y - panel_click_distance_y);
+			} else if(resizeCorner == 2) {
+				mySize_x = mousepos_x + panel_click_distance_x - panel_click_resizeorigin_x;
+				mySize_y = panel_click_distance_y + panel_click_resizeorigin_y - mousepos_y;
+			} else if(resizeCorner == 3) {
+				mySize_x = panel_click_resizeorigin_x + panel_click_distance_x - mousepos_x;
+				mySize_y = mousepos_y + panel_click_distance_y - panel_click_resizeorigin_y;
+			} else { // resizeCorner == 4
+				mySize_x = mousepos_x - (panel_click_resizeorigin_x - panel_click_distance_x);
+				mySize_y = mousepos_y - (panel_click_resizeorigin_y - panel_click_distance_y);
 			}
-
-			if(highlightedPanel == i)
-			{
-				if(prevMouseClicked == 0)
-				{
-					if(highlightedAction == 1)
-						panel_click_distance = mousepos - panelPos;
-					else if(highlightedAction == 2)
-					{
-						if(resizeCorner == 1) {
-							panel_click_distance = mousepos - panelPos;
-							panel_click_resizeorigin = panelPos + panelSize;
-						} else if(resizeCorner == 2) {
-							panel_click_distance_x = panelSize_x - mousepos_x + panelPos_x;
-							panel_click_distance_y = mousepos_y - panelPos_y;
-							panel_click_resizeorigin = panelPos + eY * panelSize_y;
-						} else if(resizeCorner == 3) {
-							panel_click_distance_x = mousepos_x - panelPos_x;
-							panel_click_distance_y = panelSize_y - mousepos_y + panelPos_y;
-							panel_click_resizeorigin = panelPos + eX * panelSize_x;
-						} else if(resizeCorner == 4) {
-							panel_click_distance = panelSize - mousepos + panelPos;
-							panel_click_resizeorigin = panelPos;
-						}
-					}	
-				}
-
-				hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && cvar("hud_configure_checkcollisions"));
-
-				if(cvar("hud_configure_checkcollisions_debug"))
-					drawfill(panelPos, panelSize, '1 0 0', .3, DRAWFLAG_NORMAL);
-
-				if(highlightedAction == 1)
-					HUD_Panel_SetPos(i, mousepos - panel_click_distance);
-				else if(highlightedAction == 2)
-					HUD_Panel_SetPosSize(i);
-			}
+			HUD_Panel_SetPosSize(highlightedPanel, mySize);
 		}
 
 		// doubleclick check
