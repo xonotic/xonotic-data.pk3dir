@@ -1402,7 +1402,6 @@ void HUD_WeaponIcons_Clear()
 }
 
 entity weaponorder[WEP_MAXCOUNT];
-
 void weaponorder_swap(float i, float j, entity pass)
 {
 	entity h;
@@ -1411,6 +1410,7 @@ void weaponorder_swap(float i, float j, entity pass)
 	weaponorder[j] = h;
 }
 
+string weaponorder_cmp_str_save;
 string weaponorder_cmp_str;
 float weaponorder_cmp(float i, float j, entity pass)
 {
@@ -1435,15 +1435,25 @@ void HUD_WeaponIcons(void)
 	{
 		self = get_weaponinfo(i);
 		if(self.impulse >= 0)
-		{
-			weaponorder[weapon_cnt] = self;
 			++weapon_cnt;
-		}
 	}
 
 	// TODO make this configurable
 	weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
-	heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
+
+	if(weaponorder_cmp_str != weaponorder_cmp_str_save)
+	{
+		if(weaponorder_cmp_str_save)
+			strunzone(weaponorder_cmp_str_save);
+		weaponorder_cmp_str_save = strzone(weaponorder_cmp_str);
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		{
+			self = get_weaponinfo(i);
+			if(self.impulse >= 0)
+				weaponorder[weapon_cnt] = self;
+		}
+		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
+	}
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
 	float padding;
