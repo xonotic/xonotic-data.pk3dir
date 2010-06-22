@@ -641,7 +641,6 @@ void race_send_speedaward_alltimebest(float msg)
 string GetMapname(void);
 float speedaward_lastupdate;
 float speedaward_lastsent;
-var float autocvar_g_movement_highspeed = 1;
 void SV_PlayerPhysics()
 {
 	local vector wishvel, wishdir, v;
