@@ -15,7 +15,6 @@ void Drag_MoveDrag(entity from, entity to) { }
 
 .float maycheat;
 float sv_cheats;
-float autocvar_sv_cheats;
 
 #define CHIMPULSE_SPEEDRUN_INIT 30
 #define CHIMPULSE_GIVE_ALL 99
