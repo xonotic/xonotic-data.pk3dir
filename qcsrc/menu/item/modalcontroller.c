@@ -52,6 +52,7 @@ void DialogCloseButton_Click(entity button, entity tab); // assumes a button has
 
 .vector ModalController_initialSize;
 .vector ModalController_initialOrigin;
+.vector ModalController_initialFontScale;
 .float ModalController_initialAlpha;
 .vector ModalController_buttonSize;
 .vector ModalController_buttonOrigin;
@@ -97,7 +98,7 @@ void DialogCloseButton_Click(entity button, entity tab)
 
 void ModalController_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, ModalController_initialOrigin, ModalController_initialSize);
+	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, ModalController_initialOrigin, ModalController_initialSize, ModalController_initialFontScale);
 }
 
 void ModalController_switchState(entity me, entity other, float state, float skipAnimation)
@@ -140,6 +141,7 @@ void ModalController_draw(entity me)
 	float df; // animation step size
 	float prevFactor, targetFactor;
 	vector targetOrigin, targetSize; float targetAlpha;
+	vector fs;
 	animating = 0;
 
 	for(e = me.firstChild; e; e = e.nextSibling)
@@ -216,7 +218,9 @@ void ModalController_draw(entity me)
 		// --> (maxima)
 		// o' = (to * (f - f_prev) + o * (1 - f)) / (1 - f_prev)
 
-		e.Container_fontscale = globalToBoxSize(e.Container_size, e.ModalController_initialSize);
+		fs = globalToBoxSize(e.Container_size, e.ModalController_initialSize);
+		e.Container_fontscale_x = fs_x * e.ModalController_initialFontScale_x;
+		e.Container_fontscale_y = fs_y * e.ModalController_initialFontScale_y;
 	}
 	if(animating || !me.focused)
 		me.setFocus(me, NULL);
@@ -242,9 +246,12 @@ void ModalController_addTab(entity me, entity other, entity tabButton)
 void ModalController_addItem(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
 {
 	SUPER(ModalController).addItem(me, other, theOrigin, theSize, (other == me.firstChild) ? theAlpha : 0);
+	other.ModalController_initialFontScale = other.Container_fontscale;
 	other.ModalController_initialSize = other.Container_size;
 	other.ModalController_initialOrigin = other.Container_origin;
 	other.ModalController_initialAlpha = theAlpha; // hope Container never modifies this
+	if(other.ModalController_initialFontScale == '0 0 0')
+		other.ModalController_initialFontScale = '1 1 0';
 }
 
 void ModalController_showChild(entity me, entity other, vector theOrigin, vector theSize, float skipAnimation)

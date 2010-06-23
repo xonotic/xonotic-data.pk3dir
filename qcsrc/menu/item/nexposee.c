@@ -35,6 +35,7 @@ void ExposeeCloseButton_Click(entity button, entity other); // un-exposees the c
 #ifdef IMPLEMENTATION
 
 .vector Nexposee_initialSize;
+.vector Nexposee_initialFontScale;
 .vector Nexposee_initialOrigin;
 .float Nexposee_initialAlpha;
 
@@ -61,7 +62,7 @@ void ExposeeCloseButton_Click(entity button, entity other)
 void Nexposee_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.calc(me);
-	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, Nexposee_initialOrigin, Nexposee_initialSize);
+	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, Nexposee_initialOrigin, Nexposee_initialSize, Nexposee_initialFontScale);
 }
 
 void Nexposee_Calc_Scale(entity me, float scale)
@@ -141,6 +142,7 @@ void Nexposee_draw(entity me)
 	float a0;
 	entity e;
 	float f;
+	vector fs;
 
 	if(me.animationState == -1)
 	{
@@ -203,7 +205,9 @@ void Nexposee_draw(entity me)
 		}
 		me.setAlphaOf(me, e, e.Container_alpha * (1 - f) + a * f);
 
-		e.Container_fontscale = globalToBoxSize(e.Container_size, e.Nexposee_initialSize);
+		fs = globalToBoxSize(e.Container_size, e.Nexposee_initialSize);
+		e.Container_fontscale_x = fs_x * e.Nexposee_initialFontScale_x;
+		e.Container_fontscale_y = fs_y * e.Nexposee_initialFontScale_y;
 	}
 
 	SUPER(Nexposee).draw(me);
@@ -338,9 +342,12 @@ float Nexposee_keyDown(entity me, float scan, float ascii, float shift)
 void Nexposee_addItem(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
 {
 	SUPER(Nexposee).addItem(me, other, theOrigin, theSize, theAlpha);
+	other.Nexposee_initialFontScale = other.Container_fontscale;
 	other.Nexposee_initialSize = other.Container_size;
 	other.Nexposee_initialOrigin = other.Container_origin;
 	other.Nexposee_initialAlpha = other.Container_alpha;
+	if(other.Nexposee_initialFontScale == '0 0 0')
+		other.Nexposee_initialFontScale = '1 1 0';
 }
 
 void Nexposee_focusEnter(entity me)
