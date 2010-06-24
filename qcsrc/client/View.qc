@@ -565,10 +565,10 @@ void CSQC_UpdateView(float w, float h)
 
 	if(cvar("cl_reticle_stretch"))
 	{
-		reticle_pos_x = 0;
-		reticle_pos_y = 0;
 		reticle_size_x = vid_conwidth;
 		reticle_size_y = vid_conheight;
+		reticle_pos_x = 0;
+		reticle_pos_y = 0;
 	}
 	else
 	{
