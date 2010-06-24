@@ -555,7 +555,7 @@ void CSQC_UpdateView(float w, float h)
 	// Draw the aiming reticle for weapons that use it
 	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 	// It must be a persisted float for fading out to work properly (you let go of the zoom button for the
-	// view to go back to normal, so reticle_type would become 0 as we fade out and use that image instead)
+	// view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || getstati(STAT_HEALTH) <= 0)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
 	else if(button_zoom)
