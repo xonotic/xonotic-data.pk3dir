@@ -564,10 +564,12 @@ void CSQC_UpdateView(float w, float h)
 	reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
 	reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
 
-	precache_pic("textures/reticle_nex");
 	if(cvar("cl_reticle_nex"))
-	if(zoom_type == 1)
-		drawpic(reticle_pos, "textures/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_nex"), DRAWFLAG_NORMAL);
+	{
+		precache_pic("textures/reticle_nex");
+		if(zoom_type == 1)
+			drawpic(reticle_pos, "textures/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_nex"), DRAWFLAG_NORMAL);
+	}
 
 	// Draw the mouse cursor
 	// NOTE: drawpic must happen after R_RenderScene for some reason
