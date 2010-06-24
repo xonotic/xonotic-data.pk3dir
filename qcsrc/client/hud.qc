@@ -1431,6 +1431,7 @@ void HUD_WeaponIcons(void)
 	mySize = HUD_Panel_GetSize(id);
 
 	stat_weapons = getstati(STAT_WEAPONS);
+	weapon_cnt = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		self = get_weaponinfo(i);
@@ -1446,11 +1447,15 @@ void HUD_WeaponIcons(void)
 		if(weaponorder_cmp_str_save)
 			strunzone(weaponorder_cmp_str_save);
 		weaponorder_cmp_str_save = strzone(weaponorder_cmp_str);
+		weapon_cnt = 0;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			self = get_weaponinfo(i);
 			if(self.impulse >= 0)
+			{
 				weaponorder[weapon_cnt] = self;
+				++weapon_cnt;
+			}
 		}
 		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
 	}
