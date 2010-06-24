@@ -559,7 +559,7 @@ void CSQC_UpdateView(float w, float h)
 
 	precache_pic("textures/reticle_nex");
 	if(cvar("cl_reticle_nex"))
-	if(activeweapon == WEP_NEX && current_zoomfraction)
+	if(activeweapon == WEP_NEX && button_attack2)
 		drawpic(reticle_pos, "textures/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_nex"), DRAWFLAG_NORMAL);
 
 	// Draw the mouse cursor
