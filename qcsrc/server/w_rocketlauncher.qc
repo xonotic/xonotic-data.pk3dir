@@ -544,17 +544,6 @@ float w_rlauncher(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "exploded";
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = "got too close to #'s rocket";
-		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "almost dodged #'s rocket";
-		else
-			w_deathtypestring = "ate #'s rocket";
-	}
 	else if (req == WR_RESETPLAYER)
 	{
 		self.rl_release = 0;
@@ -576,6 +565,17 @@ float w_rlauncher(float req)
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/rocket_impact.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "exploded";
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
+			w_deathtypestring = "got too close to #'s rocket";
+		else if(w_deathtype & HITTYPE_SPLASH)
+			w_deathtypestring = "almost dodged #'s rocket";
+		else
+			w_deathtypestring = "ate #'s rocket";
 	}
 	return TRUE;
 }

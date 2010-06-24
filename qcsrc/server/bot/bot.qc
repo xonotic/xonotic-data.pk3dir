@@ -136,7 +136,8 @@ void bot_setnameandstuff()
 			prio = 1;
 			FOR_EACH_CLIENT(p)
 			{
-				if(strcat(prefix, s, suffix) == p.netname)
+				if(clienttype(p) == CLIENTTYPE_BOT)
+				if(s == p.cleanname)
 				{
 					prio = 0;
 					break;
@@ -200,8 +201,6 @@ void bot_setnameandstuff()
 	else
 		name = bot_name;
 
-	self.cleanname = strzone(name);
-
 	// number bots with identical names
 	float i;
 	i = 0;
@@ -212,15 +211,17 @@ void bot_setnameandstuff()
 				++i;
 	}
 	if (i)
-		name = strcat(name, "(", ftos(i), ")");
+		self.netname = self.netname_freeme = strzone(strcat(prefix, name, "(", ftos(i), ")", suffix));
+	else
+		self.netname = self.netname_freeme = strzone(strcat(prefix, name, suffix));
+
+	self.cleanname = strzone(name);
 
 	// pick the model and skin
 	if(substring(bot_model, -4, 1) != ".")
 		bot_model = strcat(bot_model, ".iqm");
 	self.playermodel = self.playermodel_freeme = strzone(strcat("models/player/", bot_model));
 	self.playerskin = self.playerskin_freeme = strzone(bot_skin);
-
-	self.netname = self.netname_freeme = strzone(strcat(prefix, name, suffix));
 
 	self.cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
 	self.cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data

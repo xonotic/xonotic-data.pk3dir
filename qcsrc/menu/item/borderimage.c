@@ -18,7 +18,7 @@ ENDCLASS(BorderImage)
 #endif
 
 #ifdef IMPLEMENTATION
-void resizeNotifyBorderImage(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void BorderImage_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.isNexposeeTitleBar = 0;
 	if(me.zoomedOutTitleBar)
@@ -30,12 +30,12 @@ void resizeNotifyBorderImage(entity me, vector relOrigin, vector relSize, vector
 	{
 		vector scrs;
 		scrs = eX * conwidth + eY * conheight;
-		resizeNotifyLabel(me, relOrigin, relSize, boxToGlobal(me.parent.Nexposee_smallOrigin, '0 0 0', scrs), boxToGlobalSize(me.parent.Nexposee_smallSize, scrs));
+		SUPER(BorderImage).resizeNotify(me, relOrigin, relSize, boxToGlobal(me.parent.Nexposee_smallOrigin, '0 0 0', scrs), boxToGlobalSize(me.parent.Nexposee_smallSize, scrs));
 		me.realOrigin_y = me.realFontSize_y * me.zoomedOutTitleBarPosition;
 		me.realOrigin_Nexposeed = me.realOrigin;
 		me.realFontSize_Nexposeed = me.realFontSize;
 	}
-	resizeNotifyLabel(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(BorderImage).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	me.borderVec = me.borderHeight / absSize_y * (eY + eX * (absSize_y / absSize_x));
 	me.realOrigin_y = 0.5 * (me.borderVec_y - me.realFontSize_y);
 	if(me.closeButton)
@@ -48,14 +48,14 @@ void resizeNotifyBorderImage(entity me, vector relOrigin, vector relSize, vector
 		me.closeButton.colorF = me.color;
 	}
 }
-void configureBorderImageBorderImage(entity me, string theTitle, float sz, vector theColor, string path, float theBorderHeight)
+void BorderImage_configureBorderImage(entity me, string theTitle, float sz, vector theColor, string path, float theBorderHeight)
 {
 	me.configureLabel(me, theTitle, sz, 0.5);
 	me.src = path;
 	me.color = theColor;
 	me.borderHeight = theBorderHeight;
 }
-void drawBorderImage(entity me)
+void BorderImage_draw(entity me)
 {
 	//print(vtos(me.borderVec), "\n");
 
@@ -76,7 +76,7 @@ void drawBorderImage(entity me)
 			draw_fontscale = globalToBoxSize(boxToGlobalSize(df, me.realFontSize), rf);
 		}
 
-		drawLabel(me);
+		SUPER(BorderImage).draw(me);
 
 		if(me.isNexposeeTitleBar)
 		{

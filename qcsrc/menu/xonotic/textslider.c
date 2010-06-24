@@ -32,7 +32,7 @@ entity makeXonoticTextSlider(string theCvar)
 	me.configureXonoticTextSlider(me, theCvar);
 	return me;
 }
-void configureXonoticTextSliderXonoticTextSlider(entity me, string theCvar)
+void XonoticTextSlider_configureXonoticTextSlider(entity me, string theCvar)
 {
 	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
 	if(theCvar)
@@ -42,15 +42,15 @@ void configureXonoticTextSliderXonoticTextSlider(entity me, string theCvar)
 		// don't load it yet
 	}
 }
-void setValueXonoticTextSlider(entity me, float val)
+void XonoticTextSlider_setValue(entity me, float val)
 {
 	if(val != me.value)
 	{
-		setValueSlider( me, val );
+		SUPER(XonoticTextSlider).setValue( me, val );
 		me.saveCvars(me);
 	}
 }
-void loadCvarsXonoticTextSlider(entity me)
+void XonoticTextSlider_loadCvars(entity me)
 {
 	if not(me.cvarName)
 		return;
@@ -62,7 +62,7 @@ void loadCvarsXonoticTextSlider(entity me)
 		s = strcat(s, " ", cvar_string(argv(i)));
 	me.setValueFromIdentifier(me, s);
 }
-void saveCvarsXonoticTextSlider(entity me)
+void XonoticTextSlider_saveCvars(entity me)
 {
 	if not(me.cvarName)
 		return;
@@ -94,7 +94,7 @@ void saveCvarsXonoticTextSlider(entity me)
 		}
 	}
 }
-void configureXonoticTextSliderValuesXonoticTextSlider(entity me)
+void XonoticTextSlider_configureXonoticTextSliderValues(entity me)
 {
 	me.configureTextSliderValues(me, string_null);
 	me.loadCvars(me);

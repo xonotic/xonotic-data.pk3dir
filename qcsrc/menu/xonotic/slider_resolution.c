@@ -60,12 +60,12 @@ entity makeXonoticResolutionSlider()
 	me.configureXonoticResolutionSlider(me);
 	return me;
 }
-void addResolutionXonoticResolutionSlider(entity me, float w, float h, float pixelheight)
+void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pixelheight)
 {
 	me.addValue(me, strzone(strcat(ftos(w), "x", ftos(h))), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
 	// FIXME (in case you ever want to dynamically instantiate this): THIS IS NEVER FREED
 }
-void configureXonoticResolutionSliderXonoticResolutionSlider(entity me)
+void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 {
 	float i;
 	vector r0, r;
@@ -90,11 +90,11 @@ void configureXonoticResolutionSliderXonoticResolutionSlider(entity me)
 
 	me.configureXonoticTextSliderValues(me);
 }
-void loadCvarsXonoticResolutionSlider(entity me)
+void XonoticResolutionSlider_loadCvars(entity me)
 {
 	me.setValueFromIdentifier(me, strcat(cvar_string("menu_vid_width"), " ", cvar_string("menu_vid_height"), " ", cvar_string("menu_vid_pixelheight")));
 }
-void saveCvarsXonoticResolutionSlider(entity me)
+void XonoticResolutionSlider_saveCvars(entity me)
 {
 	if(me.value >= 0 || me.value < me.nValues)
 	{

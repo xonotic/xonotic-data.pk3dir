@@ -250,38 +250,6 @@ float w_campingrifle(float req)
 		return self.ammo_nails >= cvar("g_balance_campingrifle_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_nails >= cvar("g_balance_campingrifle_secondary_ammo");
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "shot themself automatically";
-		else
-			w_deathtypestring = "sniped themself somehow";
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-				w_deathtypestring = "failed to hide from #'s bullet hail";
-			else
-				w_deathtypestring = "died in #'s bullet hail";
-		}
-		else
-		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-			{
-				// TODO special headshot message here too?
-				w_deathtypestring = "failed to hide from #'s rifle";
-			}
-			else
-			{
-				if(w_deathtype & HITTYPE_HEADSHOT)
-					w_deathtypestring = "got hit in the head by #";
-				else
-					w_deathtypestring = "was sniped by #";
-			}
-		}
-	}
 	else if (req == WR_RELOAD)
 	{
 		W_CampingRifle_Reload();
@@ -318,6 +286,38 @@ float w_campingrifle(float req)
 		precache_sound("weapons/ric1.wav");
 		precache_sound("weapons/ric2.wav");
 		precache_sound("weapons/ric3.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			w_deathtypestring = "shot themself automatically";
+		else
+			w_deathtypestring = "sniped themself somehow";
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+				w_deathtypestring = "failed to hide from #'s bullet hail";
+			else
+				w_deathtypestring = "died in #'s bullet hail";
+		}
+		else
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+			{
+				// TODO special headshot message here too?
+				w_deathtypestring = "failed to hide from #'s rifle";
+			}
+			else
+			{
+				if(w_deathtype & HITTYPE_HEADSHOT)
+					w_deathtypestring = "got hit in the head by #";
+				else
+					w_deathtypestring = "was sniped by #";
+			}
+		}
 	}
 	return TRUE;
 }

@@ -126,15 +126,6 @@ float w_uzi(float req)
 		return self.ammo_nails >= cvar("g_balance_uzi_first_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_nails >= cvar("g_balance_uzi_first_ammo");
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "was sniped by";
-		else
-			w_deathtypestring = "was riddled full of holes by";
-	}
 	return TRUE;
 };
 #endif
@@ -159,6 +150,15 @@ float w_uzi(float req)
 		precache_sound("weapons/ric1.wav");
 		precache_sound("weapons/ric2.wav");
 		precache_sound("weapons/ric3.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "did the impossible";
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			w_deathtypestring = "was sniped by";
+		else
+			w_deathtypestring = "was riddled full of holes by";
 	}
 	return TRUE;
 }

@@ -10,7 +10,7 @@ ENDCLASS(XonoticWinnerDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticWinnerDialog(entity me)
+void XonoticWinnerDialog_fill(entity me)
 {
 	entity e;
 

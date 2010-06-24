@@ -217,23 +217,6 @@ float w_glauncher(float req)
 		return self.ammo_rockets >= cvar("g_balance_grenadelauncher_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_rockets >= cvar("g_balance_grenadelauncher_secondary_ammo");
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "tried out his own grenade";
-		else
-			w_deathtypestring = "detonated";
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SPLASH)
-			if(w_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
-				w_deathtypestring = "didn't see #'s grenade";
-			else // unchecked: SECONDARY
-				w_deathtypestring = "almost dodged #'s grenade";
-		else // unchecked: SECONDARY, BOUNCE
-			w_deathtypestring = "ate #'s grenade";
-	}
 	return TRUE;
 };
 #endif
@@ -251,6 +234,23 @@ float w_glauncher(float req)
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/grenade_impact.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			w_deathtypestring = "tried out his own grenade";
+		else
+			w_deathtypestring = "detonated";
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SPLASH)
+			if(w_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
+				w_deathtypestring = "didn't see #'s grenade";
+			else // unchecked: SECONDARY
+				w_deathtypestring = "almost dodged #'s grenade";
+		else // unchecked: SECONDARY, BOUNCE
+			w_deathtypestring = "ate #'s grenade";
 	}
 	return TRUE;
 }

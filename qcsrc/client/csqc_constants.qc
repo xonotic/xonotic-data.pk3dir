@@ -32,7 +32,7 @@ const float		VF_ANGLES_X						= 16;	//(float)
 const float		VF_ANGLES_Y						= 17;	//(float)
 const float		VF_ANGLES_Z						= 18;	//(float)
 const float		VF_DRAWWORLD					= 19;	//(float)
-const float		VF_DRAWENGINESBAR				= 20;	//(float)
+const float		VF_DRAWENGINEHUD				= 20;	//(float)
 const float		VF_DRAWCROSSHAIR				= 21;	//(float)
 const float		VF_PERSPECTIVE					= 200;	//(float)
 

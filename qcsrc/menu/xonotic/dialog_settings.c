@@ -10,7 +10,7 @@ ENDCLASS(XonoticSettingsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticSettingsDialog(entity me)
+void XonoticSettingsDialog_fill(entity me)
 {
 	entity mc;
 	mc = makeXonoticTabController(me.rows - 2);

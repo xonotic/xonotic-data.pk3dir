@@ -304,11 +304,11 @@ entity GetTeam(float Team, float add)
 
 void CSQC_CheckEngine()
 {
-	sbar_font = FONT_USER+1;
-	sbar_bigfont = FONT_USER+2;
+	hud_font = FONT_USER+1;
+	hud_bigfont = FONT_USER+2;
 }
 
-vector Sbar_GetFontsize(string cvarname)
+vector HUD_GetFontsize(string cvarname)
 {
 	vector v;
 	v = stov(cvar_string(cvarname));
@@ -320,10 +320,10 @@ vector Sbar_GetFontsize(string cvarname)
 	return v;
 }
 
-float Sbar_GetWidth(float teamcolumnwidth)
+float HUD_GetWidth(float teamcolumnwidth)
 {
 	float f;
-	f = cvar("sbar_width");
+	f = cvar("hud_width");
 	if(f == 0)
 		f = 640;
 	if(f < 320)
@@ -482,24 +482,41 @@ void drawpic_expanding_two(vector position, string pic, vector scale, vector rgb
 	drawpic(position, pic, scale, rgb, alpha * fadelerp, flag);
 }
 
+// drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
+void drawstring_aspect(vector pos, string text, vector sz, float fontsize, vector color, float alpha, float drawflag) {
+	vector textsize;
+	textsize = eX * stringwidth(text, FALSE, '1 1 0' * fontsize) + eY * fontsize;
+	
+	float textaspect;
+	textaspect = textsize_x/textsize_y;
+
+	vector oldsz;
+	oldsz = sz;
+	float aspect;
+	aspect = sz_x/sz_y;
+
+	if(aspect > textaspect) {
+		sz_x = sz_y * textaspect;
+		drawstring(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag);
+	} else {
+		sz_y = sz_x / textaspect; 
+		drawstring(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag);
+	}
+}
+
 vector drawfontscale;
 void drawstring_expanding(vector position, string text, vector scale, vector rgb, float alpha, float flag, float fadelerp)
 {
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
-	if(cvar("menu_font_size_snapping_fix"))
-		drawfontscale = sz * '1 1 0';
-	else
-		drawfontscale = '1 1 0';
+	drawfontscale = sz * '1 1 0';
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
         drawstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, FALSE, scale * (sz / drawfontscale_x)) / (scale_x * sz)), text, scale * (sz / drawfontscale_x), rgb, alpha * (1 - fadelerp), flag);
 	// width parameter:
 	//    (scale_x * sz / drawfontscale_x) * drawfontscale_x * SIZE1 / (scale_x * sz)
 	//    SIZE1
-
-	if(cvar("menu_font_size_snapping_fix"))
-		drawfontscale = '1 1 0';
+	drawfontscale = '1 1 0';
 }
 
 void drawcolorcodedstring_expanding(vector position, string text, vector scale, float alpha, float flag, float fadelerp)
@@ -507,15 +524,10 @@ void drawcolorcodedstring_expanding(vector position, string text, vector scale, 
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
-	if(cvar("menu_font_size_snapping_fix"))
-		drawfontscale = sz * '1 1 0';
-	else
-		drawfontscale = '1 1 0';
+	drawfontscale = sz * '1 1 0';
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
 	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, TRUE, scale * (sz / drawfontscale_x)) / (scale_x * sz)), text, scale * (sz / drawfontscale_x), alpha * (1 - fadelerp), flag);
-
-	if(cvar("menu_font_size_snapping_fix"))
-		drawfontscale = '1 1 0';
+	drawfontscale = '1 1 0';
 }
 
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...

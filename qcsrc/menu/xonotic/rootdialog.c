@@ -14,7 +14,7 @@ ENDCLASS(XonoticRootDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void closeXonoticRootDialog(entity me)
+void XonoticRootDialog_close(entity me)
 {
 	m_goto(string_null);
 }

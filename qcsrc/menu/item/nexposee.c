@@ -35,6 +35,7 @@ void ExposeeCloseButton_Click(entity button, entity other); // un-exposees the c
 #ifdef IMPLEMENTATION
 
 .vector Nexposee_initialSize;
+.vector Nexposee_initialFontScale;
 .vector Nexposee_initialOrigin;
 .float Nexposee_initialAlpha;
 
@@ -46,7 +47,7 @@ void ExposeeCloseButton_Click(entity button, entity other); // un-exposees the c
 .vector Nexposee_align;
 .float Nexposee_animationFactor;
 
-void closeNexposee(entity me)
+void Nexposee_close(entity me)
 {
 	// user must override this
 }
@@ -58,10 +59,10 @@ void ExposeeCloseButton_Click(entity button, entity other)
 	other.animationState = 3;
 }
 
-void resizeNotifyNexposee(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void Nexposee_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.calc(me);
-	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, Nexposee_initialOrigin, Nexposee_initialSize);
+	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, Nexposee_initialOrigin, Nexposee_initialSize, Nexposee_initialFontScale);
 }
 
 void Nexposee_Calc_Scale(entity me, float scale)
@@ -82,7 +83,7 @@ void Nexposee_Calc_Scale(entity me, float scale)
 	}
 }
 
-void calcNexposee(entity me)
+void Nexposee_calc(entity me)
 {
 	/*
 	 * patented by Apple
@@ -127,7 +128,7 @@ void calcNexposee(entity me)
 	Nexposee_Calc_Scale(me, scale);
 }
 
-void setNexposeeNexposee(entity me, entity other, vector scalecenter, float a0, float a1)
+void Nexposee_setNexposee(entity me, entity other, vector scalecenter, float a0, float a1)
 {
 	other.Nexposee_scaleCenter = scalecenter;
 	other.Nexposee_smallAlpha = a0;
@@ -135,12 +136,13 @@ void setNexposeeNexposee(entity me, entity other, vector scalecenter, float a0, 
 	other.Nexposee_mediumAlpha = a1;
 }
 
-void drawNexposee(entity me)
+void Nexposee_draw(entity me)
 {
 	float a;
 	float a0;
 	entity e;
 	float f;
+	vector fs;
 
 	if(me.animationState == -1)
 	{
@@ -161,7 +163,7 @@ void drawNexposee(entity me)
 			{
 				me.animationFactor = 1;
 				me.animationState = 2;
-				setFocusContainer(me, me.selectedChild);
+				SUPER(Nexposee).setFocus(me, me.selectedChild);
 			}
 			break;
 		case 2:
@@ -203,22 +205,24 @@ void drawNexposee(entity me)
 		}
 		me.setAlphaOf(me, e, e.Container_alpha * (1 - f) + a * f);
 
-		e.Container_fontscale = globalToBoxSize(e.Container_size, e.Nexposee_initialSize);
+		fs = globalToBoxSize(e.Container_size, e.Nexposee_initialSize);
+		e.Container_fontscale_x = fs_x * e.Nexposee_initialFontScale_x;
+		e.Container_fontscale_y = fs_y * e.Nexposee_initialFontScale_y;
 	}
 
-	drawContainer(me);
+	SUPER(Nexposee).draw(me);
 };
 
-float mousePressNexposee(entity me, vector pos)
+float Nexposee_mousePress(entity me, vector pos)
 {
 	if(me.animationState == 0)
 	{
 		me.mouseFocusedChild = NULL;
-		mouseMoveNexposee(me, pos);
+		Nexposee_mouseMove(me, pos);
 		if(me.mouseFocusedChild)
 		{
 			me.animationState = 1;
-			setFocusContainer(me, NULL);
+			SUPER(Nexposee).setFocus(me, NULL);
 		}
 		else
 			me.close(me);
@@ -226,38 +230,38 @@ float mousePressNexposee(entity me, vector pos)
 	}
 	else if(me.animationState == 2)
 	{
-		if not(mousePressContainer(me, pos))
+		if not(SUPER(Nexposee).mousePress(me, pos))
 		{
 			me.animationState = 3;
-			setFocusContainer(me, NULL);
+			SUPER(Nexposee).setFocus(me, NULL);
 		}
 		return 1;
 	}
 	return 0;
 }
 
-float mouseReleaseNexposee(entity me, vector pos)
+float Nexposee_mouseRelease(entity me, vector pos)
 {
 	if(me.animationState == 2)
-		return mouseReleaseContainer(me, pos);
+		return SUPER(Nexposee).mouseRelease(me, pos);
 	return 0;
 }
 
-float mouseDragNexposee(entity me, vector pos)
+float Nexposee_mouseDrag(entity me, vector pos)
 {
 	if(me.animationState == 2)
-		return mouseDragContainer(me, pos);
+		return SUPER(Nexposee).mouseDrag(me, pos);
 	return 0;
 }
 
-float mouseMoveNexposee(entity me, vector pos)
+float Nexposee_mouseMove(entity me, vector pos)
 {
 	entity e;
 	me.mousePosition = pos;
 	e = me.mouseFocusedChild;
 	me.mouseFocusedChild = me.itemFromPoint(me, pos);
 	if(me.animationState == 2)
-		return mouseMoveContainer(me, pos);
+		return SUPER(Nexposee).mouseMove(me, pos);
 	if(me.animationState == 0)
 	{
 		if(me.mouseFocusedChild)
@@ -268,18 +272,18 @@ float mouseMoveNexposee(entity me, vector pos)
 	return 0;
 }
 
-float keyUpNexposee(entity me, float scan, float ascii, float shift)
+float Nexposee_keyUp(entity me, float scan, float ascii, float shift)
 {
 	if(me.animationState == 2)
-		return keyUpContainer(me, scan, ascii, shift);
+		return SUPER(Nexposee).keyUp(me, scan, ascii, shift);
 	return 0;
 }
 
-float keyDownNexposee(entity me, float scan, float ascii, float shift)
+float Nexposee_keyDown(entity me, float scan, float ascii, float shift)
 {
 	float nexposeeKey;
 	if(me.animationState == 2)
-		if(keyDownContainer(me, scan, ascii, shift))
+		if(SUPER(Nexposee).keyDown(me, scan, ascii, shift))
 			return 1;
 	if(scan == K_TAB)
 	{
@@ -329,27 +333,30 @@ float keyDownNexposee(entity me, float scan, float ascii, float shift)
 			me.selectedChild = me.focusedChild;
 		if not(me.selectedChild)
 			me.animationState = 0;
-		setFocusContainer(me, NULL);
+		SUPER(Nexposee).setFocus(me, NULL);
 		return 1;
 	}
 	return 0;
 }
 
-void addItemNexposee(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
+void Nexposee_addItem(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
 {
-	addItemContainer(me, other, theOrigin, theSize, theAlpha);
+	SUPER(Nexposee).addItem(me, other, theOrigin, theSize, theAlpha);
+	other.Nexposee_initialFontScale = other.Container_fontscale;
 	other.Nexposee_initialSize = other.Container_size;
 	other.Nexposee_initialOrigin = other.Container_origin;
 	other.Nexposee_initialAlpha = other.Container_alpha;
+	if(other.Nexposee_initialFontScale == '0 0 0')
+		other.Nexposee_initialFontScale = '1 1 0';
 }
 
-void focusEnterNexposee(entity me)
+void Nexposee_focusEnter(entity me)
 {
 	if(me.animationState == 2)
-		setFocusContainer(me, me.selectedChild);
+		SUPER(Nexposee).setFocus(me, me.selectedChild);
 }
 
-void pullNexposeeNexposee(entity me, entity other, vector theAlign)
+void Nexposee_pullNexposee(entity me, entity other, vector theAlign)
 {
 	other.Nexposee_align = theAlign;
 }

@@ -281,6 +281,7 @@ string(string info, string key) infoget = #227;
 string(string info, string key, string value, ...) infoadd = #226;
 string(string in) uri_escape = #510;
 
+float stringtokeynum(string keyname) = #341;
 string	keynumtostring(float keynum) = #520;
 string	findkeysforcommand(string command) = #521;
 
@@ -316,3 +317,4 @@ float particles_alphamin, particles_alphamax;
 #define PARTICLES_USECOLOR 2
 vector particles_colormin, particles_colormax;
 void(float effectindex, entity own, vector org_from, vector org_to, vector dir_from, vector dir_to, float countmultiplier, float flags)	boxparticles = #502;
+string(string format, ...) sprintf = #627;

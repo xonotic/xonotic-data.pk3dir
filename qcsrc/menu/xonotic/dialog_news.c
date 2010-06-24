@@ -10,7 +10,7 @@ ENDCLASS(XonoticNewsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticNewsDialog(entity me)
+void XonoticNewsDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

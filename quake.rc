@@ -9,4 +9,4 @@ exec loadfonts.cfg
 //startdemos
 //play announcer/male/welcome.ogg
 
-//exec font-dejavu.cfg
+exec font-nimbussansl.cfg

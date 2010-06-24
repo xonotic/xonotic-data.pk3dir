@@ -22,7 +22,7 @@ void XonoticUserbindEditDialog_Save(entity btn, entity me)
 	Dialog_Close(btn, me);
 }
 
-void loadUserBindXonoticUserbindEditDialog(entity me, string theName, string theCommandPress, string theCommandRelease)
+void XonoticUserbindEditDialog_loadUserBind(entity me, string theName, string theCommandPress, string theCommandRelease)
 {
 	me.nameBox.setText(me.nameBox, theName);
 		me.nameBox.keyDown(me.nameBox, K_END, 0, 0);
@@ -32,7 +32,7 @@ void loadUserBindXonoticUserbindEditDialog(entity me, string theName, string the
 		me.nameBox.keyDown(me.commandReleaseBox, K_END, 0, 0);
 }
 
-void fillXonoticUserbindEditDialog(entity me)
+void XonoticUserbindEditDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);

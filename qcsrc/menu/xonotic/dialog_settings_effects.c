@@ -29,7 +29,7 @@ float someShadowCvarIsEnabled(entity box)
 	return FALSE;
 }
 
-void fillXonoticEffectsSettingsTab(entity me)
+void XonoticEffectsSettingsTab_fill(entity me)
 {
 	entity e, s;
 	float n;

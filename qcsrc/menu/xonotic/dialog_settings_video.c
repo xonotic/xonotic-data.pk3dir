@@ -18,7 +18,7 @@ entity makeXonoticVideoSettingsTab()
 	me.configureDialog(me);
 	return me;
 }
-void fillXonoticVideoSettingsTab(entity me)
+void XonoticVideoSettingsTab_fill(entity me)
 {
 	entity e;
 

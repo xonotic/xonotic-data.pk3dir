@@ -33,7 +33,6 @@
 "+showscores"                           "show scores"
 "+showaccuracy"				"show accuracy"
 "screenshot"                            "screen shot"
-"radar"                                 "toggle full radar"
 ""                                      ""
 ""                                      "Communicate"
 "messagemode"                           "public chat"
