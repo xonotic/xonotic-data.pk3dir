@@ -14,6 +14,13 @@ Misc HUD functions
 //   1/4 height: bottom part
 void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha, vector theBorderSize)
 {
+	if (theBorderSize_x <= 0 && theBorderSize_y <= 0) // no border
+	{
+		// draw only the central part
+		drawsubpic(theOrigin, theSize, pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
+		return;
+	}
+
 	vector dX, dY;
 	vector width, height;
 	vector bW, bH;
@@ -861,7 +868,7 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
 	if(bg != "0")
 	{
 		float border;
-		border = max(0.0000001, HUD_Panel_GetBorder(id)); // draw_BorderPicture does not like border = 0
+		border = HUD_Panel_GetBorder(id);
 
 		vector color;
 		color = HUD_Panel_GetColor(id);
