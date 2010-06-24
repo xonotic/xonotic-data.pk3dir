@@ -300,6 +300,7 @@ void WarpZoneCamera_InitStep_FindTarget()
 		error("Camera with nonexisting target");
 		return;
 	}
+	WarpZone_Camera_SetUp(self, self.enemy.origin, self.enemy.angles);
 }
 
 void WarpZone_InitStep_UpdateTransform()
