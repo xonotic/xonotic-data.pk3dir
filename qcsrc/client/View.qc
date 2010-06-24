@@ -341,7 +341,7 @@ void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard ();
 float view_set;
 float camera_mode;
-float zoom_type;
+float reticle_type;
 string NextFrameCommand;
 void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
@@ -553,11 +553,11 @@ void CSQC_UpdateView(float w, float h)
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
 	// draw the aiming reticle for weapons that use it (eg. Nex)
-	// zoom_type is changed to the item we are zooming with, to decide which reticle to use
+	// reticle_type is changed to the item we are zooming or aiming with, to decide which reticle to use
 	if(button_zoom)
-		zoom_type = 0; // normal zoom
+		reticle_type = 0; // normal zoom
 	else if(activeweapon == WEP_NEX && button_attack2)
-		zoom_type = 1; // nex zoom
+		reticle_type = 1; // nex zoom
 
 	reticle_size_x = max(vid_conwidth, vid_conheight);
 	reticle_size_y = max(vid_conwidth, vid_conheight);
@@ -567,7 +567,7 @@ void CSQC_UpdateView(float w, float h)
 	if(cvar("cl_reticle_nex"))
 	{
 		precache_pic("textures/reticle_nex");
-		if(zoom_type == 1)
+		if(reticle_type == 1)
 			drawpic(reticle_pos, "textures/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_nex"), DRAWFLAG_NORMAL);
 	}
 
