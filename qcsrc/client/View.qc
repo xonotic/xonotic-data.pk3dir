@@ -566,6 +566,12 @@ void CSQC_UpdateView(float w, float h)
 	reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
 	reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
 
+	if(cvar("cl_reticle_normal"))
+	{
+		precache_pic("textures/reticle_normal");
+		if(reticle_type == 0 && current_zoomfraction)
+			drawpic(reticle_pos, "textures/reticle_normal", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_normal"), DRAWFLAG_NORMAL);
+	}
 	if(cvar("cl_reticle_nex"))
 	{
 		precache_pic("textures/reticle_nex");
