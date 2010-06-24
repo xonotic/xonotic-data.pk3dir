@@ -877,7 +877,9 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
 
 void HUD_Panel_DrawProgressBar(vector pos, float vertical, vector mySize, vector color, float alpha, float drawflag)
 {
-//float	drawsubpic(vector position, vector size, string pic, vector srcPosition, vector srcSize, vector rgb, float alpha, float flag) = #328;
+	if(!alpha)
+		return;
+
 	string pic;
 	pic = strcat("gfx/hud/", cvar_string("hud_skin"), "/");
 	if(vertical) {
