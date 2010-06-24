@@ -341,6 +341,7 @@ void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard ();
 float view_set;
 float camera_mode;
+float zoom_type;
 string NextFrameCommand;
 void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
@@ -553,7 +554,6 @@ void CSQC_UpdateView(float w, float h)
 
 	// draw the aiming reticle for weapons that use it (eg. Nex)
 	// zoom_type is changed to the item we are zooming with, to decide which reticle to use
-	float zoom_type;
 	if(button_zoom)
 		zoom_type = 0; // normal zoom
 	else if(activeweapon == WEP_NEX && button_attack2)
