@@ -233,11 +233,9 @@ void draw_Text(vector theOrigin, string theText, vector theSize, vector theColor
 	if(theSize_x <= 0 || theSize_y <= 0)
 		error("Drawing zero size text?\n");
 
-	/*
-	float wi;
-	wi = draw_TextWidth(theText, ICanHasKallerz, theSize);
-	draw_Fill(theOrigin, '1 0 0' * wi + '0 1 0' * theSize_y, '1 0 0', 0.3);
-	*/
+	//float wi;
+	//wi = draw_TextWidth(theText, ICanHasKallerz, theSize);
+	//draw_Fill(theOrigin, '1 0 0' * wi + '0 1 0' * theSize_y, '1 0 0', 0.3);
 
 	if(ICanHasKallerz)
 		drawcolorcodedstring(boxToGlobal(theOrigin, draw_shift, draw_scale), theText, globalToBoxSize(boxToGlobalSize(theSize, draw_scale), draw_fontscale), theAlpha * draw_alpha, 0);
@@ -257,7 +255,7 @@ float draw_TextWidth(string theText, float ICanHasKallerz, vector SizeThxBye)
 	vector v;
 	v = '0 0 0';
 	//float r;
-	v_x = stringwidth(theText, ICanHasKallerz, boxToGlobalSize(SizeThxBye, draw_scale));
+	v_x = stringwidth(theText, ICanHasKallerz, globalToBoxSize(boxToGlobalSize(SizeThxBye, draw_scale), draw_fontscale));
 	v = globalToBoxSize(v, draw_scale);
 	return v_x;
 }
