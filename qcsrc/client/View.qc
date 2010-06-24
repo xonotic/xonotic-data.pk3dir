@@ -563,22 +563,32 @@ void CSQC_UpdateView(float w, float h)
 	else if(activeweapon == WEP_NEX && button_attack2)
 		reticle_type = 2; // nex zoom
 
-	reticle_size_x = max(vid_conwidth, vid_conheight);
-	reticle_size_y = max(vid_conwidth, vid_conheight);
-	reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
-	reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
+	if(cvar("cl_reticle_stretch"))
+	{
+		reticle_pos_x = 0;
+		reticle_pos_y = 0;
+		reticle_size_x = vid_conwidth;
+		reticle_size_y = vid_conheight;
+	}
+	else
+	{
+		reticle_size_x = max(vid_conwidth, vid_conheight);
+		reticle_size_y = max(vid_conwidth, vid_conheight);
+		reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
+		reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
+	}
 
-	if(cvar("cl_reticle_normal"))
+	if(cvar("cl_reticle_item_normal"))
 	{
 		precache_pic("textures/reticle_normal");
 		if(reticle_type == 1 && current_zoomfraction)
-			drawpic(reticle_pos, "textures/reticle_normal", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_normal"), DRAWFLAG_NORMAL);
+			drawpic(reticle_pos, "textures/reticle_normal", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_item_normal"), DRAWFLAG_NORMAL);
 	}
-	if(cvar("cl_reticle_nex"))
+	if(cvar("cl_reticle_item_nex"))
 	{
 		precache_pic("textures/reticle_nex");
 		if(reticle_type == 2 && current_zoomfraction)
-			drawpic(reticle_pos, "textures/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_nex"), DRAWFLAG_NORMAL);
+			drawpic(reticle_pos, "textures/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_item_nex"), DRAWFLAG_NORMAL);
 	}
 
 	// Draw the mouse cursor
