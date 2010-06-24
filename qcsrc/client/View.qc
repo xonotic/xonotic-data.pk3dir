@@ -569,7 +569,7 @@ void CSQC_UpdateView(float w, float h)
 	if(cvar("cl_reticle_nex"))
 	{
 		precache_pic("textures/reticle_nex");
-		if(reticle_type == 1)
+		if(reticle_type == 1 && current_zoomfraction)
 			drawpic(reticle_pos, "textures/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_nex"), DRAWFLAG_NORMAL);
 	}
 
