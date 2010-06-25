@@ -146,99 +146,6 @@ vector HUD_AccuracyColor(float accuracy)
 	return rgb;
 }
 
-// draw number in the XSCALE font
-void HUD_DrawXNum (vector pos, float num, float digits, float showsign, float lettersize, vector rgb, float highlighted, float stroke, float alpha, float dflags)
-{
-	float l, i;
-	string str, tmp, l_length;
-	float minus, plus;
-	vector vsize, num_color;
-
-	vsize_x = vsize_y = lettersize;
-	vsize_z = 0;
-
-	// showsign 1: always prefix with minus sign (useful in race distribution display)
-	// showsign 2: always prefix with plus sign (useful in race distribution display)
-	// showsign 3: prefix with minus sign if negative, plus sign if positive (useful in score distribution display)
-
-	if((showsign == 2 && num >= 0) || (num > 0 && showsign == 3))
-	{
-		plus = true;
-		pos_x -= lettersize;
-	} else
-		plus = false;
-
-	if(num < 0 || (num < 0 && showsign == 3) || (showsign == 1 && num <= 0))
-	{
-		minus = true;
-		num = -num;
-		pos_x -= lettersize;
-	} else
-		minus = false;
-
-	if(digits < 0)
-	{
-		tmp = ftos(num);
-		digits = -digits;
-		str = strcat(substring("0000000000", 0, digits - strlen(tmp)), tmp);
-	} else
-		str = ftos(num);
-
-	l = strlen(str);
-	l_length = ftos(l);
-
-	if(l > digits)
-	{
-		str = substring(str, l-digits, 999);
-		l = strlen(str);
-	} else if(l < digits)
-		pos_x += (digits-l) * lettersize;
-
-	if (highlighted == 1) {
-		vector hl_size;
-		hl_size_x = vsize_x * l + vsize_x * 0.2;
-		hl_size_y = vsize_y * 1.1;
-		hl_size_z = 0;
-		if(minus)
-			hl_size_x = hl_size_x + vsize_x;
-
-		vector hl_pos;
-		hl_pos_x = pos_x - lettersize/10;
-		hl_pos_y = pos_y - lettersize/20;
-		hl_pos_z = 0;
-
-		drawpic_skin(hl_pos, strcat("num_leading_", l_length), hl_size, '1 1 1', alpha, dflags);
-	}
-
-	if (stroke == 1)
-		num_color = '1 1 1';
-	else
-		num_color = rgb;
-
-	if(minus)
-	{
-		if (stroke == 1)
-			drawpic_skin(pos, "num_minus_stroke", vsize, rgb, alpha, dflags);
-		drawpic_skin(pos, "num_minus", vsize, num_color, alpha, dflags);
-		pos_x += lettersize;
-	} else if(plus)
-	{
-		if (stroke == 1)
-			drawpic_skin(pos, "num_plus_stroke", vsize, rgb, alpha, dflags);
-		drawpic_skin(pos, "num_plus", vsize, num_color, alpha, dflags);
-		pos_x += lettersize;
-	}
-
-	for(i = 0; i < l; ++i)
-	{
-		tmp = substring(str, i, 1);
-		if (stroke == 1)
-			drawpic_skin(pos, strcat("num_", tmp, "_stroke"), vsize, rgb, alpha, dflags);
-		drawpic_skin(pos, strcat("num_", tmp), vsize, num_color, alpha, dflags);
-		pos_x += lettersize;
-	}
-}
-
 vector HUD_Get_Num_Color (float x, float maxvalue)
 {
 	vector color;
@@ -273,13 +180,6 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 		color_z = 0;
 	}
 	return color;
-}
-// color the number differently based on how big it is (used in the health/armor panel)
-void HUD_DrawXNum_Colored (vector pos, float x, float digits, float lettersize, float alpha)
-{
-	vector color;
-	color = HUD_Get_Num_Color (x, 200);
-	HUD_DrawXNum(pos, x, digits, 0, lettersize, color, 0, 0, alpha, DRAWFLAG_NORMAL);
 }
 
 float stringwidth_colors(string s, vector theSize)
