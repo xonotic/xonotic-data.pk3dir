@@ -200,6 +200,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		if(--i < 1)
 		{
 			dprint("Too many warpzones in sequence, aborting trace.\n");
+			trace_ent = world;
 			break;
 		}
 		tracebox(org, mi, ma, end, nomonsters, forent);
@@ -216,6 +217,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		if(trace_ent == wz)
 		{
 			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
+			trace_ent = world;
 			break;
 		}
 		wz = trace_ent;
@@ -281,6 +283,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		if(--i < 1)
 		{
 			dprint("Too many warpzones in sequence, aborting trace.\n");
+			trace_ent = world;
 			break;
 		}
 		tracetoss(e, forent);
@@ -297,6 +300,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		if(trace_ent == wz)
 		{
 			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
+			trace_ent = world;
 			break;
 		}
 		wz = trace_ent;
