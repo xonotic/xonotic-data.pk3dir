@@ -96,15 +96,19 @@ float InputBox_keyDown(entity me, float key, float ascii, float shift)
 	}
 	switch(key)
 	{
+		case K_KP_LEFTARROW:
 		case K_LEFTARROW:
 			me.cursorPos -= 1;
 			return 1;
+		case K_KP_RIGHTARROW:
 		case K_RIGHTARROW:
 			me.cursorPos += 1;
 			return 1;
+		case K_KP_HOME:
 		case K_HOME:
 			me.cursorPos = 0;
 			return 1;
+		case K_KP_END:
 		case K_END:
 			me.cursorPos = strlen(me.text);
 			return 1;
@@ -115,6 +119,7 @@ float InputBox_keyDown(entity me, float key, float ascii, float shift)
 				me.setText(me, strcat(substring(me.text, 0, me.cursorPos), substring(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
 			}
 			return 1;
+		case K_KP_DEL:
 		case K_DEL:
 			if(shift & S_CTRL)
 				me.setText(me, "");

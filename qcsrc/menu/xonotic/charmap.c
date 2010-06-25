@@ -97,26 +97,33 @@ float XonoticCharmap_keyDown(entity me, float key, float ascii, float shift)
 	switch(key)
 	{
 		case K_LEFTARROW:
+		case K_KP_LEFTARROW:
 			me.selectedCharacterCell = mod(me.selectedCharacterCell + 159, 160);
 			return 1;
 		case K_RIGHTARROW:
+		case K_KP_RIGHTARROW:
 			me.selectedCharacterCell = mod(me.selectedCharacterCell + 1, 160);
 			return 1;
 		case K_UPARROW:
+		case K_KP_UPARROW:
 			me.selectedCharacterCell = mod(me.selectedCharacterCell + 144, 160);
 			return 1;
 		case K_DOWNARROW:
+		case K_KP_DOWNARROW:
 			me.selectedCharacterCell = mod(me.selectedCharacterCell + 16, 160);
 			return 1;
 		case K_HOME:
+		case K_KP_HOME:
 			me.selectedCharacterCell = 0;
 			return 1;
 		case K_END:
+		case K_KP_END:
 			me.selectedCharacterCell = 159;
 			return 1;
 		case K_SPACE:
 		case K_ENTER:
 		case K_INS:
+		case K_KP_INS:
 			me.controlledTextbox.enterText(me.controlledTextbox, CharMap_CellToChar(me.selectedCharacterCell));
 			return 1;
 		default:
