@@ -294,8 +294,8 @@ void Spawnqueue_Check()
 			allowed_to_spawn = 1;
 			return;
 		}
-		else if(!next_round)
-			if((redspawned && bluespawned == 0) || (bluespawned && redspawned == 0)) {
+		else if(!next_round) {
+			if((redspawned && !bluespawned) || (bluespawned && !redspawned)) {
 				next_round = time + 5;
 
 				champion = find(world, classname, "player");
@@ -308,7 +308,8 @@ void Spawnqueue_Check()
 					champion_team = "^4Blue team";
 					play2all("ctf/blue_capture.wav");
 				}
-				FOR_EACH_CLIENT(self) centerprint(self, strcat(champion_team, "^7 wins the round.", "^7\n"));	
+				FOR_EACH_CLIENT(self) centerprint(self, strcat(champion_team, "^7 wins the round.", "^7\n"));
+			}
 			else if(!redspawned && !bluespawned) {
 				FOR_EACH_CLIENT(self) centerprint(self, strcat("^7Round tied.", "^7\n"));
 				next_round = time + 5;
