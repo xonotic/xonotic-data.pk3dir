@@ -546,7 +546,7 @@ void WarpZone_StartFrame()
 		WarpZone_StoreProjectileData(e);
 }
 
-void target_warpzone_reconnect_use()
+void trigger_warpzone_reconnect_use()
 {
 	entity e;
 	e = self;
@@ -564,7 +564,12 @@ void target_warpzone_reconnect_use()
 	self = e;
 }
 
-void trigger_warpzone_reconnect()
+void spawnfunc_trigger_warpzone_reconnect()
 {
-	self.use = target_warpzone_reconnect_use;
+	self.use = trigger_warpzone_reconnect_use;
+}
+
+void spawnfunc_target_warpzone_reconnect()
+{
+	spawnfunc_trigger_warpzone_reconnect(); // both names make sense here :(
 }
