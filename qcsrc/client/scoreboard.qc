@@ -1114,10 +1114,10 @@ void HUD_DrawScoreboard()
 				continue;
 
 			rgb = GetTeamRGB(tm.team);
-			HUD_DrawXNum(pos - '9.5 0 0' * hud_fontsize_y + '0 1 0' * hud_fontsize_y, tm.(teamscores[ts_primary]), 6, 0, hud_fontsize_y * 1.5, rgb, 0, 1, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawstring(pos - '9.5 0 0' * hud_fontsize_y + '0 1 0' * hud_fontsize_y, ftos(tm.(teamscores[ts_primary])), '1 1 0' * hud_fontsize_y * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(ts_primary != ts_secondary)
-				HUD_DrawXNum(pos - '7.5 0 0' * hud_fontsize_y + '0 2.5 0' * hud_fontsize_y, tm.(teamscores[ts_secondary]), 6, 0, hud_fontsize_y * 1, rgb, 0, 1, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+				drawstring(pos - '7.5 0 0' * hud_fontsize_y + '0 2.5 0' * hud_fontsize_y, ftos(tm.(teamscores[ts_secondary])), '1 1 0' * hud_fontsize_y * 1, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
 		}
