@@ -394,21 +394,29 @@ void WarpZone_InitStep_ClearTarget()
 	self.enemy = world;
 }
 
+entity warpzone_first; .entity warpzone_next;
 void WarpZone_InitStep_FindTarget()
 {
 	float i;
 	entity e, e2;
 
+	if(self.enemy)
+		return;
+
 	// this way only one of the two ents needs to target
 	if(self.target != "")
 	{
+		self.enemy = self; // so the if(!e.enemy) check also skips self, saves one IF
+
 		e2 = world;
-		for(e = world; (e = find(e, targetname, self.target)); )
+		for(e = world, i = 0; (e = find(e, targetname, self.target)); )
 			if(!e.enemy)
-				if(random() * ++i < 1)
-					e2 = e;
+				if(e.classname == self.classname) // possibly non-warpzones may use the same targetname!
+					if(random() * ++i < 1)
+						e2 = e;
 		if(!e2)
 		{
+			self.enemy = world;
 			error("Warpzone with non-existing target");
 			return;
 		}
@@ -538,7 +546,7 @@ void WarpZone_StartFrame()
 		WarpZone_StoreProjectileData(e);
 }
 
-void target_warpzone_reconnect_use()
+void trigger_warpzone_reconnect_use()
 {
 	entity e;
 	e = self;
@@ -556,7 +564,12 @@ void target_warpzone_reconnect_use()
 	self = e;
 }
 
-void trigger_warpzone_reconnect()
+void spawnfunc_trigger_warpzone_reconnect()
 {
-	self.use = target_warpzone_reconnect_use;
+	self.use = trigger_warpzone_reconnect_use;
+}
+
+void spawnfunc_target_warpzone_reconnect()
+{
+	spawnfunc_trigger_warpzone_reconnect(); // both names make sense here :(
 }

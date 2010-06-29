@@ -68,20 +68,20 @@ float ListBox_keyDown(entity me, float key, float ascii, float shift)
 		me.scrollPos = min(me.scrollPos + 0.5, me.nItems * me.itemHeight - 1);
 		me.setSelected(me, max(me.selectedItem, ceil(me.scrollPos / me.itemHeight)));
 	}
-	else if(key == K_PGUP)
+	else if(key == K_PGUP || key == K_KP_PGUP)
 		me.setSelected(me, me.selectedItem - 1 / me.itemHeight);
-	else if(key == K_PGDN)
+	else if(key == K_PGDN || key == K_KP_PGDN)
 		me.setSelected(me, me.selectedItem + 1 / me.itemHeight);
-	else if(key == K_UPARROW)
+	else if(key == K_UPARROW || key == K_KP_UPARROW)
 		me.setSelected(me, me.selectedItem - 1);
-	else if(key == K_DOWNARROW)
+	else if(key == K_DOWNARROW || key == K_KP_DOWNARROW)
 		me.setSelected(me, me.selectedItem + 1);
-	else if(key == K_HOME)
+	else if(key == K_HOME || key == K_KP_HOME)
 	{
 		me.scrollPos = 0;
 		me.setSelected(me, 0);
 	}
-	else if(key == K_END)
+	else if(key == K_END || key == K_KP_END)
 	{
 		me.scrollPos = max(0, me.nItems * me.itemHeight - 1);
 		me.setSelected(me, me.nItems - 1);
