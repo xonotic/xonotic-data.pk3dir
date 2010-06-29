@@ -1285,6 +1285,47 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	return true; // Suppress ALL other input
 }
 
+float HUD_Panel_HighlightCheck()
+{
+	float i, border;
+	vector panelPos;
+	vector panelSize;
+
+	for(i = 0; i < HUD_PANEL_NUM; ++i)
+	{
+		panelPos = HUD_Panel_GetPos(i);
+		panelSize = HUD_Panel_GetSize(i);
+		border = 10; // FORCED border so a small border size doesn't mean you can't resize
+
+		// move
+		if(mousepos_x >= panelPos_x && mousepos_y >= panelPos_y && mousepos_x <= panelPos_x + panelSize_x && mousepos_y <= panelPos_y + panelSize_y)
+		{
+			return 1;
+		}
+		// resize from topleft border
+		else if(mousepos_x >= panelPos_x - border && mousepos_y >= panelPos_y - border && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
+		{
+			return 2;
+		}
+		// resize from topright border
+		else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y - border && mousepos_x <= panelPos_x + panelSize_x + border && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
+		{
+			return 3;
+		}
+		// resize from bottomleft border
+		else if(mousepos_x >= panelPos_x - border && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + panelSize_y + border)
+		{
+			return 3;
+		}
+		// resize from bottomright border
+		else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + panelSize_x + border && mousepos_y <= panelPos_y + panelSize_y + border)
+		{
+			return 2;
+		}
+	}
+	return 0;
+}
+
 void HUD_Panel_Highlight()
 {
 	float i, border;
@@ -1295,7 +1336,7 @@ void HUD_Panel_Highlight()
 	{
 		panelPos = HUD_Panel_GetPos(i);
 		panelSize = HUD_Panel_GetSize(i);
-		border = HUD_Panel_GetBorder(i);
+		border = 10; // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
 		if(mousepos_x >= panelPos_x && mousepos_y >= panelPos_y && mousepos_x <= panelPos_x + panelSize_x && mousepos_y <= panelPos_y + panelSize_y)
@@ -1350,6 +1391,7 @@ void HUD_Panel_Highlight()
 	}
 }
 
+float highlightcheck;
 void HUD_Panel_Mouse()
 {
 	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
@@ -1374,8 +1416,6 @@ void HUD_Panel_Mouse()
 
 	mousepos_x = bound(0, mousepos_x, vid_conwidth);
 	mousepos_y = bound(0, mousepos_y, vid_conheight);
-
-	drawpic(mousepos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor.tga"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 
 	if(mouseClicked)
 	{
@@ -1421,6 +1461,24 @@ void HUD_Panel_Mouse()
 			prevMouseClickedPos = mousepos;
 		}
 	}
+	else
+	{
+		highlightcheck = HUD_Panel_HighlightCheck();
+	}
+	// draw cursor after performing move/resize to have the panel pos/size updated before highlightcheck
+	string cursor;
+	vector cursorsize;
+	cursorsize = '32 32 0';
+
+	if(highlightcheck == 0)
+		drawpic(mousepos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor.tga"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+	else if(highlightcheck == 1)
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor_move.tga"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+	else if(highlightcheck == 2)
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor_resize.tga"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+	else
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor_resize2.tga"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+
 	prevMouseClicked = mouseClicked;
 }
 
