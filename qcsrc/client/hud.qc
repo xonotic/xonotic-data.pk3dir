@@ -527,27 +527,30 @@ void HUD_Panel_ExportCfg(string cfgname)
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_border \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_border")), "\"", "\n"));
 			fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_bg_padding \"", cvar_string(strcat("hud_", HUD_Panel_GetName(i), "_bg_padding")), "\"", "\n"));
 			switch(i) {
-				case 0:
+				case HUD_PANEL_WEAPONICONS:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_accuracy_yellow ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_accuracy_yellow"))), "\n"));
 					break;
-				case 1:
+				case HUD_PANEL_INVENTORY:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_onlycurrent ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_onlycurrent"))), "\n"));
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_iconalign ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_mirror"))), "\n"));
 					break;
-				case 2:
+				case HUD_PANEL_POWERUPS:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_flip ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_flip"))), "\n"));
-					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_mirror ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_mirror"))), "\n"));
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_iconalign ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_mirror"))), "\n"));
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_baralign ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_mirror"))), "\n"));
 					break;
-				case 3:
+				case HUD_PANEL_HEALTHARMOR:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_flip ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_flip"))), "\n"));
-					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_mirror ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_mirror"))), "\n"));
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_iconalign ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_mirror"))), "\n"));
+					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_baralign ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_mirror"))), "\n"));
 					break;
-				case 4:
+				case HUD_PANEL_NOTIFY:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_flip ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_flip"))), "\n"));
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_info_top ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_info_top"))), "\n"));
 					break;
-				case 6:
+				case HUD_PANEL_RADAR:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_foreground_alpha ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_foreground_alpha"))), "\n"));
-				case 9:
+				case HUD_PANEL_VOTE:
 					fputs(fh, strcat("seta hud_", HUD_Panel_GetName(i), "_alreadyvoted_alpha ", ftos(cvar(strcat("hud_", HUD_Panel_GetName(i), "_alreadyvoted_alpha"))), "\n"));
 					break;
 			}
@@ -1035,7 +1038,7 @@ void HUD_Panel_SetPosSize(float id)
 	mySize_x = max(0.025 * vid_conwidth, mySize_x);
 	mySize_y = max(0.025 * vid_conheight, mySize_y);
 
-	if(id == 12) // some panels have their own restrictions, like the chat panel (which actually only moves the engine chat print around). Looks bad if it's too small.
+	if(id == HUD_PANEL_CHAT) // some panels have their own restrictions, like the chat panel (which actually only moves the engine chat print around). Looks bad if it's too small.
 	{
 		mySize_x = max(17 * cvar("con_chatsize"), mySize_x);
 		mySize_y = max(2 * cvar("con_chatsize") + 2 * HUD_Panel_GetPadding(id), mySize_y);
@@ -3329,6 +3332,24 @@ void HUD_RaceTimer (void) {
 		mySize -= '2 2 0' * padding;
 	}
 
+	// always force 2:1 aspect
+	vector newSize;
+	if(mySize_x/mySize_y > 2)
+	{
+		newSize_x = 2 * mySize_y;
+		newSize_y = mySize_y;
+
+		pos_x = pos_x + (mySize_x - newSize_x) / 2;
+	}
+	else
+	{
+		newSize_y = 1/2 * mySize_x;
+		newSize_x = mySize_x;
+
+		pos_y = pos_y + (mySize_y - newSize_y) / 2;
+	}
+	mySize = newSize;
+
 	drawfont = hud_bigfont;
 	float a, t;
 	string s, forcetime;
@@ -3497,14 +3518,32 @@ void HUD_VoteWindow(void)
 		mySize -= '2 2 0' * padding;
 	}
 
+	// always force 2:1 aspect
+	vector newSize;
+	if(mySize_x/mySize_y > 2)
+	{
+		newSize_x = 2 * mySize_y;
+		newSize_y = mySize_y;
+
+		pos_x = pos_x + (mySize_x - newSize_x) / 2;
+	}
+	else
+	{
+		newSize_y = 1/2 * mySize_x;
+		newSize_x = mySize_x;
+
+		pos_y = pos_y + (mySize_y - newSize_y) / 2;
+	}
+	mySize = newSize;
+
 	drawpic_skin(pos, "voteprogress_back", mySize, '1 1 1', a * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 
 	s = "A vote has been called for: ";
-	drawstring(pos + '0.5 0 0' * mySize_x + '0 0.1 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/5)), s, '1 1 0' * mySize_y*(1/5), '1 1 1', a * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-	s = textShortenToWidth(vote_called_vote, mySize_x * 0.96, '1 1 0' * mySize_y*(1/5), stringwidth_colors); // TODO: broken?
+	drawstring_aspect(pos + eY * (1/12) * mySize_y, s, eX * mySize_x + eY * (3/12) * mySize_y, mySize_y*(3/12), '1 1 1', a * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (3/12), stringwidth_colors); // TODO: broken?
 	if(hud_configure)
 		s = "Configure the HUD";
-	drawcolorcodedstring(pos + '0.52 0 0' * mySize_x + '0 0.3 0' * mySize_y - eX * stringwidth(s, FALSE, '1 1 0' * 0.5 * mySize_y*(1/6)), s, '1 1 0' * mySize_y*(1/6), a * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawstring_aspect(pos + eY * (4/12) * mySize_y, s, eX * mySize_x + eY * (2/12) * mySize_y, mySize_y*(2/12), '1 1 1', a * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
 	s = strcat("Yes: ", ftos(vote_yescount));
