@@ -1915,7 +1915,6 @@ void HUD_HealthArmor(void)
 			if(health)
 				drawpic_skin(pos + eX * mySize_x - eX * 0.5 * mySize_y, "health", '0.5 0.5 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 		}
-		// TODO
 		DrawNumIcon(id, pos, mySize, x, biggercount, 1, HUD_Get_Num_Color(x, 2 * 200));
 
 		// fuel
