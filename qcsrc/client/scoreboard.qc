@@ -870,7 +870,9 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 }
 
 float HUD_WouldDrawScoreboard() {
-	if (scoreboard_showscores)
+	if (hud_configure)
+		return 0;
+	else if (scoreboard_showscores)
 		return 1;
 	else if (intermission == 1)
 		return 1;

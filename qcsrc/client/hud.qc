@@ -4523,6 +4523,7 @@ void HUD_Reset (void)
 		HUD_Mod_CTF_Reset();
 }
 
+float hud_configure_prev = -1;
 void HUD_Main (void)
 {
 	if(disable_menu_alphacheck == 1)
@@ -4585,7 +4586,6 @@ void HUD_Main (void)
 		HUD_VoteWindow();
 	if(HUD_Panel_CheckActive(HUD_PANEL_MODICONS) || hud_configure)
 		HUD_ModIcons();
-	// TODO hud'ify
 	if(HUD_Panel_CheckActive(HUD_PANEL_PRESSEDKEYS) || hud_configure)
 		if(spectatee_status > 0 || cvar("hud_pressedkeys") >= 2 || hud_configure)
 			HUD_DrawPressedKeys();
@@ -4602,8 +4602,10 @@ void HUD_Main (void)
 	if (cvar("cl_showacceleration"))
 		HUD_ShowAcceleration();
 
-	if (hud_configure && spectatee_status) // try to join if we are in hud_configure mode, but still spectating (in order to get rid of motd and such)
+	if (hud_configure && spectatee_status && hud_configure_prev == -1) // try to join if we are in hud_configure mode, but still spectating, and in the first frame (in order to get rid of motd when launching a server via the menu "HUD Setup" button)
 		localcmd("cmd selectteam auto; cmd join\n");
+
+	hud_configure_prev = hud_configure;
 
 	if (!hud_configure) // hud config mode disabled, enable normal alpha stuff again
 		disable_menu_alphacheck = 0;
