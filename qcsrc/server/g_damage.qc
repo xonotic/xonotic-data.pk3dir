@@ -294,14 +294,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				msg = ColoredTeamName(targ.team); // TODO: check if needed?
 			Send_CSQC_Centerprint(targ, msg, "", deathtype, MSG_SUICIDE);
 
-			// TODO: hmm?
-			/*
-				if (targ.killcount > 2)
-					bprint ("^1",s,"^1 faded after a ",ftos(targ.killcount)," point spree\n");
-			*/
-
-			// TODO: wut is this?
-			// givefrags for logging apparently?
 			if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
 			{
 				LogDeath("suicide", deathtype, targ, targ);
@@ -310,7 +302,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			if (targ.killcount > 2)
 				msg = ftos(targ.killcount);
-			if(teams_matter && attacker.team == targ.team)
+			if(teams_matter && deathtype == DEATH_MIRRORDAMAGE)
 			{
 				if(attacker.team == COLOR_TEAM1)
 					deathtype = KILL_TEAM_RED;
@@ -354,7 +346,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				{
 					checkrules_firstblood = TRUE;
 					Send_KillNotification(a, "", "", KILL_FIRST_BLOOD, MSG_KILL);
-					// TODO: make these print at newline if they dont
+					// TODO: make these print a newline if they dont
 					Send_CSQC_Centerprint(attacker, "", "", KILL_FIRST_BLOOD, MSG_KILL);
 					Send_CSQC_Centerprint(targ, "", "", KILL_FIRST_VICTIM, MSG_KILL);
 				}
