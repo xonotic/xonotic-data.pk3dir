@@ -1116,10 +1116,17 @@ void HUD_Panel_SetPosSize(float id, vector mySize)
 	cvar_set(strcat("hud_", HUD_Panel_GetName(id), "_pos"), s);
 }
 
+float mouseClicked;
+float prevMouseClicked; // previous state
+float prevMouseClickedTime; // time during previous mouse click, to check for doubleclicks
+vector prevMouseClickedPos; // pos during previous mouse click, to check for doubleclicks
+
+float menu_enabled;
+float menu_enabled_time;
 float pressed_key_time;
 void HUD_Panel_Arrow_Action(float nPrimary)
 {
-	if (highlightedPanel_prev == -1)
+	if (highlightedPanel_prev == -1 || mouseClicked)
 		return;
 
 	hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && cvar("hud_configure_checkcollisions"));
@@ -1191,13 +1198,6 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 }
 
-float mouseClicked;
-float prevMouseClicked; // previous state
-float prevMouseClickedTime; // time during previous mouse click, to check for doubleclicks
-vector prevMouseClickedPos; // pos during previous mouse click, to check for doubleclicks
-
-float menu_enabled;
-float menu_enabled_time;
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	if(!hud_configure)
