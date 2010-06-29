@@ -788,7 +788,7 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
 	}
 
 	if(highlightedPanel_prev == id)
-		drawfill(pos - '1 1 0' * border, mySize + '1 1 0' * 2 * border, '1 1 1', .1, DRAWFLAG_ADDITIVE);
+		drawfill(pos - '1 1 0' * border, mySize + '1 1 0' * 2 * border, '1 1 1', .1 * (1 - cvar("_menu_alpha")), DRAWFLAG_ADDITIVE);
 }
 
 void HUD_Panel_DrawProgressBar(vector pos, float vertical, vector mySize, vector color, float alpha, float drawflag)
