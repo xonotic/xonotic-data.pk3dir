@@ -294,11 +294,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				msg = ColoredTeamName(targ.team); // TODO: check if needed?
 			Send_CSQC_Centerprint(targ, msg, "", deathtype, MSG_SUICIDE);
 
-			if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
-			{
-				LogDeath("suicide", deathtype, targ, targ);
-				GiveFrags(attacker, targ, -1);
-			}
 			// TODO: hmm?
 			/*
 				if (targ.killcount > 2)
