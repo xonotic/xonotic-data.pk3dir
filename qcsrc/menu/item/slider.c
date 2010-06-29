@@ -104,7 +104,7 @@ float Slider_keyDown(entity me, float key, float ascii, float shift)
 	if(me.disabled)
 		return 0;
 	inRange = (almost_in_bounds(me.valueMin, me.value, me.valueMax));
-	if(key == K_LEFTARROW)
+	if(key == K_LEFTARROW || key == K_KP_LEFTARROW)
 	{
 		if(inRange)
 			me.setValue(me, median(me.valueMin, me.value - me.valueKeyStep, me.valueMax));
@@ -112,7 +112,7 @@ float Slider_keyDown(entity me, float key, float ascii, float shift)
 			me.setValue(me, me.valueMax);
 		return 1;
 	}
-	if(key == K_RIGHTARROW)
+	if(key == K_RIGHTARROW || key == K_KP_RIGHTARROW)
 	{
 		if(inRange)
 			me.setValue(me, median(me.valueMin, me.value + me.valueKeyStep, me.valueMax));
@@ -120,7 +120,7 @@ float Slider_keyDown(entity me, float key, float ascii, float shift)
 			me.setValue(me, me.valueMin);
 		return 1;
 	}
-	if(key == K_PGUP)
+	if(key == K_PGUP || key == K_KP_PGUP)
 	{
 		if(inRange)
 			me.setValue(me, median(me.valueMin, me.value - me.valuePageStep, me.valueMax));
@@ -128,7 +128,7 @@ float Slider_keyDown(entity me, float key, float ascii, float shift)
 			me.setValue(me, me.valueMax);
 		return 1;
 	}
-	if(key == K_PGDN)
+	if(key == K_PGDN || key == K_KP_PGDN)
 	{
 		if(inRange)
 			me.setValue(me, median(me.valueMin, me.value + me.valuePageStep, me.valueMax));
@@ -136,12 +136,12 @@ float Slider_keyDown(entity me, float key, float ascii, float shift)
 			me.setValue(me, me.valueMin);
 		return 1;
 	}
-	if(key == K_HOME)
+	if(key == K_HOME || key == K_KP_HOME)
 	{
 		me.setValue(me, me.valueMin);
 		return 1;
 	}
-	if(key == K_END)
+	if(key == K_END || key == K_KP_END)
 	{
 		me.setValue(me, me.valueMax);
 		return 1;
