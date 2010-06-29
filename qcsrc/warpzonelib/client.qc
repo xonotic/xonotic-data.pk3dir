@@ -34,21 +34,12 @@ void WarpZone_Read(float isnew)
 	WarpZone_SetUp(self, self.enemy.oldorigin, self.enemy.avelocity, self.oldorigin, self.avelocity);
 
 	// engine currently wants this
-	self.avelocity = AnglesTransform_TurnDirectionFR(self.avelocity);
 	self.drawmask = MASK_NORMAL;
 
 	// link me
 	//setmodel(self, self.model);
 	setorigin(self, self.origin);
 	setsize(self, self.mins, self.maxs);
-}
-
-vector WarpZone_Camera_camera_transform(vector org, vector ang)
-{
-	// a fixed camera view
-	trace_endpos = self.oldorigin;
-	makevectors(self.avelocity);
-	return self.oldorigin;
 }
 
 void WarpZone_Camera_Read(float isnew)
@@ -72,9 +63,11 @@ void WarpZone_Camera_Read(float isnew)
 	self.avelocity_y = ReadCoord();
 	self.avelocity_z = ReadCoord();
 
+	// common stuff
+	WarpZone_Camera_SetUp(self, self.oldorigin, self.avelocity);
+
 	// engine currently wants this
 	self.drawmask = MASK_NORMAL;
-	self.camera_transform = WarpZone_Camera_camera_transform;
 
 	// link me
 	//setmodel(self, self.model);

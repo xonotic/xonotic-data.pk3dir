@@ -8,7 +8,6 @@ compile with -DTETRIS
 
 #ifdef TETRIS
 
-float autocvar_g_bastet;
 .vector tet_org;
 
 float tet_vs_current_id;

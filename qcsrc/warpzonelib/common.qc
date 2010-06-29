@@ -55,6 +55,21 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 	e.camera_transform = WarpZone_camera_transform;
 }
 
+vector WarpZone_Camera_camera_transform(vector org, vector ang)
+{
+	// a fixed camera view
+	trace_endpos = self.warpzone_origin;
+	makevectors(self.warpzone_angles);
+	return self.warpzone_origin;
+}
+
+void WarpZone_Camera_SetUp(entity e, vector my_org, vector my_ang) // we assume that e.oldorigin and e.avelocity point to view origin and direction
+{
+	e.warpzone_origin = my_org;
+	e.warpzone_angles = my_ang;
+	e.camera_transform = WarpZone_Camera_camera_transform;
+}
+
 .entity enemy;
 
 vector WarpZoneLib_BoxTouchesBrush_mins;
@@ -185,6 +200,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		if(--i < 1)
 		{
 			dprint("Too many warpzones in sequence, aborting trace.\n");
+			trace_ent = world;
 			break;
 		}
 		tracebox(org, mi, ma, end, nomonsters, forent);
@@ -201,6 +217,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		if(trace_ent == wz)
 		{
 			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
+			trace_ent = world;
 			break;
 		}
 		wz = trace_ent;
@@ -266,6 +283,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		if(--i < 1)
 		{
 			dprint("Too many warpzones in sequence, aborting trace.\n");
+			trace_ent = world;
 			break;
 		}
 		tracetoss(e, forent);
@@ -282,6 +300,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		if(trace_ent == wz)
 		{
 			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
+			trace_ent = world;
 			break;
 		}
 		wz = trace_ent;
