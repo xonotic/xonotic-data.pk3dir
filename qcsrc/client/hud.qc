@@ -787,7 +787,7 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
 		draw_BorderPicture(pos - '1 1 0' * border, strcat("gfx/hud/", cvar_string("hud_skin"), "/", bg), mySize + '1 1 0' * 2 * border, color, alpha, '1 1 0' * (border/BORDER_MULTIPLIER));
 	}
 
-	if(highlightedPanel_prev == id)
+	if(highlightedPanel_prev == id && hud_configure)
 		drawfill(pos - '1 1 0' * border, mySize + '1 1 0' * 2 * border, '1 1 1', .1 * (1 - cvar("_menu_alpha")), DRAWFLAG_ADDITIVE);
 }
 
@@ -1132,14 +1132,34 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && cvar("hud_configure_checkcollisions"));
 
 	float step;
-	if (nPrimary == K_UPARROW || nPrimary == K_DOWNARROW)
-		step = vid_conheight;
+	if(cvar("hud_configure_grid"))
+	{
+		if (nPrimary == K_UPARROW || nPrimary == K_DOWNARROW)
+		{
+			if (hudShiftState & S_SHIFT)
+				step = bound(0.005, cvar("hud_configure_grid_y"), 0.2) * vid_conheight;
+			else
+				step = 2 * bound(0.005, cvar("hud_configure_grid_y"), 0.2) * vid_conheight;
+		}
+		else
+		{
+			if (hudShiftState & S_SHIFT)
+				step = bound(0.005, cvar("hud_configure_grid_x"), 0.2) * vid_conwidth;
+			else
+				step = 2 * bound(0.005, cvar("hud_configure_grid_x"), 0.2) * vid_conwidth;
+		}
+	}
 	else
-		step = vid_conwidth;
-	if (hudShiftState & S_SHIFT)
-		step = (step / 256); // more precision
-	else
-		step = (step / 64) * (1 + 2 * (time - pressed_key_time));
+	{
+		if (nPrimary == K_UPARROW || nPrimary == K_DOWNARROW)
+			step = vid_conheight;
+		else
+			step = vid_conwidth;
+		if (hudShiftState & S_SHIFT)
+			step = (step / 256); // more precision
+		else
+			step = (step / 64) * (1 + 2 * (time - pressed_key_time));
+	}
 
 	highlightedPanel = highlightedPanel_prev;
 
