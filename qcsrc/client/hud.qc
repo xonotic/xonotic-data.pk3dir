@@ -651,7 +651,7 @@ vector HUD_Panel_GetColor(float id)
 
 	// fetch per-panel color
 	if(teamplay && cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color_team")) != "") {
-		f = stof(getplayerkey(self.sv_entnum, "colors"));
+		f = stof(getplayerkey(player_localentnum - 1, "colors"));
 		color = vtos(colormapPaletteColor(mod(f, 16), 1) * cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_color_team")));
 	}
 	else
@@ -662,24 +662,24 @@ vector HUD_Panel_GetColor(float id)
 		color = cvar_string("hud_bg_color");
 		color_vec = stov(color);
 		if(teamplay && cvar(strcat("hud_bg_color_team"))) {
-			f = stof(getplayerkey(self.sv_entnum, "colors"));
+			f = stof(getplayerkey(player_localentnum - 1, "colors"));
 			color_vec = colormapPaletteColor(mod(f, 16), 1) * cvar("hud_bg_color_team");
 		}
 		else if(color == "shirt") {
-			f = stof(getplayerkey(self.sv_entnum, "colors"));
+			f = stof(getplayerkey(player_localentnum - 1, "colors"));
 			color_vec = colormapPaletteColor(floor(f / 16), 0);
 		}
 		else if(color == "pants") {
-			f = stof(getplayerkey(self.sv_entnum, "colors"));
+			f = stof(getplayerkey(player_localentnum - 1, "colors"));
 			color_vec = colormapPaletteColor(mod(f, 16), 1);
 		}
 	}
 	else if(color == "shirt") {
-		f = stof(getplayerkey(self.sv_entnum, "colors"));
+		f = stof(getplayerkey(player_localentnum - 1, "colors"));
 		color_vec = colormapPaletteColor(floor(f / 16), 0);
 	}
 	else if(color == "pants") {
-		f = stof(getplayerkey(self.sv_entnum, "colors"));
+		f = stof(getplayerkey(player_localentnum - 1, "colors"));
 		color_vec = colormapPaletteColor(mod(f, 16), 1);
 	}
 	return color_vec;
@@ -693,15 +693,15 @@ vector HUD_Panel_Dock_GetColor(void)
 	color = cvar_string("hud_dock_color");
 	color_vec = stov(color);
 	if(teamplay && cvar(strcat("hud_dock_color_team"))) {
-		f = stof(getplayerkey(self.sv_entnum, "colors"));
+		f = stof(getplayerkey(player_localentnum - 1, "colors"));
 		color_vec = colormapPaletteColor(mod(f, 16), 1) * cvar("hud_dock_color_team");
 	}
 	else if(color == "shirt") {
-		f = stof(getplayerkey(self.sv_entnum, "colors"));
+		f = stof(getplayerkey(player_localentnum - 1, "colors"));
 		color_vec = colormapPaletteColor(floor(f / 16), 0);
 	}
 	else if(color == "pants") {
-		f = stof(getplayerkey(self.sv_entnum, "colors"));
+		f = stof(getplayerkey(player_localentnum - 1, "colors"));
 		color_vec = colormapPaletteColor(mod(f, 16), 1);
 	}
 	return color_vec;
