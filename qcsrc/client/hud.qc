@@ -1542,7 +1542,9 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 	if (currently_selected)
 		drawpic_skin(newPos, "ammo_current_bg", newSize, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_INVENTORY), DRAWFLAG_NORMAL);
 
+	drawfont = hud_bigfont;
 	drawstring_aspect(numpos, ftos(a), eX * (2/3) * newSize_x + eY * newSize_y, newSize_y, color, HUD_Panel_GetFgAlpha(HUD_PANEL_INVENTORY) * alpha, DRAWFLAG_NORMAL);
+	drawfont = hud_font;
 	drawpic_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * newSize_y, '1 1 1', HUD_Panel_GetFgAlpha(HUD_PANEL_INVENTORY) * alpha, DRAWFLAG_NORMAL);
 }
 
@@ -1643,7 +1645,9 @@ void DrawNumIcon(float id, vector myPos, vector mySize, float x, string icon, fl
 		}
 	}
 
+	drawfont = hud_bigfont;
 	drawstring_aspect(numpos, ftos(x), eX * (2/3) * newSize_x + eY * newSize_y, newSize_y, color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawfont = hud_font;
 	drawpic_skin(picpos, icon, '1 1 0' * newSize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 }
 
@@ -3025,7 +3029,9 @@ void HUD_Timer(void)
 		timer = seconds_tostring(timeleft);
 	}
 
+	drawfont = hud_bigfont;
 	drawstring_aspect(pos, timer, mySize, mySize_y, timer_color, HUD_Panel_GetFgAlpha(HUD_PANEL_TIMER), DRAWFLAG_NORMAL);
+	drawfont = hud_font;
 }
 
 // Radar (#6)
@@ -4180,7 +4186,9 @@ void HUD_EngineInfo(void)
 
 	vector color;
 	color = HUD_Get_Num_Color (prevfps, 100);
+	drawfont = hud_bigfont;
 	drawstring_aspect(pos, strcat("FPS: ", ftos_decimals(prevfps, cvar("hud_engineinfo_framecounter_decimals"))), mySize, mySize_y, color, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+	drawfont = hud_font;
 }
 /*
 ==================
