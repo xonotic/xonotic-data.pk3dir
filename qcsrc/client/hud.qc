@@ -1791,10 +1791,10 @@ void HUD_Powerups(void) {
 		{
 			if(baralign == 0 || baralign == 3) { // up align
 				barpos = pos + eX * 0.5 * mySize_x;
-				barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/30);
+				barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, rightcnt/30);
 			} else { // down align
-				barpos = pos + eY * mySize_y - eY * mySize_y * min(1, leftcnt/30) + eX * 0.5 * mySize_x;
-				barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/30);
+				barpos = pos + eY * mySize_y - eY * mySize_y * min(1, rightcnt/30) + eX * 0.5 * mySize_x;
+				barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, rightcnt/30);
 			}
 
 			if(iconalign == 0 || iconalign == 3) { // up align
@@ -1811,7 +1811,6 @@ void HUD_Powerups(void) {
 			else
 				drawpic_skin(picpos, rightname, '0.4 0.4 0' * mySize_x, '1 1 1', rightalpha * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 			drawstring_aspect(numpos, ftos(rightcnt), eX * 0.5 * mySize_x + eY * 0.25 * mySize_x, 0.25 * mySize_x, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-			//HUD_DrawXNum(numpos, rightcnt, len, 0, 0.25 * mySize_x, '1 1 1', 0, 0, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 		}
 	}
 }
@@ -1851,7 +1850,6 @@ void HUD_HealthArmor(void)
 	if(health <= 0)
 		return;
 
-	float len;
 	vector barpos, barsize;
 	vector picpos;
 	vector numpos;
@@ -1903,7 +1901,6 @@ void HUD_HealthArmor(void)
 		if(fuel)
 			HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor("fuel"), HUD_Panel_GetFgAlpha(id) * 0.8, DRAWFLAG_NORMAL);
 	}
-
 	else
 	{
 		string leftname, rightname;
@@ -1934,167 +1931,189 @@ void HUD_HealthArmor(void)
 			rightalpha = min((armor+10)/55, 1);
 		}
 
+		float baralign, iconalign;
+		baralign = cvar(strcat("hud_", HUD_Panel_GetName(id), "_baralign"));
+		iconalign = cvar(strcat("hud_", HUD_Panel_GetName(id), "_iconalign"));
+
 		if (mySize_x/mySize_y > 5)
 		{
 			if(leftactive)
 			{
-				len = strlen(ftos(leftcnt));
-
-				if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
+				if(baralign == 1 || baralign == 3) { // right align
 					barpos = pos + eX * 0.5 * mySize_x - eX * 0.5 * mySize_x * min(1, leftcnt/200);
 					barsize = eX * 0.5 * mySize_x * min(1, leftcnt/200) + eY * mySize_y;
-					picpos = pos + eX * 0.5 * mySize_x - eX * mySize_y;
-					numpos = picpos - eX * 3 * 0.5 * mySize_y + eX * (3-len) * 0.5 * mySize_y + eY * 0.25 * mySize_y;
-				} else {
+				} else { // left align
 					barpos = pos;
 					barsize = eX * 0.5 * mySize_x * min(1, leftcnt/200) + eY * mySize_y;
+				}
+
+				if(iconalign == 1 || iconalign == 3) { // right align
+					picpos = pos + eX * (2/6) * mySize_x;
+					numpos = pos;
+				} else { // left align
 					picpos = pos;
-					numpos = picpos + eX * mySize_y + eY * 0.25 * mySize_y;
+					numpos = pos + eX * (1/6) * mySize_x;
 				}
 
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha") * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				drawpic_skin(picpos, leftname, '1 1 0' * mySize_y, '1 1 1', leftalpha * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				//HUD_DrawXNum_Colored(numpos, leftcnt, len, 0.5 * mySize_y, HUD_Panel_GetFgAlpha(id));
+				drawpic_skin(picpos, leftname, eX * (1/6) * mySize_x + eY * mySize_y, '1 1 1', leftalpha * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+				drawstring_aspect(numpos, ftos(leftcnt), eX * (2/6) * mySize_x + eY * mySize_y, mySize_y, HUD_Get_Num_Color(leftcnt, 200), HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 			}
 
 			if(rightactive)
 			{
-				len = strlen(ftos(rightcnt));
-
-				if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
+				if(baralign == 0 || baralign == 3) { // left align
 					barpos = pos + eX * 0.5 * mySize_x;
 					barsize = eX * 0.5 * mySize_x * min(1, rightcnt/200) + eY * mySize_y;
-					picpos = pos + eX * 0.5 * mySize_x;
-					numpos = picpos + eX * mySize_y - eX * (3-len) * 0.5 * mySize_y + eY * 0.25 * mySize_y;
-				} else {
+				} else { // right align
 					barpos = pos + eX * mySize_x - eX * 0.5 * mySize_x * min(1, rightcnt/200);
 					barsize = eX * 0.5 * mySize_x * min(1, rightcnt/200) + eY * mySize_y;
-					picpos = pos + eX * mySize_x - eX * mySize_y;
-					numpos = picpos - eX * 1.5 * mySize_y + eY * 0.25 * mySize_y;
+				}
+
+				if(iconalign == 0 || iconalign == 3) { // left align
+					picpos = pos + eX * (3/6) * mySize_x;
+					numpos = pos + eX * (4/6) * mySize_x;
+				} else { // right align
+					picpos = pos + eX * (5/6) * mySize_x;
+					numpos = pos + eX * (3/6) * mySize_x;
 				}
 
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha") * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				drawpic_skin(picpos, rightname, '1 1 0' * mySize_y, '1 1 1', rightalpha * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				//HUD_DrawXNum_Colored(numpos, rightcnt, 3, 0.5 * mySize_y, HUD_Panel_GetFgAlpha(id));
+				drawpic_skin(picpos, rightname, eX * (1/6) * mySize_x + eY * mySize_y, '1 1 1', rightalpha * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+				drawstring_aspect(numpos, ftos(rightcnt), eX * (2/6) * mySize_x + eY * mySize_y, mySize_y, HUD_Get_Num_Color(rightcnt, 200), HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 			}
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
-				barpos = pos + eX * mySize_x - eX * mySize_x * min(1, fuel/100);
-				barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.2 * mySize_y;
-			} else {
-				barpos = pos;
-				barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.2 * mySize_y;
-			}
 			if(fuel)
+			{
+				if(baralign == 0 || baralign == 3) { // left align
+					barpos = pos + eX * mySize_x - eX * mySize_x * min(1, fuel/100);
+					barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.2 * mySize_y;
+				} else {
+					barpos = pos;
+					barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.2 * mySize_y;
+				}
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor("fuel"), HUD_Panel_GetFgAlpha(id) * 0.8, DRAWFLAG_NORMAL);
+			}
 		}
 		else if (mySize_x/mySize_y > 2)
 		{
 			if(leftactive)
 			{
-				len = strlen(ftos(leftcnt));
-
-				if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
+				if(baralign == 1 || baralign == 3) { // right align
 					barpos = pos + eX * mySize_x - eX * mySize_x * min(1, leftcnt/200);
-					barsize = eX * mySize_x * min(1, leftcnt/200) + eY * 0.5 * mySize_y;
-					picpos = pos + eX * mySize_x - eX * 0.5 * mySize_y;
-					numpos = picpos - eX * len * 0.5 * mySize_y;
-				} else {
+					barsize = eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
+				} else { // left align
 					barpos = pos;
-					barsize = eX * mySize_x * min(1, leftcnt/200) + eY * 0.5 * mySize_y;
+					barsize = eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
+				}
+
+				if(iconalign == 1 || iconalign == 3) { // right align
+					picpos = pos + eX * (2/3) * mySize_x;
+					numpos = pos;
+				} else { // left align
 					picpos = pos;
-					numpos = picpos + eX * 0.5 * mySize_y;
+					numpos = pos + eX * (1/3) * mySize_x;
 				}
 
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha") * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				drawpic_skin(picpos, leftname, '0.5 0.5 0' * mySize_y, '1 1 1', leftalpha * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				//HUD_DrawXNum_Colored(numpos, leftcnt, len, 0.5 * mySize_y, HUD_Panel_GetFgAlpha(id));
+				drawpic_skin(picpos, leftname, eX * (1/3) * mySize_x + eY * 0.5 * mySize_y, '1 1 1', rightalpha * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+				drawstring_aspect(numpos, ftos(leftcnt), eX * (2/3) * mySize_x + eY * 0.5 * mySize_y, mySize_y, HUD_Get_Num_Color(leftcnt, 200), HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 			}
 
 			if(rightactive)
 			{
-				len = strlen(ftos(rightcnt));
-
-				if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
-					barpos = pos + eX * mySize_x - eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
-					barsize = eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
-					picpos = pos + eX * mySize_x - eX * 0.5 * mySize_y + eY * 0.5 * mySize_y;
-					numpos = picpos - eX * len * 0.5 * mySize_y;
-				} else {
+				if(baralign == 0 || baralign == 3) { // left align
 					barpos = pos + eY * 0.5 * mySize_y;
 					barsize = eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
+				} else { // right align
+					barpos = pos + eX * mySize_x - eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
+					barsize = eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
+				}
+
+				if(iconalign == 0 || iconalign == 3) { // left align
 					picpos = pos + eY * 0.5 * mySize_y;
-					numpos = picpos + eX * 0.5 * mySize_y;
+					numpos = pos + eX * (1/3) * mySize_x + eY * 0.5 * mySize_y;
+				} else { // right align
+					picpos = pos + eX * (2/3) * mySize_x + eY * 0.5 * mySize_y;
+					numpos = pos + eY * 0.5 * mySize_y;
 				}
 
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha") * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				drawpic_skin(picpos, rightname, '0.5 0.5 0' * mySize_y, '1 1 1', rightalpha * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				//HUD_DrawXNum_Colored(numpos, rightcnt, len, 0.5 * mySize_y, HUD_Panel_GetFgAlpha(id));
+				drawpic_skin(picpos, rightname, eX * (1/3) * mySize_x + eY * 0.5 * mySize_y, '1 1 1', rightalpha * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
+				drawstring_aspect(numpos, ftos(rightcnt), eX * (2/3) * mySize_x + eY * 0.5 * mySize_y, mySize_y, HUD_Get_Num_Color(rightcnt, 200), HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 			}
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
-				barpos = pos + eX * mySize_x - eX * mySize_x * min(1, fuel/100);
-				barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.1 * mySize_y;
-			} else {
-				barpos = pos;
-				barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.1 * mySize_y;
-			}
 			if(fuel)
+			{
+				if(baralign == 0 || baralign == 3) { // left align
+					barpos = pos + eX * mySize_x - eX * mySize_x * min(1, fuel/100);
+					barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.1 * mySize_y;
+				} else {
+					barpos = pos;
+					barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.1 * mySize_y;
+				}
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor("fuel"), HUD_Panel_GetFgAlpha(id) * 0.8, DRAWFLAG_NORMAL);
+			}
 		}
 		else
 		{
 			if(leftactive)
 			{
-				len = strlen(ftos(leftcnt));
-
-				if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
-					barpos = pos;
-					barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/200);
-					picpos = pos + eX * 0.05 * mySize_x;
-					numpos = pos + eX * ((3-len)/2) * 0.25 * mySize_x + eY * 0.4 * mySize_x;
-				} else {
+				if(baralign == 1 || baralign == 3) { // down align
 					barpos = pos + eY * mySize_y - eY * mySize_y * min(1, leftcnt/200);
 					barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/200);
-					picpos = pos + eX * 0.05 * mySize_x + eY * mySize_y - eY * 0.566 * mySize_x;
-					numpos = pos + eX * ((3-len)/2) * 0.25 * mySize_x + eY * mySize_y - eY * 0.166 * mySize_x;
+				} else { // up align
+					barpos = pos;
+					barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/200);
+				}
+
+				if(iconalign == 1 || iconalign == 3) { // down align
+					picpos = pos + eX * 0.05 * mySize_x + eY * (mySize_y - 0.65 * mySize_x);
+					numpos = pos + eY * mySize_y - eY * 0.25 * mySize_x;
+				} else { // up align
+					picpos = pos + eX * 0.05 * mySize_x;
+					numpos = pos + eY * 0.4 * mySize_x;
 				}
 
 				HUD_Panel_DrawProgressBar(barpos, 1, barsize, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha") * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 				drawpic_skin(picpos, leftname, '0.4 0.4 0' * mySize_x, '1 1 1', leftalpha * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				//HUD_DrawXNum_Colored(numpos, leftcnt, len, 0.166 * mySize_x, HUD_Panel_GetFgAlpha(id));
+				drawstring_aspect(numpos, ftos(leftcnt), eX * 0.5 * mySize_x + eY * 0.25 * mySize_x, 0.25 * mySize_x, HUD_Get_Num_Color(leftcnt, 200), HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 			}
 
 			if(rightactive)
 			{
-				len = strlen(ftos(rightcnt));
-
-				if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
+				if(baralign == 0 || baralign == 3) { // up align
 					barpos = pos + eX * 0.5 * mySize_x;
 					barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, rightcnt/200);
-					picpos = pos + eX * 0.05 * mySize_x + eX * 0.5 * mySize_x;
-					numpos = pos + eX * ((3-len)/2) * 0.25 * mySize_x + eY * 0.4 * mySize_x + eX * 0.5 * mySize_x;
-				} else {
+				} else { // down align
 					barpos = pos + eY * mySize_y - eY * mySize_y * min(1, rightcnt/200) + eX * 0.5 * mySize_x;
 					barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, rightcnt/200);
-					picpos = pos + eX * 0.05 * mySize_x + eY * mySize_y - eY * 0.566 * mySize_x + eX * 0.5 * mySize_x;
-					numpos = pos + eX * ((3-len)/2) * 0.25 * mySize_x + eY * mySize_y - eY * 0.166 * mySize_x + eX * 0.5 * mySize_x;
+				}
+
+				if(iconalign == 0 || iconalign == 3) { // up align
+					picpos = pos + eX * 0.05 * mySize_x + eX * 0.5 * mySize_x;
+					numpos = pos + eY * 0.4 * mySize_x + eX * 0.5 * mySize_x;
+				} else { // down align
+					picpos = pos + eX * 0.05 * mySize_x + eY * (mySize_y - 0.65 * mySize_x) + eX * 0.5 * mySize_x;
+					numpos = pos + eY * mySize_y - eY * 0.25 * mySize_x + eX * 0.5 * mySize_x;
 				}
 
 				HUD_Panel_DrawProgressBar(barpos, 1, barsize, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha") * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 				drawpic_skin(picpos, rightname, '0.4 0.4 0' * mySize_x, '1 1 1', rightalpha * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
-				//HUD_DrawXNum_Colored(numpos, rightcnt, len, 0.166 * mySize_x, HUD_Panel_GetFgAlpha(id));
+				drawstring_aspect(numpos, ftos(rightcnt), eX * 0.5 * mySize_x + eY * 0.25 * mySize_x, 0.25 * mySize_x, HUD_Get_Num_Color(rightcnt, 200), HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 			}
 
-			if(cvar(strcat("hud_", HUD_Panel_GetName(id), "_mirror"))) {
-				barpos = pos;
-				barsize = eX * 0.05 * mySize_x + eY * mySize_y * min(1, fuel/100);
-			} else {
-				barpos = pos + eY * mySize_y - eY * mySize_y * min(1, fuel/100);
-				barsize = eX * 0.05 * mySize_x + eY * mySize_y * min(1, fuel/100);
-			}
 			if(fuel)
+			{
+				if(baralign == 0 || baralign == 3) { // left align
+					barpos = pos;
+					barsize = eX * 0.05 * mySize_x + eY * mySize_y * min(1, fuel/100);
+				} else {
+					barpos = pos + eY * mySize_y - eY * mySize_y * min(1, fuel/100);
+					barsize = eX * 0.05 * mySize_x + eY * mySize_y * min(1, fuel/100);
+				}
 				HUD_Panel_DrawProgressBar(barpos, 1, barsize, HUD_Panel_GetProgressBarColor("fuel"), HUD_Panel_GetFgAlpha(id) * 0.8, DRAWFLAG_NORMAL);
+			}
 		}
 	}
 }
