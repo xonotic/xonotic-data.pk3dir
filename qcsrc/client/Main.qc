@@ -183,6 +183,7 @@ void CSQC_Init(void)
 	minimapname = strzone(minimapname);
 
 	WarpZone_Init();
+	hud_configure_prev = -1;
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -1251,6 +1252,18 @@ void Net_Notify() {
 	}
 }
 
+void Net_WeaponComplain() {
+	complain_weapon = ReadByte();
+
+	if(complain_weapon_name)
+		strunzone(complain_weapon_name);
+	complain_weapon_name = strzone(ReadString());
+
+	complain_weapon_type = ReadByte();
+
+	complain_weapon_time = time;
+}
+
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1319,6 +1332,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_NOTIFY:
 			Net_Notify();
+			bHandled = true;
+			break;
+		case TE_CSQC_WEAPONCOMPLAIN:
+			Net_WeaponComplain();
 			bHandled = true;
 			break;
 		default:

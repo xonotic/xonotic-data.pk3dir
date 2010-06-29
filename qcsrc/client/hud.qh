@@ -13,6 +13,11 @@ float weapon_hits[WEP_MAXCOUNT];
 float weapon_fired[WEP_MAXCOUNT];
 float weapon_number;
 
+float complain_weapon;
+string complain_weapon_name;
+float complain_weapon_type;
+float complain_weapon_time;
+
 float ps_primary, ps_secondary;
 float ts_primary, ts_secondary;
 
@@ -27,6 +32,7 @@ float hud_accuracy_border_thickness;
 
 float hud_configure;
 float hud_configure_checkcollisions;
+float hud_configure_prev;
 
 float hudShiftState;
 const float S_SHIFT = 1;

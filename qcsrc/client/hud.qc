@@ -1586,6 +1586,13 @@ void HUD_WeaponIcons(void)
 
 	columns = ceil(WEP_COUNT/rows);
 	float row, column;
+
+	float a;
+	float when;
+	when = cvar("hud_weaponicons_complainbubble_time");
+	float fadetime;
+	fadetime = cvar("hud_weaponicons_complainbubble_fadetime");
+
 	for(i = 0; i < weapon_cnt; ++i)
 	{
 		self = weaponorder[i];
@@ -1623,6 +1630,45 @@ void HUD_WeaponIcons(void)
 		else
 		{
 			drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '0 0 0', HUD_Panel_GetFgAlpha(id) * 0.5, DRAWFLAG_NORMAL);
+		}
+
+		// draw the complain message
+		if(time - complain_weapon_time < when + fadetime && self.weapon == complain_weapon && cvar("hud_weaponicons_complainbubble"))
+		{
+			if(fadetime)
+			{
+				if(complain_weapon_time + when > time)
+					a = 1;
+				else
+					a = bound(0, (complain_weapon_time + when + fadetime - time) / fadetime, 1);
+			}
+			else
+			{
+				if(complain_weapon_time + when > time)
+					a = 1;
+				else
+					a = 0;
+			}
+
+			vector complain_bubble_size = '100 50 0' * bound(0.25, cvar("hud_weaponicons_complainbubble_size"), 2);
+			drawpic_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) - complain_bubble_size + 0.5 * (eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows)), "weapon_complainbubble", complain_bubble_size, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+
+			string s;
+			vector color;
+			if(complain_weapon_type == 0) {
+				s = "Out of ammo for the";
+				color = '1 0 0';
+			}
+			else if(complain_weapon_type == 1) {
+				s = "You don't have the";
+				color = '1 1 0';
+			}
+			else {
+				s = "Map doesn't have the";
+				color = '1 1 1';
+			}
+			drawstring_aspect(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) - complain_bubble_size + eX * 0.05 * complain_bubble_size_x + eY * (1/6) * complain_bubble_size_y + 0.5 * (eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows)), s, eX * 0.9 * complain_bubble_size_x + eY * 0.2 * complain_bubble_size_y, 0.2 * complain_bubble_size_y, color, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
+			drawstring_aspect(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) - complain_bubble_size + eX * 0.05 * complain_bubble_size_x + eY * (11/30) * complain_bubble_size_y + 0.5 * (eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows)), complain_weapon_name, eX * 0.9 * complain_bubble_size_x + eY * 0.25 * complain_bubble_size_y, 0.25 * complain_bubble_size_y, '1 0 0', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 		}
 
 		++row;
@@ -4523,7 +4569,6 @@ void HUD_Reset (void)
 		HUD_Mod_CTF_Reset();
 }
 
-float hud_configure_prev = -1;
 void HUD_Main (void)
 {
 	if(disable_menu_alphacheck == 1)
