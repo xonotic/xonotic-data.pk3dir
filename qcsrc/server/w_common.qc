@@ -270,7 +270,7 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 
 	self.W_BallisticBullet_LeaveSolid_origin = trace_endpos;
 
-	dst = vlen(trace_endpos - self.origin);
+	dst = max(cvar("g_ballistics_mindistance"), vlen(trace_endpos - self.origin));
 	// E(s) = E0 - constant * s, constant = area of bullet circle * material constant / mass
 	Es_m = E0_m - constant * dst;
 	if(Es_m <= 0)

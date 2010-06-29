@@ -297,7 +297,8 @@ void XonoticKeyBinder_drawListBoxItem(entity me, float i, vector absSize, float 
 				theAlpha *= SKINALPHA_DISABLED;
 	}
 
-	draw_Text(me.realUpperMargin * eY + extraMargin * eX, descr, me.realFontSize, theColor, theAlpha, 0);
+	s = draw_TextShortenToWidth(descr, me.columnFunctionSize, 0, me.realFontSize);
+	draw_Text(me.realUpperMargin * eY + extraMargin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	if(func != "")
 	{
 		n = tokenize(findkeysforcommand(func)); // uses '...' strings

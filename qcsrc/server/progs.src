@@ -6,6 +6,7 @@ pre-builtins.qh
 builtins.qh
 extensions.qh
 post-builtins.qh
+autocvars.qh
 
 ../warpzonelib/anglestransform.qh
 ../warpzonelib/mathlib.qh
