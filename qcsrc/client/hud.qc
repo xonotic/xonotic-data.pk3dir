@@ -786,6 +786,9 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
 
 		draw_BorderPicture(pos - '1 1 0' * border, strcat("gfx/hud/", cvar_string("hud_skin"), "/", bg), mySize + '1 1 0' * 2 * border, color, alpha, '1 1 0' * (border/BORDER_MULTIPLIER));
 	}
+
+	if(highlightedPanel_prev == id)
+		drawfill(pos - '1 1 0' * border, mySize + '1 1 0' * 2 * border, '1 1 1', .1, DRAWFLAG_ADDITIVE);
 }
 
 void HUD_Panel_DrawProgressBar(vector pos, float vertical, vector mySize, vector color, float alpha, float drawflag)
