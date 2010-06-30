@@ -83,8 +83,10 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 } else {\
 	if(panel_bg_str == "") {\
 		panel_bg = autocvar_hud_bg;\
-	} if(panel_bg_str == "0" && autocvar__hud_configure) {\
-		panel_bg = "border"; \
+	} else if(panel_bg_str == "0" && autocvar__hud_configure) {\
+		panel_bg = "border";\
+	} else {\
+		panel_bg = panel_bg_str;\
 	}\
 }
 
@@ -131,6 +133,13 @@ if(panel_bg_border_str == "") {\
 	panel_bg_border = stof(panel_bg_border_str);\
 }
 
+// Scale the pos and size vectors to absolute coordinates
+#define HUD_Panel_GetScaledVectors()\
+panel_pos_x *= vid_conwidth;\
+panel_pos_y *= vid_conheight;\
+panel_size_x *= vid_conwidth;\
+panel_size_y *= vid_conheight;
+
 // Get padding. See comments above, it's similar.
 // last line is a port of the old function, basically always make sure the panel contents are at least 5 pixels tall/wide, to disallow extreme padding values
 #define HUD_Panel_GetPadding()\
@@ -141,12 +150,6 @@ if(panel_bg_padding_str == "") {\
 }\
 panel_bg_padding = min(min(panel_size_x, panel_size_y)/2 - 5, panel_bg_padding);
 
-#define HUD_Panel_GetScaledVectors()\
-panel_pos_x *= vid_conwidth;\
-panel_pos_y *= vid_conheight;\
-panel_size_x *= vid_conwidth;\
-panel_size_y *= vid_conheight;
-
 // Point to the macros above (stupid max macro length)
 #define HUD_Panel_StringVars()\
 HUD_Panel_GetBg()\
@@ -154,8 +157,8 @@ HUD_Panel_GetColorTeam()\
 HUD_Panel_GetBgAlpha()\
 HUD_Panel_GetFgAlpha()\
 HUD_Panel_GetBorder()\
-HUD_Panel_GetPadding()\
-HUD_Panel_GetScaledVectors()
+HUD_Panel_GetScaledVectors()\
+HUD_Panel_GetPadding()
 
 // Update all common cvars of given panel name
 #define HUD_Panel_UpdateCvars(name) \
