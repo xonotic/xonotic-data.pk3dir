@@ -98,7 +98,7 @@ switch(id) { \
 // comment on last line of macro: // we probably want to see a background in config mode at all times...
 #define HUD_Panel_GetBg()\
 if(!autocvar__hud_configure && panel_bg_str == "0") {\
-	panel_bg = 0;\
+	panel_bg = "0";\
 } else {\
 	if(panel_bg_str == "") {\
 		panel_bg = autocvar_hud_bg;\
@@ -150,7 +150,7 @@ panel_bg_padding = min(min(mySize_x, mySize_y)/2 - 5, panel_bg_padding);
 // Point to the macros above (stupid max macro length)
 #define HUD_Panel_StringVars()\
 HUD_Panel_GetBg()\
-HUD_Panel_GetColorTeam\
+HUD_Panel_GetColorTeam()\
 HUD_Panel_GetBgAlpha()\
 HUD_Panel_GetBorder()\
 HUD_Panel_GetPadding()
