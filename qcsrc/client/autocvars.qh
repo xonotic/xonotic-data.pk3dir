@@ -6,6 +6,22 @@ var float autocvar_cl_gibs_sloppy = 1;
 var float autocvar_cl_casings_ticrate = 0.1;
 var float autocvar_cl_casings_sloppy = 1;
 
+var float autocvar__hud_configure;
+var float autocvar_hud_configure_checkcollisions;
+var float autocvar_hud_configure_bg_minalpha;
+var float autocvar_hud_configure_grid;
+var float autocvar_hud_configure_grid_x;
+var float autocvar_hud_configure_grid_y;
+var float autocvar_hud_configure_grid_alpha;
+
+var string autocvar_hud_bg;
+var vector autocvar_hud_bg_color;
+var float autocvar_hud_bg_color_team;
+var float autocvar_hud_bg_alpha;
+var float autocvar_hud_bg_border;
+var float autocvar_hud_bg_padding;
+var float autocvar_hud_fg_alpha;
+
 var float autocvar_hud_weaponicons;
 var vector autocvar_hud_weaponicons_pos;
 var vector autocvar_hud_weaponicons_size;

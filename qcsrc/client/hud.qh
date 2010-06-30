@@ -30,7 +30,6 @@ float hud_accuracy_hud;
 float hud_border_thickness;
 float hud_accuracy_border_thickness;
 
-float hud_configure;
 float hud_configure_checkcollisions;
 float hud_configure_prev;
 
@@ -44,17 +43,22 @@ float menu_fade_alpha;
 
 string hud_skin_path;
 
+var float active_panel; // this panel has recently referred the UpdateCvars macro
 var string panel_name;
-
 var float panel_enabled; 
 var vector panel_pos; 
 var vector panel_size; 
 var string panel_bg; 
-var vector panel_bg_color; 
-var string panel_bg_color_team; 
-var string panel_bg_alpha; 
-var string panel_bg_border; 
-var string panel_bg_padding; 
+var string panel_bg_str; // "_str" vars contain the raw value of the cvar, non-"_str" contains what hud.qc code should use
+var string panel_bg_color; 
+var float panel_bg_color_team; 
+var string panel_bg_color_team_str; 
+var float panel_bg_alpha; 
+var string panel_bg_alpha_str; 
+var float panel_bg_border; 
+var string panel_bg_border_str; 
+var float panel_bg_padding; 
+var string panel_bg_padding_str; 
 var float panel_accuracy_yellow; 
 var float panel_accuracy_onlycurrent; 
 var float panel_accuracy_flip; 
@@ -64,40 +68,127 @@ var float panel_accuracy_info_top;
 var float panel_accuracy_foreground_alpha; 
 var float panel_accuracy_alreadyvoted_alpha; 
 
+// Because calling lots of functions in QC apparently cuts fps in half on many machines:
+// ----------------------
+// MACRO HELL STARTS HERE
+// ----------------------
+// Little help for the poor people who have to make sense of this: Start from the bottom
+
+// we probably want to get rid of GetName in the most places in hud.qc, TODO!
 // Get name of specified panel id
 #define HUD_Panel_GetName(id) \
 switch(id) { \
-	case HUD_PANEL_WEAPONICONS: panel_name = HUD_PANELNAME_WEAPONICONS; return; \
-	case HUD_PANEL_INVENTORY: panel_name = HUD_PANELNAME_INVENTORY; return; \
-	case HUD_PANEL_POWERUPS: panel_name = HUD_PANELNAME_POWERUPS; return; \
-	case HUD_PANEL_HEALTHARMOR: panel_name = HUD_PANELNAME_HEALTHARMOR; return; \
-	case HUD_PANEL_NOTIFY: panel_name = HUD_PANELNAME_NOTIFY; return; \
-	case HUD_PANEL_TIMER: panel_name = HUD_PANELNAME_TIMER; return; \
-	case HUD_PANEL_RADAR: panel_name = HUD_PANELNAME_RADAR; return; \
-	case HUD_PANEL_SCORE: panel_name = HUD_PANELNAME_SCORE; return; \
-	case HUD_PANEL_RACETIMER: panel_name = HUD_PANELNAME_RACETIMER; return; \
-	case HUD_PANEL_VOTE: panel_name = HUD_PANELNAME_VOTE; return; \
-	case HUD_PANEL_MODICONS: panel_name = HUD_PANELNAME_MODICONS; return; \
-	case HUD_PANEL_PRESSEDKEYS: panel_name = HUD_PANELNAME_PRESSEDKEYS; return; \
-	case HUD_PANEL_CHAT: panel_name = HUD_PANELNAME_CHAT; return; \
-	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; return; \
+	case HUD_PANEL_WEAPONICONS: panel_name = HUD_PANELNAME_WEAPONICONS; break; \
+	case HUD_PANEL_INVENTORY: panel_name = HUD_PANELNAME_INVENTORY; break; \
+	case HUD_PANEL_POWERUPS: panel_name = HUD_PANELNAME_POWERUPS; break; \
+	case HUD_PANEL_HEALTHARMOR: panel_name = HUD_PANELNAME_HEALTHARMOR; break; \
+	case HUD_PANEL_NOTIFY: panel_name = HUD_PANELNAME_NOTIFY; break; \
+	case HUD_PANEL_TIMER: panel_name = HUD_PANELNAME_TIMER; break; \
+	case HUD_PANEL_RADAR: panel_name = HUD_PANELNAME_RADAR; break; \
+	case HUD_PANEL_SCORE: panel_name = HUD_PANELNAME_SCORE; break; \
+	case HUD_PANEL_RACETIMER: panel_name = HUD_PANELNAME_RACETIMER; break; \
+	case HUD_PANEL_VOTE: panel_name = HUD_PANELNAME_VOTE; break; \
+	case HUD_PANEL_MODICONS: panel_name = HUD_PANELNAME_MODICONS; break; \
+	case HUD_PANEL_PRESSEDKEYS: panel_name = HUD_PANELNAME_PRESSEDKEYS; break; \
+	case HUD_PANEL_CHAT: panel_name = HUD_PANELNAME_CHAT; break; \
+	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; break; \
 }
 
-// Update all cvars of given panel
+// Get value for panel_bg: if "" fetch default, else use panel_bg_str
+// comment on last line of macro: // we probably want to see a background in config mode at all times...
+#define HUD_Panel_GetBg()\
+if(!autocvar__hud_configure && panel_bg_str == "0") {\
+	panel_bg = 0;\
+} else {\
+	if(panel_bg_str == "") {\
+		panel_bg = autocvar_hud_bg;\
+	} if(panel_bg_str == "0" && autocvar__hud_configure) {\
+		panel_bg = "border"; \
+	}\
+}
+
+// Get value for panel_bg_color_team: if "" fetch default, else use panel_bg_color_team_str
+#define HUD_Panel_GetColorTeam()\
+if(panel_bg_color_team_str == "")\
+	panel_bg_color_team = autocvar_hud_bg_color_team;\
+else\
+	panel_bg_color_team = stof(panel_bg_color_team_str);
+
+// Get value for panel_bg_alpha: if "" fetch default, else use panel_bg_alpha. Also do various menu dialog fadeout/in checks, and minalpha checks
+// comment on line 3 of macro: // do not set a minalpha cap when showing the config dialog for this panel
+#define HUD_Panel_GetBgAlpha()\
+if(panel_bg_alpha_str == "")\
+	panel_bg_alpha_str = autocvar_hud_bg_alpha;\
+panel_bg_alpha = stof(panel_bg_alpha_str);\
+if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == active_panel)\
+	panel_bg_alpha = (1 - autocvar__menu_alpha) * max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha) + autocvar__menu_alpha) * panel_bg_alpha;\
+else if(autocvar__hud_configure)\
+	panel_bg_alpha = max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha);\
+if(autocvar__hud_configure && !panel_enabled)\
+	panel_bg_alpha = 0.25;\
+if(!(disable_menu_alphacheck == 2 && highlightedPanel == id))\
+	panel_bg_alpha *= menu_fade_alpha;\
+
+#define HUD_Panel_GetBorder()\
+if(panel_bg_border_str == "")\
+	panel_bg_border = autocvar_hud_bg_border;\
+else\
+	panel_bg_border = stof(panel_bg_border_str);
+
+#define HUD_Panel_GetPadding()\
+if(panel_bg_border_padding == "")\
+	panel_bg_padding = autocvar_hud_bg_padding;\
+else\
+	panel_bg_padding = stof(panel_bg_padding_str);\
+panel_bg_padding = min(min(mySize_x, mySize_y)/2 - 5, panel_bg_padding);
+
+// Point to the macros above (stupid max macro length)
+#define HUD_Panel_StringVars()\
+HUD_Panel_GetBg \
+HUD_Panel_GetColorTeam \
+HUD_Panel_GetBgAlpha \
+HUD_Panel_GetBorder \
+HUD_Panel_GetPadding
+
+// Update all common cvars of given panel name
 #define HUD_Panel_UpdateCvars(name) \
-panel_enabled = autocvar_hud_##name; \
-panel_pos = autocvar_hud_##name_pos; \
-panel_size = autocvar_hud_##name_size; \
-panel_bg = autocvar_hud_##name_bg; \
-panel_bg_color = autocvar_hud_##name_bg_color; \
-panel_bg_color_team = autocvar_hud_##name_bg_color_team; \
-panel_bg_alpha = autocvar_hud_##name_bg_alpha; \
-panel_bg_border = autocvar_hud_##name_bg_border; \
-panel_bg_padding = autocvar_hud_##name_bg_padding; \
-panel_accuracy_yellow = autocvar_hud_##name_accuracy_yellow; \
-panel_onlycurrent = autocvar_hud_##name_onlycurrent; \
-panel_flip = autocvar_hud_##name_flip; \
-panel_iconalign = autocvar_hud_##name_iconalign; \
-panel_baralign = autocvar_hud_##name_baralign; \
-panel_info_top = autocvar_hud_##name_info_top; \
-panel_alreadyvoted_alpha = autocvar_hud_##name_alreadyvoted_alpha;
+panel_enabled = autocvar_hud_##name##; \
+panel_pos = autocvar_hud_##name##_pos; \
+panel_size = autocvar_hud_##name##_size; \
+panel_bg_str = autocvar_hud_##name##_bg; \
+panel_bg_color = autocvar_hud_##name##_bg_color; \
+panel_bg_color_team_str = autocvar_hud_##name##_bg_color_team; \
+panel_bg_alpha_str = autocvar_hud_##name##_bg_alpha; \
+panel_bg_border_str = autocvar_hud_##name##_bg_border; \
+panel_bg_padding_str = autocvar_hud_##name##_bg_padding; \
+HUD_Panel_StringVars
+
+// Update all common cvars of given panel id
+#define HUD_Panel_UpdateCvarsForId(id) \
+active_panel = id; \
+switch(id) { \
+	case HUD_PANEL_WEAPONICONS: HUD_Panel_UpdateCvars(weaponicons) break; \
+	case HUD_PANEL_INVENTORY: HUD_Panel_UpdateCvars(inventory) break; \
+	case HUD_PANEL_POWERUPS: HUD_Panel_UpdateCvars(powerups) break; \
+	case HUD_PANEL_HEALTHARMOR: HUD_Panel_UpdateCvars(healtharmor) break; \
+	case HUD_PANEL_NOTIFY: HUD_Panel_UpdateCvars(notify) break; \
+	case HUD_PANEL_TIMER: HUD_Panel_UpdateCvars(timer) break; \
+	case HUD_PANEL_RADAR: HUD_Panel_UpdateCvars(radar) break; \
+	case HUD_PANEL_SCORE: HUD_Panel_UpdateCvars(score) break; \
+	case HUD_PANEL_RACETIMER: HUD_Panel_UpdateCvars(racetimer) break; \
+	case HUD_PANEL_VOTE: HUD_Panel_UpdateCvars(vote) break; \
+	case HUD_PANEL_MODICONS: HUD_Panel_UpdateCvars(modicons) break; \
+	case HUD_PANEL_PRESSEDKEYS: HUD_Panel_UpdateCvars(pressedkeys) break; \
+	case HUD_PANEL_CHAT: HUD_Panel_UpdateCvars(chat) break; \
+	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdateCvars(engineinfo) break; \
+}
+
+/* These cvars have to be placed separately wherever they are needed.
+panel_accuracy_yellow = autocvar_hud_##name##_accuracy_yellow; \
+panel_onlycurrent = autocvar_hud_##name##_onlycurrent; \
+panel_flip = autocvar_hud_##name##_flip; \
+panel_iconalign = autocvar_hud_##name##_iconalign; \
+panel_baralign = autocvar_hud_##name##_baralign; \
+panel_info_top = autocvar_hud_##name##_info_top; \
+panel_alreadyvoted_alpha = autocvar_hud_##name##_alreadyvoted_alpha;
+*/

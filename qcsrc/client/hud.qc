@@ -544,8 +544,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 		float i;
 		for (i = 0; i < HUD_PANEL_NUM; ++i)
 		{
-			HUD_Panel_GetName(i)
-			HUD_Panel_UpdateCvars(panel_name)
+//			HUD_Panel_GetName(i)
+//			HUD_Panel_UpdateCvarsForId(i)
 
 			fputs(fh, strcat("seta hud_", panel_name, " ", ftos(cvar(strcat("hud_", panel_name))), "\n"));
 			fputs(fh, strcat("seta hud_", panel_name, "_pos \"", cvar_string(strcat("hud_", panel_name, "_pos")), "\"", "\n"));
@@ -593,19 +593,11 @@ void HUD_Panel_ExportCfg(string cfgname)
 	fclose(fh);
 }
 
-// return active status of panel
-float HUD_Panel_CheckActive(float id)
-{
-	if (cvar_or(strcat("hud_", HUD_Panel_GetName(id)), 1))
-		return 1;
-	return 0;
-}
-
 // return smoothly faded size of given panel when a dialog is active
 vector HUD_Panel_GetMenuSize(float id)
 {
 	vector mySize;
-	mySize = stov(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_size")));
+	mySize = stov(cvar_string(strcat("hud_", panel_name, "_size")));
 
 	mySize = eX * mySize_x * vid_conwidth + eY * mySize_y * vid_conheight;
 
@@ -641,7 +633,7 @@ vector HUD_Panel_GetMenuSize(float id)
 vector HUD_Panel_GetMenuPos(float id)
 {
 	vector pos;
-	pos = stov(cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_pos")));
+	pos = stov(cvar_string(strcat("hud_", panel_name, "_pos")));
 
 	pos = eX * pos_x * vid_conwidth + eY * pos_y * vid_conheight;
 
@@ -665,12 +657,12 @@ vector HUD_Panel_GetColor(float id)
 	string color;
 
 	// fetch per-panel color
-	if(teamplay && cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color_team")) != "") {
+	if(teamplay && cvar_string(strcat("hud_", panel_name, "_bg_color_team")) != "") {
 		f = stof(getplayerkey(player_localentnum - 1, "colors"));
-		color = vtos(colormapPaletteColor(mod(f, 16), 1) * cvar(strcat("hud_", HUD_Panel_GetName(id), "_bg_color_team")));
+		color = vtos(colormapPaletteColor(mod(f, 16), 1) * cvar(strcat("hud_", panel_name, "_bg_color_team")));
 	}
 	else
-		color = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_color"));
+		color = cvar_string(strcat("hud_", panel_name, "_bg_color"));
 	color_vec = stov(color);
 
 	if(color == "") { // fetch default color
@@ -703,16 +695,16 @@ vector HUD_Panel_GetColor(float id)
 float HUD_Panel_GetBgAlpha(float id)
 {
 	string alpha;
-	alpha = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_alpha"));
+	alpha = cvar_string(strcat("hud_", panel_name, "_bg_alpha"));
 	if(alpha == "")
 		alpha = cvar_string("hud_bg_alpha");
 
-	if(hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == id) // do not set a minalpha cap when showing the config dialog for this panel
-		alpha = ftos((1 - cvar("_menu_alpha")) * max(cvar("hud_configure_bg_minalpha"), stof(alpha)) + (cvar("_menu_alpha")) * stof(alpha));
-	else if(hud_configure)
-		alpha = ftos(max(cvar("hud_configure_bg_minalpha"), stof(alpha)));
+	if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == id) // do not set a minalpha cap when showing the config dialog for this panel
+		alpha = ftos((1 - cvar("_menu_alpha")) * max(autocvar_hud_configure_bg_minalpha, stof(alpha)) + (cvar("_menu_alpha")) * stof(alpha));
+	else if(autocvar__hud_configure)
+		alpha = ftos(max(autocvar_hud_configure_bg_minalpha, stof(alpha)));
 
-	if(hud_configure && !cvar(strcat("hud_", HUD_Panel_GetName(id)))) // ALWAYS show disabled panels at 0.25 alpha when in config mode
+	if(autocvar__hud_configure && !cvar(strcat("hud_", panel_name))) // ALWAYS show disabled panels at 0.25 alpha when in config mode
 		return 0.25;
 
 	if(disable_menu_alphacheck == 2 && highlightedPanel == id) // don't fade this panel when showing the panel-specific menu dialog
@@ -726,7 +718,7 @@ float HUD_Panel_GetFgAlpha(float id)
 	float alpha;
 	alpha = hud_fg_alpha;
 
-	if(hud_configure && !cvar(strcat("hud_", HUD_Panel_GetName(id)))) // ALWAYS show disabled panels at 0.25 alpha when in config mode
+	if(autocvar__hud_configure && !cvar(strcat("hud_", panel_name))) // ALWAYS show disabled panels at 0.25 alpha when in config mode
 		return 0.25;
 
 	if(disable_menu_alphacheck == 2 && highlightedPanel == id) // don't fade this panel when showing the panel-specific menu dialog
@@ -738,7 +730,7 @@ float HUD_Panel_GetFgAlpha(float id)
 float HUD_Panel_GetPadding(float id)
 {
 	string padding;
-	padding = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_padding"));
+	padding = cvar_string(strcat("hud_", panel_name, "_bg_padding"));
 	if(padding == "")
 		padding = cvar_string("hud_bg_padding");
 
@@ -752,13 +744,13 @@ float HUD_Panel_GetPadding(float id)
 // draw the background/borders
 void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
 {
-	if(!hud_configure && panel_bg == "0")
+	if(!autocvar__hud_configure && panel_bg == "0")
 		return;
 
 	if(panel_bg == "")
 		panel_bg = cvar_string("hud_bg");
 
-	if(panel_bg == "0" && hud_configure) {
+	if(panel_bg == "0" && autocvar__hud_configure) {
 		panel_bg = "border"; // we probably want to see a background in config mode at all times...
 	}
 
@@ -766,7 +758,7 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
 	{
 
 		string border;
-		border = cvar_string(strcat("hud_", HUD_Panel_GetName(id), "_bg_border"));
+		border = cvar_string(strcat("hud_", panel_name, "_bg_border"));
 		if(border == "")
 			border = cvar_string("hud_bg_border");
 
@@ -784,7 +776,7 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
 		draw_BorderPicture(pos - '1 1 0' * borderf, strcat("gfx/hud/", cvar_string("hud_skin"), "/", panel_bg), mySize + '1 1 0' * 2 * borderf, color, alpha, '1 1 0' * (borderf/BORDER_MULTIPLIER));
 	}
 
-	if(highlightedPanel_prev == id && hud_configure)
+	if(highlightedPanel_prev == id && autocvar__hud_configure)
 		drawfill(pos - '1 1 0' * borderf, mySize + '1 1 0' * 2 * borderf, '1 1 1', .1 * (1 - cvar("_menu_alpha")), DRAWFLAG_ADDITIVE);
 }
 
@@ -808,6 +800,7 @@ void HUD_Panel_DrawProgressBar(vector pos, float vertical, vector mySize, vector
 	}
 }
 
+// TODO: autocvar
 #define HUD_Panel_GetProgressBarColor(item) \
 stov(cvar_string(strcat("hud_progressbar_", item, "_color")))
 
@@ -827,10 +820,9 @@ vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 	targCenter = '0 0 0'; // shut up fteqcc, there IS a reference
 
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
-		HUD_Panel_GetName(i);
-		HUD_Panel_UpdateCvars(panel_name);
+		HUD_Panel_UpdateCvarsForId(i)
 
-		if(i == id || !panel_active)
+		if(i == id || !panel_enabled)
 			continue;
 
 		targPos = panel_pos;
@@ -895,22 +887,22 @@ void HUD_Panel_SetPos(float id, vector pos)
 	vector mySize;
 	mySize = panel_size;
 
-	if(hud_configure_checkcollisions)
+	if(autocvar_hud_configure_checkcollisions)
 		pos = HUD_Panel_CheckMove(id, pos, mySize);
 
 	pos_x = bound(0, pos_x, vid_conwidth - mySize_x);
 	pos_y = bound(0, pos_y, vid_conheight - mySize_y);
 
-	if(cvar("hud_configure_grid"))
+	if(autocvar_hud_configure_grid)
 	{
-		pos_x = floor((pos_x/vid_conwidth)/bound(0.005, cvar("hud_configure_grid_x"), 0.2) + 0.5) * bound(0.005, cvar("hud_configure_grid_x"), 0.2) * vid_conwidth;
-		pos_y = floor((pos_y/vid_conheight)/bound(0.005, cvar("hud_configure_grid_y"), 0.2) + 0.5) * bound(0.005, cvar("hud_configure_grid_y"), 0.2) * vid_conheight;
+		pos_x = floor((pos_x/vid_conwidth)/bound(0.005, autocvar_hud_configure_grid_x, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_x, 0.2) * vid_conwidth;
+		pos_y = floor((pos_y/vid_conheight)/bound(0.005, autocvar_hud_configure_grid_y, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_y, 0.2) * vid_conheight;
 	}
 
 	string s;
 	s = strcat(ftos(pos_x/vid_conwidth), " ", ftos(pos_y/vid_conheight));
 
-	cvar_set(strcat("hud_", HUD_Panel_GetName(id), "_pos"), s);
+	cvar_set(strcat("hud_", panel_name, "_pos"), s);
 }
 
 // check if resize will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector
@@ -927,7 +919,7 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin) {
 	ratio = mySize_x/mySize_y;
 
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
-		if(i == id || !HUD_Panel_CheckActive(i))
+		if(i == id || !panel_enabled)
 			continue;
 
 		targPos = panel_pos;
@@ -1037,7 +1029,7 @@ void HUD_Panel_SetPosSize(float id, vector mySize)
 	if(id == HUD_PANEL_CHAT) // some panels have their own restrictions, like the chat panel (which actually only moves the engine chat print around). Looks bad if it's too small.
 	{
 		mySize_x = max(17 * cvar("con_chatsize"), mySize_x);
-		mySize_y = max(2 * cvar("con_chatsize") + 2 * HUD_Panel_GetPadding(id), mySize_y);
+		mySize_y = max(2 * cvar("con_chatsize") + 2 * panel_bg_padding, mySize_y);
 	}
 
 	// collision testing|
@@ -1074,13 +1066,13 @@ void HUD_Panel_SetPosSize(float id, vector mySize)
 		drawfill(myPos, mySize, '1 1 1', .2, DRAWFLAG_NORMAL);
 
 	// before checkresize, otherwise panel can be snapped partially inside another panel or panel aspect ratio can be broken
-	if(cvar("hud_configure_grid"))
+	if(autocvar_hud_configure_grid)
 	{
-		mySize_x = floor((mySize_x/vid_conwidth)/bound(0.005, cvar("hud_configure_grid_x"), 0.2) + 0.5) * bound(0.005, cvar("hud_configure_grid_x"), 0.2) * vid_conwidth;
-		mySize_y = floor((mySize_y/vid_conheight)/bound(0.005, cvar("hud_configure_grid_y"), 0.2) + 0.5) * bound(0.005, cvar("hud_configure_grid_y"), 0.2) * vid_conheight;
+		mySize_x = floor((mySize_x/vid_conwidth)/bound(0.005, autocvar_hud_configure_grid_x, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_x, 0.2) * vid_conwidth;
+		mySize_y = floor((mySize_y/vid_conheight)/bound(0.005, autocvar_hud_configure_grid_y, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_y, 0.2) * vid_conheight;
 	}
 
-	if(hud_configure_checkcollisions)
+	if(autocvar_hud_configure_checkcollisions)
 		mySize = HUD_Panel_CheckResize(id, mySize, resizeorigin);
 
 	// minimum panel size cap, do this once more so we NEVER EVER EVER have a panel smaller than this, JUST IN CASE above code still makes the panel eg negative (impossible to resize back without changing cvars manually then)
@@ -1107,10 +1099,10 @@ void HUD_Panel_SetPosSize(float id, vector mySize)
 
 	string s;
 	s = strcat(ftos(mySize_x/vid_conwidth), " ", ftos(mySize_y/vid_conheight));
-	cvar_set(strcat("hud_", HUD_Panel_GetName(id), "_size"), s);
+	cvar_set(strcat("hud_", panel_name, "_size"), s);
 
 	s = strcat(ftos(myPos_x/vid_conwidth), " ", ftos(myPos_y/vid_conheight));
-	cvar_set(strcat("hud_", HUD_Panel_GetName(id), "_pos"), s);
+	cvar_set(strcat("hud_", panel_name, "_pos"), s);
 }
 
 float mouseClicked;
@@ -1129,21 +1121,21 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && cvar("hud_configure_checkcollisions"));
 
 	float step;
-	if(cvar("hud_configure_grid"))
+	if(autocvar_hud_configure_grid)
 	{
 		if (nPrimary == K_UPARROW || nPrimary == K_DOWNARROW)
 		{
 			if (hudShiftState & S_SHIFT)
-				step = bound(0.005, cvar("hud_configure_grid_y"), 0.2) * vid_conheight;
+				step = bound(0.005, autocvar_hud_configure_grid_y, 0.2) * vid_conheight;
 			else
-				step = 2 * bound(0.005, cvar("hud_configure_grid_y"), 0.2) * vid_conheight;
+				step = 2 * bound(0.005, autocvar_hud_configure_grid_y, 0.2) * vid_conheight;
 		}
 		else
 		{
 			if (hudShiftState & S_SHIFT)
-				step = bound(0.005, cvar("hud_configure_grid_x"), 0.2) * vid_conwidth;
+				step = bound(0.005, autocvar_hud_configure_grid_x, 0.2) * vid_conwidth;
 			else
-				step = 2 * bound(0.005, cvar("hud_configure_grid_x"), 0.2) * vid_conwidth;
+				step = 2 * bound(0.005, autocvar_hud_configure_grid_x, 0.2) * vid_conwidth;
 		}
 	}
 	else
@@ -1159,6 +1151,8 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 
 	highlightedPanel = highlightedPanel_prev;
+
+	HUD_Panel_UpdateCvarsForId(highlightedPanel)
 
 	if (hudShiftState & S_ALT) // resize
 	{
@@ -1181,8 +1175,8 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 		}
 
 		vector mySize;
-		mySize = HUD_Panel_GetSize(highlightedPanel);
-		panel_click_resizeorigin = HUD_Panel_GetPos(highlightedPanel);
+		mySize = panel_size;
+		panel_click_resizeorigin = panel_pos;
 		if(resizeCorner == 1) {
 			panel_click_resizeorigin += mySize;
 			mySize_y += step;
@@ -1201,7 +1195,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	{
 		highlightedAction = 2;
 		vector pos;
-		pos = HUD_Panel_GetPos(highlightedPanel);
+		pos = panel_pos;
 		if(nPrimary == K_UPARROW)
 			pos_y -= step;
 		else if(nPrimary == K_DOWNARROW)
@@ -1217,7 +1211,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
-	if(!hud_configure)
+	if(!autocvar__hud_configure)
 		return false;
 
 	// allow console bind to work
@@ -1511,8 +1505,7 @@ float weaponorder_cmp(float i, float j, entity pass)
 void HUD_WeaponIcons(void)
 {
 	float id = HUD_PANEL_WEAPONICONS;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	float alpha, stat_weapons; // "constants"
 	vector pos, mySize, accuracy_color;
 	float i, weapid, fade, weapon_stats, weapon_hit, weapon_damage, weapon_cnt; // variables
@@ -1553,7 +1546,7 @@ void HUD_WeaponIcons(void)
 	}
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -1726,7 +1719,7 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 {
 	float a;
 	a = getstati(GetAmmoStat(itemcode)); // how much ammo do we have of type itemcode?
-	if(hud_configure)
+	if(autocvar__hud_configure)
 		a = 100;
 
 	vector color;
@@ -1783,8 +1776,7 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 void HUD_Inventory(void)
 {
 	float id = HUD_PANEL_INVENTORY;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	float i, currently_selected;
 
 	vector pos, mySize;
@@ -1792,7 +1784,7 @@ void HUD_Inventory(void)
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -1811,9 +1803,9 @@ void HUD_Inventory(void)
 	for (i = 0; i < AMMO_COUNT; ++i) {
 		currently_selected = getstati(STAT_ITEMS) & GetAmmoItemCode(i);
 		if(cvar("hud_inventory_onlycurrent")) {
-			if(hud_configure)
+			if(autocvar__hud_configure)
 				i = 2;
-			if (currently_selected || hud_configure)
+			if (currently_selected || autocvar__hud_configure)
 				DrawAmmoItem(pos, mySize, i, currently_selected);
 			break;
 		} else {
@@ -1850,7 +1842,7 @@ void DrawNumIcon(float id, vector myPos, vector mySize, float x, string icon, fl
 
 	vector picpos, numpos;
 	float iconalign;
-	iconalign = cvar(strcat("hud_", HUD_Panel_GetName(id), "_iconalign"));
+	iconalign = cvar(strcat("hud_", panel_name, "_iconalign"));
 	if(left)
 	{
 		if(iconalign == 1 || iconalign == 3) // right align
@@ -1888,12 +1880,11 @@ void DrawNumIcon(float id, vector myPos, vector mySize, float x, string icon, fl
 //
 void HUD_Powerups(void) {
 	float id = HUD_PANEL_POWERUPS;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	float stat_items;
 	stat_items = getstati(STAT_ITEMS);
 
-	if(!hud_configure)
+	if(!autocvar__hud_configure)
 	{
 		if not(stat_items & IT_STRENGTH)
 			if not(stat_items & IT_INVINCIBLE)
@@ -1908,7 +1899,7 @@ void HUD_Powerups(void) {
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -1920,7 +1911,7 @@ void HUD_Powerups(void) {
 	strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
 	shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
 
-	if(hud_configure)
+	if(autocvar__hud_configure)
 	{
 		strength_time = 15;
 		shield_time = 27;
@@ -1934,7 +1925,7 @@ void HUD_Powerups(void) {
 	float leftcnt, rightcnt;
 	float leftexact, rightexact;
 	float leftalpha, rightalpha;
-	if (cvar(strcat("hud_", HUD_Panel_GetName(id), "_flip"))) {
+	if (cvar(strcat("hud_", panel_name, "_flip"))) {
 		leftname = "strength";
 		leftcnt = ceil(strength_time);
 		leftexact = strength_time;
@@ -1955,8 +1946,8 @@ void HUD_Powerups(void) {
 	rightalpha = bound(0, rightexact, 1);
 
 	float baralign, iconalign;
-	baralign = cvar(strcat("hud_", HUD_Panel_GetName(id), "_baralign"));
-	iconalign = cvar(strcat("hud_", HUD_Panel_GetName(id), "_iconalign"));
+	baralign = cvar(strcat("hud_", panel_name, "_baralign"));
+	iconalign = cvar(strcat("hud_", panel_name, "_iconalign"));
 
 	if (mySize_x/mySize_y > 4)
 	{
@@ -2084,14 +2075,13 @@ void HUD_Powerups(void) {
 void HUD_HealthArmor(void)
 {
 	float id = HUD_PANEL_HEALTHARMOR;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -2105,7 +2095,7 @@ void HUD_HealthArmor(void)
 	float fuel;
 	fuel = getstati(GetAmmoStat(4)); // how much fuel do we have?
 
-	if(hud_configure)
+	if(autocvar__hud_configure)
 	{
 		armor = 150;
 		health = 100;
@@ -2120,8 +2110,8 @@ void HUD_HealthArmor(void)
 	vector numpos;
 
 	float baralign, iconalign;
-	baralign = cvar(strcat("hud_", HUD_Panel_GetName(id), "_baralign"));
-	iconalign = cvar(strcat("hud_", HUD_Panel_GetName(id), "_iconalign"));
+	baralign = cvar(strcat("hud_", panel_name, "_baralign"));
+	iconalign = cvar(strcat("hud_", panel_name, "_iconalign"));
 
 	if(cvar("hud_healtharmor") == 2) // combined health and armor display
 	{
@@ -2175,7 +2165,7 @@ void HUD_HealthArmor(void)
 		float leftcnt, rightcnt;
 		float leftactive, rightactive;
 		float leftalpha, rightalpha;
-		if (cvar(strcat("hud_", HUD_Panel_GetName(id), "_flip"))) { // old style layout with armor left/top of health
+		if (cvar(strcat("hud_", panel_name, "_flip"))) { // old style layout with armor left/top of health
 			leftname = "armor";
 			leftcnt = armor;
 			if(leftcnt)
@@ -2398,7 +2388,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 {
 	float w;
 	float alsoprint;
-	alsoprint = (cvar("hud_notify_print") || !HUD_Panel_CheckActive(4)); // print message to console if: notify panel disabled, or cvar to do so enabled
+	alsoprint = (cvar("hud_notify_print") || !panel_enabled); // print message to console if: notify panel disabled, or cvar to do so enabled
 	
 	if(msg == MSG_SUICIDE) {
 		// TODO: cl_gentle
@@ -2809,14 +2799,13 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 void HUD_Notify (void)
 {
 	float id = HUD_PANEL_NOTIFY;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -2874,7 +2863,7 @@ void HUD_Notify (void)
 		// TODO: less copypaste code below
 		//
 		// Y [used by] X
-		if(killnotify_actiontype[j] == 0 && !hud_configure) 
+		if(killnotify_actiontype[j] == 0 && !autocvar__hud_configure) 
 		{
 			attacker = textShortenToWidth(killnotify_attackers[j], mySize_x - 2 * height, fontsize, stringwidth_colors);
 
@@ -2973,7 +2962,7 @@ void HUD_Notify (void)
 		// X [did action to] Y
 		else
 		{
-			if(hud_configure)
+			if(autocvar__hud_configure)
 			{
 				attacker = textShortenToWidth("Player1", 0.5 * mySize_x - height, fontsize, stringwidth_colors);
 				victim = textShortenToWidth("Player2", 0.5 * mySize_x - height, fontsize, stringwidth_colors);
@@ -2990,7 +2979,7 @@ void HUD_Notify (void)
 			pos_victim = pos + eX * 0.5 * ((0.5 * mySize_x - height) - width_victim) + eY * 0.5 * fontsize_y + eX * 0.5 * mySize_x + eX * height + eY * i * height;
 			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
 
-			if(hud_configure) // example actions for config mode
+			if(autocvar__hud_configure) // example actions for config mode
 			{
 				drawpic_aspect_skin(weap_pos, strcat("weapon", "electro"), '2 1 0' * height, '1 1 1', HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, HUD_Panel_GetFgAlpha(id) * a, DRAWFLAG_NORMAL);
@@ -3193,7 +3182,7 @@ void HUD_Notify (void)
 			}
 		}
 	}
-	if(hud_configure)
+	if(autocvar__hud_configure)
 	{
 		s = "^7Press ^3ESC ^7to show HUD options.";
 		drawcolorcodedstring(o, s, fontsize, HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
@@ -3222,14 +3211,13 @@ string seconds_tostring(float sec)
 void HUD_Timer(void)
 {
 	float id = HUD_PANEL_TIMER;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -3276,14 +3264,13 @@ void HUD_Timer(void)
 void HUD_Radar(void)
 {
 	float id = HUD_PANEL_RADAR;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -3403,14 +3390,13 @@ void HUD_Radar(void)
 void HUD_Score(void)
 {
 	float id = HUD_PANEL_SCORE;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -3483,7 +3469,7 @@ void HUD_Score(void)
 		if(pl == me)
 			pl = pl.sort_next;
 
-		if(hud_configure)
+		if(autocvar__hud_configure)
 			distribution = 42;
 		else if(pl)
 			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
@@ -3491,7 +3477,7 @@ void HUD_Score(void)
 			distribution = 0;
 
 		score = me.(scores[ps_primary]);
-		if(hud_configure)
+		if(autocvar__hud_configure)
 			score = 123;
 
 		if(distribution >= 5) {
@@ -3519,10 +3505,10 @@ void HUD_Score(void)
 
 		float teamnum;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
-			if(tm.team == COLOR_SPECTATOR || (!tm.team_size && !hud_configure)) // no players? don't display
+			if(tm.team == COLOR_SPECTATOR || (!tm.team_size && !autocvar__hud_configure)) // no players? don't display
 				continue;
 			score = tm.(teamscores[ts_primary]);
-			if(hud_configure)
+			if(autocvar__hud_configure)
 				score = 123;
 			leader = 0;
 			
@@ -3555,14 +3541,13 @@ void HUD_Score(void)
 //
 void HUD_RaceTimer (void) {
 	float id = HUD_PANEL_RACETIMER;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -3591,7 +3576,7 @@ void HUD_RaceTimer (void) {
 	float a, t;
 	string s, forcetime;
 
-	if(hud_configure)
+	if(autocvar__hud_configure)
 	{
 		s = "0:13:37";
 		drawstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, FALSE, '0.60 0.60 0' * mySize_y), s, '0.60 0.60 0' * mySize_y, '1 1 1', HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
@@ -3718,8 +3703,7 @@ float vote_change; // "time" when vote_active changed
 void HUD_VoteWindow(void) 
 {
 	float id = HUD_PANEL_VOTE;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3731,12 +3715,12 @@ void HUD_VoteWindow(void)
 		vote_prev = vote_active;
 	}
 
-	if(vote_active || hud_configure)
+	if(vote_active || autocvar__hud_configure)
 		vote_alpha = bound(0, (time - vote_change) * 2, 1);
 	else
 		vote_alpha = bound(0, 1 - (time - vote_change) * 2, 1);
 
-	if(hud_configure)
+	if(autocvar__hud_configure)
 	{
 		vote_yescount = 3;
 		vote_nocount = 2;
@@ -3749,7 +3733,7 @@ void HUD_VoteWindow(void)
 	a = vote_alpha * bound(cvar_or("hud_vote_alreadyvoted_alpha", 0.75), 1 - vote_highlighted, 1);
 
 	HUD_Panel_DrawBg(id, pos, mySize, a);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -3779,7 +3763,7 @@ void HUD_VoteWindow(void)
 	s = "A vote has been called for: ";
 	drawstring_aspect(pos + eY * (1/12) * mySize_y, s, eX * mySize_x + eY * (3/12) * mySize_y, mySize_y*(3/12), '1 1 1', a * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (3/12), stringwidth_colors); // TODO: broken?
-	if(hud_configure)
+	if(autocvar__hud_configure)
 		s = "Configure the HUD";
 	drawstring_aspect(pos + eY * (4/12) * mySize_y, s, eX * mySize_x + eY * (2/12) * mySize_y, mySize_y*(2/12), '1 1 1', a * HUD_Panel_GetFgAlpha(id), DRAWFLAG_NORMAL);
 
@@ -3847,7 +3831,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	else
 		mod_active = 0;
 
-	if(hud_configure)
+	if(autocvar__hud_configure)
 	{
 		redflag = 1;
 		blueflag = 2;
@@ -4296,12 +4280,11 @@ float mod_change; // "time" when mod_active changed
 
 void HUD_ModIcons(void)
 {
-	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && !hud_configure)
+	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && !autocvar__hud_configure)
 		return;
 
 	float id = HUD_PANEL_MODICONS;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4311,7 +4294,7 @@ void HUD_ModIcons(void)
 		mod_prev = mod_active;
 	}
 
-	if(mod_active || hud_configure)
+	if(mod_active || autocvar__hud_configure)
 		mod_alpha = bound(0, (time - mod_change) * 2, 1);
 	else
 		mod_alpha = bound(0, 1 - (time - mod_change) * 2, 1);
@@ -4319,7 +4302,7 @@ void HUD_ModIcons(void)
 	if(mod_alpha)
 		HUD_Panel_DrawBg(id, pos, mySize, mod_alpha);
 
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -4329,7 +4312,7 @@ void HUD_ModIcons(void)
 	// these MUST be ran in order to update mod_active
 	if(gametype == GAME_KEYHUNT)
 		HUD_Mod_KH(pos, mySize);
-	else if(gametype == GAME_CTF || hud_configure)
+	else if(gametype == GAME_CTF || autocvar__hud_configure)
 		HUD_Mod_CTF(pos, mySize); // forcealpha only needed for ctf icons, as only they are shown in config mode
 	else if(gametype == GAME_NEXBALL)
 		HUD_Mod_NexBall(pos, mySize);
@@ -4342,14 +4325,13 @@ void HUD_ModIcons(void)
 void HUD_DrawPressedKeys(void)
 {
 	float id = HUD_PANEL_PRESSEDKEYS;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -4374,14 +4356,13 @@ void HUD_DrawPressedKeys(void)
 void HUD_Chat(void)
 {
 	float id = HUD_PANEL_CHAT;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -4396,7 +4377,7 @@ void HUD_Chat(void)
 	cvar_set("con_chatwidth", ftos(mySize_x/vid_conwidth));
 	cvar_set("con_chat", ftos(floor(mySize_y/cvar("con_chatsize") - 0.5)));
 
-	if(hud_configure)
+	if(autocvar__hud_configure)
 	{
 		float chatsize;
 		chatsize = cvar("con_chatsize");
@@ -4425,14 +4406,13 @@ float frametimeavg2; // 2 frames ago
 void HUD_EngineInfo(void)
 {
 	float id = HUD_PANEL_ENGINEINFO;
-	HUD_Panel_GetName(id);
-	HUD_Panel_UpdateCvars(panel_name);
+	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = HUD_Panel_GetPadding(id);
+	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -4599,23 +4579,21 @@ void HUD_Main (void)
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 	hud_fontsize_spec = HUD_GetFontsize("hud_fontsize_spec");
 
-	hud_configure = cvar("_hud_configure");
-
 	// Drawing stuff
 
 	// HUD configure visible grid
-	if(hud_configure && cvar("hud_configure_grid") && cvar("hud_configure_grid_alpha"))
+	if(autocvar__hud_configure && autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
 	{
 		float i;
 		// x-axis
-		for(i = 0; i < 1/bound(0.005, cvar("hud_configure_grid_x"), 0.2); ++i)
+		for(i = 0; i < 1/bound(0.005, autocvar_hud_configure_grid_x, 0.2); ++i)
 		{
-			drawfill(eX * i * vid_conwidth * bound(0.005, cvar("hud_configure_grid_x"), 0.2), eX + eY * vid_conheight, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
+			drawfill(eX * i * vid_conwidth * bound(0.005, autocvar_hud_configure_grid_x, 0.2), eX + eY * vid_conheight, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 		}
 		// y-axis
-		for(i = 0; i < 1/bound(0.005, cvar("hud_configure_grid_y"), 0.2); ++i)
+		for(i = 0; i < 1/bound(0.005, autocvar_hud_configure_grid_y, 0.2); ++i)
 		{
-			drawfill(eY * i * vid_conheight * bound(0.005, cvar("hud_configure_grid_y"), 0.2), eY + eX * vid_conwidth, '0.5 0.5 0.5', cvar("hud_configure_grid_alpha"), DRAWFLAG_NORMAL);
+			drawfill(eY * i * vid_conheight * bound(0.005, autocvar_hud_configure_grid_y, 0.2), eY + eX * vid_conwidth, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 		}
 	}
 
@@ -4640,38 +4618,38 @@ void HUD_Main (void)
 	if(cvar_string("hud_dock") != "" && cvar_string("hud_dock") != "0")
 		drawpic('0 0 0', strcat("gfx/hud/", cvar_string("hud_skin"), "/", cvar_string("hud_dock")), eX * vid_conwidth + eY * vid_conheight, color_vec, cvar("hud_dock_alpha") * menu_fade_alpha, DRAWFLAG_NORMAL); // no aspect ratio forcing on dock...
 
-	if(HUD_Panel_CheckActive(HUD_PANEL_RADAR) || hud_configure)
+	if(autocvar_hud_radar || autocvar__hud_configure)
 		if(cvar_string("hud_radar") != "0" && (cvar("hud_radar") == 2 || teamplay))
 			HUD_Radar();
-	if(HUD_Panel_CheckActive(HUD_PANEL_WEAPONICONS) || hud_configure)
+	if(autocvar_hud_weaponicons || autocvar__hud_configure)
 		HUD_WeaponIcons();
-	if(HUD_Panel_CheckActive(HUD_PANEL_INVENTORY) || hud_configure)
+	if(autocvar_hud_inventory || autocvar__hud_configure)
 		HUD_Inventory();
-	if(HUD_Panel_CheckActive(HUD_PANEL_POWERUPS) || hud_configure)
+	if(autocvar_hud_powerups || autocvar__hud_configure)
 		HUD_Powerups();
-	if(HUD_Panel_CheckActive(HUD_PANEL_HEALTHARMOR) || hud_configure)
+	if(autocvar_hud_healtharmor || autocvar__hud_configure)
 		HUD_HealthArmor();
-	if(HUD_Panel_CheckActive(HUD_PANEL_NOTIFY) || hud_configure)
+	if(autocvar_hud_notify || autocvar__hud_configure)
 		HUD_Notify();
-	if(HUD_Panel_CheckActive(HUD_PANEL_TIMER) || hud_configure)
+	if(autocvar_hud_timer || autocvar__hud_configure)
 		HUD_Timer();
-	if(HUD_Panel_CheckActive(HUD_PANEL_SCORE) || hud_configure)
+	if(autocvar_hud_score || autocvar__hud_configure)
 		HUD_Score();
-	if(HUD_Panel_CheckActive(HUD_PANEL_RACETIMER) || hud_configure)
-		if(gametype == GAME_RACE || gametype == GAME_CTS || hud_configure)
+	if(autocvar_hud_racetimer || autocvar__hud_configure)
+		if(gametype == GAME_RACE || gametype == GAME_CTS || autocvar__hud_configure)
 			HUD_RaceTimer();
-	if(HUD_Panel_CheckActive(HUD_PANEL_VOTE) || hud_configure)
+	if(autocvar_hud_vote || autocvar__hud_configure)
 		HUD_VoteWindow();
-	if(HUD_Panel_CheckActive(HUD_PANEL_MODICONS) || hud_configure)
+	if(autocvar_hud_modicons || autocvar__hud_configure)
 		HUD_ModIcons();
-	if(HUD_Panel_CheckActive(HUD_PANEL_PRESSEDKEYS) || hud_configure)
-		if(spectatee_status > 0 || cvar("hud_pressedkeys") >= 2 || hud_configure)
+	if(autocvar_hud_pressedkeys || autocvar__hud_configure)
+		if(spectatee_status > 0 || cvar("hud_pressedkeys") >= 2 || autocvar__hud_configure)
 			HUD_DrawPressedKeys();
-	if(HUD_Panel_CheckActive(HUD_PANEL_CHAT) || hud_configure)
+	if(autocvar_hud_chat || autocvar__hud_configure)
 		HUD_Chat();
 	else
 		cvar_set("con_chatrect", "0");
-	if(HUD_Panel_CheckActive(HUD_PANEL_ENGINEINFO) || hud_configure)
+	if(autocvar_hud_engineinfo || autocvar__hud_configure)
 		HUD_EngineInfo();
 
 	// TODO hud_'ify these
@@ -4680,11 +4658,11 @@ void HUD_Main (void)
 	if (cvar("cl_showacceleration"))
 		HUD_ShowAcceleration();
 
-	if (hud_configure && spectatee_status && hud_configure_prev == -1) // try to join if we are in hud_configure mode, but still spectating, and in the first frame (in order to get rid of motd when launching a server via the menu "HUD Setup" button)
+	if (autocvar__hud_configure && spectatee_status && hud_configure_prev == -1) // try to join if we are in hud_configure mode, but still spectating, and in the first frame (in order to get rid of motd when launching a server via the menu "HUD Setup" button)
 		localcmd("cmd selectteam auto; cmd join\n");
 
-	hud_configure_prev = hud_configure;
+	hud_configure_prev = autocvar__hud_configure;
 
-	if (!hud_configure) // hud config mode disabled, enable normal alpha stuff again
+	if (!autocvar__hud_configure) // hud config mode disabled, enable normal alpha stuff again
 		disable_menu_alphacheck = 0;
 }
