@@ -1949,41 +1949,22 @@ float get_model_parameters(string m, float sk)
 	return 1;
 }
 
+// we probably want to get rid of GetName in the most places in hud.qc, TODO!
 // Get name of specified panel id
 #define HUD_Panel_GetName(id) \
 switch(id) { \
-	case HUD_PANEL_WEAPONICONS: panel_name = HUD_PANELNAME_WEAPONICONS; return; \
-	case HUD_PANEL_INVENTORY: panel_name = HUD_PANELNAME_INVENTORY; return; \
-	case HUD_PANEL_POWERUPS: panel_name = HUD_PANELNAME_POWERUPS; return; \
-	case HUD_PANEL_HEALTHARMOR: panel_name = HUD_PANELNAME_HEALTHARMOR; return; \
-	case HUD_PANEL_NOTIFY: panel_name = HUD_PANELNAME_NOTIFY; return; \
-	case HUD_PANEL_TIMER: panel_name = HUD_PANELNAME_TIMER; return; \
-	case HUD_PANEL_RADAR: panel_name = HUD_PANELNAME_RADAR; return; \
-	case HUD_PANEL_SCORE: panel_name = HUD_PANELNAME_SCORE; return; \
-	case HUD_PANEL_RACETIMER: panel_name = HUD_PANELNAME_RACETIMER; return; \
-	case HUD_PANEL_VOTE: panel_name = HUD_PANELNAME_VOTE; return; \
-	case HUD_PANEL_MODICONS: panel_name = HUD_PANELNAME_MODICONS; return; \
-	case HUD_PANEL_PRESSEDKEYS: panel_name = HUD_PANELNAME_PRESSEDKEYS; return; \
-	case HUD_PANEL_CHAT: panel_name = HUD_PANELNAME_CHAT; return; \
-	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; return; \
+	case HUD_PANEL_WEAPONICONS: panel_name = HUD_PANELNAME_WEAPONICONS; break; \
+	case HUD_PANEL_INVENTORY: panel_name = HUD_PANELNAME_INVENTORY; break; \
+	case HUD_PANEL_POWERUPS: panel_name = HUD_PANELNAME_POWERUPS; break; \
+	case HUD_PANEL_HEALTHARMOR: panel_name = HUD_PANELNAME_HEALTHARMOR; break; \
+	case HUD_PANEL_NOTIFY: panel_name = HUD_PANELNAME_NOTIFY; break; \
+	case HUD_PANEL_TIMER: panel_name = HUD_PANELNAME_TIMER; break; \
+	case HUD_PANEL_RADAR: panel_name = HUD_PANELNAME_RADAR; break; \
+	case HUD_PANEL_SCORE: panel_name = HUD_PANELNAME_SCORE; break; \
+	case HUD_PANEL_RACETIMER: panel_name = HUD_PANELNAME_RACETIMER; break; \
+	case HUD_PANEL_VOTE: panel_name = HUD_PANELNAME_VOTE; break; \
+	case HUD_PANEL_MODICONS: panel_name = HUD_PANELNAME_MODICONS; break; \
+	case HUD_PANEL_PRESSEDKEYS: panel_name = HUD_PANELNAME_PRESSEDKEYS; break; \
+	case HUD_PANEL_CHAT: panel_name = HUD_PANELNAME_CHAT; break; \
+	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; break; \
 }
-
-// Update all cvars of given panel
-#define HUD_Panel_UpdateCvars(name) \
-panel_enabled = autocvar_hud_##name; \
-panel_pos = autocvar_hud_##name_pos; \
-panel_size = autocvar_hud_##name_size; \
-panel_bg = autocvar_hud_##name_bg; \
-panel_bg_color = autocvar_hud_##name_bg_color; \
-panel_bg_color_team = autocvar_hud_##name_bg_color_team; \
-panel_bg_alpha = autocvar_hud_##name_bg_alpha; \
-panel_bg_border = autocvar_hud_##name_bg_border; \
-panel_bg_padding = autocvar_hud_##name_bg_padding; \
-\
-panel_accuracy_yellow = autocvar_hud_##name_accuracy_yellow; \
-panel_onlycurrent = autocvar_hud_##name_onlycurrent; \
-panel_flip = autocvar_hud_##name_flip; \
-panel_iconalign = autocvar_hud_##name_iconalign; \
-panel_baralign = autocvar_hud_##name_baralign; \
-panel_info_top = autocvar_hud_##name_info_top; \
-panel_alreadyvoted_alpha = autocvar_hud_##name_alreadyvoted_alpha;
