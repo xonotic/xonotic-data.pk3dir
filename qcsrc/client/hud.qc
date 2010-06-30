@@ -650,27 +650,39 @@ vector HUD_Panel_GetMenuPos(float id)
 	return pos;
 }
 
-vector HUD_Panel_GetColor(float id)
+// draw the background/borders
+void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
 {
-	float f;
-	vector color_vec;
-	string color;
+	if(panel_bg != "0")
+	{
+		float f;
+		vector color_vec;
+		string color;
 
-	// fetch per-panel color
-	if(teamplay && cvar_string(strcat("hud_", panel_name, "_bg_color_team")) != "") {
-		f = stof(getplayerkey(player_localentnum - 1, "colors"));
-		color = vtos(colormapPaletteColor(mod(f, 16), 1) * cvar(strcat("hud_", panel_name, "_bg_color_team")));
-	}
-	else
-		color = cvar_string(strcat("hud_", panel_name, "_bg_color"));
-	color_vec = stov(color);
-
-	if(color == "") { // fetch default color
-		color = cvar_string("hud_bg_color");
-		color_vec = stov(color);
-		if(teamplay && cvar(strcat("hud_bg_color_team"))) {
+		// fetch per-panel color
+		if(teamplay && cvar_string(strcat("hud_", panel_name, "_bg_color_team")) != "") {
 			f = stof(getplayerkey(player_localentnum - 1, "colors"));
-			color_vec = colormapPaletteColor(mod(f, 16), 1) * cvar("hud_bg_color_team");
+			color = vtos(colormapPaletteColor(mod(f, 16), 1) * cvar(strcat("hud_", panel_name, "_bg_color_team")));
+		}
+		else
+			color = cvar_string(strcat("hud_", panel_name, "_bg_color"));
+		color_vec = stov(color);
+
+		if(color == "") { // fetch default color
+			color = cvar_string("hud_bg_color");
+			color_vec = stov(color);
+			if(teamplay && cvar(strcat("hud_bg_color_team"))) {
+				f = stof(getplayerkey(player_localentnum - 1, "colors"));
+				color_vec = colormapPaletteColor(mod(f, 16), 1) * cvar("hud_bg_color_team");
+			}
+			else if(color == "shirt") {
+				f = stof(getplayerkey(player_localentnum - 1, "colors"));
+				color_vec = colormapPaletteColor(floor(f / 16), 0);
+			}
+			else if(color == "pants") {
+				f = stof(getplayerkey(player_localentnum - 1, "colors"));
+				color_vec = colormapPaletteColor(mod(f, 16), 1);
+			}
 		}
 		else if(color == "shirt") {
 			f = stof(getplayerkey(player_localentnum - 1, "colors"));
@@ -680,55 +692,12 @@ vector HUD_Panel_GetColor(float id)
 			f = stof(getplayerkey(player_localentnum - 1, "colors"));
 			color_vec = colormapPaletteColor(mod(f, 16), 1);
 		}
-	}
-	else if(color == "shirt") {
-		f = stof(getplayerkey(player_localentnum - 1, "colors"));
-		color_vec = colormapPaletteColor(floor(f / 16), 0);
-	}
-	else if(color == "pants") {
-		f = stof(getplayerkey(player_localentnum - 1, "colors"));
-		color_vec = colormapPaletteColor(mod(f, 16), 1);
-	}
-	return color_vec;
-}
 
-// draw the background/borders
-void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
-{
-	if(!autocvar__hud_configure && panel_bg == "0")
-		return;
-
-	if(panel_bg == "")
-		panel_bg = cvar_string("hud_bg");
-
-	if(panel_bg == "0" && autocvar__hud_configure) {
-		panel_bg = "border"; // we probably want to see a background in config mode at all times...
-	}
-
-	if(panel_bg != "0")
-	{
-
-		string border;
-		border = cvar_string(strcat("hud_", panel_name, "_bg_border"));
-		if(border == "")
-			border = cvar_string("hud_bg_border");
-
-		float borderf;
-		borderf = stof(border);
-
-		vector color;
-		color = stov(panel_bg_color);
-
-		//if(alpha)
-		//	alpha = HUD_Panel_GetBgAlpha(id) * alpha; // allow panels to fade in/out by passing an alpha value
-		//else
-		//	alpha = HUD_Panel_GetBgAlpha(id);
-
-		draw_BorderPicture(pos - '1 1 0' * borderf, strcat("gfx/hud/", cvar_string("hud_skin"), "/", panel_bg), mySize + '1 1 0' * 2 * borderf, color, alpha, '1 1 0' * (borderf/BORDER_MULTIPLIER));
+		draw_BorderPicture(pos - '1 1 0' * panel_bg_border, strcat(hud_skin_path, "/", panel_bg), mySize + '1 1 0' * 2 * panel_bg_border, color_vec, panel_bg_alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));
 	}
 
 	if(highlightedPanel_prev == id && autocvar__hud_configure)
-		drawfill(pos - '1 1 0' * borderf, mySize + '1 1 0' * 2 * borderf, '1 1 1', .1 * (1 - cvar("_menu_alpha")), DRAWFLAG_ADDITIVE);
+		drawfill(pos - '1 1 0' * panel_bg_border, mySize + '1 1 0' * 2 * panel_bg_border, '1 1 1', .1 * (1 - cvar("_menu_alpha")), DRAWFLAG_ADDITIVE);
 }
 
 void HUD_Panel_DrawProgressBar(vector pos, float vertical, vector mySize, vector color, float alpha, float drawflag)
@@ -1626,6 +1595,7 @@ void HUD_WeaponIcons(void)
 
 // Inventory (#1)
 //
+// TODO: macro
 float GetAmmoStat(float i)
 {
 	switch(i)
