@@ -692,27 +692,6 @@ vector HUD_Panel_GetColor(float id)
 	return color_vec;
 }
 
-float HUD_Panel_GetBgAlpha(float id)
-{
-	string alpha;
-	alpha = cvar_string(strcat("hud_", panel_name, "_bg_alpha"));
-	if(alpha == "")
-		alpha = cvar_string("hud_bg_alpha");
-
-	if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == id) // do not set a minalpha cap when showing the config dialog for this panel
-		alpha = ftos((1 - cvar("_menu_alpha")) * max(autocvar_hud_configure_bg_minalpha, stof(alpha)) + (cvar("_menu_alpha")) * stof(alpha));
-	else if(autocvar__hud_configure)
-		alpha = ftos(max(autocvar_hud_configure_bg_minalpha, stof(alpha)));
-
-	if(autocvar__hud_configure && !cvar(strcat("hud_", panel_name))) // ALWAYS show disabled panels at 0.25 alpha when in config mode
-		return 0.25;
-
-	if(disable_menu_alphacheck == 2 && highlightedPanel == id) // don't fade this panel when showing the panel-specific menu dialog
-		return stof(alpha);
-	else
-		return stof(alpha) * menu_fade_alpha;
-}
-
 float HUD_Panel_GetFgAlpha(float id)
 {
 	float alpha;
@@ -725,20 +704,6 @@ float HUD_Panel_GetFgAlpha(float id)
 		return alpha;
 	else
 		return alpha * menu_fade_alpha;
-}
-
-float HUD_Panel_GetPadding(float id)
-{
-	string padding;
-	padding = cvar_string(strcat("hud_", panel_name, "_bg_padding"));
-	if(padding == "")
-		padding = cvar_string("hud_bg_padding");
-
-	vector mySize;
-	mySize = panel_size;
-	float smallestsize;
-	smallestsize = min(mySize_x, mySize_y);
-	return min(smallestsize/2 - 5, stof(panel_bg_padding));
 }
 
 // draw the background/borders
@@ -766,12 +731,12 @@ void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
 		borderf = stof(border);
 
 		vector color;
-		color = panel_bg_color;
+		color = stov(panel_bg_color);
 
-		if(alpha)
-			alpha = HUD_Panel_GetBgAlpha(id) * alpha; // allow panels to fade in/out by passing an alpha value
-		else
-			alpha = HUD_Panel_GetBgAlpha(id);
+		//if(alpha)
+		//	alpha = HUD_Panel_GetBgAlpha(id) * alpha; // allow panels to fade in/out by passing an alpha value
+		//else
+		//	alpha = HUD_Panel_GetBgAlpha(id);
 
 		draw_BorderPicture(pos - '1 1 0' * borderf, strcat("gfx/hud/", cvar_string("hud_skin"), "/", panel_bg), mySize + '1 1 0' * 2 * borderf, color, alpha, '1 1 0' * (borderf/BORDER_MULTIPLIER));
 	}

@@ -109,46 +109,51 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 
 // Get value for panel_bg_color_team: if "" fetch default, else use panel_bg_color_team_str
 #define HUD_Panel_GetColorTeam()\
-if(panel_bg_color_team_str == "")\
+if(panel_bg_color_team_str == "") {\
 	panel_bg_color_team = autocvar_hud_bg_color_team;\
-else\
-	panel_bg_color_team = stof(panel_bg_color_team_str);
+} else {\
+	panel_bg_color_team = stof(panel_bg_color_team_str);\
+}
 
 // Get value for panel_bg_alpha: if "" fetch default, else use panel_bg_alpha. Also do various menu dialog fadeout/in checks, and minalpha checks
 // comment on line 3 of macro: // do not set a minalpha cap when showing the config dialog for this panel
 #define HUD_Panel_GetBgAlpha()\
-if(panel_bg_alpha_str == "")\
+if(panel_bg_alpha_str == "") {\
 	panel_bg_alpha_str = autocvar_hud_bg_alpha;\
+}\
 panel_bg_alpha = stof(panel_bg_alpha_str);\
-if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == active_panel)\
-	panel_bg_alpha = (1 - autocvar__menu_alpha) * max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha) + autocvar__menu_alpha) * panel_bg_alpha;\
-else if(autocvar__hud_configure)\
+if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == active_panel) {\
+	panel_bg_alpha = (1 - autocvar__menu_alpha) * max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha) + autocvar__menu_alpha * panel_bg_alpha;\
+} else if(autocvar__hud_configure) {\
 	panel_bg_alpha = max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha);\
-if(autocvar__hud_configure && !panel_enabled)\
+} if(autocvar__hud_configure && !panel_enabled) {\
 	panel_bg_alpha = 0.25;\
-if(!(disable_menu_alphacheck == 2 && highlightedPanel == id))\
+} if(!(disable_menu_alphacheck == 2 && highlightedPanel == id)) {\
 	panel_bg_alpha *= menu_fade_alpha;\
+}
 
 #define HUD_Panel_GetBorder()\
-if(panel_bg_border_str == "")\
+if(panel_bg_border_str == "") {\
 	panel_bg_border = autocvar_hud_bg_border;\
-else\
-	panel_bg_border = stof(panel_bg_border_str);
+} else {\
+	panel_bg_border = stof(panel_bg_border_str);\
+}
 
 #define HUD_Panel_GetPadding()\
-if(panel_bg_border_padding == "")\
+if(panel_bg_border_padding == "") {\
 	panel_bg_padding = autocvar_hud_bg_padding;\
-else\
+} else {\
 	panel_bg_padding = stof(panel_bg_padding_str);\
+}\
 panel_bg_padding = min(min(mySize_x, mySize_y)/2 - 5, panel_bg_padding);
 
 // Point to the macros above (stupid max macro length)
 #define HUD_Panel_StringVars()\
-HUD_Panel_GetBg \
-HUD_Panel_GetColorTeam \
-HUD_Panel_GetBgAlpha \
-HUD_Panel_GetBorder \
-HUD_Panel_GetPadding
+HUD_Panel_GetBg()\
+HUD_Panel_GetColorTeam\
+HUD_Panel_GetBgAlpha()\
+HUD_Panel_GetBorder()\
+HUD_Panel_GetPadding()
 
 // Update all common cvars of given panel name
 #define HUD_Panel_UpdateCvars(name) \
@@ -161,7 +166,7 @@ panel_bg_color_team_str = autocvar_hud_##name##_bg_color_team; \
 panel_bg_alpha_str = autocvar_hud_##name##_bg_alpha; \
 panel_bg_border_str = autocvar_hud_##name##_bg_border; \
 panel_bg_padding_str = autocvar_hud_##name##_bg_padding; \
-HUD_Panel_StringVars
+HUD_Panel_StringVars()
 
 // Update all common cvars of given panel id
 #define HUD_Panel_UpdateCvarsForId(id) \
