@@ -157,7 +157,7 @@ HUD_Panel_GetPadding()
 
 // Update all common cvars of given panel name
 #define HUD_Panel_UpdateCvars(name) \
-panel_enabled = autocvar_hud_##name##; \
+panel_enabled = autocvar_hud_##name; \
 panel_pos = autocvar_hud_##name##_pos; \
 panel_size = autocvar_hud_##name##_size; \
 panel_bg_str = autocvar_hud_##name##_bg; \
