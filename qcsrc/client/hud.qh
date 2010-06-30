@@ -128,7 +128,7 @@ if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel =
 	panel_bg_alpha = max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha);\
 } if(autocvar__hud_configure && !panel_enabled) {\
 	panel_bg_alpha = 0.25;\
-} if(!(disable_menu_alphacheck == 2 && highlightedPanel == id)) {\
+} if(!(disable_menu_alphacheck == 2 && highlightedPanel == active_panel)) {\
 	panel_bg_alpha *= menu_fade_alpha;\
 }
 
@@ -145,7 +145,7 @@ if(panel_bg_padding_str == "") {\
 } else {\
 	panel_bg_padding = stof(panel_bg_padding_str);\
 }\
-panel_bg_padding = min(min(mySize_x, mySize_y)/2 - 5, panel_bg_padding);
+panel_bg_padding = min(min(panel_size_x, panel_size_y)/2 - 5, panel_bg_padding);
 
 // Point to the macros above (stupid max macro length)
 #define HUD_Panel_StringVars()\

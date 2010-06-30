@@ -1511,7 +1511,6 @@ void HUD_WeaponIcons(void)
 	}
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -1749,7 +1748,6 @@ void HUD_Inventory(void)
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -1864,7 +1862,6 @@ void HUD_Powerups(void) {
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -2046,7 +2043,6 @@ void HUD_HealthArmor(void)
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -2770,7 +2766,6 @@ void HUD_Notify (void)
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -3182,7 +3177,6 @@ void HUD_Timer(void)
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -3235,7 +3229,6 @@ void HUD_Radar(void)
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -3361,7 +3354,6 @@ void HUD_Score(void)
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -3512,7 +3504,6 @@ void HUD_RaceTimer (void) {
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -3698,7 +3689,6 @@ void HUD_VoteWindow(void)
 	a = vote_alpha * bound(cvar_or("hud_vote_alreadyvoted_alpha", 0.75), 1 - vote_highlighted, 1);
 
 	HUD_Panel_DrawBg(id, pos, mySize, a);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -4267,7 +4257,6 @@ void HUD_ModIcons(void)
 	if(mod_alpha)
 		HUD_Panel_DrawBg(id, pos, mySize, mod_alpha);
 
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -4296,7 +4285,6 @@ void HUD_DrawPressedKeys(void)
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -4327,7 +4315,6 @@ void HUD_Chat(void)
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -4377,7 +4364,6 @@ void HUD_EngineInfo(void)
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(id, pos, mySize, 0);
-	padding = panel_bg_padding;
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
