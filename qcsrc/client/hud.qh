@@ -119,7 +119,7 @@ if(panel_bg_color_team_str == "") {\
 // comment on line 3 of macro: // do not set a minalpha cap when showing the config dialog for this panel
 #define HUD_Panel_GetBgAlpha()\
 if(panel_bg_alpha_str == "") {\
-	panel_bg_alpha_str = autocvar_hud_bg_alpha;\
+	panel_bg_alpha_str = ftos(autocvar_hud_bg_alpha);\
 }\
 panel_bg_alpha = stof(panel_bg_alpha_str);\
 if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == active_panel) {\
@@ -140,7 +140,7 @@ if(panel_bg_border_str == "") {\
 }
 
 #define HUD_Panel_GetPadding()\
-if(panel_bg_border_padding == "") {\
+if(panel_bg_padding_str == "") {\
 	panel_bg_padding = autocvar_hud_bg_padding;\
 } else {\
 	panel_bg_padding = stof(panel_bg_padding_str);\
