@@ -18,7 +18,17 @@ var float autocvar_hud_configure_grid_alpha;
 
 var string autocvar_hud_skin;
 var string autocvar_hud_dock;
+var string autocvar_hud_dock_color;
+var float autocvar_hud_dock_color_team;
 var float autocvar_hud_dock_alpha;
+
+var float autocvar_hud_progressbar_alpha
+var vector autocvar_hud_progressbar_strength_color
+var vector autocvar_hud_progressbar_shield_color
+var vector autocvar_hud_progressbar_health_color
+var vector autocvar_hud_progressbar_armor_color
+var vector autocvar_hud_progressbar_fuel_color
+var vector autocvar_hud_progressbar_nexball_color
 
 var string autocvar_hud_bg;
 var vector autocvar_hud_bg_color;
@@ -38,6 +48,10 @@ var string autocvar_hud_weaponicons_bg_alpha;
 var string autocvar_hud_weaponicons_bg_border;
 var string autocvar_hud_weaponicons_bg_padding;
 var float autocvar_hud_weaponicons_accuracy_yellow;
+var float autocvar_hud_weaponicons_complainbubble;
+var float autocvar_hud_weaponicons_complainbubble_size;
+var float autocvar_hud_weaponicons_complainbubble_time;
+var float autocvar_hud_weaponicons_complainbubble_fadetime;
 
 var float autocvar_hud_inventory;
 var vector autocvar_hud_inventory_pos;
@@ -86,6 +100,9 @@ var string autocvar_hud_notify_bg_color_team;
 var string autocvar_hud_notify_bg_alpha;
 var string autocvar_hud_notify_bg_border;
 var string autocvar_hud_notify_bg_padding;
+var float autocvar_hud_notify_print;
+var float autocvar_hud_notify_time;
+var float autocvar_hud_notify_fadetime;
 var float autocvar_hud_notify_flip;
 var float autocvar_hud_notify_info_top;
 
@@ -98,6 +115,7 @@ var string autocvar_hud_timer_bg_color_team;
 var string autocvar_hud_timer_bg_alpha;
 var string autocvar_hud_timer_bg_border;
 var string autocvar_hud_timer_bg_padding;
+var float autocvar_hud_timer_increment;
 
 var float autocvar_hud_radar;
 var vector autocvar_hud_radar_pos;
