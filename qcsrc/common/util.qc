@@ -1948,23 +1948,3 @@ float get_model_parameters(string m, float sk)
 
 	return 1;
 }
-
-// we probably want to get rid of GetName in the most places in hud.qc, TODO!
-// Get name of specified panel id
-#define HUD_Panel_GetName(id) \
-switch(id) { \
-	case HUD_PANEL_WEAPONICONS: panel_name = HUD_PANELNAME_WEAPONICONS; break; \
-	case HUD_PANEL_INVENTORY: panel_name = HUD_PANELNAME_INVENTORY; break; \
-	case HUD_PANEL_POWERUPS: panel_name = HUD_PANELNAME_POWERUPS; break; \
-	case HUD_PANEL_HEALTHARMOR: panel_name = HUD_PANELNAME_HEALTHARMOR; break; \
-	case HUD_PANEL_NOTIFY: panel_name = HUD_PANELNAME_NOTIFY; break; \
-	case HUD_PANEL_TIMER: panel_name = HUD_PANELNAME_TIMER; break; \
-	case HUD_PANEL_RADAR: panel_name = HUD_PANELNAME_RADAR; break; \
-	case HUD_PANEL_SCORE: panel_name = HUD_PANELNAME_SCORE; break; \
-	case HUD_PANEL_RACETIMER: panel_name = HUD_PANELNAME_RACETIMER; break; \
-	case HUD_PANEL_VOTE: panel_name = HUD_PANELNAME_VOTE; break; \
-	case HUD_PANEL_MODICONS: panel_name = HUD_PANELNAME_MODICONS; break; \
-	case HUD_PANEL_PRESSEDKEYS: panel_name = HUD_PANELNAME_PRESSEDKEYS; break; \
-	case HUD_PANEL_CHAT: panel_name = HUD_PANELNAME_CHAT; break; \
-	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; break; \
-}

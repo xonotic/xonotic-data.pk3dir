@@ -94,7 +94,7 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 // Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.
 #define HUD_Panel_GetColor()\
 if(panel_bg_color_str == "") {\
-	panel_bg_color_str = autocvar_hud_bg_color;\
+	panel_bg_color = autocvar_hud_bg_color;\
 } if(teamplay && panel_bg_color_team) {\
 	panel_bg_color = colormapPaletteColor(mod(stof(getplayerkey(player_localentnum - 1, "colors")), 16), 1) * panel_bg_color_team;\
 } else {\
@@ -207,6 +207,30 @@ switch(id) { \
 	case HUD_PANEL_PRESSEDKEYS: HUD_Panel_UpdateCvars(pressedkeys) break; \
 	case HUD_PANEL_CHAT: HUD_Panel_UpdateCvars(chat) break; \
 	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdateCvars(engineinfo) break; \
+}
+
+#define HUD_Panel_UpdatePosSize(name) \
+panel_pos = autocvar_hud_##name##_pos; \
+panel_size = autocvar_hud_##name##_size; \
+HUD_Panel_GetScaledVectors()
+
+// Update pos and size of given panel id
+#define HUD_Panel_UpdatePosSizeForId(id) \
+switch(id) { \
+	case HUD_PANEL_WEAPONICONS: HUD_Panel_UpdatePosSize(weaponicons) break; \
+	case HUD_PANEL_INVENTORY: HUD_Panel_UpdatePosSize(inventory) break; \
+	case HUD_PANEL_POWERUPS: HUD_Panel_UpdatePosSize(powerups) break; \
+	case HUD_PANEL_HEALTHARMOR: HUD_Panel_UpdatePosSize(healtharmor) break; \
+	case HUD_PANEL_NOTIFY: HUD_Panel_UpdatePosSize(notify) break; \
+	case HUD_PANEL_TIMER: HUD_Panel_UpdatePosSize(timer) break; \
+	case HUD_PANEL_RADAR: HUD_Panel_UpdatePosSize(radar) break; \
+	case HUD_PANEL_SCORE: HUD_Panel_UpdatePosSize(score) break; \
+	case HUD_PANEL_RACETIMER: HUD_Panel_UpdatePosSize(racetimer) break; \
+	case HUD_PANEL_VOTE: HUD_Panel_UpdatePosSize(vote) break; \
+	case HUD_PANEL_MODICONS: HUD_Panel_UpdatePosSize(modicons) break; \
+	case HUD_PANEL_PRESSEDKEYS: HUD_Panel_UpdatePosSize(pressedkeys) break; \
+	case HUD_PANEL_CHAT: HUD_Panel_UpdatePosSize(chat) break; \
+	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdatePosSize(engineinfo) break; \
 }
 
 /* These cvars have to be placed separately wherever they are needed.

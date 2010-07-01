@@ -21,7 +21,7 @@ var string autocvar_hud_dock;
 var float autocvar_hud_dock_alpha;
 
 var string autocvar_hud_bg;
-var string autocvar_hud_bg_color;
+var vector autocvar_hud_bg_color;
 var float autocvar_hud_bg_color_team;
 var float autocvar_hud_bg_alpha;
 var float autocvar_hud_bg_border;

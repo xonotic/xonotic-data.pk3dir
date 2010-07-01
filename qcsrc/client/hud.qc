@@ -544,8 +544,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 		float i;
 		for (i = 0; i < HUD_PANEL_NUM; ++i)
 		{
-//			HUD_Panel_GetName(i)
-//			HUD_Panel_UpdateCvarsForId(i)
+			HUD_Panel_GetName(i)
+			HUD_Panel_UpdateCvarsForId(i)
 
 			fputs(fh, strcat("seta hud_", panel_name, " ", ftos(cvar(strcat("hud_", panel_name))), "\n"));
 			fputs(fh, strcat("seta hud_", panel_name, "_pos \"", cvar_string(strcat("hud_", panel_name, "_pos")), "\"", "\n"));
@@ -597,7 +597,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 vector HUD_Panel_GetMenuSize(float id)
 {
 	vector mySize;
-	mySize = stov(cvar_string(strcat("hud_", panel_name, "_size")));
+	mySize = panel_size;
 
 	mySize = eX * mySize_x * vid_conwidth + eY * mySize_y * vid_conheight;
 
@@ -633,7 +633,7 @@ vector HUD_Panel_GetMenuSize(float id)
 vector HUD_Panel_GetMenuPos(float id)
 {
 	vector pos;
-	pos = stov(cvar_string(strcat("hud_", panel_name, "_pos")));
+	pos = panel_pos;
 
 	pos = eX * pos_x * vid_conwidth + eY * pos_y * vid_conheight;
 
@@ -682,7 +682,7 @@ void HUD_Panel_DrawProgressBar(vector pos, float vertical, vector mySize, vector
 stov(cvar_string(strcat("hud_progressbar_", item, "_color")))
 
 // check if move will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector
-vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
+vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 {
 	float i;
 
@@ -699,7 +699,7 @@ vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
 		HUD_Panel_UpdateCvarsForId(i)
 
-		if(i == id || !panel_enabled)
+		if(i == highlightedPanel || !panel_enabled)
 			continue;
 
 		targPos = panel_pos;
@@ -756,16 +756,13 @@ vector HUD_Panel_CheckMove(float id, vector myPos, vector mySize)
 	return myTarget;
 }
 
-void HUD_Panel_SetPos(float id, vector pos)
+void HUD_Panel_SetPos(vector pos)
 {
-	vector oldPos;
-	oldPos = panel_pos;
-
 	vector mySize;
 	mySize = panel_size;
 
 	if(autocvar_hud_configure_checkcollisions)
-		pos = HUD_Panel_CheckMove(id, pos, mySize);
+		pos = HUD_Panel_CheckMove(pos, mySize);
 
 	pos_x = bound(0, pos_x, vid_conwidth - mySize_x);
 	pos_y = bound(0, pos_y, vid_conheight - mySize_y);
@@ -779,11 +776,12 @@ void HUD_Panel_SetPos(float id, vector pos)
 	string s;
 	s = strcat(ftos(pos_x/vid_conwidth), " ", ftos(pos_y/vid_conheight));
 
+	HUD_Panel_GetName(highlightedPanel);
 	cvar_set(strcat("hud_", panel_name, "_pos"), s);
 }
 
 // check if resize will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector
-vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin) {
+vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 	float i;
 
 	float targBorder;
@@ -796,7 +794,9 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin) {
 	ratio = mySize_x/mySize_y;
 
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
-		if(i == id || !panel_enabled)
+		HUD_Panel_UpdateCvarsForId(i);
+
+		if(i == highlightedPanel || !panel_enabled)
 			continue;
 
 		targPos = panel_pos;
@@ -893,8 +893,9 @@ vector HUD_Panel_CheckResize(float id, vector mySize, vector resizeorigin) {
 	return mySize;
 }
 
-void HUD_Panel_SetPosSize(float id, vector mySize)
+void HUD_Panel_SetPosSize(vector mySize)
 {
+	HUD_Panel_UpdatePosSizeForId(highlightedPanel)
 	vector resizeorigin;
 	resizeorigin = panel_click_resizeorigin;
 	vector myPos;
@@ -903,7 +904,7 @@ void HUD_Panel_SetPosSize(float id, vector mySize)
 	mySize_x = max(0.025 * vid_conwidth, mySize_x);
 	mySize_y = max(0.025 * vid_conheight, mySize_y);
 
-	if(id == HUD_PANEL_CHAT) // some panels have their own restrictions, like the chat panel (which actually only moves the engine chat print around). Looks bad if it's too small.
+	if(highlightedPanel == HUD_PANEL_CHAT) // some panels have their own restrictions, like the chat panel (which actually only moves the engine chat print around). Looks bad if it's too small.
 	{
 		mySize_x = max(17 * cvar("con_chatsize"), mySize_x);
 		mySize_y = max(2 * cvar("con_chatsize") + 2 * panel_bg_padding, mySize_y);
@@ -950,7 +951,7 @@ void HUD_Panel_SetPosSize(float id, vector mySize)
 	}
 
 	if(autocvar_hud_configure_checkcollisions)
-		mySize = HUD_Panel_CheckResize(id, mySize, resizeorigin);
+		mySize = HUD_Panel_CheckResize(mySize, resizeorigin);
 
 	// minimum panel size cap, do this once more so we NEVER EVER EVER have a panel smaller than this, JUST IN CASE above code still makes the panel eg negative (impossible to resize back without changing cvars manually then)
 	mySize_x = max(0.025 * vid_conwidth, mySize_x);
@@ -974,6 +975,7 @@ void HUD_Panel_SetPosSize(float id, vector mySize)
 	if(cvar("hud_configure_checkcollisions_debug"))
 		drawfill(myPos, mySize, '0 1 0', .3, DRAWFLAG_NORMAL);
 
+	HUD_Panel_GetName(highlightedPanel);
 	string s;
 	s = strcat(ftos(mySize_x/vid_conwidth), " ", ftos(mySize_y/vid_conheight));
 	cvar_set(strcat("hud_", panel_name, "_size"), s);
@@ -1066,7 +1068,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 		} else { // resizeCorner == 4
 			mySize_y += step;
 		}
-		HUD_Panel_SetPosSize(highlightedPanel, mySize);
+		HUD_Panel_SetPosSize(mySize);
 	}
 	else // move
 	{
@@ -1082,7 +1084,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 		else // if(nPrimary == K_RIGHTARROW)
 			pos_x += step;
 
-		HUD_Panel_SetPos(highlightedPanel, pos);
+		HUD_Panel_SetPos(pos);
 	}
 }
 
@@ -1202,6 +1204,8 @@ void HUD_Panel_Highlight()
 
 	for(i = 0; i < HUD_PANEL_NUM; ++i)
 	{
+		HUD_Panel_UpdateCvarsForId(i);
+
 		panelPos = panel_pos;
 		panelSize = panel_size;
 		border = 10; // FORCED border so a small border size doesn't mean you can't resize
@@ -1293,7 +1297,7 @@ void HUD_Panel_Mouse()
 		hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && cvar("hud_configure_checkcollisions"));
 
 		if(highlightedAction == 1)
-			HUD_Panel_SetPos(highlightedPanel, mousepos - panel_click_distance);
+			HUD_Panel_SetPos(mousepos - panel_click_distance);
 		else if(highlightedAction == 2)
 		{
 			vector mySize;
@@ -1310,7 +1314,7 @@ void HUD_Panel_Mouse()
 				mySize_x = mousepos_x - (panel_click_resizeorigin_x - panel_click_distance_x);
 				mySize_y = mousepos_y - (panel_click_resizeorigin_y - panel_click_distance_y);
 			}
-			HUD_Panel_SetPosSize(highlightedPanel, mySize);
+			HUD_Panel_SetPosSize(mySize);
 		}
 
 		// doubleclick check
@@ -1712,6 +1716,7 @@ void DrawNumIcon(float id, vector myPos, vector mySize, float x, string icon, fl
 		newPos_x = myPos_x;
 	}
 
+	HUD_Panel_GetName(id);
 	vector picpos, numpos;
 	float iconalign;
 	iconalign = cvar(strcat("hud_", panel_name, "_iconalign"));
