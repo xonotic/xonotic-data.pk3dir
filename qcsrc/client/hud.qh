@@ -45,29 +45,30 @@ string hud_skin_path;
 
 var float active_panel; // this panel has recently referred the UpdateCvars macro
 var string panel_name;
-var float panel_enabled; 
-var vector panel_pos; 
-var vector panel_size; 
-var string panel_bg; 
+var float panel_enabled;
+var vector panel_pos;
+var vector panel_size;
+var string panel_bg;
 var string panel_bg_str; // "_str" vars contain the raw value of the cvar, non-"_str" contains what hud.qc code should use
-var string panel_bg_color; 
-var float panel_bg_color_team; 
-var string panel_bg_color_team_str; 
-var float panel_fg_alpha; 
-var float panel_bg_alpha; 
-var string panel_bg_alpha_str; 
-var float panel_bg_border; 
-var string panel_bg_border_str; 
-var float panel_bg_padding; 
-var string panel_bg_padding_str; 
-var float panel_accuracy_yellow; 
-var float panel_accuracy_onlycurrent; 
-var float panel_accuracy_flip; 
-var float panel_accuracy_iconalign; 
-var float panel_accuracy_baralign; 
-var float panel_accuracy_info_top; 
-var float panel_accuracy_foreground_alpha; 
-var float panel_accuracy_alreadyvoted_alpha; 
+var vector panel_bg_color;
+var string panel_bg_color_str;
+var float panel_bg_color_team;
+var string panel_bg_color_team_str;
+var float panel_fg_alpha;
+var float panel_bg_alpha;
+var string panel_bg_alpha_str;
+var float panel_bg_border;
+var string panel_bg_border_str;
+var float panel_bg_padding;
+var string panel_bg_padding_str;
+var float panel_accuracy_yellow;
+var float panel_accuracy_onlycurrent;
+var float panel_accuracy_flip;
+var float panel_accuracy_iconalign;
+var float panel_accuracy_baralign;
+var float panel_accuracy_info_top;
+var float panel_accuracy_foreground_alpha;
+var float panel_accuracy_alreadyvoted_alpha;
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:
 // ----------------------
@@ -87,6 +88,20 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 		panel_bg = "border";\
 	} else {\
 		panel_bg = panel_bg_str;\
+	}\
+}
+
+// Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.
+#define HUD_Panel_GetColor()\
+if(panel_bg_color_str == "") {\
+	panel_bg_color_str = autocvar_hud_bg_color;\
+} if(teamplay && panel_bg_color_team) {\
+	panel_bg_color = colormapPaletteColor(mod(stof(getplayerkey(player_localentnum - 1, "colors")), 16), 1) * panel_bg_color_team;\
+} else {\
+	if(panel_bg_color_str == "shirt") {\
+		panel_bg_color = colormapPaletteColor(floor(stof(getplayerkey(player_localentnum - 1, "colors")) / 16), 0);\
+	} else if(panel_bg_color_str == "pants") {\
+		panel_bg_color = colormapPaletteColor(mod(stof(getplayerkey(player_localentnum - 1, "colors")), 16), 1);\
 	}\
 }
 
@@ -154,6 +169,7 @@ panel_bg_padding = min(min(panel_size_x, panel_size_y)/2 - 5, panel_bg_padding);
 #define HUD_Panel_StringVars()\
 HUD_Panel_GetBg()\
 HUD_Panel_GetColorTeam()\
+HUD_Panel_GetColor()\
 HUD_Panel_GetBgAlpha()\
 HUD_Panel_GetFgAlpha()\
 HUD_Panel_GetBorder()\
@@ -166,7 +182,7 @@ panel_enabled = autocvar_hud_##name; \
 panel_pos = autocvar_hud_##name##_pos; \
 panel_size = autocvar_hud_##name##_size; \
 panel_bg_str = autocvar_hud_##name##_bg; \
-panel_bg_color = autocvar_hud_##name##_bg_color; \
+panel_bg_color_str = autocvar_hud_##name##_bg_color; \
 panel_bg_color_team_str = autocvar_hud_##name##_bg_color_team; \
 panel_bg_alpha_str = autocvar_hud_##name##_bg_alpha; \
 panel_bg_border_str = autocvar_hud_##name##_bg_border; \

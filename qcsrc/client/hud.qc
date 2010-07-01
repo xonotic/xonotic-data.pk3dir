@@ -132,12 +132,12 @@ void drawpic_aspect(vector pos, string pic, vector sz, vector color, float alpha
 // TODO: aspect!
 void drawpic_aspect_skin_expanding(vector pos, string pic, vector sz, vector rgb, float alpha, float flag, float fadelerp) {
 	return;
-	//drawpic_aspect_expanding(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/", pic), sz, rgb, alpha, flag, fadelerp);
+	//drawpic_aspect_expanding(pos, strcat("gfx/hud/", autocvar_hud_skin, "/", pic), sz, rgb, alpha, flag, fadelerp);
 }
 
 void drawpic_aspect_skin_expanding_two(vector pos, string pic, vector sz, vector rgb, float alpha, float flag, float fadelerp) {
 	return;
-	//drawpic_aspect_expanding_two(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/", pic), sz, rgb, alpha, flag, fadelerp);
+	//drawpic_aspect_expanding_two(pos, strcat("gfx/hud/", autocvar_hud_skin, "/", pic), sz, rgb, alpha, flag, fadelerp);
 }
 
 // return HUD background color
@@ -512,10 +512,10 @@ HUD panels
 void HUD_Panel_ExportCfg(string cfgname)
 {
 	float fh;
-	fh = fopen(strcat("hud_", cvar_string("hud_skin"), "_", cfgname, ".cfg"), FILE_WRITE);
+	fh = fopen(strcat("hud_", autocvar_hud_skin, "_", cfgname, ".cfg"), FILE_WRITE);
 	if(fh >= 0)
 	{
-		fputs(fh, strcat("seta hud_skin \"", cvar_string("hud_skin"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_skin \"", autocvar_hud_skin, "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg \"", cvar_string("hud_bg"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg_color \"", cvar_string("hud_bg_color"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_bg_color_team \"", cvar_string("hud_bg_color_team"), "\"", "\n"));
@@ -525,10 +525,10 @@ void HUD_Panel_ExportCfg(string cfgname)
 		fputs(fh, strcat("seta hud_fg_alpha \"", cvar_string("hud_fg_alpha"), "\"", "\n"));
 		fputs(fh, "\n");
 
-		fputs(fh, strcat("seta hud_dock \"", cvar_string("hud_dock"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_dock \"", autocvar_hud_dock, "\"", "\n"));
 		fputs(fh, strcat("seta hud_dock_color \"", cvar_string("hud_dock_color"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_dock_color_team \"", cvar_string("hud_dock_color_team"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_dock_alpha \"", ftos(cvar("hud_dock_alpha")), "\"", "\n"));
+		fputs(fh, strcat("seta hud_dock_alpha \"", ftos(autocvar_hud_dock_alpha), "\"", "\n"));
 		fputs(fh, "\n");
 
 		fputs(fh, strcat("seta hud_progressbar_alpha ", ftos(cvar("hud_progressbar_alpha")), "\n"));
@@ -588,7 +588,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 			fputs(fh, "\n");
 		}
 
-		print("^2Successfully exported to hud_", cvar_string("hud_skin"), "_", cfgname, ".cfg! (Note: It's saved in data/data/)\n");
+		print("^2Successfully exported to hud_", autocvar_hud_skin, "_", cfgname, ".cfg! (Note: It's saved in data/data/)\n");
 	}
 	fclose(fh);
 }
@@ -613,7 +613,7 @@ vector HUD_Panel_GetMenuSize(float id)
 			{
 				menu_enable_size_y = menu_enable_maxsize_y;
 				menu_enable_size_x = mySize_x * (menu_enable_maxsize_y/mySize_y);
-				mySize = (1 - cvar("_menu_alpha")) * mySize + (cvar("_menu_alpha")) * menu_enable_size;
+				mySize = (1 - autocvar__menu_alpha) * mySize + (autocvar__menu_alpha) * menu_enable_size;
 			}
 		}
 		else
@@ -622,7 +622,7 @@ vector HUD_Panel_GetMenuSize(float id)
 			{
 				menu_enable_size_x = menu_enable_maxsize_x;
 				menu_enable_size_y = mySize_y * (menu_enable_maxsize_x/mySize_x);
-				mySize = (1 - cvar("_menu_alpha")) * mySize + (cvar("_menu_alpha")) * menu_enable_size;
+				mySize = (1 - autocvar__menu_alpha) * mySize + (autocvar__menu_alpha) * menu_enable_size;
 			}
 		}
 	}
@@ -645,60 +645,17 @@ vector HUD_Panel_GetMenuPos(float id)
 			menu_enable_panelpos = eX * 0.5 * vid_conwidth - eX * 0.5 * mySize_x + eY * 0.82 * vid_conheight;
 		else
 			menu_enable_panelpos = eY * 0.5 * vid_conheight - eY * 0.5 * mySize_y + eX * 0.7 * vid_conwidth;
-		pos = (1 - cvar("_menu_alpha")) * pos + (cvar("_menu_alpha")) * menu_enable_panelpos;
+		pos = (1 - autocvar__menu_alpha) * pos + (autocvar__menu_alpha) * menu_enable_panelpos;
 	}
 	return pos;
 }
 
 // draw the background/borders
-void HUD_Panel_DrawBg(float id, vector pos, vector mySize, float alpha)
-{
-	if(panel_bg != "0")
-	{
-		float f;
-		vector color_vec;
-		string color;
-
-		// fetch per-panel color
-		if(teamplay && cvar_string(strcat("hud_", panel_name, "_bg_color_team")) != "") {
-			f = stof(getplayerkey(player_localentnum - 1, "colors"));
-			color = vtos(colormapPaletteColor(mod(f, 16), 1) * cvar(strcat("hud_", panel_name, "_bg_color_team")));
-		}
-		else
-			color = cvar_string(strcat("hud_", panel_name, "_bg_color"));
-		color_vec = stov(color);
-
-		if(color == "") { // fetch default color
-			color = cvar_string("hud_bg_color");
-			color_vec = stov(color);
-			if(teamplay && cvar(strcat("hud_bg_color_team"))) {
-				f = stof(getplayerkey(player_localentnum - 1, "colors"));
-				color_vec = colormapPaletteColor(mod(f, 16), 1) * cvar("hud_bg_color_team");
-			}
-			else if(color == "shirt") {
-				f = stof(getplayerkey(player_localentnum - 1, "colors"));
-				color_vec = colormapPaletteColor(floor(f / 16), 0);
-			}
-			else if(color == "pants") {
-				f = stof(getplayerkey(player_localentnum - 1, "colors"));
-				color_vec = colormapPaletteColor(mod(f, 16), 1);
-			}
-		}
-		else if(color == "shirt") {
-			f = stof(getplayerkey(player_localentnum - 1, "colors"));
-			color_vec = colormapPaletteColor(floor(f / 16), 0);
-		}
-		else if(color == "pants") {
-			f = stof(getplayerkey(player_localentnum - 1, "colors"));
-			color_vec = colormapPaletteColor(mod(f, 16), 1);
-		}
-
-		draw_BorderPicture(pos - '1 1 0' * panel_bg_border, strcat(hud_skin_path, "/", panel_bg), mySize + '1 1 0' * 2 * panel_bg_border, color_vec, panel_bg_alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));
-	}
-
-	if(highlightedPanel_prev == id && autocvar__hud_configure)
-		drawfill(pos - '1 1 0' * panel_bg_border, mySize + '1 1 0' * 2 * panel_bg_border, '1 1 1', .1 * (1 - cvar("_menu_alpha")), DRAWFLAG_ADDITIVE);
-}
+#define HUD_Panel_DrawBg(alpha)\
+if(panel_bg != "0")\
+	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, strcat(hud_skin_path, "/", panel_bg), panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
+if(highlightedPanel_prev == active_panel && autocvar__hud_configure)\
+	drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '1 1 0' * 2 * panel_bg_border, '1 1 1', .1 * (1 - autocvar__menu_alpha), DRAWFLAG_ADDITIVE);
 
 void HUD_Panel_DrawProgressBar(vector pos, float vertical, vector mySize, vector color, float alpha, float drawflag)
 {
@@ -706,7 +663,7 @@ void HUD_Panel_DrawProgressBar(vector pos, float vertical, vector mySize, vector
 		return;
 
 	string pic;
-	pic = strcat("gfx/hud/", cvar_string("hud_skin"), "/");
+	pic = strcat(hud_skin_path, "/");
 	if(vertical) {
 		drawsubpic(pos, eY * min(mySize_y * 0.5, mySize_x) + eX * mySize_x, strcat(pic, "statusbar_vertical"), '0 0 0', '1 0.25 0', color, alpha, drawflag);
 		if(mySize_y/mySize_x > 2)
@@ -1308,7 +1265,7 @@ void HUD_Panel_Mouse()
 	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
 	if (menu_enabled == 0) // menu dialog closed, enable normal alpha stuff again
 		disable_menu_alphacheck = 0;
-	if (cvar("_menu_alpha") == 0 && time - menu_enabled_time > 0.5)
+	if (autocvar__menu_alpha == 0 && time - menu_enabled_time > 0.5)
 		menu_enabled = 0;
 
 	/*
@@ -1396,12 +1353,10 @@ void HUD_Panel_Mouse()
 // Weapon icons (#0)
 //
 float weaponspace[10];
-void HUD_WeaponIcons_Clear()
-{
-	float idx;
-	for(idx = 0; idx < 10; ++idx)
+#define HUD_WeaponIcons_Clear()\
+	float idx;\
+	for(idx = 0; idx < 10; ++idx)\
 		weaponspace[idx] = 0;
-}
 
 entity weaponorder[WEP_MAXCOUNT];
 void weaponorder_swap(float i, float j, entity pass)
@@ -1430,9 +1385,7 @@ void HUD_WeaponIcons(void)
 	vector pos, mySize, accuracy_color;
 	float i, weapid, fade, weapon_stats, weapon_hit, weapon_damage, weapon_cnt; // variables
 
-	pos = stov(cvar_string("hud_weaponicons_pos"));
-	pos = eX * pos_x * vid_conwidth + eY * pos_y * vid_conheight;
-
+	pos = panel_pos;
 	mySize = panel_size;
 
 	stat_weapons = getstati(STAT_WEAPONS);
@@ -1673,7 +1626,7 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 	}
 
 	vector picpos, numpos;
-	if(cvar("hud_inventory_iconalign"))
+	if(autocvar_hud_inventory_iconalign)
 	{
 		numpos = newPos;
 		picpos = newPos + eX * 2 * newSize_y;
@@ -1721,7 +1674,7 @@ void HUD_Inventory(void)
 	// ammo
 	for (i = 0; i < AMMO_COUNT; ++i) {
 		currently_selected = getstati(STAT_ITEMS) & GetAmmoItemCode(i);
-		if(cvar("hud_inventory_onlycurrent")) {
+		if(autocvar_hud_inventory_onlycurrent) {
 			if(autocvar__hud_configure)
 				i = 2;
 			if (currently_selected || autocvar__hud_configure)
@@ -4471,12 +4424,13 @@ void HUD_Reset (void)
 
 void HUD_Main (void)
 {
-	hud_skin_path = strcat("gfx/hud/", cvar_string("hud_skin"));
+	// TODO: render order?
+	hud_skin_path = strcat("gfx/hud/", autocvar_hud_skin);
 
 	if(disable_menu_alphacheck == 1)
 		menu_fade_alpha = 1;
 	else
-		menu_fade_alpha = (1 - cvar("_menu_alpha"));
+		menu_fade_alpha = (1 - autocvar__menu_alpha);
 	hud_fg_alpha = cvar("hud_fg_alpha");
 
 	hud_border_thickness = bound(0, cvar("hud_border_thickness"), 5);
@@ -4522,11 +4476,11 @@ void HUD_Main (void)
 		color_vec = colormapPaletteColor(mod(f, 16), 1);
 	}
 
-	if(cvar_string("hud_dock") != "" && cvar_string("hud_dock") != "0")
-		drawpic('0 0 0', strcat("gfx/hud/", cvar_string("hud_skin"), "/", cvar_string("hud_dock")), eX * vid_conwidth + eY * vid_conheight, color_vec, cvar("hud_dock_alpha") * menu_fade_alpha, DRAWFLAG_NORMAL); // no aspect ratio forcing on dock...
+	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
+		drawpic('0 0 0', strcat("gfx/hud/", autocvar_hud_skin, "/", autocvar_hud_dock), eX * vid_conwidth + eY * vid_conheight, color_vec, autocvar_hud_dock_alpha * menu_fade_alpha, DRAWFLAG_NORMAL); // no aspect ratio forcing on dock...
 
 	if(autocvar_hud_radar || autocvar__hud_configure)
-		if(cvar_string("hud_radar") != "0" && (cvar("hud_radar") == 2 || teamplay))
+		if(autocvar_hud_radar != 0 && (autocvar_hud_radar == 2 || teamplay))
 			HUD_Radar();
 	if(autocvar_hud_weaponicons || autocvar__hud_configure)
 		HUD_WeaponIcons();
@@ -4550,7 +4504,7 @@ void HUD_Main (void)
 	if(autocvar_hud_modicons || autocvar__hud_configure)
 		HUD_ModIcons();
 	if(autocvar_hud_pressedkeys || autocvar__hud_configure)
-		if(spectatee_status > 0 || cvar("hud_pressedkeys") >= 2 || autocvar__hud_configure)
+		if(spectatee_status > 0 || autocvar_hud_pressedkeys >= 2 || autocvar__hud_configure)
 			HUD_DrawPressedKeys();
 	if(autocvar_hud_chat || autocvar__hud_configure)
 		HUD_Chat();
