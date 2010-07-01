@@ -4461,6 +4461,8 @@ void HUD_Main (void)
 		f = stof(getplayerkey(player_localentnum - 1, "colors"));
 		color = colormapPaletteColor(mod(f, 16), 1);
 	}
+	else
+		color = stov(autocvar_hud_dock_color);
 
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
 		drawpic('0 0 0', strcat("gfx/hud/", autocvar_hud_skin, "/", autocvar_hud_dock), eX * vid_conwidth + eY * vid_conheight, color, autocvar_hud_dock_alpha * menu_fade_alpha, DRAWFLAG_NORMAL); // no aspect ratio forcing on dock...
