@@ -309,7 +309,7 @@ float Nexposee_keyDown(entity me, float scan, float ascii, float shift)
 	{
 		case 0:
 		case 3:
-			nexposeeKey = ((scan == K_SPACE) || (scan == K_ENTER));
+			nexposeeKey = ((scan == K_SPACE) || (scan == K_ENTER) || (scan == K_KP_ENTER));
 			break;
 		case 1:
 		case 2:
