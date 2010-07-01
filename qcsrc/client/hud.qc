@@ -697,7 +697,7 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 	targCenter = '0 0 0'; // shut up fteqcc, there IS a reference
 
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
-		HUD_Panel_UpdateCvarsForId(i)
+		HUD_Panel_UpdatePosSizeForId(i)
 
 		if(i == highlightedPanel || !panel_enabled)
 			continue;
@@ -758,10 +758,11 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 
 void HUD_Panel_SetPos(vector pos)
 {
+	HUD_Panel_UpdatePosSizeForId(highlightedPanel)
 	vector mySize;
 	mySize = panel_size;
 
-	if(autocvar_hud_configure_checkcollisions)
+	if(hud_configure_checkcollisions)
 		pos = HUD_Panel_CheckMove(pos, mySize);
 
 	pos_x = bound(0, pos_x, vid_conwidth - mySize_x);
@@ -794,7 +795,7 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 	ratio = mySize_x/mySize_y;
 
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
-		HUD_Panel_UpdateCvarsForId(i);
+		HUD_Panel_UpdatePosSizeForId(i)
 
 		if(i == highlightedPanel || !panel_enabled)
 			continue;
@@ -950,7 +951,7 @@ void HUD_Panel_SetPosSize(vector mySize)
 		mySize_y = floor((mySize_y/vid_conheight)/bound(0.005, autocvar_hud_configure_grid_y, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_y, 0.2) * vid_conheight;
 	}
 
-	if(autocvar_hud_configure_checkcollisions)
+	if(hud_configure_checkcollisions)
 		mySize = HUD_Panel_CheckResize(mySize, resizeorigin);
 
 	// minimum panel size cap, do this once more so we NEVER EVER EVER have a panel smaller than this, JUST IN CASE above code still makes the panel eg negative (impossible to resize back without changing cvars manually then)
@@ -1031,7 +1032,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 	highlightedPanel = highlightedPanel_prev;
 
-	HUD_Panel_UpdateCvarsForId(highlightedPanel)
+	HUD_Panel_UpdatePosSizeForId(highlightedPanel)
 
 	if (hudShiftState & S_ALT) // resize
 	{
@@ -1163,6 +1164,8 @@ float HUD_Panel_HighlightCheck()
 
 	for(i = 0; i < HUD_PANEL_NUM; ++i)
 	{
+		HUD_Panel_UpdatePosSizeForId(i)
+
 		panelPos = panel_pos;
 		panelSize = panel_size;
 		border = 10; // FORCED border so a small border size doesn't mean you can't resize
@@ -1204,7 +1207,7 @@ void HUD_Panel_Highlight()
 
 	for(i = 0; i < HUD_PANEL_NUM; ++i)
 	{
-		HUD_Panel_UpdateCvarsForId(i);
+		HUD_Panel_UpdatePosSizeForId(i)
 
 		panelPos = panel_pos;
 		panelSize = panel_size;
@@ -1294,7 +1297,7 @@ void HUD_Panel_Mouse()
 		if(prevMouseClicked == 0)
 			HUD_Panel_Highlight(); // sets highlightedPanel, highlightedAction, panel_click_distance, panel_click_resizeorigin
 
-		hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && cvar("hud_configure_checkcollisions"));
+		hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
 
 		if(highlightedAction == 1)
 			HUD_Panel_SetPos(mousepos - panel_click_distance);
