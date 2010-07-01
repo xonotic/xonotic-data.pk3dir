@@ -1327,7 +1327,8 @@ void HUD_Panel_Mouse()
 			disable_menu_alphacheck = 2;
 			menu_enabled = 1;
 			menu_enabled_time = time;
-			localcmd("menu_showhudoptions ", ftos(highlightedPanel), "\n");
+			HUD_Panel_GetName(highlightedPanel)
+			localcmd("menu_showhudoptions ", panel_name, "\n");
 			return;
 		}
 		if(prevMouseClicked == 0)
@@ -1699,7 +1700,7 @@ void HUD_Inventory(void)
 	}
 }
 
-void DrawNumIcon(float id, vector myPos, vector mySize, float x, string icon, float left, vector color)
+void DrawNumIcon(float iconalign, vector myPos, vector mySize, float x, string icon, float left, vector color)
 {
 	vector newSize, newPos;
 	if(mySize_x/mySize_y > 3)
@@ -1719,10 +1720,7 @@ void DrawNumIcon(float id, vector myPos, vector mySize, float x, string icon, fl
 		newPos_x = myPos_x;
 	}
 
-	HUD_Panel_GetName(id);
 	vector picpos, numpos;
-	float iconalign;
-	iconalign = cvar(strcat("hud_", panel_name, "_iconalign"));
 	if(left)
 	{
 		if(iconalign == 1 || iconalign == 3) // right align
@@ -1824,15 +1822,11 @@ void HUD_Powerups(void) {
 	leftalpha = bound(0, leftexact, 1);
 	rightalpha = bound(0, rightexact, 1);
 
-	float baralign, iconalign;
-	baralign = cvar(strcat("hud_", panel_name, "_baralign"));
-	iconalign = cvar(strcat("hud_", panel_name, "_iconalign"));
-
 	if (mySize_x/mySize_y > 4)
 	{
 		if(leftcnt)
 		{
-			if(baralign == 1 || baralign == 3) { // right align
+			if(autocvar_hud_powerups_baralign == 1 || autocvar_hud_powerups_baralign == 3) { // right align
 				barpos = pos + eX * 0.5 * mySize_x - eX * 0.5 * mySize_x * min(1, leftcnt/30);
 				barsize = eX * 0.5 * mySize_x * min(1, leftcnt/30) + eY * mySize_y;
 			} else { // left align
@@ -1841,7 +1835,7 @@ void HUD_Powerups(void) {
 			}
 
 			HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha") * panel_fg_alpha, DRAWFLAG_NORMAL);
-			DrawNumIcon(id, pos, eX * 0.5 * mySize_x + eY * mySize_y, leftcnt, leftname, 1, '1 1 1');
+			DrawNumIcon(autocvar_hud_powerups_iconalign, pos, eX * 0.5 * mySize_x + eY * mySize_y, leftcnt, leftname, 1, '1 1 1');
 			// TODO: expand
 			//if(leftcnt <= 5)
 			//	drawpic_aspect_skin_expanding_two(picpos, leftname, '1 1 0' * mySize_y, '1 1 1', leftalpha * panel_fg_alpha, DRAWFLAG_ADDITIVE, bound(0, (leftcnt - leftexact) / 0.5, 1));
@@ -1851,7 +1845,7 @@ void HUD_Powerups(void) {
 
 		if(rightcnt)
 		{
-			if(baralign == 0 || baralign == 3) { // left align
+			if(autocvar_hud_powerups_baralign == 0 || autocvar_hud_powerups_baralign == 3) { // left align
 				barpos = pos + eX * 0.5 * mySize_x;
 				barsize = eX * 0.5 * mySize_x * min(1, rightcnt/30) + eY * mySize_y;
 			} else { // right align
@@ -1860,14 +1854,14 @@ void HUD_Powerups(void) {
 			}
 
 			HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha") * panel_fg_alpha, DRAWFLAG_NORMAL);
-			DrawNumIcon(id, pos + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * mySize_y, rightcnt, rightname, 0, '1 1 1');
+			DrawNumIcon(autocvar_hud_powerups_iconalign, pos + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * mySize_y, rightcnt, rightname, 0, '1 1 1');
 		}
 	}
 	else if (mySize_x/mySize_y > 1.5)
 	{
 		if(leftcnt)
 		{
-			if(baralign == 1 || baralign == 3) { // right align
+			if(autocvar_hud_powerups_baralign == 1 || autocvar_hud_powerups_baralign == 3) { // right align
 				barpos = pos + eX * mySize_x - eX * mySize_x * min(1, leftcnt/30);
 				barsize = eX * mySize_x * min(1, leftcnt/30) + eY * 0.5 * mySize_y;
 			} else { // left align
@@ -1876,12 +1870,12 @@ void HUD_Powerups(void) {
 			}
 
 			HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor(leftname), cvar("hud_progressbar_alpha") * panel_fg_alpha, DRAWFLAG_NORMAL);
-			DrawNumIcon(id, pos, eX * mySize_x + eY * 0.5 * mySize_y, leftcnt, leftname, 1, '1 1 1');
+			DrawNumIcon(autocvar_hud_powerups_iconalign, pos, eX * mySize_x + eY * 0.5 * mySize_y, leftcnt, leftname, 1, '1 1 1');
 		}
 
 		if(rightcnt)
 		{
-			if(baralign == 0 || baralign == 3) { // left align
+			if(autocvar_hud_powerups_baralign == 0 || autocvar_hud_powerups_baralign == 3) { // left align
 				barpos = pos + eY * 0.5 * mySize_y;
 				barsize = eX * mySize_x * min(1, rightcnt/30) + eY * 0.5 * mySize_y;
 			} else { // right align
@@ -1890,14 +1884,14 @@ void HUD_Powerups(void) {
 			}
 
 			HUD_Panel_DrawProgressBar(barpos, 0, barsize, HUD_Panel_GetProgressBarColor(rightname), cvar("hud_progressbar_alpha") * panel_fg_alpha, DRAWFLAG_NORMAL);
-			DrawNumIcon(id, pos + eY * 0.5 * mySize_y, eX * mySize_x + eY * 0.5 * mySize_y, rightcnt, rightname, 0, '1 1 1');
+			DrawNumIcon(autocvar_hud_powerups_iconalign, pos + eY * 0.5 * mySize_y, eX * mySize_x + eY * 0.5 * mySize_y, rightcnt, rightname, 0, '1 1 1');
 		}
 	}
 	else
 	{
 		if(leftcnt)
 		{
-			if(baralign == 1 || baralign == 3) { // down align
+			if(autocvar_hud_powerups_baralign == 1 || autocvar_hud_powerups_baralign == 3) { // down align
 				barpos = pos + eY * mySize_y - eY * mySize_y * min(1, leftcnt/30);
 				barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/30);
 			} else { // up align
@@ -1905,7 +1899,7 @@ void HUD_Powerups(void) {
 				barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, leftcnt/30);
 			}
 
-			if(iconalign == 1 || iconalign == 3) { // down align
+			if(autocvar_hud_powerups_iconalign == 1 || autocvar_hud_powerups_iconalign == 3) { // down align
 				picpos = pos + eX * 0.05 * mySize_x + eY * (mySize_y - 0.65 * mySize_x);
 				numpos = pos + eY * mySize_y - eY * 0.25 * mySize_x;
 			} else { // up align
@@ -1923,7 +1917,7 @@ void HUD_Powerups(void) {
 
 		if(rightcnt)
 		{
-			if(baralign == 0 || baralign == 3) { // up align
+			if(autocvar_hud_powerups_baralign == 0 || autocvar_hud_powerups_baralign == 3) { // up align
 				barpos = pos + eX * 0.5 * mySize_x;
 				barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, rightcnt/30);
 			} else { // down align
@@ -1931,7 +1925,7 @@ void HUD_Powerups(void) {
 				barsize = eX * 0.5 * mySize_x + eY * mySize_y * min(1, rightcnt/30);
 			}
 
-			if(iconalign == 0 || iconalign == 3) { // up align
+			if(autocvar_hud_powerups_iconalign == 0 || autocvar_hud_powerups_iconalign == 3) { // up align
 				picpos = pos + eX * 0.05 * mySize_x + eX * 0.5 * mySize_x;
 				numpos = pos + eY * 0.4 * mySize_x + eX * 0.5 * mySize_x;
 			} else { // down align
