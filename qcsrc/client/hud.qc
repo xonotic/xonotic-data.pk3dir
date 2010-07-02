@@ -82,13 +82,11 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 	}
 }
 
-// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
-// TODO: make a default skin, and fallback to these!
-
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
 var float imgaspect;
 var float aspect;
 #define drawpic_aspect(pos,pic,mySize,color,alpha,drawflag)\
+do {\
 	vector imgsize;\
 	imgsize = drawgetimagesize(pic);\
 	imgaspect = imgsize_x/imgsize_y;\
@@ -101,10 +99,20 @@ var float aspect;
 	} else {\
 		sz_y = sz_x / imgaspect;\
 		drawpic(pos + eY * (oldsz_y - sz_y) * 0.5, pic, sz, color, alpha, drawflag);\
-	}
+	}\
+} while(0)
 
+var string pic_path;
+// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 #define drawpic_aspect_skin(pos,pic,sz,color,alpha,drawflag)\
-	do {drawpic_aspect(pos, strcat(hud_skin_path, "/", pic), sz, color, alpha, drawflag) } while(0)
+do{\
+	pic_path = strcat(hud_skin_path, "/", pic);\
+	if(precache_pic(pic_path) == "") {\
+		drawpic_aspect(pos, strcat("gfx/hud/default/", pic), sz, color, alpha, drawflag);\
+	} else {\
+		drawpic_aspect(pos, pic_path, sz, color, alpha, drawflag);\
+	}\
+} while(0)
 
 // TODO: aspect!
 void drawpic_aspect_skin_expanding(vector pos, string pic, vector sz, vector rgb, float alpha, float flag, float fadelerp) {
