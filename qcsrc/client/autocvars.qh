@@ -12,8 +12,8 @@ var float autocvar__hud_configure;
 var float autocvar_hud_configure_checkcollisions;
 var float autocvar_hud_configure_bg_minalpha;
 var float autocvar_hud_configure_grid;
-var float autocvar_hud_configure_grid_x;
-var float autocvar_hud_configure_grid_y;
+var float autocvar_hud_configure_grid_xsize;
+var float autocvar_hud_configure_grid_ysize;
 var float autocvar_hud_configure_grid_alpha;
 
 var string autocvar_hud_skin;

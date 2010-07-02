@@ -706,8 +706,8 @@ void HUD_Panel_SetPos(vector pos)
 
 	if(autocvar_hud_configure_grid)
 	{
-		pos_x = floor((pos_x/vid_conwidth)/bound(0.005, autocvar_hud_configure_grid_x, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_x, 0.2) * vid_conwidth;
-		pos_y = floor((pos_y/vid_conheight)/bound(0.005, autocvar_hud_configure_grid_y, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_y, 0.2) * vid_conheight;
+		pos_x = floor((pos_x/vid_conwidth)/bound(0.005, autocvar_hud_configure_grid_xsize, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_xsize, 0.2) * vid_conwidth;
+		pos_y = floor((pos_y/vid_conheight)/bound(0.005, autocvar_hud_configure_grid_ysize, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_ysize, 0.2) * vid_conheight;
 	}
 
 	if(hud_configure_checkcollisions)
@@ -890,8 +890,8 @@ void HUD_Panel_SetPosSize(vector mySize)
 	// before checkresize, otherwise panel can be snapped partially inside another panel or panel aspect ratio can be broken
 	if(autocvar_hud_configure_grid)
 	{
-		mySize_x = floor((mySize_x/vid_conwidth)/bound(0.005, autocvar_hud_configure_grid_x, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_x, 0.2) * vid_conwidth;
-		mySize_y = floor((mySize_y/vid_conheight)/bound(0.005, autocvar_hud_configure_grid_y, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_y, 0.2) * vid_conheight;
+		mySize_x = floor((mySize_x/vid_conwidth)/bound(0.005, autocvar_hud_configure_grid_xsize, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_xsize, 0.2) * vid_conwidth;
+		mySize_y = floor((mySize_y/vid_conheight)/bound(0.005, autocvar_hud_configure_grid_ysize, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_ysize, 0.2) * vid_conheight;
 	}
 
 	if(hud_configure_checkcollisions)
@@ -949,16 +949,16 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 		if (nPrimary == K_UPARROW || nPrimary == K_DOWNARROW)
 		{
 			if (hudShiftState & S_SHIFT)
-				step = bound(0.005, autocvar_hud_configure_grid_y, 0.2) * vid_conheight;
+				step = bound(0.005, autocvar_hud_configure_grid_ysize, 0.2) * vid_conheight;
 			else
-				step = 2 * bound(0.005, autocvar_hud_configure_grid_y, 0.2) * vid_conheight;
+				step = 2 * bound(0.005, autocvar_hud_configure_grid_ysize, 0.2) * vid_conheight;
 		}
 		else
 		{
 			if (hudShiftState & S_SHIFT)
-				step = bound(0.005, autocvar_hud_configure_grid_x, 0.2) * vid_conwidth;
+				step = bound(0.005, autocvar_hud_configure_grid_xsize, 0.2) * vid_conwidth;
 			else
-				step = 2 * bound(0.005, autocvar_hud_configure_grid_x, 0.2) * vid_conwidth;
+				step = 2 * bound(0.005, autocvar_hud_configure_grid_xsize, 0.2) * vid_conwidth;
 		}
 	}
 	else
@@ -4419,16 +4419,17 @@ void HUD_Main (void)
 	{
 		float i;
 		// x-axis
-		for(i = 0; i < 1/bound(0.005, autocvar_hud_configure_grid_x, 0.2); ++i)
+		for(i = 0; i < 1/bound(0.005, autocvar_hud_configure_grid_xsize, 0.2); ++i)
 		{
-			drawfill(eX * i * vid_conwidth * bound(0.005, autocvar_hud_configure_grid_x, 0.2), eX + eY * vid_conheight, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+			drawfill(eX * i * vid_conwidth * bound(0.005, autocvar_hud_configure_grid_xsize, 0.2), eX + eY * vid_conheight, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 		}
 		// y-axis
-		for(i = 0; i < 1/bound(0.005, autocvar_hud_configure_grid_y, 0.2); ++i)
+		for(i = 0; i < 1/bound(0.005, autocvar_hud_configure_grid_ysize, 0.2); ++i)
 		{
-			drawfill(eY * i * vid_conheight * bound(0.005, autocvar_hud_configure_grid_y, 0.2), eY + eX * vid_conwidth, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+			drawfill(eY * i * vid_conheight * bound(0.005, autocvar_hud_configure_grid_ysize, 0.2), eY + eX * vid_conwidth, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 		}
 	}
+	print("grid_xsize: ", ftos(autocvar_hud_configure_grid_xsize), "\n");
 
 	float f;
 	vector color;
