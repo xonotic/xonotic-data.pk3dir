@@ -4436,7 +4436,6 @@ void HUD_Main (void)
 			drawfill(eY * i * vid_conheight * bound(0.005, autocvar_hud_configure_grid_ysize, 0.2), eY + eX * vid_conwidth, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 		}
 	}
-	print("grid_xsize: ", ftos(autocvar_hud_configure_grid_xsize), "\n");
 
 	float f;
 	vector color;
