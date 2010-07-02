@@ -1777,6 +1777,7 @@ void HUD_Powerups(void) {
 	leftalpha = bound(0, leftexact, 1);
 	rightalpha = bound(0, rightexact, 1);
 
+	drawfont = hud_bigfont;
 	if (mySize_x/mySize_y > 4)
 	{
 		if(leftcnt)
@@ -1902,6 +1903,7 @@ void HUD_Powerups(void) {
 			drawstring_aspect(numpos, ftos(rightcnt), eX * 0.5 * mySize_x + eY * 0.25 * mySize_x, 0.25 * mySize_x, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
+	drawfont = hud_font;
 }
 
 // Health/armor (#3)
@@ -1942,6 +1944,7 @@ void HUD_HealthArmor(void)
 	vector picpos;
 	vector numpos;
 
+	drawfont = hud_bigfont;
 	if(autocvar_hud_healtharmor == 2) // combined health and armor display
 	{
 		vector v;
@@ -2175,6 +2178,7 @@ void HUD_HealthArmor(void)
 			}
 		}
 	}
+	drawfont = hud_font;
 }
 
 // ___TODO___ !!!
