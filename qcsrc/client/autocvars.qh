@@ -48,6 +48,7 @@ var string autocvar_hud_weaponicons_bg_alpha;
 var string autocvar_hud_weaponicons_bg_border;
 var string autocvar_hud_weaponicons_bg_padding;
 var float autocvar_hud_weaponicons_accuracy_yellow;
+var float autocvar_hud_weaponicons_number;
 var float autocvar_hud_weaponicons_complainbubble;
 var float autocvar_hud_weaponicons_complainbubble_size;
 var float autocvar_hud_weaponicons_complainbubble_time;
