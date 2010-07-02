@@ -1740,6 +1740,8 @@ void ShuffleMaplist()
 float leaderfrags;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
+	float limitreached;
+
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper();
 
@@ -1784,13 +1786,22 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		}
 	}
 
+	limitreached = FALSE;
+	if(limit)
+		if(WinningConditionHelper_topscore >= limit)
+			limitreached = TRUE;
+	if(leadlimit)
+	{
+		float leadlimitreached;
+		leadlimitreached = (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
+		if(cvar("leadlimit_and_fraglimit"))
+			limitreached = (limitreached && leadlimitreached);
+		else
+			limitreached = (limitreached || leadlimitreached);
+	}
+
 	return GetWinningCode(
-		WinningConditionHelper_topscore &&
-		(
-			(limit && (WinningConditionHelper_topscore >= limit))
-			||
-			(leadlimit && (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit))
-		),
+		WinningConditionHelper_topscore && limitreached,
 		WinningConditionHelper_equality
 	);
 }
