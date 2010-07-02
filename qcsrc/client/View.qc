@@ -480,7 +480,10 @@ void CSQC_UpdateView(float w, float h)
 
 		entity e;
 		e = get_weaponinfo(activeweapon);
-		localcmd(strcat("\ncl_hook_activeweapon ", e.netname), ";");
+		if(e.netname != "")
+			localcmd(strcat("\ncl_hook_activeweapon ", e.netname), ";");
+		else
+			localcmd("\ncl_hook_activeweapon none;");
 	}
 
 	// ALWAYS Clear Current Scene First
