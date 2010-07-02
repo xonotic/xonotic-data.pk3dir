@@ -699,7 +699,7 @@ void spawnfunc_worldspawn (void)
 
 	CheatInit();
 
-	localcmd("\n_sv_hook_gamestart ", GetGametype(), ";");
+	localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
 
 	world_initialized = 1;
 }
@@ -1427,7 +1427,7 @@ void NextLevel()
 	if(cvar("g_campaign"))
 		CampaignPreIntermission();
 
-	localcmd("\nsv_hook_gameend;");
+	localcmd("\nsv_hook_gameend\n");
 }
 
 /*

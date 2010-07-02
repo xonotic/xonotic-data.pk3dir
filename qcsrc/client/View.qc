@@ -435,7 +435,7 @@ void CSQC_UpdateView(float w, float h)
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
 		if(calledhooks & HOOK_START)
 		{
-			localcmd("\ncl_hook_gameend;");
+			localcmd("\ncl_hook_gameend\n");
 			calledhooks |= HOOK_END;
 		}
 
@@ -481,9 +481,9 @@ void CSQC_UpdateView(float w, float h)
 		entity e;
 		e = get_weaponinfo(activeweapon);
 		if(e.netname != "")
-			localcmd(strcat("\ncl_hook_activeweapon ", e.netname), ";");
+			localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
 		else
-			localcmd("\ncl_hook_activeweapon none;");
+			localcmd("\ncl_hook_activeweapon none\n");
 	}
 
 	// ALWAYS Clear Current Scene First
