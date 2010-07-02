@@ -78,6 +78,7 @@ var float panel_accuracy_alreadyvoted_alpha;
 // ----------------------
 // Little help for the poor people who have to make sense of this: Start from the bottom
 
+// TODO: shirt, pants, team colors
 #define HUD_Panel_GetProgressBarColor(item) \
 switch(item) {\
 	case "strength": progressbar_color = autocvar_hud_progressbar_strength_color; break;\
@@ -105,15 +106,19 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 
 // Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.
 #define HUD_Panel_GetColor()\
-if(panel_bg_color_str == "") {\
-	panel_bg_color = autocvar_hud_bg_color;\
-} if(teamplay && panel_bg_color_team) {\
+if(teamplay && panel_bg_color_team) {\
 	panel_bg_color = colormapPaletteColor(mod(stof(getplayerkey(player_localentnum - 1, "colors")), 16), 1) * panel_bg_color_team;\
 } else {\
-	if(panel_bg_color_str == "shirt") {\
-		panel_bg_color = colormapPaletteColor(floor(stof(getplayerkey(player_localentnum - 1, "colors")) / 16), 0);\
-	} else if(panel_bg_color_str == "pants") {\
-		panel_bg_color = colormapPaletteColor(mod(stof(getplayerkey(player_localentnum - 1, "colors")), 16), 1);\
+	if(panel_bg_color_str == "") {\
+		panel_bg_color = autocvar_hud_bg_color;\
+	} else {\
+		if(panel_bg_color_str == "shirt") {\
+			panel_bg_color = colormapPaletteColor(floor(stof(getplayerkey(player_localentnum - 1, "colors")) / 16), 0);\
+		} else if(panel_bg_color_str == "pants") {\
+			panel_bg_color = colormapPaletteColor(mod(stof(getplayerkey(player_localentnum - 1, "colors")), 16), 1);\
+		} else {\
+			panel_bg_color = stov(panel_bg_color_str);\
+		}\
 	}\
 }
 
