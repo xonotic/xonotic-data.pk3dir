@@ -86,24 +86,25 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 // TODO: make a default skin, and fallback to these!
 
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
-#define drawpic_aspect(pos, pic, sz, color, alpha, drawflag)\
+var float imgaspect;
+var float aspect;
+#define drawpic_aspect(pos,pic,mySize,color,alpha,drawflag)\
 	vector imgsize;\
 	imgsize = drawgetimagesize(pic);\
-	var float imgaspect = imgsize_x/imgsize_y;\
-	vector oldsz;\
-	oldsz = sz;\
-	var float aspect = sz_x/sz_y;\
+	imgaspect = imgsize_x/imgsize_y;\
+	vector oldsz, sz;\
+	oldsz = sz = mySize;\
+	aspect = sz_x/sz_y;\
 	if(aspect > imgaspect) {\
 		sz_x = sz_y * imgaspect;\
 		drawpic(pos + eX * (oldsz_x - sz_x) * 0.5, pic, sz, color, alpha, drawflag);\
 	} else {\
 		sz_y = sz_x / imgaspect;\
 		drawpic(pos + eY * (oldsz_y - sz_y) * 0.5, pic, sz, color, alpha, drawflag);\
-	}\
-}
+	}
 
-#define drawpic_aspect_skin(pos, pic, sz, color, alpha, drawflag)\
-	drawpic_aspect(pos, strcat(hud_skin_path, "/", pic), sz, color, alpha, drawflag)
+#define drawpic_aspect_skin(pos,pic,sz,color,alpha,drawflag)\
+	do {drawpic_aspect(pos, strcat(hud_skin_path, "/", pic), sz, color, alpha, drawflag) } while(0)
 
 // TODO: aspect!
 void drawpic_aspect_skin_expanding(vector pos, string pic, vector sz, vector rgb, float alpha, float flag, float fadelerp) {
