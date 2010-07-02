@@ -580,15 +580,15 @@ void CSQC_UpdateView(float w, float h)
 
 	if(cvar("cl_reticle_item_normal"))
 	{
-		precache_pic("textures/reticle_normal");
+		precache_pic("gfx/reticle_normal");
 		if(reticle_type == 1 && current_zoomfraction)
-			drawpic(reticle_pos, "textures/reticle_normal", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_item_normal"), DRAWFLAG_NORMAL);
+			drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_item_normal"), DRAWFLAG_NORMAL);
 	}
 	if(cvar("cl_reticle_item_nex"))
 	{
-		precache_pic("textures/reticle_nex");
+		precache_pic("gfx/reticle_nex");
 		if(reticle_type == 2 && current_zoomfraction)
-			drawpic(reticle_pos, "textures/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_item_nex"), DRAWFLAG_NORMAL);
+			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_item_nex"), DRAWFLAG_NORMAL);
 	}
 
 	// Draw the mouse cursor
