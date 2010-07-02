@@ -634,22 +634,22 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 	targCenter = '0 0 0'; // shut up fteqcc, there IS a reference
 
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
-		HUD_Panel_UpdatePosSizeForId(i)
-
 		if(i == highlightedPanel || !panel_enabled)
 			continue;
 
-		targPos = panel_pos;
-		targSize = panel_size;
+		HUD_Panel_UpdatePosSizeForId(i)
 
-		if(myPos_y + mySize_y < targPos_y)
+		panel_pos -= '1 1 0' * panel_bg_border;
+		panel_size += '2 2 0' * panel_bg_border;
+
+		if(myPos_y + mySize_y < panel_pos_y)
 			continue;
-		if(myPos_y > targPos_y + targSize_y)
+		if(myPos_y > panel_pos_y + panel_size_y)
 			continue;
 
-		if(myPos_x + mySize_x < targPos_x)
+		if(myPos_x + mySize_x < panel_pos_x)
 			continue;
-		if(myPos_x > targPos_x + targSize_x)
+		if(myPos_x > panel_pos_x + panel_size_x)
 			continue;
 
 		// OK, there IS a collision.
@@ -657,37 +657,39 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 		myCenter_x = myPos_x + 0.5 * mySize_x;
 		myCenter_y = myPos_y + 0.5 * mySize_y;
 
-		targCenter_x = targPos_x + 0.5 * targSize_x;
-		targCenter_y = targPos_y + 0.5 * targSize_y;
+		targCenter_x = panel_pos_x + 0.5 * panel_size_x;
+		targCenter_y = panel_pos_y + 0.5 * panel_size_y;
 
 		if(myCenter_x < targCenter_x && myCenter_y < targCenter_y) // top left (of the target panel)
 		{
-			if(myPos_x + mySize_x - targPos_x < myPos_y + mySize_y - targPos_y) // push it to the side
-				myTarget_x = targPos_x - mySize_x;
+			if(myPos_x + mySize_x - panel_pos_x < myPos_y + mySize_y - panel_pos_y) // push it to the side
+				myTarget_x = panel_pos_x - mySize_x;
 			else // push it upwards
-				myTarget_y = targPos_y - mySize_y;
+				myTarget_y = panel_pos_y - mySize_y;
 		}
 		else if(myCenter_x > targCenter_x && myCenter_y < targCenter_y) // top right
 		{
-			if(targPos_x + targSize_x - myPos_x < myPos_y + mySize_y - targPos_y) // push it to the side
-				myTarget_x = targPos_x + targSize_x;
+			if(panel_pos_x + panel_size_x - myPos_x < myPos_y + mySize_y - panel_pos_y) // push it to the side
+				myTarget_x = panel_pos_x + panel_size_x;
 			else // push it upwards
-				myTarget_y = targPos_y - mySize_y;
+				myTarget_y = panel_pos_y - mySize_y;
 		}
 		else if(myCenter_x < targCenter_x && myCenter_y > targCenter_y) // bottom left
 		{
-			if(myPos_x + mySize_x - targPos_x < targPos_y + targSize_y - myPos_y) // push it to the side
-				myTarget_x = targPos_x - mySize_x;
+			if(myPos_x + mySize_x - panel_pos_x < panel_pos_y + panel_size_y - myPos_y) // push it to the side
+				myTarget_x = panel_pos_x - mySize_x;
 			else // push it downwards
-				myTarget_y = targPos_y + targSize_y;
+				myTarget_y = panel_pos_y + panel_size_y;
 		}
 		else if(myCenter_x > targCenter_x && myCenter_y > targCenter_y) // bottom right
 		{
-			if(targPos_x + targSize_x - myPos_x < targPos_y + targSize_y - myPos_y) // push it to the side
-				myTarget_x = targPos_x + targSize_x;
+			if(panel_pos_x + panel_size_x - myPos_x < panel_pos_y + panel_size_y - myPos_y) // push it to the side
+				myTarget_x = panel_pos_x + panel_size_x;
 			else // push it downwards
-				myTarget_y = targPos_y + targSize_y;
+				myTarget_y = panel_pos_y + panel_size_y;
 		}
+		if(cvar("hud_configure_checkcollisions_debug"))
+			drawfill(panel_pos, panel_size, '1 1 0', .3, DRAWFLAG_NORMAL);
 	}
 
 	return myTarget;
@@ -699,17 +701,20 @@ void HUD_Panel_SetPos(vector pos)
 	vector mySize;
 	mySize = panel_size;
 
-	if(hud_configure_checkcollisions)
-		pos = HUD_Panel_CheckMove(pos, mySize);
-
-	pos_x = bound(0, pos_x, vid_conwidth - mySize_x);
-	pos_y = bound(0, pos_y, vid_conheight - mySize_y);
+	if(cvar("hud_configure_checkcollisions_debug"))
+		drawfill(pos, mySize, '1 1 1', .2, DRAWFLAG_NORMAL);
 
 	if(autocvar_hud_configure_grid)
 	{
 		pos_x = floor((pos_x/vid_conwidth)/bound(0.005, autocvar_hud_configure_grid_x, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_x, 0.2) * vid_conwidth;
 		pos_y = floor((pos_y/vid_conheight)/bound(0.005, autocvar_hud_configure_grid_y, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_y, 0.2) * vid_conheight;
 	}
+
+	if(hud_configure_checkcollisions)
+		pos = HUD_Panel_CheckMove(pos, mySize);
+
+	pos_x = bound(0, pos_x, vid_conwidth - mySize_x);
+	pos_y = bound(0, pos_y, vid_conheight - mySize_y);
 
 	string s;
 	s = strcat(ftos(pos_x/vid_conwidth), " ", ftos(pos_y/vid_conheight));
@@ -732,25 +737,26 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 	ratio = mySize_x/mySize_y;
 
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
-		HUD_Panel_UpdatePosSizeForId(i)
-
 		if(i == highlightedPanel || !panel_enabled)
 			continue;
 
-		targPos = panel_pos;
-		targSize = panel_size;
-		targEndPos = targPos + targSize;
+		HUD_Panel_UpdatePosSizeForId(i)
+
+		panel_pos -= '1 1 0' * panel_bg_border;
+		panel_size += '2 2 0' * panel_bg_border;
+
+		targEndPos = panel_pos + panel_size;
 
 		// resizeorigin is WITHIN target panel, just abort any collision testing against that particular panel to produce expected behaviour!
-		if(resizeorigin_x > targPos_x && resizeorigin_x < targEndPos_x && resizeorigin_y > targPos_y && resizeorigin_y < targEndPos_y)
+		if(resizeorigin_x > panel_pos_x && resizeorigin_x < targEndPos_x && resizeorigin_y > panel_pos_y && resizeorigin_y < targEndPos_y)
 			continue;
 
 		if (resizeCorner == 1)
 		{
 			// check if this panel is on our way
-			if (resizeorigin_x <= targPos_x)
+			if (resizeorigin_x <= panel_pos_x)
 				continue;
-			if (resizeorigin_y <= targPos_y)
+			if (resizeorigin_y <= panel_pos_y)
 				continue;
 			if (targEndPos_x <= resizeorigin_x - mySize_x)
 				continue;
@@ -765,7 +771,7 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 			// in this case resizeorigin (bottom-right point) and the bottom-right point of the panel
 			dist_x = resizeorigin_x - targEndPos_x;
 			dist_y = resizeorigin_y - targEndPos_y;
-			if (dist_y < 0 || dist_x / dist_y > ratio)
+			if (dist_y <= 0 || dist_x / dist_y > ratio)
 				mySize_x = min(mySize_x, dist_x);
 			else
 				mySize_y = min(mySize_y, dist_y);
@@ -774,34 +780,34 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 		{
 			if (resizeorigin_x >= targEndPos_x)
 				continue;
-			if (resizeorigin_y <= targPos_y)
+			if (resizeorigin_y <= panel_pos_y)
 				continue;
-			if (targPos_x >= resizeorigin_x + mySize_x)
+			if (panel_pos_x >= resizeorigin_x + mySize_x)
 				continue;
 			if (targEndPos_y <= resizeorigin_y - mySize_y)
 				continue;
 
-			dist_x = targPos_x - resizeorigin_x;
+			dist_x = panel_pos_x - resizeorigin_x;
 			dist_y = resizeorigin_y - targEndPos_y;
-			if (dist_y < 0 || dist_x / dist_y > ratio)
+			if (dist_y <= 0 || dist_x / dist_y > ratio)
 				mySize_x = min(mySize_x, dist_x);
 			else
 				mySize_y = min(mySize_y, dist_y);
 		}
 		else if (resizeCorner == 3)
 		{
-			if (resizeorigin_x <= targPos_x)
+			if (resizeorigin_x <= panel_pos_x)
 				continue;
 			if (resizeorigin_y >= targEndPos_y)
 				continue;
 			if (targEndPos_x <= resizeorigin_x - mySize_x)
 				continue;
-			if (targPos_y >= resizeorigin_y + mySize_y)
+			if (panel_pos_y >= resizeorigin_y + mySize_y)
 				continue;
 
 			dist_x = resizeorigin_x - targEndPos_x;
-			dist_y = targPos_y - resizeorigin_y;
-			if (dist_y < 0 || dist_x / dist_y > ratio)
+			dist_y = panel_pos_y - resizeorigin_y;
+			if (dist_y <= 0 || dist_x / dist_y > ratio)
 				mySize_x = min(mySize_x, dist_x);
 			else
 				mySize_y = min(mySize_y, dist_y);
@@ -812,20 +818,20 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 				continue;
 			if (resizeorigin_y >= targEndPos_y)
 				continue;
-			if (targPos_x >= resizeorigin_x + mySize_x)
+			if (panel_pos_x >= resizeorigin_x + mySize_x)
 				continue;
-			if (targPos_y >= resizeorigin_y + mySize_y)
+			if (panel_pos_y >= resizeorigin_y + mySize_y)
 				continue;
 
-			dist_x = targPos_x - resizeorigin_x;
-			dist_y = targPos_y - resizeorigin_y;
-			if (dist_y < 0 || dist_x / dist_y > ratio)
+			dist_x = panel_pos_x - resizeorigin_x;
+			dist_y = panel_pos_y - resizeorigin_y;
+			if (dist_y <= 0 || dist_x / dist_y > ratio)
 				mySize_x = min(mySize_x, dist_x);
 			else
 				mySize_y = min(mySize_y, dist_y);
 		}
 		if(cvar("hud_configure_checkcollisions_debug"))
-			drawfill(targPos, targSize, '1 1 0', .3, DRAWFLAG_NORMAL);
+			drawfill(panel_pos, panel_size, '1 1 0', .3, DRAWFLAG_NORMAL);
 	}
 
 	return mySize;

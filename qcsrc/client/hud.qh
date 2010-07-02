@@ -224,7 +224,9 @@ switch(id) { \
 #define HUD_Panel_UpdatePosSize(name) \
 panel_pos = autocvar_hud_##name##_pos; \
 panel_size = autocvar_hud_##name##_size; \
-HUD_Panel_GetScaledVectors()
+HUD_Panel_GetScaledVectors()\
+panel_bg_border_str = autocvar_hud_##name##_bg_border; \
+HUD_Panel_GetBorder()
 
 // Update pos and size of given panel id
 #define HUD_Panel_UpdatePosSizeForId(id) \
