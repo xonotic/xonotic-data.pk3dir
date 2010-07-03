@@ -655,6 +655,19 @@ void HUD_Panel_DrawProgressBar(vector pos, float vertical, vector mySize, vector
 	}
 }
 
+void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float alpha, float drawflag)
+{
+	if(!alpha)
+		return;
+
+	string pic;
+	pic = strcat(hud_skin_path, "/");
+	drawsubpic(pos, eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, strcat(pic, "num_leading"), '0 0 0', '0.25 1 0', color, alpha, drawflag);
+	if(mySize_x/mySize_y > 2)
+		drawsubpic(pos + eX * mySize_y, eX * (mySize_x - 2 * mySize_y) + eY * mySize_y, strcat(pic, "num_leading"), '0.25 0 0', '0.5 1 0', color, alpha, drawflag);
+	drawsubpic(pos + eX * mySize_x - eX * min(mySize_x * 0.5, mySize_y), eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, strcat(pic, "num_leading"), '0.75 0 0', '0.25 1 0', color, alpha, drawflag);
+}
+
 // check if move will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector
 vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 {
@@ -3306,7 +3319,7 @@ void HUD_Score(void)
 
 		drawstring_aspect(pos + eX * 0.75 * mySize_x, ftos(distribution), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		if (leader)
-			drawpic_aspect_skin(pos, strcat("num_leading_", ftos(score_len)), eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_bigfont;
 		drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_font;
@@ -3332,7 +3345,7 @@ void HUD_Score(void)
 				if (max_fragcount == score)
 					leader = 1;
 				if (leader)
-					drawpic_aspect_skin(pos, strcat("num_leading_", ftos(score_len)), eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawfont = hud_bigfont;
 				drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, mySize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawfont = hud_font;
@@ -3340,7 +3353,7 @@ void HUD_Score(void)
 				if (max_fragcount == score)
 					leader = 1;
 				if (leader)
-					drawpic_aspect_skin(pos + eX * 0.75 * mySize_x + eY * (1/3) * teamnum * mySize_y, strcat("num_leading_", ftos(score_len)), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					HUD_Panel_DrawHighlight(pos + eX * 0.75 * mySize_x + eY * (1/3) * teamnum * mySize_y, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawstring_aspect(pos + eX * 0.75 * mySize_x + eY * (1/3) * teamnum * mySize_y, ftos(score), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, (1/3) * mySize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 				teamnum += 1;
 			}
