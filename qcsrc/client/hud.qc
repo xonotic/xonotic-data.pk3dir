@@ -1125,12 +1125,15 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 float HUD_Panel_HighlightCheck()
 {
-	float i, border;
+	float i, j, border;
 	vector panelPos;
 	vector panelSize;
 
-	for(i = 0; i < HUD_PANEL_NUM; ++i)
+	while(j <= HUD_PANEL_NUM)
 	{
+		i = panel_order[j];
+		j += 1;
+
 		HUD_Panel_UpdatePosSizeForId(i)
 
 		panelPos = panel_pos;
