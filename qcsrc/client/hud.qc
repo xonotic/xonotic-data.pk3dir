@@ -108,8 +108,6 @@ var string picpath;
 do{\
 	picpath = strcat(hud_skin_path, "/", pic);\
 	if(precache_pic(picpath) == "") {\
-		if(cvar("developer"))\
-			print("Precache fail!\n");\
 		picpath = strcat("gfx/hud/default/", pic);\
 	}\
 	drawpic_aspect(pos, picpath, sz, color, alpha, drawflag);\
@@ -120,8 +118,6 @@ do{\
 do{\
 	picpath = strcat(hud_skin_path, "/", pic);\
 	if(precache_pic(picpath) == "") {\
-		if(cvar("developer"))\
-			print("Precache fail!\n");\
 		picpath = strcat("gfx/hud/default/", pic);\
 	}\
 	drawpic(pos, picpath, sz, color, alpha, drawflag);\
@@ -1164,7 +1160,7 @@ float HUD_Panel_HighlightCheck()
 
 		panelPos = panel_pos;
 		panelSize = panel_size;
-		border = 10; // FORCED border so a small border size doesn't mean you can't resize
+		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
 		if(mousepos_x >= panelPos_x && mousepos_y >= panelPos_y && mousepos_x <= panelPos_x + panelSize_x && mousepos_y <= panelPos_y + panelSize_y)
