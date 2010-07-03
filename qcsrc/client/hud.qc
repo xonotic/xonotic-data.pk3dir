@@ -599,12 +599,24 @@ vector HUD_Panel_GetMenuPos(float id)
 	return pos;
 }
 
+const float hlBorderSize = 4;
+const string hlBorder = "gfx/hud/default/border_highlighted";
+const string hlBorder2 = "gfx/hud/default/border_highlighted2";
+void HUD_Panel_HlBorder(float myBorder, vector color, float alpha)
+{
+	drawfill(panel_pos - '1 1 0' * myBorder, panel_size + '2 2 0' * myBorder, '0 0.5 1', .5 * alpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(panel_pos - '1 1 0' * myBorder, hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size_x + 2 * myBorder) + eY * hlBorderSize, color, alpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * (panel_size_y + 2 * myBorder - hlBorderSize), hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size_x + 2 * myBorder) + eY * hlBorderSize, color, alpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize, hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, alpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize + eX * (panel_size_x + 2 * myBorder - hlBorderSize), hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, alpha, DRAWFLAG_NORMAL);
+}
+
 // draw the background/borders
 #define HUD_Panel_DrawBg(alpha)\
 if(panel_bg != "0")\
 	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, strcat(hud_skin_path, "/", panel_bg), panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
 if(highlightedPanel_prev == active_panel && autocvar__hud_configure)\
-	drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '1 1 0' * 2 * panel_bg_border, '1 1 1', .1 * (1 - autocvar__menu_alpha), DRAWFLAG_ADDITIVE);
+	HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha) * alpha);
 
 void HUD_Panel_DrawProgressBar(vector pos, float vertical, vector mySize, vector color, float alpha, float drawflag)
 {
@@ -1233,10 +1245,11 @@ void HUD_Panel_Mouse()
 	*/
 
 	if(mouseClicked == 0 && disable_menu_alphacheck != 2 && highlightedPanel >= 0) { // don't reset these variables in disable_menu_alphacheck mode 2!
-		highlightedPanel_prev = highlightedPanel;
 		highlightedPanel = -1;
 		highlightedAction = 0;
 	}
+	if(highlightedPanel != -1)
+		highlightedPanel_prev = highlightedPanel;
 
 	mousepos = mousepos + getmousepos();
 
