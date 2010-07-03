@@ -107,7 +107,6 @@ var float autocvar_hud_notify_print;
 var float autocvar_hud_notify_time;
 var float autocvar_hud_notify_fadetime;
 var float autocvar_hud_notify_flip;
-var float autocvar_hud_notify_info_top;
 
 var float autocvar_hud_timer;
 var vector autocvar_hud_timer_pos;
@@ -200,3 +199,14 @@ var string autocvar_hud_engineinfo_bg_color_team;
 var string autocvar_hud_engineinfo_bg_alpha;
 var string autocvar_hud_engineinfo_bg_border;
 var string autocvar_hud_engineinfo_bg_padding;
+
+var float autocvar_hud_infomessages;
+var vector autocvar_hud_infomessages_pos;
+var vector autocvar_hud_infomessages_size;
+var string autocvar_hud_infomessages_bg;
+var string autocvar_hud_infomessages_bg_color;
+var string autocvar_hud_infomessages_bg_color_team;
+var string autocvar_hud_infomessages_bg_alpha;
+var string autocvar_hud_infomessages_bg_border;
+var string autocvar_hud_infomessages_bg_padding;
+var float autocvar_hud_infomessages_flip;

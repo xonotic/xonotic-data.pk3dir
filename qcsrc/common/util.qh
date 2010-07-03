@@ -211,6 +211,12 @@ float get_model_parameters_age;
 string get_model_parameters_desc;
 float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split
 
+// stupid stupid stupid FTEQCC has a max limit on macro sizes, let's work around by splitting the macro into two macros! :(
+#define HUD_Panel_GetName_Part2(id) \
+switch(id) {\
+	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; break; \
+	case HUD_PANEL_INFOMESSAGES: panel_name = HUD_PANELNAME_INFOMESSAGES; break; \
+}
 
 // Get name of specified panel id
 #define HUD_Panel_GetName(id) \
@@ -228,5 +234,5 @@ switch(id) { \
 	case HUD_PANEL_MODICONS: panel_name = HUD_PANELNAME_MODICONS; break; \
 	case HUD_PANEL_PRESSEDKEYS: panel_name = HUD_PANELNAME_PRESSEDKEYS; break; \
 	case HUD_PANEL_CHAT: panel_name = HUD_PANELNAME_CHAT; break; \
-	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; break; \
-}
+}\
+HUD_Panel_GetName_Part2(id)

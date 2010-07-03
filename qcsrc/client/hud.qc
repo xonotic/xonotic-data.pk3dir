@@ -1186,7 +1186,7 @@ float HUD_Panel_HighlightCheck()
 void HUD_Panel_FirstInDrawQ(float id)
 {
 	float i;
-	float place;
+	var float place = -1;
 	// find out where in the array our current id is, save into place
 	for(i = 0; i < HUD_PANEL_NUM; ++i)
 	{
@@ -1196,6 +1196,9 @@ void HUD_Panel_FirstInDrawQ(float id)
 			break;
 		}
 	}
+	// place last if we didn't find a place for it yet (probably new panel, or screwed up cvar)
+	if(place == -1)
+		place = HUD_PANEL_NUM - 1;
 
 	// move all ids up by one step in the array until "place"
 	for(i = place; i > 0; --i)
@@ -2765,7 +2768,6 @@ void HUD_Notify (void)
 	float entries, height;
 	entries = bound(1, floor(14 * mySize_y/mySize_x), 12);
 	height = mySize_y/entries;
-	entries -= 2; // top/bottom two lines reserved for info messaged, such as spec instructions
 	
 	vector fontsize;
 	fontsize = '0.5 0.5 0' * height;
@@ -2790,8 +2792,6 @@ void HUD_Notify (void)
 			i = j;
 		else // rather nasty hack for ordering items from the bottom up
 			i = entries - j - 1;
-		if(autocvar_hud_notify_info_top)
-			i += 2; // top/bottom two lines reserved for info messaged, such as spec instructions
 
 		if(fadetime)
 		{
@@ -2991,155 +2991,6 @@ void HUD_Notify (void)
 				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
-
-	}
-
-	// TODO: separate panel for these?
-	// Info messages
-	//
-	entity tm;
-	vector o;
-	o = pos;
-	if(autocvar_hud_notify_info_top)
-		o = pos + eY;
-	else
-		o = pos + eY * mySize_y - eY * 2 * height;
-	
-	if(spectatee_status && !intermission)
-	{
-		//drawfont = hud_bigfont;
-		if(spectatee_status == -1)
-			s = "^1Observing";
-		else
-			s = GetPlayerName(spectatee_status - 1);
-
-		//s = textShortenToWidth(s, mySize_y, 0.5 * height, stringwidth_colors);
-		//drawcolorcodedstring(pos + eY * 0.25 * height, s, 0.5 * height, panel_fg_alpha, DRAWFLAG_NORMAL);
-		//drawfont = hud_font;
-
-		// spectator text in the upper right corner
-		if(spectatee_status == -1)
-			s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 to spectate");
-		else
-			s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 for another player");
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
-
-		if(spectatee_status == -1)
-			s = strcat("^1Use ^3", getcommandkey("next weapon", "weapnext"), "^1 or ^3", getcommandkey("previous weapon", "weapprev"), "^1 to change the speed");
-		else
-			s = strcat("^1Press ^3", getcommandkey("secondary fire", "+attack2"), "^1 to observe");
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
-
-		s = strcat("^1Press ^3", getcommandkey("server info", "+show_info"), "^1 for gamemode info");
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
-
-		if(gametype == GAME_ARENA)
-			s = "^1Wait for your turn to join";
-		else if(gametype == GAME_LMS)
-		{
-			entity sk;
-			sk = playerslots[player_localentnum - 1];
-			if(sk.(scores[ps_primary]) >= 666)
-				s = "^1Match has already begun";
-			else if(sk.(scores[ps_primary]) > 0)
-				s = "^1You have no more lives left";
-			else
-				s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
-		}
-		else
-			s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
-
-		//show restart countdown:
-		if (time < getstatf(STAT_GAMESTARTTIME)) {
-			float countdown;
-			//we need to ceil, otherwise the countdown would be off by .5 when using round()
-			countdown = ceil(getstatf(STAT_GAMESTARTTIME) - time);
-			s = strcat("^1Game starts in ^3", ftos(countdown), "^1 seconds");
-			drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
-		}
-	}
-	if(warmup_stage && !intermission)
-	{
-		s = "^2Currently in ^1warmup^2 stage!";
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
-	}
-
-	string blinkcolor;
-	if(mod(time, 1) >= 0.5)
-		blinkcolor = "^1";
-	else
-		blinkcolor = "^3";
-
-	if(ready_waiting && !intermission && !spectatee_status)
-	{
-		if(ready_waiting_for_me)
-		{
-			if(warmup_stage)
-				s = strcat(blinkcolor, "Press ^3", getcommandkey("ready", "ready"), blinkcolor, " to end warmup");
-			else
-				s = strcat(blinkcolor, "Press ^3", getcommandkey("ready", "ready"), blinkcolor, " once you are ready");
-		}
-		else
-		{
-			if(warmup_stage)
-				s = strcat("^2Waiting for others to ready up to end warmup...");
-			else
-				s = strcat("^2Waiting for others to ready up...");
-		}
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
-	}
-	else if(warmup_stage && !intermission && !spectatee_status)
-	{
-		s = strcat("^2Press ^3", getcommandkey("ready", "ready"), "^2 to end warmup");
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
-	}
-
-	if(teamplay && !intermission && !spectatee_status && gametype != GAME_CA && teamnagger)
-	{
-		float ts_min, ts_max;
-		tm = teams.sort_next;
-		if (tm)
-		{
-			for(; tm.sort_next; tm = tm.sort_next)
-			{
-				if(!tm.team_size || tm.team == COLOR_SPECTATOR)
-					continue;
-				if(!ts_min) ts_min = tm.team_size;
-				else ts_min = min(ts_min, tm.team_size);
-				if(!ts_max) ts_max = tm.team_size;
-				else ts_max = max(ts_max, tm.team_size);
-			}
-			if ((ts_max - ts_min) > 1)
-			{
-				s = strcat(blinkcolor, "Teamnumbers are unbalanced!");
-				tm = GetTeam(myteam, false);
-				if (tm)
-				if (tm.team != COLOR_SPECTATOR)
-				if (tm.team_size == ts_max)
-					s = strcat(s, " Press ^3", getcommandkey("team menu", "menu_showteamselect"), blinkcolor, " to adjust");
-
-				drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-				o += eY * fontsize_y;
-			}
-		}
-	}
-	if(autocvar__hud_configure)
-	{
-		s = "^7Press ^3ESC ^7to show HUD options.";
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
-		s = "^3Doubleclick a panel for panel-specific options.";
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
 	}
 }
 
@@ -4446,6 +4297,211 @@ void HUD_EngineInfo(void)
 	drawstring_aspect(pos, strcat("FPS: ", ftos_decimals(prevfps, cvar("hud_engineinfo_framecounter_decimals"))), mySize, mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawfont = hud_font;
 }
+
+// Info messages panel (#14)
+//
+void HUD_InfoMessages(void)
+{
+	if(!autocvar_hud_infomessages && !autocvar__hud_configure)
+		return;
+
+	float id = HUD_PANEL_INFOMESSAGES;
+	HUD_Panel_UpdateCvarsForId(id);
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+
+	HUD_Panel_DrawBg(1);
+	if(panel_bg_padding)
+	{
+		pos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+
+	// always force 6:1 aspect
+	vector newSize;
+	if(mySize_x/mySize_y > 6)
+	{
+		newSize_x = 6 * mySize_y;
+		newSize_y = mySize_y;
+
+		pos_x = pos_x + (mySize_x - newSize_x) / 2;
+	}
+	else
+	{
+		newSize_y = 1/6 * mySize_x;
+		newSize_x = mySize_x;
+
+		pos_y = pos_y + (mySize_y - newSize_y) / 2;
+	}
+
+	mySize = newSize;
+	entity tm;
+	vector o;
+	o = pos;
+
+	vector fontsize;
+	fontsize = '0.25 0.25 0' * mySize_y;
+	
+	string s;
+	if(spectatee_status && !intermission)
+	{
+		//drawfont = hud_bigfont;
+		if(spectatee_status == -1)
+			s = "^1Observing";
+		else
+			s = GetPlayerName(spectatee_status - 1);
+
+		//s = textShortenToWidth(s, mySize_y, 0.5 * height, stringwidth_colors);
+		//drawcolorcodedstring(pos + eY * 0.25 * height, s, 0.5 * height, panel_fg_alpha, DRAWFLAG_NORMAL);
+		//drawfont = hud_font;
+
+		// spectator text in the upper right corner
+		if(spectatee_status == -1)
+			s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 to spectate");
+		else
+			s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 for another player");
+		if(autocvar_hud_infomessages_flip)
+			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
+		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
+
+		if(spectatee_status == -1)
+			s = strcat("^1Use ^3", getcommandkey("next weapon", "weapnext"), "^1 or ^3", getcommandkey("previous weapon", "weapprev"), "^1 to change the speed");
+		else
+			s = strcat("^1Press ^3", getcommandkey("secondary fire", "+attack2"), "^1 to observe");
+		if(autocvar_hud_infomessages_flip)
+			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
+		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
+
+		s = strcat("^1Press ^3", getcommandkey("server info", "+show_info"), "^1 for gamemode info");
+		if(autocvar_hud_infomessages_flip)
+			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
+		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
+
+		if(gametype == GAME_ARENA)
+			s = "^1Wait for your turn to join";
+		else if(gametype == GAME_LMS)
+		{
+			entity sk;
+			sk = playerslots[player_localentnum - 1];
+			if(sk.(scores[ps_primary]) >= 666)
+				s = "^1Match has already begun";
+			else if(sk.(scores[ps_primary]) > 0)
+				s = "^1You have no more lives left";
+			else
+				s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
+		}
+		else
+			s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
+		if(autocvar_hud_infomessages_flip)
+			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
+		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
+
+		//show restart countdown:
+		if (time < getstatf(STAT_GAMESTARTTIME)) {
+			float countdown;
+			//we need to ceil, otherwise the countdown would be off by .5 when using round()
+			countdown = ceil(getstatf(STAT_GAMESTARTTIME) - time);
+			s = strcat("^1Game starts in ^3", ftos(countdown), "^1 seconds");
+			drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			o += eY * fontsize_y;
+		}
+	}
+	if(warmup_stage && !intermission)
+	{
+		s = "^2Currently in ^1warmup^2 stage!";
+		if(autocvar_hud_infomessages_flip)
+			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
+		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
+	}
+
+	string blinkcolor;
+	if(mod(time, 1) >= 0.5)
+		blinkcolor = "^1";
+	else
+		blinkcolor = "^3";
+
+	if(ready_waiting && !intermission && !spectatee_status)
+	{
+		if(ready_waiting_for_me)
+		{
+			if(warmup_stage)
+				s = strcat(blinkcolor, "Press ^3", getcommandkey("ready", "ready"), blinkcolor, " to end warmup");
+			else
+				s = strcat(blinkcolor, "Press ^3", getcommandkey("ready", "ready"), blinkcolor, " once you are ready");
+		}
+		else
+		{
+			if(warmup_stage)
+				s = strcat("^2Waiting for others to ready up to end warmup...");
+			else
+				s = strcat("^2Waiting for others to ready up...");
+		}
+		if(autocvar_hud_infomessages_flip)
+			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
+		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
+	}
+	else if(warmup_stage && !intermission && !spectatee_status)
+	{
+		s = strcat("^2Press ^3", getcommandkey("ready", "ready"), "^2 to end warmup");
+		if(autocvar_hud_infomessages_flip)
+			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
+		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
+	}
+
+	if(teamplay && !intermission && !spectatee_status && gametype != GAME_CA && teamnagger)
+	{
+		float ts_min, ts_max;
+		tm = teams.sort_next;
+		if (tm)
+		{
+			for(; tm.sort_next; tm = tm.sort_next)
+			{
+				if(!tm.team_size || tm.team == COLOR_SPECTATOR)
+					continue;
+				if(!ts_min) ts_min = tm.team_size;
+				else ts_min = min(ts_min, tm.team_size);
+				if(!ts_max) ts_max = tm.team_size;
+				else ts_max = max(ts_max, tm.team_size);
+			}
+			if ((ts_max - ts_min) > 1)
+			{
+				s = strcat(blinkcolor, "Teamnumbers are unbalanced!");
+				tm = GetTeam(myteam, false);
+				if (tm)
+				if (tm.team != COLOR_SPECTATOR)
+				if (tm.team_size == ts_max)
+					s = strcat(s, " Press ^3", getcommandkey("team menu", "menu_showteamselect"), blinkcolor, " to adjust");
+
+				if(autocvar_hud_infomessages_flip)
+					o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
+				drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+				o += eY * fontsize_y;
+			}
+		}
+	}
+	if(autocvar__hud_configure)
+	{
+		s = "^7Press ^3ESC ^7to show HUD options.";
+		if(autocvar_hud_infomessages_flip)
+			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
+		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
+		s = "^3Doubleclick a panel for panel-specific options.";
+		if(autocvar_hud_infomessages_flip)
+			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
+		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		o += eY * fontsize_y;
+	}
+}
+
 /*
 ==================
 Main HUD system
@@ -4587,6 +4643,8 @@ switch (id) {\
 		HUD_Chat(); break;\
 	case (HUD_PANEL_ENGINEINFO):\
 		HUD_EngineInfo(); break;\
+	case (HUD_PANEL_INFOMESSAGES):\
+		 HUD_InfoMessages(); break;\
 }
 
 void HUD_Main (void)

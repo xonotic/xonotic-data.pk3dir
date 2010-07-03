@@ -227,6 +227,7 @@ switch(id) { \
 	case HUD_PANEL_PRESSEDKEYS: HUD_Panel_UpdateCvars(pressedkeys) break; \
 	case HUD_PANEL_CHAT: HUD_Panel_UpdateCvars(chat) break; \
 	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdateCvars(engineinfo) break; \
+	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdateCvars(infomessages) break; \
 }
 
 #define HUD_Panel_UpdatePosSize(name) \
@@ -239,18 +240,19 @@ HUD_Panel_GetBorder()
 // Update pos and size of given panel id
 #define HUD_Panel_UpdatePosSizeForId(id) \
 switch(id) { \
-	case HUD_PANEL_WEAPONICONS: HUD_Panel_UpdatePosSize(weaponicons) break; \
-	case HUD_PANEL_INVENTORY: HUD_Panel_UpdatePosSize(inventory) break; \
-	case HUD_PANEL_POWERUPS: HUD_Panel_UpdatePosSize(powerups) break; \
-	case HUD_PANEL_HEALTHARMOR: HUD_Panel_UpdatePosSize(healtharmor) break; \
-	case HUD_PANEL_NOTIFY: HUD_Panel_UpdatePosSize(notify) break; \
-	case HUD_PANEL_TIMER: HUD_Panel_UpdatePosSize(timer) break; \
-	case HUD_PANEL_RADAR: HUD_Panel_UpdatePosSize(radar) break; \
-	case HUD_PANEL_SCORE: HUD_Panel_UpdatePosSize(score) break; \
-	case HUD_PANEL_RACETIMER: HUD_Panel_UpdatePosSize(racetimer) break; \
-	case HUD_PANEL_VOTE: HUD_Panel_UpdatePosSize(vote) break; \
-	case HUD_PANEL_MODICONS: HUD_Panel_UpdatePosSize(modicons) break; \
-	case HUD_PANEL_PRESSEDKEYS: HUD_Panel_UpdatePosSize(pressedkeys) break; \
-	case HUD_PANEL_CHAT: HUD_Panel_UpdatePosSize(chat) break; \
-	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdatePosSize(engineinfo) break; \
+	case HUD_PANEL_WEAPONICONS: HUD_Panel_UpdatePosSize(weaponicons) break;\
+	case HUD_PANEL_INVENTORY: HUD_Panel_UpdatePosSize(inventory) break;\
+	case HUD_PANEL_POWERUPS: HUD_Panel_UpdatePosSize(powerups) break;\
+	case HUD_PANEL_HEALTHARMOR: HUD_Panel_UpdatePosSize(healtharmor) break;\
+	case HUD_PANEL_NOTIFY: HUD_Panel_UpdatePosSize(notify) break;\
+	case HUD_PANEL_TIMER: HUD_Panel_UpdatePosSize(timer) break;\
+	case HUD_PANEL_RADAR: HUD_Panel_UpdatePosSize(radar) break;\
+	case HUD_PANEL_SCORE: HUD_Panel_UpdatePosSize(score) break;\
+	case HUD_PANEL_RACETIMER: HUD_Panel_UpdatePosSize(racetimer) break;\
+	case HUD_PANEL_VOTE: HUD_Panel_UpdatePosSize(vote) break;\
+	case HUD_PANEL_MODICONS: HUD_Panel_UpdatePosSize(modicons) break;\
+	case HUD_PANEL_PRESSEDKEYS: HUD_Panel_UpdatePosSize(pressedkeys) break;\
+	case HUD_PANEL_CHAT: HUD_Panel_UpdatePosSize(chat) break;\
+	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdatePosSize(engineinfo) break;\
+	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdatePosSize(infomessages)\
 }
