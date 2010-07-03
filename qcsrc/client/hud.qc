@@ -2797,6 +2797,7 @@ void HUD_Notify (void)
 	float i, j;
 	for(j = 0; j < entries; ++j)
 	{
+		s = "";
 		if(autocvar_hud_notify_flip)
 			i = j;
 		else // rather nasty hack for ordering items from the bottom up
@@ -2925,8 +2926,11 @@ void HUD_Notify (void)
 					color = '0 0 1';
 				}
 			}
-			drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, color, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-			drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			if(s != "" && a)
+			{
+				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, color, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			}
 		}
 		// X [did action to] Y
 		else
@@ -2998,9 +3002,12 @@ void HUD_Notify (void)
 				s = "notify_void";
 				color = '1 1 1';
 			}
-			drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, color, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-			drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-			drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			if(s != "" && a)
+			{
+				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, color, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			}
 		}
 	}
 }
