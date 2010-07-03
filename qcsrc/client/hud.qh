@@ -1,3 +1,6 @@
+float panel_order[HUD_PANEL_NUM];
+string hud_panelorder_prev;
+
 vector mousepos;
 vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)
 vector panel_click_resizeorigin; // coordinates for opposite point when resizing

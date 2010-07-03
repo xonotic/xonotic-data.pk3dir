@@ -1162,14 +1162,52 @@ float HUD_Panel_HighlightCheck()
 	return 0;
 }
 
+// move a panel to the beginning of the panel order array (which means it gets drawn last, on top of everything else)
+void HUD_Panel_FirstInDrawQ(float id)
+{
+	float i;
+	float place;
+	// find out where in the array our current id is, save into place
+	for(i = 0; i < HUD_PANEL_NUM; ++i)
+	{
+		if(panel_order[i] == id)
+		{
+			place = i;
+			break;
+		}
+	}
+
+	// move all ids up by one step in the array until "place"
+	for(i = place; i > 0; --i)
+	{
+		panel_order[i] = panel_order[i-1];
+	}
+	// now save the new top id
+	panel_order[0] = id;
+	
+	// let's save them into the cvar by some strcat trickery
+	string s;
+	for(i = 0; i < HUD_PANEL_NUM; ++i)
+	{
+		s = strcat(s, ftos(panel_order[i]), " ");
+	}
+	cvar_set("_hud_panelorder", s);
+	if(hud_panelorder_prev)
+		strunzone(hud_panelorder_prev);
+	hud_panelorder_prev = strzone(autocvar__hud_panelorder); // prevent HUD_Main from doing useless update, we already updated here
+}
+
 void HUD_Panel_Highlight()
 {
 	float i, border;
+	var float j = 1;
 	vector panelPos;
 	vector panelSize;
 
-	for(i = 0; i < HUD_PANEL_NUM; ++i)
+	for(i = panel_order[0]; j <= HUD_PANEL_NUM; i = panel_order[j])
 	{
+		j += 1;
+
 		HUD_Panel_UpdatePosSizeForId(i)
 
 		panelPos = panel_pos;
@@ -1180,6 +1218,7 @@ void HUD_Panel_Highlight()
 		if(mousepos_x >= panelPos_x && mousepos_y >= panelPos_y && mousepos_x <= panelPos_x + panelSize_x && mousepos_y <= panelPos_y + panelSize_y)
 		{
 			highlightedPanel = i;
+			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 1;
 			panel_click_distance = mousepos - panelPos;
 			return;
@@ -1188,6 +1227,7 @@ void HUD_Panel_Highlight()
 		else if(mousepos_x >= panelPos_x - border && mousepos_y >= panelPos_y - border && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
 		{
 			highlightedPanel = i;
+			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 1;
 			panel_click_distance = mousepos - panelPos;
@@ -1198,6 +1238,7 @@ void HUD_Panel_Highlight()
 		else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y - border && mousepos_x <= panelPos_x + panelSize_x + border && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
 		{
 			highlightedPanel = i;
+			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 2;
 			panel_click_distance_x = panelSize_x - mousepos_x + panelPos_x;
@@ -1209,6 +1250,7 @@ void HUD_Panel_Highlight()
 		else if(mousepos_x >= panelPos_x - border && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + panelSize_y + border)
 		{
 			highlightedPanel = i;
+			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 3;
 			panel_click_distance_x = mousepos_x - panelPos_x;
@@ -1220,6 +1262,7 @@ void HUD_Panel_Highlight()
 		else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + panelSize_x + border && mousepos_y <= panelPos_y + panelSize_y + border)
 		{
 			highlightedPanel = i;
+			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 4;
 			panel_click_distance = panelSize - mousepos + panelPos;
@@ -1351,6 +1394,9 @@ float weaponorder_cmp(float i, float j, entity pass)
 
 void HUD_WeaponIcons(void)
 {
+	if(!autocvar_hud_weaponicons && !autocvar__hud_configure)
+		return;
+
 	float id = HUD_PANEL_WEAPONICONS;
 	HUD_Panel_UpdateCvarsForId(id);
 	float alpha, stat_weapons; // "constants"
@@ -1635,6 +1681,9 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 
 void HUD_Inventory(void)
 {
+	if(!autocvar_hud_inventory && !autocvar__hud_configure)
+		return;
+
 	float id = HUD_PANEL_INVENTORY;
 	HUD_Panel_UpdateCvarsForId(id);
 	float i, currently_selected;
@@ -1736,6 +1785,9 @@ void DrawNumIcon(float iconalign, vector myPos, vector mySize, float x, string i
 // Powerups (#2)
 //
 void HUD_Powerups(void) {
+	if(!autocvar_hud_powerups && !autocvar__hud_configure)
+		return;
+
 	float id = HUD_PANEL_POWERUPS;
 	HUD_Panel_UpdateCvarsForId(id);
 	float stat_items;
@@ -1934,6 +1986,9 @@ void HUD_Powerups(void) {
 //
 void HUD_HealthArmor(void)
 {
+	if(!autocvar_hud_healtharmor && !autocvar__hud_configure)
+		return;
+
 	float id = HUD_PANEL_HEALTHARMOR;
 	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
@@ -2667,6 +2722,9 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 
 void HUD_Notify (void)
 {
+	if(!autocvar_hud_notify && !autocvar__hud_configure)
+		return;
+
 	float id = HUD_PANEL_NOTIFY;
 	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
@@ -3063,6 +3121,7 @@ void HUD_Notify (void)
 
 // Timer (#5)
 //
+// TODO: macro
 string seconds_tostring(float sec)
 {
 	float minutes;
@@ -3078,6 +3137,9 @@ string seconds_tostring(float sec)
 
 void HUD_Timer(void)
 {
+	if(!autocvar_hud_timer && !autocvar__hud_configure)
+		return;
+
 	float id = HUD_PANEL_TIMER;
 	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
@@ -3130,6 +3192,9 @@ void HUD_Timer(void)
 //
 void HUD_Radar(void)
 {
+	if (!(autocvar_hud_radar != 0 && (autocvar_hud_radar == 2 || teamplay || autocvar__hud_configure)))
+		return;
+
 	float id = HUD_PANEL_RADAR;
 	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
@@ -3255,6 +3320,9 @@ void HUD_Radar(void)
 //
 void HUD_Score(void)
 {
+	if(!autocvar_hud_score && !autocvar__hud_configure)
+		return;
+
 	float id = HUD_PANEL_SCORE;
 	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
@@ -3405,6 +3473,9 @@ void HUD_Score(void)
 // Race timer (#8)
 //
 void HUD_RaceTimer (void) {
+	if(!autocvar_hud_racetimer && !(gametype == GAME_RACE || gametype == GAME_CTS) && !autocvar__hud_configure)
+		return;
+
 	float id = HUD_PANEL_RACETIMER;
 	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
@@ -3566,6 +3637,9 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
+	if(!autocvar_hud_vote && !autocvar__hud_configure)
+		return;
+
 	float id = HUD_PANEL_VOTE;
 	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
@@ -4144,6 +4218,9 @@ float mod_change; // "time" when mod_active changed
 
 void HUD_ModIcons(void)
 {
+	if(!autocvar_hud_modicons && !autocvar__hud_configure)
+		return;
+
 	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && !autocvar__hud_configure)
 		return;
 
@@ -4187,6 +4264,12 @@ void HUD_ModIcons(void)
 //
 void HUD_DrawPressedKeys(void)
 {
+	if(!autocvar_hud_pressedkeys && !autocvar__hud_configure)
+		return;
+
+	if(!(spectatee_status > 0 || autocvar_hud_pressedkeys >= 2 || autocvar__hud_configure))
+		return;
+
 	float id = HUD_PANEL_PRESSEDKEYS;
 	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
@@ -4217,6 +4300,12 @@ void HUD_DrawPressedKeys(void)
 //
 void HUD_Chat(void)
 {
+	if(!autocvar_hud_chat && !autocvar__hud_configure)
+	{
+		cvar_set("con_chatrect", "0");
+		return;
+	}
+
 	float id = HUD_PANEL_CHAT;
 	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
@@ -4266,6 +4355,9 @@ float frametimeavg1; // 1 frame ago
 float frametimeavg2; // 2 frames ago
 void HUD_EngineInfo(void)
 {
+	if(!autocvar_hud_engineinfo && !autocvar__hud_configure)
+		return;
+
 	float id = HUD_PANEL_ENGINEINFO;
 	HUD_Panel_UpdateCvarsForId(id);
 	vector pos, mySize;
@@ -4422,6 +4514,38 @@ void HUD_Reset (void)
 		HUD_Mod_CTF_Reset();
 }
 
+#define HUD_DrawPanel(id)\
+switch (id) {\
+	case (HUD_PANEL_RADAR):\
+		HUD_Radar(); break;\
+	case (HUD_PANEL_WEAPONICONS):\
+		HUD_WeaponIcons(); break;\
+	case (HUD_PANEL_INVENTORY):\
+		HUD_Inventory(); break;\
+	case (HUD_PANEL_POWERUPS):\
+		HUD_Powerups(); break;\
+	case (HUD_PANEL_HEALTHARMOR):\
+		HUD_HealthArmor(); break;\
+	case (HUD_PANEL_NOTIFY):\
+		HUD_Notify(); break;\
+	case (HUD_PANEL_TIMER):\
+		HUD_Timer(); break;\
+	case (HUD_PANEL_SCORE):\
+		HUD_Score(); break;\
+	case (HUD_PANEL_RACETIMER):\
+		HUD_RaceTimer(); break;\
+	case (HUD_PANEL_VOTE):\
+		HUD_VoteWindow(); break;\
+	case (HUD_PANEL_MODICONS):\
+		HUD_ModIcons(); break;\
+	case (HUD_PANEL_PRESSEDKEYS):\
+		HUD_DrawPressedKeys(); break;\
+	case (HUD_PANEL_CHAT):\
+		HUD_Chat(); break;\
+	case (HUD_PANEL_ENGINEINFO):\
+		HUD_EngineInfo(); break;\
+}
+
 void HUD_Main (void)
 {
 	// TODO: render order?
@@ -4478,39 +4602,18 @@ void HUD_Main (void)
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
 		drawpic('0 0 0', strcat("gfx/hud/", autocvar_hud_skin, "/", autocvar_hud_dock), eX * vid_conwidth + eY * vid_conheight, color, autocvar_hud_dock_alpha * menu_fade_alpha, DRAWFLAG_NORMAL); // no aspect ratio forcing on dock...
 
-	if(autocvar_hud_radar || autocvar__hud_configure)
-		if(autocvar_hud_radar != 0 && (autocvar_hud_radar == 2 || teamplay))
-			HUD_Radar();
-	if(autocvar_hud_weaponicons || autocvar__hud_configure)
-		HUD_WeaponIcons();
-	if(autocvar_hud_inventory || autocvar__hud_configure)
-		HUD_Inventory();
-	if(autocvar_hud_powerups || autocvar__hud_configure)
-		HUD_Powerups();
-	if(autocvar_hud_healtharmor || autocvar__hud_configure)
-		HUD_HealthArmor();
-	if(autocvar_hud_notify || autocvar__hud_configure)
-		HUD_Notify();
-	if(autocvar_hud_timer || autocvar__hud_configure)
-		HUD_Timer();
-	if(autocvar_hud_score || autocvar__hud_configure)
-		HUD_Score();
-	if(autocvar_hud_racetimer || autocvar__hud_configure)
-		if(gametype == GAME_RACE || gametype == GAME_CTS || autocvar__hud_configure)
-			HUD_RaceTimer();
-	if(autocvar_hud_vote || autocvar__hud_configure)
-		HUD_VoteWindow();
-	if(autocvar_hud_modicons || autocvar__hud_configure)
-		HUD_ModIcons();
-	if(autocvar_hud_pressedkeys || autocvar__hud_configure)
-		if(spectatee_status > 0 || autocvar_hud_pressedkeys >= 2 || autocvar__hud_configure)
-			HUD_DrawPressedKeys();
-	if(autocvar_hud_chat || autocvar__hud_configure)
-		HUD_Chat();
-	else
-		cvar_set("con_chatrect", "0");
-	if(autocvar_hud_engineinfo || autocvar__hud_configure)
-		HUD_EngineInfo();
+	if(autocvar__hud_panelorder != hud_panelorder_prev) {
+		if(hud_panelorder_prev)
+			strunzone(hud_panelorder_prev);
+		hud_panelorder_prev = strzone(autocvar__hud_panelorder);
+		tokenize_console(autocvar__hud_panelorder);
+		for(i = 0; i < HUD_PANEL_NUM; ++i) {
+			panel_order[i] = stof(argv(i));
+		}
+	}
+	for(i = HUD_PANEL_NUM - 1; i >= 0; --i) {
+		HUD_DrawPanel(panel_order[i]);
+	}
 
 	// TODO hud_'ify these
 	if (cvar("cl_showspeed"))

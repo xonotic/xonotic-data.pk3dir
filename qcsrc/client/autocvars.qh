@@ -16,6 +16,8 @@ var float autocvar_hud_configure_grid_xsize;
 var float autocvar_hud_configure_grid_ysize;
 var float autocvar_hud_configure_grid_alpha;
 
+var string autocvar__hud_panelorder;
+
 var string autocvar_hud_skin;
 var string autocvar_hud_dock;
 var string autocvar_hud_dock_color;
