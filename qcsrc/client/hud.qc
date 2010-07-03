@@ -2766,7 +2766,7 @@ void HUD_Notify (void)
 	}
 
 	float entries, height;
-	entries = bound(1, floor(14 * mySize_y/mySize_x), 12);
+	entries = bound(1, floor(10 * mySize_y/mySize_x), 10);
 	height = mySize_y/entries;
 	
 	vector fontsize;
@@ -2779,10 +2779,11 @@ void HUD_Notify (void)
 	fadetime = autocvar_hud_notify_fadetime;
 
 	string s;
+	vector color;
 
 	vector pos_attacker, pos_victim;
 	vector weap_pos;
-	float width_attacker, width_victim;
+	float width_attacker;
 	string attacker, victim;
 
 	float i, j;
@@ -2809,187 +2810,189 @@ void HUD_Notify (void)
 		}
 
 		// TODO: maybe print in team colors?
-		// TODO: maybe this could be cleaned up somehow...
-		// TODO: less copypaste code below
 		//
 		// Y [used by] X
 		if(killnotify_actiontype[j] == 0 && !autocvar__hud_configure) 
 		{
-			attacker = textShortenToWidth(killnotify_attackers[j], mySize_x - 2 * height, fontsize, stringwidth_colors);
+			attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
+			pos_attacker = pos + eX * (0.52 * mySize_x + height) + eY * (0.5 * fontsize_y + i * height);
+			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
 
-			width_attacker = stringwidth(attacker, TRUE, fontsize);
-			pos_attacker = pos + eX * 0.5 * (mySize_x - width_attacker + 2 * height) + eY * 0.5 * fontsize_y + eY * i * height;
-
-			weap_pos = pos + eX * 0.5 * (mySize_x - width_attacker) - eX * height + eY * i * height;
 			if(killnotify_deathtype[j] == DEATH_GENERIC)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_death", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_death";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_NOAMMO)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_outofammo", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_outofammo";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_KILL)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_selfkill", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_selfkill";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_CAMP)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_camping", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_camping";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_teamkill", '2 1 0' * height, '1 0 0', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_teamkill";
+				color = '1 0 0';
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_teamkill", '2 1 0' * height, '0 0 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_teamkill";
+				color = '0 0 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_DROWN)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_water", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_SLIME)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_slime", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_LAVA)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_lava", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_FALL)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_fall", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_shootingstar", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_void", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == INFO_GOTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
-					s = "red";
+				{
+					s = "flag_red_carrying";
+					color = '1 0 0';
+				}
 				else
-					s = "blue";
-				drawpic_aspect_skin(weap_pos, strcat("flag_", s, "_carrying"), '1 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				{
+					s = "flag_blue_carrying";
+					color = '0 0 1';
+				}
 			}
 			else if(killnotify_deathtype[j] == INFO_RETURNFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
-					s = "red";
+				{
+					s = "flag_red_taken";
+					color = '1 0 0';
+				}
 				else
-					s = "blue";
-				drawpic_aspect_skin(weap_pos, strcat("flag_", s, "_taken"), '1 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				{
+					s = "flag_blue_taken";
+					color = '0 0 1';
+				}
 			}
 			else if(killnotify_deathtype[j] == INFO_LOSTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
-					s = "red";
+				{
+					s = "flag_red_lost";
+					color = '1 0 0';
+				}
 				else
-					s = "blue";
-				drawpic_aspect_skin(weap_pos, strcat("flag_", s, "_lost"), '1 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				{
+					s = "flag_blue_lost";
+					color = '0 0 1';
+				}
 			}
+			drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, color, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 		// X [did action to] Y
 		else
 		{
 			if(autocvar__hud_configure)
 			{
-				attacker = textShortenToWidth("Player1", 0.5 * mySize_x - height, fontsize, stringwidth_colors);
-				victim = textShortenToWidth("Player2", 0.5 * mySize_x - height, fontsize, stringwidth_colors);
+				attacker = textShortenToWidth("Player1", 0.48 * mySize_x - height, fontsize, stringwidth_colors);
+				victim = textShortenToWidth("Player2", 0.48 * mySize_x - height, fontsize, stringwidth_colors);
 				a = bound(0, (when - j) / 4, 1);
 			}
 			else
 			{
-				attacker = textShortenToWidth(killnotify_attackers[j], 0.5 * mySize_x - height, fontsize, stringwidth_colors);
-				victim = textShortenToWidth(killnotify_victims[j], 0.5 * mySize_x - height, fontsize, stringwidth_colors);
+				attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
+				victim = textShortenToWidth(killnotify_victims[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
 			}
 			width_attacker = stringwidth(attacker, TRUE, fontsize);
-			width_victim = stringwidth(victim, TRUE, fontsize);
-			pos_attacker = pos + eX * 0.5 * ((0.5 * mySize_x - height) - width_attacker) + eY * 0.5 * fontsize_y + eY * i * height;
-			pos_victim = pos + eX * 0.5 * ((0.5 * mySize_x - height) - width_victim) + eY * 0.5 * fontsize_y + eX * 0.5 * mySize_x + eX * height + eY * i * height;
+			pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * (0.5 * fontsize_y + i * height);
+			pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * (0.5 * fontsize_y + i * height);
 			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
 
 			if(autocvar__hud_configure) // example actions for config mode
 			{
-				drawpic_aspect_skin(weap_pos, strcat("weapon", "electro"), '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "weaponelectro";
+				color = '1 1 1';
 			}
 			else if(WEP_VALID(killnotify_deathtype[j]))
 			{
 				self = get_weaponinfo(killnotify_deathtype[j]);
-				drawpic_aspect_skin(weap_pos, strcat("weapon", self.netname), '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = strcat("weapon", self.netname);
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_teamkill", '2 1 0' * height, '1 0 0', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_teamkill";
+				color = '1 0 0';
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_teamkill", '2 1 0' * height, '0 0 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_teamkill";
+				color = '0 0 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_DROWN)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_water", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_water";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_SLIME)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_slime", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_slime";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_LAVA)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_lava", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_lava";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_FALL)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_fall", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_fall";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
 			{
-				drawpic_aspect_skin(weap_pos, "notify_shootingstar", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_shootingstar";
+				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
 			{
-				drawpic_aspect_skin(weap_pos, "notify_void", '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				s = "notify_void";
+				color = '1 1 1';
 			}
+			drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, color, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 	}
 }
