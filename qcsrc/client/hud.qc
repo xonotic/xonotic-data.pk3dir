@@ -1199,20 +1199,20 @@ void HUD_Panel_FirstInDrawQ(float id)
 
 void HUD_Panel_Highlight()
 {
-	float i, border;
-	var float j = 1;
+	float i, j, border;
 	vector panelPos;
 	vector panelSize;
 
-	for(i = panel_order[0]; j <= HUD_PANEL_NUM; i = panel_order[j])
+	while(j <= HUD_PANEL_NUM)
 	{
+		i = panel_order[j];
 		j += 1;
 
 		HUD_Panel_UpdatePosSizeForId(i)
 
 		panelPos = panel_pos;
 		panelSize = panel_size;
-		border = 10; // FORCED border so a small border size doesn't mean you can't resize
+		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
 		if(mousepos_x >= panelPos_x && mousepos_y >= panelPos_y && mousepos_x <= panelPos_x + panelSize_x && mousepos_y <= panelPos_y + panelSize_y)
@@ -1268,6 +1268,10 @@ void HUD_Panel_Highlight()
 			panel_click_distance = panelSize - mousepos + panelPos;
 			panel_click_resizeorigin = panelPos;
 			return;
+		}
+		else
+		{
+			highlightedPanel_prev = -1;
 		}
 	}
 }
@@ -4602,6 +4606,7 @@ void HUD_Main (void)
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
 		drawpic('0 0 0', strcat("gfx/hud/", autocvar_hud_skin, "/", autocvar_hud_dock), eX * vid_conwidth + eY * vid_conheight, color, autocvar_hud_dock_alpha * menu_fade_alpha, DRAWFLAG_NORMAL); // no aspect ratio forcing on dock...
 
+	// cache the panel order into the panel_order array
 	if(autocvar__hud_panelorder != hud_panelorder_prev) {
 		if(hud_panelorder_prev)
 			strunzone(hud_panelorder_prev);
@@ -4611,6 +4616,7 @@ void HUD_Main (void)
 			panel_order[i] = stof(argv(i));
 		}
 	}
+	// draw panels in order specified by panel_order array
 	for(i = HUD_PANEL_NUM - 1; i >= 0; --i) {
 		HUD_DrawPanel(panel_order[i]);
 	}
