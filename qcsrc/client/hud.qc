@@ -2300,7 +2300,6 @@ void HUD_HealthArmor(void)
 	drawfont = hud_font;
 }
 
-// ___TODO___ !!!
 // Notification area (#4)
 //
 
@@ -4665,7 +4664,6 @@ switch (id) {\
 
 void HUD_Main (void)
 {
-	// TODO: render order?
 	hud_skin_path = strcat("gfx/hud/", autocvar_hud_skin);
 
 	if(disable_menu_alphacheck == 1)
