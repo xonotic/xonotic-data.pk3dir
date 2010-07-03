@@ -102,16 +102,29 @@ do {\
 	}\
 } while(0)
 
-var string pic_path;
+var string picpath;
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 #define drawpic_aspect_skin(pos,pic,sz,color,alpha,drawflag)\
 do{\
-	pic_path = strcat(hud_skin_path, "/", pic);\
-	if(precache_pic(pic_path) == "") {\
-		drawpic_aspect(pos, strcat("gfx/hud/default/", pic), sz, color, alpha, drawflag);\
-	} else {\
-		drawpic_aspect(pos, pic_path, sz, color, alpha, drawflag);\
+	picpath = strcat(hud_skin_path, "/", pic);\
+	if(precache_pic(picpath) == "") {\
+		if(cvar("developer"))\
+			print("Precache fail!\n");\
+		picpath = strcat("gfx/hud/default/", pic);\
 	}\
+	drawpic_aspect(pos, picpath, sz, color, alpha, drawflag);\
+} while(0)
+
+// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
+#define drawpic_skin(pos,pic,sz,color,alpha,drawflag)\
+do{\
+	picpath = strcat(hud_skin_path, "/", pic);\
+	if(precache_pic(picpath) == "") {\
+		if(cvar("developer"))\
+			print("Precache fail!\n");\
+		picpath = strcat("gfx/hud/default/", pic);\
+	}\
+	drawpic(pos, picpath, sz, color, alpha, drawflag);\
 } while(0)
 
 // TODO: aspect!
@@ -3500,18 +3513,18 @@ void HUD_RaceTimer (void) {
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	// always force 2:1 aspect
+	// always force 4:1 aspect
 	vector newSize;
-	if(mySize_x/mySize_y > 2)
+	if(mySize_x/mySize_y > 4)
 	{
-		newSize_x = 2 * mySize_y;
+		newSize_x = 4 * mySize_y;
 		newSize_y = mySize_y;
 
 		pos_x = pos_x + (mySize_x - newSize_x) / 2;
 	}
 	else
 	{
-		newSize_y = 1/2 * mySize_x;
+		newSize_y = 1/4 * mySize_x;
 		newSize_x = mySize_x;
 
 		pos_y = pos_y + (mySize_y - newSize_y) / 2;
@@ -3681,61 +3694,62 @@ void HUD_VoteWindow(void)
 
 	a = vote_alpha * bound(autocvar_hud_vote_alreadyvoted_alpha, 1 - vote_highlighted, 1);
 
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg(a);
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	// always force 2:1 aspect
+	// always force 3:1 aspect
 	vector newSize;
-	if(mySize_x/mySize_y > 2)
+	if(mySize_x/mySize_y > 3)
 	{
-		newSize_x = 2 * mySize_y;
+		newSize_x = 3 * mySize_y;
 		newSize_y = mySize_y;
 
 		pos_x = pos_x + (mySize_x - newSize_x) / 2;
 	}
 	else
 	{
-		newSize_y = 1/2 * mySize_x;
+		newSize_y = 1/3 * mySize_x;
 		newSize_x = mySize_x;
 
 		pos_y = pos_y + (mySize_y - newSize_y) / 2;
 	}
 	mySize = newSize;
 
-	drawpic_aspect_skin(pos, "voteprogress_back", mySize, '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
-
-	s = "A vote has been called for: ";
-	drawstring_aspect(pos + eY * (1/12) * mySize_y, s, eX * mySize_x + eY * (3/12) * mySize_y, mySize_y*(3/12), '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
-	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (3/12), stringwidth_colors); // TODO: broken?
+	s = "A vote has been called for:";
+	drawstring_aspect(pos, s, eX * mySize_x + eY * (2/8) * mySize_y, mySize_y*(2/8), '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
+	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (1.75/8), stringwidth_colors);
 	if(autocvar__hud_configure)
 		s = "Configure the HUD";
-	drawstring_aspect(pos + eY * (4/12) * mySize_y, s, eX * mySize_x + eY * (2/12) * mySize_y, mySize_y*(2/12), '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, mySize_y*(1.75/8), '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
-	s = strcat("Yes: ", ftos(vote_yescount));
-	drawstring(pos + '0 0.6 0' * mySize_y + '0.02 0 0' * mySize_x, s, '1 1 0' * mySize_y*(1/6) , eY, a * panel_fg_alpha, DRAWFLAG_NORMAL);
-	s = strcat("No: ", ftos(vote_nocount));
-	drawstring(pos + '0 0.6 0' * mySize_y + '0.98 0 0' * mySize_x - eX * stringwidth(s, FALSE, '1 1 0' * mySize_y*(1/6)), s, '1 1 0' * mySize_y*(1/6), eX, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+	s = strcat("Yes (", getcommandkey("not bound", "vyes"), "): ", ftos(vote_yescount));
+	drawstring_aspect(pos + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, mySize_y*(1.5/8) , '0 1 0', a * panel_fg_alpha, DRAWFLAG_NORMAL);
+	s = strcat("No (", getcommandkey("not bound", "vno"), "): ", ftos(vote_nocount));
+	drawstring_aspect(pos + eX * 0.5 * mySize_x + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, mySize_y*(1.5/8) , '1 0 0', a * panel_fg_alpha, DRAWFLAG_NORMAL);
+
+	// draw the progress bar backgrounds
+	drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_back", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// draw the progress bars
 	drawsetcliparea(pos_x, pos_y, mySize_x * 0.5 * (vote_yescount/vote_needed), mySize_y);
-	drawpic_aspect_skin(pos, "voteprogress_prog", mySize, eY, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_prog", eX * mySize_x + eY * (3/8) * mySize_y, '0 1 0', a * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	drawsetcliparea(pos_x + mySize_x - mySize_x * 0.5 * (vote_nocount/vote_needed), pos_y, mySize_x * 0.5, mySize_y);
-	drawpic_aspect_skin(pos, "voteprogress_prog", mySize, eX, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_prog", eX * mySize_x + eY * (3/8) * mySize_y, '1 0 0', a * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// draw the highlights
 	if(vote_highlighted == 1) {
 		drawsetcliparea(pos_x, pos_y, mySize_x * 0.5, mySize_y);
-		drawpic_aspect_skin(pos, "voteprogress_voted", mySize, eY, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_voted", eX * mySize_x + eY * (3/8) * mySize_y, '0 1 0', a * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else if(vote_highlighted == 2) {
 		drawsetcliparea(pos_x + 0.5 * mySize_x, pos_y, mySize_x * 0.5, mySize_y);
-		drawpic_aspect_skin(pos, "voteprogress_voted", mySize, eX, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_voted", eX * mySize_x + eY * (3/8) * mySize_y, '0 1 0', a * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	drawresetcliparea();
@@ -4293,6 +4307,24 @@ void HUD_DrawPressedKeys(void)
 		pos += '1 1 0' * panel_bg_padding;
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
+
+	// always force 2:1 aspect
+	vector newSize;
+	if(mySize_x/mySize_y > 2)
+	{
+		newSize_x = 2 * mySize_y;
+		newSize_y = mySize_y;
+
+		pos_x = pos_x + (mySize_x - newSize_x) / 2;
+	}
+	else
+	{
+		newSize_y = 1/2 * mySize_x;
+		newSize_x = mySize_x;
+
+		pos_y = pos_y + (mySize_y - newSize_y) / 2;
+	}
+	mySize = newSize;
 
 	vector keysize;
 	keysize = eX * mySize_x * (1/3) + eY * mySize_y * 0.5;
