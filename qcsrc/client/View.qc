@@ -341,6 +341,7 @@ void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard ();
 float view_set;
 float camera_mode;
+float reticle_type;
 string NextFrameCommand;
 void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
@@ -353,6 +354,8 @@ void CSQC_UpdateView(float w, float h)
 	float fov;
 	float f, i, j;
 	vector v, vo;
+
+	vector reticle_pos, reticle_size;
 
 	WaypointSprite_Load();
 
@@ -432,7 +435,7 @@ void CSQC_UpdateView(float w, float h)
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
 		if(calledhooks & HOOK_START)
 		{
-			localcmd("\ncl_hook_gameend;");
+			localcmd("\ncl_hook_gameend\n");
 			calledhooks |= HOOK_END;
 		}
 
@@ -474,6 +477,13 @@ void CSQC_UpdateView(float w, float h)
 	if(last_weapon != activeweapon) {
 		weapontime = time;
 		last_weapon = activeweapon;
+
+		entity e;
+		e = get_weaponinfo(activeweapon);
+		if(e.netname != "")
+			localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
+		else
+			localcmd("\ncl_hook_activeweapon none\n");
 	}
 
 	// ALWAYS Clear Current Scene First
@@ -548,6 +558,45 @@ void CSQC_UpdateView(float w, float h)
 	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
+
+	// Draw the aiming reticle for weapons that use it
+	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
+	// It must be a persisted float for fading out to work properly (you let go of the zoom button for
+	// the view to go back to normal, so reticle_type would become 0 as we fade out)
+	if(spectatee_status || getstati(STAT_HEALTH) <= 0)
+		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
+	else if(button_zoom)
+		reticle_type = 1; // normal zoom
+	else if(activeweapon == WEP_NEX && button_attack2)
+		reticle_type = 2; // nex zoom
+
+	if(cvar("cl_reticle_stretch"))
+	{
+		reticle_size_x = vid_conwidth;
+		reticle_size_y = vid_conheight;
+		reticle_pos_x = 0;
+		reticle_pos_y = 0;
+	}
+	else
+	{
+		reticle_size_x = max(vid_conwidth, vid_conheight);
+		reticle_size_y = max(vid_conwidth, vid_conheight);
+		reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
+		reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
+	}
+
+	if(cvar("cl_reticle_item_normal"))
+	{
+		precache_pic("gfx/reticle_normal");
+		if(reticle_type == 1 && current_zoomfraction)
+			drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_item_normal"), DRAWFLAG_NORMAL);
+	}
+	if(cvar("cl_reticle_item_nex"))
+	{
+		precache_pic("gfx/reticle_nex");
+		if(reticle_type == 2 && current_zoomfraction)
+			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_item_nex"), DRAWFLAG_NORMAL);
+	}
 
 	// Draw the mouse cursor
 	// NOTE: drawpic must happen after R_RenderScene for some reason
