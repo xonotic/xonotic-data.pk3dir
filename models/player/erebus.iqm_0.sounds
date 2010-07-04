@@ -3,7 +3,7 @@
 attack sound/player/soldier/coms/attack 2
 //attacking sound/player/carni-lycan/player/attacking 0
 attackinfive sound/player/soldier/coms/attackinfive 0
-coverme sound/player/torus/coms/coverme 0
+coverme sound/player/soldier/coms/coverme 0
 defend sound/player/soldier/coms/defend 0
 //defending sound/player/carni-lycan/player/defending 0
 //droppedflag sound/player/carni-lycan/player/droppedflag 0
