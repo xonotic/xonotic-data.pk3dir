@@ -498,7 +498,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 		fputs(fh, strcat("seta hud_progressbar_nexball_color \"", cvar_string("hud_progressbar_nexball_color"), "\"", "\n"));
 		fputs(fh, "\n");
 
-		fputs(fh, strcat("seta _hud_panelorder \"", cvar_string("hud_nexball_color"), "\"", "\n"));
+		fputs(fh, strcat("seta _hud_panelorder \"", cvar_string("_hud_panelorder"), "\"", "\n"));
 		fputs(fh, "\n");
 
 		// common cvars for all panels
