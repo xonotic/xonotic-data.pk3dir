@@ -22,7 +22,7 @@ taunt sound/player/pyria-skadi/coms/taunt 5
 teamshoot sound/player/pyria-skadi/coms/teamshoot 4
 death sound/player/pyria-skadi/player/death 3
 drown sound/player/pyria-skadi/player/drown 0
-fall sound/player/pyria-skadi/player/fall1 0
+fall sound/player/pyria-skadi/player/fall 0
 falling sound/player/pyria-skadi/player/falling 0
 gasp sound/player/pyria-skadi/player/gasp 0
 jump sound/player/pyria-skadi/player/jump 0
