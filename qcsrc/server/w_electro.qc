@@ -219,10 +219,10 @@ void lgbeam_think()
     if(trace_fraction < 1)
     {
 	Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage"), WEP_ELECTRO, trace_endpos, force);
-	trace_ent.velocity = trace_ent.velocity * cvar("g_balance_electro_primary_velocityfactor");
+	trace_ent.velocity = trace_ent.velocity * cvar("g_balance_electro_primary_velocityfactor") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
     }
 
-    self.scale = vlen(self.owner.origin - trace_endpos) / 256;
+    self.scale = vlen(self.owner.origin - trace_endpos) / 256 * (0.75 + 0.75 * random());
 }
 
 // experimental lightning gun
