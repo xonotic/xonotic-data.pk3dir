@@ -165,8 +165,6 @@ float GameCommand_Vote(string s, entity e) {
 							print_to(e, strcat("^1You have to wait ^2", ftos(ceil(e.vote_next - time)), "^1 seconds before you can again call a vote."));
 					} else if(VoteCheckNasty(vote)) {
 						print_to(e, "Syntax error in command. See 'vhelp' for more info.");
-					} else if(cvar("timelimit") == 0 && (vote == "extendmatchtime" || vote == "reducematchtime")) {
-						print_to(e, "^1Match time can not be reduced or extended as it is infinite. See 'vhelp' for more info.");
 					} else if(RemapVote(vote, "vcall", e)) {
 						votecalledvote = strzone(RemapVote_vote);
 						votecalledvote_display = strzone(RemapVote_display);
@@ -205,7 +203,7 @@ float GameCommand_Vote(string s, entity e) {
 				VoteDialog_Reset();
 				VoteStop(e);
 			} else {
-				print_to(e, "^1You are not allowed to stop that vote.");
+				print_to(e, "^1You are not allowed to stop that Vote.");
 			}
 		} else if(argv(1) == "master") {
 			if(cvar("sv_vote_master")) {
