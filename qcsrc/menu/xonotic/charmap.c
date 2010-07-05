@@ -122,6 +122,7 @@ float XonoticCharmap_keyDown(entity me, float key, float ascii, float shift)
 			return 1;
 		case K_SPACE:
 		case K_ENTER:
+		case K_KP_ENTER:
 		case K_INS:
 		case K_KP_INS:
 			me.controlledTextbox.enterText(me.controlledTextbox, CharMap_CellToChar(me.selectedCharacterCell));
