@@ -1,3 +1,4 @@
 float autocvar_sv_cheats;
 float autocvar_g_bastet;
 var float autocvar_g_movement_highspeed = 1;
+var float autocvar_sys_ticrate;

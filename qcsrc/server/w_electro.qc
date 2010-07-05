@@ -184,23 +184,66 @@ void W_Electro_Attack2()
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
 }
 
+void lgbeam_think()
+{
+    if (!self.owner.BUTTON_ATCK || self.owner.ammo_cells <= 0) // || (self.ammo_cells <= 0 && !(self.items & IT_UNLIMITED_WEAPON_AMMO)))
+    {
+        sound (self, CHAN_PROJECTILE, "sound/misc/null.wav", VOL_BASE, ATTN_NORM);
+        remove(self);
+        return;
+    }
+
+    if (time - self.shot_spread + random() * 0.2 > 0)
+    {
+        self.shot_spread = time + 2;
+        sound (self, CHAN_PROJECTILE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
+    }
+
+    if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	self.ammo_cells = self.ammo_cells - cvar("g_balance_electro_primary_ammo");
+
+    self.nextthink = time + self.ticrate;
+
+    //w_deathtypestring = "was phased out of existence";
+
+    makevectors(self.owner.v_angle);
+    vector angle;
+    angle = v_forward;
+
+    vector force;
+    force = angle * cvar("g_balance_electro_primary_force");
+
+    traceline_antilag(self.owner, self.owner.origin, self.owner.origin + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+
+    // apply the damage
+    if(trace_fraction < 1)
+    {
+	Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage"), WEP_ELECTRO, trace_endpos, force);
+	trace_ent.velocity = trace_ent.velocity * cvar("g_balance_electro_primary_velocityfactor");
+    }
+
+    self.scale = vlen(self.owner.origin - trace_endpos) / 256;
+}
+
 // experimental lightning gun
 void W_Electro_Attack3 (void)
 {
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - cvar("g_balance_electro_primary_ammo");
-	W_SetupShot (self, TRUE, 0, "weapons/crylink_fire2.wav", cvar("g_balance_electro_primary_damage"));
+	entity beam;
 
-	WarpZone_traceline_antilag(self, w_shotorg, w_shotorg + w_shotdir * cvar("g_balance_electro_primary_radius"), FALSE, self, ANTILAG_LATENCY(self));
-
-	float i;
-	for (i = 0; i < vlen(trace_endpos - w_shotorg)/25; ++i)
-	{
-		pointparticles(particleeffectnum("electro_lightning"), w_shotorg + (i / floor(vlen(w_shotorg - trace_endpos)/25)) * (trace_endpos - w_shotorg), w_shotdir * 1000, 1);
-	}
-
-	if (trace_fraction < 1)
-		Damage(trace_ent, self, self, cvar("g_balance_electro_primary_damage"), WEP_ELECTRO | HITTYPE_SECONDARY, trace_endpos, cvar("g_balance_electro_primary_force") * w_shotdir);
+	beam = spawn();
+	beam.ticrate = autocvar_sys_ticrate;
+	setmodel(beam,"models/turrets/phaser_beam.md3");
+	beam.effects = EF_LOWPRECISION;
+	beam.solid = SOLID_NOT;
+	beam.think = lgbeam_think;
+	beam.shot_spread = 0;
+	beam.scale = cvar("g_balance_electro_primary_range") / 256;
+	beam.nextthink = time;
+	beam.owner = self;
+	beam.movetype = MOVETYPE_NONE;
+	beam.bot_dodge = TRUE;
+	beam.bot_dodgerating = cvar("g_balance_electro_primary_damage")/autocvar_sys_ticrate;
+    	setattachment(beam, self.weaponentity, "shot");
 }
 
 void spawnfunc_weapon_electro (void)
@@ -224,6 +267,7 @@ void w_electro_checkattack()
 }
 
 .float bot_secondary_electromooth;
+.float BUTTON_ATCK_prev;
 float w_electro(float req)
 {
 	if (req == WR_AIM)
@@ -255,9 +299,16 @@ float w_electro(float req)
 		if (weapon_prepareattack(0, cvar("g_balance_electro_primary_refire")))
 		{
 			if(cvar("g_balance_electro_lightning"))
-				W_Electro_Attack3();
+			{
+				if (self.BUTTON_ATCK_prev == 0)
+				{
+					W_Electro_Attack3();
+				}
+			}
 			else
+			{
 				W_Electro_Attack();
+			}
 			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_electro_primary_animtime"), w_ready);
 		}
 		if (self.BUTTON_ATCK2)
@@ -293,6 +344,7 @@ float w_electro(float req)
 	{
 		self.electro_secondarytime = time;
 	}
+	self.BUTTON_ATCK_prev = self.BUTTON_ATCK;
 	return TRUE;
 };
 #endif
