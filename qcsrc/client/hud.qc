@@ -1585,24 +1585,21 @@ void HUD_WeaponIcons(void)
 					a = 0;
 			}
 
-			vector complain_bubble_size = '100 50 0' * bound(0.25, autocvar_hud_weaponicons_complainbubble_size, 2);
-			drawpic_aspect_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) - complain_bubble_size + 0.5 * (eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows)), "weapon_complainbubble", complain_bubble_size, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-
 			string s;
 			if(complain_weapon_type == 0) {
-				s = "Out of ammo for the";
+				s = "Out of ammo";
 				color = '1 0 0';
 			}
 			else if(complain_weapon_type == 1) {
-				s = "You don't have the";
+				s = "Don't have";
 				color = '1 1 0';
 			}
 			else {
-				s = "Map doesn't have the";
+				s = "Unavailable";
 				color = '1 1 1';
 			}
-			drawstring_aspect(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) - complain_bubble_size + eX * 0.05 * complain_bubble_size_x + eY * (1/6) * complain_bubble_size_y + 0.5 * (eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows)), s, eX * 0.9 * complain_bubble_size_x + eY * 0.2 * complain_bubble_size_y, 0.2 * complain_bubble_size_y, color, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-			drawstring_aspect(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) - complain_bubble_size + eX * 0.05 * complain_bubble_size_x + eY * (11/30) * complain_bubble_size_y + 0.5 * (eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows)), complain_weapon_name, eX * 0.9 * complain_bubble_size_x + eY * 0.25 * complain_bubble_size_y, 0.25 * complain_bubble_size_y, '1 0 0', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, "weapon_complainbubble", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows) - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, s, eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows) - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, mySize_y*(1/rows), '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
 		++row;
