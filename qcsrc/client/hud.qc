@@ -1747,8 +1747,10 @@ void HUD_Inventory(void)
 			if(autocvar__hud_configure)
 				i = 2;
 			if (currently_selected || autocvar__hud_configure)
+			{
 				DrawAmmoItem(pos, mySize, i, currently_selected);
-			break;
+				break;
+			}
 		} else {
 			DrawAmmoItem(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), i, currently_selected);
 			++row;
