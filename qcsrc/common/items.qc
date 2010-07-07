@@ -32,15 +32,16 @@ void register_weapons_done()
 	dummy_weapon_info.classname = "weapon_info";
 	dummy_weapon_info.weapon = 0; // you can recognize dummies by this
 	dummy_weapon_info.weapons = 0; // you can recognize dummies by this too
-	dummy_weapon_info.netname = "@!#%'n Tuba";
+	dummy_weapon_info.netname = "";
+	dummy_weapon_info.message = "@!#%'n Tuba";
 	dummy_weapon_info.items = 0;
 	dummy_weapon_info.weapon_func = w_null;
 	dummy_weapon_info.mdl = "";
 	dummy_weapon_info.model = "";
 	dummy_weapon_info.spawnflags = 0;
+	dummy_weapon_info.model2 = "";
 	dummy_weapon_info.impulse = -1;
 	dummy_weapon_info.bot_pickupbasevalue = 0;
-	dummy_weapon_info.model2 = "";
 
 	float i;
 	weaponorder_byid = "";

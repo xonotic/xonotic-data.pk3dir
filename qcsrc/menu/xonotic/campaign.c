@@ -315,7 +315,7 @@ void XonoticCampaignList_setSelected(entity me, float i)
 
 float XonoticCampaignList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_SPACE)
+	if(scan == K_ENTER || scan == K_SPACE || scan == K_KP_ENTER)
 		CampaignList_LoadMap(me, me);
 	else
 		return SUPER(XonoticCampaignList).keyDown(me, scan, ascii, shift);

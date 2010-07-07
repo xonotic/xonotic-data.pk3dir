@@ -582,7 +582,7 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
 	sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
 
-	if(scan == K_ENTER)
+	if(scan == K_ENTER || scan == K_KP_ENTER)
 	{
 		ServerList_Connect_Click(NULL, me);
 		return 1;
@@ -592,7 +592,7 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 		main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 		DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 	}
-	else if(scan == K_INS || scan == K_MOUSE3)
+	else if(scan == K_INS || scan == K_MOUSE3 || scan == K_KP_INS)
 	{
 		i = me.selectedItem;
 		if(i < me.nItems)
