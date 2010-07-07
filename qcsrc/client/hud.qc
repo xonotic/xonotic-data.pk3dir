@@ -298,7 +298,6 @@ void HUD_DrawCenterPrint (void)
 		ts = centerprint_messages[i];
 		if (ts != "")
 		{
-			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 			drawcolorcodedstring(pos, ts, centerprint_fontsize, a, DRAWFLAG_NORMAL);
 			//  - '0 0.5 0' * (sz - 1) * centerprint_fontsize_x - '0.5 0 0' * (sz - 1) * centerprint_width[i] * centerprint_fontsize_y, centerprint_fontsize * sz
 			pos_y = pos_y + centerprint_fontsize_y;
@@ -2263,7 +2262,6 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
 	
 	if(msg == MSG_SUICIDE) {
-		// TODO: cl_gentle
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
@@ -3145,14 +3143,14 @@ void HUD_Score(void)
 	}
 
 	float score, distribution, leader;
-	float score_len;
 	vector distribution_color;
 	entity tm, pl, me;
 	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
 
-	// TODO... this (race part) still uses constant coordinates :/
 	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
-		/*pl = players.sort_next;
+		string timer, distrtimer;
+
+		pl = players.sort_next;
 		if(pl == me)
 			pl = pl.sort_next;
 		if(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)
@@ -3160,50 +3158,30 @@ void HUD_Score(void)
 				pl = world;
 
 		score = me.(scores[ps_primary]);
-
-		float racemin, racesec, racemsec;
-		float distsec, distmsec, minusplus;
-
-		racemin = floor(score/(60 * TIME_FACTOR));
-		racesec = floor((score - racemin*(60 * TIME_FACTOR))/TIME_FACTOR);
-		racemsec = score - racemin*60*TIME_FACTOR - racesec*TIME_FACTOR;
+		timer = seconds_tostring(score/TIME_FACTOR);
+		timer = strcat(timer, ":", ftos_decimals(mod(score, TIME_FACTOR), log(TIME_FACTOR)));
 
 		if (pl && ((!(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)) || score)) {
 			// distribution display
 			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
 
-			if (distribution < TIME_FACTOR && distribution > -TIME_FACTOR)
-				distmsec = fabs(distribution);
-			else {
-				distsec = floor(fabs(distribution)/TIME_FACTOR);
-				distmsec = fabs(distribution) - distsec*TIME_FACTOR;
-				if (distribution < 0)
-					distsec = -distsec;
-			}
+			distrtimer = seconds_tostring(distribution/TIME_FACTOR);
+			distrtimer = strcat(timer, ":", ftos_decimals(mod(distribution, TIME_FACTOR), log(TIME_FACTOR)));
 
 			if (distribution <= 0) {
-				distribution_color = eY;
-				minusplus = 1; // minusplus 1: always prefix with minus sign
+				distribution_color = '0 1 0';
 			}
 			else {
-				distribution_color = eX;
-				minusplus = 2; // minusplus 1: always prefix with plus sign
+				distribution_color = '1 0 0';
 			}
-			//HUD_DrawXNum(bottomright - '0 48 0' - '16 0 0' * TIME_DECIMALS, distmsec, -TIME_DECIMALS, 0, 16, distribution_color, 0, 0, panel_fg_alpha, DRAWFLAG_NORMAL);
-			//HUD_DrawXNum(bottomright - '68 48 0' - '16 0 0' * TIME_DECIMALS, distsec, 4, minusplus, 16, distribution_color, 0, 0, panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawpic_aspect_skin(bottomright - '10 48 0' - '16 0 0' * TIME_DECIMALS, "num_dot", '16 16 0', distribution_color, panel_fg_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(pos + eX * 0.75 * mySize_x, distrtimer, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		// race record display
-		if (distribution <= 0 || distribution == score) // draw the highlight background behind the timer if we have the lead
-			drawpic_aspect_skin(bottomright - '0 32 0' - '32 0 0' * (4 + TIME_DECIMALS), "num_leading_4", '0 28 0' + '32 0 0' * (4 + TIME_DECIMALS), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-
-		//HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0', racemsec, -TIME_DECIMALS, 0, 30, '1 1 1', 0, 0, panel_fg_alpha, DRAWFLAG_NORMAL);
-		//HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0'  - '66 0 0', racesec, -2, 0, 30, '1 1 1', 0, 0, panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawpic_aspect_skin(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '18 0 0', "num_dot", '30 30 0', '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE);
-
-		//HUD_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '132 0 0', racemin, -2, 0, 30, '1 1 1', 0, 0, panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawpic_aspect_skin(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '84 0 0', "num_colon", '30 30 0', '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE);
-		*/
+		if (distribution <= 0)
+			HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawfont = hud_bigfont;
+		drawstring_aspect(pos, timer, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawfont = hud_font;
 	} else if (!teamplay) { // non-teamgames
 		// me vector := [team/connected frags id]
 		pl = players.sort_next;
@@ -3232,8 +3210,6 @@ void HUD_Score(void)
 		else
 			distribution_color = eX;
 
-		score_len = strlen(ftos(score));
-
 		drawstring_aspect(pos + eX * 0.75 * mySize_x, ftos(distribution), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		if (leader)
 			HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -3253,8 +3229,6 @@ void HUD_Score(void)
 				score = 123;
 			leader = 0;
 			
-			score_len = strlen(ftos(score));
-
 			if (score > max_fragcount)
 				max_fragcount = score;
 
@@ -3359,7 +3333,6 @@ void HUD_RaceTimer (void) {
 
 		if(s != "" && a > 0)
 		{
-			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
@@ -3369,7 +3342,6 @@ void HUD_RaceTimer (void) {
 			if(a > 0)
 			{
 				s = strcat("^1PENALTY: ", ftos_decimals(race_penaltytime * 0.1, 1), " (", race_penaltyreason, ")");
-				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 				drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.8 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
@@ -3394,14 +3366,12 @@ void HUD_RaceTimer (void) {
 		{
 			a = bound(0, 2 - (time - race_mycheckpointtime), 1);
 			s = MakeRaceString(race_mycheckpoint, TIME_DECODE(race_mycheckpointdelta), -!race_mycheckpointenemy, race_mycheckpointlapsdelta, race_mycheckpointenemy);
-			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 		if(race_othercheckpointtime && race_othercheckpointenemy != "")
 		{
 			a = bound(0, 2 - (time - race_othercheckpointtime), 1);
 			s = MakeRaceString(race_othercheckpoint, -TIME_DECODE(race_othercheckpointdelta), -!race_othercheckpointenemy, race_othercheckpointlapsdelta, race_othercheckpointenemy);
-			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
@@ -3415,7 +3385,6 @@ void HUD_RaceTimer (void) {
 					s = strcat("^1PENALTY: ", ftos_decimals(t - time, 1), " (", race_penaltyreason, ")");
 				else
 					s = strcat("^2PENALTY: 0.0 (", race_penaltyreason, ")");
-				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 				drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}

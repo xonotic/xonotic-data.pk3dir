@@ -1,3 +1,5 @@
+float log(float f);
+
 float panel_order[HUD_PANEL_NUM];
 string hud_panelorder_prev;
 
