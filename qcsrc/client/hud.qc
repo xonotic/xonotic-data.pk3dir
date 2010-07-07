@@ -102,7 +102,6 @@ do {\
 	}\
 } while(0)
 
-var string picpath;
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 #define drawpic_aspect_skin(pos,pic,sz,color,alpha,drawflag)\
 do{\
@@ -627,7 +626,7 @@ void HUD_Panel_HlBorder(float myBorder, vector color, float alpha)
 // draw the background/borders
 #define HUD_Panel_DrawBg(alpha)\
 if(panel_bg != "0")\
-	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, strcat(hud_skin_path, "/", panel_bg), panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
+	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
 if(highlightedPanel_prev == active_panel && autocvar__hud_configure)\
 	HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha) * alpha);
 

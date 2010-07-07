@@ -75,6 +75,8 @@ var float panel_accuracy_info_top;
 var float panel_accuracy_foreground_alpha;
 var float panel_accuracy_alreadyvoted_alpha;
 
+var string picpath;
+
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:
 // ----------------------
 // MACRO HELL STARTS HERE
@@ -104,6 +106,10 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 		panel_bg = "border";\
 	} else {\
 		panel_bg = panel_bg_str;\
+	}\
+	panel_bg = strcat(hud_skin_path, "/", panel_bg);\
+	if(precache_pic(panel_bg) == "") {\
+		panel_bg = strcat("gfx/hud/default/", "border");\
 	}\
 }
 
