@@ -3546,8 +3546,8 @@ void HUD_VoteWindow(void)
 	drawstring_aspect(pos, s, eX * mySize_x + eY * (2/8) * mySize_y, '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
 	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (1.75/8), stringwidth_colors);
 	if(autocvar__hud_configure)
-		s = "Configure the HUD";
-	drawstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
+		s = "^1Configure the HUD";
+	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, a * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
 	s = strcat("Yes (", getcommandkey("not bound", "vyes"), "): ", ftos(vote_yescount));
