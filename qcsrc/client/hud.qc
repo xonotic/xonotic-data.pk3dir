@@ -517,9 +517,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 			fputs(fh, strcat("seta hud_", panel_name, "_bg_padding \"", cvar_string(strcat("hud_", panel_name, "_bg_padding")), "\"", "\n"));
 			switch(i) {
 				case HUD_PANEL_WEAPONICONS:
-					fputs(fh, strcat("seta hud_", panel_name, "_accuracy_yellow \"", cvar_string(strcat("hud_", panel_name, "_accuracy_yellow")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble \"", cvar_string(strcat("hud_", panel_name, "_complainbubble")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble_size \"", cvar_string(strcat("hud_", panel_name, "_complainbubble_size")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble_padding \"", cvar_string(strcat("hud_", panel_name, "_complainbubble_padding")), "\"", "\n"));
 					break;
 				case HUD_PANEL_INVENTORY:
 					fputs(fh, strcat("seta hud_", panel_name, "_onlycurrent \"", cvar_string(strcat("hud_", panel_name, "_onlycurrent")), "\"", "\n"));
@@ -537,7 +536,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case HUD_PANEL_NOTIFY:
 					fputs(fh, strcat("seta hud_", panel_name, "_flip \"", cvar_string(strcat("hud_", panel_name, "_flip")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_", panel_name, "_info_top \"", cvar_string(strcat("hud_", panel_name, "_info_top")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_", panel_name, "_print \"", cvar_string(strcat("hud_", panel_name, "_print")), "\"", "\n"));
 					break;
 				case HUD_PANEL_RADAR:
 					fputs(fh, strcat("seta hud_", panel_name, "_foreground_alpha \"", cvar_string(strcat("hud_", panel_name, "_foreground_alpha")), "\"", "\n"));
