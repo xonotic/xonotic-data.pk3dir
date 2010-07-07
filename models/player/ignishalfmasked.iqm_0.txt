@@ -1,4 +1,4 @@
-name Ignis - HalfMasked
+name Ignis - Half Masked
 species human
 sex Male
 weight 90

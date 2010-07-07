@@ -7,6 +7,7 @@ CLASS(ListBox) EXTENDS(Item)
 	METHOD(ListBox, mousePress, float(entity, vector))
 	METHOD(ListBox, mouseDrag, float(entity, vector))
 	METHOD(ListBox, mouseRelease, float(entity, vector))
+	METHOD(ListBox, focusLeave, void(entity))
 	ATTRIB(ListBox, focusable, float, 1)
 	ATTRIB(ListBox, selectedItem, float, 0)
 	ATTRIB(ListBox, size, vector, '0 0 0')
@@ -187,6 +188,13 @@ float ListBox_mouseRelease(entity me, vector pos)
 	}
 	me.pressed = 0;
 	return 1;
+}
+void ListBox_focusLeave(entity me)
+{
+	// Reset the var pressed in case listbox loses focus
+	// by a mouse click on an item of the list
+	// for example showing a dialog on right click
+	me.pressed = 0;
 }
 void ListBox_updateControlTopBottom(entity me)
 {

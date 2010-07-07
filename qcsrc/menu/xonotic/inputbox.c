@@ -74,7 +74,7 @@ float XonoticInputBox_keyDown(entity me, float key, float ascii, float shift)
 {
 	float r;
 	r = 0;
-	if(key == K_ENTER)
+	if(key == K_ENTER || key == K_KP_ENTER)
 	{
 		if(me.cvarName)
 		{

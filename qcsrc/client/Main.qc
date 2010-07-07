@@ -213,9 +213,9 @@ void CSQC_Shutdown(void)
 	if not(isdemo())
 	{
 		if not(calledhooks & HOOK_START)
-			localcmd("\n_cl_hook_gamestart nop;");
+			localcmd("\n_cl_hook_gamestart nop\n");
 		if not(calledhooks & HOOK_END)
-			localcmd("\ncl_hook_gameend;");
+			localcmd("\ncl_hook_gameend\n");
 	}
 }
 
@@ -965,7 +965,7 @@ void Gamemode_Init()
 
 	if not(isdemo())
 	{
-		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), ";");
+		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), "\n");
 		calledhooks |= HOOK_START;
 	}
 }
