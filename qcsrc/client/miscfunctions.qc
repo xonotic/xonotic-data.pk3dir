@@ -581,6 +581,28 @@ void drawstring_expanding(vector position, string text, vector scale, vector rgb
 	drawfontscale = '1 1 0';
 }
 
+// drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
+void drawstring_aspect_expanding(vector pos, string text, vector sz, vector color, float alpha, float drawflag, float fadelerp) {
+	vector textsize;
+	textsize = eX * stringwidth(text, FALSE, '1 1 1' * sz_y) + eY * sz_y;
+	
+	float textaspect;
+	textaspect = textsize_x/textsize_y;
+
+	vector oldsz;
+	oldsz = sz;
+	float aspect;
+	aspect = sz_x/sz_y;
+
+	if(aspect > textaspect) {
+		sz_x = sz_y * textaspect;
+		drawstring_expanding(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag, fadelerp);
+	} else {
+		sz_y = sz_x / textaspect; 
+		drawstring_expanding(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag, fadelerp);
+	}
+}
+
 void drawcolorcodedstring_expanding(vector position, string text, vector scale, float alpha, float flag, float fadelerp)
 {
 	float sz;
@@ -590,6 +612,27 @@ void drawcolorcodedstring_expanding(vector position, string text, vector scale, 
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
 	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, TRUE, scale * (sz / drawfontscale_x)) / (scale_x * sz)), text, scale * (sz / drawfontscale_x), alpha * (1 - fadelerp), flag);
 	drawfontscale = '1 1 0';
+}
+
+void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, float alpha, float drawflag, float fadelerp) {
+	vector textsize;
+	textsize = eX * stringwidth(text, TRUE, '1 1 1' * sz_y) + eY * sz_y;
+	
+	float textaspect;
+	textaspect = textsize_x/textsize_y;
+
+	vector oldsz;
+	oldsz = sz;
+	float aspect;
+	aspect = sz_x/sz_y;
+
+	if(aspect > textaspect) {
+		sz_x = sz_y * textaspect;
+		drawcolorcodedstring_expanding(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag, fadelerp);
+	} else {
+		sz_y = sz_x / textaspect; 
+		drawcolorcodedstring_expanding(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag, fadelerp);
+	}
 }
 
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...

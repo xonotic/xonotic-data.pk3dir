@@ -3940,8 +3940,8 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	} else {
 		drawstring_aspect(pos, "Personal best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring_aspect(pos + eY * 0.25 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		//drawstring_expanding(pos, "Personal best ", '1 1 0' * 0.15 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
-		//drawstring_expanding(pos + eY * 0.2 * mySize_y, TIME_ENCODED_TOSTRING(t), '1 1 0' * 0.2 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect_expanding(pos, "Personal best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect_expanding(pos + eY * 0.25 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 	}
 
 	// server record
@@ -3958,8 +3958,8 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	} else {
 		drawstring_aspect(pos + eY * 0.5 * mySize_y, "Server best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring_aspect(pos + eY * 0.75 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		//drawstring_expanding(pos + eY * 0.5 * mySize_y, "Server best ", '1 1 0' * 0.15 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
-		//drawstring_expanding(pos + eY * 0.5 * mySize_y + eY * 0.2 * mySize_y, TIME_ENCODED_TOSTRING(t),'1 1 0' * 0.2 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect_expanding(pos + eY * 0.5 * mySize_y, "Server best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect_expanding(pos + eY * 0.75 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 	}
 
 	if (race_status != race_status_prev || race_status_name != race_status_name_prev) {
