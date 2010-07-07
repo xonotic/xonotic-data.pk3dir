@@ -553,63 +553,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 	fclose(fh);
 }
 
-// return smoothly faded size of given panel when a dialog is active
-vector HUD_Panel_GetMenuSize(float id)
-{
-	vector mySize;
-	mySize = panel_size;
-
-	mySize = eX * mySize_x * vid_conwidth + eY * mySize_y * vid_conheight;
-
-	if(disable_menu_alphacheck == 2 && id == highlightedPanel)
-	{
-		vector menu_enable_maxsize, menu_enable_size;
-		menu_enable_maxsize = '0 0 0'; // shut up FTEQCC
-		menu_enable_maxsize_x = 0.3 * vid_conwidth;
-		menu_enable_maxsize_y = 0.18 * vid_conheight;
-		if(mySize_x > mySize_y)
-		{
-			if(mySize_y > menu_enable_maxsize_y)
-			{
-				menu_enable_size_y = menu_enable_maxsize_y;
-				menu_enable_size_x = mySize_x * (menu_enable_maxsize_y/mySize_y);
-				mySize = (1 - autocvar__menu_alpha) * mySize + (autocvar__menu_alpha) * menu_enable_size;
-			}
-		}
-		else
-		{
-			if(mySize_x > menu_enable_maxsize_x)
-			{
-				menu_enable_size_x = menu_enable_maxsize_x;
-				menu_enable_size_y = mySize_y * (menu_enable_maxsize_x/mySize_x);
-				mySize = (1 - autocvar__menu_alpha) * mySize + (autocvar__menu_alpha) * menu_enable_size;
-			}
-		}
-	}
-	return mySize;
-}
-
-// return smoothly faded pos of given panel when a dialog is active
-vector HUD_Panel_GetMenuPos(float id)
-{
-	vector pos;
-	pos = panel_pos;
-
-	pos = eX * pos_x * vid_conwidth + eY * pos_y * vid_conheight;
-
-	if(disable_menu_alphacheck == 2 && id == highlightedPanel)
-	{
-		vector mySize, menu_enable_panelpos;
-		mySize = HUD_Panel_GetMenuSize(id);
-		if(mySize_x > mySize_y)
-			menu_enable_panelpos = eX * 0.5 * vid_conwidth - eX * 0.5 * mySize_x + eY * 0.82 * vid_conheight;
-		else
-			menu_enable_panelpos = eY * 0.5 * vid_conheight - eY * 0.5 * mySize_y + eX * 0.7 * vid_conwidth;
-		pos = (1 - autocvar__menu_alpha) * pos + (autocvar__menu_alpha) * menu_enable_panelpos;
-	}
-	return pos;
-}
-
 const float hlBorderSize = 4;
 const string hlBorder = "gfx/hud/default/border_highlighted";
 const string hlBorder2 = "gfx/hud/default/border_highlighted2";

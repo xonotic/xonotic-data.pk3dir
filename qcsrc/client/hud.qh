@@ -202,6 +202,40 @@ HUD_Panel_GetBorder()\
 HUD_Panel_GetScaledVectors()\
 HUD_Panel_GetPadding()
 
+// return smoothly faded pos of given panel when a dialog is active
+var vector menu_enable_panelpos;
+#define HUD_Panel_GetMenuPos() \
+if(panel_size_x > panel_size_y)\
+	menu_enable_panelpos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size_x + eY * 0.82 * vid_conheight;\
+else\
+	menu_enable_panelpos = eY * 0.5 * vid_conheight - eY * 0.5 * panel_size_y + eX * 0.7 * vid_conwidth;\
+panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_panelpos;
+
+// return smoothly faded size of given panel when a dialog is active
+var vector menu_enable_maxsize;
+var vector menu_enable_size;
+#define HUD_Panel_GetMenuSize()\
+menu_enable_maxsize_x = 0.3 * vid_conwidth;\
+menu_enable_maxsize_y = 0.18 * vid_conheight;\
+if(panel_size_x > panel_size_y)\
+{\
+	if(panel_size_y > menu_enable_maxsize_y)\
+	{\
+		menu_enable_size_y = menu_enable_maxsize_y;\
+		menu_enable_size_x = panel_size_x * (menu_enable_maxsize_y/panel_size_y);\
+		panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;\
+	}\
+}\
+else\
+{\
+	if(panel_size_x > menu_enable_maxsize_x)\
+	{\
+		menu_enable_size_x = menu_enable_maxsize_x;\
+		menu_enable_size_y = panel_size_y * (menu_enable_maxsize_x/panel_size_x);\
+		panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;\
+	}\
+}
+
 // Update all common cvars of given panel name
 #define HUD_Panel_UpdateCvars(name) \
 panel_enabled = autocvar_hud_##name; \
@@ -213,7 +247,11 @@ panel_bg_color_team_str = autocvar_hud_##name##_bg_color_team; \
 panel_bg_alpha_str = autocvar_hud_##name##_bg_alpha; \
 panel_bg_border_str = autocvar_hud_##name##_bg_border; \
 panel_bg_padding_str = autocvar_hud_##name##_bg_padding; \
-HUD_Panel_StringVars()
+HUD_Panel_StringVars()\
+if(disable_menu_alphacheck == 2 && active_panel == highlightedPanel) {\
+	HUD_Panel_GetMenuSize()\
+	HUD_Panel_GetMenuPos()\
+}
 
 // Update all common cvars of given panel id
 #define HUD_Panel_UpdateCvarsForId(id) \
@@ -240,6 +278,10 @@ switch(id) { \
 panel_pos = autocvar_hud_##name##_pos; \
 panel_size = autocvar_hud_##name##_size; \
 HUD_Panel_GetScaledVectors()\
+if(disable_menu_alphacheck == 2 && active_panel == highlightedPanel) {\
+	HUD_Panel_GetMenuSize()\
+	HUD_Panel_GetMenuPos()\
+}\
 panel_bg_border_str = autocvar_hud_##name##_bg_border; \
 HUD_Panel_GetBorder()
 
