@@ -636,17 +636,24 @@ void HUD_Panel_DrawProgressBar(vector pos, float vertical, vector mySize, vector
 		return;
 
 	string pic;
-	pic = strcat(hud_skin_path, "/");
 	if(vertical) {
-		drawsubpic(pos, eY * min(mySize_y * 0.5, mySize_x) + eX * mySize_x, strcat(pic, "statusbar_vertical"), '0 0 0', '1 0.25 0', color, alpha, drawflag);
+		pic = strcat(hud_skin_path, "/statusbar_vertical");
+		if(precache_pic(pic) == "") {
+			pic = "gfx/hud/default/statusbar_vertical";
+		}
+		drawsubpic(pos, eY * min(mySize_y * 0.5, mySize_x) + eX * mySize_x, pic, '0 0 0', '1 0.25 0', color, alpha, drawflag);
 		if(mySize_y/mySize_x > 2)
-			drawsubpic(pos + eY * mySize_x, eY * (mySize_y - 2 * mySize_x) + eX * mySize_x, strcat(pic, "statusbar_vertical"), '0 0.25 0', '1 0.5 0', color, alpha, drawflag);
-		drawsubpic(pos + eY * mySize_y - eY * min(mySize_y * 0.5, mySize_x), eY * min(mySize_y * 0.5, mySize_x) + eX * mySize_x, strcat(pic, "statusbar_vertical"), '0 0.75 0', '1 0.25 0', color, alpha, drawflag);
+			drawsubpic(pos + eY * mySize_x, eY * (mySize_y - 2 * mySize_x) + eX * mySize_x, pic, '0 0.25 0', '1 0.5 0', color, alpha, drawflag);
+		drawsubpic(pos + eY * mySize_y - eY * min(mySize_y * 0.5, mySize_x), eY * min(mySize_y * 0.5, mySize_x) + eX * mySize_x, pic, '0 0.75 0', '1 0.25 0', color, alpha, drawflag);
 	} else {
-		drawsubpic(pos, eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, strcat(pic, "statusbar"), '0 0 0', '0.25 1 0', color, alpha, drawflag);
+		pic = strcat(hud_skin_path, "/statusbar");
+		if(precache_pic(pic) == "") {
+			pic = "gfx/hud/default/statusbar";
+		}
+		drawsubpic(pos, eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, pic, '0 0 0', '0.25 1 0', color, alpha, drawflag);
 		if(mySize_x/mySize_y > 2)
-			drawsubpic(pos + eX * mySize_y, eX * (mySize_x - 2 * mySize_y) + eY * mySize_y, strcat(pic, "statusbar"), '0.25 0 0', '0.5 1 0', color, alpha, drawflag);
-		drawsubpic(pos + eX * mySize_x - eX * min(mySize_x * 0.5, mySize_y), eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, strcat(pic, "statusbar"), '0.75 0 0', '0.25 1 0', color, alpha, drawflag);
+			drawsubpic(pos + eX * mySize_y, eX * (mySize_x - 2 * mySize_y) + eY * mySize_y, pic, '0.25 0 0', '0.5 1 0', color, alpha, drawflag);
+		drawsubpic(pos + eX * mySize_x - eX * min(mySize_x * 0.5, mySize_y), eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, pic, '0.75 0 0', '0.25 1 0', color, alpha, drawflag);
 	}
 }
 
