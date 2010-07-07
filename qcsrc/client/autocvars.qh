@@ -6,6 +6,10 @@ var float autocvar_cl_gibs_sloppy = 1;
 var float autocvar_cl_casings_ticrate = 0.1;
 var float autocvar_cl_casings_sloppy = 1;
 
+var float autocvar_cl_gentle;
+var float autocvar_cl_gentle_gibs;
+var float autocvar_cl_gentle_messages;
+
 var float autocvar__menu_alpha;
 
 var float autocvar__hud_configure;
