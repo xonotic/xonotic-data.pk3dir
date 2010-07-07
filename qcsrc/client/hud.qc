@@ -663,11 +663,15 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float alph
 		return;
 
 	string pic;
-	pic = strcat(hud_skin_path, "/");
-	drawsubpic(pos, eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, strcat(pic, "num_leading"), '0 0 0', '0.25 1 0', color, alpha, drawflag);
+	pic = strcat(hud_skin_path, "/num_leading");
+	if(precache_pic(pic) == "") {
+		pic = "gfx/hud/default/num_leading";
+	}
+
+	drawsubpic(pos, eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, pic, '0 0 0', '0.25 1 0', color, alpha, drawflag);
 	if(mySize_x/mySize_y > 2)
-		drawsubpic(pos + eX * mySize_y, eX * (mySize_x - 2 * mySize_y) + eY * mySize_y, strcat(pic, "num_leading"), '0.25 0 0', '0.5 1 0', color, alpha, drawflag);
-	drawsubpic(pos + eX * mySize_x - eX * min(mySize_x * 0.5, mySize_y), eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, strcat(pic, "num_leading"), '0.75 0 0', '0.25 1 0', color, alpha, drawflag);
+		drawsubpic(pos + eX * mySize_y, eX * (mySize_x - 2 * mySize_y) + eY * mySize_y, pic, '0.25 0 0', '0.5 1 0', color, alpha, drawflag);
+	drawsubpic(pos + eX * mySize_x - eX * min(mySize_x * 0.5, mySize_y), eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, pic, '0.75 0 0', '0.25 1 0', color, alpha, drawflag);
 }
 
 // check if move will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector
@@ -4735,8 +4739,16 @@ void HUD_Main (void)
 	else
 		color = stov(autocvar_hud_dock_color);
 
+	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
-		drawpic('0 0 0', strcat("gfx/hud/", autocvar_hud_skin, "/", autocvar_hud_dock), eX * vid_conwidth + eY * vid_conheight, color, autocvar_hud_dock_alpha * menu_fade_alpha, DRAWFLAG_NORMAL); // no aspect ratio forcing on dock...
+	{
+		string pic;
+		pic = strcat(hud_skin_path, "/", autocvar_hud_dock);
+		if(precache_pic(pic) == "") {
+			pic = "gfx/hud/default/dock";
+		}
+		drawpic('0 0 0', pic, eX * vid_conwidth + eY * vid_conheight, color, autocvar_hud_dock_alpha * menu_fade_alpha, DRAWFLAG_NORMAL); // no aspect ratio forcing on dock...
+	}
 
 	// cache the panel order into the panel_order array
 	if(autocvar__hud_panelorder != hud_panelorder_prev) {
