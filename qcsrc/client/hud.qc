@@ -1551,7 +1551,7 @@ void HUD_WeaponIcons(void)
 				color = '1 1 1';
 			}
 			drawpic_aspect_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, "weapon_complainbubble", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows) - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring_aspect(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, s, eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows) - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, mySize_y*(1/rows), '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawstring_aspect(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, s, eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows) - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
 		++row;
@@ -1659,7 +1659,7 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 		drawpic_aspect_skin(newPos, "ammo_current_bg", newSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	drawfont = hud_bigfont;
-	drawstring_aspect(numpos, ftos(a), eX * (2/3) * newSize_x + eY * newSize_y, newSize_y, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(numpos, ftos(a), eX * (2/3) * newSize_x + eY * newSize_y, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 	drawfont = hud_font;
 	drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 }
@@ -1764,7 +1764,7 @@ void DrawNumIcon(float iconalign, vector myPos, vector mySize, float x, string i
 	}
 
 	drawfont = hud_bigfont;
-	drawstring_aspect(numpos, ftos(x), eX * (2/3) * newSize_x + eY * newSize_y, newSize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(numpos, ftos(x), eX * (2/3) * newSize_x + eY * newSize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawfont = hud_font;
 	drawpic_aspect_skin(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
@@ -1936,7 +1936,7 @@ void HUD_Powerups(void) {
 				//drawpic_aspect_skin_expanding_two(picpos, leftname, '0.4 0.4 0' * mySize_x, '1 1 1', leftalpha * panel_fg_alpha, DRAWFLAG_ADDITIVE, bound(0, (leftcnt - leftexact) / 0.5, 1));
 			//else
 				drawpic_aspect_skin(picpos, leftname, '0.4 0.4 0' * mySize_x, '1 1 1', leftalpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring_aspect(numpos, ftos(leftcnt), eX * 0.5 * mySize_x + eY * 0.25 * mySize_x, 0.25 * mySize_x, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(numpos, ftos(leftcnt), eX * 0.5 * mySize_x + eY * 0.25 * mySize_x, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 
 		if(rightcnt)
@@ -1963,7 +1963,7 @@ void HUD_Powerups(void) {
 			//	drawpic_aspect_skin_expanding_two(picpos, rightname, '0.4 0.4 0' * mySize_x, '1 1 1', rightalpha * panel_fg_alpha, DRAWFLAG_ADDITIVE, bound(0, (rightcnt - rightexact) / 0.5, 1));
 			//else
 				drawpic_aspect_skin(picpos, rightname, '0.4 0.4 0' * mySize_x, '1 1 1', rightalpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring_aspect(numpos, ftos(rightcnt), eX * 0.5 * mySize_x + eY * 0.25 * mySize_x, 0.25 * mySize_x, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(numpos, ftos(rightcnt), eX * 0.5 * mySize_x + eY * 0.25 * mySize_x, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
 	drawfont = hud_font;
@@ -2203,7 +2203,7 @@ void HUD_HealthArmor(void)
 				HUD_Panel_GetProgressBarColor(leftname)
 				HUD_Panel_DrawProgressBar(barpos, 1, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawpic_aspect_skin(picpos, leftname, '0.4 0.4 0' * mySize_x, '1 1 1', leftalpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(numpos, ftos(leftcnt), eX * 0.5 * mySize_x + eY * 0.25 * mySize_x, 0.25 * mySize_x, HUD_Get_Num_Color(leftcnt, 200), panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(numpos, ftos(leftcnt), eX * 0.5 * mySize_x + eY * 0.25 * mySize_x, HUD_Get_Num_Color(leftcnt, 200), panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 
 			if(rightactive)
@@ -2227,7 +2227,7 @@ void HUD_HealthArmor(void)
 				HUD_Panel_GetProgressBarColor(rightname)
 				HUD_Panel_DrawProgressBar(barpos, 1, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawpic_aspect_skin(picpos, rightname, '0.4 0.4 0' * mySize_x, '1 1 1', rightalpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(numpos, ftos(rightcnt), eX * 0.5 * mySize_x + eY * 0.25 * mySize_x, 0.25 * mySize_x, HUD_Get_Num_Color(rightcnt, 200), panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(numpos, ftos(rightcnt), eX * 0.5 * mySize_x + eY * 0.25 * mySize_x, HUD_Get_Num_Color(rightcnt, 200), panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 
 			if(fuel)
@@ -3031,7 +3031,7 @@ void HUD_Timer(void)
 	}
 
 	drawfont = hud_bigfont;
-	drawstring_aspect(pos, timer, mySize, mySize_y, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos, timer, mySize, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawfont = hud_font;
 }
 
@@ -3273,11 +3273,11 @@ void HUD_Score(void)
 
 		score_len = strlen(ftos(score));
 
-		drawstring_aspect(pos + eX * 0.75 * mySize_x, ftos(distribution), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eX * 0.75 * mySize_x, ftos(distribution), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		if (leader)
 			HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_bigfont;
-		drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_font;
 	} else { // teamgames
 		float max_fragcount;
@@ -3303,14 +3303,14 @@ void HUD_Score(void)
 				if (leader)
 					HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawfont = hud_bigfont;
-				drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, mySize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawfont = hud_font;
 			} else {
 				if (max_fragcount == score)
 					leader = 1;
 				if (leader)
 					HUD_Panel_DrawHighlight(pos + eX * 0.75 * mySize_x + eY * (1/3) * teamnum * mySize_y, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(pos + eX * 0.75 * mySize_x + eY * (1/3) * teamnum * mySize_y, ftos(score), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, (1/3) * mySize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(pos + eX * 0.75 * mySize_x + eY * (1/3) * teamnum * mySize_y, ftos(score), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 				teamnum += 1;
 			}
 		}
@@ -3543,17 +3543,17 @@ void HUD_VoteWindow(void)
 	mySize = newSize;
 
 	s = "A vote has been called for:";
-	drawstring_aspect(pos, s, eX * mySize_x + eY * (2/8) * mySize_y, mySize_y*(2/8), '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos, s, eX * mySize_x + eY * (2/8) * mySize_y, '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
 	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (1.75/8), stringwidth_colors);
 	if(autocvar__hud_configure)
 		s = "Configure the HUD";
-	drawstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, mySize_y*(1.75/8), '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
 	s = strcat("Yes (", getcommandkey("not bound", "vyes"), "): ", ftos(vote_yescount));
-	drawstring_aspect(pos + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, mySize_y*(1.5/8) , '0 1 0', a * panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '0 1 0', a * panel_fg_alpha, DRAWFLAG_NORMAL);
 	s = strcat("No (", getcommandkey("not bound", "vno"), "): ", ftos(vote_nocount));
-	drawstring_aspect(pos + eX * 0.5 * mySize_x + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, mySize_y*(1.5/8) , '1 0 0', a * panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos + eX * 0.5 * mySize_x + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '1 0 0', a * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// draw the progress bar backgrounds
 	drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_back", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -3974,11 +3974,11 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	f = time - crecordtime_change_time;
 
 	if (f > 1) {
-		drawstring_aspect(pos, "Personal best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eY * 0.25 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos, "Personal best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eY * 0.25 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else {
-		drawstring_aspect(pos, "Personal best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eY * 0.25 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos, "Personal best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eY * 0.25 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		//drawstring_expanding(pos, "Personal best ", '1 1 0' * 0.15 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 		//drawstring_expanding(pos + eY * 0.2 * mySize_y, TIME_ENCODED_TOSTRING(t), '1 1 0' * 0.2 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 	}
@@ -3992,11 +3992,11 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	f = time - srecordtime_change_time;
 
 	if (f > 1) {
-		drawstring_aspect(pos + eY * 0.5 * mySize_y, "Server best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eY * 0.75 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eY * 0.5 * mySize_y, "Server best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eY * 0.75 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else {
-		drawstring_aspect(pos + eY * 0.5 * mySize_y, "Server best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eY * 0.75 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eY * 0.5 * mySize_y, "Server best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eY * 0.75 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		//drawstring_expanding(pos + eY * 0.5 * mySize_y, "Server best ", '1 1 0' * 0.15 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 		//drawstring_expanding(pos + eY * 0.5 * mySize_y + eY * 0.2 * mySize_y, TIME_ENCODED_TOSTRING(t),'1 1 0' * 0.2 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 	}
@@ -4266,7 +4266,7 @@ void HUD_EngineInfo(void)
 	vector color;
 	color = HUD_Get_Num_Color (prevfps, 100);
 	drawfont = hud_bigfont;
-	drawstring_aspect(pos, strcat("FPS: ", ftos_decimals(prevfps, cvar("hud_engineinfo_framecounter_decimals"))), mySize, mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos, strcat("FPS: ", ftos_decimals(prevfps, cvar("hud_engineinfo_framecounter_decimals"))), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawfont = hud_font;
 }
 

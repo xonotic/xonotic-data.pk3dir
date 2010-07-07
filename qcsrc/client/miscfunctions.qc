@@ -483,9 +483,9 @@ void drawpic_expanding_two(vector position, string pic, vector scale, vector rgb
 }
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
-void drawstring_aspect(vector pos, string text, vector sz, float fontsize, vector color, float alpha, float drawflag) {
+void drawstring_aspect(vector pos, string text, vector sz, vector color, float alpha, float drawflag) {
 	vector textsize;
-	textsize = eX * stringwidth(text, FALSE, '1 1 0' * fontsize) + eY * fontsize;
+	textsize = eX * stringwidth(text, FALSE, '1 1 1' * sz_y) + eY * sz_y;
 	
 	float textaspect;
 	textaspect = textsize_x/textsize_y;
@@ -501,6 +501,28 @@ void drawstring_aspect(vector pos, string text, vector sz, float fontsize, vecto
 	} else {
 		sz_y = sz_x / textaspect; 
 		drawstring(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag);
+	}
+}
+
+// drawstring wrapper to draw a colorcodedstring as large as possible with preserved aspect ratio into a box
+void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float alpha, float drawflag) {
+	vector textsize;
+	textsize = eX * stringwidth(text, TRUE, '1 1 1' * sz_y) + eY * sz_y;
+	
+	float textaspect;
+	textaspect = textsize_x/textsize_y;
+
+	vector oldsz;
+	oldsz = sz;
+	float aspect;
+	aspect = sz_x/sz_y;
+
+	if(aspect > textaspect) {
+		sz_x = sz_y * textaspect;
+		drawcolorcodedstring(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag);
+	} else {
+		sz_y = sz_x / textaspect; 
+		drawcolorcodedstring(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag);
 	}
 }
 
