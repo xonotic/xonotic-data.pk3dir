@@ -3360,7 +3360,6 @@ void HUD_RaceTimer (void) {
 		if(s != "" && a > 0)
 		{
 			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-			//drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
@@ -3371,7 +3370,6 @@ void HUD_RaceTimer (void) {
 			{
 				s = strcat("^1PENALTY: ", ftos_decimals(race_penaltytime * 0.1, 1), " (", race_penaltyreason, ")");
 				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-				//drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.8 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
@@ -3379,7 +3377,6 @@ void HUD_RaceTimer (void) {
 		if(forcetime != "")
 		{
 			a = bound(0, (time - race_checkpointtime) / 0.5, 1);
-			//drawstring_expanding(m - '16 0 0' * stringwidth(forcetime, FALSE), forcetime, '32 32 0', '1 1 1', panel_fg_alpha, 0, a);
 			drawstring_expanding(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(forcetime, FALSE, '1 1 0' * 0.6 * mySize_y), forcetime, '1 1 0' * 0.6 * mySize_y, '1 1 1', panel_fg_alpha, 0, a);
 		}
 		else
@@ -3388,7 +3385,6 @@ void HUD_RaceTimer (void) {
 		if(race_laptime && race_checkpoint != 255)
 		{
 			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime));
-			//drawstring(m - '16 0 0' * stringwidth(s, FALSE), s, '32 32 0', '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			drawstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, FALSE, '0.6 0.6 0' * mySize_y), s, '0.6 0.6 0' * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 	}
@@ -3399,7 +3395,6 @@ void HUD_RaceTimer (void) {
 			a = bound(0, 2 - (time - race_mycheckpointtime), 1);
 			s = MakeRaceString(race_mycheckpoint, TIME_DECODE(race_mycheckpointdelta), -!race_mycheckpointenemy, race_mycheckpointlapsdelta, race_mycheckpointenemy);
 			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-			//drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 		if(race_othercheckpointtime && race_othercheckpointenemy != "")
@@ -3407,7 +3402,6 @@ void HUD_RaceTimer (void) {
 			a = bound(0, 2 - (time - race_othercheckpointtime), 1);
 			s = MakeRaceString(race_othercheckpoint, -TIME_DECODE(race_othercheckpointdelta), -!race_othercheckpointenemy, race_othercheckpointlapsdelta, race_othercheckpointenemy);
 			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-			//drawcolorcodedstring(m - '0 0 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
@@ -3422,7 +3416,6 @@ void HUD_RaceTimer (void) {
 				else
 					s = strcat("^2PENALTY: 0.0 (", race_penaltyreason, ")");
 				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-				//drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
