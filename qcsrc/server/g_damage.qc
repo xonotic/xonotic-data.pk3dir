@@ -257,20 +257,21 @@ void Send_KillNotification (string s1, string s2, string s3, float msg, float ty
 	WriteByte(MSG_ALL, type);
 }
 
-// TODO: writespectatable?
 // Function is used to send a generic centerprint whose content CSQC gets to decide (gentle version or not in the below cases)
 void Send_CSQC_Centerprint(entity e, string s1, string s2, float msg, float type)
 {
 	if (clienttype(e) == CLIENTTYPE_REAL)
 	{
 		msg_entity = e;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
-		WriteByte(MSG_ONE, CSQC_CENTERPRINT);
-		WriteString(MSG_ONE, s1);
-		WriteString(MSG_ONE, s2);
-		WriteShort(MSG_ONE, msg);
-		WriteByte(MSG_ONE, type);
+		WRITESPECTATABLE_MSG_ONE({
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
+			WriteByte(MSG_ONE, CSQC_CENTERPRINT);
+			WriteString(MSG_ONE, s1);
+			WriteString(MSG_ONE, s2);
+			WriteShort(MSG_ONE, msg);
+			WriteByte(MSG_ONE, type);
+		});
 	}
 }
 
