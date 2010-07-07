@@ -468,18 +468,58 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 	}
 }
 
-void drawpic_expanding(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)
+// drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
+var float imgaspect;
+var float aspect;
+#define drawpic_aspect(pos,pic,mySize,color,alpha,drawflag)\
+do {\
+	vector imgsize;\
+	imgsize = drawgetimagesize(pic);\
+	imgaspect = imgsize_x/imgsize_y;\
+	vector oldsz, sz;\
+	oldsz = sz = mySize;\
+	aspect = sz_x/sz_y;\
+	if(aspect > imgaspect) {\
+		sz_x = sz_y * imgaspect;\
+		drawpic(pos + eX * (oldsz_x - sz_x) * 0.5, pic, sz, color, alpha, drawflag);\
+	} else {\
+		sz_y = sz_x / imgaspect;\
+		drawpic(pos + eY * (oldsz_y - sz_y) * 0.5, pic, sz, color, alpha, drawflag);\
+	}\
+} while(0)
+
+// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
+#define drawpic_aspect_skin(pos,pic,sz,color,alpha,drawflag)\
+do{\
+	picpath = strcat(hud_skin_path, "/", pic);\
+	if(precache_pic(picpath) == "") {\
+		picpath = strcat("gfx/hud/default/", pic);\
+	}\
+	drawpic_aspect(pos, picpath, sz, color, alpha, drawflag);\
+} while(0)
+
+// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
+#define drawpic_skin(pos,pic,sz,color,alpha,drawflag)\
+do{\
+	picpath = strcat(hud_skin_path, "/", pic);\
+	if(precache_pic(picpath) == "") {\
+		picpath = strcat("gfx/hud/default/", pic);\
+	}\
+	drawpic(pos, picpath, sz, color, alpha, drawflag);\
+} while(0)
+
+void drawpic_aspect_skin_expanding(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)
 {
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
-	drawpic(position + expandingbox_resize_centered_box_offset(sz, scale, 1), pic, scale * sz, rgb, alpha * (1 - fadelerp), flag);
+	drawpic_skin(position + expandingbox_resize_centered_box_offset(sz, scale, 1), pic, scale * sz, rgb, alpha * (1 - fadelerp), flag);
 }
 
-void drawpic_expanding_two(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)
+void drawpic_aspect_skin_expanding_two(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)
 {
-	drawpic_expanding(position, pic, scale, rgb, alpha, flag, fadelerp);
-	drawpic(position, pic, scale, rgb, alpha * fadelerp, flag);
+	drawpic_aspect_skin_expanding(position, pic, scale, rgb, alpha, flag, fadelerp);
+	drawpic_skin(position, pic, scale, rgb, alpha * fadelerp, flag);
 }
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
