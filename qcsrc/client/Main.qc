@@ -183,6 +183,7 @@ void CSQC_Init(void)
 	minimapname = strzone(minimapname);
 
 	WarpZone_Init();
+	hud_configure_prev = -1;
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -212,9 +213,9 @@ void CSQC_Shutdown(void)
 	if not(isdemo())
 	{
 		if not(calledhooks & HOOK_START)
-			localcmd("\n_cl_hook_gamestart nop;");
+			localcmd("\n_cl_hook_gamestart nop\n");
 		if not(calledhooks & HOOK_END)
-			localcmd("\ncl_hook_gameend;");
+			localcmd("\ncl_hook_gameend\n");
 	}
 }
 
@@ -964,7 +965,7 @@ void Gamemode_Init()
 
 	if not(isdemo())
 	{
-		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), ";");
+		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), "\n");
 		calledhooks |= HOOK_START;
 	}
 }
@@ -1223,13 +1224,13 @@ void Net_ReadPingPLReport()
 
 void Net_VoteDialog(float highlight) {
 	if(highlight) {
-		vote_highlighted = ReadShort();
+		vote_highlighted = ReadByte();
 		return;
 	}
 
-	vote_yescount = ReadShort();
-	vote_nocount = ReadShort();
-	vote_needed = ReadShort();
+	vote_yescount = ReadByte();
+	vote_nocount = ReadByte();
+	vote_needed = ReadByte();
 	vote_active = 1;
 }
 
@@ -1249,6 +1250,18 @@ void Net_Notify() {
 	{
 		HUD_Centerprint(ReadString(), ReadString(), ReadShort(), ReadByte());
 	}
+}
+
+void Net_WeaponComplain() {
+	complain_weapon = ReadByte();
+
+	if(complain_weapon_name)
+		strunzone(complain_weapon_name);
+	complain_weapon_name = strzone(ReadString());
+
+	complain_weapon_type = ReadByte();
+
+	complain_weapon_time = time;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
@@ -1319,6 +1332,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_NOTIFY:
 			Net_Notify();
+			bHandled = true;
+			break;
+		case TE_CSQC_WEAPONCOMPLAIN:
+			Net_WeaponComplain();
 			bHandled = true;
 			break;
 		default:

@@ -229,12 +229,6 @@ void relocate_spawnpoint()
         }
     }
 
-    if (cvar("g_spawnpoints_autodrop"))
-    {
-        setsize(self, PL_MIN, PL_MAX);
-        droptofloor();
-    }
-
     self.use = spawnpoint_use;
     self.team_saved = self.team;
     if (!self.cnt)

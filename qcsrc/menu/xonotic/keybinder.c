@@ -240,10 +240,12 @@ float XonoticKeyBinder_keyDown(entity me, float key, float ascii, float shift)
 	switch(key)
 	{
 		case K_ENTER:
+		case K_KP_ENTER:
 		case K_SPACE:
 			KeyBinder_Bind_Change(me, me);
 			break;
 		case K_DEL:
+		case K_KP_DEL:
 		case K_BACKSPACE:
 			KeyBinder_Bind_Clear(me, me);
 			break;

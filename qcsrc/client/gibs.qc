@@ -151,16 +151,16 @@ void Ent_GibSplash(float isNew)
 	org_z = ReadShort() * 4 + 2;
 	vel = decompressShortVector(ReadShort());
 
-	if(cvar("cl_gentle"))
+	if(cvar("cl_gentle_gibs") || cvar("cl_gentle"))
 		type |= 0x80; // set gentle bit
 
 	if(type & 0x80)
 	{
-		if(cvar("cl_gentle") == 2)
+		if(cvar("cl_gentle_gibs") == 2)
 			gentle_prefix = "";
-		else if(cvar("cl_gentle") == 3) 
+		else if(cvar("cl_gentle_gibs") == 3) 
 			gentle_prefix = "happy_";
-		else if(cvar("cl_gentle"))
+		else
 			gentle_prefix = "morphed_";
 	}
 	else if(cvar("cl_particlegibs"))
@@ -169,7 +169,7 @@ void Ent_GibSplash(float isNew)
 		gentle_prefix = "particlegibs_";
 	}
 
-	if not(cvar("cl_gentle"))
+	if not(cvar("cl_gentle_gibs") || cvar("cl_gentle"))
 		amount *= 1 - cvar("cl_nogibs");
 
 	if(cvar("ekg"))
