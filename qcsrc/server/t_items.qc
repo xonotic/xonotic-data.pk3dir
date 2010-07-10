@@ -291,7 +291,7 @@ float Item_GiveTo(entity item, entity player)
 				//	AnnounceTo(player, "ammo");
 
 				if (item.weapons & WEPBIT_MINSTANEX)
-					W_GiveWeapon (player, WEP_MINSTANEX, "Nex");
+					W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
 				if (item.ammo_cells)
 					player.ammo_cells = min (player.ammo_cells + cvar("g_minstagib_ammo_drop"), 999);
 				player.health = 100;
@@ -713,9 +713,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			return;
 		}
 
-		itemid = self.items;
-		weaponid = self.weapons;
-
 		self.reset = Item_Reset;
 		// it's a level item
 		if(self.spawnflags & 1)
@@ -912,7 +909,7 @@ void minstagib_items (float itemid)
 		self.ammo_cells = 1;
 		StartItem ("models/items/a_cells.md3",
 			"misc/itempickup.wav", 45, 0,
-			"Nex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
+			"MinstaNex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
 		return;
 	}
 
@@ -940,7 +937,6 @@ void minstagib_items (float itemid)
 		StartItem ("models/items/g_h100.md3",
 			"misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Extralife", IT_NAILS, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
-
 	}
 	// replace with speed
 	if (itemid == IT_INVINCIBLE)
@@ -950,7 +946,6 @@ void minstagib_items (float itemid)
 			"misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Speed", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
 	}
-
 }
 
 float minst_no_auto_cells;
@@ -1376,9 +1371,6 @@ void spawnfunc_target_items (void)
 	if(!self.invincible_finished)
 		self.invincible_finished = cvar("g_balance_powerup_invincible_time");
 
-	precache_sound("misc/itempickup.wav");
-	precache_sound("misc/itempickup.wav");
-	precache_sound("misc/itempickup.wav");
 	precache_sound("misc/itempickup.wav");
 	precache_sound("misc/megahealth.wav");
 	precache_sound("misc/armor25.wav");
