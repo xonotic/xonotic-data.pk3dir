@@ -891,16 +891,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
  */
 void minstagib_items (float itemid)
 {
-	// we don't want to replace dropped weapons ;)
-	if (self.classname == "droppedweapon")
-	{
-		self.ammo_cells = 25;
-		StartItem ("models/weapons/g_nex.md3",
-			"weapons/weaponpickup.wav", 15, 0,
-			"MinstaNex", 0, WEPBIT_MINSTANEX, FL_WEAPON, generic_pickupevalfunc, 1000);
-		return;
-	}
-
 	local float rnd;
 	self.classname = "minstagib";
 
