@@ -467,6 +467,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_WEAPONICONS:
 					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble \"", cvar_string(strcat("hud_", panel_name, "_complainbubble")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble_padding \"", cvar_string(strcat("hud_", panel_name, "_complainbubble_padding")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_", panel_name, "_ammo_color \"", cvar_string(strcat("hud_", panel_name, "_ammo_color")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_", panel_name, "_ammo_alpha \"", cvar_string(strcat("hud_", panel_name, "_ammo_alpha")), "\"", "\n"));
 					break;
 				case HUD_PANEL_INVENTORY:
 					fputs(fh, strcat("seta hud_", panel_name, "_onlycurrent \"", cvar_string(strcat("hud_", panel_name, "_onlycurrent")), "\"", "\n"));
@@ -1328,6 +1330,41 @@ float weaponorder_cmp(float i, float j, entity pass)
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
+float GetAmmoStat(float i)
+{
+	switch(i)
+	{
+		case 0: return STAT_SHELLS;
+		case 1: return STAT_NAILS;
+		case 2: return STAT_ROCKETS;
+		case 3: return STAT_CELLS;
+		case 4: return STAT_FUEL;
+		default: return -1;
+	}
+}
+
+float GetAmmoTypeForWep(float i)
+{
+	switch(i)
+	{
+		case WEP_SHOTGUN: return 0;
+		case WEP_UZI: return 1;
+		case WEP_CAMPINGRIFLE: return 1;
+		case WEP_GRENADE_LAUNCHER: return 2;
+		case WEP_ELECTRO: return 3;
+		case WEP_CRYLINK: return 3;
+		case WEP_HLAC: return 3;
+		case WEP_MINSTANEX: return 3;
+		case WEP_NEX: return 3;
+		case WEP_HAGAR: return 2;
+		case WEP_ROCKET_LAUNCHER: return 2;
+		case WEP_SEEKER: return 2;
+		case WEP_FIREBALL: return 4;
+		case WEP_HOOK: return 3;
+		default: return -1;
+	}
+}
+
 void HUD_WeaponIcons(void)
 {
 	if(!autocvar_hud_weaponicons && !autocvar__hud_configure)
@@ -1406,15 +1443,20 @@ void HUD_WeaponIcons(void)
 	columns = ceil(WEP_COUNT/rows);
 	float row, column;
 
-	float a;
+	float a, type, fullammo;
 	float when;
 	when = autocvar_hud_weaponicons_complainbubble_time;
 	float fadetime;
 	fadetime = autocvar_hud_weaponicons_complainbubble_fadetime;
 
 	vector color;
+	vector wpnpos;
+	vector wpnsize;
 	for(i = 0; i < weapon_cnt; ++i)
 	{
+		wpnpos = pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
+		wpnsize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+
 		self = weaponorder[i];
 		weapid = self.impulse;
 
@@ -1425,10 +1467,10 @@ void HUD_WeaponIcons(void)
 
 		// draw background behind currently selected weapon
 		if(self.weapon == activeweapon)
-			drawpic_aspect_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "weapon_current_bg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(wpnpos, "weapon_current_bg", wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
-		// draw the weapon accuracy on the HUD
-		if(hud_accuracy_hud && !(gametype == GAME_RACE || gametype == GAME_CTS))
+		// draw the weapon accuracy
+		if(autocvar_hud_weaponicons_accuracy && !(gametype == GAME_RACE || gametype == GAME_CTS))
 		{
 			if(weapon_damage)
 				weapon_stats = floor(100 * weapon_hit / weapon_damage);
@@ -1445,26 +1487,75 @@ void HUD_WeaponIcons(void)
 				color_x = 1;
 				color_y = weapon_stats/autocvar_hud_weaponicons_accuracy_yellow; // green value between 0 -> 1
 			}
+			color_z = 0;
 
 			if(weapon_damage)
-				drawpic_aspect_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "weapon_accuracy", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), color, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(wpnpos, "weapon_accuracy", wpnsize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 
 		// draw the weapon icon
 		if((self.impulse >= 0) && (stat_weapons & self.weapons))
 		{
-			drawpic_aspect_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			if(autocvar_hud_weaponicons_number == 1) // weapon number
-				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), ftos(weapid), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring(wpnpos, ftos(weapid), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 			else if(autocvar_hud_weaponicons_number == 2) // bind
-				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+			// draw ammo status bar
+			if(autocvar_hud_weaponicons_ammo && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
+			{
+				a = 0;
+				type = GetAmmoTypeForWep(weapid);
+				if(type != -1)
+					a = getstati(GetAmmoStat(type)); // how much ammo do we have?
+
+				if(a > 0)
+				{
+					switch(type) {
+						case 0: fullammo = autocvar_hud_weaponicons_ammo_full_shells; break;
+						case 1: fullammo = autocvar_hud_weaponicons_ammo_full_nails; break;
+						case 2: fullammo = autocvar_hud_weaponicons_ammo_full_rockets; break;
+						case 3: fullammo = autocvar_hud_weaponicons_ammo_full_cells; break;
+						case 4: fullammo = autocvar_hud_weaponicons_ammo_full_fuel; break;
+						default: fullammo = 60;
+					}
+
+					vector barsize;
+					vector barpos;
+					if(wpnsize_x/wpnsize_y > 2)
+					{
+						barsize_x = 2 * wpnsize_y;
+						barsize_y = wpnsize_y;
+
+						barpos_x = wpnpos_x + (wpnsize_x - barsize_x) / 2;
+						barpos_y = wpnpos_y;
+					}
+					else
+					{
+						barsize_y = 1/2 * wpnsize_x;
+						barsize_x = wpnsize_x;
+
+						barpos_y = wpnpos_y + (wpnsize_y - barsize_y) / 2;
+						barpos_x = wpnpos_x;
+					}
+
+					drawsetcliparea(
+						barpos_x,
+						barpos_y,
+						barsize_x * bound(0, a/fullammo, 1),
+						barsize_y); // use 2x more full ammo for uzi
+					drawpic_aspect_skin(wpnpos, "weapon_ammo", wpnsize, autocvar_hud_weaponicons_ammo_color, panel_fg_alpha * autocvar_hud_weaponicons_ammo_alpha, DRAWFLAG_NORMAL);
+					drawresetcliparea();
+				}
+			}
 		}
 
 		// draw a "ghost weapon icon" if you don't have the weapon
 		else
 		{
-			drawpic_aspect_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 		}
 
 		// draw the complain message
@@ -1515,19 +1606,6 @@ void HUD_WeaponIcons(void)
 // Inventory (#1)
 //
 // TODO: macro
-float GetAmmoStat(float i)
-{
-	switch(i)
-	{
-		case 0: return STAT_SHELLS;
-		case 1: return STAT_NAILS;
-		case 2: return STAT_ROCKETS;
-		case 3: return STAT_CELLS;
-		case 4: return STAT_FUEL;
-		default: return -1;
-	}
-}
-
 float GetAmmoItemCode(float i)
 {
 	switch(i)
