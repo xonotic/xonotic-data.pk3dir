@@ -16,6 +16,6 @@ Dominator	nyx	0	3	9	0	0	0	0	2	-1	0	0	0	-1	0	0	0
 Thunderstorm	erebus	0	13	6	0	0	0	0	-0.5	-1	1	0.5	0.5	-0.5	0	0.5	0
 Mystery	pyria	0	9	14	0	1	1	1	1	-1	-1	0	1	1	-2	-1	-1
 Lion	ignismasked	0	0	4	0	1	1.5	2	-1	-1	-1	1	0	1	-0.5	-1	-1
-Sensible	stephania	0	9	9	0	0	0	0.5	-1	0	-1	0	-1	2.5	-1.5	1	0.5
-Shadow	stephaniamasked	0	4	8	0	-0.5	2	1	0	0	-1	0	-1	0	1	-1	-0.5
+Sensible	seraphina	0	9	9	0	0	0	0.5	-1	0	-1	0	-1	2.5	-1.5	1	0.5
+Shadow	seraphinamasked	0	4	8	0	-0.5	2	1	0	0	-1	0	-1	0	1	-1	-0.5
 Resurrection	umbra	0	1	1	0	0	-0.5	-0.5	0	2	-1	-1	-1	0	-1	1	1
