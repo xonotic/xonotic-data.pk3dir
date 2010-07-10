@@ -837,7 +837,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		else
 			precache_sound ("misc/itemrespawn.wav");
 
-		if((itemid & (IT_STRENGTH | IT_INVINCIBLE | IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)) || (weaponid & WEPBIT_ALL))
+		if((itemflags & (FL_POWERUP | FL_WEAPON)) || (itemid & (IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)))
 			self.target = "###item###"; // for finding the nearest item using find()
 	}
 
