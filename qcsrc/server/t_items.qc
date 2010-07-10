@@ -795,8 +795,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			self.is_item = TRUE;
 		}
 
-		weaponsInMap |= weaponid;
-
 		if(g_lms || g_ca)
 		{
 			startitem_failed = TRUE;
@@ -825,6 +823,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			remove (self);
 			return;
 		}
+
+		weaponsInMap |= weaponid;
 
 		precache_model (itemmodel);
 		precache_sound (pickupsound);
