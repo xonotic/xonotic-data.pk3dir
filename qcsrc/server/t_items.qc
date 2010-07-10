@@ -303,7 +303,7 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				// sound not available
 				// AnnounceTo(player, "_lives");
-				player.armorvalue = player.armorvalue + cvar("g_minstagib_extralives");
+				player.armorvalue = min(player.armorvalue + cvar("g_minstagib_extralives"), 999);
 				sprint(player, "^3You picked up some extra lives\n");
 			}
 
@@ -1134,7 +1134,7 @@ void spawnfunc_weapon_rocketlauncher (void)
 {
 	if (g_minstagib)
 	{
-		minstagib_items(IT_CELLS);
+		minstagib_items(IT_CELLS); // replace rocketlauncher with cells
 		self.think = minst_remove_item;
 		self.nextthink = time;
 		return;
@@ -1766,6 +1766,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, cvar("g_balance_pause_fuel_rot"), pauseregen_finished, cvar("g_balance_pause_fuel_regen"), "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, cvar("g_balance_pause_armor_rot"), pauseregen_finished, cvar("g_balance_pause_health_regen"), "misc/armor25.wav", string_null);
 	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, cvar("g_balance_pause_health_rot"), pauseregen_finished, cvar("g_balance_pause_health_regen"), "misc/megahealth.wav", string_null);
+
+	if (g_minstagib)
+	{
+		e.health = bound(0, e.health, 100);
+		e.armorvalue = bound(0, e.armorvalue, 999);
+	}
 
 	if(e.strength_finished <= 0)
 		e.strength_finished = 0;
