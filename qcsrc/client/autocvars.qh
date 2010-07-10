@@ -183,6 +183,7 @@ var string autocvar_hud_pressedkeys_bg_color_team;
 var string autocvar_hud_pressedkeys_bg_alpha;
 var string autocvar_hud_pressedkeys_bg_border;
 var string autocvar_hud_pressedkeys_bg_padding;
+var float autocvar_hud_pressedkeys_aspect;
 
 var float autocvar_hud_chat;
 var vector autocvar_hud_chat_pos;

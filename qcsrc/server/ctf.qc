@@ -473,7 +473,7 @@ void FlagTouch()
 				h0 = strcat(h0, "^7's"); // h0: display text for previous netname
 			if (flagcaptimerecord == 0)
 			{
-				bprint(other.netname, "^7 captured the ", other.flagcarried.netname, " in ", s, " seconds\n");
+				s = strcat(" in ", s, " seconds");
 				flagcaptimerecord = t;
 				db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(t));
 				db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), h1);
@@ -481,7 +481,7 @@ void FlagTouch()
 			}
 			else if (t < flagcaptimerecord)
 			{
-				bprint(other.netname, "^7 captured the ", other.flagcarried.netname, " in ", s, ", breaking ", strcat(h0, " previous record of ", s0, " seconds\n"));
+				s = strcat(" in ", s, " seconds, breaking ", h0, " previous record of ", s0, " seconds");
 				flagcaptimerecord = t;
 				db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(t));
 				db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), h1);
@@ -489,11 +489,13 @@ void FlagTouch()
 			}
 			else
 			{
-				bprint(other.netname, "^7 captured the ", other.flagcarried.netname, " in ", s, ", failing to break ", strcat(h0, " record of ", s0, " seconds\n"));
+				s = strcat(" in ", s, " seconds, failing to break ", h0, " record of ", s0, " seconds");
 			}
 		}
 		else
-			bprint(other.netname, "^7 captured the ", other.flagcarried.netname, "\n");
+			s = "";
+
+		Send_KillNotification (other.netname, other.flagcarried.netname, s, INFO_CAPTUREFLAG, MSG_INFO);
 
 		PlayerTeamScore_Add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
 		LogCTF("capture", other.flagcarried.team, other);

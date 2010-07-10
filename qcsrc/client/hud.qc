@@ -2575,6 +2575,9 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		} else if(type == INFO_RETURNFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_RETURNFLAG);
 			print(s1, "^7 returned the ", s2, "\n");
+		} else if(type == INFO_CAPTUREFLAG) {
+			HUD_KillNotify_Push(s1, s2, 0, INFO_CAPTUREFLAG);
+			print(s1, "^7 captured the ", s2, s3, "\n");
 		}
 	}
 }
@@ -2700,7 +2703,6 @@ void HUD_Notify (void)
 	fadetime = autocvar_hud_notify_fadetime;
 
 	string s;
-	vector color;
 
 	vector pos_attacker, pos_victim;
 	vector weap_pos;
@@ -2743,105 +2745,99 @@ void HUD_Notify (void)
 			if(killnotify_deathtype[j] == DEATH_GENERIC)
 			{
 				s = "notify_death";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_NOAMMO)
 			{
 				s = "notify_outofammo";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_KILL)
 			{
 				s = "notify_selfkill";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_CAMP)
 			{
 				s = "notify_camping";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
 			{
-				s = "notify_teamkill";
-				color = '1 0 0';
+				s = "notify_teamkill_red";
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
 			{
-				s = "notify_teamkill";
-				color = '0 0 1';
+				s = "notify_teamkill_blue";
 			}
 			else if(killnotify_deathtype[j] == DEATH_DROWN)
 			{
-				s = "notify_";
-				color = '1 1 1';
+				s = "notify_water";
 			}
 			else if(killnotify_deathtype[j] == DEATH_SLIME)
 			{
-				s = "notify_";
-				color = '1 1 1';
+				s = "notify_slime";
 			}
 			else if(killnotify_deathtype[j] == DEATH_LAVA)
 			{
-				s = "notify_";
-				color = '1 1 1';
+				s = "notify_lava";
 			}
 			else if(killnotify_deathtype[j] == DEATH_FALL)
 			{
-				s = "notify_";
-				color = '1 1 1';
+				s = "notify_fall";
 			}
 			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
 			{
-				s = "notify_";
-				color = '1 1 1';
+				s = "notify_shootingstar";
 			}
 			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM)
 			{
-				s = "notify_";
-				color = '1 1 1';
+				s = "notify_death";
 			}
+			// TODO: ctf icons...
 			else if(killnotify_deathtype[j] == INFO_GOTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
-					s = "flag_red_carrying";
-					color = '1 0 0';
+					s = "notify_red_taken";
 				}
 				else
 				{
-					s = "flag_blue_carrying";
-					color = '0 0 1';
+					s = "notify_blue_taken";
 				}
 			}
 			else if(killnotify_deathtype[j] == INFO_RETURNFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
-					s = "flag_red_taken";
-					color = '1 0 0';
+					s = "notify_red_returned";
 				}
 				else
 				{
-					s = "flag_blue_taken";
-					color = '0 0 1';
+					s = "notify_blue_returned";
 				}
 			}
 			else if(killnotify_deathtype[j] == INFO_LOSTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
-					s = "flag_red_lost";
-					color = '1 0 0';
+					s = "notify_red_lost";
 				}
 				else
 				{
-					s = "flag_blue_lost";
-					color = '0 0 1';
+					s = "notify_blue_lost";
+				}
+			}
+			else if(killnotify_deathtype[j] == INFO_CAPTUREFLAG)
+			{
+				if(killnotify_victims[j] == "^1RED^7 flag")
+				{
+					s = "notify_red_captured";
+				}
+				else
+				{
+					s = "notify_blue_captured";
 				}
 			}
 			if(s != "" && a)
 			{
-				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, color, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
@@ -2867,57 +2863,47 @@ void HUD_Notify (void)
 			if(autocvar__hud_configure) // example actions for config mode
 			{
 				s = "weaponelectro";
-				color = '1 1 1';
 			}
 			else if(WEP_VALID(killnotify_deathtype[j]))
 			{
 				self = get_weaponinfo(killnotify_deathtype[j]);
 				s = strcat("weapon", self.netname);
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
 			{
-				s = "notify_teamkill";
-				color = '1 0 0';
+				s = "notify_teamkill_red";
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
 			{
-				s = "notify_teamkill";
-				color = '0 0 1';
+				s = "notify_teamkill_red";
 			}
 			else if(killnotify_deathtype[j] == DEATH_DROWN)
 			{
 				s = "notify_water";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_SLIME)
 			{
 				s = "notify_slime";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_LAVA)
 			{
 				s = "notify_lava";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_FALL)
 			{
 				s = "notify_fall";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
 			{
 				s = "notify_shootingstar";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
 			{
 				s = "notify_void";
-				color = '1 1 1';
 			}
 			if(s != "" && a)
 			{
-				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, color, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
@@ -2998,7 +2984,7 @@ void HUD_Timer(void)
 //
 void HUD_Radar(void)
 {
-	if (!(autocvar_hud_radar != 0 && (autocvar_hud_radar == 2 || teamplay || autocvar__hud_configure)))
+	if ((autocvar_hud_radar == 0 || (autocvar_hud_radar != 2 && !teamplay)) && !autocvar__hud_configure)
 		return;
 
 	float id = HUD_PANEL_RADAR;
@@ -4054,23 +4040,26 @@ void HUD_DrawPressedKeys(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	// always force 2:1 aspect
-	vector newSize;
-	if(mySize_x/mySize_y > 2)
+	// force custom aspect
+	if(autocvar_hud_pressedkeys_aspect)
 	{
-		newSize_x = 2 * mySize_y;
-		newSize_y = mySize_y;
+		vector newSize;
+		if(mySize_x/mySize_y > autocvar_hud_pressedkeys_aspect)
+		{
+			newSize_x = autocvar_hud_pressedkeys_aspect * mySize_y;
+			newSize_y = mySize_y;
 
-		pos_x = pos_x + (mySize_x - newSize_x) / 2;
-	}
-	else
-	{
-		newSize_y = 1/2 * mySize_x;
-		newSize_x = mySize_x;
+			pos_x = pos_x + (mySize_x - newSize_x) / 2;
+		}
+		else
+		{
+			newSize_y = 1/autocvar_hud_pressedkeys_aspect * mySize_x;
+			newSize_x = mySize_x;
 
-		pos_y = pos_y + (mySize_y - newSize_y) / 2;
+			pos_y = pos_y + (mySize_y - newSize_y) / 2;
+		}
+		mySize = newSize;
 	}
-	mySize = newSize;
 
 	vector keysize;
 	keysize = eX * mySize_x * (1/3) + eY * mySize_y * 0.5;
