@@ -2871,7 +2871,6 @@ void HUD_Notify (void)
 			{
 				s = "notify_death";
 			}
-			// TODO: ctf icons...
 			else if(killnotify_deathtype[j] == INFO_GOTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
