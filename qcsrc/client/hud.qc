@@ -469,6 +469,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble_padding \"", cvar_string(strcat("hud_", panel_name, "_complainbubble_padding")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_", panel_name, "_ammo_color \"", cvar_string(strcat("hud_", panel_name, "_ammo_color")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_", panel_name, "_ammo_alpha \"", cvar_string(strcat("hud_", panel_name, "_ammo_alpha")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_", panel_name, "_aspect \"", cvar_string(strcat("hud_", panel_name, "_ammo_alpha")), "\"", "\n"));
 					break;
 				case HUD_PANEL_INVENTORY:
 					fputs(fh, strcat("seta hud_", panel_name, "_onlycurrent \"", cvar_string(strcat("hud_", panel_name, "_onlycurrent")), "\"", "\n"));
@@ -493,6 +494,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case HUD_PANEL_VOTE:
 					fputs(fh, strcat("seta hud_", panel_name, "_alreadyvoted_alpha \"", cvar_string(strcat("hud_", panel_name, "_alreadyvoted_alpha")), "\"", "\n"));
+					break;
+				case HUD_PANEL_PRESSEDKEYS:
+					fputs(fh, strcat("seta hud_", panel_name, "_aspect \"", cvar_string(strcat("hud_", panel_name, "_aspect")), "\"", "\n"));
 					break;
 			}
 			fputs(fh, "\n");
@@ -1437,8 +1441,7 @@ void HUD_WeaponIcons(void)
 
 	float rows, columns;
 	rows = mySize_y/mySize_x;
-	rows = bound(1, floor((sqrt(4 * (2/1) * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
-	//                               ^^^ weapon icon aspect goes here
+	rows = bound(1, floor((sqrt(4 * autocvar_hud_weaponicons_aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
 
 	columns = ceil(WEP_COUNT/rows);
 	float row, column;
@@ -1524,9 +1527,9 @@ void HUD_WeaponIcons(void)
 
 					vector barsize;
 					vector barpos;
-					if(wpnsize_x/wpnsize_y > 2)
+					if(wpnsize_x/wpnsize_y > autocvar_hud_weaponicons_aspect)
 					{
-						barsize_x = 2 * wpnsize_y;
+						barsize_x = autocvar_hud_weaponicons_aspect * wpnsize_y;
 						barsize_y = wpnsize_y;
 
 						barpos_x = wpnpos_x + (wpnsize_x - barsize_x) / 2;
@@ -1534,7 +1537,7 @@ void HUD_WeaponIcons(void)
 					}
 					else
 					{
-						barsize_y = 1/2 * wpnsize_x;
+						barsize_y = 1/autocvar_hud_weaponicons_aspect * wpnsize_x;
 						barsize_x = wpnsize_x;
 
 						barpos_y = wpnpos_y + (wpnsize_y - barsize_y) / 2;
@@ -1545,7 +1548,7 @@ void HUD_WeaponIcons(void)
 						barpos_x,
 						barpos_y,
 						barsize_x * bound(0, a/fullammo, 1),
-						barsize_y); // use 2x more full ammo for uzi
+						barsize_y);
 					drawpic_aspect_skin(wpnpos, "weapon_ammo", wpnsize, autocvar_hud_weaponicons_ammo_color, panel_fg_alpha * autocvar_hud_weaponicons_ammo_alpha, DRAWFLAG_NORMAL);
 					drawresetcliparea();
 				}
