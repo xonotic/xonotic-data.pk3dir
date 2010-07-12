@@ -81,6 +81,7 @@
 #include "xonotic/dialog_multiplayer_demo.c"
 #include "xonotic/demolist.c"
 #include "xonotic/colorpicker.c"
+#include "xonotic/colorpicker_string.c"
 #include "xonotic/cvarlist.c"
 #include "xonotic/dialog_settings_misc_cvars.c"
 #include "xonotic/dialog_hudsetup_exit.c"
