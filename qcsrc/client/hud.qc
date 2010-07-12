@@ -1236,7 +1236,7 @@ void HUD_Panel_Mouse()
 	if(highlightedPanel != -1)
 		highlightedPanel_prev = highlightedPanel;
 
-	mousepos = mousepos + getmousepos();
+	mousepos = mousepos + getmousepos() * cvar("menu_mouse_speed");
 
 	mousepos_x = bound(0, mousepos_x, vid_conwidth);
 	mousepos_y = bound(0, mousepos_y, vid_conheight);
@@ -4661,9 +4661,12 @@ void HUD_Main (void)
 
 	float f;
 	vector color;
-	if(teamplay && autocvar_hud_dock_color_team) {
+	if((teamplay) && autocvar_hud_dock_color_team) {
 		f = stof(getplayerkey(player_localentnum - 1, "colors"));
 		color = colormapPaletteColor(mod(f, 16), 1) * autocvar_hud_dock_color_team;
+	}
+	else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && autocvar_hud_dock_color_team) {
+		color = '1 0 0' * autocvar_hud_dock_color_team;
 	}
 	else if(autocvar_hud_dock_color == "shirt") {
 		f = stof(getplayerkey(player_localentnum - 1, "colors"));
