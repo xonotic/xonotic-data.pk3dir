@@ -89,7 +89,5 @@ void XonoticHUDWeaponIconsDialog_fill(entity me)
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, "Ammo bar alpha:"));
 			me.TD(me, 1, 2.6, e = makeXonoticSlider(0.1, 1, 0.1, "hud_weaponicons_ammo_alpha"));
 			setDependent(e, "hud_weaponicons_ammo", 1, 1);
-	//me.gotoRC(me, me.rows - 1, 0);
-		//me.TD(me, 1, me.columns, e = makeXonoticCommandButton("Exit Setup", '0 0 0', "_hud_configure 0", 1));
 }
 #endif
