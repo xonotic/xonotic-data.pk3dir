@@ -70,6 +70,9 @@ var float autocvar_hud_weaponicons_complainbubble;
 var float autocvar_hud_weaponicons_complainbubble_padding;
 var float autocvar_hud_weaponicons_complainbubble_time;
 var float autocvar_hud_weaponicons_complainbubble_fadetime;
+var vector autocvar_hud_weaponicons_complainbubble_color_outofammo;
+var vector autocvar_hud_weaponicons_complainbubble_color_donthave;
+var vector autocvar_hud_weaponicons_complainbubble_color_unavailable;
 
 var float autocvar_hud_inventory;
 var vector autocvar_hud_inventory_pos;
