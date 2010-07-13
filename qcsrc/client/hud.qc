@@ -1582,15 +1582,15 @@ void HUD_WeaponIcons(void)
 			string s;
 			if(complain_weapon_type == 0) {
 				s = "Out of ammo";
-				color = '1 0 0';
+				color = '0.8 0 0';
 			}
 			else if(complain_weapon_type == 1) {
 				s = "Don't have";
-				color = '1 1 0';
+				color = '0.8 0.5 0';
 			}
 			else {
 				s = "Unavailable";
-				color = '1 1 1';
+				color = '0 0.3 0.8';
 			}
 			drawpic_aspect_skin(wpnpos + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, "weapon_complainbubble", wpnsize - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);
 			drawstring_aspect(wpnpos + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, s, wpnsize - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
