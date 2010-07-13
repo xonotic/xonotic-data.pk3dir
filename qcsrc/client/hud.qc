@@ -2182,10 +2182,10 @@ void HUD_HealthArmor(void)
 			{
 				if(autocvar_hud_healtharmor_baralign == 1 || autocvar_hud_healtharmor_baralign == 3) { // right align
 					barpos = pos + eX * mySize_x - eX * mySize_x * min(1, leftcnt/200);
-					barsize = eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
+					barsize = eX * mySize_x * min(1, leftcnt/200) + eY * 0.5 * mySize_y;
 				} else { // left align
 					barpos = pos;
-					barsize = eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
+					barsize = eX * mySize_x * min(1, leftcnt/200) + eY * 0.5 * mySize_y;
 				}
 
 				HUD_Panel_GetProgressBarColor(leftname)
