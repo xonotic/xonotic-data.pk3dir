@@ -120,7 +120,7 @@ void VoteDialog_UpdateHighlight(float selected) {
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_VOTE);
 	WriteByte(MSG_ONE, 1);
-	WriteShort(MSG_ONE, selected);
+	WriteByte(MSG_ONE, selected);
 }
 
 void VoteDialog_Reset() {
@@ -545,9 +545,9 @@ void VoteDialog_Update(float msg, float vyes, float vno, float needed) {
 	WriteByte(msg, SVC_TEMPENTITY);
 	WriteByte(msg, TE_CSQC_VOTE);
 	WriteByte(msg, 0);
-	WriteShort(msg, vyes);
-	WriteShort(msg, vno);
-	WriteShort(msg, needed);
+	WriteByte(msg, vyes);
+	WriteByte(msg, vno);
+	WriteByte(msg, needed);
 }
 
 void VoteCount() {

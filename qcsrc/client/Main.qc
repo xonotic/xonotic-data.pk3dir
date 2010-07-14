@@ -1224,13 +1224,13 @@ void Net_ReadPingPLReport()
 
 void Net_VoteDialog(float highlight) {
 	if(highlight) {
-		vote_highlighted = ReadShort();
+		vote_highlighted = ReadByte();
 		return;
 	}
 
-	vote_yescount = ReadShort();
-	vote_nocount = ReadShort();
-	vote_needed = ReadShort();
+	vote_yescount = ReadByte();
+	vote_nocount = ReadByte();
+	vote_needed = ReadByte();
 	vote_active = 1;
 }
 

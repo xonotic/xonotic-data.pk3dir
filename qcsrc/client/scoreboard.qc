@@ -980,6 +980,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 				rgb_x = 1;
 				rgb_y = weapon_stats/autocvar_hud_weaponicons_accuracy_yellow; // green value between 0 -> 1
 			}
+			rgb_z = 0;
 			drawstring(pos + '1 0 0' * padding + '0 1 0' * height * (2/3), s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		}
 		pos_x += sbwidth/weapon_cnt * rows;
