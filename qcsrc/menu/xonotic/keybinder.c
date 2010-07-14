@@ -240,10 +240,12 @@ float XonoticKeyBinder_keyDown(entity me, float key, float ascii, float shift)
 	switch(key)
 	{
 		case K_ENTER:
+		case K_KP_ENTER:
 		case K_SPACE:
 			KeyBinder_Bind_Change(me, me);
 			break;
 		case K_DEL:
+		case K_KP_DEL:
 		case K_BACKSPACE:
 			KeyBinder_Bind_Clear(me, me);
 			break;
@@ -297,7 +299,8 @@ void XonoticKeyBinder_drawListBoxItem(entity me, float i, vector absSize, float 
 				theAlpha *= SKINALPHA_DISABLED;
 	}
 
-	draw_Text(me.realUpperMargin * eY + extraMargin * eX, descr, me.realFontSize, theColor, theAlpha, 0);
+	s = draw_TextShortenToWidth(descr, me.columnFunctionSize, 0, me.realFontSize);
+	draw_Text(me.realUpperMargin * eY + extraMargin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	if(func != "")
 	{
 		n = tokenize(findkeysforcommand(func)); // uses '...' strings

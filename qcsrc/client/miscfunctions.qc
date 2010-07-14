@@ -468,24 +468,64 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 	}
 }
 
-void drawpic_expanding(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)
+// drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
+var float imgaspect;
+var float aspect;
+#define drawpic_aspect(pos,pic,mySize,color,alpha,drawflag)\
+do {\
+	vector imgsize;\
+	imgsize = drawgetimagesize(pic);\
+	imgaspect = imgsize_x/imgsize_y;\
+	vector oldsz, sz;\
+	oldsz = sz = mySize;\
+	aspect = sz_x/sz_y;\
+	if(aspect > imgaspect) {\
+		sz_x = sz_y * imgaspect;\
+		drawpic(pos + eX * (oldsz_x - sz_x) * 0.5, pic, sz, color, alpha, drawflag);\
+	} else {\
+		sz_y = sz_x / imgaspect;\
+		drawpic(pos + eY * (oldsz_y - sz_y) * 0.5, pic, sz, color, alpha, drawflag);\
+	}\
+} while(0)
+
+// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
+#define drawpic_aspect_skin(pos,pic,sz,color,alpha,drawflag)\
+do{\
+	picpath = strcat(hud_skin_path, "/", pic);\
+	if(precache_pic(picpath) == "") {\
+		picpath = strcat("gfx/hud/default/", pic);\
+	}\
+	drawpic_aspect(pos, picpath, sz, color, alpha, drawflag);\
+} while(0)
+
+// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
+#define drawpic_skin(pos,pic,sz,color,alpha,drawflag)\
+do{\
+	picpath = strcat(hud_skin_path, "/", pic);\
+	if(precache_pic(picpath) == "") {\
+		picpath = strcat("gfx/hud/default/", pic);\
+	}\
+	drawpic(pos, picpath, sz, color, alpha, drawflag);\
+} while(0)
+
+void drawpic_aspect_skin_expanding(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)
 {
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
-	drawpic(position + expandingbox_resize_centered_box_offset(sz, scale, 1), pic, scale * sz, rgb, alpha * (1 - fadelerp), flag);
+	drawpic_skin(position + expandingbox_resize_centered_box_offset(sz, scale, 1), pic, scale * sz, rgb, alpha * (1 - fadelerp), flag);
 }
 
-void drawpic_expanding_two(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)
+void drawpic_aspect_skin_expanding_two(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)
 {
-	drawpic_expanding(position, pic, scale, rgb, alpha, flag, fadelerp);
-	drawpic(position, pic, scale, rgb, alpha * fadelerp, flag);
+	drawpic_aspect_skin_expanding(position, pic, scale, rgb, alpha, flag, fadelerp);
+	drawpic_skin(position, pic, scale, rgb, alpha * fadelerp, flag);
 }
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
-void drawstring_aspect(vector pos, string text, vector sz, float fontsize, vector color, float alpha, float drawflag) {
+void drawstring_aspect(vector pos, string text, vector sz, vector color, float alpha, float drawflag) {
 	vector textsize;
-	textsize = eX * stringwidth(text, FALSE, '1 1 0' * fontsize) + eY * fontsize;
+	textsize = eX * stringwidth(text, FALSE, '1 1 1' * sz_y) + eY * sz_y;
 	
 	float textaspect;
 	textaspect = textsize_x/textsize_y;
@@ -504,24 +544,63 @@ void drawstring_aspect(vector pos, string text, vector sz, float fontsize, vecto
 	}
 }
 
+// drawstring wrapper to draw a colorcodedstring as large as possible with preserved aspect ratio into a box
+void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float alpha, float drawflag) {
+	vector textsize;
+	textsize = eX * stringwidth(text, TRUE, '1 1 1' * sz_y) + eY * sz_y;
+	
+	float textaspect;
+	textaspect = textsize_x/textsize_y;
+
+	vector oldsz;
+	oldsz = sz;
+	float aspect;
+	aspect = sz_x/sz_y;
+
+	if(aspect > textaspect) {
+		sz_x = sz_y * textaspect;
+		drawcolorcodedstring(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag);
+	} else {
+		sz_y = sz_x / textaspect; 
+		drawcolorcodedstring(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag);
+	}
+}
+
 vector drawfontscale;
 void drawstring_expanding(vector position, string text, vector scale, vector rgb, float alpha, float flag, float fadelerp)
 {
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
-	if(cvar("menu_font_size_snapping_fix"))
-		drawfontscale = sz * '1 1 0';
-	else
-		drawfontscale = '1 1 0';
+	drawfontscale = sz * '1 1 0';
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
         drawstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, FALSE, scale * (sz / drawfontscale_x)) / (scale_x * sz)), text, scale * (sz / drawfontscale_x), rgb, alpha * (1 - fadelerp), flag);
 	// width parameter:
 	//    (scale_x * sz / drawfontscale_x) * drawfontscale_x * SIZE1 / (scale_x * sz)
 	//    SIZE1
+	drawfontscale = '1 1 0';
+}
 
-	if(cvar("menu_font_size_snapping_fix"))
-		drawfontscale = '1 1 0';
+// drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
+void drawstring_aspect_expanding(vector pos, string text, vector sz, vector color, float alpha, float drawflag, float fadelerp) {
+	vector textsize;
+	textsize = eX * stringwidth(text, FALSE, '1 1 1' * sz_y) + eY * sz_y;
+	
+	float textaspect;
+	textaspect = textsize_x/textsize_y;
+
+	vector oldsz;
+	oldsz = sz;
+	float aspect;
+	aspect = sz_x/sz_y;
+
+	if(aspect > textaspect) {
+		sz_x = sz_y * textaspect;
+		drawstring_expanding(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag, fadelerp);
+	} else {
+		sz_y = sz_x / textaspect; 
+		drawstring_expanding(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag, fadelerp);
+	}
 }
 
 void drawcolorcodedstring_expanding(vector position, string text, vector scale, float alpha, float flag, float fadelerp)
@@ -529,15 +608,31 @@ void drawcolorcodedstring_expanding(vector position, string text, vector scale, 
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
-	if(cvar("menu_font_size_snapping_fix"))
-		drawfontscale = sz * '1 1 0';
-	else
-		drawfontscale = '1 1 0';
+	drawfontscale = sz * '1 1 0';
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
 	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, TRUE, scale * (sz / drawfontscale_x)) / (scale_x * sz)), text, scale * (sz / drawfontscale_x), alpha * (1 - fadelerp), flag);
+	drawfontscale = '1 1 0';
+}
 
-	if(cvar("menu_font_size_snapping_fix"))
-		drawfontscale = '1 1 0';
+void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, float alpha, float drawflag, float fadelerp) {
+	vector textsize;
+	textsize = eX * stringwidth(text, TRUE, '1 1 1' * sz_y) + eY * sz_y;
+	
+	float textaspect;
+	textaspect = textsize_x/textsize_y;
+
+	vector oldsz;
+	oldsz = sz;
+	float aspect;
+	aspect = sz_x/sz_y;
+
+	if(aspect > textaspect) {
+		sz_x = sz_y * textaspect;
+		drawcolorcodedstring_expanding(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag, fadelerp);
+	} else {
+		sz_y = sz_x / textaspect; 
+		drawcolorcodedstring_expanding(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag, fadelerp);
+	}
 }
 
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...

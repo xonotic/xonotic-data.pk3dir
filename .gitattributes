@@ -76,6 +76,7 @@ GPL crlf=input
 *.icns -crlf -diff
 *.ico -crlf -diff
 *.idsoftware crlf=input
+*.iqm -crlf -diff
 *.inc crlf=input
 *.instantaction crlf=input
 *.java crlf=input

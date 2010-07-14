@@ -87,22 +87,21 @@ void XonoticCreditsList_drawListBoxItem(entity me, float i, vector absSize, floa
 	draw_CenterText(me.realUpperMargin * eY + 0.5 * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
 
-float XonoticCreditsList_keyDown(entity me, float scan, float ascii, float shift)
+float XonoticCreditsList_keyDown(entity me, float key, float ascii, float shift)
 {
 	float i;
 	me.dragScrollTimer = time;
 	me.scrolling = 0;
-
-	if(scan == K_PGUP)
+	if(key == K_PGUP || key == K_KP_PGUP)
 		me.scrollPos = max(me.scrollPos - 0.5, 0);
-	else if(scan == K_PGDN)
+	else if(key == K_PGDN || key == K_KP_PGDN)
 		me.scrollPos = min(me.scrollPos + 0.5, me.nItems * me.itemHeight - 1);
-	else if(scan == K_UPARROW)
+	else if(key == K_UPARROW || key == K_KP_UPARROW)
 		me.scrollPos = max(me.scrollPos - me.itemHeight, 0);
-	else if(scan == K_DOWNARROW)
+	else if(key == K_DOWNARROW || key == K_KP_DOWNARROW)
 		me.scrollPos = min(me.scrollPos + me.itemHeight, me.nItems * me.itemHeight - 1);
 	else
-		return SUPER(XonoticCreditsList).keyDown(me, scan, ascii, shift);
+		return SUPER(XonoticCreditsList).keyDown(me, key, ascii, shift);
 
 	i = min(me.selectedItem, floor((me.scrollPos + 1) / me.itemHeight - 1));
 	i = max(i, ceil(me.scrollPos / me.itemHeight));

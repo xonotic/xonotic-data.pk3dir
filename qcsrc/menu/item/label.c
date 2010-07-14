@@ -22,6 +22,7 @@ CLASS(Label) EXTENDS(Item)
 	ATTRIB(Label, disabledAlpha, float, 0.3)
 	ATTRIB(Label, textEntity, entity, NULL)
 	ATTRIB(Label, allowWrap, float, 0)
+	ATTRIB(Label, recalcPos, float, 0)
 ENDCLASS(Label)
 #endif
 
@@ -33,7 +34,7 @@ string Label_toString(entity me)
 void Label_setText(entity me, string txt)
 {
 	me.text = txt;
-	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(me.text, me.allowColors, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
+	me.recalcPos = 1;
 }
 void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
@@ -45,8 +46,9 @@ void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absO
 		me.keepspaceLeft = me.marginLeft * me.realFontSize_x;
 	if(me.marginRight)
 		me.keepspaceRight = me.marginRight * me.realFontSize_x;
-	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(me.text, me.allowColors, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
 	me.realOrigin_y = 0.5 * (1 - me.realFontSize_y);
+	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(me.text, me.allowColors, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
+	me.recalcPos = 0;
 }
 void Label_configureLabel(entity me, string txt, float sz, float algn)
 {
@@ -64,10 +66,17 @@ void Label_draw(entity me)
 	if(me.textEntity)
 	{
 		t = me.textEntity.toString(me.textEntity);
-		me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(t, 0, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
+		me.recalcPos = 1;
 	}
 	else
 		t = me.text;
+
+	if(me.recalcPos)
+		me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(t, me.allowColors, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
+	me.recalcPos = 0;
+
+	//if(me.text == "Bookmark")
+	//	draw_Fill(me.realOrigin, '0 1 0' + '1 0 0' * draw_TextWidth(t, me.allowColors, me.realFontSize), '1 0 1', 1);
 	
 	if(me.fontSize)
 		if(t)

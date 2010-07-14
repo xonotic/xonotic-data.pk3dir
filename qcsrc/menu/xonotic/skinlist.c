@@ -195,7 +195,7 @@ void XonoticSkinList_clickListBoxItem(entity me, float i, vector where)
 
 float XonoticSkinList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER) {
+	if(scan == K_ENTER || scan == K_KP_ENTER) {
 		me.setSkin(me);
 		return 1;
 	}

@@ -870,7 +870,9 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 }
 
 float HUD_WouldDrawScoreboard() {
-	if (scoreboard_showscores)
+	if (autocvar__hud_configure)
+		return 0;
+	else if (scoreboard_showscores)
 		return 1;
 	else if (intermission == 1)
 		return 1;
@@ -966,7 +968,19 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			float padding;
 			padding = ((sbwidth/weapon_cnt) - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value
 
-			rgb = HUD_AccuracyColor(weapon_stats);
+			// yellow_accuracy = value at which accuracy becomes yellow
+			if(weapon_stats >= 100) {
+				rgb_x = 0;
+				rgb_y = 1;
+			}
+			else if(weapon_stats > autocvar_hud_weaponicons_accuracy_yellow) {
+				rgb_x = 1 - (weapon_stats-autocvar_hud_weaponicons_accuracy_yellow)/(100-autocvar_hud_weaponicons_accuracy_yellow); // red value between 1 -> 0
+				rgb_y = 1;
+			} else {
+				rgb_x = 1;
+				rgb_y = weapon_stats/autocvar_hud_weaponicons_accuracy_yellow; // green value between 0 -> 1
+			}
+			rgb_z = 0;
 			drawstring(pos + '1 0 0' * padding + '0 1 0' * height * (2/3), s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		}
 		pos_x += sbwidth/weapon_cnt * rows;
@@ -1114,10 +1128,10 @@ void HUD_DrawScoreboard()
 				continue;
 
 			rgb = GetTeamRGB(tm.team);
-			HUD_DrawXNum(pos - '9.5 0 0' * hud_fontsize_y + '0 1 0' * hud_fontsize_y, tm.(teamscores[ts_primary]), 6, 0, hud_fontsize_y * 1.5, rgb, 0, 1, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawstring(pos - '9.5 0 0' * hud_fontsize_y + '0 1 0' * hud_fontsize_y, ftos(tm.(teamscores[ts_primary])), '1 1 0' * hud_fontsize_y * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(ts_primary != ts_secondary)
-				HUD_DrawXNum(pos - '7.5 0 0' * hud_fontsize_y + '0 2.5 0' * hud_fontsize_y, tm.(teamscores[ts_secondary]), 6, 0, hud_fontsize_y * 1, rgb, 0, 1, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+				drawstring(pos - '7.5 0 0' * hud_fontsize_y + '0 2.5 0' * hud_fontsize_y, ftos(tm.(teamscores[ts_secondary])), '1 1 0' * hud_fontsize_y * 1, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
 		}
