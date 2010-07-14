@@ -3227,15 +3227,13 @@ void HUD_Score(void)
 				pl = world;
 
 		score = me.(scores[ps_primary]);
-		timer = seconds_tostring(score/TIME_FACTOR);
-		timer = strcat(timer, ":", ftos_decimals(mod(score, TIME_FACTOR), log(TIME_FACTOR)));
+		timer = TIME_ENCODED_TOSTRING(score);
 
 		if (pl && ((!(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)) || score)) {
 			// distribution display
 			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
 
-			distrtimer = seconds_tostring(distribution/TIME_FACTOR);
-			distrtimer = strcat(timer, ":", ftos_decimals(mod(distribution, TIME_FACTOR), log(TIME_FACTOR)));
+			distrtimer = ftos(distribution/pow(10, TIME_DECIMALS));
 
 			if (distribution <= 0) {
 				distribution_color = '0 1 0';
