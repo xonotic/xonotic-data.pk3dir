@@ -1372,6 +1372,9 @@ float GetAmmoTypeForWep(float i)
 	}
 }
 
+#define MAX_ACCURACY_LEVELS 10 // including implict levels 0 and 100
+float acc_lev[MAX_ACCURACY_LEVELS];
+
 void HUD_WeaponIcons(void)
 {
 	if(!autocvar_hud_weaponicons && !autocvar__hud_configure)
@@ -1458,6 +1461,18 @@ void HUD_WeaponIcons(void)
 	vector color;
 	vector wpnpos;
 	vector wpnsize;
+
+	float acc_levels;
+	if(autocvar_hud_weaponicons_accuracy && !(gametype == GAME_RACE || gametype == GAME_CTS))
+	{
+		acc_levels = tokenize(cvar_string("hud_weaponicons_accuracy_color_levels"));
+		if (acc_levels > MAX_ACCURACY_LEVELS)
+			acc_levels = MAX_ACCURACY_LEVELS;
+
+		for (i = 0; i < acc_levels; ++i)
+			acc_lev[i] = stof(argv(i));
+	}
+
 	for(i = 0; i < weapon_cnt; ++i)
 	{
 		wpnpos = pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
@@ -1476,24 +1491,27 @@ void HUD_WeaponIcons(void)
 			drawpic_aspect_skin(wpnpos, "weapon_current_bg", wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy
-		if(autocvar_hud_weaponicons_accuracy && !(gametype == GAME_RACE || gametype == GAME_CTS))
+		if(acc_levels)
 		{
 			if(weapon_damage)
 				weapon_stats = floor(100 * weapon_hit / weapon_damage);
 
-			// yellow_accuracy = value at which accuracy becomes yellow
-			if(weapon_stats >= 100) {
-				color_x = 0;
-				color_y = 1;
-			}
-			else if(weapon_stats > autocvar_hud_weaponicons_accuracy_yellow) {
-				color_x = 1 - (weapon_stats-autocvar_hud_weaponicons_accuracy_yellow)/(100-autocvar_hud_weaponicons_accuracy_yellow); // red value between 1 -> 0
-				color_y = 1;
-			} else {
-				color_x = 1;
-				color_y = weapon_stats/autocvar_hud_weaponicons_accuracy_yellow; // green value between 0 -> 1
-			}
-			color_z = 0;
+			if (cvar("acc_colors_debug") >= 0)
+				weapon_stats = cvar("acc_colors_debug"); // TEST
+
+			// find the max level lower than weapon_stats
+			float j;
+			j = acc_levels-1;
+			while ( j && weapon_stats < acc_lev[j] )
+				--j;
+
+#define acc_color(i) stov(cvar_string(strcat("hud_weaponicons_accuracy_color", ftos(i))))
+
+			// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
+			float factor;
+			factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
+			color = acc_color(j);
+			color = color + factor * (acc_color(j+1) - color);
 
 			if(weapon_damage)
 				drawpic_aspect_skin(wpnpos, "weapon_accuracy", wpnsize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
