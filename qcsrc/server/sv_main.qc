@@ -2,7 +2,7 @@
 void CreatureFrame (void)
 {
 	local entity oldself;
-	local float dm;
+	local float dm, maxspeed;
 	oldself = self;
 	self = findfloat(world, iscreature, TRUE);
 	while (self)
@@ -78,12 +78,11 @@ void CreatureFrame (void)
 				{
 					Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
 				}
-				else if(vlen(self.velocity) > 100000 && cvar("developer"))
-				{
-					dprint(strcat(self.netname, " became too fast, please investigate: ", vtos(self.spawnorigin), "\n"));
-					Damage (self, world, world, 50000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
-				}
 			}
+
+			maxspeed = cvar("g_maxspeed");
+			if(maxspeed > 0 && vlen(self.velocity) > maxspeed)
+				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
 
 			// play stupid sounds
 			if (g_footsteps)
