@@ -426,11 +426,15 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 	}
 	else
 	{
-		cvar_set("fraglimit", car(s));
+		sa = car(s);
+		if(sa != "")
+			cvar_set("fraglimit", sa);
 		s = cdr(s);
 	}
 
-	cvar_set("timelimit", car(s));
+	sa = car(s);
+	if(sa != "")
+		cvar_set("timelimit", sa);
 	s = cdr(s);
 
 	if(pWantedType == MAPINFO_TYPE_TEAM_DEATHMATCH)
@@ -481,15 +485,27 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 	if(pWantedType == MAPINFO_TYPE_CTS)
 	{
 		sa = car(s);
-		if(sa != "")
-			cvar_set("fraglimit", sa);
+
+		// this is the skill of the map
+		// not parsed by anything yet
+		// for map databases
+		//if(sa != "")
+		//	cvar_set("fraglimit", sa);
+
 		s = cdr(s);
 	}
 
-	sa = car(s);
-	if(sa != "")
-		cvar_set("leadlimit", sa);
-	s = cdr(s);
+	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
+	{
+		cvar_set("leadlimit", "0");
+	}
+	else
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("leadlimit", sa);
+		s = cdr(s);
+	}
 }
 
 float MapInfo_Type_FromString(string t)
