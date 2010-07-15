@@ -1372,7 +1372,7 @@ float GetAmmoTypeForWep(float i)
 	}
 }
 
-#define MAX_ACCURACY_LEVELS 10 // including implict levels 0 and 100
+#define MAX_ACCURACY_LEVELS 10
 float acc_lev[MAX_ACCURACY_LEVELS];
 
 void HUD_WeaponIcons(void)
@@ -1382,14 +1382,12 @@ void HUD_WeaponIcons(void)
 
 	float id = HUD_PANEL_WEAPONICONS;
 	HUD_Panel_UpdateCvarsForId(id);
-	float alpha, stat_weapons; // "constants"
 	vector pos, mySize;
-	float i, weapid, fade, weapon_stats, weapon_hit, weapon_damage, weapon_cnt; // variables
+	float i, weapid, fade, weapon_stats, weapon_number, weapon_cnt;
 
 	pos = panel_pos;
 	mySize = panel_size;
 
-	stat_weapons = getstati(STAT_WEAPONS);
 	weapon_cnt = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -1481,11 +1479,6 @@ void HUD_WeaponIcons(void)
 		self = weaponorder[i];
 		weapid = self.impulse;
 
-		alpha = (self.weapon == activeweapon) ? 1 : 0.6;
-
-		weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
-		weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
-
 		// draw background behind currently selected weapon
 		if(self.weapon == activeweapon)
 			drawpic_aspect_skin(wpnpos, "weapon_current_bg", wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -1493,11 +1486,13 @@ void HUD_WeaponIcons(void)
 		// draw the weapon accuracy
 		if(acc_levels)
 		{
+			float weapon_hit, weapon_damage;
+			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
 			if(weapon_damage)
+			{
+				weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
 				weapon_stats = floor(100 * weapon_hit / weapon_damage);
-
-			if (cvar("acc_colors_debug") >= 0)
-				weapon_stats = cvar("acc_colors_debug"); // TEST
+			}
 
 			// find the max level lower than weapon_stats
 			float j;
@@ -1518,7 +1513,7 @@ void HUD_WeaponIcons(void)
 		}
 
 		// draw the weapon icon
-		if((self.impulse >= 0) && (stat_weapons & self.weapons))
+		if((self.impulse >= 0) && (getstati(STAT_WEAPONS) & self.weapons))
 		{
 			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
