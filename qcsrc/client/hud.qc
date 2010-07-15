@@ -1380,8 +1380,8 @@ void HUD_WeaponIcons(void)
 	if(!autocvar_hud_weaponicons && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_WEAPONICONS;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_WEAPONICONS;
+	HUD_Panel_UpdateCvars(weaponicons);
 	vector pos, mySize;
 	float i, weapid, fade, weapon_stats, weapon_number, weapon_cnt;
 
@@ -1714,8 +1714,8 @@ void HUD_Inventory(void)
 	if(!autocvar_hud_inventory && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_INVENTORY;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_INVENTORY;
+	HUD_Panel_UpdateCvars(inventory);
 	float i, currently_selected;
 
 	vector pos, mySize;
@@ -1828,8 +1828,8 @@ void HUD_Powerups(void) {
 	if(!autocvar_hud_powerups && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_POWERUPS;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_POWERUPS;
+	HUD_Panel_UpdateCvars(powerups);
 	float stat_items;
 	stat_items = getstati(STAT_ITEMS);
 
@@ -2033,8 +2033,8 @@ void HUD_HealthArmor(void)
 	if(!autocvar_hud_healtharmor && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_HEALTHARMOR;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_HEALTHARMOR;
+	HUD_Panel_UpdateCvars(healtharmor);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2773,8 +2773,8 @@ void HUD_Notify (void)
 	if(!autocvar_hud_notify && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_NOTIFY;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_NOTIFY;
+	HUD_Panel_UpdateCvars(notify);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3028,8 +3028,8 @@ void HUD_Timer(void)
 	if(!autocvar_hud_timer && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_TIMER;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_TIMER;
+	HUD_Panel_UpdateCvars(timer);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3083,8 +3083,8 @@ void HUD_Radar(void)
 	if ((autocvar_hud_radar == 0 || (autocvar_hud_radar != 2 && !teamplay)) && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_RADAR;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_RADAR;
+	HUD_Panel_UpdateCvars(radar);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3211,8 +3211,8 @@ void HUD_Score(void)
 	if(!autocvar_hud_score && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_SCORE;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_SCORE;
+	HUD_Panel_UpdateCvars(score);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3338,8 +3338,8 @@ void HUD_RaceTimer (void) {
 	if(!autocvar_hud_racetimer && !(gametype == GAME_RACE || gametype == GAME_CTS) && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_RACETIMER;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_RACETIMER;
+	HUD_Panel_UpdateCvars(racetimer);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3490,8 +3490,8 @@ void HUD_VoteWindow(void)
 	if(!autocvar_hud_vote && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_VOTE;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_VOTE;
+	HUD_Panel_UpdateCvars(vote);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4075,8 +4075,8 @@ void HUD_ModIcons(void)
 	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_MODICONS;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_MODICONS;
+	HUD_Panel_UpdateCvars(modicons);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4121,8 +4121,8 @@ void HUD_DrawPressedKeys(void)
 	if(!(spectatee_status > 0 || autocvar_hud_pressedkeys >= 2 || autocvar__hud_configure))
 		return;
 
-	float id = HUD_PANEL_PRESSEDKEYS;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_PRESSEDKEYS;
+	HUD_Panel_UpdateCvars(pressedkeys);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4178,8 +4178,8 @@ void HUD_Chat(void)
 		return;
 	}
 
-	float id = HUD_PANEL_CHAT;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_CHAT;
+	HUD_Panel_UpdateCvars(chat);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4230,8 +4230,8 @@ void HUD_EngineInfo(void)
 	if(!autocvar_hud_engineinfo && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_ENGINEINFO;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_ENGINEINFO;
+	HUD_Panel_UpdateCvars(engineinfo);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4283,8 +4283,8 @@ void HUD_InfoMessages(void)
 	if(!autocvar_hud_infomessages && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_INFOMESSAGES;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_INFOMESSAGES;
+	HUD_Panel_UpdateCvars(infomessages);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
