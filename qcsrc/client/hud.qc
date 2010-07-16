@@ -4655,7 +4655,6 @@ void HUD_Main (void)
 
 	hud_border_thickness = bound(0, cvar("hud_border_thickness"), 5);
 	hud_accuracy_border_thickness = bound(0, cvar_or("hud_accuracy_border_thickness", 1), 5);
-	hud_color_bg_team = cvar("hud_color_bg_team");
 
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 	hud_fontsize_spec = HUD_GetFontsize("hud_fontsize_spec");

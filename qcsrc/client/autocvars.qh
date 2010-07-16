@@ -10,6 +10,8 @@ var float autocvar_cl_gentle;
 var float autocvar_cl_gentle_gibs;
 var float autocvar_cl_gentle_messages;
 
+var float autocvar_hud_color_bg_team;
+
 var float autocvar__menu_alpha;
 
 var float autocvar__hud_configure;
@@ -37,13 +39,13 @@ var vector autocvar_hud_progressbar_armor_color;
 var vector autocvar_hud_progressbar_fuel_color;
 var vector autocvar_hud_progressbar_nexball_color;
 
-var string autocvar_hud_bg;
-var vector autocvar_hud_bg_color;
-var float autocvar_hud_bg_color_team;
-var float autocvar_hud_bg_alpha;
-var float autocvar_hud_bg_border;
-var float autocvar_hud_bg_padding;
-var float autocvar_hud_fg_alpha;
+var string autocvar_hud_panel_bg;
+var vector autocvar_hud_panel_bg_color;
+var float autocvar_hud_panel_bg_color_team;
+var float autocvar_hud_panel_bg_alpha;
+var float autocvar_hud_panel_bg_border;
+var float autocvar_hud_panel_bg_padding;
+var float autocvar_hud_panel_fg_alpha;
 
 var float autocvar_hud_panel_weapons;
 var vector autocvar_hud_panel_weapons_pos;

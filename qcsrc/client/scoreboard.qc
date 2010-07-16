@@ -759,7 +759,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	tmp_y = 1.25 * hud_fontsize_y;
 
 	// rounded header
-	drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, (rgb * hud_color_bg_team) + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, (rgb * autocvar_hud_color_bg_team) + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
 	// table border
 	tmp_y += hud_border_thickness;
@@ -775,7 +775,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	// table background
 	tmp_y = body_table_height;
-	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
 	// anyway, apply some color
 	//drawfill(pos, tmp + '2 0 0', rgb, 0.1, DRAWFLAG_NORMAL);
@@ -911,7 +911,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	tmp_x = sbwidth;
 	tmp_y = height * rows;
 
-	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(hud_accuracy_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// column highlighting
@@ -1026,7 +1026,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	tmp_x = sbwidth;
 	tmp_y = hud_fontsize_y * RANKINGS_RECEIVED_CNT;
 
-	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(hud_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// row highlighting
