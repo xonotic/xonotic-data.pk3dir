@@ -1,24 +1,24 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDChatDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticHUDChatDialog, fill, void(entity))
-	ATTRIB(XonoticHUDChatDialog, title, string, "Chat Panel")
-	ATTRIB(XonoticHUDChatDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDChatDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDChatDialog, rows, float, 15)
-	ATTRIB(XonoticHUDChatDialog, columns, float, 4)
-	ATTRIB(XonoticHUDChatDialog, name, string, "HUDchat")
-ENDCLASS(XonoticHUDChatDialog)
+CLASS(XonoticHUDWeaponsDialog) EXTENDS(XonoticRootDialog)
+	METHOD(XonoticHUDWeaponsDialog, fill, void(entity))
+	ATTRIB(XonoticHUDWeaponsDialog, title, string, "Weapons Panel")
+	ATTRIB(XonoticHUDWeaponsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
+	ATTRIB(XonoticHUDWeaponsDialog, intendedWidth, float, 0.4)
+	ATTRIB(XonoticHUDWeaponsDialog, rows, float, 15)
+	ATTRIB(XonoticHUDWeaponsDialog, columns, float, 4)
+	ATTRIB(XonoticHUDWeaponsDialog, name, string, "HUDweapons")
+ENDCLASS(XonoticHUDWeaponsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void XonoticHUDChatDialog_fill(entity me)
+void XonoticHUDWeaponsDialog_fill(entity me)
 {
 	entity e;
-	string panelname = "chat";
+	string panelname = "weapons";
 	float i;
 
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_chat", "Enable panel"));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_weapons", "Enable panel"));
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Background:"));
 	me.TR(me);
@@ -67,17 +67,27 @@ void XonoticHUDChatDialog_fill(entity me)
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Chat entries:"));
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Weapon icons:"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Chat size:"));
-		me.TD(me, 1, 2.6, e = makeXonoticSlider(6, 20, 1, "con_chatsize"));
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, "Show weapon ID as:"));
+			me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "hud_panel_weapons_number", "0", "None"));
+			me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "hud_panel_weapons_number", "1", "Number"));
+			me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "hud_panel_weapons_number", "2", "Bind"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Chat lifetime:"));
-		me.TD(me, 1, 2.6, e = makeXonoticSlider(5, 60, 5, "con_chattime"));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "hud_panel_weapons_accuracy", "Show Accuracy"));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "hud_panel_weapons_ammo", "Show Ammo"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_chatsound", "Chat beep sound"));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Ammo bar color:"));
+		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString("hud_panel_weapons_ammo_color"));
+			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
+		me.TR(me);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, "Ammo bar alpha:"));
+			me.TD(me, 1, 2.6, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_weapons_ammo_alpha"));
+			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
 }
 #endif
