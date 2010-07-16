@@ -1372,21 +1372,23 @@ float GetAmmoTypeForWep(float i)
 	}
 }
 
+#define acc_color(i) stov(cvar_string(strcat("hud_weaponicons_accuracy_color", ftos(i))))
+#define MAX_ACCURACY_LEVELS 10
+float acc_lev[MAX_ACCURACY_LEVELS];
+
 void HUD_WeaponIcons(void)
 {
 	if(!autocvar_hud_weaponicons && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_WEAPONICONS;
-	HUD_Panel_UpdateCvarsForId(id);
-	float alpha, stat_weapons; // "constants"
+	active_panel = HUD_PANEL_WEAPONICONS;
+	HUD_Panel_UpdateCvars(weaponicons);
 	vector pos, mySize;
-	float i, weapid, fade, weapon_stats, weapon_hit, weapon_damage, weapon_cnt; // variables
+	float i, weapid, fade, weapon_stats, weapon_number, weapon_cnt;
 
 	pos = panel_pos;
 	mySize = panel_size;
 
-	stat_weapons = getstati(STAT_WEAPONS);
 	weapon_cnt = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -1458,6 +1460,18 @@ void HUD_WeaponIcons(void)
 	vector color;
 	vector wpnpos;
 	vector wpnsize;
+
+	float acc_levels;
+	if(autocvar_hud_weaponicons_accuracy && !(gametype == GAME_RACE || gametype == GAME_CTS))
+	{
+		acc_levels = tokenize(cvar_string("hud_weaponicons_accuracy_color_levels"));
+		if (acc_levels > MAX_ACCURACY_LEVELS)
+			acc_levels = MAX_ACCURACY_LEVELS;
+
+		for (i = 0; i < acc_levels; ++i)
+			acc_lev[i] = stof(argv(i));
+	}
+
 	for(i = 0; i < weapon_cnt; ++i)
 	{
 		wpnpos = pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
@@ -1466,41 +1480,39 @@ void HUD_WeaponIcons(void)
 		self = weaponorder[i];
 		weapid = self.impulse;
 
-		alpha = (self.weapon == activeweapon) ? 1 : 0.6;
-
-		weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
-		weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
-
 		// draw background behind currently selected weapon
 		if(self.weapon == activeweapon)
 			drawpic_aspect_skin(wpnpos, "weapon_current_bg", wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy
-		if(autocvar_hud_weaponicons_accuracy && !(gametype == GAME_RACE || gametype == GAME_CTS))
+		if(acc_levels)
 		{
+			float weapon_hit, weapon_damage;
+			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
 			if(weapon_damage)
+			{
+				weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
 				weapon_stats = floor(100 * weapon_hit / weapon_damage);
+			}
 
-			// yellow_accuracy = value at which accuracy becomes yellow
-			if(weapon_stats >= 100) {
-				color_x = 0;
-				color_y = 1;
-			}
-			else if(weapon_stats > autocvar_hud_weaponicons_accuracy_yellow) {
-				color_x = 1 - (weapon_stats-autocvar_hud_weaponicons_accuracy_yellow)/(100-autocvar_hud_weaponicons_accuracy_yellow); // red value between 1 -> 0
-				color_y = 1;
-			} else {
-				color_x = 1;
-				color_y = weapon_stats/autocvar_hud_weaponicons_accuracy_yellow; // green value between 0 -> 1
-			}
-			color_z = 0;
+			// find the max level lower than weapon_stats
+			float j;
+			j = acc_levels-1;
+			while ( j && weapon_stats < acc_lev[j] )
+				--j;
+
+			// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
+			float factor;
+			factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
+			color = acc_color(j);
+			color = color + factor * (acc_color(j+1) - color);
 
 			if(weapon_damage)
 				drawpic_aspect_skin(wpnpos, "weapon_accuracy", wpnsize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 
 		// draw the weapon icon
-		if((self.impulse >= 0) && (stat_weapons & self.weapons))
+		if((self.impulse >= 0) && (getstati(STAT_WEAPONS) & self.weapons))
 		{
 			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
@@ -1701,8 +1713,8 @@ void HUD_Inventory(void)
 	if(!autocvar_hud_inventory && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_INVENTORY;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_INVENTORY;
+	HUD_Panel_UpdateCvars(inventory);
 	float i, currently_selected;
 
 	vector pos, mySize;
@@ -1815,8 +1827,8 @@ void HUD_Powerups(void) {
 	if(!autocvar_hud_powerups && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_POWERUPS;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_POWERUPS;
+	HUD_Panel_UpdateCvars(powerups);
 	float stat_items;
 	stat_items = getstati(STAT_ITEMS);
 
@@ -2020,8 +2032,8 @@ void HUD_HealthArmor(void)
 	if(!autocvar_hud_healtharmor && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_HEALTHARMOR;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_HEALTHARMOR;
+	HUD_Panel_UpdateCvars(healtharmor);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2760,8 +2772,8 @@ void HUD_Notify (void)
 	if(!autocvar_hud_notify && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_NOTIFY;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_NOTIFY;
+	HUD_Panel_UpdateCvars(notify);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3015,8 +3027,8 @@ void HUD_Timer(void)
 	if(!autocvar_hud_timer && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_TIMER;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_TIMER;
+	HUD_Panel_UpdateCvars(timer);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3070,8 +3082,8 @@ void HUD_Radar(void)
 	if ((autocvar_hud_radar == 0 || (autocvar_hud_radar != 2 && !teamplay)) && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_RADAR;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_RADAR;
+	HUD_Panel_UpdateCvars(radar);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3198,8 +3210,8 @@ void HUD_Score(void)
 	if(!autocvar_hud_score && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_SCORE;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_SCORE;
+	HUD_Panel_UpdateCvars(score);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3325,8 +3337,8 @@ void HUD_RaceTimer (void) {
 	if(!autocvar_hud_racetimer && !(gametype == GAME_RACE || gametype == GAME_CTS) && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_RACETIMER;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_RACETIMER;
+	HUD_Panel_UpdateCvars(racetimer);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3477,8 +3489,8 @@ void HUD_VoteWindow(void)
 	if(!autocvar_hud_vote && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_VOTE;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_VOTE;
+	HUD_Panel_UpdateCvars(vote);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4062,8 +4074,8 @@ void HUD_ModIcons(void)
 	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_MODICONS;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_MODICONS;
+	HUD_Panel_UpdateCvars(modicons);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4108,8 +4120,8 @@ void HUD_DrawPressedKeys(void)
 	if(!(spectatee_status > 0 || autocvar_hud_pressedkeys >= 2 || autocvar__hud_configure))
 		return;
 
-	float id = HUD_PANEL_PRESSEDKEYS;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_PRESSEDKEYS;
+	HUD_Panel_UpdateCvars(pressedkeys);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4165,8 +4177,8 @@ void HUD_Chat(void)
 		return;
 	}
 
-	float id = HUD_PANEL_CHAT;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_CHAT;
+	HUD_Panel_UpdateCvars(chat);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4217,8 +4229,8 @@ void HUD_EngineInfo(void)
 	if(!autocvar_hud_engineinfo && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_ENGINEINFO;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_ENGINEINFO;
+	HUD_Panel_UpdateCvars(engineinfo);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4270,8 +4282,8 @@ void HUD_InfoMessages(void)
 	if(!autocvar_hud_infomessages && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_INFOMESSAGES;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_INFOMESSAGES;
+	HUD_Panel_UpdateCvars(infomessages);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;

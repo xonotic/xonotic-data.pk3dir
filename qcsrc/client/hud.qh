@@ -16,7 +16,6 @@ float hud_color_bg_team;
 float scoreboard_bottom;
 float weapon_hits[WEP_MAXCOUNT];
 float weapon_fired[WEP_MAXCOUNT];
-float weapon_number;
 
 float complain_weapon;
 string complain_weapon_name;
@@ -259,7 +258,6 @@ if(disable_menu_alphacheck == 2 && active_panel == highlightedPanel) {\
 
 // Update all common cvars of given panel id
 #define HUD_Panel_UpdateCvarsForId(id) \
-active_panel = id; \
 switch(id) { \
 	case HUD_PANEL_WEAPONICONS: HUD_Panel_UpdateCvars(weaponicons) break; \
 	case HUD_PANEL_INVENTORY: HUD_Panel_UpdateCvars(inventory) break; \
