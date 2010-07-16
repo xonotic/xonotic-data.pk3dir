@@ -291,7 +291,7 @@ float Item_GiveTo(entity item, entity player)
 				//	AnnounceTo(player, "ammo");
 
 				if (item.weapons & WEPBIT_MINSTANEX)
-					W_GiveWeapon (player, WEP_MINSTANEX, "Nex");
+					W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
 				if (item.ammo_cells)
 					player.ammo_cells = min (player.ammo_cells + cvar("g_minstagib_ammo_drop"), 999);
 				player.health = 100;
@@ -303,7 +303,7 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				// sound not available
 				// AnnounceTo(player, "_lives");
-				player.armorvalue = player.armorvalue + cvar("g_minstagib_extralives");
+				player.armorvalue = min(player.armorvalue + cvar("g_minstagib_extralives"), 999);
 				sprint(player, "^3You picked up some extra lives\n");
 			}
 
@@ -713,9 +713,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			return;
 		}
 
-		itemid = self.items;
-		weaponid = self.weapons;
-
 		self.reset = Item_Reset;
 		// it's a level item
 		if(self.spawnflags & 1)
@@ -798,8 +795,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			self.is_item = TRUE;
 		}
 
-		weaponsInMap |= weaponid;
-
 		if(g_lms || g_ca)
 		{
 			startitem_failed = TRUE;
@@ -829,17 +824,20 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			return;
 		}
 
+		weaponsInMap |= weaponid;
+
 		precache_model (itemmodel);
 		precache_sound (pickupsound);
-		precache_sound ("misc/itemrespawn.wav");
+
 		precache_sound ("misc/itemrespawncountdown.wav");
-
-		if(itemid == IT_STRENGTH)
+		if(!g_minstagib && itemid == IT_STRENGTH)
 			precache_sound ("misc/strength_respawn.wav");
-		if(itemid == IT_INVINCIBLE)
+		else if(!g_minstagib && itemid == IT_INVINCIBLE)
 			precache_sound ("misc/shield_respawn.wav");
+		else
+			precache_sound ("misc/itemrespawn.wav");
 
-		if((itemid & (IT_STRENGTH | IT_INVINCIBLE | IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)) || (weaponid & WEPBIT_ALL))
+		if((itemflags & (FL_POWERUP | FL_WEAPON)) || (itemid & (IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)))
 			self.target = "###item###"; // for finding the nearest item using find()
 	}
 
@@ -893,16 +891,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
  */
 void minstagib_items (float itemid)
 {
-	// we don't want to replace dropped weapons ;)
-	if (self.classname == "droppedweapon")
-	{
-		self.ammo_cells = 25;
-		StartItem ("models/weapons/g_nex.md3",
-			"weapons/weaponpickup.wav", 15, 0,
-			"MinstaNex", 0, WEPBIT_MINSTANEX, FL_WEAPON, generic_pickupevalfunc, 1000);
-		return;
-	}
-
 	local float rnd;
 	self.classname = "minstagib";
 
@@ -912,7 +900,7 @@ void minstagib_items (float itemid)
 		self.ammo_cells = 1;
 		StartItem ("models/items/a_cells.md3",
 			"misc/itempickup.wav", 45, 0,
-			"Nex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
+			"MinstaNex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
 		return;
 	}
 
@@ -940,7 +928,6 @@ void minstagib_items (float itemid)
 		StartItem ("models/items/g_h100.md3",
 			"misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Extralife", IT_NAILS, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
-
 	}
 	// replace with speed
 	if (itemid == IT_INVINCIBLE)
@@ -950,7 +937,6 @@ void minstagib_items (float itemid)
 			"misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Speed", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
 	}
-
 }
 
 float minst_no_auto_cells;
@@ -1138,7 +1124,7 @@ void spawnfunc_weapon_rocketlauncher (void)
 {
 	if (g_minstagib)
 	{
-		minstagib_items(IT_CELLS);
+		minstagib_items(IT_CELLS); // replace rocketlauncher with cells
 		self.think = minst_remove_item;
 		self.nextthink = time;
 		return;
@@ -1376,9 +1362,6 @@ void spawnfunc_target_items (void)
 	if(!self.invincible_finished)
 		self.invincible_finished = cvar("g_balance_powerup_invincible_time");
 
-	precache_sound("misc/itempickup.wav");
-	precache_sound("misc/itempickup.wav");
-	precache_sound("misc/itempickup.wav");
 	precache_sound("misc/itempickup.wav");
 	precache_sound("misc/megahealth.wav");
 	precache_sound("misc/armor25.wav");
@@ -1773,6 +1756,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, cvar("g_balance_pause_fuel_rot"), pauseregen_finished, cvar("g_balance_pause_fuel_regen"), "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, cvar("g_balance_pause_armor_rot"), pauseregen_finished, cvar("g_balance_pause_health_regen"), "misc/armor25.wav", string_null);
 	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, cvar("g_balance_pause_health_rot"), pauseregen_finished, cvar("g_balance_pause_health_regen"), "misc/megahealth.wav", string_null);
+
+	if (g_minstagib)
+	{
+		e.health = bound(0, e.health, 100);
+		e.armorvalue = bound(0, e.armorvalue, 999);
+	}
 
 	if(e.strength_finished <= 0)
 		e.strength_finished = 0;
