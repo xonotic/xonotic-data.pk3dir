@@ -241,15 +241,15 @@ else\
 
 // Update all common cvars of given panel name
 #define HUD_Panel_UpdateCvars(name) \
-panel_enabled = autocvar_hud_##name; \
-panel_pos = autocvar_hud_##name##_pos; \
-panel_size = autocvar_hud_##name##_size; \
-panel_bg_str = autocvar_hud_##name##_bg; \
-panel_bg_color_str = autocvar_hud_##name##_bg_color; \
-panel_bg_color_team_str = autocvar_hud_##name##_bg_color_team; \
-panel_bg_alpha_str = autocvar_hud_##name##_bg_alpha; \
-panel_bg_border_str = autocvar_hud_##name##_bg_border; \
-panel_bg_padding_str = autocvar_hud_##name##_bg_padding; \
+panel_enabled = autocvar_hud_panel_##name; \
+panel_pos = autocvar_hud_panel_##name##_pos; \
+panel_size = autocvar_hud_panel_##name##_size; \
+panel_bg_str = autocvar_hud_panel_##name##_bg; \
+panel_bg_color_str = autocvar_hud_panel_##name##_bg_color; \
+panel_bg_color_team_str = autocvar_hud_panel_##name##_bg_color_team; \
+panel_bg_alpha_str = autocvar_hud_panel_##name##_bg_alpha; \
+panel_bg_border_str = autocvar_hud_panel_##name##_bg_border; \
+panel_bg_padding_str = autocvar_hud_panel_##name##_bg_padding; \
 HUD_Panel_StringVars()\
 if(disable_menu_alphacheck == 2 && active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuSize()\
@@ -260,7 +260,7 @@ if(disable_menu_alphacheck == 2 && active_panel == highlightedPanel) {\
 #define HUD_Panel_UpdateCvarsForId(id) \
 switch(id) { \
 	case HUD_PANEL_WEAPONS: HUD_Panel_UpdateCvars(weapons) break; \
-	case HUD_PANEL_INVENTORY: HUD_Panel_UpdateCvars(inventory) break; \
+	case HUD_PANEL_AMMO: HUD_Panel_UpdateCvars(ammo) break; \
 	case HUD_PANEL_POWERUPS: HUD_Panel_UpdateCvars(powerups) break; \
 	case HUD_PANEL_HEALTHARMOR: HUD_Panel_UpdateCvars(healtharmor) break; \
 	case HUD_PANEL_NOTIFY: HUD_Panel_UpdateCvars(notify) break; \
@@ -277,21 +277,21 @@ switch(id) { \
 }
 
 #define HUD_Panel_UpdatePosSize(name) \
-panel_pos = autocvar_hud_##name##_pos; \
-panel_size = autocvar_hud_##name##_size; \
+panel_pos = autocvar_hud_panel_##name##_pos; \
+panel_size = autocvar_hud_panel_##name##_size; \
 HUD_Panel_GetScaledVectors()\
 if(disable_menu_alphacheck == 2 && active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuSize()\
 	HUD_Panel_GetMenuPos()\
 }\
-panel_bg_border_str = autocvar_hud_##name##_bg_border; \
+panel_bg_border_str = autocvar_hud_panel_##name##_bg_border; \
 HUD_Panel_GetBorder()
 
 // Update pos and size of given panel id
 #define HUD_Panel_UpdatePosSizeForId(id) \
 switch(id) { \
 	case HUD_PANEL_WEAPONS: HUD_Panel_UpdatePosSize(weapons) break;\
-	case HUD_PANEL_INVENTORY: HUD_Panel_UpdatePosSize(inventory) break;\
+	case HUD_PANEL_AMMO: HUD_Panel_UpdatePosSize(ammo) break;\
 	case HUD_PANEL_POWERUPS: HUD_Panel_UpdatePosSize(powerups) break;\
 	case HUD_PANEL_HEALTHARMOR: HUD_Panel_UpdatePosSize(healtharmor) break;\
 	case HUD_PANEL_NOTIFY: HUD_Panel_UpdatePosSize(notify) break;\
