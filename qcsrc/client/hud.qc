@@ -448,6 +448,11 @@ void HUD_Panel_ExportCfg(string cfgname)
 		fputs(fh, strcat("seta _hud_panelorder \"", cvar_string("_hud_panelorder"), "\"", "\n"));
 		fputs(fh, "\n");
 
+		fputs(fh, strcat("seta hud_configure_grid \"", cvar_string("hud_configure_grid"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_configure_grid_xsize \"", cvar_string("hud_configure_grid_xsize"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_configure_grid_ysize \"", cvar_string("hud_configure_grid_ysize"), "\"", "\n"));
+		fputs(fh, "\n");
+
 		// common cvars for all panels
 		float i;
 		for (i = 0; i < HUD_PANEL_NUM; ++i)
@@ -504,6 +509,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 			}
 			fputs(fh, "\n");
 		}
+		fputs(fh, strcat("menu_restart", "\n")); // force a menu update when execing config, so that the dialogs are updated
 
 		print("^2Successfully exported to hud_", autocvar_hud_skin, "_", cfgname, ".cfg! (Note: It's saved in data/data/)\n");
 	}
