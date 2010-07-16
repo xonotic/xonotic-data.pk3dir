@@ -57,7 +57,7 @@ void XonoticHUDModIconsDialog_fill(entity me)
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_configure_teamcolorforced", "Test the team color in HUD configure mode"));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_configure_teamcolorforced", "Test the team color in HUD configure mode"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Padding:"));
