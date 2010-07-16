@@ -1372,6 +1372,7 @@ float GetAmmoTypeForWep(float i)
 	}
 }
 
+#define acc_color(i) stov(cvar_string(strcat("hud_weaponicons_accuracy_color", ftos(i))))
 #define MAX_ACCURACY_LEVELS 10
 float acc_lev[MAX_ACCURACY_LEVELS];
 
@@ -1499,8 +1500,6 @@ void HUD_WeaponIcons(void)
 			j = acc_levels-1;
 			while ( j && weapon_stats < acc_lev[j] )
 				--j;
-
-#define acc_color(i) stov(cvar_string(strcat("hud_weaponicons_accuracy_color", ftos(i))))
 
 			// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
 			float factor;
