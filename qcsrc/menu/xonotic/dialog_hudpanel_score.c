@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(XonoticHUDScoreDialog) EXTENDS(XonoticRootDialog)
 	METHOD(XonoticHUDScoreDialog, fill, void(entity))
-	ATTRIB(XonoticHUDScoreDialog, title, string, "Score Panel Setup")
+	ATTRIB(XonoticHUDScoreDialog, title, string, "Score Panel")
 	ATTRIB(XonoticHUDScoreDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDScoreDialog, intendedWidth, float, 0.4)
 	ATTRIB(XonoticHUDScoreDialog, rows, float, 15)
@@ -14,17 +14,57 @@ ENDCLASS(XonoticHUDScoreDialog)
 void XonoticHUDScoreDialog_fill(entity me)
 {
 	entity e;
+	string panelname = "score";
+	float i;
+
 	me.TR(me);
-		me.TR(me);
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_score", "On/Off"));
-		me.TR(me);
-			me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Team Color:"));
-				me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.01, "hud_score_bg_color_team"));
-		me.TR(me);
-			me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Background Alpha:"));
-				me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.01, "hud_score_bg_alpha"));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_score", "Enable panel"));
 	me.TR(me);
-	//me.gotoRC(me, me.rows - 1, 0);
-		//me.TD(me, 1, me.columns, e = makeXonoticCommandButton("Exit Setup", '0 0 0', "_hud_configure 0", 1));
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Background:"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Color:"));
+		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString(strzone(strcat("hud_", panelname, "_bg_color"))));
+			setDependentStringNotEqual(e, strzone(strcat("hud_", panelname, "_bg_color")), "");
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticCheckBoxString("", "1 1 1", strzone(strcat("hud_", panelname, "_bg_color")), "Use default"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Border size:"));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_", panelname, "_bg_border"))));
+				e.addValue(e, "Default", "");
+				e.addValue(e, "Disable", "0");
+				for(i = 1; i <= 10; ++i)
+					e.addValue(e, strzone(ftos_decimals(i * 2, 0)), strzone(ftos(i * 2)));
+				e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Alpha:"));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_", panelname, "_bg_alpha"))));
+				e.addValue(e, "Default", "");
+				for(i = 1; i <= 10; ++i)
+					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
+				e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Team Color:"));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_", panelname, "_bg_color_team"))));
+				e.addValue(e, "Default", "");
+				e.addValue(e, "Disable", "0");
+				for(i = 1; i <= 10; ++i)
+					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
+				e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_configure_teamcolorforced", "Test the team color in HUD configure mode"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Padding:"));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_", panelname, "_bg_padding"))));
+				e.addValue(e, "Default", "");
+				for(i = 0; i <= 10; ++i)
+					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
+				e.configureXonoticTextSliderValues(e);
 }
 #endif

@@ -257,20 +257,21 @@ void Send_KillNotification (string s1, string s2, string s3, float msg, float ty
 	WriteByte(MSG_ALL, type);
 }
 
-// TODO: writespectatable?
 // Function is used to send a generic centerprint whose content CSQC gets to decide (gentle version or not in the below cases)
 void Send_CSQC_Centerprint(entity e, string s1, string s2, float msg, float type)
 {
 	if (clienttype(e) == CLIENTTYPE_REAL)
 	{
 		msg_entity = e;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
-		WriteByte(MSG_ONE, CSQC_CENTERPRINT);
-		WriteString(MSG_ONE, s1);
-		WriteString(MSG_ONE, s2);
-		WriteShort(MSG_ONE, msg);
-		WriteByte(MSG_ONE, type);
+		WRITESPECTATABLE_MSG_ONE({
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
+			WriteByte(MSG_ONE, CSQC_CENTERPRINT);
+			WriteString(MSG_ONE, s1);
+			WriteString(MSG_ONE, s2);
+			WriteShort(MSG_ONE, msg);
+			WriteByte(MSG_ONE, type);
+		});
 	}
 }
 
@@ -299,23 +300,10 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				LogDeath("suicide", deathtype, targ, targ);
 				GiveFrags(attacker, targ, -1);
 			}
-			// TODO: hmm?
-			/*
-				if (targ.killcount > 2)
-					bprint ("^1",s,"^1 faded after a ",ftos(targ.killcount)," point spree\n");
-			*/
-
-			// TODO: wut is this?
-			// givefrags for logging apparently?
-			if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
-			{
-				LogDeath("suicide", deathtype, targ, targ);
-				GiveFrags(attacker, targ, -1);
-			}
 
 			if (targ.killcount > 2)
 				msg = ftos(targ.killcount);
-			if(teams_matter && attacker.team == targ.team)
+			if(teams_matter && deathtype == DEATH_MIRRORDAMAGE)
 			{
 				if(attacker.team == COLOR_TEAM1)
 					deathtype = KILL_TEAM_RED;
@@ -359,7 +347,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				{
 					checkrules_firstblood = TRUE;
 					Send_KillNotification(a, "", "", KILL_FIRST_BLOOD, MSG_KILL);
-					// TODO: make these print at newline if they dont
+					// TODO: make these print a newline if they dont
 					Send_CSQC_Centerprint(attacker, "", "", KILL_FIRST_BLOOD, MSG_KILL);
 					Send_CSQC_Centerprint(targ, "", "", KILL_FIRST_VICTIM, MSG_KILL);
 				}
