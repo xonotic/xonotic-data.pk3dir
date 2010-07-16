@@ -259,7 +259,7 @@ if(disable_menu_alphacheck == 2 && active_panel == highlightedPanel) {\
 // Update all common cvars of given panel id
 #define HUD_Panel_UpdateCvarsForId(id) \
 switch(id) { \
-	case HUD_PANEL_WEAPONICONS: HUD_Panel_UpdateCvars(weaponicons) break; \
+	case HUD_PANEL_WEAPONS: HUD_Panel_UpdateCvars(weapons) break; \
 	case HUD_PANEL_INVENTORY: HUD_Panel_UpdateCvars(inventory) break; \
 	case HUD_PANEL_POWERUPS: HUD_Panel_UpdateCvars(powerups) break; \
 	case HUD_PANEL_HEALTHARMOR: HUD_Panel_UpdateCvars(healtharmor) break; \
@@ -290,7 +290,7 @@ HUD_Panel_GetBorder()
 // Update pos and size of given panel id
 #define HUD_Panel_UpdatePosSizeForId(id) \
 switch(id) { \
-	case HUD_PANEL_WEAPONICONS: HUD_Panel_UpdatePosSize(weaponicons) break;\
+	case HUD_PANEL_WEAPONS: HUD_Panel_UpdatePosSize(weapons) break;\
 	case HUD_PANEL_INVENTORY: HUD_Panel_UpdatePosSize(inventory) break;\
 	case HUD_PANEL_POWERUPS: HUD_Panel_UpdatePosSize(powerups) break;\
 	case HUD_PANEL_HEALTHARMOR: HUD_Panel_UpdatePosSize(healtharmor) break;\

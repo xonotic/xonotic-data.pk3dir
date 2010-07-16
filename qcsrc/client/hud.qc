@@ -464,7 +464,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 			fputs(fh, strcat("seta hud_", panel_name, "_bg_border \"", cvar_string(strcat("hud_", panel_name, "_bg_border")), "\"", "\n"));
 			fputs(fh, strcat("seta hud_", panel_name, "_bg_padding \"", cvar_string(strcat("hud_", panel_name, "_bg_padding")), "\"", "\n"));
 			switch(i) {
-				case HUD_PANEL_WEAPONICONS:
+				case HUD_PANEL_WEAPONS:
 					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble \"", cvar_string(strcat("hud_", panel_name, "_complainbubble")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble_padding \"", cvar_string(strcat("hud_", panel_name, "_complainbubble_padding")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble_color_outofammo \"", cvar_string(strcat("hud_", panel_name, "_complainbubble_color_outofammo")), "\"", "\n"));
@@ -474,7 +474,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					fputs(fh, strcat("seta hud_", panel_name, "_ammo_alpha \"", cvar_string(strcat("hud_", panel_name, "_ammo_alpha")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_", panel_name, "_aspect \"", cvar_string(strcat("hud_", panel_name, "_ammo_alpha")), "\"", "\n"));
 					break;
-				case HUD_PANEL_INVENTORY:
+				case HUD_PANEL_AMMO:
 					fputs(fh, strcat("seta hud_", panel_name, "_onlycurrent \"", cvar_string(strcat("hud_", panel_name, "_onlycurrent")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_", panel_name, "_iconalign \"", cvar_string(strcat("hud_", panel_name, "_iconalign")), "\"", "\n"));
 					break;
@@ -1313,7 +1313,7 @@ void HUD_Panel_Mouse()
 // Weapon icons (#0)
 //
 float weaponspace[10];
-#define HUD_WeaponIcons_Clear()\
+#define HUD_Weapons_Clear()\
 	float idx;\
 	for(idx = 0; idx < 10; ++idx)\
 		weaponspace[idx] = 0;
@@ -1372,17 +1372,17 @@ float GetAmmoTypeForWep(float i)
 	}
 }
 
-#define acc_color(i) stov(cvar_string(strcat("hud_weaponicons_accuracy_color", ftos(i))))
+#define acc_color(i) stov(cvar_string(strcat("hud_weapons_accuracy_color", ftos(i))))
 #define MAX_ACCURACY_LEVELS 10
 float acc_lev[MAX_ACCURACY_LEVELS];
 
-void HUD_WeaponIcons(void)
+void HUD_Weapons(void)
 {
-	if(!autocvar_hud_weaponicons && !autocvar__hud_configure)
+	if(!autocvar_hud_weapons && !autocvar__hud_configure)
 		return;
 
-	active_panel = HUD_PANEL_WEAPONICONS;
-	HUD_Panel_UpdateCvars(weaponicons);
+	active_panel = HUD_PANEL_WEAPONS;
+	HUD_Panel_UpdateCvars(weapons);
 	vector pos, mySize;
 	float i, weapid, fade, weapon_stats, weapon_number, weapon_cnt;
 
@@ -1434,7 +1434,7 @@ void HUD_WeaponIcons(void)
 	weapon_number = weapon_stats & 63;
 	weapon_fired[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
 
-	if(cvar_or("hud_weaponicons_fade", 1))
+	if(cvar_or("hud_weapons_fade", 1))
 	{
 		fade = 3.2 - 2 * (time - weapontime);
 		fade = bound(0.7, fade, 1);
@@ -1442,29 +1442,29 @@ void HUD_WeaponIcons(void)
 	else
 		fade = 1;
 
-	HUD_WeaponIcons_Clear();
+	HUD_Weapons_Clear();
 
 	float rows, columns;
 	rows = mySize_y/mySize_x;
-	rows = bound(1, floor((sqrt(4 * autocvar_hud_weaponicons_aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
+	rows = bound(1, floor((sqrt(4 * autocvar_hud_weapons_aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
 
 	columns = ceil(WEP_COUNT/rows);
 	float row, column;
 
 	float a, type, fullammo;
 	float when;
-	when = autocvar_hud_weaponicons_complainbubble_time;
+	when = autocvar_hud_weapons_complainbubble_time;
 	float fadetime;
-	fadetime = autocvar_hud_weaponicons_complainbubble_fadetime;
+	fadetime = autocvar_hud_weapons_complainbubble_fadetime;
 
 	vector color;
 	vector wpnpos;
 	vector wpnsize;
 
 	float acc_levels;
-	if(autocvar_hud_weaponicons_accuracy && !(gametype == GAME_RACE || gametype == GAME_CTS))
+	if(autocvar_hud_weapons_accuracy && !(gametype == GAME_RACE || gametype == GAME_CTS))
 	{
-		acc_levels = tokenize(cvar_string("hud_weaponicons_accuracy_color_levels"));
+		acc_levels = tokenize(cvar_string("hud_weapons_accuracy_color_levels"));
 		if (acc_levels > MAX_ACCURACY_LEVELS)
 			acc_levels = MAX_ACCURACY_LEVELS;
 
@@ -1516,13 +1516,13 @@ void HUD_WeaponIcons(void)
 		{
 			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
-			if(autocvar_hud_weaponicons_number == 1) // weapon number
+			if(autocvar_hud_weapons_number == 1) // weapon number
 				drawstring(wpnpos, ftos(weapid), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-			else if(autocvar_hud_weaponicons_number == 2) // bind
+			else if(autocvar_hud_weapons_number == 2) // bind
 				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw ammo status bar
-			if(autocvar_hud_weaponicons_ammo && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
+			if(autocvar_hud_weapons_ammo && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
 			{
 				a = 0;
 				type = GetAmmoTypeForWep(weapid);
@@ -1532,19 +1532,19 @@ void HUD_WeaponIcons(void)
 				if(a > 0)
 				{
 					switch(type) {
-						case 0: fullammo = autocvar_hud_weaponicons_ammo_full_shells; break;
-						case 1: fullammo = autocvar_hud_weaponicons_ammo_full_nails; break;
-						case 2: fullammo = autocvar_hud_weaponicons_ammo_full_rockets; break;
-						case 3: fullammo = autocvar_hud_weaponicons_ammo_full_cells; break;
-						case 4: fullammo = autocvar_hud_weaponicons_ammo_full_fuel; break;
+						case 0: fullammo = autocvar_hud_weapons_ammo_full_shells; break;
+						case 1: fullammo = autocvar_hud_weapons_ammo_full_nails; break;
+						case 2: fullammo = autocvar_hud_weapons_ammo_full_rockets; break;
+						case 3: fullammo = autocvar_hud_weapons_ammo_full_cells; break;
+						case 4: fullammo = autocvar_hud_weapons_ammo_full_fuel; break;
 						default: fullammo = 60;
 					}
 
 					vector barsize;
 					vector barpos;
-					if(wpnsize_x/wpnsize_y > autocvar_hud_weaponicons_aspect)
+					if(wpnsize_x/wpnsize_y > autocvar_hud_weapons_aspect)
 					{
-						barsize_x = autocvar_hud_weaponicons_aspect * wpnsize_y;
+						barsize_x = autocvar_hud_weapons_aspect * wpnsize_y;
 						barsize_y = wpnsize_y;
 
 						barpos_x = wpnpos_x + (wpnsize_x - barsize_x) / 2;
@@ -1552,7 +1552,7 @@ void HUD_WeaponIcons(void)
 					}
 					else
 					{
-						barsize_y = 1/autocvar_hud_weaponicons_aspect * wpnsize_x;
+						barsize_y = 1/autocvar_hud_weapons_aspect * wpnsize_x;
 						barsize_x = wpnsize_x;
 
 						barpos_y = wpnpos_y + (wpnsize_y - barsize_y) / 2;
@@ -1564,7 +1564,7 @@ void HUD_WeaponIcons(void)
 						barpos_y,
 						barsize_x * bound(0, a/fullammo, 1),
 						barsize_y);
-					drawpic_aspect_skin(wpnpos, "weapon_ammo", wpnsize, autocvar_hud_weaponicons_ammo_color, panel_fg_alpha * autocvar_hud_weaponicons_ammo_alpha, DRAWFLAG_NORMAL);
+					drawpic_aspect_skin(wpnpos, "weapon_ammo", wpnsize, autocvar_hud_weapons_ammo_color, panel_fg_alpha * autocvar_hud_weapons_ammo_alpha, DRAWFLAG_NORMAL);
 					drawresetcliparea();
 				}
 			}
@@ -1577,7 +1577,7 @@ void HUD_WeaponIcons(void)
 		}
 
 		// draw the complain message
-		if(time - complain_weapon_time < when + fadetime && self.weapon == complain_weapon && autocvar_hud_weaponicons_complainbubble)
+		if(time - complain_weapon_time < when + fadetime && self.weapon == complain_weapon && autocvar_hud_weapons_complainbubble)
 		{
 			if(fadetime)
 			{
@@ -1597,18 +1597,18 @@ void HUD_WeaponIcons(void)
 			string s;
 			if(complain_weapon_type == 0) {
 				s = "Out of ammo";
-				color = autocvar_hud_weaponicons_complainbubble_color_outofammo;
+				color = autocvar_hud_weapons_complainbubble_color_outofammo;
 			}
 			else if(complain_weapon_type == 1) {
 				s = "Don't have";
-				color = autocvar_hud_weaponicons_complainbubble_color_donthave;
+				color = autocvar_hud_weapons_complainbubble_color_donthave;
 			}
 			else {
 				s = "Unavailable";
-				color = autocvar_hud_weaponicons_complainbubble_color_unavailable;
+				color = autocvar_hud_weapons_complainbubble_color_unavailable;
 			}
-			drawpic_aspect_skin(wpnpos + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, "weapon_complainbubble", wpnsize - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring_aspect(wpnpos + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, s, wpnsize - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(wpnpos + '1 1 0' * autocvar_hud_weapons_complainbubble_padding, "weapon_complainbubble", wpnsize - '2 2 0' * autocvar_hud_weapons_complainbubble_padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(wpnpos + '1 1 0' * autocvar_hud_weapons_complainbubble_padding, s, wpnsize - '2 2 0' * autocvar_hud_weapons_complainbubble_padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
 		++row;
@@ -1621,7 +1621,7 @@ void HUD_WeaponIcons(void)
 
 }
 
-// Inventory (#1)
+// Ammo (#1)
 //
 // TODO: macro
 float GetAmmoItemCode(float i)
@@ -1688,7 +1688,7 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 	}
 
 	vector picpos, numpos;
-	if(autocvar_hud_inventory_iconalign)
+	if(autocvar_hud_ammo_iconalign)
 	{
 		numpos = newPos;
 		picpos = newPos + eX * 2 * newSize_y;
@@ -1708,13 +1708,13 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 	drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 }
 
-void HUD_Inventory(void)
+void HUD_Ammo(void)
 {
-	if(!autocvar_hud_inventory && !autocvar__hud_configure)
+	if(!autocvar_hud_ammo && !autocvar__hud_configure)
 		return;
 
-	active_panel = HUD_PANEL_INVENTORY;
-	HUD_Panel_UpdateCvars(inventory);
+	active_panel = HUD_PANEL_AMMO;
+	HUD_Panel_UpdateCvars(ammo);
 	float i, currently_selected;
 
 	vector pos, mySize;
@@ -1739,7 +1739,7 @@ void HUD_Inventory(void)
 	// ammo
 	for (i = 0; i < AMMO_COUNT; ++i) {
 		currently_selected = getstati(STAT_ITEMS) & GetAmmoItemCode(i);
-		if(autocvar_hud_inventory_onlycurrent) {
+		if(autocvar_hud_ammo_onlycurrent) {
 			if(autocvar__hud_configure)
 				i = 2;
 			if (currently_selected || autocvar__hud_configure)
@@ -4607,10 +4607,10 @@ void HUD_Reset (void)
 switch (id) {\
 	case (HUD_PANEL_RADAR):\
 		HUD_Radar(); break;\
-	case (HUD_PANEL_WEAPONICONS):\
-		HUD_WeaponIcons(); break;\
-	case (HUD_PANEL_INVENTORY):\
-		HUD_Inventory(); break;\
+	case (HUD_PANEL_WEAPONS):\
+		HUD_Weapons(); break;\
+	case (HUD_PANEL_AMMO):\
+		HUD_Ammo(); break;\
 	case (HUD_PANEL_POWERUPS):\
 		HUD_Powerups(); break;\
 	case (HUD_PANEL_HEALTHARMOR):\
