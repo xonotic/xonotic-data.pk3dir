@@ -2675,7 +2675,6 @@ void PlayerPreThink (void)
 		FOR_EACH_PLAYER(other) if(self != other)
 		{
 			if(time > other.touchexplode_time)
-			if(other.classname == "player")
 			if(other.deadflag == DEAD_NO)
 			if not(IS_INDEPENDENT_PLAYER(other))
 			if(boxesoverlap(self.absmin, self.absmax, other.absmin, other.absmax))

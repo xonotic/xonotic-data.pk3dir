@@ -375,7 +375,7 @@ void CSQC_UpdateView(float w, float h)
 	input_angles = warpzone_fixview_cl_viewangles;
 	view_angles = warpzone_fixview_angles;
 
-	if(cvar("cl_lockview") || hud_configure)
+	if(cvar("cl_lockview") || autocvar__hud_configure)
 	{
 		pmove_org = freeze_pmove_org;
 		input_angles = view_angles = freeze_input_angles;
@@ -879,7 +879,7 @@ void CSQC_UpdateView(float w, float h)
 		cvar_set("vid_conheight", h0);
 	}
 
-	if(hud_configure)
+	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
 	// be safe against triggerbots until everyone has the fixed engine
 	// this call is meant to overwrite the trace globals by something

@@ -907,6 +907,16 @@ void CL_SpawnWeaponentity()
 	self.exteriorweaponentity.nextthink = time;
 };
 
+void Send_WeaponComplain (entity e, float wpn, string wpnname, float type)
+{
+	msg_entity = e;
+	WriteByte(MSG_ONE, SVC_TEMPENTITY);
+	WriteByte(MSG_ONE, TE_CSQC_WEAPONCOMPLAIN);
+	WriteByte(MSG_ONE, wpn);
+	WriteString(MSG_ONE, wpnname);
+	WriteByte(MSG_ONE, type);
+}
+
 .float hasweapon_complain_spam;
 
 float client_hasweapon(entity cl, float wpn, float andammo, float complain)
@@ -949,6 +959,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				{
 					play2(cl, "weapons/unavailable.wav");
 					sprint(cl, strcat("You don't have any ammo for the ^2", W_Name(wpn), "\n"));
+					Send_WeaponComplain (cl, wpn, W_Name(wpn), 0);
 				}
 				return FALSE;
 			}
@@ -962,6 +973,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		if(weaponsInMap & weaponbit)
 		{
 			sprint(cl, strcat("You do not have the ^2", W_Name(wpn), "\n") );
+			Send_WeaponComplain (cl, wpn, W_Name(wpn), 1);
 
 			if(cvar("g_showweaponspawns"))
 			{
@@ -989,7 +1001,10 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			}
 		}
 		else
+		{
+			Send_WeaponComplain (cl, wpn, W_Name(wpn), 2);
 			sprint(cl, strcat("The ^2", W_Name(wpn), "^7 is ^1NOT AVAILABLE^7 in this map\n") );
+		}
 
 		play2(cl, "weapons/unavailable.wav");
 	}
