@@ -185,6 +185,7 @@ void W_Electro_Attack2()
 }
 
 .entity lgbeam, exteriorlgbeam;
+.float nextdamagethink;
 void lgbeam_think()
 {
 	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam || self.owner.BUTTON_ATCK == 0)
@@ -222,9 +223,6 @@ void exteriorlgbeam_think()
 		sound (self, CHAN_PROJECTILE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
 	}
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = max(0, self.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime);
-
 	self.nextthink = time;
 
 	makevectors(self.owner.v_angle);
@@ -234,12 +232,16 @@ void exteriorlgbeam_think()
 	traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage
-	if(trace_fraction < 1)
+	if(trace_fraction < 1 && self.nextdamagethink <= time)
 	{
+		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+			self.ammo_cells = max(0, self.ammo_cells - cvar("g_balance_electro_primary_ammo") * cvar("g_balance_electro_primary_refire"));
+
 		vector force;
 		force = angle * cvar("g_balance_electro_primary_force") + trace_ent.velocity * cvar("g_balance_electro_primary_velocityfactor") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
-		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * frametime, WEP_ELECTRO, trace_endpos, force * frametime);
+		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * cvar("g_balance_electro_primary_refire"), WEP_ELECTRO, trace_endpos, force * cvar("g_balance_electro_primary_refire"));
 		W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
+		self.nextdamagethink = time + cvar("g_balance_electro_primary_refire");
 	}
 
 	self.angles = '0 0 0';
