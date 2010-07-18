@@ -88,7 +88,8 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 	}
 	buf_del(sortbuf);
 	get_model_parameters(string_null, 0);
-	me.loadCvars(me);
+	me.loadCvars(me); // this will select the initial model, depending on the current cvars
+	me.go(me, 0); // this will set the vars for the selected model
 }
 void XonoticPlayerModelSelector_destroy(entity me)
 {
@@ -98,27 +99,25 @@ void XonoticPlayerModelSelector_destroy(entity me)
 
 void XonoticPlayerModelSelector_loadCvars(entity me)
 {
+	string skin, model;
 	float i;
-	if(me.currentModel)
-		strunzone(me.currentModel);
-	me.currentSkin = cvar("_cl_playerskin");
-	me.currentModel = strzone(cvar_string("_cl_playermodel"));
+
+	skin = cvar_string("_cl_playerskin");
+	model = cvar_string("_cl_playermodel");
+
 	for(i = 0; i < me.numModels; ++i)
 	{
-		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_MODEL) == me.currentModel)
-		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN) == ftos(me.currentSkin))
+		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_MODEL) == model)
+		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN) == skin)
 			break;
 	}
 	if(i >= me.numModels) // fail
 		i = 0;
 	me.idxModels = i;
-	me.go(me, 0); // this will set the other vars for currentSkin and currentModel
 }
 
 void XonoticPlayerModelSelector_go(entity me, float d)
 {
-	if (me.numModels <= 0)
-		return;
 	me.idxModels = mod(me.idxModels + d + me.numModels, me.numModels);
 
 	if(me.currentModel)
