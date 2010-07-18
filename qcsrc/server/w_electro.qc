@@ -142,7 +142,7 @@ void W_Electro_Attack2()
 {
 	local entity proj;
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire2.wav", cvar("g_balance_electro_secondary_damage"));
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 2, "weapons/electro_fire2.wav", cvar("g_balance_electro_secondary_damage"));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -166,7 +166,7 @@ void W_Electro_Attack2()
 	proj.movetype = MOVETYPE_BOUNCE;
 	W_SETUPPROJECTILEVELOCITY_UP(proj, g_balance_electro_secondary);
 	proj.touch = W_Plasma_Touch;
-	setsize(proj, '0 0 -3', '0 0 -3');
+	setsize(proj, '-3 -3 -3', '3 3 3');
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = cvar("g_balance_electro_secondary_damageforcescale");
 	proj.health = cvar("g_balance_electro_secondary_health");
@@ -239,6 +239,7 @@ void exteriorlgbeam_think()
 		vector force;
 		force = angle * cvar("g_balance_electro_primary_force") + trace_ent.velocity * cvar("g_balance_electro_primary_velocityfactor") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
 		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * frametime, WEP_ELECTRO, trace_endpos, force * frametime);
+		W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
 	}
 
 	self.angles = '0 0 0';
