@@ -467,6 +467,12 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_WEAPONICONS:
 					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble \"", cvar_string(strcat("hud_", panel_name, "_complainbubble")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble_padding \"", cvar_string(strcat("hud_", panel_name, "_complainbubble_padding")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble_color_outofammo \"", cvar_string(strcat("hud_", panel_name, "_complainbubble_color_outofammo")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble_color_donthave \"", cvar_string(strcat("hud_", panel_name, "_complainbubble_color_donthave")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_", panel_name, "_complainbubble_color_unavailable \"", cvar_string(strcat("hud_", panel_name, "_complainbubble_color_unavailable")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_", panel_name, "_ammo_color \"", cvar_string(strcat("hud_", panel_name, "_ammo_color")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_", panel_name, "_ammo_alpha \"", cvar_string(strcat("hud_", panel_name, "_ammo_alpha")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_", panel_name, "_aspect \"", cvar_string(strcat("hud_", panel_name, "_ammo_alpha")), "\"", "\n"));
 					break;
 				case HUD_PANEL_INVENTORY:
 					fputs(fh, strcat("seta hud_", panel_name, "_onlycurrent \"", cvar_string(strcat("hud_", panel_name, "_onlycurrent")), "\"", "\n"));
@@ -491,6 +497,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case HUD_PANEL_VOTE:
 					fputs(fh, strcat("seta hud_", panel_name, "_alreadyvoted_alpha \"", cvar_string(strcat("hud_", panel_name, "_alreadyvoted_alpha")), "\"", "\n"));
+					break;
+				case HUD_PANEL_PRESSEDKEYS:
+					fputs(fh, strcat("seta hud_", panel_name, "_aspect \"", cvar_string(strcat("hud_", panel_name, "_aspect")), "\"", "\n"));
 					break;
 			}
 			fputs(fh, "\n");
@@ -1230,7 +1239,7 @@ void HUD_Panel_Mouse()
 	if(highlightedPanel != -1)
 		highlightedPanel_prev = highlightedPanel;
 
-	mousepos = mousepos + getmousepos();
+	mousepos = mousepos + getmousepos() * cvar("menu_mouse_speed");
 
 	mousepos_x = bound(0, mousepos_x, vid_conwidth);
 	mousepos_y = bound(0, mousepos_y, vid_conheight);
@@ -1328,21 +1337,58 @@ float weaponorder_cmp(float i, float j, entity pass)
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
+float GetAmmoStat(float i)
+{
+	switch(i)
+	{
+		case 0: return STAT_SHELLS;
+		case 1: return STAT_NAILS;
+		case 2: return STAT_ROCKETS;
+		case 3: return STAT_CELLS;
+		case 4: return STAT_FUEL;
+		default: return -1;
+	}
+}
+
+float GetAmmoTypeForWep(float i)
+{
+	switch(i)
+	{
+		case WEP_SHOTGUN: return 0;
+		case WEP_UZI: return 1;
+		case WEP_CAMPINGRIFLE: return 1;
+		case WEP_GRENADE_LAUNCHER: return 2;
+		case WEP_ELECTRO: return 3;
+		case WEP_CRYLINK: return 3;
+		case WEP_HLAC: return 3;
+		case WEP_MINSTANEX: return 3;
+		case WEP_NEX: return 3;
+		case WEP_HAGAR: return 2;
+		case WEP_ROCKET_LAUNCHER: return 2;
+		case WEP_SEEKER: return 2;
+		case WEP_FIREBALL: return 4;
+		case WEP_HOOK: return 3;
+		default: return -1;
+	}
+}
+
+#define acc_color(i) stov(cvar_string(strcat("hud_weaponicons_accuracy_color", ftos(i))))
+#define MAX_ACCURACY_LEVELS 10
+float acc_lev[MAX_ACCURACY_LEVELS];
+
 void HUD_WeaponIcons(void)
 {
 	if(!autocvar_hud_weaponicons && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_WEAPONICONS;
-	HUD_Panel_UpdateCvarsForId(id);
-	float alpha, stat_weapons; // "constants"
+	active_panel = HUD_PANEL_WEAPONICONS;
+	HUD_Panel_UpdateCvars(weaponicons);
 	vector pos, mySize;
-	float i, weapid, fade, weapon_stats, weapon_hit, weapon_damage, weapon_cnt; // variables
+	float i, weapid, fade, weapon_stats, weapon_number, weapon_cnt;
 
 	pos = panel_pos;
 	mySize = panel_size;
 
-	stat_weapons = getstati(STAT_WEAPONS);
 	weapon_cnt = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -1400,71 +1446,134 @@ void HUD_WeaponIcons(void)
 
 	float rows, columns;
 	rows = mySize_y/mySize_x;
-	rows = bound(1, floor((sqrt(4 * (2/1) * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
-	//                               ^^^ weapon icon aspect goes here
+	rows = bound(1, floor((sqrt(4 * autocvar_hud_weaponicons_aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
 
 	columns = ceil(WEP_COUNT/rows);
 	float row, column;
 
-	float a;
+	float a, type, fullammo;
 	float when;
 	when = autocvar_hud_weaponicons_complainbubble_time;
 	float fadetime;
 	fadetime = autocvar_hud_weaponicons_complainbubble_fadetime;
 
 	vector color;
+	vector wpnpos;
+	vector wpnsize;
+
+	float acc_levels;
+	if(autocvar_hud_weaponicons_accuracy && !(gametype == GAME_RACE || gametype == GAME_CTS))
+	{
+		acc_levels = tokenize(cvar_string("hud_weaponicons_accuracy_color_levels"));
+		if (acc_levels > MAX_ACCURACY_LEVELS)
+			acc_levels = MAX_ACCURACY_LEVELS;
+
+		for (i = 0; i < acc_levels; ++i)
+			acc_lev[i] = stof(argv(i));
+	}
+
 	for(i = 0; i < weapon_cnt; ++i)
 	{
+		wpnpos = pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
+		wpnsize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+
 		self = weaponorder[i];
 		weapid = self.impulse;
 
-		alpha = (self.weapon == activeweapon) ? 1 : 0.6;
-
-		weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
-		weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
-
 		// draw background behind currently selected weapon
 		if(self.weapon == activeweapon)
-			drawpic_aspect_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "weapon_current_bg", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(wpnpos, "weapon_current_bg", wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
-		// draw the weapon accuracy on the HUD
-		if(hud_accuracy_hud && !(gametype == GAME_RACE || gametype == GAME_CTS))
+		// draw the weapon accuracy
+		if(acc_levels)
 		{
+			float weapon_hit, weapon_damage;
+			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
 			if(weapon_damage)
+			{
+				weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
 				weapon_stats = floor(100 * weapon_hit / weapon_damage);
+			}
 
-			// yellow_accuracy = value at which accuracy becomes yellow
-			if(weapon_stats >= 100) {
-				color_x = 0;
-				color_y = 1;
-			}
-			else if(weapon_stats > autocvar_hud_weaponicons_accuracy_yellow) {
-				color_x = 1 - (weapon_stats-autocvar_hud_weaponicons_accuracy_yellow)/(100-autocvar_hud_weaponicons_accuracy_yellow); // red value between 1 -> 0
-				color_y = 1;
-			} else {
-				color_x = 1;
-				color_y = weapon_stats/autocvar_hud_weaponicons_accuracy_yellow; // green value between 0 -> 1
-			}
+			// find the max level lower than weapon_stats
+			float j;
+			j = acc_levels-1;
+			while ( j && weapon_stats < acc_lev[j] )
+				--j;
+
+			// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
+			float factor;
+			factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
+			color = acc_color(j);
+			color = color + factor * (acc_color(j+1) - color);
 
 			if(weapon_damage)
-				drawpic_aspect_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), "weapon_accuracy", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), color, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(wpnpos, "weapon_accuracy", wpnsize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 
 		// draw the weapon icon
-		if((self.impulse >= 0) && (stat_weapons & self.weapons))
+		if((self.impulse >= 0) && (getstati(STAT_WEAPONS) & self.weapons))
 		{
-			drawpic_aspect_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			if(autocvar_hud_weaponicons_number == 1) // weapon number
-				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), ftos(weapid), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring(wpnpos, ftos(weapid), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 			else if(autocvar_hud_weaponicons_number == 2) // bind
-				drawstring(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+			// draw ammo status bar
+			if(autocvar_hud_weaponicons_ammo && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
+			{
+				a = 0;
+				type = GetAmmoTypeForWep(weapid);
+				if(type != -1)
+					a = getstati(GetAmmoStat(type)); // how much ammo do we have?
+
+				if(a > 0)
+				{
+					switch(type) {
+						case 0: fullammo = autocvar_hud_weaponicons_ammo_full_shells; break;
+						case 1: fullammo = autocvar_hud_weaponicons_ammo_full_nails; break;
+						case 2: fullammo = autocvar_hud_weaponicons_ammo_full_rockets; break;
+						case 3: fullammo = autocvar_hud_weaponicons_ammo_full_cells; break;
+						case 4: fullammo = autocvar_hud_weaponicons_ammo_full_fuel; break;
+						default: fullammo = 60;
+					}
+
+					vector barsize;
+					vector barpos;
+					if(wpnsize_x/wpnsize_y > autocvar_hud_weaponicons_aspect)
+					{
+						barsize_x = autocvar_hud_weaponicons_aspect * wpnsize_y;
+						barsize_y = wpnsize_y;
+
+						barpos_x = wpnpos_x + (wpnsize_x - barsize_x) / 2;
+						barpos_y = wpnpos_y;
+					}
+					else
+					{
+						barsize_y = 1/autocvar_hud_weaponicons_aspect * wpnsize_x;
+						barsize_x = wpnsize_x;
+
+						barpos_y = wpnpos_y + (wpnsize_y - barsize_y) / 2;
+						barpos_x = wpnpos_x;
+					}
+
+					drawsetcliparea(
+						barpos_x,
+						barpos_y,
+						barsize_x * bound(0, a/fullammo, 1),
+						barsize_y);
+					drawpic_aspect_skin(wpnpos, "weapon_ammo", wpnsize, autocvar_hud_weaponicons_ammo_color, panel_fg_alpha * autocvar_hud_weaponicons_ammo_alpha, DRAWFLAG_NORMAL);
+					drawresetcliparea();
+				}
+			}
 		}
 
 		// draw a "ghost weapon icon" if you don't have the weapon
 		else
 		{
-			drawpic_aspect_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), strcat("weapon", self.netname), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 		}
 
 		// draw the complain message
@@ -1488,18 +1597,18 @@ void HUD_WeaponIcons(void)
 			string s;
 			if(complain_weapon_type == 0) {
 				s = "Out of ammo";
-				color = '1 0 0';
+				color = autocvar_hud_weaponicons_complainbubble_color_outofammo;
 			}
 			else if(complain_weapon_type == 1) {
 				s = "Don't have";
-				color = '1 1 0';
+				color = autocvar_hud_weaponicons_complainbubble_color_donthave;
 			}
 			else {
 				s = "Unavailable";
-				color = '1 1 1';
+				color = autocvar_hud_weaponicons_complainbubble_color_unavailable;
 			}
-			drawpic_aspect_skin(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, "weapon_complainbubble", eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows) - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring_aspect(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows) + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, s, eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows) - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(wpnpos + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, "weapon_complainbubble", wpnsize - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(wpnpos + '1 1 0' * autocvar_hud_weaponicons_complainbubble_padding, s, wpnsize - '2 2 0' * autocvar_hud_weaponicons_complainbubble_padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
 		++row;
@@ -1515,19 +1624,6 @@ void HUD_WeaponIcons(void)
 // Inventory (#1)
 //
 // TODO: macro
-float GetAmmoStat(float i)
-{
-	switch(i)
-	{
-		case 0: return STAT_SHELLS;
-		case 1: return STAT_NAILS;
-		case 2: return STAT_ROCKETS;
-		case 3: return STAT_CELLS;
-		case 4: return STAT_FUEL;
-		default: return -1;
-	}
-}
-
 float GetAmmoItemCode(float i)
 {
 	switch(i)
@@ -1617,8 +1713,8 @@ void HUD_Inventory(void)
 	if(!autocvar_hud_inventory && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_INVENTORY;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_INVENTORY;
+	HUD_Panel_UpdateCvars(inventory);
 	float i, currently_selected;
 
 	vector pos, mySize;
@@ -1731,8 +1827,8 @@ void HUD_Powerups(void) {
 	if(!autocvar_hud_powerups && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_POWERUPS;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_POWERUPS;
+	HUD_Panel_UpdateCvars(powerups);
 	float stat_items;
 	stat_items = getstati(STAT_ITEMS);
 
@@ -1936,8 +2032,8 @@ void HUD_HealthArmor(void)
 	if(!autocvar_hud_healtharmor && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_HEALTHARMOR;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_HEALTHARMOR;
+	HUD_Panel_UpdateCvars(healtharmor);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2101,10 +2197,10 @@ void HUD_HealthArmor(void)
 			{
 				if(autocvar_hud_healtharmor_baralign == 1 || autocvar_hud_healtharmor_baralign == 3) { // right align
 					barpos = pos + eX * mySize_x - eX * mySize_x * min(1, leftcnt/200);
-					barsize = eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
+					barsize = eX * mySize_x * min(1, leftcnt/200) + eY * 0.5 * mySize_y;
 				} else { // left align
 					barpos = pos;
-					barsize = eX * mySize_x * min(1, rightcnt/200) + eY * 0.5 * mySize_y;
+					barsize = eX * mySize_x * min(1, leftcnt/200) + eY * 0.5 * mySize_y;
 				}
 
 				HUD_Panel_GetProgressBarColor(leftname)
@@ -2575,6 +2671,9 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		} else if(type == INFO_RETURNFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_RETURNFLAG);
 			print(s1, "^7 returned the ", s2, "\n");
+		} else if(type == INFO_CAPTUREFLAG) {
+			HUD_KillNotify_Push(s1, s2, 0, INFO_CAPTUREFLAG);
+			print(s1, "^7 captured the ", s2, s3, "\n");
 		}
 	}
 }
@@ -2673,8 +2772,8 @@ void HUD_Notify (void)
 	if(!autocvar_hud_notify && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_NOTIFY;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_NOTIFY;
+	HUD_Panel_UpdateCvars(notify);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2700,7 +2799,6 @@ void HUD_Notify (void)
 	fadetime = autocvar_hud_notify_fadetime;
 
 	string s;
-	vector color;
 
 	vector pos_attacker, pos_victim;
 	vector weap_pos;
@@ -2743,105 +2841,98 @@ void HUD_Notify (void)
 			if(killnotify_deathtype[j] == DEATH_GENERIC)
 			{
 				s = "notify_death";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_NOAMMO)
 			{
 				s = "notify_outofammo";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_KILL)
 			{
 				s = "notify_selfkill";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_CAMP)
 			{
 				s = "notify_camping";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
 			{
-				s = "notify_teamkill";
-				color = '1 0 0';
+				s = "notify_teamkill_red";
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
 			{
-				s = "notify_teamkill";
-				color = '0 0 1';
+				s = "notify_teamkill_blue";
 			}
 			else if(killnotify_deathtype[j] == DEATH_DROWN)
 			{
-				s = "notify_";
-				color = '1 1 1';
+				s = "notify_water";
 			}
 			else if(killnotify_deathtype[j] == DEATH_SLIME)
 			{
-				s = "notify_";
-				color = '1 1 1';
+				s = "notify_slime";
 			}
 			else if(killnotify_deathtype[j] == DEATH_LAVA)
 			{
-				s = "notify_";
-				color = '1 1 1';
+				s = "notify_lava";
 			}
 			else if(killnotify_deathtype[j] == DEATH_FALL)
 			{
-				s = "notify_";
-				color = '1 1 1';
+				s = "notify_fall";
 			}
 			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
 			{
-				s = "notify_";
-				color = '1 1 1';
+				s = "notify_shootingstar";
 			}
 			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM)
 			{
-				s = "notify_";
-				color = '1 1 1';
+				s = "notify_death";
 			}
 			else if(killnotify_deathtype[j] == INFO_GOTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
-					s = "flag_red_carrying";
-					color = '1 0 0';
+					s = "notify_red_taken";
 				}
 				else
 				{
-					s = "flag_blue_carrying";
-					color = '0 0 1';
+					s = "notify_blue_taken";
 				}
 			}
 			else if(killnotify_deathtype[j] == INFO_RETURNFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
-					s = "flag_red_taken";
-					color = '1 0 0';
+					s = "notify_red_returned";
 				}
 				else
 				{
-					s = "flag_blue_taken";
-					color = '0 0 1';
+					s = "notify_blue_returned";
 				}
 			}
 			else if(killnotify_deathtype[j] == INFO_LOSTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
-					s = "flag_red_lost";
-					color = '1 0 0';
+					s = "notify_red_lost";
 				}
 				else
 				{
-					s = "flag_blue_lost";
-					color = '0 0 1';
+					s = "notify_blue_lost";
+				}
+			}
+			else if(killnotify_deathtype[j] == INFO_CAPTUREFLAG)
+			{
+				if(killnotify_victims[j] == "^1RED^7 flag")
+				{
+					s = "notify_red_captured";
+				}
+				else
+				{
+					s = "notify_blue_captured";
 				}
 			}
 			if(s != "" && a)
 			{
-				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, color, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
@@ -2867,57 +2958,47 @@ void HUD_Notify (void)
 			if(autocvar__hud_configure) // example actions for config mode
 			{
 				s = "weaponelectro";
-				color = '1 1 1';
 			}
 			else if(WEP_VALID(killnotify_deathtype[j]))
 			{
 				self = get_weaponinfo(killnotify_deathtype[j]);
 				s = strcat("weapon", self.netname);
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
 			{
-				s = "notify_teamkill";
-				color = '1 0 0';
+				s = "notify_teamkill_red";
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
 			{
-				s = "notify_teamkill";
-				color = '0 0 1';
+				s = "notify_teamkill_red";
 			}
 			else if(killnotify_deathtype[j] == DEATH_DROWN)
 			{
 				s = "notify_water";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_SLIME)
 			{
 				s = "notify_slime";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_LAVA)
 			{
 				s = "notify_lava";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_FALL)
 			{
 				s = "notify_fall";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
 			{
 				s = "notify_shootingstar";
-				color = '1 1 1';
 			}
 			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
 			{
 				s = "notify_void";
-				color = '1 1 1';
 			}
 			if(s != "" && a)
 			{
-				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, color, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
@@ -2946,8 +3027,8 @@ void HUD_Timer(void)
 	if(!autocvar_hud_timer && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_TIMER;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_TIMER;
+	HUD_Panel_UpdateCvars(timer);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2998,11 +3079,11 @@ void HUD_Timer(void)
 //
 void HUD_Radar(void)
 {
-	if (!(autocvar_hud_radar != 0 && (autocvar_hud_radar == 2 || teamplay || autocvar__hud_configure)))
+	if ((autocvar_hud_radar == 0 || (autocvar_hud_radar != 2 && !teamplay)) && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_RADAR;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_RADAR;
+	HUD_Panel_UpdateCvars(radar);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3129,8 +3210,8 @@ void HUD_Score(void)
 	if(!autocvar_hud_score && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_SCORE;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_SCORE;
+	HUD_Panel_UpdateCvars(score);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3158,15 +3239,13 @@ void HUD_Score(void)
 				pl = world;
 
 		score = me.(scores[ps_primary]);
-		timer = seconds_tostring(score/TIME_FACTOR);
-		timer = strcat(timer, ":", ftos_decimals(mod(score, TIME_FACTOR), log(TIME_FACTOR)));
+		timer = TIME_ENCODED_TOSTRING(score);
 
 		if (pl && ((!(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)) || score)) {
 			// distribution display
 			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
 
-			distrtimer = seconds_tostring(distribution/TIME_FACTOR);
-			distrtimer = strcat(timer, ":", ftos_decimals(mod(distribution, TIME_FACTOR), log(TIME_FACTOR)));
+			distrtimer = ftos(distribution/pow(10, TIME_DECIMALS));
 
 			if (distribution <= 0) {
 				distribution_color = '0 1 0';
@@ -3258,8 +3337,8 @@ void HUD_RaceTimer (void) {
 	if(!autocvar_hud_racetimer && !(gametype == GAME_RACE || gametype == GAME_CTS) && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_RACETIMER;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_RACETIMER;
+	HUD_Panel_UpdateCvars(racetimer);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3410,8 +3489,8 @@ void HUD_VoteWindow(void)
 	if(!autocvar_hud_vote && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_VOTE;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_VOTE;
+	HUD_Panel_UpdateCvars(vote);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3995,8 +4074,8 @@ void HUD_ModIcons(void)
 	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_MODICONS;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_MODICONS;
+	HUD_Panel_UpdateCvars(modicons);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4041,8 +4120,8 @@ void HUD_DrawPressedKeys(void)
 	if(!(spectatee_status > 0 || autocvar_hud_pressedkeys >= 2 || autocvar__hud_configure))
 		return;
 
-	float id = HUD_PANEL_PRESSEDKEYS;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_PRESSEDKEYS;
+	HUD_Panel_UpdateCvars(pressedkeys);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4054,23 +4133,26 @@ void HUD_DrawPressedKeys(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	// always force 2:1 aspect
-	vector newSize;
-	if(mySize_x/mySize_y > 2)
+	// force custom aspect
+	if(autocvar_hud_pressedkeys_aspect)
 	{
-		newSize_x = 2 * mySize_y;
-		newSize_y = mySize_y;
+		vector newSize;
+		if(mySize_x/mySize_y > autocvar_hud_pressedkeys_aspect)
+		{
+			newSize_x = autocvar_hud_pressedkeys_aspect * mySize_y;
+			newSize_y = mySize_y;
 
-		pos_x = pos_x + (mySize_x - newSize_x) / 2;
-	}
-	else
-	{
-		newSize_y = 1/2 * mySize_x;
-		newSize_x = mySize_x;
+			pos_x = pos_x + (mySize_x - newSize_x) / 2;
+		}
+		else
+		{
+			newSize_y = 1/autocvar_hud_pressedkeys_aspect * mySize_x;
+			newSize_x = mySize_x;
 
-		pos_y = pos_y + (mySize_y - newSize_y) / 2;
+			pos_y = pos_y + (mySize_y - newSize_y) / 2;
+		}
+		mySize = newSize;
 	}
-	mySize = newSize;
 
 	vector keysize;
 	keysize = eX * mySize_x * (1/3) + eY * mySize_y * 0.5;
@@ -4095,8 +4177,8 @@ void HUD_Chat(void)
 		return;
 	}
 
-	float id = HUD_PANEL_CHAT;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_CHAT;
+	HUD_Panel_UpdateCvars(chat);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4147,8 +4229,8 @@ void HUD_EngineInfo(void)
 	if(!autocvar_hud_engineinfo && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_ENGINEINFO;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_ENGINEINFO;
+	HUD_Panel_UpdateCvars(engineinfo);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4200,8 +4282,8 @@ void HUD_InfoMessages(void)
 	if(!autocvar_hud_infomessages && !autocvar__hud_configure)
 		return;
 
-	float id = HUD_PANEL_INFOMESSAGES;
-	HUD_Panel_UpdateCvarsForId(id);
+	active_panel = HUD_PANEL_INFOMESSAGES;
+	HUD_Panel_UpdateCvars(infomessages);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4592,9 +4674,12 @@ void HUD_Main (void)
 
 	float f;
 	vector color;
-	if(teamplay && autocvar_hud_dock_color_team) {
+	if((teamplay) && autocvar_hud_dock_color_team) {
 		f = stof(getplayerkey(player_localentnum - 1, "colors"));
 		color = colormapPaletteColor(mod(f, 16), 1) * autocvar_hud_dock_color_team;
+	}
+	else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && autocvar_hud_dock_color_team) {
+		color = '1 0 0' * autocvar_hud_dock_color_team;
 	}
 	else if(autocvar_hud_dock_color == "shirt") {
 		f = stof(getplayerkey(player_localentnum - 1, "colors"));
