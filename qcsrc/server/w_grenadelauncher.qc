@@ -49,37 +49,17 @@ void W_Grenade_Touch1 (void)
 	PROJECTILE_TOUCH;
 	if(cvar("g_balance_grenadelauncher_primary_sticky") && other.takedamage != DAMAGE_AIM)
 	{
-		entity oldowner;
-		oldowner = self.owner;
+		spamsound (self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
 
-		vector temporigin;
-		temporigin = self.origin;
+		// let it stick whereever it is
+		self.velocity = '0 0 0';
+		self.movetype = MOVETYPE_NONE; // also disables gravity
+		UpdateCSQCProjectile(self);
 
-		remove(self);
-		local entity gren;
+		// do not respond to any more touches
+		self.solid = SOLID_NOT;
 
-		gren = spawn ();
-		gren.owner = oldowner;
-		gren.classname = "grenade";
-		gren.bot_dodge = TRUE;
-		gren.bot_dodgerating = cvar("g_balance_grenadelauncher_primary_damage");
-		gren.movetype = MOVETYPE_NONE;
-		PROJECTILE_MAKETRIGGER(gren);
-		gren.projectiledeathtype = WEP_GRENADE_LAUNCHER;
-		setorigin(gren, temporigin);
-		setsize(gren, '0 0 -3', '0 0 -3');
-
-		gren.nextthink = time + cvar("g_balance_grenadelauncher_primary_lifetime2");
-		gren.think = adaptor_think2use_hittype_splash;
-		gren.use = W_Grenade_Explode;
-
-		gren.flags = FL_PROJECTILE;
-
-		gren.takedamage = DAMAGE_YES;
-		gren.health = cvar("g_balance_grenadelauncher_primary_health");
-		gren.event_damage = W_Grenade_Damage;
-
-		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);	
+		self.nextthink = min(self.nextthink, time + cvar("g_balance_grenadelauncher_primary_lifetime2"));
 	}
 	else
 		W_Grenade_Explode ();
@@ -138,6 +118,10 @@ void W_Grenade_Attack (void)
 	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Grenade_Explode;
 	gren.touch = W_Grenade_Touch1;
+
+	gren.takedamage = DAMAGE_YES;
+	gren.health = cvar("g_balance_grenadelauncher_primary_health");
+	gren.event_damage = W_Grenade_Damage;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
 
 	gren.angles = vectoangles (gren.velocity);
@@ -167,13 +151,14 @@ void W_Grenade_Attack2 (void)
 	gren.bouncestop = cvar("g_balance_grenadelauncher_secondary_bouncestop");
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY;
-	setsize(gren, '0 0 -3', '0 0 -3');
 	setorigin(gren, w_shotorg);
+	setsize(gren, '0 0 -3', '0 0 -3');
 
 	gren.nextthink = time + cvar("g_balance_grenadelauncher_secondary_lifetime");
 	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Grenade_Explode2;
 	gren.touch = W_Grenade_Touch2;
+
 	gren.takedamage = DAMAGE_YES;
 	gren.health = cvar("g_balance_grenadelauncher_secondary_health");
 	gren.damageforcescale = cvar("g_balance_grenadelauncher_secondary_damageforcescale");
@@ -244,6 +229,7 @@ float w_glauncher(float req)
 		precache_sound ("weapons/grenade_bounce4.wav");
 		precache_sound ("weapons/grenade_bounce5.wav");
 		precache_sound ("weapons/grenade_bounce6.wav");
+		precache_sound ("weapons/grenade_stick.wav");
 		precache_sound ("weapons/grenade_fire.wav");
 	}
 	else if (req == WR_SETUP)
