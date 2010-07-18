@@ -187,7 +187,7 @@ void W_Electro_Attack2()
 .entity lgbeam, exteriorlgbeam;
 void lgbeam_think()
 {
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam)
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam || self.owner.BUTTON_ATCK == 0)
 	{
 		remove(self);
 		return;
@@ -209,7 +209,7 @@ void lgbeam_think()
 
 void exteriorlgbeam_think()
 {
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.exteriorlgbeam)
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.exteriorlgbeam || self.owner.BUTTON_ATCK == 0)
 	{
 		sound (self, CHAN_PROJECTILE, "sound/misc/null.wav", VOL_BASE, ATTN_NORM);
 		remove(self);
