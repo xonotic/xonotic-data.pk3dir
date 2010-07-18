@@ -54,6 +54,7 @@ void W_Grenade_Touch1 (void)
 		// let it stick whereever it is
 		self.velocity = '0 0 0';
 		self.movetype = MOVETYPE_NONE; // also disables gravity
+		self.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
 		UpdateCSQCProjectile(self);
 
 		// do not respond to any more touches
