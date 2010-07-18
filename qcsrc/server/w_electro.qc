@@ -188,7 +188,7 @@ void W_Electro_Attack2()
 .float nextdamagethink;
 void lgbeam_think()
 {
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam || self.owner.BUTTON_ATCK == 0)
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam || self.owner.BUTTON_ATCK == 0 || self.owner.deadflag != DEAD_NO)
 	{
 		remove(self);
 		return;
@@ -211,7 +211,7 @@ void lgbeam_think()
 // execute each frame to update the beam visuals, but only apply damage at intervals of "refire" to prevent massive hitsound spam
 void exteriorlgbeam_think()
 {
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.exteriorlgbeam || self.owner.BUTTON_ATCK == 0)
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.exteriorlgbeam || self.owner.BUTTON_ATCK == 0 || self.owner.deadflag != DEAD_NO)
 	{
 		sound (self, CHAN_PROJECTILE, "sound/misc/null.wav", VOL_BASE, ATTN_NORM);
 		remove(self);
