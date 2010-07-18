@@ -43,6 +43,29 @@ void W_Rocket_Explode ()
 	remove (self);
 }
 
+void W_Rocket_RemoteExplode ()
+{
+	W_Rocket_Unregister();
+
+	self.event_damage = SUB_Null;
+	self.takedamage = DAMAGE_NO;
+
+	RadiusDamage (self, self.owner, cvar("g_balance_rocketlauncher_remote_damage"), cvar("g_balance_rocketlauncher_remote_edgedamage"), cvar("g_balance_rocketlauncher_remote_radius"), world, cvar("g_balance_rocketlauncher_remote_force"), self.projectiledeathtype | HITTYPE_BOUNCE, world);
+
+	if (self.owner.weapon == WEP_ROCKET_LAUNCHER)
+	{
+		if(self.owner.ammo_rockets < cvar("g_balance_rocketlauncher_ammo"))
+		{
+			self.owner.cnt = WEP_ROCKET_LAUNCHER;
+			ATTACK_FINISHED(self.owner) = time;
+			self.owner.switchweapon = w_getbestweapon(self.owner);
+		}
+		if(g_laserguided_missile)
+			ATTACK_FINISHED(self.owner) = time + cvar("g_balance_rocketlauncher_refire") * W_WeaponRateFactor();
+	}
+	remove (self);
+}
+
 entity FindLaserTarget(entity e, float dist_variance, float dot_variance)
 {
 	entity head, selected;
@@ -105,36 +128,7 @@ void W_Rocket_RemoteExplode()
 			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > cvar("g_balance_rocketlauncher_radius")) // safety device
 		)
 		{
-			other = world;
-			self.projectiledeathtype |= HITTYPE_BOUNCE;
-		}
-		else
-		{
-			W_Rocket_Unregister();
-
-			if(other.takedamage == DAMAGE_AIM)
-				if(other.classname == "player")
-					if(IsDifferentTeam(self.owner, other))
-						if(IsFlying(other))
-							AnnounceTo(self.owner, "airshot");
-
-			self.event_damage = SUB_Null;
-			self.takedamage = DAMAGE_NO;
-
-			RadiusDamage (self, self.owner, cvar("g_balance_rocketlauncher_remote_damage"), cvar("g_balance_rocketlauncher_remote_edgedamage"), cvar("g_balance_rocketlauncher_remote_radius"), world, cvar("g_balance_rocketlauncher_remote_force"), self.projectiledeathtype, other);
-
-			if (self.owner.weapon == WEP_ROCKET_LAUNCHER)
-			{
-				if(self.owner.ammo_rockets < cvar("g_balance_rocketlauncher_ammo"))
-				{
-					self.owner.cnt = WEP_ROCKET_LAUNCHER;
-					ATTACK_FINISHED(self.owner) = time;
-					self.owner.switchweapon = w_getbestweapon(self.owner);
-				}
-				if(g_laserguided_missile)
-					ATTACK_FINISHED(self.owner) = time + cvar("g_balance_rocketlauncher_refire") * W_WeaponRateFactor();
-			}
-			remove (self);
+			W_Rocket_RemoteExplode();
 		}
 	}
 }
