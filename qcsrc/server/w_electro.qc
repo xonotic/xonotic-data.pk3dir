@@ -223,7 +223,7 @@ void exteriorlgbeam_think()
 	}
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime;
+		self.ammo_cells = max(0, self.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime);
 
 	self.nextthink = time;
 
