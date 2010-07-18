@@ -238,7 +238,7 @@ void exteriorlgbeam_think()
 			self.ammo_cells = max(0, self.ammo_cells - cvar("g_balance_electro_primary_ammo") * cvar("g_balance_electro_primary_refire"));
 
 		vector force;
-		force = angle * cvar("g_balance_electro_primary_force") + trace_ent.velocity * cvar("g_balance_electro_primary_velocityfactor") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
+		force = angle * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
 		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * cvar("g_balance_electro_primary_refire"), WEP_ELECTRO, trace_endpos, force * cvar("g_balance_electro_primary_refire"));
 		W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
 		self.nextdamagethink = time + cvar("g_balance_electro_primary_refire");
