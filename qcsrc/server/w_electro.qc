@@ -202,7 +202,7 @@ void lgbeam_think()
 	vector force;
 	force = angle * cvar("g_balance_electro_primary_force");
 
-	traceline_antilag(self.owner, self.owner.origin, self.owner.origin + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
 	self.scale = vlen(self.owner.origin - trace_endpos) / 256 * (0.75 + 0.75 * random());
 }
@@ -231,7 +231,7 @@ void exteriorlgbeam_think()
 	vector angle;
 	angle = v_forward;
 
-	traceline_antilag(self.owner, self.owner.origin, self.owner.origin + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage
 	if(trace_fraction < 1)
