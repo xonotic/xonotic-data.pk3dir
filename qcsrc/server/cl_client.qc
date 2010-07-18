@@ -2602,15 +2602,15 @@ void PlayerPreThink (void)
 			if(self.health <= 0 && cvar("g_deathglow"))
 			{
 				if(self.glowmod_x > 0)
-					self.glowmod_x -= cvar("g_deathglow");
+					self.glowmod_x -= cvar("g_deathglow") * frametime;
 				else
 					self.glowmod_x = -1;
 				if(self.glowmod_y > 0)
-					self.glowmod_y -= cvar("g_deathglow");
+					self.glowmod_y -= cvar("g_deathglow") * frametime;
 				else
 					self.glowmod_y = -1;
 				if(self.glowmod_z > 0)
-					self.glowmod_z -= cvar("g_deathglow");
+					self.glowmod_z -= cvar("g_deathglow") * frametime;
 				else
 					self.glowmod_z = -1;
 			}
