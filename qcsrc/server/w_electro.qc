@@ -184,8 +184,15 @@ void W_Electro_Attack2()
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
 }
 
+.entity lgbeam, exteriorlgbeam;
 void lgbeam_think()
 {
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam)
+	{
+		remove(self);
+		return;
+	}
+
 	self.nextthink = time;
 
 	makevectors(self.owner.v_angle);
@@ -202,7 +209,7 @@ void lgbeam_think()
 
 void exteriorlgbeam_think()
 {
-	if (!self.owner.BUTTON_ATCK || self.owner.ammo_cells <= 0) // || (self.ammo_cells <= 0 && !(self.items & IT_UNLIMITED_WEAPON_AMMO)))
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.exteriorlgbeam)
 	{
 		sound (self, CHAN_PROJECTILE, "sound/misc/null.wav", VOL_BASE, ATTN_NORM);
 		remove(self);
@@ -216,7 +223,7 @@ void exteriorlgbeam_think()
 	}
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - cvar("g_balance_electro_primary_ammo");
+		self.ammo_cells = self.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime;
 
 	self.nextthink = time;
 
@@ -234,26 +241,24 @@ void exteriorlgbeam_think()
 		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * frametime, WEP_ELECTRO, trace_endpos, force * frametime);
 	}
 
+	self.angles = '0 0 0';
 	self.scale = vlen(gettaginfo(self, 0) - trace_endpos) / 256 * (0.75 + 0.75 * random());
 
-	gettaginfo(self, 0);
 	// v_forward, v_right, v_up now are the ACTUAL directions
-	// express self.angles in terms of them!
+	// express self.angles in terms of them to aim at target!
 	self.angles = vectoangles('1 0 0' * (angle * v_forward) + '0 -1 0' * (angle * v_right) + '0 0 1' * (angle * v_up));
 }
 
 // experimental lightning gun
 void W_Electro_Attack3 (void)
 {
-	entity beam;
+	entity beam, oldself;
 
-	beam = spawn();
+	self.lgbeam = beam = spawn();
 	setmodel(beam,"models/turrets/phaser_beam.md3");
 	beam.effects = EF_LOWPRECISION;
 	beam.solid = SOLID_NOT;
 	beam.think = lgbeam_think;
-	beam.scale = cvar("g_balance_electro_primary_range") / 256;
-	beam.nextthink = time;
 	beam.owner = self;
 	beam.movetype = MOVETYPE_NONE;
 	if(gettagindex(self.weaponentity, "shot"))
@@ -261,17 +266,19 @@ void W_Electro_Attack3 (void)
 	else
 		setattachment(beam, self.weaponentity, "tag_shot");
 
-	beam = spawn();
-	beam.ticrate = autocvar_sys_ticrate;
+	oldself = self;
+	self = beam;
+	self.think();
+	self = oldself;
+
+	self.exteriorlgbeam = beam = spawn();
 	setmodel(beam,"models/turrets/phaser_beam.md3");
 	beam.effects = EF_LOWPRECISION;
 	beam.solid = SOLID_NOT;
 	beam.think = exteriorlgbeam_think;
-	beam.scale = cvar("g_balance_electro_primary_range") / 256;
-	beam.nextthink = time;
 	beam.owner = self;
 	beam.movetype = MOVETYPE_NONE;
-	beam.viewmodelforclient = self;
+	//beam.viewmodelforclient = self;
 	if(self.weaponentity.oldorigin_x > 0)
 	{
 		setattachment(beam, self.exteriorweaponentity, "");
@@ -287,7 +294,12 @@ void W_Electro_Attack3 (void)
 
 	beam.shot_spread = 0;
 	beam.bot_dodge = TRUE;
-	beam.bot_dodgerating = cvar("g_balance_electro_primary_damage")/autocvar_sys_ticrate;
+	beam.bot_dodgerating = cvar("g_balance_electro_primary_damage");
+
+	oldself = self;
+	self = beam;
+	self.think();
+	self = oldself;
 }
 
 void spawnfunc_weapon_electro (void)
