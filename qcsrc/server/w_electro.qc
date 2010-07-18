@@ -142,7 +142,7 @@ void W_Electro_Attack2()
 {
 	local entity proj;
 
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 2, "weapons/electro_fire2.wav", cvar("g_balance_electro_secondary_damage"));
+	W_SetupShot_ProjectileSize (self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", cvar("g_balance_electro_secondary_damage"));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -166,7 +166,7 @@ void W_Electro_Attack2()
 	proj.movetype = MOVETYPE_BOUNCE;
 	W_SETUPPROJECTILEVELOCITY_UP(proj, g_balance_electro_secondary);
 	proj.touch = W_Plasma_Touch;
-	setsize(proj, '-3 -3 -3', '3 3 3');
+	setsize(proj, '0 0 -4', '0 0 -4');
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = cvar("g_balance_electro_secondary_damageforcescale");
 	proj.health = cvar("g_balance_electro_secondary_health");
@@ -208,6 +208,7 @@ void lgbeam_think()
 	self.scale = vlen(self.owner.origin - trace_endpos) / 256 * (0.75 + 0.75 * random());
 }
 
+// execute each frame to update the beam visuals, but only apply damage at intervals of "refire" to prevent massive hitsound spam
 void exteriorlgbeam_think()
 {
 	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.exteriorlgbeam || self.owner.BUTTON_ATCK == 0)
@@ -231,16 +232,19 @@ void exteriorlgbeam_think()
 
 	traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
-	// apply the damage
-	if(trace_fraction < 1 && self.nextdamagethink <= time)
+	if(self.nextdamagethink <= time)
 	{
-		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-			self.ammo_cells = max(0, self.ammo_cells - cvar("g_balance_electro_primary_ammo") * cvar("g_balance_electro_primary_refire"));
+		if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
+			self.owner.ammo_cells = max(0, self.owner.ammo_cells - cvar("g_balance_electro_primary_ammo") * cvar("g_balance_electro_primary_refire"));
 
-		vector force;
-		force = angle * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
-		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * cvar("g_balance_electro_primary_refire"), WEP_ELECTRO, trace_endpos, force * cvar("g_balance_electro_primary_refire"));
-		W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
+		// apply the damage
+		if(trace_fraction < 1)
+		{
+			vector force;
+			force = angle * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
+			Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * cvar("g_balance_electro_primary_refire"), WEP_ELECTRO, trace_endpos, force * cvar("g_balance_electro_primary_refire"));
+			W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
+		}
 		self.nextdamagethink = time + cvar("g_balance_electro_primary_refire");
 	}
 
@@ -402,7 +406,12 @@ float w_electro(float req)
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_ELECTRO);
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_cells >= cvar("g_balance_electro_primary_ammo");
+	{
+		if(cvar("g_balance_electro_lightning"))
+			return self.ammo_cells >= cvar("g_balance_electro_primary_ammo") * cvar("g_balance_electro_primary_refire");
+		else
+			return self.ammo_cells >= cvar("g_balance_electro_primary_ammo");
+	}
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_cells >= cvar("g_balance_electro_secondary_ammo");
 	else if (req == WR_RESETPLAYER)
