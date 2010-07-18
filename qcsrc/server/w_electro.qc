@@ -352,21 +352,27 @@ float w_electro(float req)
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, cvar("g_balance_electro_primary_refire")))
 		{
-			if(cvar("g_balance_electro_lightning"))
+			if (weapon_prepareattack(0, cvar("g_balance_electro_primary_refire")))
 			{
-				if (self.BUTTON_ATCK_prev == 0)
+				if(cvar("g_balance_electro_lightning"))
 				{
-					W_Electro_Attack3();
+					if (self.BUTTON_ATCK_prev == 0)
+					{
+						W_Electro_Attack3();
+					}
+					self.BUTTON_ATCK_prev = 1;
 				}
+				else
+				{
+					W_Electro_Attack();
+				}
+				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_electro_primary_animtime"), w_ready);
 			}
-			else
-			{
-				W_Electro_Attack();
-			}
-			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_electro_primary_animtime"), w_ready);
+		} else {
+			self.BUTTON_ATCK_prev = 0;
 		}
+
 		if (self.BUTTON_ATCK2)
 		if (time >= self.electro_secondarytime)
 		if (weapon_prepareattack(1, cvar("g_balance_electro_secondary_refire")))
@@ -400,7 +406,6 @@ float w_electro(float req)
 	{
 		self.electro_secondarytime = time;
 	}
-	self.BUTTON_ATCK_prev = self.BUTTON_ATCK;
 	return TRUE;
 };
 #endif
