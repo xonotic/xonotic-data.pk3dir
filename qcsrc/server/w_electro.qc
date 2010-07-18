@@ -186,43 +186,60 @@ void W_Electro_Attack2()
 
 void lgbeam_think()
 {
-    if (!self.owner.BUTTON_ATCK || self.owner.ammo_cells <= 0) // || (self.ammo_cells <= 0 && !(self.items & IT_UNLIMITED_WEAPON_AMMO)))
-    {
-        sound (self, CHAN_PROJECTILE, "sound/misc/null.wav", VOL_BASE, ATTN_NORM);
-        remove(self);
-        return;
-    }
+	self.nextthink = time;
 
-    if (time - self.shot_spread + random() * 0.2 > 0)
-    {
-        self.shot_spread = time + 2;
-        sound (self, CHAN_PROJECTILE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
-    }
+	makevectors(self.owner.v_angle);
+	vector angle;
+	angle = v_forward;
 
-    if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	self.ammo_cells = self.ammo_cells - cvar("g_balance_electro_primary_ammo");
+	vector force;
+	force = angle * cvar("g_balance_electro_primary_force");
 
-    self.nextthink = time + self.ticrate;
+	traceline_antilag(self.owner, self.owner.origin, self.owner.origin + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
-    //w_deathtypestring = "was phased out of existence";
+	self.scale = vlen(self.owner.origin - trace_endpos) / 256 * (0.75 + 0.75 * random());
+}
 
-    makevectors(self.owner.v_angle);
-    vector angle;
-    angle = v_forward;
+void exteriorlgbeam_think()
+{
+	if (!self.owner.BUTTON_ATCK || self.owner.ammo_cells <= 0) // || (self.ammo_cells <= 0 && !(self.items & IT_UNLIMITED_WEAPON_AMMO)))
+	{
+		sound (self, CHAN_PROJECTILE, "sound/misc/null.wav", VOL_BASE, ATTN_NORM);
+		remove(self);
+		return;
+	}
 
-    vector force;
-    force = angle * cvar("g_balance_electro_primary_force");
+	if (time - self.shot_spread + random() * 0.2 > 0)
+	{
+		self.shot_spread = time + 2;
+		sound (self, CHAN_PROJECTILE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
+	}
 
-    traceline_antilag(self.owner, self.owner.origin, self.owner.origin + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		self.ammo_cells = self.ammo_cells - cvar("g_balance_electro_primary_ammo");
 
-    // apply the damage
-    if(trace_fraction < 1)
-    {
-	Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage"), WEP_ELECTRO, trace_endpos, force);
-	trace_ent.velocity = trace_ent.velocity * cvar("g_balance_electro_primary_velocityfactor") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
-    }
+	self.nextthink = time;
 
-    self.scale = vlen(self.owner.origin - trace_endpos) / 256 * (0.75 + 0.75 * random());
+	makevectors(self.owner.v_angle);
+	vector angle;
+	angle = v_forward;
+
+	traceline_antilag(self.owner, self.owner.origin, self.owner.origin + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+
+	// apply the damage
+	if(trace_fraction < 1)
+	{
+		vector force;
+		force = angle * cvar("g_balance_electro_primary_force") + trace_ent.velocity * cvar("g_balance_electro_primary_velocityfactor") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
+		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * frametime, WEP_ELECTRO, trace_endpos, force * frametime);
+	}
+
+	self.scale = vlen(gettaginfo(self, 0) - trace_endpos) / 256 * (0.75 + 0.75 * random());
+
+	gettaginfo(self, 0);
+	// v_forward, v_right, v_up now are the ACTUAL directions
+	// express self.angles in terms of them!
+	self.angles = vectoangles('1 0 0' * (angle * v_forward) + '0 -1 0' * (angle * v_right) + '0 0 1' * (angle * v_up));
 }
 
 // experimental lightning gun
@@ -231,19 +248,46 @@ void W_Electro_Attack3 (void)
 	entity beam;
 
 	beam = spawn();
-	beam.ticrate = autocvar_sys_ticrate;
 	setmodel(beam,"models/turrets/phaser_beam.md3");
 	beam.effects = EF_LOWPRECISION;
 	beam.solid = SOLID_NOT;
 	beam.think = lgbeam_think;
-	beam.shot_spread = 0;
 	beam.scale = cvar("g_balance_electro_primary_range") / 256;
 	beam.nextthink = time;
 	beam.owner = self;
 	beam.movetype = MOVETYPE_NONE;
+	if(gettagindex(self.weaponentity, "shot"))
+		setattachment(beam, self.weaponentity, "shot");
+	else
+		setattachment(beam, self.weaponentity, "tag_shot");
+
+	beam = spawn();
+	beam.ticrate = autocvar_sys_ticrate;
+	setmodel(beam,"models/turrets/phaser_beam.md3");
+	beam.effects = EF_LOWPRECISION;
+	beam.solid = SOLID_NOT;
+	beam.think = exteriorlgbeam_think;
+	beam.scale = cvar("g_balance_electro_primary_range") / 256;
+	beam.nextthink = time;
+	beam.owner = self;
+	beam.movetype = MOVETYPE_NONE;
+	beam.viewmodelforclient = self;
+	if(self.weaponentity.oldorigin_x > 0)
+	{
+		setattachment(beam, self.exteriorweaponentity, "");
+		setorigin(beam, self.weaponentity.oldorigin);
+	}
+	else
+	{
+		if(gettagindex(self.exteriorweaponentity, "shot"))
+			setattachment(beam, self.exteriorweaponentity, "shot");
+		else
+			setattachment(beam, self.exteriorweaponentity, "tag_shot");
+	}
+
+	beam.shot_spread = 0;
 	beam.bot_dodge = TRUE;
 	beam.bot_dodgerating = cvar("g_balance_electro_primary_damage")/autocvar_sys_ticrate;
-    	setattachment(beam, self.weaponentity, "shot");
 }
 
 void spawnfunc_weapon_electro (void)

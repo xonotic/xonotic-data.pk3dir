@@ -1357,7 +1357,10 @@ void W_AttachToShotorg(entity flash, vector offset)
 	}
 	else
 	{
-		setattachment(flash, self.weaponentity, "shot");
+		if(gettagindex(self.weaponentity, "shot"))
+			setattachment(flash, self.weaponentity, "shot");
+		else
+			setattachment(flash, self.weaponentity, "tag_shot");
 		setorigin(flash, offset);
 
 		xflash = spawn();
@@ -1372,7 +1375,11 @@ void W_AttachToShotorg(entity flash, vector offset)
 		}
 		else
 		{
-			setattachment(xflash, self.exteriorweaponentity, "shot");
+			if(gettagindex(self.exteriorweaponentity, "shot"))
+				setattachment(xflash, self.exteriorweaponentity, "shot");
+			else
+				setattachment(xflash, self.exteriorweaponentity, "tag_shot");
+			setorigin(xflash, offset);
 		}
 	}
 }

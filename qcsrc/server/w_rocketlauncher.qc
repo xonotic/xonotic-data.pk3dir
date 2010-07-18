@@ -43,7 +43,7 @@ void W_Rocket_Explode ()
 	remove (self);
 }
 
-void W_Rocket_RemoteExplode ()
+void W_Rocket_DoRemoteExplode ()
 {
 	W_Rocket_Unregister();
 
@@ -128,7 +128,7 @@ void W_Rocket_RemoteExplode()
 			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > cvar("g_balance_rocketlauncher_radius")) // safety device
 		)
 		{
-			W_Rocket_RemoteExplode();
+			W_Rocket_DoRemoteExplode();
 		}
 	}
 }
