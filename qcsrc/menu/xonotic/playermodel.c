@@ -47,10 +47,13 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 	float sortbuf, glob, i;
 	string fn;
 
+	glob = search_begin(get_model_datafilename(string_null, -1, "txt"), TRUE, TRUE);
+	if (glob < 0)
+		return;
+
 	me.configureXonoticImage(me, string_null, -1);
 
 	sortbuf = buf_create();
-	glob = search_begin(get_model_datafilename(string_null, -1, "txt"), TRUE, TRUE);
 	for(i = 0; i < search_getsize(glob); ++i)
 	{
 		// select model #i!
@@ -114,6 +117,8 @@ void XonoticPlayerModelSelector_loadCvars(entity me)
 
 void XonoticPlayerModelSelector_go(entity me, float d)
 {
+	if (me.numModels <= 0)
+		return;
 	me.idxModels = mod(me.idxModels + d + me.numModels, me.numModels);
 
 	if(me.currentModel)
@@ -139,12 +144,16 @@ void XonoticPlayerModelSelector_go(entity me, float d)
 
 void PlayerModelSelector_Next_Click(entity btn, entity me)
 {
+	if (me.numModels <= 0)
+		return;
 	me.go(me, +1);
 	me.saveCvars(me);
 }
 
 void PlayerModelSelector_Prev_Click(entity btn, entity me)
 {
+	if (me.numModels <= 0)
+		return;
 	me.go(me, -1);
 	me.saveCvars(me);
 }
@@ -161,8 +170,13 @@ void XonoticPlayerModelSelector_draw(entity me)
 	float i, n;
 	vector o;
 
-	SUPER(XonoticPlayerModelSelector).draw(me);
+	if (me.numModels <= 0)
+	{
+		draw_CenterText('0.5 0.5 0', "<no model found>", me.realFontSize, '1 1 1', 0.6, FALSE);
+		return;
+	}
 
+	SUPER(XonoticPlayerModelSelector).draw(me);
 	// draw text on the image, handle \n in the description
 	draw_CenterText('0.5 0 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);
 
