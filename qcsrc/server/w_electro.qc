@@ -244,8 +244,6 @@ void W_Electro_Attack3 (void)
 	entity beam, oldself;
 
 	self.lgbeam = beam = spawn();
-	setmodel(beam,"models/turrets/phaser_beam.md3");
-	beam.effects = EF_LOWPRECISION;
 	beam.solid = SOLID_NOT;
 	beam.think = lgbeam_think;
 	beam.owner = self;
