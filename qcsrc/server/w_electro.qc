@@ -230,12 +230,12 @@ void lgbeam_think()
 	WriteByte(MSG_BROADCAST, TE_CSQC_BEAM);
 	WriteByte(MSG_BROADCAST, num_for_edict(self.owner));
 	WriteByte(MSG_BROADCAST, sound_allowed(MSG_BROADCAST, self.owner) ? 1 : 2);
-	WriteCoord(MSG_BROADCAST, org_x);
-	WriteCoord(MSG_BROADCAST, org_y);
-	WriteCoord(MSG_BROADCAST, org_z);
 	WriteCoord(MSG_BROADCAST, trace_endpos_x);
 	WriteCoord(MSG_BROADCAST, trace_endpos_y);
 	WriteCoord(MSG_BROADCAST, trace_endpos_z);
+	WriteCoord(MSG_BROADCAST, org_x);
+	WriteCoord(MSG_BROADCAST, org_y);
+	WriteCoord(MSG_BROADCAST, org_z);
 }
 
 // experimental lightning gun
