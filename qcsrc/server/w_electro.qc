@@ -263,7 +263,10 @@ void W_Electro_Attack3 (void)
 void ElectroInit()
 {
 	weapon_action(WEP_ELECTRO, WR_PRECACHE);
-	electro_shotorigin = shotorg_adjust(CL_Weapon_GetShotOrg(WEP_ELECTRO), TRUE, FALSE);
+	electro_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), TRUE, FALSE, 1);
+	electro_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), TRUE, FALSE, 2);
+	electro_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), TRUE, FALSE, 3);
+	electro_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), TRUE, FALSE, 4);
 }
 
 void spawnfunc_weapon_electro (void)

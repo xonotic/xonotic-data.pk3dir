@@ -55,11 +55,19 @@ void Draw_GrapplingHook()
 	string tex;
 	vector rgb;
 	float t;
+	float s;
+	vector vs;
 
 	if(time < self.HookKillTime)
 	{
+		s = cvar("cl_gunalign");
+		if(s != 1 && s != 2 && s != 4)
+			s = 3; // default value
+		--s;
+		vs = hook_shotorigin[s];
+
 		if(self.sv_entnum == player_localentnum - 1)
-			a = view_origin + view_forward * hook_shotorigin_x + view_right * hook_shotorigin_y + view_up * hook_shotorigin_z;
+			a = view_origin + view_forward * vs_x + view_right * vs_y + view_up * vs_z;
 		else
 			a = self.HookStart;
 		b = self.HookEnd;
@@ -100,8 +108,14 @@ void Draw_GrapplingHook()
 
 	if(time < self.LGBeamKillTime)
 	{
+		s = cvar("cl_gunalign");
+		if(s != 1 && s != 2 && s != 4)
+			s = 3; // default value
+		--s;
+		vs = electro_shotorigin[s];
+
 		if(self.sv_entnum == player_localentnum - 1)
-			a = view_origin + view_forward * electro_shotorigin_x + view_right * electro_shotorigin_y + view_up * electro_shotorigin_z;
+			a = view_origin + view_forward * vs_x + view_right * vs_y + view_up * vs_z;
 		else
 			a = self.LGBeamStart;
 		b = self.LGBeamEnd;

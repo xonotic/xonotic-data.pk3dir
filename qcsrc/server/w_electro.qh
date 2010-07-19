@@ -1,2 +1,2 @@
 void ElectroInit();
-vector electro_shotorigin;
+vector electro_shotorigin[4];

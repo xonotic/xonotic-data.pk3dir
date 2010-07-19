@@ -116,8 +116,8 @@ void GrapplingHook_Stop()
 
 void GrapplingHookThink()
 {
-	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
-	vector dir, org, end, v0, dv, v, myorg;
+	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s;
+	vector dir, org, end, v0, dv, v, myorg, vs;
 	if(self.owner.health <= 0 || self.owner.hook != self)	// how did that happen?
 	{														// well, better fix it anyway
 		remove(self);
@@ -133,8 +133,14 @@ void GrapplingHookThink()
 
 	self.nextthink = time;
 
+	s = self.owner.cvar_cl_gunalign;
+	if(s != 1 && s != 2 && s != 4)
+		s = 3; // default value
+	--s;
+	vs = hook_shotorigin[s];
+
 	makevectors(self.owner.v_angle);
-	org = self.owner.origin + self.owner.view_ofs + v_forward * hook_shotorigin_x + v_right * hook_shotorigin_y + v_up * hook_shotorigin_z;
+	org = self.owner.origin + self.owner.view_ofs + v_forward * vs_x + v_right * vs_y + v_up * vs_z;
 	myorg = WarpZone_RefSys_TransformOrigin(self.owner, self, org);
 
 	if(self.hook_length < 0)
@@ -294,15 +300,23 @@ void FireGrapplingHook (void)
 {
 	local entity missile;
 	local vector org;
+	float s;
+	vector vs;
 
 	if((arena_roundbased && time < warmup) || (time < game_starttime))
 		return;
 
 	makevectors(self.v_angle);
 
+	s = self.cvar_cl_gunalign;
+	if(s != 1 && s != 2 && s != 4)
+		s = 3; // default value
+	--s;
+	vs = hook_shotorigin[s];
+
 	// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
 	sound (self, CHAN_WEAPON2, "weapons/hook_fire.wav", VOL_BASE, ATTN_NORM);
-	org = self.origin + self.view_ofs + v_forward * hook_shotorigin_x + v_right * hook_shotorigin_y + v_up * hook_shotorigin_z;
+	org = self.origin + self.view_ofs + v_forward * vs_x + v_right * vs_y + v_up * vs_z;
 	pointparticles(particleeffectnum("grapple_muzzleflash"), org, '0 0 0', 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -446,11 +460,19 @@ void GrapplingHookFrame()
 void GrappleHookInit()
 {
 	if(g_grappling_hook)
-		hook_shotorigin = '8 -8 -12';
+	{
+		hook_shotorigin[0] = '8 -8 -12';
+		hook_shotorigin[1] = '8 -8 -12';
+		hook_shotorigin[2] = '8 -8 -12';
+		hook_shotorigin[3] = '8 -8 -12';
+	}
 	else
 	{
 		weapon_action(WEP_HOOK, WR_PRECACHE);
-		hook_shotorigin = shotorg_adjust(CL_Weapon_GetShotOrg(WEP_HOOK), TRUE, FALSE);
+		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), TRUE, FALSE, 1);
+		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), TRUE, FALSE, 2);
+		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), TRUE, FALSE, 3);
+		hook_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), TRUE, FALSE, 4);
 	}
 }
 

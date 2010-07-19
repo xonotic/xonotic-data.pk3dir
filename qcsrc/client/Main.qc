@@ -1022,12 +1022,14 @@ void Ent_Init()
 
 	nb_pb_period = ReadByte() / 32; //Accuracy of 1/32th
 
-	hook_shotorigin_x = ReadCoord();
-	hook_shotorigin_y = ReadCoord();
-	hook_shotorigin_z = ReadCoord();
-	electro_shotorigin_x = ReadCoord();
-	electro_shotorigin_y = ReadCoord();
-	electro_shotorigin_z = ReadCoord();
+	hook_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
 	if(forcefog)
 		strunzone(forcefog);

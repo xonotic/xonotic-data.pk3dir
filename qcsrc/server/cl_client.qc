@@ -1063,12 +1063,14 @@ float ClientInit_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
 	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_x);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_y);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_z);
-	WriteCoord(MSG_ENTITY, electro_shotorigin_x);
-	WriteCoord(MSG_ENTITY, electro_shotorigin_y);
-	WriteCoord(MSG_ENTITY, electro_shotorigin_z);
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[3]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[3]));
 	if(sv_foginterval && world.fog != "")
 		WriteString(MSG_ENTITY, world.fog);
 	else
