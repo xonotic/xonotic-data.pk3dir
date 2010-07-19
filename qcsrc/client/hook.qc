@@ -116,8 +116,9 @@ void Draw_GrapplingHook()
 
 		if(self.sv_entnum == player_localentnum - 1)
 		{
+			b = view_origin + view_forward * MAX_SHOT_DISTANCE;
+			WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
 			a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
-			b = a + view_forward * MAX_SHOT_DISTANCE;
 		}
 		else
 		{
