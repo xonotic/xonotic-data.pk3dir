@@ -248,12 +248,12 @@ void GrapplingHookThink()
 	WriteByte(MSG_BROADCAST, TE_CSQC_BEAM);
 	WriteByte(MSG_BROADCAST, num_for_edict(self.owner));
 	WriteByte(MSG_BROADCAST, 0);
-	WriteCoord(MSG_BROADCAST, org_x);
-	WriteCoord(MSG_BROADCAST, org_y);
-	WriteCoord(MSG_BROADCAST, org_z);
 	WriteCoord(MSG_BROADCAST, myorg_x);
 	WriteCoord(MSG_BROADCAST, myorg_y);
 	WriteCoord(MSG_BROADCAST, myorg_z);
+	WriteCoord(MSG_BROADCAST, org_x);
+	WriteCoord(MSG_BROADCAST, org_y);
+	WriteCoord(MSG_BROADCAST, org_z);
 }
 
 void GrapplingHookTouch (void)
