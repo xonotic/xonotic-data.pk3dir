@@ -188,7 +188,7 @@ void W_Electro_Attack2()
 .float nextdamagethink;
 void lgbeam_think()
 {
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam || self.owner.BUTTON_ATCK == 0 || self.owner.deadflag != DEAD_NO)
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK)
 	{
 		remove(self);
 		return;
@@ -200,60 +200,42 @@ void lgbeam_think()
 	vector angle;
 	angle = v_forward;
 
-	vector force;
-	force = angle * cvar("g_balance_electro_primary_force");
-
 	traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
-	self.scale = vlen(self.owner.origin - trace_endpos) / 256 * (0.75 + 0.75 * random());
-}
+	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
+		self.owner.ammo_cells = max(0, self.owner.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime);
 
-// execute each frame to update the beam visuals, but only apply damage at intervals of "refire" to prevent massive hitsound spam
-void exteriorlgbeam_think()
-{
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.exteriorlgbeam || self.owner.BUTTON_ATCK == 0 || self.owner.deadflag != DEAD_NO)
+	// apply the damage
+	if(trace_fraction < 1)
 	{
-		sound (self, CHAN_PROJECTILE, "sound/misc/null.wav", VOL_BASE, ATTN_NORM);
-		remove(self);
-		return;
+		vector force;
+		force = angle * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
+		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * frametime, WEP_ELECTRO, trace_endpos, force * frametime);
+		W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
 	}
 
-	if (time - self.shot_spread + random() * 0.2 > 0)
+	// draw effect
+	vector vecs, org;
+	if(self.owner.weaponentity.movedir_x > 0)
 	{
-		self.shot_spread = time + 2;
-		sound (self, CHAN_PROJECTILE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
+		vecs = self.owner.weaponentity.movedir;
+		vecs_y = -vecs_y;
 	}
-
-	self.nextthink = time;
-
-	makevectors(self.owner.v_angle);
-	vector angle;
-	angle = v_forward;
-
-	traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
-
-	if(self.nextdamagethink <= time)
-	{
-		if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
-			self.owner.ammo_cells = max(0, self.owner.ammo_cells - cvar("g_balance_electro_primary_ammo") * cvar("g_balance_electro_primary_refire"));
-
-		// apply the damage
-		if(trace_fraction < 1)
-		{
-			vector force;
-			force = angle * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
-			Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * cvar("g_balance_electro_primary_refire"), WEP_ELECTRO, trace_endpos, force * cvar("g_balance_electro_primary_refire"));
-			W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
-		}
-		self.nextdamagethink = time + cvar("g_balance_electro_primary_refire");
-	}
-
-	self.angles = '0 0 0';
-	self.scale = vlen(gettaginfo(self, 0) - trace_endpos) / 256 * (0.75 + 0.75 * random());
-
-	// v_forward, v_right, v_up now are the ACTUAL directions
-	// express self.angles in terms of them to aim at target!
-	self.angles = vectoangles('1 0 0' * (angle * v_forward) + '0 -1 0' * (angle * v_right) + '0 0 1' * (angle * v_up));
+	else
+		vecs = '0 0 0';
+	org = self.owner.origin + self.owner.view_ofs + v_forward * vecs_x + v_right * vecs_y + v_up * vecs_z;
+	
+	// TODO turn into a csqc entity
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_BEAM);
+	WriteByte(MSG_BROADCAST, num_for_edict(self.owner));
+	WriteByte(MSG_BROADCAST, sound_allowed(MSG_BROADCAST, self.owner) ? 1 : 2);
+	WriteCoord(MSG_BROADCAST, org_x);
+	WriteCoord(MSG_BROADCAST, org_y);
+	WriteCoord(MSG_BROADCAST, org_z);
+	WriteCoord(MSG_BROADCAST, trace_endpos_x);
+	WriteCoord(MSG_BROADCAST, trace_endpos_y);
+	WriteCoord(MSG_BROADCAST, trace_endpos_z);
 }
 
 // experimental lightning gun
@@ -268,37 +250,6 @@ void W_Electro_Attack3 (void)
 	beam.think = lgbeam_think;
 	beam.owner = self;
 	beam.movetype = MOVETYPE_NONE;
-	if(gettagindex(self.weaponentity, "shot"))
-		setattachment(beam, self.weaponentity, "shot");
-	else
-		setattachment(beam, self.weaponentity, "tag_shot");
-
-	oldself = self;
-	self = beam;
-	self.think();
-	self = oldself;
-
-	self.exteriorlgbeam = beam = spawn();
-	setmodel(beam,"models/turrets/phaser_beam.md3");
-	beam.effects = EF_LOWPRECISION;
-	beam.solid = SOLID_NOT;
-	beam.think = exteriorlgbeam_think;
-	beam.owner = self;
-	beam.movetype = MOVETYPE_NONE;
-	//beam.viewmodelforclient = self;
-	if(self.weaponentity.oldorigin_x > 0)
-	{
-		setattachment(beam, self.exteriorweaponentity, "");
-		setorigin(beam, self.weaponentity.oldorigin);
-	}
-	else
-	{
-		if(gettagindex(self.exteriorweaponentity, "shot"))
-			setattachment(beam, self.exteriorweaponentity, "shot");
-		else
-			setattachment(beam, self.exteriorweaponentity, "tag_shot");
-	}
-
 	beam.shot_spread = 0;
 	beam.bot_dodge = TRUE;
 	beam.bot_dodgerating = cvar("g_balance_electro_primary_damage");
@@ -307,6 +258,12 @@ void W_Electro_Attack3 (void)
 	self = beam;
 	self.think();
 	self = oldself;
+}
+
+void ElectroInit()
+{
+	weapon_action(WEP_ELECTRO, WR_PRECACHE);
+	electro_shotorigin = shotorg_adjust(CL_Weapon_GetShotOrg(WEP_ELECTRO), TRUE, FALSE);
 }
 
 void spawnfunc_weapon_electro (void)

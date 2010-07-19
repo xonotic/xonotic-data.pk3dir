@@ -1,6 +1,11 @@
 .vector HookStart;
 .vector HookEnd;
 .float HookKillTime;
+.vector LGBeamStart;
+.vector LGBeamEnd;
+.float LGBeamKillTime;
+.float LGBeamSound;
+.float LGBeamSilent;
 
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag)
 {
@@ -51,55 +56,91 @@ void Draw_GrapplingHook()
 	vector rgb;
 	float t;
 
-	if(time >= self.HookKillTime)
-		return;
-	if(self.sv_entnum == player_localentnum - 1)
-		a = view_origin + view_forward * hook_shotorigin_x + view_right * hook_shotorigin_y + view_up * hook_shotorigin_z;
+	if(time < self.HookKillTime)
+	{
+		if(self.sv_entnum == player_localentnum - 1)
+			a = view_origin + view_forward * hook_shotorigin_x + view_right * hook_shotorigin_y + view_up * hook_shotorigin_z;
+		else
+			a = self.HookStart;
+		b = self.HookEnd;
+
+		t = GetPlayerColorForce(self.sv_entnum);
+
+		if(t == COLOR_TEAM1)
+		{
+			tex = "particles/hook_red";
+			rgb = '1 .3 .3';
+		}
+		else if(t == COLOR_TEAM2)
+		{
+			tex = "particles/hook_blue";
+			rgb = '.3 .3 1';
+		}
+		else if(t == COLOR_TEAM3)
+		{
+			tex = "particles/hook_yellow";
+			rgb = '1 1 .3';
+		}
+		else if(t == COLOR_TEAM4)
+		{
+			tex = "particles/hook_pink";
+			rgb = '1 .3 1';
+		}
+		else
+		{
+			tex = "particles/hook_green";
+			rgb = '.3 1 .3';
+		}
+
+		Draw_GrapplingHook_trace_callback_tex = tex;
+		Draw_GrapplingHook_trace_callback_rnd = random();
+		WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NOMONSTERS, world, world, Draw_GrapplingHook_trace_callback);
+		Draw_GrapplingHook_trace_callback_tex = string_null;
+	}
+
+	if(time < self.LGBeamKillTime)
+	{
+		if(self.sv_entnum == player_localentnum - 1)
+			a = view_origin + view_forward * electro_shotorigin_x + view_right * electro_shotorigin_y + view_up * electro_shotorigin_z;
+		else
+			a = self.LGBeamStart;
+		b = self.LGBeamEnd;
+
+		tex = "particles/lgbeam";
+		rgb = '1 1 1';
+
+		Draw_GrapplingHook_trace_callback_tex = tex;
+		Draw_GrapplingHook_trace_callback_rnd = random();
+		WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NOMONSTERS, world, world, Draw_GrapplingHook_trace_callback);
+		Draw_GrapplingHook_trace_callback_tex = string_null;
+	}
+
+	if(time < self.LGBeamKillTime && !self.LGBeamSilent)
+	{
+		if(!self.LGBeamSound)
+		{
+			sound (self, CHAN_PROJECTILE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
+			self.LGBeamSound = 1;
+		}
+	}
 	else
-		a = self.HookStart;
-	b = self.HookEnd;
-
-	t = GetPlayerColorForce(self.sv_entnum);
-
-	if(t == COLOR_TEAM1)
 	{
-		tex = "particles/hook_red";
-		rgb = '1 .3 .3';
+		if(self.LGBeamSound)
+		{
+			sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
+			self.LGBeamSound = 0;
+		}
 	}
-	else if(t == COLOR_TEAM2)
-	{
-		tex = "particles/hook_blue";
-		rgb = '.3 .3 1';
-	}
-	else if(t == COLOR_TEAM3)
-	{
-		tex = "particles/hook_yellow";
-		rgb = '1 1 .3';
-	}
-	else if(t == COLOR_TEAM4)
-	{
-		tex = "particles/hook_pink";
-		rgb = '1 .3 1';
-	}
-	else
-	{
-		tex = "particles/hook_green";
-		rgb = '.3 1 .3';
-	}
-
-	Draw_GrapplingHook_trace_callback_tex = tex;
-	Draw_GrapplingHook_trace_callback_rnd = random();
-	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NOMONSTERS, world, world, Draw_GrapplingHook_trace_callback);
-	Draw_GrapplingHook_trace_callback_tex = string_null;
 }
 
 void Net_GrapplingHook()
 {
-	float i;
+	float i, t;
 	vector start, end;
 	entity p;
 
-	i = ReadShort();
+	i = ReadByte();
+	t = ReadByte();
 	end_x = ReadCoord();
 	end_y = ReadCoord();
 	end_z = ReadCoord();
@@ -115,8 +156,27 @@ void Net_GrapplingHook()
 	if(!p)
 		return;
 
-	p.HookKillTime = time + 0.1;
-	p.HookStart = start;
-	p.HookEnd = end;
-	p.draw = Draw_GrapplingHook;
+	switch(t)
+	{
+		case 0: // hook beam
+			p.HookKillTime = time + 0.1;
+			p.HookStart = start;
+			p.HookEnd = end;
+			p.draw = Draw_GrapplingHook;
+			break;
+		case 1: // electro lgbeam
+			p.LGBeamKillTime = time + 0.1;
+			p.LGBeamStart = start;
+			p.LGBeamEnd = end;
+			p.LGBeamSilent = 0;
+			p.draw = Draw_GrapplingHook;
+			break;
+		case 2: // silent electro lgbeam
+			p.LGBeamKillTime = time + 0.1;
+			p.LGBeamStart = start;
+			p.LGBeamEnd = end;
+			p.LGBeamSilent = 1;
+			p.draw = Draw_GrapplingHook;
+			break;
+	}
 }

@@ -235,7 +235,19 @@ void GrapplingHookThink()
 	}
 
 	makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0');
-	te_beam(self.owner, WarpZone_RefSys_TransformOrigin(self, self.owner, self.origin) + v_forward * (-9), org);
+	myorg = WarpZone_RefSys_TransformOrigin(self, self.owner, self.origin) + v_forward * (-9);
+
+	// TODO turn into a csqc entity
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_BEAM);
+	WriteByte(MSG_BROADCAST, num_for_edict(self.owner));
+	WriteByte(MSG_BROADCAST, 0);
+	WriteCoord(MSG_BROADCAST, myorg_x);
+	WriteCoord(MSG_BROADCAST, myorg_y);
+	WriteCoord(MSG_BROADCAST, myorg_z);
+	WriteCoord(MSG_BROADCAST, org_x);
+	WriteCoord(MSG_BROADCAST, org_y);
+	WriteCoord(MSG_BROADCAST, org_z);
 }
 
 void GrapplingHookTouch (void)
@@ -436,7 +448,10 @@ void GrappleHookInit()
 	if(g_grappling_hook)
 		hook_shotorigin = '8 -8 -12';
 	else
-		hook_shotorigin = shotorg_adjust('26.2148 9.2059 -15.9772', TRUE, FALSE);
+	{
+		weapon_action(WEP_HOOK, WR_PRECACHE);
+		hook_shotorigin = shotorg_adjust(CL_Weapon_GetShotOrg(WEP_HOOK), TRUE, FALSE);
+	}
 }
 
 void SetGrappleHookBindings()

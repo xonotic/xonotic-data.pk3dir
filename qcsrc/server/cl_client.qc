@@ -1066,6 +1066,9 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, hook_shotorigin_x);
 	WriteCoord(MSG_ENTITY, hook_shotorigin_y);
 	WriteCoord(MSG_ENTITY, hook_shotorigin_z);
+	WriteCoord(MSG_ENTITY, electro_shotorigin_x);
+	WriteCoord(MSG_ENTITY, electro_shotorigin_y);
+	WriteCoord(MSG_ENTITY, electro_shotorigin_z);
 	if(sv_foginterval && world.fog != "")
 		WriteString(MSG_ENTITY, world.fog);
 	else

@@ -233,6 +233,7 @@ float announcer_5min;
 float tempdb;
 float ClientProgsDB;
 vector hook_shotorigin;
+vector electro_shotorigin;
 
 #ifdef BLURTEST
 float blurtest_time0, blurtest_time1, blurtest_radius, blurtest_power;

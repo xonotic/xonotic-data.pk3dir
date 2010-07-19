@@ -1025,6 +1025,9 @@ void Ent_Init()
 	hook_shotorigin_x = ReadCoord();
 	hook_shotorigin_y = ReadCoord();
 	hook_shotorigin_z = ReadCoord();
+	electro_shotorigin_x = ReadCoord();
+	electro_shotorigin_y = ReadCoord();
+	electro_shotorigin_z = ReadCoord();
 
 	if(forcefog)
 		strunzone(forcefog);
@@ -1290,7 +1293,7 @@ float CSQC_Parse_TempEntity()
 			Net_ReadRace();
 			bHandled = true;
 			break;
-		case 13: // TE_BEAM
+		case TE_CSQC_BEAM:
 			Net_GrapplingHook();
 			bHandled = true;
 			break;
