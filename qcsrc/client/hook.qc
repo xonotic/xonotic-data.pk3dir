@@ -194,3 +194,8 @@ void Net_GrapplingHook()
 			break;
 	}
 }
+
+void Hook_Precache()
+{
+	precache_sound("weapons/lgbeam_fly.wav");
+}

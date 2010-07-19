@@ -136,6 +136,7 @@ void CSQC_Init(void)
 
 	// precaches
 	Projectile_Precache();
+	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
 	DamageInfo_Precache();
