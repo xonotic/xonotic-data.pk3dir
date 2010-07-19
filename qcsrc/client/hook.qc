@@ -127,6 +127,9 @@ void Draw_GrapplingHook()
 		Draw_GrapplingHook_trace_callback_rnd = random();
 		WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NOMONSTERS, world, world, Draw_GrapplingHook_trace_callback);
 		Draw_GrapplingHook_trace_callback_tex = string_null;
+
+		// helps the sound
+		setorigin(self, a);
 	}
 
 	if(time < self.LGBeamKillTime && !self.LGBeamSilent)
