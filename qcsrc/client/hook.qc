@@ -115,17 +115,22 @@ void Draw_GrapplingHook()
 		vs = electro_shotorigin[s];
 
 		if(self.sv_entnum == player_localentnum - 1)
+		{
 			a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
+			b = a + view_forward * MAX_SHOT_DISTANCE;
+		}
 		else
+		{
 			a = self.LGBeamStart;
-		b = self.LGBeamEnd;
+			b = self.LGBeamEnd;
+		}
 
 		tex = "particles/lgbeam";
 		rgb = '1 1 1';
 
 		Draw_GrapplingHook_trace_callback_tex = tex;
 		Draw_GrapplingHook_trace_callback_rnd = random();
-		WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NOMONSTERS, world, world, Draw_GrapplingHook_trace_callback);
+		WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NORMAL, world, world, Draw_GrapplingHook_trace_callback);
 		Draw_GrapplingHook_trace_callback_tex = string_null;
 
 		// helps the sound
