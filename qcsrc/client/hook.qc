@@ -67,7 +67,7 @@ void Draw_GrapplingHook()
 		vs = hook_shotorigin[s];
 
 		if(self.sv_entnum == player_localentnum - 1)
-			a = view_origin + view_forward * vs_x + view_right * vs_y + view_up * vs_z;
+			a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
 		else
 			a = self.HookStart;
 		b = self.HookEnd;
@@ -115,7 +115,7 @@ void Draw_GrapplingHook()
 		vs = electro_shotorigin[s];
 
 		if(self.sv_entnum == player_localentnum - 1)
-			a = view_origin + view_forward * vs_x + view_right * vs_y + view_up * vs_z;
+			a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
 		else
 			a = self.LGBeamStart;
 		b = self.LGBeamEnd;
