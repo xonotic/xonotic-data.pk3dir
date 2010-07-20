@@ -1206,6 +1206,7 @@ void SV_PlayerPhysics()
 			// CPM
 			if(sv_airstopaccelerate)
 			{
+				vector curdir;
 				curdir = self.velocity;
 				curdir_z = 0;
 				curdir = normalize(curdir);
