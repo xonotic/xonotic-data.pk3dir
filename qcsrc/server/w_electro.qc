@@ -201,7 +201,7 @@ void lgbeam_think()
 	vector angle;
 	angle = v_forward;
 
-	traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
 	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.owner.ammo_cells = max(0, self.owner.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime);
