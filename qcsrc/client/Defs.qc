@@ -257,3 +257,4 @@ float w_deathtype, w_issilent, w_random;
 string w_deathtypestring;
 vector w_org, w_backoff;
 
+float campingrifle_scope;
