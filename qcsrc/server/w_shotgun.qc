@@ -111,6 +111,7 @@ void shotgun_meleethink (void)
 
 void W_Shotgun_Attack3 (void)
 {
+	sound (self, CHAN_PROJECTILE, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_shotgun_secondary_animtime"), w_ready);
 
 	entity meleetemp;
@@ -172,6 +173,7 @@ float w_shotgun(float req)
 		precache_model ("models/weapons/h_shotgun.iqm");
 		precache_sound ("misc/itempickup.wav");
 		precache_sound ("weapons/shotgun_fire.wav");
+		precache_sound ("weapons/shotgun_melee.wav");
 	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_SHOTGUN);
