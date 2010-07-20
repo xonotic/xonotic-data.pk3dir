@@ -91,22 +91,34 @@ void W_Shotgun_Attack2 (void)
 
 void shotgun_meleethink (void)
 {
+	// store time when we started swinging down inside self.cnt
+	if(!self.cnt)
+		self.cnt = time;
+
 	makevectors(self.owner.v_angle);
 	vector angle;
 	angle = v_forward;
 
-	// broken? fix, needs to be easier to hit
+	// broken? fix, needs to be easier to hit EDIT: maybe not :)
 	//WarpZone_tracebox_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_shotgun_secondary_melee_range") - (v_right + v_up) * cvar("g_balance_shotgun_secondary_melee_size"), self.owner.origin + self.owner.view_ofs + (v_right + v_up) * cvar("g_balance_shotgun_secondary_melee_size"), self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_shotgun_secondary_melee_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
-	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_shotgun_secondary_melee_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	float f;
+	f = (self.cnt + cvar("g_balance_shotgun_secondary_melee_time") - time) / cvar("g_balance_shotgun_secondary_melee_time") * 2 - 1;
+	vector targpos;
+	targpos = self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_shotgun_secondary_melee_range") + v_right * f * cvar("g_balance_shotgun_secondary_melee_swing") + v_up * f * cvar("g_balance_shotgun_secondary_melee_swing");
+	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, targpos, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
-	// apply the damage
+	// apply the damage, also remove self
 	if(trace_fraction < 1)
 	{
 		vector force;
 		force = angle * cvar("g_balance_shotgun_secondary_force");
-		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_shotgun_secondary_damage"), WEP_SHOTGUN, self.owner.origin + self.owner.view_ofs, force);
+		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_shotgun_secondary_damage") * ((f + 1) / 2), WEP_SHOTGUN, self.owner.origin + self.owner.view_ofs, force);
+		remove(self);
 	}
-	remove(self);
+	else if(time >= self.cnt + cvar("g_balance_shotgun_secondary_melee_time")) // missed, remove ent
+		remove(self);
+	else // continue swinging the weapon in hope of hitting someone :)
+		self.nextthink = time;
 }
 
 void W_Shotgun_Attack3 (void)
