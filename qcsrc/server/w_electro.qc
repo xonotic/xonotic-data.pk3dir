@@ -185,9 +185,10 @@ void W_Electro_Attack2()
 }
 
 .entity lgbeam, exteriorlgbeam;
-.float nextdamagethink;
+.float prevlgfire;
 void lgbeam_think()
 {
+	self.owner.prevlgfire = time;
 	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK)
 	{
 		remove(self);
@@ -241,6 +242,12 @@ void lgbeam_think()
 // experimental lightning gun
 void W_Electro_Attack3 (void)
 {
+	// only play fire sound if 0.5 sec has passed since player let go the fire button
+	if(time - self.prevlgfire > 0.5)
+	{
+		sound (self, CHAN_PROJECTILE, "weapons/lgbeam_fire.wav", VOL_BASE, ATTN_NORM);
+	}
+
 	entity beam, oldself;
 
 	self.lgbeam = beam = spawn();
@@ -359,7 +366,9 @@ float w_electro(float req)
 		precache_sound ("weapons/electro_impact.wav");
 		precache_sound ("weapons/electro_impact_combo.wav");
 		if(cvar("g_balance_electro_lightning"))
-			precache_sound ("weapons/crylink_fire2.wav");
+		{
+			precache_sound ("weapons/lgbeam_fire.wav");
+		}
 	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_ELECTRO);
