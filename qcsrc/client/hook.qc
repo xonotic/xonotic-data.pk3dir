@@ -6,6 +6,12 @@
 .float LGBeamKillTime;
 .float LGBeamSound;
 .float LGBeamSilent;
+.vector GauntletBeamStart;
+.vector GauntletBeamEnd;
+.float GauntletBeamKillTime;
+.float GauntletBeamSound;
+.float GauntletBeamSilent;
+
 
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag)
 {
@@ -138,6 +144,38 @@ void Draw_GrapplingHook()
 		setorigin(self, a);
 	}
 
+	if(time < self.GauntletBeamKillTime)
+	{
+		s = cvar("cl_gunalign");
+		if(s != 1 && s != 2 && s != 4)
+			s = 3; // default value
+		--s;
+		vs = gauntlet_shotorigin[s];
+
+		if(self.sv_entnum == player_localentnum - 1)
+		{
+			b = view_origin + view_forward * MAX_SHOT_DISTANCE;
+			WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
+			a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
+		}
+		else
+		{
+			a = self.GauntletBeamStart;
+			b = self.GauntletBeamEnd;
+		}
+
+		tex = "particles/gauntletbeam";
+		rgb = '1 1 1';
+
+		Draw_GrapplingHook_trace_callback_tex = tex;
+		Draw_GrapplingHook_trace_callback_rnd = random();
+		WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NORMAL, world, world, Draw_GrapplingHook_trace_callback);
+		Draw_GrapplingHook_trace_callback_tex = string_null;
+
+		// helps the sound
+		setorigin(self, a);
+	}
+
 	if(time < self.LGBeamKillTime && !self.LGBeamSilent)
 	{
 		if(!self.LGBeamSound)
@@ -152,6 +190,23 @@ void Draw_GrapplingHook()
 		{
 			sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 			self.LGBeamSound = 0;
+		}
+	}
+
+	if(time < self.GauntletBeamKillTime && !self.GauntletBeamSilent)
+	{
+		if(!self.GauntletBeamSound)
+		{
+			sound (self, CHAN_PROJECTILE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTN_NORM);
+			self.GauntletBeamSound = 1;
+		}
+	}
+	else
+	{
+		if(self.GauntletBeamSound)
+		{
+			sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
+			self.GauntletBeamSound = 0;
 		}
 	}
 }
@@ -201,10 +256,18 @@ void Net_GrapplingHook()
 			p.LGBeamSilent = 1;
 			p.draw = Draw_GrapplingHook;
 			break;
+		case 3: // gauntlet beam
+			p.GauntletBeamKillTime = time + 0.1;
+			p.GauntletBeamStart = start;
+			p.GauntletBeamEnd = end;
+			p.GauntletBeamSilent = 0;
+			p.draw = Draw_GrapplingHook;
+			break;
 	}
 }
 
 void Hook_Precache()
 {
 	precache_sound("weapons/lgbeam_fly.wav");
+	precache_sound("weapons/gauntletbeam_fly.wav");
 }

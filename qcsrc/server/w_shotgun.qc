@@ -89,6 +89,49 @@ void W_Shotgun_Attack2 (void)
 	W_AttachToShotorg(flash, '5 0 0');
 }
 
+void shotgun_meleethink (void)
+{
+	// store time when we started swinging down inside self.cnt
+	if(!self.cnt)
+		self.cnt = time;
+
+	makevectors(self.owner.v_angle);
+	vector angle;
+	angle = v_forward;
+
+	// perform trace
+	float f;
+	f = (self.cnt + cvar("g_balance_shotgun_secondary_melee_time") - time) / cvar("g_balance_shotgun_secondary_melee_time") * 2 - 1;
+	vector targpos;
+	targpos = self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_shotgun_secondary_melee_range") + v_right * f * cvar("g_balance_shotgun_secondary_melee_swing") + v_up * f * cvar("g_balance_shotgun_secondary_melee_swing");
+	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, targpos, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+
+	// apply the damage, also remove self
+	if(trace_fraction < 1 && trace_ent.takedamage == DAMAGE_AIM && trace_ent.classname == "player")
+	{
+		vector force;
+		force = angle * cvar("g_balance_shotgun_secondary_force");
+		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_shotgun_secondary_damage") * ((f + 1) / 2), WEP_SHOTGUN, self.owner.origin + self.owner.view_ofs, force);
+		remove(self);
+	}
+	else if(time >= self.cnt + cvar("g_balance_shotgun_secondary_melee_time")) // missed, remove ent
+		remove(self);
+	else // continue swinging the weapon in hope of hitting someone :)
+		self.nextthink = time;
+}
+
+void W_Shotgun_Attack3 (void)
+{
+	sound (self, CHAN_PROJECTILE, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
+	weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_shotgun_secondary_animtime"), w_ready);
+
+	entity meleetemp;
+	meleetemp = spawn();
+	meleetemp.owner = self;
+	meleetemp.think = shotgun_meleethink;
+	meleetemp.nextthink = time + cvar("g_balance_shotgun_secondary_melee_delay");
+}
+
 // weapon frames
 void shotgun_fire2_03()
 {
@@ -121,8 +164,16 @@ float w_shotgun(float req)
 		if (self.BUTTON_ATCK2 && cvar("g_balance_shotgun_secondary"))
 		if (weapon_prepareattack(1, cvar("g_balance_shotgun_secondary_refire")))
 		{
-			W_Shotgun_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_shotgun_secondary_animtime"), shotgun_fire2_02);
+			if(cvar("g_balance_shotgun_secondary_melee"))
+			{
+				// force playback of the anim by switching to another anim (that we never play) here...
+				weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack3);
+			}
+			else
+			{
+				W_Shotgun_Attack2();
+				weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_shotgun_secondary_animtime"), shotgun_fire2_02);
+			}
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -133,13 +184,18 @@ float w_shotgun(float req)
 		precache_model ("models/weapons/h_shotgun.iqm");
 		precache_sound ("misc/itempickup.wav");
 		precache_sound ("weapons/shotgun_fire.wav");
+		precache_sound ("weapons/shotgun_melee.wav");
 	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_SHOTGUN);
 	else if (req == WR_CHECKAMMO1)
 		return self.ammo_shells >= cvar("g_balance_shotgun_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
+	{
+		if(cvar("g_balance_shotgun_secondary_melee"))
+			return TRUE;
 		return self.ammo_shells >= cvar("g_balance_shotgun_secondary_ammo") * 3;
+	}
 	return TRUE;
 };
 #endif

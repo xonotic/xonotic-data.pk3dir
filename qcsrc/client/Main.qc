@@ -1031,6 +1031,10 @@ void Ent_Init()
 	electro_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
 	electro_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
 	electro_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
 	if(forcefog)
 		strunzone(forcefog);
@@ -1270,6 +1274,10 @@ void Net_WeaponComplain() {
 	complain_weapon_time = time;
 }
 
+void Net_CampingrifleScope() {
+	campingrifle_scope = TRUE;
+}
+
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1342,6 +1350,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_WEAPONCOMPLAIN:
 			Net_WeaponComplain();
+			bHandled = true;
+			break;
+		case TE_CSQC_CAMPINGRIFLE_SCOPE:
+			Net_CampingrifleScope();
 			bHandled = true;
 			break;
 		default:

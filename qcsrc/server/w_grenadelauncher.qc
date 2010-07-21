@@ -13,6 +13,10 @@ void W_Grenade_Explode (void)
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
+
+	if(self.movetype == MOVETYPE_NONE)
+		self.velocity = self.oldvelocity;
+
 	RadiusDamage (self, self.owner, cvar("g_balance_grenadelauncher_primary_damage"), cvar("g_balance_grenadelauncher_primary_edgedamage"), cvar("g_balance_grenadelauncher_primary_radius"), world, cvar("g_balance_grenadelauncher_primary_force"), self.projectiledeathtype, other);
 
 	remove (self);
@@ -52,6 +56,7 @@ void W_Grenade_Touch1 (void)
 		spamsound (self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
+		self.oldvelocity = self.velocity;
 		self.velocity = '0 0 0';
 		self.movetype = MOVETYPE_NONE; // also disables gravity
 		self.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
