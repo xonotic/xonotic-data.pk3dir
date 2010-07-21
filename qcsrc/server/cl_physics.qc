@@ -1205,8 +1205,13 @@ void SV_PlayerPhysics()
 
 			// CPM
 			if(sv_airstopaccelerate)
-				if(self.velocity * wishdir < 0)
-					airaccel = sv_airstopaccelerate*maxspd_mod;
+			{
+				vector curdir;
+				curdir = self.velocity;
+				curdir_z = 0;
+				curdir = normalize(curdir);
+				airaccel = airaccel + (sv_airstopaccelerate*maxspd_mod - airaccel) * max(0, -(curdir * wishdir));
+			}
 			// note that for straight forward jumping:
 			// step = accel * frametime * wishspeed0;
 			// accel  = bound(0, wishspeed - vel_xy_current, step) * accelqw + step * (1 - accelqw);
