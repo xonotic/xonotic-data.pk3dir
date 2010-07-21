@@ -513,6 +513,7 @@ void spawnfunc_worldspawn (void)
 	readlevelcvars();
 	GrappleHookInit();
 	ElectroInit();
+	LaserInit();
 
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");

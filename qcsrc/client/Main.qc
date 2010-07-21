@@ -1031,6 +1031,10 @@ void Ent_Init()
 	electro_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
 	electro_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
 	electro_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
 	if(forcefog)
 		strunzone(forcefog);

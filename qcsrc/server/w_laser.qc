@@ -101,32 +101,105 @@ void W_Laser_Attack (float issecondary)
 	}
 }
 
-void W_Laser_Attack2 (float issecondary) // gauntlet
+.entity gauntletbeam;
+.float prevgauntletfire;
+void gauntletbeam_think()
 {
-	float damage, force, myradius;
-	if(issecondary)
+	float damage, myforce, myradius;
+	if(self.cnt)
 	{
 		damage = cvar("g_balance_laser_secondary_damage");
-		force = cvar("g_balance_laser_secondary_force");
+		myforce = cvar("g_balance_laser_secondary_force");
 		myradius = cvar("g_balance_laser_secondary_radius");
 	}
 	else
 	{
 		damage = cvar("g_balance_laser_primary_damage");
-		force = cvar("g_balance_laser_primary_force");
+		myforce = cvar("g_balance_laser_primary_force");
 		myradius = cvar("g_balance_laser_primary_radius");
 	}
 
-	W_SetupShot (self, TRUE, 0, "weapons/gauntlet_fire.wav", damage);
+	self.owner.prevgauntletfire = time;
+	if (self.owner.weaponentity.state != WS_INUSE || self != self.owner.gauntletbeam || self.owner.deadflag != DEAD_NO || (!self.owner.BUTTON_ATCK2 && self.cnt) || (!self.owner.BUTTON_ATCK && !self.cnt))
+	{
+		remove(self);
+		return;
+	}
 
-	WarpZone_traceline_antilag(self, w_shotorg, w_shotorg + w_shotdir * (myradius + vlen(eX * self.velocity_x + eY * self.velocity_y)/5), FALSE, self, ANTILAG_LATENCY(self));
+	self.nextthink = time;
 
-	pointparticles(particleeffectnum("laser_gauntletmuzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-	pointparticles(particleeffectnum("laser_gauntlet"), w_shotorg + w_shotdir * (myradius + vlen(eX * self.velocity_x + eY * self.velocity_y)/5), w_shotdir * 1000, 1);
-	pointparticles(particleeffectnum("laser_gauntlet"), w_shotorg + w_shotdir * (myradius + vlen(eX * self.velocity_x + eY * self.velocity_y)/5) * 0.5, w_shotdir * 1000, 1);
+	makevectors(self.owner.v_angle);
+	vector angle;
+	angle = v_forward;
 
-	if (trace_fraction < 1)
-		Damage(trace_ent, self, self, damage, WEP_LASER | HITTYPE_SECONDARY, trace_endpos, cvar("g_balance_laser_primary_force") * w_shotdir);
+	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * myradius, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+
+	// apply the damage
+	if(trace_fraction < 1)
+	{
+		vector force;
+		force = angle * myforce;
+		Damage (trace_ent, self.owner, self.owner, damage * frametime, WEP_ELECTRO, trace_endpos, force * frametime);
+	}
+
+	// draw effect
+	vector vecs, org;
+	if(self.owner.weaponentity.movedir_x > 0)
+	{
+		vecs = self.owner.weaponentity.movedir;
+		vecs_y = -vecs_y;
+	}
+	else
+		vecs = '0 0 0';
+	org = self.owner.origin + self.owner.view_ofs + v_forward * vecs_x + v_right * vecs_y + v_up * vecs_z;
+	
+	// TODO turn into a csqc entity
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_BEAM);
+	WriteByte(MSG_BROADCAST, num_for_edict(self.owner));
+	WriteByte(MSG_BROADCAST, 3);
+	WriteCoord(MSG_BROADCAST, trace_endpos_x);
+	WriteCoord(MSG_BROADCAST, trace_endpos_y);
+	WriteCoord(MSG_BROADCAST, trace_endpos_z);
+	WriteCoord(MSG_BROADCAST, org_x);
+	WriteCoord(MSG_BROADCAST, org_y);
+	WriteCoord(MSG_BROADCAST, org_z);
+}
+
+// experimental gauntlet
+void W_Laser_Attack2 (float issecondary)
+{
+	// only play fire sound if 0.5 sec has passed since player let go the fire button
+	if(time - self.prevgauntletfire > 0.5)
+	{
+		sound (self, CHAN_WEAPON, "weapons/gauntlet_fire.wav", VOL_BASE, ATTN_NORM);
+	}
+
+	entity beam, oldself;
+
+	self.gauntletbeam = beam = spawn();
+	beam.solid = SOLID_NOT;
+	beam.think = gauntletbeam_think;
+	beam.owner = self;
+	beam.movetype = MOVETYPE_NONE;
+	beam.shot_spread = 0;
+	beam.bot_dodge = TRUE;
+	beam.bot_dodgerating = cvar("g_balance_laser_primary_damage");
+	beam.cnt = issecondary;
+
+	oldself = self;
+	self = beam;
+	self.think();
+	self = oldself;
+}
+
+void LaserInit()
+{
+	weapon_action(WEP_LASER, WR_PRECACHE);
+	gauntlet_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LASER), FALSE, FALSE, 1);
+	gauntlet_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LASER), FALSE, FALSE, 2);
+	gauntlet_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LASER), FALSE, FALSE, 3);
+	gauntlet_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LASER), FALSE, FALSE, 4);
 }
 
 void spawnfunc_weapon_laser (void)
