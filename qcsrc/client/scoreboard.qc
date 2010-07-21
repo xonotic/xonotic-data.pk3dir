@@ -893,7 +893,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float i;
 	float weapon_hit, weapon_damage, weapon_stats;
 	float fontsize = 40 * 1/3;
-	float weapon_cnt = 12;
+	float weapon_cnt = WEP_COUNT - 3; // either minstanex/nex are hidden, no port-o-launch, no tuba
 	float rows;
 	if(cvar("scoreboard_accuracy_doublerows"))
 		rows = 2;
@@ -943,7 +943,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		self = get_weaponinfo(i);
 		if not(self.weapons)
 			continue;
-		if ((i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_minstagib) || i == WEP_TUBA || i == WEP_FIREBALL) // skip port-o-launch, nex || minstanex, tuba and fireball
+		if ((i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || minstanex and tuba
 			continue;
 		weapon_hit = weapon_hits[i-WEP_FIRST];
 		weapon_damage = weapon_fired[i-WEP_FIRST];
@@ -957,7 +957,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
 
 		// weapon icon
-		drawpic(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/weapon", self.netname), '1 0 0' * sbwidth * (1/weapon_cnt) + '0 1 0' * height * (2/3), '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/weapon", self.netname), '1 0 0' * sbwidth * (1/weapon_cnt) + '0 1 0' * height * (2/3), '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
 		if(weapon_damage) {
 			weapons_with_stats += 1;
