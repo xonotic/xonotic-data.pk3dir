@@ -114,6 +114,33 @@ void GrapplingHook_Stop()
 	self.hook_length = -1;
 }
 
+.vector hook_start, hook_end;
+float GrapplingHookSend(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
+	sf = sf & 0x7F;
+	if(sound_allowed(MSG_BROADCAST, self.owner))
+		sf |= 0x80;
+	WriteByte(MSG_ENTITY, sf);
+	if(sf & 1)
+	{
+		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+	}
+	if(sf & 2)
+	{
+		WriteCoord(MSG_ENTITY, self.hook_start_x);
+		WriteCoord(MSG_ENTITY, self.hook_start_y);
+		WriteCoord(MSG_ENTITY, self.hook_start_z);
+	}
+	if(sf & 4)
+	{
+		WriteCoord(MSG_ENTITY, self.hook_end_x);
+		WriteCoord(MSG_ENTITY, self.hook_end_y);
+		WriteCoord(MSG_ENTITY, self.hook_end_z);
+	}
+	return TRUE;
+}
+
 void GrapplingHookThink()
 {
 	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s;
@@ -243,17 +270,16 @@ void GrapplingHookThink()
 	makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0');
 	myorg = WarpZone_RefSys_TransformOrigin(self, self.owner, self.origin) + v_forward * (-9);
 
-	// TODO turn into a csqc entity
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_BEAM);
-	WriteByte(MSG_BROADCAST, num_for_edict(self.owner));
-	WriteByte(MSG_BROADCAST, 0);
-	WriteCoord(MSG_BROADCAST, myorg_x);
-	WriteCoord(MSG_BROADCAST, myorg_y);
-	WriteCoord(MSG_BROADCAST, myorg_z);
-	WriteCoord(MSG_BROADCAST, org_x);
-	WriteCoord(MSG_BROADCAST, org_y);
-	WriteCoord(MSG_BROADCAST, org_z);
+	if(myorg != self.hook_start)
+	{
+		self.SendFlags |= 2;
+		self.hook_start = myorg;
+	}
+	if(org != self.hook_end)
+	{
+		self.SendFlags |= 4;
+		self.hook_end = org;
+	}
 }
 
 void GrapplingHookTouch (void)
@@ -327,7 +353,7 @@ void FireGrapplingHook (void)
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
 
-	setmodel (missile, "models/hook.md3"); // precision set below
+	//setmodel (missile, "models/hook.md3"); // precision set below
 	setsize (missile, '-3 -3 -3', '3 3 3');
 	setorigin (missile, org);
 
@@ -348,6 +374,10 @@ void FireGrapplingHook (void)
 	missile.event_damage = GrapplingHook_Damage;
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;
+
+	missile.hook_start = missile.hook_end = missile.origin;
+
+	Net_LinkEntity(missile, FALSE, 0, GrapplingHookSend);
 }
 
 //  void GrapplingHookFrame()

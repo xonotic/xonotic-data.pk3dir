@@ -184,6 +184,32 @@ void W_Electro_Attack2()
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
 }
 
+.vector hook_start, hook_end;
+float lgbeam_send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_LGBEAM);
+	sf = sf & 0x7F;
+	if(sound_allowed(MSG_BROADCAST, self.owner))
+		sf |= 0x80;
+	WriteByte(MSG_ENTITY, sf);
+	if(sf & 1)
+	{
+		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+	}
+	if(sf & 2)
+	{
+		WriteCoord(MSG_ENTITY, self.hook_start_x);
+		WriteCoord(MSG_ENTITY, self.hook_start_y);
+		WriteCoord(MSG_ENTITY, self.hook_start_z);
+	}
+	if(sf & 4)
+	{
+		WriteCoord(MSG_ENTITY, self.hook_end_x);
+		WriteCoord(MSG_ENTITY, self.hook_end_y);
+		WriteCoord(MSG_ENTITY, self.hook_end_z);
+	}
+	return TRUE;
+}
 .entity lgbeam;
 .float prevlgfire;
 void lgbeam_think()
@@ -226,17 +252,16 @@ void lgbeam_think()
 		vecs = '0 0 0';
 	org = self.owner.origin + self.owner.view_ofs + v_forward * vecs_x + v_right * vecs_y + v_up * vecs_z;
 	
-	// TODO turn into a csqc entity
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_BEAM);
-	WriteByte(MSG_BROADCAST, num_for_edict(self.owner));
-	WriteByte(MSG_BROADCAST, sound_allowed(MSG_BROADCAST, self.owner) ? 1 : 2);
-	WriteCoord(MSG_BROADCAST, trace_endpos_x);
-	WriteCoord(MSG_BROADCAST, trace_endpos_y);
-	WriteCoord(MSG_BROADCAST, trace_endpos_z);
-	WriteCoord(MSG_BROADCAST, org_x);
-	WriteCoord(MSG_BROADCAST, org_y);
-	WriteCoord(MSG_BROADCAST, org_z);
+	if(org != self.hook_start)
+	{
+		self.SendFlags |= 2;
+		self.hook_start = org;
+	}
+	if(trace_endpos != self.hook_end)
+	{
+		self.SendFlags |= 4;
+		self.hook_end = trace_endpos;
+	}
 }
 
 // experimental lightning gun
@@ -258,6 +283,7 @@ void W_Electro_Attack3 (void)
 	beam.shot_spread = 0;
 	beam.bot_dodge = TRUE;
 	beam.bot_dodgerating = cvar("g_balance_electro_primary_damage");
+	Net_LinkEntity(beam, FALSE, 0, lgbeam_send);
 
 	oldself = self;
 	self = beam;

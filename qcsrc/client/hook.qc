@@ -1,17 +1,8 @@
-.vector HookStart;
-.vector HookEnd;
-.float HookKillTime;
-.vector LGBeamStart;
-.vector LGBeamEnd;
-.float LGBeamKillTime;
-.float LGBeamSound;
-.float LGBeamSilent;
-.vector GauntletBeamStart;
-.vector GauntletBeamEnd;
-.float GauntletBeamKillTime;
-.float GauntletBeamSound;
-.float GauntletBeamSilent;
-
+.float HookType; // ENT_CLIENT_*
+.vector origin;
+.vector velocity;
+.float HookSound;
+.float HookSilent;
 
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag)
 {
@@ -58,211 +49,183 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 void Draw_GrapplingHook()
 {
 	vector a, b;
-	string tex;
+	string tex, snd;
 	vector rgb;
 	float t;
 	float s;
 	vector vs;
 
-	if(time < self.HookKillTime)
+	InterpolateOrigin_Do();
+
+	s = cvar("cl_gunalign");
+	if(s != 1 && s != 2 && s != 4)
+		s = 3; // default value
+	--s;
+	switch(self.HookType)
 	{
-		s = cvar("cl_gunalign");
-		if(s != 1 && s != 2 && s != 4)
-			s = 3; // default value
-		--s;
-		vs = hook_shotorigin[s];
-
-		if(self.sv_entnum == player_localentnum - 1)
-			a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
-		else
-			a = self.HookStart;
-		b = self.HookEnd;
-
-		t = GetPlayerColorForce(self.sv_entnum);
-
-		if(t == COLOR_TEAM1)
-		{
-			tex = "particles/hook_red";
-			rgb = '1 .3 .3';
-		}
-		else if(t == COLOR_TEAM2)
-		{
-			tex = "particles/hook_blue";
-			rgb = '.3 .3 1';
-		}
-		else if(t == COLOR_TEAM3)
-		{
-			tex = "particles/hook_yellow";
-			rgb = '1 1 .3';
-		}
-		else if(t == COLOR_TEAM4)
-		{
-			tex = "particles/hook_pink";
-			rgb = '1 .3 1';
-		}
-		else
-		{
-			tex = "particles/hook_green";
-			rgb = '.3 1 .3';
-		}
-
-		Draw_GrapplingHook_trace_callback_tex = tex;
-		Draw_GrapplingHook_trace_callback_rnd = random();
-		WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NOMONSTERS, world, world, Draw_GrapplingHook_trace_callback);
-		Draw_GrapplingHook_trace_callback_tex = string_null;
+		default:
+		case ENT_CLIENT_HOOK:
+			vs = hook_shotorigin[s];
+			break;
+		case ENT_CLIENT_LGBEAM:
+			vs = electro_shotorigin[s];
+			break;
+		case ENT_CLIENT_GAUNTLET:
+			vs = gauntlet_shotorigin[s];
+			break;
 	}
 
-	if(time < self.LGBeamKillTime)
+	if((self.owner.sv_entnum == player_localentnum - 1))
 	{
-		s = cvar("cl_gunalign");
-		if(s != 1 && s != 2 && s != 4)
-			s = 3; // default value
-		--s;
-		vs = electro_shotorigin[s];
-
-		if(self.sv_entnum == player_localentnum - 1)
+		switch(self.HookType)
 		{
-			b = view_origin + view_forward * MAX_SHOT_DISTANCE;
-			WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
-			a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
-		}
-		else
-		{
-			a = self.LGBeamStart;
-			b = self.LGBeamEnd;
-		}
-
-		tex = "particles/lgbeam";
-		rgb = '1 1 1';
-
-		Draw_GrapplingHook_trace_callback_tex = tex;
-		Draw_GrapplingHook_trace_callback_rnd = random();
-		WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NORMAL, world, world, Draw_GrapplingHook_trace_callback);
-		Draw_GrapplingHook_trace_callback_tex = string_null;
-
-		// helps the sound
-		setorigin(self, a);
-	}
-
-	if(time < self.GauntletBeamKillTime)
-	{
-		s = cvar("cl_gunalign");
-		if(s != 1 && s != 2 && s != 4)
-			s = 3; // default value
-		--s;
-		vs = gauntlet_shotorigin[s];
-
-		if(self.sv_entnum == player_localentnum - 1)
-		{
-			b = view_origin + view_forward * MAX_SHOT_DISTANCE;
-			WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
-			a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
-		}
-		else
-		{
-			a = self.GauntletBeamStart;
-			b = self.GauntletBeamEnd;
-		}
-
-		tex = "particles/gauntletbeam";
-		rgb = '1 1 1';
-
-		Draw_GrapplingHook_trace_callback_tex = tex;
-		Draw_GrapplingHook_trace_callback_rnd = random();
-		WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NORMAL, world, world, Draw_GrapplingHook_trace_callback);
-		Draw_GrapplingHook_trace_callback_tex = string_null;
-
-		// helps the sound
-		setorigin(self, a);
-	}
-
-	if(time < self.LGBeamKillTime && !self.LGBeamSilent)
-	{
-		if(!self.LGBeamSound)
-		{
-			sound (self, CHAN_PROJECTILE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
-			self.LGBeamSound = 1;
+			default:
+			case ENT_CLIENT_HOOK:
+				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
+				b = self.origin;
+				break;
+			case ENT_CLIENT_LGBEAM:
+			case ENT_CLIENT_GAUNTLET:
+				b = view_origin + view_forward * MAX_SHOT_DISTANCE;
+				WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
+				b = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
+				break;
 		}
 	}
 	else
 	{
-		if(self.LGBeamSound)
+		switch(self.HookType)
 		{
-			sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
-			self.LGBeamSound = 0;
+			default:
+			case ENT_CLIENT_HOOK:
+				a = self.velocity;
+				b = self.origin;
+				break;
+			case ENT_CLIENT_LGBEAM:
+			case ENT_CLIENT_GAUNTLET:
+				a = self.origin;
+				b = self.velocity;
+				break;
 		}
 	}
 
-	if(time < self.GauntletBeamKillTime && !self.GauntletBeamSilent)
+	t = GetPlayerColorForce(self.owner.sv_entnum);
+
+	switch(self.HookType)
 	{
-		if(!self.GauntletBeamSound)
-		{
-			sound (self, CHAN_PROJECTILE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTN_NORM);
-			self.GauntletBeamSound = 1;
-		}
+		default:
+		case ENT_CLIENT_HOOK:
+			if(t == COLOR_TEAM1)
+			{
+				tex = "particles/hook_red";
+				rgb = '1 .3 .3';
+			}
+			else if(t == COLOR_TEAM2)
+			{
+				tex = "particles/hook_blue";
+				rgb = '.3 .3 1';
+			}
+			else if(t == COLOR_TEAM3)
+			{
+				tex = "particles/hook_yellow";
+				rgb = '1 1 .3';
+			}
+			else if(t == COLOR_TEAM4)
+			{
+				tex = "particles/hook_pink";
+				rgb = '1 .3 1';
+			}
+			else
+			{
+				tex = "particles/hook_green";
+				rgb = '.3 1 .3';
+			}
+			break;
+		case ENT_CLIENT_LGBEAM:
+			tex = "particles/lgbeam";
+			rgb = '1 1 1';
+			break;
+		case ENT_CLIENT_GAUNTLET:
+			tex = "particles/gauntletbeam";
+			rgb = '1 1 1';
+			break;
 	}
-	else
+
+	Draw_GrapplingHook_trace_callback_tex = tex;
+	Draw_GrapplingHook_trace_callback_rnd = random();
+	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NOMONSTERS, world, world, Draw_GrapplingHook_trace_callback);
+	Draw_GrapplingHook_trace_callback_tex = string_null;
+
+	switch(self.HookType)
 	{
-		if(self.GauntletBeamSound)
-		{
-			sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
-			self.GauntletBeamSound = 0;
-		}
+		default:
+		case ENT_CLIENT_HOOK:
+			self.angles = vectoangles(b - a);
+			break;
+		case ENT_CLIENT_LGBEAM:
+		case ENT_CLIENT_GAUNTLET:
+			break;
 	}
 }
 
-void Net_GrapplingHook()
+void Remove_GrapplingHook()
 {
-	float i, t;
-	vector start, end;
-	entity p;
+	sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
+}
 
-	i = ReadByte();
-	t = ReadByte();
-	end_x = ReadCoord();
-	end_y = ReadCoord();
-	end_z = ReadCoord();
-	start_x = ReadCoord();
-	start_y = ReadCoord();
-	start_z = ReadCoord();
+void Ent_ReadHook(float bIsNew, float type)
+{
+	self.HookType = type;
 
-	if(i <= 0 || i >= 256) // not owned by a client
-		return;
-	--i;
+	float sf;
+	sf = ReadByte();
 
-	p = playerslots[i];
-	if(!p)
-		return;
+	self.HookSilent = (sf & 0x80);
+	self.iflags = IFLAG_VELOCITY;
 
-	switch(t)
+	InterpolateOrigin_Undo();
+
+	if(sf & 1)
 	{
-		case 0: // hook beam
-			p.HookKillTime = time + 0.1;
-			p.HookStart = start;
-			p.HookEnd = end;
-			p.draw = Draw_GrapplingHook;
-			break;
-		case 1: // electro lgbeam
-			p.LGBeamKillTime = time + 0.1;
-			p.LGBeamStart = start;
-			p.LGBeamEnd = end;
-			p.LGBeamSilent = 0;
-			p.draw = Draw_GrapplingHook;
-			break;
-		case 2: // silent electro lgbeam
-			p.LGBeamKillTime = time + 0.1;
-			p.LGBeamStart = start;
-			p.LGBeamEnd = end;
-			p.LGBeamSilent = 1;
-			p.draw = Draw_GrapplingHook;
-			break;
-		case 3: // gauntlet beam
-			p.GauntletBeamKillTime = time + 0.1;
-			p.GauntletBeamStart = start;
-			p.GauntletBeamEnd = end;
-			p.GauntletBeamSilent = 0;
-			p.draw = Draw_GrapplingHook;
-			break;
+		self.owner = playerslots[ReadByte() - 1];
+	}
+	if(sf & 2)
+	{
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
+	}
+	if(sf & 4)
+	{
+		self.velocity_x = ReadCoord();
+		self.velocity_y = ReadCoord();
+		self.velocity_z = ReadCoord();
+	}
+
+	InterpolateOrigin_Note();
+
+	if(bIsNew)
+	{
+		self.draw = Draw_GrapplingHook;
+		self.entremove = Remove_GrapplingHook;
+
+		switch(self.HookType)
+		{
+			default:
+			case ENT_CLIENT_HOOK:
+				// for the model
+				setmodel(self, "models/hook.md3");
+				self.drawmask = MASK_NORMAL;
+				break;
+			case ENT_CLIENT_LGBEAM:
+				sound (self, CHAN_PROJECTILE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
+				break;
+			case ENT_CLIENT_GAUNTLET:
+				sound (self, CHAN_PROJECTILE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTN_NORM);
+				break;
+		}
 	}
 }
 
@@ -270,4 +233,7 @@ void Hook_Precache()
 {
 	precache_sound("weapons/lgbeam_fly.wav");
 	precache_sound("weapons/gauntletbeam_fly.wav");
+	precache_model("models/hook.md3");
 }
+
+// TODO: hook: temporarily transform self.origin for drawing the model along warpzones!
