@@ -297,6 +297,7 @@ void Cmd_HUD_SetFields(float argc)
 	hud_num_fields = 0;
 
 	drawfont = hud_font;
+	hud_fontsize = HUD_GetFontsize("hud_fontsize");	
 
 	for(i = 0; i < argc - 1; ++i)
 	{
@@ -831,7 +832,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 			}
 
 			tmp_x = stringwidth(hud_title[i], FALSE, hud_fontsize);
-			tmp_x = (hud_size[i] - tmp_x) * hud_fontsize_x;
+			tmp_x = (hud_size[i] - tmp_x);
 			drawstring(pos + tmp, hud_title[i], hud_fontsize, rgb * 1.5, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_x -= hud_fontsize_x;
 		}
