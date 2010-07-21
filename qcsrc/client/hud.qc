@@ -4229,11 +4229,22 @@ void HUD_Chat(void)
 
 	active_panel = HUD_PANEL_CHAT;
 	HUD_Panel_UpdateCvars(chat);
+
+	if(autocvar__con_chat_maximized && !autocvar__hud_configure) // draw at full screen height if maximized
+	{
+		panel_pos_y = panel_bg_border;
+		panel_size_y = vid_conheight - panel_bg_border * 2;
+		if(panel_bg == "0")
+			panel_bg = "border"; // force a border when maximized
+		panel_bg_alpha = max(0.75, panel_bg_alpha); // force an alpha of at least 0.75
+	}
+
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
 
 	HUD_Panel_DrawBg(1);
+
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -4763,8 +4774,13 @@ void HUD_Main (void)
 	}
 	// draw panels in order specified by panel_order array
 	for(i = HUD_PANEL_NUM - 1; i >= 0; --i) {
-		HUD_DrawPanel(panel_order[i]);
+		if(i != HUD_PANEL_CHAT || !autocvar__con_chat_maximized) // don't draw maximized chat panel twice!
+			HUD_DrawPanel(panel_order[i]);
 	}
+
+	// draw chat panel on top if it is maximized
+	if(autocvar__con_chat_maximized)
+		HUD_DrawPanel(HUD_PANEL_CHAT);
 
 	// TODO hud_'ify these
 	if (cvar("cl_showspeed"))
