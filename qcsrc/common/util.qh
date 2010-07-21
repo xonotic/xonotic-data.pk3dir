@@ -221,8 +221,8 @@ switch(id) {\
 // Get name of specified panel id
 #define HUD_Panel_GetName(id) \
 switch(id) { \
-	case HUD_PANEL_WEAPONICONS: panel_name = HUD_PANELNAME_WEAPONICONS; break; \
-	case HUD_PANEL_INVENTORY: panel_name = HUD_PANELNAME_INVENTORY; break; \
+	case HUD_PANEL_WEAPONS: panel_name = HUD_PANELNAME_WEAPONS; break; \
+	case HUD_PANEL_AMMO: panel_name = HUD_PANELNAME_AMMO; break; \
 	case HUD_PANEL_POWERUPS: panel_name = HUD_PANELNAME_POWERUPS; break; \
 	case HUD_PANEL_HEALTHARMOR: panel_name = HUD_PANELNAME_HEALTHARMOR; break; \
 	case HUD_PANEL_NOTIFY: panel_name = HUD_PANELNAME_NOTIFY; break; \

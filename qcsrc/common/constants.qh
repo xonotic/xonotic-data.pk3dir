@@ -593,8 +593,8 @@ float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
 float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
 
 
-float HUD_PANEL_WEAPONICONS	= 0;
-float HUD_PANEL_INVENTORY	= 1;
+float HUD_PANEL_WEAPONS		= 0;
+float HUD_PANEL_AMMO		= 1;
 float HUD_PANEL_POWERUPS	= 2;
 float HUD_PANEL_HEALTHARMOR	= 3;
 float HUD_PANEL_NOTIFY		= 4;
@@ -610,8 +610,8 @@ float HUD_PANEL_ENGINEINFO	= 13;
 float HUD_PANEL_INFOMESSAGES	= 14;
 float HUD_PANEL_NUM		= 15; // always last panel id + 1, please increment when adding a new panel
 
-string HUD_PANELNAME_WEAPONICONS 	= "weaponicons";
-string HUD_PANELNAME_INVENTORY	 	= "inventory";
+string HUD_PANELNAME_WEAPONS 		= "weapons";
+string HUD_PANELNAME_AMMO	 	= "ammo";
 string HUD_PANELNAME_POWERUPS	 	= "powerups";
 string HUD_PANELNAME_HEALTHARMOR 	= "healtharmor";
 string HUD_PANELNAME_NOTIFY	 	= "notify";
