@@ -4345,18 +4345,18 @@ void HUD_InfoMessages(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	// always force 6:1 aspect
+	// always force 5:1 aspect
 	vector newSize;
-	if(mySize_x/mySize_y > 6)
+	if(mySize_x/mySize_y > 5)
 	{
-		newSize_x = 6 * mySize_y;
+		newSize_x = 5 * mySize_y;
 		newSize_y = mySize_y;
 
 		pos_x = pos_x + (mySize_x - newSize_x) / 2;
 	}
 	else
 	{
-		newSize_y = 1/6 * mySize_x;
+		newSize_y = 1/5 * mySize_x;
 		newSize_x = mySize_x;
 
 		pos_y = pos_y + (mySize_y - newSize_y) / 2;
@@ -4368,24 +4368,23 @@ void HUD_InfoMessages(void)
 	o = pos;
 
 	vector fontsize;
-	fontsize = '0.25 0.25 0' * mySize_y;
+	fontsize = '0.20 0.20 0' * mySize_y;
 	
 	string s;
 	if(!autocvar__hud_configure)
 	{
 		if(spectatee_status && !intermission)
 		{
-			//drawfont = hud_bigfont;
 			if(spectatee_status == -1)
 				s = "^1Observing";
 			else
-				s = GetPlayerName(spectatee_status - 1);
+				s = strcat("^1Spectating: ^7", GetPlayerName(spectatee_status - 1));
 
-			//s = textShortenToWidth(s, mySize_y, 0.5 * height, stringwidth_colors);
-			//drawcolorcodedstring(pos + eY * 0.25 * height, s, 0.5 * height, panel_fg_alpha, DRAWFLAG_NORMAL);
-			//drawfont = hud_font;
+			if(autocvar_hud_panel_infomessages_flip)
+				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
+			drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			o += eY * fontsize_y;
 
-			// spectator text in the upper right corner
 			if(spectatee_status == -1)
 				s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 to spectate");
 			else
