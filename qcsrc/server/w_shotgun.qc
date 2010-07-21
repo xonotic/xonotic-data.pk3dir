@@ -99,8 +99,7 @@ void shotgun_meleethink (void)
 	vector angle;
 	angle = v_forward;
 
-	// broken? fix, needs to be easier to hit EDIT: maybe not :)
-	//WarpZone_tracebox_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_shotgun_secondary_melee_range") - (v_right + v_up) * cvar("g_balance_shotgun_secondary_melee_size"), self.owner.origin + self.owner.view_ofs + (v_right + v_up) * cvar("g_balance_shotgun_secondary_melee_size"), self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_shotgun_secondary_melee_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	// perform trace
 	float f;
 	f = (self.cnt + cvar("g_balance_shotgun_secondary_melee_time") - time) / cvar("g_balance_shotgun_secondary_melee_time") * 2 - 1;
 	vector targpos;
@@ -108,7 +107,7 @@ void shotgun_meleethink (void)
 	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, targpos, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage, also remove self
-	if(trace_fraction < 1)
+	if(trace_fraction < 1 && trace_ent.takedamage == DAMAGE_AIM && trace_ent.classname == "player")
 	{
 		vector force;
 		force = angle * cvar("g_balance_shotgun_secondary_force");
