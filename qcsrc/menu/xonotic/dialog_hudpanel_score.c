@@ -20,7 +20,12 @@ void XonoticHUDScoreDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_score", "Enable panel"));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Background:"));
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, "Background:"));
+			me.TD(me, 1, 1.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg"))));
+				e.addValue(e, "Default", "");
+				e.addValue(e, "Disable", "0");
+				e.addValue(e, strzone(strcat("border_", panelname)), strzone(strcat("border_", panelname)));
+				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Color:"));

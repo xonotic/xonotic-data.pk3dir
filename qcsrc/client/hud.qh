@@ -83,7 +83,6 @@ var string picpath;
 // ----------------------
 // Little help for the poor people who have to make sense of this: Start from the bottom
 
-// TODO: shirt, pants, team colors
 #define HUD_Panel_GetProgressBarColor(item) \
 switch(item) {\
 	case "strength": progressbar_color = autocvar_hud_progressbar_strength_color; break;\
@@ -103,13 +102,17 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 	if(panel_bg_str == "") {\
 		panel_bg = autocvar_hud_panel_bg;\
 	} else if(panel_bg_str == "0" && autocvar__hud_configure) {\
-		panel_bg = "border";\
+		panel_bg = autocvar_hud_panel_bg;\
+		panel_bg_alpha_str = "0";\
 	} else {\
 		panel_bg = panel_bg_str;\
 	}\
 	panel_bg = strcat(hud_skin_path, "/", panel_bg);\
 	if(precache_pic(panel_bg) == "") {\
-		panel_bg = strcat("gfx/hud/default/", "border");\
+		panel_bg = strcat(hud_skin_path, "/", "border");\
+		if(precache_pic(panel_bg) == "") {\
+			panel_bg = strcat("gfx/hud/default/", "border");\
+		}\
 	}\
 }
 
