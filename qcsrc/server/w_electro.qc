@@ -184,7 +184,7 @@ void W_Electro_Attack2()
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
 }
 
-.entity lgbeam, exteriorlgbeam;
+.entity lgbeam;
 .float prevlgfire;
 void lgbeam_think()
 {
