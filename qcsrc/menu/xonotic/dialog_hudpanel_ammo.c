@@ -1,28 +1,24 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDPressedKeysDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticHUDPressedKeysDialog, fill, void(entity))
-	ATTRIB(XonoticHUDPressedKeysDialog, title, string, "Pressed Keys Panel")
-	ATTRIB(XonoticHUDPressedKeysDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDPressedKeysDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDPressedKeysDialog, rows, float, 15)
-	ATTRIB(XonoticHUDPressedKeysDialog, columns, float, 4)
-	ATTRIB(XonoticHUDPressedKeysDialog, name, string, "HUDpressedkeys")
-ENDCLASS(XonoticHUDPressedKeysDialog)
+CLASS(XonoticHUDAmmoDialog) EXTENDS(XonoticRootDialog)
+	METHOD(XonoticHUDAmmoDialog, fill, void(entity))
+	ATTRIB(XonoticHUDAmmoDialog, title, string, "Ammo Panel")
+	ATTRIB(XonoticHUDAmmoDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
+	ATTRIB(XonoticHUDAmmoDialog, intendedWidth, float, 0.4)
+	ATTRIB(XonoticHUDAmmoDialog, rows, float, 15)
+	ATTRIB(XonoticHUDAmmoDialog, columns, float, 4)
+	ATTRIB(XonoticHUDAmmoDialog, name, string, "HUDammo")
+ENDCLASS(XonoticHUDAmmoDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void XonoticHUDPressedKeysDialog_fill(entity me)
+void XonoticHUDAmmoDialog_fill(entity me)
 {
 	entity e;
-	string panelname = "pressedkeys";
+	string panelname = "ammo";
 	float i;
 
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_panel_pressedkeys"));
-			e.addValue(e, "Panel disabled", "0");
-			e.addValue(e, "Panel enabled when spectating", "1");
-			e.addValue(e, "Panel always enabled", "2");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_ammo", "Enable panel"));
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, "Background:"));
 			me.TD(me, 1, 1.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg"))));
@@ -76,8 +72,14 @@ void XonoticHUDPressedKeysDialog_fill(entity me)
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Ammunition display:"));
+	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Forced aspect:"));
-			me.TD(me, 1, 2.6, e = makeXonoticSlider(0.25, 4, 0.25, "hud_panel_pressedkeys_aspect"));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "hud_panel_ammo_onlycurrent", "Show only current ammo type"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, "Align icon:"));
+			me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "hud_panel_ammo_iconalign", "0", "Left"));
+			me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "hud_panel_ammo_iconalign", "1", "Right"));
 }
 #endif
