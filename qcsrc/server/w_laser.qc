@@ -132,6 +132,8 @@ float gauntletbeam_send(entity to, float sf)
 void gauntletbeam_think()
 {
 	vector endpos;
+	float oldsolid;
+
 	float damage, myforce, myradius;
 	if(self.cnt)
 	{
@@ -168,9 +170,14 @@ void gauntletbeam_think()
 		vecs = debug_shotorg;
 	org = self.owner.origin + self.owner.view_ofs + v_forward * vecs_x + v_right * -vecs_y + v_up * vecs_z;
 	
+	oldsolid = self.owner.dphitcontentsmask;
+	self.owner.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+
 	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * myradius, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 	endpos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	WarpZone_traceline_antilag(self.owner, org, endpos, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
+	WarpZone_traceline_antilag(self.owner, org, endpos + 4 * normalize(endpos - org), MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
+
+	self.owner.dphitcontentsmask = oldsolid;
 
 	// apply the damage
 	if(trace_fraction < 1)
