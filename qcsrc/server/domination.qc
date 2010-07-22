@@ -17,6 +17,9 @@ Note: The only teams who can use dom control points are identified by spawnfunc_
 
 #define DOMPOINTFRAGS frags
 
+float g_domination_point_amt;
+float g_domination_point_rate;
+
 .float enemy_playerid;
 .entity sprite;
 .float captime;
@@ -63,7 +66,19 @@ void dompoint_captured ()
 	//bprint(self.message);
 	//bprint("\n");
 
-	bprint("^3", head.netname, "^3", self.message, "\n");
+	float points, wait_time;
+	if (g_domination_point_amt)
+		points = g_domination_point_amt;
+	else
+		points = self.frags;
+	if (g_domination_point_rate)
+		wait_time = g_domination_point_rate;
+	else
+		wait_time = self.wait;
+
+	bprint("^3", head.netname, "^3", self.message);
+	bprint(" ^7(", ftos(points), " points every ", ftos(wait_time), " seconds)\n");
+
 	if(self.enemy.playerid == self.enemy_playerid)
 		PlayerScore_Add(self.enemy, SP_DOM_TAKES, 1);
 	else
@@ -80,10 +95,7 @@ void dompoint_captured ()
 	//self.nextthink = time + cvar("g_domination_point_rate");
 	//self.think = dompointthink;
 
-	if(cvar("g_domination_point_rate"))
-		self.delay = time + cvar("g_domination_point_rate");
-	else
-		self.delay = time + self.wait;
+	self.delay = time + wait_time;
 
 	// do trigger work
 	old_delay = self.delay;
@@ -131,7 +143,6 @@ void AnimateDomPoint()
 
 void dompointthink()
 {
-	local float waittime;
 	local float fragamt;
 
 	self.nextthink = time + 0.1;
@@ -146,17 +157,21 @@ void dompointthink()
 	if (gameover || self.delay > time || time < game_starttime)	// game has ended, don't keep giving points
 		return;
 
-	waittime = cvar("g_domination_point_rate");
-	if(!waittime)
-		waittime = self.wait;
-	self.delay = time + waittime;
+	g_domination_point_rate = cvar("g_domination_point_rate");
+	g_domination_point_amt = cvar("g_domination_point_amt");
+
+	if(g_domination_point_rate)
+		self.delay = time + g_domination_point_rate;
+	else
+		self.delay = time + self.wait;
 
 	// give credit to the team
 	// NOTE: this defaults to 0
 	if (self.goalentity.netname != "")
 	{
-		fragamt = cvar("g_domination_point_amt");
-		if(!fragamt)
+		if(g_domination_point_amt)
+			fragamt = g_domination_point_amt;
+		else
 			fragamt = self.DOMPOINTFRAGS;
 		TeamScore_AddToTeam(self.goalentity.team, ST_SCORE, fragamt);
 		TeamScore_AddToTeam(self.goalentity.team, ST_DOM_TICKS, fragamt);

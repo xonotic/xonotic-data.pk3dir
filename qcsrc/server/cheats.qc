@@ -653,7 +653,7 @@ float CheatCommand(float argc)
 			if(self.movetype != MOVETYPE_FLY)
 			{
 				self.movetype = MOVETYPE_FLY;
-				sprint(self, "flmodey ON\n");
+				sprint(self, "flymode ON\n");
 				DID_CHEAT();
 			}
 			else
