@@ -4,7 +4,7 @@ CLASS(XonoticHUDExitDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDExitDialog, title, string, "Panel HUD Setup")
 	ATTRIB(XonoticHUDExitDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDExitDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDExitDialog, rows, float, 20)
+	ATTRIB(XonoticHUDExitDialog, rows, float, 18)
 	ATTRIB(XonoticHUDExitDialog, columns, float, 4)
 	ATTRIB(XonoticHUDExitDialog, name, string, "HUDExit")
 ENDCLASS(XonoticHUDExitDialog)
@@ -20,12 +20,15 @@ void XonoticHUDExitDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, "Panel background defaults:"));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Background:"));
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, "Background:"));
+			me.TD(me, 1, 1.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_bg"))));
+				e.addValue(e, "Disable", "0");
+				e.addValue(e, "border_default", "border_default");
+				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Color:"));
 		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString("hud_panel_bg_color"));
-			setDependentStringNotEqual(e, "hud_panel_bg_color", "");
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -62,17 +65,28 @@ void XonoticHUDExitDialog_fill(entity me)
 				e.configureXonoticTextSliderValues(e);
 
 	me.TR(me);
-		me.TD(me, 1, 4, makeXonoticTextLabel(0, "Dock settings:"));
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, "HUD Dock:"));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_dock"));
+				e.addValue(e, "Disable", "0");
+				e.addValue(e, "Small", "dock_small");
+				e.addValue(e, "Medium", "dock");
+				e.addValue(e, "Large", "dock_large");
+				e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Color:"));
+		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString("hud_dock_color"));
+	me.TR(me);
 	me.TR(me);	
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Alpha:"));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Alpha:"));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_dock_alpha"));
 				for(i = 1; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Team color:"));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Team color:"));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_dock_color_team"));
 				e.addValue(e, "Disable", "0");
 				for(i = 1; i <= 10; ++i)
