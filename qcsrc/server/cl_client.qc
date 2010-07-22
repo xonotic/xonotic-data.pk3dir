@@ -2599,7 +2599,23 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+			if(self.health <= 0 && cvar("g_deathglow"))
+			{
+				if(self.glowmod_x > 0)
+					self.glowmod_x -= cvar("g_deathglow") * frametime;
+				else
+					self.glowmod_x = -1;
+				if(self.glowmod_y > 0)
+					self.glowmod_y -= cvar("g_deathglow") * frametime;
+				else
+					self.glowmod_y = -1;
+				if(self.glowmod_z > 0)
+					self.glowmod_z -= cvar("g_deathglow") * frametime;
+				else
+					self.glowmod_z = -1;
+			}
+			else
+				self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
 			player_powerups();
 		}
 
@@ -2659,7 +2675,6 @@ void PlayerPreThink (void)
 		FOR_EACH_PLAYER(other) if(self != other)
 		{
 			if(time > other.touchexplode_time)
-			if(other.classname == "player")
 			if(other.deadflag == DEAD_NO)
 			if not(IS_INDEPENDENT_PLAYER(other))
 			if(boxesoverlap(self.absmin, self.absmax, other.absmin, other.absmax))
