@@ -214,6 +214,7 @@ float lgbeam_send(entity to, float sf)
 .float prevlgfire;
 void lgbeam_think()
 {
+	vector endpos;
 	self.owner.prevlgfire = time;
 	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK)
 	{
@@ -226,8 +227,19 @@ void lgbeam_think()
 	makevectors(self.owner.v_angle);
 	vector angle;
 	angle = v_forward;
+	// get effect origin
+	vector vecs, org;
+	if(self.owner.weaponentity.movedir_x > 0)
+		vecs = self.owner.weaponentity.movedir;
+	else
+		vecs = '0 0 0';
+	if(debug_shotorg != '0 0 0')
+		vecs = debug_shotorg;
+	org = self.owner.origin + self.owner.view_ofs + v_forward * vecs_x + v_right * -vecs_y + v_up * vecs_z;
 
 	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	endpos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	WarpZone_traceline_antilag(self.owner, org, endpos, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
 	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.owner.ammo_cells = max(0, self.owner.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime);
@@ -242,25 +254,15 @@ void lgbeam_think()
 	}
 
 	// draw effect
-	vector vecs, org;
-	if(self.owner.weaponentity.movedir_x > 0)
-	{
-		vecs = self.owner.weaponentity.movedir;
-		vecs_y = -vecs_y;
-	}
-	else
-		vecs = '0 0 0';
-	org = self.owner.origin + self.owner.view_ofs + v_forward * vecs_x + v_right * vecs_y + v_up * vecs_z;
-	
 	if(org != self.hook_start)
 	{
 		self.SendFlags |= 2;
 		self.hook_start = org;
 	}
-	if(trace_endpos != self.hook_end)
+	if(endpos != self.hook_end)
 	{
 		self.SendFlags |= 4;
-		self.hook_end = trace_endpos;
+		self.hook_end = endpos;
 	}
 }
 

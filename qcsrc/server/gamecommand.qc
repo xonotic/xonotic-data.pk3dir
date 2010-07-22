@@ -951,6 +951,7 @@ void GameCommand(string command)
 	if(argv(0) == "debug_shotorg")
 	{
 		debug_shotorg = stov(argv(1));
+		debug_shotorg_y = -debug_shotorg_y;
 		return;
 	}
 

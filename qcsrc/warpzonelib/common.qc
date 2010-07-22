@@ -165,6 +165,7 @@ void WarpZone_Trace_AddTransform(entity wz)
 
 void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb)
 {
+	float nomonsters_adjusted;
 	float frac, sol, i;
 	vector o0, e0;
 	entity wz;
@@ -174,6 +175,18 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	vu = v_up;
 	o0 = org;
 	e0 = end;
+
+	switch(nomonsters)
+	{
+		case MOVE_WORLDONLY:
+		case MOVE_NOTHING:
+			nomonsters_adjusted = MOVE_NOMONSTERS;
+			break;
+		default:
+			nomonsters_adjusted = nomonsters;
+			break;
+	}
+
 	WarpZone_Trace_InitTransform();
 	// if starting in warpzone, first transform
 	wz = WarpZone_Find(org + mi, org + ma);
@@ -203,7 +216,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			trace_ent = world;
 			break;
 		}
-		tracebox(org, mi, ma, end, nomonsters, forent);
+		tracebox(org, mi, ma, end, nomonsters_adjusted, forent);
 		if(cb)
 			cb(org, trace_endpos, end);
 		if(sol < 0)
@@ -213,7 +226,17 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		if(trace_fraction >= 1)
 			break;
 		if(trace_ent.classname != "trigger_warpzone")
+		{
+			if((nomonsters == MOVE_NOTHING) || ((nomonsters == MOVE_WORLDONLY) && trace_ent))
+			{
+				// continue the trace, ignoring this hit (we only care for warpzones)
+				org = trace_endpos + normalize(end - org);
+				continue;
+				// we cannot do an inverted trace here, as we do care for further warpzones inside that "solid" to be found
+				// otherwise, players could block entrances that way
+			}
 			break;
+		}
 		if(trace_ent == wz)
 		{
 			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
@@ -257,6 +280,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	vu = v_up;
 	o0 = e.origin;
 	v0 = e.velocity;
+
 	WarpZone_Trace_InitTransform();
 	// if starting in warpzone, first transform
 	wz = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);

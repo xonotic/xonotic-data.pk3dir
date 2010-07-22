@@ -86,7 +86,7 @@ void Draw_GrapplingHook()
 				break;
 			case ENT_CLIENT_LGBEAM:
 			case ENT_CLIENT_GAUNTLET:
-				b = view_origin + view_forward * MAX_SHOT_DISTANCE;
+				b = view_origin + view_forward * vlen(self.velocity - self.origin); // honor original length of beam!
 				WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
 				b = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
@@ -154,17 +154,19 @@ void Draw_GrapplingHook()
 
 	Draw_GrapplingHook_trace_callback_tex = tex;
 	Draw_GrapplingHook_trace_callback_rnd = random();
-	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NOMONSTERS, world, world, Draw_GrapplingHook_trace_callback);
+	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((self.HookType == ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), world, world, Draw_GrapplingHook_trace_callback);
 	Draw_GrapplingHook_trace_callback_tex = string_null;
 
 	switch(self.HookType)
 	{
 		default:
 		case ENT_CLIENT_HOOK:
-			self.angles = vectoangles(b - a);
+			setorigin(self, trace_endpos); // hook endpoint!
+			self.angles = vectoangles(trace_endpos - WarpZone_TransformOrigin(WarpZone_trace_transform, a));
 			break;
 		case ENT_CLIENT_LGBEAM:
 		case ENT_CLIENT_GAUNTLET:
+			setorigin(self, a); // beam origin!
 			break;
 	}
 }

@@ -169,17 +169,13 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
 	if(ent.weaponentity.movedir_x > 0)
-	{
 		vecs = ent.weaponentity.movedir;
-		vecs_y = -vecs_y;
-	}
 	else
 		vecs = '0 0 0';
-
 	if(debug_shotorg != '0 0 0')
 		vecs = debug_shotorg;
 
-	dv = v_right * vecs_y + v_up * vecs_z;
+	dv = v_right * -vecs_y + v_up * vecs_z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
 
 	// now move the shotorg forward as much as requested if possible
