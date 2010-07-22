@@ -1,3 +1,6 @@
+float trace_dphitcontents;
+.float dphitcontents;
+
 void WarpZone_Accumulator_Clear(entity acc)
 {
 	acc.warpzone_transform = '0 0 0';
@@ -167,6 +170,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 {
 	float nomonsters_adjusted;
 	float frac, sol, i;
+	float contentshack;
 	vector o0, e0;
 	entity wz;
 	vector vf, vr, vu;
@@ -186,6 +190,8 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			nomonsters_adjusted = nomonsters;
 			break;
 	}
+	if((contentshack = (forent.dphitcontentsmask && !(forent.dphitcontentsmask & DPCONTENTS_SOLID))))
+		forent.dphitcontentsmask |= DPCONTENTS_SOLID;
 
 	WarpZone_Trace_InitTransform();
 	// if starting in warpzone, first transform
@@ -227,7 +233,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			break;
 		if(trace_ent.classname != "trigger_warpzone")
 		{
-			if((nomonsters == MOVE_NOTHING) || ((nomonsters == MOVE_WORLDONLY) && trace_ent))
+			if((nomonsters == MOVE_NOTHING) || ((nomonsters == MOVE_WORLDONLY) && trace_ent) || (contentshack && (trace_dphitcontents & forent.dphitcontentsmask) == DPCONTENTS_SOLID))
 			{
 				// continue the trace, ignoring this hit (we only care for warpzones)
 				org = trace_endpos + normalize(end - org);
@@ -253,6 +259,8 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	}
 	WarpZone_MakeAllOther();
 :fail
+	if(contentshack)
+		forent.dphitcontentsmask &~= DPCONTENTS_SOLID;
 	trace_startsolid = sol;
 	v_forward = vf;
 	v_right = vr;
