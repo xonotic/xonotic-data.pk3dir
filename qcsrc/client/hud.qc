@@ -421,13 +421,13 @@ void HUD_Panel_ExportCfg(string cfgname)
 	if(fh >= 0)
 	{
 		fputs(fh, strcat("seta hud_skin \"", cvar_string("hud_skin"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg \"", cvar_string("hud_bg"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg_color \"", cvar_string("hud_bg_color"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg_color_team \"", cvar_string("hud_bg_color_team"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg_alpha \"", cvar_string("hud_bg_alpha"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg_border \"", cvar_string("hud_bg_border"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg_padding \"", cvar_string("hud_bg_padding"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_fg_alpha \"", cvar_string("hud_fg_alpha"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_bg \"", cvar_string("hud_panel_bg"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_bg_color \"", cvar_string("hud_panel_bg_color"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_bg_color_team \"", cvar_string("hud_panel_bg_color_team"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_bg_alpha \"", cvar_string("hud_panel_bg_alpha"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_bg_border \"", cvar_string("hud_panel_bg_border"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_bg_padding \"", cvar_string("hud_panel_bg_padding"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_fg_alpha \"", cvar_string("hud_panel_fg_alpha"), "\"", "\n"));
 		fputs(fh, "\n");
 
 		fputs(fh, strcat("seta hud_dock \"", cvar_string("hud_dock"), "\"", "\n"));
