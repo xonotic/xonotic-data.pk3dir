@@ -237,9 +237,9 @@ void lgbeam_think()
 		vecs = debug_shotorg;
 	org = self.owner.origin + self.owner.view_ofs + v_forward * vecs_x + v_right * -vecs_y + v_up * vecs_z;
 
-	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_electro_primary_range"), FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_electro_primary_range"), MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 	endpos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	WarpZone_traceline_antilag(self.owner, org, endpos, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	WarpZone_traceline_antilag(self.owner, org, endpos, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
 	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.owner.ammo_cells = max(0, self.owner.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime);

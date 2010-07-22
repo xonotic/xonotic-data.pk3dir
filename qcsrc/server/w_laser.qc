@@ -168,9 +168,9 @@ void gauntletbeam_think()
 		vecs = debug_shotorg;
 	org = self.owner.origin + self.owner.view_ofs + v_forward * vecs_x + v_right * -vecs_y + v_up * vecs_z;
 	
-	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * myradius, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * myradius, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 	endpos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	WarpZone_traceline_antilag(self.owner, org, endpos, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	WarpZone_traceline_antilag(self.owner, org, endpos, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage
 	if(trace_fraction < 1)
