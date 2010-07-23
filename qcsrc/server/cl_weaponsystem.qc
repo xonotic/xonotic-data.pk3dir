@@ -125,14 +125,14 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 
 vector w_shotorg;
 vector w_shotdir;
+vector w_shotend;
 
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
-void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float maxdamage)
+void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float maxdamage, float range)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
-	local vector trueaimpoint;
 	local float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
@@ -141,17 +141,17 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	if(antilag)
-		WarpZone_traceline_antilag(world, ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+		WarpZone_traceline_antilag(world, ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
 		// passing world, because we do NOT want it to touch dphitcontentsmask
 	else
-		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, ent);
+		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NOMONSTERS, ent);
 	ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
 	vector vf, vr, vu;
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
-	trueaimpoint = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
+	w_shotend = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
 	v_forward = vf;
 	v_right = vr;
 	v_up = vu;
@@ -190,17 +190,17 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - v_forward * nudge;
 	// calculate the shotdir from the chosen shotorg
-	w_shotdir = normalize(trueaimpoint - w_shotorg);
+	w_shotdir = normalize(w_shotend - w_shotorg);
 
 	if (antilag)
 	if (!ent.cvar_cl_noantilag)
 	{
 		if (cvar("g_antilag") == 1) // switch to "ghost" if not hitting original
 		{
-			traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent);
+			traceline(w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent);
 			if (!trace_ent.takedamage)
 			{
-				traceline_antilag_force (ent, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+				traceline_antilag_force (ent, w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
 				if (trace_ent.takedamage && trace_ent.classname == "player")
 				{
 					entity e;
@@ -221,7 +221,7 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 			{
 				// verify that the shot would miss without antilag
 				// (avoids an issue where guns would always shoot at their origin)
-				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent);
+				traceline(w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent);
 				if (!trace_ent.takedamage)
 				{
 					// verify that the shot would hit if altered
@@ -248,11 +248,16 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	if (ent.items & IT_STRENGTH)
 	if (!g_minstagib)
 		sound (ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+
+	// nudge w_shotend so a trace to w_shotend hits
+	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
 };
 
+#define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, maxdamage, MAX_SHOT_DISTANCE)
 #define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, maxdamage)
 #define W_SetupShot_Dir(ent,s_forward,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage)
 #define W_SetupShot(ent,antilag,recoil,snd,maxdamage) W_SetupShot_ProjectileSize(ent, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage)
+#define W_SetupShot_Range(ent,antilag,recoil,snd,maxdamage,range) W_SetupShot_Dir_ProjectileSize_Range(ent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage, range)
 
 void LaserTarget_Think()
 {

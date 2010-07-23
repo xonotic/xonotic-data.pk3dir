@@ -131,9 +131,6 @@ float gauntletbeam_send(entity to, float sf)
 .float prevgauntletfire;
 void gauntletbeam_think()
 {
-	vector endpos;
-	float oldsolid;
-
 	float damage, myforce, myradius;
 	if(self.cnt)
 	{
@@ -158,45 +155,31 @@ void gauntletbeam_think()
 	self.nextthink = time;
 
 	makevectors(self.owner.v_angle);
-	vector angle;
-	angle = v_forward;
-	// get effect origin
-	vector vecs, org;
-	if(self.owner.weaponentity.movedir_x > 0)
-		vecs = self.owner.weaponentity.movedir;
-	else
-		vecs = '0 0 0';
-	if(debug_shotorg != '0 0 0')
-		vecs = debug_shotorg;
-	org = self.owner.origin + self.owner.view_ofs + v_forward * vecs_x + v_right * -vecs_y + v_up * vecs_z;
-	
-	oldsolid = self.owner.dphitcontentsmask;
-	self.owner.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * myradius, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
-	endpos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	WarpZone_traceline_antilag(self.owner, org, endpos + 4 * normalize(endpos - org), MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
+	float dt;
+	dt = frametime;
 
-	self.owner.dphitcontentsmask = oldsolid;
+	W_SetupShot_Range(self.owner, TRUE, 0, "", damage * dt, myradius);
+	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage
 	if(trace_ent)
 	{
 		vector force;
-		force = angle * myforce;
-		Damage (trace_ent, self.owner, self.owner, damage * frametime, WEP_ELECTRO, trace_endpos, force * frametime);
+		force = w_shotdir * myforce;
+		Damage (trace_ent, self.owner, self.owner, damage * dt, WEP_ELECTRO, trace_endpos, force * dt);
 	}
 
 	// draw effect
-	if(org != self.hook_start)
+	if(w_shotorg != self.hook_start)
 	{
 		self.SendFlags |= 2;
-		self.hook_start = org;
+		self.hook_start = w_shotorg;
 	}
-	if(endpos != self.hook_end)
+	if(w_shotend != self.hook_end)
 	{
 		self.SendFlags |= 4;
-		self.hook_end = endpos;
+		self.hook_end = w_shotend;
 	}
 }
 

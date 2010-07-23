@@ -214,9 +214,6 @@ float lgbeam_send(entity to, float sf)
 .float prevlgfire;
 void lgbeam_think()
 {
-	vector endpos;
-	float oldsolid;
-
 	self.owner.prevlgfire = time;
 	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK)
 	{
@@ -227,49 +224,38 @@ void lgbeam_think()
 	self.nextthink = time;
 
 	makevectors(self.owner.v_angle);
-	vector angle;
-	angle = v_forward;
-	// get effect origin
-	vector vecs, org;
-	if(self.owner.weaponentity.movedir_x > 0)
-		vecs = self.owner.weaponentity.movedir;
-	else
-		vecs = '0 0 0';
-	if(debug_shotorg != '0 0 0')
-		vecs = debug_shotorg;
-	org = self.owner.origin + self.owner.view_ofs + v_forward * vecs_x + v_right * -vecs_y + v_up * vecs_z;
 
-	oldsolid = self.owner.dphitcontentsmask;
-	self.owner.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-
-	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_electro_primary_range"), MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
-	endpos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	WarpZone_traceline_antilag(self.owner, org, endpos + 4 * normalize(endpos - org), MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
-
-	self.owner.dphitcontentsmask = oldsolid;
-
+	float dt;
+	dt = frametime;
 	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(cvar("g_balance_electro_primary_ammo"))
+			dt = min(frametime, self.owner.ammo_cells / cvar("g_balance_electro_primary_ammo"));
 		self.owner.ammo_cells = max(0, self.owner.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime);
+	}
+
+	W_SetupShot_Range(self.owner, TRUE, 0, "", cvar("g_balance_electro_primary_damage") * dt, cvar("g_balance_electro_primary_range"));
+	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage
 	if(trace_ent)
 	{
 		vector force;
-		force = angle * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
-		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * frametime, WEP_ELECTRO, trace_endpos, force * frametime);
+		force = w_shotdir * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
+		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * dt, WEP_ELECTRO, trace_endpos, force * dt);
 		W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
 	}
 
 	// draw effect
-	if(org != self.hook_start)
+	if(w_shotorg != self.hook_start)
 	{
 		self.SendFlags |= 2;
-		self.hook_start = org;
+		self.hook_start = w_shotorg;
 	}
-	if(endpos != self.hook_end)
+	if(w_shotend != self.hook_end)
 	{
 		self.SendFlags |= 4;
-		self.hook_end = endpos;
+		self.hook_end = w_shotend;
 	}
 }
 
