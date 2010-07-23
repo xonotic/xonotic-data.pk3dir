@@ -957,7 +957,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
 
 		// weapon icon
-		drawpic_aspect(pos, strcat("gfx/hud/", cvar_string("hud_skin"), "/weapon", self.netname), '1 0 0' * sbwidth * (1/weapon_cnt) + '0 1 0' * height * (2/3), '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos, strcat("weapon", self.netname), '1 0 0' * sbwidth * (1/weapon_cnt) + '0 1 0' * height * (2/3), '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
 		if(weapon_damage) {
 			weapons_with_stats += 1;
