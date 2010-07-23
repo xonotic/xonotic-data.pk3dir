@@ -477,7 +477,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_complainbubble_color_unavailable \"", cvar_string(strcat("hud_panel_", panel_name, "_complainbubble_color_unavailable")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_ammo_color \"", cvar_string(strcat("hud_panel_", panel_name, "_ammo_color")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_ammo_alpha \"", cvar_string(strcat("hud_panel_", panel_name, "_ammo_alpha")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_aspect \"", cvar_string(strcat("hud_panel_", panel_name, "_ammo_alpha")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_panel_", panel_name, "_aspect \"", cvar_string(strcat("hud_panel_", panel_name, "_aspect")), "\"", "\n"));
 					break;
 				case HUD_PANEL_AMMO:
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_onlycurrent \"", cvar_string(strcat("hud_panel_", panel_name, "_onlycurrent")), "\"", "\n"));
