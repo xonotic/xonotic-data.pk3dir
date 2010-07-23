@@ -244,10 +244,7 @@ void lgbeam_think()
 		force = w_shotdir * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
 		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * dt, WEP_ELECTRO, trace_endpos, force * dt);
 	}
-	if(trace_fraction < 1)
-	{
-		W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
-	}
+	W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
 
 	// draw effect
 	if(w_shotorg != self.hook_start)
