@@ -224,10 +224,10 @@ float w_shotgun(float req)
 		precache_sound("weapons/ric3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
+		w_deathtypestring = "%s did the impossible";
 	else if (req == WR_KILLMESSAGE)
 	{
-		w_deathtypestring = "was gunned by"; // unchecked: SECONDARY
+		w_deathtypestring = "%s was gunned by %s"; // unchecked: SECONDARY
 	}
 	return TRUE;
 }

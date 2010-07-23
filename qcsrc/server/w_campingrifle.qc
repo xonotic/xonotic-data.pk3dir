@@ -307,32 +307,32 @@ float w_campingrifle(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "shot themself automatically";
+			w_deathtypestring = "%s shot themself automatically";
 		else
-			w_deathtypestring = "sniped themself somehow";
+			w_deathtypestring = "%s sniped themself somehow";
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
-				w_deathtypestring = "failed to hide from #'s bullet hail";
+				w_deathtypestring = "%s failed to hide from %s's bullet hail";
 			else
-				w_deathtypestring = "died in #'s bullet hail";
+				w_deathtypestring = "%s died in %s's bullet hail";
 		}
 		else
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
 			{
 				// TODO special headshot message here too?
-				w_deathtypestring = "failed to hide from #'s rifle";
+				w_deathtypestring = "%s failed to hide from %s's rifle";
 			}
 			else
 			{
 				if(w_deathtype & HITTYPE_HEADSHOT)
-					w_deathtypestring = "got hit in the head by #";
+					w_deathtypestring = "%s got hit in the head by %s";
 				else
-					w_deathtypestring = "was sniped by #";
+					w_deathtypestring = "%s was sniped by %s";
 			}
 		}
 	}
