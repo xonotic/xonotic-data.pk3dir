@@ -360,7 +360,7 @@ float w_electro(float req)
 	{
 		if (self.BUTTON_ATCK)
 		{
-			if (weapon_prepareattack(0, cvar("g_balance_electro_primary_refire")))
+			if (weapon_prepareattack(0, (cvar("g_balance_electro_lightning") ? 0 : cvar("g_balance_electro_primary_refire"))))
 			{
 				if(cvar("g_balance_electro_lightning"))
 				{

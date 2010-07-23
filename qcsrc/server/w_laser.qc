@@ -263,7 +263,7 @@ float w_laser(float req)
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, cvar("g_balance_laser_primary_refire")))
+		if (weapon_prepareattack(0, (cvar("g_balance_laser_primary_gauntlet") ? 0 : cvar("g_balance_laser_primary_refire"))))
 		{
 			if(cvar("g_balance_laser_primary_gauntlet"))
 				W_Laser_Attack2(0);
@@ -275,7 +275,7 @@ float w_laser(float req)
 		{
 			if(cvar("g_balance_laser_secondary"))
 			{
-				if (weapon_prepareattack(0, cvar("g_balance_laser_secondary_refire")))
+				if (weapon_prepareattack(0, (cvar("g_balance_laser_secondary_gauntlet") ? 0 : cvar("g_balance_laser_secondary_refire"))))
 				{
 					if(cvar("g_balance_laser_secondary_gauntlet"))
 						W_Laser_Attack2(1);

@@ -463,6 +463,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 entity damage_targ;
 entity damage_inflictor;
 entity damage_attacker;
+.float prevhitsound;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -725,10 +726,14 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				{
 					if(damage > 0)
 					{
-						if(targ.BUTTON_CHAT)
-							attacker.typehitsound += 1;
-						else
-							attacker.hitsound += 1;
+						if(attacker.weapon != WEP_ELECTRO && attacker.weapon != WEP_LASER || ((attacker.weapon == WEP_ELECTRO && cvar("g_balance_electro_lightning") || attacker.weapon == WEP_LASER) && attacker.prevhitsound + cvar("sv_hitsound_antispam_time") < time))
+						{
+							if(targ.BUTTON_CHAT)
+								attacker.typehitsound += 1;
+							else
+								attacker.hitsound += 1;
+							attacker.prevhitsound = time;
+						}
 
 						damage_goodhits += 1;
 						damage_gooddamage += damage;
