@@ -478,7 +478,6 @@ void CSQC_UpdateView(float w, float h)
 		weapontime = time;
 		last_weapon = activeweapon;
 
-		entity e;
 		e = get_weaponinfo(activeweapon);
 		if(e.netname != "")
 			localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
@@ -1190,6 +1189,18 @@ void CSQC_common_hud(void)
 	switch(hud)
 	{
 		case HUD_NORMAL:
+			// do some accuracy var caching
+			float i;
+			if(!(gametype == GAME_RACE || gametype == GAME_CTS))
+			{
+				acc_levels = tokenize(cvar_string("hud_panel_weapons_accuracy_color_levels"));
+				if (acc_levels > MAX_ACCURACY_LEVELS)
+					acc_levels = MAX_ACCURACY_LEVELS;
+
+				for (i = 0; i < acc_levels; ++i)
+					acc_lev[i] = stof(argv(i));
+			}
+
 			// hud first
 			HUD_Main();
 

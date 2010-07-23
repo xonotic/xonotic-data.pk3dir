@@ -1380,10 +1380,6 @@ float GetAmmoTypeForWep(float i)
 	}
 }
 
-#define acc_color(i) stov(cvar_string(strcat("hud_panel_weapons_accuracy_color", ftos(i))))
-#define MAX_ACCURACY_LEVELS 10
-float acc_lev[MAX_ACCURACY_LEVELS];
-
 void HUD_Weapons(void)
 {
 	if(!autocvar_hud_panel_weapons && !autocvar__hud_configure)
@@ -1468,17 +1464,6 @@ void HUD_Weapons(void)
 	vector color;
 	vector wpnpos;
 	vector wpnsize;
-
-	float acc_levels;
-	if(autocvar_hud_panel_weapons_accuracy && !(gametype == GAME_RACE || gametype == GAME_CTS))
-	{
-		acc_levels = tokenize(cvar_string("hud_panel_weapons_accuracy_color_levels"));
-		if (acc_levels > MAX_ACCURACY_LEVELS)
-			acc_levels = MAX_ACCURACY_LEVELS;
-
-		for (i = 0; i < acc_levels; ++i)
-			acc_lev[i] = stof(argv(i));
-	}
 
 	for(i = 0; i < weapon_cnt; ++i)
 	{

@@ -969,19 +969,26 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			float padding;
 			padding = ((sbwidth/weapon_cnt) - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value
 
-			// yellow_accuracy = value at which accuracy becomes yellow
-			if(weapon_stats >= 100) {
-				rgb_x = 0;
-				rgb_y = 1;
+			float weapon_hit, weapon_damage;
+			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
+			if(weapon_damage)
+			{
+				weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
+				weapon_stats = floor(100 * weapon_hit / weapon_damage);
 			}
-			else if(weapon_stats > autocvar_hud_panel_weapons_accuracy_yellow) {
-				rgb_x = 1 - (weapon_stats-autocvar_hud_panel_weapons_accuracy_yellow)/(100-autocvar_hud_panel_weapons_accuracy_yellow); // red value between 1 -> 0
-				rgb_y = 1;
-			} else {
-				rgb_x = 1;
-				rgb_y = weapon_stats/autocvar_hud_panel_weapons_accuracy_yellow; // green value between 0 -> 1
-			}
-			rgb_z = 0;
+
+			// find the max level lower than weapon_stats
+			float j;
+			j = acc_levels-1;
+			while ( j && weapon_stats < acc_lev[j] )
+				--j;
+
+			// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
+			float factor;
+			factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
+			rgb = acc_color(j);
+			rgb = rgb + factor * (acc_color(j+1) - rgb);
+
 			drawstring(pos + '1 0 0' * padding + '0 1 0' * height * (2/3), s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		}
 		pos_x += sbwidth/weapon_cnt * rows;
