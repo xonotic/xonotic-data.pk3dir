@@ -252,7 +252,7 @@ void lgbeam_think()
 		self.owner.ammo_cells = max(0, self.owner.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime);
 
 	// apply the damage
-	if(trace_fraction < 1)
+	if(trace_ent)
 	{
 		vector force;
 		force = angle * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");

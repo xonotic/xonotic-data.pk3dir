@@ -180,7 +180,7 @@ void gauntletbeam_think()
 	self.owner.dphitcontentsmask = oldsolid;
 
 	// apply the damage
-	if(trace_fraction < 1)
+	if(trace_ent)
 	{
 		vector force;
 		force = angle * myforce;
