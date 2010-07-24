@@ -162,7 +162,10 @@ float w_shotgun(float req)
 		w_deathtypestring = "%s did the impossible";
 	else if (req == WR_KILLMESSAGE)
 	{
-		w_deathtypestring = "%s was gunned by %s"; // unchecked: SECONDARY
+		if(w_deathtype & HITTYPE_SECONDARY)
+			w_deathtypestring = "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun";
+		else
+			w_deathtypestring = "%s was gunned by %s";
 	}
 	return TRUE;
 }

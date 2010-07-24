@@ -2437,7 +2437,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			HUD_KillNotify_Push(s2, s1, 1, type);
+			HUD_KillNotify_Push(s1, s2, 1, type);
 			if (alsoprint)
 				print("^1", sprintf(Weapon_KillMessage(type), strcat(s2, "^1"), strcat(s1, "^1")), "\n"); // default order: victim, killer
 		}

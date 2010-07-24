@@ -370,7 +370,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					msg = ftos(strstrofs(inflictor.message2, "#", 0));
 				}
 
-				Send_KillNotification(s, a, msg, deathtype, MSG_KILL);
+				Send_KillNotification(a, s, msg, deathtype, MSG_KILL);
 
 				if(g_ctf && targ.flagcarried)
 				{
