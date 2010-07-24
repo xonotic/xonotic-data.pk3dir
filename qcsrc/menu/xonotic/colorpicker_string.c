@@ -70,10 +70,14 @@ void XonoticColorpickerString_draw(entity me)
 
 	SUPER(XonoticColorpickerString).draw(me);
 
+	vector sz;
+	sz = draw_PictureSize(strcat(me.src, "_selected"));
+	sz = globalToBoxSize(sz, draw_scale);
+
 	if(me.disabled)
 		me.prevcoords = '1 1 0';
 	else
-		draw_Picture(me.imgOrigin + me.prevcoords - '0.05 0.125 0', strcat(me.src, "_selected"), '0.1 0.25 0', '1 1 1', 1);
+		draw_Picture(me.imgOrigin + me.prevcoords - 0.5 * sz, strcat(me.src, "_selected"), sz, '1 1 1', 1);
 	draw_alpha = save;
 }
 #endif

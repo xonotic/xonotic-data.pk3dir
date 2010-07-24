@@ -384,36 +384,32 @@ float w_fireball(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "forgot about some firemine";
+			w_deathtypestring = "%s forgot about some firemine";
 		else
-			w_deathtypestring = "should have used a smaller gun";
+			w_deathtypestring = "%s should have used a smaller gun";
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
 			if(w_deathtype & HITTYPE_HEADSHOT)
-				w_deathtypestring = "tried to catch #'s firemine";
+				w_deathtypestring = "%s tried to catch %s's firemine";
 			else
-				w_deathtypestring = "fatefully ignored #'s firemine";
+				w_deathtypestring = "%s fatefully ignored %s's firemine";
 		}
 		else
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
 			{
 				if(w_deathtype & HITTYPE_SPLASH) // BFG effect
-				{
-					w_deathtypestring = "could not hide from #'s fireball";
-				}
+					w_deathtypestring = "%s could not hide from %s's fireball";
 				else // laser
-				{
-					w_deathtypestring = "saw the pretty lights of #'s fireball";
-				}
+					w_deathtypestring = "%s saw the pretty lights of %s's fireball";
 			}
 			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = "got too close to #'s fireball";
+				w_deathtypestring = "%s got too close to %s's fireball";
 			else
-				w_deathtypestring = "tasted #'s fireball";
+				w_deathtypestring = "%s tasted %s's fireball";
 		}
 	}
 	return TRUE;

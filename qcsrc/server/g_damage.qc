@@ -363,13 +363,14 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				attacker.taunt_soundtime = time + 1;
 
 				// TODO: fix this?
-					if (deathtype == DEATH_CUSTOM)
-						msg = strcat(deathmessage, " by ^1", msg);
-					else if (deathtype == DEATH_HURTTRIGGER && inflictor.message2 != "")
-					{
-						msg = ftos(strstrofs(inflictor.message2, "#", 0));
-					}
-					Send_KillNotification(s, a, msg, deathtype, MSG_KILL);
+				if (deathtype == DEATH_CUSTOM)
+					msg = strcat(deathmessage, " by ^1", msg);
+				else if (deathtype == DEATH_HURTTRIGGER && inflictor.message2 != "")
+				{
+					msg = ftos(strstrofs(inflictor.message2, "#", 0));
+				}
+
+				Send_KillNotification(a, s, msg, deathtype, MSG_KILL);
 
 				if(g_ctf && targ.flagcarried)
 				{
@@ -389,10 +390,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				if (attacker.killcount > 2) {
 					Send_KillNotification(a, ftos(attacker.killcount), "", KILL_SPREE, MSG_SPREE);
 				}
-
-				LogDeath("frag", deathtype, attacker, targ);
-
-				if (attacker.killcount == 3)
+				else if (attacker.killcount == 3)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_3, MSG_SPREE);
 					AnnounceTo(attacker, "03kills");
@@ -427,6 +425,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					Send_KillNotification(a, "", "", KILL_SPREE_30, MSG_SPREE);
 					AnnounceTo(attacker, "30kills");
 				}
+				LogDeath("frag", deathtype, attacker, targ);
 			}
 		}
 		else
@@ -463,6 +462,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 entity damage_targ;
 entity damage_inflictor;
 entity damage_attacker;
+.float prevhitsound;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -725,10 +725,14 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				{
 					if(damage > 0)
 					{
-						if(targ.BUTTON_CHAT)
-							attacker.typehitsound += 1;
-						else
-							attacker.hitsound += 1;
+						if(attacker.weapon != WEP_ELECTRO && attacker.weapon != WEP_LASER || ((attacker.weapon == WEP_ELECTRO && cvar("g_balance_electro_lightning") || attacker.weapon == WEP_LASER) && attacker.prevhitsound + cvar("sv_hitsound_antispam_time") < time))
+						{
+							if(targ.BUTTON_CHAT)
+								attacker.typehitsound += 1;
+							else
+								attacker.hitsound += 1;
+							attacker.prevhitsound = time;
+						}
 
 						damage_goodhits += 1;
 						damage_gooddamage += damage;

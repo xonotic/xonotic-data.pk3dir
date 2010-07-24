@@ -37,6 +37,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 	e.animstate_looping = looping;
 	e.animstate_override = override;
 	e.frame = e.animstate_startframe;
+	e.frame1time = servertime;
 };
 
 void updateanim(entity e)

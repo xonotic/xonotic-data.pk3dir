@@ -173,6 +173,7 @@ void W_CampingRifle_BulletHail(float mode, void(void) AttackFunc, float fr, floa
 }
 
 .float bot_secondary_campingriflemooth;
+.float sent_campingrifle_scope;
 float w_campingrifle(float req)
 {
 	float full;
@@ -219,17 +220,33 @@ float w_campingrifle(float req)
 				self.campingrifle_accumulator += cvar("g_balance_campingrifle_primary_burstcost");
 			}
 			if (self.BUTTON_ATCK2)
-			if (weapon_prepareattack_check(1, cvar("g_balance_campingrifle_secondary_refire")))
-			if (time >= self.campingrifle_accumulator + cvar("g_balance_campingrifle_secondary_burstcost"))
-			{
-				weapon_prepareattack_do(1, cvar("g_balance_campingrifle_secondary_refire"));
-				W_CampingRifle_BulletHail(cvar("g_balance_campingrifle_secondary_bullethail"), W_CampingRifle_Attack2, WFRAME_FIRE2, cvar("g_balance_campingrifle_secondary_animtime"), cvar("g_balance_campingrifle_primary_refire"));
-				self.campingrifle_accumulator += cvar("g_balance_campingrifle_secondary_burstcost");
+			{	
+				if (cvar("g_balance_campingrifle_secondary"))
+				{
+					if (weapon_prepareattack_check(1, cvar("g_balance_campingrifle_secondary_refire")))
+					if (time >= self.campingrifle_accumulator + cvar("g_balance_campingrifle_secondary_burstcost"))
+					{
+						weapon_prepareattack_do(1, cvar("g_balance_campingrifle_secondary_refire"));
+						W_CampingRifle_BulletHail(cvar("g_balance_campingrifle_secondary_bullethail"), W_CampingRifle_Attack2, WFRAME_FIRE2, cvar("g_balance_campingrifle_secondary_animtime"), cvar("g_balance_campingrifle_primary_refire"));
+						self.campingrifle_accumulator += cvar("g_balance_campingrifle_secondary_burstcost");
+					}
+				}
+				else
+				{
+					if(clienttype(self) == CLIENTTYPE_REAL)
+					if(!self.sent_campingrifle_scope)
+					{
+						msg_entity = self;
+						WriteByte(MSG_ONE, SVC_TEMPENTITY);
+						WriteByte(MSG_ONE, TE_CSQC_CAMPINGRIFLE_SCOPE);
+						self.sent_campingrifle_scope = 1;
+					}	
+				}
 			}
 		}
 	}
 	else if (req == WR_PRECACHE)
-	{		
+	{
 		precache_model ("models/weapons/g_campingrifle.md3");
 		precache_model ("models/weapons/v_campingrifle.md3");
 		precache_model ("models/weapons/h_campingrifle.iqm");
@@ -290,32 +307,32 @@ float w_campingrifle(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "shot themself automatically";
+			w_deathtypestring = "%s shot themself automatically";
 		else
-			w_deathtypestring = "sniped themself somehow";
+			w_deathtypestring = "%s sniped themself somehow";
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
-				w_deathtypestring = "failed to hide from #'s bullet hail";
+				w_deathtypestring = "%s failed to hide from %s's bullet hail";
 			else
-				w_deathtypestring = "died in #'s bullet hail";
+				w_deathtypestring = "%s died in %s's bullet hail";
 		}
 		else
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
 			{
 				// TODO special headshot message here too?
-				w_deathtypestring = "failed to hide from #'s rifle";
+				w_deathtypestring = "%s failed to hide from %s's rifle";
 			}
 			else
 			{
 				if(w_deathtype & HITTYPE_HEADSHOT)
-					w_deathtypestring = "got hit in the head by #";
+					w_deathtypestring = "%s got hit in the head by %s";
 				else
-					w_deathtypestring = "was sniped by #";
+					w_deathtypestring = "%s was sniped by %s";
 			}
 		}
 	}

@@ -137,7 +137,7 @@ vector GetCurrentFov(float fov)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
-	if(getstati(STAT_ACTIVEWEAPON) == WEP_NEX) // do NOT use switchweapon here
+	if(getstati(STAT_ACTIVEWEAPON) == WEP_NEX || (getstati(STAT_ACTIVEWEAPON) == WEP_CAMPINGRIFLE && campingrifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -478,7 +478,6 @@ void CSQC_UpdateView(float w, float h)
 		weapontime = time;
 		last_weapon = activeweapon;
 
-		entity e;
 		e = get_weaponinfo(activeweapon);
 		if(e.netname != "")
 			localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
@@ -567,7 +566,7 @@ void CSQC_UpdateView(float w, float h)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
 	else if(button_zoom)
 		reticle_type = 1; // normal zoom
-	else if(activeweapon == WEP_NEX && button_attack2)
+	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_CAMPINGRIFLE && button_attack2)
 		reticle_type = 2; // nex zoom
 
 	if(cvar("cl_reticle_stretch"))
@@ -779,7 +778,7 @@ void CSQC_UpdateView(float w, float h)
 					bullets = 0;
 
 #define CROSSHAIR_DRAW_RING(i,j,sz,wcross_name,wcross_alpha) \
-				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/hud/", cvar_string("hud_skin"), "/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
 				do \
@@ -1190,6 +1189,18 @@ void CSQC_common_hud(void)
 	switch(hud)
 	{
 		case HUD_NORMAL:
+			// do some accuracy var caching
+			float i;
+			if(!(gametype == GAME_RACE || gametype == GAME_CTS))
+			{
+				acc_levels = tokenize(cvar_string("hud_panel_weapons_accuracy_color_levels"));
+				if (acc_levels > MAX_ACCURACY_LEVELS)
+					acc_levels = MAX_ACCURACY_LEVELS;
+
+				for (i = 0; i < acc_levels; ++i)
+					acc_lev[i] = stof(argv(i));
+			}
+
 			// hud first
 			HUD_Main();
 
