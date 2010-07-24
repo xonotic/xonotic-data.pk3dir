@@ -363,13 +363,27 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				attacker.taunt_soundtime = time + 1;
 
 				// TODO: fix this?
-					if (deathtype == DEATH_CUSTOM)
-						msg = strcat(deathmessage, " by ^1", msg);
-					else if (deathtype == DEATH_HURTTRIGGER && inflictor.message2 != "")
-					{
-						msg = ftos(strstrofs(inflictor.message2, "#", 0));
-					}
-					Send_KillNotification(s, a, msg, deathtype, MSG_KILL);
+				if (deathtype == DEATH_CUSTOM)
+					msg = strcat(deathmessage, " by ^1", msg);
+				else if (deathtype == DEATH_HURTTRIGGER && inflictor.message2 != "")
+				{
+					msg = ftos(strstrofs(inflictor.message2, "#", 0));
+				}
+
+				float msgtype;
+				w = DEATH_WEAPONOF(deathtype);
+				if(w == WEP_LASER && ((cvar("g_balance_laser_secondary_gauntlet") && w & HITTYPE_SECONDARY) || (cvar("g_balance_laser_primary_gauntlet") && !(w & HITTYPE_SECONDARY))))
+				{
+					msgtype = MSG_KILL_MELEE;
+					deathtype = KILL_FRAG_GAUNTLET;
+				}
+				else if(w == WEP_SHOTGUN && (cvar("g_balance_shotgun_secondary_melee") && w & HITTYPE_SECONDARY))
+				{
+					msgtype = MSG_KILL_MELEE;
+					deathtype = KILL_FRAG_SHOTGUN_MELEE;
+				}
+
+				Send_KillNotification(s, a, msg, deathtype, MSG_KILL);
 
 				if(g_ctf && targ.flagcarried)
 				{
@@ -389,10 +403,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				if (attacker.killcount > 2) {
 					Send_KillNotification(a, ftos(attacker.killcount), "", KILL_SPREE, MSG_SPREE);
 				}
-
-				LogDeath("frag", deathtype, attacker, targ);
-
-				if (attacker.killcount == 3)
+				else if (attacker.killcount == 3)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_3, MSG_SPREE);
 					AnnounceTo(attacker, "03kills");
@@ -427,6 +438,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					Send_KillNotification(a, "", "", KILL_SPREE_30, MSG_SPREE);
 					AnnounceTo(attacker, "30kills");
 				}
+				LogDeath("frag", deathtype, attacker, targ);
 			}
 		}
 		else

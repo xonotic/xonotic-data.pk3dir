@@ -421,13 +421,13 @@ void HUD_Panel_ExportCfg(string cfgname)
 	if(fh >= 0)
 	{
 		fputs(fh, strcat("seta hud_skin \"", cvar_string("hud_skin"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg \"", cvar_string("hud_bg"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg_color \"", cvar_string("hud_bg_color"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg_color_team \"", cvar_string("hud_bg_color_team"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg_alpha \"", cvar_string("hud_bg_alpha"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg_border \"", cvar_string("hud_bg_border"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_bg_padding \"", cvar_string("hud_bg_padding"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_fg_alpha \"", cvar_string("hud_fg_alpha"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_bg \"", cvar_string("hud_panel_bg"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_bg_color \"", cvar_string("hud_panel_bg_color"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_bg_color_team \"", cvar_string("hud_panel_bg_color_team"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_bg_alpha \"", cvar_string("hud_panel_bg_alpha"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_bg_border \"", cvar_string("hud_panel_bg_border"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_bg_padding \"", cvar_string("hud_panel_bg_padding"), "\"", "\n"));
+		fputs(fh, strcat("seta hud_panel_fg_alpha \"", cvar_string("hud_panel_fg_alpha"), "\"", "\n"));
 		fputs(fh, "\n");
 
 		fputs(fh, strcat("seta hud_dock \"", cvar_string("hud_dock"), "\"", "\n"));
@@ -477,7 +477,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_complainbubble_color_unavailable \"", cvar_string(strcat("hud_panel_", panel_name, "_complainbubble_color_unavailable")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_ammo_color \"", cvar_string(strcat("hud_panel_", panel_name, "_ammo_color")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_ammo_alpha \"", cvar_string(strcat("hud_panel_", panel_name, "_ammo_alpha")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_aspect \"", cvar_string(strcat("hud_panel_", panel_name, "_ammo_alpha")), "\"", "\n"));
+					fputs(fh, strcat("seta hud_panel_", panel_name, "_aspect \"", cvar_string(strcat("hud_panel_", panel_name, "_aspect")), "\"", "\n"));
 					break;
 				case HUD_PANEL_AMMO:
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_onlycurrent \"", cvar_string(strcat("hud_panel_", panel_name, "_onlycurrent")), "\"", "\n"));
@@ -1380,10 +1380,6 @@ float GetAmmoTypeForWep(float i)
 	}
 }
 
-#define acc_color(i) stov(cvar_string(strcat("hud_panel_weapons_accuracy_color", ftos(i))))
-#define MAX_ACCURACY_LEVELS 10
-float acc_lev[MAX_ACCURACY_LEVELS];
-
 void HUD_Weapons(void)
 {
 	if(!autocvar_hud_panel_weapons && !autocvar__hud_configure)
@@ -1468,17 +1464,6 @@ void HUD_Weapons(void)
 	vector color;
 	vector wpnpos;
 	vector wpnsize;
-
-	float acc_levels;
-	if(autocvar_hud_panel_weapons_accuracy && !(gametype == GAME_RACE || gametype == GAME_CTS))
-	{
-		acc_levels = tokenize(cvar_string("hud_panel_weapons_accuracy_color_levels"));
-		if (acc_levels > MAX_ACCURACY_LEVELS)
-			acc_levels = MAX_ACCURACY_LEVELS;
-
-		for (i = 0; i < acc_levels; ++i)
-			acc_lev[i] = stof(argv(i));
-	}
 
 	for(i = 0; i < weapon_cnt; ++i)
 	{
@@ -2449,6 +2434,25 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		
 		if (stof(s2) > 2) // killcount > 2
 			print ("^1",s1,"^1 ended it all after a ",s2," kill spree\n");
+	} else if(msg == MSG_KILL_MELEE) { // handle melee types separately
+		if(type == KILL_FRAG_GAUNTLET) {
+			if(alsoprint)
+			{
+				if(gentle) {
+					print ("^1", s1, "^1 got too close to", s2, "^1's gauntlet\n");
+				} else {
+					print ("^1", s1, "^1 was cut in half by", s2, "^1's gauntlet\n");
+				}
+			}
+		}
+		else if(type == KILL_FRAG_SHOTGUN_MELEE)
+		{
+			if(alsoprint)
+			{
+				print ("^7", s2, "^7 slapped ", s1, "^7 around a bit with a large ^2shotgun\n");
+			}
+		}
+		HUD_KillNotify_Push(s1, s2, 1, type);
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
@@ -3013,6 +3017,14 @@ void HUD_Notify (void)
 			{
 				self = get_weaponinfo(killnotify_deathtype[j]);
 				s = strcat("weapon", self.netname);
+			}
+			else if(killnotify_deathtype[j] == KILL_FRAG_GAUNTLET)
+			{
+				s = "notify_melee";
+			}
+			else if(killnotify_deathtype[j] == KILL_FRAG_SHOTGUN_MELEE)
+			{
+				s = "notify_melee";
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
 			{
