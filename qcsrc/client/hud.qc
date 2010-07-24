@@ -2397,7 +2397,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		if(WEP_VALID(w)) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if (alsoprint)
-				print("^1", s1, "^1 ", Weapon_SuicideMessage(type), "\n");
+				print("^1", sprintf(Weapon_SuicideMessage(type), strcat(s1, "^1")), "\n");
 		} else if (type == DEATH_KILL) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_KILL);
 			if (alsoprint)
@@ -2458,7 +2458,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		if(WEP_VALID(w)) {
 			HUD_KillNotify_Push(s2, s1, 1, w);
 			if (alsoprint)
-				print("^1", s1, "^1 ", Weapon_KillMessage(type), "\n");
+				print("^1", sprintf(Weapon_KillMessage(type), strcat(s2, "^1"), strcat(s1, "^1")), "\n"); // default order: victim, killer
 		}
 		else if(type == KILL_TEAM_RED || type == KILL_TEAM_BLUE || type == KILL_TEAM_SPREE) {
 			HUD_KillNotify_Push(s1, s2, 1, type);
