@@ -176,7 +176,7 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_HOOK:
 			break;
 		case ENT_CLIENT_LGBEAM:
-			pointparticles(particleeffectnum("electro_lightning"), b, normalize(a - b) * 1000, frametime);
+			pointparticles(particleeffectnum("electro_lightning"), b, normalize(a - b), frametime);
 			break;
 		case ENT_CLIENT_GAUNTLET:
 			break;
