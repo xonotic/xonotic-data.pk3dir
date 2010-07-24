@@ -22,6 +22,11 @@ void SUB_Stop()
 .float silent;
 .float traileffect;
 
+void Projectile_ResetTrail(vector to)
+{
+	self.trail_oldorigin = to;
+	self.trail_oldtime = time;
+}
 void Projectile_DrawTrail(vector to)
 {
 	vector from;
@@ -38,20 +43,8 @@ void Projectile_DrawTrail(vector to)
 
 	if (self.traileffect)
 	{
-		if(checkextension("DP_CSQC_BOXPARTICLES"))
-		{
-			/* looks good, but we can do better with particle count
-			particles_alphamin = particles_alphamax = self.alpha;
-			boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, 1, PARTICLES_USEALPHA);
-			*/
-			/* looks bad
-			boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, self.alpha, 0);
-			*/
-			particles_alphamin = particles_alphamax = sqrt(self.alpha);
-			boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, sqrt(self.alpha), PARTICLES_USEALPHA);
-		}
-		else
-			trailparticles(self, self.traileffect, from, to);
+		particles_alphamin = particles_alphamax = sqrt(self.alpha);
+		boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, sqrt(self.alpha), PARTICLES_USEALPHA);
 	}
 }
 
@@ -143,10 +136,7 @@ void Projectile_Draw()
 	if(drawn)
 		Projectile_DrawTrail(trailorigin);
 	else
-	{
-		self.trail_oldorigin = trailorigin;
-		self.trail_oldtime = time;
-	}
+		Projectile_ResetTrail(trailorigin);
 
 	if(!drawn)
 		return;
