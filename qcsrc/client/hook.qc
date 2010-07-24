@@ -169,6 +169,18 @@ void Draw_GrapplingHook()
 			setorigin(self, a); // beam origin!
 			break;
 	}
+
+	switch(self.HookType)
+	{
+		default:
+		case ENT_CLIENT_HOOK:
+			break;
+		case ENT_CLIENT_LGBEAM:
+			pointparticles(particleeffectnum("electro_lightning"), b, normalize(a - b) * 1000, frametime);
+			break;
+		case ENT_CLIENT_GAUNTLET:
+			break;
+	}
 }
 
 void Remove_GrapplingHook()
