@@ -250,16 +250,16 @@ float w_crylink(float req)
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		w_deathtypestring = "succeeded at self-destructing themself with the Crylink";
+		w_deathtypestring = "%s succeeded at self-destructing themself with the Crylink";
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE)
-			w_deathtypestring = "could not hide from #'s Crylink"; // unchecked: SPLASH (SECONDARY can't be)
+			w_deathtypestring = "%s could not hide from %s's Crylink"; // unchecked: SPLASH (SECONDARY can't be)
 		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "was too close to #'s Crylink"; // unchecked: SECONDARY
+			w_deathtypestring = "%s was too close to %s's Crylink"; // unchecked: SECONDARY
 		else
-			w_deathtypestring = "took a close look at #'s Crylink"; // unchecked: SECONDARY
+			w_deathtypestring = "%s took a close look at %s's Crylink"; // unchecked: SECONDARY
 	}
 	return TRUE;
 }

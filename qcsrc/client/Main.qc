@@ -136,6 +136,7 @@ void CSQC_Init(void)
 
 	// precaches
 	Projectile_Precache();
+	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
 	DamageInfo_Precache();
@@ -923,6 +924,9 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_WARPZONE: WarpZone_Read(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE_CAMERA: WarpZone_Camera_Read(bIsNewEntity); break;
 		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
+		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
+		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
+		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		default:
 			error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
 			break;
@@ -1022,9 +1026,18 @@ void Ent_Init()
 
 	nb_pb_period = ReadByte() / 32; //Accuracy of 1/32th
 
-	hook_shotorigin_x = ReadCoord();
-	hook_shotorigin_y = ReadCoord();
-	hook_shotorigin_z = ReadCoord();
+	hook_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
 	if(forcefog)
 		strunzone(forcefog);
@@ -1264,6 +1277,10 @@ void Net_WeaponComplain() {
 	complain_weapon_time = time;
 }
 
+void Net_CampingrifleScope() {
+	campingrifle_scope = TRUE;
+}
+
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1288,10 +1305,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_RACE:
 			Net_ReadRace();
-			bHandled = true;
-			break;
-		case 13: // TE_BEAM
-			Net_GrapplingHook();
 			bHandled = true;
 			break;
 		case TE_CSQC_SPAWN:
@@ -1336,6 +1349,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_WEAPONCOMPLAIN:
 			Net_WeaponComplain();
+			bHandled = true;
+			break;
+		case TE_CSQC_CAMPINGRIFLE_SCOPE:
+			Net_CampingrifleScope();
 			bHandled = true;
 			break;
 		default:

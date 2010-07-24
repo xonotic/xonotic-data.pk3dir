@@ -14,7 +14,7 @@ void W_Rocket_Unregister()
 	}
 }
 
-void W_Rocket_Explode (void)
+void W_Rocket_Explode ()
 {
 	W_Rocket_Unregister();
 
@@ -26,7 +26,31 @@ void W_Rocket_Explode (void)
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
+
 	RadiusDamage (self, self.owner, cvar("g_balance_rocketlauncher_damage"), cvar("g_balance_rocketlauncher_edgedamage"), cvar("g_balance_rocketlauncher_radius"), world, cvar("g_balance_rocketlauncher_force"), self.projectiledeathtype, other);
+
+	if (self.owner.weapon == WEP_ROCKET_LAUNCHER)
+	{
+		if(self.owner.ammo_rockets < cvar("g_balance_rocketlauncher_ammo"))
+		{
+			self.owner.cnt = WEP_ROCKET_LAUNCHER;
+			ATTACK_FINISHED(self.owner) = time;
+			self.owner.switchweapon = w_getbestweapon(self.owner);
+		}
+		if(g_laserguided_missile)
+			ATTACK_FINISHED(self.owner) = time + cvar("g_balance_rocketlauncher_refire") * W_WeaponRateFactor();
+	}
+	remove (self);
+}
+
+void W_Rocket_DoRemoteExplode ()
+{
+	W_Rocket_Unregister();
+
+	self.event_damage = SUB_Null;
+	self.takedamage = DAMAGE_NO;
+
+	RadiusDamage (self, self.owner, cvar("g_balance_rocketlauncher_remote_damage"), cvar("g_balance_rocketlauncher_remote_edgedamage"), cvar("g_balance_rocketlauncher_remote_radius"), world, cvar("g_balance_rocketlauncher_remote_force"), self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
 	if (self.owner.weapon == WEP_ROCKET_LAUNCHER)
 	{
@@ -104,12 +128,7 @@ void W_Rocket_RemoteExplode()
 			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > cvar("g_balance_rocketlauncher_radius")) // safety device
 		)
 		{
-			other = world;
-			self.projectiledeathtype |= HITTYPE_BOUNCE;
-			W_Rocket_Explode ();
-		}
-		else
-		{
+			W_Rocket_DoRemoteExplode();
 		}
 	}
 }
@@ -567,15 +586,15 @@ float w_rlauncher(float req)
 		precache_sound("weapons/rocket_impact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "exploded";
+		w_deathtypestring = "%s exploded";
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = "got too close to #'s rocket";
+			w_deathtypestring = "%s got too close to %s's rocket";
 		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "almost dodged #'s rocket";
+			w_deathtypestring = "%s almost dodged %s's rocket";
 		else
-			w_deathtypestring = "ate #'s rocket";
+			w_deathtypestring = "%s ate %s's rocket";
 	}
 	return TRUE;
 }

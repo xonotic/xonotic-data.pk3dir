@@ -317,8 +317,8 @@ void Ent_Projectile()
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
 				loopsound(self, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
-				self.mins = '0 0 -3';
-				self.maxs = '0 0 -3';
+				self.mins = '0 0 -4';
+				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
 				break;

@@ -2397,7 +2397,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		if(WEP_VALID(w)) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if (alsoprint)
-				print("^1", s1, "^1 ", Weapon_SuicideMessage(type), "\n");
+				print("^1", sprintf(Weapon_SuicideMessage(type), strcat(s1, "^1")), "\n");
 		} else if (type == DEATH_KILL) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_KILL);
 			if (alsoprint)
@@ -2437,9 +2437,9 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			HUD_KillNotify_Push(s2, s1, 1, w);
+			HUD_KillNotify_Push(s1, s2, 1, type);
 			if (alsoprint)
-				print("^1", s1, "^1 ", Weapon_KillMessage(type), "\n");
+				print("^1", sprintf(Weapon_KillMessage(type), strcat(s2, "^1"), strcat(s1, "^1")), "\n"); // default order: victim, killer
 		}
 		else if(type == KILL_TEAM_RED || type == KILL_TEAM_BLUE || type == KILL_TEAM_SPREE) {
 			HUD_KillNotify_Push(s1, s2, 1, type);
@@ -2864,6 +2864,9 @@ void HUD_Notify (void)
 				a = 0;
 		}
 
+		float w;
+		w = DEATH_WEAPONOF(killnotify_deathtype[j]);
+
 		// TODO: maybe print in team colors?
 		//
 		// Y [used by] X
@@ -2994,9 +2997,17 @@ void HUD_Notify (void)
 			{
 				s = "weaponelectro";
 			}
-			else if(WEP_VALID(killnotify_deathtype[j]))
+			else if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_LASER)
 			{
-				self = get_weaponinfo(killnotify_deathtype[j]);
+				s = "notify_melee";
+			}
+			else if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_SHOTGUN)
+			{
+				s = "notify_melee";
+			}
+			else if(WEP_VALID(w))
+			{
+				self = get_weaponinfo(w);
 				s = strcat("weapon", self.netname);
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_RED)

@@ -43,6 +43,8 @@ cheats.qh
 portals.qh
 
 g_hook.qh
+w_electro.qh
+w_laser.qh
 
 scores.qh
 

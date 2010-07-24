@@ -137,7 +137,7 @@ vector GetCurrentFov(float fov)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
-	if(getstati(STAT_ACTIVEWEAPON) == WEP_NEX) // do NOT use switchweapon here
+	if(getstati(STAT_ACTIVEWEAPON) == WEP_NEX || (getstati(STAT_ACTIVEWEAPON) == WEP_CAMPINGRIFLE && campingrifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -566,7 +566,7 @@ void CSQC_UpdateView(float w, float h)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
 	else if(button_zoom)
 		reticle_type = 1; // normal zoom
-	else if(activeweapon == WEP_NEX && button_attack2)
+	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_CAMPINGRIFLE && button_attack2)
 		reticle_type = 2; // nex zoom
 
 	if(cvar("cl_reticle_stretch"))
