@@ -2999,11 +2999,11 @@ void HUD_Notify (void)
 			}
 			else if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_LASER)
 			{
-				s = "notify_melee";
+				s = "notify_melee_laser";
 			}
 			else if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_SHOTGUN)
 			{
-				s = "notify_melee";
+				s = "notify_melee_shotgun";
 			}
 			else if(WEP_VALID(w))
 			{
