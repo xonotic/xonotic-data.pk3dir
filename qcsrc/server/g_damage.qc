@@ -370,19 +370,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					msg = ftos(strstrofs(inflictor.message2, "#", 0));
 				}
 
-				float msgtype;
-				w = DEATH_WEAPONOF(deathtype);
-				if(w == WEP_LASER && ((cvar("g_balance_laser_secondary_gauntlet") && w & HITTYPE_SECONDARY) || (cvar("g_balance_laser_primary_gauntlet") && !(w & HITTYPE_SECONDARY))))
-				{
-					msgtype = MSG_KILL_MELEE;
-					deathtype = KILL_FRAG_GAUNTLET;
-				}
-				else if(w == WEP_SHOTGUN && (cvar("g_balance_shotgun_secondary_melee") && w & HITTYPE_SECONDARY))
-				{
-					msgtype = MSG_KILL_MELEE;
-					deathtype = KILL_FRAG_SHOTGUN_MELEE;
-				}
-
 				Send_KillNotification(s, a, msg, deathtype, MSG_KILL);
 
 				if(g_ctf && targ.flagcarried)

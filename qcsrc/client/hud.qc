@@ -2434,29 +2434,10 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		
 		if (stof(s2) > 2) // killcount > 2
 			print ("^1",s1,"^1 ended it all after a ",s2," kill spree\n");
-	} else if(msg == MSG_KILL_MELEE) { // handle melee types separately
-		if(type == KILL_FRAG_GAUNTLET) {
-			if(alsoprint)
-			{
-				if(gentle) {
-					print ("^1", s1, "^1 got too close to", s2, "^1's gauntlet\n");
-				} else {
-					print ("^1", s1, "^1 was cut in half by", s2, "^1's gauntlet\n");
-				}
-			}
-		}
-		else if(type == KILL_FRAG_SHOTGUN_MELEE)
-		{
-			if(alsoprint)
-			{
-				print ("^7", s2, "^7 slapped ", s1, "^7 around a bit with a large ^2shotgun\n");
-			}
-		}
-		HUD_KillNotify_Push(s1, s2, 1, type);
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			HUD_KillNotify_Push(s2, s1, 1, w);
+			HUD_KillNotify_Push(s2, s1, 1, type);
 			if (alsoprint)
 				print("^1", sprintf(Weapon_KillMessage(type), strcat(s2, "^1"), strcat(s1, "^1")), "\n"); // default order: victim, killer
 		}
@@ -2883,6 +2864,9 @@ void HUD_Notify (void)
 				a = 0;
 		}
 
+		float w;
+		w = DEATH_WEAPONOF(killnotify_deathtype[j]);
+
 		// TODO: maybe print in team colors?
 		//
 		// Y [used by] X
@@ -3013,18 +2997,18 @@ void HUD_Notify (void)
 			{
 				s = "weaponelectro";
 			}
-			else if(WEP_VALID(killnotify_deathtype[j]))
+			else if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_LASER)
 			{
-				self = get_weaponinfo(killnotify_deathtype[j]);
+				s = "notify_melee";
+			}
+			else if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_SHOTGUN)
+			{
+				s = "notify_melee";
+			}
+			else if(WEP_VALID(w))
+			{
+				self = get_weaponinfo(w);
 				s = strcat("weapon", self.netname);
-			}
-			else if(killnotify_deathtype[j] == KILL_FRAG_GAUNTLET)
-			{
-				s = "notify_melee";
-			}
-			else if(killnotify_deathtype[j] == KILL_FRAG_SHOTGUN_MELEE)
-			{
-				s = "notify_melee";
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
 			{
