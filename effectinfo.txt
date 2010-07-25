@@ -4978,13 +4978,13 @@ velocityjitter 156 156 156
 effect electro_lightning
 count 300
 type spark
-color 0x283880 0x283880 // 0x202020 0x404040
+color 0x501860 0x501860 // 0x202020 0x404040
 tex 65 65
-size 5 5
-alpha 256 256 1024
+size 6 6
+alpha 100 206 1724
 originjitter 1.5 1.5 1.5
 velocityjitter 6 6 6
-sizeincrease 20
+sizeincrease 10
 velocitymultiplier 2000
 effect electro_lightning
 count 30
@@ -4992,7 +4992,7 @@ type spark
 tex 8 15
 color 0xDDFDFF 0xFDFDFF
 size 2 5
-alpha 110 228 2024
+alpha 110 170 1500
 originjitter 1 1 1
 velocityjitter 150 150 150
 velocitymultiplier 0.5
@@ -5004,7 +5004,7 @@ type spark
 tex 41 41
 color 0xFDFDFF 0xF9FDFF
 size 2 3
-alpha 110 228 1500
+alpha 110 170 1500
 originjitter 1 1 1
 velocityjitter 350 350 350
 velocitymultiplier 2.5
@@ -5024,25 +5024,25 @@ originjitter 1.5 1.5 1.5
 velocityjitter 6 6 6
 sizeincrease 20
 velocitymultiplier 2000
-effect electro_lightning
+effect gauntlet_lightning
 count 30
 type spark
 tex 8 15
 color 0xDD0000 0xFD0000
 size 2 5
-alpha 110 228 2024
+alpha 110 228 1024
 originjitter 1 1 1
 velocityjitter 150 150 150
 velocitymultiplier 0.5
 airfriction 2
 stretchfactor 1.5
-effect electro_lightning
+effect gauntlet_lightning
 count 50
 type spark
 tex 41 41
 color 0xFD0000 0xF90000
 size 2 3
-alpha 110 228 1500
+alpha 110 228 600
 originjitter 1 1 1
 velocityjitter 350 350 350
 velocitymultiplier 2.5
