@@ -4990,8 +4990,8 @@ effect electro_lightning
 count 30
 type spark
 tex 8 15
-color 0xD9FDFF 0xD9FDFF
-size 3 7
+color 0xDDFDFF 0xFDFDFF
+size 2 5
 alpha 110 228 2024
 originjitter 1 1 1
 velocityjitter 150 150 150
@@ -5002,8 +5002,46 @@ effect electro_lightning
 count 50
 type spark
 tex 41 41
-color 0xD9FDFF 0xD9FDFF
-size 3 4
+color 0xFDFDFF 0xF9FDFF
+size 2 3
+alpha 110 228 1500
+originjitter 1 1 1
+velocityjitter 350 350 350
+velocitymultiplier 2.5
+airfriction 8
+gravity 1.3
+stretchfactor 0.1
+
+// used in qcsrc/server/w_gauntlet.qc:	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
+effect gauntlet_lightning
+count 300
+type spark
+color 0x280000 0x280000 // 0x202020 0x404040
+tex 65 65
+size 5 5
+alpha 256 256 1024
+originjitter 1.5 1.5 1.5
+velocityjitter 6 6 6
+sizeincrease 20
+velocitymultiplier 2000
+effect electro_lightning
+count 30
+type spark
+tex 8 15
+color 0xDD0000 0xFD0000
+size 2 5
+alpha 110 228 2024
+originjitter 1 1 1
+velocityjitter 150 150 150
+velocitymultiplier 0.5
+airfriction 2
+stretchfactor 1.5
+effect electro_lightning
+count 50
+type spark
+tex 41 41
+color 0xFD0000 0xF90000
+size 2 3
 alpha 110 228 1500
 originjitter 1 1 1
 velocityjitter 350 350 350

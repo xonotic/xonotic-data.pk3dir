@@ -179,6 +179,7 @@ void Draw_GrapplingHook()
 			pointparticles(particleeffectnum("electro_lightning"), b, normalize(a - b), frametime);
 			break;
 		case ENT_CLIENT_GAUNTLET:
+			pointparticles(particleeffectnum("gauntlet_lightning"), b, normalize(a - b), frametime);
 			break;
 	}
 }
