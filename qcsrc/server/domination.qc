@@ -24,6 +24,16 @@ float g_domination_point_rate;
 .entity sprite;
 .float captime;
 
+// pps (points per second)
+.float dom_pps_red;
+.float dom_pps_blue;
+.float dom_pps_pink;
+.float dom_pps_yellow;
+float pps_red;
+float pps_blue;
+float pps_pink;
+float pps_yellow;
+
 void() dom_controlpoint_setup;
 
 void LogDom(string mode, float team_before, entity actor)
@@ -107,21 +117,49 @@ void dompoint_captured ()
 	self.delay = old_delay;
 	self.team = old_team;
 
+	switch(self.team)
+	{
+		case COLOR_TEAM1:
+			pps_red -= (points/wait_time);
+			break;
+		case COLOR_TEAM2:
+			pps_blue -= (points/wait_time);
+			break;
+		case COLOR_TEAM3:
+			pps_yellow -= (points/wait_time);
+			break;
+		case COLOR_TEAM4:
+			pps_pink -= (points/wait_time);
+	}
+
 	switch(self.goalentity.team)
 	{
 		case COLOR_TEAM1:
+			pps_red += (points/wait_time);
 			WaypointSprite_UpdateSprites(self.sprite, "dom-red", "", "");
 			break;
 		case COLOR_TEAM2:
+			pps_blue += (points/wait_time);
 			WaypointSprite_UpdateSprites(self.sprite, "dom-blue", "", "");
 			break;
 		case COLOR_TEAM3:
+			pps_yellow += (points/wait_time);
 			WaypointSprite_UpdateSprites(self.sprite, "dom-yellow", "", "");
 			break;
 		case COLOR_TEAM4:
+			pps_pink += (points/wait_time);
 			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
-			break;
 	}
+
+	entity player;
+	FOR_EACH_CLIENT(player)
+	{
+		player.dom_pps_red = pps_red;
+		player.dom_pps_blue = pps_blue;
+		player.dom_pps_yellow = pps_yellow;
+		player.dom_pps_pink = pps_pink;
+	}
+
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
 
@@ -156,9 +194,6 @@ void dompointthink()
 
 	if (gameover || self.delay > time || time < game_starttime)	// game has ended, don't keep giving points
 		return;
-
-	g_domination_point_rate = cvar("g_domination_point_rate");
-	g_domination_point_amt = cvar("g_domination_point_amt");
 
 	if(g_domination_point_rate)
 		self.delay = time + g_domination_point_rate;
@@ -546,6 +581,17 @@ void spawnfunc_dom_controlpoint()
 	self.effects = self.effects | EF_LOWPRECISION;
 	if (cvar("g_domination_point_fullbright"))
 		self.effects |= EF_FULLBRIGHT;
+	
+	float points, waittime;
+	if (g_domination_point_rate)
+		points += g_domination_point_rate;
+	else
+		points += self.frags;
+	if (g_domination_point_amt)
+		waittime += g_domination_point_amt;
+	else
+		waittime += self.wait;
+	total_pps += points/waittime;
 };
 
 // code from here on is just to support maps that don't have control point and team entities
@@ -651,6 +697,15 @@ void dom_init()
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
+
+	addstat(STAT_DOM_TOTAL_PPS , AS_FLOAT, dom_total_pps);
+	addstat(STAT_DOM_PPS_RED   , AS_FLOAT, dom_pps_red);
+	addstat(STAT_DOM_PPS_BLUE  , AS_FLOAT, dom_pps_blue);
+	addstat(STAT_DOM_PPS_PINK  , AS_FLOAT, dom_pps_pink);
+	addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
+
+	g_domination_point_rate = cvar("g_domination_point_rate");
+	g_domination_point_amt = cvar("g_domination_point_amt");
 
 	// teamplay is always on in domination, defaults to hurt self but not teammates
 	//if(!teams_matter)

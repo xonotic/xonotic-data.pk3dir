@@ -304,6 +304,12 @@ const float STAT_SHOTORG = 46; // compressShotOrigin
 const float STAT_LEADLIMIT = 47;
 const float STAT_BULLETS_LOADED = 48;
 
+const float STAT_DOM_TOTAL_PPS = 70;
+const float STAT_DOM_PPS_RED = 71;
+const float STAT_DOM_PPS_BLUE = 72;
+const float STAT_DOM_PPS_PINK = 73;
+const float STAT_DOM_PPS_YELLOW = 74;
+
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
 const float STAT_MOVEVARS_AIRSTRAFEACCEL_QW = 223;

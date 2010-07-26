@@ -4097,6 +4097,109 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	drawfont = hud_font;
 }
 
+void DrawDomCP(vector myPos, vector mySize, float i)
+{
+	float stat;
+	vector color;
+	switch(i)
+	{
+		case 0:
+			stat = getstatf(STAT_DOM_PPS_RED);
+			color = '1 0 0';
+			break;
+		case 1:
+			stat = getstatf(STAT_DOM_PPS_BLUE);
+			color = '0 0 1';
+			break;
+		case 2:
+			stat = getstatf(STAT_DOM_PPS_YELLOW);
+			color = '1 1 0';
+			break;
+		case 3:
+			stat = getstatf(STAT_DOM_PPS_PINK);
+			color = '1 0 1';
+	}
+
+	vector newSize, newPos;
+	if(mySize_x/mySize_y > 3)
+	{
+		newSize_x = 3 * mySize_y;
+		newSize_y = mySize_y;
+
+		newPos_x = myPos_x + (mySize_x - newSize_x) / 2;
+		newPos_y = myPos_y;
+	}
+	else
+	{
+		newSize_y = 1/3 * mySize_x;
+		newSize_x = mySize_x;
+
+		newPos_y = myPos_y + (mySize_y - newSize_y) / 2;
+		newPos_x = myPos_x;
+	}
+
+	vector picpos, numpos;
+	numpos = newPos + eX * newSize_y;
+	/*
+	if(autocvar_hud_panel_modicons_iconalign)
+	{
+		numpos = newPos;
+		picpos = newPos + eX * 2 * newSize_y;
+	}
+	else
+	{
+		numpos = newPos + eX * newSize_y;
+		picpos = newPos;
+	}
+	*/
+
+	drawfont = hud_bigfont;
+	if (cvar("hud_panel_modicons_dom_pps")) // average pps
+		drawstring_aspect(numpos, ftos_decimals(stat, 2), eX * (2/3) * newSize_x + eY * newSize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	else // percentage of average pps
+		drawstring_aspect(numpos, strcat(ftos_decimals(stat*100 / getstatf(STAT_DOM_TOTAL_PPS), 0), "%"), eX * (2/3) * newSize_x + eY * newSize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawfont = hud_font;
+
+	// TODO draw controlpoints icons with a bar
+	// representing the percentage of average pps
+	// and maybe show smaller strings
+}
+
+void HUD_Mod_Dom(vector myPos, vector mySize)
+{
+	print("test ", ftos(cvar("aaa")), "\n");
+	entity tm;
+	float teams_count;
+	for(tm = teams.sort_next; tm; tm = tm.sort_next)
+		if(tm.team != COLOR_SPECTATOR)
+			++teams_count;
+
+	float rows, columns;
+	rows = mySize_y/mySize_x;
+	rows = bound(1, floor((sqrt((4 * 1 * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
+	columns = ceil(teams_count/rows);
+
+	drawfont = hud_bigfont;
+	int i;
+	float row, column;
+	for(i=0; i<teams_count; ++i)
+	{
+		vector pos, size;
+		pos = myPos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
+		size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+
+		DrawDomCP(pos, size, i);
+
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			++column;
+		}
+	}
+	drawfont = hud_font;
+}
+
 float mod_prev; // previous state of mod_active to check for a change
 float mod_alpha;
 float mod_change; // "time" when mod_active changed
@@ -4106,7 +4209,7 @@ void HUD_ModIcons(void)
 	if(!autocvar_hud_panel_modicons && !autocvar__hud_configure)
 		return;
 
-	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && !autocvar__hud_configure)
+	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_DOMINATION && !autocvar__hud_configure)
 		return;
 
 	active_panel = HUD_PANEL_MODICONS;
@@ -4143,6 +4246,8 @@ void HUD_ModIcons(void)
 		HUD_Mod_NexBall(pos, mySize);
 	else if(gametype == GAME_CTS || gametype == GAME_RACE)
 		HUD_Mod_Race(pos, mySize);
+	else if(gametype == GAME_DOMINATION)
+		HUD_Mod_Dom(pos, mySize);
 }
 
 // Draw pressed keys (#11)

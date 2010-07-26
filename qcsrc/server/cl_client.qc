@@ -1379,6 +1379,8 @@ void DecodeLevelParms (void);
 .float uid_kicktime;
 .string uid;
 #endif
+float total_pps;
+.float dom_total_pps;
 void ClientConnect (void)
 {
 	float t;
@@ -1584,6 +1586,9 @@ void ClientConnect (void)
 	}
 	else if(cvar("sv_teamnagger") && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
+
+	if (g_domination)
+		self.dom_total_pps = total_pps;
 
 	CheatInitClient();
 }
