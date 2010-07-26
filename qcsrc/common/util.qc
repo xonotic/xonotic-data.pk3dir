@@ -228,15 +228,24 @@ string ftos_decimals(float number, float decimals)
 {
 	string result;
 	string tmp;
-	float len;
-
-	// if negative, cut off the sign first
-	if(number < 0)
-		return strcat("-", ftos_decimals(-number, decimals));
-	// it now is always positive!
+	float len, isNegative;
 
 	// 3.516 -> 352
 	number = floor(number * pow(10, decimals) + 0.5);
+
+	if(number == 0)
+	{
+		if(decimals == 0)
+			return "0";
+		return strcat("0.", substring("0000000000", 0, decimals));
+	}
+
+	if(number < 0)
+	{
+		isNegative = TRUE;
+		number = -number;
+	}
+	// it now is always positive!
 
 	// 352 -> "352"
 	result = ftos(number);
@@ -262,6 +271,8 @@ string ftos_decimals(float number, float decimals)
 	// and now... INSERT THE POINT!
 	tmp = substring(result, len - decimals, decimals);
 	result = strcat(substring(result, 0, len - decimals), ".", tmp);
+	if (isNegative)
+		return strcat("-", result); // restore the sign
 	return result;
 }
 
