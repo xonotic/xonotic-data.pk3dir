@@ -3,6 +3,7 @@
 .vector velocity;
 .float HookSound;
 .float HookSilent;
+.float HookRange;
 
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag)
 {
@@ -48,7 +49,7 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 
 void Draw_GrapplingHook()
 {
-	vector a, b;
+	vector a, b, atrans;
 	string tex, snd;
 	vector rgb;
 	float t;
@@ -86,7 +87,10 @@ void Draw_GrapplingHook()
 				break;
 			case ENT_CLIENT_LGBEAM:
 			case ENT_CLIENT_GAUNTLET:
-				b = view_origin + view_forward * vlen(self.velocity - self.origin); // honor original length of beam!
+				if(self.HookRange)
+					b = view_origin + view_forward * self.HookRange;
+				else
+					b = view_origin + view_forward * vlen(self.velocity - self.origin); // honor original length of beam!
 				WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
 				b = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
@@ -157,16 +161,30 @@ void Draw_GrapplingHook()
 	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((self.HookType == ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), world, world, Draw_GrapplingHook_trace_callback);
 	Draw_GrapplingHook_trace_callback_tex = string_null;
 
+	atrans = WarpZone_TransformOrigin(WarpZone_trace_transform, a);
+
 	switch(self.HookType)
 	{
 		default:
 		case ENT_CLIENT_HOOK:
 			setorigin(self, trace_endpos); // hook endpoint!
-			self.angles = vectoangles(trace_endpos - WarpZone_TransformOrigin(WarpZone_trace_transform, a));
+			self.angles = vectoangles(trace_endpos - atrans);
 			break;
 		case ENT_CLIENT_LGBEAM:
 		case ENT_CLIENT_GAUNTLET:
 			setorigin(self, a); // beam origin!
+			break;
+	}
+
+	switch(self.HookType)
+	{
+		default:
+		case ENT_CLIENT_HOOK:
+			break;
+		case ENT_CLIENT_LGBEAM:
+			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime);
+			break;
+		case ENT_CLIENT_GAUNTLET:
 			break;
 	}
 }
@@ -191,6 +209,17 @@ void Ent_ReadHook(float bIsNew, float type)
 	if(sf & 1)
 	{
 		self.owner = playerslots[ReadByte() - 1];
+		switch(self.HookType)
+		{
+			default:
+			case ENT_CLIENT_HOOK:
+			case ENT_CLIENT_GAUNTLET:
+				self.HookRange = 0;
+				break;
+			case ENT_CLIENT_LGBEAM:
+				self.HookRange = ReadCoord();
+				break;
+		}
 	}
 	if(sf & 2)
 	{
