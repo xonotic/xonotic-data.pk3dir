@@ -4976,15 +4976,25 @@ velocityjitter 156 156 156
 // used in qcsrc/server/w_electro.qc:	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
 // used in qcsrc/server/w_electro.qc:	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
 effect electro_lightning
+countabsolute 1
+type decal
+tex 59 59
+size 16 16
+alpha 256 256 0
+originjitter 2 2 2
+lightradius 50
+lightradiusfade 200
+lightcolor 3.125 4.375 10
+effect electro_lightning
 count 300
 type spark
 color 0x283880 0x283880 // 0x202020 0x404040
 tex 65 65
-size 5 5
+size 3 3
 alpha 256 256 1024
 originjitter 1.5 1.5 1.5
 velocityjitter 6 6 6
-sizeincrease 20
+sizeincrease 15
 velocitymultiplier 2000
 effect electro_lightning
 count 30
