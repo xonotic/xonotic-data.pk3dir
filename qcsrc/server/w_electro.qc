@@ -195,6 +195,7 @@ float lgbeam_send(entity to, float sf)
 	if(sf & 1)
 	{
 		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+		WriteCoord(MSG_ENTITY, cvar("g_balance_electro_primary_range"));
 	}
 	if(sf & 2)
 	{
