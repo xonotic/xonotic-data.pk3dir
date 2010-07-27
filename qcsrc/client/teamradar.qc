@@ -53,7 +53,7 @@ vector yinvert(vector v)
 	return v;
 }
 
-void draw_teamradar_background(float bg, float fg)
+void draw_teamradar_background(float fg)
 {
 	float fga;
 	vector fgc;
@@ -106,17 +106,17 @@ void(vector coord3d, vector pangles, vector rgb) draw_teamradar_player =
 		rgb2 = '1 1 1';
 
 	R_BeginPolygon("", 0);
-	R_PolygonVertex(coord+v_forward*3, '0 0 0', rgb2, hud_fg_alpha);
-	R_PolygonVertex(coord+v_right*4-v_forward*2.5, '0 1 0', rgb2, hud_fg_alpha);
-	R_PolygonVertex(coord-v_forward*2, '1 0 0', rgb2, hud_fg_alpha);
-	R_PolygonVertex(coord-v_right*4-v_forward*2.5, '1 1 0', rgb2, hud_fg_alpha);
+	R_PolygonVertex(coord+v_forward*3, '0 0 0', rgb2, autocvar_hud_panel_fg_alpha);
+	R_PolygonVertex(coord+v_right*4-v_forward*2.5, '0 1 0', rgb2, autocvar_hud_panel_fg_alpha);
+	R_PolygonVertex(coord-v_forward*2, '1 0 0', rgb2, autocvar_hud_panel_fg_alpha);
+	R_PolygonVertex(coord-v_right*4-v_forward*2.5, '1 1 0', rgb2, autocvar_hud_panel_fg_alpha);
 	R_EndPolygon();
 
 	R_BeginPolygon("", 0);
-	R_PolygonVertex(coord+v_forward*2, '0 0 0', rgb, hud_fg_alpha);
-	R_PolygonVertex(coord+v_right*3-v_forward*2, '0 1 0', rgb, hud_fg_alpha);
-	R_PolygonVertex(coord-v_forward, '1 0 0', rgb, hud_fg_alpha);
-	R_PolygonVertex(coord-v_right*3-v_forward*2, '1 1 0', rgb, hud_fg_alpha);
+	R_PolygonVertex(coord+v_forward*2, '0 0 0', rgb, autocvar_hud_panel_fg_alpha);
+	R_PolygonVertex(coord+v_right*3-v_forward*2, '0 1 0', rgb, autocvar_hud_panel_fg_alpha);
+	R_PolygonVertex(coord-v_forward, '1 0 0', rgb, autocvar_hud_panel_fg_alpha);
+	R_PolygonVertex(coord-v_right*3-v_forward*2, '1 1 0', rgb, autocvar_hud_panel_fg_alpha);
 	R_EndPolygon();
 };
 
@@ -161,15 +161,14 @@ void draw_teamradar_link(vector start, vector end, float colors)
 	c1 = colormapPaletteColor((colors & 0xF0) / 0x10, FALSE);
 
 	R_BeginPolygon("", 0);
-	R_PolygonVertex(start - norm, '0 0 0', c0, hud_fg_alpha);
-	R_PolygonVertex(start + norm, '0 1 0', c0, hud_fg_alpha);
-	R_PolygonVertex(end + norm, '1 1 0', c1, hud_fg_alpha);
-	R_PolygonVertex(end - norm, '1 0 0', c1, hud_fg_alpha);
+	R_PolygonVertex(start - norm, '0 0 0', c0, autocvar_hud_panel_fg_alpha);
+	R_PolygonVertex(start + norm, '0 1 0', c0, autocvar_hud_panel_fg_alpha);
+	R_PolygonVertex(end + norm, '1 1 0', c1, autocvar_hud_panel_fg_alpha);
+	R_PolygonVertex(end - norm, '1 0 0', c1, autocvar_hud_panel_fg_alpha);
 	R_EndPolygon();
 }
 
 float hud_panel_radar_scale;
-float hud_panel_radar_background_alpha;
 float hud_panel_radar_foreground_alpha;
 float hud_panel_radar_rotation;
 vector hud_panel_radar_size;
@@ -180,16 +179,14 @@ void teamradar_loadcvars()
 {
 	v_flipped = cvar("v_flipped");
 	hud_panel_radar_scale = cvar("hud_panel_radar_scale");
-	hud_panel_radar_background_alpha = cvar("hud_panel_radar_background_alpha") * hud_fg_alpha;
-	hud_panel_radar_foreground_alpha = cvar("hud_panel_radar_foreground_alpha") * hud_fg_alpha;
+	hud_panel_radar_foreground_alpha = cvar("hud_panel_radar_foreground_alpha") * autocvar_hud_panel_fg_alpha;
 	hud_panel_radar_rotation = cvar("hud_panel_radar_rotation");
 	hud_panel_radar_zoommode = cvar("hud_panel_radar_zoommode");
 
 	// others default to 0
 	// match this to defaultXonotic.cfg!
 	if(!hud_panel_radar_scale) hud_panel_radar_scale = 4096;
-	if(!hud_panel_radar_background_alpha) hud_panel_radar_background_alpha = 0.4 * hud_fg_alpha;
-	if(!hud_panel_radar_foreground_alpha) hud_panel_radar_foreground_alpha = 0.8 * hud_fg_alpha;
+	if(!hud_panel_radar_foreground_alpha) hud_panel_radar_foreground_alpha = 0.8 * autocvar_hud_panel_fg_alpha;
 	if(!hud_panel_radar_size_x) hud_panel_radar_size_x = 128;
 	if(!hud_panel_radar_size_y) hud_panel_radar_size_y = hud_panel_radar_size_x;
 
