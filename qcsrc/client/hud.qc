@@ -940,6 +940,10 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 	HUD_Panel_UpdatePosSizeForId(highlightedPanel)
 
+	vector prev_pos, prev_size;
+	prev_pos = panel_pos;
+	prev_size = panel_size;
+
 	if (hudShiftState & S_ALT) // resize
 	{
 		highlightedAction = 1;
@@ -993,6 +997,16 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 		HUD_Panel_SetPos(pos);
 	}
+
+	HUD_Panel_UpdatePosSizeForId(highlightedPanel)
+
+	if (prev_pos != panel_pos || prev_size != panel_size)
+	{
+		// backup!
+		panel_pos_backup = prev_pos;
+		panel_size_backup = prev_size;
+		highlightedPanel_backup = highlightedPanel;
+	}
 }
 
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
@@ -1043,6 +1057,56 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		menu_enabled = 1;
 		menu_enabled_time = time;
 		localcmd("menu_showhudexit\n");
+	}
+	else if(hudShiftState & S_CTRL)
+	{
+		if (mouseClicked)
+			return true;
+
+		if(nPrimary == 'c') // copy highlighted panel size
+		{
+			if (bInputType == 1)
+				return true;
+
+			if (highlightedPanel_prev != -1)
+			{
+				panel_size_copied = panel_size;
+				highlightedPanel_copied = highlightedPanel_prev;
+			}
+		}
+		else if(nPrimary == 'v') // past copied size on the highlighted panel
+		{
+			if (bInputType == 1)
+				return true;
+
+			if (highlightedPanel_copied != -1 && highlightedPanel_prev != -1)
+			{
+				// backup first!
+				panel_pos_backup = panel_pos;
+				panel_size_backup = panel_size;
+				highlightedPanel_backup = highlightedPanel_prev;
+
+				string s;
+				s = strcat(ftos(panel_size_copied_x/vid_conwidth), " ", ftos(panel_size_copied_y/vid_conheight));
+				cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
+			}
+		}
+		else if(nPrimary == 'z') // undo last action
+		{
+			if (bInputType == 1)
+				return true;
+			//restore previous values
+			if (highlightedPanel_backup != -1)
+			{
+				HUD_Panel_GetName(highlightedPanel_backup)
+				string s;
+				s = strcat(ftos(panel_pos_backup_x/vid_conwidth), " ", ftos(panel_pos_backup_y/vid_conheight));
+				cvar_set(strcat("hud_panel_", panel_name, "_pos"), s);
+				s = strcat(ftos(panel_size_backup_x/vid_conwidth), " ", ftos(panel_size_backup_y/vid_conheight));
+				cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
+				highlightedPanel_backup = -1;
+			}
+		}
 	}
 	else if(nPrimary == K_UPARROW || nPrimary == K_DOWNARROW || nPrimary == K_LEFTARROW || nPrimary == K_RIGHTARROW)
 	{
@@ -1226,6 +1290,7 @@ void HUD_Panel_Highlight()
 }
 
 float highlightcheck;
+float would_backup;
 void HUD_Panel_Mouse()
 {
 	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
@@ -1254,8 +1319,20 @@ void HUD_Panel_Mouse()
 
 	if(mouseClicked)
 	{
+		vector prev_pos, prev_size;
 		if(prevMouseClicked == 0)
+		{
 			HUD_Panel_Highlight(); // sets highlightedPanel, highlightedAction, panel_click_distance, panel_click_resizeorigin
+									// and calls HUD_Panel_UpdatePosSizeForId() for the highlighted panel
+			would_backup = TRUE;
+		}
+		else if (would_backup)
+		{
+			// this is not the actual backup! Saving pos and size values
+			// only to check later if they are different from new values
+			prev_pos = panel_pos;
+			prev_size = panel_size;
+		}
 
 		hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
 
@@ -1278,6 +1355,18 @@ void HUD_Panel_Mouse()
 				mySize_y = mousepos_y - (panel_click_resizeorigin_y - panel_click_distance_y);
 			}
 			HUD_Panel_SetPosSize(mySize);
+		}
+
+		HUD_Panel_UpdatePosSizeForId(highlightedPanel)
+		if (prevMouseClicked)
+		if (would_backup)
+		if (prev_pos != panel_pos || prev_size != panel_size)
+		{
+			// backup!
+			panel_pos_backup = prev_pos;
+			panel_size_backup = prev_size;
+			highlightedPanel_backup = highlightedPanel;
+			would_backup = FALSE;
 		}
 
 		// doubleclick check

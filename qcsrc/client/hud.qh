@@ -53,6 +53,13 @@ string hud_skin_path;
 
 var vector progressbar_color;
 
+var float highlightedPanel_backup = -1;
+var vector panel_pos_backup;
+var vector panel_size_backup;
+
+var float highlightedPanel_copied = -1; //this is good only to know if there is something copied
+var vector panel_size_copied;
+
 var float active_panel; // this panel has recently referred the UpdateCvars macro
 var string panel_name;
 var float panel_enabled;
