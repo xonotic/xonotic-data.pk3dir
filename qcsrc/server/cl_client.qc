@@ -1379,8 +1379,7 @@ void DecodeLevelParms (void);
 .float uid_kicktime;
 .string uid;
 #endif
-float total_pps;
-.float dom_total_pps;
+void set_dom_state(entity e, float connecting);
 void ClientConnect (void)
 {
 	float t;
@@ -1588,7 +1587,7 @@ void ClientConnect (void)
 		send_CSQC_teamnagger();
 
 	if (g_domination)
-		self.dom_total_pps = total_pps;
+		set_dom_state(self, TRUE);
 
 	CheatInitClient();
 }

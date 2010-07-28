@@ -4097,86 +4097,82 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	drawfont = hud_font;
 }
 
-void DrawDomCP(vector myPos, vector mySize, float i)
+void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float i)
 {
-	float stat;
+	float stat, pps_ratio;
+	string pic;
 	vector color;
 	switch(i)
 	{
 		case 0:
 			stat = getstatf(STAT_DOM_PPS_RED);
+			pic = "dom_icon_red";
 			color = '1 0 0';
 			break;
 		case 1:
 			stat = getstatf(STAT_DOM_PPS_BLUE);
+			pic = "dom_icon_blue";
 			color = '0 0 1';
 			break;
 		case 2:
 			stat = getstatf(STAT_DOM_PPS_YELLOW);
+			pic = "dom_icon_yellow";
 			color = '1 1 0';
 			break;
 		case 3:
 			stat = getstatf(STAT_DOM_PPS_PINK);
+			pic = "dom_icon_pink";
 			color = '1 0 1';
 	}
+	pps_ratio = stat / getstatf(STAT_DOM_TOTAL_PPS);
 
-	vector newSize, newPos;
-	if(mySize_x/mySize_y > 3)
+	if(mySize_x/mySize_y > aspect_ratio)
 	{
-		newSize_x = 3 * mySize_y;
-		newSize_y = mySize_y;
-
-		newPos_x = myPos_x + (mySize_x - newSize_x) / 2;
-		newPos_y = myPos_y;
+		i = aspect_ratio * mySize_y;
+		myPos_x = myPos_x + (mySize_x - i) / 2;
+		mySize_x = i;
 	}
 	else
 	{
-		newSize_y = 1/3 * mySize_x;
-		newSize_x = mySize_x;
-
-		newPos_y = myPos_y + (mySize_y - newSize_y) / 2;
-		newPos_x = myPos_x;
+		i = 1/aspect_ratio * mySize_x;
+		myPos_y = myPos_y + (mySize_y - i) / 2;
+		mySize_y = i;
 	}
 
-	vector picpos, numpos;
-	numpos = newPos + eX * newSize_y;
-	/*
-	if(autocvar_hud_panel_modicons_iconalign)
+	if (cvar("hud_panel_modicons_dom_layout")) // show text too
 	{
-		numpos = newPos;
-		picpos = newPos + eX * 2 * newSize_y;
+		//draw the text
+		drawfont = hud_bigfont;
+		color *= 0.5 + pps_ratio * (1 - 0.5); // half saturated color at min, full saturated at max
+		if (cvar("hud_panel_modicons_dom_layout") == 2) // average pps
+			drawstring_aspect(myPos + eX * mySize_y, ftos_decimals(stat, 2), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		else // percentage of average pps
+			drawstring_aspect(myPos + eX * mySize_y, strcat( ftos(floor(pps_ratio*100 + 0.5)), "%" ), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawfont = hud_font;
 	}
-	else
+
+	//draw the icon
+	drawpic_aspect_skin(myPos, pic, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	if (stat > 0)
 	{
-		numpos = newPos + eX * newSize_y;
-		picpos = newPos;
+		drawsetcliparea(myPos_x, myPos_y + mySize_y * (1 - pps_ratio), mySize_y, mySize_y * pps_ratio);
+		drawpic_aspect_skin(myPos, strcat(pic, "-highlighted"), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawresetcliparea();
 	}
-	*/
-
-	drawfont = hud_bigfont;
-	if (cvar("hud_panel_modicons_dom_pps")) // average pps
-		drawstring_aspect(numpos, ftos_decimals(stat, 2), eX * (2/3) * newSize_x + eY * newSize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
-	else // percentage of average pps
-		drawstring_aspect(numpos, strcat(ftos_decimals(stat*100 / getstatf(STAT_DOM_TOTAL_PPS), 0), "%"), eX * (2/3) * newSize_x + eY * newSize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawfont = hud_font;
-
-	// TODO draw controlpoints icons with a bar
-	// representing the percentage of average pps
-	// and maybe show smaller strings
 }
 
 void HUD_Mod_Dom(vector myPos, vector mySize)
 {
-	print("test ", ftos(cvar("aaa")), "\n");
 	entity tm;
 	float teams_count;
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		if(tm.team != COLOR_SPECTATOR)
 			++teams_count;
 
-	float rows, columns;
+	float rows, columns, aspect_ratio;
 	rows = mySize_y/mySize_x;
-	rows = bound(1, floor((sqrt((4 * 1 * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
+	aspect_ratio = (cvar("hud_panel_modicons_dom_layout")) ? 3 : 1;
+	rows = bound(1, floor((sqrt((4 * aspect_ratio * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
 	columns = ceil(teams_count/rows);
 
 	drawfont = hud_bigfont;
@@ -4188,7 +4184,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 		pos = myPos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
 		size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 
-		DrawDomCP(pos, size, i);
+		DrawDomItem(pos, size, aspect_ratio, i);
 
 		++row;
 		if(row >= rows)

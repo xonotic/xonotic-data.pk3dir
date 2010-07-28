@@ -24,15 +24,25 @@ float g_domination_point_rate;
 .entity sprite;
 .float captime;
 
-// pps (points per second)
+// pps: points per second
+.float dom_total_pps;
 .float dom_pps_red;
 .float dom_pps_blue;
-.float dom_pps_pink;
 .float dom_pps_yellow;
+.float dom_pps_pink;
+float total_pps;
 float pps_red;
 float pps_blue;
-float pps_pink;
 float pps_yellow;
+float pps_pink;
+void set_dom_state(entity e, float connecting)
+{
+	if(connecting)	e.dom_total_pps = total_pps;
+					e.dom_pps_red = pps_red;
+					e.dom_pps_blue = pps_blue;
+	if(c3 >= 0)		e.dom_pps_yellow = pps_yellow;
+	if(c4 >= 0)		e.dom_pps_pink = pps_pink;
+}
 
 void() dom_controlpoint_setup;
 
@@ -151,14 +161,8 @@ void dompoint_captured ()
 			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
 	}
 
-	entity player;
-	FOR_EACH_CLIENT(player)
-	{
-		player.dom_pps_red = pps_red;
-		player.dom_pps_blue = pps_blue;
-		player.dom_pps_yellow = pps_yellow;
-		player.dom_pps_pink = pps_pink;
-	}
+	FOR_EACH_CLIENT(head)
+		set_dom_state(head, FALSE);
 
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
@@ -698,11 +702,11 @@ void dom_init()
 	precache_sound("domination/claim.wav");
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
 
-	addstat(STAT_DOM_TOTAL_PPS , AS_FLOAT, dom_total_pps);
-	addstat(STAT_DOM_PPS_RED   , AS_FLOAT, dom_pps_red);
-	addstat(STAT_DOM_PPS_BLUE  , AS_FLOAT, dom_pps_blue);
-	addstat(STAT_DOM_PPS_PINK  , AS_FLOAT, dom_pps_pink);
-	addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
+	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);
+	addstat(STAT_DOM_PPS_RED, AS_FLOAT, dom_pps_red);
+	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
+	if(c3 >= 0) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
+	if(c4 >= 0) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
 
 	g_domination_point_rate = cvar("g_domination_point_rate");
 	g_domination_point_amt = cvar("g_domination_point_amt");
