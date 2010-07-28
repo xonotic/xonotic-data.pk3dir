@@ -16,15 +16,40 @@ void SendCSQCNexBeamParticle() {
 	WriteCoord(MSG_BROADCAST, v_z);
 }
 
-void W_Nex_Attack (void)
+void W_Nex_Attack (float issecondary)
 {
+	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo;
+	if(issecondary)
+	{
+		mydmg = cvar("g_balance_nex_secondary_damage");
+		myforce = cvar("g_balance_nex_secondary_force");
+		mymindist = cvar("g_balance_nex_secondary_damagefalloff_mindist");
+		mymaxdist = cvar("g_balance_nex_secondary_damagefalloff_maxdist");
+		myhalflife = cvar("g_balance_nex_secondary_damagefalloff_halflife");
+		myforcehalflife = cvar("g_balance_nex_secondary_damagefalloff_forcehalflife");
+		myammo = cvar("g_balance_nex_secondary_ammo");
+	}
+	else
+	{
+		mydmg = cvar("g_balance_nex_primary_damage");
+		myforce = cvar("g_balance_nex_primary_force");
+		mymindist = cvar("g_balance_nex_primary_damagefalloff_mindist");
+		mymaxdist = cvar("g_balance_nex_primary_damagefalloff_maxdist");
+		myhalflife = cvar("g_balance_nex_primary_damagefalloff_halflife");
+		myforcehalflife = cvar("g_balance_nex_primary_damagefalloff_forcehalflife");
+		myammo = cvar("g_balance_nex_primary_ammo");
+	}
+
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", cvar("g_balance_nex_damage"));
+	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
 
 	yoda = 0;
-	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, cvar("g_balance_nex_damage"), cvar("g_balance_nex_force"), cvar("g_balance_nex_damagefalloff_mindist"), cvar("g_balance_nex_damagefalloff_maxdist"), cvar("g_balance_nex_damagefalloff_halflife"), cvar("g_balance_nex_damagefalloff_forcehalflife"), WEP_NEX);
+	if(issecondary) // reverse effects
+		FireRailgunBullet (w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, w_shotorg, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_NEX);
+	else
+		FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_NEX);
 
 	if(yoda && flying)
 		AnnounceTo(self, "yoda");
@@ -34,26 +59,52 @@ void W_Nex_Attack (void)
 	
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		Damage_DamageInfo(trace_endpos, cvar("g_balance_nex_damage"), 0, 0, cvar("g_balance_nex_force") * w_shotdir, WEP_NEX, self);
+		Damage_DamageInfo(trace_endpos, mydmg, 0, 0, myforce * w_shotdir, WEP_NEX, self);
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - cvar("g_balance_nex_ammo");
+		self.ammo_cells = self.ammo_cells - myammo;
 }
 
 void spawnfunc_weapon_nex (void); // defined in t_items.qc
 
+.float sent_nex_scope;
 float w_nex(float req)
 {
 	if (req == WR_AIM)
+	{
 		self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
+		self.BUTTON_ATCK2 = bot_aim(1000000, 0, 1, FALSE);
+	}
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
 		{
-			if (weapon_prepareattack(0, cvar("g_balance_nex_refire")))
+			if (weapon_prepareattack(0, cvar("g_balance_nex_primary_refire")))
 			{
-				W_Nex_Attack();
-				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_nex_animtime"), w_ready);
+				W_Nex_Attack(0);
+				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_nex_primary_animtime"), w_ready);
+			}
+		}
+		if (self.BUTTON_ATCK2)
+		{
+			if(cvar("g_balance_nex_secondary"))
+			{
+				if (weapon_prepareattack(0, cvar("g_balance_nex_secondary_refire")))
+				{
+					W_Nex_Attack(1);
+					weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_nex_secondary_animtime"), w_ready);
+				}
+			}
+			else
+			{
+				if(clienttype(self) == CLIENTTYPE_REAL)
+				if(!self.sent_nex_scope)
+				{
+					msg_entity = self;
+					WriteByte(MSG_ONE, SVC_TEMPENTITY);
+					WriteByte(MSG_ONE, TE_CSQC_NEX_SCOPE);
+					self.sent_nex_scope = 1;
+				}	
 			}
 		}
 	}
@@ -71,9 +122,9 @@ float w_nex(float req)
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_NEX);
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_cells >= cvar("g_balance_nex_ammo");
+		return self.ammo_cells >= cvar("g_balance_nex_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
-		return FALSE;
+		return self.ammo_cells >= cvar("g_balance_nex_secondary_ammo");
 	return TRUE;
 };
 #endif
