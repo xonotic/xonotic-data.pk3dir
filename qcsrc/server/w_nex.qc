@@ -46,10 +46,7 @@ void W_Nex_Attack (float issecondary)
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
 
 	yoda = 0;
-	if(issecondary) // reverse effects
-		FireRailgunBullet (w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, w_shotorg, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_NEX);
-	else
-		FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_NEX);
+	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_NEX);
 
 	if(yoda && flying)
 		AnnounceTo(self, "yoda");
