@@ -4,17 +4,20 @@ REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT
 #ifdef SVQC
 // leilei's fancy muzzleflash stuff
 void W_Uzi_Flash_Go() {
-	if (self.frame > 10){
-		SUB_Remove();
+	if (self.alpha >= 0)
+	{
+		setmodel(self, "");
 		return;
 	}
 	self.frame = self.frame + 2;
-	self.alpha = self.alpha - 0.2;
+	self.scale = self.scale * 0.5;
+	self.alpha = self.alpha - 0.25;
 	self.think = W_Uzi_Flash_Go;
-	self.nextthink = time + 0.02;
+	self.nextthink = time + 0.05;
 };
 
 .float uzi_bulletcounter;
+.entity muzzleflash;
 void W_Uzi_Attack (float deathtype)
 {
 	local entity flash;
@@ -44,16 +47,20 @@ void W_Uzi_Attack (float deathtype)
 
 	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
+	if ((self.muzzleflash == world) || wasfreed(self.muzzleflash))
+		self.muzzleflash = spawn();
+	
 	// muzzle flash for 1st person view
-	flash = spawn();
-	setmodel(flash, "models/uziflash.md3"); // precision set below
+	setmodel(self.muzzleflash, "models/uziflash.md3"); // precision set below
 	//SUB_SetFade(flash, time + 0.06, 0);
-	flash.think = W_Uzi_Flash_Go;
-	flash.nextthink = time + 0.02;
-	flash.frame = 2;
-	flash.alpha = 1;
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
+	self.muzzleflash.scale = 0.75;
+	self.muzzleflash.think = W_Uzi_Flash_Go;
+	self.muzzleflash.nextthink = time + 0.02;
+	self.muzzleflash.frame = 2;
+	self.muzzleflash.alpha = 0.75;
+	self.muzzleflash.angles_z = random() * 180;
+	self.muzzleflash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	W_AttachToShotorg(self.muzzleflash, '5 0 0');
 
 	// casing code
 	if (cvar("g_casings") >= 2)
