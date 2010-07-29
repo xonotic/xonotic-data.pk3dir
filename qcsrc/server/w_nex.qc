@@ -64,7 +64,6 @@ void W_Nex_Attack (float issecondary)
 
 void spawnfunc_weapon_nex (void); // defined in t_items.qc
 
-.float sent_nex_scope;
 float w_nex(float req)
 {
 	if (req == WR_AIM)
@@ -91,17 +90,6 @@ float w_nex(float req)
 					W_Nex_Attack(1);
 					weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_nex_secondary_animtime"), w_ready);
 				}
-			}
-			else
-			{
-				if(clienttype(self) == CLIENTTYPE_REAL)
-				if(!self.sent_nex_scope)
-				{
-					msg_entity = self;
-					WriteByte(MSG_ONE, SVC_TEMPENTITY);
-					WriteByte(MSG_ONE, TE_CSQC_NEX_SCOPE);
-					self.sent_nex_scope = 1;
-				}	
 			}
 		}
 	}

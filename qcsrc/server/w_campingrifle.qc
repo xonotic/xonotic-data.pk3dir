@@ -173,7 +173,6 @@ void W_CampingRifle_BulletHail(float mode, void(void) AttackFunc, float fr, floa
 }
 
 .float bot_secondary_campingriflemooth;
-.float sent_campingrifle_scope;
 float w_campingrifle(float req)
 {
 	float full;
@@ -230,17 +229,6 @@ float w_campingrifle(float req)
 						W_CampingRifle_BulletHail(cvar("g_balance_campingrifle_secondary_bullethail"), W_CampingRifle_Attack2, WFRAME_FIRE2, cvar("g_balance_campingrifle_secondary_animtime"), cvar("g_balance_campingrifle_primary_refire"));
 						self.campingrifle_accumulator += cvar("g_balance_campingrifle_secondary_burstcost");
 					}
-				}
-				else
-				{
-					if(clienttype(self) == CLIENTTYPE_REAL)
-					if(!self.sent_campingrifle_scope)
-					{
-						msg_entity = self;
-						WriteByte(MSG_ONE, SVC_TEMPENTITY);
-						WriteByte(MSG_ONE, TE_CSQC_CAMPINGRIFLE_SCOPE);
-						self.sent_campingrifle_scope = 1;
-					}	
 				}
 			}
 		}
