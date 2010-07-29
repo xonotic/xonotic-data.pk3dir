@@ -1063,6 +1063,16 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (mouseClicked)
 			return true;
 
+		if(nPrimary == K_SPACE) // enable/disable highlighted panel or dock
+		{
+			if (bInputType == 1)
+				return true;
+
+			if (highlightedPanel_prev != -1)
+				cvar_set(strcat("hud_panel_", panel_name), ftos(!(panel_enabled)));
+			else
+				cvar_set(strcat("hud_dock"), (autocvar_hud_dock == "") ? "dock" : "");
+		}
 		if(nPrimary == 'c') // copy highlighted panel size
 		{
 			if (bInputType == 1)
