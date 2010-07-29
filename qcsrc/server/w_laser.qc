@@ -145,6 +145,7 @@ void gauntletbeam_think()
 		vector force;
 		force = w_shotdir * myforce;
 		Damage (trace_ent, self.owner, self.owner, damage * dt, WEP_LASER | HITTYPE_SECONDARY, trace_endpos, force * dt);
+		Damage_RecordDamage(self.owner, WEP_LASER | HITTYPE_SECONDARY, damage * dt);
 	}
 
 	// draw effect

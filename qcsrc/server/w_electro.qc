@@ -244,6 +244,7 @@ void lgbeam_think()
 		vector force;
 		force = w_shotdir * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
 		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * dt, WEP_ELECTRO, trace_endpos, force * dt);
+		Damage_RecordDamage(self.owner, WEP_ELECTRO, cvar("g_balance_electro_primary_damage") * dt);
 	}
 	W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
 

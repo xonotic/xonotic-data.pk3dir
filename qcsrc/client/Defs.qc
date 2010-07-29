@@ -259,3 +259,4 @@ string w_deathtypestring;
 vector w_org, w_backoff;
 
 float campingrifle_scope;
+float nex_scope;

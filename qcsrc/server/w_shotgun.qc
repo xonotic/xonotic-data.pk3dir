@@ -61,6 +61,7 @@ void shotgun_meleethink (void)
 	f = (self.cnt + cvar("g_balance_shotgun_secondary_melee_time") - time) / cvar("g_balance_shotgun_secondary_melee_time") * 2 - 1;
 	vector targpos;
 	targpos = self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_shotgun_secondary_melee_range") + v_right * f * cvar("g_balance_shotgun_secondary_melee_swing") + v_up * f * cvar("g_balance_shotgun_secondary_melee_swing");
+
 	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, targpos, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage, also remove self
@@ -69,6 +70,7 @@ void shotgun_meleethink (void)
 		vector force;
 		force = angle * cvar("g_balance_shotgun_secondary_force");
 		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_shotgun_secondary_damage") * ((f + 1) / 2), WEP_SHOTGUN | HITTYPE_SECONDARY , self.owner.origin + self.owner.view_ofs, force);
+		Damage_RecordDamage(self.owner, WEP_SHOTGUN | HITTYPE_SECONDARY, cvar("g_balance_shotgun_secondary_damage") * ((f + 1) / 2));
 		remove(self);
 	}
 	else if(time >= self.cnt + cvar("g_balance_shotgun_secondary_melee_time")) // missed, remove ent
@@ -87,6 +89,7 @@ void W_Shotgun_Attack2 (void)
 	meleetemp.owner = self;
 	meleetemp.think = shotgun_meleethink;
 	meleetemp.nextthink = time + cvar("g_balance_shotgun_secondary_melee_delay");
+	W_SetupShot_Range(self, TRUE, 0, "", cvar("g_balance_shotgun_secondary_damage"), cvar("g_balance_shotgun_secondary_melee_range"));
 }
 
 void spawnfunc_weapon_shotgun(); // defined in t_items.qc
