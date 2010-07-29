@@ -47,10 +47,13 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 	float sortbuf, glob, i;
 	string fn;
 
+	glob = search_begin(get_model_datafilename(string_null, -1, "txt"), TRUE, TRUE);
+	if (glob < 0)
+		return;
+
 	me.configureXonoticImage(me, string_null, -1);
 
 	sortbuf = buf_create();
-	glob = search_begin(get_model_datafilename(string_null, -1, "txt"), TRUE, TRUE);
 	for(i = 0; i < search_getsize(glob); ++i)
 	{
 		// select model #i!
@@ -85,7 +88,8 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 	}
 	buf_del(sortbuf);
 	get_model_parameters(string_null, 0);
-	me.loadCvars(me);
+	me.loadCvars(me); // this will select the initial model, depending on the current cvars
+	me.go(me, 0); // this will set the vars for the selected model
 }
 void XonoticPlayerModelSelector_destroy(entity me)
 {
@@ -95,21 +99,21 @@ void XonoticPlayerModelSelector_destroy(entity me)
 
 void XonoticPlayerModelSelector_loadCvars(entity me)
 {
+	string skin, model;
 	float i;
-	if(me.currentModel)
-		strunzone(me.currentModel);
-	me.currentSkin = cvar("_cl_playerskin");
-	me.currentModel = strzone(cvar_string("_cl_playermodel"));
+
+	skin = cvar_string("_cl_playerskin");
+	model = cvar_string("_cl_playermodel");
+
 	for(i = 0; i < me.numModels; ++i)
 	{
-		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_MODEL) == me.currentModel)
-		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN) == ftos(me.currentSkin))
+		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_MODEL) == model)
+		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN) == skin)
 			break;
 	}
 	if(i >= me.numModels) // fail
 		i = 0;
 	me.idxModels = i;
-	me.go(me, 0); // this will set the other vars for currentSkin and currentModel
 }
 
 void XonoticPlayerModelSelector_go(entity me, float d)
@@ -139,12 +143,16 @@ void XonoticPlayerModelSelector_go(entity me, float d)
 
 void PlayerModelSelector_Next_Click(entity btn, entity me)
 {
+	if (me.numModels <= 0)
+		return;
 	me.go(me, +1);
 	me.saveCvars(me);
 }
 
 void PlayerModelSelector_Prev_Click(entity btn, entity me)
 {
+	if (me.numModels <= 0)
+		return;
 	me.go(me, -1);
 	me.saveCvars(me);
 }
@@ -161,8 +169,13 @@ void XonoticPlayerModelSelector_draw(entity me)
 	float i, n;
 	vector o;
 
-	SUPER(XonoticPlayerModelSelector).draw(me);
+	if (me.numModels <= 0)
+	{
+		draw_CenterText('0.5 0.5 0', "<no model found>", me.realFontSize, '1 1 1', 0.6, FALSE);
+		return;
+	}
 
+	SUPER(XonoticPlayerModelSelector).draw(me);
 	// draw text on the image, handle \n in the description
 	draw_CenterText('0.5 0 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);
 
