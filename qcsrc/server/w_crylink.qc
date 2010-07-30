@@ -6,22 +6,55 @@ REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 
 .entity realowner;
 
+.entity queuenext;
+.entity queueprev;
+
+// force projectile to explode
+void W_Crylink_LinkExplode (entity e, entity e2)
+{
+	float f;
+	f = 1;
+	if(e.alpha)
+		f = e.alpha;
+	RadiusDamage (e, e.realowner, cvar("g_balance_crylink_primary_damage") * f, cvar("g_balance_crylink_primary_edgedamage") * f, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * f, e.projectiledeathtype, other);
+
+	if(e.queuenext != e2)
+		W_Crylink_LinkExplode(e.queuenext, e2);
+	remove (e);
+}
+
 // NO bounce protection, as bounces are limited!
 void W_Crylink_Touch (void)
 {
 	float finalhit;
 	float f;
-	PROJECTILE_TOUCH;
+	//PROJECTILE_TOUCH;
+	local entity savenext, saveprev;
+	savenext = self.queuenext;
+	saveprev = self.queueprev;
+	if(WarpZone_Projectile_Touch())
+	{
+		if(wasfreed(self))
+		{
+			savenext.queueprev = saveprev;
+			saveprev.queuenext = savenext;
+		}
+		return;
+	}
+
+	float a;
+	a = 1 - (time - self.fade_time) * self.fade_rate;
+
 	finalhit = ((self.cnt <= 0) || (other.takedamage != DAMAGE_NO));
 	if(finalhit)
 		f = 1;
 	else
 		f = cvar("g_balance_crylink_primary_bouncedamagefactor");
-	if(self.alpha)
-		f *= self.alpha;
-	RadiusDamage (self, self.realowner, cvar("g_balance_crylink_primary_damage") * f, cvar("g_balance_crylink_primary_edgedamage") * f, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * f, self.projectiledeathtype, other);
-	if (finalhit)
+	if(a)
+		f *= a;
+	if (RadiusDamage (self, self.realowner, cvar("g_balance_crylink_primary_damage") * f, cvar("g_balance_crylink_primary_edgedamage") * f, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * f, self.projectiledeathtype, other) || finalhit)
 	{
+		W_Crylink_LinkExplode(self.queuenext, self);
 		remove (self);
 		return;
 	}
@@ -61,10 +94,17 @@ void W_Crylink_Touch2 (void)
 	//	CSQCProjectile(proj, TRUE, PROJECTILE_CRYLINK, TRUE);
 }
 
+void W_Crylink_Fadethink (void)
+{
+	self.queuenext.queueprev = self.queueprev;
+	self.queueprev.queuenext = self.queuenext;
+	remove(self);
+}
+
 void W_Crylink_Attack (void)
 {
 	local float counter, shots;
-	local entity proj;
+	local entity proj, prevproj, firstproj;
 	local vector s;
 	vector forward, right, up;
 
@@ -85,6 +125,21 @@ void W_Crylink_Attack (void)
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
 		proj.bot_dodgerating = cvar("g_balance_crylink_primary_damage");
+		if(counter == 0) { // first projectile, store in firstproj for now
+			firstproj = proj;
+		}
+		else if(counter == shots - 1) { // last projectile, link up with first projectile
+			prevproj.queuenext = proj;
+			firstproj.queueprev = proj;
+			proj.queuenext = firstproj;
+			proj.queueprev = prevproj;
+		}
+		else { // else link up with previous projectile
+			prevproj.queuenext = proj;
+			proj.queueprev = prevproj;
+		}
+
+		prevproj = proj;
 
 		proj.movetype = MOVETYPE_BOUNCEMISSILE;
 		PROJECTILE_MAKETRIGGER(proj);
@@ -107,12 +162,26 @@ void W_Crylink_Attack (void)
 		s = s * cvar("g_balance_crylink_primary_spread") * g_weaponspreadfactor;
 		W_SetupProjectileVelocityEx(proj, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_crylink_primary_speed"), 0, 0, 0);
 		proj.touch = W_Crylink_Touch;
+
+		proj.think = W_Crylink_Fadethink;
 		if(counter == 0)
-			SUB_SetFade(proj, time + cvar("g_balance_crylink_primary_middle_lifetime"), cvar("g_balance_crylink_primary_middle_fadetime"));
+		{
+			proj.fade_time = time + cvar("g_balance_crylink_primary_middle_lifetime");
+			self.fade_rate = 1 / cvar("g_balance_crylink_primary_middle_fadetime");
+			proj.nextthink = time + cvar("g_balance_crylink_primary_middle_lifetime") + cvar("g_balance_crylink_primary_middle_fadetime");
+		}
 		else if(counter <= 3)
-			SUB_SetFade(proj, time + cvar("g_balance_crylink_primary_star_lifetime"), cvar("g_balance_crylink_primary_star_fadetime"));
+		{
+			proj.fade_time = time + cvar("g_balance_crylink_primary_star_lifetime");
+			self.fade_rate = 1 / cvar("g_balance_crylink_primary_star_fadetime");
+			proj.nextthink = time + cvar("g_balance_crylink_primary_star_lifetime") + cvar("g_balance_crylink_primary_star_fadetime");
+		}
 		else
-			SUB_SetFade(proj, time + cvar("g_balance_crylink_primary_other_lifetime"), cvar("g_balance_crylink_primary_other_fadetime"));
+		{
+			proj.fade_time = time + cvar("g_balance_crylink_primary_other_lifetime");
+			self.fade_rate = 1 / cvar("g_balance_crylink_primary_other_fadetime");
+			proj.nextthink = time + cvar("g_balance_crylink_primary_other_lifetime") + cvar("g_balance_crylink_primary_other_fadetime");
+		}
 		proj.cnt = cvar("g_balance_crylink_primary_bounces");
 		//proj.scale = 1 + 1 * proj.cnt;
 
