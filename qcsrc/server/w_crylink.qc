@@ -12,11 +12,10 @@ REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 // force projectile to explode
 void W_Crylink_LinkExplode (entity e, entity e2)
 {
-	float f;
-	f = 1;
-	if(e.alpha)
-		f = e.alpha;
-	RadiusDamage (e, e.realowner, cvar("g_balance_crylink_primary_damage") * f, cvar("g_balance_crylink_primary_edgedamage") * f, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * f, e.projectiledeathtype, other);
+	float a;
+	a = bound(0, 1 - (time - e.fade_time) * e.fade_rate, 1);
+
+	RadiusDamage (e, e.realowner, cvar("g_balance_crylink_primary_damage") * a, cvar("g_balance_crylink_primary_edgedamage") * a, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * a, e.projectiledeathtype, other);
 
 	if(e.queuenext != e2)
 		W_Crylink_LinkExplode(e.queuenext, e2);
@@ -43,7 +42,7 @@ void W_Crylink_Touch (void)
 	}
 
 	float a;
-	a = 1 - (time - self.fade_time) * self.fade_rate;
+	a = bound(0, 1 - (time - self.fade_time) * self.fade_rate, 1);
 
 	finalhit = ((self.cnt <= 0) || (other.takedamage != DAMAGE_NO));
 	if(finalhit)
@@ -71,17 +70,33 @@ void W_Crylink_Touch2 (void)
 {
 	float finalhit;
 	float f;
-	PROJECTILE_TOUCH;
+	//PROJECTILE_TOUCH;
+	local entity savenext, saveprev;
+	savenext = self.queuenext;
+	saveprev = self.queueprev;
+	if(WarpZone_Projectile_Touch())
+	{
+		if(wasfreed(self))
+		{
+			savenext.queueprev = saveprev;
+			saveprev.queuenext = savenext;
+		}
+		return;
+	}
+
+	float a;
+	a = 1 - (time - self.fade_time) * self.fade_rate;
+
 	finalhit = ((self.cnt <= 0) || (other.takedamage != DAMAGE_NO));
 	if(finalhit)
 		f = 1;
 	else
 		f = cvar("g_balance_crylink_secondary_bouncedamagefactor");
-	if(self.alpha)
-		f *= self.alpha;
-	RadiusDamage (self, self.realowner, cvar("g_balance_crylink_secondary_damage") * f, cvar("g_balance_crylink_secondary_edgedamage") * f, cvar("g_balance_crylink_secondary_radius"), world, cvar("g_balance_crylink_secondary_force") * f, self.projectiledeathtype, other);
-	if (finalhit)
+	if(a)
+		f *= a;
+	if (RadiusDamage (self, self.realowner, cvar("g_balance_crylink_secondary_damage") * f, cvar("g_balance_crylink_secondary_edgedamage") * f, cvar("g_balance_crylink_secondary_radius"), world, cvar("g_balance_crylink_secondary_force") * f, self.projectiledeathtype, other) || finalhit)
 	{
+		W_Crylink_LinkExplode(self.queuenext, self);
 		remove (self);
 		return;
 	}
@@ -200,7 +215,7 @@ void W_Crylink_Attack (void)
 void W_Crylink_Attack2 (void)
 {
 	local float counter, shots;
-	local entity proj;
+	local entity proj, prevproj, firstproj;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - cvar("g_balance_crylink_secondary_ammo");
@@ -216,6 +231,21 @@ void W_Crylink_Attack2 (void)
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
 		proj.bot_dodgerating = cvar("g_balance_crylink_secondary_damage");
+		if(counter == 0) { // first projectile, store in firstproj for now
+			firstproj = proj;
+		}
+		else if(counter == shots - 1) { // last projectile, link up with first projectile
+			prevproj.queuenext = proj;
+			firstproj.queueprev = proj;
+			proj.queuenext = firstproj;
+			proj.queueprev = prevproj;
+		}
+		else { // else link up with previous projectile
+			prevproj.queuenext = proj;
+			proj.queueprev = prevproj;
+		}
+
+		prevproj = proj;
 
 		proj.movetype = MOVETYPE_BOUNCEMISSILE;
 		PROJECTILE_MAKETRIGGER(proj);
@@ -227,10 +257,19 @@ void W_Crylink_Attack2 (void)
 
 		W_SetupProjectileVelocityEx(proj, (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * cvar("g_balance_crylink_secondary_spread") * g_weaponspreadfactor), v_up, cvar("g_balance_crylink_secondary_speed"), 0, 0, 0);
 		proj.touch = W_Crylink_Touch2;
+		proj.think = W_Crylink_Fadethink;
 		if(counter == (shots - 1) / 2)
-			SUB_SetFade(proj, time + cvar("g_balance_crylink_secondary_middle_lifetime"), cvar("g_balance_crylink_secondary_middle_fadetime"));
+		{
+			proj.fade_time = time + cvar("g_balance_crylink_secondary_middle_lifetime");
+			self.fade_rate = 1 / cvar("g_balance_crylink_secondary_middle_fadetime");
+			proj.nextthink = time + cvar("g_balance_crylink_secondary_middle_lifetime") + cvar("g_balance_crylink_secondary_middle_fadetime");
+		}
 		else
-			SUB_SetFade(proj, time + cvar("g_balance_crylink_secondary_line_lifetime"), cvar("g_balance_crylink_secondary_line_fadetime"));
+		{
+			proj.fade_time = time + cvar("g_balance_crylink_secondary_line_lifetime");
+			self.fade_rate = 1 / cvar("g_balance_crylink_secondary_line_fadetime");
+			proj.nextthink = time + cvar("g_balance_crylink_secondary_line_lifetime") + cvar("g_balance_crylink_secondary_line_fadetime");
+		}
 		proj.cnt = cvar("g_balance_crylink_secondary_bounces");
 		//proj.scale = 1 + 1 * proj.cnt;
 
