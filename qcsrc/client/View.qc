@@ -775,7 +775,7 @@ void CSQC_UpdateView(float w, float h)
 				if (activeweapon == WEP_CAMPINGRIFLE)
 				{
 					ring_scale = cvar("crosshair_campingrifle_ring_size");
-					bullets = bound(0, getstati(STAT_BULLETS_LOADED), 8);
+					bullets = bound(0, getstati(STAT_BULLETS_LOADED), 4);
 				}
 				else
 					bullets = 0;
