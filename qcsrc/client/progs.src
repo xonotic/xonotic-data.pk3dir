@@ -26,6 +26,7 @@ waypointsprites.qh
 movetypes.qh
 prandom.qh
 bgmscript.qh
+noise.qh
 
 main.qh
 
@@ -62,6 +63,7 @@ waypointsprites.qc
 movetypes.qc
 prandom.qc
 bgmscript.qc
+noise.qc
 
 ../common/util.qc
 ../common/gamecommand.qc

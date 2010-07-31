@@ -41,9 +41,13 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 
 string Draw_GrapplingHook_trace_callback_tex;
 float Draw_GrapplingHook_trace_callback_rnd;
+vector Draw_GrapplingHook_trace_callback_rgb;
+float Draw_GrapplingHook_trace_callback_a;
 void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 {
-	Draw_CylindricLine(hit, start, 8, Draw_GrapplingHook_trace_callback_tex, 0.25, Draw_GrapplingHook_trace_callback_rnd, '1 1 1', 1, DRAWFLAG_NORMAL);
+	float i;
+	for(i = 0; i < Draw_GrapplingHook_trace_callback_a; ++i)
+		Draw_CylindricLine(hit, start, 8, Draw_GrapplingHook_trace_callback_tex, 0.25, Draw_GrapplingHook_trace_callback_rnd, Draw_GrapplingHook_trace_callback_rgb, min(1, Draw_GrapplingHook_trace_callback_a - i), DRAWFLAG_NORMAL);
 	Draw_GrapplingHook_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
 }
 
@@ -55,6 +59,7 @@ void Draw_GrapplingHook()
 	float t;
 	float s;
 	vector vs;
+	float intensity, offset;
 
 	InterpolateOrigin_Do();
 
@@ -120,6 +125,8 @@ void Draw_GrapplingHook()
 	{
 		default:
 		case ENT_CLIENT_HOOK:
+			intensity = 1;
+			offset = Noise_White(self, frametime);
 			if(t == COLOR_TEAM1)
 			{
 				tex = "particles/hook_red";
@@ -147,17 +154,23 @@ void Draw_GrapplingHook()
 			}
 			break;
 		case ENT_CLIENT_LGBEAM:
+			intensity = bound(0.2, 1 + Noise_Pink(self, frametime) * 1 + Noise_Burst(self, frametime, 0.03) * 0.3, 2);
+			offset = Noise_Brown(self, frametime) * 10;
 			tex = "particles/lgbeam";
 			rgb = '1 1 1';
 			break;
 		case ENT_CLIENT_GAUNTLET:
+			intensity = 1;
+			offset = Noise_White(self, frametime);
 			tex = "particles/gauntletbeam";
 			rgb = '1 1 1';
 			break;
 	}
 
 	Draw_GrapplingHook_trace_callback_tex = tex;
-	Draw_GrapplingHook_trace_callback_rnd = random();
+	Draw_GrapplingHook_trace_callback_rnd = offset;
+	Draw_GrapplingHook_trace_callback_rgb = rgb;
+	Draw_GrapplingHook_trace_callback_a = intensity;
 	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((self.HookType == ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), world, world, Draw_GrapplingHook_trace_callback);
 	Draw_GrapplingHook_trace_callback_tex = string_null;
 
@@ -182,10 +195,10 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_HOOK:
 			break;
 		case ENT_CLIENT_LGBEAM:
-			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime);
+			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity);
 			break;
 		case ENT_CLIENT_GAUNTLET:
-			pointparticles(particleeffectnum("gauntlet_lightning"), b, normalize(a - b), frametime);
+			pointparticles(particleeffectnum("gauntlet_lightning"), b, normalize(a - b), frametime * intensity);
 			break;
 	}
 }
