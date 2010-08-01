@@ -1976,22 +1976,23 @@ void HUD_Powerups(void) {
 	pos = panel_pos;
 	mySize = panel_size;
 
-	float strength_time, shield_time;
-
-	strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
-	shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
+ 	float strength_time, shield_time;
+	if(autocvar__hud_configure)
+	{
+		strength_time = 15;
+		shield_time = 27;
+	}
+	else
+	{
+		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
+		shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
+	}
 
 	HUD_Panel_DrawBg(bound(0, max(strength_time, shield_time), 1));
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
 		mySize -= '2 2 0' * panel_bg_padding;
-	}
-
-	if(autocvar__hud_configure)
-	{
-		strength_time = 15;
-		shield_time = 27;
 	}
 
 	vector barpos, barsize;
