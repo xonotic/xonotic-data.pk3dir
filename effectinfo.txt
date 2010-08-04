@@ -4743,18 +4743,81 @@ alpha 100 100 500
 // based off morphed's cl_gentle
 // used in qcsrc/server/w_laser.qc
 effect laser_gauntlet
-tex 43 43
-count 1.5
+count 3
 type spark
-color 0xff00ff 0xff0000
-size 4 8
-sizeincrease 34
-alpha 128 128 292
-gravity 0
-airfriction 5
-liquidfriction 10
-velocityjitter 50 50 50
+color 0xb44215 0x880000
+tex 43 43
+size 7 10
+alpha 128 512 6280
+airfriction 10
+originjitter 2 2 2
+velocityjitter 150 150 150
+velocitymultiplier 0.2
+sizeincrease -100
+stretchfactor 2.3
+rotate -180 180 4000 -4000
 
+effect laser_gauntlet
+count 6
+type spark
+color 0xff4200 0xff0000
+tex 8 15
+size 7 9
+alpha 256 512 6280
+airfriction 12
+originjitter 2 2 2
+velocityjitter 100 100 100
+velocitymultiplier 0.2
+sizeincrease -100
+stretchfactor 2
+
+
+// muzzle flash
+effect laser_gauntletmuzzleflash
+// glow and light
+countabsolute 1
+type smoke
+color 0x220000 0x880000
+tex 65 65
+size 10 15
+alpha 256 512 6280
+airfriction 10
+sizeincrease -100
+stretchfactor 2
+lightradius 150
+lightradiusfade 500
+lightcolor 3 0.1 0.1
+// electricity
+effect laser_gauntletmuzzleflash
+count 3
+type spark
+color 0xb44215 0x880000
+tex 43 43
+size 7 10
+alpha 128 512 6280
+airfriction 10
+originjitter 2 2 2
+velocityjitter 150 150 150
+velocitymultiplier 0.2
+sizeincrease -100
+stretchfactor 2.3
+rotate -180 180 4000 -4000
+
+
+// fire
+effect laser_gauntletmuzzleflash
+count 6
+type spark
+color 0xff4200 0xff0000
+tex 8 15
+size 7 9
+alpha 256 512 6280
+airfriction 12
+originjitter 2 2 2
+velocityjitter 100 100 100
+velocitymultiplier 0.2
+sizeincrease -100
+stretchfactor 2
 
 //torch flame, spawn it as fast as you can  20 times per second or more, supports direction but not required
 //fast fire
@@ -4907,3 +4970,92 @@ bounce 1.5
 airfriction 5
 liquidfriction 10
 velocityjitter 156 156 156
+
+
+
+// used in qcsrc/server/w_electro.qc:	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
+// used in qcsrc/server/w_electro.qc:	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
+effect electro_lightning
+countabsolute 1
+type decal
+tex 59 59
+size 16 16
+alpha 256 256 0
+originjitter 2 2 2
+lightradius 50
+lightradiusfade 200
+lightcolor 3.125 4.375 10
+effect electro_lightning
+count 300
+type spark
+color 0x501860 0x501860 // 0x202020 0x404040
+tex 65 65
+size 6 6
+alpha 100 206 1724
+originjitter 1.5 1.5 1.5
+velocityjitter 6 6 6
+sizeincrease 10
+velocitymultiplier 2000
+effect electro_lightning
+count 30
+type spark
+tex 8 15
+color 0xDDFDFF 0xFDFDFF
+size 2 5
+alpha 110 170 1500
+originjitter 1 1 1
+velocityjitter 150 150 150
+velocitymultiplier 0.5
+airfriction 2
+stretchfactor 1.5
+effect electro_lightning
+count 50
+type spark
+tex 41 41
+color 0xFDFDFF 0xF9FDFF
+size 2 3
+alpha 110 170 1500
+originjitter 1 1 1
+velocityjitter 350 350 350
+velocitymultiplier 2.5
+airfriction 8
+gravity 1.3
+stretchfactor 0.1
+
+// used in qcsrc/server/w_gauntlet.qc:	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
+effect gauntlet_lightning
+count 300
+type spark
+color 0x280000 0x280000 // 0x202020 0x404040
+tex 65 65
+size 3 3
+alpha 256 256 1024
+originjitter 1.5 1.5 1.5
+velocityjitter 6 6 6
+sizeincrease 15
+velocitymultiplier 2000
+effect gauntlet_lightning
+count 30
+type spark
+tex 8 15
+color 0xDD0000 0xFD0000
+size 2 5
+alpha 110 228 1024
+originjitter 1 1 1
+velocityjitter 150 150 150
+velocitymultiplier 0.5
+airfriction 2
+stretchfactor 1.5
+effect gauntlet_lightning
+count 50
+type spark
+tex 41 41
+color 0xFD0000 0xF90000
+size 2 3
+alpha 110 228 600
+originjitter 1 1 1
+velocityjitter 350 350 350
+velocitymultiplier 2.5
+airfriction 8
+gravity 1.3
+stretchfactor 0.1

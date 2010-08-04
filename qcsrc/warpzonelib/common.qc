@@ -1,3 +1,6 @@
+float trace_dphitcontents;
+.float dphitcontents;
+
 void WarpZone_Accumulator_Clear(entity acc)
 {
 	acc.warpzone_transform = '0 0 0';
@@ -110,7 +113,7 @@ float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 {
     float f, s;
 
-    if not(e.modelindex)
+    if(!e.modelindex || e.warpzone_isboxy)
         return 1;
 
     s = e.solid;
@@ -165,7 +168,9 @@ void WarpZone_Trace_AddTransform(entity wz)
 
 void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb)
 {
+	float nomonsters_adjusted;
 	float frac, sol, i;
+	float contentshack;
 	vector o0, e0;
 	entity wz;
 	vector vf, vr, vu;
@@ -174,6 +179,20 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	vu = v_up;
 	o0 = org;
 	e0 = end;
+
+	switch(nomonsters)
+	{
+		case MOVE_WORLDONLY:
+		case MOVE_NOTHING:
+			nomonsters_adjusted = MOVE_NOMONSTERS;
+			break;
+		default:
+			nomonsters_adjusted = nomonsters;
+			break;
+	}
+	if((contentshack = (forent.dphitcontentsmask && !(forent.dphitcontentsmask & DPCONTENTS_SOLID))))
+		forent.dphitcontentsmask |= DPCONTENTS_SOLID;
+
 	WarpZone_Trace_InitTransform();
 	// if starting in warpzone, first transform
 	wz = WarpZone_Find(org + mi, org + ma);
@@ -203,7 +222,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			trace_ent = world;
 			break;
 		}
-		tracebox(org, mi, ma, end, nomonsters, forent);
+		tracebox(org, mi, ma, end, nomonsters_adjusted, forent);
 		if(cb)
 			cb(org, trace_endpos, end);
 		if(sol < 0)
@@ -213,7 +232,17 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		if(trace_fraction >= 1)
 			break;
 		if(trace_ent.classname != "trigger_warpzone")
+		{
+			if((nomonsters == MOVE_NOTHING) || ((nomonsters == MOVE_WORLDONLY) && trace_ent) || (contentshack && (trace_dphitcontents & forent.dphitcontentsmask) == DPCONTENTS_SOLID))
+			{
+				// continue the trace, ignoring this hit (we only care for warpzones)
+				org = trace_endpos + normalize(end - org);
+				continue;
+				// we cannot do an inverted trace here, as we do care for further warpzones inside that "solid" to be found
+				// otherwise, players could block entrances that way
+			}
 			break;
+		}
 		if(trace_ent == wz)
 		{
 			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
@@ -230,6 +259,8 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	}
 	WarpZone_MakeAllOther();
 :fail
+	if(contentshack)
+		forent.dphitcontentsmask &~= DPCONTENTS_SOLID;
 	trace_startsolid = sol;
 	v_forward = vf;
 	v_right = vr;
@@ -257,6 +288,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	vu = v_up;
 	o0 = e.origin;
 	v0 = e.velocity;
+
 	WarpZone_Trace_InitTransform();
 	// if starting in warpzone, first transform
 	wz = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);

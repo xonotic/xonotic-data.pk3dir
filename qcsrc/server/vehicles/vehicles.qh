@@ -22,6 +22,8 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 .entity gun1;
 .entity gun2;
 
+.entity shield;
+
 .float vehicle_health;
 .float vehicle_shield;
 .float vehicle_energy;

@@ -232,7 +232,9 @@ float announcer_5min;
 // database for misc stuff
 float tempdb;
 float ClientProgsDB;
-vector hook_shotorigin;
+vector hook_shotorigin[4];
+vector electro_shotorigin[4];
+vector gauntlet_shotorigin[4];
 
 #ifdef BLURTEST
 float blurtest_time0, blurtest_time1, blurtest_radius, blurtest_power;
@@ -256,3 +258,5 @@ float w_deathtype, w_issilent, w_random;
 string w_deathtypestring;
 vector w_org, w_backoff;
 
+float campingrifle_scope;
+float nex_scope;

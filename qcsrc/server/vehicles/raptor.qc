@@ -84,13 +84,13 @@ void raptor_loadsettings()
     raptor_beam_leangth = CCVAR("_beam_length");
     raptor_beam_refire  = CCVAR("_beam_refire");
 
-    raptor_shield_max    = CCVAR("_shield_max");
+    raptor_shield_max    = CCVAR("_shield");
     raptor_shield_regen  = CCVAR("_shield_regen");
 
-    raptor_health_max    = CCVAR("_health_max");
+    raptor_health_max    = CCVAR("_health");
     raptor_health_regen  = CCVAR("_health_regen");
 
-    raptor_energy_max    = CCVAR("_energy_max");
+    raptor_energy_max    = CCVAR("_energy");
     raptor_energy_regen  = CCVAR("_energy_regen");
 }
 
@@ -234,7 +234,6 @@ void raptor_setanim(float start, float end, float length)
 }
 
 void raptor_beam (vector start, vector end, vector smin, vector smax, float bforce, float f_dmg, float deathtype)
-
 {
     vector hitloc, force, endpoint, dir;
     entity ent;
@@ -520,6 +519,7 @@ float raptor_pplug()
     setorigin(player,vhic.origin + '0 0 32');
 
     // Aim the gunz
+    /*
     vector target_angle, move_angle, org1, org2, targ;
 
     makevectors(player.v_angle);
@@ -549,7 +549,7 @@ float raptor_pplug()
     move_angle = shortangle_vxy(move_angle,(vhic.angles + vhic.gun2.angles));
     vhic.gun2.angles_x = bound(-15,move_angle_x + vhic.gun2.angles_x,15);
     vhic.gun2.angles_y = bound(-20,move_angle_y + vhic.gun2.angles_y,20);
-
+	*/
     if(player.BUTTON_ATCK)
     if(vhic.vehicle_energy > (raptor_beam_aps * sys_frametime))
     {
@@ -832,7 +832,7 @@ void raptor_dinit()
     raptor_spawn();
 }
 
-void spawnfunc_vehicle_raptor2()
+void spawnfunc_vehicle_raptor()
 {
     self.cvar_basename      = "g_vehicle_raptor";
     raptor_loadsettings();
@@ -869,7 +869,7 @@ void spawnfunc_vehicle_raptor2()
 }
 
 
-void spawnfunc_vehicle_raptor()
+void spawnfunc_vehicle_raptor2()
 {
     entity iqm,dpm,md3;
 

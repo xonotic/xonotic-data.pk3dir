@@ -59,6 +59,7 @@ CLASS(Dialog) EXTENDS(InputContainer)
 	ATTRIB(Dialog, zoomedOutTitleBar, float, 0)
 
 	ATTRIB(Dialog, backgroundImage, string, string_null)
+	ATTRIB(Dialog, borderLines, float, 1)
 	ATTRIB(Dialog, closeButtonImage, string, string_null)
 
 	ATTRIB(Dialog, frame, entity, NULL)
@@ -128,7 +129,7 @@ void Dialog_configureDialog(entity me)
 	float absWidth, absHeight;
 
 	me.frame = spawnBorderImage();
-	me.frame.configureBorderImage(me.frame, me.title, me.titleFontSize, me.color, me.backgroundImage, me.titleHeight);
+	me.frame.configureBorderImage(me.frame, me.title, me.titleFontSize, me.color, me.backgroundImage, me.borderLines * me.titleHeight);
 	me.frame.zoomedOutTitleBarPosition = me.zoomedOutTitleBarPosition;
 	me.frame.zoomedOutTitleBar = me.zoomedOutTitleBar;
 	me.frame.alpha = me.alpha;
@@ -138,9 +139,9 @@ void Dialog_configureDialog(entity me)
 		me.titleHeight = 0; // no title bar
 
 	absWidth = me.intendedWidth * conwidth;
-	absHeight = me.titleHeight + me.marginTop + me.rows * me.rowHeight + (me.rows - 1) * me.rowSpacing + me.marginBottom;
+	absHeight = me.borderLines * me.titleHeight + me.marginTop + me.rows * me.rowHeight + (me.rows - 1) * me.rowSpacing + me.marginBottom;
 	me.itemOrigin  = eX * (me.marginLeft / absWidth)
-	               + eY * ((me.titleHeight + me.marginTop) / absHeight);
+	               + eY * ((me.borderLines * me.titleHeight + me.marginTop) / absHeight);
 	me.itemSize    = eX * ((1 - (me.marginLeft + me.marginRight + me.columnSpacing * (me.columns - 1)) / absWidth) / me.columns)
 	               + eY * (me.rowHeight / absHeight);
 	me.itemSpacing = me.itemSize

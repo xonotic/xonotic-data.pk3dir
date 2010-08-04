@@ -66,14 +66,15 @@ void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, flo
     if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0))
     {
 
-        if not (self.tur_head.enemy)
+        
+        if (wasfreed(self.tur_head.enemy) || self.tur_head.enemy == world)
         {
             self.tur_head.enemy = spawn();
             self.tur_head.enemy.effects = EF_LOWPRECISION;
         }
 
-        setmodel(self.tur_head.enemy,"models/vhshield.md3");
-        setattachment(self.tur_head.enemy,self,"");
+        setmodel(self.tur_head.enemy, "models/vhshield.md3");
+        setattachment(self.tur_head.enemy, self, "");
 
         self.tur_head.enemy.colormod = '1 1 1';
         self.tur_head.enemy.alpha = 0.45;

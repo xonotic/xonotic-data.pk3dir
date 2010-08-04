@@ -136,6 +136,7 @@ void CSQC_Init(void)
 
 	// precaches
 	Projectile_Precache();
+	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
 	DamageInfo_Precache();
@@ -923,6 +924,9 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_WARPZONE: WarpZone_Read(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE_CAMERA: WarpZone_Camera_Read(bIsNewEntity); break;
 		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
+		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
+		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
+		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		default:
 			error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
 			break;
@@ -1022,9 +1026,18 @@ void Ent_Init()
 
 	nb_pb_period = ReadByte() / 32; //Accuracy of 1/32th
 
-	hook_shotorigin_x = ReadCoord();
-	hook_shotorigin_y = ReadCoord();
-	hook_shotorigin_z = ReadCoord();
+	hook_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
 	if(forcefog)
 		strunzone(forcefog);
@@ -1036,6 +1049,9 @@ void Ent_Init()
 
 	g_balance_grenadelauncher_secondary_bouncefactor = ReadCoord();
 	g_balance_grenadelauncher_secondary_bouncestop = ReadCoord();
+
+	nex_scope = !ReadByte();
+	campingrifle_scope = !ReadByte();
 
 	if(!postinit)
 		PostInit();
@@ -1288,10 +1304,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_RACE:
 			Net_ReadRace();
-			bHandled = true;
-			break;
-		case 13: // TE_BEAM
-			Net_GrapplingHook();
 			bHandled = true;
 			break;
 		case TE_CSQC_SPAWN:
