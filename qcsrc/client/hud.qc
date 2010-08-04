@@ -2473,8 +2473,13 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		else if(type == KILL_FIRST_BLOOD)
 			print("^1",s1, "^1 drew first blood", "\n");
 		// TODO: icon!
-		else if (type == DEATH_TELEFRAG)
-			print ("^1",s1, "^1 was telefragged by ", s2, "\n");
+		else if (type == DEATH_TELEFRAG) {
+			HUD_KillNotify_Push(s2, s1, 1, DEATH_TELEFRAG);
+			if(gentle)
+				print ("^1",s1, "^1 tried to occupy ", s2, "^1's teleport destination space\n");
+			else
+				print ("^1",s1, "^1 was telefragged by ", s2, "\n");
+		}
 		else if (type == DEATH_DROWN) {
 			HUD_KillNotify_Push(s2, s1, 1, DEATH_DROWN);
 			if(alsoprint)
@@ -3023,6 +3028,10 @@ void HUD_Notify (void)
 			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
 			{
 				s = "notify_teamkill_red";
+			}
+			else if(killnotify_deathtype[j] == DEATH_TELEFRAG)
+			{
+				s = "notify_telefrag";
 			}
 			else if(killnotify_deathtype[j] == DEATH_DROWN)
 			{
