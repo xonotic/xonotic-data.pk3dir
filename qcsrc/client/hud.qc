@@ -511,6 +511,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_PRESSEDKEYS:
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_aspect \"", cvar_string(strcat("hud_panel_", panel_name, "_aspect")), "\"", "\n"));
 					break;
+				case HUD_PANEL_INFOMESSAGES:
+					fputs(fh, strcat("seta hud_panel_", panel_name, "_flip \"", cvar_string(strcat("hud_panel_", panel_name, "_flip")), "\"", "\n"));
+					break;
 			}
 			fputs(fh, "\n");
 		}
@@ -4395,6 +4398,12 @@ void HUD_InfoMessages(void)
 	vector fontsize;
 	fontsize = '0.20 0.20 0' * mySize_y;
 	
+	float a;
+	if(spectatee_status != 0)
+		a = 1;
+	else
+		a = panel_fg_alpha;
+
 	string s;
 	if(!autocvar__hud_configure)
 	{
@@ -4407,7 +4416,7 @@ void HUD_InfoMessages(void)
 
 			if(autocvar_hud_panel_infomessages_flip)
 				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 			o += eY * fontsize_y;
 
 			if(spectatee_status == -1)
@@ -4416,7 +4425,7 @@ void HUD_InfoMessages(void)
 				s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 for another player");
 			if(autocvar_hud_panel_infomessages_flip)
 				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 			o += eY * fontsize_y;
 
 			if(spectatee_status == -1)
@@ -4425,13 +4434,13 @@ void HUD_InfoMessages(void)
 				s = strcat("^1Press ^3", getcommandkey("secondary fire", "+attack2"), "^1 to observe");
 			if(autocvar_hud_panel_infomessages_flip)
 				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 			o += eY * fontsize_y;
 
 			s = strcat("^1Press ^3", getcommandkey("server info", "+show_info"), "^1 for gamemode info");
 			if(autocvar_hud_panel_infomessages_flip)
 				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 			o += eY * fontsize_y;
 
 			if(gametype == GAME_ARENA)
@@ -4451,7 +4460,7 @@ void HUD_InfoMessages(void)
 				s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
 			if(autocvar_hud_panel_infomessages_flip)
 				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 			o += eY * fontsize_y;
 
 			//show restart countdown:
@@ -4460,7 +4469,7 @@ void HUD_InfoMessages(void)
 				//we need to ceil, otherwise the countdown would be off by .5 when using round()
 				countdown = ceil(getstatf(STAT_GAMESTARTTIME) - time);
 				s = strcat("^1Game starts in ^3", ftos(countdown), "^1 seconds");
-				drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 				o += eY * fontsize_y;
 			}
 		}
@@ -4469,7 +4478,7 @@ void HUD_InfoMessages(void)
 			s = "^2Currently in ^1warmup^2 stage!";
 			if(autocvar_hud_panel_infomessages_flip)
 				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 			o += eY * fontsize_y;
 		}
 
@@ -4497,7 +4506,7 @@ void HUD_InfoMessages(void)
 			}
 			if(autocvar_hud_panel_infomessages_flip)
 				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 			o += eY * fontsize_y;
 		}
 		else if(warmup_stage && !intermission && !spectatee_status)
@@ -4505,7 +4514,7 @@ void HUD_InfoMessages(void)
 			s = strcat("^2Press ^3", getcommandkey("ready", "ready"), "^2 to end warmup");
 			if(autocvar_hud_panel_infomessages_flip)
 				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 			o += eY * fontsize_y;
 		}
 
@@ -4535,7 +4544,7 @@ void HUD_InfoMessages(void)
 
 					if(autocvar_hud_panel_infomessages_flip)
 						o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-					drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 					o += eY * fontsize_y;
 				}
 			}
@@ -4546,22 +4555,22 @@ void HUD_InfoMessages(void)
 		s = "^7Press ^3ESC ^7to show HUD options.";
 		if(autocvar_hud_panel_infomessages_flip)
 			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 		o += eY * fontsize_y;
 		s = "^3Doubleclick ^7a panel for panel-specific options.";
 		if(autocvar_hud_panel_infomessages_flip)
 			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 		o += eY * fontsize_y;
 		s = "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and";
 		if(autocvar_hud_panel_infomessages_flip)
 			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 		o += eY * fontsize_y;
 		s = "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments.";
 		if(autocvar_hud_panel_infomessages_flip)
 			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-		drawcolorcodedstring(o, s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 		o += eY * fontsize_y;
 	}
 }
