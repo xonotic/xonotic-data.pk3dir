@@ -130,6 +130,9 @@ float WarpZone_Send(entity to, float sendflags)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
+	// we must send this flag for clientside to match properly too
+	WriteByte(MSG_ENTITY, self.WarpZone_isboxy);
+
 	// we need THESE to render the warpzone (and cull properly)...
 	WriteCoord(MSG_ENTITY, self.origin_x);
 	WriteCoord(MSG_ENTITY, self.origin_y);
