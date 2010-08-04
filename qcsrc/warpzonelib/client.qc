@@ -122,7 +122,7 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 		if(WarpZone_PlaneDist(e, o) < 0)
 			return '0 0 0';
 			// can't really be, though, but if it is, this is not my warpzone, but a random different one in the same mins/maxs
-		pd = min(
+		pd = min4(
 				WarpZone_PlaneDist(e, c0),
 				WarpZone_PlaneDist(e, c1),
 				WarpZone_PlaneDist(e, c2),
