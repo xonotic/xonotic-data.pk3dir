@@ -60,6 +60,7 @@ float WarpZoneLib_ExactTrigger_Touch()
 
 void WarpZoneLib_ExactTrigger_Init()
 {
+	vector mi, ma;
 	if (self.movedir == '0 0 0')
 	if (self.angles != '0 0 0')
 	{
@@ -68,8 +69,16 @@ void WarpZoneLib_ExactTrigger_Init()
 	}
  	if(self.model != "")
  	{
+		mi = self.mins;
+		ma = self.maxs;
  		precache_model(self.model);
  		setmodel(self, self.model);
+		// let mapper-set mins/maxs override the model's bounds if set
+		if(mi != '0 0 0' || ma != '0 0 0')
+		{
+			self.mins = mi;
+			self.maxs = ma;
+		}
  	}
 	setorigin(self, self.origin);
 	if(self.scale)
