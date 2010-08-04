@@ -263,6 +263,7 @@ void centerprint(string strMessage)
 #endif
 
 	centerprint_num = i;
+
 	centerprint_expire = time + cvar("scr_centertime");
 }
 
@@ -283,6 +284,10 @@ void HUD_DrawCenterPrint (void)
 
 	sz = 0.8 + (a / 5);
 
+	if(centerprint_num > 1 && HUD_WouldDrawScoreboard())
+	{
+		centerprint_start_y = scoreboard_bottom + centerprint_fontsize_y;
+	}
 	pos = centerprint_start;
 	for (i=0; i<centerprint_num; i = i + 1)
 	{
