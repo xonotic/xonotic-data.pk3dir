@@ -131,7 +131,7 @@ float stringwidth_nocolors(string s, vector theSize)
 #define CENTERPRINT_MAX_LINES 30
 string centerprint_messages[CENTERPRINT_MAX_LINES];
 float centerprint_width[CENTERPRINT_MAX_LINES];
-vector centerprint_start;
+float centerprint_time;
 float centerprint_expire;
 float centerprint_num;
 float centerprint_offset_hint;
@@ -182,6 +182,8 @@ void centerprint(string strMessage)
 		while(getWrappedLine_remaining)
 		{
 			s = getWrappedLine(vid_conwidth * 0.75, centerprint_fontsize, stringwidth_colors);
+			if(centerprint_messages[i] != s) // don't fade the same message in, looks stupid
+				centerprint_time = time;
 			if(centerprint_messages[i])
 				strunzone(centerprint_messages[i]);
 			centerprint_messages[i] = strzone(s);
@@ -207,8 +209,6 @@ void centerprint(string strMessage)
 		havail -= (-cvar("con_chatpos") + cvar("con_chat")) * cvar("con_chatsize"); // avoid overlapping chat
 	if(havail > vid_conheight - 70)
 		havail = vid_conheight - 70; // avoid overlapping HUD
-
-	centerprint_start_x = 0;
 
 #if 0
 	float forbiddenmin, forbiddenmax, allowedmin, allowedmax, preferred;
@@ -260,14 +260,6 @@ void centerprint(string strMessage)
 		centerprint_start_y = bound(forbiddenmax, preferred, allowedmax);
 	}
 #else
-	centerprint_start_y =
-		min(
-			max(
-				max(scoreboard_bottom, vid_conheight * 0.5 + 16),
-				(havail - h)/2
-			),
-			havail - h
-		);
 #endif
 
 	centerprint_num = i;
@@ -279,32 +271,35 @@ void HUD_DrawCenterPrint (void)
 	float i;
 	vector pos;
 	string ts;
-	float a;
+	float a, sz;
 
-	//if(time > centerprint_expire)
-	//	return;
-
-	//a = bound(0, 1 - 2 * (time - centerprint_expire), 1);
-	a = bound(0, 1 - 4 * (time - centerprint_expire), 1);
-	//sz = 1.2 / (a + 0.2);
+	if(time - centerprint_time < 0.25)
+		a = (time - centerprint_time) / 0.25;
+	else
+		a = bound(0, 1 - 4 * (time - centerprint_expire), 1);
 
 	if(a <= 0)
 		return;
 
+	sz = 0.8 + (a / 5);
+
 	pos = centerprint_start;
 	for (i=0; i<centerprint_num; i = i + 1)
 	{
-		pos_x = (vid_conwidth - centerprint_width[i]) * 0.5;
 		ts = centerprint_messages[i];
+		drawfontscale = sz * '1 1 0';
+		drawfont = hud_bigfont;
+		pos_x = (vid_conwidth - stringwidth(ts, TRUE, centerprint_fontsize)) * 0.5;
 		if (ts != "")
 		{
-			drawcolorcodedstring(pos, ts, centerprint_fontsize, a, DRAWFLAG_NORMAL);
-			//  - '0 0.5 0' * (sz - 1) * centerprint_fontsize_x - '0.5 0 0' * (sz - 1) * centerprint_width[i] * centerprint_fontsize_y, centerprint_fontsize * sz
+			drawcolorcodedstring(pos + '0 1 0' * (1 - sz) * 0.5 *centerprint_fontsize_y, ts, centerprint_fontsize, a, DRAWFLAG_NORMAL);
 			pos_y = pos_y + centerprint_fontsize_y;
 		}
 		else
 			// half height for empty lines looks better
-			pos_y = pos_y + centerprint_fontsize_y * 0.5;
+			pos_y = pos_y + sz * centerprint_fontsize_y * 0.5;
+		drawfontscale = '1 1 0';
+		drawfont = hud_font;
 	}
 }
 
@@ -451,6 +446,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 		fputs(fh, strcat("seta hud_configure_grid \"", cvar_string("hud_configure_grid"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_configure_grid_xsize \"", cvar_string("hud_configure_grid_xsize"), "\"", "\n"));
 		fputs(fh, strcat("seta hud_configure_grid_ysize \"", cvar_string("hud_configure_grid_ysize"), "\"", "\n"));
+		fputs(fh, "\n");
+
+		fputs(fh, strcat("seta scr_centerpos \"", cvar_string("scr_centerpos"), "\"", "\n"));
 		fputs(fh, "\n");
 
 		// common cvars for all panels
@@ -2757,7 +2755,7 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't shoot your team mates!"));
 		} else if (type == DEATH_QUIET) {
 			// do nothing
-		} else if (type == DEATH_KILL) {
+		} else { // generic message
 			if(gentle)
 				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to be more careful!"));
 			else
@@ -2800,7 +2798,7 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 			} else {
 				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You fragged ^7", s1, s2));
 			}
-		} else if (type == KILL_FRAGGED) {
+		} else { // generic message
 			if(gentle) {
 				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were scored against by ^7", s1, s2));
 			} else {
@@ -4712,10 +4710,19 @@ void HUD_Main (void)
 {
 	hud_skin_path = strcat("gfx/hud/", autocvar_hud_skin);
 
+	// global hud alpha fade
 	if(disable_menu_alphacheck == 1)
-		menu_fade_alpha = 1;
+		hud_fade_alpha = 1;
 	else
-		menu_fade_alpha = (1 - autocvar__menu_alpha);
+		hud_fade_alpha = (1 - autocvar__menu_alpha);
+
+	if(scoreboard_fade_alpha)
+		hud_fade_alpha = (1 - scoreboard_fade_alpha);
+
+	if(intermission == 2) // no hud during mapvote
+		hud_fade_alpha = 0;
+	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
+		hud_fade_alpha = 1;
 
 	hud_border_thickness = bound(0, cvar("hud_border_thickness"), 5);
 	hud_accuracy_border_thickness = bound(0, cvar_or("hud_accuracy_border_thickness", 1), 5);
@@ -4769,7 +4776,7 @@ void HUD_Main (void)
 		if(precache_pic(pic) == "") {
 			pic = "gfx/hud/default/dock";
 		}
-		drawpic('0 0 0', pic, eX * vid_conwidth + eY * vid_conheight, color, autocvar_hud_dock_alpha * menu_fade_alpha, DRAWFLAG_NORMAL); // no aspect ratio forcing on dock...
+		drawpic('0 0 0', pic, eX * vid_conwidth + eY * vid_conheight, color, autocvar_hud_dock_alpha * hud_fade_alpha, DRAWFLAG_NORMAL); // no aspect ratio forcing on dock...
 	}
 
 	// cache the panel order into the panel_order array

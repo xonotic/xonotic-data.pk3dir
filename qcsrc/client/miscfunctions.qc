@@ -320,19 +320,6 @@ vector HUD_GetFontsize(string cvarname)
 	return v;
 }
 
-float HUD_GetWidth(float teamcolumnwidth)
-{
-	float f;
-	f = cvar("hud_width");
-	if(f == 0)
-		f = 640;
-	if(f < 320)
-		f = 320;
-	if(f > vid_conwidth - 2 * teamcolumnwidth)
-		f = vid_conwidth - 2 * teamcolumnwidth;
-	return f;
-}
-
 float PreviewExists(string name)
 {
 	float f;

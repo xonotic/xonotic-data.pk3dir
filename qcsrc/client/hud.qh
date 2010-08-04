@@ -1,5 +1,7 @@
 float log(float f);
 
+vector centerprint_start;
+
 float panel_order[HUD_PANEL_NUM];
 string hud_panelorder_prev;
 
@@ -46,7 +48,7 @@ const float S_CTRL = 2;
 const float S_ALT = 4;
 
 float disable_menu_alphacheck; // 0 = enable alpha check, 1 = disable for entire hud, 2 = disable for one panel
-float menu_fade_alpha;
+float hud_fade_alpha;
 
 string hud_skin_path;
 
@@ -162,7 +164,7 @@ if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel =
 } if(autocvar__hud_configure && !panel_enabled) {\
 	panel_bg_alpha = 0.25;\
 } if(!(disable_menu_alphacheck == 2 && highlightedPanel == active_panel)) {\
-	panel_bg_alpha *= menu_fade_alpha;\
+	panel_bg_alpha *= hud_fade_alpha;\
 }
 
 // Get value for panel_fg_alpha. Also do various minalpha checks
@@ -173,7 +175,7 @@ panel_fg_alpha = autocvar_hud_panel_fg_alpha;\
 if(autocvar__hud_configure && !panel_enabled)\
 	panel_fg_alpha = 0.25;\
 if(!(disable_menu_alphacheck == 2 && highlightedPanel == active_panel))\
-	panel_fg_alpha *= menu_fade_alpha;
+	panel_fg_alpha *= hud_fade_alpha;
 
 // Get border. See comments above, it's similar.
 #define HUD_Panel_GetBorder()\

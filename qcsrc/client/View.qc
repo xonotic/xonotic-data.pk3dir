@@ -623,11 +623,6 @@ void CSQC_UpdateView(float w, float h)
 			self.draw2d();
 	self = e;
 
-	// draw hud
-	if(cvar("r_letterbox") == 0) {
-		HUD_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
-	}
-
 	float hud;
 	hud = getstati(STAT_HUD);
 	if(hud == HUD_SPIDERBOT)
@@ -645,7 +640,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !camera_active) {
+		if(!scoreboard_active && !camera_active && intermission != 2) {
 			// TrueAim check
 			float shottype;
 			float bullets, ring_scale;
@@ -1204,23 +1199,29 @@ void CSQC_common_hud(void)
 					acc_lev[i] = stof(argv(i));
 			}
 
-			// hud first
-			HUD_Main();
+			HUD_Main(); // always run these functions for alpha checks
+			HUD_DrawScoreboard();
 
-			// scoreboard/accuracy
-			if (intermission == 2 && !scoreboard_showaccuracy && !scoreboard_showscores) // map voting screen
+			if (scoreboard_showscores || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1) // scoreboard/accuracy
+			{	
+				HUD_Reset();
+				// HUD_DrawScoreboard takes care of centerprint_start
+			}
+			else if (intermission == 2) // map voting screen
 			{
 				HUD_FinaleOverlay();
 				HUD_Reset();
+
+				centerprint_start_x = 0;
+				centerprint_start_y = cvar("scr_centerpos") * vid_conheight;
 			}
-			else if(scoreboard_showaccuracy && spectatee_status != -1)
-				HUD_DrawAccuracyStats();
-			else
-				HUD_DrawScoreboard();
+			else // hud
+			{
+				centerprint_start_x = 0;
+				centerprint_start_y = cvar("scr_centerpos") * vid_conheight;
+			}
 
-			if (scoreboard_showscores || scoreboard_showaccuracy || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
-				HUD_Reset();
-
+			HUD_DrawCenterPrint();
 			break;
 
 		case HUD_SPIDERBOT:

@@ -877,7 +877,7 @@ float HUD_WouldDrawScoreboard() {
 		return 1;
 	else if (intermission == 1)
 		return 1;
-	else if (intermission == 2)
+	else if (intermission == 2 && scoreboard_showscores)
 		return 1;
 	else if (getstati(STAT_HEALTH) <= 0 && cvar("cl_deathscoreboard"))
 		return 1;
@@ -907,7 +907,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	}
 
 	drawstring(pos, strcat("Accuracy stats (average ", ftos(average_accuracy), "%)"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	pos_y += 18;
+	pos_y += 1.25 * hud_fontsize_y;
 	vector tmp;
 	tmp_x = sbwidth;
 	tmp_y = height * rows;
@@ -1006,6 +1006,8 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		pos_x -= sbwidth/weapon_cnt / 2;
 	pos_x -= sbwidth;
 	pos_y += height;
+
+	pos_y +=  1.25 * hud_fontsize_y;
 	return pos;
 }
 
@@ -1054,13 +1056,12 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		drawstring(pos, p, hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		drawstring(pos + '3 0 0' * hud_fontsize_x, TIME_ENCODED_TOSTRING(t), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		drawcolorcodedstring(pos + '8 0 0' * hud_fontsize_x, n, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-		pos += '0 1 0' * hud_fontsize_y;
+		pos_y += 1.25 * hud_fontsize_y;
 	}
 
 	return pos;
 }
 
-float scoreboard_fade_alpha;
 float hud_woulddrawscoreboard_prev;
 float hud_woulddrawscoreboard_change; // "time" at which HUD_WouldDrawScoreboard() changed
 void HUD_DrawScoreboard()
@@ -1102,13 +1103,11 @@ void HUD_DrawScoreboard()
 	vector rgb, pos, tmp;
 	entity pl, tm;
 
-	sbwidth = HUD_GetWidth(6.5 * hud_fontsize_y);
+	xmin = cvar("scoreboard_offset_left") * vid_conwidth;
+	ymin = cvar("con_notify") * cvar("con_notifysize");
 
-	xmin = 0.5 * (vid_conwidth - sbwidth);
-	ymin = SCOREBOARD_OFFSET;
-
-	xmax = vid_conwidth - xmin;
-	ymax = vid_conheight - 0.2*vid_conheight;
+	sbwidth = xmax = vid_conwidth - xmin - cvar("scoreboard_offset_right") * vid_conwidth;
+	ymax = vid_conheight - ymin;
 
 	// Initializes position
 	pos_x = xmin;
@@ -1117,10 +1116,12 @@ void HUD_DrawScoreboard()
 
 	// Heading
 	drawfont = hud_bigfont;
-	drawstringcenter('0 1 0' * ymin, "Scoreboard", '24 24 0', '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(pos, "Scoreboard", '24 24 0', '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	
+	centerprint_start_x = vid_conwidth - 0.5 * (pos_x + stringwidth("Scoreboard", FALSE, '24 24 0'));
+	centerprint_start_y = pos_y;
 
-	pos_y += 24 + 4;
-	pos_y += hud_fontsize_y;
+	pos_y += 24;
 
 	drawfont = hud_font;
 
@@ -1177,23 +1178,24 @@ void HUD_DrawScoreboard()
 			pos = HUD_DrawScoreboardAccuracyStats(pos, rgb, bg_size);
 	}
 
-	tmp = pos + '0 1.5 0' * hud_fontsize_y;
-	pos_y += 3 * hud_fontsize_y;
-
 	// List spectators
 	float specs;
 	specs = 0;
+	tmp = pos;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		if(pl.team != COLOR_SPECTATOR)
 			continue;
-		HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), specs);
 		pos_y += 1.25 * hud_fontsize_y;
+		HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), specs);
 		++specs;
 	}
 
 	if(specs)
+	{
 		drawstring(tmp, "Spectators", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+		pos_y += 1.25 * hud_fontsize_y;
+	}
 
 	// Print info string
 	string str;
