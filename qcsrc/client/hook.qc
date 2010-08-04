@@ -126,7 +126,7 @@ void Draw_GrapplingHook()
 		default:
 		case ENT_CLIENT_HOOK:
 			intensity = 1;
-			offset = Noise_White(self, frametime);
+			offset = 0;
 			if(t == COLOR_TEAM1)
 			{
 				tex = "particles/hook_red";
