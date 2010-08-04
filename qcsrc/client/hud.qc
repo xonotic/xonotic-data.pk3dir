@@ -2851,7 +2851,7 @@ void HUD_Notify (void)
 	float width_attacker;
 	string attacker, victim;
 
-	float i, j;
+	float i, j, w;
 	for(j = 0; j < entries; ++j)
 	{
 		s = "";
@@ -2875,7 +2875,7 @@ void HUD_Notify (void)
 				a = 0;
 		}
 
-		float w;
+		w = -1;
 		w = DEATH_WEAPONOF(killnotify_deathtype[j]);
 
 		// TODO: maybe print in team colors?
