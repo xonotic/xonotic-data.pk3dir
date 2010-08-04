@@ -67,7 +67,7 @@ void WarpZoneLib_ExactTrigger_Init()
 		makevectors (self.angles);
 		self.movedir = v_forward;
 	}
-	self.WarpZone_isboxy = 1;
+	self.warpzone_isboxy = 1;
  	if(self.model != "")
  	{
 		mi = self.mins;
@@ -81,7 +81,7 @@ void WarpZoneLib_ExactTrigger_Init()
 			self.maxs = ma;
 		}
 		else
-			self.WarpZone_isboxy = 0; // enable exacttrigger matching
+			self.warpzone_isboxy = 0; // enable exacttrigger matching
  	}
 	setorigin(self, self.origin);
 	if(self.scale)

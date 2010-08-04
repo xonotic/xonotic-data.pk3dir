@@ -7,7 +7,7 @@ void WarpZone_Read(float isnew)
 	}
 	self.classname = "trigger_warpzone";
 
-	self.WarpZone_isboxy = ReadByte();
+	self.warpzone_isboxy = ReadByte();
 	self.origin_x = ReadCoord();
 	self.origin_y = ReadCoord();
 	self.origin_z = ReadCoord();
