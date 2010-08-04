@@ -284,7 +284,7 @@ void HUD_DrawCenterPrint (void)
 
 	sz = 0.8 + (a / 5);
 
-	if(centerprint_num > 1 && HUD_WouldDrawScoreboard())
+	if(centerprint_num * cvar("scr_centersize") > 24 && HUD_WouldDrawScoreboard()) // 24 = height of Scoreboard text
 	{
 		centerprint_start_y = scoreboard_bottom + centerprint_fontsize_y;
 	}
