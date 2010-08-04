@@ -154,7 +154,7 @@ void WarpZone_FixView()
 	warpzone_saved_angles = warpzone_fixview_angles;
 	warpzone_saved_cl_viewangles = warpzone_fixview_cl_viewangles;
 
-	nearclip = '0 0 1' * (cvar("r_nearclip") * cvar("cl_warpzonenudge"));
+	nearclip = '0 0 1' * (cvar("r_nearclip") * 1.125);
 	corner0 = cs_unproject('0 0 0' + nearclip);
 	corner1 = cs_unproject('1 0 0' * cvar("vid_conwidth") + nearclip);
 	corner2 = cs_unproject('0 1 0' * cvar("vid_conheight") + nearclip);
