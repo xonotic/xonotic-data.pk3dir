@@ -946,6 +946,10 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 	HUD_Panel_UpdatePosSizeForId(highlightedPanel)
 
+	vector prev_pos, prev_size;
+	prev_pos = panel_pos;
+	prev_size = panel_size;
+
 	if (hudShiftState & S_ALT) // resize
 	{
 		highlightedAction = 1;
@@ -999,6 +1003,16 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 		HUD_Panel_SetPos(pos);
 	}
+
+	HUD_Panel_UpdatePosSizeForId(highlightedPanel)
+
+	if (prev_pos != panel_pos || prev_size != panel_size)
+	{
+		// backup!
+		panel_pos_backup = prev_pos;
+		panel_size_backup = prev_size;
+		highlightedPanel_backup = highlightedPanel;
+	}
 }
 
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
@@ -1049,6 +1063,66 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		menu_enabled = 1;
 		menu_enabled_time = time;
 		localcmd("menu_showhudexit\n");
+	}
+	else if(hudShiftState & S_CTRL)
+	{
+		if (mouseClicked)
+			return true;
+
+		if(nPrimary == K_SPACE) // enable/disable highlighted panel or dock
+		{
+			if (bInputType == 1)
+				return true;
+
+			if (highlightedPanel_prev != -1)
+				cvar_set(strcat("hud_panel_", panel_name), ftos(!(panel_enabled)));
+			else
+				cvar_set(strcat("hud_dock"), (autocvar_hud_dock == "") ? "dock" : "");
+		}
+		if(nPrimary == 'c') // copy highlighted panel size
+		{
+			if (bInputType == 1)
+				return true;
+
+			if (highlightedPanel_prev != -1)
+			{
+				panel_size_copied = panel_size;
+				highlightedPanel_copied = highlightedPanel_prev;
+			}
+		}
+		else if(nPrimary == 'v') // past copied size on the highlighted panel
+		{
+			if (bInputType == 1)
+				return true;
+
+			if (highlightedPanel_copied != -1 && highlightedPanel_prev != -1)
+			{
+				// backup first!
+				panel_pos_backup = panel_pos;
+				panel_size_backup = panel_size;
+				highlightedPanel_backup = highlightedPanel_prev;
+
+				string s;
+				s = strcat(ftos(panel_size_copied_x/vid_conwidth), " ", ftos(panel_size_copied_y/vid_conheight));
+				cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
+			}
+		}
+		else if(nPrimary == 'z') // undo last action
+		{
+			if (bInputType == 1)
+				return true;
+			//restore previous values
+			if (highlightedPanel_backup != -1)
+			{
+				HUD_Panel_GetName(highlightedPanel_backup)
+				string s;
+				s = strcat(ftos(panel_pos_backup_x/vid_conwidth), " ", ftos(panel_pos_backup_y/vid_conheight));
+				cvar_set(strcat("hud_panel_", panel_name, "_pos"), s);
+				s = strcat(ftos(panel_size_backup_x/vid_conwidth), " ", ftos(panel_size_backup_y/vid_conheight));
+				cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
+				highlightedPanel_backup = -1;
+			}
+		}
 	}
 	else if(nPrimary == K_UPARROW || nPrimary == K_DOWNARROW || nPrimary == K_LEFTARROW || nPrimary == K_RIGHTARROW)
 	{
@@ -1232,6 +1306,7 @@ void HUD_Panel_Highlight()
 }
 
 float highlightcheck;
+float would_backup;
 void HUD_Panel_Mouse()
 {
 	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
@@ -1260,8 +1335,20 @@ void HUD_Panel_Mouse()
 
 	if(mouseClicked)
 	{
+		vector prev_pos, prev_size;
 		if(prevMouseClicked == 0)
+		{
 			HUD_Panel_Highlight(); // sets highlightedPanel, highlightedAction, panel_click_distance, panel_click_resizeorigin
+									// and calls HUD_Panel_UpdatePosSizeForId() for the highlighted panel
+			would_backup = TRUE;
+		}
+		else if (would_backup)
+		{
+			// this is not the actual backup! Saving pos and size values
+			// only to check later if they are different from new values
+			prev_pos = panel_pos;
+			prev_size = panel_size;
+		}
 
 		hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
 
@@ -1284,6 +1371,18 @@ void HUD_Panel_Mouse()
 				mySize_y = mousepos_y - (panel_click_resizeorigin_y - panel_click_distance_y);
 			}
 			HUD_Panel_SetPosSize(mySize);
+		}
+
+		HUD_Panel_UpdatePosSizeForId(highlightedPanel)
+		if (prevMouseClicked)
+		if (would_backup)
+		if (prev_pos != panel_pos || prev_size != panel_size)
+		{
+			// backup!
+			panel_pos_backup = prev_pos;
+			panel_size_backup = prev_size;
+			highlightedPanel_backup = highlightedPanel;
+			would_backup = FALSE;
 		}
 
 		// doubleclick check
@@ -1391,14 +1490,52 @@ void HUD_Weapons(void)
 	if(!autocvar_hud_panel_weapons && !autocvar__hud_configure)
 		return;
 
+	float timeout = cvar("hud_panel_weapons_timeout");
+	float timeout_effect_lenght;
+	if (cvar("hud_panel_weapons_timeout_effect") == 0)
+		timeout_effect_lenght = 0;
+	else
+		timeout_effect_lenght = 0.75;
+
+	if (timeout && time >= weapontime + timeout + timeout_effect_lenght && !autocvar__hud_configure)
+		return;
+
 	active_panel = HUD_PANEL_WEAPONS;
 	HUD_Panel_UpdateCvars(weapons);
-	vector pos, mySize;
+
+	if (timeout && time >= weapontime + timeout && !autocvar__hud_configure)
+	{
+		float f = (time - (weapontime + timeout)) / timeout_effect_lenght;
+		if (cvar("hud_panel_weapons_timeout_effect") == 2)
+		{
+			panel_bg_alpha *= (1 - f);
+			panel_fg_alpha *= (1 - f);
+		}
+		else
+		{
+			f *= f; // for a cooler movement
+			vector center;
+			center_x = panel_pos_x + panel_size_x/2;
+			center_y = panel_pos_y + panel_size_y/2;
+			float screen_ar = vid_conwidth/vid_conheight;
+			if (center_x/center_y < screen_ar) //bottom left
+			{
+				if ((vid_conwidth - center_x)/center_y < screen_ar) //bottom
+					panel_pos_y += f * (vid_conheight - panel_pos_y);
+				else //left
+					panel_pos_x -= f * (panel_pos_x + panel_size_x);
+			}
+			else //top right
+			{
+				if ((vid_conwidth - center_x)/center_y < screen_ar) //right
+					panel_pos_x += f * (vid_conwidth - panel_pos_x);
+				else //top
+					panel_pos_y -= f * (panel_pos_y + panel_size_y);
+			}
+		}
+	}
+
 	float i, weapid, fade, weapon_stats, weapon_number, weapon_cnt;
-
-	pos = panel_pos;
-	mySize = panel_size;
-
 	weapon_cnt = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -1431,8 +1568,8 @@ void HUD_Weapons(void)
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{
-		pos += '1 1 0' * panel_bg_padding;
-		mySize -= '2 2 0' * panel_bg_padding;
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
 	// hits
@@ -1455,7 +1592,7 @@ void HUD_Weapons(void)
 	HUD_Weapons_Clear();
 
 	float rows, columns;
-	rows = mySize_y/mySize_x;
+	rows = panel_size_y/panel_size_x;
 	rows = bound(1, floor((sqrt(4 * autocvar_hud_panel_weapons_aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
 
 	columns = ceil(WEP_COUNT/rows);
@@ -1473,8 +1610,8 @@ void HUD_Weapons(void)
 
 	for(i = 0; i < weapon_cnt; ++i)
 	{
-		wpnpos = pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
-		wpnsize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+		wpnpos = panel_pos + eX * column * panel_size_x*(1/columns) + eY * row * panel_size_y*(1/rows);
+		wpnsize = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
 
 		self = weaponorder[i];
 		weapid = self.impulse;
@@ -1516,9 +1653,9 @@ void HUD_Weapons(void)
 			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			if(autocvar_hud_panel_weapons_label == 1) // weapon number
-				drawstring(wpnpos, ftos(weapid), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring(wpnpos, ftos(weapid), '1 1 0' * 0.5 * panel_size_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 			else if(autocvar_hud_panel_weapons_label == 2) // bind
-				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * mySize_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * panel_size_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw ammo status bar
 			if(autocvar_hud_panel_weapons_ammo && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
@@ -1851,22 +1988,23 @@ void HUD_Powerups(void) {
 	pos = panel_pos;
 	mySize = panel_size;
 
-	float strength_time, shield_time;
-
-	strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
-	shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
+ 	float strength_time, shield_time;
+	if(autocvar__hud_configure)
+	{
+		strength_time = 15;
+		shield_time = 27;
+	}
+	else
+	{
+		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
+		shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
+	}
 
 	HUD_Panel_DrawBg(bound(0, max(strength_time, shield_time), 1));
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
 		mySize -= '2 2 0' * panel_bg_padding;
-	}
-
-	if(autocvar__hud_configure)
-	{
-		strength_time = 15;
-		shield_time = 27;
 	}
 
 	vector barpos, barsize;

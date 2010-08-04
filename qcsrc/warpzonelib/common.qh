@@ -3,6 +3,7 @@
 
 const void func_null(void); // never assign to this one please
 
+.float warpzone_isboxy;
 .vector warpzone_shift;
 .vector warpzone_origin;
 .vector warpzone_angles;
