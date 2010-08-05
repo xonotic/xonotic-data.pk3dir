@@ -187,6 +187,11 @@ void spawnfunc_func_assault_destructible() {
 		return;
 	}
 	self.spawnflags = 3;
+	if(assault_attacker_team == COLOR_TEAM1) {
+		self.team = COLOR_TEAM2;
+	} else {
+		self.team = COLOR_TEAM1;
+	}
 	spawnfunc_func_breakable();
 }
 
