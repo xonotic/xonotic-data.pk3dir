@@ -70,7 +70,7 @@ void assault_objective_decrease_use() {
 		return;
 	}
 
-	if(other.assault_sprite.classname == "sprite_waypoint")
+	if(other.assault_sprite)
 		WaypointSprite_Disown(other.assault_sprite, waypointsprite_deadlifetime);
 	else
 		return; // already activated! cannot activate again!
