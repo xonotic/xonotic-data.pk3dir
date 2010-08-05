@@ -20,6 +20,7 @@ void XonoticMultiplayerDialog_fill(entity me)
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, "Create",  makeXonoticServerCreateTab()));
 			setDependentStringNotEqual(e, "_cl_name", "Player");
 		me.TD(me, 1, 1, mc.makeTabButton(mc, "Demos",   makeXonoticDemoBrowserTab()));
+		me.TD(me, 1, 1, mc.makeTabButton(mc, "Screenshots",   makeXonoticScreenshotBrowserTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, "Player Setup",  makeXonoticPlayerSettingsTab()));
 			if(cvar_string("_cl_name") == "Player")
 				e.onClick(e, e.onClickEntity); // lol animation

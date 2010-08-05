@@ -1,6 +1,7 @@
 #ifdef INTERFACE
 CLASS(MainWindow) EXTENDS(ModalController)
 	METHOD(MainWindow, configureMainWindow, void(entity))
+	ATTRIB(MainWindow, screenshotViewerDialog, entity, NULL)
 	ATTRIB(MainWindow, advancedDialog, entity, NULL)
 	ATTRIB(MainWindow, mutatorsDialog, entity, NULL)
 	ATTRIB(MainWindow, weaponsDialog, entity, NULL)
@@ -94,6 +95,10 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	i = spawnXonoticHUDInfoMessagesDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	me.screenshotViewerDialog = i = spawnXonoticScreenshotViewerDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
