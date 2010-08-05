@@ -70,7 +70,7 @@ void assault_objective_decrease_use() {
 		return;
 	}
 
-	if(other.assault_sprite.classname == "assault_decreaser_sprite")
+	if(other.assault_sprite.classname == "sprite_waypoint")
 		WaypointSprite_Disown(other.assault_sprite, waypointsprite_deadlifetime);
 	else
 		return; // already activated! cannot activate again!
@@ -142,7 +142,7 @@ void target_objective_decrease_activate()
 		spr = WaypointSprite_SpawnFixed("<placeholder>", 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite);
 		spr.assault_decreaser = self;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
-		spr.classname = "assault_decreaser_sprite";
+		spr.classname = "sprite_waypoint";
 		WaypointSprite_UpdateRule(spr, assault_attacker_team, SPRITERULE_TEAMPLAY);
 		if(ent.classname == "func_assault_destructible")
 			WaypointSprite_UpdateSprites(spr, "as-defend", "as-destroy", "as-destroy");
