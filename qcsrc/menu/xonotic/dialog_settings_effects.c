@@ -32,6 +32,7 @@ float someShadowCvarIsEnabled(entity box)
 
 float updateCompression()
 {
+	float fh;
 	float have_dds, have_jpg, have_tga;
 	if((have_dds = (fh = fopen("dds/particles/particlefont.dds", FILE_READ) >= 0)))
 		fclose(fh);
