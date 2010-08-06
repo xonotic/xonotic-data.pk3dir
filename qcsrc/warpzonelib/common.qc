@@ -113,7 +113,7 @@ float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 {
     float f, s;
 
-    if not(e.modelindex)
+    if(!e.modelindex || e.warpzone_isboxy)
         return 1;
 
     s = e.solid;
