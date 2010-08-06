@@ -15,16 +15,15 @@ FTEQCCFLAGS_MENU ?=
 # It will automagically add an engine check with -TID and then change back to -TFTE
 FTEQCCFLAGS_CSPROGS ?= 
 
-# xonotic svn build system overrides this by command line argument
-NEX_BUILDSYSTEM =
+# xonotic build system overrides this by command line argument to turn off the update-cvarcount step
+XON_BUILDSYSTEM =
 
 all: qc
 
 .PHONY: update-cvarcount
 update-cvarcount:
-	[ "$(NEX_BUILDSYSTEM)" = "" ] || [ "$(NEX_BUILDSYSTEM)" = "1" ]
-	[ "$(NEX_BUILDSYSTEM)" != "" ] || { ! [ -f ../misc/netradiant-XonoticPack/xonotic.game/data/entities.def ] || $(DIFF) scripts/entities.def ../misc/netradiant-XonoticPack/xonotic.game/data/entities.def || { echo entities.def mismatch, please merge ../misc/netradiant-XonoticPack/xonotic.game/data/entities.def and scripts/entities.def; exit 1; }; }
-	[ "$(NEX_BUILDSYSTEM)" != "" ] || { DO_NOT_RUN_MAKE=1 sh update-cvarcount.sh; }
+	[ "$(XON_BUILDSYSTEM)" = "" ] || [ "$(XON_BUILDSYSTEM)" = "1" ]
+	[ "$(XON_BUILDSYSTEM)" = "1" ] || { DO_NOT_RUN_MAKE=1 sh update-cvarcount.sh; }
 
 .PHONY: qc
 qc: update-cvarcount
