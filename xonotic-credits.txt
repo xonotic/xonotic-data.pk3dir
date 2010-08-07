@@ -1,8 +1,8 @@
 **Core Team
 
-divVerent
+Rudolf "divVerent" Polzer
 -z-
-merlijn
+Merlijn Hofstra
 morphed
 mand1nga
 tZork
@@ -25,13 +25,13 @@ FruitieX
 
 *Music / Sound FX
 mand1nga
-merlijn
+Merlijn Hofstra
 
 *Engine Code Additions & QA
-divVerent
+Rudolf "divVerent" Polzer
 
 *Game Code
-divVerent
+Rudolf "divVerent" Polzer
 FruitieX
 tZork
 
@@ -40,8 +40,8 @@ tZork
 mand1nga
 
 *Legal
-divVerent
-merlijn
+Rudolf "divVerent" Polzer
+Merlijn Hofstra
 
 **Game Engine
 DarkPlaces
