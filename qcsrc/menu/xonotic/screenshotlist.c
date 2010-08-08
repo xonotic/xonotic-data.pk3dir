@@ -49,34 +49,58 @@ void XonoticScreenshotList_configureXonoticScreenshotList(entity me)
 string XonoticScreenshotList_screenshotName(entity me, float i )
 {
 	string s;
-	s = search_getfilename(me.listScreenshot, i);
-	s = substring(s, 12, strlen(s) - 12 - 4);  // screenshots/, .jpg
+	s = bufstr_get(me.listScreenshot, i);
+	s = substring(s, 12, strlen(s) - 12 - 4);  // screenshots/, .<ext>
 	return s;
+}
+
+// if subdir is TRUE look in subdirectories too (1 level)
+void getScreenshots_for_ext(entity me, string ext, float subdir)
+{
+	string s;
+	if (subdir)
+		s="screenshots/*/";
+	else
+		s="screenshots/";
+	if(me.filterString)
+		s=strcat(s, me.filterString, ext);
+	else
+		s=strcat(s, "*", ext);
+
+	float list, i, n;
+	list = search_begin(s, FALSE, TRUE);
+	if(list >= 0)
+	{
+		n = search_getsize(list);
+		for(i = 0; i < n; ++i)
+			bufstr_add(me.listScreenshot, search_getfilename(list, i), TRUE);
+		search_end(list);
+	}
+
+	if (subdir)
+		getScreenshots_for_ext(me, ext, FALSE);
 }
 
 void XonoticScreenshotList_getScreenshots(entity me)
 {
-	string s;
-
-	if(me.filterString)
-		//subdirectory in filterString allowed	
-		s=strcat("screenshots/", me.filterString, ".jpg");
-	else
-		s="screenshots/*.jpg";
-
-	//dprint("Search screenshots with the pattern ", s, "\n");
-	if(me.listScreenshot >= 0)
-		search_end(me.listScreenshot);
-	me.listScreenshot = search_begin(s, FALSE, TRUE);
-	if(me.listScreenshot < 0)
-		me.nItems=0;
-	else
-		me.nItems=search_getsize(me.listScreenshot);
+	if (me.listScreenshot >= 0)
+		buf_del(me.listScreenshot);
+	me.listScreenshot = buf_create();
+	if (me.listScreenshot < 0)
+	{
+		me.nItems = 0;
+		return;
+	}
+	getScreenshots_for_ext(me, ".jpg", TRUE);
+	getScreenshots_for_ext(me, ".tga", TRUE);
+	getScreenshots_for_ext(me, ".png", TRUE);
+	me.nItems = buf_getsize(me.listScreenshot);
+	buf_sort(me.listScreenshot, 128, FALSE);
 }
 
 void XonoticScreenshotList_destroy(entity me)
 {
-	search_end(me.listScreenshot);
+	buf_del(me.listScreenshot);
 }
 
 void XonoticScreenshotList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
