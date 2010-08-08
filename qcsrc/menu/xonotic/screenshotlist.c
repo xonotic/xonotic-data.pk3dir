@@ -60,7 +60,7 @@ void XonoticScreenshotList_getScreenshots(entity me)
 
 	if(me.filterString)
 		//subdirectory in filterString allowed	
-		s=strcat("screenshots/*", me.filterString, "*.jpg");
+		s=strcat("screenshots/", me.filterString, ".jpg");
 	else
 		s="screenshots/*.jpg";
 
@@ -114,7 +114,12 @@ void ScreenshotList_Filter_Change(entity box, entity me)
 		strunzone(me.filterString);
 
 	if(box.text != "")
-		me.filterString = strzone(box.text);
+	{
+		if (strstrofs(box.text, "*", 0) >= 0 || strstrofs(box.text, "?", 0) >= 0)
+			me.filterString = strzone(box.text);
+		else
+			me.filterString = strzone(strcat("*", box.text, "*"));
+	}
 	else
 		me.filterString = string_null;
 
