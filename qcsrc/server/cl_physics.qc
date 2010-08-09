@@ -34,8 +34,11 @@ float sv_airspeedlimit_nonqw;
 .float spectatorspeed;
 
 .float multijump_count;
-.float multijump_delay;
 .float multijump_ready;
+.float prevjumpbutton;
+
+.float prevtopspeed; // store the top speed during the last 0.25 seconds to make dodging at full speeds easier
+.float prevtopspeed_time;
 
 /*
 =============
@@ -72,19 +75,14 @@ void PlayerJump (void)
 
 	if (cvar("g_multijump"))
 	{
-		if ((self.flags & FL_JUMPRELEASED) && !(self.flags & FL_ONGROUND))
+		if (self.prevjumpbutton == FALSE && !(self.flags & FL_ONGROUND)) // jump button pressed this frame and we are in midair
 			self.multijump_ready = TRUE;  // this is necessary to check that we released the jump button and pressed it again
-		else if (self.flags & FL_ONGROUND)
-		{
-			if (cvar("g_multijump") > 0)
-				self.multijump_count = 0;
-			else
-				self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
+		else
 			self.multijump_ready = FALSE;
-		}
 	}
 
-	if(self.multijump_ready && time > self.multijump_delay && self.multijump_count < cvar("g_multijump") && self.velocity_z > cvar("g_multijump_speed"))
+	print("self.multijump_ready = ", ftos(self.multijump_ready), "self.multijump_count = ", ftos(self.multijump_count), "\n");
+	if(self.multijump_ready && self.multijump_count < cvar("g_multijump") && self.velocity_z > cvar("g_multijump_speed"))
 	{
 		if (cvar("g_multijump") > 0)
 		{
@@ -95,7 +93,7 @@ void PlayerJump (void)
 			wishvel = v_forward * self.movement_x + v_right * self.movement_y + '0 0 1' * self.movement_z;
 			wishdir = normalize(wishvel);
 			if(wishdir_x != 0 && wishdir_y != 0) // don't remove all speed if player isnt pressing any movement keys
-				self.velocity = ('1 0 0' * wishdir_x + '0 1 0' * wishdir_y) * vlen(self.velocity); // allow "dodging" at a multijump
+				self.velocity = ('1 0 0' * wishdir_x + '0 1 0' * wishdir_y) * self.prevtopspeed; // allow "dodging" at a multijump
 
 			self.multijump_count += 1;
 		}
@@ -181,9 +179,6 @@ void PlayerJump (void)
 
 	self.flags &~= FL_ONGROUND;
 	self.flags &~= FL_JUMPRELEASED;
-
-	if (cvar("g_multijump"))
-		self.multijump_delay = time + cvar("g_multijump_delay");
 
 	if (self.crouch)
 		setanim(self, self.anim_duckjump, FALSE, TRUE, TRUE);
@@ -691,6 +686,12 @@ void SV_PlayerPhysics()
 	float not_allowed_to_move;
 	string c;
 
+	if(vlen(self.velocity) >= self.prevtopspeed || time - self.prevtopspeed_time > 0.25)
+	{
+		self.prevtopspeed_time = time;
+		self.prevtopspeed = vlen('1 0 0' * self.velocity_x + '0 1 0' * self.velocity_y);
+	}
+	
 	// fix physics stats for g_movement_highspeed
 	self.stat_sv_airaccel_qw = AdjustAirAccelQW(sv_airaccel_qw, autocvar_g_movement_highspeed);
 	if(sv_airstrafeaccel_qw)
@@ -935,6 +936,14 @@ void SV_PlayerPhysics()
 
 	if(self.classname == "player")
 	{
+		if(self.flags & FL_ONGROUND)
+		{
+			if (cvar("g_multijump") > 0)
+				self.multijump_count = 0;
+			else
+				self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
+		}
+
 		if (self.BUTTON_JUMP)
 			PlayerJump ();
 		else
@@ -942,6 +951,7 @@ void SV_PlayerPhysics()
 
 		if (self.waterlevel == WATERLEVEL_SWIMMING)
 			CheckWaterJump ();
+		self.prevjumpbutton = self.BUTTON_JUMP;
 	}
 
 	if (self.flags & FL_WATERJUMP )
