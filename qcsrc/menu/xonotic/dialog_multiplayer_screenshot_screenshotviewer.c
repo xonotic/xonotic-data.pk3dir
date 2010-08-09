@@ -52,6 +52,12 @@ float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, f
 			me.scrList.goScreenshot(me.scrList, +1);
 			return 1;
 		default:
+			if (me.scrList.keyDown(me.scrList, key, ascii, shift))
+			{
+				// keyDown has already changed the selected item
+				me.scrList.goScreenshot(me.scrList, 0);
+				return 1;
+			}
 			return SUPER(XonoticScreenshotViewerDialog).keyDown(me, key, ascii, shift);
 	}
 }
