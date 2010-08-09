@@ -15,7 +15,6 @@ void Drag_MoveDrag(entity from, entity to) { }
 
 .float maycheat;
 float sv_cheats;
-float autocvar_sv_cheats;
 
 #define CHIMPULSE_SPEEDRUN_INIT 30
 #define CHIMPULSE_GIVE_ALL 99
@@ -230,11 +229,8 @@ float CheatImpulse(float i)
 			IS_CHEAT(i, 0, 0);
 			FOR_EACH_PLAYER(e)
 			{
-				if( e.playermodel == "models/player/jeandarc.zym"
-						||  e.playermodel == "models/player/pyria.zym"
-						||  e.playermodel == "models/player/skadi.zym"
-						|| (e.playermodel == "models/player/specop.zym" && random() < 0.5) // you never know
-						||  e.playermodel == "models/player/visitant.zym")
+				get_model_parameters(e.playermodel, e.skinindex);
+				if(get_model_parameters_sex == "Female")
 				{
 					makevectors(e.angles);
 					traceline(e.origin, e.origin + v_right * 256, MOVE_NORMAL, e);
@@ -657,7 +653,7 @@ float CheatCommand(float argc)
 			if(self.movetype != MOVETYPE_FLY)
 			{
 				self.movetype = MOVETYPE_FLY;
-				sprint(self, "flmodey ON\n");
+				sprint(self, "flymode ON\n");
 				DID_CHEAT();
 			}
 			else

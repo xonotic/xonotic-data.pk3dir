@@ -9,7 +9,7 @@ CLASS(Container) EXTENDS(Item)
 	METHOD(Container, mouseRelease, float(entity, vector))
 	METHOD(Container, focusLeave, void(entity))
 	METHOD(Container, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(Container, resizeNotifyLie, void(entity, vector, vector, vector, vector, .vector, .vector))
+	METHOD(Container, resizeNotifyLie, void(entity, vector, vector, vector, vector, .vector, .vector, .vector))
 	METHOD(Container, addItem, void(entity, entity, vector, vector, float))
 	METHOD(Container, addItemCentered, void(entity, entity, vector, float))
 	METHOD(Container, moveItemAfter, void(entity, entity, entity))
@@ -25,6 +25,10 @@ CLASS(Container) EXTENDS(Item)
 	ATTRIB(Container, lastChild, entity, NULL)
 	ATTRIB(Container, focusedChild, entity, NULL)
 	ATTRIB(Container, shown, float, 0)
+
+	METHOD(Container, enterSubitem, void(entity, entity))
+	METHOD(Container, enterLieSubitem, void(entity, vector, vector, vector, float))
+	METHOD(Container, leaveSubitem, void(entity))
 ENDCLASS(Container)
 .entity nextSibling;
 .entity prevSibling;
@@ -33,10 +37,41 @@ ENDCLASS(Container)
 .vector Container_size;
 .vector Container_fontscale;
 .float Container_alpha;
+.vector Container_save_shift;
+.vector Container_save_scale;
+.vector Container_save_fontscale;
+.float Container_save_alpha;
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyContainer(entity me)
+void Container_enterSubitem(entity me, entity sub)
+{
+	me.enterLieSubitem(me, sub.Container_origin, sub.Container_size, sub.Container_fontscale, sub.Container_alpha);
+}
+
+void Container_enterLieSubitem(entity me, vector o, vector s, vector f, float a)
+{
+	me.Container_save_shift = draw_shift;
+	me.Container_save_scale = draw_scale;
+	me.Container_save_alpha = draw_alpha;
+	me.Container_save_fontscale = draw_fontscale;
+
+	draw_shift = boxToGlobal(o, draw_shift, draw_scale);
+	draw_scale = boxToGlobalSize(s, draw_scale);
+	if(f != '0 0 0')
+		draw_fontscale = boxToGlobalSize(f, draw_fontscale);
+	draw_alpha *= a;
+}
+
+void Container_leaveSubitem(entity me)
+{
+	draw_shift = me.Container_save_shift;
+	draw_scale = me.Container_save_scale;
+	draw_alpha = me.Container_save_alpha;
+	draw_fontscale = me.Container_save_fontscale;
+}
+
+void Container_showNotify(entity me)
 {
 	entity e;
 	if(me.shown)
@@ -47,7 +82,7 @@ void showNotifyContainer(entity me)
 			e.showNotify(e);
 }
 
-void hideNotifyContainer(entity me)
+void Container_hideNotify(entity me)
 {
 	entity e;
 	if not(me.shown)
@@ -58,7 +93,7 @@ void hideNotifyContainer(entity me)
 			e.hideNotify(e);
 }
 
-void setAlphaOfContainer(entity me, entity other, float theAlpha)
+void Container_setAlphaOf(entity me, entity other, float theAlpha)
 {
 	if(theAlpha <= 0)
 	{
@@ -73,7 +108,7 @@ void setAlphaOfContainer(entity me, entity other, float theAlpha)
 	other.Container_alpha = theAlpha;
 }
 
-void resizeNotifyLieContainer(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize, .vector originField, .vector sizeField)
+void Container_resizeNotifyLie(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize, .vector originField, .vector sizeField, .vector fontScaleField)
 {
 	entity e;
 	vector o, s;
@@ -82,7 +117,9 @@ void resizeNotifyLieContainer(entity me, vector relOrigin, vector relSize, vecto
 	{
 		o = e.originField;
 		s = e.sizeField;
+		me.enterLieSubitem(me, o, s, e.fontScaleField, e.Container_alpha);
 		e.resizeNotify(e, o, s, boxToGlobal(o, absOrigin, absSize), boxToGlobalSize(s, absSize));
+		me.leaveSubitem(me);
 	}
 	do
 	{
@@ -94,19 +131,21 @@ void resizeNotifyLieContainer(entity me, vector relOrigin, vector relSize, vecto
 				d = 1;
 				o = e.originField;
 				s = e.sizeField;
+				me.enterLieSubitem(me, o, s, e.fontScaleField, e.Container_alpha);
 				e.resizeNotify(e, o, s, boxToGlobal(o, absOrigin, absSize), boxToGlobalSize(s, absSize));
+				me.leaveSubitem(me);
 			}
 	}
 	while(d);
-	resizeNotifyItem(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(Container).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 }
 
-void resizeNotifyContainer(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void Container_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, Container_origin, Container_size);
+	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, Container_origin, Container_size, Container_fontscale);
 }
 
-entity itemFromPointContainer(entity me, vector pos)
+entity Container_itemFromPoint(entity me, vector pos)
 {
 	entity e;
 	vector o, s;
@@ -123,18 +162,10 @@ entity itemFromPointContainer(entity me, vector pos)
 	return NULL;
 }
 
-void drawContainer(entity me)
+void Container_draw(entity me)
 {
-	vector oldshift;
-	vector oldscale;
-	float oldalpha;
-	vector oldfontscale;
 	entity e;
 
-	oldshift = draw_shift;
-	oldscale = draw_scale;
-	oldalpha = draw_alpha;
-	oldfontscale = draw_fontscale;
 	me.focusable = 0;
 	for(e = me.firstChild; e; e = e.nextSibling)
 	{
@@ -142,81 +173,110 @@ void drawContainer(entity me)
 			me.focusable += 1;
 		if(e.Container_alpha < 0.003) // can't change color values anyway
 			continue;
-		draw_shift = boxToGlobal(e.Container_origin, oldshift, oldscale);
-		draw_scale = boxToGlobalSize(e.Container_size, oldscale);
-		if(e.Container_fontscale != '0 0 0')
-			draw_fontscale = boxToGlobalSize(e.Container_fontscale, oldfontscale);
-		draw_alpha *= e.Container_alpha;
+		me.enterSubitem(me, e);
 		e.draw(e);
-		draw_shift = oldshift;
-		draw_scale = oldscale;
-		draw_fontscale = oldfontscale;
-		draw_alpha = oldalpha;
+		me.leaveSubitem(me);
 	}
 };
 
-void focusLeaveContainer(entity me)
+void Container_focusLeave(entity me)
 {
 	me.setFocus(me, NULL);
 }
 
-float keyUpContainer(entity me, float scan, float ascii, float shift)
+float Container_keyUp(entity me, float scan, float ascii, float shift)
 {
 	entity f;
+	float r;
 	f = me.focusedChild;
 	if(f)
-		return f.keyUp(f, scan, ascii, shift);
+	{
+		me.enterSubitem(me, f);
+		r = f.keyUp(f, scan, ascii, shift);
+		me.leaveSubitem(me);
+		return r;
+	}
 	return 0;
 }
 
-float keyDownContainer(entity me, float scan, float ascii, float shift)
+float Container_keyDown(entity me, float scan, float ascii, float shift)
 {
 	entity f;
+	float r;
 	f = me.focusedChild;
 	if(f)
-		return f.keyDown(f, scan, ascii, shift);
+	{
+		me.enterSubitem(me, f);
+		r = f.keyDown(f, scan, ascii, shift);
+		me.leaveSubitem(me);
+		return r;
+	}
 	return 0;
 }
 
-float mouseMoveContainer(entity me, vector pos)
+float Container_mouseMove(entity me, vector pos)
 {
 	entity f;
+	float r;
 	f = me.focusedChild;
 	if(f)
-		return f.mouseMove(f, globalToBox(pos, f.Container_origin, f.Container_size));
+	{
+		me.enterSubitem(me, f);
+		r = f.mouseMove(f, globalToBox(pos, f.Container_origin, f.Container_size));
+		me.leaveSubitem(me);
+		return r;
+	}
 	return 0;
 }
-float mousePressContainer(entity me, vector pos)
+float Container_mousePress(entity me, vector pos)
 {
 	entity f;
+	float r;
 	f = me.focusedChild;
 	if(f)
-		return f.mousePress(f, globalToBox(pos, f.Container_origin, f.Container_size));
+	{
+		me.enterSubitem(me, f);
+		r = f.mousePress(f, globalToBox(pos, f.Container_origin, f.Container_size));
+		me.leaveSubitem(me);
+		return r;
+	}
 	return 0;
 }
-float mouseDragContainer(entity me, vector pos)
+float Container_mouseDrag(entity me, vector pos)
 {
 	entity f;
+	float r;
 	f = me.focusedChild;
 	if(f)
-		return f.mouseDrag(f, globalToBox(pos, f.Container_origin, f.Container_size));
+	{
+		me.enterSubitem(me, f);
+		r = f.mouseDrag(f, globalToBox(pos, f.Container_origin, f.Container_size));
+		me.leaveSubitem(me);
+		return r;
+	}
 	return 0;
 }
-float mouseReleaseContainer(entity me, vector pos)
+float Container_mouseRelease(entity me, vector pos)
 {
 	entity f;
+	float r;
 	f = me.focusedChild;
 	if(f)
-		return f.mouseRelease(f, globalToBox(pos, f.Container_origin, f.Container_size));
+	{
+		me.enterSubitem(me, f);
+		r = f.mouseRelease(f, globalToBox(pos, f.Container_origin, f.Container_size));
+		me.leaveSubitem(me);
+		return r;
+	}
 	return 0;
 }
 
-void addItemCenteredContainer(entity me, entity other, vector theSize, float theAlpha)
+void Container_addItemCentered(entity me, entity other, vector theSize, float theAlpha)
 {
 	me.addItem(me, other, '0.5 0.5 0' - 0.5 * theSize, theSize, theAlpha);
 }
 
-void addItemContainer(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
+void Container_addItem(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
 {
 	if(other.parent)
 		error("Can't add already added item!");
@@ -258,7 +318,7 @@ void addItemContainer(entity me, entity other, vector theOrigin, vector theSize,
 	draw_NeedResizeNotify = 1;
 }
 
-void removeItemContainer(entity me, entity other)
+void Container_removeItem(entity me, entity other)
 {
 	if(other.parent != me)
 		error("Can't remove from wrong container!");
@@ -285,7 +345,7 @@ void removeItemContainer(entity me, entity other)
 		me.lastChild = p;
 }
 
-void setFocusContainer(entity me, entity other)
+void Container_setFocus(entity me, entity other)
 {
 	if(other)
 		if not(me.focused)
@@ -306,7 +366,7 @@ void setFocusContainer(entity me, entity other)
 	me.focusedChild = other;
 }
 
-void moveItemAfterContainer(entity me, entity other, entity dest)
+void Container_moveItemAfter(entity me, entity other, entity dest)
 {
 	// first: remove other from the chain
 	entity n, p, f, l;
@@ -347,7 +407,7 @@ void moveItemAfterContainer(entity me, entity other, entity dest)
 		me.lastChild = other;
 }
 
-entity preferredFocusedGrandChildContainer(entity me)
+entity Container_preferredFocusedGrandChild(entity me)
 {
 	entity e, e2;
 	entity best;

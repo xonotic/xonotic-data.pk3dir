@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(ELECTRO, w_electro, IT_CELLS, 5, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "electro", "electro", "Electro");
 #else
+#ifdef SVQC
 .float electro_count;
 .float electro_secondarytime;
 
@@ -51,7 +52,6 @@ void W_Plasma_Explode (void)
 
 void W_Plasma_Explode_Combo (void)
 {
-
 	W_Plasma_TriggerCombo(self.origin, cvar("g_balance_electro_combo_comboradius"), self.owner);
 
 	self.event_damage = SUB_Null;
@@ -98,7 +98,7 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float dea
 		else
 		{
 			self.use = W_Plasma_Explode;
-			self.think = adaptor_think2use;
+			self.think = adaptor_think2use; // not _hittype_splash, as this runs "immediately"
 		}
 	}
 }
@@ -117,7 +117,7 @@ void W_Electro_Attack()
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = cvar("g_balance_electro_primary_damage");
 	proj.use = W_Plasma_Explode;
-	proj.think = adaptor_think2use;
+	proj.think = adaptor_think2use_hittype_splash;
 	proj.nextthink = time + cvar("g_balance_electro_primary_lifetime");
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_ELECTRO;
@@ -142,7 +142,7 @@ void W_Electro_Attack2()
 {
 	local entity proj;
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire2.wav", cvar("g_balance_electro_secondary_damage"));
+	W_SetupShot_ProjectileSize (self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", cvar("g_balance_electro_secondary_damage"));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -151,7 +151,7 @@ void W_Electro_Attack2()
 	proj.classname = "plasma";
 	proj.owner = self;
 	proj.use = W_Plasma_Explode;
-	proj.think = adaptor_think2use;
+	proj.think = adaptor_think2use_hittype_splash;
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = cvar("g_balance_electro_secondary_damage");
 	proj.nextthink = time + cvar("g_balance_electro_secondary_lifetime");
@@ -166,7 +166,7 @@ void W_Electro_Attack2()
 	proj.movetype = MOVETYPE_BOUNCE;
 	W_SETUPPROJECTILEVELOCITY_UP(proj, g_balance_electro_secondary);
 	proj.touch = W_Plasma_Touch;
-	setsize(proj, '0 0 -3', '0 0 -3');
+	setsize(proj, '0 0 -4', '0 0 -4');
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = cvar("g_balance_electro_secondary_damageforcescale");
 	proj.health = cvar("g_balance_electro_secondary_health");
@@ -184,19 +184,117 @@ void W_Electro_Attack2()
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
 }
 
+.vector hook_start, hook_end;
+float lgbeam_send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_LGBEAM);
+	sf = sf & 0x7F;
+	if(sound_allowed(MSG_BROADCAST, self.owner))
+		sf |= 0x80;
+	WriteByte(MSG_ENTITY, sf);
+	if(sf & 1)
+	{
+		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+		WriteCoord(MSG_ENTITY, cvar("g_balance_electro_primary_range"));
+	}
+	if(sf & 2)
+	{
+		WriteCoord(MSG_ENTITY, self.hook_start_x);
+		WriteCoord(MSG_ENTITY, self.hook_start_y);
+		WriteCoord(MSG_ENTITY, self.hook_start_z);
+	}
+	if(sf & 4)
+	{
+		WriteCoord(MSG_ENTITY, self.hook_end_x);
+		WriteCoord(MSG_ENTITY, self.hook_end_y);
+		WriteCoord(MSG_ENTITY, self.hook_end_z);
+	}
+	return TRUE;
+}
+.entity lgbeam;
+.float prevlgfire;
+void lgbeam_think()
+{
+	self.owner.prevlgfire = time;
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK)
+	{
+		remove(self);
+		return;
+	}
+
+	self.nextthink = time;
+
+	makevectors(self.owner.v_angle);
+
+	float dt;
+	dt = frametime;
+	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(cvar("g_balance_electro_primary_ammo"))
+			dt = min(frametime, self.owner.ammo_cells / cvar("g_balance_electro_primary_ammo"));
+		self.owner.ammo_cells = max(0, self.owner.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime);
+	}
+
+	W_SetupShot_Range(self.owner, TRUE, 0, "", cvar("g_balance_electro_primary_damage") * dt, cvar("g_balance_electro_primary_range"));
+	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
+
+	// apply the damage
+	if(trace_ent)
+	{
+		vector force;
+		force = w_shotdir * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
+		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * dt, WEP_ELECTRO, trace_endpos, force * dt);
+		Damage_RecordDamage(self.owner, WEP_ELECTRO, cvar("g_balance_electro_primary_damage") * dt);
+	}
+	W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
+
+	// draw effect
+	if(w_shotorg != self.hook_start)
+	{
+		self.SendFlags |= 2;
+		self.hook_start = w_shotorg;
+	}
+	if(w_shotend != self.hook_end)
+	{
+		self.SendFlags |= 4;
+		self.hook_end = w_shotend;
+	}
+}
+
 // experimental lightning gun
 void W_Electro_Attack3 (void)
 {
-       if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-               self.ammo_cells = self.ammo_cells - cvar("g_balance_electro_primary_ammo");
-       W_SetupShot (self, TRUE, 0, "weapons/crylink_fire2.wav", cvar("g_balance_electro_primary_damage"));
+	// only play fire sound if 0.5 sec has passed since player let go the fire button
+	if(time - self.prevlgfire > 0.5)
+	{
+		sound (self, CHAN_WEAPON, "weapons/lgbeam_fire.wav", VOL_BASE, ATTN_NORM);
+	}
 
-       traceline_antilag(self, w_shotorg, w_shotorg + w_shotdir * cvar("g_balance_electro_primary_radius"), FALSE, self, ANTILAG_LATENCY(self));
+	entity beam, oldself;
 
-       te_lightning1(self, w_shotorg, trace_endpos);
+	self.lgbeam = beam = spawn();
+	beam.solid = SOLID_NOT;
+	beam.think = lgbeam_think;
+	beam.owner = self;
+	beam.movetype = MOVETYPE_NONE;
+	beam.shot_spread = 0;
+	beam.bot_dodge = TRUE;
+	beam.bot_dodgerating = cvar("g_balance_electro_primary_damage");
+	Net_LinkEntity(beam, FALSE, 0, lgbeam_send);
 
-       if (trace_fraction < 1)
-               Damage(trace_ent, self, self, cvar("g_balance_electro_primary_damage"), WEP_ELECTRO | HITTYPE_SECONDARY, trace_endpos, cvar("g_balance_electro_primary_force") * w_shotdir);
+	oldself = self;
+	self = beam;
+	self.think();
+	self = oldself;
+}
+
+void ElectroInit()
+{
+	weapon_action(WEP_ELECTRO, WR_PRECACHE);
+	electro_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 1);
+	electro_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 2);
+	electro_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 3);
+	electro_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 4);
 }
 
 void spawnfunc_weapon_electro (void)
@@ -220,6 +318,7 @@ void w_electro_checkattack()
 }
 
 .float bot_secondary_electromooth;
+.float BUTTON_ATCK_prev;
 float w_electro(float req)
 {
 	if (req == WR_AIM)
@@ -248,15 +347,28 @@ float w_electro(float req)
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, cvar("g_balance_electro_primary_refire")))
 		{
-			if(cvar("g_balance_electro_lightning"))
-				W_Electro_Attack3();
-			else
-				W_Electro_Attack();
-			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_electro_primary_animtime"), w_ready);
+			if (weapon_prepareattack(0, (cvar("g_balance_electro_lightning") ? 0 : cvar("g_balance_electro_primary_refire"))))
+			{
+				if(cvar("g_balance_electro_lightning"))
+				{
+					if (self.BUTTON_ATCK_prev == 0)
+					{
+						W_Electro_Attack3();
+					}
+					self.BUTTON_ATCK_prev = 1;
+				}
+				else
+				{
+					W_Electro_Attack();
+				}
+				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_electro_primary_animtime"), w_ready);
+			}
+		} else {
+			self.BUTTON_ATCK_prev = 0;
 		}
-		if (self.BUTTON_ATCK2 && !cvar("g_balance_electro_lightning"))
+
+		if (self.BUTTON_ATCK2)
 		if (time >= self.electro_secondarytime)
 		if (weapon_prepareattack(1, cvar("g_balance_electro_secondary_refire")))
 		{
@@ -270,51 +382,97 @@ float w_electro(float req)
 	{
 		precache_model ("models/weapons/g_electro.md3");
 		precache_model ("models/weapons/v_electro.md3");
-		precache_model ("models/weapons/h_electro.dpm");
+		precache_model ("models/weapons/h_electro.iqm");
 		precache_sound ("weapons/electro_bounce.wav");
 		precache_sound ("weapons/electro_fire.wav");
 		precache_sound ("weapons/electro_fire2.wav");
 		precache_sound ("weapons/electro_impact.wav");
 		precache_sound ("weapons/electro_impact_combo.wav");
 		if(cvar("g_balance_electro_lightning"))
-			precache_sound ("weapons/crylink_fire2.wav");
+		{
+			precache_sound ("weapons/lgbeam_fire.wav");
+		}
 	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_ELECTRO);
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_cells >= cvar("g_balance_electro_primary_ammo");
+	{
+		if(cvar("g_balance_electro_lightning"))
+			return self.ammo_cells >= cvar("g_balance_electro_primary_ammo") * cvar("g_balance_electro_primary_refire");
+		else
+			return self.ammo_cells >= cvar("g_balance_electro_primary_ammo");
+	}
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_cells >= cvar("g_balance_electro_secondary_ammo");
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "could not remember where they put plasma";
-		else
-			w_deathtypestring = "played with plasma";
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			if(w_deathtype & HITTYPE_SPLASH) // unchecked: BOUNCE
-				w_deathtypestring = "just noticed #'s blue ball";
-			else // unchecked: BOUNCE
-				w_deathtypestring = "got in touch with #'s blue ball";
-		}
-		else
-		{
-			if(w_deathtype & HITTYPE_BOUNCE) // combo
-				w_deathtypestring = "felt the electrifying air of #'s combo";
-			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = "got too close to #'s blue beam";
-			else
-				w_deathtypestring = "was blasted by #'s blue beam";
-		}
-	}
 	else if (req == WR_RESETPLAYER)
 	{
 		self.electro_secondarytime = time;
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+float w_electro(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 6;
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			pointparticles(particleeffectnum("electro_ballexplode"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+		}
+		else
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+			{
+				// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
+				pointparticles(particleeffectnum("electro_combo"), org2, '0 0 0', 1);
+				if(!w_issilent)
+					sound(self, CHAN_PROJECTILE, "weapons/electro_impact_combo.wav", VOL_BASE, ATTN_NORM);
+			}
+			else
+			{
+				pointparticles(particleeffectnum("electro_impact"), org2, '0 0 0', 1);
+				if(!w_issilent)
+					sound(self, CHAN_PROJECTILE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+			}
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/electro_impact.wav");
+		precache_sound("weapons/electro_impact_combo.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			w_deathtypestring = "%s could not remember where they put plasma";
+		else
+			w_deathtypestring = "%s played with plasma";
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			if(w_deathtype & HITTYPE_SPLASH) // unchecked: BOUNCE
+				w_deathtypestring = "%s just noticed %s's blue ball";
+			else // unchecked: BOUNCE
+				w_deathtypestring = "%s got in touch with %s's blue ball";
+		}
+		else
+		{
+			if(w_deathtype & HITTYPE_BOUNCE) // combo
+				w_deathtypestring = "%s felt the electrifying air of %s's combo";
+			else if(w_deathtype & HITTYPE_SPLASH)
+				w_deathtypestring = "%s got too close to %s's blue beam";
+			else
+				w_deathtypestring = "%s was blasted by %s's blue beam";
+		}
+	}
+	return TRUE;
+}
+#endif
 #endif

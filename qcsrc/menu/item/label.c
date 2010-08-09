@@ -22,22 +22,23 @@ CLASS(Label) EXTENDS(Item)
 	ATTRIB(Label, disabledAlpha, float, 0.3)
 	ATTRIB(Label, textEntity, entity, NULL)
 	ATTRIB(Label, allowWrap, float, 0)
+	ATTRIB(Label, recalcPos, float, 0)
 ENDCLASS(Label)
 #endif
 
 #ifdef IMPLEMENTATION
-string toStringLabel(entity me)
+string Label_toString(entity me)
 {
 	return me.text;
 }
-void setTextLabel(entity me, string txt)
+void Label_setText(entity me, string txt)
 {
 	me.text = txt;
-	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(me.text, me.allowColors, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
+	me.recalcPos = 1;
 }
-void resizeNotifyLabel(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyItem(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(Label).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	// absSize_y is height of label
 	me.realFontSize_y = me.fontSize / absSize_y;
 	me.realFontSize_x = me.fontSize / absSize_x;
@@ -45,16 +46,17 @@ void resizeNotifyLabel(entity me, vector relOrigin, vector relSize, vector absOr
 		me.keepspaceLeft = me.marginLeft * me.realFontSize_x;
 	if(me.marginRight)
 		me.keepspaceRight = me.marginRight * me.realFontSize_x;
-	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(me.text, me.allowColors, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
 	me.realOrigin_y = 0.5 * (1 - me.realFontSize_y);
+	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(me.text, me.allowColors, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
+	me.recalcPos = 0;
 }
-void configureLabelLabel(entity me, string txt, float sz, float algn)
+void Label_configureLabel(entity me, string txt, float sz, float algn)
 {
 	me.fontSize = sz;
 	me.align = algn;
 	me.setText(me, txt);
 }
-void drawLabel(entity me)
+void Label_draw(entity me)
 {
 	string t;
 	vector o;
@@ -64,10 +66,17 @@ void drawLabel(entity me)
 	if(me.textEntity)
 	{
 		t = me.textEntity.toString(me.textEntity);
-		me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(t, 0, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
+		me.recalcPos = 1;
 	}
 	else
 		t = me.text;
+
+	if(me.recalcPos)
+		me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(t, me.allowColors, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
+	me.recalcPos = 0;
+
+	//if(me.text == "Bookmark")
+	//	draw_Fill(me.realOrigin, '0 1 0' + '1 0 0' * draw_TextWidth(t, me.allowColors, me.realFontSize), '1 0 1', 1);
 	
 	if(me.fontSize)
 		if(t)

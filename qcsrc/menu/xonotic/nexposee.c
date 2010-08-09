@@ -15,11 +15,11 @@ entity makeXonoticNexposee()
 	return me;
 }
 
-void configureXonoticNexposeeXonoticNexposee(entity me)
+void XonoticNexposee_configureXonoticNexposee(entity me)
 {
 }
 
-void closeXonoticNexposee(entity me)
+void XonoticNexposee_close(entity me)
 {
 	m_goto(string_null); // hide
 }

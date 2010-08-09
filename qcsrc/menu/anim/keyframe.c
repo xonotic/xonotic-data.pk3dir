@@ -6,7 +6,7 @@ CLASS(Keyframe) EXTENDS(Animation)
 	ATTRIB(Keyframe, currentChild, entity, NULL)
 	ATTRIB(Keyframe, firstChild, entity, NULL)
 	ATTRIB(Keyframe, lastChild, entity, NULL)
-ENDCLASS(Animation)
+ENDCLASS(Keyframe)
 entity makeHostedKeyframe(entity, void(entity, float), float, float, float);
 entity makeKeyframe(entity, void(entity, float), float, float, float);
 float getNewChildStart(entity);
@@ -15,26 +15,26 @@ float getNewChildValue(entity);
 #endif
 
 #ifdef IMPLEMENTATION
-entity makeHostedKeyframe(entity obj, void(entity, float) setter, float duration, float start, float end)
+entity makeHostedKeyframe(entity obj, void(entity, float) objSetter, float animDuration, float animStart, float animEnd)
 {
 	entity me;
-	me = makeKeyframe(obj, setter, duration, start, end);
+	me = makeKeyframe(obj, objSetter, animDuration, animStart, animEnd);
 	anim.addAnim(anim, me);
 	return me;
 }
 
-entity makeKeyframe(entity obj, void(entity, float) setter, float duration, float start, float end)
+entity makeKeyframe(entity obj, void(entity, float) objSetter, float animDuration, float animStart, float animEnd)
 {
 	entity me;
 	me = spawnKeyframe();
-	me.configureAnimation(me, obj, setter, time, duration, start, end);
+	me.configureAnimation(me, obj, objSetter, time, animDuration, animStart, animEnd);
 	return me;
 }
 
-entity addEasingKeyframe(entity me, float durationTime, float end, float(float, float, float, float) func)
+entity Keyframe_addEasing(entity me, float animDurationTime, float animEnd, float(float, float, float, float) func)
 {
 	entity other;
-	other = makeEasing(me.object, me.setter, func, getNewChildStart(me), getNewChildDuration(me, durationTime), getNewChildValue(me), end);
+	other = makeEasing(me.object, me.setter, func, getNewChildStart(me), getNewChildDuration(me, animDurationTime), getNewChildValue(me), animEnd);
 	me.addAnim(me, other);
 	return other;
 }
@@ -65,7 +65,7 @@ float getNewChildValue(entity me)
 		return me.startValue;
 }
 
-void addAnimKeyframe(entity me, entity other)
+void Keyframe_addAnim(entity me, entity other)
 {
 	if(other.parent)
 		error("Can't add already added anim!");
@@ -92,7 +92,7 @@ void addAnimKeyframe(entity me, entity other)
 	me.lastChild = other;
 }
 
-float calcValueKeyframe(entity me, float time, float duration, float startValue, float delta)
+float Keyframe_calcValue(entity me, float tickTime, float animDuration, float animStartValue, float animDelta)
 {
 	if (me.currentChild)
 		if (me.currentChild.isFinished(me.currentChild))
@@ -100,10 +100,10 @@ float calcValueKeyframe(entity me, float time, float duration, float startValue,
 
 	if (me.currentChild)
 	{
-		me.currentChild.tick(me.currentChild, time);
+		me.currentChild.tick(me.currentChild, tickTime);
 		return me.currentChild.value;
 	}
 
-	return startValue + delta;
+	return animStartValue + animDelta;
 }
 #endif

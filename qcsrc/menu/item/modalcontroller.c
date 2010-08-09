@@ -52,6 +52,7 @@ void DialogCloseButton_Click(entity button, entity tab); // assumes a button has
 
 .vector ModalController_initialSize;
 .vector ModalController_initialOrigin;
+.vector ModalController_initialFontScale;
 .float ModalController_initialAlpha;
 .vector ModalController_buttonSize;
 .vector ModalController_buttonOrigin;
@@ -59,7 +60,7 @@ void DialogCloseButton_Click(entity button, entity tab); // assumes a button has
 .float ModalController_factor;
 .entity ModalController_controllingButton;
 
-void initializeDialogModalController(entity me, entity root)
+void ModalController_initializeDialog(entity me, entity root)
 {
 	me.hideAll(me, 1);
 	me.showChild(me, root, '0 0 0', '0 0 0', 1); // someone else animates for us
@@ -95,12 +96,12 @@ void DialogCloseButton_Click(entity button, entity tab)
 	tab.parent.hideChild(tab.parent, tab, 0);
 }
 
-void resizeNotifyModalController(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void ModalController_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, ModalController_initialOrigin, ModalController_initialSize);
+	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, ModalController_initialOrigin, ModalController_initialSize, ModalController_initialFontScale);
 }
 
-void switchStateModalController(entity me, entity other, float state, float skipAnimation)
+void ModalController_switchState(entity me, entity other, float state, float skipAnimation)
 {
 	float previousState;
 	previousState = other.ModalController_state;
@@ -131,7 +132,7 @@ void switchStateModalController(entity me, entity other, float state, float skip
 		other.ModalController_factor = 1;
 }
 
-void drawModalController(entity me)
+void ModalController_draw(entity me)
 {
 	entity e;
 	entity front;
@@ -140,6 +141,7 @@ void drawModalController(entity me)
 	float df; // animation step size
 	float prevFactor, targetFactor;
 	vector targetOrigin, targetSize; float targetAlpha;
+	vector fs;
 	animating = 0;
 
 	for(e = me.firstChild; e; e = e.nextSibling)
@@ -216,16 +218,18 @@ void drawModalController(entity me)
 		// --> (maxima)
 		// o' = (to * (f - f_prev) + o * (1 - f)) / (1 - f_prev)
 
-		e.Container_fontscale = globalToBoxSize(e.Container_size, e.ModalController_initialSize);
+		fs = globalToBoxSize(e.Container_size, e.ModalController_initialSize);
+		e.Container_fontscale_x = fs_x * e.ModalController_initialFontScale_x;
+		e.Container_fontscale_y = fs_y * e.ModalController_initialFontScale_y;
 	}
 	if(animating || !me.focused)
 		me.setFocus(me, NULL);
 	else
 		me.setFocus(me, front);
-	drawContainer(me);
+	SUPER(ModalController).draw(me);
 };
 
-void addTabModalController(entity me, entity other, entity tabButton)
+void ModalController_addTab(entity me, entity other, entity tabButton)
 {
 	me.addItem(me, other, '0 0 0', '1 1 1', 1);
 	tabButton.onClick = TabButton_Click;
@@ -239,15 +243,18 @@ void addTabModalController(entity me, entity other, entity tabButton)
 	}
 }
 
-void addItemModalController(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
+void ModalController_addItem(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
 {
-	addItemContainer(me, other, theOrigin, theSize, (other == me.firstChild) ? theAlpha : 0);
+	SUPER(ModalController).addItem(me, other, theOrigin, theSize, (other == me.firstChild) ? theAlpha : 0);
+	other.ModalController_initialFontScale = other.Container_fontscale;
 	other.ModalController_initialSize = other.Container_size;
 	other.ModalController_initialOrigin = other.Container_origin;
 	other.ModalController_initialAlpha = theAlpha; // hope Container never modifies this
+	if(other.ModalController_initialFontScale == '0 0 0')
+		other.ModalController_initialFontScale = '1 1 0';
 }
 
-void showChildModalController(entity me, entity other, vector theOrigin, vector theSize, float skipAnimation)
+void ModalController_showChild(entity me, entity other, vector theOrigin, vector theSize, float skipAnimation)
 {
 	if(other.ModalController_state == 0 || skipAnimation)
 	{
@@ -261,14 +268,14 @@ void showChildModalController(entity me, entity other, vector theOrigin, vector 
 	} // zoom in from button (factor increases)
 }
 
-void hideAllModalController(entity me, float skipAnimation)
+void ModalController_hideAll(entity me, float skipAnimation)
 {
 	entity e;
 	for(e = me.firstChild; e; e = e.nextSibling)
 		me.hideChild(me, e, skipAnimation);
 }
 
-void hideChildModalController(entity me, entity other, float skipAnimation)
+void ModalController_hideChild(entity me, entity other, float skipAnimation)
 {
 	if(other.ModalController_state || skipAnimation)
 	{

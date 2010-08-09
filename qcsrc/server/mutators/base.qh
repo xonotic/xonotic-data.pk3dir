@@ -51,10 +51,12 @@ MUTATOR_HOOKABLE(PlayerDies);
 	// INPUT:
 		entity frag_inflictor;
 		entity frag_attacker;
+		entity frag_target; // same as self
 
 MUTATOR_HOOKABLE(GiveFragsForKill);
 	// called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill
 	// INPUT:
+		entity frag_attacker; // same as self
 		entity frag_target;
 	// INPUT, OUTPUT:
 		float frag_score;

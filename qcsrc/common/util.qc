@@ -226,43 +226,8 @@ float median(float a, float b, float c)
 // works for up to 10 decimals!
 string ftos_decimals(float number, float decimals)
 {
-	string result;
-	string tmp;
-	float len;
-
-	// if negative, cut off the sign first
-	if(number < 0)
-		return strcat("-", ftos_decimals(-number, decimals));
-	// it now is always positive!
-
-	// 3.516 -> 352
-	number = floor(number * pow(10, decimals) + 0.5);
-
-	// 352 -> "352"
-	result = ftos(number);
-	len = strlen(result);
-	// does it have a decimal point (should not happen)? If there is one, it is always at len-7)
-		// if ftos had messed it up, which should never happen: "34278.000000"
-	if(len >= 7)
-		if(substring(result, len - 7, 1) == ".")
-		{
-			dprint("ftos(integer) has comma? Can't be. Affected result: ", result, "\n");
-			result = substring(result, 0, len - 7);
-			len -= 7;
-		}
-		// "34278"
-	if(decimals == 0)
-		return result; // don't insert a point for zero decimals
-	// is it too short? If yes, insert leading zeroes
-	if(len <= decimals)
-	{
-		result = strcat(substring("0000000000", 0, decimals - len + 1), result);
-		len = decimals + 1;
-	}
-	// and now... INSERT THE POINT!
-	tmp = substring(result, len - decimals, decimals);
-	result = strcat(substring(result, 0, len - decimals), ".", tmp);
-	return result;
+	// we have sprintf...
+	return sprintf("%.*f", decimals, number);
 }
 
 float time;
@@ -1863,5 +1828,88 @@ float startsWithNocase(string haystack, string needle)
 	return strcasecmp(substring(haystack, 0, strlen(needle)), needle) == 0;
 }
 
-#ifndef MENUQC
-#endif
+string get_model_datafilename(string m, float sk, string fil)
+{
+	if(m)
+		m = strcat(m, "_");
+	else
+		m = "models/player/*_";
+	if(sk >= 0)
+		m = strcat(m, ftos(sk));
+	else
+		m = strcat(m, "*");
+	return strcat(m, ".", fil);
+}
+
+float get_model_parameters(string m, float sk)
+{
+	string fn, s, c;
+	float fh;
+
+	get_model_parameters_modelname = string_null;
+	get_model_parameters_modelskin = -1;
+	get_model_parameters_name = string_null;
+	get_model_parameters_species = -1;
+	get_model_parameters_sex = string_null;
+	get_model_parameters_weight = -1;
+	get_model_parameters_age = -1;
+	get_model_parameters_desc = string_null;
+
+	if not(m)
+		return 1;
+	if(sk < 0)
+	{
+		if(substring(m, -4, -1) != ".txt")
+			return 0;
+		if(substring(m, -6, 1) != "_")
+			return 0;
+		sk = stof(substring(m, -5, 1));
+		m = substring(m, 0, -7);
+	}
+
+	fn = get_model_datafilename(m, sk, "txt");
+	fh = fopen(fn, FILE_READ);
+	if(fh < 0)
+		return 0;
+
+	get_model_parameters_modelname = m;
+	get_model_parameters_modelskin = sk;
+	while((s = fgets(fh)))
+	{
+		if(s == "")
+			break; // next lines will be description
+		c = car(s);
+		s = cdr(s);
+		if(c == "name")
+			get_model_parameters_name = s;
+		if(c == "species")
+			switch(s)
+			{
+				case "human":       get_model_parameters_species = SPECIES_HUMAN;       break;
+				case "alien":       get_model_parameters_species = SPECIES_ALIEN;       break;
+				case "robot_shiny": get_model_parameters_species = SPECIES_ROBOT_SHINY; break;
+				case "robot_rusty": get_model_parameters_species = SPECIES_ROBOT_RUSTY; break;
+				case "robot_solid": get_model_parameters_species = SPECIES_ROBOT_SOLID; break;
+				case "animal":      get_model_parameters_species = SPECIES_ANIMAL;      break;
+				case "reserved":    get_model_parameters_species = SPECIES_RESERVED;    break;
+			}
+		if(c == "sex")
+			get_model_parameters_sex = s;
+		if(c == "weight")
+			get_model_parameters_weight = stof(s);
+		if(c == "age")
+			get_model_parameters_age = stof(s);
+	}
+
+	while((s = fgets(fh)))
+	{
+		if(get_model_parameters_desc)
+			get_model_parameters_desc = strcat(get_model_parameters_desc, "\n");
+		if(s != "")
+			get_model_parameters_desc = strcat(get_model_parameters_desc, s);
+	}
+
+	fclose(fh);
+
+	return 1;
+}

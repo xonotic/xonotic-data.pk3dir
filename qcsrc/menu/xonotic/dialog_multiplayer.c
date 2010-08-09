@@ -10,7 +10,7 @@ ENDCLASS(XonoticMultiplayerDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void fillXonoticMultiplayerDialog(entity me)
+void XonoticMultiplayerDialog_fill(entity me)
 {
 	entity mc, e;
 	mc = makeXonoticTabController(me.rows - 2);

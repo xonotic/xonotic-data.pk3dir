@@ -1,0 +1,7 @@
+name Seraphina
+species human
+sex Female
+weight 89
+age 31
+
+Heavyweight Xonotic Solider

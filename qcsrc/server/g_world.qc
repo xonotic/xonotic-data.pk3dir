@@ -512,6 +512,8 @@ void spawnfunc_worldspawn (void)
 	InitGameplayMode();
 	readlevelcvars();
 	GrappleHookInit();
+	ElectroInit();
+	LaserInit();
 
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");
@@ -635,6 +637,11 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
 	addstat(STAT_BULLETS_LOADED, AS_INT, campingrifle_bulletcounter);
 
+	// g_movementspeed hack
+	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
+	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
+	addstat(STAT_MOVEVARS_AIRSTRAFEACCEL_QW, AS_FLOAT, stat_sv_airstrafeaccel_qw);
+
 	next_pingtime = time + 5;
 	InitializeEntity(self, cvar_changes_init, INITPRIO_CVARS);
 
@@ -694,7 +701,7 @@ void spawnfunc_worldspawn (void)
 
 	CheatInit();
 
-	localcmd("\n_sv_hook_gamestart ", GetGametype(), ";");
+	localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
 
 	world_initialized = 1;
 }
@@ -1422,7 +1429,7 @@ void NextLevel()
 	if(cvar("g_campaign"))
 		CampaignPreIntermission();
 
-	localcmd("\nsv_hook_gameend;");
+	localcmd("\nsv_hook_gameend\n");
 }
 
 /*
@@ -1735,6 +1742,8 @@ void ShuffleMaplist()
 float leaderfrags;
 float WinningCondition_Scores(float limit, float leadlimit)
 {
+	float limitreached;
+
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper();
 
@@ -1779,13 +1788,22 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		}
 	}
 
+	limitreached = FALSE;
+	if(limit)
+		if(WinningConditionHelper_topscore >= limit)
+			limitreached = TRUE;
+	if(leadlimit)
+	{
+		float leadlimitreached;
+		leadlimitreached = (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit);
+		if(cvar("leadlimit_and_fraglimit"))
+			limitreached = (limitreached && leadlimitreached);
+		else
+			limitreached = (limitreached || leadlimitreached);
+	}
+
 	return GetWinningCode(
-		WinningConditionHelper_topscore &&
-		(
-			(limit && (WinningConditionHelper_topscore >= limit))
-			||
-			(leadlimit && (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit))
-		),
+		WinningConditionHelper_topscore && limitreached,
 		WinningConditionHelper_equality
 	);
 }
@@ -2697,6 +2715,7 @@ float RedirectionThink()
 	return TRUE;
 }
 
+void TargetMusic_RestoreGame();
 void RestoreGame()
 {
 	// Loaded from a save game
@@ -2710,6 +2729,8 @@ void RestoreGame()
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 	WeaponStats_Init();
+
+	TargetMusic_RestoreGame();
 }
 
 void SV_Shutdown()

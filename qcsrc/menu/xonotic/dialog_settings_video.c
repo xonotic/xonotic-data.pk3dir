@@ -18,7 +18,7 @@ entity makeXonoticVideoSettingsTab()
 	me.configureDialog(me);
 	return me;
 }
-void fillXonoticVideoSettingsTab(entity me)
+void XonoticVideoSettingsTab_fill(entity me)
 {
 	entity e;
 
@@ -42,16 +42,12 @@ void fillXonoticVideoSettingsTab(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Color depth:"));
 		me.TD(me, 1, 2, e = makeXonoticSlider(16, 32, 16, "vid_bitsperpixel"));
 	me.TR(me);
-		me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, "Texture compression"));
-		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "gl_texturecompression", "0", "None"));
-		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "gl_texturecompression", "1", "Fast"));
-		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "gl_texturecompression", "2", "Good"));
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", "Full screen"));
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "vid_vsync", "Vertical Synchronization"));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", "Use OpenGL 2.0 shaders (GLSL)"));
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_coronas_occlusionquery", "Use Occlusion Queries"));
 	me.TR(me);

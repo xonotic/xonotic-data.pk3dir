@@ -7,6 +7,7 @@ CLASS(XonoticEffectsSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticEffectsSettingsTab, columns, float, 6.5)
 ENDCLASS(XonoticEffectsSettingsTab)
 entity makeXonoticEffectsSettingsTab();
+float updateCompression();
 #endif
 
 #ifdef IMPLEMENTATION
@@ -29,7 +30,35 @@ float someShadowCvarIsEnabled(entity box)
 	return FALSE;
 }
 
-void fillXonoticEffectsSettingsTab(entity me)
+float updateCompression()
+{
+	float fh;
+	float have_dds, have_jpg, have_tga;
+	if((have_dds = (fh = fopen("dds/particles/particlefont.dds", FILE_READ) >= 0)))
+		fclose(fh);
+	if((have_jpg = (fh = fopen("jpg/particles/particlefont.jpg", FILE_READ) >= 0)))
+		fclose(fh);
+	if((have_tga = (fh = fopen("tga/particles/particlefont.tga", FILE_READ) >= 0)))
+		fclose(fh);
+	if(have_dds && (have_jpg || have_tga))
+	{
+		cvar_set("gl_texturecompression", "0");
+		return 1;
+	}
+	else if(have_dds)
+	{
+		cvar_set("gl_texturecompression", "0");
+		cvar_set("r_texture_dds_load", "1");
+		return 0;
+	}
+	else
+	{
+		cvar_set("gl_texturecompression", cvar_string("r_texture_dds_load"));
+		return 2;
+	}
+}
+
+void XonoticEffectsSettingsTab_fill(entity me)
 {
 	entity e, s;
 	float n;
@@ -66,20 +95,35 @@ void fillXonoticEffectsSettingsTab(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Texture quality:"));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Texture resolution:"));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("gl_picmip"));
 			if(cvar("developer"))
 				e.addValue(e, "Leet", "1337");
-			e.addValue(e, "Lowest", "4");
-			e.addValue(e, "Low", "3");
-			e.addValue(e, "Normal", "2");
-			e.addValue(e, "Good", "1");
-			e.addValue(e, "Best", "0");
+			e.addValue(e, "Lowest", "2");
+			e.addValue(e, "Low", "1");
+			e.addValue(e, "Normal", "0");
+			e.addValue(e, "Good", "-1");
+			e.addValue(e, "Best", "-2");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_picmipworld", "Reduce model texture quality only"));
-			setDependent(e, "gl_picmip", 0.5, -0.5);
+		{
+			// detect texture compression method
+			float f;
+			f = updateCompression();
+			switch(f)
+			{
+				case 0:
+					break;
+				case 1:
+					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", "Avoid lossy texture compression"));
+					break;
+				case 2:
+					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", "Avoid lossy texture compression"));
+						makeMulti(e, "gl_texturecompression");
+					break;
+			}
+		}
 	me.TR(me);
 	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Anisotropy:"));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("gl_texture_anisotropy"));
@@ -92,7 +136,7 @@ void fillXonoticEffectsSettingsTab(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Particle quality:"));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1.0, 0.05, "cl_particles_quality"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0.2, 1.0, 0.1, "cl_particles_quality"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Particle dist.:"));
 		me.TD(me, 1, 2, e = makeXonoticSlider(500, 2000, 100, "r_drawparticles_drawdistance"));
@@ -158,7 +202,7 @@ void fillXonoticEffectsSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_bloom", "Bloom"));
 			setDependent(e, "r_hdr", 0, 0);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_hdr", "High Dynamic Range (HDR)"));
+		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(2, 0, "r_hdr", "High Dynamic Range (HDR)"));
 	
 	me.TR(me);
 		s = makeXonoticSlider(0.1, 1, 0.1, "r_motionblur");

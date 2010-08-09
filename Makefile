@@ -6,7 +6,8 @@ ZIP ?= 7za a -tzip -mx=9
 ZIPEXCLUDE ?= -x\!*.pk3 -xr\!\.svn -x\!qcsrc
 DIFF ?= diff
 
-FTEQCCFLAGS ?= -Werror -Wall -Wno-mundane -O3 -Ono-c -Ono-cs -flo
+FTEQCCFLAGS_WATERMARK ?= -DWATERMARK='"^1$(shell git describe) TEST BUILD"'
+FTEQCCFLAGS ?= -Werror -Wall -Wno-mundane -O3 -Ono-c -Ono-cs -flo $(FTEQCCFLAGS_EXTRA) $(FTEQCCFLAGS_WATERMARK)
 FTEQCCFLAGS_PROGS ?= 
 FTEQCCFLAGS_MENU ?= 
 
@@ -14,16 +15,15 @@ FTEQCCFLAGS_MENU ?=
 # It will automagically add an engine check with -TID and then change back to -TFTE
 FTEQCCFLAGS_CSPROGS ?= 
 
-# xonotic svn build system overrides this by command line argument
-NEX_BUILDSYSTEM =
+# xonotic build system overrides this by command line argument to turn off the update-cvarcount step
+XON_BUILDSYSTEM =
 
 all: qc
 
 .PHONY: update-cvarcount
 update-cvarcount:
-	[ "$(NEX_BUILDSYSTEM)" = "" ] || [ "$(NEX_BUILDSYSTEM)" = "1" ]
-	[ "$(NEX_BUILDSYSTEM)" != "" ] || { ! [ -f ../misc/netradiant-XonoticPack/xonotic.game/data/entities.def ] || $(DIFF) scripts/entities.def ../misc/netradiant-XonoticPack/xonotic.game/data/entities.def || { echo entities.def mismatch, please merge ../misc/netradiant-XonoticPack/xonotic.game/data/entities.def and scripts/entities.def; exit 1; }; }
-	[ "$(NEX_BUILDSYSTEM)" != "" ] || { DO_NOT_RUN_MAKE=1 sh update-cvarcount.sh; }
+	[ "$(XON_BUILDSYSTEM)" = "" ] || [ "$(XON_BUILDSYSTEM)" = "1" ]
+	[ "$(XON_BUILDSYSTEM)" = "1" ] || { DO_NOT_RUN_MAKE=1 sh update-cvarcount.sh; }
 
 .PHONY: qc
 qc: update-cvarcount
@@ -57,12 +57,15 @@ clean:
 	rm -f progs.dat menu.dat csprogs.dat
 
 csprogs.dat: qcsrc/client/*.* qcsrc/common/*.* qcsrc/warpzonelib/*.*
+	@echo make[1]: Entering directory \`$(PWD)/qcsrc/client\'
 	cd qcsrc/client && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_CSPROGS)
 
 progs.dat: qcsrc/server/*.* qcsrc/common/*.* qcsrc/server/*/*.* qcsrc/server/*/*/*.* qcsrc/warpzonelib/*.*
+	@echo make[1]: Entering directory \`$(PWD)/qcsrc/server\'
 	cd qcsrc/server && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_PROGS)
 
 menu.dat: qcsrc/menu/*.* qcsrc/menu/*/*.* qcsrc/common/*.*
+	@echo make[1]: Entering directory \`$(PWD)/qcsrc/menu\'
 	cd qcsrc/menu && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_MENU)
 
 gfx/menu/default/skinvalues.txt: qcsrc/menu/skin-customizables.inc

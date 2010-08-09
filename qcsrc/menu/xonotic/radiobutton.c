@@ -30,7 +30,7 @@ entity makeXonoticRadioButton(float theGroup, string theCvar, string theValue, s
 	me.configureXonoticRadioButton(me, theGroup, theCvar, theValue, theText);
 	return me;
 }
-void configureXonoticRadioButtonXonoticRadioButton(entity me, float theGroup, string theCvar, string theValue, string theText)
+void XonoticRadioButton_configureXonoticRadioButton(entity me, float theGroup, string theCvar, string theValue, string theText)
 {
 	if(theCvar)
 	{
@@ -41,7 +41,7 @@ void configureXonoticRadioButtonXonoticRadioButton(entity me, float theGroup, st
 	}
 	me.configureRadioButton(me, theText, me.fontSize, me.image, theGroup, 0);
 }
-void setCheckedXonoticRadioButton(entity me, float val)
+void XonoticRadioButton_setChecked(entity me, float val)
 {
 	if(val != me.checked)
 	{
@@ -49,7 +49,7 @@ void setCheckedXonoticRadioButton(entity me, float val)
 		me.saveCvars(me);
 	}
 }
-void loadCvarsXonoticRadioButton(entity me)
+void XonoticRadioButton_loadCvars(entity me)
 {
 	if(me.cvarValue)
 	{
@@ -72,7 +72,7 @@ void loadCvarsXonoticRadioButton(entity me)
 		}
 	}
 }
-void drawXonoticRadioButton(entity me)
+void XonoticRadioButton_draw(entity me)
 {
 	if not(me.cvarValue)
 		if not(me.cvarName)
@@ -89,9 +89,9 @@ void drawXonoticRadioButton(entity me)
 			if(!found)
 				me.setChecked(me, 1);
 		}
-	drawCheckBox(me);
+	SUPER(XonoticRadioButton).draw(me);
 }
-void saveCvarsXonoticRadioButton(entity me)
+void XonoticRadioButton_saveCvars(entity me)
 {
 	if(me.cvarValue)
 	{

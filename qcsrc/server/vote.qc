@@ -120,7 +120,7 @@ void VoteDialog_UpdateHighlight(float selected) {
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_VOTE);
 	WriteByte(MSG_ONE, 1);
-	WriteShort(MSG_ONE, selected);
+	WriteByte(MSG_ONE, selected);
 }
 
 void VoteDialog_Reset() {
@@ -129,6 +129,7 @@ void VoteDialog_Reset() {
 }
 
 float GameCommand_Vote(string s, entity e) {
+	local float playercount;
 	float argc;
 	argc = tokenize_console(s);
 	if(argv(0) == "help") {
@@ -161,8 +162,8 @@ float GameCommand_Vote(string s, entity e) {
 					if(vote == "") {
 						print_to(e, "^1Your vote is empty. See 'vhelp' for more info.");
 					} else if(e
-						&& time < e.vote_next) {
-							print_to(e, strcat("^1You have to wait ^2", ftos(e.vote_next - time), "^1 seconds before you can again call a vote."));
+							&& time < e.vote_next) {
+						print_to(e, strcat("^1You have to wait ^2", ftos(ceil(e.vote_next - time)), "^1 seconds before you can again call a vote."));
 					} else if(VoteCheckNasty(vote)) {
 						print_to(e, "Syntax error in command. See 'vhelp' for more info.");
 					} else if(RemapVote(vote, "vcall", e)) {
@@ -183,6 +184,14 @@ float GameCommand_Vote(string s, entity e) {
 						Nagger_VoteChanged();
 						msg_entity = e;
 						VoteDialog_UpdateHighlight(1);
+
+						local entity player;
+						FOR_EACH_REALCLIENT(player)
+						{
+							++playercount;
+						}
+						if(playercount > 1) // don't announce a "vote now" sound if player is alone
+							Announce("votecall");
 					} else {
 						print_to(e, "^1This vote is not ok. See 'vhelp' for more info.");
 					}
@@ -486,16 +495,19 @@ void VoteAccept() {
 					  // no wait for next vote
 	}
 	VoteReset();
+	Announce("voteaccept");
 }
 
 void VoteReject() {
 	bprint("\{1}^2* ^3", VoteNetname(votecaller), "^2's vote for ", votecalledvote_display, "^2 was rejected\n");
 	VoteReset();
+	Announce("votefail");
 }
 
 void VoteTimeout() {
 	bprint("\{1}^2* ^3", VoteNetname(votecaller), "^2's vote for ", votecalledvote_display, "^2 timed out\n");
 	VoteReset();
+	Announce("votefail");
 }
 
 void VoteStop(entity stopper) {
@@ -545,9 +557,9 @@ void VoteDialog_Update(float msg, float vyes, float vno, float needed) {
 	WriteByte(msg, SVC_TEMPENTITY);
 	WriteByte(msg, TE_CSQC_VOTE);
 	WriteByte(msg, 0);
-	WriteShort(msg, vyes);
-	WriteShort(msg, vno);
-	WriteShort(msg, needed);
+	WriteByte(msg, vyes);
+	WriteByte(msg, vno);
+	WriteByte(msg, needed);
 }
 
 void VoteCount() {

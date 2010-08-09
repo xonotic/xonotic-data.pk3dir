@@ -137,7 +137,7 @@ vector GetCurrentFov(float fov)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
-	if(getstati(STAT_ACTIVEWEAPON) == WEP_NEX) // do NOT use switchweapon here
+	if((getstati(STAT_ACTIVEWEAPON) == WEP_NEX && nex_scope) || (getstati(STAT_ACTIVEWEAPON) == WEP_CAMPINGRIFLE && campingrifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -291,6 +291,10 @@ float TrueAimCheck()
 			mi = '-16 -16 -16';
 			ma = '16 16 16';
 			break;
+		case WEP_SEEKER: // projectile has a size!
+			mi = '-2 -2 -2';
+			ma = '2 2 2';
+			break;
 		case WEP_ELECTRO: // projectile has a size!
 			mi = '0 0 -3';
 			ma = '0 0 -3';
@@ -332,16 +336,17 @@ float TrueAimCheck()
 
 void CSQC_common_hud(void);
 
-void CSQC_kh_hud(void);
-void CSQC_ctf_hud(void);
 void PostInit(void);
 void CSQC_Demo_Camera();
-float Sbar_WouldDrawScoreboard ();
+float HUD_WouldDrawScoreboard ();
 float view_set;
 float camera_mode;
+float reticle_type;
 string NextFrameCommand;
 void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
+
+vector freeze_pmove_org, freeze_input_angles;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -349,6 +354,8 @@ void CSQC_UpdateView(float w, float h)
 	float fov;
 	float f, i, j;
 	vector v, vo;
+
+	vector reticle_pos, reticle_size;
 
 	WaypointSprite_Load();
 
@@ -361,10 +368,23 @@ void CSQC_UpdateView(float w, float h)
 	vo = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
 	warpzone_fixview_origin = pmove_org + vo;
-	warpzone_fixview_angles = input_angles;
+	warpzone_fixview_cl_viewangles = input_angles;
+	warpzone_fixview_angles = view_angles;
 	WarpZone_FixView();
 	pmove_org = warpzone_fixview_origin - vo;
-	input_angles = warpzone_fixview_angles;
+	input_angles = warpzone_fixview_cl_viewangles;
+	view_angles = warpzone_fixview_angles;
+
+	if(cvar("cl_lockview") || autocvar__hud_configure)
+	{
+		pmove_org = freeze_pmove_org;
+		input_angles = view_angles = freeze_input_angles;
+		R_SetView(VF_ORIGIN, pmove_org + vo);
+		R_SetView(VF_ANGLES, view_angles);
+		//R_SetView(VF_CL_VIEWANGLES, input_angles);
+	}
+	freeze_pmove_org = pmove_org;
+	freeze_input_angles = input_angles;
 
 	// Render the Scene
 	if(!intermission || !view_set)
@@ -400,6 +420,7 @@ void CSQC_UpdateView(float w, float h)
 	}
 #endif
 
+	TargetMusic_Advance();
 	Fog_Force();
 
 	drawframetime = max(0.000001, time - drawtime);
@@ -414,7 +435,7 @@ void CSQC_UpdateView(float w, float h)
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
 		if(calledhooks & HOOK_START)
 		{
-			localcmd("\ncl_hook_gameend;");
+			localcmd("\ncl_hook_gameend\n");
 			calledhooks |= HOOK_END;
 		}
 
@@ -443,22 +464,25 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	sbar_alpha_fg = cvar("sbar_alpha_fg" ) * (1 - cvar("_menu_alpha"));
-	sbar_currentammo = cvar("sbar_showcurrentammo");
-	sbar_hudselector = cvar("sbar_hudselector");
-	sbar_accuracy_hud = cvar_or("sbar_accuracy_hud", 1);
+	hud_accuracy_hud = cvar_or("hud_accuracy_hud", 1);
 	ColorTranslateMode = cvar("cl_stripcolorcodes");
 	activeweapon = getstati(STAT_SWITCHWEAPON);
 	f = cvar("teamplay");
 	if(f != teamplay)
 	{
 		teamplay = f;
-		Sbar_InitScores();
+		HUD_InitScores();
 	}
 
 	if(last_weapon != activeweapon) {
 		weapontime = time;
 		last_weapon = activeweapon;
+
+		e = get_weaponinfo(activeweapon);
+		if(e.netname != "")
+			localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
+		else
+			localcmd("\ncl_hook_activeweapon none\n");
 	}
 
 	// ALWAYS Clear Current Scene First
@@ -503,15 +527,15 @@ void CSQC_UpdateView(float w, float h)
 
 	// Draw the Crosshair
 	float scoreboard_active;
-	scoreboard_active = Sbar_WouldDrawScoreboard();
+	scoreboard_active = HUD_WouldDrawScoreboard();
 	R_SetView(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
 
 	// Draw the Engine Status Bar (the default Quake HUD)
-	R_SetView(VF_DRAWENGINESBAR, 0);
+	R_SetView(VF_DRAWENGINEHUD, 0);
 
 	// fetch this one only once per frame
-	sbar_showbinds = cvar("sbar_showbinds");
-	sbar_showbinds_limit = cvar("sbar_showbinds_limit");
+	hud_showbinds = cvar("hud_showbinds");
+	hud_showbinds_limit = cvar("hud_showbinds_limit");
 
 	// Update the mouse position
 	/*
@@ -533,6 +557,48 @@ void CSQC_UpdateView(float w, float h)
 	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
+
+	// Draw the aiming reticle for weapons that use it
+	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
+	// It must be a persisted float for fading out to work properly (you let go of the zoom button for
+	// the view to go back to normal, so reticle_type would become 0 as we fade out)
+	if(spectatee_status || getstati(STAT_HEALTH) <= 0)
+		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
+	else if(button_zoom || zoomscript_caught)
+		reticle_type = 1; // normal zoom
+	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_CAMPINGRIFLE && button_attack2)
+		reticle_type = 2; // nex zoom
+
+	if(cvar("cl_reticle_stretch"))
+	{
+		reticle_size_x = vid_conwidth;
+		reticle_size_y = vid_conheight;
+		reticle_pos_x = 0;
+		reticle_pos_y = 0;
+	}
+	else
+	{
+		reticle_size_x = max(vid_conwidth, vid_conheight);
+		reticle_size_y = max(vid_conwidth, vid_conheight);
+		reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
+		reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
+	}
+
+	f = current_zoomfraction;
+	if(zoomscript_caught)
+		f = 1;
+	if(cvar("cl_reticle_item_normal"))
+	{
+		precache_pic("gfx/reticle_normal");
+		if(reticle_type == 1 && f)
+			drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * cvar("cl_reticle_item_normal"), DRAWFLAG_NORMAL);
+	}
+	if(cvar("cl_reticle_item_nex"))
+	{
+		precache_pic("gfx/reticle_nex");
+		if(reticle_type == 2 && f)
+			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * cvar("cl_reticle_item_nex"), DRAWFLAG_NORMAL);
+	}
 
 	// Draw the mouse cursor
 	// NOTE: drawpic must happen after R_RenderScene for some reason
@@ -557,37 +623,9 @@ void CSQC_UpdateView(float w, float h)
 			self.draw2d();
 	self = e;
 
-	// draw radar
-	if(
-			ons_showmap
-			||
-			(
-			 !scoreboard_active
-			 &&
-			 cvar_string("cl_teamradar") != "0"
-			 &&
-			 (
-			  cvar("cl_teamradar") == 2
-			  ||
-			  teamplay
-			 )
-			)
-	  )
-		teamradar_view();
-
-	// draw sbar
+	// draw hud
 	if(cvar("r_letterbox") == 0) {
-		if (cvar("cl_showpressedkeys")) { // draw pressed keys when spectating and playing
-			if(spectatee_status > 0 || cvar("cl_showpressedkeys") >= 2)
-				Sbar_DrawPressedKeys();
-		}
-
-		if (cvar("cl_showspeed"))
-			Sbar_ShowSpeed();
-		if (cvar("cl_showacceleration"))
-			Sbar_ShowAcceleration();
-
-		Sbar_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
+		HUD_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
 	}
 
 	float hud;
@@ -607,7 +645,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !ons_showmap && !camera_active) {
+		if(!scoreboard_active && !camera_active) {
 			// TrueAim check
 			float shottype;
 			float bullets, ring_scale;
@@ -737,13 +775,13 @@ void CSQC_UpdateView(float w, float h)
 				if (activeweapon == WEP_CAMPINGRIFLE)
 				{
 					ring_scale = cvar("crosshair_campingrifle_ring_size");
-					bullets = bound(0, getstati(STAT_BULLETS_LOADED), 8);
+					bullets = bound(0, getstati(STAT_BULLETS_LOADED), 4);
 				}
 				else
 					bullets = 0;
 
 #define CROSSHAIR_DRAW_RING(i,j,sz,wcross_name,wcross_alpha) \
-				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/hud/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
 				do \
@@ -843,19 +881,19 @@ void CSQC_UpdateView(float w, float h)
 		cvar_set("vid_conheight", h0);
 	}
 
+	if(autocvar__hud_configure)
+		HUD_Panel_Mouse();
 	// be safe against triggerbots until everyone has the fixed engine
 	// this call is meant to overwrite the trace globals by something
 	// unsuspicious
 	traceline('0 0 0', '0 0 0', MOVE_WORLDONLY, world);
 }
 
-void Sbar_Draw();
 #define spider_h "gfx/vehicles/hud_bg.tga"
 #define spider_b "gfx/vehicles/sbot.tga"
 #define spider_r "gfx/vehicles/sbot_rpods.tga"
 #define spider_g "gfx/vehicles/sbot_mguns.tga"
 #define spider_s "gfx/vehicles/shiled.tga"
-
 #define spider_a1 "gfx/hud/sb_rocket.tga"
 #define spider_a2 "gfx/sb_bullets.tga"
 
@@ -958,10 +996,10 @@ void CSQC_SPIDER_HUD()
 	}
 	*/
 
-	if (sb_showscores)
+	if (scoreboard_showscores)
 	{
-		Sbar_DrawScoreboard();
-		Sbar_DrawCenterPrint();
+		HUD_DrawScoreboard();
+		HUD_DrawCenterPrint();
 	}
 
 }
@@ -971,9 +1009,6 @@ void CSQC_SPIDER_HUD()
 #define raptor_g1 "gfx/vehicles/raptor_guns.tga"
 #define raptor_g2 "gfx/vehicles/raptor_bombs.tga"
 #define raptor_s "gfx/vehicles/shiled.tga"
-
-#define spider_a1 "gfx/hud/sb_rocket.tga"
-#define spider_a2 "gfx/sb_bullets.tga"
 
 void CSQC_RAPTOR_HUD()
 {
@@ -1028,10 +1063,10 @@ void CSQC_RAPTOR_HUD()
     drawpic(hudloc, raptor_g2, picsize, '1 1 1' * reload + '1 0 0' *  (1 - reload), 1, DRAWFLAG_NORMAL);
 
 
-	if (sb_showscores)
+	if (scoreboard_showscores)
 	{
-		Sbar_DrawScoreboard();
-		Sbar_DrawCenterPrint();
+		HUD_DrawScoreboard();
+		HUD_DrawCenterPrint();
 	}
 
 }
@@ -1138,10 +1173,10 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 
 
 
-	if (sb_showscores)
+	if (scoreboard_showscores)
 	{
-		Sbar_DrawScoreboard();
-		Sbar_DrawCenterPrint();
+		HUD_DrawScoreboard();
+		HUD_DrawCenterPrint();
 	}
 
 }
@@ -1149,7 +1184,7 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 
 void CSQC_common_hud(void)
 {
-	// Sbar_SortFrags(); done in Sbar_Draw
+	// HUD_SortFrags(); done in HUD_Draw
 	float hud;
 	hud = getstati(STAT_HUD);
 
@@ -1157,7 +1192,35 @@ void CSQC_common_hud(void)
 	switch(hud)
 	{
 		case HUD_NORMAL:
-			Sbar_Draw();
+			// do some accuracy var caching
+			float i;
+			if(!(gametype == GAME_RACE || gametype == GAME_CTS))
+			{
+				acc_levels = tokenize(cvar_string("hud_panel_weapons_accuracy_color_levels"));
+				if (acc_levels > MAX_ACCURACY_LEVELS)
+					acc_levels = MAX_ACCURACY_LEVELS;
+
+				for (i = 0; i < acc_levels; ++i)
+					acc_lev[i] = stof(argv(i));
+			}
+
+			// hud first
+			HUD_Main();
+
+			// scoreboard/accuracy
+			if (intermission == 2 && !scoreboard_showaccuracy && !scoreboard_showscores) // map voting screen
+			{
+				HUD_FinaleOverlay();
+				HUD_Reset();
+			}
+			else if(scoreboard_showaccuracy && spectatee_status != -1)
+				HUD_DrawAccuracyStats();
+			else
+				HUD_DrawScoreboard();
+
+			if (scoreboard_showscores || scoreboard_showaccuracy || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
+				HUD_Reset();
+
 			break;
 
 		case HUD_SPIDERBOT:

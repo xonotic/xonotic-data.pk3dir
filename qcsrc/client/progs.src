@@ -21,10 +21,12 @@ autocvars.qh
 
 interpolate.qh
 teamradar.qh
+hud.qh
 waypointsprites.qh
 movetypes.qh
 prandom.qh
 bgmscript.qh
+noise.qh
 
 main.qh
 
@@ -34,7 +36,9 @@ teamplay.qc
 
 ctf.qc
 
-sbar.qc
+teamradar.qc
+hud.qc
+scoreboard.qc
 mapvoting.qc
 
 rubble.qc
@@ -49,21 +53,23 @@ effects.qc
 wall.qc
 modeleffects.qc
 tuba.qc
+target_music.qc
 
 //vehicles/spiderbot.qc
 Main.qc
 View.qc
 interpolate.qc
-teamradar.qc
 waypointsprites.qc
 movetypes.qc
 prandom.qc
 bgmscript.qc
+noise.qc
 
 ../common/util.qc
 ../common/gamecommand.qc
 ../common/mapinfo.qc
 ../common/items.qc
+../server/w_all.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

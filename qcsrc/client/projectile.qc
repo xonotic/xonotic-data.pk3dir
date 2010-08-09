@@ -22,6 +22,11 @@ void SUB_Stop()
 .float silent;
 .float traileffect;
 
+void Projectile_ResetTrail(vector to)
+{
+	self.trail_oldorigin = to;
+	self.trail_oldtime = time;
+}
 void Projectile_DrawTrail(vector to)
 {
 	vector from;
@@ -31,8 +36,16 @@ void Projectile_DrawTrail(vector to)
 	self.trail_oldorigin = to;
 	self.trail_oldtime = time;
 
+	// force the effect even for stationary firemine
+	if(self.cnt == PROJECTILE_FIREMINE)
+		if(from == to)
+			from_z += 1;
+
 	if (self.traileffect)
-		trailparticles(self, self.traileffect, from, to);
+	{
+		particles_alphamin = particles_alphamax = sqrt(self.alpha);
+		boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, sqrt(self.alpha), PARTICLES_USEALPHA);
+	}
 }
 
 void Projectile_Draw()
@@ -49,7 +62,15 @@ void Projectile_Draw()
 	if(self.count & 0x80)
 	{
 		//self.move_flags &~= FL_ONGROUND;
-		Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+		if(self.move_movetype == MOVETYPE_NONE || self.move_movetype == MOVETYPE_FLY)
+			Movetype_Physics_NoMatchServer();
+			// the trivial movetypes do not have to match the
+			// server's ticrate as they are ticrate independent
+			// NOTE: this assumption is only true if MOVETYPE_FLY
+			// projectiles detonate on impact. If they continue
+			// moving, we might still be ticrate dependent.
+		else
+			Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 		if(!(self.move_flags & FL_ONGROUND))
 			self.angles = vectoangles(self.velocity);
 	}
@@ -97,8 +118,10 @@ void Projectile_Draw()
 	makevectors(ang);
 
 	a = 1 - (time - self.fade_time) * self.fade_rate;
-	if(a <= 0)
+	self.alpha = bound(0, self.alphamod * a, 1);
+	if(self.alpha <= 0)
 		drawn = 0;
+	self.renderflags = 0;
 
 	trailorigin = self.origin;
 	switch(self.cnt)
@@ -113,10 +136,7 @@ void Projectile_Draw()
 	if(drawn)
 		Projectile_DrawTrail(trailorigin);
 	else
-	{
-		self.trail_oldorigin = trailorigin;
-		self.trail_oldtime = time;
-	}
+		Projectile_ResetTrail(trailorigin);
 
 	if(!drawn)
 		return;
@@ -130,9 +150,6 @@ void Projectile_Draw()
 		default:
 			break;
 	}
-
-	self.alpha = self.alphamod * a;
-	self.renderflags = 0;
 
 	R_AddEntity(self);
 }
@@ -213,13 +230,15 @@ void Ent_Projectile()
 			self.velocity_x = ReadCoord();
 			self.velocity_y = ReadCoord();
 			self.velocity_z = ReadCoord();
-			self.gravity = ReadCoord();
-
+			if(f & 0x10)
+				self.gravity = ReadCoord();
+			else
+				self.gravity = 0; // none
 			self.move_origin = self.origin;
 			self.move_velocity = self.velocity;
 		}
 
-		if(time == self.spawntime || (self.count & 0x80) || (f & 0x10))
+		if(time == self.spawntime || (self.count & 0x80) || (f & 0x08))
 		{
 			self.trail_oldorigin = self.origin;
 			if(!(self.count & 0x80))
@@ -268,6 +287,9 @@ void Ent_Projectile()
 			case PROJECTILE_HAGAR_BOUNCING: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("TR_GRENADE"); self.scale = 0.4; break;
 			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("fireball"); break; // particle effect is good enough
 			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("firemine"); break; // particle effect is good enough
+			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_FLAC: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_SEEKER: setmodel(self, "models/tagrocket.md3"); self.scale = 2; self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
@@ -285,8 +307,8 @@ void Ent_Projectile()
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
 				loopsound(self, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
-				self.mins = '0 0 -3';
-				self.maxs = '0 0 -3';
+				self.mins = '0 0 -4';
+				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
 				break;
@@ -304,6 +326,8 @@ void Ent_Projectile()
 				self.maxs = '0 0 -3';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
+				self.move_bounce_factor = g_balance_grenadelauncher_secondary_bouncefactor;
+				self.move_bounce_stopspeed = g_balance_grenadelauncher_secondary_bouncestop;
 				break;
 			case PROJECTILE_PORTO_RED:
 				self.colormod = '2 1 1';
@@ -334,6 +358,19 @@ void Ent_Projectile()
 				loopsound(self, CHAN_PROJECTILE, "weapons/fireball_fly.wav", VOL_BASE, ATTN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
+				self.mins = '-4 -4 -4';
+				self.maxs = '4 4 4';
+				break;
+			case PROJECTILE_TAG:
+				loopsound(self, CHAN_PROJECTILE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
+				self.mins = '-2 -2 -2';
+				self.maxs = '2 2 2';
+				break;
+			case PROJECTILE_FLAC:
+				self.mins = '-2 -2 -2';
+				self.maxs = '2 2 2';
+				break;
+			case PROJECTILE_SEEKER:
 				self.mins = '-4 -4 -4';
 				self.maxs = '4 4 4';
 				break;
@@ -374,9 +411,11 @@ void Projectile_Precache()
 	precache_model("models/laser.mdl");
 	precache_model("models/plasmatrail.mdl");
 	precache_model("models/rocket.md3");
+	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
 	precache_sound("weapons/electro_fly.wav");
 	precache_sound("weapons/rocket_fly.wav");
 	precache_sound("weapons/fireball_fly.wav");
 	precache_sound("weapons/fireball_fly2.wav");
+	precache_sound("weapons/tag_rocket_fly.wav");
 }

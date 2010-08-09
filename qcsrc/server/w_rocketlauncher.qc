@@ -1,6 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "rl", "rocketlauncher", "Rocket Launcher");
 #else
+#ifdef SVQC
 .float rl_release;
 .float rl_detonate_later;
 
@@ -13,7 +14,7 @@ void W_Rocket_Unregister()
 	}
 }
 
-void W_Rocket_Explode (void)
+void W_Rocket_Explode ()
 {
 	W_Rocket_Unregister();
 
@@ -25,7 +26,31 @@ void W_Rocket_Explode (void)
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
+
 	RadiusDamage (self, self.owner, cvar("g_balance_rocketlauncher_damage"), cvar("g_balance_rocketlauncher_edgedamage"), cvar("g_balance_rocketlauncher_radius"), world, cvar("g_balance_rocketlauncher_force"), self.projectiledeathtype, other);
+
+	if (self.owner.weapon == WEP_ROCKET_LAUNCHER)
+	{
+		if(self.owner.ammo_rockets < cvar("g_balance_rocketlauncher_ammo"))
+		{
+			self.owner.cnt = WEP_ROCKET_LAUNCHER;
+			ATTACK_FINISHED(self.owner) = time;
+			self.owner.switchweapon = w_getbestweapon(self.owner);
+		}
+		if(g_laserguided_missile)
+			ATTACK_FINISHED(self.owner) = time + cvar("g_balance_rocketlauncher_refire") * W_WeaponRateFactor();
+	}
+	remove (self);
+}
+
+void W_Rocket_DoRemoteExplode ()
+{
+	W_Rocket_Unregister();
+
+	self.event_damage = SUB_Null;
+	self.takedamage = DAMAGE_NO;
+
+	RadiusDamage (self, self.owner, cvar("g_balance_rocketlauncher_remote_damage"), cvar("g_balance_rocketlauncher_remote_edgedamage"), cvar("g_balance_rocketlauncher_remote_radius"), world, cvar("g_balance_rocketlauncher_remote_force"), self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
 	if (self.owner.weapon == WEP_ROCKET_LAUNCHER)
 	{
@@ -103,12 +128,7 @@ void W_Rocket_RemoteExplode()
 			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > cvar("g_balance_rocketlauncher_radius")) // safety device
 		)
 		{
-			other = world;
-			self.projectiledeathtype |= HITTYPE_BOUNCE;
-			W_Rocket_Explode ();
-		}
-		else
-		{
+			W_Rocket_DoRemoteExplode();
 		}
 	}
 }
@@ -520,7 +540,7 @@ float w_rlauncher(float req)
 		precache_model ("models/flash.md3");
 		precache_model ("models/weapons/g_rl.md3");
 		precache_model ("models/weapons/v_rl.md3");
-		precache_model ("models/weapons/h_rl.dpm");
+		precache_model ("models/weapons/h_rl.iqm");
 		precache_sound ("weapons/rocket_det.wav");
 		precache_sound ("weapons/rocket_fire.wav");
 		precache_sound ("weapons/rocket_mode.wav");
@@ -543,21 +563,40 @@ float w_rlauncher(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "exploded";
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = "got too close to #'s rocket";
-		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "almost dodged #'s rocket";
-		else
-			w_deathtypestring = "ate #'s rocket";
-	}
 	else if (req == WR_RESETPLAYER)
 	{
 		self.rl_release = 0;
 	}
 	return TRUE;
 };
+#endif
+#ifdef CSQC
+float w_rlauncher(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 12;
+		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
+		if(!w_issilent)
+			sound(self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/rocket_impact.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "%s exploded";
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
+			w_deathtypestring = "%s got too close to %s's rocket";
+		else if(w_deathtype & HITTYPE_SPLASH)
+			w_deathtypestring = "%s almost dodged %s's rocket";
+		else
+			w_deathtypestring = "%s ate %s's rocket";
+	}
+	return TRUE;
+}
+#endif
 #endif

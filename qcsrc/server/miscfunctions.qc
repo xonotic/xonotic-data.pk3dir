@@ -229,12 +229,6 @@ void relocate_spawnpoint()
         }
     }
 
-    if (cvar("g_spawnpoints_autodrop"))
-    {
-        setsize(self, PL_MIN, PL_MAX);
-        droptofloor();
-    }
-
     self.use = spawnpoint_use;
     self.team_saved = self.team;
     if (!self.cnt)
@@ -534,7 +528,7 @@ void GetCvars_handleString(string thisname, float f, .string field, string name)
 		}
 	}
 	else
-		stuffcmd(self, strcat("sendcvar ", name, "\n"));
+		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 }
 void GetCvars_handleString_Fixup(string thisname, float f, .string field, string name, string(string) func)
 {
@@ -562,7 +556,7 @@ void GetCvars_handleFloat(string thisname, float f, .float field, string name)
 			self.field = stof(argv(f + 1));
 	}
 	else
-		stuffcmd(self, strcat("sendcvar ", name, "\n"));
+		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 }
 void GetCvars_handleFloatOnce(string thisname, float f, .float field, string name)
 {
@@ -584,7 +578,7 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 	else
 	{
 		if(!self.field)
-			stuffcmd(self, strcat("sendcvar ", name, "\n"));
+			stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
 string W_FixWeaponOrder_ForceComplete(string s);
@@ -825,20 +819,30 @@ float g_pickup_fuel_jetpack;
 float g_pickup_fuel_max;
 float g_pickup_armorsmall;
 float g_pickup_armorsmall_max;
+float g_pickup_armorsmall_anyway;
 float g_pickup_armormedium;
 float g_pickup_armormedium_max;
+float g_pickup_armormedium_anyway;
 float g_pickup_armorbig;
 float g_pickup_armorbig_max;
+float g_pickup_armorbig_anyway;
 float g_pickup_armorlarge;
 float g_pickup_armorlarge_max;
+float g_pickup_armorlarge_anyway;
 float g_pickup_healthsmall;
 float g_pickup_healthsmall_max;
+float g_pickup_healthsmall_anyway;
 float g_pickup_healthmedium;
 float g_pickup_healthmedium_max;
+float g_pickup_healthmedium_anyway;
 float g_pickup_healthlarge;
 float g_pickup_healthlarge_max;
+float g_pickup_healthlarge_anyway;
 float g_pickup_healthmega;
 float g_pickup_healthmega_max;
+float g_pickup_healthmega_anyway;
+float g_pickup_ammo_anyway;
+float g_pickup_weapons_anyway;
 float g_weaponarena;
 float g_weaponarena_random;
 string g_weaponarena_list;
@@ -1217,7 +1221,6 @@ void readlevelcvars(void)
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
 	sv_pogostick = cvar("sv_pogostick");
-	sv_doublejump = cvar("sv_doublejump");
 	g_ctf_reverse = cvar("g_ctf_reverse");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
@@ -1262,20 +1265,31 @@ void readlevelcvars(void)
 	g_pickup_fuel_max = cvar("g_pickup_fuel_max");
 	g_pickup_armorsmall = cvar("g_pickup_armorsmall");
 	g_pickup_armorsmall_max = cvar("g_pickup_armorsmall_max");
+	g_pickup_armorsmall_anyway = cvar("g_pickup_armorsmall_anyway");
 	g_pickup_armormedium = cvar("g_pickup_armormedium");
 	g_pickup_armormedium_max = cvar("g_pickup_armormedium_max");
+	g_pickup_armormedium_anyway = cvar("g_pickup_armormedium_anyway");
 	g_pickup_armorbig = cvar("g_pickup_armorbig");
 	g_pickup_armorbig_max = cvar("g_pickup_armorbig_max");
+	g_pickup_armorbig_anyway = cvar("g_pickup_armorbig_anyway");
 	g_pickup_armorlarge = cvar("g_pickup_armorlarge");
 	g_pickup_armorlarge_max = cvar("g_pickup_armorlarge_max");
+	g_pickup_armorlarge_anyway = cvar("g_pickup_armorlarge_anyway");
 	g_pickup_healthsmall = cvar("g_pickup_healthsmall");
 	g_pickup_healthsmall_max = cvar("g_pickup_healthsmall_max");
+	g_pickup_healthsmall_anyway = cvar("g_pickup_healthsmall_anyway");
 	g_pickup_healthmedium = cvar("g_pickup_healthmedium");
 	g_pickup_healthmedium_max = cvar("g_pickup_healthmedium_max");
+	g_pickup_healthmedium_anyway = cvar("g_pickup_healthmedium_anyway");
 	g_pickup_healthlarge = cvar("g_pickup_healthlarge");
 	g_pickup_healthlarge_max = cvar("g_pickup_healthlarge_max");
+	g_pickup_healthlarge_anyway = cvar("g_pickup_healthlarge_anyway");
 	g_pickup_healthmega = cvar("g_pickup_healthmega");
 	g_pickup_healthmega_max = cvar("g_pickup_healthmega_max");
+	g_pickup_healthmega_anyway = cvar("g_pickup_healthmega_anyway");
+
+	g_pickup_ammo_anyway = cvar("g_pickup_ammo_anyway");
+	g_pickup_weapons_anyway = cvar("g_pickup_weapons_anyway");
 
 	g_pinata = cvar("g_pinata");
 
@@ -1513,30 +1527,50 @@ void play2all(string samp)
 }
 
 void PrecachePlayerSounds(string f);
-void precache_all_models(string pattern)
+void precache_playermodel(string m)
 {
-    float globhandle, i, n;
-    string f;
+	float globhandle, i, n;
+	string f;
 
-    globhandle = search_begin(pattern, TRUE, FALSE);
-    if (globhandle < 0)
-        return;
-    n = search_getsize(globhandle);
-    for (i = 0; i < n; ++i)
-    {
+	if(substring(m, -9,5) == "_lod1")
+		return;
+	if(substring(m, -9,5) == "_lod2")
+		return;
+	precache_model(m);
+	if(sv_loddistance1)
+	{
+		precache_model(strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1)));
+		precache_model(strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1)));
+	}
+
+	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
+	if (globhandle < 0)
+		return;
+	n = search_getsize(globhandle);
+	for (i = 0; i < n; ++i)
+	{
 		//print(search_getfilename(globhandle, i), "\n");
 		f = search_getfilename(globhandle, i);
-		if(sv_loddistance1)
-			precache_model(f);
-		if(substring(f, -9,5) == "_lod1")
-			continue;
-		if(substring(f, -9,5) == "_lod2")
-			continue;
-		if(!sv_loddistance1)
-			precache_model(f);
-		PrecachePlayerSounds(strcat(f, ".sounds"));
-    }
-    search_end(globhandle);
+		PrecachePlayerSounds(f);
+	}
+	search_end(globhandle);
+}
+void precache_all_playermodels(string pattern)
+{
+	float globhandle, i, n;
+	string f;
+
+	globhandle = search_begin(pattern, TRUE, FALSE);
+	if (globhandle < 0)
+		return;
+	n = search_getsize(globhandle);
+	for (i = 0; i < n; ++i)
+	{
+		//print(search_getfilename(globhandle, i), "\n");
+		f = search_getfilename(globhandle, i);
+		precache_playermodel(f);
+	}
+	search_end(globhandle);
 }
 
 void precache()
@@ -1559,25 +1593,11 @@ void precache()
     if (cvar("sv_precacheplayermodels"))
     {
         PrecachePlayerSounds("sound/player/default.sounds");
-        precache_all_models("models/player/*.zym");
-        precache_all_models("models/player/*.dpm");
-        precache_all_models("models/player/*.md3");
-        precache_all_models("models/player/*.psk");
-        //precache_model("models/player/carni.zym");
-        //precache_model("models/player/crash.zym");
-        //precache_model("models/player/grunt.zym");
-        //precache_model("models/player/headhunter.zym");
-        //precache_model("models/player/insurrectionist.zym");
-        //precache_model("models/player/jeandarc.zym");
-        //precache_model("models/player/lurk.zym");
-        //precache_model("models/player/lycanthrope.zym");
-        //precache_model("models/player/marine.zym");
-        //precache_model("models/player/nexus.zym");
-        //precache_model("models/player/pyria.zym");
-        //precache_model("models/player/shock.zym");
-        //precache_model("models/player/skadi.zym");
-        //precache_model("models/player/specop.zym");
-        //precache_model("models/player/visitant.zym");
+        precache_all_playermodels("models/player/*.zym");
+        precache_all_playermodels("models/player/*.dpm");
+        precache_all_playermodels("models/player/*.md3");
+        precache_all_playermodels("models/player/*.psk");
+        precache_all_playermodels("models/player/*.iqm");
     }
 
     if (cvar("sv_defaultcharacter"))
@@ -1585,34 +1605,19 @@ void precache()
         string s;
         s = cvar_string("sv_defaultplayermodel_red");
         if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
+            precache_playermodel(s);
         s = cvar_string("sv_defaultplayermodel_blue");
         if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
+            precache_playermodel(s);
         s = cvar_string("sv_defaultplayermodel_yellow");
         if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
+            precache_playermodel(s);
         s = cvar_string("sv_defaultplayermodel_pink");
         if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
+            precache_playermodel(s);
         s = cvar_string("sv_defaultplayermodel");
         if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
+            precache_playermodel(s);
     }
 
     if (g_footsteps)
@@ -1902,6 +1907,13 @@ void adaptor_think2use()
     self.use();
     other = o;
     activator = a;
+}
+
+void adaptor_think2use_hittype_splash() // for timed projectile detonation
+{
+	if not(self.flags & FL_ONGROUND) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
+		self.projectiledeathtype |= HITTYPE_SPLASH;
+	adaptor_think2use();
 }
 
 // deferred dropping
@@ -2318,9 +2330,9 @@ void write_recordmarker(entity pl, float tstart, float dt)
                  " ", ftos(tstart), " ", ftos(dt), "\n"));
 }
 
-vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter)
+vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter, float algn)
 {
-	switch(self.owner.cvar_cl_gunalign)
+	switch(algn)
 	{
 		case 1: // right
 			break;
@@ -2335,7 +2347,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			{
 				// center
 				vecs_y = 0;
-				vecs_z -= 4;
+				vecs_z -= 2;
 			}
 			else
 			{
@@ -2348,7 +2360,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			{
 				// center
 				vecs_y = 0;
-				vecs_z -= 4;
+				vecs_z -= 2;
 			}
 			else
 			{
@@ -2360,7 +2372,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 	return vecs;
 }
 
-vector shotorg_adjust(vector vecs, float y_is_right, float visual)
+vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float algn)
 {
 	string s;
 	vector v;
@@ -2369,7 +2381,7 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual)
 	{
 		if (visual)
 		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE);
+			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE, algn);
 		}
 		else
 		{
@@ -2381,12 +2393,12 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual)
 	{
 		if (visual)
 		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE);
+			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE, algn);
 		}
 		else
 		{
 			vecs_y = 0;
-			vecs_z -= 4;
+			vecs_z -= 2;
 		}
 	}
 	else if ((s = cvar_string("g_shootfromfixedorigin")) != "")
@@ -2401,11 +2413,15 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual)
 	}
 	else if (cvar("g_shootfromclient"))
 	{
-		vecs = shotorg_adjustfromclient(vecs, y_is_right, (cvar("g_shootfromclient") >= 2));
+		vecs = shotorg_adjustfromclient(vecs, y_is_right, (cvar("g_shootfromclient") >= 2), algn);
 	}
 	return vecs;
 }
 
+vector shotorg_adjust(vector vecs, float y_is_right, float visual)
+{
+	return shotorg_adjust_values(vecs, y_is_right, visual, self.owner.cvar_cl_gunalign);
+}
 
 
 void attach_sameorigin(entity e, entity to, string tag)

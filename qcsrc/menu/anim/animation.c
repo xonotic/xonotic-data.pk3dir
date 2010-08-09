@@ -27,88 +27,89 @@ void setterDummy(entity, float);
 #endif
 
 #ifdef IMPLEMENTATION
-void configureAnimationAnimation(entity me, entity obj, void(entity, float) setter, float startTime, float duration, float startValue, float end)
+void Animation_configureAnimation(entity me, entity obj, void(entity, float) objSetter, float animStartTime, float animDuration, float animStartValue, float animEndValue)
 {
-	me.setObjectSetter(me, obj, setter);
-	me.setTimeStartDuration(me, startTime, duration);
-	me.setValueStartEnd(me, startValue, end);
+	me.setObjectSetter(me, obj, objSetter);
+	me.setTimeStartDuration(me, animStartTime, animDuration);
+	me.setValueStartEnd(me, animStartValue, animEndValue);
 }
 
-void setTimeStartEndAnimation(entity me, float s, float e)
+void Animation_setTimeStartEnd(entity me, float s, float e)
 {
 	me.startTime = s;
 	me.duration = e - s;
 }
 
-void setTimeStartDurationAnimation(entity me, float s, float d)
+void Animation_setTimeStartDuration(entity me, float s, float d)
 {
 	me.startTime = s;
 	me.duration = d;
 }
 
-void setValueStartEndAnimation(entity me, float s, float e)
+void Animation_setValueStartEnd(entity me, float s, float e)
 {
 	me.startValue = s;
 	me.delta = e - s;
 }
 
-void setValueStartDeltaAnimation(entity me, float s, float d)
+void Animation_setValueStartDelta(entity me, float s, float d)
 {
 	me.startValue = s;
 	me.delta = d;
 }
 
-void setObjectSetterAnimation(entity me, entity o, void(entity, float) s)
+void Animation_setObjectSetter(entity me, entity o, void(entity, float) s)
 {
 	me.object = o;
 	me.setter = s;
 }
 
-void tickAnimation(entity me, float time)
+void Animation_tick(entity me, float tickTime)
 {
-	if (me.isStopped(me) || me.isFinished(me) || (time < me.startTime))
+	if (me.isStopped(me) || me.isFinished(me) || (tickTime < me.startTime))
 		return;
 
-	if (time >= (me.startTime + me.duration))
+	if (tickTime >= (me.startTime + me.duration))
 		me.finishAnim(me);
 	else
-		me.value = me.calcValue(me, (time - me.startTime), me.duration, me.startValue, me.delta);
+		me.value = me.calcValue(me, (tickTime - me.startTime), me.duration, me.startValue, me.delta);
 
 	me.setter(me.object, me.value);
 }
 
-float calcValueAnimation(entity me, float time, float duration, float startValue, float delta)
+float Animation_calcValue(entity me, float tickTime, float animDuration, float animStartValue, float animDelta)
 {
-	return startValue;
+	return animStartValue;
 }
 
-float isStoppedAnimation(entity me)
+float Animation_isStopped(entity me)
 {
 	return me.stopped;
 }
 
-void stopAnimAnimation(entity me)
+void Animation_stopAnim(entity me)
 {
 	me.stopped = TRUE;
 }
 
-void resumeAnimAnimation(entity me)
+void Animation_resumeAnim(entity me)
 {
 	me.stopped = FALSE;
 }
 
-float isFinishedAnimation(entity me)
+float Animation_isFinished(entity me)
 {
 	return me.finished;
 }
 
-void finishAnimAnimation(entity me)
+void Animation_finishAnim(entity me)
 {
 	me.value = me.delta + me.startValue;
 	me.finished = TRUE;
+	me.setter(me.object, me.value);
 }
 
-void setterDummy(entity object, float value)
+void setterDummy(entity obj, float objValue)
 {
 }
 

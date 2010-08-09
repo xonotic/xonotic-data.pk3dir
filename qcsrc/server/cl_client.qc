@@ -398,8 +398,15 @@ Checks if the argument string can be a valid playermodel.
 Returns a valid one in doubt.
 =============
 */
-string FallbackPlayerModel = "models/player/marine.zym";
+string FallbackPlayerModel;
 string CheckPlayerModel(string plyermodel) {
+	if(FallbackPlayerModel != cvar_defstring("_cl_playermodel"))
+	{
+		// note: we cannot summon Don Strunzone here, some player may
+		// still have the model string set. In case anyone manages how
+		// to change a cvar default, we'll have a small leak here.
+		FallbackPlayerModel = strzone(cvar_defstring("_cl_playermodel"));
+	}
 	if(strlen(plyermodel) < 4)
 		return FallbackPlayerModel;
 	if( substring(plyermodel,0,14) != "models/player/")
@@ -508,7 +515,6 @@ float Client_customizeentityforclient()
 	return TRUE;
 }
 
-void UpdatePlayerSounds();
 void setmodel_lod(entity e, string modelname)
 {
 	string s;
@@ -933,6 +939,7 @@ void PutClientInServer (void)
 		self.nextthink = 0;
 		self.hook_time = 0;
 		self.dmg_team = 0;
+		self.ballistics_density = cvar("g_ballistics_density_player");
 
 		self.metertime = 0;
 
@@ -1056,22 +1063,69 @@ float ClientInit_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
 	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_x);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_y);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_z);
-
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[3]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[3]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[3]));
 	if(sv_foginterval && world.fog != "")
 		WriteString(MSG_ENTITY, world.fog);
 	else
 		WriteString(MSG_ENTITY, "");
-	WriteByte(MSG_ENTITY, cvar("g_balance_armor_blockpercent") * 255.0);
-	WriteByte(MSG_ENTITY, cvar("g_balance_weaponswitchdelay") * 255.0);
+	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
+	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
+	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_secondary_bouncefactor
+	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_secondary_bouncestop
+	WriteByte(MSG_ENTITY, cvar("g_balance_nex_secondary")); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, cvar("g_balance_campingrifle_secondary")); // client has to know if it should zoom or not
 	return TRUE;
+}
+
+void ClientInit_CheckUpdate()
+{
+	self.nextthink = time;
+	if(self.count != cvar("g_balance_armor_blockpercent"))
+	{
+		self.count = cvar("g_balance_armor_blockpercent");
+		self.SendFlags |= 1;
+	}
+	if(self.cnt != cvar("g_balance_weaponswitchdelay"))
+	{
+		self.cnt = cvar("g_balance_weaponswitchdelay");
+		self.SendFlags |= 1;
+	}
+	if(self.bouncefactor != cvar("g_balance_grenadelauncher_secondary_bouncefactor"))
+	{
+		self.bouncefactor = cvar("g_balance_grenadelauncher_secondary_bouncefactor");
+		self.SendFlags |= 1;
+	}
+	if(self.bouncestop != cvar("g_balance_grenadelauncher_secondary_bouncestop"))
+	{
+		self.bouncestop = cvar("g_balance_grenadelauncher_secondary_bouncestop");
+		self.SendFlags |= 1;
+	}
 }
 
 void ClientInit_Spawn()
 {
-	Net_LinkEntity(spawn(), FALSE, 0, ClientInit_SendEntity);
+	entity o;
+	entity e;
+	e = spawn();
+	e.classname = "clientinit";
+	e.think = ClientInit_CheckUpdate;
+	Net_LinkEntity(e, FALSE, 0, ClientInit_SendEntity);
+
+	o = self;
+	self = e;
+	ClientInit_CheckUpdate();
+	self = o;
 }
 
 /*
@@ -1350,6 +1404,10 @@ void ClientConnect (void)
 		return;
 
 	DecodeLevelParms();
+
+#ifdef WATERMARK
+	sprint(self, strcat("^4SVQC Build information: ", WATERMARK(), "\n"));
+#endif
 
 	self.classname = "player_joining";
 
@@ -1748,10 +1806,31 @@ void UpdateTeamBubble()
 	else self.colormod = '1 1 1';
 };*/
 
+.float oldcolormap;
 void respawn(void)
 {
+	if(self.modelindex != 0 && cvar("g_respawn_ghosts"))
+	{
+		self.solid = SOLID_NOT;
+		self.takedamage = DAMAGE_NO;
+		self.movetype = MOVETYPE_FLY;
+		self.velocity = '0 0 1' * cvar("g_respawn_ghosts_speed");
+		self.avelocity = randomvec() * cvar("g_respawn_ghosts_speed") * 3 - randomvec() * cvar("g_respawn_ghosts_speed") * 3;
+		self.effects |= EF_ADDITIVE;
+		self.oldcolormap = self.colormap;
+		self.colormap = 512;
+		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
+		if(cvar("g_respawn_ghosts_maxtime"))
+			SUB_SetFade (self, time + cvar("g_respawn_ghosts_maxtime") / 2 + random () * (cvar("g_respawn_ghosts_maxtime") - cvar("g_respawn_ghosts_maxtime") / 2), 1.5);
+	}
+
 	CopyBody(1);
 	self.effects |= EF_NODRAW; // prevent another CopyBody
+	if(self.oldcolormap)
+	{
+		self.colormap = self.oldcolormap;
+		self.oldcolormap = 0;
+	}
 	PutClientInServer();
 }
 
@@ -2458,9 +2537,9 @@ void PlayerPreThink (void)
 		if(self.cvar_g_xonoticversion)
 			if(time > self.version_nagtime)
 			{
-				if(strstr(self.cvar_g_xonoticversion, "svn", 0) < 0)
+				if(strstr(self.cvar_g_xonoticversion, "git", 0) < 0)
 				{
-					if(strstr(cvar_string("g_xonoticversion"), "svn", 0) >= 0)
+					if(strstr(cvar_string("g_xonoticversion"), "git", 0) >= 0)
 					{
 						dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", cvar_string("g_xonoticversion"), " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
 						sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Xonotic ", cvar_string("g_xonoticversion"), " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n"));
@@ -2531,7 +2610,23 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+			if(self.health <= 0 && cvar("g_deathglow"))
+			{
+				if(self.glowmod_x > 0)
+					self.glowmod_x -= cvar("g_deathglow") * frametime;
+				else
+					self.glowmod_x = -1;
+				if(self.glowmod_y > 0)
+					self.glowmod_y -= cvar("g_deathglow") * frametime;
+				else
+					self.glowmod_y = -1;
+				if(self.glowmod_z > 0)
+					self.glowmod_z -= cvar("g_deathglow") * frametime;
+				else
+					self.glowmod_z = -1;
+			}
+			else
+				self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
 			player_powerups();
 		}
 
@@ -2591,7 +2686,6 @@ void PlayerPreThink (void)
 		FOR_EACH_PLAYER(other) if(self != other)
 		{
 			if(time > other.touchexplode_time)
-			if(other.classname == "player")
 			if(other.deadflag == DEAD_NO)
 			if not(IS_INDEPENDENT_PLAYER(other))
 			if(boxesoverlap(self.absmin, self.absmax, other.absmin, other.absmax))
@@ -2709,7 +2803,7 @@ void PlayerPreThink (void)
 	}
 
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX));
+		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_CAMPINGRIFLE && cvar("g_balance_campingrifle_secondary") == 0));
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;
@@ -2780,6 +2874,18 @@ Called every frame for each client after the physics are run
 =============
 */
 .float idlekick_lasttimeleft;
+.entity showheadshotbbox;
+void showheadshotbbox_think()
+{
+	if(self.owner.showheadshotbbox != self)
+	{
+		remove(self);
+		return;
+	}
+	self.nextthink = time;
+	setorigin(self, self.owner.origin);
+	setsize(self, GetHeadshotMins(self.owner), GetHeadshotMaxs(self.owner));
+}
 void PlayerPostThink (void)
 {
 	// Savage: Check for nameless players
@@ -2881,6 +2987,26 @@ void PlayerPostThink (void)
 	if(self.waypointsprite_attachedforcarrier)
 		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, cvar("g_balance_armor_blockpercent")));
 	
+	if(self.classname == "player" && self.deadflag == DEAD_NO && cvar("r_showbboxes"))
+	{
+		if(!self.showheadshotbbox)
+		{
+			self.showheadshotbbox = spawn();
+			self.showheadshotbbox.classname = "headshotbbox";
+			self.showheadshotbbox.owner = self;
+			self.showheadshotbbox.think = showheadshotbbox_think;
+			self.showheadshotbbox.nextthink = time;
+			self = self.showheadshotbbox;
+			self.think();
+			self = self.owner;
+		}
+	}
+	else
+	{
+		if(self.showheadshotbbox)
+			remove(self.showheadshotbbox);
+	}
+
 	playerdemo_write();
 
 	/*

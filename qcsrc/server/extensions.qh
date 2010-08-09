@@ -572,12 +572,10 @@ float(float a) tan = #475; // returns tangent value (which is simply sin(a)/cos(
 // string autocvar__cl_name;
 //NOTE: copying a string-typed autocvar to another variable/field, and then
 //changing the cvar or returning from progs is UNDEFINED. Writing to autocvar
-//globals is UNDEFINED.  Accessing autocvar globals after cvar_set()ing that
+//globals is UNDEFINED. Accessing autocvar globals after cvar_set()ing that
 //cvar is IMPLEMENTATION DEFINED (an implementation may either yield the
-//previous, or the current, value). Whether autocvar globals, after restoring
-//a savegame, have the cvar's current value, or the original value at time of
-//saving, is UNDEFINED. Restoring a savegame however must not restore the
-//cvar values themselves.
+//previous, or the current, value). Writing to an autocvar global is NOT
+//ALLOWED.
 //In case the cvar does NOT exist, then it is automatically created with the
 //value of the autocvar initializer, if given. This is possible with e.g.
 //frikqcc and fteqcc the following way:
@@ -1305,6 +1303,17 @@ float(entity clent) clienttype = #455; // returns one of the CLIENTTYPE_* consta
 //making explosion models that face the viewer (does not work well with chase_active).  for example: float() explosion_customizeentityforclient = {self.angles = vectoangles(other.origin + other.view_ofs - self.origin);self.angles_x = 0 - self.angles_x;};
 //implementation notes:
 //entity customization is done before per-client culling (visibility for instance) because the entity may be doing setorigin to display itself in different locations on different clients, may be altering its .modelindex, .effects and other fields important to culling, so customized entities increase cpu usage (non-customized entities can use all the early culling they want however, as they are not changing on a per client basis).
+
+//DP_SV_DISCARDABLEDEMO
+//idea: parasti
+//darkplaces implementation: parasti
+//field definitions:
+.float discardabledemo;
+//description:
+//when this field is set to a non-zero value on a player entity, a possibly recorded server-side demo for the player is discarded
+//Note that this extension only works if:
+//  auto demos are enabled (the cvar sv_autodemo_perclient is set)
+//  discarding demos is enabled (the cvar sv_autodemo_perclient_discardable is set)
 
 //DP_SV_DRAWONLYTOCLIENT
 //idea: LordHavoc

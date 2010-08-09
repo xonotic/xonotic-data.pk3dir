@@ -18,18 +18,19 @@ entity makeXonoticAudioSettingsTab()
 	return me;
 }
 
-void fillXonoticAudioSettingsTab(entity me)
+void XonoticAudioSettingsTab_fill(entity me)
 {
 	entity e, s, sl;
 
 	me.TR(me);
-		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "bgmvolume");
-		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(-1000000, 1, s, "Music:"));
+		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "mastervolume");
+		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(-1000000, 1, s, "Master:"));
 		me.TD(me, 1, 2, s);
 	me.TR(me);
-	me.TR(me);
-		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "volume");
-		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(-1000000, 1, s, "Master:"));
+		me.TDempty(me, 0.2);
+		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "bgmvolume");
+		makeMulti(s, "snd_csqcchannel2volume");
+		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, "Music:"));
 		me.TD(me, 1, 2, s);
 	me.TR(me);
 		me.TDempty(me, 0.2);

@@ -1,5 +1,5 @@
-Box01,textures/meat_alien.tga
-Cylinder02,textures/meat_alien.tga
-Cylinder13,textures/meat_alien.tga
-Cylinder14,textures/meat_alien.tga
-Cylinder15,textures/meat_alien.tga
+Box01,meat_alien
+Cylinder02,meat_alien
+Cylinder13,meat_alien
+Cylinder14,meat_alien
+Cylinder15,meat_alien

@@ -62,6 +62,13 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if(argv(0) == "directpanelhudmenu")
+	{
+		// switch to a menu item
+		m_goto(strcat("HUD", argv(1)));
+		return;
+	}
+
 	if(argv(0) == "skinselect")
 	{
 		m_goto_skin_selector();
@@ -84,6 +91,12 @@ void GameCommand(string theCommand)
 	if(argv(0) == "setresolution")
 	{
 		updateConwidths();
+		return;
+	}
+
+	if(argv(0) == "setcompression")
+	{
+		updateCompression();
 		return;
 	}
 

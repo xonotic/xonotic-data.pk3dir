@@ -26,7 +26,7 @@ entity makeXonoticColorButton(float theGroup, float theColor, float theValue)
 	me.configureXonoticColorButton(me, theGroup, theColor, theValue);
 	return me;
 }
-void configureXonoticColorButtonXonoticColorButton(entity me, float theGroup, float theColor, float theValue)
+void XonoticColorButton_configureXonoticColorButton(entity me, float theGroup, float theColor, float theValue)
 {
 	me.cvarName = "_cl_color";
 	me.cvarValueFloat = theValue;
@@ -36,7 +36,7 @@ void configureXonoticColorButtonXonoticColorButton(entity me, float theGroup, fl
 	me.srcMulti = 1;
 	me.src2 = me.image2;
 }
-void setCheckedXonoticColorButton(entity me, float val)
+void XonoticColorButton_setChecked(entity me, float val)
 {
 	if(val != me.checked)
 	{
@@ -44,7 +44,7 @@ void setCheckedXonoticColorButton(entity me, float val)
 		me.saveCvars(me);
 	}
 }
-void loadCvarsXonoticColorButton(entity me)
+void XonoticColorButton_loadCvars(entity me)
 {
 	if not(me.cvarName)
 		return;
@@ -54,7 +54,7 @@ void loadCvarsXonoticColorButton(entity me)
 	else
 		me.checked = (cvar(me.cvarName) & 15) == me.cvarValueFloat;
 }
-void saveCvarsXonoticColorButton(entity me)
+void XonoticColorButton_saveCvars(entity me)
 {
 	if not(me.cvarName)
 		return;
@@ -68,9 +68,9 @@ void saveCvarsXonoticColorButton(entity me)
 	}
 	// TODO on an apply button, read _cl_color and execute the color command for it
 }
-void drawXonoticColorButton(entity me)
+void XonoticColorButton_draw(entity me)
 {
 	me.color2 = colormapPaletteColor(me.cvarValueFloat, me.cvarPart);
-	drawCheckBox(me);
+	SUPER(XonoticColorButton).draw(me);
 }
 #endif

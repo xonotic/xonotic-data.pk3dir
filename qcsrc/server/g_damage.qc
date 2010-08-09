@@ -86,6 +86,15 @@ float IsFlying(entity a)
 	return 1;
 }
 
+vector GetHeadshotMins(entity targ)
+{
+	return '0.6 0 0' * targ.mins_x + '0 0.6 0' * targ.mins_y + '0 0 1' * (1.3 * targ.view_ofs_z - 0.3 * targ.maxs_z);
+}
+vector GetHeadshotMaxs(entity targ)
+{
+	return '0.6 0 0' * targ.maxs_x + '0 0.6 0' * targ.maxs_y + '0 0 1' * targ.maxs_z;
+}
+
 void UpdateFrags(entity player, float f)
 {
 	PlayerTeamScore_AddScore(player, f);
@@ -149,6 +158,7 @@ void GiveFrags (entity attacker, entity targ, float f)
 	entity oldself;
 	oldself = self;
 	self = attacker;
+	frag_attacker = attacker;
 	frag_target = targ;
 	frag_score = f;
 	if(MUTATOR_CALLHOOK(GiveFragsForKill))
@@ -235,10 +245,40 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	GameLogEcho(s);
 }
 
+void Send_KillNotification (string s1, string s2, string s3, float msg, float type)
+{
+	WriteByte(MSG_ALL, SVC_TEMPENTITY);
+	WriteByte(MSG_ALL, TE_CSQC_NOTIFY);
+	WriteByte(MSG_ALL, CSQC_KILLNOTIFY);
+	WriteString(MSG_ALL, s1);
+	WriteString(MSG_ALL, s2);
+	WriteString(MSG_ALL, s3);
+	WriteShort(MSG_ALL, msg);
+	WriteByte(MSG_ALL, type);
+}
+
+// Function is used to send a generic centerprint whose content CSQC gets to decide (gentle version or not in the below cases)
+void Send_CSQC_Centerprint(entity e, string s1, string s2, float msg, float type)
+{
+	if (clienttype(e) == CLIENTTYPE_REAL)
+	{
+		msg_entity = e;
+		WRITESPECTATABLE_MSG_ONE({
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
+			WriteByte(MSG_ONE, CSQC_CENTERPRINT);
+			WriteString(MSG_ONE, s1);
+			WriteString(MSG_ONE, s2);
+			WriteShort(MSG_ONE, msg);
+			WriteByte(MSG_ONE, type);
+		});
+	}
+}
+
 void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 {
-	string	s, a;
-	float p, w;
+	string	s, a, msg;
+	float p, w, type;
 
 	if (targ.classname == "player" || targ.classname == "corpse")
 	{
@@ -249,115 +289,53 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 		a = attacker.netname;
 
-		if (targ == attacker)
+		if (targ == attacker) // suicides
 		{
-			if (deathtype == DEATH_TEAMCHANGE) {
-				centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", ColoredTeamName(targ.team)));
-			} else if (deathtype == DEATH_AUTOTEAMCHANGE) {
-				centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(targ.team)));
-				return;
-			} else if (deathtype == DEATH_CAMP) {
-				if(sv_gentle)
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Reconsider your tactics, camper!"));
-				else
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Die camper!"));
-			} else if (deathtype == DEATH_NOAMMO) {
-				if(sv_gentle)
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You are reinserted into the game for running out of ammo..."));
-				else
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were killed for running out of ammo..."));
-			} else if (deathtype == DEATH_ROT) {
-				if(sv_gentle)
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to preserve your health"));
-				else
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You grew too old without taking your medicine"));
-			} else if (deathtype == DEATH_MIRRORDAMAGE) {
-				if(sv_gentle)
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't go against team mates!"));
-				else
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't shoot your team mates!"));
-			} else if (deathtype == DEATH_QUIET) {
-				// do nothing
-			} else {
-				if(sv_gentle)
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to be more careful!"));
-				else
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You killed your own dumb self!"));
-			}
-			if(sv_gentle) {
-				if (deathtype == DEATH_CAMP)
-					bprint ("^1",s, "^1 thought they found a nice camping ground\n");
-				else if (deathtype == DEATH_MIRRORDAMAGE)
-					bprint ("^1",s, "^1 didn't become friends with the Lord of Teamplay\n");
-				else
-					bprint ("^1",s, "^1 will be reinserted into the game due to their own actions\n");
+			if (deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
+				msg = ColoredTeamName(targ.team); // TODO: check if needed?
+			Send_CSQC_Centerprint(targ, msg, "", deathtype, MSG_SUICIDE);
 
-				if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
-				{
-					LogDeath("suicide", deathtype, targ, targ);
-					GiveFrags(attacker, targ, -1);
-				}
-				if (targ.killcount > 2)
-					bprint ("^1",s,"^1 faded after a ",ftos(targ.killcount)," point spree\n");
-			} else {
-				w = DEATH_WEAPONOF(deathtype);
-				if(WEP_VALID(w))
-				{
-					w_deathtypestring = "couldn't resist the urge to self-destruct";
-					w_deathtype = deathtype;
-					weapon_action(w, WR_SUICIDEMESSAGE);
- 					bprint("^1", s, "^1 ", w_deathtypestring, "\n");
-				}
-				else if (deathtype == DEATH_KILL)
-					bprint ("^1",s, "^1 couldn't take it anymore\n");
-				else if (deathtype == DEATH_ROT)
-					bprint ("^1",s, "^1 died\n");
-				else if (deathtype == DEATH_NOAMMO)
-					bprint ("^7",s, "^7 committed suicide. What's the point of living without ammo?\n");
-				else if (deathtype == DEATH_CAMP)
-					bprint ("^1",s, "^1 thought they found a nice camping ground\n");
-				else if (deathtype == DEATH_MIRRORDAMAGE)
-					bprint ("^1",s, "^1 didn't become friends with the Lord of Teamplay\n");
-				else if (deathtype == DEATH_CHEAT)
-					bprint ("^1",s, "^1 unfairly eliminated themself\n");
-				else if (deathtype == DEATH_FIRE)
-					bprint ("^1",s, "^1 burned to death\n");
-				else if (deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
-					bprint ("^1",s, "^1 couldn't resist the urge to self-destruct\n");
-
-				if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
-				{
-					LogDeath("suicide", deathtype, targ, targ);
-					GiveFrags(attacker, targ, -1);
-				}
-				if (targ.killcount > 2)
-					bprint ("^1",s,"^1 ended it all after a ",ftos(targ.killcount)," kill spree\n");
+			if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
+			{
+				LogDeath("suicide", deathtype, targ, targ);
+				GiveFrags(attacker, targ, -1);
 			}
+
+			if (targ.killcount > 2)
+				msg = ftos(targ.killcount);
+			if(teams_matter && deathtype == DEATH_MIRRORDAMAGE)
+			{
+				if(attacker.team == COLOR_TEAM1)
+					deathtype = KILL_TEAM_RED;
+				else
+					deathtype = KILL_TEAM_BLUE;
+			}
+
+			Send_KillNotification(s, msg, ftos(w), deathtype, MSG_SUICIDE);
 		}
 		else if (attacker.classname == "player" || attacker.classname == "gib")
 		{
 			if(teams_matter && attacker.team == targ.team)
 			{
-				if(sv_gentle) {
-					centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You went against a team mate!"));
-					bprint ("^1", a, "^1 took action against a team mate\n");
-				} else {
-					centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You fragged ", s, ", a team mate!"));
-					bprint ("^1", a, "^1 mows down a team mate\n");
-				}
+				if(attacker.team == COLOR_TEAM1)
+					type = KILL_TEAM_RED;
+				else
+					type = KILL_TEAM_BLUE;
+
 				GiveFrags(attacker, targ, -1);
+
+				Send_CSQC_Centerprint(attacker, s, "", type, MSG_KILL);
+
 				if (targ.killcount > 2) {
-					if(sv_gentle)
-						bprint ("^1",s,"'s ^1",ftos(targ.killcount)," scoring spree was ended by a team mate!\n");
-					else
-						bprint ("^1",s,"'s ^1",ftos(targ.killcount)," kill spree was ended by a team mate!\n");
+					msg = ftos(targ.killcount);
 				}
+
 				if (attacker.killcount > 2) {
-					if(sv_gentle)
-						bprint ("^1",a,"^1 ended a ",ftos(attacker.killcount)," scoring spree by going against a team mate\n");
-					else
-						bprint ("^1",a,"^1 ended a ",ftos(attacker.killcount)," kill spree by killing a team mate\n");
+					msg = ftos(attacker.killcount);
+					type = KILL_TEAM_SPREE;
 				}
+				Send_KillNotification(a, s, msg, type, MSG_KILL);
+
 				attacker.killcount = 0;
 
 				LogDeath("tk", deathtype, attacker, targ);
@@ -368,99 +346,31 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				if (!checkrules_firstblood)
 				{
 					checkrules_firstblood = TRUE;
-					if(sv_gentle)
-					{
-						bprint("^1",a, "^1 was the first to score", "\n");
-						blood_message = "^1First point\n";
-						//victim_message = "^1First victim\n";  // or First casualty
-					}
-					else
-					{
-						bprint("^1",a, "^1 drew first blood", "\n");
-						blood_message = "^1First blood\n";
-						victim_message = "^1First victim\n";  // or First casualty
-					}
+					Send_KillNotification(a, "", "", KILL_FIRST_BLOOD, MSG_KILL);
+					// TODO: make these print a newline if they dont
+					Send_CSQC_Centerprint(attacker, "", "", KILL_FIRST_BLOOD, MSG_KILL);
+					Send_CSQC_Centerprint(targ, "", "", KILL_FIRST_VICTIM, MSG_KILL);
 				}
-				if(sv_gentle > 0) {
-					centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^4You scored against ^7", s, GetAdvancedDeathReports(targ)));
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, a,"^1 scored against you ^7", GetAdvancedDeathReports(attacker)));
+
+				if((cvar("sv_fragmessage_information_typefrag")) && (targ.BUTTON_CHAT)) {
+					Send_CSQC_Centerprint(attacker, s, GetAdvancedDeathReports(targ), KILL_TYPEFRAG, MSG_KILL);
+					Send_CSQC_Centerprint(targ, a, GetAdvancedDeathReports(attacker), KILL_TYPEFRAGGED, MSG_KILL);
 				} else {
-					if((cvar("sv_fragmessage_information_typefrag")) && (targ.BUTTON_CHAT)) {
-						centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^1You typefragged ^7", s, GetAdvancedDeathReports(targ)));
-						centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, victim_message, "^1You were typefragged by ^7", a, GetAdvancedDeathReports(attacker)));
-					} else {
-						centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^4You fragged ^7", s, GetAdvancedDeathReports(targ)));
-						centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, victim_message, "^1You were fragged by ^7", a, GetAdvancedDeathReports(attacker)));
-					}
-					attacker.taunt_soundtime = time + 1;
+					Send_CSQC_Centerprint(attacker, s, GetAdvancedDeathReports(targ), KILL_FRAG, MSG_KILL);
+					Send_CSQC_Centerprint(targ, a, GetAdvancedDeathReports(attacker), KILL_FRAGGED, MSG_KILL);
 				}
 
-				if(sv_gentle) {
-					bprint ("^1",s, "^1 needs a restart thanks to ", a, "\n");
-				} else {
-					w = DEATH_WEAPONOF(deathtype);
-					if(WEP_VALID(w))
-					{
-						w_deathtypestring = "was blasted by";
-						w_deathtype = deathtype;
-						weapon_action(w, WR_KILLMESSAGE);
-						p = strstrofs(w_deathtypestring, "#", 0);
-						if(p < 0)
-							bprint("^1", s, "^1 ", w_deathtypestring, " ", a, "\n");
-						else
-							bprint("^1", s, "^1 ", substring(w_deathtypestring, 0, p), a, "^1", substring(w_deathtypestring, p+1, strlen(w_deathtypestring) - (p+1)), "\n");
-					}
-					else if (deathtype == DEATH_TELEFRAG)
-						bprint ("^1",s, "^1 was telefragged by ", a, "\n");
-					else if (deathtype == DEATH_DROWN)
-						bprint ("^1",s, "^1 was drowned by ", a, "\n");
-					else if (deathtype == DEATH_SLIME)
-						bprint ("^1",s, "^1 was slimed by ", a, "\n");
-					else if (deathtype == DEATH_LAVA)
-						bprint ("^1",s, "^1 was cooked by ", a, "\n");
-					else if (deathtype == DEATH_FALL)
-						bprint ("^1",s, "^1 was grounded by ", a, "\n");
-					else if (deathtype == DEATH_SHOOTING_STAR)
-						bprint ("^1",s, "^1 was shot into space by ", a, "\n");
-					else if (deathtype == DEATH_SWAMP)
-						bprint ("^1",s, "^1 was conserved by ", a, "\n");
-					else if (deathtype == DEATH_HURTTRIGGER && inflictor.message2 != "")
-					{
-						p = strstrofs(inflictor.message2, "#", 0);
-						if(p < 0)
-							bprint("^1", s, "^1 ", inflictor.message2, " ", a, "\n");
-						else
-							bprint("^1", s, "^1 ", substring(inflictor.message2, 0, p), a, "^1", substring(inflictor.message2, p+1, strlen(inflictor.message2) - (p+1)), "\n");
-					}
-					else if(deathtype == DEATH_SBCRUSH)
-                        bprint ("^1",s, "^1 was crushed by ^1", a, "\n");
-					else if(deathtype == DEATH_SBMINIGUN)
-                        bprint ("^1",s, "^1 got shredded by ^1", a, "\n");
-					else if(deathtype == DEATH_SBROCKET)
-                        bprint ("^1",s, "^1 was blased to bits by ^1", a, "\n");
-					else if(deathtype == DEATH_SBBLOWUP)
-                        bprint ("^1",s, "^1 got cought in the destruction of ^1", a, "'s vehicle\n");
+				attacker.taunt_soundtime = time + 1;
 
-					else if(deathtype == DEATH_WAKIGUN)
-                        bprint ("^1",s, "^1 was bolted down by ^1", a, "\n");
-					else if(deathtype == DEATH_WAKIROCKET)
-                        bprint ("^1",s, "^1 could find no shelter from ^1", a, "'s rockets\n");
-					else if(deathtype == DEATH_WAKIBLOWUP)
-                        bprint ("^1",s, "^1 dies when ^1", a, "'s wakizashi dies.\n");
-
-					else if(deathtype == DEATH_TURRET)
-						bprint ("^1",s, "^1 was pushed into the line of fire by ^1", a, "\n");
-					else if(deathtype == DEATH_TOUCHEXPLODE)
-						bprint ("^1",s, "^1 was pushed into an accident by ^1", a, "\n");
-					else if(deathtype == DEATH_CHEAT)
-						bprint ("^1",s, "^1 was unfairly eliminated by ^1", a, "\n");
-					else if (deathtype == DEATH_FIRE)
-					bprint ("^1",s, "^1 was burnt to death by ^1", a, "\n");
-					else if (deathtype == DEATH_CUSTOM)
-						bprint ("^1",s, "^1 ", deathmessage, " by ^1", a, "\n");
-					else
-						bprint ("^1",s, "^1 was fragged by ", a, "\n");
+				// TODO: fix this?
+				if (deathtype == DEATH_CUSTOM)
+					msg = strcat(deathmessage, " by ^1", msg);
+				else if (deathtype == DEATH_HURTTRIGGER && inflictor.message2 != "")
+				{
+					msg = ftos(strstrofs(inflictor.message2, "#", 0));
 				}
+
+				Send_KillNotification(a, s, msg, deathtype, MSG_KILL);
 
 				if(g_ctf && targ.flagcarried)
 				{
@@ -472,145 +382,68 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					GiveFrags(attacker, targ, 1);
 
 				if (targ.killcount > 2) {
-					if(sv_gentle)
-						bprint ("^1",s,"'s ^1", ftos(targ.killcount), " scoring spree was ended by ", a, "\n");
-					else
-						bprint ("^1",s,"'s ^1", ftos(targ.killcount), " kill spree was ended by ", a, "\n");
+					Send_KillNotification(s, ftos(targ.killcount), a, KILL_END_SPREE, MSG_SPREE);
 				}
 
 				attacker.killcount = attacker.killcount + 1;
 
 				if (attacker.killcount > 2) {
-					if(sv_gentle)
-						bprint ("^1",a,"^1 made ",ftos(attacker.killcount)," scores in a row\n");
-					else
-						bprint ("^1",a,"^1 has ",ftos(attacker.killcount)," frags in a row\n");
+					Send_KillNotification(a, ftos(attacker.killcount), "", KILL_SPREE, MSG_SPREE);
 				}
-
-				LogDeath("frag", deathtype, attacker, targ);
-
-				if (attacker.killcount == 3)
+				else if (attacker.killcount == 3)
 				{
-					if(sv_gentle) {
-						bprint (a,"^7 made a ^1TRIPLE SCORE\n");
-					} else {
-						bprint (a,"^7 made a ^1TRIPLE FRAG\n");
-						AnnounceTo(attacker, "03kills");
-					}
+					Send_KillNotification(a, "", "", KILL_SPREE_3, MSG_SPREE);
+					AnnounceTo(attacker, "03kills");
 				}
 				else if (attacker.killcount == 5)
 				{
-					if(sv_gentle) {
-						bprint (a,"^7 unleashes ^1SCORING RAGE\n");
-					} else {
-						bprint (a,"^7 unleashes ^1RAGE\n");
-						AnnounceTo(attacker, "05kills");
-					}
+					Send_KillNotification(a, "", "", KILL_SPREE_5, MSG_SPREE);
+					AnnounceTo(attacker, "05kills");
 				}
 				else if (attacker.killcount == 10)
 				{
-					if(sv_gentle) {
-						bprint (a,"^7 made ^1TEN SCORES IN A ROW!\n");
-					} else {
-						bprint (a,"^7 starts the ^1MASSACRE!\n");
-						AnnounceTo(attacker, "10kills");
-					}
+					Send_KillNotification(a, "", "", KILL_SPREE_10, MSG_SPREE);
+					AnnounceTo(attacker, "10kills");
 				}
 				else if (attacker.killcount == 15)
 				{
-					if(sv_gentle) {
-						bprint (a,"^7 made ^1FIFTEEN SCORES IN A ROW!\n");
-					} else {
-						bprint (a,"^7 executes ^1MAYHEM!\n");
-						AnnounceTo(attacker, "15kills");
-					}
+					Send_KillNotification(a, "", "", KILL_SPREE_15, MSG_SPREE);
+					AnnounceTo(attacker, "15kills");
 				}
 				else if (attacker.killcount == 20)
 				{
-					if(sv_gentle) {
-						bprint (a,"^7 made ^1TWENTY SCORES IN A ROW!\n");
-					} else {
-						bprint (a,"^7 is a ^1BERSERKER!\n");
-						AnnounceTo(attacker, "20kills");
-					}
+					Send_KillNotification(a, "", "", KILL_SPREE_20, MSG_SPREE);
+					AnnounceTo(attacker, "20kills");
 				}
 				else if (attacker.killcount == 25)
 				{
-					if(sv_gentle) {
-						bprint (a,"^7 made ^1TWENTY FIFE SCORES IN A ROW!\n");
-					} else {
-						bprint (a,"^7 inflicts ^1CARNAGE!\n");
-						AnnounceTo(attacker, "25kills");
-					}
+					Send_KillNotification(a, "", "", KILL_SPREE_25, MSG_SPREE);
+					AnnounceTo(attacker, "25kills");
 				}
 				else if (attacker.killcount == 30)
 				{
-					if(sv_gentle) {
-						bprint (a,"^7 made ^1THIRTY SCORES IN A ROW!\n");
-					} else {
-						bprint (a,"^7 unleashes ^1ARMAGEDDON!\n");
-						AnnounceTo(attacker, "30kills");
-					}
+					Send_KillNotification(a, "", "", KILL_SPREE_30, MSG_SPREE);
+					AnnounceTo(attacker, "30kills");
 				}
+				LogDeath("frag", deathtype, attacker, targ);
 			}
 		}
 		else
 		{
-			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Watch your step!"));
+			Send_CSQC_Centerprint(targ, "", "", deathtype, MSG_KILL_ACTION);
 			if (deathtype == DEATH_HURTTRIGGER && inflictor.message != "")
-				bprint ("^1",s, "^1 ", inflictor.message, "\n");
-			else if (deathtype == DEATH_DROWN)
-				if(sv_gentle)
-					bprint ("^1",s, "^1 was in the water for too long\n");
-				else
-					bprint ("^1",s, "^1 drowned\n");
-			else if (deathtype == DEATH_SLIME)
-				bprint ("^1",s, "^1 was slimed\n");
-			else if (deathtype == DEATH_LAVA)
-				if(sv_gentle)
-					bprint ("^1",s, "^1 found a hot place\n");
-				else
-					bprint ("^1",s, "^1 turned into hot slag\n");
-			else if (deathtype == DEATH_FALL)
-				if(sv_gentle)
-					bprint ("^1",s, "^1 tested gravity (and it worked)\n");
-				else
-					bprint ("^1",s, "^1 hit the ground with a crunch\n");
-			else if (deathtype == DEATH_SHOOTING_STAR)
-				bprint ("^1",s, "^1 became a shooting star\n");
-			else if (deathtype == DEATH_SWAMP)
-				if(sv_gentle)
-					bprint ("^1",s, "^1 discovered a swamp\n");
-				else
-					bprint ("^1",s, "^1 is now conserved for centuries to come\n");
-			else if(deathtype == DEATH_TURRET)
-				bprint ("^1",s, "^1 was mowed down by a turret \n");
-            else if (deathtype == DEATH_CUSTOM)
-                bprint ("^1",s, "^1 ", deathmessage, "\n");
-			else if(deathtype == DEATH_TOUCHEXPLODE)
-				bprint ("^1",s, "^1 died in an accident\n");
-			else if(deathtype == DEATH_CHEAT)
-				bprint ("^1",s, "^1 was unfairly eliminated\n");
-			else if(deathtype == DEATH_FIRE)
-				if(sv_gentle)
-					bprint ("^1",s, "^1 felt a little hot\n");
-				else
-					bprint ("^1",s, "^1 burnt to death\n");
-			else
-				if(sv_gentle)
-					bprint ("^1",s, "^1 needs a restart\n");
-				else
-					bprint ("^1",s, "^1 died\n");
+				msg = inflictor.message;
+			else if (deathtype == DEATH_CUSTOM)
+				msg = deathmessage;
+
 			GiveFrags(targ, targ, -1);
 			if(PlayerScore_Add(targ, SP_SCORE, 0) == -5) {
 				AnnounceTo(targ, "botlike");
 			}
+			Send_KillNotification(s, msg, "", deathtype, MSG_KILL_ACTION);
 
 			if (targ.killcount > 2)
-				if(sv_gentle)
-					bprint ("^1",s,"^1 needs a restart after a ",ftos(targ.killcount)," scoring spree\n");
-				else
-					bprint ("^1",s,"^1 died with a ",ftos(targ.killcount)," kill spree\n");
+				Send_KillNotification(s, ftos(targ.killcount), "", 0, MSG_KILL_ACTION_SPREE);
 
 			LogDeath("accident", deathtype, targ, targ);
 		}
@@ -629,6 +462,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 entity damage_targ;
 entity damage_inflictor;
 entity damage_attacker;
+.float prevhitsound;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -871,8 +705,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				// if above view_ofs and below maxs, and also in the middle half of the bbox, it is head shot
 				vector headmins, headmaxs, org;
 				org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(attacker));
-				headmins = org + '0.6 0 0' * targ.mins_x + '0 0.6 0' * targ.mins_y + '0 0 1' * (1.3 * targ.view_ofs_z - 0.3 * targ.maxs_z);
-				headmaxs = org + '0.6 0 0' * targ.maxs_x + '0 0.6 0' * targ.maxs_y + '0 0 1' * targ.maxs_z;
+				headmins = org + GetHeadshotMins(targ);
+				headmaxs = org + GetHeadshotMaxs(targ);
 				if(trace_hits_box(railgun_start, railgun_end, headmins, headmaxs))
 				{
 					deathtype |= HITTYPE_HEADSHOT;
@@ -891,10 +725,14 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				{
 					if(damage > 0)
 					{
-						if(targ.BUTTON_CHAT)
-							attacker.typehitsound += 1;
-						else
-							attacker.hitsound += 1;
+						if(attacker.weapon != WEP_ELECTRO && attacker.weapon != WEP_LASER || ((attacker.weapon == WEP_ELECTRO && cvar("g_balance_electro_lightning") || attacker.weapon == WEP_LASER) && attacker.prevhitsound + cvar("sv_hitsound_antispam_time") < time))
+						{
+							if(targ.BUTTON_CHAT)
+								attacker.typehitsound += 1;
+							else
+								attacker.hitsound += 1;
+							attacker.prevhitsound = time;
+						}
 
 						damage_goodhits += 1;
 						damage_gooddamage += damage;

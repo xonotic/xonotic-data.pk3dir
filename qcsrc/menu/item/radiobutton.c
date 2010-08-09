@@ -10,7 +10,7 @@ ENDCLASS(RadioButton)
 #endif
 
 #ifdef IMPLEMENTATION
-void configureRadioButtonRadioButton(entity me, string txt, float sz, string gfx, float theGroup, float doAllowDeselect)
+void RadioButton_configureRadioButton(entity me, string txt, float sz, string gfx, float theGroup, float doAllowDeselect)
 {
 	me.configureCheckBox(me, txt, sz, gfx);
 	me.align = 0;

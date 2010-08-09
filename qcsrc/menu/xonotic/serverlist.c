@@ -141,7 +141,7 @@ entity makeXonoticServerList()
 	me.configureXonoticServerList(me);
 	return me;
 }
-void configureXonoticServerListXonoticServerList(entity me)
+void XonoticServerList_configureXonoticServerList(entity me)
 {
 	me.configureXonoticListBox(me);
 
@@ -149,11 +149,11 @@ void configureXonoticServerListXonoticServerList(entity me)
 
 	me.nItems = 0;
 }
-void setSelectedXonoticServerList(entity me, float i)
+void XonoticServerList_setSelected(entity me, float i)
 {
 	float save;
 	save = me.selectedItem;
-	setSelectedListBox(me, i);
+	SUPER(XonoticServerList).setSelected(me, i);
 	/*
 	if(me.selectedItem == save)
 		return;
@@ -171,7 +171,7 @@ void setSelectedXonoticServerList(entity me, float i)
 	me.ipAddressBox.cursorPos = strlen(me.selectedServer);
 	me.ipAddressBoxFocused = -1;
 }
-void refreshServerListXonoticServerList(entity me, float mode)
+void XonoticServerList_refreshServerList(entity me, float mode)
 {
 	// 0: just reparametrize
 	// 1: also ask for new servers
@@ -234,7 +234,7 @@ void refreshServerListXonoticServerList(entity me, float mode)
 			refreshhostcache();
 	}
 }
-void focusEnterXonoticServerList(entity me)
+void XonoticServerList_focusEnter(entity me)
 {
 	if(time < me.nextRefreshTime)
 	{
@@ -244,7 +244,7 @@ void focusEnterXonoticServerList(entity me)
 	me.nextRefreshTime = time + 10;
 	me.refreshServerList(me, 1);
 }
-void drawXonoticServerList(entity me)
+void XonoticServerList_draw(entity me)
 {
 	float i, found, owned;
 
@@ -317,7 +317,7 @@ void drawXonoticServerList(entity me)
 		me.ipAddressBoxFocused = me.ipAddressBox.focused;
 	}
 
-	drawListBox(me);
+	SUPER(XonoticServerList).draw(me);
 }
 void ServerList_PingSort_Click(entity btn, entity me)
 {
@@ -413,7 +413,7 @@ void ServerList_ShowFull_Click(entity box, entity me)
 	me.ipAddressBox.cursorPos = 0;
 	me.ipAddressBoxFocused = -1;
 }
-void setSortOrderXonoticServerList(entity me, float field, float direction)
+void XonoticServerList_setSortOrder(entity me, float field, float direction)
 {
 	if(me.currentSortField == field)
 		direction = -me.currentSortOrder;
@@ -430,7 +430,7 @@ void setSortOrderXonoticServerList(entity me, float field, float direction)
 	me.selectedServer = string_null;
 	me.refreshServerList(me, 0);
 }
-void positionSortButtonXonoticServerList(entity me, entity btn, float theOrigin, float theSize, string theTitle, void(entity, entity) theFunc)
+void XonoticServerList_positionSortButton(entity me, entity btn, float theOrigin, float theSize, string theTitle, void(entity, entity) theFunc)
 {
 	vector originInLBSpace, sizeInLBSpace;
 	originInLBSpace = eY * (-me.itemHeight);
@@ -447,9 +447,9 @@ void positionSortButtonXonoticServerList(entity me, entity btn, float theOrigin,
 	btn.onClickEntity = me;
 	btn.resized = 1;
 }
-void resizeNotifyXonoticServerList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticServerList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
@@ -502,7 +502,7 @@ void ServerList_Info_Click(entity btn, entity me)
 	main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 	DialogOpenButton_Click(me, main.serverInfoDialog);
 }
-void clickListBoxItemXonoticServerList(entity me, float i, vector where)
+void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
 {
 	if(i == me.lastClickedServer)
 		if(time < me.lastClickedTime + 0.3)
@@ -513,7 +513,7 @@ void clickListBoxItemXonoticServerList(entity me, float i, vector where)
 	me.lastClickedServer = i;
 	me.lastClickedTime = time;
 }
-void drawListBoxItemXonoticServerList(entity me, float i, vector absSize, float isSelected)
+void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	// layout: Ping, Server name, Map name, NP, TP, MP
 	string s;
@@ -574,7 +574,7 @@ void drawListBoxItemXonoticServerList(entity me, float i, vector absSize, float 
 	draw_Text(me.realUpperMargin * eY + (me.columnPlayersOrigin + (me.columnPlayersSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
 
-float keyDownXonoticServerList(entity me, float scan, float ascii, float shift)
+float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	float i;
 	vector org, sz;
@@ -582,7 +582,7 @@ float keyDownXonoticServerList(entity me, float scan, float ascii, float shift)
 	org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
 	sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
 
-	if(scan == K_ENTER)
+	if(scan == K_ENTER || scan == K_KP_ENTER)
 	{
 		ServerList_Connect_Click(NULL, me);
 		return 1;
@@ -592,7 +592,7 @@ float keyDownXonoticServerList(entity me, float scan, float ascii, float shift)
 		main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 		DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 	}
-	else if(scan == K_INS || scan == K_MOUSE3)
+	else if(scan == K_INS || scan == K_MOUSE3 || scan == K_KP_INS)
 	{
 		i = me.selectedItem;
 		if(i < me.nItems)
@@ -601,7 +601,7 @@ float keyDownXonoticServerList(entity me, float scan, float ascii, float shift)
 			me.ipAddressBoxFocused = -1;
 		}
 	}
-	else if(keyDownListBox(me, scan, ascii, shift))
+	else if(SUPER(XonoticServerList).keyDown(me, scan, ascii, shift))
 		return 1;
 	else if(!me.controlledTextbox)
 		return 0;

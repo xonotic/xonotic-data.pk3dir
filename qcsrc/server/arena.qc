@@ -10,7 +10,8 @@ entity spawnqueue_last;
 entity champion;
 float warmup;
 float allowed_to_spawn;
-float player_cnt;
+float ca_players;
+float required_ca_players;
 .float caplayer;
 
 void PutObserverInServer();
@@ -43,7 +44,7 @@ void reset_map(float dorespawn)
 	lms_next_place = player_count;
 
 	race_ReadyRestart();
-	
+
 	for(self = world; (self = nextent(self)); )
 	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
 	{
@@ -122,7 +123,7 @@ void reset_map(float dorespawn)
 		kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_round")+(game_starttime - time), "", kh_StartRound);
 
 	if(g_arena || g_ca)
-	if(champion && champion.classname == "player" && player_cnt > 1)
+	if(champion && champion.classname == "player" && player_count > 1)
 		UpdateFrags(champion, +1);
 
 	self = oldself;
@@ -182,7 +183,7 @@ void Spawnqueue_Mark(entity e)
  * player when player is waiting for the countdown to finish.
  * Blocks the players movement while countdown is active.
  * Unblocks the player once the countdown is over.
- * 
+ *
  * Called in PlayerPostThink()
  */
 float roundStartTime_prev; // prevent networkspam
@@ -198,7 +199,7 @@ void Arena_Warmup()
 
 	allowed_to_spawn = 0;
 
-	if(g_ca && (player_cnt < 2 || inWarmupStage))
+	if(g_ca && (ca_players < required_ca_players || inWarmupStage))
 		allowed_to_spawn = 1;
 
 	msg = NEWLINES;
@@ -241,15 +242,13 @@ void Arena_Warmup()
 	{
 		roundStartTime_prev = f;
 		Announce("begin");
-		centerprint(self, "^1Begin!\n");	
+		centerprint(self, "^1Begin!\n");
 
 		if(g_ca) {
-			player_cnt = 0;
+			ca_players = 0;
 
-			FOR_EACH_CLIENT(self) {
-			if (self.classname == "player")
-				player_cnt += 1;
-			}		
+			FOR_EACH_PLAYER(self)
+				ca_players += 1;
 		}
 	}
 
@@ -262,7 +261,7 @@ float next_round;
  * This function finds out whether an arena round is over 1 player is left.
  * It determines the last player who's still alive and saves it's entity reference
  * in the global variable 'champion'. Then the new enemy/enemies are put into the server.
- * 
+ *
  * Gets called in StartFrame()
  */
 void Spawnqueue_Check()
@@ -273,26 +272,25 @@ void Spawnqueue_Check()
 	if(g_ca) {
 		// check the amount of spawned players in each team
 		float redspawned, bluespawned;
-		FOR_EACH_CLIENT(self) {
-			if (self.classname == "player") {
-				if (self.team == COLOR_TEAM1) redspawned += 1;
-				else if (self.team == COLOR_TEAM2) bluespawned += 1;
-			}
+		FOR_EACH_PLAYER(self) {
+			if (self.team == COLOR_TEAM1) redspawned += 1;
+			else if (self.team == COLOR_TEAM2) bluespawned += 1;
 		}
 
-		if(player_cnt < 2 && (redspawned && bluespawned)) {
+		required_ca_players = max(2, fabs(cvar("bot_vs_human") + 1));
+
+		if(ca_players < required_ca_players && (redspawned && bluespawned)) {
 			reset_map(TRUE);
 		}
-		else if(player_cnt < 2) {
-			FOR_EACH_CLIENT(self) 
-			if(self.classname == "player")
-				centerprint(self, strcat("^1Need at least 2 players to play CA", "^7\n"));
+		else if(ca_players < required_ca_players) {
+			FOR_EACH_PLAYER(self)
+				centerprint(self, strcat("^1Need at least 1 player in each team to play CA", "^7\n"));
 
 			allowed_to_spawn = 1;
 			return;
 		}
-		else if(!next_round)
-			if((redspawned && bluespawned == 0) || (bluespawned && redspawned == 0)) {
+		else if(!next_round) {
+			if((redspawned && !bluespawned) || (bluespawned && !redspawned)) {
 				next_round = time + 5;
 
 				champion = find(world, classname, "player");
@@ -305,7 +303,8 @@ void Spawnqueue_Check()
 					champion_team = "^4Blue team";
 					play2all("ctf/blue_capture.wav");
 				}
-				FOR_EACH_CLIENT(self) centerprint(self, strcat(champion_team, "^7 wins the round.", "^7\n"));	
+				FOR_EACH_CLIENT(self) centerprint(self, strcat(champion_team, "^7 wins the round.", "^7\n"));
+			}
 			else if(!redspawned && !bluespawned) {
 				FOR_EACH_CLIENT(self) centerprint(self, strcat("^7Round tied.", "^7\n"));
 				next_round = time + 5;

@@ -111,6 +111,7 @@ void CopyBody(float keepvelocity)
 	self.enemy = oldself;
 	self.lip = oldself.lip;
 	self.colormap = oldself.colormap;
+	self.glowmod = oldself.glowmod;
 	self.iscreature = oldself.iscreature;
 	self.angles = oldself.angles;
 	self.avelocity = oldself.avelocity;
@@ -142,6 +143,7 @@ void CopyBody(float keepvelocity)
 	self.movetype = oldself.movetype;
 	self.nextthink = oldself.nextthink;
 	self.solid = oldself.solid;
+	self.ballistics_density = oldself.ballistics_density;
 	self.takedamage = oldself.takedamage;
 	self.think = oldself.think;
 	self.customizeentityforclient = oldself.customizeentityforclient;
@@ -165,55 +167,12 @@ void CopyBody(float keepvelocity)
 
 float player_getspecies()
 {
-	local float glob, i, j, fh, len, s, sk;
-	local string fn, l;
-
-	s = -1;
-
-	glob = search_begin("models/player/*.txt", TRUE, TRUE);
-	if(glob < 0)
-		return s;
-	for(j = 0; j <= 1; ++j)
-	{
-		for(i = 0; i < search_getsize(glob); ++i)
-		{
-			fn = search_getfilename(glob, i);
-			fh = fopen(fn, FILE_READ);
-			if(fh < 0)
-				continue;
-			fgets(fh); fgets(fh);
-			sk = stof(fgets(fh));
-			if(sk == (j ? 0 : self.skinindex)) // 2nd pass skips the skin test
-			if(fgets(fh) == self.model)
-			{
-				l = fgets(fh);
-				len = tokenize_console(l);
-				if (len != 2)
-					goto nospecies;
-				if (argv(0) != "species")
-					goto nospecies;
-				switch(argv(1))
-				{
-					case "human":       s = SPECIES_HUMAN;       break;
-					case "alien":       s = SPECIES_ALIEN;       break;
-					case "robot_shiny": s = SPECIES_ROBOT_SHINY; break;
-					case "robot_rusty": s = SPECIES_ROBOT_RUSTY; break;
-					case "robot_solid": s = SPECIES_ROBOT_SOLID; break;
-					case "animal":      s = SPECIES_ANIMAL;      break;
-					case "reserved":    s = SPECIES_RESERVED;    break;
-				}
-			}
-:nospecies
-			fclose(fh);
-		}
-		if (s >= 0)
-			break;
-	}
-	search_end(glob);
-
-	if (s < 0)
-		s = SPECIES_HUMAN;
-
+	float s;
+	get_model_parameters(self.playermodel, self.skinindex);
+	s = get_model_parameters_species;
+	get_model_parameters(string_null, 0);
+	if(s < 0)
+		return SPECIES_HUMAN;
 	return s;
 }
 
@@ -412,7 +371,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	if (self.health <= -75 && self.modelindex != 0)
+	if (self.health <= -100 && self.modelindex != 0)
 	{
 		// don't use any animations as a gib
 		self.frame = 0;
@@ -475,7 +434,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
-	if((g_arena && numspawned < 2) || (g_ca && player_cnt < 2) && !inWarmupStage)
+	if((g_arena && numspawned < 2) || (g_ca && ca_players < required_ca_players) && !inWarmupStage)
 		return;
 
 	if (!g_minstagib)
@@ -636,6 +595,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		frag_attacker = attacker;
 		frag_inflictor = inflictor;
+		frag_target = self;
 		MUTATOR_CALLHOOK(PlayerDies);
 
 		if(self.flagcarried)
@@ -663,6 +623,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.movetype = MOVETYPE_TOSS;
 		// shootable corpse
 		self.solid = SOLID_CORPSE;
+		self.ballistics_density = cvar("g_ballistics_density_corpse");
 		// don't stick to the floor
 		self.flags &~= FL_ONGROUND;
 		// dying animation
@@ -1243,7 +1204,10 @@ void LoadPlayerSounds(string f, float first)
 	var .string field;
 	fh = fopen(f, FILE_READ);
 	if(fh < 0)
+	{
+		dprint("Player sound file not found: ", f, "\n");
 		return;
+	}
 	while((s = fgets(fh)))
 	{
 		if(tokenize_console(s) != 3)
@@ -1264,14 +1228,17 @@ void LoadPlayerSounds(string f, float first)
 }
 
 .float modelindex_for_playersound;
+.float skinindex_for_playersound;
 void UpdatePlayerSounds()
 {
 	if(self.modelindex == self.modelindex_for_playersound)
+	if(self.skinindex == self.skinindex_for_playersound)
 		return;
 	self.modelindex_for_playersound = self.modelindex;
+	self.skinindex_for_playersound = self.skinindex;
 	ClearPlayerSounds();
 	LoadPlayerSounds("sound/player/default.sounds", 1);
-	LoadPlayerSounds(strcat(self.model, ".sounds"), 0);
+	LoadPlayerSounds(get_model_datafilename(self.playermodel, self.skinindex, "sounds"), 0);
 }
 
 void FakeGlobalSound(string sample, float chan, float voicetype)

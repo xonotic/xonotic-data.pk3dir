@@ -51,7 +51,7 @@ void MapList_LoadMap(entity btn, entity me);
 #endif
 
 #ifdef IMPLEMENTATION
-void destroyXonoticMapList(entity me)
+void XonoticMapList_destroy(entity me)
 {
 	MapInfo_Shutdown();
 }
@@ -64,22 +64,22 @@ entity makeXonoticMapList()
 	return me;
 }
 
-void configureXonoticMapListXonoticMapList(entity me)
+void XonoticMapList_configureXonoticMapList(entity me)
 {
 	me.configureXonoticListBox(me);
 	me.refilter(me);
 }
 
-void loadCvarsXonoticMapList(entity me)
+void XonoticMapList_loadCvars(entity me)
 {
 	me.refilter(me);
 }
 
-float g_maplistCacheQueryXonoticMapList(entity me, float i)
+float XonoticMapList_g_maplistCacheQuery(entity me, float i)
 {
 	return stof(substring(me.g_maplistCache, i, 1));
 }
-void g_maplistCacheToggleXonoticMapList(entity me, float i)
+void XonoticMapList_g_maplistCacheToggle(entity me, float i)
 {
 	string a, b, c, s, bspname;
 	float n;
@@ -113,17 +113,17 @@ void g_maplistCacheToggleXonoticMapList(entity me, float i)
 	}
 }
 
-void drawXonoticMapList(entity me)
+void XonoticMapList_draw(entity me)
 {
 	if(me.startButton)
 		me.startButton.disabled = ((me.selectedItem < 0) || (me.selectedItem >= me.nItems));
-	drawListBox(me);
+	SUPER(XonoticMapList).draw(me);
 }
 
-void resizeNotifyXonoticMapList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticMapList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.itemAbsSize = '0 0 0';
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticMapList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
@@ -139,7 +139,7 @@ void resizeNotifyXonoticMapList(entity me, vector relOrigin, vector relSize, vec
 	me.checkMarkOrigin = eY + eX * (me.columnPreviewOrigin + me.columnPreviewSize) - me.checkMarkSize;
 }
 
-void clickListBoxItemXonoticMapList(entity me, float i, vector where)
+void XonoticMapList_clickListBoxItem(entity me, float i, vector where)
 {
 	if(where_x <= me.columnPreviewOrigin + me.columnPreviewSize)
 	{
@@ -163,7 +163,7 @@ void clickListBoxItemXonoticMapList(entity me, float i, vector where)
 			}
 }
 
-void drawListBoxItemXonoticMapList(entity me, float i, vector absSize, float isSelected)
+void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	// layout: Ping, Map name, Map name, NP, TP, MP
 	string s;
@@ -197,7 +197,7 @@ void drawListBoxItemXonoticMapList(entity me, float i, vector absSize, float isS
 	MapInfo_ClearTemps();
 }
 
-void refilterXonoticMapList(entity me)
+void XonoticMapList_refilter(entity me)
 {
 	float i, j, n;
 	string s;
@@ -233,7 +233,7 @@ void refilterXonoticMapList(entity me)
 	}
 }
 
-void refilterCallbackXonoticMapList(entity me, entity cb)
+void XonoticMapList_refilterCallback(entity me, entity cb)
 {
 	me.refilter(me);
 }
@@ -292,10 +292,10 @@ void MapList_LoadMap(entity btn, entity me)
 	}
 }
 
-float keyDownXonoticMapList(entity me, float scan, float ascii, float shift)
+float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	string ch, save;
-	if(scan == K_ENTER)
+	if(scan == K_ENTER || scan == K_KP_ENTER)
 	{
 		// pop up map info screen
 		main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
@@ -348,7 +348,7 @@ float keyDownXonoticMapList(entity me, float scan, float ascii, float shift)
 			me.setSelected(me, MapInfo_FindName_firstResult);
 	}
 	else
-		return keyDownListBox(me, scan, ascii, shift);
+		return SUPER(XonoticMapList).keyDown(me, scan, ascii, shift);
 	return 1;
 }
 

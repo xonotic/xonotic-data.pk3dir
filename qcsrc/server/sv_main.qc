@@ -2,7 +2,7 @@
 void CreatureFrame (void)
 {
 	local entity oldself;
-	local float dm;
+	local float dm, maxspeed;
 	oldself = self;
 	self = findfloat(world, iscreature, TRUE);
 	while (self)
@@ -78,12 +78,11 @@ void CreatureFrame (void)
 				{
 					Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
 				}
-				else if(vlen(self.velocity) > 100000 && cvar("developer"))
-				{
-					dprint(strcat(self.netname, " became too fast, please investigate: ", vtos(self.spawnorigin), "\n"));
-					Damage (self, world, world, 50000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
-				}
 			}
+
+			maxspeed = cvar("g_maxspeed");
+			if(maxspeed > 0 && vlen(self.velocity) > maxspeed)
+				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
 
 			// play stupid sounds
 			if (g_footsteps)
@@ -190,14 +189,19 @@ void StartFrame (void)
 	sv_airstopaccelerate = cvar("sv_airstopaccelerate");
 	sv_airstrafeaccelerate = cvar("sv_airstrafeaccelerate");
 	sv_maxairstrafespeed = cvar("sv_maxairstrafespeed");
+	sv_airstrafeaccel_qw = cvar("sv_airstrafeaccel_qw");
 	sv_aircontrol = cvar("sv_aircontrol");
+	sv_aircontrol_penalty = cvar("sv_aircontrol_penalty");
+	sv_aircontrol_power = cvar("sv_aircontrol_power");
 	sv_warsowbunny_airforwardaccel = cvar("sv_warsowbunny_airforwardaccel");
 	sv_warsowbunny_accel = cvar("sv_warsowbunny_accel");
 	sv_warsowbunny_topspeed = cvar("sv_warsowbunny_topspeed");
 	sv_warsowbunny_turnaccel = cvar("sv_warsowbunny_turnaccel");
 	sv_warsowbunny_backtosideratio = cvar("sv_warsowbunny_backtosideratio");
+	sv_airspeedlimit_nonqw = cvar("sv_airspeedlimit_nonqw");
 	teamplay = cvar ("teamplay");
 	sys_frametime = cvar("sys_ticrate") * cvar("slowmo");
+	sv_doublejump = cvar("sv_doublejump");
 
 	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
 		orig_slowmo = cvar("slowmo"); // slowmo will be restored after the timeout

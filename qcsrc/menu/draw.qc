@@ -230,22 +230,17 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 }
 void draw_Text(vector theOrigin, string theText, vector theSize, vector theColor, float theAlpha, float ICanHasKallerz)
 {
-	vector fs;
 	if(theSize_x <= 0 || theSize_y <= 0)
 		error("Drawing zero size text?\n");
-	if not(cvar("menu_font_size_snapping_fix")) // FIXME remove this, this is to detect old engines
-	{
-		fs = draw_fontscale;
-		draw_fontscale = '1 1 0';
-	}
+
+	//float wi;
+	//wi = draw_TextWidth(theText, ICanHasKallerz, theSize);
+	//draw_Fill(theOrigin, '1 0 0' * wi + '0 1 0' * theSize_y, '1 0 0', 0.3);
+
 	if(ICanHasKallerz)
 		drawcolorcodedstring(boxToGlobal(theOrigin, draw_shift, draw_scale), theText, globalToBoxSize(boxToGlobalSize(theSize, draw_scale), draw_fontscale), theAlpha * draw_alpha, 0);
 	else
 		drawstring(boxToGlobal(theOrigin, draw_shift, draw_scale), theText, globalToBoxSize(boxToGlobalSize(theSize, draw_scale), draw_fontscale), theColor, theAlpha * draw_alpha, 0);
-	if not(cvar("menu_font_size_snapping_fix")) // FIXME remove this, this is to detect old engines
-	{
-		draw_fontscale = fs;
-	}
 }
 void draw_CenterText(vector theOrigin, string theText, vector theSize, vector theColor, float theAlpha, float ICanHasKallerz)
 {
@@ -257,20 +252,10 @@ float draw_TextWidth(string theText, float ICanHasKallerz, vector SizeThxBye)
 {
 	//return strlen(theText);
 	//print("draw_TextWidth \"", theText, "\"\n");
-	vector fs;
 	vector v;
 	v = '0 0 0';
 	//float r;
-	if not(cvar("menu_font_size_snapping_fix")) // FIXME remove this, this is to detect old engines
-	{
-		fs = draw_fontscale;
-		draw_fontscale = '1 1 0';
-	}
-	v_x = stringwidth(theText, ICanHasKallerz, boxToGlobalSize(SizeThxBye, draw_scale)) / draw_fontscale_x;
-	if not(cvar("menu_font_size_snapping_fix")) // FIXME remove this, this is to detect old engines
-	{
-		draw_fontscale = fs;
-	}
+	v_x = stringwidth(theText, ICanHasKallerz, globalToBoxSize(boxToGlobalSize(SizeThxBye, draw_scale), draw_fontscale));
 	v = globalToBoxSize(v, draw_scale);
 	return v_x;
 }

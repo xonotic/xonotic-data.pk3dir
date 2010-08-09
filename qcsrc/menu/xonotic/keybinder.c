@@ -68,7 +68,7 @@ entity makeXonoticKeyBinder()
 	me.configureXonoticKeyBinder(me);
 	return me;
 }
-void configureXonoticKeyBinderXonoticKeyBinder(entity me)
+void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 {
 	me.configureXonoticListBox(me);
 	if(Xonotic_KeyBinds_Count < 0)
@@ -76,9 +76,9 @@ void configureXonoticKeyBinderXonoticKeyBinder(entity me)
 	me.nItems = Xonotic_KeyBinds_Count;
 	me.setSelected(me, 0);
 }
-void resizeNotifyXonoticKeyBinder(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyXonoticListBox(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticKeyBinder).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
@@ -103,7 +103,7 @@ void KeyBinder_Bind_Change(entity btn, entity me)
 	me.keyGrabButton.forcePressed = 1;
 	keyGrabber = me;
 }
-void keyGrabbedXonoticKeyBinder(entity me, float key, float ascii)
+void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 {
 	float n, j, k, nvalid;
 	string func;
@@ -135,7 +135,7 @@ void keyGrabbedXonoticKeyBinder(entity me, float key, float ascii)
 	}
 	localcmd("\nbind \"", keynumtostring(key), "\" \"", func, "\"\n");
 }
-void editUserbindXonoticKeyBinder(entity me, string theName, string theCommandPress, string theCommandRelease)
+void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandPress, string theCommandRelease)
 {
 	string func, descr;
 
@@ -195,7 +195,7 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	}
 
 }
-void clickListBoxItemXonoticKeyBinder(entity me, float i, vector where)
+void XonoticKeyBinder_clickListBoxItem(entity me, float i, vector where)
 {
 	if(i == me.lastClickedServer)
 		if(time < me.lastClickedTime + 0.3)
@@ -206,7 +206,7 @@ void clickListBoxItemXonoticKeyBinder(entity me, float i, vector where)
 	me.lastClickedServer = i;
 	me.lastClickedTime = time;
 }
-void setSelectedXonoticKeyBinder(entity me, float i)
+void XonoticKeyBinder_setSelected(entity me, float i)
 {
 	// handling of "unselectable" items
 	i = floor(0.5 + bound(0, i, me.nItems - 1));
@@ -231,29 +231,31 @@ void setSelectedXonoticKeyBinder(entity me, float i)
 		me.previouslySelected = i;
 	if(me.userbindEditButton)
 		me.userbindEditButton.disabled = (substring(Xonotic_KeyBinds_Descriptions[i], 0, 1) != "$");
-	setSelectedListBox(me, i);
+	SUPER(XonoticKeyBinder).setSelected(me, i);
 }
-float keyDownXonoticKeyBinder(entity me, float key, float ascii, float shift)
+float XonoticKeyBinder_keyDown(entity me, float key, float ascii, float shift)
 {
 	float r;
 	r = 1;
 	switch(key)
 	{
 		case K_ENTER:
+		case K_KP_ENTER:
 		case K_SPACE:
 			KeyBinder_Bind_Change(me, me);
 			break;
 		case K_DEL:
+		case K_KP_DEL:
 		case K_BACKSPACE:
 			KeyBinder_Bind_Clear(me, me);
 			break;
 		default:
-			r = keyDownListBox(me, key, ascii, shift);
+			r = SUPER(XonoticKeyBinder).keyDown(me, key, ascii, shift);
 			break;
 	}
 	return r;
 }
-void drawListBoxItemXonoticKeyBinder(entity me, float i, vector absSize, float isSelected)
+void XonoticKeyBinder_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	string s;
 	float j, k, n;
@@ -297,7 +299,8 @@ void drawListBoxItemXonoticKeyBinder(entity me, float i, vector absSize, float i
 				theAlpha *= SKINALPHA_DISABLED;
 	}
 
-	draw_Text(me.realUpperMargin * eY + extraMargin * eX, descr, me.realFontSize, theColor, theAlpha, 0);
+	s = draw_TextShortenToWidth(descr, me.columnFunctionSize, 0, me.realFontSize);
+	draw_Text(me.realUpperMargin * eY + extraMargin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	if(func != "")
 	{
 		n = tokenize(findkeysforcommand(func)); // uses '...' strings

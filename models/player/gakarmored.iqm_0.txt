@@ -1,0 +1,7 @@
+name Gak Armored
+species alien
+sex Male
+weight 90
+age 20
+
+Heavyweight Xonotic Solider

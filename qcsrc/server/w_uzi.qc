@@ -1,19 +1,23 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "uzi", "uzi", "Machine Gun");
 #else
+#ifdef SVQC
 // leilei's fancy muzzleflash stuff
 void W_Uzi_Flash_Go() {
-	if (self.frame > 10){
-		SUB_Remove();
+	if (self.alpha >= 0)
+	{
+		setmodel(self, "");
 		return;
 	}
 	self.frame = self.frame + 2;
-	self.alpha = self.alpha - 0.2;
+	self.scale = self.scale * 0.5;
+	self.alpha = self.alpha - 0.25;
 	self.think = W_Uzi_Flash_Go;
-	self.nextthink = time + 0.02;
+	self.nextthink = time + 0.05;
 };
 
 .float uzi_bulletcounter;
+.entity muzzleflash;
 void W_Uzi_Attack (float deathtype)
 {
 	local entity flash;
@@ -43,16 +47,20 @@ void W_Uzi_Attack (float deathtype)
 
 	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
+	if ((self.muzzleflash == world) || wasfreed(self.muzzleflash))
+		self.muzzleflash = spawn();
+	
 	// muzzle flash for 1st person view
-	flash = spawn();
-	setmodel(flash, "models/uziflash.md3"); // precision set below
+	setmodel(self.muzzleflash, "models/uziflash.md3"); // precision set below
 	//SUB_SetFade(flash, time + 0.06, 0);
-	flash.think = W_Uzi_Flash_Go;
-	flash.nextthink = time + 0.02;
-	flash.frame = 2;
-	flash.alpha = 1;
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
+	self.muzzleflash.scale = 0.75;
+	self.muzzleflash.think = W_Uzi_Flash_Go;
+	self.muzzleflash.nextthink = time + 0.02;
+	self.muzzleflash.frame = 2;
+	self.muzzleflash.alpha = 0.75;
+	self.muzzleflash.angles_z = random() * 180;
+	self.muzzleflash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	W_AttachToShotorg(self.muzzleflash, '5 0 0');
 
 	// casing code
 	if (cvar("g_casings") >= 2)
@@ -116,7 +124,7 @@ float w_uzi(float req)
 		precache_model ("models/uziflash.md3");
 		precache_model ("models/weapons/g_uzi.md3");
 		precache_model ("models/weapons/v_uzi.md3");
-		precache_model ("models/weapons/h_uzi.dpm");
+		precache_model ("models/weapons/h_uzi.iqm");
 		precache_sound ("weapons/uzi_fire.wav");
 	}
 	else if (req == WR_SETUP)
@@ -125,15 +133,41 @@ float w_uzi(float req)
 		return self.ammo_nails >= cvar("g_balance_uzi_first_ammo");
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_nails >= cvar("g_balance_uzi_first_ammo");
+	return TRUE;
+};
+#endif
+#ifdef CSQC
+float w_uzi(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent)
+			if(w_random < 0.05)
+				sound(self, CHAN_PROJECTILE, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.1)
+				sound(self, CHAN_PROJECTILE, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.2)
+				sound(self, CHAN_PROJECTILE, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/ric1.wav");
+		precache_sound("weapons/ric2.wav");
+		precache_sound("weapons/ric3.wav");
+	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
+		w_deathtypestring = "%s did the impossible";
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "was sniped by";
+			w_deathtypestring = "%s was sniped by %s";
 		else
-			w_deathtypestring = "was riddled full of holes by";
+			w_deathtypestring = "%s was riddled full of holes by %s";
 	}
 	return TRUE;
-};
+}
+#endif
 #endif

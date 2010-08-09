@@ -149,9 +149,8 @@ void		end_sys_fields;			// flag for structure dumping
 
 // Additional OPTIONAL Fields and Globals
 float		intermission;
-float		sb_showscores;
-float		sb_showaccuracy;
-float		sbar_currentammo;
+float		scoreboard_showscores;
+float		scoreboard_showaccuracy;
 .string		message;
 .float renderflags;
 // float		coop;
@@ -212,7 +211,7 @@ float race_othercheckpointtime;
 float race_othercheckpointdelta;
 float race_othercheckpointlapsdelta;
 string race_othercheckpointenemy;
-float sb_showscores_force;
+float scoreboard_showscores_force;
 float race_status;
 string race_status_name;
 float race_myrank;
@@ -233,7 +232,9 @@ float announcer_5min;
 // database for misc stuff
 float tempdb;
 float ClientProgsDB;
-vector hook_shotorigin;
+vector hook_shotorigin[4];
+vector electro_shotorigin[4];
+vector gauntlet_shotorigin[4];
 
 #ifdef BLURTEST
 float blurtest_time0, blurtest_time1, blurtest_radius, blurtest_power;
@@ -249,3 +250,13 @@ float ticrate;
 // only for Porto
 float angles_held_status;
 vector angles_held;
+
+// weapons
+.float silent;
+
+float w_deathtype, w_issilent, w_random;
+string w_deathtypestring;
+vector w_org, w_backoff;
+
+float campingrifle_scope;
+float nex_scope;

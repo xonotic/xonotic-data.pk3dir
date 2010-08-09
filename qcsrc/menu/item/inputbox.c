@@ -31,18 +31,18 @@ void InputBox_Clear_Click(entity btn, entity me);
 #endif
 
 #ifdef IMPLEMENTATION
-void configureInputBoxInputBox(entity me, string theText, float theCursorPos, float theFontSize, string gfx)
+void InputBox_configureInputBox(entity me, string theText, float theCursorPos, float theFontSize, string gfx)
 {
-	configureLabelLabel(me, theText, theFontSize, 0.0);
+	SUPER(InputBox).configureLabel(me, theText, theFontSize, 0.0);
 	me.src = gfx;
 	me.cursorPos = theCursorPos;
 }
 
-void setTextInputBox(entity me, string txt)
+void InputBox_setText(entity me, string txt)
 {
 	if(me.text)
 		strunzone(me.text);
-	setTextLabel(me, strzone(txt));
+	SUPER(InputBox).setText(me, strzone(txt));
 }
 
 void InputBox_Clear_Click(entity btn, entity me)
@@ -50,7 +50,7 @@ void InputBox_Clear_Click(entity btn, entity me)
 	me.setText(me, "");
 }
 
-float mouseDragInputBox(entity me, vector pos)
+float InputBox_mouseDrag(entity me, vector pos)
 {
 	float p;
 	me.dragScrollPos = pos;
@@ -60,20 +60,20 @@ float mouseDragInputBox(entity me, vector pos)
 	return 1;
 }
 
-float mousePressInputBox(entity me, vector pos)
+float InputBox_mousePress(entity me, vector pos)
 {
 	me.dragScrollTimer = time;
 	me.pressed = 1;
-	return mouseDragInputBox(me, pos);
+	return InputBox_mouseDrag(me, pos);
 }
 
-float mouseReleaseInputBox(entity me, vector pos)
+float InputBox_mouseRelease(entity me, vector pos)
 {
 	me.pressed = 0;
-	return mouseDragInputBox(me, pos);
+	return InputBox_mouseDrag(me, pos);
 }
 
-void enterTextInputBox(entity me, string ch)
+void InputBox_enterText(entity me, string ch)
 {
 	float i;
 	for(i = 0; i < strlen(ch); ++i)
@@ -85,7 +85,7 @@ void enterTextInputBox(entity me, string ch)
 	me.cursorPos += strlen(ch);
 }
 
-float keyDownInputBox(entity me, float key, float ascii, float shift)
+float InputBox_keyDown(entity me, float key, float ascii, float shift)
 {
 	me.lastChangeTime = time;
 	me.dragScrollTimer = time;
@@ -96,15 +96,19 @@ float keyDownInputBox(entity me, float key, float ascii, float shift)
 	}
 	switch(key)
 	{
+		case K_KP_LEFTARROW:
 		case K_LEFTARROW:
 			me.cursorPos -= 1;
 			return 1;
+		case K_KP_RIGHTARROW:
 		case K_RIGHTARROW:
 			me.cursorPos += 1;
 			return 1;
+		case K_KP_HOME:
 		case K_HOME:
 			me.cursorPos = 0;
 			return 1;
+		case K_KP_END:
 		case K_END:
 			me.cursorPos = strlen(me.text);
 			return 1;
@@ -115,6 +119,7 @@ float keyDownInputBox(entity me, float key, float ascii, float shift)
 				me.setText(me, strcat(substring(me.text, 0, me.cursorPos), substring(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
 			}
 			return 1;
+		case K_KP_DEL:
 		case K_DEL:
 			if(shift & S_CTRL)
 				me.setText(me, "");
@@ -125,7 +130,7 @@ float keyDownInputBox(entity me, float key, float ascii, float shift)
 	return 0;
 }
 
-void drawInputBox(entity me)
+void InputBox_draw(entity me)
 {
 #define CURSOR "_"
 	float cursorPosInWidths, totalSizeInWidths;
@@ -303,14 +308,14 @@ void drawInputBox(entity me)
 	}
 	else
 		draw_Text(me.realOrigin - eX * me.scrollPos, me.text, me.realFontSize, '1 1 1', 1, 0);
-		// skipping drawLabel(me);
+		// skipping SUPER(InputBox).draw(me);
 	if(!me.focused || (time - me.lastChangeTime) < floor(time - me.lastChangeTime) + 0.5)
 		draw_Text(me.realOrigin + eX * (cursorPosInWidths - me.scrollPos), CURSOR, me.realFontSize, '1 1 1', 1, 0);
 
 	draw_ClearClip();
 }
 
-void showNotifyInputBox(entity me)
+void InputBox_showNotify(entity me)
 {
 	me.focusable = !me.disabled;
 }

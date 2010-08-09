@@ -13,10 +13,13 @@ CLASS(Slider) EXTENDS(Label)
 	METHOD(Slider, valueToText, string(entity, float))
 	METHOD(Slider, toString, string(entity))
 	METHOD(Slider, setValue, void(entity, float))
+	METHOD(Slider, setSliderValue, void(entity, float))
 	METHOD(Slider, showNotify, void(entity))
 	ATTRIB(Slider, src, string, string_null)
 	ATTRIB(Slider, focusable, float, 1)
 	ATTRIB(Slider, value, float, 0)
+	ATTRIB(Slider, animated, float, 1)
+	ATTRIB(Slider, sliderValue, float, 0)
 	ATTRIB(Slider, valueMin, float, 0)
 	ATTRIB(Slider, valueMax, float, 0)
 	ATTRIB(Slider, valueStep, float, 0)
@@ -41,35 +44,47 @@ ENDCLASS(Slider)
 #endif
 
 #ifdef IMPLEMENTATION
-void setValueSlider(entity me, float val)
+void Slider_setValue(entity me, float val)
 {
+	if (me.animated) {
+		anim.stopObjAnim(anim, me);
+		anim.removeObjAnim(anim, me);
+		makeHostedEasing(me, Slider_setSliderValue, easingQuadInOut, 1, me.sliderValue, val);
+	} else {
+		me.setSliderValue(me, val);
+	}
 	me.value = val;
 }
-string toStringSlider(entity me)
+void Slider_setSliderValue(entity me, float val)
+{
+	me.sliderValue = val;
+}
+string Slider_toString(entity me)
 {
 	return strcat(ftos(me.value), " (", me.valueToText(me, me.value), ")");
 }
-void resizeNotifySlider(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+void Slider_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	resizeNotifyLabel(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(Slider).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	me.controlWidth = absSize_y / absSize_x;
 }
-string valueToTextSlider(entity me, float val)
+string Slider_valueToText(entity me, float val)
 {
 	if(almost_in_bounds(me.valueMin, val, me.valueMax))
 		return ftos_decimals(val * me.valueDisplayMultiplier, me.valueDigits);
 	return "";
 }
-void configureSliderVisualsSlider(entity me, float sz, float theAlign, float theTextSpace, string gfx)
+void Slider_configureSliderVisuals(entity me, float sz, float theAlign, float theTextSpace, string gfx)
 {
-	configureLabelLabel(me, string_null, sz, theAlign);
+	SUPER(Slider).configureLabel(me, string_null, sz, theAlign);
 	me.textSpace = theTextSpace;
 	me.keepspaceLeft = (theTextSpace == 0) ? 0 : (1 - theTextSpace);
 	me.src = gfx;
 }
-void configureSliderValuesSlider(entity me, float theValueMin, float theValue, float theValueMax, float theValueStep, float theValueKeyStep, float theValuePageStep)
+void Slider_configureSliderValues(entity me, float theValueMin, float theValue, float theValueMax, float theValueStep, float theValueKeyStep, float theValuePageStep)
 {
 	me.value = theValue;
+	me.sliderValue = theValue;
 	me.valueStep = theValueStep;
 	me.valueMin = theValueMin;
 	me.valueMax = theValueMax;
@@ -83,13 +98,13 @@ void configureSliderValuesSlider(entity me, float theValueMin, float theValue, f
 	if(fabs(floor(me.valueStep * 1 + 0.5) - (me.valueStep * 1)) < 0.01) // about a whole number
 		me.valueDigits = 0;
 }
-float keyDownSlider(entity me, float key, float ascii, float shift)
+float Slider_keyDown(entity me, float key, float ascii, float shift)
 {
 	float inRange;
 	if(me.disabled)
 		return 0;
 	inRange = (almost_in_bounds(me.valueMin, me.value, me.valueMax));
-	if(key == K_LEFTARROW)
+	if(key == K_LEFTARROW || key == K_KP_LEFTARROW)
 	{
 		if(inRange)
 			me.setValue(me, median(me.valueMin, me.value - me.valueKeyStep, me.valueMax));
@@ -97,7 +112,7 @@ float keyDownSlider(entity me, float key, float ascii, float shift)
 			me.setValue(me, me.valueMax);
 		return 1;
 	}
-	if(key == K_RIGHTARROW)
+	if(key == K_RIGHTARROW || key == K_KP_RIGHTARROW)
 	{
 		if(inRange)
 			me.setValue(me, median(me.valueMin, me.value + me.valueKeyStep, me.valueMax));
@@ -105,7 +120,7 @@ float keyDownSlider(entity me, float key, float ascii, float shift)
 			me.setValue(me, me.valueMin);
 		return 1;
 	}
-	if(key == K_PGUP)
+	if(key == K_PGUP || key == K_KP_PGUP)
 	{
 		if(inRange)
 			me.setValue(me, median(me.valueMin, me.value - me.valuePageStep, me.valueMax));
@@ -113,7 +128,7 @@ float keyDownSlider(entity me, float key, float ascii, float shift)
 			me.setValue(me, me.valueMax);
 		return 1;
 	}
-	if(key == K_PGDN)
+	if(key == K_PGDN || key == K_KP_PGDN)
 	{
 		if(inRange)
 			me.setValue(me, median(me.valueMin, me.value + me.valuePageStep, me.valueMax));
@@ -121,12 +136,12 @@ float keyDownSlider(entity me, float key, float ascii, float shift)
 			me.setValue(me, me.valueMin);
 		return 1;
 	}
-	if(key == K_HOME)
+	if(key == K_HOME || key == K_KP_HOME)
 	{
 		me.setValue(me, me.valueMin);
 		return 1;
 	}
-	if(key == K_END)
+	if(key == K_END || key == K_KP_END)
 	{
 		me.setValue(me, me.valueMax);
 		return 1;
@@ -134,12 +149,17 @@ float keyDownSlider(entity me, float key, float ascii, float shift)
 	// TODO more keys
 	return 0;
 }
-float mouseDragSlider(entity me, vector pos)
+float Slider_mouseDrag(entity me, vector pos)
 {
 	float hit;
-	float v;
+	float v, animed;
 	if(me.disabled)
 		return 0;
+
+	anim.finishObjAnim(anim, me);
+	animed = me.animated;
+	me.animated = false;
+
 	if(me.pressed)
 	{
 		hit = 1;
@@ -157,9 +177,12 @@ float mouseDragSlider(entity me, vector pos)
 		else
 			me.setValue(me, me.previousValue);
 	}
+
+	me.animated = animed;
+
 	return 1;
 }
-float mousePressSlider(entity me, vector pos)
+float Slider_mousePress(entity me, vector pos)
 {
 	float controlCenter;
 	if(me.disabled)
@@ -216,18 +239,18 @@ float mousePressSlider(entity me, vector pos)
 		localsound("sound/misc/menu2.wav");
 	return 1;
 }
-float mouseReleaseSlider(entity me, vector pos)
+float Slider_mouseRelease(entity me, vector pos)
 {
 	me.pressed = 0;
 	if(me.disabled)
 		return 0;
 	return 1;
 }
-void showNotifySlider(entity me)
+void Slider_showNotify(entity me)
 {
 	me.focusable = !me.disabled;
 }
-void drawSlider(entity me)
+void Slider_draw(entity me)
 {
 	float controlLeft;
 	float save;
@@ -236,9 +259,9 @@ void drawSlider(entity me)
 	if(me.disabled)
 		draw_alpha *= me.disabledAlpha;
 	draw_ButtonPicture('0 0 0', strcat(me.src, "_s"), eX * (1 - me.textSpace) + eY, me.color2, 1);
-	if(almost_in_bounds(me.valueMin, me.value, me.valueMax))
+	if(almost_in_bounds(me.valueMin, me.sliderValue, me.valueMax))
 	{
-		controlLeft = (me.value - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.textSpace - me.controlWidth);
+		controlLeft = (me.sliderValue - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.textSpace - me.controlWidth);
 		if(me.disabled)
 			draw_Picture(eX * controlLeft, strcat(me.src, "_d"), eX * me.controlWidth + eY, me.colorD, 1);
 		else if(me.pressed)
@@ -250,7 +273,7 @@ void drawSlider(entity me)
 	}
 	me.setText(me, me.valueToText(me, me.value));
 	draw_alpha = save;
-	drawLabel(me);
+	SUPER(Slider).draw(me);
 	me.text = string_null; // TEMPSTRING!
 }
 #endif

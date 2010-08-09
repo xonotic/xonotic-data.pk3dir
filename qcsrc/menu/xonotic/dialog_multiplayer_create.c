@@ -26,7 +26,7 @@ entity makeXonoticServerCreateTab()
 	return me;
 }
 
-void fillXonoticServerCreateTab(entity me)
+void XonoticServerCreateTab_fill(entity me)
 {
 	entity e, e0;
 	float n;
@@ -195,7 +195,7 @@ void GameType_ConfigureSliders(entity e, entity l, entity l2, string pLabel, flo
 	}
 }
 
-void gameTypeChangeNotifyXonoticServerCreateTab(entity me)
+void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 {
 	// tell the map list to update
 	float gt;

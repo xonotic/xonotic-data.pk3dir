@@ -33,10 +33,10 @@ entity currentDialog;
 #endif
 
 #ifdef IMPLEMENTATION
-void configureDialogXonoticDialog(entity me)
+void XonoticDialog_configureDialog(entity me)
 {
 	currentDialog = me;
-	configureDialogDialog(me);
+	SUPER(XonoticDialog).configureDialog(me);
 	me.tooltip = getZonedTooltipForIdentifier(me.classname);
 }
 #endif

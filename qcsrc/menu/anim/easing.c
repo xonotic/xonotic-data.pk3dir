@@ -13,59 +13,59 @@ float easingQuadInOut(float, float, float, float);
 #endif
 
 #ifdef IMPLEMENTATION
-entity makeHostedEasing(entity obj, void(entity, float) setter, float(float, float, float, float) func, float duration, float startValue, float end)
+entity makeHostedEasing(entity obj, void(entity, float) objSetter, float(float, float, float, float) func, float animDuration, float animStartValue, float animEnd)
 {
 	entity me;
-	me = makeEasing(obj, setter, func, time, duration, startValue, end);
+	me = makeEasing(obj, objSetter, func, time, animDuration, animStartValue, animEnd);
 	anim.addAnim(anim, me);
 	return me;
 }
 
-entity makeEasing(entity obj, void(entity, float) setter, float(float, float, float, float) func, float startTime, float duration, float startValue, float end)
+entity makeEasing(entity obj, void(entity, float) objSetter, float(float, float, float, float) func, float animStartTime, float animDuration, float animStartValue, float animEnd)
 {
 	entity me;
 	me = spawnEasing();
-	me.configureAnimation(me, obj, setter, startTime, duration, startValue, end);
+	me.configureAnimation(me, obj, objSetter, animStartTime, animDuration, animStartValue, animEnd);
 	me.setMath(me, func);
 	return me;
 }
 
-float calcValueEasing(entity me, float time, float duration, float start, float delta)
+float Easing_calcValue(entity me, float tickTime, float animDuration, float animStart, float animDelta)
 {
-	return me.math(time, duration, start, delta);
+	return me.math(tickTime, animDuration, animStart, animDelta);
 }
 
-void setMathEasing(entity me, float(float, float, float, float) func)
+void Easing_setMath(entity me, float(float, float, float, float) func)
 {
 	me.math = func;
 }
 
-float easingLinear(float time, float duration, float start, float delta)
+float easingLinear(float tickTime, float animDuration, float animStart, float animDelta)
 {
-	return (delta * (time / duration)) + start;
+	return (animDelta * (tickTime / animDuration)) + animStart;
 }
 
-float easingQuadIn(float time, float duration, float start, float delta)
+float easingQuadIn(float tickTime, float animDuration, float animStart, float animDelta)
 {
-	float frac = time / duration;
-	return (delta * frac * frac) + start;
+	float frac = tickTime / animDuration;
+	return (animDelta * frac * frac) + animStart;
 }
 
-float easingQuadOut(float time, float duration, float start, float delta)
+float easingQuadOut(float tickTime, float animDuration, float animStart, float animDelta)
 {
-	float frac = time / duration;
-	return (-delta * frac * (frac - 2)) + start;
+	float frac = tickTime / animDuration;
+	return (-animDelta * frac * (frac - 2)) + animStart;
 }
 
-float easingQuadInOut(float time, float duration, float start, float delta)
+float easingQuadInOut(float tickTime, float animDuration, float animStart, float animDelta)
 {
-	if (time < (duration / 2))
+	if (tickTime < (animDuration / 2))
 	{
- 		return easingQuadIn(time, (duration / 2), start, (delta / 2));
+		return easingQuadIn(tickTime, (animDuration / 2), animStart, (animDelta / 2));
 	}
 	else
 	{
- 		return easingQuadOut((time - (duration / 2)), (duration / 2), (start + (delta / 2)), (delta / 2));
+		return easingQuadOut((tickTime - (animDuration / 2)), (animDuration / 2), (animStart + (animDelta / 2)), (animDelta / 2));
 	}
 }
 

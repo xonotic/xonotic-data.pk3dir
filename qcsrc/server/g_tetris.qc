@@ -26,8 +26,11 @@ float tet_vs_current_timeout;
 
 var float tet_high_score = 0;
 
-float TET_LINES = 20;
+vector TET_START_PIECE_POS = '5 1 0';
+float TET_LINES = 22;
+float TET_DISPLAY_LINES = 20;
 float TET_WIDTH = 10;
+string TET_EMPTY_LINE = "0000000000"; // must match TET_WIDTH
 //character values
 float TET_BORDER = 139;
 float TET_BLOCK = 133;
@@ -46,10 +49,7 @@ string TET_PADDING_RIGHT = "\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0
 
 float PIECES = 7;
 
-.float line1, line2, line3, line4, line5, line6, line7,
-line8, line9, line10, line11, line12, line13, line14, line15,
-line16, line17, line18, line19, line20;
-
+float tet_line_buf;
 
 float	SVC_CENTERPRINTa		= 26;
 
@@ -70,146 +70,36 @@ Library Functions
 
 *********************************
 */
-void SetLine(float ln, float vl)
+void SetLine(float ln, string vl)
 {
-	if (ln == 1)
-		self.line1 = vl;
-	else if (ln == 2)
-		self.line2 = vl;
-	else if (ln == 3)
-		self.line3 = vl;
-	else if (ln == 4)
-		self.line4 = vl;
-	else if (ln == 5)
-		self.line5 = vl;
-	else if (ln == 6)
-		self.line6 = vl;
-	else if (ln == 7)
-		self.line7 = vl;
-	else if (ln == 8)
-		self.line8 = vl;
-	else if (ln == 9)
-		self.line9 = vl;
-	else if (ln == 10)
-		self.line10 = vl;
-	else if (ln == 11)
-		self.line11 = vl;
-	else if (ln == 12)
-		self.line12 = vl;
-	else if (ln == 13)
-		self.line13 = vl;
-	else if (ln == 14)
-		self.line14 = vl;
-	else if (ln == 15)
-		self.line15 = vl;
-	else if (ln == 16)
-		self.line16 = vl;
-	else if (ln == 17)
-		self.line17 = vl;
-	else if (ln == 18)
-		self.line18 = vl;
-	else if (ln == 19)
-		self.line19 = vl;
-	else if (ln == 20)
-		self.line20 = vl;
+	if(ln < 1 || ln > TET_LINES)
+		error("WTF");
+	bufstr_set(tet_line_buf, ln + TET_LINES * num_for_edict(self), vl);
 };
 
-float GetLine(float ln)
+string GetLine(float ln)
 {
-	if (ln == 1)
-		return self.line1;
-	else if (ln == 2)
-		return self.line2;
-	else if (ln == 3)
-		return self.line3;
-	else if (ln == 4)
-		return self.line4;
-	else if (ln == 5)
-		return self.line5;
-	else if (ln == 6)
-		return self.line6;
-	else if (ln == 7)
-		return self.line7;
-	else if (ln == 8)
-		return self.line8;
-	else if (ln == 9)
-		return self.line9;
-	else if (ln == 10)
-		return self.line10;
-	else if (ln == 11)
-		return self.line11;
-	else if (ln == 12)
-		return self.line12;
-	else if (ln == 13)
-		return self.line13;
-	else if (ln == 14)
-		return self.line14;
-	else if (ln == 15)
-		return self.line15;
-	else if (ln == 16)
-		return self.line16;
-	else if (ln == 17)
-		return self.line17;
-	else if (ln == 18)
-		return self.line18;
-	else if (ln == 19)
-		return self.line19;
-	else if (ln == 20)
-		return self.line20;
-	else
-		return 0;
+	if(ln < 1 || ln > TET_LINES)
+		error("WTF");
+	if(ln < 1 || ln > TET_LINES)
+		return TET_EMPTY_LINE;
+	return bufstr_get(tet_line_buf, ln + TET_LINES * num_for_edict(self));
 };
 
-float GetXBlock(float x, float dat)
+float GetXBlock(float x, string dat)
 {
-	if (x == 1)
-		return dat & 3;
-	else if (x == 2)
-		return (dat & 12) / 4;
-	else if (x == 3)
-		return (dat & 48) / 16;
-	else if (x == 4)
-		return (dat & 192) / 64;
-	else if (x == 5)
-		return (dat & 768) / 256;
-	else if (x == 6)
-		return (dat & 3072) / 1024;
-	else if (x == 7)
-		return (dat & 12288) / 4096;
-	else if (x == 8)
-		return (dat & 49152) / 16384;
-	else if (x == 9)
-		return (dat & 196608) / 65536;
-	else if (x == 10)
-		return (dat & 786432) / 262144;
-	else
-		return 0;
+	if(x < 1 || x > TET_WIDTH)
+		error("WTF");
+	return stof(substring(dat, x-1, 1));
 };
 
-float SetXBlock(float x, float dat, float new)
+string SetXBlock(float x, string dat, float new)
 {
-	if (x == 1)
-		return (dat - (dat & 3)) | new;
-	else if (x == 2)
-		return (dat - (dat & 12)) | (new*4);
-	else if (x == 3)
-		return (dat - (dat & 48)) | (new*16);
-	else if (x == 4)
-		return (dat - (dat & 192)) | (new*64);
-	else if (x == 5)
-		return (dat - (dat & 768)) | (new*256);
-	else if (x == 6)
-		return (dat - (dat & 3072)) | (new*1024);
-	else if (x == 7)
-		return (dat - (dat & 12288)) | (new*4096);
-	else if (x == 8)
-		return (dat - (dat & 49152)) | (new*16384);
-	else if (x == 9)
-		return (dat - (dat & 196608)) | (new*65536);
-	else if (x == 10)
-		return (dat - (dat & 786432)) | (new*262144);
-	else
-		return dat;
+	return strcat(
+		substring(dat, 0, x-1),
+		ftos(new),
+		substring(dat, x, -1)
+	);
 };
 
 
@@ -220,23 +110,41 @@ float GetSquare(float x, float y)
 
 void SetSquare(float x, float y, float val)
 {
-	float dat;
-
+	string dat;
 	dat = GetLine(y);
-	dat  = SetXBlock(x, dat, val & 3);
+	dat  = SetXBlock(x, dat, val);
 	SetLine(y, dat);
 };
 
+float PieceColor(float pc)
+{
+	if (pc == 1)
+		return 3; // O
+	else if (pc == 2)
+		return 4; // J
+	else if (pc == 3)
+		return 7; // L // we don't have orange, let's use white instead!
+	else if (pc == 4)
+		return 5; // I
+	else if (pc == 5)
+		return 1; // Z
+	else if (pc == 6)
+		return 2; // S
+	else if (pc == 7)
+		return 6; // T
+	else
+		return 0;
+}
 vector PieceShape(float pc)
 {
 	if (pc == 1)
-		return '5 5 0'; // O
+		return '20 20 0'; // O
 	else if (pc == 2)
 		return '1 21 0'; // J
 	else if (pc == 3)
-		return '21 1 0'; // L
+		return '16 21 0'; // L
 	else if (pc == 4)
-		return '85 0 0'; // I
+		return '0 85 0'; // I
 	else if (pc == 5)
 		return '5 20 0'; // Z
 	else if (pc == 6)
@@ -246,17 +154,35 @@ vector PieceShape(float pc)
 	else
 		return '0 0 0';
 }
-
+vector PieceSize(float pc)
+{
+	if (pc == 1)
+		return '2 2 0'; // O
+	else if (pc == 2)
+		return '3 2 0'; // J
+	else if (pc == 3)
+		return '3 2 0'; // L
+	else if (pc == 4)
+		return '4 1 0'; // I
+	else if (pc == 5)
+		return '3 2 0'; // Z
+	else if (pc == 6)
+		return '3 2 0'; // S
+	else if (pc == 7)
+		return '3 2 0'; // T
+	else
+		return '0 0 0';
+}
 vector PieceCenter(float pc)
 {
 	if(pc == 1)
-		return '1.5 1.5 0'; // O
+		return '2.5 1.5 0'; // O
 	else if (pc == 2)
 		return '2 2 0'; // J
 	else if (pc == 3)
-		return '2 1 0'; // L
+		return '2 2 0'; // L
 	else if (pc == 4)
-		return '2.5 1.5 0'; // I
+		return '2.5 2.5 0'; // I
 	else if (pc == 5)
 		return '2 2 0'; // Z
 	else if (pc == 6)
@@ -271,12 +197,10 @@ vector PieceCenter(float pc)
 float PieceMetric(float x, float y, float rot, float pc)
 {
 	float t;
-	vector piece_dat;
-	float wid;
+	vector ce;
 
 	// return bits of a piece
-	wid = piece_dat_z + 1;
-	piece_dat = PieceCenter(pc);
+	ce = PieceCenter(pc);
 	if (rot == 1) // 90 degrees
 	{
 		// x+cx, y+cy -> -y+cx, x+cy
@@ -284,13 +208,13 @@ float PieceMetric(float x, float y, float rot, float pc)
 		//   x = X-cx
 		//   y = Y-cy
 		t = y;
-		y = x - piece_dat_x + piece_dat_y;
-		x = -t + piece_dat_x + piece_dat_y;
+		y = x - ce_x + ce_y;
+		x = -t + ce_x + ce_y;
 	}
 	else if (rot == 2)//180
 	{
-		x = 2 * piece_dat_x - x;
-		y = 2 * piece_dat_y - y;
+		x = 2 * ce_x - x;
+		y = 2 * ce_y - y;
 	}
 	else if (rot == 3) // 270
 	{
@@ -299,19 +223,104 @@ float PieceMetric(float x, float y, float rot, float pc)
 		//   x = X-cx
 		//   y = Y-cy
 		t = y;
-		y = -x + piece_dat_y + piece_dat_x;
-		x =  t - piece_dat_y + piece_dat_x;
+		y = -x + ce_y + ce_x;
+		x =  t - ce_y + ce_x;
 	}
 	if (x < 1 || y < 1 || x > 4 || y > 2)
 		return 0;
-	piece_dat = PieceShape(pc);
+	ce = PieceShape(pc);
 	if (y == 1)
-		return GetXBlock(x, piece_dat_x); // first row
+		return !!(ce_x & pow(4, x-1)); // first row
 	else if (y == 2)
-		return GetXBlock(x, piece_dat_y); // second row
+		return !!(ce_y & pow(4, x-1)); // second row
 	else
 		return 0; // illegal parms
 };
+vector tet_piecemins;
+vector tet_piecemaxs;
+void PieceMinsMaxs(float rot, float pc)
+{
+	vector sz, ce;
+	float t;
+	vector v;
+
+	sz = PieceSize(pc);
+	ce = PieceCenter(pc);
+	// 1 = 2..2
+	// 2 = 2..3
+	// 3 = 1..3
+	// 4 = 1..4
+	tet_piecemins_x = floor(3.0 - sz_x * 0.5);
+	tet_piecemaxs_x = floor(2.0 + sz_x * 0.5);
+	if(sz_y == 1)
+	{
+		// special case for "I"
+		tet_piecemins_y = tet_piecemaxs_y = 2;
+	}
+	else
+	{
+		tet_piecemins_y = 1;
+		tet_piecemaxs_y = sz_y;
+	}
+	//print(sprintf("ce%v sz%v mi%v ma%v\n", ce, sz, tet_piecemins, tet_piecemaxs));
+	if (rot == 1) // 90 degrees
+	{
+		t = tet_piecemins_y;
+		tet_piecemins_y = -tet_piecemins_x + ce_y + ce_x;
+		tet_piecemins_x = t - ce_y + ce_x;
+		t = tet_piecemaxs_y;
+		tet_piecemaxs_y = -tet_piecemaxs_x + ce_y + ce_x;
+		tet_piecemaxs_x = t - ce_y + ce_x;
+		// swap mins_y, maxs_y
+		t = tet_piecemins_y;
+		tet_piecemins_y = tet_piecemaxs_y;
+		tet_piecemaxs_y = t;
+		// TODO OPTIMIZE
+	}
+	else if (rot == 2)//180
+	{
+		v = tet_piecemins;
+		tet_piecemins = 2 * ce - tet_piecemaxs;
+		tet_piecemaxs = 2 * ce - v;
+	}
+	else if (rot == 3) // 270
+	{
+		t = tet_piecemins_y;
+		tet_piecemins_y = tet_piecemins_x - ce_x + ce_y;
+		tet_piecemins_x = -t + ce_x + ce_y;
+		t = tet_piecemaxs_y;
+		tet_piecemaxs_y = tet_piecemaxs_x - ce_x + ce_y;
+		tet_piecemaxs_x = -t + ce_x + ce_y;
+		// swap mins_x, maxs_x
+		t = tet_piecemins_x;
+		tet_piecemins_x = tet_piecemaxs_x;
+		tet_piecemaxs_x = t;
+		// TODO OPTIMIZE
+	}
+#ifdef VERIFY
+	print(vtos(tet_piecemins), "-");
+	print(vtos(tet_piecemaxs), "\n");
+	if(tet_piecemins_x > tet_piecemaxs_x)
+		error("inconsistent mins/maxs");
+	if(tet_piecemins_y > tet_piecemaxs_y)
+		error("inconsistent mins/maxs");
+	float i, j;
+	vector realmins, realmaxs;
+	realmins = '4 4 0';
+	realmaxs = '1 1 0';
+	for(i = 1; i <= 4; ++i)
+		for(j = 1; j <= 4; ++j)
+			if(PieceMetric(i, j, rot, pc))
+			{
+				realmins_x = min(realmins_x, i);
+				realmins_y = min(realmins_y, j);
+				realmaxs_x = max(realmaxs_x, i);
+				realmaxs_y = max(realmaxs_y, j);
+			}
+	if(realmins != tet_piecemins || realmaxs != tet_piecemaxs)
+		error(sprintf("incorrect mins/maxs: %v %v in %d rot %d mins %v maxs %v\n", realmins, realmaxs, rot, pc, tet_piecemins, tet_piecemaxs));
+#endif
+}
 /*
 *********************************
 
@@ -361,11 +370,11 @@ void DrawLine(float ln)
 
 	for (x = 1; x <= TET_WIDTH; x = x + 1)
 	{
-		d = GetSquare(x, ln);
+		d = GetSquare(x, ln + TET_LINES - TET_DISPLAY_LINES);
 		if (d)
 		{
 			WriteChar(MSG_ONE, '^');
-			WriteChar(MSG_ONE, d * d - 2 * d + 50); // 1, 2, 5
+			WriteChar(MSG_ONE, d + '0');
 			WriteChar(MSG_ONE, TET_BLOCK);
 		}
 		else
@@ -380,7 +389,7 @@ void DrawPiece(float pc, float ln)
 {
 	float x, d, piece_ln, pcolor;
 	vector piece_dat;
-	pcolor = mod(pc, 3) + 1;
+	pcolor = PieceColor(pc);
 	WriteChar(MSG_ONE, TET_SPACE); // pad to 6
 
 	piece_dat = PieceShape(pc);
@@ -390,11 +399,10 @@ void DrawPiece(float pc, float ln)
 		piece_ln = piece_dat_y;
 	for (x = 1; x <= 4; x = x + 1)
 	{
-		d = GetXBlock(x, piece_ln) * pcolor;
-		if (d)
+		if (piece_ln & pow(4, x-1))
 		{
 			WriteChar(MSG_ONE, '^');
-			WriteChar(MSG_ONE, d * d - 2 * d + 50); // 1, 2, 5
+			WriteChar(MSG_ONE, pcolor + '0');
 			WriteChar(MSG_ONE, TET_BLOCK);
 		}
 		else
@@ -408,13 +416,18 @@ void Draw_Tetris()
 	entity head;
 	msg_entity = self;
 	WriteChar(MSG_ONE, SVC_CENTERPRINTa);
+	if(autocvar_g_bastet)
+	{
+		WriteTetrisString("NEVER GONNA GIVE YOU");
+		WriteChar(MSG_ONE, 10);
+	}
 	// decoration
 	for (i = 1; i <= (TET_WIDTH + 2); i = i + 1)
 		WriteChar(MSG_ONE, TET_BORDER);
 	WriteTetrisString("      ");
 	WriteUnterminatedString(MSG_ONE, TET_PADDING_RIGHT);
 	WriteChar(MSG_ONE, 10);
-	for (i = 1; i <= TET_LINES; i = i + 1)
+	for (i = 1; i <= TET_DISPLAY_LINES; i = i + 1)
 	{
 		if(self.tetris_on == 2)
 			WriteTetrisString(" GAME  OVER ");
@@ -423,7 +436,7 @@ void Draw_Tetris()
 		else
 			DrawLine(i);
 		if (i == 1)
-			WriteTetrisString(" NEXT ");
+			WriteTetrisString(autocvar_g_bastet ? " THAT " : " NEXT ");
 		else if (i == 3)
 			DrawPiece(self.next_piece, 1);
 		else if (i == 4)
@@ -501,8 +514,11 @@ void ResetTetris()
 {
 	float i;
 
+	if(!tet_line_buf)
+		tet_line_buf = buf_create();
+
 	for (i=1; i<=TET_LINES; i = i + 1)
-		SetLine(i, 0);
+		SetLine(i, TET_EMPTY_LINE);
 	self.piece_pos = '0 0 0';
 	self.piece_type = 0;
 	self.next_piece = self.tet_lines = self.tet_score = 0;
@@ -518,6 +534,227 @@ void Tet_GameExit()
 	self.movetype = MOVETYPE_WALK;
 };
 
+void PrintField()
+{
+	string l;
+	float r, c;
+	for(r = 1; r <= TET_LINES; ++r)
+	{
+		l = GetLine(r);
+		print(">");
+		for(c = 1; c <= TET_WIDTH; ++c)
+		{
+			print(ftos(GetXBlock(c, l)));
+		}
+		print("\n");
+	}
+}
+
+float BastetEvaluate()
+{
+	float height;
+	string l;
+	float lines;
+	float score, score_save;
+	string occupied, occupied_save;
+	float occupied_count, occupied_count_save;
+	float i, j, line;
+
+	score = 0;
+
+	// adds a bonus for each free dot above the occupied blocks profile
+	occupied = TET_EMPTY_LINE;
+	occupied_count = TET_WIDTH;
+	height = 0;
+	lines = 0;
+	for(i = 1; i <= TET_LINES; ++i)
+	{
+		l = GetLine(i);
+		if(l == TET_EMPTY_LINE)
+		{
+			height = i;
+			continue;
+		}
+		line = 1;
+		occupied_save = occupied;
+		occupied_count_save = occupied_count;
+		score_save = score;
+		for(j = 1; j <= TET_WIDTH; ++j)
+		{
+			if(GetXBlock(j, l))
+			{
+				if(!GetXBlock(j, occupied))
+				{
+					occupied = SetXBlock(j, occupied, 1);
+					--occupied_count;
+				}
+			}
+			else
+				line = 0;
+			score += 10000 * occupied_count;
+		}
+		if(line)
+		{
+			occupied = occupied_save;
+			occupied_count = occupied_count_save;
+			score = score_save + 100000000 + 10000 * TET_WIDTH + 1000;
+			++lines;
+		}
+	}
+
+	score += 1000 * height;
+
+	return score;
+}
+
+float CheckMetrics(float piece, float orgx, float orgy, float rot);
+void ClearPiece(float piece, float orgx, float orgy, float rot);
+void CementPiece(float piece, float orgx, float orgy, float rot);
+float bastet_profile_evaluate_time;
+float bastet_profile_checkmetrics_time;
+float BastetSearch(float buf, float pc, float x, float y, float rot, float move_bias)
+// returns best score, or -1 if position is impossible
+{
+	string r;
+	float b;
+	float s, sm;
+	float t1, t2;
+
+	if(move_bias < 0)
+		return 0; // DO NOT WANT
+
+	if(x < 1 || x > TET_WIDTH || y < 1 || y > TET_LINES)
+		return -1; // impossible
+	if(rot < 0) rot = 3;
+	if(rot > 3) rot = 0;
+
+	// did we already try?
+	b = x + (TET_WIDTH+2) * (y + (TET_LINES+2) * rot);
+	r = bufstr_get(buf, b);
+	if(r != "") // already tried
+		return stof(r);
+
+	bufstr_set(buf, b, "0"); // in case we READ that, not that bad - we already got that value in another branch then anyway
+
+
+
+	t1 = gettime(GETTIME_HIRES);
+	if(CheckMetrics(pc, x, y, rot))
+	{
+		t2 = gettime(GETTIME_HIRES);
+		bastet_profile_checkmetrics_time += (t2 - t1);
+		// try all moves
+		sm = 1;
+		s = BastetSearch(buf, pc, x-1, y, rot, move_bias - 1); if(s > sm) sm = s;
+		s = BastetSearch(buf, pc, x+1, y, rot, move_bias - 1); if(s > sm) sm = s;
+		s = BastetSearch(buf, pc, x, y, rot+1, move_bias - 1); if(s > sm) sm = s;
+		s = BastetSearch(buf, pc, x, y, rot-1, move_bias - 1); if(s > sm) sm = s;
+
+		s = BastetSearch(buf, pc, x, y+1, rot, move_bias + 2); if(s > sm) sm = s;
+		if(s < 0)
+		{
+			//print(sprintf("MAY CEMENT AT: %d %d %d\n", x, y, rot));
+			// moving down did not work - that means we can fixate the block here
+			t1 = gettime(GETTIME_HIRES);
+
+			CementPiece(pc, x, y, rot);
+			s = BastetEvaluate();
+			ClearPiece(pc, x, y, rot);
+
+			t2 = gettime(GETTIME_HIRES);
+			bastet_profile_evaluate_time += (t2 - t1);
+
+			if(s > sm) sm = s;
+		}
+	}
+	else
+	{
+		t2 = gettime(GETTIME_HIRES);
+		bastet_profile_checkmetrics_time += (t2 - t1);
+		sm = -1; // impassible
+	}
+
+	bufstr_set(buf, b, ftos(sm));
+
+	return sm;
+}
+
+float bastet_piece[7];
+float bastet_score[7];
+float bastet_piecetime[7];
+float BastetPiece()
+{
+	float b;
+
+	bastet_profile_evaluate_time = 0;
+	bastet_profile_checkmetrics_time = 0;
+	var float t1 = gettime(GETTIME_HIRES);
+
+	b = buf_create(); bastet_piece[0] = 1; bastet_score[0] = BastetSearch(b, 1, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[0]; buf_del(b);
+	b = buf_create(); bastet_piece[1] = 2; bastet_score[1] = BastetSearch(b, 2, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[1]; buf_del(b);
+	b = buf_create(); bastet_piece[2] = 3; bastet_score[2] = BastetSearch(b, 3, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[2]; buf_del(b);
+	b = buf_create(); bastet_piece[3] = 4; bastet_score[3] = BastetSearch(b, 4, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[3]; buf_del(b);
+	b = buf_create(); bastet_piece[4] = 5; bastet_score[4] = BastetSearch(b, 5, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[4]; buf_del(b);
+	b = buf_create(); bastet_piece[5] = 6; bastet_score[5] = BastetSearch(b, 6, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[5]; buf_del(b);
+	b = buf_create(); bastet_piece[6] = 7; bastet_score[6] = BastetSearch(b, 7, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[6]; buf_del(b);
+
+	var float t2 = gettime(GETTIME_HIRES);
+	dprint(sprintf("Time taken: %.6f seconds (of this, ev = %.2f%%, cm = %.2f%%)\n", t2 - t1, 100 * bastet_profile_evaluate_time / (t2 - t1), 100 * bastet_profile_checkmetrics_time / (t2 - t1)));
+
+	// sort
+	float i, j, k, p, s;
+
+/*
+	for(i = 0; i < 7; ++i)
+	{
+		print(sprintf("piece %s value = %d\n", substring("OJLIZST", bastet_piece[i]-1, 1), bastet_score[i]));
+	}
+*/
+
+	for(i = 0; i < 7; ++i)
+	{
+		k = i;
+		p = bastet_piece[k];
+		s = bastet_score[k];
+		for(j = i + 1; j < 7; ++j)
+		{
+			if(bastet_score[j] < s)
+			{
+				k = j;
+				s = bastet_score[k];
+				p = bastet_piece[k];
+			}
+		}
+		if(k != i)
+		{
+			bastet_score[k] = bastet_score[i];
+			bastet_piece[k] = bastet_piece[i];
+			bastet_score[i] = s;
+			bastet_piece[i] = p;
+		}
+	}
+
+	b = random();
+	if(b < 0.8)
+		j = 0;
+	else if(b < 0.92)
+		j = 1;
+	else if(b < 0.98)
+		j = 2;
+	else
+		j = 3;
+	j = bastet_piece[j];
+
+	for(i = 0; i < 7; ++i)
+	{
+		if(i == j-1)
+			bastet_piecetime[i] = 0.2 * bastet_piecetime[i];
+		else
+			bastet_piecetime[i] = 1.8 * bastet_piecetime[i] + 1000;
+	}
+
+	return j;
+}
 
 
 /*
@@ -534,6 +771,7 @@ float RandomPiece()
 	float p, q;
 	float b;
 	float seen;
+
 	if(self.tet_piece_bucket > 1)
 	{
 		p = mod(self.tet_piece_bucket, 7);
@@ -575,37 +813,37 @@ float CheckMetrics(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 	// check to see if the piece, if moved to the locations will overlap
 
 	float x, y;
+	string l;
 	// why did I start counting from 1, damnit
 	orgx = orgx - 1;
 	orgy = orgy - 1;
 
-	for (y = 0; y < 5; y = y + 1)
+	PieceMinsMaxs(rot, piece);
+	if (tet_piecemins_x+orgx<1 || tet_piecemaxs_x+orgx > TET_WIDTH || tet_piecemins_y+orgy<1 || tet_piecemaxs_y+orgy> TET_LINES)
+		return FALSE; // ouside the level
+	for (y = tet_piecemins_y; y <= tet_piecemaxs_y; y = y + 1)
 	{
-		for (x = 0; x < 5; x = x + 1)
-		{
+		l = GetLine(y + orgy);
+		if(l != TET_EMPTY_LINE)
+		for (x = tet_piecemins_x; x <= tet_piecemaxs_x; x = x + 1)
 			if (PieceMetric(x, y, rot, piece))
-			{
-				if (GetSquare(x + orgx, y + orgy))
+				if (GetXBlock(x + orgx, l))
 					return FALSE; // uhoh, gonna hit something.
-				if (x+orgx<1 || x+orgx > TET_WIDTH || y+orgy<1 || y+orgy> TET_LINES)
-					return FALSE; // ouside the level
-			}
-		}
 	}
 	return TRUE;
 }
 
 void ClearPiece(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 {
-
 	float x, y;
 	// why did I start counting from 1, damnit
 	orgx = orgx - 1;
 	orgy = orgy - 1;
 
-	for (y = 0; y < 5; y = y + 1)
+	PieceMinsMaxs(rot, piece);
+	for (y = tet_piecemins_y; y <= tet_piecemaxs_y; y = y + 1)
 	{
-		for (x = 0; x < 5; x = x + 1)
+		for (x = tet_piecemins_x; x <= tet_piecemaxs_x; x = x + 1)
 		{
 			if (PieceMetric(x, y, rot, piece))
 			{
@@ -622,11 +860,12 @@ void CementPiece(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 	orgx = orgx - 1;
 	orgy = orgy - 1;
 
-	pcolor = mod(piece, 3) + 1;
+	pcolor = PieceColor(piece);
 
-	for (y = 0; y < 5; y = y + 1)
+	PieceMinsMaxs(rot, piece);
+	for (y = tet_piecemins_y; y <= tet_piecemaxs_y; y = y + 1)
 	{
-		for (x = 0; x < 5; x = x + 1)
+		for (x = tet_piecemins_x; x <= tet_piecemaxs_x; x = x + 1)
 		{
 			if (PieceMetric(x, y, rot, piece))
 			{
@@ -650,18 +889,24 @@ void AddLines(float n)
 
 void CompletedLines()
 {
-	float y, cleared, ln, added, pos, i;
+	float y, cleared, added, pos, i;
+	string ln;
 
 	cleared = 0;
 	y = TET_LINES;
-	while(y >= 1)
+	for(;;)
 	{
 		ln = GetLine(y);
-		if (((ln & LINE_LOW) | ((ln & LINE_HIGH)/2)) == LINE_LOW)
+		if(strstrofs(ln, "0", 0) < 0)
 			cleared = cleared + 1;
 		else
 			y = y - 1;
-		ln = GetLine(y - cleared);
+		if(y < 1)
+			break;
+		if(y - cleared < 1)
+			ln = TET_EMPTY_LINE;
+		else
+			ln = GetLine(y - cleared);
 		SetLine(y, ln);
 	}
 
@@ -685,17 +930,17 @@ void CompletedLines()
 		for(y = max(1, TET_LINES - added + 1); y <= TET_LINES; ++y)
 		{
 			pos = floor(random() * TET_WIDTH);
-			ln = 0;
+			ln = TET_EMPTY_LINE;
 			for(i = 1; i <= TET_WIDTH; ++i)
 				if(i != pos)
-					ln = SetXBlock(i, ln, floor(random() * 3 + 1));
+					ln = SetXBlock(i, ln, floor(random() * 7 + 1));
 			SetLine(y, ln);
 		}
 	}
 
 	self.tet_highest_line = 0;
 	for(y = 1; y <= TET_LINES; ++y)
-		if(GetLine(y) != 0)
+		if(GetLine(y) != TET_EMPTY_LINE)
 		{
 			self.tet_highest_line = TET_LINES + 1 - y;
 			break;
@@ -725,12 +970,21 @@ void HandleGame(float keyss)
 
 	if (self.piece_type == 0)
 	{
-		self.piece_pos = '5 1 0'; // that's about middle top, we count from 1 ARGH
-		if (self.next_piece)
-			self.piece_type = self.next_piece;
+		self.piece_pos = TET_START_PIECE_POS; // that's about middle top, we count from 1 ARGH
+
+		if(autocvar_g_bastet)
+		{
+			self.piece_type = BastetPiece();
+			self.next_piece = bastet_piece[6];
+		}
 		else
-			self.piece_type = RandomPiece();
-		self.next_piece =  RandomPiece();
+		{
+			if (self.next_piece)
+				self.piece_type = self.next_piece;
+			else
+				self.piece_type = RandomPiece();
+			self.next_piece =  RandomPiece();
+		}
 		keyss = 0; // no movement first frame
 		self.tet_autodown = time + 0.2;
 		brand_new = 1;
