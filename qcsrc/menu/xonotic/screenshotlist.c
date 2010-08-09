@@ -5,6 +5,7 @@ CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
 	METHOD(XonoticScreenshotList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticScreenshotList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticScreenshotList, getScreenshots, void(entity))
+	METHOD(XonoticScreenshotList, previewScreenshot, void(entity))
 	METHOD(XonoticScreenshotList, startScreenshot, void(entity))
 	METHOD(XonoticScreenshotList, screenshotName, string(entity, float))
 	METHOD(XonoticScreenshotList, clickListBoxItem, void(entity, float, vector))
@@ -21,6 +22,9 @@ CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticScreenshotList, lastClickedScreenshot, float, -1)
 	ATTRIB(XonoticScreenshotList, lastClickedTime, float, 0)
 	ATTRIB(XonoticScreenshotList, filterString, string, string_null)
+
+	ATTRIB(XonoticScreenshotList, screenshotBrowserDialog, entity, NULL)
+	ATTRIB(XonoticScreenshotList, screenshotPreview, entity, NULL)
 	ATTRIB(XonoticScreenshotList, screenshotViewerDialog, entity, NULL)
 	METHOD(XonoticScreenshotList, goScreenshot, void(entity, float))
 ENDCLASS(XonoticScreenshotList)
@@ -120,7 +124,10 @@ void XonoticScreenshotList_drawListBoxItem(entity me, float i, vector absSize, f
 {
 	string s;
 	if(isSelected)
+	{
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+		me.previewScreenshot(me);
+	}
 
 	s = me.screenshotName(me,i);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
@@ -133,7 +140,7 @@ void XonoticScreenshotList_showNotify(entity me)
 }
 
 void ScreenshotList_Filter_Change(entity box, entity me)
-{	
+{
 	if(me.filterString)
 		strunzone(me.filterString);
 
@@ -148,6 +155,7 @@ void ScreenshotList_Filter_Change(entity box, entity me)
 		me.filterString = string_null;
 
 	me.getScreenshots(me);
+	me.setSelected(me, 0); //alway select the first element after a new search
 }
 
 void XonoticScreenshotList_goScreenshot(entity me, float d)
@@ -155,14 +163,21 @@ void XonoticScreenshotList_goScreenshot(entity me, float d)
 	if(!me.screenshotViewerDialog)
 		return;
 	me.setSelected(me, me.selectedItem + d);
-	main.screenshotViewerDialog.loadScreenshot(main.screenshotViewerDialog, strcat("/screenshots/", me.screenshotName(me,me.selectedItem)));
+	me.screenshotViewerDialog.loadScreenshot(me.screenshotViewerDialog, strcat("/screenshots/", me.screenshotName(me,me.selectedItem)));
 }
 
 void XonoticScreenshotList_startScreenshot(entity me)
 {
-	main.screenshotViewerDialog.loadScreenshot(main.screenshotViewerDialog, strcat("/screenshots/", me.screenshotName(me,me.selectedItem)));
+	me.screenshotViewerDialog.loadScreenshot(me.screenshotViewerDialog, strcat("/screenshots/", me.screenshotName(me,me.selectedItem)));
 	// pop up screenshot
-	DialogOpenButton_Click_withCoords(NULL, main.screenshotViewerDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
+	DialogOpenButton_Click_withCoords(NULL, me.screenshotViewerDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
+}
+
+void XonoticScreenshotList_previewScreenshot(entity me)
+{
+	if(!me.screenshotBrowserDialog)
+		return;
+	me.screenshotBrowserDialog.loadPreviewScreenshot(me.screenshotBrowserDialog, strcat("/screenshots/", me.screenshotName(me,me.selectedItem)));
 }
 
 void StartScreenshot_Click(entity btn, entity me)
