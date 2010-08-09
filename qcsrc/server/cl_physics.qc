@@ -81,7 +81,6 @@ void PlayerJump (void)
 			self.multijump_ready = FALSE;
 	}
 
-	print("self.multijump_ready = ", ftos(self.multijump_ready), "self.multijump_count = ", ftos(self.multijump_count), "\n");
 	if(self.multijump_ready && self.multijump_count < cvar("g_multijump") && self.velocity_z > cvar("g_multijump_speed"))
 	{
 		if (cvar("g_multijump") > 0)
