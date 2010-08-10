@@ -155,7 +155,10 @@ void ScreenshotList_Filter_Change(entity box, entity me)
 		me.filterString = string_null;
 
 	me.getScreenshots(me);
-	me.setSelected(me, 0); //alway select the first element after a new search
+	if (me.nItems <= 0)
+		me.screenshotBrowserDialog.loadPreviewScreenshot(me.screenshotBrowserDialog, "");
+	else
+		me.setSelected(me, 0); //always select the first element after a new search
 }
 
 void XonoticScreenshotList_goScreenshot(entity me, float d)

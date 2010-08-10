@@ -9,7 +9,6 @@ CLASS(XonoticScreenshotBrowserTab) EXTENDS(XonoticTab)
 	
 	METHOD(XonoticScreenshotBrowserTab, loadPreviewScreenshot, void(entity, string))
 	ATTRIB(XonoticScreenshotBrowserTab, screenshotImage, entity, NULL)
-	ATTRIB(XonoticScreenshotBrowserTab, currentScrName, string, string_null)
 	ATTRIB(XonoticScreenshotBrowserTab, currentScrPath, string, string_null)
 ENDCLASS(XonoticScreenshotBrowserTab)
 entity makeXonoticScreenshotBrowserTab();
@@ -27,18 +26,15 @@ void XonoticScreenshotBrowserTab_loadPreviewScreenshot(entity me, string scrImag
 {
 	if (me.currentScrPath)
 		strunzone(me.currentScrPath);
+	if (scrImage == "")
+		scrImage = "/gfx/transparent";
 	me.currentScrPath = strzone(scrImage);
 	me.screenshotImage.configureImage(me.screenshotImage, me.currentScrPath);
 	me.screenshotImage.updateAspect(me.screenshotImage);
-
-	if (me.currentScrName)
-		strunzone(me.currentScrName);
-	me.currentScrName = strzone(substring(scrImage, 13, strlen(scrImage) - 13));
 }
 void XonoticScreenshotBrowserTab_fill(entity me)
 {
 	entity e, btn, slist;
-	me.TR(me);
 	slist = makeXonoticScreenshotList();
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, "Filter:"));
@@ -52,13 +48,14 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 			slist.screenshotViewerDialog = main.screenshotViewerDialog;
 			main.screenshotViewerDialog.scrList = slist;
 	me.TR(me);
-		me.TD(me, me.rows - 4 - 11, me.columns, slist);
-	me.gotoRC(me, me.rows - 2 - 11, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton("View", '0 0 0'));
+		me.TD(me, 8, me.columns, slist);
+	me.gotoRC(me, 9, 0);
+		me.TD(me, 1, me.columns, e = makeXonoticButton("Open in the viewer", '0 0 0'));
 			e.onClick = StartScreenshot_Click;
 			e.onClickEntity = slist;
-	me.gotoRC(me, me.rows - 1 - 11, 0);
-		me.TD(me, 12, me.columns, e = makeXonoticImage(string_null, -1));
+	me.TR(me);
+		me.TD(me, me.rows - 10, me.columns, e = makeXonoticImage(string_null, -1));
+			e.src = "/gfx/transparent"; // in case there isn't any screenshot to show
 			me.screenshotImage = e;
 			slist.screenshotPreview = e;
 			slist.screenshotBrowserDialog = me;

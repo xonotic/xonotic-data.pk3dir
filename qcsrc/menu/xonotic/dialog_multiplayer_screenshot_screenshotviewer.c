@@ -67,9 +67,9 @@ void XonoticScreenshotViewerDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, me.rows - 1, me.columns, e = makeXonoticImage(string_null, -1));
-		me.screenshotImage = e;
+			me.screenshotImage = e;
 		me.TD(me, 1, me.columns, e = makeXonoticTextLabel(0.5, ""));
-		me.titleLabel = e;
+			me.titleLabel = e;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns/2, e = makeXonoticButton("Previous", '0 0 0'));
 			e.onClick = prevScreenshot_Click;
