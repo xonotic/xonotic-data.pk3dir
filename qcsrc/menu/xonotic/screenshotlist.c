@@ -31,6 +31,7 @@ ENDCLASS(XonoticScreenshotList)
 
 entity makeXonoticScreenshotList();
 void StartScreenshot_Click(entity btn, entity me);
+void ScreenshotList_Refresh_Click(entity btn, entity me);
 void ScreenshotList_Filter_Change(entity box, entity me);
 #endif
 
@@ -139,6 +140,15 @@ void XonoticScreenshotList_showNotify(entity me)
 	me.getScreenshots(me);
 }
 
+void ScreenshotList_Refresh_Click(entity btn, entity me)
+{
+	me.getScreenshots(me);
+	if (me.nItems <= 0)
+		me.screenshotBrowserDialog.loadPreviewScreenshot(me.screenshotBrowserDialog, "");
+	else
+		me.setSelected(me, 0); //always select the first element after a list update
+}
+
 void ScreenshotList_Filter_Change(entity box, entity me)
 {
 	if(me.filterString)
@@ -154,11 +164,7 @@ void ScreenshotList_Filter_Change(entity box, entity me)
 	else
 		me.filterString = string_null;
 
-	me.getScreenshots(me);
-	if (me.nItems <= 0)
-		me.screenshotBrowserDialog.loadPreviewScreenshot(me.screenshotBrowserDialog, "");
-	else
-		me.setSelected(me, 0); //always select the first element after a new search
+	ScreenshotList_Refresh_Click(world, me);
 }
 
 void XonoticScreenshotList_goScreenshot(entity me, float d)

@@ -8,6 +8,7 @@ CLASS(XonoticScreenshotViewerDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticScreenshotViewerDialog, rows, float, 25)
 	ATTRIB(XonoticScreenshotViewerDialog, columns, float, 6.5)
 	ATTRIB(XonoticScreenshotViewerDialog, screenshotImage, entity, NULL)
+	ATTRIB(XonoticScreenshotViewerDialog, color, vector, SKINCOLOR_DIALOG_MULTIPLAYER)
 	ATTRIB(XonoticScreenshotViewerDialog, scrList, entity, NULL)
 	ATTRIB(XonoticScreenshotViewerDialog, titleLabel, entity, NULL)
 	
