@@ -1931,3 +1931,46 @@ void spawnfunc_trigger_magicear()
 	// target:
 	//   what to trigger
 }
+
+void relay_activateors_use()
+{
+	entity trg, os;
+	
+	os = self;
+	
+	for(trg = world; (trg = find(trg, targetname, os.target)); )
+	{
+		self = trg;
+		if (trg.setactive)
+			trg.setactive(os.cnt);
+		else
+		{
+			if(os.cnt == ACTIVE_TOGGLE)
+				if(trg.active)
+					trg.active = ACTIVE_NOT;
+				else	
+					trg.active = ACTIVE_ACTIVE;
+			else
+				trg.active = os.cnt;
+		}		
+	}
+	self = os;
+}
+
+void spawnfunc_relay_activate()
+{
+	self.cnt = ACTIVE_ACTIVE;
+	self.use = relay_activateors_use;
+}
+
+void spawnfunc_relay_deactivate()
+{
+	self.cnt = ACTIVE_NOT;
+	self.use = relay_activateors_use;	
+}
+
+void spawnfunc_relay_activatetoggle()
+{
+	self.cnt = ACTIVE_TOGGLE;
+	self.use = relay_activateors_use;	
+}

@@ -327,6 +327,25 @@ void spawnfunc_func_train()
 	// TODO make a reset function for this one
 };
 
+void func_rotating_setactive(float astate)
+{
+	
+	if (astate == ACTIVE_TOGGLE)
+	{
+		if(self.active)
+			self.active = ACTIVE_NOT;
+		else
+			self.active = ACTIVE_ACTIVE;
+	}
+	else
+		self.active = astate;
+		
+	if(astate == ACTIVE_NOT)		
+		self.avelocity = '0 0 0';
+	else
+		self.avelocity = self.pos1;
+}
+
 /*QUAKED spawnfunc_func_rotating (0 .5 .8) ? - - X_AXIS Y_AXIS
 Brush model that spins in place on one axis (default Z).
 speed   : speed to rotate (in degrees per second)
@@ -342,6 +361,10 @@ void spawnfunc_func_rotating()
 		precache_sound(self.noise);
 		ambientsound(self.origin, self.noise, VOL_BASE, ATTN_IDLE);
 	}
+	
+	self.active = ACTIVE_ACTIVE;
+	self.setactive = func_rotating_setactive;
+	
 	if (!self.speed)
 		self.speed = 100;
 	// FIXME: test if this turns the right way, then remove this comment (negate as needed)
@@ -353,7 +376,9 @@ void spawnfunc_func_rotating()
 	// FIXME: test if this turns the right way, then remove this comment (negate as needed)
 	else // Z
 		self.avelocity = '0 1 0' * self.speed;
-
+	
+	self.pos1 = self.avelocity;
+    
     if(self.dmg & (!self.message))
         self.message = " was squished";
     if(self.dmg && (!self.message2))
