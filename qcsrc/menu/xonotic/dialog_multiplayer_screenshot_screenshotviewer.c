@@ -18,6 +18,8 @@ ENDCLASS(XonoticScreenshotViewerDialog)
 #ifdef IMPLEMENTATION
 void XonoticScreenshotViewerDialog_loadScreenshot(entity me, string scrImage)
 {
+	if (me.currentScrPath == scrImage)
+		return;
 	if (me.currentScrPath)
 		strunzone(me.currentScrPath);
 	me.currentScrPath = strzone(scrImage);

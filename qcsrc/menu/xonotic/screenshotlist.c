@@ -3,6 +3,7 @@ CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
 	METHOD(XonoticScreenshotList, configureXonoticScreenshotList, void(entity))
 	ATTRIB(XonoticScreenshotList, rowsPerItem, float, 1)
 	METHOD(XonoticScreenshotList, resizeNotify, void(entity, vector, vector, vector, vector))
+	METHOD(XonoticScreenshotList, setSelected, void(entity, float))
 	METHOD(XonoticScreenshotList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticScreenshotList, getScreenshots, void(entity))
 	METHOD(XonoticScreenshotList, previewScreenshot, void(entity))
@@ -121,14 +122,17 @@ void XonoticScreenshotList_resizeNotify(entity me, vector relOrigin, vector relS
 	me.columnNameSize = 1 - 2 * me.realFontSize_x;
 }
 
+void XonoticScreenshotList_setSelected(entity me, float i)
+{
+	SUPER(XonoticScreenshotList).setSelected(me, i);
+	me.previewScreenshot(me); // load the preview on selection change
+}
+
 void XonoticScreenshotList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	string s;
 	if(isSelected)
-	{
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-		me.previewScreenshot(me);
-	}
 
 	s = me.screenshotName(me,i);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
@@ -138,15 +142,13 @@ void XonoticScreenshotList_drawListBoxItem(entity me, float i, vector absSize, f
 void XonoticScreenshotList_showNotify(entity me)
 {
 	me.getScreenshots(me);
+	me.previewScreenshot(me);
 }
 
 void ScreenshotList_Refresh_Click(entity btn, entity me)
 {
 	me.getScreenshots(me);
-	if (me.nItems <= 0)
-		me.screenshotBrowserDialog.loadPreviewScreenshot(me.screenshotBrowserDialog, "");
-	else
-		me.setSelected(me, 0); //always select the first element after a list update
+	me.setSelected(me, 0); //always select the first element after a list update
 }
 
 void ScreenshotList_Filter_Change(entity box, entity me)
@@ -186,7 +188,10 @@ void XonoticScreenshotList_previewScreenshot(entity me)
 {
 	if(!me.screenshotBrowserDialog)
 		return;
-	me.screenshotBrowserDialog.loadPreviewScreenshot(me.screenshotBrowserDialog, strcat("/screenshots/", me.screenshotName(me,me.selectedItem)));
+	if (me.nItems <= 0)
+		me.screenshotBrowserDialog.loadPreviewScreenshot(me.screenshotBrowserDialog, "");
+	else
+		me.screenshotBrowserDialog.loadPreviewScreenshot(me.screenshotBrowserDialog, strcat("/screenshots/", me.screenshotName(me,me.selectedItem)));
 }
 
 void StartScreenshot_Click(entity btn, entity me)

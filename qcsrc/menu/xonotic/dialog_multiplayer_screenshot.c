@@ -24,6 +24,8 @@ entity makeXonoticScreenshotBrowserTab()
 }
 void XonoticScreenshotBrowserTab_loadPreviewScreenshot(entity me, string scrImage)
 {
+	if (me.currentScrPath == scrImage)
+		return;
 	if (me.currentScrPath)
 		strunzone(me.currentScrPath);
 	me.currentScrPath = strzone(scrImage);
