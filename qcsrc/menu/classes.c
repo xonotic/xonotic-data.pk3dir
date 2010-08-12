@@ -81,6 +81,7 @@
 #include "xonotic/dialog_multiplayer_playersetup_waypoint.c"
 #include "xonotic/dialog_multiplayer_demo.c"
 #include "xonotic/demolist.c"
+#include "xonotic/screenshotimage.c"
 #include "xonotic/dialog_multiplayer_screenshot.c"
 #include "xonotic/dialog_multiplayer_screenshot_screenshotviewer.c"
 #include "xonotic/screenshotlist.c"

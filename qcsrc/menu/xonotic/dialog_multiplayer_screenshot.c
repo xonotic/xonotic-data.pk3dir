@@ -26,11 +26,8 @@ void XonoticScreenshotBrowserTab_loadPreviewScreenshot(entity me, string scrImag
 {
 	if (me.currentScrPath)
 		strunzone(me.currentScrPath);
-	if (scrImage == "")
-		scrImage = "/gfx/transparent";
 	me.currentScrPath = strzone(scrImage);
-	me.screenshotImage.configureImage(me.screenshotImage, me.currentScrPath);
-	me.screenshotImage.updateAspect(me.screenshotImage);
+	me.screenshotImage.configureXonoticScreenshotImage(me.screenshotImage, me.currentScrPath);
 }
 void XonoticScreenshotBrowserTab_fill(entity me)
 {
@@ -57,8 +54,8 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 			e.onClick = StartScreenshot_Click;
 			e.onClickEntity = slist;
 	me.TR(me);
-		me.TD(me, me.rows - 10, me.columns, e = makeXonoticImage(string_null, -1));
-			e.src = "/gfx/transparent"; // in case there isn't any screenshot to show
+		me.TD(me, me.rows - 10, me.columns, e = makeXonoticScreenshotImage());
+			e.showTitle = 0;
 			me.screenshotImage = e;
 			slist.screenshotPreview = e;
 			slist.screenshotBrowserDialog = me;
