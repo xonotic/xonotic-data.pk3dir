@@ -761,7 +761,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	// rounded header
 	if (teamplay)
-		drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, (rgb * autocvar_hud_color_bg_team) + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+		drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, (rgb * autocvar_scoreboard_color_bg_team) + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	else
 		drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, rgb + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
@@ -780,7 +780,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	// table background
 	tmp_y = body_table_height;
 	if (teamplay)
-		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	else
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
@@ -919,7 +919,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	tmp_y = height * rows;
 
 	if (teamplay)
-		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	else
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(hud_accuracy_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
@@ -1044,7 +1044,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	tmp_y = hud_fontsize_y * RANKINGS_RECEIVED_CNT;
 
 	if (teamplay)
-		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	else
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(hud_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
