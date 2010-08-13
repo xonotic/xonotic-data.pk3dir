@@ -94,6 +94,12 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if(argv(0) == "setcompression")
+	{
+		updateCompression();
+		return;
+	}
+
 #if 0
 	if(argv(0) == "tokentest")
 	{

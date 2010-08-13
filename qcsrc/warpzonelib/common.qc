@@ -113,7 +113,7 @@ float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 {
     float f, s;
 
-    if not(e.modelindex)
+    if(!e.modelindex || e.warpzone_isboxy)
         return 1;
 
     s = e.solid;
@@ -174,6 +174,27 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	vector o0, e0;
 	entity wz;
 	vector vf, vr, vu;
+
+	WarpZone_Trace_InitTransform();
+	if(!warpzone_warpzones_exist)
+	{
+		if(nomonsters == MOVE_NOTHING)
+		{
+			trace_endpos = end;
+			trace_fraction = 1;
+			if(cb)
+				cb(org, trace_endpos, end);
+			return;
+		}
+		else
+		{
+			tracebox(org, mi, ma, end, nomonsters, forent);
+			if(cb)
+				cb(org, trace_endpos, end);
+			return;
+		}
+	}
+
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
@@ -193,7 +214,6 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	if((contentshack = (forent.dphitcontentsmask && !(forent.dphitcontentsmask & DPCONTENTS_SOLID))))
 		forent.dphitcontentsmask |= DPCONTENTS_SOLID;
 
-	WarpZone_Trace_InitTransform();
 	// if starting in warpzone, first transform
 	wz = WarpZone_Find(org + mi, org + ma);
 	if(wz)
@@ -283,13 +303,24 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	vector vf, vr, vu, v0, o0;
 	entity wz;
 
+	WarpZone_Trace_InitTransform();
+	WarpZone_tracetoss_time = 0;
+	if(!warpzone_warpzones_exist)
+	{
+		tracetoss(e, forent);
+		if(cb)
+			cb(e.origin, trace_endpos, trace_endpos);
+		dt = vlen(e.origin - o0) / vlen(e.velocity);
+		WarpZone_tracetoss_time += dt;
+		return;
+	}
+
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
 	o0 = e.origin;
 	v0 = e.velocity;
 
-	WarpZone_Trace_InitTransform();
 	// if starting in warpzone, first transform
 	wz = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
 	if(wz)
@@ -308,7 +339,6 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	}
 	WarpZone_MakeAllSolid();
 	g = cvar("sv_gravity") * e.gravity;
-	WarpZone_tracetoss_time = 0;
 	i = 16;
 	for(;;)
 	{
@@ -322,9 +352,9 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		if(cb)
 			cb(e.origin, trace_endpos, trace_endpos);
 		e.origin = trace_endpos;
-		e.velocity_z -= WarpZone_tracetoss_time * g;
 		dt = vlen(e.origin - o0) / vlen(e.velocity);
 		WarpZone_tracetoss_time += dt;
+		e.velocity_z -= WarpZone_tracetoss_time * g;
 		if(trace_fraction >= 1)
 			break;
 		if(trace_ent.classname != "trigger_warpzone")

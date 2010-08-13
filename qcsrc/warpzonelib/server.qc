@@ -130,6 +130,9 @@ float WarpZone_Send(entity to, float sendflags)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
+	// we must send this flag for clientside to match properly too
+	WriteByte(MSG_ENTITY, self.warpzone_isboxy);
+
 	// we need THESE to render the warpzone (and cull properly)...
 	WriteCoord(MSG_ENTITY, self.origin_x);
 	WriteCoord(MSG_ENTITY, self.origin_y);
@@ -300,6 +303,7 @@ void WarpZoneCamera_InitStep_FindTarget()
 		error("Camera with nonexisting target");
 		return;
 	}
+	++warpzone_cameras_exist;
 	WarpZone_Camera_SetUp(self, self.enemy.origin, self.enemy.angles);
 }
 
@@ -433,6 +437,7 @@ void WarpZone_InitStep_FinalizeTransform()
 		return;
 	}
 
+	++warpzone_warpzones_exist;
 	WarpZone_SetUp(self, self.warpzone_origin, self.warpzone_angles, self.enemy.warpzone_origin, self.enemy.warpzone_angles);
 	self.touch = WarpZone_Touch;
 	self.SendFlags = 0xFFFFFF;

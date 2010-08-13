@@ -157,7 +157,12 @@ void XonoticCvarList_drawListBoxItem(entity me, float i, vector absSize, float i
 
 float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(SUPER(XonoticCvarList).keyDown(me, scan, ascii, shift))
+	if (scan == K_MOUSE3 || ((shift & S_CTRL) && scan == K_SPACE))
+	{
+		CvarList_Revert_Click(world, me);
+		return 1;
+	}
+	else if(SUPER(XonoticCvarList).keyDown(me, scan, ascii, shift))
 		return 1;
 	else if(!me.controlledTextbox)
 		return 0;
