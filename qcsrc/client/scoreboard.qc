@@ -595,8 +595,8 @@ string HUD_FixScoreboardColumnWidth(float i, string str)
 		for(j = 0; j < hud_num_fields; ++j)
 			if(j != i)
 				if (hud_field[i] != SP_SEPARATOR)
-					namesize -= hud_size[j] + 1;
-		namesize += 1;
+					namesize -= hud_size[j] + hud_fontsize_x;
+		namesize += hud_fontsize_x;
 		hud_size[i] = namesize;
 
 		if (hud_fixscoreboardcolumnwidth_iconlen != 0)
