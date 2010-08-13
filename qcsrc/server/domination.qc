@@ -129,35 +129,45 @@ void dompoint_captured ()
 
 	switch(self.team)
 	{
+		// "fix" pps when slightly under 0 because of approximation errors
 		case COLOR_TEAM1:
 			pps_red -= (points/wait_time);
+			if (pps_red < 0) pps_red = 0;
 			break;
 		case COLOR_TEAM2:
 			pps_blue -= (points/wait_time);
+			if (pps_blue < 0) pps_blue = 0;
 			break;
 		case COLOR_TEAM3:
 			pps_yellow -= (points/wait_time);
+			if (pps_yellow < 0) pps_yellow = 0;
 			break;
 		case COLOR_TEAM4:
 			pps_pink -= (points/wait_time);
+			if (pps_pink < 0) pps_pink = 0;
 	}
 
 	switch(self.goalentity.team)
 	{
+		// "fix" pps when slightly over total_pps because of approximation errors
 		case COLOR_TEAM1:
 			pps_red += (points/wait_time);
+			if (pps_red > total_pps) pps_red = total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-red", "", "");
 			break;
 		case COLOR_TEAM2:
 			pps_blue += (points/wait_time);
+			if (pps_blue > total_pps) pps_blue = total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-blue", "", "");
 			break;
 		case COLOR_TEAM3:
 			pps_yellow += (points/wait_time);
+			if (pps_yellow > total_pps) pps_yellow = total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-yellow", "", "");
 			break;
 		case COLOR_TEAM4:
 			pps_pink += (points/wait_time);
+			if (pps_pink > total_pps) pps_pink = total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
 	}
 
