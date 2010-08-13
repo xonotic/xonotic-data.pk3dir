@@ -760,7 +760,10 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	tmp_y = 1.25 * hud_fontsize_y;
 
 	// rounded header
-	drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, (rgb * autocvar_hud_color_bg_team) + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	if (teamplay)
+		drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, (rgb * autocvar_hud_color_bg_team) + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	else
+		drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, rgb + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
 	// table border
 	tmp_y += hud_border_thickness;
@@ -776,7 +779,10 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	// table background
 	tmp_y = body_table_height;
-	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	if (teamplay)
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	else
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
 	// anyway, apply some color
 	//drawfill(pos, tmp + '2 0 0', rgb, 0.1, DRAWFLAG_NORMAL);
@@ -912,7 +918,10 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	tmp_x = sbwidth;
 	tmp_y = height * rows;
 
-	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	if (teamplay)
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	else
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(hud_accuracy_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// column highlighting
@@ -1013,9 +1022,9 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 {
 	float i;
 	RANKINGS_RECEIVED_CNT = 0;
-		for (i=RANKINGS_CNT-1; i>=0; --i)
-			if (grecordtime[i])
-				RANKINGS_RECEIVED_CNT = RANKINGS_RECEIVED_CNT + 1;
+	for (i=RANKINGS_CNT-1; i>=0; --i)
+		if (grecordtime[i])
+			++RANKINGS_RECEIVED_CNT;
 
 	if (RANKINGS_RECEIVED_CNT == 0)
 		return pos;
@@ -1023,9 +1032,9 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	float is_spec;
 	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
 	vector hl_rgb;
-		hl_rgb_x = cvar("scoreboard_color_bg_r") + 0.5;
-		hl_rgb_y = cvar("scoreboard_color_bg_g") + 0.5;
-		hl_rgb_z = cvar("scoreboard_color_bg_b") + 0.5;
+	hl_rgb_x = cvar("scoreboard_color_bg_r") + 0.5;
+	hl_rgb_y = cvar("scoreboard_color_bg_g") + 0.5;
+	hl_rgb_z = cvar("scoreboard_color_bg_b") + 0.5;
 
 	pos_y += hud_fontsize_y;
 	drawstring(pos, strcat("Rankings"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
@@ -1034,7 +1043,10 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	tmp_x = sbwidth;
 	tmp_y = hud_fontsize_y * RANKINGS_RECEIVED_CNT;
 
-	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	if (teamplay)
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	else
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(hud_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// row highlighting
