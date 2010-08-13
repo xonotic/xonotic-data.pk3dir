@@ -13,7 +13,6 @@ CLASS(BorderImage) EXTENDS(Label)
 	ATTRIB(BorderImage, isNexposeeTitleBar, float, 0)
 	ATTRIB(BorderImage, zoomedOutTitleBarPosition, float, 0)
 	ATTRIB(BorderImage, zoomedOutTitleBar, float, 0)
-	ATTRIB(BorderImage, borderLines, float, 1)
 ENDCLASS(BorderImage)
 #endif
 
@@ -36,7 +35,8 @@ void BorderImage_resizeNotify(entity me, vector relOrigin, vector relSize, vecto
 		me.realFontSize_Nexposeed = me.realFontSize;
 	}
 	SUPER(BorderImage).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	me.borderVec = me.borderHeight / absSize_y * (eY + eX * (absSize_y / absSize_x));
+	me.borderVec_x = me.borderHeight / absSize_x;
+	me.borderVec_y = me.borderHeight / absSize_y;
 	me.realOrigin_y = 0.5 * (me.borderVec_y - me.realFontSize_y);
 	if(me.closeButton)
 	{
@@ -60,7 +60,7 @@ void BorderImage_draw(entity me)
 	//print(vtos(me.borderVec), "\n");
 
 	if(me.src)
-		draw_BorderPicture('0 0 0', me.src, '1 1 0', me.color, 1, me.borderLines * me.borderVec);
+		draw_BorderPicture('0 0 0', me.src, '1 1 0', me.color, 1, me.borderVec);
 	if(me.fontSize > 0)
 	{
 		vector ro, rf, df;

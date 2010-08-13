@@ -125,14 +125,14 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 
 vector w_shotorg;
 vector w_shotdir;
+vector w_shotend;
 
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
-void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float maxdamage)
+void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float maxdamage, float range)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
-	local vector trueaimpoint;
 	local float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
@@ -141,17 +141,17 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	if(antilag)
-		WarpZone_traceline_antilag(world, ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+		WarpZone_traceline_antilag(world, ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
 		// passing world, because we do NOT want it to touch dphitcontentsmask
 	else
-		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, ent);
+		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NOMONSTERS, ent);
 	ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
 	vector vf, vr, vu;
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
-	trueaimpoint = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
+	w_shotend = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
 	v_forward = vf;
 	v_right = vr;
 	v_up = vu;
@@ -169,17 +169,13 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
 	if(ent.weaponentity.movedir_x > 0)
-	{
 		vecs = ent.weaponentity.movedir;
-		vecs_y = -vecs_y;
-	}
 	else
 		vecs = '0 0 0';
-
 	if(debug_shotorg != '0 0 0')
 		vecs = debug_shotorg;
 
-	dv = v_right * vecs_y + v_up * vecs_z;
+	dv = v_right * -vecs_y + v_up * vecs_z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
 
 	// now move the shotorg forward as much as requested if possible
@@ -194,17 +190,17 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - v_forward * nudge;
 	// calculate the shotdir from the chosen shotorg
-	w_shotdir = normalize(trueaimpoint - w_shotorg);
+	w_shotdir = normalize(w_shotend - w_shotorg);
 
 	if (antilag)
 	if (!ent.cvar_cl_noantilag)
 	{
 		if (cvar("g_antilag") == 1) // switch to "ghost" if not hitting original
 		{
-			traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent);
+			traceline(w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent);
 			if (!trace_ent.takedamage)
 			{
-				traceline_antilag_force (ent, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+				traceline_antilag_force (ent, w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
 				if (trace_ent.takedamage && trace_ent.classname == "player")
 				{
 					entity e;
@@ -225,7 +221,7 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 			{
 				// verify that the shot would miss without antilag
 				// (avoids an issue where guns would always shoot at their origin)
-				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent);
+				traceline(w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent);
 				if (!trace_ent.takedamage)
 				{
 					// verify that the shot would hit if altered
@@ -252,11 +248,16 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	if (ent.items & IT_STRENGTH)
 	if (!g_minstagib)
 		sound (ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+
+	// nudge w_shotend so a trace to w_shotend hits
+	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
 };
 
+#define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, maxdamage, MAX_SHOT_DISTANCE)
 #define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, maxdamage)
 #define W_SetupShot_Dir(ent,s_forward,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage)
 #define W_SetupShot(ent,antilag,recoil,snd,maxdamage) W_SetupShot_ProjectileSize(ent, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage)
+#define W_SetupShot_Range(ent,antilag,recoil,snd,maxdamage,range) W_SetupShot_Dir_ProjectileSize_Range(ent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage, range)
 
 void LaserTarget_Think()
 {
@@ -391,9 +392,234 @@ vector weapon_adjust = '10 0 -15';
  *    g_tuba.md3 - pickup model
  */
 
+// writes:
+//   self.origin, self.angles
+//   self.weaponentity
+//   self.movedir, self.view_ofs
+//   attachment stuff
+//   anim stuff
+// to free:
+//   call again with ""
+//   remove the ent
+void CL_WeaponEntity_SetModel(string name)
+{
+	string animfilename;
+	float animfile;
+	float v_shot_idx;
+	if (name != "")
+	{
+		// if there is a child entity, hide it until we're sure we use it
+		if (self.weaponentity)
+			self.weaponentity.model = "";
+		setmodel(self, strcat("models/weapons/v_", name, ".md3")); // precision set below
+		v_shot_idx = gettagindex(self, "shot"); // used later
+		if(!v_shot_idx)
+			v_shot_idx = gettagindex(self, "tag_shot");
+
+		if(qcweaponanimation)
+		{
+			self.angles = '0 0 0';
+			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
+			self.movedir = weapon_offset_x * v_forward - weapon_offset_y * v_right + weapon_offset_z * v_up + weapon_adjust;
+			self.movedir_x += 32;
+			self.spawnorigin = self.movedir;
+			// oldorigin - not calculated here
+		}
+		else
+		{
+			setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
+			animfilename = strcat("models/weapons/h_", name, ".iqm.animinfo");
+			animfile = fopen(animfilename, FILE_READ);
+			// preset some defaults that work great for renamed zym files (which don't need an animinfo)
+			self.anim_fire1  = '0 1 0.01';
+			self.anim_fire2  = '1 1 0.01';
+			self.anim_idle   = '2 1 0.01';
+			self.anim_reload = '3 1 0.01';
+			if (animfile >= 0)
+			{
+				animparseerror = FALSE;
+				self.anim_fire1  = animparseline(animfile);
+				self.anim_fire2  = animparseline(animfile);
+				self.anim_idle   = animparseline(animfile);
+				self.anim_reload = animparseline(animfile);
+				fclose(animfile);
+				if (animparseerror)
+					print("Parse error in ", animfilename, ", some player animations are broken\n");
+			}
+
+			// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
+			// if we don't, this is a "real" animated model
+			if(gettagindex(self, "weapon"))
+			{
+				if (!self.weaponentity)
+					self.weaponentity = spawn();
+				setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+				setattachment(self.weaponentity, self, "weapon");
+			}
+			else if(gettagindex(self, "tag_weapon"))
+			{
+				if (!self.weaponentity)
+					self.weaponentity = spawn();
+				setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+				setattachment(self.weaponentity, self, "tag_weapon");
+			}
+			else
+			{
+				if(self.weaponentity)
+					remove(self.weaponentity);
+				self.weaponentity = world;
+			}
+
+			setorigin(self,'0 0 0');
+			self.angles = '0 0 0';
+			self.frame = 0;
+			self.viewmodelforclient = world;
+
+			float idx;
+
+			if(v_shot_idx) // v_ model attached to invisible h_ model
+			{
+				self.movedir = gettaginfo(self.weaponentity, v_shot_idx);
+			}
+			else
+			{
+				idx = gettagindex(self, "shot");
+				if(!idx)
+					idx = gettagindex(self, "tag_shot");
+				if(idx)
+					self.movedir = gettaginfo(self, idx);
+				else
+				{
+					print("WARNING: weapon model ", self.model, " does not support the 'shot' tag, will display shots TOTALLY wrong\n");
+					self.movedir = '0 0 0';
+				}
+			}
+
+			if(self.weaponentity) // v_ model attached to invisible h_ model
+			{
+				idx = gettagindex(self.weaponentity, "shell");
+				if(!idx)
+					idx = gettagindex(self.weaponentity, "tag_shell");
+				if(idx)
+					self.spawnorigin = gettaginfo(self.weaponentity, idx);
+			}
+			else
+				idx = 0;
+			if(!idx)
+			{
+				idx = gettagindex(self, "shell");
+				if(!idx)
+					idx = gettagindex(self, "tag_shell");
+				if(idx)
+					self.spawnorigin = gettaginfo(self, idx);
+				else
+				{
+					print("WARNING: weapon model ", self.model, " does not support the 'shell' tag, will display casings wrong\n");
+					self.spawnorigin = self.movedir;
+				}
+			}
+
+			if(v_shot_idx)
+			{
+				self.oldorigin = '0 0 0'; // use regular attachment
+			}
+			else
+			{
+				if(self.weaponentity)
+				{
+					idx = gettagindex(self, "weapon");
+					if(!idx)
+						idx = gettagindex(self, "tag_weapon");
+				}
+				else
+				{
+					idx = gettagindex(self, "handle");
+					if(!idx)
+						idx = gettagindex(self, "tag_handle");
+				}
+				if(idx)
+				{
+					self.oldorigin = self.movedir - gettaginfo(self, idx);
+				}
+				else
+				{
+					print("WARNING: weapon model ", self.model, " does not support the 'handle' tag and neither does the v_ model support the 'shot' tag, will display muzzle flashes TOTALLY wrong\n");
+					self.oldorigin = '0 0 0'; // there is no way to recover from this
+				}
+			}
+
+			self.viewmodelforclient = self.owner;
+		}
+	}
+	else
+	{
+		self.model = "";
+		if(self.weaponentity)
+			remove(self.weaponentity);
+		self.weaponentity = world;
+		self.movedir = '0 0 0';
+		self.spawnorigin = '0 0 0';
+		self.oldorigin = '0 0 0';
+		self.anim_fire1  = '0 1 0.01';
+		self.anim_fire2  = '0 1 0.01';
+		self.anim_idle   = '0 1 0.01';
+		self.anim_reload = '0 1 0.01';
+	}
+
+	self.view_ofs = '0 0 0';
+
+	if(self.movedir_x >= 0)
+	{
+		vector v0;
+		v0 = self.movedir;
+		self.movedir = shotorg_adjust(v0, FALSE, FALSE);
+		self.view_ofs = shotorg_adjust(v0, FALSE, TRUE) - v0;
+	}
+	self.owner.stat_shotorg = compressShotOrigin(self.movedir);
+	self.movedir = decompressShotOrigin(self.owner.stat_shotorg); // make them match perfectly
+
+	self.spawnorigin += self.view_ofs; // offset the casings origin by the same amount
+
+	// check if an instant weapon switch occurred
+	if (qcweaponanimation)
+	{
+		if (self.state == WS_READY)
+		{
+			self.angles = '0 0 0';
+			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
+			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
+		}
+	}
+	else
+		setorigin(self, self.view_ofs);
+	// reset animstate now
+	self.wframe = WFRAME_IDLE;
+	self.weapon_morph0time = 0;
+	self.weapon_morph1time = 0;
+	self.weapon_morph2time = 0;
+	self.weapon_morph3time = 0;
+	self.weapon_morph4time = 0;
+	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
+}
+
+vector CL_Weapon_GetShotOrg(float wpn)
+{
+	entity wi, oldself;
+	vector ret;
+	wi = get_weaponinfo(wpn);
+	oldself = self;
+	self = spawn();
+	CL_WeaponEntity_SetModel(wi.mdl);
+	ret = self.movedir;
+	CL_WeaponEntity_SetModel("");
+	remove(self);
+	self = oldself;
+	return ret;
+}
+
 void CL_Weaponentity_Think()
 {
-	float tb, v_shot_idx;
+	float tb;
 	self.nextthink = time;
 	if (intermission_running)
 		self.frame = self.anim_idle_x;
@@ -417,202 +643,7 @@ void CL_Weaponentity_Think()
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 
-		string animfilename;
-		float animfile;
-		if (self.owner.weaponname != "")
-		{
-			// if there is a child entity, hide it until we're sure we use it
-			if (self.weaponentity)
-				self.weaponentity.model = "";
-			setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
-			v_shot_idx = gettagindex(self, "shot"); // used later
-			if(!v_shot_idx)
-				v_shot_idx = gettagindex(self, "tag_shot");
-
-			if(qcweaponanimation)
-			{
-				self.angles = '0 0 0';
-				makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
-				self.movedir = weapon_offset_x * v_forward - weapon_offset_y * v_right + weapon_offset_z * v_up + weapon_adjust;
-				self.movedir_x += 32;
-				self.spawnorigin = self.movedir;
-				// oldorigin - not calculated here
-			}
-			else
-			{
-				setmodel(self, strcat("models/weapons/h_", self.owner.weaponname, ".iqm")); // precision set below
-				animfilename = strcat("models/weapons/h_", self.owner.weaponname, ".iqm.animinfo");
-				animfile = fopen(animfilename, FILE_READ);
-				// preset some defaults that work great for renamed zym files (which don't need an animinfo)
-				self.anim_fire1  = '0 1 0.01';
-				self.anim_fire2  = '1 1 0.01';
-				self.anim_idle   = '2 1 0.01';
-				self.anim_reload = '3 1 0.01';
-				if (animfile >= 0)
-				{
-					animparseerror = FALSE;
-					self.anim_fire1  = animparseline(animfile);
-					self.anim_fire2  = animparseline(animfile);
-					self.anim_idle   = animparseline(animfile);
-					self.anim_reload = animparseline(animfile);
-					fclose(animfile);
-					if (animparseerror)
-						print("Parse error in ", animfilename, ", some player animations are broken\n");
-				}
-
-				// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
-				// if we don't, this is a "real" animated model
-				if(gettagindex(self, "weapon"))
-				{
-					if (!self.weaponentity)
-						self.weaponentity = spawn();
-					setmodel(self.weaponentity, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision does not matter
-					setattachment(self.weaponentity, self, "weapon");
-				}
-				else if(gettagindex(self, "tag_weapon"))
-				{
-					if (!self.weaponentity)
-						self.weaponentity = spawn();
-					setmodel(self.weaponentity, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision does not matter
-					setattachment(self.weaponentity, self, "tag_weapon");
-				}
-				else
-				{
-					if(self.weaponentity)
-						remove(self.weaponentity);
-					self.weaponentity = world;
-				}
-
-				setorigin(self,'0 0 0');
-				self.angles = '0 0 0';
-				self.frame = 0;
-				self.viewmodelforclient = world;
-
-				float idx;
-
-				if(v_shot_idx) // v_ model attached to invisible h_ model
-				{
-					self.movedir = gettaginfo(self.weaponentity, v_shot_idx);
-				}
-				else
-				{
-					idx = gettagindex(self, "shot");
-					if(!idx)
-						idx = gettagindex(self, "tag_shot");
-					if(idx)
-						self.movedir = gettaginfo(self, idx);
-					else
-					{
-						print("WARNING: weapon model ", self.model, " does not support the 'shot' tag, will display shots TOTALLY wrong\n");
-						self.movedir = '0 0 0';
-					}
-				}
-
-				if(self.weaponentity) // v_ model attached to invisible h_ model
-				{
-					idx = gettagindex(self.weaponentity, "shell");
-					if(!idx)
-						idx = gettagindex(self.weaponentity, "tag_shell");
-					if(idx)
-						self.spawnorigin = gettaginfo(self.weaponentity, idx);
-				}
-				else
-					idx = 0;
-				if(!idx)
-				{
-					idx = gettagindex(self, "shell");
-					if(!idx)
-						idx = gettagindex(self, "tag_shell");
-					if(idx)
-						self.spawnorigin = gettaginfo(self, idx);
-					else
-					{
-						print("WARNING: weapon model ", self.model, " does not support the 'shell' tag, will display casings wrong\n");
-						self.spawnorigin = self.movedir;
-					}
-				}
-
-				if(v_shot_idx)
-				{
-					self.oldorigin = '0 0 0'; // use regular attachment
-				}
-				else
-				{
-					if(self.weaponentity)
-					{
-						idx = gettagindex(self, "weapon");
-						if(!idx)
-							idx = gettagindex(self, "tag_weapon");
-					}
-					else
-					{
-						idx = gettagindex(self, "handle");
-						if(!idx)
-							idx = gettagindex(self, "tag_handle");
-					}
-					if(idx)
-					{
-						self.oldorigin = self.movedir - gettaginfo(self, idx);
-					}
-					else
-					{
-						print("WARNING: weapon model ", self.model, " does not support the 'handle' tag and neither does the v_ model support the 'shot' tag, will display muzzle flashes TOTALLY wrong\n");
-						self.oldorigin = '0 0 0'; // there is no way to recover from this
-					}
-				}
-
-				self.viewmodelforclient = self.owner;
-			}
-		}
-		else
-		{
-			self.model = "";
-			if(self.weaponentity)
-				remove(self.weaponentity);
-			self.weaponentity = world;
-			self.movedir = '0 0 0';
-			self.spawnorigin = '0 0 0';
-			self.oldorigin = '0 0 0';
-			self.anim_fire1  = '0 1 0.01';
-			self.anim_fire2  = '0 1 0.01';
-			self.anim_idle   = '0 1 0.01';
-			self.anim_reload = '0 1 0.01';
-		}
-
-		self.view_ofs = '0 0 0';
-
-		if(self.movedir_x >= 0)
-		{
-			vector v0;
-			v0 = self.movedir;
-			self.movedir = shotorg_adjust(v0, FALSE, FALSE);
-			self.view_ofs = shotorg_adjust(v0, FALSE, TRUE) - v0;
-		}
-		self.owner.stat_shotorg = compressShotOrigin(self.movedir);
-		self.movedir = decompressShotOrigin(self.owner.stat_shotorg); // make them match perfectly
-
-		self.spawnorigin += self.view_ofs; // offset the casings origin by the same amount
-
-		// check if an instant weapon switch occurred
-		if (qcweaponanimation)
-		{
-			if (self.state == WS_READY)
-			{
-				self.angles = '0 0 0';
-				makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
-				setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
-			}
-		}
-		else
-			setorigin(self, self.view_ofs);
-		// reset animstate now
-		self.wframe = WFRAME_IDLE;
-		self.weapon_morph0time = 0;
-		self.weapon_morph1time = 0;
-		self.weapon_morph2time = 0;
-		self.weapon_morph3time = 0;
-		self.weapon_morph4time = 0;
-		setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
+		CL_WeaponEntity_SetModel(self.owner.weaponname);
 	}
 
 	tb = (self.effects & (EF_TELEPORT_BIT | EF_RESTARTANIM_BIT));
@@ -1357,7 +1388,10 @@ void W_AttachToShotorg(entity flash, vector offset)
 	}
 	else
 	{
-		setattachment(flash, self.weaponentity, "shot");
+		if(gettagindex(self.weaponentity, "shot"))
+			setattachment(flash, self.weaponentity, "shot");
+		else
+			setattachment(flash, self.weaponentity, "tag_shot");
 		setorigin(flash, offset);
 
 		xflash = spawn();
@@ -1372,7 +1406,11 @@ void W_AttachToShotorg(entity flash, vector offset)
 		}
 		else
 		{
-			setattachment(xflash, self.exteriorweaponentity, "shot");
+			if(gettagindex(self.exteriorweaponentity, "shot"))
+				setattachment(xflash, self.exteriorweaponentity, "shot");
+			else
+				setattachment(xflash, self.exteriorweaponentity, "tag_shot");
+			setorigin(xflash, offset);
 		}
 	}
 }

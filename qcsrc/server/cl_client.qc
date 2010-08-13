@@ -1063,9 +1063,18 @@ float ClientInit_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
 	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_x);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_y);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_z);
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[3]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[3]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[3]));
 	if(sv_foginterval && world.fog != "")
 		WriteString(MSG_ENTITY, world.fog);
 	else
@@ -1074,6 +1083,8 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
 	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_secondary_bouncefactor
 	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_secondary_bouncestop
+	WriteByte(MSG_ENTITY, cvar("g_balance_nex_secondary")); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, cvar("g_balance_campingrifle_secondary")); // client has to know if it should zoom or not
 	return TRUE;
 }
 
@@ -2530,9 +2541,9 @@ void PlayerPreThink (void)
 		if(self.cvar_g_xonoticversion)
 			if(time > self.version_nagtime)
 			{
-				if(strstr(self.cvar_g_xonoticversion, "svn", 0) < 0)
+				if(strstr(self.cvar_g_xonoticversion, "git", 0) < 0)
 				{
-					if(strstr(cvar_string("g_xonoticversion"), "svn", 0) >= 0)
+					if(strstr(cvar_string("g_xonoticversion"), "git", 0) >= 0)
 					{
 						dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", cvar_string("g_xonoticversion"), " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
 						sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Xonotic ", cvar_string("g_xonoticversion"), " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n"));
@@ -2796,7 +2807,7 @@ void PlayerPreThink (void)
 	}
 
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX));
+		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_CAMPINGRIFLE && cvar("g_balance_campingrifle_secondary") == 0));
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;

@@ -137,7 +137,7 @@ vector GetCurrentFov(float fov)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
-	if(getstati(STAT_ACTIVEWEAPON) == WEP_NEX) // do NOT use switchweapon here
+	if((getstati(STAT_ACTIVEWEAPON) == WEP_NEX && nex_scope) || (getstati(STAT_ACTIVEWEAPON) == WEP_CAMPINGRIFLE && campingrifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -564,9 +564,9 @@ void CSQC_UpdateView(float w, float h)
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || getstati(STAT_HEALTH) <= 0)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
-	else if(button_zoom)
+	else if(button_zoom || zoomscript_caught)
 		reticle_type = 1; // normal zoom
-	else if(activeweapon == WEP_NEX && button_attack2)
+	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_CAMPINGRIFLE && button_attack2)
 		reticle_type = 2; // nex zoom
 
 	if(cvar("cl_reticle_stretch"))
@@ -584,17 +584,20 @@ void CSQC_UpdateView(float w, float h)
 		reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
 	}
 
+	f = current_zoomfraction;
+	if(zoomscript_caught)
+		f = 1;
 	if(cvar("cl_reticle_item_normal"))
 	{
 		precache_pic("gfx/reticle_normal");
-		if(reticle_type == 1 && current_zoomfraction)
-			drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_item_normal"), DRAWFLAG_NORMAL);
+		if(reticle_type == 1 && f)
+			drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * cvar("cl_reticle_item_normal"), DRAWFLAG_NORMAL);
 	}
 	if(cvar("cl_reticle_item_nex"))
 	{
 		precache_pic("gfx/reticle_nex");
-		if(reticle_type == 2 && current_zoomfraction)
-			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_item_nex"), DRAWFLAG_NORMAL);
+		if(reticle_type == 2 && f)
+			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * cvar("cl_reticle_item_nex"), DRAWFLAG_NORMAL);
 	}
 
 	// Draw the mouse cursor
@@ -772,7 +775,7 @@ void CSQC_UpdateView(float w, float h)
 				if (activeweapon == WEP_CAMPINGRIFLE)
 				{
 					ring_scale = cvar("crosshair_campingrifle_ring_size");
-					bullets = bound(0, getstati(STAT_BULLETS_LOADED), 8);
+					bullets = bound(0, getstati(STAT_BULLETS_LOADED), 4);
 				}
 				else
 					bullets = 0;

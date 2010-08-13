@@ -40,10 +40,7 @@ void W_Laser_Attack (float issecondary)
 	else
 		nodamage = FALSE;
 
-	if (issecondary == 1)
-		a = cvar("g_balance_laser_secondary_shotangle");
-	else
-		a = cvar("g_balance_laser_primary_shotangle");
+	a = cvar("g_balance_laser_primary_shotangle");
 	s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
 
 	if(nodamage)
@@ -57,28 +54,20 @@ void W_Laser_Attack (float issecondary)
 	missile = spawn ();
 	missile.owner = self;
 	missile.classname = "laserbolt";
-	missile.dmg = (issecondary == 1);
+	missile.dmg = 0;
 	if(!nodamage)
 	{
 		missile.bot_dodge = TRUE;
-		if (issecondary == 1)
-			missile.bot_dodgerating = cvar("g_balance_laser_secondary_damage");
-		else
-			missile.bot_dodgerating = cvar("g_balance_laser_primary_damage");
+		missile.bot_dodgerating = cvar("g_balance_laser_primary_damage");
 	}
 
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_LASER;
-	if(issecondary == 1)
-		missile.projectiledeathtype |= HITTYPE_SECONDARY;
 
 	setorigin (missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
-	if (issecondary == 1)
-		W_SETUPPROJECTILEVELOCITY(missile, g_balance_laser_secondary);
-	else
-		W_SETUPPROJECTILEVELOCITY(missile, g_balance_laser_primary);
+	W_SETUPPROJECTILEVELOCITY(missile, g_balance_laser_primary);
 	missile.angles = vectoangles (missile.velocity);
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
@@ -87,10 +76,7 @@ void W_Laser_Attack (float issecondary)
 	missile.flags = FL_PROJECTILE;
 
 	missile.think = W_Laser_Think;
-	if (issecondary == 1)
-		missile.nextthink = time + cvar("g_balance_laser_secondary_delay");
-	else
-		missile.nextthink = time + cvar("g_balance_laser_primary_delay");
+	missile.nextthink = time + cvar("g_balance_laser_primary_delay");
 	if(time >= missile.nextthink)
 	{
 		entity oldself;
@@ -101,16 +87,114 @@ void W_Laser_Attack (float issecondary)
 	}
 }
 
-void W_Laser_Attack2 (void) // gauntlet
+.vector hook_start, hook_end;
+float gauntletbeam_send(entity to, float sf)
 {
-	W_SetupShot (self, TRUE, 0, "weapons/gauntlet_fire.wav", cvar("g_balance_laser_primary_damage"));
+	WriteByte(MSG_ENTITY, ENT_CLIENT_GAUNTLET);
+	sf = sf & 0x7F;
+	if(sound_allowed(MSG_BROADCAST, self.owner))
+		sf |= 0x80;
+	WriteByte(MSG_ENTITY, sf);
+	if(sf & 1)
+	{
+		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+	}
+	if(sf & 2)
+	{
+		WriteCoord(MSG_ENTITY, self.hook_start_x);
+		WriteCoord(MSG_ENTITY, self.hook_start_y);
+		WriteCoord(MSG_ENTITY, self.hook_start_z);
+	}
+	if(sf & 4)
+	{
+		WriteCoord(MSG_ENTITY, self.hook_end_x);
+		WriteCoord(MSG_ENTITY, self.hook_end_y);
+		WriteCoord(MSG_ENTITY, self.hook_end_z);
+	}
+	return TRUE;
+}
+.entity gauntletbeam;
+.float prevgauntletfire;
+void gauntletbeam_think()
+{
+	float damage, myforce, myradius;
+	damage = cvar("g_balance_laser_secondary_damage");
+	myforce = cvar("g_balance_laser_secondary_force");
+	myradius = cvar("g_balance_laser_secondary_radius");
 
-	WarpZone_traceline_antilag(self, w_shotorg, w_shotorg + w_shotdir * cvar("g_balance_laser_primary_radius"), FALSE, self, ANTILAG_LATENCY(self));
+	self.owner.prevgauntletfire = time;
+	if (self.owner.weaponentity.state != WS_INUSE || self != self.owner.gauntletbeam || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK2)
+	{
+		remove(self);
+		return;
+	}
 
-	pointparticles(particleeffectnum("laser_gauntlet"), w_shotorg + w_shotdir * cvar("g_balance_laser_primary_radius"), '0 0 0', 1);
+	self.nextthink = time;
 
-	if (trace_fraction < 1)
-		Damage(trace_ent, self, self, cvar("g_balance_laser_primary_damage"), WEP_LASER | HITTYPE_SECONDARY, trace_endpos, cvar("g_balance_laser_primary_force") * w_shotdir);
+	makevectors(self.owner.v_angle);
+
+	float dt;
+	dt = frametime;
+
+	W_SetupShot_Range(self.owner, TRUE, 0, "", damage * dt, myradius);
+	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
+
+	// apply the damage
+	if(trace_ent)
+	{
+		vector force;
+		force = w_shotdir * myforce;
+		Damage (trace_ent, self.owner, self.owner, damage * dt, WEP_LASER | HITTYPE_SECONDARY, trace_endpos, force * dt);
+		Damage_RecordDamage(self.owner, WEP_LASER | HITTYPE_SECONDARY, damage * dt);
+	}
+
+	// draw effect
+	if(w_shotorg != self.hook_start)
+	{
+		self.SendFlags |= 2;
+		self.hook_start = w_shotorg;
+	}
+	if(w_shotend != self.hook_end)
+	{
+		self.SendFlags |= 4;
+		self.hook_end = w_shotend;
+	}
+}
+
+// experimental gauntlet
+void W_Laser_Attack2 ()
+{
+	// only play fire sound if 0.5 sec has passed since player let go the fire button
+	if(time - self.prevgauntletfire > 0.5)
+	{
+		sound (self, CHAN_WEAPON, "weapons/gauntlet_fire.wav", VOL_BASE, ATTN_NORM);
+	}
+
+	entity beam, oldself;
+
+	self.gauntletbeam = beam = spawn();
+	beam.solid = SOLID_NOT;
+	beam.think = gauntletbeam_think;
+	beam.owner = self;
+	beam.movetype = MOVETYPE_NONE;
+	beam.shot_spread = 0;
+	beam.bot_dodge = TRUE;
+	beam.bot_dodgerating = cvar("g_balance_laser_primary_damage");
+	Net_LinkEntity(beam, FALSE, 0, gauntletbeam_send);
+
+	oldself = self;
+	self = beam;
+	self.think();
+	self = oldself;
+}
+
+void LaserInit()
+{
+	weapon_action(WEP_LASER, WR_PRECACHE);
+	gauntlet_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LASER), FALSE, FALSE, 1);
+	gauntlet_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LASER), FALSE, FALSE, 2);
+	gauntlet_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LASER), FALSE, FALSE, 3);
+	gauntlet_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LASER), FALSE, FALSE, 4);
 }
 
 void spawnfunc_weapon_laser (void)
@@ -141,19 +225,16 @@ float w_laser(float req)
 		if (self.BUTTON_ATCK)
 		if (weapon_prepareattack(0, cvar("g_balance_laser_primary_refire")))
 		{
-			if(cvar("g_balance_laser_gauntlet"))
-				W_Laser_Attack2();
-			else
-				W_Laser_Attack(0);
+			W_Laser_Attack(1);
 			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_laser_primary_animtime"), w_ready);
 		}
 		if (self.BUTTON_ATCK2)
 		{
 			if(cvar("g_balance_laser_secondary"))
 			{
-				if (weapon_prepareattack(0, cvar("g_balance_laser_secondary_refire")))
+				if (weapon_prepareattack(0, 0))
 				{
-					W_Laser_Attack(1);
+					W_Laser_Attack2();
 					weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_laser_secondary_animtime"), w_ready);
 				}
 			}
@@ -197,10 +278,13 @@ float w_laser(float req)
 		precache_sound("weapons/laserimpact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "lasered themself to hell";
+		w_deathtypestring = "%s lasered themself to hell";
 	else if (req == WR_KILLMESSAGE)
 	{
-		w_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
+		if(w_deathtype & HITTYPE_SECONDARY)
+			w_deathtypestring = "%s was cut in half by %s's gauntlet"; // unchecked: SPLASH
+		else
+			w_deathtypestring = "%s was lasered to death by %s"; // unchecked: SPLASH
 	}
 	return TRUE;
 }

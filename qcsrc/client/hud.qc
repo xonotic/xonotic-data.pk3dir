@@ -1696,9 +1696,15 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 		drawpic_aspect_skin(newPos, "ammo_current_bg", newSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	drawfont = hud_bigfont;
-	drawstring_aspect(numpos, ftos(a), eX * (2/3) * newSize_x + eY * newSize_y, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+	if(a > 0)
+		drawstring_aspect(numpos, ftos(a), eX * (2/3) * newSize_x + eY * newSize_y, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+	else // "ghost" ammo count
+		drawstring_aspect(numpos, ftos(a), eX * (2/3) * newSize_x + eY * newSize_y, '0 0 0', panel_fg_alpha * alpha * 0.5, DRAWFLAG_NORMAL);
 	drawfont = hud_font;
-	drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+	if(a > 0)
+		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+	else // "ghost" ammo icon
+		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * newSize_y, '0 0 0', panel_fg_alpha * alpha * 0.5, DRAWFLAG_NORMAL);
 }
 
 void HUD_Ammo(void)
@@ -2397,7 +2403,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		if(WEP_VALID(w)) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if (alsoprint)
-				print("^1", s1, "^1 ", Weapon_SuicideMessage(type), "\n");
+				print("^1", sprintf(Weapon_SuicideMessage(type), strcat(s1, "^1")), "\n");
 		} else if (type == DEATH_KILL) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_KILL);
 			if (alsoprint)
@@ -2437,9 +2443,9 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			HUD_KillNotify_Push(s2, s1, 1, w);
+			HUD_KillNotify_Push(s1, s2, 1, type);
 			if (alsoprint)
-				print("^1", s1, "^1 ", Weapon_KillMessage(type), "\n");
+				print("^1", sprintf(Weapon_KillMessage(type), strcat(s2, "^1"), strcat(s1, "^1")), "\n"); // default order: victim, killer
 		}
 		else if(type == KILL_TEAM_RED || type == KILL_TEAM_BLUE || type == KILL_TEAM_SPREE) {
 			HUD_KillNotify_Push(s1, s2, 1, type);
@@ -2864,6 +2870,9 @@ void HUD_Notify (void)
 				a = 0;
 		}
 
+		float w;
+		w = DEATH_WEAPONOF(killnotify_deathtype[j]);
+
 		// TODO: maybe print in team colors?
 		//
 		// Y [used by] X
@@ -2994,9 +3003,17 @@ void HUD_Notify (void)
 			{
 				s = "weaponelectro";
 			}
-			else if(WEP_VALID(killnotify_deathtype[j]))
+			else if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_LASER)
 			{
-				self = get_weaponinfo(killnotify_deathtype[j]);
+				s = "notify_melee_laser";
+			}
+			else if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_SHOTGUN)
+			{
+				s = "notify_melee_shotgun";
+			}
+			else if(WEP_VALID(w))
+			{
+				self = get_weaponinfo(w);
 				s = strcat("weapon", self.netname);
 			}
 			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
@@ -3221,7 +3238,7 @@ void HUD_Radar(void)
 		mySize_y
 	);
 
-	draw_teamradar_background(hud_panel_radar_background_alpha, hud_panel_radar_foreground_alpha);
+	draw_teamradar_background(hud_panel_radar_foreground_alpha);
 
 	for(tm = world; (tm = find(tm, classname, "radarlink")); )
 		draw_teamradar_link(tm.origin, tm.velocity, tm.team);
@@ -4685,11 +4702,11 @@ void HUD_ShowSpeed(void)
 	pos = (vid_conheight - numsize_y) * cvar("cl_showspeed_position");
 
 	drawfont = hud_bigfont;
-	drawstringcenter(eX + pos * eY, speed, numsize, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+	drawstringcenter(eX + pos * eY, speed, numsize, '1 1 1', autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	if (cvar("cl_showspeed_z") == 1) {
 		zspeed = strcat(ftos(fabs(floor( pmove_vel_z * conversion_factor + 0.5 ))), unit);
-		drawstringcenter(eX + pos * eY + numsize_y * eY, zspeed, numsize * 0.5, '1 1 1', hud_fg_alpha, DRAWFLAG_NORMAL);
+		drawstringcenter(eX + pos * eY + numsize_y * eY, zspeed, numsize * 0.5, '1 1 1', autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	drawfont = hud_font;
@@ -4735,9 +4752,9 @@ void HUD_ShowAcceleration(void)
 	}
 
 	if (acceleration > 0)
-		HUD_Panel_DrawProgressBar(pos, 0, acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_fg_alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(pos, 0, acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
 	else if (acceleration < 0)
-		HUD_Panel_DrawProgressBar(pos + acceleration * scale * '40 0 0', 0, -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * hud_fg_alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(pos + acceleration * scale * '40 0 0', 0, -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 void HUD_Reset (void)
@@ -4791,7 +4808,6 @@ void HUD_Main (void)
 		menu_fade_alpha = 1;
 	else
 		menu_fade_alpha = (1 - autocvar__menu_alpha);
-	hud_fg_alpha = cvar("hud_fg_alpha");
 
 	hud_border_thickness = bound(0, cvar("hud_border_thickness"), 5);
 	hud_accuracy_border_thickness = bound(0, cvar_or("hud_accuracy_border_thickness", 1), 5);

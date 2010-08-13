@@ -13,6 +13,10 @@ void W_Grenade_Explode (void)
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
+
+	if(self.movetype == MOVETYPE_NONE)
+		self.velocity = self.oldvelocity;
+
 	RadiusDamage (self, self.owner, cvar("g_balance_grenadelauncher_primary_damage"), cvar("g_balance_grenadelauncher_primary_edgedamage"), cvar("g_balance_grenadelauncher_primary_radius"), world, cvar("g_balance_grenadelauncher_primary_force"), self.projectiledeathtype, other);
 
 	remove (self);
@@ -33,39 +37,6 @@ void W_Grenade_Explode2 (void)
 	remove (self);
 }
 
-void W_Grenade_Touch1 (void)
-{
-	PROJECTILE_TOUCH;
-	W_Grenade_Explode ();
-}
-
-void W_Grenade_Touch2 (void)
-{
-	PROJECTILE_TOUCH;
-	if (other.takedamage == DAMAGE_AIM)
-	{
-		self.use ();
-	}
-	else
-	{
-		float r;
-		r = random() * 6;
-		if(r < 1)
-			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
-		else if(r < 2)
-			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
-		else if(r < 3)
-			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
-		else if(r < 4)
-			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
-		else if(r < 5)
-			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
-		else
-			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
-		self.projectiledeathtype |= HITTYPE_BOUNCE;
-	}
-}
-
 void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
@@ -74,6 +45,75 @@ void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float de
 	if (self.health <= 0)
 	{
 		W_PrepareExplosionByDamage(attacker, self.think);
+	}
+}
+
+void W_Grenade_Touch1 (void)
+{
+	PROJECTILE_TOUCH;
+	if(cvar("g_balance_grenadelauncher_primary_sticky") && other.takedamage != DAMAGE_AIM)
+	{
+		spamsound (self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
+
+		// let it stick whereever it is
+		self.oldvelocity = self.velocity;
+		self.velocity = '0 0 0';
+		self.movetype = MOVETYPE_NONE; // also disables gravity
+		self.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
+		UpdateCSQCProjectile(self);
+
+		// do not respond to any more touches
+		self.solid = SOLID_NOT;
+
+		self.nextthink = min(self.nextthink, time + cvar("g_balance_grenadelauncher_primary_lifetime2"));
+	}
+	else
+		W_Grenade_Explode ();
+}
+
+void W_Grenade_Touch2 (void)
+{
+	PROJECTILE_TOUCH;
+	if(cvar("g_balance_grenadelauncher_secondary_sticky") && other.takedamage != DAMAGE_AIM)
+	{
+		spamsound (self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
+
+		// let it stick whereever it is
+		self.oldvelocity = self.velocity;
+		self.velocity = '0 0 0';
+		self.movetype = MOVETYPE_NONE; // also disables gravity
+		self.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
+		UpdateCSQCProjectile(self);
+
+		// do not respond to any more touches
+		self.solid = SOLID_NOT;
+
+		self.nextthink = min(self.nextthink, time + cvar("g_balance_grenadelauncher_secondary_lifetime2"));
+	}
+	else
+	{
+		if (other.takedamage == DAMAGE_AIM)
+		{
+			self.use ();
+		}
+		else
+		{
+			float r;
+			r = random() * 6;
+			if(r < 1)
+				spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+			else if(r < 2)
+				spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+			else if(r < 3)
+				spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+			else if(r < 4)
+				spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+			else if(r < 5)
+				spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+			else
+				spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+			self.projectiledeathtype |= HITTYPE_BOUNCE;
+		}
 	}
 }
 
@@ -103,6 +143,10 @@ void W_Grenade_Attack (void)
 	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Grenade_Explode;
 	gren.touch = W_Grenade_Touch1;
+
+	gren.takedamage = DAMAGE_YES;
+	gren.health = cvar("g_balance_grenadelauncher_primary_health");
+	gren.event_damage = W_Grenade_Damage;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
 
 	gren.angles = vectoangles (gren.velocity);
@@ -132,13 +176,14 @@ void W_Grenade_Attack2 (void)
 	gren.bouncestop = cvar("g_balance_grenadelauncher_secondary_bouncestop");
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY;
-	setsize(gren, '0 0 -3', '0 0 -3');
 	setorigin(gren, w_shotorg);
+	setsize(gren, '0 0 -3', '0 0 -3');
 
 	gren.nextthink = time + cvar("g_balance_grenadelauncher_secondary_lifetime");
 	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Grenade_Explode2;
 	gren.touch = W_Grenade_Touch2;
+
 	gren.takedamage = DAMAGE_YES;
 	gren.health = cvar("g_balance_grenadelauncher_secondary_health");
 	gren.damageforcescale = cvar("g_balance_grenadelauncher_secondary_damageforcescale");
@@ -148,7 +193,10 @@ void W_Grenade_Attack2 (void)
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
 
-	CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
+	if(cvar("g_balance_grenadelauncher_secondary_sticky"))
+		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
+	else
+		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
 }
 
 void spawnfunc_weapon_grenadelauncher (void)
@@ -209,6 +257,7 @@ float w_glauncher(float req)
 		precache_sound ("weapons/grenade_bounce4.wav");
 		precache_sound ("weapons/grenade_bounce5.wav");
 		precache_sound ("weapons/grenade_bounce6.wav");
+		precache_sound ("weapons/grenade_stick.wav");
 		precache_sound ("weapons/grenade_fire.wav");
 	}
 	else if (req == WR_SETUP)
@@ -238,19 +287,19 @@ float w_glauncher(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "tried out his own grenade";
+			w_deathtypestring = "%s tried out his own grenade";
 		else
-			w_deathtypestring = "detonated";
+			w_deathtypestring = "%s detonated";
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SPLASH)
 			if(w_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
-				w_deathtypestring = "didn't see #'s grenade";
+				w_deathtypestring = "%s didn't see %s's grenade";
 			else // unchecked: SECONDARY
-				w_deathtypestring = "almost dodged #'s grenade";
+				w_deathtypestring = "%s almost dodged %s's grenade";
 		else // unchecked: SECONDARY, BOUNCE
-			w_deathtypestring = "ate #'s grenade";
+			w_deathtypestring = "%s ate %s's grenade";
 	}
 	return TRUE;
 }

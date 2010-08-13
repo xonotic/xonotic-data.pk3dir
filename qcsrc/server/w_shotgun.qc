@@ -46,59 +46,50 @@ void W_Shotgun_Attack (void)
 
 }
 
+void shotgun_meleethink (void)
+{
+	// store time when we started swinging down inside self.cnt
+	if(!self.cnt)
+		self.cnt = time;
+
+	makevectors(self.owner.v_angle);
+	vector angle;
+	angle = v_forward;
+
+	// perform trace
+	float f;
+	f = (self.cnt + cvar("g_balance_shotgun_secondary_melee_time") - time) / cvar("g_balance_shotgun_secondary_melee_time") * 2 - 1;
+	vector targpos;
+	targpos = self.owner.origin + self.owner.view_ofs + angle * cvar("g_balance_shotgun_secondary_melee_range") + v_right * f * cvar("g_balance_shotgun_secondary_melee_swing") + v_up * f * cvar("g_balance_shotgun_secondary_melee_swing");
+
+	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, targpos, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+
+	// apply the damage, also remove self
+	if(trace_fraction < 1 && trace_ent.takedamage == DAMAGE_AIM && trace_ent.classname == "player")
+	{
+		vector force;
+		force = angle * cvar("g_balance_shotgun_secondary_force");
+		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_shotgun_secondary_damage") * ((f + 1) / 2), WEP_SHOTGUN | HITTYPE_SECONDARY , self.owner.origin + self.owner.view_ofs, force);
+		Damage_RecordDamage(self.owner, WEP_SHOTGUN | HITTYPE_SECONDARY, cvar("g_balance_shotgun_secondary_damage") * ((f + 1) / 2));
+		remove(self);
+	}
+	else if(time >= self.cnt + cvar("g_balance_shotgun_secondary_melee_time")) // missed, remove ent
+		remove(self);
+	else // continue swinging the weapon in hope of hitting someone :)
+		self.nextthink = time;
+}
+
 void W_Shotgun_Attack2 (void)
 {
-	float	sc;
-	float	ammoamount;
-	float	bullets;
-	float	d;
-	float	f;
-	float	spread;
-	float	bulletspeed;
-	float	bulletconstant;
-	local entity flash;
-
-	ammoamount = cvar("g_balance_shotgun_secondary_ammo");
-	bullets = cvar("g_balance_shotgun_secondary_bullets");
-	d = cvar("g_balance_shotgun_secondary_damage");
-	f = cvar("g_balance_shotgun_secondary_force");
-	spread = cvar("g_balance_shotgun_secondary_spread");
-	bulletspeed = cvar("g_balance_shotgun_secondary_speed");
-	bulletconstant = cvar("g_balance_shotgun_secondary_bulletconstant");
-
-	W_SetupShot (self, cvar("g_antilag_bullets") && bulletspeed >= cvar("g_antilag_bullets"), 5, "weapons/shotgun_fire.wav", cvar("g_balance_shotgun_secondary_damage"));
-	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN | HITTYPE_SECONDARY, 0, 1, bulletconstant);
-	endFireBallisticBullet();
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_shells = self.ammo_shells - ammoamount;
-
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, cvar("g_balance_shotgun_secondary_ammo"));
-
-	// casing code
-	if (cvar("g_casings") >= 1)
-		for (sc = 0;sc < ammoamount;sc = sc + 1)
-			SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
-
-	flash = spawn();
-	setmodel(flash, "models/uziflash.md3"); // precision set below
-	flash.scale = 1.2;
-	flash.think = SUB_Remove;
-	flash.nextthink = time + 0.06;
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
-}
-
-// weapon frames
-void shotgun_fire2_03()
-{
-	W_Shotgun_Attack2();
+	sound (self, CHAN_PROJECTILE, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_shotgun_secondary_animtime"), w_ready);
-}
-void shotgun_fire2_02()
-{
-	W_Shotgun_Attack2();
-	weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_shotgun_secondary_animtime"), shotgun_fire2_03);
+
+	entity meleetemp;
+	meleetemp = spawn();
+	meleetemp.owner = self;
+	meleetemp.think = shotgun_meleethink;
+	meleetemp.nextthink = time + cvar("g_balance_shotgun_secondary_melee_delay");
+	W_SetupShot_Range(self, TRUE, 0, "", cvar("g_balance_shotgun_secondary_damage"), cvar("g_balance_shotgun_secondary_melee_range"));
 }
 
 void spawnfunc_weapon_shotgun(); // defined in t_items.qc
@@ -121,8 +112,8 @@ float w_shotgun(float req)
 		if (self.BUTTON_ATCK2 && cvar("g_balance_shotgun_secondary"))
 		if (weapon_prepareattack(1, cvar("g_balance_shotgun_secondary_refire")))
 		{
-			W_Shotgun_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_shotgun_secondary_animtime"), shotgun_fire2_02);
+			// attempt forcing playback of the anim by switching to another anim (that we never play) here...
+			weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -133,13 +124,16 @@ float w_shotgun(float req)
 		precache_model ("models/weapons/h_shotgun.iqm");
 		precache_sound ("misc/itempickup.wav");
 		precache_sound ("weapons/shotgun_fire.wav");
+		precache_sound ("weapons/shotgun_melee.wav");
 	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_SHOTGUN);
 	else if (req == WR_CHECKAMMO1)
 		return self.ammo_shells >= cvar("g_balance_shotgun_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_shells >= cvar("g_balance_shotgun_secondary_ammo") * 3;
+	{
+		return TRUE;
+	}
 	return TRUE;
 };
 #endif
@@ -168,10 +162,13 @@ float w_shotgun(float req)
 		precache_sound("weapons/ric3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
+		w_deathtypestring = "%s did the impossible";
 	else if (req == WR_KILLMESSAGE)
 	{
-		w_deathtypestring = "was gunned by"; // unchecked: SECONDARY
+		if(w_deathtype & HITTYPE_SECONDARY)
+			w_deathtypestring = "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun";
+		else
+			w_deathtypestring = "%s was gunned by %s";
 	}
 	return TRUE;
 }

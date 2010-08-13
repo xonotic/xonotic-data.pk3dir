@@ -1,8 +1,12 @@
 // uncomment this if your mod uses the roll angle in fixangle
 // #define KEEP_ROLL
 
+float warpzone_warpzones_exist;
+float warpzone_cameras_exist;
+
 const void func_null(void); // never assign to this one please
 
+.float warpzone_isboxy;
 .vector warpzone_shift;
 .vector warpzone_origin;
 .vector warpzone_angles;
@@ -20,6 +24,7 @@ entity WarpZone_Find(vector mi, vector ma);
 void WarpZone_MakeAllSolid();
 void WarpZone_MakeAllOther();
 
+#define MOVE_NOTHING -1
 typedef void(vector start, vector hit, vector end) WarpZone_trace_callback_t; // called on every elementary trace
 const var WarpZone_trace_callback_t WarpZone_trace_callback_t_null;
 entity WarpZone_trace_transform; // transform accumulator during a trace
