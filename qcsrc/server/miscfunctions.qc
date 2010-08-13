@@ -2330,9 +2330,9 @@ void write_recordmarker(entity pl, float tstart, float dt)
                  " ", ftos(tstart), " ", ftos(dt), "\n"));
 }
 
-vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter)
+vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter, float algn)
 {
-	switch(self.owner.cvar_cl_gunalign)
+	switch(algn)
 	{
 		case 1: // right
 			break;
@@ -2372,7 +2372,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 	return vecs;
 }
 
-vector shotorg_adjust(vector vecs, float y_is_right, float visual)
+vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float algn)
 {
 	string s;
 	vector v;
@@ -2381,7 +2381,7 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual)
 	{
 		if (visual)
 		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE);
+			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE, algn);
 		}
 		else
 		{
@@ -2393,7 +2393,7 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual)
 	{
 		if (visual)
 		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE);
+			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE, algn);
 		}
 		else
 		{
@@ -2413,11 +2413,15 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual)
 	}
 	else if (cvar("g_shootfromclient"))
 	{
-		vecs = shotorg_adjustfromclient(vecs, y_is_right, (cvar("g_shootfromclient") >= 2));
+		vecs = shotorg_adjustfromclient(vecs, y_is_right, (cvar("g_shootfromclient") >= 2), algn);
 	}
 	return vecs;
 }
 
+vector shotorg_adjust(vector vecs, float y_is_right, float visual)
+{
+	return shotorg_adjust_values(vecs, y_is_right, visual, self.owner.cvar_cl_gunalign);
+}
 
 
 void attach_sameorigin(entity e, entity to, string tag)

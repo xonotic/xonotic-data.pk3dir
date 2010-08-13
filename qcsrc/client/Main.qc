@@ -136,6 +136,7 @@ void CSQC_Init(void)
 
 	// precaches
 	Projectile_Precache();
+	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
 	DamageInfo_Precache();
@@ -183,6 +184,7 @@ void CSQC_Init(void)
 	minimapname = strzone(minimapname);
 
 	WarpZone_Init();
+	hud_configure_prev = -1;
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -922,6 +924,9 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_WARPZONE: WarpZone_Read(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE_CAMERA: WarpZone_Camera_Read(bIsNewEntity); break;
 		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
+		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
+		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
+		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		default:
 			error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
 			break;
@@ -1021,9 +1026,18 @@ void Ent_Init()
 
 	nb_pb_period = ReadByte() / 32; //Accuracy of 1/32th
 
-	hook_shotorigin_x = ReadCoord();
-	hook_shotorigin_y = ReadCoord();
-	hook_shotorigin_z = ReadCoord();
+	hook_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	electro_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	gauntlet_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
 	if(forcefog)
 		strunzone(forcefog);
@@ -1035,6 +1049,9 @@ void Ent_Init()
 
 	g_balance_grenadelauncher_secondary_bouncefactor = ReadCoord();
 	g_balance_grenadelauncher_secondary_bouncestop = ReadCoord();
+
+	nex_scope = !ReadByte();
+	campingrifle_scope = !ReadByte();
 
 	if(!postinit)
 		PostInit();
@@ -1223,13 +1240,13 @@ void Net_ReadPingPLReport()
 
 void Net_VoteDialog(float highlight) {
 	if(highlight) {
-		vote_highlighted = ReadShort();
+		vote_highlighted = ReadByte();
 		return;
 	}
 
-	vote_yescount = ReadShort();
-	vote_nocount = ReadShort();
-	vote_needed = ReadShort();
+	vote_yescount = ReadByte();
+	vote_nocount = ReadByte();
+	vote_needed = ReadByte();
 	vote_active = 1;
 }
 
@@ -1249,6 +1266,18 @@ void Net_Notify() {
 	{
 		HUD_Centerprint(ReadString(), ReadString(), ReadShort(), ReadByte());
 	}
+}
+
+void Net_WeaponComplain() {
+	complain_weapon = ReadByte();
+
+	if(complain_weapon_name)
+		strunzone(complain_weapon_name);
+	complain_weapon_name = strzone(ReadString());
+
+	complain_weapon_type = ReadByte();
+
+	complain_weapon_time = time;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
@@ -1275,10 +1304,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_RACE:
 			Net_ReadRace();
-			bHandled = true;
-			break;
-		case 13: // TE_BEAM
-			Net_GrapplingHook();
 			bHandled = true;
 			break;
 		case TE_CSQC_SPAWN:
@@ -1319,6 +1344,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_NOTIFY:
 			Net_Notify();
+			bHandled = true;
+			break;
+		case TE_CSQC_WEAPONCOMPLAIN:
+			Net_WeaponComplain();
 			bHandled = true;
 			break;
 		default:

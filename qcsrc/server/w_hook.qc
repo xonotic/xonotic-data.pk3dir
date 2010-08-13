@@ -262,9 +262,9 @@ float w_hook(float req)
 		precache_sound("weapons/hookbomb_impact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
+		w_deathtypestring = "%s did the impossible";
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "has run into #'s gravity bomb";
+		w_deathtypestring = "%s has run into %s's gravity bomb";
 	return TRUE;
 }
 #endif

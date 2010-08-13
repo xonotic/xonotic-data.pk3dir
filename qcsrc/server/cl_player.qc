@@ -111,6 +111,7 @@ void CopyBody(float keepvelocity)
 	self.enemy = oldself;
 	self.lip = oldself.lip;
 	self.colormap = oldself.colormap;
+	self.glowmod = oldself.glowmod;
 	self.iscreature = oldself.iscreature;
 	self.angles = oldself.angles;
 	self.avelocity = oldself.avelocity;

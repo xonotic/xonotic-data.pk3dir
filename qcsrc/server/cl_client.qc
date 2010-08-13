@@ -1063,9 +1063,18 @@ float ClientInit_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
 	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_x);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_y);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_z);
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[3]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[3]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[3]));
 	if(sv_foginterval && world.fog != "")
 		WriteString(MSG_ENTITY, world.fog);
 	else
@@ -1074,6 +1083,8 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
 	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_secondary_bouncefactor
 	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_secondary_bouncestop
+	WriteByte(MSG_ENTITY, cvar("g_balance_nex_secondary")); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, cvar("g_balance_campingrifle_secondary")); // client has to know if it should zoom or not
 	return TRUE;
 }
 
@@ -2599,7 +2610,23 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+			if(self.health <= 0 && cvar("g_deathglow"))
+			{
+				if(self.glowmod_x > 0)
+					self.glowmod_x -= cvar("g_deathglow") * frametime;
+				else
+					self.glowmod_x = -1;
+				if(self.glowmod_y > 0)
+					self.glowmod_y -= cvar("g_deathglow") * frametime;
+				else
+					self.glowmod_y = -1;
+				if(self.glowmod_z > 0)
+					self.glowmod_z -= cvar("g_deathglow") * frametime;
+				else
+					self.glowmod_z = -1;
+			}
+			else
+				self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
 			player_powerups();
 		}
 
@@ -2776,7 +2803,7 @@ void PlayerPreThink (void)
 	}
 
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX));
+		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_CAMPINGRIFLE && cvar("g_balance_campingrifle_secondary") == 0));
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;

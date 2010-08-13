@@ -137,7 +137,7 @@ vector GetCurrentFov(float fov)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
-	if(getstati(STAT_ACTIVEWEAPON) == WEP_NEX) // do NOT use switchweapon here
+	if((getstati(STAT_ACTIVEWEAPON) == WEP_NEX && nex_scope) || (getstati(STAT_ACTIVEWEAPON) == WEP_CAMPINGRIFLE && campingrifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -375,7 +375,7 @@ void CSQC_UpdateView(float w, float h)
 	input_angles = warpzone_fixview_cl_viewangles;
 	view_angles = warpzone_fixview_angles;
 
-	if(cvar("cl_lockview") || hud_configure)
+	if(cvar("cl_lockview") || autocvar__hud_configure)
 	{
 		pmove_org = freeze_pmove_org;
 		input_angles = view_angles = freeze_input_angles;
@@ -478,7 +478,6 @@ void CSQC_UpdateView(float w, float h)
 		weapontime = time;
 		last_weapon = activeweapon;
 
-		entity e;
 		e = get_weaponinfo(activeweapon);
 		if(e.netname != "")
 			localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
@@ -565,9 +564,9 @@ void CSQC_UpdateView(float w, float h)
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || getstati(STAT_HEALTH) <= 0)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
-	else if(button_zoom)
+	else if(button_zoom || zoomscript_caught)
 		reticle_type = 1; // normal zoom
-	else if(activeweapon == WEP_NEX && button_attack2)
+	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_CAMPINGRIFLE && button_attack2)
 		reticle_type = 2; // nex zoom
 
 	if(cvar("cl_reticle_stretch"))
@@ -585,17 +584,20 @@ void CSQC_UpdateView(float w, float h)
 		reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
 	}
 
+	f = current_zoomfraction;
+	if(zoomscript_caught)
+		f = 1;
 	if(cvar("cl_reticle_item_normal"))
 	{
 		precache_pic("gfx/reticle_normal");
-		if(reticle_type == 1 && current_zoomfraction)
-			drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_item_normal"), DRAWFLAG_NORMAL);
+		if(reticle_type == 1 && f)
+			drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * cvar("cl_reticle_item_normal"), DRAWFLAG_NORMAL);
 	}
 	if(cvar("cl_reticle_item_nex"))
 	{
 		precache_pic("gfx/reticle_nex");
-		if(reticle_type == 2 && current_zoomfraction)
-			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', current_zoomfraction * cvar("cl_reticle_item_nex"), DRAWFLAG_NORMAL);
+		if(reticle_type == 2 && f)
+			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * cvar("cl_reticle_item_nex"), DRAWFLAG_NORMAL);
 	}
 
 	// Draw the mouse cursor
@@ -773,13 +775,13 @@ void CSQC_UpdateView(float w, float h)
 				if (activeweapon == WEP_CAMPINGRIFLE)
 				{
 					ring_scale = cvar("crosshair_campingrifle_ring_size");
-					bullets = bound(0, getstati(STAT_BULLETS_LOADED), 8);
+					bullets = bound(0, getstati(STAT_BULLETS_LOADED), 4);
 				}
 				else
 					bullets = 0;
 
 #define CROSSHAIR_DRAW_RING(i,j,sz,wcross_name,wcross_alpha) \
-				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/hud/", cvar_string("hud_skin"), "/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
 				do \
@@ -879,7 +881,7 @@ void CSQC_UpdateView(float w, float h)
 		cvar_set("vid_conheight", h0);
 	}
 
-	if(hud_configure)
+	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
 	// be safe against triggerbots until everyone has the fixed engine
 	// this call is meant to overwrite the trace globals by something
@@ -1190,6 +1192,18 @@ void CSQC_common_hud(void)
 	switch(hud)
 	{
 		case HUD_NORMAL:
+			// do some accuracy var caching
+			float i;
+			if(!(gametype == GAME_RACE || gametype == GAME_CTS))
+			{
+				acc_levels = tokenize(cvar_string("hud_panel_weapons_accuracy_color_levels"));
+				if (acc_levels > MAX_ACCURACY_LEVELS)
+					acc_levels = MAX_ACCURACY_LEVELS;
+
+				for (i = 0; i < acc_levels; ++i)
+					acc_lev[i] = stof(argv(i));
+			}
+
 			// hud first
 			HUD_Main();
 

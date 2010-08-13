@@ -112,7 +112,7 @@ void Item_Show (entity e, float mode)
 		e.model = e.mdl;
 		e.solid = SOLID_NOT;
 		e.colormod = stov(cvar_string("g_ghost_items_color"));
-		self.glowmod = self.colormod;
+		e.glowmod = e.colormod;
 		e.alpha = g_ghost_items;
 		e.customizeentityforclient = func_null;
 
@@ -124,7 +124,7 @@ void Item_Show (entity e, float mode)
 		e.model = string_null;
 		e.solid = SOLID_NOT;
 		e.colormod = stov(cvar_string("g_ghost_items_color"));
-		self.glowmod = self.colormod;
+		e.glowmod = e.colormod;
 		e.alpha = 0;
 		e.customizeentityforclient = func_null;
 

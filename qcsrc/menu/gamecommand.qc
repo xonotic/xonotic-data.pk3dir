@@ -64,9 +64,8 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "directpanelhudmenu")
 	{
-		highlightedPanel = stof(argv(1));
 		// switch to a menu item
-		m_goto(strcat("HUD", HUD_Panel_GetName(highlightedPanel)));
+		m_goto(strcat("HUD", argv(1)));
 		return;
 	}
 

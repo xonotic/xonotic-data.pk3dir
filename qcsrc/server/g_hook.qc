@@ -114,10 +114,37 @@ void GrapplingHook_Stop()
 	self.hook_length = -1;
 }
 
+.vector hook_start, hook_end;
+float GrapplingHookSend(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
+	sf = sf & 0x7F;
+	if(sound_allowed(MSG_BROADCAST, self.owner))
+		sf |= 0x80;
+	WriteByte(MSG_ENTITY, sf);
+	if(sf & 1)
+	{
+		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+	}
+	if(sf & 2)
+	{
+		WriteCoord(MSG_ENTITY, self.hook_start_x);
+		WriteCoord(MSG_ENTITY, self.hook_start_y);
+		WriteCoord(MSG_ENTITY, self.hook_start_z);
+	}
+	if(sf & 4)
+	{
+		WriteCoord(MSG_ENTITY, self.hook_end_x);
+		WriteCoord(MSG_ENTITY, self.hook_end_y);
+		WriteCoord(MSG_ENTITY, self.hook_end_z);
+	}
+	return TRUE;
+}
+
 void GrapplingHookThink()
 {
-	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
-	vector dir, org, end, v0, dv, v, myorg;
+	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s;
+	vector dir, org, end, v0, dv, v, myorg, vs;
 	if(self.owner.health <= 0 || self.owner.hook != self)	// how did that happen?
 	{														// well, better fix it anyway
 		remove(self);
@@ -133,8 +160,14 @@ void GrapplingHookThink()
 
 	self.nextthink = time;
 
+	s = self.owner.cvar_cl_gunalign;
+	if(s != 1 && s != 2 && s != 4)
+		s = 3; // default value
+	--s;
+	vs = hook_shotorigin[s];
+
 	makevectors(self.owner.v_angle);
-	org = self.owner.origin + self.owner.view_ofs + v_forward * hook_shotorigin_x + v_right * hook_shotorigin_y + v_up * hook_shotorigin_z;
+	org = self.owner.origin + self.owner.view_ofs + v_forward * vs_x + v_right * -vs_y + v_up * vs_z;
 	myorg = WarpZone_RefSys_TransformOrigin(self.owner, self, org);
 
 	if(self.hook_length < 0)
@@ -235,7 +268,18 @@ void GrapplingHookThink()
 	}
 
 	makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0');
-	te_beam(self.owner, WarpZone_RefSys_TransformOrigin(self, self.owner, self.origin) + v_forward * (-9), org);
+	myorg = WarpZone_RefSys_TransformOrigin(self, self.owner, self.origin) + v_forward * (-9);
+
+	if(myorg != self.hook_start)
+	{
+		self.SendFlags |= 2;
+		self.hook_start = myorg;
+	}
+	if(org != self.hook_end)
+	{
+		self.SendFlags |= 4;
+		self.hook_end = org;
+	}
 }
 
 void GrapplingHookTouch (void)
@@ -282,15 +326,23 @@ void FireGrapplingHook (void)
 {
 	local entity missile;
 	local vector org;
+	float s;
+	vector vs;
 
 	if((arena_roundbased && time < warmup) || (time < game_starttime))
 		return;
 
 	makevectors(self.v_angle);
 
+	s = self.cvar_cl_gunalign;
+	if(s != 1 && s != 2 && s != 4)
+		s = 3; // default value
+	--s;
+	vs = hook_shotorigin[s];
+
 	// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
 	sound (self, CHAN_WEAPON2, "weapons/hook_fire.wav", VOL_BASE, ATTN_NORM);
-	org = self.origin + self.view_ofs + v_forward * hook_shotorigin_x + v_right * hook_shotorigin_y + v_up * hook_shotorigin_z;
+	org = self.origin + self.view_ofs + v_forward * vs_x + v_right * -vs_y + v_up * vs_z;
 	pointparticles(particleeffectnum("grapple_muzzleflash"), org, '0 0 0', 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -301,7 +353,7 @@ void FireGrapplingHook (void)
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
 
-	setmodel (missile, "models/hook.md3"); // precision set below
+	//setmodel (missile, "models/hook.md3"); // precision set below
 	setsize (missile, '-3 -3 -3', '3 3 3');
 	setorigin (missile, org);
 
@@ -322,6 +374,10 @@ void FireGrapplingHook (void)
 	missile.event_damage = GrapplingHook_Damage;
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;
+
+	missile.hook_start = missile.hook_end = missile.origin;
+
+	Net_LinkEntity(missile, FALSE, 0, GrapplingHookSend);
 }
 
 //  void GrapplingHookFrame()
@@ -434,9 +490,20 @@ void GrapplingHookFrame()
 void GrappleHookInit()
 {
 	if(g_grappling_hook)
-		hook_shotorigin = '8 -8 -12';
+	{
+		hook_shotorigin[0] = '8 8 -12';
+		hook_shotorigin[1] = '8 8 -12';
+		hook_shotorigin[2] = '8 8 -12';
+		hook_shotorigin[3] = '8 8 -12';
+	}
 	else
-		hook_shotorigin = shotorg_adjust('26.2148 9.2059 -15.9772', TRUE, FALSE);
+	{
+		weapon_action(WEP_HOOK, WR_PRECACHE);
+		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 1);
+		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 2);
+		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 3);
+		hook_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 4);
+	}
 }
 
 void SetGrappleHookBindings()

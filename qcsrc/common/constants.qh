@@ -58,6 +58,9 @@ const float TE_CSQC_VOTERESET = 109;
 const float TE_CSQC_ANNOUNCE = 110;
 const float TE_CSQC_TARGET_MUSIC = 111;
 const float TE_CSQC_NOTIFY = 112;
+const float TE_CSQC_WEAPONCOMPLAIN = 113;
+const float TE_CSQC_CAMPINGRIFLE_SCOPE = 115;
+const float TE_CSQC_NEX_SCOPE = 116;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -104,6 +107,9 @@ const float ENT_CLIENT_TUBANOTE = 23;
 const float ENT_CLIENT_WARPZONE = 24;
 const float ENT_CLIENT_WARPZONE_CAMERA = 25;
 const float ENT_CLIENT_TRIGGER_MUSIC = 26;
+const float ENT_CLIENT_HOOK = 27;
+const float ENT_CLIENT_LGBEAM = 28;
+const float ENT_CLIENT_GAUNTLET = 29;
 
 const float ENT_CLIENT_TURRET = 40;
 
@@ -574,6 +580,7 @@ float INFO_GOTFLAG = 10319;
 float INFO_PICKUPFLAG = 10320;
 float INFO_LOSTFLAG = 10321;
 float INFO_RETURNFLAG = 10322;
+float INFO_CAPTUREFLAG = 10323;
 
 // weapon requests
 float WR_SETUP		= 1; // (SVQC) setup weapon data
@@ -589,8 +596,8 @@ float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
 float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
 
 
-float HUD_PANEL_WEAPONICONS	= 0;
-float HUD_PANEL_INVENTORY	= 1;
+float HUD_PANEL_WEAPONS		= 0;
+float HUD_PANEL_AMMO		= 1;
 float HUD_PANEL_POWERUPS	= 2;
 float HUD_PANEL_HEALTHARMOR	= 3;
 float HUD_PANEL_NOTIFY		= 4;
@@ -603,6 +610,23 @@ float HUD_PANEL_MODICONS	= 10;
 float HUD_PANEL_PRESSEDKEYS	= 11;
 float HUD_PANEL_CHAT		= 12;
 float HUD_PANEL_ENGINEINFO	= 13;
-float HUD_PANEL_NUM		= 14; // always last panel id + 1, please increment when adding a new panel
+float HUD_PANEL_INFOMESSAGES	= 14;
+float HUD_PANEL_NUM		= 15; // always last panel id + 1, please increment when adding a new panel
+
+string HUD_PANELNAME_WEAPONS 		= "weapons";
+string HUD_PANELNAME_AMMO	 	= "ammo";
+string HUD_PANELNAME_POWERUPS	 	= "powerups";
+string HUD_PANELNAME_HEALTHARMOR 	= "healtharmor";
+string HUD_PANELNAME_NOTIFY	 	= "notify";
+string HUD_PANELNAME_TIMER	 	= "timer";
+string HUD_PANELNAME_RADAR	 	= "radar";
+string HUD_PANELNAME_SCORE	 	= "score";
+string HUD_PANELNAME_RACETIMER	 	= "racetimer";
+string HUD_PANELNAME_VOTE	 	= "vote";
+string HUD_PANELNAME_MODICONS	 	= "modicons";
+string HUD_PANELNAME_PRESSEDKEYS 	= "pressedkeys";
+string HUD_PANELNAME_CHAT	 	= "chat";
+string HUD_PANELNAME_ENGINEINFO	 	= "engineinfo";
+string HUD_PANELNAME_INFOMESSAGES	= "infomessages";
 
 float HUD_MENU_ENABLE		= 0;
