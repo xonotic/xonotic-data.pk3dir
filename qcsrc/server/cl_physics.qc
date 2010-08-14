@@ -88,13 +88,17 @@ void PlayerJump (void)
 			if (cvar("g_multijump_add") == 0) // in this case we make the z velocity == jumpvelocity
 				self.velocity_z = 0;
 
+			float curspeed;
+			curspeed = vlen(self.velocity);
 			local vector wishvel, wishdir;
 			makevectors(self.v_angle);
 			wishvel = v_forward * self.movement_x + v_right * self.movement_y;
 			wishdir = normalize(wishvel);
 			if(wishdir_x != 0 && wishdir_y != 0) // don't remove all speed if player isnt pressing any movement keys
-				self.velocity = ('1 0 0' * wishdir_x + '0 1 0' * wishdir_y) * self.prevtopspeed; // allow "dodging" at a multijump
-
+			{
+				self.velocity_x = wishdir_x * max(curspeed, self.prevtopspeed); // allow "dodging" at a multijump
+				self.velocity_y = wishdir_y * max(curspeed, self.prevtopspeed);
+			}
 			self.multijump_count += 1;
 		}
 		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
