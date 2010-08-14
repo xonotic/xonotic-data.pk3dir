@@ -307,5 +307,7 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		pl.oldvelocity = pl.velocity;
+		// reset teleport time tracking too (or multijump can cause insane speeds)
+		pl.lastteleporttime = time;
 	}
 }
