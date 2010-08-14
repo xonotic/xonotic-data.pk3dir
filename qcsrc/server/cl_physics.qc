@@ -88,16 +88,19 @@ void PlayerJump (void)
 			if (cvar("g_multijump_add") == 0) // in this case we make the z velocity == jumpvelocity
 				self.velocity_z = 0;
 
-			float curspeed;
-			curspeed = vlen(self.velocity);
-			local vector wishvel, wishdir;
-			makevectors(self.v_angle);
-			wishvel = v_forward * self.movement_x + v_right * self.movement_y;
-			wishdir = normalize(wishvel);
-			if(wishdir_x != 0 && wishdir_y != 0) // don't remove all speed if player isnt pressing any movement keys
+			if(self.movement_x != 0 || self.movement_y != 0) // don't remove all speed if player isnt pressing any movement keys
 			{
-				self.velocity_x = wishdir_x * max(curspeed, self.prevtopspeed); // allow "dodging" at a multijump
-				self.velocity_y = wishdir_y * max(curspeed, self.prevtopspeed);
+				float curspeed;
+				vector wishvel, wishdir;
+
+				curspeed = max(vlen(self.velocity - '0 0 1' * self.velocity_z), self.prevtopspeed);
+				makevectors(self.v_angle);
+				wishvel = v_forward * self.movement_x + v_right * self.movement_y;
+				wishdir = normalize(wishvel);
+
+				self.velocity_x = wishdir_x * curspeed; // allow "dodging" at a multijump
+				self.velocity_y = wishdir_y * curspeed;
+				// keep velocity_z unchanged!
 			}
 			self.multijump_count += 1;
 		}
@@ -945,7 +948,7 @@ void SV_PlayerPhysics()
 		if(vlen(self.velocity) >= self.prevtopspeed || time - self.prevtopspeed_time > 0.25)
 		{
 			self.prevtopspeed_time = time;
-			self.prevtopspeed = vlen('1 0 0' * self.velocity_x + '0 1 0' * self.velocity_y);
+			self.prevtopspeed = vlen(self.velocity - '0 0 1' * self.velocity_z);
 		}
 
 		if (self.BUTTON_JUMP)
