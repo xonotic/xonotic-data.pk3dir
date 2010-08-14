@@ -132,8 +132,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 			player.pushltime = 0;
 		}
 
-		if(player.isbot)
-			player.lastteleporttime = time;
+		player.lastteleporttime = time;
 
 		// stop player name display
 		{

@@ -75,7 +75,7 @@ vector antilag_takebackorigin(entity e, float t)
 vector antilag_takebackavgvelocity(entity e, float t0, float t1)
 {
 	vector o0, o1;
-	if(t0 == t1)
+	if(t0 >= t1)
 		return '0 0 0';
 	o0 = antilag_takebackorigin(e, t0);
 	o1 = antilag_takebackorigin(e, t1);
