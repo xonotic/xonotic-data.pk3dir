@@ -78,35 +78,48 @@ void PlayerJump (void)
 			self.multijump_ready = FALSE;
 	}
 
-	if(self.multijump_ready && self.multijump_count < cvar("g_multijump") && self.velocity_z > cvar("g_multijump_speed"))
+	if(!doublejump && self.multijump_ready && self.multijump_count < cvar("g_multijump") && self.velocity_z > cvar("g_multijump_speed"))
 	{
+		// doublejump = FALSE; // checked above in the if
 		if (cvar("g_multijump") > 0)
 		{
 			if (cvar("g_multijump_add") == 0) // in this case we make the z velocity == jumpvelocity
-				self.velocity_z = 0;
-
-			if(self.movement_x != 0 || self.movement_y != 0) // don't remove all speed if player isnt pressing any movement keys
 			{
-				float curspeed;
-				vector wishvel, wishdir;
-
-				curspeed = max(
-					vlen(vec2(self.velocity)), // current xy speed
-					vlen(vec2(antilag_takebackavgvelocity(self, time - 0.25, time))) // average xy topspeed over the last 0.25 secs
-				);
-				makevectors(self.v_angle);
-				wishvel = v_forward * self.movement_x + v_right * self.movement_y;
-				wishdir = normalize(wishvel);
-
-				self.velocity_x = wishdir_x * curspeed; // allow "dodging" at a multijump
-				self.velocity_y = wishdir_y * curspeed;
-				// keep velocity_z unchanged!
+				if (self.velocity_z >= mjumpheight)
+				{
+					doublejump = TRUE;
+					self.velocity_z = 0;
+				}
 			}
-			self.multijump_count += 1;
+			else
+				doublejump = TRUE;
+
+			if(doublejump)
+			{
+				if(self.movement_x != 0 || self.movement_y != 0) // don't remove all speed if player isnt pressing any movement keys
+				{
+					float curspeed;
+					vector wishvel, wishdir;
+
+					curspeed = max(
+						vlen(vec2(self.velocity)), // current xy speed
+						vlen(vec2(antilag_takebackavgvelocity(self, time - 0.25, time))) // average xy topspeed over the last 0.25 secs
+					);
+					makevectors(self.v_angle); // this always is '0 y 0'
+					wishvel = v_forward * self.movement_x + v_right * self.movement_y;
+					wishdir = normalize(wishvel);
+
+					self.velocity_x = wishdir_x * curspeed; // allow "dodging" at a multijump
+					self.velocity_y = wishdir_y * curspeed;
+					// keep velocity_z unchanged!
+				}
+				self.multijump_count += 1;
+			}
 		}
 		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
 	}
-	else if (!doublejump)
+
+	if (!doublejump)
 		if (!(self.flags & FL_ONGROUND))
 			return;
 
