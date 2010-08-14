@@ -89,7 +89,8 @@ void PlayerJump (void)
 				self.velocity_z = 0;
 
 			local vector wishvel, wishdir;
-			wishvel = v_forward * self.movement_x + v_right * self.movement_y + '0 0 1' * self.movement_z;
+			makevectors(self.v_angle);
+			wishvel = v_forward * self.movement_x + v_right * self.movement_y;
 			wishdir = normalize(wishvel);
 			if(wishdir_x != 0 && wishdir_y != 0) // don't remove all speed if player isnt pressing any movement keys
 				self.velocity = ('1 0 0' * wishdir_x + '0 1 0' * wishdir_y) * self.prevtopspeed; // allow "dodging" at a multijump
@@ -684,12 +685,6 @@ void SV_PlayerPhysics()
 	float buttons_prev;
 	float not_allowed_to_move;
 	string c;
-
-	if(vlen(self.velocity) >= self.prevtopspeed || time - self.prevtopspeed_time > 0.25)
-	{
-		self.prevtopspeed_time = time;
-		self.prevtopspeed = vlen('1 0 0' * self.velocity_x + '0 1 0' * self.velocity_y);
-	}
 	
 	// fix physics stats for g_movement_highspeed
 	self.stat_sv_airaccel_qw = AdjustAirAccelQW(sv_airaccel_qw, autocvar_g_movement_highspeed);
@@ -941,6 +936,12 @@ void SV_PlayerPhysics()
 				self.multijump_count = 0;
 			else
 				self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
+		}
+
+		if(vlen(self.velocity) >= self.prevtopspeed || time - self.prevtopspeed_time > 0.25)
+		{
+			self.prevtopspeed_time = time;
+			self.prevtopspeed = vlen('1 0 0' * self.velocity_x + '0 1 0' * self.velocity_y);
 		}
 
 		if (self.BUTTON_JUMP)
