@@ -85,7 +85,7 @@ void PlayerJump (void)
 		{
 			if (cvar("g_multijump_add") == 0) // in this case we make the z velocity == jumpvelocity
 			{
-				if (self.velocity_z >= mjumpheight)
+				if (self.velocity_z < mjumpheight)
 				{
 					doublejump = TRUE;
 					self.velocity_z = 0;
