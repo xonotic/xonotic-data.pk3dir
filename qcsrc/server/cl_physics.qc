@@ -359,8 +359,7 @@ void RaceCarPhysics()
 		float mt;
 
 		rigvel_z -= frametime * sv_gravity; // 4x gravity plays better
-		rigvel_xy = rigvel;
-		rigvel_xy_z = 0;
+		rigvel_xy = vec2(rigvel);
 
 		if(g_bugrigs_planar_movement_car_jumping && !g_touchexplode) // touchexplode is a better way to handle collisions
 			mt = MOVE_NORMAL;
@@ -552,7 +551,7 @@ void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float acce
 
 	vel_straight = self.velocity * wishdir;
 	vel_z = self.velocity_z;
-	vel_xy = self.velocity - vel_z * '0 0 1';
+	vel_xy = vec2(self.velocity);
 	vel_perpend = vel_xy - vel_straight * wishdir;
 
 	step = accel * frametime * wishspeed0;
