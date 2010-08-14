@@ -37,9 +37,6 @@ float sv_airspeedlimit_nonqw;
 .float multijump_ready;
 .float prevjumpbutton;
 
-.float prevtopspeed; // store the top speed during the last 0.25 seconds to make dodging at full speeds easier
-.float prevtopspeed_time;
-
 /*
 =============
 PlayerJump
@@ -93,7 +90,10 @@ void PlayerJump (void)
 				float curspeed;
 				vector wishvel, wishdir;
 
-				curspeed = max(vlen(self.velocity - '0 0 1' * self.velocity_z), self.prevtopspeed);
+				curspeed = max(
+					vlen(vec2(self.velocity)), // current xy speed
+					vlen(vec2(antilag_takebackavgvelocity(self, time - 0.25, time))) // average xy topspeed over the last 0.25 secs
+				);
 				makevectors(self.v_angle);
 				wishvel = v_forward * self.movement_x + v_right * self.movement_y;
 				wishdir = normalize(wishvel);
@@ -942,12 +942,6 @@ void SV_PlayerPhysics()
 				self.multijump_count = 0;
 			else
 				self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
-		}
-
-		if(vlen(self.velocity) >= self.prevtopspeed || time - self.prevtopspeed_time > 0.25)
-		{
-			self.prevtopspeed_time = time;
-			self.prevtopspeed = vlen(self.velocity - '0 0 1' * self.velocity_z);
 		}
 
 		if (self.BUTTON_JUMP)
