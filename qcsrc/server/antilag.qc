@@ -49,7 +49,7 @@ float antilag_find(entity e, float t)
 	return -1;
 }
 
-vector lerp(float t0, vector v0, float t1, vector v1, float t)
+vector lerpv(float t0, vector v0, float t1, vector v1, float t)
 {
 	return v0 + (v1 - v0) * ((t - t0) / (t1 - t0));
 }
@@ -69,7 +69,17 @@ vector antilag_takebackorigin(entity e, float t)
 	if(i1 >= ANTILAG_MAX_ORIGINS)
 		i1 = 0;
 
-	return lerp(e.(antilag_times[i0]), e.(antilag_origins[i0]), e.(antilag_times[i1]), e.(antilag_origins[i1]), t);
+	return lerpv(e.(antilag_times[i0]), e.(antilag_origins[i0]), e.(antilag_times[i1]), e.(antilag_origins[i1]), t);
+}
+
+vector antilag_takebackavgvelocity(entity e, float t0, float t1)
+{
+	vector o0, o1;
+	if(t0 == t1)
+		return '0 0 0';
+	o0 = antilag_takebackorigin(e, t0);
+	o1 = antilag_takebackorigin(e, t1);
+	return (o1 - o0) * (1 / (t1 - t0));
 }
 
 void antilag_takeback(entity e, float t)
