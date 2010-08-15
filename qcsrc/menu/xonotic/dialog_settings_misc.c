@@ -73,6 +73,5 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticButton("Advanced settings...", '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.cvarsDialog;
-		me.TDempty(me, 0.5);
 }
 #endif
