@@ -33,6 +33,7 @@ float ts_primary, ts_secondary;
 
 float last_weapon;
 float weapontime;
+float weaponprevtime;
 
 float teamnagger;
 float hud_accuracy_hud;

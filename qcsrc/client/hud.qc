@@ -1491,29 +1491,71 @@ void HUD_Weapons(void)
 		return;
 
 	float timeout = cvar("hud_panel_weapons_timeout");
-	float timeout_effect_lenght;
+	float timeout_effect_length, timein_effect_length;
 	if (cvar("hud_panel_weapons_timeout_effect") == 0)
-		timeout_effect_lenght = 0;
+	{
+		timeout_effect_length = 0;
+		timein_effect_length = 0;
+	}
 	else
-		timeout_effect_lenght = 0.75;
+	{
+		timeout_effect_length = 0.75;
+		timein_effect_length = 0.375;
+	}
 
-	if (timeout && time >= weapontime + timeout + timeout_effect_lenght && !autocvar__hud_configure)
+	if (timeout && time >= weapontime + timeout + timeout_effect_length && !autocvar__hud_configure)
+	{
+		weaponprevtime = time;
 		return;
+	}
 
 	active_panel = HUD_PANEL_WEAPONS;
 	HUD_Panel_UpdateCvars(weapons);
 
 	if (timeout && time >= weapontime + timeout && !autocvar__hud_configure)
 	{
-		float f = (time - (weapontime + timeout)) / timeout_effect_lenght;
-		if (cvar("hud_panel_weapons_timeout_effect") == 2)
+		float f = (time - (weapontime + timeout)) / timeout_effect_length;
+		if (cvar("hud_panel_weapons_timeout_effect"))
 		{
 			panel_bg_alpha *= (1 - f);
 			panel_fg_alpha *= (1 - f);
 		}
-		else
+		if (cvar("hud_panel_weapons_timeout_effect") == 1)
 		{
 			f *= f; // for a cooler movement
+			vector center;
+			center_x = panel_pos_x + panel_size_x/2;
+			center_y = panel_pos_y + panel_size_y/2;
+			float screen_ar = vid_conwidth/vid_conheight;
+			if (center_x/center_y < screen_ar) //bottom left
+			{
+				if ((vid_conwidth - center_x)/center_y < screen_ar) //bottom
+					panel_pos_y += f * (vid_conheight - panel_pos_y);
+				else //left
+					panel_pos_x -= f * (panel_pos_x + panel_size_x);
+			}
+			else //top right
+			{
+				if ((vid_conwidth - center_x)/center_y < screen_ar) //right
+					panel_pos_x += f * (vid_conwidth - panel_pos_x);
+				else //top
+					panel_pos_y -= f * (panel_pos_y + panel_size_y);
+			}
+		}
+		weaponprevtime = time - (1 - f) * timein_effect_length;
+	}
+	else if (timeout && time < weaponprevtime + timein_effect_length && !autocvar__hud_configure)
+	{
+		float f = (time - weaponprevtime) / timein_effect_length;
+		if (cvar("hud_panel_weapons_timeout_effect"))
+		{
+			panel_bg_alpha *= (f);
+			panel_fg_alpha *= (f);
+		}
+		if (cvar("hud_panel_weapons_timeout_effect") == 1)
+		{
+			f *= f; // for a cooler movement
+			f = 1 - f;
 			vector center;
 			center_x = panel_pos_x + panel_size_x/2;
 			center_y = panel_pos_y + panel_size_y/2;
