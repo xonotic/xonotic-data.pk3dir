@@ -303,6 +303,8 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	vector vf, vr, vu, v0, o0;
 	entity wz;
 
+	o0 = e.origin;
+
 	WarpZone_Trace_InitTransform();
 	WarpZone_tracetoss_time = 0;
 	if(!warpzone_warpzones_exist)
@@ -318,7 +320,6 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
-	o0 = e.origin;
 	v0 = e.velocity;
 
 	// if starting in warpzone, first transform
