@@ -119,9 +119,9 @@ void CampaignPostInit()
 	if(Campaign_Invalid())
 		return;
 	cvar_set("fraglimit", ftos(campaign_fraglimit[0]));
-	cvar_set("timelimit", "0");
+	cvar_set("timelimit", ftos(campaign_timelimit[0]));
 	cvar_set_normal("fraglimit", ftos(campaign_fraglimit[0]));
-	cvar_set_normal("timelimit", "0");
+	cvar_set_normal("timelimit", ftos(campaign_timelimit[0]));
 }
 
 void CampaignSaveCvar(string cvarname, float value)
@@ -249,3 +249,4 @@ void CampaignLevelWarp(float n)
 		error("Sorry, cheater. You are NOT WELCOME.");
 	CampaignFile_Unload();
 }
+

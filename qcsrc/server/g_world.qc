@@ -1509,16 +1509,23 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 
 float GetWinningCode(float fraglimitreached, float equality)
 {
-	if(equality)
-		if(fraglimitreached)
-			return WINNING_STARTSUDDENDEATHOVERTIME;
-		else
-			return WINNING_NEVER;
-	else
+	if(cvar("g_campaign") == 1)
 		if(fraglimitreached)
 			return WINNING_YES;
 		else
 			return WINNING_NO;
+
+	else
+		if(equality)
+			if(fraglimitreached)
+				return WINNING_STARTSUDDENDEATHOVERTIME;
+			else
+				return WINNING_NEVER;
+		else
+			if(fraglimitreached)
+				return WINNING_YES;
+			else
+				return WINNING_NO;
 }
 
 // set the .winning flag for exactly those players with a given field value
