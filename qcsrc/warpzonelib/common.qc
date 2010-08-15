@@ -304,6 +304,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	entity wz;
 
 	o0 = e.origin;
+	v0 = e.velocity;
 
 	WarpZone_Trace_InitTransform();
 	WarpZone_tracetoss_time = 0;
@@ -314,13 +315,15 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 			cb(e.origin, trace_endpos, trace_endpos);
 		dt = vlen(e.origin - o0) / vlen(e.velocity);
 		WarpZone_tracetoss_time += dt;
+		e.velocity_z -= dt * g;
+		WarpZone_tracetoss_velocity = e.velocity;
+		e.velocity = v0;
 		return;
 	}
 
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
-	v0 = e.velocity;
 
 	// if starting in warpzone, first transform
 	wz = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
@@ -355,7 +358,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		e.origin = trace_endpos;
 		dt = vlen(e.origin - o0) / vlen(e.velocity);
 		WarpZone_tracetoss_time += dt;
-		e.velocity_z -= WarpZone_tracetoss_time * g;
+		e.velocity_z -= dt * g;
 		if(trace_fraction >= 1)
 			break;
 		if(trace_ent.classname != "trigger_warpzone")
