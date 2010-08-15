@@ -3742,8 +3742,20 @@ void HUD_VoteWindow(void)
 	pos = panel_pos;
 	mySize = panel_size;
 
-	panel_fg_alpha = 1;
-	panel_bg_alpha = 1;
+	panel_fg_alpha = autocvar_hud_panel_fg_alpha;
+	panel_bg_alpha_str = autocvar_hud_panel_vote_bg_alpha;
+
+	if(panel_bg_alpha_str == "") {
+		panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha);
+	}
+	panel_bg_alpha = stof(panel_bg_alpha_str);
+	if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == active_panel) {
+		panel_bg_alpha = (1 - autocvar__menu_alpha) * max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha) + autocvar__menu_alpha * panel_bg_alpha;
+	} else if(autocvar__hud_configure) {
+		panel_bg_alpha = max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha);
+	} if(autocvar__hud_configure && !panel_enabled) {
+		panel_bg_alpha = 0.25;
+	}
 
 	string s;
 	float a;
