@@ -1,6 +1,9 @@
 // uncomment this if your mod uses the roll angle in fixangle
 // #define KEEP_ROLL
 
+float warpzone_warpzones_exist;
+float warpzone_cameras_exist;
+
 const void func_null(void); // never assign to this one please
 
 .float warpzone_isboxy;
