@@ -4431,8 +4431,15 @@ void HUD_Chat(void)
 	{
 		panel_pos_y = panel_bg_border;
 		panel_size_y = vid_conheight - panel_bg_border * 2;
-		if(panel_bg == "0")
-			panel_bg = "border"; // force a border when maximized
+		if(panel_bg == "0") // force a border when maximized
+		{
+			if(precache_pic(panel_bg) == "") {
+				panel_bg = strcat(hud_skin_path, "/border_default");
+				if(precache_pic(panel_bg) == "") {
+					panel_bg = "gfx/hud/default/border_default";
+				}
+			}
+		}
 		panel_bg_alpha = max(0.75, panel_bg_alpha); // force an alpha of at least 0.75
 	}
 
