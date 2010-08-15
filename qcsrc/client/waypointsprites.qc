@@ -436,11 +436,7 @@ void WaypointSprite_Load()
 		for(i = 0; i < n; ++i)
 		{
 			s = search_getfilename(dh, i);
-			if(substring(s, 0, 15) != "models/sprites/")
-				continue;
-			if(substring(s, strlen(s) - 4, 4) != ".tga")
-				continue;
-			s = substring(s, 15, strlen(s) - 19);
+			s = substring(s, 15, strlen(s) - 15 - 4); // strip models/sprites/ and .tga
 
 			o = strstrofs(s, "_frame", 0);
 			sname = strcat("/spriteframes/", substring(s, 0, o));
