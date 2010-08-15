@@ -4968,7 +4968,7 @@ void HUD_Main (void)
 		string pic;
 		pic = strcat(hud_skin_path, "/", autocvar_hud_dock);
 		if(precache_pic(pic) == "") {
-			pic = "gfx/hud/default/dock";
+			pic = "gfx/hud/default/dock_medium";
 		}
 		drawpic('0 0 0', pic, eX * vid_conwidth + eY * vid_conheight, color, autocvar_hud_dock_alpha * hud_fade_alpha, DRAWFLAG_NORMAL); // no aspect ratio forcing on dock...
 	}
