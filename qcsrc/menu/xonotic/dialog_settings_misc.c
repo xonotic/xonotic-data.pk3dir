@@ -66,7 +66,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "host_sleep", "Minimize input latency"));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_maxfps_alwayssleep", "Minimize input latency"));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
