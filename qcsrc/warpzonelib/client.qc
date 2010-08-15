@@ -1,5 +1,6 @@
 void WarpZone_Read(float isnew)
 {
+	++warpzone_warpzones_exist;
 	if not(self.enemy)
 	{
 		self.enemy = spawn();
@@ -46,6 +47,7 @@ void WarpZone_Read(float isnew)
 
 void WarpZone_Camera_Read(float isnew)
 {
+	++warpzone_cameras_exist;
 	self.classname = "func_warpzone_camera";
 	self.origin_x = ReadCoord();
 	self.origin_y = ReadCoord();

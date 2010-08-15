@@ -2537,9 +2537,9 @@ void PlayerPreThink (void)
 		if(self.cvar_g_xonoticversion)
 			if(time > self.version_nagtime)
 			{
-				if(strstr(self.cvar_g_xonoticversion, "svn", 0) < 0)
+				if(strstr(self.cvar_g_xonoticversion, "git", 0) < 0)
 				{
-					if(strstr(cvar_string("g_xonoticversion"), "svn", 0) >= 0)
+					if(strstr(cvar_string("g_xonoticversion"), "git", 0) >= 0)
 					{
 						dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", cvar_string("g_xonoticversion"), " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
 						sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Xonotic ", cvar_string("g_xonoticversion"), " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n"));
