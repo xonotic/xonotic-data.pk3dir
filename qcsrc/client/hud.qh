@@ -114,18 +114,19 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 	panel_bg = "0";\
 } else {\
 	if(panel_bg_str == "") {\
-		panel_bg = autocvar_hud_panel_bg;\
-	} else if(panel_bg_str == "0" && autocvar__hud_configure) {\
-		panel_bg = autocvar_hud_panel_bg;\
-		panel_bg_alpha_str = "0";\
-	} else {\
-		panel_bg = panel_bg_str;\
+		panel_bg_str = autocvar_hud_panel_bg;\
 	}\
-	panel_bg = strcat(hud_skin_path, "/", panel_bg);\
-	if(precache_pic(panel_bg) == "") {\
-		panel_bg = strcat(hud_skin_path, "/", "border_default");\
+	if(panel_bg_str == "0" && !autocvar__hud_configure) {\
+			panel_bg = "0";\
+	} else {\
+		if (panel_bg_str == "0" && autocvar__hud_configure)\
+			panel_bg_alpha_str = "0";\
+		panel_bg = strcat(hud_skin_path, "/", panel_bg_str);\
 		if(precache_pic(panel_bg) == "") {\
-			panel_bg = strcat("gfx/hud/default/", "border_default");\
+			panel_bg = strcat(hud_skin_path, "/", "border_default");\
+			if(precache_pic(panel_bg) == "") {\
+				panel_bg = strcat("gfx/hud/default/", "border_default");\
+			}\
 		}\
 	}\
 }
