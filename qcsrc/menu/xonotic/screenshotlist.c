@@ -4,6 +4,7 @@ CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticScreenshotList, rowsPerItem, float, 1)
 	METHOD(XonoticScreenshotList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticScreenshotList, setSelected, void(entity, float))
+	METHOD(XonoticScreenshotList, draw, void(entity))
 	METHOD(XonoticScreenshotList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticScreenshotList, getScreenshots, void(entity))
 	METHOD(XonoticScreenshotList, previewScreenshot, void(entity))
@@ -23,6 +24,8 @@ CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticScreenshotList, lastClickedScreenshot, float, -1)
 	ATTRIB(XonoticScreenshotList, lastClickedTime, float, 0)
 	ATTRIB(XonoticScreenshotList, filterString, string, string_null)
+	ATTRIB(XonoticScreenshotList, filterBox, entity, NULL)
+	ATTRIB(XonoticScreenshotList, filterTime, float, 0)
 
 	ATTRIB(XonoticScreenshotList, screenshotBrowserDialog, entity, NULL)
 	ATTRIB(XonoticScreenshotList, screenshotPreview, entity, NULL)
@@ -33,6 +36,7 @@ ENDCLASS(XonoticScreenshotList)
 entity makeXonoticScreenshotList();
 void StartScreenshot_Click(entity btn, entity me);
 void ScreenshotList_Refresh_Click(entity btn, entity me);
+void ScreenshotList_Filter_Would_Change(entity box, entity me);
 void ScreenshotList_Filter_Change(entity box, entity me);
 #endif
 
@@ -167,6 +171,22 @@ void ScreenshotList_Filter_Change(entity box, entity me)
 		me.filterString = string_null;
 
 	ScreenshotList_Refresh_Click(world, me);
+}
+
+void ScreenshotList_Filter_Would_Change(entity box, entity me)
+{
+	me.filterBox = box;
+	me.filterTime = time + 0.5;
+}
+
+void XonoticScreenshotList_draw(entity me)
+{
+	if (me.filterTime && time > me.filterTime)
+	{
+		ScreenshotList_Filter_Change(me.filterBox, me);
+		me.filterTime = 0;
+	}
+	SUPER(XonoticScreenshotList).draw(me);
 }
 
 void XonoticScreenshotList_goScreenshot(entity me, float d)

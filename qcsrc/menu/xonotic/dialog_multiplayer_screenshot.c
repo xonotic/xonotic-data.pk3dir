@@ -41,10 +41,9 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 		me.TD(me, 1, 0.5, btn = makeXonoticButton("Clear", '0 0 0'));
 			btn.onClick = InputBox_Clear_Click;
 		me.TD(me, 1, me.columns - 1.5, e = makeXonoticInputBox(0, string_null));
-			e.onChange = ScreenshotList_Filter_Change;
+			e.onChange = ScreenshotList_Filter_Would_Change;
 			e.onChangeEntity = slist;
 			btn.onClickEntity = e;
-			slist.controlledTextbox = e;
 			slist.screenshotViewerDialog = main.screenshotViewerDialog;
 			main.screenshotViewerDialog.scrList = slist;
 		me.TD(me, 1, 0.5, e = makeXonoticButton("Refresh", '0 0 0'));
