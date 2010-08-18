@@ -132,6 +132,8 @@ entity WarpZone_Find(vector mi, vector ma)
 {
 	// if we are near any warpzone planes - MOVE AWAY (work around nearclip)
 	entity e;
+	if(!warpzone_warpzones_exist)
+		return world;
 	for(e = world; (e = find(e, classname, "trigger_warpzone")); )
 		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, world))
 			return e;
@@ -141,6 +143,8 @@ entity WarpZone_Find(vector mi, vector ma)
 void WarpZone_MakeAllSolid()
 {
 	entity e;
+	if(!warpzone_warpzones_exist)
+		return;
 	for(e = world; (e = find(e, classname, "trigger_warpzone")); )
 		e.solid = SOLID_BSP;
 }
@@ -148,6 +152,8 @@ void WarpZone_MakeAllSolid()
 void WarpZone_MakeAllOther()
 {
 	entity e;
+	if(!warpzone_warpzones_exist)
+		return;
 	for(e = world; (e = find(e, classname, "trigger_warpzone")); )
 		e.solid = SOLID_TRIGGER;
 }
