@@ -103,7 +103,7 @@ void PlayerJump (void)
 
 					curspeed = max(
 						vlen(vec2(self.velocity)), // current xy speed
-						vlen(vec2(antilag_takebackavgvelocity(self, max(self.lastteleporttime + sys_ticrate, time - 0.25), time))) // average xy topspeed over the last 0.25 secs
+						vlen(vec2(antilag_takebackavgvelocity(self, max(self.lastteleporttime + sys_frametime, time - 0.25), time))) // average xy topspeed over the last 0.25 secs
 					);
 					makevectors(self.v_angle_y * '0 1 0');
 					wishvel = v_forward * self.movement_x + v_right * self.movement_y;
