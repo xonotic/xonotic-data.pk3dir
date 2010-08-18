@@ -31,8 +31,6 @@
 //   Otherwise mdl_dead will be displayed at the map origin, and nobody would
 //   want that!
 
-.vector mins_save, maxs_save;
-
 void func_breakable_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 
 //
@@ -113,7 +111,6 @@ void func_breakable_behave_destroyed()
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = SUB_Null;
 	self.state = 1;
-	setsize(self, '0 0 0', '0 0 0');
 	func_breakable_colormod();
 }
 
@@ -123,7 +120,6 @@ void func_breakable_behave_restore()
 	self.takedamage = DAMAGE_AIM;
 	self.event_damage = func_breakable_damage;
 	self.state = 0;
-	setsize(self, self.mins_save, self.maxs_save);
 	func_breakable_colormod();
 }
 
@@ -232,8 +228,6 @@ void spawnfunc_func_breakable() {
 
 	self.mdl = self.model;
 	SetBrushEntityModel();
-	self.mins_save = self.mins;
-	self.maxs_save = self.maxs;
 
 	self.use = func_breakable_restore;
 
