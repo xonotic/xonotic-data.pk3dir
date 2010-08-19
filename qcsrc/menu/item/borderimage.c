@@ -42,7 +42,7 @@ void BorderImage_resizeNotify(entity me, vector relOrigin, vector relSize, vecto
 	{
 		// move the close button to the right place
 		me.closeButton.Container_origin = '1 0 0' * (1 - me.borderVec_x);
-		me.closeButton.Container_size = (me.borderHeight > 0) ? me.borderVec : 0.0001 * '1 1 0'; //workaround to not draw a big closebutton if borderHeight is 0
+		me.closeButton.Container_size = me.borderVec;
 		me.closeButton.color = me.color;
 		me.closeButton.colorC = me.color;
 		me.closeButton.colorF = me.color;

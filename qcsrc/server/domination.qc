@@ -77,7 +77,7 @@ void dompoint_captured ()
 		wait_time = self.wait;
 
 	bprint("^3", head.netname, "^3", self.message);
-	if (points > 1)
+	if (points != 1)
 		bprint(" ^7(", ftos(points), " points every ", ftos(wait_time), " seconds)\n");
 	else
 		bprint(" ^7(", ftos(points), " point every ", ftos(wait_time), " seconds)\n");

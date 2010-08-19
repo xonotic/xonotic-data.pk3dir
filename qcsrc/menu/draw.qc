@@ -69,6 +69,8 @@ void draw_PreloadPicture(string pic)
 
 void draw_Picture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha)
 {
+	if(theSize_x == 0 || theSize_y <= 0) // no default sizing please
+		return;
 	pic = draw_UseSkinFor(pic);
 	drawpic(boxToGlobal(theOrigin, draw_shift, draw_scale), pic, boxToGlobalSize(theSize, draw_scale), theColor, theAlpha * draw_alpha, 0);
 }
@@ -167,12 +169,6 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 	vector dX, dY;
 	vector width, height;
 	vector bW, bH;
-	if (theBorderSize_x <= 0 && theBorderSize_y <= 0) // no border
-	{
-		// draw only the central part
-		drawsubpic(theOrigin, theSize, pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
-		return;
-	}
 	pic = draw_UseSkinFor(pic);
 	theOrigin = boxToGlobal(theOrigin, draw_shift, draw_scale);
 	theSize = boxToGlobalSize(theSize, draw_scale);
@@ -180,11 +176,40 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 	theAlpha *= draw_alpha;
 	width = eX * theSize_x;
 	height = eY * theSize_y;
-	if(theSize_x <= theBorderSize_x * 2)
+	// zero size? bail out, we cannot handle this
+	if(theSize_x <= 0 || theSize_y <= 0)
+		return;
+	if(theBorderSize_x <= 0) // no x border
+	{
+		if(theBorderSize_y <= 0)
+		{
+			drawsubpic(theOrigin,                            width          + height,          pic, '0.25 0.25 0', '0.5  0.5  0', theColor, theAlpha, 0);
+		}
+		else if(theSize_y <= theBorderSize_y * 2)
+		{
+			// not high enough... draw just top and bottom then
+			bH = eY * (0.25 * theSize_y / (theBorderSize_y * 2));
+			drawsubpic(theOrigin,                             width          + height * 0.5, pic, '0.25 0 0',           '0.5  0 0' + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin              + height * 0.5, width          + height * 0.5, pic, '0.25 0 0' + eY - bH, '0.5  0 0' + bH, theColor, theAlpha, 0);
+		}
+		else
+		{
+			dY = theBorderSize_y * eY;
+			drawsubpic(theOrigin,                            width                   +     dY, pic, '0.25 0    0', '0.5  0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin          + dY,              width          + height - 2 * dY, pic, '0.25 0.25 0', '0.5  0.5  0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin + height - dY,              width                   +     dY, pic, '0.25 0.75 0', '0.5  0.25 0', theColor, theAlpha, 0);
+		}
+	}
+	else if(theSize_x <= theBorderSize_x * 2)
 	{
 		// not wide enough... draw just left and right then
 		bW = eX * (0.25 * theSize_x / (theBorderSize_x * 2));
-		if(theSize_y <= theBorderSize_y * 2)
+		if(theBorderSize_y <= 0)
+		{
+			drawsubpic(theOrigin,                             width * 0.5 + height,          pic, '0 0.25 0',           '0 0.5  0' + bW, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + width * 0.5,               width * 0.5 + height,          pic, '0 0.25 0' + eX - bW, '0 0.5  0' + bW, theColor, theAlpha, 0);
+		}
+		else if(theSize_y <= theBorderSize_y * 2)
 		{
 			// not high enough... draw just corners
 			bH = eY * (0.25 * theSize_y / (theBorderSize_y * 2));
@@ -195,7 +220,7 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 		}
 		else
 		{
-			dY = theBorderSize_x * eY;
+			dY = theBorderSize_y * eY;
 			drawsubpic(theOrigin,                             width * 0.5          +     dY, pic, '0 0    0',           '0 0.25 0' + bW, theColor, theAlpha, 0);
 			drawsubpic(theOrigin + width * 0.5,               width * 0.5          +     dY, pic, '0 0    0' + eX - bW, '0 0.25 0' + bW, theColor, theAlpha, 0);
 			drawsubpic(theOrigin                        + dY, width * 0.5 + height - 2 * dY, pic, '0 0.25 0',           '0 0.5  0' + bW, theColor, theAlpha, 0);
@@ -206,7 +231,14 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 	}
 	else
 	{
-		if(theSize_y <= theBorderSize_y * 2)
+		if(theBorderSize_y <= 0)
+		{
+			dX = theBorderSize_x * eX;
+			drawsubpic(theOrigin,                                        dX + height,          pic, '0    0.25 0', '0.25 0.5  0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin                       + dX, width - 2 * dX + height,          pic, '0.25 0.25 0', '0.5  0.5  0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin               + width - dX,             dX + height,          pic, '0.75 0.25 0', '0.25 0.5  0', theColor, theAlpha, 0);
+		}
+		else if(theSize_y <= theBorderSize_y * 2)
 		{
 			// not high enough... draw just top and bottom then
 			bH = eY * (0.25 * theSize_y / (theBorderSize_y * 2));
@@ -221,7 +253,7 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 		else
 		{
 			dX = theBorderSize_x * eX;
-			dY = theBorderSize_x * eY;
+			dY = theBorderSize_y * eY;
 			drawsubpic(theOrigin,                                        dX          +     dY, pic, '0    0    0', '0.25 0.25 0', theColor, theAlpha, 0);
 			drawsubpic(theOrigin                  + dX,      width - 2 * dX          +     dY, pic, '0.25 0    0', '0.5  0.25 0', theColor, theAlpha, 0);
 			drawsubpic(theOrigin          + width - dX,                  dX          +     dY, pic, '0.75 0    0', '0.25 0.25 0', theColor, theAlpha, 0);
