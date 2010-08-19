@@ -155,7 +155,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 		if(sl.value != e.savedValue)
 			e.savedValue = 0.65; // default
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.1, "Frequency:"));
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, "Frequency:"));
 		me.TD(me, 1, 2, sl);
 	me.TR(me);
 	me.TR(me);

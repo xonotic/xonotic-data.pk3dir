@@ -167,6 +167,12 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 	vector dX, dY;
 	vector width, height;
 	vector bW, bH;
+	if (theBorderSize_x <= 0 && theBorderSize_y <= 0) // no border
+	{
+		// draw only the central part
+		drawsubpic(theOrigin, theSize, pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
+		return;
+	}
 	pic = draw_UseSkinFor(pic);
 	theOrigin = boxToGlobal(theOrigin, draw_shift, draw_scale);
 	theSize = boxToGlobalSize(theSize, draw_scale);
