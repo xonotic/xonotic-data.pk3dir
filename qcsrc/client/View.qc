@@ -560,6 +560,10 @@ void CSQC_UpdateView(float w, float h)
 	R_AddEntities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	R_RenderScene();
 
+	// WORKAROUND: clear scene at the end again, to work around tiny console bug
+	R_SetView(VF_MIN, '0 0 0');
+	R_SetView(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
+
 	// now switch to 2D drawing mode by calling a 2D drawing function
 	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
 	// next R_RenderScene call
