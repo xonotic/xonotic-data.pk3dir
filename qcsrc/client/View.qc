@@ -354,6 +354,12 @@ void CSQC_UpdateView(float w, float h)
 	float fov;
 	float f, i, j;
 	vector v, vo;
+	vector vf_size, vf_min;
+
+	vf_size = R_SetView3fv(VF_SIZE);
+	vf_min = R_SetView3fv(VF_MIN);
+	vid_width = vf_size_x;
+	vid_height = vf_size_y;
 
 	vector reticle_pos, reticle_size;
 
@@ -397,9 +403,6 @@ void CSQC_UpdateView(float w, float h)
 		view_up = v_up;
 		view_set = 1;
 	}
-
-	vid_width = w;
-	vid_height = h;
 
 #ifdef BLURTEST
 	if(time > blurtest_time0 && time < blurtest_time1)
@@ -487,6 +490,10 @@ void CSQC_UpdateView(float w, float h)
 
 	// ALWAYS Clear Current Scene First
 	R_ClearScene();
+
+	// FIXME engine bug? VF_SIZE and VF_MIN are not restored to sensible values by this
+	R_SetView(VF_SIZE, vf_size);
+	R_SetView(VF_MIN, vf_min);
 
 	// Assign Standard Viewflags
 	// Draw the World (and sky)
