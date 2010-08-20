@@ -85,6 +85,9 @@ void func_breakable_look_destroyed()
 {
 	local float floor_z;
 
+	if(self.solid == SOLID_BSP) // in case a misc_follow moved me, save the current origin first
+		self.dropped_origin = self.origin;
+
 	if(self.mdl_dead == "")
 		self.model = "";
 	else {
@@ -102,6 +105,8 @@ void func_breakable_look_destroyed()
 void func_breakable_look_restore()
 {
 	setmodel(self, self.mdl);
+	if(self.mdl_dead != "") // only do this if we use mdl_dead, to behave better with misc_follow
+		setorigin(self, self.dropped_origin);
 	self.solid = SOLID_BSP;
 }
 
@@ -241,6 +246,7 @@ void spawnfunc_func_breakable() {
 		precache_sound(self.noise);
 
 	self.team_saved = self.team;
+	self.dropped_origin = self.origin;
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
