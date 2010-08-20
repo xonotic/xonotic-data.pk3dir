@@ -88,12 +88,12 @@ void func_breakable_look_destroyed()
 	if(self.mdl_dead == "")
 		self.model = "";
 	else {
-		setmodel(self, self.mdl_dead);
 		if (self.origin == '0 0 0')	{	// probably no origin brush, so don't spawn in the middle of the map..
 			floor_z = self.absmin_z;
 			setorigin(self,((self.absmax+self.absmin)*.5));
 			self.origin_z = floor_z;
 		}
+		setmodel(self, self.mdl_dead);
 	}
 
 	self.solid = SOLID_NOT;
