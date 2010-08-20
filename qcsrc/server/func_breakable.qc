@@ -146,6 +146,7 @@ void func_breakable_destroy() {
 	string oldmsg;
 
 	activator = self.owner;
+	self.owner = world; // set by W_PrepareExplosionByDamage
 
 	// now throw around the debris
 	n = tokenize_console(self.debris);
