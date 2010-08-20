@@ -27,6 +27,9 @@ CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticScreenshotList, filterBox, entity, NULL)
 	ATTRIB(XonoticScreenshotList, filterTime, float, 0)
 
+	ATTRIB(XonoticScreenshotList, newScreenshotTime, float, 0)
+	ATTRIB(XonoticScreenshotList, prevSelectedItem, float, 0)
+
 	ATTRIB(XonoticScreenshotList, screenshotBrowserDialog, entity, NULL)
 	ATTRIB(XonoticScreenshotList, screenshotPreview, entity, NULL)
 	ATTRIB(XonoticScreenshotList, screenshotViewerDialog, entity, NULL)
@@ -128,8 +131,19 @@ void XonoticScreenshotList_resizeNotify(entity me, vector relOrigin, vector relS
 
 void XonoticScreenshotList_setSelected(entity me, float i)
 {
+	me.prevSelectedItem = me.selectedItem;
 	SUPER(XonoticScreenshotList).setSelected(me, i);
-	me.previewScreenshot(me); // load the preview on selection change
+	if (me.pressed && me.selectedItem != me.prevSelectedItem)
+	{
+		// while dragging the scrollbar (or an item)
+		// for a smooth mouse movement do not load immediately the new selected images
+		me.newScreenshotTime = time + 0.2;
+	}
+	else if (time > me.newScreenshotTime)
+	{
+		me.newScreenshotTime = 0;
+		me.previewScreenshot(me); // load the preview on selection change
+	}
 }
 
 void XonoticScreenshotList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
@@ -186,6 +200,11 @@ void XonoticScreenshotList_draw(entity me)
 		ScreenshotList_Filter_Change(me.filterBox, me);
 		me.filterTime = 0;
 	}
+	if (me.newScreenshotTime && time > me.newScreenshotTime)
+	{
+		me.previewScreenshot(me);
+		me.newScreenshotTime = 0;
+	}
 	SUPER(XonoticScreenshotList).draw(me);
 }
 
@@ -239,7 +258,8 @@ float XonoticScreenshotList_keyDown(entity me, float scan, float ascii, float sh
 		me.startScreenshot(me);
 		return 1;
 	}
-	else
-		return SUPER(XonoticScreenshotList).keyDown(me, scan, ascii, shift);
+	if(scan == K_MWHEELUP || scan == K_MWHEELDOWN)
+		me.newScreenshotTime = time + 0.2;
+	return SUPER(XonoticScreenshotList).keyDown(me, scan, ascii, shift);
 }
 #endif
