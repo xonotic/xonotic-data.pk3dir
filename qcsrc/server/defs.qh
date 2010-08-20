@@ -635,3 +635,5 @@ string deathmessage;
 .float selectweapon; // last selected weapon of the player
 
 .float ballistics_density; // wall piercing factor, larger = bullet can pass through more
+
+.entity realowner;
