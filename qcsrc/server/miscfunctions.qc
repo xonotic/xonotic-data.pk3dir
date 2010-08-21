@@ -100,9 +100,9 @@ string GetAdvancedDeathReports(entity enPlayer) // Extra fragmessage information
 
 	if(cvar("sv_fragmessage_information_ping")) {
 		if(clienttype(enPlayer) == CLIENTTYPE_BOT) // Bots have no ping
-			strMessage = strcat(strMessage, "\n^7(^2Bot");
+			strMessage = strcat(strMessage, " ^7(^2Bot");
 		else
-			strMessage = strcat(strMessage, "\n^7(Ping ", strPlayerPingColor, ftos(nPlayerPing), "ms");
+			strMessage = strcat(strMessage, " ^7(Ping ", strPlayerPingColor, ftos(nPlayerPing), "ms");
 		if(cvar("sv_fragmessage_information_handicap"))
 			if(cvar("sv_fragmessage_information_handicap") == 2)
 				if(nPlayerHandicap <= 1)

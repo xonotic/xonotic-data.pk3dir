@@ -10,7 +10,7 @@ var float autocvar_cl_gentle;
 var float autocvar_cl_gentle_gibs;
 var float autocvar_cl_gentle_messages;
 
-var float autocvar_hud_color_bg_team;
+var float autocvar_scoreboard_color_bg_team;
 
 var float autocvar__menu_alpha;
 

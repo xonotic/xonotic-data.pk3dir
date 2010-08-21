@@ -22,6 +22,7 @@ autocvars.qh
 interpolate.qh
 teamradar.qh
 hud.qh
+scoreboard.qh
 waypointsprites.qh
 movetypes.qh
 prandom.qh

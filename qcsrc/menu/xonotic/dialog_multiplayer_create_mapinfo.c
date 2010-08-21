@@ -163,6 +163,5 @@ void XonoticMapInfoDialog_fill(entity me)
 		me.TD(me, 1, me.columns - 5.5, me.startButton = e = makeXonoticButton("Play", '0 0 0'));
 			me.startButton.onClick = MapList_LoadMap;
 			me.startButton.onClickEntity = NULL; // filled later
-		me.TDempty(me, 0.5);
 }
 #endif

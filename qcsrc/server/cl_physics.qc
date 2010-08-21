@@ -33,6 +33,10 @@ float sv_airspeedlimit_nonqw;
 .float wasFlying;
 .float spectatorspeed;
 
+.float multijump_count;
+.float multijump_ready;
+.float prevjumpbutton;
+
 /*
 =============
 PlayerJump
@@ -66,9 +70,58 @@ void PlayerJump (void)
 		return;
 	}
 
+	if (cvar("g_multijump"))
+	{
+		if (self.prevjumpbutton == FALSE && !(self.flags & FL_ONGROUND)) // jump button pressed this frame and we are in midair
+			self.multijump_ready = TRUE;  // this is necessary to check that we released the jump button and pressed it again
+		else
+			self.multijump_ready = FALSE;
+	}
+
+	if(!doublejump && self.multijump_ready && self.multijump_count < cvar("g_multijump") && self.velocity_z > cvar("g_multijump_speed"))
+	{
+		// doublejump = FALSE; // checked above in the if
+		if (cvar("g_multijump") > 0)
+		{
+			if (cvar("g_multijump_add") == 0) // in this case we make the z velocity == jumpvelocity
+			{
+				if (self.velocity_z < mjumpheight)
+				{
+					doublejump = TRUE;
+					self.velocity_z = 0;
+				}
+			}
+			else
+				doublejump = TRUE;
+
+			if(doublejump)
+			{
+				if(self.movement_x != 0 || self.movement_y != 0) // don't remove all speed if player isnt pressing any movement keys
+				{
+					float curspeed;
+					vector wishvel, wishdir;
+
+					curspeed = max(
+						vlen(vec2(self.velocity)), // current xy speed
+						vlen(vec2(antilag_takebackavgvelocity(self, max(self.lastteleporttime + sys_frametime, time - 0.25), time))) // average xy topspeed over the last 0.25 secs
+					);
+					makevectors(self.v_angle_y * '0 1 0');
+					wishvel = v_forward * self.movement_x + v_right * self.movement_y;
+					wishdir = normalize(wishvel);
+
+					self.velocity_x = wishdir_x * curspeed; // allow "dodging" at a multijump
+					self.velocity_y = wishdir_y * curspeed;
+					// keep velocity_z unchanged!
+				}
+				self.multijump_count += 1;
+			}
+		}
+		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
+	}
+
 	if (!doublejump)
-	if (!(self.flags & FL_ONGROUND))
-		return;
+		if (!(self.flags & FL_ONGROUND))
+			return;
 
 	if(!sv_pogostick)
 		if (!(self.flags & FL_JUMPRELEASED))
@@ -319,8 +372,7 @@ void RaceCarPhysics()
 		float mt;
 
 		rigvel_z -= frametime * sv_gravity; // 4x gravity plays better
-		rigvel_xy = rigvel;
-		rigvel_xy_z = 0;
+		rigvel_xy = vec2(rigvel);
 
 		if(g_bugrigs_planar_movement_car_jumping && !g_touchexplode) // touchexplode is a better way to handle collisions
 			mt = MOVE_NORMAL;
@@ -512,7 +564,7 @@ void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float acce
 
 	vel_straight = self.velocity * wishdir;
 	vel_z = self.velocity_z;
-	vel_xy = self.velocity - vel_z * '0 0 1';
+	vel_xy = vec2(self.velocity);
 	vel_perpend = vel_xy - vel_straight * wishdir;
 
 	step = accel * frametime * wishspeed0;
@@ -652,7 +704,7 @@ void SV_PlayerPhysics()
 	float buttons_prev;
 	float not_allowed_to_move;
 	string c;
-
+	
 	// fix physics stats for g_movement_highspeed
 	self.stat_sv_airaccel_qw = AdjustAirAccelQW(sv_airaccel_qw, autocvar_g_movement_highspeed);
 	if(sv_airstrafeaccel_qw)
@@ -897,6 +949,14 @@ void SV_PlayerPhysics()
 
 	if(self.classname == "player")
 	{
+		if(self.flags & FL_ONGROUND)
+		{
+			if (cvar("g_multijump") > 0)
+				self.multijump_count = 0;
+			else
+				self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
+		}
+
 		if (self.BUTTON_JUMP)
 			PlayerJump ();
 		else
@@ -904,6 +964,7 @@ void SV_PlayerPhysics()
 
 		if (self.waterlevel == WATERLEVEL_SWIMMING)
 			CheckWaterJump ();
+		self.prevjumpbutton = self.BUTTON_JUMP;
 	}
 
 	if (self.flags & FL_WATERJUMP )

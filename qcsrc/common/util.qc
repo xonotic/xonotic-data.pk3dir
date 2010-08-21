@@ -1913,3 +1913,9 @@ float get_model_parameters(string m, float sk)
 
 	return 1;
 }
+
+vector vec2(vector v)
+{
+	v_z = 0;
+	return v;
+}
