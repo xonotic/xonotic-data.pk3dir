@@ -3,11 +3,12 @@ CLASS(XonoticScreenshotViewerDialog) EXTENDS(XonoticDialog)
 	METHOD(XonoticScreenshotViewerDialog, fill, void(entity))
 	METHOD(XonoticScreenshotViewerDialog, keyDown, float(entity, float, float, float))
 	METHOD(XonoticScreenshotViewerDialog, loadScreenshot, void(entity, string))
+	METHOD(XonoticScreenshotViewerDialog, close, void(entity))
 	ATTRIB(XonoticScreenshotViewerDialog, title, string, "Screenshot Viewer")
 	ATTRIB(XonoticScreenshotViewerDialog, name, string, "ScreenshotViewer")
 	ATTRIB(XonoticScreenshotViewerDialog, intendedWidth, float, 1)
 	ATTRIB(XonoticScreenshotViewerDialog, rows, float, 25)
-	ATTRIB(XonoticScreenshotViewerDialog, columns, float, 6.5)
+	ATTRIB(XonoticScreenshotViewerDialog, columns, float, 4)
 	ATTRIB(XonoticScreenshotViewerDialog, color, vector, SKINCOLOR_DIALOG_SCREENSHOTVIEWER)
 	ATTRIB(XonoticScreenshotViewerDialog, scrList, entity, NULL)
 	ATTRIB(XonoticScreenshotViewerDialog, screenshotImage, entity, NULL)
@@ -33,11 +34,14 @@ void nextScreenshot_Click(entity btn, entity me)
 {
 	me.scrList.goScreenshot(me.scrList, +1);
 }
+void startSlideShow_Click(entity btn, entity me)
+{
+	me.scrList.startSlideShow(me.scrList);
+}
 float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, float shift)
 {
 	switch(key)
 	{
-		case K_KP_LEFTARROW:
 		case K_LEFTARROW:
 			me.scrList.goScreenshot(me.scrList, -1);
 			return 1;
@@ -45,6 +49,17 @@ float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, f
 		case K_RIGHTARROW:
 			me.scrList.goScreenshot(me.scrList, +1);
 			return 1;
+		case K_KP_ENTER:
+		case K_ENTER:
+		case K_SPACE:
+			// we cannot use SPACE/ENTER directly, as in a dialog they are needed
+			// to press buttons while browsing with only the keyboard
+			if (shift & S_CTRL)
+			{
+				me.scrList.startSlideShow(me.scrList);
+				return 1;
+			}
+			return SUPER(XonoticScreenshotViewerDialog).keyDown(me, key, ascii, shift);
 		default:
 			if (me.scrList.keyDown(me.scrList, key, ascii, shift))
 			{
@@ -55,6 +70,11 @@ float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, f
 			return SUPER(XonoticScreenshotViewerDialog).keyDown(me, key, ascii, shift);
 	}
 }
+void XonoticScreenshotViewerDialog_close(entity me)
+{
+	me.scrList.stopSlideShow(me.scrList);
+	SUPER(XonoticScreenshotViewerDialog).close(me);
+}
 void XonoticScreenshotViewerDialog_fill(entity me)
 {
 	entity e;
@@ -62,10 +82,16 @@ void XonoticScreenshotViewerDialog_fill(entity me)
 		me.TD(me, me.rows - 1, me.columns, e = makeXonoticScreenshotImage());
 			me.screenshotImage = e;
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns/2, e = makeXonoticButton("Previous", '0 0 0'));
+		me.TDempty(me, 1/4);
+		me.TD(me, 1, 1, e = makeXonoticButton("Previous", '0 0 0'));
 			e.onClick = prevScreenshot_Click;
 			e.onClickEntity = me;
-		me.TD(me, 1, me.columns/2, e = makeXonoticButton("Next", '0 0 0'));
+		me.TDempty(me, 1/4);
+		me.TD(me, 1, 1, e = makeXonoticButton("Start slide show", '0 0 0'));
+			e.onClick = startSlideShow_Click;
+			e.onClickEntity = me;
+		me.TDempty(me, 1/4);
+		me.TD(me, 1, 1, e = makeXonoticButton("Next", '0 0 0'));
 			e.onClick = nextScreenshot_Click;
 			e.onClickEntity = me;
 }

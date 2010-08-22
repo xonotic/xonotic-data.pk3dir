@@ -28,12 +28,15 @@ CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticScreenshotList, filterTime, float, 0)
 
 	ATTRIB(XonoticScreenshotList, newScreenshotTime, float, 0)
+	ATTRIB(XonoticScreenshotList, newSlideShowScreenshotTime, float, 0)
 	ATTRIB(XonoticScreenshotList, prevSelectedItem, float, 0)
 
 	ATTRIB(XonoticScreenshotList, screenshotBrowserDialog, entity, NULL)
 	ATTRIB(XonoticScreenshotList, screenshotPreview, entity, NULL)
 	ATTRIB(XonoticScreenshotList, screenshotViewerDialog, entity, NULL)
 	METHOD(XonoticScreenshotList, goScreenshot, void(entity, float))
+	METHOD(XonoticScreenshotList, startSlideShow, void(entity))
+	METHOD(XonoticScreenshotList, stopSlideShow, void(entity))
 ENDCLASS(XonoticScreenshotList)
 
 entity makeXonoticScreenshotList();
@@ -131,6 +134,7 @@ void XonoticScreenshotList_resizeNotify(entity me, vector relOrigin, vector relS
 
 void XonoticScreenshotList_setSelected(entity me, float i)
 {
+	me.stopSlideShow(me);
 	me.prevSelectedItem = me.selectedItem;
 	SUPER(XonoticScreenshotList).setSelected(me, i);
 	if (me.pressed && me.selectedItem != me.prevSelectedItem)
@@ -205,7 +209,23 @@ void XonoticScreenshotList_draw(entity me)
 		me.previewScreenshot(me);
 		me.newScreenshotTime = 0;
 	}
+	else if (me.newSlideShowScreenshotTime && time > me.newSlideShowScreenshotTime)
+	{
+		me.goScreenshot(me, +1);
+		if (me.selectedItem < me.nItems-1)
+			me.startSlideShow(me);
+	}
 	SUPER(XonoticScreenshotList).draw(me);
+}
+
+void XonoticScreenshotList_startSlideShow(entity me)
+{
+	me.newSlideShowScreenshotTime = time + 3;
+}
+
+void XonoticScreenshotList_stopSlideShow(entity me)
+{
+	me.newSlideShowScreenshotTime = 0;
 }
 
 void XonoticScreenshotList_goScreenshot(entity me, float d)
