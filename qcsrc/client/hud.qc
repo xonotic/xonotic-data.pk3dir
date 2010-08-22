@@ -1306,7 +1306,7 @@ void HUD_Panel_Highlight()
 }
 
 float highlightcheck;
-float would_backup;
+vector prev_pos, prev_size;
 void HUD_Panel_Mouse()
 {
 	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
@@ -1335,22 +1335,29 @@ void HUD_Panel_Mouse()
 
 	if(mouseClicked)
 	{
-		vector prev_pos, prev_size;
 		if(prevMouseClicked == 0)
 		{
 			HUD_Panel_Highlight(); // sets highlightedPanel, highlightedAction, panel_click_distance, panel_click_resizeorigin
 									// and calls HUD_Panel_UpdatePosSizeForId() for the highlighted panel
-			would_backup = TRUE;
-		}
-		else if (would_backup)
-		{
-			// this is not the actual backup! Saving pos and size values
-			// only to check later if they are different from new values
 			prev_pos = panel_pos;
 			prev_size = panel_size;
 		}
+		else
+			HUD_Panel_UpdatePosSizeForId(highlightedPanel)
 
-		hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
+		if (prev_pos != panel_pos || prev_size != panel_size)
+		{
+			hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
+			// backup!
+			panel_pos_backup = prev_pos;
+			panel_size_backup = prev_size;
+			highlightedPanel_backup = highlightedPanel;
+		}
+		else
+			// in case the clicked panel is inside another panel and we aren't
+			// moving it, avoid the immediate "fix" of its position/size
+			// (often unwanted and hateful) by disabling collisions check
+			hud_configure_checkcollisions = false;
 
 		if(highlightedAction == 1)
 			HUD_Panel_SetPos(mousepos - panel_click_distance);
@@ -1371,18 +1378,6 @@ void HUD_Panel_Mouse()
 				mySize_y = mousepos_y - (panel_click_resizeorigin_y - panel_click_distance_y);
 			}
 			HUD_Panel_SetPosSize(mySize);
-		}
-
-		HUD_Panel_UpdatePosSizeForId(highlightedPanel)
-		if (prevMouseClicked)
-		if (would_backup)
-		if (prev_pos != panel_pos || prev_size != panel_size)
-		{
-			// backup!
-			panel_pos_backup = prev_pos;
-			panel_size_backup = prev_size;
-			highlightedPanel_backup = highlightedPanel;
-			would_backup = FALSE;
 		}
 
 		// doubleclick check
