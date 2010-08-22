@@ -141,7 +141,7 @@ void XonoticScreenshotList_setSelected(entity me, float i)
 	{
 		// while dragging the scrollbar (or an item)
 		// for a smooth mouse movement do not load immediately the new selected images
-		me.newScreenshotTime = time + 0.2;
+		me.newScreenshotTime = time + 0.22; // dragging an item we need a delay > 0.2 (from listbox: me.dragScrollTimer = time + 0.2;)
 	}
 	else if (time > me.newScreenshotTime)
 	{

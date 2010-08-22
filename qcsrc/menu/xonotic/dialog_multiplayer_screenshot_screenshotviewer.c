@@ -61,6 +61,11 @@ float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, f
 			}
 			return SUPER(XonoticScreenshotViewerDialog).keyDown(me, key, ascii, shift);
 		default:
+			// mousewheel doesn't always reach the first/last screenshot
+			if (key == K_MWHEELUP)
+				key = K_PGUP;
+			else if (key == K_MWHEELDOWN)
+				key = K_PGDN;
 			if (me.scrList.keyDown(me.scrList, key, ascii, shift))
 			{
 				// keyDown has already changed the selected item
