@@ -1095,17 +1095,29 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			if (bInputType == 1)
 				return true;
 
-			if (highlightedPanel_copied != -1 && highlightedPanel_prev != -1)
-			{
-				// backup first!
-				panel_pos_backup = panel_pos;
-				panel_size_backup = panel_size;
-				highlightedPanel_backup = highlightedPanel_prev;
+			if (highlightedPanel_copied == -1 || highlightedPanel_prev == -1)
+				return true;
 
-				string s;
-				s = strcat(ftos(panel_size_copied_x/vid_conwidth), " ", ftos(panel_size_copied_y/vid_conheight));
-				cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
-			}
+			HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev)
+
+			// reduce size if it'd go beyond screen boundaries
+			vector tmp_size = panel_size_copied;
+			if (panel_pos_x + panel_size_copied_x > vid_conwidth)
+				tmp_size_x = vid_conwidth - panel_pos_x;
+			if (panel_pos_y + panel_size_copied_y > vid_conheight)
+				tmp_size_y = vid_conheight - panel_pos_y;
+
+			if (panel_size == tmp_size)
+				return true;
+
+			// backup first!
+			panel_pos_backup = panel_pos;
+			panel_size_backup = panel_size;
+			highlightedPanel_backup = highlightedPanel_prev;
+
+			string s;
+			s = strcat(ftos(tmp_size_x/vid_conwidth), " ", ftos(tmp_size_y/vid_conheight));
+			cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
 		}
 		else if(nPrimary == 'z') // undo last action
 		{
