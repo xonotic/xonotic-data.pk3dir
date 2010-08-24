@@ -672,6 +672,7 @@ float CheatCommand(float argc)
 	END_CHEAT_FUNCTION();
 }
 
+void crosshair_trace_plusvisibletriggers(entity pl);
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
 void Drag_Finish(entity dragger);
 float Drag_IsDraggable(entity draggee);
@@ -725,7 +726,7 @@ float CheatFrame()
 		if(Drag_CanDrag(self))
 			if(self.BUTTON_DRAG)
 			{
-				crosshair_trace(self);
+				crosshair_trace_plusvisibletriggers(self);
 				if(trace_ent)
 					if(Drag_IsDraggable(trace_ent))
 						switch(0)
@@ -751,6 +752,22 @@ float CheatFrame()
 
 
 // ENTITY DRAGGING
+
+void crosshair_trace_plusvisibletriggers(entity pl)
+{
+	entity first;
+	entity e;
+	first = findchainfloat(solid, SOLID_TRIGGER);
+
+	for (e = first; e; e = e.chain)
+		if (e.model != "")
+			e.solid = SOLID_BSP;
+
+	crosshair_trace(pl);
+
+	for (e = first; e; e = e.chain)
+		e.solid = SOLID_TRIGGER;
+}
 
 // on dragger:
 .float draggravity;
@@ -828,13 +845,15 @@ float Drag_IsDraggable(entity draggee)
 		return FALSE;
 	if(draggee.classname == "func_button")
 		return FALSE;
-	if(draggee.model == "")
-		return FALSE;
+//	if(draggee.model == "")
+//		return FALSE;
 	if(draggee.classname == "spectator")
 		return FALSE;
 	if(draggee.classname == "observer")
 		return FALSE;
 	if(draggee.classname == "exteriorweaponentity")
+		return FALSE;
+	if(draggee.classname == "weaponentity")
 		return FALSE;
 
 	return TRUE;
