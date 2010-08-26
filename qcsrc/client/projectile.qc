@@ -72,7 +72,8 @@ void Projectile_Draw()
 		else
 			Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 		if(!(self.move_flags & FL_ONGROUND))
-			self.angles = vectoangles(self.velocity);
+			if(self.velocity != '0 0 0')
+				self.angles = vectoangles(self.velocity);
 	}
 	else
 	{
@@ -318,12 +319,12 @@ void Ent_Projectile()
 				self.maxs = '3 3 3';
 				break;
 			case PROJECTILE_GRENADE:
-				self.mins = '0 0 -3';
-				self.maxs = '0 0 -3';
+				self.mins = '-3 -3 -3';
+				self.maxs = '3 3 3';
 				break;
 			case PROJECTILE_GRENADE_BOUNCING:
-				self.mins = '0 0 -3';
-				self.maxs = '0 0 -3';
+				self.mins = '-3 -3 -3';
+				self.maxs = '3 3 3';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
 				self.move_bounce_factor = g_balance_grenadelauncher_secondary_bouncefactor;
