@@ -29,11 +29,11 @@ void trigger_teleport_use()
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
-	if (telefragger.classname == "player" && telefragger.health >= 1)
+	if (player.classname == "player" && player.health >= 1)
 	{
 		TDEATHLOOP(org)
 		{
-			if not(teamplay && cvar("g_telefrags_teamplay") && head.team == telefragger.team)
+			if not(teamplay && cvar("g_telefrags_teamplay") && head.team == player.team)
 				if(head.classname == "player")
 					if(head.health >= 1)
 						return 1;
@@ -46,9 +46,9 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 {
 	TDEATHLOOP(player.origin)
 	{
-		if (telefragger.classname == "player" && telefragger.health >= 1)
+		if (player.classname == "player" && player.health >= 1)
 		{
-			if not(teamplay && cvar("g_telefrags_teamplay") && head.team == telefragger.team)
+			if not(teamplay && cvar("g_telefrags_teamplay") && head.team == player.team)
 			{
 				if(head.classname == "player")
 					if(head.health >= 1)
@@ -70,9 +70,10 @@ void spawn_tdeath(vector v0, entity e, vector v)
 #define TELEPORT_FLAG_SOUND 1
 #define TELEPORT_FLAG_PARTICLES 2
 #define TELEPORT_FLAG_TDEATH 4
+#define TELEPORT_FLAG_FORCE_TDEATH 8
 
 #define TELEPORT_FLAGS_WARPZONE   0
-#define TELEPORT_FLAGS_PORTAL     (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES)
+#define TELEPORT_FLAGS_PORTAL     (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH | TELEPORT_FLAG_FORCE_TDEATH)
 #define TELEPORT_FLAGS_TELEPORTER (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH)
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
@@ -114,7 +115,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	if(player.classname == "player")
 	{
 		if(tflags & TELEPORT_FLAG_TDEATH)
-			if(player.takedamage && player.deadflag == DEAD_NO && !g_race && !g_cts && cvar("g_telefrags"))
+			if(player.takedamage && player.deadflag == DEAD_NO && !g_race && !g_cts && (cvar("g_telefrags") || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
 				tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
 
 		// player no longer is on ground
