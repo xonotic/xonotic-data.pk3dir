@@ -29,13 +29,14 @@ void trigger_teleport_use()
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
-	TDEATHLOOP(org)
+	if (telefragger.classname == "player" && telefragger.health >= 1)
 	{
-		if ((player.classname == "player") && (player.health >= 1))
+		TDEATHLOOP(org)
 		{
-			if(head.classname == "player")
-				if(head.health >= 1)
-					return 1;
+			if not(teamplay && cvar("g_telefrags_teamplay") && head.team == telefragger.team)
+				if(head.classname == "player")
+					if(head.health >= 1)
+						return 1;
 		}
 	}
 	return 0;
@@ -45,15 +46,16 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 {
 	TDEATHLOOP(player.origin)
 	{
-		if ((player.classname == "player") && (player.health >= 1))
+		if (telefragger.classname == "player" && telefragger.health >= 1)
 		{
-			if(head.classname == "player")
-				if(head.health >= 1)
-					++tdeath_hit;
-			Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG, head.origin, '0 0 0');
+			if not(teamplay && cvar("g_telefrags_teamplay") && head.team == telefragger.team)
+			{
+				if(head.classname == "player")
+					if(head.health >= 1)
+						++tdeath_hit;
+				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG, head.origin, '0 0 0');
+			}
 		}
-		else if (telefragger.health < 1) // corpses gib
-			Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG, head.origin, '0 0 0');
 		else // dead bodies and monsters gib themselves instead of telefragging
 			Damage (telefragger, teleporter, telefragger, 10000, DEATH_TELEFRAG, telefragger.origin, '0 0 0');
 	}
