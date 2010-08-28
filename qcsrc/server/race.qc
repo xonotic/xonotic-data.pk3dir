@@ -101,9 +101,7 @@ void race_InitSpectator()
 string rr;
 float grecordtime[RANKINGS_CNT];
 string grecordholder[RANKINGS_CNT];
-#ifdef UID
 string grecorduid[RANKINGS_CNT];
-#endif
 float worst_time; // last ranked time
 float have_recs; // have we already read the records from the database before?
 float race_GetTime(float pos) {
@@ -117,15 +115,11 @@ float race_GetTime(float pos) {
 		for(i=0;i<RANKINGS_CNT;++i) {
 			grecordtime[i] = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "time", ftos(i))));
 			grecordholder[i] = strzone(db_get(ServerProgsDB, strcat(GetMapname(), rr, "netname", ftos(i))));
-#ifdef UID
-			grecorduid[i] = strzone(db_get(ServerProgsDB, strcat(GetMapname(), rr, "uid", ftos(i))));
-#endif
+			grecorduid[i] = strzone(db_get(ServerProgsDB, strcat(GetMapname(), rr, "crypto_idfp", ftos(i))));
 		}
 		grecordtime[0] = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "time")));
 		grecordholder[0] = strzone(db_get(ServerProgsDB, strcat(GetMapname(), rr, "netname")));
-#ifdef UID
-		grecorduid[0] = strzone(db_get(ServerProgsDB, strcat(GetMapname(), rr, "uid")));
-#endif
+		grecorduid[0] = strzone(db_get(ServerProgsDB, strcat(GetMapname(), rr, "crypto_idfp")));
 		worst_time = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, strcat("time", ftos(RANKINGS_CNT-1)))));
 		have_recs = 1;
 	}
@@ -137,12 +131,14 @@ string race_GetName(float pos) { // these other functions assume that race_GetTi
 	return grecordholder[pos-1];
 }
 
-#ifdef UID
 float race_CheckUID(string myuid, string net_name) { // return existing UID or player name ranking pos, else 0
 	float i;
-	for (i=RANKINGS_CNT-1;i>=0;--i)
-		if(grecorduid[i] == myuid)
-			return i+1;
+	if(myuid)
+	{
+		for (i=RANKINGS_CNT-1;i>=0;--i)
+			if(grecorduid[i] == myuid)
+				return i+1;
+	}
 	for (i=RANKINGS_CNT-1;i>=0;--i)
 		if(grecordholder[i] == net_name)
 			return i+1;
@@ -224,11 +220,7 @@ string race_PlaceName(float pos) {
 void race_SetTime(entity e, float t, float match_rec) {
 	float pos, prevpos;
 	pos = race_GetPos(t);
-#ifdef UID
-	prevpos = race_CheckUID(e.uid, e.netname);
-#else
-	prevpos = race_CheckName(e.netname);
-#endif
+	prevpos = race_CheckUID(e.crypto_idfp, e.netname);
 
 	float oldrec;
 	string recorddifference;
@@ -254,37 +246,29 @@ void race_SetTime(entity e, float t, float match_rec) {
 		for (i=prevpos-1;i>pos-1;--i) {
 			db_put(ServerProgsDB, strcat(GetMapname(), rr, "time", ftos(i)), ftos(grecordtime[i-1]));
 			db_put(ServerProgsDB, strcat(GetMapname(), rr, "netname", ftos(i)), grecordholder[i-1]);
-#ifdef UID
-			db_put(ServerProgsDB, strcat(GetMapname(), rr, "uid", ftos(i)), grecorduid[i-1]);
-#endif
+			db_put(ServerProgsDB, strcat(GetMapname(), rr, "crypto_idfp", ftos(i)), grecorduid[i-1]);
 			grecordtime[i] = grecordtime[i-1];
 
 			if (grecordholder[i])
 				strunzone(grecordholder[i]);
 			grecordholder[i] = strzone(grecordholder[i-1]);
-#ifdef UID
 			if (grecorduid[i])
 				strunzone(grecorduid[i]);
 			grecorduid[i] = strzone(grecorduid[i-1]);
-#endif
 		}
 	} else { // player has no ranked record yet
 		for (i=RANKINGS_CNT-1;i>pos-1;--i) {
 			db_put(ServerProgsDB, strcat(GetMapname(), rr, "time", ftos(i)), ftos(grecordtime[i-1]));
 			db_put(ServerProgsDB, strcat(GetMapname(), rr, "netname", ftos(i)), grecordholder[i-1]);
-#ifdef UID
-			db_put(ServerProgsDB, strcat(GetMapname(), rr, "uid", ftos(i)), grecorduid[i-1]);
-#endif
+			db_put(ServerProgsDB, strcat(GetMapname(), rr, "crypto_idfp", ftos(i)), grecorduid[i-1]);
 			grecordtime[i] = grecordtime[i-1];
 
 			if (grecordholder[i])
 				strunzone(grecordholder[i]);
 			grecordholder[i] = strzone(grecordholder[i-1]);
-#ifdef UID
 			if (grecorduid[i])
 				strunzone(grecorduid[i]);
 			grecorduid[i] = strzone(grecorduid[i-1]);
-#endif
 		}
 	}
 	
@@ -292,39 +276,31 @@ void race_SetTime(entity e, float t, float match_rec) {
 	if (pos == 1) {
 		db_put(ServerProgsDB, strcat(GetMapname(), rr, "time"), ftos(t));
 		db_put(ServerProgsDB, strcat(GetMapname(), rr, "netname"), e.netname);
-#ifdef UID
-		db_put(ServerProgsDB, strcat(GetMapname(), rr, "uid"), e.uid);
-#endif
+		db_put(ServerProgsDB, strcat(GetMapname(), rr, "crypto_idfp"), e.crypto_idfp);
 
 		grecordtime[0] = t;
 
 		if (grecordholder[0])
 			strunzone(grecordholder[0]);
 		grecordholder[0] = strzone(e.netname);
-#ifdef UID
 		if (grecorduid[0])
 			strunzone(grecorduid[0]);
-		grecorduid[0] = strzone(e.uid);
-#endif
+		grecorduid[0] = strzone(e.crypto_idfp);
 		write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
 		race_send_recordtime(MSG_ALL);
 	} else {
 		db_put(ServerProgsDB, strcat(GetMapname(), rr, "time", ftos(pos-1)), ftos(t));
 		db_put(ServerProgsDB, strcat(GetMapname(), rr, "netname", ftos(pos-1)), e.netname);
-#ifdef UID
-		db_put(ServerProgsDB, strcat(GetMapname(), rr, "uid", ftos(pos-1)), e.uid);
-#endif
+		db_put(ServerProgsDB, strcat(GetMapname(), rr, "crypto_idfp", ftos(pos-1)), e.crypto_idfp);
 
 		grecordtime[pos-1] = t;
 
 		if (grecordholder[pos-1])
 			strunzone(grecordholder[pos-1]);
 		grecordholder[pos-1] = strzone(e.netname);
-#ifdef UID
 		if (grecorduid[pos-1])
 			strunzone(grecorduid[pos-1]);
-		grecorduid[pos-1] = strzone(e.uid);
-#endif
+		grecorduid[pos-1] = strzone(e.crypto_idfp);
 	}
 
 	if (pos == RANKINGS_CNT)
@@ -368,53 +344,41 @@ void race_DeleteTime(float pos) {
 		if (i == 0) {
 			db_put(ServerProgsDB, strcat(GetMapname(), rr, "time"), ftos(grecordtime[1]));
 			db_put(ServerProgsDB, strcat(GetMapname(), rr, "netname"), grecordholder[1]);
-#ifdef UID
-			db_put(ServerProgsDB, strcat(GetMapname(), rr, "uid"), grecorduid[1]);
-#endif
+			db_put(ServerProgsDB, strcat(GetMapname(), rr, "crypto_idfp"), grecorduid[1]);
 			grecordtime[0] = grecordtime[1];
 			if (grecordholder[i])
 				strunzone(grecordholder[0]);
 			grecordholder[0] = strzone(grecordholder[1]);
 
-#ifdef UID
 			if (grecorduid[i])
 				strunzone(grecorduid[0]);
 			grecorduid[0] = strzone(grecorduid[1]);
-#endif
 		}
 		else if (i == RANKINGS_CNT-1) {
 			db_put(ServerProgsDB, strcat(GetMapname(), rr, "time", ftos(i)), string_null);
 			db_put(ServerProgsDB, strcat(GetMapname(), rr, "netname", ftos(i)), string_null);
-#ifdef UID
-			db_put(ServerProgsDB, strcat(GetMapname(), rr, "uid", ftos(i)), string_null);
-#endif
+			db_put(ServerProgsDB, strcat(GetMapname(), rr, "crypto_idfp", ftos(i)), string_null);
 			grecordtime[i] = 0;
 			if (grecordholder[i])
 				strunzone(grecordholder[i]);
 			grecordholder[i] = string_null;
 
-#ifdef UID
 			if (grecorduid[i])
 				strunzone(grecorduid[i]);
 			grecorduid[i] = string_null;
-#endif
 		}
 		else {
 			db_put(ServerProgsDB, strcat(GetMapname(), rr, "time", ftos(i)), ftos(grecordtime[i+1]));
 			db_put(ServerProgsDB, strcat(GetMapname(), rr, "netname", ftos(i)), grecordholder[i+1]);
-#ifdef UID
-			db_put(ServerProgsDB, strcat(GetMapname(), rr, "uid", ftos(i)), grecorduid[i+1]);
-#endif
+			db_put(ServerProgsDB, strcat(GetMapname(), rr, "crypto_idfp", ftos(i)), grecorduid[i+1]);
 			grecordtime[i] = grecordtime[i+1];
 			if (grecordholder[i])
 				strunzone(grecordholder[i]);
 			grecordholder[i] = strzone(grecordholder[i+1]);
 
-#ifdef UID
 			if (grecorduid[i])
 				strunzone(grecorduid[i]);
 			grecorduid[i] = strzone(grecorduid[i+1]);
-#endif
 		}
 	}
 
