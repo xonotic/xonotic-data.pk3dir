@@ -350,3 +350,12 @@ string(float, float) getgamedirinfo = #626;
 float log(float f) = #532;
 
 string(string format, ...) sprintf = #627;
+
+//DP_CRYPTO
+//idea: divVerent
+//darkplaces implementation: divVerent
+//field definitions: (MENUQC)
+string crypto_getkeyfp(string serveraddress) = #633; // retrieves the cached host key's CA fingerprint of a server given by IP address
+string crypto_getidfp(string serveraddress) = #634; // retrieves the cached host key fingerprint of a server given by IP address
+string crypto_getencryptlevel(string serveraddress) = #635; // 0 if never encrypting, 1 supported, 2 requested, 3 required, appended by list of allowed methods in order of preference ("AES128"), preceded by a space each
+//description:
