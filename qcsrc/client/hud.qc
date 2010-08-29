@@ -3742,19 +3742,15 @@ void HUD_VoteWindow(void)
 	pos = panel_pos;
 	mySize = panel_size;
 
-	panel_fg_alpha = autocvar_hud_panel_fg_alpha;
-	panel_bg_alpha_str = autocvar_hud_panel_vote_bg_alpha;
+	if(!autocvar__hud_configure)
+	{
+		panel_fg_alpha = autocvar_hud_panel_fg_alpha;
+		panel_bg_alpha_str = autocvar_hud_panel_vote_bg_alpha;
 
-	if(panel_bg_alpha_str == "") {
-		panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha);
-	}
-	panel_bg_alpha = stof(panel_bg_alpha_str);
-	if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == active_panel) {
-		panel_bg_alpha = (1 - autocvar__menu_alpha) * max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha) + autocvar__menu_alpha * panel_bg_alpha;
-	} else if(autocvar__hud_configure) {
-		panel_bg_alpha = max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha);
-	} if(autocvar__hud_configure && !panel_enabled) {
-		panel_bg_alpha = 0.25;
+		if(panel_bg_alpha_str == "") {
+			panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha);
+		}
+		panel_bg_alpha = stof(panel_bg_alpha_str);
 	}
 
 	string s;
@@ -3779,9 +3775,9 @@ void HUD_VoteWindow(void)
 	if(!vote_alpha)
 		return;
 
-	a = vote_alpha * bound(autocvar_hud_panel_vote_alreadyvoted_alpha, 1 - vote_highlighted, 1);
-
+	a = panel_bg_alpha * vote_alpha * bound(autocvar_hud_panel_vote_alreadyvoted_alpha, 1 - vote_highlighted, 1);
 	HUD_Panel_DrawBg(a);
+	a = panel_fg_alpha * vote_alpha * bound(autocvar_hud_panel_vote_alreadyvoted_alpha, 1 - vote_highlighted, 1);
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
