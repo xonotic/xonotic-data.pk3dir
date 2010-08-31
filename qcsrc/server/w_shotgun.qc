@@ -94,6 +94,8 @@ void W_Shotgun_Attack2 (void)
 
 void spawnfunc_weapon_shotgun(); // defined in t_items.qc
 
+.float shotgun_primarytime;
+
 float w_shotgun(float req)
 {
 	if (req == WR_AIM)
@@ -104,10 +106,16 @@ float w_shotgun(float req)
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, cvar("g_balance_shotgun_primary_refire")))
 		{
-			W_Shotgun_Attack();
-			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_shotgun_primary_animtime"), w_ready);
+			if (time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+			{
+				if(weapon_prepareattack(0, cvar("g_balance_shotgun_primary_animtime")))
+				{
+					W_Shotgun_Attack();
+					self.shotgun_primarytime = time + cvar("g_balance_shotgun_primary_refire");
+					weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_shotgun_primary_animtime"), w_ready);
+				}
+			}
 		}
 		if (self.BUTTON_ATCK2 && cvar("g_balance_shotgun_secondary"))
 		if (weapon_prepareattack(1, cvar("g_balance_shotgun_secondary_refire")))
