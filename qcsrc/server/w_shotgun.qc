@@ -65,7 +65,7 @@ void shotgun_meleethink (void)
 	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, targpos, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage, also remove self
-	if(trace_fraction < 1 && trace_ent.takedamage == DAMAGE_AIM && trace_ent.classname == "player")
+	if(trace_fraction < 1 && trace_ent.takedamage == DAMAGE_AIM && (trace_ent.classname == "player" || trace_ent.classname == "body"))
 	{
 		vector force;
 		force = angle * cvar("g_balance_shotgun_secondary_force");
