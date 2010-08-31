@@ -4564,6 +4564,11 @@ void HUD_EngineInfo(void)
 
 // Info messages panel (#14)
 //
+#define drawInfoMessage(s)\
+	if(autocvar_hud_panel_infomessages_flip)\
+		o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize);\
+	drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);\
+	o_y += fontsize_y;
 void HUD_InfoMessages(void)
 {
 	if(!autocvar_hud_panel_infomessages && !autocvar__hud_configure)
@@ -4622,35 +4627,22 @@ void HUD_InfoMessages(void)
 				s = "^1Observing";
 			else
 				s = strcat("^1Spectating: ^7", GetPlayerName(spectatee_status - 1));
-
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
 				s = strcat("^1Press ^3", getcommandkey("primary fire", "+fire"), "^1 to spectate");
 			else
 				s = strcat("^1Press ^3", getcommandkey("primary fire", "+fire"), "^1 for another player");
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
 				s = strcat("^1Use ^3", getcommandkey("next weapon", "weapnext"), "^1 or ^3", getcommandkey("previous weapon", "weapprev"), "^1 to change the speed");
 			else
 				s = strcat("^1Press ^3", getcommandkey("secondary fire", "+fire2"), "^1 to observe");
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 
 			s = strcat("^1Press ^3", getcommandkey("server info", "+show_info"), "^1 for gamemode info");
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 
 			if(gametype == GAME_ARENA)
 				s = "^1Wait for your turn to join";
@@ -4667,10 +4659,7 @@ void HUD_InfoMessages(void)
 			}
 			else
 				s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 
 			//show restart countdown:
 			if (time < getstatf(STAT_GAMESTARTTIME)) {
@@ -4679,16 +4668,13 @@ void HUD_InfoMessages(void)
 				countdown = ceil(getstatf(STAT_GAMESTARTTIME) - time);
 				s = strcat("^1Game starts in ^3", ftos(countdown), "^1 seconds");
 				drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-				o += eY * fontsize_y;
+				o_y += fontsize_y;
 			}
 		}
 		if(warmup_stage && !intermission)
 		{
 			s = "^2Currently in ^1warmup^2 stage!";
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 		}
 
 		string blinkcolor;
@@ -4713,18 +4699,12 @@ void HUD_InfoMessages(void)
 				else
 					s = strcat("^2Waiting for others to ready up...");
 			}
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 		}
 		else if(warmup_stage && !intermission && !spectatee_status)
 		{
 			s = strcat("^2Press ^3", getcommandkey("ready", "ready"), "^2 to end warmup");
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 		}
 
 		if(teamplay && !intermission && !spectatee_status && gametype != GAME_CA && teamnagger)
@@ -4750,11 +4730,7 @@ void HUD_InfoMessages(void)
 					if (tm.team != COLOR_SPECTATOR)
 					if (tm.team_size == ts_max)
 						s = strcat(s, " Press ^3", getcommandkey("team menu", "menu_showteamselect"), blinkcolor, " to adjust");
-
-					if(autocvar_hud_panel_infomessages_flip)
-						o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-					drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-					o += eY * fontsize_y;
+					drawInfoMessage(s)
 				}
 			}
 		}
@@ -4762,25 +4738,13 @@ void HUD_InfoMessages(void)
 	else 
 	{
 		s = "^7Press ^3ESC ^7to show HUD options.";
-		if(autocvar_hud_panel_infomessages_flip)
-			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-		drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
+		drawInfoMessage(s)
 		s = "^3Doubleclick ^7a panel for panel-specific options.";
-		if(autocvar_hud_panel_infomessages_flip)
-			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-		drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
+		drawInfoMessage(s)
 		s = "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and";
-		if(autocvar_hud_panel_infomessages_flip)
-			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-		drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
+		drawInfoMessage(s)
 		s = "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments.";
-		if(autocvar_hud_panel_infomessages_flip)
-			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-		drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
+		drawInfoMessage(s)
 	}
 }
 
