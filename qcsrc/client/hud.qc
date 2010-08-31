@@ -4629,9 +4629,9 @@ void HUD_InfoMessages(void)
 			o += eY * fontsize_y;
 
 			if(spectatee_status == -1)
-				s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 to spectate");
+				s = strcat("^1Press ^3", getcommandkey("primary fire", "+fire"), "^1 to spectate");
 			else
-				s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 for another player");
+				s = strcat("^1Press ^3", getcommandkey("primary fire", "+fire"), "^1 for another player");
 			if(autocvar_hud_panel_infomessages_flip)
 				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
 			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
@@ -4640,7 +4640,7 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = strcat("^1Use ^3", getcommandkey("next weapon", "weapnext"), "^1 or ^3", getcommandkey("previous weapon", "weapprev"), "^1 to change the speed");
 			else
-				s = strcat("^1Press ^3", getcommandkey("secondary fire", "+attack2"), "^1 to observe");
+				s = strcat("^1Press ^3", getcommandkey("secondary fire", "+fire2"), "^1 to observe");
 			if(autocvar_hud_panel_infomessages_flip)
 				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
 			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
