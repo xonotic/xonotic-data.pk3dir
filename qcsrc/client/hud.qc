@@ -2591,35 +2591,35 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			if (alsoprint)
 				print("^1", sprintf(Weapon_SuicideMessage(type), strcat(s1, "^1")), "\n");
 		} else if (type == DEATH_KILL) {
-			HUD_KillNotify_Push(s1, "", 0, DEATH_KILL, s1));
+			HUD_KillNotify_Push(s1, "", 0, DEATH_KILL, s1);
 			if (alsoprint)
 				print(sprintf("^1%s^1 couldn't take it anymore\n", s1));
 		} else if (type == DEATH_ROT) {
-			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC, s1));
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC, s1);
 			if (alsoprint)
 				print(sprintf("^1%s^1 died\n", s1));
 		} else if (type == DEATH_NOAMMO) {
-			HUD_KillNotify_Push(s1, "", 0, DEATH_NOAMMO, s1));
+			HUD_KillNotify_Push(s1, "", 0, DEATH_NOAMMO, s1);
 			if (alsoprint)
 				print(sprintf("^7%s^7 committed suicide. What's the point of living without ammo?\n", s1));
 		} else if (type == DEATH_CAMP) {
-			HUD_KillNotify_Push(s1, "", 0, DEATH_CAMP, s1));
+			HUD_KillNotify_Push(s1, "", 0, DEATH_CAMP, s1);
 			if (alsoprint)
 				print(sprintf("^1%s^1 thought they found a nice camping ground\n", s1));
 		} else if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
-			HUD_KillNotify_Push(s1, "", 0, type, s1));
+			HUD_KillNotify_Push(s1, "", 0, type, s1);
 			if (alsoprint)
 				print(sprintf("^1%s^1 didn't become friends with the Lord of Teamplay\n", s1));
 		} else if (type == DEATH_CHEAT) {
-			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC, s1));
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC, s1);
 			if (alsoprint)
 				print(sprintf("^1%s^1 unfairly eliminated themself\n", s1));
 		} else if (type == DEATH_FIRE) {
-			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC, s1));
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC, s1);
 			if (alsoprint)
 				print(sprintf("^1%s^1 burned to death\n", s1));
 		} else if (type != DEATH_TEAMCHANGE && type != DEATH_QUIET) {
-			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC, s1));
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC, s1);
 			if (alsoprint)
 				print(sprintf("^1%s^1 couldn't resist the urge to self-destruct\n", s1));
 		} 
