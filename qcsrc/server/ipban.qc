@@ -341,39 +341,32 @@ float Ban_GetClientIP(entity client)
 	else
 		ban_idfp = string_null;
 
-	if(cvar("g_banned_list_idmode") && ban_idfp)
-	{
-		ban_ip1 = ban_ip2 = ban_ip3 = ban_ip4 = ban_idfp;
-	}
-	else
-	{
-		s = client.netaddress;
-		
-		i1 = strstrofs(s, ".", 0);
-		if(i1 < 0)
-			return FALSE;
-		i2 = strstrofs(s, ".", i1 + 1);
-		if(i2 < 0)
-			return FALSE;
-		i3 = strstrofs(s, ".", i2 + 1);
-		if(i3 < 0)
-			return FALSE;
-		i4 = strstrofs(s, ".", i3 + 1);
-		if(i4 >= 0)
-			return FALSE;
-		
-		ban_ip1 = substring(s, 0, i1);
-		ban_ip2 = substring(s, 0, i2);
-		ban_ip3 = substring(s, 0, i3);
-		ban_ip4 = strcat1(s);
-	}
+	s = client.netaddress;
+
+	i1 = strstrofs(s, ".", 0);
+	if(i1 < 0)
+		return FALSE;
+	i2 = strstrofs(s, ".", i1 + 1);
+	if(i2 < 0)
+		return FALSE;
+	i3 = strstrofs(s, ".", i2 + 1);
+	if(i3 < 0)
+		return FALSE;
+	i4 = strstrofs(s, ".", i3 + 1);
+	if(i4 >= 0)
+		return FALSE;
+
+	ban_ip1 = substring(s, 0, i1);
+	ban_ip2 = substring(s, 0, i2);
+	ban_ip3 = substring(s, 0, i3);
+	ban_ip4 = strcat1(s);
 
 	return TRUE;
 }
 
 float Ban_IsClientBanned(entity client, float idx)
 {
-	float i, b, e;
+	float i, b, e, ipbanned;
 	if(!ban_loaded)
 		Ban_LoadBans();
 	if(!Ban_GetClientIP(client))
@@ -388,18 +381,22 @@ float Ban_IsClientBanned(entity client, float idx)
 		b = idx;
 		e = idx + 1;
 	}
+	ipbanned = FALSE;
 	for(i = b; i < e; ++i)
 	{
 		string s;
 		if(time > ban_expire[i])
 			continue;
 		s = ban_ip[i];
-		if(ban_ip1 == s) return TRUE;
-		if(ban_ip2 == s) return TRUE;
-		if(ban_ip3 == s) return TRUE;
-		if(ban_ip4 == s) return TRUE;
+		if(ban_ip1 == s) ipbanned = TRUE;
+		if(ban_ip2 == s) ipbanned = TRUE;
+		if(ban_ip3 == s) ipbanned = TRUE;
+		if(ban_ip4 == s) ipbanned = TRUE;
 		if(ban_idfp == s) return TRUE;
 	}
+	if(ipbanned)
+		if(!cvar("g_banned_list_idmode") || !ban_idfp)
+			return TRUE;
 	return FALSE;
 }
 
@@ -543,10 +540,9 @@ void Ban_KickBanClient(entity client, float bantime, float masksize, string reas
 		default:
 			Ban_Insert(ban_ip4, bantime, reason, 1);
 			break;
-		case 0:
-			Ban_Insert(ban_idfp, bantime, reason, 1);
-			break;
 	}
+	if(ban_idfp)
+		Ban_Insert(ban_idfp, bantime, reason, 1);
 	/*
 	 * not needed, as we enforce the ban in Ban_Insert anyway
 	// and kick him
