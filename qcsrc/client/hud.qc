@@ -2577,7 +2577,7 @@ void HUD_KillNotify_Push(string attacker, string victim, float actiontype, float
 	killnotify_victims[0] = strzone(victim);
 }
 
-void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
+void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s1 = attacker, s2 = victim
 {
 	float w;
 	float alsoprint, gentle;
@@ -2658,101 +2658,100 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg)
 		}
 		else if(type == KILL_FIRST_BLOOD)
 			print("^1",s1, "^1 drew first blood", "\n");
-		// TODO: icon!
 		else if (type == DEATH_TELEFRAG) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_TELEFRAG);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_TELEFRAG);
 			if(gentle)
-				print ("^1",s1, "^1 tried to occupy ", s2, "^1's teleport destination space\n");
+				print ("^1",s2, "^1 tried to occupy ", s1, "^1's teleport destination space\n");
 			else
-				print ("^1",s1, "^1 was telefragged by ", s2, "\n");
+				print ("^1",s2, "^1 was telefragged by ", s1, "\n");
 		}
 		else if (type == DEATH_DROWN) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_DROWN);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_DROWN);
 			if(alsoprint)
-				print ("^1",s1, "^1 was drowned by ", s2, "\n");
+				print ("^1",s2, "^1 was drowned by ", s1, "\n");
 		}
 		else if (type == DEATH_SLIME) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_SLIME);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_SLIME);
 			if(alsoprint)
-				print ("^1",s1, "^1 was slimed by ", s2, "\n");
+				print ("^1",s2, "^1 was slimed by ", s1, "\n");
 		}
 		else if (type == DEATH_LAVA) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_LAVA);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_LAVA);
 			if(alsoprint)
-				print ("^1",s1, "^1 was cooked by ", s2, "\n");
+				print ("^1",s2, "^1 was cooked by ", s1, "\n");
 		}
 		else if (type == DEATH_FALL) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_FALL);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_FALL);
 			if(alsoprint)
-				print ("^1",s1, "^1 was grounded by ", s2, "\n");
+				print ("^1",s2, "^1 was grounded by ", s1, "\n");
 		}
 		else if (type == DEATH_SHOOTING_STAR) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_SHOOTING_STAR);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_SHOOTING_STAR);
 			if(alsoprint)
-				print ("^1",s1, "^1 was shot into space by ", s2, "\n");
+				print ("^1",s2, "^1 was shot into space by ", s1, "\n");
 		}
 		else if (type == DEATH_SWAMP) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was conserved by ", s2, "\n");
+				print ("^1",s2, "^1 was conserved by ", s1, "\n");
 		}
 		else if (type == DEATH_HURTTRIGGER)
 		{
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_HURTTRIGGER);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_HURTTRIGGER);
 			if(alsoprint)
-				print("^1",s1, "^1 was thrown into a world of hurt by ", s2, "\n");
+				print("^1",s2, "^1 was thrown into a world of hurt by ", s1, "\n");
 		} else if(type == DEATH_SBCRUSH) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was crushed by ^1", s2, "\n");
+				print ("^1",s2, "^1 was crushed by ^1", s1, "\n");
 		} else if(type == DEATH_SBMINIGUN) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 got shredded by ^1", s2, "\n");
+				print ("^1",s2, "^1 got shredded by ^1", s1, "\n");
 		} else if(type == DEATH_SBROCKET) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was blased to bits by ^1", s2, "\n");
+				print ("^1",s2, "^1 was blased to bits by ^1", s1, "\n");
 		} else if(type == DEATH_SBBLOWUP) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 got caught in the destruction of ^1", s2, "'s vehicle\n");
+				print ("^1",s2, "^1 got caught in the destruction of ^1", s1, "'s vehicle\n");
 		} else if(type == DEATH_WAKIGUN) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was bolted down by ^1", s2, "\n");
+				print ("^1",s2, "^1 was bolted down by ^1", s1, "\n");
 		} else if(type == DEATH_WAKIROCKET) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 could find no shelter from ^1", s2, "'s rockets\n");
+				print ("^1",s2, "^1 could find no shelter from ^1", s1, "'s rockets\n");
 		} else if(type == DEATH_WAKIBLOWUP) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 dies when ^1", s2, "'s wakizashi dies.\n");
+				print ("^1",s2, "^1 dies when ^1", s1, "'s wakizashi dies.\n");
 		} else if(type == DEATH_TURRET) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was pushed into the line of fire by ^1", s2, "\n");
+				print ("^1",s2, "^1 was pushed into the line of fire by ^1", s1, "\n");
 		} else if(type == DEATH_TOUCHEXPLODE) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was pushed into an accident by ^1", s2, "\n");
+				print ("^1",s2, "^1 was pushed into an accident by ^1", s1, "\n");
 		} else if(type == DEATH_CHEAT) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was unfairly eliminated by ^1", s2, "\n");
+				print ("^1",s2, "^1 was unfairly eliminated by ^1", s1, "\n");
 		} else if (type == DEATH_FIRE) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was burnt to death by ^1", s2, "\n");
+				print ("^1",s2, "^1 was burnt to death by ^1", s1, "\n");
 		} else if (type == DEATH_CUSTOM) {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_CUSTOM);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_CUSTOM);
 			if(alsoprint)
-				print ("^1",s1, "^1 ", s2, "\n");
+				print ("^1",s2, "^1 ", s1, "\n");
 		} else {
-			HUD_KillNotify_Push(s2, s1, 1, DEATH_GENERIC);
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was fragged by ", s2, "\n");
+				print ("^1",s2, "^1 was fragged by ", s1, "\n");
 		}
 	} else if(msg == MSG_SPREE) {
 		if(type == KILL_END_SPREE) {
@@ -3742,19 +3741,15 @@ void HUD_VoteWindow(void)
 	pos = panel_pos;
 	mySize = panel_size;
 
-	panel_fg_alpha = autocvar_hud_panel_fg_alpha;
-	panel_bg_alpha_str = autocvar_hud_panel_vote_bg_alpha;
+	if(!autocvar__hud_configure)
+	{
+		panel_fg_alpha = autocvar_hud_panel_fg_alpha;
+		panel_bg_alpha_str = autocvar_hud_panel_vote_bg_alpha;
 
-	if(panel_bg_alpha_str == "") {
-		panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha);
-	}
-	panel_bg_alpha = stof(panel_bg_alpha_str);
-	if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == active_panel) {
-		panel_bg_alpha = (1 - autocvar__menu_alpha) * max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha) + autocvar__menu_alpha * panel_bg_alpha;
-	} else if(autocvar__hud_configure) {
-		panel_bg_alpha = max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha);
-	} if(autocvar__hud_configure && !panel_enabled) {
-		panel_bg_alpha = 0.25;
+		if(panel_bg_alpha_str == "") {
+			panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha);
+		}
+		panel_bg_alpha = stof(panel_bg_alpha_str);
 	}
 
 	string s;
@@ -3779,9 +3774,9 @@ void HUD_VoteWindow(void)
 	if(!vote_alpha)
 		return;
 
-	a = vote_alpha * bound(autocvar_hud_panel_vote_alreadyvoted_alpha, 1 - vote_highlighted, 1);
-
+	a = panel_bg_alpha * vote_alpha * bound(autocvar_hud_panel_vote_alreadyvoted_alpha, 1 - vote_highlighted, 1);
 	HUD_Panel_DrawBg(a);
+	a = panel_fg_alpha * vote_alpha * bound(autocvar_hud_panel_vote_alreadyvoted_alpha, 1 - vote_highlighted, 1);
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;

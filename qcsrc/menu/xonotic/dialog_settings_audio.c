@@ -51,7 +51,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "snd_entchannel3volume");
-		makeMulti(s, "snd_playerchannel0volume snd_playerchannel3volume");
+		makeMulti(s, "snd_playerchannel0volume snd_playerchannel3volume snd_csqcchannel3volume");
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, "Items:"));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "volume", "0");
