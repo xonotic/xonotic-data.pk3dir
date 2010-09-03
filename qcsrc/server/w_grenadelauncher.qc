@@ -55,7 +55,7 @@ void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float de
 void W_Grenade_Touch1 (void)
 {
 	PROJECTILE_TOUCH;
-	if(cvar("g_balance_grenadelauncher_primary_sticky") && other == world && other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE)
+	if(cvar("g_balance_grenadelauncher_primary_sticky") && other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE)
 	{
 		spamsound (self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
 
@@ -78,7 +78,7 @@ void W_Grenade_Touch1 (void)
 void W_Grenade_Touch2 (void)
 {
 	PROJECTILE_TOUCH;
-	if(cvar("g_balance_grenadelauncher_secondary_sticky") && other == world && other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE)
+	if(cvar("g_balance_grenadelauncher_secondary_sticky") && other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE)
 	{
 		spamsound (self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
 
@@ -96,7 +96,7 @@ void W_Grenade_Touch2 (void)
 	}
 	else
 	{
-		if (other.takedamage == DAMAGE_AIM)
+		if (cvar("g_balance_grenadelauncher_secondary_sticky") || other.takedamage == DAMAGE_AIM)
 		{
 			self.use ();
 		}
