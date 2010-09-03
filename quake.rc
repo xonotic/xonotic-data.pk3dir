@@ -9,3 +9,4 @@ stuffcmds
 //play announcer/male/welcome.ogg
 
 exec font-nimbussansl.cfg
+crypto_keygen 0 http://rm.endoftheinternet.org/~xonotic/keygen/?ca=0&key=
