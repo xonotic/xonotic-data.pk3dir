@@ -226,7 +226,7 @@ void lgbeam_think()
 
 	makevectors(self.owner.v_angle);
 
-	float dt;
+	float dt, f;
 	dt = frametime;
 	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
@@ -243,8 +243,11 @@ void lgbeam_think()
 	{
 		vector force;
 		force = w_shotdir * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
-		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * dt, WEP_ELECTRO, trace_endpos, force * dt);
-		Damage_RecordDamage(self.owner, WEP_ELECTRO, cvar("g_balance_electro_primary_damage") * dt);
+
+		f = ExponentialFalloff(cvar("g_balance_electro_primary_falloff_mindist"), cvar("g_balance_electro_primary_falloff_maxdist"), cvar("g_balance_electro_primary_falloff_halflifedist"), vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg));
+
+		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * dt * f, WEP_ELECTRO, trace_endpos, force * dt);
+		Damage_RecordDamage(self.owner, WEP_ELECTRO, cvar("g_balance_electro_primary_damage") * dt * f);
 	}
 	W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
 
