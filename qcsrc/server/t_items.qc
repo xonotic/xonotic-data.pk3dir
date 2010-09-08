@@ -94,7 +94,7 @@ void Item_Show (entity e, float mode)
 
 		e.spawnshieldtime = 1;
 	}
-	else if((e.flags & FL_WEAPON) && (g_weapon_stay == 3))
+	else if((e.flags & FL_WEAPON) && (g_weapon_stay == 3 && self.respawntime > 0)) // if respawntime is -1, this item does not respawn
 	{
 		// make the item translucent green and not touchable
 		e.model = e.mdl;
