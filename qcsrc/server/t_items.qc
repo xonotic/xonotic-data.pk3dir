@@ -55,7 +55,7 @@ float Item_Customize()
 	}
 	else
 	{
-		if(g_ghost_items)
+		if(g_ghost_items && self.respawntime > 0) // if respawntime is -1, this item does not respawn
 		{
 			self.colormod = stov(cvar_string("g_ghost_items_color"));
 			self.glowmod = self.colormod;
@@ -106,7 +106,7 @@ void Item_Show (entity e, float mode)
 
 		e.spawnshieldtime = 0; // field indicates whether picking it up may give you anything other than the weapon
 	}
-	else if(g_ghost_items)
+	else if(g_ghost_items && self.respawntime > 0) // if respawntime is -1, this item does not respawn
 	{
 		// make the item translucent green and not touchable
 		e.model = e.mdl;
