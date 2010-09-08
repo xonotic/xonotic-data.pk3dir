@@ -55,7 +55,7 @@ float Item_Customize()
 	}
 	else
 	{
-		if(g_ghost_items && self.respawntime > 0) // if respawntime is -1, this item does not respawn
+		if(g_ghost_items)
 		{
 			self.colormod = stov(cvar_string("g_ghost_items_color"));
 			self.glowmod = self.colormod;
@@ -94,7 +94,7 @@ void Item_Show (entity e, float mode)
 
 		e.spawnshieldtime = 1;
 	}
-	else if((e.flags & FL_WEAPON) && (g_weapon_stay == 3 && self.respawntime > 0)) // if respawntime is -1, this item does not respawn
+	else if((e.flags & FL_WEAPON) && (g_weapon_stay == 3))
 	{
 		// make the item translucent green and not touchable
 		e.model = e.mdl;
@@ -106,7 +106,7 @@ void Item_Show (entity e, float mode)
 
 		e.spawnshieldtime = 0; // field indicates whether picking it up may give you anything other than the weapon
 	}
-	else if(g_ghost_items && self.respawntime > 0) // if respawntime is -1, this item does not respawn
+	else if(g_ghost_items)
 	{
 		// make the item translucent green and not touchable
 		e.model = e.mdl;
@@ -236,6 +236,8 @@ void Item_ScheduleRespawn(entity e)
 	Item_Show(e, 0);
 	if(e.respawntime > 0) // if respawntime is -1, this item does not respawn
 		Item_ScheduleRespawnIn(e, ITEM_RESPAWNTIME(e));
+	else
+		remove(e);
 }
 
 void Item_ScheduleInitialRespawn(entity e)
