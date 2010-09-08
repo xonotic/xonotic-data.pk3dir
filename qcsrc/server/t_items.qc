@@ -233,11 +233,13 @@ void Item_ScheduleRespawnIn(entity e, float t)
 
 void Item_ScheduleRespawn(entity e)
 {
-	Item_Show(e, 0);
-	if(e.respawntime > 0) // if respawntime is -1, this item does not respawn
+	if(e.respawntime > 0)
+	{
+		Item_Show(e, 0);
 		Item_ScheduleRespawnIn(e, ITEM_RESPAWNTIME(e));
-	else
-		remove(e);
+	}
+	else // if respawntime is -1, this item does not respawn
+		Item_Show(e, -1);
 }
 
 void Item_ScheduleInitialRespawn(entity e)
