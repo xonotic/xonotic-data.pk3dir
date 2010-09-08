@@ -61,6 +61,16 @@ void XonoticTextSlider_loadCvars(entity me)
 	for(i = 1; i < n; ++i)
 		s = strcat(s, " ", cvar_string(argv(i)));
 	me.setValueFromIdentifier(me, s);
+	if(me.value < 0 && n > 1)
+	{
+		// if it failed: check if all cvars have the same value
+		// if yes, try its value as 1-word identifier
+		for(i = 1; i < n; ++i)
+			if(cvar_string(argv(i)) != cvar_string(argv(i-1)))
+				break;
+		if(i >= n)
+			me.setValueFromIdentifier(me, cvar_string(argv(0)));
+	}
 }
 void XonoticTextSlider_saveCvars(entity me)
 {
