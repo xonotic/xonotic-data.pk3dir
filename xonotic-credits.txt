@@ -49,6 +49,7 @@ by Forest "LordHavoc" Hale
 
 **Active Contributors
 Ben "MooKow" Banker
+Calinou
 Kristian "morfar" Johansson
 kojn
 Maik "SavageX" Merten
