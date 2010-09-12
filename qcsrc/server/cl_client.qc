@@ -2846,9 +2846,16 @@ float isInvisibleString(string s)
 		switch(c)
 		{
 			case 0:
-			case 32:
-			case 160:
+			case 32: // space
 				break;
+			case 192: // charmap space
+				if (!cvar("utf8_enable"))
+					break;
+				return FALSE;
+			case 160: // space in unicode fonts
+			case 0xE000 + 192: // utf8 charmap space
+				if (cvar("utf8_enable"))
+					break;
 			default:
 				return FALSE;
 		}

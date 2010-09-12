@@ -517,7 +517,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 			}
 			fputs(fh, "\n");
 		}
-		fputs(fh, strcat("menu_restart", "\n")); // force a menu update when execing config, so that the dialogs are updated
+		fputs(fh, strcat("menu_sync", "\n")); // force the menu to reread the cvars, so that the dialogs are updated
 
 		print("^2Successfully exported to hud_", autocvar_hud_skin, "_", cfgname, ".cfg! (Note: It's saved in data/data/)\n");
 	}
@@ -1095,17 +1095,29 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			if (bInputType == 1)
 				return true;
 
-			if (highlightedPanel_copied != -1 && highlightedPanel_prev != -1)
-			{
-				// backup first!
-				panel_pos_backup = panel_pos;
-				panel_size_backup = panel_size;
-				highlightedPanel_backup = highlightedPanel_prev;
+			if (highlightedPanel_copied == -1 || highlightedPanel_prev == -1)
+				return true;
 
-				string s;
-				s = strcat(ftos(panel_size_copied_x/vid_conwidth), " ", ftos(panel_size_copied_y/vid_conheight));
-				cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
-			}
+			HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev)
+
+			// reduce size if it'd go beyond screen boundaries
+			vector tmp_size = panel_size_copied;
+			if (panel_pos_x + panel_size_copied_x > vid_conwidth)
+				tmp_size_x = vid_conwidth - panel_pos_x;
+			if (panel_pos_y + panel_size_copied_y > vid_conheight)
+				tmp_size_y = vid_conheight - panel_pos_y;
+
+			if (panel_size == tmp_size)
+				return true;
+
+			// backup first!
+			panel_pos_backup = panel_pos;
+			panel_size_backup = panel_size;
+			highlightedPanel_backup = highlightedPanel_prev;
+
+			string s;
+			s = strcat(ftos(tmp_size_x/vid_conwidth), " ", ftos(tmp_size_y/vid_conheight));
+			cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
 		}
 		else if(nPrimary == 'z') // undo last action
 		{
@@ -1306,7 +1318,7 @@ void HUD_Panel_Highlight()
 }
 
 float highlightcheck;
-float would_backup;
+vector prev_pos, prev_size;
 void HUD_Panel_Mouse()
 {
 	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
@@ -1335,22 +1347,29 @@ void HUD_Panel_Mouse()
 
 	if(mouseClicked)
 	{
-		vector prev_pos, prev_size;
 		if(prevMouseClicked == 0)
 		{
 			HUD_Panel_Highlight(); // sets highlightedPanel, highlightedAction, panel_click_distance, panel_click_resizeorigin
 									// and calls HUD_Panel_UpdatePosSizeForId() for the highlighted panel
-			would_backup = TRUE;
-		}
-		else if (would_backup)
-		{
-			// this is not the actual backup! Saving pos and size values
-			// only to check later if they are different from new values
 			prev_pos = panel_pos;
 			prev_size = panel_size;
 		}
+		else
+			HUD_Panel_UpdatePosSizeForId(highlightedPanel)
 
-		hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
+		if (prev_pos != panel_pos || prev_size != panel_size)
+		{
+			hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
+			// backup!
+			panel_pos_backup = prev_pos;
+			panel_size_backup = prev_size;
+			highlightedPanel_backup = highlightedPanel;
+		}
+		else
+			// in case the clicked panel is inside another panel and we aren't
+			// moving it, avoid the immediate "fix" of its position/size
+			// (often unwanted and hateful) by disabling collisions check
+			hud_configure_checkcollisions = false;
 
 		if(highlightedAction == 1)
 			HUD_Panel_SetPos(mousepos - panel_click_distance);
@@ -1371,18 +1390,6 @@ void HUD_Panel_Mouse()
 				mySize_y = mousepos_y - (panel_click_resizeorigin_y - panel_click_distance_y);
 			}
 			HUD_Panel_SetPosSize(mySize);
-		}
-
-		HUD_Panel_UpdatePosSizeForId(highlightedPanel)
-		if (prevMouseClicked)
-		if (would_backup)
-		if (prev_pos != panel_pos || prev_size != panel_size)
-		{
-			// backup!
-			panel_pos_backup = prev_pos;
-			panel_size_backup = prev_size;
-			highlightedPanel_backup = highlightedPanel;
-			would_backup = FALSE;
 		}
 
 		// doubleclick check
@@ -3809,9 +3816,9 @@ void HUD_VoteWindow(void)
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, a, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
-	s = strcat("Yes (", getcommandkey("not bound", "vyes"), "): ", ftos(vote_yescount));
+	s = strcat("Yes (", getcommandkey("vyes", "vyes"), "): ", ftos(vote_yescount));
 	drawstring_aspect(pos + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '0 1 0', a, DRAWFLAG_NORMAL);
-	s = strcat("No (", getcommandkey("not bound", "vno"), "): ", ftos(vote_nocount));
+	s = strcat("No (", getcommandkey("vno", "vno"), "): ", ftos(vote_nocount));
 	drawstring_aspect(pos + eX * 0.5 * mySize_x + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '1 0 0', a, DRAWFLAG_NORMAL);
 
 	// draw the progress bar backgrounds
@@ -4552,6 +4559,11 @@ void HUD_EngineInfo(void)
 
 // Info messages panel (#14)
 //
+#define drawInfoMessage(s)\
+	if(autocvar_hud_panel_infomessages_flip)\
+		o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize);\
+	drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);\
+	o_y += fontsize_y;
 void HUD_InfoMessages(void)
 {
 	if(!autocvar_hud_panel_infomessages && !autocvar__hud_configure)
@@ -4610,35 +4622,22 @@ void HUD_InfoMessages(void)
 				s = "^1Observing";
 			else
 				s = strcat("^1Spectating: ^7", GetPlayerName(spectatee_status - 1));
-
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
-				s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 to spectate");
+				s = strcat("^1Press ^3", getcommandkey("primary fire", "+fire"), "^1 to spectate");
 			else
-				s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 for another player");
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+				s = strcat("^1Press ^3", getcommandkey("primary fire", "+fire"), "^1 for another player");
+			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
 				s = strcat("^1Use ^3", getcommandkey("next weapon", "weapnext"), "^1 or ^3", getcommandkey("previous weapon", "weapprev"), "^1 to change the speed");
 			else
-				s = strcat("^1Press ^3", getcommandkey("secondary fire", "+attack2"), "^1 to observe");
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+				s = strcat("^1Press ^3", getcommandkey("secondary fire", "+fire2"), "^1 to observe");
+			drawInfoMessage(s)
 
 			s = strcat("^1Press ^3", getcommandkey("server info", "+show_info"), "^1 for gamemode info");
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 
 			if(gametype == GAME_ARENA)
 				s = "^1Wait for your turn to join";
@@ -4655,10 +4654,7 @@ void HUD_InfoMessages(void)
 			}
 			else
 				s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 
 			//show restart countdown:
 			if (time < getstatf(STAT_GAMESTARTTIME)) {
@@ -4667,16 +4663,13 @@ void HUD_InfoMessages(void)
 				countdown = ceil(getstatf(STAT_GAMESTARTTIME) - time);
 				s = strcat("^1Game starts in ^3", ftos(countdown), "^1 seconds");
 				drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-				o += eY * fontsize_y;
+				o_y += fontsize_y;
 			}
 		}
 		if(warmup_stage && !intermission)
 		{
 			s = "^2Currently in ^1warmup^2 stage!";
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 		}
 
 		string blinkcolor;
@@ -4701,18 +4694,12 @@ void HUD_InfoMessages(void)
 				else
 					s = strcat("^2Waiting for others to ready up...");
 			}
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 		}
 		else if(warmup_stage && !intermission && !spectatee_status)
 		{
 			s = strcat("^2Press ^3", getcommandkey("ready", "ready"), "^2 to end warmup");
-			if(autocvar_hud_panel_infomessages_flip)
-				o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-			drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-			o += eY * fontsize_y;
+			drawInfoMessage(s)
 		}
 
 		if(teamplay && !intermission && !spectatee_status && gametype != GAME_CA && teamnagger)
@@ -4738,11 +4725,7 @@ void HUD_InfoMessages(void)
 					if (tm.team != COLOR_SPECTATOR)
 					if (tm.team_size == ts_max)
 						s = strcat(s, " Press ^3", getcommandkey("team menu", "menu_showteamselect"), blinkcolor, " to adjust");
-
-					if(autocvar_hud_panel_infomessages_flip)
-						o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-					drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-					o += eY * fontsize_y;
+					drawInfoMessage(s)
 				}
 			}
 		}
@@ -4750,25 +4733,13 @@ void HUD_InfoMessages(void)
 	else 
 	{
 		s = "^7Press ^3ESC ^7to show HUD options.";
-		if(autocvar_hud_panel_infomessages_flip)
-			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-		drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
+		drawInfoMessage(s)
 		s = "^3Doubleclick ^7a panel for panel-specific options.";
-		if(autocvar_hud_panel_infomessages_flip)
-			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-		drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
+		drawInfoMessage(s)
 		s = "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and";
-		if(autocvar_hud_panel_infomessages_flip)
-			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-		drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
+		drawInfoMessage(s)
 		s = "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments.";
-		if(autocvar_hud_panel_infomessages_flip)
-			o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize); 
-		drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-		o += eY * fontsize_y;
+		drawInfoMessage(s)
 	}
 }
 

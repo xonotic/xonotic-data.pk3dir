@@ -96,7 +96,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Texture resolution:"));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("gl_picmip"));
+		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
 			if(cvar("developer"))
 				e.addValue(e, "Leet", "1337");
 			e.addValue(e, "Lowest", "2");
