@@ -552,7 +552,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 {
 	// layout: Ping, Server name, Map name, NP, TP, MP
 	string s;
-	float p;
+	float p, q;
 	vector theColor;
 	float theAlpha;
 
@@ -592,8 +592,8 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	}
 
 	s = gethostcachestring(SLIST_FIELD_CNAME, i);
-	p = stof(substring(crypto_getencryptlevel(s), 0, 1));
-	if((p <= 0 && cvar("crypto_aeslevel") >= 3) || (p >= 3 && cvar("crypto_aeslevel") <= 0))
+	q = stof(substring(crypto_getencryptlevel(s), 0, 1));
+	if((q <= 0 && cvar("crypto_aeslevel") >= 3) || (q >= 3 && cvar("crypto_aeslevel") <= 0))
 	{
 		theColor = SKINCOLOR_SERVERLIST_IMPOSSIBLE;
 		theAlpha = SKINALPHA_SERVERLIST_IMPOSSIBLE;
