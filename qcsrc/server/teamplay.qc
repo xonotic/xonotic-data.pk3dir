@@ -879,6 +879,29 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 	// find out what teams are available
 	CheckAllowedTeams(pl);
 
+	// if we want the player in a certain team for campaign, force him there
+	if(cvar("g_campaign"))
+	if(clienttype(pl) == CLIENTTYPE_REAL) // only players, not bots
+	{
+		switch(cvar("g_campaign_forceteam"))
+		{
+			case 1:
+				SetPlayerColors(pl, COLOR_TEAM1 - 1);
+				return COLOR_TEAM1;
+			case 2:
+				SetPlayerColors(pl, COLOR_TEAM2 - 1);
+				return COLOR_TEAM2;
+			case 3:
+				SetPlayerColors(pl, COLOR_TEAM3 - 1);
+				return COLOR_TEAM3;
+			case 4:
+				SetPlayerColors(pl, COLOR_TEAM4 - 1);
+				return COLOR_TEAM4;
+			default:
+				break;
+		}
+	}
+
 	// if we don't care what team he ends up on, put him on whatever team he entered as.
 	// if he's not on a valid team, then let other code put him on the smallest team
 	if(!forcebestteam)
