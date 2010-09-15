@@ -707,10 +707,14 @@ void spawnfunc_worldspawn (void)
 	if(cvar("sv_curl_serverpackages_auto"))
 	{
 		fd = search_begin("*.serverpackage", TRUE, FALSE);
-		j = search_getsize(fd);
 		s = "";
-		for(i = 0; i < j; ++i)
-			s = strcat(s, " ", search_getfilename(i));
+		if(fd >= 0)
+		{
+			j = search_getsize(fd);
+			for(i = 0; i < j; ++i)
+				s = strcat(s, " ", search_getfilename(fd, i));
+			search_end(fd);
+		}
 		cvar_set("sv_curl_serverpackages", substring(s, 1, -1));
 	}
 
