@@ -887,15 +887,19 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 		{
 			case 1:
 				SetPlayerColors(pl, COLOR_TEAM1 - 1);
+				LogTeamchange(pl.playerid, pl.team, 2);
 				return COLOR_TEAM1;
 			case 2:
 				SetPlayerColors(pl, COLOR_TEAM2 - 1);
+				LogTeamchange(pl.playerid, pl.team, 2);
 				return COLOR_TEAM2;
 			case 3:
 				SetPlayerColors(pl, COLOR_TEAM3 - 1);
+				LogTeamchange(pl.playerid, pl.team, 2);
 				return COLOR_TEAM3;
 			case 4:
 				SetPlayerColors(pl, COLOR_TEAM4 - 1);
+				LogTeamchange(pl.playerid, pl.team, 2);
 				return COLOR_TEAM4;
 			default:
 				break;
