@@ -368,7 +368,14 @@ float w_electro(float req)
 				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_electro_primary_animtime"), w_ready);
 			}
 		} else {
-			self.BUTTON_ATCK_prev = 0;
+			if(cvar("g_balance_electro_lightning"))
+			{
+				if (self.BUTTON_ATCK_prev != 0)
+				{
+					ATTACK_FINISHED(self) = time + cvar("g_balance_electro_primary_refire") * W_WeaponRateFactor();
+				}
+				self.BUTTON_ATCK_prev = 0;
+			}
 		}
 
 		if (self.BUTTON_ATCK2)
@@ -401,7 +408,7 @@ float w_electro(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		if(cvar("g_balance_electro_lightning"))
-			return self.ammo_cells >= cvar("g_balance_electro_primary_ammo") * cvar("g_balance_electro_primary_refire");
+			return !cvar("g_balance_electro_primary_ammo") || (self.ammo_cells > 0);
 		else
 			return self.ammo_cells >= cvar("g_balance_electro_primary_ammo");
 	}
