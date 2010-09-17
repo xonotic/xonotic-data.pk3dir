@@ -261,7 +261,7 @@ void Ent_ReadHook(float bIsNew, float type)
 
 	InterpolateOrigin_Note();
 
-	if(bIsNew)
+	if(bIsNew || !self.teleport_time)
 	{
 		self.draw = Draw_GrapplingHook;
 		self.entremove = Remove_GrapplingHook;
