@@ -364,11 +364,12 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				// TODO: fix this?
 				if (deathtype == DEATH_CUSTOM)
-					msg = strcat(deathmessage, " by ^1", msg);
-				else if (deathtype == DEATH_HURTTRIGGER && inflictor.message2 != "")
-				{
-					msg = ftos(strstrofs(inflictor.message2, "#", 0));
-				}
+					msg = deathmessage;
+				else
+					msg = inflictor.message2;
+
+				if(strstrofs(msg, "%", 0) < 0)
+					msg = strcat("%s ", msg, " by %s");
 
 				Send_KillNotification(a, s, msg, deathtype, MSG_KILL);
 
@@ -435,6 +436,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				msg = inflictor.message;
 			else if (deathtype == DEATH_CUSTOM)
 				msg = deathmessage;
+			if(strstrofs(msg, "%", 0) < 0)
+				msg = strcat("%s ", msg);
 
 			GiveFrags(targ, targ, -1);
 			if(PlayerScore_Add(targ, SP_SCORE, 0) == -5) {
