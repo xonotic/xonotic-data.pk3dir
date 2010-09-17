@@ -53,6 +53,7 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 	Draw_GrapplingHook_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
 }
 
+.float teleport_time;
 void Draw_GrapplingHook()
 {
 	vector a, b, atrans;
