@@ -63,6 +63,13 @@ void Draw_GrapplingHook()
 	vector vs;
 	float intensity, offset;
 
+	if(self.teleport_time)
+	if(time > self.teleport_time)
+	{
+		sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM); // safeguard
+		self.teleport_time = 0;
+	}
+
 	InterpolateOrigin_Do();
 
 	s = cvar("cl_gunalign");
@@ -274,6 +281,8 @@ void Ent_ReadHook(float bIsNew, float type)
 				break;
 		}
 	}
+
+	self.teleport_time = time + 10;
 }
 
 void Hook_Precache()
