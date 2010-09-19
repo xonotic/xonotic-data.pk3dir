@@ -111,14 +111,23 @@ void WarpZone_Touch (void)
 	e = self.enemy;
 	if(WarpZone_Teleport(other))
 	{
-		if(self.aiment.target)
-		{
-			oldself = self;
-			activator = other;
-			self = self.aiment;
-			SUB_UseTargets();
-			self = oldself;
-		}
+		string save1, save2;
+		activator = other;
+
+		save1 = self.target; self.target = string_null;
+		save2 = self.target3; self.target3 = string_null;
+		SUB_UseTargets();
+		if not(self.target) self.target = save1;
+		if not(self.target3) self.target3 = save2;
+
+		oldself = self;
+		self = self.aiment;
+		save1 = self.target; self.target = string_null;
+		save2 = self.target2; self.target2 = string_null;
+		SUB_UseTargets();
+		if not(self.target) self.target = save1;
+		if not(self.target2) self.target2 = save2;
+		self = oldself;
 	}
 	else
 	{
