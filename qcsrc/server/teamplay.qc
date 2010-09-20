@@ -723,6 +723,7 @@ float PlayerValue(entity p)
 	if(IsTeamBalanceForced() == 1)
 		return 1;
 	return 1;
+	// FIXME: it always returns 1...
 }
 
 // c1...c4 should be set to -1 (not allowed) or 0 (allowed).
