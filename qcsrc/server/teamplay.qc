@@ -16,6 +16,8 @@ float IsTeamBalanceForced()
 		return 0;
 	if(cvar("g_campaign"))
 		return 0;
+	if(cvar("bot_vs_human") && (c3==-1 && c4==-1))
+		return 0;
 	if(!cvar("g_balance_teams_force"))
 		return -1;
 	return 1;
@@ -694,7 +696,7 @@ void CheckAllowedTeams (entity for_whom)
 	}
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
-	if(c3==-1&&c4==-1)
+	if(c3==-1 && c4==-1)
 	if(cvar("bot_vs_human") && for_whom)
 	{
 		if(cvar("bot_vs_human") > 0)
@@ -799,7 +801,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	if(c4 >= 0)
 		totalteams = totalteams + 1;
 
-	if(cvar("bot_vs_human"))
+	if(cvar("bot_vs_human") && totalteams == 1)
 		totalteams += 1;
 
 	if(totalteams <= 1)

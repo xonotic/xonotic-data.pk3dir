@@ -555,17 +555,16 @@ void bot_serverframe()
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = FALSE;
-	if ((realplayers || cvar("bot_join_empty") || (currentbots > 0 && time < 5)))
+	if (teamplay && cvar("bot_vs_human") && (c3==-1 && c4==-1))
+		bots = min(ceil(fabs(cvar("bot_vs_human")) * activerealplayers), maxclients - realplayers);
+	else if ((realplayers || cvar("bot_join_empty") || (currentbots > 0 && time < 5)))
 	{
 		float realminplayers, minplayers;
 		realminplayers = cvar("minplayers");
 		minplayers = max(0, floor(realminplayers));
 
 		float realminbots, minbots;
-		if(teamplay && cvar("bot_vs_human"))
-			realminbots = ceil(fabs(cvar("bot_vs_human")) * activerealplayers);
-		else
-			realminbots = cvar("bot_number");
+		realminbots = cvar("bot_number");
 		minbots = max(0, floor(realminbots));
 
 		bots = min(max(minbots, minplayers - activerealplayers), maxclients - realplayers);
