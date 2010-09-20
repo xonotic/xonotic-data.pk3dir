@@ -121,7 +121,7 @@ void WarpZone_Touch (void)
 		if not(self.target3) self.target3 = save2;
 
 		oldself = self;
-		self = self.aiment;
+		self = self.enemy;
 		save1 = self.target; self.target = string_null;
 		save2 = self.target2; self.target2 = string_null;
 		SUB_UseTargets();
@@ -274,6 +274,7 @@ void WarpZone_InitStep_FindOriginTarget()
 			error("Warp zone with nonexisting killtarget");
 			return;
 		}
+		self.killtarget = string_null;
 	}
 }
 
