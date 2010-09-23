@@ -10,6 +10,8 @@ for b in balance*.cfg; do
 		B=`mktemp`
 		awk '/^seta? g_/ { print $2; }' balanceXonotic.cfg       | sort -u | tr -d '\r' > "$A"
 		awk '/^seta? g_/ { print $2; }' "$b"                     | sort -u | tr -d '\r' > "$B"
+		echo "< missing in $b"
+		echo "> must get removed from $b"
 		diff "$A" "$B" | grep '^[<>]' | sort
 		rm -f "$A" "$B"
 		exit 1
