@@ -938,7 +938,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 	smallest = FindSmallestTeam(pl, TRUE);
 
-	if(!only_return_best)
+	if(!only_return_best && !pl.bot_forced_team)
 	{
 		TeamchangeFrags(self);
 		if(smallest == 1)
