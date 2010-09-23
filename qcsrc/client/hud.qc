@@ -2754,7 +2754,11 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_CUSTOM);
 			if(alsoprint)
-				print ("^1",s2, "^1 ", s1, "\n");
+				print("^1", sprintf(s3, strcat(s2, "^1"), strcat(s1, "^1")), "\n");
+		} else if (type == DEATH_HURTTRIGGER) {
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_HURTTRIGGER);
+			if(alsoprint)
+				print("^1", sprintf(s3, strcat(s2, "^1"), strcat(s1, "^1")), "\n");
 		} else {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
@@ -2859,11 +2863,11 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_CUSTOM);
 			if(alsoprint)
-				print ("^1",s1, "^1 ", s2, "\n");
+				print("^1", sprintf(s2, strcat(s1, "^1")), "\n");
 		} else if (type == DEATH_HURTTRIGGER) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_HURTTRIGGER);
 			if(alsoprint)
-				print ("^1",s1, "^1 was in the wrong place\n");
+				print("^1", sprintf(s2, strcat(s1, "^1")), "\n");
 		} else if(type == DEATH_TOUCHEXPLODE) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)

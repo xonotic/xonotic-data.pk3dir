@@ -152,6 +152,7 @@ void Teleport_Touch (void)
 	entity oldself, e;
 	vector o;
 	float p;
+	string s;
 
 	if (other.health < 1)
 		return;
@@ -208,14 +209,15 @@ void Teleport_Touch (void)
 	o = e.origin + '0 0 1' * (1 - other.mins_z - 24);
 	TeleportPlayer(self, other, o, e.mangle, v_forward * vlen(other.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
 
-	if(e.target)
-	{
-		oldself = self;
-		activator = other;
-		self = e;
-		SUB_UseTargets();
-		self = oldself;
-	}
+	activator = other;
+	s = self.target; self.target = string_null;
+	SUB_UseTargets();
+	if not(self.target) self.target = s;
+
+	oldself = self;
+	self = e;
+	SUB_UseTargets();
+	self = oldself;
 }
 
 void spawnfunc_info_teleport_destination (void)
