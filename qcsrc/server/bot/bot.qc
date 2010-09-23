@@ -43,7 +43,7 @@ void bot_think()
 	//self.bot_painintensity = self.bot_painintensity + self.bot_oldhealth - self.health;
 	//self.bot_painintensity = bound(0, self.bot_painintensity, 100);
 
-	if(time < game_starttime || ((cvar("g_campaign") && !campaign_bots_may_start)))
+	if (cvar("g_campaign") && !campaign_bots_may_start)
 	{
 		self.nextthink = time + 0.5;
 		return;
@@ -80,6 +80,14 @@ void bot_think()
 	self.button8 = 0;
 	self.BUTTON_CHAT = 0;
 	self.BUTTON_USE = 0;
+
+	if (time < game_starttime)
+	{
+		// block the bot during the countdown to game start
+		self.movement = '0 0 0';
+		self.nextthink = game_starttime;
+		return;
+	}
 
 	// if dead, just wait until we can respawn
 	if (self.deadflag)
