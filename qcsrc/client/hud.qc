@@ -4528,29 +4528,32 @@ void HUD_EngineInfo(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
+	float currentTime = gettime(GETTIME_REALTIME);
 	if(cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage"))
 	{
-		frametimeavg = (frametimeavg + frametimeavg1 + frametimeavg2 + frametime)/4; // average three frametimes into framecounter for slightly more stable fps readings :P
+		float currentframetime = currentTime - prevfps_time;
+		frametimeavg = (frametimeavg + frametimeavg1 + frametimeavg2 + currentframetime)/4; // average three frametimes into framecounter for slightly more stable fps readings :P
 		frametimeavg2 = frametimeavg1;
 		frametimeavg1 = frametimeavg;
 		
 		float weight;
 		weight = cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage_new_weight");
-		if(frametime > 0.0001) // filter out insane values which sometimes seem to occur and throw off the average? If you are getting 10,000 fps or more, then you don't need a framerate counter.
+		if(currentframetime > 0.0001) // filter out insane values which sometimes seem to occur and throw off the average? If you are getting 10,000 fps or more, then you don't need a framerate counter.
 		{
-			if(fabs(prevfps - (1/frametimeavg)) > prevfps * cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold")) // if there was a big jump in fps, just force prevfps at current (1/frametime) to make big updates instant
-				prevfps = (1/frametime);
+			if(fabs(prevfps - (1/frametimeavg)) > prevfps * cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold")) // if there was a big jump in fps, just force prevfps at current (1/currentframetime) to make big updates instant
+				prevfps = (1/currentframetime);
 			prevfps = (1 - weight) * prevfps + weight * (1/frametimeavg); // framecounter just used so there's no need for a new variable, think of it as "frametime average"
 		}
+		prevfps_time = currentTime;
 	}
 	else
 	{
 		framecounter += 1;
-		if(time - prevfps_time > cvar("hud_panel_engineinfo_framecounter_time"))
+		if(currentTime - prevfps_time > cvar("hud_panel_engineinfo_framecounter_time"))
 		{
-			prevfps = framecounter/cvar("hud_panel_engineinfo_framecounter_time");
+			prevfps = framecounter/(currentTime - prevfps_time);
 			framecounter = 0;
-			prevfps_time = time;
+			prevfps_time = currentTime;
 		}
 	}
 
