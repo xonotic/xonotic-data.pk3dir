@@ -1,7 +1,7 @@
 void WarpZone_Fade_PreDraw()
 {
 	if(self.warpzone_fadestart)
-		self.alpha = (self.warpzone_fadeend - vlen(view_origin - self.origin)) / (self.warpzone_fadeend - self.warpzone_fadestart);
+		self.alpha = (self.warpzone_fadeend - vlen(view_origin - self.origin - 0.5 * (self.mins + self.maxs))) / (self.warpzone_fadeend - self.warpzone_fadestart);
 	else
 		self.alpha = 1;
 	if(self.alpha <= 0)
@@ -24,9 +24,14 @@ void WarpZone_Read(float isnew)
 
 	f = ReadByte();
 	self.warpzone_isboxy = (f & 1);
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
+	if(f & 4)
+	{
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+	}
+	else
+		self.origin = '0 0 0';
 	self.modelindex = ReadShort();
 	self.mins_x = ReadCoord();
 	self.mins_y = ReadCoord();
@@ -82,9 +87,14 @@ void WarpZone_Camera_Read(float isnew)
 	self.classname = "func_warpzone_camera";
 
 	f = ReadByte();
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
+	if(f & 4)
+	{
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+	}
+	else
+		self.origin = '0 0 0';
 	self.modelindex = ReadShort();
 	self.mins_x = ReadCoord();
 	self.mins_y = ReadCoord();

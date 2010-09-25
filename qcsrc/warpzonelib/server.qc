@@ -146,12 +146,17 @@ float WarpZone_Send(entity to, float sendflags)
 		f |= 1;
 	if(self.warpzone_fadestart)
 		f |= 2;
+	if(self.origin != '0 0 0')
+		f |= 4;
 	WriteByte(MSG_ENTITY, f);
 
 	// we need THESE to render the warpzone (and cull properly)...
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	if(f & 4)
+	{
+		WriteCoord(MSG_ENTITY, self.origin_x);
+		WriteCoord(MSG_ENTITY, self.origin_y);
+		WriteCoord(MSG_ENTITY, self.origin_z);
+	}
 
 	WriteShort(MSG_ENTITY, self.modelindex);
 	WriteCoord(MSG_ENTITY, self.mins_x);
@@ -192,12 +197,17 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 
 	if(self.warpzone_fadestart)
 		f |= 2;
+	if(self.origin != '0 0 0')
+		f |= 4;
 	WriteByte(MSG_ENTITY, f);
 
 	// we need THESE to render the warpzone (and cull properly)...
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	if(f & 4)
+	{
+		WriteCoord(MSG_ENTITY, self.origin_x);
+		WriteCoord(MSG_ENTITY, self.origin_y);
+		WriteCoord(MSG_ENTITY, self.origin_z);
+	}
 
 	WriteShort(MSG_ENTITY, self.modelindex);
 	WriteCoord(MSG_ENTITY, self.mins_x);
