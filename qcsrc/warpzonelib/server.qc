@@ -137,10 +137,16 @@ void WarpZone_Touch (void)
 
 float WarpZone_Send(entity to, float sendflags)
 {
+	float f;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
 	// we must send this flag for clientside to match properly too
-	WriteByte(MSG_ENTITY, self.warpzone_isboxy);
+	f = 0;
+	if(self.warpzone_isboxy)
+		f |= 1;
+	if(self.warpzone_fadestart)
+		f |= 2;
+	WriteByte(MSG_ENTITY, f);
 
 	// we need THESE to render the warpzone (and cull properly)...
 	WriteCoord(MSG_ENTITY, self.origin_x);
@@ -170,12 +176,23 @@ float WarpZone_Send(entity to, float sendflags)
 	WriteCoord(MSG_ENTITY, self.warpzone_targetangles_y);
 	WriteCoord(MSG_ENTITY, self.warpzone_targetangles_z);
 
+	if(f & 2)
+	{
+		WriteShort(MSG_ENTITY, self.warpzone_fadestart);
+		WriteShort(MSG_ENTITY, self.warpzone_fadeend);
+	}
+
 	return TRUE;
 }
 
 float WarpZone_Camera_Send(entity to, float sendflags)
 {
+	float f;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
+
+	if(self.warpzone_fadestart)
+		f |= 2;
+	WriteByte(MSG_ENTITY, f);
 
 	// we need THESE to render the warpzone (and cull properly)...
 	WriteCoord(MSG_ENTITY, self.origin_x);
@@ -198,6 +215,12 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 	WriteCoord(MSG_ENTITY, self.enemy.angles_x);
 	WriteCoord(MSG_ENTITY, self.enemy.angles_y);
 	WriteCoord(MSG_ENTITY, self.enemy.angles_z);
+
+	if(f & 2)
+	{
+		WriteShort(MSG_ENTITY, self.warpzone_fadestart);
+		WriteShort(MSG_ENTITY, self.warpzone_fadeend);
+	}
 
 	return TRUE;
 }
