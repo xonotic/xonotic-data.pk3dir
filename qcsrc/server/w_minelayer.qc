@@ -3,6 +3,7 @@ REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_TY
 #else
 #ifdef SVQC
 .float minelayer_detonate;
+.float mine_number;
 
 void spawnfunc_weapon_minelayer (void)
 {
@@ -137,6 +138,19 @@ void W_Mine_Attack (void)
 {
 	local entity mine;
 	local entity flash;
+
+	// scan how many mines we placed, and return if we reached our limit
+	if(cvar("g_balance_minelayer_limit"))
+	{
+		entity min;
+		self.mine_number = 0;
+		for(min = world; (min = find(min, classname, "mine")); )
+			if(min.owner == self)
+				self.mine_number += 1;
+
+		if(self.mine_number >= cvar("g_balance_minelayer_limit"))
+			return;
+	}
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - cvar("g_balance_minelayer_ammo");
