@@ -89,6 +89,22 @@ void W_Mine_Think (void)
 		return;
 	}
 
+	// detect players around the mine and explode if the player should detonate it
+	entity head;
+	head = findradius(self.origin, cvar("g_balance_minelayer_detectionradius"));
+
+	while(head)
+	{
+		if(head.classname == "player" && head.deadflag == DEAD_NO)
+		if(head != self.owner)
+		if not(teams_matter && head.team == self.owner.team) // don't detonate for team mates
+		{
+			W_Mine_Unregister();
+			W_Mine_Explode();
+		}
+		head = head.chain;
+	}
+
 	// remote detonation
 	if (self.owner.weapon == WEP_MINE_LAYER)
 	if (self.owner.deadflag == DEAD_NO)
@@ -101,10 +117,9 @@ void W_Mine_Think (void)
 
 void W_Mine_Touch (void)
 {
-	W_Mine_Unregister();
-
 	PROJECTILE_TOUCH;
-	W_Mine_Explode ();
+	self.movetype = MOVETYPE_NONE; // locked in place.
+	// TODO: make sure this doesn't cause the mine to get stuck in the air if it falls over a team mate (doesn't explode) and the team mate leaves
 }
 
 void W_Mine_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
@@ -144,12 +159,12 @@ void W_Mine_Attack (void)
 	mine.health = cvar("g_balance_minelayer_health");
 	mine.event_damage = W_Mine_Damage;
 
-	mine.movetype = MOVETYPE_FLY;
+	mine.movetype = MOVETYPE_TOSS;
 	PROJECTILE_MAKETRIGGER(mine);
 	mine.projectiledeathtype = WEP_MINE_LAYER;
-	setsize (mine, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
+	setsize (mine, '-6 -6 -6', '6 6 6'); // give it some size so it can be shot
 
-	setorigin (mine, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
+	setorigin (mine, w_shotorg - v_forward * 6); // move it back so it hits the wall at the right point
 	W_SetupProjectileVelocity(mine, cvar("g_balance_minelayer_speedstart"), 0);
 	mine.angles = vectoangles (mine.velocity);
 
@@ -175,15 +190,15 @@ void spawnfunc_weapon_minelayer (void); // defined in t_items.qc
 
 float w_minelayer(float req)
 {
-	entity rock;
-	float rockfound;
+	entity min;
+	float minfound;
 	if (req == WR_AIM)
 	{
 		// aim and decide to fire if appropriate
 		self.BUTTON_ATCK = bot_aim(cvar("g_balance_minelayer_speed"), 0, cvar("g_balance_minelayer_lifetime"), FALSE);
-		if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
+		if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
 		{
-			// decide whether to detonate rockets
+			// decide whether to detonate mines
 			local entity mine, targetlist, targ;
 			local float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
 			local float selfdamage, teamdamage, enemydamage;
@@ -285,16 +300,16 @@ float w_minelayer(float req)
 
 		if (self.BUTTON_ATCK2)
 		{
-			rockfound = 0;
-			for(rock = world; (rock = find(rock, classname, "mine")); ) if(rock.owner == self)
+			minfound = 0;
+			for(min = world; (min = find(min, classname, "mine")); ) if(min.owner == self)
 			{
-				if(!rock.minelayer_detonate)
+				if(!min.minelayer_detonate)
 				{
-					rock.minelayer_detonate = TRUE;
-					rockfound = 1;
+					min.minelayer_detonate = TRUE;
+					minfound = 1;
 				}
 			}
-			if(rockfound)
+			if(minfound)
 				sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
@@ -344,11 +359,11 @@ float w_minelayer(float req)
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = "%s got too close to %s's rocket";
+			w_deathtypestring = "%s got too close to %s's mine";
 		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "%s almost dodged %s's rocket";
+			w_deathtypestring = "%s almost dodged %s's mine";
 		else
-			w_deathtypestring = "%s ate %s's rocket";
+			w_deathtypestring = "%s ate %s's mine";
 	}
 	return TRUE;
 }
