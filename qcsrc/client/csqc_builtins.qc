@@ -293,6 +293,7 @@ entity(vector org, float rad) findradius = #22;
 
 string(float uselocaltime, string format, ...) strftime = #478;
 float(float timer) gettime = #519;
+#define GETTIME_REALTIME 1
 #define GETTIME_CDTRACK 4
 
 float(string s) tokenize_console = #514;
