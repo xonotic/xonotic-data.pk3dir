@@ -118,7 +118,8 @@ void W_Mine_Think (void)
 void W_Mine_Touch (void)
 {
 	PROJECTILE_TOUCH;
-	self.movetype = MOVETYPE_NONE; // locked in place.
+	spamsound (self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
+	self.movetype = MOVETYPE_NONE; // lock the mine in place
 	// TODO: make sure this doesn't cause the mine to get stuck in the air if it falls over a team mate (doesn't explode) and the team mate leaves
 }
 
@@ -174,7 +175,7 @@ void W_Mine_Attack (void)
 	mine.cnt = time + cvar("g_balance_minelayer_lifetime");
 	mine.flags = FL_PROJECTILE;
 
-	CSQCProjectile(mine, FALSE, PROJECTILE_ROCKET, FALSE);
+	CSQCProjectile(mine, FALSE, PROJECTILE_MINE, FALSE);
 
 	// muzzle flash for 1st person view
 	flash = spawn ();
