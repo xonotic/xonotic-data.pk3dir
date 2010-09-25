@@ -118,7 +118,7 @@ void W_Mine_Think (void)
 void W_Mine_Touch (void)
 {
 	PROJECTILE_TOUCH;
-	spamsound (self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
+	spamsound (self, CHAN_PROJECTILE, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
 	self.movetype = MOVETYPE_NONE; // lock the mine in place
 	// TODO: make sure this doesn't cause the mine to get stuck in the air if it falls over a team mate (doesn't explode) and the team mate leaves
 }
@@ -141,7 +141,7 @@ void W_Mine_Attack (void)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - cvar("g_balance_minelayer_ammo");
 
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", cvar("g_balance_minelayer_damage"));
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/mine_fire.wav", cvar("g_balance_minelayer_damage"));
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -311,7 +311,7 @@ float w_minelayer(float req)
 				}
 			}
 			if(minfound)
-				sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CHAN_WEAPON2, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -320,9 +320,9 @@ float w_minelayer(float req)
 		precache_model ("models/weapons/g_rl.md3");
 		precache_model ("models/weapons/v_rl.md3");
 		precache_model ("models/weapons/h_rl.iqm");
-		precache_sound ("weapons/rocket_det.wav");
-		precache_sound ("weapons/rocket_fire.wav");
-		precache_sound ("weapons/rocket_mode.wav");
+		precache_sound ("weapons/mine_det.wav");
+		precache_sound ("weapons/mine_fire.wav");
+		precache_sound ("weapons/mine_stick.wav");
 	}
 	else if (req == WR_SETUP)
 	{
