@@ -43,7 +43,7 @@ void bot_think()
 	//self.bot_painintensity = self.bot_painintensity + self.bot_oldhealth - self.health;
 	//self.bot_painintensity = bound(0, self.bot_painintensity, 100);
 
-	if(time < game_starttime || ((cvar("g_campaign") && !campaign_bots_may_start)))
+	if (cvar("g_campaign") && !campaign_bots_may_start)
 	{
 		self.nextthink = time + 0.5;
 		return;
@@ -80,6 +80,14 @@ void bot_think()
 	self.button8 = 0;
 	self.BUTTON_CHAT = 0;
 	self.BUTTON_USE = 0;
+
+	if (time < game_starttime)
+	{
+		// block the bot during the countdown to game start
+		self.movement = '0 0 0';
+		self.nextthink = game_starttime;
+		return;
+	}
 
 	// if dead, just wait until we can respawn
 	if (self.deadflag)
@@ -555,17 +563,16 @@ void bot_serverframe()
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = FALSE;
-	if ((realplayers || cvar("bot_join_empty") || (currentbots > 0 && time < 5)))
+	if (teamplay && cvar("bot_vs_human") && (c3==-1 && c4==-1))
+		bots = min(ceil(fabs(cvar("bot_vs_human")) * activerealplayers), maxclients - realplayers);
+	else if ((realplayers || cvar("bot_join_empty") || (currentbots > 0 && time < 5)))
 	{
 		float realminplayers, minplayers;
 		realminplayers = cvar("minplayers");
 		minplayers = max(0, floor(realminplayers));
 
 		float realminbots, minbots;
-		if(teamplay && cvar("bot_vs_human"))
-			realminbots = ceil(fabs(cvar("bot_vs_human")) * activerealplayers);
-		else
-			realminbots = cvar("bot_number");
+		realminbots = cvar("bot_number");
 		minbots = max(0, floor(realminbots));
 
 		bots = min(max(minbots, minplayers - activerealplayers), maxclients - realplayers);
