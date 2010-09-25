@@ -317,9 +317,9 @@ float w_minelayer(float req)
 	else if (req == WR_PRECACHE)
 	{
 		precache_model ("models/flash.md3");
-		precache_model ("models/weapons/g_rl.md3");
-		precache_model ("models/weapons/v_rl.md3");
-		precache_model ("models/weapons/h_rl.iqm");
+		precache_model ("models/weapons/g_minelayer.md3");
+		precache_model ("models/weapons/v_minelayer.md3");
+		precache_model ("models/weapons/h_minelayer.iqm");
 		precache_sound ("weapons/mine_det.wav");
 		precache_sound ("weapons/mine_fire.wav");
 		precache_sound ("weapons/mine_stick.wav");
