@@ -332,8 +332,8 @@ void Ent_Projectile()
 				self.move_bounce_stopspeed = g_balance_grenadelauncher_secondary_bouncestop;
 				break;
 			case PROJECTILE_MINE:
-				self.mins = '-6 -6 -6';
-				self.maxs = '6 6 6';
+				self.mins = '-4 -4 -4';
+				self.maxs = '4 4 4';
 				break;
 			case PROJECTILE_PORTO_RED:
 				self.colormod = '2 1 1';

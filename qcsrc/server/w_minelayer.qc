@@ -156,7 +156,7 @@ void W_Mine_Attack (void)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - cvar("g_balance_minelayer_ammo");
 
-	W_SetupShot_ProjectileSize (self, '-6 -6 -6', '6 6 6', FALSE, 5, "weapons/mine_fire.wav", cvar("g_balance_minelayer_damage"));
+	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", cvar("g_balance_minelayer_damage"));
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -178,9 +178,9 @@ void W_Mine_Attack (void)
 	mine.movetype = MOVETYPE_TOSS;
 	PROJECTILE_MAKETRIGGER(mine);
 	mine.projectiledeathtype = WEP_MINE_LAYER;
-	setsize (mine, '-6 -6 -6', '6 6 6'); // give it some size so it can be shot
+	setsize (mine, '-4 -4 -4', '4 4 4'); // give it some size so it can be shot
 
-	setorigin (mine, w_shotorg - v_forward * 6); // move it back so it hits the wall at the right point
+	setorigin (mine, w_shotorg - v_forward * 4); // move it back so it hits the wall at the right point
 	W_SetupProjectileVelocity(mine, cvar("g_balance_minelayer_speedstart"), 0);
 	mine.angles = vectoangles (mine.velocity);
 
