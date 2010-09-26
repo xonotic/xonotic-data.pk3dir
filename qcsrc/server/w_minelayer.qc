@@ -142,10 +142,10 @@ void W_Mine_Attack (void)
 	// scan how many mines we placed, and return if we reached our limit
 	if(cvar("g_balance_minelayer_limit"))
 	{
-		entity min;
+		entity mine;
 		self.mine_number = 0;
-		for(min = world; (min = find(min, classname, "mine")); )
-			if(min.owner == self)
+		for(mine = world; (mine = find(mine, classname, "mine")); )
+			if(mine.owner == self)
 				self.mine_number += 1;
 
 		if(self.mine_number >= cvar("g_balance_minelayer_limit"))
@@ -210,7 +210,7 @@ void spawnfunc_weapon_minelayer (void); // defined in t_items.qc
 
 float w_minelayer(float req)
 {
-	entity min;
+	entity mine;
 	float minfound;
 	if (req == WR_AIM)
 	{
@@ -321,11 +321,11 @@ float w_minelayer(float req)
 		if (self.BUTTON_ATCK2)
 		{
 			minfound = 0;
-			for(min = world; (min = find(min, classname, "mine")); ) if(min.owner == self)
+			for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 			{
-				if(!min.minelayer_detonate)
+				if(!mine.minelayer_detonate)
 				{
-					min.minelayer_detonate = TRUE;
+					mine.minelayer_detonate = TRUE;
 					minfound = 1;
 				}
 			}
