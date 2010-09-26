@@ -90,7 +90,7 @@ void W_Mine_Think (void)
 		return;
 	}
 
-	// detect players around the mine and explode if the player should detonate it
+	// detect players who are close the mine and explode if the player should detonate it
 	entity head;
 	head = findradius(self.origin, cvar("g_balance_minelayer_detectionradius"));
 
@@ -98,11 +98,8 @@ void W_Mine_Think (void)
 	{
 		if(head.classname == "player" && head.deadflag == DEAD_NO)
 		if(head != self.owner)
-		if not(teams_matter && head.team == self.owner.team) // don't detonate for team mates
-		{
-			W_Mine_Unregister();
+		if(IsDifferentTeam(head, self.owner)) // don't detonate for team mates
 			W_Mine_Explode();
-		}
 		head = head.chain;
 	}
 
@@ -121,7 +118,7 @@ void W_Mine_Touch (void)
 	PROJECTILE_TOUCH;
 	spamsound (self, CHAN_PROJECTILE, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
 	self.movetype = MOVETYPE_NONE; // lock the mine in place
-	// TODO: make sure this doesn't cause the mine to get stuck in the air if it falls over a team mate (doesn't explode) and the team mate leaves
+	// TODO: make sure this doesn't cause the mine to get stuck in the air if it falls over a moving entity
 }
 
 void W_Mine_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
@@ -144,9 +141,8 @@ void W_Mine_Attack (void)
 	{
 		entity mine;
 		self.mine_number = 0;
-		for(mine = world; (mine = find(mine, classname, "mine")); )
-			if(mine.owner == self)
-				self.mine_number += 1;
+		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
+			self.mine_number += 1;
 
 		if(self.mine_number >= cvar("g_balance_minelayer_limit"))
 		{
@@ -160,7 +156,7 @@ void W_Mine_Attack (void)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - cvar("g_balance_minelayer_ammo");
 
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/mine_fire.wav", cvar("g_balance_minelayer_damage"));
+	W_SetupShot_ProjectileSize (self, '-6 -6 -6', '6 6 6', FALSE, 5, "weapons/mine_fire.wav", cvar("g_balance_minelayer_damage"));
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -172,7 +168,7 @@ void W_Mine_Attack (void)
 		mine.spawnshieldtime = -1;
 	mine.classname = "mine";
 	mine.bot_dodge = TRUE;
-	mine.bot_dodgerating = cvar("g_balance_minelayer_damage") * 2; // * 2 because it can be detonated inflight which makes it even more dangerous
+	mine.bot_dodgerating = cvar("g_balance_minelayer_damage") * 2; // * 2 because it can detonate inflight which makes it even more dangerous
 
 	mine.takedamage = DAMAGE_YES;
 	mine.damageforcescale = cvar("g_balance_minelayer_damageforcescale");
@@ -194,7 +190,7 @@ void W_Mine_Attack (void)
 	mine.cnt = time + cvar("g_balance_minelayer_lifetime");
 	mine.flags = FL_PROJECTILE;
 
-	CSQCProjectile(mine, FALSE, PROJECTILE_MINE, FALSE);
+	CSQCProjectile(mine, FALSE, PROJECTILE_MINE, TRUE);
 
 	// muzzle flash for 1st person view
 	flash = spawn ();
@@ -285,7 +281,7 @@ float w_minelayer(float req)
 				}else{
 					local float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
 					//As the distance gets larger, a correct detonation gets near imposible
-					//Bots are assumed to use the rocket spawnfunc_light to see if the rocket gets near a player
+					//Bots are assumed to use the mine spawnfunc_light to see if the mine gets near a player
 					if(v_forward * normalize(mine.origin - self.enemy.origin)< 0.1)
 						if(self.enemy.classname == "player")
 							if(desirabledamage >= 0.1*coredamage)
@@ -368,11 +364,11 @@ float w_minelayer(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CHAN_PROJECTILE, "weapons/mine_exp.wav", VOL_BASE, ATTN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{
-		precache_sound("weapons/rocket_impact.wav");
+		precache_sound("weapons/mine_exp.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "%s exploded";
@@ -383,7 +379,7 @@ float w_minelayer(float req)
 		else if(w_deathtype & HITTYPE_SPLASH)
 			w_deathtypestring = "%s almost dodged %s's mine";
 		else
-			w_deathtypestring = "%s ate %s's mine";
+			w_deathtypestring = "%s stepped on %s's mine";
 	}
 	return TRUE;
 }
