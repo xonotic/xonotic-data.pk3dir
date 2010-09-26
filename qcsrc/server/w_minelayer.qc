@@ -149,7 +149,12 @@ void W_Mine_Attack (void)
 				self.mine_number += 1;
 
 		if(self.mine_number >= cvar("g_balance_minelayer_limit"))
+		{
+			// the refire delay keeps this message from being spammed
+			sprint(self, strcat("You cannot place more than ^2", cvar_string("g_balance_minelayer_limit"), " ^7mines at a time\n") );
+			play2(self, "weapons/unavailable.wav");
 			return;
+		}
 	}
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
