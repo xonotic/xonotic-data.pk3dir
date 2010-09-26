@@ -255,7 +255,7 @@ float WarpZone_CheckProjectileImpact()
 	WarpZone_TraceBox_ThroughZone(self.warpzone_oldorigin, self.mins, self.maxs, self.warpzone_oldorigin + self.warpzone_oldvelocity * frametime, MOVE_NORMAL, self, wz, WarpZone_trace_callback_t_null); // this will get us through the warpzone
 	setorigin(self, trace_endpos);
 	self.angles = WarpZone_TransformAngles(WarpZone_trace_transform, self.angles);
-	self.velocity = WarpZone_TransformVelocity(WarpZone_trace_transform, self.velocity);
+	self.velocity = WarpZone_TransformVelocity(WarpZone_trace_transform, self.warpzone_oldvelocity);
 	
 	// in case we are in our warp zone post-teleport, shift the projectile forward a bit
 	mpd = max(vlen(self.mins), vlen(self.maxs));
