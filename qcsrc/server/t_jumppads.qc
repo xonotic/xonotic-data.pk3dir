@@ -231,25 +231,6 @@ void trigger_push_touch()
 	}
 };
 
-void trigger_push_setactive(float astate)
-{
-	self.active = astate;
-		
-	if(astate == ACTIVE_NOT)
-		self.touch = SUB_Null;
-	else if (astate == ACTIVE_TOGGLE)
-	{
-		if(self.active)
-			self.active = ACTIVE_NOT;
-		else
-			self.active = ACTIVE_ACTIVE;
-	}
-	else
-		self.touch = trigger_push_touch;
-}
-
-
-
 .vector dest;
 void trigger_push_findtarget()
 {
@@ -310,7 +291,6 @@ void spawnfunc_trigger_push()
 	EXACTTRIGGER_INIT;
 	
 	self.active = ACTIVE_ACTIVE;	
-	self.setactive = trigger_push_setactive;
 	self.use = trigger_push_use;
 	self.touch = trigger_push_touch;
 

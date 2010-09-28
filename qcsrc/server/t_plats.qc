@@ -331,8 +331,8 @@ void func_rotating_setactive(float astate)
 {
 	
 	if (astate == ACTIVE_TOGGLE)
-	{
-		if(self.active)
+	{		
+		if(self.active == ACTIVE_ACTIVE)
 			self.active = ACTIVE_NOT;
 		else
 			self.active = ACTIVE_ACTIVE;
@@ -340,7 +340,7 @@ void func_rotating_setactive(float astate)
 	else
 		self.active = astate;
 		
-	if(astate == ACTIVE_NOT)		
+	if(self.active  == ACTIVE_NOT)		
 		self.avelocity = '0 0 0';
 	else
 		self.avelocity = self.pos1;
@@ -408,6 +408,13 @@ void func_bobbing_controller_think()
 {
 	local vector v;
 	self.nextthink = time + 0.1;
+	
+	if not (self.owner.active == ACTIVE_ACTIVE)
+	{
+		self.owner.velocity = '0 0 0';		
+		return;
+	}
+		
 	// calculate sinewave using makevectors
 	makevectors((self.nextthink * self.owner.cnt + self.owner.phase * 360) * '0 1 0');
 	v = self.owner.destvec + self.owner.movedir * v_forward_y;
@@ -446,6 +453,8 @@ void spawnfunc_func_bobbing()
 	self.destvec = self.origin;
 	// time scale to get degrees
 	self.cnt = 360 / self.speed;
+
+	self.active = ACTIVE_ACTIVE;
 
 	// damage when blocked
 	self.blocked = bobbing_blocked;
@@ -551,6 +560,10 @@ void button_use()
 //		dprint(activator.classname);
 //		dprint(" triggered a button\n");
 //	}
+
+	if not (self.active == ACTIVE_ACTIVE)
+		return;
+
 	self.enemy = activator;
 	button_fire ();
 };
@@ -639,6 +652,8 @@ void spawnfunc_func_button()
 
     if(self.noise != "")
         precache_sound(self.noise);
+
+	self.active = ACTIVE_ACTIVE;
 
 	self.pos1 = self.origin;
 	self.pos2 = self.pos1 + self.movedir*(fabs(self.movedir*self.size) - self.lip);
@@ -1661,6 +1676,12 @@ void func_fourier_controller_think()
 	float n, i, t;
 
 	self.nextthink = time + 0.1;
+	if not (self.owner.active == ACTIVE_ACTIVE)
+	{
+		self.owner.velocity = '0 0 0';		
+		return;
+	}
+
 
 	n = floor((tokenize_console(self.owner.netname)) / 5);
 	t = self.nextthink * self.owner.cnt + self.owner.phase * 360;
@@ -1707,6 +1728,8 @@ void spawnfunc_func_fourier()
 
 	if not(InitMovingBrushTrigger())
 		return;
+
+	self.active = ACTIVE_ACTIVE;
 
 	// wait for targets to spawn
 	controller = spawn();
@@ -1784,6 +1807,13 @@ vector func_vectormamamam_origin(entity o, float t)
 void func_vectormamamam_controller_think()
 {
 	self.nextthink = time + 0.1;
+
+	if not (self.owner.active == ACTIVE_ACTIVE)
+	{
+		self.owner.velocity = '0 0 0';		
+		return;
+	}
+
 	self.owner.velocity = (self.owner.destvec + func_vectormamamam_origin(self.owner, 0.1) - self.owner.origin) * 10;
 }
 
@@ -1867,6 +1897,8 @@ void spawnfunc_func_vectormamamam()
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
+
+	self.active = ACTIVE_ACTIVE;
 
 	InitializeEntity(self, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
 }
