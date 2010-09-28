@@ -151,7 +151,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "crosshair_hittest", "1.25", "Enemies"));
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 2.2, e = makeXonoticButton("Waypoints Setup", '0 0 0'));
+		me.TD(me, 1, 2.2, e = makeXonoticButton("Waypoints setup...", '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.waypointDialog;
 		me.TDempty(me, 0.5);
@@ -178,7 +178,6 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			e.addValue(e, "Lots", "0");
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "cl_gentle", 0, 0);
-	me.TR(me);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton("Apply immediately", '0 0 0', "color -1 -1;name \"$_cl_name\";cl_cmd sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_forceplayermodelsfromxonotic;sendcvar cl_forceplayermodels;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));

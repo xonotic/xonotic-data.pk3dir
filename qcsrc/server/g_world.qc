@@ -703,6 +703,21 @@ void spawnfunc_worldspawn (void)
 
 	localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
 
+	// fill sv_curl_serverpackages from .serverpackage files
+	if(cvar("sv_curl_serverpackages_auto"))
+	{
+		fd = search_begin("*.serverpackage", TRUE, FALSE);
+		s = "";
+		if(fd >= 0)
+		{
+			j = search_getsize(fd);
+			for(i = 0; i < j; ++i)
+				s = strcat(s, " ", search_getfilename(fd, i));
+			search_end(fd);
+		}
+		cvar_set("sv_curl_serverpackages", substring(s, 1, -1));
+	}
+
 	world_initialized = 1;
 }
 

@@ -1593,7 +1593,7 @@ void ClientConnect (void)
 			race_SendRankings(i, 0, 0, MSG_ONE);
 		}
 	}
-	else if(cvar("sv_teamnagger") && !g_ca) // teamnagger is currently bad for ca
+	else if(cvar("sv_teamnagger") && !(cvar("bot_vs_human") && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
 
 	CheatInitClient();
@@ -2856,9 +2856,16 @@ float isInvisibleString(string s)
 		switch(c)
 		{
 			case 0:
-			case 32:
-			case 160:
+			case 32: // space
 				break;
+			case 192: // charmap space
+				if (!cvar("utf8_enable"))
+					break;
+				return FALSE;
+			case 160: // space in unicode fonts
+			case 0xE000 + 192: // utf8 charmap space
+				if (cvar("utf8_enable"))
+					break;
 			default:
 				return FALSE;
 		}

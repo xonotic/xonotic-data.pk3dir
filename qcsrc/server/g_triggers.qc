@@ -462,6 +462,7 @@ void spawnfunc_trigger_hurt()
 		self.message = "was in the wrong place";
 	if (!self.message2)
 		self.message2 = "was thrown into a world of hurt by";
+	// self.message = "someone like %s always gets wrongplaced";
 
 	if(!trigger_hurt_first)
 		trigger_hurt_first = self;
@@ -818,7 +819,7 @@ void spawnfunc_func_pointparticles()
 	if(!self.cnt)
 		self.cnt = particleeffectnum(self.mdl);
 
-	Net_LinkEntity(self, FALSE, 0, pointparticles_SendEntity);
+	Net_LinkEntity(self, (self.spawnflags & 4), 0, pointparticles_SendEntity);
 
 	IFTARGETED
 	{

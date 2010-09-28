@@ -5,7 +5,7 @@
 .float HookSilent;
 .float HookRange;
 
-void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag)
+void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag, vector vieworg)
 {
 	// I want to draw a quad...
 	// from and to are MIDPOINTS.
@@ -17,7 +17,7 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 	length_tex = aspect * vlen(to - from) / thickness;
 
 	// direction is perpendicular to the view normal, and perpendicular to the axis
-	thickdir = normalize(cross(axis, view_origin - from));
+	thickdir = normalize(cross(axis, vieworg - from));
 
 /*
 	print("from ", vtos(from), "\n");
@@ -46,11 +46,14 @@ float Draw_GrapplingHook_trace_callback_a;
 void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 {
 	float i;
+	vector vorg;
+	vorg = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
 	for(i = 0; i < Draw_GrapplingHook_trace_callback_a; ++i)
-		Draw_CylindricLine(hit, start, 8, Draw_GrapplingHook_trace_callback_tex, 0.25, Draw_GrapplingHook_trace_callback_rnd, Draw_GrapplingHook_trace_callback_rgb, min(1, Draw_GrapplingHook_trace_callback_a - i), DRAWFLAG_NORMAL);
+		Draw_CylindricLine(hit, start, 8, Draw_GrapplingHook_trace_callback_tex, 0.25, Draw_GrapplingHook_trace_callback_rnd, Draw_GrapplingHook_trace_callback_rgb, min(1, Draw_GrapplingHook_trace_callback_a - i), DRAWFLAG_NORMAL, vorg);
 	Draw_GrapplingHook_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
 }
 
+.float teleport_time;
 void Draw_GrapplingHook()
 {
 	vector a, b, atrans;
@@ -60,6 +63,13 @@ void Draw_GrapplingHook()
 	float s;
 	vector vs;
 	float intensity, offset;
+
+	if(self.teleport_time)
+	if(time > self.teleport_time)
+	{
+		sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM); // safeguard
+		self.teleport_time = 0;
+	}
 
 	InterpolateOrigin_Do();
 
@@ -251,7 +261,7 @@ void Ent_ReadHook(float bIsNew, float type)
 
 	InterpolateOrigin_Note();
 
-	if(bIsNew)
+	if(bIsNew || !self.teleport_time)
 	{
 		self.draw = Draw_GrapplingHook;
 		self.entremove = Remove_GrapplingHook;
@@ -272,6 +282,8 @@ void Ent_ReadHook(float bIsNew, float type)
 				break;
 		}
 	}
+
+	self.teleport_time = time + 10;
 }
 
 void Hook_Precache()

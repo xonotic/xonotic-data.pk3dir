@@ -511,6 +511,7 @@ void W_PrepareExplosionByDamage(entity attacker, void() explode)
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = SUB_Null;
 	self.owner = attacker;
+	self.realowner = attacker;
 
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed

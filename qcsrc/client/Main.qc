@@ -1278,6 +1278,7 @@ void Net_WeaponComplain() {
 	complain_weapon_type = ReadByte();
 
 	complain_weapon_time = time;
+	weapontime = time; // ping the weapon panel
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

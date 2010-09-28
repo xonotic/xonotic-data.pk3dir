@@ -65,12 +65,12 @@ void shotgun_meleethink (void)
 	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, targpos, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage, also remove self
-	if(trace_fraction < 1 && trace_ent.takedamage == DAMAGE_AIM && trace_ent.classname == "player")
+	if(trace_fraction < 1 && trace_ent.takedamage == DAMAGE_AIM && (trace_ent.classname == "player" || trace_ent.classname == "body"))
 	{
 		vector force;
 		force = angle * cvar("g_balance_shotgun_secondary_force");
-		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_shotgun_secondary_damage") * ((f + 1) / 2), WEP_SHOTGUN | HITTYPE_SECONDARY , self.owner.origin + self.owner.view_ofs, force);
-		Damage_RecordDamage(self.owner, WEP_SHOTGUN | HITTYPE_SECONDARY, cvar("g_balance_shotgun_secondary_damage") * ((f + 1) / 2));
+		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_shotgun_secondary_damage") * min(1, f + 1), WEP_SHOTGUN | HITTYPE_SECONDARY , self.owner.origin + self.owner.view_ofs, force);
+		Damage_RecordDamage(self.owner, WEP_SHOTGUN | HITTYPE_SECONDARY, cvar("g_balance_shotgun_secondary_damage") * min(1, f + 1));
 		remove(self);
 	}
 	else if(time >= self.cnt + cvar("g_balance_shotgun_secondary_melee_time")) // missed, remove ent
@@ -94,6 +94,8 @@ void W_Shotgun_Attack2 (void)
 
 void spawnfunc_weapon_shotgun(); // defined in t_items.qc
 
+.float shotgun_primarytime;
+
 float w_shotgun(float req)
 {
 	if (req == WR_AIM)
@@ -104,10 +106,16 @@ float w_shotgun(float req)
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, cvar("g_balance_shotgun_primary_refire")))
 		{
-			W_Shotgun_Attack();
-			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_shotgun_primary_animtime"), w_ready);
+			if (time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+			{
+				if(weapon_prepareattack(0, cvar("g_balance_shotgun_primary_animtime")))
+				{
+					W_Shotgun_Attack();
+					self.shotgun_primarytime = time + cvar("g_balance_shotgun_primary_refire");
+					weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_shotgun_primary_animtime"), w_ready);
+				}
+			}
 		}
 		if (self.BUTTON_ATCK2 && cvar("g_balance_shotgun_secondary"))
 		if (weapon_prepareattack(1, cvar("g_balance_shotgun_secondary_refire")))

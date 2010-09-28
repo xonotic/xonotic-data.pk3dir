@@ -378,7 +378,6 @@ float w_fireball(float req)
 	}
 	else if(req == WR_PRECACHE)
 	{
-		precache_sound("weapons/fireball_impact.wav");
 		precache_sound("weapons/fireball_impact2.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)

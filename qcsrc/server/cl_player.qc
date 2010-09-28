@@ -660,7 +660,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// call the corpse damage function just in case it wants to gib
 		self.event_damage(inflictor, attacker, 0, deathtype, hitloc, force);
 		// set up to fade out later
-		SUB_SetFade (self, time + 12 + random () * 4, 1);
+		SUB_SetFade (self, time + 6 + random (), 1);
 
 		// remove laserdot
 		if(self.weaponentity)

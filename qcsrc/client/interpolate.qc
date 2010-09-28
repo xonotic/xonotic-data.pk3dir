@@ -24,7 +24,8 @@ void InterpolateOrigin_Note()
 	self.iorigin2 = self.origin;
 
 	if(self.iflags & IFLAG_AUTOANGLES)
-		self.angles = vectoangles(self.iorigin2 - self.iorigin1);
+		if(self.iorigin2 != self.iorigin1)
+			self.angles = vectoangles(self.iorigin2 - self.iorigin1);
 
 	if(self.iflags & IFLAG_ANGLES)
 	{

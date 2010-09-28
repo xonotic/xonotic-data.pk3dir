@@ -4,8 +4,6 @@ REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 #ifdef SVQC
 .float gravity;
 
-.entity realowner;
-
 .entity queuenext;
 .entity queueprev;
 

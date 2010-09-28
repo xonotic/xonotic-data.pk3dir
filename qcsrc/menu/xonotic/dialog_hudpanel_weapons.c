@@ -4,7 +4,7 @@ CLASS(XonoticHUDWeaponsDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDWeaponsDialog, title, string, "Weapons Panel")
 	ATTRIB(XonoticHUDWeaponsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDWeaponsDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDWeaponsDialog, rows, float, 15)
+	ATTRIB(XonoticHUDWeaponsDialog, rows, float, 17)
 	ATTRIB(XonoticHUDWeaponsDialog, columns, float, 4)
 	ATTRIB(XonoticHUDWeaponsDialog, name, string, "HUDweapons")
 ENDCLASS(XonoticHUDWeaponsDialog)
@@ -71,6 +71,23 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 				for(i = 0; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
 				e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Fade out after:"));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_timeout"))));
+				e.addValue(e, "Never", "0");
+				for(i = 1; i <= 10; ++i)
+					e.addValue(e, strzone(strcat(ftos_decimals(i, 0), "s")), strzone(ftos(i)));
+				e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, "Fade effect:"));
+		me.TD(me, 1, 0.8, e = makeXonoticRadioButton(3, "hud_panel_weapons_timeout_effect", "0", "None"));
+			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");
+		me.TD(me, 1, 0.8, e = makeXonoticRadioButton(3, "hud_panel_weapons_timeout_effect", "1", "Slide"));
+			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");
+		me.TD(me, 1, 0.8, e = makeXonoticRadioButton(3, "hud_panel_weapons_timeout_effect", "2", "Alpha"));
+			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Weapon icons:"));
 	me.TR(me);

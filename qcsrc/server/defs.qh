@@ -643,3 +643,5 @@ string deathmessage;
 #define ACTIVE_TOGGLE	3
 .float active;
 .float (float act_state) setactive;
+=======
+.entity realowner;

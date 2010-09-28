@@ -293,7 +293,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return;
 	if(!W_IsWeaponThrowable(w))
 		return;
-	if(self.weaponentity.state != WS_READY)
+	if(self.deadflag == DEAD_NO && self.weaponentity.state != WS_READY)
 		return;
 
 	wb = W_WeaponBit(w);

@@ -398,7 +398,7 @@ float	CHAN_AUTO				= 0;
 	// on world: announcers, ...                     INFO
 	// on players: item pickup                       ITEMS
 	// on entities: UNUSED
-	// on csqc: UNUSED
+	// on csqc: announcers                           INFO
 float	CHAN_WEAPON				= 1; // Weapon fire
 	// on world: UNUSED
 	// on players: weapon firing                     WEAPONS
@@ -413,7 +413,7 @@ float	CHAN_TRIGGER			= 3; // Triggers/Items
 	// on world: UNUSED
 	// on players: item pickup                       ITEMS
 	// on entities: platforms moving etc.            ITEMS
-	// on csqc: UNUSED
+	// on csqc: platforms moving etc.                ITEMS
 float	CHAN_PROJECTILE			= 4; // Projectiles
 	// on world: UNUSED
 	// on players: projectiles hitting player        SHOTS

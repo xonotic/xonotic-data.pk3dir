@@ -595,8 +595,8 @@ string HUD_FixScoreboardColumnWidth(float i, string str)
 		for(j = 0; j < hud_num_fields; ++j)
 			if(j != i)
 				if (hud_field[i] != SP_SEPARATOR)
-					namesize -= hud_size[j] + 1;
-		namesize += 1;
+					namesize -= hud_size[j] + hud_fontsize_x;
+		namesize += hud_fontsize_x;
 		hud_size[i] = namesize;
 
 		if (hud_fixscoreboardcolumnwidth_iconlen != 0)
@@ -760,7 +760,10 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	tmp_y = 1.25 * hud_fontsize_y;
 
 	// rounded header
-	drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, (rgb * autocvar_hud_color_bg_team) + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	if (teamplay)
+		drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, (rgb * autocvar_scoreboard_color_bg_team) + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	else
+		drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, rgb + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
 	// table border
 	tmp_y += hud_border_thickness;
@@ -776,7 +779,10 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	// table background
 	tmp_y = body_table_height;
-	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	if (teamplay)
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	else
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
 	// anyway, apply some color
 	//drawfill(pos, tmp + '2 0 0', rgb, 0.1, DRAWFLAG_NORMAL);
@@ -877,7 +883,7 @@ float HUD_WouldDrawScoreboard() {
 		return 1;
 	else if (intermission == 1)
 		return 1;
-	else if (intermission == 2)
+	else if (intermission == 2 && scoreboard_showscores)
 		return 1;
 	else if (getstati(STAT_HEALTH) <= 0 && cvar("cl_deathscoreboard"))
 		return 1;
@@ -907,12 +913,15 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	}
 
 	drawstring(pos, strcat("Accuracy stats (average ", ftos(average_accuracy), "%)"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	pos_y += 18;
+	pos_y += 1.25 * hud_fontsize_y;
 	vector tmp;
 	tmp_x = sbwidth;
 	tmp_y = height * rows;
 
-	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	if (teamplay)
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	else
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(hud_accuracy_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// column highlighting
@@ -1006,6 +1015,8 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		pos_x -= sbwidth/weapon_cnt / 2;
 	pos_x -= sbwidth;
 	pos_y += height;
+
+	pos_y +=  1.25 * hud_fontsize_y;
 	return pos;
 }
 
@@ -1013,9 +1024,9 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 {
 	float i;
 	RANKINGS_RECEIVED_CNT = 0;
-		for (i=RANKINGS_CNT-1; i>=0; --i)
-			if (grecordtime[i])
-				RANKINGS_RECEIVED_CNT = RANKINGS_RECEIVED_CNT + 1;
+	for (i=RANKINGS_CNT-1; i>=0; --i)
+		if (grecordtime[i])
+			++RANKINGS_RECEIVED_CNT;
 
 	if (RANKINGS_RECEIVED_CNT == 0)
 		return pos;
@@ -1023,9 +1034,9 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	float is_spec;
 	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
 	vector hl_rgb;
-		hl_rgb_x = cvar("scoreboard_color_bg_r") + 0.5;
-		hl_rgb_y = cvar("scoreboard_color_bg_g") + 0.5;
-		hl_rgb_z = cvar("scoreboard_color_bg_b") + 0.5;
+	hl_rgb_x = cvar("scoreboard_color_bg_r") + 0.5;
+	hl_rgb_y = cvar("scoreboard_color_bg_g") + 0.5;
+	hl_rgb_z = cvar("scoreboard_color_bg_b") + 0.5;
 
 	pos_y += hud_fontsize_y;
 	drawstring(pos, strcat("Rankings"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
@@ -1034,7 +1045,10 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	tmp_x = sbwidth;
 	tmp_y = hud_fontsize_y * RANKINGS_RECEIVED_CNT;
 
-	drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_hud_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	if (teamplay)
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	else
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(hud_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// row highlighting
@@ -1054,13 +1068,12 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		drawstring(pos, p, hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		drawstring(pos + '3 0 0' * hud_fontsize_x, TIME_ENCODED_TOSTRING(t), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		drawcolorcodedstring(pos + '8 0 0' * hud_fontsize_x, n, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-		pos += '0 1 0' * hud_fontsize_y;
+		pos_y += 1.25 * hud_fontsize_y;
 	}
 
 	return pos;
 }
 
-float scoreboard_fade_alpha;
 float hud_woulddrawscoreboard_prev;
 float hud_woulddrawscoreboard_change; // "time" at which HUD_WouldDrawScoreboard() changed
 void HUD_DrawScoreboard()
@@ -1102,13 +1115,11 @@ void HUD_DrawScoreboard()
 	vector rgb, pos, tmp;
 	entity pl, tm;
 
-	sbwidth = HUD_GetWidth(6.5 * hud_fontsize_y);
+	xmin = cvar("scoreboard_offset_left") * vid_conwidth;
+	ymin = cvar("con_notify") * cvar("con_notifysize");
 
-	xmin = 0.5 * (vid_conwidth - sbwidth);
-	ymin = SCOREBOARD_OFFSET;
-
-	xmax = vid_conwidth - xmin;
-	ymax = vid_conheight - 0.2*vid_conheight;
+	sbwidth = xmax = vid_conwidth - xmin - cvar("scoreboard_offset_right") * vid_conwidth;
+	ymax = vid_conheight - ymin;
 
 	// Initializes position
 	pos_x = xmin;
@@ -1117,10 +1128,12 @@ void HUD_DrawScoreboard()
 
 	// Heading
 	drawfont = hud_bigfont;
-	drawstringcenter('0 1 0' * ymin, "Scoreboard", '24 24 0', '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(pos, "Scoreboard", '24 24 0', '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	
+	centerprint_start_x = vid_conwidth - 0.5 * (pos_x + stringwidth("Scoreboard", FALSE, '24 24 0'));
+	centerprint_start_y = pos_y;
 
-	pos_y += 24 + 4;
-	pos_y += hud_fontsize_y;
+	pos_y += 24;
 
 	drawfont = hud_font;
 
@@ -1136,10 +1149,10 @@ void HUD_DrawScoreboard()
 				continue;
 
 			rgb = GetTeamRGB(tm.team);
-			drawstring(pos - '9.5 0 0' * hud_fontsize_y + '0 1 0' * hud_fontsize_y, ftos(tm.(teamscores[ts_primary])), '1 1 0' * hud_fontsize_y * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawstring(pos - '2 0 0' * hud_fontsize_x + '0 1 0' * hud_fontsize_y, ftos(tm.(teamscores[ts_primary])), '1 1 0' * hud_fontsize_y * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(ts_primary != ts_secondary)
-				drawstring(pos - '7.5 0 0' * hud_fontsize_y + '0 2.5 0' * hud_fontsize_y, ftos(tm.(teamscores[ts_secondary])), '1 1 0' * hud_fontsize_y * 1, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+				drawstring(pos - '2 0 0' * hud_fontsize_x + '0 2.5 0' * hud_fontsize_y, ftos(tm.(teamscores[ts_secondary])), '1 1 0' * hud_fontsize_y * 1, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
 		}
@@ -1177,23 +1190,24 @@ void HUD_DrawScoreboard()
 			pos = HUD_DrawScoreboardAccuracyStats(pos, rgb, bg_size);
 	}
 
-	tmp = pos + '0 1.5 0' * hud_fontsize_y;
-	pos_y += 3 * hud_fontsize_y;
-
 	// List spectators
 	float specs;
 	specs = 0;
+	tmp = pos;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		if(pl.team != COLOR_SPECTATOR)
 			continue;
-		HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), specs);
 		pos_y += 1.25 * hud_fontsize_y;
+		HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), specs);
 		++specs;
 	}
 
 	if(specs)
+	{
 		drawstring(tmp, "Spectators", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+		pos_y += 1.25 * hud_fontsize_y;
+	}
 
 	// Print info string
 	string str;

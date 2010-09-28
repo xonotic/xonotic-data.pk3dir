@@ -79,11 +79,11 @@ void Porto_Draw()
 			p = p - view_up * 16;
 		if(idx-1 >= portal1_idx)
 		{
-			Draw_CylindricLine(p, q, 4, "", 1, 0, '0 0 1', 0.5, DRAWFLAG_NORMAL);
+			Draw_CylindricLine(p, q, 4, "", 1, 0, '0 0 1', 0.5, DRAWFLAG_NORMAL, view_origin);
 		}
 		else
 		{
-			Draw_CylindricLine(p, q, 4, "", 1, 0, '1 0 0', 0.5, DRAWFLAG_NORMAL);
+			Draw_CylindricLine(p, q, 4, "", 1, 0, '1 0 0', 0.5, DRAWFLAG_NORMAL, view_origin);
 		}
 		--idx;
 	}
@@ -102,7 +102,7 @@ void CheckForGamestartChange() {
 	if (previous_game_starttime != startTime) {
 		if ((time + 5.0) < startTime) {
 			//if connecting to server while restart was active don't always play prepareforbattle
-			sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
+			sound(world, CHAN_AUTO, strcat("announcer/", cvar_string("cl_announcer"), "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
 		}
 		if (time < startTime) {
 			restartAnnouncer = spawn();
@@ -354,6 +354,12 @@ void CSQC_UpdateView(float w, float h)
 	float fov;
 	float f, i, j;
 	vector v, vo;
+	vector vf_size, vf_min;
+
+	vf_size = R_SetView3fv(VF_SIZE);
+	vf_min = R_SetView3fv(VF_MIN);
+	vid_width = vf_size_x;
+	vid_height = vf_size_y;
 
 	vector reticle_pos, reticle_size;
 
@@ -397,9 +403,6 @@ void CSQC_UpdateView(float w, float h)
 		view_up = v_up;
 		view_set = 1;
 	}
-
-	vid_width = w;
-	vid_height = h;
 
 #ifdef BLURTEST
 	if(time > blurtest_time0 && time < blurtest_time1)
@@ -487,6 +490,10 @@ void CSQC_UpdateView(float w, float h)
 
 	// ALWAYS Clear Current Scene First
 	R_ClearScene();
+
+	// FIXME engine bug? VF_SIZE and VF_MIN are not restored to sensible values by this
+	R_SetView(VF_SIZE, vf_size);
+	R_SetView(VF_MIN, vf_min);
 
 	// Assign Standard Viewflags
 	// Draw the World (and sky)
@@ -623,11 +630,6 @@ void CSQC_UpdateView(float w, float h)
 			self.draw2d();
 	self = e;
 
-	// draw hud
-	if(cvar("r_letterbox") == 0) {
-		HUD_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
-	}
-
 	float hud;
 	hud = getstati(STAT_HUD);
 	if(hud == HUD_SPIDERBOT)
@@ -645,7 +647,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !camera_active) {
+		if(!scoreboard_active && !camera_active && intermission != 2) {
 			// TrueAim check
 			float shottype;
 			float bullets, ring_scale;
@@ -883,6 +885,11 @@ void CSQC_UpdateView(float w, float h)
 
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
+
+	// let's reset the view back to normal for the end
+	R_SetView(VF_MIN, '0 0 0');
+	R_SetView(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
+
 	// be safe against triggerbots until everyone has the fixed engine
 	// this call is meant to overwrite the trace globals by something
 	// unsuspicious
@@ -1204,23 +1211,29 @@ void CSQC_common_hud(void)
 					acc_lev[i] = stof(argv(i));
 			}
 
-			// hud first
-			HUD_Main();
+			HUD_Main(); // always run these functions for alpha checks
+			HUD_DrawScoreboard();
 
-			// scoreboard/accuracy
-			if (intermission == 2 && !scoreboard_showaccuracy && !scoreboard_showscores) // map voting screen
+			if (scoreboard_showscores || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1) // scoreboard/accuracy
+			{	
+				HUD_Reset();
+				// HUD_DrawScoreboard takes care of centerprint_start
+			}
+			else if (intermission == 2) // map voting screen
 			{
 				HUD_FinaleOverlay();
 				HUD_Reset();
+
+				centerprint_start_x = 0;
+				centerprint_start_y = cvar("scr_centerpos") * vid_conheight;
 			}
-			else if(scoreboard_showaccuracy && spectatee_status != -1)
-				HUD_DrawAccuracyStats();
-			else
-				HUD_DrawScoreboard();
+			else // hud
+			{
+				centerprint_start_x = 0;
+				centerprint_start_y = cvar("scr_centerpos") * vid_conheight;
+			}
 
-			if (scoreboard_showscores || scoreboard_showaccuracy || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
-				HUD_Reset();
-
+			HUD_DrawCenterPrint();
 			break;
 
 		case HUD_SPIDERBOT:
