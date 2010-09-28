@@ -1966,7 +1966,7 @@ void relay_activators_use()
 			trg.setactive(os.cnt);
 		else
 		{
-			bprint("Not using setactive\n");
+			//bprint("Not using setactive\n");
 			if(os.cnt == ACTIVE_TOGGLE)
 				if(trg.active == ACTIVE_ACTIVE)
 					trg.active = ACTIVE_NOT;
