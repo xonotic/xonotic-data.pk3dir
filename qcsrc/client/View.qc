@@ -467,7 +467,6 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	hud_accuracy_hud = cvar_or("hud_accuracy_hud", 1);
 	ColorTranslateMode = cvar("cl_stripcolorcodes");
 	activeweapon = getstati(STAT_SWITCHWEAPON);
 	f = cvar("teamplay");
