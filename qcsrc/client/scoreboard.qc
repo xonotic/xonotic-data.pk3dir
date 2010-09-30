@@ -898,7 +898,6 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
 	float i;
 	float weapon_hit, weapon_damage, weapon_stats;
-	float fontsize = 40 * 1/3;
 	float weapon_cnt = WEP_COUNT - 3; // either minstanex/nex are hidden, no port-o-launch, no tuba
 	float rows;
 	if(cvar("scoreboard_accuracy_doublerows"))
@@ -906,11 +905,9 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	else
 		rows = 1;
 	float height = 40;
-
-	if(warmup_stage)
-	{
-		return pos;
-	}
+	float fontsize = height * 1/3;
+	float weapon_height = height * 2/3;
+	float weapon_width = sbwidth / weapon_cnt;
 
 	drawstring(pos, strcat("Accuracy stats (average ", ftos(average_accuracy), "%)"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += 1.25 * hud_fontsize_y;
@@ -928,13 +925,13 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	for(i = 0; i < weapon_cnt/rows; ++i)
 	{
 		if(!mod(i, 2))
-			drawfill(pos + '1 0 0' * (sbwidth/weapon_cnt) * rows * i, '0 1 0' * height * rows + '1 0 0' * (sbwidth/weapon_cnt) * rows, '0 0 0', scoreboard_alpha_bg * 0.2, DRAWFLAG_NORMAL);
+			drawfill(pos + '1 0 0' * weapon_width * rows * i, '0 1 0' * height * rows + '1 0 0' * weapon_width * rows, '0 0 0', scoreboard_alpha_bg * 0.2, DRAWFLAG_NORMAL);
 	}
 
 	// row highlighting
 	for(i = 0; i < rows; ++i)
 	{
-		drawfill(pos + '0 1 0' * height * (2/3) + '0 1 0' * height * i, '1 0 0' * sbwidth + '0 1 0' * fontsize, '1 1 1', scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
+		drawfill(pos + '0 1 0' * weapon_height + '0 1 0' * height * i, '1 0 0' * sbwidth + '0 1 0' * fontsize, '1 1 1', scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
 	}
 
 	drawfont = hud_bigfont;
@@ -942,7 +939,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float weapons_with_stats;
 	weapons_with_stats = 0;
 	if(rows == 2)
-		pos_x += sbwidth/weapon_cnt / 2;
+		pos_x += weapon_width / 2;
 
 	if(getstati(STAT_SWITCHWEAPON) == WEP_MINSTANEX)
 		g_minstagib = 1; // TODO: real detection for minstagib?
@@ -969,7 +966,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
 
 		// weapon icon
-		drawpic_aspect_skin(pos, strcat("weapon", self.netname), '1 0 0' * sbwidth * (1/weapon_cnt) + '0 1 0' * height * (2/3), '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos, strcat("weapon", self.netname), '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
 		if(weapon_damage) {
 			weapons_with_stats += 1;
@@ -979,7 +976,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			s = strcat(ftos(weapon_stats),"%");
 
 			float padding;
-			padding = ((sbwidth/weapon_cnt) - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value
+			padding = (weapon_width - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value
 
 			float weapon_hit, weapon_damage;
 			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
@@ -1004,9 +1001,9 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 				rgb = rgb + factor * (acc_color(j+1) - rgb);
 			}
 
-			drawstring(pos + '1 0 0' * padding + '0 1 0' * height * (2/3), s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawstring(pos + '1 0 0' * padding + '0 1 0' * weapon_height, s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		}
-		pos_x += sbwidth/weapon_cnt * rows;
+		pos_x += weapon_width * rows;
 		if(rows == 2 && i == 6) {
 			pos_x -= sbwidth;
 			pos_y += height;
@@ -1018,7 +1015,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		average_accuracy = floor(average_accuracy / weapons_with_stats);
 
 	if(rows == 2)
-		pos_x -= sbwidth/weapon_cnt / 2;
+		pos_x -= weapon_width / 2;
 	pos_x -= sbwidth;
 	pos_y += height;
 
@@ -1189,7 +1186,7 @@ void HUD_DrawScoreboard()
 		}
 		pos = HUD_DrawScoreboardRankings(pos, pl, rgb, bg_size);
 	}
-	else if(cvar("scoreboard_accuracy") && spectatee_status != -1) {
+	else if(cvar("scoreboard_accuracy") && spectatee_status != -1 && !warmup_stage) {
 		if(teamplay)
 			pos = HUD_DrawScoreboardAccuracyStats(pos, GetTeamRGB(myteam), bg_size);
 		else
