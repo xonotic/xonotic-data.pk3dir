@@ -1657,6 +1657,10 @@ void HUD_Weapons(void)
 	vector wpnpos;
 	vector wpnsize;
 
+	float show_accuracy;
+	if(autocvar_hud_panel_weapons_accuracy && acc_levels)
+		show_accuracy = true;
+
 	for(i = 0; i < weapon_cnt; ++i)
 	{
 		wpnpos = panel_pos + eX * column * panel_size_x*(1/columns) + eY * row * panel_size_y*(1/rows);
@@ -1670,7 +1674,7 @@ void HUD_Weapons(void)
 			drawpic_aspect_skin(wpnpos, "weapon_current_bg", wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy
-		if(acc_levels)
+		if(show_accuracy)
 		{
 			float weapon_hit, weapon_damage;
 			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];

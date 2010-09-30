@@ -22,6 +22,7 @@ float weapon_fired[WEP_MAXCOUNT];
 #define MAX_ACCURACY_LEVELS 10
 float acc_lev[MAX_ACCURACY_LEVELS];
 float acc_levels;
+string acc_color_levels;
 
 float complain_weapon;
 string complain_weapon_name;

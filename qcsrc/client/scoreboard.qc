@@ -947,6 +947,9 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(getstati(STAT_SWITCHWEAPON) == WEP_MINSTANEX)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
+	if (!acc_levels)
+		rgb = '1 1 1';
+
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		self = get_weaponinfo(i);
@@ -986,17 +989,20 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 				weapon_stats = floor(100 * weapon_hit / weapon_damage);
 			}
 
-			// find the max level lower than weapon_stats
-			float j;
-			j = acc_levels-1;
-			while ( j && weapon_stats < acc_lev[j] )
-				--j;
+			if (acc_levels)
+			{
+				// find the max level lower than weapon_stats
+				float j;
+				j = acc_levels-1;
+				while ( j && weapon_stats < acc_lev[j] )
+					--j;
 
-			// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
-			float factor;
-			factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
-			rgb = acc_color(j);
-			rgb = rgb + factor * (acc_color(j+1) - rgb);
+				// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
+				float factor;
+				factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
+				rgb = acc_color(j);
+				rgb = rgb + factor * (acc_color(j+1) - rgb);
+			}
 
 			drawstring(pos + '1 0 0' * padding + '0 1 0' * height * (2/3), s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		}

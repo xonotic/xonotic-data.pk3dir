@@ -1200,9 +1200,11 @@ void CSQC_common_hud(void)
 		case HUD_NORMAL:
 			// do some accuracy var caching
 			float i;
+			if(cvar_string("hud_panel_weapons_accuracy_color_levels") != acc_color_levels)
 			if(!(gametype == GAME_RACE || gametype == GAME_CTS))
 			{
-				acc_levels = tokenize(cvar_string("hud_panel_weapons_accuracy_color_levels"));
+				acc_color_levels = cvar_string("hud_panel_weapons_accuracy_color_levels");
+				acc_levels = tokenize(acc_color_levels);
 				if (acc_levels > MAX_ACCURACY_LEVELS)
 					acc_levels = MAX_ACCURACY_LEVELS;
 
