@@ -883,11 +883,9 @@ float HUD_WouldDrawScoreboard() {
 		return 1;
 	else if (intermission == 1)
 		return 1;
-	else if (intermission == 2 && scoreboard_showscores)
-		return 1;
 	else if (getstati(STAT_HEALTH) <= 0 && cvar("cl_deathscoreboard"))
 		return 1;
-	else if(scoreboard_showscores_force)
+	else if (scoreboard_showscores_force)
 		return 1;
 	return 0;
 }
@@ -1081,31 +1079,32 @@ float hud_woulddrawscoreboard_prev;
 float hud_woulddrawscoreboard_change; // "time" at which HUD_WouldDrawScoreboard() changed
 void HUD_DrawScoreboard()
 {
-	HUD_UpdatePlayerTeams();
-
 	float hud_woulddrawscoreboard;
-	hud_woulddrawscoreboard = HUD_WouldDrawScoreboard();
+	hud_woulddrawscoreboard = scoreboard_active;
 	if(hud_woulddrawscoreboard != hud_woulddrawscoreboard_prev) {
 		hud_woulddrawscoreboard_change = time;
 		hud_woulddrawscoreboard_prev = hud_woulddrawscoreboard;
 	}
 
-	float scoreboard_fadeinspeed = cvar_or("scoreboard_fadeinspeed", 10);
-	float scoreboard_fadeoutspeed = cvar_or("scoreboard_fadeoutspeed", 5);
 	if(hud_woulddrawscoreboard) {
+		float scoreboard_fadeinspeed = cvar_or("scoreboard_fadeinspeed", 10);
 		if (scoreboard_fadeinspeed)
 			scoreboard_fade_alpha = bound (0, (time - hud_woulddrawscoreboard_change) * scoreboard_fadeinspeed, 1);
 		else
 			scoreboard_fade_alpha = 1;
 	}
-	else
+	else {
+		float scoreboard_fadeoutspeed = cvar_or("scoreboard_fadeoutspeed", 5);
 		if (scoreboard_fadeoutspeed)
 			scoreboard_fade_alpha = bound (0, (1/scoreboard_fadeoutspeed - (time - hud_woulddrawscoreboard_change)) * scoreboard_fadeoutspeed, 1);
 		else
 			scoreboard_fade_alpha = 0;
+	}
 
 	if not(scoreboard_fade_alpha)
 		return;
+
+	HUD_UpdatePlayerTeams();
 
 	scoreboard_alpha_bg = cvar("scoreboard_alpha_bg") * scoreboard_fade_alpha * (1 - cvar("_menu_alpha"));
 	scoreboard_alpha_fg = cvar_or("scoreboard_alpha_fg", 1.0) * scoreboard_fade_alpha * (1 - cvar("_menu_alpha"));
