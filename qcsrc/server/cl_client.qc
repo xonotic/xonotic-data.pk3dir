@@ -1354,8 +1354,9 @@ void FixClientCvars(entity e)
 	if(g_race || g_cts)
 		stuffcmd(e, "cl_cmd settemp cl_movecliptokeyboard 2\n");
 	if(cvar("g_antilag") == 3) // client side hitscan
-		//stuffcmd(e, "cl_cmd settemp cl_prydoncursor -1\ncl_cmd settemp cl_prydoncursor_notrace 0\n");
 		stuffcmd(e, "cl_cmd settemp cl_prydoncursor_notrace 0\n");
+	if(sv_gentle)
+		stuffcmd(e, "cl_cmd settemp cl_gentle 1\n");
 	/*
 	 * we no longer need to stuff this. Remove this comment block if you feel
 	 * 2.3 and higher (or was it 2.2.3?) don't need these any more
@@ -1583,7 +1584,7 @@ void ClientConnect (void)
 			race_SendRankings(i, 0, 0, MSG_ONE);
 		}
 	}
-	else if(cvar("sv_teamnagger") && !g_ca) // teamnagger is currently bad for ca
+	else if(cvar("sv_teamnagger") && !(cvar("bot_vs_human") && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
 
 	CheatInitClient();

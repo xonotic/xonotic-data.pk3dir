@@ -16,6 +16,8 @@ float IsTeamBalanceForced()
 		return 0;
 	if(cvar("g_campaign"))
 		return 0;
+	if(cvar("bot_vs_human") && (c3==-1 && c4==-1))
+		return 0;
 	if(!cvar("g_balance_teams_force"))
 		return -1;
 	return 1;
@@ -694,7 +696,7 @@ void CheckAllowedTeams (entity for_whom)
 	}
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
-	if(c3==-1&&c4==-1)
+	if(c3==-1 && c4==-1)
 	if(cvar("bot_vs_human") && for_whom)
 	{
 		if(cvar("bot_vs_human") > 0)
@@ -721,6 +723,7 @@ float PlayerValue(entity p)
 	if(IsTeamBalanceForced() == 1)
 		return 1;
 	return 1;
+	// FIXME: it always returns 1...
 }
 
 // c1...c4 should be set to -1 (not allowed) or 0 (allowed).
@@ -799,7 +802,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	if(c4 >= 0)
 		totalteams = totalteams + 1;
 
-	if(cvar("bot_vs_human"))
+	if(cvar("bot_vs_human") && totalteams == 1)
 		totalteams += 1;
 
 	if(totalteams <= 1)
@@ -938,7 +941,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 	smallest = FindSmallestTeam(pl, TRUE);
 
-	if(!only_return_best)
+	if(!only_return_best && !pl.bot_forced_team)
 	{
 		TeamchangeFrags(self);
 		if(smallest == 1)

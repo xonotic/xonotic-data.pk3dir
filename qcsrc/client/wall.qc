@@ -79,7 +79,7 @@ void Ent_Wall()
 	{
 		self.modelindex = ReadShort();
 		self.solid = ReadByte();
-		self.scale = ReadByte() / 16.0;
+		self.scale = ReadShort() / 256.0;
 		if(f & 0x20)
 		{
 			self.mins_x = ReadCoord();

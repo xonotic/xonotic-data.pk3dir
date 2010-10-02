@@ -19,8 +19,6 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 	e.classname = "gibsplash";
 	e.cnt = amount;
 	e.state = type; // should stay smaller than 15
-	if(sv_gentle)
-		e.state |= 0x80; // "force gentle" bit
 	if(!sound_allowed(MSG_BROADCAST, gibowner) || !sound_allowed(MSG_BROADCAST, attacker))
 		e.state |= 0x40; // "silence" bit
 	e.state |= 8 * self.species; // gib type, ranges from 0 to 15

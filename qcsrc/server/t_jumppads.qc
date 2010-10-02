@@ -127,6 +127,9 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 void trigger_push_touch()
 {
+	if (self.active == ACTIVE_NOT) 
+		return;		
+		
 	// FIXME: add a .float for whether an entity should be tossed by jumppads
 	if (!other.iscreature)
 	if (other.classname != "corpse")
@@ -229,7 +232,6 @@ void trigger_push_touch()
 };
 
 .vector dest;
-
 void trigger_push_findtarget()
 {
 	local entity e;
@@ -287,7 +289,8 @@ void spawnfunc_trigger_push()
 		SetMovedir ();
 
 	EXACTTRIGGER_INIT;
-
+	
+	self.active = ACTIVE_ACTIVE;	
 	self.use = trigger_push_use;
 	self.touch = trigger_push_touch;
 
