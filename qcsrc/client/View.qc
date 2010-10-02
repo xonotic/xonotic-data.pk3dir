@@ -347,6 +347,7 @@ void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
 
 vector freeze_pmove_org, freeze_input_angles;
+entity nightvision_noise, nightvision_noise2;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -564,6 +565,56 @@ void CSQC_UpdateView(float w, float h)
 	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
+
+	if(cvar("r_fakelight") >= 2)
+	{
+		// apply night vision effect
+		vector rgb, tc_00, tc_01, tc_10, tc_11;
+		float a;
+
+		if(!nightvision_noise)
+		{
+			nightvision_noise = spawn();
+			nightvision_noise.classname = "nightvision_noise";
+		}
+		if(!nightvision_noise2)
+		{
+			nightvision_noise2 = spawn();
+			nightvision_noise2.classname = "nightvision_noise2";
+		}
+
+		// color tint in yellow
+		drawfill('0 0 0', cvar("vid_conwidth") * '1 0 0' + cvar("vid_conheight") * '0 1 0', '0.5 1 0.3', 1, DRAWFLAG_MODULATE);
+
+		// draw BG
+		a = Noise_Pink(nightvision_noise, frametime * 1.5) * 0.05 + 0.15;
+		rgb = '1 1 1';
+		tc_00 = '0 0 0' + '0.2 0 0' * sin(time * 0.3) + '0 0.3 0' * cos(time * 0.7);
+		tc_01 = '0 2.25 0' + '0.6 0 0' * cos(time * 1.2) - '0 0.3 0' * sin(time * 2.2);
+		tc_10 = '1.5 0 0' - '0.2 0 0' * sin(time * 0.5) + '0 0.5 0' * cos(time * 1.7);
+		//tc_11 = '1 1 0' + '0.6 0 0' * sin(time * 0.6) + '0 0.3 0' * cos(time * 0.1);
+		tc_11 = tc_01 + tc_10 - tc_00;
+		R_BeginPolygon("gfx/nightvision-bg.tga", DRAWFLAG_ADDITIVE);
+		R_PolygonVertex('0 0 0', tc_00, rgb, a);
+		R_PolygonVertex(cvar("vid_conwidth") * '1 0 0', tc_10, rgb, a);
+		R_PolygonVertex(cvar("vid_conwidth") * '1 0 0' + cvar("vid_conheight") * '0 1 0', tc_11, rgb, a);
+		R_PolygonVertex(cvar("vid_conheight") * '0 1 0', tc_01, rgb, a);
+		R_EndPolygon();
+
+		// draw FG
+		a = Noise_Pink(nightvision_noise2, frametime * 0.1) * 0.05 + 0.12;
+		rgb = '0.3 0.6 0.4' + '0.1 0.4 0.2' * Noise_White(nightvision_noise2, frametime);
+		tc_00 = '0 0 0' + '1 0 0' * Noise_White(nightvision_noise2, frametime) + '0 1 0' * Noise_White(nightvision_noise2, frametime);
+		tc_01 = tc_00 + '0 3 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.2);
+		tc_10 = tc_00 + '2 0 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.3);
+		tc_11 = tc_01 + tc_10 - tc_00;
+		R_BeginPolygon("gfx/nightvision-fg.tga", DRAWFLAG_ADDITIVE);
+		R_PolygonVertex('0 0 0', tc_00, rgb, a);
+		R_PolygonVertex(cvar("vid_conwidth") * '1 0 0', tc_10, rgb, a);
+		R_PolygonVertex(cvar("vid_conwidth") * '1 0 0' + cvar("vid_conheight") * '0 1 0', tc_11, rgb, a);
+		R_PolygonVertex(cvar("vid_conheight") * '0 1 0', tc_01, rgb, a);
+		R_EndPolygon();
+	}
 
 	// Draw the aiming reticle for weapons that use it
 	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
