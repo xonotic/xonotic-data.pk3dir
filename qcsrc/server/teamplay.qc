@@ -513,8 +513,6 @@ void PrintWelcomeMessage(entity pl)
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_cloaked)
 		modifications = strcat(modifications, ", Cloaked");
-	if(g_footsteps)
-		modifications = strcat(modifications, ", Steps");
 	if(g_grappling_hook)
 		modifications = strcat(modifications, ", Hook");
 	if(g_laserguided_missile)
