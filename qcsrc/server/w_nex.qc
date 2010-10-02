@@ -46,13 +46,11 @@ void W_Nex_Attack (float issecondary)
 	if(cvar("g_balance_nex_velocitydependent")) // player velocity dependent damage and force
 	{
 		myvel = vlen(self.velocity);
-
-		if(myvel < cvar("g_balance_nex_velocitydependent_minspeed"))
-			myvel = bound(cvar("g_balance_nex_velocitydependent_minspeed"), myvel, cvar("g_balance_nex_velocitydependent_maxspeed"));
+		myvel = bound(cvar("g_balance_nex_velocitydependent_minspeed"), myvel, cvar("g_balance_nex_velocitydependent_maxspeed"));
 
 		// TODO: make it more obvious (through effects, indicator on weapon) that damage increases when speed increases
-		mydmg *= cvar("g_balance_nex_velocitydependent_maxspeed") / myvel;
-		myforce *= cvar("g_balance_nex_velocitydependent_maxspeed") / myvel;
+		mydmg *= myvel / cvar("g_balance_nex_velocitydependent_maxspeed");
+		myforce *= myvel / cvar("g_balance_nex_velocitydependent_maxspeed");
 	}
 
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
