@@ -1998,7 +1998,7 @@ void spawnfunc_relay_activatetoggle()
 }
 
 .string chmap, gametype;
-void spawnfunc_target_changelevel()
+void spawnfunc_target_changelevel_use()
 {
 	if(self.gametype != "")
 		MapInfo_SwitchGameType(MapInfo_Type_FromString(self.gametype));
@@ -2007,4 +2007,9 @@ void spawnfunc_target_changelevel()
 		localcmd("endmatch\n");
 	else
 		localcmd(strcat("changelevel ", self.chmap, "\n"));
+};
+
+void spawnfunc_target_changelevel()
+{
+	self.use = spawnfunc_target_changelevel_use;
 };
