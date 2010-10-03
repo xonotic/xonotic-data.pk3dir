@@ -743,6 +743,17 @@ void CSQC_UpdateView(float w, float h)
 				x0 = 1;
 				y0 = 0;
 				d = q - 1;
+				if(d > 0)
+				{
+					R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
+						v = ringorigin;			t = '0.5 0.5 0';
+						R_PolygonVertex(v, t, '1 1 1', 1);
+
+						v = ringorigin;			t = '0.5 0.5 0';
+						v_x += x0 * 0.5 * ringsize_x;	t += x0 * '0.5 0.5 0';
+						v_y += y0 * 0.5 * ringsize_x;	t += y0 * '0.5 -0.5 0';
+						R_PolygonVertex(v, t, '1 1 1', 1);
+				}
 			}
 			else if(f > 0.75)
 			{
@@ -771,11 +782,12 @@ void CSQC_UpdateView(float w, float h)
 					v = ringorigin;			t = '0.5 0.5 0';
 					v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
 					R_PolygonVertex(v, t, '1 1 1', 1);
-				R_EndPolygon();
 
 				x0 = 0;
 				y0 = -1;
 				d = q - 0.75;
+				if(d <= 0)
+					R_EndPolygon();
 			}
 			else if(f > 0.5)
 			{
@@ -797,6 +809,17 @@ void CSQC_UpdateView(float w, float h)
 				x0 = -1;
 				y0 = 0;
 				d = q - 0.5;
+				if(d > 0)
+				{
+					R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
+						v = ringorigin;			t = '0.5 0.5 0';
+						R_PolygonVertex(v, t, '1 1 1', 1);
+
+						v = ringorigin;			t = '0.5 0.5 0';
+						v_x += x0 * 0.5 * ringsize_x;	t += x0 * '0.5 0.5 0';
+						v_y += y0 * 0.5 * ringsize_x;	t += y0 * '0.5 -0.5 0';
+						R_PolygonVertex(v, t, '1 1 1', 1);
+				}
 			}
 			else if(f > 0.25)
 			{
@@ -812,33 +835,37 @@ void CSQC_UpdateView(float w, float h)
 					v = ringorigin;			t = '0.5 0.5 0';
 					v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
 					R_PolygonVertex(v, t, '1 1 1', 1);
-				R_EndPolygon();
 
 				x0 = 0;
 				y0 = 1;
 				d = q - 0.25;
+				if(d <= 0)
+					R_EndPolygon();
 			}
 			else
 			{
 				x0 = 1;
 				y0 = 0;
+				d = q;
+				if(d > 0)
+				{
+					R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
+						v = ringorigin;			t = '0.5 0.5 0';
+						R_PolygonVertex(v, t, '1 1 1', 1);
+
+						v = ringorigin;			t = '0.5 0.5 0';
+						v_x += x0 * 0.5 * ringsize_x;	t += x0 * '0.5 0.5 0';
+						v_y += y0 * 0.5 * ringsize_x;	t += y0 * '0.5 -0.5 0';
+						R_PolygonVertex(v, t, '1 1 1', 1);
+				}
 			}
 
-			if(d >= 0)
+			if(d > 0)
 			{
-				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
-				v = ringorigin;			t = '0.5 0.5 0';
-				R_PolygonVertex(v, t, '1 1 1', 1);
-
-				v = ringorigin;			t = '0.5 0.5 0';
-				v_x += x0 * 0.5 * ringsize_x;	t += x0 * '0.5 0.5 0';
-				v_y += y0 * 0.5 * ringsize_x;	t += y0 * '0.5 -0.5 0';
-				R_PolygonVertex(v, t, '1 1 1', 1);
-
-				v = ringorigin;			t = '0.5 0.5 0';
-				v_x += x * 0.5 * ringsize_x;	t += x * '0.5 0.5 0';
-				v_y += y * 0.5 * ringsize_y;	t += y * '0.5 -0.5 0';
-				R_PolygonVertex(v, t, '1 1 1', 1);
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_x += x * 0.5 * ringsize_x;	t += x * '0.5 0.5 0';
+					v_y += y * 0.5 * ringsize_y;	t += y * '0.5 -0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
 				R_EndPolygon();
 			}
 		}
