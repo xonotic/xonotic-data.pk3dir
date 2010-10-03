@@ -697,6 +697,47 @@ void CSQC_UpdateView(float w, float h)
 			if(cvar("viewsize") < 120)
 				CSQC_common_hud();
 
+
+		// ring around crosshair representing velocity-dependent damage for the nex
+		if (activeweapon == WEP_NEX)
+		{
+			float x, y;
+			vector ringorigin, ringsize, t;
+			ringorigin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
+			ringsize = 64 * '1 1 0'; // testing only
+
+			// TODO send from server
+			float maxvel, minvel, curvel;
+			minvel = 400;
+			maxvel = 1000;
+			curvel = vlen(pmove_vel);
+
+			f = bound(0, (curvel - minvel) / (maxvel - minvel), 1);
+			x = cos(f * M_2_PI);
+			y = sin(f * M_2_PI);
+			f = fabs(x) + fabs(y);
+			x /= f;
+			y /= f;
+			print("x:", ftos(x), " y:", ftos(y), "\n");
+			if(x >= 0 && y >= 0) // first quadrant
+			{
+				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
+
+				v = ringorigin;			t = '0.5 0.5 0';
+				R_PolygonVertex(v, t, '1 1 1', 1);
+
+				v = ringorigin;			t = '0.5 0.5 0';
+				v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+				R_PolygonVertex(v, t, '1 1 1', 1);
+
+				v = ringorigin;			t = '0.5 0.5 0';
+				v_x += x * 0.5 * ringsize_x;	t += x * '0.5 0.5 0';
+				v_y += y * 0.5 * ringsize_y;	t += y * '0.5 -0.5 0';
+				R_PolygonVertex(v, t, '1 1 1', 1);
+				R_EndPolygon();
+			}
+		}
+
 		// crosshair goes VERY LAST
 		if(!scoreboard_active && !camera_active && intermission != 2) {
 			// TrueAim check
