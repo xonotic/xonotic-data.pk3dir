@@ -43,7 +43,7 @@ void W_Nex_Attack (float issecondary)
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	f = ExponentialFalloff(cvar("g_balance_nex_velocitydependent_minspeed"), cvar("g_balance_nex_velocitydependent_maxspeed"), cvar("g_balance_nex_velocitydependent_halflife"), vlen(self.velocity));
+	f = ExponentialFalloff(cvar("g_balance_nex_velocitydependent_minspeed"), cvar("g_balance_nex_velocitydependent_maxspeed"), cvar("g_balance_nex_velocitydependent_halflife"), vlen('1 0 0' * self.velocity_x + '0 1 0' * self.velocity_y));
 
 	// TODO: make it more obvious (through effects, indicator on weapon) that damage increases when speed increases
 	mydmg *= f;

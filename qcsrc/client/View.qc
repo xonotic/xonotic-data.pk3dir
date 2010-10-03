@@ -710,7 +710,7 @@ void CSQC_UpdateView(float w, float h)
 			float maxvel, minvel, curvel;
 			minvel = 400;
 			maxvel = 1000;
-			curvel = vlen(pmove_vel);
+			curvel = vlen('1 0 0' * pmove_vel_x + '0 1 0' * pmove_vel_y);
 
 			f = bound(0, (curvel - minvel) / (maxvel - minvel), 1);
 			x = cos(f * 2 * M_PI);
