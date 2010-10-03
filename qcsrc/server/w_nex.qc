@@ -18,7 +18,7 @@ void SendCSQCNexBeamParticle() {
 
 void W_Nex_Attack (float issecondary)
 {
-	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, myvel;
+	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, f;
 	if(issecondary)
 	{
 		mydmg = cvar("g_balance_nex_secondary_damage");
@@ -43,15 +43,11 @@ void W_Nex_Attack (float issecondary)
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	if(cvar("g_balance_nex_velocitydependent")) // player velocity dependent damage and force
-	{
-		myvel = vlen(self.velocity);
-		myvel = bound(cvar("g_balance_nex_velocitydependent_minspeed"), myvel, cvar("g_balance_nex_velocitydependent_maxspeed"));
+	f = ExponentiaFalloff(cvar("g_balance_nex_velocitydependent_minspeed"), cvar("g_balance_nex_velocitydependent_maxspeed"), cvar("g_balance_nex_velocitydependent_halflife"), vlen(self.velocity));
 
-		// TODO: make it more obvious (through effects, indicator on weapon) that damage increases when speed increases
-		mydmg *= myvel / cvar("g_balance_nex_velocitydependent_maxspeed");
-		myforce *= myvel / cvar("g_balance_nex_velocitydependent_maxspeed");
-	}
+	// TODO: make it more obvious (through effects, indicator on weapon) that damage increases when speed increases
+	mydmg *= f;
+	myforce *= f;
 
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
 
