@@ -867,9 +867,19 @@ void PutClientInServer (void)
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
 		if(cvar("g_playerclip_collisions"))
-			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+		{
+			if(clienttype(self) == CLIENTTYPE_BOT && cvar("g_botclip_collisions"))
+				self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+			else
+				self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+		}
 		else
-			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
+		{
+			if(clienttype(self) == CLIENTTYPE_BOT && cvar("g_botclip_collisions"))
+				self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP;
+			else
+				self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
+		}
 		self.frags = FRAGS_PLAYER;
 		if(independent_players)
 			MAKE_INDEPENDENT_PLAYER(self);
