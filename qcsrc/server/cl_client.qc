@@ -866,10 +866,11 @@ void PutClientInServer (void)
 		self.iscreature = TRUE;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
+		self.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
 		if(cvar("g_playerclip_collisions"))
-			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-		else
-			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
+			self.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
+		if(clienttype(self) == CLIENTTYPE_BOT && cvar("g_botclip_collisions"))
+			self.dphitcontentsmask |= DPCONTENTS_BOTCLIP;
 		self.frags = FRAGS_PLAYER;
 		if(independent_players)
 			MAKE_INDEPENDENT_PLAYER(self);
