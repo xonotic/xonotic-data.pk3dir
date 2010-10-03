@@ -704,7 +704,7 @@ void CSQC_UpdateView(float w, float h)
 			float x, y, q, d;
 			vector ringorigin, ringsize, t;
 			ringorigin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-			ringsize = 64 * '1 1 0'; // testing only
+			ringsize = 64 * '1 -1 0'; // testing only
 
 			// TODO send from server
 			float maxvel, minvel, curvel;
@@ -732,7 +732,7 @@ void CSQC_UpdateView(float w, float h)
 					R_PolygonVertex(v, t, '1 1 1', 1);
 
 					v = ringorigin;			t = '0.5 0.5 0';
-					v_x -= 0.5 * ringsize_y;	t -= '0.5 0.5 0';
+					v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
 					R_PolygonVertex(v, t, '1 1 1', 1);
 
 					v = ringorigin;			t = '0.5 0.5 0';
@@ -765,7 +765,7 @@ void CSQC_UpdateView(float w, float h)
 					R_PolygonVertex(v, t, '1 1 1', 1);
 
 					v = ringorigin;			t = '0.5 0.5 0';
-					v_x -= 0.5 * ringsize_y;	t -= '0.5 0.5 0';
+					v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
 					R_PolygonVertex(v, t, '1 1 1', 1);
 				R_EndPolygon();
 				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
@@ -773,7 +773,7 @@ void CSQC_UpdateView(float w, float h)
 					R_PolygonVertex(v, t, '1 1 1', 1);
 
 					v = ringorigin;			t = '0.5 0.5 0';
-					v_x -= 0.5 * ringsize_y;	t -= '0.5 0.5 0';
+					v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
 					R_PolygonVertex(v, t, '1 1 1', 1);
 
 					v = ringorigin;			t = '0.5 0.5 0';
@@ -797,7 +797,7 @@ void CSQC_UpdateView(float w, float h)
 					R_PolygonVertex(v, t, '1 1 1', 1);
 
 					v = ringorigin;			t = '0.5 0.5 0';
-					v_x -= 0.5 * ringsize_y;	t -= '0.5 0.5 0';
+					v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
 					R_PolygonVertex(v, t, '1 1 1', 1);
 				R_EndPolygon();
 
@@ -821,7 +821,7 @@ void CSQC_UpdateView(float w, float h)
 					R_PolygonVertex(v, t, '1 1 1', 1);
 
 					v = ringorigin;			t = '0.5 0.5 0';
-					v_x += 0.5 * ringsize_y;	t += '0.5 0.5 0';
+					v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
 					R_PolygonVertex(v, t, '1 1 1', 1);
 
 					v = ringorigin;			t = '0.5 0.5 0';
