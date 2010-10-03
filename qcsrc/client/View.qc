@@ -701,7 +701,7 @@ void CSQC_UpdateView(float w, float h)
 		// ring around crosshair representing velocity-dependent damage for the nex
 		if (activeweapon == WEP_NEX)
 		{
-			float x, y;
+			float x, y, x0, y0, q, d;
 			vector ringorigin, ringsize, t;
 			ringorigin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 			ringsize = 64 * '1 1 0'; // testing only
@@ -713,21 +713,126 @@ void CSQC_UpdateView(float w, float h)
 			curvel = vlen(pmove_vel);
 
 			f = bound(0, (curvel - minvel) / (maxvel - minvel), 1);
-			x = cos(f * M_2_PI);
-			y = sin(f * M_2_PI);
-			f = fabs(x) + fabs(y);
-			x /= f;
-			y /= f;
-			print("x:", ftos(x), " y:", ftos(y), "\n");
-			if(x >= 0 && y >= 0) // first quadrant
+			x = cos(f * 2 * M_PI);
+			y = sin(f * 2 * M_PI);
+			q = fabs(x) + fabs(y);
+			x /= q;
+			y /= q;
+
+			if(f >= 1)
+			{
+				// draw full rectangle
+				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_x -= 0.5 * ringsize_y;	t -= '0.5 0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+				R_EndPolygon();
+
+				x0 = 1;
+				y0 = 0;
+				d = q - 1;
+			}
+			else if(f > 0.75)
+			{
+				// draw upper and first triangle
+				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_x -= 0.5 * ringsize_y;	t -= '0.5 0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+				R_EndPolygon();
+				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
+					v = ringorigin;			t = '0.5 0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_x -= 0.5 * ringsize_y;	t -= '0.5 0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+				R_EndPolygon();
+
+				x0 = 0;
+				y0 = -1;
+				d = q - 0.75;
+			}
+			else if(f > 0.5)
+			{
+				// draw upper triangle
+				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_x -= 0.5 * ringsize_y;	t -= '0.5 0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+				R_EndPolygon();
+
+				x0 = -1;
+				y0 = 0;
+				d = q - 0.5;
+			}
+			else if(f > 0.25)
+			{
+				// draw first triangle
+				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
+					v = ringorigin;			t = '0.5 0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_x += 0.5 * ringsize_y;	t += '0.5 0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+
+					v = ringorigin;			t = '0.5 0.5 0';
+					v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+					R_PolygonVertex(v, t, '1 1 1', 1);
+				R_EndPolygon();
+
+				x0 = 0;
+				y0 = 1;
+				d = q - 0.25;
+			}
+			else
+			{
+				x0 = 1;
+				y0 = 0;
+			}
+
+			if(d >= 0)
 			{
 				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
-
 				v = ringorigin;			t = '0.5 0.5 0';
 				R_PolygonVertex(v, t, '1 1 1', 1);
 
 				v = ringorigin;			t = '0.5 0.5 0';
-				v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+				v_x += x0 * 0.5 * ringsize_x;	t += x0 * '0.5 0.5 0';
+				v_y += y0 * 0.5 * ringsize_x;	t += y0 * '0.5 -0.5 0';
 				R_PolygonVertex(v, t, '1 1 1', 1);
 
 				v = ringorigin;			t = '0.5 0.5 0';
