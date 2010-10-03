@@ -2,6 +2,9 @@
 REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "gl", "grenadelauncher", "Mortar");
 #else
 #ifdef SVQC
+.float gl_detonate_later;
+.float gl_bouncecnt;
+
 void W_Grenade_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
@@ -52,10 +55,47 @@ void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float de
 	}
 }
 
+void W_Grenade_Think1 (void)
+{
+	self.nextthink = time;
+	if (time > self.cnt)
+	{
+		other = world;
+		self.projectiledeathtype |= HITTYPE_BOUNCE;
+		W_Grenade_Explode ();
+		return;
+	}
+	if(self.gl_detonate_later && self.gl_bouncecnt >= cvar("g_balance_grenadelauncher_primary_remote_minbouncecnt"))
+		W_Grenade_Explode();
+}
+
 void W_Grenade_Touch1 (void)
 {
 	PROJECTILE_TOUCH;
-	if(cvar("g_balance_grenadelauncher_primary_sticky") && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE)))
+	if (other.takedamage == DAMAGE_AIM || cvar("g_balance_grenadelauncher_primary_type") == 0) // always explode when hitting a player, or if normal mortar projectile
+	{
+		self.use ();
+	}
+	else if (cvar("g_balance_grenadelauncher_primary_type") == 1) // bounce
+	{
+		float r;
+		r = random() * 6;
+		if(r < 1)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 2)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 3)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 4)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 5)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+		else
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+		self.projectiledeathtype |= HITTYPE_BOUNCE;
+		self.gl_bouncecnt += 1;
+	}
+	else if(cvar("g_balance_grenadelauncher_primary_type") == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{
 		spamsound (self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
 
@@ -71,14 +111,35 @@ void W_Grenade_Touch1 (void)
 
 		self.nextthink = min(self.nextthink, time + cvar("g_balance_grenadelauncher_primary_lifetime2"));
 	}
-	else
-		W_Grenade_Explode ();
 }
 
 void W_Grenade_Touch2 (void)
 {
 	PROJECTILE_TOUCH;
-	if(cvar("g_balance_grenadelauncher_secondary_sticky") && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE)))
+	if (other.takedamage == DAMAGE_AIM || cvar("g_balance_grenadelauncher_secondary_type") == 0) // always explode when hitting a player, or if normal mortar projectile
+	{
+		self.use ();
+	}
+	else if (cvar("g_balance_grenadelauncher_secondary_type") == 1) // bounce
+	{
+		float r;
+		r = random() * 6;
+		if(r < 1)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 2)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 3)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 4)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 5)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+		else
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+		self.projectiledeathtype |= HITTYPE_BOUNCE;
+		self.gl_bouncecnt += 1;
+	}
+	else if(cvar("g_balance_grenadelauncher_secondary_type") == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{
 		spamsound (self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
 
@@ -93,31 +154,6 @@ void W_Grenade_Touch2 (void)
 		self.solid = SOLID_NOT;
 
 		self.nextthink = min(self.nextthink, time + cvar("g_balance_grenadelauncher_secondary_lifetime2"));
-	}
-	else
-	{
-		if (cvar("g_balance_grenadelauncher_secondary_sticky") || other.takedamage == DAMAGE_AIM)
-		{
-			self.use ();
-		}
-		else
-		{
-			float r;
-			r = random() * 6;
-			if(r < 1)
-				spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
-			else if(r < 2)
-				spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
-			else if(r < 3)
-				spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
-			else if(r < 4)
-				spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
-			else if(r < 5)
-				spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
-			else
-				spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
-			self.projectiledeathtype |= HITTYPE_BOUNCE;
-		}
 	}
 }
 
@@ -138,25 +174,32 @@ void W_Grenade_Attack (void)
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = cvar("g_balance_grenadelauncher_primary_damage");
 	gren.movetype = MOVETYPE_BOUNCE;
+	gren.bouncefactor = cvar("g_balance_grenadelauncher_primary_bouncefactor");
+	gren.bouncestop = cvar("g_balance_grenadelauncher_primary_bouncestop");
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
-	gren.nextthink = time + cvar("g_balance_grenadelauncher_primary_lifetime");
-	gren.think = adaptor_think2use_hittype_splash;
+	gren.cnt = time + cvar("g_balance_grenadelauncher_primary_lifetime");
+	gren.nextthink = time;
+	gren.think = W_Grenade_Think1;
 	gren.use = W_Grenade_Explode;
 	gren.touch = W_Grenade_Touch1;
 
 	gren.takedamage = DAMAGE_YES;
 	gren.health = cvar("g_balance_grenadelauncher_primary_health");
+	gren.damageforcescale = cvar("g_balance_grenadelauncher_primary_damageforcescale");
 	gren.event_damage = W_Grenade_Damage;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
 
-	CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);	
+	if(cvar("g_balance_grenadelauncher_secondary_type") == 0 || cvar("g_balance_grenadelauncher_secondary_type") == 2)
+		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
+	else
+		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
 }
 
 void W_Grenade_Attack2 (void)
@@ -197,7 +240,7 @@ void W_Grenade_Attack2 (void)
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
 
-	if(cvar("g_balance_grenadelauncher_secondary_sticky"))
+	if(cvar("g_balance_grenadelauncher_secondary_type") == 0 || cvar("g_balance_grenadelauncher_secondary_type") == 2)
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
 	else
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
@@ -211,6 +254,9 @@ void spawnfunc_weapon_grenadelauncher (void)
 .float bot_secondary_grenademooth;
 float w_glauncher(float req)
 {
+	entity nade;
+	float nadefound;
+
 	if (req == WR_AIM)
 	{
 		self.BUTTON_ATCK = FALSE;
@@ -243,11 +289,27 @@ float w_glauncher(float req)
 				W_Grenade_Attack();
 			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_grenadelauncher_primary_animtime"), w_ready);
 		}
-		if (self.BUTTON_ATCK2 && !cvar("g_balance_grenadelauncher_primary2secondary"))
-		if (weapon_prepareattack(1, cvar("g_balance_grenadelauncher_secondary_refire")))
+		if (self.BUTTON_ATCK2)
 		{
-			W_Grenade_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_grenadelauncher_secondary_animtime"), w_ready);
+			if (cvar("g_balance_grenadelauncher_secondary_remote_detonateprimary"))
+			{
+				nadefound = 0;
+				for(nade = world; (nade = find(nade, classname, "grenade")); ) if(nade.owner == self)
+				{
+					if(!nade.gl_detonate_later)
+					{
+						nade.gl_detonate_later = TRUE;
+						nadefound = 1;
+					}
+				}
+				if(nadefound)
+					sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+			}
+			else if (weapon_prepareattack(1, cvar("g_balance_grenadelauncher_secondary_refire")))
+			{
+				W_Grenade_Attack2();
+				weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_grenadelauncher_secondary_animtime"), w_ready);
+			}
 		}
 	}
 	else if (req == WR_PRECACHE)
