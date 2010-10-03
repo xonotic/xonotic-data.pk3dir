@@ -196,7 +196,7 @@ void W_Grenade_Attack (void)
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
 
-	if(cvar("g_balance_grenadelauncher_secondary_type") == 0 || cvar("g_balance_grenadelauncher_secondary_type") == 2)
+	if(cvar("g_balance_grenadelauncher_primary_type") == 0 || cvar("g_balance_grenadelauncher_primary_type") == 2)
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
 	else
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
