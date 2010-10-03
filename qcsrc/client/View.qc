@@ -701,7 +701,7 @@ void CSQC_UpdateView(float w, float h)
 		// ring around crosshair representing velocity-dependent damage for the nex
 		if (activeweapon == WEP_NEX)
 		{
-			float x, y, x0, y0, q, d;
+			float x, y, q, d;
 			vector ringorigin, ringsize, t;
 			ringorigin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 			ringsize = 64 * '1 1 0'; // testing only
@@ -740,8 +740,6 @@ void CSQC_UpdateView(float w, float h)
 					R_PolygonVertex(v, t, '1 1 1', 1);
 				R_EndPolygon();
 
-				x0 = 1;
-				y0 = 0;
 				d = q - 1;
 				if(d > 0)
 				{
@@ -750,8 +748,7 @@ void CSQC_UpdateView(float w, float h)
 						R_PolygonVertex(v, t, '1 1 1', 1);
 
 						v = ringorigin;			t = '0.5 0.5 0';
-						v_x += x0 * 0.5 * ringsize_x;	t += x0 * '0.5 0.5 0';
-						v_y += y0 * 0.5 * ringsize_x;	t += y0 * '0.5 -0.5 0';
+						v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
 						R_PolygonVertex(v, t, '1 1 1', 1);
 				}
 			}
@@ -783,8 +780,6 @@ void CSQC_UpdateView(float w, float h)
 					v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
 					R_PolygonVertex(v, t, '1 1 1', 1);
 
-				x0 = 0;
-				y0 = -1;
 				d = q - 0.75;
 				if(d <= 0)
 					R_EndPolygon();
@@ -806,8 +801,6 @@ void CSQC_UpdateView(float w, float h)
 					R_PolygonVertex(v, t, '1 1 1', 1);
 				R_EndPolygon();
 
-				x0 = -1;
-				y0 = 0;
 				d = q - 0.5;
 				if(d > 0)
 				{
@@ -816,8 +809,7 @@ void CSQC_UpdateView(float w, float h)
 						R_PolygonVertex(v, t, '1 1 1', 1);
 
 						v = ringorigin;			t = '0.5 0.5 0';
-						v_x += x0 * 0.5 * ringsize_x;	t += x0 * '0.5 0.5 0';
-						v_y += y0 * 0.5 * ringsize_x;	t += y0 * '0.5 -0.5 0';
+						v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
 						R_PolygonVertex(v, t, '1 1 1', 1);
 				}
 			}
@@ -836,16 +828,12 @@ void CSQC_UpdateView(float w, float h)
 					v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
 					R_PolygonVertex(v, t, '1 1 1', 1);
 
-				x0 = 0;
-				y0 = 1;
 				d = q - 0.25;
 				if(d <= 0)
 					R_EndPolygon();
 			}
 			else
 			{
-				x0 = 1;
-				y0 = 0;
 				d = q;
 				if(d > 0)
 				{
@@ -854,8 +842,7 @@ void CSQC_UpdateView(float w, float h)
 						R_PolygonVertex(v, t, '1 1 1', 1);
 
 						v = ringorigin;			t = '0.5 0.5 0';
-						v_x += x0 * 0.5 * ringsize_x;	t += x0 * '0.5 0.5 0';
-						v_y += y0 * 0.5 * ringsize_x;	t += y0 * '0.5 -0.5 0';
+						v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
 						R_PolygonVertex(v, t, '1 1 1', 1);
 				}
 			}
