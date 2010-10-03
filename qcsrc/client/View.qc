@@ -701,160 +701,18 @@ void CSQC_UpdateView(float w, float h)
 		// ring around crosshair representing velocity-dependent damage for the nex
 		if (activeweapon == WEP_NEX)
 		{
-			float x, y, q, d;
-			vector ringorigin, ringsize, t;
-			ringorigin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-			ringsize = 64 * '1 -1 0'; // testing only
+			float f, a, curvel;
+			vector rgb;
 
-			// TODO send from server
-			float maxvel, minvel, curvel;
-			minvel = 400;
-			maxvel = 1000;
+			rgb_x = cvar("crosshair_nexvelocity_color_red");
+			rgb_y = cvar("crosshair_nexvelocity_color_green");
+			rgb_z = cvar("crosshair_nexvelocity_color_blue");
+			a = cvar("crosshair_nexvelocity_alpha");
+
 			curvel = vlen('1 0 0' * pmove_vel_x + '0 1 0' * pmove_vel_y);
+			f = bound(0, (curvel - nex_minvelocity) / (nex_maxvelocity - nex_minvelocity), 1);
 
-			f = bound(0, (curvel - minvel) / (maxvel - minvel), 1);
-			x = cos(f * 2 * M_PI);
-			y = sin(f * 2 * M_PI);
-			q = fabs(x) + fabs(y);
-			x /= q;
-			y /= q;
-
-			if(f >= 1)
-			{
-				// draw full rectangle
-				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-				R_EndPolygon();
-
-				d = q - 1;
-				if(d > 0)
-				{
-					R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
-						v = ringorigin;			t = '0.5 0.5 0';
-						R_PolygonVertex(v, t, '1 1 1', 1);
-
-						v = ringorigin;			t = '0.5 0.5 0';
-						v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
-						R_PolygonVertex(v, t, '1 1 1', 1);
-				}
-			}
-			else if(f > 0.75)
-			{
-				// draw upper and first triangle
-				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-				R_EndPolygon();
-				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
-					v = ringorigin;			t = '0.5 0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-				d = q - 0.75;
-				if(d <= 0)
-					R_EndPolygon();
-			}
-			else if(f > 0.5)
-			{
-				// draw upper triangle
-				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-				R_EndPolygon();
-
-				d = q - 0.5;
-				if(d > 0)
-				{
-					R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
-						v = ringorigin;			t = '0.5 0.5 0';
-						R_PolygonVertex(v, t, '1 1 1', 1);
-
-						v = ringorigin;			t = '0.5 0.5 0';
-						v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
-						R_PolygonVertex(v, t, '1 1 1', 1);
-				}
-			}
-			else if(f > 0.25)
-			{
-				// draw first triangle
-				R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
-					v = ringorigin;			t = '0.5 0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-
-				d = q - 0.25;
-				if(d <= 0)
-					R_EndPolygon();
-			}
-			else
-			{
-				d = q;
-				if(d > 0)
-				{
-					R_BeginPolygon("gfx/nex_ring.tga", DRAWFLAG_ADDITIVE);
-						v = ringorigin;			t = '0.5 0.5 0';
-						R_PolygonVertex(v, t, '1 1 1', 1);
-
-						v = ringorigin;			t = '0.5 0.5 0';
-						v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
-						R_PolygonVertex(v, t, '1 1 1', 1);
-				}
-			}
-
-			if(d > 0)
-			{
-					v = ringorigin;			t = '0.5 0.5 0';
-					v_x += x * 0.5 * ringsize_x;	t += x * '0.5 0.5 0';
-					v_y += y * 0.5 * ringsize_y;	t += y * '0.5 -0.5 0';
-					R_PolygonVertex(v, t, '1 1 1', 1);
-				R_EndPolygon();
-			}
+			DrawCircleClippedPic('0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight, 0.1 * vid_conheight, "gfx/nex_ring.tga", f, rgb, a, DRAWFLAG_ADDITIVE);
 		}
 
 		// crosshair goes VERY LAST

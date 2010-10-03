@@ -6,6 +6,14 @@ void send_CSQC_teamnagger() {
 	WriteByte(0, TE_CSQC_TEAMNAGGER);
 }
 
+void send_CSQC_nexvelocity(entity e) {
+	msg_entity = e;
+	WriteByte(MSG_ONE, SVC_TEMPENTITY);
+	WriteByte(MSG_ONE, TE_CSQC_NEX_VELOCITY);
+	WriteShort(MSG_ONE, cvar("g_balance_nex_velocitydependent_minspeed"));
+	WriteShort(MSG_ONE, cvar("g_balance_nex_velocitydependent_maxspeed"));
+}
+
 void Announce(string snd) {
 	WriteByte(MSG_ALL, SVC_TEMPENTITY);
 	WriteByte(MSG_ALL, TE_CSQC_ANNOUNCE);
@@ -1597,6 +1605,8 @@ void ClientConnect (void)
 	}
 	else if(cvar("sv_teamnagger") && !(cvar("bot_vs_human") && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
+
+	send_CSQC_nexvelocity(self);
 
 	CheatInitClient();
 }
