@@ -283,10 +283,7 @@ float w_glauncher(float req)
 		if (self.BUTTON_ATCK)
 		if (weapon_prepareattack(0, cvar("g_balance_grenadelauncher_primary_refire")))
 		{
-			if(cvar("g_balance_grenadelauncher_primary2secondary"))
-				W_Grenade_Attack2();
-			else
-				W_Grenade_Attack();
+			W_Grenade_Attack();
 			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_grenadelauncher_primary_animtime"), w_ready);
 		}
 		if (self.BUTTON_ATCK2)
