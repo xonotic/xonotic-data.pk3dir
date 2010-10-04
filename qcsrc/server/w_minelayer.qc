@@ -99,6 +99,7 @@ void W_Mine_Think (void)
 		if(head.classname == "player" && head.deadflag == DEAD_NO)
 		if(head != self.owner)
 		if(IsDifferentTeam(head, self.owner)) // don't detonate for team mates
+		if(!self.mine_time)
 		{
 			self.mine_time = time + cvar("g_balance_minelayer_time");
 		}
@@ -106,8 +107,11 @@ void W_Mine_Think (void)
 	}
 
 	// explode if it's time
-	if(time >= self.mine_time)
+	if(self.mine_time && time >= self.mine_time)
+	{
+		self.mine_time = 0;
 		W_Mine_Explode();
+	}
 
 	// remote detonation
 	if (self.owner.weapon == WEP_MINE_LAYER)
