@@ -336,19 +336,27 @@ float Ban_GetClientIP(entity client)
 	string s;
 
 	s = client.netaddress;
-	
+
 	i1 = strstrofs(s, ".", 0);
+	if(i1 < 0)
+		i1 = strstrofs(s, ":", 0);
 	if(i1 < 0)
 		return FALSE;
 	i2 = strstrofs(s, ".", i1 + 1);
 	if(i2 < 0)
+		i2 = strstrofs(s, ":", i1 + 1);
+	if(i2 < 0)
 		return FALSE;
 	i3 = strstrofs(s, ".", i2 + 1);
 	if(i3 < 0)
+		i3 = strstrofs(s, ":", i2 + 1);
+	if(i3 < 0)
 		return FALSE;
 	i4 = strstrofs(s, ".", i3 + 1);
+	if(i4 < 0)
+		i4 = strstrofs(s, ":", i3 + 1);
 	if(i4 >= 0)
-		return FALSE;
+		s = substring(s, 0, i4);
 	
 	ban_ip1 = substring(s, 0, i1);
 	ban_ip2 = substring(s, 0, i2);
