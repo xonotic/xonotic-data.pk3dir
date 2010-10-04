@@ -1,6 +1,5 @@
 /*TODO list (things left to do before this weapon should be ready, delete once it's all done):
 - The weapon currently uses sounds and models from other weapons. We need a modeler and sound artist to make this weapon its own (the gun model should probably be something between the porto and rocket launcher design-wise).
-- Add protection so a mine doesn't explode if it would harm the player or a team mate, in case both an enemy and a friend are its range. This already exists for alt-fire detonation, but not for proximity detonation. Should probably be a cvared but default option.
 - Mines remain stuck in the air if they hit a moving entity (like an elevator or players). They should normally stick to them... perhaps set them as an attachment?
 - Bot code for the weapon may be needed. The bot AI may not have any info about this gun yet.
 - The mine model needs to face properly when it sticks to a surface. Once we'll have a correct mine model, we can't afford the model facing any way it falls to the ground. Should probably look at the porto code to see how portals face in the right direction when sticking to walls. 
@@ -87,8 +86,28 @@ void W_Mine_RemoteExplode()
 	}
 }
 
+void W_Mine_ProximityExplode()
+{
+	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
+	if(cvar("g_balance_minelayer_protection"))
+	{
+		entity head;
+		head = findradius(self.origin, cvar("g_balance_minelayer_radius"));
+		while(head)
+		{
+			if(head == self.owner || !IsDifferentTeam(head, self.owner))
+				return;
+			head = head.chain;
+		}
+	}
+
+	W_Mine_Explode();
+}
+
 void W_Mine_Think (void)
 {
+	entity head;
+
 	self.nextthink = time;
 	if (time > self.cnt)
 	{
@@ -98,44 +117,32 @@ void W_Mine_Think (void)
 		return;
 	}
 
-	// remote detonation
-	if (self.owner.weapon == WEP_MINE_LAYER)
-	if (self.owner.deadflag == DEAD_NO)
-	if (self.minelayer_detonate)
-		W_Mine_RemoteExplode();
-
-	entity head;
-
-	// detect players who are close to the mine and explode if anyone should detonate it
+	// set the mine for detonation when a foe gets too close
 	head = findradius(self.origin, cvar("g_balance_minelayer_detectionradius"));
 	while(head)
 	{
 		if(head.classname == "player" && head.deadflag == DEAD_NO)
-		if(head != self.owner)
-		if(IsDifferentTeam(head, self.owner)) // don't detonate for team mates
+		if(head != self.owner && IsDifferentTeam(head, self.owner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
 			spamsound (self, CHAN_PROJECTILE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
 			self.mine_time = time + cvar("g_balance_minelayer_time");
 		}
-
 		head = head.chain;
 	}
 
-	// if it's time for the mine to explode, make sure no friend is in its radius
-	// if an ally is detected, the explosion is delayed until he's at a safe distance
+	// explode if it's time to
 	if(self.mine_time && time >= self.mine_time)
 	{
-		head = findradius(self.origin, cvar("g_balance_minelayer_radius"));
-		while(head)
-		{
-			if(head == self.owner || !IsDifferentTeam(head, self.owner))
-				return;
-			head = head.chain;
-		}
 		self.mine_time = 0;
-		W_Mine_Explode();
+		W_Mine_ProximityExplode();
 	}
+
+	// remote detonation
+	if (self.owner.weapon == WEP_MINE_LAYER)
+	if (self.owner.deadflag == DEAD_NO)
+	if (self.minelayer_detonate)
+		W_Mine_RemoteExplode();
 
 	if(self.csqcprojectile_clientanimate == 0)
 		UpdateCSQCProjectile(self);
