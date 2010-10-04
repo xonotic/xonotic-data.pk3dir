@@ -152,7 +152,7 @@ void W_Mine_Think (void)
 		head = head.chain;
 	}
 
-	// explode if it's time
+	// explode if it's time to
 	if(self.mine_time && time >= self.mine_time)
 		W_Mine_ProximityExplode();
 
