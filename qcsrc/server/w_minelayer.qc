@@ -10,11 +10,13 @@ void spawnfunc_weapon_minelayer (void)
 	weapon_defaultspawnfunc(WEP_MINE_LAYER);
 }
 
-void W_Mine_RespawnEntity ()
+void W_Mine_Stick ()
 {
+	spamsound (self, CHAN_PROJECTILE, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
+
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
-	entity newmine;
+	local entity newmine;
 	newmine = spawn();
 	newmine.classname = self.classname;
 
@@ -25,14 +27,14 @@ void W_Mine_RespawnEntity ()
 	setsize(newmine, '-4 -4 -4', '4 4 4');
 	setorigin(newmine, self.origin);
 	setmodel(newmine, "models/mine.md3");
-	newmine.angles = vectoangles(-trace_plane_normal);
+	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
 
 	newmine.takedamage = self.takedamage;
 	newmine.damageforcescale = self.damageforcescale;
 	newmine.health = self.health;
 	newmine.event_damage = self.event_damage;
 
-	newmine.movetype = MOVETYPE_NONE;
+	newmine.movetype = MOVETYPE_NONE; // lock the mine in place
 	newmine.projectiledeathtype = self.projectiledeathtype;
 
 	newmine.mine_number = self.mine_number;
@@ -92,7 +94,7 @@ void W_Mine_DoRemoteExplode ()
 	remove (self);
 }
 
-void W_Mine_RemoteExplode()
+void W_Mine_RemoteExplode ()
 {
 	if(self.owner.deadflag == DEAD_NO)
 		if((self.spawnshieldtime >= 0)
@@ -104,7 +106,7 @@ void W_Mine_RemoteExplode()
 		}
 }
 
-void W_Mine_ProximityExplode()
+void W_Mine_ProximityExplode ()
 {
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
 	if(cvar("g_balance_minelayer_protection"))
@@ -168,12 +170,7 @@ void W_Mine_Touch (void)
 {
 	PROJECTILE_TOUCH;
 	if(!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))
-	{
-		spamsound (self, CHAN_PROJECTILE, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
-		self.movetype = MOVETYPE_NONE; // lock the mine in place
-
-		W_Mine_RespawnEntity();
-	}
+		W_Mine_Stick();
 	else if(self.movetype != MOVETYPE_NONE) // don't unstick a locked mine when someone touches it
 		self.velocity = '0 0 0';
 }
