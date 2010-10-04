@@ -1090,15 +1090,15 @@ void W_SwitchToOtherWeapon(entity pl)
 }
 float weapon_prepareattack_checkammo(float secondary)
 {
-	// always keep the Mine Layer if we placed mines, so that we can detonate them
-	local entity mine;
-	if(self.weapon == WEP_MINE_LAYER)
-	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
-		return TRUE;
-
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
+		// always keep the Mine Layer if we placed mines, so that we can detonate them
+		local entity mine;
+		if(self.weapon == WEP_MINE_LAYER)
+		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
+			return FALSE;
+
 		W_SwitchToOtherWeapon(self);
 		return FALSE;
 	}
