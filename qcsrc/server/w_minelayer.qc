@@ -15,16 +15,8 @@ void spawnfunc_weapon_minelayer (void)
 	weapon_defaultspawnfunc(WEP_MINE_LAYER);
 }
 
-void W_Mine_Unregister()
-{
-	if(self.owner && self.owner.lastmine == self)
-		self.owner.lastmine = world;
-}
-
 void W_Mine_Explode ()
 {
-	W_Mine_Unregister();
-
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
 			if(IsDifferentTeam(self.owner, other))
@@ -50,8 +42,6 @@ void W_Mine_Explode ()
 
 void W_Mine_DoRemoteExplode ()
 {
-	W_Mine_Unregister();
-
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
 
@@ -72,8 +62,6 @@ void W_Mine_DoRemoteExplode ()
 void W_Mine_RemoteExplode()
 {
 	if(self.owner.deadflag == DEAD_NO)
-	if(self.owner.lastmine)
-	{
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
 			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > cvar("g_balance_minelayer_radius")) // safety device
@@ -81,7 +69,6 @@ void W_Mine_RemoteExplode()
 		{
 			W_Mine_DoRemoteExplode();
 		}
-	}
 }
 
 void W_Mine_ProximityExplode()
@@ -174,7 +161,6 @@ void W_Mine_Attack (void)
 	// scan how many mines we placed, and return if we reached our limit
 	if(cvar("g_balance_minelayer_limit"))
 	{
-		entity mine;
 		self.mine_number = 0;
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 			self.mine_number += 1;
@@ -196,7 +182,6 @@ void W_Mine_Attack (void)
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
 	mine.owner = self;
-	self.lastmine = mine;
 	if(cvar("g_balance_minelayer_detonatedelay") >= 0)
 		mine.spawnshieldtime = time + cvar("g_balance_minelayer_detonatedelay");
 	else
