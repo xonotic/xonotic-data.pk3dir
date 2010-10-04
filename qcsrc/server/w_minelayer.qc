@@ -139,7 +139,7 @@ void W_Mine_Think (void)
 	}
 
 	// set the mine for detonation when a foe gets too close
-	head = findradius(self.origin, cvar("g_balance_minelayer_detectionradius"));
+	head = findradius(self.origin, cvar("g_balance_minelayer_proximityradius"));
 	while(head)
 	{
 		if(head.classname == "player" && head.deadflag == DEAD_NO)
