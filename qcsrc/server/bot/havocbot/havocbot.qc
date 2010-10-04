@@ -950,6 +950,7 @@ void havocbot_chooseweapon()
 	local float nex     ; nex      =-1000;
 	local float hagar   ; hagar    =-1000;
 	local float grenade ; grenade  =-1000;
+	local float mine    ; mine     =-1000;
 	local float electro ; electro  =-1000;
 	local float crylink ; crylink  =-1000;
 	local float uzi     ; uzi      =-1000;
@@ -1077,6 +1078,15 @@ void havocbot_chooseweapon()
 		grenade = (cvar("g_balance_grenadelauncher_primary_damage")/cvar("g_balance_grenadelauncher_primary_refire")*1.0)
 			* bound(0,(cvar("g_balance_grenadelauncher_primary_speed")/distance*maxdelaytime),1)*1.1;
 
+	if (client_hasweapon(self, WEP_MINE_LAYER, TRUE, FALSE) &&
+		!(
+			cvar("bot_ai_weapon_combo") && self.weapon == WEP_MINE_LAYER &&
+			af > combo_time
+		)
+	)
+		mine = (cvar("g_balance_minelayer_damage")/cvar("g_balance_minelayer_refire")*1.0)
+			* bound(0,(cvar("g_balance_minelayer_speedstart")/distance*maxdelaytime),1)*1.1;
+
 	if (client_hasweapon(self, WEP_ELECTRO, TRUE, FALSE) &&
 		!( 	cvar("bot_ai_weapon_combo") && self.weapon == WEP_ELECTRO &&
 			af > combo_time
@@ -1123,6 +1133,7 @@ void havocbot_chooseweapon()
 	dprint("Nex: "    , ftos(nex     ), "\n");
 	dprint("Hagar: "  , ftos(hagar   ), "\n");
 	dprint("Grenade: ", ftos(grenade ), "\n");
+	dprint("Mine: "   , ftos(mine    ), "\n");
 	dprint("Electro: ", ftos(electro ), "\n");
 	dprint("Crylink: ", ftos(crylink ), "\n");
 	dprint("Uzi: "    , ftos(uzi     ), "\n");
@@ -1135,6 +1146,7 @@ void havocbot_chooseweapon()
 	w = WEP_NEX              ;s = nex      ;if (s > bestscore){bestscore = s;bestweapon = w;} if (self.switchweapon == w) currentscore = s;
 	w = WEP_HAGAR            ;s = hagar    ;if (s > bestscore){bestscore = s;bestweapon = w;} if (self.switchweapon == w) currentscore = s;
 	w = WEP_GRENADE_LAUNCHER ;s = grenade  ;if (s > bestscore){bestscore = s;bestweapon = w;} if (self.switchweapon == w) currentscore = s;
+	w = WEP_MINE_LAYER       ;s = mine     ;if (s > bestscore){bestscore = s;bestweapon = w;} if (self.switchweapon == w) currentscore = s;
 	w = WEP_ELECTRO          ;s = electro  ;if (s > bestscore){bestscore = s;bestweapon = w;} if (self.switchweapon == w) currentscore = s;
 	w = WEP_CRYLINK          ;s = crylink  ;if (s > bestscore){bestscore = s;bestweapon = w;} if (self.switchweapon == w) currentscore = s;
 	w = WEP_UZI              ;s = uzi      ;if (s > bestscore){bestscore = s;bestweapon = w;} if (self.switchweapon == w) currentscore = s;
