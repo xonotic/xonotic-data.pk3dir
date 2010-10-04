@@ -1120,8 +1120,10 @@ void HUD_DrawScoreboard()
 	xmin = cvar("scoreboard_offset_left") * vid_conwidth;
 	ymin = cvar("con_notify") * cvar("con_notifysize");
 
-	sbwidth = xmax = vid_conwidth - xmin - cvar("scoreboard_offset_right") * vid_conwidth;
+	xmax = (1 - cvar("scoreboard_offset_right")) * vid_conwidth;
 	ymax = vid_conheight - ymin;
+
+	sbwidth = xmax - xmin;
 
 	// Initializes position
 	pos_x = xmin;
