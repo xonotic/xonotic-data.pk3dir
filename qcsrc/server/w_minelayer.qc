@@ -134,7 +134,17 @@ void W_Mine_Think (void)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Mine_Explode ();
+		W_Mine_Explode();
+		return;
+	}
+
+	// a player's mines shall explode if he disconnects or dies
+	// TODO: Do this on team change too
+	if(self.owner.classname != "player" || self.owner.health <= 0)
+	{
+		other = world;
+		self.projectiledeathtype |= HITTYPE_BOUNCE;
+		W_Mine_Explode();
 		return;
 	}
 
