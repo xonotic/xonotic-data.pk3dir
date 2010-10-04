@@ -18,8 +18,33 @@ void W_Mine_RespawnEntity ()
 {
 	entity newmine;
 	newmine = spawn();
-	newmine.origin = '0 0 100';
-	newmine.model = "models/mine.md3";
+	newmine.classname = self.classname;
+
+	newmine.bot_dodge = self.bot_dodge;
+	newmine.bot_dodgerating = self.bot_dodgerating;
+
+	newmine.owner = self.owner;
+	setsize(newmine, '-4 -4 -4', '4 4 4');
+	setorigin(newmine, self.origin);
+	setmodel(newmine, "models/mine.md3");
+	newmine.angles = vectoangles(-trace_plane_normal);
+
+	newmine.takedamage = self.takedamage;
+	newmine.damageforcescale = self.damageforcescale;
+	newmine.health = self.health;
+	newmine.event_damage = self.event_damage;
+
+	newmine.movetype = MOVETYPE_NONE;
+	newmine.projectiledeathtype = self.projectiledeathtype;
+
+	newmine.mine_number = self.mine_number;
+	newmine.mine_time = self.mine_time;
+
+	newmine.touch = SUB_Null;
+	newmine.think = self.think;
+	newmine.nextthink = time;
+	newmine.cnt = self.cnt;
+	newmine.flags = self.flags;
 
 	remove(self);
 	self = newmine;
