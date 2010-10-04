@@ -1,7 +1,3 @@
-/*TODO list (things left to do before this weapon should be ready, delete once it's all done):
-- The mine model needs to face properly when it sticks to a surface. Once we'll have a correct mine model, we can't afford the model facing any way it falls to the ground. Should probably look at the porto code to see how portals face in the right direction when sticking to walls. 
-*/
-
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", "Mine Layer");
 #else
@@ -16,6 +12,8 @@ void spawnfunc_weapon_minelayer (void)
 
 void W_Mine_RespawnEntity ()
 {
+	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
+
 	entity newmine;
 	newmine = spawn();
 	newmine.classname = self.classname;
@@ -389,6 +387,7 @@ float w_minelayer(float req)
 	else if (req == WR_PRECACHE)
 	{
 		precache_model ("models/flash.md3");
+		precache_model ("models/mine.md3");
 		precache_model ("models/weapons/g_minelayer.md3");
 		precache_model ("models/weapons/v_minelayer.md3");
 		precache_model ("models/weapons/h_minelayer.iqm");
