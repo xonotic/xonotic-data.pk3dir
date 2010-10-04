@@ -2,8 +2,8 @@
 REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", "Mine Layer");
 #else
 #ifdef SVQC
-.float minelayer_detonate;
-.float mine_number, mine_time;
+.float minelayer_detonate, minelayer_mines;
+.float mine_time;
 
 void spawnfunc_weapon_minelayer (void)
 {
@@ -37,7 +37,6 @@ void W_Mine_Stick ()
 	newmine.movetype = MOVETYPE_NONE; // lock the mine in place
 	newmine.projectiledeathtype = self.projectiledeathtype;
 
-	newmine.mine_number = self.mine_number;
 	newmine.mine_time = self.mine_time;
 
 	newmine.touch = SUB_Null;
@@ -203,11 +202,11 @@ void W_Mine_Attack (void)
 	// scan how many mines we placed, and return if we reached our limit
 	if(cvar("g_balance_minelayer_limit"))
 	{
-		self.mine_number = 0;
+		self.minelayer_mines = 0;
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
-			self.mine_number += 1;
+			self.minelayer_mines += 1;
 
-		if(self.mine_number >= cvar("g_balance_minelayer_limit"))
+		if(self.minelayer_mines >= cvar("g_balance_minelayer_limit"))
 		{
 			// the refire delay keeps this message from being spammed
 			sprint(self, strcat("You cannot place more than ^2", cvar_string("g_balance_minelayer_limit"), " ^7mines at a time\n") );
