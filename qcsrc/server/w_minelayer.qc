@@ -1,3 +1,11 @@
+/*TODO list (things left to do before this weapon should be ready, delete once it's all done):
+- The weapon currently uses sounds and models from other weapons. We need a modeler and sound artist to make this weapon its own (the gun model should probably be something between the porto and rocket launcher design-wise).
+- Add protection so a mine doesn't explode if it would harm the player or a team mate, in case both an enemy and a friend are its range. This already exists for alt-fire detonation, but not for proximity detonation. Should probably be a cvared but default option.
+- Mines remain stuck in the air if they hit a moving entity (like an elevator or players). They should normally stick to them... perhaps set them as an attachment?
+- Bot code for the weapon may be needed. The bot AI may not have any info about this gun yet.
+- The mine model needs to face properly when it sticks to a surface. Once we'll have a correct mine model, we can't afford the model facing any way it falls to the ground. Should probably look at the porto code to see how portals face in the right direction when sticking to walls. 
+*/
+
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", "Mine Layer");
 #else
