@@ -1085,7 +1085,7 @@ void havocbot_chooseweapon()
 		)
 	)
 		mine = (cvar("g_balance_minelayer_damage")/cvar("g_balance_minelayer_refire")*1.0)
-			* bound(0,(cvar("g_balance_minelayer_speedstart")/distance*maxdelaytime),1)*1.1;
+			* bound(0,(cvar("g_balance_minelayer_speed")/distance*maxdelaytime),1)*1.1;
 
 	if (client_hasweapon(self, WEP_ELECTRO, TRUE, FALSE) &&
 		!( 	cvar("bot_ai_weapon_combo") && self.weapon == WEP_ELECTRO &&

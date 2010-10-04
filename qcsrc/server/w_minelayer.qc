@@ -216,7 +216,7 @@ void W_Mine_Attack (void)
 	setsize (mine, '-4 -4 -4', '4 4 4'); // give it some size so it can be shot
 
 	setorigin (mine, w_shotorg - v_forward * 4); // move it back so it hits the wall at the right point
-	W_SetupProjectileVelocity(mine, cvar("g_balance_minelayer_speedstart"), 0);
+	W_SetupProjectileVelocity(mine, cvar("g_balance_minelayer_speed"), 0);
 	mine.angles = vectoangles (mine.velocity);
 
 	mine.touch = W_Mine_Touch;
