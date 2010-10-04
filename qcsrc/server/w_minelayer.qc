@@ -14,6 +14,17 @@ void spawnfunc_weapon_minelayer (void)
 	weapon_defaultspawnfunc(WEP_MINE_LAYER);
 }
 
+void W_Mine_RespawnEntity ()
+{
+	entity newmine;
+	newmine = spawn();
+	newmine.origin = '0 0 100';
+	newmine.model = "models/mine.md3";
+
+	remove(self);
+	self = newmine;
+}
+
 void W_Mine_Explode ()
 {
 	if(other.takedamage == DAMAGE_AIM)
@@ -137,6 +148,8 @@ void W_Mine_Touch (void)
 	{
 		spamsound (self, CHAN_PROJECTILE, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
 		self.movetype = MOVETYPE_NONE; // lock the mine in place
+
+		W_Mine_RespawnEntity();
 	}
 	else if(self.movetype != MOVETYPE_NONE) // don't unstick a locked mine when someone touches it
 		self.velocity = '0 0 0';
