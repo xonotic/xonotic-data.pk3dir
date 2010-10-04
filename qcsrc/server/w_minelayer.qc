@@ -101,6 +101,7 @@ void W_Mine_Think (void)
 		if(IsDifferentTeam(head, self.owner)) // don't detonate for team mates
 		if(!self.mine_time)
 		{
+			spamsound (self, CHAN_PROJECTILE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
 			self.mine_time = time + cvar("g_balance_minelayer_time");
 		}
 		head = head.chain;
@@ -348,6 +349,7 @@ float w_minelayer(float req)
 		precache_sound ("weapons/mine_det.wav");
 		precache_sound ("weapons/mine_fire.wav");
 		precache_sound ("weapons/mine_stick.wav");
+		precache_sound ("weapons/mine_trigger.wav");
 	}
 	else if (req == WR_SETUP)
 	{
