@@ -1,6 +1,5 @@
 /*TODO list (things left to do before this weapon should be ready, delete once it's all done):
 - The weapon currently uses sounds and models from other weapons. We need a modeler and sound artist to make this weapon its own (the gun model should probably be something between the porto and rocket launcher design-wise).
-- Mines remain stuck in the air if they hit a moving entity (like an elevator or players). They should normally stick to them... perhaps set them as an attachment?
 - Bot code for the weapon may be needed. The bot AI may not have any info about this gun yet.
 - The mine model needs to face properly when it sticks to a surface. Once we'll have a correct mine model, we can't afford the model facing any way it falls to the ground. Should probably look at the porto code to see how portals face in the right direction when sticking to walls. 
 */
@@ -149,9 +148,13 @@ void W_Mine_Think (void)
 void W_Mine_Touch (void)
 {
 	PROJECTILE_TOUCH;
-	spamsound (self, CHAN_PROJECTILE, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
-	self.movetype = MOVETYPE_NONE; // lock the mine in place
-	// TODO: make sure this doesn't cause the mine to get stuck in the air if it falls over a moving entity
+	if(!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))
+	{
+		spamsound (self, CHAN_PROJECTILE, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
+		self.movetype = MOVETYPE_NONE; // lock the mine in place
+	}
+	else if(self.movetype != MOVETYPE_NONE) // don't unstick a locked mine when someone touches it
+		self.velocity = '0 0 0';
 }
 
 void W_Mine_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
