@@ -138,7 +138,7 @@ void W_Mine_Think (void)
 		return;
 	}
 
-	// set the mine for detonation when a foe gets too close
+	// set the mine for detonation when a foe gets close enough
 	head = findradius(self.origin, cvar("g_balance_minelayer_proximityradius"));
 	while(head)
 	{
@@ -152,7 +152,7 @@ void W_Mine_Think (void)
 		head = head.chain;
 	}
 
-	// explode if it's time to
+	// explode if it's time
 	if(self.mine_time && time >= self.mine_time)
 		W_Mine_ProximityExplode();
 
