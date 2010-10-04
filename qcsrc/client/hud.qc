@@ -2258,12 +2258,10 @@ void HUD_HealthArmor(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float armor, health;
+	float armor, health, fuel;
 	armor = getstati(STAT_ARMOR);
 	health = getstati(STAT_HEALTH);
-
-	float fuel;
-	fuel = getstati(GetAmmoStat(4)); // how much fuel do we have?
+	fuel = getstati(STAT_FUEL);
 
 	if(autocvar__hud_configure)
 	{

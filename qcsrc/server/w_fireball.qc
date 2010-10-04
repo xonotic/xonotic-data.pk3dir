@@ -323,13 +323,13 @@ float w_fireball(float req)
 	{
 		if (self.BUTTON_ATCK)
 		if (time >= self.fireball_primarytime)
-		if (weapon_prepareattack(1, cvar("g_balance_fireball_primary_refire")))
+		if (weapon_prepareattack(0, cvar("g_balance_fireball_primary_refire")))
 		{
 			W_Fireball_Attack1_Frame0();
 			self.fireball_primarytime = time + cvar("g_balance_fireball_primary_refire2");
 		}
 		if (self.BUTTON_ATCK2)
-		if (weapon_prepareattack(0, cvar("g_balance_fireball_secondary_refire")))
+		if (weapon_prepareattack(1, cvar("g_balance_fireball_secondary_refire")))
 		{
 			W_Fireball_Attack2();
 			weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_fireball_secondary_animtime"), w_ready);
