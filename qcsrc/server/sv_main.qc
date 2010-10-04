@@ -77,6 +77,10 @@ void CreatureFrame (void)
 				if (dm > 0)
 				{
 					Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
+					// this must be allowed to cut the normal pain sounds (played after them and on the same channel)
+					// there's no way to detect falling damage and prevent the pain sounds for this to be played instead
+					if(self.health > 0)
+						PlayerSound(playersound_fall, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
 				}
 			}
 
