@@ -98,10 +98,16 @@ void W_Mine_Think (void)
 		return;
 	}
 
-	// detect players who are close the mine and explode if the player should detonate it
-	entity head;
-	head = findradius(self.origin, cvar("g_balance_minelayer_detectionradius"));
+	// remote detonation
+	if (self.owner.weapon == WEP_MINE_LAYER)
+	if (self.owner.deadflag == DEAD_NO)
+	if (self.minelayer_detonate)
+		W_Mine_RemoteExplode();
 
+	entity head;
+
+	// detect players who are close to the mine and explode if anyone should detonate it
+	head = findradius(self.origin, cvar("g_balance_minelayer_detectionradius"));
 	while(head)
 	{
 		if(head.classname == "player" && head.deadflag == DEAD_NO)
@@ -112,21 +118,24 @@ void W_Mine_Think (void)
 			spamsound (self, CHAN_PROJECTILE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
 			self.mine_time = time + cvar("g_balance_minelayer_time");
 		}
+
 		head = head.chain;
 	}
 
-	// explode if it's time
+	// if it's time for the mine to explode, make sure no friend is in its radius
+	// if an ally is detected, the explosion is delayed until he's at a safe distance
 	if(self.mine_time && time >= self.mine_time)
 	{
+		head = findradius(self.origin, cvar("g_balance_minelayer_radius"));
+		while(head)
+		{
+			if(head == self.owner || !IsDifferentTeam(head, self.owner))
+				return;
+			head = head.chain;
+		}
 		self.mine_time = 0;
 		W_Mine_Explode();
 	}
-
-	// remote detonation
-	if (self.owner.weapon == WEP_MINE_LAYER)
-	if (self.owner.deadflag == DEAD_NO)
-	if (self.minelayer_detonate)
-		W_Mine_RemoteExplode();
 
 	if(self.csqcprojectile_clientanimate == 0)
 		UpdateCSQCProjectile(self);
