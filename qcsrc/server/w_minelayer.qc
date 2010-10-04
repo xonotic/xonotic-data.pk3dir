@@ -3,7 +3,7 @@ REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_TY
 #else
 #ifdef SVQC
 .float minelayer_detonate;
-.float mine_number;
+.float mine_number, mine_time;
 
 void spawnfunc_weapon_minelayer (void)
 {
@@ -99,9 +99,15 @@ void W_Mine_Think (void)
 		if(head.classname == "player" && head.deadflag == DEAD_NO)
 		if(head != self.owner)
 		if(IsDifferentTeam(head, self.owner)) // don't detonate for team mates
-			W_Mine_Explode();
+		{
+			self.mine_time = time + cvar("g_balance_minelayer_time");
+		}
 		head = head.chain;
 	}
+
+	// explode if it's time
+	if(time >= self.mine_time)
+		W_Mine_Explode();
 
 	// remote detonation
 	if (self.owner.weapon == WEP_MINE_LAYER)
