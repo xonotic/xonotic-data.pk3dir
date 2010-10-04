@@ -140,7 +140,7 @@ void W_Mine_Think (void)
 
 	// a player's mines shall explode if he disconnects or dies
 	// TODO: Do this on team change too
-	if(self.owner.classname != "player" || self.owner.health <= 0)
+	if(self.owner.classname != "player" || self.owner.deadflag != DEAD_NO)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
