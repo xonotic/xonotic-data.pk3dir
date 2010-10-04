@@ -101,6 +101,7 @@ void W_Mine_ProximityExplode()
 		}
 	}
 
+	self.mine_time = 0;
 	W_Mine_Explode();
 }
 
@@ -133,10 +134,7 @@ void W_Mine_Think (void)
 
 	// explode if it's time to
 	if(self.mine_time && time >= self.mine_time)
-	{
-		self.mine_time = 0;
 		W_Mine_ProximityExplode();
-	}
 
 	// remote detonation
 	if (self.owner.weapon == WEP_MINE_LAYER)
