@@ -981,6 +981,13 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				self = cl;
 				f = weapon_action(wpn, WR_CHECKAMMO1);
 				f = f + weapon_action(wpn, WR_CHECKAMMO2);
+
+				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
+				local entity mine;
+				if(wpn == WEP_MINE_LAYER)
+				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
+					f = 1;
+
 				self = oldself;
 			}
 			if (!f)
