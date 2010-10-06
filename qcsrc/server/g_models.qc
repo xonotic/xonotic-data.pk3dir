@@ -88,7 +88,7 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 	{
 		WriteShort(MSG_ENTITY, self.modelindex);
 		WriteByte(MSG_ENTITY, self.solid);
-		WriteByte(MSG_ENTITY, floor(self.scale * 16));
+		WriteShort(MSG_ENTITY, floor(self.scale * 256));
 		if(sf & 0x20)
 		{
 			WriteCoord(MSG_ENTITY, self.mins_x);

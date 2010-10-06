@@ -650,3 +650,153 @@ void PolyDrawModel(entity e)
 		}
 	}
 }
+
+void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vector rgb, float a, float drawflag)
+{
+	float x, y, q, d;
+	vector ringsize, v, t;
+	ringsize = radius * '1 1 0';
+
+	x = cos(f * 2 * M_PI);
+	y = sin(f * 2 * M_PI);
+	q = fabs(x) + fabs(y);
+	x /= q;
+	y /= q;
+
+	if(f >= 1)
+	{
+		// draw full rectangle
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
+
+		d = q - 1;
+		if(d > 0)
+		{
+			R_BeginPolygon(pic, drawflag);
+				v = centre;			t = '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+
+				v = centre;			t = '0.5 0.5 0';
+				v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+		}
+	}
+	else if(f > 0.75)
+	{
+		// draw upper and first triangle
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+		d = q - 0.75;
+		if(d <= 0)
+			R_EndPolygon();
+	}
+	else if(f > 0.5)
+	{
+		// draw upper triangle
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
+
+		d = q - 0.5;
+		if(d > 0)
+		{
+			R_BeginPolygon(pic, drawflag);
+				v = centre;			t = '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+
+				v = centre;			t = '0.5 0.5 0';
+				v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+		}
+	}
+	else if(f > 0.25)
+	{
+		// draw first triangle
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+		d = q - 0.25;
+		if(d <= 0)
+			R_EndPolygon();
+	}
+	else
+	{
+		d = q;
+		if(d > 0)
+		{
+			R_BeginPolygon(pic, drawflag);
+				v = centre;			t = '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+
+				v = centre;			t = '0.5 0.5 0';
+				v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+		}
+	}
+
+	if(d > 0)
+	{
+			v = centre;			t = '0.5 0.5 0';
+			v_x += x * 0.5 * ringsize_x;	t += x * '0.5 0.5 0';
+			v_y += y * 0.5 * ringsize_y;	t += y * '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
+	}
+}

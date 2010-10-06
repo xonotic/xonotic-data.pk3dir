@@ -413,6 +413,9 @@ void spawnfunc_trigger_counter()
 .float triggerhurttime;
 void trigger_hurt_touch()
 {
+	if (self.active != ACTIVE_ACTIVE) 
+		return;
+
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
 	if (other.iscreature)
 	{
@@ -455,6 +458,7 @@ entity trigger_hurt_first;
 void spawnfunc_trigger_hurt()
 {
 	EXACTTRIGGER_INIT;
+	self.active = ACTIVE_ACTIVE;
 	self.touch = trigger_hurt_touch;
 	if (!self.dmg)
 		self.dmg = 1000;
@@ -493,6 +497,9 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 .float triggerhealtime;
 void trigger_heal_touch()
 {
+	if (self.active != ACTIVE_ACTIVE) 
+		return;
+	
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
 	if (other.iscreature)
 	{
@@ -514,6 +521,8 @@ void trigger_heal_touch()
 
 void spawnfunc_trigger_heal()
 {
+	self.active = ACTIVE_ACTIVE;
+	
 	EXACTTRIGGER_INIT;
 	self.touch = trigger_heal_touch;
 	if (!self.health)
@@ -1207,6 +1216,9 @@ void trigger_impulse_touch1()
     float pushdeltatime;
     float str;
 
+	if (self.active != ACTIVE_ACTIVE) 
+		return;
+
 	// FIXME: Better checking for what to push and not.
 	if not(other.iscreature)
 	if (other.classname != "corpse")
@@ -1258,6 +1270,9 @@ void trigger_impulse_touch2()
 {
     float pushdeltatime;
 
+	if (self.active != ACTIVE_ACTIVE) 
+		return;
+
 	// FIXME: Better checking for what to push and not.
 	if not(other.iscreature)
 	if (other.classname != "corpse")
@@ -1294,6 +1309,9 @@ void trigger_impulse_touch3()
 {
     float pushdeltatime;
     float str;
+
+	if (self.active != ACTIVE_ACTIVE) 
+		return;
 
 	// FIXME: Better checking for what to push and not.
 	if not(other.iscreature)
@@ -1356,6 +1374,8 @@ in directional and sperical mode. For damper/accelerator mode this is not nesses
 
 void spawnfunc_trigger_impulse()
 {
+	self.active = ACTIVE_ACTIVE;
+
 	EXACTTRIGGER_INIT;
     if(self.radius)
     {
@@ -1931,4 +1951,48 @@ void spawnfunc_trigger_magicear()
 	//   "hearing distance"
 	// target:
 	//   what to trigger
+}
+
+void relay_activators_use()
+{
+	entity trg, os;
+	
+	os = self;
+	
+	for(trg = world; (trg = find(trg, targetname, os.target)); )
+	{
+		self = trg;
+		if (trg.setactive)
+			trg.setactive(os.cnt);
+		else
+		{
+			//bprint("Not using setactive\n");
+			if(os.cnt == ACTIVE_TOGGLE)
+				if(trg.active == ACTIVE_ACTIVE)
+					trg.active = ACTIVE_NOT;
+				else	
+					trg.active = ACTIVE_ACTIVE;
+			else
+				trg.active = os.cnt;
+		}		
+	}
+	self = os;
+}
+
+void spawnfunc_relay_activate()
+{
+	self.cnt = ACTIVE_ACTIVE;
+	self.use = relay_activators_use;
+}
+
+void spawnfunc_relay_deactivate()
+{
+	self.cnt = ACTIVE_NOT;
+	self.use = relay_activators_use;	
+}
+
+void spawnfunc_relay_activatetoggle()
+{
+	self.cnt = ACTIVE_TOGGLE;
+	self.use = relay_activators_use;	
 }
