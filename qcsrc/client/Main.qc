@@ -1334,6 +1334,11 @@ float CSQC_Parse_TempEntity()
 			Net_WeaponComplain();
 			bHandled = true;
 			break;
+		case TE_CSQC_NEX_VELOCITY:
+			nex_minvelocity = ReadShort();
+			nex_maxvelocity = ReadShort();
+			bHandled = true;
+			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;

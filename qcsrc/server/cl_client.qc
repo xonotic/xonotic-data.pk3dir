@@ -6,6 +6,14 @@ void send_CSQC_teamnagger() {
 	WriteByte(0, TE_CSQC_TEAMNAGGER);
 }
 
+void send_CSQC_nexvelocity(entity e) {
+	msg_entity = e;
+	WriteByte(MSG_ONE, SVC_TEMPENTITY);
+	WriteByte(MSG_ONE, TE_CSQC_NEX_VELOCITY);
+	WriteShort(MSG_ONE, cvar("g_balance_nex_velocitydependent_minspeed"));
+	WriteShort(MSG_ONE, cvar("g_balance_nex_velocitydependent_maxspeed"));
+}
+
 void Announce(string snd) {
 	WriteByte(MSG_ALL, SVC_TEMPENTITY);
 	WriteByte(MSG_ALL, TE_CSQC_ANNOUNCE);
@@ -866,10 +874,11 @@ void PutClientInServer (void)
 		self.iscreature = TRUE;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
+		self.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
 		if(cvar("g_playerclip_collisions"))
-			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-		else
-			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
+			self.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
+		if(clienttype(self) == CLIENTTYPE_BOT && cvar("g_botclip_collisions"))
+			self.dphitcontentsmask |= DPCONTENTS_BOTCLIP;
 		self.frags = FRAGS_PLAYER;
 		if(independent_players)
 			MAKE_INDEPENDENT_PLAYER(self);
@@ -1586,6 +1595,8 @@ void ClientConnect (void)
 	}
 	else if(cvar("sv_teamnagger") && !(cvar("bot_vs_human") && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
+
+	send_CSQC_nexvelocity(self);
 
 	CheatInitClient();
 }

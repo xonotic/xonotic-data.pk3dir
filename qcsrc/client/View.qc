@@ -566,7 +566,7 @@ void CSQC_UpdateView(float w, float h)
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
-	if(cvar("r_fakelight") >= 2)
+	if(cvar("r_fakelight") >= 2 || cvar("r_fullbright"))
 	{
 		// apply night vision effect
 		vector rgb, tc_00, tc_01, tc_10, tc_11;
@@ -696,6 +696,24 @@ void CSQC_UpdateView(float w, float h)
 		if(cvar("r_letterbox") == 0)
 			if(cvar("viewsize") < 120)
 				CSQC_common_hud();
+
+
+		// ring around crosshair representing velocity-dependent damage for the nex
+		if (activeweapon == WEP_NEX)
+		{
+			float f, a, curvel;
+			vector rgb;
+
+			rgb_x = cvar("crosshair_nexvelocity_color_red");
+			rgb_y = cvar("crosshair_nexvelocity_color_green");
+			rgb_z = cvar("crosshair_nexvelocity_color_blue");
+			a = cvar("crosshair_nexvelocity_alpha");
+
+			curvel = vlen('1 0 0' * pmove_vel_x + '0 1 0' * pmove_vel_y);
+			f = bound(0, (curvel - nex_minvelocity) / (nex_maxvelocity - nex_minvelocity), 1);
+
+			DrawCircleClippedPic('0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight, 0.1 * vid_conheight, "gfx/nex_ring.tga", f, rgb, a, DRAWFLAG_ADDITIVE);
+		}
 
 		// crosshair goes VERY LAST
 		if(!scoreboard_active && !camera_active && intermission != 2) {
