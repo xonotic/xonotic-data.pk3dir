@@ -698,6 +698,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 
+		precache_pic("gfx/nex_ring.tga");
 		// ring around crosshair representing velocity-dependent damage for the nex
 		if (activeweapon == WEP_NEX)
 		{
