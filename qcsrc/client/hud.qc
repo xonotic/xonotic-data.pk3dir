@@ -4830,6 +4830,8 @@ void HUD_ShowAcceleration(void)
 	f = bound(0, f * 10, 1);
 	acc_avg = acc_avg * (1 - f) + acceleration * f;
 	acceleration = acc_avg / getstatf(STAT_MOVEVARS_MAXSPEED);
+	if (acceleration == 0)
+		return;
 
 	pos = top - sz/2 * eY + (cvar("cl_showacceleration_position") * vid_conheight) * eY;
 
@@ -4839,17 +4841,15 @@ void HUD_ShowAcceleration(void)
 	if (cvar("cl_showacceleration_color_custom"))
 		rgb = stov(cvar_string("cl_showacceleration_color"));
 	else {
-		rgb = '1 1 1';
-		if (acceleration < 0) {
+		if (acceleration < 0)
 			rgb = '1 .5 .5' - '0 .5 .5' * bound(0, -acceleration * 0.2, 1);
-		} else if (acceleration > 0) {
+		else
 			rgb = '.5 1 .5' - '.5 0 .5' * bound(0, +acceleration * 0.2, 1);
-		}
 	}
 
 	if (acceleration > 0)
 		HUD_Panel_DrawProgressBar(pos, 0, acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
-	else if (acceleration < 0)
+	else
 		HUD_Panel_DrawProgressBar(pos + acceleration * scale * '40 0 0', 0, -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
