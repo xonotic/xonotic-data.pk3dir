@@ -1332,6 +1332,9 @@ void HUD_Panel_Mouse()
 	print("Menu alpha: ", cvar_string("_menu_alpha"), "\n");
 	*/
 
+	if(menu_enabled)
+		return;
+
 	if(mouseClicked == 0 && disable_menu_alphacheck != 2 && highlightedPanel >= 0) { // don't reset these variables in disable_menu_alphacheck mode 2!
 		highlightedPanel = -1;
 		highlightedAction = 0;
