@@ -188,7 +188,7 @@ void place_flag()
 	self.nextthink = time + 0.1;
 	self.cnt = FLAG_BASE;
 	self.mangle = self.angles;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	//self.effects = self.effects | EF_DIMLIGHT;
 	if(self.noalign)
 	{

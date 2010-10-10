@@ -636,4 +636,11 @@ string deathmessage;
 
 .float ballistics_density; // wall piercing factor, larger = bullet can pass through more
 
+#define ACTIVE_NOT 		0
+#define ACTIVE_ACTIVE 	1
+#define ACTIVE_IDLE 	2
+#define ACTIVE_BUSY 	2
+#define ACTIVE_TOGGLE	3
+.float active;
+.float (float act_state) setactive;
 .entity realowner;

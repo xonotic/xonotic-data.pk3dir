@@ -335,11 +335,15 @@ float Ban_GetClientIP(entity client)
 	float i1, i2, i3, i4;
 	string s;
 
+#ifdef UID
+	ban_uid = client.uid;
+#endif
+
 	s = client.netaddress;
-	
+
 	i1 = strstrofs(s, ".", 0);
 	if(i1 < 0)
-		return FALSE;
+		goto ipv6;
 	i2 = strstrofs(s, ".", i1 + 1);
 	if(i2 < 0)
 		return FALSE;
@@ -348,15 +352,36 @@ float Ban_GetClientIP(entity client)
 		return FALSE;
 	i4 = strstrofs(s, ".", i3 + 1);
 	if(i4 >= 0)
-		return FALSE;
+		s = substring(s, 0, i4);
 	
-	ban_ip1 = substring(s, 0, i1);
-	ban_ip2 = substring(s, 0, i2);
-	ban_ip3 = substring(s, 0, i3);
-	ban_ip4 = strcat1(s);
-#ifdef UID
-	ban_uid = client.uid;
-#endif
+	ban_ip1 = substring(s, 0, i1); // 8
+	ban_ip2 = substring(s, 0, i2); // 16
+	ban_ip3 = substring(s, 0, i3); // 24
+	ban_ip4 = strcat1(s); // 32
+	return TRUE;
+
+:ipv6
+	i1 = strstrofs(s, ":", 0);
+	if(i1 < 0)
+		return FALSE;
+	i1 = strstrofs(s, ":", i1 + 1);
+	if(i1 < 0)
+		return FALSE;
+	i2 = strstrofs(s, ":", i1 + 1);
+	if(i2 < 0)
+		return FALSE;
+	i3 = strstrofs(s, ":", i2 + 1);
+	if(i3 < 0)
+		return FALSE;
+
+	ban_ip1 = strcat(substring(s, 0, i1), "::/32"); // 32
+	ban_ip2 = strcat(substring(s, 0, i2), "::/48"); // 48
+	ban_ip4 = strcat(substring(s, 0, i3), "::/64"); // 64
+
+	if(i3 - i2 > 3) // means there is more than 2 digits and a : in the range
+		ban_ip3 = strcat(substring(s, 0, i2), ":", substring(s, i2 + 1, i3 - i2 - 3), "00::/56");
+	else
+		ban_ip3 = strcat(substring(s, 0, i2), ":0::/56");
 
 	return TRUE;
 }

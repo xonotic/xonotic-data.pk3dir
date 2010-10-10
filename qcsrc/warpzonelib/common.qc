@@ -28,6 +28,11 @@ var float autocvar_cl_warpzone_usetrace = 1;
 vector WarpZone_camera_transform(vector org, vector ang)
 {
 	vector vf, vr, vu;
+	if(self.warpzone_fadestart)
+		if(vlen(org - self.origin - 0.5 * (self.mins + self.maxs)) > self.warpzone_fadeend + 400)
+			return org;
+			// don't transform if zone faded out (plus 400qu safety margin for typical speeds and latencies)
+			// unneeded on client, on server this helps a lot
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
@@ -61,6 +66,11 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 vector WarpZone_Camera_camera_transform(vector org, vector ang)
 {
 	// a fixed camera view
+	if(self.warpzone_fadestart)
+		if(vlen(org - self.origin - 0.5 * (self.mins + self.maxs)) > self.warpzone_fadeend + 400)
+			return org;
+			// don't transform if zone faded out (plus 400qu safety margin for typical speeds and latencies)
+			// unneeded on client, on server this helps a lot
 	trace_endpos = self.warpzone_origin;
 	makevectors(self.warpzone_angles);
 	return self.warpzone_origin;
@@ -233,7 +243,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			goto fail;
 		}
 		WarpZone_Trace_AddTransform(wz);
-		org = WarpZone_TransformOrigin(wz, trace_endpos);
+		org = WarpZone_TransformOrigin(wz, org);
 		end = WarpZone_TransformOrigin(wz, end);
 	}
 	WarpZone_MakeAllSolid();

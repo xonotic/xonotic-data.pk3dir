@@ -152,7 +152,11 @@ void Teleport_Touch (void)
 	entity oldself, e;
 	vector o;
 	float p;
+	string s;
 
+	if (self.active != ACTIVE_ACTIVE)
+		return;
+	
 	if (other.health < 1)
 		return;
 	if not(other.flags & FL_CLIENT)	// FIXME: Make missiles firable through the teleport too
@@ -208,14 +212,15 @@ void Teleport_Touch (void)
 	o = e.origin + '0 0 1' * (1 - other.mins_z - 24);
 	TeleportPlayer(self, other, o, e.mangle, v_forward * vlen(other.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
 
-	if(e.target)
-	{
-		oldself = self;
-		activator = other;
-		self = e;
-		SUB_UseTargets();
-		self = oldself;
-	}
+	activator = other;
+	s = self.target; self.target = string_null;
+	SUB_UseTargets();
+	if not(self.target) self.target = s;
+
+	oldself = self;
+	self = e;
+	SUB_UseTargets();
+	self = oldself;
 }
 
 void spawnfunc_info_teleport_destination (void)
@@ -290,7 +295,9 @@ void spawnfunc_trigger_teleport (void)
 	self.angles = '0 0 0';
 
 	EXACTTRIGGER_INIT;
-
+	
+	self.active = ACTIVE_ACTIVE;	
+	
 	self.use = trigger_teleport_use;
 
 	// this must be called to spawn the teleport waypoints for bots
