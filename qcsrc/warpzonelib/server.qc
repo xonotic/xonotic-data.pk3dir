@@ -604,7 +604,7 @@ float visible_to_some_client(entity ent)
 {
 	entity e;
 	for(e = nextent(world); clienttype(e) != CLIENTTYPE_NOTACLIENT; e = nextent(e))
-		if(e.classname == "player")
+		if(e.classname == "player" && clienttype(e) == CLIENTTYPE_REAL)
 			if(checkpvs(e.origin + e.view_ofs, ent))
 				return 1;
 	return 0;
