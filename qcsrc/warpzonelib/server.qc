@@ -353,6 +353,7 @@ void WarpZoneCamera_InitStep_FindTarget()
 	}
 	++warpzone_cameras_exist;
 	WarpZone_Camera_SetUp(self, self.enemy.origin, self.enemy.angles);
+	self.SendFlags = 0xFFFFFF;
 }
 
 void WarpZone_InitStep_UpdateTransform()
