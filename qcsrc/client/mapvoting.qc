@@ -88,7 +88,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 		drawborderlines(hud_border_thickness, pos, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
 
 	if(id == mv_selection)
-		drawfill(pos, img_size, rgb, 0.1, DRAWFLAG_NORMAL);
+		drawfill(pos, img_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
 }
 
 void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, float id)
