@@ -48,7 +48,7 @@ float WarpZone_Teleport(entity player)
 
 	o1 = WarpZone_TransformOrigin(self, o0);
 	v1 = WarpZone_TransformVelocity(self, v0);
-	if(player.classname == "player")
+	if(clienttype(player) != CLIENTTYPE_NOTACLIENT)
 		a1 = WarpZone_TransformVAngles(self, player.v_angle);
 	else
 		a1 = WarpZone_TransformAngles(self, a0);
@@ -335,12 +335,17 @@ void WarpZonePosition_InitStep_FindTarget()
 
 void WarpZoneCamera_InitStep_FindTarget()
 {
+	entity e;
+	float i;
 	if(self.target == "")
 	{
 		error("Camera with no target");
 		return;
 	}
-	self.enemy = find(world, targetname, self.target);
+	self.enemy = world;
+	for(e = world, i = 0; (e = find(e, targetname, self.target)); )
+		if(random() * ++i < 1)
+			self.enemy = e;
 	if(self.enemy == world)
 	{
 		error("Camera with nonexisting target");
@@ -348,6 +353,7 @@ void WarpZoneCamera_InitStep_FindTarget()
 	}
 	++warpzone_cameras_exist;
 	WarpZone_Camera_SetUp(self, self.enemy.origin, self.enemy.angles);
+	self.SendFlags = 0xFFFFFF;
 }
 
 void WarpZone_InitStep_UpdateTransform()
@@ -567,6 +573,8 @@ void WarpZones_Reconnect()
 		WarpZone_InitStep_ClearTarget();
 	for(self = warpzone_first; self; self = self.warpzone_next)
 		WarpZone_InitStep_FindTarget();
+	for(self = warpzone_camera_first; self; self = self.warpzone_next)
+		WarpZoneCamera_InitStep_FindTarget();
 	for(self = warpzone_first; self; self = self.warpzone_next)
 		WarpZone_InitStep_FinalizeTransform();
 	self = e;
@@ -583,8 +591,6 @@ void WarpZone_StartFrame()
 			WarpZone_InitStep_FindOriginTarget();
 		for(self = warpzone_position_first; self; self = self.warpzone_next)
 			WarpZonePosition_InitStep_FindTarget();
-		for(self = warpzone_camera_first; self; self = self.warpzone_next)
-			WarpZoneCamera_InitStep_FindTarget();
 		for(self = warpzone_first; self; self = self.warpzone_next)
 			WarpZone_InitStep_UpdateTransform();
 		self = e;
@@ -594,6 +600,16 @@ void WarpZone_StartFrame()
 		WarpZone_StoreProjectileData(e);
 }
 
+.float warpzone_reconnecting;
+float visible_to_some_client(entity ent)
+{
+	entity e;
+	for(e = nextent(world); clienttype(e) != CLIENTTYPE_NOTACLIENT; e = nextent(e))
+		if(e.classname == "player" && clienttype(e) == CLIENTTYPE_REAL)
+			if(checkpvs(e.origin + e.view_ofs, ent))
+				return 1;
+	return 0;
+}
 void trigger_warpzone_reconnect_use()
 {
 	entity e;
@@ -601,13 +617,20 @@ void trigger_warpzone_reconnect_use()
 	// NOTE: this matches for target, not targetname, but of course
 	// targetname must be set too on the other entities
 	for(self = warpzone_first; self; self = self.warpzone_next)
-		if(e.target == "" || self.target == e.target)
+		self.warpzone_reconnecting = ((e.target == "" || self.target == e.target) && !((e.spawnflags & 1) && (visible_to_some_client(self) || visible_to_some_client(self.enemy))));
+	for(self = warpzone_camera_first; self; self = self.warpzone_next)
+		self.warpzone_reconnecting = ((e.target == "" || self.target == e.target) && !((e.spawnflags & 1) && visible_to_some_client(self)));
+	for(self = warpzone_first; self; self = self.warpzone_next)
+		if(self.warpzone_reconnecting)
 			WarpZone_InitStep_ClearTarget();
 	for(self = warpzone_first; self; self = self.warpzone_next)
-		if(e.target == "" || self.target == e.target)
+		if(self.warpzone_reconnecting)
 			WarpZone_InitStep_FindTarget();
+	for(self = warpzone_camera_first; self; self = self.warpzone_next)
+		if(self.warpzone_reconnecting)
+			WarpZoneCamera_InitStep_FindTarget();
 	for(self = warpzone_first; self; self = self.warpzone_next)
-		if(e.target == "" || self.target == e.target || self.enemy.target == e.target)
+		if(self.warpzone_reconnecting || self.enemy.warpzone_reconnecting)
 			WarpZone_InitStep_FinalizeTransform();
 	self = e;
 }
