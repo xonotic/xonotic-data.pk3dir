@@ -294,6 +294,7 @@ string getTimeoutText(float addOneSecond);
 .entity flagcarried;
 
 .entity lastrocket;
+.entity lastmine;
 
 .float playerid;
 float playerid_last;

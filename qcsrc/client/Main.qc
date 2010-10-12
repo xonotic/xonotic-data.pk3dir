@@ -1356,6 +1356,10 @@ float CSQC_Parse_TempEntity()
 			nex_maxvelocity = ReadShort();
 			bHandled = true;
 			break;
+		case TE_CSQC_CR_MAXBULLETS:
+			cr_maxbullets = ReadByte();
+			bHandled = true;
+			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;

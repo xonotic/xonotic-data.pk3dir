@@ -14,6 +14,13 @@ void send_CSQC_nexvelocity(entity e) {
 	WriteShort(MSG_ONE, cvar("g_balance_nex_velocitydependent_maxspeed"));
 }
 
+void send_CSQC_cr_maxbullets(entity e) {
+	msg_entity = e;
+	WriteByte(MSG_ONE, SVC_TEMPENTITY);
+	WriteByte(MSG_ONE, TE_CSQC_CR_MAXBULLETS);
+	WriteByte(MSG_ONE, cvar("g_balance_campingrifle_magazinecapacity"));
+}
+
 void Announce(string snd) {
 	WriteByte(MSG_ALL, SVC_TEMPENTITY);
 	WriteByte(MSG_ALL, TE_CSQC_ANNOUNCE);
@@ -1607,6 +1614,7 @@ void ClientConnect (void)
 		send_CSQC_teamnagger();
 
 	send_CSQC_nexvelocity(self);
+	send_CSQC_cr_maxbullets(self);
 
 	CheatInitClient();
 }
