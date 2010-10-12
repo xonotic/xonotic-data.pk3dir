@@ -355,7 +355,7 @@ float w_electro(float req)
 			{
 				if(cvar("g_balance_electro_lightning"))
 				{
-					if (self.BUTTON_ATCK_prev == 0)
+					if ((!self.lgbeam) || wasfreed(self.lgbeam))
 					{
 						W_Electro_Attack3();
 					}
