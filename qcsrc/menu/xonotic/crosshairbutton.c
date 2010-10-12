@@ -8,6 +8,7 @@ CLASS(XonoticCrosshairButton) EXTENDS(RadioButton)
 
 	ATTRIB(XonoticCrosshairButton, useDownAsChecked, float, 1)
 	ATTRIB(XonoticCrosshairButton, src3, string, string_null)
+	ATTRIB(XonoticCrosshairButton, src4, string, string_null)
 
 	ATTRIB(XonoticCrosshairButton, cvarName, string, string_null)
 	ATTRIB(XonoticCrosshairButton, cvarValueFloat, float, 0)
@@ -33,6 +34,7 @@ void XonoticCrosshairButton_configureXonoticCrosshairButton(entity me, float the
 	me.configureRadioButton(me, string_null, me.fontSize, me.image, theGroup, 0);
 	me.srcMulti = 1;
 	me.src3 = strzone(strcat("/gfx/crosshair", ftos(me.cvarValueFloat)));
+	me.src4 = "/gfx/crosshairdot";
 }
 void XonoticCrosshairButton_setChecked(entity me, float val)
 {
@@ -76,12 +78,14 @@ void XonoticCrosshairButton_draw(entity me)
 
 	sz = draw_PictureSize(me.src3);
 	sz = globalToBoxSize(sz, draw_scale);
-	sz = sz * cvar("crosshair_size");
+	sz = (10 * '1 1 0' + sz * cvar("crosshair_size")) * 0.05; // (10 * '1 1 0' + ...) * 0.05 here to make visible size changes happen also at bigger sizes
 	if(sz_x > 0.95)
 		sz = sz * (0.95 / sz_x);
 	if(sz_y > 0.95)
 		sz = sz * (0.95 / sz_y);
 
 	draw_Picture('0.5 0.5 0' - 0.5 * sz, me.src3, sz, rgb, a);
+	if(cvar("crosshair_dot"))
+		draw_Picture('0.5 0.5 0' - 0.5 * sz * cvar("crosshair_dot_size"), me.src4, sz * cvar("crosshair_dot_size"), rgb, a * cvar("crosshair_dot_alpha"));
 }
 #endif
