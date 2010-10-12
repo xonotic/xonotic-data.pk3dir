@@ -12,6 +12,7 @@ void send_CSQC_nexvelocity(entity e) {
 	WriteByte(MSG_ONE, TE_CSQC_NEX_VELOCITY);
 	WriteShort(MSG_ONE, cvar("g_balance_nex_velocitydependent_minspeed"));
 	WriteShort(MSG_ONE, cvar("g_balance_nex_velocitydependent_maxspeed"));
+	WriteShort(MSG_ONE, cvar("g_balance_nex_velocitydependent_falloff_factor") * 10000);
 }
 
 void send_CSQC_cr_maxbullets(entity e) {
