@@ -78,7 +78,7 @@ void XonoticCrosshairButton_draw(entity me)
 
 	sz = draw_PictureSize(me.src3);
 	sz = globalToBoxSize(sz, draw_scale);
-	sz = (2 * '1 1 0' + sz * cvar("crosshair_size")) * 0.1; // (2 * '1 1 0' + ...) * 0.1 here to make visible size changes happen also at bigger sizes
+	sz = (10 * '1 1 0' + sz * cvar("crosshair_size")) * 0.05; // (10 * '1 1 0' + ...) * 0.05 here to make visible size changes happen also at bigger sizes
 	if(sz_x > 0.95)
 		sz = sz * (0.95 / sz_x);
 	if(sz_y > 0.95)

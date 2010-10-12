@@ -108,7 +108,6 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			e0.textEntity = main.weaponsDialog;
 			e0.allowCut = 1;
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 0.75, e = makeXonoticTextLabel(0, "Crosshair:"));
 		me.TD(me, 1, 1.00, e = makeXonoticCheckBox(0, "crosshair_per_weapon", "Per weapon"));
 		me.TD(me, 1, 1.25, e = makeXonoticCheckBox(1, "crosshair_color_override", "& Per weapon colors"));
