@@ -893,7 +893,12 @@ void CSQC_UpdateView(float w, float h)
 				{
 					CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_RING, wcross_resolution, wcross_name, wcross_alpha);
 				}
+
 				CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
+
+				if(cvar("crosshair_dot"))
+					CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", wcross_alpha * f * cvar("crosshair_dot_alpha"));
+
 				wcross_name_alpha_goal_prev = f;
 			}
 		}
