@@ -2,6 +2,7 @@
 REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", "Mine Layer");
 #else
 #ifdef SVQC
+void W_Mine_Think (void);
 .float minelayer_detonate, minelayer_mines;
 .float mine_time;
 
@@ -40,7 +41,7 @@ void W_Mine_Stick ()
 	newmine.mine_time = self.mine_time;
 
 	newmine.touch = SUB_Null;
-	newmine.think = self.think;
+	newmine.think = W_Mine_Think;
 	newmine.nextthink = time;
 	newmine.cnt = self.cnt;
 	newmine.flags = self.flags;
