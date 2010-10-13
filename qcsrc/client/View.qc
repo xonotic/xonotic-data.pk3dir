@@ -850,7 +850,7 @@ void CSQC_UpdateView(float w, float h)
 					a = cvar("crosshair_campingrifle_bulletcounter_alpha");
 					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 				}
-				else if (activeweapon == WEP_NEX) // ring around crosshair representing velocity-dependent damage for the nex
+				else if (activeweapon == WEP_NEX && nex_velocitydependent) // ring around crosshair representing velocity-dependent damage for the nex
 				{
 					f = bound(0, (nex_speed - nex_minvelocity) / (nex_maxvelocity - nex_minvelocity), 1);
 
