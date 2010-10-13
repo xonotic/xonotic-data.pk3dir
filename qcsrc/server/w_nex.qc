@@ -48,6 +48,7 @@ void W_Nex_Attack (float issecondary)
 	// TODO: make it more obvious (through effects, indicator on weapon) that damage increases when speed increases
 	mydmg *= f;
 	myforce *= f;
+	//print("^1Damage: ^7", ftos(mydmg), "\n");
 
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
 
