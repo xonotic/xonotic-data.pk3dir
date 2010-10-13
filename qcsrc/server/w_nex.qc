@@ -79,6 +79,7 @@ float w_nex(float req)
 	}
 	else if (req == WR_THINK)
 	{
+		print(ftos(self.nexspeed), "\n");
 		if (self.BUTTON_ATCK)
 		{
 			if (weapon_prepareattack(0, cvar("g_balance_nex_primary_refire")))
@@ -89,7 +90,12 @@ float w_nex(float req)
 		}
 		if (self.BUTTON_ATCK2)
 		{
-			if(cvar("g_balance_nex_secondary"))
+			if(cvar("g_balance_nex_secondary_charge"))
+			{
+				self.nexspeed = min(cvar("g_balance_nex_velocitydependent_maxspeed"), self.nexspeed + cvar("g_balance_nex_secondary_charge_rate") * frametime / W_TICSPERFRAME);
+				self.ammo_cells = max(0, self.ammo_cells - cvar("g_balance_nex_secondary_charge_ammo") * frametime / W_TICSPERFRAME);
+			}
+			else if(cvar("g_balance_nex_secondary"))
 			{
 				if (weapon_prepareattack(0, cvar("g_balance_nex_secondary_refire")))
 				{

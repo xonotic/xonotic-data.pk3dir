@@ -1354,7 +1354,9 @@ float CSQC_Parse_TempEntity()
 		case TE_CSQC_NEX_VELOCITY:
 			nex_minvelocity = ReadShort();
 			nex_maxvelocity = ReadShort();
-			nex_speed_falloff_factor = ReadShort()/10000;
+			nex_speed_falloff_rate = ReadByte();
+			nex_charge = ReadByte();
+			nex_charge_rate = ReadByte();
 			bHandled = true;
 			break;
 		case TE_CSQC_CR_MAXBULLETS:

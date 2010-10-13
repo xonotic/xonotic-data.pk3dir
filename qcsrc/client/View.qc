@@ -836,7 +836,10 @@ void CSQC_UpdateView(float w, float h)
 				if(xyspeed > nex_speed)
 					nex_speed = min(xyspeed, nex_maxvelocity);
 				else
-					nex_speed = (1 - nex_speed_falloff_factor) * nex_speed;
+					nex_speed = max(nex_minvelocity, nex_speed - nex_speed_falloff_rate * frametime);
+
+				if (activeweapon == WEP_NEX && button_attack2 && nex_charge)
+					nex_speed = min(nex_maxvelocity, nex_speed + nex_charge_rate * frametime);
 
 				// ring around crosshair representing bullets left in camping rifle clip
 				if (activeweapon == WEP_CAMPINGRIFLE && cr_maxbullets)
