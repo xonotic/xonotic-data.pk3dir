@@ -385,7 +385,7 @@ void W_WeaponFrame()
 	// server framerate is very low and the weapon fire rate very high
 	local float c;
 	c = 0;
-	while (c < 5)
+	while (c < W_TICSPERFRAME)
 	{
 		c = c + 1;
 		if(wb && ((self.weapons & wb) == 0))
