@@ -622,7 +622,7 @@ void CSQC_UpdateView(float w, float h)
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || getstati(STAT_HEALTH) <= 0)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
-	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_CAMPINGRIFLE && (button_zoom || zoomscript_caught))
+	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_CAMPINGRIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
 		reticle_type = 2; // nex zoom
 	else if(button_zoom || zoomscript_caught)
 		reticle_type = 1; // normal zoom
