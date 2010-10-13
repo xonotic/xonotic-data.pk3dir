@@ -263,5 +263,7 @@ float nex_scope;
 
 float nex_minvelocity;
 float nex_maxvelocity;
+float nex_speed_falloff_factor;
+float nex_speed;
 
 float cr_maxbullets;
