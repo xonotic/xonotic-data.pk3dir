@@ -97,9 +97,9 @@ void W_CampingRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdde
 	}
 
 	if(deathtype & HITTYPE_SECONDARY)
-		fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, (cvar("g_balance_campingrifle_primary_tracer") ? EF_RED : EF_BLUE), 1, pBulletConstant);
-	else
 		fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, (cvar("g_balance_campingrifle_secondary_tracer") ? EF_RED : EF_BLUE), 1, pBulletConstant);
+	else
+		fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, (cvar("g_balance_campingrifle_primary_tracer") ? EF_RED : EF_BLUE), 1, pBulletConstant);
 	endFireBallisticBullet();
 
 	if (cvar("g_casings") >= 2)
