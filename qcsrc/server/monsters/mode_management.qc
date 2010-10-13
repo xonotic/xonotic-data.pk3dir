@@ -491,11 +491,11 @@ void() deathmatch7update =
 		if (time >= 2)
 		{
 			spawnedexitmonsters = TRUE;
-			e = find(world, classname, "trigger_changelevel");
+			e = find(world, classname, "target_changelevel");
 			while (e)
 			{
 				spawnmonster(e.origin + (e.mins + e.maxs) * 0.5, 8, 8, "monster_hellfish", monster_hellfish, '-16 -16 -24', '16 16 32');
-				e = find(e, classname, "trigger_changelevel");
+				e = find(e, classname, "target_changelevel");
 			}
 		}
 		return;

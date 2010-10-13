@@ -382,7 +382,7 @@ void CSQC_UpdateView(float w, float h)
 	input_angles = warpzone_fixview_cl_viewangles;
 	view_angles = warpzone_fixview_angles;
 
-	if(cvar("cl_lockview") || autocvar__hud_configure)
+	if(cvar("cl_lockview") || (autocvar__hud_configure && spectatee_status <= 0))
 	{
 		pmove_org = freeze_pmove_org;
 		input_angles = view_angles = freeze_input_angles;
