@@ -192,6 +192,7 @@
 		<Unit filename="w_electro.qc" />
 		<Unit filename="w_fireball.qc" />
 		<Unit filename="w_grenadelauncher.qc" />
+		<Unit filename="w_minelayer.qc" />
 		<Unit filename="w_hagar.qc" />
 		<Unit filename="w_hlac.qc" />
 		<Unit filename="w_hook.qc" />

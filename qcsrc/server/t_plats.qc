@@ -418,8 +418,9 @@ void func_bobbing_controller_think()
 	// calculate sinewave using makevectors
 	makevectors((self.nextthink * self.owner.cnt + self.owner.phase * 360) * '0 1 0');
 	v = self.owner.destvec + self.owner.movedir * v_forward_y;
-	// * 10 so it will arrive in 0.1 sec
-	self.owner.velocity = (v - self.owner.origin) * 10;
+	if(self.owner.classname == "func_bobbing") // don't brake stuff if the func_bobbing was killtarget'ed
+		// * 10 so it will arrive in 0.1 sec
+		self.owner.velocity = (v - self.owner.origin) * 10;
 };
 
 void bobbing_blocked()
@@ -1694,8 +1695,9 @@ void func_fourier_controller_think()
 		v = v + ('1 0 0' * stof(argv(i*5+2)) + '0 1 0' * stof(argv(i*5+3)) + '0 0 1' * stof(argv(i*5+4))) * self.owner.height * v_forward_y;
 	}
 
-	// * 10 so it will arrive in 0.1 sec
-	self.owner.velocity = (v - self.owner.origin) * 10;
+	if(self.owner.classname == "func_fourier") // don't brake stuff if the func_fourier was killtarget'ed
+		// * 10 so it will arrive in 0.1 sec
+		self.owner.velocity = (v - self.owner.origin) * 10;
 };
 
 void spawnfunc_func_fourier()
@@ -1814,7 +1816,8 @@ void func_vectormamamam_controller_think()
 		return;
 	}
 
-	self.owner.velocity = (self.owner.destvec + func_vectormamamam_origin(self.owner, 0.1) - self.owner.origin) * 10;
+	if(self.owner.classname == "func_vectormamamam") // don't brake stuff if the func_vectormamamam was killtarget'ed
+		self.owner.velocity = (self.owner.destvec + func_vectormamamam_origin(self.owner, 0.1) - self.owner.origin) * 10;
 }
 
 void func_vectormamamam_findtarget()

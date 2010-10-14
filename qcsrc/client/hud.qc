@@ -1421,13 +1421,13 @@ void HUD_Panel_Mouse()
 	cursorsize = '32 32 0';
 
 	if(highlightcheck == 0)
-		drawpic(mousepos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor.tga"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic(mousepos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor.tga"), '32 32 0', '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
 	else if(highlightcheck == 1)
-		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor_move.tga"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor_move.tga"), '32 32 0', '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
 	else if(highlightcheck == 2)
-		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor_resize.tga"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor_resize.tga"), '32 32 0', '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
 	else
-		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor_resize2.tga"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor_resize2.tga"), '32 32 0', '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
 
 	prevMouseClicked = mouseClicked;
 }
@@ -1480,6 +1480,7 @@ float GetAmmoTypeForWep(float i)
 		case WEP_UZI: return 1;
 		case WEP_CAMPINGRIFLE: return 1;
 		case WEP_GRENADE_LAUNCHER: return 2;
+		case WEP_MINE_LAYER: return 2;
 		case WEP_ELECTRO: return 3;
 		case WEP_CRYLINK: return 3;
 		case WEP_HLAC: return 3;

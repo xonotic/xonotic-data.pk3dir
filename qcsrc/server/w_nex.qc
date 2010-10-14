@@ -43,11 +43,12 @@ void W_Nex_Attack (float issecondary)
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	f = ExponentialFalloff(cvar("g_balance_nex_velocitydependent_minspeed"), cvar("g_balance_nex_velocitydependent_maxspeed"), cvar("g_balance_nex_velocitydependent_halflife"), vlen('1 0 0' * self.velocity_x + '0 1 0' * self.velocity_y));
+	f = ExponentialFalloff(cvar("g_balance_nex_velocitydependent_minspeed"), cvar("g_balance_nex_velocitydependent_maxspeed"), cvar("g_balance_nex_velocitydependent_halflife"), self.nexspeed);
 
 	// TODO: make it more obvious (through effects, indicator on weapon) that damage increases when speed increases
 	mydmg *= f;
 	myforce *= f;
+	//print("^1Damage: ^7", ftos(mydmg), "\n");
 
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
 
@@ -89,7 +90,15 @@ float w_nex(float req)
 		}
 		if (self.BUTTON_ATCK2)
 		{
-			if(cvar("g_balance_nex_secondary"))
+			if(cvar("g_balance_nex_secondary_charge"))
+			{
+				if(self.ammo_cells)
+				{
+					self.nexspeed = min(cvar("g_balance_nex_velocitydependent_maxspeed"), self.nexspeed + cvar("g_balance_nex_secondary_charge_rate") * frametime / W_TICSPERFRAME);
+					self.ammo_cells = max(0, self.ammo_cells - cvar("g_balance_nex_secondary_charge_ammo") * frametime / W_TICSPERFRAME);
+				}
+			}
+			else if(cvar("g_balance_nex_secondary"))
 			{
 				if (weapon_prepareattack(0, cvar("g_balance_nex_secondary_refire")))
 				{
