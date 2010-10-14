@@ -1,6 +1,6 @@
 .float lip;
 .float bgmscriptangular;
-.float lodmodelindex, lodmodelindex2;
+.float lodmodelindex1, lodmodelindex2;
 .float loddistance1, loddistance2;
 
 void Ent_Wall_Draw()
