@@ -2,6 +2,7 @@
 .float bgmscriptangular;
 .float lodmodelindex0, lodmodelindex1, lodmodelindex2;
 .float loddistance1, loddistance2;
+.vector saved;
 
 void Ent_Wall_Draw()
 {
@@ -9,6 +10,11 @@ void Ent_Wall_Draw()
 	float d;
 	vector save;
 	var .vector fld;
+
+	if(self.bgmscriptangular)
+		self.angles = self.saved;
+	else
+		self.origin = self.saved;
 
 	if(self.lodmodelindex1)
 	{
@@ -37,11 +43,10 @@ void Ent_Wall_Draw()
 	InterpolateOrigin_Do();
 
 	if(self.bgmscriptangular)
-		fld = angles;
+		self.saved = self.angles;
 	else
-		fld = origin;
-	
-	save = self.fld;
+		self.saved = self.origin;
+
 	f = BGMScript(self);
 	if(f >= 0)
 	{
@@ -55,9 +60,9 @@ void Ent_Wall_Draw()
 		self.alpha = 1;
 
 	if(self.alpha >= ALPHA_MIN_VISIBLE)
-		R_AddEntity(self);
-
-	self.fld = save;
+		self.drawmask = MASK_NORMAL;
+	else
+		self.drawmask = 0;
 }
 
 void Ent_Wall_Remove()
@@ -72,6 +77,11 @@ void Ent_Wall()
 	float f;
 	InterpolateOrigin_Undo();
 	self.iflags = IFLAG_ANGLES;
+
+	if(self.bgmscriptangular)
+		self.angles = self.saved;
+	else
+		self.origin = self.saved;
 
 	f = ReadByte();
 
@@ -160,6 +170,11 @@ void Ent_Wall()
 	}
 
 	InterpolateOrigin_Note();
+
+	if(self.bgmscriptangular)
+		self.saved = self.angles;
+	else
+		self.saved = self.origin;
 
 	self.entremove = Ent_Wall_Remove;
 	self.draw = Ent_Wall_Draw;
