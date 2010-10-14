@@ -1,11 +1,38 @@
 .float lip;
 .float bgmscriptangular;
+.float lodmodelindex, lodmodelindex2;
+.float loddistance1, loddistance2;
 
 void Ent_Wall_Draw()
 {
 	float f;
+	float d;
 	vector save;
 	var .vector fld;
+
+	if(self.lodmodelindex1)
+	{
+		d = cvar("loddebug");
+		if(d > 0)
+		{
+			if(d == 1)
+				self.modelindex = self.lodmodelindex0;
+			else if(d == 2 || !self.lodmodelindex2)
+				self.modelindex = self.lodmodelindex1;
+			else // if(d == 3)
+				self.modelindex = self.lodmodelindex2;
+		}
+		else
+		{
+			d = vlen(NearestPointOnBox(self, view_origin) - view_origin);
+			if(d < self.loddistance1)
+				self.modelindex = self.lodmodelindex0;
+			else if(!self.lodmodelindex2 || d < self.loddistance2)
+				self.modelindex = self.lodmodelindex1;
+			else
+				self.modelindex = self.lodmodelindex2;
+		}
+	}
 
 	InterpolateOrigin_Do();
 
@@ -77,7 +104,20 @@ void Ent_Wall()
 
 	if(f & 8)
 	{
-		self.modelindex = ReadShort();
+		if(f & 0x80)
+		{
+			self.lodmodelindex0 = ReadShort();
+			self.loddistance1 = ReadShort();
+			self.lodmodelindex1 = ReadShort();
+			self.loddistance2 = ReadShort();
+			self.lodmodelindex2 = ReadShort();
+		}
+		else
+		{
+			self.modelindex = ReadShort();
+			self.loddistance1 = 0;
+			self.loddistance2 = 0;
+		}
 		self.solid = ReadByte();
 		self.scale = ReadShort() / 256.0;
 		if(f & 0x20)
