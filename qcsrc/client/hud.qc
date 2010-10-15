@@ -4944,29 +4944,29 @@ void HUD_Main (void)
 		}
 	}
 
-	float f;
-	vector color;
-	if((teamplay) && autocvar_hud_dock_color_team) {
-		f = stof(getplayerkey(player_localentnum - 1, "colors"));
-		color = colormapPaletteColor(mod(f, 16), 1) * autocvar_hud_dock_color_team;
-	}
-	else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && autocvar_hud_dock_color_team) {
-		color = '1 0 0' * autocvar_hud_dock_color_team;
-	}
-	else if(autocvar_hud_dock_color == "shirt") {
-		f = stof(getplayerkey(player_localentnum - 1, "colors"));
-		color = colormapPaletteColor(floor(f / 16), 0);
-	}
-	else if(autocvar_hud_dock_color == "pants") {
-		f = stof(getplayerkey(player_localentnum - 1, "colors"));
-		color = colormapPaletteColor(mod(f, 16), 1);
-	}
-	else
-		color = stov(autocvar_hud_dock_color);
-
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
 	{
+		float f;
+		vector color;
+		if((teamplay) && autocvar_hud_dock_color_team) {
+			f = stof(getplayerkey(player_localentnum - 1, "colors"));
+			color = colormapPaletteColor(mod(f, 16), 1) * autocvar_hud_dock_color_team;
+		}
+		else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && autocvar_hud_dock_color_team) {
+			color = '1 0 0' * autocvar_hud_dock_color_team;
+		}
+		else if(autocvar_hud_dock_color == "shirt") {
+			f = stof(getplayerkey(player_localentnum - 1, "colors"));
+			color = colormapPaletteColor(floor(f / 16), 0);
+		}
+		else if(autocvar_hud_dock_color == "pants") {
+			f = stof(getplayerkey(player_localentnum - 1, "colors"));
+			color = colormapPaletteColor(mod(f, 16), 1);
+		}
+		else
+			color = stov(autocvar_hud_dock_color);
+
 		string pic;
 		pic = strcat(hud_skin_path, "/", autocvar_hud_dock);
 		if(precache_pic(pic) == "") {
