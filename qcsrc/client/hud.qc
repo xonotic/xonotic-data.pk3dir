@@ -1332,6 +1332,9 @@ void HUD_Panel_Mouse()
 	print("Menu alpha: ", cvar_string("_menu_alpha"), "\n");
 	*/
 
+	// this makes instantly hide the editor cursor, it's needed in case we
+	// open the HUDExit dialog as hud_fade_alpha doesn't decrease to 0
+	// TODO: find a way to fade the cursor out even in this case
 	if(menu_enabled)
 		return;
 
