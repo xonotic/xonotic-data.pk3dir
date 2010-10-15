@@ -14,9 +14,12 @@ void ModelEffect_Draw()
 		remove(self);
 		return;
 	}
+	self.drawmask = MASK_NORMAL;
 	if(self.scale <= 0)
+	{
+		self.drawmask = 0;
 		return;
-	R_AddEntity(self);
+	}
 }
 
 void Ent_ModelEffect(float isNew)

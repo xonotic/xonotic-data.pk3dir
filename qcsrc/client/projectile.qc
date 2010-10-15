@@ -154,7 +154,7 @@ void Projectile_Draw()
 			break;
 	}
 
-	self.drawmask = DRAWMASK_NORMAL;
+	self.drawmask = MASK_NORMAL;
 }
 
 void loopsound(entity e, float ch, string samp, float vol, float attn)

@@ -20,9 +20,10 @@ void Casing_Draw()
 	self.alpha = bound(0, self.cnt - time, 1);
 
 	if(self.alpha < ALPHA_MIN_VISIBLE)
+	{
 		Casing_Delete();
-	else
-		R_AddEntity(self);
+		self.drawmask = 0;
+	}
 }
 
 void Casing_Touch()
@@ -85,6 +86,7 @@ void Ent_Casing(float isNew)
 	casing.angles_x = ReadByte() * 360 / 256;
 	casing.angles_y = ReadByte() * 360 / 256;
 	casing.angles_z = ReadByte() * 360 / 256;
+	casing.drawmask = MASK_NORMAL;
 
 	if(cvar("cl_casings") && isNew) {
 		casing.draw = Casing_Draw;

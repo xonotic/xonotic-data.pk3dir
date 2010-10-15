@@ -440,7 +440,9 @@ void ShotOrg_Draw()
 	self.angles = view_angles;
 	self.angles_x = -self.angles_x;
 	if not(self.cnt)
-		R_AddEntity(self);
+		self.drawmask = MASK_NORMAL;
+	else
+		self.drawmask = 0;
 }
 void ShotOrg_Draw2D()
 {
@@ -487,11 +489,12 @@ void DrawDebugModel()
 	if(time - floor(time) > 0.5)
 	{
 		PolyDrawModel(self);
+		self.drawmask = 0;
 	}
 	else
 	{
 		self.renderflags = 0;
-		R_AddEntity(self);
+		self.drawmask = MASK_NORMAL;
 	}
 }
 
