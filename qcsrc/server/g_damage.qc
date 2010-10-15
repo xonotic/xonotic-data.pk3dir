@@ -850,20 +850,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 }
 
-vector NearestPointOnBox(entity box, vector org)
-{
-	vector m1, m2, nearest;
-
-	m1 = box.mins + box.origin;
-	m2 = box.maxs + box.origin;
-
-	nearest_x = bound(m1_x, org_x, m2_x);
-	nearest_y = bound(m1_y, org_y, m2_y);
-	nearest_z = bound(m1_z, org_z, m2_z);
-
-	return nearest;
-}
-
 void Damage_RecordDamage(entity attacker, float deathtype, float damage)
 {
 	float weaponid;

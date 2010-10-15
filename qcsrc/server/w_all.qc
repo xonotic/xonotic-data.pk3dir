@@ -2,6 +2,7 @@
 #include "w_shotgun.qc"
 #include "w_uzi.qc"
 #include "w_grenadelauncher.qc"
+#include "w_minelayer.qc"
 #include "w_electro.qc"
 #include "w_crylink.qc"
 #include "w_nex.qc"

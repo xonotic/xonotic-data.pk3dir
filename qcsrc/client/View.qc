@@ -382,7 +382,7 @@ void CSQC_UpdateView(float w, float h)
 	input_angles = warpzone_fixview_cl_viewangles;
 	view_angles = warpzone_fixview_angles;
 
-	if(cvar("cl_lockview") || autocvar__hud_configure)
+	if(cvar("cl_lockview") || (autocvar__hud_configure && spectatee_status <= 0))
 	{
 		pmove_org = freeze_pmove_org;
 		input_angles = view_angles = freeze_input_angles;
@@ -622,6 +622,8 @@ void CSQC_UpdateView(float w, float h)
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || getstati(STAT_HEALTH) <= 0)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
+	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_CAMPINGRIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
+		reticle_type = 2; // nex zoom
 	else if(button_zoom || zoomscript_caught)
 		reticle_type = 1; // normal zoom
 	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_CAMPINGRIFLE && button_attack2)
@@ -696,24 +698,6 @@ void CSQC_UpdateView(float w, float h)
 		if(cvar("r_letterbox") == 0)
 			if(cvar("viewsize") < 120)
 				CSQC_common_hud();
-
-
-		// ring around crosshair representing velocity-dependent damage for the nex
-		if (activeweapon == WEP_NEX)
-		{
-			float f, a, curvel;
-			vector rgb;
-
-			rgb_x = cvar("crosshair_nexvelocity_color_red");
-			rgb_y = cvar("crosshair_nexvelocity_color_green");
-			rgb_z = cvar("crosshair_nexvelocity_color_blue");
-			a = cvar("crosshair_nexvelocity_alpha");
-
-			curvel = vlen('1 0 0' * pmove_vel_x + '0 1 0' * pmove_vel_y);
-			f = bound(0, (curvel - nex_minvelocity) / (nex_maxvelocity - nex_minvelocity), 1);
-
-			DrawCircleClippedPic('0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight, 0.1 * vid_conheight, "gfx/nex_ring.tga", f, rgb, a, DRAWFLAG_ADDITIVE);
-		}
 
 		// crosshair goes VERY LAST
 		if(!scoreboard_active && !camera_active && intermission != 2) {
@@ -842,17 +826,37 @@ void CSQC_UpdateView(float w, float h)
 				wcross_scale *= 1 - cvar("_menu_alpha");
 				wcross_alpha *= 1 - cvar("_menu_alpha");
 
-				// ring around crosshair representing bullets left in camping rifle clip
-				if (activeweapon == WEP_CAMPINGRIFLE)
-				{
-					ring_scale = cvar("crosshair_campingrifle_ring_size");
-					bullets = bound(0, getstati(STAT_BULLETS_LOADED), 4);
-				}
-				else
-					bullets = 0;
+				ring_scale = cvar("crosshair_ring_size");
 
-#define CROSSHAIR_DRAW_RING(i,j,sz,wcross_name,wcross_alpha) \
-				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+				float f, a;
+				wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
+
+				float xyspeed;
+				xyspeed = vlen('1 0 0' * pmove_vel_x + '0 1 0' * pmove_vel_y);
+				if(xyspeed > nex_speed)
+					nex_speed = min(xyspeed, nex_maxvelocity);
+				else
+					nex_speed = max(nex_minvelocity, nex_speed - nex_speed_falloff_rate * frametime);
+
+				if (activeweapon == WEP_NEX && button_attack2 && nex_charge && getstati(GetAmmoStat(3)))
+					nex_speed = min(nex_maxvelocity, nex_speed + nex_charge_rate * frametime);
+
+				// ring around crosshair representing bullets left in camping rifle clip
+				if (activeweapon == WEP_CAMPINGRIFLE && cr_maxbullets)
+				{
+					bullets = getstati(STAT_BULLETS_LOADED);
+					f = bound(0, bullets / cr_maxbullets, 1);
+
+					a = cvar("crosshair_campingrifle_bulletcounter_alpha");
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+				}
+				else if (activeweapon == WEP_NEX && nex_velocitydependent && nex_speed > nex_minvelocity) // ring around crosshair representing velocity-dependent damage for the nex
+				{
+					f = bound(0, (nex_speed - nex_minvelocity) / (nex_maxvelocity - nex_minvelocity), 1);
+
+					a = cvar("crosshair_nexvelocity_alpha");
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+				}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
 				do \
@@ -889,11 +893,11 @@ void CSQC_UpdateView(float w, float h)
 				}
 
 				wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
-				if(bullets)
-				{
-					CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_RING, wcross_resolution, wcross_name, wcross_alpha);
-				}
 				CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
+
+				if(cvar("crosshair_dot"))
+					CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", wcross_alpha * f * cvar("crosshair_dot_alpha"));
+
 				wcross_name_alpha_goal_prev = f;
 			}
 		}

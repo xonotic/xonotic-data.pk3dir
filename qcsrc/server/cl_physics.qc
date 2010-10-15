@@ -37,6 +37,8 @@ float sv_airspeedlimit_nonqw;
 .float multijump_ready;
 .float prevjumpbutton;
 
+.float nexspeed;
+
 /*
 =============
 PlayerJump
@@ -1323,6 +1325,15 @@ void SV_PlayerPhysics()
 			}
 		}
 	}
+
+	float f;
+	float xyspeed;
+	f = cvar("g_balance_nex_velocitydependent_falloff_rate");
+	xyspeed = vlen('1 0 0' * self.velocity_x + '0 1 0' * self.velocity_y);
+	if(xyspeed > self.nexspeed)
+		self.nexspeed = min(xyspeed, cvar("g_balance_nex_velocitydependent_maxspeed"));
+	else
+		self.nexspeed = max(cvar("g_balance_nex_velocitydependent_minspeed"), self.nexspeed - f * frametime);
 :end
 	if(self.flags & FL_ONGROUND)
 		self.lastground = time;

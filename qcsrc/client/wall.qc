@@ -1,20 +1,52 @@
 .float lip;
 .float bgmscriptangular;
+.float lodmodelindex0, lodmodelindex1, lodmodelindex2;
+.float loddistance1, loddistance2;
+.vector saved;
 
 void Ent_Wall_Draw()
 {
 	float f;
+	float d;
 	vector save;
 	var .vector fld;
+
+	if(self.bgmscriptangular)
+		self.angles = self.saved;
+	else
+		self.origin = self.saved;
+
+	if(self.lodmodelindex1)
+	{
+		d = cvar("loddebug");
+		if(d > 0)
+		{
+			if(d == 1)
+				self.modelindex = self.lodmodelindex0;
+			else if(d == 2 || !self.lodmodelindex2)
+				self.modelindex = self.lodmodelindex1;
+			else // if(d == 3)
+				self.modelindex = self.lodmodelindex2;
+		}
+		else
+		{
+			d = vlen(NearestPointOnBox(self, view_origin) - view_origin);
+			if(d < self.loddistance1)
+				self.modelindex = self.lodmodelindex0;
+			else if(!self.lodmodelindex2 || d < self.loddistance2)
+				self.modelindex = self.lodmodelindex1;
+			else
+				self.modelindex = self.lodmodelindex2;
+		}
+	}
 
 	InterpolateOrigin_Do();
 
 	if(self.bgmscriptangular)
-		fld = angles;
+		self.saved = self.angles;
 	else
-		fld = origin;
-	
-	save = self.fld;
+		self.saved = self.origin;
+
 	f = BGMScript(self);
 	if(f >= 0)
 	{
@@ -28,9 +60,9 @@ void Ent_Wall_Draw()
 		self.alpha = 1;
 
 	if(self.alpha >= ALPHA_MIN_VISIBLE)
-		R_AddEntity(self);
-
-	self.fld = save;
+		self.drawmask = MASK_NORMAL;
+	else
+		self.drawmask = 0;
 }
 
 void Ent_Wall_Remove()
@@ -45,6 +77,11 @@ void Ent_Wall()
 	float f;
 	InterpolateOrigin_Undo();
 	self.iflags = IFLAG_ANGLES;
+
+	if(self.bgmscriptangular)
+		self.angles = self.saved;
+	else
+		self.origin = self.saved;
 
 	f = ReadByte();
 
@@ -77,7 +114,20 @@ void Ent_Wall()
 
 	if(f & 8)
 	{
-		self.modelindex = ReadShort();
+		if(f & 0x80)
+		{
+			self.lodmodelindex0 = ReadShort();
+			self.loddistance1 = ReadShort();
+			self.lodmodelindex1 = ReadShort();
+			self.loddistance2 = ReadShort();
+			self.lodmodelindex2 = ReadShort();
+		}
+		else
+		{
+			self.modelindex = ReadShort();
+			self.loddistance1 = 0;
+			self.loddistance2 = 0;
+		}
 		self.solid = ReadByte();
 		self.scale = ReadShort() / 256.0;
 		if(f & 0x20)
@@ -120,6 +170,11 @@ void Ent_Wall()
 	}
 
 	InterpolateOrigin_Note();
+
+	if(self.bgmscriptangular)
+		self.saved = self.angles;
+	else
+		self.saved = self.origin;
 
 	self.entremove = Ent_Wall_Remove;
 	self.draw = Ent_Wall_Draw;

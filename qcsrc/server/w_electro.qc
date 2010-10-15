@@ -216,8 +216,15 @@ float lgbeam_send(entity to, float sf)
 void lgbeam_think()
 {
 	self.owner.prevlgfire = time;
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK)
+	if (self != self.owner.lgbeam)
 	{
+		remove(self);
+		return;
+	}
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK)
+	{
+		if(self == self.owner.lgbeam)
+			self.owner.lgbeam = world;
 		remove(self);
 		return;
 	}
@@ -355,7 +362,7 @@ float w_electro(float req)
 			{
 				if(cvar("g_balance_electro_lightning"))
 				{
-					if (self.BUTTON_ATCK_prev == 0)
+					if ((!self.lgbeam) || wasfreed(self.lgbeam))
 					{
 						W_Electro_Attack3();
 					}

@@ -57,6 +57,8 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 		sf |= 0x20;
 	if(self.colormap != 0)
 		sf |= 0x40;
+	if(self.lodmodelindex1)
+		sf |= 0x80;
 	
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WALL);
 	WriteByte(MSG_ENTITY, sf);
@@ -86,7 +88,16 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 
 	if(sf & 8)
 	{
-		WriteShort(MSG_ENTITY, self.modelindex);
+		if(sf & 0x80)
+		{
+			WriteShort(MSG_ENTITY, self.lodmodelindex0);
+			WriteShort(MSG_ENTITY, bound(0, self.loddistance1, 65535));
+			WriteShort(MSG_ENTITY, self.lodmodelindex1);
+			WriteShort(MSG_ENTITY, bound(0, self.loddistance2, 65535));
+			WriteShort(MSG_ENTITY, self.lodmodelindex2);
+		}
+		else
+			WriteShort(MSG_ENTITY, self.modelindex);
 		WriteByte(MSG_ENTITY, self.solid);
 		WriteShort(MSG_ENTITY, floor(self.scale * 256));
 		if(sf & 0x20)
@@ -124,7 +135,7 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT;
 
 #define G_CLIENTMODEL_INIT(sol) \
-	SetBrushEntityModelNoLOD(); \
+	SetBrushEntityModel(); \
 	if(!self.scale) self.scale = self.modelscale; \
 	self.use = g_clientmodel_setcolormaptoactivator; \
 	InitializeEntity(self, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
