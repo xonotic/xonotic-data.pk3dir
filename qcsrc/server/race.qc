@@ -140,17 +140,9 @@ float race_CheckUID(string myuid, string net_name) { // return existing UID or p
 				return i+1;
 	}
 	for (i=RANKINGS_CNT-1;i>=0;--i)
-		if(grecordholder[i] == net_name)
-			return i+1;
-	return 0;
-}
-#endif
-
-float race_CheckName(string net_name) { // Does the name already exist in rankings? In that case, where? (otherwise 0)
-	float i;
-	for (i=RANKINGS_CNT-1;i>=0;--i)
-		if(grecordholder[i] == net_name)
-			return i+1;
+		if(!grecorduid[i])
+			if(grecordholder[i] == net_name)
+				return i+1;
 	return 0;
 }
 
