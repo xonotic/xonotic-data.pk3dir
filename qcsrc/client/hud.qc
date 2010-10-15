@@ -4920,6 +4920,9 @@ void HUD_Main (void)
 
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 
+	if(!autocvar__hud_configure && !hud_fade_alpha)
+		return;
+
 	// Drawing stuff
 
 	// HUD configure visible grid
