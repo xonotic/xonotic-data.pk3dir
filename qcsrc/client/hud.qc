@@ -901,8 +901,6 @@ float prevMouseClicked; // previous state
 float prevMouseClickedTime; // time during previous mouse click, to check for doubleclicks
 vector prevMouseClickedPos; // pos during previous mouse click, to check for doubleclicks
 
-float menu_enabled;
-float menu_enabled_time;
 float pressed_key_time;
 void HUD_Panel_Arrow_Action(float nPrimary)
 {
@@ -1058,7 +1056,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	{
 		if (bInputType == 1)
 			return true;
-		disable_menu_alphacheck = 1;
 		menu_enabled = 1;
 		menu_enabled_time = time;
 		localcmd("menu_showhudexit\n");
@@ -1321,13 +1318,11 @@ vector prev_pos, prev_size;
 void HUD_Panel_Mouse()
 {
 	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
-	if (menu_enabled == 0) // menu dialog closed, enable normal alpha stuff again
-		disable_menu_alphacheck = 0;
 	if (autocvar__menu_alpha == 0 && time - menu_enabled_time > 0.5)
 		menu_enabled = 0;
 
 	/*
-	print("Disable menu_alphacheck: ", ftos(disable_menu_alphacheck), "\n");
+	print("menu_enabled: ", ftos(menu_enabled), "\n");
 	print("Highlighted: ", ftos(highlightedPanel), "\n");
 	print("Menu alpha: ", cvar_string("_menu_alpha"), "\n");
 	*/
@@ -1338,7 +1333,7 @@ void HUD_Panel_Mouse()
 	if(menu_enabled)
 		return;
 
-	if(mouseClicked == 0 && disable_menu_alphacheck != 2 && highlightedPanel >= 0) { // don't reset these variables in disable_menu_alphacheck mode 2!
+	if(mouseClicked == 0 && menu_enabled != 2 && highlightedPanel >= 0) { // don't reset these variables in menu_enabled mode 2!
 		highlightedPanel = -1;
 		highlightedAction = 0;
 	}
@@ -1401,8 +1396,7 @@ void HUD_Panel_Mouse()
 		if(time - prevMouseClickedTime < 0.4 && prevMouseClicked == 0 && prevMouseClickedPos == mousepos && highlightedPanel >= 0)
 		{
 			mouseClicked = 0; // to prevent spam, I guess.
-			disable_menu_alphacheck = 2;
-			menu_enabled = 1;
+			menu_enabled = 2;
 			menu_enabled_time = time;
 			HUD_Panel_GetName(highlightedPanel)
 			localcmd("menu_showhudoptions ", panel_name, "\n");
@@ -4908,7 +4902,7 @@ void HUD_Main (void)
 	hud_skin_path = strcat("gfx/hud/", autocvar_hud_skin);
 
 	// global hud alpha fade
-	if(disable_menu_alphacheck == 1)
+	if(menu_enabled == 1)
 		hud_fade_alpha = 1;
 	else
 		hud_fade_alpha = (1 - autocvar__menu_alpha);
@@ -5010,5 +5004,6 @@ void HUD_Main (void)
 	hud_configure_prev = autocvar__hud_configure;
 
 	if (!autocvar__hud_configure) // hud config mode disabled, enable normal alpha stuff again
-		disable_menu_alphacheck = 0;
+		if (menu_enabled)
+			menu_enabled = 0;
 }
