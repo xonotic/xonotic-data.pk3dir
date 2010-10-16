@@ -398,11 +398,11 @@ float racer_pplug()
     ftmp2 = ftmp * -1;
 
     ftmp = bound(ftmp2, shortangle_f(player.v_angle_y - racer.angles_y, racer.angles_y), ftmp);
-    ftmp2 = safeangle(racer.angles_y + ftmp);
+    ftmp2 = anglemods(racer.angles_y + ftmp);
 
     // Roll
     ftmp = bound(-45, shortangle_f(player.v_angle_z + ((racer.angles_y - ftmp2) * racer_turnroll), racer.angles_z), 45);
-    ftmp = safeangle(racer.angles_z + ftmp);
+    ftmp = anglemods(racer.angles_z + ftmp);
     racer.angles_z = bound(-85, ftmp, 85);
 
     // Turn
@@ -413,7 +413,7 @@ float racer_pplug()
     ftmp2 = ftmp * -1;
 
     ftmp = bound(ftmp2,shortangle_f(player.v_angle_x - racer.angles_x,racer.angles_x),ftmp);
-    racer.angles_x = safeangle(racer.angles_x + ftmp);
+    racer.angles_x = anglemods(racer.angles_x + ftmp);
     racer.angles_x *= -1;
 
     df = racer.velocity * -0.5;

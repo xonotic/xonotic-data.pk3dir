@@ -1,8 +1,9 @@
 
+#ifdef TURRET_DEBUG
 void mark_error(vector where,float lifetime);
 void mark_info(vector where,float lifetime);
 entity mark_misc(vector where,float lifetime);
-
+#endif
 
 void pathlib_showpath(entity start)
 {
@@ -23,7 +24,9 @@ void path_dbg_think()
 
 void __showpath2_think()
 {
-    mark_info(self.origin,1);
+    #ifdef TURRET_DEBUG 
+	mark_info(self.origin,1);
+	#endif
     if(self.path_next)
     {
         self.path_next.think     = __showpath2_think;

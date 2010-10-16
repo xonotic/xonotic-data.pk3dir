@@ -59,12 +59,13 @@ void ewheel_attack()
         proj.bot_dodgerating = self.shot_dmg;
         proj.think           = turret_ewheel_projectile_explode;
         proj.nextthink       = time + 9;
-        proj.solid           = SOLID_BBOX;
+        //proj.solid           = SOLID_TRIGGER;
         proj.movetype        = MOVETYPE_FLYMISSILE;
         proj.velocity        = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
         proj.touch           = turret_ewheel_projectile_explode;
         proj.enemy           = self.enemy;
         proj.flags           = FL_PROJECTILE | FL_NOTARGET;
+        PROJECTILE_MAKETRIGGER(proj);
 
         CSQCProjectile(proj, TRUE, PROJECTILE_LASER, TRUE);
 
@@ -285,7 +286,9 @@ void turret_ewheel_dinit()
     }
 
     self.target_select_flags   = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+    self.target_select_flags   = TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;// | TFL_TARGETSELECT_LOS;
+    self.target_validate_flags = TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;// | TFL_TARGETSELECT_LOS;
     self.damage_flags          |= TFL_DMG_DEATH_NOGIBS;
 
     self.iscreature = TRUE;
@@ -307,7 +310,7 @@ void turret_ewheel_dinit()
     self.tur_head.aim_speed = cvar("g_turrets_unit_ewheel_turnrate");
     self.tur_head.aim_speed = self.tur_head.aim_speed / (1 / self.ticrate);
 
-    if (!turret_tag_setup())
+    if (!turret_tag_fire_update())
         dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     //setorigin(self,self.origin + '0 0 128');

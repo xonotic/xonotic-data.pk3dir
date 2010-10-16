@@ -114,7 +114,7 @@ void turret_phaser_dinit()
 
     self.turrcaps_flags = TFL_TURRCAPS_SNIPER|TFL_TURRCAPS_HITSCAN|TFL_TURRCAPS_PLAYERKILL;
     self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
-    self.aim_flags = TFL_AIM_ZEASE | TFL_AIM_LEAD;
+    self.aim_flags = TFL_AIM_LEAD;
 
     if (turret_stdproc_init("phaser_std",0,"models/turrets/base.md3","models/turrets/phaser.md3") == 0)
     {
@@ -122,7 +122,7 @@ void turret_phaser_dinit()
         return;
     }
 
-    if (!turret_tag_setup())
+    if (!turret_tag_fire_update())
         dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     self.turret_firecheckfunc = turret_phaser_firecheck;
