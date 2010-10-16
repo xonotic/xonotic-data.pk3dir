@@ -1262,7 +1262,8 @@ void trigger_impulse_touch1()
     if(!pushdeltatime) return;
 
     other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
-	other.flags &~= FL_ONGROUND;
+    other.flags &~= FL_ONGROUND;
+    UpdateCSQCProjectile(other);
 }
 
 // Directionless (accelerator/decelerator) mode
@@ -1302,6 +1303,7 @@ void trigger_impulse_touch2()
 
     // div0: ticrate independent, 1 = identity (not 20)
     other.velocity = other.velocity * pow(self.strength, pushdeltatime);
+    UpdateCSQCProjectile(other);
 }
 
 // Spherical (gravity/repulsor) mode
@@ -1352,6 +1354,7 @@ void trigger_impulse_touch3()
         str = self.strength;
 
     other.velocity = other.velocity + normalize(other.origin - self.origin) * str * pushdeltatime;
+    UpdateCSQCProjectile(other);
 }
 
 /*QUAKED spawnfunc_trigger_impulse (.5 .5 .5) ?
