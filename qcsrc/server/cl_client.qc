@@ -6,18 +6,6 @@ void send_CSQC_teamnagger() {
 	WriteByte(0, TE_CSQC_TEAMNAGGER);
 }
 
-void send_CSQC_nexvelocity(entity e) {
-	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_NEX_VELOCITY);
-	WriteByte(MSG_ONE, bound(0, fabs(cvar("g_balance_nex_velocitydependent_halflife")), 1));
-	WriteShort(MSG_ONE, cvar("g_balance_nex_velocitydependent_minspeed"));
-	WriteShort(MSG_ONE, cvar("g_balance_nex_velocitydependent_maxspeed"));
-	WriteByte(MSG_ONE, cvar("g_balance_nex_velocitydependent_falloff_rate"));
-	WriteByte(MSG_ONE, cvar("g_balance_nex_secondary_charge"));
-	WriteByte(MSG_ONE, cvar("g_balance_nex_secondary_charge_rate"));
-}
-
 void send_CSQC_cr_maxbullets(entity e) {
 	msg_entity = e;
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
@@ -901,6 +889,7 @@ void PutClientInServer (void)
 			self.effects = 0;
 		self.air_finished = time + 12;
 		self.dmg = 2;
+		self.nex_charge = 0;
 
 		if(inWarmupStage)
 		{
@@ -1607,7 +1596,6 @@ void ClientConnect (void)
 	else if(cvar("sv_teamnagger") && !(cvar("bot_vs_human") && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
 
-	send_CSQC_nexvelocity(self);
 	send_CSQC_cr_maxbullets(self);
 
 	CheatInitClient();

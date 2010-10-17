@@ -18,7 +18,7 @@ void SendCSQCNexBeamParticle() {
 
 void W_Nex_Attack (float issecondary)
 {
-	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, f;
+	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo;
 	if(issecondary)
 	{
 		mydmg = cvar("g_balance_nex_secondary_damage");
@@ -43,12 +43,13 @@ void W_Nex_Attack (float issecondary)
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	f = ExponentialFalloff(cvar("g_balance_nex_velocitydependent_minspeed"), cvar("g_balance_nex_velocitydependent_maxspeed"), cvar("g_balance_nex_velocitydependent_halflife"), self.nexspeed);
-
-	// TODO: make it more obvious (through effects, indicator on weapon) that damage increases when speed increases
-	mydmg *= f;
-	myforce *= f;
-	//print("^1Damage: ^7", ftos(mydmg), "\n");
+	if(cvar("g_balance_nex_charge"))
+	{
+		mydmg *= self.nex_charge;
+		myforce *= self.nex_charge;
+		//print("^1Damage: ^7", ftos(mydmg), "\n");
+		self.nex_charge *= cvar("g_balance_nex_charge_shot_multiplier"); // do this AFTER setting mydmg/myforce
+	}
 
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
 
@@ -80,6 +81,8 @@ float w_nex(float req)
 	}
 	else if (req == WR_THINK)
 	{
+		if(cvar("g_balance_nex_charge"))
+			self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_charge_rate") * frametime / W_TICSPERFRAME);
 		if (self.BUTTON_ATCK)
 		{
 			if (weapon_prepareattack(0, cvar("g_balance_nex_primary_refire")))
@@ -94,8 +97,8 @@ float w_nex(float req)
 			{
 				if(self.ammo_cells)
 				{
-					self.nexspeed = min(cvar("g_balance_nex_velocitydependent_maxspeed"), self.nexspeed + cvar("g_balance_nex_secondary_charge_rate") * frametime / W_TICSPERFRAME);
-					self.ammo_cells = max(0, self.ammo_cells - cvar("g_balance_nex_secondary_charge_ammo") * frametime / W_TICSPERFRAME);
+					self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_secondary_charge_rate") * frametime / W_TICSPERFRAME);
+					self.ammo_cells = max(0, self.ammo_cells - cvar("g_balance_nex_secondary_ammo") * frametime / W_TICSPERFRAME);
 				}
 			}
 			else if(cvar("g_balance_nex_secondary"))
