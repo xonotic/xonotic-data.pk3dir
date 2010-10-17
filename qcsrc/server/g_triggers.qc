@@ -1076,13 +1076,15 @@ void misc_laser_think()
 float laser_SendEntity(entity to, float fl)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_LASER);
-	fl = fl - (fl & 0xE0); // use that bit to indicate finite length laser
+	fl = fl - (fl & 0xF0); // use that bit to indicate finite length laser
 	if(self.spawnflags & 2)
 		fl |= 0x80;
 	if(self.alpha)
 		fl |= 0x40;
 	if(self.scale != 1 || self.modelscale != 1)
 		fl |= 0x20;
+	if(self.spawnflags & 4)
+		fl |= 0x10;
 	WriteByte(MSG_ENTITY, fl);
 	if(fl & 1)
 	{
