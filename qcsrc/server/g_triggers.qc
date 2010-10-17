@@ -1104,7 +1104,8 @@ float laser_SendEntity(entity to, float fl)
 			WriteByte(MSG_ENTITY, bound(0, self.scale * 16.0, 255));
 			WriteByte(MSG_ENTITY, bound(0, self.modelscale * 16.0, 255));
 		}
-		WriteShort(MSG_ENTITY, self.cnt + 1);
+		if((fl & 0x80) || !(fl & 0x10)) // effect doesn't need sending if the laser is infinite and has collision testing turned off
+			WriteShort(MSG_ENTITY, self.cnt + 1);
 	}
 	if(fl & 2)
 	{

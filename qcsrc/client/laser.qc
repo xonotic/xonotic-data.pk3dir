@@ -101,7 +101,10 @@ void Ent_Laser()
 			self.scale *= ReadByte() / 16.0; // beam radius
 			self.modelscale *= ReadByte() / 16.0; // dlight radius
 		}
-		self.cnt = ReadShort() - 1; // effect number
+		if((f & 0x80) || !(f & 0x10))
+			self.cnt = ReadShort() - 1; // effect number
+		else
+			self.cnt = 0;
 	}
 	if(f & 2)
 	{
