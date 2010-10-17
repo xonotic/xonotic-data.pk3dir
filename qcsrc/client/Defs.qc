@@ -261,12 +261,4 @@ vector w_org, w_backoff;
 float campingrifle_scope;
 float nex_scope;
 
-float nex_velocitydependent;
-float nex_minvelocity;
-float nex_maxvelocity;
-float nex_speed_falloff_rate;
-float nex_speed;
-float nex_charge;
-float nex_charge_rate;
-
 float cr_maxbullets;

@@ -648,3 +648,5 @@ string deathmessage;
 .float active;
 .float (float act_state) setactive;
 .entity realowner;
+
+.float nex_charge;
