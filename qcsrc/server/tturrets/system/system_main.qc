@@ -340,8 +340,9 @@ float turret_stdproc_firecheck()
 
     // Special case: volly fire turret that has to fire a full volly if a shot was fired.
     if (self.shoot_flags & TFL_SHOOT_VOLLYALWAYS)
-        if not (self.volly_counter == self.shot_volly)
-            return 1;
+        if (self.volly_counter != self.shot_volly)
+			if(self.ammo >= self.shot_dmg)
+				return 1;        	
 
     // Lack of zombies makes shooting dead things unnecessary :P
     if (self.firecheck_flags & TFL_FIRECHECK_DEAD)
@@ -1234,6 +1235,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         self.use();
     }
 
+	turret_stdproc_respawn();
     return 1;
 }
 
