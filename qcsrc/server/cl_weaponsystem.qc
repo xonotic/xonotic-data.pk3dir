@@ -1106,6 +1106,9 @@ float weapon_prepareattack_checkammo(float secondary)
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 			return FALSE;
 
+		if(self.weapon == self.switchweapon) // only play once BEFORE starting to switch weapons
+			sound (self, CHAN_AUTO, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
+
 		W_SwitchToOtherWeapon(self);
 		return FALSE;
 	}
