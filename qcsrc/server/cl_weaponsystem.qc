@@ -130,6 +130,7 @@ vector w_shotend;
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
+.float prevstrengthsound;
 void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float maxdamage, float range)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
@@ -247,7 +248,11 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	if (ent.items & IT_STRENGTH)
 	if (!g_minstagib)
+	if(ent.weapon != WEP_HLAC && ent.weapon != WEP_TUBA && ent.weapon != WEP_ELECTRO && ent.weapon != WEP_LASER || ((ent.weapon == WEP_ELECTRO && cvar("g_balance_electro_lightning") || ent.weapon == WEP_LASER || ent.weapon == WEP_TUBA || ent.weapon == WEP_HLAC) && ent.prevstrengthsound + cvar("sv_hitsound_antispam_time") * 2 < time)) // prevent insane sound spam
+	{
 		sound (ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+		ent.prevstrengthsound = time;
+	}
 
 	// nudge w_shotend so a trace to w_shotend hits
 	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
