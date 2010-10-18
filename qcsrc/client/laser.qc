@@ -34,6 +34,7 @@ void Draw_Laser()
 	{
 		if(self.count & 0x10)
 		{
+			makevectors(self.angles);
 			trace_endpos = self.origin + v_forward * 1048576;
 			trace_dphitq3surfaceflags = Q3SURFACEFLAG_SKY;
 		}
