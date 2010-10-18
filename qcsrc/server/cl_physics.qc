@@ -1335,7 +1335,7 @@ void SV_PlayerPhysics()
 		float f;
 		f = (xyspeed - cvar("g_balance_nex_charge_minspeed")) / (cvar("g_balance_nex_charge_maxspeed") - cvar("g_balance_nex_charge_minspeed"));
 		// add the extra charge
-		self.nex_charge += cvar("g_balance_nex_charge_velocity_rate") * f * frametime;
+		self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_charge_velocity_rate") * f * frametime);
 	}
 :end
 	if(self.flags & FL_ONGROUND)

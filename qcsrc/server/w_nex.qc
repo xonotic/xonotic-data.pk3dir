@@ -81,7 +81,7 @@ float w_nex(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(cvar("g_balance_nex_charge"))
+		if(cvar("g_balance_nex_charge") && self.nex_charge < cvar("g_balance_nex_charge_limit"))
 			self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_charge_rate") * frametime / W_TICSPERFRAME);
 		if (self.BUTTON_ATCK)
 		{
