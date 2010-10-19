@@ -6,9 +6,14 @@ void turret_mlrs_rocket_touch();
 
 void turret_mlrs_postthink()
 {
-
     // 0 = full, 6 = empty
-    self.tur_head.frame = rint(6 - (self.ammo / self.shot_dmg));
+    self.tur_head.frame = bound(0, 6 - floor(0.1 + self.ammo / self.shot_dmg), 6);
+    if(self.tur_head.frame < 0)
+    {
+    	dprint("ammo:",ftos(self.ammo),"\n");
+    	dprint("shot_dmg:",ftos(self.shot_dmg),"\n");
+    }
+    
 }
 
 void turret_mlrs_attack()
