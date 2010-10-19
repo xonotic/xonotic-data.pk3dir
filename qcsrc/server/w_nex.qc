@@ -2,23 +2,23 @@
 REGISTER_WEAPON(NEX, w_nex, IT_CELLS, 7, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "nex", "nex", "Nex");
 #else
 #ifdef SVQC
-void SendCSQCNexBeamParticle() {
+void SendCSQCNexBeamParticle(float charge) {
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_NEXGUNBEAMPARTICLE);
-	
 	WriteCoord(MSG_BROADCAST, w_shotorg_x);
 	WriteCoord(MSG_BROADCAST, w_shotorg_y);
 	WriteCoord(MSG_BROADCAST, w_shotorg_z);
 	WriteCoord(MSG_BROADCAST, v_x);
 	WriteCoord(MSG_BROADCAST, v_y);
 	WriteCoord(MSG_BROADCAST, v_z);
+	WriteByte(MSG_BROADCAST, bound(0, 255 * charge, 255));
 }
 
 void W_Nex_Attack (float issecondary)
 {
-	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo;
+	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, charge;
 	if(issecondary)
 	{
 		mydmg = cvar("g_balance_nex_secondary_damage");
@@ -45,11 +45,13 @@ void W_Nex_Attack (float issecondary)
 
 	if(cvar("g_balance_nex_charge"))
 	{
-		mydmg *= self.nex_charge;
-		myforce *= self.nex_charge;
-		//print("^1Damage: ^7", ftos(mydmg), "\n");
+		charge = self.nex_charge;
 		self.nex_charge *= cvar("g_balance_nex_charge_shot_multiplier"); // do this AFTER setting mydmg/myforce
 	}
+	else
+		charge = 1;
+	mydmg *= charge;
+	myforce *= charge;
 
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
 
@@ -60,7 +62,7 @@ void W_Nex_Attack (float issecondary)
 		AnnounceTo(self, "yoda");
 
 	//beam and muzzle flash done on client
-	SendCSQCNexBeamParticle();
+	SendCSQCNexBeamParticle(charge);
 	
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))

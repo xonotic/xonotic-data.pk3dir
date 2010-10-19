@@ -1,60 +1,60 @@
 
-	//DarkPlaces supported extension list, draft version 1.04
+//DarkPlaces supported extension list, draft version 1.04
 
-	//things that don't have extensions yet:
-	.float disableclientprediction;
+//things that don't have extensions yet:
+.float disableclientprediction;
 
-	//definitions that id Software left out:
-	//these are passed as the 'nomonsters' parameter to traceline/tracebox (yes really this was supported in all quake engines, nomonsters is misnamed)
-	float MOVE_NORMAL = 0; // same as FALSE
-	float MOVE_NOMONSTERS = 1; // same as TRUE
-	float MOVE_MISSILE = 2; // save as movement with .movetype == MOVETYPE_FLYMISSILE
+//definitions that id Software left out:
+//these are passed as the 'nomonsters' parameter to traceline/tracebox (yes really this was supported in all quake engines, nomonsters is misnamed)
+float MOVE_NORMAL = 0; // same as FALSE
+float MOVE_NOMONSTERS = 1; // same as TRUE
+float MOVE_MISSILE = 2; // save as movement with .movetype == MOVETYPE_FLYMISSILE
 
-	//checkextension function
-	//idea: expected by almost everyone
-	//darkplaces implementation: LordHavoc
-	float(string s) checkextension = #99;
-	//description:
-	//check if (cvar("pr_checkextension")) before calling this, this is the only
-	//guaranteed extension to be present in the extension system, it allows you
-	//to check if an extension is available, by name, to check for an extension
-	//use code like this:
-	//// (it is recommended this code be placed in worldspawn or a worldspawn called function somewhere)
-	//if (cvar("pr_checkextension"))
-	//if (checkextension("DP_SV_SETCOLOR"))
-	//	ext_setcolor = TRUE;
-	//from then on you can check ext_setcolor to know if that extension is available
+//checkextension function
+//idea: expected by almost everyone
+//darkplaces implementation: LordHavoc
+float(string s) checkextension = #99;
+//description:
+//check if (cvar("pr_checkextension")) before calling this, this is the only
+//guaranteed extension to be present in the extension system, it allows you
+//to check if an extension is available, by name, to check for an extension
+//use code like this:
+//// (it is recommended this code be placed in worldspawn or a worldspawn called function somewhere)
+//if (cvar("pr_checkextension"))
+//if (checkextension("DP_SV_SETCOLOR"))
+//	ext_setcolor = TRUE;
+//from then on you can check ext_setcolor to know if that extension is available
 
-	//BX_WAL_SUPPORT
-	//idea: id Software
-	//darkplaces implementation: LordHavoc
-	//description:
-	//indicates the engine supports .wal textures for filenames in the textures/ directory
-	//(note: DarkPlaces has supported this since 2001 or 2002, but did not advertise it as an extension, then I noticed Betwix was advertising it and added the extension accordingly)
+//BX_WAL_SUPPORT
+//idea: id Software
+//darkplaces implementation: LordHavoc
+//description:
+//indicates the engine supports .wal textures for filenames in the textures/ directory
+//(note: DarkPlaces has supported this since 2001 or 2002, but did not advertise it as an extension, then I noticed Betwix was advertising it and added the extension accordingly)
 
-	//DP_BUTTONCHAT
-	//idea: Vermeulen
-	//darkplaces implementation: LordHavoc
-	//field definitions:
-	.float buttonchat;
-	//description:
-	//true if the player is currently chatting (in messagemode, menus or console)
+//DP_BUTTONCHAT
+//idea: Vermeulen
+//darkplaces implementation: LordHavoc
+//field definitions:
+.float buttonchat;
+//description:
+//true if the player is currently chatting (in messagemode, menus or console)
 
-	//DP_BUTTONUSE
-	//idea: id Software
-	//darkplaces implementation: LordHavoc
-	//field definitions:
-	.float buttonuse;
-	//client console commands:
-	//+use
-	//-use
-	//description:
-	//made +use and -use commands work, they now control the .buttonuse field (.button1 was used by many mods for other purposes).
+//DP_BUTTONUSE
+//idea: id Software
+//darkplaces implementation: LordHavoc
+//field definitions:
+.float buttonuse;
+//client console commands:
+//+use
+//-use
+//description:
+//made +use and -use commands work, they now control the .buttonuse field (.button1 was used by many mods for other purposes).
 
-	//DP_CL_LOADSKY
-	//idea: Nehahra, LordHavoc
-	//darkplaces implementation: LordHavoc
-	//client console commands:
+//DP_CL_LOADSKY
+//idea: Nehahra, LordHavoc
+//darkplaces implementation: LordHavoc
+//client console commands:
 //"loadsky" (parameters: "basename", example: "mtnsun_" would load "mtnsun_up.tga" and "mtnsun_rt.tga" and similar names, use "" to revert to quake sky, note: this is the same as Quake2 skybox naming)
 //description:
 //sets global skybox for the map for this client (can be stuffed to a client by QC), does not hurt much to repeatedly execute this command, please don't use this in mods if it can be avoided (only if changing skybox is REALLY needed, otherwise please use DP_GFX_SKYBOX).
