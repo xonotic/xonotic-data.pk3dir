@@ -81,7 +81,7 @@ float w_nex(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(cvar("g_balance_nex_charge"))
+		if(cvar("g_balance_nex_charge") && self.nex_charge < cvar("g_balance_nex_charge_limit"))
 			self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_charge_rate") * frametime / W_TICSPERFRAME);
 		if (self.BUTTON_ATCK)
 		{
@@ -95,7 +95,7 @@ float w_nex(float req)
 		{
 			if(cvar("g_balance_nex_secondary_charge"))
 			{
-				if(self.ammo_cells)
+				if(self.ammo_cells && self.nex_charge < 1)
 				{
 					self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_secondary_charge_rate") * frametime / W_TICSPERFRAME);
 					self.ammo_cells = max(0, self.ammo_cells - cvar("g_balance_nex_secondary_ammo") * frametime / W_TICSPERFRAME);
