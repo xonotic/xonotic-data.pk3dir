@@ -17,7 +17,7 @@ void W_Mine_Stick ()
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
-	local entity newmine;
+	entity newmine;
 	newmine = spawn();
 	newmine.classname = self.classname;
 
@@ -197,8 +197,8 @@ void W_Mine_Damage (entity inflictor, entity attacker, float damage, float death
 
 void W_Mine_Attack (void)
 {
-	local entity mine;
-	local entity flash;
+	entity mine;
+	entity flash;
 
 	// scan how many mines we placed, and return if we reached our limit
 	if(cvar("g_balance_minelayer_limit"))
@@ -277,9 +277,9 @@ float w_minelayer(float req)
 		if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
 		{
 			// decide whether to detonate mines
-			local entity mine, targetlist, targ;
-			local float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
-			local float selfdamage, teamdamage, enemydamage;
+			entity targetlist, targ;
+			float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
+			float selfdamage, teamdamage, enemydamage;
 			edgedamage = cvar("g_balance_minelayer_edgedamage");
 			coredamage = cvar("g_balance_minelayer_damage");
 			edgeradius = cvar("g_balance_minelayer_radius");
@@ -312,7 +312,7 @@ float w_minelayer(float req)
 				}
 				mine = find(mine, classname, "mine");
 			}
-			local float desirabledamage;
+			float desirabledamage;
 			desirabledamage = enemydamage;
 			if (teamplay != 1 && time > self.invincible_finished && time > self.spawnshieldtime)
 				desirabledamage = desirabledamage - selfdamage * cvar("g_balance_selfdamagepercent");
@@ -341,7 +341,7 @@ float w_minelayer(float req)
 						targ = targ.chain;
 					}
 				}else{
-					local float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
+					float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
 					//As the distance gets larger, a correct detonation gets near imposible
 					//Bots are assumed to use the mine spawnfunc_light to see if the mine gets near a player
 					if(v_forward * normalize(mine.origin - self.enemy.origin)< 0.1)
