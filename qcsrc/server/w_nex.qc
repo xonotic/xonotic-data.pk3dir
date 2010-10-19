@@ -74,6 +74,7 @@ void spawnfunc_weapon_nex (void); // defined in t_items.qc
 
 float w_nex(float req)
 {
+	float dt;
 	if (req == WR_AIM)
 	{
 		self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
@@ -95,10 +96,23 @@ float w_nex(float req)
 		{
 			if(cvar("g_balance_nex_secondary_charge"))
 			{
-				if(self.ammo_cells && self.nex_charge < 1)
+				dt = frametime / W_TICSPERFRAME;
+				if(self.nex_charge < 1)
 				{
-					self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_secondary_charge_rate") * frametime / W_TICSPERFRAME);
-					self.ammo_cells = max(0, self.ammo_cells - cvar("g_balance_nex_secondary_ammo") * frametime / W_TICSPERFRAME);
+					dt = min(dt, (1 - self.nex_charge) / cvar("g_balance_nex_secondary_charge_rate"));
+					if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+					{
+						if(cvar("g_balance_nex_secondary_ammo"))
+						{
+							dt = min(dt, (self.ammo_cells - cvar("g_balance_nex_primary_ammo")) / cvar("g_balance_nex_secondary_ammo"));
+							dt = max(0, dt);
+							if(dt > 0)
+							{
+								self.ammo_cells = max(cvar("g_balance_nex_secondary_ammo"), self.ammo_cells - cvar("g_balance_nex_secondary_ammo") * dt);
+							}
+						}
+					}
+					self.nex_charge += dt * cvar("g_balance_nex_secondary_charge_rate");
 				}
 			}
 			else if(cvar("g_balance_nex_secondary"))
@@ -127,7 +141,11 @@ float w_nex(float req)
 	else if (req == WR_CHECKAMMO1)
 		return self.ammo_cells >= cvar("g_balance_nex_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
+	{
+		if(cvar("g_balance_nex_secondary_charge"))
+			return self.ammo_cells >= cvar("g_balance_nex_primary_ammo");
 		return self.ammo_cells >= cvar("g_balance_nex_secondary_ammo");
+	}
 	return TRUE;
 };
 #endif
