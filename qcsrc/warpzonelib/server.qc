@@ -243,7 +243,13 @@ float WarpZone_CheckProjectileImpact()
 	entity wz;
 	wz = WarpZone_Find(self.origin + self.mins, self.origin + self.maxs);
 	if(!wz)
-		return FALSE;
+		return 0;
+	if(self.warpzone_teleport_time == time)
+	{
+		// just ignore if we got teleported this frame already and now hit a wall and are in a warpzone again (this will cause a detonation)
+		// print("2 warps 1 frame\n");
+		return -1;
+	}
 	o0 = self.origin;
 	v0 = self.velocity;
 	a0 = self.angles;
@@ -262,38 +268,40 @@ float WarpZone_CheckProjectileImpact()
 	pd = WarpZone_TargetPlaneDist(wz, self.origin);
 	if(pd < mpd)
 	{
-		dpd = normalize(self.velocity) * self.warpzone_targetforward;
+		dpd = normalize(self.velocity) * wz.warpzone_targetforward;
 		setorigin(self, self.origin + normalize(self.velocity) * ((mpd - pd) / dpd));
 		if(!WarpZoneLib_MoveOutOfSolid(self))
 		{
 			setorigin(self, o0);
 			self.angles = a0;
 			self.velocity = v0;
-			return FALSE;
+			return 0;
 		}
 	}
 	WarpZone_RefSys_Add(self, wz);
 	WarpZone_StoreProjectileData(self);
 	self.warpzone_teleport_time = time;
 
-	return TRUE;
+	return +1;
 }
 float WarpZone_Projectile_Touch()
 {
+	float f;
 	if(other.classname == "trigger_warpzone")
 		return TRUE;
 	if(WarpZone_Projectile_Touch_ImpactFilter_Callback())
 		return TRUE;
-	if(WarpZone_CheckProjectileImpact())
-		return TRUE;
-	if(self.warpzone_teleport_time == time) // already got teleported this frame? no collision then please
+	if((f = WarpZone_CheckProjectileImpact()) != 0)
+		return (f > 0);
+	if(self.warpzone_teleport_time == time)
 	{
+		// sequence: hit warpzone, get teleported, hit wall
+		// print("2 hits 1 frame\n");
 		setorigin(self, self.warpzone_oldorigin);
 		self.velocity = self.warpzone_oldvelocity;
 		self.angles = self.warpzone_oldangles;
 		return TRUE;
 	}
-
 	return FALSE;
 }
 
