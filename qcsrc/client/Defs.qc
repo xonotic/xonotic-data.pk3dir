@@ -262,3 +262,6 @@ float campingrifle_scope;
 float nex_scope;
 
 float cr_maxbullets;
+
+float bgmtime;
+

@@ -50,6 +50,11 @@ void TargetMusic_Advance()
 		}
 	}
 	music_trigger = world;
+
+	if(best)
+		bgmtime = getsoundtime(best, CHAN_VOICE);
+	else
+		bgmtime = gettime(GETTIME_CDTRACK);
 }
 
 void Net_TargetMusic()
