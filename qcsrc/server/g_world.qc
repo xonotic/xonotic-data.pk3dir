@@ -1654,7 +1654,7 @@ float WinningCondition_Assault()
 
 			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
 
-			if(ent.cnt == 1) // this was the second round
+			if(ent.cnt == 1 || cvar("g_campaign")) // this was the second round
 			{
 				status = WINNING_YES;
 			}
