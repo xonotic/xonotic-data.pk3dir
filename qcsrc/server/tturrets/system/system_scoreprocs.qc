@@ -30,7 +30,7 @@ float turret_stdproc_targetscore_support(entity e_turret,entity e_target)
 /*
 * Generic bias aware score system.
 */
-float turret_stdproc_targetscore_generic(entity e_turret,entity e_target)
+float turret_stdproc_targetscore_generic(entity e_turret, entity e_target)
 {
     //vector v_tmp;
     float d_dist;       // Defendmode Distance
@@ -45,9 +45,10 @@ float turret_stdproc_targetscore_generic(entity e_turret,entity e_target)
 
     float ikr;          // ideal kill range
 
-    if(!e_target) return 0;
-
-    //if (e_target == e_turret.enemy) s_score = 1;
+    /*
+    if(!e_target) 
+		return 0;
+	*/
 
     if (e_turret.tur_defend)
     {
@@ -83,10 +84,10 @@ float turret_stdproc_targetscore_generic(entity e_turret,entity e_target)
     if ((e_turret.target_select_playerbias > 0) && (e_target.flags & FL_CLIENT))
         p_score = 1;
 
-    d_score = max(d_score,0);
-    a_score = max(a_score,0);
-    m_score = max(m_score,0);
-    p_score = max(p_score,0);
+    d_score = max(d_score, 0);
+    a_score = max(a_score, 0);
+    m_score = max(m_score, 0);
+    p_score = max(p_score, 0);
 
     score = (d_score * e_turret.target_select_rangebias) +
             (a_score * e_turret.target_select_anglebias) +

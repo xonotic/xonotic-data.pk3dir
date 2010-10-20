@@ -97,7 +97,10 @@ void dompoint_captured ()
 		wait_time = self.wait;
 
 	bprint("^3", head.netname, "^3", self.message);
-	bprint(" ^7(", ftos(points), " points every ", ftos(wait_time), " seconds)\n");
+	if (points != 1)
+		bprint(" ^7(", ftos(points), " points every ", ftos(wait_time), " seconds)\n");
+	else
+		bprint(" ^7(", ftos(points), " point every ", ftos(wait_time), " seconds)\n");
 
 	if(self.enemy.playerid == self.enemy_playerid)
 		PlayerScore_Add(self.enemy, SP_DOM_TAKES, 1);

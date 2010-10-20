@@ -216,8 +216,15 @@ float lgbeam_send(entity to, float sf)
 void lgbeam_think()
 {
 	self.owner.prevlgfire = time;
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self != self.owner.lgbeam || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK)
+	if (self != self.owner.lgbeam)
 	{
+		remove(self);
+		return;
+	}
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK)
+	{
+		if(self == self.owner.lgbeam)
+			self.owner.lgbeam = world;
 		remove(self);
 		return;
 	}
@@ -226,7 +233,7 @@ void lgbeam_think()
 
 	makevectors(self.owner.v_angle);
 
-	float dt;
+	float dt, f;
 	dt = frametime;
 	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
@@ -243,8 +250,11 @@ void lgbeam_think()
 	{
 		vector force;
 		force = w_shotdir * cvar("g_balance_electro_primary_force") + '0 0 1' * cvar("g_balance_electro_primary_force_up");
-		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * dt, WEP_ELECTRO, trace_endpos, force * dt);
-		Damage_RecordDamage(self.owner, WEP_ELECTRO, cvar("g_balance_electro_primary_damage") * dt);
+
+		f = ExponentialFalloff(cvar("g_balance_electro_primary_falloff_mindist"), cvar("g_balance_electro_primary_falloff_maxdist"), cvar("g_balance_electro_primary_falloff_halflifedist"), vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg));
+
+		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * dt * f, WEP_ELECTRO, trace_endpos, force * dt);
+		Damage_RecordDamage(self.owner, WEP_ELECTRO, cvar("g_balance_electro_primary_damage") * dt * f);
 	}
 	W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
 
@@ -352,7 +362,7 @@ float w_electro(float req)
 			{
 				if(cvar("g_balance_electro_lightning"))
 				{
-					if (self.BUTTON_ATCK_prev == 0)
+					if ((!self.lgbeam) || wasfreed(self.lgbeam))
 					{
 						W_Electro_Attack3();
 					}
@@ -365,7 +375,14 @@ float w_electro(float req)
 				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_electro_primary_animtime"), w_ready);
 			}
 		} else {
-			self.BUTTON_ATCK_prev = 0;
+			if(cvar("g_balance_electro_lightning"))
+			{
+				if (self.BUTTON_ATCK_prev != 0)
+				{
+					ATTACK_FINISHED(self) = time + cvar("g_balance_electro_primary_refire") * W_WeaponRateFactor();
+				}
+				self.BUTTON_ATCK_prev = 0;
+			}
 		}
 
 		if (self.BUTTON_ATCK2)
@@ -398,7 +415,7 @@ float w_electro(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		if(cvar("g_balance_electro_lightning"))
-			return self.ammo_cells >= cvar("g_balance_electro_primary_ammo") * cvar("g_balance_electro_primary_refire");
+			return !cvar("g_balance_electro_primary_ammo") || (self.ammo_cells > 0);
 		else
 			return self.ammo_cells >= cvar("g_balance_electro_primary_ammo");
 	}

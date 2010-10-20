@@ -718,7 +718,7 @@ void turret_walker_dinit()
         return;
     }
 
-    if (!turret_tag_setup())
+    if (!turret_tag_fire_update())
         dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     self.damage_flags |= TFL_DMG_DEATH_NOGIBS;

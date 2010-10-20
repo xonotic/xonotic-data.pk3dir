@@ -97,9 +97,10 @@ void Gib_Draw()
 	self.alpha = bound(0, self.nextthink - time, 1);
 
 	if(self.alpha < ALPHA_MIN_VISIBLE)
+	{
+		self.drawmask = 0;
 		Gib_Delete();
-	else
-		R_AddEntity(self);
+	}
 }
 
 void TossGib (string mdlname, vector org, vector vconst, vector vrand, float specnum, float destroyontouch, float issilent)
@@ -130,6 +131,7 @@ void TossGib (string mdlname, vector org, vector vconst, vector vrand, float spe
 	gib.damageforcescale = cvar_or("cl_gibs_damageforcescale", 3.5);
 
 	gib.nextthink = time + cvar_or("cl_gibs_lifetime", 14) * (1 + prandom() * 0.15);
+	gib.drawmask = MASK_NORMAL;
 
 	RubbleLimit("gib", cvar_or("cl_gibs_maxcount",100), Gib_Delete);
 }

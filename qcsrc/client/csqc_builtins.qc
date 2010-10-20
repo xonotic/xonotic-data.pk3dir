@@ -79,6 +79,7 @@ void ()									R_ClearScene = #300;
 void (float mask)							R_AddEntities = #301;
 void (entity e)								R_AddEntity = #302;
 float (float property, ...)						R_SetView = #303;
+vector (float property, ...)						R_SetView3fv = #303;
 void ()									R_RenderScene = #304;
 void (vector org, float radius, vector rgb)				R_AddDynamicLight = #305;
 void ()									R_CalcRefDef = #306;
@@ -292,6 +293,7 @@ entity(vector org, float rad) findradius = #22;
 
 string(float uselocaltime, string format, ...) strftime = #478;
 float(float timer) gettime = #519;
+#define GETTIME_REALTIME 1
 #define GETTIME_CDTRACK 4
 
 float(string s) tokenize_console = #514;

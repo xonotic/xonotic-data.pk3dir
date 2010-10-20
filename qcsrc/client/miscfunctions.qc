@@ -8,7 +8,7 @@ void serverAnnouncer()
 	// check for pending announcement, play it and remove it
 	if(announce_snd != "")
 	{
-		sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/", announce_snd, ".wav"), VOL_BASEVOICE, ATTN_NONE);
+		sound(world, CHAN_AUTO, strcat("announcer/", cvar_string("cl_announcer"), "/", announce_snd, ".wav"), VOL_BASEVOICE, ATTN_NONE);
 		strunzone(announce_snd);
 		announce_snd = "";
 	}
@@ -22,7 +22,7 @@ void restartAnnouncer_Think() {
 		if (!spectatee_status) //do cprint only for players
 			centerprint("^1Begin!");
 
-		sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
+		sound(world, CHAN_AUTO, strcat("announcer/", cvar_string("cl_announcer"), "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
 		//reset maptime announcers now as well
 		announcer_5min = announcer_1min = FALSE;
 
@@ -34,7 +34,7 @@ void restartAnnouncer_Think() {
 			centerprint(strcat("^1Game starts in ", ftos(countdown_rounded), " seconds"));
 
 		if(countdown_rounded <= 3 && countdown_rounded >= 1) {
-			sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);
+			sound(world, CHAN_AUTO, strcat("announcer/", cvar_string("cl_announcer"), "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);
 		}
 
 		self.nextthink = getstatf(STAT_GAMESTARTTIME) - (countdown - 1);
@@ -72,7 +72,7 @@ void maptimeAnnouncer() {
 			if not (warmuplimit == -1 && warmup_stage) {
 				announcer_5min = TRUE;
 				//dprint("i will play the sound, I promise!\n");
-				sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/5minutesremain.wav"), VOL_BASEVOICE, ATTN_NONE);
+				sound(world, CHAN_AUTO, strcat("announcer/", cvar_string("cl_announcer"), "/5minutesremain.wav"), VOL_BASEVOICE, ATTN_NONE);
 			}
 	}
 
@@ -87,7 +87,7 @@ void maptimeAnnouncer() {
 			//if we're in warmup mode, check whether there's a warmup timelimit
 			if not (warmuplimit == -1 && warmup_stage) {
 				announcer_1min = TRUE;
-				sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/1minuteremains.wav"), VOL_BASEVOICE, ATTN_NONE);
+				sound(world, CHAN_AUTO, strcat("announcer/", cvar_string("cl_announcer"), "/1minuteremains.wav"), VOL_BASEVOICE, ATTN_NONE);
 			}
 	}
 }
@@ -322,19 +322,6 @@ vector HUD_GetFontsize(string cvarname)
 		v_y = v_x;
 	v_z = 0;
 	return v;
-}
-
-float HUD_GetWidth(float teamcolumnwidth)
-{
-	float f;
-	f = cvar("hud_width");
-	if(f == 0)
-		f = 640;
-	if(f < 320)
-		f = 320;
-	if(f > vid_conwidth - 2 * teamcolumnwidth)
-		f = vid_conwidth - 2 * teamcolumnwidth;
-	return f;
 }
 
 float PreviewExists(string name)
@@ -661,5 +648,155 @@ void PolyDrawModel(entity e)
 			R_PolygonVertex(getsurfacepoint(e, i_s, tri_z), getsurfacepointattribute(e, i_s, tri_z, SPA_TEXCOORDS0), '1 1 1', 1);
 			R_EndPolygon();
 		}
+	}
+}
+
+void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vector rgb, float a, float drawflag)
+{
+	float x, y, q, d;
+	vector ringsize, v, t;
+	ringsize = radius * '1 1 0';
+
+	x = cos(f * 2 * M_PI);
+	y = sin(f * 2 * M_PI);
+	q = fabs(x) + fabs(y);
+	x /= q;
+	y /= q;
+
+	if(f >= 1)
+	{
+		// draw full rectangle
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
+
+		d = q - 1;
+		if(d > 0)
+		{
+			R_BeginPolygon(pic, drawflag);
+				v = centre;			t = '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+
+				v = centre;			t = '0.5 0.5 0';
+				v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+		}
+	}
+	else if(f > 0.75)
+	{
+		// draw upper and first triangle
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+		d = q - 0.75;
+		if(d <= 0)
+			R_EndPolygon();
+	}
+	else if(f > 0.5)
+	{
+		// draw upper triangle
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
+
+		d = q - 0.5;
+		if(d > 0)
+		{
+			R_BeginPolygon(pic, drawflag);
+				v = centre;			t = '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+
+				v = centre;			t = '0.5 0.5 0';
+				v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+		}
+	}
+	else if(f > 0.25)
+	{
+		// draw first triangle
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+		d = q - 0.25;
+		if(d <= 0)
+			R_EndPolygon();
+	}
+	else
+	{
+		d = q;
+		if(d > 0)
+		{
+			R_BeginPolygon(pic, drawflag);
+				v = centre;			t = '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+
+				v = centre;			t = '0.5 0.5 0';
+				v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+		}
+	}
+
+	if(d > 0)
+	{
+			v = centre;			t = '0.5 0.5 0';
+			v_x += x * 0.5 * ringsize_x;	t += x * '0.5 0.5 0';
+			v_y += y * 0.5 * ringsize_y;	t += y * '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
 	}
 }

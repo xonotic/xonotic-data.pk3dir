@@ -1,5 +1,7 @@
 float log(float f);
 
+vector centerprint_start;
+
 float panel_order[HUD_PANEL_NUM];
 string hud_panelorder_prev;
 
@@ -31,6 +33,7 @@ float ts_primary, ts_secondary;
 
 float last_weapon;
 float weapontime;
+float weaponprevtime;
 
 float teamnagger;
 float hud_accuracy_hud;
@@ -46,11 +49,18 @@ const float S_CTRL = 2;
 const float S_ALT = 4;
 
 float disable_menu_alphacheck; // 0 = enable alpha check, 1 = disable for entire hud, 2 = disable for one panel
-float menu_fade_alpha;
+float hud_fade_alpha;
 
 string hud_skin_path;
 
 var vector progressbar_color;
+
+var float highlightedPanel_backup = -1;
+var vector panel_pos_backup;
+var vector panel_size_backup;
+
+var float highlightedPanel_copied = -1; //this is good only to know if there is something copied
+var vector panel_size_copied;
 
 var float active_panel; // this panel has recently referred the UpdateCvars macro
 var string panel_name;
@@ -85,7 +95,7 @@ var string picpath;
 // ----------------------
 // MACRO HELL STARTS HERE
 // ----------------------
-// Little help for the poor people who have to make sense of this: Start from the bottom
+// Little help for the poor people who have to make sense of this: Start from the bottom ;)
 
 #define HUD_Panel_GetProgressBarColor(item) \
 switch(item) {\
@@ -104,18 +114,19 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 	panel_bg = "0";\
 } else {\
 	if(panel_bg_str == "") {\
-		panel_bg = autocvar_hud_panel_bg;\
-	} else if(panel_bg_str == "0" && autocvar__hud_configure) {\
-		panel_bg = autocvar_hud_panel_bg;\
-		panel_bg_alpha_str = "0";\
-	} else {\
-		panel_bg = panel_bg_str;\
+		panel_bg_str = autocvar_hud_panel_bg;\
 	}\
-	panel_bg = strcat(hud_skin_path, "/", panel_bg);\
-	if(precache_pic(panel_bg) == "") {\
-		panel_bg = strcat(hud_skin_path, "/", "border");\
+	if(panel_bg_str == "0" && !autocvar__hud_configure) {\
+			panel_bg = "0";\
+	} else {\
+		if (panel_bg_str == "0" && autocvar__hud_configure)\
+			panel_bg_alpha_str = "0";\
+		panel_bg = strcat(hud_skin_path, "/", panel_bg_str);\
 		if(precache_pic(panel_bg) == "") {\
-			panel_bg = strcat("gfx/hud/default/", "border");\
+			panel_bg = strcat(hud_skin_path, "/", "border_default");\
+			if(precache_pic(panel_bg) == "") {\
+				panel_bg = strcat("gfx/hud/default/", "border_default");\
+			}\
 		}\
 	}\
 }
@@ -162,7 +173,7 @@ if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel =
 } if(autocvar__hud_configure && !panel_enabled) {\
 	panel_bg_alpha = 0.25;\
 } if(!(disable_menu_alphacheck == 2 && highlightedPanel == active_panel)) {\
-	panel_bg_alpha *= menu_fade_alpha;\
+	panel_bg_alpha *= hud_fade_alpha;\
 }
 
 // Get value for panel_fg_alpha. Also do various minalpha checks
@@ -173,7 +184,7 @@ panel_fg_alpha = autocvar_hud_panel_fg_alpha;\
 if(autocvar__hud_configure && !panel_enabled)\
 	panel_fg_alpha = 0.25;\
 if(!(disable_menu_alphacheck == 2 && highlightedPanel == active_panel))\
-	panel_fg_alpha *= menu_fade_alpha;
+	panel_fg_alpha *= hud_fade_alpha;
 
 // Get border. See comments above, it's similar.
 #define HUD_Panel_GetBorder()\

@@ -367,7 +367,7 @@ float spiderbot_pplug()
             }
             else
             {
-                spider.angles_y = safeangle(spider.angles_y + ftmp);
+                spider.angles_y = anglemods(spider.angles_y + ftmp);
                 spider.tur_head.angles_y -= ftmp;
 
                 if(player.movement_x != 0)

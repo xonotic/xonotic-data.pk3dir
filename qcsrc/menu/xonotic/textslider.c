@@ -6,13 +6,13 @@ CLASS(XonoticTextSlider) EXTENDS(TextSlider)
 	ATTRIB(XonoticTextSlider, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticTextSlider, valueSpace, float, SKINWIDTH_SLIDERTEXT)
 	ATTRIB(XonoticTextSlider, image, string, SKINGFX_SLIDER)
-	ATTRIB(XonoticSlider, tolerance, vector, SKINTOLERANCE_SLIDER)
+	ATTRIB(XonoticTextSlider, tolerance, vector, SKINTOLERANCE_SLIDER)
 	ATTRIB(XonoticTextSlider, align, float, 0.5)
-	ATTRIB(XonoticSlider, color, vector, SKINCOLOR_SLIDER_N)
-	ATTRIB(XonoticSlider, colorC, vector, SKINCOLOR_SLIDER_C)
-	ATTRIB(XonoticSlider, colorF, vector, SKINCOLOR_SLIDER_F)
-	ATTRIB(XonoticSlider, colorD, vector, SKINCOLOR_SLIDER_D)
-	ATTRIB(XonoticSlider, color2, vector, SKINCOLOR_SLIDER_S)
+	ATTRIB(XonoticTextSlider, color, vector, SKINCOLOR_SLIDER_N)
+	ATTRIB(XonoticTextSlider, colorC, vector, SKINCOLOR_SLIDER_C)
+	ATTRIB(XonoticTextSlider, colorF, vector, SKINCOLOR_SLIDER_F)
+	ATTRIB(XonoticTextSlider, colorD, vector, SKINCOLOR_SLIDER_D)
+	ATTRIB(XonoticTextSlider, color2, vector, SKINCOLOR_SLIDER_S)
 
 	ATTRIB(XonoticTextSlider, cvarName, string, string_null)
 	METHOD(XonoticTextSlider, loadCvars, void(entity))
@@ -61,6 +61,16 @@ void XonoticTextSlider_loadCvars(entity me)
 	for(i = 1; i < n; ++i)
 		s = strcat(s, " ", cvar_string(argv(i)));
 	me.setValueFromIdentifier(me, s);
+	if(me.value < 0 && n > 1)
+	{
+		// if it failed: check if all cvars have the same value
+		// if yes, try its value as 1-word identifier
+		for(i = 1; i < n; ++i)
+			if(cvar_string(argv(i)) != cvar_string(argv(i-1)))
+				break;
+		if(i >= n)
+			me.setValueFromIdentifier(me, cvar_string(argv(0)));
+	}
 }
 void XonoticTextSlider_saveCvars(entity me)
 {

@@ -431,16 +431,28 @@ void WaypointSprite_Load()
 	{
 		float dh, n, i, o, f;
 		string s, sname, sframes;
+
 		dh = search_begin("models/sprites/*_frame*.tga", FALSE, FALSE);
 		n = search_getsize(dh);
 		for(i = 0; i < n; ++i)
 		{
 			s = search_getfilename(dh, i);
-			if(substring(s, 0, 15) != "models/sprites/")
-				continue;
-			if(substring(s, strlen(s) - 4, 4) != ".tga")
-				continue;
-			s = substring(s, 15, strlen(s) - 19);
+			s = substring(s, 15, strlen(s) - 15 - 4); // strip models/sprites/ and .tga
+
+			o = strstrofs(s, "_frame", 0);
+			sname = strcat("/spriteframes/", substring(s, 0, o));
+			sframes = substring(s, o + 6, strlen(s) - o - 6);
+			f = stof(sframes) + 1;
+			db_put(tempdb, sname, ftos(max(f, stof(db_get(tempdb, sname)))));
+		}
+		search_end(dh);
+
+		dh = search_begin("models/sprites/*_frame*.jpg", FALSE, FALSE);
+		n = search_getsize(dh);
+		for(i = 0; i < n; ++i)
+		{
+			s = search_getfilename(dh, i);
+			s = substring(s, 15, strlen(s) - 15 - 4); // strip models/sprites/ and .jpg
 
 			o = strstrofs(s, "_frame", 0);
 			sname = strcat("/spriteframes/", substring(s, 0, o));

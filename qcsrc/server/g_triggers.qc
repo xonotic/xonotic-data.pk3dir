@@ -413,6 +413,9 @@ void spawnfunc_trigger_counter()
 .float triggerhurttime;
 void trigger_hurt_touch()
 {
+	if (self.active != ACTIVE_ACTIVE) 
+		return;
+
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
 	if (other.iscreature)
 	{
@@ -455,6 +458,7 @@ entity trigger_hurt_first;
 void spawnfunc_trigger_hurt()
 {
 	EXACTTRIGGER_INIT;
+	self.active = ACTIVE_ACTIVE;
 	self.touch = trigger_hurt_touch;
 	if (!self.dmg)
 		self.dmg = 1000;
@@ -462,6 +466,7 @@ void spawnfunc_trigger_hurt()
 		self.message = "was in the wrong place";
 	if (!self.message2)
 		self.message2 = "was thrown into a world of hurt by";
+	// self.message = "someone like %s always gets wrongplaced";
 
 	if(!trigger_hurt_first)
 		trigger_hurt_first = self;
@@ -492,6 +497,9 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 .float triggerhealtime;
 void trigger_heal_touch()
 {
+	if (self.active != ACTIVE_ACTIVE) 
+		return;
+	
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
 	if (other.iscreature)
 	{
@@ -513,6 +521,8 @@ void trigger_heal_touch()
 
 void spawnfunc_trigger_heal()
 {
+	self.active = ACTIVE_ACTIVE;
+	
 	EXACTTRIGGER_INIT;
 	self.touch = trigger_heal_touch;
 	if (!self.health)
@@ -818,7 +828,7 @@ void spawnfunc_func_pointparticles()
 	if(!self.cnt)
 		self.cnt = particleeffectnum(self.mdl);
 
-	Net_LinkEntity(self, FALSE, 0, pointparticles_SendEntity);
+	Net_LinkEntity(self, (self.spawnflags & 4), 0, pointparticles_SendEntity);
 
 	IFTARGETED
 	{
@@ -1066,13 +1076,15 @@ void misc_laser_think()
 float laser_SendEntity(entity to, float fl)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_LASER);
-	fl = fl - (fl & 0xE0); // use that bit to indicate finite length laser
+	fl = fl - (fl & 0xF0); // use that bit to indicate finite length laser
 	if(self.spawnflags & 2)
 		fl |= 0x80;
 	if(self.alpha)
 		fl |= 0x40;
 	if(self.scale != 1 || self.modelscale != 1)
 		fl |= 0x20;
+	if(self.spawnflags & 4)
+		fl |= 0x10;
 	WriteByte(MSG_ENTITY, fl);
 	if(fl & 1)
 	{
@@ -1092,7 +1104,8 @@ float laser_SendEntity(entity to, float fl)
 			WriteByte(MSG_ENTITY, bound(0, self.scale * 16.0, 255));
 			WriteByte(MSG_ENTITY, bound(0, self.modelscale * 16.0, 255));
 		}
-		WriteShort(MSG_ENTITY, self.cnt + 1);
+		if((fl & 0x80) || !(fl & 0x10)) // effect doesn't need sending if the laser is infinite and has collision testing turned off
+			WriteShort(MSG_ENTITY, self.cnt + 1);
 	}
 	if(fl & 2)
 	{
@@ -1206,6 +1219,9 @@ void trigger_impulse_touch1()
     float pushdeltatime;
     float str;
 
+	if (self.active != ACTIVE_ACTIVE) 
+		return;
+
 	// FIXME: Better checking for what to push and not.
 	if not(other.iscreature)
 	if (other.classname != "corpse")
@@ -1249,13 +1265,17 @@ void trigger_impulse_touch1()
     if(!pushdeltatime) return;
 
     other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
-	other.flags &~= FL_ONGROUND;
+    other.flags &~= FL_ONGROUND;
+    UpdateCSQCProjectile(other);
 }
 
 // Directionless (accelerator/decelerator) mode
 void trigger_impulse_touch2()
 {
     float pushdeltatime;
+
+	if (self.active != ACTIVE_ACTIVE) 
+		return;
 
 	// FIXME: Better checking for what to push and not.
 	if not(other.iscreature)
@@ -1286,6 +1306,7 @@ void trigger_impulse_touch2()
 
     // div0: ticrate independent, 1 = identity (not 20)
     other.velocity = other.velocity * pow(self.strength, pushdeltatime);
+    UpdateCSQCProjectile(other);
 }
 
 // Spherical (gravity/repulsor) mode
@@ -1293,6 +1314,9 @@ void trigger_impulse_touch3()
 {
     float pushdeltatime;
     float str;
+
+	if (self.active != ACTIVE_ACTIVE) 
+		return;
 
 	// FIXME: Better checking for what to push and not.
 	if not(other.iscreature)
@@ -1333,6 +1357,7 @@ void trigger_impulse_touch3()
         str = self.strength;
 
     other.velocity = other.velocity + normalize(other.origin - self.origin) * str * pushdeltatime;
+    UpdateCSQCProjectile(other);
 }
 
 /*QUAKED spawnfunc_trigger_impulse (.5 .5 .5) ?
@@ -1355,6 +1380,8 @@ in directional and sperical mode. For damper/accelerator mode this is not nesses
 
 void spawnfunc_trigger_impulse()
 {
+	self.active = ACTIVE_ACTIVE;
+
 	EXACTTRIGGER_INIT;
     if(self.radius)
     {
@@ -1931,3 +1958,64 @@ void spawnfunc_trigger_magicear()
 	// target:
 	//   what to trigger
 }
+
+void relay_activators_use()
+{
+	entity trg, os;
+	
+	os = self;
+	
+	for(trg = world; (trg = find(trg, targetname, os.target)); )
+	{
+		self = trg;
+		if (trg.setactive)
+			trg.setactive(os.cnt);
+		else
+		{
+			//bprint("Not using setactive\n");
+			if(os.cnt == ACTIVE_TOGGLE)
+				if(trg.active == ACTIVE_ACTIVE)
+					trg.active = ACTIVE_NOT;
+				else	
+					trg.active = ACTIVE_ACTIVE;
+			else
+				trg.active = os.cnt;
+		}		
+	}
+	self = os;
+}
+
+void spawnfunc_relay_activate()
+{
+	self.cnt = ACTIVE_ACTIVE;
+	self.use = relay_activators_use;
+}
+
+void spawnfunc_relay_deactivate()
+{
+	self.cnt = ACTIVE_NOT;
+	self.use = relay_activators_use;	
+}
+
+void spawnfunc_relay_activatetoggle()
+{
+	self.cnt = ACTIVE_TOGGLE;
+	self.use = relay_activators_use;	
+}
+
+.string chmap, gametype;
+void spawnfunc_target_changelevel_use()
+{
+	if(self.gametype != "")
+		MapInfo_SwitchGameType(MapInfo_Type_FromString(self.gametype));
+
+	if (self.chmap == "")
+		localcmd("endmatch\n");
+	else
+		localcmd(strcat("changelevel ", self.chmap, "\n"));
+};
+
+void spawnfunc_target_changelevel()
+{
+	self.use = spawnfunc_target_changelevel_use;
+};

@@ -72,7 +72,8 @@ void Projectile_Draw()
 		else
 			Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 		if(!(self.move_flags & FL_ONGROUND))
-			self.angles = vectoangles(self.velocity);
+			if(self.velocity != '0 0 0')
+				self.angles = vectoangles(self.velocity);
 	}
 	else
 	{
@@ -138,6 +139,8 @@ void Projectile_Draw()
 	else
 		Projectile_ResetTrail(trailorigin);
 
+	self.drawmask = 0;
+
 	if(!drawn)
 		return;
 
@@ -151,7 +154,7 @@ void Projectile_Draw()
 			break;
 	}
 
-	R_AddEntity(self);
+	self.drawmask = MASK_NORMAL;
 }
 
 void loopsound(entity e, float ch, string samp, float vol, float attn)
@@ -278,6 +281,7 @@ void Ent_Projectile()
 			case PROJECTILE_ELECTRO_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			case PROJECTILE_GRENADE: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
 			case PROJECTILE_GRENADE_BOUNCING: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
+			case PROJECTILE_MINE: setmodel(self, "models/mine.md3");self.traileffect = particleeffectnum(""); break;
 			case PROJECTILE_LASER: setmodel(self, "models/laser.mdl");self.traileffect = particleeffectnum(""); break;
 			case PROJECTILE_HLAC: setmodel(self, "models/hlac_bullet.md3");self.traileffect = particleeffectnum(""); break;
 			case PROJECTILE_PORTO_RED: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_WIZSPIKE"); self.scale = 4; break;
@@ -318,16 +322,20 @@ void Ent_Projectile()
 				self.maxs = '3 3 3';
 				break;
 			case PROJECTILE_GRENADE:
-				self.mins = '0 0 -3';
-				self.maxs = '0 0 -3';
+				self.mins = '-3 -3 -3';
+				self.maxs = '3 3 3';
 				break;
 			case PROJECTILE_GRENADE_BOUNCING:
-				self.mins = '0 0 -3';
-				self.maxs = '0 0 -3';
+				self.mins = '-3 -3 -3';
+				self.maxs = '3 3 3';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
 				self.move_bounce_factor = g_balance_grenadelauncher_secondary_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_grenadelauncher_secondary_bouncestop;
+				break;
+			case PROJECTILE_MINE:
+				self.mins = '-4 -4 -4';
+				self.maxs = '4 4 4';
 				break;
 			case PROJECTILE_PORTO_RED:
 				self.colormod = '2 1 1';
@@ -406,6 +414,7 @@ void Projectile_Precache()
 	precache_model("models/ebomb.mdl");
 	precache_model("models/elaser.mdl");
 	precache_model("models/grenademodel.md3");
+	precache_model("models/mine.md3");
 	precache_model("models/hagarmissile.mdl");
 	precache_model("models/hlac_bullet.md3");
 	precache_model("models/laser.mdl");

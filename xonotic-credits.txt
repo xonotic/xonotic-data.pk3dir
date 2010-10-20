@@ -48,8 +48,11 @@ DarkPlaces
 by Forest "LordHavoc" Hale
 
 **Active Contributors
+Antonio "terencehill" Piu
 Ben "MooKow" Banker
+Calinou
 Kristian "morfar" Johansson
+kojn
 Maik "SavageX" Merten
 MrBougo
 Stephan "esteel" Stahl

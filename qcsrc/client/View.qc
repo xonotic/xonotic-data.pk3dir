@@ -79,11 +79,11 @@ void Porto_Draw()
 			p = p - view_up * 16;
 		if(idx-1 >= portal1_idx)
 		{
-			Draw_CylindricLine(p, q, 4, "", 1, 0, '0 0 1', 0.5, DRAWFLAG_NORMAL);
+			Draw_CylindricLine(p, q, 4, "", 1, 0, '0 0 1', 0.5, DRAWFLAG_NORMAL, view_origin);
 		}
 		else
 		{
-			Draw_CylindricLine(p, q, 4, "", 1, 0, '1 0 0', 0.5, DRAWFLAG_NORMAL);
+			Draw_CylindricLine(p, q, 4, "", 1, 0, '1 0 0', 0.5, DRAWFLAG_NORMAL, view_origin);
 		}
 		--idx;
 	}
@@ -102,7 +102,7 @@ void CheckForGamestartChange() {
 	if (previous_game_starttime != startTime) {
 		if ((time + 5.0) < startTime) {
 			//if connecting to server while restart was active don't always play prepareforbattle
-			sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
+			sound(world, CHAN_AUTO, strcat("announcer/", cvar_string("cl_announcer"), "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
 		}
 		if (time < startTime) {
 			restartAnnouncer = spawn();
@@ -347,6 +347,7 @@ void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
 
 vector freeze_pmove_org, freeze_input_angles;
+entity nightvision_noise, nightvision_noise2;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -354,6 +355,12 @@ void CSQC_UpdateView(float w, float h)
 	float fov;
 	float f, i, j;
 	vector v, vo;
+	vector vf_size, vf_min;
+
+	vf_size = R_SetView3fv(VF_SIZE);
+	vf_min = R_SetView3fv(VF_MIN);
+	vid_width = vf_size_x;
+	vid_height = vf_size_y;
 
 	vector reticle_pos, reticle_size;
 
@@ -375,7 +382,7 @@ void CSQC_UpdateView(float w, float h)
 	input_angles = warpzone_fixview_cl_viewangles;
 	view_angles = warpzone_fixview_angles;
 
-	if(cvar("cl_lockview") || autocvar__hud_configure)
+	if(cvar("cl_lockview") || (autocvar__hud_configure && spectatee_status <= 0))
 	{
 		pmove_org = freeze_pmove_org;
 		input_angles = view_angles = freeze_input_angles;
@@ -397,9 +404,6 @@ void CSQC_UpdateView(float w, float h)
 		view_up = v_up;
 		view_set = 1;
 	}
-
-	vid_width = w;
-	vid_height = h;
 
 #ifdef BLURTEST
 	if(time > blurtest_time0 && time < blurtest_time1)
@@ -488,6 +492,10 @@ void CSQC_UpdateView(float w, float h)
 	// ALWAYS Clear Current Scene First
 	R_ClearScene();
 
+	// FIXME engine bug? VF_SIZE and VF_MIN are not restored to sensible values by this
+	R_SetView(VF_SIZE, vf_size);
+	R_SetView(VF_MIN, vf_min);
+
 	// Assign Standard Viewflags
 	// Draw the World (and sky)
 	R_SetView(VF_DRAWWORLD, 1);
@@ -558,12 +566,64 @@ void CSQC_UpdateView(float w, float h)
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
+	if(cvar("r_fakelight") >= 2 || cvar("r_fullbright"))
+	{
+		// apply night vision effect
+		vector rgb, tc_00, tc_01, tc_10, tc_11;
+		float a;
+
+		if(!nightvision_noise)
+		{
+			nightvision_noise = spawn();
+			nightvision_noise.classname = "nightvision_noise";
+		}
+		if(!nightvision_noise2)
+		{
+			nightvision_noise2 = spawn();
+			nightvision_noise2.classname = "nightvision_noise2";
+		}
+
+		// color tint in yellow
+		drawfill('0 0 0', cvar("vid_conwidth") * '1 0 0' + cvar("vid_conheight") * '0 1 0', '0.5 1 0.3', 1, DRAWFLAG_MODULATE);
+
+		// draw BG
+		a = Noise_Pink(nightvision_noise, frametime * 1.5) * 0.05 + 0.15;
+		rgb = '1 1 1';
+		tc_00 = '0 0 0' + '0.2 0 0' * sin(time * 0.3) + '0 0.3 0' * cos(time * 0.7);
+		tc_01 = '0 2.25 0' + '0.6 0 0' * cos(time * 1.2) - '0 0.3 0' * sin(time * 2.2);
+		tc_10 = '1.5 0 0' - '0.2 0 0' * sin(time * 0.5) + '0 0.5 0' * cos(time * 1.7);
+		//tc_11 = '1 1 0' + '0.6 0 0' * sin(time * 0.6) + '0 0.3 0' * cos(time * 0.1);
+		tc_11 = tc_01 + tc_10 - tc_00;
+		R_BeginPolygon("gfx/nightvision-bg.tga", DRAWFLAG_ADDITIVE);
+		R_PolygonVertex('0 0 0', tc_00, rgb, a);
+		R_PolygonVertex(cvar("vid_conwidth") * '1 0 0', tc_10, rgb, a);
+		R_PolygonVertex(cvar("vid_conwidth") * '1 0 0' + cvar("vid_conheight") * '0 1 0', tc_11, rgb, a);
+		R_PolygonVertex(cvar("vid_conheight") * '0 1 0', tc_01, rgb, a);
+		R_EndPolygon();
+
+		// draw FG
+		a = Noise_Pink(nightvision_noise2, frametime * 0.1) * 0.05 + 0.12;
+		rgb = '0.3 0.6 0.4' + '0.1 0.4 0.2' * Noise_White(nightvision_noise2, frametime);
+		tc_00 = '0 0 0' + '1 0 0' * Noise_White(nightvision_noise2, frametime) + '0 1 0' * Noise_White(nightvision_noise2, frametime);
+		tc_01 = tc_00 + '0 3 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.2);
+		tc_10 = tc_00 + '2 0 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.3);
+		tc_11 = tc_01 + tc_10 - tc_00;
+		R_BeginPolygon("gfx/nightvision-fg.tga", DRAWFLAG_ADDITIVE);
+		R_PolygonVertex('0 0 0', tc_00, rgb, a);
+		R_PolygonVertex(cvar("vid_conwidth") * '1 0 0', tc_10, rgb, a);
+		R_PolygonVertex(cvar("vid_conwidth") * '1 0 0' + cvar("vid_conheight") * '0 1 0', tc_11, rgb, a);
+		R_PolygonVertex(cvar("vid_conheight") * '0 1 0', tc_01, rgb, a);
+		R_EndPolygon();
+	}
+
 	// Draw the aiming reticle for weapons that use it
 	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 	// It must be a persisted float for fading out to work properly (you let go of the zoom button for
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || getstati(STAT_HEALTH) <= 0)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
+	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_CAMPINGRIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
+		reticle_type = 2; // nex zoom
 	else if(button_zoom || zoomscript_caught)
 		reticle_type = 1; // normal zoom
 	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_CAMPINGRIFLE && button_attack2)
@@ -623,11 +683,6 @@ void CSQC_UpdateView(float w, float h)
 			self.draw2d();
 	self = e;
 
-	// draw hud
-	if(cvar("r_letterbox") == 0) {
-		HUD_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
-	}
-
 	float hud;
 	hud = getstati(STAT_HUD);
 	if(hud == HUD_SPIDERBOT)
@@ -645,7 +700,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !camera_active) {
+		if(!scoreboard_active && !camera_active && intermission != 2) {
 			// TrueAim check
 			float shottype;
 			float bullets, ring_scale;
@@ -771,17 +826,28 @@ void CSQC_UpdateView(float w, float h)
 				wcross_scale *= 1 - cvar("_menu_alpha");
 				wcross_alpha *= 1 - cvar("_menu_alpha");
 
-				// ring around crosshair representing bullets left in camping rifle clip
-				if (activeweapon == WEP_CAMPINGRIFLE)
-				{
-					ring_scale = cvar("crosshair_campingrifle_ring_size");
-					bullets = bound(0, getstati(STAT_BULLETS_LOADED), 4);
-				}
-				else
-					bullets = 0;
+				ring_scale = cvar("crosshair_ring_size");
 
-#define CROSSHAIR_DRAW_RING(i,j,sz,wcross_name,wcross_alpha) \
-				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+				float f, a;
+				wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
+
+				float nex_charge;
+				nex_charge = getstatf(STAT_NEX_CHARGE);
+
+				// ring around crosshair representing bullets left in camping rifle clip
+				if (activeweapon == WEP_CAMPINGRIFLE && cr_maxbullets)
+				{
+					bullets = getstati(STAT_BULLETS_LOADED);
+					f = bound(0, bullets / cr_maxbullets, 1);
+
+					a = cvar("crosshair_campingrifle_bulletcounter_alpha");
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+				}
+				else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
+				{
+					a = cvar("crosshair_nexvelocity_alpha");
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", nex_charge, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+				}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
 				do \
@@ -818,11 +884,11 @@ void CSQC_UpdateView(float w, float h)
 				}
 
 				wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
-				if(bullets)
-				{
-					CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_RING, wcross_resolution, wcross_name, wcross_alpha);
-				}
 				CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
+
+				if(cvar("crosshair_dot"))
+					CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", wcross_alpha * f * cvar("crosshair_dot_alpha"));
+
 				wcross_name_alpha_goal_prev = f;
 			}
 		}
@@ -883,6 +949,11 @@ void CSQC_UpdateView(float w, float h)
 
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
+
+	// let's reset the view back to normal for the end
+	R_SetView(VF_MIN, '0 0 0');
+	R_SetView(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
+
 	// be safe against triggerbots until everyone has the fixed engine
 	// this call is meant to overwrite the trace globals by something
 	// unsuspicious
@@ -1204,23 +1275,29 @@ void CSQC_common_hud(void)
 					acc_lev[i] = stof(argv(i));
 			}
 
-			// hud first
-			HUD_Main();
+			HUD_Main(); // always run these functions for alpha checks
+			HUD_DrawScoreboard();
 
-			// scoreboard/accuracy
-			if (intermission == 2 && !scoreboard_showaccuracy && !scoreboard_showscores) // map voting screen
+			if (scoreboard_showscores || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1) // scoreboard/accuracy
+			{	
+				HUD_Reset();
+				// HUD_DrawScoreboard takes care of centerprint_start
+			}
+			else if (intermission == 2) // map voting screen
 			{
 				HUD_FinaleOverlay();
 				HUD_Reset();
+
+				centerprint_start_x = 0;
+				centerprint_start_y = cvar("scr_centerpos") * vid_conheight;
 			}
-			else if(scoreboard_showaccuracy && spectatee_status != -1)
-				HUD_DrawAccuracyStats();
-			else
-				HUD_DrawScoreboard();
+			else // hud
+			{
+				centerprint_start_x = 0;
+				centerprint_start_y = cvar("scr_centerpos") * vid_conheight;
+			}
 
-			if (scoreboard_showscores || scoreboard_showaccuracy || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
-				HUD_Reset();
-
+			HUD_DrawCenterPrint();
 			break;
 
 		case HUD_SPIDERBOT:

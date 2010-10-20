@@ -61,6 +61,7 @@ const float TE_CSQC_NOTIFY = 112;
 const float TE_CSQC_WEAPONCOMPLAIN = 113;
 const float TE_CSQC_CAMPINGRIFLE_SCOPE = 115;
 const float TE_CSQC_NEX_SCOPE = 116;
+const float TE_CSQC_CR_MAXBULLETS = 117;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -308,6 +309,7 @@ const float STAT_NB_METERSTART = 45;
 const float STAT_SHOTORG = 46; // compressShotOrigin
 const float STAT_LEADLIMIT = 47;
 const float STAT_BULLETS_LOADED = 48;
+const float STAT_NEX_CHARGE = 49;
 
 const float STAT_DOM_TOTAL_PPS = 70;
 const float STAT_DOM_PPS_RED = 71;
@@ -404,7 +406,7 @@ float	CHAN_AUTO				= 0;
 	// on world: announcers, ...                     INFO
 	// on players: item pickup                       ITEMS
 	// on entities: UNUSED
-	// on csqc: UNUSED
+	// on csqc: announcers                           INFO
 float	CHAN_WEAPON				= 1; // Weapon fire
 	// on world: UNUSED
 	// on players: weapon firing                     WEAPONS
@@ -419,7 +421,7 @@ float	CHAN_TRIGGER			= 3; // Triggers/Items
 	// on world: UNUSED
 	// on players: item pickup                       ITEMS
 	// on entities: platforms moving etc.            ITEMS
-	// on csqc: UNUSED
+	// on csqc: platforms moving etc.                ITEMS
 float	CHAN_PROJECTILE			= 4; // Projectiles
 	// on world: UNUSED
 	// on players: projectiles hitting player        SHOTS
@@ -460,20 +462,21 @@ float PROJECTILE_CRYLINK = 5;
 float PROJECTILE_ELECTRO_BEAM = 6;
 float PROJECTILE_GRENADE = 7;
 float PROJECTILE_GRENADE_BOUNCING = 8;
-float PROJECTILE_LASER = 9;
-float PROJECTILE_HLAC = 10;
-float PROJECTILE_SEEKER = 11;
-float PROJECTILE_FLAC = 12;
-float PROJECTILE_PORTO_RED = 13;
-float PROJECTILE_PORTO_BLUE = 14;
-float PROJECTILE_HOOKBOMB = 15;
-float PROJECTILE_HAGAR = 16;
-float PROJECTILE_HAGAR_BOUNCING = 17;
-float PROJECTILE_BULLET_GLOWING = 18;
-float PROJECTILE_CRYLINK_BOUNCING = 19;
-float PROJECTILE_FIREBALL = 20;
-float PROJECTILE_FIREMINE = 21;
-float PROJECTILE_BULLET_GLOWING_TRACER = 22;
+float PROJECTILE_MINE = 9;
+float PROJECTILE_LASER = 10;
+float PROJECTILE_HLAC = 11;
+float PROJECTILE_SEEKER = 12;
+float PROJECTILE_FLAC = 13;
+float PROJECTILE_PORTO_RED = 14;
+float PROJECTILE_PORTO_BLUE = 15;
+float PROJECTILE_HOOKBOMB = 16;
+float PROJECTILE_HAGAR = 17;
+float PROJECTILE_HAGAR_BOUNCING = 18;
+float PROJECTILE_BULLET_GLOWING = 19;
+float PROJECTILE_CRYLINK_BOUNCING = 20;
+float PROJECTILE_FIREBALL = 21;
+float PROJECTILE_FIREMINE = 22;
+float PROJECTILE_BULLET_GLOWING_TRACER = 23;
 
 float SPECIES_HUMAN        =  0;
 float SPECIES_ROBOT_SOLID  =  1;

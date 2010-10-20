@@ -36,9 +36,9 @@ float updateCompression()
 	float have_dds, have_jpg, have_tga;
 	if((have_dds = (fh = fopen("dds/particles/particlefont.dds", FILE_READ) >= 0)))
 		fclose(fh);
-	if((have_jpg = (fh = fopen("jpg/particles/particlefont.jpg", FILE_READ) >= 0)))
+	if((have_jpg = (fh = fopen("particles/particlefont.jpg", FILE_READ) >= 0)))
 		fclose(fh);
-	if((have_tga = (fh = fopen("tga/particles/particlefont.tga", FILE_READ) >= 0)))
+	if((have_tga = (fh = fopen("particles/particlefont.tga", FILE_READ) >= 0)))
 		fclose(fh);
 	if(have_dds && (have_jpg || have_tga))
 	{
@@ -96,7 +96,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Texture resolution:"));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("gl_picmip"));
+		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
 			if(cvar("developer"))
 				e.addValue(e, "Leet", "1337");
 			e.addValue(e, "Lowest", "2");

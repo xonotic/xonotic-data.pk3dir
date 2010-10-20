@@ -327,6 +327,25 @@ void spawnfunc_func_train()
 	// TODO make a reset function for this one
 };
 
+void func_rotating_setactive(float astate)
+{
+	
+	if (astate == ACTIVE_TOGGLE)
+	{		
+		if(self.active == ACTIVE_ACTIVE)
+			self.active = ACTIVE_NOT;
+		else
+			self.active = ACTIVE_ACTIVE;
+	}
+	else
+		self.active = astate;
+		
+	if(self.active  == ACTIVE_NOT)		
+		self.avelocity = '0 0 0';
+	else
+		self.avelocity = self.pos1;
+}
+
 /*QUAKED spawnfunc_func_rotating (0 .5 .8) ? - - X_AXIS Y_AXIS
 Brush model that spins in place on one axis (default Z).
 speed   : speed to rotate (in degrees per second)
@@ -342,6 +361,10 @@ void spawnfunc_func_rotating()
 		precache_sound(self.noise);
 		ambientsound(self.origin, self.noise, VOL_BASE, ATTN_IDLE);
 	}
+	
+	self.active = ACTIVE_ACTIVE;
+	self.setactive = func_rotating_setactive;
+	
 	if (!self.speed)
 		self.speed = 100;
 	// FIXME: test if this turns the right way, then remove this comment (negate as needed)
@@ -353,7 +376,9 @@ void spawnfunc_func_rotating()
 	// FIXME: test if this turns the right way, then remove this comment (negate as needed)
 	else // Z
 		self.avelocity = '0 1 0' * self.speed;
-
+	
+	self.pos1 = self.avelocity;
+    
     if(self.dmg & (!self.message))
         self.message = " was squished";
     if(self.dmg && (!self.message2))
@@ -383,11 +408,19 @@ void func_bobbing_controller_think()
 {
 	local vector v;
 	self.nextthink = time + 0.1;
+	
+	if not (self.owner.active == ACTIVE_ACTIVE)
+	{
+		self.owner.velocity = '0 0 0';		
+		return;
+	}
+		
 	// calculate sinewave using makevectors
 	makevectors((self.nextthink * self.owner.cnt + self.owner.phase * 360) * '0 1 0');
 	v = self.owner.destvec + self.owner.movedir * v_forward_y;
-	// * 10 so it will arrive in 0.1 sec
-	self.owner.velocity = (v - self.owner.origin) * 10;
+	if(self.owner.classname == "func_bobbing") // don't brake stuff if the func_bobbing was killtarget'ed
+		// * 10 so it will arrive in 0.1 sec
+		self.owner.velocity = (v - self.owner.origin) * 10;
 };
 
 void bobbing_blocked()
@@ -421,6 +454,8 @@ void spawnfunc_func_bobbing()
 	self.destvec = self.origin;
 	// time scale to get degrees
 	self.cnt = 360 / self.speed;
+
+	self.active = ACTIVE_ACTIVE;
 
 	// damage when blocked
 	self.blocked = bobbing_blocked;
@@ -526,6 +561,10 @@ void button_use()
 //		dprint(activator.classname);
 //		dprint(" triggered a button\n");
 //	}
+
+	if not (self.active == ACTIVE_ACTIVE)
+		return;
+
 	self.enemy = activator;
 	button_fire ();
 };
@@ -614,6 +653,8 @@ void spawnfunc_func_button()
 
     if(self.noise != "")
         precache_sound(self.noise);
+
+	self.active = ACTIVE_ACTIVE;
 
 	self.pos1 = self.origin;
 	self.pos2 = self.pos1 + self.movedir*(fabs(self.movedir*self.size) - self.lip);
@@ -1636,6 +1677,12 @@ void func_fourier_controller_think()
 	float n, i, t;
 
 	self.nextthink = time + 0.1;
+	if not (self.owner.active == ACTIVE_ACTIVE)
+	{
+		self.owner.velocity = '0 0 0';		
+		return;
+	}
+
 
 	n = floor((tokenize_console(self.owner.netname)) / 5);
 	t = self.nextthink * self.owner.cnt + self.owner.phase * 360;
@@ -1648,8 +1695,9 @@ void func_fourier_controller_think()
 		v = v + ('1 0 0' * stof(argv(i*5+2)) + '0 1 0' * stof(argv(i*5+3)) + '0 0 1' * stof(argv(i*5+4))) * self.owner.height * v_forward_y;
 	}
 
-	// * 10 so it will arrive in 0.1 sec
-	self.owner.velocity = (v - self.owner.origin) * 10;
+	if(self.owner.classname == "func_fourier") // don't brake stuff if the func_fourier was killtarget'ed
+		// * 10 so it will arrive in 0.1 sec
+		self.owner.velocity = (v - self.owner.origin) * 10;
 };
 
 void spawnfunc_func_fourier()
@@ -1682,6 +1730,8 @@ void spawnfunc_func_fourier()
 
 	if not(InitMovingBrushTrigger())
 		return;
+
+	self.active = ACTIVE_ACTIVE;
 
 	// wait for targets to spawn
 	controller = spawn();
@@ -1759,7 +1809,15 @@ vector func_vectormamamam_origin(entity o, float t)
 void func_vectormamamam_controller_think()
 {
 	self.nextthink = time + 0.1;
-	self.owner.velocity = (self.owner.destvec + func_vectormamamam_origin(self.owner, 0.1) - self.owner.origin) * 10;
+
+	if not (self.owner.active == ACTIVE_ACTIVE)
+	{
+		self.owner.velocity = '0 0 0';		
+		return;
+	}
+
+	if(self.owner.classname == "func_vectormamamam") // don't brake stuff if the func_vectormamamam was killtarget'ed
+		self.owner.velocity = (self.owner.destvec + func_vectormamamam_origin(self.owner, 0.1) - self.owner.origin) * 10;
 }
 
 void func_vectormamamam_findtarget()
@@ -1842,6 +1900,8 @@ void spawnfunc_func_vectormamamam()
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
+
+	self.active = ACTIVE_ACTIVE;
 
 	InitializeEntity(self, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
 }

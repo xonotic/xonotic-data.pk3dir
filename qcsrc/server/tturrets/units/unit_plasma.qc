@@ -133,7 +133,7 @@ void turret_plasma_std_init()
     self.damage_flags    |= TFL_DMG_HEADSHAKE;
     self.firecheck_flags |= TFL_FIRECHECK_AFF;
 
-    if (!turret_tag_setup())
+    if (!turret_tag_fire_update())
         dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     // Our fireing routine
@@ -165,7 +165,7 @@ void turret_plasma_dual_init()
     self.damage_flags    |= TFL_DMG_HEADSHAKE;
     self.firecheck_flags |= TFL_FIRECHECK_AFF;
 
-    if (!turret_tag_setup())
+    if (!turret_tag_fire_update())
         dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     // Our fireing routine

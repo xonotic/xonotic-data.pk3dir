@@ -6,15 +6,17 @@
 .float itime1, itime2;
 void InterpolateOrigin_Reset()
 {
-	self.iflags &~= (IFLAG_PREVALID | IFLAG_VALID);
+	self.iflags &~= IFLAG_INTERNALMASK;
 	self.itime1 = self.itime2 = 0;
 }
 void InterpolateOrigin_Note()
 {
 	float dt;
+	float f0;
 
 	dt = time - self.itime2;
 
+	f0 = self.iflags;
 	if(self.iflags & IFLAG_PREVALID)
 		self.iflags |= IFLAG_VALID;
 	else
@@ -24,13 +26,22 @@ void InterpolateOrigin_Note()
 	self.iorigin2 = self.origin;
 
 	if(self.iflags & IFLAG_AUTOANGLES)
-		self.angles = vectoangles(self.iorigin2 - self.iorigin1);
+		if(self.iorigin2 != self.iorigin1)
+			self.angles = vectoangles(self.iorigin2 - self.iorigin1);
 
 	if(self.iflags & IFLAG_ANGLES)
 	{
 		fixedmakevectors(self.angles);
-		self.iforward1 = self.iforward2;
-		self.iup1 = self.iup2;
+		if(f0 & IFLAG_VALID)
+		{
+			self.iforward1 = self.iforward2;
+			self.iup1 = self.iup2;
+		}
+		else
+		{
+			self.iforward1 = v_forward;
+			self.iup1 = v_up;
+		}
 		self.iforward2 = v_forward;
 		self.iup2 = v_up;
 	}

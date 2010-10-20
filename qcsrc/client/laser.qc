@@ -22,24 +22,39 @@ void Draw_Laser()
 	InterpolateOrigin_Do();
 	if(self.count & 0x80)
 	{
-		traceline(self.origin, self.velocity, 0, self);
+		if(self.count & 0x10)
+		{
+			trace_endpos = self.velocity,
+			trace_dphitq3surfaceflags = 0;
+		}
+		else
+			traceline(self.origin, self.velocity, 0, self);
 	}
 	else
 	{
-		makevectors(self.angles);
-		traceline(self.origin, self.origin + v_forward * 32768, 0, self);
-		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+		if(self.count & 0x10)
+		{
+			makevectors(self.angles);
 			trace_endpos = self.origin + v_forward * 1048576;
+			trace_dphitq3surfaceflags = Q3SURFACEFLAG_SKY;
+		}
+		else
+		{
+			makevectors(self.angles);
+			traceline(self.origin, self.origin + v_forward * 32768, 0, self);
+			if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+				trace_endpos = self.origin + v_forward * 1048576;
+		}
 	}
 	if(self.scale != 0)
 	{
 		if(self.alpha)
 		{
-			Draw_CylindricLine(self.origin, trace_endpos, self.scale, "particles/laserbeam", 0, time * 3, self.colormod, self.alpha, DRAWFLAG_NORMAL); // TODO make a texture to make the laser look smoother
+			Draw_CylindricLine(self.origin, trace_endpos, self.scale, "particles/laserbeam", 0, time * 3, self.colormod, self.alpha, DRAWFLAG_NORMAL, view_origin);
 		}
 		else
 		{
-			Draw_CylindricLine(self.origin, trace_endpos, self.scale, "particles/laserbeam", 0, time * 3, self.colormod, 0.5, DRAWFLAG_ADDITIVE); // TODO make a texture to make the laser look smoother
+			Draw_CylindricLine(self.origin, trace_endpos, self.scale, "particles/laserbeam", 0, time * 3, self.colormod, 0.5, DRAWFLAG_ADDITIVE, view_origin);
 		}
 	}
 	if not(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT))
@@ -58,7 +73,7 @@ void Ent_Laser()
 
 	// 30 bytes, or 13 bytes for just moving
 	f = ReadByte();
-	self.count = (f & 0xE0);
+	self.count = (f & 0xF0);
 
 	if(self.count & 0x80)
 		self.iflags = IFLAG_VELOCITY;
@@ -87,7 +102,10 @@ void Ent_Laser()
 			self.scale *= ReadByte() / 16.0; // beam radius
 			self.modelscale *= ReadByte() / 16.0; // dlight radius
 		}
-		self.cnt = ReadShort() - 1; // effect number
+		if((f & 0x80) || !(f & 0x10))
+			self.cnt = ReadShort() - 1; // effect number
+		else
+			self.cnt = 0;
 	}
 	if(f & 2)
 	{

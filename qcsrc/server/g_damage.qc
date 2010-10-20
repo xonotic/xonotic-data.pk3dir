@@ -364,11 +364,12 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				// TODO: fix this?
 				if (deathtype == DEATH_CUSTOM)
-					msg = strcat(deathmessage, " by ^1", msg);
-				else if (deathtype == DEATH_HURTTRIGGER && inflictor.message2 != "")
-				{
-					msg = ftos(strstrofs(inflictor.message2, "#", 0));
-				}
+					msg = deathmessage;
+				else
+					msg = inflictor.message2;
+
+				if(strstrofs(msg, "%", 0) < 0)
+					msg = strcat("%s ", msg, " by %s");
 
 				Send_KillNotification(a, s, msg, deathtype, MSG_KILL);
 
@@ -435,6 +436,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				msg = inflictor.message;
 			else if (deathtype == DEATH_CUSTOM)
 				msg = deathmessage;
+			if(strstrofs(msg, "%", 0) < 0)
+				msg = strcat("%s ", msg);
 
 			GiveFrags(targ, targ, -1);
 			if(PlayerScore_Add(targ, SP_SCORE, 0) == -5) {
@@ -845,20 +848,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
 		Damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE, attacker.origin, force);
 	}
-}
-
-vector NearestPointOnBox(entity box, vector org)
-{
-	vector m1, m2, nearest;
-
-	m1 = box.mins + box.origin;
-	m2 = box.maxs + box.origin;
-
-	nearest_x = bound(m1_x, org_x, m2_x);
-	nearest_y = bound(m1_y, org_y, m2_y);
-	nearest_z = bound(m1_z, org_z, m2_z);
-
-	return nearest;
 }
 
 void Damage_RecordDamage(entity attacker, float deathtype, float damage)

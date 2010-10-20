@@ -160,12 +160,15 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 			continue;
 
 		l = strlen(ip);
-		for(j = 0; j < l; ++j)
-			if(strstrofs("0123456789.", substring(ip, j, 1), 0) == -1)
-			{
-				print("Invalid character ", substring(ip, j, 1), " in IP address ", ip, ". Skipping this ban.\n");
-				goto skip;
-			}
+		if(l != 44) // length 44 is a cryptographic ID
+		{
+			for(j = 0; j < l; ++j)
+				if(strstrofs("0123456789.", substring(ip, j, 1), 0) == -1)
+				{
+					print("Invalid character ", substring(ip, j, 1), " in IP address ", ip, ". Skipping this ban.\n");
+					goto skip;
+				}
+		}
 
 		if(cvar("g_ban_sync_trusted_servers_verify"))
 			if((strstrofs(strcat(";", OnlineBanList_Servers, ";"), strcat(";", serverip, ";"), 0) == -1))
@@ -243,9 +246,7 @@ string ban_ip1;
 string ban_ip2;
 string ban_ip3;
 string ban_ip4;
-#ifdef UID
-string ban_uid;
-#endif
+string ban_idfp;
 
 void Ban_SaveBans()
 {
@@ -335,11 +336,16 @@ float Ban_GetClientIP(entity client)
 	float i1, i2, i3, i4;
 	string s;
 
+	if(client.crypto_keyfp)
+		ban_idfp = client.crypto_idfp;
+	else
+		ban_idfp = string_null;
+
 	s = client.netaddress;
-	
+
 	i1 = strstrofs(s, ".", 0);
 	if(i1 < 0)
-		return FALSE;
+		goto ipv6;
 	i2 = strstrofs(s, ".", i1 + 1);
 	if(i2 < 0)
 		return FALSE;
@@ -348,22 +354,43 @@ float Ban_GetClientIP(entity client)
 		return FALSE;
 	i4 = strstrofs(s, ".", i3 + 1);
 	if(i4 >= 0)
-		return FALSE;
+		s = substring(s, 0, i4);
 	
-	ban_ip1 = substring(s, 0, i1);
-	ban_ip2 = substring(s, 0, i2);
-	ban_ip3 = substring(s, 0, i3);
-	ban_ip4 = strcat1(s);
-#ifdef UID
-	ban_uid = client.uid;
-#endif
+	ban_ip1 = substring(s, 0, i1); // 8
+	ban_ip2 = substring(s, 0, i2); // 16
+	ban_ip3 = substring(s, 0, i3); // 24
+	ban_ip4 = strcat1(s); // 32
+	return TRUE;
+
+:ipv6
+	i1 = strstrofs(s, ":", 0);
+	if(i1 < 0)
+		return FALSE;
+	i1 = strstrofs(s, ":", i1 + 1);
+	if(i1 < 0)
+		return FALSE;
+	i2 = strstrofs(s, ":", i1 + 1);
+	if(i2 < 0)
+		return FALSE;
+	i3 = strstrofs(s, ":", i2 + 1);
+	if(i3 < 0)
+		return FALSE;
+
+	ban_ip1 = strcat(substring(s, 0, i1), "::/32"); // 32
+	ban_ip2 = strcat(substring(s, 0, i2), "::/48"); // 48
+	ban_ip4 = strcat(substring(s, 0, i3), "::/64"); // 64
+
+	if(i3 - i2 > 3) // means there is more than 2 digits and a : in the range
+		ban_ip3 = strcat(substring(s, 0, i2), ":", substring(s, i2 + 1, i3 - i2 - 3), "00::/56");
+	else
+		ban_ip3 = strcat(substring(s, 0, i2), ":0::/56");
 
 	return TRUE;
 }
 
 float Ban_IsClientBanned(entity client, float idx)
 {
-	float i, b, e;
+	float i, b, e, ipbanned;
 	if(!ban_loaded)
 		Ban_LoadBans();
 	if(!Ban_GetClientIP(client))
@@ -378,20 +405,22 @@ float Ban_IsClientBanned(entity client, float idx)
 		b = idx;
 		e = idx + 1;
 	}
+	ipbanned = FALSE;
 	for(i = b; i < e; ++i)
 	{
 		string s;
 		if(time > ban_expire[i])
 			continue;
 		s = ban_ip[i];
-		if(ban_ip1 == s) return TRUE;
-		if(ban_ip2 == s) return TRUE;
-		if(ban_ip3 == s) return TRUE;
-		if(ban_ip4 == s) return TRUE;
-#ifdef UID
-		if(ban_uid == s) return TRUE;
-#endif
+		if(ban_ip1 == s) ipbanned = TRUE;
+		if(ban_ip2 == s) ipbanned = TRUE;
+		if(ban_ip3 == s) ipbanned = TRUE;
+		if(ban_ip4 == s) ipbanned = TRUE;
+		if(ban_idfp == s) return TRUE;
 	}
+	if(ipbanned)
+		if(!cvar("g_banned_list_idmode") || !ban_idfp)
+			return TRUE;
 	return FALSE;
 }
 
@@ -535,12 +564,9 @@ void Ban_KickBanClient(entity client, float bantime, float masksize, string reas
 		default:
 			Ban_Insert(ban_ip4, bantime, reason, 1);
 			break;
-#ifdef UID
-		case 0:
-			Ban_Insert(ban_uid, bantime, reason, 1);
-			break;
-#endif
 	}
+	if(ban_idfp)
+		Ban_Insert(ban_idfp, bantime, reason, 1);
 	/*
 	 * not needed, as we enforce the ban in Ban_Insert anyway
 	// and kick him

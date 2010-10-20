@@ -236,3 +236,9 @@ switch(id) { \
 	case HUD_PANEL_CHAT: panel_name = HUD_PANELNAME_CHAT; break; \
 }\
 HUD_Panel_GetName_Part2(id)
+
+vector vec2(vector v);
+
+#ifndef MENUQC
+vector NearestPointOnBox(entity box, vector org);
+#endif

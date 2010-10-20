@@ -43,6 +43,14 @@ void W_Nex_Attack (float issecondary)
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
+	if(cvar("g_balance_nex_charge"))
+	{
+		mydmg *= self.nex_charge;
+		myforce *= self.nex_charge;
+		//print("^1Damage: ^7", ftos(mydmg), "\n");
+		self.nex_charge *= cvar("g_balance_nex_charge_shot_multiplier"); // do this AFTER setting mydmg/myforce
+	}
+
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
 
 	yoda = 0;
@@ -73,6 +81,8 @@ float w_nex(float req)
 	}
 	else if (req == WR_THINK)
 	{
+		if(cvar("g_balance_nex_charge"))
+			self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_charge_rate") * frametime / W_TICSPERFRAME);
 		if (self.BUTTON_ATCK)
 		{
 			if (weapon_prepareattack(0, cvar("g_balance_nex_primary_refire")))
@@ -83,7 +93,15 @@ float w_nex(float req)
 		}
 		if (self.BUTTON_ATCK2)
 		{
-			if(cvar("g_balance_nex_secondary"))
+			if(cvar("g_balance_nex_secondary_charge"))
+			{
+				if(self.ammo_cells)
+				{
+					self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_secondary_charge_rate") * frametime / W_TICSPERFRAME);
+					self.ammo_cells = max(0, self.ammo_cells - cvar("g_balance_nex_secondary_ammo") * frametime / W_TICSPERFRAME);
+				}
+			}
+			else if(cvar("g_balance_nex_secondary"))
 			{
 				if (weapon_prepareattack(0, cvar("g_balance_nex_secondary_refire")))
 				{

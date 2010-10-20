@@ -31,8 +31,6 @@
 //   Otherwise mdl_dead will be displayed at the map origin, and nobody would
 //   want that!
 
-.vector mins_save, maxs_save;
-
 void func_breakable_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 
 //
@@ -87,15 +85,18 @@ void func_breakable_look_destroyed()
 {
 	local float floor_z;
 
+	if(self.solid == SOLID_BSP) // in case a misc_follow moved me, save the current origin first
+		self.dropped_origin = self.origin;
+
 	if(self.mdl_dead == "")
 		self.model = "";
 	else {
-		setmodel(self, self.mdl_dead);
 		if (self.origin == '0 0 0')	{	// probably no origin brush, so don't spawn in the middle of the map..
 			floor_z = self.absmin_z;
 			setorigin(self,((self.absmax+self.absmin)*.5));
 			self.origin_z = floor_z;
 		}
+		setmodel(self, self.mdl_dead);
 	}
 
 	self.solid = SOLID_NOT;
@@ -104,6 +105,8 @@ void func_breakable_look_destroyed()
 void func_breakable_look_restore()
 {
 	setmodel(self, self.mdl);
+	if(self.mdl_dead != "") // only do this if we use mdl_dead, to behave better with misc_follow
+		setorigin(self, self.dropped_origin);
 	self.solid = SOLID_BSP;
 }
 
@@ -113,7 +116,6 @@ void func_breakable_behave_destroyed()
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = SUB_Null;
 	self.state = 1;
-	setsize(self, '0 0 0', '0 0 0');
 	func_breakable_colormod();
 }
 
@@ -123,7 +125,6 @@ void func_breakable_behave_restore()
 	self.takedamage = DAMAGE_AIM;
 	self.event_damage = func_breakable_damage;
 	self.state = 0;
-	setsize(self, self.mins_save, self.maxs_save);
 	func_breakable_colormod();
 }
 
@@ -145,6 +146,7 @@ void func_breakable_destroy() {
 	string oldmsg;
 
 	activator = self.owner;
+	self.owner = world; // set by W_PrepareExplosionByDamage
 
 	// now throw around the debris
 	n = tokenize_console(self.debris);
@@ -232,8 +234,6 @@ void spawnfunc_func_breakable() {
 
 	self.mdl = self.model;
 	SetBrushEntityModel();
-	self.mins_save = self.mins;
-	self.maxs_save = self.maxs;
 
 	self.use = func_breakable_restore;
 
@@ -247,6 +247,7 @@ void spawnfunc_func_breakable() {
 		precache_sound(self.noise);
 
 	self.team_saved = self.team;
+	self.dropped_origin = self.origin;
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();

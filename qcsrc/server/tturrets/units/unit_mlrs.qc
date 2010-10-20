@@ -106,7 +106,7 @@ void turret_mlrs_dinit()
     self.shoot_flags  |= TFL_SHOOT_VOLLYALWAYS;
     self.volly_counter = self.shot_volly;
 
-    if (!turret_tag_setup())
+    if (!turret_tag_fire_update())
         dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     // Our fire routine

@@ -70,11 +70,11 @@ void anticheat_physics()
 		MEAN_ACCUMULATE(anticheat_div0_evade, 1 - (self.anticheat_div0_evade_forward_initial * v_forward), 1);
 	}
 
-	MEAN_ACCUMULATE(anticheat_div0_strafebot_old, movement_oddity(self.movement, self.anticheat_div0_strafebot_movement_prev), max(0, 0.05 - frametime));
+	MEAN_ACCUMULATE(anticheat_div0_strafebot_old, movement_oddity(self.movement, self.anticheat_div0_strafebot_movement_prev), max(0, sys_frametime - frametime));
 	self.anticheat_div0_strafebot_movement_prev = self.movement;
 
 	if(vlen(self.anticheat_div0_strafebot_forward_prev))
-		MEAN_ACCUMULATE(anticheat_div0_strafebot_new, 1 - (self.anticheat_div0_strafebot_forward_prev * v_forward), max(0, 0.05 - frametime));
+		MEAN_ACCUMULATE(anticheat_div0_strafebot_new, 1 - (self.anticheat_div0_strafebot_forward_prev * v_forward), max(0, sys_frametime - frametime));
 	self.anticheat_div0_strafebot_forward_prev = v_forward;
 
 	// generic speedhack detection: correlate anticheat_speedhack_movetime (UPDATED BEFORE THIS) and server time

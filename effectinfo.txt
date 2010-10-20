@@ -4988,7 +4988,8 @@ lightcolor 3.125 4.375 10
 effect electro_lightning
 count 300
 type spark
-color 0x501860 0x501860 // 0x202020 0x404040
+// color 0x501860 0x501860 // 0x202020 0x404040
+color 0x2030FF 0x80C0FF
 tex 65 65
 size 6 6
 alpha 100 206 1724

@@ -148,23 +148,6 @@ void CSQC_Init(void)
 	}
 	Tuba_Precache();
 
-#ifdef UID
-	{
-		// find the user ID
-		string uid;
-		registercvar("_cl_userid", "", CVAR_SAVE);
-		uid = cvar_string("_cl_userid");
-		if(strlen(uid) < 16)
-		{
-			uid = "";
-			for(i = 0; i < 4; ++i)
-				uid = strcat(uid, substring(ftos(floor(10000 + random() * 10000)), 1, -1));
-		}
-		cvar_set("_cl_userid", uid);
-		localcmd(strcat("\ncmd uid ", uid, "\n"));
-	}
-#endif
-
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
 	minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
 	shortmapname = mi_shortname;
@@ -457,7 +440,9 @@ void ShotOrg_Draw()
 	self.angles = view_angles;
 	self.angles_x = -self.angles_x;
 	if not(self.cnt)
-		R_AddEntity(self);
+		self.drawmask = MASK_NORMAL;
+	else
+		self.drawmask = 0;
 }
 void ShotOrg_Draw2D()
 {
@@ -504,11 +489,12 @@ void DrawDebugModel()
 	if(time - floor(time) > 0.5)
 	{
 		PolyDrawModel(self);
+		self.drawmask = 0;
 	}
 	else
 	{
 		self.renderflags = 0;
-		R_AddEntity(self);
+		self.drawmask = MASK_NORMAL;
 	}
 }
 
@@ -1278,6 +1264,7 @@ void Net_WeaponComplain() {
 	complain_weapon_type = ReadByte();
 
 	complain_weapon_time = time;
+	weapontime = time; // ping the weapon panel
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
@@ -1348,6 +1335,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_WEAPONCOMPLAIN:
 			Net_WeaponComplain();
+			bHandled = true;
+			break;
+		case TE_CSQC_CR_MAXBULLETS:
+			cr_maxbullets = ReadByte();
 			bHandled = true;
 			break;
 		default:

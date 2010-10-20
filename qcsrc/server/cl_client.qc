@@ -6,6 +6,13 @@ void send_CSQC_teamnagger() {
 	WriteByte(0, TE_CSQC_TEAMNAGGER);
 }
 
+void send_CSQC_cr_maxbullets(entity e) {
+	msg_entity = e;
+	WriteByte(MSG_ONE, SVC_TEMPENTITY);
+	WriteByte(MSG_ONE, TE_CSQC_CR_MAXBULLETS);
+	WriteByte(MSG_ONE, cvar("g_balance_campingrifle_magazinecapacity"));
+}
+
 void Announce(string snd) {
 	WriteByte(MSG_ALL, SVC_TEMPENTITY);
 	WriteByte(MSG_ALL, TE_CSQC_ANNOUNCE);
@@ -866,10 +873,11 @@ void PutClientInServer (void)
 		self.iscreature = TRUE;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
+		self.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
 		if(cvar("g_playerclip_collisions"))
-			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-		else
-			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
+			self.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
+		if(clienttype(self) == CLIENTTYPE_BOT && cvar("g_botclip_collisions"))
+			self.dphitcontentsmask |= DPCONTENTS_BOTCLIP;
 		self.frags = FRAGS_PLAYER;
 		if(independent_players)
 			MAKE_INDEPENDENT_PLAYER(self);
@@ -881,6 +889,8 @@ void PutClientInServer (void)
 			self.effects = 0;
 		self.air_finished = time + 12;
 		self.dmg = 2;
+		if(cvar("g_balance_nex_charge"))
+			self.nex_charge = cvar("g_balance_nex_charge_start");
 
 		if(inWarmupStage)
 		{
@@ -1354,8 +1364,9 @@ void FixClientCvars(entity e)
 	if(g_race || g_cts)
 		stuffcmd(e, "cl_cmd settemp cl_movecliptokeyboard 2\n");
 	if(cvar("g_antilag") == 3) // client side hitscan
-		//stuffcmd(e, "cl_cmd settemp cl_prydoncursor -1\ncl_cmd settemp cl_prydoncursor_notrace 0\n");
 		stuffcmd(e, "cl_cmd settemp cl_prydoncursor_notrace 0\n");
+	if(sv_gentle)
+		stuffcmd(e, "cl_cmd settemp cl_gentle 1\n");
 	/*
 	 * we no longer need to stuff this. Remove this comment block if you feel
 	 * 2.3 and higher (or was it 2.2.3?) don't need these any more
@@ -1386,10 +1397,6 @@ Called when a client connects to the server
 string ColoredTeamName(float t);
 void DecodeLevelParms (void);
 //void dom_player_join_team(entity pl);
-#ifdef UID
-.float uid_kicktime;
-.string uid;
-#endif
 void set_dom_state(entity e, float connecting);
 void ClientConnect (void)
 {
@@ -1568,12 +1575,6 @@ void ClientConnect (void)
 	else
 		self.hitplotfh = -1;
 
-#ifdef UID
-	if(clienttype(self) == CLIENTTYPE_REAL)
-	if not(self.uid)
-		self.uid_kicktime = time + 60;
-#endif
-
 	if(g_race || g_cts) {
 		string rr;
 		if(g_cts)
@@ -1594,11 +1595,12 @@ void ClientConnect (void)
 			race_SendRankings(i, 0, 0, MSG_ONE);
 		}
 	}
-	else if(cvar("sv_teamnagger") && !g_ca) // teamnagger is currently bad for ca
+	else if(cvar("sv_teamnagger") && !(cvar("bot_vs_human") && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
 
 	if (g_domination)
 		set_dom_state(self, TRUE);
+	send_CSQC_cr_maxbullets(self);
 
 	CheatInitClient();
 }
@@ -2860,9 +2862,16 @@ float isInvisibleString(string s)
 		switch(c)
 		{
 			case 0:
-			case 32:
-			case 160:
+			case 32: // space
 				break;
+			case 192: // charmap space
+				if (!cvar("utf8_enable"))
+					break;
+				return FALSE;
+			case 160: // space in unicode fonts
+			case 0xE000 + 192: // utf8 charmap space
+				if (cvar("utf8_enable"))
+					break;
 			default:
 				return FALSE;
 		}
@@ -2906,16 +2915,6 @@ void PlayerPostThink (void)
 		self.stat_fired = self.stat_count + 64 * floor(self.(stats_fired[self.stat_count - 1]));
 		self.stat_count -= 1;
 	}
-
-#ifdef UID
-	if(self.uid_kicktime)
-	if(time > self.uid_kicktime)
-	{
-		bprint("^3", self.netname, "^3 was kicked for missing UID.\n");
-		dropclient(self);
-		return;
-	}
-#endif
 
 	if(sv_maxidle && frametime)
 	{

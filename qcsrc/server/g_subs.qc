@@ -605,7 +605,6 @@ float angc (float a1, float a2)
 .float loddistance1;
 .float loddistance2;
 
-vector NearestPointOnBox(entity box, vector org);
 float LOD_customize()
 {
 	float d;
@@ -615,7 +614,7 @@ float LOD_customize()
 		d = cvar("loddebug");
 		if(d == 1)
 			self.modelindex = self.lodmodelindex0;
-		else if(d == 2)
+		else if(d == 2 || !self.lodmodelindex2)
 			self.modelindex = self.lodmodelindex1;
 		else // if(d == 3)
 			self.modelindex = self.lodmodelindex2;
@@ -695,7 +694,8 @@ void LODmodel_attach()
 	}
 
 	if(self.lodmodelindex1)
-		SetCustomizer(self, LOD_customize, LOD_uncustomize);
+		if not(self.SendEntity)
+			SetCustomizer(self, LOD_customize, LOD_uncustomize);
 }
 
 void SetBrushEntityModel()

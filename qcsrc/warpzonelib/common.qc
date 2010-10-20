@@ -28,6 +28,11 @@ var float autocvar_cl_warpzone_usetrace = 1;
 vector WarpZone_camera_transform(vector org, vector ang)
 {
 	vector vf, vr, vu;
+	if(self.warpzone_fadestart)
+		if(vlen(org - self.origin - 0.5 * (self.mins + self.maxs)) > self.warpzone_fadeend + 400)
+			return org;
+			// don't transform if zone faded out (plus 400qu safety margin for typical speeds and latencies)
+			// unneeded on client, on server this helps a lot
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
@@ -61,6 +66,11 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 vector WarpZone_Camera_camera_transform(vector org, vector ang)
 {
 	// a fixed camera view
+	if(self.warpzone_fadestart)
+		if(vlen(org - self.origin - 0.5 * (self.mins + self.maxs)) > self.warpzone_fadeend + 400)
+			return org;
+			// don't transform if zone faded out (plus 400qu safety margin for typical speeds and latencies)
+			// unneeded on client, on server this helps a lot
 	trace_endpos = self.warpzone_origin;
 	makevectors(self.warpzone_angles);
 	return self.warpzone_origin;
@@ -132,6 +142,8 @@ entity WarpZone_Find(vector mi, vector ma)
 {
 	// if we are near any warpzone planes - MOVE AWAY (work around nearclip)
 	entity e;
+	if(!warpzone_warpzones_exist)
+		return world;
 	for(e = world; (e = find(e, classname, "trigger_warpzone")); )
 		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, world))
 			return e;
@@ -141,6 +153,8 @@ entity WarpZone_Find(vector mi, vector ma)
 void WarpZone_MakeAllSolid()
 {
 	entity e;
+	if(!warpzone_warpzones_exist)
+		return;
 	for(e = world; (e = find(e, classname, "trigger_warpzone")); )
 		e.solid = SOLID_BSP;
 }
@@ -148,6 +162,8 @@ void WarpZone_MakeAllSolid()
 void WarpZone_MakeAllOther()
 {
 	entity e;
+	if(!warpzone_warpzones_exist)
+		return;
 	for(e = world; (e = find(e, classname, "trigger_warpzone")); )
 		e.solid = SOLID_TRIGGER;
 }
@@ -227,7 +243,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			goto fail;
 		}
 		WarpZone_Trace_AddTransform(wz);
-		org = WarpZone_TransformOrigin(wz, trace_endpos);
+		org = WarpZone_TransformOrigin(wz, org);
 		end = WarpZone_TransformOrigin(wz, end);
 	}
 	WarpZone_MakeAllSolid();
@@ -303,6 +319,9 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	vector vf, vr, vu, v0, o0;
 	entity wz;
 
+	o0 = e.origin;
+	v0 = e.velocity;
+
 	WarpZone_Trace_InitTransform();
 	WarpZone_tracetoss_time = 0;
 	if(!warpzone_warpzones_exist)
@@ -312,14 +331,15 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 			cb(e.origin, trace_endpos, trace_endpos);
 		dt = vlen(e.origin - o0) / vlen(e.velocity);
 		WarpZone_tracetoss_time += dt;
+		e.velocity_z -= dt * g;
+		WarpZone_tracetoss_velocity = e.velocity;
+		e.velocity = v0;
 		return;
 	}
 
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
-	o0 = e.origin;
-	v0 = e.velocity;
 
 	// if starting in warpzone, first transform
 	wz = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
@@ -354,7 +374,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		e.origin = trace_endpos;
 		dt = vlen(e.origin - o0) / vlen(e.velocity);
 		WarpZone_tracetoss_time += dt;
-		e.velocity_z -= WarpZone_tracetoss_time * g;
+		e.velocity_z -= dt * g;
 		if(trace_fraction >= 1)
 			break;
 		if(trace_ent.classname != "trigger_warpzone")
