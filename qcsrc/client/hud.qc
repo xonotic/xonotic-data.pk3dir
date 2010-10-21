@@ -4915,9 +4915,6 @@ void HUD_Main (void)
 	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
 		hud_fade_alpha = 1;
 
-	hud_border_thickness = bound(0, cvar("hud_border_thickness"), 5);
-	hud_accuracy_border_thickness = bound(0, cvar_or("hud_accuracy_border_thickness", 1), 5);
-
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)

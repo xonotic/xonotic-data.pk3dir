@@ -234,3 +234,5 @@ var string autocvar_hud_panel_infomessages_bg_alpha;
 var string autocvar_hud_panel_infomessages_bg_border;
 var string autocvar_hud_panel_infomessages_bg_padding;
 var float autocvar_hud_panel_infomessages_flip;
+
+var float autocvar_scoreboard_border_thickness;

@@ -766,16 +766,16 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 		drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, rgb + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
 	// table border
-	tmp_y += hud_border_thickness;
+	tmp_y += autocvar_scoreboard_border_thickness;
 	tmp_y += body_table_height;
-	drawborderlines(hud_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg, DRAWFLAG_NORMAL); // more transparency for the scoreboard
+	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg, DRAWFLAG_NORMAL); // more transparency for the scoreboard
 
 	// separator header/table
 	pos_y += 1.25 * hud_fontsize_y;
-	tmp_y = hud_border_thickness;
+	tmp_y = autocvar_scoreboard_border_thickness;
 	drawfill(pos, tmp, '0 0 0', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
-	pos_y += hud_border_thickness;
+	pos_y += autocvar_scoreboard_border_thickness;
 
 	// table background
 	tmp_y = body_table_height;
@@ -789,14 +789,14 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	// go back to the top to make alternated columns highlighting and to print the strings
 	pos_y -= 1.25 * hud_fontsize_y;
-	pos_y -= hud_border_thickness;
+	pos_y -= autocvar_scoreboard_border_thickness;
 
 	pos += '1 1 0';
 
 	if (scoreboard_highlight)
 	{
 		column_dim_y = 1.25 * hud_fontsize_y; // header
-		column_dim_y += hud_border_thickness;
+		column_dim_y += autocvar_scoreboard_border_thickness;
 		column_dim_y += body_table_height;
 	}
 
@@ -846,7 +846,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	pos_x = xmin;
 	pos_y += 1.25 * hud_fontsize_y; // skip the header
-	pos_y += hud_border_thickness;
+	pos_y += autocvar_scoreboard_border_thickness;
 
 	// fill the table and draw the rows
 	i = 0;
@@ -917,7 +917,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	else
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
-	drawborderlines(hud_accuracy_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
+	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// column highlighting
 	for(i = 0; i < weapon_cnt/rows; ++i)
@@ -1050,7 +1050,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	else
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
-	drawborderlines(hud_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
+	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// row highlighting
 	for(i = 0; i<RANKINGS_RECEIVED_CNT; ++i)
@@ -1394,7 +1394,7 @@ void HUD_DrawAccuracyStats()
 
 				// background
 				drawpic(pos, "gfx/scoreboard/accuracy_bg", fill_size , fill_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
-				drawborderlines(hud_border_thickness, pos, fill_size, border_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+				drawborderlines(autocvar_scoreboard_border_thickness, pos, fill_size, border_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
 				// the weapon
 				drawpic(pos, strcat("gfx/weapons/weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
@@ -1444,7 +1444,7 @@ void HUD_DrawAccuracyStats()
 
 				// background
 				drawpic(pos, "gfx/scoreboard/accuracy_bg", fill_size , fill_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
-				drawborderlines(hud_border_thickness, pos, fill_size, border_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+				drawborderlines(autocvar_scoreboard_border_thickness, pos, fill_size, border_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
 				// the weapon
 				drawpic(pos, strcat("gfx/weapons/weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
