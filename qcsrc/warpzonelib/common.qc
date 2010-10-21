@@ -411,6 +411,8 @@ void WarpZone_TraceToss(entity e, entity forent)
 
 entity WarpZone_TrailParticles_trace_callback_own;
 float WarpZone_TrailParticles_trace_callback_eff;
+float WarpZone_TrailParticles_trace_callback_f;
+float WarpZone_TrailParticles_trace_callback_flags;
 void WarpZone_TrailParticles_trace_callback(vector from, vector endpos, vector to)
 {
 	trailparticles(WarpZone_TrailParticles_trace_callback_own, WarpZone_TrailParticles_trace_callback_eff, from, endpos);
@@ -422,6 +424,22 @@ void WarpZone_TrailParticles(entity own, float eff, vector org, vector end)
 	WarpZone_TrailParticles_trace_callback_eff = eff;
 	WarpZone_TraceBox_ThroughZone(org, '0 0 0', '0 0 0', end, MOVE_NOMONSTERS, world, world, WarpZone_TrailParticles_trace_callback);
 }
+
+#ifdef CSQC
+void WarpZone_TrailParticles_WithMultiplier_trace_callback(vector from, vector endpos, vector to)
+{
+	boxparticles(WarpZone_TrailParticles_trace_callback_eff, WarpZone_TrailParticles_trace_callback_own, from, endpos, WarpZone_TrailParticles_trace_callback_own.velocity, WarpZone_TrailParticles_trace_callback_own.velocity, WarpZone_TrailParticles_trace_callback_f, WarpZone_TrailParticles_trace_callback_flags);
+}
+
+void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, float boxflags)
+{
+	WarpZone_TrailParticles_trace_callback_own = own;
+	WarpZone_TrailParticles_trace_callback_eff = eff;
+	WarpZone_TrailParticles_trace_callback_f = f;
+	WarpZone_TrailParticles_trace_callback_flags = boxflags;
+	WarpZone_TraceBox_ThroughZone(org, '0 0 0', '0 0 0', end, MOVE_NOMONSTERS, world, world, WarpZone_TrailParticles_WithMultiplier_trace_callback);
+}
+#endif
 
 float WarpZone_PlaneDist(entity wz, vector v)
 {

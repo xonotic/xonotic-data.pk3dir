@@ -238,3 +238,7 @@ switch(id) { \
 HUD_Panel_GetName_Part2(id)
 
 vector vec2(vector v);
+
+#ifndef MENUQC
+vector NearestPointOnBox(entity box, vector org);
+#endif

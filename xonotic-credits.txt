@@ -26,6 +26,7 @@ FruitieX
 *Music / Sound FX
 mand1nga
 Merlijn Hofstra
+remaxim
 
 *Engine Code Additions & QA
 Rudolf "divVerent" Polzer
@@ -48,6 +49,7 @@ DarkPlaces
 by Forest "LordHavoc" Hale
 
 **Active Contributors
+Antonio "terencehill" Piu
 Ben "MooKow" Banker
 Calinou
 Kristian "morfar" Johansson

@@ -458,14 +458,14 @@ float raptor_pplug()
     //vhic.angles_z = ftmp;
 
     // Turn
-    vhic.angles_y = safeangle(vhic.angles_y + ftmp);
+    vhic.angles_y = anglemods(vhic.angles_y + ftmp);
 
     // Pitch Body
     ftmp = raptor_pitchspeed  * sys_frametime;
 
     ftmp = bound(-ftmp, shortangle_f(player.v_angle_x - vhic.angles_x,vhic.angles_x), ftmp);
 
-    vhic.angles_x = bound(-60,safeangle(vhic.angles_x + ftmp),60);
+    vhic.angles_x = bound(-60,anglemods(vhic.angles_x + ftmp),60);
     vhic.angles_x *= -1;
 
     if(raptor_movestyle == 1)

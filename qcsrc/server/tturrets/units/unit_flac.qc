@@ -99,7 +99,7 @@ void turret_flac_dinit()
     self.damage_flags |= TFL_DMG_HEADSHAKE;
     self.target_select_flags |= TFL_TARGETSELECT_NOTURRETS | TFL_TARGETSELECT_MISSILESONLY;
 
-    if (!turret_tag_setup())
+    if (!turret_tag_fire_update())
         dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     // Our fire routine

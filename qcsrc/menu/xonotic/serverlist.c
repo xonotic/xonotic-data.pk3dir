@@ -95,41 +95,76 @@ void ServerList_UpdateFieldIDs()
 
 float IsFavorite(string srv)
 {
+	string p;
 	float i, n;
+	if(srv == "")
+		return FALSE;
 	srv = netaddress_resolve(srv, 26000);
+	p = crypto_getidfp(srv);
 	n = tokenize_console(cvar_string("net_slist_favorites"));
 	for(i = 0; i < n; ++i)
-		if(srv == netaddress_resolve(argv(i), 26000))
-			return TRUE;
+	{
+		if(substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0)
+		{
+			if(p)
+				if(argv(i) == p)
+					return TRUE;
+		}
+		else
+		{
+			if(srv == netaddress_resolve(argv(i), 26000))
+				return TRUE;
+		}
+	}
 	return FALSE;
 }
 
 void ToggleFavorite(string srv)
 {
-	string s, s0, s1, s2, srv_resolved;
-	float i, n;
+	string s, s0, s1, s2, srv_resolved, p;
+	float i, n, f;
 	srv_resolved = netaddress_resolve(srv, 26000);
+	p = crypto_getidfp(srv_resolved);
 	s = cvar_string("net_slist_favorites");
 	n = tokenize_console(s);
+	f = 0;
 	for(i = 0; i < n; ++i)
-		if(srv_resolved == netaddress_resolve(argv(i), 26000))
+	{
+		if(substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0)
 		{
-			s0 = s1 = s2 = "";
-			if(i > 0)
-				s0 = substring(s, 0, argv_end_index(i - 1));
-			if(i < n-1)
-				s2 = substring(s, argv_start_index(i + 1), -1);
-			if(s0 != "" && s2 != "")
-				s1 = " ";
-			print("s0 = >>", s0, "<<\ns1 = >>", s1, "<<\ns2 = >>", s2, "<<\n");
-			cvar_set("net_slist_favorites", strcat(s0, s1, s2));
-			return;
+			if(p)
+				if(argv(i) != p)
+					continue;
 		}
+		else
+		{
+			if(srv_resolved != netaddress_resolve(argv(i), 26000))
+				continue;
+		}
+		s0 = s1 = s2 = "";
+		if(i > 0)
+			s0 = substring(s, 0, argv_end_index(i - 1));
+		if(i < n-1)
+			s2 = substring(s, argv_start_index(i + 1), -1);
+		if(s0 != "" && s2 != "")
+			s1 = " ";
+		cvar_set("net_slist_favorites", strcat(s0, s1, s2));
+		s = cvar_string("net_slist_favorites");
+		n = tokenize_console(s);
+		f = 1;
+		--i;
+	}
 	
-	s1 = "";
-	if(s != "")
-		s1 = " ";
-	cvar_set("net_slist_favorites", strcat(s, " ", srv));
+	if(!f)
+	{
+		s1 = "";
+		if(s != "")
+			s1 = " ";
+		if(p)
+			cvar_set("net_slist_favorites", strcat(s, s1, p));
+		else
+			cvar_set("net_slist_favorites", strcat(s, s1, srv));
+	}
 
 	resorthostcache();
 }
@@ -517,7 +552,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 {
 	// layout: Ping, Server name, Map name, NP, TP, MP
 	string s;
-	float p;
+	float p, q;
 	vector theColor;
 	float theAlpha;
 
@@ -555,6 +590,15 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		theColor = theColor * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINCOLOR_SERVERLIST_FAVORITE * SKINALPHA_SERVERLIST_FAVORITE;
 		theAlpha = theAlpha * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINALPHA_SERVERLIST_FAVORITE;
 	}
+
+	s = gethostcachestring(SLIST_FIELD_CNAME, i);
+	q = stof(substring(crypto_getencryptlevel(s), 0, 1));
+	if((q <= 0 && cvar("crypto_aeslevel") >= 3) || (q >= 3 && cvar("crypto_aeslevel") <= 0))
+	{
+		theColor = SKINCOLOR_SERVERLIST_IMPOSSIBLE;
+		theAlpha = SKINALPHA_SERVERLIST_IMPOSSIBLE;
+	}
+	// TODO show an icon for encryption status
 
 	s = ftos(p);
 	draw_Text(me.realUpperMargin * eY + (me.columnPingSize - draw_TextWidth(s, 0, me.realFontSize)) * eX, s, me.realFontSize, theColor, theAlpha, 0);

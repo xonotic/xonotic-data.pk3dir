@@ -699,7 +699,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 			else
 				fputs(fh, strcat("cdtrack ", _MapInfo_Map_worldspawn_music, "\n"));
 		}
-		else if(_MapInfo_Map_worldspawn_music)
+		else
 		{
 			n = tokenize_console(cvar_string("g_cdtracks_remaplist"));
 			s = strcat(" ", cvar_string("g_cdtracks_dontusebydefault"), " ");

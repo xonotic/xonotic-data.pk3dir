@@ -828,15 +828,8 @@ void CSQC_UpdateView(float w, float h)
 				float f, a;
 				wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
-				float xyspeed;
-				xyspeed = vlen('1 0 0' * pmove_vel_x + '0 1 0' * pmove_vel_y);
-				if(xyspeed > nex_speed)
-					nex_speed = min(xyspeed, nex_maxvelocity);
-				else
-					nex_speed = max(nex_minvelocity, nex_speed - nex_speed_falloff_rate * frametime);
-
-				if (activeweapon == WEP_NEX && button_attack2 && nex_charge && getstati(GetAmmoStat(3)))
-					nex_speed = min(nex_maxvelocity, nex_speed + nex_charge_rate * frametime);
+				float nex_charge;
+				nex_charge = getstatf(STAT_NEX_CHARGE);
 
 				// ring around crosshair representing bullets left in camping rifle clip
 				if (activeweapon == WEP_CAMPINGRIFLE && cr_maxbullets)
@@ -847,12 +840,10 @@ void CSQC_UpdateView(float w, float h)
 					a = cvar("crosshair_campingrifle_bulletcounter_alpha");
 					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 				}
-				else if (activeweapon == WEP_NEX && nex_velocitydependent && nex_speed > nex_minvelocity) // ring around crosshair representing velocity-dependent damage for the nex
+				else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
 				{
-					f = bound(0, (nex_speed - nex_minvelocity) / (nex_maxvelocity - nex_minvelocity), 1);
-
 					a = cvar("crosshair_nexvelocity_alpha");
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", nex_charge, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 				}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \

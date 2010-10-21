@@ -1052,7 +1052,7 @@ void weapon_defaultspawnfunc(float wpn)
 			{
 				ammofield = Item_CounterField(j);
 				if(!self.ammofield)
-					self.ammofield = cvar(strcat("g_pickup_", Item_CounterFieldName(j)));
+					self.ammofield = cvar(strcat("g_pickup_", Item_CounterFieldName(j), "_weapon"));
 			}
 		}
 	}

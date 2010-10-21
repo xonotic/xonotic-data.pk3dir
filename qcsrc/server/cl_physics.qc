@@ -1326,14 +1326,16 @@ void SV_PlayerPhysics()
 		}
 	}
 
-	float f;
 	float xyspeed;
-	f = cvar("g_balance_nex_velocitydependent_falloff_rate");
 	xyspeed = vlen('1 0 0' * self.velocity_x + '0 1 0' * self.velocity_y);
-	if(xyspeed > self.nexspeed)
-		self.nexspeed = min(xyspeed, cvar("g_balance_nex_velocitydependent_maxspeed"));
-	else
-		self.nexspeed = max(cvar("g_balance_nex_velocitydependent_minspeed"), self.nexspeed - f * frametime);
+	if(self.weapon == WEP_NEX && cvar("g_balance_nex_charge") && cvar("g_balance_nex_charge_velocity_rate") && xyspeed > cvar("g_balance_nex_charge_minspeed"))
+	{
+		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
+	        xyspeed = min(xyspeed, cvar("g_balance_nex_charge_maxspeed"));
+		f = (xyspeed - cvar("g_balance_nex_charge_minspeed")) / (cvar("g_balance_nex_charge_maxspeed") - cvar("g_balance_nex_charge_minspeed"));
+		// add the extra charge
+		self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_charge_velocity_rate") * f * frametime);
+	}
 :end
 	if(self.flags & FL_ONGROUND)
 		self.lastground = time;

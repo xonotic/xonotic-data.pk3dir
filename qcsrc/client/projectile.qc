@@ -139,6 +139,8 @@ void Projectile_Draw()
 	else
 		Projectile_ResetTrail(trailorigin);
 
+	self.drawmask = 0;
+
 	if(!drawn)
 		return;
 
@@ -152,7 +154,7 @@ void Projectile_Draw()
 			break;
 	}
 
-	R_AddEntity(self);
+	self.drawmask = MASK_NORMAL;
 }
 
 void loopsound(entity e, float ch, string samp, float vol, float attn)

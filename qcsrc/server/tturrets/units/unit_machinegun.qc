@@ -34,12 +34,10 @@ void turret_machinegun_std_init()
 
     self.ammo_flags = TFL_AMMO_BULLETS | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
     self.turrcaps_flags = TFL_TURRCAPS_PLAYERKILL;
-    self.aim_flags = TFL_AIM_LEAD;
-
-    if(cvar("g_antilag_bullets"))
-        self.turrcaps_flags |= TFL_TURRCAPS_HITSCAN;
-    else
-        self.aim_flags      |= TFL_AIM_SHOTTIMECOMPENSATE;
+    self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
+    
+	if not (cvar("g_antilag_bullets"))
+		self.turrcaps_flags |= TFL_TURRCAPS_HITSCAN;
 
     if (turret_stdproc_init("machinegun_std",0,"models/turrets/base.md3","models/turrets/machinegun.md3") == 0)
     {
@@ -49,7 +47,7 @@ void turret_machinegun_std_init()
 
     self.damage_flags |= TFL_DMG_HEADSHAKE;
 
-    if (!turret_tag_setup())
+    if (!turret_tag_fire_update())
         dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     // Our fire routine

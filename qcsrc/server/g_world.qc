@@ -637,6 +637,8 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
 	addstat(STAT_BULLETS_LOADED, AS_INT, campingrifle_bulletcounter);
 
+	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
+
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
@@ -1652,7 +1654,7 @@ float WinningCondition_Assault()
 
 			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
 
-			if(ent.cnt == 1) // this was the second round
+			if(ent.cnt == 1 || cvar("g_campaign")) // this was the second round
 			{
 				status = WINNING_YES;
 			}

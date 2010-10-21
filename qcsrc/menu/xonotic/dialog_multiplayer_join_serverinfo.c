@@ -5,7 +5,7 @@ CLASS(XonoticServerInfoDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticServerInfoDialog, title, string, "Server Information")
 	ATTRIB(XonoticServerInfoDialog, color, vector, SKINCOLOR_DIALOG_SERVERINFO)
 	ATTRIB(XonoticServerInfoDialog, intendedWidth, float, 0.68)
-	ATTRIB(XonoticServerInfoDialog, rows, float, 11)
+	ATTRIB(XonoticServerInfoDialog, rows, float, 14)
 	ATTRIB(XonoticServerInfoDialog, columns, float, 12)
 
 	ATTRIB(XonoticServerInfoDialog, currentServerName, string, string_null)
@@ -18,6 +18,10 @@ CLASS(XonoticServerInfoDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticServerInfoDialog, currentServerMod, string, string_null)
 	ATTRIB(XonoticServerInfoDialog, currentServerVersion, string, string_null)
 	ATTRIB(XonoticServerInfoDialog, currentServerPing, string, string_null)
+	ATTRIB(XonoticServerInfoDialog, currentServerKey, string, string_null)
+	ATTRIB(XonoticServerInfoDialog, currentServerID, string, string_null)
+	ATTRIB(XonoticServerInfoDialog, currentServerEncrypt, string, string_null)
+	ATTRIB(XonoticServerInfoDialog, currentServerCanConnect, string, string_null)
 
 	ATTRIB(XonoticServerInfoDialog, nameLabel, entity, NULL)
 	ATTRIB(XonoticServerInfoDialog, cnameLabel, entity, NULL)
@@ -29,6 +33,10 @@ CLASS(XonoticServerInfoDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticServerInfoDialog, modLabel, entity, NULL)
 	ATTRIB(XonoticServerInfoDialog, versionLabel, entity, NULL)
 	ATTRIB(XonoticServerInfoDialog, pingLabel, entity, NULL)
+	ATTRIB(XonoticServerInfoDialog, keyLabel, entity, NULL)
+	ATTRIB(XonoticServerInfoDialog, idLabel, entity, NULL)
+	ATTRIB(XonoticServerInfoDialog, encryptLabel, entity, NULL)
+	ATTRIB(XonoticServerInfoDialog, canConnectLabel, entity, NULL)
 ENDCLASS(XonoticServerInfoDialog)
 
 float SLIST_FIELD_NAME;
@@ -74,7 +82,6 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerType = strzone(typestr);
 	me.typeLabel.setText(me.typeLabel, me.currentServerType);
 
-
 	SLIST_FIELD_MAP = gethostcacheindexforkey("map");
 	me.currentServerMap = strzone(gethostcachestring(SLIST_FIELD_MAP, i));
 	me.mapLabel.setText(me.mapLabel, me.currentServerMap);
@@ -106,6 +113,51 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	s = ftos(gethostcachenumber(SLIST_FIELD_PING, i));
 	me.currentServerPing = strzone(s);
 	me.pingLabel.setText(me.pingLabel, me.currentServerPing);
+
+	print(me.currentServerCName, "\n");
+
+	s = crypto_getidfp(me.currentServerCName);
+	if not(s)
+		s = "N/A";
+	me.currentServerID = strzone(s);
+	me.idLabel.setText(me.idLabel, me.currentServerID);
+
+	s = crypto_getkeyfp(me.currentServerCName);
+	if not(s)
+		s = "N/A";
+	me.currentServerKey = strzone(s);
+	me.keyLabel.setText(me.keyLabel, me.currentServerKey);
+
+	s = crypto_getencryptlevel(me.currentServerCName);
+	if(s == "")
+	{
+		if(cvar("crypto_aeslevel") >= 3)
+			me.currentServerEncrypt = "N/A (can't connect)";
+		else
+			me.currentServerEncrypt = "N/A";
+	}
+	else switch(stof(substring(s, 0, 1)))
+	{
+		case 0:
+			if(cvar("crypto_aeslevel") >= 3)
+				me.currentServerEncrypt = "not supported (can't connect)";
+			else
+				me.currentServerEncrypt = "not supported";
+			break;
+		case 1:
+			me.currentServerEncrypt = "supported";
+			break;
+		case 2:
+			me.currentServerEncrypt = "requested";
+			break;
+		case 3:
+			if(cvar("crypto_aeslevel") <= 0)
+				me.currentServerEncrypt = "required (can't connect)";
+			else
+				me.currentServerEncrypt = "required";
+			break;
+	}
+	me.encryptLabel.setText(me.encryptLabel, me.currentServerEncrypt);
 }
 
 void XonoticServerInfoDialog_fill(entity me)
@@ -165,6 +217,24 @@ void XonoticServerInfoDialog_fill(entity me)
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.pingLabel = e;
+
+	me.TR(me);
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "CA:"));
+		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
+			e.allowCut = 1;
+			me.keyLabel = e;
+
+	me.TR(me);
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Key:"));
+		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
+			e.allowCut = 1;
+			me.idLabel = e;
+
+	me.TR(me);
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Encryption:"));
+		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
+			e.allowCut = 1;
+			me.encryptLabel = e;
 
 	me.gotoRC(me, me.rows - 1, 0);
 

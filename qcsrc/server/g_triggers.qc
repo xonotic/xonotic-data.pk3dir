@@ -1076,13 +1076,15 @@ void misc_laser_think()
 float laser_SendEntity(entity to, float fl)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_LASER);
-	fl = fl - (fl & 0xE0); // use that bit to indicate finite length laser
+	fl = fl - (fl & 0xF0); // use that bit to indicate finite length laser
 	if(self.spawnflags & 2)
 		fl |= 0x80;
 	if(self.alpha)
 		fl |= 0x40;
 	if(self.scale != 1 || self.modelscale != 1)
 		fl |= 0x20;
+	if(self.spawnflags & 4)
+		fl |= 0x10;
 	WriteByte(MSG_ENTITY, fl);
 	if(fl & 1)
 	{
@@ -1102,7 +1104,8 @@ float laser_SendEntity(entity to, float fl)
 			WriteByte(MSG_ENTITY, bound(0, self.scale * 16.0, 255));
 			WriteByte(MSG_ENTITY, bound(0, self.modelscale * 16.0, 255));
 		}
-		WriteShort(MSG_ENTITY, self.cnt + 1);
+		if((fl & 0x80) || !(fl & 0x10)) // effect doesn't need sending if the laser is infinite and has collision testing turned off
+			WriteShort(MSG_ENTITY, self.cnt + 1);
 	}
 	if(fl & 2)
 	{
@@ -1185,6 +1188,8 @@ void spawnfunc_misc_laser()
 		self.scale = 1;
 	if(!self.modelscale)
 		self.modelscale = 1;
+	else if(self.modelscale < 0)
+		self.modelscale = 0;
 	self.think = misc_laser_think;
 	self.nextthink = time;
 	InitializeEntity(self, misc_laser_init, INITPRIO_FINDTARGET);
@@ -1262,7 +1267,8 @@ void trigger_impulse_touch1()
     if(!pushdeltatime) return;
 
     other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
-	other.flags &~= FL_ONGROUND;
+    other.flags &~= FL_ONGROUND;
+    UpdateCSQCProjectile(other);
 }
 
 // Directionless (accelerator/decelerator) mode
@@ -1302,6 +1308,7 @@ void trigger_impulse_touch2()
 
     // div0: ticrate independent, 1 = identity (not 20)
     other.velocity = other.velocity * pow(self.strength, pushdeltatime);
+    UpdateCSQCProjectile(other);
 }
 
 // Spherical (gravity/repulsor) mode
@@ -1352,6 +1359,7 @@ void trigger_impulse_touch3()
         str = self.strength;
 
     other.velocity = other.velocity + normalize(other.origin - self.origin) * str * pushdeltatime;
+    UpdateCSQCProjectile(other);
 }
 
 /*QUAKED spawnfunc_trigger_impulse (.5 .5 .5) ?
