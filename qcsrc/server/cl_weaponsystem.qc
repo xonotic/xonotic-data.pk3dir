@@ -1106,6 +1106,7 @@ void W_SwitchToOtherWeapon(entity pl)
 	if(ww)
 		W_SwitchWeapon_Force(pl, ww);
 }
+.float prevdryfire;
 float weapon_prepareattack_checkammo(float secondary)
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -1117,8 +1118,11 @@ float weapon_prepareattack_checkammo(float secondary)
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 			return FALSE;
 
-		if(self.weapon == self.switchweapon) // only play once BEFORE starting to switch weapons
+		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
+		{
 			sound (self, CHAN_AUTO, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
+			self.prevdryfire = time;
+		}
 
 		W_SwitchToOtherWeapon(self);
 		return FALSE;
