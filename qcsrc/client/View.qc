@@ -1265,7 +1265,9 @@ void CSQC_common_hud(void)
 			if(cvar_string("hud_panel_weapons_accuracy_color_levels") != acc_color_levels)
 			if(!(gametype == GAME_RACE || gametype == GAME_CTS))
 			{
-				acc_color_levels = cvar_string("hud_panel_weapons_accuracy_color_levels");
+				if(acc_color_levels)
+					strunzone(acc_color_levels);
+				acc_color_levels = strzone(cvar_string("hud_panel_weapons_accuracy_color_levels"));
 				acc_levels = tokenize(acc_color_levels);
 				if (acc_levels > MAX_ACCURACY_LEVELS)
 					acc_levels = MAX_ACCURACY_LEVELS;

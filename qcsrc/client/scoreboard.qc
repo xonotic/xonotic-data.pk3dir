@@ -1142,7 +1142,7 @@ void HUD_DrawScoreboard()
 	drawfont = hud_font;
 
 	// Draw the scoreboard
-	vector bg_size = drawgetimagesize("gfx/scoreboard/scoreboard_bg");
+	vector bg_size = drawgetimagesize("gfx/scoreboard/scoreboard_bg") * cvar("scoreboard_bg_scale");
 
 	if(teamplay)
 	{
