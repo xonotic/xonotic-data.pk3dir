@@ -1188,6 +1188,8 @@ void spawnfunc_misc_laser()
 		self.scale = 1;
 	if(!self.modelscale)
 		self.modelscale = 1;
+	else if(self.modelscale < 0)
+		self.modelscale = 0;
 	self.think = misc_laser_think;
 	self.nextthink = time;
 	InitializeEntity(self, misc_laser_init, INITPRIO_FINDTARGET);

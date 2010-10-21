@@ -440,6 +440,7 @@ float next_pingtime;
 // TODO implemented fall and falling
 #define ALLPLAYERSOUNDS \
 		_VOICEMSG(death) \
+		_VOICEMSG(fall) \
 		_VOICEMSG(drown) \
 		_VOICEMSG(gasp) \
 		_VOICEMSG(jump) \

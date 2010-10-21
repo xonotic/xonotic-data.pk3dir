@@ -1154,9 +1154,7 @@ void Fire_ApplyDamage(entity e)
 	if not(Fire_IsBurning(e))
 		return;
 
-	o = e.owner;
-	while(o.owner)
-		o = o.owner;
+	for(t = 0, o = e.owner; o.owner && t < 16; o = o.owner, ++t);
 	if(clienttype(o) == CLIENTTYPE_NOTACLIENT)
 		o = e.fire_owner;
 

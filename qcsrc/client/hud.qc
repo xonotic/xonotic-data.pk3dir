@@ -4240,16 +4240,31 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		crecordtime_prev = t;
 		crecordtime_change_time = time;
 	}
+
+	vector textPos, medalPos;
+	float squareSize;
+	if(mySize_x > mySize_y) {
+		// text on left side
+		squareSize = min(mySize_y, mySize_x/2);
+		textPos = pos + eX * 0.5 * max(0, mySize_x/2 - squareSize) + eY * 0.5 * (mySize_y - squareSize);
+		medalPos = pos + eX * 0.5 * max(0, mySize_x/2 - squareSize) + eX * 0.5 * mySize_x + eY * 0.5 * (mySize_y - squareSize);
+	} else {
+		// text on top
+		squareSize = min(mySize_x, mySize_y/2);
+		textPos = pos + eY * 0.5 * max(0, mySize_y/2 - squareSize) + eX * 0.5 * (mySize_x - squareSize);;
+		medalPos = pos + eY * 0.5 * max(0, mySize_y/2 - squareSize) + eY * 0.5 * mySize_y + eX * 0.5 * (mySize_x - squareSize);
+	}
+
 	f = time - crecordtime_change_time;
 
 	if (f > 1) {
-		drawstring_aspect(pos, "Personal best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eY * 0.25 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos, "Personal best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos + eY * 0.25 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else {
-		drawstring_aspect(pos, "Personal best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eY * 0.25 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect_expanding(pos, "Personal best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
-		drawstring_aspect_expanding(pos + eY * 0.25 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect(textPos, "Personal best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos + eY * 0.25 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect_expanding(pos, "Personal best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect_expanding(pos + eY * 0.25 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 	}
 
 	// server record
@@ -4261,13 +4276,13 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	f = time - srecordtime_change_time;
 
 	if (f > 1) {
-		drawstring_aspect(pos + eY * 0.5 * mySize_y, "Server best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eY * 0.75 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos + eY * 0.5 * squareSize, "Server best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos + eY * 0.75 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else {
-		drawstring_aspect(pos + eY * 0.5 * mySize_y, "Server best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eY * 0.75 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect_expanding(pos + eY * 0.5 * mySize_y, "Server best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
-		drawstring_aspect_expanding(pos + eY * 0.75 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect(textPos + eY * 0.5 * squareSize, "Server best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos + eY * 0.75 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect_expanding(textPos + eY * 0.5 * squareSize, "Server best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect_expanding(textPos + eY * 0.75 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 	}
 
 	if (race_status != race_status_prev || race_status_name != race_status_name_prev) {
@@ -4278,13 +4293,12 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		race_status_name_prev = strzone(race_status_name);
 	}
 
-	pos_x += mySize_x/2;
 	// race "awards"
 	float a;
 	a = bound(0, race_status_time - time, 1);
 
 	string s;
-	s = textShortenToWidth(race_status_name, mySize_y, '1 1 0' * 0.1 * mySize_y, stringwidth_colors);
+	s = textShortenToWidth(race_status_name, squareSize, '1 1 0' * 0.1 * squareSize, stringwidth_colors);
 
 	float rank;
 	if(race_status > 0)
@@ -4293,27 +4307,27 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	rankname = race_PlaceName(rank);
 
 	vector namepos;
-	namepos = pos + '0.5 0.9 0' * mySize_y - eX * stringwidth(s, TRUE, '1 1 0' * 0.1 * mySize_y);
+	namepos = medalPos + '0 0.8 0' * squareSize;
 	vector rankpos;
-	rankpos = pos + '0.5 0.25 0' * mySize_y - eX * stringwidth(rankname, TRUE, '1 1 0' * 0.15 * mySize_y);
+	rankpos = medalPos + '0 0.15 0' * squareSize;
 
 	if(race_status == 0)
-		drawpic_aspect_skin(pos, "race_newfail", '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(medalPos, "race_newfail", '1 1 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	else if(race_status == 1) {
-		drawpic_aspect_skin(pos, "race_newtime", '1 1 0' * 0.9 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(namepos, s, '1 1 0' * 0.1 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawstring(rankpos, rankname, '1 1 0' * 0.15 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newtime", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	} else if(race_status == 2) {
 		if(race_status_name == GetPlayerName(player_localentnum -1) || !race_myrank || race_myrank < rank)
-			drawpic_aspect_skin(pos, "race_newrankgreen", '1 1 0' * 0.9 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankgreen", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		else
-			drawpic_aspect_skin(pos, "race_newrankyellow", '1 1 0' * 0.9 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(namepos, s, '1 1 0' * 0.1 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawstring(rankpos, rankname, '1 1 0' * 0.15 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankyellow", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	} else if(race_status == 3) {
-		drawpic_aspect_skin(pos, "race_newrecordserver", '1 1 0' * 0.9 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(namepos, s, '1 1 0' * 0.1 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawstring(rankpos, rankname, '1 1 0' * 0.15 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrecordserver", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	}
 
 	if (race_status_time - time <= 0) {

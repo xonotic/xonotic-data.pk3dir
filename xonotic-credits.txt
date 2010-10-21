@@ -26,6 +26,7 @@ FruitieX
 *Music / Sound FX
 mand1nga
 Merlijn Hofstra
+remaxim
 
 *Engine Code Additions & QA
 Rudolf "divVerent" Polzer
