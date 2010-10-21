@@ -4409,6 +4409,7 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float i)
 
 void HUD_Mod_Dom(vector myPos, vector mySize)
 {
+	mod_active = 1; // required in each mod function that always shows something
 	entity tm;
 	float teams_count;
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
