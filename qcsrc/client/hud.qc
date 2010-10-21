@@ -4799,11 +4799,11 @@ void HUD_ShowSpeed(void)
 	pos = (vid_conheight - numsize_y) * cvar("cl_showspeed_position");
 
 	drawfont = hud_bigfont;
-	drawstringcenter(eX + pos * eY, speed, numsize, '1 1 1', autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstringcenter(eX + pos * eY, speed, numsize, '1 1 1', autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
 
 	if (cvar("cl_showspeed_z") == 1) {
 		zspeed = strcat(ftos(fabs(floor( pmove_vel_z * conversion_factor + 0.5 ))), unit);
-		drawstringcenter(eX + pos * eY + numsize_y * eY, zspeed, numsize * 0.5, '1 1 1', autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstringcenter(eX + pos * eY + numsize_y * eY, zspeed, numsize * 0.5, '1 1 1', autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
 	}
 
 	drawfont = hud_font;
@@ -4849,9 +4849,9 @@ void HUD_ShowAcceleration(void)
 	}
 
 	if (acceleration > 0)
-		HUD_Panel_DrawProgressBar(pos, 0, acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(pos, 0, acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
 	else
-		HUD_Panel_DrawProgressBar(pos + acceleration * scale * '40 0 0', 0, -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(pos + acceleration * scale * '40 0 0', 0, -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
 }
 
 void HUD_Reset (void)
