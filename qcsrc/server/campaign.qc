@@ -119,9 +119,9 @@ void CampaignPostInit()
 	if(Campaign_Invalid())
 		return;
 	cvar_set("fraglimit", ftos(campaign_fraglimit[0]));
-	cvar_set("timelimit", "0");
+	cvar_set("timelimit", ftos(campaign_timelimit[0]));
 	cvar_set_normal("fraglimit", ftos(campaign_fraglimit[0]));
-	cvar_set_normal("timelimit", "0");
+	cvar_set_normal("timelimit", ftos(campaign_timelimit[0]));
 }
 
 void CampaignSaveCvar(string cvarname, float value)
@@ -188,8 +188,23 @@ void CampaignPreIntermission()
 
 	if(won == 1 && lost == 0 && checkrules_equality == 0 && cheatcount_total == 0)
 	{
+		if(cvar("timelimit") != 0  &&  time > cvar("timelimit") * 60) // checks if the timelimit has expired.
+		{
+			campaign_won = 0;
+			bprint("Time's up! The current level has been LOST.\n");
+			// sound!
+		}
+		else
+		{
 		campaign_won = 1;
 		bprint("The current level has been WON.\n");
+		// sound!	
+		}
+	}
+	else if(cvar("timelimit") != 0  &&  time > cvar("timelimit") * 60)
+	{
+		campaign_won = 0;
+		bprint("Time's up! The current level has been LOST.\n");
 		// sound!
 	}
 	else
@@ -249,3 +264,4 @@ void CampaignLevelWarp(float n)
 		error("Sorry, cheater. You are NOT WELCOME.");
 	CampaignFile_Unload();
 }
+
