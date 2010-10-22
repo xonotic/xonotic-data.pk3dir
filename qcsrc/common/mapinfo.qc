@@ -525,7 +525,7 @@ string _MapInfo_GetDefaultEx(float t)
 		case MAPINFO_TYPE_RACE:            return "timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0";
 		case MAPINFO_TYPE_ONSLAUGHT:       return "timelimit=20";
 		case MAPINFO_TYPE_NEXBALL:         return "timelimit=20 pointlimit=5 leadlimit=0";
-		case MAPINFO_TYPE_CTS:             return "timelimit=20";
+		case MAPINFO_TYPE_CTS:             return "timelimit=20 skill=-1";
 		default:                           return "";
 	}
 }
