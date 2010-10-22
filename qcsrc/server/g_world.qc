@@ -236,6 +236,7 @@ void cvar_changes_init()
 		BADCVAR("g_configversion");
 		BADCVAR("g_maplist_index");
 		BADCVAR("halflifebsp");
+		BADPREFIX("sv_world");
 
 		// client
 		BADPREFIX("cl_");
