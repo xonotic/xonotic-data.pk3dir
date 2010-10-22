@@ -532,7 +532,7 @@ string _MapInfo_GetDefaultEx(float t)
 
 void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 {
-	string sa, k, v, spre;
+	string sa, k, v;
 	float p;
 	string fraglimit_normal;
 	string fraglimit_caps;
