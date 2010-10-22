@@ -512,19 +512,19 @@ string _MapInfo_GetDefaultEx(float t)
 {
 	switch(t)
 	{
-		case MAPINFO_TYPE_DEATHMATCH:      return "timelimit=20 pointlimit=30";
-		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "timelimit=20 pointlimit=50 teams=2";
-		case MAPINFO_TYPE_DOMINATION:      return "timelimit=20 pointlimit=200 teams=2";
-		case MAPINFO_TYPE_CTF:             return "timelimit=20 pointlimit=300 caplimit=10";
-		case MAPINFO_TYPE_RUNEMATCH:       return "timelimit=20 pointlimit=200";
-		case MAPINFO_TYPE_LMS:             return "timelimit=20 lives=9";
-		case MAPINFO_TYPE_ARENA:           return "timelimit=20 pointlimit=10";
-		case MAPINFO_TYPE_CA:              return "timelimit=20 pointlimit=10";
-		case MAPINFO_TYPE_KEYHUNT:         return "timelimit=20 pointlimit=1000 teams=3";
+		case MAPINFO_TYPE_DEATHMATCH:      return "timelimit=20 pointlimit=30 leadlimit=0";
+		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "timelimit=20 pointlimit=50 teams=2 leadlimit=0";
+		case MAPINFO_TYPE_DOMINATION:      return "timelimit=20 pointlimit=200 teams=2 leadlimit=0";
+		case MAPINFO_TYPE_CTF:             return "timelimit=20 pointlimit=300 caplimit=10 leadlimit=0";
+		case MAPINFO_TYPE_RUNEMATCH:       return "timelimit=20 pointlimit=200 leadlimit=0";
+		case MAPINFO_TYPE_LMS:             return "timelimit=20 lives=9 leadlimit=0";
+		case MAPINFO_TYPE_ARENA:           return "timelimit=20 pointlimit=10 leadlimit=0";
+		case MAPINFO_TYPE_CA:              return "timelimit=20 pointlimit=10 leadlimit=0";
+		case MAPINFO_TYPE_KEYHUNT:         return "timelimit=20 pointlimit=1000 teams=3 leadlimit=0";
 		case MAPINFO_TYPE_ASSAULT:         return "timelimit=20";
-		case MAPINFO_TYPE_RACE:            return "timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15";
+		case MAPINFO_TYPE_RACE:            return "timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0";
 		case MAPINFO_TYPE_ONSLAUGHT:       return "timelimit=20";
-		case MAPINFO_TYPE_NEXBALL:         return "timelimit=20 pointlimit=5";
+		case MAPINFO_TYPE_NEXBALL:         return "timelimit=20 pointlimit=5 leadlimit=0";
 		case MAPINFO_TYPE_CTS:             return "timelimit=20";
 		default:                           return "";
 	}
