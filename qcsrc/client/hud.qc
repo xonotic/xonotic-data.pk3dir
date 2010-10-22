@@ -4329,7 +4329,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	drawfont = hud_font;
 }
 
-void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float i)
+void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, float i)
 {
 	float stat, pps_ratio;
 	string pic;
@@ -4371,16 +4371,14 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float i)
 		mySize_y = i;
 	}
 
-	if (cvar("hud_panel_modicons_dom_layout")) // show text too
+	if (layout) // show text too
 	{
 		//draw the text
-		drawfont = hud_bigfont;
 		color *= 0.5 + pps_ratio * (1 - 0.5); // half saturated color at min, full saturated at max
-		if (cvar("hud_panel_modicons_dom_layout") == 2) // average pps
+		if (layout == 2) // average pps
 			drawstring_aspect(myPos + eX * mySize_y, ftos_decimals(stat, 2), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		else // percentage of average pps
 			drawstring_aspect(myPos + eX * mySize_y, strcat( ftos(floor(pps_ratio*100 + 0.5)), "%" ), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawfont = hud_font;
 	}
 
 	//draw the icon
@@ -4401,9 +4399,10 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 		if(tm.team != COLOR_SPECTATOR)
 			++teams_count;
 
+	float layout = cvar("hud_panel_modicons_dom_layout");
 	float rows, columns, aspect_ratio;
 	rows = mySize_y/mySize_x;
-	aspect_ratio = (cvar("hud_panel_modicons_dom_layout")) ? 3 : 1;
+	aspect_ratio = (layout) ? 3 : 1;
 	rows = bound(1, floor((sqrt((4 * aspect_ratio * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
 	columns = ceil(teams_count/rows);
 
@@ -4416,7 +4415,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 		pos = myPos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
 		size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 
-		DrawDomItem(pos, size, aspect_ratio, i);
+		DrawDomItem(pos, size, aspect_ratio, layout, i);
 
 		++row;
 		if(row >= rows)
