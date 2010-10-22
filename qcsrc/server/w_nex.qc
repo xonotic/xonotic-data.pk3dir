@@ -45,7 +45,7 @@ void W_Nex_Attack (float issecondary)
 
 	if(cvar("g_balance_nex_charge"))
 	{
-		charge = self.nex_charge;
+		charge = cvar("g_balance_nex_charge_mindmg") / mydmg + (1 - cvar("g_balance_nex_charge_mindmg") / mydmg) * self.nex_charge;
 		self.nex_charge *= cvar("g_balance_nex_charge_shot_multiplier"); // do this AFTER setting mydmg/myforce
 	}
 	else
