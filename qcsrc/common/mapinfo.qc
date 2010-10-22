@@ -846,7 +846,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 
 		for(i = 1; i <= MapInfo_Map_supportedGametypes; i *= 2)
 			if(MapInfo_Map_supportedGametypes & i)
-				fputs(fh, sprintf("gametype %s\n", MapInfo_Type_ToString(i), " // ", _MapInfo_GetDefaultEx(i)));
+				fputs(fh, sprintf("gametype %s // defaults: %s\n", MapInfo_Type_ToString(i), _MapInfo_GetDefaultEx(i)));
 
 		fh2 = fopen(strcat("scripts/", pFilename, ".arena"), FILE_READ);
 		if(fh2 >= 0)
