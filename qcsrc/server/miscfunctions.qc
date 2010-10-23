@@ -1172,6 +1172,10 @@ void readlevelcvars(void)
 	// first load all the mutators
 	if(cvar("g_nix"))
 		MUTATOR_ADD(mutator_nix);
+	if(cvar("g_dodging"))
+		MUTATOR_ADD(mutator_dodging);
+	if(cvar("g_rocket_flying"))
+		MUTATOR_ADD(mutator_rocketflying);
 
     g_bugrigs = cvar("g_bugrigs");
     g_bugrigs_planar_movement = cvar("g_bugrigs_planar_movement");
