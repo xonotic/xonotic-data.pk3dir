@@ -199,7 +199,9 @@ void Arena_Warmup()
 	if((!g_arena && !g_ca) || (g_arena && !arena_roundbased) || (time < game_starttime))
 		return;
 
-	f = floor(warmup - time + 1);
+	f = ceil(warmup - time);
+	if(f <= 0)
+		champion = world; // this is done because a if(champion) will not execute if champion = world
 
 	allowed_to_spawn = 0;
 
