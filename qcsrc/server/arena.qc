@@ -122,9 +122,13 @@ void reset_map(float dorespawn)
 	if(g_keyhunt)
 		kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_round")+(game_starttime - time), "", kh_StartRound);
 
-	if(g_arena || g_ca)
+	if(g_arena)
 	if(champion && champion.classname == "player" && player_count > 1)
 		UpdateFrags(champion, +1);
+
+	if(g_ca)
+	if(champion && champion.classname == "player" && player_count > 1)
+		TeamScore_AddToTeam(champion.team, SP_SCORE, 1);
 
 	self = oldself;
 }
@@ -199,7 +203,7 @@ void Arena_Warmup()
 
 	allowed_to_spawn = 0;
 
-	if(g_ca && (ca_players < required_ca_players || inWarmupStage))
+	if(inWarmupStage)
 		allowed_to_spawn = 1;
 
 	msg = NEWLINES;
