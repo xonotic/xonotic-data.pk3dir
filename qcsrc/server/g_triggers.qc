@@ -416,6 +416,10 @@ void trigger_hurt_touch()
 	if (self.active != ACTIVE_ACTIVE) 
 		return;
 
+	if(self.team)
+		if((self.spawnflags & 4 == 0) == (self.team != other.team))
+			return;
+
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
 	if (other.iscreature)
 	{
@@ -1012,6 +1016,8 @@ void misc_laser_think()
 {
 	vector o;
 	entity oldself;
+	entity hitent;
+	vector hitloc;
 
 	self.nextthink = time;
 
@@ -1032,20 +1038,18 @@ void misc_laser_think()
 		o = self.origin + v_forward * 32768;
 	}
 
-	if(self.dmg)
+	if(self.dmg || self.enemy.target != "")
 	{
-		if(self.dmg < 0)
-			FireRailgunBullet(self.origin, o, 100000, 0, 0, 0, 0, 0, DEATH_HURTTRIGGER);
-		else
-			FireRailgunBullet(self.origin, o, self.dmg * frametime, 0, 0, 0, 0, 0, DEATH_HURTTRIGGER);
+		traceline(self.origin, o, MOVE_NORMAL, self);
 	}
+	hitent = trace_ent;
+	hitloc = trace_endpos;
 
 	if(self.enemy.target != "") // DETECTOR laser
 	{
-		traceline(self.origin, o, MOVE_NORMAL, self);
 		if(trace_ent.iscreature)
 		{
-			self.pusher = trace_ent;
+			self.pusher = hitent;
 			if(!self.count)
 			{
 				self.count = 1;
@@ -1070,6 +1074,15 @@ void misc_laser_think()
 				self = oldself;
 			}
 		}
+	}
+
+	if(self.dmg)
+	{
+		if(self.team)
+			if((self.spawnflags & 4 == 0) == (self.team != hitent.team))
+				return;
+		if(hitent.takedamage)
+			Damage(hitent, self, self, ((self.dmg < 0) ? 100000 : (self.dmg * frametime)), DEATH_HURTTRIGGER, hitloc, '0 0 0');
 	}
 }
 
