@@ -478,6 +478,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 	if (gameover || targ.killcount == -666)
 		return;
+	if(g_arena || g_ca)
+	if(champion && champion.classname == "player" && player_count > 1)
+		return;
 
 	local entity oldself;
 	oldself = self;
