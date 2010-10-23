@@ -307,7 +307,7 @@ void Spawnqueue_Check()
 					strunzone(champion_name);
 				champion_name = strzone(champion.netname);
 			}
-			else if((!redspawned && !bluespawned) || (!redspawned && !bluealive) || (!bluespawned && !redalive) || time - warmup > cvar("g_ca_round_timelimit")) {
+			else if((!redspawned && !bluespawned) || time - warmup > cvar("g_ca_round_timelimit")) {
 				FOR_EACH_CLIENT(self) centerprint(self, strcat("^7Round tied.", "^7\n"));
 				next_round = time + 5;
 			}
