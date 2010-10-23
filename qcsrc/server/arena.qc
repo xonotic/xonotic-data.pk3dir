@@ -10,7 +10,6 @@ entity spawnqueue_last;
 entity champion;
 string champion_name;
 float warmup;
-float allowed_to_spawn;
 float ca_players;
 float required_ca_players;
 .float caplayer;

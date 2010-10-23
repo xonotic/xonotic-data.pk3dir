@@ -440,6 +440,8 @@ void spawnfunc_worldspawn (void)
 
 	compressShortVector_init();
 
+	allowed_to_spawn = TRUE;
+
 	local entity head;
 	head = nextent(world);
 	maxclients = 0;
