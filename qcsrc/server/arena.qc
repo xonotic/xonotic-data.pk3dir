@@ -262,6 +262,7 @@ void Arena_Warmup()
 
 float next_round;
 float stopalivecheck;
+float redalive, bluealive;
 /**
  * This function finds out whether an arena round is over 1 player is left.
  * It determines the last player who's still alive and saves it's entity reference
@@ -283,7 +284,7 @@ void Spawnqueue_Check()
 		}
 		// this is STUPID to perform again, but has to be done so that we can give instant feedback when a round ends
 		// and so the code won't start searching for a champion using find() before all players are actually REMOVED
-		float redalive, bluealive;
+		redalive = 0; bluealive = 0;
 		FOR_EACH_PLAYER(self) {
 			if (self.team == COLOR_TEAM1 && self.health >= 1) redalive += 1;
 			else if (self.team == COLOR_TEAM2 && self.health >= 1) bluealive += 1;
