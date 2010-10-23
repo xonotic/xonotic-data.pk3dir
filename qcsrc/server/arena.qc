@@ -126,10 +126,6 @@ void reset_map(float dorespawn)
 	if(champion && champion.classname == "player" && player_count > 1)
 		UpdateFrags(champion, +1);
 
-	if(g_ca)
-	if(champion && champion.classname == "player" && player_count > 1)
-		TeamScore_AddToTeam(champion.team, ST_SCORE, +1);
-
 	self = oldself;
 }
 
@@ -265,6 +261,7 @@ void Arena_Warmup()
 }
 
 float next_round;
+float stopalivecheck;
 /**
  * This function finds out whether an arena round is over 1 player is left.
  * It determines the last player who's still alive and saves it's entity reference
@@ -284,6 +281,13 @@ void Spawnqueue_Check()
 			if (self.team == COLOR_TEAM1) redspawned += 1;
 			else if (self.team == COLOR_TEAM2) bluespawned += 1;
 		}
+		// this is STUPID to perform again, but has to be done so that we can give instant feedback when a round ends
+		// and so the code won't start searching for a champion using find() before all players are actually REMOVED
+		float redalive, bluealive;
+		FOR_EACH_PLAYER(self) {
+			if (self.team == COLOR_TEAM1 && self.health >= 1) redalive += 1;
+			else if (self.team == COLOR_TEAM2 && self.health >= 1) bluealive += 1;
+		}
 
 		required_ca_players = max(2, fabs(cvar("bot_vs_human") + 1));
 
@@ -298,30 +302,38 @@ void Spawnqueue_Check()
 		else if(!next_round) {
 			if((redspawned && !bluespawned) || (bluespawned && !redspawned)) {
 				next_round = time + 5;
-
 				champion = find(world, classname, "player");
 				if(champion_name)
 					strunzone(champion_name);
 				champion_name = strzone(champion.netname);
-				string champion_team;
-				if(champion.team == COLOR_TEAM1) {
-					champion_team = "^1Red team";
-					play2all("ctf/red_capture.wav");
-				}
-				else if(champion.team == COLOR_TEAM2) {
-					champion_team = "^4Blue team";
-					play2all("ctf/blue_capture.wav");
-				}
-				FOR_EACH_CLIENT(self) centerprint(self, strcat(champion_team, "^7 wins the round.", "^7\n"));
 			}
-			else if(!redspawned && !bluespawned) {
+			else if((!redspawned && !bluespawned) || (!redspawned && !bluealive) || (!bluespawned && !redalive) || time - warmup > cvar("g_ca_round_timelimit")) {
 				FOR_EACH_CLIENT(self) centerprint(self, strcat("^7Round tied.", "^7\n"));
 				next_round = time + 5;
+			}
+
+		}
+		if(!stopalivecheck)
+		{
+			if(redalive && !bluealive)
+			{
+				play2all("ctf/red_capture.wav");
+				FOR_EACH_CLIENT(self) centerprint(self, "^1 RED ^7team wins the round.\n");
+				TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, +1);
+				stopalivecheck = TRUE;
+			}
+			else if(bluealive && !redalive)
+			{
+				play2all("ctf/blue_capture.wav");
+				FOR_EACH_CLIENT(self) centerprint(self, "^4 BLUE ^7team wins the round.\n");
+				TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, +1);
+				stopalivecheck = TRUE;
 			}
 		}
 
 		if((next_round && next_round < time))
 		{
+			stopalivecheck = FALSE;
 			next_round = 0;
 			reset_map(TRUE);
 		}
