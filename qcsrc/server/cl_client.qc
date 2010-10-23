@@ -1308,6 +1308,22 @@ void ClientKill (void)
 	ClientKill_TeamChange(0);
 }
 
+void CTS_ClientKill_Think (void)
+{
+	self = self.owner; // set self to the player to be killed
+	sprint(self, "^1You were killed in order to prevent cheating!");
+	ClientKill_Now();
+}
+
+void CTS_ClientKill (float t) // silent version of ClientKill
+{
+	entity e;
+	spawn(e);
+	e.owner = self;
+	e.think = CTS_ClientKill_Think;
+	e.nextthink = t;
+}
+
 void DoTeamChange(float destteam)
 {
 	float t, c0;

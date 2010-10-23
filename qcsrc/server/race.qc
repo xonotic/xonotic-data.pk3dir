@@ -441,7 +441,12 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 			if(t != 0) {
 				if(cp == race_timed_checkpoint)
+				{
 					race_SetTime(e, t, recordtime);
+					if(g_cts && cvar("g_cts_finish_kill_delay"))
+					{
+						CTS_ClientKill(cvar("g_cts_finish_kill_delay"));
+					}
 
 				if(t < recordtime || recordtime == 0)
 				{
