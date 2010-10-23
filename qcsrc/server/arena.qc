@@ -273,16 +273,8 @@ float redalive, bluealive;
  */
 void Spawnqueue_Check()
 {
-	if(time < warmup + 1 || inWarmupStage)
-		return;
-
-	if(g_ca) {
-		// check the amount of spawned players in each team
-		float redspawned, bluespawned;
-		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1) redspawned += 1;
-			else if (self.team == COLOR_TEAM2) bluespawned += 1;
-		}
+	if(g_ca) // we want to perform this before the return block below...
+	{
 		// this is STUPID to perform again, but has to be done so that we can give instant feedback when a round ends
 		// and so the code won't start searching for a champion using find() before all players are actually REMOVED
 		redalive = 0; bluealive = 0;
@@ -295,6 +287,17 @@ void Spawnqueue_Check()
 		FOR_EACH_PLAYER(self) {
 			self.redalive_stat = redalive;
 			self.bluealive_stat = bluealive;
+		}
+	}
+	if(time < warmup + 1 || inWarmupStage)
+		return;
+
+	if(g_ca) {
+		// check the amount of spawned players in each team
+		float redspawned, bluespawned;
+		FOR_EACH_PLAYER(self) {
+			if (self.team == COLOR_TEAM1) redspawned += 1;
+			else if (self.team == COLOR_TEAM2) bluespawned += 1;
 		}
 
 		required_ca_players = max(2, fabs(cvar("bot_vs_human") + 1));
