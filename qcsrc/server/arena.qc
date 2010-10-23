@@ -8,6 +8,7 @@ float arena_roundbased;
 entity spawnqueue_first;
 entity spawnqueue_last;
 entity champion;
+string champion_name;
 float warmup;
 float allowed_to_spawn;
 float ca_players;
@@ -128,7 +129,7 @@ void reset_map(float dorespawn)
 
 	if(g_ca)
 	if(champion && champion.classname == "player" && player_count > 1)
-		TeamScore_AddToTeam(champion.team, SP_SCORE, 1);
+		TeamScore_AddToTeam(champion.team, ST_SCORE, +1);
 
 	self = oldself;
 }
@@ -200,7 +201,7 @@ void Arena_Warmup()
 		return;
 
 	f = ceil(warmup - time);
-	if(f <= 0)
+	if(f > 0)
 		champion = world; // this is done because a if(champion) will not execute if champion = world
 
 	allowed_to_spawn = 0;
@@ -216,7 +217,7 @@ void Arena_Warmup()
 		if (g_ca)
 			allowed_to_spawn = 1;
 		if(champion && g_arena)
-			msg = strcat("The Champion is ", champion.netname, "^7\n");
+			msg = strcat("The Champion is ", champion_name, "^7\n");
 			//centerprint(self, strcat(msg, "The Champion is ", champion.netname, "^7\n"));
 
 		if(f != roundStartTime_prev) {
@@ -300,6 +301,9 @@ void Spawnqueue_Check()
 				next_round = time + 5;
 
 				champion = find(world, classname, "player");
+				if(champion_name)
+					strunzone(champion_name);
+				champion_name = strzone(champion.netname);
 				string champion_team;
 				if(champion.team == COLOR_TEAM1) {
 					champion_team = "^1Red team";
