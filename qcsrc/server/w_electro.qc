@@ -136,6 +136,8 @@ void W_Electro_Attack()
 	//sounds bad
 
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
+
+	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void W_Electro_Attack2()
@@ -182,6 +184,8 @@ void W_Electro_Attack2()
 #endif
 
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
+
+	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 .vector hook_start, hook_end;

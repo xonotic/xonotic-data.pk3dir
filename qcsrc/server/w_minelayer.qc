@@ -262,6 +262,8 @@ void W_Mine_Attack (void)
 	W_AttachToShotorg(flash, '5 0 0');
 
 	// common properties
+
+	other = mine; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void spawnfunc_weapon_minelayer (void); // defined in t_items.qc
