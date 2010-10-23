@@ -310,8 +310,7 @@ const float STAT_SHOTORG = 46; // compressShotOrigin
 const float STAT_LEADLIMIT = 47;
 const float STAT_BULLETS_LOADED = 48;
 const float STAT_NEX_CHARGE = 49;
-const float STAT_REDALIVE = 50;
-const float STAT_BLUEALIVE = 51;
+const float STAT_HUD = 50;
 
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
@@ -322,7 +321,6 @@ const float CTF_STATE_ATTACK = 1;
 const float CTF_STATE_DEFEND = 2;
 const float CTF_STATE_COMMANDER = 3;
 
-const float STAT_HUD = 50;
 const float HUD_NORMAL = 0;
 const float HUD_SPIDERBOT = 10;
 const float HUD_WAKIZASHI = 11;
@@ -338,6 +336,10 @@ const float STAT_VEHICLESTAT_AMMO1   = 63;
 const float STAT_VEHICLESTAT_RELOAD1 = 64;
 const float STAT_VEHICLESTAT_AMMO2   = 65;
 const float STAT_VEHICLESTAT_RELOAD2 = 66;
+
+// mod stats (1xx)
+const float STAT_REDALIVE = 100;
+const float STAT_BLUEALIVE = 101;
 
 //const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
 //const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin
