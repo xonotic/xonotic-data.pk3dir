@@ -646,8 +646,8 @@ void spawnfunc_worldspawn (void)
 
 	if(g_ca)
 	{
-		addstat(STAT_REDALIVE, AS_INT, redalive);
-		addstat(STAT_BLUEALIVE, AS_INT, bluealive);
+		addstat(STAT_REDALIVE, AS_INT, redalive_stat);
+		addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
 	}
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);

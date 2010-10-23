@@ -263,6 +263,7 @@ void Arena_Warmup()
 float next_round;
 float stopalivecheck;
 float redalive, bluealive;
+.float redalive_stat, bluealive_stat;
 /**
  * This function finds out whether an arena round is over 1 player is left.
  * It determines the last player who's still alive and saves it's entity reference
@@ -288,6 +289,12 @@ void Spawnqueue_Check()
 		FOR_EACH_PLAYER(self) {
 			if (self.team == COLOR_TEAM1 && self.health >= 1) redalive += 1;
 			else if (self.team == COLOR_TEAM2 && self.health >= 1) bluealive += 1;
+		}
+		// as if the above stuff wasn't stupid enough, let's run it a third time! :D
+		// (so that we can send redalive/bluealive as a stat)
+		FOR_EACH_PLAYER(self) {
+			self.redalive_stat = redalive;
+			self.bluealive_stat = bluealive;
 		}
 
 		required_ca_players = max(2, fabs(cvar("bot_vs_human") + 1));
