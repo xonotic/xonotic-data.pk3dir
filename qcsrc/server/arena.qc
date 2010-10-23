@@ -207,6 +207,8 @@ void Arena_Warmup()
 
 	if(inWarmupStage)
 		allowed_to_spawn = 1;
+	if(ca_players < required_ca_players)
+		allowed_to_spawn = 1;
 
 	msg = NEWLINES;
 	if(time < warmup && !inWarmupStage)
@@ -291,8 +293,6 @@ void Spawnqueue_Check()
 		else if(ca_players < required_ca_players) {
 			FOR_EACH_PLAYER(self)
 				centerprint(self, strcat("^1Need at least 1 player in each team to play CA", "^7\n"));
-
-			allowed_to_spawn = 1;
 			return;
 		}
 		else if(!next_round) {
