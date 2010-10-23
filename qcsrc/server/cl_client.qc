@@ -1668,9 +1668,6 @@ void ClientDisconnect (void)
 	if (self.killindicator)
 		remove (self.killindicator);
 
-	if (self.muzzleflash)
-		remove (self.muzzleflash);
-
 	WaypointSprite_PlayerGone();
 
 	bot_relinkplayerlist();
