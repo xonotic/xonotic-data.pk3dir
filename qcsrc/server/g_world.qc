@@ -280,6 +280,8 @@ void cvar_changes_init()
 		BADCVAR("sys_colortranslation");
 		BADCVAR("sys_specialcharactertranslation");
 		BADCVAR("timestamps");
+		BADCVAR("net_address");
+		BADCVAR("net_address_ipv6");
 
 		// mapinfo
 		BADCVAR("timelimit");
