@@ -17,7 +17,6 @@ void W_Uzi_Flash_Go() {
 };
 
 .float uzi_bulletcounter;
-.entity muzzleflash;
 void W_Uzi_Attack (float deathtype)
 {
 	local entity flash;

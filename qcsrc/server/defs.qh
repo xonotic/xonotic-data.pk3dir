@@ -651,3 +651,4 @@ string deathmessage;
 .entity realowner;
 
 .float nex_charge;
+.entity muzzleflash;
