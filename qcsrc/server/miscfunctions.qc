@@ -2115,7 +2115,7 @@ string race_GetName(string map, float pos)
 }
 
 string race_PlaceName(float pos) {
-	if(pos < 10 || pos > 20)
+	if(floor((pos % 100)/10) * 10 != 10) // examples: 12th, 111th, 213th will not execute this block
 	{
 		if(pos % 10 == 1)
 			return strcat(ftos(pos), "st");
