@@ -412,6 +412,12 @@ HUD panels
 ==================
 */
 
+#define HUD_Write(s) fputs(fh, s)
+// q: quoted, n: not quoted
+#define HUD_Write_Cvar_n(cvar) HUD_Write(strcat("seta ", cvar, " ", cvar_string(cvar), "\n"))
+#define HUD_Write_Cvar_q(cvar) HUD_Write(strcat("seta ", cvar, " \"", cvar_string(cvar), "\"\n"))
+#define HUD_Write_PanelCvar_n(cvar_suf) HUD_Write_Cvar_n(strcat("hud_panel_", panel_name, cvar_suf))
+#define HUD_Write_PanelCvar_q(cvar_suf) HUD_Write_Cvar_q(strcat("hud_panel_", panel_name, cvar_suf))
 // Save the config
 void HUD_Panel_ExportCfg(string cfgname)
 {
@@ -419,41 +425,41 @@ void HUD_Panel_ExportCfg(string cfgname)
 	fh = fopen(strcat("hud_", autocvar_hud_skin, "_", cfgname, ".cfg"), FILE_WRITE);
 	if(fh >= 0)
 	{
-		fputs(fh, strcat("seta hud_skin \"", cvar_string("hud_skin"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_panel_bg \"", cvar_string("hud_panel_bg"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_panel_bg_color \"", cvar_string("hud_panel_bg_color"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_panel_bg_color_team \"", cvar_string("hud_panel_bg_color_team"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_panel_bg_alpha \"", cvar_string("hud_panel_bg_alpha"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_panel_bg_border \"", cvar_string("hud_panel_bg_border"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_panel_bg_padding \"", cvar_string("hud_panel_bg_padding"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_panel_fg_alpha \"", cvar_string("hud_panel_fg_alpha"), "\"", "\n"));
-		fputs(fh, "\n");
+		HUD_Write_Cvar_q("hud_skin");
+		HUD_Write_Cvar_q("hud_panel_bg");
+		HUD_Write_Cvar_q("hud_panel_bg_color");
+		HUD_Write_Cvar_q("hud_panel_bg_color_team");
+		HUD_Write_Cvar_q("hud_panel_bg_alpha");
+		HUD_Write_Cvar_q("hud_panel_bg_border");
+		HUD_Write_Cvar_q("hud_panel_bg_padding");
+		HUD_Write_Cvar_q("hud_panel_fg_alpha");
+		HUD_Write("\n");
 
-		fputs(fh, strcat("seta hud_dock \"", cvar_string("hud_dock"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_dock_color \"", cvar_string("hud_dock_color"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_dock_color_team \"", cvar_string("hud_dock_color_team"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_dock_alpha \"", cvar_string("hud_dock_alpha"), "\"", "\n"));
-		fputs(fh, "\n");
+		HUD_Write_Cvar_q("hud_dock");
+		HUD_Write_Cvar_q("hud_dock_color");
+		HUD_Write_Cvar_q("hud_dock_color_team");
+		HUD_Write_Cvar_q("hud_dock_alpha");
+		HUD_Write("\n");
 
-		fputs(fh, strcat("seta hud_progressbar_alpha \"", cvar_string("hud_progressbar_alpha"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_progressbar_strength_color \"", cvar_string("hud_progressbar_strength_color"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_progressbar_shield_color \"", cvar_string("hud_progressbar_shield_color"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_progressbar_health_color \"", cvar_string("hud_progressbar_health_color"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_progressbar_armor_color \"", cvar_string("hud_progressbar_armor_color"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_progressbar_fuel_color \"", cvar_string("hud_progressbar_fuel_color"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_progressbar_nexball_color \"", cvar_string("hud_progressbar_nexball_color"), "\"", "\n"));
-		fputs(fh, "\n");
+		HUD_Write_Cvar_q("hud_progressbar_alpha");
+		HUD_Write_Cvar_q("hud_progressbar_strength_color");
+		HUD_Write_Cvar_q("hud_progressbar_shield_color");
+		HUD_Write_Cvar_q("hud_progressbar_health_color");
+		HUD_Write_Cvar_q("hud_progressbar_armor_color");
+		HUD_Write_Cvar_q("hud_progressbar_fuel_color");
+		HUD_Write_Cvar_q("hud_progressbar_nexball_color");
+		HUD_Write("\n");
 
-		fputs(fh, strcat("seta _hud_panelorder \"", cvar_string("_hud_panelorder"), "\"", "\n"));
-		fputs(fh, "\n");
+		HUD_Write_Cvar_q("_hud_panelorder");
+		HUD_Write("\n");
 
-		fputs(fh, strcat("seta hud_configure_grid \"", cvar_string("hud_configure_grid"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_configure_grid_xsize \"", cvar_string("hud_configure_grid_xsize"), "\"", "\n"));
-		fputs(fh, strcat("seta hud_configure_grid_ysize \"", cvar_string("hud_configure_grid_ysize"), "\"", "\n"));
-		fputs(fh, "\n");
+		HUD_Write_Cvar_q("hud_configure_grid");
+		HUD_Write_Cvar_q("hud_configure_grid_xsize");
+		HUD_Write_Cvar_q("hud_configure_grid_ysize");
+		HUD_Write("\n");
 
-		fputs(fh, strcat("seta scr_centerpos \"", cvar_string("scr_centerpos"), "\"", "\n"));
-		fputs(fh, "\n");
+		HUD_Write_Cvar_q("scr_centerpos");
+		HUD_Write("\n");
 
 		// common cvars for all panels
 		float i;
@@ -461,62 +467,62 @@ void HUD_Panel_ExportCfg(string cfgname)
 		{
 			HUD_Panel_GetName(i)
 
-			fputs(fh, strcat("seta hud_panel_", panel_name, " ", cvar_string(strcat("hud_panel_", panel_name)), "\n"));
-			fputs(fh, strcat("seta hud_panel_", panel_name, "_pos \"", cvar_string(strcat("hud_panel_", panel_name, "_pos")), "\"", "\n"));
-			fputs(fh, strcat("seta hud_panel_", panel_name, "_size \"", cvar_string(strcat("hud_panel_", panel_name, "_size")), "\"", "\n"));
-			fputs(fh, strcat("seta hud_panel_", panel_name, "_bg \"", cvar_string(strcat("hud_panel_", panel_name, "_bg")), "\"", "\n"));
-			fputs(fh, strcat("seta hud_panel_", panel_name, "_bg_color \"", cvar_string(strcat("hud_panel_", panel_name, "_bg_color")), "\"", "\n"));
-			fputs(fh, strcat("seta hud_panel_", panel_name, "_bg_color_team \"", cvar_string(strcat("hud_panel_", panel_name, "_bg_color_team")), "\"", "\n"));
-			fputs(fh, strcat("seta hud_panel_", panel_name, "_bg_alpha \"", cvar_string(strcat("hud_panel_", panel_name, "_bg_alpha")), "\"", "\n"));
-			fputs(fh, strcat("seta hud_panel_", panel_name, "_bg_border \"", cvar_string(strcat("hud_panel_", panel_name, "_bg_border")), "\"", "\n"));
-			fputs(fh, strcat("seta hud_panel_", panel_name, "_bg_padding \"", cvar_string(strcat("hud_panel_", panel_name, "_bg_padding")), "\"", "\n"));
+			HUD_Write_PanelCvar_n("");
+			HUD_Write_PanelCvar_q("_pos");
+			HUD_Write_PanelCvar_q("_size");
+			HUD_Write_PanelCvar_q("_bg");
+			HUD_Write_PanelCvar_q("_bg_color");
+			HUD_Write_PanelCvar_q("_bg_color_team");
+			HUD_Write_PanelCvar_q("_bg_alpha");
+			HUD_Write_PanelCvar_q("_bg_border");
+			HUD_Write_PanelCvar_q("_bg_padding");
 			switch(i) {
 				case HUD_PANEL_WEAPONS:
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_complainbubble \"", cvar_string(strcat("hud_panel_", panel_name, "_complainbubble")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_complainbubble_padding \"", cvar_string(strcat("hud_panel_", panel_name, "_complainbubble_padding")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_complainbubble_color_outofammo \"", cvar_string(strcat("hud_panel_", panel_name, "_complainbubble_color_outofammo")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_complainbubble_color_donthave \"", cvar_string(strcat("hud_panel_", panel_name, "_complainbubble_color_donthave")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_complainbubble_color_unavailable \"", cvar_string(strcat("hud_panel_", panel_name, "_complainbubble_color_unavailable")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_ammo_color \"", cvar_string(strcat("hud_panel_", panel_name, "_ammo_color")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_ammo_alpha \"", cvar_string(strcat("hud_panel_", panel_name, "_ammo_alpha")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_aspect \"", cvar_string(strcat("hud_panel_", panel_name, "_aspect")), "\"", "\n"));
+					HUD_Write_PanelCvar_q("_complainbubble");
+					HUD_Write_PanelCvar_q("_complainbubble_padding");
+					HUD_Write_PanelCvar_q("_complainbubble_color_outofammo");
+					HUD_Write_PanelCvar_q("_complainbubble_color_donthave");
+					HUD_Write_PanelCvar_q("_complainbubble_color_unavailable");
+					HUD_Write_PanelCvar_q("_ammo_color");
+					HUD_Write_PanelCvar_q("_ammo_alpha");
+					HUD_Write_PanelCvar_q("_aspect");
 					break;
 				case HUD_PANEL_AMMO:
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_onlycurrent \"", cvar_string(strcat("hud_panel_", panel_name, "_onlycurrent")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_iconalign \"", cvar_string(strcat("hud_panel_", panel_name, "_iconalign")), "\"", "\n"));
+					HUD_Write_PanelCvar_q("_onlycurrent");
+					HUD_Write_PanelCvar_q("_iconalign");
 					break;
 				case HUD_PANEL_POWERUPS:
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_flip \"", cvar_string(strcat("hud_panel_", panel_name, "_flip")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_iconalign \"", cvar_string(strcat("hud_panel_", panel_name, "_iconalign")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_baralign \"", cvar_string(strcat("hud_panel_", panel_name, "_baralign")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_progressbar \"", cvar_string(strcat("hud_panel_", panel_name, "_progressbar")), "\"", "\n"));
+					HUD_Write_PanelCvar_q("_flip");
+					HUD_Write_PanelCvar_q("_iconalign");
+					HUD_Write_PanelCvar_q("_baralign");
+					HUD_Write_PanelCvar_q("_progressbar");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_flip \"", cvar_string(strcat("hud_panel_", panel_name, "_flip")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_iconalign \"", cvar_string(strcat("hud_panel_", panel_name, "_iconalign")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_baralign \"", cvar_string(strcat("hud_panel_", panel_name, "_baralign")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_progressbar \"", cvar_string(strcat("hud_panel_", panel_name, "_progressbar")), "\"", "\n"));
+					HUD_Write_PanelCvar_q("_flip");
+					HUD_Write_PanelCvar_q("_iconalign");
+					HUD_Write_PanelCvar_q("_baralign");
+					HUD_Write_PanelCvar_q("_progressbar");
 					break;
 				case HUD_PANEL_NOTIFY:
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_flip \"", cvar_string(strcat("hud_panel_", panel_name, "_flip")), "\"", "\n"));
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_print \"", cvar_string(strcat("hud_panel_", panel_name, "_print")), "\"", "\n"));
+					HUD_Write_PanelCvar_q("_flip");
+					HUD_Write_PanelCvar_q("_print");
 					break;
 				case HUD_PANEL_RADAR:
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_foreground_alpha \"", cvar_string(strcat("hud_panel_", panel_name, "_foreground_alpha")), "\"", "\n"));
+					HUD_Write_PanelCvar_q("_foreground_alpha");
 					break;
 				case HUD_PANEL_VOTE:
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_alreadyvoted_alpha \"", cvar_string(strcat("hud_panel_", panel_name, "_alreadyvoted_alpha")), "\"", "\n"));
+					HUD_Write_PanelCvar_q("_alreadyvoted_alpha");
 					break;
 				case HUD_PANEL_PRESSEDKEYS:
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_aspect \"", cvar_string(strcat("hud_panel_", panel_name, "_aspect")), "\"", "\n"));
+					HUD_Write_PanelCvar_q("_aspect");
 					break;
 				case HUD_PANEL_INFOMESSAGES:
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_flip \"", cvar_string(strcat("hud_panel_", panel_name, "_flip")), "\"", "\n"));
+					HUD_Write_PanelCvar_q("_flip");
 					break;
 			}
-			fputs(fh, "\n");
+			HUD_Write("\n");
 		}
-		fputs(fh, strcat("menu_sync", "\n")); // force the menu to reread the cvars, so that the dialogs are updated
+		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 
 		print("^2Successfully exported to hud_", autocvar_hud_skin, "_", cfgname, ".cfg! (Note: It's saved in data/data/)\n");
 	}
