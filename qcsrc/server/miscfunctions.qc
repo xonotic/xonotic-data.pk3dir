@@ -2249,11 +2249,11 @@ string getladder()
     {
         if (MapInfo_Get_ByID(k))
 	{
-		for (i = 0; i < LADDER_CNT; ++i) {
-			if(stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "time", ftos(Ii)))) == 0)
+		for (i = 0; i <= LADDER_CNT; ++i) { // i = 0 because it is the speed award
+			if(race_GetTime(GetMapname(), i) == 0)
 			    break;
 
-			myuid = db_get(ServerProgsDB, strcat(GetMapname(), rr, "crypto_idfp", ftos(i)));
+			myuid = race_GetUID(GetMapname(), i);
 
 			// string s contains:
 			// arg 0 = # of speed recs
@@ -2279,10 +2279,10 @@ string getladder()
 			len = tokenize_console(temp_s);
 			s = "";
 
-			if(i == 0) // speedrec
+			if(i == 0) // speed award
 			    for (j = 0; j <= LADDER_CNT; ++j) // loop over each arg in the string
 			    {
-				if(j == 0) // speed rec!
+				if(j == 0) // speed award
 				    s = strcat(s, ftos(stof(argv(j)) +1)); // add 1 to speed rec count and write
 				else
 				    s = strcat(s, " ", argv(j)); // just copy over everything else
@@ -2291,7 +2291,7 @@ string getladder()
 			    for (j = 0; j <= LADDER_CNT; ++j) // loop over each arg in the string
 			    {
 				if(j == 0)
-				    s = strcat(s, argv(j)); // speed rec, dont prefix with " "
+				    s = strcat(s, argv(j)); // speed award, dont prefix with " "
 				else if(j == i) // wanted rec!
 				    s = strcat(s, " ", ftos(stof(argv(j)) +1)); // update argv(j)
 				else
@@ -2308,7 +2308,7 @@ string getladder()
 			// ... etc
 
 			if(i == 0)
-			    s = strcat(s, " ", ftos(stof(argv(LADDER_CNT+1)) + LADDER_FIRSTPOINT / 10)); // speedrec, add LADDER_FIRSTPOINT / 10 points
+			    s = strcat(s, " ", ftos(stof(argv(LADDER_CNT+1)) + LADDER_FIRSTPOINT / 10)); // speed award, add LADDER_FIRSTPOINT / 10 points
 			else
 			    s = strcat(s, " ", ftos(stof(argv(LADDER_CNT+1)) + floor(LADDER_FIRSTPOINT / i))); // record, add LADDER_FIRSTPOINT / i points
 
@@ -2373,8 +2373,8 @@ string getladder()
 	{
 	    s = strcat(s, strpad(4, argv(j)), "^3| ^7"); // 1st, 2nd, 3rd etc cnt
 	}
-	s = strcat(s, strpad(13, argv(0)), "^3| ^7"); // speed rec cnt
-	s = strcat(s, race_GetName_OfUID(top_uids[i]), "\n"); // name
+	s = strcat(s, strpad(13, argv(0)), "^3| ^7"); // speed award cnt
+	s = strcat(s, uid2name(top_uids[i]), "\n"); // name
     }
 
     MapInfo_ClearTemps();
