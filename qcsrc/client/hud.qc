@@ -525,8 +525,10 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 
 		print("^2Successfully exported to hud_", autocvar_hud_skin, "_", cfgname, ".cfg! (Note: It's saved in data/data/)\n");
+		fclose(fh);
 	}
-	fclose(fh);
+	else
+		print("^1Couldn't write to hud_", autocvar_hud_skin, "_", cfgname, ".cfg\n");
 }
 
 const float hlBorderSize = 4;
