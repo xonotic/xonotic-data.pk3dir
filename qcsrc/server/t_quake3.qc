@@ -39,12 +39,28 @@ void spawnfunc_item_armor_combat()   { spawnfunc_item_armor_big();      }
 void spawnfunc_item_armor_shard()    { spawnfunc_item_armor_small();    }
 void spawnfunc_item_enviro()         { spawnfunc_item_invincible();     }
 
-// weapon remove ent from defrag
+// weapon remove ent from df
+// +void target_init_verify()
+{
+	entity trigger, targ;
+	for(trigger = world; (trigger = find(trigger, classname, "trigger_multiple")); )
+		for(targ = world; (targ = find(targ, targetname, trigger.target)); )
+			if (targ.classname == "target_init" || targ.classname == "target_give" || targ.classname == "target_items") {
+				targ.wait = -2;
+				targ.delay = 0;
+
+				setsize(targ, trigger.mins, trigger.maxs);
+				setorigin(targ, trigger.origin);
+				//remove(trigger);
+			}
+}
+
 void spawnfunc_target_init()
 {
 	self.spawnflags = 0; // remove all weapons except the ones listed below
 	self.netname = "laser uzi"; // keep these weapons through the remove trigger
 	spawnfunc_target_items();
+	InitializeEntity(self, target_init_verify, INITPRIO_FINDTARGET);
 }
 
 // weapon give ent from defrag
@@ -85,6 +101,7 @@ void target_give_init()
 	}
 	self.spawnflags = 2;
 	spawnfunc_target_items();
+	InitializeEntity(self, target_init_verify, INITPRIO_FINDTARGET);
 }
 
 void spawnfunc_target_give()
