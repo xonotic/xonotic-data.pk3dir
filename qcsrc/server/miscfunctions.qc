@@ -16,7 +16,6 @@ void WarpZone_crosshair_trace(entity pl)
 
 void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
 void() spawnpoint_use;
-float race_GetTime(float pos);
 string race_GetName(float pos);
 string race_PlaceName(float pos);
 string GetMapname();
@@ -2069,6 +2068,67 @@ void print_to(entity e, string s)
         print(s, "\n");
 }
 
+string uid2name(string myuid) {
+	// TODO TODO TODO!
+	// store uid in separate uid2name db IF CLIENT ALLOWS THIS
+	// - make it global for all mods
+	// perhaps show 10 first digits here if missing name?
+	string s;
+	s = db_get(ServerProgsDB, strcat("uid2name", myuid));
+	
+	if(s == "")
+		s = "^1Unregistered Player";
+	return s;
+}
+
+float race_GetTime(string map, float pos)
+{
+	float rr;
+	if(g_cts)
+		rr = CTS_RECORD;
+	else
+		rr = RACE_RECORD;
+
+	return stof(db_get(ServerProgsDB, strcat(map, rr, "time", ftos(pos))));
+}
+
+string race_GetUID(string map, float pos)
+{
+	float rr;
+	if(g_cts)
+		rr = CTS_RECORD;
+	else
+		rr = RACE_RECORD;
+
+	return stof(db_get(ServerProgsDB, strcat(map, rr, "time", ftos(pos))));
+}
+
+string race_GetName(string map, float pos)
+{
+	float rr;
+	if(g_cts)
+		rr = CTS_RECORD;
+	else
+		rr = RACE_RECORD;
+
+	return uid2name(db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos))));
+}
+
+string race_PlaceName(float pos) {
+	if(pos < 10 || pos > 20)
+	{
+		if(pos % 10 == 1)
+			return strcat(ftos(pos), "st");
+		else if(pos % 10 == 2)
+			return strcat(ftos(pos), "nd");
+		else if(pos % 10 == 3)
+			return strcat(ftos(pos), "rd");
+		else
+			return strcat(ftos(pos), "th");
+	}
+	else
+		return strcat(ftos(pos), "th");
+}
 string getrecords(float page) // 50 records per page
 {
     float rec;
@@ -2090,6 +2150,7 @@ string getrecords(float page) // 50 records per page
                 r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/time")));
                 if (r == 0)
                     continue;
+		// TODO: uid2name
                 h = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/netname"));
                 s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-6, ftos_decimals(r, 2)), " ", h, "\n");
                 ++rec;
@@ -2103,10 +2164,10 @@ string getrecords(float page) // 50 records per page
         {
             if (MapInfo_Get_ByID(i))
             {
-                r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time")));
+		r = race_GetTime(MapInfo_Map_bspname, 1);
                 if (r == 0)
                     continue;
-                h = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "netname"));
+		h = race_GetName(MapInfo_Map_bspname, 1)
                 s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
                 ++rec;
             }
@@ -2119,10 +2180,10 @@ string getrecords(float page) // 50 records per page
         {
             if (MapInfo_Get_ByID(i))
             {
-                r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time")));
+		r = race_GetTime(MapInfo_Map_bspname, 1);
                 if (r == 0)
                     continue;
-                h = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "netname"));
+		h = race_GetName(MapInfo_Map_bspname, 1)
                 s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
                 ++rec;
             }
@@ -2152,10 +2213,10 @@ string getrankings()
 
     for (i = 1; i <= RANKINGS_CNT; ++i)
     {
-        t = race_GetTime(i);
+        t = race_GetTime(map, i);
 	if (t == 0)
 	    continue;
-	n = race_GetName(i);
+	n = race_GetName(map, i);
 	p = race_PlaceName(i);
         s = strcat(s, strpad(8, p), " ", strpad(-8, TIME_ENCODED_TOSTRING(t)), " ", n, "\n");
     }
@@ -2167,6 +2228,163 @@ string getrankings()
     else
         return strcat("Records for ", map, ":\n", s);
 }
+
+const float LADDER_FIRSTPOINT = 100;
+const float LADDER_CNT = 10; // position X still gives LADDER_FIRSTPOINT/X points
+const float LADDER_SIZE = 30; // ladder shows the top X players
+string top_uids[LADDER_SIZE];
+float top_scores[LADDER_SIZE];
+float UIDCNT;
+string getladder()
+{
+    float i, j, k;
+    string s, len, temp_s;
+
+    s = "";
+    temp_s = "";
+
+    string myuid;
+
+    for (k = 0; k < MapInfo_count; ++k)
+    {
+        if (MapInfo_Get_ByID(k))
+	{
+		for (i = 0; i < LADDER_CNT; ++i) {
+			if(stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "time", ftos(Ii)))) == 0)
+			    break;
+
+			myuid = db_get(ServerProgsDB, strcat(GetMapname(), rr, "crypto_idfp", ftos(i)));
+
+			// string s contains:
+			// arg 0 = # of speed recs
+			// arg 1 = # of 1st place recs
+			// arg 2 = # of 2nd place recs
+			// ... etc
+			// LADDER_CNT+1 = total points
+
+			temp_s = db_get(TemporaryDB, strcat("ladder", myuid));
+			if (temp_s == "")
+			{
+			    db_put(TemporaryDB, strcat("uid", ftos(UIDCNT)), myuid);
+			    ++UIDCNT;
+			    for (j = 0; j <= LADDER_CNT + 1; ++j)
+			    {
+				if(j != LADDER_CNT + 1)
+				    temp_s = strcat(temp_s, "0 ");
+			        else
+				    temp_s = strcat(temp_s, "0");
+			    }
+			}
+
+			len = tokenize_console(temp_s);
+			s = "";
+
+			if(i == 0) // speedrec
+			    for (j = 0; j <= LADDER_CNT; ++j) // loop over each arg in the string
+			    {
+				if(j == 0) // speed rec!
+				    s = strcat(s, ftos(stof(argv(j)) +1)); // add 1 to speed rec count and write
+				else
+				    s = strcat(s, " ", argv(j)); // just copy over everything else
+			    }
+			else // record
+			    for (j = 0; j <= LADDER_CNT; ++j) // loop over each arg in the string
+			    {
+				if(j == 0)
+				    s = strcat(s, argv(j)); // speed rec, dont prefix with " "
+				else if(j == i) // wanted rec!
+				    s = strcat(s, " ", ftos(stof(argv(j)) +1)); // update argv(j)
+				else
+				    s = strcat(s, " ", argv(j)); // just copy over everything else
+			    }
+
+			// total points are (by default) calculated like this:
+			// speedrec = floor(100 / 10) = 10 points
+			// 1st place = floor(100 / 1) = 100 points
+			// 2nd place = floor(100 / 2) = 50 points
+			// 3rd place = floor(100 / 3) = 33 points
+			// 4th place = floor(100 / 4) = 25 points
+			// 5th place = floor(100 / 5) = 20 points
+			// ... etc
+
+			if(i == 0)
+			    s = strcat(s, " ", ftos(stof(argv(LADDER_CNT+1)) + LADDER_FIRSTPOINT / 10)); // speedrec, add LADDER_FIRSTPOINT / 10 points
+			else
+			    s = strcat(s, " ", ftos(stof(argv(LADDER_CNT+1)) + floor(LADDER_FIRSTPOINT / i))); // record, add LADDER_FIRSTPOINT / i points
+
+			db_put(TemporaryDB, strcat("ladder", myuid), s);
+	        }
+	    }
+	}
+    }
+
+    float thiscnt;
+    string thisuid;
+    for (i = 0; i <= UIDCNT; ++i) // for each known uid
+    {
+	thisuid = db_get(TemporaryDB, strcat("uid", ftos(i)));
+	temp_s = db_get(TemporaryDB, strcat("ladder", thisuid));
+    	len = tokenize_console(temp_s);
+        thiscnt = stof(argv(LADDER_CNT+1));
+
+	if(thiscnt > top_scores[LADDER_SIZE-1])
+	for (j = 0; j < LADDER_SIZE; ++j) // for each place in ladder
+	{
+	    if(thiscnt > top_scores[j])
+	    {
+		for (k = LADDER_SIZE-1; k >= j; --k)
+		{
+	            top_uids[k] = top_uids[k-1];
+		    top_scores[k] = top_scores[k-1];
+		}
+		top_uids[j] = thisuid;
+		top_scores[j] = thiscnt;
+		break;
+	    }
+	}
+    }
+
+    s = "^3-----------------------\n\n";
+
+    s = strcat(s, "Pos ^3|");
+    s = strcat(s, " ^7Total  ^3|");
+    for (i = 1; i <= LADDER_CNT; ++i)
+    {
+	s = strcat(s, " ^7", race_PlaceName(i), " ^3|");
+    }
+    s = strcat(s, " ^7Speed awards ^3| ^7Name");
+
+    s = strcat(s, "\n^3----+--------");
+    for (i = 1; i <= LADDER_CNT; ++i)
+    {
+	s = strcat(s, "+-----");
+    }
+    s = strcat(s, "+--------------+--------------------\n");
+
+    for (i = 0; i < LADDER_SIZE; ++i)
+    {
+	temp_s = db_get(TemporaryDB, strcat("ladder", top_uids[i]));
+	len = tokenize_console(temp_s);
+	if (argv(LADDER_CNT+1) == "") // total is 0, skip
+	    continue;
+	s = strcat(s, strpad(4, race_PlaceName(i+1)), "^3| ^7"); // pos
+	s = strcat(s, strpad(7, argv(LADDER_CNT+1)), "^3| ^7"); // total
+	for (j = 1; j <= LADDER_CNT; ++j)
+	{
+	    s = strcat(s, strpad(4, argv(j)), "^3| ^7"); // 1st, 2nd, 3rd etc cnt
+	}
+	s = strcat(s, strpad(13, argv(0)), "^3| ^7"); // speed rec cnt
+	s = strcat(s, race_GetName_OfUID(top_uids[i]), "\n"); // name
+    }
+
+    MapInfo_ClearTemps();
+
+    if (s == "")
+	return "No ladder on this server!\n";
+    else
+        return strcat("Top ", ftos(LADDER_SIZE), " ladder rankings:\n", s);
+}
+
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
 {

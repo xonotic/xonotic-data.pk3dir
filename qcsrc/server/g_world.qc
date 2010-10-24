@@ -697,6 +697,8 @@ void spawnfunc_worldspawn (void)
 	{
 		records_reply[i] = strzone(getrecords(i));
 	}
+	if(g_cts)
+		ladder_reply = strzone(getladder());
 
 	rankings_reply = strzone(getrankings());
 

@@ -924,6 +924,11 @@ void GameCommand(string command)
 			print(records_reply[i]);
 		return;
 	}
+	if (argv(0) == "ladder")
+	{
+		print(ladder_reply);
+		return;
+	}
 	if (argv(0) == "rankings")
 	{
 		strunzone(rankings_reply);

@@ -198,17 +198,6 @@ void race_SendStatus(float id, entity e)
 	});
 }
 
-string race_PlaceName(float pos) {
-	if(pos == 1)
-		return "1st";
-	else if(pos == 2)
-		return "2nd";
-	else if(pos == 3)
-		return "3rd";
-	else
-		return strcat(ftos(pos), "th");
-}
-
 void race_SetTime(entity e, float t, float match_rec) {
 	float pos, prevpos;
 	pos = race_GetPos(t);
