@@ -440,6 +440,8 @@ void spawnfunc_worldspawn (void)
 
 	compressShortVector_init();
 
+	allowed_to_spawn = TRUE;
+
 	local entity head;
 	head = nextent(world);
 	maxclients = 0;
@@ -642,6 +644,11 @@ void spawnfunc_worldspawn (void)
 
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
 
+	if(g_ca)
+	{
+		addstat(STAT_REDALIVE, AS_INT, redalive_stat);
+		addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
+	}
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
