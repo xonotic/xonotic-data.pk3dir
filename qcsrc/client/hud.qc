@@ -492,7 +492,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_progressbar \"", cvar_string(strcat("hud_panel_", panel_name, "_progressbar")), "\"", "\n"));
 					break;
 				case HUD_PANEL_HEALTHARMOR:
-					fputs(fh, strcat("seta hud_panel_", panel_name, "_flip \"", cvar_string(strcat("hud_panel_", panel_name, "_flip")), "\n"));
+					fputs(fh, strcat("seta hud_panel_", panel_name, "_flip \"", cvar_string(strcat("hud_panel_", panel_name, "_flip")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_iconalign \"", cvar_string(strcat("hud_panel_", panel_name, "_iconalign")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_baralign \"", cvar_string(strcat("hud_panel_", panel_name, "_baralign")), "\"", "\n"));
 					fputs(fh, strcat("seta hud_panel_", panel_name, "_progressbar \"", cvar_string(strcat("hud_panel_", panel_name, "_progressbar")), "\"", "\n"));
