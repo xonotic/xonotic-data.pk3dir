@@ -40,12 +40,13 @@ void spawnfunc_item_armor_shard()    { spawnfunc_item_armor_small();    }
 void spawnfunc_item_enviro()         { spawnfunc_item_invincible();     }
 
 // weapon remove ent from df
-// +void target_init_verify()
+void target_init_verify()
 {
 	entity trigger, targ;
 	for(trigger = world; (trigger = find(trigger, classname, "trigger_multiple")); )
 		for(targ = world; (targ = find(targ, targetname, trigger.target)); )
-			if (targ.classname == "target_init" || targ.classname == "target_give" || targ.classname == "target_items") {
+			if (targ.classname == "target_init" || targ.classname == "target_give" || targ.classname == "target_items")
+			{
 				targ.wait = -2;
 				targ.delay = 0;
 
