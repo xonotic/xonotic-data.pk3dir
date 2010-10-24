@@ -16,8 +16,8 @@ void WarpZone_crosshair_trace(entity pl)
 
 void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
 void() spawnpoint_use;
-string race_GetName(float pos);
-string race_PlaceName(float pos);
+string race_readName(float pos);
+string race_placeName(float pos);
 string GetMapname();
 string ColoredTeamName(float t);
 
@@ -2081,9 +2081,9 @@ string uid2name(string myuid) {
 	return s;
 }
 
-float race_GetTime(string map, float pos)
+float race_readTime(string map, float pos)
 {
-	float rr;
+	string rr;
 	if(g_cts)
 		rr = CTS_RECORD;
 	else
@@ -2092,20 +2092,46 @@ float race_GetTime(string map, float pos)
 	return stof(db_get(ServerProgsDB, strcat(map, rr, "time", ftos(pos))));
 }
 
-string race_GetUID(string map, float pos)
+string race_readUID(string map, float pos)
 {
-	float rr;
+	string rr;
 	if(g_cts)
 		rr = CTS_RECORD;
 	else
 		rr = RACE_RECORD;
 
-	return stof(db_get(ServerProgsDB, strcat(map, rr, "time", ftos(pos))));
+	return db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos)));
 }
 
-string race_GetName(string map, float pos)
+float race_readPos(string map, float t) {
+	float i;
+	for (i = 1; i <= RANKINGS_CNT; ++i)
+		if (race_readTime(map, i) == 0 || race_readTime(map, i) > t)
+			return i;
+
+	return 0; // pos is zero if unranked
+}
+
+float race_writeTime(string map, float t, string myuid)
 {
-	float rr;
+	string rr;
+	if(g_cts)
+		rr = CTS_RECORD;
+	else
+		rr = RACE_RECORD;
+
+	float pos;
+	pos = race_readPos(map, t);
+
+	if(pos) { // don't even ALLOW writing unranked times into the db, less stuff to worry about in other code then :-)
+		db_put(ServerProgsDB, strcat(map, rr, "time", ftos(pos)), ftos(t));
+		db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos)), myuid);
+	}
+}
+
+string race_readName(string map, float pos)
+{
+	string rr;
 	if(g_cts)
 		rr = CTS_RECORD;
 	else
@@ -2114,7 +2140,7 @@ string race_GetName(string map, float pos)
 	return uid2name(db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos))));
 }
 
-string race_PlaceName(float pos) {
+string race_placeName(float pos) {
 	if(floor((pos % 100)/10) * 10 != 10) // examples: 12th, 111th, 213th will not execute this block
 	{
 		if(pos % 10 == 1)
@@ -2164,10 +2190,10 @@ string getrecords(float page) // 50 records per page
         {
             if (MapInfo_Get_ByID(i))
             {
-		r = race_GetTime(MapInfo_Map_bspname, 1);
+		r = race_readTime(MapInfo_Map_bspname, 1);
                 if (r == 0)
                     continue;
-		h = race_GetName(MapInfo_Map_bspname, 1)
+		h = race_readName(MapInfo_Map_bspname, 1)
                 s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
                 ++rec;
             }
@@ -2180,10 +2206,10 @@ string getrecords(float page) // 50 records per page
         {
             if (MapInfo_Get_ByID(i))
             {
-		r = race_GetTime(MapInfo_Map_bspname, 1);
+		r = race_readTime(MapInfo_Map_bspname, 1);
                 if (r == 0)
                     continue;
-		h = race_GetName(MapInfo_Map_bspname, 1)
+		h = race_readName(MapInfo_Map_bspname, 1)
                 s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
                 ++rec;
             }
@@ -2213,11 +2239,11 @@ string getrankings()
 
     for (i = 1; i <= RANKINGS_CNT; ++i)
     {
-        t = race_GetTime(map, i);
+        t = race_readTime(map, i);
 	if (t == 0)
 	    continue;
-	n = race_GetName(map, i);
-	p = race_PlaceName(i);
+	n = race_readName(map, i);
+	p = race_placeName(i);
         s = strcat(s, strpad(8, p), " ", strpad(-8, TIME_ENCODED_TOSTRING(t)), " ", n, "\n");
     }
 
@@ -2250,10 +2276,10 @@ string getladder()
         if (MapInfo_Get_ByID(k))
 	{
 		for (i = 0; i <= LADDER_CNT; ++i) { // i = 0 because it is the speed award
-			if(race_GetTime(GetMapname(), i) == 0)
+			if(race_readTime(GetMapname(), i) == 0)
 			    break;
 
-			myuid = race_GetUID(GetMapname(), i);
+			myuid = race_readUID(GetMapname(), i);
 
 			// string s contains:
 			// arg 0 = # of speed recs
@@ -2350,7 +2376,7 @@ string getladder()
     s = strcat(s, " ^7Total  ^3|");
     for (i = 1; i <= LADDER_CNT; ++i)
     {
-	s = strcat(s, " ^7", race_PlaceName(i), " ^3|");
+	s = strcat(s, " ^7", race_placeName(i), " ^3|");
     }
     s = strcat(s, " ^7Speed awards ^3| ^7Name");
 
@@ -2367,7 +2393,7 @@ string getladder()
 	len = tokenize_console(temp_s);
 	if (argv(LADDER_CNT+1) == "") // total is 0, skip
 	    continue;
-	s = strcat(s, strpad(4, race_PlaceName(i+1)), "^3| ^7"); // pos
+	s = strcat(s, strpad(4, race_placeName(i+1)), "^3| ^7"); // pos
 	s = strcat(s, strpad(7, argv(LADDER_CNT+1)), "^3| ^7"); // total
 	for (j = 1; j <= LADDER_CNT; ++j)
 	{
