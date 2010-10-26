@@ -2107,7 +2107,7 @@ float race_readPos(string map, float t) {
 	return 0; // pos is zero if unranked
 }
 
-void race_writeTime(string map, float t, string myuid, float pos)
+void race_writeTime(string map, float t, string myuid)
 {
 	string rr;
 	if(g_cts)
@@ -2115,13 +2115,30 @@ void race_writeTime(string map, float t, string myuid, float pos)
 	else
 		rr = RACE_RECORD;
 
-	if(!pos)
-		pos = race_readPos(map, t);
+	float newpos;
+	newpos = race_readPos(map, t);
 
-	if(pos) { // don't even ALLOW writing unranked times into the db, less stuff to worry about in other code then :-)
-		db_put(ServerProgsDB, strcat(map, rr, "time", ftos(pos)), ftos(t));
-		db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos)), myuid);
+	float i, prevpos;
+	for(i = 1; i <= RANKINGS_CNT; ++i)
+	{
+		if(race_readUID(map, i) == myuid)
+			prevpos = i;
 	}
+	if (prevpos) { // player improved his existing record, only have to iterate on ranks between new and old recs
+		for (i = prevpos; i > newpos; --i) {
+			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
+			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
+		}
+	} else { // player has no ranked record yet
+		for (i = RANKINGS_CNT; i > newpos; --i) {
+			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
+			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
+		}
+	}
+
+	// store new time itself
+	db_put(ServerProgsDB, strcat(map, rr, "time", ftos(newpos)), ftos(t));
+	db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(newpos)), myuid);
 }
 
 string race_readName(string map, float pos)
