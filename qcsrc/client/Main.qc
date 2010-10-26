@@ -634,7 +634,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if(menu_action(bInputType, nPrimary, nSecondary))
 			return TRUE;
 
-	if(autocvar_g_allow_uid2name == -1 && gametype == GAME_CTS || gametype == GAME_RACE && panel_fg_alpha) // don't lock keys before we actually see what's going on
+	if(autocvar_cl_allow_uid2name == -1 && gametype == GAME_CTS || gametype == GAME_RACE && panel_fg_alpha) // don't lock keys before we actually see what's going on
 	{
 		string vyes_keys;
 		float keys;

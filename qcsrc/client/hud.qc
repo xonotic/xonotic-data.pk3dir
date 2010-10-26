@@ -3844,7 +3844,7 @@ void HUD_VoteWindow(void)
 
 	s = "A vote has been called for:";
 	if(autocvar_cl_allow_uid2name == -1 && gametype == GAME_CTS || gametype == GAME_RACE)
-		s = "Allow servers to store and display your name?"
+		s = "Allow servers to store and display your name?";
 	drawstring_aspect(pos, s, eX * mySize_x + eY * (2/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
 	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (1.75/8), stringwidth_colors);
 	if(autocvar__hud_configure)
