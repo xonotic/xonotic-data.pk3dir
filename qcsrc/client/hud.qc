@@ -2921,13 +2921,13 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		}
 	} else if(msg == MSG_RACE) {
 		if(type == RACE_SERVER_RECORD) {
-			HUD_KillNotify_Push(s1, "", 0, RACE_SERVER_RECORD);
+			HUD_KillNotify_Push(s1, s2, 1, RACE_SERVER_RECORD);
 		}
 		else if(type == RACE_NEW_RANK) {
-			HUD_KillNotify_Push(s1, "", 0, RACE_NEW_RANK);
+			HUD_KillNotify_Push(s1, s2, 1, RACE_NEW_RANK);
 		}
 		else if(type == RACE_NEW_TIME) {
-			HUD_KillNotify_Push(s1, "", 0, RACE_NEW_TIME);
+			HUD_KillNotify_Push(s1, s2, 1, RACE_NEW_TIME);
 		}
 	}
 }
@@ -3187,18 +3187,6 @@ void HUD_Notify (void)
 					s = "notify_blue_captured";
 				}
 			}
-			else if(killnotify_deathtype[j] == RACE_SERVER_RECORD)
-			{
-				s = "race_newrecordserver";
-			}
-			else if(killnotify_deathtype[j] == RACE_NEW_RANK)
-			{
-				s = "race_newrankyellow";
-			}
-			else if(killnotify_deathtype[j] == RACE_NEW_TIME)
-			{
-				s = "race_newtime";
-			}
 			if(s != "" && a)
 			{
 				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
@@ -3276,6 +3264,18 @@ void HUD_Notify (void)
 			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
 			{
 				s = "notify_void";
+			}
+			else if(killnotify_deathtype[j] == RACE_SERVER_RECORD)
+			{
+				s = "race_newrecordserver";
+			}
+			else if(killnotify_deathtype[j] == RACE_NEW_RANK)
+			{
+				s = "race_newrankyellow";
+			}
+			else if(killnotify_deathtype[j] == RACE_NEW_TIME)
+			{
+				s = "race_newtime";
 			}
 			if(s != "" && a)
 			{
