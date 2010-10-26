@@ -3536,7 +3536,7 @@ void HUD_Score(void)
 			// distribution display
 			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
 
-			distrtimer = ftos(distribution/pow(10, TIME_DECIMALS));
+			distrtimer = ftos_decimals(distribution/pow(10, TIME_DECIMALS), TIME_DECIMALS);
 
 			if (distribution <= 0) {
 				distribution_color = '0 1 0';
