@@ -104,7 +104,7 @@ void race_send_recordtime(float msg)
 	WriteByte(msg, SVC_TEMPENTITY);
 	WriteByte(msg, TE_CSQC_RACE);
 	WriteByte(msg, RACE_NET_SERVER_RECORD);
-	WriteInt24_t(msg, race_readTime(1));
+	WriteInt24_t(msg, race_readTime(MapInfo_Map_bspname, 1));
 }
 
 void race_SendRankings(float pos, float prevpos, float del, float msg)
@@ -115,27 +115,28 @@ void race_SendRankings(float pos, float prevpos, float del, float msg)
 	WriteShort(msg, pos);
 	WriteShort(msg, prevpos);
 	WriteShort(msg, del);
-	WriteString(msg, race_readName(pos));
-	WriteInt24_t(msg, race_readTime(pos));
+	WriteString(msg, race_readName(MapInfo_Map_bspname, pos));
+	WriteInt24_t(msg, race_readTime(MapInfo_Map_bspname, pos));
 }
 
-void race_SendStatus(float id, string mynetname)
+void race_SendStatus(float id, entity e)
 {
 	float msg;
 	if (id == 0)
 		msg = MSG_ONE;
 	else
 		msg = MSG_ALL;
+	msg_entity = e;
 	WRITESPECTATABLE_MSG_ONE_VARNAME(dummy3, {
 		WriteByte(msg, SVC_TEMPENTITY);
 		WriteByte(msg, TE_CSQC_RACE);
 		WriteByte(msg, RACE_NET_SERVER_STATUS);
 		WriteShort(msg, id);
-		WriteString(msg, mynetname);
+		WriteString(msg, e.netname);
 	});
 }
 
-void race_setTime(string map, float t, string myuid, string mynetname) { // netname only used TEMPORARILY for printing
+void race_setTime(string map, float t, string myuid, string mynetname, entity e) { // netname only used TEMPORARILY for printing
 	float newpos, player_prevpos;
 	newpos = race_readPos(map, t);
 
@@ -147,17 +148,17 @@ void race_setTime(string map, float t, string myuid, string mynetname) { // netn
 	}
 
 	float oldrec;
-	string recorddifference;
+	string recorddifference, oldrec_holder;
 	if (player_prevpos && (player_prevpos < newpos || !newpos))
 	{
-		oldrec = race_readTime(player_prevpos);
+		oldrec = race_readTime(MapInfo_Map_bspname, player_prevpos);
 		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - oldrec), "]");
 		bprint(mynetname, "^7 couldn't break their ", race_placeName(player_prevpos), " place record of ", TIME_ENCODED_TOSTRING(oldrec), recorddifference, "\n");
 		race_SendStatus(0, e); // "fail"
 		return;
 	} else if (!newpos) { // no ranking, time worse than the worst ranked
 		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - race_readTime(MapInfo_Map_bspname, RANKINGS_CNT)), "]");
-		bprint(mynetname, "^7 couldn't break the ", race_placeName(RANKINGS_CNT), " place record of ", TIME_ENCODED_TOSTRING(race_readTime(MapInfo_Map_bspname)), recorddifference, "\n");
+		bprint(mynetname, "^7 couldn't break the ", race_placeName(RANKINGS_CNT), " place record of ", TIME_ENCODED_TOSTRING(race_readTime(MapInfo_Map_bspname, RANKINGS_CNT)), recorddifference, "\n");
 		race_SendStatus(0, e); // "fail"
 		return;
 	}
@@ -168,21 +169,20 @@ void race_setTime(string map, float t, string myuid, string mynetname) { // netn
 	oldrec_holder = race_readName(MapInfo_Map_bspname, newpos);
 
 	// move other rankings out of the way
-	float i;
 	if (player_prevpos) { // player improved his existing record, only have to iterate on ranks between new and old recs
-		for (i=player_prevpos;i>pos;--i) {
+		for (i = player_prevpos; i > newpos; --i) {
 			race_writeTime(GetMapname(), race_readTime(GetMapname(), newpos-1), race_readUID(GetMapname(), newpos-1));
 		}
 	} else { // player has no ranked record yet
-		for (i=RANKINGS_CNT;i>pos;--i) {
+		for (i = RANKINGS_CNT; i > newpos; --i) {
 			race_writeTime(GetMapname(), race_readTime(GetMapname(), newpos-1), race_readUID(GetMapname(), newpos-1));
 		}
 	}
 	
 	// store new ranking
-	race_writeTime(GetMapname(), t, e.crypto_idfp);
+	race_writeTime(GetMapname(), t, myuid);
 
-	if (pos == 1) {
+	if (newpos == 1) {
 		write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
 		race_send_recordtime(MSG_ALL);
 	}
@@ -191,8 +191,8 @@ void race_setTime(string map, float t, string myuid, string mynetname) { // netn
 	if(rankings_reply)
 		strunzone(rankings_reply);
 	rankings_reply = strzone(getrankings());
-	if(pos == 1) {
-		if(pos == player_prevpos) {
+	if(newpos == 1) {
+		if(newpos == player_prevpos) {
 			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
 			bprint(mynetname, "^1 improved their 1st place record with ", TIME_ENCODED_TOSTRING(t), recorddifference, "\n");
 		} else if (oldrec == 0) {
@@ -203,7 +203,7 @@ void race_setTime(string map, float t, string myuid, string mynetname) { // netn
 		}
 		race_SendStatus(3, e); // "new server record"
 	} else {
-		if(pos == player_prevpos) {
+		if(newpos == player_prevpos) {
 			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
 			bprint(mynetname, "^5 improved their ", race_placeName(newpos), " ^5place record with ", TIME_ENCODED_TOSTRING(t), recorddifference, "\n");
 			race_SendStatus(1, e); // "new time"
@@ -218,15 +218,22 @@ void race_setTime(string map, float t, string myuid, string mynetname) { // netn
 	}
 }
 
-void race_DeleteTime(float pos) {
-	float i;
+void race_deleteTime(string map, float pos) {
+	string rr;
+	if(g_cts)
+		rr = CTS_RECORD;
+	else
+		rr = RACE_RECORD;
 
+	float i;
 	for (i = pos; i <= RANKINGS_CNT; ++i) {
 		if (i == RANKINGS_CNT) {
-			race_writeTime(GetMapname(), string_null, string_null);
+			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), string_null);
+			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), string_null);
 		}
 		else {
-			race_writeTime(GetMapname(), race_readTime(GetMapname(), newpos-1), race_readUID(GetMapname(), pos+1));
+			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(GetMapname(), i+1)));
+			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(GetMapname(), i+1));
 		}
 	}
 
@@ -296,13 +303,12 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			if(t != 0) {
 				if(cp == race_timed_checkpoint)
 				{
-					msg_entity = e;
-					race_setTime(MapInfo_Map_bspname, t, e.crypto_idfp, e.netname);
+					race_setTime(MapInfo_Map_bspname, t, e.crypto_idfp, e.netname, e);
 					if(g_cts && cvar("g_cts_finish_kill_delay"))
 					{
 						CTS_ClientKill(cvar("g_cts_finish_kill_delay"));
 					}
-
+				}
 				if(t < recordtime || recordtime == 0)
 				{
 					race_checkpoint_records[cp] = t;

@@ -1,5 +1,5 @@
 string GotoMap(string m);
-void race_DeleteTime(float pos);
+void race_deleteTime(string map, float pos);
 
 float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 {
@@ -1345,7 +1345,11 @@ void GameCommand(string command)
 	}
 	if(argv(0) == "delrec")
 	{
-		race_DeleteTime(stof(argv(1)));
+		if(argv(2) != "")
+			race_deleteTime(argv(2), stof(argv(1)));
+		else
+			race_deleteTime(GetMapname(), stof(argv(1)));
+
 		return;
 	}
 
