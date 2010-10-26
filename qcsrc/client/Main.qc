@@ -660,8 +660,6 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		}
 		*/ // If only I could grab F1-F12 in CSQC... but no
 
-		print(ftos(nPrimary), "\n");
-
 		if(nPrimary == 121) // ascii value for y
 		{
 			vote_active = 0;
