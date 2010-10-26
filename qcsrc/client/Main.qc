@@ -633,6 +633,39 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if(menu_visible)
 		if(menu_action(bInputType, nPrimary, nSecondary))
 			return TRUE;
+
+	if(autocvar_g_allow_uid2name == -1 && gametype == GAME_CTS || gametype == GAME_RACE && panel_fg_alpha) // don't lock keys before we actually see what's going on
+	{
+		string vyes_keys;
+		float keys;
+		vyes_keys = findkeysforcommand("vyes");
+		keys = tokenize(vyes_keys);
+
+		float i;
+		for (i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+			{
+				cvar_set("cl_allow_uid2name", "1");
+				return true;
+			}
+		}
+
+		string vno_keys;
+		vno_keys = findkeysforcommand("vno");
+		keys = tokenize(vno_keys);
+
+		float i;
+		for (i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+			{
+				cvar_set("cl_allow_uid2name", "0");
+				return true;
+			}
+		}
+	}
+
 	return bSkipKey;
 }
 

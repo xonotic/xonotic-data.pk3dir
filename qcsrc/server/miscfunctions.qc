@@ -625,6 +625,7 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_forceplayermodelsfromxonotic, "cl_forceplayermodelsfromxonotic");
 #endif
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
+	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)

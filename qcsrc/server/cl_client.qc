@@ -3026,6 +3026,18 @@ void PlayerPostThink (void)
 
 	playerdemo_write();
 
+	if((g_cts || g_race) && self.cvar_cl_allow_uid2name)
+	{
+		if(!self.stored_netname)
+			self.stored_netname = strzone(uid2name(self.crypto_idfp));
+		if(self.stored_netname != self.stored_netname)
+		{
+			db_put(ServerProgsDB, strcat("uid2name", self.crypto_idfp), self.netname);
+			strunzone(self.stored_netname);
+			self.stored_netname = strzone(self.netname);
+		}
+	}
+
 	/*
 	if(g_race)
 		dprint(sprintf("%f %.6f\n", time, race_GetFractionalLapCount(self)));

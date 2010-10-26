@@ -3767,6 +3767,12 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
+	if(autocvar_cl_allow_uid2name == -1 && gametype == GAME_CTS || gametype == GAME_RACE)
+	{
+		vote_active = 1;
+		vote_called_vote = "This allows your name to be identified in stats instead of \"Unregistered player\"";
+	}
+
 	if(!autocvar_hud_panel_vote && !autocvar__hud_configure)
 		return;
 
@@ -3837,6 +3843,8 @@ void HUD_VoteWindow(void)
 	mySize = newSize;
 
 	s = "A vote has been called for:";
+	if(autocvar_cl_allow_uid2name == -1 && gametype == GAME_CTS || gametype == GAME_RACE)
+		s = "Allow servers to store and display your name?"
 	drawstring_aspect(pos, s, eX * mySize_x + eY * (2/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
 	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (1.75/8), stringwidth_colors);
 	if(autocvar__hud_configure)

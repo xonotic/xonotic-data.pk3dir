@@ -329,6 +329,9 @@ float sv_loddistance2;
 .float cvar_cl_gunalign;
 .float cvar_cl_noantilag;
 
+.float cvar_cl_allow_uid2name;
+.string stored_netname;
+
 void Announce(string snd);
 void AnnounceTo(entity e, string snd);
 
