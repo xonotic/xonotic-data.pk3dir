@@ -2593,6 +2593,9 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	alsoprint = (autocvar_hud_panel_notify_print || !panel_enabled); // print message to console if: notify panel disabled, or cvar to do so enabled
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
 	
+	if (msg == MSG_SUICIDE && gametype == GAME_CTS) // selfkill isn't interesting in CTS and only spams up the notify panel
+		return;
+
 	if(msg == MSG_SUICIDE) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
