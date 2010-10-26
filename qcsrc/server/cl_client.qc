@@ -1318,7 +1318,7 @@ void CTS_ClientKill_Think (void)
 void CTS_ClientKill (float t) // silent version of ClientKill
 {
 	entity e;
-	spawn(e);
+	e = spawn();
 	e.owner = self;
 	e.think = CTS_ClientKill_Think;
 	e.nextthink = t;
