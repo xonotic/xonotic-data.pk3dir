@@ -17,8 +17,8 @@ Note: The only teams who can use dom control points are identified by spawnfunc_
 
 #define DOMPOINTFRAGS frags
 
-float g_domination_point_amt;
-float g_domination_point_rate;
+.float g_domination_point_amt;
+.float g_domination_point_rate;
 
 .float enemy_playerid;
 .entity sprite;
