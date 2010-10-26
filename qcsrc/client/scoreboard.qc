@@ -1177,11 +1177,11 @@ void HUD_DrawScoreboard()
 
 	if(gametype == GAME_CTS || gametype == GAME_RACE) {
 		if(race_speedaward) {
-			drawcolorcodedstring(pos, strcat("Speed award: ", ftos(race_speedaward), " (", race_speedaward_holder, ")"), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, strcat("Speed award: ", ftos(race_speedaward), " ^7(", race_speedaward_holder, "^7)"), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
 		}
 		if(race_speedaward_alltimebest) {
-			drawcolorcodedstring(pos, strcat("All-time fastest: ", ftos(race_speedaward_alltimebest), " (", race_speedaward_alltimebest_holder, ")"), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, strcat("All-time fastest: ", ftos(race_speedaward_alltimebest), " ^7(", race_speedaward_alltimebest_holder, "^7)"), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
 		}
 		pos = HUD_DrawScoreboardRankings(pos, pl, rgb, bg_size);
