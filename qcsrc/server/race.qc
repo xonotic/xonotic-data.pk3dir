@@ -104,7 +104,7 @@ void race_send_recordtime(float msg)
 	WriteByte(msg, SVC_TEMPENTITY);
 	WriteByte(msg, TE_CSQC_RACE);
 	WriteByte(msg, RACE_NET_SERVER_RECORD);
-	WriteInt24_t(msg, race_readTime(MapInfo_Map_bspname, 1));
+	WriteInt24_t(msg, race_readTime(GetMapname(), 1));
 }
 
 void race_SendRankings(float pos, float prevpos, float del, float msg)
@@ -115,8 +115,8 @@ void race_SendRankings(float pos, float prevpos, float del, float msg)
 	WriteShort(msg, pos);
 	WriteShort(msg, prevpos);
 	WriteShort(msg, del);
-	WriteString(msg, race_readName(MapInfo_Map_bspname, pos));
-	WriteInt24_t(msg, race_readTime(MapInfo_Map_bspname, pos));
+	WriteString(msg, race_readName(GetMapname(), pos));
+	WriteInt24_t(msg, race_readTime(GetMapname(), pos));
 }
 
 void race_SendStatus(float id, entity e)
@@ -151,22 +151,22 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	string recorddifference, oldrec_holder;
 	if (player_prevpos && (player_prevpos < newpos || !newpos))
 	{
-		oldrec = race_readTime(MapInfo_Map_bspname, player_prevpos);
+		oldrec = race_readTime(GetMapname(), player_prevpos);
 		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - oldrec), "]");
 		bprint(mynetname, "^7 couldn't break their ", race_placeName(player_prevpos), " place record of ", TIME_ENCODED_TOSTRING(oldrec), recorddifference, "\n");
 		race_SendStatus(0, e); // "fail"
 		return;
 	} else if (!newpos) { // no ranking, time worse than the worst ranked
-		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - race_readTime(MapInfo_Map_bspname, RANKINGS_CNT)), "]");
-		bprint(mynetname, "^7 couldn't break the ", race_placeName(RANKINGS_CNT), " place record of ", TIME_ENCODED_TOSTRING(race_readTime(MapInfo_Map_bspname, RANKINGS_CNT)), recorddifference, "\n");
+		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - race_readTime(GetMapname(), RANKINGS_CNT)), "]");
+		bprint(mynetname, "^7 couldn't break the ", race_placeName(RANKINGS_CNT), " place record of ", TIME_ENCODED_TOSTRING(race_readTime(GetMapname(), RANKINGS_CNT)), recorddifference, "\n");
 		race_SendStatus(0, e); // "fail"
 		return;
 	}
 
 	// if we didn't hit a return yet, we have a new record!
 
-	oldrec = race_readTime(MapInfo_Map_bspname, newpos);
-	oldrec_holder = race_readName(MapInfo_Map_bspname, newpos);
+	oldrec = race_readTime(GetMapname(), newpos);
+	oldrec_holder = race_readName(GetMapname(), newpos);
 
 	// move other rankings out of the way
 	if (player_prevpos) { // player improved his existing record, only have to iterate on ranks between new and old recs
@@ -303,7 +303,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			if(t != 0) {
 				if(cp == race_timed_checkpoint)
 				{
-					race_setTime(MapInfo_Map_bspname, t, e.crypto_idfp, e.netname, e);
+					race_setTime(GetMapname(), t, e.crypto_idfp, e.netname, e);
 					if(g_cts && cvar("g_cts_finish_kill_delay"))
 					{
 						CTS_ClientKill(cvar("g_cts_finish_kill_delay"));
