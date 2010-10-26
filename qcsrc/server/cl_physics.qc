@@ -1308,9 +1308,7 @@ void SV_PlayerPhysics()
 		if(vlen(self.velocity - self.velocity_z * '0 0 1') > speedaward_speed) {
 			speedaward_speed = vlen(self.velocity - self.velocity_z * '0 0 1');
 			speedaward_holder = self.netname;
-			if(speedaward_uid)
-				strunzone(speedaward_uid);
-			speedaward_uid = strzone(self.crypto_idfp);
+			speedaward_uid = self.crypto_idfp;
 			speedaward_lastupdate = time;
 		}
 		if(speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1) {
@@ -1323,12 +1321,8 @@ void SV_PlayerPhysics()
 			speedaward_lastsent = speedaward_speed;
 			if (speedaward_speed > speedaward_alltimebest) {
 				speedaward_alltimebest = speedaward_speed;
-				if(speedaward_alltimebest_holder != "^1Unregistered Player")
-					strunzone(speedaward_alltimebest_holder);
-				speedaward_alltimebest_holder = strzone(speedaward_holder);
-				if(speedaward_alltimebest_uid)
-					strunzone(speedaward_alltimebest_uid);
-				speedaward_alltimebest_uid = strzone(speedaward_uid);
+				speedaward_alltimebest_holder = speedaward_holder;
+				speedaward_alltimebest_uid = speedaward_uid;
 				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed"), ftos(speedaward_alltimebest));
 				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp"), speedaward_alltimebest_uid);
 				race_send_speedaward_alltimebest(MSG_ALL);
