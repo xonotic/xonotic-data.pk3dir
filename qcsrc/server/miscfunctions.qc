@@ -2394,10 +2394,16 @@ string getladder()
     s = strcat(s, " ^7Speed awards ^3| ^7Name");
 
     s = strcat(s, "\n^3----+--------");
-    for (i = 1; i <= LADDER_CNT; ++i)
+    for (i = 1; i <= min(9, LADDER_CNT); ++i)
     {
 	s = strcat(s, "+-----");
     }
+    if(LADDER_CNT > 9)
+	    for (i = 1; i <= LADDER_CNT - 9; ++i)
+	    {
+		s = strcat(s, "+------");
+	    }
+
     s = strcat(s, "+--------------+--------------------\n");
 
     for (i = 0; i < LADDER_SIZE; ++i)
