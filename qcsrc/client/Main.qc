@@ -672,11 +672,6 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			cvar_set("cl_allow_uid2name", "0");
 			return TRUE;
 		}
-		else if(nPrimary == 27) // ascii value for esc
-		{
-			return FALSE;
-		}
-		return TRUE; // capture all other keys to get more attention
 	}
 
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
