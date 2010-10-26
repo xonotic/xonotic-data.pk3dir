@@ -432,7 +432,7 @@ void ReadyRestartForce()
 
 	readyrestart_happened = 1;
 	game_starttime = time;
-	if(!g_ca)
+	if(!g_ca && !g_arena)
 		game_starttime += RESTART_COUNTDOWN;
 	restart_mapalreadyrestarted = 0; //reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
@@ -450,7 +450,7 @@ void ReadyRestartForce()
 	}
 
 	//initiate the restart-countdown-announcer entity
-	if(cvar("sv_ready_restart_after_countdown"))
+	if(cvar("sv_ready_restart_after_countdown") && !g_ca && !g_arena)
 	{
 		restartTimer = spawn();
 		restartTimer.think = restartTimer_Think;
