@@ -2929,6 +2929,9 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		else if(type == RACE_NEW_TIME) {
 			HUD_KillNotify_Push(s1, s2, 1, RACE_NEW_TIME);
 		}
+		else if(type == RACE_FAIL) {
+			HUD_KillNotify_Push(s1, s2, 1, RACE_FAIL);
+		}
 	}
 }
 
@@ -3276,6 +3279,10 @@ void HUD_Notify (void)
 			else if(killnotify_deathtype[j] == RACE_NEW_TIME)
 			{
 				s = "race_newtime";
+			}
+			else if(killnotify_deathtype[j] == RACE_FAIL)
+			{
+				s = "race_newfail";
 			}
 			if(s != "" && a)
 			{

@@ -590,6 +590,7 @@ float INFO_CAPTUREFLAG = 10323;
 float RACE_SERVER_RECORD = 10400;
 float RACE_NEW_TIME = 10401;
 float RACE_NEW_RANK = 10402;
+float RACE_FAIL = 10403;
 
 // weapon requests
 float WR_SETUP		= 1; // (SVQC) setup weapon data

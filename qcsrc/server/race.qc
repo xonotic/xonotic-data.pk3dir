@@ -155,11 +155,13 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - oldrec), "]");
 		bprint(mynetname, "^7 couldn't break their ", race_placeName(player_prevpos), " place record of ", TIME_ENCODED_TOSTRING(oldrec), recorddifference, "\n");
 		race_SendStatus(0, e); // "fail"
+		Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_FAIL, MSG_RACE);
 		return;
 	} else if (!newpos) { // no ranking, time worse than the worst ranked
 		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - race_readTime(GetMapname(), RANKINGS_CNT)), "]");
 		bprint(mynetname, "^7 couldn't break the ", race_placeName(RANKINGS_CNT), " place record of ", TIME_ENCODED_TOSTRING(race_readTime(GetMapname(), RANKINGS_CNT)), recorddifference, "\n");
 		race_SendStatus(0, e); // "fail"
+		Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_FAIL, MSG_RACE);
 		return;
 	}
 
