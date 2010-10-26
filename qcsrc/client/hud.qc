@@ -664,8 +664,8 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 			else // push it downwards
 				myTarget_y = panel_pos_y + panel_size_y;
 		}
-		if(cvar("hud_configure_checkcollisions_debug"))
-			drawfill(panel_pos, panel_size, '1 1 0', .3, DRAWFLAG_NORMAL);
+		//if(cvar("hud_configure_checkcollisions_debug"))
+			//drawfill(panel_pos, panel_size, '1 1 0', .3, DRAWFLAG_NORMAL);
 	}
 
 	return myTarget;
@@ -677,8 +677,8 @@ void HUD_Panel_SetPos(vector pos)
 	vector mySize;
 	mySize = panel_size;
 
-	if(cvar("hud_configure_checkcollisions_debug"))
-		drawfill(pos, mySize, '1 1 1', .2, DRAWFLAG_NORMAL);
+	//if(cvar("hud_configure_checkcollisions_debug"))
+		//drawfill(pos, mySize, '1 1 1', .2, DRAWFLAG_NORMAL);
 
 	if(autocvar_hud_configure_grid)
 	{
@@ -806,8 +806,8 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 			else
 				mySize_y = min(mySize_y, dist_y);
 		}
-		if(cvar("hud_configure_checkcollisions_debug"))
-			drawfill(panel_pos, panel_size, '1 1 0', .3, DRAWFLAG_NORMAL);
+		//if(cvar("hud_configure_checkcollisions_debug"))
+			//drawfill(panel_pos, panel_size, '1 1 0', .3, DRAWFLAG_NORMAL);
 	}
 
 	return mySize;
@@ -860,8 +860,8 @@ void HUD_Panel_SetPosSize(vector mySize)
 	if(myPos_y + mySize_y > vid_conheight)
 		mySize_y = vid_conheight - myPos_y;
 
-	if(cvar("hud_configure_checkcollisions_debug"))
-		drawfill(myPos, mySize, '1 1 1', .2, DRAWFLAG_NORMAL);
+	//if(cvar("hud_configure_checkcollisions_debug"))
+		//drawfill(myPos, mySize, '1 1 1', .2, DRAWFLAG_NORMAL);
 
 	// before checkresize, otherwise panel can be snapped partially inside another panel or panel aspect ratio can be broken
 	if(autocvar_hud_configure_grid)
@@ -892,8 +892,8 @@ void HUD_Panel_SetPosSize(vector mySize)
 		myPos_y = resizeorigin_y;
 	}
 
-	if(cvar("hud_configure_checkcollisions_debug"))
-		drawfill(myPos, mySize, '0 1 0', .3, DRAWFLAG_NORMAL);
+	//if(cvar("hud_configure_checkcollisions_debug"))
+		//drawfill(myPos, mySize, '0 1 0', .3, DRAWFLAG_NORMAL);
 
 	HUD_Panel_GetName(highlightedPanel);
 	string s;
@@ -1367,7 +1367,7 @@ void HUD_Panel_Mouse()
 
 		if (prev_pos != panel_pos || prev_size != panel_size)
 		{
-			hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
+			hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && cvar("hud_configure_checkcollisions"));
 			// backup!
 			panel_pos_backup = prev_pos;
 			panel_size_backup = prev_size;
