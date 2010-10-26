@@ -820,8 +820,8 @@ void CSQC_UpdateView(float w, float h)
 				wcross_alpha_prev = wcross_alpha;
 				wcross_color_prev = wcross_color;
 
-				wcross_scale *= 1 - cvar("_menu_alpha");
-				wcross_alpha *= 1 - cvar("_menu_alpha");
+				wcross_scale *= 1 - autocvar__menu_alpha;
+				wcross_alpha *= 1 - autocvar__menu_alpha;
 
 				ring_scale = cvar("crosshair_ring_size");
 

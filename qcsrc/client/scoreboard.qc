@@ -1106,8 +1106,8 @@ void HUD_DrawScoreboard()
 
 	HUD_UpdatePlayerTeams();
 
-	scoreboard_alpha_bg = cvar("scoreboard_alpha_bg") * scoreboard_fade_alpha * (1 - cvar("_menu_alpha"));
-	scoreboard_alpha_fg = cvar_or("scoreboard_alpha_fg", 1.0) * scoreboard_fade_alpha * (1 - cvar("_menu_alpha"));
+	scoreboard_alpha_bg = cvar("scoreboard_alpha_bg") * scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
+	scoreboard_alpha_fg = cvar_or("scoreboard_alpha_fg", 1.0) * scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
 	scoreboard_highlight = cvar("scoreboard_highlight");
 	scoreboard_highlight_alpha = cvar_or("scoreboard_highlight_alpha", 0.10) * scoreboard_alpha_fg;
 	scoreboard_highlight_alpha_self = cvar_or("scoreboard_highlight_alpha_self", 0.25) * scoreboard_alpha_fg;
