@@ -2919,6 +2919,16 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			HUD_KillNotify_Push(s1, s2, 0, INFO_CAPTUREFLAG);
 			print(s1, "^7 captured the ", s2, s3, "\n");
 		}
+	} else if(msg == MSG_RACE) {
+		if(type == RACE_SERVER_RECORD) {
+			HUD_KillNotify_Push(s1, "", 0, RACE_SERVER_RECORD);
+		}
+		else if(type == RACE_NEW_RANK) {
+			HUD_KillNotify_Push(s1, "", 0, RACE_NEW_RANK);
+		}
+		else if(type == RACE_NEW_TIME) {
+			HUD_KillNotify_Push(s1, "", 0, RACE_NEW_TIME);
+		}
 	}
 }
 
@@ -3176,6 +3186,18 @@ void HUD_Notify (void)
 				{
 					s = "notify_blue_captured";
 				}
+			}
+			else if(killnotify_deathtype[j] == RACE_SERVER_RECORD)
+			{
+				s = "race_newrecordserver";
+			}
+			else if(killnotify_deathtype[j] == RACE_NEW_RANK)
+			{
+				s = "race_newrankyellow";
+			}
+			else if(killnotify_deathtype[j] == RACE_NEW_TIME)
+			{
+				s = "race_newtime";
 			}
 			if(s != "" && a)
 			{

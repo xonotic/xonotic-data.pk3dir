@@ -202,18 +202,22 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 			bprint(mynetname, "^1 broke ", oldrec_holder, "^1's 1st place record with ", strcat(TIME_ENCODED_TOSTRING(t), recorddifference, "\n"));
 		}
 		race_SendStatus(3, e); // "new server record"
+		Send_KillNotification(e.netname, "", "", RACE_SERVER_RECORD, MSG_RACE);
 	} else {
 		if(newpos == player_prevpos) {
 			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
 			bprint(mynetname, "^5 improved their ", race_placeName(newpos), " ^5place record with ", TIME_ENCODED_TOSTRING(t), recorddifference, "\n");
 			race_SendStatus(1, e); // "new time"
+			Send_KillNotification(e.netname, "", "", RACE_NEW_TIME, MSG_RACE);
 		} else if (oldrec == 0) {
 			bprint(mynetname, "^2 set the ", race_placeName(newpos), " ^2place record with ", TIME_ENCODED_TOSTRING(t), "\n");
 			race_SendStatus(2, e); // "new rank"
+			Send_KillNotification(e.netname, "", "", RACE_NEW_RANK, MSG_RACE);
 		} else {
 			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
 			bprint(mynetname, "^2 broke ", oldrec_holder, "^2's ", race_placeName(newpos), " ^2place record with ", strcat(TIME_ENCODED_TOSTRING(t), recorddifference, "\n"));
 			race_SendStatus(2, e); // "new rank"
+			Send_KillNotification(e.netname, "", "", RACE_NEW_TIME, MSG_RACE);
 		}
 	}
 }
