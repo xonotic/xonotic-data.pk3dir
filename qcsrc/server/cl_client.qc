@@ -1598,6 +1598,7 @@ void ClientConnect (void)
 			rr = RACE_RECORD;
 		t = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "time")));
 
+		msg_entity = self;
 		race_send_recordtime(MSG_ONE);
 		race_send_speedaward(MSG_ONE);
 
