@@ -6,7 +6,7 @@ ZIPEXCLUDE ?= -x\!*.pk3 -xr\!\.svn -x\!qcsrc
 DIFF ?= diff
 
 FTEQCCFLAGS_WATERMARK ?= -DWATERMARK='"^1$(shell git describe) TEST BUILD"'
-FTEQCCFLAGS ?= -Werror -Wall -Wno-mundane -O3 -Ono-c -Ono-cs -flo $(FTEQCCFLAGS_EXTRA) $(FTEQCCFLAGS_WATERMARK)
+FTEQCCFLAGS ?= -Werror -Wno-Q302 -O3 -Ono-c -Ono-cs -flo $(FTEQCCFLAGS_EXTRA) $(FTEQCCFLAGS_WATERMARK)
 FTEQCCFLAGS_PROGS ?=
 FTEQCCFLAGS_MENU ?=
 
