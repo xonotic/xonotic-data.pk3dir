@@ -2107,7 +2107,7 @@ float race_readPos(string map, float t) {
 	return 0; // pos is zero if unranked
 }
 
-void race_writeTime(string map, float t, string myuid)
+void race_writeTime(string map, float t, string myuid, float pos)
 {
 	string rr;
 	if(g_cts)
@@ -2115,8 +2115,8 @@ void race_writeTime(string map, float t, string myuid)
 	else
 		rr = RACE_RECORD;
 
-	float pos;
-	pos = race_readPos(map, t);
+	if(!pos)
+		pos = race_readPos(map, t);
 
 	if(pos) { // don't even ALLOW writing unranked times into the db, less stuff to worry about in other code then :-)
 		db_put(ServerProgsDB, strcat(map, rr, "time", ftos(pos)), ftos(t));

@@ -173,16 +173,16 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	// move other rankings out of the way
 	if (player_prevpos) { // player improved his existing record, only have to iterate on ranks between new and old recs
 		for (i = player_prevpos; i > newpos; --i) {
-			race_writeTime(GetMapname(), race_readTime(GetMapname(), newpos-1), race_readUID(GetMapname(), newpos-1));
+			race_writeTime(GetMapname(), race_readTime(GetMapname(), i-1), race_readUID(GetMapname(), i-1), i);
 		}
 	} else { // player has no ranked record yet
 		for (i = RANKINGS_CNT; i > newpos; --i) {
-			race_writeTime(GetMapname(), race_readTime(GetMapname(), newpos-1), race_readUID(GetMapname(), newpos-1));
+			race_writeTime(GetMapname(), race_readTime(GetMapname(), i-1), race_readUID(GetMapname(), i-1), i);
 		}
 	}
 	
 	// store new ranking
-	race_writeTime(GetMapname(), t, myuid);
+	race_writeTime(GetMapname(), t, myuid, 0); // 0 = autodetect pos
 
 	if (newpos == 1) {
 		write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
