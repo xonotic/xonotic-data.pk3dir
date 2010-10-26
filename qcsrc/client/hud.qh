@@ -22,6 +22,7 @@ float weapon_fired[WEP_MAXCOUNT];
 #define MAX_ACCURACY_LEVELS 10
 float acc_lev[MAX_ACCURACY_LEVELS];
 float acc_levels;
+string acc_color_levels;
 
 float complain_weapon;
 string complain_weapon_name;
@@ -36,9 +37,6 @@ float weapontime;
 float weaponprevtime;
 
 float teamnagger;
-float hud_accuracy_hud;
-float hud_border_thickness;
-float hud_accuracy_border_thickness;
 
 float hud_configure_checkcollisions;
 float hud_configure_prev;
@@ -48,7 +46,9 @@ const float S_SHIFT = 1;
 const float S_CTRL = 2;
 const float S_ALT = 4;
 
-float disable_menu_alphacheck; // 0 = enable alpha check, 1 = disable for entire hud, 2 = disable for one panel
+float menu_enabled; // 1 showing the entire HUD, 2 showing only the clicked panel
+float menu_enabled_time;
+
 float hud_fade_alpha;
 
 string hud_skin_path;
@@ -166,13 +166,13 @@ if(panel_bg_alpha_str == "") {\
 	panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha);\
 }\
 panel_bg_alpha = stof(panel_bg_alpha_str);\
-if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == active_panel) {\
+if(autocvar__hud_configure && menu_enabled == 2 && highlightedPanel == active_panel) {\
 	panel_bg_alpha = (1 - autocvar__menu_alpha) * max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha) + autocvar__menu_alpha * panel_bg_alpha;\
 } else if(autocvar__hud_configure) {\
 	panel_bg_alpha = max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha);\
 } if(autocvar__hud_configure && !panel_enabled) {\
 	panel_bg_alpha = 0.25;\
-} if(!(disable_menu_alphacheck == 2 && highlightedPanel == active_panel)) {\
+} if(!(menu_enabled == 2 && highlightedPanel == active_panel)) {\
 	panel_bg_alpha *= hud_fade_alpha;\
 }
 
@@ -183,7 +183,7 @@ if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel =
 panel_fg_alpha = autocvar_hud_panel_fg_alpha;\
 if(autocvar__hud_configure && !panel_enabled)\
 	panel_fg_alpha = 0.25;\
-if(!(disable_menu_alphacheck == 2 && highlightedPanel == active_panel))\
+if(!(menu_enabled == 2 && highlightedPanel == active_panel))\
 	panel_fg_alpha *= hud_fade_alpha;
 
 // Get border. See comments above, it's similar.
@@ -268,7 +268,7 @@ panel_bg_alpha_str = autocvar_hud_panel_##name##_bg_alpha; \
 panel_bg_border_str = autocvar_hud_panel_##name##_bg_border; \
 panel_bg_padding_str = autocvar_hud_panel_##name##_bg_padding; \
 HUD_Panel_StringVars()\
-if(disable_menu_alphacheck == 2 && active_panel == highlightedPanel) {\
+if(menu_enabled == 2 && active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuSize()\
 	HUD_Panel_GetMenuPos()\
 }
@@ -297,7 +297,7 @@ switch(id) { \
 panel_pos = autocvar_hud_panel_##name##_pos; \
 panel_size = autocvar_hud_panel_##name##_size; \
 HUD_Panel_GetScaledVectors()\
-if(disable_menu_alphacheck == 2 && active_panel == highlightedPanel) {\
+if(menu_enabled == 2 && active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuSize()\
 	HUD_Panel_GetMenuPos()\
 }\

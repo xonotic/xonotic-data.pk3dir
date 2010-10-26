@@ -206,6 +206,8 @@ void W_Crylink_Attack (void)
 
 		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
 
+		other = proj; MUTATOR_CALLHOOK(EditProjectile);
+
 		counter = counter + 1;
 	}
 }
@@ -278,6 +280,8 @@ void W_Crylink_Attack2 (void)
 		proj.flags = FL_PROJECTILE;
 
 		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
+
+		other = proj; MUTATOR_CALLHOOK(EditProjectile);
 
 		counter = counter + 1;
 	}

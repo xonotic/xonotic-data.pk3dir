@@ -155,6 +155,8 @@ void W_Fireball_Attack1()
 	proj.flags = FL_PROJECTILE;
 
 	CSQCProjectile(proj, TRUE, PROJECTILE_FIREBALL, TRUE);
+
+	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void W_Fireball_AttackEffect(float i, vector f_diff)
@@ -289,6 +291,8 @@ void W_Fireball_Attack2()
 	proj.flags = FL_PROJECTILE;
 
 	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
+
+	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void spawnfunc_weapon_fireball (void)

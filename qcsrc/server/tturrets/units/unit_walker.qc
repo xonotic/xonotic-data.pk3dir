@@ -615,26 +615,14 @@ void walker_postthink()
 
 void walker_attack()
 {
-    entity flash;
-
     sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
     fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET, 0, 1, cvar("g_balance_uzi_bulletconstant"));
     endFireBallisticBullet();
     if (self.uzi_bulletcounter == 2)
     {
 
-        flash = spawn();
-
-        setmodel(flash, "models/uziflash.md3");
-        setattachment(flash, self.tur_head, "tag_fire");
-
-        flash.scale     = 3;
-        flash.think     = W_Uzi_Flash_Go;
-        flash.nextthink = time + 0.02;
-        flash.frame     = 2;
-        flash.angles_z  = flash.v_angle_z + random() * 180;
-        flash.alpha     = 1;
-        flash.effects   = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+		UziFlash();
+		setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
 
         self.uzi_bulletcounter = 0;
     }

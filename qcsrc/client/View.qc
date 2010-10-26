@@ -338,7 +338,7 @@ void CSQC_common_hud(void);
 
 void PostInit(void);
 void CSQC_Demo_Camera();
-float HUD_WouldDrawScoreboard ();
+float HUD_WouldDrawScoreboard();
 float view_set;
 float camera_mode;
 float reticle_type;
@@ -468,7 +468,6 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	hud_accuracy_hud = cvar_or("hud_accuracy_hud", 1);
 	ColorTranslateMode = cvar("cl_stripcolorcodes");
 	activeweapon = getstati(STAT_SWITCHWEAPON);
 	f = cvar("teamplay");
@@ -534,8 +533,6 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	// Draw the Crosshair
-	float scoreboard_active;
-	scoreboard_active = HUD_WouldDrawScoreboard();
 	R_SetView(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
 
 	// Draw the Engine Status Bar (the default Quake HUD)
@@ -683,12 +680,12 @@ void CSQC_UpdateView(float w, float h)
 			self.draw2d();
 	self = e;
 
+	scoreboard_active = HUD_WouldDrawScoreboard();
+
 	float hud;
 	hud = getstati(STAT_HUD);
 	if(hud == HUD_SPIDERBOT)
-	{
 		CSQC_SPIDER_HUD();
-	}
 	else if(hud == HUD_WAKIZASHI)
         CSQC_WAKIZASHI_HUD();
     else if(hud == HUD_RAPTOR)
@@ -953,11 +950,6 @@ void CSQC_UpdateView(float w, float h)
 	// let's reset the view back to normal for the end
 	R_SetView(VF_MIN, '0 0 0');
 	R_SetView(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
-
-	// be safe against triggerbots until everyone has the fixed engine
-	// this call is meant to overwrite the trace globals by something
-	// unsuspicious
-	traceline('0 0 0', '0 0 0', MOVE_WORLDONLY, world);
 }
 
 #define spider_h "gfx/vehicles/hud_bg.tga"
@@ -1265,9 +1257,13 @@ void CSQC_common_hud(void)
 		case HUD_NORMAL:
 			// do some accuracy var caching
 			float i;
+			if(cvar_string("hud_panel_weapons_accuracy_color_levels") != acc_color_levels)
 			if(!(gametype == GAME_RACE || gametype == GAME_CTS))
 			{
-				acc_levels = tokenize(cvar_string("hud_panel_weapons_accuracy_color_levels"));
+				if(acc_color_levels)
+					strunzone(acc_color_levels);
+				acc_color_levels = strzone(cvar_string("hud_panel_weapons_accuracy_color_levels"));
+				acc_levels = tokenize(acc_color_levels);
 				if (acc_levels > MAX_ACCURACY_LEVELS)
 					acc_levels = MAX_ACCURACY_LEVELS;
 
@@ -1278,7 +1274,7 @@ void CSQC_common_hud(void)
 			HUD_Main(); // always run these functions for alpha checks
 			HUD_DrawScoreboard();
 
-			if (scoreboard_showscores || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1) // scoreboard/accuracy
+			if (scoreboard_active) // scoreboard/accuracy
 			{	
 				HUD_Reset();
 				// HUD_DrawScoreboard takes care of centerprint_start
