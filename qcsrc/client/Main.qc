@@ -186,7 +186,10 @@ void CSQC_Shutdown(void)
 	remove(players);
 	db_close(binddb);
 	db_close(tempdb);
-	db_save(ClientProgsDB, "client.db");
+	if(cvar("cl_db_saveasdump"))
+		db_dump(ClientProgsDB, "client.db");
+	else
+		db_save(ClientProgsDB, "client.db");
 	db_close(ClientProgsDB);
 
 	cvar_clientsettemp_restore();
