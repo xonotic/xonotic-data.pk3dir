@@ -16,8 +16,6 @@ void WarpZone_crosshair_trace(entity pl)
 
 void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
 void() spawnpoint_use;
-string race_readName(float pos);
-string race_placeName(float pos);
 string GetMapname();
 string ColoredTeamName(float t);
 
@@ -2112,7 +2110,7 @@ float race_readPos(string map, float t) {
 	return 0; // pos is zero if unranked
 }
 
-float race_writeTime(string map, float t, string myuid)
+void race_writeTime(string map, float t, string myuid)
 {
 	string rr;
 	if(g_cts)
@@ -2141,13 +2139,13 @@ string race_readName(string map, float pos)
 }
 
 string race_placeName(float pos) {
-	if(floor((pos % 100)/10) * 10 != 10) // examples: 12th, 111th, 213th will not execute this block
+	if(floor((mod(pos, 100))/10) * 10 != 10) // examples: 12th, 111th, 213th will not execute this block
 	{
-		if(pos % 10 == 1)
+		if(mod(pos, 10) == 1)
 			return strcat(ftos(pos), "st");
-		else if(pos % 10 == 2)
+		else if(mod(pos, 10) == 2)
 			return strcat(ftos(pos), "nd");
-		else if(pos % 10 == 3)
+		else if(mod(pos, 10) == 3)
 			return strcat(ftos(pos), "rd");
 		else
 			return strcat(ftos(pos), "th");
@@ -2193,7 +2191,7 @@ string getrecords(float page) // 50 records per page
 		r = race_readTime(MapInfo_Map_bspname, 1);
                 if (r == 0)
                     continue;
-		h = race_readName(MapInfo_Map_bspname, 1)
+		h = race_readName(MapInfo_Map_bspname, 1);
                 s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
                 ++rec;
             }
@@ -2209,7 +2207,7 @@ string getrecords(float page) // 50 records per page
 		r = race_readTime(MapInfo_Map_bspname, 1);
                 if (r == 0)
                     continue;
-		h = race_readName(MapInfo_Map_bspname, 1)
+		h = race_readName(MapInfo_Map_bspname, 1);
                 s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
                 ++rec;
             }
@@ -2264,7 +2262,7 @@ float UIDCNT;
 string getladder()
 {
     float i, j, k;
-    string s, len, temp_s;
+    string s, temp_s;
 
     s = "";
     temp_s = "";
@@ -2302,7 +2300,7 @@ string getladder()
 			    }
 			}
 
-			len = tokenize_console(temp_s);
+			tokenize_console(temp_s);
 			s = "";
 
 			if(i == 0) // speed award
@@ -2339,8 +2337,7 @@ string getladder()
 			    s = strcat(s, " ", ftos(stof(argv(LADDER_CNT+1)) + floor(LADDER_FIRSTPOINT / i))); // record, add LADDER_FIRSTPOINT / i points
 
 			db_put(TemporaryDB, strcat("ladder", myuid), s);
-	        }
-	    }
+		}
 	}
     }
 
@@ -2350,7 +2347,7 @@ string getladder()
     {
 	thisuid = db_get(TemporaryDB, strcat("uid", ftos(i)));
 	temp_s = db_get(TemporaryDB, strcat("ladder", thisuid));
-    	len = tokenize_console(temp_s);
+    	tokenize_console(temp_s);
         thiscnt = stof(argv(LADDER_CNT+1));
 
 	if(thiscnt > top_scores[LADDER_SIZE-1])
@@ -2390,7 +2387,7 @@ string getladder()
     for (i = 0; i < LADDER_SIZE; ++i)
     {
 	temp_s = db_get(TemporaryDB, strcat("ladder", top_uids[i]));
-	len = tokenize_console(temp_s);
+	tokenize_console(temp_s);
 	if (argv(LADDER_CNT+1) == "") // total is 0, skip
 	    continue;
 	s = strcat(s, strpad(4, race_placeName(i+1)), "^3| ^7"); // pos
