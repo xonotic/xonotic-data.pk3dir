@@ -280,6 +280,8 @@ void cvar_changes_init()
 		BADCVAR("sys_colortranslation");
 		BADCVAR("sys_specialcharactertranslation");
 		BADCVAR("timestamps");
+		BADCVAR("net_address");
+		BADCVAR("net_address_ipv6");
 
 		// mapinfo
 		BADCVAR("timelimit");
@@ -437,6 +439,8 @@ void spawnfunc_worldspawn (void)
 	check_unacceptable_compiler_bugs();
 
 	compressShortVector_init();
+
+	allowed_to_spawn = TRUE;
 
 	local entity head;
 	head = nextent(world);
@@ -640,6 +644,11 @@ void spawnfunc_worldspawn (void)
 
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
 
+	if(g_ca)
+	{
+		addstat(STAT_REDALIVE, AS_INT, redalive_stat);
+		addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
+	}
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);

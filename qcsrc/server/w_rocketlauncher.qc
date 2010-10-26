@@ -367,6 +367,7 @@ void W_Rocket_Attack (void)
 	W_AttachToShotorg(flash, '5 0 0');
 
 	// common properties
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void spawnfunc_weapon_rocketlauncher (void); // defined in t_items.qc
