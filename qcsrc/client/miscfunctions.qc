@@ -460,21 +460,21 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 }
 
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
-var float imgaspect;
-var float aspect;
+var float _drawpic_imgaspect;
+var float _drawpic_aspect;
 #define drawpic_aspect(pos,pic,mySize,color,alpha,drawflag)\
 	do {\
 		vector imgsize;\
 		imgsize = drawgetimagesize(pic);\
-		imgaspect = imgsize_x/imgsize_y;\
+		_drawpic_imgaspect = imgsize_x/imgsize_y;\
 		vector oldsz, sz;\
 		oldsz = sz = mySize;\
-		aspect = sz_x/sz_y;\
-		if(aspect > imgaspect) {\
-			sz_x = sz_y * imgaspect;\
+		_drawpic_aspect = sz_x/sz_y;\
+		if(_drawpic_aspect > _drawpic_imgaspect) {\
+			sz_x = sz_y * _drawpic_imgaspect;\
 			drawpic(pos + eX * (oldsz_x - sz_x) * 0.5, pic, sz, color, alpha, drawflag);\
 		} else {\
-			sz_y = sz_x / imgaspect;\
+			sz_y = sz_x / _drawpic_imgaspect;\
 			drawpic(pos + eY * (oldsz_y - sz_y) * 0.5, pic, sz, color, alpha, drawflag);\
 		}\
 	} while(0)

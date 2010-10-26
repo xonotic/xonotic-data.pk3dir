@@ -825,7 +825,6 @@ void CSQC_UpdateView(float w, float h)
 
 				ring_scale = cvar("crosshair_ring_size");
 
-				float f, a;
 				wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
 				float nex_charge;
