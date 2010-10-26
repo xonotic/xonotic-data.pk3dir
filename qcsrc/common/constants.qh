@@ -312,12 +312,6 @@ const float STAT_BULLETS_LOADED = 48;
 const float STAT_NEX_CHARGE = 49;
 const float STAT_HUD = 50;
 
-const float STAT_DOM_TOTAL_PPS = 70;
-const float STAT_DOM_PPS_RED = 71;
-const float STAT_DOM_PPS_BLUE = 72;
-const float STAT_DOM_PPS_PINK = 73;
-const float STAT_DOM_PPS_YELLOW = 74;
-
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
 const float STAT_MOVEVARS_AIRSTRAFEACCEL_QW = 223;
@@ -346,6 +340,12 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;
+
+const float STAT_DOM_TOTAL_PPS = 100;
+const float STAT_DOM_PPS_RED = 101;
+const float STAT_DOM_PPS_BLUE = 102;
+const float STAT_DOM_PPS_PINK = 103;
+const float STAT_DOM_PPS_YELLOW = 104;
 
 //const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
 //const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin
