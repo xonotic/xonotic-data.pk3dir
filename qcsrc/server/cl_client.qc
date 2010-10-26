@@ -1603,7 +1603,7 @@ void ClientConnect (void)
 		race_send_speedaward(MSG_ONE);
 
 		speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed")));
-		speedaward_alltimebest_holder = db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/netname"));
+		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp")));
 		race_send_speedaward_alltimebest(MSG_ONE);
 
 		float i;

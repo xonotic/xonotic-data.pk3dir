@@ -1325,7 +1325,6 @@ void SV_PlayerPhysics()
 				speedaward_alltimebest = speedaward_speed;
 				speedaward_alltimebest_holder = speedaward_holder;
 				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed"), ftos(speedaward_alltimebest));
-				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/netname"), speedaward_alltimebest_holder);
 				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp"), speedaward_alltimebest_holder);
 				race_send_speedaward_alltimebest(MSG_ALL);
 			}

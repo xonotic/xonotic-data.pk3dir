@@ -2267,6 +2267,12 @@ string getladder()
     s = "";
     temp_s = "";
 
+    string rr;
+    if(g_cts)
+	rr = CTS_RECORD;
+    else
+	rr = RACE_RECORD;
+
     string myuid;
 
     for (k = 0; k < MapInfo_count; ++k)
@@ -2274,10 +2280,20 @@ string getladder()
         if (MapInfo_Get_ByID(k))
 	{
 		for (i = 0; i <= LADDER_CNT; ++i) { // i = 0 because it is the speed award
-			if(race_readTime(GetMapname(), i) == 0)
-			    break;
+			if(i == 0) // speed award
+			{
+				if(stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed"))) == 0);
+					break;
 
-			myuid = race_readUID(GetMapname(), i);
+				myuid = db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp"));
+			}
+			else // normal record, if it exists (else break)
+			{
+				if(race_readTime(GetMapname(), i) == 0)
+				    break;
+
+				myuid = race_readUID(GetMapname(), i);
+			}
 
 			// string s contains:
 			// arg 0 = # of speed recs
