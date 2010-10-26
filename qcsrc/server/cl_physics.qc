@@ -1323,7 +1323,7 @@ void SV_PlayerPhysics()
 			speedaward_lastsent = speedaward_speed;
 			if (speedaward_speed > speedaward_alltimebest) {
 				speedaward_alltimebest = speedaward_speed;
-				if(speedaward_alltimebest_holder)
+				if(speedaward_alltimebest_holder != "^1Unregistered Player")
 					strunzone(speedaward_alltimebest_holder);
 				speedaward_alltimebest_holder = strzone(speedaward_holder);
 				if(speedaward_alltimebest_uid)
