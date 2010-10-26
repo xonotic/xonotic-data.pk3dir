@@ -3767,10 +3767,10 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
-	if(autocvar_cl_allow_uid2name == -1 && gametype == GAME_CTS || gametype == GAME_RACE)
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
 	{
 		vote_active = 1;
-		vote_called_vote = "This allows your name to be identified in stats instead of \"Unregistered player\"";
+		vote_called_vote = "^2Name ^7instead of \"^1Unregistered player\" ^7in stats";
 	}
 
 	if(!autocvar_hud_panel_vote && !autocvar__hud_configure)
@@ -3778,6 +3778,11 @@ void HUD_VoteWindow(void)
 
 	active_panel = HUD_PANEL_VOTE;
 	HUD_Panel_UpdateCvars(vote);
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+	{
+		panel_pos = eX * 0.3 * vid_conwidth + eY * 0.1 * vid_conheight;
+		panel_size = eX * 0.4 * vid_conwidth + eY * 0.3 * vid_conheight;
+	}
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3843,18 +3848,22 @@ void HUD_VoteWindow(void)
 	mySize = newSize;
 
 	s = "A vote has been called for:";
-	if(autocvar_cl_allow_uid2name == -1 && gametype == GAME_CTS || gametype == GAME_RACE)
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
 		s = "Allow servers to store and display your name?";
 	drawstring_aspect(pos, s, eX * mySize_x + eY * (2/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
-	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (1.75/8), stringwidth_colors);
+	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (1/8), stringwidth_colors);
 	if(autocvar__hud_configure)
 		s = "^1Configure the HUD";
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, a, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
 	s = strcat("Yes (", getcommandkey("vyes", "vyes"), "): ", ftos(vote_yescount));
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+		s = strcat("Yes: (press y)");
 	drawstring_aspect(pos + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '0 1 0', a, DRAWFLAG_NORMAL);
 	s = strcat("No (", getcommandkey("vno", "vno"), "): ", ftos(vote_nocount));
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+		s = strcat("No: (press n)");
 	drawstring_aspect(pos + eX * 0.5 * mySize_x + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '1 0 0', a, DRAWFLAG_NORMAL);
 
 	// draw the progress bar backgrounds
