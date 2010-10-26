@@ -2068,10 +2068,6 @@ void print_to(entity e, string s)
 }
 
 string uid2name(string myuid) {
-	// TODO TODO TODO!
-	// store uid in separate uid2name db IF CLIENT ALLOWS THIS
-	// - make it global for all mods
-	// perhaps show 10 first digits here if missing name?
 	string s;
 	s = db_get(ServerProgsDB, strcat("uid2name", myuid));
 	
