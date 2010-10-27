@@ -1014,6 +1014,8 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
+	string s;
+
 	if(!autocvar__hud_configure)
 		return false;
 
@@ -1111,7 +1113,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			panel_size_backup = panel_size;
 			highlightedPanel_backup = highlightedPanel_prev;
 
-			string s;
 			s = strcat(ftos(tmp_size_x/vid_conwidth), " ", ftos(tmp_size_y/vid_conheight));
 			cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
 		}
@@ -1123,7 +1124,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			if (highlightedPanel_backup != -1)
 			{
 				HUD_Panel_GetName(highlightedPanel_backup)
-				string s;
 				s = strcat(ftos(panel_pos_backup_x/vid_conwidth), " ", ftos(panel_pos_backup_y/vid_conheight));
 				cvar_set(strcat("hud_panel_", panel_name, "_pos"), s);
 				s = strcat(ftos(panel_size_backup_x/vid_conwidth), " ", ftos(panel_size_backup_y/vid_conheight));
@@ -1494,6 +1494,8 @@ float GetAmmoTypeForWep(float i)
 
 void HUD_Weapons(void)
 {
+	float f;
+
 	if(!autocvar_hud_panel_weapons && !autocvar__hud_configure)
 		return;
 
@@ -1521,7 +1523,7 @@ void HUD_Weapons(void)
 
 	if (timeout && time >= weapontime + timeout && !autocvar__hud_configure)
 	{
-		float f = (time - (weapontime + timeout)) / timeout_effect_length;
+		f = (time - (weapontime + timeout)) / timeout_effect_length;
 		if (cvar("hud_panel_weapons_timeout_effect"))
 		{
 			panel_bg_alpha *= (1 - f);
@@ -1553,7 +1555,7 @@ void HUD_Weapons(void)
 	}
 	else if (timeout && time < weaponprevtime + timein_effect_length && !autocvar__hud_configure)
 	{
-		float f = (time - weaponprevtime) / timein_effect_length;
+		f = (time - weaponprevtime) / timein_effect_length;
 		if (cvar("hud_panel_weapons_timeout_effect"))
 		{
 			panel_bg_alpha *= (f);
@@ -5037,7 +5039,7 @@ void HUD_Main (void)
 
 	// draw chat panel on top if it is maximized
 	if(autocvar__con_chat_maximized)
-		HUD_DrawPanel(HUD_PANEL_CHAT);
+		HUD_Chat(); // HUD_DrawPanel(HUD_PANEL_CHAT);
 
 	// TODO hud_'ify these
 	if (cvar("cl_showspeed"))
