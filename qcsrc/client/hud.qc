@@ -459,7 +459,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 		float i;
 		for (i = 0; i < HUD_PANEL_NUM; ++i)
 		{
-			HUD_Panel_GetName(i)
+			HUD_Panel_GetName(i);
 
 			fputs(fh, strcat("seta hud_panel_", panel_name, " ", cvar_string(strcat("hud_panel_", panel_name)), "\n"));
 			fputs(fh, strcat("seta hud_panel_", panel_name, "_pos \"", cvar_string(strcat("hud_panel_", panel_name, "_pos")), "\"", "\n"));
@@ -605,7 +605,7 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 		if(i == highlightedPanel || !panel_enabled)
 			continue;
 
-		HUD_Panel_UpdatePosSizeForId(i)
+		HUD_Panel_UpdatePosSizeForId(i);
 
 		panel_pos -= '1 1 0' * panel_bg_border;
 		panel_size += '2 2 0' * panel_bg_border;
@@ -665,7 +665,7 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 
 void HUD_Panel_SetPos(vector pos)
 {
-	HUD_Panel_UpdatePosSizeForId(highlightedPanel)
+	HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 	vector mySize;
 	mySize = panel_size;
 
@@ -708,7 +708,7 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 		if(i == highlightedPanel || !panel_enabled)
 			continue;
 
-		HUD_Panel_UpdatePosSizeForId(i)
+		HUD_Panel_UpdatePosSizeForId(i);
 
 		panel_pos -= '1 1 0' * panel_bg_border;
 		panel_size += '2 2 0' * panel_bg_border;
@@ -807,7 +807,7 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 
 void HUD_Panel_SetPosSize(vector mySize)
 {
-	HUD_Panel_UpdatePosSizeForId(highlightedPanel)
+	HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 	vector resizeorigin;
 	resizeorigin = panel_click_resizeorigin;
 	vector myPos;
@@ -941,7 +941,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 	highlightedPanel = highlightedPanel_prev;
 
-	HUD_Panel_UpdatePosSizeForId(highlightedPanel)
+	HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 
 	vector prev_pos, prev_size;
 	prev_pos = panel_pos;
@@ -1001,7 +1001,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 		HUD_Panel_SetPos(pos);
 	}
 
-	HUD_Panel_UpdatePosSizeForId(highlightedPanel)
+	HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 
 	if (prev_pos != panel_pos || prev_size != panel_size)
 	{
@@ -1096,7 +1096,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			if (highlightedPanel_copied == -1 || highlightedPanel_prev == -1)
 				return true;
 
-			HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev)
+			HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev);
 
 			// reduce size if it'd go beyond screen boundaries
 			vector tmp_size = panel_size_copied;
@@ -1123,7 +1123,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			//restore previous values
 			if (highlightedPanel_backup != -1)
 			{
-				HUD_Panel_GetName(highlightedPanel_backup)
+				HUD_Panel_GetName(highlightedPanel_backup);
 				s = strcat(ftos(panel_pos_backup_x/vid_conwidth), " ", ftos(panel_pos_backup_y/vid_conheight));
 				cvar_set(strcat("hud_panel_", panel_name, "_pos"), s);
 				s = strcat(ftos(panel_size_backup_x/vid_conwidth), " ", ftos(panel_size_backup_y/vid_conheight));
@@ -1161,7 +1161,7 @@ float HUD_Panel_HighlightCheck()
 		i = panel_order[j];
 		j += 1;
 
-		HUD_Panel_UpdatePosSizeForId(i)
+		HUD_Panel_UpdatePosSizeForId(i);
 
 		panelPos = panel_pos;
 		panelSize = panel_size;
@@ -1245,7 +1245,7 @@ void HUD_Panel_Highlight()
 		i = panel_order[j];
 		j += 1;
 
-		HUD_Panel_UpdatePosSizeForId(i)
+		HUD_Panel_UpdatePosSizeForId(i);
 
 		panelPos = panel_pos;
 		panelSize = panel_size;
@@ -1355,7 +1355,7 @@ void HUD_Panel_Mouse()
 			prev_size = panel_size;
 		}
 		else
-			HUD_Panel_UpdatePosSizeForId(highlightedPanel)
+			HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 
 		if (prev_pos != panel_pos || prev_size != panel_size)
 		{
@@ -1398,7 +1398,7 @@ void HUD_Panel_Mouse()
 			mouseClicked = 0; // to prevent spam, I guess.
 			menu_enabled = 2;
 			menu_enabled_time = time;
-			HUD_Panel_GetName(highlightedPanel)
+			HUD_Panel_GetName(highlightedPanel);
 			localcmd("menu_showhudoptions ", panel_name, "\n");
 			return;
 		}
@@ -2101,7 +2101,7 @@ void HUD_Powerups(void) {
 
 			if(autocvar_hud_panel_powerups_progressbar)
 			{
-				HUD_Panel_GetProgressBarColor(leftname)
+				HUD_Panel_GetProgressBarColorForString(leftname);
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
 			}
 			if(leftcnt > 1)
@@ -2122,7 +2122,7 @@ void HUD_Powerups(void) {
 
 			if(autocvar_hud_panel_powerups_progressbar)
 			{
-				HUD_Panel_GetProgressBarColor(rightname)
+				HUD_Panel_GetProgressBarColorForString(rightname);
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1) * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			if(rightcnt > 1)
@@ -2145,7 +2145,7 @@ void HUD_Powerups(void) {
 
 			if(autocvar_hud_panel_powerups_progressbar)
 			{
-				HUD_Panel_GetProgressBarColor(leftname)
+				HUD_Panel_GetProgressBarColorForString(leftname);
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1) * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			if(leftcnt > 1)
@@ -2166,7 +2166,7 @@ void HUD_Powerups(void) {
 
 			if(autocvar_hud_panel_powerups_progressbar)
 			{
-				HUD_Panel_GetProgressBarColor(rightname)
+				HUD_Panel_GetProgressBarColorForString(rightname);
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1) * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			if(rightcnt > 1)
@@ -2197,7 +2197,7 @@ void HUD_Powerups(void) {
 
 			if(autocvar_hud_panel_powerups_progressbar)
 			{
-				HUD_Panel_GetProgressBarColor(leftname)
+				HUD_Panel_GetProgressBarColorForString(leftname);
 				HUD_Panel_DrawProgressBar(barpos, 1, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1) * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			if(leftcnt <= 5)
@@ -2227,7 +2227,7 @@ void HUD_Powerups(void) {
 
 			if(autocvar_hud_panel_powerups_progressbar)
 			{
-				HUD_Panel_GetProgressBarColor(rightname)
+				HUD_Panel_GetProgressBarColorForString(rightname);
 				HUD_Panel_DrawProgressBar(barpos, 1, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1) * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			if(rightcnt <= 5)
@@ -2302,7 +2302,7 @@ void HUD_HealthArmor(void)
 			biggercount = "health";
 			if(autocvar_hud_panel_healtharmor_progressbar)
 			{
-				HUD_Panel_GetProgressBarColor("health")
+				HUD_Panel_GetProgressBarColor(health);
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			if(armor)
@@ -2313,7 +2313,7 @@ void HUD_HealthArmor(void)
 			biggercount = "armor";
 			if(autocvar_hud_panel_healtharmor_progressbar)
 			{
-				HUD_Panel_GetProgressBarColor("armor")
+				HUD_Panel_GetProgressBarColor(armor);
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			if(health)
@@ -2331,7 +2331,7 @@ void HUD_HealthArmor(void)
 				barpos = pos;
 				barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.2 * mySize_y;
 			}
-			HUD_Panel_GetProgressBarColor("fuel")
+			HUD_Panel_GetProgressBarColor(fuel);
 			HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 		}
 	}
@@ -2379,7 +2379,7 @@ void HUD_HealthArmor(void)
 
 				if(autocvar_hud_panel_healtharmor_progressbar)
 				{
-					HUD_Panel_GetProgressBarColor(leftname)
+					HUD_Panel_GetProgressBarColorForString(leftname);
 					HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				}
 				DrawNumIcon(autocvar_hud_panel_healtharmor_iconalign, pos, eX * 0.5 * mySize_x + eY * mySize_y, leftcnt, leftname, 1, HUD_Get_Num_Color(leftcnt, 200), 1);
@@ -2397,7 +2397,7 @@ void HUD_HealthArmor(void)
 
 				if(autocvar_hud_panel_healtharmor_progressbar)
 				{
-					HUD_Panel_GetProgressBarColor(rightname)
+					HUD_Panel_GetProgressBarColorForString(rightname);
 					HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				}
 				DrawNumIcon(autocvar_hud_panel_healtharmor_iconalign, pos + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * mySize_y, rightcnt, rightname, 0, HUD_Get_Num_Color(rightcnt, 200), 1);
@@ -2412,7 +2412,7 @@ void HUD_HealthArmor(void)
 					barpos = pos;
 					barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.2 * mySize_y;
 				}
-				HUD_Panel_GetProgressBarColor("fuel")
+				HUD_Panel_GetProgressBarColor(fuel);
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 			}
 		}
@@ -2430,7 +2430,7 @@ void HUD_HealthArmor(void)
 
 				if(autocvar_hud_panel_healtharmor_progressbar)
 				{
-					HUD_Panel_GetProgressBarColor(leftname)
+					HUD_Panel_GetProgressBarColorForString(leftname);
 					HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				}
 				DrawNumIcon(autocvar_hud_panel_healtharmor_iconalign, pos, eX * mySize_x + eY * 0.5 * mySize_y, leftcnt, leftname, 1, HUD_Get_Num_Color(leftcnt, 200), 1);
@@ -2448,7 +2448,7 @@ void HUD_HealthArmor(void)
 
 				if(autocvar_hud_panel_healtharmor_progressbar)
 				{
-					HUD_Panel_GetProgressBarColor(rightname)
+					HUD_Panel_GetProgressBarColorForString(rightname);
 					HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				}
 				DrawNumIcon(autocvar_hud_panel_healtharmor_iconalign, pos + eY * 0.5 * mySize_y, eX * mySize_x + eY * 0.5 * mySize_y, rightcnt, rightname, 0, HUD_Get_Num_Color(rightcnt, 200), 1);
@@ -2463,7 +2463,7 @@ void HUD_HealthArmor(void)
 					barpos = pos;
 					barsize = eX * mySize_x * min(1, fuel/100) + eY * 0.1 * mySize_y;
 				}
-				HUD_Panel_GetProgressBarColor("fuel")
+				HUD_Panel_GetProgressBarColor(fuel);
 				HUD_Panel_DrawProgressBar(barpos, 0, barsize, progressbar_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 			}
 		}
@@ -2489,7 +2489,7 @@ void HUD_HealthArmor(void)
 
 				if(autocvar_hud_panel_healtharmor_progressbar)
 				{
-					HUD_Panel_GetProgressBarColor(leftname)
+					HUD_Panel_GetProgressBarColorForString(leftname);
 					HUD_Panel_DrawProgressBar(barpos, 1, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				}
 				drawpic_aspect_skin(picpos, leftname, '0.4 0.4 0' * mySize_x, '1 1 1', leftalpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2516,7 +2516,7 @@ void HUD_HealthArmor(void)
 
 				if(autocvar_hud_panel_healtharmor_progressbar)
 				{
-					HUD_Panel_GetProgressBarColor(rightname)
+					HUD_Panel_GetProgressBarColorForString(rightname);
 					HUD_Panel_DrawProgressBar(barpos, 1, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				}
 				drawpic_aspect_skin(picpos, rightname, '0.4 0.4 0' * mySize_x, '1 1 1', rightalpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2532,7 +2532,7 @@ void HUD_HealthArmor(void)
 					barpos = pos + eY * mySize_y - eY * mySize_y * min(1, fuel/100);
 					barsize = eX * 0.05 * mySize_x + eY * mySize_y * min(1, fuel/100);
 				}
-				HUD_Panel_GetProgressBarColor("fuel")
+				HUD_Panel_GetProgressBarColor(fuel);
 				HUD_Panel_DrawProgressBar(barpos, 1, barsize, progressbar_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 			}
 		}
@@ -4222,7 +4222,7 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 			barsize = eX * mySize_x + eY * p * mySize_y;
 			vertical = 1;
 		}
-		HUD_Panel_GetProgressBarColor("nexball")
+		HUD_Panel_GetProgressBarColor(nexball);
 		HUD_Panel_DrawProgressBar(pos, vertical, barsize, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
