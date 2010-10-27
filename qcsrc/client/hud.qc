@@ -596,8 +596,6 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 	vector myTarget;
 	myTarget = myPos;
 
-	vector targPos;
-	vector targSize;
 	vector myCenter;
 	vector targCenter;
 	myCenter = '0 0 0'; // shut up fteqcc, there IS a reference
@@ -697,12 +695,9 @@ void HUD_Panel_SetPos(vector pos)
 vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 	float i;
 
-	float targBorder;
-	vector targPos;
-	vector targSize;
 	vector targEndPos;
 
-	vector dist;
+	float dist_x, dist_y;
 	float ratio;
 	ratio = mySize_x/mySize_y;
 
@@ -1415,7 +1410,6 @@ void HUD_Panel_Mouse()
 		highlightcheck = HUD_Panel_HighlightCheck();
 	}
 	// draw cursor after performing move/resize to have the panel pos/size updated before highlightcheck
-	string cursor;
 	vector cursorsize;
 	cursorsize = '32 32 0';
 
@@ -1496,7 +1490,7 @@ float GetAmmoTypeForWep(float i)
 void HUD_Weapons(void)
 {
 	float f, screen_ar;
-	vector center;
+	float center_x, center_y;
 
 	if(!autocvar_hud_panel_weapons && !autocvar__hud_configure)
 		return;
@@ -1737,8 +1731,7 @@ void HUD_Weapons(void)
 						default: fullammo = 60;
 					}
 
-					vector barsize;
-					vector barpos;
+					float barsize_x, barsize_y, barpos_x, barpos_y;
 					if(wpnsize_x/wpnsize_y > autocvar_hud_panel_weapons_aspect)
 					{
 						barsize_x = autocvar_hud_panel_weapons_aspect * wpnsize_y;
@@ -1964,7 +1957,8 @@ void HUD_Ammo(void)
 
 void DrawNumIcon(float iconalign, vector myPos, vector mySize, float x, string icon, float left, vector color, float alpha)
 {
-	vector newSize, newPos;
+	vector newPos;
+	float newSize_x, newSize_y;
 	if(mySize_x/mySize_y > 3)
 	{
 		newSize_x = 3 * mySize_y;
