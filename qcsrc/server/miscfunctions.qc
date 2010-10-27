@@ -2427,10 +2427,16 @@ string getladder()
 	    continue;
 	s = strcat(s, strpad(4, race_placeName(i+1)), "^3| ^7"); // pos
 	s = strcat(s, strpad(7, argv(LADDER_CNT+1)), "^3| ^7"); // total
-	for (j = 1; j <= LADDER_CNT; ++j)
+	for (j = 1; j <= min(9, LADDER_CNT); ++j)
 	{
 	    s = strcat(s, strpad(4, argv(j)), "^3| ^7"); // 1st, 2nd, 3rd etc cnt
 	}
+	if(LADDER_CNT > 9)
+		for (j = 10; j <= LADDER_CNT; ++j)
+		{
+		    s = strcat(s, strpad(4, argv(j)), " ^3| ^7"); // 1st, 2nd, 3rd etc cnt
+		}
+
 	s = strcat(s, strpad(13, argv(0)), "^3| ^7"); // speed award cnt
 	s = strcat(s, uid2name(top_uids[i]), "\n"); // name
     }
