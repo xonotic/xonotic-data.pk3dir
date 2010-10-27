@@ -698,6 +698,18 @@ void CSQC_UpdateView(float w, float h)
 
 		// crosshair goes VERY LAST
 		if(!scoreboard_active && !camera_active && intermission != 2) {
+			string wcross_style;
+			float wcross_alpha, wcross_resolution;
+			wcross_style = cvar_string("crosshair");
+			if (wcross_style == "0")
+				return;
+			wcross_resolution = cvar("crosshair_size");
+			if (wcross_resolution == 0)
+				return;
+			wcross_alpha = cvar("crosshair_color_alpha");
+			if (wcross_alpha == 0)
+				return;
+
 			// TrueAim check
 			float shottype;
 			float bullets, ring_scale;
@@ -723,24 +735,26 @@ void CSQC_UpdateView(float w, float h)
 			else
 				shottype = SHOTTYPE_HITWORLD;
 
-			string wcross_style;
-			wcross_style = cvar_string("crosshair");
-
 			if (wcross_style != "0") {
 				vector wcross_color, wcross_size;
 				string wcross_wep, wcross_name;
-				float wcross_alpha, wcross_scale, wcross_blur, wcross_resolution;
+				float wcross_scale, wcross_blur;
 
 				wcross_color_x = cvar("crosshair_color_red");
 				wcross_color_y = cvar("crosshair_color_green");
 				wcross_color_z = cvar("crosshair_color_blue");
-				wcross_alpha = cvar("crosshair_color_alpha");
-				wcross_resolution = cvar("crosshair_size");
 				if (cvar("crosshair_per_weapon")) {
 					e = get_weaponinfo(activeweapon);
 					if (e && e.netname != "")
 					{
 						wcross_wep = e.netname;
+						wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
+						if (wcross_resolution == 0)
+							return;
+						wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_color_alpha"));
+						if (wcross_alpha == 0)
+							return;
+
 						wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
 						if(wcross_style == "")
 							wcross_style = e.netname;
@@ -751,9 +765,6 @@ void CSQC_UpdateView(float w, float h)
 							wcross_color_y = cvar(strcat("crosshair_", wcross_wep, "_color_green"));
 							wcross_color_z = cvar(strcat("crosshair_", wcross_wep, "_color_blue"));
 						}
-
-						wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_color_alpha"));
-						wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
 					}
 				}
 
@@ -771,7 +782,7 @@ void CSQC_UpdateView(float w, float h)
 
 				if(shottype == SHOTTYPE_HITENEMY)
 					wcross_scale *= cvar("crosshair_hittest"); // is not queried if hittest is 0
-				if(shottype == SHOTTYPE_HITTEAM)
+				else if(shottype == SHOTTYPE_HITTEAM)
 					wcross_scale /= cvar("crosshair_hittest"); // is not queried if hittest is 0
 
 				f = cvar("crosshair_effect_speed");
