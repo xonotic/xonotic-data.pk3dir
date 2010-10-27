@@ -3515,6 +3515,7 @@ void HUD_Score(void)
 	}
 
 	float score, distribution, leader;
+	string sign;
 	vector distribution_color;
 	entity tm, pl, me;
 	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
@@ -3536,15 +3537,17 @@ void HUD_Score(void)
 			// distribution display
 			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
 
-			distrtimer = ftos_decimals(distribution/pow(10, TIME_DECIMALS), TIME_DECIMALS);
+			distrtimer = ftos_decimals(fabs(distribution/pow(10, TIME_DECIMALS)), TIME_DECIMALS);
 
 			if (distribution <= 0) {
 				distribution_color = '0 1 0';
+				sign = "-";
 			}
 			else {
 				distribution_color = '1 0 0';
+				sign = "+";
 			}
-			drawstring_aspect(pos + eX * 0.75 * mySize_x, distrtimer, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(pos + eX * 0.75 * mySize_x, strcat(sign, distrtimer), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		// race record display
 		if (distribution <= 0)
