@@ -89,8 +89,6 @@ var float panel_accuracy_info_top;
 var float panel_accuracy_foreground_alpha;
 var float panel_accuracy_alreadyvoted_alpha;
 
-var string picpath;
-
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:
 // ----------------------
 // MACRO HELL STARTS HERE

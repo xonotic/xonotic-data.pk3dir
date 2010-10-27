@@ -1494,7 +1494,8 @@ float GetAmmoTypeForWep(float i)
 
 void HUD_Weapons(void)
 {
-	float f;
+	float f, screen_ar;
+	vector center;
 
 	if(!autocvar_hud_panel_weapons && !autocvar__hud_configure)
 		return;
@@ -1532,10 +1533,9 @@ void HUD_Weapons(void)
 		if (cvar("hud_panel_weapons_timeout_effect") == 1)
 		{
 			f *= f; // for a cooler movement
-			vector center;
 			center_x = panel_pos_x + panel_size_x/2;
 			center_y = panel_pos_y + panel_size_y/2;
-			float screen_ar = vid_conwidth/vid_conheight;
+			screen_ar = vid_conwidth/vid_conheight;
 			if (center_x/center_y < screen_ar) //bottom left
 			{
 				if ((vid_conwidth - center_x)/center_y < screen_ar) //bottom
@@ -1565,10 +1565,9 @@ void HUD_Weapons(void)
 		{
 			f *= f; // for a cooler movement
 			f = 1 - f;
-			vector center;
 			center_x = panel_pos_x + panel_size_x/2;
 			center_y = panel_pos_y + panel_size_y/2;
-			float screen_ar = vid_conwidth/vid_conheight;
+			screen_ar = vid_conwidth/vid_conheight;
 			if (center_x/center_y < screen_ar) //bottom left
 			{
 				if ((vid_conwidth - center_x)/center_y < screen_ar) //bottom
