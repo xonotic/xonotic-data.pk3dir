@@ -584,7 +584,7 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 float w_getbestweapon(entity e);
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 {
-	string o, s;
+	string o;
 	o = W_FixWeaponOrder_ForceComplete(wo);
 	if(self.weaponorder_byimpulse)
 	{
