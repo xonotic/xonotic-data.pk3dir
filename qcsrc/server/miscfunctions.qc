@@ -2295,8 +2295,10 @@ string getladder()
 		for (i = 0; i <= LADDER_CNT; ++i) { // i = 0 because it is the speed award
 			if(i == 0) // speed award
 			{
-				if(stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, rr, "speed/speed"))) == 0);
+				print("^1Hit! ", db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, rr, "speed/speed")), "\n");
+				if(stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, rr, "speed/speed"))) == 0)
 					continue;
+				print("^1Also hit after\n");
 
 				myuid = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, rr, "speed/crypto_idfp"));
 			}
