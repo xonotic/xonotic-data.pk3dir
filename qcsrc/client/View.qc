@@ -825,7 +825,6 @@ void CSQC_UpdateView(float w, float h)
 
 				ring_scale = cvar("crosshair_ring_size");
 
-				float f, a;
 				wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
 				float nex_charge;
@@ -950,11 +949,6 @@ void CSQC_UpdateView(float w, float h)
 	// let's reset the view back to normal for the end
 	R_SetView(VF_MIN, '0 0 0');
 	R_SetView(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
-
-	// be safe against triggerbots until everyone has the fixed engine
-	// this call is meant to overwrite the trace globals by something
-	// unsuspicious
-	traceline('0 0 0', '0 0 0', MOVE_WORLDONLY, world);
 }
 
 #define spider_h "gfx/vehicles/hud_bg.tga"

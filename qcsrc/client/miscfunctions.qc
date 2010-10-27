@@ -460,21 +460,21 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 }
 
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
-var float imgaspect;
-var float aspect;
+var float _drawpic_imgaspect;
+var float _drawpic_aspect;
 #define drawpic_aspect(pos,pic,mySize,color,alpha,drawflag)\
 	do {\
 		vector imgsize;\
 		imgsize = drawgetimagesize(pic);\
-		imgaspect = imgsize_x/imgsize_y;\
+		_drawpic_imgaspect = imgsize_x/imgsize_y;\
 		vector oldsz, sz;\
 		oldsz = sz = mySize;\
-		aspect = sz_x/sz_y;\
-		if(aspect > imgaspect) {\
-			sz_x = sz_y * imgaspect;\
+		_drawpic_aspect = sz_x/sz_y;\
+		if(_drawpic_aspect > _drawpic_imgaspect) {\
+			sz_x = sz_y * _drawpic_imgaspect;\
 			drawpic(pos + eX * (oldsz_x - sz_x) * 0.5, pic, sz, color, alpha, drawflag);\
 		} else {\
-			sz_y = sz_x / imgaspect;\
+			sz_y = sz_x / _drawpic_imgaspect;\
 			drawpic(pos + eY * (oldsz_y - sz_y) * 0.5, pic, sz, color, alpha, drawflag);\
 		}\
 	} while(0)
@@ -627,28 +627,33 @@ void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, f
 }
 
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...
-void PolyDrawModel(entity e)
+float PolyDrawModelSurface(entity e, float i_s)
 {
-	float i_s, i_t;
+	float i_t;
 	float n_t;
 	vector tri;
 	string tex;
-	for(i_s = 0; ; ++i_s)
+	tex = getsurfacetexture(e, i_s);
+	if not(tex)
+		return 0; // this is beyond the last one
+	n_t = getsurfacenumtriangles(e, i_s);
+	for(i_t = 0; i_t < n_t; ++i_t)
 	{
-		tex = getsurfacetexture(e, i_s);
-		if not(tex)
-			break; // this is beyond the last one
-		n_t = getsurfacenumtriangles(e, i_s);
-		for(i_t = 0; i_t < n_t; ++i_t)
-		{
-			tri = getsurfacetriangle(e, i_s, i_t);
-			R_BeginPolygon(tex, 0);
-			R_PolygonVertex(getsurfacepoint(e, i_s, tri_x), getsurfacepointattribute(e, i_s, tri_x, SPA_TEXCOORDS0), '1 1 1', 1);
-			R_PolygonVertex(getsurfacepoint(e, i_s, tri_y), getsurfacepointattribute(e, i_s, tri_y, SPA_TEXCOORDS0), '1 1 1', 1);
-			R_PolygonVertex(getsurfacepoint(e, i_s, tri_z), getsurfacepointattribute(e, i_s, tri_z, SPA_TEXCOORDS0), '1 1 1', 1);
-			R_EndPolygon();
-		}
+		tri = getsurfacetriangle(e, i_s, i_t);
+		R_BeginPolygon(tex, 0);
+		R_PolygonVertex(getsurfacepoint(e, i_s, tri_x), getsurfacepointattribute(e, i_s, tri_x, SPA_TEXCOORDS0), '1 1 1', 1);
+		R_PolygonVertex(getsurfacepoint(e, i_s, tri_y), getsurfacepointattribute(e, i_s, tri_y, SPA_TEXCOORDS0), '1 1 1', 1);
+		R_PolygonVertex(getsurfacepoint(e, i_s, tri_z), getsurfacepointattribute(e, i_s, tri_z, SPA_TEXCOORDS0), '1 1 1', 1);
+		R_EndPolygon();
 	}
+	return 1;
+}
+void PolyDrawModel(entity e)
+{
+	float i_s;
+	for(i_s = 0; ; ++i_s)
+		if(!PolyDrawModelSurface(e, i_s))
+			break;
 }
 
 void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vector rgb, float a, float drawflag)
