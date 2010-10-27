@@ -2272,10 +2272,9 @@ const float LADDER_CNT = 10; // position X still gives LADDER_FIRSTPOINT/X point
 const float LADDER_SIZE = 30; // ladder shows the top X players
 string top_uids[LADDER_SIZE];
 float top_scores[LADDER_SIZE];
-float UIDCNT;
 string getladder()
 {
-    float i, j, k;
+    float i, j, k, uidcnt;
     string s, temp_s;
 
     s = "";
@@ -2296,17 +2295,17 @@ string getladder()
 		for (i = 0; i <= LADDER_CNT; ++i) { // i = 0 because it is the speed award
 			if(i == 0) // speed award
 			{
-				if(stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed"))) == 0);
-					break;
+				if(stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, rr, "speed/speed"))) == 0);
+					continue;
 
-				myuid = db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp"));
+				myuid = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, rr, "speed/crypto_idfp"));
 			}
 			else // normal record, if it exists (else break)
 			{
-				if(race_readTime(GetMapname(), i) == 0)
-				    break;
+				if(race_readTime(MapInfo_Map_bspname, i) == 0)
+					continue;
 
-				myuid = race_readUID(GetMapname(), i);
+				myuid = race_readUID(MapInfo_Map_bspname, i);
 			}
 
 			// string s contains:
@@ -2319,8 +2318,8 @@ string getladder()
 			temp_s = db_get(TemporaryDB, strcat("ladder", myuid));
 			if (temp_s == "")
 			{
-			    db_put(TemporaryDB, strcat("uid", ftos(UIDCNT)), myuid);
-			    ++UIDCNT;
+			    db_put(TemporaryDB, strcat("uid", ftos(uidcnt)), myuid);
+			    ++uidcnt;
 			    for (j = 0; j <= LADDER_CNT + 1; ++j)
 			    {
 				if(j != LADDER_CNT + 1)
@@ -2373,7 +2372,7 @@ string getladder()
 
     float thiscnt;
     string thisuid;
-    for (i = 0; i <= UIDCNT; ++i) // for each known uid
+    for (i = 0; i <= uidcnt; ++i) // for each known uid
     {
 	thisuid = db_get(TemporaryDB, strcat("uid", ftos(i)));
 	temp_s = db_get(TemporaryDB, strcat("ladder", thisuid));
