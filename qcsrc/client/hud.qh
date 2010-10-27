@@ -105,7 +105,7 @@ switch(item) {\
 	case "armor": HUD_Panel_GetProgressBarColor(armor); break;\
 	case "fuel": HUD_Panel_GetProgressBarColor(fuel); break;\
 	case "nexball": HUD_Panel_GetProgressBarColor(nexball); break;\
-}
+} ENDS_WITH_CURLY_BRACE
 
 // Get value for panel_bg: if "" fetch default, else use panel_bg_str
 // comment on last line of macro: // we probably want to see a background in config mode at all times...
@@ -192,7 +192,7 @@ if(panel_bg_border_str == "") {\
 	panel_bg_border = autocvar_hud_panel_bg_border;\
 } else {\
 	panel_bg_border = stof(panel_bg_border_str);\
-}
+} ENDS_WITH_CURLY_BRACE
 
 // Scale the pos and size vectors to absolute coordinates
 #define HUD_Panel_GetScaledVectors()\
@@ -271,7 +271,7 @@ HUD_Panel_StringVars()\
 if(menu_enabled == 2 && active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuSize()\
 	HUD_Panel_GetMenuPos()\
-}
+} ENDS_WITH_CURLY_BRACE
 
 // Update all common cvars of given panel id
 #define HUD_Panel_UpdateCvarsForId(id) \

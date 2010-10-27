@@ -540,7 +540,9 @@ void HUD_Panel_HlBorder(float myBorder, vector color, float alpha)
 if(panel_bg != "0")\
 	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
 if(highlightedPanel_prev == active_panel && autocvar__hud_configure)\
-	HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha) * alpha);
+{\
+	HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha) * alpha);\
+} ENDS_WITH_CURLY_BRACE
 
 void HUD_Panel_DrawProgressBar(vector pos, float vertical, vector mySize, vector color, float alpha, float drawflag)
 {
@@ -1435,7 +1437,7 @@ float weaponspace[10];
 #define HUD_Weapons_Clear()\
 	float idx;\
 	for(idx = 0; idx < 10; ++idx)\
-		weaponspace[idx] = 0;
+		weaponspace[idx] = 0
 
 entity weaponorder[WEP_MAXCOUNT];
 void weaponorder_swap(float i, float j, entity pass)
@@ -4286,7 +4288,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	} else {
 		// text on top
 		squareSize = min(mySize_x, mySize_y/2);
-		textPos = pos + eY * 0.5 * max(0, mySize_y/2 - squareSize) + eX * 0.5 * (mySize_x - squareSize);;
+		textPos = pos + eY * 0.5 * max(0, mySize_y/2 - squareSize) + eX * 0.5 * (mySize_x - squareSize);
 		medalPos = pos + eY * 0.5 * max(0, mySize_y/2 - squareSize) + eY * 0.5 * mySize_y + eX * 0.5 * (mySize_x - squareSize);
 	}
 
@@ -4943,7 +4945,7 @@ switch (id) {\
 		HUD_EngineInfo(); break;\
 	case (HUD_PANEL_INFOMESSAGES):\
 		 HUD_InfoMessages(); break;\
-}
+} ENDS_WITH_CURLY_BRACE
 
 void HUD_Main (void)
 {
