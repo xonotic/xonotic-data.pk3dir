@@ -1,12 +1,13 @@
 ../../progs.dat // output filename
 
 ../common/util-pre.qh
+
+../common/fteqcc-ignore-unref.qh
 sys.qh
 pre-builtins.qh
 builtins.qh
 extensions.qh
 post-builtins.qh
-autocvars.qh
 
 ../warpzonelib/anglestransform.qh
 ../warpzonelib/mathlib.qh
@@ -14,11 +15,13 @@ autocvars.qh
 ../warpzonelib/util_server.qh
 ../warpzonelib/server.qh
 
-constants.qh
 ../common/constants.qh
 ../common/util.qh
 ../common/items.qh
+../common/fteqcc-warn-unref.qh
 
+autocvars.qh
+constants.qh
 defs.qh		// Should rename this, it has fields and globals
 
 mutators/base.qh
