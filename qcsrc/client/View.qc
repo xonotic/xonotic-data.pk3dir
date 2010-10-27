@@ -735,169 +735,167 @@ void CSQC_UpdateView(float w, float h)
 			else
 				shottype = SHOTTYPE_HITWORLD;
 
-			if (wcross_style != "0") {
-				vector wcross_color, wcross_size;
-				string wcross_wep, wcross_name;
-				float wcross_scale, wcross_blur;
+			vector wcross_color, wcross_size;
+			string wcross_wep, wcross_name;
+			float wcross_scale, wcross_blur;
 
-				wcross_color_x = cvar("crosshair_color_red");
-				wcross_color_y = cvar("crosshair_color_green");
-				wcross_color_z = cvar("crosshair_color_blue");
-				if (cvar("crosshair_per_weapon")) {
-					e = get_weaponinfo(activeweapon);
-					if (e && e.netname != "")
+			wcross_color_x = cvar("crosshair_color_red");
+			wcross_color_y = cvar("crosshair_color_green");
+			wcross_color_z = cvar("crosshair_color_blue");
+			if (cvar("crosshair_per_weapon")) {
+				e = get_weaponinfo(activeweapon);
+				if (e && e.netname != "")
+				{
+					wcross_wep = e.netname;
+					wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
+					if (wcross_resolution == 0)
+						return;
+					wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_color_alpha"));
+					if (wcross_alpha == 0)
+						return;
+
+					wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
+					if(wcross_style == "")
+						wcross_style = e.netname;
+
+					if(!cvar("crosshair_color_override"))
 					{
-						wcross_wep = e.netname;
-						wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
-						if (wcross_resolution == 0)
-							return;
-						wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_color_alpha"));
-						if (wcross_alpha == 0)
-							return;
-
-						wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
-						if(wcross_style == "")
-							wcross_style = e.netname;
-
-						if(!cvar("crosshair_color_override"))
-						{
-							wcross_color_x = cvar(strcat("crosshair_", wcross_wep, "_color_red"));
-							wcross_color_y = cvar(strcat("crosshair_", wcross_wep, "_color_green"));
-							wcross_color_z = cvar(strcat("crosshair_", wcross_wep, "_color_blue"));
-						}
+						wcross_color_x = cvar(strcat("crosshair_", wcross_wep, "_color_red"));
+						wcross_color_y = cvar(strcat("crosshair_", wcross_wep, "_color_green"));
+						wcross_color_z = cvar(strcat("crosshair_", wcross_wep, "_color_blue"));
 					}
 				}
+			}
 
-				wcross_name = strcat("gfx/crosshair", wcross_style);
+			wcross_name = strcat("gfx/crosshair", wcross_style);
 
-				if(cvar("crosshair_effect_scalefade"))
-				{
-					wcross_scale = wcross_resolution;
-					wcross_resolution = 1;
-				}
-				else
-				{
-					wcross_scale = 1;
-				}
+			if(cvar("crosshair_effect_scalefade"))
+			{
+				wcross_scale = wcross_resolution;
+				wcross_resolution = 1;
+			}
+			else
+			{
+				wcross_scale = 1;
+			}
 
-				if(shottype == SHOTTYPE_HITENEMY)
-					wcross_scale *= cvar("crosshair_hittest"); // is not queried if hittest is 0
-				else if(shottype == SHOTTYPE_HITTEAM)
-					wcross_scale /= cvar("crosshair_hittest"); // is not queried if hittest is 0
+			if(shottype == SHOTTYPE_HITENEMY)
+				wcross_scale *= cvar("crosshair_hittest"); // is not queried if hittest is 0
+			else if(shottype == SHOTTYPE_HITTEAM)
+				wcross_scale /= cvar("crosshair_hittest"); // is not queried if hittest is 0
 
-				f = cvar("crosshair_effect_speed");
-				if(f < 0)
-					f *= -2 * g_weaponswitchdelay;
-				if(wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
-				{
-					wcross_changedonetime = time + f;
-				}
-				if(wcross_name != wcross_name_goal_prev || wcross_resolution != wcross_resolution_goal_prev)
-				{
-					wcross_name_changestarttime = time;
-					wcross_name_changedonetime = time + f;
-					if(wcross_name_goal_prev_prev)
-						strunzone(wcross_name_goal_prev_prev);
-					wcross_name_goal_prev_prev = wcross_name_goal_prev;
-					wcross_name_goal_prev = strzone(wcross_name);
-					wcross_name_alpha_goal_prev_prev = wcross_name_alpha_goal_prev;
-					wcross_resolution_goal_prev_prev = wcross_resolution_goal_prev;
-					wcross_resolution_goal_prev = wcross_resolution;
-				}
+			f = cvar("crosshair_effect_speed");
+			if(f < 0)
+				f *= -2 * g_weaponswitchdelay;
+			if(wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
+			{
+				wcross_changedonetime = time + f;
+			}
+			if(wcross_name != wcross_name_goal_prev || wcross_resolution != wcross_resolution_goal_prev)
+			{
+				wcross_name_changestarttime = time;
+				wcross_name_changedonetime = time + f;
+				if(wcross_name_goal_prev_prev)
+					strunzone(wcross_name_goal_prev_prev);
+				wcross_name_goal_prev_prev = wcross_name_goal_prev;
+				wcross_name_goal_prev = strzone(wcross_name);
+				wcross_name_alpha_goal_prev_prev = wcross_name_alpha_goal_prev;
+				wcross_resolution_goal_prev_prev = wcross_resolution_goal_prev;
+				wcross_resolution_goal_prev = wcross_resolution;
+			}
 
-				wcross_scale_goal_prev = wcross_scale;
-				wcross_alpha_goal_prev = wcross_alpha;
-				wcross_color_goal_prev = wcross_color;
+			wcross_scale_goal_prev = wcross_scale;
+			wcross_alpha_goal_prev = wcross_alpha;
+			wcross_color_goal_prev = wcross_color;
 
-				if(shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && cvar("crosshair_hittest_blur") && !cvar("chase_active")))
-				{
-					wcross_blur = 1;
-					wcross_alpha *= 0.75;
-				}
-				else
-					wcross_blur = 0;
-				// *_prev is at time-frametime
-				// * is at wcross_changedonetime+f
-				// what do we have at time?
-				if(time < wcross_changedonetime)
-				{
-					f = frametime / (wcross_changedonetime - time + frametime);
-					wcross_scale = f * wcross_scale + (1 - f) * wcross_scale_prev;
-					wcross_alpha = f * wcross_alpha + (1 - f) * wcross_alpha_prev;
-					wcross_color = f * wcross_color + (1 - f) * wcross_color_prev;
-				}
+			if(shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && cvar("crosshair_hittest_blur") && !cvar("chase_active")))
+			{
+				wcross_blur = 1;
+				wcross_alpha *= 0.75;
+			}
+			else
+				wcross_blur = 0;
+			// *_prev is at time-frametime
+			// * is at wcross_changedonetime+f
+			// what do we have at time?
+			if(time < wcross_changedonetime)
+			{
+				f = frametime / (wcross_changedonetime - time + frametime);
+				wcross_scale = f * wcross_scale + (1 - f) * wcross_scale_prev;
+				wcross_alpha = f * wcross_alpha + (1 - f) * wcross_alpha_prev;
+				wcross_color = f * wcross_color + (1 - f) * wcross_color_prev;
+			}
 
-				wcross_scale_prev = wcross_scale;
-				wcross_alpha_prev = wcross_alpha;
-				wcross_color_prev = wcross_color;
+			wcross_scale_prev = wcross_scale;
+			wcross_alpha_prev = wcross_alpha;
+			wcross_color_prev = wcross_color;
 
-				wcross_scale *= 1 - cvar("_menu_alpha");
-				wcross_alpha *= 1 - cvar("_menu_alpha");
+			wcross_scale *= 1 - cvar("_menu_alpha");
+			wcross_alpha *= 1 - cvar("_menu_alpha");
 
-				ring_scale = cvar("crosshair_ring_size");
+			ring_scale = cvar("crosshair_ring_size");
 
-				wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
+			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
-				float nex_charge;
-				nex_charge = getstatf(STAT_NEX_CHARGE);
+			float nex_charge;
+			nex_charge = getstatf(STAT_NEX_CHARGE);
 
-				// ring around crosshair representing bullets left in camping rifle clip
-				if (activeweapon == WEP_CAMPINGRIFLE && cr_maxbullets)
-				{
-					bullets = getstati(STAT_BULLETS_LOADED);
-					f = bound(0, bullets / cr_maxbullets, 1);
+			// ring around crosshair representing bullets left in camping rifle clip
+			if (activeweapon == WEP_CAMPINGRIFLE && cr_maxbullets)
+			{
+				bullets = getstati(STAT_BULLETS_LOADED);
+				f = bound(0, bullets / cr_maxbullets, 1);
 
-					a = cvar("crosshair_campingrifle_bulletcounter_alpha");
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
-				}
-				else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
-				{
-					a = cvar("crosshair_nexvelocity_alpha");
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", nex_charge, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
-				}
+				a = cvar("crosshair_campingrifle_bulletcounter_alpha");
+				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+			}
+			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
+			{
+				a = cvar("crosshair_nexvelocity_alpha");
+				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", nex_charge, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
-				do \
+			do \
+			{ \
+				if(wcross_blur > 0) \
 				{ \
-					if(wcross_blur > 0) \
-					{ \
-						for(i = -2; i <= 2; ++i) \
-							for(j = -2; j <= 2; ++j) \
-								M(i,j,sz,wcross_name,wcross_alpha*0.04); \
-					} \
-					else \
-					{ \
-						M(0,0,sz,wcross_name,wcross_alpha); \
-					} \
+					for(i = -2; i <= 2; ++i) \
+						for(j = -2; j <= 2; ++j) \
+							M(i,j,sz,wcross_name,wcross_alpha*0.04); \
 				} \
-				while(0)
+				else \
+				{ \
+					M(0,0,sz,wcross_name,wcross_alpha); \
+				} \
+			} \
+			while(0)
 
 #define CROSSHAIR_DRAW_SINGLE(i,j,sz,wcross_name,wcross_alpha) \
-				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y + j * wcross_blur)), wcross_name, sz * wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+			drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y + j * wcross_blur)), wcross_name, sz * wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
 
 #define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
-				CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
+			CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
 
-				if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
-				{
-					f = (wcross_name_changedonetime - time) / (wcross_name_changedonetime - wcross_name_changestarttime);
-					wcross_size = drawgetimagesize(wcross_name_goal_prev_prev) * wcross_scale;
-					CROSSHAIR_DRAW(wcross_resolution_goal_prev_prev, wcross_name_goal_prev_prev, wcross_alpha * f * wcross_name_alpha_goal_prev_prev);
-					f = 1 - f;
-				}
-				else
-				{
-					f = 1;
-				}
-
-				wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
-				CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
-
-				if(cvar("crosshair_dot"))
-					CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", wcross_alpha * f * cvar("crosshair_dot_alpha"));
-
-				wcross_name_alpha_goal_prev = f;
+			if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
+			{
+				f = (wcross_name_changedonetime - time) / (wcross_name_changedonetime - wcross_name_changestarttime);
+				wcross_size = drawgetimagesize(wcross_name_goal_prev_prev) * wcross_scale;
+				CROSSHAIR_DRAW(wcross_resolution_goal_prev_prev, wcross_name_goal_prev_prev, wcross_alpha * f * wcross_name_alpha_goal_prev_prev);
+				f = 1 - f;
 			}
+			else
+			{
+				f = 1;
+			}
+
+			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
+			CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
+
+			if(cvar("crosshair_dot"))
+				CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", wcross_alpha * f * cvar("crosshair_dot_alpha"));
+
+			wcross_name_alpha_goal_prev = f;
 		}
 		else
 		{
