@@ -266,3 +266,4 @@ float cr_maxbullets;
 float bgmtime;
 
 string weaponorder_byimpulse;
+string weaponorder_bypriority;

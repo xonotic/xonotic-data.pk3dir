@@ -1448,7 +1448,6 @@ void weaponorder_swap(float i, float j, entity pass)
 	weaponorder[j] = h;
 }
 
-string weaponorder_cmp_str_save;
 string weaponorder_cmp_str;
 float weaponorder_cmp(float i, float j, entity pass)
 {
@@ -1597,13 +1596,17 @@ void HUD_Weapons(void)
 	}
 
 	// TODO make this configurable
-	weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
-
-	if(weaponorder_cmp_str != weaponorder_cmp_str_save)
+	if(weaponorder_bypriority != cvar_string("cl_weaponpriority"))
 	{
-		if(weaponorder_cmp_str_save)
-			strunzone(weaponorder_cmp_str_save);
-		weaponorder_cmp_str_save = strzone(weaponorder_cmp_str);
+		if(weaponorder_bypriority)
+			strunzone(weaponorder_bypriority);
+		if(weaponorder_byimpulse)
+			strunzone(weaponorder_byimpulse);
+
+		weaponorder_bypriority = strzone(cvar_string("cl_weaponpriority"));
+		weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority))));
+		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
+
 		weapon_cnt = 0;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
@@ -1615,6 +1618,8 @@ void HUD_Weapons(void)
 			}
 		}
 		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
+
+		weaponorder_cmp_str = string_null;
 	}
 
 	HUD_Panel_DrawBg(1);

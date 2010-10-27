@@ -581,9 +581,7 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 			stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
-string W_FixWeaponOrder_ForceComplete(string s);
-string W_FixWeaponOrder_AllowIncomplete(string s);
-string W_FixWeaponOrder_BuildImpulseList(string s);
+float w_getbestweapon(entity e);
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 {
 	string o, s;
