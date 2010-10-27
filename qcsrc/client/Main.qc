@@ -338,6 +338,8 @@ void PostInit(void)
 	Porto_Init();
 	TrueAim_Init();
 
+	weaponorder_byimpulse = W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(cvar_string("cl_weaponpriority"))));
+
 	postinit = true;
 }
 
