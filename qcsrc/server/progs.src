@@ -2,7 +2,6 @@
 
 ../common/util-pre.qh
 
-../common/fteqcc-ignore-unref.qh
 sys.qh
 pre-builtins.qh
 builtins.qh
@@ -18,7 +17,6 @@ post-builtins.qh
 ../common/constants.qh
 ../common/util.qh
 ../common/items.qh
-../common/fteqcc-warn-unref.qh
 
 autocvars.qh
 constants.qh
