@@ -15,7 +15,7 @@ void WarpZone_Read(float isnew)
 {
 	float f;
 
-	++warpzone_warpzones_exist;
+	warpzone_warpzones_exist = 1;
 	if not(self.enemy)
 	{
 		self.enemy = spawn();
@@ -84,7 +84,7 @@ void WarpZone_Read(float isnew)
 void WarpZone_Camera_Read(float isnew)
 {
 	float f;
-	++warpzone_cameras_exist;
+	warpzone_cameras_exist = 1;
 	self.classname = "func_warpzone_camera";
 
 	f = ReadByte();
@@ -170,7 +170,6 @@ void WarpZone_Outside()
 
 vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3)
 {
-	float nearclipdistance;
 	vector mi, ma;
 	entity e;
 	float pd;
@@ -210,7 +209,7 @@ var float autocvar_cl_rollkillspeed = 10;
 #endif
 void WarpZone_FixView()
 {
-	float pd, f;
+	float f;
 	vector o;
 	entity e;
 	vector corner0, corner1, corner2, corner3, nearclip;

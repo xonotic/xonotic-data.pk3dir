@@ -1,5 +1,5 @@
 float trace_dphitcontents;
-.float dphitcontents;
+.float dphitcontentsmask;
 
 void WarpZone_Accumulator_Clear(entity acc)
 {

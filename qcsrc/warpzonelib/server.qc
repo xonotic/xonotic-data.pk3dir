@@ -359,7 +359,7 @@ void WarpZoneCamera_InitStep_FindTarget()
 		error("Camera with nonexisting target");
 		return;
 	}
-	++warpzone_cameras_exist;
+	warpzone_cameras_exist = 1;
 	WarpZone_Camera_SetUp(self, self.enemy.origin, self.enemy.angles);
 	self.SendFlags = 0xFFFFFF;
 }
@@ -494,7 +494,7 @@ void WarpZone_InitStep_FinalizeTransform()
 		return;
 	}
 
-	++warpzone_warpzones_exist;
+	warpzone_warpzones_exist = 1;
 	WarpZone_SetUp(self, self.warpzone_origin, self.warpzone_angles, self.enemy.warpzone_origin, self.enemy.warpzone_angles);
 	self.touch = WarpZone_Touch;
 	self.SendFlags = 0xFFFFFF;

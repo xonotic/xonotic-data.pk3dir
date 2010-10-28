@@ -1074,7 +1074,7 @@ void CSQC_SPIDER_HUD()
 
 void CSQC_RAPTOR_HUD()
 {
-	float rockets, reload, heat, hp, shield, energy;
+	float reload, hp, shield, energy;
 	vector picsize, hudloc;
 
     // Fetch health & ammo stats

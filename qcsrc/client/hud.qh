@@ -80,14 +80,6 @@ var float panel_bg_border;
 var string panel_bg_border_str;
 var float panel_bg_padding;
 var string panel_bg_padding_str;
-var float panel_accuracy_yellow;
-var float panel_accuracy_onlycurrent;
-var float panel_accuracy_flip;
-var float panel_accuracy_iconalign;
-var float panel_accuracy_baralign;
-var float panel_accuracy_info_top;
-var float panel_accuracy_foreground_alpha;
-var float panel_accuracy_alreadyvoted_alpha;
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:
 // ----------------------
@@ -232,7 +224,7 @@ else\
 panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_panelpos;
 
 // return smoothly faded size of given panel when a dialog is active
-var vector menu_enable_maxsize;
+var vector menu_enable_maxsize; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(menu_enable_maxsize);
 var vector menu_enable_size;
 #define HUD_Panel_GetMenuSize()\
 menu_enable_maxsize_x = 0.3 * vid_conwidth;\
