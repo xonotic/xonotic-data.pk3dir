@@ -80,7 +80,6 @@ var float panel_bg_border;
 var string panel_bg_border_str;
 var float panel_bg_padding;
 var string panel_bg_padding_str;
-var float panel_accuracy_yellow;
 var float panel_accuracy_onlycurrent;
 var float panel_accuracy_flip;
 var float panel_accuracy_iconalign;

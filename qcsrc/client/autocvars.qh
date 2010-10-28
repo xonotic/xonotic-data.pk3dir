@@ -58,7 +58,6 @@ var string autocvar_hud_panel_weapons_bg_border;
 var string autocvar_hud_panel_weapons_bg_padding;
 var float autocvar_hud_panel_weapons_aspect;
 var float autocvar_hud_panel_weapons_accuracy;
-var float autocvar_hud_panel_weapons_accuracy_yellow;
 var float autocvar_hud_panel_weapons_ammo;
 var vector autocvar_hud_panel_weapons_ammo_color;
 var float autocvar_hud_panel_weapons_ammo_alpha;
@@ -180,7 +179,6 @@ var string autocvar_hud_panel_vote_bg_color_team;
 var string autocvar_hud_panel_vote_bg_alpha;
 var string autocvar_hud_panel_vote_bg_border;
 var string autocvar_hud_panel_vote_bg_padding;
-var float autocvar_hud_panel_vote_alreadyvoted_alpha;
 
 var float autocvar_hud_panel_modicons;
 var vector autocvar_hud_panel_modicons_pos;

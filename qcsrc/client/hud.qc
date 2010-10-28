@@ -3795,9 +3795,10 @@ void HUD_VoteWindow(void)
 	if(!vote_alpha)
 		return;
 
-	a = panel_bg_alpha * vote_alpha * bound(autocvar_hud_panel_vote_alreadyvoted_alpha, 1 - vote_highlighted, 1);
+	a = vote_alpha * bound(cvar("hud_panel_vote_alreadyvoted_alpha"), 1 - vote_highlighted, 1);
 	HUD_Panel_DrawBg(a);
-	a = panel_fg_alpha * vote_alpha * bound(autocvar_hud_panel_vote_alreadyvoted_alpha, 1 - vote_highlighted, 1);
+	a = panel_fg_alpha * a;
+
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
