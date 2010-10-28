@@ -1305,7 +1305,12 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 
 void ClientKill (void)
 {
-	ClientKill_TeamChange(0);
+	if((g_arena || g_ca) && ((champion && champion.classname == "player" && player_count > 1) || player_count == 1)) // don't allow a kill in this case either
+	{
+		// do nothing
+	}
+	else
+		ClientKill_TeamChange(0);
 }
 
 void DoTeamChange(float destteam)
@@ -1690,6 +1695,8 @@ void ClientDisconnect (void)
 		strunzone(self.netname_previous);
 	if(self.clientstatus)
 		strunzone(self.clientstatus);
+	if(self.weaponorder_byimpulse)
+		strunzone(self.weaponorder_byimpulse);
 
 	ClearPlayerSounds();
 

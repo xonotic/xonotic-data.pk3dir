@@ -1242,4 +1242,8 @@ float TetrisPostFrame()
 	return 1;
 };
 
+#else
+
+FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(autocvar_g_bastet);
+
 #endif

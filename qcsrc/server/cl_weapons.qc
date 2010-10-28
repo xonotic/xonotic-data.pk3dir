@@ -123,7 +123,7 @@ void W_NextWeapon(float list)
 	if(list == 0)
 		W_CycleWeapon(weaponorder_byid, -1);
 	else if(list == 1)
-		W_CycleWeapon(weaponorder_byimpulse, -1);
+		W_CycleWeapon(self.weaponorder_byimpulse, -1);
 	else if(list == 2)
 		W_CycleWeapon(self.cvar_cl_weaponpriority, -1);
 }
@@ -134,21 +134,9 @@ void W_PreviousWeapon(float list)
 	if(list == 0)
 		W_CycleWeapon(weaponorder_byid, +1);
 	else if(list == 1)
-		W_CycleWeapon(weaponorder_byimpulse, +1);
+		W_CycleWeapon(self.weaponorder_byimpulse, +1);
 	else if(list == 2)
 		W_CycleWeapon(self.cvar_cl_weaponpriority, +1);
-}
-
-string W_FixWeaponOrder_AllowIncomplete(string order)
-{
-	return W_FixWeaponOrder(order, 0);
-}
-
-string W_FixWeaponOrder_ForceComplete(string order)
-{
-	if(order == "")
-		order = W_NumberWeaponOrder(cvar_string("cl_weaponpriority"));
-	return W_FixWeaponOrder(order, 1);
 }
 
 float w_getbestweapon(entity e)

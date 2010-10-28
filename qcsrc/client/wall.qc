@@ -8,7 +8,6 @@ void Ent_Wall_Draw()
 {
 	float f;
 	float d;
-	vector save;
 	var .vector fld;
 
 	if(self.bgmscriptangular)

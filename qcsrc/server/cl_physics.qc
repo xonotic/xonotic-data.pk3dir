@@ -37,8 +37,6 @@ float sv_airspeedlimit_nonqw;
 .float multijump_ready;
 .float prevjumpbutton;
 
-.float nexspeed;
-
 /*
 =============
 PlayerJump

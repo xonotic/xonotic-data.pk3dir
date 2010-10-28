@@ -1,7 +1,6 @@
 .float HookType; // ENT_CLIENT_*
 .vector origin;
 .vector velocity;
-.float HookSound;
 .float HookSilent;
 .float HookRange;
 
@@ -57,7 +56,7 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 void Draw_GrapplingHook()
 {
 	vector a, b, atrans;
-	string tex, snd;
+	string tex;
 	vector rgb;
 	float t;
 	float s;
