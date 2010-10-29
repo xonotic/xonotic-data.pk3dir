@@ -1470,7 +1470,6 @@ float GetAmmoTypeForWep(float i)
 	{
 		case WEP_SHOTGUN: return 0;
 		case WEP_UZI: return 1;
-		case WEP_CAMPINGRIFLE: return 1;
 		case WEP_GRENADE_LAUNCHER: return 2;
 		case WEP_MINE_LAYER: return 2;
 		case WEP_ELECTRO: return 3;
@@ -1478,6 +1477,7 @@ float GetAmmoTypeForWep(float i)
 		case WEP_HLAC: return 3;
 		case WEP_MINSTANEX: return 3;
 		case WEP_NEX: return 3;
+		case WEP_CAMPINGRIFLE: return 1;
 		case WEP_HAGAR: return 2;
 		case WEP_ROCKET_LAUNCHER: return 2;
 		case WEP_SEEKER: return 2;
