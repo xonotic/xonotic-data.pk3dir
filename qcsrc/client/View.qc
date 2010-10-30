@@ -770,8 +770,7 @@ void CSQC_UpdateView(float w, float h)
 				{
 					wcross_scale = 1;
 				}
-if(!pickup_crosshair_fade)
-pickup_crosshair_fade = 1;
+
 				if(pickup_crosshair_time < getstatf(STAT_PICKUP_CROSSHAIR))
 				{
 					pickup_crosshair_fade = 1;
@@ -782,7 +781,6 @@ pickup_crosshair_fade = 1;
 				else
 					pickup_crosshair_fade = 0;
 				wcross_scale += sin(pickup_crosshair_fade);
-				dprint(strcat(" ------------> ", ftos(getstatf(STAT_PICKUP_CROSSHAIR)), " <-------------\n"));
 
 				if(shottype == SHOTTYPE_HITENEMY)
 					wcross_scale *= cvar("crosshair_hittest"); // is not queried if hittest is 0
