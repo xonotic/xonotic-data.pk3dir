@@ -2241,7 +2241,7 @@ void SpectateCopy(entity spectatee) {
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.angles = spectatee.v_angle;
 	self.fixangle = TRUE;
-	self.stat_crosshair_pickup = spectatee.stat_crosshair_pickup;
+	self.last_pickup = spectatee.last_pickup;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);

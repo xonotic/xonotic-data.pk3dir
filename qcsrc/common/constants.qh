@@ -310,7 +310,7 @@ const float STAT_SHOTORG = 46; // compressShotOrigin
 const float STAT_LEADLIMIT = 47;
 const float STAT_BULLETS_LOADED = 48;
 const float STAT_NEX_CHARGE = 49;
-const float	STAT_PICKUP_CROSSHAIR = 50;
+const float	STAT_LAST_PICKUP = 50;
 const float STAT_HUD = 51;
 
 // see DP source, quakedef.h

@@ -489,7 +489,7 @@ void Item_Touch (void)
 	if(!Item_GiveTo(self, other))
 		return;
 
-	other.stat_crosshair_pickup = time;
+	other.last_pickup = time;
 
 	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
 

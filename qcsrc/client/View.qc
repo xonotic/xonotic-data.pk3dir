@@ -773,10 +773,10 @@ void CSQC_UpdateView(float w, float h)
 
 				if(cvar("crosshair_pickup"))
 				{
-					if(pickup_crosshair_time < getstatf(STAT_PICKUP_CROSSHAIR))
+					if(pickup_crosshair_time < getstatf(STAT_LAST_PICKUP))
 					{
 						pickup_crosshair_size = 1;
-						pickup_crosshair_time = getstatf(STAT_PICKUP_CROSSHAIR);
+						pickup_crosshair_time = getstatf(STAT_LAST_PICKUP);
 					}
 
 					if(pickup_crosshair_size > 0)
