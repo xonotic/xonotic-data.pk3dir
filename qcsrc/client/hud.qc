@@ -1657,16 +1657,16 @@ void HUD_Weapons(void)
 
 	float a, type, fullammo;
 	float when;
-	when = autocvar_hud_panel_weapons_complainbubble_time;
+	when = cvar("hud_panel_weapons_complainbubble_time");
 	float fadetime;
-	fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
+	fadetime = cvar("hud_panel_weapons_complainbubble_fadetime");
 
 	vector color;
 	vector wpnpos;
 	vector wpnsize;
 
 	float show_accuracy;
-	if(autocvar_hud_panel_weapons_accuracy && acc_levels)
+	if(cvar("hud_panel_weapons_accuracy") && acc_levels)
 		show_accuracy = true;
 
 	for(i = 0; i < weapon_cnt; ++i)
@@ -1713,13 +1713,14 @@ void HUD_Weapons(void)
 		{
 			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
-			if(autocvar_hud_panel_weapons_label == 1) // weapon number
+			float label = cvar("hud_panel_weapons_label");
+			if(label == 1) // weapon number
 				drawstring(wpnpos, ftos(weapid), '1 1 0' * 0.5 * panel_size_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-			else if(autocvar_hud_panel_weapons_label == 2) // bind
+			else if(label == 2) // bind
 				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * panel_size_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw ammo status bar
-			if(autocvar_hud_panel_weapons_ammo && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
+			if(cvar("hud_panel_weapons_ammo") && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
 			{
 				a = 0;
 				type = GetAmmoTypeForWep(weapid);
@@ -1729,11 +1730,11 @@ void HUD_Weapons(void)
 				if(a > 0)
 				{
 					switch(type) {
-						case 0: fullammo = autocvar_hud_panel_weapons_ammo_full_shells; break;
-						case 1: fullammo = autocvar_hud_panel_weapons_ammo_full_nails; break;
-						case 2: fullammo = autocvar_hud_panel_weapons_ammo_full_rockets; break;
-						case 3: fullammo = autocvar_hud_panel_weapons_ammo_full_cells; break;
-						case 4: fullammo = autocvar_hud_panel_weapons_ammo_full_fuel; break;
+						case 0: fullammo = cvar("hud_panel_weapons_ammo_full_shells"); break;
+						case 1: fullammo = cvar("hud_panel_weapons_ammo_full_nails"); break;
+						case 2: fullammo = cvar("hud_panel_weapons_ammo_full_rockets"); break;
+						case 3: fullammo = cvar("hud_panel_weapons_ammo_full_cells"); break;
+						case 4: fullammo = cvar("hud_panel_weapons_ammo_full_fuel"); break;
 						default: fullammo = 60;
 					}
 
@@ -1761,7 +1762,7 @@ void HUD_Weapons(void)
 						barpos_y,
 						barsize_x * bound(0, a/fullammo, 1),
 						barsize_y);
-					drawpic_aspect_skin(wpnpos, "weapon_ammo", wpnsize, autocvar_hud_panel_weapons_ammo_color, panel_fg_alpha * autocvar_hud_panel_weapons_ammo_alpha, DRAWFLAG_NORMAL);
+					drawpic_aspect_skin(wpnpos, "weapon_ammo", wpnsize, stov(cvar_string("hud_panel_weapons_ammo_color")), panel_fg_alpha * cvar("hud_panel_weapons_ammo_alpha"), DRAWFLAG_NORMAL);
 					drawresetcliparea();
 				}
 			}
@@ -1774,7 +1775,7 @@ void HUD_Weapons(void)
 		}
 
 		// draw the complain message
-		if(time - complain_weapon_time < when + fadetime && self.weapon == complain_weapon && autocvar_hud_panel_weapons_complainbubble)
+		if(time - complain_weapon_time < when + fadetime && self.weapon == complain_weapon && cvar("hud_panel_weapons_complainbubble"))
 		{
 			if(fadetime)
 			{
@@ -1794,18 +1795,19 @@ void HUD_Weapons(void)
 			string s;
 			if(complain_weapon_type == 0) {
 				s = "Out of ammo";
-				color = autocvar_hud_panel_weapons_complainbubble_color_outofammo;
+				color = stov(cvar_string("hud_panel_weapons_complainbubble_color_outofammo"));
 			}
 			else if(complain_weapon_type == 1) {
 				s = "Don't have";
-				color = autocvar_hud_panel_weapons_complainbubble_color_donthave;
+				color = stov(cvar_string("hud_panel_weapons_complainbubble_color_donthave"));
 			}
 			else {
 				s = "Unavailable";
-				color = autocvar_hud_panel_weapons_complainbubble_color_unavailable;
+				color = stov(cvar_string("hud_panel_weapons_complainbubble_color_unavailable"));
 			}
-			drawpic_aspect_skin(wpnpos + '1 1 0' * autocvar_hud_panel_weapons_complainbubble_padding, "weapon_complainbubble", wpnsize - '2 2 0' * autocvar_hud_panel_weapons_complainbubble_padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring_aspect(wpnpos + '1 1 0' * autocvar_hud_panel_weapons_complainbubble_padding, s, wpnsize - '2 2 0' * autocvar_hud_panel_weapons_complainbubble_padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			float padding = cvar("hud_panel_weapons_complainbubble_padding");
+			drawpic_aspect_skin(wpnpos + '1 1 0' * padding, "weapon_complainbubble", wpnsize - '2 2 0' * padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(wpnpos + '1 1 0' * padding, s, wpnsize - '2 2 0' * padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
 		++row;
