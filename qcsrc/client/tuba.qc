@@ -24,7 +24,7 @@ void Ent_TubaNote_UpdateSound()
 {
 	self.enemy.cnt = bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1);
 	self.enemy.count = self.enemy.cnt;
-	sound(self.enemy, CHAN_PROJECTILE, TUBA_STARTNOTE(self.cnt), self.enemy.cnt, self.attenuate * cvar("g_balance_tuba_attenuation"));
+	sound(self.enemy, CHAN_PROJECTILE, TUBA_STARTNOTE(self.cnt), self.enemy.cnt, self.enemy.attenuate * cvar("g_balance_tuba_attenuation"));
 }
 
 void Ent_TubaNote_StopSound()
