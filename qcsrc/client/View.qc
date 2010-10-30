@@ -779,7 +779,7 @@ void CSQC_UpdateView(float w, float h)
 						pickup_crosshair_time = getstatf(STAT_PICKUP_CROSSHAIR);
 					}
 					if(pickup_crosshair_fade > 0)
-						pickup_crosshair_fade -= cvar("crosshair_pickup_speed");
+						pickup_crosshair_fade -= cvar("crosshair_pickup_speed") * frametime;
 					else
 						pickup_crosshair_fade = 0;
 					wcross_scale += sin(pickup_crosshair_fade) * cvar("crosshair_pickup");
