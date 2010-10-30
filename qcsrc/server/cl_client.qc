@@ -2225,6 +2225,7 @@ void SpectateCopy(entity spectatee) {
 	self.health = spectatee.health;
 	self.impulse = 0;
 	self.items = spectatee.items;
+	self.last_pickup = spectatee.last_pickup;
 	self.metertime = spectatee.metertime;
 	self.strength_finished = spectatee.strength_finished;
 	self.invincible_finished = spectatee.invincible_finished;
@@ -2241,7 +2242,6 @@ void SpectateCopy(entity spectatee) {
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.angles = spectatee.v_angle;
 	self.fixangle = TRUE;
-	self.last_pickup = spectatee.last_pickup;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
