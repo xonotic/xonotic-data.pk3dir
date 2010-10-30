@@ -146,6 +146,7 @@ float w_shotgun(float req)
 };
 #endif
 #ifdef CSQC
+.float prevric;
 float w_shotgun(float req)
 {
 	if(req == WR_IMPACTEFFECT)
@@ -153,14 +154,15 @@ float w_shotgun(float req)
 		vector org2;
 		org2 = w_org + w_backoff * 2;
 		pointparticles(particleeffectnum("shotgun_impact"), org2, w_backoff * 1000, 1);
-		if(!w_issilent)
+		if(!w_issilent && time - self.prevric > 0.25)
 		{
-			if(w_random < 0.05)
+			if(w_random < 0.0165)
 				sound(self, CHAN_PROJECTILE, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
-			else if(w_random < 0.1)
+			else if(w_random < 0.033)
 				sound(self, CHAN_PROJECTILE, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
-			else if(w_random < 0.2)
+			else if(w_random < 0.05)
 				sound(self, CHAN_PROJECTILE, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+			self.prevric = time;
 		}
 	}
 	else if(req == WR_PRECACHE)
