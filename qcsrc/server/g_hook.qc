@@ -268,7 +268,7 @@ void GrapplingHookThink()
 	}
 
 	makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0');
-	myorg = WarpZone_RefSys_TransformOrigin(self, self.owner, self.origin) + v_forward * (-9);
+	myorg = WarpZone_RefSys_TransformOrigin(self, self.owner, self.origin); // + v_forward * (-9);
 
 	if(myorg != self.hook_start)
 	{

@@ -189,8 +189,16 @@ void Draw_GrapplingHook()
 	{
 		default:
 		case ENT_CLIENT_HOOK:
-			setorigin(self, trace_endpos); // hook endpoint!
-			self.angles = vectoangles(trace_endpos - atrans);
+			if(vlen(trace_endpos - atrans) > 0.5)
+			{
+				setorigin(self, trace_endpos); // hook endpoint!
+				self.angles = vectoangles(trace_endpos - atrans);
+				self.drawmask = MASK_NORMAL;
+			}
+			else
+			{
+				self.drawmask = 0;
+			}
 			break;
 		case ENT_CLIENT_LGBEAM:
 		case ENT_CLIENT_GAUNTLET:
