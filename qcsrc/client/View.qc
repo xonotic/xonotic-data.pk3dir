@@ -349,6 +349,8 @@ void CSQC_RAPTOR_HUD();
 vector freeze_pmove_org, freeze_input_angles;
 entity nightvision_noise, nightvision_noise2;
 
+float pickup_crosshair_time, pickup_crosshair_fade;
+
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -768,6 +770,19 @@ void CSQC_UpdateView(float w, float h)
 				{
 					wcross_scale = 1;
 				}
+if(!pickup_crosshair_fade)
+pickup_crosshair_fade = 1;
+				if(pickup_crosshair_time < getstatf(STAT_PICKUP_CROSSHAIR))
+				{
+					pickup_crosshair_fade = 1;
+					pickup_crosshair_time = getstatf(STAT_PICKUP_CROSSHAIR);
+				}
+				if(pickup_crosshair_fade > 0)
+					pickup_crosshair_fade -= 0.01;
+				else
+					pickup_crosshair_fade = 0;
+				wcross_scale += sin(pickup_crosshair_fade);
+				dprint(strcat(" ------------> ", ftos(getstatf(STAT_PICKUP_CROSSHAIR)), " <-------------\n"));
 
 				if(shottype == SHOTTYPE_HITENEMY)
 					wcross_scale *= cvar("crosshair_hittest"); // is not queried if hittest is 0
