@@ -32,12 +32,6 @@ var float autocvar_hud_dock_color_team;
 var float autocvar_hud_dock_alpha;
 
 var float autocvar_hud_progressbar_alpha;
-var vector autocvar_hud_progressbar_strength_color;
-var vector autocvar_hud_progressbar_shield_color;
-var vector autocvar_hud_progressbar_health_color;
-var vector autocvar_hud_progressbar_armor_color;
-var vector autocvar_hud_progressbar_fuel_color;
-var vector autocvar_hud_progressbar_nexball_color;
 
 var string autocvar_hud_panel_bg;
 var vector autocvar_hud_panel_bg_color;

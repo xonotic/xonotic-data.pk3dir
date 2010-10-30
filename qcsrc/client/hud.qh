@@ -98,12 +98,12 @@ var string picpath;
 
 #define HUD_Panel_GetProgressBarColor(item) \
 switch(item) {\
-	case "strength": progressbar_color = autocvar_hud_progressbar_strength_color; break;\
-	case "shield": progressbar_color = autocvar_hud_progressbar_shield_color; break;\
-	case "health": progressbar_color = autocvar_hud_progressbar_health_color; break;\
-	case "armor": progressbar_color = autocvar_hud_progressbar_armor_color; break;\
-	case "fuel": progressbar_color = autocvar_hud_progressbar_fuel_color; break;\
-	case "nexball": progressbar_color = autocvar_hud_progressbar_nexball_color; break;\
+	case "strength": progressbar_color = stov(cvar_string("hud_progressbar_strength_color")); break;\
+	case "shield": progressbar_color = stov(cvar_string("hud_progressbar_shield_color")); break;\
+	case "health": progressbar_color = stov(cvar_string("hud_progressbar_health_color")); break;\
+	case "armor": progressbar_color = stov(cvar_string("hud_progressbar_armor_color")); break;\
+	case "fuel": progressbar_color = stov(cvar_string("hud_progressbar_fuel_color")); break;\
+	case "nexball": progressbar_color = stov(cvar_string("hud_progressbar_nexball_color")); break;\
 }
 
 // Get value for panel_bg: if "" fetch default, else use panel_bg_str
