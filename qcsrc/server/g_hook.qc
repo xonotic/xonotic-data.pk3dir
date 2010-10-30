@@ -343,6 +343,10 @@ void FireGrapplingHook (void)
 	// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
 	sound (self, CHAN_WEAPON2, "weapons/hook_fire.wav", VOL_BASE, ATTN_NORM);
 	org = self.origin + self.view_ofs + v_forward * vs_x + v_right * -vs_y + v_up * vs_z;
+
+	WarpZone_TraceBox(self.origin + self.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, self);
+	org = trace_endpos;
+
 	pointparticles(particleeffectnum("grapple_muzzleflash"), org, '0 0 0', 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
