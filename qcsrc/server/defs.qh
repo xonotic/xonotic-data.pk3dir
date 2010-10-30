@@ -603,6 +603,8 @@ string matchid;
 .float stats_hit[WEP_MAXCOUNT];  // for hitscan bullets hit
 .float stats_fired[WEP_MAXCOUNT];  // for hitscan bullets fired
 
+.float stat_pickup_crosshair;
+
 FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_hit);
 FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_fired);
 
