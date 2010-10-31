@@ -1,3 +1,4 @@
+#pragma flag enable subscope
 #pragma flag enable lo
 
 //float log(float x);
