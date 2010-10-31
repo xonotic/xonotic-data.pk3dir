@@ -505,7 +505,7 @@ void func_pendulum_controller_think()
 	if(self.owner.classname == "func_pendulum") // don't brake stuff if the func_bobbing was killtarget'ed
 	{
 		// * 10 so it will arrive in 0.1 sec
-		self.owner.avelocity_x = (remainder(v - self.owner.angles_x, 360)) * 10;
+		self.owner.avelocity_z = (remainder(v - self.owner.angles_z, 360)) * 10;
 	}
 };
 
@@ -542,7 +542,7 @@ void spawnfunc_func_pendulum()
 	if(!self.freq)
 	{
 		// find pendulum length (same formula as Q3A)
-		self.freq = 1 / (M_PI * 2) * sqrt(cvar("sv_gravity") / (3 * fabs(self.mins_z)));
+		self.freq = 1 / (M_PI * 2) * sqrt(cvar("sv_gravity") / (3 * max(8, fabs(self.mins_z))));
 	}
 
 	// wait for targets to spawn
