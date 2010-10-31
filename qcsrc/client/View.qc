@@ -706,7 +706,7 @@ void CSQC_UpdateView(float w, float h)
 			wcross_resolution = cvar("crosshair_size");
 			if (wcross_resolution == 0)
 				return;
-			wcross_alpha = cvar("crosshair_color_alpha");
+			wcross_alpha = cvar("crosshair_alpha");
 			if (wcross_alpha == 0)
 				return;
 
@@ -750,7 +750,7 @@ void CSQC_UpdateView(float w, float h)
 					wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
 					if (wcross_resolution == 0)
 						return;
-					wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_color_alpha"));
+					wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_alpha"));
 					if (wcross_alpha == 0)
 						return;
 
