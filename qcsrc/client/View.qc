@@ -358,6 +358,7 @@ void CSQC_UpdateView(float w, float h)
 	float f, i, j;
 	vector v, vo;
 	vector vf_size, vf_min;
+	float a;
 
 	vf_size = R_SetView3fv(VF_SIZE);
 	vf_min = R_SetView3fv(VF_MIN);
@@ -569,7 +570,6 @@ void CSQC_UpdateView(float w, float h)
 	{
 		// apply night vision effect
 		vector rgb, tc_00, tc_01, tc_10, tc_11;
-		float a;
 
 		if(!nightvision_noise)
 		{

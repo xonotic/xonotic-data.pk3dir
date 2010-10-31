@@ -4948,6 +4948,8 @@ switch (id) {\
 
 void HUD_Main (void)
 {
+	float i;
+
 	hud_skin_path = strcat("gfx/hud/", autocvar_hud_skin);
 
 	// global hud alpha fade
@@ -4974,7 +4976,6 @@ void HUD_Main (void)
 	// HUD configure visible grid
 	if(autocvar__hud_configure && autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
 	{
-		float i;
 		// x-axis
 		for(i = 0; i < 1/bound(0.005, autocvar_hud_configure_grid_xsize, 0.2); ++i)
 		{

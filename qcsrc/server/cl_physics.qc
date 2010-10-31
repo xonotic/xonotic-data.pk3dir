@@ -266,7 +266,7 @@ void RaceCarPhysics()
 	// using this move type for "big rigs"
 	// the engine does not push the entity!
 
-	float accel, steer, f;
+	float accel, steer, f, myspeed, steerfactor;
 	vector angles_save, rigvel;
 
 	angles_save = self.angles;
@@ -292,7 +292,7 @@ void RaceCarPhysics()
 
 	if(self.flags & FL_ONGROUND || g_bugrigs_air_steering)
 	{
-		float myspeed, upspeed, steerfactor, accelfactor;
+		float upspeed, accelfactor;
 
 		myspeed = self.velocity * v_forward;
 		upspeed = self.velocity * v_up;
