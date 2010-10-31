@@ -501,7 +501,7 @@ void func_pendulum_controller_think()
 
 	// calculate sinewave using makevectors
 	makevectors((self.nextthink * self.owner.freq + self.owner.phase) * '0 360 0');
-	v = self.owner.speed * v_forward_y;
+	v = self.owner.speed * v_forward_y + self.cnt;
 	if(self.owner.classname == "func_pendulum") // don't brake stuff if the func_bobbing was killtarget'ed
 	{
 		// * 10 so it will arrive in 0.1 sec
@@ -544,6 +544,9 @@ void spawnfunc_func_pendulum()
 		// find pendulum length (same formula as Q3A)
 		self.freq = 1 / (M_PI * 2) * sqrt(cvar("sv_gravity") / (3 * max(8, fabs(self.mins_z))));
 	}
+
+	// copy initial angle
+	self.cnt = self.angles_z;
 
 	// wait for targets to spawn
 	controller = spawn();
