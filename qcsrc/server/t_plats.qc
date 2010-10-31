@@ -423,12 +423,6 @@ void func_bobbing_controller_think()
 		self.owner.velocity = (v - self.owner.origin) * 10;
 };
 
-void bobbing_blocked()
-{
-	// no need to duplicate code
-	generic_plat_blocked();
-}
-
 /*QUAKED spawnfunc_func_bobbing (0 .5 .8) ? X_AXIS Y_AXIS
 Brush model that moves back and forth on one axis (default Z).
 speed : how long one cycle takes in seconds (default 4)
@@ -458,7 +452,7 @@ void spawnfunc_func_bobbing()
 	self.active = ACTIVE_ACTIVE;
 
 	// damage when blocked
-	self.blocked = bobbing_blocked;
+	self.blocked = generic_plat_blocked;
 	if(self.dmg & (!self.message))
 		self.message = " was squished";
     if(self.dmg && (!self.message2))
