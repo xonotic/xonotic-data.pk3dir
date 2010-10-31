@@ -349,6 +349,8 @@ void CSQC_RAPTOR_HUD();
 vector freeze_pmove_org, freeze_input_angles;
 entity nightvision_noise, nightvision_noise2;
 
+float pickup_crosshair_time, pickup_crosshair_size;
+
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -767,6 +769,22 @@ void CSQC_UpdateView(float w, float h)
 				else
 				{
 					wcross_scale = 1;
+				}
+
+				if(cvar("crosshair_pickup"))
+				{
+					if(pickup_crosshair_time < getstatf(STAT_LAST_PICKUP))
+					{
+						pickup_crosshair_size = 1;
+						pickup_crosshair_time = getstatf(STAT_LAST_PICKUP);
+					}
+
+					if(pickup_crosshair_size > 0)
+						pickup_crosshair_size -= cvar("crosshair_pickup_speed") * frametime;
+					else
+						pickup_crosshair_size = 0;
+
+					wcross_scale += sin(pickup_crosshair_size) * cvar("crosshair_pickup");
 				}
 
 				if(shottype == SHOTTYPE_HITENEMY)
