@@ -1695,6 +1695,8 @@ void ClientDisconnect (void)
 		strunzone(self.netname_previous);
 	if(self.clientstatus)
 		strunzone(self.clientstatus);
+	if(self.weaponorder_byimpulse)
+		strunzone(self.weaponorder_byimpulse);
 
 	ClearPlayerSounds();
 

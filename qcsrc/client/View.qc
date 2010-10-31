@@ -825,7 +825,6 @@ void CSQC_UpdateView(float w, float h)
 
 				ring_scale = cvar("crosshair_ring_size");
 
-				float f, a;
 				wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
 				float nex_charge;
@@ -1075,7 +1074,7 @@ void CSQC_SPIDER_HUD()
 
 void CSQC_RAPTOR_HUD()
 {
-	float rockets, reload, heat, hp, shield, energy;
+	float reload, hp, shield, energy;
 	vector picsize, hudloc;
 
     // Fetch health & ammo stats

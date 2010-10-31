@@ -460,43 +460,47 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 }
 
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
-var float imgaspect;
-var float aspect;
+var float _drawpic_imgaspect;
+var float _drawpic_aspect;
+var vector _drawpic_imgsize;
+var vector _drawpic_sz;
+var vector _drawpic_oldsz;
+var string _drawpic_picpath;
 #define drawpic_aspect(pos,pic,mySize,color,alpha,drawflag)\
 	do {\
-		vector imgsize;\
-		imgsize = drawgetimagesize(pic);\
-		imgaspect = imgsize_x/imgsize_y;\
-		vector oldsz, sz;\
-		oldsz = sz = mySize;\
-		aspect = sz_x/sz_y;\
-		if(aspect > imgaspect) {\
-			sz_x = sz_y * imgaspect;\
-			drawpic(pos + eX * (oldsz_x - sz_x) * 0.5, pic, sz, color, alpha, drawflag);\
+		_drawpic_imgsize = drawgetimagesize(pic);\
+		_drawpic_imgaspect = _drawpic_imgsize_x/_drawpic_imgsize_y;\
+		_drawpic_oldsz = _drawpic_sz = mySize;\
+		_drawpic_aspect = _drawpic_sz_x/_drawpic_sz_y;\
+		if(_drawpic_aspect > _drawpic_imgaspect) {\
+			_drawpic_sz_x = _drawpic_sz_y * _drawpic_imgaspect;\
+			drawpic(pos + eX * (_drawpic_oldsz_x - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
 		} else {\
-			sz_y = sz_x / imgaspect;\
-			drawpic(pos + eY * (oldsz_y - sz_y) * 0.5, pic, sz, color, alpha, drawflag);\
+			_drawpic_sz_y = _drawpic_sz_x / _drawpic_imgaspect;\
+			drawpic(pos + eY * (_drawpic_oldsz_y - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
 		}\
 	} while(0)
 
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 #define drawpic_aspect_skin(pos,pic,sz,color,alpha,drawflag)\
 	do{\
-		picpath = strcat(hud_skin_path, "/", pic);\
-		if(precache_pic(picpath) == "") {\
-			picpath = strcat("gfx/hud/default/", pic);\
+		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
+		if(precache_pic(_drawpic_picpath) == "") {\
+			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
 		}\
-		drawpic_aspect(pos, picpath, sz, color, alpha, drawflag);\
+		drawpic_aspect(pos, _drawpic_picpath, sz, color, alpha, drawflag);\
+		_drawpic_picpath = string_null;\
 	} while(0)
 
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 #define drawpic_skin(pos,pic,sz,color,alpha,drawflag)\
 	do{\
-		picpath = strcat(hud_skin_path, "/", pic);\
-		if(precache_pic(picpath) == "") {\
-			picpath = strcat("gfx/hud/default/", pic);\
+		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
+		if(precache_pic(_drawpic_picpath) == "") {\
+			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
 		}\
-		drawpic(pos, picpath, sz, color, alpha, drawflag);\
+		drawpic(pos, _drawpic_picpath, sz, color, alpha, drawflag);\
+		_drawpic_picpath = string_null;\
 	} while(0)
 
 void drawpic_aspect_skin_expanding(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)

@@ -34,11 +34,11 @@ float updateCompression()
 {
 	float fh;
 	float have_dds, have_jpg, have_tga;
-	if((have_dds = (fh = fopen("dds/particles/particlefont.dds", FILE_READ) >= 0)))
+	if((have_dds = ((fh = fopen("dds/particles/particlefont.dds", FILE_READ)) >= 0)))
 		fclose(fh);
-	if((have_jpg = (fh = fopen("particles/particlefont.jpg", FILE_READ) >= 0)))
+	if((have_jpg = ((fh = fopen("particles/particlefont.jpg", FILE_READ)) >= 0)))
 		fclose(fh);
-	if((have_tga = (fh = fopen("particles/particlefont.tga", FILE_READ) >= 0)))
+	if((have_tga = ((fh = fopen("particles/particlefont.tga", FILE_READ)) >= 0)))
 		fclose(fh);
 	if(have_dds && (have_jpg || have_tga))
 	{

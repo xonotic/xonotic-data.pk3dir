@@ -22,8 +22,6 @@ MUTATOR_HOOKFUNCTION(rocketflying_BuildMutatorsPrettyString)
 
 MUTATOR_DEFINITION(mutator_rocketflying)
 {
-	entity e;
-
 	MUTATOR_HOOK(EditProjectile, rocketflying_EditProjectile, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, rocketflying_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, rocketflying_BuildMutatorsPrettyString, CBC_ORDER_ANY);
