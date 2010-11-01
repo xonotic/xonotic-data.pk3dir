@@ -2034,21 +2034,17 @@ void HUD_Powerups(void) {
 	if(!autocvar_hud_panel_powerups && !autocvar__hud_configure)
 		return;
 
-	active_panel = HUD_PANEL_POWERUPS;
-	HUD_Panel_UpdateCvars(powerups);
-	float stat_items;
-	stat_items = getstati(STAT_ITEMS);
-
 	if(!autocvar__hud_configure)
 	{
-		if not(stat_items & IT_STRENGTH)
-			if not(stat_items & IT_INVINCIBLE)
-				return;
+		if not(getstati(STAT_ITEMS) & (IT_STRENGTH | IT_INVINCIBLE))
+			return;
 
 		if (getstati(STAT_HEALTH) <= 0)
 			return;
 	}
 
+	active_panel = HUD_PANEL_POWERUPS;
+	HUD_Panel_UpdateCvars(powerups);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3760,12 +3756,6 @@ void HUD_VoteWindow(void)
 	if(!autocvar_hud_panel_vote && !autocvar__hud_configure)
 		return;
 
-	active_panel = HUD_PANEL_VOTE;
-	HUD_Panel_UpdateCvars(vote);
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
-
 	if(!autocvar__hud_configure)
 	{
 		panel_fg_alpha = autocvar_hud_panel_fg_alpha;
@@ -3798,6 +3788,12 @@ void HUD_VoteWindow(void)
 
 	if(!vote_alpha)
 		return;
+
+	active_panel = HUD_PANEL_VOTE;
+	HUD_Panel_UpdateCvars(vote);
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
 
 	a = vote_alpha * bound(cvar("hud_panel_vote_alreadyvoted_alpha"), 1 - vote_highlighted, 1);
 	HUD_Panel_DrawBg(a);
