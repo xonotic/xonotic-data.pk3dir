@@ -278,7 +278,7 @@ void Send_CSQC_Centerprint(entity e, string s1, string s2, float msg, float type
 void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	string	s, a, msg;
-	float p, w, type;
+	float w, type;
 
 	if (targ.classname == "player" || targ.classname == "corpse")
 	{
@@ -342,7 +342,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			}
 			else
 			{
-				string blood_message, victim_message;
 				if (!checkrules_firstblood)
 				{
 					checkrules_firstblood = TRUE;

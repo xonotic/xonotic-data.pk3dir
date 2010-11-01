@@ -309,7 +309,8 @@ float db_load(string pFilename)
 	fh = fopen(pFilename, FILE_READ);
 	if(fh < 0)
 		return db;
-	if(stof(fgets(fh)) == DB_BUCKETS)
+	l = fgets(fh);
+	if(stof(l) == DB_BUCKETS)
 	{
 		i = 0;
 		while((l = fgets(fh)))
@@ -321,14 +322,18 @@ float db_load(string pFilename)
 	}
 	else
 	{
-		// different count of buckets?
+		// different count of buckets, or a dump?
 		// need to reorganize the database then (SLOW)
-		while((l = fgets(fh)))
+		//
+		// note: we also parse the first line (l) in case the DB file is
+		// missing the bucket count
+		do
 		{
 			n = tokenizebyseparator(l, "\\");
 			for(j = 2; j < n; j += 2)
 				db_put(db, argv(j-1), uri_unescape(argv(j)));
 		}
+		while((l = fgets(fh)));
 	}
 	fclose(fh);
 	return db;

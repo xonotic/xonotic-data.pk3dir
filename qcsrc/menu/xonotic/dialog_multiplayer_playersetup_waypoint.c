@@ -22,7 +22,7 @@ string XonoticWaypointDialog_toString(entity me)
 }
 void XonoticWaypointDialog_fill(entity me)
 {
-	entity e, sl;
+	entity e;
 	
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, "Waypoint settings:"));

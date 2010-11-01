@@ -1695,6 +1695,8 @@ void ClientDisconnect (void)
 		strunzone(self.netname_previous);
 	if(self.clientstatus)
 		strunzone(self.clientstatus);
+	if(self.weaponorder_byimpulse)
+		strunzone(self.weaponorder_byimpulse);
 
 	ClearPlayerSounds();
 
@@ -2223,6 +2225,7 @@ void SpectateCopy(entity spectatee) {
 	self.health = spectatee.health;
 	self.impulse = 0;
 	self.items = spectatee.items;
+	self.last_pickup = spectatee.last_pickup;
 	self.metertime = spectatee.metertime;
 	self.strength_finished = spectatee.strength_finished;
 	self.invincible_finished = spectatee.invincible_finished;

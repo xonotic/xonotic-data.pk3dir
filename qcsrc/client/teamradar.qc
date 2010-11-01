@@ -172,7 +172,6 @@ float hud_panel_radar_scale;
 float hud_panel_radar_foreground_alpha;
 float hud_panel_radar_rotation;
 vector hud_panel_radar_size;
-vector hud_panel_radar_position;
 float hud_panel_radar_zoommode;
 
 void teamradar_loadcvars()
@@ -191,8 +190,7 @@ void teamradar_loadcvars()
 	if(!hud_panel_radar_size_y) hud_panel_radar_size_y = hud_panel_radar_size_x;
 
 	hud_panel_radar_size_z = 0;
-	hud_panel_radar_nohudhack = hud_panel_radar_position_z;
-	hud_panel_radar_position_z = 0;
+	hud_panel_radar_nohudhack = 0;
 }
 
 // radar links

@@ -227,7 +227,6 @@ float WS_READY			= 4; // idle frame
 void weapon_defaultspawnfunc(float wpn);
 
 string w_deathtypestring;
-float w_deathtype;
 
 void(entity client, string s) centerprint_builtin = #73;
 .vector dest1, dest2;
@@ -297,7 +296,6 @@ string getTimeoutText(float addOneSecond);
 .entity flagcarried;
 
 .entity lastrocket;
-.entity lastmine;
 
 .float playerid;
 float playerid_last;
@@ -328,6 +326,8 @@ float sv_loddistance1;
 float sv_loddistance2;
 .float cvar_cl_gunalign;
 .float cvar_cl_noantilag;
+
+.string weaponorder_byimpulse;
 
 void Announce(string snd);
 void AnnounceTo(entity e, string snd);
@@ -602,6 +602,8 @@ string matchid;
 
 .float stats_hit[WEP_MAXCOUNT];  // for hitscan bullets hit
 .float stats_fired[WEP_MAXCOUNT];  // for hitscan bullets fired
+
+.float last_pickup;
 
 FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_hit);
 FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_fired);

@@ -488,15 +488,18 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 					if(sound_allowed(MSG_BROADCAST, attacker))
 					if(!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * cvar("g_balance_laser_primary_damage") * cvar("g_balance_selfdamagepercent") + 1)
+					if(self.health > 1)
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{
-						if(self.health > 75) // TODO make a "gentle" version?
+						if(deathtype == DEATH_FALL)
+							PlayerSound(playersound_fall, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+						else if(self.health > 75) // TODO make a "gentle" version?
 							PlayerSound(playersound_pain100, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(self.health > 50)
 							PlayerSound(playersound_pain75, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(self.health > 25)
 							PlayerSound(playersound_pain50, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
-						else if(self.health > 1)
+						else
 							PlayerSound(playersound_pain25, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
 					}
 				}
@@ -855,6 +858,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 {
 	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, privatemsgprefix;
 	float flood, privatemsgprefixlen;
+	var .float flood_field;
 	entity head;
 	float ret;
 
@@ -936,7 +940,6 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		float flood_spl;
 		float flood_burst;
 		float flood_lmax;
-		var .float flood_field;
 		float lines;
 		if(privatesay)
 		{
@@ -998,10 +1001,10 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 			else
 				flood = 1;
 		}
-	}
 
-	if (timeoutStatus == 2) //when game is paused, no flood protection
-		source.flood_field = flood = 0;
+		if (timeoutStatus == 2) //when game is paused, no flood protection
+			source.flood_field = flood = 0;
+	}
 
 	if(flood == 2) // cannot happen for empty msgstr
 	{
