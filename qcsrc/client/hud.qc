@@ -3769,7 +3769,7 @@ void HUD_VoteWindow(void)
 	if(!autocvar__hud_configure)
 	{
 		panel_fg_alpha = autocvar_hud_panel_fg_alpha;
-		panel_bg_alpha_str = autocvar_hud_panel_vote_bg_alpha;
+		panel_bg_alpha_str = cvar_string("hud_panel_vote_bg_alpha");
 
 		if(panel_bg_alpha_str == "") {
 			panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha);
