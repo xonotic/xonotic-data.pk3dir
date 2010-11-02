@@ -1588,7 +1588,7 @@ void HUD_Weapons(void)
 		}
 	}
 
-	float i, weapid, fade, weapon_stats, weapon_number, weapon_cnt;
+	float i, weapid, wpnalpha, weapon_stats, weapon_number, weapon_cnt;
 	weapon_cnt = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -1642,17 +1642,17 @@ void HUD_Weapons(void)
 
 	if(cvar_or("hud_panel_weapons_fade", 1))
 	{
-		fade = 3.2 - 2 * (time - weapontime);
-		fade = bound(0.7, fade, 1);
+		wpnalpha = 3.2 - 2 * (time - weapontime);
+		wpnalpha = bound(0.7, wpnalpha, 1) * panel_fg_alpha;
 	}
 	else
-		fade = 1;
+		wpnalpha = panel_fg_alpha;
 
 	HUD_Weapons_Clear();
 
 	float rows, columns;
-	rows = panel_size_y/panel_size_x;
 	float aspect = cvar("hud_panel_weapons_aspect");
+	rows = panel_size_y/panel_size_x;
 	rows = bound(1, floor((sqrt(4 * aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
 
 	columns = ceil(WEP_COUNT/rows);
@@ -1667,22 +1667,50 @@ void HUD_Weapons(void)
 	vector color;
 	vector wpnpos;
 	vector wpnsize;
+	
+	float fullammo_shells, fullammo_nails, fullammo_rockets, fullammo_cells, fullammo_fuel;
+	vector ammo_color;
+	float ammo_alpha;
+	float barsize_x, barsize_y;
+	wpnsize = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
+	float show_ammo = cvar("hud_panel_weapons_ammo");
+	if (show_ammo)
+	{
+		fullammo_shells = cvar("hud_panel_weapons_ammo_full_shells");
+		fullammo_nails = cvar("hud_panel_weapons_ammo_full_nails");
+		fullammo_rockets = cvar("hud_panel_weapons_ammo_full_rockets");
+		fullammo_cells = cvar("hud_panel_weapons_ammo_full_cells");
+		fullammo_fuel = cvar("hud_panel_weapons_ammo_full_fuel");
+		ammo_color = stov(cvar_string("hud_panel_weapons_ammo_color"));
+		ammo_alpha = panel_fg_alpha * cvar("hud_panel_weapons_ammo_alpha");
+
+		if(wpnsize_x/wpnsize_y > aspect)
+		{
+			barsize_x = aspect * wpnsize_y;
+			barsize_y = wpnsize_y;
+		}
+		else
+		{
+			barsize_y = 1/aspect * wpnsize_x;
+			barsize_x = wpnsize_x;
+		}
+	}
 
 	float show_accuracy;
 	if(cvar("hud_panel_weapons_accuracy") && acc_levels)
 		show_accuracy = true;
+	float label = cvar("hud_panel_weapons_label");
 
 	for(i = 0; i < weapon_cnt; ++i)
 	{
-		wpnpos = panel_pos + eX * column * panel_size_x*(1/columns) + eY * row * panel_size_y*(1/rows);
-		wpnsize = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
+		wpnpos = panel_pos + eX * column * wpnsize_x + eY * row * wpnsize_y;
 
 		self = weaponorder[i];
 		weapid = self.impulse;
 
 		// draw background behind currently selected weapon
 		if(self.weapon == activeweapon)
-			drawpic_aspect_skin(wpnpos, "weapon_current_bg", wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(wpnpos, "weapon_current_bg", wpnsize, '1 1 1', wpnalpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy
 		if(show_accuracy)
@@ -1714,16 +1742,15 @@ void HUD_Weapons(void)
 		// draw the weapon icon
 		if((self.impulse >= 0) && (getstati(STAT_WEAPONS) & self.weapons))
 		{
-			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '1 1 1', wpnalpha, DRAWFLAG_NORMAL);
 
-			float label = cvar("hud_panel_weapons_label");
 			if(label == 1) // weapon number
-				drawstring(wpnpos, ftos(weapid), '1 1 0' * 0.5 * panel_size_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring(wpnpos, ftos(weapid), '1 1 0' * 0.5 * wpnsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 			else if(label == 2) // bind
-				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * panel_size_y*(1/rows), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * wpnsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw ammo status bar
-			if(cvar("hud_panel_weapons_ammo") && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
+			if(show_ammo && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
 			{
 				a = 0;
 				type = GetAmmoTypeForWep(weapid);
@@ -1733,28 +1760,22 @@ void HUD_Weapons(void)
 				if(a > 0)
 				{
 					switch(type) {
-						case 0: fullammo = cvar("hud_panel_weapons_ammo_full_shells"); break;
-						case 1: fullammo = cvar("hud_panel_weapons_ammo_full_nails"); break;
-						case 2: fullammo = cvar("hud_panel_weapons_ammo_full_rockets"); break;
-						case 3: fullammo = cvar("hud_panel_weapons_ammo_full_cells"); break;
-						case 4: fullammo = cvar("hud_panel_weapons_ammo_full_fuel"); break;
+						case 0: fullammo = fullammo_shells; break;
+						case 1: fullammo = fullammo_nails; break;
+						case 2: fullammo = fullammo_rockets; break;
+						case 3: fullammo = fullammo_cells; break;
+						case 4: fullammo = fullammo_fuel; break;
 						default: fullammo = 60;
 					}
 
-					float barsize_x, barsize_y, barpos_x, barpos_y;
+					float barpos_x, barpos_y;
 					if(wpnsize_x/wpnsize_y > aspect)
 					{
-						barsize_x = aspect * wpnsize_y;
-						barsize_y = wpnsize_y;
-
 						barpos_x = wpnpos_x + (wpnsize_x - barsize_x) / 2;
 						barpos_y = wpnpos_y;
 					}
 					else
 					{
-						barsize_y = 1/aspect * wpnsize_x;
-						barsize_x = wpnsize_x;
-
 						barpos_y = wpnpos_y + (wpnsize_y - barsize_y) / 2;
 						barpos_x = wpnpos_x;
 					}
@@ -1764,7 +1785,7 @@ void HUD_Weapons(void)
 						barpos_y,
 						barsize_x * bound(0, a/fullammo, 1),
 						barsize_y);
-					drawpic_aspect_skin(wpnpos, "weapon_ammo", wpnsize, stov(cvar_string("hud_panel_weapons_ammo_color")), panel_fg_alpha * cvar("hud_panel_weapons_ammo_alpha"), DRAWFLAG_NORMAL);
+					drawpic_aspect_skin(wpnpos, "weapon_ammo", wpnsize, ammo_color, ammo_alpha, DRAWFLAG_NORMAL);
 					drawresetcliparea();
 				}
 			}
