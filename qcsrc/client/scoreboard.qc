@@ -942,6 +942,16 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(getstati(STAT_SWITCHWEAPON) == WEP_MINSTANEX)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
+	float weapon_stats, weapon_number;
+	// hits
+	weapon_stats = getstati(STAT_DAMAGE_HITS);
+	weapon_number = weapon_stats & 63;
+	weapon_hits[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
+	// fired
+	weapon_stats = getstati(STAT_DAMAGE_FIRED);
+	weapon_number = weapon_stats & 63;
+	weapon_fired[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
+
 	if (!acc_levels)
 		rgb = '1 1 1';
 	else if (acc_col_x[0] == -1)
@@ -957,12 +967,13 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			continue;
 		weapon_hit = weapon_hits[i-WEP_FIRST];
 		weapon_damage = weapon_fired[i-WEP_FIRST];
-		if(weapon_damage)
-			weapon_stats = bound(0, floor(100 * weapon_hit / weapon_damage), 100);
-		float weapon_alpha;
 
+		float weapon_alpha;
 		if(weapon_damage)
+		{
+			weapon_stats = bound(0, floor(100 * weapon_hit / weapon_damage), 100);
 			weapon_alpha = scoreboard_alpha_fg;
+		}
 		else
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
 

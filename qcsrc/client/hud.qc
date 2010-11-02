@@ -1588,7 +1588,7 @@ void HUD_Weapons(void)
 		}
 	}
 
-	float i, weapid, wpnalpha, weapon_stats, weapon_number, weapon_cnt;
+	float i, weapid, wpnalpha, weapon_cnt;
 	weapon_cnt = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -1630,15 +1630,6 @@ void HUD_Weapons(void)
 		panel_pos += '1 1 0' * panel_bg_padding;
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
-
-	// hits
-	weapon_stats = getstati(STAT_DAMAGE_HITS);
-	weapon_number = weapon_stats & 63;
-	weapon_hits[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
-	// fired
-	weapon_stats = getstati(STAT_DAMAGE_FIRED);
-	weapon_number = weapon_stats & 63;
-	weapon_fired[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
 
 	if(cvar_or("hud_panel_weapons_fade", 1))
 	{
@@ -1697,12 +1688,21 @@ void HUD_Weapons(void)
 	}
 
 	float show_accuracy;
+	float weapon_stats, weapon_number;
 	if(cvar("hud_panel_weapons_accuracy") && acc_levels)
 	{
+		show_accuracy = true;
+		// hits
+		weapon_stats = getstati(STAT_DAMAGE_HITS);
+		weapon_number = weapon_stats & 63;
+		weapon_hits[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
+		// fired
+		weapon_stats = getstati(STAT_DAMAGE_FIRED);
+		weapon_number = weapon_stats & 63;
+		weapon_fired[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
 		if (acc_col_x[0] == -1)
 			for (i = 0; i < acc_levels; ++i)
 				acc_col[i] = stov(cvar_string(strcat("hud_panel_weapons_accuracy_color", ftos(i))));
-		show_accuracy = true;
 	}
 	float label = cvar("hud_panel_weapons_label");
 
