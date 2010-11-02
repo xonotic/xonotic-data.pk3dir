@@ -341,6 +341,7 @@ void cvar_changes_init()
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
+		//   :/"impure"/,$d
 		//   :g!,^\/\/[^ /],d
 		//   :%s,//\([^ ]*\).*,BADCVAR("\1");,
 		//   :%!sort
@@ -356,18 +357,14 @@ void cvar_changes_init()
 		BADCVAR("g_balance_teams_force");
 		BADCVAR("g_ban_sync_trusted_servers");
 		BADCVAR("g_ban_sync_uri");
-		BADCVAR("g_cloaked");
 		BADCVAR("g_ctf_capture_limit");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_ctf_win_mode");
 		BADCVAR("g_domination_point_limit");
-		BADCVAR("g_footsteps");
 		BADCVAR("g_fullbrightitems");
 		BADCVAR("g_fullbrightplayers");
-		BADCVAR("g_grappling_hook");
 		BADCVAR("g_keyhunt_point_limit");
 		BADCVAR("g_keyhunt_teams_override");
-		BADCVAR("g_laserguided_missile");
 		BADCVAR("g_lms_lives_override");
 		BADCVAR("g_maplist");
 		BADCVAR("g_maplist_check_waypoints");
@@ -377,13 +374,8 @@ void cvar_changes_init()
 		BADCVAR("g_maplist_votable_abstain");
 		BADCVAR("g_maplist_votable_nodetail");
 		BADCVAR("g_maplist_votable_suggestions");
-		BADCVAR("g_midair");
-		BADCVAR("g_minstagib");
 		BADCVAR("g_nexball_goallimit");
-		BADCVAR("g_nixnex");
-		BADCVAR("g_nixnex_with_laser");
 		BADCVAR("g_runematch_point_limit");
-		BADCVAR("g_vampire");
 		BADCVAR("hostname");
 		BADCVAR("log_file");
 		BADCVAR("maxplayers");
@@ -399,7 +391,6 @@ void cvar_changes_init()
 		BADCVAR("sv_defaultcharacter");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
-		BADCVAR("sv_gravity");
 		BADCVAR("sv_maxrate");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
