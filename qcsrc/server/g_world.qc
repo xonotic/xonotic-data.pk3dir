@@ -246,8 +246,10 @@ void cvar_changes_init()
 		BADPREFIX("sv_world");
 
 		// client
+		BADPREFIX("chase_");
 		BADPREFIX("cl_");
 		BADPREFIX("con_");
+		BADPREFIX("scoreboard_");
 		BADPREFIX("g_campaign");
 		BADPREFIX("gl_");
 		BADPREFIX("joy");
@@ -291,6 +293,8 @@ void cvar_changes_init()
 		BADCVAR("net_address");
 		BADCVAR("net_address_ipv6");
 		BADPREFIX("sv_weaponstats_");
+		BADCVAR("developer");
+		BADPREFIX("developer_");
 
 		// mapinfo
 		BADCVAR("timelimit");
@@ -336,8 +340,6 @@ void cvar_changes_init()
 
 		// does nothing visible
 		BADPREFIX("prvm_");
-		BADCVAR("bot_prefix");
-		BADCVAR("bot_suffix");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
@@ -376,6 +378,7 @@ void cvar_changes_init()
 		BADCVAR("g_maplist_votable_suggestions");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_runematch_point_limit");
+		BADCVAR("g_start_delay");
 		BADCVAR("hostname");
 		BADCVAR("log_file");
 		BADCVAR("maxplayers");
