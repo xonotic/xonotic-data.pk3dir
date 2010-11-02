@@ -1726,22 +1726,21 @@ void HUD_Weapons(void)
 			{
 				weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
 				weapon_stats = floor(100 * weapon_hit / weapon_damage);
-			}
 
-			// find the max level lower than weapon_stats
-			float j;
-			j = acc_levels-1;
-			while ( j && weapon_stats < acc_lev[j] )
-				--j;
+				// find the max level lower than weapon_stats
+				float j;
+				j = acc_levels-1;
+				while ( j && weapon_stats < acc_lev[j] )
+					--j;
 
-			// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
-			float factor;
-			factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
-			color = acc_col[j];
-			color = color + factor * (acc_col[j+1] - color);
+				// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
+				float factor;
+				factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
+				color = acc_col[j];
+				color = color + factor * (acc_col[j+1] - color);
 
-			if(weapon_damage)
 				drawpic_aspect_skin(wpnpos, "weapon_accuracy", wpnsize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			}
 		}
 
 		// draw the weapon icon
