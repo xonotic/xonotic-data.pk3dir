@@ -1698,7 +1698,12 @@ void HUD_Weapons(void)
 
 	float show_accuracy;
 	if(cvar("hud_panel_weapons_accuracy") && acc_levels)
+	{
+		if (acc_col_x[0] == -1)
+			for (i = 0; i < acc_levels; ++i)
+				acc_col[i] = stov(cvar_string(strcat("hud_panel_weapons_accuracy_color", ftos(i))));
 		show_accuracy = true;
+	}
 	float label = cvar("hud_panel_weapons_label");
 
 	for(i = 0; i < weapon_cnt; ++i)
@@ -1732,8 +1737,8 @@ void HUD_Weapons(void)
 			// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
 			float factor;
 			factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
-			color = acc_color(j);
-			color = color + factor * (acc_color(j+1) - color);
+			color = acc_col[j];
+			color = color + factor * (acc_col[j+1] - color);
 
 			if(weapon_damage)
 				drawpic_aspect_skin(wpnpos, "weapon_accuracy", wpnsize, color, panel_fg_alpha, DRAWFLAG_NORMAL);

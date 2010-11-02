@@ -944,6 +944,9 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 
 	if (!acc_levels)
 		rgb = '1 1 1';
+	else if (acc_col_x[0] == -1)
+		for (i = 0; i < acc_levels; ++i)
+			acc_col[i] = stov(cvar_string(strcat("hud_panel_weapons_accuracy_color", ftos(i))));
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -994,8 +997,8 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 				// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
 				float factor;
 				factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
-				rgb = acc_color(j);
-				rgb = rgb + factor * (acc_color(j+1) - rgb);
+				rgb = acc_col[j];
+				rgb = rgb + factor * (acc_col[j+1] - rgb);
 			}
 
 			drawstring(pos + '1 0 0' * padding + '0 1 0' * weapon_height, s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
