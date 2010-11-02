@@ -42,7 +42,6 @@ var float autocvar_hud_panel_bg_padding;
 var float autocvar_hud_panel_fg_alpha;
 
 var float autocvar_hud_panel_weapons;
-var float autocvar_hud_panel_weapons_aspect;
 
 var float autocvar_hud_panel_ammo;
 var float autocvar_hud_panel_ammo_onlycurrent;
@@ -80,7 +79,6 @@ var float autocvar_hud_panel_vote;
 var float autocvar_hud_panel_modicons;
 
 var float autocvar_hud_panel_pressedkeys;
-var float autocvar_hud_panel_pressedkeys_aspect;
 
 var float autocvar_hud_panel_chat;
 

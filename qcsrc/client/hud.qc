@@ -1652,7 +1652,8 @@ void HUD_Weapons(void)
 
 	float rows, columns;
 	rows = panel_size_y/panel_size_x;
-	rows = bound(1, floor((sqrt(4 * autocvar_hud_panel_weapons_aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
+	float aspect = cvar("hud_panel_weapons_aspect");
+	rows = bound(1, floor((sqrt(4 * aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
 
 	columns = ceil(WEP_COUNT/rows);
 	float row, column;
@@ -1741,9 +1742,9 @@ void HUD_Weapons(void)
 					}
 
 					float barsize_x, barsize_y, barpos_x, barpos_y;
-					if(wpnsize_x/wpnsize_y > autocvar_hud_panel_weapons_aspect)
+					if(wpnsize_x/wpnsize_y > aspect)
 					{
-						barsize_x = autocvar_hud_panel_weapons_aspect * wpnsize_y;
+						barsize_x = aspect * wpnsize_y;
 						barsize_y = wpnsize_y;
 
 						barpos_x = wpnpos_x + (wpnsize_x - barsize_x) / 2;
@@ -1751,7 +1752,7 @@ void HUD_Weapons(void)
 					}
 					else
 					{
-						barsize_y = 1/autocvar_hud_panel_weapons_aspect * wpnsize_x;
+						barsize_y = 1/aspect * wpnsize_x;
 						barsize_x = wpnsize_x;
 
 						barpos_y = wpnpos_y + (wpnsize_y - barsize_y) / 2;
@@ -4460,19 +4461,20 @@ void HUD_DrawPressedKeys(void)
 	}
 
 	// force custom aspect
-	if(autocvar_hud_panel_pressedkeys_aspect)
+	float aspect = cvar("hud_panel_pressedkeys_aspect");
+	if(aspect)
 	{
 		vector newSize;
-		if(mySize_x/mySize_y > autocvar_hud_panel_pressedkeys_aspect)
+		if(mySize_x/mySize_y > aspect)
 		{
-			newSize_x = autocvar_hud_panel_pressedkeys_aspect * mySize_y;
+			newSize_x = aspect * mySize_y;
 			newSize_y = mySize_y;
 
 			pos_x = pos_x + (mySize_x - newSize_x) / 2;
 		}
 		else
 		{
-			newSize_y = 1/autocvar_hud_panel_pressedkeys_aspect * mySize_x;
+			newSize_y = 1/aspect * mySize_x;
 			newSize_x = mySize_x;
 
 			pos_y = pos_y + (mySize_y - newSize_y) / 2;
