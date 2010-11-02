@@ -523,6 +523,8 @@ string clientstuff;
 .string fog;
 
 string cvar_changes;
+string cvar_purechanges;
+float cvar_purechanges_count;
 
 float game_starttime; //point in time when the countdown is over
 .float stat_game_starttime;

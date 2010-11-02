@@ -362,6 +362,8 @@ void SV_ParseClientCommand(string s) {
 		Score_NicePrint(self);
 	} else if(cmd == "cvar_changes") {
 		sprint(self, cvar_changes);
+	} else if(cmd == "cvar_purechanges") {
+		sprint(self, cvar_purechanges);
 	} else if(CheatCommand(tokens)) {
 	} else {
 		//if(ctf_clientcommand())

@@ -651,6 +651,7 @@ void GameCommand(string command)
 		print("  radarmap [--force] [--quit | --loop] [sharpness]\n");
 		print("  bbox\n");
 		print("  cvar_changes\n");
+		print("  cvar_purechanges\n");
 		print("  find classname\n");
 		GameCommand_Vote("help", world);
 		GameCommand_Ban("help");
@@ -910,6 +911,11 @@ void GameCommand(string command)
 	if (argv(0) == "cvar_changes")
 	{
 		print(cvar_changes);
+		return;
+	}
+	if (argv(0) == "cvar_purechanges")
+	{
+		print(cvar_purechanges);
 		return;
 	}
 	if (argv(0) == "find") if(argc == 2)
