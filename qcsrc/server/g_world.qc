@@ -251,6 +251,7 @@ void cvar_changes_init()
 		BADPREFIX("g_campaign");
 		BADPREFIX("gl_");
 		BADPREFIX("joy");
+		BADPREFIX("hud_");
 		BADPREFIX("menu_");
 		BADPREFIX("net_slist_");
 		BADPREFIX("r_");
