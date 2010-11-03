@@ -1043,7 +1043,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	pos_y += hud_fontsize_y;
 	vector tmp;
 	tmp_x = sbwidth;
-	tmp_y = hud_fontsize_y * RANKINGS_RECEIVED_CNT;
+	tmp_y = 1.25 * hud_fontsize_y * RANKINGS_RECEIVED_CNT;
 
 	if (teamplay)
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
@@ -1062,12 +1062,12 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		n = grecordholder[i];
 		p = race_PlaceName(i+1);
 		if(grecordholder[i] == GetPlayerName(player_localentnum - 1))
-			drawfill(pos, '1 0 0' * sbwidth + '0 1 0' * hud_fontsize_y, hl_rgb, scoreboard_highlight_alpha_self, DRAWFLAG_NORMAL);
+			drawfill(pos, '1 0 0' * sbwidth + '0 1.25 0' * hud_fontsize_y, hl_rgb, scoreboard_highlight_alpha_self, DRAWFLAG_NORMAL);
 		else if(!mod(i, 2) && scoreboard_highlight)
-			drawfill(pos, '1 0 0' * sbwidth + '0 1 0' * hud_fontsize_y, hl_rgb, scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos, p, hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-		drawstring(pos + '3 0 0' * hud_fontsize_x, TIME_ENCODED_TOSTRING(t), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(pos + '8 0 0' * hud_fontsize_x, n, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawfill(pos, '1 0 0' * sbwidth + '0 1.25 0' * hud_fontsize_y, hl_rgb, scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos, p, '1 1 0' * hud_fontsize_y, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(pos + '3 0 0' * hud_fontsize_y, TIME_ENCODED_TOSTRING(t), '1 1 0' * hud_fontsize_y, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + '8 0 0' * hud_fontsize_y, n, '1 1 0' * hud_fontsize_y, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		pos_y += 1.25 * hud_fontsize_y;
 	}
 
@@ -1176,11 +1176,11 @@ void HUD_DrawScoreboard()
 
 	if(gametype == GAME_CTS || gametype == GAME_RACE) {
 		if(race_speedaward) {
-			drawcolorcodedstring(pos, strcat("Speed award: ", ftos(race_speedaward), " (", race_speedaward_holder, ")"), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, strcat("Speed award: ", ftos(race_speedaward), " ^7(", race_speedaward_holder, "^7)"), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
 		}
 		if(race_speedaward_alltimebest) {
-			drawcolorcodedstring(pos, strcat("All-time fastest: ", ftos(race_speedaward_alltimebest), " (", race_speedaward_alltimebest_holder, ")"), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, strcat("All-time fastest: ", ftos(race_speedaward_alltimebest), " ^7(", race_speedaward_alltimebest_holder, "^7)"), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
 		}
 		pos = HUD_DrawScoreboardRankings(pos, pl, rgb, bg_size);

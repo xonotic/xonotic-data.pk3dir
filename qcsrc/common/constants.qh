@@ -565,6 +565,8 @@ float MSG_KILL_ACTION = 3;
 float MSG_KILL_ACTION_SPREE = 4;
 float MSG_INFO = 5;
 
+float MSG_RACE = 10;
+
 float KILL_TEAM_RED = 10301;
 float KILL_TEAM_BLUE = 10302;
 float KILL_TEAM_SPREE = 10303;
@@ -589,6 +591,11 @@ float INFO_PICKUPFLAG = 10320;
 float INFO_LOSTFLAG = 10321;
 float INFO_RETURNFLAG = 10322;
 float INFO_CAPTUREFLAG = 10323;
+
+float RACE_SERVER_RECORD = 10400;
+float RACE_NEW_TIME = 10401;
+float RACE_NEW_RANK = 10402;
+float RACE_FAIL = 10403;
 
 // weapon requests
 float WR_SETUP		= 1; // (SVQC) setup weapon data

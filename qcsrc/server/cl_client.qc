@@ -1313,6 +1313,22 @@ void ClientKill (void)
 		ClientKill_TeamChange(0);
 }
 
+void CTS_ClientKill_Think (void)
+{
+	self = self.owner; // set self to the player to be killed
+	sprint(self, "^1You were killed in order to prevent cheating!");
+	ClientKill_Now();
+}
+
+void CTS_ClientKill (float t) // silent version of ClientKill
+{
+	entity e;
+	e = spawn();
+	e.owner = self;
+	e.think = CTS_ClientKill_Think;
+	e.nextthink = t;
+}
+
 void DoTeamChange(float destteam)
 {
 	float t, c0;
@@ -1587,11 +1603,12 @@ void ClientConnect (void)
 			rr = RACE_RECORD;
 		t = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "time")));
 
+		msg_entity = self;
 		race_send_recordtime(MSG_ONE);
 		race_send_speedaward(MSG_ONE);
 
 		speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed")));
-		speedaward_alltimebest_holder = db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/netname"));
+		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp")));
 		race_send_speedaward_alltimebest(MSG_ONE);
 
 		float i;
@@ -3016,6 +3033,18 @@ void PlayerPostThink (void)
 	}
 
 	playerdemo_write();
+
+	if((g_cts || g_race) && self.cvar_cl_allow_uid2name)
+	{
+		if(!self.stored_netname)
+			self.stored_netname = strzone(uid2name(self.crypto_idfp));
+		if(self.stored_netname != self.netname)
+		{
+			db_put(ServerProgsDB, strcat("uid2name", self.crypto_idfp), self.netname);
+			strunzone(self.stored_netname);
+			self.stored_netname = strzone(self.netname);
+		}
+	}
 
 	/*
 	if(g_race)

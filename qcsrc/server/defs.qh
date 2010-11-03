@@ -329,6 +329,9 @@ float sv_loddistance2;
 
 .string weaponorder_byimpulse;
 
+.float cvar_cl_allow_uid2name;
+.string stored_netname;
+
 void Announce(string snd);
 void AnnounceTo(entity e, string snd);
 

@@ -303,6 +303,8 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "records") {
 		for(i = 0; i < 10; ++i)
 			sprint(self, records_reply[i]);
+	} else if(cmd == "ladder") {
+		sprint(self, ladder_reply);
 	} else if(cmd == "rankings") {
 		sprint(self, rankings_reply);
 	} else if(cmd == "voice") {
