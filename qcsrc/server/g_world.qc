@@ -395,6 +395,7 @@ void cvar_changes_init()
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
 		BADCVAR("sv_maxrate");
+		BADCVAR("sv_maxidle");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
 		BADCVAR("sv_ready_restart");
