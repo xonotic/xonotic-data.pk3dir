@@ -50,8 +50,8 @@ void W_Nex_Attack (float issecondary)
 	}
 	else
 		charge = 1;
-	mydmg *= charge;
-	myforce *= charge;
+	mydmg = mydmg * charge;
+	myforce = myforce * charge;
 
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
 
