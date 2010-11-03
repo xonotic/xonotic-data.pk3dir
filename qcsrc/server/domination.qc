@@ -367,10 +367,22 @@ void dom_controlpoint_setup()
 	if(!self.message)
 		self.message = " has captured a control point";
 
-	if(!self.DOMPOINTFRAGS)
+	if(self.DOMPOINTFRAGS <= 0)
 		self.DOMPOINTFRAGS = 1;
-	if(!self.wait)
+	if(self.wait <= 0)
 		self.wait = 5;
+
+	float points, waittime;
+	if (g_domination_point_rate)
+		points = g_domination_point_rate;
+	else
+		points = self.frags;
+	if (g_domination_point_amt)
+		waittime = g_domination_point_amt;
+	else
+		waittime = self.wait;
+
+	total_pps += points/waittime;
 
 	if(!self.t_width)
 		self.t_width = 0.02; // frame animation rate
@@ -605,22 +617,6 @@ void spawnfunc_dom_controlpoint()
 	self.effects = self.effects | EF_LOWPRECISION;
 	if (cvar("g_domination_point_fullbright"))
 		self.effects |= EF_FULLBRIGHT;
-	
-	float points, waittime;
-	if (g_domination_point_rate)
-		points = g_domination_point_rate;
-	else
-		points = self.frags;
-	if(points == 0) // default
-		points = 1;
-
-	if (g_domination_point_amt)
-		waittime = g_domination_point_amt;
-	else
-		waittime = self.wait;
-	if(waittime == 0) // default
-		waittime = 5;
-	total_pps += points/waittime;
 };
 
 // code from here on is just to support maps that don't have control point and team entities
