@@ -346,6 +346,10 @@ void cvar_changes_init()
 		// does nothing visible
 		BADPREFIX("prvm_");
 		BADPREFIX("crypto_");
+		BADPREFIX("g_chat_");
+		BADPREFIX("sv_fragmessage_");
+		BADPREFIX("sv_vote_");
+		BADPREFIX("timelimit_");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
