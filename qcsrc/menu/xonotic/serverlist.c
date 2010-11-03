@@ -635,10 +635,10 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		iconPos_x = (me.columnIconsSize - 2 * iconSize_x) * 0.5;
 		iconPos_y = (1 - iconSize_y) * 0.5;
 
-		draw_Picture(iconPos, strcat("icon_pure", ftos(strstrofs(s, ":P0:", 0) >= 0)), iconSize, '1 1 1', 1);
+		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_pure", ftos(strstrofs(s, ":P0:", 0) >= 0)), iconSize, '1 1 1', 1);
 
 		iconPos_x += iconSize_x;
-		draw_Picture(iconPos, strcat("icon_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
+		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
 	}
 
 	s = ftos(p);
