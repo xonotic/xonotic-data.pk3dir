@@ -259,12 +259,17 @@ void cvar_changes_init()
 		BADPREFIX("r_");
 		BADPREFIX("sbar_");
 		BADPREFIX("scr_");
+		BADPREFIX("snd_");
 		BADPREFIX("userbind");
 		BADPREFIX("v_");
 		BADPREFIX("vid_");
 		BADPREFIX("crosshair");
 		BADCVAR("mod_q3bsp_lightmapmergepower");
 		BADCVAR("mod_q3bsp_nolightmaps");
+		BADCVAR("fov");
+		BADCVAR("mastervolume");
+		BADCVAR("volume");
+		BADCVAR("bgmvolume");
 
 		// private
 		BADCVAR("serverconfig");
@@ -340,6 +345,7 @@ void cvar_changes_init()
 
 		// does nothing visible
 		BADPREFIX("prvm_");
+		BADPREFIX("crypto_");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:

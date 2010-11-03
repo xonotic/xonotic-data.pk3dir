@@ -5,7 +5,7 @@ CLASS(XonoticServerInfoDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticServerInfoDialog, title, string, "Server Information")
 	ATTRIB(XonoticServerInfoDialog, color, vector, SKINCOLOR_DIALOG_SERVERINFO)
 	ATTRIB(XonoticServerInfoDialog, intendedWidth, float, 0.68)
-	ATTRIB(XonoticServerInfoDialog, rows, float, 14)
+	ATTRIB(XonoticServerInfoDialog, rows, float, 15)
 	ATTRIB(XonoticServerInfoDialog, columns, float, 12)
 
 	ATTRIB(XonoticServerInfoDialog, currentServerName, string, string_null)
@@ -22,6 +22,7 @@ CLASS(XonoticServerInfoDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticServerInfoDialog, currentServerID, string, string_null)
 	ATTRIB(XonoticServerInfoDialog, currentServerEncrypt, string, string_null)
 	ATTRIB(XonoticServerInfoDialog, currentServerCanConnect, string, string_null)
+	ATTRIB(XonoticServerInfoDialog, currentServerPure, string, string_null)
 
 	ATTRIB(XonoticServerInfoDialog, nameLabel, entity, NULL)
 	ATTRIB(XonoticServerInfoDialog, cnameLabel, entity, NULL)
@@ -37,6 +38,7 @@ CLASS(XonoticServerInfoDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticServerInfoDialog, idLabel, entity, NULL)
 	ATTRIB(XonoticServerInfoDialog, encryptLabel, entity, NULL)
 	ATTRIB(XonoticServerInfoDialog, canConnectLabel, entity, NULL)
+	ATTRIB(XonoticServerInfoDialog, pureLabel, entity, NULL)
 ENDCLASS(XonoticServerInfoDialog)
 
 float SLIST_FIELD_NAME;
@@ -55,8 +57,8 @@ void Join_Click(entity btn, entity me);
 #ifdef IMPLEMENTATION
 void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 {
-	float m;
-	string s, typestr, versionstr, numh, maxp;
+	float m, pure, j;
+	string s, typestr, versionstr, numh, maxp, k, v;
 
 	SLIST_FIELD_NAME = gethostcacheindexforkey("name");
 	me.currentServerName = strzone(gethostcachestring(SLIST_FIELD_NAME, i));
@@ -66,19 +68,28 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerCName = strzone(gethostcachestring(SLIST_FIELD_CNAME, i));
 	me.cnameLabel.setText(me.cnameLabel, me.currentServerCName);
 
+	pure = -1;
+	typestr = "N/A";
+	versionstr = "N/A";
+
 	SLIST_FIELD_QCSTATUS = gethostcacheindexforkey("qcstatus");
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
 	m = tokenizebyseparator(s, ":");
-	if(m > 1)
+	if(m >= 2)
 	{
-		typestr = argv (0);
+		typestr = argv(0);
 		versionstr = argv(1);
 	}
-	else
+	for(j = 2; j < m; ++j)
 	{
-		typestr = "N/A";
-		versionstr = "N/A";
+		if(argv(j) == "")
+			break;
+		k = substring(argv(j), 0, 1);
+		v = substring(argv(j), 1, -1);
+		if(k == "P")
+			pure = stof(v);
 	}
+
 	me.currentServerType = strzone(typestr);
 	me.typeLabel.setText(me.typeLabel, me.currentServerType);
 
@@ -108,6 +119,9 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 
 	me.currentServerVersion = strzone(versionstr);
 	me.versionLabel.setText(me.versionLabel, me.currentServerVersion);
+
+	me.currentServerPure = ((pure < 0) ? "N/A" : (pure == 0) ? "Official settings" : sprintf("%d modified settings", pure));
+	me.pureLabel.setText(me.pureLabel, me.currentServerPure);
 
 	SLIST_FIELD_PING = gethostcacheindexforkey("ping");
 	s = ftos(gethostcachenumber(SLIST_FIELD_PING, i));
@@ -192,6 +206,11 @@ void XonoticServerInfoDialog_fill(entity me)
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.mapLabel = e;
+	me.TR(me);
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Gameplay:"));
+		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
+			e.allowCut = 1;
+			me.pureLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Players:"));
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
