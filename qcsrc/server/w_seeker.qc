@@ -212,6 +212,8 @@ void Seeker_Fire_Missile(vector f_diff)
 	missile.angles = vectoangles (missile.velocity);
 
 	CSQCProjectile(missile, FALSE, PROJECTILE_SEEKER, TRUE);
+
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void Seeker_Vollycontroler_Think()
@@ -351,6 +353,8 @@ void Seeker_Fire_Tag()
 	missile.angles = vectoangles (missile.velocity);
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_TAG, FALSE); // has sound
+
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 
@@ -424,6 +428,8 @@ void Seeker_Fire_Flac()
 	missile.flags = FL_PROJECTILE;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_FLAC, TRUE);
+
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void spawnfunc_weapon_seeker (void)

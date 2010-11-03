@@ -371,6 +371,8 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 	proj.oldvelocity = proj.velocity;
 
+	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+
 	if(cvar("g_antilag_bullets"))
 	if(pSpeed >= cvar("g_antilag_bullets"))
 	{

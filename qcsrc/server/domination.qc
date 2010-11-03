@@ -35,13 +35,20 @@ float pps_red;
 float pps_blue;
 float pps_yellow;
 float pps_pink;
-void set_dom_state(entity e, float connecting)
+void set_dom_state(void)
 {
-	if(connecting)	e.dom_total_pps = total_pps;
-					e.dom_pps_red = pps_red;
-					e.dom_pps_blue = pps_blue;
-	if(c3 >= 0)		e.dom_pps_yellow = pps_yellow;
-	if(c4 >= 0)		e.dom_pps_pink = pps_pink;
+	// BIG ugly hack to make stat sending work
+	self.dom_total_pps = total_pps;
+	self.dom_pps_red = pps_red;
+	self.dom_pps_blue = pps_blue;
+	if(c3 >= 0)
+	{
+		self.dom_pps_yellow = pps_yellow;
+	}
+	if(c4 >= 0)
+	{
+		self.dom_pps_pink = pps_pink;
+	}
 }
 
 void() dom_controlpoint_setup;
@@ -174,8 +181,8 @@ void dompoint_captured ()
 			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
 	}
 
-	FOR_EACH_CLIENT(head)
-		set_dom_state(head, FALSE);
+	FOR_EACH_PLAYER(self)
+		set_dom_state();
 
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
@@ -601,13 +608,18 @@ void spawnfunc_dom_controlpoint()
 	
 	float points, waittime;
 	if (g_domination_point_rate)
-		points += g_domination_point_rate;
+		points = g_domination_point_rate;
 	else
-		points += self.frags;
+		points = self.frags;
+	if(points == 0) // default
+		points = 1;
+
 	if (g_domination_point_amt)
-		waittime += g_domination_point_amt;
+		waittime = g_domination_point_amt;
 	else
-		waittime += self.wait;
+		waittime = self.wait;
+	if(waittime == 0) // default
+		waittime = 5;
 	total_pps += points/waittime;
 };
 

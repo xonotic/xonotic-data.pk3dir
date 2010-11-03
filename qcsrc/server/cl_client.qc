@@ -1305,7 +1305,12 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 
 void ClientKill (void)
 {
-	ClientKill_TeamChange(0);
+	if((g_arena || g_ca) && ((champion && champion.classname == "player" && player_count > 1) || player_count == 1)) // don't allow a kill in this case either
+	{
+		// do nothing
+	}
+	else
+		ClientKill_TeamChange(0);
 }
 
 void DoTeamChange(float destteam)
@@ -1397,7 +1402,7 @@ Called when a client connects to the server
 string ColoredTeamName(float t);
 void DecodeLevelParms (void);
 //void dom_player_join_team(entity pl);
-void set_dom_state(entity e, float connecting);
+void set_dom_state(void);
 void ClientConnect (void)
 {
 	float t;
@@ -1599,7 +1604,7 @@ void ClientConnect (void)
 		send_CSQC_teamnagger();
 
 	if (g_domination)
-		set_dom_state(self, TRUE);
+		set_dom_state();
 	send_CSQC_cr_maxbullets(self);
 
 	CheatInitClient();

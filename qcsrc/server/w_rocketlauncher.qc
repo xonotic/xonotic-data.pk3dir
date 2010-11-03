@@ -291,9 +291,13 @@ void W_Rocket_Think (void)
 
 void W_Rocket_Touch (void)
 {
+	if(WarpZone_Projectile_Touch())
+	{
+		if(wasfreed(self))
+			W_Rocket_Unregister();
+		return;
+	}
 	W_Rocket_Unregister();
-
-	PROJECTILE_TOUCH;
 	W_Rocket_Explode ();
 }
 
@@ -363,6 +367,7 @@ void W_Rocket_Attack (void)
 	W_AttachToShotorg(flash, '5 0 0');
 
 	// common properties
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void spawnfunc_weapon_rocketlauncher (void); // defined in t_items.qc

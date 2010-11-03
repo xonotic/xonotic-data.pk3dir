@@ -130,6 +130,8 @@ vector w_shotend;
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
+.float prevstrengthsound;
+.float prevstrengthsoundattempt;
 void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float maxdamage, float range)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
@@ -245,9 +247,18 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		sound (ent, CHAN_WEAPON, snd, VOL_BASE, ATTN_NORM);
 	}
 
-	if (ent.items & IT_STRENGTH)
-	if (!g_minstagib)
-		sound (ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+	if(ent.items & IT_STRENGTH)
+	if(!g_minstagib)
+	if(
+		(time > ent.prevstrengthsound + cvar("sv_strengthsound_antispam_time"))
+		||
+		(time > ent.prevstrengthsoundattempt + cvar("sv_strengthsound_antispam_refire_threshold"))
+	) // prevent insane sound spam
+	{
+		sound(ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+		ent.prevstrengthsound = time;
+	}
+	ent.prevstrengthsoundattempt = time;
 
 	// nudge w_shotend so a trace to w_shotend hits
 	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
@@ -1105,6 +1116,9 @@ float weapon_prepareattack_checkammo(float secondary)
 		if(self.weapon == WEP_MINE_LAYER)
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 			return FALSE;
+
+		if(self.weapon == self.switchweapon) // only play once BEFORE starting to switch weapons
+			sound (self, CHAN_AUTO, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
 
 		W_SwitchToOtherWeapon(self);
 		return FALSE;

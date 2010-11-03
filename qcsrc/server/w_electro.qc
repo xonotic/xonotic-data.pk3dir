@@ -136,6 +136,8 @@ void W_Electro_Attack()
 	//sounds bad
 
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
+
+	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void W_Electro_Attack2()
@@ -182,6 +184,8 @@ void W_Electro_Attack2()
 #endif
 
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
+
+	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 .vector hook_start, hook_end;
@@ -238,8 +242,10 @@ void lgbeam_think()
 	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		if(cvar("g_balance_electro_primary_ammo"))
-			dt = min(frametime, self.owner.ammo_cells / cvar("g_balance_electro_primary_ammo"));
-		self.owner.ammo_cells = max(0, self.owner.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime);
+		{
+			dt = min(dt, self.owner.ammo_cells / cvar("g_balance_electro_primary_ammo"));
+			self.owner.ammo_cells = max(0, self.owner.ammo_cells - cvar("g_balance_electro_primary_ammo") * frametime);
+		}
 	}
 
 	W_SetupShot_Range(self.owner, TRUE, 0, "", cvar("g_balance_electro_primary_damage") * dt, cvar("g_balance_electro_primary_range"));

@@ -188,6 +188,7 @@ void spiderbot_rocket_do()
     self.gun2.cnt = time + self.attack_finished_single;
 }
 
+/*
 void spiderbot_minigun_fire_Flash_Go() {
 	if (self.frame > 10)
 	{
@@ -201,12 +202,12 @@ void spiderbot_minigun_fire_Flash_Go() {
 	self.scale -= 0.01;
 	self.nextthink = time + 0.02;
 }
+*/
 
-void spiderbot_minigun_fire(entity gun,float trail)
+void spiderbot_minigun_fire(entity gun, float trail)
 {
-
-    entity flash;
     vector v;
+    
     v = gettaginfo(gun,gettagindex(gun,"barrels"));
     v_forward = normalize(v_forward);
 
@@ -215,22 +216,9 @@ void spiderbot_minigun_fire(entity gun,float trail)
     fireBullet (v, v_forward, cvar("g_vehicle_spiderbot_minigun_spread"), cvar("g_vehicle_spiderbot_minigun_damage"),
         cvar("g_vehicle_spiderbot_minigun_spread"), DEATH_SBMINIGUN, 0);
 
-    if not (gun.enemy)
-    {
-        gun.enemy = spawn();
-        setattachment(gun.enemy , gun, "barrels");
-        setorigin(gun.enemy ,gun.enemy.origin + '52 0 0');
-    }
 
-    flash = gun.enemy;
-    setmodel(flash, "models/uziflash.md3");
-    flash.think = spiderbot_minigun_fire_Flash_Go;
-    flash.nextthink = time + 0.02;
-    flash.frame = 2;
-    flash.angles_z = flash.v_angle_z + random() * 180;
-    flash.alpha = 1;
-    flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-    flash.scale = 1;
+	UziFlash();
+	setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
 
     if(trail)
         trailparticles(self, particleeffectnum("EF_MGTURRETTRAIL"), v, trace_endpos);

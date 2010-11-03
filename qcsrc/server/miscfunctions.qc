@@ -1172,6 +1172,10 @@ void readlevelcvars(void)
 	// first load all the mutators
 	if(cvar("g_nix"))
 		MUTATOR_ADD(mutator_nix);
+	if(cvar("g_dodging"))
+		MUTATOR_ADD(mutator_dodging);
+	if(cvar("g_rocket_flying") || (cvar("g_balance_rocketlauncher_detonatedelay") == 0 && stof(cvar_defstring("g_balance_rocketlauncher_detonatedelay")) != 0))
+		MUTATOR_ADD(mutator_rocketflying);
 
     g_bugrigs = cvar("g_bugrigs");
     g_bugrigs_planar_movement = cvar("g_bugrigs_planar_movement");
@@ -1668,6 +1672,7 @@ void precache()
     precache_sound ("weapons/weapon_switch.wav");
     precache_sound ("weapons/weaponpickup.wav");
     precache_sound ("weapons/unavailable.wav");
+    precache_sound ("weapons/dryfire.wav");
     if (g_grappling_hook)
     {
         precache_sound ("weapons/hook_fire.wav"); // hook

@@ -17,20 +17,22 @@ void turret_hellion_postthink()
     }
 
     if (self.tur_head.frame != 0)
-        self.tur_head.frame = self.tur_head.frame + 1;
+        self.tur_head.frame += 1;
 
-    if (self.tur_head.frame > 7)
+    if (self.tur_head.frame >= 7)
         self.tur_head.frame = 0;
 }
 
 void turret_hellion_attack()
 {
-    local entity missile;
-
+    entity missile;
+		
+	if(self.tur_head.frame != 0)
+		self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));
+	else
+		self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire2"));
+    
     sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
-
-    // switch tubes
-    //self.tur_shotorg_y = self.tur_shotorg_y * -1;
 
     missile = spawn ();
     setorigin(missile, self.tur_shotorg);
@@ -57,12 +59,9 @@ void turret_hellion_attack()
     missile.tur_health         = time + 9;
     missile.tur_aimpos         = randomvec() * 128;
     te_explosion (missile.origin);
-
 	CSQCProjectile(missile, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
 
-    if (self.tur_head.frame == 0)
-        self.tur_head.frame = self.tur_head.frame + 1;
-
+	self.tur_head.frame += 1;
 }
 
 void turret_hellion_missile_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)

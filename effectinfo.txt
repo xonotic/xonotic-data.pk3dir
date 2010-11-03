@@ -4676,8 +4676,8 @@ trailspacing 16
 type static
 color 0x202020 0x404040
 size 2 2
-sizeincrease 2
-alpha 256 256 512
+sizeincrease 0.2
+alpha 256 256 256
 airfriction -4
 velocityjitter 4 4 4
 type smoke
@@ -4688,7 +4688,7 @@ type bubble
 tex 62 62
 color 0x404040 0x808080
 size 1 1
-alpha 256 256 256
+alpha 256 256 128
 gravity -0.125
 bounce 1.5
 liquidfriction 4

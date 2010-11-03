@@ -38,6 +38,9 @@ void WarpZone_TraceLine(vector org, vector end, float nomonsters, entity forent)
 void WarpZone_TraceToss(entity e, entity forent);
 void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZone_trace_callback_t cb);
 void WarpZone_TrailParticles(entity own, float eff, vector org, vector end);
+#ifdef CSQC
+void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, float boxflags);
+#endif
 
 .vector WarpZone_findradius_dist;
 .vector WarpZone_findradius_nearest;

@@ -284,10 +284,9 @@ void HUD_DrawCenterPrint (void)
 
 	sz = 0.8 + (a / 5);
 
-	if(centerprint_num * cvar("scr_centersize") > 24 && HUD_WouldDrawScoreboard()) // 24 = height of Scoreboard text
-	{
+	if(centerprint_num * cvar("scr_centersize") > 24 && scoreboard_active) // 24 = height of Scoreboard text
 		centerprint_start_y = scoreboard_bottom + centerprint_fontsize_y;
-	}
+
 	pos = centerprint_start;
 	for (i=0; i<centerprint_num; i = i + 1)
 	{
@@ -902,8 +901,6 @@ float prevMouseClicked; // previous state
 float prevMouseClickedTime; // time during previous mouse click, to check for doubleclicks
 vector prevMouseClickedPos; // pos during previous mouse click, to check for doubleclicks
 
-float menu_enabled;
-float menu_enabled_time;
 float pressed_key_time;
 void HUD_Panel_Arrow_Action(float nPrimary)
 {
@@ -1059,7 +1056,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	{
 		if (bInputType == 1)
 			return true;
-		disable_menu_alphacheck = 1;
 		menu_enabled = 1;
 		menu_enabled_time = time;
 		localcmd("menu_showhudexit\n");
@@ -1322,18 +1318,22 @@ vector prev_pos, prev_size;
 void HUD_Panel_Mouse()
 {
 	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
-	if (menu_enabled == 0) // menu dialog closed, enable normal alpha stuff again
-		disable_menu_alphacheck = 0;
 	if (autocvar__menu_alpha == 0 && time - menu_enabled_time > 0.5)
 		menu_enabled = 0;
 
 	/*
-	print("Disable menu_alphacheck: ", ftos(disable_menu_alphacheck), "\n");
+	print("menu_enabled: ", ftos(menu_enabled), "\n");
 	print("Highlighted: ", ftos(highlightedPanel), "\n");
 	print("Menu alpha: ", cvar_string("_menu_alpha"), "\n");
 	*/
 
-	if(mouseClicked == 0 && disable_menu_alphacheck != 2 && highlightedPanel >= 0) { // don't reset these variables in disable_menu_alphacheck mode 2!
+	// instantly hide the editor cursor if we open the HUDExit dialog
+	// as hud_fade_alpha doesn't decrease to 0 in this case
+	// TODO: find a way to fade the cursor out even in this case
+	if(menu_enabled == 1 || (menu_enabled == 2 && !hud_fade_alpha))
+		return;
+
+	if(mouseClicked == 0 && menu_enabled != 2 && highlightedPanel >= 0) { // don't reset these variables in menu_enabled mode 2!
 		highlightedPanel = -1;
 		highlightedAction = 0;
 	}
@@ -1396,8 +1396,7 @@ void HUD_Panel_Mouse()
 		if(time - prevMouseClickedTime < 0.4 && prevMouseClicked == 0 && prevMouseClickedPos == mousepos && highlightedPanel >= 0)
 		{
 			mouseClicked = 0; // to prevent spam, I guess.
-			disable_menu_alphacheck = 2;
-			menu_enabled = 1;
+			menu_enabled = 2;
 			menu_enabled_time = time;
 			HUD_Panel_GetName(highlightedPanel)
 			localcmd("menu_showhudoptions ", panel_name, "\n");
@@ -1658,6 +1657,10 @@ void HUD_Weapons(void)
 	vector wpnpos;
 	vector wpnsize;
 
+	float show_accuracy;
+	if(autocvar_hud_panel_weapons_accuracy && acc_levels)
+		show_accuracy = true;
+
 	for(i = 0; i < weapon_cnt; ++i)
 	{
 		wpnpos = panel_pos + eX * column * panel_size_x*(1/columns) + eY * row * panel_size_y*(1/rows);
@@ -1671,7 +1674,7 @@ void HUD_Weapons(void)
 			drawpic_aspect_skin(wpnpos, "weapon_current_bg", wpnsize, '1 1 1', fade * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy
-		if(acc_levels)
+		if(show_accuracy)
 		{
 			float weapon_hit, weapon_damage;
 			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
@@ -3856,6 +3859,37 @@ void HUD_VoteWindow(void)
 
 float mod_active; // is there any active mod icon?
 
+// Clan Arena HUD modicons
+void HUD_Mod_CA(vector pos, vector mySize)
+{
+	mod_active = 1; // CA should never hide the mod icons panel
+	float redalive, bluealive;
+	redalive = getstati(STAT_REDALIVE);
+	bluealive = getstati(STAT_BLUEALIVE);
+
+	drawfont = hud_bigfont;
+	vector redpos, bluepos;
+	if(mySize_x > mySize_y)
+	{
+		redpos = pos;
+		bluepos = pos + eY * 0.5 * mySize_y;
+		drawpic_aspect_skin(redpos, "player_red.tga", 0.5 * mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(redpos + eX * 0.5 * mySize_x, ftos(redalive), 0.5 * mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(bluepos, "player_blue.tga", 0.5 * mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(bluepos + eX * 0.5 * mySize_x, ftos(bluealive), 0.5 * mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+	else
+	{
+		redpos = pos;
+		bluepos = pos + eY * 0.5 * mySize_y;
+		drawpic_aspect_skin(redpos, "player_red.tga", eX * mySize_x + eY * 0.3 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(redpos + eY * 0.3 * mySize_y, ftos(redalive), eX * mySize_x + eY * 0.2 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(bluepos, "player_blue.tga", eX * mySize_x + eY * 0.3 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(bluepos + eY * 0.3 * mySize_y, ftos(bluealive), eX * mySize_x + eY * 0.2 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+	drawfont = hud_font;
+}
+
 // CTF HUD modicon section
 float redflag_prevframe, blueflag_prevframe; // status during previous frame
 float redflag_prevstatus, blueflag_prevstatus; // last remembered status
@@ -4240,16 +4274,31 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		crecordtime_prev = t;
 		crecordtime_change_time = time;
 	}
+
+	vector textPos, medalPos;
+	float squareSize;
+	if(mySize_x > mySize_y) {
+		// text on left side
+		squareSize = min(mySize_y, mySize_x/2);
+		textPos = pos + eX * 0.5 * max(0, mySize_x/2 - squareSize) + eY * 0.5 * (mySize_y - squareSize);
+		medalPos = pos + eX * 0.5 * max(0, mySize_x/2 - squareSize) + eX * 0.5 * mySize_x + eY * 0.5 * (mySize_y - squareSize);
+	} else {
+		// text on top
+		squareSize = min(mySize_x, mySize_y/2);
+		textPos = pos + eY * 0.5 * max(0, mySize_y/2 - squareSize) + eX * 0.5 * (mySize_x - squareSize);;
+		medalPos = pos + eY * 0.5 * max(0, mySize_y/2 - squareSize) + eY * 0.5 * mySize_y + eX * 0.5 * (mySize_x - squareSize);
+	}
+
 	f = time - crecordtime_change_time;
 
 	if (f > 1) {
-		drawstring_aspect(pos, "Personal best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eY * 0.25 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos, "Personal best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos + eY * 0.25 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else {
-		drawstring_aspect(pos, "Personal best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eY * 0.25 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect_expanding(pos, "Personal best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
-		drawstring_aspect_expanding(pos + eY * 0.25 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect(textPos, "Personal best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos + eY * 0.25 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect_expanding(pos, "Personal best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect_expanding(pos + eY * 0.25 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 	}
 
 	// server record
@@ -4261,13 +4310,13 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	f = time - srecordtime_change_time;
 
 	if (f > 1) {
-		drawstring_aspect(pos + eY * 0.5 * mySize_y, "Server best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eY * 0.75 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos + eY * 0.5 * squareSize, "Server best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos + eY * 0.75 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else {
-		drawstring_aspect(pos + eY * 0.5 * mySize_y, "Server best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eY * 0.75 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect_expanding(pos + eY * 0.5 * mySize_y, "Server best", eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
-		drawstring_aspect_expanding(pos + eY * 0.75 * mySize_y, TIME_ENCODED_TOSTRING(t), eX * 0.5 * mySize_x + eY * 0.25 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect(textPos + eY * 0.5 * squareSize, "Server best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos + eY * 0.75 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect_expanding(textPos + eY * 0.5 * squareSize, "Server best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect_expanding(textPos + eY * 0.75 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 	}
 
 	if (race_status != race_status_prev || race_status_name != race_status_name_prev) {
@@ -4278,13 +4327,12 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		race_status_name_prev = strzone(race_status_name);
 	}
 
-	pos_x += mySize_x/2;
 	// race "awards"
 	float a;
 	a = bound(0, race_status_time - time, 1);
 
 	string s;
-	s = textShortenToWidth(race_status_name, mySize_y, '1 1 0' * 0.1 * mySize_y, stringwidth_colors);
+	s = textShortenToWidth(race_status_name, squareSize, '1 1 0' * 0.1 * squareSize, stringwidth_colors);
 
 	float rank;
 	if(race_status > 0)
@@ -4293,27 +4341,27 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	rankname = race_PlaceName(rank);
 
 	vector namepos;
-	namepos = pos + '0.5 0.9 0' * mySize_y - eX * stringwidth(s, TRUE, '1 1 0' * 0.1 * mySize_y);
+	namepos = medalPos + '0 0.8 0' * squareSize;
 	vector rankpos;
-	rankpos = pos + '0.5 0.25 0' * mySize_y - eX * stringwidth(rankname, TRUE, '1 1 0' * 0.15 * mySize_y);
+	rankpos = medalPos + '0 0.15 0' * squareSize;
 
 	if(race_status == 0)
-		drawpic_aspect_skin(pos, "race_newfail", '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(medalPos, "race_newfail", '1 1 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	else if(race_status == 1) {
-		drawpic_aspect_skin(pos, "race_newtime", '1 1 0' * 0.9 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(namepos, s, '1 1 0' * 0.1 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawstring(rankpos, rankname, '1 1 0' * 0.15 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newtime", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	} else if(race_status == 2) {
 		if(race_status_name == GetPlayerName(player_localentnum -1) || !race_myrank || race_myrank < rank)
-			drawpic_aspect_skin(pos, "race_newrankgreen", '1 1 0' * 0.9 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankgreen", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		else
-			drawpic_aspect_skin(pos, "race_newrankyellow", '1 1 0' * 0.9 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(namepos, s, '1 1 0' * 0.1 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawstring(rankpos, rankname, '1 1 0' * 0.15 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankyellow", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	} else if(race_status == 3) {
-		drawpic_aspect_skin(pos, "race_newrecordserver", '1 1 0' * 0.9 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(namepos, s, '1 1 0' * 0.1 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawstring(rankpos, rankname, '1 1 0' * 0.15 * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrecordserver", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	}
 
 	if (race_status_time - time <= 0) {
@@ -4393,6 +4441,7 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, 
 
 void HUD_Mod_Dom(vector myPos, vector mySize)
 {
+	mod_active = 1; // required in each mod function that always shows something
 	entity tm;
 	float teams_count;
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
@@ -4436,7 +4485,7 @@ void HUD_ModIcons(void)
 	if(!autocvar_hud_panel_modicons && !autocvar__hud_configure)
 		return;
 
-	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_DOMINATION && !autocvar__hud_configure)
+	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && gametype != GAME_DOMINATION && !autocvar__hud_configure)
 		return;
 
 	active_panel = HUD_PANEL_MODICONS;
@@ -4475,6 +4524,8 @@ void HUD_ModIcons(void)
 		HUD_Mod_Race(pos, mySize);
 	else if(gametype == GAME_DOMINATION)
 		HUD_Mod_Dom(pos, mySize);
+	else if(gametype == GAME_CA)
+		HUD_Mod_CA(pos, mySize);
 }
 
 // Draw pressed keys (#11)
@@ -4896,11 +4947,11 @@ void HUD_ShowSpeed(void)
 	pos = (vid_conheight - numsize_y) * cvar("cl_showspeed_position");
 
 	drawfont = hud_bigfont;
-	drawstringcenter(eX + pos * eY, speed, numsize, '1 1 1', autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstringcenter(eX + pos * eY, speed, numsize, '1 1 1', autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
 
 	if (cvar("cl_showspeed_z") == 1) {
 		zspeed = strcat(ftos(fabs(floor( pmove_vel_z * conversion_factor + 0.5 ))), unit);
-		drawstringcenter(eX + pos * eY + numsize_y * eY, zspeed, numsize * 0.5, '1 1 1', autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstringcenter(eX + pos * eY + numsize_y * eY, zspeed, numsize * 0.5, '1 1 1', autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
 	}
 
 	drawfont = hud_font;
@@ -4928,6 +4979,8 @@ void HUD_ShowAcceleration(void)
 	f = bound(0, f * 10, 1);
 	acc_avg = acc_avg * (1 - f) + acceleration * f;
 	acceleration = acc_avg / getstatf(STAT_MOVEVARS_MAXSPEED);
+	if (acceleration == 0)
+		return;
 
 	pos = top - sz/2 * eY + (cvar("cl_showacceleration_position") * vid_conheight) * eY;
 
@@ -4937,18 +4990,16 @@ void HUD_ShowAcceleration(void)
 	if (cvar("cl_showacceleration_color_custom"))
 		rgb = stov(cvar_string("cl_showacceleration_color"));
 	else {
-		rgb = '1 1 1';
-		if (acceleration < 0) {
+		if (acceleration < 0)
 			rgb = '1 .5 .5' - '0 .5 .5' * bound(0, -acceleration * 0.2, 1);
-		} else if (acceleration > 0) {
+		else
 			rgb = '.5 1 .5' - '.5 0 .5' * bound(0, +acceleration * 0.2, 1);
-		}
 	}
 
 	if (acceleration > 0)
-		HUD_Panel_DrawProgressBar(pos, 0, acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
-	else if (acceleration < 0)
-		HUD_Panel_DrawProgressBar(pos + acceleration * scale * '40 0 0', 0, -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(pos, 0, acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
+	else
+		HUD_Panel_DrawProgressBar(pos + acceleration * scale * '40 0 0', 0, -acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
 }
 
 void HUD_Reset (void)
@@ -4999,7 +5050,7 @@ void HUD_Main (void)
 	hud_skin_path = strcat("gfx/hud/", autocvar_hud_skin);
 
 	// global hud alpha fade
-	if(disable_menu_alphacheck == 1)
+	if(menu_enabled == 1)
 		hud_fade_alpha = 1;
 	else
 		hud_fade_alpha = (1 - autocvar__menu_alpha);
@@ -5012,11 +5063,10 @@ void HUD_Main (void)
 	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
 		hud_fade_alpha = 1;
 
-	hud_border_thickness = bound(0, cvar("hud_border_thickness"), 5);
-	hud_accuracy_border_thickness = bound(0, cvar_or("hud_accuracy_border_thickness", 1), 5);
-
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
-	hud_fontsize_spec = HUD_GetFontsize("hud_fontsize_spec");
+
+	if(!autocvar__hud_configure && !hud_fade_alpha)
+		return;
 
 	// Drawing stuff
 
@@ -5036,29 +5086,29 @@ void HUD_Main (void)
 		}
 	}
 
-	float f;
-	vector color;
-	if((teamplay) && autocvar_hud_dock_color_team) {
-		f = stof(getplayerkey(player_localentnum - 1, "colors"));
-		color = colormapPaletteColor(mod(f, 16), 1) * autocvar_hud_dock_color_team;
-	}
-	else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && autocvar_hud_dock_color_team) {
-		color = '1 0 0' * autocvar_hud_dock_color_team;
-	}
-	else if(autocvar_hud_dock_color == "shirt") {
-		f = stof(getplayerkey(player_localentnum - 1, "colors"));
-		color = colormapPaletteColor(floor(f / 16), 0);
-	}
-	else if(autocvar_hud_dock_color == "pants") {
-		f = stof(getplayerkey(player_localentnum - 1, "colors"));
-		color = colormapPaletteColor(mod(f, 16), 1);
-	}
-	else
-		color = stov(autocvar_hud_dock_color);
-
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
 	{
+		float f;
+		vector color;
+		if((teamplay) && autocvar_hud_dock_color_team) {
+			f = stof(getplayerkey(player_localentnum - 1, "colors"));
+			color = colormapPaletteColor(mod(f, 16), 1) * autocvar_hud_dock_color_team;
+		}
+		else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && autocvar_hud_dock_color_team) {
+			color = '1 0 0' * autocvar_hud_dock_color_team;
+		}
+		else if(autocvar_hud_dock_color == "shirt") {
+			f = stof(getplayerkey(player_localentnum - 1, "colors"));
+			color = colormapPaletteColor(floor(f / 16), 0);
+		}
+		else if(autocvar_hud_dock_color == "pants") {
+			f = stof(getplayerkey(player_localentnum - 1, "colors"));
+			color = colormapPaletteColor(mod(f, 16), 1);
+		}
+		else
+			color = stov(autocvar_hud_dock_color);
+
 		string pic;
 		pic = strcat(hud_skin_path, "/", autocvar_hud_dock);
 		if(precache_pic(pic) == "") {
@@ -5102,5 +5152,6 @@ void HUD_Main (void)
 	hud_configure_prev = autocvar__hud_configure;
 
 	if (!autocvar__hud_configure) // hud config mode disabled, enable normal alpha stuff again
-		disable_menu_alphacheck = 0;
+		if (menu_enabled)
+			menu_enabled = 0;
 }

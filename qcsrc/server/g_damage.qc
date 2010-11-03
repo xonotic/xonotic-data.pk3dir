@@ -753,6 +753,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(deathtype & HITTYPE_HEADSHOT)
 								headshot = 1;
 						}
+						if(g_ca)
+							PlayerScore_Add(attacker, SP_SCORE, damage * cvar("g_ca_damage2score_multiplier"));
 					}
 				}
 				else
@@ -1154,9 +1156,7 @@ void Fire_ApplyDamage(entity e)
 	if not(Fire_IsBurning(e))
 		return;
 
-	o = e.owner;
-	while(o.owner)
-		o = o.owner;
+	for(t = 0, o = e.owner; o.owner && t < 16; o = o.owner, ++t);
 	if(clienttype(o) == CLIENTTYPE_NOTACLIENT)
 		o = e.fire_owner;
 

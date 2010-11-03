@@ -200,6 +200,8 @@ void W_Grenade_Attack (void)
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
 	else
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
+
+	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void W_Grenade_Attack2 (void)
@@ -244,6 +246,8 @@ void W_Grenade_Attack2 (void)
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
 	else
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
+
+	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void spawnfunc_weapon_grenadelauncher (void)
