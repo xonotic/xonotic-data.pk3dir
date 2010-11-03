@@ -2276,9 +2276,11 @@ string getrankings()
         return strcat("Records for ", map, ":\n", s);
 }
 
-const float LADDER_FIRSTPOINT = 100;
-const float LADDER_CNT = 10; // position X still gives LADDER_FIRSTPOINT/X points
-const float LADDER_SIZE = 30; // ladder shows the top X players
+#define LADDER_FIRSTPOINT 100
+#define LADDER_CNT 10
+	// position X still gives LADDER_FIRSTPOINT/X points
+#define LADDER_SIZE 30
+	// ladder shows the top X players
 string top_uids[LADDER_SIZE];
 float top_scores[LADDER_SIZE];
 string getladder()
@@ -2420,11 +2422,12 @@ string getladder()
     {
 	s = strcat(s, "+-----");
     }
-    if(LADDER_CNT > 9)
-	    for (i = 1; i <= LADDER_CNT - 9; ++i)
-	    {
-		s = strcat(s, "+------");
-	    }
+#if LADDER_CNT > 9
+    for (i = 1; i <= LADDER_CNT - 9; ++i)
+    {
+	s = strcat(s, "+------");
+    }
+#endif
 
     s = strcat(s, "+--------------+--------------------\n");
 
@@ -2440,11 +2443,12 @@ string getladder()
 	{
 	    s = strcat(s, strpad(4, argv(j)), "^3| ^7"); // 1st, 2nd, 3rd etc cnt
 	}
-	if(LADDER_CNT > 9)
-		for (j = 10; j <= LADDER_CNT; ++j)
-		{
-		    s = strcat(s, strpad(4, argv(j)), " ^3| ^7"); // 1st, 2nd, 3rd etc cnt
-		}
+#if LADDER_CNT > 9
+	for (j = 10; j <= LADDER_CNT; ++j)
+	{
+	    s = strcat(s, strpad(4, argv(j)), " ^3| ^7"); // 1st, 2nd, 3rd etc cnt
+	}
+#endif
 
 	s = strcat(s, strpad(13, argv(0)), "^3| ^7"); // speed award cnt
 	s = strcat(s, uid2name(top_uids[i]), "\n"); // name
