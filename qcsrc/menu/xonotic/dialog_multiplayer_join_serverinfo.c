@@ -21,7 +21,6 @@ CLASS(XonoticServerInfoDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticServerInfoDialog, currentServerKey, string, string_null)
 	ATTRIB(XonoticServerInfoDialog, currentServerID, string, string_null)
 	ATTRIB(XonoticServerInfoDialog, currentServerEncrypt, string, string_null)
-	ATTRIB(XonoticServerInfoDialog, currentServerCanConnect, string, string_null)
 	ATTRIB(XonoticServerInfoDialog, currentServerPure, string, string_null)
 
 	ATTRIB(XonoticServerInfoDialog, nameLabel, entity, NULL)
@@ -96,12 +95,10 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	if(me.currentServerID)
 		strunzone(me.currentServerID);
 	me.currentServerID = string_null;
-	if(me.currentServerEncrypt)
-		strunzone(me.currentServerEncrypt);
-	me.currentServerEncrypt = string_null;
-	if(me.currentServerCanConnect)
-		strunzone(me.currentServerCanConnect);
-	me.currentServerCanConnect = string_null;
+	// not zoned!
+	//if(me.currentServerEncrypt)
+	//	strunzone(me.currentServerEncrypt);
+	//me.currentServerEncrypt = string_null;
 	if(me.currentServerPure)
 		strunzone(me.currentServerPure);
 	me.currentServerPure = string_null;
