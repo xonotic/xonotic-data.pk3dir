@@ -132,7 +132,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair alpha:"));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.1, "crosshair_color_alpha"));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.1, "crosshair_alpha"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair red:"));
