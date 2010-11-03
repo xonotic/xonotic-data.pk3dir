@@ -60,6 +60,52 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	float m, pure, j;
 	string s, typestr, versionstr, numh, maxp, k, v;
 
+	if(me.currentServerName)
+		strunzone(me.currentServerName);
+	me.currentServerName = string_null;
+	if(me.currentServerCName)
+		strunzone(me.currentServerCName);
+	me.currentServerCName = string_null;
+	if(me.currentServerType)
+		strunzone(me.currentServerType);
+	me.currentServerType = string_null;
+	if(me.currentServerMap)
+		strunzone(me.currentServerMap);
+	me.currentServerMap = string_null;
+	if(me.currentServerPlayers)
+		strunzone(me.currentServerPlayers);
+	me.currentServerPlayers = string_null;
+	if(me.currentServerNumPlayers)
+		strunzone(me.currentServerNumPlayers);
+	me.currentServerNumPlayers = string_null;
+	if(me.currentServerNumBots)
+		strunzone(me.currentServerNumBots);
+	me.currentServerNumBots = string_null;
+	if(me.currentServerMod)
+		strunzone(me.currentServerMod);
+	me.currentServerMod = string_null;
+	if(me.currentServerVersion)
+		strunzone(me.currentServerVersion);
+	me.currentServerVersion = string_null;
+	if(me.currentServerPing)
+		strunzone(me.currentServerPing);
+	me.currentServerPing = string_null;
+	if(me.currentServerKey)
+		strunzone(me.currentServerKey);
+	me.currentServerKey = string_null;
+	if(me.currentServerID)
+		strunzone(me.currentServerID);
+	me.currentServerID = string_null;
+	if(me.currentServerEncrypt)
+		strunzone(me.currentServerEncrypt);
+	me.currentServerEncrypt = string_null;
+	if(me.currentServerCanConnect)
+		strunzone(me.currentServerCanConnect);
+	me.currentServerCanConnect = string_null;
+	if(me.currentServerPure)
+		strunzone(me.currentServerPure);
+	me.currentServerPure = string_null;
+
 	SLIST_FIELD_NAME = gethostcacheindexforkey("name");
 	me.currentServerName = strzone(gethostcachestring(SLIST_FIELD_NAME, i));
 	me.nameLabel.setText(me.nameLabel, me.currentServerName);
@@ -121,6 +167,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.versionLabel.setText(me.versionLabel, me.currentServerVersion);
 
 	me.currentServerPure = ((pure < 0) ? "N/A" : (pure == 0) ? "Official settings" : sprintf("%d modified settings", pure));
+	me.currentServerPure = strzone(me.currentServerPure);
 	me.pureLabel.setText(me.pureLabel, me.currentServerPure);
 
 	SLIST_FIELD_PING = gethostcacheindexforkey("ping");
