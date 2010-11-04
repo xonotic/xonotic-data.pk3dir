@@ -25,7 +25,6 @@ var float autocvar_hud_configure_grid_alpha;
 var float autocvar__con_chat_maximized;
 var string autocvar__hud_panelorder;
 
-var string autocvar_hud_skin;
 var string autocvar_hud_dock;
 
 var float autocvar_hud_progressbar_alpha;

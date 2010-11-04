@@ -422,7 +422,8 @@ HUD panels
 void HUD_Panel_ExportCfg(string cfgname)
 {
 	float fh;
-	fh = fopen(strcat("hud_", autocvar_hud_skin, "_", cfgname, ".cfg"), FILE_WRITE);
+	string filename = strcat("hud_", cvar_string("hud_skin"), "_", cfgname, ".cfg");
+	fh = fopen(filename, FILE_WRITE);
 	if(fh >= 0)
 	{
 		HUD_Write_Cvar_q("hud_skin");
@@ -524,11 +525,11 @@ void HUD_Panel_ExportCfg(string cfgname)
 		}
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 
-		print("^2Successfully exported to hud_", autocvar_hud_skin, "_", cfgname, ".cfg! (Note: It's saved in data/data/)\n");
+		print("^2Successfully exported to ", filename, "! (Note: It's saved in data/data/)\n");
 		fclose(fh);
 	}
 	else
-		print("^1Couldn't write to hud_", autocvar_hud_skin, "_", cfgname, ".cfg\n");
+		print("^1Couldn't write to ", filename, "\n");
 }
 
 const float hlBorderSize = 4;
@@ -4982,8 +4983,6 @@ switch (id) {\
 
 void HUD_Main (void)
 {
-	hud_skin_path = strcat("gfx/hud/", autocvar_hud_skin);
-
 	// global hud alpha fade
 	if(menu_enabled == 1)
 		hud_fade_alpha = 1;
@@ -5004,6 +5003,12 @@ void HUD_Main (void)
 		return;
 
 	// Drawing stuff
+	if (hud_skin_path != cvar_string("hud_skin"))
+	{
+		if (hud_skin_path)
+			strunzone(hud_skin_path);
+		hud_skin_path = strzone(strcat("gfx/hud/", cvar_string("hud_skin")));
+	}
 
 	// HUD configure visible grid
 	if(autocvar__hud_configure && autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
