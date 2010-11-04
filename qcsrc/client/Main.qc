@@ -1199,6 +1199,20 @@ void Net_ReadRace()
 	}
 }
 
+void Net_ReadDom()
+{
+	if (dom_total_pps == 0)
+		dom_total_pps = ReadShort() / 100.0;
+	dom_pps_red = ReadShort() / 100.0;
+	dom_pps_blue = ReadShort() / 100.0;
+	//if dom_pps_yellow/dom_pps_pink was negative the first time we read it,
+	//it means the relative team doesn't exist and we don't have to read its value anymore
+	if (dom_pps_yellow >= 0)
+		dom_pps_yellow = ReadShort() / 100.0;
+	if (dom_pps_pink >= 0)
+		dom_pps_pink = ReadShort() / 100.0;
+}
+
 void Net_ReadSpawn()
 {
 	zoomin_effect = 1;
@@ -1291,6 +1305,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_RACE:
 			Net_ReadRace();
+			bHandled = true;
+			break;
+		case TE_CSQC_DOM:
+			Net_ReadDom();
 			bHandled = true;
 			break;
 		case TE_CSQC_SPAWN:

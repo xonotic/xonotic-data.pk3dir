@@ -25,30 +25,32 @@ float g_domination_point_rate;
 .float captime;
 
 // pps: points per second
-.float dom_total_pps;
-.float dom_pps_red;
-.float dom_pps_blue;
-.float dom_pps_yellow;
-.float dom_pps_pink;
-float total_pps;
-float pps_red;
-float pps_blue;
-float pps_yellow;
-float pps_pink;
-void set_dom_state(void)
+float dom_total_pps;
+float dom_pps_red;
+float dom_pps_blue;
+float dom_pps_yellow;
+float dom_pps_pink;
+void send_CSQC_dom_state()
 {
-	// BIG ugly hack to make stat sending work
-	self.dom_total_pps = total_pps;
-	self.dom_pps_red = pps_red;
-	self.dom_pps_blue = pps_blue;
-	if(c3 >= 0)
-	{
-		self.dom_pps_yellow = pps_yellow;
-	}
-	if(c4 >= 0)
-	{
-		self.dom_pps_pink = pps_pink;
-	}
+	WriteByte(MSG_ALL, SVC_TEMPENTITY);
+	WriteByte(MSG_ALL, TE_CSQC_DOM);
+	WriteShort(MSG_ALL, dom_pps_red * 100.0);
+	WriteShort(MSG_ALL, dom_pps_blue * 100.0);
+	if (c3 >= 0) WriteShort(MSG_ALL, dom_pps_yellow * 100.0);
+	if (c4 >= 0) WriteShort(MSG_ALL, dom_pps_pink * 100.0);
+}
+//Must be called ONLY when a client connects to send total pps and state
+//If yellow/pink team doesn't exist sends a negative dom_pps_yellow/dom_pps_pink
+//to let know the client to not read these values anymore
+void send_CSQC_dom_all()
+{
+	WriteByte(MSG_ALL, SVC_TEMPENTITY);
+	WriteByte(MSG_ALL, TE_CSQC_DOM);
+	WriteShort(MSG_ALL, dom_total_pps * 100.0);
+	WriteShort(MSG_ALL, dom_pps_red * 100.0);
+	WriteShort(MSG_ALL, dom_pps_blue * 100.0);
+	WriteShort(MSG_ALL, dom_pps_yellow * 100.0);
+	WriteShort(MSG_ALL, dom_pps_pink * 100.0);
 }
 
 void() dom_controlpoint_setup;
@@ -141,48 +143,47 @@ void dompoint_captured ()
 	{
 		// "fix" pps when slightly under 0 because of approximation errors
 		case COLOR_TEAM1:
-			pps_red -= (points/wait_time);
-			if (pps_red < 0) pps_red = 0;
+			dom_pps_red -= (points/wait_time);
+			if (dom_pps_red < 0) dom_pps_red = 0;
 			break;
 		case COLOR_TEAM2:
-			pps_blue -= (points/wait_time);
-			if (pps_blue < 0) pps_blue = 0;
+			dom_pps_blue -= (points/wait_time);
+			if (dom_pps_blue < 0) dom_pps_blue = 0;
 			break;
 		case COLOR_TEAM3:
-			pps_yellow -= (points/wait_time);
-			if (pps_yellow < 0) pps_yellow = 0;
+			dom_pps_yellow -= (points/wait_time);
+			if (dom_pps_yellow < 0) dom_pps_yellow = 0;
 			break;
 		case COLOR_TEAM4:
-			pps_pink -= (points/wait_time);
-			if (pps_pink < 0) pps_pink = 0;
+			dom_pps_pink -= (points/wait_time);
+			if (dom_pps_pink < 0) dom_pps_pink = 0;
 	}
 
 	switch(self.goalentity.team)
 	{
-		// "fix" pps when slightly over total_pps because of approximation errors
+		// "fix" pps when slightly over dom_total_pps because of approximation errors
 		case COLOR_TEAM1:
-			pps_red += (points/wait_time);
-			if (pps_red > total_pps) pps_red = total_pps;
+			dom_pps_red += (points/wait_time);
+			if (dom_pps_red > dom_total_pps) dom_pps_red = dom_total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-red", "", "");
 			break;
 		case COLOR_TEAM2:
-			pps_blue += (points/wait_time);
-			if (pps_blue > total_pps) pps_blue = total_pps;
+			dom_pps_blue += (points/wait_time);
+			if (dom_pps_blue > dom_total_pps) dom_pps_blue = dom_total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-blue", "", "");
 			break;
 		case COLOR_TEAM3:
-			pps_yellow += (points/wait_time);
-			if (pps_yellow > total_pps) pps_yellow = total_pps;
+			dom_pps_yellow += (points/wait_time);
+			if (dom_pps_yellow > dom_total_pps) dom_pps_yellow = dom_total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-yellow", "", "");
 			break;
 		case COLOR_TEAM4:
-			pps_pink += (points/wait_time);
-			if (pps_pink > total_pps) pps_pink = total_pps;
+			dom_pps_pink += (points/wait_time);
+			if (dom_pps_pink > dom_total_pps) dom_pps_pink = dom_total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
 	}
 
-	FOR_EACH_PLAYER(self)
-		set_dom_state();
+	send_CSQC_dom_state();
 
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
@@ -382,7 +383,7 @@ void dom_controlpoint_setup()
 	else
 		waittime = self.wait;
 
-	total_pps += points/waittime;
+	dom_total_pps += points/waittime;
 
 	if(!self.t_width)
 		self.t_width = 0.02; // frame animation rate
@@ -706,6 +707,8 @@ void dom_delayedinit()
 			}
 		}
 	}
+	if (c3 == -1) dom_pps_yellow = -1;
+	if (c4 == -1) dom_pps_pink = -1;
 
 	ScoreRules_dom();
 };
@@ -722,12 +725,6 @@ void dom_init()
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
-
-	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);
-	addstat(STAT_DOM_PPS_RED, AS_FLOAT, dom_pps_red);
-	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
-	if(c3 >= 0) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
-	if(c4 >= 0) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
 
 	g_domination_point_rate = cvar("g_domination_point_rate");
 	g_domination_point_amt = cvar("g_domination_point_amt");
