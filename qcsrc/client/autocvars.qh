@@ -27,9 +27,6 @@ var string autocvar__hud_panelorder;
 
 var string autocvar_hud_skin;
 var string autocvar_hud_dock;
-var string autocvar_hud_dock_color;
-var float autocvar_hud_dock_color_team;
-var float autocvar_hud_dock_alpha;
 
 var float autocvar_hud_progressbar_alpha;
 
