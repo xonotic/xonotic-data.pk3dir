@@ -304,6 +304,12 @@ void cvar_changes_init()
 		// mapinfo
 		BADCVAR("timelimit");
 		BADCVAR("fraglimit");
+		BADCVAR("leadlimit");
+		BADCVAR("g_tdm_teams");
+		BADCVAR("g_keyhunt_teams");
+		BADCVAR("g_domination_default_teams");
+		BADCVAR("g_race_qualifying_timelimit");
+		BADCVAR("g_lms");
 		BADCVAR("g_arena");
 		BADCVAR("g_ca");
 		BADCVAR("g_assault");
@@ -344,9 +350,19 @@ void cvar_changes_init()
 		// now check if the changes are actually gameplay relevant
 
 		// does nothing visible
-		BADPREFIX("prvm_");
+		BADCVAR("captureleadlimit_override");
+		BADCVAR("g_arena_point_leadlimit");
+		BADCVAR("g_ca_point_leadlimit");
+		BADCVAR("g_ctf_capture_leadlimit");
+		BADCVAR("g_domination_point_leadlimit");
+		BADCVAR("g_keyhunt_point_leadlimit");
+		BADCVAR("g_nexball_goalleadlimit");
+		BADCVAR("g_runematch_point_leadlimit");
+		BADCVAR("leadlimit_and_fraglimit");
+		BADCVAR("leadlimit_override");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
+		BADPREFIX("prvm_");
 		BADPREFIX("sv_fragmessage_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
@@ -399,13 +415,14 @@ void cvar_changes_init()
 		BADCVAR("rcon_restricted_commands");
 		BADCVAR("rcon_restricted_password");
 		BADCVAR("skill");
+		BADCVAR("sv_adminnick");
 		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_curl_defaulturl");
 		BADCVAR("sv_defaultcharacter");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
-		BADCVAR("sv_maxrate");
 		BADCVAR("sv_maxidle");
+		BADCVAR("sv_maxrate");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
 		BADCVAR("sv_ready_restart");
