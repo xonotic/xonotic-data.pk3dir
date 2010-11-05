@@ -1880,9 +1880,14 @@ string GetAmmoPicture(float i)
 void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_selected)
 {
 	float a;
-	a = getstati(GetAmmoStat(itemcode)); // how much ammo do we have of type itemcode?
 	if(autocvar__hud_configure)
+	{
+		if(itemcode == 2)
+			currently_selected = true; //rockets always selected
 		a = 100;
+	}
+	else
+		a = getstati(GetAmmoStat(itemcode)); // how much ammo do we have of type itemcode?
 
 	vector color;
 	if(a < 10)
@@ -1948,8 +1953,6 @@ void HUD_Ammo(void)
 
 	active_panel = HUD_PANEL_AMMO;
 	HUD_Panel_UpdateCvars(ammo);
-	float i, currently_selected;
-
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -1961,6 +1964,26 @@ void HUD_Ammo(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
+	float i, stat_items, currently_selected;
+	if (autocvar_hud_panel_ammo_onlycurrent)
+	{
+		if(autocvar__hud_configure)
+		{
+			DrawAmmoItem(pos, mySize, 2, true); //show rockets
+			return;
+		}
+		stat_items = getstati(STAT_ITEMS);
+		for (i = 0; i < AMMO_COUNT; ++i) {
+			currently_selected = stat_items & GetAmmoItemCode(i);
+			if (currently_selected)
+			{
+				DrawAmmoItem(pos, mySize, i, currently_selected);
+				return;
+			}
+		}
+		return; // nothing to display
+	}
+
 	float rows, columns;
 	rows = mySize_y/mySize_x;
 	rows = bound(1, floor((sqrt(4 * (3/1) * rows * AMMO_COUNT + rows * rows) + rows + 0.5) / 2), AMMO_COUNT);
@@ -1969,25 +1992,16 @@ void HUD_Ammo(void)
 	columns = ceil(AMMO_COUNT/rows);
 
 	float row, column;
-	// ammo
+	stat_items = getstati(STAT_ITEMS);
+	vector ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 	for (i = 0; i < AMMO_COUNT; ++i) {
-		currently_selected = getstati(STAT_ITEMS) & GetAmmoItemCode(i);
-		if(autocvar_hud_panel_ammo_onlycurrent) {
-			if(autocvar__hud_configure)
-				i = 2;
-			if (currently_selected || autocvar__hud_configure)
-			{
-				DrawAmmoItem(pos, mySize, i, currently_selected);
-				break;
-			}
-		} else {
-			DrawAmmoItem(pos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows), eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows), i, currently_selected);
-			++row;
-			if(row >= rows)
-			{
-				row = 0;
-				column = column + 1;
-			}
+		currently_selected = stat_items & GetAmmoItemCode(i);
+		DrawAmmoItem(pos + eX * column * ammo_size_x + eY * row * ammo_size_y, ammo_size, i, currently_selected);
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			column = column + 1;
 		}
 	}
 }
