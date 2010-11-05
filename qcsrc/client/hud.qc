@@ -2647,8 +2647,8 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 {
 	float w;
 	float alsoprint, gentle;
-	alsoprint = (autocvar_hud_panel_notify_print || !panel_enabled); // print message to console if: notify panel disabled, or cvar to do so enabled
-	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
+	alsoprint = (cvar("hud_panel_notify_print") || !panel_enabled); // print message to console if: notify panel disabled, or cvar to do so enabled
+	gentle = (cvar("cl_gentle") || cvar("cl_gentle_messages"));
 	
 	if(msg == MSG_SUICIDE) {
 		w = DEATH_WEAPONOF(type);
@@ -2984,7 +2984,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 void HUD_Centerprint(string s1, string s2, float type, float msg)
 {
 	float gentle;
-	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
+	gentle = (cvar("cl_gentle") || cvar("cl_gentle_messages"));
 	if(msg == MSG_SUICIDE) {
 		if (type == DEATH_TEAMCHANGE) {
 			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", s1));
@@ -3095,9 +3095,9 @@ void HUD_Notify (void)
 
 	float a;
 	float when;
-	when = autocvar_hud_panel_notify_time;
+	when = cvar("hud_panel_notify_time");
 	float fadetime;
-	fadetime = autocvar_hud_panel_notify_fadetime;
+	fadetime = cvar("hud_panel_notify_fadetime");
 
 	string s;
 
@@ -3107,10 +3107,11 @@ void HUD_Notify (void)
 	string attacker, victim;
 
 	float i, j, w;
+	float flip = cvar("hud_panel_notify_flip");
 	for(j = 0; j < entries; ++j)
 	{
 		s = "";
-		if(autocvar_hud_panel_notify_flip)
+		if(flip)
 			i = j;
 		else // rather nasty hack for ordering items from the bottom up
 			i = entries - j - 1;

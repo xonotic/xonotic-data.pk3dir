@@ -6,10 +6,6 @@ var float autocvar_cl_gibs_sloppy = 1;
 var float autocvar_cl_casings_ticrate = 0.1;
 var float autocvar_cl_casings_sloppy = 1;
 
-var float autocvar_cl_gentle;
-var float autocvar_cl_gentle_gibs;
-var float autocvar_cl_gentle_messages;
-
 var float autocvar_scoreboard_color_bg_team;
 
 var float autocvar__menu_alpha;
@@ -48,10 +44,6 @@ var float autocvar_hud_panel_powerups;
 var float autocvar_hud_panel_healtharmor;
 
 var float autocvar_hud_panel_notify;
-var float autocvar_hud_panel_notify_print;
-var float autocvar_hud_panel_notify_time;
-var float autocvar_hud_panel_notify_fadetime;
-var float autocvar_hud_panel_notify_flip;
 
 var float autocvar_hud_panel_timer;
 var float autocvar_hud_panel_timer_increment;
