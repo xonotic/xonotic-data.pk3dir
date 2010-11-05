@@ -627,6 +627,56 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	local float bSkipKey;
 	bSkipKey = false;
 
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE) && panel_fg_alpha && !scoreboard_active) // don't lock keys before we actually see what's going on
+	{
+		/*
+		string vyes_keys;
+		float keys;
+		vyes_keys = findkeysforcommand("vyes");
+		keys = tokenize(vyes_keys);
+
+		float i;
+		for (i = 0; i < keys; ++i)
+		{
+			print(ftos(nPrimary), " ", argv(i), "\n"); 
+			if(nPrimary == stof(argv(i)))
+			{
+				vote_active = 0;
+				cvar_set("cl_allow_uid2name", "1");
+				return TRUE;
+			}
+		}
+
+		string vno_keys;
+		vno_keys = findkeysforcommand("vno");
+		keys = tokenize(vno_keys);
+
+		float i;
+		for (i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+			{
+				vote_active = 0;
+				cvar_set("cl_allow_uid2name", "0");
+				return TRUE;
+			}
+		}
+		*/ // If only I could grab F1-F12 in CSQC... but no
+
+		if(nPrimary == 121) // ascii value for y
+		{
+			vote_active = 0;
+			cvar_set("cl_allow_uid2name", "1");
+			return TRUE;
+		}
+		else if(nPrimary == 110) // ascii value for n
+		{
+			vote_active = 0;
+			cvar_set("cl_allow_uid2name", "0");
+			return TRUE;
+		}
+	}
+
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
@@ -636,6 +686,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if(menu_visible)
 		if(menu_action(bInputType, nPrimary, nSecondary))
 			return TRUE;
+
 	return bSkipKey;
 }
 

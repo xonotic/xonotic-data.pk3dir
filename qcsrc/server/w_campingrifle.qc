@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(CAMPINGRIFLE, w_campingrifle, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "campingrifle", "campingrifle", "Sniper Rifle");
+REGISTER_WEAPON(CAMPINGRIFLE, w_campingrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "campingrifle", "campingrifle", "Sniper Rifle");
 #else
 #ifdef SVQC
 //Camping rifle Primary mode: manually operated bolt*, Secondary: full automatic**

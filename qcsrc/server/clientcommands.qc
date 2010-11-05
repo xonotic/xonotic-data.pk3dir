@@ -303,6 +303,8 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "records") {
 		for(i = 0; i < 10; ++i)
 			sprint(self, records_reply[i]);
+	} else if(cmd == "ladder") {
+		sprint(self, ladder_reply);
 	} else if(cmd == "rankings") {
 		sprint(self, rankings_reply);
 	} else if(cmd == "voice") {
@@ -362,6 +364,8 @@ void SV_ParseClientCommand(string s) {
 		Score_NicePrint(self);
 	} else if(cmd == "cvar_changes") {
 		sprint(self, cvar_changes);
+	} else if(cmd == "cvar_purechanges") {
+		sprint(self, cvar_purechanges);
 	} else if(CheatCommand(tokens)) {
 	} else {
 		//if(ctf_clientcommand())

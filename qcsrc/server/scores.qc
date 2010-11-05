@@ -369,7 +369,8 @@ void WinningConditionHelper()
 
 	s = GetGametype();
 	s = strcat(s, ":", cvar_string("g_xonoticversion"));
-	s = strcat(s, "::", GetPlayerScoreString(world, 2)); // make this 1 once we can
+	s = strcat(s, ":P", ftos(cvar_purechanges_count));
+	s = strcat(s, "::", GetPlayerScoreString(world, 1)); // make this 1 once we can, note: this doesn't contain any :<letter>
 
 	fullstatus = cvar("g_full_getstatus_responses");
 

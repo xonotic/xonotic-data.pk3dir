@@ -329,6 +329,9 @@ float sv_loddistance2;
 
 .string weaponorder_byimpulse;
 
+.float cvar_cl_allow_uid2name;
+.string stored_netname;
+
 void Announce(string snd);
 void AnnounceTo(entity e, string snd);
 
@@ -523,6 +526,8 @@ string clientstuff;
 .string fog;
 
 string cvar_changes;
+string cvar_purechanges;
+float cvar_purechanges_count;
 
 float game_starttime; //point in time when the countdown is over
 .float stat_game_starttime;
@@ -602,6 +607,8 @@ string matchid;
 
 .float stats_hit[WEP_MAXCOUNT];  // for hitscan bullets hit
 .float stats_fired[WEP_MAXCOUNT];  // for hitscan bullets fired
+
+.float last_pickup;
 
 FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_hit);
 FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_fired);
