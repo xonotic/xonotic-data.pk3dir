@@ -44,16 +44,8 @@ var float autocvar_hud_panel_ammo_onlycurrent;
 var float autocvar_hud_panel_ammo_iconalign;
 
 var float autocvar_hud_panel_powerups;
-var float autocvar_hud_panel_powerups_flip;
-var float autocvar_hud_panel_powerups_iconalign;
-var float autocvar_hud_panel_powerups_baralign;
-var float autocvar_hud_panel_powerups_progressbar;
 
 var float autocvar_hud_panel_healtharmor;
-var float autocvar_hud_panel_healtharmor_flip;
-var float autocvar_hud_panel_healtharmor_iconalign;
-var float autocvar_hud_panel_healtharmor_baralign;
-var float autocvar_hud_panel_healtharmor_progressbar;
 
 var float autocvar_hud_panel_notify;
 var float autocvar_hud_panel_notify_print;
