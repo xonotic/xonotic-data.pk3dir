@@ -172,8 +172,6 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerPing = strzone(s);
 	me.pingLabel.setText(me.pingLabel, me.currentServerPing);
 
-	print(me.currentServerCName, "\n");
-
 	s = crypto_getidfp(me.currentServerCName);
 	if not(s)
 		s = "N/A";
