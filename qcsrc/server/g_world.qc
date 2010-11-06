@@ -360,6 +360,7 @@ void cvar_changes_init()
 		BADCVAR("g_runematch_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
+		BADCVAR("sv_checkforpacketsduringsleep");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("prvm_");
