@@ -1882,8 +1882,7 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 	float a;
 	if(autocvar__hud_configure)
 	{
-		if(itemcode == 2)
-			currently_selected = true; //rockets always selected
+		currently_selected = (itemcode == 2); //rockets always selected
 		a = 100;
 	}
 	else
@@ -1901,49 +1900,29 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 	else
 		alpha = 0.7;
 
-	vector newSize, newPos;
-	if(mySize_x/mySize_y > 3)
-	{
-		newSize_x = 3 * mySize_y;
-		newSize_y = mySize_y;
-
-		newPos_x = myPos_x + (mySize_x - newSize_x) / 2;
-		newPos_y = myPos_y;
-	}
-	else
-	{
-		newSize_y = 1/3 * mySize_x;
-		newSize_x = mySize_x;
-
-		newPos_y = myPos_y + (mySize_y - newSize_y) / 2;
-		newPos_x = myPos_x;
-	}
-
 	vector picpos, numpos;
 	if(autocvar_hud_panel_ammo_iconalign)
 	{
-		numpos = newPos;
-		picpos = newPos + eX * 2 * newSize_y;
+		numpos = myPos;
+		picpos = myPos + eX * 2 * mySize_y;
 	}
 	else
 	{
-		numpos = newPos + eX * newSize_y;
-		picpos = newPos;
+		numpos = myPos + eX * mySize_y;
+		picpos = myPos;
 	}
 
 	if (currently_selected)
-		drawpic_aspect_skin(newPos, "ammo_current_bg", newSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(myPos, "ammo_current_bg", mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
-	drawfont = hud_bigfont;
 	if(a > 0)
-		drawstring_aspect(numpos, ftos(a), eX * (2/3) * newSize_x + eY * newSize_y, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 	else // "ghost" ammo count
-		drawstring_aspect(numpos, ftos(a), eX * (2/3) * newSize_x + eY * newSize_y, '0 0 0', panel_fg_alpha * alpha * 0.5, DRAWFLAG_NORMAL);
-	drawfont = hud_font;
+		drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * alpha * 0.5, DRAWFLAG_NORMAL);
 	if(a > 0)
-		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 	else // "ghost" ammo icon
-		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * newSize_y, '0 0 0', panel_fg_alpha * alpha * 0.5, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * alpha * 0.5, DRAWFLAG_NORMAL);
 }
 
 void HUD_Ammo(void)
@@ -1964,12 +1943,45 @@ void HUD_Ammo(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
+	float rows, columns, row, column;
+	vector ammo_size;
+	if (autocvar_hud_panel_ammo_onlycurrent)
+		ammo_size = mySize;
+	else
+	{
+		rows = mySize_y/mySize_x;
+		rows = bound(1, floor((sqrt(4 * (3/1) * rows * AMMO_COUNT + rows * rows) + rows + 0.5) / 2), AMMO_COUNT);
+		//                               ^^^ ammo item aspect goes here
+
+		columns = ceil(AMMO_COUNT/rows);
+
+		ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+	}
+
+	vector offset;
+	float newSize;
+	if(ammo_size_x/ammo_size_y > 3)
+	{
+		newSize = 3 * ammo_size_y;
+		offset_x = ammo_size_x - newSize;
+		pos_x += offset_x/2;
+		ammo_size_x = newSize;
+	}
+	else
+	{
+		newSize = 1/3 * ammo_size_x;
+		offset_y = ammo_size_y - newSize;
+		pos_y += offset_y/2;
+		ammo_size_y = newSize;
+	}
+
+	drawfont = hud_bigfont;
 	float i, stat_items, currently_selected;
 	if (autocvar_hud_panel_ammo_onlycurrent)
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, mySize, 2, true); //show rockets
+			DrawAmmoItem(pos, ammo_size, 2, true); //show rockets
 			return;
 		}
 		stat_items = getstati(STAT_ITEMS);
@@ -1977,26 +1989,17 @@ void HUD_Ammo(void)
 			currently_selected = stat_items & GetAmmoItemCode(i);
 			if (currently_selected)
 			{
-				DrawAmmoItem(pos, mySize, i, currently_selected);
+				DrawAmmoItem(pos, ammo_size, i, true);
 				return;
 			}
 		}
 		return; // nothing to display
 	}
 
-	float rows, columns;
-	rows = mySize_y/mySize_x;
-	rows = bound(1, floor((sqrt(4 * (3/1) * rows * AMMO_COUNT + rows * rows) + rows + 0.5) / 2), AMMO_COUNT);
-	//                               ^^^ ammo item aspect goes here
-
-	columns = ceil(AMMO_COUNT/rows);
-
-	float row, column;
 	stat_items = getstati(STAT_ITEMS);
-	vector ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 	for (i = 0; i < AMMO_COUNT; ++i) {
 		currently_selected = stat_items & GetAmmoItemCode(i);
-		DrawAmmoItem(pos + eX * column * ammo_size_x + eY * row * ammo_size_y, ammo_size, i, currently_selected);
+		DrawAmmoItem(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, i, currently_selected);
 		++row;
 		if(row >= rows)
 		{
@@ -2004,6 +2007,7 @@ void HUD_Ammo(void)
 			column = column + 1;
 		}
 	}
+	drawfont = hud_font;
 }
 
 void DrawNumIcon(float iconalign, vector myPos, vector mySize, float x, string icon, float left, vector color, float alpha)
