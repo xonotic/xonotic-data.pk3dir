@@ -1663,8 +1663,8 @@ void HUD_Weapons(void)
 	float fullammo_shells, fullammo_nails, fullammo_rockets, fullammo_cells, fullammo_fuel;
 	vector ammo_color;
 	float ammo_alpha;
-	float barsize_x, barsize_y;
 	wpnsize = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
+	float barsize_x, barsize_y, baroffset_x, baroffset_y;
 	float show_ammo = cvar("hud_panel_weapons_ammo");
 	if (show_ammo)
 	{
@@ -1676,15 +1676,18 @@ void HUD_Weapons(void)
 		ammo_color = stov(cvar_string("hud_panel_weapons_ammo_color"));
 		ammo_alpha = panel_fg_alpha * cvar("hud_panel_weapons_ammo_alpha");
 
+
 		if(wpnsize_x/wpnsize_y > aspect)
 		{
 			barsize_x = aspect * wpnsize_y;
 			barsize_y = wpnsize_y;
+			baroffset_x = (wpnsize_x - barsize_x) / 2;
 		}
 		else
 		{
 			barsize_y = 1/aspect * wpnsize_x;
 			barsize_x = wpnsize_x;
+			baroffset_y = (wpnsize_y - barsize_y) / 2;
 		}
 	}
 
@@ -1705,6 +1708,8 @@ void HUD_Weapons(void)
 			for (i = 0; i < acc_levels; ++i)
 				acc_col[i] = stov(cvar_string(strcat("hud_panel_weapons_accuracy_color", ftos(i))));
 	}
+
+	float weapons_st = getstati(STAT_WEAPONS);
 	float label = cvar("hud_panel_weapons_label");
 
 	for(i = 0; i < weapon_cnt; ++i)
@@ -1745,7 +1750,7 @@ void HUD_Weapons(void)
 		}
 
 		// draw the weapon icon
-		if((self.impulse >= 0) && (getstati(STAT_WEAPONS) & self.weapons))
+		if((weapid >= 0) && (weapons_st & self.weapons))
 		{
 			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '1 1 1', wpnalpha, DRAWFLAG_NORMAL);
 
@@ -1773,21 +1778,9 @@ void HUD_Weapons(void)
 						default: fullammo = 60;
 					}
 
-					float barpos_x, barpos_y;
-					if(wpnsize_x/wpnsize_y > aspect)
-					{
-						barpos_x = wpnpos_x + (wpnsize_x - barsize_x) / 2;
-						barpos_y = wpnpos_y;
-					}
-					else
-					{
-						barpos_y = wpnpos_y + (wpnsize_y - barsize_y) / 2;
-						barpos_x = wpnpos_x;
-					}
-
 					drawsetcliparea(
-						barpos_x,
-						barpos_y,
+						wpnpos_x + baroffset_x,
+						wpnpos_y + baroffset_y,
 						barsize_x * bound(0, a/fullammo, 1),
 						barsize_y);
 					drawpic_aspect_skin(wpnpos, "weapon_ammo", wpnsize, ammo_color, ammo_alpha, DRAWFLAG_NORMAL);
