@@ -994,8 +994,37 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 						a = bound(0, tfloorforce + (1-tfloorforce) * hitratio, 1);
 						force = force * a;
 
-						if(deathtype == WEP_LASER && cvar("g_balance_laser_force_zscale")) // scale laser push force on the z-axis
-							force_z = force_z * cvar("g_balance_laser_force_zscale");
+						// laser force adjustments :P
+						if(DEATH_WEAPONOF(deathtype) == WEP_LASER)
+						{
+							vector vel;
+
+							float force_zscale;
+							float force_velocitybiasramp;
+							float force_velocitybias;
+
+							force_velocitybiasramp = cvar("sv_maxspeed");
+							if(deathtype & HITTYPE_SECONDARY)
+							{
+								force_zscale = cvar("g_balance_laser_secondary_force_zscale");
+								force_velocitybias = cvar("g_balance_laser_secondary_force_velocitybias");
+							}
+							else
+							{
+								force_zscale = cvar("g_balance_laser_primary_force_zscale");
+								force_velocitybias = cvar("g_balance_laser_primary_force_velocitybias");
+							}
+
+							vel = targ.velocity;
+							vel_z = 0;
+							vel = normalize(vel) * bound(0, vlen(vel) / force_velocitybiasramp, 1) * force_velocitybias;
+							force =
+								vlen(force)
+								*
+								normalize(normalize(force) + vel);
+
+							force_z *= force_zscale;
+						}
 
 						//if (targ == attacker)
 						//{
