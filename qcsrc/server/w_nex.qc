@@ -46,12 +46,12 @@ void W_Nex_Attack (float issecondary)
 	if(cvar("g_balance_nex_charge"))
 	{
 		charge = cvar("g_balance_nex_charge_mindmg") / mydmg + (1 - cvar("g_balance_nex_charge_mindmg") / mydmg) * self.nex_charge;
-		self.nex_charge *= cvar("g_balance_nex_charge_shot_multiplier"); // do this AFTER setting mydmg/myforce
+		self.nex_charge = self.nex_charge * cvar("g_balance_nex_charge_shot_multiplier"); // do this AFTER setting mydmg/myforce
 	}
 	else
 		charge = 1;
-	mydmg *= charge;
-	myforce *= charge;
+	mydmg = mydmg * charge;
+	myforce = myforce * charge;
 
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
 
@@ -86,6 +86,7 @@ float w_nex(float req)
 	{
 		if(cvar("g_balance_nex_charge") && self.nex_charge < cvar("g_balance_nex_charge_limit"))
 			self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_charge_rate") * frametime / W_TICSPERFRAME);
+
 		if (self.BUTTON_ATCK)
 		{
 			if (weapon_prepareattack(0, cvar("g_balance_nex_primary_refire")))
