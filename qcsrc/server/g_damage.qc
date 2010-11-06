@@ -993,6 +993,10 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 						finaldmg = finaldmg * a;
 						a = bound(0, tfloorforce + (1-tfloorforce) * hitratio, 1);
 						force = force * a;
+
+						if(deathtype == WEP_LASER && cvar("g_balance_laser_force_zscale")) // scale laser push force on the z-axis
+							force_z = force_z * cvar("g_balance_laser_force_zscale");
+
 						//if (targ == attacker)
 						//{
 						//	print("hits ", ftos(hits), " / ", ftos(total));
