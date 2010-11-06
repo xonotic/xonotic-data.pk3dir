@@ -907,6 +907,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		{
 			t = car(s); s = cdr(s);
 			if     (t == "weapons") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
+			else if(t == "new_toys") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
 			else
 				dprint("Map ", pFilename, " supports unknown feature ", t, ", ignored\n");
 		}
@@ -1029,8 +1030,9 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 	{
 		if(!(MapInfo_Map_supportedGametypes & pGametypeToSet))
 		{
-			print("Can't select the requested game type. Trying anyway with stupid settings.\n");
-			_MapInfo_Map_ApplyGametypeEx("", pGametypeToSet, MAPINFO_TYPE_DEATHMATCH);
+			error("Can't select the requested game type. This should never happen as the caller should prevent it!\n");
+			//_MapInfo_Map_ApplyGametypeEx("", pGametypeToSet, MAPINFO_TYPE_DEATHMATCH);
+			//return;
 		}
 	}
 
@@ -1232,6 +1234,8 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 		{
 			print("Mapinfo system is not functional at all. Assuming deathmatch.\n");
 			MapInfo_Map_supportedGametypes = MAPINFO_TYPE_DEATHMATCH;
+			_MapInfo_Map_ApplyGametypeEx("", t0, t0);
+			return; // do not call Get_ByName!
 		}
 
 		t = 1;
@@ -1245,12 +1249,9 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 		if(cvar("g_mapinfo_allow_unsupported_modes_and_let_stuff_break"))
 		{
 			print("EMERGENCY: can't play the selected map in the given game mode. Working with only the override settings.\n");
-			cvar_set("timelimit", "0");
-			cvar_set("fraglimit", "0");
-			cvar_set("g_tdm_teams", "2");
-			cvar_set("g_keyhunt_teams", "3");
-			cvar_set("g_race_qualifying_timelimit", "0");
-			cvar_set("leadlimit", "0");
+			cvar_settemp_restore();
+			_MapInfo_Map_ApplyGametypeEx("", t0, t0);
+			return; // do not call Get_ByName!
 		}
 		else
 		{
