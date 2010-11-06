@@ -46,12 +46,13 @@ void W_Nex_Attack (float issecondary)
 	if(cvar("g_balance_nex_charge"))
 	{
 		charge = cvar("g_balance_nex_charge_mindmg") / mydmg + (1 - cvar("g_balance_nex_charge_mindmg") / mydmg) * self.nex_charge;
-		self.nex_charge = self.nex_charge * cvar("g_balance_nex_charge_shot_multiplier"); // do this AFTER setting mydmg/myforce
+		self.nex_charge *= cvar("g_balance_nex_charge_shot_multiplier"); // do this AFTER setting mydmg/myforce
+		                                                                 // O RLY? -- divVerent
 	}
 	else
 		charge = 1;
-	mydmg = mydmg * charge;
-	myforce = myforce * charge;
+	mydmg *= charge;
+	myforce *= charge;
 
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
 
