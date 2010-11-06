@@ -267,3 +267,5 @@ float bgmtime;
 
 string weaponorder_byimpulse;
 string weaponorder_bypriority;
+
+float nex_charge_movingavg;

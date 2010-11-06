@@ -350,7 +350,6 @@ vector freeze_pmove_org, freeze_input_angles;
 entity nightvision_noise, nightvision_noise2;
 
 float pickup_crosshair_time, pickup_crosshair_size;
-float nex_charge_movingavg, nex_charge_current_avg;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -858,6 +857,9 @@ void CSQC_UpdateView(float w, float h)
 
 			float nex_charge;
 			nex_charge = getstatf(STAT_NEX_CHARGE);
+
+			if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
+				nex_charge_movingavg = nex_charge;
 
 			// ring around crosshair representing bullets left in camping rifle clip
 			if (activeweapon == WEP_CAMPINGRIFLE && cr_maxbullets)
