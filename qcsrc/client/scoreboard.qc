@@ -895,7 +895,6 @@ float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
 	float i;
-	float weapon_hit, weapon_damage, weapon_stats;
 	float weapon_cnt = WEP_COUNT - 3; // either minstanex/nex are hidden, no port-o-launch, no tuba
 	float rows;
 	if(cvar("scoreboard_accuracy_doublerows"))
@@ -942,7 +941,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(getstati(STAT_SWITCHWEAPON) == WEP_MINSTANEX)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
-	float weapon_stats, weapon_number;
+	float weapon_hit, weapon_damage, weapon_stats, weapon_number;
 	// hits
 	weapon_stats = getstati(STAT_DAMAGE_HITS);
 	weapon_number = weapon_stats & 63;
