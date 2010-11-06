@@ -198,19 +198,25 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 			if(cvar("crypto_aeslevel") >= 3)
 				me.currentServerEncrypt = "not supported (can't connect)";
 			else
-				me.currentServerEncrypt = "not supported";
+				me.currentServerEncrypt = "not supported (won't encrypt)";
 			break;
 		case 1:
-			me.currentServerEncrypt = "supported";
+			if(cvar("crypto_aeslevel") >= 2)
+				me.currentServerEncrypt = "supported (will encrypt)";
+			else
+				me.currentServerEncrypt = "supported (won't encrypt)";
 			break;
 		case 2:
-			me.currentServerEncrypt = "requested";
+			if(cvar("crypto_aeslevel") >= 1)
+				me.currentServerEncrypt = "requested (will encrypt)";
+			else
+				me.currentServerEncrypt = "requested (won't encrypt)";
 			break;
 		case 3:
 			if(cvar("crypto_aeslevel") <= 0)
 				me.currentServerEncrypt = "required (can't connect)";
 			else
-				me.currentServerEncrypt = "required";
+				me.currentServerEncrypt = "required (will encrypt)";
 			break;
 	}
 	me.encryptLabel.setText(me.encryptLabel, me.currentServerEncrypt);
