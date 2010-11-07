@@ -741,9 +741,7 @@ void CSQC_UpdateView(float w, float h)
 			string wcross_wep, wcross_name;
 			float wcross_scale, wcross_blur;
 
-			wcross_color_x = cvar("crosshair_color_red");
-			wcross_color_y = cvar("crosshair_color_green");
-			wcross_color_z = cvar("crosshair_color_blue");
+			wcross_color = stov(cvar_string("crosshair_color"));
 			if (cvar("crosshair_per_weapon")) {
 				e = get_weaponinfo(activeweapon);
 				if (e && e.netname != "")
@@ -761,11 +759,7 @@ void CSQC_UpdateView(float w, float h)
 						wcross_style = e.netname;
 
 					if(!cvar("crosshair_color_override"))
-					{
-						wcross_color_x = cvar(strcat("crosshair_", wcross_wep, "_color_red"));
-						wcross_color_y = cvar(strcat("crosshair_", wcross_wep, "_color_green"));
-						wcross_color_z = cvar(strcat("crosshair_", wcross_wep, "_color_blue"));
-					}
+						wcross_color = stov(cvar_string(strcat("crosshair_", wcross_wep, "_color")));
 				}
 			}
 
