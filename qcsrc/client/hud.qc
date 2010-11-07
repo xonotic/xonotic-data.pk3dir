@@ -2643,9 +2643,14 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			HUD_KillNotify_Push(s1, s2, 1, type);
-			if (alsoprint)
-				print("^1", sprintf(Weapon_KillMessage(type), strcat(s2, "^1"), strcat(s1, "^1")), "\n"); // default order: victim, killer
+			if(type & HITTYPE_HEADSHOT)
+				HUD_KillNotify_Push(s1, s2, 1, DEATH_HEADSHOT);
+			else
+			{
+				HUD_KillNotify_Push(s1, s2, 1, type);
+				if (alsoprint)
+					print("^1", sprintf(Weapon_KillMessage(type), strcat(s2, "^1"), strcat(s1, "^1")), "\n"); // default order: victim, killer
+			}
 		}
 		else if(type == KILL_TEAM_RED || type == KILL_TEAM_BLUE || type == KILL_TEAM_SPREE) {
 			HUD_KillNotify_Push(s1, s2, 1, type);
@@ -3272,6 +3277,10 @@ void HUD_Notify (void)
 			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
 			{
 				s = "notify_void";
+			}
+			else if(killnotify_deathtype[j] == DEATH_HEADSHOT)
+			{
+				s = "notify_headshot";
 			}
 			else if(killnotify_deathtype[j] == RACE_SERVER_RECORD)
 			{
