@@ -13,6 +13,9 @@ float Violence_GibSplash_SendEntity(entity to, float sf)
 // TODO maybe convert this to a TE?
 void Violence_GibSplash_At(vector org, vector dir, float type, float amount, entity gibowner, entity attacker)
 {
+	if(g_cts) // no gibs in CTS
+		return;
+
 	entity e;
 
 	e = spawn();

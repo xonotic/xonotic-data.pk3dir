@@ -858,6 +858,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 {
 	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, privatemsgprefix;
 	float flood, privatemsgprefixlen;
+	var .float flood_field;
 	entity head;
 	float ret;
 
@@ -939,7 +940,6 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		float flood_spl;
 		float flood_burst;
 		float flood_lmax;
-		var .float flood_field;
 		float lines;
 		if(privatesay)
 		{
@@ -1001,10 +1001,10 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 			else
 				flood = 1;
 		}
-	}
 
-	if (timeoutStatus == 2) //when game is paused, no flood protection
-		source.flood_field = flood = 0;
+		if (timeoutStatus == 2) //when game is paused, no flood protection
+			source.flood_field = flood = 0;
+	}
 
 	if(flood == 2) // cannot happen for empty msgstr
 	{

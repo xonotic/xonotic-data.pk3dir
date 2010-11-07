@@ -2647,6 +2647,9 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	alsoprint = (cvar("hud_panel_notify_print") || !panel_enabled); // print message to console if: notify panel disabled, or cvar to do so enabled
 	gentle = (cvar("cl_gentle") || cvar("cl_gentle_messages"));
 	
+	if ((msg == MSG_SUICIDE || msg == MSG_KILL || msg == MSG_KILL_ACTION) && gametype == GAME_CTS) // selfkill isn't interesting in CTS and only spams up the notify panel
+		return;
+
 	if(msg == MSG_SUICIDE) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
@@ -2972,6 +2975,19 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if(type == INFO_CAPTUREFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_CAPTUREFLAG);
 			print(s1, "^7 captured the ", s2, s3, "\n");
+		}
+	} else if(msg == MSG_RACE) {
+		if(type == RACE_SERVER_RECORD) {
+			HUD_KillNotify_Push(s1, s2, 1, RACE_SERVER_RECORD);
+		}
+		else if(type == RACE_NEW_RANK) {
+			HUD_KillNotify_Push(s1, s2, 1, RACE_NEW_RANK);
+		}
+		else if(type == RACE_NEW_TIME) {
+			HUD_KillNotify_Push(s1, s2, 1, RACE_NEW_TIME);
+		}
+		else if(type == RACE_FAIL) {
+			HUD_KillNotify_Push(s1, s2, 1, RACE_FAIL);
 		}
 	}
 }
@@ -3310,6 +3326,22 @@ void HUD_Notify (void)
 			{
 				s = "notify_void";
 			}
+			else if(killnotify_deathtype[j] == RACE_SERVER_RECORD)
+			{
+				s = "race_newrecordserver";
+			}
+			else if(killnotify_deathtype[j] == RACE_NEW_RANK)
+			{
+				s = "race_newrankyellow";
+			}
+			else if(killnotify_deathtype[j] == RACE_NEW_TIME)
+			{
+				s = "race_newtime";
+			}
+			else if(killnotify_deathtype[j] == RACE_FAIL)
+			{
+				s = "race_newfail";
+			}
 			if(s != "" && a)
 			{
 				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
@@ -3538,6 +3570,7 @@ void HUD_Score(void)
 	}
 
 	float score, distribution, leader;
+	string sign;
 	vector distribution_color;
 	entity tm, pl, me;
 	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
@@ -3559,15 +3592,17 @@ void HUD_Score(void)
 			// distribution display
 			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
 
-			distrtimer = ftos(distribution/pow(10, TIME_DECIMALS));
+			distrtimer = ftos_decimals(fabs(distribution/pow(10, TIME_DECIMALS)), TIME_DECIMALS);
 
 			if (distribution <= 0) {
 				distribution_color = '0 1 0';
+				sign = "-";
 			}
 			else {
 				distribution_color = '1 0 0';
+				sign = "+";
 			}
-			drawstring_aspect(pos + eX * 0.75 * mySize_x, distrtimer, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(pos + eX * 0.75 * mySize_x, strcat(sign, distrtimer), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		// race record display
 		if (distribution <= 0)
@@ -3800,6 +3835,12 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+	{
+		vote_active = 1;
+		vote_called_vote = strzone(strcat("^2Name ^7instead of \"^1Unregistered player\"", " ^7in stats"));
+	}
+
 	if(!autocvar_hud_panel_vote && !autocvar__hud_configure)
 		return;
 
@@ -3842,6 +3883,12 @@ void HUD_VoteWindow(void)
 	pos = panel_pos;
 	mySize = panel_size;
 
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+	{
+		panel_pos = eX * 0.3 * vid_conwidth + eY * 0.1 * vid_conheight;
+		panel_size = eX * 0.4 * vid_conwidth + eY * 0.3 * vid_conheight;
+	}
+
 	a = vote_alpha * bound(cvar("hud_panel_vote_alreadyvoted_alpha"), 1 - vote_highlighted, 1);
 	HUD_Panel_DrawBg(a);
 	a = panel_fg_alpha * a;
@@ -3871,16 +3918,22 @@ void HUD_VoteWindow(void)
 	mySize = newSize;
 
 	s = "A vote has been called for:";
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+		s = "Allow servers to store and display your name?";
 	drawstring_aspect(pos, s, eX * mySize_x + eY * (2/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
-	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (1.75/8), stringwidth_colors);
+	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (1/8), stringwidth_colors);
 	if(autocvar__hud_configure)
 		s = "^1Configure the HUD";
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, a, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
 	s = strcat("Yes (", getcommandkey("vyes", "vyes"), "): ", ftos(vote_yescount));
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+		s = strcat("Yes: (press y)");
 	drawstring_aspect(pos + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '0 1 0', a, DRAWFLAG_NORMAL);
 	s = strcat("No (", getcommandkey("vno", "vno"), "): ", ftos(vote_nocount));
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+		s = strcat("No: (press n)");
 	drawstring_aspect(pos + eX * 0.5 * mySize_x + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '1 0 0', a, DRAWFLAG_NORMAL);
 
 	// draw the progress bar backgrounds
@@ -5003,6 +5056,7 @@ switch (id) {\
 
 void HUD_Main (void)
 {
+	float i;
 	// global hud alpha fade
 	if(menu_enabled == 1)
 		hud_fade_alpha = 1;
@@ -5033,7 +5087,6 @@ void HUD_Main (void)
 	// HUD configure visible grid
 	if(autocvar__hud_configure && autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
 	{
-		float i;
 		// x-axis
 		for(i = 0; i < 1/bound(0.005, autocvar_hud_configure_grid_xsize, 0.2); ++i)
 		{

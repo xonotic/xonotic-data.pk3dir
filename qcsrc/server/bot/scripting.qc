@@ -101,7 +101,7 @@ entity bot_getplace(string placename)
 	{
 		e = find(world, targetname, placename);
 		if(!e)
-			print("invalid place ", s, "\n");
+			print("invalid place ", placename, "\n");
 		return e;
 	}
 }

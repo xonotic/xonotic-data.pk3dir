@@ -266,7 +266,7 @@ void RaceCarPhysics()
 	// using this move type for "big rigs"
 	// the engine does not push the entity!
 
-	float accel, steer, f;
+	float accel, steer, f, myspeed, steerfactor;
 	vector angles_save, rigvel;
 
 	angles_save = self.angles;
@@ -292,7 +292,7 @@ void RaceCarPhysics()
 
 	if(self.flags & FL_ONGROUND || g_bugrigs_air_steering)
 	{
-		float myspeed, upspeed, steerfactor, accelfactor;
+		float upspeed, accelfactor;
 
 		myspeed = self.velocity * v_forward;
 		upspeed = self.velocity * v_up;
@@ -671,6 +671,7 @@ void SpecialCommand()
 
 float speedaward_speed;
 string speedaward_holder;
+string speedaward_uid;
 void race_send_speedaward(float msg)
 {
 	// send the best speed of the round
@@ -683,6 +684,7 @@ void race_send_speedaward(float msg)
 
 float speedaward_alltimebest;
 string speedaward_alltimebest_holder;
+string speedaward_alltimebest_uid;
 void race_send_speedaward_alltimebest(float msg)
 {
 	// send the best speed
@@ -1304,6 +1306,7 @@ void SV_PlayerPhysics()
 		if(vlen(self.velocity - self.velocity_z * '0 0 1') > speedaward_speed) {
 			speedaward_speed = vlen(self.velocity - self.velocity_z * '0 0 1');
 			speedaward_holder = self.netname;
+			speedaward_uid = self.crypto_idfp;
 			speedaward_lastupdate = time;
 		}
 		if(speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1) {
@@ -1317,8 +1320,9 @@ void SV_PlayerPhysics()
 			if (speedaward_speed > speedaward_alltimebest) {
 				speedaward_alltimebest = speedaward_speed;
 				speedaward_alltimebest_holder = speedaward_holder;
+				speedaward_alltimebest_uid = speedaward_uid;
 				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed"), ftos(speedaward_alltimebest));
-				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/netname"), speedaward_alltimebest_holder);
+				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp"), speedaward_alltimebest_uid);
 				race_send_speedaward_alltimebest(MSG_ALL);
 			}
 		}

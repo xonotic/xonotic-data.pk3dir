@@ -1,18 +1,18 @@
-float MAPINFO_TYPE_CTF				= 1;
-float MAPINFO_TYPE_ASSAULT			= 2;
-float MAPINFO_TYPE_ONSLAUGHT		= 4;
-float MAPINFO_TYPE_RACE				= 8;
-float MAPINFO_TYPE_DEATHMATCH		= 16;
-float MAPINFO_TYPE_TEAM_DEATHMATCH	= 32;
-float MAPINFO_TYPE_DOMINATION		= 64;
-float MAPINFO_TYPE_RUNEMATCH		= 128;
-float MAPINFO_TYPE_LMS				= 256;
-float MAPINFO_TYPE_ARENA			= 512;
-float MAPINFO_TYPE_KEYHUNT			= 1024;
-float MAPINFO_TYPE_NEXBALL          = 2048;
-float MAPINFO_TYPE_CTS              = 4096;
-float MAPINFO_TYPE_CA				= 8192;
-float MAPINFO_TYPE_ALL              = 16383; // this has to include all above bits
+float MAPINFO_TYPE_DEATHMATCH		= 1;
+float MAPINFO_TYPE_LMS			= 2;
+float MAPINFO_TYPE_ARENA		= 4;
+float MAPINFO_TYPE_RUNEMATCH		= 8;
+float MAPINFO_TYPE_RACE			= 16;
+float MAPINFO_TYPE_CTS			= 32;
+float MAPINFO_TYPE_TEAM_DEATHMATCH	= 64;
+float MAPINFO_TYPE_CTF			= 128;
+float MAPINFO_TYPE_CA			= 256;
+float MAPINFO_TYPE_DOMINATION		= 512;
+float MAPINFO_TYPE_KEYHUNT		= 1024;
+float MAPINFO_TYPE_ASSAULT		= 2048;
+float MAPINFO_TYPE_ONSLAUGHT		= 4096;
+float MAPINFO_TYPE_NEXBALL		= 8192;
+float MAPINFO_TYPE_ALL			= 16383; // this has to include all above bits
 
 float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps
 

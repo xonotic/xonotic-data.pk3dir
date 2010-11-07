@@ -68,3 +68,5 @@ var float autocvar_hud_panel_infomessages;
 var float autocvar_hud_panel_infomessages_flip;
 
 var float autocvar_scoreboard_border_thickness;
+
+var float autocvar_cl_allow_uid2name;

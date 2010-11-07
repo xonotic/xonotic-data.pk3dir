@@ -4983,7 +4983,7 @@ size 16 16
 alpha 256 256 0
 originjitter 2 2 2
 lightradius 50
-lightradiusfade 200
+lightradiusfade 500
 lightcolor 3.125 4.375 10
 effect electro_lightning
 count 300

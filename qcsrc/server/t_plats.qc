@@ -423,12 +423,6 @@ void func_bobbing_controller_think()
 		self.owner.velocity = (v - self.owner.origin) * 10;
 };
 
-void bobbing_blocked()
-{
-	// no need to duplicate code
-	generic_plat_blocked();
-}
-
 /*QUAKED spawnfunc_func_bobbing (0 .5 .8) ? X_AXIS Y_AXIS
 Brush model that moves back and forth on one axis (default Z).
 speed : how long one cycle takes in seconds (default 4)
@@ -458,7 +452,7 @@ void spawnfunc_func_bobbing()
 	self.active = ACTIVE_ACTIVE;
 
 	// damage when blocked
-	self.blocked = bobbing_blocked;
+	self.blocked = generic_plat_blocked;
 	if(self.dmg & (!self.message))
 		self.message = " was squished";
     if(self.dmg && (!self.message2))
@@ -489,6 +483,81 @@ void spawnfunc_func_bobbing()
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
+
+	// TODO make a reset function for this one
+};
+
+.float freq;
+void func_pendulum_controller_think()
+{
+	local float v;
+	self.nextthink = time + 0.1;
+
+	if not (self.owner.active == ACTIVE_ACTIVE)
+	{
+		self.owner.avelocity_x = 0;
+		return;
+	}
+
+	// calculate sinewave using makevectors
+	makevectors((self.nextthink * self.owner.freq + self.owner.phase) * '0 360 0');
+	v = self.owner.speed * v_forward_y + self.cnt;
+	if(self.owner.classname == "func_pendulum") // don't brake stuff if the func_bobbing was killtarget'ed
+	{
+		// * 10 so it will arrive in 0.1 sec
+		self.owner.avelocity_z = (remainder(v - self.owner.angles_z, 360)) * 10;
+	}
+};
+
+void spawnfunc_func_pendulum()
+{
+	local entity controller;
+	if (self.noise != "")
+	{
+		precache_sound(self.noise);
+		soundto(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+	}
+
+	self.active = ACTIVE_ACTIVE;
+
+	// keys: angle, speed, phase, noise, freq
+
+	if(!self.speed)
+		self.speed = 30;
+	// not initializing self.dmg to 2, to allow damageless pendulum
+
+	if(self.dmg & (!self.message))
+		self.message = " was squished";
+	if(self.dmg && (!self.message2))
+		self.message2 = "was squished by";
+	if(self.dmg && (!self.dmgtime))
+		self.dmgtime = 0.25;
+	self.dmgtime2 = time;
+
+	self.blocked = generic_plat_blocked;
+
+	if not(InitMovingBrushTrigger())
+		return;
+
+	if(!self.freq)
+	{
+		// find pendulum length (same formula as Q3A)
+		self.freq = 1 / (M_PI * 2) * sqrt(cvar("sv_gravity") / (3 * max(8, fabs(self.mins_z))));
+	}
+
+	// copy initial angle
+	self.cnt = self.angles_z;
+
+	// wait for targets to spawn
+	controller = spawn();
+	controller.classname = "func_pendulum_controller";
+	controller.owner = self;
+	controller.nextthink = time + 1;
+	controller.think = func_pendulum_controller_think;
+	self.nextthink = self.ltime + 999999999;
+	self.think = SUB_Null;
+
+	//self.effects |= EF_LOWPRECISION;
 
 	// TODO make a reset function for this one
 };
