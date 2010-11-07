@@ -741,27 +741,30 @@ void CSQC_UpdateView(float w, float h)
 			string wcross_wep, wcross_name;
 			float wcross_scale, wcross_blur;
 
-			wcross_color = stov(cvar_string("crosshair_color"));
-			if (cvar("crosshair_per_weapon")) {
+			if (cvar("crosshair_per_weapon") || cvar("crosshair_color_per_weapon")) {
 				e = get_weaponinfo(activeweapon);
 				if (e && e.netname != "")
 				{
 					wcross_wep = e.netname;
-					wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
-					if (wcross_resolution == 0)
-						return;
-					wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_alpha"));
-					if (wcross_alpha == 0)
-						return;
+					if(cvar("crosshair_per_weapon"))
+					{
+						wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
+						if (wcross_resolution == 0)
+							return;
+						wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_alpha"));
+						if (wcross_alpha == 0)
+							return;
 
-					wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
-					if(wcross_style == "")
-						wcross_style = e.netname;
-
-					if(!cvar("crosshair_color_override"))
-						wcross_color = stov(cvar_string(strcat("crosshair_", wcross_wep, "_color")));
+						wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
+						if(wcross_style == "" || wcross_style == "0")
+							wcross_style = wcross_wep;
+					}
 				}
 			}
+			if(wcross_wep != "" && cvar("crosshair_color_per_weapon"))
+				wcross_color = stov(cvar_string(strcat("crosshair_", wcross_wep, "_color")));
+			else
+				wcross_color = stov(cvar_string("crosshair_color"));
 
 			wcross_name = strcat("gfx/crosshair", wcross_style);
 

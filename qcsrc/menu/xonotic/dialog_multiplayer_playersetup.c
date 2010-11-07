@@ -109,10 +109,8 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			e0.textEntity = main.weaponsDialog;
 			e0.allowCut = 1;
 	me.TR(me);
-		me.TD(me, 1, 0.75, e = makeXonoticTextLabel(0, "Crosshair:"));
-		me.TD(me, 1, 1.00, e = makeXonoticCheckBox(0, "crosshair_per_weapon", "Per weapon"));
-		me.TD(me, 1, 1.25, e = makeXonoticCheckBox(1, "crosshair_color_override", "& Per weapon colors"));
-		setDependent(e, "crosshair_per_weapon", 1, 1);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair:"));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "crosshair_per_weapon", "Per weapon"));
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		for(i = 1; i <= 10; ++i) {
@@ -137,7 +135,10 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair color:"));
 		me.TD(me, 2, 1.8, e = makeXonoticColorpickerString("crosshair_color"));
-		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
+		setDependent(e, "crosshair_color_per_weapon", 1, 1);
+	me.TR(me);
+		me.TDempty(me, 0.3);
+		me.TD(me, 1, 0.7, e = makeXonoticCheckBox(0, "crosshair_color_per_weapon", "Per weapon"));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_dot", "Enable centered dot"));
 	me.TR(me);
