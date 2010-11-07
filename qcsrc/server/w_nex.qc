@@ -47,6 +47,7 @@ void W_Nex_Attack (float issecondary)
 	{
 		charge = cvar("g_balance_nex_charge_mindmg") / mydmg + (1 - cvar("g_balance_nex_charge_mindmg") / mydmg) * self.nex_charge;
 		self.nex_charge *= cvar("g_balance_nex_charge_shot_multiplier"); // do this AFTER setting mydmg/myforce
+		                                                                 // O RLY? -- divVerent
 	}
 	else
 		charge = 1;
@@ -86,6 +87,7 @@ float w_nex(float req)
 	{
 		if(cvar("g_balance_nex_charge") && self.nex_charge < cvar("g_balance_nex_charge_limit"))
 			self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_charge_rate") * frametime / W_TICSPERFRAME);
+
 		if (self.BUTTON_ATCK)
 		{
 			if (weapon_prepareattack(0, cvar("g_balance_nex_primary_refire")))

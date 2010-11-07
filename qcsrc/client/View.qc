@@ -858,6 +858,9 @@ void CSQC_UpdateView(float w, float h)
 			float nex_charge;
 			nex_charge = getstatf(STAT_NEX_CHARGE);
 
+			if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
+				nex_charge_movingavg = nex_charge;
+
 			// ring around crosshair representing bullets left in camping rifle clip
 			if (activeweapon == WEP_CAMPINGRIFLE && cr_maxbullets)
 			{
@@ -869,6 +872,15 @@ void CSQC_UpdateView(float w, float h)
 			}
 			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
 			{
+				vector rgb;
+				// indicate how much we're charging right now with an inner circle
+				a = cvar("crosshair_nexvelocity_currentcharge_alpha");
+				nex_charge_movingavg = (1 - cvar("crosshair_nexvelocity_currentcharge_movingavg_rate")) * nex_charge_movingavg + cvar("crosshair_nexvelocity_currentcharge_movingavg_rate") * nex_charge;
+
+				rgb = eX * cvar("crosshair_nexvelocity_currentcharge_color_red") + eY * cvar("crosshair_nexvelocity_currentcharge_color_green") + eZ * cvar("crosshair_nexvelocity_currentcharge_color_blue");
+				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", bound(0, cvar("crosshair_nexvelocity_currentcharge_scale") * (nex_charge - nex_charge_movingavg), 1), rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+
+				// draw the charge
 				a = cvar("crosshair_nexvelocity_alpha");
 				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", nex_charge, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 			}
