@@ -955,7 +955,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		rgb = '1 1 1';
 	else if (acc_col_x[0] == -1)
 		for (i = 0; i < acc_levels; ++i)
-			acc_col[i] = stov(cvar_string(strcat("hud_panel_weapons_accuracy_color", ftos(i))));
+			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{

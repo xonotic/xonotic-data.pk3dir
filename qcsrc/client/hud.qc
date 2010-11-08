@@ -1706,7 +1706,7 @@ void HUD_Weapons(void)
 		weapon_fired[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
 		if (acc_col_x[0] == -1)
 			for (i = 0; i < acc_levels; ++i)
-				acc_col[i] = stov(cvar_string(strcat("hud_panel_weapons_accuracy_color", ftos(i))));
+				acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 	}
 
 	float weapons_st = getstati(STAT_WEAPONS);
