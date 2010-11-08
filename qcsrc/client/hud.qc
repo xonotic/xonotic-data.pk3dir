@@ -3112,18 +3112,25 @@ void HUD_Notify (void)
 	float width_attacker;
 	string attacker, victim;
 
-	float k, i, j, w;
-	float flip = cvar("hud_panel_notify_flip");
-	for(k = 0, j = kn_index;  k < entries;  ++k, ++j)
+	float i, j, w, step, limit;
+	if(cvar("hud_panel_notify_flip")) //order items from the top down
+	{
+		i = 0;
+		step = +1;
+		limit = entries;
+	}
+	else //order items from the bottom up
+	{
+		i = entries - 1;
+		step = -1;
+		limit = -1;
+	}
+	for(j = kn_index;  i != limit;  i += step, ++j)
 	{
 		if (j == KN_MAX_ENTRIES)
 			j = 0;
 
 		s = "";
-		if(flip)
-			i = k;
-		else // rather nasty hack for ordering items from the bottom up
-			i = entries - k - 1;
 
 		if(fadetime)
 		{
@@ -3257,7 +3264,11 @@ void HUD_Notify (void)
 			{
 				attacker = textShortenToWidth("Player1", 0.48 * mySize_x - height, fontsize, stringwidth_colors);
 				victim = textShortenToWidth("Player2", 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-				a = bound(0, (when - k) / 4, 1);
+				if (step == +1)
+					a = i;
+				else // inverse order
+					a = entries - 1 - i;
+				a = bound(0, (when - a) / 4, 1);
 			}
 			else
 			{
