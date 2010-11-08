@@ -2610,34 +2610,27 @@ string Weapon_KillMessage(float deathtype)
 	return w_deathtypestring;
 }
 
-float killnotify_times[10];
-float killnotify_deathtype[10];
-float killnotify_actiontype[10]; // 0 = "Y [used by] X", 1 = "X [did action to] Y"
-string killnotify_attackers[10];
-string killnotify_victims[10];
+#define KN_MAX_ENTRIES 10
+float kn_index;
+float killnotify_times[KN_MAX_ENTRIES];
+float killnotify_deathtype[KN_MAX_ENTRIES];
+float killnotify_actiontype[KN_MAX_ENTRIES]; // 0 = "Y [used by] X", 1 = "X [did action to] Y"
+string killnotify_attackers[KN_MAX_ENTRIES];
+string killnotify_victims[KN_MAX_ENTRIES];
 void HUD_KillNotify_Push(string attacker, string victim, float actiontype, float wpn)
 {
-	float i;
-	for (i = 9; i > 0; --i) {
-		killnotify_times[i] = killnotify_times[i-1];
-		killnotify_deathtype[i] = killnotify_deathtype[i-1];
-		killnotify_actiontype[i] = killnotify_actiontype[i-1];
-		if(killnotify_attackers[i])
-			strunzone(killnotify_attackers[i]);
-		killnotify_attackers[i] = strzone(killnotify_attackers[i-1]);
-		if(killnotify_victims[i])
-			strunzone(killnotify_victims[i]);
-		killnotify_victims[i] = strzone(killnotify_victims[i-1]);
-	}
-	killnotify_times[0] = time;
-	killnotify_deathtype[0] = wpn;
-	killnotify_actiontype[0] = actiontype;
-	if(killnotify_attackers[0])
-		strunzone(killnotify_attackers[0]);
-	killnotify_attackers[0] = strzone(attacker);
-	if(killnotify_victims[0])
-		strunzone(killnotify_victims[0]);
-	killnotify_victims[0] = strzone(victim);
+	--kn_index;
+	if (kn_index == -1)
+		kn_index = KN_MAX_ENTRIES-1;
+	killnotify_times[kn_index] = time;
+	killnotify_deathtype[kn_index] = wpn;
+	killnotify_actiontype[kn_index] = actiontype;
+	if(killnotify_attackers[kn_index])
+		strunzone(killnotify_attackers[kn_index]);
+	killnotify_attackers[kn_index] = strzone(attacker);
+	if(killnotify_victims[kn_index])
+		strunzone(killnotify_victims[kn_index]);
+	killnotify_victims[kn_index] = strzone(victim);
 }
 
 void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s1 = attacker, s2 = victim
@@ -3100,7 +3093,7 @@ void HUD_Notify (void)
 	}
 
 	float entries, height;
-	entries = bound(1, floor(10 * mySize_y/mySize_x), 10);
+	entries = bound(1, floor(KN_MAX_ENTRIES * mySize_y/mySize_x), KN_MAX_ENTRIES);
 	height = mySize_y/entries;
 	
 	vector fontsize;
@@ -3119,15 +3112,18 @@ void HUD_Notify (void)
 	float width_attacker;
 	string attacker, victim;
 
-	float i, j, w;
+	float k, i, j, w;
 	float flip = cvar("hud_panel_notify_flip");
-	for(j = 0; j < entries; ++j)
+	for(k = 0, j = kn_index;  k < entries;  ++k, ++j)
 	{
+		if (j == KN_MAX_ENTRIES)
+			j = 0;
+
 		s = "";
 		if(flip)
-			i = j;
+			i = k;
 		else // rather nasty hack for ordering items from the bottom up
-			i = entries - j - 1;
+			i = entries - k - 1;
 
 		if(fadetime)
 		{
@@ -3261,7 +3257,7 @@ void HUD_Notify (void)
 			{
 				attacker = textShortenToWidth("Player1", 0.48 * mySize_x - height, fontsize, stringwidth_colors);
 				victim = textShortenToWidth("Player2", 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-				a = bound(0, (when - j) / 4, 1);
+				a = bound(0, (when - k) / 4, 1);
 			}
 			else
 			{
