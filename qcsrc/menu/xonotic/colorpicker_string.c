@@ -28,7 +28,7 @@ void XonoticColorpickerString_configureXonoticColorpickerString(entity me, strin
 {
 	me.cvarName = theCvar;
 	me.configureImage(me, me.image);
-	me.prevcoords = '1 1 0';
+	me.prevcoords = color_hslimage(stov(cvar_string(theCvar)), me.imagemargin);
 }
 
 float XonoticColorpickerString_mousePress(entity me, vector coords)
@@ -74,9 +74,7 @@ void XonoticColorpickerString_draw(entity me)
 	sz = draw_PictureSize(strcat(me.src, "_selected"));
 	sz = globalToBoxSize(sz, draw_scale);
 
-	if(me.disabled)
-		me.prevcoords = '1 1 0';
-	else
+	if(!me.disabled)
 		draw_Picture(me.imgOrigin + me.prevcoords - 0.5 * sz, strcat(me.src, "_selected"), sz, '1 1 1', 1);
 	draw_alpha = save;
 }
