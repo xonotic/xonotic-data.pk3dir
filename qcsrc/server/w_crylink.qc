@@ -417,6 +417,7 @@ float w_crylink(float req)
 		}
 		else if(self.BUTTON_ATCK2 && cvar("g_balance_crylink_secondary"))
 		{
+			if (!self.crylink_waitrelease)
 			if (weapon_prepareattack(1, cvar("g_balance_crylink_secondary_refire")))
 			{
 				W_Crylink_Attack2();
