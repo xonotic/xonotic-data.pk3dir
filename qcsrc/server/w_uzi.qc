@@ -181,18 +181,6 @@ void uzi_mode1_fire_burst()
 
 void spawnfunc_weapon_machinegun(); // defined in t_items.qc
 
-/*
-set g_balance_uzi_mode 1
-set g_balance_uzi_spread_min 0.025
-set g_balance_uzi_spread_max 0.85
-set g_balance_uzi_spread_add 0.01
-set g_balance_uzi_burst 5
-set g_balance_uzi_burst_refire 0.05
-set g_balance_uzi_burst_refire2 0.75
-set g_balance_uzi_burst_spread 0.04
-g_balance_uzi_burst_ammo
-*/
-
 float w_uzi(float req)
 {
 	if (req == WR_AIM)
@@ -220,7 +208,7 @@ float w_uzi(float req)
 				{
 					W_SwitchWeapon_Force(self, w_getbestweapon(self));
 					w_ready();
-					return;
+					return FALSE;
 				}
 				
 				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)	
