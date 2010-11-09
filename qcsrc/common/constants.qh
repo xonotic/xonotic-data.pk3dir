@@ -646,3 +646,5 @@ string HUD_PANELNAME_ENGINEINFO	 	= "engineinfo";
 string HUD_PANELNAME_INFOMESSAGES	= "infomessages";
 
 float HUD_MENU_ENABLE		= 0;
+
+#define SERVERFLAG_ALLOW_FULLBRIGHT 1

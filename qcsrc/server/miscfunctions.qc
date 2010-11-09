@@ -1187,6 +1187,10 @@ void readlevelcvars(void)
 	if(cvar("g_rocket_flying"))
 		MUTATOR_ADD(mutator_rocketflying);
 
+	serverflags = 0;
+	if(cvar("sv_allow_fullbright"))
+		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
+
     g_bugrigs = cvar("g_bugrigs");
     g_bugrigs_planar_movement = cvar("g_bugrigs_planar_movement");
     g_bugrigs_planar_movement_car_jumping = cvar("g_bugrigs_planar_movement_car_jumping");

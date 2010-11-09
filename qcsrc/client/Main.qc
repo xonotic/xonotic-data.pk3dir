@@ -1093,6 +1093,8 @@ void Ent_Init()
 	nex_scope = !ReadByte();
 	campingrifle_scope = !ReadByte();
 
+	serverflags = ReadByte();
+
 	if(!postinit)
 		PostInit();
 }
