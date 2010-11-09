@@ -20,6 +20,82 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 	remove (e);
 }
 
+// adjust towards center
+// returns the origin where they will meet... and the time till the meeting is
+// stored in w_crylink_linkjoin_time.
+// could possibly network this origin and time, and display a special particle
+// effect when projectiles meet there :P
+float w_crylink_linkjoin_time;
+vector W_Crylink_LinkJoin(entity e, float joinspeed)
+{
+	vector avg_origin, avg_velocity;
+	vector targ_origin;
+	float avg_dist, n;
+	entity p;
+
+	avg_origin = e.origin;
+	avg_velocity = e.velocity;
+	n = 1;
+	for(p = e; (p = p.queuenext) != e; )
+	{
+		avg_origin += p.origin;
+		avg_velocity += p.velocity;
+		++n;
+	}
+	avg_origin *= (1.0 / n);
+	avg_velocity *= (1.0 / n);
+
+	// yes, mathematically we can do this in ONE step, but beware of 32bit floats...
+	avg_dist = pow(vlen(e.origin - avg_origin), 2);
+	for(p = e; (p = p.queuenext) != e; )
+		avg_dist += pow(vlen(e.origin - avg_origin), 2);
+	avg_dist *= (1.0 / n);
+
+	w_crylink_linkjoin_time = 0;
+	if(avg_dist == 0)
+		return avg_origin; // no change needed
+
+	if(joinspeed == 0)
+	{
+		e.velocity = avg_velocity;
+		UpdateCSQCProjectile(e);
+		for(p = e; (p = p.queuenext) != e; )
+		{
+			p.velocity = avg_velocity;
+			UpdateCSQCProjectile(p);
+		}
+	}
+	else
+	{
+		w_crylink_linkjoin_time = avg_dist / joinspeed;
+		targ_origin = avg_origin + w_crylink_linkjoin_time * avg_velocity;
+
+		e.velocity = (targ_origin - e.origin) * (joinspeed / avg_dist);
+		UpdateCSQCProjectile(e);
+		for(p = e; (p = p.queuenext) != e; )
+		{
+			p.velocity = (targ_origin - p.origin) * (joinspeed / avg_dist);
+			UpdateCSQCProjectile(p);
+		}
+
+		// analysis:
+		//   joinspeed -> +infinity:
+		//      w_crylink_linkjoin_time -> +0
+		//      targ_origin -> avg_origin
+		//      p->velocity -> HUEG towards center
+		//   joinspeed -> 0:
+		//      w_crylink_linkjoin_time -> +/- infinity
+		//      targ_origin -> avg_velocity * +/- infinity
+		//      p->velocity -> avg_velocity
+		//   joinspeed -> -infinity:
+		//      w_crylink_linkjoin_time -> -0
+		//      targ_origin -> avg_origin
+		//      p->velocity -> HUEG away from center
+	}
+
+	return targ_origin;
+}
+
 // NO bounce protection, as bounces are limited!
 void W_Crylink_Touch (void)
 {
