@@ -69,6 +69,7 @@ vector W_Crylink_LinkJoin(entity e, float joinspeed)
 	for(p = e; (p = p.queuenext) != e; )
 		avg_dist += pow(vlen(e.origin - avg_origin), 2);
 	avg_dist *= (1.0 / n);
+	avg_dist = sqrt(avg_dist);
 
 	w_crylink_linkjoin_time = 0;
 	if(avg_dist == 0)
