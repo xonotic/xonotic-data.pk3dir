@@ -449,6 +449,12 @@ void cvar_changes_init()
 			}
 		}
 		++cvar_purechanges_count;
+		// WARNING: this variable is used for the server list
+		// NEVER dare to skip this code!
+		// Hacks to intentionally appearing as "pure server" even though you DO have
+		// modified settings may be punished by removal from the server list.
+		// You can do to the variables cvar_changes and cvar_purechanges all you want,
+		// though.
 	}
 	buf_del(h);
 	if(cvar_changes == "")
