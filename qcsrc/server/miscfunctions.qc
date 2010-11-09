@@ -1184,7 +1184,7 @@ void readlevelcvars(void)
 		MUTATOR_ADD(mutator_nix);
 	if(cvar("g_dodging"))
 		MUTATOR_ADD(mutator_dodging);
-	if(cvar("g_rocket_flying") || (cvar("g_balance_rocketlauncher_detonatedelay") == 0 && stof(cvar_defstring("g_balance_rocketlauncher_detonatedelay")) != 0))
+	if(cvar("g_rocket_flying"))
 		MUTATOR_ADD(mutator_rocketflying);
 
     g_bugrigs = cvar("g_bugrigs");
