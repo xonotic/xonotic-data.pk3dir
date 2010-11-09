@@ -312,12 +312,6 @@ void W_Crylink_Attack (void)
 			self.fade_rate = 1 / cvar("g_balance_crylink_primary_middle_fadetime");
 			proj.nextthink = time + cvar("g_balance_crylink_primary_middle_lifetime") + cvar("g_balance_crylink_primary_middle_fadetime");
 		}
-		else if(counter <= 3)
-		{
-			proj.fade_time = time + cvar("g_balance_crylink_primary_star_lifetime");
-			self.fade_rate = 1 / cvar("g_balance_crylink_primary_star_fadetime");
-			proj.nextthink = time + cvar("g_balance_crylink_primary_star_lifetime") + cvar("g_balance_crylink_primary_star_fadetime");
-		}
 		else
 		{
 			proj.fade_time = time + cvar("g_balance_crylink_primary_other_lifetime");
