@@ -99,7 +99,7 @@ void W_Mine_RemoteExplode ()
 	if(self.owner.deadflag == DEAD_NO)
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
-			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > cvar("g_balance_minelayer_radius")) // safety device
+			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > cvar("g_balance_minelayer_remote_radius")) // safety device
 		)
 		{
 			W_Mine_DoRemoteExplode();
