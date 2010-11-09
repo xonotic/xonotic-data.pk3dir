@@ -173,10 +173,17 @@ void W_Crylink_Touch (void)
 		f = cvar("g_balance_crylink_primary_bouncedamagefactor");
 	if(a)
 		f *= a;
-	if (RadiusDamage (self, self.realowner, cvar("g_balance_crylink_primary_damage") * f, cvar("g_balance_crylink_primary_edgedamage") * f, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * f, self.projectiledeathtype, other) || finalhit)
+	if (RadiusDamage (self, self.realowner, cvar("g_balance_crylink_primary_damage") * f, cvar("g_balance_crylink_primary_edgedamage") * f, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * f, self.projectiledeathtype, other))
 	{
 		W_Crylink_LinkExplode(self.queuenext, self);
 		remove (self);
+		return;
+	}
+	else if(finalhit)
+	{
+		// just unlink
+		W_Crylink_Dequeue(self);
+		remove(self);
 		return;
 	}
 	self.cnt = self.cnt - 1;
