@@ -482,8 +482,14 @@ float w_crylink(float req)
 					linkjoineffect.owner = self;
 					setorigin(linkjoineffect, pos);
 				}
+				self.crylink_waitrelease = 0;
+				if(!w_crylink(WR_CHECKAMMO1) && !w_crylink(WR_CHECKAMMO2))
+				{
+					// ran out of ammo!
+					self.cnt = WEP_CRYLINK;
+					self.switchweapon = w_getbestweapon(self);
+				}
 			}
-			self.crylink_waitrelease = 0;
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -498,9 +504,19 @@ float w_crylink(float req)
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_CRYLINK);
 	else if (req == WR_CHECKAMMO1)
+	{
+		// don't "run out of ammo" and switch weapons while waiting for release
+		if(self.crylink_lastgroup && self.crylink_waitrelease)
+			return TRUE;
 		return self.ammo_cells >= cvar("g_balance_crylink_primary_ammo");
+	}
 	else if (req == WR_CHECKAMMO2)
+	{
+		// don't "run out of ammo" and switch weapons while waiting for release
+		if(self.crylink_lastgroup && self.crylink_waitrelease)
+			return TRUE;
 		return self.ammo_cells >= cvar("g_balance_crylink_secondary_ammo");
+	}
 	return TRUE;
 };
 #endif
