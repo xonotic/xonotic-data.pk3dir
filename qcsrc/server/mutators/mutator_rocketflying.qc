@@ -1,6 +1,6 @@
 MUTATOR_HOOKFUNCTION(rocketflying_EditProjectile)
 {
-	if(other.classname == "rocket")
+	if(other.classname == "rocket" || other.classname == "mine")
 	{
 		// kill detonate delay of rockets
 		other.spawnshieldtime = time;

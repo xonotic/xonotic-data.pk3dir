@@ -3,9 +3,24 @@ REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 #else
 #ifdef SVQC
 .float gravity;
+.float crylink_waitrelease;
+.entity crylink_lastgroup;
 
 .entity queuenext;
 .entity queueprev;
+
+void W_Crylink_Dequeue_Raw(entity own, entity prev, entity me, entity next)
+{
+	if(me == own.crylink_lastgroup)
+		own.crylink_lastgroup = ((me == next) ? world : next);
+	prev.queuenext = next;
+	next.queueprev = prev;
+}
+
+void W_Crylink_Dequeue(entity e)
+{
+	W_Crylink_Dequeue_Raw(e.realowner, e.queueprev, e, e.queuenext);
+}
 
 // force projectile to explode
 void W_Crylink_LinkExplode (entity e, entity e2)
@@ -13,11 +28,92 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 	float a;
 	a = bound(0, 1 - (time - e.fade_time) * e.fade_rate, 1);
 
+	if(e == e.realowner.crylink_lastgroup)
+		e.realowner.crylink_lastgroup = world;
+
 	RadiusDamage (e, e.realowner, cvar("g_balance_crylink_primary_damage") * a, cvar("g_balance_crylink_primary_edgedamage") * a, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * a, e.projectiledeathtype, other);
 
 	if(e.queuenext != e2)
 		W_Crylink_LinkExplode(e.queuenext, e2);
+
 	remove (e);
+}
+
+// adjust towards center
+// returns the origin where they will meet... and the time till the meeting is
+// stored in w_crylink_linkjoin_time.
+// could possibly network this origin and time, and display a special particle
+// effect when projectiles meet there :P
+float w_crylink_linkjoin_time;
+vector W_Crylink_LinkJoin(entity e, float joinspeed)
+{
+	vector avg_origin, avg_velocity;
+	vector targ_origin;
+	float avg_dist, n;
+	entity p;
+
+	avg_origin = e.origin;
+	avg_velocity = e.velocity;
+	n = 1;
+	for(p = e; (p = p.queuenext) != e; )
+	{
+		avg_origin += p.origin;
+		avg_velocity += p.velocity;
+		++n;
+	}
+	avg_origin *= (1.0 / n);
+	avg_velocity *= (1.0 / n);
+
+	// yes, mathematically we can do this in ONE step, but beware of 32bit floats...
+	avg_dist = pow(vlen(e.origin - avg_origin), 2);
+	for(p = e; (p = p.queuenext) != e; )
+		avg_dist += pow(vlen(e.origin - avg_origin), 2);
+	avg_dist *= (1.0 / n);
+	avg_dist = sqrt(avg_dist);
+
+	w_crylink_linkjoin_time = 0;
+	if(avg_dist == 0)
+		return avg_origin; // no change needed
+
+	if(joinspeed == 0)
+	{
+		e.velocity = avg_velocity;
+		UpdateCSQCProjectile(e);
+		for(p = e; (p = p.queuenext) != e; )
+		{
+			p.velocity = avg_velocity;
+			UpdateCSQCProjectile(p);
+		}
+	}
+	else
+	{
+		w_crylink_linkjoin_time = avg_dist / joinspeed;
+		targ_origin = avg_origin + w_crylink_linkjoin_time * avg_velocity;
+
+		e.velocity = (targ_origin - e.origin) * (joinspeed / avg_dist);
+		UpdateCSQCProjectile(e);
+		for(p = e; (p = p.queuenext) != e; )
+		{
+			p.velocity = (targ_origin - p.origin) * (joinspeed / avg_dist);
+			UpdateCSQCProjectile(p);
+		}
+
+		// analysis:
+		//   joinspeed -> +infinity:
+		//      w_crylink_linkjoin_time -> +0
+		//      targ_origin -> avg_origin
+		//      p->velocity -> HUEG towards center
+		//   joinspeed -> 0:
+		//      w_crylink_linkjoin_time -> +/- infinity
+		//      targ_origin -> avg_velocity * +/- infinity
+		//      p->velocity -> avg_velocity
+		//   joinspeed -> -infinity:
+		//      w_crylink_linkjoin_time -> -0
+		//      targ_origin -> avg_origin
+		//      p->velocity -> HUEG away from center
+	}
+
+	return targ_origin;
 }
 
 // NO bounce protection, as bounces are limited!
@@ -26,16 +122,14 @@ void W_Crylink_Touch (void)
 	float finalhit;
 	float f;
 	//PROJECTILE_TOUCH;
-	local entity savenext, saveprev;
+	local entity savenext, saveprev, saveown;
+	saveown = self.realowner;
 	savenext = self.queuenext;
 	saveprev = self.queueprev;
 	if(WarpZone_Projectile_Touch())
 	{
 		if(wasfreed(self))
-		{
-			savenext.queueprev = saveprev;
-			saveprev.queuenext = savenext;
-		}
+			W_Crylink_Dequeue_Raw(saveown, saveprev, self, savenext);
 		return;
 	}
 
@@ -69,16 +163,14 @@ void W_Crylink_Touch2 (void)
 	float finalhit;
 	float f;
 	//PROJECTILE_TOUCH;
-	local entity savenext, saveprev;
+	local entity savenext, saveprev, saveown;
 	savenext = self.queuenext;
 	saveprev = self.queueprev;
+	saveown = self.realowner;
 	if(WarpZone_Projectile_Touch())
 	{
 		if(wasfreed(self))
-		{
-			savenext.queueprev = saveprev;
-			saveprev.queuenext = savenext;
-		}
+			W_Crylink_Dequeue_Raw(saveown, saveprev, self, savenext);
 		return;
 	}
 
@@ -92,10 +184,17 @@ void W_Crylink_Touch2 (void)
 		f = cvar("g_balance_crylink_secondary_bouncedamagefactor");
 	if(a)
 		f *= a;
-	if (RadiusDamage (self, self.realowner, cvar("g_balance_crylink_secondary_damage") * f, cvar("g_balance_crylink_secondary_edgedamage") * f, cvar("g_balance_crylink_secondary_radius"), world, cvar("g_balance_crylink_secondary_force") * f, self.projectiledeathtype, other) || finalhit)
+	if (RadiusDamage (self, self.realowner, cvar("g_balance_crylink_secondary_damage") * f, cvar("g_balance_crylink_secondary_edgedamage") * f, cvar("g_balance_crylink_secondary_radius"), world, cvar("g_balance_crylink_secondary_force") * f, self.projectiledeathtype, other))
 	{
 		W_Crylink_LinkExplode(self.queuenext, self);
 		remove (self);
+		return;
+	}
+	else if(finalhit)
+	{
+		// just unlink
+		W_Crylink_Dequeue(self);
+		remove(self);
 		return;
 	}
 	self.cnt = self.cnt - 1;
@@ -109,8 +208,7 @@ void W_Crylink_Touch2 (void)
 
 void W_Crylink_Fadethink (void)
 {
-	self.queuenext.queueprev = self.queueprev;
-	self.queueprev.queuenext = self.queuenext;
+	W_Crylink_Dequeue(self);
 	remove(self);
 }
 
@@ -131,6 +229,7 @@ void W_Crylink_Attack (void)
 
 	shots = cvar("g_balance_crylink_primary_shots");
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	proj = world;
 	while (counter < shots)
 	{
 		proj = spawn ();
@@ -210,6 +309,7 @@ void W_Crylink_Attack (void)
 
 		counter = counter + 1;
 	}
+	self.crylink_lastgroup = proj;
 }
 
 void W_Crylink_Attack2 (void)
@@ -224,6 +324,7 @@ void W_Crylink_Attack2 (void)
 
 	shots = cvar("g_balance_crylink_secondary_shots");
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	proj = world;
 	while (counter < shots)
 	{
 		proj = spawn ();
@@ -285,6 +386,7 @@ void W_Crylink_Attack2 (void)
 
 		counter = counter + 1;
 	}
+	self.crylink_lastgroup = proj;
 }
 
 void spawnfunc_weapon_crylink (void)
@@ -304,16 +406,45 @@ float w_crylink(float req)
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, cvar("g_balance_crylink_primary_refire")))
 		{
-			W_Crylink_Attack();
-			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_crylink_primary_animtime"), w_ready);
+			if (!self.crylink_waitrelease)
+			if (weapon_prepareattack(0, cvar("g_balance_crylink_primary_refire")))
+			{
+				W_Crylink_Attack();
+				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_crylink_primary_animtime"), w_ready);
+				if(cvar("g_balance_crylink_primary_joinspeed") != 0)
+					self.crylink_waitrelease = 1;
+			}
 		}
-		if (self.BUTTON_ATCK2 && cvar("g_balance_crylink_secondary"))
-		if (weapon_prepareattack(1, cvar("g_balance_crylink_secondary_refire")))
+		else if(self.BUTTON_ATCK2 && cvar("g_balance_crylink_secondary"))
 		{
-			W_Crylink_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_crylink_secondary_animtime"), w_ready);
+			if (!self.crylink_waitrelease)
+			if (weapon_prepareattack(1, cvar("g_balance_crylink_secondary_refire")))
+			{
+				W_Crylink_Attack2();
+				weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_crylink_secondary_animtime"), w_ready);
+				if(cvar("g_balance_crylink_secondary_joinspeed") != 0)
+					self.crylink_waitrelease = 2;
+			}
+		}
+		else
+		{
+			if (self.crylink_waitrelease)
+			{
+				// fired and released now!
+				if(self.crylink_lastgroup)
+				{
+					if(self.crylink_waitrelease == 1)
+					{
+						W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"));
+					}
+					else
+					{
+						W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspeed"));
+					}
+				}
+			}
+			self.crylink_waitrelease = 0;
 		}
 	}
 	else if (req == WR_PRECACHE)
