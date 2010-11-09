@@ -403,6 +403,7 @@ void cvar_changes_init()
 		BADCVAR("g_maplist_votable_abstain");
 		BADCVAR("g_maplist_votable_nodetail");
 		BADCVAR("g_maplist_votable_suggestions");
+		BADCVAR("g_minstagib");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_runematch_point_limit");
 		BADCVAR("g_start_delay");
