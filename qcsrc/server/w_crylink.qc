@@ -52,6 +52,8 @@ vector W_Crylink_LinkJoin(entity e, float joinspeed)
 	float avg_dist, n;
 	entity p;
 
+	w_crylink_linkjoin_time = 0;
+
 	avg_origin = e.origin;
 	avg_velocity = e.velocity;
 	n = 1;
@@ -64,6 +66,9 @@ vector W_Crylink_LinkJoin(entity e, float joinspeed)
 	avg_origin *= (1.0 / n);
 	avg_velocity *= (1.0 / n);
 
+	if(n < 2)
+		return avg_origin; // nothing to do
+
 	// yes, mathematically we can do this in ONE step, but beware of 32bit floats...
 	avg_dist = pow(vlen(e.origin - avg_origin), 2);
 	for(p = e; (p = p.queuenext) != e; )
@@ -71,7 +76,6 @@ vector W_Crylink_LinkJoin(entity e, float joinspeed)
 	avg_dist *= (1.0 / n);
 	avg_dist = sqrt(avg_dist);
 
-	w_crylink_linkjoin_time = 0;
 	if(avg_dist == 0)
 		return avg_origin; // no change needed
 
@@ -114,6 +118,32 @@ vector W_Crylink_LinkJoin(entity e, float joinspeed)
 	}
 
 	return targ_origin;
+}
+
+void W_Crylink_LinkJoinEffect_Think()
+{
+	// is there at least 2 projectiles very close?
+	entity e, p;
+	float n;
+	e = self.owner.crylink_lastgroup;
+	n = 0;
+	if(e)
+	{
+		if(vlen(e.origin - self.origin) < vlen(e.velocity) * frametime)
+			++n;
+		for(p = e; (p = p.queuenext) != e; )
+		{
+			if(vlen(p.origin - self.origin) < vlen(p.velocity) * frametime)
+				++n;
+		}
+		if(n >= 2)
+		{
+			// they seem to touch...
+			// TODO make a specific particle effect for this
+			pointparticles(particleeffectnum("crylink_linkjoin"), self.origin, '0 0 0', 1);
+		}
+	}
+	remove(self);
 }
 
 // NO bounce protection, as bounces are limited!
@@ -434,14 +464,23 @@ float w_crylink(float req)
 				// fired and released now!
 				if(self.crylink_lastgroup)
 				{
+					vector pos;
 					if(self.crylink_waitrelease == 1)
 					{
-						W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"));
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"));
 					}
 					else
 					{
-						W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspeed"));
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspeed"));
 					}
+
+					entity linkjoineffect;
+					linkjoineffect = spawn();
+					linkjoineffect.classname = "linkjoineffect";
+					linkjoineffect.think = W_Crylink_LinkJoinEffect_Think;
+					linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
+					linkjoineffect.owner = self;
+					setorigin(linkjoineffect, pos);
 				}
 			}
 			self.crylink_waitrelease = 0;
@@ -454,6 +493,7 @@ float w_crylink(float req)
 		precache_model ("models/weapons/h_crylink.iqm");
 		precache_sound ("weapons/crylink_fire.wav");
 		precache_sound ("weapons/crylink_fire2.wav");
+		precache_sound ("weapons/crylink_linkjoin.wav");
 	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_CRYLINK);
