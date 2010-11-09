@@ -3,7 +3,7 @@ REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 #else
 #ifdef SVQC
 .float gravity;
-.float crylink_release;
+.float crylink_waitrelease;
 .entity crylink_lastgroup;
 
 .entity queuenext;
@@ -28,10 +28,14 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 	float a;
 	a = bound(0, 1 - (time - e.fade_time) * e.fade_rate, 1);
 
+	if(e == e.realowner.crylink_lastgroup)
+		e.realowner.crylink_lastgroup = world;
+
 	RadiusDamage (e, e.realowner, cvar("g_balance_crylink_primary_damage") * a, cvar("g_balance_crylink_primary_edgedamage") * a, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * a, e.projectiledeathtype, other);
 
 	if(e.queuenext != e2)
 		W_Crylink_LinkExplode(e.queuenext, e2);
+
 	remove (e);
 }
 
@@ -401,16 +405,44 @@ float w_crylink(float req)
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, cvar("g_balance_crylink_primary_refire")))
 		{
-			W_Crylink_Attack();
-			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_crylink_primary_animtime"), w_ready);
+			if (!self.crylink_waitrelease)
+			if (weapon_prepareattack(0, cvar("g_balance_crylink_primary_refire")))
+			{
+				W_Crylink_Attack();
+				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_crylink_primary_animtime"), w_ready);
+				if(cvar("g_balance_crylink_primary_joinspeed") != 0)
+					self.crylink_waitrelease = 1;
+			}
 		}
-		if (self.BUTTON_ATCK2 && cvar("g_balance_crylink_secondary"))
-		if (weapon_prepareattack(1, cvar("g_balance_crylink_secondary_refire")))
+		else if(self.BUTTON_ATCK2 && cvar("g_balance_crylink_secondary"))
 		{
-			W_Crylink_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_crylink_secondary_animtime"), w_ready);
+			if (weapon_prepareattack(1, cvar("g_balance_crylink_secondary_refire")))
+			{
+				W_Crylink_Attack2();
+				weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_crylink_secondary_animtime"), w_ready);
+				if(cvar("g_balance_crylink_secondary_joinspeed") != 0)
+					self.crylink_waitrelease = 2;
+			}
+		}
+		else
+		{
+			if (self.crylink_waitrelease)
+			{
+				// fired and released now!
+				if(self.crylink_lastgroup)
+				{
+					if(self.crylink_waitrelease == 1)
+					{
+						W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"));
+					}
+					else
+					{
+						W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspeed"));
+					}
+				}
+			}
+			self.crylink_waitrelease = 0;
 		}
 	}
 	else if (req == WR_PRECACHE)
