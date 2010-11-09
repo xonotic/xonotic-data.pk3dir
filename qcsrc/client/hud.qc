@@ -3125,12 +3125,24 @@ void HUD_Notify (void)
 		step = -1;
 		limit = -1;
 	}
+
 	for(j = kn_index;  i != limit;  i += step, ++j)
 	{
+		if(autocvar__hud_configure)
+		{
+			if (step == +1)
+				a = i;
+			else // inverse order
+				a = entries - 1 - i;
+			attacker = textShortenToWidth(strcat("Player", ftos(a+1)), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
+			victim = textShortenToWidth(strcat("Player", ftos(a+2)), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
+			s = strcat("weapon", get_weaponinfo(WEP_FIRST + mod(floor(a*2.4), WEP_LAST)).netname);
+			a = bound(0, (when - a) / 4, 1);
+			goto hud_config_notifyprint;
+		}
+
 		if (j == KN_MAX_ENTRIES)
 			j = 0;
-
-		s = "";
 
 		if(fadetime)
 		{
@@ -3146,6 +3158,10 @@ void HUD_Notify (void)
 			else
 				a = 0;
 		}
+		if(!a)
+			continue;
+
+		s = "";
 
 		w = -1;
 		w = DEATH_WEAPONOF(killnotify_deathtype[j]);
@@ -3153,12 +3169,8 @@ void HUD_Notify (void)
 		// TODO: maybe print in team colors?
 		//
 		// Y [used by] X
-		if(killnotify_actiontype[j] == 0 && !autocvar__hud_configure) 
+		if(killnotify_actiontype[j] == 0) 
 		{
-			attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			pos_attacker = pos + eX * (0.52 * mySize_x + height) + eY * (0.5 * fontsize_y + i * height);
-			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
-
 			if(killnotify_deathtype[j] == DEATH_GENERIC)
 			{
 				s = "notify_death";
@@ -3251,7 +3263,11 @@ void HUD_Notify (void)
 					s = "notify_blue_captured";
 				}
 			}
-			if(s != "" && a)
+			attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
+			pos_attacker = pos + eX * (0.52 * mySize_x + height) + eY * (0.5 * fontsize_y + i * height);
+			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
+
+			if(s != "")
 			{
 				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
@@ -3260,31 +3276,7 @@ void HUD_Notify (void)
 		// X [did action to] Y
 		else
 		{
-			if(autocvar__hud_configure)
-			{
-				attacker = textShortenToWidth("Player1", 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-				victim = textShortenToWidth("Player2", 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-				if (step == +1)
-					a = i;
-				else // inverse order
-					a = entries - 1 - i;
-				a = bound(0, (when - a) / 4, 1);
-			}
-			else
-			{
-				attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-				victim = textShortenToWidth(killnotify_victims[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			}
-			width_attacker = stringwidth(attacker, TRUE, fontsize);
-			pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * (0.5 * fontsize_y + i * height);
-			pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * (0.5 * fontsize_y + i * height);
-			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
-
-			if(autocvar__hud_configure) // example actions for config mode
-			{
-				s = "weaponelectro";
-			}
-			else if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_LASER)
+			if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_LASER)
 			{
 				s = "notify_melee_laser";
 			}
@@ -3349,7 +3341,16 @@ void HUD_Notify (void)
 			{
 				s = "race_newfail";
 			}
-			if(s != "" && a)
+
+			attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
+			victim = textShortenToWidth(killnotify_victims[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
+:hud_config_notifyprint
+			width_attacker = stringwidth(attacker, TRUE, fontsize);
+			pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * (0.5 * fontsize_y + i * height);
+			pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * (0.5 * fontsize_y + i * height);
+			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
+
+			if(s != "")
 			{
 				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
