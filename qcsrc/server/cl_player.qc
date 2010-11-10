@@ -449,6 +449,16 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		take = damage;
 	}
 
+	frag_inflictor = inflictor;
+	frag_attacker = attacker;
+	frag_target = self;
+	damage_take = take;
+	damage_save = save;
+	damage_force = force;
+	MUTATOR_CALLHOOK(PlayerDamage);
+	take = bound(0, damage_take, self.health);
+	save = bound(0, damage_save, self.armorvalue);
+
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)

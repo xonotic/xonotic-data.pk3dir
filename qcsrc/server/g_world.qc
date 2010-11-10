@@ -710,10 +710,6 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":", cvar_string("g_weaponarena"), " arena");
 
 		// TODO to mutator system
-		if(cvar("g_vampire"))
-			s = strcat(s, ":vampire");
-
-		// TODO to mutator system
 		if(cvar("g_norecoil"))
 			s = strcat(s, ":norecoil");
 
@@ -724,6 +720,7 @@ void spawnfunc_worldspawn (void)
 		// TODO to mutator system
 		if(cvar("g_minstagib"))
 			s = strcat(s, ":minstagib");
+
 		GameLogEcho(s);
 		GameLogEcho(":gameinfo:end");
 	}

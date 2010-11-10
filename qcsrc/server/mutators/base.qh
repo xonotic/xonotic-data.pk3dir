@@ -118,3 +118,14 @@ MUTATOR_HOOKABLE(EditProjectile);
 	// INPUT:
 		entity self;
 		entity other;
+
+MUTATOR_HOOKABLE(PlayerDamage);
+	// called when a player gets damaged to e.g. remove stuff he was carrying.
+	// INPUT:
+		entity frag_inflictor;
+		entity frag_attacker;
+		entity frag_target; // same as self
+		vector damage_force; // NOTE: this force already HAS been applied (create and use a Damage hook to change that one)
+	// INPUT, OUTPUT:
+		float damage_take;
+		float damage_save;
