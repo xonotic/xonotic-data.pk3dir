@@ -231,6 +231,7 @@ void W_Crylink_Attack (void)
 	while (counter < shots)
 	{
 		proj = spawn ();
+		proj.crylink_waitrelease = time; 	// keep track of when each projectile was spawned
 		proj.realowner = proj.owner = self;
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
@@ -325,6 +326,7 @@ void W_Crylink_Attack2 (void)
 	while (counter < shots)
 	{
 		proj = spawn ();
+		proj.crylink_waitrelease = time; 	// keep track of when each projectile was spawned
 		proj.realowner = proj.owner = self;
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
@@ -404,14 +406,19 @@ float w_crylink(float req)
 	{
 		if (self.BUTTON_ATCK)
 		{
+			if(self.crylink_lastgroup == world)
+				self.crylink_waitrelease = 0;
+				
 			if (!self.crylink_waitrelease)
 			if (weapon_prepareattack(0, cvar("g_balance_crylink_primary_refire")))
 			{
 				W_Crylink_Attack();
 				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_crylink_primary_animtime"), w_ready);
 				if(cvar("g_balance_crylink_primary_joinspeed") != 0)
-					self.crylink_waitrelease = 1;
-			}		
+					self.crylink_waitrelease = 1; // time + 0.01;
+			}
+			
+
 		}
 		else if(self.BUTTON_ATCK2 && cvar("g_balance_crylink_secondary"))
 		{
@@ -424,29 +431,33 @@ float w_crylink(float req)
 			}
 		}
 		else
-		{
-			if (self.crylink_waitrelease)
+		{			
+			if (self.crylink_waitrelease) 
 			{
 				// fired and released now!
 				if(self.crylink_lastgroup)
-				{
-					if(self.crylink_waitrelease == 1)
+				{					
+					// Click and hold fire
+					if (time - self.crylink_lastgroup.crylink_waitrelease > 0.1)
 					{
-						W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"));						
-						
+						//dprint("HoldFire:", ftos(time - self.crylink_lastgroup.crylink_waitrelease), "\nTimer is ", ftos(self.crylink_lastgroup.crylink_waitrelease),"\n");
+						W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"));													
 						// 'splode @ join, if timing is just right, you get the target with the join-explode splash first, then the individual projectile's damage.
-						self.crylink_lastgroup.think = W_Crylink_Touch;
-						self.crylink_lastgroup.nextthink = w_crylink_linkjoin_time + time;							
 						
+						if(w_crylink_linkjoin_time > 0)
+						{
+							self.crylink_lastgroup.think 		= W_Crylink_Touch;
+							self.crylink_lastgroup.nextthink 	= w_crylink_linkjoin_time + time;																				
+						}
 					}
-					else
+					else // tap fire
 					{
-						W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspeed"));
+						dprint("TapFire:", ftos(time - self.crylink_lastgroup.crylink_waitrelease), "\nTimer is ", ftos(self.crylink_lastgroup.crylink_waitrelease),"\n");
 					}
 				}
-			}
-
-			self.crylink_waitrelease = 0;
+				
+				self.crylink_waitrelease = 0;
+			}							
 		}
 	}
 	else if (req == WR_PRECACHE)
