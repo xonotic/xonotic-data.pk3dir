@@ -171,9 +171,6 @@ void W_Mine_Think (void)
 	if (self.owner.deadflag == DEAD_NO)
 	if (self.minelayer_detonate)
 		W_Mine_RemoteExplode();
-
-	if(self.csqcprojectile_clientanimate == 0)
-		UpdateCSQCProjectile(self);
 }
 
 void W_Mine_Touch (void)
@@ -252,7 +249,7 @@ void W_Mine_Attack (void)
 	mine.cnt = time + cvar("g_balance_minelayer_lifetime");
 	mine.flags = FL_PROJECTILE;
 
-	CSQCProjectile(mine, FALSE, PROJECTILE_MINE, TRUE);
+	CSQCProjectile(mine, TRUE, PROJECTILE_MINE, TRUE);
 
 	// muzzle flash for 1st person view
 	flash = spawn ();
