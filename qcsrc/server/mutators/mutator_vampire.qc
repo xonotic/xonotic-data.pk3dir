@@ -5,7 +5,7 @@ MUTATOR_HOOKFUNCTION(vampire_PlayerDamage)
 	if(g_minstagib)
 	{
 		// minstagib: each hit means +1 ammo
-		frag_attacker.ammo_cells += 1;
+		frag_attacker.ammo_cells += 2; // note: 1 cell was deducted for the shot
 	}
 	else
 	{
