@@ -1095,6 +1095,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_bouncestop
 	WriteByte(MSG_ENTITY, cvar("g_balance_nex_secondary")); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, cvar("g_balance_campingrifle_secondary")); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
 	return TRUE;
 }
 
