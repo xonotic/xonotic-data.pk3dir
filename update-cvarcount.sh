@@ -6,12 +6,12 @@ for b in balance*.cfg; do
 	if [ "$countw" != "$countb" ]; then
 		echo "Mismatch between balanceXonotic.cfg and $b. Aborting."
 		echo "Differences are:"
-		A=`mktemp`
-		B=`mktemp`
-		awk '/^seta? g_/ { print $2; }' balanceXonotic.cfg       | sort -u | tr -d '\r' > "$A"
-		awk '/^seta? g_/ { print $2; }' "$b"                     | sort -u | tr -d '\r' > "$B"
 		echo "< missing in $b"
 		echo "> must get removed from $b"
+		A=`mktemp || echo a.tmp`
+		B=`mktemp || echo b.tmp`
+		awk '/^seta? g_/ { print $2; }' balanceXonotic.cfg       | sort -u | tr -d '\r' > "$A"
+		awk '/^seta? g_/ { print $2; }' "$b"                     | sort -u | tr -d '\r' > "$B"
 		diff "$A" "$B" | grep '^[<>]' | sort
 		rm -f "$A" "$B"
 		exit 1

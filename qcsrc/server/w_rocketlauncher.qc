@@ -125,7 +125,7 @@ void W_Rocket_RemoteExplode()
 	{
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
-			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > cvar("g_balance_rocketlauncher_radius")) // safety device
+			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > cvar("g_balance_rocketlauncher_remote_radius")) // safety device
 		)
 		{
 			W_Rocket_DoRemoteExplode();
