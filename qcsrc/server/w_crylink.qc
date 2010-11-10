@@ -215,7 +215,7 @@ void W_Crylink_Attack (void)
 {
 	float counter, shots;
 	entity proj, prevproj, firstproj;
-	vector forward, right, up, s
+	vector forward, right, up, s;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - cvar("g_balance_crylink_primary_ammo");
