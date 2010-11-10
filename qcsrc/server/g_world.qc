@@ -713,10 +713,6 @@ void spawnfunc_worldspawn (void)
 		if(cvar("g_vampire"))
 			s = strcat(s, ":vampire");
 
-		// initialiation stuff, not good in the mutator system
-		if(cvar("g_laserguided_missile"))
-			s = strcat(s, ":laserguided_missile");
-
 		// TODO to mutator system
 		if(cvar("g_norecoil"))
 			s = strcat(s, ":norecoil");

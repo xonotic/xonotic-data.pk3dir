@@ -1230,7 +1230,6 @@ void readlevelcvars(void)
 	g_footsteps = cvar("g_footsteps");
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
-	g_laserguided_missile = cvar("g_laserguided_missile");
 	g_midair = cvar("g_midair");
 	g_minstagib = cvar("g_minstagib");
 	g_norecoil = cvar("g_norecoil");
