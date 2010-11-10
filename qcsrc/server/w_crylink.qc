@@ -149,7 +149,7 @@ void W_Crylink_Touch (void)
 		return;
 	}
 	self.cnt = self.cnt - 1;
-	self.angles = vectoangles(self.velocity);
+	// self.angles = vectoangles(self.velocity); // csqc
 	self.owner = world;
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 	// commented out as it causes a little hitch...
@@ -197,7 +197,7 @@ void W_Crylink_Touch2 (void)
 		return;
 	}
 	self.cnt = self.cnt - 1;
-	self.angles = vectoangles(self.velocity);
+	// self.angles = vectoangles(self.velocity); // csqc
 	self.owner = world;
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 	// commented out as it causes a little hitch...
@@ -213,10 +213,9 @@ void W_Crylink_Fadethink (void)
 
 void W_Crylink_Attack (void)
 {
-	local float counter, shots;
-	local entity proj, prevproj, firstproj;
-	local vector s;
-	vector forward, right, up;
+	float counter, shots;
+	entity proj, prevproj, firstproj;
+	vector forward, right, up, s
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - cvar("g_balance_crylink_primary_ammo");
@@ -294,10 +293,9 @@ void W_Crylink_Attack (void)
 			proj.nextthink = time + cvar("g_balance_crylink_primary_other_lifetime") + cvar("g_balance_crylink_primary_other_fadetime");
 		}
 		proj.cnt = cvar("g_balance_crylink_primary_bounces");
+		
 		//proj.scale = 1 + 1 * proj.cnt;
-
-		proj.angles = vectoangles (proj.velocity);
-
+		//proj.angles = vectoangles (proj.velocity); // csqc
 		//proj.glow_size = 20;
 
 		proj.flags = FL_PROJECTILE;
@@ -373,7 +371,7 @@ void W_Crylink_Attack2 (void)
 		proj.cnt = cvar("g_balance_crylink_secondary_bounces");
 		//proj.scale = 1 + 1 * proj.cnt;
 
-		proj.angles = vectoangles (proj.velocity);
+		// proj.angles = vectoangles (proj.velocity); // csqc
 
 		//proj.glow_size = 20;
 
@@ -413,7 +411,7 @@ float w_crylink(float req)
 				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_crylink_primary_animtime"), w_ready);
 				if(cvar("g_balance_crylink_primary_joinspeed") != 0)
 					self.crylink_waitrelease = 1;
-			}
+			}		
 		}
 		else if(self.BUTTON_ATCK2 && cvar("g_balance_crylink_secondary"))
 		{
@@ -434,7 +432,12 @@ float w_crylink(float req)
 				{
 					if(self.crylink_waitrelease == 1)
 					{
-						W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"));
+						W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"));						
+						
+						// 'splode @ join, if timing is just right, you get the target with the join-explode splash first, then the individual projectile's damage.
+						self.crylink_lastgroup.think = W_Crylink_Touch;
+						self.crylink_lastgroup.nextthink = w_crylink_linkjoin_time + time;							
+						
 					}
 					else
 					{
@@ -442,6 +445,7 @@ float w_crylink(float req)
 					}
 				}
 			}
+
 			self.crylink_waitrelease = 0;
 		}
 	}
