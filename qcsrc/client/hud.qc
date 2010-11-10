@@ -2622,7 +2622,7 @@ void HUD_KillNotify_Push(string attacker, string victim, float actiontype, float
 	--kn_index;
 	if (kn_index == -1)
 		kn_index = KN_MAX_ENTRIES-1;
-	killnotify_times[kn_index] = time;
+	killnotify_times[kn_index] = time; // -1 indicates the message is deleted
 	killnotify_deathtype[kn_index] = wpn;
 	killnotify_actiontype[kn_index] = actiontype;
 	if(killnotify_attackers[kn_index])
@@ -3144,22 +3144,25 @@ void HUD_Notify (void)
 		if (j == KN_MAX_ENTRIES)
 			j = 0;
 
-		if(fadetime)
+		if (killnotify_times[j] == -1)
+			break;
+
+		if(killnotify_times[j] + when > time)
+			a = 1;
+		else if(fadetime)
 		{
-			if(killnotify_times[j] + when > time)
-				a = 1;
-			else
-				a = bound(0, (killnotify_times[j] + when + fadetime - time) / fadetime, 1);
+			a = bound(0, (killnotify_times[j] + when + fadetime - time) / fadetime, 1);
+			if(!a)
+			{
+				killnotify_times[j] = -1;
+				break;
+			}
 		}
 		else
 		{
-			if(killnotify_times[j] + when > time)
-				a = 1;
-			else
-				a = 0;
+			killnotify_times[j] = -1;
+			break;
 		}
-		if(!a)
-			continue;
 
 		s = "";
 
