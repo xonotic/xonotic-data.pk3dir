@@ -28,7 +28,6 @@ void W_MinstaNex_Attack (void)
 		if(headshot)
 		{
 			AnnounceTo(self, "headshot");
-			print("h\n");
 		}
 		if(damage_goodhits && self.minstanex_lasthit)
 		{
