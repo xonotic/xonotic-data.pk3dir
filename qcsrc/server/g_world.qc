@@ -693,22 +693,39 @@ void spawnfunc_worldspawn (void)
 		MUTATOR_CALLHOOK(BuildMutatorsString);
 		s = ret_string;
 
+		// simple, probably not good in the mutator system
 		if(cvar("g_grappling_hook"))
 			s = strcat(s, ":grappling_hook");
+
+		// initialiation stuff, not good in the mutator system
 		if(!cvar("g_use_ammunition"))
 			s = strcat(s, ":no_use_ammunition");
+
+		// initialiation stuff, not good in the mutator system
 		if(!cvar("g_pickup_items"))
 			s = strcat(s, ":no_pickup_items");
+
+		// initialiation stuff, not good in the mutator system
 		if(cvar_string("g_weaponarena") != "0")
 			s = strcat(s, ":", cvar_string("g_weaponarena"), " arena");
+
+		// TODO to mutator system
 		if(cvar("g_vampire"))
 			s = strcat(s, ":vampire");
+
+		// initialiation stuff, not good in the mutator system
 		if(cvar("g_laserguided_missile"))
 			s = strcat(s, ":laserguided_missile");
+
+		// TODO to mutator system
 		if(cvar("g_norecoil"))
 			s = strcat(s, ":norecoil");
+
+		// TODO to mutator system
 		if(cvar("g_midair"))
 			s = strcat(s, ":midair");
+
+		// TODO to mutator system
 		if(cvar("g_minstagib"))
 			s = strcat(s, ":minstagib");
 		GameLogEcho(s);
