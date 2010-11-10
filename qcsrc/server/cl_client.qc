@@ -1091,8 +1091,8 @@ float ClientInit_SendEntity(entity to, float sf)
 		WriteString(MSG_ENTITY, "");
 	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
 	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
-	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_secondary_bouncefactor
-	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_secondary_bouncestop
+	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_bouncefactor
+	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_bouncestop
 	WriteByte(MSG_ENTITY, cvar("g_balance_nex_secondary")); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, cvar("g_balance_campingrifle_secondary")); // client has to know if it should zoom or not
 	return TRUE;
@@ -1111,14 +1111,14 @@ void ClientInit_CheckUpdate()
 		self.cnt = cvar("g_balance_weaponswitchdelay");
 		self.SendFlags |= 1;
 	}
-	if(self.bouncefactor != cvar("g_balance_grenadelauncher_secondary_bouncefactor"))
+	if(self.bouncefactor != cvar("g_balance_grenadelauncher_bouncefactor"))
 	{
-		self.bouncefactor = cvar("g_balance_grenadelauncher_secondary_bouncefactor");
+		self.bouncefactor = cvar("g_balance_grenadelauncher_bouncefactor");
 		self.SendFlags |= 1;
 	}
-	if(self.bouncestop != cvar("g_balance_grenadelauncher_secondary_bouncestop"))
+	if(self.bouncestop != cvar("g_balance_grenadelauncher_bouncestop"))
 	{
-		self.bouncestop = cvar("g_balance_grenadelauncher_secondary_bouncestop");
+		self.bouncestop = cvar("g_balance_grenadelauncher_bouncestop");
 		self.SendFlags |= 1;
 	}
 }

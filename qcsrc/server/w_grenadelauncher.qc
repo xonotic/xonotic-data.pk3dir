@@ -174,8 +174,8 @@ void W_Grenade_Attack (void)
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = cvar("g_balance_grenadelauncher_primary_damage");
 	gren.movetype = MOVETYPE_BOUNCE;
-	gren.bouncefactor = cvar("g_balance_grenadelauncher_primary_bouncefactor");
-	gren.bouncestop = cvar("g_balance_grenadelauncher_primary_bouncestop");
+	gren.bouncefactor = cvar("g_balance_grenadelauncher_bouncefactor");
+	gren.bouncestop = cvar("g_balance_grenadelauncher_bouncestop");
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER;
 	setorigin(gren, w_shotorg);
@@ -221,8 +221,8 @@ void W_Grenade_Attack2 (void)
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = cvar("g_balance_grenadelauncher_secondary_damage");
 	gren.movetype = MOVETYPE_BOUNCE;
-	gren.bouncefactor = cvar("g_balance_grenadelauncher_secondary_bouncefactor");
-	gren.bouncestop = cvar("g_balance_grenadelauncher_secondary_bouncestop");
+	gren.bouncefactor = cvar("g_balance_grenadelauncher_bouncefactor");
+	gren.bouncestop = cvar("g_balance_grenadelauncher_bouncestop");
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);
