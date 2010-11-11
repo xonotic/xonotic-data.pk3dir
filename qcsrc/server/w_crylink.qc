@@ -453,7 +453,7 @@ float w_crylink(float req)
 			{
 				W_Crylink_Attack();
 				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_crylink_primary_animtime"), w_ready);
-				if(cvar("g_balance_crylink_primary_joinspeed") != 0)
+				if(cvar("g_balance_crylink_primary_joinspeed") != 0 || cvar("g_balance_crylink_primary_jointime") != 0)
 					self.crylink_waitrelease = 1;
 			}
 		}
@@ -464,7 +464,7 @@ float w_crylink(float req)
 			{
 				W_Crylink_Attack2();
 				weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_crylink_secondary_animtime"), w_ready);
-				if(cvar("g_balance_crylink_secondary_joinspeed") != 0)
+				if(cvar("g_balance_crylink_secondary_joinspeed") != 0 || cvar("g_balance_crylink_secondary_jointime") != 0)
 					self.crylink_waitrelease = 2;
 			}
 		}
