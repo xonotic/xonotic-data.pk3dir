@@ -301,6 +301,12 @@ void cvar_changes_init()
 		BADCVAR("developer");
 		BADPREFIX("developer_");
 
+		// these can contain player IDs, so better hide
+		BADCVAR("g_forced_team_red");
+		BADCVAR("g_forced_team_blue");
+		BADCVAR("g_forced_team_yellow");
+		BADCVAR("g_forced_team_pink");
+
 		// mapinfo
 		BADCVAR("timelimit");
 		BADCVAR("fraglimit");
@@ -437,6 +443,12 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
 		BADCVAR("timelimit_override");
+
+		if(cvar("g_minstagib"))
+		{
+			BADCVAR("g_grappling_hook");
+			BADCVAR("g_jetpack");
+		}
 #undef BADPREFIX
 #undef BADCVAR
 

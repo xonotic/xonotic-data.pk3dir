@@ -711,6 +711,16 @@ void CheckAllowedTeams (entity for_whom)
 				c1 = -1;
 		}
 	}
+
+	// if player has a forced team, ONLY allow that one
+	if(self.team_forced == COLOR_TEAM1 && c1 >= 0)
+		c2 = c3 = c4 = -1;
+	else if(self.team_forced == COLOR_TEAM2 && c2 >= 0)
+		c1 = c3 = c4 = -1;
+	else if(self.team_forced == COLOR_TEAM3 && c3 >= 0)
+		c1 = c2 = c4 = -1;
+	else if(self.team_forced == COLOR_TEAM4 && c4 >= 0)
+		c1 = c2 = c3 = -1;
 }
 
 float PlayerValue(entity p)
