@@ -59,8 +59,8 @@ vector W_Crylink_LinkJoin(entity e, float joinspeed)
 	n = 1;
 	for(p = e; (p = p.queuenext) != e; )
 	{
-		avg_origin += p.origin;
-		avg_velocity += p.velocity;
+		avg_origin += WarpZone_RefSys_TransformOrigin(p, e, p.origin);
+		avg_velocity += WarpZone_RefSys_TransformVelocity(p, e, p.velocity);
 		++n;
 	}
 	avg_origin *= (1.0 / n);
@@ -72,7 +72,7 @@ vector W_Crylink_LinkJoin(entity e, float joinspeed)
 	// yes, mathematically we can do this in ONE step, but beware of 32bit floats...
 	avg_dist = pow(vlen(e.origin - avg_origin), 2);
 	for(p = e; (p = p.queuenext) != e; )
-		avg_dist += pow(vlen(e.origin - avg_origin), 2);
+		avg_dist += pow(vlen(WarpZone_RefSys_TransformOrigin(p, e, p.origin) - avg_origin), 2);
 	avg_dist *= (1.0 / n);
 	avg_dist = sqrt(avg_dist);
 
@@ -85,7 +85,7 @@ vector W_Crylink_LinkJoin(entity e, float joinspeed)
 		UpdateCSQCProjectile(e);
 		for(p = e; (p = p.queuenext) != e; )
 		{
-			p.velocity = avg_velocity;
+			p.velocity = WarpZone_RefSys_TransformVelocity(e, p, avg_velocity);
 			UpdateCSQCProjectile(p);
 		}
 	}
@@ -98,7 +98,7 @@ vector W_Crylink_LinkJoin(entity e, float joinspeed)
 		UpdateCSQCProjectile(e);
 		for(p = e; (p = p.queuenext) != e; )
 		{
-			p.velocity = (targ_origin - p.origin) * (joinspeed / avg_dist);
+			p.velocity = WarpZone_RefSys_TransformVelocity(e, p, (targ_origin - WarpZone_RefSys_TransformOrigin(p, e, p.origin)) * (joinspeed / avg_dist));
 			UpdateCSQCProjectile(p);
 		}
 
