@@ -44,8 +44,10 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 // stored in w_crylink_linkjoin_time.
 // could possibly network this origin and time, and display a special particle
 // effect when projectiles meet there :P
+// jspeed: MINIMUM jing speed
+// jtime: MAXIMUM jing time (0: none)
 float w_crylink_linkjoin_time;
-vector W_Crylink_LinkJoin(entity e, float joinspeed)
+vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 {
 	vector avg_origin, avg_velocity;
 	vector targ_origin;
@@ -79,7 +81,7 @@ vector W_Crylink_LinkJoin(entity e, float joinspeed)
 	if(avg_dist == 0)
 		return avg_origin; // no change needed
 
-	if(joinspeed == 0)
+	if(jspeed == 0 && jtime == 0)
 	{
 		e.velocity = avg_velocity;
 		UpdateCSQCProjectile(e);
@@ -91,27 +93,33 @@ vector W_Crylink_LinkJoin(entity e, float joinspeed)
 	}
 	else
 	{
-		w_crylink_linkjoin_time = avg_dist / joinspeed;
+		if(jtime)
+		{
+			if(jspeed)
+				w_crylink_linkjoin_time = min(jtime, avg_dist / jspeed);
+			else
+				w_crylink_linkjoin_time = jtime;
+		}
 		targ_origin = avg_origin + w_crylink_linkjoin_time * avg_velocity;
 
-		e.velocity = (targ_origin - e.origin) * (joinspeed / avg_dist);
+		e.velocity = (targ_origin - e.origin) * (1.0 / w_crylink_linkjoin_time);
 		UpdateCSQCProjectile(e);
 		for(p = e; (p = p.queuenext) != e; )
 		{
-			p.velocity = WarpZone_RefSys_TransformVelocity(e, p, (targ_origin - WarpZone_RefSys_TransformOrigin(p, e, p.origin)) * (joinspeed / avg_dist));
+			p.velocity = WarpZone_RefSys_TransformVelocity(e, p, (targ_origin - WarpZone_RefSys_TransformOrigin(p, e, p.origin)) * (1.0 / w_crylink_linkjoin_time));
 			UpdateCSQCProjectile(p);
 		}
 
 		// analysis:
-		//   joinspeed -> +infinity:
+		//   jspeed -> +infinity:
 		//      w_crylink_linkjoin_time -> +0
 		//      targ_origin -> avg_origin
 		//      p->velocity -> HUEG towards center
-		//   joinspeed -> 0:
+		//   jspeed -> 0:
 		//      w_crylink_linkjoin_time -> +/- infinity
 		//      targ_origin -> avg_velocity * +/- infinity
 		//      p->velocity -> avg_velocity
-		//   joinspeed -> -infinity:
+		//   jspeed -> -infinity:
 		//      w_crylink_linkjoin_time -> -0
 		//      targ_origin -> avg_origin
 		//      p->velocity -> HUEG away from center
@@ -468,11 +476,11 @@ float w_crylink(float req)
 					vector pos;
 					if(self.crylink_waitrelease == 1)
 					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"));
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"), cvar("g_balance_crylink_primary_jointime"));
 					}
 					else
 					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspeed"));
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspeed"), cvar("g_balance_crylink_secondary_jointime"));
 					}
 
 					entity linkjoineffect;
