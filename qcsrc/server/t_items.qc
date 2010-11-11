@@ -598,7 +598,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	// If custom weapon priorities for bots is enabled rate most wanted weapons higher
 	if( bot_custom_weapon && c )
 	{
-		for(i = WEP_FIRST; i < WEP_LAST ; ++i)
+		for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 		{
 			// Find weapon
 			if( (get_weaponinfo(i)).weapons & item.weapons  != item.weapons )
@@ -638,7 +638,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	c = 0;
 
 	// Detect needed ammo
-	for(i = WEP_FIRST; i < WEP_LAST ; ++i)
+	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
 		wi = get_weaponinfo(i);
 
