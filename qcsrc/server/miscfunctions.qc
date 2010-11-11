@@ -1186,6 +1186,12 @@ void readlevelcvars(void)
 		MUTATOR_ADD(mutator_dodging);
 	if(cvar("g_rocket_flying"))
 		MUTATOR_ADD(mutator_rocketflying);
+	if(cvar("g_vampire"))
+		MUTATOR_ADD(mutator_vampire);
+
+	serverflags = 0;
+	if(cvar("sv_allow_fullbright"))
+		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
     g_bugrigs = cvar("g_bugrigs");
     g_bugrigs_planar_movement = cvar("g_bugrigs_planar_movement");
@@ -1226,11 +1232,9 @@ void readlevelcvars(void)
 	g_footsteps = cvar("g_footsteps");
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
-	g_laserguided_missile = cvar("g_laserguided_missile");
 	g_midair = cvar("g_midair");
 	g_minstagib = cvar("g_minstagib");
 	g_norecoil = cvar("g_norecoil");
-	g_vampire = cvar("g_vampire");
 	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");

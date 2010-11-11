@@ -566,7 +566,8 @@ void CSQC_UpdateView(float w, float h)
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
-	if(cvar("r_fakelight") >= 2 || cvar("r_fullbright"))
+	if(cvar("r_fakelight") >= 2 || cvar("r_fullbright") >= 1)
+	if not(serverflags & SERVERFLAG_ALLOW_FULLBRIGHT)
 	{
 		// apply night vision effect
 		vector rgb, tc_00, tc_01, tc_10, tc_11;
