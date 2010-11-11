@@ -1744,11 +1744,6 @@ void ClientDisconnect (void)
 
 	bot_relinkplayerlist();
 
-	// remove laserdot
-	if(self.weaponentity)
-		if(self.weaponentity.lasertarget)
-			remove(self.weaponentity.lasertarget);
-
 	if(g_arena)
 	{
 		Spawnqueue_Unmark(self);
