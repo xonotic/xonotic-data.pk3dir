@@ -284,7 +284,11 @@ void W_Crylink_Attack (void)
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
 		proj.bot_dodgerating = cvar("g_balance_crylink_primary_damage");
-		if(counter == 0) { // first projectile, store in firstproj for now
+		if(shots == 1) {
+			proj.queuenext = proj;
+			proj.queueprev = proj;
+		}
+		else if(counter == 0) { // first projectile, store in firstproj for now
 			firstproj = proj;
 		}
 		else if(counter == shots - 1) { // last projectile, link up with first projectile
@@ -326,13 +330,13 @@ void W_Crylink_Attack (void)
 		if(counter == 0)
 		{
 			proj.fade_time = time + cvar("g_balance_crylink_primary_middle_lifetime");
-			self.fade_rate = 1 / cvar("g_balance_crylink_primary_middle_fadetime");
+			proj.fade_rate = 1 / cvar("g_balance_crylink_primary_middle_fadetime");
 			proj.nextthink = time + cvar("g_balance_crylink_primary_middle_lifetime") + cvar("g_balance_crylink_primary_middle_fadetime");
 		}
 		else
 		{
 			proj.fade_time = time + cvar("g_balance_crylink_primary_other_lifetime");
-			self.fade_rate = 1 / cvar("g_balance_crylink_primary_other_fadetime");
+			proj.fade_rate = 1 / cvar("g_balance_crylink_primary_other_fadetime");
 			proj.nextthink = time + cvar("g_balance_crylink_primary_other_lifetime") + cvar("g_balance_crylink_primary_other_fadetime");
 		}
 		proj.cnt = cvar("g_balance_crylink_primary_bounces");
@@ -373,7 +377,11 @@ void W_Crylink_Attack2 (void)
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
 		proj.bot_dodgerating = cvar("g_balance_crylink_secondary_damage");
-		if(counter == 0) { // first projectile, store in firstproj for now
+		if(shots == 1) {
+			proj.queuenext = proj;
+			proj.queueprev = proj;
+		}
+		else if(counter == 0) { // first projectile, store in firstproj for now
 			firstproj = proj;
 		}
 		else if(counter == shots - 1) { // last projectile, link up with first projectile
@@ -403,13 +411,13 @@ void W_Crylink_Attack2 (void)
 		if(counter == (shots - 1) / 2)
 		{
 			proj.fade_time = time + cvar("g_balance_crylink_secondary_middle_lifetime");
-			self.fade_rate = 1 / cvar("g_balance_crylink_secondary_middle_fadetime");
+			proj.fade_rate = 1 / cvar("g_balance_crylink_secondary_middle_fadetime");
 			proj.nextthink = time + cvar("g_balance_crylink_secondary_middle_lifetime") + cvar("g_balance_crylink_secondary_middle_fadetime");
 		}
 		else
 		{
 			proj.fade_time = time + cvar("g_balance_crylink_secondary_line_lifetime");
-			self.fade_rate = 1 / cvar("g_balance_crylink_secondary_line_fadetime");
+			proj.fade_rate = 1 / cvar("g_balance_crylink_secondary_line_fadetime");
 			proj.nextthink = time + cvar("g_balance_crylink_secondary_line_lifetime") + cvar("g_balance_crylink_secondary_line_fadetime");
 		}
 		proj.cnt = cvar("g_balance_crylink_secondary_bounces");
