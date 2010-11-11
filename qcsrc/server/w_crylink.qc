@@ -100,6 +100,8 @@ vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 			else
 				w_crylink_linkjoin_time = jtime;
 		}
+		else
+			w_crylink_linkjoin_time = avg_dist / jspeed;
 		targ_origin = avg_origin + w_crylink_linkjoin_time * avg_velocity;
 
 		e.velocity = (targ_origin - e.origin) * (1.0 / w_crylink_linkjoin_time);
