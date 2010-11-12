@@ -148,6 +148,16 @@ void W_Crylink_LinkJoinEffect_Think()
 		}
 		if(n >= 2)
 		{
+
+			if(cvar("g_balance_crylink_primary_joinexplode"))
+			{
+				n = n / cvar("g_balance_crylink_primary_shots");
+				RadiusDamage (e, e.realowner, cvar("g_balance_crylink_primary_joinexplode_damage") * n, 
+								cvar("g_balance_crylink_primary_joinexplode_edgedamage") * n, 
+								cvar("g_balance_crylink_primary_joinexplode_radius") * n, world, 
+								cvar("g_balance_crylink_primary_joinexplode_force") * n, e.projectiledeathtype, other);
+			}
+			
 			// they seem to touch...
 			// TODO make a specific particle effect for this
 			pointparticles(particleeffectnum("crylink_linkjoin"), self.origin, '0 0 0', 1);
