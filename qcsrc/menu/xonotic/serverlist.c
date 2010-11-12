@@ -658,20 +658,20 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		{
 			iconPos_x += iconSize_x * 0.5;
 		}
-
-		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_pure", ftos(strstrofs(s, ":P0:", 0) >= 0)), iconSize, '1 1 1', 1);
-
-		iconPos_x += iconSize_x;
-		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
-
-		iconPos_x += iconSize_x;
-		if(me.seenIPv4 && me.seenIPv6)
+		else if(me.seenIPv4 && me.seenIPv6)
 		{
 			if(isv6)
 				draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), iconSize, '1 1 1', 1);
 			else if(isv4)
 				draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), iconSize, '1 1 1', 1);
+			iconPos_x += iconSize_x;
 		}
+
+		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
+		iconPos_x += iconSize_x;
+
+		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_pure", ftos(strstrofs(s, ":P0:", 0) >= 0)), iconSize, '1 1 1', 1);
+		iconPos_x += iconSize_x;
 	}
 
 	s = ftos(p);
