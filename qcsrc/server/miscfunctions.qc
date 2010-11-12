@@ -181,6 +181,7 @@ void GameLogClose()
 vector PL_VIEW_OFS;
 vector PL_MIN;
 vector PL_MAX;
+vector PL_HEAD;
 vector PL_CROUCH_VIEW_OFS;
 vector PL_CROUCH_MIN;
 vector PL_CROUCH_MAX;
@@ -191,6 +192,7 @@ void relocate_spawnpoint()
     PL_VIEW_OFS                             = stov(cvar_string("sv_player_viewoffset"));
     PL_MIN                                  = stov(cvar_string("sv_player_mins"));
     PL_MAX                                  = stov(cvar_string("sv_player_maxs"));
+    PL_HEAD                                 = stov(cvar_string("sv_player_headsize"));
     PL_CROUCH_VIEW_OFS                      = stov(cvar_string("sv_player_crouch_viewoffset"));
     PL_CROUCH_MIN                           = stov(cvar_string("sv_player_crouch_mins"));
     PL_CROUCH_MAX                           = stov(cvar_string("sv_player_crouch_maxs"));
@@ -1182,8 +1184,14 @@ void readlevelcvars(void)
 		MUTATOR_ADD(mutator_nix);
 	if(cvar("g_dodging"))
 		MUTATOR_ADD(mutator_dodging);
-	if(cvar("g_rocket_flying") || (cvar("g_balance_rocketlauncher_detonatedelay") == 0 && stof(cvar_defstring("g_balance_rocketlauncher_detonatedelay")) != 0))
+	if(cvar("g_rocket_flying"))
 		MUTATOR_ADD(mutator_rocketflying);
+	if(cvar("g_vampire"))
+		MUTATOR_ADD(mutator_vampire);
+
+	serverflags = 0;
+	if(cvar("sv_allow_fullbright"))
+		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
     g_bugrigs = cvar("g_bugrigs");
     g_bugrigs_planar_movement = cvar("g_bugrigs_planar_movement");
@@ -1224,11 +1232,9 @@ void readlevelcvars(void)
 	g_footsteps = cvar("g_footsteps");
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
-	g_laserguided_missile = cvar("g_laserguided_missile");
 	g_midair = cvar("g_midair");
 	g_minstagib = cvar("g_minstagib");
 	g_norecoil = cvar("g_norecoil");
-	g_vampire = cvar("g_vampire");
 	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");

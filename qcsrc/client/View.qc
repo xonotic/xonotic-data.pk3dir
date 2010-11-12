@@ -566,7 +566,8 @@ void CSQC_UpdateView(float w, float h)
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
-	if(cvar("r_fakelight") >= 2 || cvar("r_fullbright"))
+	if(cvar("r_fakelight") >= 2 || cvar("r_fullbright") >= 1)
+	if not(serverflags & SERVERFLAG_ALLOW_FULLBRIGHT)
 	{
 		// apply night vision effect
 		vector rgb, tc_00, tc_01, tc_10, tc_11;
@@ -858,6 +859,9 @@ void CSQC_UpdateView(float w, float h)
 			float nex_charge;
 			nex_charge = getstatf(STAT_NEX_CHARGE);
 
+			if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
+				nex_charge_movingavg = nex_charge;
+
 			// ring around crosshair representing bullets left in camping rifle clip
 			if (activeweapon == WEP_CAMPINGRIFLE && cr_maxbullets)
 			{
@@ -869,6 +873,15 @@ void CSQC_UpdateView(float w, float h)
 			}
 			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
 			{
+				vector rgb;
+				// indicate how much we're charging right now with an inner circle
+				a = cvar("crosshair_nexvelocity_currentcharge_alpha");
+				nex_charge_movingavg = (1 - cvar("crosshair_nexvelocity_currentcharge_movingavg_rate")) * nex_charge_movingavg + cvar("crosshair_nexvelocity_currentcharge_movingavg_rate") * nex_charge;
+
+				rgb = eX * cvar("crosshair_nexvelocity_currentcharge_color_red") + eY * cvar("crosshair_nexvelocity_currentcharge_color_green") + eZ * cvar("crosshair_nexvelocity_currentcharge_color_blue");
+				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", bound(0, cvar("crosshair_nexvelocity_currentcharge_scale") * (nex_charge - nex_charge_movingavg), 1), rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+
+				// draw the charge
 				a = cvar("crosshair_nexvelocity_alpha");
 				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", nex_charge, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 			}

@@ -403,6 +403,7 @@ void cvar_changes_init()
 		BADCVAR("g_maplist_votable_abstain");
 		BADCVAR("g_maplist_votable_nodetail");
 		BADCVAR("g_maplist_votable_suggestions");
+		BADCVAR("g_minstagib");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_runematch_point_limit");
 		BADCVAR("g_start_delay");
@@ -449,6 +450,12 @@ void cvar_changes_init()
 			}
 		}
 		++cvar_purechanges_count;
+		// WARNING: this variable is used for the server list
+		// NEVER dare to skip this code!
+		// Hacks to intentionally appearing as "pure server" even though you DO have
+		// modified settings may be punished by removal from the server list.
+		// You can do to the variables cvar_changes and cvar_purechanges all you want,
+		// though.
 	}
 	buf_del(h);
 	if(cvar_changes == "")
@@ -686,24 +693,34 @@ void spawnfunc_worldspawn (void)
 		MUTATOR_CALLHOOK(BuildMutatorsString);
 		s = ret_string;
 
+		// simple, probably not good in the mutator system
 		if(cvar("g_grappling_hook"))
 			s = strcat(s, ":grappling_hook");
+
+		// initialiation stuff, not good in the mutator system
 		if(!cvar("g_use_ammunition"))
 			s = strcat(s, ":no_use_ammunition");
+
+		// initialiation stuff, not good in the mutator system
 		if(!cvar("g_pickup_items"))
 			s = strcat(s, ":no_pickup_items");
+
+		// initialiation stuff, not good in the mutator system
 		if(cvar_string("g_weaponarena") != "0")
 			s = strcat(s, ":", cvar_string("g_weaponarena"), " arena");
-		if(cvar("g_vampire"))
-			s = strcat(s, ":vampire");
-		if(cvar("g_laserguided_missile"))
-			s = strcat(s, ":laserguided_missile");
+
+		// TODO to mutator system
 		if(cvar("g_norecoil"))
 			s = strcat(s, ":norecoil");
+
+		// TODO to mutator system
 		if(cvar("g_midair"))
 			s = strcat(s, ":midair");
+
+		// TODO to mutator system
 		if(cvar("g_minstagib"))
 			s = strcat(s, ":minstagib");
+
 		GameLogEcho(s);
 		GameLogEcho(":gameinfo:end");
 	}

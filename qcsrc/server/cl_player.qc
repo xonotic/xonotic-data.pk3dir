@@ -449,6 +449,16 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		take = damage;
 	}
 
+	frag_inflictor = inflictor;
+	frag_attacker = attacker;
+	frag_target = self;
+	damage_take = take;
+	damage_save = save;
+	damage_force = force;
+	MUTATOR_CALLHOOK(PlayerDamage);
+	take = bound(0, damage_take, self.health);
+	save = bound(0, damage_save, self.armorvalue);
+
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
@@ -664,11 +674,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.event_damage(inflictor, attacker, 0, deathtype, hitloc, force);
 		// set up to fade out later
 		SUB_SetFade (self, time + 6 + random (), 1);
-
-		// remove laserdot
-		if(self.weaponentity)
-			if(self.weaponentity.lasertarget)
-				remove(self.weaponentity.lasertarget);
 
 		if(clienttype(self) == CLIENTTYPE_REAL)
 		{
