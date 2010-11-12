@@ -195,7 +195,7 @@ float w_minstanex(float req)
 		{
 			if (self.jump_interval <= time)
 			{
-				self.jump_interval = time + 0.9 * W_WeaponRateFactor();
+				self.jump_interval = time + cvar("g_balance_laser_primary_refire") * W_WeaponRateFactor();
 
 				// ugly minstagib hack to reuse the fire mode of the laser
 				float w;
