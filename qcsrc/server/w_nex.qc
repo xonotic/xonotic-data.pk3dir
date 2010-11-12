@@ -100,6 +100,7 @@ float w_nex(float req)
 		{
 			if(cvar("g_balance_nex_secondary_charge"))
 			{
+				self.nex_charge_rottime = time + cvar("g_balance_nex_charge_rot_pause");
 				dt = frametime / W_TICSPERFRAME;
 				if(self.nex_charge < 1)
 				{

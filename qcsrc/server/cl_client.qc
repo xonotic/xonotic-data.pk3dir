@@ -2806,7 +2806,7 @@ void PlayerPreThink (void)
 		player_regen();
 
 		// rot nex charge to the charge limit
-		if(cvar("g_balance_nex_charge_rot_rate") && self.nex_charge > cvar("g_balance_nex_charge_limit"))
+		if(cvar("g_balance_nex_charge_rot_rate") && self.nex_charge > cvar("g_balance_nex_charge_limit") && self.nex_charge_rottime < time)
 			self.nex_charge = bound(cvar("g_balance_nex_charge_limit"), self.nex_charge - cvar("g_balance_nex_charge_rot_rate") * frametime / W_TICSPERFRAME, 1);
 
 		if(frametime)
