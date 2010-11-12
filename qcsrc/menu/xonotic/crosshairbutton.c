@@ -65,7 +65,7 @@ void XonoticCrosshairButton_draw(entity me)
 	vector sz, rgb;
 	float a;
 
-	rgb = eX * cvar("crosshair_color_red") + eY * cvar("crosshair_color_green") + eZ * cvar("crosshair_color_blue");
+	rgb = stov(cvar_string("crosshair_color"));
 	a = cvar("crosshair_alpha");
 
 	if(!me.checked && !me.focused)

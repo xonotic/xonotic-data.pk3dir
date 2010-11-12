@@ -109,10 +109,8 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			e0.textEntity = main.weaponsDialog;
 			e0.allowCut = 1;
 	me.TR(me);
-		me.TD(me, 1, 0.75, e = makeXonoticTextLabel(0, "Crosshair:"));
-		me.TD(me, 1, 1.00, e = makeXonoticCheckBox(0, "crosshair_per_weapon", "Per weapon"));
-		me.TD(me, 1, 1.25, e = makeXonoticCheckBox(1, "crosshair_color_override", "& Per weapon colors"));
-		setDependent(e, "crosshair_per_weapon", 1, 1);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair:"));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "crosshair_per_weapon", "Per weapon"));
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		for(i = 1; i <= 10; ++i) {
@@ -135,19 +133,12 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.1, "crosshair_alpha"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair red:"));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.01, "crosshair_color_red"));
-		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair color:"));
+		me.TD(me, 2, 1.8, e = makeXonoticColorpickerString("crosshair_color"));
+		setDependent(e, "crosshair_color_per_weapon", 1, 1);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair green:"));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.01, "crosshair_color_green"));
-		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair blue:"));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.01, "crosshair_color_blue"));
-		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
+		me.TDempty(me, 0.3);
+		me.TD(me, 1, 0.7, e = makeXonoticCheckBox(0, "crosshair_color_per_weapon", "Per weapon"));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_dot", "Enable centered dot"));
 	me.TR(me);
@@ -163,6 +154,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "crosshair_hittest", "0",    "None"));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "crosshair_hittest", "1",    "TrueAim"));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "crosshair_hittest", "1.25", "Enemies"));
+	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 2.2, e = makeXonoticButton("Waypoints setup...", '0 0 0'));
