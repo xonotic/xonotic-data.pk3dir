@@ -1501,8 +1501,11 @@ void HUD_Weapons(void)
 	float f, screen_ar;
 	float center_x, center_y;
 
-	if(!autocvar_hud_panel_weapons && !autocvar__hud_configure)
-		return;
+	if(!autocvar__hud_configure)
+	{
+		if(!autocvar_hud_panel_weapons) return;
+		if(spectatee_status == -1) return;
+	}
 
 	float timeout = cvar("hud_panel_weapons_timeout");
 	float timeout_effect_length, timein_effect_length;
@@ -1920,8 +1923,11 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 
 void HUD_Ammo(void)
 {
-	if(!autocvar_hud_panel_ammo && !autocvar__hud_configure)
-		return;
+	if(!autocvar__hud_configure)
+	{
+		if(!autocvar_hud_panel_ammo) return;
+		if(spectatee_status == -1) return;
+	}
 
 	active_panel = HUD_PANEL_AMMO;
 	HUD_Panel_UpdateCvars(ammo);
@@ -2069,16 +2075,12 @@ void DrawNumIcon_expanding(float iconalign, vector myPos, vector mySize, float x
 // Powerups (#2)
 //
 void HUD_Powerups(void) {
-	if(!autocvar_hud_panel_powerups && !autocvar__hud_configure)
-		return;
-
 	if(!autocvar__hud_configure)
 	{
-		if not(getstati(STAT_ITEMS) & (IT_STRENGTH | IT_INVINCIBLE))
-			return;
-
-		if (getstati(STAT_HEALTH) <= 0)
-			return;
+		if(!autocvar_hud_panel_powerups) return;
+		if(spectatee_status == -1) return;
+		if not(getstati(STAT_ITEMS) & (IT_STRENGTH | IT_INVINCIBLE)) return;
+		if (getstati(STAT_HEALTH) <= 0) return;
 	}
 
 	active_panel = HUD_PANEL_POWERUPS;
@@ -2293,8 +2295,11 @@ void HUD_Powerups(void) {
 //
 void HUD_HealthArmor(void)
 {
-	if(!autocvar_hud_panel_healtharmor && !autocvar__hud_configure)
-		return;
+	if(!autocvar__hud_configure)
+	{
+		if(!autocvar_hud_panel_healtharmor) return;
+		if(spectatee_status == -1) return;
+	}
 
 	active_panel = HUD_PANEL_HEALTHARMOR;
 	HUD_Panel_UpdateCvars(healtharmor);
@@ -3573,8 +3578,13 @@ void HUD_Radar(void)
 //
 void HUD_Score(void)
 {
-	if(!autocvar_hud_panel_score && !autocvar__hud_configure)
-		return;
+	if(!autocvar__hud_configure)
+	{
+		if(!autocvar_hud_panel_score) return;
+		// FIXME when observing show correctly scores for every game mode
+		// and remove this check
+		if(spectatee_status == -1) return;
+	}
 
 	active_panel = HUD_PANEL_SCORE;
 	HUD_Panel_UpdateCvars(score);
@@ -3703,8 +3713,12 @@ void HUD_Score(void)
 // Race timer (#8)
 //
 void HUD_RaceTimer (void) {
-	if(!autocvar_hud_panel_racetimer && !(gametype == GAME_RACE || gametype == GAME_CTS) && !autocvar__hud_configure)
-		return;
+	if(!autocvar__hud_configure)
+	{
+		if(!autocvar_hud_panel_racetimer) return;
+		if(!(gametype == GAME_RACE || gametype == GAME_CTS)) return;
+		if(spectatee_status == -1) return;
+	}
 
 	active_panel = HUD_PANEL_RACETIMER;
 	HUD_Panel_UpdateCvars(racetimer);
