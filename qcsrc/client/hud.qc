@@ -3155,12 +3155,12 @@ void HUD_Notify (void)
 			a = bound(0, (killnotify_times[j] + when + fadetime - time) / fadetime, 1);
 			if(!a)
 			{
-				continue;
+				break;
 			}
 		}
 		else
 		{
-			continue;
+			break;
 		}
 
 		s = "";
