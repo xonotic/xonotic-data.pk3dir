@@ -119,7 +119,8 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		}
 		// show a larger preview of the selected crosshair
 		me.TDempty(me, 0.2);
-		me.TDNoMargin(me, 2, 2 / 5, e = makeXonoticCrosshairButton(3, -1), '1 1 0'); // crosshair -1 makes this a preview
+		me.TDNoMargin(me, 2, 2 / 5, e = makeXonoticCrosshairButton(4, -1), '1 1 0'); // crosshair -1 makes this a preview
+		setDependent(e, "crosshair_per_weapon", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		for(i = 11; i <= 20; ++i) {
@@ -154,9 +155,9 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			setDependent(e, "crosshair_dot", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Hit test:"));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "crosshair_hittest", "0",    "None"));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "crosshair_hittest", "1",    "TrueAim"));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "crosshair_hittest", "1.25", "Enemies"));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "0",    "None"));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "1",    "TrueAim"));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "1.25", "Enemies"));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.4);
@@ -173,9 +174,9 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Force models:"));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(2, string_null, string_null, "None"));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(2, "cl_forceplayermodelsfromxonotic", string_null, "Custom"));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(2, "cl_forceplayermodels", string_null, "All"));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, string_null, string_null, "None"));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodelsfromxonotic", string_null, "Custom"));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodels", string_null, "All"));
 	#endif
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_gentle", "Disable gore effects"));
 	me.TR(me);

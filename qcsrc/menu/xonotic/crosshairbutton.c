@@ -84,6 +84,7 @@ void XonoticCrosshairButton_draw(entity me)
 			strunzone(me.src3);
 		me.src3 = strzone(strcat("/gfx/crosshair", cvar_string("crosshair")));
 		me.focused = 1;
+		me.checked = 0;
 	}
 
 	SUPER(XonoticCrosshairButton).draw(me);
