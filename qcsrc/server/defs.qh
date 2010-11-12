@@ -654,6 +654,7 @@ string deathmessage;
 .entity realowner;
 
 .float nex_charge;
+.float nex_charge_rottime;
 
 float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
 
