@@ -803,7 +803,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	if(c4 >= 0)
 		totalteams = totalteams + 1;
 
-	if(cvar("bot_vs_human") && totalteams == 1)
+	if((cvar("bot_vs_human") || pl.team_forced > 0) && totalteams == 1)
 		totalteams += 1;
 
 	if(totalteams <= 1)

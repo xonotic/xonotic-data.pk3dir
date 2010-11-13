@@ -171,7 +171,7 @@ void SV_ParseClientCommand(string s) {
 			PutClientInServer();
 		} else if(cvar("g_campaign") || cvar("g_balance_teams") || cvar("g_balance_teams_force")) {
 			//JoinBestTeam(self, FALSE, TRUE);
-		} else if(teams_matter && !cvar("sv_spectate")) {
+		} else if(teams_matter && !cvar("sv_spectate") && !(self.team_forced > 0)) {
 			self.classname = "observer";
 			stuffcmd(self,"menu_showteamselect\n");
 		}
@@ -249,9 +249,11 @@ void SV_ParseClientCommand(string s) {
 		if not(self.flags & FL_CLIENT)
 			return;
 		if( !teams_matter ) {
-			sprint( self, "selecteam can only be used in teamgames\n");
+			sprint( self, "selectteam can only be used in teamgames\n");
 		} else if(cvar("g_campaign")) {
 			//JoinBestTeam(self, 0);
+		} else if(self.team_forced > 0) {
+			sprint( self, "selectteam can not be used as your team is forced\n");
 		} else if(lockteams) {
 			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 		} else if( argv(1) == "red" ) {
