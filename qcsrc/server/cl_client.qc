@@ -916,7 +916,13 @@ void PutClientInServer (void)
 		}
 
 		if(g_weaponarena_random)
+		{
+			if(g_weaponarena_random_with_laser)
+				self.weapons &~= WEPBIT_LASER;
 			self.weapons = randombits(self.weapons, g_weaponarena_random, FALSE);
+			if(g_weaponarena_random_with_laser)
+				self.weapons |= WEPBIT_LASER;
+		}
 
 		self.items = start_items;
 		self.jump_interval = time;
