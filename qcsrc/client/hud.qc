@@ -3578,13 +3578,8 @@ void HUD_Radar(void)
 //
 void HUD_Score(void)
 {
-	if(!autocvar__hud_configure)
-	{
-		if(!autocvar_hud_panel_score) return;
-		// FIXME when observing show correctly scores for every game mode
-		// and remove this check
-		//if(spectatee_status == -1) return;
-	}
+	if(!autocvar__hud_configure && !autocvar_hud_panel_score)
+		return;
 
 	active_panel = HUD_PANEL_SCORE;
 	HUD_Panel_UpdateCvars(score);
@@ -3641,6 +3636,26 @@ void HUD_Score(void)
 		drawstring_aspect(pos, timer, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_font;
 	} else if (!teamplay) { // non-teamgames
+		if (spectatee_status == -1)
+		{
+#define SCOREPANEL_MAX_ENTRIES 6
+#define SCOREPANEL_ASPECTRATIO 2
+			float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
+			float height = mySize_y/entries;
+			vector fontsize = '0.9 0.9 0' * height;
+			pos_y += height * (1 - 0.9) / 2;
+
+			float name_size = mySize_x*0.75;
+			float i, name_pos;
+			for (pl = players.sort_next, i=0; pl && i<entries; pl = pl.sort_next, ++i)
+			{
+				string s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
+				drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring(pos + eX * mySize_x*0.79, ftos(pl.(scores[ps_primary])), fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				pos_y += height;
+			}
+			return;
+		}
 		// me vector := [team/connected frags id]
 		pl = players.sort_next;
 		if(pl == me)
