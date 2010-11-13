@@ -3678,7 +3678,6 @@ void HUD_Score(void)
 		float max_fragcount;
 		max_fragcount = -99;
 
-		float teamnum;
 		float scores_count, row, column, rows, columns;
 		vector offset;
 		vector score_pos, score_size; //for scores other than myteam
@@ -3687,7 +3686,7 @@ void HUD_Score(void)
 			if (autocvar__hud_configure)
 				scores_count = 4;
 			else for(tm = teams.sort_next; tm; tm = tm.sort_next) {
-				if(tm.team == COLOR_SPECTATOR || !tm.team_size)
+				if(tm.team == COLOR_SPECTATOR)
 					continue;
 				++scores_count;
 			}
@@ -3715,13 +3714,14 @@ void HUD_Score(void)
 				score_size_y = newSize;
 			}
 		}
+		else
+			score_size = eX * mySize_x*(1/4) + eY * mySize_y*(1/3);
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
-			if(tm.team == COLOR_SPECTATOR || (!tm.team_size && !autocvar__hud_configure)) // no players? don't display
+			if(tm.team == COLOR_SPECTATOR)
 				continue;
 			score = tm.(teamscores[ts_primary]);
 			if(autocvar__hud_configure)
 				score = 123;
-			leader = 0;
 			
 			if (score > max_fragcount)
 				max_fragcount = score;
@@ -3730,8 +3730,6 @@ void HUD_Score(void)
 			{
 				score_pos = pos + eX * column * (score_size_x + offset_x) + eY * row * (score_size_y + offset_y);
 				if (max_fragcount == score)
-					leader = 1;
-				if (leader)
 					HUD_Panel_DrawHighlight(score_pos, score_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawfont = hud_bigfont;
 				drawstring_aspect(score_pos, ftos(score), score_size, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -3745,19 +3743,15 @@ void HUD_Score(void)
 			}
 			else if(tm.team == myteam) {
 				if (max_fragcount == score)
-					leader = 1;
-				if (leader)
 					HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawfont = hud_bigfont;
 				drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawfont = hud_font;
 			} else {
 				if (max_fragcount == score)
-					leader = 1;
-				if (leader)
-					HUD_Panel_DrawHighlight(pos + eX * 0.75 * mySize_x + eY * (1/3) * teamnum * mySize_y, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(pos + eX * 0.75 * mySize_x + eY * (1/3) * teamnum * mySize_y, ftos(score), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
-				teamnum += 1;
+					HUD_Panel_DrawHighlight(pos + eX * 0.75 * mySize_x + eY * (1/3) * rows * mySize_y, score_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(pos + eX * 0.75 * mySize_x + eY * (1/3) * rows * mySize_y, ftos(score), score_size, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+				++rows;
 			}
 		}
 	}
