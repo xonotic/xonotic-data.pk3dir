@@ -1,3 +1,3 @@
-flag,flags/flag_blue
-flag_cloth,flags/flag_blue_cloth
-flag_laser,flags/flag_blue_laser
+mesh,models/ctf/flag_blue.tga
+mesh2,models/ctf/banner_blue.tga
+mesh3,models/ctf/glow_blue.tga
