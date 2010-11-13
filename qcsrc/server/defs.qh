@@ -659,3 +659,5 @@ string deathmessage;
 float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
 
 float serverflags;
+
+.float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator

@@ -1414,6 +1414,27 @@ void FixClientCvars(entity e)
 	 */
 }
 
+float PlayerInIDList(entity p, string idlist)
+{
+	float n, i;
+	string s;
+
+	// NOTE: we do NOT check crypto_keyfp here, an unsigned ID is fine too for this
+	if not(p.crypto_idfp)
+		return 0;
+
+	// this function allows abbreviated player IDs too!
+	n = tokenize_console(idlist);
+	for(i = 0; i < n; ++i)
+	{
+		s = argv(i);
+		if(s == substring(p.crypto_idfp, 0, strlen(s)))
+			return 1;
+	}
+
+	return 0;
+}
+
 /*
 =============
 ClientConnect
@@ -1469,9 +1490,37 @@ void ClientConnect (void)
 	//if(g_domination)
 	//	dom_player_join_team(self);
 
+	// identify the right forced team
+	if(PlayerInIDList(self, cvar_string("g_forced_team_red")))
+		self.team_forced = COLOR_TEAM1;
+	else if(PlayerInIDList(self, cvar_string("g_forced_team_blue")))
+		self.team_forced = COLOR_TEAM2;
+	else if(PlayerInIDList(self, cvar_string("g_forced_team_yellow")))
+		self.team_forced = COLOR_TEAM3;
+	else if(PlayerInIDList(self, cvar_string("g_forced_team_pink")))
+		self.team_forced = COLOR_TEAM4;
+	else if(cvar_string("g_forced_team_otherwise") == "red")
+		self.team_forced = COLOR_TEAM1;
+	else if(cvar_string("g_forced_team_otherwise") == "blue")
+		self.team_forced = COLOR_TEAM2;
+	else if(cvar_string("g_forced_team_otherwise") == "yellow")
+		self.team_forced = COLOR_TEAM3;
+	else if(cvar_string("g_forced_team_otherwise") == "pink")
+		self.team_forced = COLOR_TEAM4;
+	else if(cvar_string("g_forced_team_otherwise") == "spectate")
+		self.team_forced = -1;
+	else if(cvar_string("g_forced_team_otherwise") == "spectator")
+		self.team_forced = -1;
+	else
+		self.team_forced = 0;
+
+	if(!teams_matter)
+		if(self.team_forced > 0)
+			self.team_forced = 0;
+
 	JoinBestTeam(self, FALSE, FALSE); // if the team number is valid, keep it
 
-	if((cvar("sv_spectate") == 1 && !g_lms) || cvar("g_campaign")) {
+	if((cvar("sv_spectate") == 1 && !g_lms) || cvar("g_campaign") || self.team_forced < 0) {
 		self.classname = "observer";
 	} else {
 		if(teams_matter)
@@ -2380,6 +2429,9 @@ void LeaveSpectatorMode()
  * @return bool TRUE if the player is allowed to join, false otherwise
  */
 float isJoinAllowed() {
+	if(self.team_forced < 0)
+		return FALSE; // forced spectators can never join
+
 	if (!cvar("g_maxplayers"))
 		return TRUE;
 
