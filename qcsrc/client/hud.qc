@@ -3583,7 +3583,7 @@ void HUD_Score(void)
 		if(!autocvar_hud_panel_score) return;
 		// FIXME when observing show correctly scores for every game mode
 		// and remove this check
-		if(spectatee_status == -1) return;
+		//if(spectatee_status == -1) return;
 	}
 
 	active_panel = HUD_PANEL_SCORE;
@@ -3679,6 +3679,42 @@ void HUD_Score(void)
 		max_fragcount = -99;
 
 		float teamnum;
+		float scores_count, row, column, rows, columns;
+		vector offset;
+		vector score_pos, score_size; //for scores other than myteam
+		if (spectatee_status == -1)
+		{
+			if (autocvar__hud_configure)
+				scores_count = 4;
+			else for(tm = teams.sort_next; tm; tm = tm.sort_next) {
+				if(tm.team == COLOR_SPECTATOR || !tm.team_size)
+					continue;
+				++scores_count;
+			}
+			rows = mySize_y/mySize_x;
+			rows = bound(1, floor((sqrt(4 * (3/1) * rows * scores_count + rows * rows) + rows + 0.5) / 2), scores_count);
+			//                               ^^^ ammo item aspect goes here
+
+			columns = ceil(scores_count/rows);
+
+			score_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+
+			float newSize;
+			if(score_size_x/score_size_y > 3)
+			{
+				newSize = 3 * score_size_y;
+				offset_x = score_size_x - newSize;
+				pos_x += offset_x/2;
+				score_size_x = newSize;
+			}
+			else
+			{
+				newSize = 1/3 * score_size_x;
+				offset_y = score_size_y - newSize;
+				pos_y += offset_y/2;
+				score_size_y = newSize;
+			}
+		}
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
 			if(tm.team == COLOR_SPECTATOR || (!tm.team_size && !autocvar__hud_configure)) // no players? don't display
 				continue;
@@ -3690,7 +3726,24 @@ void HUD_Score(void)
 			if (score > max_fragcount)
 				max_fragcount = score;
 
-			if(tm.team == myteam) {
+			if (spectatee_status == -1)
+			{
+				score_pos = pos + eX * column * (score_size_x + offset_x) + eY * row * (score_size_y + offset_y);
+				if (max_fragcount == score)
+					leader = 1;
+				if (leader)
+					HUD_Panel_DrawHighlight(score_pos, score_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawfont = hud_bigfont;
+				drawstring_aspect(score_pos, ftos(score), score_size, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawfont = hud_font;
+				++row;
+				if(row >= rows)
+				{
+					row = 0;
+					++column;
+				}
+			}
+			else if(tm.team == myteam) {
 				if (max_fragcount == score)
 					leader = 1;
 				if (leader)
