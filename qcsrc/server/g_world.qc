@@ -369,6 +369,7 @@ void cvar_changes_init()
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
+		BADPREFIX("net_");
 		BADPREFIX("prvm_");
 		BADPREFIX("sv_fragmessage_");
 		BADPREFIX("sv_vote_");
