@@ -3636,7 +3636,7 @@ void HUD_Score(void)
 		drawstring_aspect(pos, timer, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_font;
 	} else if (!teamplay) { // non-teamgames
-		if (spectatee_status == -1)
+		if (spectatee_status == -1 || cvar("hud_panel_score_rankings"))
 		{
 #define SCOREPANEL_MAX_ENTRIES 6
 #define SCOREPANEL_ASPECTRATIO 2
