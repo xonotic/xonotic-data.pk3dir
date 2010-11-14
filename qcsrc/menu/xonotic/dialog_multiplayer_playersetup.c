@@ -92,7 +92,8 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 		sl = makeXonoticSlider(0.45, 0.75, 0.01, "cl_bobcycle");
 		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, sl, "View bobbing:"));
-		me.TD(me, 1, 2, sl);	
+		makeMulti(sl, "cl_bob2cycle");
+		me.TD(me, 1, 2, sl);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Zoom factor:"));
 		me.TD(me, 1, 2, e = makeXonoticSlider(2, 16, 0.5, "cl_zoomfactor"));
@@ -131,7 +132,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair alpha:"));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.1, "crosshair_color_alpha"));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.1, "crosshair_alpha"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair red:"));

@@ -1,3 +1,6 @@
+// a dummy macro that prevents the "hanging ;" warning
+#define ENDS_WITH_CURLY_BRACE
+
 #define ACCUMULATE_FUNCTION(func,otherfunc) \
 	#ifdef func \
 	void __merge__##otherfunc() { func(); otherfunc(); } \
@@ -162,7 +165,7 @@ void check_unacceptable_compiler_bugs();
 float compressShotOrigin(vector v);
 vector decompressShotOrigin(float f);
 
-string rankings_reply, lsmaps_reply, lsnewmaps_reply, maplist_reply; // cached replies
+string rankings_reply, ladder_reply, lsmaps_reply, lsnewmaps_reply, maplist_reply; // cached replies
 string records_reply[10];
 
 float RandomSelection_totalweight;
@@ -216,7 +219,7 @@ float get_model_parameters(string mod, float skn); // call with string_null to c
 switch(id) {\
 	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; break; \
 	case HUD_PANEL_INFOMESSAGES: panel_name = HUD_PANELNAME_INFOMESSAGES; break; \
-}
+} ENDS_WITH_CURLY_BRACE
 
 // Get name of specified panel id
 #define HUD_Panel_GetName(id) \

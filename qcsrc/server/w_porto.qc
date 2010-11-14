@@ -200,6 +200,8 @@ void W_Porto_Attack (void)
 	gren.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 
 	CSQCProjectile(gren, TRUE, PROJECTILE_PORTO_RED, TRUE);
+
+	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void spawnfunc_weapon_porto (void)

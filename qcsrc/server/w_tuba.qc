@@ -83,13 +83,14 @@ float W_Tuba_NoteSendEntity(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.origin_x);
 		WriteCoord(MSG_ENTITY, self.origin_y);
 		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteByte(MSG_ENTITY, self.owner != to);
 	}
 	return TRUE;
 }
 
 void W_Tuba_NoteThink()
 {
-	float needchange, dist_mult;
+	float dist_mult;
 	float vol0, vol1;
 	vector dir0, dir1;
 	vector v;
@@ -102,7 +103,6 @@ void W_Tuba_NoteThink()
 	}
 	self.nextthink = time;
 	dist_mult = cvar("g_balance_tuba_attenuation") / cvar("snd_soundradius");
-	needchange = 0;
 	FOR_EACH_REALCLIENT(e)
 	if(e != self.owner)
 	{

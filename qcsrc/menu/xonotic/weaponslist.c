@@ -36,10 +36,7 @@ void XonoticWeaponsList_draw(entity me)
 	s = W_NumberWeaponOrder(cvar_string("cl_weaponpriority"));
 	t = W_FixWeaponOrder(s, 1);
 	if(t != s)
-	{
-		print("AUTOFIXED\n");
 		cvar_set("cl_weaponpriority", W_NameWeaponOrder(t));
-	}
 	me.nItems = tokenize_console(t);
 	SUPER(XonoticWeaponsList).draw(me);
 }

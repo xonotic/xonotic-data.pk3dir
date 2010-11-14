@@ -831,6 +831,10 @@ float GameCommand_Generic(string command)
 		print(records_reply);
 		return TRUE;
 	}
+	else if(argv(0) == "ladder") {
+		print(ladder_reply);
+		return TRUE;
+	}
 	else if(argv(0) == "rankings") {
 		print(rankings_reply);
 		return TRUE;

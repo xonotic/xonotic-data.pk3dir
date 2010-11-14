@@ -37,7 +37,6 @@
 \sv_gravity\Make things fall to the ground slower, lower value means lower gravity
 \g_grappling_hook\Players spawn with the grappling hook
 \g_jetpack\Players spawn with the jetpack
-\g_laserguided_missile\Rockets can be steered using a laser pointer
 \g_pinata\Players will drop all weapons they possessed when they are killed
 \g_weapon_stay\Weapons stay after they are picked up
 \g_weaponarena\Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.

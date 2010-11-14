@@ -99,7 +99,7 @@ void W_Mine_RemoteExplode ()
 	if(self.owner.deadflag == DEAD_NO)
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
-			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > cvar("g_balance_minelayer_radius")) // safety device
+			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > cvar("g_balance_minelayer_remote_radius")) // safety device
 		)
 		{
 			W_Mine_DoRemoteExplode();
@@ -171,9 +171,6 @@ void W_Mine_Think (void)
 	if (self.owner.deadflag == DEAD_NO)
 	if (self.minelayer_detonate)
 		W_Mine_RemoteExplode();
-
-	if(self.csqcprojectile_clientanimate == 0)
-		UpdateCSQCProjectile(self);
 }
 
 void W_Mine_Touch (void)
@@ -252,7 +249,7 @@ void W_Mine_Attack (void)
 	mine.cnt = time + cvar("g_balance_minelayer_lifetime");
 	mine.flags = FL_PROJECTILE;
 
-	CSQCProjectile(mine, FALSE, PROJECTILE_MINE, TRUE);
+	CSQCProjectile(mine, TRUE, PROJECTILE_MINE, TRUE);
 
 	// muzzle flash for 1st person view
 	flash = spawn ();
@@ -262,6 +259,8 @@ void W_Mine_Attack (void)
 	W_AttachToShotorg(flash, '5 0 0');
 
 	// common properties
+
+	other = mine; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void spawnfunc_weapon_minelayer (void); // defined in t_items.qc

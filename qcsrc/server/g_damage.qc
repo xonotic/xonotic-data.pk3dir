@@ -88,11 +88,11 @@ float IsFlying(entity a)
 
 vector GetHeadshotMins(entity targ)
 {
-	return '0.6 0 0' * targ.mins_x + '0 0.6 0' * targ.mins_y + '0 0 1' * (1.3 * targ.view_ofs_z - 0.3 * targ.maxs_z);
+	return '-0.5 0 0' * PL_HEAD_x + '0 -0.5 0' * PL_HEAD_y + '0 0 1' * (targ.maxs_z - PL_HEAD_z);
 }
 vector GetHeadshotMaxs(entity targ)
 {
-	return '0.6 0 0' * targ.maxs_x + '0 0.6 0' * targ.maxs_y + '0 0 1' * targ.maxs_z;
+	return '0.5 0 0' * PL_HEAD_x + '0 0.5 0' * PL_HEAD_y + '0 0 1' * targ.maxs_z;
 }
 
 void UpdateFrags(entity player, float f)
@@ -278,7 +278,7 @@ void Send_CSQC_Centerprint(entity e, string s1, string s2, float msg, float type
 void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	string	s, a, msg;
-	float p, w, type;
+	float w, type;
 
 	if (targ.classname == "player" || targ.classname == "corpse")
 	{
@@ -342,7 +342,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			}
 			else
 			{
-				string blood_message, victim_message;
 				if (!checkrules_firstblood)
 				{
 					checkrules_firstblood = TRUE;
@@ -753,6 +752,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(deathtype & HITTYPE_HEADSHOT)
 								headshot = 1;
 						}
+						if(g_ca)
+							PlayerScore_Add(attacker, SP_SCORE, damage * cvar("g_ca_damage2score_multiplier"));
 					}
 				}
 				else
@@ -788,13 +789,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 	if(targ.classname == "player" && attacker.classname == "player" && attacker != targ && attacker.health > 2)
 	{
-		// Savage: vampire mode
-		if (g_vampire)
-		if (!g_minstagib)
-		if (time >= self.spawnshieldtime)
-		{
-			attacker.health += damage;
-		}
 		if(g_runematch)
 		{
 			if (attacker.runes & RUNE_VAMPIRE)
@@ -992,6 +986,39 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 						finaldmg = finaldmg * a;
 						a = bound(0, tfloorforce + (1-tfloorforce) * hitratio, 1);
 						force = force * a;
+
+						// laser force adjustments :P
+						if(DEATH_WEAPONOF(deathtype) == WEP_LASER)
+						{
+							vector vel;
+
+							float force_zscale;
+							float force_velocitybiasramp;
+							float force_velocitybias;
+
+							force_velocitybiasramp = cvar("sv_maxspeed");
+							if(deathtype & HITTYPE_SECONDARY)
+							{
+								force_zscale = cvar("g_balance_laser_secondary_force_zscale");
+								force_velocitybias = cvar("g_balance_laser_secondary_force_velocitybias");
+							}
+							else
+							{
+								force_zscale = cvar("g_balance_laser_primary_force_zscale");
+								force_velocitybias = cvar("g_balance_laser_primary_force_velocitybias");
+							}
+
+							vel = targ.velocity;
+							vel_z = 0;
+							vel = normalize(vel) * bound(0, vlen(vel) / force_velocitybiasramp, 1) * force_velocitybias;
+							force =
+								vlen(force)
+								*
+								normalize(normalize(force) + vel);
+
+							force_z *= force_zscale;
+						}
+
 						//if (targ == attacker)
 						//{
 						//	print("hits ", ftos(hits), " / ", ftos(total));

@@ -310,6 +310,8 @@ const float STAT_SHOTORG = 46; // compressShotOrigin
 const float STAT_LEADLIMIT = 47;
 const float STAT_BULLETS_LOADED = 48;
 const float STAT_NEX_CHARGE = 49;
+const float	STAT_LAST_PICKUP = 50;
+const float STAT_HUD = 51;
 
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
@@ -320,7 +322,6 @@ const float CTF_STATE_ATTACK = 1;
 const float CTF_STATE_DEFEND = 2;
 const float CTF_STATE_COMMANDER = 3;
 
-const float STAT_HUD = 50;
 const float HUD_NORMAL = 0;
 const float HUD_SPIDERBOT = 10;
 const float HUD_WAKIZASHI = 11;
@@ -336,6 +337,10 @@ const float STAT_VEHICLESTAT_AMMO1   = 63;
 const float STAT_VEHICLESTAT_RELOAD1 = 64;
 const float STAT_VEHICLESTAT_AMMO2   = 65;
 const float STAT_VEHICLESTAT_RELOAD2 = 66;
+
+// mod stats (1xx)
+const float STAT_REDALIVE = 100;
+const float STAT_BLUEALIVE = 101;
 
 //const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
 //const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin
@@ -503,6 +508,7 @@ float DEATH_CHEAT = 10016;
 float DEATH_FIRE = 10017;
 float DEATH_TURRET = 10020;
 float DEATH_QUIET = 10021;
+float DEATH_HEADSHOT = 10022;
 
 float DEATH_SBMINIGUN = 10030;
 float DEATH_SBROCKET  = 10031;
@@ -560,6 +566,8 @@ float MSG_KILL_ACTION = 3;
 float MSG_KILL_ACTION_SPREE = 4;
 float MSG_INFO = 5;
 
+float MSG_RACE = 10;
+
 float KILL_TEAM_RED = 10301;
 float KILL_TEAM_BLUE = 10302;
 float KILL_TEAM_SPREE = 10303;
@@ -584,6 +592,11 @@ float INFO_PICKUPFLAG = 10320;
 float INFO_LOSTFLAG = 10321;
 float INFO_RETURNFLAG = 10322;
 float INFO_CAPTUREFLAG = 10323;
+
+float RACE_SERVER_RECORD = 10400;
+float RACE_NEW_TIME = 10401;
+float RACE_NEW_RANK = 10402;
+float RACE_FAIL = 10403;
 
 // weapon requests
 float WR_SETUP		= 1; // (SVQC) setup weapon data
@@ -633,3 +646,5 @@ string HUD_PANELNAME_ENGINEINFO	 	= "engineinfo";
 string HUD_PANELNAME_INFOMESSAGES	= "infomessages";
 
 float HUD_MENU_ENABLE		= 0;
+
+#define SERVERFLAG_ALLOW_FULLBRIGHT 1

@@ -303,6 +303,8 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "records") {
 		for(i = 0; i < 10; ++i)
 			sprint(self, records_reply[i]);
+	} else if(cmd == "ladder") {
+		sprint(self, ladder_reply);
 	} else if(cmd == "rankings") {
 		sprint(self, rankings_reply);
 	} else if(cmd == "voice") {
@@ -362,6 +364,8 @@ void SV_ParseClientCommand(string s) {
 		Score_NicePrint(self);
 	} else if(cmd == "cvar_changes") {
 		sprint(self, cvar_changes);
+	} else if(cmd == "cvar_purechanges") {
+		sprint(self, cvar_purechanges);
 	} else if(CheatCommand(tokens)) {
 	} else {
 		//if(ctf_clientcommand())
@@ -430,7 +434,7 @@ void ReadyRestartForce()
 
 	readyrestart_happened = 1;
 	game_starttime = time;
-	if(!g_ca)
+	if(!g_ca && !g_arena)
 		game_starttime += RESTART_COUNTDOWN;
 	restart_mapalreadyrestarted = 0; //reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
@@ -448,7 +452,7 @@ void ReadyRestartForce()
 	}
 
 	//initiate the restart-countdown-announcer entity
-	if(cvar("sv_ready_restart_after_countdown"))
+	if(cvar("sv_ready_restart_after_countdown") && !g_ca && !g_arena)
 	{
 		restartTimer = spawn();
 		restartTimer.think = restartTimer_Think;

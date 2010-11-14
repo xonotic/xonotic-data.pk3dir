@@ -6,7 +6,7 @@ CLASS(XonoticAdvancedDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticAdvancedDialog, title, string, "Advanced server settings")
 	ATTRIB(XonoticAdvancedDialog, color, vector, SKINCOLOR_DIALOG_ADVANCED)
 	ATTRIB(XonoticAdvancedDialog, intendedWidth, float, 0.5)
-	ATTRIB(XonoticAdvancedDialog, rows, float, 14)
+	ATTRIB(XonoticAdvancedDialog, rows, float, 13)
 	ATTRIB(XonoticAdvancedDialog, columns, float, 3)
 	ATTRIB(XonoticAdvancedDialog, refilterEntity, entity, NULL)
 ENDCLASS(XonoticAdvancedDialog)
@@ -30,10 +30,6 @@ void XonoticAdvancedDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Spawn shield:"));
 		me.TD(me, 1, 1.7, e = makeXonoticSlider(0, 15, 0.5, "g_spawnshieldtime"));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Start delay:"));
-		me.TD(me, 1, 1.7, e = makeXonoticSlider(0, 30, 0.5, "g_start_delay"));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);

@@ -1,5 +1,6 @@
 #define TUBA_STARTNOTE(n) strcat((checkextension("DP_SND_SETPARAMS") ? "weapons/tuba_loopnote" : "weapons/tuba_note"), ftos(n), ".wav")
 .float cnt; // note
+.float attenuate; // if set, attenuate it
 
 void Ent_TubaNote_Think()
 {
@@ -16,14 +17,14 @@ void Ent_TubaNote_Think()
 		remove(self);
 	}
 	else
-		sound(self, CHAN_PROJECTILE, "", self.cnt, cvar("g_balance_tuba_attenuation"));
+		sound(self, CHAN_PROJECTILE, "", self.cnt, self.attenuate * cvar("g_balance_tuba_attenuation"));
 }
 
 void Ent_TubaNote_UpdateSound()
 {
 	self.enemy.cnt = bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1);
 	self.enemy.count = self.enemy.cnt;
-	sound(self.enemy, CHAN_PROJECTILE, TUBA_STARTNOTE(self.cnt), self.enemy.cnt, cvar("g_balance_tuba_attenuation"));
+	sound(self.enemy, CHAN_PROJECTILE, TUBA_STARTNOTE(self.cnt), self.enemy.cnt, self.enemy.attenuate * cvar("g_balance_tuba_attenuation"));
 }
 
 void Ent_TubaNote_StopSound()
@@ -52,6 +53,7 @@ void Ent_TubaNote(float bIsNew)
 		self.enemy.origin_y = ReadCoord();
 		self.enemy.origin_z = ReadCoord();
 		setorigin(self.enemy, self.enemy.origin);
+		self.enemy.attenuate = ReadByte();
 	}
 	self.think = Ent_TubaNote_StopSound;
 	self.entremove = Ent_TubaNote_StopSound;

@@ -18,7 +18,7 @@ float require_spawnfunc_prefix; // if this float exists, only functions with spa
 float ctf_score_value(string parameter);
 
 float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_arena, g_ca, g_lms, g_runematch, g_race, g_nexball, g_cts;
-float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_laserguided_missile, g_midair, g_minstagib, g_pinata, g_norecoil, g_vampire, g_minstagib_invis_alpha, g_bloodloss;
+float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minstagib, g_pinata, g_norecoil, g_minstagib_invis_alpha, g_bloodloss;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
@@ -227,7 +227,6 @@ float WS_READY			= 4; // idle frame
 void weapon_defaultspawnfunc(float wpn);
 
 string w_deathtypestring;
-float w_deathtype;
 
 void(entity client, string s) centerprint_builtin = #73;
 .vector dest1, dest2;
@@ -243,10 +242,6 @@ float alreadychangedlevel;
 
 .float welcomemessage_time;
 .float version;
-
-// Laser target for laser-guided weapons
-.entity lasertarget;
-.float laser_on;
 
 // minstagib vars
 .float jump_interval;    // laser refire
@@ -297,7 +292,6 @@ string getTimeoutText(float addOneSecond);
 .entity flagcarried;
 
 .entity lastrocket;
-.entity lastmine;
 
 .float playerid;
 float playerid_last;
@@ -328,6 +322,11 @@ float sv_loddistance1;
 float sv_loddistance2;
 .float cvar_cl_gunalign;
 .float cvar_cl_noantilag;
+
+.string weaponorder_byimpulse;
+
+.float cvar_cl_allow_uid2name;
+.string stored_netname;
 
 void Announce(string snd);
 void AnnounceTo(entity e, string snd);
@@ -523,6 +522,8 @@ string clientstuff;
 .string fog;
 
 string cvar_changes;
+string cvar_purechanges;
+float cvar_purechanges_count;
 
 float game_starttime; //point in time when the countdown is over
 .float stat_game_starttime;
@@ -603,6 +604,8 @@ string matchid;
 .float stats_hit[WEP_MAXCOUNT];  // for hitscan bullets hit
 .float stats_fired[WEP_MAXCOUNT];  // for hitscan bullets fired
 
+.float last_pickup;
+
 FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_hit);
 FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_fired);
 
@@ -651,3 +654,8 @@ string deathmessage;
 .entity realowner;
 
 .float nex_charge;
+.float nex_charge_rottime;
+
+float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
+
+float serverflags;

@@ -77,6 +77,9 @@ void W_Laser_Attack (float issecondary)
 
 	missile.think = W_Laser_Think;
 	missile.nextthink = time + cvar("g_balance_laser_primary_delay");
+
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+
 	if(time >= missile.nextthink)
 	{
 		entity oldself;

@@ -99,15 +99,15 @@ void XonoticPlayerModelSelector_destroy(entity me)
 
 void XonoticPlayerModelSelector_loadCvars(entity me)
 {
-	string skin, model;
+	string skin, modelname;
 	float i;
 
 	skin = cvar_string("_cl_playerskin");
-	model = cvar_string("_cl_playermodel");
+	modelname = cvar_string("_cl_playermodel");
 
 	for(i = 0; i < me.numModels; ++i)
 	{
-		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_MODEL) == model)
+		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_MODEL) == modelname)
 		if(bufstr_get(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN) == skin)
 			break;
 	}

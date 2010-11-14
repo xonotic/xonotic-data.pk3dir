@@ -916,7 +916,13 @@ void PutClientInServer (void)
 		}
 
 		if(g_weaponarena_random)
+		{
+			if(g_weaponarena_random_with_laser)
+				self.weapons &~= WEPBIT_LASER;
 			self.weapons = randombits(self.weapons, g_weaponarena_random, FALSE);
+			if(g_weaponarena_random_with_laser)
+				self.weapons |= WEPBIT_LASER;
+		}
 
 		self.items = start_items;
 		self.jump_interval = time;
@@ -1091,10 +1097,11 @@ float ClientInit_SendEntity(entity to, float sf)
 		WriteString(MSG_ENTITY, "");
 	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
 	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
-	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_secondary_bouncefactor
-	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_secondary_bouncestop
+	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_bouncefactor
+	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_bouncestop
 	WriteByte(MSG_ENTITY, cvar("g_balance_nex_secondary")); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, cvar("g_balance_campingrifle_secondary")); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
 	return TRUE;
 }
 
@@ -1111,14 +1118,14 @@ void ClientInit_CheckUpdate()
 		self.cnt = cvar("g_balance_weaponswitchdelay");
 		self.SendFlags |= 1;
 	}
-	if(self.bouncefactor != cvar("g_balance_grenadelauncher_secondary_bouncefactor"))
+	if(self.bouncefactor != cvar("g_balance_grenadelauncher_bouncefactor"))
 	{
-		self.bouncefactor = cvar("g_balance_grenadelauncher_secondary_bouncefactor");
+		self.bouncefactor = cvar("g_balance_grenadelauncher_bouncefactor");
 		self.SendFlags |= 1;
 	}
-	if(self.bouncestop != cvar("g_balance_grenadelauncher_secondary_bouncestop"))
+	if(self.bouncestop != cvar("g_balance_grenadelauncher_bouncestop"))
 	{
-		self.bouncestop = cvar("g_balance_grenadelauncher_secondary_bouncestop");
+		self.bouncestop = cvar("g_balance_grenadelauncher_bouncestop");
 		self.SendFlags |= 1;
 	}
 }
@@ -1305,7 +1312,28 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 
 void ClientKill (void)
 {
-	ClientKill_TeamChange(0);
+	if((g_arena || g_ca) && ((champion && champion.classname == "player" && player_count > 1) || player_count == 1)) // don't allow a kill in this case either
+	{
+		// do nothing
+	}
+	else
+		ClientKill_TeamChange(0);
+}
+
+void CTS_ClientKill_Think (void)
+{
+	self = self.owner; // set self to the player to be killed
+	sprint(self, "^1You were killed in order to prevent cheating!");
+	ClientKill_Now();
+}
+
+void CTS_ClientKill (float t) // silent version of ClientKill
+{
+	entity e;
+	e = spawn();
+	e.owner = self;
+	e.think = CTS_ClientKill_Think;
+	e.nextthink = t;
 }
 
 void DoTeamChange(float destteam)
@@ -1582,11 +1610,12 @@ void ClientConnect (void)
 			rr = RACE_RECORD;
 		t = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "time")));
 
+		msg_entity = self;
 		race_send_recordtime(MSG_ONE);
 		race_send_speedaward(MSG_ONE);
 
 		speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed")));
-		speedaward_alltimebest_holder = db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/netname"));
+		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp")));
 		race_send_speedaward_alltimebest(MSG_ONE);
 
 		float i;
@@ -1672,11 +1701,6 @@ void ClientDisconnect (void)
 
 	bot_relinkplayerlist();
 
-	// remove laserdot
-	if(self.weaponentity)
-		if(self.weaponentity.lasertarget)
-			remove(self.weaponentity.lasertarget);
-
 	if(g_arena)
 	{
 		Spawnqueue_Unmark(self);
@@ -1690,6 +1714,8 @@ void ClientDisconnect (void)
 		strunzone(self.netname_previous);
 	if(self.clientstatus)
 		strunzone(self.clientstatus);
+	if(self.weaponorder_byimpulse)
+		strunzone(self.weaponorder_byimpulse);
 
 	ClearPlayerSounds();
 
@@ -2218,6 +2244,7 @@ void SpectateCopy(entity spectatee) {
 	self.health = spectatee.health;
 	self.impulse = 0;
 	self.items = spectatee.items;
+	self.last_pickup = spectatee.last_pickup;
 	self.metertime = spectatee.metertime;
 	self.strength_finished = spectatee.strength_finished;
 	self.invincible_finished = spectatee.invincible_finished;
@@ -2783,6 +2810,11 @@ void PlayerPreThink (void)
 		}
 
 		player_regen();
+
+		// rot nex charge to the charge limit
+		if(cvar("g_balance_nex_charge_rot_rate") && self.nex_charge > cvar("g_balance_nex_charge_limit") && self.nex_charge_rottime < time)
+			self.nex_charge = bound(cvar("g_balance_nex_charge_limit"), self.nex_charge - cvar("g_balance_nex_charge_rot_rate") * frametime / W_TICSPERFRAME, 1);
+
 		if(frametime)
 			player_anim();
 
@@ -3008,6 +3040,18 @@ void PlayerPostThink (void)
 	}
 
 	playerdemo_write();
+
+	if((g_cts || g_race) && self.cvar_cl_allow_uid2name)
+	{
+		if(!self.stored_netname)
+			self.stored_netname = strzone(uid2name(self.crypto_idfp));
+		if(self.stored_netname != self.netname)
+		{
+			db_put(ServerProgsDB, strcat("uid2name", self.crypto_idfp), self.netname);
+			strunzone(self.stored_netname);
+			self.stored_netname = strzone(self.netname);
+		}
+	}
 
 	/*
 	if(g_race)

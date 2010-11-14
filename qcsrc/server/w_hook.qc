@@ -93,6 +93,8 @@ void W_Hook_Attack2()
 	gren.flags = FL_PROJECTILE;
 
 	CSQCProjectile(gren, TRUE, PROJECTILE_HOOKBOMB, TRUE);
+
+	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void spawnfunc_weapon_hook (void)

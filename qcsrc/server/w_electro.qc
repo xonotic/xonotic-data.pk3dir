@@ -61,10 +61,13 @@ void W_Plasma_Explode_Combo (void)
 
 void W_Plasma_Touch (void)
 {
+	//self.velocity = self.velocity  * 0.1;
+	
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM) {
 		W_Plasma_Explode ();
 	} else {
+		//UpdateCSQCProjectile(self);
 		spamsound (self, CHAN_PROJECTILE, "weapons/electro_bounce.wav", VOL_BASE, ATTN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
@@ -136,6 +139,8 @@ void W_Electro_Attack()
 	//sounds bad
 
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
+
+	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void W_Electro_Attack2()
@@ -172,7 +177,10 @@ void W_Electro_Attack2()
 	proj.health = cvar("g_balance_electro_secondary_health");
 	proj.event_damage = W_Plasma_Damage;
 	proj.flags = FL_PROJECTILE;
-
+	
+	//proj.bouncefactor = cvar("g_balance_electro_secondary_bouncefactor");
+	//proj.bouncestop = cvar("g_balance_electro_secondary_bouncestop");
+	
 #if 0
 	entity p2;
 	p2 = spawn();
@@ -182,7 +190,9 @@ void W_Electro_Attack2()
 #endif
 
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
-}
+
+	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+	}
 
 .vector hook_start, hook_end;
 float lgbeam_send(entity to, float sf)

@@ -51,9 +51,9 @@ void Seeker_Missile_Think()
 	{
 		e               = self.enemy;
 		eorg            = 0.5 * (e.absmin + e.absmax);
-		turnrate        = cvar("g_balance_seeker_missile_turnrate");		    // how fast to turn
+		turnrate        = cvar("g_balance_seeker_missile_turnrate"); // how fast to turn
 		desireddir      = normalize(eorg - self.origin);
-		olddir          = normalize(self.velocity);				            // get my current direction
+		olddir          = normalize(self.velocity); // get my current direction
 		dist            = vlen(eorg - self.origin);
 
 		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
@@ -66,18 +66,14 @@ void Seeker_Missile_Think()
 				traceline(self.origin, eorg, FALSE, self);
 
 			// Setup adaptive tracelength
-			self.wait = vlen(self.origin - trace_endpos);
-			if (self.wait < cvar("g_balance_seeker_missile_smart_trace_min")) self.wait = cvar("g_balance_seeker_missile_smart_trace_min");
-			if (self.wait > cvar("g_balance_seeker_missile_smart_trace_max")) self.wait = cvar("g_balance_seeker_missile_smart_trace_max");
+			self.wait = bound(cvar("g_balance_seeker_missile_smart_trace_min"), vlen(self.origin - trace_endpos), self.wait = cvar("g_balance_seeker_missile_smart_trace_max"));
 
 			// Calc how important it is that we turn and add this to the desierd (enemy) dir.
 			desireddir  = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
 		}
-
-		//newdir = normalize((olddir + desireddir * turnrate) * 0.5);// take the average of the 2 directions; not the best method but simple & easy
-		newdir = normalize(olddir + desireddir * turnrate);// take the average of the 2 directions; not the best method but simple & easy
-
-		self.velocity = newdir * self.switchweapon;			                    // make me fly in the new direction at my flight speed
+		
+		newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
+		self.velocity = newdir * self.switchweapon; // make me fly in the new direction at my flight speed
 	}
 
 	// Proxy
@@ -114,9 +110,8 @@ void Seeker_Missile_Think()
 		return;
 	}
 
-	self.angles = vectoangles(self.velocity);			// turn model in the new flight direction
-	self.nextthink = time + 0.05;
-
+	//self.angles = vectoangles(self.velocity);			// turn model in the new flight direction
+	self.nextthink = time;// + 0.05; // csqc projectiles
 	UpdateCSQCProjectile(self);
 }
 
@@ -124,21 +119,19 @@ void Seeker_Missile_Think()
 
 void Seeker_Missile_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	float d;
-	d = damage;
-
 	if (self.health <= 0)
 		return;
 
 	if (self.owner == attacker)
-		d = d * 0.25;
-
-	self.health = self.health - d;
-
+		self.health = self.health - (damage * 0.25);
+	else
+		self.health = self.health - damage;
+		
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, Seeker_Missile_Explode);
 }
 
+/*
 void Seeker_Missile_Animate()
 {
 	self.frame = self.frame +1;
@@ -161,6 +154,7 @@ void Seeker_Missile_Animate()
 
 	UpdateCSQCProjectile(self);
 }
+*/
 
 void Seeker_Fire_Missile(vector f_diff)
 {
@@ -182,36 +176,33 @@ void Seeker_Fire_Missile(vector f_diff)
 	missile.bot_dodge       = TRUE;
 	missile.bot_dodgerating = cvar("g_balance_seeker_missile_damage");
 
-	missile.think           = Seeker_Missile_Animate;
-
-	//if (!cvar("g_balance_seeker_missile_proxy"))
+	missile.think           = Seeker_Missile_Think;
 	missile.touch           = Seeker_Missile_Touch;
-
 	missile.event_damage    = Seeker_Missile_Damage;
 	missile.nextthink       = time;// + 0.2;// + cvar("g_balance_seeker_missile_activate_delay");
 	missile.cnt             = time + cvar("g_balance_seeker_missile_lifetime");
 	missile.enemy           = self.enemy;
 	missile.solid           = SOLID_BBOX;
 	missile.scale           = 2;
-	missile.takedamage          = DAMAGE_YES;
+	missile.takedamage      = DAMAGE_YES;
 	missile.health          = cvar("g_balance_seeker_missile_health");
 	missile.damageforcescale = cvar("g_balance_seeker_missile_damageforcescale");
 	missile.projectiledeathtype = WEP_SEEKER;
+	//missile.think           = Seeker_Missile_Animate; // csqc projectiles.
+
 
 	setorigin (missile, w_shotorg);
 	setsize (missile, '-4 -4 -4', '4 4 4');
-
-
-	missile.movetype    = MOVETYPE_FLYMISSILE;// MOVETYPE_TOSS;
-
+	missile.movetype    = MOVETYPE_FLYMISSILE;
 	missile.flags       = FL_PROJECTILE;
-
 	W_SETUPPROJECTILEVELOCITY_UP(missile, g_balance_seeker_missile);
 
 	missile.switchweapon = vlen(missile.velocity);
 	missile.angles = vectoangles (missile.velocity);
 
 	CSQCProjectile(missile, FALSE, PROJECTILE_SEEKER, TRUE);
+
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void Seeker_Vollycontroler_Think()
@@ -274,17 +265,13 @@ void Seeker_Tag_Damage (entity inflictor, entity attacker, float damage, float d
 		Seeker_Tag_Explode();
 }
 
-void Seeker_Tag_Think()
-{
-	remove(self);
-	return;
-}
 
 void Seeker_Tag_Touch()
 {
 	vector dir;
 	vector org2;
-
+	entity e;
+	
 	dir     = normalize (self.owner.origin - self.origin);
 	org2    = findbetterlocation (self.origin, 8);
 
@@ -294,27 +281,18 @@ void Seeker_Tag_Touch()
 	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_HEADSHOT, self);
 
 	if (other.takedamage == DAMAGE_AIM && other.deadflag == DEAD_NO)
-	{
-		entity e;
+	{		
 		e           = spawn();
 		e.cnt       = cvar("g_balance_seeker_missile_count");
 		e.owner     = self.owner;
 		e.enemy     = other;
 		e.think     = Seeker_Vollycontroler_Think;
 		e.nextthink = time;
-
-		//sprint(self.owner, "^1Target lock ^3[^7 ",other.netname, " ^3]^1 acquired - autofire activated.\n");
-		//sprint(other,"^1You are targeted!\n");
-
-		// stuffcmd(other,"play2 weapons/zany-alarm4.ogg\n");
-		// stuffcmd(self.owner, "play2 weapons/zany-lock4.ogg\n");
 	}
 
 	remove(self);
 	return;
 }
-
-
 
 void Seeker_Fire_Tag()
 {
@@ -330,7 +308,7 @@ void Seeker_Fire_Tag()
 	missile.bot_dodge       = TRUE;
 	missile.bot_dodgerating = 50;
 	missile.touch           = Seeker_Tag_Touch;
-	missile.think           = Seeker_Tag_Think;
+	missile.think           = SUB_Remove;
 	missile.nextthink       = time + cvar("g_balance_seeker_tag_lifetime");
 	missile.movetype        = MOVETYPE_FLY;
 	missile.solid           = SOLID_BBOX;
@@ -351,6 +329,8 @@ void Seeker_Fire_Tag()
 	missile.angles = vectoangles (missile.velocity);
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_TAG, FALSE); // has sound
+
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 
@@ -401,29 +381,32 @@ void Seeker_Fire_Flac()
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn ();
-	missile.owner = missile.realowner = self;
-	missile.classname = "missile";
-	missile.bot_dodge = TRUE;
+	missile 				= spawn ();
+	missile.owner 			= missile.realowner = self;
+	missile.classname 		= "missile";
+	missile.bot_dodge 		= TRUE;
 	missile.bot_dodgerating = cvar("g_balance_seeker_flac_damage");
-	missile.touch = Seeker_Flac_Explode;
-	missile.use = Seeker_Flac_Explode;
-	missile.think = adaptor_think2use_hittype_splash;
-	missile.nextthink = time + cvar("g_balance_seeker_flac_lifetime") + cvar("g_balance_seeker_flac_lifetime_rand");
-	missile.solid = SOLID_BBOX;
-	missile.scale = 0.4; // BUG: the model is too big
+	missile.touch 			= Seeker_Flac_Explode;
+	missile.use 			= Seeker_Flac_Explode; 
+	missile.think 			= adaptor_think2use_hittype_splash;
+	missile.nextthink 		= time + cvar("g_balance_seeker_flac_lifetime") + cvar("g_balance_seeker_flac_lifetime_rand");
+	missile.solid 			= SOLID_BBOX;
+	missile.movetype 		= MOVETYPE_FLY;	
 	missile.projectiledeathtype = WEP_SEEKER;
+	missile.projectiledeathtype = WEP_SEEKER | HITTYPE_SECONDARY;
+	missile.flags 				= FL_PROJECTILE;
+	
+	// csqc projectiles
+	//missile.angles 				= vectoangles (missile.velocity);	
+	//missile.scale = 0.4; // BUG: the model is too big 
+	
 	setorigin (missile, w_shotorg);
 	setsize (missile, '-2 -2 -2', '2 2 2');
-	missile.projectiledeathtype = WEP_SEEKER | HITTYPE_SECONDARY;
-
-	missile.movetype = MOVETYPE_FLY;
+		
 	W_SETUPPROJECTILEVELOCITY_UP(missile, g_balance_seeker_flac);
-
-	missile.angles = vectoangles (missile.velocity);
-	missile.flags = FL_PROJECTILE;
-
 	CSQCProjectile(missile, TRUE, PROJECTILE_FLAC, TRUE);
+
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void spawnfunc_weapon_seeker (void)

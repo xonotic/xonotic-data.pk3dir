@@ -71,6 +71,8 @@ void W_Hagar_Attack (void)
 	missile.flags = FL_PROJECTILE;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR, TRUE);
+
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void W_Hagar_Attack2 (void)
@@ -106,6 +108,8 @@ void W_Hagar_Attack2 (void)
 	missile.flags = FL_PROJECTILE;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE);
+
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void spawnfunc_weapon_hagar (void)

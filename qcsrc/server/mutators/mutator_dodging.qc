@@ -266,7 +266,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	return 0;
 }
 
-MUTATOR_DEFINITION(dodging)
+MUTATOR_DEFINITION(mutator_dodging)
 {
 	// we need to be called before GetPressedKey does its thing so we can
 	// detect state changes and therefore dodging actions..

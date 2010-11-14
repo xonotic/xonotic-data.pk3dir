@@ -74,6 +74,8 @@ void W_HLAC_Attack (void)
 	missile.projectiledeathtype = WEP_HLAC;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_HLAC, TRUE);
+
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void W_HLAC_Attack2f (void)
@@ -116,6 +118,8 @@ void W_HLAC_Attack2f (void)
 	missile.projectiledeathtype = WEP_HLAC | HITTYPE_SECONDARY;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_HLAC, TRUE);
+
+	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void W_HLAC_Attack2 (void)

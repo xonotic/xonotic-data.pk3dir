@@ -7,7 +7,7 @@ CLASS(XonoticMutatorsDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticMutatorsDialog, title, string, "Mutators")
 	ATTRIB(XonoticMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS)
 	ATTRIB(XonoticMutatorsDialog, intendedWidth, float, 0.9)
-	ATTRIB(XonoticMutatorsDialog, rows, float, 18)
+	ATTRIB(XonoticMutatorsDialog, rows, float, 17)
 	ATTRIB(XonoticMutatorsDialog, columns, float, 6)
 	ATTRIB(XonoticMutatorsDialog, refilterEntity, entity, NULL)
 ENDCLASS(XonoticMutatorsDialog)
@@ -70,6 +70,8 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", MinstaGib");
 	if(cvar("g_nix"))
 		s = strcat(s, ", NIX");
+	if(cvar("g_rocket_flying"))
+		s = strcat(s, ", Rocket Flying");
 	if(cvar_string("g_weaponarena") != "0")
 		s = strcat(s, ", ", WeaponArenaString());
 	if(cvar("g_start_weapon_laser") == 0)
@@ -78,12 +80,8 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", Low gravity");
 	if(cvar("g_cloaked"))
 		s = strcat(s, ", Cloaked");
-	if(cvar("g_footsteps"))
-		s = strcat(s, ", Steps");
 	if(cvar("g_grappling_hook"))
 		s = strcat(s, ", Hook");
-	if(cvar("g_laserguided_missile"))
-		s = strcat(s, ", LG missiles");
 	if(cvar("g_midair"))
 		s = strcat(s, ", Midair");
 	if(cvar("g_vampire"))
@@ -172,9 +170,6 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_cloaked", "Cloaked"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_footsteps", "Footsteps"));
-	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_midair", "Midair"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -207,7 +202,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_jetpack", "Jet pack"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_laserguided_missile", "Laser guided missiles"));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_rocket_flying", "Rocket Flying"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_pinata", "Pinata"));
