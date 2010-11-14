@@ -75,6 +75,9 @@ void XonoticHUDScoreDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Score:"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_score_rankings", "Show rankings in non-team games"));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Rankings:"));
+		me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(1, "hud_panel_score_rankings", "0", "Off"));
+		me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(1, "hud_panel_score_rankings", "1", "And me"));
+		me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(1, "hud_panel_score_rankings", "2", "Pure"));
 }
 #endif

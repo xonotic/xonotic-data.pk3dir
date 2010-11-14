@@ -3576,6 +3576,7 @@ void HUD_Radar(void)
 
 // Score (#7)
 //
+void HUD_UpdatePlayerTeams();
 void HUD_Score(void)
 {
 	if(!autocvar__hud_configure && !autocvar_hud_panel_score)
@@ -3645,10 +3646,40 @@ void HUD_Score(void)
 			vector fontsize = '0.9 0.9 0' * height;
 			pos_y += height * (1 - 0.9) / 2;
 
+			vector rgb;
+			rgb = '1 1 1';
+
+			if (!scoreboard_fade_alpha) // the scoreboard too calls HUD_UpdatePlayerTeams
+				HUD_UpdatePlayerTeams();
+
 			float name_size = mySize_x*0.75;
-			float i, name_pos;
+			float i, me_printed;
 			for (pl = players.sort_next, i=0; pl && i<entries; pl = pl.sort_next, ++i)
 			{
+				if (pl.team == COLOR_SPECTATOR)
+					continue;
+
+				if (i == entries-1 && !me_printed && pl != me)
+				if (cvar("hud_panel_score_rankings") == 1 && spectatee_status != -1)
+				{
+					for (pl = me.sort_next; pl; pl = pl.sort_next)
+						if (pl.team != COLOR_SPECTATOR)
+							break;
+
+					if (pl)
+						rgb = '1 1 0'; //not last but not among the leading players: yellow
+					else
+						rgb = '1 0 0'; //last: red
+					pl = me;
+				}
+
+				if (pl == me)
+				{
+					if (i == 0)
+						rgb = '0 1 0'; //first: green
+					me_printed = 1;
+					drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, 0.3 * panel_fg_alpha, DRAWFLAG_NORMAL);
+				}
 				string s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
 				drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawstring(pos + eX * mySize_x*0.79, ftos(pl.(scores[ps_primary])), fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
