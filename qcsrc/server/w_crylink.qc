@@ -158,7 +158,7 @@ void W_Crylink_LinkJoinEffect_Think()
 									cvar("g_balance_crylink_secondary_joinexplode_radius") * n, world, 
 									cvar("g_balance_crylink_secondary_joinexplode_force") * n, e.projectiledeathtype, other);
 
-					pointparticles(particleeffectnum("crylink_linkjoin"), self.origin, '0 0 0', n);
+					pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
 				}				
 			}
 			else
@@ -171,7 +171,7 @@ void W_Crylink_LinkJoinEffect_Think()
 									cvar("g_balance_crylink_primary_joinexplode_radius") * n, world, 
 									cvar("g_balance_crylink_primary_joinexplode_force") * n, e.projectiledeathtype, other);
 
-					pointparticles(particleeffectnum("crylink_linkjoin"), self.origin, '0 0 0', n);
+					pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
 				}				
 			}			
 		}
