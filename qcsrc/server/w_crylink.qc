@@ -148,8 +148,6 @@ void W_Crylink_LinkJoinEffect_Think()
 		}
 		if(n >= 2)
 		{
-
-			
 			if(e.projectiledeathtype & HITTYPE_SECONDARY)
 			{
 				if(cvar("g_balance_crylink_secondary_joinexplode"))
@@ -159,6 +157,8 @@ void W_Crylink_LinkJoinEffect_Think()
 									cvar("g_balance_crylink_secondary_joinexplode_edgedamage") * n, 
 									cvar("g_balance_crylink_secondary_joinexplode_radius") * n, world, 
 									cvar("g_balance_crylink_secondary_joinexplode_force") * n, e.projectiledeathtype, other);
+
+					pointparticles(particleeffectnum("crylink_linkjoin"), self.origin, '0 0 0', n);
 				}				
 			}
 			else
@@ -170,12 +170,10 @@ void W_Crylink_LinkJoinEffect_Think()
 									cvar("g_balance_crylink_primary_joinexplode_edgedamage") * n, 
 									cvar("g_balance_crylink_primary_joinexplode_radius") * n, world, 
 									cvar("g_balance_crylink_primary_joinexplode_force") * n, e.projectiledeathtype, other);
+
+					pointparticles(particleeffectnum("crylink_linkjoin"), self.origin, '0 0 0', n);
 				}				
 			}			
-			
-			// they seem to touch...
-			// TODO make a specific particle effect for this
-			pointparticles(particleeffectnum("crylink_linkjoin"), self.origin, '0 0 0', 1);
 		}
 	}
 	remove(self);
