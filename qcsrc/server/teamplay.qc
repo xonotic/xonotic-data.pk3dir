@@ -317,6 +317,16 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_keyhunt);
 	}
 
+	if(g_freezetag)
+	{
+		game = GAME_FREEZETAG;
+		gamemode_name = "Freeze Tag";
+		ActivateTeamplay();
+		fraglimit_override = cvar("g_freezetag_point_limit");
+		leadlimit_override = cvar("g_freezetag_point_leadlimit");
+		MUTATOR_ADD(gamemode_freezetag);
+	}
+
 	if(g_assault)
 	{
 		game = GAME_ASSAULT;

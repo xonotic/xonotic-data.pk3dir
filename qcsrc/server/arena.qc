@@ -262,8 +262,8 @@ void Arena_Warmup()
 
 float next_round;
 float stopalivecheck;
-float redalive, bluealive;
-.float redalive_stat, bluealive_stat;
+float redalive, bluealive, yellowalive, pinkalive;
+.float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
 /**
  * This function finds out whether an arena round is over 1 player is left.
  * It determines the last player who's still alive and saves it's entity reference
@@ -287,6 +287,22 @@ void Spawnqueue_Check()
 		FOR_EACH_PLAYER(self) {
 			self.redalive_stat = redalive;
 			self.bluealive_stat = bluealive;
+		}
+	}
+	else if(g_freezetag)
+	{
+		redalive = 0; bluealive = 0;
+		FOR_EACH_PLAYER(self) {
+			if (self.team == COLOR_TEAM1 && self.freezetag_frozen == 0 && self.health >= 1) redalive += 1;
+			else if (self.team == COLOR_TEAM2 && self.freezetag_frozen == 0 && self.health >= 1) bluealive += 1;
+			else if (self.team == COLOR_TEAM3 && self.freezetag_frozen == 0 && self.health >= 1) yellowalive += 1;
+			else if (self.team == COLOR_TEAM4 && self.freezetag_frozen == 0 && self.health >= 1) pinkalive += 1;
+		}
+		FOR_EACH_PLAYER(self) {
+			self.redalive_stat = redalive;
+			self.bluealive_stat = bluealive;
+			self.yellowalive_stat = yellowalive;
+			self.pinkalive_stat = pinkalive;
 		}
 	}
 	if(time < warmup + 1 || inWarmupStage)
