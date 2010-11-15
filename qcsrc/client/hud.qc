@@ -3595,7 +3595,7 @@ void HUD_Score(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float score, distribution, leader;
+	float score, distribution;
 	string sign;
 	vector distribution_color;
 	entity tm, pl, me;
@@ -3703,23 +3703,27 @@ void HUD_Score(void)
 		if(autocvar__hud_configure)
 			score = 123;
 
-		if(distribution >= 5) {
+		if(distribution >= 5)
 			distribution_color = eY;
-			leader = 1;
-		} else if(distribution >= 0) {
+		else if(distribution >= 0)
 			distribution_color = '1 1 1';
-			leader = 1;
-		} else if(distribution >= -5)
+		else if(distribution >= -5)
 			distribution_color = '1 1 0';
 		else
 			distribution_color = eX;
 
-		drawstring_aspect(pos + eX * 0.75 * mySize_x, ftos(distribution), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-		if (leader)
+		string distribution_str;
+		distribution_str = ftos(distribution);
+		if (distribution >= 0)
+		{
+			if (distribution > 0)
+				distribution_str = strcat("+", distribution_str);
 			HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
 		drawfont = hud_bigfont;
 		drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_font;
+		drawstring_aspect(pos + eX * 0.75 * mySize_x, distribution_str, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else { // teamgames
 		float max_fragcount;
 		max_fragcount = -99;
