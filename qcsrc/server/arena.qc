@@ -39,6 +39,10 @@ void reset_map(float dorespawn)
 		warmup = time + cvar("g_ca_warmup");
 		allowed_to_spawn = 1;
 	}
+	else if(g_freezetag)
+	{
+		warmup = time + cvar("g_freezetag_warmup");
+	}
 
 	lms_lowest_lives = 999;
 	lms_next_place = player_count;
@@ -361,6 +365,12 @@ void Spawnqueue_Check()
 		if((next_round && next_round < time))
 		{
 			stopalivecheck = FALSE;
+			next_round = 0;
+			reset_map(TRUE);
+		}
+	} else if(g_freezetag) {
+		if((next_round && next_round < time))
+		{
 			next_round = 0;
 			reset_map(TRUE);
 		}

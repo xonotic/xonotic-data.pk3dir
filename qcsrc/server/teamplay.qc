@@ -101,6 +101,7 @@ void WriteGameCvars()
 	cvar_set("g_race", ftos(g_race));
 	cvar_set("g_nexball", ftos(g_nexball));
 	cvar_set("g_cts", ftos(g_cts));
+	cvar_set("g_freezetag", ftos(g_freezetag));
 }
 
 void ReadGameCvars()
@@ -127,6 +128,7 @@ void ReadGameCvars()
 		found += (g_race = (!found && (prev != GAME_RACE) && cvar("g_race")));
 		found += (g_nexball = (!found && (prev != GAME_NEXBALL) && cvar("g_nexball")));
 		found += (g_cts = (!found && (prev != GAME_CTS) && cvar("g_cts")));
+		found += (g_freezetag = (!found && (prev != GAME_FREEZETAG) && cvar("g_freezetag")));
 
 		if(found)
 			break;
@@ -826,6 +828,8 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 			error("Too few teams available for ctf\n");
 		else if(g_keyhunt)
 			error("Too few teams available for key hunt\n");
+		else if(g_freezetag)
+			error("Too few teams available for freeze tag\n");
 		else
 			error("Too few teams available for team deathmatch\n");
 	}
