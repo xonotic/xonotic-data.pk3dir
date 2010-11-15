@@ -347,6 +347,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DEATHMATCH;      // DM always works
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RUNEMATCH;       // Rune always works
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_LMS;             // LMS always works
+		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEEPAWAY;		// Keepaway always works
 
 		if(spawnpoints >= 8  && diameter > 4096) {
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
@@ -406,6 +407,7 @@ string _MapInfo_GetDefault(float t)
 		case MAPINFO_TYPE_ONSLAUGHT:       return "20 0";
 		case MAPINFO_TYPE_NEXBALL:         return "5 20 0";
 		case MAPINFO_TYPE_CTS:             return "20 0 0";
+		case MAPINFO_TYPE_KEEPAWAY:	   return "30 20 0";
 		default:                           return "";
 	}
 }
@@ -460,6 +462,14 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 			if(cvar("g_ctf_win_mode") < 2)
 				cvar_set("fraglimit", sa);
 		s = cdr(s);
+	}
+
+	if(pWantedType == MAPINFO_TYPE_KEEPAWAY)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("fraglimit", sa);
+		s = cdr(s)
 	}
 
 	// rc = timelimit timelimit_qualification laps laps_teamplay
@@ -526,6 +536,7 @@ string _MapInfo_GetDefaultEx(float t)
 		case MAPINFO_TYPE_ONSLAUGHT:       return "timelimit=20";
 		case MAPINFO_TYPE_NEXBALL:         return "timelimit=20 pointlimit=5 leadlimit=0";
 		case MAPINFO_TYPE_CTS:             return "timelimit=20 skill=-1";
+		case MAPINFO_TYPE_KEEPAWAY: 	   return "timelimit=20 pointlimit=30";
 		default:                           return "";
 	}
 }
@@ -650,6 +661,7 @@ float MapInfo_Type_FromString(string t)
 	else if(t == "rc")      return MAPINFO_TYPE_RACE;
 	else if(t == "nexball") return MAPINFO_TYPE_NEXBALL;
 	else if(t == "cts")     return MAPINFO_TYPE_CTS;
+	else if(t == "ka")	   return MAPINFO_TYPE_KEEPAWAY;
 	else if(t == "all")     return MAPINFO_TYPE_ALL;
 	else                    return 0;
 }
@@ -670,6 +682,7 @@ string MapInfo_Type_ToString(float t)
 	else if(t == MAPINFO_TYPE_RACE)            return "rc";
 	else if(t == MAPINFO_TYPE_NEXBALL)         return "nexball";
 	else if(t == MAPINFO_TYPE_CTS)             return "cts";
+	else if(t == MAPINFO_TYPE_KEEPAWAY)  		return "ka";
 	else if(t == MAPINFO_TYPE_ALL)             return "all";
 	else                                       return "";
 }
@@ -1134,6 +1147,8 @@ float MapInfo_CurrentGametype()
 		return MAPINFO_TYPE_NEXBALL;
 	else if(cvar("g_cts"))
 		return MAPINFO_TYPE_CTS;
+	else if(cvar("g_ka"))
+		return MAPINFO_TYPE_KEEPAWAY;
 	else
 		return MAPINFO_TYPE_DEATHMATCH;
 }
@@ -1161,20 +1176,21 @@ string MapInfo_GetGameTypeCvar(float t)
 {
 	switch(t)
 	{
-		case MAPINFO_TYPE_DEATHMATCH: return "g_dm";
-		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "g_tdm";
-		case MAPINFO_TYPE_DOMINATION: return "g_domination";
-		case MAPINFO_TYPE_CTF: return "g_ctf";
-		case MAPINFO_TYPE_RUNEMATCH: return "g_runematch";
-		case MAPINFO_TYPE_LMS: return "g_lms";
-		case MAPINFO_TYPE_ARENA: return "g_arena";
-		case MAPINFO_TYPE_CA: return "g_ca";
-		case MAPINFO_TYPE_KEYHUNT: return "g_kh";
-		case MAPINFO_TYPE_ASSAULT: return "g_assault";
-		case MAPINFO_TYPE_ONSLAUGHT: return "g_onslaught";
-		case MAPINFO_TYPE_RACE: return "g_race";
-		case MAPINFO_TYPE_NEXBALL: return "g_nexball";
-		case MAPINFO_TYPE_CTS: return "g_cts";
+		case MAPINFO_TYPE_DEATHMATCH: 		return "g_dm";
+		case MAPINFO_TYPE_TEAM_DEATHMATCH: 	return "g_tdm";
+		case MAPINFO_TYPE_DOMINATION: 		return "g_domination";
+		case MAPINFO_TYPE_CTF: 			return "g_ctf";
+		case MAPINFO_TYPE_RUNEMATCH: 		return "g_runematch";
+		case MAPINFO_TYPE_LMS: 			return "g_lms";
+		case MAPINFO_TYPE_ARENA: 			return "g_arena";
+		case MAPINFO_TYPE_CA: 			return "g_ca";
+		case MAPINFO_TYPE_KEYHUNT: 		return "g_kh";
+		case MAPINFO_TYPE_ASSAULT: 		return "g_assault";
+		case MAPINFO_TYPE_ONSLAUGHT: 		return "g_onslaught";
+		case MAPINFO_TYPE_RACE: 			return "g_race";
+		case MAPINFO_TYPE_NEXBALL: 		return "g_nexball";
+		case MAPINFO_TYPE_CTS: 			return "g_cts";
+		case MAPINFO_TYPE_KEEPAWAY: 		return "g_ka";
 		default: return "";
 	}
 }
@@ -1196,6 +1212,7 @@ void MapInfo_SwitchGameType(float t)
 	cvar_set("g_race",       (t == MAPINFO_TYPE_RACE)            ? "1" : "0");
 	cvar_set("g_nexball",    (t == MAPINFO_TYPE_NEXBALL)         ? "1" : "0");
 	cvar_set("g_cts",        (t == MAPINFO_TYPE_CTS)             ? "1" : "0");
+	cvar_set("g_ka",	    (t == MAPINFO_TYPE_KEEPAWAY)	  ? "1" : "0");
 }
 
 void MapInfo_LoadMap(string s)
