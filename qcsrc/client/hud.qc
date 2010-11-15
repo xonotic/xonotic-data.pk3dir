@@ -1068,74 +1068,68 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		menu_enabled_time = time;
 		localcmd("menu_showhudexit\n");
 	}
-	else if(hudShiftState & S_CTRL)
+	else if(nPrimary == K_SPACE && hudShiftState & S_CTRL) // enable/disable highlighted panel or dock
 	{
-		if (mouseClicked)
+		if (bInputType == 1 || mouseClicked)
 			return true;
 
-		if(nPrimary == K_SPACE) // enable/disable highlighted panel or dock
-		{
-			if (bInputType == 1)
-				return true;
+		if (highlightedPanel_prev != -1)
+			cvar_set(strcat("hud_panel_", panel_name), ftos(!(panel_enabled)));
+		else
+			cvar_set(strcat("hud_dock"), (autocvar_hud_dock == "") ? "dock" : "");
+	}
+	else if(nPrimary == 'c' && hudShiftState & S_CTRL) // copy highlighted panel size
+	{
+		if (bInputType == 1 || mouseClicked)
+			return true;
 
-			if (highlightedPanel_prev != -1)
-				cvar_set(strcat("hud_panel_", panel_name), ftos(!(panel_enabled)));
-			else
-				cvar_set(strcat("hud_dock"), (autocvar_hud_dock == "") ? "dock" : "");
+		if (highlightedPanel_prev != -1)
+		{
+			panel_size_copied = panel_size;
+			highlightedPanel_copied = highlightedPanel_prev;
 		}
-		if(nPrimary == 'c') // copy highlighted panel size
+	}
+	else if(nPrimary == 'v' && hudShiftState & S_CTRL) // past copied size on the highlighted panel
+	{
+		if (bInputType == 1 || mouseClicked)
+			return true;
+
+		if (highlightedPanel_copied == -1 || highlightedPanel_prev == -1)
+			return true;
+
+		HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev);
+
+		// reduce size if it'd go beyond screen boundaries
+		vector tmp_size = panel_size_copied;
+		if (panel_pos_x + panel_size_copied_x > vid_conwidth)
+			tmp_size_x = vid_conwidth - panel_pos_x;
+		if (panel_pos_y + panel_size_copied_y > vid_conheight)
+			tmp_size_y = vid_conheight - panel_pos_y;
+
+		if (panel_size == tmp_size)
+			return true;
+
+		// backup first!
+		panel_pos_backup = panel_pos;
+		panel_size_backup = panel_size;
+		highlightedPanel_backup = highlightedPanel_prev;
+
+		s = strcat(ftos(tmp_size_x/vid_conwidth), " ", ftos(tmp_size_y/vid_conheight));
+		cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
+	}
+	else if(nPrimary == 'z' && hudShiftState & S_CTRL) // undo last action
+	{
+		if (bInputType == 1 || mouseClicked)
+			return true;
+		//restore previous values
+		if (highlightedPanel_backup != -1)
 		{
-			if (bInputType == 1)
-				return true;
-
-			if (highlightedPanel_prev != -1)
-			{
-				panel_size_copied = panel_size;
-				highlightedPanel_copied = highlightedPanel_prev;
-			}
-		}
-		else if(nPrimary == 'v') // past copied size on the highlighted panel
-		{
-			if (bInputType == 1)
-				return true;
-
-			if (highlightedPanel_copied == -1 || highlightedPanel_prev == -1)
-				return true;
-
-			HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev);
-
-			// reduce size if it'd go beyond screen boundaries
-			vector tmp_size = panel_size_copied;
-			if (panel_pos_x + panel_size_copied_x > vid_conwidth)
-				tmp_size_x = vid_conwidth - panel_pos_x;
-			if (panel_pos_y + panel_size_copied_y > vid_conheight)
-				tmp_size_y = vid_conheight - panel_pos_y;
-
-			if (panel_size == tmp_size)
-				return true;
-
-			// backup first!
-			panel_pos_backup = panel_pos;
-			panel_size_backup = panel_size;
-			highlightedPanel_backup = highlightedPanel_prev;
-
-			s = strcat(ftos(tmp_size_x/vid_conwidth), " ", ftos(tmp_size_y/vid_conheight));
+			HUD_Panel_GetName(highlightedPanel_backup);
+			s = strcat(ftos(panel_pos_backup_x/vid_conwidth), " ", ftos(panel_pos_backup_y/vid_conheight));
+			cvar_set(strcat("hud_panel_", panel_name, "_pos"), s);
+			s = strcat(ftos(panel_size_backup_x/vid_conwidth), " ", ftos(panel_size_backup_y/vid_conheight));
 			cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
-		}
-		else if(nPrimary == 'z') // undo last action
-		{
-			if (bInputType == 1)
-				return true;
-			//restore previous values
-			if (highlightedPanel_backup != -1)
-			{
-				HUD_Panel_GetName(highlightedPanel_backup);
-				s = strcat(ftos(panel_pos_backup_x/vid_conwidth), " ", ftos(panel_pos_backup_y/vid_conheight));
-				cvar_set(strcat("hud_panel_", panel_name, "_pos"), s);
-				s = strcat(ftos(panel_size_backup_x/vid_conwidth), " ", ftos(panel_size_backup_y/vid_conheight));
-				cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
-				highlightedPanel_backup = -1;
-			}
+			highlightedPanel_backup = -1;
 		}
 	}
 	else if(nPrimary == K_UPARROW || nPrimary == K_DOWNARROW || nPrimary == K_LEFTARROW || nPrimary == K_RIGHTARROW)
