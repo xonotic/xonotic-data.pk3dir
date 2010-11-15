@@ -18,9 +18,9 @@ float scoreboard_bottom;
 float weapon_hits[WEP_MAXCOUNT];
 float weapon_fired[WEP_MAXCOUNT];
 
-#define acc_color(i) stov(cvar_string(strcat("hud_panel_weapons_accuracy_color", ftos(i))))
 #define MAX_ACCURACY_LEVELS 10
 float acc_lev[MAX_ACCURACY_LEVELS];
+vector acc_col[MAX_ACCURACY_LEVELS];
 float acc_levels;
 string acc_color_levels;
 
@@ -88,7 +88,7 @@ var string panel_bg_padding_str;
 // Little help for the poor people who have to make sense of this: Start from the bottom ;)
 
 #define HUD_Panel_GetProgressBarColor(item) \
-		progressbar_color = autocvar_hud_progressbar_##item##_color
+		progressbar_color = stov(cvar_string("hud_progressbar_" #item "_color"))
 #define HUD_Panel_GetProgressBarColorForString(item) \
 switch(item) {\
 	case "strength": HUD_Panel_GetProgressBarColor(strength); break;\
@@ -251,14 +251,14 @@ else\
 // Update all common cvars of given panel name
 #define HUD_Panel_UpdateCvars(name) \
 panel_enabled = autocvar_hud_panel_##name; \
-panel_pos = autocvar_hud_panel_##name##_pos; \
-panel_size = autocvar_hud_panel_##name##_size; \
-panel_bg_str = autocvar_hud_panel_##name##_bg; \
-panel_bg_color_str = autocvar_hud_panel_##name##_bg_color; \
-panel_bg_color_team_str = autocvar_hud_panel_##name##_bg_color_team; \
-panel_bg_alpha_str = autocvar_hud_panel_##name##_bg_alpha; \
-panel_bg_border_str = autocvar_hud_panel_##name##_bg_border; \
-panel_bg_padding_str = autocvar_hud_panel_##name##_bg_padding; \
+panel_pos = stov(cvar_string("hud_panel_" #name "_pos")); \
+panel_size = stov(cvar_string("hud_panel_" #name "_size")); \
+panel_bg_str = cvar_string("hud_panel_" #name "_bg"); \
+panel_bg_color_str = cvar_string("hud_panel_" #name "_bg_color"); \
+panel_bg_color_team_str = cvar_string("hud_panel_" #name "_bg_color_team"); \
+panel_bg_alpha_str = cvar_string("hud_panel_" #name "_bg_alpha"); \
+panel_bg_border_str = cvar_string("hud_panel_" #name "_bg_border"); \
+panel_bg_padding_str = cvar_string("hud_panel_" #name "_bg_padding"); \
 HUD_Panel_StringVars()\
 if(menu_enabled == 2 && active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuSize()\
@@ -286,14 +286,14 @@ switch(id) { \
 }
 
 #define HUD_Panel_UpdatePosSize(name) \
-panel_pos = autocvar_hud_panel_##name##_pos; \
-panel_size = autocvar_hud_panel_##name##_size; \
+panel_pos = stov(cvar_string("hud_panel_" #name "_pos")); \
+panel_size = stov(cvar_string("hud_panel_" #name "_size")); \
 HUD_Panel_GetScaledVectors()\
 if(menu_enabled == 2 && active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuSize()\
 	HUD_Panel_GetMenuPos()\
 }\
-panel_bg_border_str = autocvar_hud_panel_##name##_bg_border; \
+panel_bg_border_str = cvar_string("hud_panel_" #name "_bg_border"); \
 HUD_Panel_GetBorder()
 
 // Update pos and size of given panel id
