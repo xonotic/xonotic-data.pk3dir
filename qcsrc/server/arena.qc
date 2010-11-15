@@ -96,6 +96,11 @@ void reset_map(float dorespawn)
 				self.classname = "player";
 				PutClientInServer();
 			}
+			else if(g_freezetag)
+			{
+				if(self.classname == "player")
+					PutClientInServer();
+			}
 			else
 			{
 				/*
@@ -196,7 +201,7 @@ void Arena_Warmup()
 	float f;
 	string msg;
 
-	if((!g_arena && !g_ca) || (g_arena && !arena_roundbased) || (time < game_starttime))
+	if((!g_arena && !g_ca && !g_freezetag) || (g_arena && !arena_roundbased) || (time < game_starttime))
 		return;
 
 	f = ceil(warmup - time);

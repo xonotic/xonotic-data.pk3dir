@@ -1,4 +1,4 @@
-models/ice/ice.tga
+models/ice/ice
 {
 	cull none
 	dpnoshadow
