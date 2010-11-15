@@ -22,6 +22,7 @@ morphed
 
 *Level Design
 FruitieX
+MirceaKitsune
 
 *Music / Sound FX
 mand1nga
@@ -105,7 +106,6 @@ MauveBib
 Mephisto
 michaelb
 Michael "Tenshihan" Quinn
-MirceaKitsune
 Munyul
 Netzwerg
 NoelCower
