@@ -229,66 +229,83 @@ void setDependentWeird(entity e, float(entity) func)
 	setDependent_Check(e);
 }
 
-// EXTRESPONSE SYSTEM ////////////////////////////////////////////////////////
+// URI SYSTEM ////////////////////////////////////////////////////////
 
-float _Nex_ExtResponseSystem_RequestsSent;
-float _Nex_ExtResponseSystem_VersionHandled;
+float _Nex_ExtResponseSystem_Queried;
 string _Nex_ExtResponseSystem_UpdateTo;
-float _Nex_ExtResponseSystem_RetryTime;
-float _Nex_ExtResponseSystem_RetryTime_LastDelay;
 
-void() Item_Nex_ExtResponseSystem_SendQuery =
-{
-	dprint("Sending extended response requests...\n");
-	localcmd(strcat("packet 64.22.107.122:27950 \"getExtResponse checkUpdates xonotic ", cvar_string("g_xonoticversion"), "\"\n"));
-	_Nex_ExtResponseSystem_RequestsSent = TRUE;
-	_Nex_ExtResponseSystem_RetryTime_LastDelay = _Nex_ExtResponseSystem_RetryTime_LastDelay * 2 + 1;
-	_Nex_ExtResponseSystem_RetryTime = time + _Nex_ExtResponseSystem_RetryTime_LastDelay;
-}
+float URI_GET_DISCARD = 0;
 
-void(float argc) Item_Nex_ExtResponseSystem_Parse =
+float URI_GET_UPDATENOTIFICATION = 1;
+void UpdateNotification_URI_Get_Callback(float id, float status, string data);
+
+void URI_Get_Callback(float id, float status, string data)
 {
-	dprint("Received extended response packet from ", argv(0), "\n");
-	if(!_Nex_ExtResponseSystem_RequestsSent)
+	if (id == URI_GET_DISCARD)
 	{
-		dprint("  But I haven't sent a request yet! Ignoring.\n");
-		return;
+		// discard
 	}
-	if(argv(1) == "noUpdateAvailable")
+	else if(id == URI_GET_UPDATENOTIFICATION)
 	{
-		if(_Nex_ExtResponseSystem_VersionHandled)
-		{
-			dprint("  duplicated update notice, ignored\n");
-			return;
-		}
-		_Nex_ExtResponseSystem_VersionHandled = 1;
-	}
-	else if(argv(1) == "updateAvailable")
-	{
-		if(_Nex_ExtResponseSystem_VersionHandled)
-		{
-			dprint("  duplicated update notice, ignored\n");
-			return;
-		}
-		_Nex_ExtResponseSystem_VersionHandled = 1;
-		_Nex_ExtResponseSystem_UpdateTo = strzone(argv(2)); // note: only one packet can be handled, so this can't be a leak
+		// online ban list
+		UpdateNotification_URI_Get_Callback(id, status, data);
 	}
 	else
-		dprint("  UNKNOWN RESPONSE TYPE: ", argv(1), "\n");
-}
-
-void() Item_Nex_ExtResponseSystem_CheckForResponse =
-{
-	local string s;
-	local float argc;
-	while(strlen((s = getextresponse())))
 	{
-		argc = tokenize_console(s);
-		Item_Nex_ExtResponseSystem_Parse(argc);
+		print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
 	}
 }
 
-// END OF EXTRESPONSE SYSTEM /////////////////////////////////////////////////
+void UpdateNotification_URI_Get_Callback(float id, float status, string data)
+{
+	float n;
+
+	if(_Nex_ExtResponseSystem_UpdateTo)
+	{
+		print("error: UpdateNotification_URI_Get_Callback has been called before\n");
+		return;
+	}
+	if(status != 0)
+	{
+		print(sprintf("error receiving update notification: status is %d\n", status));
+		return;
+	}
+	if(substring(data, 0, 1) == "<")
+	{
+		print("error: received HTML instead of an update notification\n");
+		return;
+	}
+	if(strstrofs(data, "\r", 0) != -1)
+	{
+		print("error: received carriage returns from update notification server\n");
+		return;
+	}
+
+	if(data == "")
+		n = 0;
+	else
+		n = tokenizebyseparator(data, "\n");
+	
+	if(n >= 1)
+	{
+		_Nex_ExtResponseSystem_UpdateTo = argv(0);
+
+		if(vercmp(cvar_string("g_xonoticversion"), _Nex_ExtResponseSystem_UpdateTo) >= 0)
+		{
+			_Nex_ExtResponseSystem_UpdateTo = ""; // no update needed
+		}
+		else
+		{
+			// update needed
+			if(n >= 2)
+				print(sprintf("Update can be downloaded at:\n%s\n", argv(1)));
+		}
+
+		_Nex_ExtResponseSystem_UpdateTo = strzone(_Nex_ExtResponseSystem_UpdateTo);
+	}
+}
+
+// END OF URI SYSTEM ////////////////////////////////////////////////////////
 
 float preMenuInit()
 {
@@ -341,26 +358,28 @@ void preMenuDraw()
 
 	if(cvar("menu_updatecheck"))
 	{
-		Item_Nex_ExtResponseSystem_CheckForResponse();
-		if(!_Nex_ExtResponseSystem_VersionHandled)
-			if(time > _Nex_ExtResponseSystem_RetryTime)
-				Item_Nex_ExtResponseSystem_SendQuery();
+		if(!_Nex_ExtResponseSystem_Queried)
+		{
+			_Nex_ExtResponseSystem_Queried = 1;
+			uri_get(sprintf("http://www.xonotic.org/dl/checkupdate.txt?version=%s", uri_escape(cvar_string("g_xonoticversion"))), URI_GET_UPDATENOTIFICATION);
+		}
 	}
 
 	if(_Nex_ExtResponseSystem_UpdateTo != "")
 	{
+		// TODO rather turn this into a dialog
 		fs = ((1/draw_scale_x) * eX + (1/draw_scale_y) * eY) * 12;
 		line = eY * fs_y;
 		sz_x = draw_TextWidth("  http://www.xonotic.com/  ", 0, fs);
 		sz_y = 3 * fs_y;
 
-		draw_alpha = sin(time * 0.112 - 0.3) * 0.7;
+		draw_alpha = sin(time * 0.112 - 0.3) * 10;
 		mid = eX * (0.5 + 0.5 * (1 - sz_x) * cos(time * 0.071))
 		    + eY * (0.5 + 0.5 * (1 - sz_y) * sin(time * 0.071));
 
 		draw_Fill(mid - 0.5 * sz, sz, '1 1 0', 1);
 		draw_CenterText(mid - 1 * line, strcat("Update to ", _Nex_ExtResponseSystem_UpdateTo, " now!"), fs, '1 0 0', 1, 0);
-		draw_CenterText(mid - 0 * line, "http://www.xonotic.com/", fs, '0 0 1', 1, 0);
+		draw_CenterText(mid - 0 * line, "http://www.xonotic.org/", fs, '0 0 1', 1, 0);
 	}
 	if not(campaign_name_previous)
 		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
