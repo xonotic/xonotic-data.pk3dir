@@ -6,6 +6,9 @@ void freezetag_Initialize()
 
 void freezetag_CheckWinner()
 {
+	if(next_round)
+		return; // already waiting for next round to start
+
 	if((redalive >= 1 && bluealive >= 1) // counted in arena.qc
 		|| (redalive >= 1 && yellowalive >= 1)
 		|| (redalive >= 1 && pinkalive >= 1)
@@ -25,14 +28,13 @@ void freezetag_CheckWinner()
 
 	FOR_EACH_PLAYER(e)
 	{
-		if(e.freezetag_frozen == 0) // here's one player from the winning team... good
+		if(e.freezetag_frozen == 0 && e.classname == "player" && e.health >= 1) // here's one player from the winning team... good
 		{
 			winner = e;
+			TeamScore_AddToTeam(winner.team, ST_SCORE, +1); // just in case a winner isn't found, we do this already here (causes crashes otherwise...)
 			break; // break, we found the winner
 		}
 	}
-
-	TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
 
 	if(winner.team == COLOR_TEAM1)
 		teamname = "^1Red Team";
@@ -85,8 +87,6 @@ void freezetag_Unfreeze()
 {
 	self.freezetag_frozen = 0;
 
-	self.movetype = MOVETYPE_WALK;
-
 	// remove the ice block
 	entity ice;
 	for(ice = world; (ice = find(ice, classname, "freezetag_ice")); ) if(ice.owner == self)
@@ -103,6 +103,7 @@ void freezetag_Unfreeze()
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
 	freezetag_CheckWinner();
+	freezetag_Unfreeze();
 
 	return 1;
 }
@@ -138,9 +139,6 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
-	if(redalive + bluealive + yellowalive + pinkalive == 1 && time > warmup)
-		next_round = time; // start a new round immediately
-
 	if(time > warmup) // spawn too late, freeze player
 	{
 		centerprint(self, "^1You spawned after the round started, you'll spawn as frozen.\n");

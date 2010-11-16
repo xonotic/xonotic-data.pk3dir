@@ -24,6 +24,12 @@ void func_breakable_reset();
 void assault_objective_reset();
 void target_assault_roundend_reset();
 
+float next_round;
+float stopalivecheck;
+float redalive, bluealive, yellowalive, pinkalive;
+.float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
+float redspawned, bluespawned, yellowspawned, pinkspawned;
+
 /**
  * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
  * Sets the 'warmup' global variable.
@@ -204,6 +210,17 @@ void Arena_Warmup()
 	if((!g_arena && !g_ca && !g_freezetag) || (g_arena && !arena_roundbased) || (time < game_starttime))
 		return;
 
+	if(g_freezetag &&
+		!((redspawned >= 1 && bluespawned >= 1)
+		|| (redspawned >= 1 && yellowspawned >= 1)
+		|| (redspawned >= 1 && pinkspawned >= 1)
+		|| (bluespawned >= 1 && yellowspawned >= 1)
+		|| (bluespawned >= 1 && pinkspawned >= 1)
+		|| (yellowspawned >= 1 && pinkspawned >= 1)))
+	{
+		warmup = time + cvar("g_freezetag_warmup");
+	}
+
 	f = ceil(warmup - time);
 	if(f > 0)
 		champion = world; // this is done because a if(champion) will not execute if champion = world
@@ -268,11 +285,6 @@ void Arena_Warmup()
 	if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
 		self.movetype = MOVETYPE_WALK;
 }
-
-float next_round;
-float stopalivecheck;
-float redalive, bluealive, yellowalive, pinkalive;
-.float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
 /**
  * This function finds out whether an arena round is over 1 player is left.
  * It determines the last player who's still alive and saves it's entity reference
@@ -282,6 +294,15 @@ float redalive, bluealive, yellowalive, pinkalive;
  */
 void Spawnqueue_Check()
 {
+	// check the amount of spawned players in each team
+	redspawned = bluespawned = yellowspawned = pinkspawned = 0;
+	FOR_EACH_PLAYER(self) {
+		if (self.team == COLOR_TEAM1) redspawned += 1;
+		else if (self.team == COLOR_TEAM2) bluespawned += 1;
+		else if (self.team == COLOR_TEAM3) yellowspawned += 1;
+		else if (self.team == COLOR_TEAM4) pinkspawned += 1;
+	}
+
 	if(g_ca) // we want to perform this before the return block below...
 	{
 		// this is STUPID to perform again, but has to be done so that we can give instant feedback when a round ends
@@ -300,7 +321,7 @@ void Spawnqueue_Check()
 	}
 	else if(g_freezetag)
 	{
-		redalive = 0; bluealive = 0;
+		redalive = bluealive = yellowalive = pinkalive = 0;
 		FOR_EACH_PLAYER(self) {
 			if (self.team == COLOR_TEAM1 && self.freezetag_frozen == 0 && self.health >= 1) redalive += 1;
 			else if (self.team == COLOR_TEAM2 && self.freezetag_frozen == 0 && self.health >= 1) bluealive += 1;
@@ -318,13 +339,6 @@ void Spawnqueue_Check()
 		return;
 
 	if(g_ca) {
-		// check the amount of spawned players in each team
-		float redspawned, bluespawned;
-		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1) redspawned += 1;
-			else if (self.team == COLOR_TEAM2) bluespawned += 1;
-		}
-
 		required_ca_players = max(2, fabs(cvar("bot_vs_human") + 1));
 
 		if(ca_players < required_ca_players && (redspawned && bluespawned)) {
