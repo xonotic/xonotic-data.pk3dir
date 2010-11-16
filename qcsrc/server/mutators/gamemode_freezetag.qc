@@ -103,15 +103,15 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	freezetag_Freeze();
 
 	centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
-	if(frag_target.netname != "")
-	{
-		centerprint(frag_target, strcat("^1You were frozen by ^7", frag_attacker.netname, ".\n"));
-		bprint("^7", frag_target.netname, "^1 was frozen by ^7", frag_attacker.netname, ".\n");
-	}
-	else
+	if(frag_attacker == frag_target || frag_attacker == world)
 	{
 		centerprint(frag_target, strcat("^1You froze yourself.\n"));
 		bprint("^7", frag_target.netname, "^1 froze himself.\n");
+	}
+	else
+	{
+		centerprint(frag_target, strcat("^1You were frozen by ^7", frag_attacker.netname, ".\n"));
+		bprint("^7", frag_target.netname, "^1 was frozen by ^7", frag_attacker.netname, ".\n");
 	}
 
 	frag_target.health = cvar("g_balance_health_start"); // "respawn" the player :P
@@ -128,6 +128,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 
 	if(time > warmup) // spawn too late, freeze player
 	{
+		centerprint(self, strcat("^1You spawned after the round started, you'll spawn as frozen.\n"));
 		freezetag_Freeze();
 	}
 	else // we are still in the delay period before the round starts
