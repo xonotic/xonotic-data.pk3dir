@@ -167,6 +167,13 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 
 	// if we didn't hit a return yet, we have a new record!
 
+	// if the player does not have a UID we can unfortunately not store the record, as the rankings system relies on UIDs
+	if(myuid == "")
+	{
+		bprint(mynetname, "^1 scored a new record with ^7", TIME_ENCODED_TOSTRING(t), "^1, but lacks a UID, so the record will unfortunately be lost.\n");
+		return;
+	}
+
 	oldrec = race_readTime(GetMapname(), newpos);
 	oldrec_holder = race_readName(GetMapname(), newpos);
 	

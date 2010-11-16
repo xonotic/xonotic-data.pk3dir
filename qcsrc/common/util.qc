@@ -1941,3 +1941,54 @@ vector NearestPointOnBox(entity box, vector org)
 	return nearest;
 }
 #endif
+
+float vercmp_recursive(string v1, string v2)
+{
+	float dot1, dot2;
+	string s1, s2;
+	float r;
+
+	dot1 = strstrofs(v1, ".", 0);
+	dot2 = strstrofs(v2, ".", 0);
+	if(dot1 == -1)
+		s1 = v1;
+	else
+		s1 = substring(v1, 0, dot1);
+	if(dot2 == -1)
+		s2 = v2;
+	else
+		s2 = substring(v2, 0, dot2);
+
+	r = stof(s1) - stof(s2);
+	if(r != 0)
+		return r;
+
+	r = strcasecmp(s1, s2);
+	if(r != 0)
+		return r;
+
+	if(dot1 == -1)
+		if(dot2 == -1)
+			return 0;
+		else
+			return -1;
+	else
+		if(dot2 == -1)
+			return 1;
+		else
+			return vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
+}
+
+float vercmp(string v1, string v2)
+{
+	if(strcasecmp(v1, v2) == 0) // early out check
+		return 0;
+
+	// "git" beats all
+	if(v1 == "git")
+		return 1;
+	if(v2 == "git")
+		return -1;
+
+	return vercmp_recursive(v1, v2);
+}

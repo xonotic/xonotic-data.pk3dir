@@ -753,33 +753,30 @@ void CSQC_UpdateView(float w, float h)
 			string wcross_wep, wcross_name;
 			float wcross_scale, wcross_blur;
 
-			wcross_color_x = cvar("crosshair_color_red");
-			wcross_color_y = cvar("crosshair_color_green");
-			wcross_color_z = cvar("crosshair_color_blue");
-			if (cvar("crosshair_per_weapon")) {
+			if (cvar("crosshair_per_weapon") || cvar("crosshair_color_per_weapon")) {
 				e = get_weaponinfo(activeweapon);
 				if (e && e.netname != "")
 				{
 					wcross_wep = e.netname;
-					wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
-					if (wcross_resolution == 0)
-						return;
-					wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_alpha"));
-					if (wcross_alpha == 0)
-						return;
-
-					wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
-					if(wcross_style == "")
-						wcross_style = e.netname;
-
-					if(!cvar("crosshair_color_override"))
+					if(cvar("crosshair_per_weapon"))
 					{
-						wcross_color_x = cvar(strcat("crosshair_", wcross_wep, "_color_red"));
-						wcross_color_y = cvar(strcat("crosshair_", wcross_wep, "_color_green"));
-						wcross_color_z = cvar(strcat("crosshair_", wcross_wep, "_color_blue"));
+						wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
+						if (wcross_resolution == 0)
+							return;
+						wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_alpha"));
+						if (wcross_alpha == 0)
+							return;
+
+						wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
+						if(wcross_style == "" || wcross_style == "0")
+							wcross_style = wcross_wep;
 					}
 				}
 			}
+			if(wcross_wep != "" && cvar("crosshair_color_per_weapon"))
+				wcross_color = stov(cvar_string(strcat("crosshair_", wcross_wep, "_color")));
+			else
+				wcross_color = stov(cvar_string("crosshair_color"));
 
 			wcross_name = strcat("gfx/crosshair", wcross_style);
 
@@ -1307,18 +1304,22 @@ void CSQC_common_hud(void)
 		case HUD_NORMAL:
 			// do some accuracy var caching
 			float i;
-			if(cvar_string("hud_panel_weapons_accuracy_color_levels") != acc_color_levels)
 			if(!(gametype == GAME_RACE || gametype == GAME_CTS))
 			{
-				if(acc_color_levels)
-					strunzone(acc_color_levels);
-				acc_color_levels = strzone(cvar_string("hud_panel_weapons_accuracy_color_levels"));
-				acc_levels = tokenize(acc_color_levels);
-				if (acc_levels > MAX_ACCURACY_LEVELS)
-					acc_levels = MAX_ACCURACY_LEVELS;
+				if(cvar_string("accuracy_color_levels") != acc_color_levels)
+				{
+					if(acc_color_levels)
+						strunzone(acc_color_levels);
+					acc_color_levels = strzone(cvar_string("accuracy_color_levels"));
+					acc_levels = tokenize(acc_color_levels);
+					if (acc_levels > MAX_ACCURACY_LEVELS)
+						acc_levels = MAX_ACCURACY_LEVELS;
 
-				for (i = 0; i < acc_levels; ++i)
-					acc_lev[i] = stof(argv(i));
+					for (i = 0; i < acc_levels; ++i)
+						acc_lev[i] = stof(argv(i));
+				}
+				// let know that acc_col[] needs to be loaded
+				acc_col_x[0] = -1;
 			}
 
 			HUD_Main(); // always run these functions for alpha checks

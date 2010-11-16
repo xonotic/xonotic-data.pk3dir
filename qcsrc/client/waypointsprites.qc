@@ -425,7 +425,7 @@ void WaypointSprite_Load()
 	waypointsprite_distancefadealpha = cvar_or("g_waypointsprite_distancefadealpha", 1);
 	waypointsprite_distancefadescale = cvar_or("g_waypointsprite_distancefadescale", 1);
 	waypointsprite_distancefadedistance = vlen(mi_max - mi_min) * cvar_or("g_waypointsprite_distancefadedistancemultiplier", 1);
-	waypointsprite_alpha = cvar_or("g_waypointsprite_alpha", 1) * (1 - cvar("_menu_alpha"));
+	waypointsprite_alpha = cvar_or("g_waypointsprite_alpha", 1) * (1 - autocvar__menu_alpha);
 
 	if(!waypointsprite_initialized)
 	{

@@ -1320,7 +1320,7 @@ void SV_PlayerPhysics()
 				rr = RACE_RECORD;
 			race_send_speedaward(MSG_ALL);
 			speedaward_lastsent = speedaward_speed;
-			if (speedaward_speed > speedaward_alltimebest) {
+			if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "") {
 				speedaward_alltimebest = speedaward_speed;
 				speedaward_alltimebest_holder = speedaward_holder;
 				speedaward_alltimebest_uid = speedaward_uid;

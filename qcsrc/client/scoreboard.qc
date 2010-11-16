@@ -895,7 +895,6 @@ float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
 	float i;
-	float weapon_hit, weapon_damage, weapon_stats;
 	float weapon_cnt = WEP_COUNT - 3; // either minstanex/nex are hidden, no port-o-launch, no tuba
 	float rows;
 	if(cvar("scoreboard_accuracy_doublerows"))
@@ -942,8 +941,21 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(getstati(STAT_SWITCHWEAPON) == WEP_MINSTANEX)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
+	float weapon_hit, weapon_damage, weapon_stats, weapon_number;
+	// hits
+	weapon_stats = getstati(STAT_DAMAGE_HITS);
+	weapon_number = weapon_stats & 63;
+	weapon_hits[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
+	// fired
+	weapon_stats = getstati(STAT_DAMAGE_FIRED);
+	weapon_number = weapon_stats & 63;
+	weapon_fired[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
+
 	if (!acc_levels)
 		rgb = '1 1 1';
+	else if (acc_col_x[0] == -1)
+		for (i = 0; i < acc_levels; ++i)
+			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -954,12 +966,13 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			continue;
 		weapon_hit = weapon_hits[i-WEP_FIRST];
 		weapon_damage = weapon_fired[i-WEP_FIRST];
-		if(weapon_damage)
-			weapon_stats = bound(0, floor(100 * weapon_hit / weapon_damage), 100);
-		float weapon_alpha;
 
+		float weapon_alpha;
 		if(weapon_damage)
+		{
+			weapon_stats = bound(0, floor(100 * weapon_hit / weapon_damage), 100);
 			weapon_alpha = scoreboard_alpha_fg;
+		}
 		else
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
 
@@ -994,8 +1007,8 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 				// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
 				float factor;
 				factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
-				rgb = acc_color(j);
-				rgb = rgb + factor * (acc_color(j+1) - rgb);
+				rgb = acc_col[j];
+				rgb = rgb + factor * (acc_col[j+1] - rgb);
 			}
 
 			drawstring(pos + '1 0 0' * padding + '0 1 0' * weapon_height, s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
@@ -1105,8 +1118,8 @@ void HUD_DrawScoreboard()
 
 	HUD_UpdatePlayerTeams();
 
-	scoreboard_alpha_bg = cvar("scoreboard_alpha_bg") * scoreboard_fade_alpha * (1 - cvar("_menu_alpha"));
-	scoreboard_alpha_fg = cvar_or("scoreboard_alpha_fg", 1.0) * scoreboard_fade_alpha * (1 - cvar("_menu_alpha"));
+	scoreboard_alpha_bg = cvar("scoreboard_alpha_bg") * scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
+	scoreboard_alpha_fg = cvar_or("scoreboard_alpha_fg", 1.0) * scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
 	scoreboard_highlight = cvar("scoreboard_highlight");
 	scoreboard_highlight_alpha = cvar_or("scoreboard_highlight_alpha", 0.10) * scoreboard_alpha_fg;
 	scoreboard_highlight_alpha_self = cvar_or("scoreboard_highlight_alpha_self", 0.25) * scoreboard_alpha_fg;
