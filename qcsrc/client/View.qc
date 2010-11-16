@@ -696,8 +696,15 @@ void CSQC_UpdateView(float w, float h)
 	else
 	{
 		if(gametype == GAME_FREEZETAG)
+		{
 			if(getstati(STAT_FROZEN))
 				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0.25 0.90 1', cvar_or("hud_colorflash_alpha", 0.5), DRAWFLAG_ADDITIVE);
+			if(getstatf(STAT_REVIVE_PROGRESS))
+			{
+				DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', cvar("hud_colorflash_alpha"), DRAWFLAG_ADDITIVE);
+				drawstring_aspect(eY * 0.64 * vid_conheight, "Revival progress", eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+			}
+		}
 
 		if(cvar("r_letterbox") == 0)
 			if(cvar("viewsize") < 120)

@@ -179,9 +179,13 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		if(self.freezetag_beginrevive_time == -9999)
 		{
 			self.freezetag_beginrevive_time = time;
+			self.freezetag_revive_progress = 0;
+			other.freezetag_revive_progress = 0;
 		}
 		else
 		{
+			self.freezetag_revive_progress = (time - self.freezetag_beginrevive_time) / cvar("g_freezetag_revive_time");
+			other.freezetag_revive_progress = (time - self.freezetag_beginrevive_time) / cvar("g_freezetag_revive_time");
 			if(time - self.freezetag_beginrevive_time >= cvar("g_freezetag_revive_time"))
 			{
 				freezetag_Unfreeze();
@@ -191,12 +195,16 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 				bprint("^7", other.netname, "^5 revived ^7", self.netname, ".\n");
 
 				self.freezetag_beginrevive_time = -9999;
+				self.freezetag_revive_progress = 0;
+				other.freezetag_revive_progress = 0;
 			}
 		}
 	}
 	else
 	{
 		self.freezetag_beginrevive_time = -9999;
+		self.freezetag_revive_progress = 0;
+		other.freezetag_revive_progress = 0;
 	}
 
 	return 1;

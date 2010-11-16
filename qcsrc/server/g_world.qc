@@ -817,7 +817,10 @@ void spawnfunc_worldspawn (void)
 		addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
 	}
 	if(g_freezetag)
+	{
 		addstat(STAT_FROZEN, AS_INT, freezetag_frozen);
+		addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, freezetag_revive_progress);
+	}
 
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
