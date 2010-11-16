@@ -350,6 +350,7 @@ vector freeze_pmove_org, freeze_input_angles;
 entity nightvision_noise, nightvision_noise2;
 
 float pickup_crosshair_time, pickup_crosshair_size;
+float use_nex_charge_pool;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -853,8 +854,9 @@ void CSQC_UpdateView(float w, float h)
 
 			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
-			float nex_charge;
+			float nex_charge, nex_charge_pool;
 			nex_charge = getstatf(STAT_NEX_CHARGE);
+			nex_charge_pool = getstatf(STAT_NEX_CHARGEPOOL);
 
 			if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 				nex_charge_movingavg = nex_charge;
@@ -871,12 +873,23 @@ void CSQC_UpdateView(float w, float h)
 			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
 			{
 				vector rgb;
-				// indicate how much we're charging right now with an inner circle
-				a = cvar("crosshair_nexvelocity_currentcharge_alpha");
-				nex_charge_movingavg = (1 - cvar("crosshair_nexvelocity_currentcharge_movingavg_rate")) * nex_charge_movingavg + cvar("crosshair_nexvelocity_currentcharge_movingavg_rate") * nex_charge;
+				if(nex_charge_pool || use_nex_charge_pool)
+				{
+					use_nex_charge_pool = 1;
 
-				rgb = eX * cvar("crosshair_nexvelocity_currentcharge_color_red") + eY * cvar("crosshair_nexvelocity_currentcharge_color_green") + eZ * cvar("crosshair_nexvelocity_currentcharge_color_blue");
-				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", bound(0, cvar("crosshair_nexvelocity_currentcharge_scale") * (nex_charge - nex_charge_movingavg), 1), rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+					a = cvar("crosshair_nexvelocity_alpha");
+					rgb = eX * cvar("crosshair_nexvelocity_currentcharge_color_red") + eY * cvar("crosshair_nexvelocity_currentcharge_color_green") + eZ * cvar("crosshair_nexvelocity_currentcharge_color_blue");
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", nex_charge_pool, rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+				}
+				else
+				{
+					// indicate how much we're charging right now with an inner circle
+					a = cvar("crosshair_nexvelocity_currentcharge_alpha");
+					nex_charge_movingavg = (1 - cvar("crosshair_nexvelocity_currentcharge_movingavg_rate")) * nex_charge_movingavg + cvar("crosshair_nexvelocity_currentcharge_movingavg_rate") * nex_charge;
+
+					rgb = eX * cvar("crosshair_nexvelocity_currentcharge_color_red") + eY * cvar("crosshair_nexvelocity_currentcharge_color_green") + eZ * cvar("crosshair_nexvelocity_currentcharge_color_blue");
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", bound(0, cvar("crosshair_nexvelocity_currentcharge_scale") * (nex_charge - nex_charge_movingavg), 1), rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+				}
 
 				// draw the charge
 				a = cvar("crosshair_nexvelocity_alpha");
