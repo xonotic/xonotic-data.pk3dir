@@ -1133,14 +1133,14 @@ void ClientInit_CheckUpdate()
 		self.bouncestop = cvar("g_balance_grenadelauncher_bouncestop");
 		self.SendFlags |= 1;
 	}
-	if(self.ebouncefactor != cvar("g_balance_electro_bouncefactor"))
+	if(self.ebouncefactor != cvar("g_balance_electro_secondary_bouncefactor"))
 	{
-		self.ebouncefactor = cvar("g_balance_electro_bouncefactor");
+		self.ebouncefactor = cvar("g_balance_electro_secondary_bouncefactor");
 		self.SendFlags |= 1;
 	}
-	if(self.ebouncestop != cvar("g_balance_electro_bouncestop"))
+	if(self.ebouncestop != cvar("g_balance_electro_secondary_bouncestop"))
 	{
-		self.ebouncestop = cvar("g_balance_electro_bouncestop");
+		self.ebouncestop = cvar("g_balance_electro_secondary_bouncestop");
 		self.SendFlags |= 1;
 	}
 }
