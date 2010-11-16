@@ -50,18 +50,26 @@ void freezetag_CheckWinner()
 	next_round = time + 5;
 }
 
+void freezetag_Ice_Think()
+{
+	setorigin(self, self.owner.origin - '0 0 16');
+	self.nextthink = time;
+}
+
 void freezetag_Freeze()
 {
 	self.freezetag_frozen = 1;
 
-	entity tag;
-	tag = spawn();
-	tag.owner = self;
-	tag.classname = "freezetag_ice";
-	tag.frame = floor(random() * 21); // ice model has 20 different looking frames
-	setmodel(tag, "models/ice/ice.md3");
+	entity ice;
+	ice = spawn();
+	ice.owner = self;
+	ice.classname = "freezetag_ice";
+	ice.think = freezetag_Ice_Think;
+	ice.nextthink = time;
+	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
+	setmodel(ice, "models/ice/ice.md3");
 
-	setattachment(tag, self, "");
+	//setattachment(ice, self, "");
 
 	self.movetype = MOVETYPE_NONE;
 
@@ -75,10 +83,10 @@ void freezetag_Unfreeze()
 	self.movetype = MOVETYPE_WALK;
 
 	// remove the ice block
-	entity tag;
-	for(tag = world; (tag = find(tag, classname, "freezetag_ice")); ) if(tag.owner == self)
+	entity ice;
+	for(ice = world; (ice = find(ice, classname, "freezetag_ice")); ) if(ice.owner == self)
 	{
-		remove(tag);
+		remove(ice);
 		break;
 	}
 }
