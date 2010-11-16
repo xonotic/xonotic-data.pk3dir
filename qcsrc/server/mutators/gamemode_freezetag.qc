@@ -69,11 +69,16 @@ void freezetag_Freeze()
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
 	setmodel(ice, "models/ice/ice.md3");
 
-	//setattachment(ice, self, "");
-
-	//self.movetype = MOVETYPE_NONE;
-
 	self.movement = '0 0 0';
+
+	// add waypoint
+	WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE);
+	if(self.waypointsprite_attached)
+	{
+		WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_WAYPOINT, '0.25 0.90 1');
+		//WaypointSprite_UpdateMaxHealth(self.waypointsprite_attached, ITEM_RESPAWN_TICKS + 1);
+		//WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+	}
 }
 
 void freezetag_Unfreeze()
@@ -89,6 +94,10 @@ void freezetag_Unfreeze()
 		remove(ice);
 		break;
 	}
+
+	// remove waypoint
+	if(self.waypointsprite_attached)
+		WaypointSprite_Kill(self.waypointsprite_attached);
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
