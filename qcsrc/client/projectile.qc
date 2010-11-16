@@ -315,6 +315,8 @@ void Ent_Projectile()
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
+				self.move_bounce_factor = g_balance_electro_secondary_bouncefactor;
+				self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
 				break;
 			case PROJECTILE_ROCKET:
 				loopsound(self, CHAN_PROJECTILE, "weapons/rocket_fly.wav", VOL_BASE, ATTN_NORM);
@@ -330,8 +332,8 @@ void Ent_Projectile()
 				self.maxs = '3 3 3';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
-				self.move_bounce_factor = g_balance_grenadelauncher_secondary_bouncefactor;
-				self.move_bounce_stopspeed = g_balance_grenadelauncher_secondary_bouncestop;
+				self.move_bounce_factor = g_balance_grenadelauncher_bouncefactor;
+				self.move_bounce_stopspeed = g_balance_grenadelauncher_bouncestop;
 				break;
 			case PROJECTILE_MINE:
 				self.mins = '-4 -4 -4';

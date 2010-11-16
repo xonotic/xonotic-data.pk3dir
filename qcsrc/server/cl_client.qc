@@ -1075,6 +1075,9 @@ void PutClientInServer (void)
 	//	ctf_playerchanged();
 }
 
+.float ebouncefactor, ebouncestop; // electro's values
+// TODO do we need all these fields, or should we stop autodetecting runtime
+// changes and just have a console command to update this?
 float ClientInit_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
@@ -1099,6 +1102,8 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
 	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_bouncefactor
 	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_bouncestop
+	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_grenadelauncher_bouncefactor
+	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_grenadelauncher_bouncestop
 	WriteByte(MSG_ENTITY, cvar("g_balance_nex_secondary")); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, cvar("g_balance_campingrifle_secondary")); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
@@ -1126,6 +1131,16 @@ void ClientInit_CheckUpdate()
 	if(self.bouncestop != cvar("g_balance_grenadelauncher_bouncestop"))
 	{
 		self.bouncestop = cvar("g_balance_grenadelauncher_bouncestop");
+		self.SendFlags |= 1;
+	}
+	if(self.ebouncefactor != cvar("g_balance_electro_bouncefactor"))
+	{
+		self.ebouncefactor = cvar("g_balance_electro_bouncefactor");
+		self.SendFlags |= 1;
+	}
+	if(self.ebouncestop != cvar("g_balance_electro_bouncestop"))
+	{
+		self.ebouncestop = cvar("g_balance_electro_bouncestop");
 		self.SendFlags |= 1;
 	}
 }
