@@ -345,6 +345,9 @@ const float STAT_BLUEALIVE = 101;
 const float STAT_YELLOWALIVE = 102;
 const float STAT_PINKALIVE = 103;
 
+// freeze tag
+const float STAT_FROZEN = 104;
+
 //const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
 //const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin
 

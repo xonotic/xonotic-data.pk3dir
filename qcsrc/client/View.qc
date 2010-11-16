@@ -695,6 +695,10 @@ void CSQC_UpdateView(float w, float h)
         CSQC_RAPTOR_HUD();
 	else
 	{
+		if(gametype == GAME_FREEZETAG)
+			if(getstati(STAT_FROZEN))
+				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0.25 0.90 1', cvar("hud_colorflash_alpha"), DRAWFLAG_ADDITIVE);
+
 		if(cvar("r_letterbox") == 0)
 			if(cvar("viewsize") < 120)
 				CSQC_common_hud();

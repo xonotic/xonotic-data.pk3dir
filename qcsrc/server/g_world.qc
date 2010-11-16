@@ -816,6 +816,9 @@ void spawnfunc_worldspawn (void)
 		addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
 		addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
 	}
+	if(g_freezetag)
+		addstat(STAT_FROZEN, AS_INT, freezetag_frozen);
+
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
