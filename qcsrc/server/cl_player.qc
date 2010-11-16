@@ -386,6 +386,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 }
 
 void ClientKill_Now_TeamChange();
+void freezetag_CheckWinner();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -609,6 +610,14 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
 		DropAllRunes(self);
+
+		if(deathtype == DEATH_HURTTRIGGER)
+		{
+			PutClientInServer();
+			count_alive_players(); // re-count players
+			freezetag_CheckWinner();
+			return;
+		}
 
 		frag_attacker = attacker;
 		frag_inflictor = inflictor;

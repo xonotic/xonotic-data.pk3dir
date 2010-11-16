@@ -217,8 +217,9 @@ void Arena_Warmup()
 		|| (bluespawned >= 1 && yellowspawned >= 1)
 		|| (bluespawned >= 1 && pinkspawned >= 1)
 		|| (yellowspawned >= 1 && pinkspawned >= 1)))
-	{
+	{ // no teams, or only one team has players
 		warmup = time + cvar("g_freezetag_warmup");
+		return;
 	}
 
 	f = ceil(warmup - time);
@@ -285,16 +286,13 @@ void Arena_Warmup()
 	if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
 		self.movetype = MOVETYPE_WALK;
 }
-/**
- * This function finds out whether an arena round is over 1 player is left.
- * It determines the last player who's still alive and saves it's entity reference
- * in the global variable 'champion'. Then the new enemy/enemies are put into the server.
- *
- * Gets called in StartFrame()
- */
-void Spawnqueue_Check()
+
+void count_spawned_players()
 {
-	// check the amount of spawned players in each team
+	// TODO fix "*spawned" name, it should rather be "*players" or so
+	// not doing this not to prevent merge hell with Tag
+
+	// count amount of players in each team
 	redspawned = bluespawned = yellowspawned = pinkspawned = 0;
 	FOR_EACH_PLAYER(self) {
 		if (self.team == COLOR_TEAM1) redspawned += 1;
@@ -302,18 +300,17 @@ void Spawnqueue_Check()
 		else if (self.team == COLOR_TEAM3) yellowspawned += 1;
 		else if (self.team == COLOR_TEAM4) pinkspawned += 1;
 	}
+}
 
-	if(g_ca) // we want to perform this before the return block below...
+void count_alive_players()
+{
+	redalive = bluealive = yellowalive = pinkalive = 0;
+	if(g_ca)
 	{
-		// this is STUPID to perform again, but has to be done so that we can give instant feedback when a round ends
-		// and so the code won't start searching for a champion using find() before all players are actually REMOVED
-		redalive = 0; bluealive = 0;
 		FOR_EACH_PLAYER(self) {
 			if (self.team == COLOR_TEAM1 && self.health >= 1) redalive += 1;
 			else if (self.team == COLOR_TEAM2 && self.health >= 1) bluealive += 1;
 		}
-		// as if the above stuff wasn't stupid enough, let's run it a third time! :D
-		// (so that we can send redalive/bluealive as a stat)
 		FOR_EACH_PLAYER(self) {
 			self.redalive_stat = redalive;
 			self.bluealive_stat = bluealive;
@@ -321,7 +318,7 @@ void Spawnqueue_Check()
 	}
 	else if(g_freezetag)
 	{
-		redalive = bluealive = yellowalive = pinkalive = 0;
+		// count amount of alive players in each team
 		FOR_EACH_PLAYER(self) {
 			if (self.team == COLOR_TEAM1 && self.freezetag_frozen == 0 && self.health >= 1) redalive += 1;
 			else if (self.team == COLOR_TEAM2 && self.freezetag_frozen == 0 && self.health >= 1) bluealive += 1;
@@ -334,6 +331,23 @@ void Spawnqueue_Check()
 			self.yellowalive_stat = yellowalive;
 			self.pinkalive_stat = pinkalive;
 		}
+	}
+
+}
+
+/**
+ * This function finds out whether an arena round is over 1 player is left.
+ * It determines the last player who's still alive and saves it's entity reference
+ * in the global variable 'champion'. Then the new enemy/enemies are put into the server.
+ *
+ * Gets called in StartFrame()
+ */
+void Spawnqueue_Check()
+{
+	count_spawned_players();
+	if(g_ca || g_freezetag) // we want to perform this before the return block below (CA)...
+	{
+		count_alive_players();
 	}
 	if(time < warmup + 1 || inWarmupStage)
 		return;

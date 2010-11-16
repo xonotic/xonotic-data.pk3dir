@@ -1,12 +1,12 @@
 void freezetag_Initialize()
 {
 	precache_model("models/ice/ice.md3");
-	next_round = time + 5;
+	warmup = time + cvar("g_freezetag_warmup");
 }
 
 void freezetag_CheckWinner()
 {
-	if(next_round)
+	if(next_round || (time > warmup - cvar("g_freezetag_warmup") && time < warmup))
 		return; // already waiting for next round to start
 
 	if((redalive >= 1 && bluealive >= 1) // counted in arena.qc
@@ -78,8 +78,6 @@ void freezetag_Freeze()
 	if(self.waypointsprite_attached)
 	{
 		WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_WAYPOINT, '0.25 0.90 1');
-		//WaypointSprite_UpdateMaxHealth(self.waypointsprite_attached, ITEM_RESPAWN_TICKS + 1);
-		//WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
 	}
 }
 
