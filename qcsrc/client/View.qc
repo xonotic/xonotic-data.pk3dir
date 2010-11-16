@@ -697,7 +697,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		if(gametype == GAME_FREEZETAG)
 			if(getstati(STAT_FROZEN))
-				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0.25 0.90 1', cvar("hud_colorflash_alpha"), DRAWFLAG_ADDITIVE);
+				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0.25 0.90 1', cvar_or("hud_colorflash_alpha", 0.5), DRAWFLAG_ADDITIVE);
 
 		if(cvar("r_letterbox") == 0)
 			if(cvar("viewsize") < 120)
