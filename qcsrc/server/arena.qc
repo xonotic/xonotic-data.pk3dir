@@ -265,7 +265,7 @@ void Arena_Warmup()
 		}
 	}
 
-	if(self.classname == "player" && self.health > 0)
+	if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
 		self.movetype = MOVETYPE_WALK;
 }
 

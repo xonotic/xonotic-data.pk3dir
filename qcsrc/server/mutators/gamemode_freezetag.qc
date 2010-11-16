@@ -71,7 +71,7 @@ void freezetag_Freeze()
 
 	//setattachment(ice, self, "");
 
-	self.movetype = MOVETYPE_NONE;
+	//self.movetype = MOVETYPE_NONE;
 
 	self.movement = '0 0 0';
 }
@@ -111,7 +111,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
 	if(frag_attacker == frag_target || frag_attacker == world)
 	{
-		centerprint(frag_target, strcat("^1You froze yourself.\n"));
+		centerprint(frag_target, "^1You froze yourself.\n");
 		bprint("^7", frag_target.netname, "^1 froze himself.\n");
 	}
 	else
@@ -134,7 +134,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 
 	if(time > warmup) // spawn too late, freeze player
 	{
-		centerprint(self, strcat("^1You spawned after the round started, you'll spawn as frozen.\n"));
+		centerprint(self, "^1You spawned after the round started, you'll spawn as frozen.\n");
 		freezetag_Freeze();
 	}
 	else // we are still in the delay period before the round starts
@@ -153,16 +153,6 @@ MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 {
-	if(self.freezetag_frozen)
-	{
-		// nasty hack, i want them to move around later on as i figure out a better way to block movement TODO TODO TODO !!!
-		self.velocity_x = 0;
-		self.velocity_y = 0;
-		self.velocity_z = min(self.velocity_z, 0);
-		self.movement = '0 0 0'; // don't move anywhere :-P
-		self.avelocity = '0 0 0';
-	}
-
 	vector revive_extra_size;
 	revive_extra_size = '1 1 1' * cvar("g_freezetag_revive_extra_size");
 
@@ -207,6 +197,13 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	return 1;
 }
 
+MUTATOR_HOOKFUNCTION(freezetag_PlayerPhysics)
+{
+	if(self.freezetag_frozen)
+		self.movement = '0 0 0';
+	return 1;
+}
+
 MUTATOR_DEFINITION(gamemode_freezetag)
 {
 	MUTATOR_HOOK(MakePlayerObserver, freezetag_RemovePlayer, CBC_ORDER_ANY);
@@ -215,6 +212,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(PlayerSpawn, freezetag_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, freezetag_GiveFragsForKill, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);
+	MUTATOR_HOOK(PlayerPhysics, freezetag_PlayerPhysics, CBC_ORDER_FIRST);
 
 	MUTATOR_ONADD
 	{

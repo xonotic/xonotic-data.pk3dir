@@ -46,6 +46,9 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
+	if(g_freezetag && self.freezetag_frozen)
+		return; // no jumping in freezetag when frozen
+
 	float mjumpheight;
 	float doublejump;
 
