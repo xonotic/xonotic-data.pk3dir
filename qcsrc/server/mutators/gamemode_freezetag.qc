@@ -66,7 +66,6 @@ void freezetag_Freeze()
 	self.movetype = MOVETYPE_NONE;
 
 	self.movement = '0 0 0';
-	//self.fixangle = TRUE;
 }
 
 void freezetag_Unfreeze()
@@ -74,7 +73,6 @@ void freezetag_Unfreeze()
 	self.freezetag_frozen = 0;
 
 	self.movetype = MOVETYPE_WALK;
-	//self.fixangle = FALSE;
 
 	// remove the ice block
 	entity tag;
