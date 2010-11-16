@@ -101,7 +101,7 @@ void WriteGameCvars()
 	cvar_set("g_race", ftos(g_race));
 	cvar_set("g_nexball", ftos(g_nexball));
 	cvar_set("g_cts", ftos(g_cts));
-	cvar_set("g_ka", ftos(g_ka));
+	cvar_set("g_keepaway", ftos(g_keepaway));
 }
 
 void ReadGameCvars()
@@ -128,7 +128,7 @@ void ReadGameCvars()
 		found += (g_race = (!found && (prev != GAME_RACE) && cvar("g_race")));
 		found += (g_nexball = (!found && (prev != GAME_NEXBALL) && cvar("g_nexball")));
 		found += (g_cts = (!found && (prev != GAME_CTS) && cvar("g_cts")));
-		found += (g_ka = (!found && (prev != GAME_KEEPAWAY) && cvar("g_ka")));
+		found += (g_keepaway = (!found && (prev != GAME_KEEPAWAY) && cvar("g_keepaway")));
 
 		if(found)
 			break;
@@ -375,11 +375,11 @@ void InitGameplayMode()
 		have_team_spawns = -1; // request team spawns
 	}
 
-	if(g_ka)
+	if(g_keepaway)
 	{
 		game = GAME_KEEPAWAY;
 		gamemode_name = "Keepaway";
-		MUTATOR_ADD(gamemode_ka);
+		MUTATOR_ADD(gamemode_keepaway);
 	}
 
 	if(teams_matter)

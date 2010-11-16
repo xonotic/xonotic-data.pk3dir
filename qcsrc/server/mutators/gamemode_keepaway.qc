@@ -1,4 +1,22 @@
+void ka_SpawnBall(void);
+void ka_TouchEvent(entity);
+void ka_RespawnBall(void);
+
 void ka_Initialize()
+{
+	if(!g_keepaway)
+		return;
+		
+	precache_sound("keepaway/pickedup.wav");
+	precache_sound("keepaway/dropped.wav");
+	
+	entity e;
+	e = spawn();
+	e.think = ka_SpawnBall;
+	e.nextthink = time;
+}
+
+void ka_SpawnBall()
 {
 	if(!g_keepaway) { 
 		remove(self); 
@@ -18,17 +36,17 @@ void ka_Initialize()
 	self.effects = self.effects | EF_FULLBRIGHT;
 	self.movetype = MOVETYPE_BOUNCE;
 	self.touch = ka_TouchEvent;
-	self.think = ka_SpawnBall;
+	self.think = ka_RespawnBall;
 	self.nextthink = time;
 	self.flags = FL_ITEM;
-	self.reset = ka_Reset;
+	//self.reset = ka_Reset;
 	self.owner = world;
 	
 	// todo: Waypoints and radar
 	//WaypointSprite_AttachCarrier();
 }
 
-void ka_SpawnBall()
+void ka_RespawnBall()
 {
 	if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 	{
@@ -38,13 +56,13 @@ void ka_SpawnBall()
 		self.angles = '0 0 0';
 		self.solid = SOLID_TRIGGER;
 		//self.touch = ka_TouchEvent;
-		self.think = ka_SpawnBall;
+		self.think = ka_RespawnBall;
 		self.nextthink = time + cvar("g_keepawayball_respawntime");
 	}
 	else
 	{
 		// sorry, can't spawn, better luck next frame
-		self.think = ka_SpawnBall;
+		self.think = ka_RespawnBall;
 		self.nextthink = time;
 	}
 }
@@ -80,9 +98,9 @@ void ka_TouchEvent(entity plyr)
 	self.nextthink = 0;
 
 	self.glow_color = cvar("g_keepawayball_trail_color");
-	self.glowtrail = TRUE;
+	self.glow_trail = TRUE;
 	plyr.effects |= 8;
-	plyr.alpha = 0.6
+	plyr.alpha = 0.6;
 
 	bprint(other.netname, "^7 has picked up the ball!\n");
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
@@ -94,6 +112,43 @@ void ka_TouchEvent(entity plyr)
 	// todo: Waypoints and radar
 }
 
+MUTATOR_HOOKFUNCTION(ka_RemovePlayer)
+{
+	entity ball;
+	ball = self.ballcarried;
+
+	setattachment(ball, world, "");
+	ball.movetype = MOVETYPE_BOUNCE;
+	ball.solid = SOLID_TRIGGER;
+	ball.wait = time + 1;
+	ball.ctf_droptime = time;
+	ball.think = ka_SpawnBall;
+	ball.nextthink = time + cvar("g_keepawayball_respawntime");
+	ball.touch = ka_TouchEvent;
+	self.effects = EF_LOWPRECISION;
+	self.alpha = 1.0;
+	ball.alpha = 1.0;
+	setorigin(ball, self.origin + '0 0 10');
+	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
+	
+	bprint(self.netname, "^7 has dropped the ball!\n");
+	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
+	WriteString(MSG_BROADCAST, strcat("\n\n", self.netname, "^7 has dropped the ball!\n"));
+	sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NORM);	
+	
+	PlayerScore_Add(self, SP_KEEPAWAY_DROPS, 1);
+	
+	// todo
+	//WaypointSprite_AttachCarrier("ka-ball", ball);
+	//WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
+	
+	ball.owner.ballcarried = world;
+	ball.owner = world;
+
+	return 1;
+}
+
+/*
 void ka_DropEvent(entity plyr, entity ball)
 {	
 	setattachment(ball, world, "");
@@ -125,7 +180,7 @@ void ka_DropEvent(entity plyr, entity ball)
 	ball.owner = world;
 }
 
-/*
+
 void ka_CheckWinner()
 {
 
@@ -186,59 +241,6 @@ MUTATOR_HOOKFUNCTION(ka_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(tag_RemovePlayer)
 {
-	if(self.tag_playernum == -1)
-		return 0; // nothing to remove
-
-	float i, j;
-	/*for (i = self.tag_playernum; i < tag_players_count; ++i)
-	{
-		tag_players[i] = tag_players[i+1];
-		tag_players[i].tag_playernum = tag_players[i].tag_playernum - 1;
-	}
-	*/
-
-	tag_players[self.tag_playernum] = world;
-	tag_players_count = tag_players_count - 1;
-
-	// if other players have our color, randomize their color
-	entity e, random_player;
-	float temp_tag_players_count;
-	temp_tag_players_count = tag_players_count;
-
-	if(!next_round) // ... but ONLY if next_round isn't set. We don't care about the colors if the round has already ended
-	for(i = 0; i < temp_tag_players_count; ++i) // check other players...
-	{
-		e = tag_players[i];
-		if(e == world) // empty slot, skip to next
-		{
-			if(temp_tag_players_count < TAGCOLOR_MAX - 1) // just in case
-				++temp_tag_players_count;
-			continue;
-		}
-
-		if(e.tagcolor == self.tagcolor_original) // and see if they have our original tag color
-		{
-			for(j = 0; j < 100; ++j) // try 100 times to find a color that isn't the same as our color. If this fails we are either damn unlucky, or there are really only players left of our color
-			{
-				random_player = tag_players[floor(random() * (TAGCOLOR_MAX - 1))];
-
-				if(random_player == world) // hit empty slot, try again
-					continue;
-
-				if(random_player.tagcolor != self.tagcolor_original) // break if we found another color
-				{
-					break;
-				}
-			}
-			e.tagcolor = random_player.tagcolor;
-			setcolor(e, 16 * e.tagcolor + e.tagcolor);
-		}
-	}
-
-	self.tag_playernum = -1;
-
-	if(tag_players_count > 1 && time > warmup)
-		tag_CheckWinner();
 
 	return 1;
 }
@@ -257,11 +259,11 @@ MUTATOR_HOOKFUNCTION(tag_PlayerPreThink)
 */
 
 
-MUTATOR_DEFINITION(gamemode_ka)
+MUTATOR_DEFINITION(gamemode_keepaway)
 {
 	MUTATOR_HOOK(MakePlayerObserver, ka_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, ka_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, ka_PlayerDies, CBC_ORDER_ANY);
+	//MUTATOR_HOOK(PlayerDies, ka_PlayerDies, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(PlayerSpawn, ka_PlayerSpawn, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(GiveFragsForKill, ka_GiveFragsForKill, CBC_ORDER_FIRST);
 	//MUTATOR_HOOK(PlayerPreThink, ka_PlayerPreThink, CBC_ORDER_FIRST);
@@ -270,13 +272,13 @@ MUTATOR_DEFINITION(gamemode_ka)
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		g_ka = 1;
+		g_keepaway = 1;
 		ka_Initialize();
 	}
 
 	MUTATOR_ONREMOVE
 	{
-		g_ka = 0;
+		g_keepaway = 0;
 		error("This is a game type and it cannot be removed at runtime.");
 	}
 

@@ -469,7 +469,7 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 		sa = car(s);
 		if(sa != "")
 			cvar_set("fraglimit", sa);
-		s = cdr(s)
+		s = cdr(s);
 	}
 
 	// rc = timelimit timelimit_qualification laps laps_teamplay
@@ -1147,7 +1147,7 @@ float MapInfo_CurrentGametype()
 		return MAPINFO_TYPE_NEXBALL;
 	else if(cvar("g_cts"))
 		return MAPINFO_TYPE_CTS;
-	else if(cvar("g_ka"))
+	else if(cvar("g_keepaway"))
 		return MAPINFO_TYPE_KEEPAWAY;
 	else
 		return MAPINFO_TYPE_DEATHMATCH;
@@ -1190,7 +1190,7 @@ string MapInfo_GetGameTypeCvar(float t)
 		case MAPINFO_TYPE_RACE: 			return "g_race";
 		case MAPINFO_TYPE_NEXBALL: 		return "g_nexball";
 		case MAPINFO_TYPE_CTS: 			return "g_cts";
-		case MAPINFO_TYPE_KEEPAWAY: 		return "g_ka";
+		case MAPINFO_TYPE_KEEPAWAY: 		return "g_keepaway";
 		default: return "";
 	}
 }
@@ -1212,7 +1212,7 @@ void MapInfo_SwitchGameType(float t)
 	cvar_set("g_race",       (t == MAPINFO_TYPE_RACE)            ? "1" : "0");
 	cvar_set("g_nexball",    (t == MAPINFO_TYPE_NEXBALL)         ? "1" : "0");
 	cvar_set("g_cts",        (t == MAPINFO_TYPE_CTS)             ? "1" : "0");
-	cvar_set("g_ka",	    (t == MAPINFO_TYPE_KEEPAWAY)	  ? "1" : "0");
+	cvar_set("g_keepaway",   (t == MAPINFO_TYPE_KEEPAWAY)        ? "1" : "0");
 }
 
 void MapInfo_LoadMap(string s)
