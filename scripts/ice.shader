@@ -1,6 +1,5 @@
 models/ice/ice
 {
-	cull none
 	dpnoshadow
 	dpreflectcube cubemaps/default/sky
  {
