@@ -661,7 +661,7 @@ float MapInfo_Type_FromString(string t)
 	else if(t == "rc")      return MAPINFO_TYPE_RACE;
 	else if(t == "nexball") return MAPINFO_TYPE_NEXBALL;
 	else if(t == "cts")     return MAPINFO_TYPE_CTS;
-	else if(t == "ka")	   return MAPINFO_TYPE_KEEPAWAY;
+	else if(t == "keepaway") return MAPINFO_TYPE_KEEPAWAY;
 	else if(t == "all")     return MAPINFO_TYPE_ALL;
 	else                    return 0;
 }
@@ -682,7 +682,7 @@ string MapInfo_Type_ToString(float t)
 	else if(t == MAPINFO_TYPE_RACE)            return "rc";
 	else if(t == MAPINFO_TYPE_NEXBALL)         return "nexball";
 	else if(t == MAPINFO_TYPE_CTS)             return "cts";
-	else if(t == MAPINFO_TYPE_KEEPAWAY)  		return "ka";
+	else if(t == MAPINFO_TYPE_KEEPAWAY)  	   return "keepaway";
 	else if(t == MAPINFO_TYPE_ALL)             return "all";
 	else                                       return "";
 }
