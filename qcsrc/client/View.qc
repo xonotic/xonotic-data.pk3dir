@@ -664,48 +664,51 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	// improved polyblend
-	float myhealth_flash_temp;
-	myhealth = getstati(STAT_HEALTH);
-
-	// fade out
-	myhealth_flash = max(0, myhealth_flash - cvar("hud_damage_fade_rate") * frametime);
-	// add new damage
-	myhealth_flash = bound(0, myhealth_flash + max(0, myhealth_prev - myhealth) * cvar("hud_damage_factor"), cvar("hud_damage_maxalpha"));
-
-	float pain_treshold, pain_treshold_lower, pain_treshold_lower_health;
-	pain_treshold = cvar("hud_damage_pain_treshold");
-	pain_treshold_lower = cvar("hud_damage_pain_treshold_lower");
-	pain_treshold_lower_health = cvar("hud_damage_pain_treshold_lower_health");
-
-	if(pain_treshold_lower && myhealth < pain_treshold_lower_health)
+	if(cvar("hud_damage"))
 	{
-		pain_treshold = pain_treshold - max(cvar("hud_damage_pain_treshold_pulsating_min"), fabs(sin(M_PI * time / cvar("hud_damage_pain_treshold_pulsating_period")))) * pain_treshold_lower * (1 - max(0, myhealth)/pain_treshold_lower_health);
-	}
+		float myhealth_flash_temp;
+		myhealth = getstati(STAT_HEALTH);
 
-	myhealth_flash_temp = bound(0, myhealth_flash - pain_treshold, 1);
+		// fade out
+		myhealth_flash = max(0, myhealth_flash - cvar("hud_damage_fade_rate") * frametime);
+		// add new damage
+		myhealth_flash = bound(0, myhealth_flash + max(0, myhealth_prev - myhealth) * cvar("hud_damage_factor"), cvar("hud_damage_maxalpha"));
 
-	if(myhealth_prev < 1)
-	{
-		if(myhealth >= 1)
+		float pain_treshold, pain_treshold_lower, pain_treshold_lower_health;
+		pain_treshold = cvar("hud_damage_pain_treshold");
+		pain_treshold_lower = cvar("hud_damage_pain_treshold_lower");
+		pain_treshold_lower_health = cvar("hud_damage_pain_treshold_lower_health");
+
+		if(pain_treshold_lower && myhealth < pain_treshold_lower_health)
 		{
-			myhealth_flash = 0; // just spawned, clear the flash immediately
+			pain_treshold = pain_treshold - max(cvar("hud_damage_pain_treshold_pulsating_min"), fabs(sin(M_PI * time / cvar("hud_damage_pain_treshold_pulsating_period")))) * pain_treshold_lower * (1 - max(0, myhealth)/pain_treshold_lower_health);
+		}
+
+		myhealth_flash_temp = bound(0, myhealth_flash - pain_treshold, 1);
+
+		if(myhealth_prev < 1)
+		{
+			if(myhealth >= 1)
+			{
+				myhealth_flash = 0; // just spawned, clear the flash immediately
+				myhealth_flash_temp = 0;
+			}
+			else
+			{
+				myhealth_flash += cvar("hud_damage_fade_rate") * frametime; // dead
+			}
+		}
+
+		if(spectatee_status == -1 || intermission)
+		{
+			myhealth_flash = 0; // observing, or match ended
 			myhealth_flash_temp = 0;
 		}
-		else
-		{
-			myhealth_flash += cvar("hud_damage_fade_rate") * frametime; // dead
-		}
+
+		myhealth_prev = myhealth;
+
+		drawpic(reticle_pos, "gfx/blood", reticle_size, stov(cvar_string("hud_damage_color")), bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
 	}
-
-	if(spectatee_status == -1 || intermission)
-	{
-		myhealth_flash = 0; // observing, or match ended
-		myhealth_flash_temp = 0;
-	}
-
-	myhealth_prev = myhealth;
-
-	drawpic(reticle_pos, "gfx/blood", reticle_size, '1 0 0', bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
 
 	// Draw the mouse cursor
 	// NOTE: drawpic must happen after R_RenderScene for some reason
