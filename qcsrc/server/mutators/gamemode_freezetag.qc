@@ -1,21 +1,16 @@
 void freezetag_Initialize()
 {
 	precache_model("models/ice/ice.md3");
-	next_round = time + cvar("g_start_delay");
+	warmup = time + cvar("g_start_delay") + cvar("g_freezetag_warmup");
 }
 
 void freezetag_CheckWinner()
 {
-	if(time <= game_starttime)
+	if(time <= game_starttime) // game didn't even start yet! nobody can win in that case.
 		return;
 
 	if(next_round || (time > warmup - cvar("g_freezetag_warmup") && time < warmup))
 		return; // already waiting for next round to start
-
-	if(redalive + bluealive + yellowalive + pinkalive <= 0 && time > game_starttime)
-	{
-		next_round = time + 5;
-	}
 
 	if((redalive >= 1 && bluealive >= 1) // counted in arena.qc
 		|| (redalive >= 1 && yellowalive >= 1)
@@ -23,7 +18,7 @@ void freezetag_CheckWinner()
 		|| (bluealive >= 1 && yellowalive >= 1)
 		|| (bluealive >= 1 && pinkalive >= 1)
 		|| (yellowalive >= 1 && pinkalive >= 1))
-		return; // we still have active players on two or more teams
+		return; // we still have active players on two or more teams, nobody won yet
 
 	entity e, winner;
 	string teamname;
@@ -37,7 +32,7 @@ void freezetag_CheckWinner()
 		}
 	}
 
-	if(winner != world) // just in case a winner isn't found
+	if(winner != world) // just in case a winner wasn't found
 	{
 		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
 		if(winner.team == COLOR_TEAM1)
@@ -115,9 +110,12 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 			--yellowalive;
 		else if(self.team == COLOR_TEAM4)
 			--pinkalive;
+		--totalalive;
 	}
 
-	freezetag_CheckWinner();
+	if(totalspawned > 2) // only check for winners if we had more than two players (one of them left, don't let the other player win just because of that)
+		freezetag_CheckWinner();
+
 	freezetag_Unfreeze();
 
 	return 1;
@@ -125,8 +123,20 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 {
+	if(self.freezetag_frozen == 0)
+	{
+		if(self.team == COLOR_TEAM1)
+			--redalive;
+		else if(self.team == COLOR_TEAM2)
+			--bluealive;
+		else if(self.team == COLOR_TEAM3)
+			--yellowalive;
+		else if(self.team == COLOR_TEAM4)
+			--pinkalive;
+		--totalalive;
+	}
+
 	freezetag_Freeze();
-	count_alive_players();
 
 	centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
 	if(frag_attacker == frag_target || frag_attacker == world)
@@ -149,9 +159,14 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
-	if(time > warmup) // spawn too late, freeze player
+	if(totalspawned == 1 && time > game_starttime) // only one player active on server, start a new match immediately
+	if(!next_round && warmup && (time < warmup - cvar("g_freezetag_warmup") || time > warmup)) // not awaiting next round
 	{
-		print("time: ", ftos(time), " warmup: ", ftos(warmup), "\n");
+		next_round = time;
+		return 1;
+	}
+	if(warmup && time > warmup) // spawn too late, freeze player
+	{
 		centerprint(self, "^1You spawned after the round started, you'll spawn as frozen.\n");
 		freezetag_Freeze();
 	}

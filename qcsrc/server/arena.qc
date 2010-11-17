@@ -27,8 +27,10 @@ void target_assault_roundend_reset();
 float next_round;
 float stopalivecheck;
 float redalive, bluealive, yellowalive, pinkalive;
+float totalalive;
 .float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
 float redspawned, bluespawned, yellowspawned, pinkspawned;
+float totalspawned;
 
 /**
  * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
@@ -56,7 +58,7 @@ void reset_map(float dorespawn)
 	race_ReadyRestart();
 
 	for(self = world; (self = nextent(self)); )
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	if(clienttype(self) == CLIENTTYPE_NOTACLIENT && self.items != IT_STRENGTH && self.items != IT_INVINCIBLE) // don't respawn strength or shield, that will only lead to them spawning very early each match
 	{
 		if(self.reset)
 		{
@@ -210,18 +212,6 @@ void Arena_Warmup()
 	if((!g_arena && !g_ca && !g_freezetag) || (g_arena && !arena_roundbased) || (time < game_starttime))
 		return;
 
-	if(g_freezetag && time > game_starttime &&
-		!((redspawned >= 1 && bluespawned >= 1)
-		|| (redspawned >= 1 && yellowspawned >= 1)
-		|| (redspawned >= 1 && pinkspawned >= 1)
-		|| (bluespawned >= 1 && yellowspawned >= 1)
-		|| (bluespawned >= 1 && pinkspawned >= 1)
-		|| (yellowspawned >= 1 && pinkspawned >= 1)))
-	{ // no teams, or only one team has players
-		warmup = time + cvar("g_freezetag_warmup");
-		return;
-	}
-
 	f = ceil(warmup - time);
 	if(f > 0)
 		champion = world; // this is done because a if(champion) will not execute if champion = world
@@ -290,26 +280,51 @@ void Arena_Warmup()
 void count_spawned_players()
 {
 	// TODO fix "*spawned" name, it should rather be "*players" or so
-	// not doing this not to prevent merge hell with Tag
+	// not doing this now to prevent merge hell with Tag
+	// fix after merging with Tag
 
 	// count amount of players in each team
-	redspawned = bluespawned = yellowspawned = pinkspawned = 0;
+	totalspawned = redspawned = bluespawned = yellowspawned = pinkspawned = 0;
 	FOR_EACH_PLAYER(self) {
-		if (self.team == COLOR_TEAM1) redspawned += 1;
-		else if (self.team == COLOR_TEAM2) bluespawned += 1;
-		else if (self.team == COLOR_TEAM3) yellowspawned += 1;
-		else if (self.team == COLOR_TEAM4) pinkspawned += 1;
+		if (self.team == COLOR_TEAM1)
+		{
+			redspawned += 1;
+			totalspawned += 1;
+		}
+		else if (self.team == COLOR_TEAM2)
+		{
+			bluespawned += 1;
+			totalspawned += 1;
+		}
+		else if (self.team == COLOR_TEAM3)
+		{
+			yellowspawned += 1;
+			totalspawned += 1;
+		}
+		else if (self.team == COLOR_TEAM4)
+		{
+			pinkspawned += 1;
+			totalspawned += 1;
+		}
 	}
 }
 
 void count_alive_players()
 {
-	redalive = bluealive = yellowalive = pinkalive = 0;
+	totalalive = redalive = bluealive = yellowalive = pinkalive = 0;
 	if(g_ca)
 	{
 		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1 && self.health >= 1) redalive += 1;
-			else if (self.team == COLOR_TEAM2 && self.health >= 1) bluealive += 1;
+			if (self.team == COLOR_TEAM1 && self.health >= 1)
+			{
+				redalive += 1;
+				totalalive += 1;
+			}
+			else if (self.team == COLOR_TEAM2 && self.health >= 1)
+			{
+				bluealive += 1;
+				totalalive += 1;
+			}
 		}
 		FOR_EACH_PLAYER(self) {
 			self.redalive_stat = redalive;
@@ -320,10 +335,26 @@ void count_alive_players()
 	{
 		// count amount of alive players in each team
 		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1 && self.freezetag_frozen == 0 && self.health >= 1) redalive += 1;
-			else if (self.team == COLOR_TEAM2 && self.freezetag_frozen == 0 && self.health >= 1) bluealive += 1;
-			else if (self.team == COLOR_TEAM3 && self.freezetag_frozen == 0 && self.health >= 1) yellowalive += 1;
-			else if (self.team == COLOR_TEAM4 && self.freezetag_frozen == 0 && self.health >= 1) pinkalive += 1;
+			if (self.team == COLOR_TEAM1 && self.freezetag_frozen == 0 && self.health >= 1)
+			{
+				redalive += 1;
+				totalalive += 1;
+			}
+			else if (self.team == COLOR_TEAM2 && self.freezetag_frozen == 0 && self.health >= 1)
+			{
+				bluealive += 1;
+				totalalive += 1;
+			}
+			else if (self.team == COLOR_TEAM3 && self.freezetag_frozen == 0 && self.health >= 1)
+			{
+				yellowalive += 1;
+				totalalive += 1;
+			}
+			else if (self.team == COLOR_TEAM4 && self.freezetag_frozen == 0 && self.health >= 1)
+			{
+				pinkalive += 1;
+				totalalive += 1;
+			}
 		}
 		FOR_EACH_PLAYER(self) {
 			self.redalive_stat = redalive;
