@@ -172,11 +172,7 @@ float w_nex(float req)
 	else if (req == WR_CHECKAMMO1)
 		return self.ammo_cells >= cvar("g_balance_nex_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
-	{
-		if(cvar("g_balance_nex_secondary_charge_pool"))
-			return TRUE;
 		return self.ammo_cells >= cvar("g_balance_nex_primary_ammo"); // don't allow charging if we don't have enough ammo
-	}
 	return TRUE;
 };
 #endif
