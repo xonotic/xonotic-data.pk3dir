@@ -100,6 +100,8 @@ void freezetag_Unfreeze()
 
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
+	self.freezetag_frozen = 1; // count player as frozen in CheckWinner
+
 	freezetag_CheckWinner();
 	freezetag_Unfreeze();
 
