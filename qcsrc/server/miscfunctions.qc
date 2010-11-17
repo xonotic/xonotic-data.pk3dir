@@ -855,6 +855,7 @@ float g_pickup_ammo_anyway;
 float g_pickup_weapons_anyway;
 float g_weaponarena;
 float g_weaponarena_random;
+float g_weaponarena_random_with_laser;
 string g_weaponarena_list;
 float g_weaponspeedfactor;
 float g_weaponratefactor;
@@ -995,6 +996,7 @@ void readplayerstartcvars()
 		g_weaponarena_random = cvar("g_weaponarena_random");
 	else
 		g_weaponarena_random = 0;
+	g_weaponarena_random_with_laser = cvar("g_weaponarena_random_with_laser");
 
 	if (g_weaponarena)
 	{

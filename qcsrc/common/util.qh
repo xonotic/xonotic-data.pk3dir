@@ -245,3 +245,5 @@ vector vec2(vector v);
 #ifndef MENUQC
 vector NearestPointOnBox(entity box, vector org);
 #endif
+
+float vercmp(string v1, string v2);

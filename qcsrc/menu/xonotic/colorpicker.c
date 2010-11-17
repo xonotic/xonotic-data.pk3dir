@@ -51,6 +51,25 @@ vector hslimage_color(vector v, vector margin)
         return hsl_to_rgb(v_x * 6 * eX + eY + v_y / 0.875 * eZ);
 }
 
+vector color_hslimage(vector v, vector margin)
+{
+	vector pos;
+	v = rgb_to_hsl(v);
+	if (v_y)
+	{
+		pos_x = v_x / 6;
+		pos_y = v_z * 0.875;
+	}
+	else // grey scale
+	{
+		pos_x = v_z;
+		pos_y = 0.875 + 0.07;
+	}
+	pos_x = margin_x + pos_x * (1 - 2 * margin_x);
+	pos_y = margin_y + pos_y * (1 - 2 * margin_y);
+	return pos;
+}
+
 float XonoticColorpicker_mouseDrag(entity me, vector coords)
 {
 	float i;

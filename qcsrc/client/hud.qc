@@ -2621,7 +2621,7 @@ void HUD_KillNotify_Push(string attacker, string victim, float actiontype, float
 	--kn_index;
 	if (kn_index == -1)
 		kn_index = KN_MAX_ENTRIES-1;
-	killnotify_times[kn_index] = time; // -1 indicates the message is deleted
+	killnotify_times[kn_index] = time;
 	killnotify_deathtype[kn_index] = wpn;
 	killnotify_actiontype[kn_index] = actiontype;
 	if(killnotify_attackers[kn_index])
@@ -2687,14 +2687,13 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			if(type & HITTYPE_HEADSHOT)
+			if((w == WEP_CAMPINGRIFLE || w == WEP_MINSTANEX) && type & HITTYPE_HEADSHOT) // all headshot weapons go here
 				HUD_KillNotify_Push(s1, s2, 1, DEATH_HEADSHOT);
 			else
-			{
 				HUD_KillNotify_Push(s1, s2, 1, type);
-				if (alsoprint)
-					print("^1", sprintf(Weapon_KillMessage(type), strcat(s2, "^1"), strcat(s1, "^1")), "\n"); // default order: victim, killer
-			}
+
+			if (alsoprint)
+				print("^1", sprintf(Weapon_KillMessage(type), strcat(s2, "^1"), strcat(s1, "^1")), "\n"); // default order: victim, killer
 		}
 		else if(type == KILL_TEAM_RED || type == KILL_TEAM_BLUE || type == KILL_TEAM_SPREE) {
 			HUD_KillNotify_Push(s1, s2, 1, type);
@@ -3148,9 +3147,6 @@ void HUD_Notify (void)
 		if (j == KN_MAX_ENTRIES)
 			j = 0;
 
-		if (killnotify_times[j] == -1)
-			break;
-
 		if(killnotify_times[j] + when > time)
 			a = 1;
 		else if(fadetime)
@@ -3158,13 +3154,11 @@ void HUD_Notify (void)
 			a = bound(0, (killnotify_times[j] + when + fadetime - time) / fadetime, 1);
 			if(!a)
 			{
-				killnotify_times[j] = -1;
 				break;
 			}
 		}
 		else
 		{
-			killnotify_times[j] = -1;
 			break;
 		}
 

@@ -916,7 +916,13 @@ void PutClientInServer (void)
 		}
 
 		if(g_weaponarena_random)
+		{
+			if(g_weaponarena_random_with_laser)
+				self.weapons &~= WEPBIT_LASER;
 			self.weapons = randombits(self.weapons, g_weaponarena_random, FALSE);
+			if(g_weaponarena_random_with_laser)
+				self.weapons |= WEPBIT_LASER;
+		}
 
 		self.items = start_items;
 		self.jump_interval = time;
@@ -1069,6 +1075,9 @@ void PutClientInServer (void)
 	//	ctf_playerchanged();
 }
 
+.float ebouncefactor, ebouncestop; // electro's values
+// TODO do we need all these fields, or should we stop autodetecting runtime
+// changes and just have a console command to update this?
 float ClientInit_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
@@ -1093,6 +1102,8 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
 	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_bouncefactor
 	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_bouncestop
+	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_grenadelauncher_bouncefactor
+	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_grenadelauncher_bouncestop
 	WriteByte(MSG_ENTITY, cvar("g_balance_nex_secondary")); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, cvar("g_balance_campingrifle_secondary")); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
@@ -1120,6 +1131,16 @@ void ClientInit_CheckUpdate()
 	if(self.bouncestop != cvar("g_balance_grenadelauncher_bouncestop"))
 	{
 		self.bouncestop = cvar("g_balance_grenadelauncher_bouncestop");
+		self.SendFlags |= 1;
+	}
+	if(self.ebouncefactor != cvar("g_balance_electro_secondary_bouncefactor"))
+	{
+		self.ebouncefactor = cvar("g_balance_electro_secondary_bouncefactor");
+		self.SendFlags |= 1;
+	}
+	if(self.ebouncestop != cvar("g_balance_electro_secondary_bouncestop"))
+	{
+		self.ebouncestop = cvar("g_balance_electro_secondary_bouncestop");
 		self.SendFlags |= 1;
 	}
 }
@@ -1408,6 +1429,27 @@ void FixClientCvars(entity e)
 	 */
 }
 
+float PlayerInIDList(entity p, string idlist)
+{
+	float n, i;
+	string s;
+
+	// NOTE: we do NOT check crypto_keyfp here, an unsigned ID is fine too for this
+	if not(p.crypto_idfp)
+		return 0;
+
+	// this function allows abbreviated player IDs too!
+	n = tokenize_console(idlist);
+	for(i = 0; i < n; ++i)
+	{
+		s = argv(i);
+		if(s == substring(p.crypto_idfp, 0, strlen(s)))
+			return 1;
+	}
+
+	return 0;
+}
+
 /*
 =============
 ClientConnect
@@ -1463,9 +1505,37 @@ void ClientConnect (void)
 	//if(g_domination)
 	//	dom_player_join_team(self);
 
+	// identify the right forced team
+	if(PlayerInIDList(self, cvar_string("g_forced_team_red")))
+		self.team_forced = COLOR_TEAM1;
+	else if(PlayerInIDList(self, cvar_string("g_forced_team_blue")))
+		self.team_forced = COLOR_TEAM2;
+	else if(PlayerInIDList(self, cvar_string("g_forced_team_yellow")))
+		self.team_forced = COLOR_TEAM3;
+	else if(PlayerInIDList(self, cvar_string("g_forced_team_pink")))
+		self.team_forced = COLOR_TEAM4;
+	else if(cvar_string("g_forced_team_otherwise") == "red")
+		self.team_forced = COLOR_TEAM1;
+	else if(cvar_string("g_forced_team_otherwise") == "blue")
+		self.team_forced = COLOR_TEAM2;
+	else if(cvar_string("g_forced_team_otherwise") == "yellow")
+		self.team_forced = COLOR_TEAM3;
+	else if(cvar_string("g_forced_team_otherwise") == "pink")
+		self.team_forced = COLOR_TEAM4;
+	else if(cvar_string("g_forced_team_otherwise") == "spectate")
+		self.team_forced = -1;
+	else if(cvar_string("g_forced_team_otherwise") == "spectator")
+		self.team_forced = -1;
+	else
+		self.team_forced = 0;
+
+	if(!teams_matter)
+		if(self.team_forced > 0)
+			self.team_forced = 0;
+
 	JoinBestTeam(self, FALSE, FALSE); // if the team number is valid, keep it
 
-	if((cvar("sv_spectate") == 1 && !g_lms) || cvar("g_campaign")) {
+	if((cvar("sv_spectate") == 1 && !g_lms) || cvar("g_campaign") || self.team_forced < 0) {
 		self.classname = "observer";
 	} else {
 		if(teams_matter)
@@ -2333,7 +2403,7 @@ void ShowRespawnCountdown()
 void LeaveSpectatorMode()
 {
 	if(isJoinAllowed()) {
-		if(!teams_matter || cvar("g_campaign") || cvar("g_balance_teams") || (self.wasplayer && cvar("g_changeteam_banned"))) {
+		if(!teams_matter || cvar("g_campaign") || cvar("g_balance_teams") || (self.wasplayer && cvar("g_changeteam_banned")) || self.team_forced > 0) {
 			self.classname = "player";
 
 			if(cvar("g_campaign") || cvar("g_balance_teams") || cvar("g_balance_teams_force"))
@@ -2374,6 +2444,9 @@ void LeaveSpectatorMode()
  * @return bool TRUE if the player is allowed to join, false otherwise
  */
 float isJoinAllowed() {
+	if(self.team_forced < 0)
+		return FALSE; // forced spectators can never join
+
 	if (!cvar("g_maxplayers"))
 		return TRUE;
 
@@ -2400,50 +2473,6 @@ void checkSpectatorBlock() {
 			dropclient(self);
 		}
 	}
-}
-
-float vercmp_recursive(string v1, string v2)
-{
-	float dot1, dot2;
-	string s1, s2;
-	float r;
-
-	dot1 = strstrofs(v1, ".", 0);
-	dot2 = strstrofs(v2, ".", 0);
-	if(dot1 == -1)
-		s1 = v1;
-	else
-		s1 = substring(v1, 0, dot1);
-	if(dot2 == -1)
-		s2 = v2;
-	else
-		s2 = substring(v2, 0, dot2);
-
-	r = stof(s1) - stof(s2);
-	if(r != 0)
-		return r;
-
-	r = strcasecmp(s1, s2);
-	if(r != 0)
-		return r;
-
-	if(dot1 == -1)
-		if(dot2 == -1)
-			return 0;
-		else
-			return -1;
-	else
-		if(dot2 == -1)
-			return 1;
-		else
-			return vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
-}
-
-float vercmp(string v1, string v2)
-{
-	if(strcasecmp(v1, v2) == 0) // early out check
-		return 0;
-	return vercmp_recursive(v1, v2);
 }
 
 void ObserverThink()
@@ -2806,7 +2835,7 @@ void PlayerPreThink (void)
 		player_regen();
 
 		// rot nex charge to the charge limit
-		if(cvar("g_balance_nex_charge_rot_rate") && self.nex_charge > cvar("g_balance_nex_charge_limit"))
+		if(cvar("g_balance_nex_charge_rot_rate") && self.nex_charge > cvar("g_balance_nex_charge_limit") && self.nex_charge_rottime < time)
 			self.nex_charge = bound(cvar("g_balance_nex_charge_limit"), self.nex_charge - cvar("g_balance_nex_charge_rot_rate") * frametime / W_TICSPERFRAME, 1);
 
 		if(frametime)

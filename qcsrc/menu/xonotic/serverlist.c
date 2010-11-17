@@ -8,6 +8,8 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 	METHOD(XonoticServerList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticServerList, keyDown, float(entity, float, float, float))
 
+	ATTRIB(XonoticServerList, iconsSizeFactor, float, 0.85)
+
 	ATTRIB(XonoticServerList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticServerList, realUpperMargin, float, 0)
 	ATTRIB(XonoticServerList, columnIconsOrigin, float, 0)
@@ -50,6 +52,9 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticServerList, lastClickedTime, float, 0)
 
 	ATTRIB(XonoticServerList, ipAddressBoxFocused, float, -1)
+
+	ATTRIB(XonoticServerList, seenIPv4, float, 0)
+	ATTRIB(XonoticServerList, seenIPv6, float, 0)
 ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
 void ServerList_Connect_Click(entity btn, entity me);
@@ -493,11 +498,11 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 
 	me.columnIconsOrigin = 0;
-	me.columnIconsSize = me.realFontSize_x * 2;
-	me.columnPingSize = me.realFontSize_x * 4;
-	me.columnMapSize = me.realFontSize_x * 12;
+	me.columnIconsSize = me.realFontSize_x * 3 * me.iconsSizeFactor;
+	me.columnPingSize = me.realFontSize_x * 3;
+	me.columnMapSize = me.realFontSize_x * 10;
 	me.columnTypeSize = me.realFontSize_x * 4;
-	me.columnPlayersSize = me.realFontSize_x * 6;
+	me.columnPlayersSize = me.realFontSize_x * 4;
 	me.columnNameSize = 1 - me.columnPlayersSize - me.columnMapSize - me.columnPingSize - me.columnIconsSize - me.columnTypeSize - 5 * me.realFontSize_x;
 	me.columnPingOrigin = me.columnIconsOrigin + me.columnIconsSize + me.realFontSize_x;
 	me.columnNameOrigin = me.columnPingOrigin + me.columnPingSize + me.realFontSize_x;
@@ -557,6 +562,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	// layout: Ping, Server name, Map name, NP, TP, MP
 	string s;
 	float p, q;
+	float isv4, isv6;
 	vector theColor;
 	float theAlpha;
 
@@ -596,6 +602,19 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	}
 
 	s = gethostcachestring(SLIST_FIELD_CNAME, i);
+
+	isv4 = isv6 = 0;
+	if(substring(s, 0, 1) == "[")
+	{
+		isv6 = 1;
+		me.seenIPv6 += 1;
+	}
+	else if(strstrofs("0123456789", substring(s, 0, 1), 0) >= 0)
+	{
+		isv4 = 1;
+		me.seenIPv4 += 1;
+	}
+
 	q = stof(substring(crypto_getencryptlevel(s), 0, 1));
 	if((q <= 0 && cvar("crypto_aeslevel") >= 3) || (q >= 3 && cvar("crypto_aeslevel") <= 0))
 	{
@@ -628,21 +647,35 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
 	{
 		vector iconSize;
-		iconSize_y = 1;
-		iconSize_x = iconSize_y * (absSize_y / absSize_x);
+		iconSize_y = me.realFontSize_y * me.iconsSizeFactor;
+		iconSize_x = me.realFontSize_x * me.iconsSizeFactor;
 
 		vector iconPos;
-		iconPos_x = (me.columnIconsSize - 2 * iconSize_x) * 0.5;
+		iconPos_x = (me.columnIconsSize - 3 * iconSize_x) * 0.5;
 		iconPos_y = (1 - iconSize_y) * 0.5;
 
-		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_pure", ftos(strstrofs(s, ":P0:", 0) >= 0)), iconSize, '1 1 1', 1);
+		if not(me.seenIPv4 && me.seenIPv6)
+		{
+			iconPos_x += iconSize_x * 0.5;
+		}
+		else if(me.seenIPv4 && me.seenIPv6)
+		{
+			if(isv6)
+				draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), iconSize, '1 1 1', 1);
+			else if(isv4)
+				draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), iconSize, '1 1 1', 1);
+			iconPos_x += iconSize_x;
+		}
 
-		iconPos_x += iconSize_x;
 		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
+		iconPos_x += iconSize_x;
+
+		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_pure", ftos(strstrofs(s, ":P0:", 0) >= 0)), iconSize, '1 1 1', 1);
+		iconPos_x += iconSize_x;
 	}
 
 	s = ftos(p);
-	draw_Text(me.realUpperMargin * eY + (me.columnPingSize - draw_TextWidth(s, 0, me.realFontSize)) * eX, s, me.realFontSize, theColor, theAlpha, 0);
+	draw_Text(me.realUpperMargin * eY + (me.columnPingOrigin + me.columnPingSize - draw_TextWidth(s, 0, me.realFontSize)) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	s = draw_TextShortenToWidth(gethostcachestring(SLIST_FIELD_NAME, i), me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	s = draw_TextShortenToWidth(gethostcachestring(SLIST_FIELD_MAP, i), me.columnMapSize, 0, me.realFontSize);

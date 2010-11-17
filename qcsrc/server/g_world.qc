@@ -272,7 +272,21 @@ void cvar_changes_init()
 		BADCVAR("bgmvolume");
 
 		// private
+		BADCVAR("developer");
+		BADCVAR("g_banned_list");
+		BADCVAR("log_dest_udp");
+		BADCVAR("log_file");
+		BADCVAR("net_address");
+		BADCVAR("net_address_ipv6");
+		BADCVAR("port");
+		BADCVAR("savedgamecfg");
 		BADCVAR("serverconfig");
+		BADCVAR("sv_heartbeatperiod");
+		BADCVAR("sv_vote_master_password");
+		BADCVAR("sys_colortranslation");
+		BADCVAR("sys_specialcharactertranslation");
+		BADCVAR("timestamps");
+		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_chat_flood_");
 		BADPREFIX("g_voice_flood_");
@@ -284,22 +298,13 @@ void cvar_changes_init()
 		BADPREFIX("sv_eventlog");
 		BADPREFIX("sv_logscores_");
 		BADPREFIX("sv_master");
-		BADCVAR("g_banned_list");
-		BADCVAR("log_dest_udp");
-		BADCVAR("log_file");
-		BADCVAR("net_address");
-		BADCVAR("port");
-		BADCVAR("savedgamecfg");
-		BADCVAR("sv_heartbeatperiod");
-		BADCVAR("sv_vote_master_password");
-		BADCVAR("sys_colortranslation");
-		BADCVAR("sys_specialcharactertranslation");
-		BADCVAR("timestamps");
-		BADCVAR("net_address");
-		BADCVAR("net_address_ipv6");
 		BADPREFIX("sv_weaponstats_");
-		BADCVAR("developer");
-		BADPREFIX("developer_");
+
+		// these can contain player IDs, so better hide
+		BADCVAR("g_forced_team_red");
+		BADCVAR("g_forced_team_blue");
+		BADCVAR("g_forced_team_yellow");
+		BADCVAR("g_forced_team_pink");
 
 		// mapinfo
 		BADCVAR("timelimit");
@@ -363,6 +368,7 @@ void cvar_changes_init()
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
+		BADPREFIX("net_");
 		BADPREFIX("prvm_");
 		BADPREFIX("sv_fragmessage_");
 		BADPREFIX("sv_vote_");
@@ -437,6 +443,12 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
 		BADCVAR("timelimit_override");
+
+		if(cvar("g_minstagib"))
+		{
+			BADCVAR("g_grappling_hook");
+			BADCVAR("g_jetpack");
+		}
 #undef BADPREFIX
 #undef BADCVAR
 

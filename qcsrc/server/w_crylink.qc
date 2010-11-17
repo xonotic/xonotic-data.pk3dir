@@ -148,13 +148,37 @@ void W_Crylink_LinkJoinEffect_Think()
 		}
 		if(n >= 2)
 		{
-			// they seem to touch...
-			// TODO make a specific particle effect for this
-			pointparticles(particleeffectnum("crylink_linkjoin"), self.origin, '0 0 0', 1);
+			if(e.projectiledeathtype & HITTYPE_SECONDARY)
+			{
+				if(cvar("g_balance_crylink_secondary_joinexplode"))
+				{
+					n = n / cvar("g_balance_crylink_secondary_shots");
+					RadiusDamage (e, e.realowner, cvar("g_balance_crylink_secondary_joinexplode_damage") * n, 
+									cvar("g_balance_crylink_secondary_joinexplode_edgedamage") * n, 
+									cvar("g_balance_crylink_secondary_joinexplode_radius") * n, e.realowner, 
+									cvar("g_balance_crylink_secondary_joinexplode_force") * n, e.projectiledeathtype, other);
+
+					pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
+				}				
+			}
+			else
+			{
+				if(cvar("g_balance_crylink_primary_joinexplode"))
+				{
+					n = n / cvar("g_balance_crylink_primary_shots");
+					RadiusDamage (e, e.realowner, cvar("g_balance_crylink_primary_joinexplode_damage") * n, 
+									cvar("g_balance_crylink_primary_joinexplode_edgedamage") * n, 
+									cvar("g_balance_crylink_primary_joinexplode_radius") * n, e.realowner, 
+									cvar("g_balance_crylink_primary_joinexplode_force") * n, e.projectiledeathtype, other);
+
+					pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
+				}				
+			}			
 		}
 	}
 	remove(self);
 }
+
 
 // NO bounce protection, as bounces are limited!
 void W_Crylink_Touch (void)
@@ -484,22 +508,27 @@ float w_crylink(float req)
 				if(self.crylink_lastgroup)
 				{
 					vector pos;
+					entity linkjoineffect;
+					
+					
 					if(self.crylink_waitrelease == 1)
 					{
 						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"), cvar("g_balance_crylink_primary_jointime"));
+						
 					}
 					else
 					{
 						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspeed"), cvar("g_balance_crylink_secondary_jointime"));
 					}
-
-					entity linkjoineffect;
+					
 					linkjoineffect = spawn();
-					linkjoineffect.classname = "linkjoineffect";
 					linkjoineffect.think = W_Crylink_LinkJoinEffect_Think;
+					linkjoineffect.classname = "linkjoineffect";					
 					linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
 					linkjoineffect.owner = self;
 					setorigin(linkjoineffect, pos);
+
+
 				}
 				self.crylink_waitrelease = 0;
 				if(!w_crylink(WR_CHECKAMMO1) && !w_crylink(WR_CHECKAMMO2))

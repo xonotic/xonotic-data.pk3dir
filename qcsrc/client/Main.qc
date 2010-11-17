@@ -1087,8 +1087,10 @@ void Ent_Init()
 
 	g_weaponswitchdelay = ReadByte() / 255.0;
 
-	g_balance_grenadelauncher_secondary_bouncefactor = ReadCoord();
-	g_balance_grenadelauncher_secondary_bouncestop = ReadCoord();
+	g_balance_grenadelauncher_bouncefactor = ReadCoord();
+	g_balance_grenadelauncher_bouncestop = ReadCoord();
+	g_balance_electro_secondary_bouncefactor = ReadCoord();
+	g_balance_electro_secondary_bouncestop = ReadCoord();
 
 	nex_scope = !ReadByte();
 	campingrifle_scope = !ReadByte();

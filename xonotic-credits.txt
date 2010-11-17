@@ -22,6 +22,7 @@ morphed
 
 *Level Design
 FruitieX
+MirceaKitsune
 
 *Music / Sound FX
 mand1nga
@@ -56,6 +57,7 @@ Kristian "morfar" Johansson
 kojn
 Maik "SavageX" Merten
 MrBougo
+Samual Lenks
 Stephan "esteel" Stahl
 Wolfgang "Blub\0" Bumiller
 
@@ -104,7 +106,6 @@ MauveBib
 Mephisto
 michaelb
 Michael "Tenshihan" Quinn
-MirceaKitsune
 Munyul
 Netzwerg
 NoelCower
@@ -117,7 +118,6 @@ Rick "Rat" Kelley
 Robert "ai" Kuroto
 Ronan
 Sajt
-Samual Lenks
 Severin "sev" Meyer
 Shaggy
 Shank
