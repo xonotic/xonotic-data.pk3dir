@@ -293,7 +293,6 @@ float CVAR_READONLY	= 4;
 ///////////////////////////
 // csqc communication stuff
 
-const float STAT_CSHIFT_DAMAGE = 1;
 const float STAT_KH_KEYS = 32;
 const float STAT_CTF_STATE = 33;
 const float STAT_WEAPONS = 35;
