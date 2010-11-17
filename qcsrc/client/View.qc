@@ -697,9 +697,9 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	if(spectatee_status == -1)
+	if(spectatee_status == -1 || intermission)
 	{
-		myhealth_flash = 0; // observing
+		myhealth_flash = 0; // observing, or match ended
 		myhealth_flash_temp = 0;
 	}
 
