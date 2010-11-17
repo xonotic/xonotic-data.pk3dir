@@ -169,7 +169,8 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 			if(other.team == self.team)
 			{
 				teammate_nearby = boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax);
-				break;
+				if(teammate_nearby)
+					break;
 			}
 		}
 	}
