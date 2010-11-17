@@ -31,7 +31,8 @@ void freezetag_CheckWinner()
 		if(e.freezetag_frozen == 0 && e.classname == "player" && e.health >= 1) // here's one player from the winning team... good
 		{
 			winner = e;
-			TeamScore_AddToTeam(winner.team, ST_SCORE, +1); // just in case a winner isn't found, we do this already here (causes crashes otherwise...)
+			if(winner != world) // just in case a winner isn't found (causes crashes otherwise...)
+				TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
 			break; // break, we found the winner
 		}
 	}
@@ -100,8 +101,17 @@ void freezetag_Unfreeze()
 
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
-	self.freezetag_frozen = 1;
-	count_alive_players();
+	if(self.freezetag_frozen == 0)
+	{
+		if(self.team == COLOR_TEAM1)
+			--redalive;
+		else if(self.team == COLOR_TEAM2)
+			--bluealive;
+		else if(self.team == COLOR_TEAM3)
+			--yellowalive;
+		else if(self.team == COLOR_TEAM4)
+			--pinkalive;
+	}
 
 	freezetag_CheckWinner();
 	freezetag_Unfreeze();
@@ -111,13 +121,8 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 {
-	// if the player was previously not frozen (should be the case anyway), decrement alive playercount before running CheckWinner
-	if (self.team == COLOR_TEAM1 && self.freezetag_frozen == 0) redalive -= 1;
-	else if (self.team == COLOR_TEAM2 && self.freezetag_frozen == 0) bluealive -= 1;
-	else if (self.team == COLOR_TEAM3 && self.freezetag_frozen == 0) yellowalive -= 1;
-	else if (self.team == COLOR_TEAM4 && self.freezetag_frozen == 0) pinkalive -= 1;
-	
 	freezetag_Freeze();
+	count_alive_players();
 
 	centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
 	if(frag_attacker == frag_target || frag_attacker == world)
