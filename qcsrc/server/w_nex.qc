@@ -175,9 +175,7 @@ float w_nex(float req)
 	{
 		if(cvar("g_balance_nex_secondary_charge_pool"))
 			return TRUE;
-		if(cvar("g_balance_nex_secondary_charge") && cvar("g_balance_nex_secondary_ammo")) // if charge consumes ammo, don't allow consuming so much that we cant fire a primary anymore
-			return self.ammo_cells >= cvar("g_balance_nex_primary_ammo");
-		return self.ammo_cells >= cvar("g_balance_nex_secondary_ammo");
+		return self.ammo_cells >= cvar("g_balance_nex_primary_ammo"); // don't allow charging if we don't have enough ammo
 	}
 	return TRUE;
 };
