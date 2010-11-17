@@ -100,7 +100,8 @@ void freezetag_Unfreeze()
 
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
-	self.freezetag_frozen = 1; // count player as frozen in CheckWinner
+	self.freezetag_frozen = 1;
+	count_alive_players();
 
 	freezetag_CheckWinner();
 	freezetag_Unfreeze();
@@ -203,11 +204,10 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 			}
 		}
 	}
-	else
+	else if(!teammate_nearby) // only if no teammate is nearby will we reset
 	{
 		self.freezetag_beginrevive_time = -9999;
 		self.freezetag_revive_progress = 0;
-		other.freezetag_revive_progress = 0;
 	}
 
 	return 1;
