@@ -210,7 +210,7 @@ void Arena_Warmup()
 	if((!g_arena && !g_ca && !g_freezetag) || (g_arena && !arena_roundbased) || (time < game_starttime))
 		return;
 
-	if(g_freezetag &&
+	if(g_freezetag && time > game_starttime &&
 		!((redspawned >= 1 && bluespawned >= 1)
 		|| (redspawned >= 1 && yellowspawned >= 1)
 		|| (redspawned >= 1 && pinkspawned >= 1)
@@ -349,7 +349,7 @@ void Spawnqueue_Check()
 	{
 		count_alive_players();
 	}
-	if(time < warmup + 1 || inWarmupStage)
+	if(time < warmup + 1 || inWarmupStage || intermission_running)
 		return;
 
 	if(g_ca) {

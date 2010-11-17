@@ -1,13 +1,21 @@
 void freezetag_Initialize()
 {
 	precache_model("models/ice/ice.md3");
-	warmup = time + cvar("g_freezetag_warmup");
+	next_round = time + cvar("g_start_delay");
 }
 
 void freezetag_CheckWinner()
 {
+	if(time <= game_starttime)
+		return;
+
 	if(next_round || (time > warmup - cvar("g_freezetag_warmup") && time < warmup))
 		return; // already waiting for next round to start
+
+	if(redalive + bluealive + yellowalive + pinkalive <= 0 && time > game_starttime)
+	{
+		next_round = time + 5;
+	}
 
 	if((redalive >= 1 && bluealive >= 1) // counted in arena.qc
 		|| (redalive >= 1 && yellowalive >= 1)
@@ -17,12 +25,6 @@ void freezetag_CheckWinner()
 		|| (yellowalive >= 1 && pinkalive >= 1))
 		return; // we still have active players on two or more teams
 
-	if(redalive + bluealive + yellowalive + pinkalive <= 0)
-	{
-		next_round = time + 5;
-		return;
-	}
-
 	entity e, winner;
 	string teamname;
 
@@ -31,24 +33,26 @@ void freezetag_CheckWinner()
 		if(e.freezetag_frozen == 0 && e.classname == "player" && e.health >= 1) // here's one player from the winning team... good
 		{
 			winner = e;
-			if(winner != world) // just in case a winner isn't found (causes crashes otherwise...)
-				TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
 			break; // break, we found the winner
 		}
 	}
 
-	if(winner.team == COLOR_TEAM1)
-		teamname = "^1Red Team";
-	else if(winner.team == COLOR_TEAM2)
-		teamname = "^4Blue Team";
-	else if(winner.team == COLOR_TEAM3)
-		teamname = "^3Yellow Team";
-	else
-		teamname = "^6Pink Team";
-	FOR_EACH_PLAYER(e) {
-		centerprint(e, strcat(teamname, "^5 wins the round, all other teams were frozen.\n"));
+	if(winner != world) // just in case a winner isn't found
+	{
+		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
+		if(winner.team == COLOR_TEAM1)
+			teamname = "^1Red Team";
+		else if(winner.team == COLOR_TEAM2)
+			teamname = "^4Blue Team";
+		else if(winner.team == COLOR_TEAM3)
+			teamname = "^3Yellow Team";
+		else
+			teamname = "^6Pink Team";
+		FOR_EACH_PLAYER(e) {
+			centerprint(e, strcat(teamname, "^5 wins the round, all other teams were frozen.\n"));
+		}
+		bprint(teamname, "^5 wins the round since all the other teams were frozen.\n");
 	}
-	bprint(teamname, "^5 wins the round since all the other teams were frozen.\n");
 
 	next_round = time + 5;
 }
@@ -147,6 +151,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
 	if(time > warmup) // spawn too late, freeze player
 	{
+		print("time: ", ftos(time), " warmup: ", ftos(warmup), "\n");
 		centerprint(self, "^1You spawned after the round started, you'll spawn as frozen.\n");
 		freezetag_Freeze();
 	}
