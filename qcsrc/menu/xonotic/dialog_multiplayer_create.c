@@ -32,16 +32,12 @@ void XonoticServerCreateTab_fill(entity me)
 	float n;
 
 	me.TR(me);
-		n = 7;
+		n = 6;
 		me.TD(me, 1, me.columns / n, e = makeXonoticGametypeButton(1, "g_dm", "DM"));
 			e0 = e;
 		me.TD(me, 1, me.columns / n, e = makeXonoticGametypeButton(1, "g_lms", "LMS"));
 			if(e.checked) e0 = NULL;
 		me.TD(me, 1, me.columns / n, e = makeXonoticGametypeButton(1, "g_arena", "Arena"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeXonoticGametypeButton(1, "g_runematch", "Runematch"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeXonoticGametypeButton(1, "g_keepaway", "Keepaway"));
 			if(e.checked) e0 = NULL;
 		me.TD(me, 1, me.columns / n, e = makeXonoticGametypeButton(1, "g_race", "Race"));
 			if(e.checked) e0 = NULL;

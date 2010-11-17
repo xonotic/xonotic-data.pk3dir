@@ -126,12 +126,10 @@ void XonoticMapInfoDialog_fill(entity me)
 			me.typeLMSLabel = e;
 		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, "Arena"));
 			me.typeArenaLabel = e;
-		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, "Rune"));
-			me.typeRuneLabel = e;
-	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, "Domination"));
 			me.typeDominationLabel = e;
+	me.TR(me);
+		me.TDempty(me, 0.2);
 		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, "Key Hunt"));
 			me.typeKeyHuntLabel = e;
 		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, "CTF"));
@@ -140,10 +138,10 @@ void XonoticMapInfoDialog_fill(entity me)
 			me.typeCALabel = e;
 		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, "Assault"));
 			me.typeAssaultLabel = e;
-	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, "Onslaught"));
 			me.typeOnslaughtLabel = e;
+	me.TR(me);
+		me.TDempty(me, 0.2);
 		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, "Race"));
 			me.typeRaceLabel = e;
 		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, "CTS"));
