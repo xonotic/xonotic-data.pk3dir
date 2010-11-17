@@ -109,18 +109,20 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			e0.textEntity = main.weaponsDialog;
 			e0.allowCut = 1;
 	me.TR(me);
-		me.TD(me, 1, 0.75, e = makeXonoticTextLabel(0, "Crosshair:"));
-		me.TD(me, 1, 1.00, e = makeXonoticCheckBox(0, "crosshair_per_weapon", "Per weapon"));
-		me.TD(me, 1, 1.25, e = makeXonoticCheckBox(1, "crosshair_color_override", "& Per weapon colors"));
-		setDependent(e, "crosshair_per_weapon", 1, 1);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair:"));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "crosshair_per_weapon", "Per weapon"));
 	me.TR(me);
-		me.TDempty(me, 0.5);
+		me.TDempty(me, 0.2);
 		for(i = 1; i <= 10; ++i) {
 			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(3, i), '1 1 0');
 			setDependent(e, "crosshair_per_weapon", 0, 0);
 		}
+		// show a larger preview of the selected crosshair
+		me.TDempty(me, 0.2);
+		me.TDNoMargin(me, 2, 2 / 5, e = makeXonoticCrosshairButton(4, -1), '1 1 0'); // crosshair -1 makes this a preview
+		setDependent(e, "crosshair_per_weapon", 0, 0);
 	me.TR(me);
-		me.TDempty(me, 0.5);
+		me.TDempty(me, 0.2);
 		for(i = 11; i <= 20; ++i) {
 			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(3, i), '1 1 0');
 			setDependent(e, "crosshair_per_weapon", 0, 0);
@@ -135,19 +137,12 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.1, "crosshair_alpha"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair red:"));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.01, "crosshair_color_red"));
-		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair color:"));
+		me.TD(me, 2, 1.8, e = makeXonoticColorpickerString("crosshair_color", "crosshair_color"));
+		setDependent(e, "crosshair_color_per_weapon", 0, 0);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair green:"));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.01, "crosshair_color_green"));
-		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair blue:"));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.01, "crosshair_color_blue"));
-		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
+		me.TDempty(me, 0.3);
+		me.TD(me, 1, 0.7, e = makeXonoticCheckBox(0, "crosshair_color_per_weapon", "Per weapon"));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_dot", "Enable centered dot"));
 	me.TR(me);
@@ -160,9 +155,10 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			setDependent(e, "crosshair_dot", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Hit test:"));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "crosshair_hittest", "0",    "None"));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "crosshair_hittest", "1",    "TrueAim"));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "crosshair_hittest", "1.25", "Enemies"));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "0",    "None"));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "1",    "TrueAim"));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "1.25", "Enemies"));
+	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 2.2, e = makeXonoticButton("Waypoints setup...", '0 0 0'));
@@ -178,9 +174,9 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Force models:"));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(2, string_null, string_null, "None"));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(2, "cl_forceplayermodelsfromxonotic", string_null, "Custom"));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(2, "cl_forceplayermodels", string_null, "All"));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, string_null, string_null, "None"));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodelsfromxonotic", string_null, "Custom"));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodels", string_null, "All"));
 	#endif
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_gentle", "Disable gore effects"));
 	me.TR(me);

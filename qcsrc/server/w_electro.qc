@@ -178,8 +178,8 @@ void W_Electro_Attack2()
 	proj.event_damage = W_Plasma_Damage;
 	proj.flags = FL_PROJECTILE;
 	
-	//proj.bouncefactor = cvar("g_balance_electro_secondary_bouncefactor");
-	//proj.bouncestop = cvar("g_balance_electro_secondary_bouncestop");
+	proj.bouncefactor = cvar("g_balance_electro_secondary_bouncefactor");
+	proj.bouncestop = cvar("g_balance_electro_secondary_bouncestop");
 	
 #if 0
 	entity p2;

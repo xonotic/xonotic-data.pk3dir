@@ -28,7 +28,7 @@ void XonoticHUDExitDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Color:"));
-		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString("hud_panel_bg_color"));
+		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString("hud_panel_bg_color", "hud_panel_bg_color"));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -75,7 +75,7 @@ void XonoticHUDExitDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Color:"));
-		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString("hud_dock_color"));
+		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString("hud_dock_color", "hud_dock_color"));
 	me.TR(me);
 	me.TR(me);	
 		me.TDempty(me, 0.2);
