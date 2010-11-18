@@ -485,7 +485,7 @@ float w_crylink(float req)
 			{
 				W_Crylink_Attack();
 				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_crylink_primary_animtime"), w_ready);
-				if(cvar("g_balance_crylink_primary_joinspeed") != 0 || cvar("g_balance_crylink_primary_jointime") != 0)
+				if(cvar("g_balance_crylink_primary_joinspread") != 0 || cvar("g_balance_crylink_primary_jointime") != 0)
 					self.crylink_waitrelease = 1;
 			}
 		}
@@ -496,7 +496,7 @@ float w_crylink(float req)
 			{
 				W_Crylink_Attack2();
 				weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_crylink_secondary_animtime"), w_ready);
-				if(cvar("g_balance_crylink_secondary_joinspeed") != 0 || cvar("g_balance_crylink_secondary_jointime") != 0)
+				if(cvar("g_balance_crylink_secondary_joinspread") != 0 || cvar("g_balance_crylink_secondary_jointime") != 0)
 					self.crylink_waitrelease = 2;
 			}
 		}
@@ -513,12 +513,12 @@ float w_crylink(float req)
 					
 					if(self.crylink_waitrelease == 1)
 					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"), cvar("g_balance_crylink_primary_jointime"));
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspread") * cvar("g_balance_crylink_primary_speed"), cvar("g_balance_crylink_primary_jointime"));
 						
 					}
 					else
 					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspeed"), cvar("g_balance_crylink_secondary_jointime"));
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspread") * cvar("g_balance_crylink_secondary_speed"), cvar("g_balance_crylink_secondary_jointime"));
 					}
 					
 					linkjoineffect = spawn();
