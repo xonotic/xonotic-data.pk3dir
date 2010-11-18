@@ -231,12 +231,14 @@ void havocbot_bunnyhop(vector dir)
 		return;
 
 	// Don't jump when using some weapons
+	/*
 	if(self.aistatus & AI_STATUS_ATTACKING)
 	if(self.weapon & WEP_CAMPINGRIFLE)
 		return;
 
 	if(self.goalcurrent.classname == "player")
 		return;
+	*/
 
 	maxspeed = cvar("sv_maxspeed");
 
@@ -337,6 +339,7 @@ void havocbot_bunnyhop(vector dir)
 	}
 
 	// Release jump button
+	if(!cvar("sv_pogostick"))
 	if(self.flags & FL_ONGROUND == 0)
 	{
 		if(self.velocity_z < 0 || vlen(self.velocity)<maxspeed)
@@ -1333,7 +1336,6 @@ vector havocbot_dodge()
 {
 	// LordHavoc: disabled because this is too expensive
 	return '0 0 0';
-	/*
 	local entity head;
 	local vector dodge, v, n;
 	local float danger, bestdanger, vl, d;
@@ -1378,5 +1380,4 @@ vector havocbot_dodge()
 		head = head.chain;
 	}
 	return dodge;
-	*/
 };
