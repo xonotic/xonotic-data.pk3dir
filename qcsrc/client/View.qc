@@ -352,6 +352,9 @@ entity nightvision_noise, nightvision_noise2;
 float pickup_crosshair_time, pickup_crosshair_size;
 float use_nex_charge_pool;
 
+float myhealth, myhealth_prev;
+float myhealth_flash;
+
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -659,6 +662,53 @@ void CSQC_UpdateView(float w, float h)
 		precache_pic("gfx/reticle_nex");
 		if(reticle_type == 2 && f)
 			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * cvar("cl_reticle_item_nex"), DRAWFLAG_NORMAL);
+	}
+
+	// improved polyblend
+	if(cvar("hud_damage"))
+	{
+		float myhealth_flash_temp;
+		myhealth = getstati(STAT_HEALTH);
+
+		// fade out
+		myhealth_flash = max(0, myhealth_flash - cvar("hud_damage_fade_rate") * frametime);
+		// add new damage
+		myhealth_flash = bound(0, myhealth_flash + max(0, myhealth_prev - myhealth) * cvar("hud_damage_factor"), cvar("hud_damage_maxalpha"));
+
+		float pain_treshold, pain_treshold_lower, pain_treshold_lower_health;
+		pain_treshold = cvar("hud_damage_pain_treshold");
+		pain_treshold_lower = cvar("hud_damage_pain_treshold_lower");
+		pain_treshold_lower_health = cvar("hud_damage_pain_treshold_lower_health");
+
+		if(pain_treshold_lower && myhealth < pain_treshold_lower_health)
+		{
+			pain_treshold = pain_treshold - max(cvar("hud_damage_pain_treshold_pulsating_min"), fabs(sin(M_PI * time / cvar("hud_damage_pain_treshold_pulsating_period")))) * pain_treshold_lower * (1 - max(0, myhealth)/pain_treshold_lower_health);
+		}
+
+		myhealth_flash_temp = bound(0, myhealth_flash - pain_treshold, 1);
+
+		if(myhealth_prev < 1)
+		{
+			if(myhealth >= 1)
+			{
+				myhealth_flash = 0; // just spawned, clear the flash immediately
+				myhealth_flash_temp = 0;
+			}
+			else
+			{
+				myhealth_flash += cvar("hud_damage_fade_rate") * frametime; // dead
+			}
+		}
+
+		if(spectatee_status == -1 || intermission)
+		{
+			myhealth_flash = 0; // observing, or match ended
+			myhealth_flash_temp = 0;
+		}
+
+		myhealth_prev = myhealth;
+
+		drawpic(reticle_pos, "gfx/blood", reticle_size, stov(cvar_string("hud_damage_color")), bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
 	}
 
 	// Draw the mouse cursor
