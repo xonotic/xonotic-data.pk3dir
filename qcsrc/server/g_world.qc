@@ -428,6 +428,7 @@ void cvar_changes_init()
 		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_curl_defaulturl");
 		BADCVAR("sv_defaultcharacter");
+		BADCVAR("sv_defaultplayercolors");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
 		BADCVAR("sv_maxidle");
@@ -809,6 +810,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
 
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
+	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_charge_pool_ammo);
 
 	if(g_ca)
 	{
@@ -817,6 +819,7 @@ void spawnfunc_worldspawn (void)
 	}
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
+	addstat(STAT_MOVEVARS_MAXSPEED, AS_FLOAT, stat_sv_maxspeed);
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
 	addstat(STAT_MOVEVARS_AIRSTRAFEACCEL_QW, AS_FLOAT, stat_sv_airstrafeaccel_qw);
 

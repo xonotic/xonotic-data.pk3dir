@@ -599,6 +599,7 @@ void PutObserverInServer (void)
 	}
 
 	DropAllRunes(self);
+	MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	Portal_ClearAll(self);
 
@@ -713,8 +714,6 @@ void PutObserverInServer (void)
 	}
 	else
 		self.frags = FRAGS_SPECTATOR;
-
-	MUTATOR_CALLHOOK(MakePlayerObserver);
 }
 
 float RestrictSkin(float s)
@@ -890,7 +889,11 @@ void PutClientInServer (void)
 		self.air_finished = time + 12;
 		self.dmg = 2;
 		if(cvar("g_balance_nex_charge"))
+		{
+			if(cvar("g_balance_nex_secondary_charge_pool"))
+				self.nex_charge_pool_ammo = 1;
 			self.nex_charge = cvar("g_balance_nex_charge_start");
+		}
 
 		if(inWarmupStage)
 		{
