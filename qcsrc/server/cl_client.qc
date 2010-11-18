@@ -599,6 +599,7 @@ void PutObserverInServer (void)
 	}
 
 	DropAllRunes(self);
+	MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	Portal_ClearAll(self);
 
@@ -713,8 +714,6 @@ void PutObserverInServer (void)
 	}
 	else
 		self.frags = FRAGS_SPECTATOR;
-
-	MUTATOR_CALLHOOK(MakePlayerObserver);
 }
 
 float RestrictSkin(float s)
