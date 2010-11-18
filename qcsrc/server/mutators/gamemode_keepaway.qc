@@ -133,7 +133,7 @@ MUTATOR_HOOKFUNCTION(ka_RemovePlayer)
 		self.effects = EF_LOWPRECISION;
 		self.alpha = 1.0;
 		ball.alpha = 1.0;
-		setorigin(ball, self.origin + '0 0 10'); // FIX ME: If a player becomes spectator, the hook function is given AFTER this happens, which means the origin given is after they already moved to another position, not where they died!
+		setorigin(ball, self.origin + '0 0 10');
 		ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	
 		bprint(self.netname, "^7 has dropped the ball!\n");
