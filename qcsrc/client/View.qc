@@ -721,7 +721,7 @@ void CSQC_UpdateView(float w, float h)
 				}
 			}
 			else
-				myhealth_gentlergb = '1 0.7 1';
+				myhealth_gentlergb = stov(cvar_string("hud_damage_gentle_color"));
 
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, cvar("hud_damage_gentle_alpha_multiplier") * bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
 		}
