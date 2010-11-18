@@ -12,7 +12,6 @@ var float autocvar__menu_alpha;
 
 var float autocvar__hud_configure;
 var float autocvar_hud_configure_teamcolorforced;
-var float autocvar_hud_configure_bg_minalpha;
 
 var float autocvar__con_chat_maximized;
 var string autocvar__hud_panelorder;
