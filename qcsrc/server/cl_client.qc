@@ -608,6 +608,8 @@ void PutObserverInServer (void)
 	if(self.ballcarried)
 		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
 
+	MUTATOR_CALLHOOK(MakePlayerObserver);
+
 	WaypointSprite_PlayerDead();
 
 	if not(g_ca)  // don't reset teams when moving a ca player to the spectators
@@ -714,7 +716,7 @@ void PutObserverInServer (void)
 	else
 		self.frags = FRAGS_SPECTATOR;
 
-	MUTATOR_CALLHOOK(MakePlayerObserver);
+	//MUTATOR_CALLHOOK(MakePlayerObserver);
 }
 
 float RestrictSkin(float s)

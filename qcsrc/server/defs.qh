@@ -558,6 +558,10 @@ void target_voicescript_clear(entity pl);
 .float metertime;
 float g_nexball_meter_period;
 
+// Keepaway
+
+.entity kaballcarried;
+
 void SUB_DontUseTargets();
 void SUB_UseTargets();
 

@@ -16,15 +16,15 @@ void ka_Initialize()
 	e.nextthink = time;
 }
 
-void ka_SpawnBall()
+void ka_SpawnBall() // self = the ball
 {
 	if(!g_keepaway) { 
 		remove(self); 
 		return; 
 	}
 	if (!self.model) {
-		self.model = "models/nexball/ball.md3";	
-		self.scale = 1.3;
+		self.model = "models/orbs/orbblue.md3";	
+		self.scale = 1;
 	}
 
 	precache_model(self.model);
@@ -43,7 +43,8 @@ void ka_SpawnBall()
 	self.owner = world;
 	
 	// todo: Waypoints and radar
-	//WaypointSprite_AttachCarrier();
+	WaypointSprite_AttachCarrier("nb-ball", self);
+	//bprint("^4ka_SpawnBall was just called!\n");
 }
 
 void ka_RespawnBall()
@@ -65,6 +66,7 @@ void ka_RespawnBall()
 		self.think = ka_RespawnBall;
 		self.nextthink = time;
 	}
+	//bprint("^4ka_RespawnBall was just called!\n");
 }
 
 void ka_TouchEvent(entity plyr)
@@ -75,17 +77,19 @@ void ka_TouchEvent(entity plyr)
 		self.nextthink = time;
 		return;
 	}
-	if (!plyr) 
+	if(!plyr) 
 		return;
-	if (!self) 
+	if(!self) 
 		return;
-	if ((other.classname != "player" || other.health < 1) && (time > self.ctf_droptime + cvar("g_keepawayball_respawntime")))
+	if(other.classname != "player" || other.health < 1)
 		return;
-	if (self.wait > time)
+	if(self.wait > time)
 		return;
+	//if(time > self.ctf_droptime + cvar("g_keepawayball_respawntime"))
+	//	return;
 
 	self.owner = other;
-	other.ballcarried = self;
+	other.kaballcarried = self;
 	setattachment(self, other, "");
 	setorigin(self, BALL_ATTACHORG);
 	
@@ -114,37 +118,38 @@ void ka_TouchEvent(entity plyr)
 
 MUTATOR_HOOKFUNCTION(ka_RemovePlayer)
 {
-	entity ball;
-	ball = self.ballcarried;
+	if(self.kaballcarried) {
+		entity ball;
+		ball = self.kaballcarried;
 
-	setattachment(ball, world, "");
-	ball.movetype = MOVETYPE_BOUNCE;
-	ball.solid = SOLID_TRIGGER;
-	ball.wait = time + 1;
-	ball.ctf_droptime = time;
-	ball.think = ka_SpawnBall;
-	ball.nextthink = time + cvar("g_keepawayball_respawntime");
-	ball.touch = ka_TouchEvent;
-	self.effects = EF_LOWPRECISION;
-	self.alpha = 1.0;
-	ball.alpha = 1.0;
-	setorigin(ball, self.origin + '0 0 10');
-	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
+		setattachment(ball, world, "");
+		ball.movetype = MOVETYPE_BOUNCE;
+		ball.solid = SOLID_TRIGGER;
+		ball.wait = time + 1;
+		ball.ctf_droptime = time;
+		ball.think = ka_SpawnBall;
+		ball.nextthink = time + cvar("g_keepawayball_respawntime");
+		ball.touch = ka_TouchEvent;
+		self.effects = EF_LOWPRECISION;
+		self.alpha = 1.0;
+		ball.alpha = 1.0;
+		setorigin(ball, self.origin + '0 0 10'); // FIX ME: If a player becomes spectator, the hook function is given AFTER this happens, which means the origin given is after they already moved to another position, not where they died!
+		ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	
-	bprint(self.netname, "^7 has dropped the ball!\n");
-	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
-	WriteString(MSG_BROADCAST, strcat("\n\n", self.netname, "^7 has dropped the ball!\n"));
-	sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NORM);	
-	
-	PlayerScore_Add(self, SP_KEEPAWAY_DROPS, 1);
-	
-	// todo
-	//WaypointSprite_AttachCarrier("ka-ball", ball);
-	//WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
-	
-	ball.owner.ballcarried = world;
-	ball.owner = world;
-
+		bprint(self.netname, "^7 has dropped the ball!\n");
+		WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
+		WriteString(MSG_BROADCAST, strcat("\n\n", self.netname, "^7 has dropped the ball!\n"));
+		sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NORM);	
+		
+		PlayerScore_Add(self, SP_KEEPAWAY_DROPS, 1);
+		
+		// todo
+		WaypointSprite_AttachCarrier("nb-ball", ball);
+		WaypointSprite_Kill(self.waypointsprite_attachedforcarrier);
+		
+		ball.owner.kaballcarried = world;
+		ball.owner = world;
+	}
 	return 1;
 }
 
@@ -263,7 +268,7 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 {
 	MUTATOR_HOOK(MakePlayerObserver, ka_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, ka_RemovePlayer, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(PlayerDies, ka_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, ka_RemovePlayer, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(PlayerSpawn, ka_PlayerSpawn, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(GiveFragsForKill, ka_GiveFragsForKill, CBC_ORDER_FIRST);
 	//MUTATOR_HOOK(PlayerPreThink, ka_PlayerPreThink, CBC_ORDER_FIRST);
