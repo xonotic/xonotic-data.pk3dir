@@ -316,6 +316,7 @@ const float STAT_HUD = 51;
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
 const float STAT_MOVEVARS_AIRSTRAFEACCEL_QW = 223;
+const float STAT_MOVEVARS_MAXSPEED = 244;
 const float STAT_MOVEVARS_AIRACCEL_QW = 254;
 
 const float CTF_STATE_ATTACK = 1;

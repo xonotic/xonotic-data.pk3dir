@@ -130,21 +130,6 @@ void PlayerJump (void)
 	if(self.health <= g_bloodloss)
 		return;
 
-	if(g_runematch)
-	{
-		if(self.runes & RUNE_SPEED)
-		{
-			if(self.runes & CURSE_SLOW)
-				mjumpheight = mjumpheight * cvar("g_balance_rune_speed_combo_jumpheight");
-			else
-				mjumpheight = mjumpheight * cvar("g_balance_rune_speed_jumpheight");
-		}
-		else if(self.runes & CURSE_SLOW)
-		{
-			mjumpheight = mjumpheight * cvar("g_balance_curse_slow_jumpheight");
-		}
-	}
-
 	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
 	// velocity bounds.  Final velocity is bound between (jumpheight *
 	// min + jumpheight) and (jumpheight * max + jumpheight);
@@ -265,8 +250,8 @@ void RaceCarPhysics()
 	vector angles_save, rigvel;
 
 	angles_save = self.angles;
-	accel = bound(-1, self.movement_x / sv_maxspeed, 1);
-	steer = bound(-1, self.movement_y / sv_maxspeed, 1);
+	accel = bound(-1, self.movement_x / self.stat_sv_maxspeed, 1);
+	steer = bound(-1, self.movement_y / self.stat_sv_maxspeed, 1);
 
 	if(g_bugrigs_reverse_speeding)
 	{
@@ -620,19 +605,19 @@ void PM_AirAccelerate(vector wishdir, float wishspeed)
 
 	if(wishspeed > curspeed * 1.01)
 	{
-		wishspeed = min(wishspeed, curspeed + sv_warsowbunny_airforwardaccel * sv_maxspeed * frametime);
+		wishspeed = min(wishspeed, curspeed + sv_warsowbunny_airforwardaccel * self.stat_sv_maxspeed * frametime);
 	}
 	else
 	{
-		f = max(0, (sv_warsowbunny_topspeed - curspeed) / (sv_warsowbunny_topspeed - sv_maxspeed));
-		wishspeed = max(curspeed, sv_maxspeed) + sv_warsowbunny_accel * f * sv_maxspeed * frametime;
+		f = max(0, (sv_warsowbunny_topspeed - curspeed) / (sv_warsowbunny_topspeed - self.stat_sv_maxspeed));
+		wishspeed = max(curspeed, self.stat_sv_maxspeed) + sv_warsowbunny_accel * f * self.stat_sv_maxspeed * frametime;
 	}
 	wishvel = wishdir * wishspeed;
 	acceldir = wishvel - curvel;
 	addspeed = vlen(acceldir);
 	acceldir = normalize(acceldir);
 
-	accelspeed = min(addspeed, sv_warsowbunny_turnaccel * sv_maxspeed * frametime);
+	accelspeed = min(addspeed, sv_warsowbunny_turnaccel * self.stat_sv_maxspeed * frametime);
 
 	if(sv_warsowbunny_backtosideratio < 1)
 	{
@@ -707,16 +692,30 @@ void SV_PlayerPhysics()
 		maxspd_mod *= cvar("g_minstagib_speed_highspeed");
 	if(g_nexball && self.ballcarried)
 		maxspd_mod *= cvar("g_nexball_basketball_carrier_highspeed");
+	if(g_runematch)
+	{
+		if(self.runes & RUNE_SPEED)
+		{
+			if(self.runes & CURSE_SLOW)
+				maxspd_mod *= cvar("g_balance_rune_speed_combo_highspeed");
+			else
+				maxspd_mod *= cvar("g_balance_rune_speed_highspeed");
+		}
+		else if(self.runes & CURSE_SLOW)
+		{
+			maxspd_mod *= cvar("g_balance_curse_slow_highspeed");
+		}
+	}
+	maxspd_mod *= autocvar_g_movement_highspeed;
 
 	// fix physics stats for g_movement_highspeed
-	self.stat_sv_airaccel_qw = AdjustAirAccelQW(sv_airaccel_qw, autocvar_g_movement_highspeed * maxspd_mod);
-
+	self.stat_sv_airaccel_qw = AdjustAirAccelQW(sv_airaccel_qw, maxspd_mod);
 	if(sv_airstrafeaccel_qw)
-		self.stat_sv_airstrafeaccel_qw = AdjustAirAccelQW(sv_airstrafeaccel_qw, autocvar_g_movement_highspeed * maxspd_mod);
+		self.stat_sv_airstrafeaccel_qw = AdjustAirAccelQW(sv_airstrafeaccel_qw, maxspd_mod);
 	else
 		self.stat_sv_airstrafeaccel_qw = 0;
-
-	self.stat_sv_airspeedlimit_nonqw = sv_airspeedlimit_nonqw * autocvar_g_movement_highspeed * maxspd_mod;
+	self.stat_sv_airspeedlimit_nonqw = sv_airspeedlimit_nonqw * maxspd_mod;
+	self.stat_sv_maxspeed = sv_maxspeed * maxspd_mod; // also slow walking
 
     if(self.PlayerPhysplug)
         if(self.PlayerPhysplug())
@@ -849,21 +848,6 @@ void SV_PlayerPhysics()
 
 	maxspd_mod = 1;
 
-	if(g_runematch)
-	{
-		if(self.runes & RUNE_SPEED)
-		{
-			if(self.runes & CURSE_SLOW)
-				maxspd_mod = maxspd_mod * cvar("g_balance_rune_speed_combo_moverate");
-			else
-				maxspd_mod = maxspd_mod * cvar("g_balance_rune_speed_moverate");
-		}
-		else if(self.runes & CURSE_SLOW)
-		{
-			maxspd_mod = maxspd_mod * cvar("g_balance_curse_slow_moverate");
-		}
-	}
-
 	swampspd_mod = 1;
 	if(self.in_swamp) {
 		swampspd_mod = self.swamp_slowdown; //cvar("g_balance_swamp_moverate");
@@ -892,7 +876,7 @@ void SV_PlayerPhysics()
 		maxspd_mod = self.spectatorspeed;
 	}
 
-	spd = max(sv_maxspeed, sv_maxairspeed) * maxspd_mod * swampspd_mod;
+	spd = max(self.stat_sv_maxspeed, sv_maxairspeed) * maxspd_mod * swampspd_mod;
 	if(self.speed != spd)
 	{
 		self.speed = spd;
@@ -988,8 +972,8 @@ void SV_PlayerPhysics()
 		// acceleration
 		wishdir = normalize(wishvel);
 		wishspeed = vlen(wishvel);
-		if (wishspeed > sv_maxspeed*maxspd_mod)
-			wishspeed = sv_maxspeed*maxspd_mod;
+		if (wishspeed > self.stat_sv_maxspeed*maxspd_mod)
+			wishspeed = self.stat_sv_maxspeed*maxspd_mod;
 		if (time >= self.teleport_time)
 			PM_Accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0, 0);
 	}
@@ -1006,8 +990,8 @@ void SV_PlayerPhysics()
 
 		wishdir = normalize(wishvel);
 		wishspeed = vlen(wishvel);
-		if (wishspeed > sv_maxspeed*maxspd_mod)
-			wishspeed = sv_maxspeed*maxspd_mod;
+		if (wishspeed > self.stat_sv_maxspeed*maxspd_mod)
+			wishspeed = self.stat_sv_maxspeed*maxspd_mod;
 		wishspeed = wishspeed * 0.7;
 
 		// water friction
@@ -1052,8 +1036,8 @@ void SV_PlayerPhysics()
 		// acceleration
 		wishdir = normalize(wishvel);
 		wishspeed = vlen(wishvel);
-		if (wishspeed > sv_maxspeed*maxspd_mod)
-			wishspeed = sv_maxspeed*maxspd_mod;
+		if (wishspeed > self.stat_sv_maxspeed*maxspd_mod)
+			wishspeed = self.stat_sv_maxspeed*maxspd_mod;
 		if (time >= self.teleport_time)
 		{
 			// water acceleration
@@ -1212,8 +1196,8 @@ void SV_PlayerPhysics()
 		// acceleration
 		wishdir = normalize(wishvel);
 		wishspeed = vlen(wishvel);
-		if (wishspeed > sv_maxspeed*maxspd_mod)
-			wishspeed = sv_maxspeed*maxspd_mod;
+		if (wishspeed > self.stat_sv_maxspeed*maxspd_mod)
+			wishspeed = self.stat_sv_maxspeed*maxspd_mod;
 		if (self.crouch)
 			wishspeed = wishspeed * 0.5;
 		if (time >= self.teleport_time)
@@ -1242,8 +1226,8 @@ void SV_PlayerPhysics()
 		// acceleration
 		wishdir = normalize(wishvel);
 		wishspeed = wishspeed0 = vlen(wishvel);
-		if (wishspeed0 > sv_maxspeed*maxspd_mod)
-			wishspeed0 = sv_maxspeed*maxspd_mod;
+		if (wishspeed0 > self.stat_sv_maxspeed*maxspd_mod)
+			wishspeed0 = self.stat_sv_maxspeed*maxspd_mod;
 		if (wishspeed > maxairspd)
 			wishspeed = maxairspd;
 		if (self.crouch)
