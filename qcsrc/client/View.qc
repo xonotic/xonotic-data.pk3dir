@@ -678,17 +678,17 @@ void CSQC_UpdateView(float w, float h)
 		// add new damage
 		myhealth_flash = bound(0, myhealth_flash + max(0, myhealth_prev - myhealth) * cvar("hud_damage_factor"), cvar("hud_damage_maxalpha"));
 
-		float pain_treshold, pain_treshold_lower, pain_treshold_lower_health;
-		pain_treshold = cvar("hud_damage_pain_treshold");
-		pain_treshold_lower = cvar("hud_damage_pain_treshold_lower");
-		pain_treshold_lower_health = cvar("hud_damage_pain_treshold_lower_health");
+		float pain_threshold, pain_threshold_lower, pain_threshold_lower_health;
+		pain_threshold = cvar("hud_damage_pain_threshold");
+		pain_threshold_lower = cvar("hud_damage_pain_threshold_lower");
+		pain_threshold_lower_health = cvar("hud_damage_pain_threshold_lower_health");
 
-		if(pain_treshold_lower && myhealth < pain_treshold_lower_health)
+		if(pain_threshold_lower && myhealth < pain_threshold_lower_health)
 		{
-			pain_treshold = pain_treshold - max(cvar("hud_damage_pain_treshold_pulsating_min"), fabs(sin(M_PI * time / cvar("hud_damage_pain_treshold_pulsating_period")))) * pain_treshold_lower * (1 - max(0, myhealth)/pain_treshold_lower_health);
+			pain_threshold = pain_threshold - max(cvar("hud_damage_pain_threshold_pulsating_min"), fabs(sin(M_PI * time / cvar("hud_damage_pain_threshold_pulsating_period")))) * pain_threshold_lower * (1 - max(0, myhealth)/pain_threshold_lower_health);
 		}
 
-		myhealth_flash_temp = bound(0, myhealth_flash - pain_treshold, 1);
+		myhealth_flash_temp = bound(0, myhealth_flash - pain_threshold, 1);
 
 		if(myhealth_prev < 1)
 		{
@@ -715,7 +715,7 @@ void CSQC_UpdateView(float w, float h)
 		{
 			if(autocvar_cl_gentle_damage == 2)
 			{
-				if(myhealth_flash < pain_treshold) // only randomize when the flash is gone
+				if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
 				{
 					myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
 				}
