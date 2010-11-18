@@ -681,10 +681,10 @@ void HUD_Panel_SetPos(vector pos)
 	//if(cvar("hud_configure_checkcollisions_debug"))
 		//drawfill(pos, mySize, '1 1 1', .2, DRAWFLAG_NORMAL);
 
-	if(autocvar_hud_configure_grid)
+	if(cvar("hud_configure_grid"))
 	{
-		pos_x = floor((pos_x/vid_conwidth)/bound(0.005, autocvar_hud_configure_grid_xsize, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_xsize, 0.2) * vid_conwidth;
-		pos_y = floor((pos_y/vid_conheight)/bound(0.005, autocvar_hud_configure_grid_ysize, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_ysize, 0.2) * vid_conheight;
+		pos_x = floor((pos_x/vid_conwidth)/hud_configure_gridSize_x + 0.5) * hud_configure_realGridSize_x;
+		pos_y = floor((pos_y/vid_conheight)/hud_configure_gridSize_y + 0.5) * hud_configure_realGridSize_y;
 	}
 
 	if(hud_configure_checkcollisions)
@@ -862,10 +862,10 @@ void HUD_Panel_SetPosSize(vector mySize)
 		//drawfill(myPos, mySize, '1 1 1', .2, DRAWFLAG_NORMAL);
 
 	// before checkresize, otherwise panel can be snapped partially inside another panel or panel aspect ratio can be broken
-	if(autocvar_hud_configure_grid)
+	if(cvar("hud_configure_grid"))
 	{
-		mySize_x = floor((mySize_x/vid_conwidth)/bound(0.005, autocvar_hud_configure_grid_xsize, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_xsize, 0.2) * vid_conwidth;
-		mySize_y = floor((mySize_y/vid_conheight)/bound(0.005, autocvar_hud_configure_grid_ysize, 0.2) + 0.5) * bound(0.005, autocvar_hud_configure_grid_ysize, 0.2) * vid_conheight;
+		mySize_x = floor((mySize_x/vid_conwidth)/hud_configure_gridSize_x + 0.5) * hud_configure_realGridSize_x;
+		mySize_y = floor((mySize_y/vid_conheight)/hud_configure_gridSize_y + 0.5) * hud_configure_realGridSize_y;
 	}
 
 	if(hud_configure_checkcollisions)
@@ -916,21 +916,21 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && cvar("hud_configure_checkcollisions"));
 
 	float step;
-	if(autocvar_hud_configure_grid)
+	if(cvar("hud_configure_grid"))
 	{
 		if (nPrimary == K_UPARROW || nPrimary == K_DOWNARROW)
 		{
 			if (hudShiftState & S_SHIFT)
-				step = bound(0.005, autocvar_hud_configure_grid_ysize, 0.2) * vid_conheight;
+				step = hud_configure_realGridSize_y;
 			else
-				step = 2 * bound(0.005, autocvar_hud_configure_grid_ysize, 0.2) * vid_conheight;
+				step = 2 * hud_configure_realGridSize_y;
 		}
 		else
 		{
 			if (hudShiftState & S_SHIFT)
-				step = bound(0.005, autocvar_hud_configure_grid_xsize, 0.2) * vid_conwidth;
+				step = hud_configure_realGridSize_x;
 			else
-				step = 2 * bound(0.005, autocvar_hud_configure_grid_xsize, 0.2) * vid_conwidth;
+				step = 2 * hud_configure_realGridSize_x;
 		}
 	}
 	else
@@ -5210,18 +5210,19 @@ void HUD_Main (void)
 	}
 
 	// HUD configure visible grid
-	if(autocvar__hud_configure && autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
+	float hud_configure_grid_alpha;
+	if(autocvar__hud_configure && cvar("hud_configure_grid") && (hud_configure_grid_alpha = cvar("hud_configure_grid_alpha")))
 	{
+		hud_configure_gridSize_x = bound(0.005, cvar("hud_configure_grid_xsize"), 0.2);
+		hud_configure_gridSize_y = bound(0.005, cvar("hud_configure_grid_ysize"), 0.2);
+		hud_configure_realGridSize_x = hud_configure_gridSize_x * vid_conwidth;
+		hud_configure_realGridSize_y = hud_configure_gridSize_y * vid_conheight;
 		// x-axis
-		for(i = 0; i < 1/bound(0.005, autocvar_hud_configure_grid_xsize, 0.2); ++i)
-		{
-			drawfill(eX * i * vid_conwidth * bound(0.005, autocvar_hud_configure_grid_xsize, 0.2), eX + eY * vid_conheight, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
-		}
+		for(i = 0; i < 1/hud_configure_gridSize_x; ++i)
+			drawfill(eX * i * hud_configure_realGridSize_x, eX + eY * vid_conheight, '0.5 0.5 0.5', hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 		// y-axis
-		for(i = 0; i < 1/bound(0.005, autocvar_hud_configure_grid_ysize, 0.2); ++i)
-		{
-			drawfill(eY * i * vid_conheight * bound(0.005, autocvar_hud_configure_grid_ysize, 0.2), eY + eX * vid_conwidth, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
-		}
+		for(i = 0; i < 1/hud_configure_gridSize_y; ++i)
+			drawfill(eY * i * hud_configure_realGridSize_y, eY + eX * vid_conwidth, '0.5 0.5 0.5', hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 	}
 
 	// draw the dock
