@@ -677,7 +677,7 @@ void kh_Key_Think()  // runs all the time
 			bprint(self.owner.netname, "^7 dropped the ", self.netname, "\n");
 			sound(self.owner, CHAN_AUTO, kh_sound_drop, VOL_BASE, ATTN_NORM);
 			makevectors(self.owner.v_angle);
-			self.velocity = W_CalculateProjectileVelocity(self.owner.velocity, cvar("g_balance_keyhunt_throwvelocity") * v_forward);
+			self.velocity = W_CalculateProjectileVelocity(self.owner.velocity, cvar("g_balance_keyhunt_throwvelocity") * v_forward, FALSE);
 			kh_Key_AssignTo(self, world);
 			self.pushltime = time + cvar("g_balance_keyhunt_protecttime");
 			self.kh_dropperteam = self.team;
@@ -828,7 +828,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 			bprint(player.netname, "^7 died and lost the ", key.netname, "\n");
 			kh_Key_AssignTo(key, world);
 			makevectors('-1 0 0' * (45 + 45 * random()) + '0 360 0' * random());
-			key.velocity = W_CalculateProjectileVelocity(player.velocity, cvar("g_balance_keyhunt_dropvelocity") * v_forward);
+			key.velocity = W_CalculateProjectileVelocity(player.velocity, cvar("g_balance_keyhunt_dropvelocity") * v_forward, FALSE);
 			key.pusher = mypusher;
 			key.pushltime = time + cvar("g_balance_keyhunt_protecttime");
 			if(suicide)

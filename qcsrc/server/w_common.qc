@@ -341,6 +341,9 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 {
 	float lag, dt, savetime, density;
 	entity pl, oldself;
+	float antilagging;
+
+	antilagging = (cvar("g_antilag_bullets") && (pSpeed >= cvar("g_antilag_bullets")));
 
 	entity proj;
 	proj = spawn();
@@ -356,7 +359,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		proj.movetype = MOVETYPE_FLY;
 	proj.think = SUB_Remove;
 	proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
-	W_SetupProjectileVelocityEx(proj, dir, v_up, pSpeed, 0, 0, spread);
+	W_SetupProjectileVelocityEx(proj, dir, v_up, pSpeed, 0, 0, spread, antilagging);
 	proj.angles = vectoangles(proj.velocity);
 	proj.dmg_radius = cvar("g_ballistics_materialconstant") / bulletconstant;
 	// so: bulletconstant = bullet mass / area of bullet circle
@@ -373,8 +376,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 
-	if(cvar("g_antilag_bullets"))
-	if(pSpeed >= cvar("g_antilag_bullets"))
+	if(antilagging)
 	{
 		float eff;
 

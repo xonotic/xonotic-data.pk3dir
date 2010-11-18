@@ -652,7 +652,7 @@ void W_Nexball_Attack (float t)
 			mul = 2 - mul;
 		mul = mi + (ma - mi) * mul; // range from the minimal power to the maximal power
 	}
-	DropBall (ball, w_shotorg, W_CalculateProjectileVelocity(self.velocity, w_shotdir * cvar("g_balance_nexball_primary_speed") * mul));
+	DropBall (ball, w_shotorg, W_CalculateProjectileVelocity(self.velocity, w_shotdir * cvar("g_balance_nexball_primary_speed") * mul, FALSE));
 	//TODO: use the speed_up cvar too ??
 }
 
