@@ -426,9 +426,6 @@ void cvar_changes_init()
 		BADCVAR("sv_adminnick");
 		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_curl_defaulturl");
-		BADCVAR("sv_defaultcharacter");
-		BADCVAR("sv_defaultplayermodel");
-		BADCVAR("sv_defaultplayerskin");
 		BADCVAR("sv_maxidle");
 		BADCVAR("sv_maxrate");
 		BADCVAR("sv_motd");
