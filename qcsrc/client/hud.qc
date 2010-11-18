@@ -1873,7 +1873,7 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 	if(autocvar__hud_configure)
 	{
 		currently_selected = (itemcode == 2); //rockets always selected
-		a = 100;
+		a = 31 + mod(itemcode*93, 128);
 	}
 	else
 		a = getstati(GetAmmoStat(itemcode)); // how much ammo do we have of type itemcode?
