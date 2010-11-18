@@ -347,7 +347,7 @@ void W_Crylink_Attack (void)
 			s_z = v_forward_y;
 		}
 		s = s * cvar("g_balance_crylink_primary_spread") * g_weaponspreadfactor;
-		W_SetupProjectileVelocityEx(proj, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_crylink_primary_speed"), 0, 0, 0);
+		W_SetupProjectileVelocityEx(proj, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_crylink_primary_speed"), 0, 0, 0, FALSE);
 		proj.touch = W_Crylink_Touch;
 
 		proj.think = W_Crylink_Fadethink;
@@ -429,7 +429,7 @@ void W_Crylink_Attack2 (void)
 		setorigin (proj, w_shotorg);
 		setsize(proj, '0 0 0', '0 0 0');
 
-		W_SetupProjectileVelocityEx(proj, (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * cvar("g_balance_crylink_secondary_spread") * g_weaponspreadfactor), v_up, cvar("g_balance_crylink_secondary_speed"), 0, 0, 0);
+		W_SetupProjectileVelocityEx(proj, (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * cvar("g_balance_crylink_secondary_spread") * g_weaponspreadfactor), v_up, cvar("g_balance_crylink_secondary_speed"), 0, 0, 0, FALSE);
 		proj.touch = W_Crylink_Touch2;
 		proj.think = W_Crylink_Fadethink;
 		if(counter == (shots - 1) / 2)
@@ -485,7 +485,7 @@ float w_crylink(float req)
 			{
 				W_Crylink_Attack();
 				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_crylink_primary_animtime"), w_ready);
-				if(cvar("g_balance_crylink_primary_joinspeed") != 0 || cvar("g_balance_crylink_primary_jointime") != 0)
+				if(cvar("g_balance_crylink_primary_joinspread") != 0 || cvar("g_balance_crylink_primary_jointime") != 0)
 					self.crylink_waitrelease = 1;
 			}
 		}
@@ -496,7 +496,7 @@ float w_crylink(float req)
 			{
 				W_Crylink_Attack2();
 				weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_crylink_secondary_animtime"), w_ready);
-				if(cvar("g_balance_crylink_secondary_joinspeed") != 0 || cvar("g_balance_crylink_secondary_jointime") != 0)
+				if(cvar("g_balance_crylink_secondary_joinspread") != 0 || cvar("g_balance_crylink_secondary_jointime") != 0)
 					self.crylink_waitrelease = 2;
 			}
 		}
@@ -513,12 +513,12 @@ float w_crylink(float req)
 					
 					if(self.crylink_waitrelease == 1)
 					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"), cvar("g_balance_crylink_primary_jointime"));
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspread") * cvar("g_balance_crylink_primary_speed"), cvar("g_balance_crylink_primary_jointime"));
 						
 					}
 					else
 					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspeed"), cvar("g_balance_crylink_secondary_jointime"));
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspread") * cvar("g_balance_crylink_secondary_speed"), cvar("g_balance_crylink_secondary_jointime"));
 					}
 					
 					linkjoineffect = spawn();
