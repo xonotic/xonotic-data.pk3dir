@@ -355,6 +355,8 @@ float use_nex_charge_pool;
 float myhealth, myhealth_prev;
 float myhealth_flash;
 
+vector myhealth_gentlergb;
+
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -665,6 +667,7 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	// improved polyblend
+	vector rgb;
 	if(cvar("hud_damage"))
 	{
 		float myhealth_flash_temp;
@@ -708,7 +711,22 @@ void CSQC_UpdateView(float w, float h)
 
 		myhealth_prev = myhealth;
 
-		drawpic(reticle_pos, "gfx/blood", reticle_size, stov(cvar_string("hud_damage_color")), bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
+		if(autocvar_cl_gentle_damage || cvar("cl_gentle"))
+		{
+			if(autocvar_cl_gentle_damage == 2)
+			{
+				if(myhealth_flash < pain_treshold) // only randomize when the flash is gone
+				{
+					myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
+				}
+			}
+			else
+				myhealth_gentlergb = '1 0.7 1';
+
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, cvar("hud_damage_gentle_alpha_multiplier") * bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
+		}
+		else
+			drawpic(reticle_pos, "gfx/blood", reticle_size, stov(cvar_string("hud_damage_color")), bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
 	}
 
 	// Draw the mouse cursor
@@ -922,7 +940,6 @@ void CSQC_UpdateView(float w, float h)
 			}
 			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
 			{
-				vector rgb;
 				if(nex_charge_pool || use_nex_charge_pool)
 				{
 					use_nex_charge_pool = 1;
