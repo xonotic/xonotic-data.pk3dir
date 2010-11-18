@@ -4709,14 +4709,15 @@ void HUD_DrawPressedKeys(void)
 	vector keysize;
 	keysize = eX * mySize_x * (1/3) + eY * mySize_y * 0.5;
 	float pressedkeys;
-
 	pressedkeys = getstatf(STAT_PRESSED_KEYS);
+
 	drawpic_aspect_skin(pos, ((pressedkeys & KEY_CROUCH) ? "key_crouch_inv.tga" : "key_crouch.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eX * mySize_x * (1/3), ((pressedkeys & KEY_FORWARD) ? "key_forward_inv.tga" : "key_forward.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eX * mySize_x * (2/3), ((pressedkeys & KEY_JUMP) ? "key_jump_inv.tga" : "key_jump.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eY * 0.5 * mySize_y, ((pressedkeys & KEY_LEFT) ? "key_left_inv.tga" : "key_left.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eY * 0.5 * mySize_y + eX * mySize_x * (1/3), ((pressedkeys & KEY_BACKWARD) ? "key_backward_inv.tga" : "key_backward.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eY * 0.5 * mySize_y + eX * mySize_x * (2/3), ((pressedkeys & KEY_RIGHT) ? "key_right_inv.tga" : "key_right.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos + eX * keysize_x, ((pressedkeys & KEY_FORWARD) ? "key_forward_inv.tga" : "key_forward.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos + eX * keysize_x * 2, ((pressedkeys & KEY_JUMP) ? "key_jump_inv.tga" : "key_jump.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	pos_y += keysize_y;
+	drawpic_aspect_skin(pos, ((pressedkeys & KEY_LEFT) ? "key_left_inv.tga" : "key_left.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos + eX * keysize_x, ((pressedkeys & KEY_BACKWARD) ? "key_backward_inv.tga" : "key_backward.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos + eX * keysize_x * 2, ((pressedkeys & KEY_RIGHT) ? "key_right_inv.tga" : "key_right.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 // Handle chat as a panel (#12)
