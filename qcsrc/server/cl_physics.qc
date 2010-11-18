@@ -145,11 +145,6 @@ void PlayerJump (void)
 		}
 	}
 
-	if(g_minstagib && (self.items & IT_INVINCIBLE))
-	{
-		mjumpheight = mjumpheight * cvar("g_minstagib_speed_jumpheight");
-	}
-
 	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
 	// velocity bounds.  Final velocity is bound between (jumpheight *
 	// min + jumpheight) and (jumpheight * max + jumpheight);
@@ -707,13 +702,21 @@ void SV_PlayerPhysics()
 	float not_allowed_to_move;
 	string c;
 	
+	maxspd_mod = 1;
+	if(g_minstagib && (self.items & IT_INVINCIBLE))
+		maxspd_mod *= cvar("g_minstagib_speed_highspeed");
+	if(g_nexball && self.ballcarried)
+		maxspd_mod *= cvar("g_nexball_basketball_carrier_highspeed");
+
 	// fix physics stats for g_movement_highspeed
-	self.stat_sv_airaccel_qw = AdjustAirAccelQW(sv_airaccel_qw, autocvar_g_movement_highspeed);
+	self.stat_sv_airaccel_qw = AdjustAirAccelQW(sv_airaccel_qw, autocvar_g_movement_highspeed * maxspd_mod);
+
 	if(sv_airstrafeaccel_qw)
-		self.stat_sv_airstrafeaccel_qw = AdjustAirAccelQW(sv_airstrafeaccel_qw, autocvar_g_movement_highspeed);
+		self.stat_sv_airstrafeaccel_qw = AdjustAirAccelQW(sv_airstrafeaccel_qw, autocvar_g_movement_highspeed * maxspd_mod);
 	else
 		self.stat_sv_airstrafeaccel_qw = 0;
-	self.stat_sv_airspeedlimit_nonqw = sv_airspeedlimit_nonqw * autocvar_g_movement_highspeed;
+
+	self.stat_sv_airspeedlimit_nonqw = sv_airspeedlimit_nonqw * autocvar_g_movement_highspeed * maxspd_mod;
 
     if(self.PlayerPhysplug)
         if(self.PlayerPhysplug())
@@ -859,16 +862,6 @@ void SV_PlayerPhysics()
 		{
 			maxspd_mod = maxspd_mod * cvar("g_balance_curse_slow_moverate");
 		}
-	}
-
-	if(g_minstagib && (self.items & IT_INVINCIBLE))
-	{
-		maxspd_mod = cvar("g_minstagib_speed_moverate");
-	}
-
-	if(g_nexball && self.ballcarried)
-	{
-		maxspd_mod = cvar("g_nexball_basketball_carrier_speed");
 	}
 
 	swampspd_mod = 1;
