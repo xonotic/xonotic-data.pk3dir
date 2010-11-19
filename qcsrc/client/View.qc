@@ -355,6 +355,8 @@ float use_nex_charge_pool;
 float myhealth, myhealth_prev;
 float myhealth_flash;
 
+vector myhealth_gentlergb;
+
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -665,6 +667,7 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	// improved polyblend
+	vector rgb;
 	if(cvar("hud_damage"))
 	{
 		float myhealth_flash_temp;
@@ -675,17 +678,17 @@ void CSQC_UpdateView(float w, float h)
 		// add new damage
 		myhealth_flash = bound(0, myhealth_flash + max(0, myhealth_prev - myhealth) * cvar("hud_damage_factor"), cvar("hud_damage_maxalpha"));
 
-		float pain_treshold, pain_treshold_lower, pain_treshold_lower_health;
-		pain_treshold = cvar("hud_damage_pain_treshold");
-		pain_treshold_lower = cvar("hud_damage_pain_treshold_lower");
-		pain_treshold_lower_health = cvar("hud_damage_pain_treshold_lower_health");
+		float pain_threshold, pain_threshold_lower, pain_threshold_lower_health;
+		pain_threshold = cvar("hud_damage_pain_threshold");
+		pain_threshold_lower = cvar("hud_damage_pain_threshold_lower");
+		pain_threshold_lower_health = cvar("hud_damage_pain_threshold_lower_health");
 
-		if(pain_treshold_lower && myhealth < pain_treshold_lower_health)
+		if(pain_threshold_lower && myhealth < pain_threshold_lower_health)
 		{
-			pain_treshold = pain_treshold - max(cvar("hud_damage_pain_treshold_pulsating_min"), fabs(sin(M_PI * time / cvar("hud_damage_pain_treshold_pulsating_period")))) * pain_treshold_lower * (1 - max(0, myhealth)/pain_treshold_lower_health);
+			pain_threshold = pain_threshold - max(cvar("hud_damage_pain_threshold_pulsating_min"), fabs(sin(M_PI * time / cvar("hud_damage_pain_threshold_pulsating_period")))) * pain_threshold_lower * (1 - max(0, myhealth)/pain_threshold_lower_health);
 		}
 
-		myhealth_flash_temp = bound(0, myhealth_flash - pain_treshold, 1);
+		myhealth_flash_temp = bound(0, myhealth_flash - pain_threshold, 1);
 
 		if(myhealth_prev < 1)
 		{
@@ -708,7 +711,22 @@ void CSQC_UpdateView(float w, float h)
 
 		myhealth_prev = myhealth;
 
-		drawpic(reticle_pos, "gfx/blood", reticle_size, stov(cvar_string("hud_damage_color")), bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
+		if(autocvar_cl_gentle_damage || cvar("cl_gentle"))
+		{
+			if(autocvar_cl_gentle_damage == 2)
+			{
+				if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
+				{
+					myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
+				}
+			}
+			else
+				myhealth_gentlergb = stov(cvar_string("hud_damage_gentle_color"));
+
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, cvar("hud_damage_gentle_alpha_multiplier") * bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
+		}
+		else
+			drawpic(reticle_pos, "gfx/blood", reticle_size, stov(cvar_string("hud_damage_color")), bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
 	}
 
 	// Draw the mouse cursor
@@ -922,7 +940,6 @@ void CSQC_UpdateView(float w, float h)
 			}
 			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
 			{
-				vector rgb;
 				if(nex_charge_pool || use_nex_charge_pool)
 				{
 					use_nex_charge_pool = 1;
