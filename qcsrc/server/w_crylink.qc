@@ -39,6 +39,27 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 	remove (e);
 }
 
+void W_Crylink_CheckLinks(entity e)
+{
+	float i;
+	entity p;
+
+	if(e == world)
+		error("W_Crylink_CheckLinks: entity is world");
+
+	p = e;
+	for(i = 0; i < 1000; ++i)
+	{
+		if(p.queuenext.queueprev != p || p.queueprev.queuenext != p)
+			error("W_Crylink_CheckLinks: queue is inconsistent");
+		p = p.queuenext;
+		if(p == e)
+			break;
+	}
+	if(i >= 1000)
+		error("W_Crylink_CheckLinks: infinite chain");
+}
+
 // adjust towards center
 // returns the origin where they will meet... and the time till the meeting is
 // stored in w_crylink_linkjoin_time.
@@ -53,6 +74,9 @@ vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 	vector targ_origin;
 	float avg_dist, n;
 	entity p;
+
+	// FIXME remove this debug code
+	W_Crylink_CheckLinks(e);
 
 	w_crylink_linkjoin_time = 0;
 
