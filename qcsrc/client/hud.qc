@@ -1153,8 +1153,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 float HUD_Panel_HighlightCheck()
 {
 	float i, j, border;
-	vector panelPos;
-	vector panelSize;
 
 	while(j < HUD_PANEL_NUM)
 	{
@@ -1163,32 +1161,30 @@ float HUD_Panel_HighlightCheck()
 
 		HUD_Panel_UpdatePosSizeForId(i);
 
-		panelPos = panel_pos;
-		panelSize = panel_size;
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
-		if(mousepos_x >= panelPos_x && mousepos_y >= panelPos_y && mousepos_x <= panelPos_x + panelSize_x && mousepos_y <= panelPos_y + panelSize_y)
+		if(mousepos_x >= panel_pos_x && mousepos_y >= panel_pos_y && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= panel_pos_y + panel_size_y)
 		{
 			return 1;
 		}
 		// resize from topleft border
-		else if(mousepos_x >= panelPos_x - border && mousepos_y >= panelPos_y - border && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
+		else if(mousepos_x >= panel_pos_x - border && mousepos_y >= panel_pos_y - border && mousepos_x <= panel_pos_x + 0.5 * panel_size_x && mousepos_y <= panel_pos_y + 0.5 * panel_size_y)
 		{
 			return 2;
 		}
 		// resize from topright border
-		else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y - border && mousepos_x <= panelPos_x + panelSize_x + border && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
+		else if(mousepos_x >= panel_pos_x + 0.5 * panel_size_x && mousepos_y >= panel_pos_y - border && mousepos_x <= panel_pos_x + panel_size_x + border && mousepos_y <= panel_pos_y + 0.5 * panel_size_y)
 		{
 			return 3;
 		}
 		// resize from bottomleft border
-		else if(mousepos_x >= panelPos_x - border && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + panelSize_y + border)
+		else if(mousepos_x >= panel_pos_x - border && mousepos_y >= panel_pos_y + 0.5 * panel_size_y && mousepos_x <= panel_pos_x + 0.5 * panel_size_x && mousepos_y <= panel_pos_y + panel_size_y + border)
 		{
 			return 3;
 		}
 		// resize from bottomright border
-		else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + panelSize_x + border && mousepos_y <= panelPos_y + panelSize_y + border)
+		else if(mousepos_x >= panel_pos_x + 0.5 * panel_size_x && mousepos_y >= panel_pos_y + 0.5 * panel_size_y && mousepos_x <= panel_pos_x + panel_size_x + border && mousepos_y <= panel_pos_y + panel_size_y + border)
 		{
 			return 2;
 		}
@@ -1237,8 +1233,6 @@ void HUD_Panel_FirstInDrawQ(float id)
 void HUD_Panel_Highlight()
 {
 	float i, j, border;
-	vector panelPos;
-	vector panelSize;
 
 	while(j < HUD_PANEL_NUM)
 	{
@@ -1247,63 +1241,61 @@ void HUD_Panel_Highlight()
 
 		HUD_Panel_UpdatePosSizeForId(i);
 
-		panelPos = panel_pos;
-		panelSize = panel_size;
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
-		if(mousepos_x >= panelPos_x && mousepos_y >= panelPos_y && mousepos_x <= panelPos_x + panelSize_x && mousepos_y <= panelPos_y + panelSize_y)
+		if(mousepos_x >= panel_pos_x && mousepos_y >= panel_pos_y && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= panel_pos_y + panel_size_y)
 		{
 			highlightedPanel = i;
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 1;
-			panel_click_distance = mousepos - panelPos;
+			panel_click_distance = mousepos - panel_pos;
 			return;
 		}
 		// resize from topleft border
-		else if(mousepos_x >= panelPos_x - border && mousepos_y >= panelPos_y - border && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
+		else if(mousepos_x >= panel_pos_x - border && mousepos_y >= panel_pos_y - border && mousepos_x <= panel_pos_x + 0.5 * panel_size_x && mousepos_y <= panel_pos_y + 0.5 * panel_size_y)
 		{
 			highlightedPanel = i;
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 1;
-			panel_click_distance = mousepos - panelPos;
-			panel_click_resizeorigin = panelPos + panelSize;
+			panel_click_distance = mousepos - panel_pos;
+			panel_click_resizeorigin = panel_pos + panel_size;
 			return;
 		}
 		// resize from topright border
-		else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y - border && mousepos_x <= panelPos_x + panelSize_x + border && mousepos_y <= panelPos_y + 0.5 * panelSize_y)
+		else if(mousepos_x >= panel_pos_x + 0.5 * panel_size_x && mousepos_y >= panel_pos_y - border && mousepos_x <= panel_pos_x + panel_size_x + border && mousepos_y <= panel_pos_y + 0.5 * panel_size_y)
 		{
 			highlightedPanel = i;
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 2;
-			panel_click_distance_x = panelSize_x - mousepos_x + panelPos_x;
-			panel_click_distance_y = mousepos_y - panelPos_y;
-			panel_click_resizeorigin = panelPos + eY * panelSize_y;
+			panel_click_distance_x = panel_size_x - mousepos_x + panel_pos_x;
+			panel_click_distance_y = mousepos_y - panel_pos_y;
+			panel_click_resizeorigin = panel_pos + eY * panel_size_y;
 			return;
 		}
 		// resize from bottomleft border
-		else if(mousepos_x >= panelPos_x - border && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + 0.5 * panelSize_x && mousepos_y <= panelPos_y + panelSize_y + border)
+		else if(mousepos_x >= panel_pos_x - border && mousepos_y >= panel_pos_y + 0.5 * panel_size_y && mousepos_x <= panel_pos_x + 0.5 * panel_size_x && mousepos_y <= panel_pos_y + panel_size_y + border)
 		{
 			highlightedPanel = i;
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 3;
-			panel_click_distance_x = mousepos_x - panelPos_x;
-			panel_click_distance_y = panelSize_y - mousepos_y + panelPos_y;
-			panel_click_resizeorigin = panelPos + eX * panelSize_x;
+			panel_click_distance_x = mousepos_x - panel_pos_x;
+			panel_click_distance_y = panel_size_y - mousepos_y + panel_pos_y;
+			panel_click_resizeorigin = panel_pos + eX * panel_size_x;
 			return;
 		}
 		// resize from bottomright border
-		else if(mousepos_x >= panelPos_x + 0.5 * panelSize_x && mousepos_y >= panelPos_y + 0.5 * panelSize_y && mousepos_x <= panelPos_x + panelSize_x + border && mousepos_y <= panelPos_y + panelSize_y + border)
+		else if(mousepos_x >= panel_pos_x + 0.5 * panel_size_x && mousepos_y >= panel_pos_y + 0.5 * panel_size_y && mousepos_x <= panel_pos_x + panel_size_x + border && mousepos_y <= panel_pos_y + panel_size_y + border)
 		{
 			highlightedPanel = i;
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 4;
-			panel_click_distance = panelSize - mousepos + panelPos;
-			panel_click_resizeorigin = panelPos;
+			panel_click_distance = panel_size - mousepos + panel_pos;
+			panel_click_resizeorigin = panel_pos;
 			return;
 		}
 		else
