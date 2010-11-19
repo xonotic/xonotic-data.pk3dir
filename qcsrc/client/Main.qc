@@ -998,15 +998,6 @@ void CSQC_Ent_Remove()
 
 void Gamemode_Init()
 {
-	if(gametype == GAME_ONSLAUGHT) {
-		print(strcat("Using ", minimapname, " as minimap.\n"));
-		precache_pic("gfx/ons-cp-neutral.tga");
-		precache_pic("gfx/ons-cp-red.tga");
-		precache_pic("gfx/ons-cp-blue.tga");
-		precache_pic("gfx/ons-frame.tga");
-		precache_pic("gfx/ons-frame-team.tga");
-	}
-
 	if not(isdemo())
 	{
 		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), "\n");
