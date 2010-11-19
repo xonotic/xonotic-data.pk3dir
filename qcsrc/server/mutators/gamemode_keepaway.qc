@@ -4,11 +4,15 @@ void ka_RespawnBall(void);
 
 void ka_Initialize()
 {
+	print("^4ka_Initialize was just called!\n");
+
 	if(!g_keepaway)
 		return;
 		
 	precache_sound("keepaway/pickedup.wav");
 	precache_sound("keepaway/dropped.wav");
+
+	ScoreRules_keepaway();
 	
 	entity e;
 	e = spawn();
@@ -150,46 +154,38 @@ MUTATOR_HOOKFUNCTION(ka_RemovePlayer)
 		ball.owner.kaballcarried = world;
 		ball.owner = world;
 	}
+	
+	if((frag_attacker || frag_target) && !(frag_attacker == frag_target)) {
+		if(frag_target.kaballcarried) // get amount of times killing carrier
+			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_CARRIERKILLS, 1);
+		else if not(frag_attacker.kaballcarried)
+			if(cvar("g_keepaway_noncarrier_warn"))
+				centerprint_atprio(frag_attacker, (CENTERPRIO_SPAM + 5), "Killing people while you don't have the ball gives no points!");
+	
+		if(frag_attacker.kaballcarried) // get kills as carrier
+			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_SCORE, 1);
+	}
+	return 1;
+}
+/*
+MUTATOR_HOOKFUNCTION(ka_Scoring)
+{
+	if not(frag_attacker == frag_target)
+	{
+		if(frag_target.kaballcarried) { // get amount of times killing carrier
+			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_CARRIERKILLS, 1);
+			//ka_RemovePlayer();
+		}
+		else if not(frag_attacker.kaballcarried)
+			if(cvar("g_keepaway_noncarrier_warn"))
+				centerprint_atprio(frag_attacker, (CENTERPRIO_SPAM + 5), "Killing people while you don't have the ball gives no points!");
+
+		if(frag_attacker.kaballcarried) // get kills as carrier
+			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_SCORE, 1);
+	}
 	return 1;
 }
 
-/*
-void ka_DropEvent(entity plyr, entity ball)
-{	
-	setattachment(ball, world, "");
-	ball.movetype = MOVETYPE_BOUNCE;
-	ball.solid = SOLID_TRIGGER;
-	ball.wait = time + 1;
-	ball.ctf_droptime = time;
-	ball.think = ka_SpawnBall;
-	ball.nextthink = time + cvar("g_keepawayball_respawntime");
-	ball.touch = ka_TouchEvent;
-	plyr.effects = EF_LOWPRECISION;
-	plyr.alpha = 1.0;
-	ball.alpha = 1.0;
-	setorigin(ball, plyr.origin + '0 0 10');
-	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
-	
-	bprint(plyr.netname, "^7 has dropped the ball!\n");
-	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
-	WriteString(MSG_BROADCAST, strcat("\n\n", plyr.netname, "^7 has dropped the ball!\n"));
-	sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NORM);	
-	
-	PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1);
-	
-	// todo
-	//WaypointSprite_AttachCarrier("ka-ball", ball);
-	//WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
-	
-	ball.owner.kaballcarried = world;
-	ball.owner = world;
-}
-
-
-void ka_CheckWinner()
-{
-
-}
 
 MUTATOR_HOOKFUNCTION(ka_PlayerDies)
 {
@@ -241,24 +237,6 @@ MUTATOR_HOOKFUNCTION(ka_PlayerDies)
 
 	tag_CheckWinner();
 
-	return 1;
-}
-
-MUTATOR_HOOKFUNCTION(tag_RemovePlayer)
-{
-
-	return 1;
-}
-
-MUTATOR_HOOKFUNCTION(tag_GiveFragsForKill)
-{
-	frag_score = 0; // no frags counted in Tag, maybe later (TODO)
-	return 1;
-}
-
-MUTATOR_HOOKFUNCTION(tag_PlayerPreThink)
-{
-	setcolor(self, 16 * self.tagcolor + self.tagcolor); // prevent cheating by changing player colors
 	return 1;
 }
 */

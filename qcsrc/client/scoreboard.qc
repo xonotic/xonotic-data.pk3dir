@@ -248,12 +248,12 @@ string HUD_DefaultColumnLayout()
 {
 	return strcat( // fteqcc sucks
 		"ping pl name | ",
-		"-teams,race,lms/kills -teams,lms/deaths -teams,lms,race/suicides -race,dm,tdm/frags ", // tdm already has this in "score"
+		"-teams,race,lms/kills -teams,lms/deaths -teams,lms,race,keepaway/suicides -race,dm,tdm,keepaway/frags ", // tdm already has this in "score"
 		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
 		"+lms/lives +lms/rank ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
-		"+as/objectives +nexball/faults +nexball/goals ",
+		"+as/objectives +nexball/faults +nexball/goals +keepaway/drops +keepaway/pickups +keepaway/bckills ",
 		"-lms,race,nexball/score");
 }
 
