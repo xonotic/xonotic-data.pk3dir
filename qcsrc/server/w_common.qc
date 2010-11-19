@@ -310,6 +310,26 @@ void W_BallisticBullet_Touch (void)
 	PROJECTILE_TOUCH;
 	W_BallisticBullet_Hit ();
 
+	// if we hit "weapclip", bail out
+	//
+	// rationale of this check:
+	//
+	// any shader that is solid, nodraw AND trans is meant to clip weapon
+	// shots and players, but has no other effect!
+	//
+	// if it is not trans, it is caulk and should not have this side effect
+	//
+	// matching shaders:
+	//   common/weapclip (intended)
+	//   common/noimpact (is supposed to eat projectiles, but is erased farther above)
+	if(trace_dphitq3surfaceflags
+		&  (Q3SURFACEFLAG_NONSOLID | Q3SURFACEFLAG_NODRAW | Q3SURFACEFLAG_TRANS)
+		== (                         Q3SURFACEFLAG_NODRAW | Q3SURFACEFLAG_TRANS))
+	{
+		remove(self);
+		return;
+	}
+
 	density = other.ballistics_density;
 	if(density == 0)
 		density = 1;
