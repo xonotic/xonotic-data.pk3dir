@@ -322,9 +322,9 @@ void W_BallisticBullet_Touch (void)
 	// matching shaders:
 	//   common/weapclip (intended)
 	//   common/noimpact (is supposed to eat projectiles, but is erased farther above)
-	if(trace_dphitq3surfaceflags
-		&  (Q3SURFACEFLAG_NONSOLID | Q3SURFACEFLAG_NODRAW | Q3SURFACEFLAG_TRANS)
-		== (                         Q3SURFACEFLAG_NODRAW | Q3SURFACEFLAG_TRANS))
+	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
+	if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID)
+	if not(trace_dphitcontents & DPCONTENTS_OPAQUE)
 	{
 		remove(self);
 		return;
