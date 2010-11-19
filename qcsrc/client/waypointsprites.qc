@@ -409,7 +409,7 @@ void Ent_WaypointSprite()
 
 void WaypointSprite_Load()
 {
-	waypointsprite_fadedistance = vlen(mi_max - mi_min);
+	waypointsprite_fadedistance = vlen(mi_scale);
 	waypointsprite_normdistance = cvar("g_waypointsprite_normdistance");
 	waypointsprite_minscale = cvar("g_waypointsprite_minscale");
 	waypointsprite_minalpha = cvar("g_waypointsprite_minalpha");
@@ -424,7 +424,7 @@ void WaypointSprite_Load()
 	waypointsprite_crosshairfadedistance = cvar("g_waypointsprite_crosshairfadedistance");
 	waypointsprite_distancefadealpha = cvar_or("g_waypointsprite_distancefadealpha", 1);
 	waypointsprite_distancefadescale = cvar_or("g_waypointsprite_distancefadescale", 1);
-	waypointsprite_distancefadedistance = vlen(mi_max - mi_min) * cvar_or("g_waypointsprite_distancefadedistancemultiplier", 1);
+	waypointsprite_distancefadedistance = waypointsprite_fadedistance * cvar_or("g_waypointsprite_distancefadedistancemultiplier", 1);
 	waypointsprite_alpha = cvar_or("g_waypointsprite_alpha", 1) * (1 - autocvar__menu_alpha);
 
 	if(!waypointsprite_initialized)
