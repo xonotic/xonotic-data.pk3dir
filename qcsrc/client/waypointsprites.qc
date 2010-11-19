@@ -461,6 +461,6 @@ void WaypointSprite_Load()
 			db_put(tempdb, sname, ftos(max(f, stof(db_get(tempdb, sname)))));
 		}
 		search_end(dh);
+		waypointsprite_initialized = true;
 	}
-	waypointsprite_initialized = 1;
 }
