@@ -5,7 +5,6 @@ vector teamradar_size2d; // 2D size
 vector teamradar_extraclip_mins, teamradar_extraclip_maxs; // for non-centered radar display
 float teamradar_size; // 2D scale factor
 float hud_panel_radar_scale; // window size = ...qu
-float hud_panel_radar_nohudhack;
 float v_flipped;
 
 float vlen2d(vector v)
@@ -188,9 +187,6 @@ void teamradar_loadcvars()
 	if(!hud_panel_radar_foreground_alpha) hud_panel_radar_foreground_alpha = 0.8 * panel_fg_alpha;
 	if(!hud_panel_radar_size_x) hud_panel_radar_size_x = 128;
 	if(!hud_panel_radar_size_y) hud_panel_radar_size_y = hud_panel_radar_size_x;
-
-	hud_panel_radar_size_z = 0;
-	hud_panel_radar_nohudhack = 0;
 }
 
 // radar links
