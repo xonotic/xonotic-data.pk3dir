@@ -181,16 +181,33 @@ void SUB_CalcMove_controller_think (void)
 {
 	float movephase;
 	float traveltime;
+	float phasepos;
 	vector delta;
+	vector veloc;
 	if(time < self.animstate_endtime) {
 		delta = self.finaldest - self.origin;
 		traveltime = self.animstate_endtime - self.animstate_starttime;
-		
-		self.owner.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
-		self.nextthink = time;
-	} else {
-		self = self.owner;
-		self.think();
+		movephase = (time - self.animstate_starttime) / traveltime;
+
+		//bprint(ftos(movephase));
+		//bprint("\n");
+
+		// TODO: Don't mess with the velocity, instead compute where
+		// we want to be next tick and compute velocity from that
+
+		veloc = delta * (1/traveltime); // QuakeC doesn't allow vector/float division
+
+		// scale velocity with pi/2 so integrated over time we
+		// still have the original velocity
+		veloc = veloc * 1.5708;
+
+		// scale velocity with sin(phase)
+		phasepos = movephase * 3.1416; // phase * pi
+		phasepos = sin(phasepos);
+		veloc = veloc * phasepos;	
+
+		self.owner.velocity = veloc;
+		self.nextthink = time + 0.1;
 	}
 }
 
@@ -229,14 +246,17 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 	controller.owner = self;
 	controller.origin = self.origin; // starting point
 	controller.finaldest = tdest; // where do we want to end?
-	controller.animstate_starttime = self.ltime;
-	controller.animstate_endtime = self.ltime + traveltime;
+	controller.animstate_starttime = time;
+	controller.animstate_endtime = time + traveltime;
 	controller.think = SUB_CalcMove_controller_think;
-	controller.nextthink = time;
 
+	// let the controller handle the velocity compuation
 	//self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
-
-	//self.nextthink = self.ltime + traveltime;
+	self.nextthink = self.ltime + traveltime;
+	
+	// invoke controller
+	self = controller;
+	self.think();
 }
 
 void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeed, void() func)
