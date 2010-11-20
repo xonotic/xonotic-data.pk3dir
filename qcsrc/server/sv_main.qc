@@ -199,6 +199,8 @@ void StartFrame (void)
 	sv_airspeedlimit_nonqw = cvar("sv_airspeedlimit_nonqw");
 	teamplay = cvar ("teamplay");
 	sys_frametime = cvar("sys_ticrate") * cvar("slowmo");
+	if(sys_frametime <= 0)
+		sys_frametime = 1.0 / 60.0; // somewhat safe fallback
 	sv_doublejump = cvar("sv_doublejump");
 
 	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)

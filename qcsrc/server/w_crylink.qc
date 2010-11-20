@@ -39,6 +39,27 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 	remove (e);
 }
 
+void W_Crylink_CheckLinks(entity e)
+{
+	float i;
+	entity p;
+
+	if(e == world)
+		error("W_Crylink_CheckLinks: entity is world");
+
+	p = e;
+	for(i = 0; i < 1000; ++i)
+	{
+		if(p.queuenext.queueprev != p || p.queueprev.queuenext != p)
+			error("W_Crylink_CheckLinks: queue is inconsistent");
+		p = p.queuenext;
+		if(p == e)
+			break;
+	}
+	if(i >= 1000)
+		error("W_Crylink_CheckLinks: infinite chain");
+}
+
 // adjust towards center
 // returns the origin where they will meet... and the time till the meeting is
 // stored in w_crylink_linkjoin_time.
@@ -53,6 +74,9 @@ vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 	vector targ_origin;
 	float avg_dist, n;
 	entity p;
+
+	// FIXME remove this debug code
+	W_Crylink_CheckLinks(e);
 
 	w_crylink_linkjoin_time = 0;
 
@@ -347,7 +371,7 @@ void W_Crylink_Attack (void)
 			s_z = v_forward_y;
 		}
 		s = s * cvar("g_balance_crylink_primary_spread") * g_weaponspreadfactor;
-		W_SetupProjectileVelocityEx(proj, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_crylink_primary_speed"), 0, 0, 0);
+		W_SetupProjectileVelocityEx(proj, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_crylink_primary_speed"), 0, 0, 0, FALSE);
 		proj.touch = W_Crylink_Touch;
 
 		proj.think = W_Crylink_Fadethink;
@@ -429,7 +453,7 @@ void W_Crylink_Attack2 (void)
 		setorigin (proj, w_shotorg);
 		setsize(proj, '0 0 0', '0 0 0');
 
-		W_SetupProjectileVelocityEx(proj, (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * cvar("g_balance_crylink_secondary_spread") * g_weaponspreadfactor), v_up, cvar("g_balance_crylink_secondary_speed"), 0, 0, 0);
+		W_SetupProjectileVelocityEx(proj, (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * cvar("g_balance_crylink_secondary_spread") * g_weaponspreadfactor), v_up, cvar("g_balance_crylink_secondary_speed"), 0, 0, 0, FALSE);
 		proj.touch = W_Crylink_Touch2;
 		proj.think = W_Crylink_Fadethink;
 		if(counter == (shots - 1) / 2)
@@ -485,7 +509,7 @@ float w_crylink(float req)
 			{
 				W_Crylink_Attack();
 				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_crylink_primary_animtime"), w_ready);
-				if(cvar("g_balance_crylink_primary_joinspeed") != 0 || cvar("g_balance_crylink_primary_jointime") != 0)
+				if(cvar("g_balance_crylink_primary_joinspread") != 0 || cvar("g_balance_crylink_primary_jointime") != 0)
 					self.crylink_waitrelease = 1;
 			}
 		}
@@ -496,7 +520,7 @@ float w_crylink(float req)
 			{
 				W_Crylink_Attack2();
 				weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_crylink_secondary_animtime"), w_ready);
-				if(cvar("g_balance_crylink_secondary_joinspeed") != 0 || cvar("g_balance_crylink_secondary_jointime") != 0)
+				if(cvar("g_balance_crylink_secondary_joinspread") != 0 || cvar("g_balance_crylink_secondary_jointime") != 0)
 					self.crylink_waitrelease = 2;
 			}
 		}
@@ -513,12 +537,12 @@ float w_crylink(float req)
 					
 					if(self.crylink_waitrelease == 1)
 					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspeed"), cvar("g_balance_crylink_primary_jointime"));
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspread") * cvar("g_balance_crylink_primary_speed"), cvar("g_balance_crylink_primary_jointime"));
 						
 					}
 					else
 					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspeed"), cvar("g_balance_crylink_secondary_jointime"));
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspread") * cvar("g_balance_crylink_secondary_speed"), cvar("g_balance_crylink_secondary_jointime"));
 					}
 					
 					linkjoineffect = spawn();

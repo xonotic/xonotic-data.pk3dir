@@ -6,6 +6,8 @@ var float autocvar_cl_gibs_sloppy = 1;
 var float autocvar_cl_casings_ticrate = 0.1;
 var float autocvar_cl_casings_sloppy = 1;
 
+var float autocvar_cl_gentle_damage;
+
 var float autocvar_scoreboard_color_bg_team;
 
 var float autocvar__menu_alpha;

@@ -75,6 +75,7 @@ void W_Nex_Attack (float issecondary)
 
 void spawnfunc_weapon_nex (void); // defined in t_items.qc
 
+.float nex_charge_pool_pauseregen_finished;
 float w_nex(float req)
 {
 	float dt;
@@ -87,6 +88,14 @@ float w_nex(float req)
 	{
 		if(cvar("g_balance_nex_charge") && self.nex_charge < cvar("g_balance_nex_charge_limit"))
 			self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_charge_rate") * frametime / W_TICSPERFRAME);
+
+		if(cvar("g_balance_nex_secondary_charge_pool"))
+		if(self.nex_charge_pool_ammo < 1)
+		{
+			if(self.nex_charge_pool_pauseregen_finished < time)
+				self.nex_charge_pool_ammo = min(1, self.nex_charge_pool_ammo + cvar("g_balance_nex_secondary_charge_pool_regen") * frametime / W_TICSPERFRAME);
+			self.pauseregen_finished = max(self.pauseregen_finished, time + cvar("g_balance_nex_secondary_charge_pool_pause_health_regen"));
+		}
 
 		if (self.BUTTON_ATCK)
 		{
@@ -102,12 +111,29 @@ float w_nex(float req)
 			{
 				self.nex_charge_rottime = time + cvar("g_balance_nex_charge_rot_pause");
 				dt = frametime / W_TICSPERFRAME;
-				if(self.nex_charge < 1)
+
+				if(cvar("g_balance_nex_secondary_charge_pool"))
 				{
-					dt = min(dt, (1 - self.nex_charge) / cvar("g_balance_nex_secondary_charge_rate"));
-					if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+					if(cvar("g_balance_nex_secondary_ammo"))
 					{
-						if(cvar("g_balance_nex_secondary_ammo"))
+						// always deplete if secondary is held
+						self.nex_charge_pool_ammo = max(0, self.nex_charge_pool_ammo - cvar("g_balance_nex_secondary_ammo") * dt);
+
+						dt = min(dt, (1 - self.nex_charge) / cvar("g_balance_nex_secondary_charge_rate"));
+						self.nex_charge_pool_pauseregen_finished = time + cvar("g_balance_nex_secondary_charge_pool_pause_regen");
+						dt = min(dt, self.nex_charge_pool_ammo);
+						dt = max(0, dt);
+
+						self.nex_charge += dt * cvar("g_balance_nex_secondary_charge_rate");
+					}
+				}
+
+				else if(cvar("g_balance_nex_secondary_ammo"))
+				{
+					if(self.nex_charge < 1)
+					{
+						dt = min(dt, (1 - self.nex_charge) / cvar("g_balance_nex_secondary_charge_rate"));
+						if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 						{
 							dt = min(dt, (self.ammo_cells - cvar("g_balance_nex_primary_ammo")) / cvar("g_balance_nex_secondary_ammo"));
 							dt = max(0, dt);
@@ -116,8 +142,8 @@ float w_nex(float req)
 								self.ammo_cells = max(cvar("g_balance_nex_secondary_ammo"), self.ammo_cells - cvar("g_balance_nex_secondary_ammo") * dt);
 							}
 						}
+						self.nex_charge += dt * cvar("g_balance_nex_secondary_charge_rate");
 					}
-					self.nex_charge += dt * cvar("g_balance_nex_secondary_charge_rate");
 				}
 			}
 			else if(cvar("g_balance_nex_secondary"))
@@ -146,11 +172,7 @@ float w_nex(float req)
 	else if (req == WR_CHECKAMMO1)
 		return self.ammo_cells >= cvar("g_balance_nex_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
-	{
-		if(cvar("g_balance_nex_secondary_charge"))
-			return self.ammo_cells >= cvar("g_balance_nex_primary_ammo");
-		return self.ammo_cells >= cvar("g_balance_nex_secondary_ammo");
-	}
+		return self.ammo_cells >= cvar("g_balance_nex_primary_ammo"); // don't allow charging if we don't have enough ammo
 	return TRUE;
 };
 #endif

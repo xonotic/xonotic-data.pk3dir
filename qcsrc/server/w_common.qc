@@ -310,6 +310,26 @@ void W_BallisticBullet_Touch (void)
 	PROJECTILE_TOUCH;
 	W_BallisticBullet_Hit ();
 
+	// if we hit "weapclip", bail out
+	//
+	// rationale of this check:
+	//
+	// any shader that is solid, nodraw AND trans is meant to clip weapon
+	// shots and players, but has no other effect!
+	//
+	// if it is not trans, it is caulk and should not have this side effect
+	//
+	// matching shaders:
+	//   common/weapclip (intended)
+	//   common/noimpact (is supposed to eat projectiles, but is erased farther above)
+	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
+	if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID)
+	if not(trace_dphitcontents & DPCONTENTS_OPAQUE)
+	{
+		remove(self);
+		return;
+	}
+
 	density = other.ballistics_density;
 	if(density == 0)
 		density = 1;
@@ -341,6 +361,9 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 {
 	float lag, dt, savetime, density;
 	entity pl, oldself;
+	float antilagging;
+
+	antilagging = (cvar("g_antilag_bullets") && (pSpeed >= cvar("g_antilag_bullets")));
 
 	entity proj;
 	proj = spawn();
@@ -356,7 +379,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		proj.movetype = MOVETYPE_FLY;
 	proj.think = SUB_Remove;
 	proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
-	W_SetupProjectileVelocityEx(proj, dir, v_up, pSpeed, 0, 0, spread);
+	W_SetupProjectileVelocityEx(proj, dir, v_up, pSpeed, 0, 0, spread, antilagging);
 	proj.angles = vectoangles(proj.velocity);
 	proj.dmg_radius = cvar("g_ballistics_materialconstant") / bulletconstant;
 	// so: bulletconstant = bullet mass / area of bullet circle
@@ -373,8 +396,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 
-	if(cvar("g_antilag_bullets"))
-	if(pSpeed >= cvar("g_antilag_bullets"))
+	if(antilagging)
 	{
 		float eff;
 
