@@ -177,10 +177,28 @@ void SUB_CalcMoveDone (void)
 		self.think1 ();
 }
 
+void SUB_CalcMove_controller_think (void)
+{
+	float movephase;
+	float traveltime;
+	vector delta;
+	if(time < self.animstate_endtime) {
+		delta = self.finaldest - self.origin;
+		traveltime = self.animstate_endtime - self.animstate_starttime;
+		
+		self.owner.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
+		self.nextthink = time;
+	} else {
+		self = self.owner;
+		self.think();
+	}
+}
+
 void SUB_CalcMove (vector tdest, float tspeed, void() func)
 {
 	vector	delta;
 	float	traveltime;
+	entity controller;
 
 	if (!tspeed)
 		objerror ("No speed is defined!");
@@ -206,9 +224,19 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 		return;
 	}
 
-	self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
+	controller = spawn();
+	controller.classname = "SUB_CalcMove_controller";
+	controller.owner = self;
+	controller.origin = self.origin; // starting point
+	controller.finaldest = tdest; // where do we want to end?
+	controller.animstate_starttime = self.ltime;
+	controller.animstate_endtime = self.ltime + traveltime;
+	controller.think = SUB_CalcMove_controller_think;
+	controller.nextthink = time;
 
-	self.nextthink = self.ltime + traveltime;
+	//self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
+
+	//self.nextthink = self.ltime + traveltime;
 }
 
 void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeed, void() func)
