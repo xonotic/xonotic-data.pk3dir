@@ -45,7 +45,8 @@ void ka_SpawnBall() // self = the ball
 	//self.reset = ka_Reset;
 	self.owner = world;
 	
-	WaypointSprite_AttachCarrier("ka-ball", self);
+	//WaypointSprite_AttachCarrier("ka-ball", self);
+	//WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE);
 	//WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 0 0');
 	// wtf radar doesn't work when not in a team environment?
 }
@@ -62,6 +63,7 @@ void ka_RespawnBall()
 		//self.touch = ka_TouchEvent;
 		self.think = ka_RespawnBall;
 		self.nextthink = time + cvar("g_keepawayball_respawntime");
+		WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE);
 	}
 	else
 	{
@@ -113,10 +115,10 @@ void ka_TouchEvent()
 	
 	PlayerScore_Add(other, SP_KEEPAWAY_PICKUPS, 1);
 
-	WaypointSprite_Kill(self.waypointsprite_attachedforcarrier);
 	WaypointSprite_AttachCarrier("ka-ballcarrier", other);
-	//WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-	//WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 0 0');
+	WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+	WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 0 0');
+	WaypointSprite_Kill(self.waypointsprite_attachedforcarrier);
 }
 
 void ka_DropEvent(entity plyr) 
@@ -148,8 +150,11 @@ void ka_DropEvent(entity plyr)
 	PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1);
 	
 	// todo
+	WaypointSprite_Spawn("ka-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, FALSE);
+	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
-	WaypointSprite_AttachCarrier("ka-ball", ball);
+	//WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
+	//WaypointSprite_AttachCarrier("ka-ball", ball);
 	//WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	//WaypointSprite_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 	//WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);	
