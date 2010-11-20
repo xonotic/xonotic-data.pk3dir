@@ -1,11 +1,10 @@
 void ka_SpawnBall(void);
-void ka_TouchEvent(entity);
+void ka_TouchEvent(void);
 void ka_RespawnBall(void);
+void ka_DropEvent(entity);
 
 void ka_Initialize()
 {
-	print("^4ka_Initialize was just called!\n");
-
 	if(!g_keepaway)
 		return;
 		
@@ -46,9 +45,9 @@ void ka_SpawnBall() // self = the ball
 	//self.reset = ka_Reset;
 	self.owner = world;
 	
-	// todo: Waypoints and radar
-	WaypointSprite_AttachCarrier("nb-ball", self);
-	//bprint("^4ka_SpawnBall was just called!\n");
+	WaypointSprite_AttachCarrier("ka-ball", self);
+	//WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 0 0');
+	// wtf radar doesn't work when not in a team environment?
 }
 
 void ka_RespawnBall()
@@ -70,10 +69,9 @@ void ka_RespawnBall()
 		self.think = ka_RespawnBall;
 		self.nextthink = time;
 	}
-	//bprint("^4ka_RespawnBall was just called!\n");
 }
 
-void ka_TouchEvent(entity plyr)
+void ka_TouchEvent()
 {
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
@@ -81,8 +79,6 @@ void ka_TouchEvent(entity plyr)
 		self.nextthink = time;
 		return;
 	}
-	if(!plyr) 
-		return;
 	if(!self) 
 		return;
 	if(other.classname != "player" || other.health < 1)
@@ -107,8 +103,8 @@ void ka_TouchEvent(entity plyr)
 
 	self.glow_color = cvar("g_keepawayball_trail_color");
 	self.glow_trail = TRUE;
-	plyr.effects |= 8;
-	plyr.alpha = 0.6;
+	other.effects |= 8;
+	other.alpha = 0.6;
 
 	bprint(other.netname, "^7 has picked up the ball!\n");
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
@@ -117,64 +113,63 @@ void ka_TouchEvent(entity plyr)
 	
 	PlayerScore_Add(other, SP_KEEPAWAY_PICKUPS, 1);
 
-	// todo: Waypoints and radar
+	WaypointSprite_Kill(self.waypointsprite_attachedforcarrier);
+	WaypointSprite_AttachCarrier("ka-ballcarrier", other);
+	//WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+	//WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 0 0');
+}
+
+void ka_DropEvent(entity plyr) 
+{
+	entity ball;
+	ball = plyr.kaballcarried;
+
+	if(!ball) { return; }
+	
+	setattachment(ball, world, "");
+	ball.movetype = MOVETYPE_BOUNCE;
+	ball.solid = SOLID_TRIGGER;
+	ball.wait = time + 1;
+	ball.ctf_droptime = time;
+	ball.think = ka_SpawnBall;
+	ball.nextthink = time + cvar("g_keepawayball_respawntime");
+	ball.touch = ka_TouchEvent;
+	plyr.effects = EF_LOWPRECISION;
+	plyr.alpha = 1.0;
+	ball.alpha = 1.0;
+	setorigin(ball, plyr.origin + '0 0 10');
+	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
+
+	bprint(plyr.netname, "^7 has dropped the ball!\n");
+	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
+	WriteString(MSG_BROADCAST, strcat("\n\n", plyr.netname, "^7 has dropped the ball!\n"));
+	sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NORM);	
+	
+	PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1);
+	
+	// todo
+	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
+	WaypointSprite_AttachCarrier("ka-ball", ball);
+	//WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+	//WaypointSprite_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
+	//WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);	
+
+	ball.owner.kaballcarried = world;
+	ball.owner = world;
 }
 
 MUTATOR_HOOKFUNCTION(ka_RemovePlayer)
 {
-	if(self.kaballcarried) {
-		entity ball;
-		ball = self.kaballcarried;
-
-		setattachment(ball, world, "");
-		ball.movetype = MOVETYPE_BOUNCE;
-		ball.solid = SOLID_TRIGGER;
-		ball.wait = time + 1;
-		ball.ctf_droptime = time;
-		ball.think = ka_SpawnBall;
-		ball.nextthink = time + cvar("g_keepawayball_respawntime");
-		ball.touch = ka_TouchEvent;
-		self.effects = EF_LOWPRECISION;
-		self.alpha = 1.0;
-		ball.alpha = 1.0;
-		setorigin(ball, self.origin + '0 0 10');
-		ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
-	
-		bprint(self.netname, "^7 has dropped the ball!\n");
-		WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
-		WriteString(MSG_BROADCAST, strcat("\n\n", self.netname, "^7 has dropped the ball!\n"));
-		sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NORM);	
-		
-		PlayerScore_Add(self, SP_KEEPAWAY_DROPS, 1);
-		
-		// todo
-		WaypointSprite_AttachCarrier("nb-ball", ball);
-		WaypointSprite_Kill(self.waypointsprite_attachedforcarrier);
-		
-		ball.owner.kaballcarried = world;
-		ball.owner = world;
-	}
-	
-	if((frag_attacker || frag_target) && !(frag_attacker == frag_target)) {
-		if(frag_target.kaballcarried) // get amount of times killing carrier
-			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_CARRIERKILLS, 1);
-		else if not(frag_attacker.kaballcarried)
-			if(cvar("g_keepaway_noncarrier_warn"))
-				centerprint_atprio(frag_attacker, (CENTERPRIO_SPAM + 5), "Killing people while you don't have the ball gives no points!");
-	
-		if(frag_attacker.kaballcarried) // get kills as carrier
-			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_SCORE, 1);
-	}
+	if(self.kaballcarried) { ka_DropEvent(self); }
 	return 1;
 }
-/*
+
 MUTATOR_HOOKFUNCTION(ka_Scoring)
 {
 	if not(frag_attacker == frag_target)
 	{
 		if(frag_target.kaballcarried) { // get amount of times killing carrier
 			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_CARRIERKILLS, 1);
-			//ka_RemovePlayer();
 		}
 		else if not(frag_attacker.kaballcarried)
 			if(cvar("g_keepaway_noncarrier_warn"))
@@ -183,73 +178,23 @@ MUTATOR_HOOKFUNCTION(ka_Scoring)
 		if(frag_attacker.kaballcarried) // get kills as carrier
 			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_SCORE, 1);
 	}
+
+	if(self.kaballcarried) { ka_DropEvent(self); }
 	return 1;
 }
 
-
-MUTATOR_HOOKFUNCTION(ka_PlayerDies)
+MUTATOR_HOOKFUNCTION(ka_GiveFragsForKill)
 {
-	float i;
-	entity e;
-
-	float temp_tag_players_count;
-	temp_tag_players_count = tag_players_count;
-
-	if(frag_target.tagcolor == frag_target.tagcolor_original) // if this is the first time we die... (our tagcolor remained unchanged)
-	{
-		for(i = 0; i < temp_tag_players_count; ++i) // check other players...
-		{
-			e = tag_players[i];
-			if(e == world) // empty slot, skip to next
-			{
-				if(temp_tag_players_count < TAGCOLOR_MAX - 1) // just in case
-					++temp_tag_players_count;
-				continue;
-			}
-
-			if(e.tagcolor == frag_target.tagcolor_original) // and see if they have our original tag color
-			{
-				tag_GetFragAttackers_ColorOwner();
-				centerprint(e, strcat("^1Your master ^7", frag_target.netname, "^1 was tagged by ^7", frag_attacker.netname, " ^1with ^7", color_owner_red, " ^1color.\n"));
-				e.tagcolor = frag_attacker.tagcolor; // if so, remove it, our tag color has now "died out" from this round and we can not win anymore. The attacker will "summon" all of our previously fragged targets, and also us.
-				setcolor(e, 16 * e.tagcolor + e.tagcolor);
-			}
-		}
-	}
-	else
-	{
-		frag_target.tagcolor = frag_attacker.tagcolor;
-		setcolor(frag_target, 16 * frag_target.tagcolor + frag_target.tagcolor);
-	}
-
-	tag_GetFragAttackers_ColorOwner();
-
-	if(color_owner_self)
-		color_owner_green = "^2your own";
-	centerprint(frag_attacker, strcat("^2You tagged ^7", frag_target.netname, " ^2with ^7", color_owner_green, " ^2color.\n"));
-
-	if(color_owner_self)
-		color_owner_red = "^1their own";
-	centerprint(frag_target, strcat("^1You were tagged by ^7", frag_attacker.netname, " ^1with ^7", color_owner_red, " ^1color.\n"));
-	bprint("^7", frag_target.netname, "^1 was tagged by ^7", frag_attacker.netname, " ^1with ^7", color_owner_red, " ^1color.\n");
-
-	frag_target.health = cvar("g_balance_health_start"); // "respawn" the player :P
-
-	tag_CheckWinner();
-
+	frag_score = 0; // no frags counted in keepaway
 	return 1;
 }
-*/
-
 
 MUTATOR_DEFINITION(gamemode_keepaway)
 {
 	MUTATOR_HOOK(MakePlayerObserver, ka_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, ka_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, ka_RemovePlayer, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(PlayerSpawn, ka_PlayerSpawn, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(GiveFragsForKill, ka_GiveFragsForKill, CBC_ORDER_FIRST);
-	//MUTATOR_HOOK(PlayerPreThink, ka_PlayerPreThink, CBC_ORDER_FIRST);
+	MUTATOR_HOOK(PlayerDies, ka_Scoring, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GiveFragsForKill, ka_GiveFragsForKill, CBC_ORDER_FIRST);
 
 	MUTATOR_ONADD
 	{

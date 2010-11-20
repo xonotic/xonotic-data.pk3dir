@@ -195,11 +195,10 @@ void ScoreRules_nexball(float teams)
 #define SP_KEEPAWAY_SCORE 7
 void ScoreRules_keepaway()
 {
-	print("^4ScoreRules_keepaway was just called!\n");
-	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, FALSE);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_SCORE, 		 "score", 	 SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,      "pickups",  0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS, "bckills",  0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_DROPS,        "drops",    SFL_LOWER_IS_BETTER);
+	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, FALSE); // SFL_SORT_PRIO_PRIMARY
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_SCORE,		"score",		SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,		"pickups",		0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,	"bckills",		0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_DROPS,		"drops",		SFL_LOWER_IS_BETTER);
 	ScoreRules_basics_end();
 }
