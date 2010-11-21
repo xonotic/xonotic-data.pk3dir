@@ -33,6 +33,8 @@ void KeyBinder_Bind_Edit(entity btn, entity me);
 
 #ifdef IMPLEMENTATION
 
+string KEY_NOT_BOUND_COMMAND "// not bound";
+
 #define MAX_KEYS_PER_FUNCTION 2
 #define MAX_KEYBINDS 256
 string Xonotic_KeyBinds_Functions[MAX_KEYBINDS];
@@ -130,7 +132,8 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 		{
 			k = stof(argv(j));
 			if(k != -1)
-				localcmd("\nunbind \"", keynumtostring(k), "\"\n");
+				//localcmd("\nunbind \"", keynumtostring(k), "\"\n");
+				localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
 		}
 	}
 	localcmd("\nbind \"", keynumtostring(key), "\" \"", func, "\"\n");
@@ -191,7 +194,8 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	{
 		k = stof(argv(j));
 		if(k != -1)
-			localcmd("\nunbind \"", keynumtostring(k), "\"\n");
+			//localcmd("\nunbind \"", keynumtostring(k), "\"\n");
+			localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
 	}
 
 }
