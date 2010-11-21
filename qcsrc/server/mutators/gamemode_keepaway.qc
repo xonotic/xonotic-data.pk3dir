@@ -2,7 +2,6 @@ void ka_SpawnBall(void);
 void ka_TouchEvent(void);
 void ka_RespawnBall(void);
 void ka_DropEvent(entity);
-void ka_UpdateState(entity);
 
 void ka_Initialize()
 {
@@ -46,11 +45,9 @@ void ka_SpawnBall() // self = the ball
 	self.flags = FL_ITEM;
 	//self.reset = ka_Reset;
 	self.owner = world;
-	
-	//WaypointSprite_AttachCarrier("ka-ball", self);
+
 	WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE);
 	WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 1');
-	// wtf radar doesn't work when not in a team environment?
 }
 
 void ka_RespawnBall()
@@ -104,10 +101,7 @@ void ka_TouchEvent()
 	other.effects |= 8;
 	other.alpha = 0.6;
 
-	ka_UpdateState(other);
-
 	bprint(other.netname, "^7 has picked up the ball!\n");
-	if(other.items & IT_KEY1) { bprint(other.netname, "^7 has the ball in their inventory.\n"); }
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
 	WriteString(MSG_BROADCAST, strcat("\n\n", other.netname, "^7 has picked up the ball!\n"));
 	sound(self.owner, CHAN_AUTO, "keepaway/pickedup.wav", VOL_BASE, ATTN_NONE);
@@ -144,10 +138,7 @@ void ka_DropEvent(entity plyr)
 	ball.owner.kaballcarried = world;
 	ball.owner = world;
 	
-	ka_UpdateState(plyr);
-	
 	bprint(plyr.netname, "^7 has dropped the ball!\n");
-	if(plyr.items & IT_KEY1) { bprint(plyr.netname, "^7 has the ball in their inventory.\n"); }
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
 	WriteString(MSG_BROADCAST, strcat("\n\n", plyr.netname, "^7 has dropped the ball!\n"));
 	sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	
@@ -159,13 +150,6 @@ void ka_DropEvent(entity plyr)
 	WaypointSprite_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 1');
 	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);	
 	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
-}
-
-void ka_UpdateState(entity plyr)
-{
-	if(plyr.kaballcarried) {
-		plyr.items |= IT_KEY1; 
-	}
 }
 
 MUTATOR_HOOKFUNCTION(ka_RemovePlayer)
@@ -191,8 +175,6 @@ MUTATOR_HOOKFUNCTION(ka_Scoring)
 			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_SCORE, 1);
 	}
 
-	if(self.items & IT_KEY1) { bprint(self.netname, "^7 has the ball in their inventory.\n"); }
-
 	if(self.kaballcarried) { ka_DropEvent(self); }
 	return 1;
 }
@@ -205,18 +187,13 @@ MUTATOR_HOOKFUNCTION(ka_GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 {
+	self.items &~= IT_KEY1;
+
 	if(self.kaballcarried) {
 		self.items |= IT_KEY1; 
 	}
-	//if(self.items & IT_KEY1) { bprint(self.netname, "^7 has the ball in their inventory.\n"); }
 	return 1;
 }
-
-//MUTATOR_HOOKFUNCTION(ka_SpectateCopy)
-//{
-//	self.items = other.items;
-//	return 1;
-//}
 
 MUTATOR_DEFINITION(gamemode_keepaway)
 {
@@ -225,7 +202,6 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 	MUTATOR_HOOK(PlayerDies, ka_Scoring, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ka_GiveFragsForKill, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPreThink, ka_PlayerPreThink, CBC_ORDER_FIRST);
-	//MUTATOR_HOOK(SpectateCopy, ka_SpectateCopy, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
