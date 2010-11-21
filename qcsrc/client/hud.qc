@@ -5219,8 +5219,6 @@ void HUD_Main (void)
 	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
 		hud_fade_alpha = 1;
 
-	hud_fontsize = HUD_GetFontsize("hud_fontsize");
-
 	if(!autocvar__hud_configure && !hud_fade_alpha)
 		return;
 
