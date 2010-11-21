@@ -267,6 +267,7 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 	// invoke controller
 	self = controller;
 	self.think();
+	self = self.owner;
 }
 
 void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeed, void() func)
