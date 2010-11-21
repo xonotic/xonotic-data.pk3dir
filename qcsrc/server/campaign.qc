@@ -188,7 +188,7 @@ void CampaignPreIntermission()
 
 	if(won == 1 && lost == 0 && checkrules_equality == 0 && cheatcount_total == 0)
 	{
-		if(cvar("timelimit") != 0  &&  time > cvar("timelimit") * 60) // checks if the timelimit has expired.
+		if(cvar("timelimit") != 0 && cvar("fraglimit") != 0 && time > cvar("timelimit") * 60) // checks if the timelimit has expired.
 		{
 			campaign_won = 0;
 			bprint("Time's up! The current level has been LOST.\n");
@@ -196,12 +196,12 @@ void CampaignPreIntermission()
 		}
 		else
 		{
-		campaign_won = 1;
-		bprint("The current level has been WON.\n");
-		// sound!	
+			campaign_won = 1;
+			bprint("The current level has been WON.\n");
+			// sound!
 		}
 	}
-	else if(cvar("timelimit") != 0  &&  time > cvar("timelimit") * 60)
+	else if(cvar("timelimit") != 0 && time > cvar("timelimit") * 60)
 	{
 		campaign_won = 0;
 		bprint("Time's up! The current level has been LOST.\n");
