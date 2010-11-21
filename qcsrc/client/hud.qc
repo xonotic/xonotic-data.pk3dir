@@ -3617,7 +3617,7 @@ void HUD_Score(void)
 		drawstring_aspect(pos, timer, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_font;
 	} else if (!teamplay) { // non-teamgames
-		if (spectatee_status == -1 || cvar("hud_panel_score_rankings"))
+		if ((spectatee_status == -1 && !autocvar__hud_configure) || cvar("hud_panel_score_rankings"))
 		{
 #define SCOREPANEL_MAX_ENTRIES 6
 #define SCOREPANEL_ASPECTRATIO 2
@@ -3629,11 +3629,41 @@ void HUD_Score(void)
 			vector rgb;
 			rgb = '1 1 1';
 
+			float name_size = mySize_x*0.75;
+			float i, me_printed;
+			string s;
+			if (autocvar__hud_configure)
+			{
+				score = 10 + SCOREPANEL_MAX_ENTRIES * 3;
+				for (i=0; i<entries; ++i)
+				{
+					//simulate my score is lower than all displayed players,
+					//so that I don't appear at all showing pure rankings.
+					//This is to better show the difference between the 2 ranking views
+					if (i == entries-1 && cvar("hud_panel_score_rankings") == 1)
+					{
+						rgb = '1 1 0';
+						drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, 0.3 * panel_fg_alpha, DRAWFLAG_NORMAL);
+						s = GetPlayerName(pl.sv_entnum);
+						score = 7;
+					}
+					else
+					{
+						s = strcat("Player", ftos(i+1));
+						score -= 3;
+					}
+
+					s = textShortenToWidth(s, name_size, fontsize, stringwidth_colors);
+					drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawstring(pos + eX * mySize_x*0.79, ftos(score), fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					pos_y += height;
+				}
+				return;
+			}
+
 			if (!scoreboard_fade_alpha) // the scoreboard too calls HUD_UpdatePlayerTeams
 				HUD_UpdatePlayerTeams();
 
-			float name_size = mySize_x*0.75;
-			float i, me_printed;
 			for (pl = players.sort_next, i=0; pl && i<entries; pl = pl.sort_next, ++i)
 			{
 				if (pl.team == COLOR_SPECTATOR)
@@ -3660,7 +3690,7 @@ void HUD_Score(void)
 					me_printed = 1;
 					drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, 0.3 * panel_fg_alpha, DRAWFLAG_NORMAL);
 				}
-				string s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
+				s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
 				drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawstring(pos + eX * mySize_x*0.79, ftos(pl.(scores[ps_primary])), fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 				pos_y += height;
