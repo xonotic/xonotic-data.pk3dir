@@ -84,7 +84,7 @@ void ka_TouchEvent()
 	if(self.wait > time) { return; }
 
 	self.owner = other;
-	other.kaballcarried = self;
+	other.ballcarried = self;
 	setattachment(self, other, "");
 	setorigin(self, BALL_ATTACHORG);
 	
@@ -118,7 +118,7 @@ void ka_TouchEvent()
 void ka_DropEvent(entity plyr) 
 {
 	entity ball;
-	ball = plyr.kaballcarried;
+	ball = plyr.ballcarried;
 
 	if(!ball) { return; }
 	
@@ -135,7 +135,7 @@ void ka_DropEvent(entity plyr)
 	ball.alpha = 1.0;
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
-	ball.owner.kaballcarried = world;
+	ball.owner.ballcarried = world;
 	ball.owner = world;
 	
 	bprint(plyr.netname, "^7 has dropped the ball!\n");
@@ -154,7 +154,7 @@ void ka_DropEvent(entity plyr)
 
 MUTATOR_HOOKFUNCTION(ka_RemovePlayer)
 {
-	if(self.kaballcarried) { ka_DropEvent(self); }
+	if(self.ballcarried) { ka_DropEvent(self); }
 	return 1;
 }
 
@@ -162,20 +162,20 @@ MUTATOR_HOOKFUNCTION(ka_Scoring)
 {
 	if((frag_attacker != frag_target) && (frag_attacker.classname == "player"))
 	{
-		if(frag_target.kaballcarried) { // get amount of times killing carrier
+		if(frag_target.ballcarried) { // get amount of times killing carrier
 			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_CARRIERKILLS, 1);
 			if(cvar("g_keepaway_bckillscore"))
 				PlayerScore_Add(frag_attacker, SP_KEEPAWAY_SCORE, 1);
 		}
-		else if(!frag_attacker.kaballcarried)
+		else if(!frag_attacker.ballcarried)
 			if(cvar("g_keepaway_noncarrier_warn"))
 				centerprint_atprio(frag_attacker, (CENTERPRIO_SPAM + 5), "Killing people while you don't have the ball gives no points!");
 
-		if(frag_attacker.kaballcarried) // get kills as carrier
+		if(frag_attacker.ballcarried) // get kills as carrier
 			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_SCORE, 1);
 	}
 
-	if(self.kaballcarried) { ka_DropEvent(self); }
+	if(self.ballcarried) { ka_DropEvent(self); }
 	return 1;
 }
 
@@ -189,7 +189,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 {
 	self.items &~= IT_KEY1;
 
-	if(self.kaballcarried) {
+	if(self.ballcarried) {
 		self.items |= IT_KEY1; 
 	}
 	return 1;

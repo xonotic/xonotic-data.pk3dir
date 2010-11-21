@@ -606,7 +606,7 @@ void PutObserverInServer (void)
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
 
-	if(self.ballcarried)
+	if(self.ballcarried && g_nexball)
 		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
 
 	WaypointSprite_PlayerDead();
@@ -1748,7 +1748,7 @@ void ClientDisconnect (void)
 
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
-	if(self.ballcarried)
+	if(self.ballcarried && g_nexball)
 		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
 
 	// Here, everything has been done that requires this player to be a client.

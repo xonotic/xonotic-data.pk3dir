@@ -620,7 +620,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			else
 				DropFlag(self.flagcarried, world, attacker);
 		}
-		if(self.ballcarried)
+		if(self.ballcarried && g_nexball)
 			DropBall(self.ballcarried, self.origin, self.velocity);
 		Portal_ClearAllLater(self);
 		// clear waypoints

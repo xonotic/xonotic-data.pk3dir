@@ -554,14 +554,10 @@ void target_voicescript_clear(entity pl);
 .string target4;
 .float trigger_reverse;
 
-// Nexball
-.entity ballcarried;
+// Nexball 
+.entity ballcarried; // Also used for keepaway
 .float metertime;
 float g_nexball_meter_period;
-
-// Keepaway
-
-.entity kaballcarried;
 
 void SUB_DontUseTargets();
 void SUB_UseTargets();

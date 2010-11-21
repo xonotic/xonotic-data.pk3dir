@@ -213,7 +213,7 @@ void SV_ParseClientCommand(string s) {
 		if(self.classname == "player" && cvar("sv_spectate") == 1) {
 			if(self.flagcarried)
 				DropFlag(self.flagcarried, world, world);
-			if(self.ballcarried)
+			if(self.ballcarried && g_nexball)
 				DropBall(self.ballcarried, self.origin, self.velocity);
 			WaypointSprite_PlayerDead();
 			self.classname = "observer";
