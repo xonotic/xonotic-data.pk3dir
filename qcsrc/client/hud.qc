@@ -3446,8 +3446,7 @@ void HUD_Radar(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	local float color1, color2; // color already declared as a global in hud.qc
-	local vector rgb;
+	local float color2;
 	local entity tm;
 	float scale2d, normalsize, bigsize;
 	float f;
@@ -3526,9 +3525,6 @@ void HUD_Radar(void)
 	teamradar_origin3d_in_texcoord = teamradar_3dcoord_to_texcoord(
 		  f * (mi_min + mi_max) * 0.5
 		+ (1 - f) * view_origin);
-
-	color1 = GetPlayerColor(player_localentnum-1);
-	rgb = GetTeamRGB(color1);
 
 	drawsetcliparea(
 		pos_x,
