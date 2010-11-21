@@ -4315,6 +4315,19 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	}
 }
 
+// Keepaway HUD mod icon
+void HUD_Mod_Keepaway(vector pos, vector mySize)
+{
+	float stat_items;
+	stat_items = getstati(STAT_ITEMS);
+
+	mod_active = 1;
+
+	if(stat_items & IT_KEY1)
+		drawpic_aspect_skin(pos, "nexball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
+
 // Nexball HUD mod icon
 void HUD_Mod_NexBall(vector pos, vector mySize)
 {
@@ -4515,7 +4528,7 @@ void HUD_ModIcons(void)
 	if(!autocvar_hud_panel_modicons && !autocvar__hud_configure)
 		return;
 
-	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && !autocvar__hud_configure)
+	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && gametype != GAME_KEEPAWAY && !autocvar__hud_configure)
 		return;
 
 	active_panel = HUD_PANEL_MODICONS;
@@ -4554,6 +4567,8 @@ void HUD_ModIcons(void)
 		HUD_Mod_Race(pos, mySize);
 	else if(gametype == GAME_CA)
 		HUD_Mod_CA(pos, mySize);
+	else if(gametype == GAME_KEEPAWAY)
+		HUD_Mod_Keepaway(pos, mySize);
 }
 
 // Draw pressed keys (#11)
