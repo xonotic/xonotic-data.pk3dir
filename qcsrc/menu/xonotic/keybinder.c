@@ -33,7 +33,7 @@ void KeyBinder_Bind_Edit(entity btn, entity me);
 
 #ifdef IMPLEMENTATION
 
-string KEY_NOT_BOUND_COMMAND "// not bound";
+string KEY_NOT_BOUND_COMMAND = "// not bound";
 
 #define MAX_KEYS_PER_FUNCTION 2
 #define MAX_KEYBINDS 256
