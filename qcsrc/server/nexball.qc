@@ -80,8 +80,7 @@ void ball_restart (void)
 void nexball_setstatus (void)
 {
 	local entity oldself;
-	if (!g_nexball)
-		return;
+	self.items &~= IT_KEY1;
 	if (self.ballcarried)
 	{
 		if (self.ballcarried.teamtime && (self.ballcarried.teamtime < time))

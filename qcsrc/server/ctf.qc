@@ -1058,42 +1058,40 @@ void ctf_setstatus()
 	self.items &~= IT_BLUE_FLAG_LOST;
 	self.items &~= IT_CTF_SHIELDED;
 
-	if (g_ctf) {
-		local entity flag;
-		float redflags, blueflags;
+	local entity flag;
+	float redflags, blueflags;
 
-		if(self.ctf_captureshielded)
-			self.items |= IT_CTF_SHIELDED;
+	if(self.ctf_captureshielded)
+		self.items |= IT_CTF_SHIELDED;
 
-		redflags = 0;
-		blueflags = 0;
+	redflags = 0;
+	blueflags = 0;
 
-		for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
+	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
+	{
+		if(flag.items & IT_KEY2) // blue
+			++redflags;
+		else if(flag.items & IT_KEY1) // red
+			++blueflags;
+	}
+
+	// blinking magic: if there is more than one flag, show one of these in a clever way
+	if(redflags)
+		redflags = mod(floor(time * redflags * 0.75), redflags);
+	if(blueflags)
+		blueflags = mod(floor(time * blueflags * 0.75), blueflags);
+
+	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
+	{
+		if(flag.items & IT_KEY2) // blue
 		{
-			if(flag.items & IT_KEY2) // blue
-				++redflags;
-			else if(flag.items & IT_KEY1) // red
-				++blueflags;
+			if(--redflags == -1) // happens exactly once (redflags is in 0..count-1, and will --'ed count times)
+				ctf_setstatus2(flag, IT_RED_FLAG_TAKEN);
 		}
-
-		// blinking magic: if there is more than one flag, show one of these in a clever way
-		if(redflags)
-			redflags = mod(floor(time * redflags * 0.75), redflags);
-		if(blueflags)
-			blueflags = mod(floor(time * blueflags * 0.75), blueflags);
-
-		for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
+		else if(flag.items & IT_KEY1) // red
 		{
-			if(flag.items & IT_KEY2) // blue
-			{
-				if(--redflags == -1) // happens exactly once (redflags is in 0..count-1, and will --'ed count times)
-					ctf_setstatus2(flag, IT_RED_FLAG_TAKEN);
-			}
-			else if(flag.items & IT_KEY1) // red
-			{
-				if(--blueflags == -1) // happens exactly once
-					ctf_setstatus2(flag, IT_BLUE_FLAG_TAKEN);
-			}
+			if(--blueflags == -1) // happens exactly once
+				ctf_setstatus2(flag, IT_BLUE_FLAG_TAKEN);
 		}
 	}
 };
