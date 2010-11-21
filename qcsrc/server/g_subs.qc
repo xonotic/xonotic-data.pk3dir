@@ -248,6 +248,15 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 		return;
 	}
 
+	// the controller only thinks every 0.1 seconds, so very short
+	// animations should just use the traditional movement
+	if (traveltime < 0.3)
+	{
+		self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
+		self.nextthink = self.ltime + traveltime;
+		return;
+	}
+
 	controller = spawn();
 	controller.classname = "SUB_CalcMove_controller";
 	controller.owner = self;
@@ -259,8 +268,7 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 	controller.think = SUB_CalcMove_controller_think;
 	controller.think1 = self.think;
 
-	// let the controller handle the velocity compuation
-	//self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
+	// the thinking is now done by the controller
 	self.think = SUB_Null;
 	self.nextthink = self.ltime + traveltime;
 	
