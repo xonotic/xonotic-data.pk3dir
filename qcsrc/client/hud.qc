@@ -5117,9 +5117,7 @@ float acc_avg;
 void HUD_ShowAcceleration(void)
 {
 	float acceleration, sz, scale, alpha, f;
-	vector pos, top, rgb;
-	top_x = vid_conwidth/2;
-	top_y = 0;
+	vector pos, rgb;
 
 	f = time - acc_prevtime;
 	if(cvar("cl_showacceleration_z"))
@@ -5135,8 +5133,6 @@ void HUD_ShowAcceleration(void)
 	if (acceleration == 0)
 		return;
 
-	pos = top - sz/2 * eY + (cvar("cl_showacceleration_position") * vid_conheight) * eY;
-
 	sz = cvar("cl_showacceleration_size");
 	scale = cvar("cl_showacceleration_scale");
 	alpha = cvar("cl_showacceleration_alpha");
@@ -5149,6 +5145,8 @@ void HUD_ShowAcceleration(void)
 			rgb = '.5 1 .5' - '.5 0 .5' * bound(0, +acceleration * 0.2, 1);
 	}
 
+	pos_x = vid_conwidth/2;
+	pos_y = cvar("cl_showacceleration_position") * vid_conheight - sz/2;
 	if (acceleration > 0)
 		HUD_Panel_DrawProgressBar(pos, 0, acceleration * scale * '40 0 0' + sz * eY, rgb, alpha * autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
 	else
