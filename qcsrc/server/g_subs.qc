@@ -179,13 +179,14 @@ void SUB_CalcMoveDone (void)
 
 void SUB_CalcMove_controller_think (void)
 {
+	entity oldself;
 	float movephase;
 	float traveltime;
 	float phasepos;
 	vector delta;
 	vector veloc;
 	if(time < self.animstate_endtime) {
-		delta = self.finaldest - self.origin;
+		delta = self.destvec;
 		traveltime = self.animstate_endtime - self.animstate_starttime;
 		movephase = (time - self.animstate_starttime) / traveltime;
 
@@ -208,6 +209,12 @@ void SUB_CalcMove_controller_think (void)
 
 		self.owner.velocity = veloc;
 		self.nextthink = time + 0.1;
+	} else {
+		oldself = self;
+		self.owner.think = self.think1;
+		self = self.owner;
+		remove(oldself);
+		self.think();
 	}
 }
 
@@ -246,12 +253,15 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 	controller.owner = self;
 	controller.origin = self.origin; // starting point
 	controller.finaldest = tdest; // where do we want to end?
+	controller.destvec = delta;
 	controller.animstate_starttime = time;
 	controller.animstate_endtime = time + traveltime;
 	controller.think = SUB_CalcMove_controller_think;
+	controller.think1 = self.think;
 
 	// let the controller handle the velocity compuation
 	//self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
+	self.think = SUB_Null;
 	self.nextthink = self.ltime + traveltime;
 	
 	// invoke controller
