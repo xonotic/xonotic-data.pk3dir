@@ -4324,7 +4324,7 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 	mod_active = 1;
 
 	if(stat_items & IT_KEY1)
-		drawpic_aspect_skin(pos, "nexball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos, "keepawayball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 

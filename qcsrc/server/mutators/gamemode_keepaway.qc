@@ -37,7 +37,9 @@ void ka_SpawnBall() // self = the ball
 	self.classname = "keepawayball";
 	self.damageforcescale = cvar("g_keepawayball_damageforcescale");
 	self.takedamage = DAMAGE_YES;
-	self.effects = self.effects | EF_FULLBRIGHT;
+	//self.effects |= "sparks";
+	self.glow_color = cvar("g_keepawayball_trail_color");
+	self.glow_trail = TRUE;
 	self.movetype = MOVETYPE_BOUNCE;
 	self.touch = ka_TouchEvent;
 	self.think = ka_RespawnBall;
@@ -52,6 +54,8 @@ void ka_SpawnBall() // self = the ball
 
 void ka_RespawnBall()
 {
+	vector oldballorigin = self.origin;
+
 	if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 	{
 		makevectors(self.angles);
@@ -62,6 +66,8 @@ void ka_RespawnBall()
 		//self.touch = ka_TouchEvent;
 		self.think = ka_RespawnBall;
 		self.nextthink = time + cvar("g_keepawayball_respawntime");
+		pointparticles(particleeffectnum("electro_combo"), oldballorigin, '0 0 0', 1);
+		pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 1);
 	}
 	else
 	{
@@ -79,7 +85,11 @@ void ka_TouchEvent()
 		self.nextthink = time;
 		return;
 	}
-	if(other.classname != "player" || other.health < 1) { return; }
+	if(other.classname != "player" || other.health < 1) 
+	{ 
+		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
+		return; 
+	}
 	if(!self) { return; }
 	if(self.wait > time) { return; }
 
@@ -91,11 +101,9 @@ void ka_TouchEvent()
 	self.velocity = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
 	self.touch = SUB_Null;
-	self.alpha = 0.01;
+	self.effects |= EF_NODRAW;
 	self.think = SUB_Null;
 	self.nextthink = 0;
-	self.glow_color = cvar("g_keepawayball_trail_color");
-	self.glow_trail = TRUE;
 	self.takedamage = DAMAGE_NO;
 
 	other.effects |= 8;
@@ -130,9 +138,9 @@ void ka_DropEvent(entity plyr)
 	ball.nextthink = time + cvar("g_keepawayball_respawntime");
 	ball.touch = ka_TouchEvent;
 	ball.takedamage = DAMAGE_YES;
-	plyr.effects = EF_LOWPRECISION;
+	plyr.effects &~= 8;
 	plyr.alpha = 1.0;
-	ball.alpha = 1.0;
+	ball.effects &~= EF_NODRAW; //ball.alpha = 1.0;
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner.ballcarried = world;
