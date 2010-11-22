@@ -2,8 +2,9 @@ void ka_SpawnBall(void);
 void ka_TouchEvent(void);
 void ka_RespawnBall(void);
 void ka_DropEvent(entity);
+//.float dropperid;
 
-void ka_Initialize()
+void ka_Initialize() // run at the start of a match, initiates game mode
 {
 	if(!g_keepaway)
 		return;
@@ -19,7 +20,16 @@ void ka_Initialize()
 	e.nextthink = time;
 }
 
-void ka_SpawnBall() // self = the ball
+void ka_Reset() // used to clear the ballcarrier whenever the match switches from warmup to normal
+{
+	if(self.owner)
+		if(self.owner.classname == "player")
+			ka_DropEvent(self.owner);
+
+	ka_RespawnBall();
+}
+
+void ka_SpawnBall() // loads various values for the ball
 {
 	if(!g_keepaway) { 
 		remove(self); 
@@ -45,14 +55,11 @@ void ka_SpawnBall() // self = the ball
 	self.think = ka_RespawnBall;
 	self.nextthink = time;
 	self.flags = FL_ITEM;
-	//self.reset = ka_Reset;
+	self.reset = ka_Reset;
 	self.owner = world;
-
-	WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE);
-	WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 1');
 }
 
-void ka_RespawnBall()
+void ka_RespawnBall() // runs whenever the ball needs to be relocated
 {
 	vector oldballorigin = self.origin;
 
@@ -68,6 +75,11 @@ void ka_RespawnBall()
 		self.nextthink = time + cvar("g_keepawayball_respawntime");
 		pointparticles(particleeffectnum("electro_combo"), oldballorigin, '0 0 0', 1);
 		pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 1);
+
+		WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE);
+		WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 1');
+
+		sound(self.owner, CHAN_AUTO, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE);
 	}
 	else
 	{
@@ -77,7 +89,7 @@ void ka_RespawnBall()
 	}
 }
 
-void ka_TouchEvent()
+void ka_TouchEvent() // runs any time that the ball comes in contact with something
 {
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
@@ -85,7 +97,8 @@ void ka_TouchEvent()
 		self.nextthink = time;
 		return;
 	}
-	if(other.classname != "player" || other.health < 1) 
+	if(other.deadflag != DEAD_NO) { return; }
+	if(other.classname != "player") 
 	{ 
 		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
 		return; 
@@ -106,6 +119,8 @@ void ka_TouchEvent()
 	self.nextthink = 0;
 	self.takedamage = DAMAGE_NO;
 
+	other.glow_color = cvar("g_keepawayball_trail_color");
+	other.glow_trail = TRUE;
 	other.effects |= 8;
 	other.alpha = 0.6;
 
@@ -123,7 +138,7 @@ void ka_TouchEvent()
 	WaypointSprite_Kill(self.waypointsprite_attachedforcarrier);
 }
 
-void ka_DropEvent(entity plyr) 
+void ka_DropEvent(entity plyr) // runs any time that a player is supposed to lose the ball
 {
 	entity ball;
 	ball = plyr.ballcarried;
@@ -138,13 +153,15 @@ void ka_DropEvent(entity plyr)
 	ball.nextthink = time + cvar("g_keepawayball_respawntime");
 	ball.touch = ka_TouchEvent;
 	ball.takedamage = DAMAGE_YES;
-	plyr.effects &~= 8;
-	plyr.alpha = 1.0;
 	ball.effects &~= EF_NODRAW; //ball.alpha = 1.0;
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner.ballcarried = world;
 	ball.owner = world;
+
+	plyr.effects &~= 8;
+	plyr.alpha = 1.0;
+	plyr.glow_trail = FALSE;
 	
 	bprint(plyr.netname, "^7 has dropped the ball!\n");
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
@@ -197,9 +214,12 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 {
 	self.items &~= IT_KEY1;
 
-	if(self.ballcarried) {
+	if(self.ballcarried)
 		self.items |= IT_KEY1; 
-	}
+	
+	if(self.BUTTON_USE)
+		if(self.ballcarried) { ka_DropEvent(self); }
+
 	return 1;
 }
 
