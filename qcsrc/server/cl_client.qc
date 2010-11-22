@@ -1500,6 +1500,7 @@ void ClientConnect (void)
 
 	PlayerScore_Attach(self);
 	ClientData_Attach();
+	accuracy_init();
 
 	bot_clientconnect();
 
@@ -1778,6 +1779,7 @@ void ClientDisconnect (void)
 		Spawnqueue_Remove(self);
 	}
 
+	accuracy_free();
 	ClientData_Detach();
 	PlayerScore_Detach(self);
 
