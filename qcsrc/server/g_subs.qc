@@ -180,35 +180,35 @@ void SUB_CalcMoveDone (void)
 void SUB_CalcMove_controller_think (void)
 {
 	entity oldself;
-	float movephase;
 	float traveltime;
 	float phasepos;
-	float remaining;
+	float nexttick;
 	vector delta;
 	vector veloc;
 	vector nextpos;
 	if(time < self.animstate_endtime) {
 		delta = self.destvec;
+		nexttick = time + 0.1;
 
-		if((time + 0.1) < self.animstate_endtime) {
-
+		if(nexttick < self.animstate_endtime) {
 			traveltime = self.animstate_endtime - self.animstate_starttime;
-			movephase = ((time + 0.1) - self.animstate_starttime) / traveltime;
-			phasepos = sin(movephase * 3.14159265 / 2);
+			phasepos = (nexttick - self.animstate_starttime) / traveltime; // range: [0, 1]
+			phasepos = 3.14159265 + (phasepos * 3.14159265); // range: [pi, 2pi]
+			phasepos = cos(phasepos); // cos [pi, 2pi] is in [-1, 1]
+			phasepos = phasepos + 1; // correct range to [0, 2]
+			phasepos = phasepos / 2; // correct range to [0, 1]
 			nextpos = self.origin + (delta * phasepos);
 
 			veloc = nextpos - self.owner.origin;
 			veloc = veloc * 10; // so it arrives in 0.1 seconds
-			self.nextthink = time + 0.1;
+
 		} else {
-			remaining = self.animstate_endtime - time;
 			veloc = self.finaldest - self.owner.origin;
-			veloc = veloc * (1 / remaining); // so it'll arrive in the remaining time
+			veloc = veloc * 10; // so it arrives in 0.1 seconds
 			self.nextthink = self.animstate_endtime;
 		}
-
 		self.owner.velocity = veloc;
-
+		self.nextthink = nexttick;
 	} else {
 		oldself = self;
 		self.owner.think = self.think1;
