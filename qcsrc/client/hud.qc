@@ -3893,15 +3893,17 @@ void HUD_VoteWindow(void)
 
 	active_panel = HUD_PANEL_VOTE;
 	HUD_Panel_UpdateCvars(vote);
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
 
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
 	{
 		panel_pos = eX * 0.3 * vid_conwidth + eY * 0.1 * vid_conheight;
 		panel_size = eX * 0.4 * vid_conwidth + eY * 0.3 * vid_conheight;
 	}
+
+    // these must be below above block
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
 
 	a = vote_alpha * bound(cvar("hud_panel_vote_alreadyvoted_alpha"), 1 - vote_highlighted, 1);
 	HUD_Panel_DrawBg(a);
@@ -3941,13 +3943,9 @@ void HUD_VoteWindow(void)
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, a, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
-	s = strcat("Yes (", getcommandkey("vyes", "vyes"), "): ", ftos(vote_yescount));
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
-		s = strcat("Yes: (press y)");
+    s = strcat("Yes (", getcommandkey("cl_cmd cl_vyes", "cl_cmd cl_vyes"), "): ", ftos(vote_yescount));
 	drawstring_aspect(pos + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '0 1 0', a, DRAWFLAG_NORMAL);
-	s = strcat("No (", getcommandkey("vno", "vno"), "): ", ftos(vote_nocount));
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
-		s = strcat("No: (press n)");
+    s = strcat("No (", getcommandkey("cl_cmd cl_vno", "cl_cmd cl_vno"), "): ", ftos(vote_nocount));
 	drawstring_aspect(pos + eX * 0.5 * mySize_x + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '1 0 0', a, DRAWFLAG_NORMAL);
 
 	// draw the progress bar backgrounds
