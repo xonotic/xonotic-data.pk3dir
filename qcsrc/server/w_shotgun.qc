@@ -69,8 +69,9 @@ void shotgun_meleethink (void)
 	{
 		vector force;
 		force = angle * cvar("g_balance_shotgun_secondary_force");
+		if(accuracy_isgooddamage(self.owner, trace_ent))
+			accuracy_add(self.owner, WEP_SHOTGUN, 0, cvar("g_balance_shotgun_secondary_damage") * min(1, f + 1));
 		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_shotgun_secondary_damage") * min(1, f + 1), WEP_SHOTGUN | HITTYPE_SECONDARY , self.owner.origin + self.owner.view_ofs, force);
-		Damage_RecordDamage(self.owner, WEP_SHOTGUN | HITTYPE_SECONDARY, cvar("g_balance_shotgun_secondary_damage") * min(1, f + 1));
 		remove(self);
 	}
 	else if(time >= self.cnt + cvar("g_balance_shotgun_secondary_melee_time")) // missed, remove ent

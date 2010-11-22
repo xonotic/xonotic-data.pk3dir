@@ -11,3 +11,7 @@ void accuracy_resend(entity e);
 // update accuracy stats
 void accuracy_set(entity e, float w, float hit, float fired);
 void accuracy_add(entity e, float w, float hit, float fired);
+
+// helper
+float accuracy_isgooddamage(entity attacker, entity targ);
+float accuracy_canbegooddamage(entity attacker);

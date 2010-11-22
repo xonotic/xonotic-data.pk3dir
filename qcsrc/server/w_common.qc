@@ -125,9 +125,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		f = ExponentialFalloff(mindist, maxdist, halflifedist, ent.railgundistance);
 		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, ent.railgundistance);
 
-		if(ent.flags & FL_CLIENT)
-		if(ent.deadflag == DEAD_NO)
-		if(!teamplay || ent.team != self.team)
+		if(accuracy_isgooddamage(self.owner, ent))
 			totaldmg += bdamage * f;
 
 		// apply the damage
@@ -148,8 +146,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	}
 
 	// calculate hits and fired shots for hitscan
-	if not(inWarmupStage)
-		accuracy_add(self, self.weapon, 0, min(bdamage, totaldmg));
+	accuracy_add(self, self.weapon, 0, min(bdamage, totaldmg));
 
 	trace_endpos = endpoint;
 	trace_ent = endent;
@@ -195,10 +192,7 @@ void W_BallisticBullet_Hit (void)
 			AnnounceTo(self.owner, "awesome");
 
 		// calculate hits for ballistic weapons
-		if (other.flags & FL_CLIENT)  // is the player a client
-		if (other.deadflag == DEAD_NO)  // is the victim a corpse
-		if ((!(teamplay)) | (other.team != self.owner.team))  // not teamplay (ctf, kh, tdm etc) or the victim is in the same team
-		if not(inWarmupStage)  // not in warm up stage
+		if(accuracy_isgooddamage(self.owner, other))
 		{
 			// do not exceed 100%
 			q = min(self.dmg * q, self.dmg_total + f * self.dmg) - self.dmg_total;

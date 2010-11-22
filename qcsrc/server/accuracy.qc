@@ -79,15 +79,34 @@ void accuracy_add(entity e, float w, float hit, float fired)
 {
 	entity a;
 	a = e.accuracy;
-	if(!a)
+	if(!a || !(hit || fired))
 		return;
 	w -= WEP_FIRST;
-	a.(accuracy_hit[w]) += hit;
-	a.(accuracy_fired[w]) += fired;
+	if(hit)
+		a.(accuracy_hit[w]) += hit;
+	if(fired)
+		a.(accuracy_fired[w]) += fired;
 	w = pow(2, w);
 	a.SendFlags |= w;
 	FOR_EACH_CLIENT(a)
 		if(a.classname == "spectator")
 			if(a.enemy == e)
 				a.SendFlags |= w;
+}
+
+float accuracy_isgooddamage(entity attacker, entity targ)
+{
+	if(!inWarmupStage)
+	if(targ.flags & FL_CLIENT)
+	if(targ.deadflag == DEAD_NO)
+	if(IsDifferentTeam(attacker, targ))
+		return TRUE;
+	return FALSE;
+}
+
+float accuracy_canbegooddamage(entity attacker)
+{
+	if(!inWarmupStage)
+		return TRUE;
+	return FALSE;
 }
