@@ -631,6 +631,8 @@ void PutObserverInServer (void)
 
 	PlayerScore_Clear(self); // clear scores when needed
 
+	accuracy_resend(self);
+
 	self.spectatortime = time;
 
 	self.classname = "observer";
@@ -852,6 +854,8 @@ void PutClientInServer (void)
 	if(self.classname == "player" && (!g_ca || (g_ca && allowed_to_spawn))) {
 		entity spot, oldself;
 		float j;
+
+		accuracy_resend(self);
 
 		if(self.team < 0)
 			JoinBestTeam(self, FALSE, TRUE);
@@ -2345,6 +2349,7 @@ float SpectateNext() {
 		WriteEntity(MSG_ONE, self.enemy);
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
 		self.movetype = MOVETYPE_NONE;
+		accuracy_resend(self);
 
 		if(!SpectateUpdate())
 			PutObserverInServer();
