@@ -183,32 +183,32 @@ void SUB_CalcMove_controller_think (void)
 	float movephase;
 	float traveltime;
 	float phasepos;
+	float remaining;
 	vector delta;
 	vector veloc;
+	vector nextpos;
 	if(time < self.animstate_endtime) {
 		delta = self.destvec;
-		traveltime = self.animstate_endtime - self.animstate_starttime;
-		movephase = (time - self.animstate_starttime) / traveltime;
 
-		//bprint(ftos(movephase));
-		//bprint("\n");
+		if((time + 0.1) < self.animstate_endtime) {
 
-		// TODO: Don't mess with the velocity, instead compute where
-		// we want to be next tick and compute velocity from that
+			traveltime = self.animstate_endtime - self.animstate_starttime;
+			movephase = ((time + 0.1) - self.animstate_starttime) / traveltime;
+			phasepos = sin(movephase * 3.14159265 / 2);
+			nextpos = self.origin + (delta * phasepos);
 
-		veloc = delta * (1/traveltime); // QuakeC doesn't allow vector/float division
-
-		// scale velocity with pi/2 so integrated over time we
-		// still have the original velocity
-		veloc = veloc * 1.5708;
-
-		// scale velocity with sin(phase)
-		phasepos = movephase * 3.1416; // phase * pi
-		phasepos = sin(phasepos);
-		veloc = veloc * phasepos;	
+			veloc = nextpos - self.owner.origin;
+			veloc = veloc * 10; // so it arrives in 0.1 seconds
+			self.nextthink = time + 0.1;
+		} else {
+			remaining = self.animstate_endtime - time;
+			veloc = self.finaldest - self.owner.origin;
+			veloc = veloc * (1 / remaining); // so it'll arrive in the remaining time
+			self.nextthink = self.animstate_endtime;
+		}
 
 		self.owner.velocity = veloc;
-		self.nextthink = time + 0.1;
+
 	} else {
 		oldself = self;
 		self.owner.think = self.think1;
