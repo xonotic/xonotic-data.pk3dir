@@ -608,7 +608,7 @@ void GameCommand(string msg)
 		e.draw = DrawDebugModel;
 		e.classname = "debugmodel";
 	}
-    else if(cmd == "cl_vyes")
+    else if(cmd == "vyes")
     {
         if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE) && panel_fg_alpha && !scoreboard_active) // don't lock keys before we actually see what's going on
         {
@@ -622,7 +622,7 @@ void GameCommand(string msg)
             localcmd("vyes\n");
         }
     }
-    else if(cmd == "cl_vno")
+    else if(cmd == "vno")
     {
         if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE) && panel_fg_alpha && !scoreboard_active) // don't lock keys before we actually see what's going on
         {

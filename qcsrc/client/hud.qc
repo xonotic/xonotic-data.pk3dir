@@ -3943,9 +3943,9 @@ void HUD_VoteWindow(void)
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, a, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
-    s = strcat("Yes (", getcommandkey("cl_cmd cl_vyes", "cl_cmd cl_vyes"), "): ", ftos(vote_yescount));
+    s = strcat("Yes (", getcommandkey("cl_cmd vyes", "cl_cmd vyes"), "): ", ftos(vote_yescount));
 	drawstring_aspect(pos + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '0 1 0', a, DRAWFLAG_NORMAL);
-    s = strcat("No (", getcommandkey("cl_cmd cl_vno", "cl_cmd cl_vno"), "): ", ftos(vote_nocount));
+    s = strcat("No (", getcommandkey("cl_cmd vno", "cl_cmd vno"), "): ", ftos(vote_nocount));
 	drawstring_aspect(pos + eX * 0.5 * mySize_x + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '1 0 0', a, DRAWFLAG_NORMAL);
 
 	// draw the progress bar backgrounds
