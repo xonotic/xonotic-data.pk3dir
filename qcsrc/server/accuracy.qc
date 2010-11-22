@@ -42,8 +42,8 @@ void accuracy_init(entity e)
 	e.accuracy = spawn();
 	e.accuracy.owner = e;
 	e.accuracy.classname = "accuracy";
-	e.accuracy.SendEntity = accuracy_send;
 	e.accuracy.drawonlytoclient = e;
+	Net_LinkEntity(e.accuracy, FALSE, 0, accuracy_send);
 }
 
 void accuracy_free(entity e)
