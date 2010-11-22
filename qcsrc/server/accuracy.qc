@@ -1,12 +1,21 @@
 .entity accuracy;
 .float accuracy_hit[WEP_MAXCOUNT];
 .float accuracy_fired[WEP_MAXCOUNT];
+FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_hit);
+FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_fired);
 
-void accuracy_send(entity to, float sf)
+float accuracy_send(entity to, float sf)
 {
 	float w, f;
+	entity a;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ACCURACY);
-	if(to != self.owner)
+
+	a = self.owner;
+	if(a.classname == "spectator")
+		a = a.enemy;
+	a = a.accuracy;
+
+	if(to != a.owner)
 		if not(self.owner.cvar_cl_accuracy_data_share && autocvar_sv_accuracy_data_share)
 			sf = 0;
 	// note: zero sendflags can never be sent... so we can use that to say that we send no accuracy!
@@ -34,6 +43,7 @@ void accuracy_init(entity e)
 	e.accuracy.owner = e;
 	e.accuracy.classname = "accuracy";
 	e.accuracy.SendEntity = accuracy_send;
+	e.accuracy.drawonlytoclient = e;
 }
 
 void accuracy_free(entity e)
@@ -50,18 +60,34 @@ void accuracy_resend(entity e)
 // update accuracy stats
 void accuracy_set(entity e, float w, float hit, float fired)
 {
-	e = e.accuracy;
+	entity a;
+	a = e.accuracy;
+	if(!a)
+		return;
 	w -= WEP_FIRST;
-	e.(accuracy_hit[w]) = hit;
-	e.(accuracy_fired[w]) = fired;
-	e.SendFlags |= pow(2, w);
+	a.(accuracy_hit[w]) = hit;
+	a.(accuracy_fired[w]) = fired;
+	w = pow(2, w);
+	a.SendFlags |= w;
+	FOR_EACH_CLIENT(a)
+		if(a.classname == "spectator")
+			if(a.enemy == e)
+				a.SendFlags |= w;
 }
 
 void accuracy_add(entity e, float w, float hit, float fired)
 {
-	e = e.accuracy;
+	entity a;
+	a = e.accuracy;
+	if(!a)
+		return;
 	w -= WEP_FIRST;
-	e.(accuracy_hit[w]) += hit;
-	e.(accuracy_fired[w]) += fired;
-	e.SendFlags |= pow(2, w);
+	a.(accuracy_hit[w]) += hit;
+	a.(accuracy_fired[w]) += fired;
+	w = pow(2, w);
+	a.SendFlags |= w;
+	FOR_EACH_CLIENT(a)
+		if(a.classname == "spectator")
+			if(a.enemy == e)
+				a.SendFlags |= w;
 }

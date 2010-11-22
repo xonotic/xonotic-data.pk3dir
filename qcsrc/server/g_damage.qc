@@ -851,10 +851,7 @@ void Damage_RecordDamage(entity attacker, float deathtype, float damage)
 
 	if not(inWarmupStage)
 	if (weaponid)
-	if ((clienttype(attacker) == CLIENTTYPE_REAL) | (clienttype(attacker) == CLIENTTYPE_BOT)) {
-		attacker.stats_hit[weaponid - 1] += damage;
-		attacker.stat_hit = weaponid + 64 * floor(attacker.stats_hit[weaponid - 1]);
-	}
+		accuracy_add(attacker, weaponid, 0, damage);
 }
 
 float RadiusDamage_running;
@@ -875,7 +872,6 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 	float   tfloorforce;
 
 	float stat_damagedone;
-	float stat_maxdamage;
 
 	if(RadiusDamage_running)
 	{
@@ -913,7 +909,6 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 	}
 
 	stat_damagedone = 0;
-	stat_maxdamage = 0;
 
 	targ = WarpZone_FindRadius (blastorigin, rad, FALSE);
 	while (targ)
@@ -1035,10 +1030,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 								if(targ.deadflag == DEAD_NO)
 								if(targ != attacker)
 								if(!teamplay || targ.team != attacker.team)
-								{
 									stat_damagedone += finaldmg;
-									stat_maxdamage += coredamage;
-								}
 							}
 
 							if(targ == directhitentity || DEATH_ISSPECIAL(deathtype))
@@ -1054,7 +1046,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 
 	RadiusDamage_running = 0;
 
-	Damage_RecordDamage(attacker, deathtype, min(stat_maxdamage, stat_damagedone));
+	Damage_RecordDamage(attacker, deathtype, min(coredamage, stat_damagedone));
 
 	return total_damage_to_creatures;
 }
