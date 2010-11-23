@@ -14,10 +14,13 @@ void ka_Initialize() // run at the start of a match, initiates game mode
 
 	ScoreRules_keepaway();
 	
-	entity e;
-	e = spawn();
-	e.think = ka_SpawnBall;
-	e.nextthink = time;
+	//entity e; // Is this needed here? I think not
+	//e = spawn();
+	//e.think = ka_SpawnBall;
+	//e.nextthink = time;
+
+	//InitializeEntity(e, ka_SpawnBall, INITPRIO_SETLOCATION); // Is initializeentity needed here? I think not
+	ka_SpawnBall();
 }
 
 void ka_Reset() // used to clear the ballcarrier whenever the match switches from warmup to normal
@@ -31,32 +34,30 @@ void ka_Reset() // used to clear the ballcarrier whenever the match switches fro
 
 void ka_SpawnBall() // loads various values for the ball
 {
-	if(!g_keepaway) { 
-		remove(self); 
-		return; 
-	}
-	if (!self.model) {
-		self.model = "models/orbs/orbblue.md3";	
-		self.scale = 1;
-	}
-
-	precache_model(self.model);
-	setmodel(self, self.model);
-	setsize(self, BALL_MINS, BALL_MAXS);
-	ball_scale = self.scale;
-	self.classname = "keepawayball";
-	self.damageforcescale = cvar("g_keepawayball_damageforcescale");
-	self.takedamage = DAMAGE_YES;
+	if(!g_keepaway) { return; }
+	
+	entity e;
+	e = spawn();
+	if (!e.model) { // is this needed? OF COURSE the model doesn't exist, the ball isn't on the map yet!
+		e.model = "models/orbs/orbblue.md3";	
+		e.scale = 1; }
+	precache_model(e.model);
+	setmodel(e, e.model);
+	setsize(e, BALL_MINS, BALL_MAXS);
+	ball_scale = e.scale;
+	e.classname = "keepawayball";
+	e.damageforcescale = cvar("g_keepawayball_damageforcescale");
+	e.takedamage = DAMAGE_YES;
 	//self.effects |= "sparks";
-	self.glow_color = cvar("g_keepawayball_trail_color");
-	self.glow_trail = TRUE;
-	self.movetype = MOVETYPE_BOUNCE;
-	self.touch = ka_TouchEvent;
-	self.think = ka_RespawnBall;
-	self.nextthink = time;
-	self.flags = FL_ITEM;
-	self.reset = ka_Reset;
-	self.owner = world;
+	e.glow_color = cvar("g_keepawayball_trail_color");
+	e.glow_trail = TRUE;
+	e.movetype = MOVETYPE_BOUNCE;
+	e.touch = ka_TouchEvent;
+	e.think = ka_RespawnBall;
+	e.nextthink = time;
+	e.flags = FL_ITEM;
+	e.reset = ka_Reset;
+	e.owner = world;
 }
 
 void ka_RespawnBall() // runs whenever the ball needs to be relocated
@@ -93,7 +94,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 {
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
-		self.think = ka_SpawnBall;
+		self.think = ka_RespawnBall;
 		self.nextthink = time;
 		return;
 	}
@@ -149,7 +150,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.movetype = MOVETYPE_BOUNCE;
 	ball.solid = SOLID_TRIGGER;
 	ball.wait = time + 1; 
-	ball.think = ka_SpawnBall;
+	ball.think = ka_RespawnBall;
 	ball.nextthink = time + cvar("g_keepawayball_respawntime");
 	ball.touch = ka_TouchEvent;
 	ball.takedamage = DAMAGE_YES;
