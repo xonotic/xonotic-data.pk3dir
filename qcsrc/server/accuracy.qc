@@ -4,6 +4,13 @@
 FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_hit);
 FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_fired);
 
+float accuracy_byte(float n, float d)
+{
+	if(d == 0)
+		return 0;
+	return 1.0 + rint(n * 254.0 / d);
+}
+
 float accuracy_send(entity to, float sf)
 {
 	float w, f;
@@ -26,12 +33,7 @@ float accuracy_send(entity to, float sf)
 	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w, f *= 2)
 	{
 		if(sf & f)
-		{
-			if(self.(accuracy_fired[w]))
-				WriteByte(MSG_ENTITY, 0);
-			else
-				WriteByte(MSG_ENTITY, 1 + bound(0, (254.0 * self.(accuracy_hit[w])) / self.(accuracy_fired[w]), 254));
-		}
+			WriteByte(MSG_ENTITY, accuracy_byte(self.(accuracy_hit[w]), self.(accuracy_fired[w])));
 	}
 	return TRUE;
 }
@@ -61,12 +63,16 @@ void accuracy_resend(entity e)
 void accuracy_set(entity e, float w, float hit, float fired)
 {
 	entity a;
+	float b;
 	a = e.accuracy;
 	if(!a)
 		return;
 	w -= WEP_FIRST;
+	b = accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w]));
 	a.(accuracy_hit[w]) = hit;
 	a.(accuracy_fired[w]) = fired;
+	if(b == accuracy_byte(hit, fired))
+		return;
 	w = pow(2, w);
 	a.SendFlags |= w;
 	FOR_EACH_CLIENT(a)
@@ -78,14 +84,18 @@ void accuracy_set(entity e, float w, float hit, float fired)
 void accuracy_add(entity e, float w, float hit, float fired)
 {
 	entity a;
+	float b;
 	a = e.accuracy;
 	if(!a || !(hit || fired))
 		return;
 	w -= WEP_FIRST;
+	b = accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w]));
 	if(hit)
 		a.(accuracy_hit[w]) += hit;
 	if(fired)
 		a.(accuracy_fired[w]) += fired;
+	if(b == accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w])))
+		return;
 	w = pow(2, w);
 	a.SendFlags |= w;
 	FOR_EACH_CLIENT(a)
