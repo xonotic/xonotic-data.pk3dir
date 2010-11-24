@@ -188,7 +188,7 @@ void SUB_CalcMove_controller_think (void)
 	vector nextpos;
 	if(time < self.animstate_endtime) {
 		delta = self.destvec;
-		nexttick = time + 0.1;
+		nexttick = time + sys_frametime;
 
 		if(nexttick < self.animstate_endtime) {
 			traveltime = self.animstate_endtime - self.animstate_starttime;
@@ -200,12 +200,11 @@ void SUB_CalcMove_controller_think (void)
 			nextpos = self.origin + (delta * phasepos);
 
 			veloc = nextpos - self.owner.origin;
-			veloc = veloc * 10; // so it arrives in 0.1 seconds
+			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
 
 		} else {
 			veloc = self.finaldest - self.owner.origin;
-			veloc = veloc * 10; // so it arrives in 0.1 seconds
-			self.nextthink = self.animstate_endtime;
+			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
 		}
 		self.owner.velocity = veloc;
 		self.nextthink = nexttick;
@@ -248,9 +247,9 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 		return;
 	}
 
-	// the controller only thinks every 0.1 seconds, so very short
-	// animations should just use the traditional movement
-	if (traveltime < 0.3)
+	// very short animations don't really show off the effect
+	// of controlled animation, so let's just use linear movement
+	if (traveltime < 0.15)
 	{
 		self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
 		self.nextthink = self.ltime + traveltime;
