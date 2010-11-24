@@ -313,11 +313,17 @@ void W_Crylink_Attack (void)
 	local entity proj, prevproj, firstproj;
 	local vector s;
 	vector forward, right, up;
+	float maxdmg;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - cvar("g_balance_crylink_primary_ammo");
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", (cvar("g_balance_crylink_primary_damage")*cvar("g_balance_crylink_primary_shots"))); // FIXME this is wrong, crylink can do more (linkjoin, bounce damage)
+	maxdmg = cvar("g_balance_crylink_primary_damage")*cvar("g_balance_crylink_primary_shots");
+	maxdmg *= 1 + cvar("g_balance_crylink_primary_bouncedamagefactor") * cvar("g_balance_crylink_primary_bounces");
+	if(cvar("g_balance_crylink_primary_joinexplode"))
+		maxdmg += cvar("g_balance_crylink_primary_joinexplode_damage");
+
+	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -409,11 +415,17 @@ void W_Crylink_Attack2 (void)
 {
 	local float counter, shots;
 	local entity proj, prevproj, firstproj;
+	float maxdmg;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - cvar("g_balance_crylink_secondary_ammo");
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", (cvar("g_balance_crylink_secondary_damage")*cvar("g_balance_crylink_secondary_shots")));
+	maxdmg = cvar("g_balance_crylink_secondary_damage")*cvar("g_balance_crylink_secondary_shots");
+	maxdmg *= 1 + cvar("g_balance_crylink_secondary_bouncedamagefactor") * cvar("g_balance_crylink_secondary_bounces");
+	if(cvar("g_balance_crylink_secondary_joinexplode"))
+		maxdmg += cvar("g_balance_crylink_secondary_joinexplode_damage");
+
+	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", maxdmg);
 
 	shots = cvar("g_balance_crylink_secondary_shots");
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
