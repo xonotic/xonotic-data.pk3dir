@@ -11,6 +11,8 @@ void ka_Initialize() // run at the start of a match, initiates game mode
 		
 	precache_sound("keepaway/pickedup.wav");
 	precache_sound("keepaway/dropped.wav");
+	precache_sound("keepaway/respawn.wav");
+	precache_sound("keepaway/touch.wav");
 
 	ScoreRules_keepaway();
 	
@@ -80,7 +82,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 		WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE);
 		WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 1');
 
-		sound(self.owner, CHAN_AUTO, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE);
+		sound(self, CHAN_AUTO, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE);
 	}
 	else
 	{
@@ -92,6 +94,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 
 void ka_TouchEvent() // runs any time that the ball comes in contact with something
 {
+	if(!self) { return; }
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
 		self.think = ka_RespawnBall;
@@ -100,11 +103,11 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	}
 	if(other.deadflag != DEAD_NO) { return; }
 	if(other.classname != "player") 
-	{ 
+	{  // The ball just touched an object, most likely the world
 		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
+		sound(self, CHAN_AUTO, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
 		return; 
 	}
-	if(!self) { return; }
 	if(self.wait > time) { return; }
 
 	self.owner = other;
