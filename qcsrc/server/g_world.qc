@@ -801,8 +801,6 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
-	addstat(STAT_DAMAGE_HITS, AS_INT, stat_hit);
-	addstat(STAT_DAMAGE_FIRED, AS_INT, stat_fired);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
 	addstat(STAT_BULLETS_LOADED, AS_INT, campingrifle_bulletcounter);
@@ -1544,8 +1542,6 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
-	float i;
-
 	gameover = TRUE;
 
 	intermission_running = 1;
@@ -1574,52 +1570,10 @@ void NextLevel()
 
 	GameLogClose();
 
-// TO DO
-
-// save the stats to a text file on the client
-// stuffcmd(other, log_stats "stats/file_name");
-// bprint stats
-// stuffcmd(other, log_stats "");
-// use a filename similar to the demo name
-	// string file_name;
-	// file_name = strcat("\nlog_file \"stats/", strftime(TRUE, "%Y-%m-%d_%H-%M"), "_", mapname, ".txt\"");  // open the log file
-
-// write a stats parser for the menu
-
-	if(cvar("sv_accuracy_data_send")) {
-		string stats_to_send;
-
-		FOR_EACH_CLIENT(other) {  // make the string to send
-			FixIntermissionClient(other);
-
-			if(other.cvar_cl_accuracy_data_share) {
-				stats_to_send = strcat(stats_to_send, ":hits:", other.netname);
-
-				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-					stats_to_send = strcat(stats_to_send, ":", ftos(other.stats_hit[i-1]));
-
-				stats_to_send = strcat(stats_to_send, "\n:fired:", other.netname);
-
-				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-					stats_to_send = strcat(stats_to_send, ":", ftos(other.stats_fired[i-1]));
-
-				stats_to_send = strcat(stats_to_send, "\n");
-			}
-		}
-
-		FOR_EACH_REALCLIENT(other) {  // only spam humans
-			Score_NicePrint(other);  // print the score
-
-			if(other.cvar_cl_accuracy_data_receive)  // send the stats string to all the willing clients
-				bprint(stats_to_send);
-		}
-	} else { // ye olde message
-		FOR_EACH_PLAYER(other) {
-			FixIntermissionClient(other);
-
-			if(other.winning)
-				bprint(other.netname, " ^7wins.\n");
-		}
+	FOR_EACH_PLAYER(other) {
+		FixIntermissionClient(other);
+		if(other.winning)
+			bprint(other.netname, " ^7wins.\n");
 	}
 
 	if(cvar("g_campaign"))
