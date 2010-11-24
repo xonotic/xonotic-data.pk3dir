@@ -9,6 +9,27 @@ REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 .entity queuenext;
 .entity queueprev;
 
+void W_Crylink_CheckLinks(entity e)
+{
+	float i;
+	entity p;
+
+	if(e == world)
+		error("W_Crylink_CheckLinks: entity is world");
+
+	p = e;
+	for(i = 0; i < 1000; ++i)
+	{
+		if(p.queuenext.queueprev != p || p.queueprev.queuenext != p)
+			error("W_Crylink_CheckLinks: queue is inconsistent");
+		p = p.queuenext;
+		if(p == e)
+			break;
+	}
+	if(i >= 1000)
+		error("W_Crylink_CheckLinks: infinite chain");
+}
+
 void W_Crylink_Dequeue_Raw(entity own, entity prev, entity me, entity next)
 {
 	if(me == own.crylink_lastgroup)
@@ -37,27 +58,6 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 		W_Crylink_LinkExplode(e.queuenext, e2);
 
 	remove (e);
-}
-
-void W_Crylink_CheckLinks(entity e)
-{
-	float i;
-	entity p;
-
-	if(e == world)
-		error("W_Crylink_CheckLinks: entity is world");
-
-	p = e;
-	for(i = 0; i < 1000; ++i)
-	{
-		if(p.queuenext.queueprev != p || p.queueprev.queuenext != p)
-			error("W_Crylink_CheckLinks: queue is inconsistent");
-		p = p.queuenext;
-		if(p == e)
-			break;
-	}
-	if(i >= 1000)
-		error("W_Crylink_CheckLinks: infinite chain");
 }
 
 // adjust towards center
@@ -233,6 +233,8 @@ void W_Crylink_Touch (void)
 		f *= a;
 	if (RadiusDamage (self, self.realowner, cvar("g_balance_crylink_primary_damage") * f, cvar("g_balance_crylink_primary_edgedamage") * f, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * f, self.projectiledeathtype, other) && cvar("g_balance_crylink_primary_linkexplode"))
 	{
+		if(self == self.realowner.crylink_lastgroup)
+			self.realowner.crylink_lastgroup = world;
 		W_Crylink_LinkExplode(self.queuenext, self);
 		remove (self);
 		return;
@@ -281,6 +283,8 @@ void W_Crylink_Touch2 (void)
 		f *= a;
 	if (RadiusDamage (self, self.realowner, cvar("g_balance_crylink_secondary_damage") * f, cvar("g_balance_crylink_secondary_edgedamage") * f, cvar("g_balance_crylink_secondary_radius"), world, cvar("g_balance_crylink_secondary_force") * f, self.projectiledeathtype, other) && cvar("g_balance_crylink_secondary_linkexplode"))
 	{
+		if(self == self.realowner.crylink_lastgroup)
+			self.realowner.crylink_lastgroup = world;
 		W_Crylink_LinkExplode(self.queuenext, self);
 		remove (self);
 		return;
