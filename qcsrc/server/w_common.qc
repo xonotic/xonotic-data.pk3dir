@@ -180,16 +180,15 @@ void W_BallisticBullet_Hit (void)
 		Damage(other, self, self.owner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
 		damage_headshotbonus = 0;
 
-		if(self.dmg_edge != 0)
+		if(headshot)
+			f *= q;
+		if(DEATH_WEAPONOF(self.projectiledeathtype) == WEP_CAMPINGRIFLE)
 		{
 			if(headshot)
-			{	
-				f *= q;
 				AnnounceTo(self.owner, "headshot");
-			}
+			if(yoda)
+				AnnounceTo(self.owner, "awesome");
 		}
-		if(yoda)
-			AnnounceTo(self.owner, "awesome");
 
 		// calculate hits for ballistic weapons
 		if(g)
