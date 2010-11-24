@@ -159,14 +159,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	v_up = vu;
 
 	// track max damage
-	if not(inWarmupStage) {
-		entity w;
-		w = get_weaponinfo(ent.weapon);
-		if(w.spawnflags & WEP_TYPE_SPLASH) {  // splash damage
-			ent.stats_fired[ent.weapon - 1] += maxdamage;
-			ent.stat_fired = ent.weapon + 64 * floor(ent.stats_fired[ent.weapon - 1]);
-		}
-	}
+	if(accuracy_canbegooddamage(ent))
+		accuracy_add(ent, ent.weapon, maxdamage, 0);
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
@@ -1270,7 +1264,7 @@ void weapon_boblayer1(float spd, vector org)
 	// VorteX: haste can be added here
 };
 
-vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
+vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float forceAbsolute)
 {
 	vector mdirection;
 	float mspeed;
@@ -1284,7 +1278,7 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
 	mspeed = vlen(mvelocity);
 
 	nstyle = cvar("g_projectiles_newton_style");
-	if(nstyle == 0)
+	if(nstyle == 0 || forceAbsolute)
 	{
 		// absolute velocity
 		outvelocity = mvelocity;
@@ -1577,7 +1571,7 @@ float mspercallsum;
 float mspercallsstyle;
 float mspercallcount;
 #endif
-void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread)
+void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread, float forceAbsolute)
 {
 	if(missile.owner == world)
 		error("Unowned missile");
@@ -1602,13 +1596,13 @@ void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float
 	print("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
 #endif
 
-	missile.velocity = W_CalculateProjectileVelocity(missile.owner.velocity, pSpeed * dir);
+	missile.velocity = W_CalculateProjectileVelocity(missile.owner.velocity, pSpeed * dir, forceAbsolute);
 }
 
 void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 {
-	W_SetupProjectileVelocityEx(missile, w_shotdir, v_up, pSpeed, 0, 0, spread);
+	W_SetupProjectileVelocityEx(missile, w_shotdir, v_up, pSpeed, 0, 0, spread, FALSE);
 }
 
-#define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"))
-#define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"))
+#define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
+#define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)

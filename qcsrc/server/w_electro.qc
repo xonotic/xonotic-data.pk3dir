@@ -265,8 +265,9 @@ void lgbeam_think()
 
 		f = ExponentialFalloff(cvar("g_balance_electro_primary_falloff_mindist"), cvar("g_balance_electro_primary_falloff_maxdist"), cvar("g_balance_electro_primary_falloff_halflifedist"), vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg));
 
+		if(accuracy_isgooddamage(self.owner, trace_ent))
+			accuracy_add(self.owner, WEP_ELECTRO, 0, cvar("g_balance_electro_primary_damage") * dt * f);
 		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_electro_primary_damage") * dt * f, WEP_ELECTRO, trace_endpos, force * dt);
-		Damage_RecordDamage(self.owner, WEP_ELECTRO, cvar("g_balance_electro_primary_damage") * dt * f);
 	}
 	W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self.owner);
 

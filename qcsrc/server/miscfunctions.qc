@@ -468,28 +468,6 @@ string formatmessage(string msg)
 			replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1'));
 		else if (escape == "S")
 			replacement = ftos(vlen(self.velocity));
-		else if (escape == "v") {
-			float weapon_number;
-			local entity stats;
-
-			if(self.classname == "spectator")
-				stats = self.enemy;
-			else
-				stats = self;
-
-			weapon_number = stats.weapon;
-
-			if (!weapon_number)
-				weapon_number = stats.switchweapon;
-
-			if (!weapon_number)
-				weapon_number = stats.cnt;
-
-			if(stats.cvar_cl_accuracy_data_share && stats.stats_fired[weapon_number - 1])
-				replacement = ftos(bound(0, floor(100 * stats.stats_hit[weapon_number - 1] / stats.stats_fired[weapon_number - 1]), 100));
-			else
-				replacement = "~"; // or something to indicate NULL, not available
-		}
 
 		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
 		p = p + strlen(replacement);

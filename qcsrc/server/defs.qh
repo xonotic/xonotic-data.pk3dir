@@ -531,6 +531,7 @@ float game_starttime; //point in time when the countdown is over
 .float stat_sv_airaccel_qw;
 .float stat_sv_airstrafeaccel_qw;
 .float stat_sv_airspeedlimit_nonqw;
+.float stat_sv_maxspeed;
 
 void W_Porto_Remove (entity p);
 
@@ -597,17 +598,7 @@ string matchid;
 .float hitplotfh;
 .string noise4;
 
-.float stat_hit;
-.float stat_fired;
-.float stat_count;
-
-.float stats_hit[WEP_MAXCOUNT];  // for hitscan bullets hit
-.float stats_fired[WEP_MAXCOUNT];  // for hitscan bullets fired
-
 .float last_pickup;
-
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_hit);
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_fired);
 
 .float stat_leadlimit;
 
@@ -655,6 +646,7 @@ string deathmessage;
 
 .float nex_charge;
 .float nex_charge_rottime;
+.float nex_charge_pool_ammo;
 
 float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
 

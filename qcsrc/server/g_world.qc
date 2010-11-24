@@ -427,6 +427,7 @@ void cvar_changes_init()
 		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_curl_defaulturl");
 		BADCVAR("sv_defaultcharacter");
+		BADCVAR("sv_defaultplayercolors");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
 		BADCVAR("sv_maxidle");
@@ -800,14 +801,13 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
-	addstat(STAT_DAMAGE_HITS, AS_INT, stat_hit);
-	addstat(STAT_DAMAGE_FIRED, AS_INT, stat_fired);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
 	addstat(STAT_BULLETS_LOADED, AS_INT, campingrifle_bulletcounter);
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
 
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
+	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_charge_pool_ammo);
 
 	if(g_ca || g_freezetag)
 	{
@@ -824,6 +824,7 @@ void spawnfunc_worldspawn (void)
 
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
+	addstat(STAT_MOVEVARS_MAXSPEED, AS_FLOAT, stat_sv_maxspeed);
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
 	addstat(STAT_MOVEVARS_AIRSTRAFEACCEL_QW, AS_FLOAT, stat_sv_airstrafeaccel_qw);
 
@@ -1549,8 +1550,6 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
-	float i;
-
 	gameover = TRUE;
 
 	intermission_running = 1;
@@ -1579,52 +1578,10 @@ void NextLevel()
 
 	GameLogClose();
 
-// TO DO
-
-// save the stats to a text file on the client
-// stuffcmd(other, log_stats "stats/file_name");
-// bprint stats
-// stuffcmd(other, log_stats "");
-// use a filename similar to the demo name
-	// string file_name;
-	// file_name = strcat("\nlog_file \"stats/", strftime(TRUE, "%Y-%m-%d_%H-%M"), "_", mapname, ".txt\"");  // open the log file
-
-// write a stats parser for the menu
-
-	if(cvar("sv_accuracy_data_send")) {
-		string stats_to_send;
-
-		FOR_EACH_CLIENT(other) {  // make the string to send
-			FixIntermissionClient(other);
-
-			if(other.cvar_cl_accuracy_data_share) {
-				stats_to_send = strcat(stats_to_send, ":hits:", other.netname);
-
-				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-					stats_to_send = strcat(stats_to_send, ":", ftos(other.stats_hit[i-1]));
-
-				stats_to_send = strcat(stats_to_send, "\n:fired:", other.netname);
-
-				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-					stats_to_send = strcat(stats_to_send, ":", ftos(other.stats_fired[i-1]));
-
-				stats_to_send = strcat(stats_to_send, "\n");
-			}
-		}
-
-		FOR_EACH_REALCLIENT(other) {  // only spam humans
-			Score_NicePrint(other);  // print the score
-
-			if(other.cvar_cl_accuracy_data_receive)  // send the stats string to all the willing clients
-				bprint(stats_to_send);
-		}
-	} else { // ye olde message
-		FOR_EACH_PLAYER(other) {
-			FixIntermissionClient(other);
-
-			if(other.winning)
-				bprint(other.netname, " ^7wins.\n");
-		}
+	FOR_EACH_PLAYER(other) {
+		FixIntermissionClient(other);
+		if(other.winning)
+			bprint(other.netname, " ^7wins.\n");
 	}
 
 	if(cvar("g_campaign"))

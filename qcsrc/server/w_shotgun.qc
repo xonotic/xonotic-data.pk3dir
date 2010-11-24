@@ -22,7 +22,7 @@ void W_Shotgun_Attack (void)
 	bulletspeed = cvar("g_balance_shotgun_primary_speed");
 	bulletconstant = cvar("g_balance_shotgun_primary_bulletconstant");
 
-	W_SetupShot (self, cvar("g_antilag_bullets") && bulletspeed >= cvar("g_antilag_bullets"), 5, "weapons/shotgun_fire.wav", cvar("g_balance_shotgun_primary_damage"));
+	W_SetupShot (self, cvar("g_antilag_bullets") && bulletspeed >= cvar("g_antilag_bullets"), 5, "weapons/shotgun_fire.wav", d * bullets);
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, 1, bulletconstant);
 	endFireBallisticBullet();
@@ -69,8 +69,9 @@ void shotgun_meleethink (void)
 	{
 		vector force;
 		force = angle * cvar("g_balance_shotgun_secondary_force");
+		if(accuracy_isgooddamage(self.owner, trace_ent))
+			accuracy_add(self.owner, WEP_SHOTGUN, 0, cvar("g_balance_shotgun_secondary_damage") * min(1, f + 1));
 		Damage (trace_ent, self.owner, self.owner, cvar("g_balance_shotgun_secondary_damage") * min(1, f + 1), WEP_SHOTGUN | HITTYPE_SECONDARY , self.owner.origin + self.owner.view_ofs, force);
-		Damage_RecordDamage(self.owner, WEP_SHOTGUN | HITTYPE_SECONDARY, cvar("g_balance_shotgun_secondary_damage") * min(1, f + 1));
 		remove(self);
 	}
 	else if(time >= self.cnt + cvar("g_balance_shotgun_secondary_melee_time")) // missed, remove ent
