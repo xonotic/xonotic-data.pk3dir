@@ -229,7 +229,7 @@ float w_laser(float req)
 		if (self.BUTTON_ATCK)
 		if (weapon_prepareattack(0, cvar("g_balance_laser_primary_refire")))
 		{
-			W_Laser_Attack(1);
+			W_Laser_Attack(0);
 			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_laser_primary_animtime"), w_ready);
 		}
 		if (self.BUTTON_ATCK2)

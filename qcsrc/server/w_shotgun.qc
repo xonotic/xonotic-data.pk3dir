@@ -22,7 +22,7 @@ void W_Shotgun_Attack (void)
 	bulletspeed = cvar("g_balance_shotgun_primary_speed");
 	bulletconstant = cvar("g_balance_shotgun_primary_bulletconstant");
 
-	W_SetupShot (self, cvar("g_antilag_bullets") && bulletspeed >= cvar("g_antilag_bullets"), 5, "weapons/shotgun_fire.wav", cvar("g_balance_shotgun_primary_damage"));
+	W_SetupShot (self, cvar("g_antilag_bullets") && bulletspeed >= cvar("g_antilag_bullets"), 5, "weapons/shotgun_fire.wav", d * bullets);
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, 1, bulletconstant);
 	endFireBallisticBullet();

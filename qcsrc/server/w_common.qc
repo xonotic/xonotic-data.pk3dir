@@ -159,7 +159,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 .float dmg_total;
 void W_BallisticBullet_Hit (void)
 {
-	float f, q;
+	float f, q, g;
 
 	f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
 	q = 1 + self.dmg_edge / self.dmg;
@@ -173,10 +173,10 @@ void W_BallisticBullet_Hit (void)
 
 		headshot = 0;
 		yoda = 0;
-		damage_headshotbonus = self.dmg_edge;
+		damage_headshotbonus = self.dmg_edge * f;
 		railgun_start = self.origin - 2 * frametime * self.velocity;
 		railgun_end = self.origin + 2 * frametime * self.velocity;
-
+		g = accuracy_isgooddamage(self.owner, other);
 		Damage(other, self, self.owner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
 		damage_headshotbonus = 0;
 
@@ -192,7 +192,7 @@ void W_BallisticBullet_Hit (void)
 			AnnounceTo(self.owner, "awesome");
 
 		// calculate hits for ballistic weapons
-		if(accuracy_isgooddamage(self.owner, other))
+		if(g)
 		{
 			// do not exceed 100%
 			q = min(self.dmg * q, self.dmg_total + f * self.dmg) - self.dmg_total;

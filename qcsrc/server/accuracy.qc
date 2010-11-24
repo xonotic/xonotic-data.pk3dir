@@ -6,9 +6,10 @@ FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_fired);
 
 float accuracy_byte(float n, float d)
 {
+	print(sprintf("accuracy: %d / %d\n", n, d));
 	if(d == 0)
 		return 0;
-	return 1.0 + rint(n * 254.0 / d);
+	return 1 + rint(n * 100.0 / d);
 }
 
 float accuracy_send(entity to, float sf)
@@ -60,7 +61,7 @@ void accuracy_resend(entity e)
 }
 
 // update accuracy stats
-void accuracy_set(entity e, float w, float hit, float fired)
+void accuracy_set(entity e, float w, float fired, float hit)
 {
 	entity a;
 	float b;
@@ -81,7 +82,7 @@ void accuracy_set(entity e, float w, float hit, float fired)
 				a.SendFlags |= w;
 }
 
-void accuracy_add(entity e, float w, float hit, float fired)
+void accuracy_add(entity e, float w, float fired, float hit)
 {
 	entity a;
 	float b;

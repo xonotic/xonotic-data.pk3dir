@@ -9,8 +9,8 @@ void accuracy_free(entity e);
 void accuracy_resend(entity e);
 
 // update accuracy stats
-void accuracy_set(entity e, float w, float hit, float fired);
-void accuracy_add(entity e, float w, float hit, float fired);
+void accuracy_set(entity e, float w, float fired, float hit);
+void accuracy_add(entity e, float w, float fired, float hit);
 
 // helper
 float accuracy_isgooddamage(entity attacker, entity targ);

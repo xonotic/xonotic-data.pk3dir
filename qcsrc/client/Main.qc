@@ -918,7 +918,7 @@ void Ent_ReadAccuracy(void)
 			if(b == 0)
 				weapon_accuracy[w] = -1;
 			else
-				weapon_accuracy[w] = (b - 1.0) / 254.0;
+				weapon_accuracy[w] = (b - 1.0) / 100.0;
 		}
 	}
 }
