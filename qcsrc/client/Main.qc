@@ -917,6 +917,8 @@ void Ent_ReadAccuracy(void)
 			b = ReadByte();
 			if(b == 0)
 				weapon_accuracy[w] = -1;
+			else if(b == 255)
+				weapon_accuracy[w] = 1.0; // no better error handling yet, sorry
 			else
 				weapon_accuracy[w] = (b - 1.0) / 100.0;
 		}

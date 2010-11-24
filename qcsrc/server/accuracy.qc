@@ -7,8 +7,10 @@ FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_fired);
 float accuracy_byte(float n, float d)
 {
 	print(sprintf("accuracy: %d / %d\n", n, d));
-	if(d == 0)
+	if(n <= 0)
 		return 0;
+	if(n > d)
+		return 255;
 	return 1 + rint(n * 100.0 / d);
 }
 
