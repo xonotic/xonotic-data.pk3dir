@@ -80,8 +80,7 @@ void ball_restart (void)
 void nexball_setstatus (void)
 {
 	local entity oldself;
-	if (!g_nexball)
-		return;
+	self.items &~= IT_KEY1;
 	if (self.ballcarried)
 	{
 		if (self.ballcarried.teamtime && (self.ballcarried.teamtime < time))
@@ -202,7 +201,8 @@ void DropBall (entity ball, vector org, vector vel)
 	}
 
 	WaypointSprite_Kill(ball.owner.waypointsprite_attachedforcarrier);
-	WaypointSprite_AttachCarrier("nb-ball", ball);
+	//WaypointSprite_AttachCarrier("nb-ball", ball);
+	WaypointSprite_Spawn("nb-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, FALSE); // no health bar please
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 
