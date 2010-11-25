@@ -54,7 +54,7 @@ void W_Nex_Attack (float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
+	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", CHAN_WEAPON, mydmg);
 
 	yoda = 0;
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_NEX);

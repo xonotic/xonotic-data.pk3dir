@@ -44,11 +44,11 @@ void W_Laser_Attack (float issecondary)
 	s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
 
 	if(nodamage)
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", 0);
+		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CHAN_WEAPON2, 0);
 	else if(issecondary == 1)
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", cvar("g_balance_laser_secondary_damage"));
+		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CHAN_WEAPON2, cvar("g_balance_laser_secondary_damage"));
 	else
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", cvar("g_balance_laser_primary_damage"));
+		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CHAN_WEAPON2, cvar("g_balance_laser_primary_damage"));
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
@@ -139,7 +139,7 @@ void gauntletbeam_think()
 	float dt;
 	dt = frametime;
 
-	W_SetupShot_Range(self.owner, TRUE, 0, "", damage * dt, myradius);
+	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, damage * dt, myradius);
 	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage

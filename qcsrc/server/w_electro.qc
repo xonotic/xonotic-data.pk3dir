@@ -110,7 +110,7 @@ void W_Electro_Attack()
 {
 	local entity proj;
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", cvar("g_balance_electro_primary_damage"));
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", CHAN_WEAPON, cvar("g_balance_electro_primary_damage"));
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -147,8 +147,8 @@ void W_Electro_Attack2()
 {
 	local entity proj;
 
-	W_SetupShot_ProjectileSize (self, '0 0 -4', '0 0 -4', FALSE, 2, "", cvar("g_balance_electro_secondary_damage"));
-	sound(self, CHAN_WEAPON2, "weapons/electro_fire2.wav", VOL_BASE, ATTN_NORM);
+	W_SetupShot_ProjectileSize (self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", CHAN_WEAPON, cvar("g_balance_electro_secondary_damage"));
+
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -255,7 +255,7 @@ void lgbeam_think()
 		}
 	}
 
-	W_SetupShot_Range(self.owner, TRUE, 0, "", cvar("g_balance_electro_primary_damage") * dt, cvar("g_balance_electro_primary_range"));
+	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, cvar("g_balance_electro_primary_damage") * dt, cvar("g_balance_electro_primary_range"));
 	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage
