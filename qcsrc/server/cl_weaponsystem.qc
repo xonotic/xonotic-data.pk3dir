@@ -159,14 +159,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	v_up = vu;
 
 	// track max damage
-	if not(inWarmupStage) {
-		entity w;
-		w = get_weaponinfo(ent.weapon);
-		if(w.spawnflags & WEP_TYPE_SPLASH) {  // splash damage
-			ent.stats_fired[ent.weapon - 1] += maxdamage;
-			ent.stat_fired = ent.weapon + 64 * floor(ent.stats_fired[ent.weapon - 1]);
-		}
-	}
+	if(accuracy_canbegooddamage(ent))
+		accuracy_add(ent, ent.weapon, maxdamage, 0);
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 

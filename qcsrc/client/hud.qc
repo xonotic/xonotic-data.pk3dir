@@ -1692,18 +1692,10 @@ void HUD_Weapons(void)
 	}
 
 	float show_accuracy;
-	float weapon_stats, weapon_number;
+	float weapon_stats;
 	if(cvar("hud_panel_weapons_accuracy") && acc_levels)
 	{
 		show_accuracy = true;
-		// hits
-		weapon_stats = getstati(STAT_DAMAGE_HITS);
-		weapon_number = weapon_stats & 63;
-		weapon_hits[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
-		// fired
-		weapon_stats = getstati(STAT_DAMAGE_FIRED);
-		weapon_number = weapon_stats & 63;
-		weapon_fired[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
 		if (acc_col_x[0] == -1)
 			for (i = 0; i < acc_levels; ++i)
 				acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
@@ -1726,13 +1718,9 @@ void HUD_Weapons(void)
 		// draw the weapon accuracy
 		if(show_accuracy)
 		{
-			float weapon_hit, weapon_damage;
-			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
-			if(weapon_damage)
+			weapon_stats = weapon_accuracy[self.weapon-WEP_FIRST];
+			if(weapon_stats >= 0)
 			{
-				weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
-				weapon_stats = floor(100 * weapon_hit / weapon_damage);
-
 				// find the max level lower than weapon_stats
 				float j;
 				j = acc_levels-1;

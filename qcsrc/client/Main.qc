@@ -848,11 +848,6 @@ void Ent_ClientData()
 	if(newspectatee_status != spectatee_status)
 	{
 		float i;
-		// clear the weapon accuracy stats
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i) {
-			weapon_hits[i] = 0;
-			weapon_fired[i] = 0;
-		}
 
 		// clear race stuff
 		race_laptime = 0;
@@ -902,6 +897,32 @@ void Ent_RandomSeed()
 	prandom_debug();
 	s = ReadShort();
 	psrandom(s);
+}
+
+void Ent_ReadAccuracy(void)
+{
+	float sf, f, w, b;
+	sf = ReadInt24_t();
+	if(sf == 0)
+	{
+		for(w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
+			weapon_accuracy[w] = -1;
+		return;
+	}
+	
+	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w, f *= 2)
+	{
+		if(sf & f)
+		{
+			b = ReadByte();
+			if(b == 0)
+				weapon_accuracy[w] = -1;
+			else if(b == 255)
+				weapon_accuracy[w] = 1.0; // no better error handling yet, sorry
+			else
+				weapon_accuracy[w] = (b - 1.0) / 100.0;
+		}
+	}
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
@@ -967,6 +988,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
+		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		default:
 			error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
 			break;

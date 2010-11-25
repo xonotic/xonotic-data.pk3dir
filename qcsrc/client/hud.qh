@@ -15,8 +15,7 @@ float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 0.25;
 float scoreboard_bottom;
-float weapon_hits[WEP_MAXCOUNT];
-float weapon_fired[WEP_MAXCOUNT];
+float weapon_accuracy[WEP_MAXCOUNT];
 
 #define MAX_ACCURACY_LEVELS 10
 float acc_lev[MAX_ACCURACY_LEVELS];
