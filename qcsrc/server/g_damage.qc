@@ -623,7 +623,16 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			force = force * g_weaponforcefactor;
 			mirrorforce *= g_weaponforcefactor;
 		}
-
+		
+		// should this be changed at all? If so, in what way?
+		frag_attacker = attacker;
+		frag_target = targ;
+		frag_damage = damage;
+		frag_force = force;
+		MUTATOR_CALLHOOK(PlayerDamage_Calculate);
+		damage = frag_damage;
+		force = frag_force;
+		
 		// apply strength multiplier
 		if ((attacker.items & IT_STRENGTH) && !g_minstagib)
 		{
