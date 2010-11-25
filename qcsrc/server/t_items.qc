@@ -268,7 +268,7 @@ float Item_GiveTo(entity item, entity player)
 			if (player.ammo_fuel < g_pickup_fuel_max)
 			{
 				pickedup = TRUE;
-				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
+				player.ammo_fuel = bound(player.ammo_fuel, g_pickup_fuel_max, player.ammo_fuel + item.ammo_fuel);
 				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + cvar("g_balance_pause_fuel_rot"));
 			}
 			if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
@@ -298,7 +298,7 @@ float Item_GiveTo(entity item, entity player)
 				if (item.weapons & WEPBIT_MINSTANEX)
 					W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
 				if (item.ammo_cells)
-					player.ammo_cells = min (player.ammo_cells + cvar("g_minstagib_ammo_drop"), 999);
+					player.ammo_cells = bound(player.ammo_cells, 999, player.ammo_cells + cvar("g_minstagib_ammo_drop"));
 				player.health = 100;
 			}
 
@@ -308,7 +308,7 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				// sound not available
 				// AnnounceTo(player, "_lives");
-				player.armorvalue = min(player.armorvalue + cvar("g_minstagib_extralives"), 999);
+				player.armorvalue = bound(player.armorvalue, 999, player.armorvalue + cvar("g_minstagib_extralives"));
 				sprint(player, "^3You picked up some extra lives\n");
 			}
 
@@ -328,14 +328,6 @@ float Item_GiveTo(entity item, entity player)
 				// sound not available
 				// AnnounceTo(player, "speed");
 				player.invincible_finished = max(player.invincible_finished, time) + cvar("g_balance_powerup_strength_time");
-			}
-
-			if (item.ammo_fuel)
-			if (player.ammo_fuel < g_pickup_fuel_max) 
-			{
-				pickedup = TRUE;
-				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
-				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + cvar("g_balance_pause_fuel_rot"));
 			}
 		}
 	}
@@ -373,31 +365,31 @@ float Item_GiveTo(entity item, entity player)
 			if ((player.ammo_shells < g_pickup_shells_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.ammo_shells = min (player.ammo_shells + item.ammo_shells, g_pickup_shells_max);
+				player.ammo_shells = bound(player.ammo_shells, g_pickup_shells_max, player.ammo_shells + item.ammo_shells);
 			}
 			if (item.ammo_nails)
 			if ((player.ammo_nails < g_pickup_nails_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.ammo_nails = min (player.ammo_nails + item.ammo_nails, g_pickup_nails_max);
+				player.ammo_nails = bound(player.ammo_nails, g_pickup_nails_max, player.ammo_nails + item.ammo_nails);
 			}
 			if (item.ammo_rockets)
 			if ((player.ammo_rockets < g_pickup_rockets_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.ammo_rockets = min (player.ammo_rockets + item.ammo_rockets, g_pickup_rockets_max);
+				player.ammo_rockets = bound(player.ammo_rockets, g_pickup_rockets_max, player.ammo_rockets + item.ammo_rockets);
 			}
 			if (item.ammo_cells)
 			if ((player.ammo_cells < g_pickup_cells_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.ammo_cells = min (player.ammo_cells + item.ammo_cells, g_pickup_cells_max);
+				player.ammo_cells = bound(player.ammo_cells, g_pickup_cells_max, player.ammo_cells + item.ammo_cells);
 			}
 			if (item.ammo_fuel)
 			if ((player.ammo_fuel < g_pickup_fuel_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
+				player.ammo_fuel = bound(player.ammo_fuel, g_pickup_fuel_max, player.ammo_fuel + item.ammo_fuel);
 				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + cvar("g_balance_pause_fuel_rot"));
 			}
 		}
@@ -438,14 +430,14 @@ float Item_GiveTo(entity item, entity player)
 			if ((player.health < item.max_health) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.health = min(player.health + item.health, item.max_health);
+				player.health = bound(player.health, item.max_health, player.health + item.health);
 				player.pauserothealth_finished = max(player.pauserothealth_finished, time + cvar("g_balance_pause_health_rot"));
 			}
 			if (item.armorvalue)
 			if ((player.armorvalue < item.max_armorvalue) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.armorvalue = min(player.armorvalue + item.armorvalue, item.max_armorvalue);
+				player.armorvalue = bound(player.armorvalue, item.max_armorvalue, player.armorvalue + item.armorvalue);
 				player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + cvar("g_balance_pause_armor_rot"));
 			}
 		}
