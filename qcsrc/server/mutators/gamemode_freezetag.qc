@@ -184,54 +184,66 @@ MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 {
-	vector revive_extra_size;
-	revive_extra_size = '1 1 1' * cvar("g_freezetag_revive_extra_size");
+    vector revive_extra_size;
+    revive_extra_size = '1 1 1' * cvar("g_freezetag_revive_extra_size");
 
-	float teammate_nearby;
-	FOR_EACH_PLAYER(other) if(self != other)
-	{
-		if(other.freezetag_frozen == 0)
-		{
-			if(other.team == self.team)
-			{
-				teammate_nearby = boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax);
-				if(teammate_nearby)
-					break;
-			}
-		}
-	}
+    float revive_progress;
 
-	if(teammate_nearby && self.freezetag_frozen == 1)
-	{
-		if(self.freezetag_beginrevive_time == -9999)
-		{
-			self.freezetag_beginrevive_time = time;
-			self.freezetag_revive_progress = 0;
-			other.freezetag_revive_progress = 0;
-		}
-		else
-		{
-			self.freezetag_revive_progress = (time - self.freezetag_beginrevive_time) / cvar("g_freezetag_revive_time");
-			other.freezetag_revive_progress = (time - self.freezetag_beginrevive_time) / cvar("g_freezetag_revive_time");
-			if(time - self.freezetag_beginrevive_time >= cvar("g_freezetag_revive_time"))
-			{
-				freezetag_Unfreeze();
+    float teammate_nearby;
+    FOR_EACH_PLAYER(other) if(self != other)
+    {
+        if(other.freezetag_frozen == 0)
+        {
+            if(other.team == self.team)
+            {
+                teammate_nearby = boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax);
+                if(teammate_nearby)
+                    break;
+            }
+        }
+    }
 
-				centerprint(self, strcat("^5You were revived by ^7", other.netname, ".\n"));
-				centerprint(other, strcat("^5You revived ^7", self.netname, ".\n"));
-				bprint("^7", other.netname, "^5 revived ^7", self.netname, ".\n");
+    if(teammate_nearby && self.freezetag_frozen == 1) // OK, there is at least one teammate reviving us
+    {
+        if(self.freezetag_beginrevive_time == -9999) // initialize values if this is the first frame of revival
+        {
+            self.freezetag_beginrevive_time = time;
+            self.freezetag_revive_progress = 0;
+        }
+        else
+        {
+            self.freezetag_revive_progress = (time - self.freezetag_beginrevive_time) / cvar("g_freezetag_revive_time");
+            if(time - self.freezetag_beginrevive_time >= cvar("g_freezetag_revive_time"))
+            {
+                freezetag_Unfreeze();
 
-				self.freezetag_beginrevive_time = -9999;
-				self.freezetag_revive_progress = 0;
-				other.freezetag_revive_progress = 0;
-			}
-		}
-	}
-	else if(!teammate_nearby) // only if no teammate is nearby will we reset
-	{
-		self.freezetag_beginrevive_time = -9999;
-		self.freezetag_revive_progress = 0;
-	}
+                centerprint(self, strcat("^5You were revived by ^7", other.netname, ".\n"));
+                centerprint(other, strcat("^5You revived ^7", self.netname, ".\n"));
+                bprint("^7", other.netname, "^5 revived ^7", self.netname, ".\n");
+
+                self.freezetag_beginrevive_time = -9999;
+                self.freezetag_revive_progress = 0;
+            }
+        }
+        // now find EVERY teammate within reviving radius, set their revive_progress values correct
+        FOR_EACH_PLAYER(other) if(self != other)
+        {
+            if(other.freezetag_frozen == 0)
+            {
+                if(other.team == self.team)
+                {
+                    teammate_nearby = boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax);
+                    if(teammate_nearby)
+                        other.freezetag_revive_progress = self.freezetag_revive_progress;
+                }
+            }
+        }
+    }
+    else if(!teammate_nearby) // only if no teammate is nearby will we reset
+    {
+        self.freezetag_beginrevive_time = -9999;
+        self.freezetag_revive_progress = 0;
+    }
 
 	return 1;
 }
