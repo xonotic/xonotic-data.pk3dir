@@ -187,8 +187,6 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
     vector revive_extra_size;
     revive_extra_size = '1 1 1' * cvar("g_freezetag_revive_extra_size");
 
-    float revive_progress;
-
     float teammate_nearby;
     FOR_EACH_PLAYER(other) if(self != other)
     {
