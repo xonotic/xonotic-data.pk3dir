@@ -2007,39 +2007,47 @@ void HUD_Ammo(void)
 
 void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float alpha)
 {
-	vector newPos;
-	float newSize_x, newSize_y;
+	vector newPos, newSize;
 	vector picpos, numpos;
 
 	if (vertical)
 	{
-		vector square;
-		square_x = mySize_x;
-		square_y = mySize_y / 2;
-		if (square_y > square_x)
+		if(mySize_y/mySize_x > 2)
 		{
-			myPos_y += square_y - square_x; //add padding
-			square_y = mySize_x;
+			newSize_y = 2 * mySize_x;
+			newSize_x = mySize_x;
+
+			newPos_y = myPos_y + (mySize_y - newSize_y) / 2;
+			newPos_x = myPos_x;
+		}
+		else
+		{
+			newSize_x = 1/2 * mySize_y;
+			newSize_y = mySize_y;
+
+			newPos_x = myPos_x + (mySize_x - newSize_x) / 2;
+			newPos_y = myPos_y;
 		}
 
 		if(icon_right_align) // right aligned icon
 		{
-			numpos = myPos;
-			picpos = myPos + eY * square_y;
+			numpos = newPos;
+			picpos = newPos + eY * newSize_x;
 		}
 		else // left aligned icon
 		{
-			picpos = myPos;
-			numpos = myPos + eY * square_y;
+			picpos = newPos;
+			numpos = newPos + eY * newSize_x;
 		}
 
-		drawpic_aspect_skin(picpos, icon, square, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		newSize_y /= 2;
+		drawpic_aspect_skin(picpos, icon, newSize, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_bigfont;
 		// make number smaller than icon, it looks better
 		// reduce only y to draw numbers with different number of digits with the same y size
-		numpos_y += square_y * ((1 - 0.7) / 2);
-		square_y *= 0.7;
-		drawstring_aspect(numpos, ftos(x), square, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		numpos_y += newSize_y * ((1 - 0.7) / 2);
+		newSize_y *= 0.7;
+		drawstring_aspect(numpos, ftos(x), newSize, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_font;
 		return;
 	}
