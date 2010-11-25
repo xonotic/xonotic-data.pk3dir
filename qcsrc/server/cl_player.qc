@@ -387,6 +387,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 
 void ClientKill_Now_TeamChange();
 void freezetag_CheckWinner();
+void freezetag_Unfreeze();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -611,7 +612,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		race_PreDie();
 		DropAllRunes(self);
 
-		if(deathtype == DEATH_HURTTRIGGER)
+		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
 		{
 			PutClientInServer();
 			count_alive_players(); // re-count players
@@ -625,7 +626,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		MUTATOR_CALLHOOK(PlayerDies);
 
 		if(g_freezetag)
-			return;
+        {
+            if(!defer_ClientKill_Now_TeamChange)
+                return;
+            else // team change...
+                freezetag_Unfreeze(); // remove all ice blocks 
+        }
 
 		if(self.flagcarried)
 		{

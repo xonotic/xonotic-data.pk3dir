@@ -1338,6 +1338,10 @@ void ClientKill (void)
 	{
 		// do nothing
 	}
+    else if(g_freezetag && self.freezetag_frozen == 1)
+    {
+        // do nothing
+    }
 	else
 		ClientKill_TeamChange(0);
 }

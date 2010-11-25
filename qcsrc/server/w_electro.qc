@@ -231,7 +231,7 @@ void lgbeam_think()
 		remove(self);
 		return;
 	}
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || (g_freezetag && self.freezetag_frozen)
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || (g_freezetag && self.freezetag_frozen))
 	{
 		if(self == self.owner.lgbeam)
 			self.owner.lgbeam = world;

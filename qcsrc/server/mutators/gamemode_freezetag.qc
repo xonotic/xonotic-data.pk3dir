@@ -159,6 +159,8 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
+    freezetag_Unfreeze(); // start by making sure that all ice blocks are removed
+
 	if(totalspawned == 1 && time > game_starttime) // only one player active on server, start a new match immediately
 	if(!next_round && warmup && (time < warmup - cvar("g_freezetag_warmup") || time > warmup)) // not awaiting next round
 	{
@@ -169,10 +171,6 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 	{
 		centerprint(self, "^1You spawned after the round started, you'll spawn as frozen.\n");
 		freezetag_Freeze();
-	}
-	else // we are still in the delay period before the round starts
-	{
-		freezetag_Unfreeze();
 	}
 
 	return 1;
