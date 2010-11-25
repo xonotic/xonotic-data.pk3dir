@@ -237,9 +237,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != "")
-	{
 		sound (ent, CHAN_WEAPON, snd, VOL_BASE, ATTN_NORM);
-	}
 
 	if(ent.items & IT_STRENGTH)
 	if(!g_minstagib)
