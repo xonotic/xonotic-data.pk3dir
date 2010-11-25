@@ -627,9 +627,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(g_freezetag)
         {
-            if(!defer_ClientKill_Now_TeamChange)
+            if(deathtype != DEATH_KILL || attacker == self)
                 return;
-            else // team change...
+            else // team change or kill trigger
                 freezetag_Unfreeze(); // remove all ice blocks 
         }
 

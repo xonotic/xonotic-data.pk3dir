@@ -528,7 +528,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 		if(g_freezetag)
 		{
-			if(targ.freezetag_frozen == 1 && deathtype != DEATH_KILL) // we still need teamchange to actually kill
+			if(targ.freezetag_frozen == 1)
 			{
 				damage = 0;
 				force = force * cvar("g_freezetag_frozen_force");
