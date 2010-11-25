@@ -2036,8 +2036,10 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertic
 		drawpic_aspect_skin(picpos, icon, square, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_bigfont;
 		// make number smaller than icon, it looks better
-		numpos += square * (1 - 0.75) * 0.5;
-		drawstring_aspect(numpos, ftos(x), square * 0.75, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		// reduce only y to draw numbers with different number of digits with the same y size
+		numpos_y += square_y * ((1 - 0.7) / 2);
+		square_y *= 0.7;
+		drawstring_aspect(numpos, ftos(x), square, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_font;
 		return;
 	}
