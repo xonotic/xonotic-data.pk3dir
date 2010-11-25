@@ -2137,8 +2137,7 @@ void HUD_Powerups(void) {
 	string leftname, rightname;
 	float leftcnt, rightcnt;
 	float leftexact, rightexact;
-	float flip = cvar("hud_panel_powerups_flip");
-	if (flip) {
+	if (cvar("hud_panel_powerups_flip")) {
 		leftname = "strength";
 		leftcnt = ceil(strength_time);
 		leftexact = strength_time;
