@@ -626,12 +626,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		MUTATOR_CALLHOOK(PlayerDies);
 
 		if(g_freezetag)
-        {
-            if(deathtype != DEATH_KILL || attacker == self)
-                return;
-            else // team change or kill trigger
-                freezetag_Unfreeze(); // remove all ice blocks 
-        }
+            return;
 
 		if(self.flagcarried)
 		{

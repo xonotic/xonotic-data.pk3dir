@@ -134,9 +134,9 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		else if(self.team == COLOR_TEAM4)
 			--pinkalive;
 		--totalalive;
-	}
 
-	freezetag_Freeze();
+        freezetag_Freeze();
+	}
 
 	centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
 	if(frag_attacker == frag_target || frag_attacker == world)
