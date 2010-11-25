@@ -2974,6 +2974,17 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		else if(type == RACE_FAIL) {
 			HUD_KillNotify_Push(s1, s2, 1, RACE_FAIL);
 		}
+	} else if(msg == MSG_KA) {
+		if(type == KA_PICKUPBALL) {
+			HUD_KillNotify_Push(s1, s2, 0, KA_PICKUPBALL);
+			if(alsoprint)
+				print (s1, "^7 has picked up the ball!\n");
+		}
+		else if(type == KA_DROPBALL) {
+			HUD_KillNotify_Push(s1, s2, 0, KA_DROPBALL);
+			if(alsoprint)
+				print(s1, "^7 has dropped the ball!\n");
+		}
 	}
 }
 
@@ -3253,6 +3264,15 @@ void HUD_Notify (void)
 					s = "notify_blue_captured";
 				}
 			}
+			else if(killnotify_deathtype[j] == KA_DROPBALL)
+			{
+				s = "notify_blue_lost";
+			}
+			else if(killnotify_deathtype[j] == KA_PICKUPBALL)
+			{
+				s = "notify_blue_captured";
+			}
+			
 			attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
 			pos_attacker = pos + eX * (0.52 * mySize_x + height) + eY * (0.5 * fontsize_y + i * height);
 			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;

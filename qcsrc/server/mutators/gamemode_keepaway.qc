@@ -118,8 +118,8 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	other.effects |= 8;
 	other.alpha = 0.6;
 
-	// messages and prints
-	bprint(other.netname, "^7 has picked up the ball!\n");
+	// messages and sounds
+	Send_KillNotification(other.netname, "", "", KA_PICKUPBALL, MSG_KA);
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
 	WriteString(MSG_BROADCAST, strcat("\n\n", other.netname, "^7 has picked up the ball!\n"));
 	sound(self.owner, CHAN_AUTO, "keepaway/pickedup.wav", VOL_BASE, ATTN_NONE);
@@ -162,8 +162,8 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	plyr.alpha = 1.0;
 	plyr.glow_trail = FALSE;
 	
-	// messages and prints
-	bprint(plyr.netname, "^7 has dropped the ball!\n");
+	// messages and sounds
+	Send_KillNotification(plyr.netname, "", "", KA_DROPBALL, MSG_KA);
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
 	WriteString(MSG_BROADCAST, strcat("\n\n", plyr.netname, "^7 has dropped the ball!\n"));
 	sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	
