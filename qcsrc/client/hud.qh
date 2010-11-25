@@ -93,10 +93,10 @@ var string panel_bg_padding_str;
 		progressbar_color = stov(cvar_string("hud_progressbar_" #item "_color"))
 #define HUD_Panel_GetProgressBarColorForString(item) \
 switch(item) {\
-	case "strength": HUD_Panel_GetProgressBarColor(strength); break;\
-	case "shield": HUD_Panel_GetProgressBarColor(shield); break;\
 	case "health": HUD_Panel_GetProgressBarColor(health); break;\
 	case "armor": HUD_Panel_GetProgressBarColor(armor); break;\
+	case "strength": HUD_Panel_GetProgressBarColor(strength); break;\
+	case "shield": HUD_Panel_GetProgressBarColor(shield); break;\
 	case "fuel": HUD_Panel_GetProgressBarColor(fuel); break;\
 	case "nexball": HUD_Panel_GetProgressBarColor(nexball); break;\
 } ENDS_WITH_CURLY_BRACE
