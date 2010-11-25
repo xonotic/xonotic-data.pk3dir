@@ -87,8 +87,9 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	else
 	{
 		// sorry, can't spawn, better luck next frame
-		self.think = ka_RespawnBall;
-		self.nextthink = time;
+		//self.think = ka_RespawnBall;
+		//self.nextthink = time;
+		ka_RespawnBall();
 	}
 }
 
