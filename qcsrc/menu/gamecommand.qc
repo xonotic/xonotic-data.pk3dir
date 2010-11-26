@@ -132,6 +132,7 @@ void GameCommand(string theCommand)
 		float i, j;
 		string url;
 		float buf;
+		float r;
 
 		do_exec = FALSE;
 		do_cvar = string_null;
@@ -143,20 +144,17 @@ void GameCommand(string theCommand)
 			{
 				++i;
 				do_cvar = argv(i);
-				++i;
 				continue;
 			}
 			if(argv(i) == "--exec")
 			{
 				do_exec = TRUE;
-				++i;
 				continue;
 			}
 			if(argv(i) == "--key" && i+2 < argc)
 			{
 				++i;
 				key = stof(argv(i));
-				++i;
 				continue;
 			}
 			break;
@@ -174,11 +172,18 @@ void GameCommand(string theCommand)
 			bufstr_set(buf, ++j, sprintf("submit=%s", uri_escape(argv(i))));
 
 		if(j == 0) // no args: GET
-			crypto_uri_postbuf(url, URI_GET_CURL + curl_uri_get_pos, string_null, string_null, -1, key);
+			r = crypto_uri_postbuf(url, URI_GET_CURL + curl_uri_get_pos, string_null, string_null, -1, key);
 		else // with args: POST
-			crypto_uri_postbuf(url, URI_GET_CURL + curl_uri_get_pos, "application/x-www-form-urlencoded", "&", buf, key);
+			r = crypto_uri_postbuf(url, URI_GET_CURL + curl_uri_get_pos, "application/x-www-form-urlencoded", "&", buf, key);
 
-		curl_uri_get_pos = mod(curl_uri_get_pos + 1, URI_GET_CURL_END - URI_GET_CURL + 1);
+		if(r)
+		{
+			curl_uri_get_exec[curl_uri_get_pos] = do_exec;
+			curl_uri_get_cvar[curl_uri_get_pos] = do_cvar;
+			curl_uri_get_pos = mod(curl_uri_get_pos + 1, URI_GET_CURL_END - URI_GET_CURL + 1);
+		}
+		else
+			print("error creating curl handle\n");
 
 		buf_del(buf);
 
