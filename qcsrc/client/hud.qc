@@ -2042,13 +2042,11 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertic
 
 		newSize_y /= 2;
 		drawpic_aspect_skin(picpos, icon, newSize, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
-		drawfont = hud_bigfont;
 		// make number smaller than icon, it looks better
 		// reduce only y to draw numbers with different number of digits with the same y size
 		numpos_y += newSize_y * ((1 - 0.7) / 2);
 		newSize_y *= 0.7;
 		drawstring_aspect(numpos, ftos(x), newSize, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
-		drawfont = hud_font;
 		return;
 	}
 
@@ -2080,9 +2078,7 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertic
 		picpos = newPos;
 	}
 
-	drawfont = hud_bigfont;
 	drawstring_aspect(numpos, ftos(x), eX * (2/3) * newSize_x + eY * newSize_y, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
-	drawfont = hud_font;
 	drawpic_aspect_skin(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 }
 
