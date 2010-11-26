@@ -2029,12 +2029,12 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertic
 			newPos_y = myPos_y;
 		}
 
-		if(icon_right_align) // right aligned icon
+		if(icon_right_align)
 		{
 			numpos = newPos;
 			picpos = newPos + eY * newSize_x;
 		}
-		else // left aligned icon
+		else
 		{
 			picpos = newPos;
 			numpos = newPos + eY * newSize_x;
@@ -2078,7 +2078,7 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertic
 		picpos = newPos;
 	}
 
-	drawstring_aspect(numpos, ftos(x), eX * (2/3) * newSize_x + eY * newSize_y, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(numpos, ftos(x), '2 1 0' * newSize_y, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 	drawpic_aspect_skin(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 }
 
@@ -2255,8 +2255,7 @@ void HUD_HealthArmor(void)
 		return;
 
 	vector barpos, barsize;
-	vector picpos;
-	vector numpos;
+	vector picpos, numpos;
 
 	drawfont = hud_bigfont;
 	float baralign = cvar("hud_panel_healtharmor_baralign");
@@ -4282,13 +4281,9 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 		float vertical;
 		HUD_Panel_GetProgressBarColor(nexball);
 		if(mySize_x > mySize_y)
-		{
 			HUD_Panel_DrawProgressBar(pos, mySize, p, 0, 0, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		}
 		else
-		{
 			HUD_Panel_DrawProgressBar(pos, mySize, p, 1, 0, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		}
 	}
 
 	if (stat_items & IT_KEY1)
