@@ -2159,19 +2159,21 @@ void HUD_Powerups(void) {
 	float baralign = cvar("hud_panel_powerups_baralign");
 	float iconalign = cvar("hud_panel_powerups_iconalign");
 	float progressbar = cvar("hud_panel_powerups_progressbar");
-	if (mySize_x/mySize_y > 4)
+	float panel_ar = mySize_x/mySize_y;
+	float is_vertical = (panel_ar < 1);
+	if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
 	{
 		if(leftcnt)
 		{
 			if(progressbar)
 			{
 				HUD_Panel_GetProgressBarColorForString(leftname);
-				HUD_Panel_DrawProgressBar(pos, eX * 0.5 * mySize_x + eY * mySize_y, min(1, leftcnt/30), 0, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
+				HUD_Panel_DrawProgressBar(pos, eX * 0.5 * mySize_x + eY * mySize_y, min(1, leftcnt/30), is_vertical, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
 			}
 			if(leftcnt > 1)
-				DrawNumIcon(pos, eX * 0.5 * mySize_x + eY * mySize_y, leftcnt, leftname, 0, (iconalign == 1 || iconalign == 2), '1 1 1', 1);
+				DrawNumIcon(pos, eX * 0.5 * mySize_x + eY * mySize_y, leftcnt, leftname, is_vertical, (iconalign == 1 || iconalign == 2), '1 1 1', 1);
 			if(leftcnt <= 5)
-				DrawNumIcon_expanding(pos, eX * 0.5 * mySize_x + eY * mySize_y, leftcnt, leftname, 0, (iconalign == 1 || iconalign == 2), '1 1 1', bound(0, (leftcnt - leftexact) / 0.5, 1));
+				DrawNumIcon_expanding(pos, eX * 0.5 * mySize_x + eY * mySize_y, leftcnt, leftname, is_vertical, (iconalign == 1 || iconalign == 2), '1 1 1', bound(0, (leftcnt - leftexact) / 0.5, 1));
 		}
 
 		if(rightcnt)
@@ -2179,40 +2181,12 @@ void HUD_Powerups(void) {
 			if(progressbar)
 			{
 				HUD_Panel_GetProgressBarColorForString(rightname);
-				HUD_Panel_DrawProgressBar(pos + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * mySize_y, min(1, rightcnt/30), 0, (baralign == 1 || baralign == 3), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
+				HUD_Panel_DrawProgressBar(pos + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * mySize_y, min(1, rightcnt/30), is_vertical, (baralign == 1 || baralign == 3), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
 			}
 			if(rightcnt > 1)
-				DrawNumIcon(pos + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * mySize_y, rightcnt, rightname, 0, (iconalign == 1 || iconalign == 3), '1 1 1', 1);
+				DrawNumIcon(pos + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * mySize_y, rightcnt, rightname, is_vertical, (iconalign == 1 || iconalign == 3), '1 1 1', 1);
 			if(rightcnt <= 5)
-				DrawNumIcon_expanding(pos + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * mySize_y, rightcnt, rightname, 0, (iconalign == 1 || iconalign == 3), '1 1 1', bound(0, (rightcnt - rightexact) / 0.5, 1));
-		}
-	}
-	else if (mySize_x/mySize_y > 1.5)
-	{
-		if(leftcnt)
-		{
-			if(progressbar)
-			{
-				HUD_Panel_GetProgressBarColorForString(leftname);
-				HUD_Panel_DrawProgressBar(pos, eX * mySize_x + eY * 0.5 * mySize_y, min(1, leftcnt/30), 0, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
-			}
-			if(leftcnt > 1)
-				DrawNumIcon(pos, eX * mySize_x + eY * 0.5 * mySize_y, leftcnt, leftname, 0, (iconalign == 1 || iconalign == 2), '1 1 1', 1);
-			if(leftcnt <= 5)
-				DrawNumIcon_expanding(pos, eX * mySize_x + eY * 0.5 * mySize_y, leftcnt, leftname, 0, (iconalign == 1 || iconalign == 2), '1 1 1', bound(0, (leftcnt - leftexact) / 0.5, 1));
-		}
-
-		if(rightcnt)
-		{
-			if(progressbar)
-			{
-				HUD_Panel_GetProgressBarColorForString(rightname);
-				HUD_Panel_DrawProgressBar(pos + eY * 0.5 * mySize_y, eX * mySize_x + eY * 0.5 * mySize_y, min(1, rightcnt/30), 0, (baralign == 1 || baralign == 3), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
-			}
-			if(rightcnt > 1)
-				DrawNumIcon(pos + eY * 0.5 * mySize_y, eX * mySize_x + eY * 0.5 * mySize_y, rightcnt, rightname, 0, (iconalign == 1 || iconalign == 3), '1 1 1', 1);
-			if(rightcnt <= 5)
-				DrawNumIcon_expanding(pos + eY * 0.5 * mySize_y, eX * mySize_x + eY * 0.5 * mySize_y, rightcnt, rightname, 0, (iconalign == 1 || iconalign == 3), '1 1 1', bound(0, (rightcnt - rightexact) / 0.5, 1));
+				DrawNumIcon_expanding(pos + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * mySize_y, rightcnt, rightname, is_vertical, (iconalign == 1 || iconalign == 3), '1 1 1', bound(0, (rightcnt - rightexact) / 0.5, 1));
 		}
 	}
 	else
@@ -2222,12 +2196,12 @@ void HUD_Powerups(void) {
 			if(progressbar)
 			{
 				HUD_Panel_GetProgressBarColorForString(leftname);
-				HUD_Panel_DrawProgressBar(pos, eX * 0.5 * mySize_x + eY * mySize_y, min(1, leftcnt/30), 1, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
+				HUD_Panel_DrawProgressBar(pos, eX * mySize_x + eY * 0.5 * mySize_y, min(1, leftcnt/30), is_vertical, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
 			}
 			if(leftcnt > 1)
-				DrawNumIcon(pos, eX * mySize_x * 0.5 + eY * mySize_y, leftcnt, leftname, 1, (iconalign == 1 || iconalign == 2), '1 1 1', 1);
+				DrawNumIcon(pos, eX * mySize_x + eY * 0.5 * mySize_y, leftcnt, leftname, is_vertical, (iconalign == 1 || iconalign == 2), '1 1 1', 1);
 			if(leftcnt <= 5)
-				DrawNumIcon_expanding(pos, eX * mySize_x * 0.5 + eY * mySize_y, leftcnt, leftname, 1, (iconalign == 1 || iconalign == 2), '1 1 1', bound(0, (leftcnt - leftexact) / 0.5, 1));
+				DrawNumIcon_expanding(pos, eX * mySize_x + eY * 0.5 * mySize_y, leftcnt, leftname, is_vertical, (iconalign == 1 || iconalign == 2), '1 1 1', bound(0, (leftcnt - leftexact) / 0.5, 1));
 		}
 
 		if(rightcnt)
@@ -2235,12 +2209,12 @@ void HUD_Powerups(void) {
 			if(progressbar)
 			{
 				HUD_Panel_GetProgressBarColorForString(rightname);
-				HUD_Panel_DrawProgressBar(pos + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * mySize_y, min(1, rightcnt/30), 1, (baralign == 1 || baralign == 3), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
+				HUD_Panel_DrawProgressBar(pos + eY * 0.5 * mySize_y, eX * mySize_x + eY * 0.5 * mySize_y, min(1, rightcnt/30), is_vertical, (baralign == 1 || baralign == 3), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
 			}
 			if(rightcnt > 1)
-				DrawNumIcon(pos + eX * mySize_x * 0.5, eX * mySize_x * 0.5 + eY * mySize_y, rightcnt, rightname, 1, (iconalign == 1 || iconalign == 3), '1 1 1', 1);
+				DrawNumIcon(pos + eY * 0.5 * mySize_y, eX * mySize_x + eY * 0.5 * mySize_y, rightcnt, rightname, is_vertical, (iconalign == 1 || iconalign == 3), '1 1 1', 1);
 			if(rightcnt <= 5)
-				DrawNumIcon_expanding(pos + eX * mySize_x * 0.5, eX * mySize_x * 0.5 + eY * mySize_y, rightcnt, rightname, 1, (iconalign == 1 || iconalign == 3), '1 1 1', bound(0, (rightcnt - rightexact) / 0.5, 1));
+				DrawNumIcon_expanding(pos + eY * 0.5 * mySize_y, eX * mySize_x + eY * 0.5 * mySize_y, rightcnt, rightname, is_vertical, (iconalign == 1 || iconalign == 3), '1 1 1', bound(0, (rightcnt - rightexact) / 0.5, 1));
 		}
 	}
 	drawfont = hud_font;
