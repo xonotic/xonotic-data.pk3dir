@@ -327,7 +327,7 @@ void W_Crylink_Attack (void)
 	if(cvar("g_balance_crylink_primary_joinexplode"))
 		maxdmg += cvar("g_balance_crylink_primary_joinexplode_damage");
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", maxdmg);
+	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", CHAN_WEAPON, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -429,7 +429,7 @@ void W_Crylink_Attack2 (void)
 	if(cvar("g_balance_crylink_secondary_joinexplode"))
 		maxdmg += cvar("g_balance_crylink_secondary_joinexplode_damage");
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", maxdmg);
+	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", CHAN_WEAPON, maxdmg);
 
 	shots = cvar("g_balance_crylink_secondary_shots");
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);

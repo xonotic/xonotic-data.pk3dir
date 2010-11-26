@@ -22,7 +22,7 @@ void W_Shotgun_Attack (void)
 	bulletspeed = cvar("g_balance_shotgun_primary_speed");
 	bulletconstant = cvar("g_balance_shotgun_primary_bulletconstant");
 
-	W_SetupShot (self, cvar("g_antilag_bullets") && bulletspeed >= cvar("g_antilag_bullets"), 5, "weapons/shotgun_fire.wav", d * bullets);
+	W_SetupShot (self, cvar("g_antilag_bullets") && bulletspeed >= cvar("g_antilag_bullets"), 5, "weapons/shotgun_fire.wav", CHAN_WEAPON, d * bullets);
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, 1, bulletconstant);
 	endFireBallisticBullet();
@@ -90,7 +90,7 @@ void W_Shotgun_Attack2 (void)
 	meleetemp.owner = self;
 	meleetemp.think = shotgun_meleethink;
 	meleetemp.nextthink = time + cvar("g_balance_shotgun_secondary_melee_delay");
-	W_SetupShot_Range(self, TRUE, 0, "", cvar("g_balance_shotgun_secondary_damage"), cvar("g_balance_shotgun_secondary_melee_range"));
+	W_SetupShot_Range(self, TRUE, 0, "", 0, cvar("g_balance_shotgun_secondary_damage"), cvar("g_balance_shotgun_secondary_melee_range"));
 }
 
 void spawnfunc_weapon_shotgun(); // defined in t_items.qc
