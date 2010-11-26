@@ -84,9 +84,9 @@ void W_CampingRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdde
 		self.ammo_nails -= pAmmo;
 
 	if(deathtype & HITTYPE_SECONDARY)
-		W_SetupShot (self, cvar("g_antilag_bullets") && pSpeed >= cvar("g_antilag_bullets"), 2, "weapons/campingrifle_fire2.wav", cvar("g_balance_campingrifle_secondary_damage") + cvar("g_balance_campingrifle_secondary_headshotaddeddamage"));
+		W_SetupShot (self, cvar("g_antilag_bullets") && pSpeed >= cvar("g_antilag_bullets"), 2, "weapons/campingrifle_fire2.wav", CHAN_WEAPON, cvar("g_balance_campingrifle_secondary_damage") + cvar("g_balance_campingrifle_secondary_headshotaddeddamage"));
 	else
-		W_SetupShot (self, cvar("g_antilag_bullets") && pSpeed >= cvar("g_antilag_bullets"), 2, "weapons/campingrifle_fire.wav", cvar("g_balance_campingrifle_primary_damage") + cvar("g_balance_campingrifle_primary_headshotaddeddamage"));
+		W_SetupShot (self, cvar("g_antilag_bullets") && pSpeed >= cvar("g_antilag_bullets"), 2, "weapons/campingrifle_fire.wav", CHAN_WEAPON, cvar("g_balance_campingrifle_primary_damage") + cvar("g_balance_campingrifle_primary_headshotaddeddamage"));
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
 
