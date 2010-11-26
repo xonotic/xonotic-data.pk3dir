@@ -131,7 +131,7 @@ void W_Tuba_Attack(float hittype)
 {
 	vector o;
 	float c, n;
-	W_SetupShot(self, FALSE, 2, "", cvar("g_balance_tuba_damage"));
+	W_SetupShot(self, FALSE, 2, "", 0, cvar("g_balance_tuba_damage"));
 	if(self.tuba_notecount)
 	{
 		self.tuba_notecount = FALSE;

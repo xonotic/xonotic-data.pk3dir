@@ -132,7 +132,7 @@ vector w_shotend;
 // make sure you call makevectors first (FIXME?)
 .float prevstrengthsound;
 .float prevstrengthsoundattempt;
-void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float maxdamage, float range)
+void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
 	local float oldsolid;
@@ -237,7 +237,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != "")
-		sound (ent, CHAN_WEAPON, snd, VOL_BASE, ATTN_NORM);
+		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
 
 	if(ent.items & IT_STRENGTH)
 	if(!g_minstagib)
@@ -256,11 +256,11 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
 };
 
-#define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, maxdamage, MAX_SHOT_DISTANCE)
-#define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, maxdamage)
-#define W_SetupShot_Dir(ent,s_forward,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage)
-#define W_SetupShot(ent,antilag,recoil,snd,maxdamage) W_SetupShot_ProjectileSize(ent, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage)
-#define W_SetupShot_Range(ent,antilag,recoil,snd,maxdamage,range) W_SetupShot_Dir_ProjectileSize_Range(ent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage, range)
+#define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, MAX_SHOT_DISTANCE)
+#define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, chan, maxdamage)
+#define W_SetupShot_Dir(ent,s_forward,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage)
+#define W_SetupShot(ent,antilag,recoil,snd,chan,maxdamage) W_SetupShot_ProjectileSize(ent, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage)
+#define W_SetupShot_Range(ent,antilag,recoil,snd,chan,maxdamage,range) W_SetupShot_Dir_ProjectileSize_Range(ent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, range)
 
 float CL_Weaponentity_CustomizeEntityForClient()
 {
