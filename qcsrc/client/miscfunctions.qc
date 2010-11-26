@@ -461,23 +461,23 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
 var float _drawpic_imgaspect;
-var float _drawpic_aspect;
 var vector _drawpic_imgsize;
 var vector _drawpic_sz;
-var vector _drawpic_oldsz;
+var float _drawpic_oldsz;
 var string _drawpic_picpath;
 #define drawpic_aspect(pos,pic,mySize,color,alpha,drawflag)\
 	do {\
 		_drawpic_imgsize = drawgetimagesize(pic);\
 		_drawpic_imgaspect = _drawpic_imgsize_x/_drawpic_imgsize_y;\
-		_drawpic_oldsz = _drawpic_sz = mySize;\
-		_drawpic_aspect = _drawpic_sz_x/_drawpic_sz_y;\
-		if(_drawpic_aspect > _drawpic_imgaspect) {\
+		_drawpic_sz = mySize;\
+		if(_drawpic_sz_x/_drawpic_sz_y > _drawpic_imgaspect) {\
+			_drawpic_oldsz = _drawpic_sz_x;\
 			_drawpic_sz_x = _drawpic_sz_y * _drawpic_imgaspect;\
-			drawpic(pos + eX * (_drawpic_oldsz_x - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
+			drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
 		} else {\
+			_drawpic_oldsz = _drawpic_sz_y;\
 			_drawpic_sz_y = _drawpic_sz_x / _drawpic_imgaspect;\
-			drawpic(pos + eY * (_drawpic_oldsz_y - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
+			drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
 		}\
 	} while(0)
 
