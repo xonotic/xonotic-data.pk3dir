@@ -36,7 +36,7 @@ void ka_SpawnBall() // loads various values for the ball
 	e.scale = 1;
 	precache_model(e.model);
 	setmodel(e, e.model);
-	setsize(e, BALL_MINS, BALL_MAXS);
+	setsize(e, '-20 -20 -20', '20 20 20');
 	e.classname = "keepawayball";
 	e.damageforcescale = cvar("g_keepawayball_damageforcescale");
 	e.takedamage = DAMAGE_YES;
@@ -72,7 +72,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 		WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 1');
 		WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);	
 
-		sound(self, CHAN_AUTO, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE);
+		sound(self, CHAN_AUTO, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE); // no attenuation as this is a global sound
 	}
 	else
 	{
@@ -101,7 +101,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	self.owner = other;
 	other.ballcarried = self;
 	setattachment(self, other, "");
-	setorigin(self, BALL_ATTACHORG);
+	setorigin(self, '3 0 20');
 	
 	// make the ball invisible/unable to do anything
 	self.velocity = '0 0 0';
@@ -219,8 +219,8 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 	if(self.ballcarried)
 		self.items |= IT_KEY1;
 	
-	if(self.BUTTON_USE)
-		if(self.ballcarried) { ka_DropEvent(self); } // drop the ball if the player presses the use button
+	if(self.BUTTON_USE) // drop the ball if the player presses the use button
+		if(self.ballcarried) { ka_DropEvent(self); } 
 
 	return 0;
 }
