@@ -3266,11 +3266,11 @@ void HUD_Notify (void)
 			}
 			else if(killnotify_deathtype[j] == KA_DROPBALL)
 			{
-				s = "notify_blue_lost";
+				s = "notify_balldropped";
 			}
 			else if(killnotify_deathtype[j] == KA_PICKUPBALL)
 			{
-				s = "notify_blue_captured";
+				s = "notify_ballpickedup";
 			}
 			
 			attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
