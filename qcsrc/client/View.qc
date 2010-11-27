@@ -1385,7 +1385,7 @@ void CSQC_common_hud(void)
 						acc_levels = MAX_ACCURACY_LEVELS;
 
 					for (i = 0; i < acc_levels; ++i)
-						acc_lev[i] = stof(argv(i));
+						acc_lev[i] = stof(argv(i)) / 100.0;
 				}
 				// let know that acc_col[] needs to be loaded
 				acc_col_x[0] = -1;

@@ -329,6 +329,14 @@ string(string in) uri_unescape = #511;
 //  the HTTP response code on server error (e.g. 404)
 //if 1 is returned by uri_get, the callback will be called in the future
 float(string url, float id) uri_get = #513;
+//DP_QC_URI_POST
+//idea: divVerent
+//darkplaces implementation: divVerent
+//loads text from an URL into a string after POSTing via HTTP
+//works like uri_get, but uri_post sends data with Content-Type: content_type to the server
+//and uri_post sends the string buffer buf, joined using the delimiter delim
+float(string url, float id, string content_type, string data) uri_post = #513;
+float(string url, float id, string content_type, string delim, float buf) uri_postbuf = #513;
 
 string(string, float) netaddress_resolve = #625;
 string(string search, string replace, string subject) strreplace = #484;
@@ -373,4 +381,5 @@ string(string format, ...) sprintf = #627;
 string crypto_getkeyfp(string serveraddress) = #633; // retrieves the cached host key's CA fingerprint of a server given by IP address
 string crypto_getidfp(string serveraddress) = #634; // retrieves the cached host key fingerprint of a server given by IP address
 string crypto_getencryptlevel(string serveraddress) = #635; // 0 if never encrypting, 1 supported, 2 requested, 3 required, appended by list of allowed methods in order of preference ("AES128"), preceded by a space each
+float(string url, float id, string content_type, string delim, float buf, float keyid) crypto_uri_postbuf = #513;
 //description:

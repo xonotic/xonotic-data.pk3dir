@@ -234,11 +234,6 @@ void setDependentWeird(entity e, float(entity) func)
 float _Nex_ExtResponseSystem_Queried;
 string _Nex_ExtResponseSystem_UpdateTo;
 
-float URI_GET_DISCARD = 0;
-
-float URI_GET_UPDATENOTIFICATION = 1;
-void UpdateNotification_URI_Get_Callback(float id, float status, string data);
-
 void URI_Get_Callback(float id, float status, string data)
 {
 	if (id == URI_GET_DISCARD)
@@ -247,8 +242,11 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else if(id == URI_GET_UPDATENOTIFICATION)
 	{
-		// online ban list
 		UpdateNotification_URI_Get_Callback(id, status, data);
+	}
+	else if(id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		Curl_URI_Get_Callback(id, status, data);
 	}
 	else
 	{
@@ -361,7 +359,8 @@ void preMenuDraw()
 		if(!_Nex_ExtResponseSystem_Queried)
 		{
 			_Nex_ExtResponseSystem_Queried = 1;
-			uri_get(sprintf("http://www.xonotic.org/dl/checkupdate.txt?version=%s", uri_escape(cvar_string("g_xonoticversion"))), URI_GET_UPDATENOTIFICATION);
+			//uri_get(sprintf("http://www.xonotic.org/dl/checkupdate.txt?version=%s", uri_escape(cvar_string("g_xonoticversion"))), URI_GET_UPDATENOTIFICATION);
+			crypto_uri_postbuf(sprintf("http://www.xonotic.org/dl/t/checkupdate2.cgi?version=%s", uri_escape(cvar_string("g_xonoticversion"))), URI_GET_UPDATENOTIFICATION, "application/x-www-urlencoded", "hello=world&foo=bar", -1, 0);
 		}
 	}
 
