@@ -34,7 +34,7 @@ void CreatureFrame (void)
 				}
 				if (self.dmgtime < time)
 				{
-					self.dmgtime = time + 0.1;
+					self.dmgtime = time + 0.2;
 					if (self.watertype == CONTENT_LAVA)
 					{
 						if (self.watersound_finished < time)
@@ -42,7 +42,7 @@ void CreatureFrame (void)
 							self.watersound_finished = time + 0.5;
 							sound (self, CHAN_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
 						}
-						Damage (self, world, world, 6 * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+						Damage (self, world, world, 4 * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
 					}
 					else if (self.watertype == CONTENT_SLIME)
 					{
