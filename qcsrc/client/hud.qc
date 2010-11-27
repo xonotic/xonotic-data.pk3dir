@@ -4324,15 +4324,39 @@ void HUD_Mod_KH(vector pos, vector mySize)
 }
 
 // Keepaway HUD mod icon
+float kaball_prevstatus; // last remembered status
+float kaball_statuschange_time; // time when the status changed
+
+void HUD_Mod_Keepaway_Reset(void)
+{
+	kaball_prevstatus = kaball_statuschange_time = 0;
+}
 void HUD_Mod_Keepaway(vector pos, vector mySize)
 {
-	float stat_items;
-	stat_items = getstati(STAT_ITEMS);
-
-	mod_active = 1;
-
-	if(stat_items & IT_KEY1)
-		drawpic_aspect_skin(pos, "keepawayball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	mod_active = 1; // keepaway should always show the mod HUD
+	
+	float BLINK_FACTOR = 0.15;
+	float BLINK_BASE = 0.85;
+	float BLINK_FREQ = 5; 
+	float kaball_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
+	
+	float stat_items = getstati(STAT_ITEMS);
+	float kaball = (stat_items/IT_KEY1) & 1;
+	
+	if (kaball != kaball_prevstatus)
+	{
+		kaball_statuschange_time = time;
+		kaball_prevstatus = kaball;
+	}
+	
+	float kaball_statuschange_elapsedtime = time - kaball_statuschange_time;
+	float f = bound(0, kaball_statuschange_elapsedtime*2, 1);
+	
+	if(kaball_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(pos + eY * 0.25 * mySize_y, "keepawayball_carrying", eX * mySize_x + eY * mySize_y * 0.5, '1 1 1', panel_fg_alpha * kaball_alpha, DRAWFLAG_NORMAL, f);
+	
+	if(kaball)
+		drawpic_aspect_skin(pos, "keepawayball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * kaball_alpha * f, DRAWFLAG_NORMAL);
 }
 
 
@@ -5059,6 +5083,8 @@ void HUD_Reset (void)
 	// reset gametype specific icons
 	if(gametype == GAME_KEYHUNT)
 		HUD_Mod_KH_Reset();
+	else if(gametype == GAME_KEEPAWAY)
+		HUD_Mod_Keepaway_Reset();
 	else if(gametype == GAME_CTF)
 		HUD_Mod_CTF_Reset();
 }
