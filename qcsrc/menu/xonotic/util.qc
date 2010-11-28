@@ -359,8 +359,8 @@ void preMenuDraw()
 		if(!_Nex_ExtResponseSystem_Queried)
 		{
 			_Nex_ExtResponseSystem_Queried = 1;
-			//uri_get(sprintf("http://www.xonotic.org/dl/checkupdate.txt?version=%s", uri_escape(cvar_string("g_xonoticversion"))), URI_GET_UPDATENOTIFICATION);
-			crypto_uri_postbuf(sprintf("http://www.xonotic.org/dl/t/checkupdate2.cgi?version=%s", uri_escape(cvar_string("g_xonoticversion"))), URI_GET_UPDATENOTIFICATION, "application/x-www-urlencoded", "hello=world&foo=bar", -1, 0);
+			uri_get(sprintf("http://www.xonotic.org/dl/checkupdate.txt?version=%s", uri_escape(cvar_string("g_xonoticversion"))), URI_GET_UPDATENOTIFICATION);
+			//crypto_uri_postbuf(sprintf("http://www.xonotic.org/dl/t/checkupdate2.cgi?version=%s", uri_escape(cvar_string("g_xonoticversion"))), URI_GET_UPDATENOTIFICATION, "application/x-www-urlencoded", "hello=world&foo=bar", -1, 0);
 		}
 	}
 
