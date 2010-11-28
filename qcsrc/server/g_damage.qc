@@ -120,12 +120,14 @@ void GiveFrags (entity attacker, entity targ, float f)
 		{
 			// teamkill
 			PlayerScore_Add(attacker, SP_KILLS, -1); // or maybe add a teamkills field?
+			PlayerStats_Event(attacker, PLAYERSTATS_KILLS, -1);
 		}
 	}
 	else
 	{
 		// regular frag
 		PlayerScore_Add(attacker, SP_KILLS, 1);
+		PlayerStats_Event(attacker, PLAYERSTATS_KILLS, 1);
 	}
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
