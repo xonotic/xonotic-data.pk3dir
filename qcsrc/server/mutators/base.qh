@@ -139,3 +139,9 @@ MUTATOR_HOOKABLE(PlayerDamage_Calculate);
 	// INPUT, OUTPUT:
 		float frag_damage;
 		vector frag_force;
+
+MUTATOR_HOOKABLE(PlayerPowerups);
+	// called at the end of player_powerups() in cl_client.qc, used for manipulating the values which are set by powerup items.
+	// INPUT
+	entity self;
+	float olditems; // also technically output, but since it is at the end of the function it's useless for that :P 

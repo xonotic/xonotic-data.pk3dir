@@ -3,6 +3,8 @@ void ka_TouchEvent(void);
 void ka_RespawnBall(void);
 void ka_DropEvent(entity);
 
+float ka_ballcarrier_waypointsprite_visible_for_player(entity);
+
 void ka_Initialize() // run at the start of a match, initiates game mode
 {
 	if(!g_keepaway)
@@ -36,7 +38,7 @@ void ka_SpawnBall() // loads various values for the ball
 	e.scale = 1;
 	precache_model(e.model);
 	setmodel(e, e.model);
-	setsize(e, '-20 -20 -20', '20 20 20');
+	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
 	e.classname = "keepawayball";
 	e.damageforcescale = cvar("g_keepawayball_damageforcescale");
 	e.takedamage = DAMAGE_YES;
@@ -72,7 +74,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 		WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 1');
 		WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);	
 
-		sound(self, CHAN_AUTO, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE); // no attenuation as this is a global sound
+		sound(self, CHAN_AUTO, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
 	}
 	else
 	{
@@ -95,7 +97,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 		sound(self, CHAN_AUTO, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
 		return; 
 	}
-	if(self.wait > time) { return; }
+	else if(self.wait > time) { return; }
 
 	// attach the ball to the player
 	self.owner = other;
@@ -115,20 +117,22 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	// apply effects to player
 	other.glow_color = cvar("g_keepawayball_trail_color");
 	other.glow_trail = TRUE;
-	other.effects |= 8;
-	other.alpha = 0.6;
+	other.effects |= EF_DIMLIGHT;
+	other.alpha = cvar("g_keepaway_ballcarrier_alpha");
+	other.exteriorweaponentity.alpha = cvar("g_keepaway_ballcarrier_alpha");
 
 	// messages and sounds
 	Send_KillNotification(other.netname, "", "", KA_PICKUPBALL, MSG_KA);
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
 	WriteString(MSG_BROADCAST, strcat("\n\n", other.netname, "^7 has picked up the ball!\n"));
-	sound(self.owner, CHAN_AUTO, "keepaway/pickedup.wav", VOL_BASE, ATTN_NONE);
+	sound(self.owner, CHAN_AUTO, "keepaway/pickedup.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
 	PlayerScore_Add(other, SP_KEEPAWAY_PICKUPS, 1);
 
 	// waypoints
 	WaypointSprite_AttachCarrier("ka-ballcarrier", other);
+	other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ka_ballcarrier_waypointsprite_visible_for_player;
 	WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 0 0');
 	WaypointSprite_Ping(other.waypointsprite_attachedforcarrier);	
@@ -145,7 +149,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	// reset the ball
 	setattachment(ball, world, "");
 	ball.movetype = MOVETYPE_BOUNCE;
-	ball.solid = SOLID_TRIGGER;
+	ball.solid = SOLID_TRIGGER; // is this needed? 
 	ball.wait = time + 1; 
 	ball.think = ka_RespawnBall;
 	ball.nextthink = time + cvar("g_keepawayball_respawntime");
@@ -154,19 +158,20 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.effects &~= EF_NODRAW; 
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
-	ball.owner.ballcarried = world;
+	ball.owner.ballcarried = world; // I hope nothing checks to see if the world has the ball in the rest of my code :P 
 	ball.owner = world;
 	
 	// reset the player effects
-	plyr.effects &~= 8;
-	plyr.alpha = 1.0;
+	plyr.effects &~= EF_DIMLIGHT;
+	plyr.alpha = default_player_alpha;
+	plyr.exteriorweaponentity.alpha = default_weapon_alpha; 
 	plyr.glow_trail = FALSE;
 	
 	// messages and sounds
 	Send_KillNotification(plyr.netname, "", "", KA_DROPBALL, MSG_KA);
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
 	WriteString(MSG_BROADCAST, strcat("\n\n", plyr.netname, "^7 has dropped the ball!\n"));
-	sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	
+	sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
 	PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1);
@@ -177,6 +182,19 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	WaypointSprite_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 1');
 	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);	
 	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
+}
+
+float ka_ballcarrier_waypointsprite_visible_for_player(entity e) // runs on waypoints which are attached to ballcarriers, updates once per frame 
+{
+	if(e.ballcarried)
+	{
+		if(other.classname == "spectator") 
+			return FALSE; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
+		else if(g_minstagib && (e.items & IT_STRENGTH))
+			return FALSE; // if the ballcarrier has invisibility, don't draw the waypoint as this is the function of invisibility in keepaway
+	}
+
+	return TRUE;
 }
 
 MUTATOR_HOOKFUNCTION(ka_RemovePlayer)
@@ -214,12 +232,15 @@ MUTATOR_HOOKFUNCTION(ka_GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 {
+	// clear the item used for the ball in keepaway
 	self.items &~= IT_KEY1;
-
+	
+	// if the player has the ball, make sure they have the item for it (Used for HUD primarily)
 	if(self.ballcarried)
 		self.items |= IT_KEY1;
-	
-	if(self.BUTTON_USE) // drop the ball if the player presses the use button
+
+	// drop the ball if the player presses the use button
+	if(self.BUTTON_USE)
 		if(self.ballcarried) { ka_DropEvent(self); } 
 
 	return 0;
@@ -227,7 +248,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(ka_PlayerDamage) // for changing damage and force values that are applied to players in g_damage.qc
 {
-	if(frag_attacker.items & IT_KEY1) // if the attacker is a ballcarrier
+	if(frag_attacker.ballcarried) // if the attacker is a ballcarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
 		{
@@ -240,7 +261,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerDamage) // for changing damage and force values th
 			frag_force *= cvar("g_keepaway_ballcarrier_force");
 		}
 	}
-	else if not(frag_target.items & IT_KEY1) // if the target is a noncarrier
+	else if not(frag_target.ballcarried) // if the target is a noncarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
 		{
@@ -256,14 +277,64 @@ MUTATOR_HOOKFUNCTION(ka_PlayerDamage) // for changing damage and force values th
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
+{
+	if(self.ballcarried)
+	{ 
+		// if the player has the ball, force ballcarrier alpha upon them
+		self.alpha = cvar("g_keepaway_ballcarrier_alpha");
+		self.exteriorweaponentity.alpha = cvar("g_keepaway_ballcarrier_alpha");
+	
+		// if we're in minstagib and a ballcarrier has just picked up invisibility, 
+		// notify all the other players that the ballcarrier no longer has a waypoint
+		if(g_minstagib)
+		{
+			if(olditems & IT_STRENGTH) 
+			{
+				if(time > self.strength_finished) 
+				{	// this only runs ONCE right after the player loses invisibility
+					bprint(self.netname, "^7 isn't invisible from radar anymore.\n");
+				}
+			}
+			else 
+			{
+				if(time < self.strength_finished)
+				{	// this only runs ONCE right after the player gains invisibility
+					bprint(self.netname, "^7 has picked up invisibility and can no longer be seen on radar!\n");
+				}
+			}
+		}
+	}
+	else if(g_minstagib)
+	{
+		// if we're in minstagib and a noncarrier has invisibility, assure that we apply the invisibility effects normally
+		if(olditems & IT_STRENGTH) 
+		{
+			self.alpha = g_minstagib_invis_alpha;
+			self.exteriorweaponentity.alpha = g_minstagib_invis_alpha;
+		}
+	}
+	else
+	{
+		// if we're a normal player with no powerups that edit alpha make sure the alpha is default. 
+		// (normal powerups just use EF_ADDITIVE)
+		self.alpha = default_player_alpha;
+		self.exteriorweaponentity.alpha = default_weapon_alpha;
+	}
+	
+	return 0;
+}
+
 MUTATOR_DEFINITION(gamemode_keepaway)
 {
+	// I don't quite understand these orders, perhaps someone could enlighten me?
 	MUTATOR_HOOK(MakePlayerObserver, ka_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, ka_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, ka_Scoring, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ka_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, ka_PlayerPreThink, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ka_PlayerDamage, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPowerups, ka_PlayerPowerups, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

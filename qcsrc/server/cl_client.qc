@@ -1987,6 +1987,9 @@ string getTimeoutText(float addOneSecond) {
 
 void player_powerups (void)
 {
+	// add a way to see what the items were BEFORE all of these checks for the mutator hook
+	olditems = self.items;
+	
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
 	{
 		SoundEntity_StartSound(self, CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, cvar("g_jetpack_attenuation"));
@@ -2049,64 +2052,67 @@ void player_powerups (void)
 				sprint(self, "^3You are on speed\n");
 			}
 		}
-		return;
 	}
-
-	if (self.items & IT_STRENGTH)
+	else // if we're not in minstagib, continue. I added this else to replace the "return" which was here that broke the callhook for this function -- This code is nasty.
 	{
-		play_countdown(self.strength_finished, "misc/poweroff.wav");
-		self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-		if (time > self.strength_finished && cvar("g_balance_powerup_timer"))
+		if (self.items & IT_STRENGTH)
 		{
-			self.items = self.items - (self.items & IT_STRENGTH);
-			sprint(self, "^3Strength has worn off\n");
+			play_countdown(self.strength_finished, "misc/poweroff.wav");
+			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
+			if (time > self.strength_finished && cvar("g_balance_powerup_timer"))
+			{
+				self.items = self.items - (self.items & IT_STRENGTH);
+				sprint(self, "^3Strength has worn off\n");
+			}
 		}
-	}
-	else
-	{
-		if (time < self.strength_finished)
+		else
 		{
-			self.items = self.items | IT_STRENGTH;
-			sprint(self, "^3Strength infuses your weapons with devastating power\n");
+			if (time < self.strength_finished)
+			{
+				self.items = self.items | IT_STRENGTH;
+				sprint(self, "^3Strength infuses your weapons with devastating power\n");
+			}
 		}
-	}
-	if (self.items & IT_INVINCIBLE)
-	{
-		play_countdown(self.invincible_finished, "misc/poweroff.wav");
-		self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
-		if (time > self.invincible_finished && cvar("g_balance_powerup_timer"))
+		if (self.items & IT_INVINCIBLE)
 		{
-			self.items = self.items - (self.items & IT_INVINCIBLE);
-			sprint(self, "^3Shield has worn off\n");
+			play_countdown(self.invincible_finished, "misc/poweroff.wav");
+			self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
+			if (time > self.invincible_finished && cvar("g_balance_powerup_timer"))
+			{
+				self.items = self.items - (self.items & IT_INVINCIBLE);
+				sprint(self, "^3Shield has worn off\n");
+			}
 		}
-	}
-	else
-	{
-		if (time < self.invincible_finished)
+		else
 		{
-			self.items = self.items | IT_INVINCIBLE;
-			sprint(self, "^3Shield surrounds you\n");
+			if (time < self.invincible_finished)
+			{
+				self.items = self.items | IT_INVINCIBLE;
+				sprint(self, "^3Shield surrounds you\n");
+			}
 		}
+
+		if(cvar("g_nodepthtestplayers"))
+			self.effects = self.effects | EF_NODEPTHTEST;
+
+		if(cvar("g_fullbrightplayers"))
+			self.effects = self.effects | EF_FULLBRIGHT;
+
+		// midair gamemode: damage only while in the air
+		// if in midair mode, being on ground grants temporary invulnerability
+		// (this is so that multishot weapon don't clear the ground flag on the
+		// first damage in the frame, leaving the player vulnerable to the
+		// remaining hits in the same frame)
+		if (self.flags & FL_ONGROUND)
+		if (g_midair)
+			self.spawnshieldtime = max(self.spawnshieldtime, time + cvar("g_midair_shieldtime"));
+
+		if (time >= game_starttime)
+		if (time < self.spawnshieldtime)
+			self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 	}
-
-	if(cvar("g_nodepthtestplayers"))
-		self.effects = self.effects | EF_NODEPTHTEST;
-
-	if(cvar("g_fullbrightplayers"))
-		self.effects = self.effects | EF_FULLBRIGHT;
-
-	// midair gamemode: damage only while in the air
-	// if in midair mode, being on ground grants temporary invulnerability
-	// (this is so that multishot weapon don't clear the ground flag on the
-	// first damage in the frame, leaving the player vulnerable to the
-	// remaining hits in the same frame)
-	if (self.flags & FL_ONGROUND)
-	if (g_midair)
-		self.spawnshieldtime = max(self.spawnshieldtime, time + cvar("g_midair_shieldtime"));
-
-	if (time >= game_starttime)
-	if (time < self.spawnshieldtime)
-		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
+	
+	MUTATOR_CALLHOOK(PlayerPowerups);
 }
 
 float CalcRegen(float current, float stable, float regenfactor, float regenframetime)
