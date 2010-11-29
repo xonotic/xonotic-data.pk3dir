@@ -637,7 +637,11 @@ void walker_respawnhook()
     vector vtmp;
     entity e;
 
-    setorigin(self,self.wkr_spawn.origin);
+    // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
+    if(self.movetype  != MOVETYPE_WALK)
+		return;
+		
+    setorigin(self, self.wkr_spawn.origin);
 
     self.angles = self.wkr_spawn.angles;
     vtmp = self.wkr_spawn.origin;
