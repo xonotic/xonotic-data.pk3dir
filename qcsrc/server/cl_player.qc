@@ -567,6 +567,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = FALSE;
 
+		if(self.alivetime)
+		{
+			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+			self.alivetime = 0;
+		}
+
 		if(valid_damage_for_weaponstats)
 			WeaponStats_LogKill(DEATH_WEAPONOF(deathtype), self.weapon);
 

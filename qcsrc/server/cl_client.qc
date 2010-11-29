@@ -603,6 +603,12 @@ void PutObserverInServer (void)
 
 	Portal_ClearAll(self);
 
+	if(self.alivetime)
+	{
+		PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+		self.alivetime = 0;
+	}
+
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
 
@@ -1074,6 +1080,9 @@ void PutClientInServer (void)
 		self.switchweapon = w_getbestweapon(self);
 		self.cnt = self.switchweapon;
 		self.weapon = 0;
+
+		if(!self.alivetime)
+			self.alivetime = time;
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
 		PutObserverInServer ();
 	}
@@ -1701,6 +1710,8 @@ void ClientConnect (void)
 	send_CSQC_cr_maxbullets(self);
 
 	CheatInitClient();
+
+	PlayerStats_AddPlayer(self);
 }
 
 /*
@@ -1720,6 +1731,8 @@ void ClientDisconnect (void)
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
+
+	PlayerStats_AddGlobalInfo(self);
 
 	CheatShutdownClient();
 
