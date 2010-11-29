@@ -14,7 +14,12 @@ Misc HUD functions
 //   1/4 height: bottom part
 void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha, vector theBorderSize)
 {
-	if (theBorderSize_x <= 0 && theBorderSize_y <= 0) // no border
+    if (theBorderSize_x < 0 && theBorderSize_y < 0) // draw whole image as it is
+    {
+		drawpic(theOrigin, pic, theSize, theColor, theAlpha, 0);
+		return;
+    }
+	if (theBorderSize_x == 0 && theBorderSize_y == 0) // no border
 	{
 		// draw only the central part
 		drawsubpic(theOrigin, theSize, pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
