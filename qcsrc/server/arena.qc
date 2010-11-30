@@ -245,7 +245,9 @@ void Arena_Warmup()
 			else if(f == 1)
 				Announce("1");
 
-			centerprint(self, msg);
+            entity e;
+            FOR_EACH_PLAYER(e)
+                centerprint(e, msg);
 		}
 
 		if (g_arena) {
@@ -268,13 +270,15 @@ void Arena_Warmup()
 		if(g_ca) {
 			ca_players = 0;
 
-			FOR_EACH_PLAYER(self)
+            local entity oldself;
+            oldself = self;
 				ca_players += 1;
+            self = oldself;
 		}
-	}
 
-	if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
-		self.movetype = MOVETYPE_WALK;
+        if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
+            self.movetype = MOVETYPE_WALK;
+	}
 }
 
 void count_spawned_players()
