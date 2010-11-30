@@ -29,7 +29,7 @@ MUTATOR_HOOKFUNCTION(vampire_BuildMutatorsPrettyString)
 
 MUTATOR_DEFINITION(mutator_vampire)
 {
-	MUTATOR_HOOK(PlayerDamage, vampire_PlayerDamage, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, vampire_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, vampire_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, vampire_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 

@@ -329,6 +329,7 @@ void cvar_changes_init()
 		BADCVAR("g_runematch");
 		BADCVAR("g_tdm");
 		BADCVAR("g_nexball");
+		BADCVAR("g_keepaway");
 		BADCVAR("teamplay");
 
 		// long

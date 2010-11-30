@@ -457,7 +457,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	damage_take = take;
 	damage_save = save;
 	damage_force = force;
-	MUTATOR_CALLHOOK(PlayerDamage);
+	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor);
 	take = bound(0, damage_take, self.health);
 	save = bound(0, damage_save, self.armorvalue);
 
@@ -643,7 +643,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			else
 				DropFlag(self.flagcarried, world, attacker);
 		}
-		if(self.ballcarried)
+		if(self.ballcarried && g_nexball)
 			DropBall(self.ballcarried, self.origin, self.velocity);
 		Portal_ClearAllLater(self);
 		// clear waypoints

@@ -693,8 +693,12 @@ void SV_PlayerPhysics()
 	maxspd_mod = 1;
 	if(g_minstagib && (self.items & IT_INVINCIBLE))
 		maxspd_mod *= cvar("g_minstagib_speed_highspeed");
-	if(g_nexball && self.ballcarried)
-		maxspd_mod *= cvar("g_nexball_basketball_carrier_highspeed");
+	if(self.ballcarried)
+		if(g_nexball)
+			maxspd_mod *= cvar("g_nexball_basketball_carrier_highspeed");
+		else if(g_keepaway)
+			maxspd_mod *= cvar("g_keepaway_ballcarrier_highspeed");
+
 	if(g_runematch)
 	{
 		if(self.runes & RUNE_SPEED)
