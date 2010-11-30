@@ -28,6 +28,7 @@ CLASS(XonoticMapInfoDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticMapInfoDialog, typeRaceLabel, entity, NULL)
 	ATTRIB(XonoticMapInfoDialog, typeCTSLabel, entity, NULL)
 	ATTRIB(XonoticMapInfoDialog, typeNexballLabel, entity, NULL)
+	ATTRIB(XonoticMapInfoDialog, typeFreezetagLabel, entity, NULL)
 
 	ATTRIB(XonoticMapInfoDialog, currentMapIndex, float, 0)
 	ATTRIB(XonoticMapInfoDialog, currentMapBSPName, string, string_null)
@@ -83,6 +84,7 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
 	me.typeRaceLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RACE);
 	me.typeCTSLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CTS);
 	me.typeNexballLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_NEXBALL);
+	me.typeFreezetagLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_FREEZETAG);
 
 	MapInfo_ClearTemps();
 }

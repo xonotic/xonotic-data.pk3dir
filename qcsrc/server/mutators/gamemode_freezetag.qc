@@ -257,6 +257,20 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPhysics)
 	return 1;
 }
 
+MUTATOR_HOOKFUNCTION(freezetag_PlayerDamage)
+{
+    if(g_freezetag)
+    {
+        if(frag_target.freezetag_frozen == 1)
+        {
+            damage_take = 0;
+            damage_save = 0;
+            damage_force = damage_force * cvar("g_freezetag_frozen_force");
+        }
+    }
+    return 1;
+}
+
 MUTATOR_DEFINITION(gamemode_freezetag)
 {
 	MUTATOR_HOOK(MakePlayerObserver, freezetag_RemovePlayer, CBC_ORDER_ANY);
@@ -266,6 +280,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(GiveFragsForKill, freezetag_GiveFragsForKill, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPhysics, freezetag_PlayerPhysics, CBC_ORDER_FIRST);
+	MUTATOR_HOOK(PlayerDamage, freezetag_PlayerDamage, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
