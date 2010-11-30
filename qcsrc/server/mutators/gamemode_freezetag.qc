@@ -261,7 +261,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDamage_Calculate)
 {
     if(g_freezetag)
     {
-        if(frag_target.freezetag_frozen == 1)
+        if(frag_target.freezetag_frozen == 1 && frag_deathtype != DEATH_HURTTRIGGER)
         {
             frag_damage = 0;
             frag_force = frag_force * cvar("g_freezetag_frozen_force");

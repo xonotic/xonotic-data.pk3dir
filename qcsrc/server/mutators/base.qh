@@ -136,6 +136,7 @@ MUTATOR_HOOKABLE(PlayerDamage_Calculate);
 	// INPUT:
 		entity frag_attacker;
 		entity frag_target;
+		float frag_deathtype;
 	// INPUT, OUTPUT:
 		float frag_damage;
 		vector frag_force;
