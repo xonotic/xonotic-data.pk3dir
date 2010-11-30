@@ -3849,10 +3849,12 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
+    uid2name_dialog = 0;
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
 	{
 		vote_active = 1;
 		vote_called_vote = strzone(strcat("^2Name ^7instead of \"^1Unregistered player\"", " ^7in stats"));
+        uid2name_dialog = 1;
 	}
 
 	if(!autocvar_hud_panel_vote && !autocvar__hud_configure)
@@ -3894,7 +3896,7 @@ void HUD_VoteWindow(void)
 	active_panel = HUD_PANEL_VOTE;
 	HUD_Panel_UpdateCvars(vote);
 
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+	if(uid2name_dialog)
 	{
 		panel_pos = eX * 0.3 * vid_conwidth + eY * 0.1 * vid_conheight;
 		panel_size = eX * 0.4 * vid_conwidth + eY * 0.3 * vid_conheight;
@@ -3934,7 +3936,7 @@ void HUD_VoteWindow(void)
 	mySize = newSize;
 
 	s = "A vote has been called for:";
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+	if(uid2name_dialog)
 		s = "Allow servers to store and display your name?";
 	drawstring_aspect(pos, s, eX * mySize_x + eY * (2/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
 	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (1/8), stringwidth_colors);

@@ -610,7 +610,7 @@ void GameCommand(string msg)
 	}
     else if(cmd == "vyes")
     {
-        if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE) && panel_fg_alpha && !scoreboard_active) // don't lock keys before we actually see what's going on
+        if(uid2name_dialog)
         {
             vote_active = 0; // force the panel to disappear right as we have selected the value (to prevent it from fading out in the normal vote panel pos)
             vote_prev = 0;
@@ -624,7 +624,7 @@ void GameCommand(string msg)
     }
     else if(cmd == "vno")
     {
-        if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE) && panel_fg_alpha && !scoreboard_active) // don't lock keys before we actually see what's going on
+        if(uid2name_dialog)
         {
             vote_active = 0;
             vote_prev = 0;
