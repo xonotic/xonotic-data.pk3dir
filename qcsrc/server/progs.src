@@ -35,11 +35,13 @@ campaign.qh
 ../common/mapinfo.qh
 ../common/util.qc
 
+accuracy.qh
 csqcprojectile.qh
 csqceffects.qc
 
 anticheat.qh
 cheats.qh
+playerstats.qh
 
 portals.qh
 
@@ -168,12 +170,14 @@ monsters/fight.qc
 monsters/ai.qc
 monsters/m_monsters.qc
 monsters/monster_zombie.qc
+accuracy.qc
 csqcprojectile.qc
 
 playerdemo.qc
 
 anticheat.qc
 cheats.qc
+playerstats.qc
 
 mutators/base.qc
 mutators/gamemode_keyhunt.qc

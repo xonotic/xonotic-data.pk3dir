@@ -603,6 +603,12 @@ void PutObserverInServer (void)
 
 	Portal_ClearAll(self);
 
+	if(self.alivetime)
+	{
+		PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+		self.alivetime = 0;
+	}
+
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
 
@@ -630,6 +636,8 @@ void PutObserverInServer (void)
 	}
 
 	PlayerScore_Clear(self); // clear scores when needed
+
+	accuracy_resend(self);
 
 	self.spectatortime = time;
 
@@ -853,6 +861,8 @@ void PutClientInServer (void)
 		entity spot, oldself;
 		float j;
 
+		accuracy_resend(self);
+
 		if(self.team < 0)
 			JoinBestTeam(self, FALSE, TRUE);
 
@@ -1070,6 +1080,9 @@ void PutClientInServer (void)
 		self.switchweapon = w_getbestweapon(self);
 		self.cnt = self.switchweapon;
 		self.weapon = 0;
+
+		if(!self.alivetime)
+			self.alivetime = time;
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
 		PutObserverInServer ();
 	}
@@ -1496,6 +1509,7 @@ void ClientConnect (void)
 
 	PlayerScore_Attach(self);
 	ClientData_Attach();
+	accuracy_init(self);
 
 	bot_clientconnect();
 
@@ -1696,6 +1710,8 @@ void ClientConnect (void)
 	send_CSQC_cr_maxbullets(self);
 
 	CheatInitClient();
+
+	PlayerStats_AddPlayer(self);
 }
 
 /*
@@ -1715,6 +1731,8 @@ void ClientDisconnect (void)
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
+
+	PlayerStats_AddGlobalInfo(self);
 
 	CheatShutdownClient();
 
@@ -1774,6 +1792,7 @@ void ClientDisconnect (void)
 		Spawnqueue_Remove(self);
 	}
 
+	accuracy_free(self);
 	ClientData_Detach();
 	PlayerScore_Detach(self);
 
@@ -2271,33 +2290,13 @@ void GetPressedKeys(void) {
 		self.pressedkeys &~= KEY_CROUCH;
 }
 
-void update_stats (float number, float hit, float fired) {
-// self.stat_hit   = number + ((number==0) ? 1 : 64) * hit   * sv_accuracy_data_share;
-// self.stat_fired = number + ((number==0) ? 1 : 64) * fired * sv_accuracy_data_share;
-
-	if(number) {
-		self.stat_hit = number + 64 * hit * sv_accuracy_data_share;
-		self.stat_fired = number + 64 * fired * sv_accuracy_data_share;
-	} else {
-		self.stat_hit = hit * sv_accuracy_data_share;
-		self.stat_fired = fired * sv_accuracy_data_share;
-	}
-}
-
 /*
 ======================
 spectate mode routines
 ======================
 */
 
-.float weapon_count;
 void SpectateCopy(entity spectatee) {
-	if(spectatee.weapon_count < WEP_LAST) {
-		update_stats (spectatee.weapon_count, spectatee.cvar_cl_accuracy_data_share * floor(spectatee.stats_hit[spectatee.weapon_count - 1]), spectatee.cvar_cl_accuracy_data_share * floor(spectatee.stats_fired[spectatee.weapon_count - 1]));
-		spectatee.weapon_count ++;
-	} else
-		update_stats (0, spectatee.cvar_cl_accuracy_data_share * spectatee.stat_hit, spectatee.cvar_cl_accuracy_data_share * spectatee.stat_fired);
-
 	other = spectatee;
 	MUTATOR_CALLHOOK(SpectateCopy);
 	self.armortype = spectatee.armortype;
@@ -2365,8 +2364,7 @@ float SpectateNext() {
 		WriteEntity(MSG_ONE, self.enemy);
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
 		self.movetype = MOVETYPE_NONE;
-
-		self.enemy.weapon_count = 0;
+		accuracy_resend(self);
 
 		if(!SpectateUpdate())
 			PutObserverInServer();
@@ -2414,8 +2412,6 @@ void LeaveSpectatorMode()
 
 			if(cvar("g_campaign"))
 				campaign_bots_may_start = 1;
-
-			self.stat_count = WEP_LAST;
 
 			PutClientInServer();
 
@@ -2520,14 +2516,12 @@ void SpectatorThink()
 				self.classname = "spectator";
 			} else {
 				self.classname = "observer";
-				self.stat_count = WEP_LAST;
 				PutClientInServer();
 			}
 		} else if (self.BUTTON_ATCK2) {
 			self.welcomemessage_time = 0;
 			self.flags &~= FL_JUMPRELEASED;
 			self.classname = "observer";
-			self.stat_count = WEP_LAST;
 			PutClientInServer();
 		} else {
 			if(!SpectateUpdate())
@@ -2963,15 +2957,6 @@ void PlayerPostThink (void)
 	if (isInvisibleString(self.netname)) {
 		self.netname = "Player";
 		stuffcmd(self, strcat("name ", self.netname, substring(ftos(random()), 2, -1), "\n"));
-	}
-
-	// send the clients accuracy stats to the client
-	if(self.stat_count > 0)
-	if(frametime)
-	{
-		self.stat_hit = self.stat_count + 64 * floor(self.(stats_hit[self.stat_count - 1]));
-		self.stat_fired = self.stat_count + 64 * floor(self.(stats_fired[self.stat_count - 1]));
-		self.stat_count -= 1;
 	}
 
 	if(sv_maxidle && frametime)

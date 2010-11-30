@@ -1001,7 +1001,14 @@ void CSQC_UpdateView(float w, float h)
 			CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
 
 			if(cvar("crosshair_dot"))
-				CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", wcross_alpha * f * cvar("crosshair_dot_alpha"));
+            {
+                vector wcross_color_old;
+                wcross_color_old = wcross_color;
+                if(cvar_string("crosshair_dot_color") != "0")
+                    wcross_color = stov(cvar_string("crosshair_dot_color"));
+				CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", f * cvar("crosshair_dot_alpha"));
+                wcross_color = wcross_color_old;
+            }
 
 			wcross_name_alpha_goal_prev = f;
 		}
@@ -1385,7 +1392,7 @@ void CSQC_common_hud(void)
 						acc_levels = MAX_ACCURACY_LEVELS;
 
 					for (i = 0; i < acc_levels; ++i)
-						acc_lev[i] = stof(argv(i));
+						acc_lev[i] = stof(argv(i)) / 100.0;
 				}
 				// let know that acc_col[] needs to be loaded
 				acc_col_x[0] = -1;

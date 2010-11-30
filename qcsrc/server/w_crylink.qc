@@ -9,6 +9,27 @@ REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 .entity queuenext;
 .entity queueprev;
 
+void W_Crylink_CheckLinks(entity e)
+{
+	float i;
+	entity p;
+
+	if(e == world)
+		error("W_Crylink_CheckLinks: entity is world");
+
+	p = e;
+	for(i = 0; i < 1000; ++i)
+	{
+		if(p.queuenext.queueprev != p || p.queueprev.queuenext != p)
+			error("W_Crylink_CheckLinks: queue is inconsistent");
+		p = p.queuenext;
+		if(p == e)
+			break;
+	}
+	if(i >= 1000)
+		error("W_Crylink_CheckLinks: infinite chain");
+}
+
 void W_Crylink_Dequeue_Raw(entity own, entity prev, entity me, entity next)
 {
 	if(me == own.crylink_lastgroup)
@@ -37,27 +58,6 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 		W_Crylink_LinkExplode(e.queuenext, e2);
 
 	remove (e);
-}
-
-void W_Crylink_CheckLinks(entity e)
-{
-	float i;
-	entity p;
-
-	if(e == world)
-		error("W_Crylink_CheckLinks: entity is world");
-
-	p = e;
-	for(i = 0; i < 1000; ++i)
-	{
-		if(p.queuenext.queueprev != p || p.queueprev.queuenext != p)
-			error("W_Crylink_CheckLinks: queue is inconsistent");
-		p = p.queuenext;
-		if(p == e)
-			break;
-	}
-	if(i >= 1000)
-		error("W_Crylink_CheckLinks: infinite chain");
 }
 
 // adjust towards center
@@ -233,6 +233,8 @@ void W_Crylink_Touch (void)
 		f *= a;
 	if (RadiusDamage (self, self.realowner, cvar("g_balance_crylink_primary_damage") * f, cvar("g_balance_crylink_primary_edgedamage") * f, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * f, self.projectiledeathtype, other) && cvar("g_balance_crylink_primary_linkexplode"))
 	{
+		if(self == self.realowner.crylink_lastgroup)
+			self.realowner.crylink_lastgroup = world;
 		W_Crylink_LinkExplode(self.queuenext, self);
 		remove (self);
 		return;
@@ -281,6 +283,8 @@ void W_Crylink_Touch2 (void)
 		f *= a;
 	if (RadiusDamage (self, self.realowner, cvar("g_balance_crylink_secondary_damage") * f, cvar("g_balance_crylink_secondary_edgedamage") * f, cvar("g_balance_crylink_secondary_radius"), world, cvar("g_balance_crylink_secondary_force") * f, self.projectiledeathtype, other) && cvar("g_balance_crylink_secondary_linkexplode"))
 	{
+		if(self == self.realowner.crylink_lastgroup)
+			self.realowner.crylink_lastgroup = world;
 		W_Crylink_LinkExplode(self.queuenext, self);
 		remove (self);
 		return;
@@ -313,11 +317,17 @@ void W_Crylink_Attack (void)
 	local entity proj, prevproj, firstproj;
 	local vector s;
 	vector forward, right, up;
+	float maxdmg;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - cvar("g_balance_crylink_primary_ammo");
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", (cvar("g_balance_crylink_primary_damage")*cvar("g_balance_crylink_primary_shots")));
+	maxdmg = cvar("g_balance_crylink_primary_damage")*cvar("g_balance_crylink_primary_shots");
+	maxdmg *= 1 + cvar("g_balance_crylink_primary_bouncedamagefactor") * cvar("g_balance_crylink_primary_bounces");
+	if(cvar("g_balance_crylink_primary_joinexplode"))
+		maxdmg += cvar("g_balance_crylink_primary_joinexplode_damage");
+
+	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", CHAN_WEAPON, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -409,11 +419,17 @@ void W_Crylink_Attack2 (void)
 {
 	local float counter, shots;
 	local entity proj, prevproj, firstproj;
+	float maxdmg;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - cvar("g_balance_crylink_secondary_ammo");
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", (cvar("g_balance_crylink_secondary_damage")*cvar("g_balance_crylink_secondary_shots")));
+	maxdmg = cvar("g_balance_crylink_secondary_damage")*cvar("g_balance_crylink_secondary_shots");
+	maxdmg *= 1 + cvar("g_balance_crylink_secondary_bouncedamagefactor") * cvar("g_balance_crylink_secondary_bounces");
+	if(cvar("g_balance_crylink_secondary_joinexplode"))
+		maxdmg += cvar("g_balance_crylink_secondary_joinexplode_damage");
+
+	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", CHAN_WEAPON, maxdmg);
 
 	shots = cvar("g_balance_crylink_secondary_shots");
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);

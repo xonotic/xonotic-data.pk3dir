@@ -34,6 +34,7 @@ void W_Mine_Stick ()
 	newmine.damageforcescale = self.damageforcescale;
 	newmine.health = self.health;
 	newmine.event_damage = self.event_damage;
+	newmine.spawnshieldtime = self.spawnshieldtime;
 
 	newmine.movetype = MOVETYPE_NONE; // lock the mine in place
 	newmine.projectiledeathtype = self.projectiledeathtype;
@@ -216,7 +217,7 @@ void W_Mine_Attack (void)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - cvar("g_balance_minelayer_ammo");
 
-	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", cvar("g_balance_minelayer_damage"));
+	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", CHAN_WEAPON, cvar("g_balance_minelayer_damage"));
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);

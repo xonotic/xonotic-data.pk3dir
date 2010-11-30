@@ -120,12 +120,14 @@ void GiveFrags (entity attacker, entity targ, float f)
 		{
 			// teamkill
 			PlayerScore_Add(attacker, SP_KILLS, -1); // or maybe add a teamkills field?
+			PlayerStats_Event(attacker, PLAYERSTATS_KILLS, -1);
 		}
 	}
 	else
 	{
 		// regular frag
 		PlayerScore_Add(attacker, SP_KILLS, 1);
+		PlayerStats_Event(attacker, PLAYERSTATS_KILLS, 1);
 	}
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
@@ -844,19 +846,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 }
 
-void Damage_RecordDamage(entity attacker, float deathtype, float damage)
-{
-	float weaponid;
-	weaponid = DEATH_WEAPONOF(deathtype);
-
-	if not(inWarmupStage)
-	if (weaponid)
-	if ((clienttype(attacker) == CLIENTTYPE_REAL) | (clienttype(attacker) == CLIENTTYPE_BOT)) {
-		attacker.stats_hit[weaponid - 1] += damage;
-		attacker.stat_hit = weaponid + 64 * floor(attacker.stats_hit[weaponid - 1]);
-	}
-}
-
 float RadiusDamage_running;
 float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity)
 // Returns total damage applies to creatures
@@ -875,7 +864,6 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 	float   tfloorforce;
 
 	float stat_damagedone;
-	float stat_maxdamage;
 
 	if(RadiusDamage_running)
 	{
@@ -913,7 +901,6 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 	}
 
 	stat_damagedone = 0;
-	stat_maxdamage = 0;
 
 	targ = WarpZone_FindRadius (blastorigin, rad, FALSE);
 	while (targ)
@@ -1031,14 +1018,8 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 							{
 								total_damage_to_creatures += finaldmg;
 
-								if(targ.flags & FL_CLIENT)
-								if(targ.deadflag == DEAD_NO)
-								if(targ != attacker)
-								if(!teamplay || targ.team != attacker.team)
-								{
+								if(accuracy_isgooddamage(attacker, targ))
 									stat_damagedone += finaldmg;
-									stat_maxdamage += coredamage;
-								}
 							}
 
 							if(targ == directhitentity || DEATH_ISSPECIAL(deathtype))
@@ -1054,7 +1035,8 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 
 	RadiusDamage_running = 0;
 
-	Damage_RecordDamage(attacker, deathtype, min(stat_maxdamage, stat_damagedone));
+	if(!DEATH_ISSPECIAL(deathtype))
+		accuracy_add(attacker, DEATH_WEAPONOFWEAPONDEATH(deathtype), 0, min(coredamage, stat_damagedone));
 
 	return total_damage_to_creatures;
 }
@@ -1157,6 +1139,8 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 					e.fire_hitsound = FALSE;
 				}
 			}
+			if(accuracy_isgooddamage(o, e))
+				accuracy_add(o, DEATH_WEAPONOFWEAPONDEATH(dt), 0, max(0, totaldamage - mindamage));
 			return max(0, totaldamage - mindamage); // can never be negative, but to make sure
 		}
 		else
@@ -1169,6 +1153,8 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		e.fire_deathtype = dt;
 		e.fire_owner = o;
 		e.fire_hitsound = FALSE;
+		if(accuracy_isgooddamage(o, e))
+			accuracy_add(o, DEATH_WEAPONOFWEAPONDEATH(dt), 0, d);
 		return d;
 	}
 }
@@ -1202,8 +1188,6 @@ void Fire_ApplyDamage(entity e)
 		e.fire_owner.typehitsound = ty;
 	}
 	e.fire_hitsound = TRUE;
-
-	Damage_RecordDamage(e.fire_owner, e.fire_deathtype, d);
 
 	if not(IS_INDEPENDENT_PLAYER(e))
 	FOR_EACH_PLAYER(other) if(e != other)

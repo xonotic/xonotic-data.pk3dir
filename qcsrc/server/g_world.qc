@@ -801,8 +801,6 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
-	addstat(STAT_DAMAGE_HITS, AS_INT, stat_hit);
-	addstat(STAT_DAMAGE_FIRED, AS_INT, stat_fired);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
 	addstat(STAT_BULLETS_LOADED, AS_INT, campingrifle_bulletcounter);
@@ -898,6 +896,8 @@ void spawnfunc_worldspawn (void)
 		}
 		cvar_set("sv_curl_serverpackages", substring(s, 1, -1));
 	}
+
+	PlayerStats_Init();
 
 	world_initialized = 1;
 }
@@ -1399,12 +1399,13 @@ RULES
 
 void DumpStats(float final)
 {
-	local float file;
-	local string s;
-	local float to_console;
-	local float to_eventlog;
-	local float to_file;
-	local float i;
+	float file;
+	string s;
+	float to_console;
+	float to_eventlog;
+	float to_file;
+	float i;
+	entity e;
 
 	to_console = cvar("sv_logscores_console");
 	to_eventlog = cvar("sv_eventlog");
@@ -1499,6 +1500,11 @@ void DumpStats(float final)
 		fputs(file, ":end\n");
 		fclose(file);
 	}
+
+	// send statistics
+	FOR_EACH_CLIENT(e)
+		PlayerStats_AddGlobalInfo(e);
+	PlayerStats_Shutdown();
 }
 
 void FixIntermissionClient(entity e)
@@ -1544,8 +1550,6 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
-	float i;
-
 	gameover = TRUE;
 
 	intermission_running = 1;
@@ -1574,52 +1578,10 @@ void NextLevel()
 
 	GameLogClose();
 
-// TO DO
-
-// save the stats to a text file on the client
-// stuffcmd(other, log_stats "stats/file_name");
-// bprint stats
-// stuffcmd(other, log_stats "");
-// use a filename similar to the demo name
-	// string file_name;
-	// file_name = strcat("\nlog_file \"stats/", strftime(TRUE, "%Y-%m-%d_%H-%M"), "_", mapname, ".txt\"");  // open the log file
-
-// write a stats parser for the menu
-
-	if(cvar("sv_accuracy_data_send")) {
-		string stats_to_send;
-
-		FOR_EACH_CLIENT(other) {  // make the string to send
-			FixIntermissionClient(other);
-
-			if(other.cvar_cl_accuracy_data_share) {
-				stats_to_send = strcat(stats_to_send, ":hits:", other.netname);
-
-				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-					stats_to_send = strcat(stats_to_send, ":", ftos(other.stats_hit[i-1]));
-
-				stats_to_send = strcat(stats_to_send, "\n:fired:", other.netname);
-
-				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-					stats_to_send = strcat(stats_to_send, ":", ftos(other.stats_fired[i-1]));
-
-				stats_to_send = strcat(stats_to_send, "\n");
-			}
-		}
-
-		FOR_EACH_REALCLIENT(other) {  // only spam humans
-			Score_NicePrint(other);  // print the score
-
-			if(other.cvar_cl_accuracy_data_receive)  // send the stats string to all the willing clients
-				bprint(stats_to_send);
-		}
-	} else { // ye olde message
-		FOR_EACH_PLAYER(other) {
-			FixIntermissionClient(other);
-
-			if(other.winning)
-				bprint(other.netname, " ^7wins.\n");
-		}
+	FOR_EACH_PLAYER(other) {
+		FixIntermissionClient(other);
+		if(other.winning)
+			bprint(other.netname, " ^7wins.\n");
 	}
 
 	if(cvar("g_campaign"))
@@ -2764,6 +2726,10 @@ void MapVote_Start()
 	if(mapvote_run)
 		return;
 
+	// wait for stats to be sent first
+	if(!playerstats_sent)
+		return;
+
 	MapInfo_Enumerate();
 	if(MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1))
 		mapvote_run = TRUE;
@@ -2938,6 +2904,8 @@ void RestoreGame()
 
 void SV_Shutdown()
 {
+	entity e;
+
 	if(gameover > 1) // shutting down already?
 		return;
 
@@ -2948,6 +2916,11 @@ void SV_Shutdown()
 		world_initialized = 0;
 		print("Saving persistent data...\n");
 		Ban_SaveBans();
+
+		FOR_EACH_CLIENT(e)
+			PlayerStats_AddGlobalInfo(e);
+		PlayerStats_Shutdown();
+
 		if(!cheatcount_total)
 		{
 			if(cvar("sv_db_saveasdump"))

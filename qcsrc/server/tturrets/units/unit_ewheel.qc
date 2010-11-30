@@ -216,6 +216,10 @@ void ewheel_respawnhook()
 {
     entity e;
 
+    // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
+    if(self.movetype  != MOVETYPE_WALK)
+		return;
+		
     self.velocity = '0 0 0';
     self.enemy = world;
 

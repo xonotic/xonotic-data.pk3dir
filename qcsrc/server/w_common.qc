@@ -28,14 +28,13 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	local vector hitloc, force, endpoint, dir;
 	local entity ent, endent;
 	local float endq3surfaceflags;
+	float totaldmg;
 
 	float length;
 	vector beampos;
 	string snd;
 	entity pseudoprojectile;
 	float f, ffs;
-
-	float hit;
 
 	railgun_start = start;
 	railgun_end = end;
@@ -46,6 +45,8 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 	// go a little bit into the wall because we need to hit this wall later
 	end = end + dir;
+
+	totaldmg = 0;
 
 	// trace multiple times until we hit a wall, each obstacle will be made
 	// non-solid so we can hit the next, while doing this we spawn effects and
@@ -121,17 +122,11 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		// get the details we need to call the damage function
 		hitloc = ent.railgunhitloc;
 
-		//for stats so that team hit will count as a miss
-		if(ent.flags & FL_CLIENT)
-		if(ent.deadflag == DEAD_NO)
-			hit = 1;
-
-		if(teams_matter)
-		if(ent.team == self.team)
-			hit = 0;
-
 		f = ExponentialFalloff(mindist, maxdist, halflifedist, ent.railgundistance);
 		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, ent.railgundistance);
+
+		if(accuracy_isgooddamage(self.owner, ent))
+			totaldmg += bdamage * f;
 
 		// apply the damage
 		if (ent.takedamage)
@@ -151,16 +146,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	}
 
 	// calculate hits and fired shots for hitscan
-	if not(inWarmupStage)
-	{
-		self.stats_fired[self.weapon - 1] += 1;
-		self.stat_fired = self.weapon + 64 * floor(self.stats_fired[self.weapon - 1]);
-
-		if(hit) {
-			self.stats_hit[self.weapon - 1] += 1;
-			self.stat_hit = self.weapon + 64 * floor(self.stats_hit[self.weapon - 1]);
-		}
-	}
+	accuracy_add(self, self.weapon, 0, min(bdamage, totaldmg));
 
 	trace_endpos = endpoint;
 	trace_ent = endent;
@@ -170,11 +156,13 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 .float dmg_edge;
 .float dmg_force;
 .float dmg_radius;
+.float dmg_total;
 void W_BallisticBullet_Hit (void)
 {
-	float f;
+	float f, q, g;
 
 	f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
+	q = 1 + self.dmg_edge / self.dmg;
 
 	if(other.solid == SOLID_BSP)
 		Damage_DamageInfo(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.projectiledeathtype, self);
@@ -185,14 +173,16 @@ void W_BallisticBullet_Hit (void)
 
 		headshot = 0;
 		yoda = 0;
-		damage_headshotbonus = self.dmg_edge;
+		damage_headshotbonus = self.dmg_edge * f;
 		railgun_start = self.origin - 2 * frametime * self.velocity;
 		railgun_end = self.origin + 2 * frametime * self.velocity;
-
+		g = accuracy_isgooddamage(self.owner, other);
 		Damage(other, self, self.owner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
 		damage_headshotbonus = 0;
 
-		if(self.dmg_edge != 0)
+		if(headshot)
+			f *= q;
+		if(DEATH_WEAPONOF(self.projectiledeathtype) == WEP_CAMPINGRIFLE)
 		{
 			if(headshot)
 				AnnounceTo(self.owner, "headshot");
@@ -201,13 +191,12 @@ void W_BallisticBullet_Hit (void)
 		}
 
 		// calculate hits for ballistic weapons
-		if (other.flags & FL_CLIENT)  // is the player a client
-		if (other.deadflag == DEAD_NO)  // is the victim a corpse
-		if ((!(teamplay)) | (other.team != self.owner.team))  // not teamplay (ctf, kh, tdm etc) or the victim is in the same team
-		if not(inWarmupStage)  // not in warm up stage
+		if(g)
 		{
-			self.owner.stats_hit[self.owner.weapon - 1] += 1;
-			self.owner.stat_hit = self.owner.weapon + 64 * floor(self.owner.stats_hit[self.owner.weapon - 1]);
+			// do not exceed 100%
+			q = min(self.dmg * q, self.dmg_total + f * self.dmg) - self.dmg_total;
+			self.dmg_total += f * self.dmg;
+			accuracy_add(self.owner, self.owner.weapon, 0, q);
 		}
 	}
 
@@ -424,13 +413,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		savetime = frametime;
 		frametime = 0.05;
 
-		// update the accuracy stats - increase shots fired by 1
-		if not(inWarmupStage)
-		{
-			oldself.stats_fired[oldself.weapon - 1] += 1;
-			oldself.stat_fired = oldself.weapon + 64 * floor(oldself.stats_fired[oldself.weapon - 1]);
-		}
-
 		for(;;)
 		{
 			// DP tracetoss is stupid and always traces in 0.05s
@@ -489,13 +471,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		remove(proj);
 
 		return;
-	}
-
-	// update the accuracy stats
-	if not(inWarmupStage)
-	{
-		self.stats_fired[self.weapon - 1] += 1;
-		self.stat_fired = self.weapon + 64 * floor(self.stats_fired[self.weapon - 1]);
 	}
 
 	if(tracereffects & EF_RED)
