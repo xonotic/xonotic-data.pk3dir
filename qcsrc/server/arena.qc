@@ -24,6 +24,14 @@ void func_breakable_reset();
 void assault_objective_reset();
 void target_assault_roundend_reset();
 
+float next_round;
+float stopalivecheck;
+float redalive, bluealive, yellowalive, pinkalive;
+float totalalive;
+.float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
+float redspawned, bluespawned, yellowspawned, pinkspawned;
+float totalspawned;
+
 /**
  * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
  * Sets the 'warmup' global variable.
@@ -39,6 +47,10 @@ void reset_map(float dorespawn)
 		warmup = time + cvar("g_ca_warmup");
 		allowed_to_spawn = 1;
 	}
+	else if(g_freezetag)
+	{
+		warmup = time + cvar("g_freezetag_warmup");
+	}
 
 	lms_lowest_lives = 999;
 	lms_next_place = player_count;
@@ -46,7 +58,7 @@ void reset_map(float dorespawn)
 	race_ReadyRestart();
 
 	for(self = world; (self = nextent(self)); )
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	if(clienttype(self) == CLIENTTYPE_NOTACLIENT && self.items != IT_STRENGTH && self.items != IT_INVINCIBLE) // don't respawn strength or shield, that will only lead to them spawning very early each match
 	{
 		if(self.reset)
 		{
@@ -91,6 +103,11 @@ void reset_map(float dorespawn)
 			else if(g_ca && self.caplayer) {
 				self.classname = "player";
 				PutClientInServer();
+			}
+			else if(g_freezetag)
+			{
+				if(self.classname == "player")
+					PutClientInServer();
 			}
 			else
 			{
@@ -192,7 +209,7 @@ void Arena_Warmup()
 	float f;
 	string msg;
 
-	if((!g_arena && !g_ca) || (g_arena && !arena_roundbased) || (time < game_starttime))
+	if((!g_arena && !g_ca && !g_freezetag) || (g_arena && !arena_roundbased) || (time < game_starttime))
 		return;
 
 	f = ceil(warmup - time);
@@ -256,14 +273,99 @@ void Arena_Warmup()
 		}
 	}
 
-	if(self.classname == "player" && self.health > 0)
+	if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
 		self.movetype = MOVETYPE_WALK;
 }
 
-float next_round;
-float stopalivecheck;
-float redalive, bluealive;
-.float redalive_stat, bluealive_stat;
+void count_spawned_players()
+{
+	// TODO fix "*spawned" name, it should rather be "*players" or so
+	// not doing this now to prevent merge hell with Tag
+	// fix after merging with Tag
+
+	// count amount of players in each team
+	totalspawned = redspawned = bluespawned = yellowspawned = pinkspawned = 0;
+	FOR_EACH_PLAYER(self) {
+		if (self.team == COLOR_TEAM1)
+		{
+			redspawned += 1;
+			totalspawned += 1;
+		}
+		else if (self.team == COLOR_TEAM2)
+		{
+			bluespawned += 1;
+			totalspawned += 1;
+		}
+		else if (self.team == COLOR_TEAM3)
+		{
+			yellowspawned += 1;
+			totalspawned += 1;
+		}
+		else if (self.team == COLOR_TEAM4)
+		{
+			pinkspawned += 1;
+			totalspawned += 1;
+		}
+	}
+}
+
+void count_alive_players()
+{
+	totalalive = redalive = bluealive = yellowalive = pinkalive = 0;
+	if(g_ca)
+	{
+		FOR_EACH_PLAYER(self) {
+			if (self.team == COLOR_TEAM1 && self.health >= 1)
+			{
+				redalive += 1;
+				totalalive += 1;
+			}
+			else if (self.team == COLOR_TEAM2 && self.health >= 1)
+			{
+				bluealive += 1;
+				totalalive += 1;
+			}
+		}
+		FOR_EACH_PLAYER(self) {
+			self.redalive_stat = redalive;
+			self.bluealive_stat = bluealive;
+		}
+	}
+	else if(g_freezetag)
+	{
+		// count amount of alive players in each team
+		FOR_EACH_PLAYER(self) {
+			if (self.team == COLOR_TEAM1 && self.freezetag_frozen == 0 && self.health >= 1)
+			{
+				redalive += 1;
+				totalalive += 1;
+			}
+			else if (self.team == COLOR_TEAM2 && self.freezetag_frozen == 0 && self.health >= 1)
+			{
+				bluealive += 1;
+				totalalive += 1;
+			}
+			else if (self.team == COLOR_TEAM3 && self.freezetag_frozen == 0 && self.health >= 1)
+			{
+				yellowalive += 1;
+				totalalive += 1;
+			}
+			else if (self.team == COLOR_TEAM4 && self.freezetag_frozen == 0 && self.health >= 1)
+			{
+				pinkalive += 1;
+				totalalive += 1;
+			}
+		}
+		FOR_EACH_PLAYER(self) {
+			self.redalive_stat = redalive;
+			self.bluealive_stat = bluealive;
+			self.yellowalive_stat = yellowalive;
+			self.pinkalive_stat = pinkalive;
+		}
+	}
+
+}
+
 /**
  * This function finds out whether an arena round is over 1 player is left.
  * It determines the last player who's still alive and saves it's entity reference
@@ -273,33 +375,15 @@ float redalive, bluealive;
  */
 void Spawnqueue_Check()
 {
-	if(g_ca) // we want to perform this before the return block below...
+	count_spawned_players();
+	if(g_ca || g_freezetag) // we want to perform this before the return block below (CA)...
 	{
-		// this is STUPID to perform again, but has to be done so that we can give instant feedback when a round ends
-		// and so the code won't start searching for a champion using find() before all players are actually REMOVED
-		redalive = 0; bluealive = 0;
-		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1 && self.health >= 1) redalive += 1;
-			else if (self.team == COLOR_TEAM2 && self.health >= 1) bluealive += 1;
-		}
-		// as if the above stuff wasn't stupid enough, let's run it a third time! :D
-		// (so that we can send redalive/bluealive as a stat)
-		FOR_EACH_PLAYER(self) {
-			self.redalive_stat = redalive;
-			self.bluealive_stat = bluealive;
-		}
+		count_alive_players();
 	}
-	if(time < warmup + 1 || inWarmupStage)
+	if(time < warmup + 1 || inWarmupStage || intermission_running)
 		return;
 
 	if(g_ca) {
-		// check the amount of spawned players in each team
-		float redspawned, bluespawned;
-		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1) redspawned += 1;
-			else if (self.team == COLOR_TEAM2) bluespawned += 1;
-		}
-
 		required_ca_players = max(2, fabs(cvar("bot_vs_human") + 1));
 
 		if(ca_players < required_ca_players && (redspawned && bluespawned)) {
@@ -345,6 +429,12 @@ void Spawnqueue_Check()
 		if((next_round && next_round < time))
 		{
 			stopalivecheck = FALSE;
+			next_round = 0;
+			reset_map(TRUE);
+		}
+	} else if(g_freezetag) {
+		if((next_round && next_round < time))
+		{
 			next_round = 0;
 			reset_map(TRUE);
 		}

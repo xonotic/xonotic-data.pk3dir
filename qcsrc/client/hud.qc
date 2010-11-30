@@ -3023,6 +3023,17 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		else if(type == RACE_FAIL) {
 			HUD_KillNotify_Push(s1, s2, 1, RACE_FAIL);
 		}
+	} else if(msg == MSG_KA) {
+		if(type == KA_PICKUPBALL) {
+			HUD_KillNotify_Push(s1, s2, 0, KA_PICKUPBALL);
+			if(alsoprint)
+				print (s1, "^7 has picked up the ball!\n");
+		}
+		else if(type == KA_DROPBALL) {
+			HUD_KillNotify_Push(s1, s2, 0, KA_DROPBALL);
+			if(alsoprint)
+				print(s1, "^7 has dropped the ball!\n");
+		}
 	}
 }
 
@@ -3302,6 +3313,15 @@ void HUD_Notify (void)
 					s = "notify_blue_captured";
 				}
 			}
+			else if(killnotify_deathtype[j] == KA_DROPBALL)
+			{
+				s = "notify_balldropped";
+			}
+			else if(killnotify_deathtype[j] == KA_PICKUPBALL)
+			{
+				s = "notify_ballpickedup";
+			}
+			
 			attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
 			pos_attacker = pos + eX * (0.52 * mySize_x + height) + eY * (0.5 * fontsize_y + i * height);
 			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
@@ -4352,6 +4372,44 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	}
 }
 
+// Keepaway HUD mod icon
+float kaball_prevstatus; // last remembered status
+float kaball_statuschange_time; // time when the status changed
+
+// we don't need to reset for keepaway since it immediately 
+// autocorrects prevstatus as to if the player has the ball or not
+
+void HUD_Mod_Keepaway(vector pos, vector mySize)
+{
+	mod_active = 1; // keepaway should always show the mod HUD
+	
+	float BLINK_FACTOR = 0.15;
+	float BLINK_BASE = 0.85;
+	float BLINK_FREQ = 5; 
+	float kaball_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
+	
+	float stat_items = getstati(STAT_ITEMS);
+	float kaball = (stat_items/IT_KEY1) & 1;
+	
+	if(kaball != kaball_prevstatus)
+	{
+		kaball_statuschange_time = time;
+		kaball_prevstatus = kaball;
+	}
+	
+	// todo: Fix the sizing with the expanding image
+	
+	float kaball_statuschange_elapsedtime = time - kaball_statuschange_time;
+	float f = bound(0, kaball_statuschange_elapsedtime*2, 1);
+	
+	if(kaball_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(pos + eY * 0.25 * mySize_y, "keepawayball_carrying", eX * mySize_x + eY * mySize_y * 0.5, '1 1 1', panel_fg_alpha * kaball_alpha, DRAWFLAG_NORMAL, f);
+	
+	if(kaball)
+		drawpic_aspect_skin(pos, "keepawayball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * kaball_alpha * f, DRAWFLAG_NORMAL);
+}
+
+
 // Nexball HUD mod icon
 void HUD_Mod_NexBall(vector pos, vector mySize)
 {
@@ -4549,7 +4607,7 @@ void HUD_ModIcons(void)
 	if(!autocvar_hud_panel_modicons && !autocvar__hud_configure)
 		return;
 
-	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && !autocvar__hud_configure)
+	if (gametype != GAME_KEYHUNT && gametype != GAME_CTF && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && gametype != GAME_FREEZETAG && gametype != GAME_KEEPAWAY && !autocvar__hud_configure)
 		return;
 
 	active_panel = HUD_PANEL_MODICONS;
@@ -4586,8 +4644,10 @@ void HUD_ModIcons(void)
 		HUD_Mod_NexBall(pos, mySize);
 	else if(gametype == GAME_CTS || gametype == GAME_RACE)
 		HUD_Mod_Race(pos, mySize);
-	else if(gametype == GAME_CA)
+	else if(gametype == GAME_CA || gametype == GAME_FREEZETAG)
 		HUD_Mod_CA(pos, mySize);
+	else if(gametype == GAME_KEEPAWAY)
+		HUD_Mod_Keepaway(pos, mySize);
 }
 
 // Draw pressed keys (#11)
