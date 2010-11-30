@@ -148,6 +148,8 @@ void XonoticMapInfoDialog_fill(entity me)
 			me.typeCTSLabel = e;
 		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, "Nexball"));
 			me.typeNexballLabel = e;
+		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, "Freezetag"));
+			me.typeFreezetagLabel = e;
 
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticTextLabel(0.5, ""));
