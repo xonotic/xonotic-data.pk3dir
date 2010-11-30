@@ -208,6 +208,7 @@ void Arena_Warmup()
 {
 	float f;
 	string msg;
+    entity e;
 
 	if((!g_arena && !g_ca && !g_freezetag) || (g_arena && !arena_roundbased) || (time < game_starttime))
 		return;
@@ -245,7 +246,6 @@ void Arena_Warmup()
 			else if(f == 1)
 				Announce("1");
 
-            entity e;
             FOR_EACH_PLAYER(e)
                 centerprint(e, msg);
 		}
@@ -270,10 +270,8 @@ void Arena_Warmup()
 		if(g_ca) {
 			ca_players = 0;
 
-            local entity oldself;
-            oldself = self;
+            FOR_EACH_PLAYER(e)
 				ca_players += 1;
-            self = oldself;
 		}
 
         if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
