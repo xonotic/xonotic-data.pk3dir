@@ -631,6 +631,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		frag_target = targ;
 		frag_damage = damage;
 		frag_force = force;
+        frag_deathtype = deathtype;
 		MUTATOR_CALLHOOK(PlayerDamage_Calculate);
 		damage = frag_damage;
 		force = frag_force;
