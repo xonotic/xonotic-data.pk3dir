@@ -619,7 +619,7 @@ void GameCommand(string msg)
         }
         else
         {
-            localcmd("vyes\n");
+            localcmd("cmd vote yes\n");
         }
     }
     else if(cmd == "vno")
@@ -633,7 +633,7 @@ void GameCommand(string msg)
         }
         else
         {
-            localcmd("vno\n");
+            localcmd("cmd vote no\n");
         }
     }
 
