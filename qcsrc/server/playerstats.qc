@@ -149,6 +149,6 @@ void PlayerStats_AddGlobalInfo(entity p)
 	if(p.alivetime)
 		PlayerStats_Event(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
 	
-	if(p.cvar_cl_allow_uid2name)
+	if(p.cvar_cl_allow_uid2name == 1)
 		db_put(playerstats_db, sprintf("%s:_netname", p.crypto_idfp), p.netname);
 }
