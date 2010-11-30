@@ -1012,7 +1012,14 @@ void CSQC_UpdateView(float w, float h)
 			CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
 
 			if(cvar("crosshair_dot"))
-				CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", wcross_alpha * f * cvar("crosshair_dot_alpha"));
+            {
+                vector wcross_color_old;
+                wcross_color_old = wcross_color;
+                if(cvar_string("crosshair_dot_color") != "0")
+                    wcross_color = stov(cvar_string("crosshair_dot_color"));
+				CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", f * cvar("crosshair_dot_alpha"));
+                wcross_color = wcross_color_old;
+            }
 
 			wcross_name_alpha_goal_prev = f;
 		}

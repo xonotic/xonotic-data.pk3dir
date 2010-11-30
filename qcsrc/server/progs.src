@@ -41,6 +41,7 @@ csqceffects.qc
 
 anticheat.qh
 cheats.qh
+playerstats.qh
 
 portals.qh
 
@@ -176,6 +177,7 @@ playerdemo.qc
 
 anticheat.qc
 cheats.qc
+playerstats.qc
 
 mutators/base.qc
 mutators/gamemode_keyhunt.qc

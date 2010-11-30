@@ -263,7 +263,8 @@ float blockSpectators; //if set, new or existing spectators or observers will be
 void checkSpectatorBlock();
 
 .float winning;
-.float jointime;
+.float jointime; // time of joining
+.float alivetime; // time of being alive
 
 float isJoinAllowed();
 #define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
