@@ -520,6 +520,11 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_INFOMESSAGES:
 					HUD_Write_PanelCvar_q("_flip");
 					break;
+				case HUD_PANEL_PHYSICS:
+					HUD_Write_PanelCvar_q("_flip");
+					HUD_Write_PanelCvar_q("_baralign");
+					HUD_Write_PanelCvar_q("_progressbar");
+					break;
 			}
 			HUD_Write("\n");
 		}
@@ -4852,6 +4857,213 @@ void HUD_InfoMessages(void)
 	}
 }
 
+// Physics panel (#15)
+//
+vector acc_prevspeed;
+float acc_prevtime, acc_avg, top_speed, top_speed_time;
+
+void HUD_Physics(void)
+{
+	if(!autocvar_hud_panel_physics && !autocvar__hud_configure)
+		return;
+
+	active_panel = HUD_PANEL_PHYSICS;
+	HUD_Panel_UpdateCvars(physics);
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+
+	HUD_Panel_DrawBg(1);
+	if(panel_bg_padding)
+	{
+		pos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+
+	//compute speed
+	float speed, conversion_factor;
+	string zspeed, unit;
+
+	switch(cvar("hud_panel_physics_speed_unit"))
+	{
+		default:
+		case 1:
+			unit = "qu/s";
+			conversion_factor = 1.0;
+			break;
+		case 2:
+			unit = "m/s";
+			conversion_factor = 0.0254;
+			break;
+		case 3:
+			unit = "km/h";
+			conversion_factor = 0.0254 * 3.6;
+			break;
+		case 4:
+			unit = "mph";
+			conversion_factor = 0.0254 * 3.6 * 0.6213711922;
+			break;
+		case 5:
+			unit = "knots";
+			conversion_factor = 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
+			break;
+	}
+
+	float max_speed = floor( cvar("hud_panel_physics_speed_max") * conversion_factor + 0.5 );
+	if (autocvar__hud_configure)
+		speed = floor( max_speed * 0.65 + 0.5 );
+	else if(cvar("hud_panel_physics_speed_z"))
+		speed = floor( vlen(pmove_vel) * conversion_factor + 0.5 );
+	else
+		speed = floor( vlen(pmove_vel - pmove_vel_z * '0 0 1') * conversion_factor + 0.5 );
+
+	//compute acceleration
+	float acceleration, f;
+	float max_acceleration = cvar("hud_panel_physics_acceleration_max");
+	if (autocvar__hud_configure)
+		acceleration = max_acceleration * 0.3;
+	else
+	{
+		f = time - acc_prevtime;
+		if(cvar("hud_panel_physics_acceleration_z"))
+			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed)) * (1 / f);
+		else
+			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f);
+		acc_prevspeed = pmove_vel;
+		acc_prevtime = time;
+
+		f = bound(0, f * 10, 1);
+		acc_avg = acc_avg * (1 - f) + acceleration * f;
+		acceleration = acc_avg / getstatf(STAT_MOVEVARS_MAXSPEED);
+	}
+
+	//compute layout
+	drawfont = hud_bigfont;
+	float baralign = cvar("hud_panel_physics_baralign");
+	float progressbar = cvar("hud_panel_physics_progressbar");
+	float panel_ar = mySize_x/mySize_y;
+	vector speed_offset, acceleration_offset;
+	if (panel_ar >= 5)
+	{
+		mySize_x *= 0.5;
+		if (cvar("hud_panel_physics_flip"))
+			speed_offset_x = mySize_x;
+		else
+			acceleration_offset_x = mySize_x;
+	}
+	else
+	{
+		mySize_y *= 0.5;
+		if (cvar("hud_panel_physics_flip"))
+			speed_offset_y = mySize_y;
+		else
+			acceleration_offset_y = mySize_y;
+	}
+	float speed_baralign, acceleration_baralign;
+	if (cvar("hud_panel_physics_flip"))
+	{
+		acceleration_baralign = (baralign == 1 || baralign == 2);
+		speed_baralign = (baralign == 1 || baralign == 3);
+	}
+	else
+	{
+		speed_baralign = (baralign == 1 || baralign == 2);
+		acceleration_baralign = (baralign == 1 || baralign == 3);
+	}
+
+	//draw speed
+	if(speed && progressbar)
+	{
+		HUD_Panel_GetProgressBarColor(speed);
+		HUD_Panel_DrawProgressBar(pos + speed_offset, mySize, speed/max_speed, 0, speed_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+
+	vector tmp_offset, tmp_size;
+	tmp_size_x = mySize_x * 0.75;
+	tmp_size_y = mySize_y;
+	if (speed_baralign)
+		tmp_offset_x = mySize_x - tmp_size_x;
+	//else
+		//tmp_offset_x = 0;
+	drawstring_aspect(pos + speed_offset + tmp_offset, ftos(speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+	//draw speed unit
+	if (speed_baralign)
+		tmp_offset_x = 0;
+	else
+		tmp_offset_x = tmp_size_x;
+	if (cvar("hud_panel_physics_speed_unit_show"))
+	{
+		//tmp_offset_y = 0;
+		tmp_size_x = mySize_x * (1 - 0.75);
+		tmp_size_y = mySize_y * 0.4;
+		drawstring_aspect(pos + speed_offset + tmp_offset, unit, tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+
+	//compute and draw top speed
+	if (cvar("hud_panel_physics_topspeed"))
+	{
+		if (autocvar__hud_configure)
+		{
+			top_speed = floor( max_speed * 0.75 + 0.5 );
+			f = 1;
+		}
+		else
+		{
+			if (speed >= top_speed)
+			{
+				top_speed = speed;
+				top_speed_time = time;
+			}
+			if (top_speed == 0) //hide top speed 0, it would be stupid
+				f = 0;
+			else
+			{
+				f = max(1, cvar("hud_panel_physics_topspeed_time"));
+				// divide by f to make it start from 1
+				f = cos( ((time - top_speed_time) / f) * PI/2 );
+			}
+		}
+		if (f > 0)
+		{
+			//top speed progressbar peek
+			if(progressbar && speed < top_speed)
+			{
+				float peek_offset_x, peek_size_x;
+				if (speed_baralign)
+					peek_offset_x = (1 - min(top_speed, max_speed)/max_speed) * mySize_x;
+				else
+					peek_offset_x = min(top_speed, max_speed)/max_speed * mySize_x;
+				//if speed is not 0 the speed progressbar already fetched the color
+				if (speed == 0)
+					HUD_Panel_GetProgressBarColor(speed);
+				peek_size_x = mySize_x * 0.01;
+				drawfill(pos + speed_offset + eX * (peek_offset_x - peek_size_x), eX * peek_size_x + eY * mySize_y, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			}
+
+			//top speed
+			tmp_offset_y = mySize_y * 0.4;
+			tmp_size_x = mySize_x * (1 - 0.75);
+			tmp_size_y = mySize_y - tmp_offset_y;
+			drawstring_aspect(pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		else
+			top_speed = 0;
+	}
+
+	//draw acceleration
+	if(acceleration && progressbar)
+	{
+		if (acceleration < 0)
+			HUD_Panel_GetProgressBarColor(acceleration_neg);
+		else
+			HUD_Panel_GetProgressBarColor(acceleration);
+		HUD_Panel_DrawProgressBar(pos + acceleration_offset, mySize, fabs(acceleration)/max_acceleration, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+	drawstring_aspect(pos + acceleration_offset, ftos_decimals(acceleration, 3), mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawfont = hud_font;
+}
+
 /*
 ==================
 Main HUD system
@@ -4908,10 +5120,6 @@ void HUD_ShowSpeed(void)
 
 	drawfont = hud_font;
 }
-
-vector acc_prevspeed;
-float acc_prevtime;
-float acc_avg;
 
 void HUD_ShowAcceleration(void)
 {
@@ -5000,6 +5208,8 @@ switch (id) {\
 		HUD_EngineInfo(); break;\
 	case (HUD_PANEL_INFOMESSAGES):\
 		 HUD_InfoMessages(); break;\
+	case (HUD_PANEL_PHYSICS):\
+		 HUD_Physics(); break;\
 } ENDS_WITH_CURLY_BRACE
 
 void HUD_Main (void)
