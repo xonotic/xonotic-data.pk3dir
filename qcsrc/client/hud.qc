@@ -553,14 +553,17 @@ if(highlightedPanel_prev == active_panel && autocvar__hud_configure)\
 	HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha) * alpha);\
 } ENDS_WITH_CURLY_BRACE
 
-void HUD_Panel_DrawProgressBar(vector pos, vector mySize, float lenght_ratio, float vertical, float right_align, vector color, float alpha, float drawflag)
+//basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
+void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, float lenght_ratio, float vertical, float right_align, vector theColor, float theAlpha, float drawflag)
 {
-	if(lenght_ratio <= 0 || !alpha)
+	if(lenght_ratio <= 0 || !theAlpha)
 		return;
 	if(lenght_ratio > 1)
 		lenght_ratio = 1;
 
 	string pic;
+	vector square;
+	vector width, height;
 	if(vertical) {
 		pic = strcat(hud_skin_path, "/statusbar_vertical");
 		if(precache_pic(pic) == "") {
@@ -568,13 +571,28 @@ void HUD_Panel_DrawProgressBar(vector pos, vector mySize, float lenght_ratio, fl
 		}
 
 		if (right_align)
-			pos_y += (1 - lenght_ratio) * mySize_y;
-		mySize_y *= lenght_ratio;
+			theOrigin_y += (1 - lenght_ratio) * theSize_y;
+		theSize_y *= lenght_ratio;
 
-		drawsubpic(pos, eY * min(mySize_y * 0.5, mySize_x) + eX * mySize_x, pic, '0 0 0', '1 0.25 0', color, alpha, drawflag);
-		if(mySize_y/mySize_x > 2)
-			drawsubpic(pos + eY * mySize_x, eY * (mySize_y - 2 * mySize_x) + eX * mySize_x, pic, '0 0.25 0', '1 0.5 0', color, alpha, drawflag);
-		drawsubpic(pos + eY * mySize_y - eY * min(mySize_y * 0.5, mySize_x), eY * min(mySize_y * 0.5, mySize_x) + eX * mySize_x, pic, '0 0.75 0', '1 0.25 0', color, alpha, drawflag);
+		vector bH;
+		width = eX * theSize_x;
+		height = eY * theSize_y;
+		if(theSize_y <= theSize_x * 2)
+		{
+			// button not high enough
+			// draw just upper and lower part then
+			square = eY * theSize_y * 0.5;
+			bH = eY * (0.25 * theSize_y / (theSize_x * 2));
+			drawsubpic(theOrigin,          square + width, pic, '0 0 0', eX + bH, theColor, theAlpha, drawflag);
+			drawsubpic(theOrigin + square, square + width, pic, eY - bH, eX + bH, theColor, theAlpha, drawflag);
+		}
+		else
+		{
+			square = eY * theSize_x;
+			drawsubpic(theOrigin,                   width   +     square, pic, '0 0    0', '1 0.25 0', theColor, theAlpha, drawflag);
+			drawsubpic(theOrigin +          square, theSize - 2 * square, pic, '0 0.25 0', '1 0.5  0', theColor, theAlpha, drawflag);
+			drawsubpic(theOrigin + height - square, width   +     square, pic, '0 0.75 0', '1 0.25 0', theColor, theAlpha, drawflag);
+		}
 	} else {
 		pic = strcat(hud_skin_path, "/statusbar");
 		if(precache_pic(pic) == "") {
@@ -582,13 +600,28 @@ void HUD_Panel_DrawProgressBar(vector pos, vector mySize, float lenght_ratio, fl
 		}
 
 		if (right_align)
-			pos_x += (1 - lenght_ratio) * mySize_x;
-		mySize_x *= lenght_ratio;
+			theOrigin_x += (1 - lenght_ratio) * theSize_x;
+		theSize_x *= lenght_ratio;
 
-		drawsubpic(pos, eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, pic, '0 0 0', '0.25 1 0', color, alpha, drawflag);
-		if(mySize_x/mySize_y > 2)
-			drawsubpic(pos + eX * mySize_y, eX * (mySize_x - 2 * mySize_y) + eY * mySize_y, pic, '0.25 0 0', '0.5 1 0', color, alpha, drawflag);
-		drawsubpic(pos + eX * mySize_x - eX * min(mySize_x * 0.5, mySize_y), eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, pic, '0.75 0 0', '0.25 1 0', color, alpha, drawflag);
+		vector bW;
+		width = eX * theSize_x;
+		height = eY * theSize_y;
+		if(theSize_x <= theSize_y * 2)
+		{
+			// button not wide enough
+			// draw just left and right part then
+			square = eX * theSize_x * 0.5;
+			bW = eX * (0.25 * theSize_x / (theSize_y * 2));
+			drawsubpic(theOrigin,          square + height, pic, '0 0 0', eY + bW, theColor, theAlpha, drawflag);
+			drawsubpic(theOrigin + square, square + height, pic, eX - bW, eY + bW, theColor, theAlpha, drawflag);
+		}
+		else
+		{
+			square = eX * theSize_y;
+			drawsubpic(theOrigin,                  height  +     square, pic, '0    0 0', '0.25 1 0', theColor, theAlpha, drawflag);
+			drawsubpic(theOrigin +         square, theSize - 2 * square, pic, '0.25 0 0', '0.5  1 0', theColor, theAlpha, drawflag);
+			drawsubpic(theOrigin + width - square, height  +     square, pic, '0.75 0 0', '0.25 1 0', theColor, theAlpha, drawflag);
+		}
 	}
 }
 
