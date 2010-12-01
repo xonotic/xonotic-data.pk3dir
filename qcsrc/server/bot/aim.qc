@@ -109,6 +109,10 @@ float bot_shouldattack(entity e)
 			return FALSE;
 	}
 
+	if(g_freezetag)
+		if(e.freezetag_frozen)
+			return FALSE;
+
 	if(teams_matter)
 	{
 		if(e.team==0)
