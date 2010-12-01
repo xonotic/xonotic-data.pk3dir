@@ -5120,10 +5120,40 @@ void HUD_Main (void)
 
 	// cache the panel order into the panel_order array
 	if(autocvar__hud_panelorder != hud_panelorder_prev) {
+		for(i = 0; i < HUD_PANEL_NUM; ++i)
+			panel_order[i] = -1;
+		string s;
+		float p_num, warning;
+		float argc = tokenize_console(autocvar__hud_panelorder);
+		if (argc > HUD_PANEL_NUM)
+			warning = true;
+		//first detect wrong/missing panel numbers
+		for(i = 0; i < HUD_PANEL_NUM; ++i) {
+			p_num = stof(argv(i));
+			if (p_num >= 0 && p_num < HUD_PANEL_NUM) { //correct panel number?
+				if (panel_order[p_num] == -1) //found for the first time?
+					s = strcat(s, ftos(p_num), " ");
+				panel_order[p_num] = 1; //mark as found
+			}
+			else
+				warning = true;
+		}
+		for(i = 0; i < HUD_PANEL_NUM; ++i) {
+			if (panel_order[i] == -1) {
+				warning = true;
+				s = strcat(s, ftos(i), " "); //add missing panel number
+			}
+		}
+		if (warning)
+			print("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
+
+		cvar_set("_hud_panelorder", s);
 		if(hud_panelorder_prev)
 			strunzone(hud_panelorder_prev);
-		hud_panelorder_prev = strzone(autocvar__hud_panelorder);
-		tokenize_console(autocvar__hud_panelorder);
+		hud_panelorder_prev = strzone(s);
+
+		//now properly set panel_order
+		tokenize_console(s);
 		for(i = 0; i < HUD_PANEL_NUM; ++i) {
 			panel_order[i] = stof(argv(i));
 		}
