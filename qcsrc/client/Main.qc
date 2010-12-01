@@ -608,6 +608,35 @@ void GameCommand(string msg)
 		e.draw = DrawDebugModel;
 		e.classname = "debugmodel";
 	}
+    else if(cmd == "vyes")
+    {
+        if(uid2name_dialog)
+        {
+            vote_active = 0; // force the panel to disappear right as we have selected the value (to prevent it from fading out in the normal vote panel pos)
+            vote_prev = 0;
+            cvar_set("cl_allow_uid2name", "1");
+            vote_change = -9999;
+        }
+        else
+        {
+            localcmd("cmd vote yes\n");
+        }
+    }
+    else if(cmd == "vno")
+    {
+        if(uid2name_dialog)
+        {
+            vote_active = 0;
+            vote_prev = 0;
+            cvar_set("cl_allow_uid2name", "0");
+            vote_change = -9999;
+        }
+        else
+        {
+            localcmd("cmd vote no\n");
+        }
+    }
+
 	else
 	{
 		print("Invalid command. For a list of supported commands, try cl_cmd help.\n");
@@ -626,56 +655,6 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	local float bSkipKey;
 	bSkipKey = false;
-
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE) && panel_fg_alpha && !scoreboard_active) // don't lock keys before we actually see what's going on
-	{
-		/*
-		string vyes_keys;
-		float keys;
-		vyes_keys = findkeysforcommand("vyes");
-		keys = tokenize(vyes_keys);
-
-		float i;
-		for (i = 0; i < keys; ++i)
-		{
-			print(ftos(nPrimary), " ", argv(i), "\n"); 
-			if(nPrimary == stof(argv(i)))
-			{
-				vote_active = 0;
-				cvar_set("cl_allow_uid2name", "1");
-				return TRUE;
-			}
-		}
-
-		string vno_keys;
-		vno_keys = findkeysforcommand("vno");
-		keys = tokenize(vno_keys);
-
-		float i;
-		for (i = 0; i < keys; ++i)
-		{
-			if(nPrimary == stof(argv(i)))
-			{
-				vote_active = 0;
-				cvar_set("cl_allow_uid2name", "0");
-				return TRUE;
-			}
-		}
-		*/ // If only I could grab F1-F12 in CSQC... but no
-
-		if(nPrimary == 121) // ascii value for y
-		{
-			vote_active = 0;
-			cvar_set("cl_allow_uid2name", "1");
-			return TRUE;
-		}
-		else if(nPrimary == 110) // ascii value for n
-		{
-			vote_active = 0;
-			cvar_set("cl_allow_uid2name", "0");
-			return TRUE;
-		}
-	}
 
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
