@@ -7,13 +7,14 @@ float playerstats_requested;
 void PlayerStats_Init()
 {
 	string uri;
-	playerstats_sent = TRUE;
+	playerstats_db = -1;
+	playerstats_waitforme = TRUE;
 	uri = cvar_string("g_playerstats_uri");
 	if(uri == "")
 		return;
 	playerstats_db = db_create();
 	if(playerstats_db >= 0)
-		playerstats_sent = FALSE; // must wait for it at match end
+		playerstats_waitforme = FALSE; // must wait for it at match end
 	
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
 	PlayerStats_AddEvent(PLAYERSTATS_KILLS);
@@ -81,7 +82,7 @@ void PlayerStats_Event(entity e, string event_id, float value)
 void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 {
 	if(playerstats_requested)
-		playerstats_sent = TRUE;
+		playerstats_waitforme = TRUE;
 }
 
 void PlayerStats_Shutdown()
@@ -126,12 +127,12 @@ void PlayerStats_Shutdown()
 		if(crypto_uri_postbuf(uri, URI_GET_PLAYERSTATS_SENT, "text/plain", "\n", b, 0))
 			playerstats_requested = TRUE;
 		else
-			playerstats_sent = TRUE; // if posting fails, we must continue anyway
+			playerstats_waitforme = TRUE; // if posting fails, we must continue anyway
 
 		buf_del(b);
 	}
 	else
-		playerstats_sent = TRUE;
+		playerstats_waitforme = TRUE;
 
 	db_close(playerstats_db);
 	playerstats_db = -1;
