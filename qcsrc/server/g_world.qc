@@ -2736,7 +2736,7 @@ void MapVote_Start()
 		return;
 
 	// wait for stats to be sent first
-	if(!playerstats_sent)
+	if(!playerstats_waitforme)
 		return;
 
 	MapInfo_Enumerate();

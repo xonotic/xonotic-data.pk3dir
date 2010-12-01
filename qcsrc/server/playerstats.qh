@@ -3,7 +3,7 @@ string PLAYERSTATS_ALIVETIME = "alivetime";
 string PLAYERSTATS_KILLS     = "kills";
 
 // delay map switch until this is set
-float playerstats_sent;
+float playerstats_waitforme;
 
 // call at initialization
 void PlayerStats_Init();
