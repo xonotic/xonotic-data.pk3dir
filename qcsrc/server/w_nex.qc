@@ -96,8 +96,6 @@ float w_nex(float req)
 
         if(cvar("g_balance_nex_charge"))
         {
-            local float hdrmultiplier = 
-
             self.weaponentity.weaponentity.glowmod = '0 0 0'; // reset
 
             self.weaponentity.weaponentity.glowmod_x = cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_red_half") * bound(0, self.weaponentity.weaponentity.glowmod_y + self.nex_charge / cvar("g_balance_nex_charge_limit"), 1);
