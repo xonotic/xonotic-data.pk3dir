@@ -28,7 +28,7 @@ void ka_Reset() // used to clear the ballcarrier whenever the match switches fro
 	ka_RespawnBall();
 }
 
-void ka_SpawnBall() // loads various values for the ball
+void ka_SpawnBall() // loads various values for the ball, runs only once at start of match
 {
 	if(!g_keepaway) { return; }
 	
@@ -103,7 +103,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	self.owner = other;
 	other.ballcarried = self;
 	setattachment(self, other, "");
-	setorigin(self, '3 0 20');
+	setorigin(self, '3 0 20'); // wtf why is this not '0 0 0' ? 
 	
 	// make the ball invisible/unable to do anything
 	self.velocity = '0 0 0';
@@ -162,10 +162,10 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.owner = world;
 	
 	// reset the player effects
+	plyr.glow_trail = FALSE;
 	plyr.effects &~= EF_DIMLIGHT;
 	plyr.alpha = default_player_alpha;
 	plyr.exteriorweaponentity.alpha = default_weapon_alpha; 
-	plyr.glow_trail = FALSE;
 	
 	// messages and sounds
 	Send_KillNotification(plyr.netname, "", "", KA_DROPBALL, MSG_KA);
@@ -187,12 +187,10 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 float ka_ballcarrier_waypointsprite_visible_for_player(entity e) // runs on waypoints which are attached to ballcarriers, updates once per frame 
 {
 	if(e.ballcarried)
-	{
 		if(other.classname == "spectator") 
 			return FALSE; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
-		else if(g_minstagib && (e.items & IT_STRENGTH))
-			return FALSE; // if the ballcarrier has invisibility, don't draw the waypoint as this is the function of invisibility in keepaway
-	}
+		
+	// TODO: Make the ballcarrier lack a waypointsprite whenever they have the invisibility powerup
 
 	return TRUE;
 }
@@ -279,29 +277,25 @@ MUTATOR_HOOKFUNCTION(ka_PlayerDamage) // for changing damage and force values th
 
 MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 {
+	// right now this hook doesn't make much sense (It's actually useless this way except for minstagib invisibility alpha) 
+	// but in the future it's supposed to allow me to do some extra stuff with waypointsprites and invisibility powerup
+	// So bare with me until I can fix a certain bug with ka_ballcarrier_waypointsprite_visible_for_player() 
+	
+	// also note that this structure makes no sense (Rather there is a better way to do it) the way it's currently applied
+	// again just bare with me as this is for a future feature. 
+
 	if(self.ballcarried)
 	{ 
-		// if the player has the ball, force ballcarrier alpha upon them
+		// force the default ballcarrier alpha on the player if they have the ball
 		self.alpha = cvar("g_keepaway_ballcarrier_alpha");
 		self.exteriorweaponentity.alpha = cvar("g_keepaway_ballcarrier_alpha");
 	
-		// if we're in minstagib and a ballcarrier has just picked up invisibility, 
-		// notify all the other players that the ballcarrier no longer has a waypoint
 		if(g_minstagib)
 		{
 			if(olditems & IT_STRENGTH) 
-			{
-				if(time > self.strength_finished) 
-				{	// this only runs ONCE right after the player loses invisibility
-					bprint(self.netname, "^7 isn't invisible from radar anymore.\n");
-				}
-			}
-			else 
-			{
-				if(time < self.strength_finished)
-				{	// this only runs ONCE right after the player gains invisibility
-					bprint(self.netname, "^7 has picked up invisibility and can no longer be seen on radar!\n");
-				}
+			{ // if the player has the ball and they also have the invisibility powerup, apply alpha accordingly
+				self.alpha = g_minstagib_invis_alpha;
+				self.exteriorweaponentity.alpha = g_minstagib_invis_alpha;
 			}
 		}
 	}
