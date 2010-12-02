@@ -96,16 +96,19 @@ float w_nex(float req)
 
         if(cvar("g_balance_nex_charge"))
         {
+            local float hdrmultiplier = 
+
             self.weaponentity.weaponentity.glowmod = '0 0 0'; // reset
 
-            self.weaponentity.weaponentity.glowmod_y = 0.5 * bound(0, self.weaponentity.weaponentity.glowmod_y + self.nex_charge / cvar("g_balance_nex_charge_limit"), 1);
-            self.weaponentity.weaponentity.glowmod_z = bound(0, self.weaponentity.weaponentity.glowmod_z + self.nex_charge / cvar("g_balance_nex_charge_limit"), 1);
+            self.weaponentity.weaponentity.glowmod_x = cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_red_half") * bound(0, self.weaponentity.weaponentity.glowmod_y + self.nex_charge / cvar("g_balance_nex_charge_limit"), 1);
+            self.weaponentity.weaponentity.glowmod_y = cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_green_half") * bound(0, self.weaponentity.weaponentity.glowmod_y + self.nex_charge / cvar("g_balance_nex_charge_limit"), 1);
+            self.weaponentity.weaponentity.glowmod_z = cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_blue_half") * bound(0, self.weaponentity.weaponentity.glowmod_z + self.nex_charge / cvar("g_balance_nex_charge_limit"), 1);
 
             if(self.nex_charge > cvar("g_balance_nex_charge_limit"))
             {
-                self.weaponentity.weaponentity.glowmod_x = self.weaponentity.weaponentity.glowmod_x + (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
-                self.weaponentity.weaponentity.glowmod_y = self.weaponentity.weaponentity.glowmod_y - 0.5 * (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
-                self.weaponentity.weaponentity.glowmod_z = self.weaponentity.weaponentity.glowmod_z - (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
+                self.weaponentity.weaponentity.glowmod_x = self.weaponentity.weaponentity.glowmod_x + cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_red_full") * (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
+                self.weaponentity.weaponentity.glowmod_y = self.weaponentity.weaponentity.glowmod_y + cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_green_full") * (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
+                self.weaponentity.weaponentity.glowmod_z = self.weaponentity.weaponentity.glowmod_z + cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_blue_full") * (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
             }
             self.exteriorweaponentity.glowmod = self.weaponentity.weaponentity.glowmod;
         }
