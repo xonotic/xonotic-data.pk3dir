@@ -48,6 +48,7 @@ void W_Nex_Attack (float issecondary)
 		charge = cvar("g_balance_nex_charge_mindmg") / mydmg + (1 - cvar("g_balance_nex_charge_mindmg") / mydmg) * self.nex_charge;
 		self.nex_charge *= cvar("g_balance_nex_charge_shot_multiplier"); // do this AFTER setting mydmg/myforce
 		                                                                 // O RLY? -- divVerent
+                                                                         // YA RLY -- FruitieX
 	}
 	else
 		charge = 1;
@@ -92,6 +93,17 @@ float w_nex(float req)
 	{
 		if(cvar("g_balance_nex_charge") && self.nex_charge < cvar("g_balance_nex_charge_limit"))
 			self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_charge_rate") * frametime / W_TICSPERFRAME);
+
+        if(cvar("g_balance_nex_charge"))
+        {
+            self.weaponentity.weaponentity.glowmod = '1 1 1' * self.nex_charge;
+            self.exteriorweaponentity.glowmod = '1 1 1' * self.nex_charge;
+            if(self.nex_charge > cvar("g_balance_nex_charge_limit"))
+            {
+                self.weaponentity.weaponentity.glowmod_y -= 0.5 * (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
+                self.weaponentity.weaponentity.glowmod_z -= 0.5 * (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
+            }
+        }
 
 		if(cvar("g_balance_nex_secondary_charge_pool"))
 		if(self.nex_charge_pool_ammo < 1)
