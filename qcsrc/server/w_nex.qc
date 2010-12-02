@@ -55,6 +55,10 @@ void W_Nex_Attack (float issecondary)
 	myforce *= charge;
 
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", CHAN_WEAPON, mydmg);
+    if(charge > cvar("g_balance_nex_charge_limit") && cvar("g_balance_nex_charge_limit")) // if the Nex is overcharged, we play an extra sound
+    {
+        sound (self, CHAN_WEAPON2, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * cvar("g_balance_nex_charge_limit")) / (1 - 0.5 * cvar("g_balance_nex_charge_limit")), ATTN_NORM);
+    }
 
 	yoda = 0;
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_NEX);
