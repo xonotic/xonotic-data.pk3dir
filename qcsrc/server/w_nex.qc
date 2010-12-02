@@ -96,13 +96,18 @@ float w_nex(float req)
 
         if(cvar("g_balance_nex_charge"))
         {
-            self.weaponentity.weaponentity.glowmod = '1 1 1' * self.nex_charge;
-            self.exteriorweaponentity.glowmod = '1 1 1' * self.nex_charge;
+            self.weaponentity.weaponentity.glowmod = '0 0 0'; // reset
+
+            self.weaponentity.weaponentity.glowmod_y = 0.5 * bound(0, self.weaponentity.weaponentity.glowmod_y + self.nex_charge / cvar("g_balance_nex_charge_limit"), 1);
+            self.weaponentity.weaponentity.glowmod_z = bound(0, self.weaponentity.weaponentity.glowmod_z + self.nex_charge / cvar("g_balance_nex_charge_limit"), 1);
+
             if(self.nex_charge > cvar("g_balance_nex_charge_limit"))
             {
-                self.weaponentity.weaponentity.glowmod_y -= 0.5 * (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
-                self.weaponentity.weaponentity.glowmod_z -= 0.5 * (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
+                self.weaponentity.weaponentity.glowmod_x = self.weaponentity.weaponentity.glowmod_x + (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
+                self.weaponentity.weaponentity.glowmod_y = self.weaponentity.weaponentity.glowmod_y - 0.5 * (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
+                self.weaponentity.weaponentity.glowmod_z = self.weaponentity.weaponentity.glowmod_z - (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
             }
+            self.exteriorweaponentity.glowmod = self.weaponentity.weaponentity.glowmod;
         }
 
 		if(cvar("g_balance_nex_secondary_charge_pool"))
