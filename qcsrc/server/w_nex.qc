@@ -185,6 +185,7 @@ float w_nex(float req)
 		precache_model ("models/weapons/v_nex.md3");
 		precache_model ("models/weapons/h_nex.iqm");
 		precache_sound ("weapons/nexfire.wav");
+		precache_sound ("weapons/nexcharge.wav");
 		precache_sound ("weapons/nexwhoosh1.wav");
 		precache_sound ("weapons/nexwhoosh2.wav");
 		precache_sound ("weapons/nexwhoosh3.wav");
