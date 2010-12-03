@@ -87,9 +87,6 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Field of view:"));
 		me.TD(me, 1, 2, e = makeXonoticSlider(60, 130, 1, "fov"));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Damage kick:"));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 0.5, 0.05, "v_kicktime"));
-	me.TR(me);
 		sl = makeXonoticSlider(0.45, 0.75, 0.01, "cl_bobcycle");
 		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, sl, "View bobbing:"));
 		makeMulti(sl, "cl_bob2cycle");
@@ -159,7 +156,6 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "1",    "TrueAim"));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "1.25", "Enemies"));
 	me.TR(me);
-	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 2.2, e = makeXonoticButton("Waypoints setup...", '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
@@ -171,6 +167,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			e.onClick = HUDSetup_Join_Click;
 			e.onClickEntity = me;
 		me.TDempty(me, 0.5);
+	me.TR(me);
 	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Force models:"));
@@ -188,6 +185,9 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			e.addValue(e, "Lots", "0");
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "cl_gentle", 0, 0);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Damage splash:"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton("Apply immediately", '0 0 0', "color -1 -1;name \"$_cl_name\";cl_cmd sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_forceplayermodelsfromxonotic;sendcvar cl_forceplayermodels;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
