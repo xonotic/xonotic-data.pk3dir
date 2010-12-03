@@ -38,17 +38,17 @@ skin: gfx/menu/default/skinvalues.txt
 clean:
 	rm -f progs.dat menu.dat csprogs.dat
 
-FILES_CSPROGS = qcsrc/client/progs.src $(shell sed '/\.dat/d; s,//.*,,; s,[^ 	],qcsrc/client/&,' < qcsrc/client/progs.src)
+FILES_CSPROGS = $(shell find qcsrc/client qcsrc/common qcsrc/warpzonelib -type f -not -name fteqcc.log -not -name qc.asm) qcsrc/server/w_*.qc
 csprogs.dat: $(FILES_CSPROGS)
 	@echo make[1]: Entering directory \`$(PWD)/qcsrc/client\'
 	cd qcsrc/client && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_CSPROGS)
 
-FILES_PROGS = qcsrc/server/progs.src $(shell sed '/\.dat/d; s,//.*,,; s,[^ 	],qcsrc/server/&,' < qcsrc/server/progs.src)
+FILES_PROGS = $(shell find qcsrc/server qcsrc/common qcsrc/warpzonelib -type f -not -name fteqcc.log -not -name qc.asm) qcsrc/server/w_*.qc
 progs.dat: $(FILES_PROGS)
 	@echo make[1]: Entering directory \`$(PWD)/qcsrc/server\'
 	cd qcsrc/server && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_PROGS)
 
-FILES_MENU = qcsrc/menu/progs.src $(shell sed '/\.dat/d; s,//.*,,; s,[^ 	],qcsrc/menu/&,' < qcsrc/menu/progs.src)
+FILES_MENU = $(shell find qcsrc/menu qcsrc/common qcsrc/warpzonelib -type f -not -name fteqcc.log -not -name qc.asm) qcsrc/server/w_*.qc
 menu.dat: $(FILES_MENU)
 	@echo make[1]: Entering directory \`$(PWD)/qcsrc/menu\'
 	cd qcsrc/menu && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_MENU)
