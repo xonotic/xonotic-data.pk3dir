@@ -723,10 +723,10 @@ void CSQC_UpdateView(float w, float h)
 			else
 				myhealth_gentlergb = stov(cvar_string("hud_damage_gentle_color"));
 
-			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, cvar("hud_damage_gentle_alpha_multiplier") * bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, cvar("hud_damage_gentle_alpha_multiplier") * bound(0, myhealth_flash_temp, 1) * cvar("hud_damage"), DRAWFLAG_NORMAL);
 		}
 		else
-			drawpic(reticle_pos, "gfx/blood", reticle_size, stov(cvar_string("hud_damage_color")), bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
+			drawpic(reticle_pos, "gfx/blood", reticle_size, stov(cvar_string("hud_damage_color")), bound(0, myhealth_flash_temp, 1) * cvar("hud_damage"), DRAWFLAG_NORMAL);
 	}
 
 	// Draw the mouse cursor
