@@ -5103,103 +5103,6 @@ Main HUD system
 ==================
 */
 
-void HUD_ShowSpeed(void)
-{
-	vector numsize;
-	float pos, conversion_factor;
-	string speed, zspeed, unit;
-
-	switch(cvar("cl_showspeed_unit"))
-	{
-		default:
-		case 0:
-			unit = "";
-			conversion_factor = 1.0;
-			break;
-		case 1:
-			unit = " qu/s";
-			conversion_factor = 1.0;
-			break;
-		case 2:
-			unit = " m/s";
-			conversion_factor = 0.0254;
-			break;
-		case 3:
-			unit = " km/h";
-			conversion_factor = 0.0254 * 3.6;
-			break;
-		case 4:
-			unit = " mph";
-			conversion_factor = 0.0254 * 3.6 * 0.6213711922;
-			break;
-		case 5:
-			unit = " knots";
-			conversion_factor = 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
-			break;
-	}
-
-	speed = strcat(ftos(floor( vlen(pmove_vel - pmove_vel_z * '0 0 1') * conversion_factor + 0.5 )), unit);
-
-	numsize_x = numsize_y = cvar("cl_showspeed_size");
-	pos = (vid_conheight - numsize_y) * cvar("cl_showspeed_position");
-
-	drawfont = hud_bigfont;
-	drawstringcenter(eX + pos * eY, speed, numsize, '1 1 1', autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
-
-	if (cvar("cl_showspeed_z") == 1) {
-		zspeed = strcat(ftos(fabs(floor( pmove_vel_z * conversion_factor + 0.5 ))), unit);
-		drawstringcenter(eX + pos * eY + numsize_y * eY, zspeed, numsize * 0.5, '1 1 1', autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
-	}
-
-	drawfont = hud_font;
-}
-
-void HUD_ShowAcceleration(void)
-{
-	float acceleration, sz, scale, alpha, f;
-	vector pos, mySize, rgb;
-
-	f = time - acc_prevtime;
-	if(cvar("cl_showacceleration_z"))
-		acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed)) * (1 / f);
-	else
-		acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f);
-	acc_prevspeed = pmove_vel;
-	acc_prevtime = time;
-
-	f = bound(0, f * 10, 1);
-	acc_avg = acc_avg * (1 - f) + acceleration * f;
-	acceleration = acc_avg / getstatf(STAT_MOVEVARS_MAXSPEED);
-	if (acceleration == 0)
-		return;
-
-	sz = cvar("cl_showacceleration_size");
-	scale = cvar("cl_showacceleration_scale");
-	alpha = cvar("cl_showacceleration_alpha");
-	if (cvar("cl_showacceleration_color_custom"))
-		rgb = stov(cvar_string("cl_showacceleration_color"));
-	else {
-		if (acceleration < 0)
-			rgb = '1 .5 .5' - '0 .5 .5' * bound(0, -acceleration * 0.2, 1);
-		else
-			rgb = '.5 1 .5' - '.5 0 .5' * bound(0, +acceleration * 0.2, 1);
-	}
-
-	mySize_x = vid_conwidth/2;
-	mySize_y = sz;
-	pos_y = cvar("cl_showacceleration_position") * vid_conheight - sz/2;
-	if (acceleration > 0)
-	{
-		pos_x = mySize_x;
-		HUD_Panel_DrawProgressBar(pos, mySize, acceleration * scale, 0, 0, rgb, alpha * autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
-	}
-	else
-	{
-		//pos_x = 0;
-		HUD_Panel_DrawProgressBar(pos, mySize, -acceleration * scale, 0, 1, rgb, alpha * autocvar_hud_panel_fg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
-	}
-}
-
 void HUD_Reset (void)
 {
 	// reset gametype specific icons
@@ -5377,12 +5280,6 @@ void HUD_Main (void)
 	// draw chat panel on top if it is maximized
 	if(autocvar__con_chat_maximized)
 		HUD_Chat(); // HUD_DrawPanel(HUD_PANEL_CHAT);
-
-	// TODO hud_'ify these
-	if (cvar("cl_showspeed"))
-		HUD_ShowSpeed();
-	if (cvar("cl_showacceleration"))
-		HUD_ShowAcceleration();
 
 	if (autocvar__hud_configure && spectatee_status && hud_configure_prev == -1) // try to join if we are in hud_configure mode, but still spectating, and in the first frame (in order to get rid of motd when launching a server via the menu "HUD Setup" button)
 		localcmd("cmd selectteam auto; cmd join\n");
