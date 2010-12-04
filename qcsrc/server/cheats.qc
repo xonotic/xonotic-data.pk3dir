@@ -14,7 +14,7 @@ void Drag_MoveDrag(entity from, entity to) { }
 #else
 
 .float maycheat;
-float sv_cheats;
+float gamestart_sv_cheats;
 
 #define CHIMPULSE_SPEEDRUN_INIT 30
 #define CHIMPULSE_GIVE_ALL 99
@@ -28,7 +28,7 @@ float sv_cheats;
 
 void CheatInit()
 {
-	sv_cheats = cvar("sv_cheats");
+	gamestart_sv_cheats = cvar("sv_cheats");
 }
 
 void CheatShutdown()
@@ -61,7 +61,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 		return 1;
 	
 	// sv_cheats
-	if(sv_cheats && autocvar_sv_cheats)
+	if(gamestart_sv_cheats && autocvar_sv_cheats)
 		return 1;
 
 	// if we get here, player is not allowed to cheat. Log it.
@@ -215,7 +215,7 @@ float CheatImpulse(float i)
 			break;
 		case CHIMPULSE_TELEPORT:
 			IS_CHEAT(i, 0, 0);
-			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((sv_cheats >= 2) ? 100000 : 100), 1024, 256))
+			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats >= 2) ? 100000 : 100), 1024, 256))
 			{
 				self.angles_x = -self.angles_x;
 				self.fixangle = TRUE;

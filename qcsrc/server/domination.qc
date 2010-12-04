@@ -17,9 +17,6 @@ Note: The only teams who can use dom control points are identified by spawnfunc_
 
 #define DOMPOINTFRAGS frags
 
-float g_domination_point_amt;
-float g_domination_point_rate;
-
 .float enemy_playerid;
 .entity sprite;
 .float captime;
@@ -67,12 +64,12 @@ void dompoint_captured ()
 	//bprint("\n");
 
 	float points, wait_time;
-	if (g_domination_point_amt)
-		points = g_domination_point_amt;
+	if (cvar("g_domination_point_amt"))
+		points = cvar("g_domination_point_amt");
 	else
 		points = self.frags;
-	if (g_domination_point_rate)
-		wait_time = g_domination_point_rate;
+	if (cvar("g_domination_point_rate"))
+		wait_time = cvar("g_domination_point_rate");
 	else
 		wait_time = self.wait;
 
@@ -160,11 +157,8 @@ void dompointthink()
 	if (gameover || self.delay > time || time < game_starttime)	// game has ended, don't keep giving points
 		return;
 
-	g_domination_point_rate = cvar("g_domination_point_rate");
-	g_domination_point_amt = cvar("g_domination_point_amt");
-
-	if(g_domination_point_rate)
-		self.delay = time + g_domination_point_rate;
+	if(cvar("g_domination_point_rate"))
+		self.delay = time + cvar("g_domination_point_rate");
 	else
 		self.delay = time + self.wait;
 
@@ -172,8 +166,8 @@ void dompointthink()
 	// NOTE: this defaults to 0
 	if (self.goalentity.netname != "")
 	{
-		if(g_domination_point_amt)
-			fragamt = g_domination_point_amt;
+		if(cvar("g_domination_point_amt"))
+			fragamt = cvar("g_domination_point_amt");
 		else
 			fragamt = self.DOMPOINTFRAGS;
 		TeamScore_AddToTeam(self.goalentity.team, ST_SCORE, fragamt);
