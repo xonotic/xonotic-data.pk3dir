@@ -100,10 +100,10 @@ void spawnfunc_weapon_shotgun(); // defined in t_items.qc
 float w_shotgun(float req)
 {
 	if (req == WR_AIM)
-		if(vlen(self.origin-self.enemy.origin)>200)
-			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
-		else
+		if(vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_shotgun_secondary_melee_range)
 			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
+		else
+			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
