@@ -208,7 +208,7 @@ void Seeker_Vollycontroler_Think()
 	entity oldself,oldenemy;
 	self.cnt = self.cnt - 1;
 
-	if((!(self.owner.items & IT_UNLIMITED_AMMO) && self.owner.ammo_rockets < cvar("g_balance_seeker_missile_ammo")) || (self.cnt <= -1) || (self.owner.deadflag != DEAD_NO))
+	if((!(self.owner.items & IT_UNLIMITED_AMMO) && self.owner.ammo_rockets < cvar("g_balance_seeker_missile_ammo")) || (self.cnt <= -1) || (self.owner.deadflag != DEAD_NO) || (self.owner.switchweapon != WEP_SEEKER))
 	{
 		remove(self);
 		return;
