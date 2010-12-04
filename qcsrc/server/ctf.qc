@@ -171,11 +171,6 @@ void place_flag()
 		return;
 	}
 
-	if(!self.t_width)
-		self.t_width = 0.1; // frame animation rate
-	if(!self.t_length)
-		self.t_length = 58; // maximum frame
-
 	setattachment(self, world, "");
 	self.mdl = self.model;
 	self.flags = FL_ITEM;
@@ -339,19 +334,6 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 		dprint("FLAG FALLTHROUGH will happen SOON\n");
 };
 
-void AnimateFlag()
-{
-	if(self.delay > time)
-		return;
-	self.delay = time + self.t_width;
-	if(self.nextthink > self.delay)
-		self.nextthink = self.delay;
-
-	self.frame = self.frame + 1;
-	if(self.frame > self.t_length)
-		self.frame = 0;
-}
-
 void FlagThink()
 {
 	local entity e;
@@ -372,8 +354,6 @@ void FlagThink()
 		FOR_EACH_CLIENT(e)
 			ctf_captureshield_update(e, 1); // release shield only
 	}
-
-	AnimateFlag();
 
 	if(self.speedrunning)
 	if(self.cnt == FLAG_CARRY)
@@ -1058,42 +1038,40 @@ void ctf_setstatus()
 	self.items &~= IT_BLUE_FLAG_LOST;
 	self.items &~= IT_CTF_SHIELDED;
 
-	if (g_ctf) {
-		local entity flag;
-		float redflags, blueflags;
+	local entity flag;
+	float redflags, blueflags;
 
-		if(self.ctf_captureshielded)
-			self.items |= IT_CTF_SHIELDED;
+	if(self.ctf_captureshielded)
+		self.items |= IT_CTF_SHIELDED;
 
-		redflags = 0;
-		blueflags = 0;
+	redflags = 0;
+	blueflags = 0;
 
-		for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
+	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
+	{
+		if(flag.items & IT_KEY2) // blue
+			++redflags;
+		else if(flag.items & IT_KEY1) // red
+			++blueflags;
+	}
+
+	// blinking magic: if there is more than one flag, show one of these in a clever way
+	if(redflags)
+		redflags = mod(floor(time * redflags * 0.75), redflags);
+	if(blueflags)
+		blueflags = mod(floor(time * blueflags * 0.75), blueflags);
+
+	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
+	{
+		if(flag.items & IT_KEY2) // blue
 		{
-			if(flag.items & IT_KEY2) // blue
-				++redflags;
-			else if(flag.items & IT_KEY1) // red
-				++blueflags;
+			if(--redflags == -1) // happens exactly once (redflags is in 0..count-1, and will --'ed count times)
+				ctf_setstatus2(flag, IT_RED_FLAG_TAKEN);
 		}
-
-		// blinking magic: if there is more than one flag, show one of these in a clever way
-		if(redflags)
-			redflags = mod(floor(time * redflags * 0.75), redflags);
-		if(blueflags)
-			blueflags = mod(floor(time * blueflags * 0.75), blueflags);
-
-		for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
+		else if(flag.items & IT_KEY1) // red
 		{
-			if(flag.items & IT_KEY2) // blue
-			{
-				if(--redflags == -1) // happens exactly once (redflags is in 0..count-1, and will --'ed count times)
-					ctf_setstatus2(flag, IT_RED_FLAG_TAKEN);
-			}
-			else if(flag.items & IT_KEY1) // red
-			{
-				if(--blueflags == -1) // happens exactly once
-					ctf_setstatus2(flag, IT_BLUE_FLAG_TAKEN);
-			}
+			if(--blueflags == -1) // happens exactly once
+				ctf_setstatus2(flag, IT_BLUE_FLAG_TAKEN);
 		}
 	}
 };

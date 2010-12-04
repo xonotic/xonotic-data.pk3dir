@@ -350,6 +350,12 @@ vector freeze_pmove_org, freeze_input_angles;
 entity nightvision_noise, nightvision_noise2;
 
 float pickup_crosshair_time, pickup_crosshair_size;
+float use_nex_charge_pool;
+
+float myhealth, myhealth_prev;
+float myhealth_flash;
+
+vector myhealth_gentlergb;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -660,6 +666,69 @@ void CSQC_UpdateView(float w, float h)
 			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * cvar("cl_reticle_item_nex"), DRAWFLAG_NORMAL);
 	}
 
+	// improved polyblend
+	vector rgb;
+	if(cvar("hud_damage"))
+	{
+		float myhealth_flash_temp;
+		myhealth = getstati(STAT_HEALTH);
+
+		// fade out
+		myhealth_flash = max(0, myhealth_flash - cvar("hud_damage_fade_rate") * frametime);
+		// add new damage
+		myhealth_flash = bound(0, myhealth_flash + max(0, myhealth_prev - myhealth) * cvar("hud_damage_factor"), cvar("hud_damage_maxalpha"));
+
+		float pain_threshold, pain_threshold_lower, pain_threshold_lower_health;
+		pain_threshold = cvar("hud_damage_pain_threshold");
+		pain_threshold_lower = cvar("hud_damage_pain_threshold_lower");
+		pain_threshold_lower_health = cvar("hud_damage_pain_threshold_lower_health");
+
+		if(pain_threshold_lower && myhealth < pain_threshold_lower_health)
+		{
+			pain_threshold = pain_threshold - max(cvar("hud_damage_pain_threshold_pulsating_min"), fabs(sin(M_PI * time / cvar("hud_damage_pain_threshold_pulsating_period")))) * pain_threshold_lower * (1 - max(0, myhealth)/pain_threshold_lower_health);
+		}
+
+		myhealth_flash_temp = bound(0, myhealth_flash - pain_threshold, 1);
+
+		if(myhealth_prev < 1)
+		{
+			if(myhealth >= 1)
+			{
+				myhealth_flash = 0; // just spawned, clear the flash immediately
+				myhealth_flash_temp = 0;
+			}
+			else
+			{
+				myhealth_flash += cvar("hud_damage_fade_rate") * frametime; // dead
+			}
+		}
+
+		if(spectatee_status == -1 || intermission)
+		{
+			myhealth_flash = 0; // observing, or match ended
+			myhealth_flash_temp = 0;
+		}
+
+		myhealth_prev = myhealth;
+
+		if(autocvar_cl_gentle_damage || cvar("cl_gentle"))
+		{
+			if(autocvar_cl_gentle_damage == 2)
+			{
+				if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
+				{
+					myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
+				}
+			}
+			else
+				myhealth_gentlergb = stov(cvar_string("hud_damage_gentle_color"));
+
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, cvar("hud_damage_gentle_alpha_multiplier") * bound(0, myhealth_flash_temp, 1) * cvar("hud_damage"), DRAWFLAG_NORMAL);
+		}
+		else
+			drawpic(reticle_pos, "gfx/blood", reticle_size, stov(cvar_string("hud_damage_color")), bound(0, myhealth_flash_temp, 1) * cvar("hud_damage"), DRAWFLAG_NORMAL);
+	}
+
 	// Draw the mouse cursor
 	// NOTE: drawpic must happen after R_RenderScene for some reason
 	//drawpic(getmousepos(), "gfx/cursor.tga", '11 14 0', '1 1 1', 1, 0);
@@ -695,6 +764,17 @@ void CSQC_UpdateView(float w, float h)
         CSQC_RAPTOR_HUD();
 	else
 	{
+		if(gametype == GAME_FREEZETAG)
+		{
+			if(getstati(STAT_FROZEN))
+				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0.25 0.90 1', cvar_or("hud_colorflash_alpha", 0.5), DRAWFLAG_ADDITIVE);
+			if(getstatf(STAT_REVIVE_PROGRESS))
+			{
+				DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', cvar("hud_colorflash_alpha"), DRAWFLAG_ADDITIVE);
+				drawstring_aspect(eY * 0.64 * vid_conheight, "Revival progress", eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+			}
+		}
+
 		if(cvar("r_letterbox") == 0)
 			if(cvar("viewsize") < 120)
 				CSQC_common_hud();
@@ -853,8 +933,9 @@ void CSQC_UpdateView(float w, float h)
 
 			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
-			float nex_charge;
+			float nex_charge, nex_charge_pool;
 			nex_charge = getstatf(STAT_NEX_CHARGE);
+			nex_charge_pool = getstatf(STAT_NEX_CHARGEPOOL);
 
 			if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 				nex_charge_movingavg = nex_charge;
@@ -865,21 +946,31 @@ void CSQC_UpdateView(float w, float h)
 				bullets = getstati(STAT_BULLETS_LOADED);
 				f = bound(0, bullets / cr_maxbullets, 1);
 
-				a = cvar("crosshair_campingrifle_bulletcounter_alpha");
+				a = cvar("crosshair_ring_campingrifle_alpha");
 				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 			}
 			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
 			{
-				vector rgb;
-				// indicate how much we're charging right now with an inner circle
-				a = cvar("crosshair_nexvelocity_currentcharge_alpha");
-				nex_charge_movingavg = (1 - cvar("crosshair_nexvelocity_currentcharge_movingavg_rate")) * nex_charge_movingavg + cvar("crosshair_nexvelocity_currentcharge_movingavg_rate") * nex_charge;
+				if(nex_charge_pool || use_nex_charge_pool)
+				{
+					use_nex_charge_pool = 1;
 
-				rgb = eX * cvar("crosshair_nexvelocity_currentcharge_color_red") + eY * cvar("crosshair_nexvelocity_currentcharge_color_green") + eZ * cvar("crosshair_nexvelocity_currentcharge_color_blue");
-				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", bound(0, cvar("crosshair_nexvelocity_currentcharge_scale") * (nex_charge - nex_charge_movingavg), 1), rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+					a = cvar("crosshair_ring_nex_inner_alpha");
+					rgb = eX * cvar("crosshair_ring_nex_inner_color_red") + eY * cvar("crosshair_ring_nex_inner_color_green") + eZ * cvar("crosshair_ring_nex_inner_color_blue");
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", nex_charge_pool, rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+				}
+				else
+				{
+					// indicate how much we're charging right now with an inner circle
+					a = cvar("crosshair_ring_nex_inner_alpha");
+					nex_charge_movingavg = (1 - cvar("crosshair_ring_nex_currentcharge_movingavg_rate")) * nex_charge_movingavg + cvar("crosshair_ring_nex_currentcharge_movingavg_rate") * nex_charge;
+
+					rgb = eX * cvar("crosshair_ring_nex_inner_color_red") + eY * cvar("crosshair_ring_nex_inner_color_green") + eZ * cvar("crosshair_ring_nex_inner_color_blue");
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", bound(0, cvar("crosshair_ring_nex_currentcharge_scale") * (nex_charge - nex_charge_movingavg), 1), rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+				}
 
 				// draw the charge
-				a = cvar("crosshair_nexvelocity_alpha");
+				a = cvar("crosshair_ring_nex_outer_alpha");
 				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", nex_charge, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 			}
 
@@ -921,7 +1012,14 @@ void CSQC_UpdateView(float w, float h)
 			CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
 
 			if(cvar("crosshair_dot"))
-				CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", wcross_alpha * f * cvar("crosshair_dot_alpha"));
+            {
+                vector wcross_color_old;
+                wcross_color_old = wcross_color;
+                if(cvar_string("crosshair_dot_color") != "0")
+                    wcross_color = stov(cvar_string("crosshair_dot_color"));
+				CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", f * cvar("crosshair_dot_alpha"));
+                wcross_color = wcross_color_old;
+            }
 
 			wcross_name_alpha_goal_prev = f;
 		}
@@ -1305,7 +1403,7 @@ void CSQC_common_hud(void)
 						acc_levels = MAX_ACCURACY_LEVELS;
 
 					for (i = 0; i < acc_levels; ++i)
-						acc_lev[i] = stof(argv(i));
+						acc_lev[i] = stof(argv(i)) / 100.0;
 				}
 				// let know that acc_col[] needs to be loaded
 				acc_col_x[0] = -1;

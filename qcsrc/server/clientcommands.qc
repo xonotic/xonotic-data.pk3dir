@@ -213,7 +213,7 @@ void SV_ParseClientCommand(string s) {
 		if(self.classname == "player" && cvar("sv_spectate") == 1) {
 			if(self.flagcarried)
 				DropFlag(self.flagcarried, world, world);
-			if(self.ballcarried)
+			if(self.ballcarried && g_nexball)
 				DropBall(self.ballcarried, self.origin, self.velocity);
 			WaypointSprite_PlayerDead();
 			self.classname = "observer";
@@ -235,7 +235,6 @@ void SV_ParseClientCommand(string s) {
 					self.caplayer = 1;
 				PlayerScore_Clear(self);
 				bprint ("^4", self.netname, "^4 is playing now\n");
-				self.stat_count = WEP_LAST;
 				PutClientInServer();
 				if(cvar("g_campaign"))
 					campaign_bots_may_start = 1;

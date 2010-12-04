@@ -102,3 +102,11 @@ seeker
 		rgbgen lightingDiffuse
 	}
 }
+minelayer
+{
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/minelayer.tga
+		rgbgen lightingDiffuse
+	}
+}

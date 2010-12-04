@@ -44,10 +44,12 @@ void W_Fireball_Explode (void)
 			if(points <= 0)
 				continue;
 			dir = normalize(e.origin + e.view_ofs - self.origin);
+
+			if(accuracy_isgooddamage(self.realowner, e))
+				accuracy_add(self.realowner, WEP_FIREBALL, 0, cvar("g_balance_fireball_primary_bfgdamage") * points);
+
 			Damage(e, self, self.realowner, cvar("g_balance_fireball_primary_bfgdamage") * points, self.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e.origin + e.view_ofs, cvar("g_balance_fireball_primary_bfgforce") * dir);
 			pointparticles(particleeffectnum("fireball_bfgdamage"), e.origin, -1 * dir, 1);
-
-			Damage_RecordDamage(self.owner, self.projectiledeathtype, cvar("g_balance_fireball_primary_bfgdamage") * points);
 		}
 	}
 
@@ -125,7 +127,7 @@ void W_Fireball_Attack1()
 {
 	local entity proj;
 
-	W_SetupShot_ProjectileSize (self, '-16 -16 -16', '16 16 16', FALSE, 2, "weapons/fireball_fire2.wav", cvar("g_balance_fireball_primary_damage") + cvar("g_balance_fireball_primary_bfgdamage"));
+	W_SetupShot_ProjectileSize (self, '-16 -16 -16', '16 16 16', FALSE, 2, "weapons/fireball_fire2.wav", CHAN_WEAPON, cvar("g_balance_fireball_primary_damage") + cvar("g_balance_fireball_primary_bfgdamage"));
 
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -161,7 +163,7 @@ void W_Fireball_Attack1()
 
 void W_Fireball_AttackEffect(float i, vector f_diff)
 {
-	W_SetupShot_ProjectileSize (self, '-16 -16 -16', '16 16 16', FALSE, 0, "", 0);
+	W_SetupShot_ProjectileSize (self, '-16 -16 -16', '16 16 16', FALSE, 0, "", 0, 0);
 	w_shotorg += f_diff_x * v_up + f_diff_y * v_right;
 	pointparticles(particleeffectnum("fireball_preattack_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 }
@@ -264,7 +266,7 @@ void W_Fireball_Attack2()
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, "weapons/fireball_fire.wav", cvar("g_balance_fireball_secondary_damage"));
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, "weapons/fireball_fire.wav", CHAN_WEAPON, cvar("g_balance_fireball_secondary_damage"));
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 

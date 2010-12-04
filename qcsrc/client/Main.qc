@@ -608,6 +608,35 @@ void GameCommand(string msg)
 		e.draw = DrawDebugModel;
 		e.classname = "debugmodel";
 	}
+    else if(cmd == "vyes")
+    {
+        if(uid2name_dialog)
+        {
+            vote_active = 0; // force the panel to disappear right as we have selected the value (to prevent it from fading out in the normal vote panel pos)
+            vote_prev = 0;
+            cvar_set("cl_allow_uid2name", "1");
+            vote_change = -9999;
+        }
+        else
+        {
+            localcmd("cmd vote yes\n");
+        }
+    }
+    else if(cmd == "vno")
+    {
+        if(uid2name_dialog)
+        {
+            vote_active = 0;
+            vote_prev = 0;
+            cvar_set("cl_allow_uid2name", "0");
+            vote_change = -9999;
+        }
+        else
+        {
+            localcmd("cmd vote no\n");
+        }
+    }
+
 	else
 	{
 		print("Invalid command. For a list of supported commands, try cl_cmd help.\n");
@@ -626,56 +655,6 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	local float bSkipKey;
 	bSkipKey = false;
-
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE) && panel_fg_alpha && !scoreboard_active) // don't lock keys before we actually see what's going on
-	{
-		/*
-		string vyes_keys;
-		float keys;
-		vyes_keys = findkeysforcommand("vyes");
-		keys = tokenize(vyes_keys);
-
-		float i;
-		for (i = 0; i < keys; ++i)
-		{
-			print(ftos(nPrimary), " ", argv(i), "\n"); 
-			if(nPrimary == stof(argv(i)))
-			{
-				vote_active = 0;
-				cvar_set("cl_allow_uid2name", "1");
-				return TRUE;
-			}
-		}
-
-		string vno_keys;
-		vno_keys = findkeysforcommand("vno");
-		keys = tokenize(vno_keys);
-
-		float i;
-		for (i = 0; i < keys; ++i)
-		{
-			if(nPrimary == stof(argv(i)))
-			{
-				vote_active = 0;
-				cvar_set("cl_allow_uid2name", "0");
-				return TRUE;
-			}
-		}
-		*/ // If only I could grab F1-F12 in CSQC... but no
-
-		if(nPrimary == 121) // ascii value for y
-		{
-			vote_active = 0;
-			cvar_set("cl_allow_uid2name", "1");
-			return TRUE;
-		}
-		else if(nPrimary == 110) // ascii value for n
-		{
-			vote_active = 0;
-			cvar_set("cl_allow_uid2name", "0");
-			return TRUE;
-		}
-	}
 
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
@@ -848,11 +827,6 @@ void Ent_ClientData()
 	if(newspectatee_status != spectatee_status)
 	{
 		float i;
-		// clear the weapon accuracy stats
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i) {
-			weapon_hits[i] = 0;
-			weapon_fired[i] = 0;
-		}
 
 		// clear race stuff
 		race_laptime = 0;
@@ -902,6 +876,32 @@ void Ent_RandomSeed()
 	prandom_debug();
 	s = ReadShort();
 	psrandom(s);
+}
+
+void Ent_ReadAccuracy(void)
+{
+	float sf, f, w, b;
+	sf = ReadInt24_t();
+	if(sf == 0)
+	{
+		for(w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
+			weapon_accuracy[w] = -1;
+		return;
+	}
+	
+	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w, f *= 2)
+	{
+		if(sf & f)
+		{
+			b = ReadByte();
+			if(b == 0)
+				weapon_accuracy[w] = -1;
+			else if(b == 255)
+				weapon_accuracy[w] = 1.0; // no better error handling yet, sorry
+			else
+				weapon_accuracy[w] = (b - 1.0) / 100.0;
+		}
+	}
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
@@ -967,6 +967,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
+		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		default:
 			error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
 			break;

@@ -80,8 +80,7 @@ void ball_restart (void)
 void nexball_setstatus (void)
 {
 	local entity oldself;
-	if (!g_nexball)
-		return;
+	self.items &~= IT_KEY1;
 	if (self.ballcarried)
 	{
 		if (self.ballcarried.teamtime && (self.ballcarried.teamtime < time))
@@ -202,7 +201,8 @@ void DropBall (entity ball, vector org, vector vel)
 	}
 
 	WaypointSprite_Kill(ball.owner.waypointsprite_attachedforcarrier);
-	WaypointSprite_AttachCarrier("nb-ball", ball);
+	//WaypointSprite_AttachCarrier("nb-ball", ball);
+	WaypointSprite_Spawn("nb-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, FALSE); // no health bar please
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 
@@ -630,7 +630,7 @@ void W_Nexball_Attack (float t)
 	if (!(ball = self.ballcarried))
 		return;
 
-	W_SetupShot (self, FALSE, 4, "nexball/shoot1.wav",0);
+	W_SetupShot (self, FALSE, 4, "nexball/shoot1.wav", CHAN_WEAPON, 0);
 	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, world);
 	if(trace_startsolid)
 	{
@@ -652,7 +652,7 @@ void W_Nexball_Attack (float t)
 			mul = 2 - mul;
 		mul = mi + (ma - mi) * mul; // range from the minimal power to the maximal power
 	}
-	DropBall (ball, w_shotorg, W_CalculateProjectileVelocity(self.velocity, w_shotdir * cvar("g_balance_nexball_primary_speed") * mul));
+	DropBall (ball, w_shotorg, W_CalculateProjectileVelocity(self.velocity, w_shotdir * cvar("g_balance_nexball_primary_speed") * mul, FALSE));
 	//TODO: use the speed_up cvar too ??
 }
 
@@ -661,7 +661,7 @@ void W_Nexball_Attack2 (void)
 	local entity missile;
 	if (!(balls & BALL_BASKET))
 		return;
-	W_SetupShot (self, FALSE, 2, "nexball/shoot2.wav",0);
+	W_SetupShot (self, FALSE, 2, "nexball/shoot2.wav", CHAN_WEAPON, 0);
 //	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 	missile = spawn ();
 

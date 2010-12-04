@@ -48,13 +48,18 @@ void W_Nex_Attack (float issecondary)
 		charge = cvar("g_balance_nex_charge_mindmg") / mydmg + (1 - cvar("g_balance_nex_charge_mindmg") / mydmg) * self.nex_charge;
 		self.nex_charge *= cvar("g_balance_nex_charge_shot_multiplier"); // do this AFTER setting mydmg/myforce
 		                                                                 // O RLY? -- divVerent
+                                                                         // YA RLY -- FruitieX
 	}
 	else
 		charge = 1;
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", mydmg);
+	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", CHAN_WEAPON, mydmg);
+    if(charge > cvar("g_balance_nex_charge_limit") && cvar("g_balance_nex_charge_limit")) // if the Nex is overcharged, we play an extra sound
+    {
+        sound (self, CHAN_WEAPON2, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * cvar("g_balance_nex_charge_limit")) / (1 - 0.5 * cvar("g_balance_nex_charge_limit")), ATTN_NORM);
+    }
 
 	yoda = 0;
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_NEX);
@@ -75,6 +80,7 @@ void W_Nex_Attack (float issecondary)
 
 void spawnfunc_weapon_nex (void); // defined in t_items.qc
 
+.float nex_charge_pool_pauseregen_finished;
 float w_nex(float req)
 {
 	float dt;
@@ -87,6 +93,31 @@ float w_nex(float req)
 	{
 		if(cvar("g_balance_nex_charge") && self.nex_charge < cvar("g_balance_nex_charge_limit"))
 			self.nex_charge = min(1, self.nex_charge + cvar("g_balance_nex_charge_rate") * frametime / W_TICSPERFRAME);
+
+        if(cvar("g_balance_nex_charge"))
+        {
+            self.weaponentity.weaponentity.glowmod = '0 0 0'; // reset
+
+            self.weaponentity.weaponentity.glowmod_x = cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_red_half") * bound(0, self.weaponentity.weaponentity.glowmod_y + self.nex_charge / cvar("g_balance_nex_charge_limit"), 1);
+            self.weaponentity.weaponentity.glowmod_y = cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_green_half") * bound(0, self.weaponentity.weaponentity.glowmod_y + self.nex_charge / cvar("g_balance_nex_charge_limit"), 1);
+            self.weaponentity.weaponentity.glowmod_z = cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_blue_half") * bound(0, self.weaponentity.weaponentity.glowmod_z + self.nex_charge / cvar("g_balance_nex_charge_limit"), 1);
+
+            if(self.nex_charge > cvar("g_balance_nex_charge_limit"))
+            {
+                self.weaponentity.weaponentity.glowmod_x = self.weaponentity.weaponentity.glowmod_x + cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_red_full") * (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
+                self.weaponentity.weaponentity.glowmod_y = self.weaponentity.weaponentity.glowmod_y + cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_green_full") * (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
+                self.weaponentity.weaponentity.glowmod_z = self.weaponentity.weaponentity.glowmod_z + cvar("g_weapon_charge_colormod_hdrmultiplier") * cvar("g_weapon_charge_colormod_blue_full") * (self.nex_charge - cvar("g_balance_nex_charge_limit")) / (1 - cvar("g_balance_nex_charge_limit"));
+            }
+            self.exteriorweaponentity.glowmod = self.weaponentity.weaponentity.glowmod;
+        }
+
+		if(cvar("g_balance_nex_secondary_charge_pool"))
+		if(self.nex_charge_pool_ammo < 1)
+		{
+			if(self.nex_charge_pool_pauseregen_finished < time)
+				self.nex_charge_pool_ammo = min(1, self.nex_charge_pool_ammo + cvar("g_balance_nex_secondary_charge_pool_regen") * frametime / W_TICSPERFRAME);
+			self.pauseregen_finished = max(self.pauseregen_finished, time + cvar("g_balance_nex_secondary_charge_pool_pause_health_regen"));
+		}
 
 		if (self.BUTTON_ATCK)
 		{
@@ -102,12 +133,29 @@ float w_nex(float req)
 			{
 				self.nex_charge_rottime = time + cvar("g_balance_nex_charge_rot_pause");
 				dt = frametime / W_TICSPERFRAME;
-				if(self.nex_charge < 1)
+
+				if(cvar("g_balance_nex_secondary_charge_pool"))
 				{
-					dt = min(dt, (1 - self.nex_charge) / cvar("g_balance_nex_secondary_charge_rate"));
-					if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+					if(cvar("g_balance_nex_secondary_ammo"))
 					{
-						if(cvar("g_balance_nex_secondary_ammo"))
+						// always deplete if secondary is held
+						self.nex_charge_pool_ammo = max(0, self.nex_charge_pool_ammo - cvar("g_balance_nex_secondary_ammo") * dt);
+
+						dt = min(dt, (1 - self.nex_charge) / cvar("g_balance_nex_secondary_charge_rate"));
+						self.nex_charge_pool_pauseregen_finished = time + cvar("g_balance_nex_secondary_charge_pool_pause_regen");
+						dt = min(dt, self.nex_charge_pool_ammo);
+						dt = max(0, dt);
+
+						self.nex_charge += dt * cvar("g_balance_nex_secondary_charge_rate");
+					}
+				}
+
+				else if(cvar("g_balance_nex_secondary_ammo"))
+				{
+					if(self.nex_charge < 1)
+					{
+						dt = min(dt, (1 - self.nex_charge) / cvar("g_balance_nex_secondary_charge_rate"));
+						if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 						{
 							dt = min(dt, (self.ammo_cells - cvar("g_balance_nex_primary_ammo")) / cvar("g_balance_nex_secondary_ammo"));
 							dt = max(0, dt);
@@ -116,8 +164,8 @@ float w_nex(float req)
 								self.ammo_cells = max(cvar("g_balance_nex_secondary_ammo"), self.ammo_cells - cvar("g_balance_nex_secondary_ammo") * dt);
 							}
 						}
+						self.nex_charge += dt * cvar("g_balance_nex_secondary_charge_rate");
 					}
-					self.nex_charge += dt * cvar("g_balance_nex_secondary_charge_rate");
 				}
 			}
 			else if(cvar("g_balance_nex_secondary"))
@@ -137,6 +185,7 @@ float w_nex(float req)
 		precache_model ("models/weapons/v_nex.md3");
 		precache_model ("models/weapons/h_nex.iqm");
 		precache_sound ("weapons/nexfire.wav");
+		precache_sound ("weapons/nexcharge.wav");
 		precache_sound ("weapons/nexwhoosh1.wav");
 		precache_sound ("weapons/nexwhoosh2.wav");
 		precache_sound ("weapons/nexwhoosh3.wav");
@@ -146,11 +195,7 @@ float w_nex(float req)
 	else if (req == WR_CHECKAMMO1)
 		return self.ammo_cells >= cvar("g_balance_nex_primary_ammo");
 	else if (req == WR_CHECKAMMO2)
-	{
-		if(cvar("g_balance_nex_secondary_charge"))
-			return self.ammo_cells >= cvar("g_balance_nex_primary_ammo");
-		return self.ammo_cells >= cvar("g_balance_nex_secondary_ammo");
-	}
+		return self.ammo_cells >= cvar("g_balance_nex_primary_ammo"); // don't allow charging if we don't have enough ammo
 	return TRUE;
 };
 #endif

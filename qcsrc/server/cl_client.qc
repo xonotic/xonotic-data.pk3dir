@@ -599,13 +599,20 @@ void PutObserverInServer (void)
 	}
 
 	DropAllRunes(self);
+	MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	Portal_ClearAll(self);
+
+	if(self.alivetime)
+	{
+		PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+		self.alivetime = 0;
+	}
 
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
 
-	if(self.ballcarried)
+	if(self.ballcarried && g_nexball)
 		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
 
 	WaypointSprite_PlayerDead();
@@ -629,6 +636,8 @@ void PutObserverInServer (void)
 	}
 
 	PlayerScore_Clear(self); // clear scores when needed
+
+	accuracy_resend(self);
 
 	self.spectatortime = time;
 
@@ -713,8 +722,6 @@ void PutObserverInServer (void)
 	}
 	else
 		self.frags = FRAGS_SPECTATOR;
-
-	MUTATOR_CALLHOOK(MakePlayerObserver);
 }
 
 float RestrictSkin(float s)
@@ -854,6 +861,8 @@ void PutClientInServer (void)
 		entity spot, oldself;
 		float j;
 
+		accuracy_resend(self);
+
 		if(self.team < 0)
 			JoinBestTeam(self, FALSE, TRUE);
 
@@ -890,7 +899,11 @@ void PutClientInServer (void)
 		self.air_finished = time + 12;
 		self.dmg = 2;
 		if(cvar("g_balance_nex_charge"))
+		{
+			if(cvar("g_balance_nex_secondary_charge_pool"))
+				self.nex_charge_pool_ammo = 1;
 			self.nex_charge = cvar("g_balance_nex_charge_start");
+		}
 
 		if(inWarmupStage)
 		{
@@ -1067,6 +1080,9 @@ void PutClientInServer (void)
 		self.switchweapon = w_getbestweapon(self);
 		self.cnt = self.switchweapon;
 		self.weapon = 0;
+
+		if(!self.alivetime)
+			self.alivetime = time;
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
 		PutObserverInServer ();
 	}
@@ -1331,6 +1347,10 @@ void ClientKill (void)
 	{
 		// do nothing
 	}
+    else if(g_freezetag && self.freezetag_frozen == 1)
+    {
+        // do nothing
+    }
 	else
 		ClientKill_TeamChange(0);
 }
@@ -1493,6 +1513,7 @@ void ClientConnect (void)
 
 	PlayerScore_Attach(self);
 	ClientData_Attach();
+	accuracy_init(self);
 
 	bot_clientconnect();
 
@@ -1693,6 +1714,8 @@ void ClientConnect (void)
 	send_CSQC_cr_maxbullets(self);
 
 	CheatInitClient();
+
+	PlayerStats_AddPlayer(self);
 }
 
 /*
@@ -1712,6 +1735,8 @@ void ClientDisconnect (void)
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
+
+	PlayerStats_AddGlobalInfo(self);
 
 	CheatShutdownClient();
 
@@ -1745,7 +1770,7 @@ void ClientDisconnect (void)
 
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
-	if(self.ballcarried)
+	if(self.ballcarried && g_nexball)
 		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
 
 	// Here, everything has been done that requires this player to be a client.
@@ -1771,6 +1796,7 @@ void ClientDisconnect (void)
 		Spawnqueue_Remove(self);
 	}
 
+	accuracy_free(self);
 	ClientData_Detach();
 	PlayerScore_Detach(self);
 
@@ -1978,6 +2004,9 @@ string getTimeoutText(float addOneSecond) {
 
 void player_powerups (void)
 {
+	// add a way to see what the items were BEFORE all of these checks for the mutator hook
+	olditems = self.items;
+	
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
 	{
 		SoundEntity_StartSound(self, CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, cvar("g_jetpack_attenuation"));
@@ -2040,64 +2069,67 @@ void player_powerups (void)
 				sprint(self, "^3You are on speed\n");
 			}
 		}
-		return;
 	}
-
-	if (self.items & IT_STRENGTH)
+	else // if we're not in minstagib, continue. I added this else to replace the "return" which was here that broke the callhook for this function -- This code is nasty.
 	{
-		play_countdown(self.strength_finished, "misc/poweroff.wav");
-		self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-		if (time > self.strength_finished && cvar("g_balance_powerup_timer"))
+		if (self.items & IT_STRENGTH)
 		{
-			self.items = self.items - (self.items & IT_STRENGTH);
-			sprint(self, "^3Strength has worn off\n");
+			play_countdown(self.strength_finished, "misc/poweroff.wav");
+			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
+			if (time > self.strength_finished && cvar("g_balance_powerup_timer"))
+			{
+				self.items = self.items - (self.items & IT_STRENGTH);
+				sprint(self, "^3Strength has worn off\n");
+			}
 		}
-	}
-	else
-	{
-		if (time < self.strength_finished)
+		else
 		{
-			self.items = self.items | IT_STRENGTH;
-			sprint(self, "^3Strength infuses your weapons with devastating power\n");
+			if (time < self.strength_finished)
+			{
+				self.items = self.items | IT_STRENGTH;
+				sprint(self, "^3Strength infuses your weapons with devastating power\n");
+			}
 		}
-	}
-	if (self.items & IT_INVINCIBLE)
-	{
-		play_countdown(self.invincible_finished, "misc/poweroff.wav");
-		self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
-		if (time > self.invincible_finished && cvar("g_balance_powerup_timer"))
+		if (self.items & IT_INVINCIBLE)
 		{
-			self.items = self.items - (self.items & IT_INVINCIBLE);
-			sprint(self, "^3Shield has worn off\n");
+			play_countdown(self.invincible_finished, "misc/poweroff.wav");
+			self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
+			if (time > self.invincible_finished && cvar("g_balance_powerup_timer"))
+			{
+				self.items = self.items - (self.items & IT_INVINCIBLE);
+				sprint(self, "^3Shield has worn off\n");
+			}
 		}
-	}
-	else
-	{
-		if (time < self.invincible_finished)
+		else
 		{
-			self.items = self.items | IT_INVINCIBLE;
-			sprint(self, "^3Shield surrounds you\n");
+			if (time < self.invincible_finished)
+			{
+				self.items = self.items | IT_INVINCIBLE;
+				sprint(self, "^3Shield surrounds you\n");
+			}
 		}
+
+		if(cvar("g_nodepthtestplayers"))
+			self.effects = self.effects | EF_NODEPTHTEST;
+
+		if(cvar("g_fullbrightplayers"))
+			self.effects = self.effects | EF_FULLBRIGHT;
+
+		// midair gamemode: damage only while in the air
+		// if in midair mode, being on ground grants temporary invulnerability
+		// (this is so that multishot weapon don't clear the ground flag on the
+		// first damage in the frame, leaving the player vulnerable to the
+		// remaining hits in the same frame)
+		if (self.flags & FL_ONGROUND)
+		if (g_midair)
+			self.spawnshieldtime = max(self.spawnshieldtime, time + cvar("g_midair_shieldtime"));
+
+		if (time >= game_starttime)
+		if (time < self.spawnshieldtime)
+			self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 	}
-
-	if(cvar("g_nodepthtestplayers"))
-		self.effects = self.effects | EF_NODEPTHTEST;
-
-	if(cvar("g_fullbrightplayers"))
-		self.effects = self.effects | EF_FULLBRIGHT;
-
-	// midair gamemode: damage only while in the air
-	// if in midair mode, being on ground grants temporary invulnerability
-	// (this is so that multishot weapon don't clear the ground flag on the
-	// first damage in the frame, leaving the player vulnerable to the
-	// remaining hits in the same frame)
-	if (self.flags & FL_ONGROUND)
-	if (g_midair)
-		self.spawnshieldtime = max(self.spawnshieldtime, time + cvar("g_midair_shieldtime"));
-
-	if (time >= game_starttime)
-	if (time < self.spawnshieldtime)
-		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
+	
+	MUTATOR_CALLHOOK(PlayerPowerups);
 }
 
 float CalcRegen(float current, float stable, float regenfactor, float regenframetime)
@@ -2268,33 +2300,13 @@ void GetPressedKeys(void) {
 		self.pressedkeys &~= KEY_CROUCH;
 }
 
-void update_stats (float number, float hit, float fired) {
-// self.stat_hit   = number + ((number==0) ? 1 : 64) * hit   * sv_accuracy_data_share;
-// self.stat_fired = number + ((number==0) ? 1 : 64) * fired * sv_accuracy_data_share;
-
-	if(number) {
-		self.stat_hit = number + 64 * hit * sv_accuracy_data_share;
-		self.stat_fired = number + 64 * fired * sv_accuracy_data_share;
-	} else {
-		self.stat_hit = hit * sv_accuracy_data_share;
-		self.stat_fired = fired * sv_accuracy_data_share;
-	}
-}
-
 /*
 ======================
 spectate mode routines
 ======================
 */
 
-.float weapon_count;
 void SpectateCopy(entity spectatee) {
-	if(spectatee.weapon_count < WEP_LAST) {
-		update_stats (spectatee.weapon_count, spectatee.cvar_cl_accuracy_data_share * floor(spectatee.stats_hit[spectatee.weapon_count - 1]), spectatee.cvar_cl_accuracy_data_share * floor(spectatee.stats_fired[spectatee.weapon_count - 1]));
-		spectatee.weapon_count ++;
-	} else
-		update_stats (0, spectatee.cvar_cl_accuracy_data_share * spectatee.stat_hit, spectatee.cvar_cl_accuracy_data_share * spectatee.stat_fired);
-
 	other = spectatee;
 	MUTATOR_CALLHOOK(SpectateCopy);
 	self.armortype = spectatee.armortype;
@@ -2362,8 +2374,7 @@ float SpectateNext() {
 		WriteEntity(MSG_ONE, self.enemy);
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
 		self.movetype = MOVETYPE_NONE;
-
-		self.enemy.weapon_count = 0;
+		accuracy_resend(self);
 
 		if(!SpectateUpdate())
 			PutObserverInServer();
@@ -2411,8 +2422,6 @@ void LeaveSpectatorMode()
 
 			if(cvar("g_campaign"))
 				campaign_bots_may_start = 1;
-
-			self.stat_count = WEP_LAST;
 
 			PutClientInServer();
 
@@ -2517,14 +2526,12 @@ void SpectatorThink()
 				self.classname = "spectator";
 			} else {
 				self.classname = "observer";
-				self.stat_count = WEP_LAST;
 				PutClientInServer();
 			}
 		} else if (self.BUTTON_ATCK2) {
 			self.welcomemessage_time = 0;
 			self.flags &~= FL_JUMPRELEASED;
 			self.classname = "observer";
-			self.stat_count = WEP_LAST;
 			PutClientInServer();
 		} else {
 			if(!SpectateUpdate())
@@ -2844,8 +2851,11 @@ void PlayerPreThink (void)
 		if (g_minstagib)
 			minstagib_ammocheck();
 
-		ctf_setstatus();
-		nexball_setstatus();
+		if(g_ctf)
+			ctf_setstatus();
+
+		if(g_nexball)
+			nexball_setstatus();
 
 		self.dmg_team = max(0, self.dmg_team - cvar("g_teamdamage_resetspeed") * frametime);
 
@@ -2959,15 +2969,6 @@ void PlayerPostThink (void)
 		stuffcmd(self, strcat("name ", self.netname, substring(ftos(random()), 2, -1), "\n"));
 	}
 
-	// send the clients accuracy stats to the client
-	if(self.stat_count > 0)
-	if(frametime)
-	{
-		self.stat_hit = self.stat_count + 64 * floor(self.(stats_hit[self.stat_count - 1]));
-		self.stat_fired = self.stat_count + 64 * floor(self.(stats_fired[self.stat_count - 1]));
-		self.stat_count -= 1;
-	}
-
 	if(sv_maxidle && frametime)
 	{
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
@@ -3064,7 +3065,7 @@ void PlayerPostThink (void)
 
 	playerdemo_write();
 
-	if((g_cts || g_race) && self.cvar_cl_allow_uid2name)
+	if((g_cts || g_race) && self.cvar_cl_allow_uid2name == 1)
 	{
 		if(!self.stored_netname)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));

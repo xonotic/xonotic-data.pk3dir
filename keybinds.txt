@@ -31,7 +31,6 @@
 ""                                      "View"
 "+zoom"                                 "zoom"
 "+showscores"                           "show scores"
-"+showaccuracy"				"show accuracy"
 "screenshot"                            "screen shot"
 ""                                      ""
 ""                                      "Communicate"

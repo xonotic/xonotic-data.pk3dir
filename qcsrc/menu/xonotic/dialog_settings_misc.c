@@ -61,7 +61,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8/2, e = makeXonoticTextLabel(0, "Accelerometer scale:"));
 			setDependent(e, "cl_showacceleration", 1, 1);
-		me.TD(me, 1, 2.8/2, e = makeXonoticSlider(1, 10, 0.5, "cl_showacceleration_scale"));
+		me.TD(me, 1, 2.8/2, e = makeXonoticSlider(0.2, 2, 0.2, "cl_showacceleration_scale"));
 			setDependent(e, "cl_showacceleration", 1, 1);
 	me.TR(me);
 	me.TR(me);

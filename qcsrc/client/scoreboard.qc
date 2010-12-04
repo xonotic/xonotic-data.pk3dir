@@ -248,12 +248,12 @@ string HUD_DefaultColumnLayout()
 {
 	return strcat( // fteqcc sucks
 		"ping pl name | ",
-		"-teams,race,lms/kills -teams,lms/deaths -teams,lms,race/suicides -race,dm,tdm/frags ", // tdm already has this in "score"
+		"-teams,race,lms/kills -teams,lms/deaths -teams,lms,race,ka/suicides -race,dm,tdm,ka/frags ", // tdm already has this in "score"
 		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
 		"+lms/lives +lms/rank ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
-		"+as/objectives +nexball/faults +nexball/goals ",
+		"+as/objectives +nexball/faults +nexball/goals +ka/drops +ka/pickups +ka/bckills ",
 		"-lms,race,nexball/score");
 }
 
@@ -941,15 +941,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(getstati(STAT_SWITCHWEAPON) == WEP_MINSTANEX)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
-	float weapon_hit, weapon_damage, weapon_stats, weapon_number;
-	// hits
-	weapon_stats = getstati(STAT_DAMAGE_HITS);
-	weapon_number = weapon_stats & 63;
-	weapon_hits[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
-	// fired
-	weapon_stats = getstati(STAT_DAMAGE_FIRED);
-	weapon_number = weapon_stats & 63;
-	weapon_fired[weapon_number-WEP_FIRST] = floor(weapon_stats / 64);
+	float weapon_stats, weapon_number;
 
 	if (!acc_levels)
 		rgb = '1 1 1';
@@ -964,37 +956,26 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			continue;
 		if ((i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || minstanex and tuba
 			continue;
-		weapon_hit = weapon_hits[i-WEP_FIRST];
-		weapon_damage = weapon_fired[i-WEP_FIRST];
+		weapon_stats = weapon_accuracy[i-WEP_FIRST];
 
 		float weapon_alpha;
-		if(weapon_damage)
-		{
-			weapon_stats = bound(0, floor(100 * weapon_hit / weapon_damage), 100);
+		if(weapon_stats >= 0)
 			weapon_alpha = scoreboard_alpha_fg;
-		}
 		else
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
 
 		// weapon icon
 		drawpic_aspect_skin(pos, strcat("weapon", self.netname), '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
-		if(weapon_damage) {
+		if(weapon_stats >= 0) {
 			weapons_with_stats += 1;
 			average_accuracy += weapon_stats; // store sum of all accuracies in average_accuracy
 
 			string s;
-			s = strcat(ftos(weapon_stats),"%");
+			s = sprintf("%d%%", weapon_stats*100);
 
 			float padding;
 			padding = (weapon_width - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value
-
-			weapon_damage = weapon_fired[self.weapon-WEP_FIRST];
-			if(weapon_damage)
-			{
-				weapon_hit = weapon_hits[self.weapon-WEP_FIRST];
-				weapon_stats = floor(100 * weapon_hit / weapon_damage);
-			}
 
 			if (acc_levels)
 			{
@@ -1297,184 +1278,4 @@ void HUD_DrawScoreboard()
 	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 	scoreboard_bottom = pos_y + 2 * hud_fontsize_y;
-}
-
-void HUD_DrawAccuracyStats_Description_Hitscan(vector position)
-{
-	drawstring(position + '0 3 0' * hud_fontsize_y, "Shots fired:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	drawstring(position + '0 5 0' * hud_fontsize_y, "Shots hit:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	drawstring(position + '0 7 0' * hud_fontsize_y, "Accuracy:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	drawstring(position + '0 9 0' * hud_fontsize_y, "Shots missed:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-}
-
-void HUD_DrawAccuracyStats_Description_Splash(vector position)
-{
-	drawstring(position + '0 3 0' * hud_fontsize_y, "Maximum damage:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	drawstring(position + '0 5 0' * hud_fontsize_y, "Actual damage:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	drawstring(position + '0 7 0' * hud_fontsize_y, "Accuracy:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	drawstring(position + '0 9 0' * hud_fontsize_y, "Damage wasted:", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-}
-
-void HUD_DrawAccuracyStats()
-{
-	float i, count_hitscan, count_splash, row;  // count is the number of 'colums'
-	float weapon_hit, weapon_damage, weapon_stats;
-	float left_border;  // position where the weapons start, the description is in the border
-	vector fill_colour, fill_size;
-	vector pos;
-	vector border_colour;
-
-	float col_margin = 20;  // pixels between the columns
-	float row_margin = 20;  // pixels between the rows
-
-	fill_size_x = 5 * hud_fontsize_x;  // width of the background
-	fill_size_y = 10 * hud_fontsize_y;  // height of the background
-
-	drawfont = hud_bigfont;
-	pos_x = 0;
-	pos_y = SCOREBOARD_OFFSET;
-	pos_z = 0;
-	drawstringcenter(pos, "Weapon Accuracy", 2 * hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-	left_border = col_margin + 11 * hud_fontsize_x;
-
-	drawfont = hud_font;
-
-	if(warmup_stage)
-	{
-		pos_y += 40;
-		if(mod(time, 1) >= 0.4)
-			drawstringcenter(pos, "Stats are not tracked during warmup stage", hud_fontsize, '1 1 0', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-		return;
-	}
-
-	if(gametype == GAME_RACE || gametype == GAME_CTS)
-	{
-		pos_y += 40;
-		if(mod(time, 1) >= 0.4)
-			drawstringcenter(pos, "Stats are not tracked in Race/CTS", hud_fontsize, '1 1 0', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-		return;
-	}
-
-	float top_border_hitscan = SCOREBOARD_OFFSET + 55;  // position where the hitscan row starts: pixels down the screen
-	HUD_DrawAccuracyStats_Description_Hitscan('1 0 0' * col_margin + '0 1 0' * top_border_hitscan);
-
-	float top_border_splash = SCOREBOARD_OFFSET + 175;  // position where the splash row starts: pixels down the screen
-	HUD_DrawAccuracyStats_Description_Splash('1 0 0' * col_margin + '0 1 0' * top_border_splash);
-
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-	{
-		self = get_weaponinfo(i);
-		if not(self.weapons)
-			continue;
-		weapon_hit = weapon_hits[i-WEP_FIRST];
-		weapon_damage = weapon_fired[i-WEP_FIRST];
-		border_colour = (i == activeweapon) ? '1 1 1' : '0 0 0';  // white or black border
-
-		if (weapon_damage) {
-			if (self.spawnflags & WEP_TYPE_SPLASH) {
-				weapon_stats = bound(0, floor(100 * weapon_hit / weapon_damage), 100);
-
-				fill_colour_x = 1 - 0.015 * weapon_stats;
-				fill_colour_y = 1 - 0.015 * (100 - weapon_stats);
-
-				// how the background colour is calculated
-				// %	red		green	red_2			green_2
-				// 0	1		0		1 - % * 0.015	1 - (100 - %) * 0.015
-				// 10	0.85	0		1 - % * 0.015	1 - (100 - %) * 0.015
-				// 20	0.70	0		1 - % * 0.015	1 - (100 - %) * 0.015
-				// 30	0.55	0		1 - % * 0.015	1 - (100 - %) * 0.015
-				// 40	0.40	0.10	1 - % * 0.015	1 - (100 - %) * 0.015
-				// 50	0.25	0.25	1 - % * 0.015	1 - (100 - %) * 0.015
-				// 60	0.10	0.40	1 - % * 0.015	1 - (100 - %) * 0.015
-				// 70	0		0.55	1 - % * 0.015	1 - (100 - %) * 0.015
-				// 80	0		0.70	1 - % * 0.015	1 - (100 - %) * 0.015
-				// 90	0		0.85	1 - % * 0.015	1 - (100 - %) * 0.015
-				// 100	0		1		1 - % * 0.015	1 - (100 - %) * 0.015
-
-				if ((left_border + count_splash * (fill_size_x + col_margin) + fill_size_x) >= vid_conwidth)
-				{
-					count_splash = 0;
-					++row;
-					HUD_DrawAccuracyStats_Description_Splash('1 0 0' * col_margin + '0 1 0' * (top_border_splash + row * (fill_size_y + row_margin)));
-				}
-
-				pos_x = left_border + count_splash * (fill_size_x + col_margin);
-				pos_y = top_border_splash + row * (fill_size_y + row_margin);
-
-				// background
-				drawpic(pos, "gfx/scoreboard/accuracy_bg", fill_size , fill_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
-				drawborderlines(autocvar_scoreboard_border_thickness, pos, fill_size, border_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
-
-				// the weapon
-				drawpic(pos, strcat("gfx/weapons/weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-				// the amount of shots fired or max damage
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 3 0' * hud_fontsize_y, ftos(weapon_damage), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-				// the amount of hits or actual damage
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 5 0' * hud_fontsize_y, ftos(weapon_hit), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-				// the accuracy
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 7 0' * hud_fontsize_y, strcat(ftos(weapon_stats),"%"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-				// the amount of shots missed or damage wasted
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 9 0' * hud_fontsize_y, ftos(max(0, weapon_damage - weapon_hit)), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-				++count_splash;
-			} else if (self.spawnflags & WEP_TYPE_HITSCAN) {
-				weapon_stats = bound(0, floor(100 * weapon_hit / weapon_damage), 100);
-
-				fill_colour_x = 1 - 0.015 * weapon_stats;
-				fill_colour_y = 1 - 0.015 * (100 - weapon_stats);
-
-				// how the background colour is calculated
-				// %	red		green	red_2			green_2
-				// 0	1		0		1 - % * 0.015	1 - (100 - %) * 0.015
-				// 10	0.850	0		1 - % * 0.015	1 - (100 - %) * 0.015
-				// 20	0.70	0		1 - % * 0.015	1 - (100 - %) * 0.015
-				// 30	0.55	0		1 - % * 0.015	1 - (100 - %) * 0.015
-				// 40	0.40	0.10	1 - % * 0.015	1 - (100 - %) * 0.015
-				// 50	0.25	0.25	1 - % * 0.015	1 - (100 - %) * 0.015
-				// 60	0.10	0.40	1 - % * 0.015	1 - (100 - %) * 0.015
-				// 70	0		0.55	1 - % * 0.015	1 - (100 - %) * 0.015
-				// 80	0		0.70	1 - % * 0.015	1 - (100 - %) * 0.015
-				// 90	0		0.85	1 - % * 0.015	1 - (100 - %) * 0.015
-				// 100	0		1		1 - % * 0.015	1 - (100 - %) * 0.015
-
-				if ((left_border + count_hitscan * (fill_size_x + col_margin) + fill_size_x + cvar("stats_right_margin")) >= vid_conwidth)
-				{
-					count_hitscan = 0;
-					++row;
-					HUD_DrawAccuracyStats_Description_Hitscan('1 0 0' * col_margin + '0 1 0' * (top_border_hitscan + row * (fill_size_y + row_margin)));
-				}
-
-				pos_x = left_border + count_hitscan * (fill_size_x + col_margin);
-				pos_y = top_border_hitscan + row * (fill_size_y + row_margin);
-
-				// background
-				drawpic(pos, "gfx/scoreboard/accuracy_bg", fill_size , fill_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
-				drawborderlines(autocvar_scoreboard_border_thickness, pos, fill_size, border_colour, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
-
-				// the weapon
-				drawpic(pos, strcat("gfx/weapons/weapon", self.netname), '1 0.5 0' * fill_size_x , '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-				// the amount of shots fired or max damage
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 3 0' * hud_fontsize_y, ftos(weapon_damage), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-				// the amount of hits or actual damage
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 5 0' * hud_fontsize_y, ftos(weapon_hit), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-				// the accuracy
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 7 0' * hud_fontsize_y, strcat(ftos(weapon_stats),"%"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-				// the amount of shots missed or damage wasted
-				drawstringright(pos + '4.5 0 0' * hud_fontsize_x + '0 9 0' * hud_fontsize_y, ftos(max(0, weapon_damage - weapon_hit)), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-				++count_hitscan;
-			}
-		}
-	}
 }

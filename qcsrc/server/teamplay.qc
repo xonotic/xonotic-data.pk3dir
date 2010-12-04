@@ -101,6 +101,8 @@ void WriteGameCvars()
 	cvar_set("g_race", ftos(g_race));
 	cvar_set("g_nexball", ftos(g_nexball));
 	cvar_set("g_cts", ftos(g_cts));
+	cvar_set("g_freezetag", ftos(g_freezetag));
+	cvar_set("g_keepaway", ftos(g_keepaway));
 }
 
 void ReadGameCvars()
@@ -127,6 +129,8 @@ void ReadGameCvars()
 		found += (g_race = (!found && (prev != GAME_RACE) && cvar("g_race")));
 		found += (g_nexball = (!found && (prev != GAME_NEXBALL) && cvar("g_nexball")));
 		found += (g_cts = (!found && (prev != GAME_CTS) && cvar("g_cts")));
+		found += (g_freezetag = (!found && (prev != GAME_FREEZETAG) && cvar("g_freezetag")));
+		found += (g_keepaway = (!found && (prev != GAME_KEEPAWAY) && cvar("g_keepaway")));
 
 		if(found)
 			break;
@@ -317,6 +321,16 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_keyhunt);
 	}
 
+	if(g_freezetag)
+	{
+		game = GAME_FREEZETAG;
+		gamemode_name = "Freeze Tag";
+		ActivateTeamplay();
+		fraglimit_override = cvar("g_freezetag_point_limit");
+		leadlimit_override = cvar("g_freezetag_point_leadlimit");
+		MUTATOR_ADD(gamemode_freezetag);
+	}
+
 	if(g_assault)
 	{
 		game = GAME_ASSAULT;
@@ -371,6 +385,13 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		nb_init();
 		have_team_spawns = -1; // request team spawns
+	}
+
+	if(g_keepaway)
+	{
+		game = GAME_KEEPAWAY;
+		gamemode_name = "Keepaway";
+		MUTATOR_ADD(gamemode_keepaway);
 	}
 
 	if(teams_matter)
@@ -816,6 +837,8 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 			error("Too few teams available for ctf\n");
 		else if(g_keyhunt)
 			error("Too few teams available for key hunt\n");
+		else if(g_freezetag)
+			error("Too few teams available for freeze tag\n");
 		else
 			error("Too few teams available for team deathmatch\n");
 	}

@@ -436,6 +436,16 @@ void(entity e, entity tagentity, string tagname) setattachment = #443; // attach
 //description:
 //global skybox for the map, can not be changed by QC
 
+//DP_UTF8
+//idea: Blub\0, divVerent
+//darkplaces implementation: Blub\0
+//cvar definitions:
+//   utf8_enable: enable utf8 encoding
+//description: utf8 characters are allowed inside cvars, protocol strings, files, progs strings, etc., 
+//and count as 1 char for string functions like strlen, substring, etc.
+// note: utf8_enable is run-time cvar, could be changed during execution
+// note: beware that str2chr() could return value bigger than 255 once utf8 is enabled
+
 //DP_HALFLIFE_MAP
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
@@ -572,10 +582,12 @@ float(float a) tan = #475; // returns tangent value (which is simply sin(a)/cos(
 // string autocvar__cl_name;
 //NOTE: copying a string-typed autocvar to another variable/field, and then
 //changing the cvar or returning from progs is UNDEFINED. Writing to autocvar
-//globals is UNDEFINED. Accessing autocvar globals after cvar_set()ing that
+//globals is UNDEFINED.  Accessing autocvar globals after cvar_set()ing that
 //cvar is IMPLEMENTATION DEFINED (an implementation may either yield the
-//previous, or the current, value). Writing to an autocvar global is NOT
-//ALLOWED.
+//previous, or the current, value). Whether autocvar globals, after restoring
+//a savegame, have the cvar's current value, or the original value at time of
+//saving, is UNDEFINED. Restoring a savegame however must not restore the
+//cvar values themselves.
 //In case the cvar does NOT exist, then it is automatically created with the
 //value of the autocvar initializer, if given. This is possible with e.g.
 //frikqcc and fteqcc the following way:
@@ -818,7 +830,7 @@ vector(entity e, float s, float n) getsurfacetriangle = #629;
 //function to query triangles of a surface
 
 //DP_QC_GETTAGINFO
-//idea: VorteX, LordHavoc (somebody else?)
+//idea: VorteX, LordHavoc
 //DarkPlaces implementation: VorteX
 //builtin definitions:
 float(entity ent, string tagname) gettagindex = #451;
@@ -863,6 +875,7 @@ float(float tmr) gettime = #519;
 float GETTIME_CDTRACK = 4;
 //description:
 //returns the playing time of the current cdtrack when passed to gettime()
+//see DP_END_GETSOUNDTIME for similar functionality but for entity sound channels
 
 //DP_QC_LOG
 //darkplaces implementation: divVerent
@@ -950,7 +963,8 @@ string(string format, ...) sprintf = #627;
 //  optional: .<precision>, .*, or .*<argpos>$ for the precision
 //  length modifiers: h for forcing a float, l for forcing an int/entity (by default, %d etc. cast a float to int)
 //  conversions:
-//    di take a float if no length is specified or h is, and an int/entity if l is specified as length, and cast it to an int
+//    d takes a float if no length is specified or h is, and an int/entity if l is specified as length, and cast it to an int
+//    i takes an int/entity if no length is specified or i is, and a float if h is specified as length, and cast it to an int
 //    ouxXc take a float if no length is specified or h is, and an int/entity if l is specified as length, and cast it to an unsigned int
 //    eEfFgG take a float if no length is specified or h is, and an int/entity if l is specified as length, and cast it to a double
 //    s takes a string
@@ -1126,6 +1140,15 @@ string(string in) uri_unescape = #511;
 //if 1 is returned by uri_get, the callback will be called in the future
 float(string url, float id) uri_get = #513;
 
+//DP_QC_URI_POST
+//idea: divVerent
+//darkplaces implementation: divVerent
+//loads text from an URL into a string after POSTing via HTTP
+//works like uri_get, but uri_post sends data with Content-Type: content_type to the server
+//and uri_post sends the string buffer buf, joined using the delimiter delim
+float(string url, float id, string content_type, string data) uri_post = #513;
+float(string url, float id, string content_type, string delim, float buf) uri_postbuf = #513;
+
 //DP_SKELETONOBJECTS
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
@@ -1197,6 +1220,56 @@ float(string name, string value) registercvar = #93;
 //darkplaces implementation: LordHavoc
 //description:
 //the engine supports stereo WAV files.  (useful with DP_SND_DIRECTIONLESSATTNNONE for music)
+
+//DP_SND_GETSOUNDTIME
+//idea: VorteX
+//darkplaces implementation: VorteX
+//constant definitions:
+float(entity e, float channel) getsoundtime = #533; // get currently sound playing position on entity channel, -1 if not playing or error
+float(string sample) soundlength = #534; // returns length of sound sample in seconds, -1 on error (sound not precached, sound system not initialized etc.)
+//description: provides opportunity to query length of sound samples and realtime tracking of sound playing on entities (similar to DP_GETTIME_CDTRACK)
+//note: beware dedicated server not running sound engine at all, so in dedicated mode this builtins will not work in server progs
+//note also: menu progs not supporting getsoundtime() (will give a warning) since it has no sound playing on entities
+//examples of use:
+//  - QC-driven looped sounds
+//  - QC events when sound playing is finished
+//  - toggleable ambientsounds
+//  - subtitles
+
+//DP_VIDEO_DPV
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//console commands:
+//  playvideo <videoname> - start playing video
+//  stopvideo - stops current video
+//description: indicated that engine support playing videos in DPV format
+
+//DP_VIDEO_SUBTITLES
+//idea: VorteX
+//darkplaces implementation: VorteX
+//cvars:
+//  cl_video_subtitles - toggles subtitles showing
+//  cl_video_subtitles_lines - how many lines to reserve for subtitles
+//  cl_video_subtitles_textsize - font size
+//console commands:
+//  playvideo <videoname> <custom_subtitles_file> - start playing video
+//  stopvideo - stops current video
+//description: indicates that engine support subtitles on videos
+//subtitles stored in external text files, each video file has it's default subtitles file ( <videoname>.dpsubs )
+//example: for video/act1.dpv default subtitles file will be video/act1.dpsubs
+//also video could be played with custom subtitles file by utilizing second parm of playvideo command
+//syntax of .dpsubs files: each line in .dpsubs file defines 1 subtitle, there are three tokens:
+//   <start> <end> "string"
+//   start: subtitle start time in seconds
+//     end: subtitle time-to-show in seconds, if 0 - subtitle will be showed until next subtitle is started, 
+//          if below 0 - show until next subtitles minus this number of seconds
+//    text: subtitle text, color codes (Q3-style and ^xRGB) are allowed
+//example of subtitle file:
+//   3	0	"Vengeance! Vengeance for my eternity of suffering!"
+//   9	0	"Whelp! As if you knew what eternity was!"
+//   13	0	"Grovel before your true master."
+//   17	0	"Never!" 
+//   18	7	"I'll hack you from crotch to gizzard and feed what's left of you to your brides..."
 
 //DP_SOLIDCORPSE
 //idea: LordHavoc
@@ -1272,6 +1345,14 @@ float(entity clent) clienttype = #455; // returns one of the CLIENTTYPE_* consta
 .float bouncestop; // bounce stops if velocity to bounce plane is < bouncestop * gravity AFTER the bounce
 //description:
 //allows qc to customize MOVETYPE_BOUNCE a bit
+
+//DP_SV_CLIENTCAMERA
+//idea: LordHavoc, others
+//darkplaces implementation: Black
+//field definitions:
+.entity clientcamera; // override camera entity
+//description:
+//allows another entity to be the camera for a client, for example a remote camera, this is similar to sending svc_setview manually except that it also changes the network culling appropriately.
 
 //DP_SV_CLIENTCOLORS
 //idea: LordHavoc
@@ -1806,14 +1887,14 @@ float Q3SURFACEFLAG_LADDER = 8; // climbable surface
 float Q3SURFACEFLAG_NOIMPACT = 16; // projectiles should remove themselves on impact (this is set on sky)
 float Q3SURFACEFLAG_NOMARKS = 32; // projectiles should not leave marks, such as decals (this is set on sky)
 float Q3SURFACEFLAG_FLESH = 64; // projectiles should do a fleshy effect (blood?) on impact
-//float Q3SURFACEFLAG_NODRAW = 128; // compiler hint (not important to qc)
+float Q3SURFACEFLAG_NODRAW = 128; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_HINT = 256; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_SKIP = 512; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_NOLIGHTMAP = 1024; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_POINTLIGHT = 2048; // compiler hint (not important to qc)
 float Q3SURFACEFLAG_METALSTEPS = 4096; // walking on this surface should make metal step sounds
 float Q3SURFACEFLAG_NOSTEPS = 8192; // walking on this surface should not make footstep sounds
-//float Q3SURFACEFLAG_NONSOLID = 16384; // compiler hint (not important to qc)
+float Q3SURFACEFLAG_NONSOLID = 16384; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_LIGHTFILTER = 32768; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_ALPHASHADOW = 65536; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_NODLIGHT = 131072; // compiler hint (not important to qc)
@@ -2320,4 +2401,7 @@ float JOINTTYPE_HINGE2 = 5; // hinge2; uses origin (anchor), angles (axis1), vel
 .string crypto_encryptmethod; // the string "AES128" if encrypting, and string_null if plaintext
 .string crypto_signmethod; // the string "HMAC-SHA256" if signing, and string_null if plaintext
 // there is no field crypto_myidfp, as that info contains no additional information the QC may have a use for
+//builtin definitions: (SVQC)
+float(string url, float id, string content_type, string delim, float buf, float keyid) crypto_uri_postbuf = #513;
 //description:
+//use -1 as buffer handle to justs end delim as postdata

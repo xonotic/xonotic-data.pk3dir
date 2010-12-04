@@ -468,28 +468,6 @@ string formatmessage(string msg)
 			replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1'));
 		else if (escape == "S")
 			replacement = ftos(vlen(self.velocity));
-		else if (escape == "v") {
-			float weapon_number;
-			local entity stats;
-
-			if(self.classname == "spectator")
-				stats = self.enemy;
-			else
-				stats = self;
-
-			weapon_number = stats.weapon;
-
-			if (!weapon_number)
-				weapon_number = stats.switchweapon;
-
-			if (!weapon_number)
-				weapon_number = stats.cnt;
-
-			if(stats.cvar_cl_accuracy_data_share && stats.stats_fired[weapon_number - 1])
-				replacement = ftos(bound(0, floor(100 * stats.stats_hit[weapon_number - 1] / stats.stats_fired[weapon_number - 1]), 100));
-			else
-				replacement = "~"; // or something to indicate NULL, not available
-		}
 
 		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
 		p = p + strlen(replacement);
@@ -2049,11 +2027,12 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 }
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
 
-float MAX_IPBAN_URIS = 16;
-
-float URI_GET_DISCARD   = 0;
-float URI_GET_IPBAN     = 1;
-float URI_GET_IPBAN_END = 16;
+float MAX_IPBAN_URIS           = 16;
+                              
+float URI_GET_DISCARD          = 0;
+float URI_GET_IPBAN            = 1;
+float URI_GET_IPBAN_END        = 16;
+float URI_GET_PLAYERSTATS_SENT = 17;
 
 void URI_Get_Callback(float id, float status, string data)
 {
@@ -2069,6 +2048,10 @@ void URI_Get_Callback(float id, float status, string data)
     {
         // online ban list
         OnlineBanList_URI_Get_Callback(id, status, data);
+    }
+    else if (id == URI_GET_PLAYERSTATS_SENT)
+    {
+        PlayerStats_Sent_URI_Get_Callback(id, status, data);
     }
     else
     {

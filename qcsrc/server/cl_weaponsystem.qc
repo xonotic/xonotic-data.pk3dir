@@ -132,7 +132,7 @@ vector w_shotend;
 // make sure you call makevectors first (FIXME?)
 .float prevstrengthsound;
 .float prevstrengthsoundattempt;
-void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float maxdamage, float range)
+void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
 	local float oldsolid;
@@ -159,14 +159,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	v_up = vu;
 
 	// track max damage
-	if not(inWarmupStage) {
-		entity w;
-		w = get_weaponinfo(ent.weapon);
-		if(w.spawnflags & WEP_TYPE_SPLASH) {  // splash damage
-			ent.stats_fired[ent.weapon - 1] += maxdamage;
-			ent.stat_fired = ent.weapon + 64 * floor(ent.stats_fired[ent.weapon - 1]);
-		}
-	}
+	if(accuracy_canbegooddamage(ent))
+		accuracy_add(ent, ent.weapon, maxdamage, 0);
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
@@ -243,9 +237,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != "")
-	{
-		sound (ent, CHAN_WEAPON, snd, VOL_BASE, ATTN_NORM);
-	}
+		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
 
 	if(ent.items & IT_STRENGTH)
 	if(!g_minstagib)
@@ -264,11 +256,11 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
 };
 
-#define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, maxdamage, MAX_SHOT_DISTANCE)
-#define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, maxdamage)
-#define W_SetupShot_Dir(ent,s_forward,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage)
-#define W_SetupShot(ent,antilag,recoil,snd,maxdamage) W_SetupShot_ProjectileSize(ent, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage)
-#define W_SetupShot_Range(ent,antilag,recoil,snd,maxdamage,range) W_SetupShot_Dir_ProjectileSize_Range(ent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage, range)
+#define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, MAX_SHOT_DISTANCE)
+#define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, chan, maxdamage)
+#define W_SetupShot_Dir(ent,s_forward,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage)
+#define W_SetupShot(ent,antilag,recoil,snd,chan,maxdamage) W_SetupShot_ProjectileSize(ent, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage)
+#define W_SetupShot_Range(ent,antilag,recoil,snd,chan,maxdamage,range) W_SetupShot_Dir_ProjectileSize_Range(ent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, range)
 
 float CL_Weaponentity_CustomizeEntityForClient()
 {
@@ -1270,7 +1262,7 @@ void weapon_boblayer1(float spd, vector org)
 	// VorteX: haste can be added here
 };
 
-vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
+vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float forceAbsolute)
 {
 	vector mdirection;
 	float mspeed;
@@ -1284,7 +1276,7 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
 	mspeed = vlen(mvelocity);
 
 	nstyle = cvar("g_projectiles_newton_style");
-	if(nstyle == 0)
+	if(nstyle == 0 || forceAbsolute)
 	{
 		// absolute velocity
 		outvelocity = mvelocity;
@@ -1577,7 +1569,7 @@ float mspercallsum;
 float mspercallsstyle;
 float mspercallcount;
 #endif
-void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread)
+void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread, float forceAbsolute)
 {
 	if(missile.owner == world)
 		error("Unowned missile");
@@ -1602,13 +1594,13 @@ void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float
 	print("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
 #endif
 
-	missile.velocity = W_CalculateProjectileVelocity(missile.owner.velocity, pSpeed * dir);
+	missile.velocity = W_CalculateProjectileVelocity(missile.owner.velocity, pSpeed * dir, forceAbsolute);
 }
 
 void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 {
-	W_SetupProjectileVelocityEx(missile, w_shotdir, v_up, pSpeed, 0, 0, spread);
+	W_SetupProjectileVelocityEx(missile, w_shotdir, v_up, pSpeed, 0, 0, spread, FALSE);
 }
 
-#define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"))
-#define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"))
+#define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
+#define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)

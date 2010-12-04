@@ -240,7 +240,7 @@ alpha 256 256 0
 originjitter 6 6 6
 // dust/smoke drifting away from the impact
 effect TE_GUNSHOT
-count 2
+count 0.8
 type smoke
 tex 0 8
 color 0x101010 0x101010
@@ -251,7 +251,7 @@ originjitter 0 0 0
 velocityjitter 8 8 8
 // dust/smoke staying at the impact
 effect TE_GUNSHOT
-count 0.5
+count 0.2
 type smoke
 tex 0 8
 color 0x505050 0x505050
@@ -262,7 +262,7 @@ originjitter 0 0 0
 velocityjitter 0 0 0
 // bouncing sparks
 effect TE_GUNSHOT
-count 5
+count 2.5
 type spark
 color 0x8f4333 0xfff31b
 size 0.4 0.4
@@ -1022,7 +1022,7 @@ effect shotgun_impact
 type alphastatic
 notunderwater
 tex 0 8
-count 3
+count 1
 size 10 20
 sizeincrease 25
 alpha 300 550 756
@@ -1036,7 +1036,7 @@ effect shotgun_impact
 type alphastatic
 notunderwater
 tex 36 36
-count 0.5
+count 0.2
 size 10 11
 sizeincrease 74
 alpha 200 350 500
@@ -1049,7 +1049,7 @@ rotate 0 360 -50 50
 // sparks
 effect shotgun_impact
 notunderwater
-count 1.5
+count 0.5
 type spark
 tex 40 40
 color 0xFDFFD9 0xFDFFD9
@@ -1110,7 +1110,7 @@ effect machinegun_impact
 type alphastatic
 notunderwater
 tex 0 8
-count 3
+count 1.5
 size 10 20
 sizeincrease 15
 alpha 300 550 456
@@ -1134,7 +1134,7 @@ color 0x201d1a 0x000000
 bounce 6
 velocitymultiplier 0.03
 rotate 0 360 -50 50
-//derbis
+//debris
 effect machinegun_impact
 type alphastatic
 notunderwater
@@ -1985,7 +1985,7 @@ lightcolor 8 4 1
 // fire effect which make bright dot inside
 effect hagar_explode
 notunderwater
-count 5
+count 3.5
 type smoke
 tex 48 55
 color 0xffe955 0xff5a00
@@ -2018,7 +2018,7 @@ effect hagar_explode
 type alphastatic
 notunderwater
 tex 0 8
-count 10
+count 7
 size 20 40
 sizeincrease 20
 alpha 200 500 600
@@ -5110,3 +5110,18 @@ size 16 16
 alpha 256 256 1024
 velocityjitter 256 256 256
 
+//sparks for keepaway ball touch
+// used nowhere in code
+effect kaball_sparks
+count 35
+type spark
+tex 40 40
+color 0xa9cacf 0x0054ff
+size 1 3
+alpha 0 256 556
+gravity 1
+bounce 1.5
+originjitter 1 1 1
+velocityjitter 300 300 300
+velocitymultiplier 0.5
+airfriction 3

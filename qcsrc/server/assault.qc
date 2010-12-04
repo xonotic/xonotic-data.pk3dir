@@ -92,6 +92,17 @@ void assault_objective_decrease_use() {
 
 			oldself = self;
 			self = oldself.enemy;
+				if(self.message)
+				{
+					entity player;
+					string s;
+					FOR_EACH_PLAYER(player)
+					{
+						s = strcat(self.message, "\n");
+						centerprint(player, s);
+					}
+				}
+					
 				oldactivator = activator;
 				activator = oldself;
 					SUB_UseTargets();
@@ -251,31 +262,30 @@ void assault_roundstart_use() {
 	activator = self;
 	SUB_UseTargets();
 
-	/*
+	
 #ifdef TTURRETS_ENABLED
-entity ent,oldself;
+	entity ent, oldself;
 
 	//(Re)spawn all turrets
 	oldself = self;
 	ent = find(world, classname, "turret_main");
 	while(ent) {
-	// Swap turret teams
-	if(ent.team == COLOR_TEAM1)
-	ent.team = COLOR_TEAM2;
-	else
-	ent.team = COLOR_TEAM1;
+		// Swap turret teams
+		if(ent.team == COLOR_TEAM1)
+			ent.team = COLOR_TEAM2;
+		else
+			ent.team = COLOR_TEAM1;
 
-	self = ent;
+		self = ent;
 
-	// Dubbles as teamchange
-	turret_stdproc_respawn();
-	//ent.turret_spawnfunc();
+		// Dubbles as teamchange
+		turret_stdproc_respawn();
 
-	ent = find(ent, classname, "turret_main");
+		ent = find(ent, classname, "turret_main");
 	}
 	self = oldself;
 #endif
-*/
+
 
 }
 
