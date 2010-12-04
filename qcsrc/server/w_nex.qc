@@ -96,8 +96,6 @@ float w_nex(float req)
 
         if(autocvar_g_balance_nex_charge)
         {
-            self.weaponentity.weaponentity.glowmod = '0 0 0'; // reset
-
             self.weaponentity.weaponentity.glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * bound(0, self.weaponentity.weaponentity.glowmod_y + self.nex_charge / autocvar_g_balance_nex_charge_limit, 1);
             self.weaponentity.weaponentity.glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * bound(0, self.weaponentity.weaponentity.glowmod_y + self.nex_charge / autocvar_g_balance_nex_charge_limit, 1);
             self.weaponentity.weaponentity.glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * bound(0, self.weaponentity.weaponentity.glowmod_z + self.nex_charge / autocvar_g_balance_nex_charge_limit, 1);
@@ -108,7 +106,6 @@ float w_nex(float req)
                 self.weaponentity.weaponentity.glowmod_y = self.weaponentity.weaponentity.glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - autocvar_g_balance_nex_charge_limit) / (1 - autocvar_g_balance_nex_charge_limit);
                 self.weaponentity.weaponentity.glowmod_z = self.weaponentity.weaponentity.glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_limit) / (1 - autocvar_g_balance_nex_charge_limit);
             }
-            self.exteriorweaponentity.glowmod = self.weaponentity.weaponentity.glowmod;
         }
 
 		if(autocvar_g_balance_nex_secondary_chargepool)
