@@ -108,7 +108,7 @@ void bot_serverframe();
  * Imports
  */
 
-float sv_maxspeed;
+float autocvar_sv_maxspeed;
 
 void() havocbot_setupbot;
 

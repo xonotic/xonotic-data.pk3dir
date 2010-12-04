@@ -161,13 +161,9 @@ void default_delayedinit()
 void ActivateTeamplay()
 {
 	float teamplay_default;
-	teamplay_default = cvar("teamplay_default");
 
-	if(teamplay_default)
-		teamplay = teamplay_default;
-	else
-		teamplay = 3;
-	cvar_set("teamplay", ftos(teamplay));
+	teamplay_default = cvar_or("teamplay_default", 3);
+	cvar_set("teamplay", teamplay_default);
 
 	teams_matter = 1;
 }

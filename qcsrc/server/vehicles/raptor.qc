@@ -295,7 +295,7 @@ void raptor_enter()
     if (clienttype(other) != CLIENTTYPE_REAL)
         return;
 
-    if(teamplay)
+    if(autocvar_teamplay)
         if(self.team)
             if(self.team != other.team)
                 return;

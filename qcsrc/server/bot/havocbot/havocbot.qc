@@ -1346,7 +1346,7 @@ vector havocbot_dodge()
 		if (head.owner != self)
 		{
 			vl = vlen(head.velocity);
-			if (vl > sv_maxspeed * 0.3)
+			if (vl > autocvar_sv_maxspeed * 0.3)
 			{
 				n = normalize(head.velocity);
 				v = self.origin - head.origin;

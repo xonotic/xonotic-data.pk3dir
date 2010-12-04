@@ -114,7 +114,7 @@ void racer_align4point()
         self.velocity += normalize(self.origin - trace_endpos) * (vlen(self.velocity) * 1.25);
 
     self.velocity =  self.velocity + (push_vector * frametime);
-    self.velocity_z -= sv_gravity * frametime;
+    self.velocity_z -= autocvar_sv_gravity * frametime;
 
     push_vector_x = (fl_push - bl_push);
     push_vector_x += (fr_push - br_push);

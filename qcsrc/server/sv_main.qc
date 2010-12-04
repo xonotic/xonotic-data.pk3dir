@@ -86,7 +86,7 @@ void CreatureFrame (void)
 			if (g_footsteps)
 			if (!gameover)
 			if (self.flags & FL_ONGROUND)
-			if (vlen(self.velocity) > sv_maxspeed * 0.6)
+			if (vlen(self.velocity) > autocvar_sv_maxspeed * 0.6)
 			if (!self.deadflag)
 			if (time < self.lastground + 0.2)
 			{
@@ -175,31 +175,6 @@ void StartFrame (void)
 
 	WarpZone_StartFrame();
 
-	sv_gravity = cvar("sv_gravity");
-	sv_maxairspeed = cvar("sv_maxairspeed");
-	sv_maxspeed = cvar ("sv_maxspeed");
-	sv_friction = cvar ("sv_friction");
-	sv_accelerate = cvar ("sv_accelerate");
-	sv_airaccelerate = cvar("sv_airaccelerate");
-	sv_airaccel_sideways_friction = cvar("sv_airaccel_sideways_friction");
-	sv_airaccel_qw = cvar("sv_airaccel_qw");
-	sv_stopspeed = cvar ("sv_stopspeed");
-	sv_airstopaccelerate = cvar("sv_airstopaccelerate");
-	sv_airstrafeaccelerate = cvar("sv_airstrafeaccelerate");
-	sv_maxairstrafespeed = cvar("sv_maxairstrafespeed");
-	sv_airstrafeaccel_qw = cvar("sv_airstrafeaccel_qw");
-	sv_aircontrol = cvar("sv_aircontrol");
-	sv_aircontrol_penalty = cvar("sv_aircontrol_penalty");
-	sv_aircontrol_power = cvar("sv_aircontrol_power");
-	sv_warsowbunny_airforwardaccel = cvar("sv_warsowbunny_airforwardaccel");
-	sv_warsowbunny_accel = cvar("sv_warsowbunny_accel");
-	sv_warsowbunny_topspeed = cvar("sv_warsowbunny_topspeed");
-	sv_warsowbunny_turnaccel = cvar("sv_warsowbunny_turnaccel");
-	sv_warsowbunny_backtosideratio = cvar("sv_warsowbunny_backtosideratio");
-	sv_airspeedlimit_nonqw = cvar("sv_airspeedlimit_nonqw");
-	sv_doublejump = cvar("sv_doublejump");
-	teamplay = cvar ("teamplay");
-
 	sys_frametime = cvar("sys_ticrate") * cvar("slowmo");
 	if(sys_frametime <= 0)
 		sys_frametime = 1.0 / 60.0; // somewhat safe fallback
@@ -207,10 +182,10 @@ void StartFrame (void)
 	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
 		orig_slowmo = cvar("slowmo"); // slowmo will be restored after the timeout
 
-	if(teams_matter && !teamplay)
-		teamplay = 3;
-	if(!teams_matter && teamplay)
-		teamplay = 0;
+	if(teams_matter && !autocvar_teamplay)
+		cvar_set("teamplay", "3"); // this also updates the autocvar
+	if(!teams_matter && autocvar_teamplay)
+		cvar_set("teamplay", "0"); // this also updates the autocvar
 
 	skill = cvar("skill");
 

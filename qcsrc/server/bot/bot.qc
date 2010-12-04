@@ -563,7 +563,7 @@ void bot_serverframe()
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = FALSE;
-	if (teamplay && cvar("bot_vs_human") && (c3==-1 && c4==-1))
+	if (autocvar_teamplay && cvar("bot_vs_human") && (c3==-1 && c4==-1))
 		bots = min(ceil(fabs(cvar("bot_vs_human")) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || cvar("bot_join_empty") || (currentbots > 0 && time < 5)))
 	{

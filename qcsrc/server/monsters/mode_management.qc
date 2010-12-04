@@ -143,7 +143,7 @@ void(float c) SV_ChangeTeam =
 	if (mode_shirtmustmatchpants || shirt < 0)
 		shirt = pants;
 	setcolor(self, pants + shirt * 16);
-	if (pants != old && old >= 0 && teamplay && deathmatch)
+	if (pants != old && old >= 0 && autocvar_teamplay && deathmatch)
 	{
 		T_Damage(self, self, self, 0, 0, " changed teams", DT_TELEFRAG, self.origin, '0 0 0', Obituary_Generic);
 		self.frags = 0;

@@ -33,7 +33,7 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 	{
 		TDEATHLOOP(org)
 		{
-			if not(teamplay && cvar("g_telefrags_teamplay") && head.team == player.team)
+			if not(autocvar_teamplay && cvar("g_telefrags_teamplay") && head.team == player.team)
 				if(head.classname == "player")
 					if(head.health >= 1)
 						return 1;
@@ -48,7 +48,7 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 	{
 		if (player.classname == "player" && player.health >= 1)
 		{
-			if not(teamplay && cvar("g_telefrags_teamplay") && head.team == player.team)
+			if not(autocvar_teamplay && cvar("g_telefrags_teamplay") && head.team == player.team)
 			{
 				if(head.classname == "player")
 					if(head.health >= 1)
