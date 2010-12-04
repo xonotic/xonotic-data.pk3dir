@@ -388,7 +388,7 @@ void preMenuDraw()
 			buf_del(cvar_handle);
 			uri_postbuf(
 				uri, URI_GET_UPDATENOTIFICATION,
-				"application/x-www-urlencoded",
+				"application/x-www-form-urlencoded",
 				"&",
 				popcon_handle
 			);
