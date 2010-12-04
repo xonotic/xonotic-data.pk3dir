@@ -2,7 +2,6 @@
 
 // #define KH_PLAYER_USE_ATTACHMENT
 // #define KH_PLAYER_USE_CARRIEDMODEL
-// #define KH_KEY_ATTACHMENT_DEBUG
 
 #ifdef KH_PLAYER_USE_ATTACHMENT
 vector KH_PLAYER_ATTACHMENT_DIST_ROTATED = '0 -4 0';
@@ -647,17 +646,6 @@ void kh_Key_Think()  // runs all the time
 
 	if(intermission_running)
 		return;
-
-#ifdef KH_KEY_ATTACHMENT_DEBUG
-	if(self.kh_prev == self.owner)
-	{
-		if(cvar_string("_angles") != "")
-		{
-			self.angles = stov(cvar_string("_angles"));
-			setorigin(self, stov(cvar_string("_origin")));
-		}
-	}
-#endif
 
 	if(self.owner)
 	{

@@ -794,6 +794,8 @@ vector randompos(vector m1, vector m2)
     return  v;
 };
 
+//#NO AUTOCVARS START
+
 float g_pickup_shells;
 float g_pickup_shells_max;
 float g_pickup_nails;
@@ -1313,25 +1315,7 @@ void readlevelcvars(void)
 	readplayerstartcvars();
 }
 
-/*
-// TODO sound pack system
-string soundpack;
-
-string precache_sound_builtin (string s) = #19;
-void(entity e, float chan, string samp, float vol, float atten) sound_builtin = #8;
-string precache_sound(string s)
-{
-	return precache_sound_builtin(strcat(soundpack, s));
-}
-void play2(entity e, string filename)
-{
-	stuffcmd(e, strcat("play2 ", soundpack, filename, "\n"));
-}
-void sound(entity e, float chan, string samp, float vol, float atten)
-{
-	sound_builtin(e, chan, strcat(soundpack, samp), vol, atten);
-}
-*/
+//#NO AUTOCVARS END
 
 // Sound functions
 string precache_sound (string s) = #19;

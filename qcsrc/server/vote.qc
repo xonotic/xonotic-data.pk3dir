@@ -55,7 +55,7 @@ entity GetKickVoteVictim(string vote, string cmd, entity caller)
 		GetKickVoteVictim_newcommand = strcat(argv(0), " # ", ftos(num_for_edict(e)));
 		if(argv(0) == "kickban")
 		{
-			GetKickVoteVictim_newcommand = strcat(GetKickVoteVictim_newcommand, " ", cvar_string("g_ban_default_bantime"), " ", cvar_string("g_ban_default_masksize"), " ", reason);
+			GetKickVoteVictim_newcommand = strcat(GetKickVoteVictim_newcommand, " ", ftos(cvar("g_ban_default_bantime")), " ", ftos(cvar("g_ban_default_masksize")), " ", reason);
 		}
 		else if(argv(0) == "kick")
 		{
@@ -367,7 +367,7 @@ void VoteHelp(entity e) {
 	print_to(e, "^7\"^2yes^7\", \"^2no^7\", \"^2abstain^7\" and \"^2dontcare^7\" to make your vote.");
 	print_to(e, "^7If enough of the players vote yes the vote is accepted.");
 	print_to(e, "^7If enough of the players vote no the vote is rejected.");
-	print_to(e, strcat("^7If neither the vote will timeout after ", cvar_string("sv_vote_timeout"), "^7 seconds."));
+	print_to(e, strcat("^7If neither the vote will timeout after ", ftos(cvar("sv_vote_timeout")), "^7 seconds."));
 	print_to(e, "^7You can call a vote for or execute these commands:");
 	print_to(e, strcat("^3", cvar_string("sv_vote_commands"), "^7 and maybe further ^3arguments^7"));
 }

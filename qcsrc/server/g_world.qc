@@ -614,15 +614,6 @@ void spawnfunc_worldspawn (void)
 
 	TemporaryDB = db_create();
 
-	/*
-	TODO sound pack system
-	// initialize sound pack system
-	soundpack = cvar_string("g_soundpack");
-	if(soundpack != "")
-		soundpack = strcat(soundpack, "/");
-	soundpack = strzone(soundpack);
-	*/
-
 	// 0 normal
 	lightstyle(0, "m");
 
@@ -696,7 +687,7 @@ void spawnfunc_worldspawn (void)
 	GameLogInit(); // prepare everything
 	if(cvar("sv_eventlog"))
 	{
-		s = strcat(cvar_string("sv_eventlog_files_counter"), ".");
+		s = strcat(ftos(cvar("sv_eventlog_files_counter")), ".");
 		s = strcat(s, ftos(random()));
 		matchid = strzone(s);
 

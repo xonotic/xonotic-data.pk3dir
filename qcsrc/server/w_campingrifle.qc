@@ -250,7 +250,7 @@ float w_campingrifle(float req)
 		weapon_setup(WEP_CAMPINGRIFLE);
 
 		full = W_CampingRifle_CheckMaxBullets(TRUE);
-		if(cvar("g_balance_campingrifle_auto_reload_after_changing_weapons"))
+		if(cvar("g_balance_campingrifle_auto_reload_on_switch"))
 			if(!full)
 				self.campingrifle_bulletcounter = -1;
 	}

@@ -802,8 +802,8 @@ void FixPlayermodel()
 
 	if(!teams_matter)
 		if(strlen(cvar_string("sv_defaultplayercolors")))
-			if(self.clientcolors != cvar("sv_defaultplayercolors"))
-				setcolor(self, cvar("sv_defaultplayercolors"));
+			if(self.clientcolors != stof(cvar_string("sv_defaultplayercolors")))
+				setcolor(self, stof(cvar_string("sv_defaultplayercolors")));
 }
 
 void PlayerTouchExplode(entity p1, entity p2)

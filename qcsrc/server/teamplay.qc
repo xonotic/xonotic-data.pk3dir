@@ -115,6 +115,7 @@ void ReadGameCvars()
 	prev = cvar("gamecfg");
 	for(i = 0; i < 2; ++i)
 	{
+//#NO AUTOCVARS START
 		found += (g_dm = (!found && (prev != GAME_DEATHMATCH) && cvar("g_dm")));
 		found += (g_tdm = (!found && (prev != GAME_TEAM_DEATHMATCH) && cvar("g_tdm")));
 		found += (g_domination = (!found && (prev != GAME_DOMINATION) && cvar("g_domination")));
@@ -131,6 +132,7 @@ void ReadGameCvars()
 		found += (g_cts = (!found && (prev != GAME_CTS) && cvar("g_cts")));
 		found += (g_freezetag = (!found && (prev != GAME_FREEZETAG) && cvar("g_freezetag")));
 		found += (g_keepaway = (!found && (prev != GAME_KEEPAWAY) && cvar("g_keepaway")));
+//#NO AUTOCVARS END
 
 		if(found)
 			break;
@@ -431,7 +433,7 @@ void InitGameplayMode()
 			race_timelimit = cvar("timelimit");
 			cvar_set("fraglimit", "0");
 			cvar_set("leadlimit", "0");
-			cvar_set("timelimit", cvar_string("g_race_qualifying_timelimit"));
+			cvar_set("timelimit", ftos(cvar("g_race_qualifying_timelimit")));
 		}
 		else
 			g_race_qualifying = 0;

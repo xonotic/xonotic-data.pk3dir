@@ -164,14 +164,14 @@ string dmmessage;
 void(string m) setdm =
 {
 	dmmessage = m;
-	if (cvar_string("deathmatch") != m)
+	if (cvar("deathmatch") != stof(m))
 		cvar_set("deathmatch", m);
 }
 
 void(string m) setteamplay =
 {
 	dmmessage = m;
-	if (cvar_string("teamplay") != m)
+	if (cvar("teamplay") != stof(m))
 		cvar_set("teamplay", m);
 }
 

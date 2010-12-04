@@ -64,7 +64,7 @@ void CampaignPreInit()
 {
 	float baseskill;
 	string title;
-	if(cvar("sv_cheats"))
+	if(autocvar_sv_cheats)
 	{
 		CampaignBailout("JOLLY CHEATS AHAHAHAHAHAHAH))");
 		return;
@@ -101,7 +101,7 @@ void CampaignPreInit()
 
 	// copy sv_gravity cvar, as the engine needs it too (sorry, this will mess
 	// with the menu a little still...)
-	cvar_set_normal("sv_gravity", cvar_string("sv_gravity"));
+	cvar_set_normal("sv_gravity", ftos(cvar("sv_gravity")));
 
 	if(Campaign_Invalid())
 		return;

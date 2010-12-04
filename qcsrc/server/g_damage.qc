@@ -877,14 +877,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 
 	if(RadiusDamage_running)
 	{
-		string save;
-		print("RadiusDamage called recursively!\n");
-		print("Expect stuff to go HORRIBLY wrong.\n");
-		print("Causing a stack trace...\n");
-		save = cvar_string("prvm_backtraceforwarnings");
-		cvar_set("prvm_backtraceforwarnings", "1");
-		fclose(-1); // calls VM_Warning
-		cvar_set("prvm_backtraceforwarnings", save);
+		backtrace("RadiusDamage called recursively! Expect stuff to go HORRIBLY wrong.");
 		return 0;
 	}
 
