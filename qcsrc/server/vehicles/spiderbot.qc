@@ -430,7 +430,7 @@ void spiderbot_enter()
 
     self.colormod = self.tur_head.colormod = '0 0 0';
 
-    if(autocvar_teamplay)
+    if(teams_matter)
     if(self.team)
     if(self.team != other.team)
         return;
@@ -533,7 +533,7 @@ void spiderbot_exit(float eject)
 	self.colormap            = 1024;
 	self.tur_head.colormap   = 1024;
 
-    if not (autocvar_teamplay)
+    if not (teams_matter)
         self.team                = 0;
     else
     {
@@ -697,7 +697,7 @@ void vewhicle_spiderbot_dinit()
     tracebox(self.origin + '0 0 100', spiderbot_MIN, spiderbot_MAX, self.origin - '0 0 10000', MOVE_WORLDONLY, self);
     setorigin(self.spiderbot_spawnpnt,trace_endpos);
 
-    if(self.team && !autocvar_teamplay)
+    if(self.team && !teams_matter)
         self.team = 0;
     else
         self.spiderbot_spawnpnt.team = self.team;

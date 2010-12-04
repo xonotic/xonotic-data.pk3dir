@@ -43,7 +43,7 @@ void W_MinstaNex_Attack (void)
 	// teamcolor / hit beam effect
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	if(autocvar_teamplay)
+	if(teams_matter)
 	{
 	    switch(self.team)
 	    {

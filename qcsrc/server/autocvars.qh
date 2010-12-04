@@ -1,3 +1,4 @@
 float autocvar_sv_cheats;
 float autocvar_g_bastet;
+float autocvar_teamplay;
 var float autocvar_g_movement_highspeed = 1;

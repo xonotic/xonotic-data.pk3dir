@@ -609,7 +609,7 @@ void turret_think()
     self.nextthink = time + self.ticrate;
 
     // ONS uses somewhat backwards linking.
-    if (autocvar_teamplay)
+    if (teams_matter)
     {
         if not (g_onslaught)
             if (self.target)
@@ -918,7 +918,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         if not (self.team)
             self.team = 14; // Assume turrets are on the defending side if not explicitly set otehrwize
     }
-    else if not (autocvar_teamplay)
+    else if not (teams_matter)
 		self.team = MAX_SHOT_DISTANCE; // Group all turrets into the same team, so they dont kill eachother.
 	else if(g_onslaught && self.targetname)
 	{

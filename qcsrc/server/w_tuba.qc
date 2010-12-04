@@ -46,7 +46,7 @@ float Tuba_GetNote(entity pl, float hittype)
 	
 	// we support two kinds of tubas, those tuned in Eb and those tuned in C
 	// kind of tuba currently is player slot number, or team number if in
-	// autocvar_teamplay
+	// teamplay
 	// that way, holes in the range of notes are "plugged"
 	if(teams_matter)
 	{
