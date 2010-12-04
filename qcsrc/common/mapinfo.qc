@@ -347,9 +347,11 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DEATHMATCH;      // DM always works
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RUNEMATCH;       // Rune always works
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_LMS;             // LMS always works
+		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEEPAWAY;		// Keepaway always works
 
 		if(spawnpoints >= 8  && diameter > 4096) {
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
+			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_FREEZETAG;
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CA;
 		}
 		if(                     diameter < 4096)
@@ -406,6 +408,8 @@ string _MapInfo_GetDefault(float t)
 		case MAPINFO_TYPE_ONSLAUGHT:       return "20 0";
 		case MAPINFO_TYPE_NEXBALL:         return "5 20 0";
 		case MAPINFO_TYPE_CTS:             return "20 0 0";
+		case MAPINFO_TYPE_FREEZETAG:       return "10 20 0";
+		case MAPINFO_TYPE_KEEPAWAY:	   return "30 20 0";
 		default:                           return "";
 	}
 }
@@ -459,6 +463,14 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 		if(sa != "")
 			if(cvar("g_ctf_win_mode") < 2)
 				cvar_set("fraglimit", sa);
+		s = cdr(s);
+	}
+
+	if(pWantedType == MAPINFO_TYPE_KEEPAWAY)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("fraglimit", sa);
 		s = cdr(s);
 	}
 
@@ -526,6 +538,8 @@ string _MapInfo_GetDefaultEx(float t)
 		case MAPINFO_TYPE_ONSLAUGHT:       return "timelimit=20";
 		case MAPINFO_TYPE_NEXBALL:         return "timelimit=20 pointlimit=5 leadlimit=0";
 		case MAPINFO_TYPE_CTS:             return "timelimit=20 skill=-1";
+		case MAPINFO_TYPE_FREEZETAG:       return "timelimit=20 pointlimit=10 teams=2 leadlimit=0";
+		case MAPINFO_TYPE_KEEPAWAY: 	   return "timelimit=20 pointlimit=30";
 		default:                           return "";
 	}
 }
@@ -650,6 +664,8 @@ float MapInfo_Type_FromString(string t)
 	else if(t == "rc")      return MAPINFO_TYPE_RACE;
 	else if(t == "nexball") return MAPINFO_TYPE_NEXBALL;
 	else if(t == "cts")     return MAPINFO_TYPE_CTS;
+	else if(t == "freezetag") 	return MAPINFO_TYPE_FREEZETAG;
+	else if(t == "keepaway") return MAPINFO_TYPE_KEEPAWAY;
 	else if(t == "all")     return MAPINFO_TYPE_ALL;
 	else                    return 0;
 }
@@ -670,6 +686,8 @@ string MapInfo_Type_ToString(float t)
 	else if(t == MAPINFO_TYPE_RACE)            return "rc";
 	else if(t == MAPINFO_TYPE_NEXBALL)         return "nexball";
 	else if(t == MAPINFO_TYPE_CTS)             return "cts";
+	else if(t == MAPINFO_TYPE_FREEZETAG)       return "freezetag";
+	else if(t == MAPINFO_TYPE_KEEPAWAY)  	   return "keepaway";
 	else if(t == MAPINFO_TYPE_ALL)             return "all";
 	else                                       return "";
 }
@@ -1134,6 +1152,10 @@ float MapInfo_CurrentGametype()
 		return MAPINFO_TYPE_NEXBALL;
 	else if(cvar("g_cts"))
 		return MAPINFO_TYPE_CTS;
+	else if(cvar("g_freezetag"))
+		return MAPINFO_TYPE_FREEZETAG;
+	else if(cvar("g_keepaway"))
+		return MAPINFO_TYPE_KEEPAWAY;
 	else
 		return MAPINFO_TYPE_DEATHMATCH;
 }
@@ -1174,7 +1196,9 @@ string MapInfo_GetGameTypeCvar(float t)
 		case MAPINFO_TYPE_ONSLAUGHT: return "g_onslaught";
 		case MAPINFO_TYPE_RACE: return "g_race";
 		case MAPINFO_TYPE_NEXBALL: return "g_nexball";
+		case MAPINFO_TYPE_FREEZETAG: return "g_freezetag";
 		case MAPINFO_TYPE_CTS: return "g_cts";
+		case MAPINFO_TYPE_KEEPAWAY: 		return "g_keepaway";
 		default: return "";
 	}
 }
@@ -1196,6 +1220,8 @@ void MapInfo_SwitchGameType(float t)
 	cvar_set("g_race",       (t == MAPINFO_TYPE_RACE)            ? "1" : "0");
 	cvar_set("g_nexball",    (t == MAPINFO_TYPE_NEXBALL)         ? "1" : "0");
 	cvar_set("g_cts",        (t == MAPINFO_TYPE_CTS)             ? "1" : "0");
+	cvar_set("g_freezetag",  (t == MAPINFO_TYPE_FREEZETAG)       ? "1" : "0");
+	cvar_set("g_keepaway",   (t == MAPINFO_TYPE_KEEPAWAY)        ? "1" : "0");
 }
 
 void MapInfo_LoadMap(string s)

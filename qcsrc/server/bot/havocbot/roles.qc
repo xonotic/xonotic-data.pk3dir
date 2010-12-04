@@ -274,6 +274,24 @@ void havocbot_role_race()
 	}
 };
 
+// Keepaway
+// If you don't have the ball, get it; if you do, kill people.
+void havocbot_role_ka()
+{
+	if(self.deadflag != DEAD_NO)
+		return;
+
+	if (self.bot_strategytime < time)
+	{
+		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		navigation_goalrating_start();
+		havocbot_goalrating_items(10000, self.origin, 10000);
+		havocbot_goalrating_enemyplayers(20000, self.origin, 10000);
+		//havocbot_goalrating_waypoints(1, self.origin, 1000);
+		navigation_goalrating_end();
+	}
+}
+
 void havocbot_chooserole_dm()
 {
 	self.havocbot_role = havocbot_role_dm;
@@ -288,6 +306,11 @@ void havocbot_chooserole_dom()
 {
 	self.havocbot_role = havocbot_role_dom;
 };
+
+void havocbot_chooserole_ka()
+{
+	self.havocbot_role = havocbot_role_ka;
+}
 
 void havocbot_chooserole()
 {
@@ -304,6 +327,8 @@ void havocbot_chooserole()
 		havocbot_chooserole_race();
 	else if (g_onslaught)
 		havocbot_chooserole_ons();
+	else if (g_keepaway)
+		havocbot_chooserole_ka();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
 };

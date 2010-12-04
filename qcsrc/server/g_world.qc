@@ -329,6 +329,7 @@ void cvar_changes_init()
 		BADCVAR("g_runematch");
 		BADCVAR("g_tdm");
 		BADCVAR("g_nexball");
+		BADCVAR("g_keepaway");
 		BADCVAR("teamplay");
 
 		// long
@@ -809,11 +810,19 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_charge_pool_ammo);
 
-	if(g_ca)
+	if(g_ca || g_freezetag)
 	{
 		addstat(STAT_REDALIVE, AS_INT, redalive_stat);
 		addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
+		addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
+		addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
 	}
+	if(g_freezetag)
+	{
+		addstat(STAT_FROZEN, AS_INT, freezetag_frozen);
+		addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, freezetag_revive_progress);
+	}
+
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
 	addstat(STAT_MOVEVARS_MAXSPEED, AS_FLOAT, stat_sv_maxspeed);
@@ -896,6 +905,8 @@ void spawnfunc_worldspawn (void)
 		}
 		cvar_set("sv_curl_serverpackages", substring(s, 1, -1));
 	}
+
+	PlayerStats_Init();
 
 	world_initialized = 1;
 }
@@ -1397,12 +1408,13 @@ RULES
 
 void DumpStats(float final)
 {
-	local float file;
-	local string s;
-	local float to_console;
-	local float to_eventlog;
-	local float to_file;
-	local float i;
+	float file;
+	string s;
+	float to_console;
+	float to_eventlog;
+	float to_file;
+	float i;
+	entity e;
 
 	to_console = cvar("sv_logscores_console");
 	to_eventlog = cvar("sv_eventlog");
@@ -1497,6 +1509,11 @@ void DumpStats(float final)
 		fputs(file, ":end\n");
 		fclose(file);
 	}
+
+	// send statistics
+	FOR_EACH_CLIENT(e)
+		PlayerStats_AddGlobalInfo(e);
+	PlayerStats_Shutdown();
 }
 
 void FixIntermissionClient(entity e)
@@ -2718,6 +2735,10 @@ void MapVote_Start()
 	if(mapvote_run)
 		return;
 
+	// wait for stats to be sent first
+	if(!playerstats_waitforme)
+		return;
+
 	MapInfo_Enumerate();
 	if(MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1))
 		mapvote_run = TRUE;
@@ -2892,6 +2913,8 @@ void RestoreGame()
 
 void SV_Shutdown()
 {
+	entity e;
+
 	if(gameover > 1) // shutting down already?
 		return;
 
@@ -2902,6 +2925,11 @@ void SV_Shutdown()
 		world_initialized = 0;
 		print("Saving persistent data...\n");
 		Ban_SaveBans();
+
+		FOR_EACH_CLIENT(e)
+			PlayerStats_AddGlobalInfo(e);
+		PlayerStats_Shutdown();
+
 		if(!cheatcount_total)
 		{
 			if(cvar("sv_db_saveasdump"))

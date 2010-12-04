@@ -386,6 +386,8 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 }
 
 void ClientKill_Now_TeamChange();
+void freezetag_CheckWinner();
+void freezetag_Unfreeze();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -455,7 +457,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	damage_take = take;
 	damage_save = save;
 	damage_force = force;
-	MUTATOR_CALLHOOK(PlayerDamage);
+	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor);
 	take = bound(0, damage_take, self.health);
 	save = bound(0, damage_save, self.armorvalue);
 
@@ -567,6 +569,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = FALSE;
 
+		if(self.alivetime)
+		{
+			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+			self.alivetime = 0;
+		}
+
 		if(valid_damage_for_weaponstats)
 			WeaponStats_LogKill(DEATH_WEAPONOF(deathtype), self.weapon);
 
@@ -595,21 +603,36 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			}
 		}
 
-		// become fully visible
-		self.alpha = 1;
-		// clear selected player display
-		ClearSelectedPlayer();
-		// throw a weapon
-		SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
+		if(!g_freezetag)
+		{
+			// become fully visible
+			self.alpha = 1;
+			// clear selected player display
+			ClearSelectedPlayer();
+			// throw a weapon
+			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
+		}
+
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
 		DropAllRunes(self);
 
+		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
+		{
+			PutClientInServer();
+			count_alive_players(); // re-count players
+			freezetag_CheckWinner();
+			return;
+		}
+
 		frag_attacker = attacker;
 		frag_inflictor = inflictor;
 		frag_target = self;
 		MUTATOR_CALLHOOK(PlayerDies);
+
+		if(g_freezetag)
+            return;
 
 		if(self.flagcarried)
 		{
@@ -620,7 +643,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			else
 				DropFlag(self.flagcarried, world, attacker);
 		}
-		if(self.ballcarried)
+		if(self.ballcarried && g_nexball)
 			DropBall(self.ballcarried, self.origin, self.velocity);
 		Portal_ClearAllLater(self);
 		// clear waypoints

@@ -1,0 +1,27 @@
+// time the player was alive and kicking
+string PLAYERSTATS_ALIVETIME = "alivetime";
+string PLAYERSTATS_KILLS     = "kills";
+
+// delay map switch until this is set
+float playerstats_waitforme;
+
+// call at initialization
+void PlayerStats_Init();
+
+// add a new player
+void PlayerStats_AddPlayer(entity e);
+
+// add a new event
+void PlayerStats_AddEvent(string event_id);
+
+// call on each event to track, or at player disconnect OR match end for "global stuff"
+void PlayerStats_Event(entity e, string event_id, float value);
+
+// call at game over
+void PlayerStats_Shutdown(); // send stats to the server
+
+// URI GET callback
+void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data);
+
+// call this whenever a player leaves
+void PlayerStats_AddGlobalInfo(entity p);

@@ -137,6 +137,7 @@ void trigger_push_touch()
 	if (other.classname != "gib")
 	if (other.classname != "casing")
 	if (other.classname != "droppedweapon")
+	if (other.classname != "keepawayball")
 	if (!other.projectiledeathtype || other.classname == "bullet")
 		return;
 

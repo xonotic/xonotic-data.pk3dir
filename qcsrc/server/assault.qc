@@ -92,6 +92,17 @@ void assault_objective_decrease_use() {
 
 			oldself = self;
 			self = oldself.enemy;
+				if(self.message)
+				{
+					entity player;
+					string s;
+					FOR_EACH_PLAYER(player)
+					{
+						s = strcat(self.message, "\n");
+						centerprint(player, s);
+					}
+				}
+					
 				oldactivator = activator;
 				activator = oldself;
 					SUB_UseTargets();

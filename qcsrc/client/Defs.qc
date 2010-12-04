@@ -271,3 +271,5 @@ string weaponorder_bypriority;
 float nex_charge_movingavg;
 
 float serverflags;
+
+float uid2name_dialog;

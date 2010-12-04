@@ -171,6 +171,8 @@ sprite race-checkpoint    "Checkpoint"    ff8000 000000 0.0
 sprite race-finish        "Finish"        ff8000 000000 0.0
 sprite race-start         "Start"         ff8000 000000 0.0
 sprite nb-ball            "Ball"          e8d8a0 000000 0.0
+sprite ka-ball            "Ball"          00ffff 000000 0.0
+sprite ka-ballcarrier     "Ball carrier"  ff0000 000000 0.0
 
 sprite wpn-laser          "Laser"         ff8080 000000 0.0 # bright red
 sprite wpn-shotgun        "Shotgun"       804000 000000 0.0 # brown

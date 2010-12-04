@@ -723,10 +723,10 @@ void CSQC_UpdateView(float w, float h)
 			else
 				myhealth_gentlergb = stov(cvar_string("hud_damage_gentle_color"));
 
-			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, cvar("hud_damage_gentle_alpha_multiplier") * bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, cvar("hud_damage_gentle_alpha_multiplier") * bound(0, myhealth_flash_temp, 1) * cvar("hud_damage"), DRAWFLAG_NORMAL);
 		}
 		else
-			drawpic(reticle_pos, "gfx/blood", reticle_size, stov(cvar_string("hud_damage_color")), bound(0, myhealth_flash_temp, 1), DRAWFLAG_NORMAL);
+			drawpic(reticle_pos, "gfx/blood", reticle_size, stov(cvar_string("hud_damage_color")), bound(0, myhealth_flash_temp, 1) * cvar("hud_damage"), DRAWFLAG_NORMAL);
 	}
 
 	// Draw the mouse cursor
@@ -764,6 +764,17 @@ void CSQC_UpdateView(float w, float h)
         CSQC_RAPTOR_HUD();
 	else
 	{
+		if(gametype == GAME_FREEZETAG)
+		{
+			if(getstati(STAT_FROZEN))
+				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0.25 0.90 1', cvar_or("hud_colorflash_alpha", 0.5), DRAWFLAG_ADDITIVE);
+			if(getstatf(STAT_REVIVE_PROGRESS))
+			{
+				DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', cvar("hud_colorflash_alpha"), DRAWFLAG_ADDITIVE);
+				drawstring_aspect(eY * 0.64 * vid_conheight, "Revival progress", eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+			}
+		}
+
 		if(cvar("r_letterbox") == 0)
 			if(cvar("viewsize") < 120)
 				CSQC_common_hud();
@@ -1001,7 +1012,14 @@ void CSQC_UpdateView(float w, float h)
 			CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
 
 			if(cvar("crosshair_dot"))
-				CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", wcross_alpha * f * cvar("crosshair_dot_alpha"));
+            {
+                vector wcross_color_old;
+                wcross_color_old = wcross_color;
+                if(cvar_string("crosshair_dot_color") != "0")
+                    wcross_color = stov(cvar_string("crosshair_dot_color"));
+				CROSSHAIR_DRAW(wcross_resolution * cvar("crosshair_dot_size"), "gfx/crosshairdot.tga", f * cvar("crosshair_dot_alpha"));
+                wcross_color = wcross_color_old;
+            }
 
 			wcross_name_alpha_goal_prev = f;
 		}
