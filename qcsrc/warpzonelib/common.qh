@@ -31,6 +31,7 @@ typedef void(vector start, vector hit, vector end) WarpZone_trace_callback_t; //
 const var WarpZone_trace_callback_t WarpZone_trace_callback_t_null;
 entity WarpZone_trace_transform; // transform accumulator during a trace
 entity WarpZone_trace_firstzone; // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
+entity WarpZone_trace_lastzone; // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
 vector WarpZone_tracetoss_velocity; // ending velocity of a tracetoss (post-transform)
 float WarpZone_tracetoss_time; // duration of toss (approximate)
 void WarpZone_TraceBox(vector org, vector min, vector max, vector end, float nomonsters, entity forent);
