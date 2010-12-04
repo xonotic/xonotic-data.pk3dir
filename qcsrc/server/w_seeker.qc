@@ -2,7 +2,6 @@
 REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", "T.A.G. Seeker");
 #else
 #ifdef SVQC
-//.float speed; = switchweapon
 //.float proxytime; = autoswitch
 //.float tl; = wait
 
@@ -27,6 +26,7 @@ void Seeker_Missile_Think()
 	vector desireddir, olddir, newdir, eorg;
 	float turnrate;
 	float dist;
+	float spd;
 
 	if (time > self.cnt)
 	{
@@ -34,14 +34,12 @@ void Seeker_Missile_Think()
 		Seeker_Missile_Explode();
 	}
 
-	if (!self.switchweapon)
-		self.switchweapon = cvar("g_balance_seeker_missile_speed");
-
-	if ((self.switchweapon < cvar("g_balance_seeker_missile_speed_max")) && cvar("g_balance_seeker_missile_speed_accel"))
-		self.switchweapon = self.switchweapon * cvar("g_balance_seeker_missile_accel");
-
-	if (self.switchweapon > cvar("g_balance_seeker_missile_speed_max"))
-		self.switchweapon = self.switchweapon * cvar("g_balance_seeker_missile_decel");
+	spd = vlen(self.velocity);
+	spd = bound(
+		spd - cvar("g_balance_seeker_missile_decel") * frametime,
+		cvar("g_balance_seeker_missile_speed_max"),
+		spd + cvar("g_balance_seeker_missile_accel") * frametime
+	);
 
 	if (self.enemy != world)
 		if (self.enemy.takedamage != DAMAGE_AIM || self.enemy.deadflag != DEAD_NO)
@@ -73,7 +71,7 @@ void Seeker_Missile_Think()
 		}
 		
 		newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
-		self.velocity = newdir * self.switchweapon; // make me fly in the new direction at my flight speed
+		self.velocity = newdir * spd; // make me fly in the new direction at my flight speed
 	}
 
 	// Proxy
@@ -197,7 +195,6 @@ void Seeker_Fire_Missile(vector f_diff)
 	missile.flags       = FL_PROJECTILE;
 	W_SETUPPROJECTILEVELOCITY_UP(missile, g_balance_seeker_missile);
 
-	missile.switchweapon = vlen(missile.velocity);
 	missile.angles = vectoangles (missile.velocity);
 
 	CSQCProjectile(missile, FALSE, PROJECTILE_SEEKER, TRUE);
