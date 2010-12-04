@@ -160,8 +160,6 @@ void default_delayedinit()
 
 void ActivateTeamplay()
 {
-	float teamplay_default;
-
 	serverflags |= SERVERFLAG_TEAMPLAY;
 	teams_matter = 1;
 }
