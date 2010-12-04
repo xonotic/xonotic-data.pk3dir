@@ -162,9 +162,7 @@ void ActivateTeamplay()
 {
 	float teamplay_default;
 
-	teamplay_default = cvar_or("teamplay_default", 3);
-	cvar_set("teamplay", teamplay_default);
-
+	serverflags |= SERVERFLAG_TEAMPLAY;
 	teams_matter = 1;
 }
 
@@ -177,7 +175,6 @@ void InitGameplayMode()
 	VoteReset();
 
 	teams_matter = 0;
-	cvar_set("teamplay", "0");
 
 	// make sure only ONE type is selected
 	ReadGameCvars();

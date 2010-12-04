@@ -1619,9 +1619,6 @@ void ClientConnect (void)
 	// get other cvars from player
 	GetCvars(0);
 
-	// set cvar for team scoreboard
-	stuffcmd(self, strcat("set teamplay ", ftos(autocvar_teamplay), "\n"));
-
 	// notify about available teams
 	if(teams_matter)
 	{

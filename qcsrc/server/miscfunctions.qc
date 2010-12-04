@@ -1171,7 +1171,6 @@ void readlevelcvars(void)
 	if(cvar("g_vampire"))
 		MUTATOR_ADD(mutator_vampire);
 
-	serverflags = 0;
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 

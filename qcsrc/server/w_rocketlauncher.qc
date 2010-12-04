@@ -349,9 +349,9 @@ float w_rlauncher(float req)
 			}
 			local float desirabledamage;
 			desirabledamage = enemydamage;
-			if (autocvar_teamplay != 1 && time > self.invincible_finished && time > self.spawnshieldtime)
+			if (time > self.invincible_finished && time > self.spawnshieldtime)
 				desirabledamage = desirabledamage - selfdamage * cvar("g_balance_selfdamagepercent");
-			if (self.team && autocvar_teamplay != 1)
+			if (teams_matter && self.team)
 				desirabledamage = desirabledamage - teamdamage;
 
 			missile = find(world, classname, "rocket");

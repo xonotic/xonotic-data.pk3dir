@@ -648,9 +648,5 @@ void dom_init()
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
-
-	// teamplay is always on in domination, defaults to hurt self but not teammates
-	//if(!teams_matter)
-	//	cvar_set("teamplay", "3");
 };
 

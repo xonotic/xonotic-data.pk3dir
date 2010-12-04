@@ -537,15 +537,15 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(attacker.team == targ.team)
+			else if(teams_matter && attacker.team == targ.team)
 			{
-				if(autocvar_teamplay == 1)
+				if(autocvar_teamplay_mode == 1)
 					damage = 0;
 				else if(attacker != targ)
 				{
-					if(autocvar_teamplay == 3)
+					if(autocvar_teamplay_mode == 3)
 						damage = 0;
-					else if(autocvar_teamplay == 4)
+					else if(autocvar_teamplay_mode == 4)
 					{
 						if(targ.classname == "player" && targ.deadflag == DEAD_NO)
 						{

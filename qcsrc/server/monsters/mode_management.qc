@@ -163,57 +163,17 @@ string dmmessage;
 
 void(string m) setdm =
 {
-	dmmessage = m;
-	if (cvar("deathmatch") != stof(m))
-		cvar_set("deathmatch", m);
+	error("THIS MUST NOT BE CALLED IN XONOTIC");
 }
 
 void(string m) setteamplay =
 {
-	dmmessage = m;
-	if (cvar("teamplay") != stof(m))
-		cvar_set("teamplay", m);
+	error("THIS MUST NOT BE CALLED IN XONOTIC");
 }
 
 void() mode_updatecvars =
 {
-	local float dm, tp;
-	dm = cvar("deathmatch");
-	tp = cvar("teamplay");
-	// now set deathmatch cvar
-	if (dm ==  0) setdm("0?Dark Places - Coop");
-	else if (dm ==  1) setdm("1?Dark Places - Deathmatch");
-	else if (dm ==  2) setdm("2?Dark Places - Deathmatch 2 (can only pickup gun once)");
-	else if (dm ==  3) setdm("3?Dark Places - Deathmatch 3 (quick ammo respawn)");
-	else if (dm ==  5) setdm("5?Dark Places - Frag Fest (spawn with full pack)");
-//	else if (dm ==  6) setdm("6?Dark Places - Random Weapons (spawn with 2 random weapons)"); // removed
-	else if (dm ==  7) setdm("7?Dark Places - Monsters");
-//	else if (dm ==  8) setdm("8?Dark Places - Elimination");
-//	else if (dm ==  9) setdm("9?Dark Places - Kill The Leader Mode");
-	else if (dm == 10) setdm("10?Dark Places - Capture The Flag - 2 Team");
-	else if (dm == 11) setdm("11?Dark Places - Capture The Flag - 3 Team");
-	else if (dm == 12) setdm("12?Dark Places - Domination");
-	else if (dm == 13) setdm("13?Dark Places - Monster Capture The Flag - 2 Team");
-	else if (dm == 14) setdm("14?Dark Places - Super Domination");
-	else if (dm == 30) setdm("30?Dark Places - Role Playing Game");
-	else                               setdm("1?Dark Places - Deathmatch");
-
-	// now set teamplay cvar
-	if (dm == 0) setteamplay("4?Dark Places - Coop (Can't hurt other players)");
-	//else if (dm == 8) setteamplay("3?Dark Places - Elimination");
-	//else if (dm == 9) setteamplay("3?Dark Places - Kill The Leader");
-	else if (dm == 10) setteamplay("3?Dark Places - Capture The Flag - 2 Team");
-	else if (dm == 11) setteamplay("3?Dark Places - Capture The Flag - 3 Team");
-	else if (dm == 12) setteamplay("3?Dark Places - Domination");
-	else if (dm == 13) setteamplay("3?Dark Places - Monster Capture The Flag - 2 Team");
-	else
-	{
-		if (tp == 0) setteamplay("0?Dark Places - No Teamplay");
-		else if (tp == 1) setteamplay("1?Dark Places - No team damage");
-		else if (tp == 2) setteamplay("2?Dark Places - Can hurt anyone");
-		else if (tp == 3) setteamplay("3?Dark Places - No team damage, but can hurt self");
-		else              setteamplay("0?Dark Places - No Teamplay");
-	}
+	error("THIS MUST NOT BE CALLED IN XONOTIC");
 };
 
 float nextcvarupdate;

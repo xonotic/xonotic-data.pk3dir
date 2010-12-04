@@ -182,11 +182,6 @@ void StartFrame (void)
 	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
 		orig_slowmo = cvar("slowmo"); // slowmo will be restored after the timeout
 
-	if(teams_matter && !autocvar_teamplay)
-		cvar_set("teamplay", "3"); // this also updates the autocvar
-	if(!teams_matter && autocvar_teamplay)
-		cvar_set("teamplay", "0"); // this also updates the autocvar
-
 	skill = cvar("skill");
 
 	Spawnqueue_Check();
