@@ -62,7 +62,7 @@ void W_Plasma_Explode_Combo (void)
 void W_Plasma_Touch (void)
 {
 	//self.velocity = self.velocity  * 0.1;
-	
+
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM) {
 		W_Plasma_Explode ();
@@ -178,10 +178,10 @@ void W_Electro_Attack2()
 	proj.health = autocvar_g_balance_electro_secondary_health;
 	proj.event_damage = W_Plasma_Damage;
 	proj.flags = FL_PROJECTILE;
-	
+
 	proj.bouncefactor = autocvar_g_balance_electro_secondary_bouncefactor;
 	proj.bouncestop = autocvar_g_balance_electro_secondary_bouncestop;
-	
+
 #if 0
 	entity p2;
 	p2 = spawn();
@@ -351,7 +351,14 @@ float w_electro(float req)
 			self.bot_secondary_electromooth = 0;
 		if(self.bot_secondary_electromooth == 0)
 		{
-			if(bot_aim(autocvar_g_balance_electro_primary_speed, 0, autocvar_g_balance_electro_primary_lifetime, FALSE))
+			bool shoot;
+
+			if(autocvar_g_balance_electro_primary_speed)
+				shoot = bot_aim(autocvar_g_balance_electro_primary_speed, 0, autocvar_g_balance_electro_primary_lifetime, FALSE);
+			else
+				shoot = bot_aim(1000000, 0, 0.001, FALSE);
+
+			if(shoot)
 			{
 				self.BUTTON_ATCK = TRUE;
 				if(random() < 0.01) self.bot_secondary_electromooth = 1;
