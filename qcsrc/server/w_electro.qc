@@ -351,7 +351,7 @@ float w_electro(float req)
 			self.bot_secondary_electromooth = 0;
 		if(self.bot_secondary_electromooth == 0)
 		{
-			bool shoot;
+			float shoot;
 
 			if(autocvar_g_balance_electro_primary_speed)
 				shoot = bot_aim(autocvar_g_balance_electro_primary_speed, 0, autocvar_g_balance_electro_primary_lifetime, FALSE);
