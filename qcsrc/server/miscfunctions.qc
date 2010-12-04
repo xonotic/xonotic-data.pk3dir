@@ -1157,8 +1157,6 @@ float sv_pitch_min;
 float sv_pitch_max;
 float sv_pitch_fixyaw;
 
-float sv_accuracy_data_share;
-
 void readlevelcvars(void)
 {
 	// first load all the mutators
@@ -1308,8 +1306,6 @@ void readlevelcvars(void)
 	sv_pitch_min = cvar("sv_pitch_min");
 	sv_pitch_max = cvar("sv_pitch_max");
 	sv_pitch_fixyaw = cvar("sv_pitch_fixyaw");
-
-	sv_accuracy_data_share = boolean(cvar("sv_accuracy_data_share"));
 
 	readplayerstartcvars();
 }

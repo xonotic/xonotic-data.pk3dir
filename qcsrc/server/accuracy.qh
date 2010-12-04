@@ -1,5 +1,4 @@
 .float cvar_cl_accuracy_data_share;
-var float autocvar_sv_accuracy_data_share = 1;
 
 // init/free
 void accuracy_init(entity e);

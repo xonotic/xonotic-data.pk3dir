@@ -1,29 +1,6 @@
 .float race_penalty;
 .float restart_jump;
 
-float autocvar_sv_accelerate;
-float autocvar_sv_friction;
-float autocvar_sv_maxspeed;
-float autocvar_sv_airaccelerate;
-float autocvar_sv_maxairspeed;
-float autocvar_sv_stopspeed;
-float autocvar_sv_gravity;
-float sv_airaccel_sideways_friction;
-float autocvar_sv_airaccel_qw;
-float autocvar_sv_airstopaccelerate;
-float autocvar_sv_airstrafeaccelerate;
-float sv_maxairstrafespeed;
-float autocvar_sv_airstrafeaccel_qw;
-float autocvar_sv_aircontrol;
-float autocvar_sv_aircontrol_power;
-float autocvar_sv_aircontrol_penalty;
-float autocvar_sv_warsowbunny_airforwardaccel;
-float autocvar_sv_warsowbunny_accel;
-float autocvar_sv_warsowbunny_topspeed;
-float autocvar_sv_warsowbunny_turnaccel;
-float autocvar_sv_warsowbunny_backtosideratio;
-float autocvar_sv_airspeedlimit_nonqw;
-
 .float ladder_time;
 .entity ladder_entity;
 .float gravity;
@@ -522,7 +499,7 @@ float AdjustAirAccelQW(float accelqw, float factor)
 }
 
 // example config for alternate speed clamping:
-//   autocvar_sv_airaccel_qw 0.8
+//   sv_airaccel_qw 0.8
 //   sv_airaccel_sideways_friction 0
 //   prvm_globalset server speedclamp_mode 1
 //     (or 2)
@@ -1268,8 +1245,8 @@ void SV_PlayerPhysics()
 			// log dv/dt = logaccel + logmaxspeed (when slow)
 			// log dv/dt = logaccel + logmaxspeed + log(1 - accelqw) (when fast)
 			strafity = IsMoveInDirection(self.movement, -90) + IsMoveInDirection(self.movement, +90); // if one is nonzero, other is always zero
-			if(sv_maxairstrafespeed)
-				wishspeed = min(wishspeed, GeomLerp(autocvar_sv_maxairspeed*maxspd_mod, strafity, sv_maxairstrafespeed*maxspd_mod));
+			if(autocvar_sv_maxairstrafespeed)
+				wishspeed = min(wishspeed, GeomLerp(autocvar_sv_maxairspeed*maxspd_mod, strafity, autocvar_sv_maxairstrafespeed*maxspd_mod));
 			if(autocvar_sv_airstrafeaccelerate)
 				airaccel = GeomLerp(airaccel, strafity, autocvar_sv_airstrafeaccelerate*maxspd_mod);
 			if(self.stat_sv_airstrafeaccel_qw)
@@ -1279,7 +1256,7 @@ void SV_PlayerPhysics()
 			if(autocvar_sv_warsowbunny_turnaccel && accelerating && self.movement_y == 0 && self.movement_x != 0)
 				PM_AirAccelerate(wishdir, wishspeed);
 			else
-				PM_Accelerate(wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, sv_airaccel_sideways_friction / maxairspd, self.stat_sv_airspeedlimit_nonqw);
+				PM_Accelerate(wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, autocvar_sv_airaccel_sideways_friction / maxairspd, self.stat_sv_airspeedlimit_nonqw);
 
 			if(autocvar_sv_aircontrol)
 				CPM_PM_Aircontrol(wishdir, wishspeed2);
