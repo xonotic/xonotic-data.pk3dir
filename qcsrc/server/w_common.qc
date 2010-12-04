@@ -451,6 +451,23 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 				W_BallisticBullet_Hit();
 			}
 
+			// if we hit "weapclip", bail out
+			//
+			// rationale of this check:
+			//
+			// any shader that is solid, nodraw AND trans is meant to clip weapon
+			// shots and players, but has no other effect!
+			//
+			// if it is not trans, it is caulk and should not have this side effect
+			//
+			// matching shaders:
+			//   common/weapclip (intended)
+			//   common/noimpact (is supposed to eat projectiles, but is erased farther above)
+			if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
+			if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID)
+			if not(trace_dphitcontents & DPCONTENTS_OPAQUE)
+				break;
+
 			density = other.ballistics_density;
 			if(density == 0)
 				density = 1;
