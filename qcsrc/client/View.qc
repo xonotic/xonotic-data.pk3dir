@@ -350,7 +350,7 @@ vector freeze_pmove_org, freeze_input_angles;
 entity nightvision_noise, nightvision_noise2;
 
 float pickup_crosshair_time, pickup_crosshair_size;
-float use_nex_charge_pool;
+float use_nex_chargepool;
 
 float myhealth, myhealth_prev;
 float myhealth_flash;
@@ -933,9 +933,9 @@ void CSQC_UpdateView(float w, float h)
 
 			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
-			float nex_charge, nex_charge_pool;
+			float nex_charge, nex_chargepool;
 			nex_charge = getstatf(STAT_NEX_CHARGE);
-			nex_charge_pool = getstatf(STAT_NEX_CHARGEPOOL);
+			nex_chargepool = getstatf(STAT_NEX_CHARGEPOOL);
 
 			if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 				nex_charge_movingavg = nex_charge;
@@ -951,13 +951,13 @@ void CSQC_UpdateView(float w, float h)
 			}
 			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
 			{
-				if(nex_charge_pool || use_nex_charge_pool)
+				if(nex_chargepool || use_nex_chargepool)
 				{
-					use_nex_charge_pool = 1;
+					use_nex_chargepool = 1;
 
 					a = cvar("crosshair_ring_nex_inner_alpha");
 					rgb = eX * cvar("crosshair_ring_nex_inner_color_red") + eY * cvar("crosshair_ring_nex_inner_color_green") + eZ * cvar("crosshair_ring_nex_inner_color_blue");
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", nex_charge_pool, rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", nex_chargepool, rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 				}
 				else
 				{

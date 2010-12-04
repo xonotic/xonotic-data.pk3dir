@@ -799,7 +799,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
 
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
-	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_charge_pool_ammo);
+	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
 
 	if(g_ca || g_freezetag)
 	{

@@ -900,8 +900,8 @@ void PutClientInServer (void)
 		self.dmg = 2;
 		if(cvar("g_balance_nex_charge"))
 		{
-			if(cvar("g_balance_nex_secondary_charge_pool"))
-				self.nex_charge_pool_ammo = 1;
+			if(cvar("g_balance_nex_secondary_chargepool"))
+				self.nex_chargepool_ammo = 1;
 			self.nex_charge = cvar("g_balance_nex_charge_start");
 		}
 
