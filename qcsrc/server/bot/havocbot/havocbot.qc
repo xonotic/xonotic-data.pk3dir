@@ -80,7 +80,7 @@ void havocbot_ai()
 	havocbot_chooseenemy();
 	if (self.bot_chooseweapontime < time )
 	{
-		self.bot_chooseweapontime = time + cvar("bot_ai_chooseweaponinterval");
+		self.bot_chooseweapontime = time + autocvar_bot_ai_chooseweaponinterval;
 		havocbot_chooseweapon();
 	}
 	havocbot_aim();
@@ -93,7 +93,7 @@ void havocbot_ai()
 		if(self.weapons)
 		{
 			weapon_action(self.weapon, WR_AIM);
-			if (cvar("bot_nofire") || IS_INDEPENDENT_PLAYER(self))
+			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 			{
 				self.BUTTON_ATCK = FALSE;
 				self.BUTTON_ATCK2 = FALSE;
@@ -128,7 +128,7 @@ void havocbot_ai()
 			next = self.goalstack01.origin - (self.origin + self.view_ofs);
 
 		skillblend=bound(0,(skill+self.bot_moveskill-2.5)*0.5,1); //lower skill player can't preturn
-		distanceblend=bound(0,aimdistance/cvar("bot_ai_keyboard_distance"),1);
+		distanceblend=bound(0,aimdistance/autocvar_bot_ai_keyboard_distance,1);
 		blend = skillblend * (1-distanceblend);
 		//v = (now * (distanceblend) + next * (1-distanceblend)) * (skillblend) + now * (1-skillblend);
 		//v = now * (distanceblend) * (skillblend) + next * (1-distanceblend) * (skillblend) + now * (1-skillblend);
@@ -154,7 +154,7 @@ void havocbot_keyboard_movement(vector destorg)
 
 	sk = skill + self.bot_moveskill;
 
-	maxspeed = cvar("sv_maxspeed");
+	maxspeed = autocvar_sv_maxspeed;
 
 	if (time < self.havocbot_keyboardtime)
 		return;
@@ -169,7 +169,7 @@ void havocbot_keyboard_movement(vector destorg)
 
 	local float trigger, trigger1;
 	blend = bound(0,sk*0.1,1);
-	trigger = cvar("bot_ai_keyboard_treshold");
+	trigger = autocvar_bot_ai_keyboard_treshold;
 	trigger1 = 0 - trigger;
 
 	// categorize forward movement
@@ -216,7 +216,7 @@ void havocbot_keyboard_movement(vector destorg)
 	if (self.havocbot_ducktime>time) self.BUTTON_CROUCH=TRUE;
 
 	keyboard = self.havocbot_keyboard;
-	blend = bound(0,vlen(destorg-self.origin)/cvar("bot_ai_keyboard_distance"),1); // When getting close move with 360 degree
+	blend = bound(0,vlen(destorg-self.origin)/autocvar_bot_ai_keyboard_distance,1); // When getting close move with 360 degree
 	//dprint("movement ", vtos(self.movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
 	self.movement = self.movement + (keyboard - self.movement) * blend;
 };
@@ -227,7 +227,7 @@ void havocbot_bunnyhop(vector dir)
 	local vector deviation;
 	local float maxspeed;
 
-	if(cvar("g_midair"))
+	if(autocvar_g_midair)
 		return;
 
 	// Don't jump when using some weapons
@@ -238,7 +238,7 @@ void havocbot_bunnyhop(vector dir)
 	if(self.goalcurrent.classname == "player")
 		return;
 
-	maxspeed = cvar("sv_maxspeed");
+	maxspeed = autocvar_sv_maxspeed;
 
 	if(self.aistatus & AI_STATUS_DANGER_AHEAD)
 	{
@@ -274,7 +274,7 @@ void havocbot_bunnyhop(vector dir)
 			if(self.bot_timelastseengoal)
 			{
 				// for a period of time
-				if(time - self.bot_timelastseengoal > cvar("bot_ai_bunnyhop_firstjumpdelay"))
+				if(time - self.bot_timelastseengoal > autocvar_bot_ai_bunnyhop_firstjumpdelay)
 				{
 					local float checkdistance;
 					checkdistance = TRUE;
@@ -282,7 +282,7 @@ void havocbot_bunnyhop(vector dir)
 					// don't run if it is too close
 					if(self.bot_canruntogoal==0)
 					{
-						if(bunnyhopdistance > cvar("bot_ai_bunnyhop_startdistance"))
+						if(bunnyhopdistance > autocvar_bot_ai_bunnyhop_startdistance)
 							self.bot_canruntogoal = 1;
 						else
 							self.bot_canruntogoal = -1;
@@ -305,7 +305,7 @@ void havocbot_bunnyhop(vector dir)
 						if(bunnyhopdistance < vlen(self.origin - self.goalstack01.origin))
 						if(fabs(self.goalstack01.origin_z - self.goalcurrent.origin_z) < self.maxs_z - self.mins_z)
 						{
-							if(vlen(self.goalcurrent.origin - self.goalstack01.origin) > cvar("bot_ai_bunnyhop_startdistance"))
+							if(vlen(self.goalcurrent.origin - self.goalstack01.origin) > autocvar_bot_ai_bunnyhop_startdistance)
 							if(checkpvs(self.origin + self.view_ofs, self.goalstack01))
 							{
 								checkdistance = FALSE;
@@ -316,7 +316,7 @@ void havocbot_bunnyhop(vector dir)
 					if(checkdistance)
 					{
 						self.aistatus &~= AI_STATUS_RUNNING;
-						if(bunnyhopdistance > cvar("bot_ai_bunnyhop_stopdistance"))
+						if(bunnyhopdistance > autocvar_bot_ai_bunnyhop_stopdistance)
 							self.BUTTON_JUMP = TRUE;
 					}
 					else
@@ -379,7 +379,7 @@ void havocbot_movetogoal()
 	//if (self.goalentity)
 	//	te_lightning2(self, self.origin, (self.goalentity.absmin + self.goalentity.absmax) * 0.5);
 	self.movement = '0 0 0';
-	maxspeed = cvar("sv_maxspeed");
+	maxspeed = autocvar_sv_maxspeed;
 
 	// Jetpack navigation
 	if(self.goalcurrent)
@@ -414,7 +414,7 @@ void havocbot_movetogoal()
 			dxy = self.origin - self.goalcurrent.origin; dxy_z = 0;
 			d = vlen(dxy);
 			v = vlen(self.velocity -  self.velocity_z * '0 0 1');
-			db = (pow(v,2) / (cvar("g_jetpack_acceleration_side") * 2)) + 100;
+			db = (pow(v,2) / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
 		//	dprint("distance ", ftos(ceil(d)), " velocity ", ftos(ceil(v)), " brake at ", ftos(ceil(db)), "\n");
 			if(d < db || d < 500)
 			{
@@ -491,7 +491,7 @@ void havocbot_movetogoal()
 				if(newgoal)
 				{
 					self.ignoregoal = self.goalcurrent;
-					self.ignoregoaltime = time + cvar("bot_ai_ignoregoal_timeout");
+					self.ignoregoaltime = time + autocvar_bot_ai_ignoregoal_timeout;
 					navigation_clearroute();
 					navigation_routetogoal(newgoal, self.origin);
 					self.aistatus &~= AI_STATUS_OUT_JUMPPAD;
@@ -559,7 +559,7 @@ void havocbot_movetogoal()
 
 			return;
 		}
-		else if(self.health>cvar("g_balance_rocketlauncher_damage")*0.5)
+		else if(self.health>autocvar_g_balance_rocketlauncher_damage*0.5)
 		{
 			if(self.velocity_z < 0)
 			if(client_hasweapon(self, WEP_ROCKET_LAUNCHER, TRUE, FALSE))
@@ -579,7 +579,7 @@ void havocbot_movetogoal()
 				self.switchweapon = WEP_ROCKET_LAUNCHER;
 				self.v_angle_x = 90;
 				self.BUTTON_ATCK = TRUE;
-				self.rocketjumptime = time + cvar("g_balance_rocketlauncher_detonatedelay");
+				self.rocketjumptime = time + autocvar_g_balance_rocketlauncher_detonatedelay;
 				return;
 			}
 		}
@@ -702,7 +702,7 @@ void havocbot_movetogoal()
 				if(self.facingwalltime && time > self.facingwalltime)
 				{
 					self.ignoregoal = self.goalcurrent;
-					self.ignoregoaltime = time + cvar("bot_ai_ignoregoal_timeout");
+					self.ignoregoaltime = time + autocvar_bot_ai_ignoregoal_timeout;
 					self.bot_strategytime = 0;
 					return;
 				}
@@ -808,10 +808,10 @@ void havocbot_movetogoal()
 	// Bunnyhop!
 //	if(self.aistatus & AI_STATUS_ROAMING)
 	if(self.goalcurrent)
-	if(skill+self.bot_moveskill >= cvar("bot_ai_bunnyhop_skilloffset"))
+	if(skill+self.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
 		havocbot_bunnyhop(dir);
 
-	if ((dir * v_up) >= cvar("sv_jumpvelocity")*0.5 && (self.flags & FL_ONGROUND)) self.BUTTON_JUMP=1;
+	if ((dir * v_up) >= autocvar_sv_jumpvelocity*0.5 && (self.flags & FL_ONGROUND)) self.BUTTON_JUMP=1;
 	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.BUTTON_JUMP=TRUE;
 	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.havocbot_ducktime=time+0.3/bound(0.1,skill+self.bot_dodgeskill,10);
 };
@@ -821,7 +821,7 @@ void havocbot_chooseenemy()
 	local entity head, best, head2;
 	local float rating, bestrating, i, f;
 	local vector eye, v;
-	if (cvar("bot_nofire") || IS_INDEPENDENT_PLAYER(self))
+	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 	{
 		self.enemy = world;
 		return;
@@ -847,7 +847,7 @@ void havocbot_chooseenemy()
 			if (self.health > 30)
 			{
 				// remain tracking him for a shot while (case he went after a small corner or pilar
-				self.havocbot_chooseenemy_finished = time + cvar("bot_ai_enemydetectioninterval");
+				self.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
 				return;
 			}
 			// enemy isn't visible, or is far away, or we're injured severely
@@ -858,7 +858,7 @@ void havocbot_chooseenemy()
 	}
 	if (time < self.havocbot_chooseenemy_finished)
 		return;
-	self.havocbot_chooseenemy_finished = time + cvar("bot_ai_enemydetectioninterval");
+	self.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
 	eye = self.origin + self.view_ofs;
 	best = world;
 	bestrating = 100000000;
@@ -871,7 +871,7 @@ void havocbot_chooseenemy()
 		{
 			v = (head.absmin + head.absmax) * 0.5;
 			rating = vlen(v - eye);
-			if (rating<cvar("bot_ai_enemydetectionradius"))
+			if (rating<autocvar_bot_ai_enemydetectionradius)
 			if (bestrating > rating)
 			if (bot_shouldattack(head))
 			{
@@ -942,7 +942,7 @@ void havocbot_chooseweapon()
 
 	// Workaround for rifle reloading (..)
 	if(self.weapon == WEP_CAMPINGRIFLE)
-	if(i < cvar("g_balance_campingrifle_reloadtime") + 1)
+	if(i < autocvar_g_balance_campingrifle_reloadtime + 1)
 		return;
 
 	local float w;
@@ -968,7 +968,7 @@ void havocbot_chooseweapon()
 	local float af, ct, combo_time, combo;
 
 	af = ATTACK_FINISHED(self);
-	ct = cvar("bot_ai_weapon_combo_threshold");
+	ct = autocvar_bot_ai_weapon_combo_threshold;
 
 	// Bots with no skill will be 4 times more slower than "godlike" bots when doing weapon combos
 	// Ideally this 4 should be calculated as longest_weapon_refire / bot_ai_weapon_combo_threshold
@@ -976,7 +976,7 @@ void havocbot_chooseweapon()
 
 	combo = FALSE;
 
-	if(cvar("bot_ai_weapon_combo"))
+	if(autocvar_bot_ai_weapon_combo)
 	if(self.weapon == self.lastfiredweapon)
 	if(af > combo_time)
 	{

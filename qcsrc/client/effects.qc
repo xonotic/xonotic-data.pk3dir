@@ -80,7 +80,7 @@ void Net_ReadLightningarc()
     from_x = ReadCoord(); from_y = ReadCoord(); from_z = ReadCoord();
     to_x   = ReadCoord(); to_y   = ReadCoord(); to_z   = ReadCoord();
 
-    if(cvar("cl_effects_lightningarc_simple"))
+    if(autocvar_cl_effects_lightningarc_simple)
     {
         te_lightning1(world,from,to);
     }
@@ -88,11 +88,11 @@ void Net_ReadLightningarc()
     {
         float seglength, drifts, drifte, branchfactor, branchfactor_add;
 
-        seglength    = cvar("cl_effects_lightningarc_segmentlength");
-        drifts       = cvar("cl_effects_lightningarc_drift_start");
-        drifte       = cvar("cl_effects_lightningarc_drift_end");
-        branchfactor = cvar("cl_effects_lightningarc_branchfactor_start");
-        branchfactor = cvar("cl_effects_lightningarc_branchfactor_add");
+        seglength    = autocvar_cl_effects_lightningarc_segmentlength;
+        drifts       = autocvar_cl_effects_lightningarc_drift_start;
+        drifte       = autocvar_cl_effects_lightningarc_drift_end;
+        branchfactor = autocvar_cl_effects_lightningarc_branchfactor_start;
+        branchfactor = autocvar_cl_effects_lightningarc_branchfactor_add;
 
         cl_effetcs_lightningarc(from,to,seglength,drifts,drifte,branchfactor,branchfactor_add);
     }

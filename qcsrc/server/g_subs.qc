@@ -364,13 +364,13 @@ void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst
 }
 void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	if (cvar("g_antilag") != 2 || source.cvar_cl_noantilag)
+	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
 		lag = 0;
 	traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	if (cvar("g_antilag") != 2 || source.cvar_cl_noantilag)
+	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, FALSE);
 }
@@ -380,13 +380,13 @@ void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, floa
 }
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	if (cvar("g_antilag") != 2 || source.cvar_cl_noantilag)
+	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
 		lag = 0;
 	WarpZone_traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	if (cvar("g_antilag") != 2 || source.cvar_cl_noantilag)
+	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, TRUE);
 }
@@ -609,9 +609,9 @@ float LOD_customize()
 {
 	float d;
 
-	if(cvar("loddebug"))
+	if(autocvar_loddebug)
 	{
-		d = cvar("loddebug");
+		d = autocvar_loddebug;
 		if(d == 1)
 			self.modelindex = self.lodmodelindex0;
 		else if(d == 2 || !self.lodmodelindex2)
@@ -667,7 +667,7 @@ void LODmodel_attach()
 		}
 	}
 
-	if(cvar("loddebug") < 0)
+	if(autocvar_loddebug < 0)
 	{
 		self.lodmodel1 = self.lodmodel2 = ""; // don't even initialize
 	}

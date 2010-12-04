@@ -36,7 +36,7 @@ spawn point for runes in runematch
 
 void spawnfunc_runematch_spawn_point()
 {
-	if(!g_runematch || !cvar("g_runematch_fixedspawns"))
+	if(!g_runematch || !autocvar_g_runematch_fixedspawns)
 	{
 		remove(self);
 		return;
@@ -156,7 +156,7 @@ vector RuneColormod(float r)
 	if(r == CURSE_EMPATHY)
 		_color = '179 0 204';//'128 0 255';
 
-	return _color * (1 / 255) * cvar("g_runematch_rune_color_strength");
+	return _color * (1 / 255) * autocvar_g_runematch_rune_color_strength;
 }
 
 void rune_respawn();
@@ -243,7 +243,7 @@ void rune_respawn()
 		self.solid = SOLID_TRIGGER;
 		self.touch = rune_touch;
 		self.think = rune_respawn;
-		self.nextthink = time + cvar("g_runematch_shuffletime");//30 + random()*5; // fixme: cvar
+		self.nextthink = time + autocvar_g_runematch_shuffletime;//30 + random()*5; // fixme: cvar
 	}
 	else
 	{
@@ -297,7 +297,7 @@ void DropRune(entity pl, entity e)
 	e.solid = SOLID_TRIGGER;
 	// reposition itself if not picked up soon
 	e.think = rune_respawn;
-	e.nextthink = time + cvar("g_runematch_respawntime");//15 + random()*5; // fixme: cvar
+	e.nextthink = time + autocvar_g_runematch_respawntime;//15 + random()*5; // fixme: cvar
 	e.touch = rune_touch;
 
 	pl.runes = pl.runes - (pl.runes & (e.runes | e.enemy.runes));
@@ -358,8 +358,8 @@ void DropAllRunes(entity pl)
 		curse = find(curse, classname, "curse");
 	}
 
-	numtodrop = cvar("g_runematch_drop_runes_max");
-	prevent_same = !cvar("g_runematch_allow_same");
+	numtodrop = autocvar_g_runematch_drop_runes_max;
+	prevent_same = !autocvar_g_runematch_allow_same;
 
 	rune = curse = world;
 	do
@@ -452,7 +452,7 @@ void spawn_runes()
 	runes_used  = 0;
 	curses_used = 0;
 
-	prevent_same = !cvar("g_runematch_allow_same");
+	prevent_same = !autocvar_g_runematch_allow_same;
 	numrunes = RUNE_COUNT;
 
 	while(numrunes > 0)
@@ -501,8 +501,8 @@ void spawn_runes()
 		e.colormod = RuneColormod(rn);
 		e.enemy.colormod = RuneColormod(cs);
 
-		e.alpha = e.enemy.alpha = cvar("g_runematch_rune_alpha");//0.78;
-		e.effects = e.enemy.effects = cvar("g_runematch_rune_effects") | EF_LOWPRECISION;//EF_ADDITIVE;// | EF_FULLBRIGHT;
+		e.alpha = e.enemy.alpha = autocvar_g_runematch_rune_alpha;//0.78;
+		e.effects = e.enemy.effects = autocvar_g_runematch_rune_effects | EF_LOWPRECISION;//EF_ADDITIVE;// | EF_FULLBRIGHT;
 
 		//e.glow_size = e.enemy.glow_size = cvar("g_runematch_rune_glow_size");
 		//e.glow_color = e.enemy.glow_color = cvar("g_runematch_rune_glow_color");
@@ -533,7 +533,7 @@ void RuneMatchGivePoints()
 {
 	entity rune;
 
-	if(!g_runematch || !cvar("g_runematch_pointamt"))
+	if(!g_runematch || !autocvar_g_runematch_pointamt)
 		return;
 
 	if(gameover)
@@ -542,7 +542,7 @@ void RuneMatchGivePoints()
 	if(runematch_point_time > time)
 		return;
 
-	runematch_point_time = time + cvar("g_runematch_pointrate");
+	runematch_point_time = time + autocvar_g_runematch_pointrate;
 
 	rune = world;
 	do
@@ -553,7 +553,7 @@ void RuneMatchGivePoints()
 
 		if(rune.owner.classname == "player")
 		{
-			UpdateFrags(rune.owner, cvar("g_runematch_pointamt"));
+			UpdateFrags(rune.owner, autocvar_g_runematch_pointamt);
 		}
 	}while(rune);
 }
@@ -586,15 +586,15 @@ float RunematchHandleFrags(entity attacker, entity targ, float f)
 	}
 
 	if(!arunes && !trunes)
-		return f - 1 + cvar("g_runematch_frags_norune"); // don't give points to players when no runes are involved.
+		return f - 1 + autocvar_g_runematch_frags_norune; // don't give points to players when no runes are involved.
 
 	if(arunes)
 	{	// got a kill while holding runes
-		newfrags = newfrags + cvar("g_runematch_frags_killedby_runeholder");//5;
+		newfrags = newfrags + autocvar_g_runematch_frags_killedby_runeholder;//5;
 	}
 	if(trunes)
 	{	// killed an enemy holding runes
-		newfrags = newfrags + cvar("g_runematch_frags_killed_runeholder");//5;
+		newfrags = newfrags + autocvar_g_runematch_frags_killed_runeholder;//5;
 	}
 	if(newfrags)
 		f = f - 1 + newfrags;

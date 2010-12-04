@@ -78,13 +78,13 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	// if we have e.g. 0.5 sec ramptime and a frametime of 0.25, then the ramp code 
 	// will be called ramp_time/frametime times = 2 times. so, we need to 
 	// add 0.5 * the total speed each frame until the dodge action is done..
-	common_factor = sys_frametime / cvar("sv_dodging_ramp_time");
+	common_factor = sys_frametime / autocvar_sv_dodging_ramp_time;
 
 	// if ramp time is smaller than frametime we get problems ;D
 	if (common_factor > 1) 
 		common_factor = 1;
 
-	new_velocity_gain = self.dodging_velocity_gain - (common_factor * cvar("sv_dodging_horiz_speed"));
+	new_velocity_gain = self.dodging_velocity_gain - (common_factor * autocvar_sv_dodging_horiz_speed);
 	if (new_velocity_gain < 0)
 		new_velocity_gain = 0;
 
@@ -109,9 +109,9 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 		self.velocity = 
 			  self.velocity 
-			+ (cvar("sv_dodging_up_speed") * v_up);
+			+ (autocvar_sv_dodging_up_speed * v_up);
 
-		if (cvar("sv_dodging_sound") == 1)
+		if (autocvar_sv_dodging_sound == 1)
 			PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
 
 		setanim(self, self.anim_jump, TRUE, FALSE, TRUE);
@@ -120,7 +120,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	}
 
 	// are we done with the dodging ramp yet?
-	if((self.dodging_action == 1) && ((time - self.last_dodging_time) > cvar("sv_dodging_ramp_time")))
+	if((self.dodging_action == 1) && ((time - self.last_dodging_time) > autocvar_sv_dodging_ramp_time))
 	{
 		// reset state so next dodge can be done correctly
 		self.dodging_action = 0;
@@ -134,7 +134,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 // returns 1 if the player is close to a wall
 float check_close_to_wall(float threshold) {
-	if (cvar("sv_dodging_wall_dodging") == 0)
+	if (autocvar_sv_dodging_wall_dodging == 0)
 		return 0;
 
 	vector trace_start;
@@ -190,11 +190,11 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	dodge_detected = 0;
 
 	// first check if the last dodge is far enough back in time so we can dodge again
-	if ((time - self.last_dodging_time) < cvar("sv_dodging_delay"))
+	if ((time - self.last_dodging_time) < autocvar_sv_dodging_delay)
 		return 0;
 
-	if (check_close_to_ground(cvar("sv_dodging_height_threshold")) != 1 
-		&& check_close_to_wall(cvar("sv_dodging_wall_distance_threshold")) != 1)
+	if (check_close_to_ground(autocvar_sv_dodging_height_threshold) != 1 
+		&& check_close_to_wall(autocvar_sv_dodging_wall_distance_threshold) != 1)
 		return 0;
 
 	if (self.movement_x > 0) {
@@ -249,7 +249,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		self.dodging_action = 1;
 		self.dodging_single_action = 1;
 
-		self.dodging_velocity_gain = cvar("sv_dodging_horiz_speed");
+		self.dodging_velocity_gain = autocvar_sv_dodging_horiz_speed;
 
 		self.dodging_direction_x = tap_direction_x;
 		self.dodging_direction_y = tap_direction_y;

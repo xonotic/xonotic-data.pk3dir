@@ -28,7 +28,7 @@ float gamestart_sv_cheats;
 
 void CheatInit()
 {
-	gamestart_sv_cheats = cvar("sv_cheats");
+	gamestart_sv_cheats = autocvar_sv_cheats;
 }
 
 void CheatShutdown()
@@ -180,10 +180,10 @@ float CheatImpulse(float i)
 					self.health = start_health;
 					self.armorvalue = start_armorvalue;
 					self.weapons |= weaponsInMap;
-					self.pauserotarmor_finished = time + cvar("g_balance_pause_armor_rot_spawn");
-					self.pauserothealth_finished = time + cvar("g_balance_pause_health_rot_spawn");
-					self.pauserotfuel_finished = time + cvar("g_balance_pause_fuel_rot_spawn");
-					self.pauseregen_finished = time + cvar("g_balance_pause_health_regen_spawn");
+					self.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
+					self.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
+					self.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
+					self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen_spawn;
 					self.strength_finished = 0;
 					self.invincible_finished = 0;
 				}
@@ -606,7 +606,7 @@ float CheatCommand(float argc)
 			break;
 		case "warp":
 			IS_CHEAT(0, argc, 0);
-			if(argc == 2) if(cvar("g_campaign"))
+			if(argc == 2) if(autocvar_g_campaign)
 			{
 				CampaignLevelWarp(stof(argv(1)));
 				DID_CHEAT();

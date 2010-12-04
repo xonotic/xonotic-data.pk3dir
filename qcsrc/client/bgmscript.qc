@@ -172,7 +172,7 @@ float BGMScript(entity e)
 	if(e.bgmscript == "")
 		return 1;
 	
-	if(cvar("bgmvolume") <= 0)
+	if(autocvar_bgmvolume <= 0)
 		return -1;
 
 	e.just_toggled = FALSE;

@@ -409,7 +409,7 @@ void raptor_exit(float eject)
         ret = spawn();
         ret.enemy = self;
         ret.think = raptor_return;
-        ret.nextthink = time + cvar("g_vehicle_racer_respawntime");
+        ret.nextthink = time + autocvar_g_vehicle_racer_respawntime;
     }
 }
 
@@ -421,7 +421,7 @@ float raptor_pplug()
     vector df;
 
 
-    if(cvar("g_vehicle_raptor_reload"))
+    if(autocvar_g_vehicle_raptor_reload)
     {
         raptor_loadsettings();
         cvar_set("g_vehicle_raptor_reload","0");

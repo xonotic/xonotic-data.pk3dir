@@ -26,12 +26,12 @@ void OnlineBanList_SendBan(string ip, float bantime, string reason)
 	string uri;
 	float i, n;
 
-	uri = strcat(     "action=ban&hostname=", uri_escape(cvar_string("hostname")));
+	uri = strcat(     "action=ban&hostname=", uri_escape(autocvar_hostname));
 	uri = strcat(uri, "&ip=", uri_escape(ip));
 	uri = strcat(uri, "&duration=", ftos(bantime));
 	uri = strcat(uri, "&reason=", uri_escape(reason));
 
-	n = tokenize_console(cvar_string("g_ban_sync_uri"));
+	n = tokenize_console(autocvar_g_ban_sync_uri);
 	if(n >= MAX_IPBAN_URIS)
 		n = MAX_IPBAN_URIS;
 	for(i = 0; i < n; ++i)
@@ -48,10 +48,10 @@ void OnlineBanList_SendUnban(string ip)
 	string uri;
 	float i, n;
 
-	uri = strcat(     "action=unban&hostname=", uri_escape(cvar_string("hostname")));
+	uri = strcat(     "action=unban&hostname=", uri_escape(autocvar_hostname));
 	uri = strcat(uri, "&ip=", uri_escape(ip));
 
-	n = tokenize_console(cvar_string("g_ban_sync_uri"));
+	n = tokenize_console(autocvar_g_ban_sync_uri);
 	if(n >= MAX_IPBAN_URIS)
 		n = MAX_IPBAN_URIS;
 	for(i = 0; i < n; ++i)
@@ -85,7 +85,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 		return;
 	}
 
-	tokenize_console(cvar_string("g_ban_sync_uri"));
+	tokenize_console(autocvar_g_ban_sync_uri);
 	uri = argv(id);
 
 	print("Received ban list from ", uri, ": ");
@@ -104,7 +104,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 		return;
 	}
 
-	syncinterval = cvar("g_ban_sync_interval");
+	syncinterval = autocvar_g_ban_sync_interval;
 	if(syncinterval == 0)
 	{
 		print("rejected (syncing disabled)\n");
@@ -155,7 +155,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 		dprint(" timeleft=", ftos(timeleft), " reason=", reason);
 		dprint(" serverip=", serverip, "\n");
 
-		timeleft -= 1.5 * cvar("g_ban_sync_timeout");
+		timeleft -= 1.5 * autocvar_g_ban_sync_timeout;
 		if(timeleft < 0)
 			continue;
 
@@ -170,7 +170,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 				}
 		}
 
-		if(cvar("g_ban_sync_trusted_servers_verify"))
+		if(autocvar_g_ban_sync_trusted_servers_verify)
 			if((strstrofs(strcat(";", OnlineBanList_Servers, ";"), strcat(";", serverip, ";"), 0) == -1))
 				continue;
 
@@ -192,11 +192,11 @@ void OnlineBanList_Think()
 	string uri;
 	float i, n;
 	
-	if(cvar_string("g_ban_sync_uri") == "")
+	if(autocvar_g_ban_sync_uri == "")
 		goto killme;
-	if(cvar("g_ban_sync_interval") == 0) // < 0 is okay, it means "sync on level start only"
+	if(autocvar_g_ban_sync_interval == 0) // < 0 is okay, it means "sync on level start only"
 		goto killme;
-	argc = tokenize_console(cvar_string("g_ban_sync_trusted_servers"));
+	argc = tokenize_console(autocvar_g_ban_sync_trusted_servers);
 	if(argc == 0)
 		goto killme;
 
@@ -207,12 +207,12 @@ void OnlineBanList_Think()
 		OnlineBanList_Servers = strcat(OnlineBanList_Servers, ";", argv(i));
 	OnlineBanList_Servers = strzone(OnlineBanList_Servers);
 	
-	uri = strcat(     "action=list&hostname=", uri_escape(cvar_string("hostname")));
+	uri = strcat(     "action=list&hostname=", uri_escape(autocvar_hostname));
 	uri = strcat(uri, "&servers=", uri_escape(OnlineBanList_Servers));
 
-	OnlineBanList_Timeout = time + cvar("g_ban_sync_timeout");
+	OnlineBanList_Timeout = time + autocvar_g_ban_sync_timeout;
 
-	n = tokenize_console(cvar_string("g_ban_sync_uri"));
+	n = tokenize_console(autocvar_g_ban_sync_uri);
 	if(n >= MAX_IPBAN_URIS)
 		n = MAX_IPBAN_URIS;
 	for(i = 0; i < n; ++i)
@@ -226,8 +226,8 @@ void OnlineBanList_Think()
 			uri_get(strcat(argv(i), "?", uri), URI_GET_IPBAN + i); // 1000 = "banlist" callback target
 	}
 	
-	if(cvar("g_ban_sync_interval") > 0)
-		self.nextthink = time + max(60, cvar("g_ban_sync_interval") * 60);
+	if(autocvar_g_ban_sync_interval > 0)
+		self.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
 	else
 		goto killme;
 	return;
@@ -297,7 +297,7 @@ void Ban_LoadBans()
 		Ban_Delete(i);
 	ban_count = 0;
 	ban_loaded = TRUE;
-	n = tokenize_console(cvar_string("g_banned_list"));
+	n = tokenize_console(autocvar_g_banned_list);
 	if(stof(argv(0)) == 1)
 	{
 		ban_count = (n - 1) / 2;
@@ -419,7 +419,7 @@ float Ban_IsClientBanned(entity client, float idx)
 		if(ban_idfp == s) return TRUE;
 	}
 	if(ipbanned)
-		if(!cvar("g_banned_list_idmode") || !ban_idfp)
+		if(!autocvar_g_banned_list_idmode || !ban_idfp)
 			return TRUE;
 	return FALSE;
 }
@@ -607,8 +607,8 @@ float GameCommand_Ban(string command)
 			client = edict_num(entno);
 
 			INITARG(3);
-			GETARG(bantime, cvar("g_ban_default_bantime"));
-			GETARG(masksize, cvar("g_ban_default_masksize"));
+			GETARG(bantime, autocvar_g_ban_default_bantime);
+			GETARG(masksize, autocvar_g_ban_default_masksize);
 			RESTARG(reason);
 
 			Ban_KickBanClient(client, bantime, masksize, reason);
@@ -623,7 +623,7 @@ float GameCommand_Ban(string command)
 			ip = argv(1);
 
 			INITARG(2);
-			GETARG(bantime, cvar("g_ban_default_bantime"));
+			GETARG(bantime, autocvar_g_ban_default_bantime);
 			RESTARG(reason);
 
 			Ban_Insert(ip, bantime, reason, 1);

@@ -33,7 +33,7 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 	{
 		TDEATHLOOP(org)
 		{
-			if not(teams_matter && cvar("g_telefrags_teamplay") && head.team == player.team)
+			if not(teams_matter && autocvar_g_telefrags_teamplay && head.team == player.team)
 				if(head.classname == "player")
 					if(head.health >= 1)
 						return 1;
@@ -48,7 +48,7 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 	{
 		if (player.classname == "player" && player.health >= 1)
 		{
-			if not(teams_matter && cvar("g_telefrags_teamplay") && head.team == player.team)
+			if not(teams_matter && autocvar_g_telefrags_teamplay && head.team == player.team)
 			{
 				if(head.classname == "player")
 					if(head.health >= 1)
@@ -115,7 +115,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	if(player.classname == "player")
 	{
 		if(tflags & TELEPORT_FLAG_TDEATH)
-			if(player.takedamage && player.deadflag == DEAD_NO && !g_race && !g_cts && (cvar("g_telefrags") || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
+			if(player.takedamage && player.deadflag == DEAD_NO && !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
 				tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
 
 		// player no longer is on ground
@@ -128,7 +128,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		if(teleporter.owner)
 		{
 			player.pusher = teleporter.owner;
-			player.pushltime = time + cvar("g_maxpushtime");
+			player.pushltime = time + autocvar_g_maxpushtime;
 		}
 		else
 		{
@@ -183,7 +183,7 @@ void Teleport_Touch (void)
 		for(e = world; (e = find(e, targetname, self.target)); )
 		{
 			p = 1;
-			if(cvar("g_telefrags_avoid"))
+			if(autocvar_g_telefrags_avoid)
 			{
 				o = e.origin + '0 0 1' * (1 - other.mins_z - 24);
 				if(check_tdeath(other, o, '0 0 0', '0 0 0'))
@@ -205,9 +205,9 @@ void Teleport_Touch (void)
 	if(e.speed)
 		if(vlen(other.velocity) > e.speed)
 			other.velocity = normalize(other.velocity) * max(0, e.speed);
-	if(cvar("g_teleport_maxspeed"))
-		if(vlen(other.velocity) > cvar("g_teleport_maxspeed"))
-			other.velocity = normalize(other.velocity) * max(0, cvar("g_teleport_maxspeed"));
+	if(autocvar_g_teleport_maxspeed)
+		if(vlen(other.velocity) > autocvar_g_teleport_maxspeed)
+			other.velocity = normalize(other.velocity) * max(0, autocvar_g_teleport_maxspeed);
 
 	o = e.origin + '0 0 1' * (1 - other.mins_z - 24);
 	TeleportPlayer(self, other, o, e.mangle, v_forward * vlen(other.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);

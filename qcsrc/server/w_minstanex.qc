@@ -85,7 +85,7 @@ void W_MinstaNex_Attack (void)
 		if (g_minstagib)
 			self.ammo_cells = self.ammo_cells - 1;
 		else
-			self.ammo_cells = self.ammo_cells - cvar("g_balance_minstanex_ammo");
+			self.ammo_cells = self.ammo_cells - autocvar_g_balance_minstanex_ammo;
 	}
 }
 
@@ -178,23 +178,23 @@ float w_minstanex(float req)
 		if(self.ammo_cells>0)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 		else
-			self.BUTTON_ATCK2 = bot_aim(cvar("g_balance_laser_primary_speed"), 0, cvar("g_balance_laser_primary_lifetime"), FALSE);
+			self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE);
 	}
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
 		{
-			if (weapon_prepareattack(0, cvar("g_balance_minstanex_refire")))
+			if (weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
 			{
 				W_MinstaNex_Attack();
-				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_minstanex_animtime"), w_ready);
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_minstanex_animtime, w_ready);
 			}
 		}
 		else if (self.BUTTON_ATCK2)
 		{
 			if (self.jump_interval <= time)
 			{
-				self.jump_interval = time + cvar("g_balance_laser_primary_refire") * W_WeaponRateFactor();
+				self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
 
 				// ugly minstagib hack to reuse the fire mode of the laser
 				float w;
@@ -227,7 +227,7 @@ float w_minstanex(float req)
 		if (g_minstagib)
 			return self.ammo_cells >= 1;
 		else
-			return self.ammo_cells >= cvar("g_balance_minstanex_ammo");
+			return self.ammo_cells >= autocvar_g_balance_minstanex_ammo;
 	}
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;

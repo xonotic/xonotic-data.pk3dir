@@ -180,13 +180,13 @@ void W_Porto_Attack (void)
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
 
-	gren.nextthink = time + cvar("g_balance_porto_primary_lifetime");
+	gren.nextthink = time + autocvar_g_balance_porto_primary_lifetime;
 	gren.think = W_Porto_Think;
 	gren.touch = W_Porto_Touch;
 	if(self.items & IT_STRENGTH)
-		W_SetupProjectileVelocity(gren, cvar("g_balance_porto_primary_speed") * cvar("g_balance_powerup_strength_force"), 0);
+		W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_primary_speed * autocvar_g_balance_powerup_strength_force, 0);
 	else
-		W_SetupProjectileVelocity(gren, cvar("g_balance_porto_primary_speed"), 0);
+		W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_primary_speed, 0);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
@@ -219,7 +219,7 @@ float w_porto(float req)
 	{
 		self.BUTTON_ATCK = FALSE;
 		self.BUTTON_ATCK2 = FALSE;
-		if(bot_aim(cvar("g_balance_porto_primary_speed"), 0, cvar("g_balance_grenadelauncher_primary_lifetime"), FALSE))
+		if(bot_aim(autocvar_g_balance_porto_primary_speed, 0, autocvar_g_balance_grenadelauncher_primary_lifetime, FALSE))
 			self.BUTTON_ATCK = TRUE;
 	}
 	else if (req == WR_THINK)
@@ -250,10 +250,10 @@ float w_porto(float req)
 		if (self.BUTTON_ATCK)
 		if (!self.porto_current)
 		if (!self.porto_forbidden)
-		if (weapon_prepareattack(0, cvar("g_balance_porto_primary_refire")))
+		if (weapon_prepareattack(0, autocvar_g_balance_porto_primary_refire))
 		{
 			W_Porto_Attack();
-			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_porto_primary_animtime"), w_ready);
+			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_porto_primary_animtime, w_ready);
 		}
 	}
 	else if (req == WR_PRECACHE)

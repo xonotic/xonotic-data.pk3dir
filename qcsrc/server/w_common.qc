@@ -249,7 +249,7 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 	// maxdist = 0.5 * v0 * v0 / constant
 	// dprint("max dist = ", ftos(maxdist), "\n");
 
-	if(maxdist <= cvar("g_ballistics_mindistance"))
+	if(maxdist <= autocvar_g_ballistics_mindistance)
 		return 0;
 
 	traceline_inverted (self.origin, self.origin + normalize(vel) * maxdist, MOVE_NORMAL, self);
@@ -259,7 +259,7 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 
 	self.W_BallisticBullet_LeaveSolid_origin = trace_endpos;
 
-	dst = max(cvar("g_ballistics_mindistance"), vlen(trace_endpos - self.origin));
+	dst = max(autocvar_g_ballistics_mindistance, vlen(trace_endpos - self.origin));
 	// E(s) = E0 - constant * s, constant = area of bullet circle * material constant / mass
 	Es_m = E0_m - constant * dst;
 	if(Es_m <= 0)
@@ -352,7 +352,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	entity pl, oldself;
 	float antilagging;
 
-	antilagging = (cvar("g_antilag_bullets") && (pSpeed >= cvar("g_antilag_bullets")));
+	antilagging = (autocvar_g_antilag_bullets && (pSpeed >= autocvar_g_antilag_bullets));
 
 	entity proj;
 	proj = spawn();
@@ -370,7 +370,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 	W_SetupProjectileVelocityEx(proj, dir, v_up, pSpeed, 0, 0, spread, antilagging);
 	proj.angles = vectoangles(proj.velocity);
-	proj.dmg_radius = cvar("g_ballistics_materialconstant") / bulletconstant;
+	proj.dmg_radius = autocvar_g_ballistics_materialconstant / bulletconstant;
 	// so: bulletconstant = bullet mass / area of bullet circle
 	setorigin(proj, start);
 	proj.flags = FL_PROJECTILE;
@@ -400,7 +400,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			lag = 0;
 		if(clienttype(self) != CLIENTTYPE_REAL)
 			lag = 0;
-		if(cvar("g_antilag") == 0 || self.cvar_cl_noantilag)
+		if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
 			lag = 0; // only do hitscan, but no antilag
 
 		if(lag)

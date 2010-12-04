@@ -271,13 +271,13 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return;
 	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
 		return;
-	if (!cvar("g_pickup_items"))
+	if (!autocvar_g_pickup_items)
 		return;
 	if (g_ca)
 		return;
-	if(!cvar("g_weapon_throwable"))
+	if(!autocvar_g_weapon_throwable)
 		return;
-	if(cvar("g_weapon_stay") == 1)
+	if(autocvar_g_weapon_stay == 1)
 		return;
 	if(!W_IsWeaponThrowable(w))
 		return;
@@ -310,7 +310,7 @@ void W_WeaponFrame()
 	if (frametime)
 		self.weapon_frametime = frametime;
 
-	if(((arena_roundbased || g_ca || g_freezetag) && time < warmup) || ((time < game_starttime) && !cvar("sv_ready_restart_after_countdown")))
+	if(((arena_roundbased || g_ca || g_freezetag) && time < warmup) || ((time < game_starttime) && !autocvar_sv_ready_restart_after_countdown))
 		return;
 
 	if(g_freezetag && self.freezetag_frozen == 1)
@@ -343,7 +343,7 @@ void W_WeaponFrame()
 			weapon_action(self.switchweapon, WR_SETUP);
 			// VorteX: add player model weapon select frame here
 			// setcustomframe(PlayerWeaponRaise);
-			weapon_thinkf(WFRAME_IDLE, cvar("g_balance_weaponswitchdelay"), w_ready);
+			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_weaponswitchdelay, w_ready);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
 		}
 		else if (self.weaponentity.state == WS_READY)
@@ -356,7 +356,7 @@ void W_WeaponFrame()
 			sound (self, CHAN_WEAPON2, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
-			weapon_thinkf(WFRAME_DONTCHANGE, cvar("g_balance_weaponswitchdelay"), w_clear);
+			weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_weaponswitchdelay, w_clear);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, PLAYER_WEAPONSELECTION_RANGE);
 #ifndef INDEPENDENT_ATTACK_FINISHED
 			}

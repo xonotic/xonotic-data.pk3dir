@@ -61,7 +61,7 @@ void NIX_GiveCurrentWeapon()
 		nix_weapon = nix_nextweapon;
 		nix_weapon_ammo = nix_nextweapon_ammo;
 		nix_nextweapon = 0;
-		nix_nextchange = time + cvar("g_balance_nix_roundtime");
+		nix_nextchange = time + autocvar_g_balance_nix_roundtime;
 		//weapon_action(nix_weapon, WR_PRECACHE); // forget it, too slow
 	}
 	
@@ -71,30 +71,30 @@ void NIX_GiveCurrentWeapon()
 		if (self.items & IT_UNLIMITED_WEAPON_AMMO)
 		{
 			self.ammo_shells = (nix_weapon_ammo & IT_SHELLS) ?
-				cvar("g_pickup_shells_max") : 0;
+				autocvar_g_pickup_shells_max : 0;
 			self.ammo_nails = (nix_weapon_ammo & IT_NAILS) ?
-				cvar("g_pickup_nails_max") : 0;
+				autocvar_g_pickup_nails_max : 0;
 			self.ammo_rockets = (nix_weapon_ammo & IT_ROCKETS) ?
-				cvar("g_pickup_rockets_max") : 0;
+				autocvar_g_pickup_rockets_max : 0;
 			self.ammo_cells = (nix_weapon_ammo & IT_CELLS) ?
-				cvar("g_pickup_cells_max") : 0;
+				autocvar_g_pickup_cells_max : 0;
 			self.ammo_fuel = (nix_weapon_ammo & IT_FUEL) ?
-				cvar("g_pickup_fuel_max") : 0;
+				autocvar_g_pickup_fuel_max : 0;
 		}
 		else
 		{
 			self.ammo_shells = (nix_weapon_ammo & IT_SHELLS) ?
-				cvar("g_balance_nix_ammo_shells") : 0;
+				autocvar_g_balance_nix_ammo_shells : 0;
 			self.ammo_nails = (nix_weapon_ammo & IT_NAILS) ?
-				cvar("g_balance_nix_ammo_nails") : 0;
+				autocvar_g_balance_nix_ammo_nails : 0;
 			self.ammo_rockets = (nix_weapon_ammo & IT_ROCKETS) ?
-				cvar("g_balance_nix_ammo_rockets") : 0;
+				autocvar_g_balance_nix_ammo_rockets : 0;
 			self.ammo_cells = (nix_weapon_ammo & IT_CELLS) ?
-				cvar("g_balance_nix_ammo_cells") : 0;
+				autocvar_g_balance_nix_ammo_cells : 0;
 			self.ammo_fuel = (nix_weapon_ammo & IT_FUEL) ?
-				cvar("g_balance_nix_ammo_fuel") : 0;
+				autocvar_g_balance_nix_ammo_fuel : 0;
 		}
-		self.nix_nextincr = time + cvar("g_balance_nix_incrtime");
+		self.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
 		if(dt >= 1 && dt <= 5)
 			self.nix_lastinfotime = -42;
 		else
@@ -110,16 +110,16 @@ void NIX_GiveCurrentWeapon()
 	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO) && time > self.nix_nextincr)
 	{
 		if (nix_weapon_ammo & IT_SHELLS)
-			self.ammo_shells = self.ammo_shells + cvar("g_balance_nix_ammoincr_shells");
+			self.ammo_shells = self.ammo_shells + autocvar_g_balance_nix_ammoincr_shells;
 		else if (nix_weapon_ammo & IT_NAILS)
-			self.ammo_nails = self.ammo_nails + cvar("g_balance_nix_ammoincr_nails");
+			self.ammo_nails = self.ammo_nails + autocvar_g_balance_nix_ammoincr_nails;
 		else if (nix_weapon_ammo & IT_ROCKETS)
-			self.ammo_rockets = self.ammo_rockets + cvar("g_balance_nix_ammoincr_rockets");
+			self.ammo_rockets = self.ammo_rockets + autocvar_g_balance_nix_ammoincr_rockets;
 		else if (nix_weapon_ammo & IT_CELLS)
-			self.ammo_cells = self.ammo_cells + cvar("g_balance_nix_ammoincr_cells");
+			self.ammo_cells = self.ammo_cells + autocvar_g_balance_nix_ammoincr_cells;
 		if (nix_weapon_ammo & IT_FUEL) // hook uses cells and fuel
-			self.ammo_fuel = self.ammo_fuel + cvar("g_balance_nix_ammoincr_fuel");
-		self.nix_nextincr = time + cvar("g_balance_nix_incrtime");
+			self.ammo_fuel = self.ammo_fuel + autocvar_g_balance_nix_ammoincr_fuel;
+		self.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
 	}
 
 	self.weapons = 0;
@@ -176,12 +176,12 @@ MUTATOR_HOOKFUNCTION(nix_FilterItem)
 		case IT_25HP:
 		case IT_ARMOR:
 		case IT_ARMOR_SHARD:
-			if (cvar("g_nix_with_healtharmor"))
+			if (autocvar_g_nix_with_healtharmor)
 				return 0;
 			break;
 		case IT_STRENGTH:
 		case IT_INVINCIBLE:
-			if (cvar("g_nix_with_powerups"))
+			if (autocvar_g_nix_with_powerups)
 				return 0;
 			break;
 	}
@@ -227,7 +227,7 @@ MUTATOR_DEFINITION(mutator_nix)
 
 	MUTATOR_ONADD
 	{
-		g_nix_with_laser = cvar("g_nix_with_laser");
+		g_nix_with_laser = autocvar_g_nix_with_laser;
 
 		nix_nextchange = time;
 		nix_nextweapon = 0;

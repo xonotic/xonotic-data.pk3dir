@@ -251,7 +251,7 @@ void havocbot_role_ctf_carrier()
 
 	if (self.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 
 		navigation_goalrating_start();
 		havocbot_goalrating_ctf_ourbase(50000);
@@ -324,7 +324,7 @@ void havocbot_role_ctf_escort()
 	// Chase the flag carrier
 	if (self.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 		havocbot_goalrating_ctf_enemyflag(30000);
 		havocbot_goalrating_ctf_ourstolenflag(40000);
@@ -404,7 +404,7 @@ void havocbot_role_ctf_offense()
 
 	if (self.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 		havocbot_goalrating_ctf_ourstolenflag(50000);
 		havocbot_goalrating_ctf_enemybase(20000);
@@ -453,7 +453,7 @@ void havocbot_role_ctf_retriever()
 		local float radius;
 		radius = 10000;
 
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 		havocbot_goalrating_ctf_ourstolenflag(50000);
 		havocbot_goalrating_ctf_droppedflags(40000, self.origin, radius);
@@ -502,7 +502,7 @@ void havocbot_role_ctf_middle()
 		org = havocbot_ctf_middlepoint;
 		org_z = self.origin_z;
 
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 		havocbot_goalrating_ctf_ourstolenflag(50000);
 		havocbot_goalrating_ctf_droppedflags(30000, self.origin, 10000);
@@ -554,7 +554,7 @@ void havocbot_role_ctf_defense()
 		org = mf.dropped_origin;
 		radius = havocbot_ctf_middlepoint_radius;
 
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 
 		// if enemies are closer to our base, go there

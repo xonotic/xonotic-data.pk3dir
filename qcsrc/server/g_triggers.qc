@@ -516,7 +516,7 @@ void trigger_heal_touch()
 			if (other.health < self.max_health)
 			{
 				other.health = min(other.health + self.health, self.max_health);
-				other.pauserothealth_finished = max(other.pauserothealth_finished, time + cvar("g_balance_pause_health_rot"));
+				other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
 				sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
 			}
 		}
@@ -1400,7 +1400,7 @@ void spawnfunc_trigger_impulse()
 	EXACTTRIGGER_INIT;
     if(self.radius)
     {
-        if(!self.strength) self.strength = 2000 * cvar("g_triggerimpulse_radial_multiplier");
+        if(!self.strength) self.strength = 2000 * autocvar_g_triggerimpulse_radial_multiplier;
         setorigin(self, self.origin);
         setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
         self.touch = trigger_impulse_touch3;
@@ -1409,13 +1409,13 @@ void spawnfunc_trigger_impulse()
     {
         if(self.target)
         {
-            if(!self.strength) self.strength = 950 * cvar("g_triggerimpulse_directional_multiplier");
+            if(!self.strength) self.strength = 950 * autocvar_g_triggerimpulse_directional_multiplier;
             self.touch = trigger_impulse_touch1;
         }
         else
         {
             if(!self.strength) self.strength = 0.9;
-			self.strength = pow(self.strength, cvar("g_triggerimpulse_accel_power")) * cvar("g_triggerimpulse_accel_multiplier");
+			self.strength = pow(self.strength, autocvar_g_triggerimpulse_accel_power) * autocvar_g_triggerimpulse_accel_multiplier;
             self.touch = trigger_impulse_touch2;
         }
     }

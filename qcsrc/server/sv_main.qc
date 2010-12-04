@@ -67,18 +67,18 @@ void CreatureFrame (void)
 				self.dmg = 2;
 			}
 			// check for falling damage
-			if(!self.hook.state && !g_ca && !(g_cts && !cvar("g_cts_selfdamage")))
+			if(!self.hook.state && !g_ca && !(g_cts && !autocvar_g_cts_selfdamage))
 			{
 				dm = vlen(self.oldvelocity) - vlen(self.velocity); // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
 				if (self.deadflag)
-					dm = (dm - cvar("g_balance_falldamage_deadminspeed")) * cvar("g_balance_falldamage_factor");
+					dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
 				else
-					dm = min((dm - cvar("g_balance_falldamage_minspeed")) * cvar("g_balance_falldamage_factor"), cvar("g_balance_falldamage_maxdamage"));
+					dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
 				if (dm > 0)
 					Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
 			}
 
-			maxspeed = cvar("g_maxspeed");
+			maxspeed = autocvar_g_maxspeed;
 			if(maxspeed > 0 && vlen(self.velocity) > maxspeed)
 				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
 
@@ -175,14 +175,14 @@ void StartFrame (void)
 
 	WarpZone_StartFrame();
 
-	sys_frametime = cvar("sys_ticrate") * cvar("slowmo");
+	sys_frametime = autocvar_sys_ticrate * autocvar_slowmo;
 	if(sys_frametime <= 0)
 		sys_frametime = 1.0 / 60.0; // somewhat safe fallback
 
 	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
-		orig_slowmo = cvar("slowmo"); // slowmo will be restored after the timeout
+		orig_slowmo = autocvar_slowmo; // slowmo will be restored after the timeout
 
-	skill = cvar("skill");
+	skill = autocvar_skill;
 
 	Spawnqueue_Check();
 
@@ -192,7 +192,7 @@ void StartFrame (void)
 
 	if(game_delay_last == TRUE)
 	if(game_delay == FALSE)
-	if(cvar("sv_eventlog"))
+	if(autocvar_sv_eventlog)
 			GameLogEcho(":startdelay_ended");
 
 	game_delay_last = game_delay;
@@ -200,7 +200,7 @@ void StartFrame (void)
 	// if in warmup stage and limit for warmup is hit start match
 	if (inWarmupStage)
 	if ((g_warmup_limit > 0 && time >= g_warmup_limit)
-	 || (g_warmup_limit == 0 && cvar("timelimit") != 0 && time >= cvar("timelimit") * 60))
+	 || (g_warmup_limit == 0 && autocvar_timelimit != 0 && time >= autocvar_timelimit * 60))
 	{
 		ReadyRestart();
 		return;
@@ -214,7 +214,7 @@ void StartFrame (void)
 	RuneMatchGivePoints();
 	bot_serverframe();
 
-	if(cvar("spawn_debugview"))
+	if(autocvar_spawn_debugview)
 	{
 		RandomSelection_Init();
 		for(self = world; (self = find(self, classname, "player")); )
