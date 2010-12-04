@@ -39,6 +39,8 @@ const float GAME_RACE	= 11;
 const float GAME_NEXBALL = 12;
 const float GAME_CTS = 13;
 const float GAME_CA		= 14;
+const float GAME_FREEZETAG		= 15;
+const float GAME_KEEPAWAY		= 16;
 
 const float AS_STRING		= 1;
 const float AS_INT		= 2;
@@ -342,6 +344,12 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;
+const float STAT_YELLOWALIVE = 102;
+const float STAT_PINKALIVE = 103;
+
+// freeze tag
+const float STAT_FROZEN = 104;
+const float STAT_REVIVE_PROGRESS = 105;
 
 //const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
 //const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin
@@ -566,7 +574,7 @@ float MSG_SPREE = 2;
 float MSG_KILL_ACTION = 3;
 float MSG_KILL_ACTION_SPREE = 4;
 float MSG_INFO = 5;
-
+float MSG_KA = 6;
 float MSG_RACE = 10;
 
 float KILL_TEAM_RED = 10301;
@@ -593,6 +601,9 @@ float INFO_PICKUPFLAG = 10320;
 float INFO_LOSTFLAG = 10321;
 float INFO_RETURNFLAG = 10322;
 float INFO_CAPTUREFLAG = 10323;
+
+float KA_PICKUPBALL = 10350;
+float KA_DROPBALL = 10351;
 
 float RACE_SERVER_RECORD = 10400;
 float RACE_NEW_TIME = 10401;

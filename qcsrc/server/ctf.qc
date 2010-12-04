@@ -171,11 +171,6 @@ void place_flag()
 		return;
 	}
 
-	if(!self.t_width)
-		self.t_width = 0.1; // frame animation rate
-	if(!self.t_length)
-		self.t_length = 58; // maximum frame
-
 	setattachment(self, world, "");
 	self.mdl = self.model;
 	self.flags = FL_ITEM;
@@ -339,19 +334,6 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 		dprint("FLAG FALLTHROUGH will happen SOON\n");
 };
 
-void AnimateFlag()
-{
-	if(self.delay > time)
-		return;
-	self.delay = time + self.t_width;
-	if(self.nextthink > self.delay)
-		self.nextthink = self.delay;
-
-	self.frame = self.frame + 1;
-	if(self.frame > self.t_length)
-		self.frame = 0;
-}
-
 void FlagThink()
 {
 	local entity e;
@@ -372,8 +354,6 @@ void FlagThink()
 		FOR_EACH_CLIENT(e)
 			ctf_captureshield_update(e, 1); // release shield only
 	}
-
-	AnimateFlag();
 
 	if(self.speedrunning)
 	if(self.cnt == FLAG_CARRY)

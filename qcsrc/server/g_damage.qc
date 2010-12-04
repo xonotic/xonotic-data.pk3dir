@@ -120,12 +120,14 @@ void GiveFrags (entity attacker, entity targ, float f)
 		{
 			// teamkill
 			PlayerScore_Add(attacker, SP_KILLS, -1); // or maybe add a teamkills field?
+			PlayerStats_Event(attacker, PLAYERSTATS_KILLS, -1);
 		}
 	}
 	else
 	{
 		// regular frag
 		PlayerScore_Add(attacker, SP_KILLS, 1);
+		PlayerStats_Event(attacker, PLAYERSTATS_KILLS, 1);
 	}
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
@@ -623,7 +625,17 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			force = force * g_weaponforcefactor;
 			mirrorforce *= g_weaponforcefactor;
 		}
-
+		
+		// should this be changed at all? If so, in what way?
+		frag_attacker = attacker;
+		frag_target = targ;
+		frag_damage = damage;
+		frag_force = force;
+        frag_deathtype = deathtype;
+		MUTATOR_CALLHOOK(PlayerDamage_Calculate);
+		damage = frag_damage;
+		force = frag_force;
+		
 		// apply strength multiplier
 		if ((attacker.items & IT_STRENGTH) && !g_minstagib)
 		{

@@ -34,7 +34,7 @@ void CreatureFrame (void)
 				}
 				if (self.dmgtime < time)
 				{
-					self.dmgtime = time + 0.1;
+					self.dmgtime = time + 0.2;
 					if (self.watertype == CONTENT_LAVA)
 					{
 						if (self.watersound_finished < time)
