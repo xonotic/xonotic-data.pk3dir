@@ -51,6 +51,9 @@ void SUB_UseTargets()
 		t.message = self.message;
 		t.killtarget = self.killtarget;
 		t.target = self.target;
+		t.target2 = self.target2;
+		t.target3 = self.target3;
+		t.target4 = self.target4;
 		return;
 	}
 
