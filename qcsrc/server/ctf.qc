@@ -138,7 +138,7 @@ void ctf_flag_spawnstuff()
 
 float ctf_score_value(string parameter)
 {
-	if(g_ctf_win_mode != 2)
+	if(autocvar_g_ctf_win_mode != 2)
 		return cvar(strcat("g_ctf_personal", parameter));
 	else
 		return cvar(strcat("g_ctf_flag", parameter));
