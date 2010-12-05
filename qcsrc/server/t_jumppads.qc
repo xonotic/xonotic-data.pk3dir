@@ -286,8 +286,7 @@ void trigger_push_findtarget()
  */
 void spawnfunc_trigger_push()
 {
-	if (self.angles != '0 0 0')
-		SetMovedir ();
+	SetMovedir ();
 
 	EXACTTRIGGER_INIT;
 	

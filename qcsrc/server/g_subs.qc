@@ -750,9 +750,7 @@ void InitTrigger()
 {
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	if (self.movedir == '0 0 0')
-	if (self.angles != '0 0 0')
-		SetMovedir ();
+	SetMovedir ();
 	self.solid = SOLID_TRIGGER;
 	SetBrushEntityModel();
 	self.movetype = MOVETYPE_NONE;
@@ -764,9 +762,7 @@ void InitSolidBSPTrigger()
 {
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	if (self.movedir == '0 0 0')
-	if (self.angles != '0 0 0')
-		SetMovedir ();
+	SetMovedir ();
 	self.solid = SOLID_BSP;
 	SetBrushEntityModel();
 	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
