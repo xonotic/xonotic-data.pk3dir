@@ -719,6 +719,19 @@ void target_speaker_use_off()
 	sound(self, CHAN_TRIGGER, "misc/null.wav", VOL_BASE * self.volume, self.atten);
 	self.use = target_speaker_use_on;
 }
+void target_speaker_reset()
+{
+	if(self.spawnflags & 1) // LOOPED_ON
+	{
+		if(self.use == target_speaker_use_on)
+			target_speaker_use_on();
+	}
+	else if(self.spawnflags & 2)
+	{
+		if(self.use == target_speaker_use_off)
+			target_speaker_use_off();
+	}
+}
 
 void spawnfunc_target_speaker()
 {
@@ -745,7 +758,15 @@ void spawnfunc_target_speaker()
 		if(self.spawnflags & 8) // ACTIVATOR
 			self.use = target_speaker_use_activator;
 		else if(self.spawnflags & 1) // LOOPED_ON
+		{
 			target_speaker_use_on();
+			self.reset = target_speaker_reset;
+		}
+		else if(self.spawnflags & 2) // LOOPED_OFF
+		{
+			self.use = target_speaker_use_on;
+			self.reset = target_speaker_reset;
+		}
 		else
 			self.use = target_speaker_use_on;
 	}
