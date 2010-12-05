@@ -1147,12 +1147,9 @@ float GetVoiceMessageVoiceType(string type)
 }
 
 string allvoicesamples;
-float GetPlayerSoundSampleField_notFound;
-float GetPlayerSoundSampleField_fixed;
 .string GetVoiceMessageSampleField(string type)
 {
 	GetPlayerSoundSampleField_notFound = 0;
-	GetPlayerSoundSampleField_fixed = 0;
 	switch(type)
 	{
 #define _VOICEMSG(m) case #m: return playersound_##m;
@@ -1166,7 +1163,6 @@ float GetPlayerSoundSampleField_fixed;
 .string GetPlayerSoundSampleField(string type)
 {
 	GetPlayerSoundSampleField_notFound = 0;
-	GetPlayerSoundSampleField_fixed = 0;
 	switch(type)
 	{
 #define _VOICEMSG(m) case #m: return playersound_##m;
@@ -1248,9 +1244,6 @@ void LoadPlayerSounds(string f, float first)
 			field = GetVoiceMessageSampleField(argv(0));
 		if(GetPlayerSoundSampleField_notFound)
 			continue;
-		if(GetPlayerSoundSampleField_fixed)
-			if not(first)
-				continue;
 		if(self.field)
 			strunzone(self.field);
 		self.field = strzone(strcat(argv(1), " ", argv(2)));
