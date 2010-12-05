@@ -673,6 +673,7 @@ void target_speaker_use_activator()
 		else
 		{
 			tokenize_console(activator.sample);
+			float n;
 			n = stof(argv(1));
 			if(n > 0)
 				snd = strcat(argv(0), ftos(floor(random() * n + 1)), ".wav"); // randomization
@@ -699,6 +700,7 @@ void target_speaker_use_on()
 		else
 		{
 			tokenize_console(activator.sample);
+			float n;
 			n = stof(argv(1));
 			if(n > 0)
 				snd = strcat(argv(0), ftos(floor(random() * n + 1)), ".wav"); // randomization
