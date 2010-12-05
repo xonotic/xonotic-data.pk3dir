@@ -239,8 +239,9 @@ void InitGameplayMode()
 		game = GAME_CTF;
 		gamemode_name = "Capture the Flag";
 		ActivateTeamplay();
+		g_ctf_win_mode = autocvar_g_ctf_win_mode;
 		g_ctf_ignore_frags = autocvar_g_ctf_ignore_frags;
-		if(autocvar_g_ctf_win_mode == 2)
+		if(g_ctf_win_mode == 2)
 		{
 			fraglimit_override = autocvar_g_ctf_capture_limit;
 			leadlimit_override = autocvar_g_ctf_capture_leadlimit;
