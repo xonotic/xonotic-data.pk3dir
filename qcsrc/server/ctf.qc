@@ -1008,6 +1008,11 @@ void ctf_init()
 	captureshield_min_negscore = autocvar_g_ctf_shield_min_negscore;
 	captureshield_max_ratio = autocvar_g_ctf_shield_max_ratio;
 	captureshield_force = autocvar_g_ctf_shield_force;
+
+
+//#NO AUTOCVARS START
+	g_ctf_win_mode = cvar("g_ctf_win_mode");
+//#NO AUTOCVARS END
 };
 
 void ctf_setstatus2(entity flag, float shift)

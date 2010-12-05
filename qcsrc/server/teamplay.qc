@@ -239,7 +239,6 @@ void InitGameplayMode()
 		game = GAME_CTF;
 		gamemode_name = "Capture the Flag";
 		ActivateTeamplay();
-		g_ctf_win_mode = autocvar_g_ctf_win_mode;
 		g_ctf_ignore_frags = autocvar_g_ctf_ignore_frags;
 		if(g_ctf_win_mode == 2)
 		{
