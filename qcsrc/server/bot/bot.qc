@@ -173,7 +173,8 @@ void bot_setnameandstuff()
 	if(argv(4) != "" && stof(argv(4)) >= 0) bot_pants = argv(4);
 	else bot_pants = ftos(floor(random() * 15));
 
-	self.bot_forced_team = stof(argv(5));
+    if(!autocvar_g_campaign) // no forced teams in campaign
+        self.bot_forced_team = stof(argv(5));
 
 	prio = 6;
 

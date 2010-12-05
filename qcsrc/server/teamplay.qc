@@ -842,6 +842,13 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	// c1...c4 now have counts of each team
 	// figure out which is smallest, giving priority to the team the player is already on as a tie-breaker
 
+    if(autocvar_g_campaign)
+    {
+        entity e;
+        FOR_EACH_REALCLIENT(e)
+            if(e.team != COLOR_TEAM1) // player is forced to the red team in campaign
+                ++c1; // player will join the red team, join bots accordingly
+    }
 	// 2 gives priority to what team you're already on, 1 goes in order
 	// 2 doesn't seem to work though...
 	balance_type = 1;
