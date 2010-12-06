@@ -172,9 +172,9 @@ void MapVote_Draw()
 	xmin = vid_conwidth*0.05; // 5% border must suffice
 	xmax = vid_conwidth - xmin;
 	ymin = 20;
-	i = cvar("con_chatpos"); //*cvar("con_chatsize");
+	i = autocvar_con_chatpos; //*autocvar_con_chatsize;
 	if(i < 0)
-		ymax = vid_conheight + (i - cvar("con_chat")) * cvar("con_chatsize");
+		ymax = vid_conheight + (i - autocvar_con_chat) * autocvar_con_chatsize;
 	if(i >= 0 || ymax < (vid_conheight*0.5))
 		ymax = vid_conheight - ymin;
 
@@ -244,7 +244,7 @@ void MapVote_Draw()
 		MapVote_DrawAbstain(pos, isize, xmax - xmin, tmp, i);
 	}
 
-	drawpic(mv_mousepos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor.tga"), '32 32 0', '1 1 1', autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic(mv_mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), '32 32 0', '1 1 1', autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 void Cmd_MapVote_MapDownload(float argc)

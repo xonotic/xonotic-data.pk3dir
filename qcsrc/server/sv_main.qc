@@ -67,18 +67,18 @@ void CreatureFrame (void)
 				self.dmg = 2;
 			}
 			// check for falling damage
-			if(!self.hook.state && !g_ca && !(g_cts && !cvar("g_cts_selfdamage")))
+			if(!self.hook.state && !g_ca && !(g_cts && !autocvar_g_cts_selfdamage))
 			{
 				dm = vlen(self.oldvelocity) - vlen(self.velocity); // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
 				if (self.deadflag)
-					dm = (dm - cvar("g_balance_falldamage_deadminspeed")) * cvar("g_balance_falldamage_factor");
+					dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
 				else
-					dm = min((dm - cvar("g_balance_falldamage_minspeed")) * cvar("g_balance_falldamage_factor"), cvar("g_balance_falldamage_maxdamage"));
+					dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
 				if (dm > 0)
 					Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
 			}
 
-			maxspeed = cvar("g_maxspeed");
+			maxspeed = autocvar_g_maxspeed;
 			if(maxspeed > 0 && vlen(self.velocity) > maxspeed)
 				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
 
@@ -86,7 +86,7 @@ void CreatureFrame (void)
 			if (g_footsteps)
 			if (!gameover)
 			if (self.flags & FL_ONGROUND)
-			if (vlen(self.velocity) > sv_maxspeed * 0.6)
+			if (vlen(self.velocity) > autocvar_sv_maxspeed * 0.6)
 			if (!self.deadflag)
 			if (time < self.lastground + 0.2)
 			{
@@ -175,43 +175,14 @@ void StartFrame (void)
 
 	WarpZone_StartFrame();
 
-	sv_gravity = cvar("sv_gravity");
-	sv_maxairspeed = cvar("sv_maxairspeed");
-	sv_maxspeed = cvar ("sv_maxspeed");
-	sv_friction = cvar ("sv_friction");
-	sv_accelerate = cvar ("sv_accelerate");
-	sv_airaccelerate = cvar("sv_airaccelerate");
-	sv_airaccel_sideways_friction = cvar("sv_airaccel_sideways_friction");
-	sv_airaccel_qw = cvar("sv_airaccel_qw");
-	sv_stopspeed = cvar ("sv_stopspeed");
-	sv_airstopaccelerate = cvar("sv_airstopaccelerate");
-	sv_airstrafeaccelerate = cvar("sv_airstrafeaccelerate");
-	sv_maxairstrafespeed = cvar("sv_maxairstrafespeed");
-	sv_airstrafeaccel_qw = cvar("sv_airstrafeaccel_qw");
-	sv_aircontrol = cvar("sv_aircontrol");
-	sv_aircontrol_penalty = cvar("sv_aircontrol_penalty");
-	sv_aircontrol_power = cvar("sv_aircontrol_power");
-	sv_warsowbunny_airforwardaccel = cvar("sv_warsowbunny_airforwardaccel");
-	sv_warsowbunny_accel = cvar("sv_warsowbunny_accel");
-	sv_warsowbunny_topspeed = cvar("sv_warsowbunny_topspeed");
-	sv_warsowbunny_turnaccel = cvar("sv_warsowbunny_turnaccel");
-	sv_warsowbunny_backtosideratio = cvar("sv_warsowbunny_backtosideratio");
-	sv_airspeedlimit_nonqw = cvar("sv_airspeedlimit_nonqw");
-	teamplay = cvar ("teamplay");
-	sys_frametime = cvar("sys_ticrate") * cvar("slowmo");
+	sys_frametime = autocvar_sys_ticrate * autocvar_slowmo;
 	if(sys_frametime <= 0)
 		sys_frametime = 1.0 / 60.0; // somewhat safe fallback
-	sv_doublejump = cvar("sv_doublejump");
 
 	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
-		orig_slowmo = cvar("slowmo"); // slowmo will be restored after the timeout
+		orig_slowmo = autocvar_slowmo; // slowmo will be restored after the timeout
 
-	if(teams_matter && !teamplay)
-		teamplay = 3;
-	if(!teams_matter && teamplay)
-		teamplay = 0;
-
-	skill = cvar("skill");
+	skill = autocvar_skill;
 
 	Spawnqueue_Check();
 
@@ -221,7 +192,7 @@ void StartFrame (void)
 
 	if(game_delay_last == TRUE)
 	if(game_delay == FALSE)
-	if(cvar("sv_eventlog"))
+	if(autocvar_sv_eventlog)
 			GameLogEcho(":startdelay_ended");
 
 	game_delay_last = game_delay;
@@ -229,7 +200,7 @@ void StartFrame (void)
 	// if in warmup stage and limit for warmup is hit start match
 	if (inWarmupStage)
 	if ((g_warmup_limit > 0 && time >= g_warmup_limit)
-	 || (g_warmup_limit == 0 && cvar("timelimit") != 0 && time >= cvar("timelimit") * 60))
+	 || (g_warmup_limit == 0 && autocvar_timelimit != 0 && time >= autocvar_timelimit * 60))
 	{
 		ReadyRestart();
 		return;
@@ -243,7 +214,7 @@ void StartFrame (void)
 	RuneMatchGivePoints();
 	bot_serverframe();
 
-	if(cvar("spawn_debugview"))
+	if(autocvar_spawn_debugview)
 	{
 		RandomSelection_Init();
 		for(self = world; (self = find(self, classname, "player")); )

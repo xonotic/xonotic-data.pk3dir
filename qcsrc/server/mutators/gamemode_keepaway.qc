@@ -40,9 +40,9 @@ void ka_SpawnBall() // loads various values for the ball
 	setmodel(e, e.model);
 	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
 	e.classname = "keepawayball";
-	e.damageforcescale = cvar("g_keepawayball_damageforcescale");
+	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
 	e.takedamage = DAMAGE_YES;
-	e.glow_color = cvar("g_keepawayball_trail_color");
+	e.glow_color = autocvar_g_keepawayball_trail_color;
 	e.glow_trail = TRUE;
 	e.movetype = MOVETYPE_BOUNCE;
 	e.touch = ka_TouchEvent;
@@ -65,7 +65,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 		self.angles = '0 0 0';
 		self.solid = SOLID_TRIGGER;
 		self.think = ka_RespawnBall;
-		self.nextthink = time + cvar("g_keepawayball_respawntime");
+		self.nextthink = time + autocvar_g_keepawayball_respawntime;
 		
 		pointparticles(particleeffectnum("electro_combo"), oldballorigin, '0 0 0', 1);
 		pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 1);
@@ -115,11 +115,11 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	self.takedamage = DAMAGE_NO;
 
 	// apply effects to player
-	other.glow_color = cvar("g_keepawayball_trail_color");
+	other.glow_color = autocvar_g_keepawayball_trail_color;
 	other.glow_trail = TRUE;
 	other.effects |= EF_DIMLIGHT;
-	other.alpha = cvar("g_keepaway_ballcarrier_alpha");
-	other.exteriorweaponentity.alpha = cvar("g_keepaway_ballcarrier_alpha");
+	other.alpha = autocvar_g_keepaway_ballcarrier_alpha;
+	other.exteriorweaponentity.alpha = autocvar_g_keepaway_ballcarrier_alpha;
 
 	// messages and sounds
 	Send_KillNotification(other.netname, "", "", KA_PICKUPBALL, MSG_KA);
@@ -152,7 +152,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.solid = SOLID_TRIGGER; // is this needed? 
 	ball.wait = time + 1; 
 	ball.think = ka_RespawnBall;
-	ball.nextthink = time + cvar("g_keepawayball_respawntime");
+	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
 	ball.touch = ka_TouchEvent;
 	ball.takedamage = DAMAGE_YES;
 	ball.effects &~= EF_NODRAW; 
@@ -209,11 +209,11 @@ MUTATOR_HOOKFUNCTION(ka_Scoring)
 	{
 		if(frag_target.ballcarried) { // add to amount of times killing carrier
 			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_CARRIERKILLS, 1);
-			if(cvar("g_keepaway_bckillscore")) // add bckills to the score
+			if(autocvar_g_keepaway_bckillscore) // add bckills to the score
 				PlayerScore_Add(frag_attacker, SP_KEEPAWAY_SCORE, 1);
 		}
 		else if(!frag_attacker.ballcarried)
-			if(cvar("g_keepaway_noncarrier_warn"))
+			if(autocvar_g_keepaway_noncarrier_warn)
 				centerprint_atprio(frag_attacker, (CENTERPRIO_SPAM + 5), "Killing people while you don't have the ball gives no points!");
 
 		if(frag_attacker.ballcarried) // add to amount of kills while ballcarrier
@@ -252,26 +252,26 @@ MUTATOR_HOOKFUNCTION(ka_PlayerDamage) // for changing damage and force values th
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
 		{
-			frag_damage *= cvar("g_keepaway_ballcarrier_selfdamage");
-			frag_force *= cvar("g_keepaway_ballcarrier_selfforce");
+			frag_damage *= autocvar_g_keepaway_ballcarrier_selfdamage;
+			frag_force *= autocvar_g_keepaway_ballcarrier_selfforce;
 		}
 		else // damage done to noncarriers
 		{
-			frag_damage *= cvar("g_keepaway_ballcarrier_damage");
-			frag_force *= cvar("g_keepaway_ballcarrier_force");
+			frag_damage *= autocvar_g_keepaway_ballcarrier_damage;
+			frag_force *= autocvar_g_keepaway_ballcarrier_force;
 		}
 	}
 	else if not(frag_target.ballcarried) // if the target is a noncarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
 		{
-			frag_damage *= cvar("g_keepaway_noncarrier_selfdamage");
-			frag_force *= cvar("g_keepaway_noncarrier_selfforce");
+			frag_damage *= autocvar_g_keepaway_noncarrier_selfdamage;
+			frag_force *= autocvar_g_keepaway_noncarrier_selfforce;
 		}
 		else // damage done to other noncarriers
 		{
-			frag_damage *= cvar("g_keepaway_noncarrier_damage");
-			frag_force *= cvar("g_keepaway_noncarrier_force");
+			frag_damage *= autocvar_g_keepaway_noncarrier_damage;
+			frag_force *= autocvar_g_keepaway_noncarrier_force;
 		}
 	}
 	return 0;
@@ -282,8 +282,8 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 	if(self.ballcarried)
 	{ 
 		// if the player has the ball, force ballcarrier alpha upon them
-		self.alpha = cvar("g_keepaway_ballcarrier_alpha");
-		self.exteriorweaponentity.alpha = cvar("g_keepaway_ballcarrier_alpha");
+		self.alpha = autocvar_g_keepaway_ballcarrier_alpha;
+		self.exteriorweaponentity.alpha = autocvar_g_keepaway_ballcarrier_alpha;
 	
 		// if we're in minstagib and a ballcarrier has just picked up invisibility, 
 		// notify all the other players that the ballcarrier no longer has a waypoint

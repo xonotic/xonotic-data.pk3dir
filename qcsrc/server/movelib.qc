@@ -89,10 +89,10 @@ void movelib_move(vector force,float max_velocity,float drag,float theMass,float
     if (self.waterlevel > 1)
     {
         self.velocity = self.velocity + force * (acceleration * deltatime);
-        self.velocity = self.velocity + '0 0 0.05' * sv_gravity * deltatime;
+        self.velocity = self.velocity + '0 0 0.05' * autocvar_sv_gravity * deltatime;
     }
     else
-        self.velocity = self.velocity + '0 0 -1' * sv_gravity * deltatime;
+        self.velocity = self.velocity + '0 0 -1' * autocvar_sv_gravity * deltatime;
 
     mspeed = vlen(self.velocity);
 
@@ -137,7 +137,7 @@ void movelib_update(vector dir,float force)
     old_speed    = vlen(self.velocity);
     old_dir      = normalize(self.velocity);
 
-    //ggravity      =  (sv_gravity / self.mass) * '0 0 100';
+    //ggravity      =  (autocvar_sv_gravity / self.mass) * '0 0 100';
     acceleration =  (force / self.mass) * dir;
     //acceleration -= old_dir * (old_speed / self.mass);
     acceleration -= ggravity;

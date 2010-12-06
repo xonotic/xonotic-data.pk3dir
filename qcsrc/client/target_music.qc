@@ -39,7 +39,7 @@ void TargetMusic_Advance()
 			else
 				e.state = 0;
 		}
-		vol = e.state * e.volume * cvar("bgmvolume");
+		vol = e.state * e.volume * autocvar_bgmvolume;
 		if(vol != vol0)
 		{
 			if(vol0 < 0)

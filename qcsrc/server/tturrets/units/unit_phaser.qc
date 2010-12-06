@@ -79,7 +79,7 @@ void turret_phaser_attack()
     entity beam;
 
     beam = spawn();
-    beam.ticrate = 0.1; //cvar("sys_ticrate");
+    beam.ticrate = 0.1; //autocvar_sys_ticrate;
     setmodel(beam,"models/turrets/phaser_beam.md3");
     beam.effects = EF_LOWPRECISION;
     beam.solid = SOLID_NOT;
@@ -98,7 +98,7 @@ void turret_phaser_attack()
     self.fireflag = 1;
 
     beam.attack_finished_single = self.attack_finished_single;
-    self.attack_finished_single = time; // + cvar("sys_ticrate");
+    self.attack_finished_single = time; // + autocvar_sys_ticrate;
 
     setattachment(beam,self.tur_head,"tag_fire");
 

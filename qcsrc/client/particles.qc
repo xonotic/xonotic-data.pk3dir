@@ -296,7 +296,7 @@ void Net_ReadNexgunBeamParticle()
 	//draw either the old v2.3 beam or the new beam
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
 	particles_alphamin = particles_alphamax = charge;
-	if (cvar("cl_particles_oldnexbeam") && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo()))
+	if (autocvar_cl_particles_oldnexbeam && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo()))
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("TE_TEI_G3"), shotorg, endpos, charge, 1);
 	else
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("nex_beam"), shotorg, endpos, charge, 1);

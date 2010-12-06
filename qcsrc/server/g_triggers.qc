@@ -51,6 +51,9 @@ void SUB_UseTargets()
 		t.message = self.message;
 		t.killtarget = self.killtarget;
 		t.target = self.target;
+		t.target2 = self.target2;
+		t.target3 = self.target3;
+		t.target4 = self.target4;
 		return;
 	}
 
@@ -516,7 +519,7 @@ void trigger_heal_touch()
 			if (other.health < self.max_health)
 			{
 				other.health = min(other.health + self.health, self.max_health);
-				other.pauserothealth_finished = max(other.pauserothealth_finished, time + cvar("g_balance_pause_health_rot"));
+				other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
 				sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
 			}
 		}
@@ -656,31 +659,134 @@ void spawnfunc_trigger_gravity()
 
 // TODO add a way to do looped sounds with sound(); then complete this entity
 .float volume, atten;
-void target_speaker_use() {sound(self, CHAN_TRIGGER, self.noise, VOL_BASE * self.volume, self.atten);}
+void target_speaker_use_off();
+void target_speaker_use_activator()
+{
+	if(clienttype(activator) != CLIENTTYPE_REAL)
+		return;
+	string snd;
+	if(substring(self.noise, 0, 1) == "*")
+	{
+		var .string sample;
+		sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
+		if(GetPlayerSoundSampleField_notFound)
+			snd = "misc/null.wav";
+		else if(activator.sample == "")
+			snd = "misc/null.wav";
+		else
+		{
+			tokenize_console(activator.sample);
+			float n;
+			n = stof(argv(1));
+			if(n > 0)
+				snd = strcat(argv(0), ftos(floor(random() * n + 1)), ".wav"); // randomization
+			else
+				snd = strcat(argv(0), ".wav"); // randomization
+		}
+	}
+	else
+		snd = self.noise;
+	msg_entity = activator;
+	soundto(MSG_ONE, self, CHAN_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
+}
+void target_speaker_use_on()
+{
+	string snd;
+	if(substring(self.noise, 0, 1) == "*")
+	{
+		var .string sample;
+		sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
+		if(GetPlayerSoundSampleField_notFound)
+			snd = "misc/null.wav";
+		else if(activator.sample == "")
+			snd = "misc/null.wav";
+		else
+		{
+			tokenize_console(activator.sample);
+			float n;
+			n = stof(argv(1));
+			if(n > 0)
+				snd = strcat(argv(0), ftos(floor(random() * n + 1)), ".wav"); // randomization
+			else
+				snd = strcat(argv(0), ".wav"); // randomization
+		}
+	}
+	else
+		snd = self.noise;
+	sound(self, CHAN_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
+	if(self.spawnflags & 3)
+		self.use = target_speaker_use_off;
+}
+void target_speaker_use_off()
+{
+	sound(self, CHAN_TRIGGER, "misc/null.wav", VOL_BASE * self.volume, self.atten);
+	self.use = target_speaker_use_on;
+}
+void target_speaker_reset()
+{
+	if(self.spawnflags & 1) // LOOPED_ON
+	{
+		if(self.use == target_speaker_use_on)
+			target_speaker_use_on();
+	}
+	else if(self.spawnflags & 2)
+	{
+		if(self.use == target_speaker_use_off)
+			target_speaker_use_off();
+	}
+}
 
 void spawnfunc_target_speaker()
 {
+	// TODO: "*" prefix to sound file name
+	// TODO: wait and random (just, HOW? random is not a field)
 	if(self.noise)
 		precache_sound (self.noise);
+
+	if(!self.atten && !(self.spawnflags & 4))
+	{
+		IFTARGETED
+			self.atten = ATTN_NORM;
+		else
+			self.atten = ATTN_STATIC;
+	}
+	else if(self.atten < 0)
+		self.atten = 0;
+
+	if(!self.volume)
+		self.volume = 1;
+
 	IFTARGETED
 	{
-		if(!self.atten)
-			self.atten = ATTN_NORM;
-		else if(self.atten < 0)
-			self.atten = 0;
-		if(!self.volume)
-			self.volume = 1;
-		self.use = target_speaker_use;
+		if(self.spawnflags & 8) // ACTIVATOR
+			self.use = target_speaker_use_activator;
+		else if(self.spawnflags & 1) // LOOPED_ON
+		{
+			target_speaker_use_on();
+			self.reset = target_speaker_reset;
+		}
+		else if(self.spawnflags & 2) // LOOPED_OFF
+		{
+			self.use = target_speaker_use_on;
+			self.reset = target_speaker_reset;
+		}
+		else
+			self.use = target_speaker_use_on;
+	}
+	else if(self.spawnflags & 1) // LOOPED_ON
+	{
+		ambientsound (self.origin, self.noise, VOL_BASE * self.volume, self.atten);
+		remove(self);
+	}
+	else if(self.spawnflags & 2) // LOOPED_OFF
+	{
+		objerror("This sound entity can never be activated");
 	}
 	else
 	{
-		if(!self.atten)
-			self.atten = ATTN_STATIC;
-		else if(self.atten < 0)
-			self.atten = 0;
-		if(!self.volume)
-			self.volume = 1;
+		// Quake/Nexuiz fallback
 		ambientsound (self.origin, self.noise, VOL_BASE * self.volume, self.atten);
+		remove(self);
 	}
 };
 
@@ -1400,7 +1506,7 @@ void spawnfunc_trigger_impulse()
 	EXACTTRIGGER_INIT;
     if(self.radius)
     {
-        if(!self.strength) self.strength = 2000 * cvar("g_triggerimpulse_radial_multiplier");
+        if(!self.strength) self.strength = 2000 * autocvar_g_triggerimpulse_radial_multiplier;
         setorigin(self, self.origin);
         setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
         self.touch = trigger_impulse_touch3;
@@ -1409,13 +1515,13 @@ void spawnfunc_trigger_impulse()
     {
         if(self.target)
         {
-            if(!self.strength) self.strength = 950 * cvar("g_triggerimpulse_directional_multiplier");
+            if(!self.strength) self.strength = 950 * autocvar_g_triggerimpulse_directional_multiplier;
             self.touch = trigger_impulse_touch1;
         }
         else
         {
             if(!self.strength) self.strength = 0.9;
-			self.strength = pow(self.strength, cvar("g_triggerimpulse_accel_power")) * cvar("g_triggerimpulse_accel_multiplier");
+			self.strength = pow(self.strength, autocvar_g_triggerimpulse_accel_power) * autocvar_g_triggerimpulse_accel_multiplier;
             self.touch = trigger_impulse_touch2;
         }
     }

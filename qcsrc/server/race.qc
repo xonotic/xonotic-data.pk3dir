@@ -277,8 +277,8 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			PlayerScore_Add(e, SP_RACE_TIME, snew - s);
 			l = PlayerTeamScore_Add(e, SP_RACE_LAPS, ST_RACE_LAPS, 1);
 
-			if(cvar("fraglimit"))
-				if(l >= cvar("fraglimit"))
+			if(autocvar_fraglimit)
+				if(l >= autocvar_fraglimit)
 					race_StartCompleting();
 
 			if(race_completing)
@@ -306,9 +306,9 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				if(cp == race_timed_checkpoint)
 				{
 					race_setTime(GetMapname(), t, e.crypto_idfp, e.netname, e);
-					if(g_cts && cvar("g_cts_finish_kill_delay"))
+					if(g_cts && autocvar_g_cts_finish_kill_delay)
 					{
-						CTS_ClientKill(cvar("g_cts_finish_kill_delay"));
+						CTS_ClientKill(autocvar_g_cts_finish_kill_delay);
 					}
 				}
 				if(t < recordtime || recordtime == 0)
