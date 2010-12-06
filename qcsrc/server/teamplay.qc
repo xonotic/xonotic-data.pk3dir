@@ -150,6 +150,7 @@ void ReadGameCvars()
 	}
 
 	teams_matter = 0;
+	serverflags &~= SERVERFLAG_TEAMPLAY;
 }
 
 void default_delayedinit()
@@ -171,8 +172,6 @@ void InitGameplayMode()
 	qualifying_override = -1;
 
 	VoteReset();
-
-	teams_matter = 0;
 
 	// make sure only ONE type is selected
 	ReadGameCvars();
