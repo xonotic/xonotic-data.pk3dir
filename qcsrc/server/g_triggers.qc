@@ -189,14 +189,12 @@ void multi_use()
 void multi_touch()
 {
 	if not(self.spawnflags & 2)
-	{
 		if not(other.iscreature)
 			return;
 
-		if(self.team)
-		if(self.team == other.team)
+	if(self.team)
+		if((self.spawnflags & 4 == 0) == (self.team != other.team))
 			return;
-	}
 
 // if the trigger has an angles field, check player's facing direction
 	if (self.movedir != '0 0 0')
