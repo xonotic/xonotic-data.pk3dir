@@ -21,7 +21,8 @@ void havocbot_ai()
 		}
 		else
 		{
-			self.havocbot_role();
+			if not(self.jumppadcount)
+				self.havocbot_role();
 		}
 
 		// TODO: tracewalk() should take care of this job (better path finding under water)
