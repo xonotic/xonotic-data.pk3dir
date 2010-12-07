@@ -1037,6 +1037,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 }
 
+void HUD_Panel_EnableMenu();
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	string s;
@@ -1169,10 +1170,20 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 		HUD_Panel_Arrow_Action(nPrimary); //move or resize panel
 	}
+	else if(nPrimary == K_ENTER || nPrimary == K_SPACE || nPrimary == K_KP_ENTER)
+	{
+		if (bInputType == 1)
+			return true;
+		if (highlightedPanel_prev != -1)
+		{
+			highlightedPanel = highlightedPanel_prev;
+			HUD_Panel_EnableMenu();
+		}
+	}
 	else if(hit_con_bind)
 		return false;
 
-	return true; // Suppress ALL other input
+	return true;
 }
 
 float HUD_Panel_HighlightCheck()
@@ -1338,6 +1349,13 @@ void HUD_Panel_Highlight()
 	}
 }
 
+void HUD_Panel_EnableMenu()
+{
+	menu_enabled = 2;
+	menu_enabled_time = time;
+	HUD_Panel_GetName(highlightedPanel);
+	localcmd("menu_showhudoptions ", panel_name, "\n");
+}
 float highlightcheck;
 vector prev_pos, prev_size;
 void HUD_Panel_Mouse()
@@ -1421,10 +1439,7 @@ void HUD_Panel_Mouse()
 		if(time - prevMouseClickedTime < 0.4 && prevMouseClicked == 0 && prevMouseClickedPos == mousepos && highlightedPanel >= 0)
 		{
 			mouseClicked = 0; // to prevent spam, I guess.
-			menu_enabled = 2;
-			menu_enabled_time = time;
-			HUD_Panel_GetName(highlightedPanel);
-			localcmd("menu_showhudoptions ", panel_name, "\n");
+			HUD_Panel_EnableMenu();
 			return;
 		}
 		if(prevMouseClicked == 0)
