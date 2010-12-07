@@ -627,11 +627,7 @@ void CheckAllowedTeams (entity for_whom)
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 
-	if(autocvar_g_campaign && for_whom && clienttype(for_whom) == CLIENTTYPE_REAL)
-	{
-		c1 = 0; // only allow RED team for player joining
-	}
-	else if(g_onslaught)
+	if(g_onslaught)
 	{
 		// onslaught is special
 		head = findchain(classname, "onslaught_generator");
