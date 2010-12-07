@@ -260,7 +260,7 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 	controller.classname = "SUB_CalcMove_controller";
 	controller.owner = self;
 	controller.origin = self.origin; // starting point
-	controller.finaldest = tdest; // where do we want to end?
+	controller.finaldest = (tdest + '0 0 1'); // where do we want to end? Offset to overshoot a bit.
 	controller.destvec = delta;
 	controller.animstate_starttime = time;
 	controller.animstate_endtime = time + traveltime;
