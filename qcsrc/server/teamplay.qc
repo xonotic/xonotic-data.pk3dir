@@ -743,8 +743,15 @@ void GetTeamCounts(entity ignore)
 	// FIXME: also find and memorize the lowest-scoring bot on each team (in case players must be shuffled around)
 	// also remember the lowest-scoring player
 
-	FOR_EACH_PLAYER(head)
+	FOR_EACH_CLIENT(head)
 	{
+		float t;
+		if(head.classname == "player")
+			t = head.team;
+		else if(head.team_forced > 0)
+			t = head.team_forced; // reserve the spot
+		else
+			continue;
 		if(head != ignore)// && head.netname != "")
 		{
 			value = PlayerValue(head);
@@ -752,7 +759,7 @@ void GetTeamCounts(entity ignore)
 				bvalue = value;
 			else
 				bvalue = 0;
-			if(head.team == COLOR_TEAM1)
+			if(t == COLOR_TEAM1)
 			{
 				if(c1 >= 0)
 				{
@@ -760,7 +767,7 @@ void GetTeamCounts(entity ignore)
 					cb1 = cb1 + bvalue;
 				}
 			}
-			if(head.team == COLOR_TEAM2)
+			if(t == COLOR_TEAM2)
 			{
 				if(c2 >= 0)
 				{
@@ -768,7 +775,7 @@ void GetTeamCounts(entity ignore)
 					cb2 = cb2 + bvalue;
 				}
 			}
-			if(head.team == COLOR_TEAM3)
+			if(t == COLOR_TEAM3)
 			{
 				if(c3 >= 0)
 				{
@@ -776,7 +783,7 @@ void GetTeamCounts(entity ignore)
 					cb3 = cb3 + bvalue;
 				}
 			}
-			if(head.team == COLOR_TEAM4)
+			if(t == COLOR_TEAM4)
 			{
 				if(c4 >= 0)
 				{
@@ -784,6 +791,18 @@ void GetTeamCounts(entity ignore)
 					cb4 = cb4 + bvalue;
 				}
 			}
+		}
+	}
+
+	// if the player who has a forced team has not joined yet, reserve the spot
+	if(autocvar_g_campaign)
+	{
+		switch(autocvar_g_campaign_forceteam)
+		{
+			case 1: if(c1 == cb1) ++c1; break;
+			case 2: if(c2 == cb2) ++c2; break;
+			case 3: if(c3 == cb3) ++c3; break;
+			case 4: if(c4 == cb4) ++c4; break;
 		}
 	}
 }
@@ -889,33 +908,6 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 	// find out what teams are available
 	CheckAllowedTeams(pl);
-
-	// if we want the player in a certain team for campaign, force him there
-	if(autocvar_g_campaign)
-	if(clienttype(pl) == CLIENTTYPE_REAL) // only players, not bots
-	{
-		switch(autocvar_g_campaign_forceteam)
-		{
-			case 1:
-				SetPlayerColors(pl, COLOR_TEAM1 - 1);
-				LogTeamchange(pl.playerid, pl.team, 2);
-				return COLOR_TEAM1;
-			case 2:
-				SetPlayerColors(pl, COLOR_TEAM2 - 1);
-				LogTeamchange(pl.playerid, pl.team, 2);
-				return COLOR_TEAM2;
-			case 3:
-				SetPlayerColors(pl, COLOR_TEAM3 - 1);
-				LogTeamchange(pl.playerid, pl.team, 2);
-				return COLOR_TEAM3;
-			case 4:
-				SetPlayerColors(pl, COLOR_TEAM4 - 1);
-				LogTeamchange(pl.playerid, pl.team, 2);
-				return COLOR_TEAM4;
-			default:
-				break;
-		}
-	}
 
 	// if we don't care what team he ends up on, put him on whatever team he entered as.
 	// if he's not on a valid team, then let other code put him on the smallest team

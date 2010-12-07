@@ -1527,7 +1527,21 @@ void ClientConnect (void)
 	//	dom_player_join_team(self);
 
 	// identify the right forced team
-	if(PlayerInIDList(self, autocvar_g_forced_team_red))
+	if(autocvar_g_campaign)
+	{
+		if(clienttype(self) == CLIENTTYPE_REAL) // only players, not bots
+		{
+			switch(autocvar_g_campaign_forceteam)
+			{
+				case 1: self.team_forced = COLOR_TEAM1; break;
+				case 2: self.team_forced = COLOR_TEAM2; break;
+				case 3: self.team_forced = COLOR_TEAM3; break;
+				case 4: self.team_forced = COLOR_TEAM4; break;
+				default: self.team_forced = 0;
+			}
+		}
+	}
+	else if(PlayerInIDList(self, autocvar_g_forced_team_red))
 		self.team_forced = COLOR_TEAM1;
 	else if(PlayerInIDList(self, autocvar_g_forced_team_blue))
 		self.team_forced = COLOR_TEAM2;
