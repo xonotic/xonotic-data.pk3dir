@@ -47,11 +47,13 @@ void target_init_verify()
 		for(targ = world; (targ = find(targ, targetname, trigger.target)); )
 			if (targ.classname == "target_init" || targ.classname == "target_give" || targ.classname == "target_items")
 			{
-				targ.wait = -2;
+				trigger.wait = 0;
+				trigger.delay = 0;
+				targ.wait = 0;
 				targ.delay = 0;
 
-				setsize(targ, trigger.mins, trigger.maxs);
-				setorigin(targ, trigger.origin);
+				//setsize(targ, trigger.mins, trigger.maxs);
+				//setorigin(targ, trigger.origin);
 				//remove(trigger);
 			}
 }
@@ -59,7 +61,7 @@ void target_init_verify()
 void spawnfunc_target_init()
 {
 	self.spawnflags = 0; // remove all weapons except the ones listed below
-	self.netname = "laser uzi"; // keep these weapons through the remove trigger
+	self.netname = "shotgun"; // keep these weapons through the remove trigger
 	spawnfunc_target_items();
 	InitializeEntity(self, target_init_verify, INITPRIO_FINDTARGET);
 }

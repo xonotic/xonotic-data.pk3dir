@@ -881,7 +881,7 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 		else if(t < -1)
 			t = 0;
 		else if (g_race || g_cts)
-			t = (i == WEP_LASER);
+			t = (i == WEP_SHOTGUN);
 		else if (g_nexball)
 			t = 0; // weapon is set a few lines later
 		else

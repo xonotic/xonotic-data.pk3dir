@@ -742,7 +742,9 @@ void trigger_race_checkpoint_verify()
 		for(trigger = world; (trigger = find(trigger, classname, "trigger_multiple")); )
 			for(targ = world; (targ = find(targ, targetname, trigger.target)); )
 				if (targ.classname == "target_checkpoint" || targ.classname == "target_startTimer" || targ.classname == "target_stopTimer") {
-					targ.wait = -2;
+					trigger.wait = 0;
+					trigger.delay = 0;
+					targ.wait = 0;
 					targ.delay = 0;
 
                     // These just make the game crash on some maps with oddly shaped triggers. 
@@ -750,12 +752,15 @@ void trigger_race_checkpoint_verify()
                     // and often one of them just passed through without being registered. Hope it's fixed  in a better way now.
                     // (happened on item triggers too)
                     //
+					//targ.wait = -2;
+					//targ.delay = 0;
+
 					//setsize(targ, trigger.mins, trigger.maxs);
 					//setorigin(targ, trigger.origin);
 					//remove(trigger);
 				}
 	}
-	remove(self);
+	//remove(self);
 	self = oldself;
 }
 
