@@ -1111,7 +1111,13 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (bInputType == 1)
 			return true;
 
+		//FIXME: if a panel is highlighted, has the same pos_x and lays in the same level
+		//of other panels then next consecutive ctrl-tab will select the highlighted panel too
+		//(it should only after every other panel of the hud)
+		//It's a minor bug anyway, we can live with it
+
 		float starting_panel;
+		float old_tab_panel = tab_panel;
 		if (tab_panel == -1) //first press of TAB
 		{
 			if (highlightedPanel_prev != -1)
@@ -1133,6 +1139,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		float k, j, level, min_pos_x, max_pos_x;
 		vector candidate_pos;
 		float level_height = vid_conheight * 1/LEVELS_NUM;
+:find_tab_panel
 		level = floor(tab_panel_pos_y / level_height) * level_height; //starting level
 		if (!tab_backward)
 		{
@@ -1145,7 +1152,8 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			candidate_pos_x = 0;
 		}
 		tab_panel = -1;
-		for (k=1; k != LEVELS_NUM + 1; ++k)
+		k=0;
+		while(++k)
 		{
 			for(i = 0; i < HUD_PANEL_NUM; ++i)
 			{
@@ -1164,6 +1172,18 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			}
 			if (tab_panel != -1)
 				break;
+			if (k == LEVELS_NUM) //tab_panel not found
+			{
+				reset_tab_panels();
+				if (old_tab_panel == -2) //this prevents an infinite loop (should not happen normally)
+				{
+					tab_panel = -1;
+					return true;
+				}
+				starting_panel = old_tab_panel;
+				old_tab_panel = -2;
+				goto find_tab_panel; //u must find tab_panel!
+			}
 			if (!tab_backward)
 			{
 				level = mod(level + level_height, vid_conheight);
@@ -1178,17 +1198,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			}
 		}
 
-		if (tab_panel == -1) //this happens if we ctrl-TABed every other panel
-			reset_tab_panels();
-		else
-		{
-			HUD_Panel_UpdatePosSizeForId(tab_panel)
-			//this check avoids infinite cycling of panels in the same level and
-			//with the same pos_x if one of these panels is highlighted
-			//although the highlighted panel gets tabbed more than once (FIXME)
-			if (tab_panel != highlightedPanel_prev)
-				tab_panels[tab_panel] = tab_panel;
-		}
+		tab_panels[tab_panel] = tab_panel;
 	}
 	else if(nPrimary == K_ESCAPE)
 	{
