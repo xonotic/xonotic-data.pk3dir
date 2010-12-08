@@ -1039,9 +1039,15 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 void HUD_Panel_EnableMenu();
 float tab_panels[HUD_PANEL_NUM];
-float tab_panel;
+float tab_panel, tab_backward;
 vector tab_panel_pos, tab_panel_size;
 void HUD_Panel_FirstInDrawQ(float id);
+void reset_tab_panels()
+{
+	int i;
+	for(i = 0; i < HUD_PANEL_NUM; ++i)
+		tab_panels[i] = -1;
+}
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	string s;
@@ -1077,17 +1083,16 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	{
 		if (bInputType == 1)
 		{
-			//switch to selected panel when ctrl has been released
 			if (tab_panel != -1)
 			{
+				//switch to selected panel when ctrl has been released
 				highlightedPanel_prev = tab_panel;
 				HUD_Panel_FirstInDrawQ(highlightedPanel_prev);
 			}
-
-			tab_panel = -1;
-			for(i = 0; i < HUD_PANEL_NUM; ++i)
-				tab_panels[i] = -1;
 		}
+		//reset on press AND on release
+		tab_panel = -1;
+		reset_tab_panels();
 	}
 
 	if(nPrimary == K_MOUSE1)
@@ -1106,56 +1111,84 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (bInputType == 1)
 			return true;
 
-		if (tab_panel == -1)
+		float starting_panel;
+		if (tab_panel == -1) //first press of TAB
 		{
 			if (highlightedPanel_prev != -1)
 				HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev)
 			else
 				panel_pos = '0 0 0';
+			starting_panel = highlightedPanel_prev; //can be -1, it means no starting panel
 			tab_panel_pos = panel_pos; //to compute level
 		}
+		else
+		{
+			if ( ((!tab_backward) && (hudShiftState & S_SHIFT)) || (tab_backward && !(hudShiftState & S_SHIFT)) ) //tab direction changed?
+				reset_tab_panels();
+			starting_panel = tab_panel;
+		}
+		tab_backward = (hudShiftState & S_SHIFT);
 
 		const float LEVELS_NUM = 4;
-		float k, j, level, min_pos_x, candidate_pos_x;
+		float k, j, level, min_pos_x, max_pos_x;
+		vector candidate_pos;
 		float level_height = vid_conheight * 1/LEVELS_NUM;
 		level = floor(tab_panel_pos_y / level_height) * level_height; //starting level
-		min_pos_x = tab_panel_pos_x;
-		candidate_pos_x = vid_conwidth;
+		if (!tab_backward)
+		{
+			min_pos_x = tab_panel_pos_x;
+			candidate_pos_x = vid_conwidth;
+		}
+		else
+		{
+			max_pos_x = tab_panel_pos_x;
+			candidate_pos_x = 0;
+		}
 		tab_panel = -1;
 		for (k=1; k != LEVELS_NUM + 1; ++k)
 		{
 			for(i = 0; i < HUD_PANEL_NUM; ++i)
 			{
-				if (i == tab_panels[i] || i == highlightedPanel_prev)
+				if (i == tab_panels[i] || i == starting_panel)
 					continue;
 				HUD_Panel_UpdatePosSizeForId(i)
 				if (panel_pos_y >= level && (panel_pos_y - level) < level_height)
-				if (panel_pos_x >= min_pos_x && panel_pos_x <= candidate_pos_x)
+				if (  ( !tab_backward && panel_pos_x >= min_pos_x && (panel_pos_x < candidate_pos_x || (panel_pos_x == candidate_pos_x && panel_pos_y <= candidate_pos_y)) )
+					|| ( tab_backward && panel_pos_x <= max_pos_x && (panel_pos_x > candidate_pos_x || (panel_pos_x == candidate_pos_x && panel_pos_y >= candidate_pos_y)) )  )
 				{
 					tab_panel = i;
 					tab_panel_pos = panel_pos;
 					tab_panel_size = panel_size;
-					candidate_pos_x = tab_panel_pos_x;
+					candidate_pos = tab_panel_pos;
 				}
 			}
 			if (tab_panel != -1)
 				break;
-			level = mod(level + k * level_height, vid_conheight);
-			min_pos_x = 0;
-			candidate_pos_x = vid_conwidth;
+			if (!tab_backward)
+			{
+				level = mod(level + level_height, vid_conheight);
+				min_pos_x = 0;
+				candidate_pos_x = vid_conwidth;
+			}
+			else
+			{
+				level = mod(level - level_height, vid_conheight);
+				max_pos_x = vid_conwidth;
+				candidate_pos_x = 0;
+			}
 		}
 
-		if (tab_panel == -1) //this happens if we ctrl-TABed every other panels
+		if (tab_panel == -1) //this happens if we ctrl-TABed every other panel
+			reset_tab_panels();
+		else
 		{
-			tab_panel = highlightedPanel_prev;
-			tab_panel_pos = panel_pos;
-			tab_panel_size = panel_size;
-			for(i = 0; i < HUD_PANEL_NUM; ++i)
-				tab_panels[i] = -1;
+			HUD_Panel_UpdatePosSizeForId(tab_panel)
+			//this check avoids infinite cycling of panels in the same level and
+			//with the same pos_x if one of these panels is highlighted
+			//although the highlighted panel gets tabbed more than once (FIXME)
+			if (tab_panel != highlightedPanel_prev)
+				tab_panels[tab_panel] = tab_panel;
 		}
-
-		HUD_Panel_UpdatePosSizeForId(tab_panel)
-		tab_panels[tab_panel] = tab_panel;
 	}
 	else if(nPrimary == K_ESCAPE)
 	{
