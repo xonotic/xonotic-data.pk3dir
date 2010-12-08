@@ -1083,6 +1083,7 @@ float autocvar_sv_dodging_sound;
 float autocvar_sv_dodging_up_speed;
 float autocvar_sv_dodging_wall_distance_threshold;
 float autocvar_sv_dodging_wall_dodging;
+float autocvar_sv_doublejump;
 float autocvar_sv_eventlog;
 float autocvar_sv_eventlog_console;
 float autocvar_sv_eventlog_files;
