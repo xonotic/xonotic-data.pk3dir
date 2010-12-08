@@ -1812,6 +1812,8 @@ void InitializeEntitiesRun()
         //dprint("Delayed initialization: ", self.classname, "\n");
         if(func != func_null)
             func();
+        else
+            dprint("^1WARNING: Skipped initialization: ", self.classname, "\n");
         self = e;
     }
 }
