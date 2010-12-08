@@ -1038,6 +1038,10 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 }
 
 void HUD_Panel_EnableMenu();
+float tab_panels[HUD_PANEL_NUM];
+float tab_panel;
+vector tab_panel_pos, tab_panel_size;
+void HUD_Panel_FirstInDrawQ(float id);
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	string s;
@@ -1069,6 +1073,23 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
 	}
 
+	if(nPrimary == K_CTRL)
+	{
+		if (bInputType == 1)
+		{
+			//switch to selected panel when ctrl has been released
+			if (tab_panel != -1)
+			{
+				highlightedPanel_prev = tab_panel;
+				HUD_Panel_FirstInDrawQ(highlightedPanel_prev);
+			}
+
+			tab_panel = -1;
+			for(i = 0; i < HUD_PANEL_NUM; ++i)
+				tab_panels[i] = -1;
+		}
+	}
+
 	if(nPrimary == K_MOUSE1)
 	{
 		if(bInputType == 0) { // key pressed
@@ -1079,6 +1100,62 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			mouseClicked = 0;
 			return true;
 		}
+	}
+	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) //TODO: move this case down
+	{
+		if (bInputType == 1)
+			return true;
+
+		if (tab_panel == -1)
+		{
+			if (highlightedPanel_prev != -1)
+				HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev)
+			else
+				panel_pos = '0 0 0';
+			tab_panel_pos = panel_pos; //to compute level
+		}
+
+		const float LEVELS_NUM = 4;
+		float k, j, level, min_pos_x, candidate_pos_x;
+		float level_height = vid_conheight * 1/LEVELS_NUM;
+		level = floor(tab_panel_pos_y / level_height) * level_height; //starting level
+		min_pos_x = tab_panel_pos_x;
+		candidate_pos_x = vid_conwidth;
+		tab_panel = -1;
+		for (k=1; k != LEVELS_NUM + 1; ++k)
+		{
+			for(i = 0; i < HUD_PANEL_NUM; ++i)
+			{
+				if (i == tab_panels[i] || i == highlightedPanel_prev)
+					continue;
+				HUD_Panel_UpdatePosSizeForId(i)
+				if (panel_pos_y >= level && (panel_pos_y - level) < level_height)
+				if (panel_pos_x >= min_pos_x && panel_pos_x <= candidate_pos_x)
+				{
+					tab_panel = i;
+					tab_panel_pos = panel_pos;
+					tab_panel_size = panel_size;
+					candidate_pos_x = tab_panel_pos_x;
+				}
+			}
+			if (tab_panel != -1)
+				break;
+			level = mod(level + k * level_height, vid_conheight);
+			min_pos_x = 0;
+			candidate_pos_x = vid_conwidth;
+		}
+
+		if (tab_panel == -1) //this happens if we ctrl-TABed every other panels
+		{
+			tab_panel = highlightedPanel_prev;
+			tab_panel_pos = panel_pos;
+			tab_panel_size = panel_size;
+			for(i = 0; i < HUD_PANEL_NUM; ++i)
+				tab_panels[i] = -1;
+		}
+
+		HUD_Panel_UpdatePosSizeForId(tab_panel)
+		tab_panels[tab_panel] = tab_panel;
 	}
 	else if(nPrimary == K_ESCAPE)
 	{
@@ -5204,6 +5281,9 @@ void HUD_Main (void)
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)
 		return;
+
+	if(autocvar__hud_configure && tab_panel != -1)
+		drawfill(tab_panel_pos, tab_panel_size, '1 1 1', .3, DRAWFLAG_NORMAL);
 
 	// Drawing stuff
 	if (hud_skin_path != autocvar_hud_skin)
