@@ -1040,7 +1040,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 void HUD_Panel_EnableMenu();
 float tab_panels[HUD_PANEL_NUM];
 float tab_panel, tab_backward;
-vector tab_panel_pos, tab_panel_size;
+vector tab_panel_pos;
 void HUD_Panel_FirstInDrawQ(float id);
 void reset_tab_panels()
 {
@@ -1166,7 +1166,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 				{
 					tab_panel = i;
 					tab_panel_pos = panel_pos;
-					tab_panel_size = panel_size;
 					candidate_pos = tab_panel_pos;
 				}
 			}
@@ -5325,9 +5324,6 @@ void HUD_Main (void)
 	if(!autocvar__hud_configure && !hud_fade_alpha)
 		return;
 
-	if(autocvar__hud_configure && tab_panel != -1)
-		drawfill(tab_panel_pos, tab_panel_size, '1 1 1', .3, DRAWFLAG_NORMAL);
-
 	// Drawing stuff
 	if (hud_skin_path != autocvar_hud_skin)
 	{
@@ -5418,6 +5414,12 @@ void HUD_Main (void)
 
 	if (autocvar__hud_configure && spectatee_status && hud_configure_prev == -1) // try to join if we are in hud_configure mode, but still spectating, and in the first frame (in order to get rid of motd when launching a server via the menu "HUD Setup" button)
 		localcmd("cmd selectteam auto; cmd join\n");
+
+	if(autocvar__hud_configure && tab_panel != -1)
+	{
+		HUD_Panel_UpdatePosSizeForId(tab_panel)
+		drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .2, DRAWFLAG_NORMAL);
+	}
 
 	hud_configure_prev = autocvar__hud_configure;
 
