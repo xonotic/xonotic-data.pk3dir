@@ -1263,6 +1263,11 @@ void KillIndicator_Think()
 		ClientKill_Now(); // no oldself needed
 		return;
 	}
+    else if(g_cts)
+    {
+        self.nextthink = time + 1;
+        self.cnt -= 1;
+    }
 	else
 	{
 		if(self.cnt <= 10)
@@ -1297,7 +1302,13 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 
 	self.killindicator_teamchange = targetteam;
 
-	if(!self.killindicator)
+    if(g_cts) // allow an instant kill in CTS
+    {
+        ClientKill_Now();
+        return;
+    }
+
+    else if(!self.killindicator)
 	{
 		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO)
 		{
@@ -1355,20 +1366,14 @@ void ClientKill (void)
 		ClientKill_TeamChange(0);
 }
 
-void CTS_ClientKill_Think (void)
+void CTS_ClientKill (entity e) // silent version of ClientKill
 {
-	self = self.owner; // set self to the player to be killed
-	sprint(self, "^1You were killed in order to prevent cheating!");
-	ClientKill_Now();
-}
-
-void CTS_ClientKill (float t) // silent version of ClientKill
-{
-	entity e;
-	e = spawn();
-	e.owner = self;
-	e.think = CTS_ClientKill_Think;
-	e.nextthink = t;
+    e.killindicator = spawn();
+    e.killindicator.owner = e;
+    e.killindicator.think = KillIndicator_Think;
+    e.killindicator.nextthink = time + (e.lip) * 0.05;
+    e.killindicator.cnt = ceil(autocvar_g_cts_finish_kill_delay);
+    e.lip = 0;
 }
 
 void DoTeamChange(float destteam)

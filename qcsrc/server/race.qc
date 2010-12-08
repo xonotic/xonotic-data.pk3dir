@@ -308,7 +308,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 					race_setTime(GetMapname(), t, e.crypto_idfp, e.netname, e);
 					if(g_cts && autocvar_g_cts_finish_kill_delay)
 					{
-						CTS_ClientKill(autocvar_g_cts_finish_kill_delay);
+						CTS_ClientKill(e);
 					}
 				}
 				if(t < recordtime || recordtime == 0)
@@ -745,8 +745,13 @@ void trigger_race_checkpoint_verify()
 					targ.wait = -2;
 					targ.delay = 0;
 
-					setsize(targ, trigger.mins, trigger.maxs);
-					setorigin(targ, trigger.origin);
+                    // These just make the game crash on some maps with oddly shaped triggers. 
+                    // (on the other hand they used to fix the case when two players ran through a checkpoint at once, 
+                    // and often one of them just passed through without being registered. Hope it's fixed  in a better way now.
+                    // (happened on item triggers too)
+                    //
+					//setsize(targ, trigger.mins, trigger.maxs);
+					//setorigin(targ, trigger.origin);
 					//remove(trigger);
 				}
 	}
