@@ -1810,7 +1810,8 @@ void InitializeEntitiesRun()
             self = e_old;
         }
         //dprint("Delayed initialization: ", self.classname, "\n");
-        func();
+        if(func != func_null)
+            func();
         self = e;
     }
 }
