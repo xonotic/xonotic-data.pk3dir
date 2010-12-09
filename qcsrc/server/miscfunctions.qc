@@ -1209,6 +1209,8 @@ void readlevelcvars(void)
 	sv_gentle = cvar("sv_gentle");
 	sv_foginterval = cvar("sv_foginterval");
 	g_cloaked = cvar("g_cloaked");
+    if(g_cts)
+        g_cloaked = 1; // always enable cloak in CTS
 	g_jump_grunt = cvar("g_jump_grunt");
 	g_footsteps = cvar("g_footsteps");
 	g_grappling_hook = cvar("g_grappling_hook");

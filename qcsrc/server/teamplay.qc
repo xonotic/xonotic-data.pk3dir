@@ -517,7 +517,7 @@ void PrintWelcomeMessage(entity pl)
 		modifications = strcat(modifications, ", No start weapons");
 	if(autocvar_sv_gravity < 800)
 		modifications = strcat(modifications, ", Low gravity");
-	if(g_cloaked)
+	if(cvar("g_cloaked"))
 		modifications = strcat(modifications, ", Cloaked");
 	if(g_grappling_hook)
 		modifications = strcat(modifications, ", Hook");
