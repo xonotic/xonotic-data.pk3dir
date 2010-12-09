@@ -3526,7 +3526,7 @@ void HUD_Score(void)
 		drawstring_aspect(pos, timer, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawfont = hud_font;
 	} else if (!teamplay) { // non-teamgames
-		if ((spectatee_status == -1 && !autocvar__hud_configure) || cvar("hud_panel_score_rankings"))
+		if ((spectatee_status == -1 && !autocvar__hud_configure) || autocvar_hud_panel_score_rankings)
 		{
 #define SCOREPANEL_MAX_ENTRIES 6
 #define SCOREPANEL_ASPECTRATIO 2
@@ -3549,7 +3549,7 @@ void HUD_Score(void)
 					//simulate my score is lower than all displayed players,
 					//so that I don't appear at all showing pure rankings.
 					//This is to better show the difference between the 2 ranking views
-					if (i == entries-1 && cvar("hud_panel_score_rankings") == 1)
+					if (i == entries-1 && autocvar_hud_panel_score_rankings == 1)
 					{
 						rgb = '1 1 0';
 						drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, 0.3 * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -3579,7 +3579,7 @@ void HUD_Score(void)
 					continue;
 
 				if (i == entries-1 && !me_printed && pl != me)
-				if (cvar("hud_panel_score_rankings") == 1 && spectatee_status != -1)
+				if (autocvar_hud_panel_score_rankings == 1 && spectatee_status != -1)
 				{
 					for (pl = me.sort_next; pl; pl = pl.sort_next)
 						if (pl.team != COLOR_SPECTATOR)
