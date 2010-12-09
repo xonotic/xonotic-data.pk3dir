@@ -1748,6 +1748,14 @@ void objerror(string s)
     objerror_builtin(s);
 }
 
+.float remove_except_protected_forbidden;
+void remove_except_protected(entity e)
+{
+	if(e.remove_except_protected_forbidden)
+		error("not allowed to remove this at this point");
+	remove_builtin(e);
+}
+
 void remove_unsafely(entity e)
 {
     remove_builtin(e);
@@ -1798,6 +1806,11 @@ void InitializeEntitiesRun()
     entity startoflist;
     startoflist = initialize_entity_first;
     initialize_entity_first = world;
+    remove = remove_except_protected;
+    for (self = startoflist; self; self = self.initialize_entity_next)
+    {
+	self.remove_except_protected_forbidden = 1;
+    }
     for (self = startoflist; self; )
     {
         entity e;
@@ -1807,6 +1820,7 @@ void InitializeEntitiesRun()
         self.initialize_entity_order = 0;
         self.initialize_entity = func_null;
         self.initialize_entity_next = world;
+	self.remove_except_protected_forbidden = 0;
         if (self.classname == "initialize_entity")
         {
             entity e_old;
@@ -1824,6 +1838,7 @@ void InitializeEntitiesRun()
         }
         self = e;
     }
+    remove = remove_unsafely;
 }
 
 .float uncustomizeentityforclient_set;
