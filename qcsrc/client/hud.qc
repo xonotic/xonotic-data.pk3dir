@@ -1706,19 +1706,12 @@ void HUD_Weapons(void)
 	vector wpnpos;
 	vector wpnsize;
 	
-	float fullammo_shells, fullammo_nails, fullammo_rockets, fullammo_cells, fullammo_fuel;
 	vector ammo_color;
 	float ammo_alpha;
 	wpnsize = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
 	float barsize_x, barsize_y, baroffset_x, baroffset_y;
-	float show_ammo = autocvar_hud_panel_weapons_ammo;
-	if (show_ammo)
+	if (autocvar_hud_panel_weapons_ammo)
 	{
-		fullammo_shells = autocvar_hud_panel_weapons_ammo_full_shells;
-		fullammo_nails = autocvar_hud_panel_weapons_ammo_full_nails;
-		fullammo_rockets = autocvar_hud_panel_weapons_ammo_full_rockets;
-		fullammo_cells = autocvar_hud_panel_weapons_ammo_full_cells;
-		fullammo_fuel = autocvar_hud_panel_weapons_ammo_full_fuel;
 		ammo_color = stov(autocvar_hud_panel_weapons_ammo_color);
 		ammo_alpha = panel_fg_alpha * autocvar_hud_panel_weapons_ammo_alpha;
 
@@ -1794,7 +1787,7 @@ void HUD_Weapons(void)
 				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * wpnsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw ammo status bar
-			if(show_ammo && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
+			if(autocvar_hud_panel_weapons_ammo && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
 			{
 				a = 0;
 				type = GetAmmoTypeForWep(weapid);
@@ -1804,11 +1797,11 @@ void HUD_Weapons(void)
 				if(a > 0)
 				{
 					switch(type) {
-						case 0: fullammo = fullammo_shells; break;
-						case 1: fullammo = fullammo_nails; break;
-						case 2: fullammo = fullammo_rockets; break;
-						case 3: fullammo = fullammo_cells; break;
-						case 4: fullammo = fullammo_fuel; break;
+						case 0: fullammo = autocvar_hud_panel_weapons_ammo_full_shells; break;
+						case 1: fullammo = autocvar_hud_panel_weapons_ammo_full_nails; break;
+						case 2: fullammo = autocvar_hud_panel_weapons_ammo_full_rockets; break;
+						case 3: fullammo = autocvar_hud_panel_weapons_ammo_full_cells; break;
+						case 4: fullammo = autocvar_hud_panel_weapons_ammo_full_fuel; break;
 						default: fullammo = 60;
 					}
 
@@ -2200,7 +2193,7 @@ void HUD_Powerups(void) {
 	drawfont = hud_bigfont;
 	float baralign = autocvar_hud_panel_powerups_baralign;
 	float iconalign = autocvar_hud_panel_powerups_iconalign;
-	float progressbar = autocvar_hud_panel_powerups_progressbar;
+
 	float panel_ar = mySize_x/mySize_y;
 	float is_vertical = (panel_ar < 1);
 	if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
@@ -2208,7 +2201,7 @@ void HUD_Powerups(void) {
         barsize = eX * 0.5 * mySize_x + eY * mySize_y;
 		if(leftcnt)
 		{
-			if(progressbar)
+			if(autocvar_hud_panel_powerups_progressbar)
 			{
 				HUD_Panel_GetProgressBarColorForString(leftname);
 				HUD_Panel_DrawProgressBar(pos, barsize, leftprogressname, leftcnt/30, is_vertical, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
@@ -2225,7 +2218,7 @@ void HUD_Powerups(void) {
 		if(rightcnt)
 		{
 			pos_x += barsize_x;
-			if(progressbar)
+			if(autocvar_hud_panel_powerups_progressbar)
 			{
 				HUD_Panel_GetProgressBarColorForString(rightname);
 				HUD_Panel_DrawProgressBar(pos, barsize, rightprogressname, rightcnt/30, is_vertical, (baralign == 1 || baralign == 3), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
@@ -2244,7 +2237,7 @@ void HUD_Powerups(void) {
         barsize = eX * mySize_x + eY * 0.5 * mySize_y;
 		if(leftcnt)
 		{
-			if(progressbar)
+			if(autocvar_hud_panel_powerups_progressbar)
 			{
 				HUD_Panel_GetProgressBarColorForString(leftname);
 				HUD_Panel_DrawProgressBar(pos, barsize, leftprogressname, leftcnt/30, is_vertical, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
@@ -2261,7 +2254,7 @@ void HUD_Powerups(void) {
 		if(rightcnt)
 		{
 			pos_y += barsize_y;
-			if(progressbar)
+			if(autocvar_hud_panel_powerups_progressbar)
 			{
 				HUD_Panel_GetProgressBarColorForString(rightname);
 				HUD_Panel_DrawProgressBar(pos, barsize, rightprogressname, rightcnt/30, is_vertical, (baralign == 1 || baralign == 3), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
@@ -2322,7 +2315,6 @@ void HUD_HealthArmor(void)
 	drawfont = hud_bigfont;
 	float baralign = autocvar_hud_panel_healtharmor_baralign;
 	float iconalign = autocvar_hud_panel_healtharmor_iconalign;
-	float progressbar = autocvar_hud_panel_healtharmor_progressbar;
 
     float maxhealth = autocvar_hud_panel_healtharmor_maxhealth;
     float maxarmor = autocvar_hud_panel_healtharmor_maxarmor;
@@ -2339,7 +2331,7 @@ void HUD_HealthArmor(void)
 		if(v_z) // NOT fully armored
 		{
 			biggercount = "health";
-			if(progressbar)
+			if(autocvar_hud_panel_healtharmor_progressbar)
 			{
 				HUD_Panel_GetProgressBarColor(health);
 				HUD_Panel_DrawProgressBar(pos, mySize, autocvar_hud_panel_healtharmor_progressbar_health, x/maxtotal, 0, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2351,7 +2343,7 @@ void HUD_HealthArmor(void)
 		else
 		{
 			biggercount = "armor";
-			if(progressbar)
+			if(autocvar_hud_panel_healtharmor_progressbar)
 			{
 				HUD_Panel_GetProgressBarColor(armor);
 				HUD_Panel_DrawProgressBar(pos, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, x/maxtotal, 0, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2416,7 +2408,7 @@ void HUD_HealthArmor(void)
             barsize = eX * 0.5 * mySize_x + eY * mySize_y;
 			if(leftactive)
 			{
-				if(progressbar)
+				if(autocvar_hud_panel_healtharmor_progressbar)
 				{
 					HUD_Panel_GetProgressBarColorForString(leftname);
 					HUD_Panel_DrawProgressBar(pos, barsize, leftprogressname, leftcnt/leftmax, is_vertical, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2427,7 +2419,7 @@ void HUD_HealthArmor(void)
 
 			if(rightactive)
 			{
-				if(progressbar)
+				if(autocvar_hud_panel_healtharmor_progressbar)
 				{
 					HUD_Panel_GetProgressBarColorForString(rightname);
 					HUD_Panel_DrawProgressBar(pos + eX * 0.5 * mySize_x, barsize, rightprogressname, rightcnt/rightmax, is_vertical, (baralign == 1 || baralign == 3), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2451,7 +2443,7 @@ void HUD_HealthArmor(void)
             barsize = eX * mySize_x + eY * 0.5 * mySize_y;
 			if(leftactive)
 			{
-				if(progressbar)
+				if(autocvar_hud_panel_healtharmor_progressbar)
 				{
 					HUD_Panel_GetProgressBarColorForString(leftname);
 					HUD_Panel_DrawProgressBar(pos, barsize, leftprogressname, leftcnt/leftmax, is_vertical, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2462,7 +2454,7 @@ void HUD_HealthArmor(void)
 
 			if(rightactive)
 			{
-				if(progressbar)
+				if(autocvar_hud_panel_healtharmor_progressbar)
 				{
 					HUD_Panel_GetProgressBarColorForString(rightname);
 					HUD_Panel_DrawProgressBar(pos + eY * 0.5 * mySize_y, barsize, rightprogressname, rightcnt/rightmax, is_vertical, (baralign == 1 || baralign == 3), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
