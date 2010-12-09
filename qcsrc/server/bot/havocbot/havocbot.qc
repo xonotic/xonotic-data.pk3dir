@@ -507,6 +507,10 @@ void havocbot_movetogoal()
 				}
 				return;
 			}
+
+			// Don't chase players while using a jump pad
+			if(self.goalcurrent.classname=="player" || self.goalstack01.classname=="player")
+				return;
 		}
 	}
 	else if(self.aistatus & AI_STATUS_OUT_JUMPPAD)
