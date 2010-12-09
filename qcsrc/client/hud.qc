@@ -1075,6 +1075,17 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 }
 
+void HUD_Panel_EnableMenu();
+float tab_panels[HUD_PANEL_NUM];
+float tab_panel, tab_backward;
+vector tab_panel_pos;
+void HUD_Panel_FirstInDrawQ(float id);
+void reset_tab_panels()
+{
+	int i;
+	for(i = 0; i < HUD_PANEL_NUM; ++i)
+		tab_panels[i] = -1;
+}
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	string s;
@@ -1106,6 +1117,22 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
 	}
 
+	if(nPrimary == K_CTRL)
+	{
+		if (bInputType == 1)
+		{
+			if (tab_panel != -1)
+			{
+				//switch to selected panel when ctrl has been released
+				highlightedPanel_prev = tab_panel;
+				HUD_Panel_FirstInDrawQ(highlightedPanel_prev);
+			}
+		}
+		//reset on press AND on release
+		tab_panel = -1;
+		reset_tab_panels();
+	}
+
 	if(nPrimary == K_MOUSE1)
 	{
 		if(bInputType == 0) { // key pressed
@@ -1116,6 +1143,99 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			mouseClicked = 0;
 			return true;
 		}
+	}
+	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) //TODO: move this case down
+	{
+		if (bInputType == 1)
+			return true;
+
+		//FIXME: if a panel is highlighted, has the same pos_x and lays in the same level
+		//of other panels then next consecutive ctrl-tab will select the highlighted panel too
+		//(it should only after every other panel of the hud)
+		//It's a minor bug anyway, we can live with it
+
+		float starting_panel;
+		float old_tab_panel = tab_panel;
+		if (tab_panel == -1) //first press of TAB
+		{
+			if (highlightedPanel_prev != -1)
+				HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev)
+			else
+				panel_pos = '0 0 0';
+			starting_panel = highlightedPanel_prev; //can be -1, it means no starting panel
+			tab_panel_pos = panel_pos; //to compute level
+		}
+		else
+		{
+			if ( ((!tab_backward) && (hudShiftState & S_SHIFT)) || (tab_backward && !(hudShiftState & S_SHIFT)) ) //tab direction changed?
+				reset_tab_panels();
+			starting_panel = tab_panel;
+		}
+		tab_backward = (hudShiftState & S_SHIFT);
+
+		const float LEVELS_NUM = 4;
+		float k, j, level, min_pos_x, max_pos_x;
+		vector candidate_pos;
+		float level_height = vid_conheight * 1/LEVELS_NUM;
+:find_tab_panel
+		level = floor(tab_panel_pos_y / level_height) * level_height; //starting level
+		if (!tab_backward)
+		{
+			min_pos_x = tab_panel_pos_x;
+			candidate_pos_x = vid_conwidth;
+		}
+		else
+		{
+			max_pos_x = tab_panel_pos_x;
+			candidate_pos_x = 0;
+		}
+		tab_panel = -1;
+		k=0;
+		while(++k)
+		{
+			for(i = 0; i < HUD_PANEL_NUM; ++i)
+			{
+				if (i == tab_panels[i] || i == starting_panel)
+					continue;
+				HUD_Panel_UpdatePosSizeForId(i)
+				if (panel_pos_y >= level && (panel_pos_y - level) < level_height)
+				if (  ( !tab_backward && panel_pos_x >= min_pos_x && (panel_pos_x < candidate_pos_x || (panel_pos_x == candidate_pos_x && panel_pos_y <= candidate_pos_y)) )
+					|| ( tab_backward && panel_pos_x <= max_pos_x && (panel_pos_x > candidate_pos_x || (panel_pos_x == candidate_pos_x && panel_pos_y >= candidate_pos_y)) )  )
+				{
+					tab_panel = i;
+					tab_panel_pos = panel_pos;
+					candidate_pos = tab_panel_pos;
+				}
+			}
+			if (tab_panel != -1)
+				break;
+			if (k == LEVELS_NUM) //tab_panel not found
+			{
+				reset_tab_panels();
+				if (old_tab_panel == -2) //this prevents an infinite loop (should not happen normally)
+				{
+					tab_panel = -1;
+					return true;
+				}
+				starting_panel = old_tab_panel;
+				old_tab_panel = -2;
+				goto find_tab_panel; //u must find tab_panel!
+			}
+			if (!tab_backward)
+			{
+				level = mod(level + level_height, vid_conheight);
+				min_pos_x = 0;
+				candidate_pos_x = vid_conwidth;
+			}
+			else
+			{
+				level = mod(level - level_height, vid_conheight);
+				max_pos_x = vid_conwidth;
+				candidate_pos_x = 0;
+			}
+		}
+
+		tab_panels[tab_panel] = tab_panel;
 	}
 	else if(nPrimary == K_ESCAPE)
 	{
@@ -1201,10 +1321,20 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 		HUD_Panel_Arrow_Action(nPrimary); //move or resize panel
 	}
+	else if(nPrimary == K_ENTER || nPrimary == K_SPACE || nPrimary == K_KP_ENTER)
+	{
+		if (bInputType == 1)
+			return true;
+		if (highlightedPanel_prev != -1)
+		{
+			highlightedPanel = highlightedPanel_prev;
+			HUD_Panel_EnableMenu();
+		}
+	}
 	else if(hit_con_bind)
 		return false;
 
-	return true; // Suppress ALL other input
+	return true;
 }
 
 float HUD_Panel_HighlightCheck()
@@ -1362,6 +1492,13 @@ void HUD_Panel_Highlight()
 	}
 }
 
+void HUD_Panel_EnableMenu()
+{
+	menu_enabled = 2;
+	menu_enabled_time = time;
+	HUD_Panel_GetName(highlightedPanel);
+	localcmd("menu_showhudoptions ", panel_name, "\n");
+}
 float highlightcheck;
 vector prev_pos, prev_size;
 void HUD_Panel_Mouse()
@@ -1445,10 +1582,7 @@ void HUD_Panel_Mouse()
 		if(time - prevMouseClickedTime < 0.4 && prevMouseClicked == 0 && prevMouseClickedPos == mousepos && highlightedPanel >= 0)
 		{
 			mouseClicked = 0; // to prevent spam, I guess.
-			menu_enabled = 2;
-			menu_enabled_time = time;
-			HUD_Panel_GetName(highlightedPanel);
-			localcmd("menu_showhudoptions ", panel_name, "\n");
+			HUD_Panel_EnableMenu();
 			return;
 		}
 		if(prevMouseClicked == 0)
@@ -5288,6 +5422,12 @@ void HUD_Main (void)
 
 	if (autocvar__hud_configure && spectatee_status && hud_configure_prev == -1) // try to join if we are in hud_configure mode, but still spectating, and in the first frame (in order to get rid of motd when launching a server via the menu "HUD Setup" button)
 		localcmd("cmd selectteam auto; cmd join\n");
+
+	if(autocvar__hud_configure && tab_panel != -1)
+	{
+		HUD_Panel_UpdatePosSizeForId(tab_panel)
+		drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .2, DRAWFLAG_NORMAL);
+	}
 
 	hud_configure_prev = autocvar__hud_configure;
 
