@@ -1173,22 +1173,14 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		}
 		tab_backward = (hudShiftState & S_SHIFT);
 
-		const float LEVELS_NUM = 4;
-		float k, j, level, min_pos_x, max_pos_x;
+		float k, level, start_pos_x;
 		vector candidate_pos;
-		float level_height = vid_conheight * 1/LEVELS_NUM;
+		const float LEVELS_NUM = 4;
+		const float level_height = vid_conheight / LEVELS_NUM;
 :find_tab_panel
 		level = floor(tab_panel_pos_y / level_height) * level_height; //starting level
-		if (!tab_backward)
-		{
-			min_pos_x = tab_panel_pos_x;
-			candidate_pos_x = vid_conwidth;
-		}
-		else
-		{
-			max_pos_x = tab_panel_pos_x;
-			candidate_pos_x = 0;
-		}
+		candidate_pos_x = (!tab_backward) ? vid_conwidth : 0;
+		start_pos_x = tab_panel_pos_x;
 		tab_panel = -1;
 		k=0;
 		while(++k)
@@ -1199,12 +1191,11 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 					continue;
 				HUD_Panel_UpdatePosSizeForId(i)
 				if (panel_pos_y >= level && (panel_pos_y - level) < level_height)
-				if (  ( !tab_backward && panel_pos_x >= min_pos_x && (panel_pos_x < candidate_pos_x || (panel_pos_x == candidate_pos_x && panel_pos_y <= candidate_pos_y)) )
-					|| ( tab_backward && panel_pos_x <= max_pos_x && (panel_pos_x > candidate_pos_x || (panel_pos_x == candidate_pos_x && panel_pos_y >= candidate_pos_y)) )  )
+				if (  ( !tab_backward && panel_pos_x >= start_pos_x && (panel_pos_x < candidate_pos_x || (panel_pos_x == candidate_pos_x && panel_pos_y <= candidate_pos_y)) )
+					|| ( tab_backward && panel_pos_x <= start_pos_x && (panel_pos_x > candidate_pos_x || (panel_pos_x == candidate_pos_x && panel_pos_y >= candidate_pos_y)) )  )
 				{
 					tab_panel = i;
-					tab_panel_pos = panel_pos;
-					candidate_pos = tab_panel_pos;
+					tab_panel_pos = candidate_pos = panel_pos;
 				}
 			}
 			if (tab_panel != -1)
@@ -1224,13 +1215,13 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			if (!tab_backward)
 			{
 				level = mod(level + level_height, vid_conheight);
-				min_pos_x = 0;
+				start_pos_x = 0;
 				candidate_pos_x = vid_conwidth;
 			}
 			else
 			{
 				level = mod(level - level_height, vid_conheight);
-				max_pos_x = vid_conwidth;
+				start_pos_x = vid_conwidth;
 				candidate_pos_x = 0;
 			}
 		}
