@@ -112,7 +112,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 
 			// Rate the item only if no one needs it, or if an enemy is closer to it
 			if ( (enemy_distance < friend_distance && distance < enemy_distance) ||
-				(friend_distance > cvar("bot_ai_friends_aware_pickup_radius") ) || !discard )
+				(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius ) || !discard )
 				rating = head.bot_pickupevalfunc(self, head);
 
 		}
@@ -150,7 +150,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 	local float t, noteam, distance;
 	noteam = ((self.team == 0) || !teams_matter); // fteqcc sucks
 
-	if (cvar("bot_nofire"))
+	if (autocvar_bot_nofire)
 		return;
 
 	// don't chase players if we're under water
@@ -212,7 +212,7 @@ void havocbot_role_dom()
 
 	if (self.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 		havocbot_goalrating_controlpoints(10000, self.origin, 15000);
 		havocbot_goalrating_items(8000, self.origin, 8000);
@@ -231,7 +231,7 @@ void havocbot_role_dm()
 
 	if (self.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 		havocbot_goalrating_items(10000, self.origin, 10000);
 		havocbot_goalrating_enemyplayers(20000, self.origin, 10000);
@@ -251,7 +251,7 @@ void havocbot_role_race()
 	entity e;
 	if (self.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 		/*
 		havocbot_goalrating_items(100, self.origin, 10000);
@@ -283,7 +283,7 @@ void havocbot_role_ka()
 
 	if (self.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 		havocbot_goalrating_items(10000, self.origin, 10000);
 		havocbot_goalrating_enemyplayers(20000, self.origin, 10000);

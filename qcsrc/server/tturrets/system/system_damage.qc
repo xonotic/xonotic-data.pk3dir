@@ -269,15 +269,15 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     if not (self.tur_active)
         return;
 
-    if (teamplay != 0)
+    if (teams_matter)
     if (self.team == attacker.team)
     {
         // This does not happen anymore. Re-enable if you fix that.
         if(clienttype(attacker) == CLIENTTYPE_REAL)
             sprint(attacker, "\{1}Turret tells you: I'm on your team!\n");
 
-        if(cvar("g_friendlyfire"))
-            damage = damage * cvar("g_friendlyfire");
+        if(autocvar_g_friendlyfire)
+            damage = damage * autocvar_g_friendlyfire;
         else
             return;
     }

@@ -17,9 +17,6 @@ Note: The only teams who can use dom control points are identified by spawnfunc_
 
 #define DOMPOINTFRAGS frags
 
-float g_domination_point_amt;
-float g_domination_point_rate;
-
 .float enemy_playerid;
 .entity sprite;
 .float captime;
@@ -29,7 +26,7 @@ void() dom_controlpoint_setup;
 void LogDom(string mode, float team_before, entity actor)
 {
 	string s;
-	if(!cvar("sv_eventlog"))
+	if(!autocvar_sv_eventlog)
 		return;
 	s = strcat(":dom:", mode);
 	s = strcat(s, ":", ftos(team_before));
@@ -67,12 +64,12 @@ void dompoint_captured ()
 	//bprint("\n");
 
 	float points, wait_time;
-	if (g_domination_point_amt)
-		points = g_domination_point_amt;
+	if (autocvar_g_domination_point_amt)
+		points = autocvar_g_domination_point_amt;
 	else
 		points = self.frags;
-	if (g_domination_point_rate)
-		wait_time = g_domination_point_rate;
+	if (autocvar_g_domination_point_rate)
+		wait_time = autocvar_g_domination_point_rate;
 	else
 		wait_time = self.wait;
 
@@ -95,7 +92,7 @@ void dompoint_captured ()
 	if (head.noise1 != "")
 		play2all(head.noise1);
 
-	//self.nextthink = time + cvar("g_domination_point_rate");
+	//self.nextthink = time + autocvar_g_domination_point_rate;
 	//self.think = dompointthink;
 
 	self.delay = time + wait_time;
@@ -160,11 +157,8 @@ void dompointthink()
 	if (gameover || self.delay > time || time < game_starttime)	// game has ended, don't keep giving points
 		return;
 
-	g_domination_point_rate = cvar("g_domination_point_rate");
-	g_domination_point_amt = cvar("g_domination_point_amt");
-
-	if(g_domination_point_rate)
-		self.delay = time + g_domination_point_rate;
+	if(autocvar_g_domination_point_rate)
+		self.delay = time + autocvar_g_domination_point_rate;
 	else
 		self.delay = time + self.wait;
 
@@ -172,8 +166,8 @@ void dompointthink()
 	// NOTE: this defaults to 0
 	if (self.goalentity.netname != "")
 	{
-		if(g_domination_point_amt)
-			fragamt = g_domination_point_amt;
+		if(autocvar_g_domination_point_amt)
+			fragamt = autocvar_g_domination_point_amt;
 		else
 			fragamt = self.DOMPOINTFRAGS;
 		TeamScore_AddToTeam(self.goalentity.team, ST_SCORE, fragamt);
@@ -270,7 +264,7 @@ Keys:
 
 void spawnfunc_dom_team()
 {
-	if(!g_domination || cvar("g_domination_teams_override") >= 2)
+	if(!g_domination || autocvar_g_domination_teams_override >= 2)
 	{
 		remove(self);
 		return;
@@ -345,8 +339,8 @@ void dom_controlpoint_setup()
 	float c1, c2, c3, c4, totalteams, smallestteam, smallestteam_count, selectedteam;
 	float balance_teams, force_balance, balance_type;
 
-	balance_teams = cvar("g_balance_teams");
-	balance_teams = cvar("g_balance_teams_force");
+	balance_teams = autocvar_g_balance_teams;
+	balance_teams = autocvar_g_balance_teams_force;
 
 	c1 = c2 = c3 = c4 = -1;
 	totalteams = 0;
@@ -547,7 +541,7 @@ void spawnfunc_dom_controlpoint()
 	//if(!self.glow_size)
 	//	self.glow_size = cvar("g_domination_point_glow");
 	self.effects = self.effects | EF_LOWPRECISION;
-	if (cvar("g_domination_point_fullbright"))
+	if (autocvar_g_domination_point_fullbright)
 		self.effects |= EF_FULLBRIGHT;
 };
 
@@ -596,10 +590,10 @@ void dom_spawnpoint(vector org)
 void dom_spawnteams()
 {
 	float numteams;
-	if(cvar("g_domination_teams_override") < 2)
-		numteams = cvar("g_domination_default_teams");
+	if(autocvar_g_domination_teams_override < 2)
+		numteams = autocvar_g_domination_default_teams;
 	else
-		numteams = cvar("g_domination_teams_override");
+		numteams = autocvar_g_domination_teams_override;
 	// LordHavoc: edit this if you want to change defaults
 	dom_spawnteam("Red", COLOR_TEAM1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
 	dom_spawnteam("Blue", COLOR_TEAM2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
@@ -615,7 +609,7 @@ void dom_delayedinit()
 	local entity head;
 
 	// if no teams are found, spawn defaults, if custom teams are set, use them
-	if (find(world, classname, "dom_team") == world || cvar("g_domination_teams_override") >= 2)
+	if (find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
 		dom_spawnteams();
 	// if no control points are found, spawn defaults
 	if (find(world, classname, "dom_controlpoint") == world)
@@ -654,9 +648,5 @@ void dom_init()
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
-
-	// teamplay is always on in domination, defaults to hurt self but not teammates
-	//if(!teams_matter)
-	//	cvar_set("teamplay", "3");
 };
 

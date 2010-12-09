@@ -5,7 +5,7 @@
 void Ent_TubaNote_Think()
 {
 	float f;
-	f = cvar("g_balance_tuba_fadetime");
+	f = autocvar_g_balance_tuba_fadetime;
 	if(f > 0)
 		self.cnt -= frametime * self.count / f;
 	else
@@ -17,14 +17,14 @@ void Ent_TubaNote_Think()
 		remove(self);
 	}
 	else
-		sound(self, CHAN_PROJECTILE, "", self.cnt, self.attenuate * cvar("g_balance_tuba_attenuation"));
+		sound(self, CHAN_PROJECTILE, "", self.cnt, self.attenuate * autocvar_g_balance_tuba_attenuation);
 }
 
 void Ent_TubaNote_UpdateSound()
 {
-	self.enemy.cnt = bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1);
+	self.enemy.cnt = bound(0, VOL_BASE * autocvar_g_balance_tuba_volume, 1);
 	self.enemy.count = self.enemy.cnt;
-	sound(self.enemy, CHAN_PROJECTILE, TUBA_STARTNOTE(self.cnt), self.enemy.cnt, self.enemy.attenuate * cvar("g_balance_tuba_attenuation"));
+	sound(self.enemy, CHAN_PROJECTILE, TUBA_STARTNOTE(self.cnt), self.enemy.cnt, self.enemy.attenuate * autocvar_g_balance_tuba_attenuation);
 }
 
 void Ent_TubaNote_StopSound()

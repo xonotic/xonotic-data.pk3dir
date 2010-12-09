@@ -40,12 +40,14 @@ float   AS_MISSILE              = 4;
 float SKILL4_MINALPHA         = 0.4;
 
 float monsterwander;
+//#NO AUTOCVARS START
 /*
         monsterwander = cvar("monsterwander");
         // monsterwander is always on in skill 5
         if (skill >= 5)
                 monsterwander = TRUE;
 */
+//#NO AUTOCVARS END
 
 .float candrown;
 

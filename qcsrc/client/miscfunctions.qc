@@ -8,7 +8,7 @@ void serverAnnouncer()
 	// check for pending announcement, play it and remove it
 	if(announce_snd != "")
 	{
-		sound(world, CHAN_AUTO, strcat("announcer/", cvar_string("cl_announcer"), "/", announce_snd, ".wav"), VOL_BASEVOICE, ATTN_NONE);
+		sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/", announce_snd, ".wav"), VOL_BASEVOICE, ATTN_NONE);
 		strunzone(announce_snd);
 		announce_snd = "";
 	}
@@ -22,7 +22,7 @@ void restartAnnouncer_Think() {
 		if (!spectatee_status) //do cprint only for players
 			centerprint("^1Begin!");
 
-		sound(world, CHAN_AUTO, strcat("announcer/", cvar_string("cl_announcer"), "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
+		sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
 		//reset maptime announcers now as well
 		announcer_5min = announcer_1min = FALSE;
 
@@ -34,7 +34,7 @@ void restartAnnouncer_Think() {
 			centerprint(strcat("^1Game starts in ", ftos(countdown_rounded), " seconds"));
 
 		if(countdown_rounded <= 3 && countdown_rounded >= 1) {
-			sound(world, CHAN_AUTO, strcat("announcer/", cvar_string("cl_announcer"), "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);
+			sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);
 		}
 
 		self.nextthink = getstatf(STAT_GAMESTARTTIME) - (countdown - 1);
@@ -53,14 +53,14 @@ void maptimeAnnouncer() {
 	float warmuplimit;
 	float warmuptimeleft;
 	if(warmup_stage) {
-		warmuplimit = cvar("g_warmup_limit");
+		warmuplimit = autocvar_g_warmup_limit;
 		if(warmuplimit > 0) {
 			warmuptimeleft = max(0, warmuplimit + getstatf(STAT_GAMESTARTTIME) - time); 
 		}
 	}
 
 	//5 minute check
-	if (cvar("cl_sound_maptime_warning") >= 2) {
+	if (autocvar_cl_sound_maptime_warning >= 2) {
 		//make sure that after connect (and e.g. 4 minutes left) we will not get a wrong sound
 		if(announcer_5min)
 		{
@@ -72,12 +72,12 @@ void maptimeAnnouncer() {
 			if not (warmuplimit == -1 && warmup_stage) {
 				announcer_5min = TRUE;
 				//dprint("i will play the sound, I promise!\n");
-				sound(world, CHAN_AUTO, strcat("announcer/", cvar_string("cl_announcer"), "/5minutesremain.wav"), VOL_BASEVOICE, ATTN_NONE);
+				sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"), VOL_BASEVOICE, ATTN_NONE);
 			}
 	}
 
 	//1 minute check
-	if (cvar("cl_sound_maptime_warning") == 1 || cvar("cl_sound_maptime_warning") == 3) {
+	if (autocvar_cl_sound_maptime_warning == 1 || autocvar_cl_sound_maptime_warning == 3) {
 		if (announcer_1min)
 		{
 			if(((!warmup_stage || warmuplimit == 0) && timeleft > 60) || (warmup_stage && warmuplimit > 0 && warmuptimeleft > 60))
@@ -87,7 +87,7 @@ void maptimeAnnouncer() {
 			//if we're in warmup mode, check whether there's a warmup timelimit
 			if not (warmuplimit == -1 && warmup_stage) {
 				announcer_1min = TRUE;
-				sound(world, CHAN_AUTO, strcat("announcer/", cvar_string("cl_announcer"), "/1minuteremains.wav"), VOL_BASEVOICE, ATTN_NONE);
+				sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"), VOL_BASEVOICE, ATTN_NONE);
 			}
 	}
 }
@@ -102,7 +102,7 @@ void carrierAnnouncer() {
 	float pickup;
 	string item;
 
-	if not(cvar("cl_notify_carried_items"))
+	if not(autocvar_cl_notify_carried_items)
 		return;
 
 	stat_items = getstati(STAT_ITEMS);
@@ -123,11 +123,11 @@ void carrierAnnouncer() {
 	if (item)
 	{
 		if (pickup) {
-			if (cvar("cl_notify_carried_items") & 2)
+			if (autocvar_cl_notify_carried_items & 2)
 				centerprint(strcat("You picked up the ", item, "!"));
 		}
 		else {
-			if (cvar("cl_notify_carried_items") & 1)
+			if (autocvar_cl_notify_carried_items & 1)
 				centerprint(strcat("You got the ", item, "!"));
 		}
 	}
@@ -141,50 +141,50 @@ void carrierAnnouncer() {
  * TODO: announcer queues
  */
 void Announcer_Precache () {
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/1minuteremains.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/5minutesremain.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"));
 
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/electrobitch.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/airshot.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/03kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/05kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/10kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/15kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/20kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/25kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/30kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/botlike.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/yoda.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/amazing.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/awesome.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/headshot.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/impressive.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/electrobitch.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/airshot.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/03kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/05kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/10kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/15kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/20kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/25kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/30kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/botlike.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/yoda.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/amazing.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/awesome.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/headshot.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/impressive.wav"));
 
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/prepareforbattle.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/begin.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/timeoutcalled.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/1fragleft.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/2fragsleft.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/3fragsleft.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/terminated.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/begin.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/timeoutcalled.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1fragleft.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/2fragsleft.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/3fragsleft.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/terminated.wav"));
 
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/1.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/2.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/3.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/4.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/5.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/6.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/7.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/8.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/9.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/10.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/2.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/3.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/4.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/5.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/6.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/7.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/8.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/9.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/10.wav"));
 
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/lastsecond.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/narrowly.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/lastsecond.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/narrowly.wav"));
 
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/voteaccept.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/votecall.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/votefail.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/voteaccept.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/votecall.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/votefail.wav"));
 }
 
 void AuditLists()
@@ -329,7 +329,7 @@ float PreviewExists(string name)
 	float f;
 	string file;
 
-	if(cvar("cl_readpicture_force"))
+	if(autocvar_cl_readpicture_force)
 		return false;
 
 	file = strcat(name, ".tga");

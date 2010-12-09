@@ -55,7 +55,7 @@ entity GetKickVoteVictim(string vote, string cmd, entity caller)
 		GetKickVoteVictim_newcommand = strcat(argv(0), " # ", ftos(num_for_edict(e)));
 		if(argv(0) == "kickban")
 		{
-			GetKickVoteVictim_newcommand = strcat(GetKickVoteVictim_newcommand, " ", cvar_string("g_ban_default_bantime"), " ", cvar_string("g_ban_default_masksize"), " ", reason);
+			GetKickVoteVictim_newcommand = strcat(GetKickVoteVictim_newcommand, " ", ftos(autocvar_g_ban_default_bantime), " ", ftos(autocvar_g_ban_default_masksize), " ", reason);
 		}
 		else if(argv(0) == "kick")
 		{
@@ -147,8 +147,8 @@ float GameCommand_Vote(string s, entity e) {
 				print_to(e, "^1No vote called.");
 			}
 		} else if(argv(1) == "call") {
-			if(!e || cvar("sv_vote_call")) {
-				if(cvar("sv_vote_nospectators") && e && e.classname != "player") {
+			if(!e || autocvar_sv_vote_call) {
+				if(autocvar_sv_vote_nospectators && e && e.classname != "player") {
 					print_to(e, "^1Error: Only players can call a vote."); // TODO invent a cvar name for allowing votes by spectators during warmup anyway
 				}
 				else if(timeoutStatus) { //don't allow a vote call during a timeout
@@ -171,14 +171,14 @@ float GameCommand_Vote(string s, entity e) {
 						votecalledvote_display = strzone(RemapVote_display);
 						votecalled = TRUE;
 						votecalledmaster = FALSE;
-						votefinished = time + cvar("sv_vote_timeout");
+						votefinished = time + autocvar_sv_vote_timeout;
 						votecaller = e; // remember who called the vote
 						if(e) {
 							e.vote_vote = 1; // of course you vote yes
-							e.vote_next = time + cvar("sv_vote_wait");
+							e.vote_next = time + autocvar_sv_vote_wait;
 						}
 						bprint("\{1}^2* ^3", VoteNetname(votecaller), "^2 calls a vote for ", votecalledvote_display, "\n");
-						if(cvar("sv_eventlog"))
+						if(autocvar_sv_eventlog)
 							GameLogEcho(strcat(":vote:vcall:", ftos(votecaller.playerid), ":", votecalledvote_display));
 						VoteCount(); // needed if you are the only one
 						Nagger_VoteChanged();
@@ -215,7 +215,7 @@ float GameCommand_Vote(string s, entity e) {
 				print_to(e, "^1You are not allowed to stop that Vote.");
 			}
 		} else if(argv(1) == "master") {
-			if(cvar("sv_vote_master")) {
+			if(autocvar_sv_vote_master) {
 				if(votecalled) {
 					print_to(e, "^1There is already a vote called.");
 				} else {
@@ -223,14 +223,14 @@ float GameCommand_Vote(string s, entity e) {
 					votecalledmaster = TRUE;
 					votecalledvote = strzone("XXX");
 					votecalledvote_display = strzone("^3master");
-					votefinished = time + cvar("sv_vote_timeout");
+					votefinished = time + autocvar_sv_vote_timeout;
 					votecaller = e; // remember who called the vote
 					if(e) {
 						e.vote_vote = 1; // of course you vote yes
-						e.vote_next = time + cvar("sv_vote_wait");
+						e.vote_next = time + autocvar_sv_vote_wait;
 					}
 					bprint("\{1}^2* ^3", VoteNetname(votecaller), "^2 calls a vote to become ^3master^2.\n");
-					if(cvar("sv_eventlog"))
+					if(autocvar_sv_eventlog)
 						GameLogEcho(strcat(":vote:vcall:", ftos(votecaller.playerid), ":", votecalledvote_display));
 					VoteCount(); // needed if you are the only one
 					Nagger_VoteChanged();
@@ -248,7 +248,7 @@ float GameCommand_Vote(string s, entity e) {
 					print_to(e, "Syntax error in command. See 'vhelp' for more info.");
 				} else if(RemapVote(dovote, "vdo", e)) { // strcat seems to be necessary
 					bprint("\{1}^2* ^3", VoteNetname(e), "^2 used their ^3master^2 status to do \"^2", RemapVote_display, "^2\".\n");
-					if(cvar("sv_eventlog"))
+					if(autocvar_sv_eventlog)
 						GameLogEcho(strcat(":vote:vdo:", ftos(e.playerid), ":", RemapVote_display));
 					localcmd(strcat(RemapVote_vote, "\n"));
 				} else {
@@ -259,7 +259,7 @@ float GameCommand_Vote(string s, entity e) {
 			}
 		} else if(argv(1) == "login") {
 			local string masterpwd;
-			masterpwd = cvar_string("sv_vote_master_password");
+			masterpwd = autocvar_sv_vote_master_password;
 			if(masterpwd != "") {
 				local float granted;
 				granted = (masterpwd == argv(2));
@@ -268,7 +268,7 @@ float GameCommand_Vote(string s, entity e) {
 				if(granted) {
 					print("Accepted master login from ", VoteNetname(e), "\n");
 					bprint("\{1}^2* ^3", VoteNetname(e), "^2 logged in as ^3master^2\n");
-					if(cvar("sv_eventlog"))
+					if(autocvar_sv_eventlog)
 						GameLogEcho(strcat(":vote:vlogin:", ftos(e.playerid)));
 				}
 				else
@@ -282,13 +282,13 @@ float GameCommand_Vote(string s, entity e) {
 			} else if (!e) {
 				print_to(e, "^1You can't vote from the server console.");
 			} else if(e.vote_vote == 0
-				  || cvar("sv_vote_change")) {
+				  || autocvar_sv_vote_change) {
 				msg_entity = e;
 				VoteDialog_UpdateHighlight(1);
 				print_to(e, "^1You accepted the vote.");
 				e.vote_vote = 1;
 				centerprint_expire(e, CENTERPRIO_VOTE);
-				if(!cvar("sv_vote_singlecount")) {
+				if(!autocvar_sv_vote_singlecount) {
 					VoteCount();
 				}
 			} else {
@@ -300,13 +300,13 @@ float GameCommand_Vote(string s, entity e) {
 			} else if (!e) {
 				print_to(e, "^1You can't vote from the server console.");
 			} else if(e.vote_vote == 0
-				  || cvar("sv_vote_change")) {
+				  || autocvar_sv_vote_change) {
 				msg_entity = e;
 				VoteDialog_UpdateHighlight(2);
 				print_to(e, "^1You rejected the vote.");
 				e.vote_vote = -1;
 				centerprint_expire(e, CENTERPRIO_VOTE);
-				if(!cvar("sv_vote_singlecount")) {
+				if(!autocvar_sv_vote_singlecount) {
 					VoteCount();
 				}
 			} else {
@@ -318,13 +318,13 @@ float GameCommand_Vote(string s, entity e) {
 			} else if (!e) {
 				print_to(e, "^1You can't vote from the server console.");
 			} else if(e.vote_vote == 0
-				  || cvar("sv_vote_change")) {
+				  || autocvar_sv_vote_change) {
 				msg_entity = e;
 				VoteDialog_UpdateHighlight(3);
 				print_to(e, "^1You abstained from your vote.");
 				e.vote_vote = -2;
 				centerprint_expire(e, CENTERPRIO_VOTE);
-				if(!cvar("sv_vote_singlecount")) {
+				if(!autocvar_sv_vote_singlecount) {
 					VoteCount();
 				}
 			} else {
@@ -341,17 +341,17 @@ float GameCommand_Vote(string s, entity e) {
 
 void VoteHelp(entity e) {
 	local string vmasterdis;
-	if(!cvar("sv_vote_master")) {
+	if(!autocvar_sv_vote_master) {
 		vmasterdis = " ^1(disabled)";
 	}
 
 	local string vlogindis;
-	if("" == cvar_string("sv_vote_master_password")) {
+	if("" == autocvar_sv_vote_master_password) {
 		vlogindis = " ^1(disabled)";
 	}
 
 	local string vcalldis;
-	if(!cvar("sv_vote_call")) {
+	if(!autocvar_sv_vote_call) {
 		vcalldis = " ^1(disabled)";
 	}
 
@@ -367,9 +367,9 @@ void VoteHelp(entity e) {
 	print_to(e, "^7\"^2yes^7\", \"^2no^7\", \"^2abstain^7\" and \"^2dontcare^7\" to make your vote.");
 	print_to(e, "^7If enough of the players vote yes the vote is accepted.");
 	print_to(e, "^7If enough of the players vote no the vote is rejected.");
-	print_to(e, strcat("^7If neither the vote will timeout after ", cvar_string("sv_vote_timeout"), "^7 seconds."));
+	print_to(e, strcat("^7If neither the vote will timeout after ", ftos(autocvar_sv_vote_timeout), "^7 seconds."));
 	print_to(e, "^7You can call a vote for or execute these commands:");
-	print_to(e, strcat("^3", cvar_string("sv_vote_commands"), "^7 and maybe further ^3arguments^7"));
+	print_to(e, strcat("^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
 }
 
 string VoteNetname(entity e)
@@ -377,10 +377,10 @@ string VoteNetname(entity e)
 	if(e) {
 		return e.netname;
 	} else {
-		if(cvar_string("sv_adminnick") != "") {
-			return cvar_string("sv_adminnick");
+		if(autocvar_sv_adminnick != "") {
+			return autocvar_sv_adminnick;
 		} else {
-			return cvar_string("hostname");
+			return autocvar_hostname;
 		}
 	}
 }
@@ -393,7 +393,7 @@ string ValidateMap(string m, entity e)
 		print_to(e, "This map is not available on this server.");
 		return string_null;
 	}
-	if(!cvar("sv_vote_override_mostrecent"))
+	if(!autocvar_sv_vote_override_mostrecent)
 		if(Map_IsRecent(m))
 		{
 			print_to(e, "This server does not allow for recent maps to be played again. Please be patient for some rounds.");
@@ -443,17 +443,17 @@ float VoteCommandInList(string votecommand, string list)
 }
 
 float VoteAllowed(string votecommand, string cmd) {
-	if(VoteCommandInList(votecommand, cvar_string("sv_vote_commands")))
+	if(VoteCommandInList(votecommand, autocvar_sv_vote_commands))
 		return TRUE;
 
 	if(cmd == "vdo")
 	{
-		if(VoteCommandInList(votecommand, cvar_string("sv_vote_master_commands")))
+		if(VoteCommandInList(votecommand, autocvar_sv_vote_master_commands))
 			return TRUE;
 	}
 	else
 	{
-		if(VoteCommandInList(votecommand, cvar_string("sv_vote_only_commands")))
+		if(VoteCommandInList(votecommand, autocvar_sv_vote_only_commands))
 			return TRUE;
 	}
 
@@ -512,12 +512,12 @@ void VoteTimeout() {
 
 void VoteStop(entity stopper) {
 	bprint("\{1}^2* ^3", VoteNetname(stopper), "^2 stopped ^3", VoteNetname(votecaller), "^2's vote\n");
-	if(cvar("sv_eventlog"))
+	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":vote:vstop:", ftos(stopper.playerid)));
 	if(stopper == votecaller) {
 		// no wait for next vote so you can correct your vote
 		if(votecaller) {
-			votecaller.vote_next = time + cvar("sv_vote_stop");
+			votecaller.vote_next = time + autocvar_sv_vote_stop;
 		}
 	}
 	VoteReset();
@@ -542,7 +542,7 @@ void VoteSpam(float yescount, float nocount, float abstaincount, float notvoters
 		s = strcat(s, ftos(notvoters), "^2 didn't have to vote\n");
 	}
 	bprint(s);
-	if(cvar("sv_eventlog"))
+	if(autocvar_sv_eventlog)
 	{
 		s = strcat(":vote:v", result, ":", ftos(yescount));
 		s = strcat(s, ":", ftos(nocount));
@@ -603,7 +603,7 @@ void VoteCount() {
 	}
 
 	//in tournament mode, if we have at least one player then don't make the vote dependent on spectators (so specs don't have to press F1)
-	if(cvar("sv_vote_nospectators"))
+	if(autocvar_sv_vote_nospectators)
 	if(realplayercount > 0) {
 		yescount = realplayeryescount;
 		nocount = realplayernocount;
@@ -612,8 +612,8 @@ void VoteCount() {
 	}
 
 	float votefactor, simplevotefactor;
-	votefactor = bound(0.5, cvar("sv_vote_majority_factor"), 0.999);
-	simplevotefactor = cvar("sv_vote_simple_majority_factor");
+	votefactor = bound(0.5, autocvar_sv_vote_majority_factor, 0.999);
+	simplevotefactor = autocvar_sv_vote_simple_majority_factor;
 	float needed;
 	needed = floor((playercount - abstaincount) * max(votefactor, simplevotefactor)) + 1;
 	VoteDialog_Update(MSG_ALL, yescount, nocount, needed);

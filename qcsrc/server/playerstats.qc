@@ -9,7 +9,7 @@ void PlayerStats_Init()
 	string uri;
 	playerstats_db = -1;
 	playerstats_waitforme = TRUE;
-	uri = cvar_string("g_playerstats_uri");
+	uri = autocvar_g_playerstats_uri;
 	if(uri == "")
 		return;
 	playerstats_db = db_create();
@@ -97,7 +97,7 @@ void PlayerStats_Shutdown()
 	if(playerstats_db < 0)
 		return;
 
-	uri = cvar_string("g_playerstats_uri");
+	uri = autocvar_g_playerstats_uri;
 	if(uri != "")
 	{
 		b = buf_create();
