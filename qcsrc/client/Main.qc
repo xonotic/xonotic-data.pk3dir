@@ -167,7 +167,9 @@ void CSQC_Init(void)
 	minimapname = strzone(minimapname);
 
 	WarpZone_Init();
+
 	hud_configure_prev = -1;
+	tab_panel = -1;
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
