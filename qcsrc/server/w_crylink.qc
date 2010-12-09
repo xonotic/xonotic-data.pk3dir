@@ -177,27 +177,27 @@ void W_Crylink_LinkJoinEffect_Think()
 				if(autocvar_g_balance_crylink_secondary_joinexplode)
 				{
 					n = n / autocvar_g_balance_crylink_secondary_shots;
-					RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_secondary_joinexplode_damage * n, 
-									autocvar_g_balance_crylink_secondary_joinexplode_edgedamage * n, 
-									autocvar_g_balance_crylink_secondary_joinexplode_radius * n, e.realowner, 
+					RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_secondary_joinexplode_damage * n,
+									autocvar_g_balance_crylink_secondary_joinexplode_edgedamage * n,
+									autocvar_g_balance_crylink_secondary_joinexplode_radius * n, e.realowner,
 									autocvar_g_balance_crylink_secondary_joinexplode_force * n, e.projectiledeathtype, other);
 
 					pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
-				}				
+				}
 			}
 			else
 			{
 				if(autocvar_g_balance_crylink_primary_joinexplode)
 				{
 					n = n / autocvar_g_balance_crylink_primary_shots;
-					RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_joinexplode_damage * n, 
-									autocvar_g_balance_crylink_primary_joinexplode_edgedamage * n, 
-									autocvar_g_balance_crylink_primary_joinexplode_radius * n, e.realowner, 
+					RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_joinexplode_damage * n,
+									autocvar_g_balance_crylink_primary_joinexplode_edgedamage * n,
+									autocvar_g_balance_crylink_primary_joinexplode_radius * n, e.realowner,
 									autocvar_g_balance_crylink_primary_joinexplode_force * n, e.projectiledeathtype, other);
 
 					pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
-				}				
-			}			
+				}
+			}
 		}
 	}
 	remove(self);
@@ -511,7 +511,7 @@ float w_crylink(float req)
 {
 	if (req == WR_AIM)
 	{
-		if (random() > 0.15)
+		if (random() < 0.10)
 			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_crylink_primary_speed, 0, autocvar_g_balance_crylink_primary_middle_lifetime, FALSE);
 		else
 			self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_crylink_secondary_speed, 0, autocvar_g_balance_crylink_secondary_middle_lifetime, FALSE);
@@ -549,21 +549,21 @@ float w_crylink(float req)
 				{
 					vector pos;
 					entity linkjoineffect;
-					
-					
+
+
 					if(self.crylink_waitrelease == 1)
 					{
 						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, autocvar_g_balance_crylink_primary_joinspread * autocvar_g_balance_crylink_primary_speed, autocvar_g_balance_crylink_primary_jointime);
-						
+
 					}
 					else
 					{
 						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, autocvar_g_balance_crylink_secondary_joinspread * autocvar_g_balance_crylink_secondary_speed, autocvar_g_balance_crylink_secondary_jointime);
 					}
-					
+
 					linkjoineffect = spawn();
 					linkjoineffect.think = W_Crylink_LinkJoinEffect_Think;
-					linkjoineffect.classname = "linkjoineffect";					
+					linkjoineffect.classname = "linkjoineffect";
 					linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
 					linkjoineffect.owner = self;
 					setorigin(linkjoineffect, pos);

@@ -20,6 +20,10 @@ FruitieX (game / web)
 *3D Art
 morphed
 
+*Concept Art
+LJFHutch
+theShadow
+
 *Level Design
 FruitieX
 MirceaKitsune

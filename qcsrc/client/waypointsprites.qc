@@ -409,7 +409,7 @@ void Ent_WaypointSprite()
 
 void WaypointSprite_Load()
 {
-	waypointsprite_fadedistance = vlen(mi_max - mi_min);
+	waypointsprite_fadedistance = vlen(mi_scale);
 	waypointsprite_normdistance = autocvar_g_waypointsprite_normdistance;
 	waypointsprite_minscale = autocvar_g_waypointsprite_minscale;
 	waypointsprite_minalpha = autocvar_g_waypointsprite_minalpha;
@@ -424,8 +424,7 @@ void WaypointSprite_Load()
 	waypointsprite_crosshairfadedistance = autocvar_g_waypointsprite_crosshairfadedistance;
 	waypointsprite_distancefadealpha = autocvar_g_waypointsprite_distancefadealpha;
 	waypointsprite_distancefadescale = autocvar_g_waypointsprite_distancefadescale;
-	waypointsprite_distancefadedistance = vlen(mi_max - mi_min) * autocvar_g_waypointsprite_distancefadedistancemultiplier;
-	waypointsprite_alpha = autocvar_g_waypointsprite_alpha * (1 - autocvar__menu_alpha);
+	waypointsprite_distancefadedistance = waypointsprite_fadedistance * autocvar_g_waypointsprite_distancefadedistancemultiplier;
 
 	if(!waypointsprite_initialized)
 	{
@@ -461,6 +460,6 @@ void WaypointSprite_Load()
 			db_put(tempdb, sname, ftos(max(f, stof(db_get(tempdb, sname)))));
 		}
 		search_end(dh);
+		waypointsprite_initialized = true;
 	}
-	waypointsprite_initialized = 1;
 }
