@@ -1813,7 +1813,10 @@ void InitializeEntitiesRun()
         if(func != func_null)
             func();
         else
-            dprint("^1WARNING: Skipped initialization: ", self.classname, "\n");
+        {
+            eprint(self);
+            backtrace(strcat("Null function in: ", self.classname, "\n"));
+        }
         self = e;
     }
 }

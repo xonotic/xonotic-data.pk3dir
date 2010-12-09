@@ -760,7 +760,7 @@ void trigger_race_checkpoint_verify()
 					//remove(trigger);
 				}
 	}
-	//remove(self);
+	remove(self);
 	self = oldself;
 }
 
