@@ -5022,20 +5022,17 @@ void HUD_Physics(void)
 
 	active_panel = HUD_PANEL_PHYSICS;
 	HUD_Panel_UpdateCvars(physics);
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
 
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{
-		pos += '1 1 0' * panel_bg_padding;
-		mySize -= '2 2 0' * panel_bg_padding;
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
 	//compute speed
 	float speed, conversion_factor;
-	string zspeed, unit;
+	string unit;
 
 	switch(cvar("hud_panel_physics_speed_unit"))
 	{
@@ -5094,23 +5091,23 @@ void HUD_Physics(void)
 	drawfont = hud_bigfont;
 	float baralign = cvar("hud_panel_physics_baralign");
 	float progressbar = cvar("hud_panel_physics_progressbar");
-	float panel_ar = mySize_x/mySize_y;
+	float panel_ar = panel_size_x/panel_size_y;
 	vector speed_offset, acceleration_offset;
 	if (panel_ar >= 5)
 	{
-		mySize_x *= 0.5;
+		panel_size_x *= 0.5;
 		if (cvar("hud_panel_physics_flip"))
-			speed_offset_x = mySize_x;
+			speed_offset_x = panel_size_x;
 		else
-			acceleration_offset_x = mySize_x;
+			acceleration_offset_x = panel_size_x;
 	}
 	else
 	{
-		mySize_y *= 0.5;
+		panel_size_y *= 0.5;
 		if (cvar("hud_panel_physics_flip"))
-			speed_offset_y = mySize_y;
+			speed_offset_y = panel_size_y;
 		else
-			acceleration_offset_y = mySize_y;
+			acceleration_offset_y = panel_size_y;
 	}
 	float speed_baralign, acceleration_baralign;
 	if (cvar("hud_panel_physics_flip"))
@@ -5128,17 +5125,17 @@ void HUD_Physics(void)
 	if(speed && progressbar)
 	{
 		HUD_Panel_GetProgressBarColor(speed);
-		HUD_Panel_DrawProgressBar(pos + speed_offset, mySize, "progressbar", speed/max_speed, 0, speed_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed/max_speed, 0, speed_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	vector tmp_offset, tmp_size;
-	tmp_size_x = mySize_x * 0.75;
-	tmp_size_y = mySize_y;
+	tmp_size_x = panel_size_x * 0.75;
+	tmp_size_y = panel_size_y;
 	if (speed_baralign)
-		tmp_offset_x = mySize_x - tmp_size_x;
+		tmp_offset_x = panel_size_x - tmp_size_x;
 	//else
 		//tmp_offset_x = 0;
-	drawstring_aspect(pos + speed_offset + tmp_offset, ftos(speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	//draw speed unit
 	if (speed_baralign)
@@ -5148,9 +5145,9 @@ void HUD_Physics(void)
 	if (cvar("hud_panel_physics_speed_unit_show"))
 	{
 		//tmp_offset_y = 0;
-		tmp_size_x = mySize_x * (1 - 0.75);
-		tmp_size_y = mySize_y * 0.4;
-		drawstring_aspect(pos + speed_offset + tmp_offset, unit, tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		tmp_size_x = panel_size_x * (1 - 0.75);
+		tmp_size_y = panel_size_y * 0.4;
+		drawstring_aspect(panel_pos + speed_offset + tmp_offset, unit, tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	//compute and draw top speed
@@ -5184,21 +5181,21 @@ void HUD_Physics(void)
 			{
 				float peek_offset_x, peek_size_x;
 				if (speed_baralign)
-					peek_offset_x = (1 - min(top_speed, max_speed)/max_speed) * mySize_x;
+					peek_offset_x = (1 - min(top_speed, max_speed)/max_speed) * panel_size_x;
 				else
-					peek_offset_x = min(top_speed, max_speed)/max_speed * mySize_x;
+					peek_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x;
 				//if speed is not 0 the speed progressbar already fetched the color
 				if (speed == 0)
 					HUD_Panel_GetProgressBarColor(speed);
-				peek_size_x = mySize_x * 0.01;
-				drawfill(pos + speed_offset + eX * (peek_offset_x - peek_size_x), eX * peek_size_x + eY * mySize_y, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				peek_size_x = panel_size_x * 0.01;
+				drawfill(panel_pos + speed_offset + eX * (peek_offset_x - peek_size_x), eX * peek_size_x + eY * panel_size_y, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 
 			//top speed
-			tmp_offset_y = mySize_y * 0.4;
-			tmp_size_x = mySize_x * (1 - 0.75);
-			tmp_size_y = mySize_y - tmp_offset_y;
-			drawstring_aspect(pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
+			tmp_offset_y = panel_size_y * 0.4;
+			tmp_size_x = panel_size_x * (1 - 0.75);
+			tmp_size_y = panel_size_y - tmp_offset_y;
+			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		else
 			top_speed = 0;
@@ -5211,9 +5208,9 @@ void HUD_Physics(void)
 			HUD_Panel_GetProgressBarColor(acceleration_neg);
 		else
 			HUD_Panel_GetProgressBarColor(acceleration);
-		HUD_Panel_DrawProgressBar(pos + acceleration_offset, mySize, "progressbar", fabs(acceleration)/max_acceleration, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset, panel_size, "progressbar", fabs(acceleration)/max_acceleration, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	drawstring_aspect(pos + acceleration_offset, ftos_decimals(acceleration, 3), mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(panel_pos + acceleration_offset, ftos_decimals(acceleration, 3), panel_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawfont = hud_font;
 }
 
