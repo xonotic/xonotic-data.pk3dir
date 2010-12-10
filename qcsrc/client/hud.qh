@@ -295,8 +295,8 @@ switch(id) { \
 	case HUD_PANEL_PRESSEDKEYS: HUD_Panel_UpdateCvars(pressedkeys) break; \
 	case HUD_PANEL_CHAT: HUD_Panel_UpdateCvars(chat) break; \
 	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdateCvars(engineinfo) break; \
-}\
-HUD_Panel_UpdateCvarsForId_Part2(id)
+	default: HUD_Panel_UpdateCvarsForId_Part2(id)\
+}
 
 #define HUD_Panel_UpdatePosSize(name) \
 panel_pos = stov(cvar_string("hud_panel_" #name "_pos")); \
@@ -331,5 +331,5 @@ switch(id) { \
 	case HUD_PANEL_PRESSEDKEYS: HUD_Panel_UpdatePosSize(pressedkeys) break;\
 	case HUD_PANEL_CHAT: HUD_Panel_UpdatePosSize(chat) break;\
 	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdatePosSize(engineinfo) break;\
-}\
-HUD_Panel_UpdatePosSizeForId_Part2(id)
+	default: HUD_Panel_UpdatePosSizeForId_Part2(id)\
+}

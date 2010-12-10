@@ -5176,23 +5176,23 @@ void HUD_Physics(void)
 			break;
 	}
 
-	float max_speed = floor( cvar("hud_panel_physics_speed_max") * conversion_factor + 0.5 );
+	float max_speed = floor( autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5 );
 	if (autocvar__hud_configure)
 		speed = floor( max_speed * 0.65 + 0.5 );
-	else if(cvar("hud_panel_physics_speed_z"))
+	else if(autocvar_hud_panel_physics_speed_z)
 		speed = floor( vlen(pmove_vel) * conversion_factor + 0.5 );
 	else
 		speed = floor( vlen(pmove_vel - pmove_vel_z * '0 0 1') * conversion_factor + 0.5 );
 
 	//compute acceleration
 	float acceleration, f;
-	float max_acceleration = cvar("hud_panel_physics_acceleration_max");
+	float max_acceleration = autocvar_hud_panel_physics_acceleration_max;
 	if (autocvar__hud_configure)
 		acceleration = max_acceleration * 0.3;
 	else
 	{
 		f = time - acc_prevtime;
-		if(cvar("hud_panel_physics_acceleration_z"))
+		if(autocvar_hud_panel_physics_acceleration_z)
 			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed)) * (1 / f);
 		else
 			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f);
@@ -5206,14 +5206,14 @@ void HUD_Physics(void)
 
 	//compute layout
 	drawfont = hud_bigfont;
-	float baralign = cvar("hud_panel_physics_baralign");
-	float progressbar = cvar("hud_panel_physics_progressbar");
+	float baralign = autocvar_hud_panel_physics_baralign;
+	float progressbar = autocvar_hud_panel_physics_progressbar;
 	float panel_ar = panel_size_x/panel_size_y;
 	vector speed_offset, acceleration_offset;
 	if (panel_ar >= 5)
 	{
 		panel_size_x *= 0.5;
-		if (cvar("hud_panel_physics_flip"))
+		if (autocvar_hud_panel_physics_flip)
 			speed_offset_x = panel_size_x;
 		else
 			acceleration_offset_x = panel_size_x;
@@ -5221,13 +5221,13 @@ void HUD_Physics(void)
 	else
 	{
 		panel_size_y *= 0.5;
-		if (cvar("hud_panel_physics_flip"))
+		if (autocvar_hud_panel_physics_flip)
 			speed_offset_y = panel_size_y;
 		else
 			acceleration_offset_y = panel_size_y;
 	}
 	float speed_baralign, acceleration_baralign;
-	if (cvar("hud_panel_physics_flip"))
+	if (autocvar_hud_panel_physics_flip)
 	{
 		acceleration_baralign = (baralign == 1 || baralign == 2);
 		speed_baralign = (baralign == 1 || baralign == 3);
@@ -5259,7 +5259,7 @@ void HUD_Physics(void)
 		tmp_offset_x = 0;
 	else
 		tmp_offset_x = tmp_size_x;
-	if (cvar("hud_panel_physics_speed_unit_show"))
+	if (autocvar_hud_panel_physics_speed_unit_show)
 	{
 		//tmp_offset_y = 0;
 		tmp_size_x = panel_size_x * (1 - 0.75);
@@ -5268,7 +5268,7 @@ void HUD_Physics(void)
 	}
 
 	//compute and draw top speed
-	if (cvar("hud_panel_physics_topspeed"))
+	if (autocvar_hud_panel_physics_topspeed)
 	{
 		if (autocvar__hud_configure)
 		{
@@ -5286,7 +5286,7 @@ void HUD_Physics(void)
 				f = 0;
 			else
 			{
-				f = max(1, cvar("hud_panel_physics_topspeed_time"));
+				f = max(1, autocvar_hud_panel_physics_topspeed_time);
 				// divide by f to make it start from 1
 				f = cos( ((time - top_speed_time) / f) * PI/2 );
 			}
