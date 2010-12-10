@@ -359,8 +359,43 @@ void preMenuDraw()
 		if(!_Nex_ExtResponseSystem_Queried)
 		{
 			_Nex_ExtResponseSystem_Queried = 1;
-			uri_get(sprintf("http://www.xonotic.org/dl/checkupdate.txt?version=%s", uri_escape(cvar_string("g_xonoticversion"))), URI_GET_UPDATENOTIFICATION);
-			//crypto_uri_postbuf(sprintf("http://www.xonotic.org/dl/t/checkupdate2.cgi?version=%s", uri_escape(cvar_string("g_xonoticversion"))), URI_GET_UPDATENOTIFICATION, "application/x-www-urlencoded", "hello=world&foo=bar", -1, 0);
+			float startcnt;
+			string uri;
+
+			cvar_set("cl_startcount", ftos(startcnt = cvar("cl_startcount") + 1));
+
+			// for privacy, munge the start count a little
+			startcnt = floor((floor(startcnt / 10) + random()) * 10);
+			uri = sprintf("http://www.xonotic.org/dl/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
+
+#ifdef CVAR_POPCON
+			float cvar_handle, popcon_handle;
+			float n, i, j;
+			string k, s;
+			cvar_handle = buf_create();
+			buf_cvarlist(cvar_handle, "", "");
+			n = buf_getsize(cvar_handle);
+			popcon_handle = buf_create();
+			for(i= 0, j = 0; i < n; ++i)
+			{
+				k = bufstr_get(cvar_handle, i);
+				if(!(cvar_type(k) & CVAR_TYPEFLAG_SAVED))
+					continue;
+				s = sprintf("%s=%d", uri_escape(k), cvar_string(k) != cvar_defstring(k));
+				bufstr_set(popcon_handle, j, s);
+				++j;
+			}
+			buf_del(cvar_handle);
+			uri_postbuf(
+				uri, URI_GET_UPDATENOTIFICATION,
+				"application/x-www-form-urlencoded",
+				"&",
+				popcon_handle
+			);
+			buf_del(popcon_handle);
+#else
+			uri_get(uri, URI_GET_UPDATENOTIFICATION);
+#endif
 		}
 	}
 

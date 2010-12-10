@@ -319,7 +319,7 @@ void havocbot_role_ons_offense()
 		havocbot_goalrating_ons_offenseitems(10000, self.origin, 10000);
 		navigation_goalrating_end();
 
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 	}
 };
 

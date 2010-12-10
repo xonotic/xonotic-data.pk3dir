@@ -379,8 +379,8 @@ void onslaught_generator_think()
 	self.nextthink = ceil(time + 1);
 	if (!gameover)
 	{
-		if (cvar("timelimit"))
-		if (time > game_starttime + cvar("timelimit") * 60)
+		if (autocvar_timelimit)
+		if (time > game_starttime + autocvar_timelimit * 60)
 		{
 			// self.max_health / 300 gives 5 minutes of overtime.
 			// control points reduce the overtime duration.
@@ -809,7 +809,7 @@ void onslaught_controlpoint_updatesprite(entity e)
 void onslaught_generator_reset()
 {
 	self.team = self.team_saved;
-	self.lasthealth = self.max_health = self.health = cvar("g_onslaught_gen_health");
+	self.lasthealth = self.max_health = self.health = autocvar_g_onslaught_gen_health;
 	self.takedamage = DAMAGE_AIM;
 	self.bot_attack = TRUE;
 	self.iscaptured = TRUE;
@@ -874,7 +874,7 @@ void spawnfunc_onslaught_generator()
 	self.colormap = 1024 + (self.team - 1) * 17;
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
-	self.lasthealth = self.max_health = self.health = cvar("g_onslaught_gen_health");
+	self.lasthealth = self.max_health = self.health = autocvar_g_onslaught_gen_health;
 	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, '-52 -52 -14', '52 52 75');
 	setorigin(self, self.origin);
@@ -1127,7 +1127,7 @@ void onslaught_controlpoint_icon_buildthink()
 	if (self.health >= self.max_health)
 	{
 		self.health = self.max_health;
-		self.count = cvar("g_onslaught_cp_regen") * sys_frametime; // slow repair rate from now on
+		self.count = autocvar_g_onslaught_cp_regen * sys_frametime; // slow repair rate from now on
 		self.think = onslaught_controlpoint_icon_think;
 		sound(self, CHAN_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTN_NORM);
 		bprint(ColoredTeamName(self.team), " captured ", self.owner.message, " control point\n");
@@ -1177,8 +1177,8 @@ void onslaught_controlpoint_touch()
 	self.goalentity = e = spawn();
 	e.classname = "onslaught_controlpoint_icon";
 	e.owner = self;
-	e.max_health = cvar("g_onslaught_cp_health");
-	e.health = cvar("g_onslaught_cp_buildhealth");
+	e.max_health = autocvar_g_onslaught_cp_health;
+	e.health = autocvar_g_onslaught_cp_buildhealth;
 	e.solid = SOLID_BBOX;
 	e.movetype = MOVETYPE_NONE;
 	setmodel(e, "models/onslaught/controlpoint_icon.md3");
@@ -1191,7 +1191,7 @@ void onslaught_controlpoint_touch()
 	e.colormap = 1024 + (e.team - 1) * 17;
 	e.think = onslaught_controlpoint_icon_buildthink;
 	e.nextthink = time + sys_frametime;
-	e.count = (e.max_health - e.health) * sys_frametime / cvar("g_onslaught_cp_buildtime"); // how long it takes to build
+	e.count = (e.max_health - e.health) * sys_frametime / autocvar_g_onslaught_cp_buildtime; // how long it takes to build
 	sound(e, CHAN_TRIGGER, "onslaught/controlpoint_build.wav", VOL_BASE, ATTN_NORM);
 	self.team = e.team;
 	self.colormap = e.colormap;

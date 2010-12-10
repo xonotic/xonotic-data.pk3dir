@@ -70,25 +70,25 @@ void target_give_init()
 	entity targ;
 	for (targ = world; (targ = find(targ, targetname, self.target)); ) {
 		if (targ.classname == "weapon_rocketlauncher") {
-			self.ammo_rockets += targ.count * cvar("g_balance_rocketlauncher_ammo");
+			self.ammo_rockets += targ.count * autocvar_g_balance_rocketlauncher_ammo;
 			self.netname = "rocketlauncher";
 		}
 		else if (targ.classname == "weapon_plasmagun") {
-			self.ammo_rockets += targ.count * cvar("g_balance_hagar_primary_ammo");
+			self.ammo_rockets += targ.count * autocvar_g_balance_hagar_primary_ammo;
 			if(self.netname == "")
 				self.netname = "hagar";
 			else
 				self.netname = strcat(self.netname, " hagar");
 		}
 		else if (targ.classname == "weapon_bfg") {
-			self.ammo_cells += targ.count * cvar("g_balance_crylink_primary_ammo");
+			self.ammo_cells += targ.count * autocvar_g_balance_crylink_primary_ammo;
 			if(self.netname == "")
 				self.netname = "crylink";
 			else
 				self.netname = strcat(self.netname, " crylink");
 		}
 		else if (targ.classname == "weapon_grenadelauncher") {
-			self.ammo_rockets += targ.count * cvar("g_balance_grenadelauncher_primary_ammo");
+			self.ammo_rockets += targ.count * autocvar_g_balance_grenadelauncher_primary_ammo;
 			if(self.netname == "")
 				self.netname = "grenadelauncher";
 			else

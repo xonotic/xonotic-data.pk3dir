@@ -91,7 +91,7 @@ void ScoreRules_dom()
 {
 	float sp_domticks, sp_score;
 	sp_score = sp_domticks = 0;
-	if(cvar("g_domination_disable_frags"))
+	if(autocvar_g_domination_disable_frags)
 		sp_domticks = SFL_SORT_PRIO_PRIMARY;
 	else
 		sp_score = SFL_SORT_PRIO_PRIMARY;

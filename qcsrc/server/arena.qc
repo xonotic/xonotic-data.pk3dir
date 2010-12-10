@@ -41,15 +41,15 @@ void reset_map(float dorespawn)
 	entity oldself;
 	oldself = self;
 
-	if(g_arena && cvar("g_arena_warmup"))
-		warmup = time + cvar("g_arena_warmup");
+	if(g_arena && autocvar_g_arena_warmup)
+		warmup = time + autocvar_g_arena_warmup;
 	else if(g_ca) {
-		warmup = time + cvar("g_ca_warmup");
+		warmup = time + autocvar_g_ca_warmup;
 		allowed_to_spawn = 1;
 	}
 	else if(g_freezetag)
 	{
-		warmup = time + cvar("g_freezetag_warmup");
+		warmup = time + autocvar_g_freezetag_warmup;
 	}
 
 	lms_lowest_lives = 999;
@@ -137,7 +137,7 @@ void reset_map(float dorespawn)
 	}
 
 	if(g_keyhunt)
-		kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_round")+(game_starttime - time), "", kh_StartRound);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round+(game_starttime - time), "", kh_StartRound);
 
 	if(g_arena)
 	if(champion && champion.classname == "player" && player_count > 1)
@@ -386,7 +386,7 @@ void Spawnqueue_Check()
 		return;
 
 	if(g_ca) {
-		required_ca_players = max(2, fabs(cvar("bot_vs_human") + 1));
+		required_ca_players = max(2, fabs(autocvar_bot_vs_human + 1));
 
 		if(ca_players < required_ca_players && (redspawned && bluespawned)) {
 			reset_map(TRUE);
@@ -404,7 +404,7 @@ void Spawnqueue_Check()
 					strunzone(champion_name);
 				champion_name = strzone(champion.netname);
 			}
-			else if((!redspawned && !bluespawned) || time - warmup > cvar("g_ca_round_timelimit")) {
+			else if((!redspawned && !bluespawned) || time - warmup > autocvar_g_ca_round_timelimit) {
 				FOR_EACH_CLIENT(self) centerprint(self, strcat("^7Round tied.", "^7\n"));
 				next_round = time + 5;
 			}

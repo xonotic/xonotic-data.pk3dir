@@ -64,13 +64,13 @@ void CampaignPreInit()
 {
 	float baseskill;
 	string title;
-	if(cvar("sv_cheats"))
+	if(autocvar_sv_cheats)
 	{
 		CampaignBailout("JOLLY CHEATS AHAHAHAHAHAHAH))");
 		return;
 	}
-	campaign_level = cvar("_campaign_index");
-	campaign_name = strzone(cvar_string("_campaign_name"));
+	campaign_level = autocvar__campaign_index;
+	campaign_name = strzone(autocvar__campaign_name);
 	campaign_index_var = strzone(strcat("g_campaign", campaign_name, "_index"));
 	CampaignFile_Load(campaign_level, 2);
 	if(campaign_entries < 1)
@@ -79,7 +79,7 @@ void CampaignPreInit()
 		return;
 	}
 
-	baseskill = cvar("g_campaign_skill");
+	baseskill = autocvar_g_campaign_skill;
 	baseskill = baseskill + campaign_botskill[0];
 	if(baseskill < 0)
 		baseskill = 0;
@@ -101,7 +101,7 @@ void CampaignPreInit()
 
 	// copy sv_gravity cvar, as the engine needs it too (sorry, this will mess
 	// with the menu a little still...)
-	cvar_set_normal("sv_gravity", cvar_string("sv_gravity"));
+	cvar_set_normal("sv_gravity", ftos(autocvar_sv_gravity));
 
 	if(Campaign_Invalid())
 		return;
@@ -188,7 +188,7 @@ void CampaignPreIntermission()
 
 	if(won == 1 && lost == 0 && checkrules_equality == 0 && cheatcount_total == 0)
 	{
-		if(cvar("timelimit") != 0 && cvar("fraglimit") != 0 && time > cvar("timelimit") * 60) // checks if the timelimit has expired.
+		if(autocvar_timelimit != 0 && autocvar_fraglimit != 0 && time > autocvar_timelimit * 60) // checks if the timelimit has expired.
 		{
 			campaign_won = 0;
 			bprint("Time's up! The current level has been LOST.\n");
@@ -201,7 +201,7 @@ void CampaignPreIntermission()
 			// sound!
 		}
 	}
-	else if(cvar("timelimit") != 0 && time > cvar("timelimit") * 60)
+	else if(autocvar_timelimit != 0 && time > autocvar_timelimit * 60)
 	{
 		campaign_won = 0;
 		bprint("Time's up! The current level has been LOST.\n");

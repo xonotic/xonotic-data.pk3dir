@@ -88,7 +88,7 @@ void Ent_Casing(float isNew)
 	casing.angles_z = ReadByte() * 360 / 256;
 	casing.drawmask = MASK_NORMAL;
 
-	if(cvar("cl_casings") && isNew) {
+	if(autocvar_cl_casings && isNew) {
 		casing.draw = Casing_Draw;
 		casing.move_origin = casing.origin;
 		casing.move_velocity = casing.velocity + 2 * prandomvec();
@@ -104,11 +104,11 @@ void Ent_Casing(float isNew)
 		{
 			case 1:
 				setmodel(casing, "models/casing_shell.mdl");
-				casing.cnt = time + cvar("cl_casings_shell_time");
+				casing.cnt = time + autocvar_cl_casings_shell_time;
 				break;
 			default:
 				setmodel(casing, "models/casing_bronze.mdl");
-				casing.cnt = time + cvar("cl_casings_bronze_time");
+				casing.cnt = time + autocvar_cl_casings_bronze_time;
 				break;
 		}
 
@@ -117,7 +117,7 @@ void Ent_Casing(float isNew)
     else
         Casing_Delete();
 
-	RubbleLimit("casing", cvar_or("cl_casings_maxcount",100), Casing_Delete);
+	RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
 }
 
 void Casings_Precache()

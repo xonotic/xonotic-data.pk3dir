@@ -35,7 +35,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
-	grav = cvar("sv_gravity");
+	grav = autocvar_sv_gravity;
 
 	zdist = torg_z - org_z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
@@ -286,8 +286,7 @@ void trigger_push_findtarget()
  */
 void spawnfunc_trigger_push()
 {
-	if (self.angles != '0 0 0')
-		SetMovedir ();
+	SetMovedir ();
 
 	EXACTTRIGGER_INIT;
 	

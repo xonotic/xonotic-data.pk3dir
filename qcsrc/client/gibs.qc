@@ -51,7 +51,7 @@ void Gib_setmodel(entity gib, string mdlname, float specnum)
 void new_te_bloodshower (float ef, vector org, float explosionspeed, float howmany)
 {
 	float i, pmod;
-	pmod = cvar("cl_particles_quality");
+	pmod = autocvar_cl_particles_quality;
 	for (i = 0; i < 250 * pmod; ++i)
 		pointparticles(ef, org, randomvec() * explosionspeed, howmany / 250);
 }
@@ -125,15 +125,15 @@ void TossGib (string mdlname, vector org, vector vconst, vector vrand, float spe
 		gib.move_touch = SUB_RemoveOnNoImpact;
 
 	gib.move_origin = gib.origin = org;
-	gib.move_velocity = vconst * cvar_or("cl_gibs_velocity_scale", 1) + vrand * cvar_or("cl_gibs_velocity_random", 1) + '0 0 1' * cvar("cl_gibs_velocity_up");
+	gib.move_velocity = vconst * autocvar_cl_gibs_velocity_scale + vrand * autocvar_cl_gibs_velocity_random + '0 0 1' * autocvar_cl_gibs_velocity_up;
 	gib.move_avelocity = prandomvec() * vlen(gib.move_velocity);
 	gib.move_time = time;
-	gib.damageforcescale = cvar_or("cl_gibs_damageforcescale", 3.5);
+	gib.damageforcescale = autocvar_cl_gibs_damageforcescale;
 
-	gib.nextthink = time + cvar_or("cl_gibs_lifetime", 14) * (1 + prandom() * 0.15);
+	gib.nextthink = time + autocvar_cl_gibs_lifetime * (1 + prandom() * 0.15);
 	gib.drawmask = MASK_NORMAL;
 
-	RubbleLimit("gib", cvar_or("cl_gibs_maxcount",100), Gib_Delete);
+	RubbleLimit("gib", autocvar_cl_gibs_maxcount, Gib_Delete);
 }
 
 void Ent_GibSplash(float isNew)
@@ -153,8 +153,8 @@ void Ent_GibSplash(float isNew)
 	org_z = ReadShort() * 4 + 2;
 	vel = decompressShortVector(ReadShort());
 
-	float cl_gentle_gibs = cvar("cl_gentle_gibs");
-	if(cl_gentle_gibs || cvar("cl_gentle"))
+	float cl_gentle_gibs = autocvar_cl_gentle_gibs;
+	if(cl_gentle_gibs || autocvar_cl_gentle)
 		type |= 0x80; // set gentle bit
 
 	if(type & 0x80)
@@ -166,16 +166,16 @@ void Ent_GibSplash(float isNew)
 		else
 			gentle_prefix = "morphed_";
 	}
-	else if(cvar("cl_particlegibs"))
+	else if(autocvar_cl_particlegibs)
 	{
 		type |= 0x80;
 		gentle_prefix = "particlegibs_";
 	}
 
-	if not(cl_gentle_gibs || cvar("cl_gentle"))
-		amount *= 1 - cvar("cl_nogibs");
+	if not(cl_gentle_gibs || autocvar_cl_gentle)
+		amount *= 1 - autocvar_cl_nogibs;
 
-	if(cvar("ekg"))
+	if(autocvar_ekg)
 		amount *= 5;
 
 	if(amount <= 0 || !isNew)
