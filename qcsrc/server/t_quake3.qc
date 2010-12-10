@@ -100,7 +100,9 @@ void target_give_init()
 			self.armorvalue = 100;
 		else if (targ.classname == "item_health_mega")
 			self.health = 200;
-		remove(targ);
+		//remove(targ); // removing ents in init functions causes havoc, workaround:
+        targ.think = SUB_Remove;
+        targ.nextthink = time;
 	}
 	self.spawnflags = 2;
 	spawnfunc_target_items();
