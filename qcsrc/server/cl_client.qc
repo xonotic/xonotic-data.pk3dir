@@ -1311,16 +1311,16 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 	if(g_race_qualifying || g_cts)
 		killtime = 0;
 
-	if(self.modelindex && self.deadflag == DEAD_NO)
-	{
-		killtime = max(killtime, self.clientkill_nexttime - time);
-		self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
-	}
-
 	self.killindicator_teamchange = targetteam;
 
     if(!self.killindicator)
 	{
+		if(self.modelindex && self.deadflag == DEAD_NO)
+		{
+			killtime = max(killtime, self.clientkill_nexttime - time);
+			self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
+		}
+
 		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO)
 		{
 			ClientKill_Now();
