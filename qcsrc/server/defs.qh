@@ -659,3 +659,5 @@ float serverflags;
 .float freezetag_frozen;
 .float freezetag_beginrevive_time;
 .float freezetag_revive_progress;
+
+.float killcnt; // keep track of how many times a player has suicided during the previous 5 seconds

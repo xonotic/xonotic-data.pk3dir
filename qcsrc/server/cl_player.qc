@@ -669,7 +669,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		waves = 0;
 		sdelay = cvar(strcat("g_", GetGametype(), "_respawn_delay"));
 		if(!sdelay)
-			sdelay = autocvar_g_respawn_delay;
+        {
+            if(g_cts)
+                sdelay = 0; // no respawn delay in CTS
+            else
+                sdelay = autocvar_g_respawn_delay;
+        }
 		waves = cvar(strcat("g_", GetGametype(), "_respawn_waves"));
 		if(!waves)
 			waves = autocvar_g_respawn_waves;

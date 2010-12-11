@@ -1304,7 +1304,11 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 
     if(g_cts) // allow an instant kill in CTS
     {
-        ClientKill_Now();
+        if(self.killcnt < 5) // 5 kills in 5 seconds allowed
+        {
+            self.killcnt += 1;
+            ClientKill_Now();
+        }
         return;
     }
 
@@ -2872,6 +2876,9 @@ void PlayerPreThink (void)
 
 		if(g_nexball)
 			nexball_setstatus();
+
+        if(g_cts)
+            self.killcnt = max(0, self.killcount - sys_frametime);
 
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
