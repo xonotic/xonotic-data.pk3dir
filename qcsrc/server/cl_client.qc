@@ -1229,6 +1229,8 @@ void ClientKill_Now_TeamChange()
 		self.team = -1;
 		JoinBestTeam( self, FALSE, FALSE );
 	}
+	else if(self.killindicator_teamchange == -2)
+		PutObserverInServer();
 	else
 		SV_ChangeTeam(self.killindicator_teamchange - 1);
 }
@@ -1275,6 +1277,8 @@ void KillIndicator_Think()
 			{
 				if(self.owner.killindicator_teamchange == -1)
 					centerprint(self.owner, strcat("Changing team in ", ftos(self.cnt), " seconds"));
+				else if(self.owner.killindicator_teamchange == -2)
+					centerprint(self.owner, strcat("Spectating in ", ftos(self.cnt), " seconds"));
 				else
 					centerprint(self.owner, strcat("Changing to ", ColoredTeamName(self.owner.killindicator_teamchange), " in ", ftos(self.cnt), " seconds"));
 			}
@@ -1286,7 +1290,7 @@ void KillIndicator_Think()
 	}
 }
 
-void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
+void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2 = spec
 {
 	float killtime;
 	entity e;
