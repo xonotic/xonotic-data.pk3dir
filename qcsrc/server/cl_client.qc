@@ -1222,6 +1222,7 @@ Called when a client types 'kill' in the console
 =============
 */
 
+.float clientkill_nexttime;
 void ClientKill_Now_TeamChange()
 {
 	if(self.killindicator_teamchange == -1)
@@ -1299,6 +1300,10 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 	if(g_race_qualifying)
 		killtime = 0;
 
+	// flood control it
+	killtime = max(killtime, self.clientkill_nexttime - time);
+	self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
+
 	self.killindicator_teamchange = targetteam;
 
 	if(!self.killindicator)
@@ -1338,10 +1343,14 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 	}
 	if(self.killindicator)
 	{
-		if(targetteam)
-			self.killindicator.colormod = TeamColor(targetteam);
-		else
+		if(targetteam == 0) // just die
 			self.killindicator.colormod = '0 0 0';
+		else if(targetteam == -1) // auto
+			self.killindicator.colormod = '0 1 0';
+		else if(targetteam == -2) // spectate
+			self.killindicator.colormod = '0.5 0.5 0.5';
+		else
+			self.killindicator.colormod = TeamColor(targetteam);
 	}
 }
 
