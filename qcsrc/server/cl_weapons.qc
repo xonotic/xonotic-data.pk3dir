@@ -275,6 +275,8 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return;
 	if (g_ca)
 		return;
+    if (g_cts)
+        return;
 	if(!autocvar_g_weapon_throwable)
 		return;
 	if(autocvar_g_weapon_stay == 1)
