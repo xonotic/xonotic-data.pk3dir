@@ -1304,15 +1304,14 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 
     if(g_cts) // allow an instant kill in CTS
     {
-        if(self.killcnt < 5) // 5 kills in 5 seconds allowed
+        if(self.selfkilltime < time + 3) // prevent spam
         {
-            self.killcnt += 1;
+            self.selfkilltime = max(time, self.selfkilltime) + 2;
             ClientKill_Now();
         }
         return;
     }
-
-    else if(!self.killindicator)
+    if(!self.killindicator)
 	{
 		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO)
 		{
@@ -2876,9 +2875,6 @@ void PlayerPreThink (void)
 
 		if(g_nexball)
 			nexball_setstatus();
-
-        if(g_cts)
-            self.killcnt = max(0, self.killcount - sys_frametime);
 
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
