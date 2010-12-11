@@ -1029,6 +1029,8 @@ float autocvar_g_weapon_throwable;
 string autocvar_g_xonoticversion;
 float autocvar_gamecfg;
 float autocvar_gameversion;
+float autocvar_gameversion_min;
+float autocvar_gameversion_max;
 string autocvar_hostname;
 float autocvar_lastlevel;
 float autocvar_leadlimit;
