@@ -1272,7 +1272,7 @@ void KillIndicator_Think()
 		ClientKill_Now(); // no oldself needed
 		return;
 	}
-    else if(g_cts)
+    else if(g_cts && self.health == 1) // health == 1 means that it's silent
     {
         self.nextthink = time + 1;
         self.cnt -= 1;
@@ -1388,6 +1388,7 @@ void CTS_ClientKill (entity e) // silent version of ClientKill
     e.killindicator.think = KillIndicator_Think;
     e.killindicator.nextthink = time + (e.lip) * 0.05;
     e.killindicator.cnt = ceil(autocvar_g_cts_finish_kill_delay);
+    e.killindicator.health = 1; // this is used to indicate that it should be silent
     e.lip = 0;
 }
 
