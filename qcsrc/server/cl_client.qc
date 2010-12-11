@@ -1308,7 +1308,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 	entity e;
 	killtime = autocvar_g_balance_kill_delay;
 
-	if(g_race_qualifying)
+	if(g_race_qualifying || g_cts)
 		killtime = 0;
 
 	if(self.modelindex && self.deadflag == DEAD_NO)
@@ -1319,15 +1319,6 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
 	self.killindicator_teamchange = targetteam;
 
-    if(g_cts) // allow an instant kill in CTS
-    {
-        if(self.selfkilltime < time + 3) // prevent spam
-        {
-            self.selfkilltime = max(time, self.selfkilltime) + 2;
-            ClientKill_Now();
-        }
-        return;
-    }
     if(!self.killindicator)
 	{
 		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO)
