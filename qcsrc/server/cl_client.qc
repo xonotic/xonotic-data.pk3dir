@@ -1222,12 +1222,21 @@ Called when a client types 'kill' in the console
 =============
 */
 
+.float clientkill_nexttime;
 void ClientKill_Now_TeamChange()
 {
 	if(self.killindicator_teamchange == -1)
 	{
 		self.team = -1;
 		JoinBestTeam( self, FALSE, FALSE );
+	}
+	else if(self.killindicator_teamchange == -2)
+	{
+		if(g_ca)
+			self.caplayer = 0;
+		if(blockSpectators)
+			sprint(self, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+		PutObserverInServer();
 	}
 	else
 		SV_ChangeTeam(self.killindicator_teamchange - 1);
@@ -1280,6 +1289,8 @@ void KillIndicator_Think()
 			{
 				if(self.owner.killindicator_teamchange == -1)
 					centerprint(self.owner, strcat("Changing team in ", ftos(self.cnt), " seconds"));
+				else if(self.owner.killindicator_teamchange == -2)
+					centerprint(self.owner, strcat("Spectating in ", ftos(self.cnt), " seconds"));
 				else
 					centerprint(self.owner, strcat("Changing to ", ColoredTeamName(self.owner.killindicator_teamchange), " in ", ftos(self.cnt), " seconds"));
 			}
@@ -1291,7 +1302,7 @@ void KillIndicator_Think()
 	}
 }
 
-void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
+void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2 = spec
 {
 	float killtime;
 	entity e;
@@ -1299,6 +1310,12 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 
 	if(g_race_qualifying)
 		killtime = 0;
+
+	if(self.modelindex && self.deadflag == DEAD_NO)
+	{
+		killtime = max(killtime, self.clientkill_nexttime - time);
+		self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
+	}
 
 	self.killindicator_teamchange = targetteam;
 
@@ -1348,10 +1365,14 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 	}
 	if(self.killindicator)
 	{
-		if(targetteam)
-			self.killindicator.colormod = TeamColor(targetteam);
-		else
+		if(targetteam == 0) // just die
 			self.killindicator.colormod = '0 0 0';
+		else if(targetteam == -1) // auto
+			self.killindicator.colormod = '0 1 0';
+		else if(targetteam == -2) // spectate
+			self.killindicator.colormod = '0.5 0.5 0.5';
+		else
+			self.killindicator.colormod = TeamColor(targetteam);
 	}
 }
 

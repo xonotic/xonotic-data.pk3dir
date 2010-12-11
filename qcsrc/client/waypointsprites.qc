@@ -425,6 +425,7 @@ void WaypointSprite_Load()
 	waypointsprite_distancefadealpha = autocvar_g_waypointsprite_distancefadealpha;
 	waypointsprite_distancefadescale = autocvar_g_waypointsprite_distancefadescale;
 	waypointsprite_distancefadedistance = waypointsprite_fadedistance * autocvar_g_waypointsprite_distancefadedistancemultiplier;
+	waypointsprite_alpha = autocvar_g_waypointsprite_alpha;
 
 	if(!waypointsprite_initialized)
 	{
