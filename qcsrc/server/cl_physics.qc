@@ -30,7 +30,7 @@ void PlayerJump (void)
 	float doublejump;
 
 	doublejump = FALSE;
-	if (sv_doublejump)
+	if (autocvar_sv_doublejump)
 	{
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
 		if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
