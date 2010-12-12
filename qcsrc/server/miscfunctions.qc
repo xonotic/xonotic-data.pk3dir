@@ -880,8 +880,6 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 			t = (weaponinfo.spawnflags & WEP_FLAG_NORMAL);
 		else if(t < -1)
 			t = 0;
-		else if (g_race)
-			t = (i == WEP_LASER || i == WEP_SHOTGUN);
 		else if (g_cts)
 			t = (i == WEP_SHOTGUN);
 		else if (g_nexball)
