@@ -1297,7 +1297,9 @@ void readlevelcvars(void)
 
 	g_pinata = cvar("g_pinata");
 
-	g_weapon_stay = cvar("g_weapon_stay");
+    g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
+    if(!g_weapon_stay)
+        g_weapon_stay = cvar("g_weapon_stay");
 
 	if (!g_weapon_stay && (cvar("deathmatch") == 2))
 		g_weapon_stay = 1;
