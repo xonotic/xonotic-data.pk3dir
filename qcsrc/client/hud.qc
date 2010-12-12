@@ -1119,18 +1119,18 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if(nPrimary == K_CTRL)
 	{
-		if (bInputType == 1)
+		if (bInputType == 1) //ctrl has been released
 		{
 			if (tab_panel != -1)
 			{
-				//switch to selected panel when ctrl has been released
+				//switch to selected panel
+				highlightedPanel = tab_panel;
 				highlightedPanel_prev = tab_panel;
 				HUD_Panel_FirstInDrawQ(highlightedPanel_prev);
 			}
+			tab_panel = -1;
+			reset_tab_panels();
 		}
-		//reset on press AND on release
-		tab_panel = -1;
-		reset_tab_panels();
 	}
 
 	if(nPrimary == K_MOUSE1)
@@ -1242,7 +1242,10 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			return true;
 
 		if (highlightedPanel_prev != -1)
+		{
+			HUD_Panel_GetName(highlightedPanel_prev);
 			cvar_set(strcat("hud_panel_", panel_name), ftos(!(panel_enabled)));
+		}
 		else
 			cvar_set(strcat("hud_dock"), (autocvar_hud_dock == "") ? "dock" : "");
 	}
@@ -1253,6 +1256,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 		if (highlightedPanel_prev != -1)
 		{
+			HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev);
 			panel_size_copied = panel_size;
 			highlightedPanel_copied = highlightedPanel_prev;
 		}
@@ -1283,6 +1287,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		highlightedPanel_backup = highlightedPanel_prev;
 
 		s = strcat(ftos(tmp_size_x/vid_conwidth), " ", ftos(tmp_size_y/vid_conheight));
+		HUD_Panel_GetName(highlightedPanel_prev);
 		cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
 	}
 	else if(nPrimary == 'z' && hudShiftState & S_CTRL) // undo last action
