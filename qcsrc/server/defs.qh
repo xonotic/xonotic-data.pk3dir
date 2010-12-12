@@ -200,6 +200,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 
 .entity weaponentity;
 .entity exteriorweaponentity;
+.vector weaponentity_glowmod;
 .float switchweapon;
 .float autoswitch;
 float weapon_action(float wpn, float wrequest);
