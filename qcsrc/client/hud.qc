@@ -1144,7 +1144,15 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			return true;
 		}
 	}
-	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) //TODO: move this case down
+	else if(nPrimary == K_ESCAPE)
+	{
+		if (bInputType == 1)
+			return true;
+		menu_enabled = 1;
+		menu_enabled_time = time;
+		localcmd("menu_showhudexit\n");
+	}
+	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // select and highlight another panel
 	{
 		if (bInputType == 1 || mouseClicked)
 			return true;
@@ -1227,14 +1235,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		}
 
 		tab_panels[tab_panel] = tab_panel;
-	}
-	else if(nPrimary == K_ESCAPE)
-	{
-		if (bInputType == 1)
-			return true;
-		menu_enabled = 1;
-		menu_enabled_time = time;
-		localcmd("menu_showhudexit\n");
 	}
 	else if(nPrimary == K_SPACE && hudShiftState & S_CTRL) // enable/disable highlighted panel or dock
 	{
