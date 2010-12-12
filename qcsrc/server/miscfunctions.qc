@@ -1528,8 +1528,12 @@ void precache_playermodel(string m)
 	precache_model(m);
 	if(sv_loddistance1)
 	{
-		precache_model(strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1)));
-		precache_model(strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1)));
+		f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
+		if(fexists(f))
+			precache_model(f);
+		f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
+		if(fexists(f))
+			precache_model(f);
 	}
 
 	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
