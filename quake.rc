@@ -4,7 +4,6 @@ maxplayers $menu_maxplayers
 exec data/campaign.cfg
 exec config_update.cfg
 exec autoexec.cfg
-exec font-nimbussansl.cfg
 stuffcmds
 //startdemos demos/demo1 demos/demo2 demos/demo3
 //startdemos
