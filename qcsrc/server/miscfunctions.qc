@@ -1166,6 +1166,7 @@ float sv_pitch_min;
 float sv_pitch_max;
 float sv_pitch_fixyaw;
 
+string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
 	// first load all the mutators
@@ -2622,7 +2623,6 @@ void zcurveparticles_from_tracetoss(float effectno, vector start, vector end, ve
 	zcurveparticles(effectno, start, end, end_dz, vlen(vel));
 }
 
-string GetGametype(); // g_world.qc
 void write_recordmarker(entity pl, float tstart, float dt)
 {
     GameLogEcho(strcat(":recordset:", ftos(pl.playerid), ":", ftos(dt)));
