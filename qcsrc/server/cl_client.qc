@@ -1244,18 +1244,16 @@ void ClientKill_Now_TeamChange()
 
 void ClientKill_Now()
 {
+	remove(self.killindicator);
+	self.killindicator = world;
+
 	if(self.killindicator_teamchange)
 		ClientKill_Now_TeamChange();
 
 	// in any case:
 	Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 
-	if(self.killindicator)
-	{
-		dprint("Cleaned up after a leaked kill indicator.\n");
-		remove(self.killindicator);
-		self.killindicator = world;
-	}
+	// now I am sure the player IS dead
 }
 void KillIndicator_Think()
 {
