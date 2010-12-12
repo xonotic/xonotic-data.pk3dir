@@ -1146,7 +1146,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	}
 	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) //TODO: move this case down
 	{
-		if (bInputType == 1)
+		if (bInputType == 1 || mouseClicked)
 			return true;
 
 		//FIXME: if a panel is highlighted, has the same pos_x and lays in the same level
@@ -1529,6 +1529,12 @@ void HUD_Panel_Mouse()
 
 	if(mouseClicked)
 	{
+		if (tab_panel != -1)
+		{
+			//stop ctrl-tab selection
+			tab_panel = -1;
+			reset_tab_panels();
+		}
 		if(prevMouseClicked == 0)
 		{
 			HUD_Panel_Highlight(); // sets highlightedPanel, highlightedAction, panel_click_distance, panel_click_resizeorigin
