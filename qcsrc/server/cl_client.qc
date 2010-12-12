@@ -1311,6 +1311,15 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 	if(g_race_qualifying || g_cts)
 		killtime = 0;
 
+    if(g_cts && self.killindicator && self.killindicator.health == 1) // self.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill
+    {
+		remove(self.killindicator);
+		self.killindicator = world;
+
+        ClientKill_Now(); // allow instant kill in this case
+        return;
+    }
+
 	self.killindicator_teamchange = targetteam;
 
     if(!self.killindicator)
@@ -1381,7 +1390,7 @@ void ClientKill (void)
 		ClientKill_TeamChange(0);
 }
 
-void CTS_ClientKill (entity e) // silent version of ClientKill
+void CTS_ClientKill (entity e) // silent version of ClientKill, used when player finishes a CTS run. Useful to prevent cheating by running back to the start line and starting out with more speed
 {
     e.killindicator = spawn();
     e.killindicator.owner = e;
