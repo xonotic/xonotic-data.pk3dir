@@ -542,7 +542,7 @@ void spawnfunc_func_pendulum()
 	if(!self.freq)
 	{
 		// find pendulum length (same formula as Q3A)
-		self.freq = 1 / (M_PI * 2) * sqrt(cvar("sv_gravity") / (3 * max(8, fabs(self.mins_z))));
+		self.freq = 1 / (M_PI * 2) * sqrt(autocvar_sv_gravity / (3 * max(8, fabs(self.mins_z))));
 	}
 
 	// copy initial angle

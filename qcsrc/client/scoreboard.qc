@@ -266,7 +266,7 @@ void Cmd_HUD_SetFields(float argc)
 
 	// TODO: re enable with gametype dependant cvars?
 	if(argc < 2) // no arguments provided
-		argc = tokenizebyseparator(strcat("x ", cvar_string("scoreboard_columns")), " ");
+		argc = tokenizebyseparator(strcat("x ", autocvar_scoreboard_columns), " ");
 
 	if(argc < 2)
 		argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
@@ -624,9 +624,9 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
 
 	if((rgb == '1 1 1') && (!is_spec)) {
-		rgb_x = cvar("scoreboard_color_bg_r") + 0.5;
-		rgb_y = cvar("scoreboard_color_bg_g") + 0.5;
-		rgb_z = cvar("scoreboard_color_bg_b") + 0.5; }
+		rgb_x = autocvar_scoreboard_color_bg_r + 0.5;
+		rgb_y = autocvar_scoreboard_color_bg_g + 0.5;
+		rgb_z = autocvar_scoreboard_color_bg_b + 0.5; }
 
 	// Layout:
 	tmp_x = sbwidth;
@@ -883,8 +883,10 @@ float HUD_WouldDrawScoreboard() {
 		return 1;
 	else if (intermission == 1)
 		return 1;
-	else if (getstati(STAT_HEALTH) <= 0 && cvar("cl_deathscoreboard"))
+	else if (getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != GAME_CTS)
 		return 1;
+    else if (spectatee_status == -1)
+        return 1;
 	else if (scoreboard_showscores_force)
 		return 1;
 	return 0;
@@ -897,7 +899,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float i;
 	float weapon_cnt = WEP_COUNT - 3; // either minstanex/nex are hidden, no port-o-launch, no tuba
 	float rows;
-	if(cvar("scoreboard_accuracy_doublerows"))
+	if(autocvar_scoreboard_accuracy_doublerows)
 		rows = 2;
 	else
 		rows = 1;
@@ -1028,9 +1030,9 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	float is_spec;
 	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
 	vector hl_rgb;
-	hl_rgb_x = cvar("scoreboard_color_bg_r") + 0.5;
-	hl_rgb_y = cvar("scoreboard_color_bg_g") + 0.5;
-	hl_rgb_z = cvar("scoreboard_color_bg_b") + 0.5;
+	hl_rgb_x = autocvar_scoreboard_color_bg_r + 0.5;
+	hl_rgb_y = autocvar_scoreboard_color_bg_g + 0.5;
+	hl_rgb_z = autocvar_scoreboard_color_bg_b + 0.5;
 
 	pos_y += hud_fontsize_y;
 	drawstring(pos, strcat("Rankings"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
@@ -1080,14 +1082,14 @@ void HUD_DrawScoreboard()
 	}
 
 	if(hud_woulddrawscoreboard) {
-		float scoreboard_fadeinspeed = cvar_or("scoreboard_fadeinspeed", 10);
+		float scoreboard_fadeinspeed = autocvar_scoreboard_fadeinspeed;
 		if (scoreboard_fadeinspeed)
 			scoreboard_fade_alpha = bound (0, (time - hud_woulddrawscoreboard_change) * scoreboard_fadeinspeed, 1);
 		else
 			scoreboard_fade_alpha = 1;
 	}
 	else {
-		float scoreboard_fadeoutspeed = cvar_or("scoreboard_fadeoutspeed", 5);
+		float scoreboard_fadeoutspeed = autocvar_scoreboard_fadeoutspeed;
 		if (scoreboard_fadeoutspeed)
 			scoreboard_fade_alpha = bound (0, (1/scoreboard_fadeoutspeed - (time - hud_woulddrawscoreboard_change)) * scoreboard_fadeoutspeed, 1);
 		else
@@ -1099,21 +1101,21 @@ void HUD_DrawScoreboard()
 
 	HUD_UpdatePlayerTeams();
 
-	scoreboard_alpha_bg = cvar("scoreboard_alpha_bg") * scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
-	scoreboard_alpha_fg = cvar_or("scoreboard_alpha_fg", 1.0) * scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
-	scoreboard_highlight = cvar("scoreboard_highlight");
-	scoreboard_highlight_alpha = cvar_or("scoreboard_highlight_alpha", 0.10) * scoreboard_alpha_fg;
-	scoreboard_highlight_alpha_self = cvar_or("scoreboard_highlight_alpha_self", 0.25) * scoreboard_alpha_fg;
-	scoreboard_alpha_name = cvar_or("scoreboard_alpha_name", 0.9) * scoreboard_alpha_fg;
-	scoreboard_alpha_name_self = cvar_or("scoreboard_alpha_name_self", 1) * scoreboard_alpha_fg;
+	scoreboard_alpha_bg = autocvar_scoreboard_alpha_bg * scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
+	scoreboard_alpha_fg = autocvar_scoreboard_alpha_fg * scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
+	scoreboard_highlight = autocvar_scoreboard_highlight;
+	scoreboard_highlight_alpha = autocvar_scoreboard_highlight_alpha * scoreboard_alpha_fg;
+	scoreboard_highlight_alpha_self = autocvar_scoreboard_highlight_alpha_self * scoreboard_alpha_fg;
+	scoreboard_alpha_name = autocvar_scoreboard_alpha_name * scoreboard_alpha_fg;
+	scoreboard_alpha_name_self = autocvar_scoreboard_alpha_name_self * scoreboard_alpha_fg;
 
 	vector rgb, pos, tmp;
 	entity pl, tm;
 
-	xmin = cvar("scoreboard_offset_left") * vid_conwidth;
-	ymin = cvar("con_notify") * cvar("con_notifysize");
+	xmin = autocvar_scoreboard_offset_left * vid_conwidth;
+	ymin = autocvar_con_notify * autocvar_con_notifysize;
 
-	xmax = (1 - cvar("scoreboard_offset_right")) * vid_conwidth;
+	xmax = (1 - autocvar_scoreboard_offset_right) * vid_conwidth;
 	ymax = vid_conheight - ymin;
 
 	sbwidth = xmax - xmin;
@@ -1135,7 +1137,7 @@ void HUD_DrawScoreboard()
 	drawfont = hud_font;
 
 	// Draw the scoreboard
-	vector bg_size = drawgetimagesize("gfx/scoreboard/scoreboard_bg") * cvar("scoreboard_bg_scale");
+	vector bg_size = drawgetimagesize("gfx/scoreboard/scoreboard_bg") * autocvar_scoreboard_bg_scale;
 
 	if(teamplay)
 	{
@@ -1155,9 +1157,9 @@ void HUD_DrawScoreboard()
 	}
 	else
 	{
-		rgb_x = cvar("scoreboard_color_bg_r");
-		rgb_y = cvar("scoreboard_color_bg_g");
-		rgb_z = cvar("scoreboard_color_bg_b");
+		rgb_x = autocvar_scoreboard_color_bg_r;
+		rgb_y = autocvar_scoreboard_color_bg_g;
+		rgb_z = autocvar_scoreboard_color_bg_b;
 
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
@@ -1179,7 +1181,7 @@ void HUD_DrawScoreboard()
 		}
 		pos = HUD_DrawScoreboardRankings(pos, pl, rgb, bg_size);
 	}
-	else if(cvar("scoreboard_accuracy") && spectatee_status != -1 && !warmup_stage) {
+	else if(autocvar_scoreboard_accuracy && spectatee_status != -1 && !warmup_stage) {
 		if(teamplay)
 			pos = HUD_DrawScoreboardAccuracyStats(pos, GetTeamRGB(myteam), bg_size);
 		else

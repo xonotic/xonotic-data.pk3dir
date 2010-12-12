@@ -10,10 +10,10 @@ void turret_hellion_missile_damage (entity inflictor, entity attacker, float dam
 
 void turret_hellion_postthink()
 {
-    if (cvar("g_turrets_reloadcvars"))
+    if (autocvar_g_turrets_reloadcvars)
     {
-        if (!self.shot_speed_max)  self.shot_speed_max  = cvar("g_turrets_unit_hellion_std_shot_speed_max");
-        if (!self.shot_speed_gain) self.shot_speed_gain = cvar("g_turrets_unit_hellion_std_shot_speed_gain");
+        if (!self.shot_speed_max)  self.shot_speed_max  = autocvar_g_turrets_unit_hellion_std_shot_speed_max;
+        if (!self.shot_speed_gain) self.shot_speed_gain = autocvar_g_turrets_unit_hellion_std_shot_speed_gain;
     }
 
     if (self.tur_head.frame != 0)
@@ -177,10 +177,10 @@ void turret_hellion_dinit()
     if (self.netname == "")      self.netname  = "Hellion Missile Turret";
 
     if not (self.shot_speed_max)
-        self.shot_speed_max  = cvar("g_turrets_unit_hellion_std_shot_speed_max");
+        self.shot_speed_max  = autocvar_g_turrets_unit_hellion_std_shot_speed_max;
 
     if not (self.shot_speed_gain)
-        self.shot_speed_gain = cvar("g_turrets_unit_hellion_std_shot_speed_gain");
+        self.shot_speed_gain = autocvar_g_turrets_unit_hellion_std_shot_speed_gain;
 
     self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_FASTPROJ | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_MISSILEKILL;
     self.aim_flags = TFL_AIM_SIMPLE;

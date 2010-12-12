@@ -191,6 +191,8 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	entity wz;
 	vector vf, vr, vu;
 
+	WarpZone_trace_firstzone = world;
+	WarpZone_trace_lastzone = world;
 	WarpZone_Trace_InitTransform();
 	if(!warpzone_warpzones_exist)
 	{
@@ -234,6 +236,8 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	wz = WarpZone_Find(org + mi, org + ma);
 	if(wz)
 	{
+		WarpZone_trace_firstzone = wz;
+		WarpZone_trace_lastzone = wz;
 		if(zone && wz != zone)
 		{
 			// we are in ANOTHER warpzone. This is bad. Make a zero length trace and return.
@@ -281,11 +285,15 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		}
 		if(trace_ent == wz)
 		{
+			// FIXME can this check be removed? Do we really need it?
 			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
 			trace_ent = world;
 			break;
 		}
 		wz = trace_ent;
+		if(!WarpZone_trace_firstzone)
+			WarpZone_trace_firstzone = wz;
+		WarpZone_trace_lastzone = wz;
 		if(zone && wz != zone)
 			break;
 		WarpZone_Trace_AddTransform(wz);
@@ -322,6 +330,8 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	o0 = e.origin;
 	v0 = e.velocity;
 
+	WarpZone_trace_firstzone = world;
+	WarpZone_trace_lastzone = world;
 	WarpZone_Trace_InitTransform();
 	WarpZone_tracetoss_time = 0;
 	if(!warpzone_warpzones_exist)
@@ -345,6 +355,8 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	wz = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
 	if(wz)
 	{
+		WarpZone_trace_firstzone = wz;
+		WarpZone_trace_lastzone = wz;
 		if(zone && wz != zone)
 		{
 			// we are in ANOTHER warpzone. This is bad. Make a zero length trace and return.
@@ -381,11 +393,15 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 			break;
 		if(trace_ent == wz)
 		{
+			// FIXME can this check be removed? Do we really need it?
 			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
 			trace_ent = world;
 			break;
 		}
 		wz = trace_ent;
+		if(!WarpZone_trace_firstzone)
+			WarpZone_trace_firstzone = wz;
+		WarpZone_trace_lastzone = wz;
 		if(zone && wz != zone)
 			break;
 		WarpZone_Trace_AddTransform(wz);

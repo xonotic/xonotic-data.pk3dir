@@ -277,8 +277,8 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			PlayerScore_Add(e, SP_RACE_TIME, snew - s);
 			l = PlayerTeamScore_Add(e, SP_RACE_LAPS, ST_RACE_LAPS, 1);
 
-			if(cvar("fraglimit"))
-				if(l >= cvar("fraglimit"))
+			if(autocvar_fraglimit)
+				if(l >= autocvar_fraglimit)
 					race_StartCompleting();
 
 			if(race_completing)
@@ -306,9 +306,9 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				if(cp == race_timed_checkpoint)
 				{
 					race_setTime(GetMapname(), t, e.crypto_idfp, e.netname, e);
-					if(g_cts && cvar("g_cts_finish_kill_delay"))
+					if(g_cts && autocvar_g_cts_finish_kill_delay)
 					{
-						CTS_ClientKill(cvar("g_cts_finish_kill_delay"));
+						CTS_ClientKill(e);
 					}
 				}
 				if(t < recordtime || recordtime == 0)
@@ -742,11 +742,21 @@ void trigger_race_checkpoint_verify()
 		for(trigger = world; (trigger = find(trigger, classname, "trigger_multiple")); )
 			for(targ = world; (targ = find(targ, targetname, trigger.target)); )
 				if (targ.classname == "target_checkpoint" || targ.classname == "target_startTimer" || targ.classname == "target_stopTimer") {
-					targ.wait = -2;
+					trigger.wait = 0;
+					trigger.delay = 0;
+					targ.wait = 0;
 					targ.delay = 0;
 
-					setsize(targ, trigger.mins, trigger.maxs);
-					setorigin(targ, trigger.origin);
+                    // These just make the game crash on some maps with oddly shaped triggers. 
+                    // (on the other hand they used to fix the case when two players ran through a checkpoint at once, 
+                    // and often one of them just passed through without being registered. Hope it's fixed  in a better way now.
+                    // (happened on item triggers too)
+                    //
+					//targ.wait = -2;
+					//targ.delay = 0;
+
+					//setsize(targ, trigger.mins, trigger.maxs);
+					//setorigin(targ, trigger.origin);
 					//remove(trigger);
 				}
 	}

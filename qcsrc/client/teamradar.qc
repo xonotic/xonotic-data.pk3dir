@@ -176,11 +176,11 @@ float hud_panel_radar_zoommode;
 
 void teamradar_loadcvars()
 {
-	v_flipped = cvar("v_flipped");
-	hud_panel_radar_scale = cvar("hud_panel_radar_scale");
-	hud_panel_radar_foreground_alpha = cvar("hud_panel_radar_foreground_alpha") * panel_fg_alpha;
-	hud_panel_radar_rotation = cvar("hud_panel_radar_rotation");
-	hud_panel_radar_zoommode = cvar("hud_panel_radar_zoommode");
+	v_flipped = autocvar_v_flipped;
+	hud_panel_radar_scale = autocvar_hud_panel_radar_scale;
+	hud_panel_radar_foreground_alpha = autocvar_hud_panel_radar_foreground_alpha * panel_fg_alpha;
+	hud_panel_radar_rotation = autocvar_hud_panel_radar_rotation;
+	hud_panel_radar_zoommode = autocvar_hud_panel_radar_zoommode;
 
 	// others default to 0
 	// match this to defaultXonotic.cfg!

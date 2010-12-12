@@ -258,7 +258,7 @@ void ImpulseCommands (void)
 	}
 	else if(imp >= 103 && imp <= 107)
 	{
-		if(cvar("g_waypointeditor"))
+		if(autocvar_g_waypointeditor)
 		{
 			switch(imp)
 			{

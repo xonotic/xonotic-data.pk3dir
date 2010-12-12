@@ -14,11 +14,11 @@ float IsTeamBalanceForced()
 		return 0; // no rebalancing whatsoever please
 	if(!teams_matter)
 		return 0;
-	if(cvar("g_campaign"))
+	if(autocvar_g_campaign)
 		return 0;
-	if(cvar("bot_vs_human") && (c3==-1 && c4==-1))
+	if(autocvar_bot_vs_human && (c3==-1 && c4==-1))
 		return 0;
-	if(!cvar("g_balance_teams_force"))
+	if(!autocvar_g_balance_teams_force)
 		return -1;
 	return 1;
 }
@@ -76,7 +76,7 @@ void entcs_init();
 
 void LogTeamchange(float player_id, float team_number, float type)
 {
-	if(!cvar("sv_eventlog"))
+	if(!autocvar_sv_eventlog)
 		return;
 
 	if(player_id < 1)
@@ -112,9 +112,10 @@ void ReadGameCvars()
 	float i;
 
 	found = 0;
-	prev = cvar("gamecfg");
+	prev = autocvar_gamecfg;
 	for(i = 0; i < 2; ++i)
 	{
+//#NO AUTOCVARS START
 		found += (g_dm = (!found && (prev != GAME_DEATHMATCH) && cvar("g_dm")));
 		found += (g_tdm = (!found && (prev != GAME_TEAM_DEATHMATCH) && cvar("g_tdm")));
 		found += (g_domination = (!found && (prev != GAME_DOMINATION) && cvar("g_domination")));
@@ -131,6 +132,7 @@ void ReadGameCvars()
 		found += (g_cts = (!found && (prev != GAME_CTS) && cvar("g_cts")));
 		found += (g_freezetag = (!found && (prev != GAME_FREEZETAG) && cvar("g_freezetag")));
 		found += (g_keepaway = (!found && (prev != GAME_KEEPAWAY) && cvar("g_keepaway")));
+//#NO AUTOCVARS END
 
 		if(found)
 			break;
@@ -141,13 +143,14 @@ void ReadGameCvars()
 	if(!found)
 		g_dm = 1;
 
-	if(g_dm && cvar("deathmatch_force_teamplay"))
+	if(g_dm && autocvar_deathmatch_force_teamplay)
 	{
 		g_dm = 0;
 		g_tdm = 1;
 	}
 
 	teams_matter = 0;
+	serverflags &~= SERVERFLAG_TEAMPLAY;
 }
 
 void default_delayedinit()
@@ -158,15 +161,7 @@ void default_delayedinit()
 
 void ActivateTeamplay()
 {
-	float teamplay_default;
-	teamplay_default = cvar("teamplay_default");
-
-	if(teamplay_default)
-		teamplay = teamplay_default;
-	else
-		teamplay = 3;
-	cvar_set("teamplay", ftos(teamplay));
-
+	serverflags |= SERVERFLAG_TEAMPLAY;
 	teams_matter = 1;
 }
 
@@ -177,9 +172,6 @@ void InitGameplayMode()
 	qualifying_override = -1;
 
 	VoteReset();
-
-	teams_matter = 0;
-	cvar_set("teamplay", "0");
 
 	// make sure only ONE type is selected
 	ReadGameCvars();
@@ -210,9 +202,9 @@ void InitGameplayMode()
 	ReadGameCvars();
 
 	// set both here, gamemode can override it later
-	timelimit_override = cvar("timelimit_override");
-	fraglimit_override = cvar("fraglimit_override");
-	leadlimit_override = cvar("leadlimit_override");
+	timelimit_override = autocvar_timelimit_override;
+	fraglimit_override = autocvar_fraglimit_override;
+	leadlimit_override = autocvar_leadlimit_override;
 
 	if(g_dm)
 	{
@@ -226,7 +218,7 @@ void InitGameplayMode()
 		gamemode_name = "Team Deathmatch";
 		ActivateTeamplay();
 		tdm_init();
-		if(cvar("g_tdm_team_spawns"))
+		if(autocvar_g_tdm_team_spawns)
 			have_team_spawns = -1; // request team spawns
 	}
 
@@ -235,8 +227,8 @@ void InitGameplayMode()
 		game = GAME_DOMINATION;
 		gamemode_name = "Domination";
 		ActivateTeamplay();
-		fraglimit_override = cvar("g_domination_point_limit");
-		leadlimit_override = cvar("g_domination_point_leadlimit");
+		fraglimit_override = autocvar_g_domination_point_limit;
+		leadlimit_override = autocvar_g_domination_point_leadlimit;
 		dom_init();
 		have_team_spawns = -1; // request team spawns
 	}
@@ -246,20 +238,16 @@ void InitGameplayMode()
 		game = GAME_CTF;
 		gamemode_name = "Capture the Flag";
 		ActivateTeamplay();
-		if(cvar("g_campaign"))
-			g_ctf_win_mode = 2;
-		else
-			g_ctf_win_mode = cvar("g_ctf_win_mode");
-		g_ctf_ignore_frags = cvar("g_ctf_ignore_frags");
+		g_ctf_ignore_frags = autocvar_g_ctf_ignore_frags;
 		if(g_ctf_win_mode == 2)
 		{
-			fraglimit_override = cvar("g_ctf_capture_limit");
-			leadlimit_override = cvar("g_ctf_capture_leadlimit");
+			fraglimit_override = autocvar_g_ctf_capture_limit;
+			leadlimit_override = autocvar_g_ctf_capture_leadlimit;
 		}
 		else
 		{
-			fraglimit_override = cvar("capturelimit_override");
-			leadlimit_override = cvar("captureleadlimit_override");
+			fraglimit_override = autocvar_capturelimit_override;
+			leadlimit_override = autocvar_captureleadlimit_override;
 		}
 		ctf_init();
 		have_team_spawns = -1; // request team spawns
@@ -269,10 +257,10 @@ void InitGameplayMode()
 	{
 		game = GAME_RUNEMATCH;
 		gamemode_name = "Rune Match";
-		if(cvar("deathmatch_force_teamplay"))
+		if(autocvar_deathmatch_force_teamplay)
 			ActivateTeamplay();
-		fraglimit_override = cvar("g_runematch_point_limit");
-		leadlimit_override = cvar("g_runematch_point_leadlimit");
+		fraglimit_override = autocvar_g_runematch_point_limit;
+		leadlimit_override = autocvar_g_runematch_point_leadlimit;
 		runematch_init();
 	}
 
@@ -280,7 +268,7 @@ void InitGameplayMode()
 	{
 		game = GAME_LMS;
 		gamemode_name = "Last Man Standing";
-		fraglimit_override = cvar("g_lms_lives_override");
+		fraglimit_override = autocvar_g_lms_lives_override;
 		leadlimit_override = 0; // not supported by LMS
 		if(fraglimit_override == 0)
 			fraglimit_override = -1;
@@ -293,12 +281,12 @@ void InitGameplayMode()
 	{
 		game = GAME_ARENA;
 		gamemode_name = "Arena";
-		fraglimit_override = cvar("g_arena_point_limit");
-		leadlimit_override = cvar("g_arena_point_leadlimit");
-		maxspawned = cvar("g_arena_maxspawned");
+		fraglimit_override = autocvar_g_arena_point_limit;
+		leadlimit_override = autocvar_g_arena_point_leadlimit;
+		maxspawned = autocvar_g_arena_maxspawned;
 		if(maxspawned < 2)
 			maxspawned = 2;
-		arena_roundbased = cvar("g_arena_roundbased");
+		arena_roundbased = autocvar_g_arena_roundbased;
 	}
 
 	if(g_ca)
@@ -306,8 +294,8 @@ void InitGameplayMode()
 		game = GAME_CA;
 		gamemode_name = "Clan Arena";
 		ActivateTeamplay();
-		fraglimit_override = cvar("g_ca_point_limit");
-		leadlimit_override = cvar("g_ca_point_leadlimit");
+		fraglimit_override = autocvar_g_ca_point_limit;
+		leadlimit_override = autocvar_g_ca_point_leadlimit;
 		precache_sound("ctf/red_capture.wav");
 		precache_sound("ctf/blue_capture.wav");
 	}
@@ -316,8 +304,8 @@ void InitGameplayMode()
 		game = GAME_KEYHUNT;
 		gamemode_name = "Key Hunt";
 		ActivateTeamplay();
-		fraglimit_override = cvar("g_keyhunt_point_limit");
-		leadlimit_override = cvar("g_keyhunt_point_leadlimit");
+		fraglimit_override = autocvar_g_keyhunt_point_limit;
+		leadlimit_override = autocvar_g_keyhunt_point_leadlimit;
 		MUTATOR_ADD(gamemode_keyhunt);
 	}
 
@@ -326,8 +314,8 @@ void InitGameplayMode()
 		game = GAME_FREEZETAG;
 		gamemode_name = "Freeze Tag";
 		ActivateTeamplay();
-		fraglimit_override = cvar("g_freezetag_point_limit");
-		leadlimit_override = cvar("g_freezetag_point_leadlimit");
+		fraglimit_override = autocvar_g_freezetag_point_limit;
+		leadlimit_override = autocvar_g_freezetag_point_leadlimit;
 		MUTATOR_ADD(gamemode_freezetag);
 	}
 
@@ -353,17 +341,17 @@ void InitGameplayMode()
 		game = GAME_RACE;
 		gamemode_name = "Race";
 
-		if(cvar("g_race_teams"))
+		if(autocvar_g_race_teams)
 		{
 			ActivateTeamplay();
-			race_teams = bound(2, cvar("g_race_teams"), 4);
+			race_teams = bound(2, autocvar_g_race_teams, 4);
 			have_team_spawns = -1; // request team spawns
 		}
 		else
 			race_teams = 0;
 
-		qualifying_override = cvar("g_race_qualifying_timelimit_override");
-		fraglimit_override = cvar("g_race_laps_limit");
+		qualifying_override = autocvar_g_race_qualifying_timelimit_override;
+		fraglimit_override = autocvar_g_race_laps_limit;
 		leadlimit_override = 0; // currently not supported by race
 	}
 
@@ -380,8 +368,8 @@ void InitGameplayMode()
 	{
 		game = GAME_NEXBALL;
 		gamemode_name = "Nexball";
-		fraglimit_override = cvar("g_nexball_goallimit");
-		leadlimit_override = cvar("g_nexball_goalleadlimit");
+		fraglimit_override = autocvar_g_nexball_goallimit;
+		leadlimit_override = autocvar_g_nexball_goalleadlimit;
 		ActivateTeamplay();
 		nb_init();
 		have_team_spawns = -1; // request team spawns
@@ -404,7 +392,7 @@ void InitGameplayMode()
 	cache_lastmutatormsg = strzone("");
 
 	// enforce the server's universal frag/time limits
-	if(!cvar("g_campaign"))
+	if(!autocvar_g_campaign)
 	{
 		if(fraglimit_override >= 0)
 			cvar_set("fraglimit", ftos(fraglimit_override));
@@ -419,19 +407,19 @@ void InitGameplayMode()
 	if(g_race)
 	{
 		// we need to find out the correct value for g_race_qualifying
-		if(cvar("g_campaign"))
+		if(autocvar_g_campaign)
 		{
 			g_race_qualifying = 1;
 		}
-		else if(!cvar("g_campaign") && cvar("g_race_qualifying_timelimit") > 0)
+		else if(!autocvar_g_campaign && autocvar_g_race_qualifying_timelimit > 0)
 		{
 			g_race_qualifying = 2;
-			race_fraglimit = cvar("fraglimit");
-			race_leadlimit = cvar("leadlimit");
-			race_timelimit = cvar("timelimit");
+			race_fraglimit = autocvar_fraglimit;
+			race_leadlimit = autocvar_leadlimit;
+			race_timelimit = autocvar_timelimit;
 			cvar_set("fraglimit", "0");
 			cvar_set("leadlimit", "0");
-			cvar_set("timelimit", cvar_string("g_race_qualifying_timelimit"));
+			cvar_set("timelimit", ftos(autocvar_g_race_qualifying_timelimit));
 		}
 		else
 			g_race_qualifying = 0;
@@ -451,7 +439,7 @@ void InitGameplayMode()
 string GetClientVersionMessage() {
 	local string versionmsg;
 	if (self.version_mismatch) {
-		if(self.version < cvar("gameversion")) {
+		if(self.version < autocvar_gameversion) {
 			versionmsg = "^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8";
 		} else {
 			versionmsg = "^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8";
@@ -469,14 +457,14 @@ void PrintWelcomeMessage(entity pl)
 
 	if(self.cvar_scr_centertime == 0) return;
 
-	if(cvar("g_campaign"))
+	if(autocvar_g_campaign)
 	{
 		if(self.classname == "player" && !self.BUTTON_INFO)
 			return;
 	}
 	else
 	{
-		if((time - self.jointime) > cvar("welcome_message_time") && !self.BUTTON_INFO)
+		if((time - self.jointime) > autocvar_welcome_message_time && !self.BUTTON_INFO)
 			return;
 	}
 
@@ -485,7 +473,7 @@ void PrintWelcomeMessage(entity pl)
 		self.welcomemessage_time = time + max(0.5, self.cvar_scr_centertime * 0.6);
 	}
 
-	if(cvar("g_campaign"))
+	if(autocvar_g_campaign)
 	{
 		centerprint(pl, campaign_message);
 		return;
@@ -525,11 +513,11 @@ void PrintWelcomeMessage(entity pl)
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
-	if(cvar("g_start_weapon_laser") == 0)
+	if(autocvar_g_start_weapon_laser == 0)
 		modifications = strcat(modifications, ", No start weapons");
-	if(cvar("sv_gravity") < 800)
+	if(autocvar_sv_gravity < 800)
 		modifications = strcat(modifications, ", Low gravity");
-	if(g_cloaked)
+	if(g_cloaked && !g_cts)
 		modifications = strcat(modifications, ", Cloaked");
 	if(g_grappling_hook)
 		modifications = strcat(modifications, ", Hook");
@@ -537,7 +525,7 @@ void PrintWelcomeMessage(entity pl)
 		modifications = strcat(modifications, ", Midair");
 	if(g_pinata)
 		modifications = strcat(modifications, ", Pinata");
-	if(g_weapon_stay)
+	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_bloodloss > 0)
 		modifications = strcat(modifications, ", Bloodloss");
@@ -548,7 +536,7 @@ void PrintWelcomeMessage(entity pl)
 	local string versionmessage;
 	versionmessage = GetClientVersionMessage();
 
-	s = strcat(s, NEWLINES, "This is Xonotic ", cvar_string("g_xonoticversion"), "\n", versionmessage);
+	s = strcat(s, NEWLINES, "This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
 	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
 
 	if(modifications != "")
@@ -560,13 +548,13 @@ void PrintWelcomeMessage(entity pl)
 	if (g_grappling_hook)
 		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
 
-	if(cache_lastmutatormsg != cvar_string("g_mutatormsg"))
+	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
 		if(cache_lastmutatormsg)
 			strunzone(cache_lastmutatormsg);
 		if(cache_mutatormsg)
 			strunzone(cache_mutatormsg);
-		cache_lastmutatormsg = strzone(cvar_string("g_mutatormsg"));
+		cache_lastmutatormsg = strzone(autocvar_g_mutatormsg);
 		cache_mutatormsg = strzone(cache_lastmutatormsg);
 	}
 
@@ -574,7 +562,7 @@ void PrintWelcomeMessage(entity pl)
 		s = strcat(s, "\n\n^8special gameplay tips: ^7", cache_mutatormsg);
 	}
 
-	motd = cvar_string("sv_motd");
+	motd = autocvar_sv_motd;
 	if (motd != "") {
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
@@ -639,11 +627,7 @@ void CheckAllowedTeams (entity for_whom)
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 
-	if(cvar("g_campaign") && for_whom && clienttype(for_whom) == CLIENTTYPE_REAL)
-	{
-		c1 = 0; // only allow RED team for player joining
-	}
-	else if(g_onslaught)
+	if(g_onslaught)
 	{
 		// onslaught is special
 		head = findchain(classname, "onslaught_generator");
@@ -709,9 +693,9 @@ void CheckAllowedTeams (entity for_whom)
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
 	if(c3==-1 && c4==-1)
-	if(cvar("bot_vs_human") && for_whom)
+	if(autocvar_bot_vs_human && for_whom)
 	{
-		if(cvar("bot_vs_human") > 0)
+		if(autocvar_bot_vs_human > 0)
 		{
 			// bots are all blue
 			if(clienttype(for_whom) == CLIENTTYPE_BOT)
@@ -759,8 +743,15 @@ void GetTeamCounts(entity ignore)
 	// FIXME: also find and memorize the lowest-scoring bot on each team (in case players must be shuffled around)
 	// also remember the lowest-scoring player
 
-	FOR_EACH_PLAYER(head)
+	FOR_EACH_CLIENT(head)
 	{
+		float t;
+		if(head.classname == "player")
+			t = head.team;
+		else if(head.team_forced > 0)
+			t = head.team_forced; // reserve the spot
+		else
+			continue;
 		if(head != ignore)// && head.netname != "")
 		{
 			value = PlayerValue(head);
@@ -768,7 +759,7 @@ void GetTeamCounts(entity ignore)
 				bvalue = value;
 			else
 				bvalue = 0;
-			if(head.team == COLOR_TEAM1)
+			if(t == COLOR_TEAM1)
 			{
 				if(c1 >= 0)
 				{
@@ -776,7 +767,7 @@ void GetTeamCounts(entity ignore)
 					cb1 = cb1 + bvalue;
 				}
 			}
-			if(head.team == COLOR_TEAM2)
+			if(t == COLOR_TEAM2)
 			{
 				if(c2 >= 0)
 				{
@@ -784,7 +775,7 @@ void GetTeamCounts(entity ignore)
 					cb2 = cb2 + bvalue;
 				}
 			}
-			if(head.team == COLOR_TEAM3)
+			if(t == COLOR_TEAM3)
 			{
 				if(c3 >= 0)
 				{
@@ -792,7 +783,7 @@ void GetTeamCounts(entity ignore)
 					cb3 = cb3 + bvalue;
 				}
 			}
-			if(head.team == COLOR_TEAM4)
+			if(t == COLOR_TEAM4)
 			{
 				if(c4 >= 0)
 				{
@@ -800,6 +791,18 @@ void GetTeamCounts(entity ignore)
 					cb4 = cb4 + bvalue;
 				}
 			}
+		}
+	}
+
+	// if the player who has a forced team has not joined yet, reserve the spot
+	if(autocvar_g_campaign)
+	{
+		switch(autocvar_g_campaign_forceteam)
+		{
+			case 1: if(c1 == cb1) ++c1; break;
+			case 2: if(c2 == cb2) ++c2; break;
+			case 3: if(c3 == cb3) ++c3; break;
+			case 4: if(c4 == cb4) ++c4; break;
 		}
 	}
 }
@@ -824,12 +827,12 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	if(c4 >= 0)
 		totalteams = totalteams + 1;
 
-	if((cvar("bot_vs_human") || pl.team_forced > 0) && totalteams == 1)
+	if((autocvar_bot_vs_human || pl.team_forced > 0) && totalteams == 1)
 		totalteams += 1;
 
 	if(totalteams <= 1)
 	{
-		if(cvar("g_campaign") && pl && clienttype(pl) == CLIENTTYPE_REAL)
+		if(autocvar_g_campaign && pl && clienttype(pl) == CLIENTTYPE_REAL)
 			return 1; // special case for campaign and player joining
 		else if(g_domination)
 			error("Too few teams available for domination\n");
@@ -905,33 +908,6 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 	// find out what teams are available
 	CheckAllowedTeams(pl);
-
-	// if we want the player in a certain team for campaign, force him there
-	if(cvar("g_campaign"))
-	if(clienttype(pl) == CLIENTTYPE_REAL) // only players, not bots
-	{
-		switch(cvar("g_campaign_forceteam"))
-		{
-			case 1:
-				SetPlayerColors(pl, COLOR_TEAM1 - 1);
-				LogTeamchange(pl.playerid, pl.team, 2);
-				return COLOR_TEAM1;
-			case 2:
-				SetPlayerColors(pl, COLOR_TEAM2 - 1);
-				LogTeamchange(pl.playerid, pl.team, 2);
-				return COLOR_TEAM2;
-			case 3:
-				SetPlayerColors(pl, COLOR_TEAM3 - 1);
-				LogTeamchange(pl.playerid, pl.team, 2);
-				return COLOR_TEAM3;
-			case 4:
-				SetPlayerColors(pl, COLOR_TEAM4 - 1);
-				LogTeamchange(pl.playerid, pl.team, 2);
-				return COLOR_TEAM4;
-			default:
-				break;
-		}
-	}
 
 	// if we don't care what team he ends up on, put him on whatever team he entered as.
 	// if he's not on a valid team, then let other code put him on the smallest team
@@ -1044,12 +1020,12 @@ void SV_ChangeTeam(float _color)
 		return;
 	}
 
-	if((cvar("g_campaign")) || (cvar("g_changeteam_banned") && self.wasplayer)) {
+	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && self.wasplayer)) {
 		sprint(self, "Team changes not allowed\n");
 		return; // changing teams is not allowed
 	}
 
-	if(cvar("g_balance_teams_prevent_imbalance"))
+	if(autocvar_g_balance_teams_prevent_imbalance)
 	{
 		// only allow changing to a smaller or equal size team
 
@@ -1364,9 +1340,9 @@ void tdm_spawnteams()
 {
 	float numteams;
 
-	numteams = cvar("g_tdm_teams_override");
+	numteams = autocvar_g_tdm_teams_override;
 	if(numteams < 2)
-		numteams = cvar("g_tdm_teams");
+		numteams = autocvar_g_tdm_teams;
 	numteams = bound(2, numteams, 4);
 
 	tdm_spawnteam("Red", COLOR_TEAM1-1);

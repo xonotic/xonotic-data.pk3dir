@@ -1,7 +1,7 @@
 void freezetag_Initialize()
 {
 	precache_model("models/ice/ice.md3");
-	warmup = time + cvar("g_start_delay") + cvar("g_freezetag_warmup");
+	warmup = time + autocvar_g_start_delay + autocvar_g_freezetag_warmup;
 }
 
 void freezetag_CheckWinner()
@@ -9,7 +9,7 @@ void freezetag_CheckWinner()
 	if(time <= game_starttime) // game didn't even start yet! nobody can win in that case.
 		return;
 
-	if(next_round || (time > warmup - cvar("g_freezetag_warmup") && time < warmup))
+	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
 		return; // already waiting for next round to start
 
 	if((redalive >= 1 && bluealive >= 1) // counted in arena.qc
@@ -154,7 +154,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		bprint("^7", frag_target.netname, "^1 was frozen by ^7", frag_attacker.netname, ".\n");
 	}
 
-	frag_target.health = cvar("g_balance_health_start"); // "respawn" the player :P
+	frag_target.health = autocvar_g_balance_health_start; // "respawn" the player :P
 
 	freezetag_CheckWinner();
 
@@ -166,7 +166,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
     freezetag_Unfreeze(); // start by making sure that all ice blocks are removed
 
 	if(totalspawned == 1 && time > game_starttime) // only one player active on server, start a new match immediately
-	if(!next_round && warmup && (time < warmup - cvar("g_freezetag_warmup") || time > warmup)) // not awaiting next round
+	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
 	{
 		next_round = time;
 		return 1;
@@ -189,7 +189,7 @@ MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
 MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 {
     vector revive_extra_size;
-    revive_extra_size = '1 1 1' * cvar("g_freezetag_revive_extra_size");
+    revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 
     float teammate_nearby;
     FOR_EACH_PLAYER(other) if(self != other)
@@ -214,8 +214,8 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
         }
         else
         {
-            self.freezetag_revive_progress = (time - self.freezetag_beginrevive_time) / cvar("g_freezetag_revive_time");
-            if(time - self.freezetag_beginrevive_time >= cvar("g_freezetag_revive_time"))
+            self.freezetag_revive_progress = (time - self.freezetag_beginrevive_time) / autocvar_g_freezetag_revive_time;
+            if(time - self.freezetag_beginrevive_time >= autocvar_g_freezetag_revive_time)
             {
                 freezetag_Unfreeze();
 
@@ -264,7 +264,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDamage_Calculate)
         if(frag_target.freezetag_frozen == 1 && frag_deathtype != DEATH_HURTTRIGGER)
         {
             frag_damage = 0;
-            frag_force = frag_force * cvar("g_freezetag_frozen_force");
+            frag_force = frag_force * autocvar_g_freezetag_frozen_force;
         }
     }
     return 1;

@@ -771,10 +771,10 @@ void GameCommand(string command)
 			if(plr.classname == "spectator" || plr.classname == "observer")
 			{
 				plr.spectatortime = time;
-				sprint(plr, strcat("^7You have to become a player within the next ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+				sprint(plr, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 			}
 		}
-		bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds!\n"));
+		bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
 		return;
 	}
 

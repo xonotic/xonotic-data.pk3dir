@@ -1953,3 +1953,23 @@ float vercmp(string v1, string v2)
 
 	return vercmp_recursive(v1, v2);
 }
+
+float u8_strsize(string s)
+{
+	float l, i, c;
+	l = 0;
+	for(i = 0; ; ++i)
+	{
+		c = str2chr(s, i);
+		if(c <= 0)
+			break;
+		++l;
+		if(c >= 0x80)
+			++l;
+		if(c >= 0x800)
+			++l;
+		if(c >= 0x10000)
+			++l;
+	}
+	return l;
+}

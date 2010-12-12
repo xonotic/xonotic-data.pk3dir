@@ -52,7 +52,7 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 	if(e == e.realowner.crylink_lastgroup)
 		e.realowner.crylink_lastgroup = world;
 
-	RadiusDamage (e, e.realowner, cvar("g_balance_crylink_primary_damage") * a, cvar("g_balance_crylink_primary_edgedamage") * a, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * a, e.projectiledeathtype, other);
+	RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_damage * a, autocvar_g_balance_crylink_primary_edgedamage * a, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * a, e.projectiledeathtype, other);
 
 	if(e.queuenext != e2)
 		W_Crylink_LinkExplode(e.queuenext, e2);
@@ -174,30 +174,30 @@ void W_Crylink_LinkJoinEffect_Think()
 		{
 			if(e.projectiledeathtype & HITTYPE_SECONDARY)
 			{
-				if(cvar("g_balance_crylink_secondary_joinexplode"))
+				if(autocvar_g_balance_crylink_secondary_joinexplode)
 				{
-					n = n / cvar("g_balance_crylink_secondary_shots");
-					RadiusDamage (e, e.realowner, cvar("g_balance_crylink_secondary_joinexplode_damage") * n, 
-									cvar("g_balance_crylink_secondary_joinexplode_edgedamage") * n, 
-									cvar("g_balance_crylink_secondary_joinexplode_radius") * n, e.realowner, 
-									cvar("g_balance_crylink_secondary_joinexplode_force") * n, e.projectiledeathtype, other);
+					n = n / autocvar_g_balance_crylink_secondary_shots;
+					RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_secondary_joinexplode_damage * n,
+									autocvar_g_balance_crylink_secondary_joinexplode_edgedamage * n,
+									autocvar_g_balance_crylink_secondary_joinexplode_radius * n, e.realowner,
+									autocvar_g_balance_crylink_secondary_joinexplode_force * n, e.projectiledeathtype, other);
 
 					pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
-				}				
+				}
 			}
 			else
 			{
-				if(cvar("g_balance_crylink_primary_joinexplode"))
+				if(autocvar_g_balance_crylink_primary_joinexplode)
 				{
-					n = n / cvar("g_balance_crylink_primary_shots");
-					RadiusDamage (e, e.realowner, cvar("g_balance_crylink_primary_joinexplode_damage") * n, 
-									cvar("g_balance_crylink_primary_joinexplode_edgedamage") * n, 
-									cvar("g_balance_crylink_primary_joinexplode_radius") * n, e.realowner, 
-									cvar("g_balance_crylink_primary_joinexplode_force") * n, e.projectiledeathtype, other);
+					n = n / autocvar_g_balance_crylink_primary_shots;
+					RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_joinexplode_damage * n,
+									autocvar_g_balance_crylink_primary_joinexplode_edgedamage * n,
+									autocvar_g_balance_crylink_primary_joinexplode_radius * n, e.realowner,
+									autocvar_g_balance_crylink_primary_joinexplode_force * n, e.projectiledeathtype, other);
 
 					pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
-				}				
-			}			
+				}
+			}
 		}
 	}
 	remove(self);
@@ -228,10 +228,10 @@ void W_Crylink_Touch (void)
 	if(finalhit)
 		f = 1;
 	else
-		f = cvar("g_balance_crylink_primary_bouncedamagefactor");
+		f = autocvar_g_balance_crylink_primary_bouncedamagefactor;
 	if(a)
 		f *= a;
-	if (RadiusDamage (self, self.realowner, cvar("g_balance_crylink_primary_damage") * f, cvar("g_balance_crylink_primary_edgedamage") * f, cvar("g_balance_crylink_primary_radius"), world, cvar("g_balance_crylink_primary_force") * f, self.projectiledeathtype, other) && cvar("g_balance_crylink_primary_linkexplode"))
+	if (RadiusDamage (self, self.realowner, autocvar_g_balance_crylink_primary_damage * f, autocvar_g_balance_crylink_primary_edgedamage * f, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * f, self.projectiledeathtype, other) && autocvar_g_balance_crylink_primary_linkexplode)
 	{
 		if(self == self.realowner.crylink_lastgroup)
 			self.realowner.crylink_lastgroup = world;
@@ -278,10 +278,10 @@ void W_Crylink_Touch2 (void)
 	if(finalhit)
 		f = 1;
 	else
-		f = cvar("g_balance_crylink_secondary_bouncedamagefactor");
+		f = autocvar_g_balance_crylink_secondary_bouncedamagefactor;
 	if(a)
 		f *= a;
-	if (RadiusDamage (self, self.realowner, cvar("g_balance_crylink_secondary_damage") * f, cvar("g_balance_crylink_secondary_edgedamage") * f, cvar("g_balance_crylink_secondary_radius"), world, cvar("g_balance_crylink_secondary_force") * f, self.projectiledeathtype, other) && cvar("g_balance_crylink_secondary_linkexplode"))
+	if (RadiusDamage (self, self.realowner, autocvar_g_balance_crylink_secondary_damage * f, autocvar_g_balance_crylink_secondary_edgedamage * f, autocvar_g_balance_crylink_secondary_radius, world, autocvar_g_balance_crylink_secondary_force * f, self.projectiledeathtype, other) && autocvar_g_balance_crylink_secondary_linkexplode)
 	{
 		if(self == self.realowner.crylink_lastgroup)
 			self.realowner.crylink_lastgroup = world;
@@ -320,19 +320,19 @@ void W_Crylink_Attack (void)
 	float maxdmg;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - cvar("g_balance_crylink_primary_ammo");
+		self.ammo_cells = self.ammo_cells - autocvar_g_balance_crylink_primary_ammo;
 
-	maxdmg = cvar("g_balance_crylink_primary_damage")*cvar("g_balance_crylink_primary_shots");
-	maxdmg *= 1 + cvar("g_balance_crylink_primary_bouncedamagefactor") * cvar("g_balance_crylink_primary_bounces");
-	if(cvar("g_balance_crylink_primary_joinexplode"))
-		maxdmg += cvar("g_balance_crylink_primary_joinexplode_damage");
+	maxdmg = autocvar_g_balance_crylink_primary_damage*autocvar_g_balance_crylink_primary_shots;
+	maxdmg *= 1 + autocvar_g_balance_crylink_primary_bouncedamagefactor * autocvar_g_balance_crylink_primary_bounces;
+	if(autocvar_g_balance_crylink_primary_joinexplode)
+		maxdmg += autocvar_g_balance_crylink_primary_joinexplode_damage;
 
 	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", CHAN_WEAPON, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
 
-	shots = cvar("g_balance_crylink_primary_shots");
+	shots = autocvar_g_balance_crylink_primary_shots;
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
 	proj = world;
 	while (counter < shots)
@@ -341,7 +341,7 @@ void W_Crylink_Attack (void)
 		proj.realowner = proj.owner = self;
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
-		proj.bot_dodgerating = cvar("g_balance_crylink_primary_damage");
+		proj.bot_dodgerating = autocvar_g_balance_crylink_primary_damage;
 		if(shots == 1) {
 			proj.queuenext = proj;
 			proj.queueprev = proj;
@@ -380,24 +380,24 @@ void W_Crylink_Attack (void)
 			s_y = v_forward_x;
 			s_z = v_forward_y;
 		}
-		s = s * cvar("g_balance_crylink_primary_spread") * g_weaponspreadfactor;
-		W_SetupProjectileVelocityEx(proj, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_crylink_primary_speed"), 0, 0, 0, FALSE);
+		s = s * autocvar_g_balance_crylink_primary_spread * g_weaponspreadfactor;
+		W_SetupProjectileVelocityEx(proj, w_shotdir + right * s_y + up * s_z, v_up, autocvar_g_balance_crylink_primary_speed, 0, 0, 0, FALSE);
 		proj.touch = W_Crylink_Touch;
 
 		proj.think = W_Crylink_Fadethink;
 		if(counter == 0)
 		{
-			proj.fade_time = time + cvar("g_balance_crylink_primary_middle_lifetime");
-			proj.fade_rate = 1 / cvar("g_balance_crylink_primary_middle_fadetime");
-			proj.nextthink = time + cvar("g_balance_crylink_primary_middle_lifetime") + cvar("g_balance_crylink_primary_middle_fadetime");
+			proj.fade_time = time + autocvar_g_balance_crylink_primary_middle_lifetime;
+			proj.fade_rate = 1 / autocvar_g_balance_crylink_primary_middle_fadetime;
+			proj.nextthink = time + autocvar_g_balance_crylink_primary_middle_lifetime + autocvar_g_balance_crylink_primary_middle_fadetime;
 		}
 		else
 		{
-			proj.fade_time = time + cvar("g_balance_crylink_primary_other_lifetime");
-			proj.fade_rate = 1 / cvar("g_balance_crylink_primary_other_fadetime");
-			proj.nextthink = time + cvar("g_balance_crylink_primary_other_lifetime") + cvar("g_balance_crylink_primary_other_fadetime");
+			proj.fade_time = time + autocvar_g_balance_crylink_primary_other_lifetime;
+			proj.fade_rate = 1 / autocvar_g_balance_crylink_primary_other_fadetime;
+			proj.nextthink = time + autocvar_g_balance_crylink_primary_other_lifetime + autocvar_g_balance_crylink_primary_other_fadetime;
 		}
-		proj.cnt = cvar("g_balance_crylink_primary_bounces");
+		proj.cnt = autocvar_g_balance_crylink_primary_bounces;
 		//proj.scale = 1 + 1 * proj.cnt;
 
 		proj.angles = vectoangles (proj.velocity);
@@ -422,16 +422,16 @@ void W_Crylink_Attack2 (void)
 	float maxdmg;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - cvar("g_balance_crylink_secondary_ammo");
+		self.ammo_cells = self.ammo_cells - autocvar_g_balance_crylink_secondary_ammo;
 
-	maxdmg = cvar("g_balance_crylink_secondary_damage")*cvar("g_balance_crylink_secondary_shots");
-	maxdmg *= 1 + cvar("g_balance_crylink_secondary_bouncedamagefactor") * cvar("g_balance_crylink_secondary_bounces");
-	if(cvar("g_balance_crylink_secondary_joinexplode"))
-		maxdmg += cvar("g_balance_crylink_secondary_joinexplode_damage");
+	maxdmg = autocvar_g_balance_crylink_secondary_damage*autocvar_g_balance_crylink_secondary_shots;
+	maxdmg *= 1 + autocvar_g_balance_crylink_secondary_bouncedamagefactor * autocvar_g_balance_crylink_secondary_bounces;
+	if(autocvar_g_balance_crylink_secondary_joinexplode)
+		maxdmg += autocvar_g_balance_crylink_secondary_joinexplode_damage;
 
 	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", CHAN_WEAPON, maxdmg);
 
-	shots = cvar("g_balance_crylink_secondary_shots");
+	shots = autocvar_g_balance_crylink_secondary_shots;
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
 	proj = world;
 	while (counter < shots)
@@ -440,7 +440,7 @@ void W_Crylink_Attack2 (void)
 		proj.realowner = proj.owner = self;
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
-		proj.bot_dodgerating = cvar("g_balance_crylink_secondary_damage");
+		proj.bot_dodgerating = autocvar_g_balance_crylink_secondary_damage;
 		if(shots == 1) {
 			proj.queuenext = proj;
 			proj.queueprev = proj;
@@ -469,22 +469,22 @@ void W_Crylink_Attack2 (void)
 		setorigin (proj, w_shotorg);
 		setsize(proj, '0 0 0', '0 0 0');
 
-		W_SetupProjectileVelocityEx(proj, (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * cvar("g_balance_crylink_secondary_spread") * g_weaponspreadfactor), v_up, cvar("g_balance_crylink_secondary_speed"), 0, 0, 0, FALSE);
+		W_SetupProjectileVelocityEx(proj, (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * autocvar_g_balance_crylink_secondary_spread * g_weaponspreadfactor), v_up, autocvar_g_balance_crylink_secondary_speed, 0, 0, 0, FALSE);
 		proj.touch = W_Crylink_Touch2;
 		proj.think = W_Crylink_Fadethink;
 		if(counter == (shots - 1) / 2)
 		{
-			proj.fade_time = time + cvar("g_balance_crylink_secondary_middle_lifetime");
-			proj.fade_rate = 1 / cvar("g_balance_crylink_secondary_middle_fadetime");
-			proj.nextthink = time + cvar("g_balance_crylink_secondary_middle_lifetime") + cvar("g_balance_crylink_secondary_middle_fadetime");
+			proj.fade_time = time + autocvar_g_balance_crylink_secondary_middle_lifetime;
+			proj.fade_rate = 1 / autocvar_g_balance_crylink_secondary_middle_fadetime;
+			proj.nextthink = time + autocvar_g_balance_crylink_secondary_middle_lifetime + autocvar_g_balance_crylink_secondary_middle_fadetime;
 		}
 		else
 		{
-			proj.fade_time = time + cvar("g_balance_crylink_secondary_line_lifetime");
-			proj.fade_rate = 1 / cvar("g_balance_crylink_secondary_line_fadetime");
-			proj.nextthink = time + cvar("g_balance_crylink_secondary_line_lifetime") + cvar("g_balance_crylink_secondary_line_fadetime");
+			proj.fade_time = time + autocvar_g_balance_crylink_secondary_line_lifetime;
+			proj.fade_rate = 1 / autocvar_g_balance_crylink_secondary_line_fadetime;
+			proj.nextthink = time + autocvar_g_balance_crylink_secondary_line_lifetime + autocvar_g_balance_crylink_secondary_line_fadetime;
 		}
-		proj.cnt = cvar("g_balance_crylink_secondary_bounces");
+		proj.cnt = autocvar_g_balance_crylink_secondary_bounces;
 		//proj.scale = 1 + 1 * proj.cnt;
 
 		proj.angles = vectoangles (proj.velocity);
@@ -511,32 +511,32 @@ float w_crylink(float req)
 {
 	if (req == WR_AIM)
 	{
-		if (random() > 0.15)
-			self.BUTTON_ATCK = bot_aim(cvar("g_balance_crylink_primary_speed"), 0, cvar("g_balance_crylink_primary_middle_lifetime"), FALSE);
+		if (random() < 0.10)
+			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_crylink_primary_speed, 0, autocvar_g_balance_crylink_primary_middle_lifetime, FALSE);
 		else
-			self.BUTTON_ATCK2 = bot_aim(cvar("g_balance_crylink_secondary_speed"), 0, cvar("g_balance_crylink_secondary_middle_lifetime"), FALSE);
+			self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_crylink_secondary_speed, 0, autocvar_g_balance_crylink_secondary_middle_lifetime, FALSE);
 	}
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
 		{
 			if (!self.crylink_waitrelease)
-			if (weapon_prepareattack(0, cvar("g_balance_crylink_primary_refire")))
+			if (weapon_prepareattack(0, autocvar_g_balance_crylink_primary_refire))
 			{
 				W_Crylink_Attack();
-				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_crylink_primary_animtime"), w_ready);
-				if(cvar("g_balance_crylink_primary_joinspread") != 0 || cvar("g_balance_crylink_primary_jointime") != 0)
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_crylink_primary_animtime, w_ready);
+				if(autocvar_g_balance_crylink_primary_joinspread != 0 || autocvar_g_balance_crylink_primary_jointime != 0)
 					self.crylink_waitrelease = 1;
 			}
 		}
-		else if(self.BUTTON_ATCK2 && cvar("g_balance_crylink_secondary"))
+		else if(self.BUTTON_ATCK2 && autocvar_g_balance_crylink_secondary)
 		{
 			if (!self.crylink_waitrelease)
-			if (weapon_prepareattack(1, cvar("g_balance_crylink_secondary_refire")))
+			if (weapon_prepareattack(1, autocvar_g_balance_crylink_secondary_refire))
 			{
 				W_Crylink_Attack2();
-				weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_crylink_secondary_animtime"), w_ready);
-				if(cvar("g_balance_crylink_secondary_joinspread") != 0 || cvar("g_balance_crylink_secondary_jointime") != 0)
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_crylink_secondary_animtime, w_ready);
+				if(autocvar_g_balance_crylink_secondary_joinspread != 0 || autocvar_g_balance_crylink_secondary_jointime != 0)
 					self.crylink_waitrelease = 2;
 			}
 		}
@@ -549,21 +549,21 @@ float w_crylink(float req)
 				{
 					vector pos;
 					entity linkjoineffect;
-					
-					
+
+
 					if(self.crylink_waitrelease == 1)
 					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_primary_joinspread") * cvar("g_balance_crylink_primary_speed"), cvar("g_balance_crylink_primary_jointime"));
-						
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, autocvar_g_balance_crylink_primary_joinspread * autocvar_g_balance_crylink_primary_speed, autocvar_g_balance_crylink_primary_jointime);
+
 					}
 					else
 					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, cvar("g_balance_crylink_secondary_joinspread") * cvar("g_balance_crylink_secondary_speed"), cvar("g_balance_crylink_secondary_jointime"));
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, autocvar_g_balance_crylink_secondary_joinspread * autocvar_g_balance_crylink_secondary_speed, autocvar_g_balance_crylink_secondary_jointime);
 					}
-					
+
 					linkjoineffect = spawn();
 					linkjoineffect.think = W_Crylink_LinkJoinEffect_Think;
-					linkjoineffect.classname = "linkjoineffect";					
+					linkjoineffect.classname = "linkjoineffect";
 					linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
 					linkjoineffect.owner = self;
 					setorigin(linkjoineffect, pos);
@@ -596,14 +596,14 @@ float w_crylink(float req)
 		// don't "run out of ammo" and switch weapons while waiting for release
 		if(self.crylink_lastgroup && self.crylink_waitrelease)
 			return TRUE;
-		return self.ammo_cells >= cvar("g_balance_crylink_primary_ammo");
+		return self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		// don't "run out of ammo" and switch weapons while waiting for release
 		if(self.crylink_lastgroup && self.crylink_waitrelease)
 			return TRUE;
-		return self.ammo_cells >= cvar("g_balance_crylink_secondary_ammo");
+		return self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
 	}
 	return TRUE;
 };

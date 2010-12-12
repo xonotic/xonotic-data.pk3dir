@@ -47,11 +47,13 @@ void target_init_verify()
 		for(targ = world; (targ = find(targ, targetname, trigger.target)); )
 			if (targ.classname == "target_init" || targ.classname == "target_give" || targ.classname == "target_items")
 			{
-				targ.wait = -2;
+				trigger.wait = 0;
+				trigger.delay = 0;
+				targ.wait = 0;
 				targ.delay = 0;
 
-				setsize(targ, trigger.mins, trigger.maxs);
-				setorigin(targ, trigger.origin);
+				//setsize(targ, trigger.mins, trigger.maxs);
+				//setorigin(targ, trigger.origin);
 				//remove(trigger);
 			}
 }
@@ -59,7 +61,7 @@ void target_init_verify()
 void spawnfunc_target_init()
 {
 	self.spawnflags = 0; // remove all weapons except the ones listed below
-	self.netname = "laser uzi"; // keep these weapons through the remove trigger
+	self.netname = "shotgun"; // keep these weapons through the remove trigger
 	spawnfunc_target_items();
 	InitializeEntity(self, target_init_verify, INITPRIO_FINDTARGET);
 }
@@ -70,25 +72,25 @@ void target_give_init()
 	entity targ;
 	for (targ = world; (targ = find(targ, targetname, self.target)); ) {
 		if (targ.classname == "weapon_rocketlauncher") {
-			self.ammo_rockets += targ.count * cvar("g_balance_rocketlauncher_ammo");
+			self.ammo_rockets += targ.count * autocvar_g_balance_rocketlauncher_ammo;
 			self.netname = "rocketlauncher";
 		}
 		else if (targ.classname == "weapon_plasmagun") {
-			self.ammo_rockets += targ.count * cvar("g_balance_hagar_primary_ammo");
+			self.ammo_rockets += targ.count * autocvar_g_balance_hagar_primary_ammo;
 			if(self.netname == "")
 				self.netname = "hagar";
 			else
 				self.netname = strcat(self.netname, " hagar");
 		}
 		else if (targ.classname == "weapon_bfg") {
-			self.ammo_cells += targ.count * cvar("g_balance_crylink_primary_ammo");
+			self.ammo_cells += targ.count * autocvar_g_balance_crylink_primary_ammo;
 			if(self.netname == "")
 				self.netname = "crylink";
 			else
 				self.netname = strcat(self.netname, " crylink");
 		}
 		else if (targ.classname == "weapon_grenadelauncher") {
-			self.ammo_rockets += targ.count * cvar("g_balance_grenadelauncher_primary_ammo");
+			self.ammo_rockets += targ.count * autocvar_g_balance_grenadelauncher_primary_ammo;
 			if(self.netname == "")
 				self.netname = "grenadelauncher";
 			else
@@ -98,7 +100,9 @@ void target_give_init()
 			self.armorvalue = 100;
 		else if (targ.classname == "item_health_mega")
 			self.health = 200;
-		remove(targ);
+		//remove(targ); // removing ents in init functions causes havoc, workaround:
+        targ.think = SUB_Remove;
+        targ.nextthink = time;
 	}
 	self.spawnflags = 2;
 	spawnfunc_target_items();

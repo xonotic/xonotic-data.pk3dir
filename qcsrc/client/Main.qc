@@ -140,11 +140,11 @@ void CSQC_Init(void)
 	GibSplash_Precache();
 	Casings_Precache();
 	DamageInfo_Precache();
-	if(cvar_string("cl_announcer") != cl_announcer_prev) {
+	if(autocvar_cl_announcer != cl_announcer_prev) {
 		Announcer_Precache();
 		if(cl_announcer_prev)
 			strunzone(cl_announcer_prev);
-		cl_announcer_prev = strzone(cvar_string("cl_announcer"));
+		cl_announcer_prev = strzone(autocvar_cl_announcer);
 	}
 	Tuba_Precache();
 
@@ -186,7 +186,7 @@ void CSQC_Shutdown(void)
 	remove(players);
 	db_close(binddb);
 	db_close(tempdb);
-	if(cvar("cl_db_saveasdump"))
+	if(autocvar_cl_db_saveasdump)
 		db_dump(ClientProgsDB, "client.db");
 	else
 		db_save(ClientProgsDB, "client.db");
@@ -328,7 +328,7 @@ void TrueAim_Init();
 void PostInit(void)
 {
 	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
-	localcmd(strcat("\nscoreboard_columns_set ", cvar_string("scoreboard_columns"), ";\n"));
+	localcmd(strcat("\nscoreboard_columns_set ", autocvar_scoreboard_columns, ";\n"));
 
 	entity playerchecker;
 	playerchecker = spawn();
@@ -358,7 +358,7 @@ float CSQC_ConsoleCommand(string strMessage)
 	strCmd = argv(0);
 
 	if(strCmd == "hud_configure") { // config hud
-		cvar_set("_hud_configure", ftos(!cvar("_hud_configure")));
+		cvar_set("_hud_configure", ftos(!autocvar__hud_configure));
 		return true;
 	} else if(strCmd == "hud_save") { // save hud config
 		if(argv(1) == "" || argv(2)) {
