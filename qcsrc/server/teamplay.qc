@@ -525,7 +525,7 @@ void PrintWelcomeMessage(entity pl)
 		modifications = strcat(modifications, ", Midair");
 	if(g_pinata)
 		modifications = strcat(modifications, ", Pinata");
-	if(g_weapon_stay)
+	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_bloodloss > 0)
 		modifications = strcat(modifications, ", Bloodloss");
