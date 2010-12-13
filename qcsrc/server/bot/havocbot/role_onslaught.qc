@@ -35,7 +35,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 		needarmor = TRUE;
 
 	// Needs weapons?
-	for(i = WEP_FIRST; i < WEP_LAST ; ++i)
+	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
 		// Find weapon
 		if(power2of(i-1) & self.weapons)
