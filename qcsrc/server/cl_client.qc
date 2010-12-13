@@ -1334,7 +1334,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 			self.killindicator.nextthink = time + (self.lip) * 0.05;
 			self.killindicator.cnt = ceil(killtime);
 			self.killindicator.count = bound(0, ceil(killtime), 10);
-			sprint(self, strcat("^1You'll be dead in ", ftos(self.killindicator.cnt), " seconds\n"));
+			//sprint(self, strcat("^1You'll be dead in ", ftos(self.killindicator.cnt), " seconds\n"));
 
 			for(e = world; (e = find(e, classname, "body")) != world; )
 			{
