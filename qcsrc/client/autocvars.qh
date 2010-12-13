@@ -85,6 +85,7 @@ float autocvar_cl_zoomsensitivity;
 float autocvar_cl_zoomspeed;
 float autocvar_con_chat;
 float autocvar_con_chatpos;
+float autocvar_con_chatrect;
 float autocvar_con_chatsize;
 float autocvar_con_chattime;
 float autocvar_con_notify;
