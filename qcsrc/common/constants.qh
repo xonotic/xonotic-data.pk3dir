@@ -639,7 +639,8 @@ float HUD_PANEL_PRESSEDKEYS	= 11;
 float HUD_PANEL_CHAT		= 12;
 float HUD_PANEL_ENGINEINFO	= 13;
 float HUD_PANEL_INFOMESSAGES	= 14;
-float HUD_PANEL_NUM		= 15; // always last panel id + 1, please increment when adding a new panel
+float HUD_PANEL_PHYSICS	= 15;
+float HUD_PANEL_NUM		= 16; // always last panel id + 1, please increment when adding a new panel
 
 string HUD_PANELNAME_WEAPONS 		= "weapons";
 string HUD_PANELNAME_AMMO	 	= "ammo";
@@ -656,6 +657,7 @@ string HUD_PANELNAME_PRESSEDKEYS 	= "pressedkeys";
 string HUD_PANELNAME_CHAT	 	= "chat";
 string HUD_PANELNAME_ENGINEINFO	 	= "engineinfo";
 string HUD_PANELNAME_INFOMESSAGES	= "infomessages";
+string HUD_PANELNAME_PHYSICS	= "physics";
 
 float HUD_MENU_ENABLE		= 0;
 
