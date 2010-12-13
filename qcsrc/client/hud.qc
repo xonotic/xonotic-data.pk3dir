@@ -4021,12 +4021,18 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
-    uid2name_dialog = 0;
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
 	{
 		vote_active = 1;
-		vote_called_vote = strzone(strcat("^2Name ^7instead of \"^1Unregistered player\"", " ^7in stats"));
-        uid2name_dialog = 1;
+		if (autocvar__hud_configure)
+		{
+			vote_yescount = 0;
+			vote_nocount = 0;
+			print("^1You have to answer before entering hud configure mode\n");
+			cvar_set("_hud_configure", "0");
+		}
+		vote_called_vote = strzone("^2Name ^7instead of \"^1Unregistered player^7\" in stats");
+		uid2name_dialog = 1;
 	}
 
 	if(!autocvar_hud_panel_vote && !autocvar__hud_configure)

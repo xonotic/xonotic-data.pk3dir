@@ -618,6 +618,7 @@ void GameCommand(string msg)
             vote_prev = 0;
             cvar_set("cl_allow_uid2name", "1");
             vote_change = -9999;
+			uid2name_dialog = 0;
         }
         else
         {
@@ -632,6 +633,7 @@ void GameCommand(string msg)
             vote_prev = 0;
             cvar_set("cl_allow_uid2name", "0");
             vote_change = -9999;
+			uid2name_dialog = 0;
         }
         else
         {
