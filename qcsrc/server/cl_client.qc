@@ -724,15 +724,6 @@ void PutObserverInServer (void)
 		self.frags = FRAGS_SPECTATOR;
 }
 
-float RestrictSkin(float s)
-{
-	if(!teams_matter)
-		return s;
-	if(s == 6)
-		return 6;
-	return mod(s, 3);
-}
-
 void FixPlayermodel()
 {
 	local string defaultmodel;
@@ -794,7 +785,7 @@ void FixPlayermodel()
 		}
 
 		oldskin = self.skinindex;
-		self.skinindex = RestrictSkin(stof(self.playerskin));
+		self.skinindex = stof(self.playerskin);
 	}
 
 	if(chmdl || oldskin != self.skinindex)

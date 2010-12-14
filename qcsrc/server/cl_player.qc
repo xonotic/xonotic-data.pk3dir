@@ -168,7 +168,7 @@ void CopyBody(float keepvelocity)
 float player_getspecies()
 {
 	float s;
-	get_model_parameters(self.playermodel, self.skinindex);
+	get_model_parameters(self.model, self.skinindex);
 	s = get_model_parameters_species;
 	get_model_parameters(string_null, 0);
 	if(s < 0)
@@ -1229,7 +1229,7 @@ void ClearPlayerSounds()
 #undef _VOICEMSG
 }
 
-void LoadPlayerSounds(string f, float first)
+float LoadPlayerSounds(string f, float first)
 {
 	float fh;
 	string s;
@@ -1238,7 +1238,7 @@ void LoadPlayerSounds(string f, float first)
 	if(fh < 0)
 	{
 		dprint("Player sound file not found: ", f, "\n");
-		return;
+		return 0;
 	}
 	while((s = fgets(fh)))
 	{
@@ -1254,6 +1254,7 @@ void LoadPlayerSounds(string f, float first)
 		self.field = strzone(strcat(argv(1), " ", argv(2)));
 	}
 	fclose(fh);
+	return 1;
 }
 
 .float modelindex_for_playersound;
@@ -1267,7 +1268,8 @@ void UpdatePlayerSounds()
 	self.skinindex_for_playersound = self.skinindex;
 	ClearPlayerSounds();
 	LoadPlayerSounds("sound/player/default.sounds", 1);
-	LoadPlayerSounds(get_model_datafilename(self.playermodel, self.skinindex, "sounds"), 0);
+	if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skinindex, "sounds"), 0))
+		LoadPlayerSounds(get_model_datafilename(self.model, 0, "sounds"), 0);
 }
 
 void FakeGlobalSound(string sample, float chan, float voicetype)
