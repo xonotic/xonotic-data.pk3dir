@@ -604,8 +604,36 @@ void WarpZone_StartFrame()
 		self = e;
 		WarpZones_Reconnect();
 	}
+
+	entity oldself, oldother;
+	oldself = self;
+	oldother = other;
 	for(e = world; (e = nextent(e)); )
+	{
 		WarpZone_StoreProjectileData(e);
+		float f;
+		f = clienttype(e);
+		if(f == CLIENTTYPE_REAL)
+		{
+			if(e.solid != SOLID_NOT) // not spectating?
+				continue;
+			self = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
+			if(!self)
+				continue;
+			other = e;
+			if(WarpZoneLib_ExactTrigger_Touch())
+				continue;
+			WarpZone_Teleport(e); // NOT triggering targets by this!
+		}
+		if(f == CLIENTTYPE_NOTACLIENT)
+		{
+			for(; (e = nextent(e)); )
+				WarpZone_StoreProjectileData(e);
+			break;
+		}
+	}
+	self = oldself;
+	other = oldother;
 }
 
 .float warpzone_reconnecting;
