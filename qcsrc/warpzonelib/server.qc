@@ -617,6 +617,8 @@ void WarpZone_StartFrame()
 		{
 			if(e.solid != SOLID_NOT) // not spectating?
 				continue;
+			if(e.movetype != MOVETYPE_NOCLIP && e.movetype != MOVETYPE_FLY) // not spectating? (this is to catch observers)
+				continue;
 			self = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
 			if(!self)
 				continue;
