@@ -492,6 +492,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_ammo_color");
 					HUD_Write_PanelCvar_q("_ammo_alpha");
 					HUD_Write_PanelCvar_q("_aspect");
+					HUD_Write_PanelCvar_q("_timeout");
+					HUD_Write_PanelCvar_q("_timeout_effect");
 					break;
 				case HUD_PANEL_AMMO:
 					HUD_Write_PanelCvar_q("_onlycurrent");
