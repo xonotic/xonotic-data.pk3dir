@@ -566,7 +566,7 @@ void HUD_Panel_HlBorder(float myBorder, vector color, float alpha)
 #define HUD_Panel_DrawBg(alpha)\
 if(panel_bg != "0")\
 	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
-if(highlightedPanel_prev == hud_configure_active_panel && autocvar__hud_configure)\
+if(highlightedPanel == hud_configure_active_panel && autocvar__hud_configure)\
 {\
 	HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha) * alpha);\
 } ENDS_WITH_CURLY_BRACE
@@ -967,7 +967,7 @@ vector prevMouseClickedPos; // pos during previous mouse click, to check for dou
 float pressed_key_time;
 void HUD_Panel_Arrow_Action(float nPrimary)
 {
-	if (highlightedPanel_prev == -1 || mouseClicked)
+	if (highlightedPanel == -1 || mouseClicked)
 		return;
 
 	hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
@@ -1001,8 +1001,6 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 		else
 			step = (step / 64) * (1 + 2 * (time - pressed_key_time));
 	}
-
-	highlightedPanel = highlightedPanel_prev;
 
 	HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 
@@ -1125,8 +1123,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			{
 				//switch to selected panel
 				highlightedPanel = tab_panel;
-				highlightedPanel_prev = tab_panel;
-				HUD_Panel_FirstInDrawQ(highlightedPanel_prev);
+				HUD_Panel_FirstInDrawQ(highlightedPanel);
 			}
 			tab_panel = -1;
 			reset_tab_panels();
@@ -1166,11 +1163,11 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		float old_tab_panel = tab_panel;
 		if (tab_panel == -1) //first press of TAB
 		{
-			if (highlightedPanel_prev != -1)
-				HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev)
+			if (highlightedPanel != -1)
+				HUD_Panel_UpdatePosSizeForId(highlightedPanel)
 			else
 				panel_pos = '0 0 0';
-			starting_panel = highlightedPanel_prev; //can be -1, it means no starting panel
+			starting_panel = highlightedPanel; //can be -1, it means no starting panel
 			tab_panel_pos = panel_pos; //to compute level
 		}
 		else
@@ -1241,9 +1238,9 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (bInputType == 1 || mouseClicked)
 			return true;
 
-		if (highlightedPanel_prev != -1)
+		if (highlightedPanel != -1)
 		{
-			HUD_Panel_GetName(highlightedPanel_prev);
+			HUD_Panel_GetName(highlightedPanel);
 			cvar_set(strcat("hud_panel_", panel_name), ftos(!(panel_enabled)));
 		}
 		else
@@ -1254,11 +1251,11 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (bInputType == 1 || mouseClicked)
 			return true;
 
-		if (highlightedPanel_prev != -1)
+		if (highlightedPanel != -1)
 		{
-			HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev);
+			HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 			panel_size_copied = panel_size;
-			highlightedPanel_copied = highlightedPanel_prev;
+			highlightedPanel_copied = highlightedPanel;
 		}
 	}
 	else if(nPrimary == 'v' && hudShiftState & S_CTRL) // past copied size on the highlighted panel
@@ -1266,10 +1263,10 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (bInputType == 1 || mouseClicked)
 			return true;
 
-		if (highlightedPanel_copied == -1 || highlightedPanel_prev == -1)
+		if (highlightedPanel_copied == -1 || highlightedPanel == -1)
 			return true;
 
-		HUD_Panel_UpdatePosSizeForId(highlightedPanel_prev);
+		HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 
 		// reduce size if it'd go beyond screen boundaries
 		vector tmp_size = panel_size_copied;
@@ -1284,10 +1281,10 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		// backup first!
 		panel_pos_backup = panel_pos;
 		panel_size_backup = panel_size;
-		highlightedPanel_backup = highlightedPanel_prev;
+		highlightedPanel_backup = highlightedPanel;
 
 		s = strcat(ftos(tmp_size_x/vid_conwidth), " ", ftos(tmp_size_y/vid_conheight));
-		HUD_Panel_GetName(highlightedPanel_prev);
+		HUD_Panel_GetName(highlightedPanel);
 		cvar_set(strcat("hud_panel_", panel_name, "_size"), s);
 	}
 	else if(nPrimary == 'z' && hudShiftState & S_CTRL) // undo last action
@@ -1321,11 +1318,8 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	{
 		if (bInputType == 1)
 			return true;
-		if (highlightedPanel_prev != -1)
-		{
-			highlightedPanel = highlightedPanel_prev;
+		if (highlightedPanel != -1)
 			HUD_Panel_EnableMenu();
-		}
 	}
 	else if(hit_con_bind)
 		return false;
@@ -1481,11 +1475,9 @@ void HUD_Panel_Highlight()
 			panel_click_resizeorigin = panel_pos;
 			return;
 		}
-		else
-		{
-			highlightedPanel_prev = -1;
-		}
 	}
+	highlightedPanel = -1;
+	highlightedAction = 0;
 }
 
 void HUD_Panel_EnableMenu()
@@ -1514,13 +1506,6 @@ void HUD_Panel_Mouse()
 	// TODO: find a way to fade the cursor out even in this case
 	if(menu_enabled == 1 || (menu_enabled == 2 && !hud_fade_alpha))
 		return;
-
-	if(mouseClicked == 0 && menu_enabled != 2 && highlightedPanel >= 0) { // don't reset these variables in menu_enabled mode 2!
-		highlightedPanel = -1;
-		highlightedAction = 0;
-	}
-	if(highlightedPanel != -1)
-		highlightedPanel_prev = highlightedPanel;
 
 	mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
 
