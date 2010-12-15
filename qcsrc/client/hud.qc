@@ -965,6 +965,7 @@ float prevMouseClickedTime; // time during previous mouse click, to check for do
 vector prevMouseClickedPos; // pos during previous mouse click, to check for doubleclicks
 
 float pressed_key_time;
+vector highlightedPanel_initial_pos, highlightedPanel_initial_size;
 void HUD_Panel_Arrow_Action(float nPrimary)
 {
 	if (highlightedPanel == -1 || mouseClicked)
@@ -1004,9 +1005,8 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 	HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 
-	vector prev_pos, prev_size;
-	prev_pos = panel_pos;
-	prev_size = panel_size;
+	highlightedPanel_initial_pos = panel_pos;
+	highlightedPanel_initial_size = panel_size;
 
 	if (hudShiftState & S_ALT) // resize
 	{
@@ -1064,11 +1064,11 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 	HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 
-	if (prev_pos != panel_pos || prev_size != panel_size)
+	if (highlightedPanel_initial_pos != panel_pos || highlightedPanel_initial_size != panel_size)
 	{
 		// backup!
-		panel_pos_backup = prev_pos;
-		panel_size_backup = prev_size;
+		panel_pos_backup = highlightedPanel_initial_pos;
+		panel_size_backup = highlightedPanel_initial_size;
 		highlightedPanel_backup = highlightedPanel;
 	}
 }
@@ -1123,6 +1123,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			{
 				//switch to selected panel
 				highlightedPanel = tab_panel;
+				highlightedAction = 0;
 				HUD_Panel_FirstInDrawQ(highlightedPanel);
 			}
 			tab_panel = -1;
@@ -1488,7 +1489,6 @@ void HUD_Panel_EnableMenu()
 	localcmd("menu_showhudoptions ", panel_name, "\n");
 }
 float highlightcheck;
-vector prev_pos, prev_size;
 void HUD_Panel_Mouse()
 {
 	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
@@ -1524,25 +1524,31 @@ void HUD_Panel_Mouse()
 		{
 			HUD_Panel_Highlight(); // sets highlightedPanel, highlightedAction, panel_click_distance, panel_click_resizeorigin
 									// and calls HUD_Panel_UpdatePosSizeForId() for the highlighted panel
-			prev_pos = panel_pos;
-			prev_size = panel_size;
+			if (highlightedPanel != -1)
+			{
+				highlightedPanel_initial_pos = panel_pos;
+				highlightedPanel_initial_size = panel_size;
+			}
 		}
 		else
 			HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 
-		if (prev_pos != panel_pos || prev_size != panel_size)
+		if (highlightedPanel != -1)
 		{
-			hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
-			// backup!
-			panel_pos_backup = prev_pos;
-			panel_size_backup = prev_size;
-			highlightedPanel_backup = highlightedPanel;
+			if (highlightedPanel_initial_pos != panel_pos || highlightedPanel_initial_size != panel_size)
+			{
+				hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
+				// backup!
+				panel_pos_backup = highlightedPanel_initial_pos;
+				panel_size_backup = highlightedPanel_initial_size;
+				highlightedPanel_backup = highlightedPanel;
+			}
+			else
+				// in case the clicked panel is inside another panel and we aren't
+				// moving it, avoid the immediate "fix" of its position/size
+				// (often unwanted and hateful) by disabling collisions check
+				hud_configure_checkcollisions = false;
 		}
-		else
-			// in case the clicked panel is inside another panel and we aren't
-			// moving it, avoid the immediate "fix" of its position/size
-			// (often unwanted and hateful) by disabling collisions check
-			hud_configure_checkcollisions = false;
 
 		if(highlightedAction == 1)
 			HUD_Panel_SetPos(mousepos - panel_click_distance);
