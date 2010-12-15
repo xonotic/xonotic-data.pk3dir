@@ -255,12 +255,15 @@ void cvar_changes_init()
 		BADPREFIX("gl_");
 		BADPREFIX("joy");
 		BADPREFIX("hud_");
+		BADPREFIX("m_");
 		BADPREFIX("menu_");
 		BADPREFIX("net_slist_");
 		BADPREFIX("r_");
 		BADPREFIX("sbar_");
 		BADPREFIX("scr_");
 		BADPREFIX("snd_");
+		BADPREFIX("show");
+		BADPREFIX("sensitivity");
 		BADPREFIX("userbind");
 		BADPREFIX("v_");
 		BADPREFIX("vid_");
@@ -368,6 +371,8 @@ void cvar_changes_init()
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("pausable");
+		BADCVAR("sv_timeout");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("net_");
