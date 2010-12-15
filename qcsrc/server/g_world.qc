@@ -325,6 +325,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf");
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");
+		BADCVAR("g_freezetag");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_onslaught");
