@@ -4813,11 +4813,11 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	float row, column;
 	for(i=0; i<teams_count; ++i)
 	{
-		vector pos, size;
+		vector pos, itemSize;
 		pos = myPos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
-		size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+		itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 
-		DrawDomItem(pos, size, aspect_ratio, layout, i);
+		DrawDomItem(pos, itemSize, aspect_ratio, layout, i);
 
 		++row;
 		if(row >= rows)

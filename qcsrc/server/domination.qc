@@ -371,12 +371,12 @@ void dom_controlpoint_setup()
 		self.wait = 5;
 
 	float points, waittime;
-	if (g_domination_point_rate)
-		points = g_domination_point_rate;
+	if (autocvar_g_domination_point_rate)
+		points = autocvar_g_domination_point_rate;
 	else
 		points = self.frags;
-	if (g_domination_point_amt)
-		waittime = g_domination_point_amt;
+	if (autocvar_g_domination_point_amt)
+		waittime = autocvar_g_domination_point_amt;
 	else
 		waittime = self.wait;
 
@@ -722,8 +722,5 @@ void dom_init()
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
-
-	g_domination_point_rate = cvar("g_domination_point_rate");
-	g_domination_point_amt = cvar("g_domination_point_amt");
 };
 
