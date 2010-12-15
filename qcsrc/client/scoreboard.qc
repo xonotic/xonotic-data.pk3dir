@@ -883,8 +883,10 @@ float HUD_WouldDrawScoreboard() {
 		return 1;
 	else if (intermission == 1)
 		return 1;
-	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard)
+	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != GAME_CTS)
 		return 1;
+    else if (spectatee_status == -1)
+        return 1;
 	else if (scoreboard_showscores_force)
 		return 1;
 	return 0;

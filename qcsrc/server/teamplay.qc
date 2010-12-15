@@ -517,7 +517,7 @@ void PrintWelcomeMessage(entity pl)
 		modifications = strcat(modifications, ", No start weapons");
 	if(autocvar_sv_gravity < 800)
 		modifications = strcat(modifications, ", Low gravity");
-	if(g_cloaked)
+	if(g_cloaked && !g_cts)
 		modifications = strcat(modifications, ", Cloaked");
 	if(g_grappling_hook)
 		modifications = strcat(modifications, ", Hook");
@@ -525,7 +525,7 @@ void PrintWelcomeMessage(entity pl)
 		modifications = strcat(modifications, ", Midair");
 	if(g_pinata)
 		modifications = strcat(modifications, ", Pinata");
-	if(g_weapon_stay)
+	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_bloodloss > 0)
 		modifications = strcat(modifications, ", Bloodloss");

@@ -1837,7 +1837,13 @@ float get_model_parameters(string m, float sk)
 	fn = get_model_datafilename(m, sk, "txt");
 	fh = fopen(fn, FILE_READ);
 	if(fh < 0)
-		return 0;
+	{
+		sk = 0;
+		fn = get_model_datafilename(m, sk, "txt");
+		fh = fopen(fn, FILE_READ);
+		if(fh < 0)
+			return 0;
+	}
 
 	get_model_parameters_modelname = m;
 	get_model_parameters_modelskin = sk;
@@ -1952,4 +1958,24 @@ float vercmp(string v1, string v2)
 		return -1;
 
 	return vercmp_recursive(v1, v2);
+}
+
+float u8_strsize(string s)
+{
+	float l, i, c;
+	l = 0;
+	for(i = 0; ; ++i)
+	{
+		c = str2chr(s, i);
+		if(c <= 0)
+			break;
+		++l;
+		if(c >= 0x80)
+			++l;
+		if(c >= 0x800)
+			++l;
+		if(c >= 0x10000)
+			++l;
+	}
+	return l;
 }
