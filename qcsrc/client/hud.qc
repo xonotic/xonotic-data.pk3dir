@@ -3609,6 +3609,7 @@ void HUD_Score(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_score) return;
+		if(spectatee_status == -1 && (gametype == GAME_RACE || gametype == GAME_CTS)) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_SCORE;
