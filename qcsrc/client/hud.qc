@@ -3670,15 +3670,16 @@ void HUD_Score(void)
 		{
 #define SCOREPANEL_MAX_ENTRIES 6
 #define SCOREPANEL_ASPECTRATIO 2
-			float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
-			float height = mySize_y/entries;
-			vector fontsize = '0.9 0.9 0' * height;
+			const float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
+			const float height = mySize_y/entries;
+			const vector fontsize = '0.9 0.9 0' * height;
 			pos_y += height * (1 - 0.9) / 2;
 
 			vector rgb;
 			rgb = '1 1 1';
 
-			float name_size = mySize_x*0.75;
+			const float name_size = mySize_x*0.75;
+			const float highlight_alpha = 0.2;
 			float i, me_printed;
 			string s;
 			if (autocvar__hud_configure)
@@ -3692,7 +3693,7 @@ void HUD_Score(void)
 					if (i == entries-1 && autocvar_hud_panel_score_rankings == 1)
 					{
 						rgb = '1 1 0';
-						drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, 0.3 * panel_fg_alpha, DRAWFLAG_NORMAL);
+						drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 						s = GetPlayerName(pl.sv_entnum);
 						score = 7;
 					}
@@ -3737,7 +3738,7 @@ void HUD_Score(void)
 					if (i == 0)
 						rgb = '0 1 0'; //first: green
 					me_printed = 1;
-					drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, 0.3 * panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				}
 				s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
 				drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
