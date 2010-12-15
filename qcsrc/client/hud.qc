@@ -1514,14 +1514,14 @@ void HUD_Panel_Mouse()
 
 	if(mouseClicked)
 	{
-		if (tab_panel != -1)
-		{
-			//stop ctrl-tab selection
-			tab_panel = -1;
-			reset_tab_panels();
-		}
 		if(prevMouseClicked == 0)
 		{
+			if (tab_panel != -1)
+			{
+				//stop ctrl-tab selection
+				tab_panel = -1;
+				reset_tab_panels();
+			}
 			HUD_Panel_Highlight(); // sets highlightedPanel, highlightedAction, panel_click_distance, panel_click_resizeorigin
 									// and calls HUD_Panel_UpdatePosSizeForId() for the highlighted panel
 			if (highlightedPanel != -1)
