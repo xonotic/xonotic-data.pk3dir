@@ -4732,32 +4732,32 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, float i)
 {
-	float dom_pps, dom_pps_ratio;
+	float stat, pps_ratio;
 	string pic;
 	vector color;
 	switch(i)
 	{
 		case 0:
-			dom_pps = dom_pps_red;
+			stat = getstatf(STAT_DOM_PPS_RED);
 			pic = "dom_icon_red";
 			color = '1 0 0';
 			break;
 		case 1:
-			dom_pps = dom_pps_blue;
+			stat = getstatf(STAT_DOM_PPS_BLUE);
 			pic = "dom_icon_blue";
 			color = '0 0 1';
 			break;
 		case 2:
-			dom_pps = dom_pps_yellow;
+			stat = getstatf(STAT_DOM_PPS_YELLOW);
 			pic = "dom_icon_yellow";
 			color = '1 1 0';
 			break;
 		case 3:
-			dom_pps = dom_pps_pink;
+			stat = getstatf(STAT_DOM_PPS_PINK);
 			pic = "dom_icon_pink";
 			color = '1 0 1';
 	}
-	dom_pps_ratio = dom_pps / dom_total_pps;
+	pps_ratio = stat / getstatf(STAT_DOM_TOTAL_PPS);
 
 	if(mySize_x/mySize_y > aspect_ratio)
 	{
@@ -4775,18 +4775,18 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, 
 	if (layout) // show text too
 	{
 		//draw the text
-		color *= 0.5 + dom_pps_ratio * (1 - 0.5); // half saturated color at min, full saturated at max
+		color *= 0.5 + pps_ratio * (1 - 0.5); // half saturated color at min, full saturated at max
 		if (layout == 2) // average pps
-			drawstring_aspect(myPos + eX * mySize_y, ftos_decimals(dom_pps, 2), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(myPos + eX * mySize_y, ftos_decimals(stat, 2), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		else // percentage of average pps
-			drawstring_aspect(myPos + eX * mySize_y, strcat( ftos(floor(dom_pps_ratio*100 + 0.5)), "%" ), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(myPos + eX * mySize_y, strcat( ftos(floor(pps_ratio*100 + 0.5)), "%" ), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	//draw the icon
 	drawpic_aspect_skin(myPos, pic, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	if (dom_pps > 0)
+	if (stat > 0)
 	{
-		drawsetcliparea(myPos_x, myPos_y + mySize_y * (1 - dom_pps_ratio), mySize_y, mySize_y * dom_pps_ratio);
+		drawsetcliparea(myPos_x, myPos_y + mySize_y * (1 - pps_ratio), mySize_y, mySize_y * pps_ratio);
 		drawpic_aspect_skin(myPos, strcat(pic, "-highlighted"), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawresetcliparea();
 	}

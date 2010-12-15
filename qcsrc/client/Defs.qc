@@ -216,13 +216,6 @@ float race_status;
 string race_status_name;
 float race_myrank;
 
-// DOM
-float dom_total_pps;
-float dom_pps_red;
-float dom_pps_blue;
-float dom_pps_yellow;
-float dom_pps_pink;
-
 // Nexball
 float nb_pb_period;
 

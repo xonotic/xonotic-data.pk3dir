@@ -64,7 +64,6 @@ const float TE_CSQC_WEAPONCOMPLAIN = 113;
 const float TE_CSQC_CAMPINGRIFLE_SCOPE = 115;
 const float TE_CSQC_NEX_SCOPE = 116;
 const float TE_CSQC_CR_MAXBULLETS = 117;
-const float TE_CSQC_DOM = 119;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -351,6 +350,12 @@ const float STAT_PINKALIVE = 103;
 // freeze tag
 const float STAT_FROZEN = 104;
 const float STAT_REVIVE_PROGRESS = 105;
+
+const float STAT_DOM_TOTAL_PPS = 100;
+const float STAT_DOM_PPS_RED = 101;
+const float STAT_DOM_PPS_BLUE = 102;
+const float STAT_DOM_PPS_PINK = 103;
+const float STAT_DOM_PPS_YELLOW = 104;
 
 //const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
 //const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin

@@ -1500,7 +1500,7 @@ Called when a client connects to the server
 string ColoredTeamName(float t);
 void DecodeLevelParms (void);
 //void dom_player_join_team(entity pl);
-void send_CSQC_dom_all();
+void set_dom_state(void);
 void ClientConnect (void)
 {
 	float t;
@@ -1743,7 +1743,7 @@ void ClientConnect (void)
 		send_CSQC_teamnagger();
 
 	if (g_domination)
-		send_CSQC_dom_all();
+		set_dom_state();
 	send_CSQC_cr_maxbullets(self);
 
 	CheatInitClient();
