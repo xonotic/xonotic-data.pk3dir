@@ -5434,8 +5434,9 @@ void HUD_Physics(void)
 			{
 				top_speed = speed;
 				top_speed_time = time;
+                f = 1;
 			}
-			if (top_speed != 0)
+            else if (top_speed != 0)
 			{
 				f = max(1, autocvar_hud_panel_physics_topspeed_time);
 				// divide by f to make it start from 1
@@ -5480,7 +5481,6 @@ void HUD_Physics(void)
 		else
 			top_speed = 0;
 	}
-    print(ftos(f), "\n");
 
 	//draw acceleration
 	if(acceleration && autocvar_hud_panel_physics_progressbar)
