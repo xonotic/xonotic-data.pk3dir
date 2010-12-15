@@ -4801,7 +4801,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 		if(tm.team != COLOR_SPECTATOR)
 			++teams_count;
 
-	float layout = cvar("hud_panel_modicons_dom_layout");
+	float layout = autocvar_hud_panel_modicons_dom_layout;
 	float rows, columns, aspect_ratio;
 	rows = mySize_y/mySize_x;
 	aspect_ratio = (layout) ? 3 : 1;
