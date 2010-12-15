@@ -1770,10 +1770,10 @@ void HUD_Weapons(void)
 				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * wpnsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw ammo status bar
-			if(show_ammo && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
+			if(show_ammo && self.weapon != WEP_TUBA && self.weapon != WEP_LASER && self.weapon != WEP_PORTO)
 			{
 				a = 0;
-				type = GetAmmoTypeForWep(weapid);
+				type = GetAmmoTypeForWep(self.weapon);
 				if(type != -1)
 					a = getstati(GetAmmoStat(type)); // how much ammo do we have?
 
