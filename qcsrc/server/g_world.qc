@@ -452,7 +452,8 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
 		BADCVAR("timelimit_override");
-		BADPREFIX("g_warmup");
+		BADCVAR("g_warmup");
+		BADPREFIX("g_warmup_");
 
 		if(autocvar_g_minstagib)
 		{
