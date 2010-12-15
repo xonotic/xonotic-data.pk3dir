@@ -575,12 +575,12 @@ if(highlightedPanel_prev == hud_configure_active_panel && autocvar__hud_configur
 } ENDS_WITH_CURLY_BRACE
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
-void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float lenght_ratio, float vertical, float right_align, vector theColor, float theAlpha, float drawflag)
+void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, float vertical, float baralign, vector theColor, float theAlpha, float drawflag)
 {
-	if(lenght_ratio <= 0 || !theAlpha)
+	if(length_ratio <= 0 || !theAlpha)
 		return;
-	if(lenght_ratio > 1)
-		lenght_ratio = 1;
+	if(length_ratio > 1)
+		length_ratio = 1;
 
 	vector square;
 	vector width, height;
@@ -590,9 +590,11 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 			pic = "gfx/hud/default/statusbar_vertical";
 		}
 
-		if (right_align)
-			theOrigin_y += (1 - lenght_ratio) * theSize_y;
-		theSize_y *= lenght_ratio;
+        if (baralign == 1) // bottom align
+			theOrigin_y += (1 - length_ratio) * theSize_y;
+        else if (baralign == 2) // center align
+            theOrigin_y += 0.5 * (1 - length_ratio) * theSize_y;
+		theSize_y *= length_ratio;
 
 		vector bH;
 		width = eX * theSize_x;
@@ -619,9 +621,11 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 			pic = "gfx/hud/default/statusbar";
 		}
 
-		if (right_align)
-			theOrigin_x += (1 - lenght_ratio) * theSize_x;
-		theSize_x *= lenght_ratio;
+		if (baralign == 1) // right align
+			theOrigin_x += (1 - length_ratio) * theSize_x;
+        else if (baralign == 2) // center align
+            theOrigin_x += 0.5 * (1 - length_ratio) * theSize_x;
+		theSize_x *= length_ratio;
 
 		vector bW;
 		width = eX * theSize_x;
@@ -5374,6 +5378,8 @@ void HUD_Physics(void)
 	float speed_baralign, acceleration_baralign;
 	if (autocvar_hud_panel_physics_baralign == 1)
 		acceleration_baralign = speed_baralign = 1;
+    else if(autocvar_hud_panel_physics_baralign == 4)
+		acceleration_baralign = speed_baralign = 2;
 	else if (autocvar_hud_panel_physics_flip)
 	{
 		acceleration_baralign = (autocvar_hud_panel_physics_baralign == 2);
@@ -5429,30 +5435,40 @@ void HUD_Physics(void)
 				top_speed = speed;
 				top_speed_time = time;
 			}
-			if (top_speed == 0) //hide top speed 0, it would be stupid
-				f = 0;
-			else
+			if (top_speed != 0)
 			{
 				f = max(1, autocvar_hud_panel_physics_topspeed_time);
 				// divide by f to make it start from 1
 				f = cos( ((time - top_speed_time) / f) * PI/2 );
 			}
+            else //hide top speed 0, it would be stupid
+				f = 0;
 		}
 		if (f > 0)
 		{
-			//top speed progressbar peek
+			//top speed progressbar peak
 			if(autocvar_hud_panel_physics_progressbar && speed < top_speed)
 			{
-				float peek_offset_x, peek_size_x;
-				if (speed_baralign)
-					peek_offset_x = (1 - min(top_speed, max_speed)/max_speed) * panel_size_x;
-				else
-					peek_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x;
+				float peak_offset_x;
+                vector peak_size
+				if (speed_baralign == 0)
+					peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x;
+                else if (speed_baralign == 1)
+					peak_offset_x = (1 - min(top_speed, max_speed)/max_speed) * panel_size_x;
+                else if (speed_baralign == 2)
+                    peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x * 0.5;
 				//if speed is not 0 the speed progressbar already fetched the color
 				if (speed == 0)
 					HUD_Panel_GetProgressBarColor(speed);
-				peek_size_x = panel_size_x * 0.01;
-				drawfill(panel_pos + speed_offset + eX * (peek_offset_x - peek_size_x), eX * peek_size_x + eY * panel_size_y, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				peak_size_x = floor(panel_size_x * 0.01 + 1.5);
+                peak_size_y = panel_size_y;
+                if (speed_baralign == 2) // draw two peaks, on both sides
+                {
+                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size_x + peak_offset_x - peak_size_x), peak_size, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size_x - peak_offset_x + peak_size_x), peak_size, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                }
+                else
+                    drawfill(panel_pos + speed_offset + eX * (peak_offset_x - peak_size_x), peak_size, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 
 			//top speed
@@ -5464,6 +5480,7 @@ void HUD_Physics(void)
 		else
 			top_speed = 0;
 	}
+    print(ftos(f), "\n");
 
 	//draw acceleration
 	if(acceleration && autocvar_hud_panel_physics_progressbar)
