@@ -1500,6 +1500,7 @@ Called when a client connects to the server
 string ColoredTeamName(float t);
 void DecodeLevelParms (void);
 //void dom_player_join_team(entity pl);
+void send_CSQC_dom_all();
 void ClientConnect (void)
 {
 	float t;
@@ -1741,6 +1742,8 @@ void ClientConnect (void)
 	else if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
 
+	if (g_domination)
+		send_CSQC_dom_all();
 	send_CSQC_cr_maxbullets(self);
 
 	CheatInitClient();

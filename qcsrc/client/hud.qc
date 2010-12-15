@@ -4730,6 +4730,105 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	drawfont = hud_font;
 }
 
+void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, float i)
+{
+	float dom_pps, dom_pps_ratio;
+	string pic;
+	vector color;
+	switch(i)
+	{
+		case 0:
+			dom_pps = dom_pps_red;
+			pic = "dom_icon_red";
+			color = '1 0 0';
+			break;
+		case 1:
+			dom_pps = dom_pps_blue;
+			pic = "dom_icon_blue";
+			color = '0 0 1';
+			break;
+		case 2:
+			dom_pps = dom_pps_yellow;
+			pic = "dom_icon_yellow";
+			color = '1 1 0';
+			break;
+		case 3:
+			dom_pps = dom_pps_pink;
+			pic = "dom_icon_pink";
+			color = '1 0 1';
+	}
+	dom_pps_ratio = dom_pps / dom_total_pps;
+
+	if(mySize_x/mySize_y > aspect_ratio)
+	{
+		i = aspect_ratio * mySize_y;
+		myPos_x = myPos_x + (mySize_x - i) / 2;
+		mySize_x = i;
+	}
+	else
+	{
+		i = 1/aspect_ratio * mySize_x;
+		myPos_y = myPos_y + (mySize_y - i) / 2;
+		mySize_y = i;
+	}
+
+	if (layout) // show text too
+	{
+		//draw the text
+		color *= 0.5 + dom_pps_ratio * (1 - 0.5); // half saturated color at min, full saturated at max
+		if (layout == 2) // average pps
+			drawstring_aspect(myPos + eX * mySize_y, ftos_decimals(dom_pps, 2), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		else // percentage of average pps
+			drawstring_aspect(myPos + eX * mySize_y, strcat( ftos(floor(dom_pps_ratio*100 + 0.5)), "%" ), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+
+	//draw the icon
+	drawpic_aspect_skin(myPos, pic, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	if (dom_pps > 0)
+	{
+		drawsetcliparea(myPos_x, myPos_y + mySize_y * (1 - dom_pps_ratio), mySize_y, mySize_y * dom_pps_ratio);
+		drawpic_aspect_skin(myPos, strcat(pic, "-highlighted"), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawresetcliparea();
+	}
+}
+
+void HUD_Mod_Dom(vector myPos, vector mySize)
+{
+	mod_active = 1; // required in each mod function that always shows something
+	entity tm;
+	float teams_count;
+	for(tm = teams.sort_next; tm; tm = tm.sort_next)
+		if(tm.team != COLOR_SPECTATOR)
+			++teams_count;
+
+	float layout = cvar("hud_panel_modicons_dom_layout");
+	float rows, columns, aspect_ratio;
+	rows = mySize_y/mySize_x;
+	aspect_ratio = (layout) ? 3 : 1;
+	rows = bound(1, floor((sqrt((4 * aspect_ratio * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
+	columns = ceil(teams_count/rows);
+
+	drawfont = hud_bigfont;
+	int i;
+	float row, column;
+	for(i=0; i<teams_count; ++i)
+	{
+		vector pos, size;
+		pos = myPos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
+		size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+
+		DrawDomItem(pos, size, aspect_ratio, layout, i);
+
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			++column;
+		}
+	}
+	drawfont = hud_font;
+}
+
 float mod_prev; // previous state of mod_active to check for a change
 float mod_alpha;
 float mod_change; // "time" when mod_active changed
@@ -4739,7 +4838,7 @@ void HUD_ModIcons(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_modicons) return;
-		if (gametype != GAME_CTF && gametype != GAME_KEYHUNT && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && gametype != GAME_FREEZETAG && gametype != GAME_KEEPAWAY) return;
+		if (gametype != GAME_CTF && gametype != GAME_KEYHUNT && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && gametype != GAME_FREEZETAG && gametype != GAME_KEEPAWAY && gametype != GAME_DOMINATION) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_MODICONS;
@@ -4779,6 +4878,8 @@ void HUD_ModIcons(void)
 		HUD_Mod_Race(pos, mySize);
 	else if(gametype == GAME_CA || gametype == GAME_FREEZETAG)
 		HUD_Mod_CA(pos, mySize);
+	else if(gametype == GAME_DOMINATION)
+		HUD_Mod_Dom(pos, mySize);
 	else if(gametype == GAME_KEEPAWAY)
 		HUD_Mod_Keepaway(pos, mySize);
 }

@@ -21,6 +21,35 @@ Note: The only teams who can use dom control points are identified by spawnfunc_
 .entity sprite;
 .float captime;
 
+// pps: points per second
+float dom_total_pps;
+float dom_pps_red;
+float dom_pps_blue;
+float dom_pps_yellow;
+float dom_pps_pink;
+void send_CSQC_dom_state()
+{
+	WriteByte(MSG_ALL, SVC_TEMPENTITY);
+	WriteByte(MSG_ALL, TE_CSQC_DOM);
+	WriteShort(MSG_ALL, dom_pps_red * 100.0);
+	WriteShort(MSG_ALL, dom_pps_blue * 100.0);
+	if (c3 >= 0) WriteShort(MSG_ALL, dom_pps_yellow * 100.0);
+	if (c4 >= 0) WriteShort(MSG_ALL, dom_pps_pink * 100.0);
+}
+//Must be called ONLY when a client connects to send total pps and state
+//If yellow/pink team doesn't exist sends a negative dom_pps_yellow/dom_pps_pink
+//to let know the client to not read these values anymore
+void send_CSQC_dom_all()
+{
+	WriteByte(MSG_ALL, SVC_TEMPENTITY);
+	WriteByte(MSG_ALL, TE_CSQC_DOM);
+	WriteShort(MSG_ALL, dom_total_pps * 100.0);
+	WriteShort(MSG_ALL, dom_pps_red * 100.0);
+	WriteShort(MSG_ALL, dom_pps_blue * 100.0);
+	WriteShort(MSG_ALL, dom_pps_yellow * 100.0);
+	WriteShort(MSG_ALL, dom_pps_pink * 100.0);
+}
+
 void() dom_controlpoint_setup;
 
 void LogDom(string mode, float team_before, entity actor)
@@ -107,21 +136,52 @@ void dompoint_captured ()
 	self.delay = old_delay;
 	self.team = old_team;
 
+	switch(self.team)
+	{
+		// "fix" pps when slightly under 0 because of approximation errors
+		case COLOR_TEAM1:
+			dom_pps_red -= (points/wait_time);
+			if (dom_pps_red < 0) dom_pps_red = 0;
+			break;
+		case COLOR_TEAM2:
+			dom_pps_blue -= (points/wait_time);
+			if (dom_pps_blue < 0) dom_pps_blue = 0;
+			break;
+		case COLOR_TEAM3:
+			dom_pps_yellow -= (points/wait_time);
+			if (dom_pps_yellow < 0) dom_pps_yellow = 0;
+			break;
+		case COLOR_TEAM4:
+			dom_pps_pink -= (points/wait_time);
+			if (dom_pps_pink < 0) dom_pps_pink = 0;
+	}
+
 	switch(self.goalentity.team)
 	{
+		// "fix" pps when slightly over dom_total_pps because of approximation errors
 		case COLOR_TEAM1:
+			dom_pps_red += (points/wait_time);
+			if (dom_pps_red > dom_total_pps) dom_pps_red = dom_total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-red", "", "");
 			break;
 		case COLOR_TEAM2:
+			dom_pps_blue += (points/wait_time);
+			if (dom_pps_blue > dom_total_pps) dom_pps_blue = dom_total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-blue", "", "");
 			break;
 		case COLOR_TEAM3:
+			dom_pps_yellow += (points/wait_time);
+			if (dom_pps_yellow > dom_total_pps) dom_pps_yellow = dom_total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-yellow", "", "");
 			break;
 		case COLOR_TEAM4:
+			dom_pps_pink += (points/wait_time);
+			if (dom_pps_pink > dom_total_pps) dom_pps_pink = dom_total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
-			break;
 	}
+
+	send_CSQC_dom_state();
+
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
 
@@ -305,10 +365,22 @@ void dom_controlpoint_setup()
 	if(!self.message)
 		self.message = " has captured a control point";
 
-	if(!self.DOMPOINTFRAGS)
+	if(self.DOMPOINTFRAGS <= 0)
 		self.DOMPOINTFRAGS = 1;
-	if(!self.wait)
+	if(self.wait <= 0)
 		self.wait = 5;
+
+	float points, waittime;
+	if (g_domination_point_rate)
+		points = g_domination_point_rate;
+	else
+		points = self.frags;
+	if (g_domination_point_amt)
+		waittime = g_domination_point_amt;
+	else
+		waittime = self.wait;
+
+	dom_total_pps += points/waittime;
 
 	if(!self.t_width)
 		self.t_width = 0.02; // frame animation rate
@@ -632,6 +704,8 @@ void dom_delayedinit()
 			}
 		}
 	}
+	if (c3 == -1) dom_pps_yellow = -1;
+	if (c4 == -1) dom_pps_pink = -1;
 
 	ScoreRules_dom();
 };
@@ -648,5 +722,8 @@ void dom_init()
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
+
+	g_domination_point_rate = cvar("g_domination_point_rate");
+	g_domination_point_amt = cvar("g_domination_point_amt");
 };
 
