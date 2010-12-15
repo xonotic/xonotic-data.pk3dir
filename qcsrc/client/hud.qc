@@ -498,6 +498,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_iconalign");
 					HUD_Write_PanelCvar_q("_progressbar");
 					HUD_Write_PanelCvar_q("_progressbar_name");
+					HUD_Write_PanelCvar_q("_progressbar_xoffset");
 					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_POWERUPS:
@@ -3545,7 +3546,7 @@ void HUD_Radar(void)
 	if(hud_panel_radar_rotation == 0)
 	{
 		// max-min distance must fit the radar in any rotation
-		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_max - mi_min));
+		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_scale));
 	}
 	else
 	{
@@ -3573,7 +3574,7 @@ void HUD_Radar(void)
 		  f * bigsize
 		+ (1 - f) * normalsize;
 	teamradar_origin3d_in_texcoord = teamradar_3dcoord_to_texcoord(
-		  f * (mi_min + mi_max) * 0.5
+		  f * mi_center
 		+ (1 - f) * view_origin);
 
 	drawsetcliparea(

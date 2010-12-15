@@ -164,11 +164,10 @@ void SV_ParseClientCommand(string s) {
 		} else {
 			self.version = stof(argv(1));
 		}
-		if(self.version != autocvar_gameversion)
+		if(self.version < autocvar_gameversion_min || self.version > autocvar_gameversion_max)
 		{
-			self.classname = "observer";
 			self.version_mismatch = 1;
-			PutClientInServer();
+			ClientKill_TeamChange(-2); // observe
 		} else if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force) {
 			//JoinBestTeam(self, FALSE, TRUE);
 		} else if(teams_matter && !autocvar_sv_spectate && !(self.team_forced > 0)) {
@@ -211,17 +210,7 @@ void SV_ParseClientCommand(string s) {
 			}
 		}
 		if(self.classname == "player" && autocvar_sv_spectate == 1) {
-			if(self.flagcarried)
-				DropFlag(self.flagcarried, world, world);
-			if(self.ballcarried && g_nexball)
-				DropBall(self.ballcarried, self.origin, self.velocity);
-			WaypointSprite_PlayerDead();
-			self.classname = "observer";
-			if(g_ca)
-				self.caplayer = 0;
-			if(blockSpectators)
-				sprint(self, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
-			PutClientInServer();
+			ClientKill_TeamChange(-2); // observe
 		}
 	} else if(cmd == "join") {
 		if not(self.flags & FL_CLIENT)
@@ -256,15 +245,15 @@ void SV_ParseClientCommand(string s) {
 		} else if(lockteams) {
 			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 		} else if( argv(1) == "red" ) {
-			DoTeamChange(COLOR_TEAM1);
+			ClientKill_TeamChange(COLOR_TEAM1);
 		} else if( argv(1) == "blue" ) {
-			DoTeamChange(COLOR_TEAM2);
+			ClientKill_TeamChange(COLOR_TEAM2);
 		} else if( argv(1) == "yellow" ) {
-			DoTeamChange(COLOR_TEAM3);
+			ClientKill_TeamChange(COLOR_TEAM3);
 		} else if( argv(1) == "pink" ) {
-			DoTeamChange(COLOR_TEAM4);
+			ClientKill_TeamChange(COLOR_TEAM4);
 		} else if( argv(1) == "auto" ) {
-			DoTeamChange(-1);
+			ClientKill_TeamChange(-1);
 		} else {
 			sprint( self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
 		}

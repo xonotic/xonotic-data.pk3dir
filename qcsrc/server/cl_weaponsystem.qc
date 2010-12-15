@@ -603,12 +603,14 @@ void CL_Weaponentity_Think()
 	else
 		self.alpha = 1;
 
+	self.glowmod = self.owner.weaponentity_glowmod;
 	self.colormap = self.owner.colormap;
 	if (self.weaponentity)
 	{
 		self.weaponentity.effects = self.effects;
 		self.weaponentity.alpha = self.alpha;
 		self.weaponentity.colormap = self.colormap;
+		self.weaponentity.glowmod = self.glowmod;
 	}
 
 	self.angles = '0 0 0';
@@ -847,6 +849,7 @@ void CL_ExteriorWeaponentity_Think()
 		self.angles = ang;
 	}
 
+	self.glowmod = self.owner.weaponentity_glowmod;
 	self.colormap = self.owner.colormap;
 };
 

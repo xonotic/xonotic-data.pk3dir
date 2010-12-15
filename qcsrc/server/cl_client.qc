@@ -724,15 +724,6 @@ void PutObserverInServer (void)
 		self.frags = FRAGS_SPECTATOR;
 }
 
-float RestrictSkin(float s)
-{
-	if(!teams_matter)
-		return s;
-	if(s == 6)
-		return 6;
-	return mod(s, 3);
-}
-
 void FixPlayermodel()
 {
 	local string defaultmodel;
@@ -794,7 +785,7 @@ void FixPlayermodel()
 		}
 
 		oldskin = self.skinindex;
-		self.skinindex = RestrictSkin(stof(self.playerskin));
+		self.skinindex = stof(self.playerskin);
 	}
 
 	if(chmdl || oldskin != self.skinindex)
@@ -1222,6 +1213,7 @@ Called when a client types 'kill' in the console
 =============
 */
 
+.float clientkill_nexttime;
 void ClientKill_Now_TeamChange()
 {
 	if(self.killindicator_teamchange == -1)
@@ -1229,24 +1221,30 @@ void ClientKill_Now_TeamChange()
 		self.team = -1;
 		JoinBestTeam( self, FALSE, FALSE );
 	}
+	else if(self.killindicator_teamchange == -2)
+	{
+		if(g_ca)
+			self.caplayer = 0;
+		if(blockSpectators)
+			sprint(self, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+		PutObserverInServer();
+	}
 	else
 		SV_ChangeTeam(self.killindicator_teamchange - 1);
 }
 
 void ClientKill_Now()
 {
+	remove(self.killindicator);
+	self.killindicator = world;
+
 	if(self.killindicator_teamchange)
 		ClientKill_Now_TeamChange();
 
 	// in any case:
 	Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 
-	if(self.killindicator)
-	{
-		dprint("Cleaned up after a leaked kill indicator.\n");
-		remove(self.killindicator);
-		self.killindicator = world;
-	}
+	// now I am sure the player IS dead
 }
 void KillIndicator_Think()
 {
@@ -1263,6 +1261,11 @@ void KillIndicator_Think()
 		ClientKill_Now(); // no oldself needed
 		return;
 	}
+    else if(g_cts && self.health == 1) // health == 1 means that it's silent
+    {
+        self.nextthink = time + 1;
+        self.cnt -= 1;
+    }
 	else
 	{
 		if(self.cnt <= 10)
@@ -1275,6 +1278,8 @@ void KillIndicator_Think()
 			{
 				if(self.owner.killindicator_teamchange == -1)
 					centerprint(self.owner, strcat("Changing team in ", ftos(self.cnt), " seconds"));
+				else if(self.owner.killindicator_teamchange == -2)
+					centerprint(self.owner, strcat("Spectating in ", ftos(self.cnt), " seconds"));
 				else
 					centerprint(self.owner, strcat("Changing to ", ColoredTeamName(self.owner.killindicator_teamchange), " in ", ftos(self.cnt), " seconds"));
 			}
@@ -1286,19 +1291,34 @@ void KillIndicator_Think()
 	}
 }
 
-void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
+void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2 = spec
 {
 	float killtime;
 	entity e;
 	killtime = autocvar_g_balance_kill_delay;
 
-	if(g_race_qualifying)
+	if(g_race_qualifying || g_cts)
 		killtime = 0;
+
+    if(g_cts && self.killindicator && self.killindicator.health == 1) // self.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill
+    {
+		remove(self.killindicator);
+		self.killindicator = world;
+
+        ClientKill_Now(); // allow instant kill in this case
+        return;
+    }
 
 	self.killindicator_teamchange = targetteam;
 
-	if(!self.killindicator)
+    if(!self.killindicator)
 	{
+		if(self.modelindex && self.deadflag == DEAD_NO)
+		{
+			killtime = max(killtime, self.clientkill_nexttime - time);
+			self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
+		}
+
 		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO)
 		{
 			ClientKill_Now();
@@ -1334,10 +1354,14 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 	}
 	if(self.killindicator)
 	{
-		if(targetteam)
-			self.killindicator.colormod = TeamColor(targetteam);
-		else
+		if(targetteam == 0) // just die
 			self.killindicator.colormod = '0 0 0';
+		else if(targetteam == -1) // auto
+			self.killindicator.colormod = '0 1 0';
+		else if(targetteam == -2) // spectate
+			self.killindicator.colormod = '0.5 0.5 0.5';
+		else
+			self.killindicator.colormod = TeamColor(targetteam);
 	}
 }
 
@@ -1355,20 +1379,15 @@ void ClientKill (void)
 		ClientKill_TeamChange(0);
 }
 
-void CTS_ClientKill_Think (void)
+void CTS_ClientKill (entity e) // silent version of ClientKill, used when player finishes a CTS run. Useful to prevent cheating by running back to the start line and starting out with more speed
 {
-	self = self.owner; // set self to the player to be killed
-	sprint(self, "^1You were killed in order to prevent cheating!");
-	ClientKill_Now();
-}
-
-void CTS_ClientKill (float t) // silent version of ClientKill
-{
-	entity e;
-	e = spawn();
-	e.owner = self;
-	e.think = CTS_ClientKill_Think;
-	e.nextthink = t;
+    e.killindicator = spawn();
+    e.killindicator.owner = e;
+    e.killindicator.think = KillIndicator_Think;
+    e.killindicator.nextthink = time + (e.lip) * 0.05;
+    e.killindicator.cnt = ceil(autocvar_g_cts_finish_kill_delay);
+    e.killindicator.health = 1; // this is used to indicate that it should be silent
+    e.lip = 0;
 }
 
 void DoTeamChange(float destteam)
@@ -2718,7 +2737,7 @@ void PlayerPreThink (void)
 				if(frametime)
 					player_anim();
 				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
-				force_respawn = (g_lms || (g_ca) || autocvar_g_forced_respawn);
+				force_respawn = (g_lms || g_ca || g_cts || autocvar_g_forced_respawn);
 				if (self.deadflag == DEAD_DYING)
 				{
 					if(force_respawn)

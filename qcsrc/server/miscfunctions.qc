@@ -880,8 +880,8 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 			t = (weaponinfo.spawnflags & WEP_FLAG_NORMAL);
 		else if(t < -1)
 			t = 0;
-		else if (g_race || g_cts)
-			t = (i == WEP_LASER);
+		else if (g_cts)
+			t = (i == WEP_SHOTGUN);
 		else if (g_nexball)
 			t = 0; // weapon is set a few lines later
 		else
@@ -981,16 +981,23 @@ void readplayerstartcvars()
 	if (g_weaponarena)
 	{
 		start_weapons = g_weaponarena;
-		if (g_weaponarena & (WEPBIT_GRENADE_LAUNCHER | WEPBIT_MINE_LAYER | WEPBIT_HAGAR | WEPBIT_ROCKET_LAUNCHER))
-			start_ammo_rockets = 999;
-		if (g_weaponarena & WEPBIT_SHOTGUN)
-			start_ammo_shells = 999;
-		if (g_weaponarena & (WEPBIT_ELECTRO | WEPBIT_CRYLINK | WEPBIT_NEX | WEPBIT_MINSTANEX | WEPBIT_HLAC | WEPBIT_HOOK))
-			start_ammo_cells = 999;
-		if (g_weaponarena & (WEPBIT_UZI | WEPBIT_CAMPINGRIFLE))
-			start_ammo_nails = 999;
-		if (g_weaponarena & WEPBIT_HOOK)
-			start_ammo_fuel = 999;
+		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+		{
+			e = get_weaponinfo(j);
+			if(start_weapons & e.weapons)
+			{
+				if(e.items & IT_ROCKETS)
+					start_ammo_rockets = 999;
+				if(e.items & IT_SHELLS)
+					start_ammo_shells = 999;
+				if(e.items & IT_CELLS)
+					start_ammo_cells = 999;
+				if(e.items & IT_NAILS)
+					start_ammo_nails = 999;
+				if(e.items & IT_FUEL)
+					start_ammo_fuel = 999;
+			}
+		}
 		start_items |= IT_UNLIMITED_AMMO;
 	}
 	else if (g_minstagib)
@@ -1157,6 +1164,7 @@ float sv_pitch_min;
 float sv_pitch_max;
 float sv_pitch_fixyaw;
 
+string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
 	// first load all the mutators
@@ -1207,6 +1215,8 @@ void readlevelcvars(void)
 	sv_gentle = cvar("sv_gentle");
 	sv_foginterval = cvar("sv_foginterval");
 	g_cloaked = cvar("g_cloaked");
+    if(g_cts)
+        g_cloaked = 1; // always enable cloak in CTS
 	g_jump_grunt = cvar("g_jump_grunt");
 	g_footsteps = cvar("g_footsteps");
 	g_grappling_hook = cvar("g_grappling_hook");
@@ -1290,7 +1300,9 @@ void readlevelcvars(void)
 
 	g_pinata = cvar("g_pinata");
 
-	g_weapon_stay = cvar("g_weapon_stay");
+    g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
+    if(!g_weapon_stay)
+        g_weapon_stay = cvar("g_weapon_stay");
 
 	if (!g_weapon_stay && (cvar("deathmatch") == 2))
 		g_weapon_stay = 1;
@@ -1516,8 +1528,12 @@ void precache_playermodel(string m)
 	precache_model(m);
 	if(sv_loddistance1)
 	{
-		precache_model(strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1)));
-		precache_model(strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1)));
+		f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
+		if(fexists(f))
+			precache_model(f);
+		f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
+		if(fexists(f))
+			precache_model(f);
 	}
 
 	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
@@ -1743,6 +1759,14 @@ void objerror(string s)
     objerror_builtin(s);
 }
 
+.float remove_except_protected_forbidden;
+void remove_except_protected(entity e)
+{
+	if(e.remove_except_protected_forbidden)
+		error("not allowed to remove this at this point");
+	remove_builtin(e);
+}
+
 void remove_unsafely(entity e)
 {
     remove_builtin(e);
@@ -1793,6 +1817,11 @@ void InitializeEntitiesRun()
     entity startoflist;
     startoflist = initialize_entity_first;
     initialize_entity_first = world;
+    remove = remove_except_protected;
+    for (self = startoflist; self; self = self.initialize_entity_next)
+    {
+	self.remove_except_protected_forbidden = 1;
+    }
     for (self = startoflist; self; )
     {
         entity e;
@@ -1802,6 +1831,7 @@ void InitializeEntitiesRun()
         self.initialize_entity_order = 0;
         self.initialize_entity = func_null;
         self.initialize_entity_next = world;
+	self.remove_except_protected_forbidden = 0;
         if (self.classname == "initialize_entity")
         {
             entity e_old;
@@ -1810,9 +1840,16 @@ void InitializeEntitiesRun()
             self = e_old;
         }
         //dprint("Delayed initialization: ", self.classname, "\n");
-        func();
+        if(func != func_null)
+            func();
+        else
+        {
+            eprint(self);
+            backtrace(strcat("Null function in: ", self.classname, "\n"));
+        }
         self = e;
     }
+    remove = remove_unsafely;
 }
 
 .float uncustomizeentityforclient_set;
@@ -2588,7 +2625,6 @@ void zcurveparticles_from_tracetoss(float effectno, vector start, vector end, ve
 	zcurveparticles(effectno, start, end, end_dz, vlen(vel));
 }
 
-string GetGametype(); // g_world.qc
 void write_recordmarker(entity pl, float tstart, float dt)
 {
     GameLogEcho(strcat(":recordset:", ftos(pl.playerid), ":", ftos(dt)));

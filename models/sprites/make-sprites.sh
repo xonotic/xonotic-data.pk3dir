@@ -189,6 +189,7 @@ sprite wpn-hookgun        "Hook"          008000 000000 0.0 # dark green
 sprite wpn-fireball       "Fireball"      ff8000 000000 0.0 # orange
 sprite wpn-hlac           "HLAC"          00ff00 000000 0.0 # green
 sprite wpn-campingrifle   "Rifle"         80ff00 000000 0.0 # orange
+sprite wpn-minelayer      "Mine Layer"    ccff00 000000 0.0 # yellowish orange
 
 sprite dom-neut           "Control point" 00ffff 000000 0.0
 sprite dom-red            "Control point" ff0000 000000 0.0

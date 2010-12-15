@@ -235,6 +235,7 @@ void cvar_changes_init()
 		k = bufstr_get(h, i);
 
 #define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
+#define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
 #define BADCVAR(p) if(k == p) continue
 		// internal
 		BADPREFIX("csqc_");
@@ -414,6 +415,7 @@ void cvar_changes_init()
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_runematch_point_limit");
 		BADCVAR("g_start_delay");
+		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
 		BADCVAR("hostname");
 		BADCVAR("log_file");
 		BADCVAR("maxplayers");

@@ -25,7 +25,7 @@ CLASS(InputBox) EXTENDS(Label)
 	ATTRIB(InputBox, forbiddenCharacters, string, "")
 	ATTRIB(InputBox, color, vector, '1 1 1')
 	ATTRIB(InputBox, colorF, vector, '1 1 1')
-	ATTRIB(InputBox, maxLength, float, 255)
+	ATTRIB(InputBox, maxLength, float, 255) // if negative, it counts bytes, not chars
 ENDCLASS(InputBox)
 void InputBox_Clear_Click(entity btn, entity me);
 #endif
@@ -79,8 +79,16 @@ void InputBox_enterText(entity me, string ch)
 	for(i = 0; i < strlen(ch); ++i)
 		if(strstrofs(me.forbiddenCharacters, substring(ch, i, 1), 0) > -1)
 			return;
-	if(strlen(ch) + strlen(me.text) > me.maxLength)
-		return;
+	if(me.maxLength > 0)
+	{
+		if(strlen(ch) + strlen(me.text) > me.maxLength)
+			return;
+	}
+	else if(me.maxLength < 0)
+	{
+		if(u8_strsize(ch) + u8_strsize(me.text) > -me.maxLength)
+			return;
+	}
 	me.setText(me, strcat(substring(me.text, 0, me.cursorPos), ch, substring(me.text, me.cursorPos, strlen(me.text) - me.cursorPos)));
 	me.cursorPos += strlen(ch);
 }

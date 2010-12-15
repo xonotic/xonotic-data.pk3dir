@@ -275,6 +275,8 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return;
 	if (g_ca)
 		return;
+    if (g_cts)
+        return;
 	if(!autocvar_g_weapon_throwable)
 		return;
 	if(autocvar_g_weapon_stay == 1)
@@ -389,9 +391,8 @@ void W_WeaponFrame()
 			v_forward = fo;
 			v_right = ri;
 			v_up = up;
-            self.weaponentity.weaponentity.glowmod = '0 0 0'; // reset glowmod, weapon think function only *might* set it
+			self.weaponentity_glowmod = '0 0 0'; // reset glowmod, weapon think function only *might* set it
 			weapon_action(self.weapon, WR_THINK);
-            self.exteriorweaponentity.glowmod = self.weaponentity.weaponentity.glowmod; // exterior weaponmodel has the same glowmod
 		}
 		if (time + self.weapon_frametime * 0.5 >= self.weapon_nextthink)
 		{
