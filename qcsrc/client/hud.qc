@@ -5190,7 +5190,7 @@ void HUD_Physics(void)
 	float speed, conversion_factor;
 	string unit;
 
-	switch(autocvar_cl_showspeed_unit)
+	switch(autocvar_hud_panel_physics_speed_unit)
 	{
 		default:
 		case 1:
