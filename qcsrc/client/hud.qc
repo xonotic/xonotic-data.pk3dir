@@ -1536,6 +1536,7 @@ void HUD_Panel_Mouse()
 
 		if (highlightedPanel != -1)
 		{
+			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .1, DRAWFLAG_NORMAL);
 			if (highlightedPanel_initial_pos != panel_pos || highlightedPanel_initial_size != panel_size)
 			{
 				hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
@@ -1588,6 +1589,8 @@ void HUD_Panel_Mouse()
 	else
 	{
 		highlightcheck = HUD_Panel_HighlightCheck();
+		if (highlightcheck && tab_panel == -1)
+			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .1, DRAWFLAG_NORMAL);
 	}
 	// draw cursor after performing move/resize to have the panel pos/size updated before highlightcheck
 	vector cursorsize;
