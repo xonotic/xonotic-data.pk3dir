@@ -5173,6 +5173,7 @@ void HUD_Physics(void)
 	if(!autocvar_hud_panel_physics)
 	{
 		if(!autocvar__hud_configure) return;
+		if(spectatee_status <= 0 && autocvar_hud_panel_physics < 2) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_PHYSICS;
