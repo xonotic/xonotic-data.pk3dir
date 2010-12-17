@@ -843,8 +843,10 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.bot_pickup = TRUE;
 	self.bot_pickupevalfunc = pickupevalfunc;
 	self.bot_pickupbasevalue = pickupbasevalue;
-	if(self.mdl == "")
+	if(self.model == "")
 		self.mdl = itemmodel;
+	else
+		self.mdl = self.model;
 	self.item_pickupsound = pickupsound;
 	// let mappers override respawntime
 	if(!self.respawntime) // both set
