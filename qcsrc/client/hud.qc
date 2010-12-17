@@ -960,16 +960,11 @@ void HUD_Panel_SetPosSize(vector mySize)
 	cvar_set(strcat("hud_panel_", panel_name, "_pos"), s);
 }
 
-float mouseClicked;
-float prevMouseClicked; // previous state
-float prevMouseClickedTime; // time during previous mouse click, to check for doubleclicks
-vector prevMouseClickedPos; // pos during previous mouse click, to check for doubleclicks
-
 float pressed_key_time;
 vector highlightedPanel_initial_pos, highlightedPanel_initial_size;
 void HUD_Panel_Arrow_Action(float nPrimary)
 {
-	if (highlightedPanel == -1 || mouseClicked)
+	if (highlightedPanel == -1)
 		return;
 
 	hud_configure_checkcollisions = (!(hudShiftState & S_CTRL) && autocvar_hud_configure_checkcollisions);
@@ -1073,6 +1068,11 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 		highlightedPanel_backup = highlightedPanel;
 	}
 }
+
+float mouseClicked;
+float prevMouseClicked; // previous state
+float prevMouseClickedTime; // time during previous mouse click, to check for doubleclicks
+vector prevMouseClickedPos; // pos during previous mouse click, to check for doubleclicks
 
 void HUD_Panel_EnableMenu();
 float tab_panels[HUD_PANEL_NUM];
@@ -1314,7 +1314,8 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		else if (pressed_key_time == 0)
 			pressed_key_time = time;
 
-		HUD_Panel_Arrow_Action(nPrimary); //move or resize panel
+		if (!mouseClicked)
+			HUD_Panel_Arrow_Action(nPrimary); //move or resize panel
 	}
 	else if(nPrimary == K_ENTER || nPrimary == K_SPACE || nPrimary == K_KP_ENTER)
 	{
@@ -1329,7 +1330,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	return true;
 }
 
-float HUD_Panel_HighlightCheck()
+float HUD_Panel_Check_Mouse_Pos()
 {
 	float i, j, border;
 
@@ -1489,7 +1490,7 @@ void HUD_Panel_EnableMenu()
 	HUD_Panel_GetName(highlightedPanel);
 	localcmd("menu_showhudoptions ", panel_name, "\n");
 }
-float highlightcheck;
+float mouse_over_panel;
 void HUD_Panel_Mouse()
 {
 	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
@@ -1529,6 +1530,17 @@ void HUD_Panel_Mouse()
 			{
 				highlightedPanel_initial_pos = panel_pos;
 				highlightedPanel_initial_size = panel_size;
+			}
+			// doubleclick check
+			if (time - prevMouseClickedTime < 0.4 && highlightedPanel != -1 && prevMouseClickedPos == mousepos)
+			{
+				mouseClicked = 0; // to prevent spam, I guess.
+				HUD_Panel_EnableMenu();
+			}
+			else
+			{
+				prevMouseClickedTime = time;
+				prevMouseClickedPos = mousepos;
 			}
 		}
 		else
@@ -1572,35 +1584,21 @@ void HUD_Panel_Mouse()
 			}
 			HUD_Panel_SetPosSize(mySize);
 		}
-
-		// doubleclick check
-		if(time - prevMouseClickedTime < 0.4 && prevMouseClicked == 0 && prevMouseClickedPos == mousepos && highlightedPanel >= 0)
-		{
-			mouseClicked = 0; // to prevent spam, I guess.
-			HUD_Panel_EnableMenu();
-			return;
-		}
-		if(prevMouseClicked == 0)
-		{
-			prevMouseClickedTime = time;
-			prevMouseClickedPos = mousepos;
-		}
 	}
 	else
 	{
-		highlightcheck = HUD_Panel_HighlightCheck();
-		if (highlightcheck && tab_panel == -1)
+		mouse_over_panel = HUD_Panel_Check_Mouse_Pos();
+		if (mouse_over_panel && tab_panel == -1)
 			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .1, DRAWFLAG_NORMAL);
 	}
-	// draw cursor after performing move/resize to have the panel pos/size updated before highlightcheck
-	vector cursorsize;
-	cursorsize = '32 32 0';
+	// draw cursor after performing move/resize to have the panel pos/size updated before mouse_over_panel
+	const vector cursorsize = '32 32 0';
 
-	if(highlightcheck == 0)
+	if(!mouse_over_panel)
 		drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
-	else if(highlightcheck == 1)
+	else if(mouse_over_panel == 1)
 		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_move.tga"), cursorsize, '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
-	else if(highlightcheck == 2)
+	else if(mouse_over_panel == 2)
 		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize.tga"), cursorsize, '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
 	else
 		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize2.tga"), cursorsize, '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
