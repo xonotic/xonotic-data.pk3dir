@@ -712,6 +712,11 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			return;
 		}
 
+		if(self.model != "")
+			itemmodel = self.model;
+		if(self.item_pickupsound != "")
+			pickupsound = self.item_pickupsound;
+
 		self.reset = Item_Reset;
 		// it's a level item
 		if(self.spawnflags & 1)
@@ -843,10 +848,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.bot_pickup = TRUE;
 	self.bot_pickupevalfunc = pickupevalfunc;
 	self.bot_pickupbasevalue = pickupbasevalue;
-	if(self.model == "")
-		self.mdl = itemmodel;
-	else
-		self.mdl = self.model;
+	self.mdl = itemmodel;
 	self.item_pickupsound = pickupsound;
 	// let mappers override respawntime
 	if(!self.respawntime) // both set
