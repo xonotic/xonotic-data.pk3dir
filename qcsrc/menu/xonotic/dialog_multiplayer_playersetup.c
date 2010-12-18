@@ -141,7 +141,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TDempty(me, 0.3);
 		me.TD(me, 1, 0.7, e = makeXonoticCheckBox(0, "crosshair_color_per_weapon", "Per weapon"));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_dot", "Enable centered dot"));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_dot", "Enable center dot"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, "Size:"));
