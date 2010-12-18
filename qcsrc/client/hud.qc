@@ -5446,7 +5446,7 @@ void HUD_Physics(void)
 			if(autocvar_hud_panel_physics_progressbar && speed < top_speed)
 			{
 				float peak_offset_x;
-                vector peak_size
+				vector peak_size;
 				if (speed_baralign == 0)
 					peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x;
                 else if (speed_baralign == 1)
