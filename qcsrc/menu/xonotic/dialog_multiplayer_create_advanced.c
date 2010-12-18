@@ -6,7 +6,7 @@ CLASS(XonoticAdvancedDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticAdvancedDialog, title, string, "Advanced server settings")
 	ATTRIB(XonoticAdvancedDialog, color, vector, SKINCOLOR_DIALOG_ADVANCED)
 	ATTRIB(XonoticAdvancedDialog, intendedWidth, float, 0.5)
-	ATTRIB(XonoticAdvancedDialog, rows, float, 13)
+	ATTRIB(XonoticAdvancedDialog, rows, float, 12)
 	ATTRIB(XonoticAdvancedDialog, columns, float, 3)
 	ATTRIB(XonoticAdvancedDialog, refilterEntity, entity, NULL)
 ENDCLASS(XonoticAdvancedDialog)
@@ -35,9 +35,6 @@ void XonoticAdvancedDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Game speed:"));
 		me.TD(me, 1, 1.7, e = makeXonoticSlider(0.5, 2.0, 0.1, "slowmo"));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticCheckBoxEx(2, 0, "g_antilag", "AntiLag"));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1.2, makeXonoticTextLabel(0, "Teamplay settings:"));

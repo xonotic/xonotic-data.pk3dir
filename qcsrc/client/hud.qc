@@ -492,6 +492,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_ammo_color");
 					HUD_Write_PanelCvar_q("_ammo_alpha");
 					HUD_Write_PanelCvar_q("_aspect");
+					HUD_Write_PanelCvar_q("_timeout");
+					HUD_Write_PanelCvar_q("_timeout_effect");
 					break;
 				case HUD_PANEL_AMMO:
 					HUD_Write_PanelCvar_q("_onlycurrent");
@@ -573,12 +575,12 @@ if(highlightedPanel == hud_configure_active_panel && autocvar__hud_configure)\
 } ENDS_WITH_CURLY_BRACE
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
-void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float lenght_ratio, float vertical, float right_align, vector theColor, float theAlpha, float drawflag)
+void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, float vertical, float baralign, vector theColor, float theAlpha, float drawflag)
 {
-	if(lenght_ratio <= 0 || !theAlpha)
+	if(length_ratio <= 0 || !theAlpha)
 		return;
-	if(lenght_ratio > 1)
-		lenght_ratio = 1;
+	if(length_ratio > 1)
+		length_ratio = 1;
 
 	vector square;
 	vector width, height;
@@ -588,9 +590,11 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 			pic = "gfx/hud/default/statusbar_vertical";
 		}
 
-		if (right_align)
-			theOrigin_y += (1 - lenght_ratio) * theSize_y;
-		theSize_y *= lenght_ratio;
+        if (baralign == 1) // bottom align
+			theOrigin_y += (1 - length_ratio) * theSize_y;
+        else if (baralign == 2) // center align
+            theOrigin_y += 0.5 * (1 - length_ratio) * theSize_y;
+		theSize_y *= length_ratio;
 
 		vector bH;
 		width = eX * theSize_x;
@@ -617,9 +621,11 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 			pic = "gfx/hud/default/statusbar";
 		}
 
-		if (right_align)
-			theOrigin_x += (1 - lenght_ratio) * theSize_x;
-		theSize_x *= lenght_ratio;
+		if (baralign == 1) // right align
+			theOrigin_x += (1 - length_ratio) * theSize_x;
+        else if (baralign == 2) // center align
+            theOrigin_x += 0.5 * (1 - length_ratio) * theSize_x;
+		theSize_x *= length_ratio;
 
 		vector bW;
 		width = eX * theSize_x;
@@ -1678,8 +1684,8 @@ void HUD_Weapons(void)
 		if(!autocvar_hud_panel_weapons) return;
 		if(spectatee_status == -1) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_WEAPONS;
+
+    hud_configure_active_panel = HUD_PANEL_WEAPONS;
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
 	float timeout_effect_length, timein_effect_length;
@@ -2088,8 +2094,8 @@ void HUD_Ammo(void)
 		if(!autocvar_hud_panel_ammo) return;
 		if(spectatee_status == -1) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_AMMO;
+
+    hud_configure_active_panel = HUD_PANEL_AMMO;
 
 	HUD_Panel_UpdateCvars(ammo);
 	vector pos, mySize;
@@ -2272,11 +2278,11 @@ void HUD_Powerups(void)
 	}
 	else
 	{
-		hud_configure_active_panel = HUD_PANEL_POWERUPS;
-
 		strength_time = 15;
 		shield_time = 27;
 	}
+
+    hud_configure_active_panel = HUD_PANEL_POWERUPS;
 
 	HUD_Panel_UpdateCvars(powerups);
 	vector pos, mySize;
@@ -2419,12 +2425,12 @@ void HUD_HealthArmor(void)
 	}
 	else
 	{
-		hud_configure_active_panel = HUD_PANEL_HEALTHARMOR;
-
 		health = 150;
 		armor = 75;
 		fuel = 20;
 	}
+
+    hud_configure_active_panel = HUD_PANEL_HEALTHARMOR;
 
 	HUD_Panel_UpdateCvars(healtharmor);
 	vector pos, mySize;
@@ -3108,8 +3114,8 @@ void HUD_Notify (void)
 	{
 		if(!autocvar_hud_panel_notify) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_NOTIFY;
+
+    hud_configure_active_panel = HUD_PANEL_NOTIFY;
 
 	HUD_Panel_UpdateCvars(notify);
 	vector pos, mySize;
@@ -3424,8 +3430,8 @@ void HUD_Timer(void)
 	{
 		if(!autocvar_hud_panel_timer) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_TIMER;
+
+    hud_configure_active_panel = HUD_PANEL_TIMER;
 
 	HUD_Panel_UpdateCvars(timer);
 	vector pos, mySize;
@@ -3483,8 +3489,8 @@ void HUD_Radar(void)
 		if (autocvar_hud_panel_radar == 0) return;
 		if (autocvar_hud_panel_radar != 2 && !teamplay) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_RADAR;
+
+    hud_configure_active_panel = HUD_PANEL_RADAR;
 
 	HUD_Panel_UpdateCvars(radar);
 	vector pos, mySize;
@@ -3612,8 +3618,8 @@ void HUD_Score(void)
 		if(!autocvar_hud_panel_score) return;
 		if(spectatee_status == -1 && (gametype == GAME_RACE || gametype == GAME_CTS)) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_SCORE;
+
+    hud_configure_active_panel = HUD_PANEL_SCORE;
 
 	HUD_Panel_UpdateCvars(score);
 	vector pos, mySize;
@@ -3880,8 +3886,8 @@ void HUD_RaceTimer (void)
 		if(!(gametype == GAME_RACE || gametype == GAME_CTS)) return;
 		if(spectatee_status == -1) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_RACETIMER;
+
+    hud_configure_active_panel = HUD_PANEL_RACETIMER;
 
 	HUD_Panel_UpdateCvars(racetimer);
 	vector pos, mySize;
@@ -4059,12 +4065,12 @@ void HUD_VoteWindow(void)
 	}
 	else
 	{
-		hud_configure_active_panel = HUD_PANEL_VOTE;
-
 		vote_yescount = 3;
 		vote_nocount = 2;
 		vote_needed = 4;
 	}
+
+    hud_configure_active_panel = HUD_PANEL_VOTE;
 
 	string s;
 	float a;
@@ -4722,6 +4728,105 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	drawfont = hud_font;
 }
 
+void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, float i)
+{
+	float stat, pps_ratio;
+	string pic;
+	vector color;
+	switch(i)
+	{
+		case 0:
+			stat = getstatf(STAT_DOM_PPS_RED);
+			pic = "dom_icon_red";
+			color = '1 0 0';
+			break;
+		case 1:
+			stat = getstatf(STAT_DOM_PPS_BLUE);
+			pic = "dom_icon_blue";
+			color = '0 0 1';
+			break;
+		case 2:
+			stat = getstatf(STAT_DOM_PPS_YELLOW);
+			pic = "dom_icon_yellow";
+			color = '1 1 0';
+			break;
+		case 3:
+			stat = getstatf(STAT_DOM_PPS_PINK);
+			pic = "dom_icon_pink";
+			color = '1 0 1';
+	}
+	pps_ratio = stat / getstatf(STAT_DOM_TOTAL_PPS);
+
+	if(mySize_x/mySize_y > aspect_ratio)
+	{
+		i = aspect_ratio * mySize_y;
+		myPos_x = myPos_x + (mySize_x - i) / 2;
+		mySize_x = i;
+	}
+	else
+	{
+		i = 1/aspect_ratio * mySize_x;
+		myPos_y = myPos_y + (mySize_y - i) / 2;
+		mySize_y = i;
+	}
+
+	if (layout) // show text too
+	{
+		//draw the text
+		color *= 0.5 + pps_ratio * (1 - 0.5); // half saturated color at min, full saturated at max
+		if (layout == 2) // average pps
+			drawstring_aspect(myPos + eX * mySize_y, ftos_decimals(stat, 2), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		else // percentage of average pps
+			drawstring_aspect(myPos + eX * mySize_y, strcat( ftos(floor(pps_ratio*100 + 0.5)), "%" ), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+
+	//draw the icon
+	drawpic_aspect_skin(myPos, pic, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	if (stat > 0)
+	{
+		drawsetcliparea(myPos_x, myPos_y + mySize_y * (1 - pps_ratio), mySize_y, mySize_y * pps_ratio);
+		drawpic_aspect_skin(myPos, strcat(pic, "-highlighted"), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawresetcliparea();
+	}
+}
+
+void HUD_Mod_Dom(vector myPos, vector mySize)
+{
+	mod_active = 1; // required in each mod function that always shows something
+	entity tm;
+	float teams_count;
+	for(tm = teams.sort_next; tm; tm = tm.sort_next)
+		if(tm.team != COLOR_SPECTATOR)
+			++teams_count;
+
+	float layout = autocvar_hud_panel_modicons_dom_layout;
+	float rows, columns, aspect_ratio;
+	rows = mySize_y/mySize_x;
+	aspect_ratio = (layout) ? 3 : 1;
+	rows = bound(1, floor((sqrt((4 * aspect_ratio * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
+	columns = ceil(teams_count/rows);
+
+	drawfont = hud_bigfont;
+	int i;
+	float row, column;
+	for(i=0; i<teams_count; ++i)
+	{
+		vector pos, itemSize;
+		pos = myPos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
+		itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+
+		DrawDomItem(pos, itemSize, aspect_ratio, layout, i);
+
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			++column;
+		}
+	}
+	drawfont = hud_font;
+}
+
 float mod_prev; // previous state of mod_active to check for a change
 float mod_alpha;
 float mod_change; // "time" when mod_active changed
@@ -4731,10 +4836,10 @@ void HUD_ModIcons(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_modicons) return;
-		if (gametype != GAME_CTF && gametype != GAME_KEYHUNT && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && gametype != GAME_FREEZETAG && gametype != GAME_KEEPAWAY) return;
+		if (gametype != GAME_CTF && gametype != GAME_KEYHUNT && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && gametype != GAME_FREEZETAG && gametype != GAME_KEEPAWAY && gametype != GAME_DOMINATION) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_MODICONS;
+
+    hud_configure_active_panel = HUD_PANEL_MODICONS;
 
 	HUD_Panel_UpdateCvars(modicons);
 	vector pos, mySize;
@@ -4771,6 +4876,8 @@ void HUD_ModIcons(void)
 		HUD_Mod_Race(pos, mySize);
 	else if(gametype == GAME_CA || gametype == GAME_FREEZETAG)
 		HUD_Mod_CA(pos, mySize);
+	else if(gametype == GAME_DOMINATION)
+		HUD_Mod_Dom(pos, mySize);
 	else if(gametype == GAME_KEEPAWAY)
 		HUD_Mod_Keepaway(pos, mySize);
 }
@@ -4784,9 +4891,8 @@ void HUD_DrawPressedKeys(void)
 		if(!autocvar_hud_panel_pressedkeys) return;
 		if(spectatee_status <= 0 && autocvar_hud_panel_pressedkeys < 2) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_PRESSEDKEYS;
 
+    hud_configure_active_panel = HUD_PANEL_PRESSEDKEYS;
 
 	HUD_Panel_UpdateCvars(pressedkeys);
 	vector pos, mySize;
@@ -4849,8 +4955,8 @@ void HUD_Chat(void)
 			return;
 		}
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_CHAT;
+
+    hud_configure_active_panel = HUD_PANEL_CHAT;
 
 	HUD_Panel_UpdateCvars(chat);
 
@@ -4924,8 +5030,8 @@ void HUD_EngineInfo(void)
 	{
 		if(!autocvar_hud_panel_engineinfo) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_ENGINEINFO;
+
+    hud_configure_active_panel = HUD_PANEL_ENGINEINFO;
 
 	HUD_Panel_UpdateCvars(engineinfo);
 	vector pos, mySize;
@@ -4988,8 +5094,8 @@ void HUD_InfoMessages(void)
 	{
 		if(!autocvar_hud_panel_infomessages) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_INFOMESSAGES;
+
+    hud_configure_active_panel = HUD_PANEL_INFOMESSAGES;
 
 	HUD_Panel_UpdateCvars(infomessages);
 	vector pos, mySize;
@@ -5176,8 +5282,8 @@ void HUD_Physics(void)
 		if(!autocvar__hud_configure) return;
 		if(spectatee_status <= 0 && autocvar_hud_panel_physics < 2) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_PHYSICS;
+
+    hud_configure_active_panel = HUD_PANEL_PHYSICS;
 
 	HUD_Panel_UpdateCvars(physics);
 
@@ -5267,6 +5373,8 @@ void HUD_Physics(void)
 	float speed_baralign, acceleration_baralign;
 	if (autocvar_hud_panel_physics_baralign == 1)
 		acceleration_baralign = speed_baralign = 1;
+    else if(autocvar_hud_panel_physics_baralign == 4)
+		acceleration_baralign = speed_baralign = 2;
 	else if (autocvar_hud_panel_physics_flip)
 	{
 		acceleration_baralign = (autocvar_hud_panel_physics_baralign == 2);
@@ -5321,31 +5429,42 @@ void HUD_Physics(void)
 			{
 				top_speed = speed;
 				top_speed_time = time;
+                f = 1;
 			}
-			if (top_speed == 0) //hide top speed 0, it would be stupid
-				f = 0;
-			else
+            else if (top_speed != 0)
 			{
 				f = max(1, autocvar_hud_panel_physics_topspeed_time);
 				// divide by f to make it start from 1
 				f = cos( ((time - top_speed_time) / f) * PI/2 );
 			}
+            else //hide top speed 0, it would be stupid
+				f = 0;
 		}
 		if (f > 0)
 		{
-			//top speed progressbar peek
+			//top speed progressbar peak
 			if(autocvar_hud_panel_physics_progressbar && speed < top_speed)
 			{
-				float peek_offset_x, peek_size_x;
-				if (speed_baralign)
-					peek_offset_x = (1 - min(top_speed, max_speed)/max_speed) * panel_size_x;
-				else
-					peek_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x;
+				float peak_offset_x;
+                vector peak_size
+				if (speed_baralign == 0)
+					peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x;
+                else if (speed_baralign == 1)
+					peak_offset_x = (1 - min(top_speed, max_speed)/max_speed) * panel_size_x;
+                else if (speed_baralign == 2)
+                    peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x * 0.5;
 				//if speed is not 0 the speed progressbar already fetched the color
 				if (speed == 0)
 					HUD_Panel_GetProgressBarColor(speed);
-				peek_size_x = panel_size_x * 0.01;
-				drawfill(panel_pos + speed_offset + eX * (peek_offset_x - peek_size_x), eX * peek_size_x + eY * panel_size_y, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				peak_size_x = floor(panel_size_x * 0.01 + 1.5);
+                peak_size_y = panel_size_y;
+                if (speed_baralign == 2) // draw two peaks, on both sides
+                {
+                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size_x + peak_offset_x - peak_size_x), peak_size, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size_x - peak_offset_x + peak_size_x), peak_size, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                }
+                else
+                    drawfill(panel_pos + speed_offset + eX * (peak_offset_x - peak_size_x), peak_size, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 
 			//top speed
