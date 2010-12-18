@@ -1684,8 +1684,8 @@ void HUD_Weapons(void)
 		if(!autocvar_hud_panel_weapons) return;
 		if(spectatee_status == -1) return;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_WEAPONS;
+	else
+		hud_configure_active_panel = HUD_PANEL_WEAPONS;
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
 	float timeout_effect_length, timein_effect_length;
@@ -2094,8 +2094,8 @@ void HUD_Ammo(void)
 		if(!autocvar_hud_panel_ammo) return;
 		if(spectatee_status == -1) return;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_AMMO;
+	else
+		hud_configure_active_panel = HUD_PANEL_AMMO;
 
 	HUD_Panel_UpdateCvars(ammo);
 	vector pos, mySize;
@@ -2278,11 +2278,11 @@ void HUD_Powerups(void)
 	}
 	else
 	{
+		hud_configure_active_panel = HUD_PANEL_POWERUPS;
+
 		strength_time = 15;
 		shield_time = 27;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_POWERUPS;
 
 	HUD_Panel_UpdateCvars(powerups);
 	vector pos, mySize;
@@ -2425,12 +2425,12 @@ void HUD_HealthArmor(void)
 	}
 	else
 	{
+		hud_configure_active_panel = HUD_PANEL_HEALTHARMOR;
+
 		health = 150;
 		armor = 75;
 		fuel = 20;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_HEALTHARMOR;
 
 	HUD_Panel_UpdateCvars(healtharmor);
 	vector pos, mySize;
@@ -3114,8 +3114,8 @@ void HUD_Notify (void)
 	{
 		if(!autocvar_hud_panel_notify) return;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_NOTIFY;
+	else
+		hud_configure_active_panel = HUD_PANEL_NOTIFY;
 
 	HUD_Panel_UpdateCvars(notify);
 	vector pos, mySize;
@@ -3430,8 +3430,8 @@ void HUD_Timer(void)
 	{
 		if(!autocvar_hud_panel_timer) return;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_TIMER;
+	else
+		hud_configure_active_panel = HUD_PANEL_TIMER;
 
 	HUD_Panel_UpdateCvars(timer);
 	vector pos, mySize;
@@ -3489,8 +3489,8 @@ void HUD_Radar(void)
 		if (autocvar_hud_panel_radar == 0) return;
 		if (autocvar_hud_panel_radar != 2 && !teamplay) return;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_RADAR;
+	else
+		hud_configure_active_panel = HUD_PANEL_RADAR;
 
 	HUD_Panel_UpdateCvars(radar);
 	vector pos, mySize;
@@ -3618,8 +3618,8 @@ void HUD_Score(void)
 		if(!autocvar_hud_panel_score) return;
 		if(spectatee_status == -1 && (gametype == GAME_RACE || gametype == GAME_CTS)) return;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_SCORE;
+	else
+		hud_configure_active_panel = HUD_PANEL_SCORE;
 
 	HUD_Panel_UpdateCvars(score);
 	vector pos, mySize;
@@ -3886,8 +3886,8 @@ void HUD_RaceTimer (void)
 		if(!(gametype == GAME_RACE || gametype == GAME_CTS)) return;
 		if(spectatee_status == -1) return;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_RACETIMER;
+	else
+		hud_configure_active_panel = HUD_PANEL_RACETIMER;
 
 	HUD_Panel_UpdateCvars(racetimer);
 	vector pos, mySize;
@@ -4065,12 +4065,12 @@ void HUD_VoteWindow(void)
 	}
 	else
 	{
+		hud_configure_active_panel = HUD_PANEL_VOTE;
+
 		vote_yescount = 3;
 		vote_nocount = 2;
 		vote_needed = 4;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_VOTE;
 
 	string s;
 	float a;
@@ -4838,8 +4838,8 @@ void HUD_ModIcons(void)
 		if(!autocvar_hud_panel_modicons) return;
 		if (gametype != GAME_CTF && gametype != GAME_KEYHUNT && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && gametype != GAME_FREEZETAG && gametype != GAME_KEEPAWAY && gametype != GAME_DOMINATION) return;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_MODICONS;
+	else
+		hud_configure_active_panel = HUD_PANEL_MODICONS;
 
 	HUD_Panel_UpdateCvars(modicons);
 	vector pos, mySize;
@@ -4891,8 +4891,9 @@ void HUD_DrawPressedKeys(void)
 		if(!autocvar_hud_panel_pressedkeys) return;
 		if(spectatee_status <= 0 && autocvar_hud_panel_pressedkeys < 2) return;
 	}
+	else
+		hud_configure_active_panel = HUD_PANEL_PRESSEDKEYS;
 
-    hud_configure_active_panel = HUD_PANEL_PRESSEDKEYS;
 
 	HUD_Panel_UpdateCvars(pressedkeys);
 	vector pos, mySize;
@@ -4955,8 +4956,8 @@ void HUD_Chat(void)
 			return;
 		}
 	}
-
-    hud_configure_active_panel = HUD_PANEL_CHAT;
+	else
+		hud_configure_active_panel = HUD_PANEL_CHAT;
 
 	HUD_Panel_UpdateCvars(chat);
 
@@ -5030,8 +5031,8 @@ void HUD_EngineInfo(void)
 	{
 		if(!autocvar_hud_panel_engineinfo) return;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_ENGINEINFO;
+	else
+		hud_configure_active_panel = HUD_PANEL_ENGINEINFO;
 
 	HUD_Panel_UpdateCvars(engineinfo);
 	vector pos, mySize;
@@ -5094,8 +5095,8 @@ void HUD_InfoMessages(void)
 	{
 		if(!autocvar_hud_panel_infomessages) return;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_INFOMESSAGES;
+	else
+		hud_configure_active_panel = HUD_PANEL_INFOMESSAGES;
 
 	HUD_Panel_UpdateCvars(infomessages);
 	vector pos, mySize;
@@ -5282,8 +5283,8 @@ void HUD_Physics(void)
 		if(!autocvar__hud_configure) return;
 		if(spectatee_status <= 0 && autocvar_hud_panel_physics < 2) return;
 	}
-
-    hud_configure_active_panel = HUD_PANEL_PHYSICS;
+	else
+		hud_configure_active_panel = HUD_PANEL_PHYSICS;
 
 	HUD_Panel_UpdateCvars(physics);
 
