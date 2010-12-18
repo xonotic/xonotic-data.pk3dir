@@ -247,3 +247,5 @@ vector NearestPointOnBox(entity box, vector org);
 #endif
 
 float vercmp(string v1, string v2);
+
+float u8_strsize(string s);

@@ -235,6 +235,7 @@ void cvar_changes_init()
 		k = bufstr_get(h, i);
 
 #define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
+#define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
 #define BADCVAR(p) if(k == p) continue
 		// internal
 		BADPREFIX("csqc_");
@@ -254,12 +255,15 @@ void cvar_changes_init()
 		BADPREFIX("gl_");
 		BADPREFIX("joy");
 		BADPREFIX("hud_");
+		BADPREFIX("m_");
 		BADPREFIX("menu_");
 		BADPREFIX("net_slist_");
 		BADPREFIX("r_");
 		BADPREFIX("sbar_");
 		BADPREFIX("scr_");
 		BADPREFIX("snd_");
+		BADPREFIX("show");
+		BADPREFIX("sensitivity");
 		BADPREFIX("userbind");
 		BADPREFIX("v_");
 		BADPREFIX("vid_");
@@ -321,6 +325,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf");
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");
+		BADCVAR("g_freezetag");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_onslaught");
@@ -367,6 +372,8 @@ void cvar_changes_init()
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("pausable");
+		BADCVAR("sv_timeout");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("net_");
@@ -414,6 +421,7 @@ void cvar_changes_init()
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_runematch_point_limit");
 		BADCVAR("g_start_delay");
+		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
 		BADCVAR("hostname");
 		BADCVAR("log_file");
 		BADCVAR("maxplayers");
@@ -445,6 +453,8 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
 		BADCVAR("timelimit_override");
+		BADCVAR("g_warmup");
+		BADPREFIX("g_warmup_");
 
 		if(autocvar_g_minstagib)
 		{

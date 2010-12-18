@@ -158,7 +158,7 @@ void Seeker_Fire_Missile(vector f_diff)
 {
 	local entity missile;
 
-	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_seeker_missile_ammo;
 
 	makevectors(self.v_angle);

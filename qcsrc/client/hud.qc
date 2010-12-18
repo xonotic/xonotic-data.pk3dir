@@ -492,12 +492,15 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_ammo_color");
 					HUD_Write_PanelCvar_q("_ammo_alpha");
 					HUD_Write_PanelCvar_q("_aspect");
+					HUD_Write_PanelCvar_q("_timeout");
+					HUD_Write_PanelCvar_q("_timeout_effect");
 					break;
 				case HUD_PANEL_AMMO:
 					HUD_Write_PanelCvar_q("_onlycurrent");
 					HUD_Write_PanelCvar_q("_iconalign");
 					HUD_Write_PanelCvar_q("_progressbar");
 					HUD_Write_PanelCvar_q("_progressbar_name");
+					HUD_Write_PanelCvar_q("_progressbar_xoffset");
 					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_POWERUPS:
@@ -1767,10 +1770,10 @@ void HUD_Weapons(void)
 				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * wpnsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw ammo status bar
-			if(show_ammo && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
+			if(show_ammo && self.weapon != WEP_TUBA && self.weapon != WEP_LASER && self.weapon != WEP_PORTO)
 			{
 				a = 0;
-				type = GetAmmoTypeForWep(weapid);
+				type = GetAmmoTypeForWep(self.weapon);
 				if(type != -1)
 					a = getstati(GetAmmoStat(type)); // how much ammo do we have?
 
@@ -3562,7 +3565,7 @@ void HUD_Radar(void)
 	if(hud_panel_radar_rotation == 0)
 	{
 		// max-min distance must fit the radar in any rotation
-		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_max - mi_min));
+		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_scale));
 	}
 	else
 	{
@@ -3590,7 +3593,7 @@ void HUD_Radar(void)
 		  f * bigsize
 		+ (1 - f) * normalsize;
 	teamradar_origin3d_in_texcoord = teamradar_3dcoord_to_texcoord(
-		  f * (mi_min + mi_max) * 0.5
+		  f * mi_center
 		+ (1 - f) * view_origin);
 
 	color1 = GetPlayerColor(player_localentnum-1);
@@ -5213,6 +5216,8 @@ void HUD_Main (void)
 		}
 	}
 
+    current_player = (spectatee_status > 0) ? spectatee_status : player_localentnum;
+
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
 	{
@@ -5220,7 +5225,7 @@ void HUD_Main (void)
 		vector color;
 		float hud_dock_color_team = autocvar_hud_dock_color_team;
 		if((teamplay) && hud_dock_color_team) {
-			f = stof(getplayerkey(player_localentnum - 1, "colors"));
+			f = stof(getplayerkey(current_player - 1, "colors"));
 			color = colormapPaletteColor(mod(f, 16), 1) * hud_dock_color_team;
 		}
 		else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && hud_dock_color_team) {
@@ -5230,11 +5235,11 @@ void HUD_Main (void)
 		{
 			string hud_dock_color = autocvar_hud_dock_color;
 			if(hud_dock_color == "shirt") {
-				f = stof(getplayerkey(player_localentnum - 1, "colors"));
+				f = stof(getplayerkey(current_player - 1, "colors"));
 				color = colormapPaletteColor(floor(f / 16), 0);
 			}
 			else if(hud_dock_color == "pants") {
-				f = stof(getplayerkey(player_localentnum - 1, "colors"));
+				f = stof(getplayerkey(current_player - 1, "colors"));
 				color = colormapPaletteColor(mod(f, 16), 1);
 			}
 			else

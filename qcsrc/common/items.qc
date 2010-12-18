@@ -1,5 +1,5 @@
 // WEAPON PLUGIN SYSTEM
-entity weapon_info[24];
+entity weapon_info[WEP_MAXCOUNT];
 entity dummy_weapon_info;
 
 void register_weapon(float id, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname)
@@ -43,7 +43,7 @@ void register_weapons_done()
 
 	float i;
 	weaponorder_byid = "";
-	for(i = 24; i >= 1; --i)
+	for(i = WEP_MAXCOUNT; i >= 1; --i)
 		if(weapon_info[i-1])
 			weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
 	weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
