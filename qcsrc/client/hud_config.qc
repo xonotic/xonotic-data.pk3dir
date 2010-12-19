@@ -625,6 +625,13 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		menu_enabled_time = time;
 		localcmd("menu_showhudexit\n");
 	}
+	else if(nPrimary == K_BACKSPACE && hudShiftState & S_CTRL)
+	{
+		if (bInputType == 1)
+			return true;
+		if (!menu_enabled)
+			cvar_set("_hud_configure", "0");
+	}
 	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // select and highlight another panel
 	{
 		if (bInputType == 1 || mouseClicked)
