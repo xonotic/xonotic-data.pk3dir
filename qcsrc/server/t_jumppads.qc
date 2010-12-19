@@ -127,9 +127,9 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 void trigger_push_touch()
 {
-	if (self.active == ACTIVE_NOT) 
-		return;		
-		
+	if (self.active == ACTIVE_NOT)
+		return;
+
 	// FIXME: add a .float for whether an entity should be tossed by jumppads
 	if (!other.iscreature)
 	if (other.classname != "corpse")
@@ -171,7 +171,7 @@ void trigger_push_touch()
 		}
 		local float ct;
 		ct = clienttype(other);
-		if( ct == CLIENTTYPE_REAL)
+		if( ct == CLIENTTYPE_REAL || ct == CLIENTTYPE_BOT)
 		{
 			local float i;
 			local float found;
@@ -185,11 +185,14 @@ void trigger_push_touch()
 				other.jumppadcount = other.jumppadcount + 1;
 			}
 
-			if(self.message)
-				centerprint(other, self.message);
+			if(ct == CLIENTTYPE_REAL)
+			{
+				if(self.message)
+					centerprint(other, self.message);
+			}
+			else
+				other.lastteleporttime = time;
 		}
-		else if(ct == CLIENTTYPE_BOT)
-			other.lastteleporttime = time;
 		else
 			other.jumppadcount = TRUE;
 
@@ -289,8 +292,8 @@ void spawnfunc_trigger_push()
 	SetMovedir ();
 
 	EXACTTRIGGER_INIT;
-	
-	self.active = ACTIVE_ACTIVE;	
+
+	self.active = ACTIVE_ACTIVE;
 	self.use = trigger_push_use;
 	self.touch = trigger_push_touch;
 
