@@ -38,6 +38,7 @@ teamplay.qc
 ctf.qc
 
 teamradar.qc
+hud_config.qc
 hud.qc
 scoreboard.qc
 mapvoting.qc
