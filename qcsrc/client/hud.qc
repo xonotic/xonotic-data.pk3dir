@@ -520,12 +520,6 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float alph
 
 // Weapon icons (#0)
 //
-float weaponspace[10];
-#define HUD_Weapons_Clear()\
-	float idx;\
-	for(idx = 0; idx < 10; ++idx)\
-		weaponspace[idx] = 0
-
 entity weaponorder[WEP_MAXCOUNT];
 void weaponorder_swap(float i, float j, entity pass)
 {
@@ -727,8 +721,6 @@ void HUD_Weapons(void)
 	}
 	else
 		wpnalpha = panel_fg_alpha;
-
-	HUD_Weapons_Clear();
 
 	float rows, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
