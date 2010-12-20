@@ -852,8 +852,20 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				}
 				mirrordamage = 0;
 			}
-		force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
-		Damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE, attacker.origin, force);
+
+		if(autocvar_g_mirrordamage_virtual)
+		{
+			vector v;
+			v = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
+			attacker.dmg_take += v_x;
+			attacker.dmg_save += v_y;
+			attacker.dmg_inflictor = inflictor;
+		}
+		else
+		{
+			force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
+			Damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE, attacker.origin, force);
+		}
 	}
 }
 
