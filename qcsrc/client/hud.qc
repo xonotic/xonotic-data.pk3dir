@@ -617,12 +617,12 @@ void HUD_Weapons(void)
 	if (timeout && time >= weapontime + timeout && !autocvar__hud_configure)
 	{
 		f = (time - (weapontime + timeout)) / timeout_effect_length;
-		if (autocvar_hud_panel_weapons_timeout_effect)
+		if (autocvar_hud_panel_weapons_timeout_effect == 1 || autocvar_hud_panel_weapons_timeout_effect == 3)
 		{
 			panel_bg_alpha *= (1 - f);
 			panel_fg_alpha *= (1 - f);
 		}
-		if (autocvar_hud_panel_weapons_timeout_effect == 1)
+		if (autocvar_hud_panel_weapons_timeout_effect == 2 || autocvar_hud_panel_weapons_timeout_effect == 3)
 		{
 			f *= f; // for a cooler movement
 			center_x = panel_pos_x + panel_size_x/2;
@@ -648,12 +648,12 @@ void HUD_Weapons(void)
 	else if (timeout && time < weaponprevtime + timein_effect_length && !autocvar__hud_configure)
 	{
 		f = (time - weaponprevtime) / timein_effect_length;
-		if (autocvar_hud_panel_weapons_timeout_effect)
+		if (autocvar_hud_panel_weapons_timeout_effect == 1 || autocvar_hud_panel_weapons_timeout_effect == 3)
 		{
 			panel_bg_alpha *= (f);
 			panel_fg_alpha *= (f);
 		}
-		if (autocvar_hud_panel_weapons_timeout_effect == 1)
+		if (autocvar_hud_panel_weapons_timeout_effect == 2 || autocvar_hud_panel_weapons_timeout_effect == 3)
 		{
 			f *= f; // for a cooler movement
 			f = 1 - f;
