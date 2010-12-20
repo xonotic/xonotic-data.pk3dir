@@ -102,7 +102,7 @@ void UpdateFrags(entity player, float f)
 
 // NOTE: f=0 means still count as a (positive) kill, but count no frags for it
 void W_SwitchWeapon_Force(entity e, float w);
-void GiveFrags (entity attacker, entity targ, float f)
+void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 {
 	float w;
 
@@ -139,19 +139,36 @@ void GiveFrags (entity attacker, entity targ, float f)
 	if(targ != attacker) // not for suicides
 	if(g_weaponarena_random)
 	{
-		// after a frag, choose another random weapon set
-		if(inWarmupStage)
-			w = warmup_start_weapons;
-		else
-			w = start_weapons;
+		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
+		float culprit;
+		culprit = DEATH_WEAPONOF(deathtype);
+		if(!culprit || !(attacker.weapons & W_WeaponBit(culprit)))
+			culprit = attacker.weapon;
 
-		attacker.weapons = randombits(w - (w & W_WeaponBit(attacker.weapon)), g_weaponarena_random, TRUE);
-		if(attacker.weapons < 0)
+		if(g_weaponarena_random_with_laser && culprit == WEPBIT_LASER)
 		{
-			// error from randombits: no weapon available
-			// this means we can just give ALL weapons
-			attacker.weapons = w;
+			// no exchange
 		}
+		else
+		{
+			if(inWarmupStage)
+				w = warmup_start_weapons;
+			else
+				w = start_weapons;
+
+			// all others (including the culprit): remove
+			w &~= self.weapons;
+
+			// among the remaining ones, choose one by random
+			w = randombits(w, 1, FALSE);
+			if(w)
+			{
+				attacker.weapons |= w;
+				attacker.weapons &~= W_WeaponBit(culprit);
+			}
+		}
+
+		// after a frag, choose another random weapon set
 		if not(attacker.weapons & W_WeaponBit(attacker.weapon))
 			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
 	}
