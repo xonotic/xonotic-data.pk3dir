@@ -6,7 +6,7 @@ CLASS(XonoticAdvancedDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticAdvancedDialog, title, string, "Advanced server settings")
 	ATTRIB(XonoticAdvancedDialog, color, vector, SKINCOLOR_DIALOG_ADVANCED)
 	ATTRIB(XonoticAdvancedDialog, intendedWidth, float, 0.5)
-	ATTRIB(XonoticAdvancedDialog, rows, float, 13)
+	ATTRIB(XonoticAdvancedDialog, rows, float, 14)
 	ATTRIB(XonoticAdvancedDialog, columns, float, 3)
 	ATTRIB(XonoticAdvancedDialog, refilterEntity, entity, NULL)
 ENDCLASS(XonoticAdvancedDialog)
@@ -42,6 +42,9 @@ void XonoticAdvancedDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Friendly fire scale:"));
 		me.TD(me, 1, 1.6, e = makeXonoticSlider(0, 1.0, 0.05, "g_friendlyfire"));
+	me.TR(me);
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 2.6, e = makeXonoticCheckBox(0, "g_friendlyfire_virtual", "Virtual friendly fire (effect only)"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Friendly fire penalty:"));
