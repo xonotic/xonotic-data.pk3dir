@@ -6,7 +6,7 @@ CLASS(XonoticAdvancedDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticAdvancedDialog, title, string, "Advanced server settings")
 	ATTRIB(XonoticAdvancedDialog, color, vector, SKINCOLOR_DIALOG_ADVANCED)
 	ATTRIB(XonoticAdvancedDialog, intendedWidth, float, 0.5)
-	ATTRIB(XonoticAdvancedDialog, rows, float, 12)
+	ATTRIB(XonoticAdvancedDialog, rows, float, 13)
 	ATTRIB(XonoticAdvancedDialog, columns, float, 3)
 	ATTRIB(XonoticAdvancedDialog, refilterEntity, entity, NULL)
 ENDCLASS(XonoticAdvancedDialog)
@@ -22,34 +22,37 @@ void XonoticAdvancedDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 1.2, makeXonoticTextLabel(0, "Game settings:"));
+		me.TD(me, 1, 3, makeXonoticTextLabel(0, "Game settings:"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "sv_spectate", "Allow spectating"));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "sv_spectate", "Allow spectating"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Spawn shield:"));
-		me.TD(me, 1, 1.7, e = makeXonoticSlider(0, 15, 0.5, "g_spawnshieldtime"));
+		me.TD(me, 1, 1.6, e = makeXonoticSlider(0, 15, 0.5, "g_spawnshieldtime"));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Game speed:"));
-		me.TD(me, 1, 1.7, e = makeXonoticSlider(0.5, 2.0, 0.1, "slowmo"));
+		me.TD(me, 1, 1.6, e = makeXonoticSlider(0.5, 2.0, 0.1, "slowmo"));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1.2, makeXonoticTextLabel(0, "Teamplay settings:"));
+		me.TD(me, 1, 3, makeXonoticTextLabel(0, "Teamplay settings:"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Friendly fire scale:"));
-		me.TD(me, 1, 1.7, e = makeXonoticSlider(0, 1.0, 0.05, "g_friendlyfire"));
+		me.TD(me, 1, 1.6, e = makeXonoticSlider(0, 1.0, 0.05, "g_friendlyfire"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Friendly fire penalty:"));
-		me.TD(me, 1, 1.7, e = makeXonoticSlider(0, 1.0, 0.05, "g_mirrordamage"));
+		me.TD(me, 1, 1.6, e = makeXonoticSlider(0, 1.0, 0.05, "g_mirrordamage"));
+	me.TR(me);
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 2.6, e = makeXonoticCheckBox(0, "g_mirrordamage_virtual", "Virtual penalty (effect only)"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Teams:"));
-		me.TD(me, 1, 1.7, e = makeXonoticTextSlider("g_tdm_teams_override g_domination_teams_override g_keyhunt_teams_override"));
+		me.TD(me, 1, 1.6, e = makeXonoticTextSlider("g_tdm_teams_override g_domination_teams_override g_keyhunt_teams_override"));
 			e.addValue(e, "Default", "0");
 			e.addValue(e, "2 teams", "2");
 			e.addValue(e, "3 teams", "3");
