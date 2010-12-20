@@ -5160,3 +5160,37 @@ gravity -0.125
 bounce 1.5
 liquidfriction 4
 velocityjitter 16 16 16
+
+// red smoke emiter
+// used nowhere in code
+effect red_smoke
+count 2
+type smoke
+tex 0 8
+color 0xff8866 0x331100
+size 60 120
+sizeincrease 0
+alpha 32 64 32
+gravity -0.007
+originjitter 0 0 0
+velocityjitter 0 0 0
+velocitymultiplier 5
+airfriction -1
+rotate 0 360 -30 30
+
+// pipe smoke emiter
+// used nowhere in code
+effect pipe_smoke
+count 2
+type smoke
+tex 0 8
+color 0x999999 0x555555
+size 5 10
+sizeincrease 35
+alpha 32 64 48
+gravity -0.015
+originjitter 0 0 0
+velocityjitter 0 0 5
+velocitymultiplier 15
+airfriction -1
+rotate 0 360 -180 180
