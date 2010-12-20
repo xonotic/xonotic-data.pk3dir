@@ -4694,8 +4694,6 @@ bounce 1.5
 liquidfriction 4
 velocityjitter 16 16 16
 
-
-
 // rocket guiding start
 // underwater bubbles
 effect rocket_guide
@@ -5125,3 +5123,40 @@ originjitter 1 1 1
 velocityjitter 300 300 300
 velocitymultiplier 0.5
 airfriction 3
+
+
+// weak rifle bullet trail (somewhat like a tracer)
+// used in qcsrc/server/w_common.qc:				zcurveparticles_from_tracetoss(particleeffectnum("tr_bullet"), self.origin, trace_endpos, self.velocity)
+// used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("tr_bullet"), from, to)
+effect tr_rifle_weak
+trailspacing 128
+type spark
+color 0x800000 0xFF8020
+alpha 256 256 2560
+size 1.5 1.5
+stretchfactor 1
+velocitymultiplier 0.7
+effect tr_rifle_weak
+notunderwater
+tex 0 8
+trailspacing 24
+type static
+color 0x202020 0x404040
+size 4 4
+sizeincrease 0.4
+alpha 256 256 256
+airfriction -4
+velocityjitter 4 4 4
+type smoke
+effect tr_rifle_weak
+underwater
+trailspacing 96
+type bubble
+tex 62 62
+color 0x404040 0x808080
+size 2 2
+alpha 256 256 128
+gravity -0.125
+bounce 1.5
+liquidfriction 4
+velocityjitter 16 16 16

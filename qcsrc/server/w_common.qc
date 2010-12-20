@@ -391,6 +391,8 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 		if(tracereffects & EF_RED)
 			eff = particleeffectnum("tr_rifle");
+		else if(tracereffects & EF_BLUE)
+			eff = particleeffectnum("tr_rifle_weak");
 		else
 			eff = particleeffectnum("tr_bullet");
 
