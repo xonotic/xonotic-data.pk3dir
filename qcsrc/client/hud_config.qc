@@ -543,10 +543,13 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 }
 
+const float S_MOUSE1 = 1;
+const float S_MOUSE2 = 2;
+const float S_MOUSE3 = 4;
 float mouseClicked;
 float prevMouseClicked; // previous state
-float prevMouseClickedTime; // time during previous mouse click, to check for doubleclicks
-vector prevMouseClickedPos; // pos during previous mouse click, to check for doubleclicks
+float prevMouseClickedTime; // time during previous left mouse click, to check for doubleclicks
+vector prevMouseClickedPos; // pos during previous left mouse click, to check for doubleclicks
 
 void HUD_Panel_EnableMenu();
 float tab_panels[HUD_PANEL_NUM];
@@ -608,14 +611,17 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if(nPrimary == K_MOUSE1)
 	{
-		if(bInputType == 0) { // key pressed
-			mouseClicked = 1;
-			return true;
-		}
-		else if(bInputType == 1) {// key released
-			mouseClicked = 0;
-			return true;
-		}
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE1;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE1);
+	}
+	else if(nPrimary == K_MOUSE2)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE2;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
 	else if(nPrimary == K_ESCAPE)
 	{
@@ -811,7 +817,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	return true;
 }
 
-float HUD_Panel_Check_Mouse_Pos()
+float HUD_Panel_Check_Mouse_Pos(float allow_move)
 {
 	float i, j, border;
 
@@ -825,7 +831,7 @@ float HUD_Panel_Check_Mouse_Pos()
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
-		if(mousepos_x >= panel_pos_x && mousepos_y >= panel_pos_y && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= panel_pos_y + panel_size_y)
+		if(allow_move && mousepos_x >= panel_pos_x && mousepos_y >= panel_pos_y && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= panel_pos_y + panel_size_y)
 		{
 			return 1;
 		}
@@ -891,7 +897,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	hud_panelorder_prev = strzone(autocvar__hud_panelorder); // prevent HUD_Main from doing useless update, we already updated here
 }
 
-void HUD_Panel_Highlight()
+void HUD_Panel_Highlight(float allow_move)
 {
 	float i, j, border;
 
@@ -905,7 +911,7 @@ void HUD_Panel_Highlight()
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
-		if(mousepos_x >= panel_pos_x && mousepos_y >= panel_pos_y && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= panel_pos_y + panel_size_y)
+		if(allow_move && mousepos_x >= panel_pos_x && mousepos_y >= panel_pos_y && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= panel_pos_y + panel_size_y)
 		{
 			highlightedPanel = i;
 			HUD_Panel_FirstInDrawQ(i);
@@ -1005,7 +1011,7 @@ void HUD_Panel_Mouse()
 				tab_panel = -1;
 				reset_tab_panels();
 			}
-			HUD_Panel_Highlight(); // sets highlightedPanel, highlightedAction, panel_click_distance, panel_click_resizeorigin
+			HUD_Panel_Highlight(mouseClicked & S_MOUSE1); // sets highlightedPanel, highlightedAction, panel_click_distance, panel_click_resizeorigin
 									// and calls HUD_Panel_UpdatePosSizeForId() for the highlighted panel
 			if (highlightedPanel != -1)
 			{
@@ -1013,15 +1019,19 @@ void HUD_Panel_Mouse()
 				highlightedPanel_initial_size = panel_size;
 			}
 			// doubleclick check
-			if (time - prevMouseClickedTime < 0.4 && highlightedPanel != -1 && prevMouseClickedPos == mousepos)
+			if ((mouseClicked & S_MOUSE1) && time - prevMouseClickedTime < 0.4 && highlightedPanel != -1 && prevMouseClickedPos == mousepos)
 			{
 				mouseClicked = 0; // to prevent spam, I guess.
 				HUD_Panel_EnableMenu();
 			}
 			else
 			{
-				prevMouseClickedTime = time;
-				prevMouseClickedPos = mousepos;
+				if (mouseClicked & S_MOUSE1)
+				{
+					prevMouseClickedTime = time;
+					prevMouseClickedPos = mousepos;
+				}
+				mouse_over_panel = HUD_Panel_Check_Mouse_Pos(mouseClicked & S_MOUSE1);
 			}
 		}
 		else
@@ -1071,7 +1081,7 @@ void HUD_Panel_Mouse()
 		if(menu_enabled == 2)
 			mouse_over_panel = 0;
 		else
-			mouse_over_panel = HUD_Panel_Check_Mouse_Pos();
+			mouse_over_panel = HUD_Panel_Check_Mouse_Pos(TRUE);
 		if (mouse_over_panel && tab_panel == -1)
 			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .1, DRAWFLAG_NORMAL);
 	}
