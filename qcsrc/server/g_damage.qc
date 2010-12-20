@@ -157,7 +157,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 				w = start_weapons;
 
 			// all others (including the culprit): remove
-			w &~= self.weapons;
+			w &~= attacker.weapons;
 
 			// among the remaining ones, choose one by random
 			w = randombits(w, 1, FALSE);
@@ -318,7 +318,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
 			{
 				LogDeath("suicide", deathtype, targ, targ);
-				GiveFrags(attacker, targ, -1);
+				GiveFrags(attacker, targ, -1, deathtype);
 			}
 
 			if (targ.killcount > 2)
@@ -342,7 +342,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				else
 					type = KILL_TEAM_BLUE;
 
-				GiveFrags(attacker, targ, -1);
+				GiveFrags(attacker, targ, -1, deathtype);
 
 				Send_CSQC_Centerprint(attacker, s, "", type, MSG_KILL);
 
@@ -396,10 +396,10 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				{
 					UpdateFrags(attacker, ctf_score_value("score_kill"));
 					PlayerScore_Add(attacker, SP_CTF_FCKILLS, 1);
-					GiveFrags(attacker, targ, 0); // for logging
+					GiveFrags(attacker, targ, 0, deathtype); // for logging
 				}
 				else
-					GiveFrags(attacker, targ, 1);
+					GiveFrags(attacker, targ, 1, deathtype);
 
 				if (targ.killcount > 2) {
 					Send_KillNotification(s, ftos(targ.killcount), a, KILL_END_SPREE, MSG_SPREE);
@@ -458,7 +458,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			if(strstrofs(msg, "%", 0) < 0)
 				msg = strcat("%s ", msg);
 
-			GiveFrags(targ, targ, -1);
+			GiveFrags(targ, targ, -1, deathtype);
 			if(PlayerScore_Add(targ, SP_SCORE, 0) == -5) {
 				AnnounceTo(targ, "botlike");
 			}
