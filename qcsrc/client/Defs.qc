@@ -156,7 +156,7 @@ float		scoreboard_showaccuracy;
 // float		coop;
 // float		deathmatch;
 
-// float		dmg_take;
+float		dmg_take;
 // float		dmg_save;
 // vector		dmg_origin;
 
