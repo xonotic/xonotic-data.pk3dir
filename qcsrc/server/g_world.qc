@@ -455,6 +455,7 @@ void cvar_changes_init()
 		BADCVAR("timelimit_override");
 		BADCVAR("g_warmup");
 		BADPREFIX("g_warmup_");
+		BADCVAR("teamplay_mode");
 
 		if(autocvar_g_minstagib)
 		{
