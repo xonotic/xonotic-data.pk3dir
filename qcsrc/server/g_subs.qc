@@ -700,7 +700,7 @@ void LODmodel_attach()
 
 void ApplyMinMaxScaleAngles(entity e)
 {
-	if(e.angles_x != 0 || e.angles_z != 0) // "weird" rotation
+	if(e.angles_x != 0 || e.angles_z != 0 || self.avelocity_x != 0 || self.avelocity_z != 0) // "weird" rotation
 	{
 		e.maxs = '1 1 1' * vlen(
 			'1 0 0' * max(-e.mins_x, e.maxs_x) +
@@ -709,7 +709,7 @@ void ApplyMinMaxScaleAngles(entity e)
 		);
 		e.mins = -e.maxs;
 	}
-	else if(e.angles_y != 0) // yaw only is a bit better
+	else if(e.angles_y != 0 || self.avelocity_y != 0) // yaw only is a bit better
 	{
 		e.maxs_x = vlen(
 			'1 0 0' * max(-e.mins_x, e.maxs_x) +
