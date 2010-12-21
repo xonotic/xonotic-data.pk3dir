@@ -582,6 +582,28 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							else
 								damage = autocvar_g_friendlyfire * damage;
 							// mirrordamage will be used LATER
+
+							if(autocvar_g_mirrordamage_virtual)
+							{
+								vector v;
+								v = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
+								attacker.dmg_take += v_x;
+								attacker.dmg_save += v_y;
+								attacker.dmg_inflictor = inflictor;
+								mirrordamage = 0;
+								mirrorforce = 0;
+							}
+
+							if(autocvar_g_friendlyfire_virtual)
+							{
+								vector v;
+								v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
+								targ.dmg_take += v_x;
+								targ.dmg_save += v_y;
+								targ.dmg_inflictor = inflictor;
+								damage = 0;
+								force = '0 0 0';
+							}
 						}
 						else
 							damage = 0;
@@ -623,12 +645,11 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			if (DEATH_ISWEAPON(deathtype, WEP_LASER))
 			{
 				damage = 0;
+				mirrordamage = 0;
 				if (targ != attacker)
 				{
 					if ((targ.health >= 1) && (targ.classname == "player"))
 						centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
-					damage = 0;
-					mirrordamage = 0;
 					force = '0 0 0';
 					// keep mirrorforce
 					attacker = targ;
@@ -858,17 +879,18 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	{
 		attacker = attacker_save;
 		if(g_minstagib)
-			if(mirrordamage > 0)
+		if(mirrordamage > 0)
+		{
+			// just lose extra LIVES, don't kill the player for mirror damage
+			if(attacker.armorvalue > 0)
 			{
-				// just lose extra LIVES, don't kill the player for mirror damage
-				if(attacker.armorvalue > 0)
-				{
-					attacker.armorvalue = attacker.armorvalue - 1;
-					centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(attacker.armorvalue)));
-					attacker.hitsound += 1;
-				}
-				mirrordamage = 0;
+				attacker.armorvalue = attacker.armorvalue - 1;
+				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(attacker.armorvalue)));
+				attacker.hitsound += 1;
 			}
+			mirrordamage = 0;
+		}
+
 		force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
 		Damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE, attacker.origin, force);
 	}
