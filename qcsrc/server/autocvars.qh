@@ -722,6 +722,7 @@ float autocvar_g_freezetag_revive_extra_size;
 float autocvar_g_freezetag_revive_time;
 float autocvar_g_freezetag_warmup;
 #define autocvar_g_friendlyfire cvar("g_friendlyfire")
+#define autocvar_g_friendlyfire_virtual cvar("g_friendlyfire_virtual")
 float autocvar_g_full_getstatus_responses;
 float autocvar_g_fullbrightitems;
 float autocvar_g_fullbrightplayers;
