@@ -3134,6 +3134,8 @@ void HUD_Notify (void)
 	if(!autocvar_hud_panel_notify && !autocvar__hud_configure)
 		return;
 
+	drawfont = hud_bigfont;
+
 	active_panel = HUD_PANEL_NOTIFY;
 	HUD_Panel_UpdateCvars(notify);
 	vector pos, mySize;
@@ -3424,6 +3426,8 @@ void HUD_Notify (void)
 			}
 		}
 	}
+
+	drawfont = hud_font;
 }
 
 // Timer (#5)
