@@ -1,4 +1,4 @@
-##ifdef INTERFACE
+#ifdef INTERFACE
 CLASS(XonoticPlayerSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticPlayerSettingsTab, fill, void(entity))
 	METHOD(XonoticPlayerSettingsTab, draw, void(entity))
