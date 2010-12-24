@@ -6,13 +6,6 @@ void send_CSQC_teamnagger() {
 	WriteByte(0, TE_CSQC_TEAMNAGGER);
 }
 
-void send_CSQC_cr_maxbullets(entity e) {
-	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_CR_MAXBULLETS);
-	WriteByte(MSG_ONE, autocvar_g_balance_campingrifle_magazinecapacity);
-}
-
 void Announce(string snd) {
 	WriteByte(MSG_ALL, SVC_TEMPENTITY);
 	WriteByte(MSG_ALL, TE_CSQC_ANNOUNCE);
@@ -1114,6 +1107,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, autocvar_g_balance_campingrifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, autocvar_g_balance_campingrifle_magazinecapacity); // rifle max bullets
 	return TRUE;
 }
 
@@ -1740,8 +1734,6 @@ void ClientConnect (void)
 	}
 	else if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
-
-	send_CSQC_cr_maxbullets(self);
 
 	CheatInitClient();
 

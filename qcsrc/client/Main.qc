@@ -1097,6 +1097,8 @@ void Ent_Init()
 
 	serverflags = ReadByte();
 
+	cr_maxbullets = ReadByte();
+
 	if(!postinit)
 		PostInit();
 }
@@ -1393,10 +1395,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_WEAPONCOMPLAIN:
 			Net_WeaponComplain();
-			bHandled = true;
-			break;
-		case TE_CSQC_CR_MAXBULLETS:
-			cr_maxbullets = ReadByte();
 			bHandled = true;
 			break;
 		default:
