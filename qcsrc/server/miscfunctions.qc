@@ -915,8 +915,15 @@ void readplayerstartcvars()
 
 	g_weaponarena = 0;
 	s = cvar_string("g_weaponarena");
-	if (s == "0")
+	if (s == "0" || s == "")
 	{
+		if(g_lms || g_ca)
+			s = "most";
+	}
+
+	if (s == "off")
+	{
+		// forcibly turn off weaponarena
 	}
 	else if (s == "all")
 	{

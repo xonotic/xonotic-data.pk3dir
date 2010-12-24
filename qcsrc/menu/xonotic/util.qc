@@ -454,3 +454,34 @@ string HUD_Panel_GetSettingName(float theSetting)
 		default: return "";
 	}
 }
+
+float updateCompression()
+{
+	float fh;
+	float have_dds, have_jpg, have_tga;
+	if((have_dds = ((fh = fopen("dds/particles/particlefont.dds", FILE_READ)) >= 0)))
+		fclose(fh);
+	if((have_jpg = ((fh = fopen("particles/particlefont.jpg", FILE_READ)) >= 0)))
+		fclose(fh);
+	if((have_tga = ((fh = fopen("particles/particlefont.tga", FILE_READ)) >= 0)))
+		fclose(fh);
+	if(have_dds && (have_jpg || have_tga))
+	{
+		// both? Let's only use good quality precompressed files
+		cvar_set("gl_texturecompression", "0");
+		return 1;
+	}
+	else if(have_dds)
+	{
+		// DDS only? We probably always want texture compression
+		cvar_set("gl_texturecompression", "1");
+		cvar_set("r_texture_dds_load", "1");
+		return 0;
+	}
+	else
+	{
+		// TGA only? Allow runtime compression
+		cvar_set("gl_texturecompression", cvar_string("r_texture_dds_load"));
+		return 2;
+	}
+}

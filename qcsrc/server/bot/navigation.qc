@@ -897,6 +897,7 @@ void navigation_goalrating_start()
 	self.navigation_jetpack_goal = world;
 	navigation_bestrating = -1;
 	self.navigation_hasgoals = FALSE;
+	navigation_clearroute();
 	navigation_bestgoal = world;
 	navigation_markroutes(world);
 };

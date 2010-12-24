@@ -137,6 +137,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 		}
 	}
 	localcmd("\nbind \"", keynumtostring(key), "\" \"", func, "\"\n");
+	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 }
 void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandPress, string theCommandRelease)
 {
@@ -197,7 +198,7 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 			//localcmd("\nunbind \"", keynumtostring(k), "\"\n");
 			localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
 	}
-
+	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 }
 void XonoticKeyBinder_clickListBoxItem(entity me, float i, vector where)
 {

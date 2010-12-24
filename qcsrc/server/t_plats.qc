@@ -536,6 +536,7 @@ void spawnfunc_func_pendulum()
 
 	self.blocked = generic_plat_blocked;
 
+	self.avelocity_z = 0.0000001;
 	if not(InitMovingBrushTrigger())
 		return;
 
@@ -1433,8 +1434,10 @@ void spawnfunc_func_door_rotating()
 	self.angles = '0 0 0';
 
 	self.max_health = self.health;
+	self.avelocity = self.movedir;
 	if not(InitMovingBrushTrigger())
 		return;
+	self.velocity = '0 0 0';
 	//self.effects |= EF_LOWPRECISION;
 	self.classname = "door_rotating";
 

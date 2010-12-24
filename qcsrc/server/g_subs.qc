@@ -698,6 +698,33 @@ void LODmodel_attach()
 			SetCustomizer(self, LOD_customize, LOD_uncustomize);
 }
 
+void ApplyMinMaxScaleAngles(entity e)
+{
+	if(e.angles_x != 0 || e.angles_z != 0 || self.avelocity_x != 0 || self.avelocity_z != 0) // "weird" rotation
+	{
+		e.maxs = '1 1 1' * vlen(
+			'1 0 0' * max(-e.mins_x, e.maxs_x) +
+			'0 1 0' * max(-e.mins_y, e.maxs_y) +
+			'0 0 1' * max(-e.mins_z, e.maxs_z)
+		);
+		e.mins = -e.maxs;
+	}
+	else if(e.angles_y != 0 || self.avelocity_y != 0) // yaw only is a bit better
+	{
+		e.maxs_x = vlen(
+			'1 0 0' * max(-e.mins_x, e.maxs_x) +
+			'0 1 0' * max(-e.mins_y, e.maxs_y)
+		);
+		e.maxs_y = e.maxs_x;
+		e.mins_x = -e.maxs_x;
+		e.mins_y = -e.maxs_x;
+	}
+	if(e.scale)
+		setsize(e, e.mins * e.scale, e.maxs * e.scale);
+	else
+		setsize(e, e.mins, e.maxs);
+}
+
 void SetBrushEntityModel()
 {
  	if(self.model != "")
@@ -707,10 +734,7 @@ void SetBrushEntityModel()
 		InitializeEntity(self, LODmodel_attach, INITPRIO_FINDTARGET);
  	}
 	setorigin(self, self.origin);
-	if(self.scale)
-		setsize(self, self.mins * self.scale, self.maxs * self.scale);
-	else
-		setsize(self, self.mins, self.maxs);
+	ApplyMinMaxScaleAngles(self);
 }
 
 void SetBrushEntityModelNoLOD()
@@ -721,10 +745,7 @@ void SetBrushEntityModelNoLOD()
  		setmodel(self, self.model); // no precision needed
  	}
 	setorigin(self, self.origin);
-	if(self.scale)
-		setsize(self, self.mins * self.scale, self.maxs * self.scale);
-	else
-		setsize(self, self.mins, self.maxs);
+	ApplyMinMaxScaleAngles(self);
 }
 
 /*

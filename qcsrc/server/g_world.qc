@@ -325,6 +325,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf");
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");
+		BADCVAR("g_freezetag");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_onslaught");
@@ -452,6 +453,8 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
 		BADCVAR("timelimit_override");
+		BADCVAR("g_warmup");
+		BADPREFIX("g_warmup_");
 
 		if(autocvar_g_minstagib)
 		{
