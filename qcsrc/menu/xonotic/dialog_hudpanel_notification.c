@@ -18,7 +18,7 @@ void XonoticHUDNotificationDialog_fill(entity me)
 	float i;
 
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_healtharmor", "Enable panel"));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_notify", "Enable panel"));
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, "Background:"));
 			me.TD(me, 1, 1.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg"))));
