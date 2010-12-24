@@ -12,6 +12,8 @@ float mv_ownvote;
 float mv_detail;
 float mv_timeout;
 float mv_maps_mask;
+float mv_top2_time;
+float mv_top2_alpha;
 
 vector mv_mousepos;
 float mv_selection;
@@ -34,8 +36,10 @@ string MapVote_FormatMapItem(float id, string map, float count, float maxwidth, 
 	return strcat(pre, map, post);
 }
 
-vector MapVote_RGB(float id)
+vector MapVote_RGB(float id, float count)
 {
+	if(count < 0)
+		return '1 1 1';
 	if(id == mv_ownvote)
 		return '0 1 0';
 	else if (id == mv_selection)
@@ -53,7 +57,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	
 	isize -= hud_fontsize_y; // respect the text when calculating the image size
 
-	rgb = MapVote_RGB(id);
+	rgb = MapVote_RGB(id, count);
 	
 	img_size_y = isize;
 	img_size_x = isize / 0.75; // 4:3 x can be stretched easily, height is defined in isize
@@ -64,9 +68,15 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	label = MapVote_FormatMapItem(id, map, count, tsize, hud_fontsize);
 
 	text_size = stringwidth(label, false, hud_fontsize);
-	
+
+	float alpha;
+	if (count < 0 && mv_top2_alpha)
+		alpha = mv_top2_alpha;
+	else
+		alpha = 1;
+
 	pos_x -= text_size*0.5;
-	drawstring(pos, label, hud_fontsize, rgb, 1, DRAWFLAG_NORMAL);
+	drawstring(pos, label, hud_fontsize, rgb, alpha, DRAWFLAG_NORMAL);
 	
 	pos_x = pos_x + text_size*0.5 - img_size_x*0.5;
 	pos_y = pos_y - img_size_y;
@@ -75,19 +85,19 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	img_size -= (autocvar_scoreboard_border_thickness * 2) * '1 1 0';
 	if(pic == "")
 	{
-		drawfill(pos, img_size, '.5 .5 .5', .7, DRAWFLAG_NORMAL);
+		drawfill(pos, img_size, '.5 .5 .5', .7 * alpha, DRAWFLAG_NORMAL);
 	}
 	else
 	{
-		drawpic(pos, pic, img_size, '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic(pos, pic, img_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
 	}
 
 	if(id == mv_ownvote)
-		drawborderlines(autocvar_scoreboard_border_thickness, pos, img_size, rgb, 1, DRAWFLAG_NORMAL);
+		drawborderlines(autocvar_scoreboard_border_thickness, pos, img_size, rgb, alpha, DRAWFLAG_NORMAL);
 	else
-		drawborderlines(autocvar_scoreboard_border_thickness, pos, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
+		drawborderlines(autocvar_scoreboard_border_thickness, pos, img_size, '0 0 0', alpha, DRAWFLAG_NORMAL);
 
-	if(id == mv_selection)
+	if(id == mv_selection && count >= 0)
 		drawfill(pos, img_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
 }
 
@@ -97,7 +107,7 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, floa
 	float text_size;
 	string label;
 	
-	rgb = MapVote_RGB(id);
+	rgb = MapVote_RGB(id, count);
 
 	drawfont = hud_font;
 	pos_y = pos_y + hud_fontsize_y;
@@ -222,11 +232,12 @@ void MapVote_Draw()
 	pos_y += (dist_y - isize) / 2;
 	ymax -= isize;
 
+	if (mv_top2_time)
+		mv_top2_alpha = max(0.2, 1 - (time - mv_top2_time)*(time - mv_top2_time));
+
 	for(i = 0; i < mv_num_maps; ++i)
 	{
 		tmp = mv_votes[i]; // FTEQCC bug: too many array accesses in the function call screw it up
-		if(tmp < 0)
-			continue;
 		map = mv_maps[i];
 		if(mv_preview[i])
 			MapVote_DrawMapItem(pos + MapVote_GridVec(dist, i, columns), isize, tsize, map, mv_pics[i], tmp, i);
@@ -440,6 +451,8 @@ void MapVote_UpdateMask()
 	for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)
 		if not(mv_maps_mask & power)
 			mv_votes[i] = -1;
+
+	mv_top2_time = time;
 }
 
 void MapVote_UpdateVotes()
