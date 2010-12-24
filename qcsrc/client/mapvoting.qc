@@ -58,7 +58,6 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	img_size_y = isize;
 	img_size_x = isize / 0.75; // 4:3 x can be stretched easily, height is defined in isize
 
-	drawfont = hud_font;
 	pos_y = pos_y + img_size_y;
 	
 	label = MapVote_FormatMapItem(id, map, count, tsize, hud_fontsize);
@@ -99,7 +98,6 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, floa
 	
 	rgb = MapVote_RGB(id);
 
-	drawfont = hud_font;
 	pos_y = pos_y + hud_fontsize_y;
 	
 	label = MapVote_FormatMapItem(id, "Don't care", count, tsize, hud_fontsize);
@@ -178,7 +176,6 @@ void MapVote_Draw()
 	if(i >= 0 || ymax < (vid_conheight*0.5))
 		ymax = vid_conheight - ymin;
 
-	drawfont = hud_bigfont;
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 
 	pos_y = ymin;
@@ -196,8 +193,6 @@ void MapVote_Draw()
 	pos_y += 22;
 	pos_x = xmin;
 
-	drawfont = hud_font;
-	
 	// base for multi-column stuff...
 	ymin = pos_y;
 	if(mv_abstain)
