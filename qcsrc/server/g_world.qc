@@ -363,22 +363,33 @@ void cvar_changes_init()
 		// does nothing visible
 		BADCVAR("captureleadlimit_override");
 		BADCVAR("g_arena_point_leadlimit");
+		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_ca_point_leadlimit");
+		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_capture_leadlimit");
+		BADCVAR("g_ctf_flag_capture_effects");
+		BADCVAR("g_ctf_flag_glowtrails");
+		BADCVAR("g_ctf_flag_pickup_effects");
 		BADCVAR("g_domination_point_leadlimit");
+		BADCVAR("g_forced_respawn");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_runematch_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
-		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("pausable");
+		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_timeout");
+		BADCVAR("welcome_message_time");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
+		BADPREFIX("g_ctf_captimerecord_");
+		BADPREFIX("g_maplist_votable_");
 		BADPREFIX("net_");
 		BADPREFIX("prvm_");
+		BADPREFIX("skill_");
 		BADPREFIX("sv_fragmessage_");
+		BADPREFIX("sv_maxidle_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
 
