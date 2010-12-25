@@ -2,15 +2,8 @@ void race_send_recordtime(float msg);
 void race_SendRankings(float pos, float prevpos, float del, float msg);
 
 void send_CSQC_teamnagger() {
-	WriteByte(0, SVC_TEMPENTITY);
-	WriteByte(0, TE_CSQC_TEAMNAGGER);
-}
-
-void send_CSQC_cr_maxbullets(entity e) {
-	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_CR_MAXBULLETS);
-	WriteByte(MSG_ONE, autocvar_g_balance_campingrifle_magazinecapacity);
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
 void Announce(string snd) {
@@ -1114,6 +1107,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, autocvar_g_balance_campingrifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, autocvar_g_balance_campingrifle_magazinecapacity); // rifle max bullets
 	return TRUE;
 }
 
@@ -1744,7 +1738,6 @@ void ClientConnect (void)
 
 	if (g_domination)
 		set_dom_state();
-	send_CSQC_cr_maxbullets(self);
 
 	CheatInitClient();
 

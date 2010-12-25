@@ -296,7 +296,6 @@ void Cmd_HUD_SetFields(float argc)
 
 	hud_num_fields = 0;
 
-	drawfont = hud_font;
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");	
 
 	for(i = 0; i < argc - 1; ++i)
@@ -931,7 +930,6 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		drawfill(pos + '0 1 0' * weapon_height + '0 1 0' * height * i, '1 0 0' * sbwidth + '0 1 0' * fontsize, '1 1 1', scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
 	}
 
-	drawfont = hud_bigfont;
 	average_accuracy = 0;
 	float weapons_with_stats;
 	weapons_with_stats = 0;
@@ -1000,7 +998,6 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			pos_y += height;
 		}
 	}
-	drawfont = hud_font;
 
 	if(weapons_with_stats)
 		average_accuracy = floor(average_accuracy / weapons_with_stats);
@@ -1124,15 +1121,12 @@ void HUD_DrawScoreboard()
 	pos_z = 0;
 
 	// Heading
-	drawfont = hud_bigfont;
 	drawstring(pos, "Scoreboard", '24 24 0', '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	
 	centerprint_start_x = vid_conwidth - 0.5 * (pos_x + stringwidth("Scoreboard", FALSE, '24 24 0'));
 	centerprint_start_y = pos_y;
 
 	pos_y += 24;
-
-	drawfont = hud_font;
 
 	// Draw the scoreboard
 	vector bg_size = drawgetimagesize("gfx/scoreboard/scoreboard_bg") * autocvar_scoreboard_bg_scale;

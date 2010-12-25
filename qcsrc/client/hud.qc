@@ -297,7 +297,6 @@ void HUD_DrawCenterPrint (void)
 	{
 		ts = centerprint_messages[i];
 		drawfontscale = sz * '1 1 0';
-		drawfont = hud_bigfont;
 		pos_x = (vid_conwidth - stringwidth(ts, TRUE, centerprint_fontsize)) * 0.5;
 		if (ts != "")
 		{
@@ -308,7 +307,6 @@ void HUD_DrawCenterPrint (void)
 			// half height for empty lines looks better
 			pos_y = pos_y + sz * centerprint_fontsize_y * 0.5;
 		drawfontscale = '1 1 0';
-		drawfont = hud_font;
 	}
 }
 
@@ -821,10 +819,10 @@ void HUD_Weapons(void)
 				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * wpnsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw ammo status bar
-			if(autocvar_hud_panel_weapons_ammo && weapid != WEP_TUBA && weapid != WEP_LASER && weapid != WEP_PORTO)
+			if(autocvar_hud_panel_weapons_ammo && self.weapon != WEP_TUBA && self.weapon != WEP_LASER && self.weapon != WEP_PORTO)
 			{
 				a = 0;
-				type = GetAmmoTypeForWep(weapid);
+				type = GetAmmoTypeForWep(self.weapon);
 				if(type != -1)
 					a = getstati(GetAmmoStat(type)); // how much ammo do we have?
 
@@ -1039,7 +1037,6 @@ void HUD_Ammo(void)
 		ammo_size_y = newSize;
 	}
 
-	drawfont = hud_bigfont;
 	float i, stat_items, currently_selected;
 	if (autocvar_hud_panel_ammo_onlycurrent)
 	{
@@ -1071,7 +1068,6 @@ void HUD_Ammo(void)
 			column = column + 1;
 		}
 	}
-	drawfont = hud_font;
 }
 
 void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float alpha)
@@ -1224,7 +1220,6 @@ void HUD_Powerups(void)
 		rightexact = strength_time;
 	}
 
-	drawfont = hud_bigfont;
 	float baralign = autocvar_hud_panel_powerups_baralign;
 	float iconalign = autocvar_hud_panel_powerups_iconalign;
 
@@ -1302,7 +1297,6 @@ void HUD_Powerups(void)
 			}
 		}
 	}
-	drawfont = hud_font;
 }
 
 // Health/armor (#3)
@@ -1345,7 +1339,6 @@ void HUD_HealthArmor(void)
 	vector barsize;
 	vector picpos, numpos;
 
-	drawfont = hud_bigfont;
 	float baralign = autocvar_hud_panel_healtharmor_baralign;
 	float iconalign = autocvar_hud_panel_healtharmor_iconalign;
 
@@ -1507,7 +1500,6 @@ void HUD_HealthArmor(void)
 			}
 		}
 	}
-	drawfont = hud_font;
 }
 
 // Notification area (#4)
@@ -2373,9 +2365,7 @@ void HUD_Timer(void)
 		timer = seconds_tostring(timeleft);
 	}
 
-	drawfont = hud_bigfont;
 	drawstring_aspect(pos, timer, mySize, timer_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawfont = hud_font;
 }
 
 // Radar (#6)
@@ -2569,9 +2559,7 @@ void HUD_Score(void)
 		// race record display
 		if (distribution <= 0)
 			HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawfont = hud_bigfont;
 		drawstring_aspect(pos, timer, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawfont = hud_font;
 	} else if (!teamplay) { // non-teamgames
 		if ((spectatee_status == -1 && !autocvar__hud_configure) || autocvar_hud_panel_score_rankings)
 		{
@@ -2687,9 +2675,7 @@ void HUD_Score(void)
 				distribution_str = strcat("+", distribution_str);
 			HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
-		drawfont = hud_bigfont;
 		drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawfont = hud_font;
 		drawstring_aspect(pos + eX * 0.75 * mySize_x, distribution_str, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else { // teamgames
 		float max_fragcount;
@@ -2761,9 +2747,7 @@ void HUD_Score(void)
 			else if(tm.team == myteam) {
 				if (max_fragcount == score)
 					HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawfont = hud_bigfont;
 				drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawfont = hud_font;
 			} else {
 				if (max_fragcount == score)
 					HUD_Panel_DrawHighlight(pos + eX * 0.75 * mySize_x + eY * (1/3) * rows * mySize_y, score_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2817,7 +2801,6 @@ void HUD_RaceTimer (void)
 	}
 	mySize = newSize;
 
-	drawfont = hud_bigfont;
 	float a, t;
 	string s, forcetime;
 
@@ -2917,8 +2900,6 @@ void HUD_RaceTimer (void)
 			}
 		}
 	}
-
-	drawfont = hud_font;
 }
 
 // Vote window (#9)
@@ -3087,7 +3068,6 @@ void HUD_Mod_CA(vector pos, vector mySize)
 	redalive = getstati(STAT_REDALIVE);
 	bluealive = getstati(STAT_BLUEALIVE);
 
-	drawfont = hud_bigfont;
 	vector redpos, bluepos;
 	if(mySize_x > mySize_y)
 	{
@@ -3107,7 +3087,6 @@ void HUD_Mod_CA(vector pos, vector mySize)
 		drawpic_aspect_skin(bluepos, "player_blue.tga", eX * mySize_x + eY * 0.3 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring_aspect(bluepos + eY * 0.3 * mySize_y, ftos(bluealive), eX * mySize_x + eY * 0.2 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	drawfont = hud_font;
 }
 
 // CTF HUD modicon section
@@ -3499,8 +3478,6 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	if not((scores_flags[ps_primary] & SFL_TIME) && !teamplay) // race/cts record display on HUD
 		return; // no records in the actual race
 
-	drawfont = hud_bigfont;
-
 	// clientside personal record
 	string rr;
 	if(gametype == GAME_CTS)
@@ -3623,7 +3600,6 @@ void HUD_Mod_Race(vector pos, vector mySize)
 			strunzone(race_status_name_prev);
 		race_status_name_prev = string_null;
 	}
-	drawfont = hud_font;
 }
 
 void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, float i)
@@ -3975,9 +3951,7 @@ void HUD_EngineInfo(void)
 
 	vector color;
 	color = HUD_Get_Num_Color (prevfps, 100);
-	drawfont = hud_bigfont;
 	drawstring_aspect(pos, strcat("FPS: ", ftos_decimals(prevfps, autocvar_hud_panel_engineinfo_framecounter_decimals)), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawfont = hud_font;
 }
 
 // Info messages panel (#14)
@@ -4483,6 +4457,8 @@ void HUD_Main (void)
 			drawfill(eY * i * hud_configure_realGridSize_y, eY + eX * vid_conwidth, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 	}
 
+    current_player = (spectatee_status > 0) ? spectatee_status : player_localentnum;
+
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
 	{
@@ -4490,7 +4466,7 @@ void HUD_Main (void)
 		vector color;
 		float hud_dock_color_team = autocvar_hud_dock_color_team;
 		if((teamplay) && hud_dock_color_team) {
-			f = stof(getplayerkey(player_localentnum - 1, "colors"));
+			f = stof(getplayerkey(current_player - 1, "colors"));
 			color = colormapPaletteColor(mod(f, 16), 1) * hud_dock_color_team;
 		}
 		else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && hud_dock_color_team) {
@@ -4500,11 +4476,11 @@ void HUD_Main (void)
 		{
 			string hud_dock_color = autocvar_hud_dock_color;
 			if(hud_dock_color == "shirt") {
-				f = stof(getplayerkey(player_localentnum - 1, "colors"));
+				f = stof(getplayerkey(current_player - 1, "colors"));
 				color = colormapPaletteColor(floor(f / 16), 0);
 			}
 			else if(hud_dock_color == "pants") {
-				f = stof(getplayerkey(player_localentnum - 1, "colors"));
+				f = stof(getplayerkey(current_player - 1, "colors"));
 				color = colormapPaletteColor(mod(f, 16), 1);
 			}
 			else

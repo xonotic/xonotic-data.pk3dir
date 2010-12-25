@@ -75,6 +75,7 @@ void GameCommand(string theCommand)
 	if(argv(0) == "sync")
 	{
 		loadAllCvars(main);
+		updateCompression();
 		return;
 	}
 

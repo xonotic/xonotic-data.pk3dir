@@ -261,7 +261,7 @@ void SV_ParseClientCommand(string s) {
 		if not(self.flags & FL_CLIENT)
 			return;
 
-		if((inWarmupStage && 0 >= g_warmup_limit) // with unlimited warmup players have to be able to restart
+		if((inWarmupStage)
 		   || autocvar_sv_ready_restart || g_race_qualifying == 2)
 		{
 			if(!readyrestart_happened || autocvar_sv_ready_restart_repeatable)

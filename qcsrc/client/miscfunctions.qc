@@ -306,12 +306,6 @@ entity GetTeam(float Team, float add)
 	return tm;
 }
 
-void CSQC_CheckEngine()
-{
-	hud_font = FONT_USER+1;
-	hud_bigfont = FONT_USER+2;
-}
-
 vector HUD_GetFontsize(string cvarname)
 {
 	vector v;

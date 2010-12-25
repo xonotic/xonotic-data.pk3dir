@@ -676,7 +676,7 @@ void CSQC_UpdateView(float w, float h)
 		// fade out
 		myhealth_flash = max(0, myhealth_flash - autocvar_hud_damage_fade_rate * frametime);
 		// add new damage
-		myhealth_flash = bound(0, myhealth_flash + max(0, myhealth_prev - myhealth) * autocvar_hud_damage_factor, autocvar_hud_damage_maxalpha);
+		myhealth_flash = bound(0, myhealth_flash + dmg_take * autocvar_hud_damage_factor, autocvar_hud_damage_maxalpha);
 
 		float pain_threshold, pain_threshold_lower, pain_threshold_lower_health;
 		pain_threshold = autocvar_hud_damage_pain_threshold;
