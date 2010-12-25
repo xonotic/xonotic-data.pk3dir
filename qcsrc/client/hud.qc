@@ -1190,111 +1190,76 @@ void HUD_Powerups(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	vector barsize;
-	vector picpos;
-	vector numpos;
-
-	string leftname, rightname;
-    string leftprogressname, rightprogressname;
-	float leftcnt, rightcnt;
-	float leftexact, rightexact;
-	if (autocvar_hud_panel_powerups_flip) {
-		leftname = "strength";
-        leftprogressname = autocvar_hud_panel_powerups_progressbar_strength;
-		leftcnt = ceil(strength_time);
-		leftexact = strength_time;
-
-		rightname = "shield";
-        rightprogressname = autocvar_hud_panel_powerups_progressbar_shield;
-		rightcnt = ceil(shield_time);
-		rightexact = shield_time;
-	} else {
-		leftname = "shield";
-        leftprogressname = autocvar_hud_panel_powerups_progressbar_shield;
-		leftcnt = ceil(shield_time);
-		leftexact = shield_time;
-
-		rightname = "strength";
-        rightprogressname = autocvar_hud_panel_powerups_progressbar_strength;
-		rightcnt = ceil(strength_time);
-		rightexact = strength_time;
-	}
-
-	float baralign = autocvar_hud_panel_powerups_baralign;
-	float iconalign = autocvar_hud_panel_powerups_iconalign;
-
 	float panel_ar = mySize_x/mySize_y;
 	float is_vertical = (panel_ar < 1);
+	vector shield_offset, strength_offset;
 	if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
 	{
-        barsize = eX * 0.5 * mySize_x + eY * mySize_y;
-		if(leftcnt)
-		{
-			if(autocvar_hud_panel_powerups_progressbar)
-			{
-				HUD_Panel_GetProgressBarColorForString(leftname);
-				HUD_Panel_DrawProgressBar(pos, barsize, leftprogressname, leftcnt/30, is_vertical, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
-			}
-            if(autocvar_hud_panel_powerups_text)
-            {
-				if(leftcnt > 1)
-					DrawNumIcon(pos, barsize, leftcnt, leftname, is_vertical, (iconalign == 1 || iconalign == 2), '1 1 1', 1);
-				if(leftcnt <= 5)
-					DrawNumIcon_expanding(pos, barsize, leftcnt, leftname, is_vertical, (iconalign == 1 || iconalign == 2), '1 1 1', bound(0, (leftcnt - leftexact) / 0.5, 1));
-			}
-		}
-
-		if(rightcnt)
-		{
-			pos_x += barsize_x;
-			if(autocvar_hud_panel_powerups_progressbar)
-			{
-				HUD_Panel_GetProgressBarColorForString(rightname);
-				HUD_Panel_DrawProgressBar(pos, barsize, rightprogressname, rightcnt/30, is_vertical, (baralign == 1 || baralign == 3), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
-			}
-            if(autocvar_hud_panel_powerups_text)
-            {
-				if(rightcnt > 1)
-					DrawNumIcon(pos, barsize, rightcnt, rightname, is_vertical, (iconalign == 1 || iconalign == 3), '1 1 1', 1);
-				if(rightcnt <= 5)
-					DrawNumIcon_expanding(pos, eX * 0.5 * mySize_x + eY * mySize_y, rightcnt, rightname, is_vertical, (iconalign == 1 || iconalign == 3), '1 1 1', bound(0, (rightcnt - rightexact) / 0.5, 1));
-			}
-		}
+		mySize_x *= 0.5;
+		if (autocvar_hud_panel_powerups_flip)
+			shield_offset_x = mySize_x;
+		else
+			strength_offset_x = mySize_x;
 	}
 	else
 	{
-        barsize = eX * mySize_x + eY * 0.5 * mySize_y;
-		if(leftcnt)
-		{
-			if(autocvar_hud_panel_powerups_progressbar)
-			{
-				HUD_Panel_GetProgressBarColorForString(leftname);
-				HUD_Panel_DrawProgressBar(pos, barsize, leftprogressname, leftcnt/30, is_vertical, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
-			}
-            if(autocvar_hud_panel_powerups_text)
-            {
-				if(leftcnt > 1)
-					DrawNumIcon(pos, barsize, leftcnt, leftname, is_vertical, (iconalign == 1 || iconalign == 2), '1 1 1', 1);
-				if(leftcnt <= 5)
-					DrawNumIcon_expanding(pos, barsize, leftcnt, leftname, is_vertical, (iconalign == 1 || iconalign == 2), '1 1 1', bound(0, (leftcnt - leftexact) / 0.5, 1));
-			}
-		}
+		mySize_y *= 0.5;
+		if (autocvar_hud_panel_powerups_flip)
+			shield_offset_y = mySize_y;
+		else
+			strength_offset_y = mySize_y;
+	}
 
-		if(rightcnt)
+	float shield_baralign, strength_baralign;
+	float shield_iconalign, strength_iconalign;
+	if (autocvar_hud_panel_powerups_flip)
+	{
+		strength_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
+		shield_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
+		strength_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
+		shield_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
+	}
+	else
+	{
+		shield_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
+		strength_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
+		shield_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
+		strength_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
+	}
+
+	if(shield_time)
+	{
+		const float maxshield = 30;
+		float shield = ceil(shield_time);
+		if(autocvar_hud_panel_powerups_progressbar)
 		{
-			pos_y += barsize_y;
-			if(autocvar_hud_panel_powerups_progressbar)
-			{
-				HUD_Panel_GetProgressBarColorForString(rightname);
-				HUD_Panel_DrawProgressBar(pos, barsize, rightprogressname, rightcnt/30, is_vertical, (baralign == 1 || baralign == 3), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * bound(0, max(strength_time, shield_time), 1), DRAWFLAG_NORMAL);
-			}
-            if(autocvar_hud_panel_powerups_text)
-            {
-				if(rightcnt > 1)
-					DrawNumIcon(pos, barsize, rightcnt, rightname, is_vertical, (iconalign == 1 || iconalign == 3), '1 1 1', 1);
-				if(rightcnt <= 5)
-					DrawNumIcon_expanding(pos, barsize, rightcnt, rightname, is_vertical, (iconalign == 1 || iconalign == 3), '1 1 1', bound(0, (rightcnt - rightexact) / 0.5, 1));
-			}
+			HUD_Panel_GetProgressBarColor(shield);
+			HUD_Panel_DrawProgressBar(pos + shield_offset, mySize, autocvar_hud_panel_powerups_progressbar_shield, shield/maxshield, is_vertical, shield_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		if(autocvar_hud_panel_powerups_text)
+		{
+			if(shield > 1)
+				DrawNumIcon(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1);
+			if(shield <= 5)
+				DrawNumIcon_expanding(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', bound(0, (shield - shield_time) / 0.5, 1));
+		}
+	}
+
+	if(strength_time)
+	{
+		const float maxstrength = 30;
+		float strength = ceil(strength_time);
+		if(autocvar_hud_panel_powerups_progressbar)
+		{
+			HUD_Panel_GetProgressBarColor(strength);
+			HUD_Panel_DrawProgressBar(pos + strength_offset, mySize, autocvar_hud_panel_powerups_progressbar_strength, strength/maxstrength, is_vertical, strength_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		if(autocvar_hud_panel_powerups_text)
+		{
+			if(strength > 1)
+				DrawNumIcon(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1);
+			if(strength <= 5)
+				DrawNumIcon_expanding(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', bound(0, (strength - strength_time) / 0.5, 1));
 		}
 	}
 }
