@@ -2734,9 +2734,7 @@ void HUD_Score(void)
 				score_pos = pos + eX * column * (score_size_x + offset_x) + eY * row * (score_size_y + offset_y);
 				if (max_fragcount == score)
 					HUD_Panel_DrawHighlight(score_pos, score_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawfont = hud_bigfont;
 				drawstring_aspect(score_pos, ftos(score), score_size, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawfont = hud_font;
 				++row;
 				if(row >= rows)
 				{
@@ -3680,7 +3678,6 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	rows = bound(1, floor((sqrt((4 * aspect_ratio * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
 	columns = ceil(teams_count/rows);
 
-	drawfont = hud_bigfont;
 	int i;
 	float row, column;
 	for(i=0; i<teams_count; ++i)
@@ -3698,7 +3695,6 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 			++column;
 		}
 	}
-	drawfont = hud_font;
 }
 
 float mod_prev; // previous state of mod_active to check for a change
@@ -4224,7 +4220,6 @@ void HUD_Physics(void)
 	}
 
 	//compute layout
-	drawfont = hud_bigfont;
 	float panel_ar = panel_size_x/panel_size_y;
 	vector speed_offset, acceleration_offset;
 	if (panel_ar >= 5)
@@ -4360,7 +4355,6 @@ void HUD_Physics(void)
 		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset, panel_size, "progressbar", fabs(acceleration)/autocvar_hud_panel_physics_acceleration_max, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	drawstring_aspect(panel_pos + acceleration_offset, ftos_decimals(acceleration, 3), panel_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawfont = hud_font;
 }
 
 /*
