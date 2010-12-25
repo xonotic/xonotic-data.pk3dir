@@ -4146,9 +4146,9 @@ float acc_prevtime, acc_avg, top_speed, top_speed_time;
 
 void HUD_Physics(void)
 {
-	if(!autocvar_hud_panel_physics)
+	if(!autocvar__hud_configure)
 	{
-		if(!autocvar__hud_configure) return;
+		if(!autocvar_hud_panel_physics) return;
 		if(spectatee_status <= 0 && autocvar_hud_panel_physics < 2) return;
 	}
 	else
