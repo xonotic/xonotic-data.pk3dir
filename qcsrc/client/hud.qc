@@ -1266,6 +1266,10 @@ void HUD_Powerups(void)
 
 // Health/armor (#3)
 //
+float health_time, prev_health;
+float armor_time, prev_armor;
+var float saved_health = -2;
+var float saved_armor = -2;
 void HUD_HealthArmor(void)
 {
 	float armor, health, fuel;
@@ -1276,7 +1280,36 @@ void HUD_HealthArmor(void)
 
 		health = getstati(STAT_HEALTH);
 		if(health <= 0)
+		{
+			health_time = -1;
 			return;
+		}
+		if (autocvar_hud_panel_healtharmor_progressbar_gfx)
+		{
+			if ( (prev_spectatee_status == -1 && spectatee_status > 0) //before observing, now spectating
+			  || (prev_spectatee_status > 0 && spectatee_status > 0 && prev_spectatee_status != spectatee_status) //changed spectated player
+			)
+			{
+				//no effect
+				saved_health = 0;
+				saved_armor = 0;
+				health_time = 0;
+				armor_time = 0;
+			}
+			else if(prev_spectatee_status == -1 || (prev_spectatee_status > 0 && !spectatee_status)) //before spectating/observing, now playing
+				health_time = -1;
+
+			if (health_time == -1)
+			{
+				//start the load effect
+				saved_health = -2;
+				saved_armor = -2;
+				health_time = time;
+				armor_time = time;
+				prev_health = 0;
+				prev_armor = 0;
+			}
+		}
 		armor = getstati(STAT_ARMOR);
 		fuel = getstati(STAT_FUEL);
 	}
@@ -1395,7 +1428,38 @@ void HUD_HealthArmor(void)
 			if(autocvar_hud_panel_healtharmor_progressbar)
 			{
 				HUD_Panel_GetProgressBarColor(health);
-				HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, health/maxhealth, is_vertical, health_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				float p_health;
+				p_health = health;
+				if (autocvar_hud_panel_healtharmor_progressbar_gfx)
+				{
+					if (saved_health == -1)
+					{
+						if (prev_health == 0 || prev_health - health >= 3)
+						{
+							health_time = time;
+							saved_health = prev_health;
+						}
+					}
+					if (saved_health != -1)
+					{
+						float d = time - health_time;
+						if (d < 1)
+						{
+							if (saved_health == -2)
+								p_health *= sqrt(d);
+							else
+							{
+								HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, saved_health/maxhealth, is_vertical, health_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * (1 - d * d), DRAWFLAG_NORMAL);
+								if (prev_health - health >= 1) //refresh the effect if repeatedly damaged
+									health_time = time;
+							}
+						}
+						else
+							saved_health = -1; //damage effect ended
+					}
+					prev_health = health;
+				}
+				HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, p_health/maxhealth, is_vertical, health_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			if(autocvar_hud_panel_healtharmor_text)
 				DrawNumIcon(pos + health_offset, mySize, health, "health", is_vertical, health_iconalign, HUD_Get_Num_Color(health, maxhealth), 1);
@@ -1406,7 +1470,38 @@ void HUD_HealthArmor(void)
 			if(autocvar_hud_panel_healtharmor_progressbar)
 			{
 				HUD_Panel_GetProgressBarColor(armor);
-				HUD_Panel_DrawProgressBar(pos + armor_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, armor/maxarmor, is_vertical, armor_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				float p_armor;
+				p_armor = armor;
+				if (autocvar_hud_panel_healtharmor_progressbar_gfx)
+				{
+					if (saved_armor == -1)
+					{
+						if (prev_armor == 0 || prev_armor - armor >= 3)
+						{
+							armor_time = time;
+							saved_armor = prev_armor;
+						}
+					}
+					if (saved_armor != -1)
+					{
+						float d = time - armor_time;
+						if (d < 1)
+						{
+							if (saved_armor == -2)
+								p_armor *= sqrt(d);
+							else
+							{
+								HUD_Panel_DrawProgressBar(pos + armor_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, saved_armor/maxarmor, is_vertical, armor_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * (1 - d * d), DRAWFLAG_NORMAL);
+								if (prev_armor - armor >= 1) //refresh the effect if repeatedly damaged
+									armor_time = time;
+							}
+						}
+						else
+							saved_armor = -1; //damage effect ended
+					}
+					prev_armor = armor;
+				}
+				HUD_Panel_DrawProgressBar(pos + armor_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, p_armor/maxarmor, is_vertical, armor_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			if(autocvar_hud_panel_healtharmor_text)
 				DrawNumIcon(pos + armor_offset, mySize, armor, "armor", is_vertical, armor_iconalign, HUD_Get_Num_Color(armor, maxarmor), 1);
