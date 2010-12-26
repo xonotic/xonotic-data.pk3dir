@@ -295,6 +295,7 @@ void W_Electro_Attack3 (void)
 	entity beam, oldself;
 
 	self.lgbeam = beam = spawn();
+	beam.classname = "lgbeam";
 	beam.solid = SOLID_NOT;
 	beam.think = lgbeam_think;
 	beam.owner = self;
