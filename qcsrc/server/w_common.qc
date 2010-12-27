@@ -184,7 +184,7 @@ void W_BallisticBullet_Hit (void)
 
 		if(headshot)
 			f *= q;
-		if(DEATH_WEAPONOF(self.projectiledeathtype) == WEP_CAMPINGRIFLE)
+		if(DEATH_WEAPONOF(self.projectiledeathtype) == WEP_SNIPERRIFLE)
 		{
 			if(headshot)
 				AnnounceTo(self.owner, "headshot");

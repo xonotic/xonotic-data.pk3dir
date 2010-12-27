@@ -105,7 +105,7 @@ float autocvar_crosshair_hittest_showimpact;
 float autocvar_crosshair_per_weapon;
 float autocvar_crosshair_pickup;
 float autocvar_crosshair_pickup_speed;
-float autocvar_crosshair_ring_campingrifle_alpha;
+float autocvar_crosshair_ring_sniperrifle_alpha;
 float autocvar_crosshair_ring_nex_currentcharge_movingavg_rate;
 float autocvar_crosshair_ring_nex_currentcharge_scale;
 float autocvar_crosshair_ring_nex_inner_alpha;
