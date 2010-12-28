@@ -796,8 +796,6 @@ void SV_PlayerPhysics()
 		bot_think();
 	}
 	
-	MUTATOR_CALLHOOK(PlayerPhysics);
-
 	self.items &~= IT_USING_JETPACK;
 
 	if(self.classname == "player")
@@ -834,6 +832,8 @@ void SV_PlayerPhysics()
 	self.disableclientprediction = 0;
 	if(time < self.ladder_time)
 		self.disableclientprediction = 1;
+
+	MUTATOR_CALLHOOK(PlayerPhysics);
 
 	maxspd_mod = 1;
 
