@@ -660,3 +660,6 @@ float serverflags;
 .float freezetag_frozen;
 .float freezetag_beginrevive_time;
 .float freezetag_revive_progress;
+
+.entity muzzle_flash;
+.float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
