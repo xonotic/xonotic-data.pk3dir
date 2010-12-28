@@ -174,7 +174,6 @@ void uzi_mode1_fire_burst()
 	else
 	{
 		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_burst_refire, uzi_mode1_fire_burst);
-		dprint("bullets:", ftos(self.uzi_bulletcounter),"\n");
 	}
 		
 }
