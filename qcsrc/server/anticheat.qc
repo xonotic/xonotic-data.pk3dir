@@ -1,3 +1,5 @@
+.float anticheat_jointime;
+
 void mean_accumulate(entity e, .float a, .float c, float mean, float value, float weight)
 {
 	if(weight == 0)
@@ -155,6 +157,7 @@ void anticheat_report()
 {
 	if(!autocvar_sv_eventlog)
 		return;
+	GameLogEcho(strcat(":anticheat:_time:", ftos(self.playerid), ":", ftos(servertime - self.anticheat_jointime)));
 	GameLogEcho(strcat(":anticheat:speedhack:", ftos(self.playerid), ":", ftos(MEAN_EVALUATE(anticheat_speedhack))));
 	GameLogEcho(strcat(":anticheat:div0_strafebot_old:", ftos(self.playerid), ":", ftos(MEAN_EVALUATE(anticheat_div0_strafebot_old))));
 	GameLogEcho(strcat(":anticheat:div0_strafebot_new:", ftos(self.playerid), ":", ftos(MEAN_EVALUATE(anticheat_div0_strafebot_new))));
@@ -169,6 +172,7 @@ void anticheat_serverframe()
 void anticheat_init()
 {
 	self.anticheat_speedhack_offset = 0;
+	self.anticheat_jointime = servertime;
 }
 
 void anticheat_shutdown()
