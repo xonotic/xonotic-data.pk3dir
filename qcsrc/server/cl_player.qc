@@ -643,8 +643,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(self.ballcarried && g_nexball)
 			DropBall(self.ballcarried, self.origin, self.velocity);
 		Portal_ClearAllLater(self);
-		// clear waypoints
-		WaypointSprite_PlayerDead();
 
 		if(clienttype(self) == CLIENTTYPE_REAL)
 		{
@@ -665,6 +663,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(g_freezetag)
 			return;
+
+		// when we get here, player actually dies
+		// clear waypoints (do this AFTER FreezeTag)
+		WaypointSprite_PlayerDead();
 
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;
