@@ -1187,6 +1187,7 @@ vector havocbot_dodge()
 {
 	// LordHavoc: disabled because this is too expensive
 	return '0 0 0';
+#if 0
 	local entity head;
 	local vector dodge, v, n;
 	local float danger, bestdanger, vl, d;
@@ -1231,4 +1232,5 @@ vector havocbot_dodge()
 		head = head.chain;
 	}
 	return dodge;
+#endif
 };
