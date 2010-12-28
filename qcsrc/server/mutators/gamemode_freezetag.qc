@@ -253,7 +253,10 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 MUTATOR_HOOKFUNCTION(freezetag_PlayerPhysics)
 {
 	if(self.freezetag_frozen)
+	{
 		self.movement = '0 0 0';
+		self.disableclientprediction = 1;
+	}
 	return 1;
 }
 

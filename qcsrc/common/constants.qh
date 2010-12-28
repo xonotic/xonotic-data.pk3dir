@@ -61,7 +61,6 @@ const float TE_CSQC_ANNOUNCE = 110;
 const float TE_CSQC_TARGET_MUSIC = 111;
 const float TE_CSQC_NOTIFY = 112;
 const float TE_CSQC_WEAPONCOMPLAIN = 113;
-const float TE_CSQC_CAMPINGRIFLE_SCOPE = 115;
 const float TE_CSQC_NEX_SCOPE = 116;
 const float TE_CSQC_CR_MAXBULLETS = 117;
 

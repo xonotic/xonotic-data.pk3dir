@@ -370,7 +370,7 @@ void FireGrapplingHook (void)
 	//missile.glow_size = 120;
 	missile.touch = GrapplingHookTouch;
 	missile.think = GrapplingHookThink;
-	missile.nextthink = time + 0.1;
+	missile.nextthink = time;
 
 	missile.effects = /*EF_FULLBRIGHT | EF_ADDITIVE |*/ EF_LOWPRECISION;
 

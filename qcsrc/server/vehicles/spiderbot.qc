@@ -255,17 +255,17 @@ void spiderbot_miniguns_do()
         {
             // Fire bullets, alternating trails left<->right
             self = self.owner;
-            if(self.uzi_bulletcounter == 1)
+            if(self.misc_bulletcounter == 1)
             {
                 spiderbot_minigun_fire(self.vehicle.gun1, 0);
                 spiderbot_minigun_fire(self.vehicle.gun2, 1);
-                self.uzi_bulletcounter = 0;
+                self.misc_bulletcounter = 0;
             }
             else
             {
                 spiderbot_minigun_fire(self.vehicle.gun1, 1);
                 spiderbot_minigun_fire(self.vehicle.gun2, 0);
-                self.uzi_bulletcounter += 1;
+                self.misc_bulletcounter += 1;
             }
 
             self = self.vehicle;

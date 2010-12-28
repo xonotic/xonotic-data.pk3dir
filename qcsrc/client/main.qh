@@ -80,9 +80,6 @@ float hud_size[MAX_HUD_FIELDS + 1];
 string hud_title[MAX_HUD_FIELDS + 1];
 float hud_num_fields;
 
-float hud_font;
-float hud_bigfont;
-
 string scores_label[MAX_SCORE];
 float scores_flags[MAX_SCORE];
 string teamscores_label[MAX_SCORE];

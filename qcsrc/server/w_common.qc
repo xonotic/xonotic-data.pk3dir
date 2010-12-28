@@ -23,6 +23,7 @@ void W_GiveWeapon (entity e, float wep, string name)
 }
 
 .float railgundistance;
+.vector railgunforce;
 void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
 {
 	local vector hitloc, force, endpoint, dir;
@@ -67,6 +68,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		trace_ent.railgunhitloc = end;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		trace_ent.railgundistance = vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - start);
+		trace_ent.railgunforce = WarpZone_TransformVelocity(WarpZone_trace_transform, force);
 
 		// stop if this is a wall
 		if (trace_ent.solid == SOLID_BSP)
@@ -130,7 +132,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 		// apply the damage
 		if (ent.takedamage)
-			Damage (ent, self, self, bdamage * f, deathtype, hitloc, force * ffs);
+			Damage (ent, self, self, bdamage * f, deathtype, hitloc, ent.railgunforce * ffs);
 
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin (explosion, hitloc);
@@ -182,7 +184,7 @@ void W_BallisticBullet_Hit (void)
 
 		if(headshot)
 			f *= q;
-		if(DEATH_WEAPONOF(self.projectiledeathtype) == WEP_CAMPINGRIFLE)
+		if(DEATH_WEAPONOF(self.projectiledeathtype) == WEP_SNIPERRIFLE)
 		{
 			if(headshot)
 				AnnounceTo(self.owner, "headshot");

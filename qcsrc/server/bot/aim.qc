@@ -353,18 +353,19 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	{
 		f = bot_aimdir(v - shotorg, r);
 		//dprint("AIM: ");dprint(vtos(self.bot_aimtargorigin));dprint(" + ");dprint(vtos(self.bot_aimtargvelocity));dprint(" * ");dprint(ftos(self.bot_aimlatency + vlen(self.bot_aimtargorigin - shotorg) / shotspeed));dprint(" = ");dprint(vtos(v));dprint(" : aimdir = ");dprint(vtos(normalize(v - shotorg)));dprint(" : ");dprint(vtos(shotdir));dprint("\n");
-		traceline(shotorg, shotorg + shotdir * 10000, FALSE, self);
-		if (trace_ent.takedamage)
-		if (trace_fraction < 1)
-		if (!bot_shouldattack(trace_ent))
-			return FALSE;
+		//traceline(shotorg, shotorg + shotdir * 10000, FALSE, self);
+		//if (trace_ent.takedamage)
+		//if (trace_fraction < 1)
+		//if (!bot_shouldattack(trace_ent))
+		//	return FALSE;
 		traceline(shotorg, self.bot_aimtargorigin, FALSE, self);
 		if (trace_fraction < 1)
 		if (trace_ent != self.enemy)
 		if (!bot_shouldattack(trace_ent))
 			return FALSE;
 	}
-	if (r > maxshottime * shotspeed)
-		return FALSE;
-	return f;
+
+	//if (r > maxshottime * shotspeed)
+	//	return FALSE;
+	return TRUE;
 };
