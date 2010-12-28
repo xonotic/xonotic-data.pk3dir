@@ -69,14 +69,14 @@ void anticheat_physics()
 	{
 		if(time < self.anticheat_div0_evade_offset)
 			self.anticheat_div0_evade_v_angle = self.v_angle;
-		MEAN_ACCUMULATE(anticheat_div0_evade, 1 - (self.anticheat_div0_evade_forward_initial * v_forward), 1);
+		MEAN_ACCUMULATE(anticheat_div0_evade, 0.5 - 0.5 * (self.anticheat_div0_evade_forward_initial * v_forward), 1);
 	}
 
-	MEAN_ACCUMULATE(anticheat_div0_strafebot_old, movement_oddity(self.movement, self.anticheat_div0_strafebot_movement_prev), max(0, sys_frametime - frametime));
+	MEAN_ACCUMULATE(anticheat_div0_strafebot_old, movement_oddity(self.movement, self.anticheat_div0_strafebot_movement_prev), 1);
 	self.anticheat_div0_strafebot_movement_prev = self.movement;
 
 	if(vlen(self.anticheat_div0_strafebot_forward_prev))
-		MEAN_ACCUMULATE(anticheat_div0_strafebot_new, 1 - (self.anticheat_div0_strafebot_forward_prev * v_forward), max(0, sys_frametime - frametime));
+		MEAN_ACCUMULATE(anticheat_div0_strafebot_new, 0.5 - 0.5 * (self.anticheat_div0_strafebot_forward_prev * v_forward), 1);
 	self.anticheat_div0_strafebot_forward_prev = v_forward;
 
 	// generic speedhack detection: correlate anticheat_speedhack_movetime (UPDATED BEFORE THIS) and server time
@@ -90,7 +90,7 @@ void anticheat_physics()
 		self.anticheat_speedhack_offset = f;
 	else
 	{
-		MEAN_ACCUMULATE(anticheat_speedhack, fabs(f - self.anticheat_speedhack_offset), 1);
+		MEAN_ACCUMULATE(anticheat_speedhack, max(0, f - self.anticheat_speedhack_offset), 1);
 		self.anticheat_speedhack_offset += (f - self.anticheat_speedhack_offset) * frametime * 0.1;
 	}
 
