@@ -153,6 +153,17 @@ void anticheat_prethink()
 	self.anticheat_div0_evade_offset = 0;
 }
 
+string anticheat_display(float f, float mi, float ma)
+{
+	string s;
+	s = ftos(f);
+	if(f <= mi)
+		return strcat(s, ":N");
+	if(f >= ma)
+		return strcat(s, ":Y");
+	return strcat(s, ":-");
+}
+
 void anticheat_report()
 {
 	if(!autocvar_sv_eventlog)
@@ -161,7 +172,7 @@ void anticheat_report()
 	GameLogEcho(strcat(":anticheat:speedhack:", ftos(self.playerid), ":", ftos(MEAN_EVALUATE(anticheat_speedhack))));
 	GameLogEcho(strcat(":anticheat:div0_strafebot_old:", ftos(self.playerid), ":", ftos(MEAN_EVALUATE(anticheat_div0_strafebot_old))));
 	GameLogEcho(strcat(":anticheat:div0_strafebot_new:", ftos(self.playerid), ":", ftos(MEAN_EVALUATE(anticheat_div0_strafebot_new))));
-	GameLogEcho(strcat(":anticheat:div0_evade:", ftos(self.playerid), ":", ftos(MEAN_EVALUATE(anticheat_div0_evade))));
+	GameLogEcho(strcat(":anticheat:div0_evade:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_div0_evade), 0.15, 0.3)));
 }
 
 void anticheat_serverframe()
