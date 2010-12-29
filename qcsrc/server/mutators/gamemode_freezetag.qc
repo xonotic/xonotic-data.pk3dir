@@ -52,6 +52,9 @@ void freezetag_CheckWinner()
 	next_round = time + 5;
 }
 
+// this is needed to allow the player to turn his view around (fixangle can't
+// be used to freeze his view, as that also changes the angles), while not
+// turning that ice object with the player
 void freezetag_Ice_Think()
 {
 	setorigin(self, self.owner.origin - '0 0 16');
