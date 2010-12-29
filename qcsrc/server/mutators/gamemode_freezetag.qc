@@ -75,7 +75,7 @@ void freezetag_Freeze()
 	setmodel(ice, "models/ice/ice.md3");
 
 	entity oldself;
-	olfself = self;
+	oldself = self;
 	self = ice;
 	freezetag_Ice_Think();
 	self = oldself;
