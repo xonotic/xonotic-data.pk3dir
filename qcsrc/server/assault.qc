@@ -71,7 +71,11 @@ void assault_objective_decrease_use() {
 	}
 
 	if(other.assault_sprite)
+	{
 		WaypointSprite_Disown(other.assault_sprite, waypointsprite_deadlifetime);
+		if(other.classname == "func_assault_destructible")
+			other.sprite = world;
+	}
 	else
 		return; // already activated! cannot activate again!
 
@@ -148,7 +152,11 @@ void target_objective_decrease_activate()
 	for(ent = world; (ent = find(ent, target, self.targetname)); )
 	{
 		if(ent.assault_sprite != world)
+		{
 			WaypointSprite_Disown(ent.assault_sprite, waypointsprite_deadlifetime);
+			if(ent.classname == "func_assault_destructible")
+				ent.sprite = world;
+		}
 
 		spr = WaypointSprite_SpawnFixed("<placeholder>", 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite);
 		spr.assault_decreaser = self;
@@ -156,7 +164,12 @@ void target_objective_decrease_activate()
 		spr.classname = "sprite_waypoint";
 		WaypointSprite_UpdateRule(spr, assault_attacker_team, SPRITERULE_TEAMPLAY);
 		if(ent.classname == "func_assault_destructible")
+		{
 			WaypointSprite_UpdateSprites(spr, "as-defend", "as-destroy", "as-destroy");
+			WaypointSprite_UpdateMaxHealth(spr, ent.max_health);
+			WaypointSprite_UpdateHealth(spr, ent.health);
+			ent.sprite = spr;
+		}
 		else
 			WaypointSprite_UpdateSprites(spr, "as-defend", "as-push", "as-push");
 		WaypointSprite_UpdateTeamRadar(spr, RADARICON_OBJECTIVE, '1 0.5 0');
