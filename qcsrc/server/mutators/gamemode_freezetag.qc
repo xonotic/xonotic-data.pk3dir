@@ -71,7 +71,11 @@ void freezetag_Freeze()
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
 	setmodel(ice, "models/ice/ice.md3");
 
-	self.movement = '0 0 0';
+	entity oldself;
+	olfself = self;
+	self = ice;
+	freezetag_Ice_Think();
+	self = oldself;
 
 	// add waypoint
 	WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE);
