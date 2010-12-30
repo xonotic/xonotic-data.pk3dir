@@ -111,8 +111,11 @@ void freezetag_Unfreeze(entity attacker)
 {
 	self.freezetag_frozen = 0;
 
-	PlayerScore_Add(attacker, SP_FREEZETAG_REVIVAL, +1);
-	PlayerScore_Add(attacker, SP_SCORE, +1);
+	if(attacker)
+	{
+		PlayerScore_Add(attacker, SP_FREEZETAG_REVIVALS, +1);
+		PlayerScore_Add(attacker, SP_SCORE, +1);
+	}
 
 	// remove the ice block
 	entity ice;
@@ -145,7 +148,7 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 	if(totalspawned > 2) // only check for winners if we had more than two players (one of them left, don't let the other player win just because of that)
 		freezetag_CheckWinner();
 
-	freezetag_Unfreeze();
+	freezetag_Unfreeze(world);
 
 	return 1;
 }
@@ -192,7 +195,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
-    freezetag_Unfreeze(); // start by making sure that all ice blocks are removed
+    freezetag_Unfreeze(world); // start by making sure that all ice blocks are removed
 
 	if(totalspawned == 1 && time > game_starttime) // only one player active on server, start a new match immediately
 	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
@@ -246,7 +249,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
             self.freezetag_revive_progress = (time - self.freezetag_beginrevive_time) / autocvar_g_freezetag_revive_time;
             if(time - self.freezetag_beginrevive_time >= autocvar_g_freezetag_revive_time)
             {
-                freezetag_Unfreeze();
+                freezetag_Unfreeze(self);
 
                 centerprint(self, strcat("^5You were revived by ^7", other.netname, ".\n"));
                 centerprint(other, strcat("^5You revived ^7", self.netname, ".\n"));
