@@ -257,8 +257,8 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 					teammate_nearby = boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax);
 					if(teammate_nearby)
 					{
-						PlayerScore_Add(teammate_nearby, SP_FREEZETAG_REVIVALS, +1);
-						PlayerScore_Add(teammate_nearby, SP_SCORE, +1);
+						PlayerScore_Add(other, SP_FREEZETAG_REVIVALS, +1);
+						PlayerScore_Add(other, SP_SCORE, +1);
 						++n;
 					}
 				}
