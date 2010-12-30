@@ -23,6 +23,7 @@ void freezetag_CheckWinner()
 
 	entity e, winner;
 	string teamname;
+	winner = world;
 
 	FOR_EACH_PLAYER(e)
 	{
@@ -35,7 +36,6 @@ void freezetag_CheckWinner()
 
 	if(winner != world) // just in case a winner wasn't found
 	{
-		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
 		if(winner.team == COLOR_TEAM1)
 			teamname = "^1Red Team";
 		else if(winner.team == COLOR_TEAM2)
@@ -48,6 +48,7 @@ void freezetag_CheckWinner()
 			centerprint(e, strcat(teamname, "^5 wins the round, all other teams were frozen.\n"));
 		}
 		bprint(teamname, "^5 wins the round since all the other teams were frozen.\n");
+		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
 	}
 
 	next_round = time + 5;

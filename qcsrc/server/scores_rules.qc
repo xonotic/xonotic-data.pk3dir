@@ -34,7 +34,6 @@ void ScoreRules_basics_end()
 }
 void ScoreRules_generic()
 {
-	CheckAllowedTeams(world);
 	if(teams_matter)
 	{
 		CheckAllowedTeams(world);
@@ -207,7 +206,8 @@ void ScoreRules_keepaway()
 #define SP_FREEZETAG_REVIVALS 4
 void ScoreRules_freezetag()
 {
-	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
+	CheckAllowedTeams(world);
+	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
 	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS,		"revivals",		0);
 	ScoreRules_basics_end();
 }
