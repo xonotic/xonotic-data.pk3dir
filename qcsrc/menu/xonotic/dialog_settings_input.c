@@ -66,12 +66,10 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", "\"enter console\" also closes"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Show binds:"));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("sbar_showbinds"));
-			e.addValue(e, "Actions", "0");
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_showbinds"));
+			e.addValue(e, "Commands", "0");
 			e.addValue(e, "Bound keys", "1");
 			e.addValue(e, "Both", "2");
 			e.configureXonoticTextSliderValues(e);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "cl_showpressedkeys", "Show pressed keys"));
 }
 #endif
