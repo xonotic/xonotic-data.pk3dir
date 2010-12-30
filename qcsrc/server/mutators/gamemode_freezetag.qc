@@ -111,7 +111,7 @@ void freezetag_Unfreeze(entity attacker)
 {
 	self.freezetag_frozen = 0;
 
-	if(attacker)
+	if(attacker.classname == "player")
 	{
 		PlayerScore_Add(attacker, SP_FREEZETAG_REVIVALS, +1);
 		PlayerScore_Add(attacker, SP_SCORE, +1);
