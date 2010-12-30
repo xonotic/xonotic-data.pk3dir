@@ -112,12 +112,6 @@ void freezetag_Unfreeze(entity attacker)
 {
 	self.freezetag_frozen = 0;
 
-	if(attacker.classname == "player")
-	{
-		PlayerScore_Add(attacker, SP_FREEZETAG_REVIVALS, +1);
-		PlayerScore_Add(attacker, SP_SCORE, +1);
-	}
-
 	// remove the ice block
 	entity ice;
 	for(ice = world; (ice = find(ice, classname, "freezetag_ice")); ) if(ice.owner == self)
@@ -251,10 +245,32 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
             if(time - self.freezetag_beginrevive_time >= autocvar_g_freezetag_revive_time)
             {
                 freezetag_Unfreeze(self);
+		
+		// EVERY team mate nearby gets a point (even if multiple!)
+		float n;
+		FOR_EACH_PLAYER(other) if(self != other)
+		{
+			if(other.freezetag_frozen == 0)
+			{
+				if(other.team == self.team)
+				{
+					teammate_nearby = boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax);
+					if(teammate_nearby)
+					{
+						PlayerScore_Add(teammate_nearby, SP_FREEZETAG_REVIVALS, +1);
+						PlayerScore_Add(teammate_nearby, SP_SCORE, +1);
+						++n;
+					}
+				}
+			}
+		}
 
-                centerprint(self, strcat("^5You were revived by ^7", other.netname, ".\n"));
-                centerprint(other, strcat("^5You revived ^7", self.netname, ".\n"));
-                bprint("^7", other.netname, "^5 revived ^7", self.netname, ".\n");
+		if(n > 1)
+			centerprint(self, strcat("^5You were revived by ^7", other.netname, "^5 et al.\n"));
+		else
+			centerprint(self, strcat("^5You were revived by ^7", other.netname, "^5.\n"));
+                centerprint(other, strcat("^5You revived ^7", self.netname, "^5.\n"));
+                bprint("^7", other.netname, "^5 revived ^7", self.netname, "^5.\n");
 
                 self.freezetag_beginrevive_time = -9999;
                 self.freezetag_revive_progress = 0;
