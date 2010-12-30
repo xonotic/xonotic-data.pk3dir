@@ -2,6 +2,7 @@ void freezetag_Initialize()
 {
 	precache_model("models/ice/ice.md3");
 	warmup = time + autocvar_g_start_delay + autocvar_g_freezetag_warmup;
+	ScoreRules_freezetag();
 }
 
 void freezetag_CheckWinner()
@@ -61,7 +62,7 @@ void freezetag_Ice_Think()
 	self.nextthink = time;
 }
 
-void freezetag_Freeze()
+void freezetag_Freeze(entity attacker)
 {
 	self.freezetag_frozen = 1;
 
@@ -86,11 +87,32 @@ void freezetag_Freeze()
 	{
 		WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_WAYPOINT, '0.25 0.90 1');
 	}
+
+	if(attacker == self)
+	{
+		// you froze your own dumb self
+		// counted as "suicide" already
+		PlayerScore_Add(self, SP_SCORE, -1);
+	}
+	else if(attacker.classname == "player")
+	{
+		// got frozen by an enemy
+		// counted as "kill" and "death" already
+		PlayerScore_Add(self, SP_SCORE, -1);
+		PlayerScore_Add(attacker, SP_SCORE, +1);
+	}
+	else
+	{
+		// nothing - got frozen by the game type rules themselves
+	}
 }
 
-void freezetag_Unfreeze()
+void freezetag_Unfreeze(entity attacker)
 {
 	self.freezetag_frozen = 0;
+
+	PlayerScore_Add(attacker, SP_FREEZETAG_REVIVAL, +1);
+	PlayerScore_Add(attacker, SP_SCORE, +1);
 
 	// remove the ice block
 	entity ice;
@@ -142,7 +164,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 			--pinkalive;
 		--totalalive;
 
-        freezetag_Freeze();
+        freezetag_Freeze(frag_attacker);
 	}
 
     if(frag_attacker.classname == STR_PLAYER)
@@ -181,7 +203,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 	if(warmup && time > warmup) // spawn too late, freeze player
 	{
 		centerprint(self, "^1You spawned after the round started, you'll spawn as frozen.\n");
-		freezetag_Freeze();
+		freezetag_Freeze(world);
 	}
 
 	return 1;

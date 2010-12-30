@@ -202,3 +202,12 @@ void ScoreRules_keepaway()
 	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_DROPS,		"drops",		SFL_LOWER_IS_BETTER);
 	ScoreRules_basics_end();
 }
+
+// FreezeTag stuff
+#define SP_FREEZETAG_REVIVALS 4
+void ScoreRules_freezetag()
+{
+	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS,		"revivals",		0);
+	ScoreRules_basics_end();
+}
