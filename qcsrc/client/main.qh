@@ -121,8 +121,6 @@ float ignore_minus_zoom;
 float warmup_stage;
 
 string getcommandkey(string text, string command);
-float hud_showbinds;
-float hud_showbinds_limit;
 
 string vote_called_vote;
 float ready_waiting;

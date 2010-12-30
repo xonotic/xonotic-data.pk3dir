@@ -773,7 +773,6 @@ void HUD_Weapons(void)
 	}
 
 	float weapons_st = getstati(STAT_WEAPONS);
-	float label = autocvar_hud_panel_weapons_label;
 
 	for(i = 0; i < weapon_cnt; ++i)
 	{
@@ -813,9 +812,9 @@ void HUD_Weapons(void)
 		{
 			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '1 1 1', wpnalpha, DRAWFLAG_NORMAL);
 
-			if(label == 1) // weapon number
+			if(autocvar_hud_panel_weapons_label == 1) // weapon number
 				drawstring(wpnpos, ftos(weapid), '1 1 0' * 0.5 * wpnsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-			else if(label == 2) // bind
+			else if(autocvar_hud_panel_weapons_label == 2) // bind
 				drawstring(wpnpos, getcommandkey(ftos(weapid), strcat("impulse ", ftos(weapid))), '1 1 0' * 0.5 * wpnsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw ammo status bar

@@ -1406,7 +1406,7 @@ string getcommandkey(string text, string command)
 	string keys;
 	float n, j, k, l;
 
-	if (!hud_showbinds)
+	if (!autocvar_hud_showbinds)
 		return text;
 
 	keys = db_get(binddb, command);
@@ -1424,7 +1424,7 @@ string getcommandkey(string text, string command)
 					keys = strcat(keys, ", ", keynumtostring(k));
 
 				++l;
-				if (hud_showbinds_limit > 0 && hud_showbinds_limit >= l) break;
+				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit >= l) break;
 			}
 
 		}
@@ -1432,12 +1432,12 @@ string getcommandkey(string text, string command)
 	}
 
 	if ("" == keys) {
-		if (hud_showbinds > 1)
+		if (autocvar_hud_showbinds > 1)
 			return strcat(text, " (not bound)");
 		else
 			return text;
 	}
-	else if (hud_showbinds > 1)
+	else if (autocvar_hud_showbinds > 1)
 		return strcat(text, " (", keys, ")");
 	else
 		return keys;
