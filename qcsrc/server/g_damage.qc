@@ -602,7 +602,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 								targ.dmg_save += v_y;
 								targ.dmg_inflictor = inflictor;
 								damage = 0;
-								force = '0 0 0';
+                                if(!autocvar_g_friendlyfire_virtual_force)
+                                    force = '0 0 0';
 							}
 						}
 						else
