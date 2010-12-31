@@ -45,8 +45,7 @@ void XonoticSlider_configureXonoticSlider(entity me, float theValueMin, float th
 	{
 		me.cvarName = theCvar;
 		me.loadCvars(me);
-		if(tooltipdb >= 0)
-			me.tooltip = getZonedTooltipForIdentifier(theCvar);
+		me.tooltip = getZonedTooltipForIdentifier(theCvar);
 	}
 }
 void XonoticSlider_setValue(entity me, float val)

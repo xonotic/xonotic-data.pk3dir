@@ -69,6 +69,12 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_maxfps_alwayssleep", "Minimize input latency"));
 	me.TR(me);
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Menu Tooltips:"));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_tooltips", "0", "Off"));
+		me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "menu_tooltips", "1", "Standard"));
+		me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "menu_tooltips", "2", "Advanced"));
+	me.TR(me);
+	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton("Advanced settings...", '0 0 0'));
 			e.onClick = DialogOpenButton_Click;

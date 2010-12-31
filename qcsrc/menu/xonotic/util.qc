@@ -21,7 +21,7 @@ void unloadTooltips()
 string getZonedTooltipForIdentifier(string s)
 {
 	string t;
-	if(s == "")
+	if(s == "" || tooltipdb < 0)
 		return string_null;
 	t = db_get(tooltipdb, s);
 	if(t == "-")
@@ -65,6 +65,12 @@ void loadAllCvars(entity root)
 
 .string cvarNames_Multi;
 .void(entity me) saveCvars_Multi;
+string getCvarsMulti(entity me)
+{
+	if (me.cvarNames_Multi)
+		return me.cvarNames_Multi;
+	return string_null;
+}
 void saveCvarsMulti(entity me)
 {
 	float n, i;
