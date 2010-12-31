@@ -1055,11 +1055,11 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
                             {
                                 if(deathtype & HITTYPE_SECONDARY)
                                 {
-                                    force *= autocvar_g_balance_laser_primary_force_other_scale;
+                                    force *= autocvar_g_balance_laser_secondary_force_other_scale;
                                 }
                                 else
                                 {
-                                    force *= autocvar_g_balance_laser_secondary_force_other_scale;
+                                    force *= autocvar_g_balance_laser_primary_force_other_scale;
                                 }
                             }
 						}
