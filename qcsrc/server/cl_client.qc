@@ -1105,9 +1105,9 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_grenadelauncher_bouncefactor
 	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_grenadelauncher_bouncestop
 	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
-	WriteByte(MSG_ENTITY, autocvar_g_balance_campingrifle_secondary); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
-	WriteByte(MSG_ENTITY, autocvar_g_balance_campingrifle_magazinecapacity); // rifle max bullets
+	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_magazinecapacity); // rifle max bullets
 	return TRUE;
 }
 
@@ -2897,7 +2897,7 @@ void PlayerPreThink (void)
 	}
 
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_CAMPINGRIFLE && autocvar_g_balance_campingrifle_secondary == 0));
+		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_SNIPERRIFLE && autocvar_g_balance_sniperrifle_secondary == 0));
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;

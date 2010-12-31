@@ -612,7 +612,7 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-.float campingrifle_bulletcounter;
+.float sniperrifle_bulletcounter;
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones
@@ -660,3 +660,6 @@ float serverflags;
 .float freezetag_frozen;
 .float freezetag_beginrevive_time;
 .float freezetag_revive_progress;
+
+.entity muzzle_flash;
+.float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
