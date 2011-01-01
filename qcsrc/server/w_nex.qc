@@ -110,7 +110,7 @@ float w_nex(float req)
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nex_primary_animtime, w_ready);
 			}
 		}
-		if (self.BUTTON_ATCK2)
+		if (self.BUTTON_ATCK2 || (self.BUTTON_ZOOM && autocvar_g_balance_nex_secondary_charge && !autocvar_g_balance_nex_secondary))
 		{
 			if(autocvar_g_balance_nex_secondary_charge)
 			{
