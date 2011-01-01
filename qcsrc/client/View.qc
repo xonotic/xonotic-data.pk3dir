@@ -572,7 +572,7 @@ void CSQC_UpdateView(float w, float h)
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
-	if(autocvar_r_fakelight >= 2 || autocvar_r_fullbright >= 1)
+	if(autocvar_r_fakelight >= 2 || autocvar_r_fullbright)
 	if not(serverflags & SERVERFLAG_ALLOW_FULLBRIGHT)
 	{
 		// apply night vision effect
