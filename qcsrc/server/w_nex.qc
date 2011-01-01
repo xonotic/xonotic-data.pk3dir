@@ -110,43 +110,52 @@ float w_nex(float req)
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nex_primary_animtime, w_ready);
 			}
 		}
-		if (self.BUTTON_ATCK2 || (self.BUTTON_ZOOM && autocvar_g_balance_nex_secondary_charge && !autocvar_g_balance_nex_secondary))
+		if ((autocvar_g_balance_nex_secondary_charge && !autocvar_g_balance_nex_secondary) ? self.BUTTON_ZOOM : self.BUTTON_ATCK2)
 		{
 			if(autocvar_g_balance_nex_secondary_charge)
 			{
 				self.nex_charge_rottime = time + autocvar_g_balance_nex_charge_rot_pause;
 				dt = frametime / W_TICSPERFRAME;
 
-				if(autocvar_g_balance_nex_secondary_chargepool)
+				if(self.nex_charge < 1)
 				{
-					if(autocvar_g_balance_nex_secondary_ammo)
+					if(autocvar_g_balance_nex_secondary_chargepool)
 					{
-						// always deplete if secondary is held
-						self.nex_chargepool_ammo = max(0, self.nex_chargepool_ammo - autocvar_g_balance_nex_secondary_ammo * dt);
-
-						dt = min(dt, (1 - self.nex_charge) / autocvar_g_balance_nex_secondary_charge_rate);
-						self.nex_chargepool_pauseregen_finished = time + autocvar_g_balance_nex_secondary_chargepool_pause_regen;
-						dt = min(dt, self.nex_chargepool_ammo);
-						dt = max(0, dt);
-
-						self.nex_charge += dt * autocvar_g_balance_nex_secondary_charge_rate;
-					}
-				}
-
-				else if(autocvar_g_balance_nex_secondary_ammo)
-				{
-					if(self.nex_charge < 1)
-					{
-						dt = min(dt, (1 - self.nex_charge) / autocvar_g_balance_nex_secondary_charge_rate);
-						if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+						if(autocvar_g_balance_nex_secondary_ammo)
 						{
-							dt = min(dt, (self.ammo_cells - autocvar_g_balance_nex_primary_ammo) / autocvar_g_balance_nex_secondary_ammo);
+							// always deplete if secondary is held
+							self.nex_chargepool_ammo = max(0, self.nex_chargepool_ammo - autocvar_g_balance_nex_secondary_ammo * dt);
+
+							dt = min(dt, (1 - self.nex_charge) / autocvar_g_balance_nex_secondary_charge_rate);
+							self.nex_chargepool_pauseregen_finished = time + autocvar_g_balance_nex_secondary_chargepool_pause_regen;
+							dt = min(dt, self.nex_chargepool_ammo);
 							dt = max(0, dt);
-							if(dt > 0)
-							{
-								self.ammo_cells = max(autocvar_g_balance_nex_secondary_ammo, self.ammo_cells - autocvar_g_balance_nex_secondary_ammo * dt);
-							}
+
+							self.nex_charge += dt * autocvar_g_balance_nex_secondary_charge_rate;
 						}
+					}
+
+					else if(autocvar_g_balance_nex_secondary_ammo)
+					{
+						if(self.BUTTON_ATCK2) // only eat ammo when the button is pressed
+						{
+							dt = min(dt, (1 - self.nex_charge) / autocvar_g_balance_nex_secondary_charge_rate);
+							if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+							{
+								dt = min(dt, (self.ammo_cells - autocvar_g_balance_nex_primary_ammo) / autocvar_g_balance_nex_secondary_ammo);
+								dt = max(0, dt);
+								if(dt > 0)
+								{
+									self.ammo_cells = max(autocvar_g_balance_nex_secondary_ammo, self.ammo_cells - autocvar_g_balance_nex_secondary_ammo * dt);
+								}
+							}
+							self.nex_charge += dt * autocvar_g_balance_nex_secondary_charge_rate;
+						}
+					}
+
+					else
+					{
+						dt = min(dt, (1 - self.nex_charge) / autocvar_g_balance_nex_secondary_charge_rate);
 						self.nex_charge += dt * autocvar_g_balance_nex_secondary_charge_rate;
 					}
 				}
