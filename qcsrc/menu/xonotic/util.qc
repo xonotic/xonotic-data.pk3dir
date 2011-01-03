@@ -457,14 +457,6 @@ string resolvemod(string m)
 		return m;
 }
 
-string HUD_Panel_GetSettingName(float theSetting)
-{
-	switch(theSetting) {
-		case HUD_MENU_ENABLE: return ""; break;
-		default: return "";
-	}
-}
-
 float updateCompression()
 {
 	float fh;

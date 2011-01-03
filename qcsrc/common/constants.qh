@@ -664,7 +664,5 @@ string HUD_PANELNAME_ENGINEINFO	 	= "engineinfo";
 string HUD_PANELNAME_INFOMESSAGES	= "infomessages";
 string HUD_PANELNAME_PHYSICS	= "physics";
 
-float HUD_MENU_ENABLE		= 0;
-
 #define SERVERFLAG_ALLOW_FULLBRIGHT 1
 #define SERVERFLAG_TEAMPLAY 2
