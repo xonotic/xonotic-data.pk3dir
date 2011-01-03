@@ -151,7 +151,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 		sl = makeXonoticSlider(0.15, 1, 0.05, "cl_autotaunt");
 			sl.valueDisplayMultiplier = 100;
 			sl.valueDigits = 0;
-		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, sl, "Automatic taunts"));
+		me.TD(me, 1, 3, e = makeXonoticSliderCheckBox(0, 1, sl, "Automatic taunts"));
 		if(sl.value != e.savedValue)
 			e.savedValue = 0.65; // default
 	me.TR(me);
