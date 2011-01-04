@@ -245,6 +245,8 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
             if(time - self.freezetag_beginrevive_time >= autocvar_g_freezetag_revive_time)
             {
                 freezetag_Unfreeze(self);
+		entity o;
+		o = other;
 		
 		// EVERY team mate nearby gets a point (even if multiple!)
 		float n;
@@ -266,11 +268,11 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		}
 
 		if(n > 1)
-			centerprint(self, strcat("^5You were revived by ^7", other.netname, "^5 et al.\n"));
+			centerprint(self, strcat("^5You were revived by ^7", o.netname, "^5 et al.\n"));
 		else
-			centerprint(self, strcat("^5You were revived by ^7", other.netname, "^5.\n"));
-                centerprint(other, strcat("^5You revived ^7", self.netname, "^5.\n"));
-                bprint("^7", other.netname, "^5 revived ^7", self.netname, "^5.\n");
+			centerprint(self, strcat("^5You were revived by ^7", o.netname, "^5.\n"));
+                centerprint(o, strcat("^5You revived ^7", self.netname, "^5.\n"));
+                bprint("^7", o.netname, "^5 revived ^7", self.netname, "^5.\n");
 
                 self.freezetag_beginrevive_time = -9999;
                 self.freezetag_revive_progress = 0;
