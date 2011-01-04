@@ -272,7 +272,10 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		else
 			centerprint(self, strcat("^5You were revived by ^7", o.netname, "^5.\n"));
                 centerprint(o, strcat("^5You revived ^7", self.netname, "^5.\n"));
-                bprint("^7", o.netname, "^5 revived ^7", self.netname, "^5.\n");
+		if(n > 1)
+			bprint("^7", o.netname, "^5 et al revived ^7", self.netname, "^5.\n");
+		else
+			bprint("^7", o.netname, "^5 revived ^7", self.netname, "^5.\n");
 
                 self.freezetag_beginrevive_time = -9999;
                 self.freezetag_revive_progress = 0;
