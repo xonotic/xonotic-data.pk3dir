@@ -94,6 +94,10 @@ MUTATOR_HOOKABLE(FilterItem);
 	// checks if the current item may be spawned (self.items and self.weapons may be read and written to, as well as the ammo_ fields)
 	// return error to request removal
 
+MUTATOR_HOOKABLE(TurretSpawn);
+	// return error to request removal
+	// INPUT: self - turret
+	
 MUTATOR_HOOKABLE(OnEntityPreSpawn);
 	// return error to prevent entity spawn, or modify the entity
 
