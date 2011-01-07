@@ -426,7 +426,7 @@ float w_electro(float req)
 			W_Electro_Attack2();
 			self.electro_count = autocvar_g_balance_electro_secondary_count;
 			weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_electro_secondary_animtime, w_electro_checkattack);
-			self.electro_secondarytime = time + autocvar_g_balance_electro_secondary_refire2;
+			self.electro_secondarytime = time + autocvar_g_balance_electro_secondary_refire2 * W_WeaponRateFactor();
 		}
 	}
 	else if (req == WR_PRECACHE)
