@@ -997,9 +997,7 @@ void readplayerstartcvars()
 		start_armorvalue = 0;
 		start_weapons = WEPBIT_MINSTANEX;
 		weapon_action(WEP_MINSTANEX, WR_PRECACHE);
-		start_ammo_cells = cvar("g_minstagib_ammo_start");
 		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
-		start_ammo_fuel = cvar("g_start_ammo_fuel");
 
 		if (g_minstagib_invis_alpha <= 0)
 			g_minstagib_invis_alpha = -1;
@@ -1017,7 +1015,12 @@ void readplayerstartcvars()
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
 
-	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
+	if(g_minstagib)
+	{
+		start_ammo_cells = cvar("g_minstagib_ammo_start");
+		start_ammo_fuel = cvar("g_start_ammo_fuel");
+	}
+	else if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
