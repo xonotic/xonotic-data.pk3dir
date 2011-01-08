@@ -33,6 +33,8 @@ float texmemsize(float s3tc)
 void XonoticPicmipSlider_autofix(entity me)
 {
 	float max_hard, max_soft;
+	if(cvar("menu_picmip_bypass"))
+		return;
 	max_hard = cvar("sys_memsize_virtual");
 	max_soft = cvar("sys_memsize_physical");
 	if(max_hard > 0)
