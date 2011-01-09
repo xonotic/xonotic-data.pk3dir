@@ -638,8 +638,8 @@ void PutObserverInServer (void)
 	self.iscreature = FALSE;
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
-	self.solid = SOLID_NOT;
-	self.movetype = MOVETYPE_NOCLIP;
+	self.solid = SOLID_TRIGGER; // FIXME: SOLID_TRIGGER doesn't work for doors, and SOLID_NOT doesn't work for teleporters... can we do what warpzones do to fix this?
+	self.movetype = MOVETYPE_FLY;
 	self.flags = FL_CLIENT | FL_NOTARGET;
 	self.armorvalue = 666;
 	self.effects = 0;
@@ -668,9 +668,9 @@ void PutObserverInServer (void)
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 
-	self.view_ofs = PL_VIEW_OFS;
+	self.view_ofs = '0 0 0'; // so that you can't go inside walls with MOVETYPE_FLY, previously "PL_VIEW_OFS" - for some reason this is diff from normal players
 	setorigin (self, spot.origin);
-	setsize (self, '0 0 0', '0 0 0');
+	setsize (self, '-16 -16 -24', '16 16 24'); // so that you can't go inside walls with MOVETYPE_FLY
 	self.prevorigin = self.origin;
 	self.items = 0;
 	self.weapons = 0;

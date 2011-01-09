@@ -88,16 +88,19 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 
 	makevectors (to_angles);
 
-	if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
+	if(player.classname == "player") // don't play sounds or show particles for anything that isn't a player, maybe change later to block only observers
 	{
-		if(tflags & TELEPORT_FLAG_SOUND)
-			sound (player, CHAN_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
-		if(tflags & TELEPORT_FLAG_PARTICLES)
+		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		{
-			pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
-			pointparticles(particleeffectnum("teleport"), to + v_forward * 32, '0 0 0', 1);
+			if(tflags & TELEPORT_FLAG_SOUND)
+				sound (player, CHAN_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
+			if(tflags & TELEPORT_FLAG_PARTICLES)
+			{
+				pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
+				pointparticles(particleeffectnum("teleport"), to + v_forward * 32, '0 0 0', 1);
+			}
+			self.pushltime = time + 0.2;
 		}
-		self.pushltime = time + 0.2;
 	}
 
 	// Relocate the player
@@ -157,7 +160,7 @@ void Teleport_Touch (void)
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 	
-	if (other.health < 1)
+	if (other.deadflag != DEAD_NO) // Samual: Allow observers, instead of health value lets use deadflags
 		return;
 	if not(other.flags & FL_CLIENT)	// FIXME: Make missiles firable through the teleport too
 		return;

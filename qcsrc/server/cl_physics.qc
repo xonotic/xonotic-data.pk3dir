@@ -891,6 +891,7 @@ void SV_PlayerPhysics()
 	}
 
 	if(self.flags & FL_ONGROUND)
+	if(self.classname == "player") // no fall sounds for observers thank you very much
 	if(self.wasFlying)
 	{
 		self.wasFlying = 0;
