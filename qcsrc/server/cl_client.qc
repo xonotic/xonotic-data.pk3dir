@@ -1065,6 +1065,8 @@ void PutClientInServer (void)
 		self.cnt = self.switchweapon;
 		self.weapon = 0;
 
+        self.wish_reload = 0;
+
 		if(!self.alivetime)
 			self.alivetime = time;
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
