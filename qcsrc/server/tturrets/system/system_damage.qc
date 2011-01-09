@@ -287,8 +287,6 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     // thorw head slightly off aim when hit?
     if (self.damage_flags & TFL_DMG_HEADSHAKE)
     {
-        //baseent.tur_aimoff_x += (random() * damage);
-        //baseent.tur_aimoff_y += ((random()*0.75) * damage);
         self.tur_head.angles_x = self.tur_head.angles_x + (-0.5 + random()) * damage;
         self.tur_head.angles_y = self.tur_head.angles_y + (-0.5 + random()) * damage;
     }
@@ -296,11 +294,8 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     if (self.turrcaps_flags & TFL_TURRCAPS_MOVE)
         self.velocity = self.velocity + vforce;
 
-    // FIXME: Better damage feedback
-    // Start burning when we have 10% or less health left
-    //if (self.health < (self.tur_health * 0.1))
-    //    self.effects = EF_FLAME;
-
+    // FIXME: Better damage feedback?
+    
     if (self.health <= 0)
     {
         self.event_damage           = SUB_Null;

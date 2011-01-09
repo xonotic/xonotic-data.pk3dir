@@ -779,7 +779,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				{
 					if(damage > 0)
 					{
-						if(attacker.weapon != WEP_ELECTRO && attacker.weapon != WEP_LASER || ((attacker.weapon == WEP_ELECTRO && autocvar_g_balance_electro_lightning || attacker.weapon == WEP_LASER) && attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time))
+						if(attacker.weapon != WEP_LASER
+						&& (attacker.weapon != WEP_ELECTRO || !autocvar_g_balance_electro_lightning)
+						&& attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time)
 						{
 							if(targ.BUTTON_CHAT)
 								attacker.typehitsound += 1;
@@ -810,8 +812,12 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				}
 				else
 				{
-					if(deathtype != DEATH_FIRE)
+					if(deathtype != DEATH_FIRE
+					&& attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time)
+					{
 						attacker.typehitsound += 1;
+						attacker.prevhitsound = time;
+					}
 					if(mirrordamage > 0)
 						if(time > attacker.teamkill_complain)
 						{

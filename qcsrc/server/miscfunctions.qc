@@ -2553,10 +2553,7 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
         // rule 6: we must not end up in trigger_hurt
         if (tracebox_hits_trigger_hurt(start, e.mins, e.maxs, enddown))
-        {
-            dprint("trigger_hurt! ouch! and nothing else could find it!\n");
             continue;
-        }
 
         break;
     }
