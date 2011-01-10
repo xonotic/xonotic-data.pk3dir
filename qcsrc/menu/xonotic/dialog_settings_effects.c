@@ -110,7 +110,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Particle quality:"));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.2, 1.0, 0.1, "cl_particles_quality"));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Particle dist.:"));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Particle distance:"));
 		me.TD(me, 1, 2, e = makeXonoticSlider(500, 2000, 100, "r_drawparticles_drawdistance"));
 	me.TR(me);
 	me.TR(me);
@@ -129,15 +129,15 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	        setDependent(e, "cl_decals", 1, 1);
 
 	me.gotoRC(me, 2, 3.5); me.setFirstColumn(me, me.currentColumn);
-	me.TD(me, 1, 2, e = makeXonoticCheckBox(1, "mod_q3bsp_nolightmaps", "Use lightmaps"));
-	me.TD(me, 1, 1.9, e = makeXonoticCheckBox(0, "r_glsl_deluxemapping", "Deluxe mapping"));
+	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(1, "mod_q3bsp_nolightmaps", "Use lightmaps"));
+	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_deluxemapping", "Deluxe mapping"));
 		setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
-	me.TD(me, 1, 0.7, e = makeXonoticCheckBox(0, "r_shadow_gloss", "Gloss"));
+	me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "r_shadow_gloss", "Gloss"));
 		setDependentAND3(e, "vid_gl20", 1, 1, "r_glsl_deluxemapping", 1, 2, "mod_q3bsp_nolightmaps", 0, 0);
 	me.TR(me);
-		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping", "Offset mapping"));
+		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping", "Offset mapping"));
 			setDependent(e, "vid_gl20", 1, 1);
-		me.TD(me, 1, 1.9, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping_reliefmapping", "Relief mapping"));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping_reliefmapping", "Relief mapping"));
 			setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_water", "Reflections:"));
