@@ -168,7 +168,7 @@ void CopyBody(float keepvelocity)
 float player_getspecies()
 {
 	float s;
-	get_model_parameters(self.playermodel, self.skinindex);
+	get_model_parameters(self.model, self.skinindex);
 	s = get_model_parameters_species;
 	get_model_parameters(string_null, 0);
 	if(s < 0)
@@ -387,7 +387,6 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 
 void ClientKill_Now_TeamChange();
 void freezetag_CheckWinner();
-void freezetag_Unfreeze();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -631,9 +630,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		frag_target = self;
 		MUTATOR_CALLHOOK(PlayerDies);
 
-		if(g_freezetag)
-            return;
-
 		if(self.flagcarried)
 		{
 			if(attacker.classname != "player" && attacker.classname != "gib")
@@ -646,8 +642,31 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(self.ballcarried && g_nexball)
 			DropBall(self.ballcarried, self.origin, self.velocity);
 		Portal_ClearAllLater(self);
-		// clear waypoints
+
+		if(clienttype(self) == CLIENTTYPE_REAL)
+		{
+			stuffcmd(self, "-zoom\n");
+			self.fixangle = TRUE;
+			//msg_entity = self;
+			//WriteByte (MSG_ONE, SVC_SETANGLE);
+			//WriteAngle (MSG_ONE, self.v_angle_x);
+			//WriteAngle (MSG_ONE, self.v_angle_y);
+			//WriteAngle (MSG_ONE, 80);
+		}
+
+		if(defer_ClientKill_Now_TeamChange) // TODO does this work with FreezeTag?
+			ClientKill_Now_TeamChange();
+
+		if(g_arena)
+			Spawnqueue_Unmark(self);
+
+		if(g_freezetag)
+			return;
+
+		// when we get here, player actually dies
+		// clear waypoints (do this AFTER FreezeTag)
 		WaypointSprite_PlayerDead();
+
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;
 		self.angles_z = 0;
@@ -669,12 +688,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		waves = 0;
 		sdelay = cvar(strcat("g_", GetGametype(), "_respawn_delay"));
 		if(!sdelay)
-        {
-            if(g_cts)
-                sdelay = 0; // no respawn delay in CTS
-            else
-                sdelay = autocvar_g_respawn_delay;
-        }
+		{
+			if(g_cts)
+				sdelay = 0; // no respawn delay in CTS
+			else
+				sdelay = autocvar_g_respawn_delay;
+		}
 		waves = cvar(strcat("g_", GetGametype(), "_respawn_waves"));
 		if(!waves)
 			waves = autocvar_g_respawn_waves;
@@ -703,31 +722,15 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// set up to fade out later
 		SUB_SetFade (self, time + 6 + random (), 1);
 
-		if(clienttype(self) == CLIENTTYPE_REAL)
-		{
-			self.fixangle = TRUE;
-			//msg_entity = self;
-			//WriteByte (MSG_ONE, SVC_SETANGLE);
-			//WriteAngle (MSG_ONE, self.v_angle_x);
-			//WriteAngle (MSG_ONE, self.v_angle_y);
-			//WriteAngle (MSG_ONE, 80);
-		}
-
-		if(g_arena)
-			Spawnqueue_Unmark(self);
-
-		if(defer_ClientKill_Now_TeamChange)
-			ClientKill_Now_TeamChange();
-
 		if(sv_gentle > 0 || autocvar_ekg) {
 			// remove corpse
 			PlayerCorpseDamage (inflictor, attacker, 100.0, deathtype, hitloc, force);
 		}
 
 		// reset fields the weapons may use just in case
-        for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-            weapon_action(j, WR_RESETPLAYER);
+			weapon_action(j, WR_RESETPLAYER);
 			ATTACK_FINISHED_FOR(self, j) = 0;
 		}
 	}
@@ -1229,7 +1232,7 @@ void ClearPlayerSounds()
 #undef _VOICEMSG
 }
 
-void LoadPlayerSounds(string f, float first)
+float LoadPlayerSounds(string f, float first)
 {
 	float fh;
 	string s;
@@ -1238,7 +1241,7 @@ void LoadPlayerSounds(string f, float first)
 	if(fh < 0)
 	{
 		dprint("Player sound file not found: ", f, "\n");
-		return;
+		return 0;
 	}
 	while((s = fgets(fh)))
 	{
@@ -1254,6 +1257,7 @@ void LoadPlayerSounds(string f, float first)
 		self.field = strzone(strcat(argv(1), " ", argv(2)));
 	}
 	fclose(fh);
+	return 1;
 }
 
 .float modelindex_for_playersound;
@@ -1267,7 +1271,8 @@ void UpdatePlayerSounds()
 	self.skinindex_for_playersound = self.skinindex;
 	ClearPlayerSounds();
 	LoadPlayerSounds("sound/player/default.sounds", 1);
-	LoadPlayerSounds(get_model_datafilename(self.playermodel, self.skinindex, "sounds"), 0);
+	if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skinindex, "sounds"), 0))
+		LoadPlayerSounds(get_model_datafilename(self.model, 0, "sounds"), 0);
 }
 
 void FakeGlobalSound(string sample, float chan, float voicetype)

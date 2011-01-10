@@ -21,7 +21,8 @@ void havocbot_ai()
 		}
 		else
 		{
-			self.havocbot_role();
+			if not(self.jumppadcount)
+				self.havocbot_role();
 		}
 
 		// TODO: tracewalk() should take care of this job (better path finding under water)
@@ -231,12 +232,14 @@ void havocbot_bunnyhop(vector dir)
 		return;
 
 	// Don't jump when using some weapons
+	/*
 	if(self.aistatus & AI_STATUS_ATTACKING)
-	if(self.weapon & WEP_CAMPINGRIFLE)
+	if(self.weapon == WEP_SNIPERRIFLE)
 		return;
 
 	if(self.goalcurrent.classname == "player")
 		return;
+	*/
 
 	maxspeed = autocvar_sv_maxspeed;
 
@@ -337,6 +340,7 @@ void havocbot_bunnyhop(vector dir)
 	}
 
 	// Release jump button
+	if(!cvar("sv_pogostick"))
 	if(self.flags & FL_ONGROUND == 0)
 	{
 		if(self.velocity_z < 0 || vlen(self.velocity)<maxspeed)
@@ -452,14 +456,7 @@ void havocbot_movetogoal()
 	// Handling of jump pads
 	if(self.jumppadcount)
 	{
-		if(self.flags & FL_ONGROUND)
-		{
-			self.jumppadcount = FALSE;
-			if(self.aistatus & AI_STATUS_OUT_JUMPPAD)
-				self.aistatus &~= AI_STATUS_OUT_JUMPPAD;
-		}
-
-		// If got stuck on the jump pad try to reach the farther visible item
+		// If got stuck on the jump pad try to reach the farthest visible item
 		if(self.aistatus & AI_STATUS_OUT_JUMPPAD)
 		{
 			if(fabs(self.velocity_z)<50)
@@ -507,11 +504,20 @@ void havocbot_movetogoal()
 				local float threshold;
 				threshold = maxspeed * 0.2;
 				if(fabs(self.velocity_x) < threshold  &&  fabs(self.velocity_y) < threshold)
+				{
+					dprint("Warning: ", self.netname, " got stuck on a jumppad, trying to get out of it now\n");
 					self.aistatus |= AI_STATUS_OUT_JUMPPAD;
+				}
 				return;
 			}
+
+			// Don't chase players while using a jump pad
+			if(self.goalcurrent.classname=="player" || self.goalstack01.classname=="player")
+				return;
 		}
 	}
+	else if(self.aistatus & AI_STATUS_OUT_JUMPPAD)
+		self.aistatus &~= AI_STATUS_OUT_JUMPPAD;
 
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
 	if(skill>6)
@@ -726,7 +732,7 @@ void havocbot_movetogoal()
 			// (only when the bot is on the ground or jumping intentionally)
 			self.aistatus &~= AI_STATUS_DANGER_AHEAD;
 
-			if(trace_fraction == 1)
+			if(trace_fraction == 1 && self.jumppadcount == 0)
 			if(self.flags & FL_ONGROUND || self.aistatus & AI_STATUS_RUNNING || self.BUTTON_JUMP == TRUE)
 			{
 				// Look downwards
@@ -887,7 +893,7 @@ void havocbot_chooseenemy()
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if(best || self.weapons) // || self.weapon == WEP_CAMPINGRIFLE
+		if(best || self.weapons) // || self.weapon == WEP_SNIPERRIFLE
 			break;
 		if(i)
 			break;
@@ -941,28 +947,12 @@ void havocbot_chooseweapon()
 		return;
 
 	// Workaround for rifle reloading (..)
-	if(self.weapon == WEP_CAMPINGRIFLE)
-	if(i < autocvar_g_balance_campingrifle_reloadtime + 1)
+	if(self.weapon == WEP_SNIPERRIFLE)
+	if(i < autocvar_g_balance_sniperrifle_reloadtime + 1)
 		return;
 
 	local float w;
-	local float rocket  ; rocket   =-1000;
-	local float nex     ; nex      =-1000;
-	local float hagar   ; hagar    =-1000;
-	local float grenade ; grenade  =-1000;
-	local float mine    ; mine     =-1000;
-	local float electro ; electro  =-1000;
-	local float crylink ; crylink  =-1000;
-	local float uzi     ; uzi      =-1000;
-	local float shotgun ; shotgun  =-1000;
-	local float campingrifle ; campingrifle  =-1000;
-	local float laser   ; laser    =-1000;
-	local float minstanex ; minstanex =-1000;
-	local float bestscore; bestscore = 0;
-	local float bestweapon; bestweapon=self.switchweapon;
 	local float distance; distance=bound(10,vlen(self.origin-self.enemy.origin)-200,10000);
-	local float maxdelaytime=0.5;
-	local float spreadpenalty=10;
 
 	// Should it do a weapon combo?
 	local float af, ct, combo_time, combo;
@@ -1197,7 +1187,7 @@ vector havocbot_dodge()
 {
 	// LordHavoc: disabled because this is too expensive
 	return '0 0 0';
-	/*
+#if 0
 	local entity head;
 	local vector dodge, v, n;
 	local float danger, bestdanger, vl, d;
@@ -1242,5 +1232,5 @@ vector havocbot_dodge()
 		head = head.chain;
 	}
 	return dodge;
-	*/
+#endif
 };

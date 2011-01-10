@@ -255,12 +255,15 @@ void cvar_changes_init()
 		BADPREFIX("gl_");
 		BADPREFIX("joy");
 		BADPREFIX("hud_");
+		BADPREFIX("m_");
 		BADPREFIX("menu_");
 		BADPREFIX("net_slist_");
 		BADPREFIX("r_");
 		BADPREFIX("sbar_");
 		BADPREFIX("scr_");
 		BADPREFIX("snd_");
+		BADPREFIX("show");
+		BADPREFIX("sensitivity");
 		BADPREFIX("userbind");
 		BADPREFIX("v_");
 		BADPREFIX("vid_");
@@ -322,6 +325,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf");
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");
+		BADCVAR("g_freezetag");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_onslaught");
@@ -359,20 +363,33 @@ void cvar_changes_init()
 		// does nothing visible
 		BADCVAR("captureleadlimit_override");
 		BADCVAR("g_arena_point_leadlimit");
+		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_ca_point_leadlimit");
+		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_capture_leadlimit");
+		BADCVAR("g_ctf_flag_capture_effects");
+		BADCVAR("g_ctf_flag_glowtrails");
+		BADCVAR("g_ctf_flag_pickup_effects");
 		BADCVAR("g_domination_point_leadlimit");
+		BADCVAR("g_forced_respawn");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_runematch_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
+		BADCVAR("pausable");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("sv_timeout");
+		BADCVAR("welcome_message_time");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
+		BADPREFIX("g_ctf_captimerecord_");
+		BADPREFIX("g_maplist_votable_");
 		BADPREFIX("net_");
 		BADPREFIX("prvm_");
+		BADPREFIX("skill_");
 		BADPREFIX("sv_fragmessage_");
+		BADPREFIX("sv_maxidle_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
 
@@ -447,6 +464,9 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
 		BADCVAR("timelimit_override");
+		BADCVAR("g_warmup");
+		BADPREFIX("g_warmup_");
+		BADCVAR("teamplay_mode");
 
 		if(autocvar_g_minstagib)
 		{
@@ -797,7 +817,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
-	addstat(STAT_BULLETS_LOADED, AS_INT, campingrifle_bulletcounter);
+	addstat(STAT_BULLETS_LOADED, AS_INT, sniperrifle_bulletcounter);
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
 
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);

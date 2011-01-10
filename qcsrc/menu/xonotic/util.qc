@@ -1,3 +1,13 @@
+float GL_CheckExtension(string ext)
+{
+	return (strstrofs(strcat(" ", cvar_string("gl_info_extensions"), " "), strcat(" ", ext, " "), 0) >= 0);
+}
+
+float GL_Have_TextureCompression()
+{
+	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
+}
+
 float tooltipdb;
 void loadTooltips()
 {
@@ -452,5 +462,59 @@ string HUD_Panel_GetSettingName(float theSetting)
 	switch(theSetting) {
 		case HUD_MENU_ENABLE: return ""; break;
 		default: return "";
+	}
+}
+
+float updateCompression()
+{
+	float fh;
+	float have_dds, have_jpg, have_tga;
+	float can_dds;
+	if((have_dds = ((fh = fopen("dds/particles/particlefont.dds", FILE_READ)) >= 0)))
+		fclose(fh);
+	if((have_jpg = ((fh = fopen("particles/particlefont.jpg", FILE_READ)) >= 0)))
+		fclose(fh);
+	if((have_tga = ((fh = fopen("particles/particlefont.tga", FILE_READ)) >= 0)))
+		fclose(fh);
+	can_dds = GL_Have_TextureCompression();
+	if(have_dds && (have_jpg || have_tga))
+	{
+		// both? Let's only use good quality precompressed files
+		// but ONLY if we actually support it!
+		if(can_dds)
+		{
+			cvar_set("gl_texturecompression", "0");
+			return 1;
+		}
+		else
+		{
+			cvar_set("gl_texturecompression", "0");
+			cvar_set("r_texture_dds_load", "0");
+			return 0;
+		}
+	}
+	else if(have_dds)
+	{
+		// DDS only? We probably always want texture compression
+		cvar_set("gl_texturecompression", "1");
+		cvar_set("r_texture_dds_load", "1");
+		if(!can_dds)
+			print("^1ERROR: Texture compression is required but not supported.\n^1Expect visual problems.\n");
+		return 0;
+	}
+	else
+	{
+		// TGA only? Allow runtime compression
+		if(can_dds)
+		{
+			cvar_set("gl_texturecompression", cvar_string("r_texture_dds_load"));
+			return 2;
+		}
+		else
+		{
+			cvar_set("gl_texturecompression", "0");
+			cvar_set("r_texture_dds_load", "0");
+			return 0;
+		}
 	}
 }

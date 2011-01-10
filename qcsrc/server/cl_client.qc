@@ -2,15 +2,8 @@ void race_send_recordtime(float msg);
 void race_SendRankings(float pos, float prevpos, float del, float msg);
 
 void send_CSQC_teamnagger() {
-	WriteByte(0, SVC_TEMPENTITY);
-	WriteByte(0, TE_CSQC_TEAMNAGGER);
-}
-
-void send_CSQC_cr_maxbullets(entity e) {
-	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_CR_MAXBULLETS);
-	WriteByte(MSG_ONE, autocvar_g_balance_campingrifle_magazinecapacity);
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
 void Announce(string snd) {
@@ -724,15 +717,6 @@ void PutObserverInServer (void)
 		self.frags = FRAGS_SPECTATOR;
 }
 
-float RestrictSkin(float s)
-{
-	if(!teams_matter)
-		return s;
-	if(s == 6)
-		return 6;
-	return mod(s, 3);
-}
-
 void FixPlayermodel()
 {
 	local string defaultmodel;
@@ -794,7 +778,7 @@ void FixPlayermodel()
 		}
 
 		oldskin = self.skinindex;
-		self.skinindex = RestrictSkin(stof(self.playerskin));
+		self.skinindex = stof(self.playerskin);
 	}
 
 	if(chmdl || oldskin != self.skinindex)
@@ -1121,8 +1105,9 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_grenadelauncher_bouncefactor
 	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_grenadelauncher_bouncestop
 	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
-	WriteByte(MSG_ENTITY, autocvar_g_balance_campingrifle_secondary); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_magazinecapacity); // rifle max bullets
 	return TRUE;
 }
 
@@ -1343,7 +1328,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 			self.killindicator.nextthink = time + (self.lip) * 0.05;
 			self.killindicator.cnt = ceil(killtime);
 			self.killindicator.count = bound(0, ceil(killtime), 10);
-			sprint(self, strcat("^1You'll be dead in ", ftos(self.killindicator.cnt), " seconds\n"));
+			//sprint(self, strcat("^1You'll be dead in ", ftos(self.killindicator.cnt), " seconds\n"));
 
 			for(e = world; (e = find(e, classname, "body")) != world; )
 			{
@@ -1749,8 +1734,6 @@ void ClientConnect (void)
 	}
 	else if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
-
-	send_CSQC_cr_maxbullets(self);
 
 	CheatInitClient();
 
@@ -2910,7 +2893,7 @@ void PlayerPreThink (void)
 	}
 
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_CAMPINGRIFLE && autocvar_g_balance_campingrifle_secondary == 0));
+		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_SNIPERRIFLE && autocvar_g_balance_sniperrifle_secondary == 0));
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;

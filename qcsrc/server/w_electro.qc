@@ -295,6 +295,7 @@ void W_Electro_Attack3 (void)
 	entity beam, oldself;
 
 	self.lgbeam = beam = spawn();
+	beam.classname = "lgbeam";
 	beam.solid = SOLID_NOT;
 	beam.think = lgbeam_think;
 	beam.owner = self;
@@ -377,6 +378,15 @@ float w_electro(float req)
 	{
 		if (self.BUTTON_ATCK)
 		{
+			if(autocvar_g_balance_electro_lightning)
+				if(self.BUTTON_ATCK_prev)
+				{
+					// prolong the animtime while the gun is being fired
+					if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
+						weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_electro_primary_animtime, w_ready);
+					else
+						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
+				}
 			if (weapon_prepareattack(0, (autocvar_g_balance_electro_lightning ? 0 : autocvar_g_balance_electro_primary_refire)))
 			{
 				if(autocvar_g_balance_electro_lightning)
@@ -385,19 +395,24 @@ float w_electro(float req)
 					{
 						W_Electro_Attack3();
 					}
-					self.BUTTON_ATCK_prev = 1;
+					if(!self.BUTTON_ATCK_prev)
+					{
+						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
+						self.BUTTON_ATCK_prev = 1;
+					}
 				}
 				else
 				{
 					W_Electro_Attack();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
 				}
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
 			}
 		} else {
 			if(autocvar_g_balance_electro_lightning)
 			{
 				if (self.BUTTON_ATCK_prev != 0)
 				{
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
 					ATTACK_FINISHED(self) = time + autocvar_g_balance_electro_primary_refire * W_WeaponRateFactor();
 				}
 				self.BUTTON_ATCK_prev = 0;
@@ -411,7 +426,7 @@ float w_electro(float req)
 			W_Electro_Attack2();
 			self.electro_count = autocvar_g_balance_electro_secondary_count;
 			weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_electro_secondary_animtime, w_electro_checkattack);
-			self.electro_secondarytime = time + autocvar_g_balance_electro_secondary_refire2;
+			self.electro_secondarytime = time + autocvar_g_balance_electro_secondary_refire2 * W_WeaponRateFactor();
 		}
 	}
 	else if (req == WR_PRECACHE)

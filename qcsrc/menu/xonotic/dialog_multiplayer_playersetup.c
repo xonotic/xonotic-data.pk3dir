@@ -46,7 +46,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3.0, box = makeXonoticInputBox(1, "_cl_name"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
-			box.maxLength = -63; // negativ means encoded length in bytes
+			box.maxLength = -127; // negative means encoded length in bytes
 			label.textEntity = box;
 	me.TR(me);
 		me.TD(me, 5, 1, e = makeXonoticColorpicker(box));
@@ -141,7 +141,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TDempty(me, 0.3);
 		me.TD(me, 1, 0.7, e = makeXonoticCheckBox(0, "crosshair_color_per_weapon", "Per weapon"));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_dot", "Enable centered dot"));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_dot", "Enable center dot"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, "Size:"));

@@ -137,7 +137,7 @@ vector GetCurrentFov(float fov)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
-	if((getstati(STAT_ACTIVEWEAPON) == WEP_NEX && nex_scope) || (getstati(STAT_ACTIVEWEAPON) == WEP_CAMPINGRIFLE && campingrifle_scope)) // do NOT use switchweapon here
+	if((getstati(STAT_ACTIVEWEAPON) == WEP_NEX && nex_scope) || (getstati(STAT_ACTIVEWEAPON) == WEP_SNIPERRIFLE && sniperrifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -274,7 +274,7 @@ float TrueAimCheck()
 		case WEP_MINSTANEX:
 			mv = MOVE_NORMAL;
 			break;
-		case WEP_CAMPINGRIFLE:
+		case WEP_SNIPERRIFLE:
 			ta = trueaim_rifle;
 			mv = MOVE_NORMAL;
 			if(zoomscript_caught)
@@ -572,7 +572,7 @@ void CSQC_UpdateView(float w, float h)
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
-	if(autocvar_r_fakelight >= 2 || autocvar_r_fullbright >= 1)
+	if(autocvar_r_fakelight >= 2 || autocvar_r_fullbright)
 	if not(serverflags & SERVERFLAG_ALLOW_FULLBRIGHT)
 	{
 		// apply night vision effect
@@ -628,11 +628,11 @@ void CSQC_UpdateView(float w, float h)
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || getstati(STAT_HEALTH) <= 0)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
-	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_CAMPINGRIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
+	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_SNIPERRIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
 		reticle_type = 2; // nex zoom
 	else if(button_zoom || zoomscript_caught)
 		reticle_type = 1; // normal zoom
-	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_CAMPINGRIFLE && button_attack2)
+	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_SNIPERRIFLE && button_attack2)
 		reticle_type = 2; // nex zoom
 
 	if(autocvar_cl_reticle_stretch)
@@ -676,7 +676,7 @@ void CSQC_UpdateView(float w, float h)
 		// fade out
 		myhealth_flash = max(0, myhealth_flash - autocvar_hud_damage_fade_rate * frametime);
 		// add new damage
-		myhealth_flash = bound(0, myhealth_flash + max(0, myhealth_prev - myhealth) * autocvar_hud_damage_factor, autocvar_hud_damage_maxalpha);
+		myhealth_flash = bound(0, myhealth_flash + dmg_take * autocvar_hud_damage_factor, autocvar_hud_damage_maxalpha);
 
 		float pain_threshold, pain_threshold_lower, pain_threshold_lower_health;
 		pain_threshold = autocvar_hud_damage_pain_threshold;
@@ -941,12 +941,12 @@ void CSQC_UpdateView(float w, float h)
 				nex_charge_movingavg = nex_charge;
 
 			// ring around crosshair representing bullets left in camping rifle clip
-			if (activeweapon == WEP_CAMPINGRIFLE && cr_maxbullets)
+			if (activeweapon == WEP_SNIPERRIFLE && cr_maxbullets)
 			{
 				bullets = getstati(STAT_BULLETS_LOADED);
 				f = bound(0, bullets / cr_maxbullets, 1);
 
-				a = autocvar_crosshair_ring_campingrifle_alpha;
+				a = autocvar_crosshair_ring_sniperrifle_alpha;
 				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 			}
 			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
