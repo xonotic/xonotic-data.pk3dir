@@ -848,38 +848,44 @@ void CSQC_UpdateView(float w, float h)
 			{
 				local float x = getstati(STAT_HEALTH);
 				
-				//This part was shamelessly stolen from Nexuiz sources
-				//Do not want to put this into a function because it's used just in one place and is called too often
+				//x = red
+				//y = green
+				//z = blue
 				
-				if(x > 200) {
+				wcross_color_z = 0;
+				
+				if(x > 200)
+				{
 					wcross_color_x = 0;
 					wcross_color_y = 1;
-					wcross_color_z = 0;
 				}
-				else if(x > 150) {
-					wcross_color_x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
-					wcross_color_y = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
-					wcross_color_z = 0;
+				else if(x > 150)
+				{
+					wcross_color_x = 0.4 - (x-150)*0.02 * 0.4;
+					wcross_color_y = 0.9 + (x-150)*0.02 * 0.1;
 				}
-				else if(x > 100) {
-					wcross_color_x = 1 - (x-100)*0.02 * 0.6; //red value between 1 -> 0.4
-					wcross_color_y = 1 - (x-100)*0.02 * 0.1; // green value between 1 -> 0.9
-					wcross_color_z = 1 - (x-100)*0.02; // blue value between 1 -> 0
+				else if(x > 100)
+				{
+					wcross_color_x = 1 - (x-100)*0.02 * 0.6;
+					wcross_color_y = 1 - (x-100)*0.02 * 0.1;
+					wcross_color_z = 1 - (x-100)*0.02;
 				}
-				else if(x > 50) {
+				else if(x > 50)
+				{
 					wcross_color_x = 1;
 					wcross_color_y = 1;
-					wcross_color_z = 0.2 + (x-50)*0.02 * 0.8; // blue value between 0.2 -> 1
+					wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;  
 				}
-				else if(x > 20) {
+				else if(x > 20)
+				{
 					wcross_color_x = 1;
-					wcross_color_y = (x-20)*90/27/100; // green value between 0 -> 1
-					wcross_color_z = (x-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
+					wcross_color_y = (x-20)*90/27/100;
+					wcross_color_z = (x-20)*90/27/100 * 0.2;
 				}
-				else {
+				else
+				{
 					wcross_color_x = 1;
 					wcross_color_y = 0;
-					wcross_color_z = 0;
 				}
 			}
 			else

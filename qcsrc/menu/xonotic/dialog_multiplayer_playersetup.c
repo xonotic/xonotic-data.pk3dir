@@ -140,7 +140,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2/3, e = makeXonoticCheckBox(0, "crosshair_color_by_health", "By health"));
 		setDependent(e, "crosshair_color_per_weapon", 0, 0);
 	me.TR(me);
-		me.TDempty(me, 0.5);
+		me.TDempty(me, 0.4);
 		me.TD(me, 2, 1.8, e = makeXonoticColorpickerString("crosshair_color", "crosshair_color"));
 		setDependentAND(e, "crosshair_color_per_weapon", 0, 0, "crosshair_color_by_health", 0, 0);
 	me.TR(me);
