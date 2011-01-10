@@ -280,3 +280,4 @@ float autocvar_vid_conheight;
 float autocvar_vid_conwidth;
 float autocvar_vid_pixelheight;
 float autocvar_viewsize;
+float autocvar_crosshair_color_by_health;
