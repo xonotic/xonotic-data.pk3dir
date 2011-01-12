@@ -18,53 +18,6 @@ entity makeXonoticGametypeList();
 
 #ifdef IMPLEMENTATION
 
-#define GAMETYPES \
-	GAMETYPE(MAPINFO_TYPE_ARENA, "Arena") \
-	GAMETYPE(MAPINFO_TYPE_ASSAULT, "Assault") \
-	GAMETYPE(MAPINFO_TYPE_CTF, "Capture The Flag") \
-	GAMETYPE(MAPINFO_TYPE_CA, "Clan Arena") \
-	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, "Deathmatch") \
-	GAMETYPE(MAPINFO_TYPE_DOMINATION, "Domination") \
-	GAMETYPE(MAPINFO_TYPE_FREEZETAG, "Freeze Tag") \
-	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, "Keepaway") \
-	GAMETYPE(MAPINFO_TYPE_KEYHUNT, "Key Hunt") \
-	GAMETYPE(MAPINFO_TYPE_LMS, "Last Man Standing") \
-	GAMETYPE(MAPINFO_TYPE_NEXBALL, "Nexball") \
-	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, "Onslaught") \
-	GAMETYPE(MAPINFO_TYPE_RACE, "Race") \
-	GAMETYPE(MAPINFO_TYPE_CTS, "Race CTS") \
-	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, "Runematch") \
-	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, "Team Deathmatch") \
-	/* nothing */
-
-float GameType_GetID(float cnt)
-{
-	float i;
-	i = 0;
-#define GAMETYPE(id,name) if(i++ == cnt) return id;
-	GAMETYPES
-#undef GAMETYPE
-	return 0;
-}
-string GameType_GetName(float cnt)
-{
-	float i;
-	i = 0;
-#define GAMETYPE(id,name) if(i++ == cnt) return name;
-	GAMETYPES
-#undef GAMETYPE
-	return "@!#%'n Tuba Throwing";
-}
-float GameType_GetCount()
-{
-	float i;
-	i = 0;
-#define GAMETYPE(id,name) ++i;
-	GAMETYPES
-#undef GAMETYPE
-	return i;
-}
-
 entity makeXonoticGametypeList(void)
 {
 	entity me;
