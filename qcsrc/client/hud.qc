@@ -427,10 +427,17 @@ if(highlightedPanel == hud_configure_active_panel && autocvar__hud_configure)\
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, float vertical, float baralign, vector theColor, float theAlpha, float drawflag)
 {
-	if(length_ratio <= 0 || !theAlpha)
+	if(!length_ratio || !theAlpha)
 		return;
 	if(length_ratio > 1)
 		length_ratio = 1;
+	if (baralign == 3)
+	{
+		if(length_ratio < -1)
+			length_ratio = -1;
+	}
+	else if(length_ratio < 0)
+		return;
 
 	vector square;
 	vector width, height;
@@ -444,6 +451,17 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 			theOrigin_y += (1 - length_ratio) * theSize_y;
         else if (baralign == 2) // center align
             theOrigin_y += 0.5 * (1 - length_ratio) * theSize_y;
+        else if (baralign == 3) // center align, positive values down, negative up
+		{
+			theSize_y *= 0.5;
+			if (length_ratio > 0)
+				theOrigin_y += theSize_y;
+			else
+			{
+				theOrigin_y += (1 + length_ratio) * theSize_y;
+				length_ratio = -length_ratio;
+			}
+		}
 		theSize_y *= length_ratio;
 
 		vector bH;
@@ -475,6 +493,17 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 			theOrigin_x += (1 - length_ratio) * theSize_x;
         else if (baralign == 2) // center align
             theOrigin_x += 0.5 * (1 - length_ratio) * theSize_x;
+        else if (baralign == 3) // center align, positive values on the right, negative on the left
+		{
+			theSize_x *= 0.5;
+			if (length_ratio > 0)
+				theOrigin_x += theSize_x;
+			else
+			{
+				theOrigin_x += (1 + length_ratio) * theSize_x;
+				length_ratio = -length_ratio;
+			}
+		}
 		theSize_x *= length_ratio;
 
 		vector bW;
@@ -4273,6 +4302,8 @@ void HUD_Physics(void)
 		speed_baralign = (autocvar_hud_panel_physics_baralign == 2);
 		acceleration_baralign = (autocvar_hud_panel_physics_baralign == 3);
 	}
+	if (autocvar_hud_panel_physics_progressbar_acceleration_mode == 0)
+		acceleration_baralign = 3; //override hud_panel_physics_baralign value for acceleration
 
 	//draw speed
 	if(speed && autocvar_hud_panel_physics_progressbar)
@@ -4372,7 +4403,7 @@ void HUD_Physics(void)
 			HUD_Panel_GetProgressBarColor(acceleration_neg);
 		else
 			HUD_Panel_GetProgressBarColor(acceleration);
-		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset, panel_size, "progressbar", fabs(acceleration)/autocvar_hud_panel_physics_acceleration_max, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset, panel_size, "progressbar", acceleration/autocvar_hud_panel_physics_acceleration_max, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	drawstring_aspect(panel_pos + acceleration_offset, ftos_decimals(acceleration, 3), panel_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }

@@ -189,6 +189,7 @@ float autocvar_hud_panel_notify_flip;
 float autocvar_hud_panel_notify_print;
 float autocvar_hud_panel_notify_time;
 float autocvar_hud_panel_physics;
+float autocvar_hud_panel_physics_progressbar_acceleration_mode;
 float autocvar_hud_panel_physics_acceleration_max;
 float autocvar_hud_panel_physics_acceleration_z;
 float autocvar_hud_panel_physics_baralign;
