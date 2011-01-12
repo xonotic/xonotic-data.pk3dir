@@ -76,6 +76,7 @@ void XonoticGametypeList_configureXonoticGametypeList(entity me)
 {
 	me.loadCvars(me);
 	me.configureXonoticListBox(me);
+	me.nItems = GameType_GetCount();
 }
 void XonoticGametypeList_setSelected(entity me, float i)
 {
