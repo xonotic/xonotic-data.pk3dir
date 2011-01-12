@@ -86,7 +86,6 @@ void XonoticServerCreateTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "bot_number", 0, -1);
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticButton("Mutators...", '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.mutatorsDialog;
