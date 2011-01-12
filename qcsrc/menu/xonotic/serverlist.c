@@ -502,7 +502,7 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.columnPingSize = me.realFontSize_x * 3;
 	me.columnMapSize = me.realFontSize_x * 10;
 	me.columnTypeSize = me.realFontSize_x * 4;
-	me.columnPlayersSize = me.realFontSize_x * 4;
+	me.columnPlayersSize = me.realFontSize_x * 5;
 	me.columnNameSize = 1 - me.columnPlayersSize - me.columnMapSize - me.columnPingSize - me.columnIconsSize - me.columnTypeSize - 5 * me.realFontSize_x;
 	me.columnPingOrigin = me.columnIconsOrigin + me.columnIconsSize + me.realFontSize_x;
 	me.columnNameOrigin = me.columnPingOrigin + me.columnPingSize + me.realFontSize_x;
