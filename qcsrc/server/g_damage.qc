@@ -1240,6 +1240,10 @@ void Fire_ApplyDamage(entity e)
 	if(e.watertype != CONTENT_LAVA)
 		e.fire_endtime = 0;
 
+	// ice stops fire
+	if(e.freezetag_frozen)
+		e.fire_endtime = 0;
+
 	t = min(frametime, e.fire_endtime - time);
 	d = e.fire_damagepersec * t;
 
