@@ -19,22 +19,22 @@ entity makeXonoticGametypeList();
 #ifdef IMPLEMENTATION
 
 #define GAMETYPES \
-	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, "Deathmatch") \
-	GAMETYPE(MAPINFO_TYPE_LMS, "LMS") \
 	GAMETYPE(MAPINFO_TYPE_ARENA, "Arena") \
-	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, "Runematch") \
-	GAMETYPE(MAPINFO_TYPE_RACE, "Race") \
-	GAMETYPE(MAPINFO_TYPE_CTS, "Race CTS") \
-	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, "TDM") \
-	GAMETYPE(MAPINFO_TYPE_CTF, "CTF") \
-	GAMETYPE(MAPINFO_TYPE_CA, "Clan Arena") \
-	GAMETYPE(MAPINFO_TYPE_DOMINATION, "Domination") \
-	GAMETYPE(MAPINFO_TYPE_KEYHUNT, "Key Hunt") \
 	GAMETYPE(MAPINFO_TYPE_ASSAULT, "Assault") \
-	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, "Onslaught") \
-	GAMETYPE(MAPINFO_TYPE_NEXBALL, "Nexball") \
+	GAMETYPE(MAPINFO_TYPE_CTF, "Capture The Flag") \
+	GAMETYPE(MAPINFO_TYPE_CA, "Clan Arena") \
+	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, "Deathmatch") \
+	GAMETYPE(MAPINFO_TYPE_DOMINATION, "Domination") \
 	GAMETYPE(MAPINFO_TYPE_FREEZETAG, "Freeze Tag") \
 	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, "Keepaway") \
+	GAMETYPE(MAPINFO_TYPE_KEYHUNT, "Key Hunt") \
+	GAMETYPE(MAPINFO_TYPE_LMS, "Last Man Standing") \
+	GAMETYPE(MAPINFO_TYPE_NEXBALL, "Nexball") \
+	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, "Onslaught") \
+	GAMETYPE(MAPINFO_TYPE_RACE, "Race") \
+	GAMETYPE(MAPINFO_TYPE_CTS, "Race CTS") \
+	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, "Runematch") \
+	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, "Team Deathmatch") \
 	/* nothing */
 
 float GameType_GetID(float cnt)
@@ -86,9 +86,6 @@ void XonoticGametypeList_setSelected(entity me, float i)
 
 void XonoticGametypeList_loadCvars(entity me)
 {
-	if not(me.cvarName)
-		return;
-
 	float t;
 	t = MapInfo_CurrentGametype();
 	float i;
@@ -96,7 +93,13 @@ void XonoticGametypeList_loadCvars(entity me)
 		if(t == GameType_GetID(i))
 			break;
 	if(i >= GameType_GetCount())
-		i = 0;
+	{
+		for(i = 0; i < GameType_GetCount(); ++i)
+			if(t == MAPINFO_TYPE_DEATHMATCH)
+				break;
+		if(i >= GameType_GetCount())
+			i = 0;
+	}
 	me.setSelected(me, i);
 	// do we need this: me.parent.gameTypeChangeNotify(me.parent); // to make sure
 }
