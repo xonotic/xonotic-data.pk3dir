@@ -83,7 +83,7 @@ void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 		if(r == r0)
 			continue;
 		r0 = r;
-		if(r_x < 640 || r_y < 400)
+		if(r_x < 640 || r_y < 480)
 			continue;
 		me.addResolution(me, r_x, r_y, r_z);
 	}
