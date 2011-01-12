@@ -602,7 +602,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 								targ.dmg_save += v_y;
 								targ.dmg_inflictor = inflictor;
 								damage = 0;
-								force = '0 0 0';
+                                if(!autocvar_g_friendlyfire_virtual_force)
+                                    force = '0 0 0';
 							}
 						}
 						else
@@ -1026,33 +1027,47 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 						// laser force adjustments :P
 						if(DEATH_WEAPONOF(deathtype) == WEP_LASER)
 						{
-							vector vel;
+                            if (targ == attacker)
+                            {
+                                vector vel;
 
-							float force_zscale;
-							float force_velocitybiasramp;
-							float force_velocitybias;
+                                float force_zscale;
+                                float force_velocitybiasramp;
+                                float force_velocitybias;
 
-							force_velocitybiasramp = autocvar_sv_maxspeed;
-							if(deathtype & HITTYPE_SECONDARY)
-							{
-								force_zscale = autocvar_g_balance_laser_secondary_force_zscale;
-								force_velocitybias = autocvar_g_balance_laser_secondary_force_velocitybias;
-							}
-							else
-							{
-								force_zscale = autocvar_g_balance_laser_primary_force_zscale;
-								force_velocitybias = autocvar_g_balance_laser_primary_force_velocitybias;
-							}
+                                force_velocitybiasramp = autocvar_sv_maxspeed;
+                                if(deathtype & HITTYPE_SECONDARY)
+                                {
+                                    force_zscale = autocvar_g_balance_laser_secondary_force_zscale;
+                                    force_velocitybias = autocvar_g_balance_laser_secondary_force_velocitybias;
+                                }
+                                else
+                                {
+                                    force_zscale = autocvar_g_balance_laser_primary_force_zscale;
+                                    force_velocitybias = autocvar_g_balance_laser_primary_force_velocitybias;
+                                }
 
-							vel = targ.velocity;
-							vel_z = 0;
-							vel = normalize(vel) * bound(0, vlen(vel) / force_velocitybiasramp, 1) * force_velocitybias;
-							force =
-								vlen(force)
-								*
-								normalize(normalize(force) + vel);
+                                vel = targ.velocity;
+                                vel_z = 0;
+                                vel = normalize(vel) * bound(0, vlen(vel) / force_velocitybiasramp, 1) * force_velocitybias;
+                                force =
+                                    vlen(force)
+                                    *
+                                    normalize(normalize(force) + vel);
 
-							force_z *= force_zscale;
+                                force_z *= force_zscale;
+                            }
+                            else
+                            {
+                                if(deathtype & HITTYPE_SECONDARY)
+                                {
+                                    force *= autocvar_g_balance_laser_secondary_force_other_scale;
+                                }
+                                else
+                                {
+                                    force *= autocvar_g_balance_laser_primary_force_other_scale;
+                                }
+                            }
 						}
 
 						//if (targ == attacker)
