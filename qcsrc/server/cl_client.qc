@@ -1368,7 +1368,7 @@ void ClientKill (void)
 	{
 		// do nothing
 	}
-    else if(g_freezetag && self.freezetag_frozen == 1)
+    else if(self.freezetag_frozen)
     {
         // do nothing
     }
