@@ -49,7 +49,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Geometry detail:"));
+		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, "Geometry detail:"));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("r_subdivisions_tolerance"));
 			e.addValue(e, "Lowest", "16");
 			e.addValue(e, "Low", "8");
@@ -59,7 +59,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, "Insane", "1");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Antialiasing:"));
+		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, "Antialiasing:"));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("vid_samples"));
 			e.addValue(e, "Disabled", "1");
 			e.addValue(e, "2x", "2");
@@ -67,7 +67,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Texture resolution:"));
+		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, "Texture resolution:"));
 		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
 			if(cvar("developer"))
 				e.addValue(e, "Leet", "1337");
@@ -97,7 +97,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			}
 		}
 	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Anisotropy:"));
+	me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, "Anisotropy:"));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("gl_texture_anisotropy"));
 			e.addValue(e, "Disabled", "1");
 			e.addValue(e, "2x", "2");
@@ -107,23 +107,23 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Particle quality:"));
+		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, "Particle quality:"));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.2, 1.0, 0.1, "cl_particles_quality"));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Particle dist.:"));
+		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, "Particle distance:"));
 		me.TD(me, 1, 2, e = makeXonoticSlider(500, 2000, 100, "r_drawparticles_drawdistance"));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_decals", "Decals"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, "Distance:"));
+		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, "Distance:"));
 			setDependent(e, "cl_decals", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(200, 500, 20, "r_drawdecals_drawdistance"));
 			setDependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-	    me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, "Time:"));
+	    me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, "Time:"));
 	        setDependent(e, "cl_decals", 1, 1);
 	    me.TD(me, 1, 2, e = makeXonoticSlider(1, 20, 1, "cl_decals_time"));
 	        setDependent(e, "cl_decals", 1, 1);

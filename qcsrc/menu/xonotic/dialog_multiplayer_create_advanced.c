@@ -6,7 +6,7 @@ CLASS(XonoticAdvancedDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticAdvancedDialog, title, string, "Advanced server settings")
 	ATTRIB(XonoticAdvancedDialog, color, vector, SKINCOLOR_DIALOG_ADVANCED)
 	ATTRIB(XonoticAdvancedDialog, intendedWidth, float, 0.5)
-	ATTRIB(XonoticAdvancedDialog, rows, float, 14)
+	ATTRIB(XonoticAdvancedDialog, rows, float, 17)
 	ATTRIB(XonoticAdvancedDialog, columns, float, 3)
 	ATTRIB(XonoticAdvancedDialog, refilterEntity, entity, NULL)
 ENDCLASS(XonoticAdvancedDialog)
@@ -61,6 +61,22 @@ void XonoticAdvancedDialog_fill(entity me)
 			e.addValue(e, "3 teams", "3");
 			e.addValue(e, "4 teams", "4");
 			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Map voting:"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("g_maplist_votable"));
+			e.addValue(e, "No voting", "0");
+			e.addValue(e, "2 choices", "2");
+			e.addValue(e, "3 choices", "3");
+			e.addValue(e, "4 choices", "4");
+			e.addValue(e, "5 choices", "5");
+			e.addValue(e, "6 choices", "6");
+			e.addValue(e, "7 choices", "7");
+			e.addValue(e, "8 choices", "8");
+			e.addValue(e, "9 choices", "9");
+			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(0.5, 0, "sv_vote_simple_majority_factor", "Simple majority wins vcall"));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton("OK", '0 0 0'));
