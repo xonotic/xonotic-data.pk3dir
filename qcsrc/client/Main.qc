@@ -1099,6 +1099,8 @@ void Ent_Init()
 
 	cr_maxbullets = ReadByte();
 
+	g_trueaim_minrange = ReadCoord();
+
 	if(!postinit)
 		PostInit();
 }

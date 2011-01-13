@@ -158,6 +158,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	v_right = vr;
 	v_up = vu;
 
+	// un-adjust trueaim if shotend is too close
+	if(vlen(w_shotend - (ent.origin + ent.view_ofs)) < autocvar_g_trueaim_minrange)
+		w_shotend = ent.origin + ent.view_ofs + s_forward * autocvar_g_trueaim_minrange;
+
 	// track max damage
 	if(accuracy_canbegooddamage(ent))
 		accuracy_add(ent, ent.weapon, maxdamage, 0);

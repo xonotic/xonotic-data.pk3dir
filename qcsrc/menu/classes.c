@@ -58,7 +58,7 @@
 #include "xonotic/dialog_multiplayer_create_mutators.c"
 #include "xonotic/dialog_multiplayer_create_advanced.c"
 #include "xonotic/dialog_multiplayer_create_mapinfo.c"
-#include "xonotic/gametypebutton.c"
+#include "xonotic/gametypelist.c"
 #include "xonotic/maplist.c"
 #include "xonotic/skinlist.c"
 #include "xonotic/image.c"
