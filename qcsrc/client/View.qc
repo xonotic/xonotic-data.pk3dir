@@ -306,6 +306,9 @@ float TrueAimCheck()
 	traceline(view_origin, view_origin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
 	trueaimpoint = trace_endpos;
 
+	if(vlen(trueaimpoint - view_origin) < g_trueaim_minrange)
+		trueaimpoint = view_origin + view_forward * g_trueaim_minrange;
+
 	if(vecs_x > 0)
 		vecs_y = -vecs_y;
 	else
