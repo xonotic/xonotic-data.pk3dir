@@ -624,6 +624,7 @@ float autocvar_g_balance_tuba_refire;
 float autocvar_g_balance_uzi_bulletconstant;
 float autocvar_g_balance_uzi_burst;
 float autocvar_g_balance_uzi_burst_ammo;
+float autocvar_g_balance_uzi_burst_animtime;
 float autocvar_g_balance_uzi_burst_refire;
 float autocvar_g_balance_uzi_burst_refire2;
 float autocvar_g_balance_uzi_burst_spread;
