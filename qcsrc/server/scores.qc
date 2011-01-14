@@ -150,8 +150,11 @@ void ScoreInfo_SetLabel_PlayerScore(float i, string label, float scoreflags)
 		scores_primary = scores[i];
 		scores_flags_primary = scoreflags;
 	}
-	PlayerStats_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
-	PlayerStats_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+	if(label != "")
+	{
+		PlayerStats_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+	}
 }
 
 void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
