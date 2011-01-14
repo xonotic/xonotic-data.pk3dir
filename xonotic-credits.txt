@@ -63,6 +63,7 @@ Kristian "morfar" Johansson
 kojn
 Maik "SavageX" Merten
 MrBougo
+Ruszkai "C.Brutail" Ákos
 Samual Lenks
 Stephan "esteel" Stahl
 Wolfgang "Blub\0" Bumiller
