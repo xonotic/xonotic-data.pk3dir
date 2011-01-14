@@ -1595,6 +1595,7 @@ void NextLevel()
 	VoteReset();
 
 	DumpStats(TRUE);
+	PlayerStats_EndMatch();
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");

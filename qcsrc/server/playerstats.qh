@@ -1,6 +1,9 @@
 // time the player was alive and kicking
-string PLAYERSTATS_ALIVETIME = "alivetime";
-string PLAYERSTATS_KILLS     = "kills";
+string PLAYERSTATS_ALIVETIME  = "alivetime";
+string PLAYERSTATS_WINS = "wins";
+string PLAYERSTATS_MATCHES = "matches";
+string PLAYERSTATS_TOTAL = "total-";
+string PLAYERSTATS_SCOREBOARD = "scoreboard-";
 
 // delay map switch until this is set
 float playerstats_waitforme;
@@ -25,3 +28,6 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data);
 
 // call this whenever a player leaves
 void PlayerStats_AddGlobalInfo(entity p);
+
+// call this at the end of the match
+void PlayerStats_EndMatch()

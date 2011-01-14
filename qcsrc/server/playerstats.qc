@@ -3,6 +3,7 @@ string playerstats_last;
 string events_last;
 .float playerstats_addedglobalinfo;
 float playerstats_requested;
+.string playerstats_id;
 
 void PlayerStats_Init()
 {
@@ -17,16 +18,24 @@ void PlayerStats_Init()
 		playerstats_waitforme = FALSE; // must wait for it at match end
 	
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
-	PlayerStats_AddEvent(PLAYERSTATS_KILLS);
+	PlayerStats_AddEvent(PLAYERSTATS_WINS);
+	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
 }
 
 void PlayerStats_AddPlayer(entity e)
 {
-	if(!e.crypto_idfp || playerstats_db < 0)
+	if(playerstats_db < 0)
 		return;
+
+	if(e.crypto_idfp != "")
+		e.playerstats_id = strzone(e.crypto_idfp);
+	else if(clienttype(e) == CLIENTTYPE_BOT)
+		e.playerstats_id = strzone(sprintf("bot#%d", e.playerid));
+	else
+		e.playerstats_id = strzone(sprintf("player#%d", e.playerid));
 	
 	string key;
-	key = sprintf("%s:*", e.crypto_idfp);
+	key = sprintf("%s:*", e.playerstats_id);
 	
 	string p;
 	p = db_get(playerstats_db, key);
@@ -39,7 +48,7 @@ void PlayerStats_AddPlayer(entity e)
 		}
 		else
 			db_put(playerstats_db, key, "#");
-		playerstats_last = strzone(e.crypto_idfp);
+		playerstats_last = strzone(e.playerstats_id);
 	}
 }
 
@@ -68,12 +77,12 @@ void PlayerStats_AddEvent(string event_id)
 
 void PlayerStats_Event(entity e, string event_id, float value)
 {
-	if(!e.crypto_idfp || playerstats_db < 0)
+	if(!e.playerstats_id || playerstats_db < 0)
 		return;
 	
 	string key;
 	float val;
-	key = sprintf("%s:%s", e.crypto_idfp, event_id);
+	key = sprintf("%s:%s", e.playerstats_id, event_id);
 	val = stof(db_get(playerstats_db, key));
 	val += value;
 	db_put(playerstats_db, key, ftos(val));
@@ -127,6 +136,12 @@ void PlayerStats_Shutdown()
 		}
 		bufstr_set(b, i++, "");
 
+		if(autocvar_g_playerstats_debug)
+		{
+			for(i = 0; i < buf_getsize(b); ++i)
+				print(bufstr_get(b, i), "\n");
+		}
+
 		if(crypto_uri_postbuf(uri, URI_GET_PLAYERSTATS_SENT, "text/plain", "\n", b, 0))
 			playerstats_requested = TRUE;
 		else
@@ -146,14 +161,31 @@ void PlayerStats_AddGlobalInfo(entity p)
 {
 	if(playerstats_db < 0)
 		return;
-	if(!p.crypto_idfp || playerstats_db < 0)
+	if(!p.playerstats_id || playerstats_db < 0)
 		return;
 	p.playerstats_addedglobalinfo = TRUE;
 
 	// add global info!
 	if(p.alivetime)
 		PlayerStats_Event(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
+
+	if(p.alivetime)
+		PlayerStats_Event(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
 	
 	if(p.cvar_cl_allow_uid2name == 1)
-		db_put(playerstats_db, sprintf("%s:_netname", p.crypto_idfp), p.netname);
+		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
+
+	strunzone(p.playerstats_id);
+	p.playerstats_id = string_null;
+}
+
+void PlayerStats_EndMatch()
+{
+	entity p;
+	FOR_EACH_PLAYER(p)
+	{
+		PlayerScore_PlayerStats(p);
+		PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
+		PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
+	}
 }
