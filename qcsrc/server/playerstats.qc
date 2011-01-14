@@ -131,7 +131,7 @@ void PlayerStats_Shutdown()
 			{
 				float v;
 				v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
-				bufstr_set(b, i++, sprintf("e %s %f", e, v));
+				bufstr_set(b, i++, sprintf("e %s %g", e, v));
 			}
 		}
 		bufstr_set(b, i++, "");
