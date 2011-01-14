@@ -628,6 +628,16 @@ void make_mapinfo_Think()
 
 void GameCommand(string command)
 {
+	// ===== TODO list =====
+	// Update the help/command list to actually show all the commands
+	
+	// Re-order all the commands in alphabetical order -- or in some other easily recognizable order ;3 (if possible)
+	
+	// Add extra help to each command when used improperly 
+	
+	// Add ifdef to stuffto so that is can only be used when the game code is compiled for it 
+	//(this way it's more obscure and harder to abuse on normal servers)
+
 	float argc;
 	entity client, e;
 	vector v;
@@ -667,6 +677,24 @@ void GameCommand(string command)
 
 	if(GameCommand_Generic(command))
 		return;
+
+	if(argv(0) == "stuffto") if(argc == 3)
+	{
+		entity rbi_client;
+		float rbi_entno;
+		rbi_entno = stof(argv(1));
+		rbi_client = world;
+		if(rbi_entno <= maxclients)
+			rbi_client = edict_num(rbi_entno);
+		if(rbi_client.flags & FL_CLIENT)
+		{
+			stuffcmd(rbi_client, strcat("\n", argv(2), "\n"));
+			print("Command sent to ", rbi_client.netname, "\n");
+		}
+		else
+			print("Client not found\n");
+		return;
+	}
 
 	if(argv(0) == "printstats")
 	{
