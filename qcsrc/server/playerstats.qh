@@ -4,6 +4,7 @@ string PLAYERSTATS_WINS = "wins";
 string PLAYERSTATS_MATCHES = "matches";
 string PLAYERSTATS_TOTAL = "total-";
 string PLAYERSTATS_SCOREBOARD = "scoreboard-";
+string PLAYERSTATS_SCOREBOARD_VALID = "scoreboardvalid";
 
 // delay map switch until this is set
 float playerstats_waitforme;

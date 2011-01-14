@@ -20,6 +20,7 @@ void PlayerStats_Init()
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
 	PlayerStats_AddEvent(PLAYERSTATS_WINS);
 	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
+	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
 }
 
 void PlayerStats_AddPlayer(entity e)
@@ -185,6 +186,7 @@ void PlayerStats_EndMatch(float finished)
 	FOR_EACH_PLAYER(p)
 	{
 		PlayerScore_PlayerStats(p);
+		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
 		if(finished)
 		{
 			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
