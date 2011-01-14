@@ -1523,11 +1523,6 @@ void DumpStats(float final)
 		fputs(file, ":end\n");
 		fclose(file);
 	}
-
-	// send statistics
-	FOR_EACH_CLIENT(e)
-		PlayerStats_AddGlobalInfo(e);
-	PlayerStats_Shutdown();
 }
 
 void FixIntermissionClient(entity e)
@@ -1595,7 +1590,13 @@ void NextLevel()
 	VoteReset();
 
 	DumpStats(TRUE);
-	PlayerStats_EndMatch();
+
+	// send statistics
+	entity e;
+	PlayerStats_EndMatch(1);
+	FOR_EACH_CLIENT(e)
+		PlayerStats_AddGlobalInfo(e);
+	PlayerStats_Shutdown();
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
@@ -2941,6 +2942,7 @@ void SV_Shutdown()
 		print("Saving persistent data...\n");
 		Ban_SaveBans();
 
+		PlayerStats_EndMatch(0);
 		FOR_EACH_CLIENT(e)
 			PlayerStats_AddGlobalInfo(e);
 		PlayerStats_Shutdown();

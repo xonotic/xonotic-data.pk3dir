@@ -179,13 +179,16 @@ void PlayerStats_AddGlobalInfo(entity p)
 	p.playerstats_id = string_null;
 }
 
-void PlayerStats_EndMatch()
+void PlayerStats_EndMatch(float finished)
 {
 	entity p;
 	FOR_EACH_PLAYER(p)
 	{
 		PlayerScore_PlayerStats(p);
-		PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
-		PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
+		if(finished)
+		{
+			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
+			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
+		}
 	}
 }

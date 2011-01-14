@@ -30,4 +30,4 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data);
 void PlayerStats_AddGlobalInfo(entity p);
 
 // call this at the end of the match
-void PlayerStats_EndMatch()
+void PlayerStats_EndMatch(float finished);
