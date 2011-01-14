@@ -245,6 +245,7 @@ void PlayerScore_Clear(entity player)
 
 	if(teamscores_entities_count)
 		return;
+
 	if(g_lms) return;
 	if(g_arena || g_ca) return;
 	if(g_race && !g_race_qualifying) return;
@@ -256,6 +257,7 @@ void PlayerScore_Clear(entity player)
 			if(scores_label[i] != "")
 				sk.SendFlags |= pow(2, i);
 		sk.(scores[i]) = 0;
+		// do NOT clear scores_accumulated!
 	}
 }
 
@@ -274,6 +276,7 @@ void Score_ClearAll()
 				if(scores_label[i] != "")
 					sk.SendFlags |= pow(2, i);
 			sk.(scores[i]) = 0;
+			// do NOT clear scores_accumulated!
 		}
 	}
 	for(t = 0; t < 16; ++t)
@@ -330,6 +333,7 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	if(score)
 		if(scores_label[scorefield] != "")
 			s.SendFlags |= pow(2, scorefield);
+	s.(scores_accumulated[scorefield]) += score;
 	return (s.(scores[scorefield]) += score);
 }
 
