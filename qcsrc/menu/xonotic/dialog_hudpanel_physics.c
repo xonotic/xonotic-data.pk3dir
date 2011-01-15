@@ -91,7 +91,7 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 //speed
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Speed:"));
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_physics_speed_z", "Include vertical speed"));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_physics_speed_vertical", "Include vertical speed"));
 	// me.TR(me);
 		// me.TDempty(me, 0.2);
 		// me.TD(me, 1, 1.8, e = makeXonoticTextLabel(0, "Full status bar at:"));
@@ -120,7 +120,7 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 //acceleration
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Acceleration:"));
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_physics_acceleration_z", "Include vertical acc."));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_physics_acceleration_vertical", "Include vertical acc."));
 	// me.TR(me);
 		// me.TDempty(me, 0.2);
 		// me.TD(me, 1, 1.8, e = makeXonoticTextLabel(0, "Full status bar at:"));

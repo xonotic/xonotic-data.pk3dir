@@ -4244,7 +4244,7 @@ void HUD_Physics(void)
 	float max_speed = floor( autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5 );
 	if (autocvar__hud_configure)
 		speed = floor( max_speed * 0.65 + 0.5 );
-	else if(autocvar_hud_panel_physics_speed_z)
+	else if(autocvar_hud_panel_physics_speed_vertical)
 		speed = floor( vlen(pmove_vel) * conversion_factor + 0.5 );
 	else
 		speed = floor( vlen(pmove_vel - pmove_vel_z * '0 0 1') * conversion_factor + 0.5 );
@@ -4256,7 +4256,7 @@ void HUD_Physics(void)
 	else
 	{
 		f = time - acc_prevtime;
-		if(autocvar_hud_panel_physics_acceleration_z)
+		if(autocvar_hud_panel_physics_acceleration_vertical)
 			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed)) * (1 / f);
 		else
 			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f);
