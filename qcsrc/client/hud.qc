@@ -4394,7 +4394,6 @@ void HUD_Physics(void)
 		else
 			top_speed = 0;
 	}
-    print(ftos(f), "\n");
 
 	//draw acceleration
 	if(acceleration && autocvar_hud_panel_physics_progressbar)
