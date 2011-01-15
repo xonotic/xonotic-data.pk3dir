@@ -367,6 +367,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					// TODO: make these print a newline if they dont
 					Send_CSQC_Centerprint(attacker, "", "", KILL_FIRST_BLOOD, MSG_KILL);
 					Send_CSQC_Centerprint(targ, "", "", KILL_FIRST_VICTIM, MSG_KILL);
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
+					PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 				}
 
 				if((autocvar_sv_fragmessage_information_typefrag) && (targ.BUTTON_CHAT)) {
@@ -412,36 +414,43 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_3, MSG_SPREE);
 					AnnounceTo(attacker, "03kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3, 1);
 				}
 				else if (attacker.killcount == 5)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_5, MSG_SPREE);
 					AnnounceTo(attacker, "05kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5, 1);
 				}
 				else if (attacker.killcount == 10)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_10, MSG_SPREE);
 					AnnounceTo(attacker, "10kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10, 1);
 				}
 				else if (attacker.killcount == 15)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_15, MSG_SPREE);
 					AnnounceTo(attacker, "15kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15, 1);
 				}
 				else if (attacker.killcount == 20)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_20, MSG_SPREE);
 					AnnounceTo(attacker, "20kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20, 1);
 				}
 				else if (attacker.killcount == 25)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_25, MSG_SPREE);
 					AnnounceTo(attacker, "25kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_25, 1);
 				}
 				else if (attacker.killcount == 30)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_30, MSG_SPREE);
 					AnnounceTo(attacker, "30kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30, 1);
 				}
 				LogDeath("frag", deathtype, attacker, targ);
 			}
@@ -459,6 +468,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			GiveFrags(targ, targ, -1, deathtype);
 			if(PlayerScore_Add(targ, SP_SCORE, 0) == -5) {
 				AnnounceTo(targ, "botlike");
+				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 			}
 			Send_KillNotification(s, msg, "", deathtype, MSG_KILL_ACTION);
 

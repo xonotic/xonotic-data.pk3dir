@@ -20,7 +20,19 @@ void PlayerStats_Init()
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
 	PlayerStats_AddEvent(PLAYERSTATS_WINS);
 	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
+	PlayerStats_AddEvent(PLAYERSTATS_JOINS);
 	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
+
+	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
+	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
+	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10);
+	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15);
+	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20);
+	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_25);
+	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30);
+	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_BOTLIKE);
+	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD);
+	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM);
 }
 
 void PlayerStats_AddPlayer(entity e)
@@ -175,6 +187,8 @@ void PlayerStats_AddGlobalInfo(entity p)
 	
 	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
+
+	PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
 	strunzone(p.playerstats_id);
 	p.playerstats_id = string_null;
