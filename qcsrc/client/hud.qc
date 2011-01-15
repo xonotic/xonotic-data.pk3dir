@@ -4255,17 +4255,17 @@ void HUD_Physics(void)
 		acceleration = autocvar_hud_panel_physics_acceleration_max * 0.3;
 	else
 	{
+		// 1 m/s = 0.0254 qu/s; 1 g = 9.80665 m/s^2
 		f = time - acc_prevtime;
 		if(autocvar_hud_panel_physics_acceleration_vertical)
-			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed)) * (1 / f);
+			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed)) * (1 / f) * (0.0254 / 9.80665);
 		else
-			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f);
+			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f) * (0.0254 / 9.80665);
 		acc_prevspeed = pmove_vel;
 		acc_prevtime = time;
 
 		f = bound(0, f * 10, 1);
 		acc_avg = acc_avg * (1 - f) + acceleration * f;
-		acceleration = acc_avg / getstatf(STAT_MOVEVARS_MAXSPEED);
 	}
 
 	//compute layout
@@ -4311,7 +4311,6 @@ void HUD_Physics(void)
 		HUD_Panel_GetProgressBarColor(speed);
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed/max_speed, 0, speed_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-
 	vector tmp_offset, tmp_size;
 	tmp_size_x = panel_size_x * 0.75;
 	tmp_size_y = panel_size_y;
@@ -4404,7 +4403,7 @@ void HUD_Physics(void)
 			HUD_Panel_GetProgressBarColor(acceleration);
 		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset, panel_size, "progressbar", acceleration/autocvar_hud_panel_physics_acceleration_max, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	drawstring_aspect(panel_pos + acceleration_offset, ftos_decimals(acceleration, 3), panel_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(panel_pos + acceleration_offset, strcat(ftos_decimals(acceleration, 2), "g"), panel_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 /*
