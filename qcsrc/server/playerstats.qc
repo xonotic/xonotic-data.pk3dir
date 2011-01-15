@@ -144,7 +144,8 @@ void PlayerStats_Shutdown()
 			{
 				float v;
 				v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
-				bufstr_set(b, i++, sprintf("e %s %g", e, v));
+				if(v != 0)
+					bufstr_set(b, i++, sprintf("e %s %g", e, v));
 			}
 		}
 		bufstr_set(b, i++, "");
@@ -188,7 +189,8 @@ void PlayerStats_AddGlobalInfo(entity p)
 	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
 
-	PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
+	if(p.alivetime > 0)
+		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
 	strunzone(p.playerstats_id);
 	p.playerstats_id = string_null;
