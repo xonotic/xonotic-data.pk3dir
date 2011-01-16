@@ -8,17 +8,12 @@ Guideline:
 - if code loads files with text, use language_filename()
 - test by:
   find . -type f -not -name \*.po -not -name \*.txt | xgettext -LC -k_ -f- gamecommand.qc
-- interesting vi macros:
+- interesting vim macros:
   :map # /"<return>
   :map ' i_(<esc>2f"a)<esc>/"<return>
 
 List of files to do:
 
-./xonotic/dialog_multiplayer.c
-./xonotic/dialog_multiplayer_create_advanced.c
-./xonotic/dialog_multiplayer_create.c
-./xonotic/dialog_multiplayer_create_mapinfo.c
-./xonotic/dialog_multiplayer_create_mutators.c
 ./xonotic/dialog_multiplayer_demo.c
 ./xonotic/dialog_multiplayer_join.c
 ./xonotic/dialog_multiplayer_join_serverinfo.c
