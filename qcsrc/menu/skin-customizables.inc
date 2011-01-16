@@ -6,7 +6,7 @@ print "\n";
 while(<DATA>)
 {
 	chomp;
-	if(/^\s*(?:SKINFLOAT|SKINVECTOR)\(([A-Z_]+), ([-'0-9. ]+)\);$/)
+	if(/^\s*(?:SKINFLOAT|SKINVECTOR)\(([A-Z_]+), ([-'0-9. ]+)\);$/) #'
 	{
 		printf "%-31s %s\n", $1, $2;
 	}
