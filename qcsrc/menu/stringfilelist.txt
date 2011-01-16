@@ -14,8 +14,6 @@ Guideline:
 
 List of files to do:
 
-./xonotic/dialog_news.c
-./xonotic/dialog_quit.c
 ./xonotic/dialog_settings_audio.c
 ./xonotic/dialog_settings.c
 ./xonotic/dialog_settings_effects.c
