@@ -15,11 +15,23 @@ Guideline:
 
 List of files to do:
 
-./xonotic/dialog_hudpanel_score.c
-./xonotic/dialog_hudpanel_timer.c
-./xonotic/dialog_hudpanel_vote.c
-./xonotic/dialog_hudpanel_weapons.c
-./xonotic/dialog_hudsetup_exit.c
+./xonotic/inputbox.c
+./xonotic/keybinder.c
+./xonotic/mainwindow.c
+./xonotic/maplist.c
+./xonotic/playerlist.c
+./xonotic/playermodel.c
+./xonotic/radiobutton.c
+./xonotic/rootdialog.c
+./xonotic/serverlist.c
+./xonotic/skinlist.c
+./xonotic/slider_decibels.c
+./xonotic/slider_picmip.c
+./xonotic/slider_resolution.c
+./xonotic/tabcontroller.c
+./xonotic/textslider.c
+./xonotic/util.qc
+./xonotic/weaponslist.c
 ./xonotic/dialog_multiplayer.c
 ./xonotic/dialog_multiplayer_create_advanced.c
 ./xonotic/dialog_multiplayer_create.c
@@ -45,23 +57,6 @@ List of files to do:
 ./xonotic/dialog_singleplayer.c
 ./xonotic/dialog_singleplayer_winner.c
 ./xonotic/dialog_teamselect.c
-./xonotic/inputbox.c
-./xonotic/keybinder.c
-./xonotic/mainwindow.c
-./xonotic/maplist.c
-./xonotic/playerlist.c
-./xonotic/playermodel.c
-./xonotic/radiobutton.c
-./xonotic/rootdialog.c
-./xonotic/serverlist.c
-./xonotic/skinlist.c
-./xonotic/slider_decibels.c
-./xonotic/slider_picmip.c
-./xonotic/slider_resolution.c
-./xonotic/tabcontroller.c
-./xonotic/textslider.c
-./xonotic/util.qc
-./xonotic/weaponslist.c
 
 
 
