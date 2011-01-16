@@ -15,7 +15,6 @@ void XonoticHUDNotificationDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "notify";
-	float i;
 
 	DIALOG_HUDPANEL_COMMON();
 

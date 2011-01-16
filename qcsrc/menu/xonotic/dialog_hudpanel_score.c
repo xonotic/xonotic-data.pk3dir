@@ -15,7 +15,6 @@ void XonoticHUDScoreDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "score";
-	float i;
 
 	DIALOG_HUDPANEL_COMMON();
 }

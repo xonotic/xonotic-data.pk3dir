@@ -15,7 +15,6 @@ void XonoticHUDRadarDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "radar";
-	float i;
 
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_panel_radar"));

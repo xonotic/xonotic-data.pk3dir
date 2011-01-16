@@ -15,7 +15,6 @@ void XonoticHUDHealthArmorDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "healtharmor";
-	float i;
 
 	DIALOG_HUDPANEL_COMMON();
 

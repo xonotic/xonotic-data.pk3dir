@@ -105,7 +105,7 @@ void XonoticSkinList_getSkins(entity me)
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, _("<TITLE>"));
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, _("<AUTHOR>"));
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview"));
-		fh = fopen(language_file(s), FILE_READ);
+		fh = fopen(language_filename(s), FILE_READ);
 		if(fh < 0)
 		{
 			print("Warning: can't open skinvalues.txt file\n");

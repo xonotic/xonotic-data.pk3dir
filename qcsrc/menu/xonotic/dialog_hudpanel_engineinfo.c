@@ -15,7 +15,6 @@ void XonoticHUDEngineInfoDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "engineinfo";
-	float i;
 
 	DIALOG_HUDPANEL_COMMON();
 

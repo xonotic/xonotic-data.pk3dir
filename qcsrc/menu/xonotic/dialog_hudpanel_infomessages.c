@@ -15,7 +15,6 @@ void XonoticHUDInfoMessagesDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "infomessages";
-	float i;
 
 	DIALOG_HUDPANEL_COMMON();
 

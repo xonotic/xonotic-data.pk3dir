@@ -15,7 +15,6 @@ void XonoticHUDRaceTimerDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "racetimer";
-	float i;
 
 	DIALOG_HUDPANEL_COMMON();
 }

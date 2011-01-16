@@ -15,7 +15,6 @@ void XonoticHUDVoteDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "vote";
-	float i;
 
 	DIALOG_HUDPANEL_COMMON();
 

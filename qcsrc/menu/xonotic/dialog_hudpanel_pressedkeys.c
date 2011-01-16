@@ -15,7 +15,6 @@ void XonoticHUDPressedKeysDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "pressedkeys";
-	float i;
 
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_panel_pressedkeys"));

@@ -15,7 +15,6 @@ void XonoticHUDAmmoDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "ammo";
-	float i;
 
 	DIALOG_HUDPANEL_COMMON();
 
