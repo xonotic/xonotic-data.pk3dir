@@ -1,5 +1,6 @@
 Guideline:
 - do NOT translate strings in error() messages, or in dprint()!
+- delete obviously useless developer prints while at it
 - change obvious developer prints from print to dprint (even in comments),
   unless in developer-only functions (e.g. *dumptree*)
 - mark translatable strings with _()
@@ -7,25 +8,6 @@ Guideline:
 
 List of files to do:
 
-./item/borderimage.c
-./item/button.c
-./item.c
-./item/checkbox.c
-./item/container.c
-./item/dialog.c
-./item/gecko.c
-./item/inputbox.c
-./item/label.c
-./item/listbox.c
-./item/nexposee.c
-./item/slider.c
-./item/textslider.c
-./mbuiltin.qh
-./menu.qc
-./menu.qh
-./oo/base.h
-./skin-customizables.inc
-./skin.qh
 ./xonotic/button.c
 ./xonotic/campaign.c
 ./xonotic/charmap.c
