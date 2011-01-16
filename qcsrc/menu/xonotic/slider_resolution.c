@@ -85,7 +85,20 @@ void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 		r0 = r;
 		if(r_x < 640 || r_y < 480)
 			continue;
+		if(r_x > 2 * r_y) // likely dualscreen resolution, skip this one
+			continue;
 		me.addResolution(me, r_x, r_y, r_z);
+	}
+
+	if(me.nValues == 0)
+	{
+		me.addResolution(me, 640, 480, 1);
+		me.addResolution(me, 800, 600, 1);
+		me.addResolution(me, 1024, 768, 1);
+		me.addResolution(me, 1280, 960, 1);
+		me.addResolution(me, 1280, 1024, 1);
+		me.addResolution(me, 1650, 1080, 1);
+		me.addResolution(me, 1920, 1080, 1);
 	}
 
 	me.configureXonoticTextSliderValues(me);
