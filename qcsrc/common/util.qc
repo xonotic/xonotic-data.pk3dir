@@ -360,7 +360,10 @@ float buf_load(string pFilename)
 		return -1;
 	fh = fopen(pFilename, FILE_READ);
 	if(fh < 0)
-		return buf;
+	{
+		buf_del(buf);
+		return -1;
+	}
 	i = 0;
 	while((l = fgets(fh)))
 	{

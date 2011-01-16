@@ -81,15 +81,15 @@ void XonoticCvarList_setSelected(entity me, float i)
 	t = cvar_type(me.cvarName);
 	me.cvarType = "";
 	if(t & CVAR_TYPEFLAG_SAVED)
-		me.cvarType = strcat(me.cvarType, ", will be saved to config.cfg");
+		me.cvarType = strcat(me.cvarType, _(", will be saved to config.cfg"));
 	else
-		me.cvarType = strcat(me.cvarType, ", will not be saved");
+		me.cvarType = strcat(me.cvarType, _(", will not be saved"));
 	if(t & CVAR_TYPEFLAG_PRIVATE)
-		me.cvarType = strcat(me.cvarType, ", private");
+		me.cvarType = strcat(me.cvarType, _(", private"));
 	if(t & CVAR_TYPEFLAG_ENGINE)
-		me.cvarType = strcat(me.cvarType, ", engine setting");
+		me.cvarType = strcat(me.cvarType, _(", engine setting"));
 	if(t & CVAR_TYPEFLAG_READONLY)
-		me.cvarType = strcat(me.cvarType, ", read only");
+		me.cvarType = strcat(me.cvarType, _(", read only"));
 	me.cvarType = strzone(substring(me.cvarType, 2, strlen(me.cvarType) - 2));
 
 	me.cvarNameBox.setText(me.cvarNameBox, me.cvarName);

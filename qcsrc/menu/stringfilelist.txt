@@ -5,20 +5,16 @@ Guideline:
   unless in developer-only functions (e.g. *dumptree*)
 - mark translatable strings with _()
 - if a translatable string is a strcat monster, change it to sprintf
+- if code loads files with text, allow loading
+  <filename>.cvar_string("prvm_language") in preference
 - test by:
   find . -type f -not -name \*.po | xgettext -LC -k_ -f- gamecommand.qc
 - interesting vi macros:
   :map # /"<return>
   :map ' i_(<esc>2f"a)<esc>/"<return>
-  
 
 List of files to do:
 
-./xonotic/commandbutton.c
-./xonotic/credits.c
-./xonotic/crosshairbutton.c
-./xonotic/cvarlist.c
-./xonotic/demolist.c
 ./xonotic/dialog.c
 ./xonotic/dialog_credits.c
 ./xonotic/dialog_hudpanel_ammo.c
@@ -79,3 +75,9 @@ List of files to do:
 ./xonotic/textslider.c
 ./xonotic/util.qc
 ./xonotic/weaponslist.c
+
+
+
+Unresolved TODO:
+
+- translated campaigns
