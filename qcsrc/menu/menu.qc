@@ -38,7 +38,7 @@ void() m_init =
 			s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
 			if not(s)
 				break;
-			print(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
+			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
 	}
 }
@@ -183,7 +183,7 @@ void(float key, float ascii) m_keyup =
 		if(mouseButtonsPressed < 0)
 		{
 			mouseButtonsPressed = 0;
-			print("Warning: released an already released button\n");
+			dprint("Warning: released an already released button\n");
 		}
 	}
 	if(key == K_ALT) menuShiftState -= (menuShiftState & S_ALT);
@@ -221,7 +221,7 @@ void(float key, float ascii) m_keydown =
 		if(mouseButtonsPressed > 10)
 		{
 			mouseButtonsPressed = 10;
-			print("Warning: pressed an already pressed button\n");
+			dprint("Warning: pressed an already pressed button\n");
 		}
 	}
 	if(key == K_ALT) menuShiftState |= S_ALT;
@@ -341,11 +341,6 @@ float m_testtooltipbox(vector tooltippos)
 		return FALSE;
 	if(tooltippos_y + menuTooltipSize_y > 1)
 		return FALSE;
-	/*
-	menuTooltipOrigin_x = rint(tooltippos_x * cvar("vid_width")) / cvar("vid_width");
-	menuTooltipOrigin_y = rint(tooltippos_y * cvar("vid_height")) / cvar("vid_height");
-	menuTooltipOrigin_z = 0;
-	*/
 	menuTooltipOrigin = tooltippos;
 	return TRUE;
 }
@@ -566,7 +561,7 @@ void() m_draw =
 		if(!cvar("menu_video_played"))
 		{
 			localcmd("set menu_video_played 1; cd loop $menu_cdtrack; play sound/announcer/default/welcome.ogg\n");
-			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading
+			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading FIXME
 		}
 	}
 

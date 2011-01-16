@@ -3,9 +3,6 @@
 //////////////////////////////////////////////////
 // AK FIXME: Create perhaps a special builtin file for the common cmds
 
-//#define PROFILESTRZONE
-//#define FIXEDFOPEN
-
 float 	checkextension(string ext) = #1;
 
 // error cmds
@@ -100,11 +97,7 @@ float	bound(float min,float value, float max)  = #45;
 float	pow(float a, float b)  = #46;
 void	copyentity(entity src, entity dst)  = #47;
 
-#ifdef FIXEDFOPEN
-float 	_fopen( string filename, float mode ) = #48;
-#else
 float	fopen(string filename, float mode)  = #48;
-#endif
 void	fclose(float fhandle)  = #49;
 string	fgets(float fhandle)  = #50;
 void	fputs(float fhandle, string s)  = #51;
@@ -116,23 +109,8 @@ string	substring(string s, float start, float length)  = #54;
 
 vector	stov(string s)  = #55;
 
-#ifdef PROFILESTRZONE
-string	_strzone(string s)  = #56;
-void	_strunzone(string s) = #57;
-
-string( string s ) strzone =
-{
-	return _strzone( s );
-};
-
-void( string s ) strunzone =
-{
-	return _strunzone( s );
-};
-#else
 string	strzone(string s)  = #56;
 void	strunzone(string s) = #57;
-#endif
 
 float	tokenize(string s) = #58;
 float(string s, string separator1, ...) tokenizebyseparator = #479;
@@ -342,26 +320,6 @@ string(string, float) netaddress_resolve = #625;
 string(string search, string replace, string subject) strreplace = #484;
 
 string(float uselocaltime, string format, ...) strftime = #478;
-
-#ifdef FIXEDFOPEN
-float 	fopen( string filename, float mode ) =
-{
-	local float handle;
-	if( mode == FILE_READ ) {
-		return _fopen( filename, mode );
-	}
-
-	// check for data/
-	filename = strzone( filename );
-	if( substring( filename, 0, 5 ) != "data/" ) {
-		print( "menu: fopen: all output must go into data/!\n" );
-		return -1;
-	}
-	handle = _fopen( substring( filename, 5, 10000 ), mode );
-	strunzone( filename );
-	return handle;
-};
-#endif
 
 float(string s) tokenize_console = #514;
 float(float i) argv_start_index = #515;

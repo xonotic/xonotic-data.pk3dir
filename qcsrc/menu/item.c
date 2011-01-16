@@ -42,7 +42,6 @@ void Item_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOr
 {
 	me.origin = absOrigin;
 	me.size = absSize;
-	// me.tooltip = "The quick brown fox jumped over the lazy sleeping dog's back then sat on a tack. Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.";
 }
 
 void Item_draw(entity me)

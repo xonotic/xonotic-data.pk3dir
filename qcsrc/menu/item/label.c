@@ -75,9 +75,6 @@ void Label_draw(entity me)
 		me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(t, me.allowColors, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
 	me.recalcPos = 0;
 
-	//if(me.text == "Bookmark")
-	//	draw_Fill(me.realOrigin, '0 1 0' + '1 0 0' * draw_TextWidth(t, me.allowColors, me.realFontSize), '1 0 1', 1);
-	
 	if(me.fontSize)
 		if(t)
 		{
