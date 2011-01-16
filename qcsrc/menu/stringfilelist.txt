@@ -7,15 +7,13 @@ Guideline:
 - if a translatable string is a strcat monster, change it to sprintf
 - test by:
   find . -type f -not -name \*.po | xgettext -LC -k_ -f- gamecommand.qc
+- interesting vi macros:
+  :map # /"<return>
+  :map ' i_(<esc>2f"a)<esc>/"<return>
+  
 
 List of files to do:
 
-./xonotic/button.c
-./xonotic/campaign.c
-./xonotic/charmap.c
-./xonotic/colorbutton.c
-./xonotic/colorpicker.c
-./xonotic/colorpicker_string.c
 ./xonotic/commandbutton.c
 ./xonotic/credits.c
 ./xonotic/crosshairbutton.c
