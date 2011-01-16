@@ -5,6 +5,8 @@ Guideline:
   unless in developer-only functions (e.g. *dumptree*)
 - mark translatable strings with _()
 - if a translatable string is a strcat monster, change it to sprintf
+- test by:
+  find . -type f -not -name \*.po | xgettext -LC -k_ -f- gamecommand.qc
 
 List of files to do:
 
