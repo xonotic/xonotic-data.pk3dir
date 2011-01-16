@@ -567,3 +567,18 @@ float GameType_GetCount()
 	return i;
 }
 
+string language_filename(string s)
+{
+	string fn;
+	float fh;
+	fn = cvar_string("prvm_language");
+	if(fn == "" || fn == "dump")
+		return s;
+	fn = strcat(s, ".", fn);
+	if((fh = fopen(fn, FILE_READ)) >= 0)
+	{
+		fclose(fh);
+		return fn;
+	}
+	return s;
+}

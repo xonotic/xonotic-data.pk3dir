@@ -5,8 +5,7 @@ Guideline:
   unless in developer-only functions (e.g. *dumptree*)
 - mark translatable strings with _()
 - if a translatable string is a strcat monster, change it to sprintf
-- if code loads files with text, allow loading
-  <filename>.cvar_string("prvm_language") in preference
+- if code loads files with text, use language_filename()
 - test by:
   find . -type f -not -name \*.po | xgettext -LC -k_ -f- gamecommand.qc
 - interesting vi macros:
@@ -15,16 +14,6 @@ Guideline:
 
 List of files to do:
 
-./xonotic/inputbox.c
-./xonotic/keybinder.c
-./xonotic/mainwindow.c
-./xonotic/maplist.c
-./xonotic/playerlist.c
-./xonotic/playermodel.c
-./xonotic/radiobutton.c
-./xonotic/rootdialog.c
-./xonotic/serverlist.c
-./xonotic/skinlist.c
 ./xonotic/slider_decibels.c
 ./xonotic/slider_picmip.c
 ./xonotic/slider_resolution.c

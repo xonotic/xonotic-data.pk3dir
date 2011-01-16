@@ -19,10 +19,10 @@ ENDCLASS(MainWindow)
 
 void DemoButton_Click(entity me, entity other)
 {
-	if(me.text == "Do not press this button again!")
+	if(me.text == _("Do not press this button again!"))
 		DialogOpenButton_Click(me, other);
 	else
-		me.setText(me, "Do not press this button again!");
+		me.setText(me, _("Do not press this button again!"));
 }
 
 void MainWindow_configureMainWindow(entity me)

@@ -62,7 +62,7 @@ entity makeXonoticResolutionSlider()
 }
 void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pixelheight)
 {
-	me.addValue(me, strzone(strcat(ftos(w), "x", ftos(h))), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
+	me.addValue(me, strzone(sprintf(_("%dx%d"), w, h)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
 	// FIXME (in case you ever want to dynamically instantiate this): THIS IS NEVER FREED
 }
 void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
