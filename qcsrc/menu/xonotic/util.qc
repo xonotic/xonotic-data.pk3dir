@@ -11,7 +11,7 @@ float GL_Have_TextureCompression()
 float tooltipdb;
 void loadTooltips()
 {
-	tooltipdb = db_load("tooltips.db");
+	tooltipdb = db_load(language_filename("tooltips.db"));
 }
 void unloadTooltips()
 {
@@ -260,7 +260,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
+		print(sprintf(_("Received HTTP request data for an invalid id %d.\n"), id));
 	}
 }
 
@@ -270,22 +270,22 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 
 	if(_Nex_ExtResponseSystem_UpdateTo)
 	{
-		print("error: UpdateNotification_URI_Get_Callback has been called before\n");
+		dprint("error: UpdateNotification_URI_Get_Callback has been called before\n");
 		return;
 	}
 	if(status != 0)
 	{
-		print(sprintf("error receiving update notification: status is %d\n", status));
+		print(sprintf(_("error receiving update notification: status is %d\n"), status));
 		return;
 	}
 	if(substring(data, 0, 1) == "<")
 	{
-		print("error: received HTML instead of an update notification\n");
+		print(_("error: received HTML instead of an update notification\n"));
 		return;
 	}
 	if(strstrofs(data, "\r", 0) != -1)
 	{
-		print("error: received carriage returns from update notification server\n");
+		print(_("error: received carriage returns from update notification server\n"));
 		return;
 	}
 
@@ -306,7 +306,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		{
 			// update needed
 			if(n >= 2)
-				print(sprintf("Update can be downloaded at:\n%s\n", argv(1)));
+				print(sprintf(_("Update can be downloaded at:\n%s\n"), argv(1)));
 		}
 
 		_Nex_ExtResponseSystem_UpdateTo = strzone(_Nex_ExtResponseSystem_UpdateTo);
@@ -327,7 +327,7 @@ float preMenuInit()
 		draw_reset_cropped();
 
 		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
-		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, "Autogenerating mapinfo for newly added maps...", sz, '1 1 1', 1, 0);
+		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
 
 		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
 		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
@@ -414,7 +414,7 @@ void preMenuDraw()
 		// TODO rather turn this into a dialog
 		fs = ((1/draw_scale_x) * eX + (1/draw_scale_y) * eY) * 12;
 		line = eY * fs_y;
-		sz_x = draw_TextWidth("  http://www.xonotic.com/  ", 0, fs);
+		sz_x = draw_TextWidth("  http://www.xonotic.org/  ", 0, fs);
 		sz_y = 3 * fs_y;
 
 		draw_alpha = sin(time * 0.112 - 0.3) * 10;
@@ -499,7 +499,7 @@ float updateCompression()
 		cvar_set("gl_texturecompression", "1");
 		cvar_set("r_texture_dds_load", "1");
 		if(!can_dds)
-			print("^1ERROR: Texture compression is required but not supported.\n^1Expect visual problems.\n");
+			print(_("^1ERROR: Texture compression is required but not supported.\n^1Expect visual problems.\n"));
 		return 0;
 	}
 	else
@@ -521,22 +521,22 @@ float updateCompression()
 
 // note: include only those that should be in the menu!
 #define GAMETYPES \
-	GAMETYPE(MAPINFO_TYPE_ARENA, "Arena") \
-	GAMETYPE(MAPINFO_TYPE_ASSAULT, "Assault") \
-	GAMETYPE(MAPINFO_TYPE_CTF, "Capture The Flag") \
-	GAMETYPE(MAPINFO_TYPE_CA, "Clan Arena") \
-	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, "Deathmatch") \
-	GAMETYPE(MAPINFO_TYPE_DOMINATION, "Domination") \
-	GAMETYPE(MAPINFO_TYPE_FREEZETAG, "Freeze Tag") \
-	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, "Keepaway") \
-	GAMETYPE(MAPINFO_TYPE_KEYHUNT, "Key Hunt") \
-	GAMETYPE(MAPINFO_TYPE_LMS, "Last Man Standing") \
-	GAMETYPE(MAPINFO_TYPE_NEXBALL, "Nexball") \
-	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, "Onslaught") \
-	GAMETYPE(MAPINFO_TYPE_RACE, "Race") \
-	GAMETYPE(MAPINFO_TYPE_CTS, "Race CTS") \
-	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, "Runematch") \
-	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, "Team Deathmatch") \
+	GAMETYPE(MAPINFO_TYPE_ARENA, _("Arena")) \
+	GAMETYPE(MAPINFO_TYPE_ASSAULT, _("Assault")) \
+	GAMETYPE(MAPINFO_TYPE_CTF, _("Capture The Flag")) \
+	GAMETYPE(MAPINFO_TYPE_CA, _("Clan Arena")) \
+	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, _("Deathmatch")) \
+	GAMETYPE(MAPINFO_TYPE_DOMINATION, _("Domination")) \
+	GAMETYPE(MAPINFO_TYPE_FREEZETAG, _("Freeze Tag")) \
+	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, _("Keepaway")) \
+	GAMETYPE(MAPINFO_TYPE_KEYHUNT, _("Key Hunt")) \
+	GAMETYPE(MAPINFO_TYPE_LMS, _("Last Man Standing")) \
+	GAMETYPE(MAPINFO_TYPE_NEXBALL, _("Nexball")) \
+	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, _("Onslaught")) \
+	GAMETYPE(MAPINFO_TYPE_RACE, _("Race")) \
+	GAMETYPE(MAPINFO_TYPE_CTS, _("Race CTS")) \
+	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, _("Runematch")) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, _("Team Deathmatch")) \
 	/* nothing */
 
 float GameType_GetID(float cnt)
@@ -555,7 +555,7 @@ string GameType_GetName(float cnt)
 #define GAMETYPE(id,name) if(i++ == cnt) return name;
 	GAMETYPES
 #undef GAMETYPE
-	return "@!#%'n Tuba Throwing";
+	return _("@!#%'n Tuba Throwing");
 }
 float GameType_GetCount()
 {

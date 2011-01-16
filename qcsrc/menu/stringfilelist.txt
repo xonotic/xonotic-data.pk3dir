@@ -14,13 +14,6 @@ Guideline:
 
 List of files to do:
 
-./xonotic/slider_decibels.c
-./xonotic/slider_picmip.c
-./xonotic/slider_resolution.c
-./xonotic/tabcontroller.c
-./xonotic/textslider.c
-./xonotic/util.qc
-./xonotic/weaponslist.c
 ./xonotic/dialog_multiplayer.c
 ./xonotic/dialog_multiplayer_create_advanced.c
 ./xonotic/dialog_multiplayer_create.c
