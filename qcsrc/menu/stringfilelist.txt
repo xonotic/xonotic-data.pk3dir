@@ -14,12 +14,6 @@ Guideline:
 
 List of files to do:
 
-./xonotic/dialog_multiplayer_demo.c
-./xonotic/dialog_multiplayer_join.c
-./xonotic/dialog_multiplayer_join_serverinfo.c
-./xonotic/dialog_multiplayer_playersetup.c
-./xonotic/dialog_multiplayer_playersetup_waypoint.c
-./xonotic/dialog_multiplayer_playersetup_weapons.c
 ./xonotic/dialog_news.c
 ./xonotic/dialog_quit.c
 ./xonotic/dialog_settings_audio.c
