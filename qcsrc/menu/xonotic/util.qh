@@ -41,9 +41,7 @@ float GameType_GetID(float cnt);
 string GameType_GetName(float cnt);
 float GameType_GetCount();
 
-#define DIALOG_HUDPANEL_COMMON() \
-	me.TR(me); \
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", hudpanel)), _("Enable panel"))); \
+#define DIALOG_HUDPANEL_COMMON_NOTOGGLE() \
 	me.TR(me); \
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Background:"))); \
 			me.TD(me, 1, 1.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg")))); \
@@ -96,3 +94,7 @@ float GameType_GetCount();
 				for(i = 0; i <= 10; ++i) \
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5))); \
 				e.configureXonoticTextSliderValues(e)
+#define DIALOG_HUDPANEL_COMMON() \
+	me.TR(me); \
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", hudpanel)), _("Enable panel"))); \
+	DIALOG_HUDPANEL_COMMON_NOTOGGLE()

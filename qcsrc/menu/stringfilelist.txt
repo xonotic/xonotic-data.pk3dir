@@ -15,14 +15,6 @@ Guideline:
 
 List of files to do:
 
-./xonotic/dialog_hudpanel_healtharmor.c
-./xonotic/dialog_hudpanel_infomessages.c
-./xonotic/dialog_hudpanel_modicons.c
-./xonotic/dialog_hudpanel_notification.c
-./xonotic/dialog_hudpanel_powerups.c
-./xonotic/dialog_hudpanel_pressedkeys.c
-./xonotic/dialog_hudpanel_racetimer.c
-./xonotic/dialog_hudpanel_radar.c
 ./xonotic/dialog_hudpanel_score.c
 ./xonotic/dialog_hudpanel_timer.c
 ./xonotic/dialog_hudpanel_vote.c
