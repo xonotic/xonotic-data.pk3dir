@@ -15,6 +15,6 @@ void XonoticNewsDialog_fill(entity me)
 	entity e;
 	me.TR(me);
 		me.TD(me, 24, 1, e = spawnGecko());
-		e.configureBrowser( e, "http://www.xonotic.org/team/blog/" );
+		e.configureBrowser( e, _("http://www.xonotic.org/team/blog/") );
 }
 #endif
