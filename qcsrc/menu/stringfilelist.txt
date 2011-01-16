@@ -15,11 +15,6 @@ Guideline:
 
 List of files to do:
 
-./xonotic/dialog.c
-./xonotic/dialog_credits.c
-./xonotic/dialog_hudpanel_ammo.c
-./xonotic/dialog_hudpanel_chat.c
-./xonotic/dialog_hudpanel_engineinfo.c
 ./xonotic/dialog_hudpanel_healtharmor.c
 ./xonotic/dialog_hudpanel_infomessages.c
 ./xonotic/dialog_hudpanel_modicons.c
