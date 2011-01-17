@@ -62,7 +62,7 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "help" || argc == 0)
 	{
-		print(_("Usage: menu_cmd theCommand..., where possible theCommands are:\n"));
+		print(_("Usage: menu_cmd command..., where possible commands are:\n"));
 		print(_("  sync - reloads all cvars on the current menu page\n"));
 		print(_("  directmenu ITEM - select a menu item as main item\n"));
 		GameCommand_Generic("help");

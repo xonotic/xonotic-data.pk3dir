@@ -1195,15 +1195,15 @@ msgstr "Erweiterte Einstellungen..."
 
 #: xonotic/dialog_hudpanel_notification.c:4
 msgid "Notification Panel"
-msgstr "Info-Panel"
+msgstr "Anzeige-Panel"
 
 #: xonotic/dialog_hudpanel_notification.c:22
 msgid "Notifications:"
-msgstr "Informationen:"
+msgstr "Anzeige:"
 
 #: xonotic/dialog_hudpanel_notification.c:25
 msgid "Also print notifications to the console"
-msgstr "Informationen auch auf der Konsole ausgeben"
+msgstr "auch auf der Konsole ausgeben"
 
 #: xonotic/dialog_hudpanel_notification.c:28
 msgid "Flip notify order"
@@ -1715,516 +1715,516 @@ msgstr "Schadenseffekt:"
 
 #: xonotic/dialog_hudpanel_infomessages.c:4
 msgid "Info Messages Panel"
-msgstr ""
+msgstr "Informations-Panel"
 
 #: xonotic/dialog_hudpanel_infomessages.c:22
 msgid "Info messages:"
-msgstr ""
+msgstr "Informationen:"
 
 #: xonotic/dialog_hudpanel_infomessages.c:25
 msgid "Flip align"
-msgstr ""
+msgstr "Ausrichtung tauschen"
 
 #: xonotic/dialog_multiplayer.c:4
 msgid "Multiplayer"
-msgstr ""
+msgstr "Mehrspieler"
 
 #: xonotic/dialog_multiplayer.c:18
 msgid "Servers"
-msgstr ""
+msgstr "Server"
 
 #: xonotic/dialog_multiplayer.c:22
 msgid "Demos"
-msgstr ""
+msgstr "Demos"
 
 #: xonotic/dialog_hudpanel_racetimer.c:4
 msgid "Race Timer Panel"
-msgstr ""
+msgstr "Rundenzeit-Panel"
 
 #: xonotic/dialog_multiplayer_playersetup_waypoint.c:5
 msgid "Waypoints"
-msgstr ""
+msgstr "Wegpunkte"
 
 #: xonotic/dialog_multiplayer_playersetup_waypoint.c:23
 msgid "Waypoint settings:"
-msgstr ""
+msgstr "Wegpunkt-Einstellungen:"
 
 #: xonotic/dialog_multiplayer_playersetup_waypoint.c:26
 msgid "Show base waypoints"
-msgstr ""
+msgstr "Basis-Wegpunkte anzeigen"
 
 #: xonotic/dialog_multiplayer_playersetup_waypoint.c:29
 msgid "Waypoint scale:"
-msgstr ""
+msgstr "Wegpunkt-Skalierung:"
 
 #: xonotic/dialog_multiplayer_playersetup_waypoint.c:34
 msgid "Waypoint alpha:"
-msgstr ""
+msgstr "Wegpunkt-Alpha:"
 
 #: xonotic/dialog_multiplayer_playersetup_waypoint.c:39
 msgid "Show names:"
-msgstr ""
+msgstr "Namen anzeigen:"
 
 #: xonotic/dialog_multiplayer_playersetup_waypoint.c:42
 msgid "Teammates"
-msgstr ""
+msgstr "Mitspieler"
 
 #: xonotic/dialog_multiplayer_playersetup_waypoint.c:43
 msgid "All players"
-msgstr ""
+msgstr "Alle Spieler"
 
 #: xonotic/dialog_hudpanel_powerups.c:4
 msgid "Powerups Panel"
-msgstr ""
+msgstr "Bonus-Panel"
 
 #: xonotic/dialog_hudpanel_powerups.c:45
 msgid "Flip strength and shield positions"
-msgstr ""
+msgstr "Strength und Shield vertauschen"
 
 #: xonotic/dialog_settings_effects.c:38
 msgid "Quality preset:"
-msgstr ""
+msgstr "Qualitäts-Vorgabe:"
 
 #: xonotic/dialog_settings_effects.c:41
 msgid "OMG!"
-msgstr ""
+msgstr "OMG!"
 
 #: xonotic/dialog_settings_effects.c:42 xonotic/dialog_settings_effects.c:55
 #: xonotic/dialog_settings_effects.c:75
 msgid "Low"
-msgstr ""
+msgstr "Niedrig"
 
 #: xonotic/dialog_settings_effects.c:44 xonotic/dialog_settings_effects.c:56
 #: xonotic/dialog_settings_effects.c:76 xonotic/dialog_settings_audio.c:145
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #: xonotic/dialog_settings_effects.c:45
 msgid "High"
-msgstr ""
+msgstr "Hoch"
 
 #: xonotic/dialog_settings_effects.c:46
 msgid "Ultra"
-msgstr ""
+msgstr "Ultra"
 
 #: xonotic/dialog_settings_effects.c:48
 msgid "Ultimate"
-msgstr ""
+msgstr "Ultimativ"
 
 #: xonotic/dialog_settings_effects.c:52
 msgid "Geometry detail:"
-msgstr ""
+msgstr "Geometrie-Detail:"
 
 #: xonotic/dialog_settings_effects.c:54 xonotic/dialog_settings_effects.c:74
 msgid "Lowest"
-msgstr ""
+msgstr "Sehr niedrig"
 
 #: xonotic/dialog_settings_effects.c:57 xonotic/dialog_settings_effects.c:77
 #: xonotic/dialog_settings_effects.c:147
 msgid "Good"
-msgstr ""
+msgstr "Gut"
 
 #: xonotic/dialog_settings_effects.c:58 xonotic/dialog_settings_effects.c:78
 msgid "Best"
-msgstr ""
+msgstr "Optimal"
 
 #: xonotic/dialog_settings_effects.c:59
 msgid "Insane"
-msgstr ""
+msgstr "Wahnsinnig"
 
 #: xonotic/dialog_settings_effects.c:62
 msgid "Antialiasing:"
-msgstr ""
+msgstr "Kantenglättung:"
 
 #: xonotic/dialog_settings_effects.c:65 xonotic/dialog_settings_effects.c:103
 msgid "2x"
-msgstr ""
+msgstr "2x"
 
 #: xonotic/dialog_settings_effects.c:66 xonotic/dialog_settings_effects.c:104
 msgid "4x"
-msgstr ""
+msgstr "4x"
 
 #: xonotic/dialog_settings_effects.c:70
 msgid "Texture resolution:"
-msgstr ""
+msgstr "Texturauflösung:"
 
 #: xonotic/dialog_settings_effects.c:73
 msgid "Leet"
-msgstr ""
+msgstr "Leet"
 
 #: xonotic/dialog_settings_effects.c:91 xonotic/dialog_settings_effects.c:94
 msgid "Avoid lossy texture compression"
-msgstr ""
+msgstr "Texturkompression vermeiden"
 
 #: xonotic/dialog_settings_effects.c:100
 msgid "Anisotropy:"
-msgstr ""
+msgstr "Anisotropie:"
 
 #: xonotic/dialog_settings_effects.c:105
 msgid "8x"
-msgstr ""
+msgstr "8x"
 
 #: xonotic/dialog_settings_effects.c:106
 msgid "16x"
-msgstr ""
+msgstr "16x"
 
 #: xonotic/dialog_settings_effects.c:110
 msgid "Particle quality:"
-msgstr ""
+msgstr "Partikelqualität:"
 
 #: xonotic/dialog_settings_effects.c:113
 msgid "Particle distance:"
-msgstr ""
+msgstr "Partikeldistanz:"
 
 #: xonotic/dialog_settings_effects.c:117
 msgid "Decals"
-msgstr ""
+msgstr "Einschusslöcher"
 
 #: xonotic/dialog_settings_effects.c:120
 msgid "Distance:"
-msgstr ""
+msgstr "Distanz:"
 
 #: xonotic/dialog_settings_effects.c:126
 msgid "Time:"
-msgstr ""
+msgstr "Zeit:"
 
 #: xonotic/dialog_settings_effects.c:132
 msgid "Use lightmaps"
-msgstr ""
+msgstr "Lightmaps verwenden"
 
 #: xonotic/dialog_settings_effects.c:133
 msgid "Deluxe mapping"
-msgstr ""
+msgstr "Deluxemapping"
 
 #: xonotic/dialog_settings_effects.c:135
 msgid "Gloss"
-msgstr ""
+msgstr "Glanz"
 
 #: xonotic/dialog_settings_effects.c:138
 msgid "Offset mapping"
-msgstr ""
+msgstr "Offsetmapping"
 
 #: xonotic/dialog_settings_effects.c:140
 msgid "Relief mapping"
-msgstr ""
+msgstr "Reliefmapping"
 
 #: xonotic/dialog_settings_effects.c:143
 msgid "Reflections:"
-msgstr ""
+msgstr "Reflexionen:"
 
 #: xonotic/dialog_settings_effects.c:146
 msgid "Blurred"
-msgstr ""
+msgstr "Schwammig"
 
 #: xonotic/dialog_settings_effects.c:148
 msgid "Sharp"
-msgstr ""
+msgstr "Scharf"
 
 #: xonotic/dialog_settings_effects.c:153
 msgid "Show surfaces"
-msgstr ""
+msgstr "Oberflächen anzeigen"
 
 #: xonotic/dialog_settings_effects.c:155
 msgid "No dynamic lighting"
-msgstr ""
+msgstr "Kein dynamisches Licht"
 
 #: xonotic/dialog_settings_effects.c:157
 msgid "Flash blend approximation"
-msgstr ""
+msgstr "Flash-Blend-Näherung"
 
 #: xonotic/dialog_settings_effects.c:159
 msgid "Realtime dynamic lighting"
-msgstr ""
+msgstr "Dynamisches Licht in Echtzeit"
 
 #: xonotic/dialog_settings_effects.c:160 xonotic/dialog_settings_effects.c:164
 msgid "Shadows"
-msgstr ""
+msgstr "Schatten"
 
 #: xonotic/dialog_settings_effects.c:163
 msgid "Realtime world lighting"
-msgstr ""
+msgstr "Map-Licht in Echtzeit"
 
 #: xonotic/dialog_settings_effects.c:168
 msgid "Use normal maps"
-msgstr ""
+msgstr "Normalmaps verwenden"
 
 #: xonotic/dialog_settings_effects.c:170
 msgid "Soft shadows"
-msgstr ""
+msgstr "Weiche Schaten"
 
 #: xonotic/dialog_settings_effects.c:173
 msgid "Coronas"
-msgstr ""
+msgstr "Koronas"
 
 #: xonotic/dialog_settings_effects.c:175
 msgid "Bloom"
-msgstr ""
+msgstr "Überstrahlung"
 
 #: xonotic/dialog_settings_effects.c:177
 msgid "High Dynamic Range (HDR)"
-msgstr ""
+msgstr "Lichtdynamik (HDR)"
 
 #: xonotic/dialog_settings_effects.c:181
 msgid "Motion blur:"
-msgstr ""
+msgstr "Bewegungsunschärfe:"
 
 #: xonotic/dialog_settings_effects.c:187
 msgid "Damage blur:"
-msgstr ""
+msgstr "Schadensunschärfe:"
 
 #: xonotic/skinlist.c:105
 msgid "<TITLE>"
-msgstr ""
+msgstr "<TITEL>"
 
 #: xonotic/skinlist.c:106
 msgid "<AUTHOR>"
-msgstr ""
+msgstr "<AUTOR>"
 
 #: xonotic/skinlist.c:163
 #, c-format
 msgid "%s: %s"
-msgstr ""
+msgstr "%s: %s"
 
 #: xonotic/serverlist.c:357
 msgid "Remove"
-msgstr ""
+msgstr "Vergessen"
 
 #: xonotic/serverlist.c:359
 msgid "Bookmark"
-msgstr ""
+msgstr "Speichern"
 
 #: xonotic/serverlist.c:515
 msgid "Ping"
-msgstr ""
+msgstr "Ping"
 
 #: xonotic/serverlist.c:516
 msgid "Host name"
-msgstr ""
+msgstr "Servername"
 
 #: xonotic/serverlist.c:517
 msgid "Map"
-msgstr ""
+msgstr "Map"
 
 #: xonotic/serverlist.c:518
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: xonotic/serverlist.c:519
 msgid "Players"
-msgstr ""
+msgstr "Spieler"
 
 #: xonotic/dialog_settings_audio.c:27
 msgid "Master:"
-msgstr ""
+msgstr "Master:"
 
 #: xonotic/dialog_settings_audio.c:33
 msgid "Music:"
-msgstr ""
+msgstr "Musik:"
 
 #: xonotic/dialog_settings_audio.c:46
 msgid "Info:"
-msgstr ""
+msgstr "Info:"
 
 #: xonotic/dialog_settings_audio.c:55
 msgid "Items:"
-msgstr ""
+msgstr "Gegenstände:"
 
 #: xonotic/dialog_settings_audio.c:63
 msgid "Pain:"
-msgstr ""
+msgstr "Schmerz:"
 
 #: xonotic/dialog_settings_audio.c:71
 msgid "Player:"
-msgstr ""
+msgstr "Spieler:"
 
 #: xonotic/dialog_settings_audio.c:79
 msgid "Shots:"
-msgstr ""
+msgstr "Schüsse:"
 
 #: xonotic/dialog_settings_audio.c:86
 msgid "Voice:"
-msgstr ""
+msgstr "Stimme:"
 
 #: xonotic/dialog_settings_audio.c:94
 msgid "Weapons:"
-msgstr ""
+msgstr "Waffen:"
 
 #: xonotic/dialog_settings_audio.c:101 xonotic/dialog_settings_audio.c:159
 msgid "Frequency:"
-msgstr ""
+msgstr "Frequenz:"
 
 #: xonotic/dialog_settings_audio.c:103
 msgid "8 kHz"
-msgstr ""
+msgstr "8 kHz"
 
 #: xonotic/dialog_settings_audio.c:104
 msgid "11.025 kHz"
-msgstr ""
+msgstr "11,025 kHz"
 
 #: xonotic/dialog_settings_audio.c:105
 msgid "16 kHz"
-msgstr ""
+msgstr "16 kHz"
 
 #: xonotic/dialog_settings_audio.c:106
 msgid "22.05 kHz"
-msgstr ""
+msgstr "22,05 kHz"
 
 #: xonotic/dialog_settings_audio.c:107
 msgid "24 kHz"
-msgstr ""
+msgstr "24 kHz"
 
 #: xonotic/dialog_settings_audio.c:108
 msgid "32 kHz"
-msgstr ""
+msgstr "32 kHz"
 
 #: xonotic/dialog_settings_audio.c:109
 msgid "44.1 kHz"
-msgstr ""
+msgstr "44,1 kHz"
 
 #: xonotic/dialog_settings_audio.c:110
 msgid "48 kHz"
-msgstr ""
+msgstr "48 kHz"
 
 #: xonotic/dialog_settings_audio.c:113
 msgid "Channels:"
-msgstr ""
+msgstr "Kanäle"
 
 #: xonotic/dialog_settings_audio.c:115
 msgid "Mono"
-msgstr ""
+msgstr "Mono"
 
 #: xonotic/dialog_settings_audio.c:116
 msgid "Stereo"
-msgstr ""
+msgstr "Stereo"
 
 #: xonotic/dialog_settings_audio.c:117
 msgid "2.1"
-msgstr ""
+msgstr "2.1"
 
 #: xonotic/dialog_settings_audio.c:118
 msgid "4"
-msgstr ""
+msgstr "4"
 
 #: xonotic/dialog_settings_audio.c:119
 msgid "5"
-msgstr ""
+msgstr "5"
 
 #: xonotic/dialog_settings_audio.c:120
 msgid "5.1"
-msgstr ""
+msgstr "5.1"
 
 #: xonotic/dialog_settings_audio.c:121
 msgid "6.1"
-msgstr ""
+msgstr "6.1"
 
 #: xonotic/dialog_settings_audio.c:122
 msgid "7.1"
-msgstr ""
+msgstr "7.1"
 
 #: xonotic/dialog_settings_audio.c:126
 msgid "Swap Stereo"
-msgstr ""
+msgstr "Stereokanäle tauschen"
 
 #: xonotic/dialog_settings_audio.c:130
 msgid "Headphone friendly mode"
-msgstr ""
+msgstr "Kopfhörer-Modus"
 
 #: xonotic/dialog_settings_audio.c:134
 msgid "Spatial voices:"
-msgstr ""
+msgstr "Räumliche Sprachnachrichten:"
 
 #: xonotic/dialog_settings_audio.c:136
 msgid "Taunts"
-msgstr ""
+msgstr "Spott"
 
 #: xonotic/dialog_settings_audio.c:140
 msgid "Taunt range:"
-msgstr ""
+msgstr "Spott-Radius:"
 
 #: xonotic/dialog_settings_audio.c:143
 msgid "Very short"
-msgstr ""
+msgstr "Sehr klein"
 
 #: xonotic/dialog_settings_audio.c:144
 msgid "Short"
-msgstr ""
+msgstr "Klein"
 
 #: xonotic/dialog_settings_audio.c:146
 msgid "Long"
-msgstr ""
+msgstr "Groß"
 
 #: xonotic/dialog_settings_audio.c:154
 msgid "Automatic taunts"
-msgstr ""
+msgstr "Automatischer Spott"
 
 #: xonotic/dialog_settings_audio.c:163
 msgid "Time warning:"
-msgstr ""
+msgstr "Zeitwarnung:"
 
 #: xonotic/dialog_settings_audio.c:166
 msgid "1 minute"
-msgstr ""
+msgstr "1 Minute"
 
 #: xonotic/dialog_settings_audio.c:167
 msgid "5 minutes"
-msgstr ""
+msgstr "5 Minuten"
 
 #: xonotic/dialog_settings_audio.c:168
 msgid "Both"
-msgstr ""
+msgstr "Beide"
 
 #: xonotic/dialog_settings_audio.c:171
 msgid "Hit indicator"
-msgstr ""
+msgstr "Treffer-Indikator"
 
 #: xonotic/dialog_settings_audio.c:173
 msgid "Menu sounds"
-msgstr ""
+msgstr "Menü-Sounds"
 
 #: gamecommand.qc:47 gamecommand.qc:47
 #, c-format
 msgid "error: status is %d\n"
-msgstr ""
+msgstr "Fehler: Status ist %d\n"
 
 #: gamecommand.qc:65 gamecommand.qc:65
-msgid "Usage: menu_cmd theCommand..., where possible theCommands are:\n"
-msgstr ""
+msgid "Usage: menu_cmd command..., where possible commands are:\n"
+msgstr "Syntax: menu_cmd Befehl..., wobei mögliche Befehle sind:\n"
 
 #: gamecommand.qc:66 gamecommand.qc:66
 msgid "  sync - reloads all cvars on the current menu page\n"
-msgstr ""
+msgstr "  sync - lädt alle Variablen auf der aktuellen Menüseite neu\n"
 
 #: gamecommand.qc:67 gamecommand.qc:67
 msgid "  directmenu ITEM - select a menu item as main item\n"
-msgstr ""
+msgstr "  directmenu ELEMENT - springt zu einem Menüelement"
 
 #: gamecommand.qc:187 gamecommand.qc:187
 msgid "error creating curl handle\n"
-msgstr ""
+msgstr "Fehler beim Erstellen eines curl-Handles\n"
 
 #: gamecommand.qc:233 gamecommand.qc:233
 msgid "Invalid command. For a list of supported commands, try menu_cmd help.\n"
-msgstr ""
+msgstr "Ungültiger Befehl. Eine Liste der unterstützten Befehle wird von menu_cmd help ausgegeben.\n"
 
 #: menu.qc:28
 #, c-format
 msgid "^4MQC Build information: %s\n"
-msgstr ""
+msgstr "^4MQC Build-Information: %s (deutsch)\n"
 
 #: item/listbox.c:300
 #, c-format
 msgid "Item %d"
-msgstr ""
+msgstr "Eintrag %d"
 
 #: item/gecko.c:49
 msgid "Browser not initialized!"
-msgstr ""
+msgstr "Browser nicht initialisiert!"
 
 #: item/slider.c:64
 #, c-format
 msgid "%d (%s)"
-msgstr ""
+msgstr "%d (%s)"
 
 #: item/textslider.c:29 item/textslider.c:31
 msgid "custom"
-msgstr ""
+msgstr "benutzerdefiniert"
