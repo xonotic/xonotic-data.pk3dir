@@ -5,6 +5,7 @@ CLASS(Label) EXTENDS(Item)
 	METHOD(Label, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(Label, setText, void(entity, string))
 	METHOD(Label, toString, string(entity))
+	METHOD(Label, recalcPosition, void(entity))
 	ATTRIB(Label, text, string, string_null)
 	ATTRIB(Label, fontSize, float, 8)
 	ATTRIB(Label, align, float, 0.5)
@@ -23,6 +24,7 @@ CLASS(Label) EXTENDS(Item)
 	ATTRIB(Label, textEntity, entity, NULL)
 	ATTRIB(Label, allowWrap, float, 0)
 	ATTRIB(Label, recalcPos, float, 0)
+	ATTRIB(Label, condenseFactor, float, 1)
 ENDCLASS(Label)
 #endif
 
@@ -36,6 +38,32 @@ void Label_setText(entity me, string txt)
 	me.text = txt;
 	me.recalcPos = 1;
 }
+void Label_recalcPosition(entity me)
+{
+	float spaceAvail;
+	spaceAvail = 1 - me.keepspaceLeft - me.keepspaceRight;
+
+	float spaceUsed;
+	spaceUsed = draw_TextWidth(me.text, me.allowColors, me.realFontSize);
+
+	if(spaceUsed <= spaceAvail)
+	{
+		me.realOrigin_x = me.align * (spaceAvail - spaceUsed) + me.keepspaceLeft;
+		me.condenseFactor = 1;
+	}
+	else if(me.allowCut || me.allowWrap)
+	{
+		me.realOrigin_x = me.keepspaceLeft;
+		me.condenseFactor = 1;
+	}
+	else
+	{
+		me.realOrigin_x = me.keepspaceLeft;
+		me.condenseFactor = spaceAvail / spaceUsed;
+		dprint(sprintf(_("NOTE: label text %s too wide for label, condensed by factor %f\n"), me.text, me.condenseFactor));
+	}
+	me.recalcPos = 0;
+}
 void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(Label).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
@@ -47,8 +75,8 @@ void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absO
 	if(me.marginRight)
 		me.keepspaceRight = me.marginRight * me.realFontSize_x;
 	me.realOrigin_y = 0.5 * (1 - me.realFontSize_y);
-	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(me.text, me.allowColors, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
-	me.recalcPos = 0;
+
+	me.recalcPosition(me);
 }
 void Label_configureLabel(entity me, string txt, float sz, float algn)
 {
@@ -72,14 +100,23 @@ void Label_draw(entity me)
 		t = me.text;
 
 	if(me.recalcPos)
-		me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(draw_TextWidth(t, me.allowColors, me.realFontSize), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
-	me.recalcPos = 0;
+		me.recalcPosition(me);
 
 	if(me.fontSize)
 		if(t)
 		{
+			vector dfs;
+			vector fs;
+
+			// set up variables to draw in condensed size, but use hinting for original size
+			fs = me.realFontSize;
+			fs_x *= me.condenseFactor;
+
+			dfs = draw_fontscale;
+			draw_fontscale_x *= me.condenseFactor;
+
 			if(me.allowCut) // FIXME allowCut incompatible with align != 0
-				draw_Text(me.realOrigin, draw_TextShortenToWidth(t, (1 - me.keepspaceLeft - me.keepspaceRight), me.allowColors, me.realFontSize), me.realFontSize, me.colorL, me.alpha, me.allowColors);
+				draw_Text(me.realOrigin, draw_TextShortenToWidth(t, (1 - me.keepspaceLeft - me.keepspaceRight), me.allowColors, fs), fs, me.colorL, me.alpha, me.allowColors);
 			else if(me.allowWrap) // FIXME allowWrap incompatible with align != 0
 			{
 				getWrappedLine_remaining = t;
@@ -87,15 +124,17 @@ void Label_draw(entity me)
 				while(getWrappedLine_remaining)
 				{
 					if (me.allowColors)
-						t = getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), me.realFontSize, draw_TextWidth_WithColors);
+						t = getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), fs, draw_TextWidth_WithColors);
 					else
-						t = getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), me.realFontSize, draw_TextWidth_WithoutColors);
-					draw_Text(o, t, me.realFontSize, me.colorL, me.alpha, me.allowColors);
+						t = getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), fs, draw_TextWidth_WithoutColors);
+					draw_Text(o, t, fs, me.colorL, me.alpha, me.allowColors);
 					o_y += me.realFontSize_y;
 				}
 			}
 			else
-				draw_Text(me.realOrigin, t, me.realFontSize, me.colorL, me.alpha, me.allowColors);
+				draw_Text(me.realOrigin, t, fs, me.colorL, me.alpha, me.allowColors);
+
+			draw_fontscale = dfs;
 		}
 }
 #endif
