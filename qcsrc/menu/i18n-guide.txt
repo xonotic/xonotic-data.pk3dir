@@ -12,17 +12,6 @@ Guideline:
   :map # /"<return>
   :map ' i_(<esc>2f"a)<esc>/"<return>
 
-List of files to do:
-
-./xonotic/dialog_settings_effects.c
-./xonotic/dialog_settings_input.c
-./xonotic/dialog_settings_input_userbind.c
-./xonotic/dialog_settings_misc.c
-./xonotic/dialog_settings_network.c
-./xonotic/dialog_settings_video.c
-
-
-
 Unresolved TODO:
 
 - translated campaigns
