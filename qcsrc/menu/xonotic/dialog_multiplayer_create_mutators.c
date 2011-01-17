@@ -87,7 +87,7 @@ string XonoticMutatorsDialog_toString(entity me)
 	if(cvar("g_vampire"))
 		s = strcat(s, ", ", _("Vampire"));
 	if(cvar("g_pinata"))
-		s = strcat(s, ", ", _("Pinata"));
+		s = strcat(s, ", ", _("Piñata"));
 	if(cvar("g_weapon_stay"))
 		s = strcat(s, ", ", _("Weapons stay"));
 	if(cvar("g_bloodloss") > 0)
@@ -205,7 +205,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_rocket_flying", _("Rocket Flying")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_pinata", _("Pinata")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_pinata", _("Piñata")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(2, 0, "g_weapon_stay", _("Weapons stay")));
