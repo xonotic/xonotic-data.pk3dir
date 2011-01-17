@@ -1,7 +1,7 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Xonotic French Translation.
+# Copyright (C) 2011
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Calinou <hugohachel@gmail.com>, 2011.
 #
 #, fuzzy
 msgid ""
@@ -75,7 +75,7 @@ msgstr "Aucun"
 
 #: xonotic/dialog_hudpanel_weapons.c:35
 msgid "Slide"
-msgstr ""
+msgstr "Glisse"
 
 #: xonotic/dialog_hudpanel_weapons.c:37
 msgid "Alpha"
@@ -770,7 +770,7 @@ msgstr "Échanger positions Santé/Armure"
 
 #: xonotic/dialog_settings_effects.c:38
 msgid "Quality preset:"
-msgstr ""
+msgstr "Qualité effets:"
 
 #: xonotic/dialog_settings_effects.c:41
 msgid "OMG!"
@@ -914,7 +914,7 @@ msgstr "Net"
 
 #: xonotic/dialog_settings_effects.c:153
 msgid "Show surfaces"
-msgstr ""
+msgstr "Textures unies"
 
 #: xonotic/dialog_settings_effects.c:155
 msgid "No dynamic lighting"
@@ -946,11 +946,11 @@ msgstr "Ombres avancées"
 
 #: xonotic/dialog_settings_effects.c:173
 msgid "Coronas"
-msgstr ""
+msgstr "Brillance Lumière"
 
 #: xonotic/dialog_settings_effects.c:175
 msgid "Bloom"
-msgstr "Effets d'Éblouissement"
+msgstr "Effets d'éblouissement"
 
 #: xonotic/dialog_settings_effects.c:177
 msgid "High Dynamic Range (HDR)"
@@ -1066,7 +1066,7 @@ msgstr "Points et Triangles"
 
 #: xonotic/dialog_settings_video.c:65
 msgid "Depth first:"
-msgstr "Fixeur de "
+msgstr "Fixeur profondeur:"
 
 #: xonotic/dialog_settings_video.c:68
 msgid "World"
@@ -1074,11 +1074,11 @@ msgstr "Carte"
 
 #: xonotic/dialog_settings_video.c:73
 msgid "Disable multithreaded OpenGL"
-msgstr ""
+msgstr "Désactiver OpenGL multi-coeurs"
 
 #: xonotic/dialog_settings_video.c:75
 msgid "Wait for GPU to finish each frame"
-msgstr ""
+msgstr "Attendre le GPU pour finir chaque trame"
 
 #: xonotic/dialog_settings_video.c:78
 msgid "Brightness:"
@@ -1155,11 +1155,11 @@ msgstr "Utiliser une manette"
 
 #: xonotic/dialog_settings_input.c:62 xonotic/dialog_settings_input.c:64
 msgid "Turn off OS mouse acceleration"
-msgstr ""
+msgstr "Désactiver l'accélération souris de l'OS"
 
 #: xonotic/dialog_settings_input.c:66
 msgid "\"enter console\" also closes"
-msgstr "\"entrer la console\" ferme aussi la console"
+msgstr "\"ouvrir la console\" ferme aussi la console"
 
 #: xonotic/mainwindow.c:22 xonotic/mainwindow.c:25
 msgid "Do not press this button again!"
@@ -1792,7 +1792,7 @@ msgstr "Mode de jeu:"
 
 #: xonotic/dialog_multiplayer_create.c:47
 msgid "Match settings:"
-msgstr "Paramètres match!"
+msgstr "Paramètres match:"
 
 #: xonotic/dialog_multiplayer_create.c:50
 msgid "Time limit:"
@@ -2230,7 +2230,7 @@ msgstr "REMARQUE: le texte label %s est trop large pour un label, condensé par 
 
 #: item/gecko.c:49
 msgid "Browser not initialized!"
-msgstr "Navigateur non initialisé!"
+msgstr "Navigateur non initialisé !"
 
 #: item/textslider.c:29 item/textslider.c:31
 msgid "custom"
