@@ -384,7 +384,7 @@ msgstr "Schlüssel:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:301
 msgid "Encryption:"
-msgstr "Verschlüsselung:"
+msgstr "Krypto:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:308
 #: xonotic/dialog_multiplayer_create_mapinfo.c:119
