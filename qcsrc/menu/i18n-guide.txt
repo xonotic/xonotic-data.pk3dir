@@ -7,7 +7,7 @@ Guideline:
 - if a translatable string is a strcat monster, change it to sprintf
 - if code loads files with text, use language_filename()
 - test by:
-  find . -type f -not -name \*.po -not -name \*.txt | xgettext -LC -k_ -f-
+  find . -type f -not -name \*.po -not -name \*.txt | xgettext -LC -k_ -f- --from-code utf-8
 - interesting vim macros:
   :map # /"<return>
   :map ' i_(<esc>2f"a)<esc>/"<return>
