@@ -192,8 +192,8 @@ msgid "Team Color:"
 msgstr "Teamfarbe:"
 
 #: xonotic/util.qc:634 xonotic/dialog_hudsetup_exit.c:58
-msgid "Test the team color in HUD configure mode"
-msgstr "Teamfarbe im HUD-Konfigurationsmodus testen"
+msgid "Test team color in configure mode"
+msgstr "Teamfarbe bei Konfiguration testen"
 
 #: xonotic/util.qc:637 xonotic/dialog_hudsetup_exit.c:61
 msgid "Padding:"
