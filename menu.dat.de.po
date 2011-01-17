@@ -338,7 +338,7 @@ msgstr "Sofort anwenden"
 
 #: xonotic/dialog_hudpanel_score.c:4
 msgid "Score Panel"
-msgstr "Punktzahl-Panel"
+msgstr "Punkte-Panel"
 
 #: xonotic/dialog_singleplayer_winner.c:4
 msgid "Winner"
