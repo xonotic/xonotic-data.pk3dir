@@ -504,634 +504,630 @@ msgstr "Map-Information"
 
 #: xonotic/dialog_multiplayer_create_mapinfo.c:49
 msgid "Full item placement"
-msgstr ""
+msgstr "mit Waffen"
 
 #: xonotic/dialog_multiplayer_create_mapinfo.c:49
 msgid "MinstaGib only"
-msgstr ""
+msgstr "nur MinstaGib"
 
 #: xonotic/dialog_multiplayer_create_mapinfo.c:78
 msgid "Title:"
-msgstr ""
+msgstr "Titel:"
 
 #: xonotic/dialog_multiplayer_create_mapinfo.c:84
 msgid "Author:"
-msgstr ""
+msgstr "Autor:"
 
 #: xonotic/dialog_multiplayer_create_mapinfo.c:90
 msgid "Features:"
-msgstr ""
+msgstr "Features:"
 
 #: xonotic/dialog_multiplayer_create_mapinfo.c:95
 msgid "Game types:"
-msgstr ""
+msgstr "Spieltyp:"
 
 #: xonotic/dialog_multiplayer_create_mapinfo.c:122
 #: xonotic/dialog_multiplayer_demo.c:46
 msgid "Play"
-msgstr ""
+msgstr "Start"
 
 #: xonotic/campaign.c:285
 #, c-format
 msgid "Level %d: %s"
-msgstr ""
+msgstr "Level %d: %s"
 
 #: xonotic/dialog_hudpanel_healtharmor.c:4
 msgid "Health/Armor Panel"
-msgstr ""
+msgstr "Health/Armor-Panel"
 
 #: xonotic/dialog_hudpanel_healtharmor.c:22
 #: xonotic/dialog_hudpanel_powerups.c:22
 msgid "Enable status bar"
-msgstr ""
+msgstr "Statusleiste anzeigen"
 
 #: xonotic/dialog_hudpanel_healtharmor.c:24
 #: xonotic/dialog_hudpanel_powerups.c:24
 msgid "Status bar alignment:"
-msgstr ""
+msgstr "Statusleistenausrichtung"
 
 #: xonotic/dialog_hudpanel_healtharmor.c:28
 #: xonotic/dialog_hudpanel_healtharmor.c:40 xonotic/dialog_hudpanel_ammo.c:29
 #: xonotic/dialog_hudpanel_powerups.c:28 xonotic/dialog_hudpanel_powerups.c:40
 msgid "Left"
-msgstr ""
+msgstr "Links"
 
 #: xonotic/dialog_hudpanel_healtharmor.c:30
 #: xonotic/dialog_hudpanel_healtharmor.c:41 xonotic/dialog_hudpanel_ammo.c:30
 #: xonotic/dialog_hudpanel_powerups.c:30 xonotic/dialog_hudpanel_powerups.c:41
 msgid "Right"
-msgstr ""
+msgstr "Rechts"
 
 #: xonotic/dialog_hudpanel_healtharmor.c:32
 #: xonotic/dialog_hudpanel_healtharmor.c:42
 #: xonotic/dialog_hudpanel_powerups.c:32 xonotic/dialog_hudpanel_powerups.c:42
 msgid "Inward"
-msgstr ""
+msgstr "Innen"
 
 #: xonotic/dialog_hudpanel_healtharmor.c:34
 #: xonotic/dialog_hudpanel_healtharmor.c:43
 #: xonotic/dialog_hudpanel_powerups.c:34 xonotic/dialog_hudpanel_powerups.c:43
 msgid "Outward"
-msgstr ""
+msgstr "Außen"
 
 #: xonotic/dialog_hudpanel_healtharmor.c:37
 #: xonotic/dialog_hudpanel_powerups.c:37
 msgid "Icon alignment:"
-msgstr ""
+msgstr "Iconausrichtung:"
 
 #: xonotic/dialog_hudpanel_healtharmor.c:45
 msgid "Flip health and armor positions"
-msgstr ""
+msgstr "Health und Armor tauschen"
 
 #: xonotic/dialog_multiplayer_demo.c:4
 msgid "Demo"
-msgstr ""
+msgstr "Demo"
 
 #: xonotic/dialog_multiplayer_demo.c:28
 msgid "Record demos while playing"
-msgstr ""
+msgstr "Demo beim Spielen aufnehmen"
 
 #: xonotic/dialog_multiplayer_demo.c:32 xonotic/dialog_multiplayer_join.c:28
 msgid "Filter:"
-msgstr ""
+msgstr "Filter:"
 
 #: xonotic/dialog_multiplayer_demo.c:33
 #: xonotic/dialog_settings_misc_cvars.c:24
 #: xonotic/dialog_multiplayer_join.c:29 xonotic/dialog_settings_input.c:41
 msgid "Clear"
-msgstr ""
+msgstr "Löschen"
 
 #: xonotic/dialog_multiplayer_demo.c:43
 msgid "Timedemo"
-msgstr ""
+msgstr "Timedemo"
 
 #: xonotic/dialog_hudpanel_pressedkeys.c:4
 msgid "Pressed Keys Panel"
-msgstr ""
+msgstr "Gedrückte-Tasten-Panel"
 
 #: xonotic/dialog_hudpanel_pressedkeys.c:21 xonotic/dialog_hudpanel_radar.c:21
 msgid "Panel disabled"
-msgstr ""
+msgstr "Panel nicht anzeigen"
 
 #: xonotic/dialog_hudpanel_pressedkeys.c:22
 msgid "Panel enabled when spectating"
-msgstr ""
+msgstr "Panel beim Zuschauen anzeigen"
 
 #: xonotic/dialog_hudpanel_pressedkeys.c:23 xonotic/dialog_hudpanel_radar.c:23
 msgid "Panel always enabled"
-msgstr ""
+msgstr "Panel immer anzeigen"
 
 #: xonotic/dialog_hudpanel_pressedkeys.c:30
 msgid "Forced aspect:"
-msgstr ""
+msgstr "Aspektverhältnis:"
 
 #: xonotic/dialog_teamselect.c:5
 msgid "Team Selection"
-msgstr ""
+msgstr "Teamauswahl"
 
 #: xonotic/dialog_teamselect.c:41
 msgid "join 'best' team (auto-select)"
-msgstr ""
+msgstr "'bestem' Team beitreten"
 
 #: xonotic/dialog_teamselect.c:45
 msgid "red"
-msgstr ""
+msgstr "rot"
 
 #: xonotic/dialog_teamselect.c:46
 msgid "blue"
-msgstr ""
+msgstr "blau"
 
 #: xonotic/dialog_teamselect.c:47
 msgid "yellow"
-msgstr ""
+msgstr "gelb"
 
 #: xonotic/dialog_teamselect.c:48
 msgid "pink"
-msgstr ""
+msgstr "pink"
 
 #: xonotic/dialog_teamselect.c:51
 msgid "spectate"
-msgstr ""
+msgstr "zuschauen"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:7
 msgid "Mutators"
-msgstr ""
+msgstr "Mutators"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:33
 msgid "All Weapons Arena"
-msgstr ""
+msgstr "Alle-Waffen-Arena"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:35
 msgid "Most Weapons Arena"
-msgstr ""
+msgstr "Viele-Waffen-Arena"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:56
 #, c-format
 msgid "%s Arena"
-msgstr ""
+msgstr "%s-Arena"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:68
 #: xonotic/dialog_multiplayer_create_mutators.c:167
 msgid "Dodging"
-msgstr ""
+msgstr "Ausweichen"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:70
 #: xonotic/dialog_multiplayer_create_mutators.c:250
 msgid "MinstaGib"
-msgstr ""
+msgstr "MinstaGib"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:72
 #: xonotic/dialog_multiplayer_create_mutators.c:253
 msgid "NIX"
-msgstr ""
+msgstr "NIX"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:74
 #: xonotic/dialog_multiplayer_create_mutators.c:205
 msgid "Rocket Flying"
-msgstr ""
+msgstr "Raketen-Fliegen"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:78
 #: xonotic/dialog_multiplayer_create_mutators.c:264
 msgid "No start weapons"
-msgstr ""
+msgstr "Ohne Waffen starten"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:80
 #: xonotic/dialog_multiplayer_create_mutators.c:189
 msgid "Low gravity"
-msgstr ""
+msgstr "Wenig Schwerkraft"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:82
 #: xonotic/dialog_multiplayer_create_mutators.c:170
 msgid "Cloaked"
-msgstr ""
+msgstr "Tarnung"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:84
 msgid "Hook"
-msgstr ""
+msgstr "Enterhaken"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:86
 #: xonotic/dialog_multiplayer_create_mutators.c:173
 msgid "Midair"
-msgstr ""
+msgstr "in der Luft"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:88
 #: xonotic/dialog_multiplayer_create_mutators.c:176
 msgid "Vampire"
-msgstr ""
+msgstr "Vampir"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:90
 #: xonotic/dialog_multiplayer_create_mutators.c:208
 msgid "Pinata"
-msgstr ""
+msgstr "Piñata"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:92
 #: xonotic/dialog_multiplayer_create_mutators.c:211
 msgid "Weapons stay"
-msgstr ""
-
-#: xonotic/dialog_multiplayer_create_mutators.c:94
-msgid "Bloodloss"
-msgstr ""
+msgstr "Waffen bleiben"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:96
 #: xonotic/dialog_multiplayer_create_mutators.c:202
 msgid "Jet pack"
-msgstr ""
+msgstr "Jetpack"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:164
 msgid "Gameplay mutators:"
-msgstr ""
+msgstr "Spielmechanik-Mutators:"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:180
 msgid "Blood loss"
-msgstr ""
+msgstr "Blutverlust"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:196
 msgid "Weapon & item mutators:"
-msgstr ""
+msgstr "Waffen/Gegenstände-Mutators:"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:199
 msgid "Grappling hook"
-msgstr ""
+msgstr "Enterhaken"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:215
 msgid "Weapon arenas:"
-msgstr ""
+msgstr "Waffen-Arenen"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:218
 msgid "Regular (no arena)"
-msgstr ""
+msgstr "Normal (keine Arena)"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:239
 #: xonotic/dialog_multiplayer_create_mutators.c:256
 msgid "with laser"
-msgstr ""
+msgstr "mit Laser"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:247
 msgid "Special arenas:"
-msgstr ""
+msgstr "Spezielle Arenen"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:260
 msgid "Most weapons"
-msgstr ""
+msgstr "Viele Waffen"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:6
 msgid "Advanced server settings"
-msgstr ""
+msgstr "Erweiterte Servereinstellungen"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:25
 msgid "Game settings:"
-msgstr ""
+msgstr "Spieleinstellungen"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:28
 msgid "Allow spectating"
-msgstr ""
+msgstr "Zuschauer erlauben"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:31
 msgid "Spawn shield:"
-msgstr ""
+msgstr "Startschutz:"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:36
 msgid "Game speed:"
-msgstr ""
+msgstr "Spieltempo:"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:40
 msgid "Teamplay settings:"
-msgstr ""
+msgstr "Teamplay-Einstellungen:"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:43
 msgid "Friendly fire scale:"
-msgstr ""
+msgstr "Eigenbeschuss-Faktor:"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:47
 msgid "Virtual friendly fire (effect only)"
-msgstr ""
+msgstr "Virtueller Eigenbeschuss (nur Effekt)"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:50
 msgid "Friendly fire penalty:"
-msgstr ""
+msgstr "Strafe für Eigenbeschuss:"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:54
 msgid "Virtual penalty (effect only)"
-msgstr ""
+msgstr "Virtuelle Strafe (nur Effekt)"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:57
 msgid "Teams:"
-msgstr ""
+msgstr "Teams:"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:66
 msgid "Map voting:"
-msgstr ""
+msgstr "Map-Wahl:"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:68
 msgid "No voting"
-msgstr ""
+msgstr "Keine Wahl"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:69
 msgid "2 choices"
-msgstr ""
+msgstr "2 Optionen"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:70
 msgid "3 choices"
-msgstr ""
+msgstr "3 Optionen"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:71
 msgid "4 choices"
-msgstr ""
+msgstr "4 Optionen"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:72
 msgid "5 choices"
-msgstr ""
+msgstr "5 Optionen"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:73
 msgid "6 choices"
-msgstr ""
+msgstr "6 Optionen"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:74
 msgid "7 choices"
-msgstr ""
+msgstr "7 Optionen"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:75
 msgid "8 choices"
-msgstr ""
+msgstr "8 Optionen"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:76
 msgid "9 choices"
-msgstr ""
+msgstr "9 Optionen"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:79
 msgid "Simple majority wins vcall"
-msgstr ""
+msgstr "Einfache Mehrheit gewinnt vcall"
 
 #: xonotic/dialog_hudpanel_chat.c:4
 msgid "Chat Panel"
-msgstr ""
+msgstr "Chat-Panel"
 
 #: xonotic/dialog_hudpanel_chat.c:22
 msgid "Chat entries:"
-msgstr ""
+msgstr "Chat-Zeilen:"
 
 #: xonotic/dialog_hudpanel_chat.c:25
 msgid "Chat size:"
-msgstr ""
+msgstr "Chat-Größe:"
 
 #: xonotic/dialog_hudpanel_chat.c:29
 msgid "Chat lifetime:"
-msgstr ""
+msgstr "Chat-Sichtbarkeit:"
 
 #: xonotic/dialog_hudpanel_chat.c:33
 msgid "Chat beep sound"
-msgstr ""
+msgstr "Chat-Piepton:"
 
 #: xonotic/dialog_hudpanel_ammo.c:4
 msgid "Ammo Panel"
-msgstr ""
+msgstr "Munitons-Panel"
 
 #: xonotic/dialog_hudpanel_ammo.c:22
 msgid "Ammunition display:"
-msgstr ""
+msgstr "Munitionsanzeige:"
 
 #: xonotic/dialog_hudpanel_ammo.c:25
 msgid "Show only current ammo type"
-msgstr ""
+msgstr "Nur aktuellen Munitionstyp anzeigen"
 
 #: xonotic/dialog_settings.c:4
 msgid "Settings"
-msgstr ""
+msgstr "Einstellungen"
 
 #: xonotic/dialog_settings.c:18 xonotic/dialog_settings_input.c:4
 msgid "Input"
-msgstr ""
+msgstr "Eingabe"
 
 #: xonotic/dialog_settings.c:19 xonotic/dialog_settings_video.c:4
 msgid "Video"
-msgstr ""
+msgstr "Grafik"
 
 #: xonotic/dialog_settings.c:20 xonotic/dialog_settings_effects.c:4
 msgid "Effects"
-msgstr ""
+msgstr "Effekte"
 
 #: xonotic/dialog_settings.c:21 xonotic/dialog_settings_audio.c:4
 msgid "Audio"
-msgstr ""
+msgstr "Ton"
 
 #: xonotic/dialog_settings.c:22 xonotic/dialog_settings_network.c:4
 msgid "Network"
-msgstr ""
+msgstr "Netzwerk"
 
 #: xonotic/dialog_settings.c:23 xonotic/dialog_settings_misc.c:4
 msgid "Misc"
-msgstr ""
+msgstr "Sonstiges"
 
 #: xonotic/playermodel.c:174
 msgid "<no model found>"
-msgstr ""
+msgstr "<Spielermodell nicht gefunden>"
 
 #: xonotic/dialog_hudpanel_score.c:4
 msgid "Score Panel"
-msgstr ""
+msgstr "Punktzahl-Panel"
 
 #: xonotic/dialog_hudpanel_modicons.c:4
 msgid "Mod Icons Panel"
-msgstr ""
+msgstr "Mod-Symbole-Panel"
 
 #: xonotic/dialog_settings_misc_cvars.c:5
 msgid "Advanced settings"
-msgstr ""
+msgstr "Erweiterte Einstellungen"
 
 #: xonotic/dialog_settings_misc_cvars.c:23
 msgid "Cvar filter:"
-msgstr ""
+msgstr "Cvar-Filter:"
 
 #: xonotic/dialog_settings_misc_cvars.c:34
 msgid "Setting:"
-msgstr ""
+msgstr "Einstellung:"
 
 #: xonotic/dialog_settings_misc_cvars.c:42
 msgid "Value:"
-msgstr ""
+msgstr "Wert:"
 
 #: xonotic/dialog_settings_misc_cvars.c:54
 msgid "Description:"
-msgstr ""
+msgstr "Beschreibung:"
 
 #: xonotic/slider_decibels.c:50
 msgid "OFF"
-msgstr ""
+msgstr "AUS"
 
 #: xonotic/slider_decibels.c:52
 msgid "MAX"
-msgstr ""
+msgstr "MAX"
 
 #: xonotic/slider_decibels.c:53
 #, c-format
 msgid "%s dB"
-msgstr ""
+msgstr "%s dB"
 
 #: xonotic/mainwindow.c:22 xonotic/mainwindow.c:25
 msgid "Do not press this button again!"
-msgstr ""
+msgstr "Bitte nicht nochmal diesen Knopf drücken!"
 
 #: xonotic/dialog_settings_video.c:26
 msgid "Resolution:"
-msgstr ""
+msgstr "Auflösung:"
 
 #: xonotic/dialog_settings_video.c:29
 msgid "Font/UI size:"
-msgstr ""
+msgstr "Schriftgröße:"
 
 #: xonotic/dialog_settings_video.c:31
 msgid "Unreadable"
-msgstr ""
+msgstr "Unleserlich"
 
 #: xonotic/dialog_settings_video.c:32
 msgid "Tiny"
-msgstr ""
+msgstr "Winzig"
 
 #: xonotic/dialog_settings_video.c:33
 msgid "Little"
-msgstr ""
+msgstr "Klein"
 
 #: xonotic/dialog_settings_video.c:37
 msgid "Huge"
-msgstr ""
+msgstr "Riesig"
 
 #: xonotic/dialog_settings_video.c:38
 msgid "Gigantic"
-msgstr ""
+msgstr "Gigantisch"
 
 #: xonotic/dialog_settings_video.c:39
 msgid "Colossal"
-msgstr ""
+msgstr "Kolossal"
 
 #: xonotic/dialog_settings_video.c:42
 msgid "Color depth:"
-msgstr ""
+msgstr "Farbtiefe:"
 
 #: xonotic/dialog_settings_video.c:45
 msgid "Full screen"
-msgstr ""
+msgstr "Vollbild"
 
 #: xonotic/dialog_settings_video.c:46
 msgid "Vertical Synchronization"
-msgstr ""
+msgstr "Vertikale Synchronisation"
 
 #: xonotic/dialog_settings_video.c:49
 msgid "Use OpenGL 2.0 shaders (GLSL)"
-msgstr ""
+msgstr "OpenGL 2.0 Shaders verwenden (GLSL)"
 
 #: xonotic/dialog_settings_video.c:52
 msgid "Use Occlusion Queries"
-msgstr ""
+msgstr "Occlusion Queries verwenden"
 
 #: xonotic/dialog_settings_video.c:55
 msgid "Vertex Buffer Objects (VBOs)"
-msgstr ""
+msgstr "Vertex Buffer Objects (VBOs)"
 
 #: xonotic/dialog_settings_video.c:58
 msgid "Off"
-msgstr ""
+msgstr "Aus"
 
 #: xonotic/dialog_settings_video.c:59
 msgid "Vertices, some Tris (compatible)"
-msgstr ""
+msgstr "Ecken, einige Dreiecke (kompatibel)"
 
 #: xonotic/dialog_settings_video.c:62
 msgid "Vertices"
-msgstr ""
+msgstr "Ecken"
 
 #: xonotic/dialog_settings_video.c:63
 msgid "Vertices and Triangles"
-msgstr ""
+msgstr "Ecken und Dreiecke"
 
 #: xonotic/dialog_settings_video.c:65
 msgid "Depth first:"
-msgstr ""
+msgstr "Tiefe zuerst rendern:"
 
 #: xonotic/dialog_settings_video.c:67 xonotic/dialog_settings_effects.c:64
 #: xonotic/dialog_settings_effects.c:102
 msgid "Disabled"
-msgstr ""
+msgstr "Aus"
 
 #: xonotic/dialog_settings_video.c:68
 msgid "World"
-msgstr ""
+msgstr "nur Map"
 
 #: xonotic/dialog_settings_video.c:69
 #: xonotic/dialog_multiplayer_playersetup.c:176
 #: xonotic/dialog_settings_audio.c:137
 msgid "All"
-msgstr ""
+msgstr "Immer"
 
 #: xonotic/dialog_settings_video.c:73
 msgid "Disable multithreaded OpenGL"
-msgstr ""
+msgstr "OpenGL-Multithreading deaktivieren"
 
 #: xonotic/dialog_settings_video.c:75
 msgid "Wait for GPU to finish each frame"
-msgstr ""
+msgstr "Bei jedem Frame auf die Grafikkarte warten"
 
 #: xonotic/dialog_settings_video.c:78
 msgid "Brightness:"
-msgstr ""
+msgstr "Helligkeit:"
 
 #: xonotic/dialog_settings_video.c:81
 msgid "Contrast:"
-msgstr ""
+msgstr "Kontrast:"
 
 #: xonotic/dialog_settings_video.c:84
 msgid "Gamma:"
-msgstr ""
+msgstr "Gamma:"
 
 #: xonotic/dialog_settings_video.c:87
 msgid "Contrast boost:"
-msgstr ""
+msgstr "Kontrasterhöhung:"
 
 #: xonotic/dialog_settings_video.c:90
 msgid "Saturation:"
-msgstr ""
+msgstr "Sättigung:"
 
 #: xonotic/dialog_settings_video.c:95
 msgid "Use GLSL to handle color control"
-msgstr ""
+msgstr "GLSL für Farbregelung verwenden"
 
 #: xonotic/dialog_settings_video.c:99 xonotic/dialog_settings_audio.c:38
 msgid "Ambient:"
-msgstr ""
+msgstr "Umgebungslicht:"
 
 #: xonotic/dialog_settings_video.c:102
 msgid "Intensity:"
-msgstr ""
+msgstr "Lichtstärke:"
 
 #: xonotic/dialog_settings_video.c:106 xonotic/dialog_settings_misc.c:30
 #: xonotic/dialog_multiplayer_playersetup.c:193
 #: xonotic/dialog_settings_effects.c:193 xonotic/dialog_settings_audio.c:176
 msgid "Apply immediately"
-msgstr ""
+msgstr "Sofort anwenden"
 
 #: xonotic/dialog_multiplayer_join.c:4
 msgid "Join"
-msgstr ""
+msgstr "Verbinden"
 
 #: xonotic/dialog_multiplayer_join.c:36
 msgid "Empty"
-msgstr ""
+msgstr "Leer"
 
 #: xonotic/dialog_multiplayer_join.c:40 xonotic/dialog_settings_audio.c:147
 msgid "Full"
-msgstr ""
+msgstr "Voll"
 
 #: xonotic/dialog_multiplayer_join.c:44
 msgid "Pause"
-msgstr ""
+msgstr "Pause"
 
 #: xonotic/dialog_multiplayer_join.c:56
 msgid "Address:"
-msgstr ""
+msgstr "Adresse:"
 
 #: xonotic/dialog_multiplayer_join.c:65
-msgid "Info"
-msgstr ""
+msgid "Info..."
+msgstr "Info..."
 
 #: xonotic/dialog_credits.c:5
 msgid "Credits"
@@ -1139,63 +1135,63 @@ msgstr ""
 
 #: xonotic/dialog_settings_misc.c:26
 msgid "Menu skins:"
-msgstr ""
+msgstr "Menü-Skins:"
 
 #: xonotic/dialog_settings_misc.c:35
 msgid "Show current time"
-msgstr ""
+msgstr "Uhrzeit anzeigen"
 
 #: xonotic/dialog_settings_misc.c:37
 msgid "Show current date"
-msgstr ""
+msgstr "Datum anzeigen"
 
 #: xonotic/dialog_settings_misc.c:39
 msgid "Show frames per second"
-msgstr ""
+msgstr "Frames pro Sekunde anzeigen"
 
 #: xonotic/dialog_settings_misc.c:41
 msgid "Speedometer"
-msgstr ""
+msgstr "Tachometer"
 
 #: xonotic/dialog_settings_misc.c:44
 msgid "qu/s (hidden)"
-msgstr ""
+msgstr "qu/s (ohne Einheit)"
 
 #: xonotic/dialog_settings_misc.c:46
 msgid "qu/s"
-msgstr ""
+msgstr "qu/s"
 
 #: xonotic/dialog_settings_misc.c:48
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #: xonotic/dialog_settings_misc.c:52
 msgid "km/h"
-msgstr ""
+msgstr "km/h"
 
 #: xonotic/dialog_settings_misc.c:54
 msgid "mph"
-msgstr ""
+msgstr "mph"
 
 #: xonotic/dialog_settings_misc.c:56
 msgid "knots"
-msgstr ""
+msgstr "Knoten"
 
 #: xonotic/dialog_settings_misc.c:59
 msgid "Show accelerometer"
-msgstr ""
+msgstr "Akzelerometer anzeigen"
 
 #: xonotic/dialog_settings_misc.c:62
 msgid "Accelerometer scale:"
-msgstr ""
+msgstr "Akzelerometer-Skalierung:"
 
 #: xonotic/dialog_settings_misc.c:69
 msgid "Minimize input latency"
-msgstr ""
+msgstr "Eingabelatenz minimieren"
 
 #: xonotic/dialog_settings_misc.c:73 xonotic/dialog_multiplayer_create.c:98
 msgid "Advanced settings..."
-msgstr ""
+msgstr "Erweiterte Einstellungen..."
 
 #: xonotic/dialog_hudpanel_notification.c:4
 msgid "Notification Panel"

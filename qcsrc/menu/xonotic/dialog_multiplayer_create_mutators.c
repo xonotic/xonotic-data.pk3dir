@@ -91,7 +91,7 @@ string XonoticMutatorsDialog_toString(entity me)
 	if(cvar("g_weapon_stay"))
 		s = strcat(s, ", ", _("Weapons stay"));
 	if(cvar("g_bloodloss") > 0)
-		s = strcat(s, ", ", _("Bloodloss"));
+		s = strcat(s, ", ", _("Blood loss"));
 	if(cvar("g_jetpack"))
 		s = strcat(s, ", ", _("Jet pack"));
 	if(s == "")

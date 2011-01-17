@@ -62,7 +62,7 @@ void XonoticServerListTab_fill(entity me)
 			e.onClick = ServerList_Favorite_Click;
 			e.onClickEntity = slist;
 			slist.favoriteButton = e;
-		me.TD(me, 1, 1.5, e = makeXonoticButton(_("Info"), '0 0 0'));
+		me.TD(me, 1, 1.5, e = makeXonoticButton(_("Info..."), '0 0 0'));
 			e.onClick = ServerList_Info_Click;
 			e.onClickEntity = slist;
 			slist.infoButton = e;
