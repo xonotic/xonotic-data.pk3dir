@@ -95,7 +95,7 @@ msgstr "Numéro"
 
 #: xonotic/dialog_hudpanel_weapons.c:46
 msgid "Bind"
-msgstr "Touche d'accès"
+msgstr "Touche"
 
 #: xonotic/dialog_hudpanel_weapons.c:49
 msgid "Show Accuracy"
@@ -124,11 +124,11 @@ msgstr "Pseudonyme:"
 
 #: xonotic/dialog_settings_input_userbind.c:42
 msgid "Command when pressed:"
-msgstr "Commande quand touche appuyée:"
+msgstr "Commande quand appuyée:"
 
 #: xonotic/dialog_settings_input_userbind.c:45
 msgid "Command when released:"
-msgstr "Commande quand touche relachée:"
+msgstr "Commande quand relachée:"
 
 #: xonotic/dialog_settings_input_userbind.c:48
 msgid "Save"
@@ -184,7 +184,7 @@ msgstr "Armes:"
 
 #: xonotic/dialog_settings_audio.c:103 xonotic/dialog_settings_audio.c:161
 msgid "Frequency:"
-msgstr "Fréquance:"
+msgstr "Fréquence:"
 
 #: xonotic/dialog_settings_audio.c:105
 msgid "8 kHz"
@@ -369,7 +369,7 @@ msgstr "erreur: a reçu un fichier HTML et non une notification de mise à jour\
 
 #: xonotic/util.qc:288
 msgid "error: received carriage returns from update notification server\n"
-msgstr ""
+msgstr "erreur: a reçu un message erroné depuis le serveur de notifications de M.A.J.\n"
 
 #: xonotic/util.qc:309
 #, c-format
@@ -686,7 +686,7 @@ msgstr "Monojoueur"
 
 #: xonotic/dialog_singleplayer.c:59
 msgid "Instant action! (random map with bots)"
-msgstr "Instant action! (map aléactoire avec bots)"
+msgstr "Instant action! (map aléatoire avec bots)"
 
 #: xonotic/dialog_singleplayer.c:66 xonotic/campaign.c:284
 msgid "???"
@@ -1054,7 +1054,7 @@ msgstr "Désactivé"
 
 #: xonotic/dialog_settings_video.c:59
 msgid "Vertices, some Tris (compatible)"
-msgstr "Points, quelques triangles (compatible)"
+msgstr "Points, quelques Triangles (compatible)"
 
 #: xonotic/dialog_settings_video.c:62
 msgid "Vertices"
@@ -1370,7 +1370,7 @@ msgstr "9 choix"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:79
 msgid "Simple majority wins vcall"
-msgstr "Majorité simple pour gagner le vote"
+msgstr "Majorité 50% pour gagner le vote"
 
 #: xonotic/dialog_hudpanel_infomessages.c:4
 msgid "Info Messages Panel"
@@ -2159,7 +2159,7 @@ msgstr "Panneau Mini-carte"
 
 #: xonotic/dialog_hudpanel_radar.c:22
 msgid "Panel enabled in teamgames"
-msgstr "Panneau activé en modes d'Équipe"
+msgstr "Panneau activé en Équipe"
 
 #: xonotic/dialog_hudpanel_radar.c:29
 msgid "Radar:"

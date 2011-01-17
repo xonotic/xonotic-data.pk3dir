@@ -4,7 +4,7 @@ CLASS(XonoticServerInfoDialog) EXTENDS(XonoticDialog)
 	METHOD(XonoticServerInfoDialog, loadServerInfo, void(entity, float))
 	ATTRIB(XonoticServerInfoDialog, title, string, _("Server Information"))
 	ATTRIB(XonoticServerInfoDialog, color, vector, SKINCOLOR_DIALOG_SERVERINFO)
-	ATTRIB(XonoticServerInfoDialog, intendedWidth, float, 0.68)
+	ATTRIB(XonoticServerInfoDialog, intendedWidth, float, 0.8)
 	ATTRIB(XonoticServerInfoDialog, rows, float, 15)
 	ATTRIB(XonoticServerInfoDialog, columns, float, 12)
 

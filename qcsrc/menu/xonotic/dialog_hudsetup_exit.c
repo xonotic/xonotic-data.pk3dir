@@ -21,14 +21,14 @@ void XonoticHUDExitDialog_fill(entity me)
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Panel background defaults:")));
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, "Background:"));
-			me.TD(me, 1, 1.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_bg"))));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_bg"))));
 				e.addValue(e, _("Disable"), "0");
 				e.addValue(e, "border_default", "border_default"); // this is a file name!
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Color:")));
-		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString("hud_panel_bg_color", "hud_panel_bg_color"));
+		me.TD(me, 2, 2.6, e = makeXonoticColorpickerString("hud_panel_bg_color", "hud_panel_bg_color"));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -55,7 +55,7 @@ void XonoticHUDExitDialog_fill(entity me)
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_configure_teamcolorforced", _("Test team color in configure mode")));
+		me.TD(me, 1, 3.6, e = makeXonoticCheckBox(0, "hud_configure_teamcolorforced", _("Test team color in configure mode")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Padding:")));
@@ -75,7 +75,7 @@ void XonoticHUDExitDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Color:")));
-		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString("hud_dock_color", "hud_dock_color"));
+		me.TD(me, 2, 2.6, e = makeXonoticColorpickerString("hud_dock_color", "hud_dock_color"));
 	me.TR(me);
 	me.TR(me);	
 		me.TDempty(me, 0.2);
@@ -96,7 +96,7 @@ void XonoticHUDExitDialog_fill(entity me)
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Grid settings:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_configure_grid", _("Snap panels to grid")));
+		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_configure_grid", _("Snap panels to grid")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Grid size:")));
