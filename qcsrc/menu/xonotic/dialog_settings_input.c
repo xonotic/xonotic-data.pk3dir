@@ -63,6 +63,6 @@ void XonoticInputSettingsTab_fill(entity me)
 		else if(cvar_type("apple_mouse_noaccel") & CVAR_TYPEFLAG_ENGINE)
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "apple_mouse_noaccel", _("Turn off OS mouse acceleration")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", "\"enter console\" also closes"));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", _("\"enter console\" also closes")));
 }
 #endif

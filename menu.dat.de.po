@@ -1093,7 +1093,7 @@ msgstr "GLSL für Farbregelung verwenden"
 
 #: xonotic/dialog_settings_video.c:99 xonotic/dialog_settings_audio.c:38
 msgid "Ambient:"
-msgstr "Umgebungslicht:"
+msgstr "Umgebung:"
 
 #: xonotic/dialog_settings_video.c:102
 msgid "Intensity:"
@@ -1950,7 +1950,7 @@ msgstr "Normalmaps verwenden"
 
 #: xonotic/dialog_settings_effects.c:170
 msgid "Soft shadows"
-msgstr "Weiche Schaten"
+msgstr "Weiche Schatten"
 
 #: xonotic/dialog_settings_effects.c:173
 msgid "Coronas"
