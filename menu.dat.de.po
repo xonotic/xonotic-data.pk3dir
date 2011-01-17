@@ -1235,7 +1235,7 @@ msgstr "Vampir"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:90
 #: xonotic/dialog_multiplayer_create_mutators.c:208
-msgid "Pinata"
+msgid "Piñata"
 msgstr "Piñata"
 
 #: xonotic/dialog_multiplayer_create_mutators.c:92
