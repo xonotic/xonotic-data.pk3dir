@@ -58,7 +58,7 @@ msgstr "Jamais"
 #: xonotic/dialog_hudpanel_weapons.c:28
 #, c-format
 msgid "%ds"
-msgstr ""
+msgstr "%ds"
 
 #: xonotic/dialog_hudpanel_weapons.c:32
 msgid "Fade effect:"
@@ -1322,7 +1322,7 @@ msgstr "Pénalité Dégâts équipiers:"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:54
 msgid "Virtual penalty (effect only)"
-msgstr "Pénalité Dégâts équipiers virtuelle (seulement effets)
+msgstr "Pénalité Dégâts équipiers virtuelle (seulement effets)"
 
 #: xonotic/dialog_multiplayer_create_advanced.c:57
 msgid "Teams:"
