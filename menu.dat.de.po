@@ -1,230 +1,233 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Xonotic Menu
+# Copyright (C) 2011 Team Xonotic
+# This file is distributed under the same license as the Xonotic package.
+# Rudolf Polzer <divVerent@xonotic.org>
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-01-17 06:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: xonotic/dialog_hudpanel_engineinfo.c:4
 msgid "Engine Info Panel"
-msgstr ""
+msgstr "Engine-Info-Panel"
 
 #: xonotic/dialog_hudpanel_engineinfo.c:22
 msgid "Engine info:"
-msgstr ""
+msgstr "Engine-Info:"
 
 #: xonotic/dialog_hudpanel_engineinfo.c:25
 msgid "Use an averaging algorithm for fps"
-msgstr ""
+msgstr "Zeige einen Durchschnittswert für fps"
 
 #: xonotic/dialog_singleplayer.c:4
 msgid "Singleplayer"
-msgstr ""
+msgstr "Einzelspieler"
 
 #: xonotic/dialog_singleplayer.c:59
 msgid "Instant action! (random map with bots)"
-msgstr ""
+msgstr "Sofortstart! (zufällige Map mit Bots)"
 
 #: xonotic/dialog_singleplayer.c:66 xonotic/campaign.c:284
 msgid "???"
-msgstr ""
+msgstr "???"
 
 #: xonotic/dialog_singleplayer.c:80
 msgid "Start Singleplayer!"
-msgstr ""
+msgstr "Spiel starten!"
 
 #: xonotic/util.qc:263
 #, c-format
 msgid "Received HTTP request data for an invalid id %d.\n"
-msgstr ""
+msgstr "HTTP-Antwort für ungültige ID %d erhalten.\n"
 
 #: xonotic/util.qc:278
 #, c-format
 msgid "error receiving update notification: status is %d\n"
-msgstr ""
+msgstr "Fehler beim Empfang von Update-Information (Status: %d)\n"
 
 #: xonotic/util.qc:283
 msgid "error: received HTML instead of an update notification\n"
-msgstr ""
+msgstr "Fehler: HTML statt Update-Information erhalten\n"
 
 #: xonotic/util.qc:288
 msgid "error: received carriage returns from update notification server\n"
-msgstr ""
+msgstr "Fehler: Carriage-Returns in Update-Information enthalten\n"
 
 #: xonotic/util.qc:309
 #, c-format
 msgid ""
 "Update can be downloaded at:\n"
 "%s\n"
-msgstr ""
+msgstr "Das Update kann bei:\n"
+"%s\n"
+"heruntergeladen werden.\n"
 
 #: xonotic/util.qc:330
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr ""
+msgstr "Automatische Generierung von mapinfo-Dateien..."
 
 #: xonotic/util.qc:502
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems.\n"
 msgstr ""
+"^1FEHLER: Texturekompression ist notwendig aber nicht unterstützt.\n"
+"^1Darstellungsprobleme sind zu erwarten.\n"
 
 #: xonotic/util.qc:524
 msgid "Arena"
-msgstr ""
+msgstr "Arena"
 
 #: xonotic/util.qc:525
 msgid "Assault"
-msgstr ""
+msgstr "Assault"
 
 #: xonotic/util.qc:526
 msgid "Capture The Flag"
-msgstr ""
+msgstr "Capture The Flag"
 
 #: xonotic/util.qc:527
 msgid "Clan Arena"
-msgstr ""
+msgstr "Clan Arena"
 
 #: xonotic/util.qc:528
 msgid "Deathmatch"
-msgstr ""
+msgstr "Deathmatch"
 
 #: xonotic/util.qc:529
 msgid "Domination"
-msgstr ""
+msgstr "Domination"
 
 #: xonotic/util.qc:530
 msgid "Freeze Tag"
-msgstr ""
+msgstr "Freeze Tag"
 
 #: xonotic/util.qc:531
 msgid "Keepaway"
-msgstr ""
+msgstr "Keepaway"
 
 #: xonotic/util.qc:532
 msgid "Key Hunt"
-msgstr ""
+msgstr "Key Hunt"
 
 #: xonotic/util.qc:533
 msgid "Last Man Standing"
-msgstr ""
+msgstr "Last Man Standing"
 
 #: xonotic/util.qc:534
 msgid "Nexball"
-msgstr ""
+msgstr "Nexball"
 
 #: xonotic/util.qc:535
 msgid "Onslaught"
-msgstr ""
+msgstr "Onslaught"
 
 #: xonotic/util.qc:536
 msgid "Race"
-msgstr ""
+msgstr "Race"
 
 #: xonotic/util.qc:537
 msgid "Race CTS"
-msgstr ""
+msgstr "Race CTS"
 
 #: xonotic/util.qc:538
 msgid "Runematch"
-msgstr ""
+msgstr "Runematch"
 
 #: xonotic/util.qc:539
 msgid "Team Deathmatch"
-msgstr ""
+msgstr "Team Deathmatch"
 
 #: xonotic/util.qc:558
 #, c-format
 msgid "@!#%'n Tuba Throwing"
-msgstr ""
+msgstr "@!#%'n Tuba-Werfen"
 
 #: xonotic/util.qc:592
 msgid "Background:"
-msgstr ""
+msgstr "Hintergrund:"
 
 #: xonotic/util.qc:594 xonotic/util.qc:610 xonotic/util.qc:619
 #: xonotic/util.qc:627 xonotic/util.qc:639
 msgid "Default"
-msgstr ""
+msgstr "Standard"
 
 #: xonotic/util.qc:595 xonotic/util.qc:611 xonotic/util.qc:628
 #: xonotic/dialog_hudsetup_exit.c:25 xonotic/dialog_hudsetup_exit.c:37
 #: xonotic/dialog_hudsetup_exit.c:52 xonotic/dialog_hudsetup_exit.c:70
 #: xonotic/dialog_hudsetup_exit.c:91
 msgid "Disable"
-msgstr ""
+msgstr "Aus"
 
 #: xonotic/util.qc:600 xonotic/dialog_hudsetup_exit.c:30
 #: xonotic/dialog_hudsetup_exit.c:77
 msgid "Color:"
-msgstr ""
+msgstr "Farbe:"
 
 #: xonotic/util.qc:605
 msgid "Use default"
-msgstr ""
+msgstr "Standard verwenden"
 
 #: xonotic/util.qc:608 xonotic/dialog_hudsetup_exit.c:35
 msgid "Border size:"
-msgstr ""
+msgstr "Rahmengröße:"
 
 #: xonotic/util.qc:617 xonotic/dialog_hudsetup_exit.c:43
 #: xonotic/dialog_hudsetup_exit.c:82 xonotic/dialog_hudpanel_radar.c:32
 #: xonotic/dialog_multiplayer_playersetup.c:150
 msgid "Alpha:"
-msgstr ""
+msgstr "Alpha:"
 
 #: xonotic/util.qc:625
 msgid "Team Color:"
-msgstr ""
+msgstr "Teamfarbe:"
 
 #: xonotic/util.qc:634 xonotic/dialog_hudsetup_exit.c:58
 msgid "Test the team color in HUD configure mode"
-msgstr ""
+msgstr "Teamfarbe im HUD-Konfigurationsmodus testen"
 
 #: xonotic/util.qc:637 xonotic/dialog_hudsetup_exit.c:61
 msgid "Padding:"
-msgstr ""
+msgstr "Abstand:"
 
 #: xonotic/dialog_news.c:4
 msgid "News"
-msgstr ""
+msgstr "Nachrichten"
 
 #: xonotic/dialog_news.c:18
 msgid "http://www.xonotic.org/team/blog/"
-msgstr ""
+msgstr "http://www.xonotic.org/team/blog/"
 
 #: xonotic/dialog_hudpanel_weapons.c:4
 msgid "Weapons Panel"
-msgstr ""
+msgstr "Waffen-Panel"
 
 #: xonotic/dialog_hudpanel_weapons.c:24
 msgid "Fade out after:"
-msgstr ""
+msgstr "Ausblenden nach:"
 
 #: xonotic/dialog_hudpanel_weapons.c:26
 #: xonotic/dialog_multiplayer_playersetup_waypoint.c:41
 msgid "Never"
-msgstr ""
+msgstr "Nie"
 
 #: xonotic/dialog_hudpanel_weapons.c:28
 #, c-format
 msgid "%ds"
-msgstr ""
+msgstr "%ds"
 
 #: xonotic/dialog_hudpanel_weapons.c:32
 msgid "Fade effect:"
-msgstr ""
+msgstr "Ausblendeeffekt:"
 
 #: xonotic/dialog_hudpanel_weapons.c:33 xonotic/dialog_hudpanel_weapons.c:44
 #: xonotic/dialog_multiplayer_create_mutators.c:98
@@ -233,51 +236,51 @@ msgstr ""
 #: xonotic/dialog_multiplayer_playersetup.c:182
 #: xonotic/dialog_settings_audio.c:135 xonotic/dialog_settings_audio.c:165
 msgid "None"
-msgstr ""
+msgstr "Aus"
 
 #: xonotic/dialog_hudpanel_weapons.c:35
 msgid "Slide"
-msgstr ""
+msgstr "Schieben"
 
 #: xonotic/dialog_hudpanel_weapons.c:37
 msgid "Alpha"
-msgstr ""
+msgstr "Alpha"
 
 #: xonotic/dialog_hudpanel_weapons.c:40
 msgid "Weapon icons:"
-msgstr ""
+msgstr "Waffensymbole:"
 
 #: xonotic/dialog_hudpanel_weapons.c:43
 msgid "Show weapon ID as:"
-msgstr ""
+msgstr "Waffen-ID zeigen als:"
 
 #: xonotic/dialog_hudpanel_weapons.c:45
 msgid "Number"
-msgstr ""
+msgstr "Zahl"
 
 #: xonotic/dialog_hudpanel_weapons.c:46
 msgid "Bind"
-msgstr ""
+msgstr "Taste"
 
 #: xonotic/dialog_hudpanel_weapons.c:49
 msgid "Show Accuracy"
-msgstr ""
+msgstr "Trefferquote zeigen"
 
 #: xonotic/dialog_hudpanel_weapons.c:50
 msgid "Show Ammo"
-msgstr ""
+msgstr "Munition zeigen"
 
 #: xonotic/dialog_hudpanel_weapons.c:53
 msgid "Ammo bar color:"
-msgstr ""
+msgstr "Muntionsleistenfarbe:"
 
 #: xonotic/dialog_hudpanel_weapons.c:59
 msgid "Ammo bar alpha:"
-msgstr ""
+msgstr "Munitionsleistenalpha:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:5
 msgid "Server Information"
-msgstr ""
+msgstr "Server-Information"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:115
 #: xonotic/dialog_multiplayer_join_serverinfo.c:116
@@ -285,153 +288,153 @@ msgstr ""
 #: xonotic/dialog_multiplayer_join_serverinfo.c:183
 #: xonotic/dialog_multiplayer_join_serverinfo.c:193
 msgid "N/A"
-msgstr ""
+msgstr "-"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:151
 #, c-format
 msgid "%d/%d"
-msgstr ""
+msgstr "%d/%d"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:166
 msgid "Official settings"
-msgstr ""
+msgstr "Offizielle Einstellungen"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:166
 #, c-format
 msgid "%d modified settings"
-msgstr ""
+msgstr "%d veränderte Einstellungen"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:191
 msgid "N/A (can't connect)"
-msgstr ""
+msgstr "- (nicht kompatibel)"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:199
 msgid "not supported (can't connect)"
-msgstr ""
+msgstr "nicht unterstützt (nicht kompatibel)"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:201
 msgid "not supported (won't encrypt)"
-msgstr ""
+msgstr "nicht untersützt (nicht aktiv)"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:205
 msgid "supported (will encrypt)"
-msgstr ""
+msgstr "unterstützt (aktiv)"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:207
 msgid "supported (won't encrypt)"
-msgstr ""
+msgstr "unterstützt (nicht aktiv)"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:211
 msgid "requested (will encrypt)"
-msgstr ""
+msgstr "erwünscht (aktiv)"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:213
 msgid "requested (won't encrypt)"
-msgstr ""
+msgstr "erwünscht (nicht aktiv)"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:217
 msgid "required (can't connect)"
-msgstr ""
+msgstr "notwendig (nicht kompatibel)"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:219
 msgid "required (will encrypt)"
-msgstr ""
+msgstr "notwendig (aktiv)"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:240
 #: xonotic/dialog_multiplayer_join_serverinfo.c:263
 msgid "Players:"
-msgstr ""
+msgstr "Spieler:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:248
 #: xonotic/dialog_settings_misc_cvars.c:38
 msgid "Type:"
-msgstr ""
+msgstr "Typ:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:253
 msgid "Map:"
-msgstr ""
+msgstr "Map:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:258
 msgid "Gameplay:"
-msgstr ""
+msgstr "Spielregeln:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:268
 msgid "Bots:"
-msgstr ""
+msgstr "Bots:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:273
 msgid "Mod:"
-msgstr ""
+msgstr "Mod:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:278
 msgid "Version:"
-msgstr ""
+msgstr "Version:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:283
 msgid "Ping:"
-msgstr ""
+msgstr "Ping:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:289
 msgid "CA:"
-msgstr ""
+msgstr "CA:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:295
 msgid "Key:"
-msgstr ""
+msgstr "Schlüssel:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:301
 msgid "Encryption:"
-msgstr ""
+msgstr "Verschlüsselung:"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:308
 #: xonotic/dialog_multiplayer_create_mapinfo.c:119
 msgid "Close"
-msgstr ""
+msgstr "Schließen"
 
 #: xonotic/dialog_multiplayer_join_serverinfo.c:311
 #: xonotic/dialog_multiplayer_join.c:70
 msgid "Join!"
-msgstr ""
+msgstr "Verbinden!"
 
 #: xonotic/dialog_multiplayer_playersetup_weapons.c:6
 msgid "Weapon settings"
-msgstr ""
+msgstr "Waffeneinstellungen"
 
 #: xonotic/dialog_multiplayer_playersetup_weapons.c:29
 msgid "Weapon priority list:"
-msgstr ""
+msgstr "Waffenreihenfolge"
 
 #: xonotic/dialog_multiplayer_playersetup_weapons.c:34
 msgid "Up"
-msgstr ""
+msgstr "Hoch"
 
 #: xonotic/dialog_multiplayer_playersetup_weapons.c:37
 msgid "Down"
-msgstr ""
+msgstr "Runter"
 
 #: xonotic/dialog_multiplayer_playersetup_weapons.c:41
 msgid "Use priority list for weapon cycling"
-msgstr ""
+msgstr "Waffenreihenfolge für Mausrad verwenden"
 
 #: xonotic/dialog_multiplayer_playersetup_weapons.c:43
 msgid "Auto switch weapons on pickup"
-msgstr ""
+msgstr "Automatisch auf beste Waffe wechseln"
 
 #: xonotic/dialog_multiplayer_playersetup_weapons.c:45
 msgid "Draw 1st person weapon model"
-msgstr ""
+msgstr "Waffe in 3D anzeigen"
 
 #: xonotic/dialog_multiplayer_playersetup_weapons.c:48
 msgid "Left align"
-msgstr ""
+msgstr "Links"
 
 #: xonotic/dialog_multiplayer_playersetup_weapons.c:50
 msgid "Right align"
-msgstr ""
+msgstr "Rechts"
 
 #: xonotic/dialog_multiplayer_playersetup_weapons.c:53
 msgid "Flip view horizontally"
-msgstr ""
+msgstr "3D-Ansicht spiegeln"
 
 #: xonotic/dialog_multiplayer_playersetup_weapons.c:55
 #: xonotic/dialog_multiplayer_create_mutators.c:269
@@ -440,64 +443,64 @@ msgstr ""
 #: xonotic/dialog_singleplayer_winner.c:21
 #: xonotic/dialog_multiplayer_playersetup_waypoint.c:46
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: xonotic/dialog_hudsetup_exit.c:4
 msgid "Panel HUD Setup"
-msgstr ""
+msgstr "HUD-Konfiguration"
 
 #: xonotic/dialog_hudsetup_exit.c:21
 msgid "Panel background defaults:"
-msgstr ""
+msgstr "Panel-Standardhintergrund:"
 
 #: xonotic/dialog_hudsetup_exit.c:50 xonotic/dialog_hudsetup_exit.c:89
 msgid "Team color:"
-msgstr ""
+msgstr "Teamfarbe:"
 
 #: xonotic/dialog_hudsetup_exit.c:68
 msgid "HUD Dock:"
-msgstr ""
+msgstr "HUD-Dock:"
 
 #: xonotic/dialog_hudsetup_exit.c:71 xonotic/dialog_settings_video.c:34
 msgid "Small"
-msgstr ""
+msgstr "Klein"
 
 #: xonotic/dialog_hudsetup_exit.c:72 xonotic/dialog_settings_video.c:35
 #: xonotic/dialog_settings_effects.c:43
 msgid "Medium"
-msgstr ""
+msgstr "Mittel"
 
 #: xonotic/dialog_hudsetup_exit.c:73 xonotic/dialog_settings_video.c:36
 msgid "Large"
-msgstr ""
+msgstr "Groß"
 
 #: xonotic/dialog_hudsetup_exit.c:96
 msgid "Grid settings:"
-msgstr ""
+msgstr "Gitter:"
 
 #: xonotic/dialog_hudsetup_exit.c:99
 msgid "Snap panels to grid"
-msgstr ""
+msgstr "Panels am Gitter ausrichten"
 
 #: xonotic/dialog_hudsetup_exit.c:102
 msgid "Grid size:"
-msgstr ""
+msgstr "Gitterweite:"
 
 #: xonotic/dialog_hudsetup_exit.c:103
 msgid "X:"
-msgstr ""
+msgstr "X:"
 
 #: xonotic/dialog_hudsetup_exit.c:109
 msgid "Y:"
-msgstr ""
+msgstr "Y:"
 
 #: xonotic/dialog_hudsetup_exit.c:117
 msgid "Exit setup"
-msgstr ""
+msgstr "Verlassen"
 
 #: xonotic/dialog_multiplayer_create_mapinfo.c:5
 msgid "Map Information"
-msgstr ""
+msgstr "Map-Information"
 
 #: xonotic/dialog_multiplayer_create_mapinfo.c:49
 msgid "Full item placement"
