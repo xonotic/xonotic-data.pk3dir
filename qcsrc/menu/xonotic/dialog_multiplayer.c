@@ -16,13 +16,9 @@ void XonoticMultiplayerDialog_fill(entity me)
 	mc = makeXonoticTabController(me.rows - 2);
 	me.TR(me);
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Servers"),  makeXonoticServerListTab()));
-			setDependentStringNotEqual(e, "_cl_name", "Player");
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Create"),  makeXonoticServerCreateTab()));
-			setDependentStringNotEqual(e, "_cl_name", "Player");
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Demos"),   makeXonoticDemoBrowserTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Player Setup"),  makeXonoticPlayerSettingsTab()));
-			if(cvar_string("_cl_name") == "Player")
-				e.onClick(e, e.onClickEntity); // lol animation
 
 	me.TR(me);
 	me.TR(me);
