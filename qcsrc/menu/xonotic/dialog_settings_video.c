@@ -96,7 +96,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Ambient:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("LIT^Ambient:"))));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 20.0, 1.0, "r_ambient"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Intensity:")));

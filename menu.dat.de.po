@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 15:53+0100\n"
+"POT-Creation-Date: 2011-01-18 17:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -211,9 +211,8 @@ msgid "Use GLSL to handle color control"
 msgstr "GLSL für Farbregelung verwenden"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:99
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:40
-msgid "Ambient:"
-msgstr "Umgebung:"
+msgid "LIT^Ambient:"
+msgstr "Umgebungslicht:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:102
 msgid "Intensity:"
@@ -2196,6 +2195,10 @@ msgstr "Master:"
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:33
 msgid "Music:"
 msgstr "Musik:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:40
+msgid "VOL^Ambient:"
+msgstr "Umgebung:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:48
 msgid "Info:"
