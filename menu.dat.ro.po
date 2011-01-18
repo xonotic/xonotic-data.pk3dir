@@ -1,7 +1,7 @@
-# Xonotic French Translation.
+# Xonotic Romanian Translation.
 # Copyright (C) 2011
 # This file is distributed under the same license as the PACKAGE package.
-# Calinou <hugohachel@gmail.com>, 2011.
+# MirceaKitsune <sonichedgehog_hyperblast00@yahoo.com>, 2011.
 #
 #, fuzzy
 msgid ""
@@ -10,12 +10,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-01-18 15:53+0100\n"
 "PO-Revision-Date: 2011-01-18 11:53+0100\t\n"
-"Last-Translator: Calinou <hugohachel@gmail.com>\n"
+"Last-Translator: MirceaKitsune <sonichedgehog_hyperblast00@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
+"Language: ro\n"
 
 #: qcsrc/menu/menu.qc:29
 #, c-format
