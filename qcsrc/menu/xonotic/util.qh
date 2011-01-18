@@ -50,3 +50,5 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname);
 	DIALOG_HUDPANEL_COMMON_NOTOGGLE()
 
 string language_filename(string s);
+string CTX(string s);
+#define ZCTX(s) strzone(CTX(s))

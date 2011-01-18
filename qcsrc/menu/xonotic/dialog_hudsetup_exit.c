@@ -67,10 +67,10 @@ void XonoticHUDExitDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("HUD Dock:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_dock"));
-				e.addValue(e, _("Disable"), "0");
-				e.addValue(e, _("Small"), "dock_small");
-				e.addValue(e, _("Medium"), "dock_medium");
-				e.addValue(e, _("Large"), "dock_large");
+				e.addValue(e, ZCTX(_("DOCK^Disabled")), "0");
+				e.addValue(e, ZCTX(_("DOCK^Small")), "dock_small");
+				e.addValue(e, ZCTX(_("DOCK^Medium")), "dock_medium");
+				e.addValue(e, ZCTX(_("DOCK^Large")), "dock_large");
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);

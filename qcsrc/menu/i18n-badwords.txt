@@ -1,7 +1,9 @@
 # list of words that must not be used in the source as a single string;
-# use stripctx(_("CONTEXT^string")) instead
+# use ZCTX(_("CONTEXT^string")) instead
+# vi macro to do it:
+#   :s/_("\([^"]*\)")/ZCTX(_("CONTEXT^\1"))/g
 # test by:
-#   grep -v ^# i18n-badwords.txt | while IFS= read -r W; do grep -r "_(\"$W\")" .; done
+#   grep -v ^# i18n-badwords.txt | while IFS= read -r W; do grep -nri "_(\"$W\")" xonotic; done | sort -n
 # this is done to help with languages like Russian where these words may need
 # different grammatical gender in different instances
 All
@@ -15,5 +17,17 @@ Lowest
 Medium
 Normal
 Off
-OFF
 Ultra
+Small
+Large
+Custom
+Very short
+Short
+Long
+Full
+Empty
+None
+Few
+Many
+Lots
+Both

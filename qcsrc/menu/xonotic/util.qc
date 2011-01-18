@@ -582,6 +582,13 @@ string language_filename(string s)
 	}
 	return s;
 }
+string CTX(string s)
+{
+	float p = strstrofs(s, "^", 0);
+	if(p < 0)
+		return s;
+	return substring(s, p+1, -1);
+}
 
 void dialog_hudpanel_common_notoggle(entity me, string panelname)
 {

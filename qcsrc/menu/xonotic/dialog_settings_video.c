@@ -28,15 +28,15 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Font/UI size:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_vid_scale"));
-			e.addValue(e, _("Unreadable"), "-1");
-			e.addValue(e, _("Tiny"), "-0.75");
-			e.addValue(e, _("Little"), "-0.5");
-			e.addValue(e, _("Small"), "-0.25");
-			e.addValue(e, _("Medium"), "0");
-			e.addValue(e, _("Large"), "0.25");
-			e.addValue(e, _("Huge"), "0.5");
-			e.addValue(e, _("Gigantic"), "0.75");
-			e.addValue(e, _("Colossal"), "1");
+			e.addValue(e, ZCTX(_("SIZE^Unreadable")), "-1");
+			e.addValue(e, ZCTX(_("SIZE^Tiny")), "-0.75");
+			e.addValue(e, ZCTX(_("SIZE^Little")), "-0.5");
+			e.addValue(e, ZCTX(_("SIZE^Small")), "-0.25");
+			e.addValue(e, ZCTX(_("SIZE^Medium")), "0");
+			e.addValue(e, ZCTX(_("SIZE^Large")), "0.25");
+			e.addValue(e, ZCTX(_("SIZE^Huge")), "0.5");
+			e.addValue(e, ZCTX(_("SIZE^Gigantic")), "0.75");
+			e.addValue(e, ZCTX(_("SIZE^Colossal")), "1");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Color depth:")));
@@ -55,7 +55,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Vertex Buffer Objects (VBOs)")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "gl_vbo", "0", _("Off")));
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "gl_vbo", "0", ZCTX(_("VBO^Off"))));
 		me.TD(me, 1, 2.1, e = makeXonoticRadioButton(1, "gl_vbo", "3", _("Vertices, some Tris (compatible)")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -64,9 +64,9 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Depth first:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("r_depthfirst"));
-			e.addValue(e, _("Disabled"), "0");
-			e.addValue(e, _("World"), "1");
-			e.addValue(e, _("All"), "2");
+			e.addValue(e, ZCTX(_("DEPTHFIRST^Disabled")), "0");
+			e.addValue(e, ZCTX(_("DEPTHFIRST^World")), "1");
+			e.addValue(e, ZCTX(_("DEPTHFIRST^All")), "2");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		if(cvar_type("apple_multithreadedgl") & CVAR_TYPEFLAG_ENGINE)

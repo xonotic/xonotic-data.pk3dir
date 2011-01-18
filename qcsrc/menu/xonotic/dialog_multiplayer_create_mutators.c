@@ -95,7 +95,7 @@ string XonoticMutatorsDialog_toString(entity me)
 	if(cvar("g_jetpack"))
 		s = strcat(s, ", ", _("Jet pack"));
 	if(s == "")
-		return _("None");
+		return ZCTX(_("MUTATOR^None"));
 	else
 		return substring(s, 2, strlen(s) - 2);
 }
