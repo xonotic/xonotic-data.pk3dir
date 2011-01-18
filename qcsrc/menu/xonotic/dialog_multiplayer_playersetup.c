@@ -47,6 +47,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 3.0, box = makeXonoticInputBox(1, "_cl_name"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
+			box.saveImmediately = 1;
 			label.textEntity = box;
 	me.TR(me);
 		me.TD(me, 5, 1, e = makeXonoticColorpicker(box));
