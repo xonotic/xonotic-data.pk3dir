@@ -28,3 +28,32 @@ Guideline:
 Unresolved TODO:
 
 - translated campaigns
+
+client/bgmscript.qc
+client/casings.qc
+client/ctf.qc
+client/damage.qc
+client/effects.qc
+client/gibs.qc
+client/hook.qc
+client/hud.qc
+client/hud.qh
+client/laser.qc
+client/Main.qc
+client/main.qh
+client/mapvoting.qc
+client/miscfunctions.qc
+client/modeleffects.qc
+client/movetypes.qc
+client/noise.qh
+client/particles.qc
+client/prandom.qc
+client/projectile.qc
+client/scoreboard.qc
+client/target_music.qc
+client/teamplay.qc
+client/teamradar.qc
+client/tuba.qc
+client/View.qc
+client/wall.qc
+client/waypointsprites.qc
