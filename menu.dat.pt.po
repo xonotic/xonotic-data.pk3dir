@@ -2050,7 +2050,7 @@ msgstr "Mostrar superfícies"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:155
 msgid "No dynamic lighting"
-msgstr "Iluminção dinâmica desligada"
+msgstr "Iluminação dinâmica desligada"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:157
 msgid "Flash blend approximation"
