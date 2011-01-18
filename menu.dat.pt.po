@@ -504,17 +504,17 @@ msgstr "Misc"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:4
 msgid "Welcome"
-msgstr ""
+msgstr "Bem-Vindo"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:32
 msgid "Please answer a few initial questions to enhance the game experience."
-msgstr ""
+msgstr "Por favor responda a umas perguntas iniciais para melhorarmos a sua experiência de jogo."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:36
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:35
-#, fuzzy
 msgid "Text language:"
-msgstr "Nível dos taunts:"
+msgstr "Linguagem do texto:"
+
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:45
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:39
@@ -522,10 +522,10 @@ msgstr "Nível dos taunts:"
 msgid "Name:"
 msgstr "Nome:"
 
+
 #: qcsrc/menu/xonotic/dialog_firstrun.c:67
-#, fuzzy
 msgid "Save settings"
-msgstr "Definições de Jogo:"
+msgstr "Guardar Definições" 
 
 #: qcsrc/menu/xonotic/campaign.c:284
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:66
@@ -1605,6 +1605,9 @@ msgid ""
 "Update can be downloaded at:\n"
 "%s\n"
 msgstr ""
+"Actualização pode ser transferida em:\n"
+"%s\n"
+
 
 #: qcsrc/menu/xonotic/util.qc:330
 msgid "Autogenerating mapinfo for newly added maps..."
@@ -1613,13 +1616,17 @@ msgstr "Informação de mapas auto-gerada para novos mapas..."
 #: qcsrc/menu/xonotic/util.qc:425
 #, c-format
 msgid "Update to %s now!"
-msgstr ""
+msgstr "Actualize para %s agora!"
+
 
 #: qcsrc/menu/xonotic/util.qc:502
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems.\n"
 msgstr ""
+"^1ERRO: A compressão de texturas é necessária mas não é suportada.\n"
+"^1Possíveis problemas visuais.\n"
+
 
 #: qcsrc/menu/xonotic/util.qc:524
 msgid "Arena"
@@ -2065,6 +2072,9 @@ msgstr "Jogadores"
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"
 msgstr ""
+"Huh? Não posso jogar isto (m é NULL). Voltando a filtrar de maneira a que isto não se repita"
+"novamente.\n"
+
 
 #: qcsrc/menu/xonotic/maplist.c:286
 #, c-format
@@ -2076,6 +2086,9 @@ msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again.\n"
 msgstr ""
+"Huh? Não posso jogar isto (tipo de jogo inválido). Voltando a filtrar de maneira a que isto não se repita"
+"novamente.\n"
+
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:4
 msgid "Demo"
@@ -2314,3 +2327,5 @@ msgstr "Painel Vida/Armadura"
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:45
 msgid "Flip health and armor positions"
 msgstr "Trocar posição da vida e armadura"
+
+
