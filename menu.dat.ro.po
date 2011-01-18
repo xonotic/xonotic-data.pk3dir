@@ -833,7 +833,7 @@ msgstr "Joc singular"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:59
 msgid "Instant action! (random map with bots)"
-msgstr "Actiune instanta! (mapa aleatorie cu boti)"
+msgstr "Actiune instanta! (harta aleatorie cu boti)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:80
 msgid "Start Singleplayer!"
@@ -929,7 +929,7 @@ msgstr "Jucatori:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:253
 msgid "Map:"
-msgstr "Mapa:"
+msgstr "Harta:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:258
 msgid "Gameplay:"
@@ -1211,7 +1211,7 @@ msgstr "Limite de timp:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:54
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:62
 msgid "Use map specified default"
-msgstr "Folosire setari mapa"
+msgstr "Folosire setari harta"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:57
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:156
@@ -1285,7 +1285,7 @@ msgstr "Modificari speciale..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:105
 msgid "Map list:"
-msgstr "Lista mape:"
+msgstr "Lista harti:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:111
 msgid "Select all"
@@ -1514,7 +1514,7 @@ msgstr "Afisare timp ramas"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:5
 msgid "Map Information"
-msgstr "Informatii mapa:"
+msgstr "Informatii harta:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:49
 msgid "Full item placement"
@@ -1591,7 +1591,7 @@ msgstr "Echipe:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:66
 msgid "Map voting:"
-msgstr "Vot mape:"
+msgstr "Vot harti:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:68
 msgid "No voting"
@@ -1665,7 +1665,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:330
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr "Auto-generare mapinfo pentru mape proaspat adaugate..."
+msgstr "Auto-generare mapinfo pentru hartile proaspat adaugate..."
 
 #: qcsrc/menu/xonotic/util.qc:425
 #, c-format
@@ -2009,7 +2009,7 @@ msgstr "Durata:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:132
 msgid "Use lightmaps"
-msgstr "Utilizare lightmapuri"
+msgstr "Utilizare lightmap"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:133
 msgid "Deluxe mapping"
@@ -2167,7 +2167,7 @@ msgstr "Nume server"
 
 #: qcsrc/menu/xonotic/serverlist.c:517
 msgid "Map"
-msgstr "Mapa"
+msgstr "Harta"
 
 #: qcsrc/menu/xonotic/serverlist.c:518
 msgid "Type"
