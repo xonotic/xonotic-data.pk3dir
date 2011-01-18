@@ -1,0 +1,19 @@
+# list of words that must not be used in the source as a single string;
+# use stripctx(_("CONTEXT^string")) instead
+# test by:
+#   grep -v ^# i18n-badwords.txt | while IFS= read -r W; do grep -r "_(\"$W\")" .; done
+# this is done to help with languages like Russian where these words may need
+# different grammatical gender in different instances
+All
+Best
+Disabled
+Good
+High
+Insane
+Low
+Lowest
+Medium
+Normal
+Off
+OFF
+Ultra
