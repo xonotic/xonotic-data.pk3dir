@@ -47,9 +47,9 @@ void XonoticDecibelsSlider_saveCvars(entity me)
 string XonoticDecibelsSlider_valueToText(entity me, float v)
 {
 	if(v < -33)
-		return ZCTX(_("VOL^OFF"));
+		return CTX(_("VOL^OFF"));
 	else if(v >= -0.1)
-		return ZCTX(_("VOL^MAX"));
+		return CTX(_("VOL^MAX"));
 	return sprintf(_("%s dB"), SUPER(XonoticDecibelsSlider).valueToText(me, v));
 }
 
