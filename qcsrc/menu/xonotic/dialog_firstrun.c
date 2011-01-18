@@ -4,7 +4,7 @@ CLASS(XonoticFirstRunDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticFirstRunDialog, title, string, _("Welcome"))
 	ATTRIB(XonoticFirstRunDialog, color, vector, SKINCOLOR_DIALOG_FIRSTRUN)
 	ATTRIB(XonoticFirstRunDialog, intendedWidth, float, 0.6)
-	ATTRIB(XonoticFirstRunDialog, rows, float, 11)
+	ATTRIB(XonoticFirstRunDialog, rows, float, 14)
 	ATTRIB(XonoticFirstRunDialog, columns, float, 3)
 	ATTRIB(XonoticFirstRunDialog, name, string, "FirstRun")
 	ATTRIB(XonoticFirstRunDialog, playerNameLabel, entity, NULL)
@@ -15,6 +15,15 @@ ENDCLASS(XonoticFirstRunDialog)
 #endif
 
 #ifdef IMPLEMENTATION
+float CheckFirstRunButton(entity me)
+{
+	if(cvar_string("_cl_name") != "Player")
+		return 1;
+	if(cvar_string("prvm_language") != prvm_language)
+		return 1; // OK will then reopen the dialog in another language
+	return 0;
+}
+
 void XonoticFirstRunDialog_fill(entity me)
 {
 	entity e;
@@ -23,6 +32,15 @@ void XonoticFirstRunDialog_fill(entity me)
 		me.TD(me, 2, 3, e = makeXonoticTextLabel(0, _("Please answer a few initial questions to enhance the game experience.")));
 		e.allowWrap = 1;
 	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Text language:")));
+	me.TR(me);
+		me.TD(me, 3, 3, e = makeXonoticLanguageList());
+			e.name = "languageselector_firstrun";
+			e.doubleClickCommand = "saveconfig; menu_restart; togglemenu";
+	me.TR(me);
+	me.TR(me);
+
 	me.TR(me);
 		me.TD(me, 1, 0.5, me.playerNameLabel = makeXonoticTextLabel(0, _("Name:")));
 			me.playerNameLabelAlpha = me.playerNameLabel.alpha;
@@ -42,12 +60,10 @@ void XonoticFirstRunDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
-	me.TR(me);
-	me.TR(me);
 
 	// because of the language selector, this is a menu_restart!
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Save settings"), '0 0 0', "saveconfig; menu_restart; togglemenu", COMMANDBUTTON_APPLY));
-		setDependentStringNotEqual(e, "_cl_name", "Player");
+		setDependentWeird(e, CheckFirstRunButton);
 }
 #endif

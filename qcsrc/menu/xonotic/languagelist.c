@@ -26,6 +26,7 @@ CLASS(XonoticLanguageList) EXTENDS(XonoticListBox)
 	METHOD(XonoticLanguageList, languageParameter, string(entity, float, float))
 
 	ATTRIB(XonoticLanguageList, name, string, "languageselector") // change this to make it noninteractive (for first run dialog)
+	ATTRIB(XonoticLanguageList, doubleClickCommand, string, "menu_restart\ntogglemenu\ndefer 0.1 \"menu_cmd languageselect\"")
 ENDCLASS(XonoticLanguageList)
 
 entity makeXonoticLanguageList();
@@ -114,8 +115,6 @@ void XonoticLanguageList_saveCvars(entity me)
 
 void XonoticLanguageList_clickListBoxItem(entity me, float i, vector where)
 {
-	if(me.name != "languageselector")
-		return;
 	if(i == me.lastClickedLanguage)
 		if(time < me.lastClickedTime + 0.3)
 		{
@@ -129,8 +128,6 @@ void XonoticLanguageList_clickListBoxItem(entity me, float i, vector where)
 
 float XonoticLanguageList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(me.name != "languageselector")
-		return SUPER(XonoticLanguageList).keyDown(me, scan, ascii, shift);
 	if(scan == K_ENTER || scan == K_KP_ENTER) {
 		me.setLanguage(me);
 		return 1;
@@ -170,9 +167,7 @@ void XonoticLanguageList_getLanguages(entity me)
 
 void XonoticLanguageList_setLanguage(entity me)
 {
-	if(me.name != "languageselector")
-		return;
-	localcmd("\nmenu_restart\ntogglemenu\ndefer 0.1 \"menu_cmd languageselect\"\n");
+	localcmd(sprintf("\n%s\n", me.doubleClickCommand));
 }
 
 string XonoticLanguageList_languageParameter(entity me, float i, float key)

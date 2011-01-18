@@ -571,7 +571,7 @@ string language_filename(string s)
 {
 	string fn;
 	float fh;
-	fn = cvar_string("prvm_language");
+	fn = prvm_language;
 	if(fn == "" || fn == "dump")
 		return s;
 	fn = strcat(s, ".", fn);
