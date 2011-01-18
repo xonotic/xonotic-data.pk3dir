@@ -835,7 +835,9 @@ void(string itemname) m_goto =
 	}
 	else
 	{
-		e = findstring(NULL, name, itemname);
+		for(e = NULL; (e = findstring(e, name, itemname)); )
+			if(e.classname != "vtbl")
+				break;
 		if(e)
 		{
 			m_hide();
