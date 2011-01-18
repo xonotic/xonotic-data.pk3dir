@@ -21,13 +21,13 @@ float mv_selection;
 string MapVote_FormatMapItem(float id, string map, float count, float maxwidth, vector fontsize)
 {
 	string pre, post;
-	pre = strcat(ftos(id+1), ". ");
+	pre = sprintf("%d. ", id+1);
 	if(mv_detail)
 	{
 		if(count == 1)
-			post = strcat(" (1 vote)");
+			post = _(" (1 vote)");
 		else
-			post = strcat(" (", ftos(count), " votes)");
+			post = sprintf(_(" (%d votes)"), count);
 	}
 	else
 		post = "";
@@ -110,7 +110,7 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, floa
 
 	pos_y = pos_y + hud_fontsize_y;
 	
-	label = MapVote_FormatMapItem(id, "Don't care", count, tsize, hud_fontsize);
+	label = MapVote_FormatMapItem(id, _("Don't care"), count, tsize, hud_fontsize);
 
 	text_size = stringwidth(label, false, hud_fontsize);
 	
@@ -191,12 +191,12 @@ void MapVote_Draw()
 	pos_y = ymin;
 	pos_z = 0;
 	//pos_x = center - stringwidth("Vote for a map", false) * 0.5 * 24;
-	pos_x = center - stringwidth("Vote for a map", false, '12 0 0');
+	pos_x = center - stringwidth(_("Vote for a map"), false, '12 0 0');
 	drawstring(pos, "Vote for a map", '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 	pos_y += 26;
 
 	i = ceil(max(0, mv_timeout - time));
-	map = strcat(ftos(i), " seconds left");
+	map = sprintf(_("%d seconds left"), i);
 	//pos_x = center - stringwidth(map, false) * 0.5 * 16;
 	pos_x = center - stringwidth(map, false, '8 0 0');
 	drawstring(pos, map, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
@@ -260,7 +260,7 @@ void Cmd_MapVote_MapDownload(float argc)
 
 	if(argc != 2 || !mv_pk3list)
 	{
-		print("mv_mapdownload: ^3You're not supposed to use this command on your own!\n");
+		print(_("mv_mapdownload: ^3You're not supposed to use this command on your own!\n"));
 		return;
 	}
 	
@@ -270,19 +270,16 @@ void Cmd_MapVote_MapDownload(float argc)
 			break;
 	
 	if(!pak || pak.sv_entnum != id) {
-		print("^1Error:^7 Couldn't find pak index.\n");
+		print(_("^1Error:^7 Couldn't find pak index.\n"));
 		return;
 	}
 
-	//print(strcat("^3Adding: ", ftos(id), " - ", pak.message, " - "));
-	
 	if(PreviewExists(pak.message))
 	{
 		mv_preview[id] = true;
-		//print("^2Found...\n");
 		return;
 	} else {
-		print("Requesting preview...\n");
+		print(_("Requesting preview...\n"));
 		localcmd(strcat("\ncmd mv_getpic ", ftos(id), "\n"));
 	}
 }
@@ -381,7 +378,6 @@ void MapVote_Init()
 
 			mv_preview[i] = false;
 
-			//print(strcat("RECV: ", map, " in ", pk3, "\n"));
 			MapVote_CheckPic(map, pk3, i);
 		}
 		else
