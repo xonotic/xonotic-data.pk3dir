@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 15:51+0100\n"
+"POT-Creation-Date: 2011-01-18 15:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -623,8 +623,8 @@ msgid "Show weapon ID as:"
 msgstr "Waffen-ID zeigen als:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:44
-msgid "EFFECT^None"
-msgstr "keiner"
+msgid "SHOWAS^None"
+msgstr "nichts"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:45
 msgid "Number"

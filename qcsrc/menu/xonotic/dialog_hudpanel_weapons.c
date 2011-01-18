@@ -41,7 +41,7 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Show weapon ID as:")));
-			me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "hud_panel_weapons_label", "0", ZCTX(_("EFFECT^None"))));
+			me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "hud_panel_weapons_label", "0", ZCTX(_("SHOWAS^None"))));
 			me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "hud_panel_weapons_label", "1", _("Number")));
 			me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "hud_panel_weapons_label", "2", _("Bind")));
 	me.TR(me);
