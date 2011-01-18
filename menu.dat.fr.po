@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 11:56+0100\n"
+"POT-Creation-Date: 2011-01-18 12:29+0100\n"
 "PO-Revision-Date: 2011-01-18 11:53+0100\t\n"
 "Last-Translator: Calinou <hugohachel@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -506,7 +506,7 @@ msgstr "Autres"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:4
 msgid "Welcome"
-msgstr ""
+msgstr "Bienvenue"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:32
 msgid "Please answer a few initial questions to enhance the game experience."
@@ -514,9 +514,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:36
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:35
-#, fuzzy
 msgid "Text language:"
-msgstr "Distance voix:"
+msgstr "Langue écran:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:45
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:39
@@ -525,9 +524,8 @@ msgid "Name:"
 msgstr "Pseudonyme:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:67
-#, fuzzy
 msgid "Save settings"
-msgstr "Paramètres jeu"
+msgstr "Sauvegarder"
 
 #: qcsrc/menu/xonotic/campaign.c:284
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:66
@@ -714,7 +712,7 @@ msgstr "Info..."
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:70
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:311
 msgid "Join!"
-msgstr "Joindre!"
+msgstr "Joindre !"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:4
 msgid "Notification Panel"
@@ -815,7 +813,7 @@ msgstr "Instant action! (map aléatoire avec bots)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:80
 msgid "Start Singleplayer!"
-msgstr "Démarrer!"
+msgstr "Démarrer !"
 
 #: qcsrc/menu/xonotic/skinlist.c:105
 msgid "<TITLE>"
@@ -1618,7 +1616,7 @@ msgstr "Génération des mapinfo pour les nouvelles cartes ajoutées..."
 #: qcsrc/menu/xonotic/util.qc:425
 #, c-format
 msgid "Update to %s now!"
-msgstr ""
+msgstr "Mettez à jour vers %s maintenant !"
 
 #: qcsrc/menu/xonotic/util.qc:502
 msgid ""
