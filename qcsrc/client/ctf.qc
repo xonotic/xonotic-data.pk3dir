@@ -1,4 +1,5 @@
-//include "main.qh"
+#ifdef CTF_EXAMPLE
+
 // NOTE: This file contains lots of debugging stuff
 // it is not really used... can be seen as another sample...
 
@@ -214,3 +215,5 @@ void() ctf_view =
 		drawstring('0 0 0', "Awaiting orders...", '8 8 0', '1 1 1', 0.5, 0);
 	}
 };
+
+#endif

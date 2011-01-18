@@ -29,7 +29,6 @@ Unresolved TODO:
 
 - translated campaigns
 
-client/bgmscript.qc
 client/casings.qc
 client/ctf.qc
 client/damage.qc
