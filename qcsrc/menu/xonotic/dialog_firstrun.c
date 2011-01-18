@@ -4,7 +4,7 @@ CLASS(XonoticFirstRunDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticFirstRunDialog, title, string, _("Welcome"))
 	ATTRIB(XonoticFirstRunDialog, color, vector, SKINCOLOR_DIALOG_FIRSTRUN)
 	ATTRIB(XonoticFirstRunDialog, intendedWidth, float, 0.6)
-	ATTRIB(XonoticFirstRunDialog, rows, float, 15)
+	ATTRIB(XonoticFirstRunDialog, rows, float, 16)
 	ATTRIB(XonoticFirstRunDialog, columns, float, 3)
 	ATTRIB(XonoticFirstRunDialog, name, string, "FirstRun")
 	ATTRIB(XonoticFirstRunDialog, playerNameLabel, entity, NULL)
@@ -29,8 +29,9 @@ void XonoticFirstRunDialog_fill(entity me)
 	entity e;
 	entity label, box;
 	me.TR(me);
-		me.TD(me, 2, 3, e = makeXonoticTextLabel(0, _("Please answer a few initial questions to enhance the game experience.")));
+		me.TD(me, 3, 3, e = makeXonoticTextLabel(0, _("Welcome to Xonotic, please select your language preference and enter your player name to get started.  You can change these options later through the menu system.")));
 		e.allowWrap = 1;
+	me.TR(me);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Text language:")));
