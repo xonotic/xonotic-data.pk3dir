@@ -28,15 +28,15 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Font/UI size:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_vid_scale"));
-			e.addValue(e, ZCTX(_("SIZE^Unreadable")), "-1");
-			e.addValue(e, ZCTX(_("SIZE^Tiny")), "-0.75");
-			e.addValue(e, ZCTX(_("SIZE^Little")), "-0.5");
-			e.addValue(e, ZCTX(_("SIZE^Small")), "-0.25");
-			e.addValue(e, ZCTX(_("SIZE^Medium")), "0");
-			e.addValue(e, ZCTX(_("SIZE^Large")), "0.25");
-			e.addValue(e, ZCTX(_("SIZE^Huge")), "0.5");
-			e.addValue(e, ZCTX(_("SIZE^Gigantic")), "0.75");
-			e.addValue(e, ZCTX(_("SIZE^Colossal")), "1");
+			e.addValue(e, ZCTX(_("SZ^Unreadable")), "-1");
+			e.addValue(e, ZCTX(_("SZ^Tiny")), "-0.75");
+			e.addValue(e, ZCTX(_("SZ^Little")), "-0.5");
+			e.addValue(e, ZCTX(_("SZ^Small")), "-0.25");
+			e.addValue(e, ZCTX(_("SZ^Medium")), "0");
+			e.addValue(e, ZCTX(_("SZ^Large")), "0.25");
+			e.addValue(e, ZCTX(_("SZ^Huge")), "0.5");
+			e.addValue(e, ZCTX(_("SZ^Gigantic")), "0.75");
+			e.addValue(e, ZCTX(_("SZ^Colossal")), "1");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Color depth:")));
@@ -64,9 +64,9 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Depth first:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("r_depthfirst"));
-			e.addValue(e, ZCTX(_("DEPTHFIRST^Disabled")), "0");
-			e.addValue(e, ZCTX(_("DEPTHFIRST^World")), "1");
-			e.addValue(e, ZCTX(_("DEPTHFIRST^All")), "2");
+			e.addValue(e, ZCTX(_("DF^Disabled")), "0");
+			e.addValue(e, ZCTX(_("DF^World")), "1");
+			e.addValue(e, ZCTX(_("DF^All")), "2");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		if(cvar_type("apple_multithreadedgl") & CVAR_TYPEFLAG_ENGINE)

@@ -33,11 +33,11 @@ void XonoticServerListTab_fill(entity me)
 			e.onChangeEntity = slist;
 			btn.onClickEntity = e;
 			slist.controlledTextbox = e;
-		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "menu_slist_showempty", ZCTX(_("SERVERS^Empty"))));
+		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "menu_slist_showempty", ZCTX(_("SRVS^Empty"))));
 			slist.filterShowEmpty = e.checked;
 			e.onClickEntity = slist;
 			e.onClick = ServerList_ShowEmpty_Click;
-		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "menu_slist_showfull", ZCTX(_("SERVERS^Full"))));
+		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "menu_slist_showfull", ZCTX(_("SRVS^Full"))));
 			slist.filterShowFull = e.checked;
 			e.onClickEntity = slist;
 			e.onClick = ServerList_ShowFull_Click;

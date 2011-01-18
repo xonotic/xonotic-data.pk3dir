@@ -153,7 +153,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			setDependent(e, "crosshair_dot", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Hit test:")));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "0",    ZCTX(_("HITTEST^None"))));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "0",    ZCTX(_("HTST^None"))));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "1",    _("TrueAim")));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "1.25", _("Enemies")));
 	me.TR(me);
@@ -172,9 +172,9 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Force models:")));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, string_null, string_null, ZCTX(_("MODELS^None")));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodelsfromxonotic", string_null, ZCTX(_("MODELS^Custom"))));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodels", string_null, ZCTX(_("MODELS^All"))));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, string_null, string_null, ZCTX(_("MDL^None")));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodelsfromxonotic", string_null, ZCTX(_("MDL^Custom"))));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodels", string_null, ZCTX(_("MDL^All"))));
 	#endif
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_gentle", _("Disable gore effects")));
 	me.TR(me);

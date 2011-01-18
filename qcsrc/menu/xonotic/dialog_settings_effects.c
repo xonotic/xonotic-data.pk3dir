@@ -38,30 +38,30 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Quality preset:")));
 		n = 5 + 2 * !!cvar("developer");
 		if(cvar("developer"))
-			me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRESET^OMG!")), '1 0 1', "exec effects-omg.cfg", 0));
-		me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRESET^Low")), '0 0 0', "exec effects-low.cfg", 0));
-		me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRESET^Medium")), '0 0 0', "exec effects-med.cfg", 0));
-		me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRESET^Normal")), '0 0 0', "exec effects-normal.cfg", 0));
-		me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRESET^High")), '0 0 0', "exec effects-high.cfg", 0));
-		me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRESET^Ultra")), '0 0 0', "exec effects-ultra.cfg", 0));
+			me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^OMG!")), '1 0 1', "exec effects-omg.cfg", 0));
+		me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Low")), '0 0 0', "exec effects-low.cfg", 0));
+		me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Medium")), '0 0 0', "exec effects-med.cfg", 0));
+		me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Normal")), '0 0 0', "exec effects-normal.cfg", 0));
+		me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^High")), '0 0 0', "exec effects-high.cfg", 0));
+		me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Ultra")), '0 0 0', "exec effects-ultra.cfg", 0));
 		if(cvar("developer"))
-			me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRESET^Ultimate")), '0 0 0', "exec effects-ultimate.cfg", 0));
+			me.TD(me, 1, 5.5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Ultimate")), '0 0 0', "exec effects-ultimate.cfg", 0));
 
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Geometry detail:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("r_subdivisions_tolerance"));
-			e.addValue(e, ZCTX(_("DETAIL^Lowest")), "16");
-			e.addValue(e, ZCTX(_("DETAIL^Low")), "8");
-			e.addValue(e, ZCTX(_("DETAIL^Normal")), "4");
-			e.addValue(e, ZCTX(_("DETAIL^Good")), "3");
-			e.addValue(e, ZCTX(_("DETAIL^Best")), "2");
-			e.addValue(e, ZCTX(_("DETAIL^Insane")), "1");
+			e.addValue(e, ZCTX(_("DET^Lowest")), "16");
+			e.addValue(e, ZCTX(_("DET^Low")), "8");
+			e.addValue(e, ZCTX(_("DET^Normal")), "4");
+			e.addValue(e, ZCTX(_("DET^Good")), "3");
+			e.addValue(e, ZCTX(_("DET^Best")), "2");
+			e.addValue(e, ZCTX(_("DET^Insane")), "1");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Antialiasing:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("vid_samples"));
-			e.addValue(e, ZCTX(_("ANTIALIASING^Disabled")), "1");
+			e.addValue(e, ZCTX(_("AA^Disabled")), "1");
 			e.addValue(e, _("2x"), "2");
 			e.addValue(e, _("4x"), "4");
 			e.configureXonoticTextSliderValues(e);
@@ -70,12 +70,12 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Texture resolution:")));
 		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
 			if(cvar("developer"))
-				e.addValue(e, ZCTX(_("RESOLUTION^Leet")), "1337");
-			e.addValue(e, ZCTX(_("RESOLUTION^Lowest")), "2");
-			e.addValue(e, ZCTX(_("RESOLUTION^Low")), "1");
-			e.addValue(e, ZCTX(_("RESOLUTION^Normal")), "0");
-			e.addValue(e, ZCTX(_("RESOLUTION^Good")), "-1");
-			e.addValue(e, ZCTX(_("RESOLUTION^Best")), "-2");
+				e.addValue(e, ZCTX(_("RES^Leet")), "1337");
+			e.addValue(e, ZCTX(_("RES^Lowest")), "2");
+			e.addValue(e, ZCTX(_("RES^Low")), "1");
+			e.addValue(e, ZCTX(_("RES^Normal")), "0");
+			e.addValue(e, ZCTX(_("RES^Good")), "-1");
+			e.addValue(e, ZCTX(_("RES^Best")), "-2");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -99,7 +99,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Anisotropy:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("gl_texture_anisotropy"));
-			e.addValue(e, ZCTX(_("ANISOTROPY^Disabled")), "1");
+			e.addValue(e, ZCTX(_("ANISO^Disabled")), "1");
 			e.addValue(e, _("2x"), "2");
 			e.addValue(e, _("4x"), "4");
 			e.addValue(e, _("8x"), "8");
@@ -144,7 +144,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("r_water_resolutionmultiplier"));
 			e.addValue(e, _("Blurred"), "0.25");
-			e.addValue(e, ZCTX(_("REFLECTIONS^Good")), "0.5");
+			e.addValue(e, ZCTX(_("REFL^Good")), "0.5");
 			e.addValue(e, _("Sharp"), "1");
 			e.configureXonoticTextSliderValues(e);
 			setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 11:25+0100\n"
+"POT-Creation-Date: 2011-01-18 15:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,43 +87,39 @@ msgid "Font/UI size:"
 msgstr "Schriftgröße:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:31
-msgid "Unreadable"
+msgid "SZ^Unreadable"
 msgstr "Unleserlich"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:32
-msgid "Tiny"
+msgid "SZ^Tiny"
 msgstr "Winzig"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:33
-msgid "Little"
+msgid "SZ^Little"
 msgstr "Klein"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:34
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:71
-msgid "Small"
+msgid "SZ^Small"
 msgstr "Klein"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:35
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:72
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:43
-msgid "Medium"
+msgid "SZ^Medium"
 msgstr "Mittel"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:36
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:73
-msgid "Large"
+msgid "SZ^Large"
 msgstr "Groß"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:37
-msgid "Huge"
+msgid "SZ^Huge"
 msgstr "Riesig"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:38
-msgid "Gigantic"
+msgid "SZ^Gigantic"
 msgstr "Gigantisch"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:39
-msgid "Colossal"
+msgid "SZ^Colossal"
 msgstr "Kolossal"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:42
@@ -151,7 +147,7 @@ msgid "Vertex Buffer Objects (VBOs)"
 msgstr "Vertex Buffer Objects (VBOs)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:58
-msgid "Off"
+msgid "VBO^Off"
 msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:59
@@ -171,19 +167,15 @@ msgid "Depth first:"
 msgstr "Tiefe zuerst rendern:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:67
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:64
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:102
-msgid "Disabled"
+msgid "DF^Disabled"
 msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:68
-msgid "World"
+msgid "DF^World"
 msgstr "nur Map"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:69
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:177
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:139
-msgid "All"
+msgid "DF^All"
 msgstr "Immer"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:73
@@ -247,18 +239,17 @@ msgstr "Panel-Standardhintergrund:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:37
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:52
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:70
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:595
-#: qcsrc/menu/xonotic/util.qc:611 qcsrc/menu/xonotic/util.qc:628
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:602
+#: qcsrc/menu/xonotic/util.qc:618 qcsrc/menu/xonotic/util.qc:635
 msgid "Disable"
 msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:30
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:600
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:607
 msgid "Color:"
 msgstr "Farbe:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:608
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:615
 msgid "Border size:"
 msgstr "Rahmengröße:"
 
@@ -266,7 +257,7 @@ msgstr "Rahmengröße:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:82
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:32
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:151
-#: qcsrc/menu/xonotic/util.qc:617
+#: qcsrc/menu/xonotic/util.qc:624
 msgid "Alpha:"
 msgstr "Alpha:"
 
@@ -275,17 +266,33 @@ msgstr "Alpha:"
 msgid "Team color:"
 msgstr "Teamfarbe:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:634
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:641
 msgid "Test team color in configure mode"
 msgstr "Teamfarbe bei Konfiguration testen"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:637
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:644
 msgid "Padding:"
 msgstr "Abstand:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:68
 msgid "HUD Dock:"
 msgstr "HUD-Dock:"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:70
+msgid "DOCK^Disabled"
+msgstr "Aus"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:71
+msgid "DOCK^Small"
+msgstr "Klein"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:72
+msgid "DOCK^Medium"
+msgstr "Mittel"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:73
+msgid "DOCK^Large"
+msgstr "Groß"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:96
 msgid "Grid settings:"
@@ -596,15 +603,8 @@ msgid "Fade effect:"
 msgstr "Ausblendeeffekt:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:33
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:44
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:98
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:156
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:175
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:183
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:137
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:167
-msgid "None"
-msgstr "Aus"
+msgid "EF^None"
+msgstr "keiner"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:35
 msgid "Slide"
@@ -621,6 +621,10 @@ msgstr "Waffensymbole:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:43
 msgid "Show weapon ID as:"
 msgstr "Waffen-ID zeigen als:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:44
+msgid "EFFECT^None"
+msgstr "keiner"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:45
 msgid "Number"
@@ -688,13 +692,12 @@ msgid "Filter:"
 msgstr "Filter:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:36
-msgid "Empty"
-msgstr "Leer"
+msgid "SRVS^Empty"
+msgstr "leer"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:40
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:149
-msgid "Full"
-msgstr "Voll"
+msgid "SRVS^Full"
+msgstr "voll"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:44
 msgid "Pause"
@@ -944,11 +947,11 @@ msgid "Close"
 msgstr "Schließen"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:50
-msgid "OFF"
+msgid "VOL^OFF"
 msgstr "AUS"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:52
-msgid "MAX"
+msgid "VOL^MAX"
 msgstr "MAX"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:53
@@ -1041,6 +1044,10 @@ msgstr "Blutverlust"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:202
 msgid "Jet pack"
 msgstr "Jetpack"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:98
+msgid "MUT^None"
+msgstr "keiner"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:164
 msgid "Gameplay mutators:"
@@ -1373,6 +1380,10 @@ msgstr "Größe:"
 msgid "Hit test:"
 msgstr "Treffer-Test:"
 
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:156
+msgid "HTST^None"
+msgstr "Aus"
+
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:157
 msgid "TrueAim"
 msgstr "TrueAim"
@@ -1393,9 +1404,17 @@ msgstr "HUD-Editor starten"
 msgid "Force models:"
 msgstr "Modell erzwingen:"
 
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:175
+msgid "MDL^None"
+msgstr "keine"
+
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:176
-msgid "Custom"
-msgstr "Benutzerdefiniert"
+msgid "MDL^Custom"
+msgstr "inoffizielle"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:177
+msgid "MDL^All"
+msgstr "alle"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:179
 msgid "Disable gore effects"
@@ -1405,16 +1424,20 @@ msgstr "Gewalteffekte deaktivieren"
 msgid "Gibs:"
 msgstr "Fleischteile:"
 
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:183
+msgid "GIBS^None"
+msgstr "Aus"
+
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:184
-msgid "Few"
+msgid "GIBS^Few"
 msgstr "Wenige"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:185
-msgid "Many"
+msgid "GIBS^Many"
 msgstr "Einige"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:186
-msgid "Lots"
+msgid "GIBS^Lots"
 msgstr "Viele"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:190
@@ -1692,21 +1715,21 @@ msgstr "Team Deathmatch"
 msgid "@!#%'n Tuba Throwing"
 msgstr "@!#%'n Tuba-Werfen"
 
-#: qcsrc/menu/xonotic/util.qc:592
+#: qcsrc/menu/xonotic/util.qc:599
 msgid "Background:"
 msgstr "Hintergrund:"
 
-#: qcsrc/menu/xonotic/util.qc:594 qcsrc/menu/xonotic/util.qc:610
-#: qcsrc/menu/xonotic/util.qc:619 qcsrc/menu/xonotic/util.qc:627
-#: qcsrc/menu/xonotic/util.qc:639
+#: qcsrc/menu/xonotic/util.qc:601 qcsrc/menu/xonotic/util.qc:617
+#: qcsrc/menu/xonotic/util.qc:626 qcsrc/menu/xonotic/util.qc:634
+#: qcsrc/menu/xonotic/util.qc:646
 msgid "Default"
 msgstr "Standard"
 
-#: qcsrc/menu/xonotic/util.qc:605
+#: qcsrc/menu/xonotic/util.qc:612
 msgid "Use default"
 msgstr "Standard verwenden"
 
-#: qcsrc/menu/xonotic/util.qc:625
+#: qcsrc/menu/xonotic/util.qc:632
 msgid "Team Color:"
 msgstr "Teamfarbe:"
 
@@ -1787,32 +1810,31 @@ msgid "Quality preset:"
 msgstr "Qualitäts-Vorgabe:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:41
-msgid "OMG!"
+msgid "PRE^OMG!"
 msgstr "OMG!"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:42
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:55
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:75
-msgid "Low"
+msgid "PRE^Low"
 msgstr "Niedrig"
 
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:43
+msgid "PRE^Medium"
+msgstr "Mittel"
+
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:44
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:56
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:76
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:147
-msgid "Normal"
+msgid "PRE^Normal"
 msgstr "Normal"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:45
-msgid "High"
+msgid "PRE^High"
 msgstr "Hoch"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:46
-msgid "Ultra"
+msgid "PRE^Ultra"
 msgstr "Ultra"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:48
-msgid "Ultimate"
+msgid "PRE^Ultimate"
 msgstr "Ultimativ"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:52
@@ -1820,28 +1842,36 @@ msgid "Geometry detail:"
 msgstr "Geometrie-Detail:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:54
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:74
-msgid "Lowest"
+msgid "DET^Lowest"
 msgstr "Sehr niedrig"
 
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:55
+msgid "DET^Low"
+msgstr "Niedrig"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:56
+msgid "DET^Normal"
+msgstr "Normal"
+
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:57
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:77
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:147
-msgid "Good"
+msgid "DET^Good"
 msgstr "Gut"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:58
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:78
-msgid "Best"
-msgstr "Optimal"
+msgid "DET^Best"
+msgstr "Sehr gut"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:59
-msgid "Insane"
+msgid "DET^Insane"
 msgstr "Wahnsinnig"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:62
 msgid "Antialiasing:"
 msgstr "Kantenglättung:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:64
+msgid "AA^Disabled"
+msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:65
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:103
@@ -1858,8 +1888,28 @@ msgid "Texture resolution:"
 msgstr "Texturauflösung:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:73
-msgid "Leet"
+msgid "RES^Leet"
 msgstr "Leet"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:74
+msgid "RES^Lowest"
+msgstr "Sehr niedrig"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:75
+msgid "RES^Low"
+msgstr "Niedrig"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:76
+msgid "RES^Normal"
+msgstr "Normal"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:77
+msgid "RES^Good"
+msgstr "Gut"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:78
+msgid "RES^Best"
+msgstr "Sehr gut"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:91
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:94
@@ -1869,6 +1919,10 @@ msgstr "Texturkompression vermeiden"
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:100
 msgid "Anisotropy:"
 msgstr "Anisotropie:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:102
+msgid "ANISO^Disabled"
+msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:105
 msgid "8x"
@@ -1925,6 +1979,10 @@ msgstr "Reflexionen:"
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:146
 msgid "Blurred"
 msgstr "Schwammig"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:147
+msgid "REFL^Good"
+msgstr "Gut"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:148
 msgid "Sharp"
@@ -2252,25 +2310,41 @@ msgstr "Kopfhörer-Modus"
 msgid "Spatial voices:"
 msgstr "Räumliche Sprachnachrichten:"
 
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:137
+msgid "VOCS^None"
+msgstr "keine"
+
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:138
-msgid "Taunts"
-msgstr "Spott"
+msgid "VOCS^Taunts"
+msgstr "nur Spott"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:139
+msgid "VOCS^All"
+msgstr "alle"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:142
 msgid "Taunt range:"
 msgstr "Spott-Radius:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:145
-msgid "Very short"
+msgid "RNG^Very short"
 msgstr "Sehr klein"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:146
-msgid "Short"
+msgid "RNG^Short"
 msgstr "Klein"
 
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:147
+msgid "RNG^Normal"
+msgstr "Normal"
+
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:148
-msgid "Long"
+msgid "RNG^Long"
 msgstr "Groß"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:149
+msgid "RNG^Full"
+msgstr "Sehr groß"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:156
 msgid "Automatic taunts"
@@ -2279,6 +2353,10 @@ msgstr "Automatischer Spott"
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:165
 msgid "Time warning:"
 msgstr "Zeitwarnung:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:167
+msgid "WRN^None"
+msgstr "keine"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:168
 msgid "1 minute"
@@ -2289,8 +2367,8 @@ msgid "5 minutes"
 msgstr "5 Minuten"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:170
-msgid "Both"
-msgstr "Beide"
+msgid "WRN^Both"
+msgstr "beide"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:173
 msgid "Hit indicator"
