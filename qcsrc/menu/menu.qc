@@ -853,10 +853,18 @@ void() m_goto_skin_selector =
 	m_goto("skinselector");
 }
 
+void() m_goto_language_selector =
+{
+	if(!menuInitialized)
+		return;
+	// TODO add code to switch back to the language selector (no idea how to do it now)
+	m_goto("languageselector");
+}
+
 void() m_goto_video_settings =
 {
 	if(!menuInitialized)
 		return;
-	// TODO add code to switch back to the skin selector (no idea how to do it now)
+	// TODO add code to switch back to the video settings (no idea how to do it now)
 	m_goto("videosettings");
 }

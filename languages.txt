@@ -1,0 +1,3 @@
+de German "Deutsch"
+en English "English"
+fr French "Français"

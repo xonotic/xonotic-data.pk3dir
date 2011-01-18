@@ -62,6 +62,7 @@
 #include "xonotic/gametypelist.c"
 #include "xonotic/maplist.c"
 #include "xonotic/skinlist.c"
+#include "xonotic/languagelist.c"
 #include "xonotic/image.c"
 #include "xonotic/crosshairbutton.c"
 #include "xonotic/playermodel.c"

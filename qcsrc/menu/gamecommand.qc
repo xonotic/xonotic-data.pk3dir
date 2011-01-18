@@ -100,6 +100,12 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if(argv(0) == "languageselect")
+	{
+		m_goto_language_selector();
+		return;
+	}
+
 	if(argv(0) == "videosettings")
 	{
 		m_goto_video_settings();
