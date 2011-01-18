@@ -602,7 +602,7 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname)
 			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_bg_color")), "");
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3.8, e = makeXonoticCheckBoxString("", "1 1 1", strzone(strcat("hud_panel_", panelname, "_bg_color")), _("Use default")));
+		me.TD(me, 1, 1.0, e = makeXonoticCheckBoxString("", "1 1 1", strzone(strcat("hud_panel_", panelname, "_bg_color")), _("Use default")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Border size:")));
