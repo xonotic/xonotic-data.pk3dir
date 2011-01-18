@@ -1457,8 +1457,9 @@ msgid "GIBS^None"
 msgstr "Нет"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:184
+#, fuzzy
 msgid "GIBS^Few"
-msgstr ""
+msgstr "Мало"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:185
 #, fuzzy
@@ -2375,8 +2376,9 @@ msgid "VOCS^Taunts"
 msgstr "Насмешки"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:139
+#, fuzzy
 msgid "VOCS^All"
-msgstr ""
+msgstr "Всё"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:142
 msgid "Taunt range:"
@@ -2460,6 +2462,3 @@ msgstr "Панель здоровья/брони"
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:45
 msgid "Flip health and armor positions"
 msgstr "Поменять местами здоровье и броню"
-
-#~ msgid "Few"
-#~ msgstr "Мало"
