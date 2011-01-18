@@ -32,6 +32,18 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.onClickEntity = sk;
 
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Text language:")));
+	me.TR(me);
+		me.TD(me, 3, 3, sk = makeXonoticLanguageList());
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticButton(_("Apply immediately"), '0 0 0'));
+			e.onClick = SetLanguage_Click;
+			e.onClickEntity = sk;
+
+	me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showtime", _("Show current time")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showdate", _("Show current date")));
@@ -65,8 +77,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 			setDependent(e, "cl_showacceleration", 1, 1);
 	me.TR(me);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_maxfps_alwayssleep", _("Minimize input latency")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_maxfps_alwayssleep", _("Minimize input latency")));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
