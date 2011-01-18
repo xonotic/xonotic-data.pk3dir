@@ -199,7 +199,7 @@ msgstr "Dezactiveaza OpenGL multi-core"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:75
 msgid "Wait for GPU to finish each frame"
-msgstr "Asteapta ca GPU-ul sa termine fiecare cadru"
+msgstr "Asteapta ca GPU sa termine fiecare cadru"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:78
 msgid "Brightness:"
@@ -211,7 +211,7 @@ msgstr "Contrast:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:84
 msgid "Gamma:"
-msgstr "Gamma:"
+msgstr "Gama:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:87
 msgid "Contrast boost:"
@@ -219,7 +219,7 @@ msgstr "Exagerare contrast:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:90
 msgid "Saturation:"
-msgstr "Saturare:"
+msgstr "Saturatie:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:95
 msgid "Use GLSL to handle color control"
@@ -257,7 +257,7 @@ msgstr "Setari normale fond:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:602
 #: qcsrc/menu/xonotic/util.qc:618 qcsrc/menu/xonotic/util.qc:635
 msgid "Disable"
-msgstr "Dezactivare"
+msgstr "Dezactivat"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:30
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:607
@@ -451,16 +451,16 @@ msgstr "Fereastra Taste Apasate"
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:21
 msgid "Panel disabled"
-msgstr "Fereastra dezactivata"
+msgstr "Dezactivata"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:22
 msgid "Panel enabled when spectating"
-msgstr "Fereastra activa pentru spectatori"
+msgstr "Activa pentru spectatori"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:23
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:23
 msgid "Panel always enabled"
-msgstr "Fereastra mereu activa"
+msgstr "Mereu activa"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:30
 msgid "Forced aspect:"
@@ -601,7 +601,7 @@ msgstr "Dezactivare acceleratie mouse din OS"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:66
 msgid "\"enter console\" also closes"
-msgstr "\"enter\" inchide consola deasemenea"
+msgstr "\"enter\" inchide si consola"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:4
 msgid "Weapons Panel"
@@ -748,11 +748,11 @@ msgstr "Notificatii:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:25
 msgid "Also print notifications to the console"
-msgstr "Printeaza notificatiile si in consola"
+msgstr "Printare notificatii si in consola"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:28
 msgid "Flip notify order"
-msgstr "Inverseaza ordinea notificatiilor"
+msgstr "Inversare ordine notificatii"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:31
 msgid "Entry lifetime:"
@@ -772,11 +772,11 @@ msgstr "Stil meniu:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:47
 msgid "Show current time"
-msgstr "Afisaj timp curent"
+msgstr "Afisaj ora"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:49
 msgid "Show current date"
-msgstr "Afisaj data curenta"
+msgstr "Afisaj data"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:51
 msgid "Show frames per second"
@@ -812,7 +812,7 @@ msgstr "noduri"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:71
 msgid "Show accelerometer"
-msgstr "Asisare metru acceleratie"
+msgstr "Afisaj metru acceleratie"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:74
 msgid "Accelerometer scale:"
@@ -971,7 +971,7 @@ msgstr "Inchidere"
 #: qcsrc/menu/xonotic/slider_decibels.c:50
 #, fuzzy
 msgid "VOL^OFF"
-msgstr "INCHIS"
+msgstr "OPRIT"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:52
 #, fuzzy
@@ -1113,7 +1113,7 @@ msgstr "Fereastra Radar"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:22
 msgid "Panel enabled in teamgames"
-msgstr "Pornit in jocuri de echipa"
+msgstr "Activa in jocuri de echipa"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:29
 msgid "Radar:"
@@ -1153,23 +1153,23 @@ msgstr "Modalitate Zoom:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:52
 msgid "Zoomed in"
-msgstr "Zoom in interior"
+msgstr "In interior"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:53
 msgid "Zoomed out"
-msgstr "Zoom in exterior"
+msgstr "In exterior"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:54
 msgid "Always zoomed"
-msgstr "Zoom permanent activ"
+msgstr "Permanent activ"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:55
 msgid "Never zoomed"
-msgstr "Zoom niciodata activ"
+msgstr "Niciodata activ"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.c:4
 msgid "Race Timer Panel"
-msgstr "Fereastra Timpi Curse"
+msgstr "Fereastra Timp Curse"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:4
 msgid "Chat Panel"
@@ -1229,7 +1229,7 @@ msgstr "Numar maxim jucatori:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:68
 msgid "Number of bots:"
-msgstr "Numar maxim boti:"
+msgstr "Numar boti:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:72
 msgid "Bot skill:"
@@ -1317,7 +1317,7 @@ msgstr "Goluri:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:165
 msgid "Frag limit:"
-msgstr "Limita de crime:"
+msgstr "Limita de omoruri:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.c:4
 msgid "Winner"
@@ -1714,7 +1714,7 @@ msgstr "Keepaway"
 
 #: qcsrc/menu/xonotic/util.qc:532
 msgid "Key Hunt"
-msgstr "Vanatoare Chei"
+msgstr "Vanatoarea Cheilor"
 
 #: qcsrc/menu/xonotic/util.qc:533
 msgid "Last Man Standing"
@@ -1742,7 +1742,7 @@ msgstr "Runematch"
 
 #: qcsrc/menu/xonotic/util.qc:539
 msgid "Team Deathmatch"
-msgstr "Meciul Mortii (in echipe)"
+msgstr "Meciul Mortii (in echipa)"
 
 #: qcsrc/menu/xonotic/util.qc:558
 #, c-format
@@ -1841,7 +1841,7 @@ msgstr "Oglindire orizontala ecran"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:38
 msgid "Quality preset:"
-msgstr "Setari de calitate:"
+msgstr "Setari calitate:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:41
 #, fuzzy
@@ -2017,7 +2017,7 @@ msgstr "Texturi Deluxe"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:135
 msgid "Gloss"
-msgstr "Stralucire"
+msgstr "Suprafete lucioase"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:138
 msgid "Offset mapping"
@@ -2033,16 +2033,16 @@ msgstr "Reflectii:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:146
 msgid "Blurred"
-msgstr "Blurat"
+msgstr "Blurate"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:147
 #, fuzzy
 msgid "REFL^Good"
-msgstr "Bun"
+msgstr "Bune"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:148
 msgid "Sharp"
-msgstr "Ascutit"
+msgstr "Ascutite"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:153
 msgid "Show surfaces"
@@ -2079,7 +2079,7 @@ msgstr "Umbre fine"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:173
 msgid "Coronas"
-msgstr "Straluciri"
+msgstr "Coroane lumini"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:175
 msgid "Bloom"
@@ -2135,7 +2135,7 @@ msgstr "Pachete intrare/secunda:"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:46
 msgid "HTTP downloads:"
-msgstr "Descarcati HTTP:"
+msgstr "Descarcari HTTP:"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:49
 msgid "Downloads:"
@@ -2242,7 +2242,7 @@ msgstr "Aliniere iconuri:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:45
 msgid "Flip strength and shield positions"
-msgstr "Oglindire pozitii iconuri"
+msgstr "Oglindire pozitie iconuri"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:27
 msgid "Master:"
