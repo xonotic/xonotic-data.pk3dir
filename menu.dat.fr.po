@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 11:05+0100\n"
+"POT-Creation-Date: 2011-01-18 11:25+0100\n"
 "PO-Revision-Date: 2011-01-17 14:00+0100\t\n"
 "Last-Translator: Calinou <hugohachel@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1614,6 +1614,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:330
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Génération des mapinfo pour les nouvelles cartes ajoutées..."
+
+#: qcsrc/menu/xonotic/util.qc:425
+#, c-format
+msgid "Update to %s now!"
+msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:502
 msgid ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 11:05+0100\n"
+"POT-Creation-Date: 2011-01-18 11:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1609,6 +1609,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:330
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Automatische Generierung von mapinfo-Dateien..."
+
+#: qcsrc/menu/xonotic/util.qc:425
+#, c-format
+msgid "Update to %s now!"
+msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:502
 msgid ""
