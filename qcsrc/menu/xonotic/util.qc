@@ -422,7 +422,7 @@ void preMenuDraw()
 		    + eY * (0.5 + 0.5 * (1 - sz_y) * sin(time * 0.071));
 
 		draw_Fill(mid - 0.5 * sz, sz, '1 1 0', 1);
-		draw_CenterText(mid - 1 * line, strcat("Update to ", _Nex_ExtResponseSystem_UpdateTo, " now!"), fs, '1 0 0', 1, 0);
+		draw_CenterText(mid - 1 * line, sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo), fs, '1 0 0', 1, 0);
 		draw_CenterText(mid - 0 * line, "http://www.xonotic.org/", fs, '0 0 1', 1, 0);
 	}
 	if not(campaign_name_previous)
