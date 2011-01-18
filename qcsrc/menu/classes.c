@@ -27,6 +27,7 @@
 #include "xonotic/bigbutton.c"
 #include "xonotic/commandbutton.c"
 #include "xonotic/bigcommandbutton.c"
+#include "xonotic/dialog_firstrun.c"
 #include "xonotic/dialog_teamselect.c"
 #include "xonotic/dialog_settings.c"
 #include "xonotic/dialog_settings_video.c"
