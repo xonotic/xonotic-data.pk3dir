@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 11:25+0100\n"
-"PO-Revision-Date: 2011-01-17 14:00+0100\t\n"
+"POT-Creation-Date: 2011-01-18 11:56+0100\n"
+"PO-Revision-Date: 2011-01-18 11:53+0100\t\n"
 "Last-Translator: Calinou <hugohachel@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -347,11 +347,11 @@ msgstr "Paramètres Waypoint (flèches 3D sur la carte):"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:26
 msgid "Show base waypoints"
-msgstr "Montrer les Waypoints de drapeau:"
+msgstr "Montrer les Waypoints de drapeau"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:29
 msgid "Waypoint scale:"
-msgstr "Taille des waypoints:"
+msgstr "Taille des Waypoints:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:34
 msgid "Waypoint alpha:"
@@ -1329,7 +1329,7 @@ msgstr "Champ de vision:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:92
 msgid "View bobbing:"
-msgstr "Mouvement caméra marche:"
+msgstr "Caméra marche:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:96
 msgid "Zoom factor:"
@@ -1579,7 +1579,7 @@ msgstr "9 choix"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:79
 msgid "Simple majority wins vcall"
-msgstr "Majorité 50% pour gagner le vote"
+msgstr "Majorité 51% pour gagner le vote"
 
 #: qcsrc/menu/xonotic/util.qc:263
 #, c-format
@@ -1846,7 +1846,7 @@ msgstr "Extrême"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:62
 msgid "Antialiasing:"
-msgstr "Anticrénélage:"
+msgstr "Anticrénelage:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:65
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:103
@@ -1913,7 +1913,7 @@ msgstr "Textures Deluxe"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:135
 msgid "Gloss"
-msgstr "Réflection textures"
+msgstr "Brillance textures"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:138
 msgid "Offset mapping"

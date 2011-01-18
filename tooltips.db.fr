@@ -33,8 +33,8 @@
 \g_footsteps\Activer les bruitages de pas
 \g_midair\Il faut que votre adversaire soit en l'air pour lui faire mal
 \g_vampire\Les dégâts faits à vos enemies vous font gagner de la santé
-\g_bloodloss\Si vous avez moins de santé que spécifiez ici, vous perdrez du sang et mourez progressivement
-\sv_gravity\Vous tombez donc plus lentement, comme sur la lune
+\g_bloodloss\Si vous avez moins de santé que spécifié ici, vous perdrez du sang et mourez progressivement
+\sv_gravity\Vous tombez plus lentement, comme sur la lune
 \g_grappling_hook\Tous les joueurs ont un grappin
 \g_jetpack\Tous les joueurs ont un jetpack
 \g_pinata\Tous les joueurs lâchent toutes leurs armes quand ils meurent
