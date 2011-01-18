@@ -168,7 +168,10 @@ void uzi_mode1_fire_burst()
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 	if (self.misc_bulletcounter == 0)
-		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_burst_refire2, w_ready);
+	{
+		ATTACK_FINISHED(self) = time + autocvar_g_balance_uzi_burst_refire2 * W_WeaponRateFactor();
+		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_burst_animtime, w_ready);
+	}
 	else
 	{
 		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_burst_refire, uzi_mode1_fire_burst);

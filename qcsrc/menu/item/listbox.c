@@ -277,6 +277,7 @@ void ListBox_draw(entity me)
 	oldshift = draw_shift;
 	oldscale = draw_scale;
 	absSize = boxToGlobalSize(me.size, eX * (1 - me.controlWidth) + eY * me.itemHeight);
+	draw_scale = boxToGlobalSize(eX * (1 - me.controlWidth) + eY * me.itemHeight, oldscale);
 	for(i = floor(me.scrollPos / me.itemHeight); i < me.nItems; ++i)
 	{
 		float y;
@@ -284,7 +285,6 @@ void ListBox_draw(entity me)
 		if(y >= 1)
 			break;
 		draw_shift = boxToGlobal(eY * y, oldshift, oldscale);
-		draw_scale = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), oldscale);
 		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i));
 	}
 	draw_ClearClip();

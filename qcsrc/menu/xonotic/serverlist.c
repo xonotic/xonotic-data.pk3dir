@@ -107,6 +107,8 @@ float IsFavorite(string srv)
 	if(srv == "")
 		return FALSE;
 	srv = netaddress_resolve(srv, 26000);
+	if(srv == "")
+		return FALSE;
 	p = crypto_getidfp(srv);
 	n = tokenize_console(cvar_string("net_slist_favorites"));
 	for(i = 0; i < n; ++i)
@@ -502,7 +504,7 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.columnPingSize = me.realFontSize_x * 3;
 	me.columnMapSize = me.realFontSize_x * 10;
 	me.columnTypeSize = me.realFontSize_x * 4;
-	me.columnPlayersSize = me.realFontSize_x * 4;
+	me.columnPlayersSize = me.realFontSize_x * 5;
 	me.columnNameSize = 1 - me.columnPlayersSize - me.columnMapSize - me.columnPingSize - me.columnIconsSize - me.columnTypeSize - 5 * me.realFontSize_x;
 	me.columnPingOrigin = me.columnIconsOrigin + me.columnIconsSize + me.realFontSize_x;
 	me.columnNameOrigin = me.columnPingOrigin + me.columnPingSize + me.realFontSize_x;
@@ -707,8 +709,11 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	}
 	else if(scan == K_MOUSE2 || scan == K_SPACE)
 	{
-		main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
-		DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
+		if(me.nItems != 0)
+		{
+			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
+			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
+		}
 	}
 	else if(scan == K_INS || scan == K_MOUSE3 || scan == K_KP_INS)
 	{
