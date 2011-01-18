@@ -1613,7 +1613,7 @@ msgstr "Automatische Generierung von mapinfo-Dateien..."
 #: qcsrc/menu/xonotic/util.qc:425
 #, c-format
 msgid "Update to %s now!"
-msgstr ""
+msgstr "Jetzt auf %s updaten!"
 
 #: qcsrc/menu/xonotic/util.qc:502
 msgid ""
