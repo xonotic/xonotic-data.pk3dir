@@ -1460,7 +1460,7 @@ msgstr "Nenhum"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:184
 msgid "GIBS^Few"
-msgstr ""
+msgstr "Poucas"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:185
 #, fuzzy
@@ -2377,8 +2377,9 @@ msgid "VOCS^Taunts"
 msgstr "Taunts"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:139
+#, fuzzy
 msgid "VOCS^All"
-msgstr ""
+msgstr "Todos"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:142
 msgid "Taunt range:"
@@ -2462,6 +2463,3 @@ msgstr "Painel Vida/Armadura"
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:45
 msgid "Flip health and armor positions"
 msgstr "Trocar posição da vida e armadura"
-
-#~ msgid "Few"
-#~ msgstr "Poucas"
