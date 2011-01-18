@@ -53,6 +53,17 @@ Merlijn Hofstra
 DarkPlaces
 by Forest "LordHavoc" Hale
 
+**Translators
+
+*German
+Rudolf "divVerent" Polzer
+
+*French
+Calinou
+
+*Portuguese
+Ricardo "Hellgardia" Silva
+
 **Active Contributors
 Antonio "terencehill" Piu
 Ben "MooKow" Banker
