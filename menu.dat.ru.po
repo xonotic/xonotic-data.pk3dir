@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 17:06+0100\n"
+"POT-Creation-Date: 2011-01-18 17:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Lord Canistra <lordcanistra@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -85,47 +85,38 @@ msgid "Font/UI size:"
 msgstr "Размера шрифта/UI"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:31
-#, fuzzy
 msgid "SZ^Unreadable"
 msgstr "Нечитаемый"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:32
-#, fuzzy
 msgid "SZ^Tiny"
 msgstr "Крошечный"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:33
-#, fuzzy
 msgid "SZ^Little"
 msgstr "Маленький"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:34
-#, fuzzy
 msgid "SZ^Small"
 msgstr "Небольшой"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:35
-#, fuzzy
 msgid "SZ^Medium"
-msgstr "Среднее"
+msgstr "Средний"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:36
-#, fuzzy
 msgid "SZ^Large"
 msgstr "Большой"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:37
-#, fuzzy
 msgid "SZ^Huge"
 msgstr "Огромный"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:38
-#, fuzzy
 msgid "SZ^Gigantic"
 msgstr "Гигантский"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:39
-#, fuzzy
 msgid "SZ^Colossal"
 msgstr "Колоссальный"
 
@@ -154,9 +145,8 @@ msgid "Vertex Buffer Objects (VBOs)"
 msgstr "Использование Vertex Buffer Objects (VBOs)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:58
-#, fuzzy
 msgid "VBO^Off"
-msgstr "Откл."
+msgstr "Отключено"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:59
 msgid "Vertices, some Tris (compatible)"
@@ -175,17 +165,14 @@ msgid "Depth first:"
 msgstr "Сперва глубина:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:67
-#, fuzzy
 msgid "DF^Disabled"
 msgstr "Отключено"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:68
-#, fuzzy
 msgid "DF^World"
 msgstr "Мир"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:69
-#, fuzzy
 msgid "DF^All"
 msgstr "Всё"
 
@@ -222,7 +209,6 @@ msgid "Use GLSL to handle color control"
 msgstr "Использовать GLSL для контроля цвета"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:99
-#, fuzzy
 msgid "LIT^Ambient:"
 msgstr "Фоновое освещение:"
 
@@ -290,24 +276,20 @@ msgid "HUD Dock:"
 msgstr "Область HUD:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:70
-#, fuzzy
 msgid "DOCK^Disabled"
 msgstr "Отключено"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:71
-#, fuzzy
 msgid "DOCK^Small"
-msgstr "Небольшой"
+msgstr "Небольшая"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:72
-#, fuzzy
 msgid "DOCK^Medium"
-msgstr "Среднее"
+msgstr "Средняя"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:73
-#, fuzzy
 msgid "DOCK^Large"
-msgstr "Большой"
+msgstr "Большая"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:96
 msgid "Grid settings:"
@@ -526,17 +508,16 @@ msgstr "Разное"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:4
 msgid "Welcome"
-msgstr ""
+msgstr "Добро пожаловать"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:32
 msgid "Please answer a few initial questions to enhance the game experience."
-msgstr ""
+msgstr "Пожалуйста, ответьте на несколько начальных вопросов."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:36
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:35
-#, fuzzy
 msgid "Text language:"
-msgstr "Радиус насмешек:"
+msgstr "Язык меню:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:45
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:39
@@ -545,9 +526,8 @@ msgid "Name:"
 msgstr "Имя:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:67
-#, fuzzy
 msgid "Save settings"
-msgstr "Настройки игры:"
+msgstr "Сохранить настройки:"
 
 #: qcsrc/menu/xonotic/campaign.c:284
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:66
@@ -619,9 +599,8 @@ msgid "Fade effect:"
 msgstr "Эффект исчезновения:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:33
-#, fuzzy
 msgid "EF^None"
-msgstr "Нет"
+msgstr "Отсутствует"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:35
 msgid "Slide"
@@ -640,9 +619,8 @@ msgid "Show weapon ID as:"
 msgstr "Показывать ID оружия как:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:44
-#, fuzzy
 msgid "SHOWAS^None"
-msgstr "Нет"
+msgstr "Не показывать"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:45
 msgid "Number"
@@ -710,14 +688,12 @@ msgid "Filter:"
 msgstr "Фильтр:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:36
-#, fuzzy
 msgid "SRVS^Empty"
 msgstr "Пустые"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:40
-#, fuzzy
 msgid "SRVS^Full"
-msgstr "Полный"
+msgstr "Полные"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:44
 msgid "Pause"
@@ -967,12 +943,10 @@ msgid "Close"
 msgstr "Закрыть"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:50
-#, fuzzy
 msgid "VOL^OFF"
 msgstr "Отключено"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:52
-#, fuzzy
 msgid "VOL^MAX"
 msgstr "Максимум"
 
@@ -1068,9 +1042,8 @@ msgid "Jet pack"
 msgstr "Джетпак"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:98
-#, fuzzy
 msgid "MUT^None"
-msgstr "Нет"
+msgstr "Отсутствуют"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:164
 msgid "Gameplay mutators:"
@@ -1404,9 +1377,8 @@ msgid "Hit test:"
 msgstr "Проверка на попадание:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:156
-#, fuzzy
 msgid "HTST^None"
-msgstr "Нет"
+msgstr "Отключена"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:157
 msgid "TrueAim"
@@ -1426,22 +1398,19 @@ msgstr "Войти в редактор HUD"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:174
 msgid "Force models:"
-msgstr "Force models:"
+msgstr "Использовать свои модели:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:175
-#, fuzzy
 msgid "MDL^None"
 msgstr "Нет"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:176
-#, fuzzy
 msgid "MDL^Custom"
-msgstr "Свои настройки"
+msgstr "Вместо нестандартных"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:177
-#, fuzzy
 msgid "MDL^All"
-msgstr "Всё"
+msgstr "Вместо всех"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:179
 msgid "Disable gore effects"
@@ -1452,22 +1421,18 @@ msgid "Gibs:"
 msgstr "Ошмётки:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:183
-#, fuzzy
 msgid "GIBS^None"
 msgstr "Нет"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:184
-#, fuzzy
 msgid "GIBS^Few"
 msgstr "Мало"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:185
-#, fuzzy
 msgid "GIBS^Many"
 msgstr "Много"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:186
-#, fuzzy
 msgid "GIBS^Lots"
 msgstr "Тонны"
 
@@ -1842,37 +1807,30 @@ msgid "Quality preset:"
 msgstr "Качество:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:41
-#, fuzzy
 msgid "PRE^OMG!"
 msgstr "ОХЩИ-"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:42
-#, fuzzy
 msgid "PRE^Low"
 msgstr "Низкое"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:43
-#, fuzzy
 msgid "PRE^Medium"
 msgstr "Среднее"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:44
-#, fuzzy
 msgid "PRE^Normal"
-msgstr "Нормальный"
+msgstr "Нормальное"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:45
-#, fuzzy
 msgid "PRE^High"
 msgstr "Высокое"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:46
-#, fuzzy
 msgid "PRE^Ultra"
 msgstr "Ультра"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:48
-#, fuzzy
 msgid "PRE^Ultimate"
 msgstr ">9000"
 
@@ -1881,41 +1839,34 @@ msgid "Geometry detail:"
 msgstr "Детализация:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:54
-#, fuzzy
 msgid "DET^Lowest"
-msgstr "Нижайшее"
+msgstr "Нижайшая"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:55
-#, fuzzy
 msgid "DET^Low"
-msgstr "Низкое"
+msgstr "Низкая"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:56
-#, fuzzy
 msgid "DET^Normal"
-msgstr "Нормальный"
+msgstr "Нормальная"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:57
-#, fuzzy
 msgid "DET^Good"
-msgstr "Хорошее"
+msgstr "Хорошая"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:58
-#, fuzzy
 msgid "DET^Best"
-msgstr "Лучшее"
+msgstr "Лучшая"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:59
-#, fuzzy
 msgid "DET^Insane"
-msgstr "Высочайшее"
+msgstr "Высочайшая"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:62
 msgid "Antialiasing:"
 msgstr "Сглаживание:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:64
-#, fuzzy
 msgid "AA^Disabled"
 msgstr "Отключено"
 
@@ -1934,32 +1885,26 @@ msgid "Texture resolution:"
 msgstr "Разрешение текстур:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:73
-#, fuzzy
 msgid "RES^Leet"
-msgstr "Leet"
+msgstr "Ужасное"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:74
-#, fuzzy
 msgid "RES^Lowest"
 msgstr "Нижайшее"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:75
-#, fuzzy
 msgid "RES^Low"
 msgstr "Низкое"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:76
-#, fuzzy
 msgid "RES^Normal"
-msgstr "Нормальный"
+msgstr "Нормальное"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:77
-#, fuzzy
 msgid "RES^Good"
 msgstr "Хорошее"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:78
-#, fuzzy
 msgid "RES^Best"
 msgstr "Лучшее"
 
@@ -1973,9 +1918,8 @@ msgid "Anisotropy:"
 msgstr "Анизотропия:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:102
-#, fuzzy
 msgid "ANISO^Disabled"
-msgstr "Отключено"
+msgstr "Отключена"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:105
 msgid "8x"
@@ -2034,9 +1978,8 @@ msgid "Blurred"
 msgstr "Размытые"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:147
-#, fuzzy
 msgid "REFL^Good"
-msgstr "Хорошее"
+msgstr "Хорошие"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:148
 msgid "Sharp"
@@ -2077,7 +2020,7 @@ msgstr "Мягкие тени"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:173
 msgid "Coronas"
-msgstr "Сияния"
+msgstr "Короны"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:175
 msgid "Bloom"
@@ -2253,9 +2196,8 @@ msgid "Music:"
 msgstr "Музыка:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:40
-#, fuzzy
 msgid "VOL^Ambient:"
-msgstr "Фоновое освещение:"
+msgstr "Фоновые звуки:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:48
 msgid "Info:"
@@ -2371,46 +2313,38 @@ msgid "Spatial voices:"
 msgstr "Объёмные голоса"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:137
-#, fuzzy
 msgid "VOCS^None"
-msgstr "Нет"
+msgstr "Отключены"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:138
-#, fuzzy
 msgid "VOCS^Taunts"
 msgstr "Насмешки"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:139
-#, fuzzy
 msgid "VOCS^All"
-msgstr "Всё"
+msgstr "Все"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:142
 msgid "Taunt range:"
 msgstr "Радиус насмешек:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:145
-#, fuzzy
 msgid "RNG^Very short"
 msgstr "Очень маленький"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:146
-#, fuzzy
 msgid "RNG^Short"
 msgstr "Маленький"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:147
-#, fuzzy
 msgid "RNG^Normal"
 msgstr "Нормальный"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:148
-#, fuzzy
 msgid "RNG^Long"
 msgstr "Большой"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:149
-#, fuzzy
 msgid "RNG^Full"
 msgstr "Полный"
 
@@ -2423,7 +2357,6 @@ msgid "Time warning:"
 msgstr "Предупреждение о таймауте за:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:167
-#, fuzzy
 msgid "WRN^None"
 msgstr "Нет"
 
@@ -2436,9 +2369,8 @@ msgid "5 minutes"
 msgstr "5 минут"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:170
-#, fuzzy
 msgid "WRN^Both"
-msgstr "Оба"
+msgstr "1 и 5 минут"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:173
 msgid "Hit indicator"
