@@ -676,11 +676,11 @@ msgstr "Nu mai apasati acest buton din nou!"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:4
 msgid "Engine Info Panel"
-msgstr "Fereastra Informatii Sistem"
+msgstr "Fereastra Informatii Motor"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:22
 msgid "Engine info:"
-msgstr "Informatii sistem:"
+msgstr "Informatii motor:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:25
 msgid "Use an averaging algorithm for fps"
@@ -1490,7 +1490,7 @@ msgstr "privat"
 
 #: qcsrc/menu/xonotic/cvarlist.c:90
 msgid "engine setting"
-msgstr "setari sistem"
+msgstr "setari motor"
 
 #: qcsrc/menu/xonotic/cvarlist.c:92
 msgid "read only"
