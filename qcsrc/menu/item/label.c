@@ -74,9 +74,44 @@ void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absO
 		me.keepspaceLeft = me.marginLeft * me.realFontSize_x;
 	if(me.marginRight)
 		me.keepspaceRight = me.marginRight * me.realFontSize_x;
-	me.realOrigin_y = 0.5 * (1 - me.realFontSize_y);
 
 	me.recalcPosition(me);
+
+	float lines;
+
+	vector dfs;
+	vector fs;
+
+	// set up variables to draw in condensed size, but use hinting for original size
+	fs = me.realFontSize;
+	fs_x *= me.condenseFactor;
+
+	dfs = draw_fontscale;
+	draw_fontscale_x *= me.condenseFactor;
+
+	if(me.allowCut) // FIXME allowCut incompatible with align != 0
+		lines = 1;
+	else if(me.allowWrap) // FIXME allowWrap incompatible with align != 0
+	{
+		getWrappedLine_remaining = me.text;
+		lines = 0;
+		while(getWrappedLine_remaining)
+		{
+			if (me.allowColors)
+				getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), fs, draw_TextWidth_WithColors);
+			else
+				getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), fs, draw_TextWidth_WithoutColors);
+			++lines;
+		}
+	}
+	else
+		lines = 1;
+
+	draw_fontscale = dfs;
+
+	me.realOrigin_y = 0.5 * (1 - lines * me.realFontSize_y);
+	if(substring(me.text, 0, 3) == "Wel")
+		print(ftos(me.realOrigin_y), " ", me.text, "\n");
 }
 void Label_configureLabel(entity me, string txt, float sz, float algn)
 {

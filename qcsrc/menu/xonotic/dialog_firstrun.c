@@ -28,11 +28,12 @@ void XonoticFirstRunDialog_fill(entity me)
 {
 	entity e;
 	entity label, box;
+
 	me.TR(me);
-		me.TD(me, 3, 3, e = makeXonoticTextLabel(0, _("Welcome to Xonotic, please select your language preference and enter your player name to get started.  You can change these options later through the menu system.")));
+		me.TD(me, 2, 3, e = makeXonoticTextLabel(0, _("Welcome to Xonotic, please select your language preference and enter your player name to get started.  You can change these options later through the menu system.")));
 		e.allowWrap = 1;
 	me.TR(me);
-	me.TR(me);
+
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Text language:")));
 	me.TR(me);
