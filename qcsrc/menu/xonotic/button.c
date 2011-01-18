@@ -10,6 +10,8 @@ CLASS(XonoticButton) EXTENDS(Button)
 	ATTRIB(XonoticButton, colorD, vector, SKINCOLOR_BUTTON_D)
 	ATTRIB(XonoticButton, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(XonoticButton, disabledAlpha, float, SKINALPHA_DISABLED)
+	ATTRIB(XonoticButton, marginLeft, float, SKINMARGIN_BUTTON) // chars
+	ATTRIB(XonoticButton, marginRight, float, SKINMARGIN_BUTTON) // chars
 ENDCLASS(XonoticButton)
 entity makeXonoticButton(string theText, vector theColor);
 #endif
