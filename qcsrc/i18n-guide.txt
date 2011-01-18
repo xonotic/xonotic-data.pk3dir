@@ -29,10 +29,6 @@ Unresolved TODO:
 
 - translated campaigns
 
-client/miscfunctions.qc
-client/modeleffects.qc
-client/movetypes.qc
-client/noise.qh
 client/particles.qc
 client/prandom.qc
 client/projectile.qc

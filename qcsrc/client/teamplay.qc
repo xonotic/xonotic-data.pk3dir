@@ -52,10 +52,10 @@ string GetTeamName(float color)
 {
 	switch(color)
 	{
-	default: return "Spectators";
-	case COLOR_TEAM1: return "Red Team";
-	case COLOR_TEAM2: return "Blue Team";
-	case COLOR_TEAM3: return "Yellow Team";
-	case COLOR_TEAM4: return "Pink Team";
+	default: return _("Spectators");
+	case COLOR_TEAM1: return _("Red Team");
+	case COLOR_TEAM2: return _("Blue Team");
+	case COLOR_TEAM3: return _("Yellow Team");
+	case COLOR_TEAM4: return _("Pink Team");
 	}
 }
