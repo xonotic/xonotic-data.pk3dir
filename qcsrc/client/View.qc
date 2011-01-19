@@ -360,7 +360,8 @@ float myhealth_flash;
 
 vector myhealth_gentlergb;
 
-float contentavgalpha;
+float contentavgalpha, liquidalpha_prev;
+vector liquidcolor_prev;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -671,13 +672,12 @@ void CSQC_UpdateView(float w, float h)
 			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_nex, DRAWFLAG_NORMAL);
 	}
 
+
 	// improved polyblend with post processing effects
 	vector rgb;
-	vector damage_blurpostprocess;
-	vector content_blurpostprocess;
 	if(autocvar_hud_contents)
 	{
-		float contentalpha_temp, incontent, liquidalpha;
+		float contentalpha_temp, incontent, liquidalpha, contentfadetime;
 		vector liquidcolor;
 		
 		switch(pointcontents(view_origin))
@@ -707,28 +707,20 @@ void CSQC_UpdateView(float w, float h)
 				break;
 		}
 		
-		contentalpha_temp = bound(0, drawframetime / max(0.0001, autocvar_hud_contents_fadetime), 1);
-		contentavgalpha = contentavgalpha * (1 - contentalpha_temp) + incontent * contentalpha_temp;
-		//contentalpha_temp = contentavgalpha;
-		
-		if(incontent)
-			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, liquidcolor, contentavgalpha * liquidalpha, DRAWFLAG_NORMAL);
-		
-		if(autocvar_hud_postprocessing)
-		{
-			if(autocvar_hud_contents_blur)
-			{
-				content_blurpostprocess_x = 1;
-				content_blurpostprocess_y = contentavgalpha * autocvar_hud_contents_blur;
-				content_blurpostprocess_z = contentavgalpha * autocvar_hud_contents_blur_alpha;
-			}
-			else
-			{
-				content_blurpostprocess_x = 0;
-				content_blurpostprocess_y = 0;
-				content_blurpostprocess_z = 0;
-			}
+		if(incontent) // fade in/out at different speeds so you can do e.g. instant fade when entering water and slow when leaving it.
+		{ // also lets delcare previous values for blending properties, this way it isn't reset until after you have entered a different content
+			contentfadetime = autocvar_hud_contents_fadeintime;
+			liquidalpha_prev = liquidalpha;
+			liquidcolor_prev = liquidcolor;
 		}
+		else
+			contentfadetime = autocvar_hud_contents_fadeouttime;
+			
+		contentalpha_temp = bound(0, drawframetime / max(0.0001, contentfadetime), 1);
+		contentavgalpha = contentavgalpha * (1 - contentalpha_temp) + incontent * contentalpha_temp;
+		
+		if(contentavgalpha)
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
 	}
 	
 	if(autocvar_hud_damage)
@@ -788,42 +780,9 @@ void CSQC_UpdateView(float w, float h)
 
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 		}
-		else if(autocvar_hud_damage_image)
-			drawpic(reticle_pos, "gfx/blood", reticle_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
-			
-		if(autocvar_hud_postprocessing)
-		{
-			if(autocvar_hud_damage_blur)
-			{
-				damage_blurpostprocess_x = 1;
-				damage_blurpostprocess_y = bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage_blur;
-				damage_blurpostprocess_z = bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage_blur_alpha;
-			}
-			else
-			{
-				damage_blurpostprocess_x = 0;
-				damage_blurpostprocess_y = 0;
-				damage_blurpostprocess_z = 0;
-			}
-		}
-	}
-	
-	if(autocvar_hud_postprocessing)
-	{ // lets apply the postprocess effects from the previous two functions if needed
-		if(damage_blurpostprocess_x || content_blurpostprocess_x)
-		{
-			float blurradius = bound(0, damage_blurpostprocess_y + content_blurpostprocess_y, autocvar_hud_postprocessing_maxblurradius);
-			float bluralpha = bound(0, damage_blurpostprocess_z + content_blurpostprocess_z, autocvar_hud_postprocessing_maxbluralpha);
-			cvar_set("r_glsl_postprocess_uservec1", strcat(ftos(blurradius), " ", ftos(bluralpha), " 0 0"));
-			cvar_set("r_glsl_postprocess_uservec1_enable", "1");
-		}
 		else
-		{
-			cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
-			cvar_set("r_glsl_postprocess_uservec1_enable", "0");
-		}
+			drawpic(reticle_pos, "gfx/blood", reticle_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 	}
-	
 
 	// Draw the mouse cursor
 	// NOTE: drawpic must happen after R_RenderScene for some reason
