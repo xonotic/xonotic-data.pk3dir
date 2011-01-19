@@ -1162,14 +1162,13 @@ void HUD_DrawScoreboard()
 		}
 	}
 
-// FIXME i18n until here
 	if(gametype == GAME_CTS || gametype == GAME_RACE) {
 		if(race_speedaward) {
-			drawcolorcodedstring(pos, strcat("Speed award: ", ftos(race_speedaward), " ^7(", race_speedaward_holder, "^7)"), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, sprintf(_("Speed award: %d ^7(%s^7)"), race_speedaward, race_speedaward_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
 		}
 		if(race_speedaward_alltimebest) {
-			drawcolorcodedstring(pos, strcat("All-time fastest: ", ftos(race_speedaward_alltimebest), " ^7(", race_speedaward_alltimebest_holder, "^7)"), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d ^7(%s^7)"), race_speedaward_alltimebest, race_speedaward_alltimebest_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
 		}
 		pos = HUD_DrawScoreboardRankings(pos, pl, rgb, bg_size);
@@ -1196,74 +1195,62 @@ void HUD_DrawScoreboard()
 
 	if(specs)
 	{
-		drawstring(tmp, "Spectators", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(tmp, _("Spectators"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		pos_y += 1.25 * hud_fontsize_y;
 	}
 
 	// Print info string
 	string str;
 	float tl, fl, ll;
-	str = strcat("playing on ^2", shortmapname, "^7");
+	str = sprintf(_("playing on ^2%s^7"), shortmapname);
 	tl = getstatf(STAT_TIMELIMIT);
 	fl = getstatf(STAT_FRAGLIMIT);
 	ll = getstatf(STAT_LEADLIMIT);
 	if(gametype == GAME_LMS)
 	{
 		if(tl > 0)
-			str = strcat(str, " for up to ^1", ftos(tl), " minutes^7");
+			str = strcat(str, sprintf(_(" for up to ^1%.1g minutes^7"), tl));
 	}
 	else
 	{
 		if(tl > 0)
-			str = strcat(str, " for ^1", ftos(tl), " minutes^7");
+			str = strcat(str, sprintf(_(" for up to ^1%.1g minutes^7"), tl));
 		if(fl > 0)
 		{
 			if(tl > 0)
-				str = strcat(str, " or");
+				str = strcat(str, _(" or"));
 			if(teamplay)
 			{
-				str = strcat(str, " until ^3", ScoreString(teamscores_flags[ts_primary], fl));
-				if(teamscores_label[ts_primary] == "score")
-					str = strcat(str, " points^7");
-				else if(teamscores_label[ts_primary] == "fastest")
-					str = strcat(str, " is beaten^7");
-				else
-					str = strcat(str, " ", teamscores_label[ts_primary]);
+				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], fl), 
+					(teamscores_label[ts_primary] == "score")   ? _("points") :
+					(teamscores_label[ts_primary] == "fastest") ? _("is beaten") :
+					teamscores_label[ts_primary]));
 			}
 			else
 			{
-				str = strcat(str, " until ^3", ScoreString(scores_flags[ps_primary], fl));
-				if(scores_label[ps_primary] == "score")
-					str = strcat(str, " points^7");
-				else if(scores_label[ps_primary] == "fastest")
-					str = strcat(str, " is beaten^7");
-				else
-					str = strcat(str, " ", scores_label[ps_primary]);
+				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(scores_flags[ps_primary], fl), 
+					(teamscores_label[ts_primary] == "score")   ? _("points") :
+					(teamscores_label[ts_primary] == "fastest") ? _("is beaten") :
+					teamscores_label[ts_primary]));
 			}
 		}
 		if(ll > 0)
 		{
 			if(tl > 0 || fl > 0)
-				str = strcat(str, " or");
+				str = strcat(str, _(" or"));
 			if(teamplay)
 			{
-				str = strcat(str, " until a lead of ^3", ScoreString(teamscores_flags[ts_primary], ll));
-				if(teamscores_label[ts_primary] == "score")
-					str = strcat(str, " points^7");
-				else if(teamscores_label[ts_primary] == "fastest")
-					str = strcat(str, " is beaten^7");
-				else
-					str = strcat(str, " ", teamscores_label[ts_primary]);
+				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], ll), 
+					(teamscores_label[ts_primary] == "score")   ? _("points") :
+					(teamscores_label[ts_primary] == "fastest") ? _("is beaten") :
+					teamscores_label[ts_primary]));
 			}
 			else
 			{
-				str = strcat(str, " until a lead of ^3", ScoreString(scores_flags[ps_primary], ll));
-				if(scores_label[ps_primary] == "score")
-					str = strcat(str, " points^7");
-				else if(scores_label[ps_primary] == "fastest")
-					str = strcat(str, " is beaten^7");
-				else
-					str = strcat(str, " ", scores_label[ps_primary]);
+				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(scores_flags[ps_primary], ll), 
+					(teamscores_label[ts_primary] == "score")   ? _("points") :
+					(teamscores_label[ts_primary] == "fastest") ? _("is beaten") :
+					teamscores_label[ts_primary]));
 			}
 		}
 	}
