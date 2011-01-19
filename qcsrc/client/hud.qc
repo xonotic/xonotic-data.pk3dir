@@ -325,13 +325,13 @@ void drawstringcenter(vector position, string text, vector scale, vector rgb, fl
 // return the string of the given race place
 string race_PlaceName(float pos) {
 	if(pos == 1)
-		return "1st";
+		return _("1st");
 	else if(pos == 2)
-		return "2nd";
+		return _("2nd");
 	else if(pos == 3)
-		return "3rd";
+		return _("3rd");
 	else
-		return strcat(ftos(pos), "th");
+		return sprintf(_("%dth"), pos);
 }
 
 // return the string of the onscreen race timer
@@ -363,12 +363,12 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 
 		if(lapdelta > 0)
 		{
-			lapstr = strcat(" (-", ftos(lapdelta), "L)");
+			lapstr = sprintf(_(" (-%dL)"), lapdelta);
 			col = "^2";
 		}
 		else if(lapdelta < 0)
 		{
-			lapstr = strcat(" (+", ftos(-lapdelta), "L)");
+			lapstr = sprintf(_(" (+%dL)"), -lapdelta);
 			col = "^1";
 		}
 	}
@@ -384,20 +384,20 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 		col = "^7";
 
 	if(cp == 254)
-		cpname = "Start line";
+		cpname = _("Start line");
 	else if(cp == 255)
-		cpname = "Finish line";
+		cpname = _("Finish line");
 	else if(cp)
-		cpname = strcat("Intermediate ", ftos(cp));
+		cpname = sprintf(_("Intermediate %d"), cp);
 	else
-		cpname = "Finish line";
+		cpname = _("Finish line");
 
 	if(histime < 0)
 		return strcat(col, cpname);
 	else if(hisname == "")
-		return strcat(col, cpname, " (", timestr, ")");
+		return strcat(col, sprintf(_("%s (%s)")), cpname, timestr);
 	else
-		return strcat(col, cpname, " (", timestr, " ", strcat(hisname, col, lapstr), ")");
+		return strcat(col, sprintf(_("%s (%s %s)")), cpname, timestr, strcat(hisname, col, lapstr));
 }
 
 // Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
@@ -539,11 +539,11 @@ void HUD_Panel_ExportCfg(string cfgname)
 		}
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 
-		print("^2Successfully exported to ", filename, "! (Note: It's saved in data/data/)\n");
+		print(sprintf(_("^2Successfully exported to %s! (Note: It's saved in data/data/)\n"), filename));
 		fclose(fh);
 	}
 	else
-		print("^1Couldn't write to ", filename, "\n");
+		print(sprintf(_("^1Couldn't write to \n"), filename));
 }
 
 const float hlBorderSize = 4;
@@ -1827,11 +1827,11 @@ void HUD_Weapons(void)
 				color = stov(autocvar_hud_panel_weapons_complainbubble_color_outofammo);
 			}
 			else if(complain_weapon_type == 1) {
-				s = "Don't have";
+				s = _("Don't have");
 				color = stov(autocvar_hud_panel_weapons_complainbubble_color_donthave);
 			}
 			else {
-				s = "Unavailable";
+				s = _("Unavailable");
 				color = stov(autocvar_hud_panel_weapons_complainbubble_color_unavailable);
 			}
 			float padding = autocvar_hud_panel_weapons_complainbubble_padding;
@@ -2682,39 +2682,39 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if (type == DEATH_KILL) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_KILL);
 			if (alsoprint)
-				print ("^1",s1, "^1 couldn't take it anymore\n");
+				print (sprintf(_("^1%s^1 couldn't take it anymore\n"), s1));
 		} else if (type == DEATH_ROT) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if (alsoprint)
-				print ("^1",s1, "^1 died\n");
+				print (sprintf(_("^1%s^1 died\n"), s1));
 		} else if (type == DEATH_NOAMMO) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_NOAMMO);
 			if (alsoprint)
-				print ("^7",s1, "^7 committed suicide. What's the point of living without ammo?\n");
+				print (sprintf(_("^7%s^7 committed suicide. What's the point of living without ammo?\n"), s1));
 		} else if (type == DEATH_CAMP) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_CAMP);
 			if (alsoprint)
-				print ("^1",s1, "^1 thought they found a nice camping ground\n");
+				print (sprintf(_("^1%s^1 thought they found a nice camping ground\n"), s1));
 		} else if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			HUD_KillNotify_Push(s1, "", 0, type);
 			if (alsoprint)
-				print ("^1",s1, "^1 didn't become friends with the Lord of Teamplay\n");
+				print (sprintf(_("^1%s^1 didn't become friends with the Lord of Teamplay\n"), s1));
 		} else if (type == DEATH_CHEAT) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if (alsoprint)
-				print ("^1",s1, "^1 unfairly eliminated themself\n");
+				print (sprintf(_("^1%s^1 unfairly eliminated themself\n"), s1));
 		} else if (type == DEATH_FIRE) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if (alsoprint)
-				print ("^1",s1, "^1 burned to death\n");
+				print (sprintf(_("^1%s^1 burned to death\n"), s1));
 		} else if (type != DEATH_TEAMCHANGE && type != DEATH_QUIET) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if (alsoprint)
-				print ("^1",s1, "^1 couldn't resist the urge to self-destruct\n");
+				print (sprintf(_("^1%s^1 couldn't resist the urge to self-destruct\n"), s1));
 		} 
 		
 		if (stof(s2) > 2) // killcount > 2
-			print ("^1",s1,"^1 ended it all after a ",s2," kill spree\n");
+			print (sprintf(_("^1%s^1 ended it all after a %d kill spree\n"), s1, stof(s2)));
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
@@ -2731,26 +2731,27 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			if(alsoprint)
 			{
 				if(gentle) {
-					print ("^1", s1, "^1 took action against a team mate\n");
+					print (sprintf(_("^1%s^1 took action against a team mate\n"), s1));
 				} else {
-					print ("^1", s1, "^1 mows down a team mate\n");
+					print (sprintf(_("^1%s^1 mows down a team mate\n"), s1));
 				}
 			}
 			if (stof(s2) > 2 && type == KILL_TEAM_SPREE) {
 				if(gentle)
-					print ("^1",s1,"^1 ended a ",s3," scoring spree by going against a team mate\n");
+					print (sprintf(_("^1%s^1 ended a %d scoring spree by going against a team mate\n"), s1, stof(s3)));
 				else
-					print ("^1",s1,"^1 ended a ",s3," kill spree by killing a team mate\n");
+					print (sprintf(_("^1%s^1 ended a %d kill spree by killing a team mate\n"), s1, stof(s3)));
 			}
 			else if (stof(s2) > 2) {
 				if(gentle)
-					print ("^1",s1,"'s ^1",s3," scoring spree was ended by a team mate!\n");
+					print (sprintf(_("^1%s's ^1%s scoring spree was ended by a team mate!\n"), s1, stof(s3)));
 				else
-					print ("^1",s1,"'s ^1",s3," kill spree was ended by a team mate!\n");
+					print (sprintf(_("^1%s's ^1%s kill spree was ended by a team mate!\n"), s1, stof(s3)));
 			}
 		}
 		else if(type == KILL_FIRST_BLOOD)
-			print("^1",s1, "^1 drew first blood", "\n");
+			print(sprintf("^1%s^1 drew first blood\n", s1));
+		// FIXME gettext-mark strings from here
 		else if (type == DEATH_TELEFRAG) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_TELEFRAG);
 			if(gentle)
@@ -2957,28 +2958,28 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if(type == DEATH_TOUCHEXPLODE) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 died in an accident\n");
+				print (sprintf("^1%s^1 died in an accident\n", s1));
 		} else if(type == DEATH_CHEAT) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was unfairly eliminated\n");
+				print (sprintf("^1%s^1 was unfairly eliminated\n", s1));
 		} else if(type == DEATH_FIRE) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
 				if(gentle)
-					print ("^1",s1, "^1 felt a little hot\n");
+					print (sprintf("^1%s^1 felt a little hot\n", s1));
 				else
-					print ("^1",s1, "^1 burnt to death\n");
+					print (sprintf("^1%s^1 burnt to death\n", s1));
 				}
 		} else {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
 				if(gentle)
-					print ("^1",s1, "^1 needs a restart\n");
+					print (sprintf("^1%s^1 needs a restart\n", s1));
 				else
-					print ("^1",s1, "^1 died\n");
+					print (sprintf("^1%s^1 died\n", s1));
 			}
 		}
 	} else if(msg == MSG_KILL_ACTION_SPREE) {
