@@ -4984,7 +4984,7 @@ void HUD_InfoMessages(void)
 					if (tm.team != COLOR_SPECTATOR)
 					if (tm.team_size == ts_max)
 						s = strcat(s, sprintf(" Press ^3%s%s to adjust", getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
-					drawInfoMessage(s);
+					drawInfoMessage(s)
 				}
 			}
 		}
