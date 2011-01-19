@@ -673,7 +673,7 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 
-	// improved polyblend with post processing effects
+	// improved polyblend
 	vector rgb;
 	if(autocvar_hud_contents)
 	{
