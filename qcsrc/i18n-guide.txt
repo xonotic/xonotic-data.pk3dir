@@ -30,5 +30,4 @@ Unresolved TODO:
 
 - translated campaigns
 
-client/hud.qc
 client/scoreboard.qc

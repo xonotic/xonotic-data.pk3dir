@@ -20,7 +20,7 @@ void restartAnnouncer_Think() {
 	countdown_rounded = floor(0.5 + countdown);
 	if(countdown <= 0) {
 		if (!spectatee_status) //do cprint only for players
-			centerprint("^1Begin!");
+			centerprint(_("^1Begin!"));
 
 		sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
 		//reset maptime announcers now as well
@@ -31,7 +31,7 @@ void restartAnnouncer_Think() {
 	}
 	else {
 		if (!spectatee_status) //do cprint only for players
-			centerprint(sprintf("^1Game starts in %d seconds", countdown_rounded));
+			centerprint(sprintf(_("^1Game starts in %d seconds"), countdown_rounded));
 
 		if(countdown_rounded <= 3 && countdown_rounded >= 1) {
 			sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);
@@ -123,11 +123,11 @@ void carrierAnnouncer() {
 	{
 		if (pickup) {
 			if (autocvar_cl_notify_carried_items & 2)
-				centerprint(sprintf("You picked up the %s!", item));
+				centerprint(sprintf(_("You picked up the %s!"), item));
 		}
 		else {
 			if (autocvar_cl_notify_carried_items & 1)
-				centerprint(sprintf("You got the %s!", item));
+				centerprint(sprintf(_("You got the %s!"), item));
 		}
 	}
 
