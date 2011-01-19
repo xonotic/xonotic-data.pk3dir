@@ -2751,93 +2751,92 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		}
 		else if(type == KILL_FIRST_BLOOD)
 			print(sprintf("^1%s^1 drew first blood\n", s1));
-		// FIXME gettext-mark strings from here
 		else if (type == DEATH_TELEFRAG) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_TELEFRAG);
 			if(gentle)
-				print ("^1",s2, "^1 tried to occupy ", s1, "^1's teleport destination space\n");
+				print (sprintf(_("^1%s^1 tried to occupy %s^1's teleport destination space\n"), s2, s1));
 			else
-				print ("^1",s2, "^1 was telefragged by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was telefragged by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_DROWN) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_DROWN);
 			if(alsoprint)
-				print ("^1",s2, "^1 was drowned by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was drowned by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_SLIME) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_SLIME);
 			if(alsoprint)
-				print ("^1",s2, "^1 was slimed by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was slimed by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_LAVA) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_LAVA);
 			if(alsoprint)
-				print ("^1",s2, "^1 was cooked by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was cooked by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_FALL) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_FALL);
 			if(alsoprint)
-				print ("^1",s2, "^1 was grounded by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was grounded by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_SHOOTING_STAR) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_SHOOTING_STAR);
 			if(alsoprint)
-				print ("^1",s2, "^1 was shot into space by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was shot into space by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_SWAMP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was conserved by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was conserved by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_HURTTRIGGER)
 		{
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_HURTTRIGGER);
 			if(alsoprint)
-				print("^1",s2, "^1 was thrown into a world of hurt by ", s1, "\n");
+				print(sprintf(_("^1%s^1 was thrown into a world of hurt by %s\n"), s2, s1));
 		} else if(type == DEATH_SBCRUSH) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was crushed by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was crushed by ^1%s\n"), s2, s1));
 		} else if(type == DEATH_SBMINIGUN) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 got shredded by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 got shredded by ^1%s\n"), s2, s1));
 		} else if(type == DEATH_SBROCKET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was blased to bits by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was blased to bits by ^1%s\n"), s2, s1));
 		} else if(type == DEATH_SBBLOWUP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 got caught in the destruction of ^1", s1, "'s vehicle\n");
+				print (sprintf(_("^1%s^1 got caught in the destruction of ^1%s's vehicle\n"), s2, s1));
 		} else if(type == DEATH_WAKIGUN) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was bolted down by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was bolted down by ^1%s\n"), s2, s1));
 		} else if(type == DEATH_WAKIROCKET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 could find no shelter from ^1", s1, "'s rockets\n");
+				print (sprintf(_("^1%s^1 could find no shelter from ^1%s's rockets\n"), s2, s1));
 		} else if(type == DEATH_WAKIBLOWUP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 dies when ^1", s1, "'s wakizashi dies.\n");
+				print (sprintf(_("^1%s^1 dies when ^1%s's wakizashi dies.\n"), s2, s1));
 		} else if(type == DEATH_TURRET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was pushed into the line of fire by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was pushed into the line of fire by ^1%s\n"), s2, s1));
 		} else if(type == DEATH_TOUCHEXPLODE) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was pushed into an accident by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was pushed into an accident by ^1%s\n"), s2, s1));
 		} else if(type == DEATH_CHEAT) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was unfairly eliminated by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was unfairly eliminated by ^1%s\n"), s2, s1));
 		} else if (type == DEATH_FIRE) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was burnt to death by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was burnt to death by ^1%s\n"), s2, s1));
 		} else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_CUSTOM);
 			if(alsoprint)
@@ -2849,54 +2848,54 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was fragged by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was fragged by %s\n"), s2, s1));
 		}
 	} else if(msg == MSG_SPREE) {
 		if(type == KILL_END_SPREE) {
 			if(gentle)
-				print ("^1",s1,"'s ^1", s2, " scoring spree was ended by ", s3, "\n");
+				print (sprintf(_("^1%s's ^1%s scoring spree was ended by %s\n"), s1, s2, s3));
 			else
-				print ("^1",s1,"'s ^1", s2, " kill spree was ended by ", s3, "\n");
+				print (sprintf(_("^1%s's ^1%s kill spree was ended by %s\n"), s1, s2, s3));
 		} else if(type == KILL_SPREE) {
 			if(gentle)
-				print ("^1",s1,"^1 made ",s2," scores in a row\n");
+				print (sprintf(_("^1%s^1 made %s scores in a row\n"), s1, s2));
 			else
-				print ("^1",s1,"^1 has ",s2," frags in a row\n");
+				print (sprintf(_("^1%s^1 has %s frags in a row\n"), s1, s2));
 		} else if(type == KILL_SPREE_3) {
 			if(gentle)
-				print (s1,"^7 made a ^1TRIPLE SCORE\n");
+				print (sprintf(_("%s^7 made a ^1TRIPLE SCORE\n"), s1));
 			else
-				print (s1,"^7 made a ^1TRIPLE FRAG\n");
+				print (sprintf(_("%s^7 made a ^1TRIPLE FRAG\n"), s1));
 		} else if(type == KILL_SPREE_5) {
 			if(gentle)
-				print (s1,"^7 unleashes ^1SCORING RAGE\n");
+				print (sprintf(_("%s^7 unleashes ^1SCORING RAGE\n"), s1));
 			else
-				print (s1,"^7 unleashes ^1RAGE\n");
+				print (sprintf(_("%s^7 unleashes ^1RAGE\n"), s1));
 		} else if(type == KILL_SPREE_10) {
 			if(gentle)
-				print (s1,"^7 made ^1TEN SCORES IN A ROW!\n");
+				print (sprintf(_("%s^7 made ^1TEN SCORES IN A ROW!\n"), s1));
 			else
-				print (s1,"^7 starts the ^1MASSACRE!\n");
+				print (sprintf(_("%s^7 starts the ^1MASSACRE!\n"), s1));
 		} else if(type == KILL_SPREE_15) {
 			if(gentle)
-				print (s1,"^7 made ^1FIFTEEN SCORES IN A ROW!\n");
+				print (sprintf(_("%s^7 made ^1FIFTEEN SCORES IN A ROW!\n"), s1));
 			else
-				print (s1,"^7 executes ^1MAYHEM!\n");
+				print (sprintf(_("%s^7 executes ^1MAYHEM!\n"), s1));
 		} else if(type == KILL_SPREE_20) {
 			if(gentle)
-				print (s1,"^7 made ^1TWENTY SCORES IN A ROW!\n");
+				print (sprintf(_("%s^7 made ^1TWENTY SCORES IN A ROW!\n"), s1));
 			else
-				print (s1,"^7 is a ^1BERSERKER!\n");
+				print (sprintf(_("%s^7 is a ^1BERSERKER!\n"), s1));
 		} else if(type == KILL_SPREE_25) {
 			if(gentle)
-				print (s1,"^7 made ^1TWENTY FIFE SCORES IN A ROW!\n");
+				print (sprintf(_("%s^7 made ^1TWENTY FIFE SCORES IN A ROW!\n"), s1));
 			else
-				print (s1,"^7 inflicts ^1CARNAGE!\n");
+				print (sprintf(_("%s^7 inflicts ^1CARNAGE!\n"), s1));
 		} else if(type == KILL_SPREE_30) {
 			if(gentle)
-				print (s1,"^7 made ^1THIRTY SCORES IN A ROW!\n");
+				print (sprintf(_("%s^7 made ^1THIRTY SCORES IN A ROW!\n"), s1));
 			else
-				print (s1,"^7 unleashes ^1ARMAGEDDON!\n");
+				print (sprintf(_("%s^7 unleashes ^1ARMAGEDDON!\n"), s1));
 		}
 	} else if(msg == MSG_KILL_ACTION) { // wtf is this? isnt it basically the same as MSG_SUICIDE?
 		if (type == DEATH_DROWN) {
@@ -2904,49 +2903,49 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			if(alsoprint)
 			{
 				if(gentle)
-					print ("^1",s1, "^1 was in the water for too long\n");
+					print (sprintf(_("^1%s^1 was in the water for too long\n"), s1));
 				else
-					print ("^1",s1, "^1 drowned\n");
+					print (sprintf(_("^1%s^1 drowned\n"), s1));
 			}
 		} else if (type == DEATH_SLIME) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_SLIME);
 			if(alsoprint)
-				print ("^1",s1, "^1 was slimed\n");
+				print (sprintf("^1%s^1 was slimed\n", s1));
 		} else if (type == DEATH_LAVA) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_LAVA);
 			if(alsoprint)
 			{
 				if(gentle)
-					print ("^1",s1, "^1 found a hot place\n");
+					print (sprintf(_("^1%s^1 found a hot place\n"), s1));
 				else
-					print ("^1",s1, "^1 turned into hot slag\n");
+					print (sprintf(_("^1%s^1 turned into hot slag\n"), s1));
 			}
 		} else if (type == DEATH_FALL) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
 				if(gentle)
-					print ("^1",s1, "^1 tested gravity (and it worked)\n");
+					print (sprintf(_("^1%s^1 tested gravity (and it worked)\n"), s1));
 				else
-					print ("^1",s1, "^1 hit the ground with a crunch\n");
+					print (sprintf(_("^1%s^1 hit the ground with a crunch\n"), s1));
 			}
 		} else if (type == DEATH_SHOOTING_STAR) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_SHOOTING_STAR);
 			if(alsoprint)
-				print ("^1",s1, "^1 became a shooting star\n");
+				print (sprintf(_("^1%s^1 became a shooting star\n"), s1));
 		} else if (type == DEATH_SWAMP) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
 				if(gentle)
-					print ("^1",s1, "^1 discovered a swamp\n");
+					print (sprintf(_("^1%s^1 discovered a swamp\n"), s1));
 				else
-					print ("^1",s1, "^1 is now conserved for centuries to come\n");
+					print (sprintf(_("^1%s^1 is now conserved for centuries to come\n"), s1));
 			}
 		} else if(type == DEATH_TURRET) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was mowed down by a turret \n");
+				print (sprintf(_("^1%s^1 was mowed down by a turret \n"), s1));
 		} else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_CUSTOM);
 			if(alsoprint)
@@ -2958,51 +2957,51 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if(type == DEATH_TOUCHEXPLODE) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf("^1%s^1 died in an accident\n", s1));
+				print (sprintf(_("^1%s^1 died in an accident\n"), s1));
 		} else if(type == DEATH_CHEAT) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf("^1%s^1 was unfairly eliminated\n", s1));
+				print (sprintf(_("^1%s^1 was unfairly eliminated\n"), s1));
 		} else if(type == DEATH_FIRE) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
 				if(gentle)
-					print (sprintf("^1%s^1 felt a little hot\n", s1));
+					print (sprintf(_("^1%s^1 felt a little hot\n"), s1));
 				else
-					print (sprintf("^1%s^1 burnt to death\n", s1));
+					print (sprintf(_("^1%s^1 burnt to death\n"), s1));
 				}
 		} else {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
 				if(gentle)
-					print (sprintf("^1%s^1 needs a restart\n", s1));
+					print (sprintf(_("^1%s^1 needs a restart\n"), s1));
 				else
-					print (sprintf("^1%s^1 died\n", s1));
+					print (sprintf(_("^1%s^1 died\n"), s1));
 			}
 		}
 	} else if(msg == MSG_KILL_ACTION_SPREE) {
 		if(gentle)
-			print ("^1",s1,"^1 needs a restart after a ",s2," scoring spree\n");
+			print (sprintf(_("^1%s^1 needs a restart after a %d scoring spree\n"), s1, stof(s2)));
 		else
-			print ("^1",s1,"^1 died with a ",s2," kill spree\n");
+			print (sprintf(_("^1%s^1 died with a %d kill spree\n"), s1, stof(s2)));
 	} else if(msg == MSG_INFO) {
 		if(type == INFO_GOTFLAG) { // here, s2 is the flag name
 			HUD_KillNotify_Push(s1, s2, 0, INFO_GOTFLAG);
-			print(s1, "^7 got the ", s2, "\n");
+			print(sprintf(_("%s^7 got the %s\n"), s1, s2));
 		} else if(type == INFO_LOSTFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_LOSTFLAG);
-			print(s1, "^7 lost the ", s2, "\n");
+			print(sprintf(_("%s^7 lost the %s\n"), s1, s2));
 		} else if(type == INFO_PICKUPFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_GOTFLAG);
-			print(s1, "^7 picked up the ", s2, "\n");
+			print(sprintf(_("%s^7 picked up the %s\n"), s1, s2));
 		} else if(type == INFO_RETURNFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_RETURNFLAG);
-			print(s1, "^7 returned the ", s2, "\n");
+			print(sprintf(_("%s^7 returned the %s\n"), s1, s2));
 		} else if(type == INFO_CAPTUREFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_CAPTUREFLAG);
-			print(s1, "^7 captured the ", s2, s3, "\n");
+			print(sprintf(_("%1^7 captured the %s%s\n"), s1, s2, s3));
 		}
 	} else if(msg == MSG_RACE) {
 		if(type == RACE_SERVER_RECORD) {
@@ -3021,18 +3020,19 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		if(type == KA_PICKUPBALL) {
 			HUD_KillNotify_Push(s1, s2, 0, KA_PICKUPBALL);
 			if(alsoprint)
-				print (s1, "^7 has picked up the ball!\n");
+				print (sprintf(_("%s^7 has picked up the ball!\n"), s1));
 		}
 		else if(type == KA_DROPBALL) {
 			HUD_KillNotify_Push(s1, s2, 0, KA_DROPBALL);
 			if(alsoprint)
-				print(s1, "^7 has dropped the ball!\n");
+				print(sprintf(_("%s^7 has dropped the ball!\n"), s1));
 		}
 	}
 }
 
 #define DAMAGE_CENTERPRINT_SPACER NEWLINES
 
+//FIXME gettext marked till here
 void HUD_Centerprint(string s1, string s2, float type, float msg)
 {
 	float gentle;
