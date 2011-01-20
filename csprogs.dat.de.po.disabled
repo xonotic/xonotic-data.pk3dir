@@ -25,6 +25,8 @@ msgid ""
 "^3Your engine build is outdated\n"
 "^3This Server uses a newer QC VM. Please update!\n"
 msgstr ""
+"^3Diese Engine ist veraltet.\n"
+"^3Dieser Server verwendet eine neuere QC VM. Bitte updaten!\n"
 
 #: qcsrc/client/Main.qc:66
 #, c-format
