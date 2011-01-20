@@ -1,5 +1,6 @@
 de German "Deutsch"
 en English "English"
 fr French "Français"
+nl Dutch "Nederlands"
 pt Portuguese "Português"
 ru Russian "Русский"
