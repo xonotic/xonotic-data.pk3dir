@@ -543,7 +543,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 		fclose(fh);
 	}
 	else
-		print(sprintf(_("^1Couldn't write to \n"), filename));
+		print(sprintf(_("^1Couldn't write to %s\n"), filename));
 }
 
 const float hlBorderSize = 4;

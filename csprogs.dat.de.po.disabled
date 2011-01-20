@@ -31,12 +31,12 @@ msgstr ""
 #: qcsrc/client/Main.qc:66
 #, c-format
 msgid "^4CSQC Build information: %s\n"
-msgstr ""
+msgstr "^4CSQC Build-Information: %s (deutsch)\n"
 
 #: qcsrc/client/Main.qc:227 qcsrc/client/Main.qc:243
 #, c-format
 msgid "trying to switch to unsupported team %d\n"
-msgstr ""
+msgstr "es wurde versucht, in das nicht unterstützte Team %d zu wechseln"
 
 #: qcsrc/client/Main.qc:359 qcsrc/client/scoreboard.qc:240
 msgid "Usage:\n"
@@ -44,46 +44,46 @@ msgstr "Syntax:\n"
 
 #: qcsrc/client/Main.qc:360
 msgid "hud_save configname   (saves to hud_skinname_configname.cfg)\n"
-msgstr ""
+msgstr "hud_save configname   (speichert als hud_skinname_configname.cfg)\n"
 
 #: qcsrc/client/Main.qc:507
 msgid "Usage: cl_cmd COMMAND..., where possible commands are:\n"
-msgstr ""
+msgstr "Syntax: cl_cmd BEFEHL..., wobei mögliche Befehle sind:\n"
 
 #: qcsrc/client/Main.qc:508
 msgid "  settemp cvar value\n"
-msgstr ""
+msgstr "  settemp Cvar Wert\n"
 
 #: qcsrc/client/Main.qc:509
 msgid "  scoreboard_columns_set ...\n"
-msgstr ""
+msgstr "  scoreboard_columns_set ...\n"
 
 #: qcsrc/client/Main.qc:510
 msgid "  scoreboard_columns_help\n"
-msgstr ""
+msgstr "  scoreboard_columns_help\n"
 
 #: qcsrc/client/Main.qc:715
 msgid "A CSQC entity changed its owner!\n"
-msgstr ""
+msgstr "Ein CSQC-Entity hat seinen Besitzer gewechselt!\n"
 
 #: qcsrc/client/Main.qc:929
 msgid "A CSQC entity changed its type!\n"
-msgstr ""
+msgstr "Ein CSQC-Entity hat seinen Typ gewechselt!\n"
 
 #: qcsrc/client/Main.qc:966
 #, c-format
 msgid "unknown entity type in CSQC_Ent_Update: %d\n"
-msgstr ""
+msgstr "unbekannter Entity-Typ in CSQC_Ent_Update: %d\n"
 
 #: qcsrc/client/Main.qc:1438
 #, c-format
 msgid "%s (not bound)"
-msgstr ""
+msgstr "%s (nicht zugewiesen)"
 
 #: qcsrc/client/Main.qc:1443 qcsrc/client/hud.qc:398
 #, c-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #: qcsrc/client/ctf.qc:35
 msgid "----- Order Menu -----"
@@ -122,11 +122,11 @@ msgstr "Auftrag geben:"
 #: qcsrc/client/ctf.qc:156
 #, fuzzy
 msgid " 1) Attack"
-msgstr " 1) Angreifen "
+msgstr " 1) Angreifen"
 
 #: qcsrc/client/ctf.qc:158
 msgid " 2) Defend"
-msgstr ""
+msgstr " 2) Verteidigen"
 
 #: qcsrc/client/ctf.qc:160
 msgid "3) Resign from command."
@@ -142,105 +142,105 @@ msgstr "Warten auf Auftrag..."
 
 #: qcsrc/client/hud.qc:328
 msgid "1st"
-msgstr ""
+msgstr "1."
 
 #: qcsrc/client/hud.qc:330
 msgid "2nd"
-msgstr ""
+msgstr "2."
 
 #: qcsrc/client/hud.qc:332
 msgid "3rd"
-msgstr ""
+msgstr "3."
 
 #: qcsrc/client/hud.qc:334
 #, c-format
 msgid "%dth"
-msgstr ""
+msgstr "%d."
 
 #: qcsrc/client/hud.qc:366
 #, c-format
 msgid " (-%dL)"
-msgstr ""
+msgstr " (-%dR)"
 
 #: qcsrc/client/hud.qc:371
 #, c-format
 msgid " (+%dL)"
-msgstr ""
+msgstr " (+%dR)"
 
 #: qcsrc/client/hud.qc:387
 msgid "Start line"
-msgstr ""
+msgstr "Start"
 
 #: qcsrc/client/hud.qc:389 qcsrc/client/hud.qc:393
 msgid "Finish line"
-msgstr ""
+msgstr "Ziel"
 
 #: qcsrc/client/hud.qc:391
 #, c-format
 msgid "Intermediate %d"
-msgstr ""
+msgstr "Zwischenzeit %d"
 
 #: qcsrc/client/hud.qc:400
 #, c-format
 msgid "%s (%s %s)"
-msgstr ""
+msgstr "%s (%s %s)"
 
 #: qcsrc/client/hud.qc:542
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
-msgstr ""
+msgstr "^2Erfolgreich als %s exportiert! (Hinweis: die Datei wurde in data/data/ abgelegt)\n"
 
 #: qcsrc/client/hud.qc:546
-msgid "^1Couldn't write to \n"
-msgstr ""
+msgid "^1Couldn't write to %s\n"
+msgstr "^1Konnte nicht nach %s schreiben\n"
 
 #: qcsrc/client/hud.qc:1830
 msgid "Don't have"
-msgstr ""
+msgstr "nicht vorhanden"
 
 #: qcsrc/client/hud.qc:1834
 msgid "Unavailable"
-msgstr ""
+msgstr "nicht verfügbar"
 
 #: qcsrc/client/hud.qc:2685
 #, c-format
 msgid "^1%s^1 couldn't take it anymore\n"
-msgstr ""
+msgstr "^1%s^1 konnte es nicht mehr ertragen\n"
 
 #: qcsrc/client/hud.qc:2689 qcsrc/client/hud.qc:2981
 #, c-format
 msgid "^1%s^1 died\n"
-msgstr ""
+msgstr "^1%s^1 ist gestorben\n"
 
 #: qcsrc/client/hud.qc:2693
 #, c-format
 msgid "^7%s^7 committed suicide. What's the point of living without ammo?\n"
-msgstr ""
+msgstr "^7%s^7 hat sich erhängt. Was ist schon ein Leben ohne Munition?\n"
 
 #: qcsrc/client/hud.qc:2697
 #, c-format
 msgid "^1%s^1 thought they found a nice camping ground\n"
-msgstr ""
+msgstr "^1%s^1 dachte, einen tollen Campingplatz gefunden zu haben\n"
 
 #: qcsrc/client/hud.qc:2701
 #, c-format
 msgid "^1%s^1 didn't become friends with the Lord of Teamplay\n"
-msgstr ""
+msgstr "^1%s^1 bekam Probleme mit dem Lord of Teamplay\n"
 
 #: qcsrc/client/hud.qc:2705
 #, c-format
 msgid "^1%s^1 unfairly eliminated themself\n"
-msgstr ""
+msgstr "^1%s^1 hat sich selbst auf unfaire Weise erledigt\n"
 
 #: qcsrc/client/hud.qc:2709
 #, c-format
 msgid "^1%s^1 burned to death\n"
-msgstr ""
+msgstr "^1%s^1 brannte zu Tode\n"
 
 #: qcsrc/client/hud.qc:2713
 #, c-format
 msgid "^1%s^1 couldn't resist the urge to self-destruct\n"
-msgstr ""
+msgstr "^1%s^1 konnte dem Drang zur Selbstzerstörung einfach nicht widerstehen\n"
 
 #: qcsrc/client/hud.qc:2717
 #, c-format
@@ -1374,73 +1374,73 @@ msgstr ""
 
 #: qcsrc/server/w_crylink.qc:2
 msgid "Crylink"
-msgstr ""
+msgstr "Crylink"
 
 #: qcsrc/server/w_electro.qc:2
 msgid "Electro"
-msgstr ""
+msgstr "Electro"
 
 #: qcsrc/server/w_fireball.qc:2
 msgid "Fireball"
-msgstr ""
+msgstr "Fireball"
 
 #: qcsrc/server/w_grenadelauncher.qc:2
 msgid "Mortar"
-msgstr ""
+msgstr "Mortar"
 
 #: qcsrc/server/w_hagar.qc:2
 msgid "Hagar"
-msgstr ""
+msgstr "Hagar"
 
 #: qcsrc/server/w_hlac.qc:2
 msgid "Heavy Laser Assault Cannon"
-msgstr ""
+msgstr "Heavy Laser Assault Cannon"
 
 #: qcsrc/server/w_hook.qc:2
 msgid "Grappling Hook"
-msgstr ""
+msgstr "Grappling Hook"
 
 #: qcsrc/server/w_laser.qc:2
 msgid "Laser"
-msgstr ""
+msgstr "Laser"
 
 #: qcsrc/server/w_minelayer.qc:2
 msgid "Mine Layer"
-msgstr ""
+msgstr "Mine Layer"
 
 #: qcsrc/server/w_minstanex.qc:2
 msgid "MinstaNex"
-msgstr ""
+msgstr "MinstaNex"
 
 #: qcsrc/server/w_nex.qc:2
 msgid "Nex"
-msgstr ""
+msgstr "Nex"
 
 #: qcsrc/server/w_porto.qc:2
 msgid "Port-O-Launch"
-msgstr ""
+msgstr "Port-O-Launch"
 
 #: qcsrc/server/w_rocketlauncher.qc:2
 msgid "Rocket Launcher"
-msgstr ""
+msgstr "Rocket Launcher"
 
 #: qcsrc/server/w_seeker.qc:2
 msgid "T.A.G. Seeker"
-msgstr ""
+msgstr "T.A.G. Seeker"
 
 #: qcsrc/server/w_shotgun.qc:2
 msgid "Shotgun"
-msgstr ""
+msgstr "Shotgun"
 
 #: qcsrc/server/w_sniperrifle.qc:2
 msgid "Sniper Rifle"
-msgstr ""
+msgstr "Sniper Rifle"
 
 #: qcsrc/server/w_tuba.qc:2
 #, c-format
 msgid "@!#%'n Tuba"
-msgstr ""
+msgstr "@!#%'n Tuba"
 
 #: qcsrc/server/w_uzi.qc:2
 msgid "Machine Gun"
-msgstr ""
+msgstr "Machine Gun"
