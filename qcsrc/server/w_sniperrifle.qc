@@ -8,6 +8,14 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_T
 
 .float sniperrifle_accumulator;
 
+void W_SniperRifle_CheckReloadAndReady()
+{
+	w_ready();
+	if(self.sniperrifle_bulletcounter <= 0)
+		if(W_SniperRifle_Reload("nails"))
+			return;
+}
+
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -180,7 +188,7 @@ float w_sniperrifle(float req)
                 if(self.weaponentity.state == WS_READY)
                 {
                     self.wish_reload = 0;
-                    W_SniperRifle_Reload();
+                    W_SniperRifle_Reload("nails");
                 }
             }
         }

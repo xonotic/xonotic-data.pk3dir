@@ -2,6 +2,15 @@
 REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "shotgun", "shotgun", _("Shotgun"))
 #else
 #ifdef SVQC
+
+void W_Shotgun_CheckReloadAndReady()
+{
+	w_ready();
+	if(self.sniperrifle_bulletcounter <= 0)
+		if(W_SniperRifle_Reload("shells"))
+			return;
+}
+
 void W_Shotgun_Attack (void)
 {
 	float	sc;
@@ -14,7 +23,7 @@ void W_Shotgun_Attack (void)
 	float	bulletconstant;
 	local entity flash;
 
-	W_SniperRifle_CheckReloadAndReady();
+	W_Shotgun_CheckReloadAndReady();
 	if(self.sniperrifle_bulletcounter < 0)
 		return; // reloading, so we are done
 
@@ -144,7 +153,7 @@ float w_shotgun(float req)
                 if(self.weaponentity.state == WS_READY)
                 {
                     self.wish_reload = 0;
-                    W_SniperRifle_Reload();
+                    W_SniperRifle_Reload("shells");
                 }
             }
         }
