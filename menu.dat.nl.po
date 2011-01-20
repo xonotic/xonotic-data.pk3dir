@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-20 19:44+0100\n"
+"POT-Creation-Date: 2011-01-20 20:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -331,7 +331,7 @@ msgstr "Radar:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:43
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:82
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:151
-#: qcsrc/menu/xonotic/util.qc:631
+#: qcsrc/menu/xonotic/util.qc:608
 msgid "Alpha:"
 msgstr "Alpha:"
 
@@ -488,17 +488,17 @@ msgstr "Paneel achtergrond standaards:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:37
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:52
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:609
-#: qcsrc/menu/xonotic/util.qc:625 qcsrc/menu/xonotic/util.qc:642
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:586
+#: qcsrc/menu/xonotic/util.qc:602 qcsrc/menu/xonotic/util.qc:619
 msgid "Disable"
 msgstr "Uitschakelen"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:30
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:614
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:591
 msgid "Color:"
 msgstr "Kleur:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:622
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:599
 msgid "Border size:"
 msgstr "Grootte rand:"
 
@@ -507,11 +507,11 @@ msgstr "Grootte rand:"
 msgid "Team color:"
 msgstr "Teamkleur:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:648
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:625
 msgid "Test team color in configure mode"
 msgstr "Test teamkleur in aanpassingsmodus"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:651
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:628
 msgid "Padding:"
 msgstr "Opvulling:"
 
@@ -2382,21 +2382,21 @@ msgstr "Team Deathmatch"
 msgid "@!#%'n Tuba Throwing"
 msgstr "@!#%'n Tuba Smijten"
 
-#: qcsrc/menu/xonotic/util.qc:606
+#: qcsrc/menu/xonotic/util.qc:583
 msgid "Background:"
 msgstr "Achtergrond"
 
-#: qcsrc/menu/xonotic/util.qc:608 qcsrc/menu/xonotic/util.qc:624
-#: qcsrc/menu/xonotic/util.qc:633 qcsrc/menu/xonotic/util.qc:641
-#: qcsrc/menu/xonotic/util.qc:653
+#: qcsrc/menu/xonotic/util.qc:585 qcsrc/menu/xonotic/util.qc:601
+#: qcsrc/menu/xonotic/util.qc:610 qcsrc/menu/xonotic/util.qc:618
+#: qcsrc/menu/xonotic/util.qc:630
 msgid "Default"
 msgstr "Standaard"
 
-#: qcsrc/menu/xonotic/util.qc:619
+#: qcsrc/menu/xonotic/util.qc:596
 msgid "Use default"
 msgstr "Gebruik standaard"
 
-#: qcsrc/menu/xonotic/util.qc:639
+#: qcsrc/menu/xonotic/util.qc:616
 msgid "Team Color:"
 msgstr "Team Kleur:"
 

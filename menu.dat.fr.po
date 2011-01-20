@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-20 19:44+0100\n"
+"POT-Creation-Date: 2011-01-20 20:17+0100\n"
 "PO-Revision-Date: 2011-01-18 11:53+0100\t\n"
 "Last-Translator: Calinou <hugohachel@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -331,7 +331,7 @@ msgstr "Mini-carte:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:43
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:82
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:151
-#: qcsrc/menu/xonotic/util.qc:631
+#: qcsrc/menu/xonotic/util.qc:608
 msgid "Alpha:"
 msgstr "Opacité:"
 
@@ -488,17 +488,17 @@ msgstr "Fond du Panneau par défaut:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:37
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:52
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:609
-#: qcsrc/menu/xonotic/util.qc:625 qcsrc/menu/xonotic/util.qc:642
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:586
+#: qcsrc/menu/xonotic/util.qc:602 qcsrc/menu/xonotic/util.qc:619
 msgid "Disable"
 msgstr "Désactiver"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:30
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:614
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:591
 msgid "Color:"
 msgstr "Couleur:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:622
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:599
 msgid "Border size:"
 msgstr "Taille des bords:"
 
@@ -507,11 +507,11 @@ msgstr "Taille des bords:"
 msgid "Team color:"
 msgstr "Couleur d'équipe:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:648
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:625
 msgid "Test team color in configure mode"
 msgstr "Affichier la couleur d'équipe en mode configuration"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:651
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:628
 msgid "Padding:"
 msgstr "Ajustement:"
 
@@ -2385,21 +2385,21 @@ msgstr "Match à Mort Équipe"
 msgid "@!#%'n Tuba Throwing"
 msgstr "Lancer de @!#%'n Tuba"
 
-#: qcsrc/menu/xonotic/util.qc:606
+#: qcsrc/menu/xonotic/util.qc:583
 msgid "Background:"
 msgstr "Arrière-plan:"
 
-#: qcsrc/menu/xonotic/util.qc:608 qcsrc/menu/xonotic/util.qc:624
-#: qcsrc/menu/xonotic/util.qc:633 qcsrc/menu/xonotic/util.qc:641
-#: qcsrc/menu/xonotic/util.qc:653
+#: qcsrc/menu/xonotic/util.qc:585 qcsrc/menu/xonotic/util.qc:601
+#: qcsrc/menu/xonotic/util.qc:610 qcsrc/menu/xonotic/util.qc:618
+#: qcsrc/menu/xonotic/util.qc:630
 msgid "Default"
 msgstr "Par défaut"
 
-#: qcsrc/menu/xonotic/util.qc:619
+#: qcsrc/menu/xonotic/util.qc:596
 msgid "Use default"
 msgstr "Par défaut"
 
-#: qcsrc/menu/xonotic/util.qc:639
+#: qcsrc/menu/xonotic/util.qc:616
 msgid "Team Color:"
 msgstr "Couleur d'équipe:"
 
