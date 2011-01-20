@@ -65,7 +65,10 @@ void freezetag_Ice_Think()
 
 void freezetag_Freeze(entity attacker)
 {
+	if(self.freezetag_frozen)
+		return;
 	self.freezetag_frozen = 1;
+	self.freezetag_revive_progress = 0;
 
 	entity ice;
 	ice = spawn();
@@ -111,6 +114,7 @@ void freezetag_Freeze(entity attacker)
 void freezetag_Unfreeze(entity attacker)
 {
 	self.freezetag_frozen = 0;
+	self.freezetag_revive_progress = 0;
 
 	// remove the ice block
 	entity ice;
@@ -215,86 +219,86 @@ MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 {
-    vector revive_extra_size;
-    revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
+	float n;
+	vector revive_extra_size;
 
-    float teammate_nearby;
-    FOR_EACH_PLAYER(other) if(self != other)
-    {
-        if(other.freezetag_frozen == 0)
-        {
-            if(other.team == self.team)
-            {
-                teammate_nearby = boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax);
-                if(teammate_nearby)
-                    break;
-            }
-        }
-    }
+	revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 
-    if(teammate_nearby && self.freezetag_frozen == 1) // OK, there is at least one teammate reviving us
-    {
-        if(self.freezetag_beginrevive_time == -9999) // initialize values if this is the first frame of revival
-        {
-            self.freezetag_beginrevive_time = time;
-            self.freezetag_revive_progress = 0;
-        }
-        else
-        {
-            self.freezetag_revive_progress = (time - self.freezetag_beginrevive_time) / autocvar_g_freezetag_revive_time;
-            if(time - self.freezetag_beginrevive_time >= autocvar_g_freezetag_revive_time)
-            {
-                freezetag_Unfreeze(self);
-		
-		// EVERY team mate nearby gets a point (even if multiple!)
-		float n;
+	entity o;
+	o = world;
+	n = 0;
+	FOR_EACH_PLAYER(other) if(self != other)
+	{
+		if(other.freezetag_frozen == 0)
+		{
+			if(other.team == self.team)
+			{
+				if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
+				{
+					if(!o)
+						o = other;
+					++n;
+				}
+			}
+		}
+	}
+
+	if(n && self.freezetag_frozen) // OK, there is at least one teammate reviving us
+	{
+		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress + frametime * autocvar_g_freezetag_revive_speed, 1);
+
+		if(self.freezetag_revive_progress >= 1)
+		{
+			freezetag_Unfreeze(self);
+
+			// EVERY team mate nearby gets a point (even if multiple!)
+			FOR_EACH_PLAYER(other) if(self != other)
+			{
+				if(other.freezetag_frozen == 0)
+				{
+					if(other.team == self.team)
+					{
+						if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
+						{
+							PlayerScore_Add(other, SP_FREEZETAG_REVIVALS, +1);
+							PlayerScore_Add(other, SP_SCORE, +1);
+						}
+					}
+				}
+			}
+
+			if(n > 1)
+				centerprint(self, strcat("^5You were revived by ^7", o.netname, "^5 et al.\n"));
+			else
+				centerprint(self, strcat("^5You were revived by ^7", o.netname, "^5.\n"));
+			centerprint(o, strcat("^5You revived ^7", self.netname, "^5.\n"));
+			if(n > 1)
+				bprint("^7", o.netname, "^5 et al revived ^7", self.netname, "^5.\n");
+			else
+				bprint("^7", o.netname, "^5 revived ^7", self.netname, "^5.\n");
+		}
+
+		// now find EVERY teammate within reviving radius, set their revive_progress values correct
 		FOR_EACH_PLAYER(other) if(self != other)
 		{
 			if(other.freezetag_frozen == 0)
 			{
 				if(other.team == self.team)
 				{
-					teammate_nearby = boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax);
-					if(teammate_nearby)
-					{
-						PlayerScore_Add(other, SP_FREEZETAG_REVIVALS, +1);
-						PlayerScore_Add(other, SP_SCORE, +1);
-						++n;
-					}
+					if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
+						other.freezetag_revive_progress = self.freezetag_revive_progress;
 				}
 			}
 		}
-
-		if(n > 1)
-			centerprint(self, strcat("^5You were revived by ^7", other.netname, "^5 et al.\n"));
-		else
-			centerprint(self, strcat("^5You were revived by ^7", other.netname, "^5.\n"));
-                centerprint(other, strcat("^5You revived ^7", self.netname, "^5.\n"));
-                bprint("^7", other.netname, "^5 revived ^7", self.netname, "^5.\n");
-
-                self.freezetag_beginrevive_time = -9999;
-                self.freezetag_revive_progress = 0;
-            }
-        }
-        // now find EVERY teammate within reviving radius, set their revive_progress values correct
-        FOR_EACH_PLAYER(other) if(self != other)
-        {
-            if(other.freezetag_frozen == 0)
-            {
-                if(other.team == self.team)
-                {
-                    teammate_nearby = boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax);
-                    if(teammate_nearby)
-                        other.freezetag_revive_progress = self.freezetag_revive_progress;
-                }
-            }
-        }
-    }
-    else if(!teammate_nearby) // only if no teammate is nearby will we reset
-    {
-        self.freezetag_beginrevive_time = -9999;
-        self.freezetag_revive_progress = 0;
-    }
+	}
+	else if(!n && self.freezetag_frozen) // only if no teammate is nearby will we reset
+	{
+		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
+	}
+	else if(!n)
+	{
+		self.freezetag_revive_progress = 0; // thawing nobody
+	}
 
 	return 1;
 }

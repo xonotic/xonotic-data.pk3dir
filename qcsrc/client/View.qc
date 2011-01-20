@@ -306,6 +306,9 @@ float TrueAimCheck()
 	traceline(view_origin, view_origin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
 	trueaimpoint = trace_endpos;
 
+	if(vlen(trueaimpoint - view_origin) < g_trueaim_minrange)
+		trueaimpoint = view_origin + view_forward * g_trueaim_minrange;
+
 	if(vecs_x > 0)
 		vecs_y = -vecs_y;
 	else
@@ -356,6 +359,9 @@ float myhealth, myhealth_prev;
 float myhealth_flash;
 
 vector myhealth_gentlergb;
+
+float contentavgalpha, liquidalpha_prev;
+vector liquidcolor_prev;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -572,7 +578,7 @@ void CSQC_UpdateView(float w, float h)
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
-	if(autocvar_r_fakelight >= 2 || autocvar_r_fullbright >= 1)
+	if(autocvar_r_fakelight >= 2 || autocvar_r_fullbright)
 	if not(serverflags & SERVERFLAG_ALLOW_FULLBRIGHT)
 	{
 		// apply night vision effect
@@ -666,8 +672,57 @@ void CSQC_UpdateView(float w, float h)
 			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_nex, DRAWFLAG_NORMAL);
 	}
 
+
 	// improved polyblend
 	vector rgb;
+	if(autocvar_hud_contents)
+	{
+		float contentalpha_temp, incontent, liquidalpha, contentfadetime;
+		vector liquidcolor;
+		
+		switch(pointcontents(view_origin))
+		{
+			case CONTENT_WATER:
+				liquidalpha = autocvar_hud_contents_water_alpha;
+				liquidcolor = stov(autocvar_hud_contents_water_color);
+				incontent = 1;
+				break;
+				
+			case CONTENT_LAVA:
+				liquidalpha = autocvar_hud_contents_lava_alpha;
+				liquidcolor = stov(autocvar_hud_contents_lava_color);
+				incontent = 1;
+				break;	
+							
+			case CONTENT_SLIME:
+				liquidalpha = autocvar_hud_contents_slime_alpha;
+				liquidcolor = stov(autocvar_hud_contents_slime_color);
+				incontent = 1;
+				break;
+				
+			default:
+				liquidalpha = 0;
+				liquidcolor = '0 0 0';
+				incontent = 0;
+				break;
+		}
+		
+		if(incontent) // fade in/out at different speeds so you can do e.g. instant fade when entering water and slow when leaving it.
+		{ // also lets delcare previous values for blending properties, this way it isn't reset until after you have entered a different content
+			contentfadetime = autocvar_hud_contents_fadeintime;
+			liquidalpha_prev = liquidalpha;
+			liquidcolor_prev = liquidcolor;
+		}
+		else
+			contentfadetime = autocvar_hud_contents_fadeouttime;
+			
+		contentalpha_temp = bound(0, drawframetime / max(0.0001, contentfadetime), 1);
+		contentavgalpha = contentavgalpha * (1 - contentalpha_temp) + incontent * contentalpha_temp;
+		
+		if(contentavgalpha)
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
+	}
+	
 	if(autocvar_hud_damage)
 	{
 		float myhealth_flash_temp;

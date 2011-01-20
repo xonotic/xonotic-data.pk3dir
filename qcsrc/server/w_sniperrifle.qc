@@ -212,9 +212,7 @@ float w_sniperrifle(float req)
 	{
 		if(self.sniperrifle_bulletcounter < 0) // forced reload (e.g. because interrupted)
 		{
-			if(self.switchweapon == self.weapon)
-			if(self.weaponentity.state == WS_READY)
-				W_SniperRifle_Reload();
+            self.wish_reload = 1;
 		}
 		else
 		{
@@ -231,16 +229,32 @@ float w_sniperrifle(float req)
 			{	
 				if (autocvar_g_balance_sniperrifle_secondary)
 				{
-					if (weapon_prepareattack_check(1, autocvar_g_balance_sniperrifle_secondary_refire))
-					if (time >= self.sniperrifle_accumulator + autocvar_g_balance_sniperrifle_secondary_burstcost)
-					{
-						weapon_prepareattack_do(1, autocvar_g_balance_sniperrifle_secondary_refire);
-						W_SniperRifle_BulletHail(autocvar_g_balance_sniperrifle_secondary_bullethail, W_SniperRifle_Attack2, WFRAME_FIRE2, autocvar_g_balance_sniperrifle_secondary_animtime, autocvar_g_balance_sniperrifle_primary_refire);
-						self.sniperrifle_accumulator += autocvar_g_balance_sniperrifle_secondary_burstcost;
-					}
+                    if(autocvar_g_balance_sniperrifle_secondary_reload)
+                        self.wish_reload = 1;
+                    else
+                    {
+                        if (weapon_prepareattack_check(1, autocvar_g_balance_sniperrifle_secondary_refire))
+                        if (time >= self.sniperrifle_accumulator + autocvar_g_balance_sniperrifle_secondary_burstcost)
+                        {
+                            weapon_prepareattack_do(1, autocvar_g_balance_sniperrifle_secondary_refire);
+                            W_SniperRifle_BulletHail(autocvar_g_balance_sniperrifle_secondary_bullethail, W_SniperRifle_Attack2, WFRAME_FIRE2, autocvar_g_balance_sniperrifle_secondary_animtime, autocvar_g_balance_sniperrifle_primary_refire);
+                            self.sniperrifle_accumulator += autocvar_g_balance_sniperrifle_secondary_burstcost;
+                        }
+                    }
 				}
 			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_SniperRifle_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -266,7 +280,7 @@ float w_sniperrifle(float req)
 		return self.ammo_nails >= autocvar_g_balance_sniperrifle_secondary_ammo;
 	else if (req == WR_RELOAD)
 	{
-		W_SniperRifle_Reload();
+        self.wish_reload = 1;
 	}
 	else if (req == WR_RESETPLAYER)
 	{

@@ -20,6 +20,8 @@ CLASS(XonoticInputBox) EXTENDS(InputBox)
 	METHOD(XonoticInputBox, loadCvars, void(entity))
 	METHOD(XonoticInputBox, saveCvars, void(entity))
 	METHOD(XonoticInputBox, keyDown, float(entity, float, float, float))
+
+	ATTRIB(XonoticInputBox, saveImmediately, float, 0)
 ENDCLASS(XonoticInputBox)
 entity makeXonoticInputBox(float, string);
 #endif
@@ -54,6 +56,8 @@ void XonoticInputBox_setText(entity me, string new)
 	{
 		SUPER(XonoticInputBox).setText(me, new);
 		me.onChange(me, me.onChangeEntity);
+		if(me.saveImmediately)
+			me.saveCvars(me);
 	}
 	else
 		SUPER(XonoticInputBox).setText(me, new);

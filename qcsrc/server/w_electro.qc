@@ -232,7 +232,7 @@ void lgbeam_think()
 		remove(self);
 		return;
 	}
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || (g_freezetag && self.owner.freezetag_frozen))
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
 	{
 		if(self == self.owner.lgbeam)
 			self.owner.lgbeam = world;
@@ -426,7 +426,7 @@ float w_electro(float req)
 			W_Electro_Attack2();
 			self.electro_count = autocvar_g_balance_electro_secondary_count;
 			weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_electro_secondary_animtime, w_electro_checkattack);
-			self.electro_secondarytime = time + autocvar_g_balance_electro_secondary_refire2;
+			self.electro_secondarytime = time + autocvar_g_balance_electro_secondary_refire2 * W_WeaponRateFactor();
 		}
 	}
 	else if (req == WR_PRECACHE)

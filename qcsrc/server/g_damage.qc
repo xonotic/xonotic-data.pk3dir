@@ -120,14 +120,12 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		{
 			// teamkill
 			PlayerScore_Add(attacker, SP_KILLS, -1); // or maybe add a teamkills field?
-			PlayerStats_Event(attacker, PLAYERSTATS_KILLS, -1);
 		}
 	}
 	else
 	{
 		// regular frag
 		PlayerScore_Add(attacker, SP_KILLS, 1);
-		PlayerStats_Event(attacker, PLAYERSTATS_KILLS, 1);
 	}
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
@@ -203,6 +201,8 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 			{
 				if(!lms_next_place)
 					lms_next_place = player_count;
+				else
+					lms_next_place = min(lms_next_place, player_count);
 				PlayerScore_Add(targ, SP_LMS_RANK, lms_next_place); // won't ever spawn again
 				--lms_next_place;
 			}
@@ -369,6 +369,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					// TODO: make these print a newline if they dont
 					Send_CSQC_Centerprint(attacker, "", "", KILL_FIRST_BLOOD, MSG_KILL);
 					Send_CSQC_Centerprint(targ, "", "", KILL_FIRST_VICTIM, MSG_KILL);
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
+					PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 				}
 
 				if((autocvar_sv_fragmessage_information_typefrag) && (targ.BUTTON_CHAT)) {
@@ -414,36 +416,43 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_3, MSG_SPREE);
 					AnnounceTo(attacker, "03kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3, 1);
 				}
 				else if (attacker.killcount == 5)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_5, MSG_SPREE);
 					AnnounceTo(attacker, "05kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5, 1);
 				}
 				else if (attacker.killcount == 10)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_10, MSG_SPREE);
 					AnnounceTo(attacker, "10kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10, 1);
 				}
 				else if (attacker.killcount == 15)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_15, MSG_SPREE);
 					AnnounceTo(attacker, "15kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15, 1);
 				}
 				else if (attacker.killcount == 20)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_20, MSG_SPREE);
 					AnnounceTo(attacker, "20kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20, 1);
 				}
 				else if (attacker.killcount == 25)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_25, MSG_SPREE);
 					AnnounceTo(attacker, "25kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_25, 1);
 				}
 				else if (attacker.killcount == 30)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_30, MSG_SPREE);
 					AnnounceTo(attacker, "30kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30, 1);
 				}
 				LogDeath("frag", deathtype, attacker, targ);
 			}
@@ -461,6 +470,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			GiveFrags(targ, targ, -1, deathtype);
 			if(PlayerScore_Add(targ, SP_SCORE, 0) == -5) {
 				AnnounceTo(targ, "botlike");
+				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 			}
 			Send_KillNotification(s, msg, "", deathtype, MSG_KILL_ACTION);
 
@@ -602,7 +612,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 								targ.dmg_save += v_y;
 								targ.dmg_inflictor = inflictor;
 								damage = 0;
-								force = '0 0 0';
+                                if(!autocvar_g_friendlyfire_virtual_force)
+                                    force = '0 0 0';
 							}
 						}
 						else
@@ -778,7 +789,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				{
 					if(damage > 0)
 					{
-						if(attacker.weapon != WEP_ELECTRO && attacker.weapon != WEP_LASER || ((attacker.weapon == WEP_ELECTRO && autocvar_g_balance_electro_lightning || attacker.weapon == WEP_LASER) && attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time))
+						if(attacker.weapon != WEP_LASER
+						&& (attacker.weapon != WEP_ELECTRO || !autocvar_g_balance_electro_lightning)
+						&& attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time)
 						{
 							if(targ.BUTTON_CHAT)
 								attacker.typehitsound += 1;
@@ -809,8 +822,12 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				}
 				else
 				{
-					if(deathtype != DEATH_FIRE)
+					if(deathtype != DEATH_FIRE
+					&& attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time)
+					{
 						attacker.typehitsound += 1;
+						attacker.prevhitsound = time;
+					}
 					if(mirrordamage > 0)
 						if(time > attacker.teamkill_complain)
 						{
@@ -1020,33 +1037,47 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 						// laser force adjustments :P
 						if(DEATH_WEAPONOF(deathtype) == WEP_LASER)
 						{
-							vector vel;
+                            if (targ == attacker)
+                            {
+                                vector vel;
 
-							float force_zscale;
-							float force_velocitybiasramp;
-							float force_velocitybias;
+                                float force_zscale;
+                                float force_velocitybiasramp;
+                                float force_velocitybias;
 
-							force_velocitybiasramp = autocvar_sv_maxspeed;
-							if(deathtype & HITTYPE_SECONDARY)
-							{
-								force_zscale = autocvar_g_balance_laser_secondary_force_zscale;
-								force_velocitybias = autocvar_g_balance_laser_secondary_force_velocitybias;
-							}
-							else
-							{
-								force_zscale = autocvar_g_balance_laser_primary_force_zscale;
-								force_velocitybias = autocvar_g_balance_laser_primary_force_velocitybias;
-							}
+                                force_velocitybiasramp = autocvar_sv_maxspeed;
+                                if(deathtype & HITTYPE_SECONDARY)
+                                {
+                                    force_zscale = autocvar_g_balance_laser_secondary_force_zscale;
+                                    force_velocitybias = autocvar_g_balance_laser_secondary_force_velocitybias;
+                                }
+                                else
+                                {
+                                    force_zscale = autocvar_g_balance_laser_primary_force_zscale;
+                                    force_velocitybias = autocvar_g_balance_laser_primary_force_velocitybias;
+                                }
 
-							vel = targ.velocity;
-							vel_z = 0;
-							vel = normalize(vel) * bound(0, vlen(vel) / force_velocitybiasramp, 1) * force_velocitybias;
-							force =
-								vlen(force)
-								*
-								normalize(normalize(force) + vel);
+                                vel = targ.velocity;
+                                vel_z = 0;
+                                vel = normalize(vel) * bound(0, vlen(vel) / force_velocitybiasramp, 1) * force_velocitybias;
+                                force =
+                                    vlen(force)
+                                    *
+                                    normalize(normalize(force) + vel);
 
-							force_z *= force_zscale;
+                                force_z *= force_zscale;
+                            }
+                            else
+                            {
+                                if(deathtype & HITTYPE_SECONDARY)
+                                {
+                                    force *= autocvar_g_balance_laser_secondary_force_other_scale;
+                                }
+                                else
+                                {
+                                    force *= autocvar_g_balance_laser_primary_force_other_scale;
+                                }
+                            }
 						}
 
 						//if (targ == attacker)
@@ -1217,6 +1248,10 @@ void Fire_ApplyDamage(entity e)
 	// water and slime stop fire
 	if(e.waterlevel)
 	if(e.watertype != CONTENT_LAVA)
+		e.fire_endtime = 0;
+
+	// ice stops fire
+	if(e.freezetag_frozen)
 		e.fire_endtime = 0;
 
 	t = min(frametime, e.fire_endtime - time);

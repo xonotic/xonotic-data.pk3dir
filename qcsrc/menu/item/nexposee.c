@@ -149,8 +149,6 @@ void Nexposee_draw(entity me)
 		me.animationState = 0;
 	}
 
-	//print(ftos(me.animationState), "\n");
-
 	f = min(1, frametime * 5);
 	switch(me.animationState)
 	{

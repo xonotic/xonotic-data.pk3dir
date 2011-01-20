@@ -150,6 +150,11 @@ void ScoreInfo_SetLabel_PlayerScore(float i, string label, float scoreflags)
 		scores_primary = scores[i];
 		scores_flags_primary = scoreflags;
 	}
+	if(label != "")
+	{
+		PlayerStats_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+	}
 }
 
 void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
@@ -245,6 +250,7 @@ void PlayerScore_Clear(entity player)
 
 	if(teamscores_entities_count)
 		return;
+
 	if(g_lms) return;
 	if(g_arena || g_ca) return;
 	if(g_race && !g_race_qualifying) return;
@@ -330,6 +336,8 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	if(score)
 		if(scores_label[scorefield] != "")
 			s.SendFlags |= pow(2, scorefield);
+	PlayerStats_Event(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label[scorefield]), score);
+	s.(scores_accumulated[scorefield]) += score;
 	return (s.(scores[scorefield]) += score);
 }
 
@@ -864,3 +872,14 @@ void Score_NicePrint(entity to)
 	}
 }
 
+void PlayerScore_PlayerStats(entity p)
+{
+	entity s;
+	float i;
+	s = p.scorekeeper;
+
+	for(i = 0; i < MAX_SCORE; ++i)
+		if(s.(scores[i]) != 0)
+			if(scores_label[i] != "")
+				PlayerStats_Event(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label[i]), s.(scores[i]));
+}

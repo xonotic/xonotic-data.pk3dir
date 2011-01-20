@@ -325,11 +325,14 @@ void SpawnThrownWeapon (vector org, float w)
 		{
 			if(self.weapons & W_WeaponBit(j))
 				if(W_IsWeaponThrowable(j))
-					W_ThrowNewWeapon(self, j, FALSE, self.origin, randomvec() * 175 + '0 0 325');
+					W_ThrowNewWeapon(self, j, FALSE, org, randomvec() * 175 + '0 0 325');
 		}
 	}
 	else
-		W_ThrowWeapon(randomvec() * 125 + '0 0 200', org - self.origin, FALSE);
+	{
+		if(W_IsWeaponThrowable(self.weapon))
+			W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
+	}
 }
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)

@@ -637,6 +637,10 @@ void turret_think()
     if (self.ammo < self.ammo_max)
         self.ammo = min(self.ammo + self.ammo_recharge, self.ammo_max);
 
+    if (self.health < (self.tur_health * 0.5))
+		if(random() < 0.25)
+			te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
+			
     // Inactive turrets needs to run the think loop,
     // So they can handle animation and wake up if need be.
     if not (self.tur_active)
@@ -873,6 +877,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     {
         e = spawn();
 
+        /*
         setorigin(e,'0 0 0');
         setmodel(e,"models/turrets/plasma.md3");
         vector v;
@@ -883,6 +888,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
             //crash();
         }
         setmodel(e,"");
+        */
 
         e.classname = "turret_manager";
         e.think = turrets_manager_think;
@@ -1129,6 +1135,10 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 // Offsets & origins
     if (!self.tur_shotorg)   self.tur_shotorg = '50 0 50';
 
+// Gane hooks
+	if(MUTATOR_CALLHOOK(TurretSpawn))
+		return 0;
+
 // End of default & sanety checks, start building the turret.
 
 // Spawn extra bits
@@ -1234,7 +1244,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         activator = ee;
         self.use();
     }
-
+	
 	turret_stdproc_respawn();
     return 1;
 }

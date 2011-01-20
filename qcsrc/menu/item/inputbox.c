@@ -272,35 +272,6 @@ void InputBox_draw(entity me)
 						draw_Text(p, substring(me.text, i, 2), me.realFontSize, '1 1 1', theAlpha, 0);
 					}
 				}
-				/*else if(ch2 == "a") // ^a found
-				{
-					draw_Fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
-					draw_Text(p, substring(me.text, i, 2), me.realFontSize, theColor, 0.8, 0);
-					
-					component = str2chr(me.text, i+2);
-					if (component >= '0' && component <= '9')
-						component = component - '0';
-					else if (component >= 'a' && component <= 'f')
-						component = component - 87;
-					else if (component >= 'A' && component <= 'F')
-						component = component - 55;
-					else
-						component = -1;
-					
-					if (component >= 0) // ^ah found
-					{
-						// FIX ME: overflow here
-						if (component == 20 && theVariableAlpha <= 0.97)
-							theVariableAlpha = theVariableAlpha + 0.0625;
-						else if (component == 30 && theVariableAlpha >= 0.03)
-							theVariableAlpha = theVariableAlpha - 0.0625;
-						else
-							theVariableAlpha = component*0.0625;
-						
-						draw_Fill(p, eX * draw_TextWidth(substring(me.text, i, 3), 0, me.realFontSize) + eY * me.realFontSize_y, '0.8 0.8 0.8', 0.5);
-						draw_Text(p, strcat(ch, ch2), me.realFontSize, theColor, 0.8, 0);
-					}
-				}*/
 				else
 				{
 					draw_Fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
