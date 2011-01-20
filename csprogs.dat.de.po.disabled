@@ -270,22 +270,22 @@ msgstr "^1%s^1 beendete seinen %d-Amoklauf, indem er einen Mitspieler tötete\n"
 #: qcsrc/client/hud.qc:2747
 #, c-format
 msgid "^1%s^1's %s scoring spree was ended by a team mate!\n"
-msgstr "^1%ss ^1%s"
+msgstr "^1%s^1s %s Punkte hintereinander wurden von einem Mitspieler gestört!\n"
 
 #: qcsrc/client/hud.qc:2749
 #, c-format
 msgid "^1%s^1's %s kill spree was ended by a team mate!\n"
-msgstr ""
+msgstr "^1%s^1s %s-Amoklauf wurde von einem Mitspieler beendet!\n"
 
 #: qcsrc/client/hud.qc:2757
 #, c-format
 msgid "^1%s^1 tried to occupy %s^1's teleport destination space\n"
-msgstr ""
+msgstr "^1%s^1 dachte, %s^1 am Teleportieren hindern zu können\n"
 
 #: qcsrc/client/hud.qc:2759
 #, c-format
 msgid "^1%s^1 was telefragged by %s\n"
-msgstr ""
+msgstr "^1%s^1 wurde von %s^1 telefragged\n"
 
 #: qcsrc/client/hud.qc:2764
 #, c-format
