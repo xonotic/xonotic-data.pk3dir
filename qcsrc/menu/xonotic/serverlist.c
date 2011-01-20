@@ -107,6 +107,8 @@ float IsFavorite(string srv)
 	if(srv == "")
 		return FALSE;
 	srv = netaddress_resolve(srv, 26000);
+	if(srv == "")
+		return FALSE;
 	p = crypto_getidfp(srv);
 	n = tokenize_console(cvar_string("net_slist_favorites"));
 	for(i = 0; i < n; ++i)
@@ -352,9 +354,9 @@ void XonoticServerList_draw(entity me)
 		if(me.ipAddressBox.focused || me.ipAddressBoxFocused < 0)
 		{
 			if(IsFavorite(me.ipAddressBox.text))
-				me.favoriteButton.setText(me.favoriteButton, "Remove");
+				me.favoriteButton.setText(me.favoriteButton, _("Remove"));
 			else
-				me.favoriteButton.setText(me.favoriteButton, "Bookmark");
+				me.favoriteButton.setText(me.favoriteButton, _("Bookmark"));
 		}
 		me.ipAddressBoxFocused = me.ipAddressBox.focused;
 	}
@@ -502,7 +504,7 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.columnPingSize = me.realFontSize_x * 3;
 	me.columnMapSize = me.realFontSize_x * 10;
 	me.columnTypeSize = me.realFontSize_x * 4;
-	me.columnPlayersSize = me.realFontSize_x * 4;
+	me.columnPlayersSize = me.realFontSize_x * 5;
 	me.columnNameSize = 1 - me.columnPlayersSize - me.columnMapSize - me.columnPingSize - me.columnIconsSize - me.columnTypeSize - 5 * me.realFontSize_x;
 	me.columnPingOrigin = me.columnIconsOrigin + me.columnIconsSize + me.realFontSize_x;
 	me.columnNameOrigin = me.columnPingOrigin + me.columnPingSize + me.realFontSize_x;
@@ -510,11 +512,11 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.columnTypeOrigin = me.columnMapOrigin + me.columnMapSize + me.realFontSize_x;
 	me.columnPlayersOrigin = me.columnTypeOrigin + me.columnTypeSize + me.realFontSize_x;
 
-	me.positionSortButton(me, me.sortButton1, me.columnPingOrigin, me.columnPingSize, "Ping", ServerList_PingSort_Click);
-	me.positionSortButton(me, me.sortButton2, me.columnNameOrigin, me.columnNameSize, "Host name", ServerList_NameSort_Click);
-	me.positionSortButton(me, me.sortButton3, me.columnMapOrigin, me.columnMapSize, "Map", ServerList_MapSort_Click);
-	me.positionSortButton(me, me.sortButton4, me.columnTypeOrigin, me.columnTypeSize, "Type", ServerList_TypeSort_Click);
-	me.positionSortButton(me, me.sortButton5, me.columnPlayersOrigin, me.columnPlayersSize, "Players", ServerList_PlayerSort_Click);
+	me.positionSortButton(me, me.sortButton1, me.columnPingOrigin, me.columnPingSize, _("Ping"), ServerList_PingSort_Click);
+	me.positionSortButton(me, me.sortButton2, me.columnNameOrigin, me.columnNameSize, _("Host name"), ServerList_NameSort_Click);
+	me.positionSortButton(me, me.sortButton3, me.columnMapOrigin, me.columnMapSize, _("Map"), ServerList_MapSort_Click);
+	me.positionSortButton(me, me.sortButton4, me.columnTypeOrigin, me.columnTypeSize, _("Type"), ServerList_TypeSort_Click);
+	me.positionSortButton(me, me.sortButton5, me.columnPlayersOrigin, me.columnPlayersSize, _("Players"), ServerList_PlayerSort_Click);
 
 	float f;
 	f = me.currentSortField;
@@ -707,8 +709,11 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	}
 	else if(scan == K_MOUSE2 || scan == K_SPACE)
 	{
-		main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
-		DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
+		if(me.nItems != 0)
+		{
+			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
+			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
+		}
 	}
 	else if(scan == K_INS || scan == K_MOUSE3 || scan == K_KP_INS)
 	{

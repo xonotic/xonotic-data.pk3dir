@@ -195,53 +195,53 @@ void HUD_UpdateTeamPos(entity Team)
 
 void Cmd_HUD_Help(float argc)
 {
-	print("You can modify the scoreboard using the ^2scoreboard_columns_set command.\n");
-	print("^3|---------------------------------------------------------------|\n");
-	print("Usage:\n");
-	print("^2scoreboard_columns_set default\n");
-	print("^2scoreboard_columns_set ^7filed1 field2 ...\n");
-	print("The following field names are recognized (case insensitive):\n");
-	print("You can use a ^3|^7 to start the right-aligned fields.\n\n");
+	print(_("You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"));
+	print(_("^3|---------------------------------------------------------------|\n"));
+	print(_("Usage:\n"));
+	print(_("^2scoreboard_columns_set default\n"));
+	print(_("^2scoreboard_columns_set ^7filed1 field2 ...\n"));
+	print(_("The following field names are recognized (case insensitive):\n"));
+	print(_("You can use a ^3|^7 to start the right-aligned fields.\n\n"));
 
-	print("^3name^7 or ^3nick^7         Name of a player\n");
-	print("^3ping^7                     Ping time\n");
-	print("^3pl^7                       Packet loss\n");
-	print("^3kills^7                    Number of kills\n");
-	print("^3deaths^7                   Number of deaths\n");
-	print("^3suicides^7                 Number of suicides\n");
-	print("^3frags^7                    kills - suicides\n");
-	print("^3kd^7                       The kill-death ratio\n");
-	print("^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured\n");
-	print("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) was picked up\n");
-	print("^3fckills^7                  Number of flag carrier kills\n");
-	print("^3returns^7                  Number of flag returns\n");
-	print("^3drops^7                    Number of flag drops\n");
-	print("^3lives^7                    Number of lives (LMS)\n");
-	print("^3rank^7                     Player rank\n");
-	print("^3pushes^7                   Number of players pushed into void\n");
-	print("^3destroyed^7                Number of keys destroyed by pushing them into void\n");
-	print("^3kckills^7                  Number of keys carrier kills\n");
-	print("^3losses^7                   Number of times a key was lost\n");
-	print("^3laps^7                     Number of laps finished (race/cts)\n");
-	print("^3time^7                     Total time raced (race/cts)\n");
-	print("^3fastest^7                  Time of fastest lap (race/cts)\n");
-	print("^3ticks^7                    Number of ticks (DOM)\n");
-	print("^3takes^7                    Number of domination points taken (DOM)\n");
-	print("^3score^7                    Total score\n\n");
+	print(_("^3name^7 or ^3nick^7         Name of a player\n"));
+	print(_("^3ping^7                     Ping time\n"));
+	print(_("^3pl^7                       Packet loss\n"));
+	print(_("^3kills^7                    Number of kills\n"));
+	print(_("^3deaths^7                   Number of deaths\n"));
+	print(_("^3suicides^7                 Number of suicides\n"));
+	print(_("^3frags^7                    kills - suicides\n"));
+	print(_("^3kd^7                       The kill-death ratio\n"));
+	print(_("^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured\n"));
+	print(_("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) was picked up\n"));
+	print(_("^3fckills^7                  Number of flag carrier kills\n"));
+	print(_("^3returns^7                  Number of flag returns\n"));
+	print(_("^3drops^7                    Number of flag drops\n"));
+	print(_("^3lives^7                    Number of lives (LMS)\n"));
+	print(_("^3rank^7                     Player rank\n"));
+	print(_("^3pushes^7                   Number of players pushed into void\n"));
+	print(_("^3destroyed^7                Number of keys destroyed by pushing them into void\n"));
+	print(_("^3kckills^7                  Number of keys carrier kills\n"));
+	print(_("^3losses^7                   Number of times a key was lost\n"));
+	print(_("^3laps^7                     Number of laps finished (race/cts)\n"));
+	print(_("^3time^7                     Total time raced (race/cts)\n"));
+	print(_("^3fastest^7                  Time of fastest lap (race/cts)\n"));
+	print(_("^3ticks^7                    Number of ticks (DOM)\n"));
+	print(_("^3takes^7                    Number of domination points taken (DOM)\n"));
+	print(_("^3score^7                    Total score\n\n"));
 
-	print("Before a field you can put a + or - sign, then a comma separated list\n");
-	print("of game types, then a slash, to make the field show up only in these\n");
-	print("or in all but these game types. You can also specify 'all' as a\n");
-	print("field to show all fields available for the current game mode.\n\n");
+	print(_("Before a field you can put a + or - sign, then a comma separated list\n"
+	        "of game types, then a slash, to make the field show up only in these\n"
+	        "or in all but these game types. You can also specify 'all' as a\n"
+	        "field to show all fields available for the current game mode.\n\n"));
 
-	print("The special game type names 'teams' and 'noteams' can be used to\n");
-	print("include/exclude ALL teams/noteams game modes.\n\n");
+	print(_("The special game type names 'teams' and 'noteams' can be used to\n"
+	        "include/exclude ALL teams/noteams game modes.\n\n"));
 
-	print("Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n");
-	print("will display name, ping and pl aligned to the left, and the fields\n");
-	print("right of the vertical bar aligned to the right.\n");
-	print("'field3' will only be shown in CTF, and 'field4' will be shown in all\n");
-	print("other gamemodes except DM.\n");
+	print(_("Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"));
+	print(_("will display name, ping and pl aligned to the left, and the fields\n"
+	        "right of the vertical bar aligned to the right.\n"));
+	print(_("'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
+	        "other gamemodes except DM.\n"));
 }
 
 string HUD_DefaultColumnLayout()
@@ -253,7 +253,7 @@ string HUD_DefaultColumnLayout()
 		"+lms/lives +lms/rank ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
-		"+as/objectives +nexball/faults +nexball/goals +ka/drops +ka/pickups +ka/bckills +freezetag/revivals ",
+		"+as/objectives +nexball/faults +nexball/goals +ka/drops +ka/pickups +ka/bckills +ka/time +freezetag/revivals ",
 		"-lms,race,nexball/score");
 }
 
@@ -349,7 +349,7 @@ void Cmd_HUD_SetFields(float argc)
 			else
 			{
 				if not(nocomplain)
-					print(strcat("^1Error:^7 Unknown score field: '", str, "'\n"));
+					print(sprintf("^1Error:^7 Unknown score field: '%s'\n", str));
 				continue;
 			}
 :found
@@ -386,7 +386,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_title[0] = strzone("name");
 			hud_field[0] = SP_NAME;
 			++hud_num_fields;
-			print("fixed missing field 'name'\n");
+			print(sprintf(_("fixed missing field '%s'\n"), "name"));
 
 			if(!have_separator)
 			{
@@ -401,7 +401,7 @@ void Cmd_HUD_SetFields(float argc)
 				hud_field[1] = SP_SEPARATOR;
 				hud_size[1] = stringwidth("|", FALSE, hud_fontsize);
 				++hud_num_fields;
-				print("fixed missing field '|'\n");
+				print(sprintf(_("fixed missing field '%s'\n"), "|"));
 			}
 		}
 		else if(!have_separator)
@@ -411,7 +411,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth("|", FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = SP_SEPARATOR;
 			++hud_num_fields;
-			print("fixed missing field '|'\n");
+			print(sprintf(_("fixed missing field '%s'\n"), "|"));
 		}
 		if(!have_secondary)
 		{
@@ -420,7 +420,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = ps_secondary;
 			++hud_num_fields;
-			print("fixed missing field '", scores_label[ps_secondary], "'\n");
+			print(sprintf(_("fixed missing field '%s'\n"), scores_label[ps_secondary]));
 		}
 		if(!have_primary)
 		{
@@ -429,7 +429,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = ps_primary;
 			++hud_num_fields;
-			print("fixed missing field '", scores_label[ps_primary], "'\n");
+			print(sprintf(_("fixed missing field '%s'\n"), scores_label[ps_primary]));
 		}
 	}
 
@@ -465,18 +465,18 @@ string HUD_GetField(entity pl, float field)
 	{
 		case SP_PING:
 			if not(pl.gotscores)
-				return "\x8D\x8D\x8D"; // >>> sign
+				return "\xEE\x82\x8D\xEE\x82\x8D\xEE\x82\x8D"; // >>> sign
 			//str = getplayerkey(pl.sv_entnum, "ping");
 			f = pl.ping;
 			if(f == 0)
-				return "N/A";
+				return _("N/A");
 			tmp = max(0, min(220, f-80)) / 220;
 			hud_field_rgb = '1 1 1' - '0 1 1'*tmp;
 			return ftos(f);
 
 		case SP_PL:
 			if not(pl.gotscores)
-				return "N/A";
+				return _("N/A");
 			f = pl.ping_packetloss;
 			tmp = pl.ping_movementloss;
 			if(f == 0 && tmp == 0)
@@ -517,16 +517,12 @@ string HUD_GetField(entity pl, float field)
 
 			if(denom == 0) {
 				hud_field_rgb = '0 1 0';
-				str = ftos(num);
+				str = sprintf("%d", num);
 			} else if(num <= 0) {
 				hud_field_rgb = '1 0 0';
-				str = ftos(num/denom);
+				str = sprintf("%.1f", num/denom);
 			} else
-				str = ftos(num/denom);
-
-			tmp = strstrofs(str, ".", 0);
-			if(tmp > 0)
-				str = substring(str, 0, tmp+2);
+				str = sprintf("%.1f", num/denom);
 			return str;
 
 		default:
@@ -882,6 +878,8 @@ float HUD_WouldDrawScoreboard() {
 		return 1;
 	else if (intermission == 1)
 		return 1;
+	else if (intermission == 2)
+		return 0;
 	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != GAME_CTS)
 		return 1;
 	else if (scoreboard_showscores_force)
@@ -905,7 +903,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float weapon_height = height * 2/3;
 	float weapon_width = sbwidth / weapon_cnt;
 
-	drawstring(pos, strcat("Accuracy stats (average ", ftos(average_accuracy), "%)"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(pos, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += 1.25 * hud_fontsize_y;
 	vector tmp;
 	tmp_x = sbwidth;
@@ -970,7 +968,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			average_accuracy += weapon_stats; // store sum of all accuracies in average_accuracy
 
 			string s;
-			s = sprintf("%d%%", weapon_stats*100);
+			s = sprintf(_("%d%%"), weapon_stats*100);
 
 			float padding;
 			padding = (weapon_width - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value
@@ -1030,7 +1028,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	hl_rgb_z = autocvar_scoreboard_color_bg_b + 0.5;
 
 	pos_y += hud_fontsize_y;
-	drawstring(pos, strcat("Rankings"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(pos, _("Rankings"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += hud_fontsize_y;
 	vector tmp;
 	tmp_x = sbwidth;
@@ -1121,9 +1119,9 @@ void HUD_DrawScoreboard()
 	pos_z = 0;
 
 	// Heading
-	drawstring(pos, "Scoreboard", '24 24 0', '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(pos, _("Scoreboard"), '24 24 0', '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	
-	centerprint_start_x = vid_conwidth - 0.5 * (pos_x + stringwidth("Scoreboard", FALSE, '24 24 0'));
+	centerprint_start_x = vid_conwidth - 0.5 * (pos_x + stringwidth(_("Scoreboard"), FALSE, '24 24 0'));
 	centerprint_start_y = pos_y;
 
 	pos_y += 24;
@@ -1164,11 +1162,11 @@ void HUD_DrawScoreboard()
 
 	if(gametype == GAME_CTS || gametype == GAME_RACE) {
 		if(race_speedaward) {
-			drawcolorcodedstring(pos, strcat("Speed award: ", ftos(race_speedaward), " ^7(", race_speedaward_holder, "^7)"), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, sprintf(_("Speed award: %d ^7(%s^7)"), race_speedaward, race_speedaward_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
 		}
 		if(race_speedaward_alltimebest) {
-			drawcolorcodedstring(pos, strcat("All-time fastest: ", ftos(race_speedaward_alltimebest), " ^7(", race_speedaward_alltimebest_holder, "^7)"), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d ^7(%s^7)"), race_speedaward_alltimebest, race_speedaward_alltimebest_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
 		}
 		pos = HUD_DrawScoreboardRankings(pos, pl, rgb, bg_size);
@@ -1195,74 +1193,62 @@ void HUD_DrawScoreboard()
 
 	if(specs)
 	{
-		drawstring(tmp, "Spectators", hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+		drawstring(tmp, _("Spectators"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		pos_y += 1.25 * hud_fontsize_y;
 	}
 
 	// Print info string
 	string str;
 	float tl, fl, ll;
-	str = strcat("playing on ^2", shortmapname, "^7");
+	str = sprintf(_("playing on ^2%s^7"), shortmapname);
 	tl = getstatf(STAT_TIMELIMIT);
 	fl = getstatf(STAT_FRAGLIMIT);
 	ll = getstatf(STAT_LEADLIMIT);
 	if(gametype == GAME_LMS)
 	{
 		if(tl > 0)
-			str = strcat(str, " for up to ^1", ftos(tl), " minutes^7");
+			str = strcat(str, sprintf(_(" for up to ^1%.1g minutes^7"), tl));
 	}
 	else
 	{
 		if(tl > 0)
-			str = strcat(str, " for ^1", ftos(tl), " minutes^7");
+			str = strcat(str, sprintf(_(" for up to ^1%.1g minutes^7"), tl));
 		if(fl > 0)
 		{
 			if(tl > 0)
-				str = strcat(str, " or");
+				str = strcat(str, _(" or"));
 			if(teamplay)
 			{
-				str = strcat(str, " until ^3", ScoreString(teamscores_flags[ts_primary], fl));
-				if(teamscores_label[ts_primary] == "score")
-					str = strcat(str, " points^7");
-				else if(teamscores_label[ts_primary] == "fastest")
-					str = strcat(str, " is beaten^7");
-				else
-					str = strcat(str, " ", teamscores_label[ts_primary]);
+				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], fl), 
+					(teamscores_label[ts_primary] == "score")   ? _("points") :
+					(teamscores_label[ts_primary] == "fastest") ? _("is beaten") :
+					teamscores_label[ts_primary]));
 			}
 			else
 			{
-				str = strcat(str, " until ^3", ScoreString(scores_flags[ps_primary], fl));
-				if(scores_label[ps_primary] == "score")
-					str = strcat(str, " points^7");
-				else if(scores_label[ps_primary] == "fastest")
-					str = strcat(str, " is beaten^7");
-				else
-					str = strcat(str, " ", scores_label[ps_primary]);
+				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(scores_flags[ps_primary], fl), 
+					(teamscores_label[ts_primary] == "score")   ? _("points") :
+					(teamscores_label[ts_primary] == "fastest") ? _("is beaten") :
+					teamscores_label[ts_primary]));
 			}
 		}
 		if(ll > 0)
 		{
 			if(tl > 0 || fl > 0)
-				str = strcat(str, " or");
+				str = strcat(str, _(" or"));
 			if(teamplay)
 			{
-				str = strcat(str, " until a lead of ^3", ScoreString(teamscores_flags[ts_primary], ll));
-				if(teamscores_label[ts_primary] == "score")
-					str = strcat(str, " points^7");
-				else if(teamscores_label[ts_primary] == "fastest")
-					str = strcat(str, " is beaten^7");
-				else
-					str = strcat(str, " ", teamscores_label[ts_primary]);
+				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], ll), 
+					(teamscores_label[ts_primary] == "score")   ? _("points") :
+					(teamscores_label[ts_primary] == "fastest") ? _("is beaten") :
+					teamscores_label[ts_primary]));
 			}
 			else
 			{
-				str = strcat(str, " until a lead of ^3", ScoreString(scores_flags[ps_primary], ll));
-				if(scores_label[ps_primary] == "score")
-					str = strcat(str, " points^7");
-				else if(scores_label[ps_primary] == "fastest")
-					str = strcat(str, " is beaten^7");
-				else
-					str = strcat(str, " ", scores_label[ps_primary]);
+				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(scores_flags[ps_primary], ll), 
+					(teamscores_label[ts_primary] == "score")   ? _("points") :
+					(teamscores_label[ts_primary] == "fastest") ? _("is beaten") :
+					teamscores_label[ts_primary]));
 			}
 		}
 	}

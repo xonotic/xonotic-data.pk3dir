@@ -397,6 +397,7 @@ void W_Crylink_Attack (void)
 			proj.fade_rate = 1 / autocvar_g_balance_crylink_primary_other_fadetime;
 			proj.nextthink = time + autocvar_g_balance_crylink_primary_other_lifetime + autocvar_g_balance_crylink_primary_other_fadetime;
 		}
+		proj.teleport_time = time + autocvar_g_balance_crylink_primary_joindelay;
 		proj.cnt = autocvar_g_balance_crylink_primary_bounces;
 		//proj.scale = 1 + 1 * proj.cnt;
 
@@ -484,6 +485,7 @@ void W_Crylink_Attack2 (void)
 			proj.fade_rate = 1 / autocvar_g_balance_crylink_secondary_line_fadetime;
 			proj.nextthink = time + autocvar_g_balance_crylink_secondary_line_lifetime + autocvar_g_balance_crylink_secondary_line_fadetime;
 		}
+		proj.teleport_time = time + autocvar_g_balance_crylink_secondary_joindelay;
 		proj.cnt = autocvar_g_balance_crylink_secondary_bounces;
 		//proj.scale = 1 + 1 * proj.cnt;
 
@@ -542,14 +544,13 @@ float w_crylink(float req)
 		}
 		else
 		{
-			if (self.crylink_waitrelease)
+			if (self.crylink_waitrelease && (!self.crylink_lastgroup || time > self.crylink_lastgroup.teleport_time))
 			{
 				// fired and released now!
 				if(self.crylink_lastgroup)
 				{
 					vector pos;
 					entity linkjoineffect;
-
 
 					if(self.crylink_waitrelease == 1)
 					{
@@ -567,8 +568,6 @@ float w_crylink(float req)
 					linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
 					linkjoineffect.owner = self;
 					setorigin(linkjoineffect, pos);
-
-
 				}
 				self.crylink_waitrelease = 0;
 				if(!w_crylink(WR_CHECKAMMO1) && !w_crylink(WR_CHECKAMMO2))

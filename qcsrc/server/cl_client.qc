@@ -1065,6 +1065,8 @@ void PutClientInServer (void)
 		self.cnt = self.switchweapon;
 		self.weapon = 0;
 
+        self.wish_reload = 0;
+
 		if(!self.alivetime)
 			self.alivetime = time;
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
@@ -1108,6 +1110,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_magazinecapacity); // rifle max bullets
+	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
 	return TRUE;
 }
 
@@ -1365,7 +1368,7 @@ void ClientKill (void)
 	{
 		// do nothing
 	}
-    else if(g_freezetag && self.freezetag_frozen == 1)
+    else if(self.freezetag_frozen)
     {
         // do nothing
     }
@@ -2044,7 +2047,7 @@ void player_powerups (void)
 		self.modelflags &~= MF_ROCKET;
 	}
 
-	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
+	self.effects &~= (EF_DIMLIGHT | EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
 	if(!self.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
 		return;

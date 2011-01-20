@@ -613,6 +613,7 @@ float client_cefc_accumulatortime;
 #endif
 
 .float sniperrifle_bulletcounter;
+.float wish_reload;
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones
@@ -658,7 +659,6 @@ float serverflags;
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
 .float freezetag_frozen;
-.float freezetag_beginrevive_time;
 .float freezetag_revive_progress;
 
 .entity muzzle_flash;
