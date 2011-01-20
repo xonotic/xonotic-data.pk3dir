@@ -8,76 +8,6 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_T
 
 .float sniperrifle_accumulator;
 
-float W_SniperRifle_CheckMaxBullets(float checkammo)
-{
-	float maxbulls;
-	maxbulls = autocvar_g_balance_sniperrifle_magazinecapacity;
-	if(!maxbulls)
-		maxbulls = 8; // match HUD
-	if(checkammo)
-		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-			maxbulls = min(maxbulls, floor(self.ammo_nails / min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)));
-	if(self.sniperrifle_bulletcounter > maxbulls || !autocvar_g_balance_sniperrifle_magazinecapacity)
-		self.sniperrifle_bulletcounter = maxbulls;
-	return (self.sniperrifle_bulletcounter == maxbulls);
-}
-
-void W_SniperRifle_ReloadedAndReady()
-{
-	float t;
-	self.sniperrifle_bulletcounter = autocvar_g_balance_sniperrifle_magazinecapacity;
-	W_SniperRifle_CheckMaxBullets(TRUE);
-	t = ATTACK_FINISHED(self) - autocvar_g_balance_sniperrifle_reloadtime - 1;
-	ATTACK_FINISHED(self) = t;
-	w_ready();
-}
-
-float W_SniperRifle_Reload()
-{
-	float t;
-
-	W_SniperRifle_CheckMaxBullets(TRUE);
-
-	if(self.ammo_nails < min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)) // when we get here, bulletcounter must be 0 or -1
-	{
-		print("cannot reload... not enough bullets\n");
-		self.sniperrifle_bulletcounter = -1; // reload later
-		W_SwitchToOtherWeapon(self);
-		return 0;
-	}
-	
-	if (self.sniperrifle_bulletcounter >= autocvar_g_balance_sniperrifle_magazinecapacity)
-		return 0;
-
-	if (self.weaponentity)
-	{
-		if (self.weaponentity.wframe == WFRAME_RELOAD)
-			return 0;
-
-		// allow to switch away while reloading, but this will cause a new reload!
-		self.weaponentity.state = WS_READY;
-	}
-
-	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
-
-	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_sniperrifle_reloadtime + 1;
-	ATTACK_FINISHED(self) = t;
-
-	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_sniperrifle_reloadtime, W_SniperRifle_ReloadedAndReady);
-
-	self.sniperrifle_bulletcounter = -1;
-
-	return 1;
-}
-
-void W_SniperRifle_CheckReloadAndReady()
-{
-	w_ready();
-	if(self.sniperrifle_bulletcounter <= 0)
-		if(W_SniperRifle_Reload())
-			return;
-}
-
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -106,7 +36,6 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 	
 	self.sniperrifle_bulletcounter = self.sniperrifle_bulletcounter - 1;
-	W_SniperRifle_CheckMaxBullets(TRUE);
 }
 
 void W_SniperRifle_Attack()

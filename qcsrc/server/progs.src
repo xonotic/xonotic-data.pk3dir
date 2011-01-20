@@ -38,6 +38,7 @@ campaign.qh
 accuracy.qh
 csqcprojectile.qh
 csqceffects.qc
+cl_weaponsystem.qh
 
 anticheat.qh
 cheats.qh
