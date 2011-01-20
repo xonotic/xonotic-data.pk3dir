@@ -110,8 +110,6 @@ void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absO
 	draw_fontscale = dfs;
 
 	me.realOrigin_y = 0.5 * (1 - lines * me.realFontSize_y);
-	if(substring(me.text, 0, 3) == "Wel")
-		print(ftos(me.realOrigin_y), " ", me.text, "\n");
 }
 void Label_configureLabel(entity me, string txt, float sz, float algn)
 {

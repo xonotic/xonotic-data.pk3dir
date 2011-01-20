@@ -90,7 +90,7 @@ void Net_TargetMusic()
 		sound(e, CHAN_VOICE, e.noise, 0, ATTN_NONE);
 		if(getsoundtime(e, CHAN_VOICE) < 0)
 		{
-			print("Cannot initialize sound ", e.noise, "\n");
+			print(sprintf(_("Cannot initialize sound %s\n"), e.noise));
 			strunzone(e.noise);
 			e.noise = string_null;
 		}
@@ -178,7 +178,7 @@ void Ent_ReadTriggerMusic()
 			sound(self, CHAN_VOICE, self.noise, 0, ATTN_NONE);
 			if(getsoundtime(self, CHAN_VOICE) < 0)
 			{
-				print("Cannot initialize sound ", self.noise, "\n");
+				print(sprintf(_("Cannot initialize sound %s\n"), self.noise));
 				strunzone(self.noise);
 				self.noise = string_null;
 			}

@@ -26,6 +26,7 @@ CLASS(XonoticLanguageList) EXTENDS(XonoticListBox)
 	METHOD(XonoticLanguageList, languageParameter, string(entity, float, float))
 
 	ATTRIB(XonoticLanguageList, name, string, "languageselector") // change this to make it noninteractive (for first run dialog)
+
 	ATTRIB(XonoticLanguageList, doubleClickCommand, string, "menu_restart\ntogglemenu\ndefer 0.1 \"menu_cmd languageselect\"")
 ENDCLASS(XonoticLanguageList)
 

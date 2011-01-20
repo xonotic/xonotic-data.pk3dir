@@ -24,6 +24,7 @@ Guideline:
 - interesting vim macros:
   :map # /"<return>
   :map ' i_(<esc>2f"a)<esc>/"<return>
+  :map " F"isprintf(_(<esc>%i), )<esc>i
 
 Unresolved TODO:
 

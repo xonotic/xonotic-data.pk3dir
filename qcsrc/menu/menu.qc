@@ -561,9 +561,11 @@ void() m_draw =
 		if(Menu_Active)
 		if(!cvar("menu_video_played"))
 		{
-			localcmd("set menu_video_played 1; cd loop $menu_cdtrack; play sound/announcer/default/welcome.ogg\n");
+			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.ogg\n");
 			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading FIXME
 		}
+		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!
+		localcmd("set menu_video_played 1\n");
 	}
 
 	t = gettime();
@@ -835,7 +837,9 @@ void(string itemname) m_goto =
 	}
 	else
 	{
-		e = findstring(NULL, name, itemname);
+		for(e = NULL; (e = findstring(e, name, itemname)); )
+			if(e.classname != "vtbl")
+				break;
 		if(e)
 		{
 			m_hide();

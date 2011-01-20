@@ -15,7 +15,8 @@ void loadTooltips()
 }
 void unloadTooltips()
 {
-	db_close(tooltipdb);
+	if(tooltipdb >= 0)
+		db_close(tooltipdb);
 	tooltipdb = -1;
 }
 string getZonedTooltipForIdentifier(string s)
@@ -23,14 +24,20 @@ string getZonedTooltipForIdentifier(string s)
 	string t;
 	if(s == "")
 		return string_null;
-	t = db_get(tooltipdb, s);
-	if(t == "-")
-		return string_null;
-	if(t != "")
-		return strzone(t);
-	t = cvar_description(s);
-	if(t != "" && t != "custom cvar")
-		return strzone(t);
+	if(tooltipdb >= 0)
+	{
+		t = db_get(tooltipdb, s);
+		if(t == "-")
+			return string_null;
+		if(t != "")
+			return strzone(t);
+	}
+	if(prvm_language == "en" || prvm_language == "")
+	{
+		t = cvar_description(s);
+		if(t != "" && t != "custom cvar")
+			return strzone(t);
+	}
 	dprint("WARNING: no tooltip set for ", s, "\n");
 	return string_null;
 }
