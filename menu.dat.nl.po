@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-20 19:24+0100\n"
+"POT-Creation-Date: 2011-01-20 19:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2404,7 +2404,75 @@ msgstr "Team Kleur:"
 msgid "Enable panel"
 msgstr "Activeer paneel"
 
-#~ msgid ""
-#~ "Please answer a few initial questions to enhance the game experience."
-#~ msgstr ""
-#~ "Beantwoord alstublieft een paar vragen om de spelervaring te verbeteren."
+#: qcsrc/server/w_crylink.qc:2
+msgid "Crylink"
+msgstr "Crylink"
+
+#: qcsrc/server/w_electro.qc:2
+msgid "Electro"
+msgstr "Electro"
+
+#: qcsrc/server/w_fireball.qc:2
+msgid "Fireball"
+msgstr "Fireball"
+
+#: qcsrc/server/w_grenadelauncher.qc:2
+msgid "Mortar"
+msgstr "Mortar"
+
+#: qcsrc/server/w_hagar.qc:2
+msgid "Hagar"
+msgstr "Hagar"
+
+#: qcsrc/server/w_hlac.qc:2
+msgid "Heavy Laser Assault Cannon"
+msgstr "Heavy Laser Assault Cannon"
+
+#: qcsrc/server/w_hook.qc:2
+msgid "Grappling Hook"
+msgstr "Grappling Hook"
+
+#: qcsrc/server/w_laser.qc:2
+msgid "Laser"
+msgstr "Laser"
+
+#: qcsrc/server/w_minelayer.qc:2
+msgid "Mine Layer"
+msgstr "Mine Layer"
+
+#: qcsrc/server/w_minstanex.qc:2
+msgid "MinstaNex"
+msgstr "MinstaNex"
+
+#: qcsrc/server/w_nex.qc:2
+msgid "Nex"
+msgstr "Nex"
+
+#: qcsrc/server/w_porto.qc:2
+msgid "Port-O-Launch"
+msgstr "Port-O-Launch"
+
+#: qcsrc/server/w_rocketlauncher.qc:2
+msgid "Rocket Launcher"
+msgstr "Rocket Launcher"
+
+#: qcsrc/server/w_seeker.qc:2
+msgid "T.A.G. Seeker"
+msgstr "T.A.G. Seeker"
+
+#: qcsrc/server/w_shotgun.qc:2
+msgid "Shotgun"
+msgstr "Shotgun"
+
+#: qcsrc/server/w_sniperrifle.qc:2
+msgid "Sniper Rifle"
+msgstr "Sniper Rifle"
+
+#: qcsrc/server/w_tuba.qc:2
+#, c-format
+msgid "@!#%'n Tuba"
+msgstr "@!#%'n Tuba"
+
+#: qcsrc/server/w_uzi.qc:2
+msgid "Machine Gun"
+msgstr "Machine Gun"
