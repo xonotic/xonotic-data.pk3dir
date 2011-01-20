@@ -14,6 +14,10 @@ void W_Shotgun_Attack (void)
 	float	bulletconstant;
 	local entity flash;
 
+	W_SniperRifle_CheckReloadAndReady();
+	if(self.sniperrifle_bulletcounter < 0)
+		return; // reloading, so we are done
+
 	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
 	bullets = autocvar_g_balance_shotgun_primary_bullets;
 	d = autocvar_g_balance_shotgun_primary_damage;
@@ -44,6 +48,7 @@ void W_Shotgun_Attack (void)
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');
 
+	self.sniperrifle_bulletcounter = self.sniperrifle_bulletcounter - 1;
 }
 
 void shotgun_meleethink (void)
@@ -109,24 +114,40 @@ float w_shotgun(float req)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if(self.sniperrifle_bulletcounter < 0) // forced reload (e.g. because interrupted)
+            self.wish_reload = 1;
+		else
 		{
-			if (time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+			if (self.BUTTON_ATCK)
 			{
-				if(weapon_prepareattack(0, autocvar_g_balance_shotgun_primary_animtime))
+				if (time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
 				{
-					W_Shotgun_Attack();
-					self.shotgun_primarytime = time + autocvar_g_balance_shotgun_primary_refire;
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_primary_animtime, w_ready);
+					if(weapon_prepareattack(0, autocvar_g_balance_shotgun_primary_animtime))
+					{
+						W_Shotgun_Attack();
+						self.shotgun_primarytime = time + autocvar_g_balance_shotgun_primary_refire;
+						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_primary_animtime, w_ready);
+					}
 				}
 			}
+			if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary)
+			if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
+			{
+				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
+				weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);
+			}
 		}
-		if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary)
-		if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
-		{
-			// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-			weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);
-		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_SniperRifle_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
