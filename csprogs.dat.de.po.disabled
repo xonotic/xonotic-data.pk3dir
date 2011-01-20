@@ -245,36 +245,36 @@ msgstr "^1%s^1 konnte dem Drang zur Selbstzerstörung einfach nicht widerstehen\
 #: qcsrc/client/hud.qc:2717
 #, c-format
 msgid "^1%s^1 ended it all after a %d kill spree\n"
-msgstr ""
+msgstr "^1%s^1 machte seinem %d-Amoklauf ein Ende\n"
 
 #: qcsrc/client/hud.qc:2734
 #, c-format
 msgid "^1%s^1 took action against a team mate\n"
-msgstr ""
+msgstr "^1%s^1 ergriff Maßnahmen gegen einen Mitspieler\n"
 
 #: qcsrc/client/hud.qc:2736
 #, c-format
 msgid "^1%s^1 mows down a team mate\n"
-msgstr ""
+msgstr "^1%s^1 mähte einen Mitspieler nieder\n"
 
 #: qcsrc/client/hud.qc:2741
 #, c-format
 msgid "^1%s^1 ended a %d scoring spree by going against a team mate\n"
-msgstr ""
+msgstr "^1%s^1 dachte, %d Punkte hintereinander reichen, und trug dies an einem Mitspieler aus\n"
 
 #: qcsrc/client/hud.qc:2743
 #, c-format
 msgid "^1%s^1 ended a %d kill spree by killing a team mate\n"
-msgstr ""
+msgstr "^1%s^1 beendete seinen %d-Amoklauf, indem er einen Mitspieler tötete\n"
 
 #: qcsrc/client/hud.qc:2747
 #, c-format
-msgid "^1%s's ^1%s scoring spree was ended by a team mate!\n"
-msgstr ""
+msgid "^1%s^1's %s scoring spree was ended by a team mate!\n"
+msgstr "^1%ss ^1%s"
 
 #: qcsrc/client/hud.qc:2749
 #, c-format
-msgid "^1%s's ^1%s kill spree was ended by a team mate!\n"
+msgid "^1%s^1's %s kill spree was ended by a team mate!\n"
 msgstr ""
 
 #: qcsrc/client/hud.qc:2757
@@ -384,12 +384,12 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:2856
 #, c-format
-msgid "^1%s's ^1%s scoring spree was ended by %s\n"
+msgid "^1%s^1's %s scoring spree was ended by %s\n"
 msgstr ""
 
 #: qcsrc/client/hud.qc:2858
 #, c-format
-msgid "^1%s's ^1%s kill spree was ended by %s\n"
+msgid "^1%s^1's %s kill spree was ended by %s\n"
 msgstr ""
 
 #: qcsrc/client/hud.qc:2861

@@ -2744,9 +2744,9 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			}
 			else if (stof(s2) > 2) {
 				if(gentle)
-					print (sprintf(_("^1%s's ^1%s scoring spree was ended by a team mate!\n"), s1, stof(s3)));
+					print (sprintf(_("^1%s^1's %s scoring spree was ended by a team mate!\n"), s1, stof(s3)));
 				else
-					print (sprintf(_("^1%s's ^1%s kill spree was ended by a team mate!\n"), s1, stof(s3)));
+					print (sprintf(_("^1%s^1's %s kill spree was ended by a team mate!\n"), s1, stof(s3)));
 			}
 		}
 		else if(type == KILL_FIRST_BLOOD)
@@ -2853,9 +2853,9 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	} else if(msg == MSG_SPREE) {
 		if(type == KILL_END_SPREE) {
 			if(gentle)
-				print (sprintf(_("^1%s's ^1%s scoring spree was ended by %s\n"), s1, s2, s3));
+				print (sprintf(_("^1%s^1's %s scoring spree was ended by %s\n"), s1, s2, s3));
 			else
-				print (sprintf(_("^1%s's ^1%s kill spree was ended by %s\n"), s1, s2, s3));
+				print (sprintf(_("^1%s^1's %s kill spree was ended by %s\n"), s1, s2, s3));
 		} else if(type == KILL_SPREE) {
 			if(gentle)
 				print (sprintf(_("^1%s^1 made %s scores in a row\n"), s1, s2));
