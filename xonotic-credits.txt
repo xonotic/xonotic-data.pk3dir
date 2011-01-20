@@ -1,7 +1,7 @@
 **Core Team
 
 Rudolf "divVerent" Polzer
--z-
+Tyler "-z-" Mulligan
 Merlijn Hofstra
 morphed
 mand1nga
@@ -14,7 +14,7 @@ tZork
 Diabolik a.k.a Dib
 
 *2D Art / Web
--z- (web / game)
+Tyler "-z-" Mulligan (web / game)
 FruitieX (game / web)
 
 *3D Art
@@ -42,7 +42,7 @@ FruitieX
 tZork
 
 *Marketing / PR
--z-
+Tyler "-z-" Mulligan
 mand1nga
 
 *Legal
@@ -66,6 +66,7 @@ Ricardo "Hellgardia" Silva
 
 *Russian
 Lord Canistra
+Nikoli
 
 **Active Contributors
 Antonio "terencehill" Piu
