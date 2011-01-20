@@ -325,13 +325,13 @@ void drawstringcenter(vector position, string text, vector scale, vector rgb, fl
 // return the string of the given race place
 string race_PlaceName(float pos) {
 	if(pos == 1)
-		return "1st";
+		return _("1st");
 	else if(pos == 2)
-		return "2nd";
+		return _("2nd");
 	else if(pos == 3)
-		return "3rd";
+		return _("3rd");
 	else
-		return strcat(ftos(pos), "th");
+		return sprintf(_("%dth"), pos);
 }
 
 // return the string of the onscreen race timer
@@ -363,12 +363,12 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 
 		if(lapdelta > 0)
 		{
-			lapstr = strcat(" (-", ftos(lapdelta), "L)");
+			lapstr = sprintf(_(" (-%dL)"), lapdelta);
 			col = "^2";
 		}
 		else if(lapdelta < 0)
 		{
-			lapstr = strcat(" (+", ftos(-lapdelta), "L)");
+			lapstr = sprintf(_(" (+%dL)"), -lapdelta);
 			col = "^1";
 		}
 	}
@@ -384,20 +384,20 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 		col = "^7";
 
 	if(cp == 254)
-		cpname = "Start line";
+		cpname = _("Start line");
 	else if(cp == 255)
-		cpname = "Finish line";
+		cpname = _("Finish line");
 	else if(cp)
-		cpname = strcat("Intermediate ", ftos(cp));
+		cpname = sprintf(_("Intermediate %d"), cp);
 	else
-		cpname = "Finish line";
+		cpname = _("Finish line");
 
 	if(histime < 0)
 		return strcat(col, cpname);
 	else if(hisname == "")
-		return strcat(col, cpname, " (", timestr, ")");
+		return strcat(col, sprintf(_("%s (%s)")), cpname, timestr);
 	else
-		return strcat(col, cpname, " (", timestr, " ", strcat(hisname, col, lapstr), ")");
+		return strcat(col, sprintf(_("%s (%s %s)")), cpname, timestr, strcat(hisname, col, lapstr));
 }
 
 // Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
@@ -539,11 +539,11 @@ void HUD_Panel_ExportCfg(string cfgname)
 		}
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 
-		print("^2Successfully exported to ", filename, "! (Note: It's saved in data/data/)\n");
+		print(sprintf(_("^2Successfully exported to %s! (Note: It's saved in data/data/)\n"), filename));
 		fclose(fh);
 	}
 	else
-		print("^1Couldn't write to ", filename, "\n");
+		print(sprintf(_("^1Couldn't write to \n"), filename));
 }
 
 const float hlBorderSize = 4;
@@ -1827,11 +1827,11 @@ void HUD_Weapons(void)
 				color = stov(autocvar_hud_panel_weapons_complainbubble_color_outofammo);
 			}
 			else if(complain_weapon_type == 1) {
-				s = "Don't have";
+				s = _("Don't have");
 				color = stov(autocvar_hud_panel_weapons_complainbubble_color_donthave);
 			}
 			else {
-				s = "Unavailable";
+				s = _("Unavailable");
 				color = stov(autocvar_hud_panel_weapons_complainbubble_color_unavailable);
 			}
 			float padding = autocvar_hud_panel_weapons_complainbubble_padding;
@@ -2682,39 +2682,39 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if (type == DEATH_KILL) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_KILL);
 			if (alsoprint)
-				print ("^1",s1, "^1 couldn't take it anymore\n");
+				print (sprintf(_("^1%s^1 couldn't take it anymore\n"), s1));
 		} else if (type == DEATH_ROT) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if (alsoprint)
-				print ("^1",s1, "^1 died\n");
+				print (sprintf(_("^1%s^1 died\n"), s1));
 		} else if (type == DEATH_NOAMMO) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_NOAMMO);
 			if (alsoprint)
-				print ("^7",s1, "^7 committed suicide. What's the point of living without ammo?\n");
+				print (sprintf(_("^7%s^7 committed suicide. What's the point of living without ammo?\n"), s1));
 		} else if (type == DEATH_CAMP) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_CAMP);
 			if (alsoprint)
-				print ("^1",s1, "^1 thought they found a nice camping ground\n");
+				print (sprintf(_("^1%s^1 thought they found a nice camping ground\n"), s1));
 		} else if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			HUD_KillNotify_Push(s1, "", 0, type);
 			if (alsoprint)
-				print ("^1",s1, "^1 didn't become friends with the Lord of Teamplay\n");
+				print (sprintf(_("^1%s^1 didn't become friends with the Lord of Teamplay\n"), s1));
 		} else if (type == DEATH_CHEAT) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if (alsoprint)
-				print ("^1",s1, "^1 unfairly eliminated themself\n");
+				print (sprintf(_("^1%s^1 unfairly eliminated themself\n"), s1));
 		} else if (type == DEATH_FIRE) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if (alsoprint)
-				print ("^1",s1, "^1 burned to death\n");
+				print (sprintf(_("^1%s^1 burned to death\n"), s1));
 		} else if (type != DEATH_TEAMCHANGE && type != DEATH_QUIET) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if (alsoprint)
-				print ("^1",s1, "^1 couldn't resist the urge to self-destruct\n");
+				print (sprintf(_("^1%s^1 couldn't resist the urge to self-destruct\n"), s1));
 		} 
 		
 		if (stof(s2) > 2) // killcount > 2
-			print ("^1",s1,"^1 ended it all after a ",s2," kill spree\n");
+			print (sprintf(_("^1%s^1 ended it all after a %d kill spree\n"), s1, stof(s2)));
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
@@ -2731,112 +2731,112 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			if(alsoprint)
 			{
 				if(gentle) {
-					print ("^1", s1, "^1 took action against a team mate\n");
+					print (sprintf(_("^1%s^1 took action against a team mate\n"), s1));
 				} else {
-					print ("^1", s1, "^1 mows down a team mate\n");
+					print (sprintf(_("^1%s^1 mows down a team mate\n"), s1));
 				}
 			}
 			if (stof(s2) > 2 && type == KILL_TEAM_SPREE) {
 				if(gentle)
-					print ("^1",s1,"^1 ended a ",s3," scoring spree by going against a team mate\n");
+					print (sprintf(_("^1%s^1 ended a %d scoring spree by going against a team mate\n"), s1, stof(s3)));
 				else
-					print ("^1",s1,"^1 ended a ",s3," kill spree by killing a team mate\n");
+					print (sprintf(_("^1%s^1 ended a %d kill spree by killing a team mate\n"), s1, stof(s3)));
 			}
 			else if (stof(s2) > 2) {
 				if(gentle)
-					print ("^1",s1,"'s ^1",s3," scoring spree was ended by a team mate!\n");
+					print (sprintf(_("^1%s's ^1%s scoring spree was ended by a team mate!\n"), s1, stof(s3)));
 				else
-					print ("^1",s1,"'s ^1",s3," kill spree was ended by a team mate!\n");
+					print (sprintf(_("^1%s's ^1%s kill spree was ended by a team mate!\n"), s1, stof(s3)));
 			}
 		}
 		else if(type == KILL_FIRST_BLOOD)
-			print("^1",s1, "^1 drew first blood", "\n");
+			print(sprintf("^1%s^1 drew first blood\n", s1));
 		else if (type == DEATH_TELEFRAG) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_TELEFRAG);
 			if(gentle)
-				print ("^1",s2, "^1 tried to occupy ", s1, "^1's teleport destination space\n");
+				print (sprintf(_("^1%s^1 tried to occupy %s^1's teleport destination space\n"), s2, s1));
 			else
-				print ("^1",s2, "^1 was telefragged by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was telefragged by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_DROWN) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_DROWN);
 			if(alsoprint)
-				print ("^1",s2, "^1 was drowned by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was drowned by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_SLIME) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_SLIME);
 			if(alsoprint)
-				print ("^1",s2, "^1 was slimed by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was slimed by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_LAVA) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_LAVA);
 			if(alsoprint)
-				print ("^1",s2, "^1 was cooked by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was cooked by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_FALL) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_FALL);
 			if(alsoprint)
-				print ("^1",s2, "^1 was grounded by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was grounded by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_SHOOTING_STAR) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_SHOOTING_STAR);
 			if(alsoprint)
-				print ("^1",s2, "^1 was shot into space by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was shot into space by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_SWAMP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was conserved by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was conserved by %s\n"), s2, s1));
 		}
 		else if (type == DEATH_HURTTRIGGER)
 		{
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_HURTTRIGGER);
 			if(alsoprint)
-				print("^1",s2, "^1 was thrown into a world of hurt by ", s1, "\n");
+				print(sprintf(_("^1%s^1 was thrown into a world of hurt by %s\n"), s2, s1));
 		} else if(type == DEATH_SBCRUSH) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was crushed by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was crushed by ^1%s\n"), s2, s1));
 		} else if(type == DEATH_SBMINIGUN) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 got shredded by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 got shredded by ^1%s\n"), s2, s1));
 		} else if(type == DEATH_SBROCKET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was blased to bits by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was blased to bits by ^1%s\n"), s2, s1));
 		} else if(type == DEATH_SBBLOWUP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 got caught in the destruction of ^1", s1, "'s vehicle\n");
+				print (sprintf(_("^1%s^1 got caught in the destruction of ^1%s's vehicle\n"), s2, s1));
 		} else if(type == DEATH_WAKIGUN) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was bolted down by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was bolted down by ^1%s\n"), s2, s1));
 		} else if(type == DEATH_WAKIROCKET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 could find no shelter from ^1", s1, "'s rockets\n");
+				print (sprintf(_("^1%s^1 could find no shelter from ^1%s's rockets\n"), s2, s1));
 		} else if(type == DEATH_WAKIBLOWUP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 dies when ^1", s1, "'s wakizashi dies.\n");
+				print (sprintf(_("^1%s^1 dies when ^1%s's wakizashi dies.\n"), s2, s1));
 		} else if(type == DEATH_TURRET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was pushed into the line of fire by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was pushed into the line of fire by ^1%s\n"), s2, s1));
 		} else if(type == DEATH_TOUCHEXPLODE) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was pushed into an accident by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was pushed into an accident by ^1%s\n"), s2, s1));
 		} else if(type == DEATH_CHEAT) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was unfairly eliminated by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was unfairly eliminated by ^1%s\n"), s2, s1));
 		} else if (type == DEATH_FIRE) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was burnt to death by ^1", s1, "\n");
+				print (sprintf(_("^1%s^1 was burnt to death by ^1%s\n"), s2, s1));
 		} else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_CUSTOM);
 			if(alsoprint)
@@ -2848,54 +2848,54 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s2, "^1 was fragged by ", s1, "\n");
+				print (sprintf(_("^1%s^1 was fragged by %s\n"), s2, s1));
 		}
 	} else if(msg == MSG_SPREE) {
 		if(type == KILL_END_SPREE) {
 			if(gentle)
-				print ("^1",s1,"'s ^1", s2, " scoring spree was ended by ", s3, "\n");
+				print (sprintf(_("^1%s's ^1%s scoring spree was ended by %s\n"), s1, s2, s3));
 			else
-				print ("^1",s1,"'s ^1", s2, " kill spree was ended by ", s3, "\n");
+				print (sprintf(_("^1%s's ^1%s kill spree was ended by %s\n"), s1, s2, s3));
 		} else if(type == KILL_SPREE) {
 			if(gentle)
-				print ("^1",s1,"^1 made ",s2," scores in a row\n");
+				print (sprintf(_("^1%s^1 made %s scores in a row\n"), s1, s2));
 			else
-				print ("^1",s1,"^1 has ",s2," frags in a row\n");
+				print (sprintf(_("^1%s^1 has %s frags in a row\n"), s1, s2));
 		} else if(type == KILL_SPREE_3) {
 			if(gentle)
-				print (s1,"^7 made a ^1TRIPLE SCORE\n");
+				print (sprintf(_("%s^7 made a ^1TRIPLE SCORE\n"), s1));
 			else
-				print (s1,"^7 made a ^1TRIPLE FRAG\n");
+				print (sprintf(_("%s^7 made a ^1TRIPLE FRAG\n"), s1));
 		} else if(type == KILL_SPREE_5) {
 			if(gentle)
-				print (s1,"^7 unleashes ^1SCORING RAGE\n");
+				print (sprintf(_("%s^7 unleashes ^1SCORING RAGE\n"), s1));
 			else
-				print (s1,"^7 unleashes ^1RAGE\n");
+				print (sprintf(_("%s^7 unleashes ^1RAGE\n"), s1));
 		} else if(type == KILL_SPREE_10) {
 			if(gentle)
-				print (s1,"^7 made ^1TEN SCORES IN A ROW!\n");
+				print (sprintf(_("%s^7 made ^1TEN SCORES IN A ROW!\n"), s1));
 			else
-				print (s1,"^7 starts the ^1MASSACRE!\n");
+				print (sprintf(_("%s^7 starts the ^1MASSACRE!\n"), s1));
 		} else if(type == KILL_SPREE_15) {
 			if(gentle)
-				print (s1,"^7 made ^1FIFTEEN SCORES IN A ROW!\n");
+				print (sprintf(_("%s^7 made ^1FIFTEEN SCORES IN A ROW!\n"), s1));
 			else
-				print (s1,"^7 executes ^1MAYHEM!\n");
+				print (sprintf(_("%s^7 executes ^1MAYHEM!\n"), s1));
 		} else if(type == KILL_SPREE_20) {
 			if(gentle)
-				print (s1,"^7 made ^1TWENTY SCORES IN A ROW!\n");
+				print (sprintf(_("%s^7 made ^1TWENTY SCORES IN A ROW!\n"), s1));
 			else
-				print (s1,"^7 is a ^1BERSERKER!\n");
+				print (sprintf(_("%s^7 is a ^1BERSERKER!\n"), s1));
 		} else if(type == KILL_SPREE_25) {
 			if(gentle)
-				print (s1,"^7 made ^1TWENTY FIFE SCORES IN A ROW!\n");
+				print (sprintf(_("%s^7 made ^1TWENTY FIFE SCORES IN A ROW!\n"), s1));
 			else
-				print (s1,"^7 inflicts ^1CARNAGE!\n");
+				print (sprintf(_("%s^7 inflicts ^1CARNAGE!\n"), s1));
 		} else if(type == KILL_SPREE_30) {
 			if(gentle)
-				print (s1,"^7 made ^1THIRTY SCORES IN A ROW!\n");
+				print (sprintf(_("%s^7 made ^1THIRTY SCORES IN A ROW!\n"), s1));
 			else
-				print (s1,"^7 unleashes ^1ARMAGEDDON!\n");
+				print (sprintf(_("%s^7 unleashes ^1ARMAGEDDON!\n"), s1));
 		}
 	} else if(msg == MSG_KILL_ACTION) { // wtf is this? isnt it basically the same as MSG_SUICIDE?
 		if (type == DEATH_DROWN) {
@@ -2903,49 +2903,49 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			if(alsoprint)
 			{
 				if(gentle)
-					print ("^1",s1, "^1 was in the water for too long\n");
+					print (sprintf(_("^1%s^1 was in the water for too long\n"), s1));
 				else
-					print ("^1",s1, "^1 drowned\n");
+					print (sprintf(_("^1%s^1 drowned\n"), s1));
 			}
 		} else if (type == DEATH_SLIME) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_SLIME);
 			if(alsoprint)
-				print ("^1",s1, "^1 was slimed\n");
+				print (sprintf("^1%s^1 was slimed\n", s1));
 		} else if (type == DEATH_LAVA) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_LAVA);
 			if(alsoprint)
 			{
 				if(gentle)
-					print ("^1",s1, "^1 found a hot place\n");
+					print (sprintf(_("^1%s^1 found a hot place\n"), s1));
 				else
-					print ("^1",s1, "^1 turned into hot slag\n");
+					print (sprintf(_("^1%s^1 turned into hot slag\n"), s1));
 			}
 		} else if (type == DEATH_FALL) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
 				if(gentle)
-					print ("^1",s1, "^1 tested gravity (and it worked)\n");
+					print (sprintf(_("^1%s^1 tested gravity (and it worked)\n"), s1));
 				else
-					print ("^1",s1, "^1 hit the ground with a crunch\n");
+					print (sprintf(_("^1%s^1 hit the ground with a crunch\n"), s1));
 			}
 		} else if (type == DEATH_SHOOTING_STAR) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_SHOOTING_STAR);
 			if(alsoprint)
-				print ("^1",s1, "^1 became a shooting star\n");
+				print (sprintf(_("^1%s^1 became a shooting star\n"), s1));
 		} else if (type == DEATH_SWAMP) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
 				if(gentle)
-					print ("^1",s1, "^1 discovered a swamp\n");
+					print (sprintf(_("^1%s^1 discovered a swamp\n"), s1));
 				else
-					print ("^1",s1, "^1 is now conserved for centuries to come\n");
+					print (sprintf(_("^1%s^1 is now conserved for centuries to come\n"), s1));
 			}
 		} else if(type == DEATH_TURRET) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was mowed down by a turret \n");
+				print (sprintf(_("^1%s^1 was mowed down by a turret \n"), s1));
 		} else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_CUSTOM);
 			if(alsoprint)
@@ -2957,51 +2957,51 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if(type == DEATH_TOUCHEXPLODE) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 died in an accident\n");
+				print (sprintf(_("^1%s^1 died in an accident\n"), s1));
 		} else if(type == DEATH_CHEAT) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
-				print ("^1",s1, "^1 was unfairly eliminated\n");
+				print (sprintf(_("^1%s^1 was unfairly eliminated\n"), s1));
 		} else if(type == DEATH_FIRE) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
 				if(gentle)
-					print ("^1",s1, "^1 felt a little hot\n");
+					print (sprintf(_("^1%s^1 felt a little hot\n"), s1));
 				else
-					print ("^1",s1, "^1 burnt to death\n");
+					print (sprintf(_("^1%s^1 burnt to death\n"), s1));
 				}
 		} else {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
 				if(gentle)
-					print ("^1",s1, "^1 needs a restart\n");
+					print (sprintf(_("^1%s^1 needs a restart\n"), s1));
 				else
-					print ("^1",s1, "^1 died\n");
+					print (sprintf(_("^1%s^1 died\n"), s1));
 			}
 		}
 	} else if(msg == MSG_KILL_ACTION_SPREE) {
 		if(gentle)
-			print ("^1",s1,"^1 needs a restart after a ",s2," scoring spree\n");
+			print (sprintf(_("^1%s^1 needs a restart after a %d scoring spree\n"), s1, stof(s2)));
 		else
-			print ("^1",s1,"^1 died with a ",s2," kill spree\n");
+			print (sprintf(_("^1%s^1 died with a %d kill spree\n"), s1, stof(s2)));
 	} else if(msg == MSG_INFO) {
 		if(type == INFO_GOTFLAG) { // here, s2 is the flag name
 			HUD_KillNotify_Push(s1, s2, 0, INFO_GOTFLAG);
-			print(s1, "^7 got the ", s2, "\n");
+			print(sprintf(_("%s^7 got the %s\n"), s1, s2));
 		} else if(type == INFO_LOSTFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_LOSTFLAG);
-			print(s1, "^7 lost the ", s2, "\n");
+			print(sprintf(_("%s^7 lost the %s\n"), s1, s2));
 		} else if(type == INFO_PICKUPFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_GOTFLAG);
-			print(s1, "^7 picked up the ", s2, "\n");
+			print(sprintf(_("%s^7 picked up the %s\n"), s1, s2));
 		} else if(type == INFO_RETURNFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_RETURNFLAG);
-			print(s1, "^7 returned the ", s2, "\n");
+			print(sprintf(_("%s^7 returned the %s\n"), s1, s2));
 		} else if(type == INFO_CAPTUREFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_CAPTUREFLAG);
-			print(s1, "^7 captured the ", s2, s3, "\n");
+			print(sprintf(_("%1^7 captured the %s%s\n"), s1, s2, s3));
 		}
 	} else if(msg == MSG_RACE) {
 		if(type == RACE_SERVER_RECORD) {
@@ -3020,12 +3020,12 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		if(type == KA_PICKUPBALL) {
 			HUD_KillNotify_Push(s1, s2, 0, KA_PICKUPBALL);
 			if(alsoprint)
-				print (s1, "^7 has picked up the ball!\n");
+				print (sprintf(_("%s^7 has picked up the ball!\n"), s1));
 		}
 		else if(type == KA_DROPBALL) {
 			HUD_KillNotify_Push(s1, s2, 0, KA_DROPBALL);
 			if(alsoprint)
-				print(s1, "^7 has dropped the ball!\n");
+				print(sprintf(_("%s^7 has dropped the ball!\n"), s1));
 		}
 	}
 }
@@ -3038,84 +3038,84 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
 	if(msg == MSG_SUICIDE) {
 		if (type == DEATH_TEAMCHANGE) {
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", s1));
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("You are now on: %s"), s1)));
 		} else if (type == DEATH_AUTOTEAMCHANGE) {
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "You have been moved into a different team to improve team balance\nYou are now on: ", s1));
+			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("You have been moved into a different team to improve team balance\nYou are now on: %s"), s1)));
 		} else if (type == DEATH_CAMP) {
 			if(gentle)
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Reconsider your tactics, camper!"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1Reconsider your tactics, camper!")));
 			else
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Die camper!"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1Die camper!")));
 		} else if (type == DEATH_NOAMMO) {
 			if(gentle)
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You are reinserted into the game for running out of ammo..."));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1You are reinserted into the game for running out of ammo...")));
 			else
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were killed for running out of ammo..."));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1You were killed for running out of ammo...")));
 		} else if (type == DEATH_ROT) {
 			if(gentle)
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to preserve your health"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1You need to preserve your health")));
 			else
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You grew too old without taking your medicine"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1You grew too old without taking your medicine")));
 		} else if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(gentle)
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't go against team mates!"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1Don't go against team mates!")));
 			else
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Don't shoot your team mates!"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1Don't shoot your team mates!")));
 		} else if (type == DEATH_QUIET) {
 			// do nothing
 		} else { // generic message
 			if(gentle)
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You need to be more careful!"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1You need to be more careful!")));
 			else
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You killed your own dumb self!"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1You killed your own dumb self!")));
 		}
 	} else if(msg == MSG_KILL) {
 		if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You went against", s1, ",a team mate!"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1Moron! You went against %s, a team mate!"), s1)));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You fragged ", s1, ", a team mate!"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1Moron! You fragged %s, a team mate!"), s1)));
 			}
 		} else if (type == KILL_FIRST_BLOOD) {
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1First score"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1First score")));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1First blood"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1First blood")));
 			}
 		} else if (type == KILL_FIRST_VICTIM) {
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1First casualty"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1First casualty")));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1First victim"));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1First victim")));
 			}
 		} else if (type == KILL_TYPEFRAG) { // s2 contains "advanced kill messages" such as ping, handicap...
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You scored against ^7", s1, "^1 who was typing!", s2));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1You scored against ^7%s^1 who was typing!"), s1), s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You typefragged ^7", s1, s2));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1You typefragged ^7%s"), s1), s2));
 			}
 		} else if (type == KILL_TYPEFRAGGED) {
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were scored against by ^7", s1, "^1 while you were typing!", s2));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1You were scored against by ^7%s^1 while you were typing!"), s1), s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were typefragged by ^7", s1, s2));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1You were typefragged by ^7%s"), s1), s2));
 			}
 		} else if (type == KILL_FRAG) {
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You scored against ^7", s1, s2));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^4You scored against ^7%s"), s1), s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^4You fragged ^7", s1, s2));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^4You fragged ^7%s"), s1), s2));
 			}
 		} else { // generic message
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were scored against by ^7", s1, s2));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1You were scored against by ^7%s"), s1), s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were fragged by ^7", s1, s2));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1You were fragged by ^7%s"), s1), s2));
 			}
 		}
 	} else if(msg == MSG_KILL_ACTION) {
 		// TODO: invent more centerprints here?
-		centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, "^1Watch your step!"));
+		centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1Watch your step!")));
 	}
 }
 
@@ -3179,8 +3179,8 @@ void HUD_Notify (void)
 				a = i;
 			else // inverse order
 				a = entries - 1 - i;
-			attacker = textShortenToWidth(strcat("Player", ftos(a+1)), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			victim = textShortenToWidth(strcat("Player", ftos(a+2)), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
+			attacker = textShortenToWidth(sprintf(_("Player %d"), a+1), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
+			victim = textShortenToWidth(sprintf(_("Player %d"), a+2), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
 			s = strcat("weapon", get_weaponinfo(WEP_FIRST + mod(floor(a*2.4), WEP_LAST)).netname);
 			a = bound(0, (when - a) / 4, 1);
 			goto hud_config_notifyprint;
@@ -3425,11 +3425,7 @@ string seconds_tostring(float sec)
 	minutes = floor(sec / 60);
 
 	sec -= minutes * 60;
-
-	string s;
-	s = ftos(100 + sec);
-
-	return strcat(ftos(minutes), ":", substring(s, 1, 3));
+	return sprintf("%d:%02d", minutes, sec);
 }
 
 void HUD_Timer(void)
@@ -3780,9 +3776,9 @@ void HUD_RaceTimer (void) {
 	{
 		s = "0:13:37";
 		drawstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, FALSE, '0.60 0.60 0' * mySize_y), s, '0.60 0.60 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		s = "^1Intermediate 1 (+15.42)";
+		s = _("^1Intermediate 1 (+15.42)");
 		drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.20 * mySize_y) + eY * 0.60 * mySize_y, s, '1 1 0' * 0.20 * mySize_y, panel_fg_alpha, DRAWFLAG_NORMAL);
-		s = strcat("^1PENALTY: ", ftos_decimals(20 * 0.1, 1), " (missing a checkpoint)");
+		s = sprintf(_("^1PENALTY: %.1f (%s)"), 2, "missing a checkpoint");
 		drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.20 * mySize_y) + eY * 0.80 * mySize_y, s, '1 1 0' * 0.20 * mySize_y, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else if(race_checkpointtime)
@@ -3824,7 +3820,7 @@ void HUD_RaceTimer (void) {
 			a = bound(0, 2 - (time - race_penaltyeventtime), 1);
 			if(a > 0)
 			{
-				s = strcat("^1PENALTY: ", ftos_decimals(race_penaltytime * 0.1, 1), " (", race_penaltyreason, ")");
+				s = sprintf(_("^1PENALTY: %.1f (%s)"), race_penaltytime * 0.1, race_penaltyreason);
 				drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.8 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
@@ -3865,9 +3861,9 @@ void HUD_RaceTimer (void) {
 			if(a > 0)
 			{
 				if(time < t)
-					s = strcat("^1PENALTY: ", ftos_decimals(t - time, 1), " (", race_penaltyreason, ")");
+					s = sprintf(_("^1PENALTY: %.1f (%s)"), (t - time) * 0.1, race_penaltyreason);
 				else
-					s = strcat("^2PENALTY: 0.0 (", race_penaltyreason, ")");
+					s = sprintf(_("^2PENALTY: %.1f (%s)"), 0, race_penaltyreason);
 				drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
@@ -3892,7 +3888,7 @@ void HUD_VoteWindow(void)
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
 	{
 		vote_active = 1;
-		vote_called_vote = strzone(strcat("^2Name ^7instead of \"^1Unregistered player\"", " ^7in stats"));
+		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player\" ^7in stats"));
         uid2name_dialog = 1;
 	}
 
@@ -3974,19 +3970,19 @@ void HUD_VoteWindow(void)
 	}
 	mySize = newSize;
 
-	s = "A vote has been called for:";
+	s = _("A vote has been called for:");
 	if(uid2name_dialog)
-		s = "Allow servers to store and display your name?";
+		s = _("Allow servers to store and display your name?");
 	drawstring_aspect(pos, s, eX * mySize_x + eY * (2/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
 	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (1/8), stringwidth_colors);
 	if(autocvar__hud_configure)
-		s = "^1Configure the HUD";
+		s = _("^1Configure the HUD");
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, a, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
-    s = strcat("Yes (", getcommandkey("vyes", "vyes"), "): ", ftos(vote_yescount));
+    s = sprintf(_("Yes (%s): %d"), getcommandkey("vyes", "vyes"), ftos(vote_yescount));
 	drawstring_aspect(pos + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '0 1 0', a, DRAWFLAG_NORMAL);
-    s = strcat("No (", getcommandkey("vno", "vno"), "): ", ftos(vote_nocount));
+    s = sprintf(_("No (%s): %d"), getcommandkey("vno", "vno"), ftos(vote_nocount));
 	drawstring_aspect(pos + eX * 0.5 * mySize_x + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '1 0 0', a, DRAWFLAG_NORMAL);
 
 	// draw the progress bar backgrounds
@@ -4377,13 +4373,21 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 		kaball_prevstatus = kaball;
 	}
 	
-	// todo: Fix the sizing with the expanding image
+	vector kaball_pos, kaball_size;
+	
+	if(mySize_x > mySize_y) {
+		kaball_pos = pos + eX * 0.25 * mySize_x;
+		kaball_size = eX * 0.5 * mySize_x + eY * mySize_y;
+	} else {
+		kaball_pos = pos + eY * 0.25 * mySize_y;
+		kaball_size = eY * 0.5 * mySize_y + eX * mySize_x;
+	}
 	
 	float kaball_statuschange_elapsedtime = time - kaball_statuschange_time;
 	float f = bound(0, kaball_statuschange_elapsedtime*2, 1);
 	
 	if(kaball_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(pos + eY * 0.25 * mySize_y, "keepawayball_carrying", eX * mySize_x + eY * mySize_y * 0.5, '1 1 1', panel_fg_alpha * kaball_alpha, DRAWFLAG_NORMAL, f);
+		drawpic_aspect_skin_expanding(kaball_pos, "keepawayball_carrying", kaball_size, '1 1 1', panel_fg_alpha * kaball_alpha, DRAWFLAG_NORMAL, f);
 	
 	if(kaball)
 		drawpic_aspect_skin(pos, "keepawayball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * kaball_alpha * f, DRAWFLAG_NORMAL);
@@ -4491,12 +4495,12 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	f = time - crecordtime_change_time;
 
 	if (f > 1) {
-		drawstring_aspect(textPos, "Personal best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos, _("Personal best"), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring_aspect(textPos + eY * 0.25 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else {
-		drawstring_aspect(textPos, "Personal best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos, _("Personal best"), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring_aspect(textPos + eY * 0.25 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect_expanding(pos, "Personal best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect_expanding(pos, _("Personal best"), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 		drawstring_aspect_expanding(pos + eY * 0.25 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 	}
 
@@ -4509,12 +4513,12 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	f = time - srecordtime_change_time;
 
 	if (f > 1) {
-		drawstring_aspect(textPos + eY * 0.5 * squareSize, "Server best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos + eY * 0.5 * squareSize, _("Server best"), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring_aspect(textPos + eY * 0.75 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else {
-		drawstring_aspect(textPos + eY * 0.5 * squareSize, "Server best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos + eY * 0.5 * squareSize, _("Server best"), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring_aspect(textPos + eY * 0.75 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect_expanding(textPos + eY * 0.5 * squareSize, "Server best", eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect_expanding(textPos + eY * 0.5 * squareSize, _("Server best"), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 		drawstring_aspect_expanding(textPos + eY * 0.75 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
 	}
 
@@ -4746,7 +4750,7 @@ void HUD_Chat(void)
 				a = panel_fg_alpha;
 			else
 				a = panel_fg_alpha * floor(((i + 1) * 7 + autocvar_con_chattime)/45);
-			drawcolorcodedstring(pos + eY * i * chatsize, textShortenToWidth("^3Player^7: This is the chat area.", mySize_x, '1 1 0' * chatsize, stringwidth_colors), '1 1 0' * chatsize, a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eY * i * chatsize, textShortenToWidth(_("^3Player^7: This is the chat area."), mySize_x, '1 1 0' * chatsize, stringwidth_colors), '1 1 0' * chatsize, a, DRAWFLAG_NORMAL);
 		}
 	}
 }
@@ -4809,7 +4813,7 @@ void HUD_EngineInfo(void)
 
 	vector color;
 	color = HUD_Get_Num_Color (prevfps, 100);
-	drawstring_aspect(pos, strcat("FPS: ", ftos_decimals(prevfps, autocvar_hud_panel_engineinfo_framecounter_decimals)), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos, sprintf(_("FPS: %.*f"), autocvar_hud_panel_engineinfo_framecounter_decimals, prevfps), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 // Info messages panel (#14)
@@ -4874,41 +4878,41 @@ void HUD_InfoMessages(void)
 		if(spectatee_status && !intermission)
 		{
 			if(spectatee_status == -1)
-				s = "^1Observing";
+				s = _("^1Observing");
 			else
-				s = strcat("^1Spectating: ^7", GetPlayerName(spectatee_status - 1));
+				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(spectatee_status - 1));
 			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
-				s = strcat("^1Press ^3", getcommandkey("primary fire", "+fire"), "^1 to spectate");
+				s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey("primary fire", "+fire"));
 			else
-				s = strcat("^1Press ^3", getcommandkey("primary fire", "+fire"), "^1 for another player");
+				s = sprintf(_("^1Press ^3%s^1 for another player"), getcommandkey("primary fire", "+fire"));
 			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
-				s = strcat("^1Use ^3", getcommandkey("next weapon", "weapnext"), "^1 or ^3", getcommandkey("previous weapon", "weapprev"), "^1 to change the speed");
+				s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
 			else
-				s = strcat("^1Press ^3", getcommandkey("secondary fire", "+fire2"), "^1 to observe");
+				s = sprintf(_("^1Press ^3%s^1 to observe"), getcommandkey("secondary fire", "+fire2"));
 			drawInfoMessage(s)
 
-			s = strcat("^1Press ^3", getcommandkey("server info", "+show_info"), "^1 for gamemode info");
+			s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
 			drawInfoMessage(s)
 
 			if(gametype == GAME_ARENA)
-				s = "^1Wait for your turn to join";
+				s = _("^1Wait for your turn to join");
 			else if(gametype == GAME_LMS)
 			{
 				entity sk;
 				sk = playerslots[player_localentnum - 1];
 				if(sk.(scores[ps_primary]) >= 666)
-					s = "^1Match has already begun";
+					s = _("^1Match has already begun");
 				else if(sk.(scores[ps_primary]) > 0)
-					s = "^1You have no more lives left";
+					s = _("^1You have no more lives left");
 				else
-					s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
+					s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey("jump", "+jump"));
 			}
 			else
-				s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
+				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey("jump", "+jump"));
 			drawInfoMessage(s)
 
 			//show restart countdown:
@@ -4916,14 +4920,14 @@ void HUD_InfoMessages(void)
 				float countdown;
 				//we need to ceil, otherwise the countdown would be off by .5 when using round()
 				countdown = ceil(getstatf(STAT_GAMESTARTTIME) - time);
-				s = strcat("^1Game starts in ^3", ftos(countdown), "^1 seconds");
+				s = sprintf(_("^1Game starts in ^3%d^1 seconds"), countdown);
 				drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 				o_y += fontsize_y;
 			}
 		}
 		if(warmup_stage && !intermission)
 		{
-			s = "^2Currently in ^1warmup^2 stage!";
+			s = _("^2Currently in ^1warmup^2 stage!");
 			drawInfoMessage(s)
 		}
 
@@ -4938,22 +4942,22 @@ void HUD_InfoMessages(void)
 			if(ready_waiting_for_me)
 			{
 				if(warmup_stage)
-					s = strcat(blinkcolor, "Press ^3", getcommandkey("ready", "ready"), blinkcolor, " to end warmup");
+					s = sprintf(_("%sPress ^3%s%s to end warmup"), blinkcolor, getcommandkey("ready", "ready"), blinkcolor);
 				else
-					s = strcat(blinkcolor, "Press ^3", getcommandkey("ready", "ready"), blinkcolor, " once you are ready");
+					s = sprintf(_("%sPress ^3%s%s once you are ready"), blinkcolor, getcommandkey("ready", "ready"), blinkcolor);
 			}
 			else
 			{
 				if(warmup_stage)
-					s = strcat("^2Waiting for others to ready up to end warmup...");
+					s = _("^2Waiting for others to ready up to end warmup...");
 				else
-					s = strcat("^2Waiting for others to ready up...");
+					s = _("^2Waiting for others to ready up...");
 			}
 			drawInfoMessage(s)
 		}
 		else if(warmup_stage && !intermission && !spectatee_status)
 		{
-			s = strcat("^2Press ^3", getcommandkey("ready", "ready"), "^2 to end warmup");
+			s = strcat("^2Press ^3%s^2 to end warmup", getcommandkey("ready", "ready"));
 			drawInfoMessage(s)
 		}
 
@@ -4974,12 +4978,12 @@ void HUD_InfoMessages(void)
 				}
 				if ((ts_max - ts_min) > 1)
 				{
-					s = strcat(blinkcolor, "Teamnumbers are unbalanced!");
+					s = strcat(blinkcolor, _("Teamnumbers are unbalanced!"));
 					tm = GetTeam(myteam, false);
 					if (tm)
 					if (tm.team != COLOR_SPECTATOR)
 					if (tm.team_size == ts_max)
-						s = strcat(s, " Press ^3", getcommandkey("team menu", "menu_showteamselect"), blinkcolor, " to adjust");
+						s = strcat(s, sprintf(" Press ^3%s%s to adjust", getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
 					drawInfoMessage(s)
 				}
 			}
@@ -4987,13 +4991,13 @@ void HUD_InfoMessages(void)
 	}
 	else 
 	{
-		s = "^7Press ^3ESC ^7to show HUD options.";
+		s = _("^7Press ^3ESC ^7to show HUD options.");
 		drawInfoMessage(s)
-		s = "^3Doubleclick ^7a panel for panel-specific options.";
+		s = _("^3Doubleclick ^7a panel for panel-specific options.");
 		drawInfoMessage(s)
-		s = "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and";
+		s = _("^3CTRL ^7to disable collision testing, ^3SHIFT ^7and");
 		drawInfoMessage(s)
-		s = "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments.";
+		s = _("^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments.");
 		drawInfoMessage(s)
 	}
 }
@@ -5018,23 +5022,23 @@ void HUD_ShowSpeed(void)
 			conversion_factor = 1.0;
 			break;
 		case 1:
-			unit = " qu/s";
+			unit = _(" qu/s");
 			conversion_factor = 1.0;
 			break;
 		case 2:
-			unit = " m/s";
+			unit = _(" m/s");
 			conversion_factor = 0.0254;
 			break;
 		case 3:
-			unit = " km/h";
+			unit = _(" km/h");
 			conversion_factor = 0.0254 * 3.6;
 			break;
 		case 4:
-			unit = " mph";
+			unit = _(" mph");
 			conversion_factor = 0.0254 * 3.6 * 0.6213711922;
 			break;
 		case 5:
-			unit = " knots";
+			unit = _(" knots");
 			conversion_factor = 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
 			break;
 	}

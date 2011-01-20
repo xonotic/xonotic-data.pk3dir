@@ -1,0 +1,5 @@
+de German "Deutsch"
+en English "English"
+fr French "Français"
+pt Portuguese "Português"
+ru Russian "Русский"

@@ -311,31 +311,32 @@ void cvar_changes_init()
 		BADCVAR("g_forced_team_pink");
 
 		// mapinfo
-		BADCVAR("timelimit");
 		BADCVAR("fraglimit");
-		BADCVAR("leadlimit");
-		BADCVAR("g_tdm_teams");
-		BADCVAR("g_keyhunt_teams");
-		BADCVAR("g_domination_default_teams");
-		BADCVAR("g_race_qualifying_timelimit");
-		BADCVAR("g_lms");
 		BADCVAR("g_arena");
-		BADCVAR("g_ca");
 		BADCVAR("g_assault");
+		BADCVAR("g_ca");
 		BADCVAR("g_ctf");
+		BADCVAR("g_cts");
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");
+		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_freezetag");
+		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
+		BADCVAR("g_keyhunt_teams");
+		BADCVAR("g_lms");
+		BADCVAR("g_nexball");
 		BADCVAR("g_onslaught");
 		BADCVAR("g_race");
-		BADCVAR("g_cts");
+		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_runematch");
 		BADCVAR("g_tdm");
-		BADCVAR("g_nexball");
-		BADCVAR("g_keepaway");
+		BADCVAR("g_tdm_teams");
+		BADCVAR("leadlimit");
+		BADCVAR("nextmap");
 		BADCVAR("teamplay");
+		BADCVAR("timelimit");
 
 		// long
 		BADCVAR("hostname");
@@ -1522,11 +1523,6 @@ void DumpStats(float final)
 		fputs(file, ":end\n");
 		fclose(file);
 	}
-
-	// send statistics
-	FOR_EACH_CLIENT(e)
-		PlayerStats_AddGlobalInfo(e);
-	PlayerStats_Shutdown();
 }
 
 void FixIntermissionClient(entity e)
@@ -1594,6 +1590,13 @@ void NextLevel()
 	VoteReset();
 
 	DumpStats(TRUE);
+
+	// send statistics
+	entity e;
+	PlayerStats_EndMatch(1);
+	FOR_EACH_CLIENT(e)
+		PlayerStats_AddGlobalInfo(e);
+	PlayerStats_Shutdown();
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
@@ -2939,6 +2942,7 @@ void SV_Shutdown()
 		print("Saving persistent data...\n");
 		Ban_SaveBans();
 
+		PlayerStats_EndMatch(0);
 		FOR_EACH_CLIENT(e)
 			PlayerStats_AddGlobalInfo(e);
 		PlayerStats_Shutdown();

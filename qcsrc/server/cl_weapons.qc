@@ -1,8 +1,6 @@
 void W_Reload()
 {
-	if(self.switchweapon == self.weapon)
-	if(self.weaponentity.state == WS_READY)
-		weapon_action(self.weapon, WR_RELOAD);
+    self.wish_reload = 1;
 }
 
 // switch between weapons
@@ -236,6 +234,20 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 float W_IsWeaponThrowable(float w)
 {
 	float wb, wa;
+
+	if (!autocvar_g_pickup_items)
+		return 0;
+	if (g_weaponarena)
+		return 0;
+	if (g_lms)
+		return 0;
+	if (g_ca)
+		return 0;
+	if (g_cts)
+		return 0;
+	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
+		return 0;
+
 	wb = W_WeaponBit(w);
 	if(!wb)
 		return 0;
@@ -265,25 +277,13 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return; // just in case
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon))
 		return;
-	if (g_weaponarena)
-		return;
-	if (g_lms)
-		return;
-	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
-		return;
-	if (!autocvar_g_pickup_items)
-		return;
-	if (g_ca)
-		return;
-    if (g_cts)
-        return;
 	if(!autocvar_g_weapon_throwable)
 		return;
 	if(autocvar_g_weapon_stay == 1)
 		return;
-	if(!W_IsWeaponThrowable(w))
+	if(self.weaponentity.state != WS_READY)
 		return;
-	if(self.deadflag == DEAD_NO && self.weaponentity.state != WS_READY)
+	if(!W_IsWeaponThrowable(w))
 		return;
 
 	wb = W_WeaponBit(w);
@@ -295,13 +295,10 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
 	if not(a)
 		return;
-	if(self.health >= 1)
-	{
-		if(a == "")
-			sprint(self, strcat("You dropped the ^2", W_Name(w), "\n"));
-		else
-			sprint(self, strcat("You dropped the ^2", W_Name(w), " with ", a, "\n"));
-	}
+	if(a == "")
+		sprint(self, strcat("You dropped the ^2", W_Name(w), "\n"));
+	else
+		sprint(self, strcat("You dropped the ^2", W_Name(w), " with ", a, "\n"));
 };
 
 // Bringed back weapon frame
