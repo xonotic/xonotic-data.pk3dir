@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-01-20 19:44+0100\n"
-"PO-Revision-Date: 2011-01-20 20:01+0100\n"
+"PO-Revision-Date: 2011-01-20 20:16+0100\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -230,59 +230,63 @@ msgstr "^3returns^7                  Wie oft die Flagge zurückgebracht wurde\n"
 
 #: qcsrc/client/scoreboard.qc:258
 msgid "^3drops^7                    Number of flag drops\n"
-msgstr ""
+msgstr "^3drops^7                    Wie oft die Flagge verloren wurde\n"
 
 #: qcsrc/client/scoreboard.qc:259
 msgid "^3lives^7                    Number of lives (LMS)\n"
-msgstr ""
+msgstr "^3lives^7                    Anzahl Leben (LMS)\n"
 
 #: qcsrc/client/scoreboard.qc:260
 msgid "^3rank^7                     Player rank\n"
-msgstr ""
+msgstr "^3rank^7                     Rang des Spielers\n"
 
 #: qcsrc/client/scoreboard.qc:261
 msgid "^3pushes^7                   Number of players pushed into void\n"
-msgstr ""
+msgstr "^3pushes^7                   Anzahl in die Tiefe geworfener Gegner\n"
 
 #: qcsrc/client/scoreboard.qc:262
 msgid ""
 "^3destroyed^7                Number of keys destroyed by pushing them into "
 "void\n"
 msgstr ""
+"^3destroyed^7                Wie oft ein Gegner mit Schlüssel in die Tiefe "
+"geworfen wurde\n"
 
 #: qcsrc/client/scoreboard.qc:263
 msgid "^3kckills^7                  Number of keys carrier kills\n"
-msgstr ""
+msgstr "^3kckills^7                  Wie oft Key-Carrier getötet wurden\n"
 
 #: qcsrc/client/scoreboard.qc:264
 msgid "^3losses^7                   Number of times a key was lost\n"
-msgstr ""
+msgstr "^3losses^7                   Anzahl verlorener Schlüssel\n"
 
 #: qcsrc/client/scoreboard.qc:265
 msgid "^3laps^7                     Number of laps finished (race/cts)\n"
-msgstr ""
+msgstr "^3laps^7                     Anzahl vollendeter Runden (race/cts)\n"
 
 #: qcsrc/client/scoreboard.qc:266
 msgid "^3time^7                     Total time raced (race/cts)\n"
-msgstr ""
+msgstr "^3time^7                     Gesamtzeit des Rennens (race/cts)\n"
 
 #: qcsrc/client/scoreboard.qc:267
 msgid "^3fastest^7                  Time of fastest lap (race/cts)\n"
-msgstr ""
+msgstr "^3fastest^7                  Zeit der schnellsten Runde (race/cts)\n"
 
 #: qcsrc/client/scoreboard.qc:268
 msgid "^3ticks^7                    Number of ticks (DOM)\n"
-msgstr ""
+msgstr "^3ticks^7                    Anzahl der Ticks (DOM)\n"
 
 #: qcsrc/client/scoreboard.qc:269
 msgid "^3takes^7                    Number of domination points taken (DOM)\n"
-msgstr ""
+msgstr "^3takes^7                    Anzahl eingenommener Dom-Points (DOM)\n"
 
 #: qcsrc/client/scoreboard.qc:270
 msgid ""
 "^3score^7                    Total score\n"
 "\n"
 msgstr ""
+"^3score^7                    Gesamtpunktzahl\n"
+"\n"
 
 #: qcsrc/client/scoreboard.qc:272
 msgid ""
@@ -292,6 +296,14 @@ msgid ""
 "field to show all fields available for the current game mode.\n"
 "\n"
 msgstr ""
+"Vor ein Feld können Sie ein Plus- oder Minuszeichen setzen, anschließend\n"
+"eine durch Kommata getrennte Liste von Spieltypen, dann einen Slash, so "
+"dass\n"
+"das Feld nur in diesen, oder in allen außer diesen Spieltypen erscheint.\n"
+"Außerdem kann \"all\" als Feldname verwendet werden; in diesem Fall "
+"erscheinen\n"
+"sämtliche möglichen Felder im aktuellen Spieltyp.\n"
+"\n"
 
 #: qcsrc/client/scoreboard.qc:277
 msgid ""
@@ -299,99 +311,106 @@ msgid ""
 "include/exclude ALL teams/noteams game modes.\n"
 "\n"
 msgstr ""
+"Die speziellen Bezeichner 'teams' und 'noteams' können verwendet werden\n"
+"als Gruppierung aller Teamplay- oder Nicht-Teamplay-Spieltypen.\n"
+"\n"
 
 #: qcsrc/client/scoreboard.qc:280
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"
-msgstr ""
+msgstr "Beispiel: scoreboard_columns_set name ping pl < +ctf/feld3 dm/feld4\n"
 
 #: qcsrc/client/scoreboard.qc:281
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right.\n"
 msgstr ""
+"wird Name, Ping und Paketverlust linksbündig, und die Felder rechts\n"
+"von der Trennlinie (und rechtsbündig) anzeigen.\n"
 
 #: qcsrc/client/scoreboard.qc:283
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM.\n"
 msgstr ""
+"'feld3' wird nur in CTF sichtbar sein, und 'feld4' wird in allen Spieltypen\n"
+"außer DM erscheinen.\n"
 
 #: qcsrc/client/scoreboard.qc:429 qcsrc/client/scoreboard.qc:444
 #: qcsrc/client/scoreboard.qc:454 qcsrc/client/scoreboard.qc:463
 #: qcsrc/client/scoreboard.qc:472
 #, c-format
 msgid "fixed missing field '%s'\n"
-msgstr ""
+msgstr "Fehlendes Feld '%s' wurde ergänzt.\n"
 
 #: qcsrc/client/scoreboard.qc:512 qcsrc/client/scoreboard.qc:519
 msgid "N/A"
-msgstr ""
+msgstr "-"
 
 #: qcsrc/client/scoreboard.qc:948
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr ""
+msgstr "Genauigkeit (Durchschn.: %d%%)"
 
 #: qcsrc/client/scoreboard.qc:1013
 #, c-format
 msgid "%d%%"
-msgstr ""
+msgstr "%d%%"
 
 #: qcsrc/client/scoreboard.qc:1073
 msgid "Rankings"
-msgstr ""
+msgstr "Platzierungen"
 
 #: qcsrc/client/scoreboard.qc:1164 qcsrc/client/scoreboard.qc:1166
 msgid "Scoreboard"
-msgstr ""
+msgstr "Tabelle"
 
 #: qcsrc/client/scoreboard.qc:1207
 #, c-format
 msgid "Speed award: %d ^7(%s^7)"
-msgstr ""
+msgstr "Höchstgeschwindigkeit: %d ^7(%s^7)"
 
 #: qcsrc/client/scoreboard.qc:1211
 #, c-format
 msgid "All-time fastest: %d ^7(%s^7)"
-msgstr ""
+msgstr "Rekord: %d ^7(%s^7)"
 
 #: qcsrc/client/scoreboard.qc:1238 qcsrc/client/teamplay.qc:55
 msgid "Spectators"
-msgstr ""
+msgstr "Zuschauer"
 
 #: qcsrc/client/scoreboard.qc:1245
 #, c-format
 msgid "playing on ^2%s^7"
-msgstr ""
+msgstr "es wird auf ^2%s^7 gespielt"
 
 #: qcsrc/client/scoreboard.qc:1252 qcsrc/client/scoreboard.qc:1257
 #, c-format
 msgid " for up to ^1%.1g minutes^7"
-msgstr ""
+msgstr " für bis zu ^1%.1g Minuten^7"
 
 #: qcsrc/client/scoreboard.qc:1261 qcsrc/client/scoreboard.qc:1280
 msgid " or"
-msgstr ""
+msgstr " oder"
 
 #: qcsrc/client/scoreboard.qc:1264 qcsrc/client/scoreboard.qc:1271
 #, c-format
 msgid " until ^3%s %s^7"
-msgstr ""
+msgstr " bis ^3%s %s^7"
 
 #: qcsrc/client/scoreboard.qc:1265 qcsrc/client/scoreboard.qc:1272
 #: qcsrc/client/scoreboard.qc:1284 qcsrc/client/scoreboard.qc:1291
 msgid "SCO^points"
-msgstr ""
+msgstr "Punkte"
 
 #: qcsrc/client/scoreboard.qc:1266 qcsrc/client/scoreboard.qc:1273
 #: qcsrc/client/scoreboard.qc:1285 qcsrc/client/scoreboard.qc:1292
 msgid "SCO^is beaten"
-msgstr ""
+msgstr "geschlagen wird"
 
 #: qcsrc/client/scoreboard.qc:1283 qcsrc/client/scoreboard.qc:1290
 #, c-format
 msgid " until a lead of ^3%s %s^7"
-msgstr ""
+msgstr " bis zu einem Vorsprung von ^3%s %s^7"
 
 #: qcsrc/client/scoreboard.qc:1284 qcsrc/client/scoreboard.qc:1291
 msgid "score"
@@ -403,41 +422,41 @@ msgstr ""
 
 #: qcsrc/client/ctf.qc:35
 msgid "----- Order Menu -----"
-msgstr ""
+msgstr "----- Auftragsmenü -----"
 
 #: qcsrc/client/ctf.qc:36
 #, c-format
 msgid "Order: %s"
-msgstr ""
+msgstr "Auftrag: %s"
 
 #: qcsrc/client/ctf.qc:37
 msgid "1) ^3previous page"
-msgstr ""
+msgstr "1) ^3vorherige Seite"
 
 #: qcsrc/client/ctf.qc:38
 msgid "2) ^3next page"
-msgstr ""
+msgstr "2) ^3nächste Seite"
 
 #: qcsrc/client/ctf.qc:55 qcsrc/client/ctf.qc:161
 msgid "ESC) Exit Menu"
-msgstr ""
+msgstr "ESC) Menü verlassen"
 
 #: qcsrc/client/ctf.qc:126
 #, c-format
 msgid "Couldn't find player %d\n"
-msgstr ""
+msgstr "Kann Spieler %d nicht finden\n"
 
 #: qcsrc/client/ctf.qc:154
 msgid "----- Command Menu -----"
-msgstr ""
+msgstr "---- Befehlsmenü -----"
 
 #: qcsrc/client/ctf.qc:155
 msgid "Issue orders:"
-msgstr ""
+msgstr "Auftrag geben:"
 
 #: qcsrc/client/ctf.qc:156
 msgid " 1) Attack "
-msgstr ""
+msgstr " 1) Angreifen "
 
 #: qcsrc/client/ctf.qc:157
 msgid " "
@@ -449,19 +468,19 @@ msgstr ""
 
 #: qcsrc/client/ctf.qc:160
 msgid "3) Resign from command."
-msgstr ""
+msgstr "3) Befehlsgewalt abgeben."
 
 #: qcsrc/client/ctf.qc:212
 msgid "You're commander!"
-msgstr ""
+msgstr "Sie sind Befehlshaber!"
 
 #: qcsrc/client/ctf.qc:215
 msgid "Awaiting orders..."
-msgstr ""
+msgstr "Warten auf Auftrag..."
 
 #: qcsrc/client/Main.qc:30
 msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
-msgstr ""
+msgstr "FEHLER - MENÜ IST SICHTBAR ABER KEIN MENÜ WURDE DEFINIERT!"
 
 #: qcsrc/client/Main.qc:54
 msgid ""
