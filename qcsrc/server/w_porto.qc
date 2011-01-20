@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(PORTO, w_porto, 0, 0, WEP_TYPE_OTHER, 0, "porto" , "porto", "Port-O-Launch");
+REGISTER_WEAPON(PORTO, w_porto, 0, 0, WEP_TYPE_OTHER, 0, "porto" , "porto", _("Port-O-Launch"))
 #else
 #ifdef SVQC
 .entity porto_current;
