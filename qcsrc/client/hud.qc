@@ -4377,13 +4377,21 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 		kaball_prevstatus = kaball;
 	}
 	
-	// todo: Fix the sizing with the expanding image
+	vector kaball_pos, kaball_size;
+	
+	if(mySize_x > mySize_y) {
+		kaball_pos = pos + eX * 0.25 * mySize_x;
+		kaball_size = eX * 0.5 * mySize_x + eY * mySize_y;
+	} else {
+		kaball_pos = pos + eY * 0.25 * mySize_y;
+		kaball_size = eY * 0.5 * mySize_y + eX * mySize_x;
+	}
 	
 	float kaball_statuschange_elapsedtime = time - kaball_statuschange_time;
 	float f = bound(0, kaball_statuschange_elapsedtime*2, 1);
 	
 	if(kaball_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(pos + eY * 0.25 * mySize_y, "keepawayball_carrying", eX * mySize_x + eY * mySize_y * 0.5, '1 1 1', panel_fg_alpha * kaball_alpha, DRAWFLAG_NORMAL, f);
+		drawpic_aspect_skin_expanding(kaball_pos, "keepawayball_carrying", kaball_size, '1 1 1', panel_fg_alpha * kaball_alpha, DRAWFLAG_NORMAL, f);
 	
 	if(kaball)
 		drawpic_aspect_skin(pos, "keepawayball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * kaball_alpha * f, DRAWFLAG_NORMAL);

@@ -282,14 +282,14 @@ void draw_Text(vector theOrigin, string theText, vector theSize, vector theColor
 }
 void draw_CenterText(vector theOrigin, string theText, vector theSize, vector theColor, float theAlpha, float ICanHasKallerz)
 {
-	//print(strcat("orig = ", vtos(theOrigin) ," tx = ", ftos(draw_TextWidth(theText, ICanHasKallerz, theSize)), "\n"));
+	//dprint(strcat("orig = ", vtos(theOrigin) ," tx = ", ftos(draw_TextWidth(theText, ICanHasKallerz, theSize)), "\n"));
 	draw_Text(theOrigin - eX * 0.5 * draw_TextWidth(theText, ICanHasKallerz, theSize), theText, theSize, theColor, theAlpha, ICanHasKallerz);
 }
 
 float draw_TextWidth(string theText, float ICanHasKallerz, vector SizeThxBye)
 {
 	//return strlen(theText);
-	//print("draw_TextWidth \"", theText, "\"\n");
+	//dprint("draw_TextWidth \"", theText, "\"\n");
 	vector v;
 	v = '0 0 0';
 	//float r;

@@ -53,6 +53,20 @@ Merlijn Hofstra
 DarkPlaces
 by Forest "LordHavoc" Hale
 
+**Translators
+
+*German
+Rudolf "divVerent" Polzer
+
+*French
+Calinou
+
+*Portuguese
+Ricardo "Hellgardia" Silva
+
+*Russian
+Lord Canistra
+
 **Active Contributors
 Antonio "terencehill" Piu
 Ben "MooKow" Banker
@@ -63,6 +77,7 @@ Kristian "morfar" Johansson
 kojn
 Maik "SavageX" Merten
 MrBougo
+Ruszkai "C.Brutail" Ákos
 Samual Lenks
 Stephan "esteel" Stahl
 Wolfgang "Blub\0" Bumiller

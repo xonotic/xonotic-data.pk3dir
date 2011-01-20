@@ -27,7 +27,7 @@ void cvar_clientsettemp_restore()
 
 void() menu_show_error =
 {
-	drawstring('0 200 0', "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!", '8 8 0', '1 0 0', 1, 0);
+	drawstring('0 200 0', _("ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"), '8 8 0', '1 0 0', 1, 0);
 };
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
@@ -51,7 +51,7 @@ void CSQC_Init(void)
 	__engine_check = checkextension("DP_SV_WRITEPICTURE");
 	if(!__engine_check)
 	{
-		print("^3Your engine build is outdated\n^3This Server uses a newer QC VM. Please update!\n");
+		print(_("^3Your engine build is outdated\n^3This Server uses a newer QC VM. Please update!\n"));
 		localcmd("\ndisconnect\n");
 		return;
 	}
@@ -61,7 +61,7 @@ void CSQC_Init(void)
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print("^4CSQC Build information: ", WATERMARK(), "\n");
+	print(sprintf(_("^4CSQC Build information: %s\n"), WATERMARK()));
 #endif
 
 	float i;
@@ -222,7 +222,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == NULL)
 				{
-					print("trying to switch to unsupported team ", ftos(Team), "\n");
+					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
 					Team = COLOR_SPECTATOR;
 				}
 				break;
@@ -238,7 +238,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == NULL)
 				{
-					print("trying to switch to unsupported team ", ftos(Team), "\n");
+					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
 					Team = COLOR_SPECTATOR;
 				}
 				break;
@@ -248,7 +248,6 @@ float SetTeam(entity o, float Team)
 	{
 		if(o.has_team)
 		{
-			//print("(DISCONNECT) leave team ", ftos(o.team), "\n");
 			tm = GetTeam(o.team, false);
 			tm.team_size -= 1;
 			o.has_team = 0;
@@ -259,7 +258,6 @@ float SetTeam(entity o, float Team)
 	{
 		if not(o.has_team)
 		{
-			//print("(CONNECT) enter team ", ftos(o.team), "\n");
 			o.team = Team;
 			tm = GetTeam(Team, true);
 			tm.team_size += 1;
@@ -268,11 +266,9 @@ float SetTeam(entity o, float Team)
 		}
 		else if(Team != o.team)
 		{
-			//print("(CHANGE) leave team ", ftos(o.team), "\n");
 			tm = GetTeam(o.team, false);
 			tm.team_size -= 1;
 			o.team = Team;
-			//print("(CHANGE) enter team ", ftos(o.team), "\n");
 			tm = GetTeam(Team, true);
 			tm.team_size += 1;
 			return TRUE;
@@ -292,7 +288,6 @@ void Playerchecker_Think()
 		{
 			if(e.sort_prev)
 			{
-				//print("playerchecker: KILL KILL KILL\n");
 				// player disconnected
 				SetTeam(e, -1);
 				RemovePlayer(e);
@@ -304,7 +299,6 @@ void Playerchecker_Think()
 		{
 			if not(e.sort_prev)
 			{
-				//print("playerchecker: SPAWN SPAWN SPAWN\n");
 				// player connected
 				if not(e)
 					playerslots[i] = e = spawn();
@@ -326,7 +320,6 @@ void Porto_Init();
 void TrueAim_Init();
 void PostInit(void)
 {
-	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
 	localcmd(strcat("\nscoreboard_columns_set ", autocvar_scoreboard_columns, ";\n"));
 
 	entity playerchecker;
@@ -361,8 +354,8 @@ float CSQC_ConsoleCommand(string strMessage)
 		return true;
 	} else if(strCmd == "hud_save") { // save hud config
 		if(argv(1) == "" || argv(2)) {
-			print("Usage:\n");
-			print("hud_save configname   (saves to hud_skinname_configname.cfg)\n");
+			print(_("Usage:\n"));
+			print(_("hud_save configname   (saves to hud_skinname_configname.cfg)\n"));
 		}
 		else
 			HUD_Panel_ExportCfg(argv(1));
@@ -509,10 +502,10 @@ void GameCommand(string msg)
 
 	if(argv(0) == "help" || argc == 0)
 	{
-		print("Usage: cl_cmd COMMAND..., where possible commands are:\n");
-		print("  settemp cvar value\n");
-		print("  scoreboard_columns_set ...\n");
-		print("  scoreboard_columns_help\n");
+		print(_("Usage: cl_cmd COMMAND..., where possible commands are:\n"));
+		print(_("  settemp cvar value\n"));
+		print(_("  scoreboard_columns_set ...\n"));
+		print(_("  scoreboard_columns_help\n"));
 		GameCommand_Generic("help");
 		return;
 	}
@@ -717,7 +710,7 @@ void Ent_ReadPlayerScore()
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 	if(!isNew && n != self.sv_entnum)
 	{
-		print("A CSQC entity changed its owner!\n");
+		print(_("A CSQC entity changed its owner!\n"));
 		isNew = true;
 		Ent_Remove();
 		self.enttype = ENT_CLIENT_SCORES;
@@ -931,7 +924,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 	if(self.enttype)
 		if(t != self.enttype)
 		{
-			print("A CSQC entity changed its type!\n");
+			print(_("A CSQC entity changed its type!\n"));
 			Ent_Remove();
 			bIsNewEntity = 1;
 		}
@@ -968,7 +961,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		default:
-			error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
+			error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			break;
 	}
 
@@ -1098,6 +1091,8 @@ void Ent_Init()
 	serverflags = ReadByte();
 
 	cr_maxbullets = ReadByte();
+
+	g_trueaim_minrange = ReadCoord();
 
 	if(!postinit)
 		PostInit();
@@ -1438,12 +1433,12 @@ string getcommandkey(string text, string command)
 
 	if ("" == keys) {
 		if (hud_showbinds > 1)
-			return strcat(text, " (not bound)");
+			return sprintf(_("%s (not bound)"), text);
 		else
 			return text;
 	}
 	else if (hud_showbinds > 1)
-		return strcat(text, " (", keys, ")");
+		return sprintf(_("%s (%s)"), text, keys);
 	else
 		return keys;
 }
