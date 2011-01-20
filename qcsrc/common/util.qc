@@ -1982,3 +1982,27 @@ float u8_strsize(string s)
 	}
 	return l;
 }
+
+// translation helpers
+string language_filename(string s)
+{
+	string fn;
+	float fh;
+	fn = prvm_language;
+	if(fn == "" || fn == "dump")
+		return s;
+	fn = strcat(s, ".", fn);
+	if((fh = fopen(fn, FILE_READ)) >= 0)
+	{
+		fclose(fh);
+		return fn;
+	}
+	return s;
+}
+string CTX(string s)
+{
+	float p = strstrofs(s, "^", 0);
+	if(p < 0)
+		return s;
+	return substring(s, p+1, -1);
+}
