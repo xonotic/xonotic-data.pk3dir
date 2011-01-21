@@ -43,7 +43,7 @@ void W_Shotgun_Reload()
 
 	float t;
 
-	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
 
 	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_shotgun_reload_time + 1;
 	ATTACK_FINISHED(self) = t;
@@ -217,6 +217,7 @@ float w_shotgun(float req)
 		precache_sound ("misc/itempickup.wav");
 		precache_sound ("weapons/shotgun_fire.wav");
 		precache_sound ("weapons/shotgun_melee.wav");
+		precache_sound ("weapons/reload.wav");
 	}
 	else if (req == WR_SETUP)
 	{

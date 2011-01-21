@@ -47,7 +47,7 @@ void W_SniperRifle_Reload()
 
 	float t;
 
-	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
 
 	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_sniperrifle_reload_time + 1;
 	ATTACK_FINISHED(self) = t;
@@ -245,9 +245,9 @@ float w_sniperrifle(float req)
 		precache_model ("models/weapons/g_campingrifle.md3");
 		precache_model ("models/weapons/v_campingrifle.md3");
 		precache_model ("models/weapons/h_campingrifle.iqm");
-		precache_sound ("weapons/campingrifle_reload.wav");
 		precache_sound ("weapons/campingrifle_fire.wav");
 		precache_sound ("weapons/campingrifle_fire2.wav");
+		precache_sound ("weapons/reload.wav");
 	}
 	else if (req == WR_SETUP)
 	{
