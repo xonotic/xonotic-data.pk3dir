@@ -298,6 +298,16 @@ float lgbeam_send(entity to, float sf)
 }
 .entity lgbeam;
 .float prevlgfire;
+float lgbeam_checkammo()
+{
+	if(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
+		return TRUE;
+	else if(autocvar_g_balance_electro_reload_ammo)
+		return self.owner.clip_load > 0;
+	else
+		return self.owner.ammo_cells > 0;
+}
+
 void lgbeam_think()
 {
 	self.owner.prevlgfire = time;
@@ -306,7 +316,9 @@ void lgbeam_think()
 		remove(self);
 		return;
 	}
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
+	if(autocvar_g_balance_electro_reload_ammo)
+
+	if (self.owner.weaponentity.state != WS_INUSE || !lgbeam_checkammo() || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
 	{
 		if(self == self.owner.lgbeam)
 			self.owner.lgbeam = world;
@@ -329,7 +341,7 @@ void lgbeam_think()
 			{
 				dt = min(dt, self.owner.clip_load / autocvar_g_balance_electro_primary_ammo);
 				self.owner.clip_load = max(0, self.owner.clip_load - autocvar_g_balance_electro_primary_ammo * frametime);
-				self.electro_load = self.clip_load;
+				self.owner.electro_load = self.owner.clip_load;
 			}
 			else
 			{
