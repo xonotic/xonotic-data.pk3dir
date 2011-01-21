@@ -1643,7 +1643,7 @@ float W_ReloadCheck(float ammo_amount)
 		if(clienttype(self) == CLIENTTYPE_REAL && self.reload_complain < time)
 		{
 			play2(self, "weapons/unavailable.wav");
-			sprint(self, strcat("You don't have any ammo to reload the ^2", W_Name(self.weapon), "\n"));
+			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));
 			self.reload_complain = time + 1;
 		}
 		// is there's no more ammo to reload, only switch to another weapon if there's no more load in this one
