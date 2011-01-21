@@ -1632,6 +1632,11 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 
 float W_ReloadCheck(float ammo_amount)
 {
+	entity e;
+	e = get_weaponinfo(self.weapon);
+	if (self.ammo_counter >= cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
+		return 0;
+
 	if(!ammo_amount) // when we get here, ammo_counter must be 0 or -1
 	{
 		print("cannot reload... not enough ammo\n");
@@ -1639,11 +1644,6 @@ float W_ReloadCheck(float ammo_amount)
 		W_SwitchToOtherWeapon(self);
 		return 0;
 	}
-
-	entity e;
-	e = get_weaponinfo(self.weapon);
-	if (self.ammo_counter >= cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
-		return 0;
 
 	if (self.weaponentity)
 	{
