@@ -31,7 +31,7 @@ void W_SniperRifle_ReloadedAndReady()
 	}
 	self.sniperrifle_load = self.ammo_counter;
 
-	t = ATTACK_FINISHED(self) - autocvar_g_balance_sniperrifle_reloadtime - 1;
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_sniperrifle_reload_time - 1;
 	ATTACK_FINISHED(self) = t;
 	w_ready();
 }
@@ -49,10 +49,10 @@ void W_SniperRifle_Reload()
 
 	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
 
-	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_sniperrifle_reloadtime + 1;
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_sniperrifle_reload_time + 1;
 	ATTACK_FINISHED(self) = t;
 
-	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_sniperrifle_reloadtime, W_SniperRifle_ReloadedAndReady);
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_sniperrifle_reload_time, W_SniperRifle_ReloadedAndReady);
 
 	self.old_ammo_counter = self.ammo_counter;
 	self.ammo_counter = -1;
@@ -61,7 +61,7 @@ void W_SniperRifle_Reload()
 float W_SniperRifle_CheckMaxBullets(float checkammo)
 {
 	float maxbulls;
-	maxbulls = autocvar_g_balance_sniperrifle_magazinecapacity;
+	maxbulls = autocvar_g_balance_sniperrifle_reload_ammo;
 	if(!maxbulls)
 		maxbulls = 8; // match HUD
 	if(checkammo)
@@ -283,7 +283,7 @@ float w_sniperrifle(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.sniperrifle_accumulator = time - autocvar_g_balance_sniperrifle_bursttime;
-		self.ammo_counter = autocvar_g_balance_sniperrifle_magazinecapacity;
+		self.ammo_counter = autocvar_g_balance_sniperrifle_reload_ammo;
 		W_SniperRifle_CheckMaxBullets(FALSE);
 	}
 	return TRUE;
