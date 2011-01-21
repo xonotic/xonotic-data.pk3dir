@@ -3,6 +3,60 @@ REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT
 #else
 #ifdef SVQC
 
+.float uzi_load;
+
+void W_Uzi_SetAmmoCounter()
+{
+	// set clip_load to the weapon we have switched to, if the gun uses reloading
+	if(!autocvar_g_balance_uzi_reload_ammo)
+		self.clip_load = 0; // also keeps crosshair ammo from displaying
+	else
+	{
+		self.clip_load = self.uzi_load;
+		self.clip_size = autocvar_g_balance_uzi_reload_ammo; // for the crosshair ammo display
+	}
+}
+
+void W_Uzi_ReloadedAndReady()
+{
+	float t;
+
+	// now do the ammo transfer
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.clip_load < autocvar_g_balance_uzi_reload_ammo && self.ammo_nails) // make sure we don't add more ammo than we have
+	{
+		self.clip_load += 1;
+		self.ammo_nails -= 1;
+	}
+	self.uzi_load = self.clip_load;
+
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_uzi_reload_time - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
+}
+
+void W_Uzi_Reload()
+{
+	// return if reloading is disabled for this weapon
+	if(!autocvar_g_balance_uzi_reload_ammo)
+		return;
+
+	if(!W_ReloadCheck(self.ammo_nails))
+		return;
+
+	float t;
+
+	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_uzi_reload_time + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_uzi_reload_time, W_Uzi_ReloadedAndReady);
+
+	self.old_clip_load = self.clip_load;
+	self.clip_load = -1;
+}
+
 // leilei's fancy muzzleflash stuff
 void Uzi_Flash_Go() 
 {	
@@ -41,13 +95,9 @@ void UziFlash()
 
 void W_Uzi_Attack (float deathtype)
 {
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if (self.misc_bulletcounter == 1)
-			self.ammo_nails = self.ammo_nails - autocvar_g_balance_uzi_first_ammo;
-		else
-			self.ammo_nails = self.ammo_nails - autocvar_g_balance_uzi_sustained_ammo;
-	}
+	if(autocvar_g_balance_uzi_reload_ammo && self.clip_load <= 0)
+		return; // reloading, so we are done
+
 	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CHAN_WEAPON, ((self.misc_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage));
 	if (!g_norecoil)
 	{
@@ -72,6 +122,26 @@ void W_Uzi_Attack (float deathtype)
 	// casing code
 	if (autocvar_g_casings >= 2)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_uzi_reload_ammo)
+		{
+			if (self.misc_bulletcounter == 1)
+				self.clip_load -= autocvar_g_balance_uzi_first_ammo;
+			else
+				self.clip_load -= autocvar_g_balance_uzi_sustained_ammo;
+			self.uzi_load = self.clip_load;
+		}
+		else
+		{
+			if (self.misc_bulletcounter == 1)
+				self.ammo_nails -= autocvar_g_balance_uzi_first_ammo;
+			else
+				self.ammo_nails -= autocvar_g_balance_uzi_sustained_ammo;
+		}
+	}
 }
 
 // weapon frames
@@ -139,10 +209,18 @@ void uzi_mode1_fire_auto()
 	
 	if (autocvar_g_casings >= 2) // casing code
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
-	
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)	
-		self.ammo_nails = self.ammo_nails - autocvar_g_balance_uzi_sustained_ammo;
-	
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_uzi_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_uzi_sustained_ammo;
+			self.uzi_load = self.clip_load;
+		}
+		else
+			self.ammo_nails -= autocvar_g_balance_uzi_sustained_ammo;
+	}
 }
 
 void uzi_mode1_fire_burst()
@@ -192,7 +270,9 @@ float w_uzi(float req)
 		}
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_uzi_mode == 1)
+		if(autocvar_g_balance_uzi_reload_ammo && self.clip_load <= 0) // forced reload
+			W_Uzi_Reload();
+		else if(autocvar_g_balance_uzi_mode == 1)
 		{
 			if (self.BUTTON_ATCK)
 			if (weapon_prepareattack(0, 0))
@@ -210,9 +290,18 @@ float w_uzi(float req)
 					w_ready();
 					return FALSE;
 				}
-				
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)	
-					self.ammo_nails = self.ammo_nails - autocvar_g_balance_uzi_burst_ammo;
+
+				// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+				{
+					if(autocvar_g_balance_uzi_reload_ammo)
+					{
+						self.clip_load -= autocvar_g_balance_uzi_burst_ammo;
+						self.uzi_load = self.clip_load;
+					}
+					else
+						self.ammo_nails -= autocvar_g_balance_uzi_burst_ammo;
+				}
 
 				self.misc_bulletcounter = autocvar_g_balance_uzi_burst * -1;
 				uzi_mode1_fire_burst();
@@ -237,6 +326,17 @@ float w_uzi(float req)
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_first_refire, w_ready);
 			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_Uzi_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -247,17 +347,28 @@ float w_uzi(float req)
 		precache_sound ("weapons/uzi_fire.wav");
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_UZI);
+		W_Uzi_SetAmmoCounter();
+	}
 	else if (req == WR_CHECKAMMO1)
+	{
 		if(autocvar_g_balance_uzi_mode == 1)
 			return self.ammo_nails >= autocvar_g_balance_uzi_sustained_ammo;
 		else
 			return self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+	}
 	else if (req == WR_CHECKAMMO2)
+	{
 		if(autocvar_g_balance_uzi_mode == 1)
 			return self.ammo_nails >= autocvar_g_balance_uzi_burst_ammo;
 		else
 			return self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Uzi_Reload();
+	}
 	return TRUE;
 };
 #endif

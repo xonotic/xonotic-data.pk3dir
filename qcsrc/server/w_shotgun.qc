@@ -103,13 +103,13 @@ void W_Shotgun_Attack (void)
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		if(!autocvar_g_balance_shotgun_reload_ammo)
-			self.ammo_shells -= ammoamount;
-		else
+		if(autocvar_g_balance_shotgun_reload_ammo)
 		{
 			self.clip_load -= ammoamount;
 			self.shotgun_load = self.clip_load;
 		}
+		else
+			self.ammo_shells -= ammoamount;
 	}
 }
 

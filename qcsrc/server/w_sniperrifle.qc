@@ -88,13 +88,13 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		if(!autocvar_g_balance_sniperrifle_reload_ammo)
-			self.ammo_nails -= pAmmo;
-		else
+		if(autocvar_g_balance_sniperrifle_reload_ammo)
 		{
 			self.clip_load -= pAmmo;
 			self.sniperrifle_load = self.clip_load;
 		}
+		else
+			self.ammo_nails -= pAmmo;
 	}
 }
 

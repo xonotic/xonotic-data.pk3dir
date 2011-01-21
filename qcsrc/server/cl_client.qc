@@ -892,6 +892,7 @@ void PutClientInServer (void)
 		// all weapons must be fully loaded the first time we pick them up, so set their load to maximum at respawn
 		self.shotgun_load = autocvar_g_balance_shotgun_reload_ammo;
 		self.sniperrifle_load = autocvar_g_balance_sniperrifle_reload_ammo;
+		self.uzi_load = autocvar_g_balance_uzi_reload_ammo;
 
 		if(inWarmupStage)
 		{
