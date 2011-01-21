@@ -3,12 +3,11 @@ REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HIT
 #else
 #ifdef SVQC
 
-void W_Shotgun_CheckReloadAndReady()
+void W_Shotgun_DoReload()
 {
 	w_ready();
-	if(self.sniperrifle_bulletcounter <= 0)
-		if(W_SniperRifle_Reload("shells"))
-			return;
+	if(W_SniperRifle_Reload(self.ammo_shells))
+		return;
 }
 
 void W_Shotgun_Attack (void)
@@ -23,7 +22,8 @@ void W_Shotgun_Attack (void)
 	float	bulletconstant;
 	local entity flash;
 
-	W_Shotgun_CheckReloadAndReady();
+	if(self.sniperrifle_bulletcounter <= 0)
+		W_Shotgun_DoReload();
 	if(self.sniperrifle_bulletcounter < 0)
 		return; // reloading, so we are done
 
@@ -153,7 +153,7 @@ float w_shotgun(float req)
                 if(self.weaponentity.state == WS_READY)
                 {
                     self.wish_reload = 0;
-                    W_SniperRifle_Reload("shells");
+                    W_SniperRifle_Reload(self.ammo_shells);
                 }
             }
         }

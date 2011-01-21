@@ -8,12 +8,11 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_T
 
 .float sniperrifle_accumulator;
 
-void W_SniperRifle_CheckReloadAndReady()
+void W_SniperRifle_DoReload()
 {
 	w_ready();
-	if(self.sniperrifle_bulletcounter <= 0)
-		if(W_SniperRifle_Reload("nails"))
-			return;
+	if(W_SniperRifle_Reload(self.ammo_nails))
+		return;
 }
 
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
@@ -74,7 +73,8 @@ void spawnfunc_weapon_campingrifle (void)
 void W_SniperRifle_BulletHail_Continue()
 {
 	float r, sw, af;
-	W_SniperRifle_CheckReloadAndReady();
+	if(self.sniperrifle_bulletcounter <= 0)
+		W_SniperRifle_DoReload();
 	if(self.sniperrifle_bulletcounter < 0)
 		return; // reloading, so we are done
 	sw = self.switchweapon; // make it not detect weapon changes as reason to abort firing
@@ -114,7 +114,7 @@ void W_SniperRifle_BulletHail(float mode, void(void) AttackFunc, float fr, float
 	else
 	{
 		// just one shot
-		weapon_thinkf(fr, animtime, W_SniperRifle_CheckReloadAndReady);
+		weapon_thinkf(fr, animtime, w_ready);
 	}
 }
 
@@ -188,7 +188,7 @@ float w_sniperrifle(float req)
                 if(self.weaponentity.state == WS_READY)
                 {
                     self.wish_reload = 0;
-                    W_SniperRifle_Reload("nails");
+                    W_SniperRifle_Reload(self.ammo_nails);
                 }
             }
         }

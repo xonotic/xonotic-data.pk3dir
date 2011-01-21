@@ -1617,35 +1617,6 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 // ----------------------------------------------------------------
 
 float ammo_amount;
-void W_SniperRifle_Ammo(string ammo_string, float ammo_reduce)
-{
-	// sets ammo_amount to our current ammo level, and can optionally reduce ammo
-	switch(ammo_string)
-	{
-		case "shells":
-			ammo_amount = self.ammo_shells;
-			self.ammo_shells -= ammo_reduce;
-			return;
-		case "nails":
-			ammo_amount = self.ammo_nails;
-			self.ammo_nails -= ammo_reduce;
-			return;
-		case "cells":
-			ammo_amount = self.ammo_cells;
-			self.ammo_cells -= ammo_reduce;
-			return;
-		case "rockets":
-			ammo_amount = self.ammo_rockets;
-			self.ammo_rockets -= ammo_reduce;
-			return;
-		case "fuel":
-			ammo_amount = self.ammo_fuel;
-			self.ammo_fuel -= ammo_reduce;
-			return;
-		default:
-			return;
-	}
-}
 
 float W_SniperRifle_CheckMaxBullets(float checkammo)
 {
@@ -1671,13 +1642,13 @@ void W_SniperRifle_ReloadedAndReady()
 	w_ready();
 }
 
-float W_SniperRifle_Reload(string ammo_type)
+float W_SniperRifle_Reload(float ammo_value)
 {
 	float t;
 
 	W_SniperRifle_CheckMaxBullets(TRUE);
 
-	W_SniperRifle_Ammo(ammo_type, 0); // set ammo_amount to the ammo type specified
+	ammo_amount = ammo_value; // save ammo to a global float
 	if(ammo_amount < min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)) // when we get here, bulletcounter must be 0 or -1
 	{
 		print("cannot reload... not enough bullets\n");
