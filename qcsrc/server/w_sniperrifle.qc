@@ -11,26 +11,50 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_T
 
 void W_SniperRifle_SetAmmoCounter()
 {
+	// set ammo counter to the weapon we have switched to
 	if(!autocvar_g_balance_sniperrifle_reload_ammo)
 		self.ammo_counter = 0; // also keeps the crosshair ammo from displaying
 	else
 		self.ammo_counter = self.sniperrifle_load;
 }
 
+void W_SniperRifle_ReloadedAndReady()
+{
+	float t;
+
+	// now do the ammo maths
+	self.ammo_counter = 0; // when we get here it's -1
+	while(self.ammo_counter < autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_shells) // make sure we don't add more than the amount of ammo we have
+	{
+		self.ammo_counter += 1;
+		self.ammo_shells -= 1;
+	}
+	self.sniperrifle_load = self.ammo_counter;
+
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_sniperrifle_reloadtime - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
+}
+
 void W_SniperRifle_Reload()
 {
 	// reloading is disabled for this weapon
-	if(!autocvar_g_balance_shotgun_reload_ammo)
+	if(!autocvar_g_balance_sniperrifle_reload_ammo)
 		return;
 
-	w_ready();
-	/*if(W_Reload(self.ammo_nails))
-	{
-		// now do the actual ammo transfer
-		for(self.sniperrifle_load; self.sniperrifle_load < autocvar_g_balance_shotgun_reload_ammo && self.ammo_nails; ++self.sniperrifle_load)
-			self.ammo_nails -= 1;
+	float t;
+
+	if(!W_ReloadCheck(self.ammo_shells))
 		return;
-	}*/
+
+	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_sniperrifle_reloadtime + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_sniperrifle_reloadtime, W_SniperRifle_ReloadedAndReady);
+
+	self.ammo_counter = -1;
 }
 
 float W_SniperRifle_CheckMaxBullets(float checkammo)
@@ -62,7 +86,7 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 	else
 		W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, "weapons/campingrifle_fire.wav", CHAN_WEAPON, autocvar_g_balance_sniperrifle_primary_damage + autocvar_g_balance_sniperrifle_primary_headshotaddeddamage);
 
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
+	pointparticles(particleeffectnum("sniperrifle_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
 
 	if(self.BUTTON_ZOOM) // if zoomed, shoot from the eye
 	{
@@ -110,10 +134,11 @@ void spawnfunc_weapon_campingrifle (void)
 void W_SniperRifle_BulletHail_Continue()
 {
 	float r, sw, af;
-	//if(self.ammo_counter <= 0)
-		//W_SniperRifle_Reload();
-	if(self.ammo_counter < 0)
+	if(self.ammo_counter <= 0)
+	{
+		W_SniperRifle_Reload();
 		return; // reloading, so we are done
+	}
 	sw = self.switchweapon; // make it not detect weapon changes as reason to abort firing
 	af = ATTACK_FINISHED(self);
 	self.switchweapon = self.weapon;
@@ -224,7 +249,7 @@ float w_sniperrifle(float req)
                 if(self.weaponentity.state == WS_READY)
                 {
                     self.wish_reload = 0;
-                    //W_Reload(self.ammo_nails);
+                    W_SniperRifle_Reload(self.ammo_nails);
                 }
             }
         }

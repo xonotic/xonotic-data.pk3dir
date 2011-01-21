@@ -66,9 +66,10 @@ void W_Shotgun_Attack (void)
 	local entity flash;
 
 	if(self.ammo_counter <= 0)
+	{
 		W_Shotgun_Reload();
-	if(self.ammo_counter < 0)
 		return; // reloading, so we are done
+	}
 
 	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
 	bullets = autocvar_g_balance_shotgun_primary_bullets;
