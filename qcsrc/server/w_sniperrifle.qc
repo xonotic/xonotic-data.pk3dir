@@ -11,12 +11,12 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_T
 
 void W_SniperRifle_SetAmmoCounter()
 {
-	// set ammo_counter to the weapon we have switched to, if the gun uses reloading
+	// set ammo_loaded to the weapon we have switched to, if the gun uses reloading
 	if(!autocvar_g_balance_sniperrifle_reload_ammo)
-		self.ammo_counter = 0; // also keeps crosshair ammo from displaying
+		self.ammo_loaded = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.ammo_counter = self.sniperrifle_load;
+		self.ammo_loaded = self.sniperrifle_load;
 		self.ammo_max = autocvar_g_balance_sniperrifle_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -26,13 +26,13 @@ void W_SniperRifle_ReloadedAndReady()
 	float t;
 
 	// now do the ammo transfer
-	self.ammo_counter = self.old_ammo_counter; // restore the ammo counter, in case we still had ammo in the weapon before reloading
-	while(self.ammo_counter < autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_nails) // make sure we don't add more ammo than we have
+	self.ammo_loaded = self.old_ammo_loaded; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.ammo_loaded < autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_nails) // make sure we don't add more ammo than we have
 	{
-		self.ammo_counter += 1;
+		self.ammo_loaded += 1;
 		self.ammo_nails -= 1;
 	}
-	self.sniperrifle_load = self.ammo_counter;
+	self.sniperrifle_load = self.ammo_loaded;
 
 	t = ATTACK_FINISHED(self) - autocvar_g_balance_sniperrifle_reload_time - 1;
 	ATTACK_FINISHED(self) = t;
@@ -57,8 +57,8 @@ void W_SniperRifle_Reload()
 
 	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_sniperrifle_reload_time, W_SniperRifle_ReloadedAndReady);
 
-	self.old_ammo_counter = self.ammo_counter;
-	self.ammo_counter = -1;
+	self.old_ammo_loaded = self.ammo_loaded;
+	self.ammo_loaded = -1;
 }
 
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
@@ -92,8 +92,8 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 			self.ammo_nails -= pAmmo;
 		else
 		{
-			self.ammo_counter -= pAmmo;
-			self.sniperrifle_load = self.ammo_counter;
+			self.ammo_loaded -= pAmmo;
+			self.sniperrifle_load = self.ammo_loaded;
 		}
 	}
 }
@@ -127,7 +127,7 @@ void W_SniperRifle_BulletHail_Continue()
 {
 	float r, sw, af;
 
-	if(autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_counter <= 0)
+	if(autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_loaded <= 0)
 		return; // reloading, so we are done
 
 	sw = self.switchweapon; // make it not detect weapon changes as reason to abort firing
@@ -199,7 +199,7 @@ float w_sniperrifle(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_counter <= 0) // forced reload
+		if(autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_loaded <= 0) // forced reload
             W_SniperRifle_Reload();
 		else
 		{
@@ -278,7 +278,7 @@ float w_sniperrifle(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.sniperrifle_accumulator = time - autocvar_g_balance_sniperrifle_bursttime;
-		self.ammo_counter = autocvar_g_balance_sniperrifle_reload_ammo;
+		self.ammo_loaded = autocvar_g_balance_sniperrifle_reload_ammo;
 	}
 	return TRUE;
 };

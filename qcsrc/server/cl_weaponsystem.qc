@@ -1634,7 +1634,7 @@ float W_ReloadCheck(float ammo_amount)
 	e = get_weaponinfo(self.weapon);
 
 	// our weapon is fully loaded, no need to reload
-	if (self.ammo_counter >= cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
+	if (self.ammo_loaded >= cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
 		return 0;
 
 	// no ammo, so nothing to load
@@ -1647,9 +1647,9 @@ float W_ReloadCheck(float ammo_amount)
 			self.reload_complain = time + 1;
 		}
 		// is there's no more ammo to reload, only switch to another weapon if there's no more load in this one
-		if(!self.ammo_counter)
+		if(!self.ammo_loaded)
 		{
-			self.ammo_counter = -1; // reload later
+			self.ammo_loaded = -1; // reload later
 			W_SwitchToOtherWeapon(self);
 		}
 		return 0;

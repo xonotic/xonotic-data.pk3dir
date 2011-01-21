@@ -612,8 +612,8 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-.float ammo_counter;
-.float old_ammo_counter;
+.float ammo_loaded;
+.float old_ammo_loaded;
 .float ammo_max;
 .float wish_reload;
 

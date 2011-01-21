@@ -7,12 +7,12 @@ REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HIT
 
 void W_Shotgun_SetAmmoCounter()
 {
-	// set ammo_counter to the weapon we have switched to, if the gun uses reloading
+	// set ammo_loaded to the weapon we have switched to, if the gun uses reloading
 	if(!autocvar_g_balance_shotgun_reload_ammo)
-		self.ammo_counter = 0; // also keeps crosshair ammo from displaying
+		self.ammo_loaded = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.ammo_counter = self.shotgun_load;
+		self.ammo_loaded = self.shotgun_load;
 		self.ammo_max = autocvar_g_balance_shotgun_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -22,13 +22,13 @@ void W_Shotgun_ReloadedAndReady()
 	float t;
 
 	// now do the ammo transfer
-	self.ammo_counter = self.old_ammo_counter; // restore the ammo counter, in case we still had ammo in the weapon before reloading
-	while(self.ammo_counter < autocvar_g_balance_shotgun_reload_ammo && self.ammo_shells) // make sure we don't add more ammo than we have
+	self.ammo_loaded = self.old_ammo_loaded; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.ammo_loaded < autocvar_g_balance_shotgun_reload_ammo && self.ammo_shells) // make sure we don't add more ammo than we have
 	{
-		self.ammo_counter += 1;
+		self.ammo_loaded += 1;
 		self.ammo_shells -= 1;
 	}
-	self.shotgun_load = self.ammo_counter;
+	self.shotgun_load = self.ammo_loaded;
 
 	t = ATTACK_FINISHED(self) - autocvar_g_balance_shotgun_reload_time - 1;
 	ATTACK_FINISHED(self) = t;
@@ -53,8 +53,8 @@ void W_Shotgun_Reload()
 
 	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_shotgun_reload_time, W_Shotgun_ReloadedAndReady);
 
-	self.old_ammo_counter = self.ammo_counter;
-	self.ammo_counter = -1;
+	self.old_ammo_loaded = self.ammo_loaded;
+	self.ammo_loaded = -1;
 }
 
 void W_Shotgun_Attack (void)
@@ -69,7 +69,7 @@ void W_Shotgun_Attack (void)
 	float	bulletconstant;
 	local entity flash;
 
-	if(autocvar_g_balance_shotgun_reload_ammo && self.ammo_counter <= 0)
+	if(autocvar_g_balance_shotgun_reload_ammo && self.ammo_loaded <= 0)
 		return; // reloading, so we are done
 
 	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
@@ -107,8 +107,8 @@ void W_Shotgun_Attack (void)
 			self.ammo_shells -= ammoamount;
 		else
 		{
-			self.ammo_counter -= ammoamount;
-			self.shotgun_load = self.ammo_counter;
+			self.ammo_loaded -= ammoamount;
+			self.shotgun_load = self.ammo_loaded;
 		}
 	}
 }
@@ -176,7 +176,7 @@ float w_shotgun(float req)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_shotgun_reload_ammo && self.ammo_counter <= 0) // forced reload
+		if(autocvar_g_balance_shotgun_reload_ammo && self.ammo_loaded <= 0) // forced reload
 			W_Shotgun_Reload();
 		else
 		{
