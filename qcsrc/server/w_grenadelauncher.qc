@@ -213,9 +213,6 @@ void W_Grenade_Touch2 (void)
 
 void W_Grenade_Attack (void)
 {
-	if(autocvar_g_balance_grenadelauncher_reload_ammo && self.clip_load <= 0)
-		return; // reloading, so we are done
-
 	local entity gren;
 
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CHAN_WEAPON, autocvar_g_balance_grenadelauncher_primary_damage);

@@ -95,9 +95,6 @@ void UziFlash()
 
 void W_Uzi_Attack (float deathtype)
 {
-	if(autocvar_g_balance_uzi_reload_ammo && self.clip_load <= 0)
-		return; // reloading, so we are done
-
 	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CHAN_WEAPON, ((self.misc_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage));
 	if (!g_norecoil)
 	{

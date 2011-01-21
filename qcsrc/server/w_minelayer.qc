@@ -249,9 +249,6 @@ void W_Mine_Damage (entity inflictor, entity attacker, float damage, float death
 
 void W_Mine_Attack (void)
 {
-	if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load <= 0)
-		return; // reloading, so we are done
-
 	entity mine;
 	entity flash;
 

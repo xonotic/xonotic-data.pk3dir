@@ -127,9 +127,6 @@ void W_SniperRifle_BulletHail_Continue()
 {
 	float r, sw, af;
 
-	if(autocvar_g_balance_sniperrifle_reload_ammo && self.clip_load <= 0)
-		return; // reloading, so we are done
-
 	sw = self.switchweapon; // make it not detect weapon changes as reason to abort firing
 	af = ATTACK_FINISHED(self);
 	self.switchweapon = self.weapon;
