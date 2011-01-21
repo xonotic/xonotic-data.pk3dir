@@ -433,7 +433,7 @@ float w_minelayer(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load <= 0) // forced reload
+		if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < autocvar_g_balance_minelayer_ammo) // forced reload
 			W_MineLayer_Reload();
 		else if (self.BUTTON_ATCK)
 		{

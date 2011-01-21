@@ -250,7 +250,7 @@ float w_uzi(float req)
 		}
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_uzi_reload_ammo && self.clip_load <= 0) // forced reload
+		if(autocvar_g_balance_uzi_reload_ammo && self.clip_load < min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo)) // forced reload
 			W_Uzi_Reload();
 		else if(autocvar_g_balance_uzi_mode == 1)
 		{

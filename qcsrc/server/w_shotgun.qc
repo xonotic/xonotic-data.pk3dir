@@ -176,7 +176,7 @@ float w_shotgun(float req)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_shotgun_reload_ammo && self.clip_load <= 0) // forced reload
+		if(autocvar_g_balance_shotgun_reload_ammo && self.clip_load < autocvar_g_balance_shotgun_primary_ammo) // forced reload
 			W_Shotgun_Reload();
 		else
 		{

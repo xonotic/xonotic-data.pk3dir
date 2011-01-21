@@ -199,7 +199,7 @@ float w_sniperrifle(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_sniperrifle_reload_ammo && self.clip_load <= 0) // forced reload
+		if(autocvar_g_balance_sniperrifle_reload_ammo && self.clip_load < min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)) // forced reload
             W_SniperRifle_Reload();
 		else
 		{
