@@ -1640,7 +1640,9 @@ float W_ReloadCheck(float ammo_amount)
 		return 0;
 	}
 
-	if (self.ammo_counter >= autocvar_g_balance_shotgun_reload_ammo)
+	entity e;
+	e = get_weaponinfo(self.weapon);
+	if (self.ammo_counter >= cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
 		return 0;
 
 	if (self.weaponentity)
