@@ -1616,27 +1616,16 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 // weapon reload code
 // ----------------------------------------------------------------
 
-void W_ReloadedAndReady()
+float W_ReloadCheck(float ammo_amount)
 {
-	float t;
-	self.ammo_counter = autocvar_g_balance_sniperrifle_magazinecapacity;
-	t = ATTACK_FINISHED(self) - autocvar_g_balance_sniperrifle_reloadtime - 1;
-	ATTACK_FINISHED(self) = t;
-	w_ready();
-}
-
-float W_Reload(float ammo_value)
-{
-	float t;
-
-	if(ammo_value < min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)) // when we get here, bulletcounter must be 0 or -1
+	if(ammo_amount < min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)) // when we get here, ammo_counter must be 0 or -1
 	{
-		print("cannot reload... not enough bullets\n");
+		print("cannot reload... not enough ammo\n");
 		self.ammo_counter = -1; // reload later
 		W_SwitchToOtherWeapon(self);
 		return 0;
 	}
-	
+
 	if (self.ammo_counter >= autocvar_g_balance_shotgun_reload_ammo)
 		return 0;
 
@@ -1648,15 +1637,6 @@ float W_Reload(float ammo_value)
 		// allow to switch away while reloading, but this will cause a new reload!
 		self.weaponentity.state = WS_READY;
 	}
-
-	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
-
-	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_sniperrifle_reloadtime + 1;
-	ATTACK_FINISHED(self) = t;
-
-	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_sniperrifle_reloadtime, W_ReloadedAndReady);
-
-	self.ammo_counter = -1;
 
 	return 1;
 }

@@ -7,11 +7,29 @@ REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HIT
 
 void W_Shotgun_SetAmmoCounter()
 {
-	// set our ammo counter to the weapon we have switched to
+	// set ammo counter to the weapon we have switched to
 	if(!autocvar_g_balance_shotgun_reload_ammo)
 		self.ammo_counter = 0; // also keeps the crosshair ammo from displaying
 	else
 		self.ammo_counter = self.shotgun_load;
+}
+
+void W_Shotgun_ReloadedAndReady()
+{
+	float t;
+
+	// now do the ammo maths
+	self.ammo_counter = 0; // when we get here it's -1
+	while(self.ammo_counter < autocvar_g_balance_shotgun_reload_ammo)
+	{
+		self.ammo_counter += 1;
+		self.ammo_shells -= 1;
+	}
+	self.shotgun_load = self.ammo_counter;
+
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_sniperrifle_reloadtime - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
 }
 
 void W_Shotgun_Reload()
@@ -20,18 +38,19 @@ void W_Shotgun_Reload()
 	if(!autocvar_g_balance_shotgun_reload_ammo)
 		return;
 
-	w_ready();
-	if(W_Reload(self.ammo_shells))
-	{
-		// now do the actual ammo transfer
-		for(self.shotgun_load; self.shotgun_load < autocvar_g_balance_shotgun_reload_ammo && self.ammo_shells; )
-		{
-			self.ammo_counter += 1;
-			self.shotgun_load = self.ammo_counter;
-			self.ammo_shells -= 1;
-		}
+	float t;
+
+	if(!W_ReloadCheck(self.ammo_shells))
 		return;
-	}
+
+	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_sniperrifle_reloadtime + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_sniperrifle_reloadtime, W_Shotgun_ReloadedAndReady);
+
+	self.ammo_counter = -1;
 }
 
 void W_Shotgun_Attack (void)
@@ -182,7 +201,7 @@ float w_shotgun(float req)
                 if(self.weaponentity.state == WS_READY)
                 {
                     self.wish_reload = 0;
-                    W_Reload(self.ammo_shells);
+                    W_Shotgun_Reload();
                 }
             }
         }

@@ -24,13 +24,13 @@ void W_SniperRifle_Reload()
 		return;
 
 	w_ready();
-	if(W_Reload(self.ammo_nails))
+	/*if(W_Reload(self.ammo_nails))
 	{
 		// now do the actual ammo transfer
 		for(self.sniperrifle_load; self.sniperrifle_load < autocvar_g_balance_shotgun_reload_ammo && self.ammo_nails; ++self.sniperrifle_load)
 			self.ammo_nails -= 1;
 		return;
-	}
+	}*/
 }
 
 float W_SniperRifle_CheckMaxBullets(float checkammo)
@@ -110,8 +110,8 @@ void spawnfunc_weapon_campingrifle (void)
 void W_SniperRifle_BulletHail_Continue()
 {
 	float r, sw, af;
-	if(self.ammo_counter <= 0)
-		W_SniperRifle_Reload();
+	//if(self.ammo_counter <= 0)
+		//W_SniperRifle_Reload();
 	if(self.ammo_counter < 0)
 		return; // reloading, so we are done
 	sw = self.switchweapon; // make it not detect weapon changes as reason to abort firing
@@ -224,7 +224,7 @@ float w_sniperrifle(float req)
                 if(self.weaponentity.state == WS_READY)
                 {
                     self.wish_reload = 0;
-                    W_Reload(self.ammo_nails);
+                    //W_Reload(self.ammo_nails);
                 }
             }
         }
