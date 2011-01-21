@@ -850,7 +850,7 @@ void CSQC_UpdateView(float w, float h)
 
 			// TrueAim check
 			float shottype;
-			float weapon_load, weapon_clipsize, ring_scale;
+			float weapon_clipload, weapon_clipsize, ring_scale;
 			// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 			wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
 			wcross_origin_z = 0;
@@ -996,11 +996,11 @@ void CSQC_UpdateView(float w, float h)
 				nex_charge_movingavg = nex_charge;
 
 			// ring around crosshair representing bullets left in weapon clip
-			weapon_load = getstati(STAT_WEAPON_LOAD);
-			if (weapon_load)
+			weapon_clipload = getstati(STAT_WEAPON_CLIPLOAD);
+			if (weapon_clipload)
 			{
 				weapon_clipsize = getstati(STAT_WEAPON_CLIPSIZE);
-				f = bound(0, weapon_load / weapon_clipsize, 1);
+				f = bound(0, weapon_clipload / weapon_clipsize, 1);
 
 				a = autocvar_crosshair_ring_sniperrifle_alpha;
 				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
