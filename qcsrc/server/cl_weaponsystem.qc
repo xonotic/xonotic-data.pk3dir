@@ -1618,7 +1618,7 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 
 float ammo_amount;
 
-float W_SniperRifle_CheckMaxBullets(float checkammo)
+float W_CheckMaxBullets(float checkammo)
 {
 	float maxbulls;
 	maxbulls = autocvar_g_balance_sniperrifle_magazinecapacity;
@@ -1627,37 +1627,37 @@ float W_SniperRifle_CheckMaxBullets(float checkammo)
 	if(checkammo)
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 			maxbulls = min(maxbulls, floor(ammo_amount / min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)));
-	if(self.sniperrifle_bulletcounter > maxbulls || !autocvar_g_balance_sniperrifle_magazinecapacity)
-		self.sniperrifle_bulletcounter = maxbulls;
-	return (self.sniperrifle_bulletcounter == maxbulls);
+	if(self.ammo_counter > maxbulls || !autocvar_g_balance_sniperrifle_magazinecapacity)
+		self.ammo_counter = maxbulls;
+	return (self.ammo_counter == maxbulls);
 }
 
-void W_SniperRifle_ReloadedAndReady()
+void W_ReloadedAndReady()
 {
 	float t;
-	self.sniperrifle_bulletcounter = autocvar_g_balance_sniperrifle_magazinecapacity;
-	W_SniperRifle_CheckMaxBullets(TRUE);
+	self.ammo_counter = autocvar_g_balance_sniperrifle_magazinecapacity;
+	W_CheckMaxBullets(TRUE);
 	t = ATTACK_FINISHED(self) - autocvar_g_balance_sniperrifle_reloadtime - 1;
 	ATTACK_FINISHED(self) = t;
 	w_ready();
 }
 
-float W_SniperRifle_Reload(float ammo_value)
+float W_Reload(float ammo_value)
 {
 	float t;
 
-	W_SniperRifle_CheckMaxBullets(TRUE);
+	W_CheckMaxBullets(TRUE);
 
 	ammo_amount = ammo_value; // save ammo to a global float
 	if(ammo_amount < min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)) // when we get here, bulletcounter must be 0 or -1
 	{
 		print("cannot reload... not enough bullets\n");
-		self.sniperrifle_bulletcounter = -1; // reload later
+		self.ammo_counter = -1; // reload later
 		W_SwitchToOtherWeapon(self);
 		return 0;
 	}
 	
-	if (self.sniperrifle_bulletcounter >= autocvar_g_balance_sniperrifle_magazinecapacity)
+	if (self.ammo_counter >= autocvar_g_balance_sniperrifle_magazinecapacity)
 		return 0;
 
 	if (self.weaponentity)
@@ -1674,9 +1674,9 @@ float W_SniperRifle_Reload(float ammo_value)
 	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_sniperrifle_reloadtime + 1;
 	ATTACK_FINISHED(self) = t;
 
-	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_sniperrifle_reloadtime, W_SniperRifle_ReloadedAndReady);
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_sniperrifle_reloadtime, W_ReloadedAndReady);
 
-	self.sniperrifle_bulletcounter = -1;
+	self.ammo_counter = -1;
 
 	return 1;
 }

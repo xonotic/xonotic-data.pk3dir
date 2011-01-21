@@ -11,7 +11,7 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_T
 void W_SniperRifle_DoReload()
 {
 	w_ready();
-	if(W_SniperRifle_Reload(self.ammo_nails))
+	if(W_Reload(self.ammo_nails))
 		return;
 }
 
@@ -42,7 +42,7 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 	if (autocvar_g_casings >= 2)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 	
-	self.sniperrifle_bulletcounter = self.sniperrifle_bulletcounter - 1;
+	self.ammo_counter = self.ammo_counter - 1;
 }
 
 void W_SniperRifle_Attack()
@@ -73,9 +73,9 @@ void spawnfunc_weapon_campingrifle (void)
 void W_SniperRifle_BulletHail_Continue()
 {
 	float r, sw, af;
-	if(self.sniperrifle_bulletcounter <= 0)
+	if(self.ammo_counter <= 0)
 		W_SniperRifle_DoReload();
-	if(self.sniperrifle_bulletcounter < 0)
+	if(self.ammo_counter < 0)
 		return; // reloading, so we are done
 	sw = self.switchweapon; // make it not detect weapon changes as reason to abort firing
 	af = ATTACK_FINISHED(self);
@@ -147,7 +147,7 @@ float w_sniperrifle(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(self.sniperrifle_bulletcounter < 0) // forced reload (e.g. because interrupted)
+		if(self.ammo_counter < 0) // forced reload (e.g. because interrupted)
 		{
             self.wish_reload = 1;
 		}
@@ -188,7 +188,7 @@ float w_sniperrifle(float req)
                 if(self.weaponentity.state == WS_READY)
                 {
                     self.wish_reload = 0;
-                    W_SniperRifle_Reload(self.ammo_nails);
+                    W_Reload(self.ammo_nails);
                 }
             }
         }
@@ -206,10 +206,10 @@ float w_sniperrifle(float req)
 	{
 		weapon_setup(WEP_SNIPERRIFLE);
 
-		full = W_SniperRifle_CheckMaxBullets(TRUE);
+		full = W_CheckMaxBullets(TRUE);
 		if(autocvar_g_balance_sniperrifle_auto_reload_on_switch)
 			if(!full)
-				self.sniperrifle_bulletcounter = -1;
+				self.ammo_counter = -1;
 	}
 	else if (req == WR_CHECKAMMO1)
 		return self.ammo_nails >= autocvar_g_balance_sniperrifle_primary_ammo;
@@ -222,8 +222,8 @@ float w_sniperrifle(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.sniperrifle_accumulator = time - autocvar_g_balance_sniperrifle_bursttime;
-		self.sniperrifle_bulletcounter = autocvar_g_balance_sniperrifle_magazinecapacity;
-		W_SniperRifle_CheckMaxBullets(FALSE);
+		self.ammo_counter = autocvar_g_balance_sniperrifle_magazinecapacity;
+		W_CheckMaxBullets(FALSE);
 	}
 	return TRUE;
 };

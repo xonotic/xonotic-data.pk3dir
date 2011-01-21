@@ -612,7 +612,7 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-.float sniperrifle_bulletcounter;
+.float ammo_counter;
 .float wish_reload;
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE

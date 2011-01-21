@@ -6,7 +6,7 @@ REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HIT
 void W_Shotgun_DoReload()
 {
 	w_ready();
-	if(W_SniperRifle_Reload(self.ammo_shells))
+	if(W_Reload(self.ammo_shells))
 		return;
 }
 
@@ -22,9 +22,9 @@ void W_Shotgun_Attack (void)
 	float	bulletconstant;
 	local entity flash;
 
-	if(self.sniperrifle_bulletcounter <= 0)
+	if(self.ammo_counter <= 0)
 		W_Shotgun_DoReload();
-	if(self.sniperrifle_bulletcounter < 0)
+	if(self.ammo_counter < 0)
 		return; // reloading, so we are done
 
 	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
@@ -57,7 +57,7 @@ void W_Shotgun_Attack (void)
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');
 
-	self.sniperrifle_bulletcounter = self.sniperrifle_bulletcounter - 1;
+	self.ammo_counter = self.ammo_counter - 1;
 }
 
 void shotgun_meleethink (void)
@@ -123,7 +123,7 @@ float w_shotgun(float req)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 	else if (req == WR_THINK)
 	{
-		if(self.sniperrifle_bulletcounter < 0) // forced reload (e.g. because interrupted)
+		if(self.ammo_counter < 0) // forced reload (e.g. because interrupted)
             self.wish_reload = 1;
 		else
 		{
@@ -153,7 +153,7 @@ float w_shotgun(float req)
                 if(self.weaponentity.state == WS_READY)
                 {
                     self.wish_reload = 0;
-                    W_SniperRifle_Reload(self.ammo_shells);
+                    W_Reload(self.ammo_shells);
                 }
             }
         }
