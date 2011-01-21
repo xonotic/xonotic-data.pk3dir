@@ -995,7 +995,7 @@ void CSQC_UpdateView(float w, float h)
 			if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 				nex_charge_movingavg = nex_charge;
 
-			// ring around crosshair representing bullets left in camping rifle clip
+			// ring around crosshair representing bullets left in weapon clip
 			weapon_load = getstati(STAT_WEAPON_LOAD);
 			if (weapon_load)
 			{
