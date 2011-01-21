@@ -24,10 +24,10 @@ void W_SniperRifle_ReloadedAndReady()
 
 	// now do the ammo maths
 	self.ammo_counter = 0; // when we get here it's -1
-	while(self.ammo_counter < autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_shells) // make sure we don't add more than the amount of ammo we have
+	while(self.ammo_counter < autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_nails) // make sure we don't add more than the amount of ammo we have
 	{
 		self.ammo_counter += 1;
-		self.ammo_shells -= 1;
+		self.ammo_nails -= 1;
 	}
 	self.sniperrifle_load = self.ammo_counter;
 
@@ -44,7 +44,7 @@ void W_SniperRifle_Reload()
 
 	float t;
 
-	if(!W_ReloadCheck(self.ammo_shells))
+	if(!W_ReloadCheck(self.ammo_nails))
 		return;
 
 	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
