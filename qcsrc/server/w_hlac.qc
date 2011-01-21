@@ -3,6 +3,60 @@ REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BO
 #else
 #ifdef SVQC
 
+.float hlac_load;
+
+void W_Hlac_SetAmmoCounter()
+{
+	// set clip_load to the weapon we have switched to, if the gun uses reloading
+	if(!autocvar_g_balance_hlac_reload_ammo)
+		self.clip_load = 0; // also keeps crosshair ammo from displaying
+	else
+	{
+		self.clip_load = self.hlac_load;
+		self.clip_size = autocvar_g_balance_hlac_reload_ammo; // for the crosshair ammo display
+	}
+}
+
+void W_Hlac_ReloadedAndReady()
+{
+	float t;
+
+	// now do the ammo transfer
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.clip_load < autocvar_g_balance_hlac_reload_ammo && self.ammo_cells) // make sure we don't add more ammo than we have
+	{
+		self.clip_load += 1;
+		self.ammo_cells -= 1;
+	}
+	self.hlac_load = self.clip_load;
+
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_hlac_reload_time - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
+}
+
+void W_Hlac_Reload()
+{
+	// return if reloading is disabled for this weapon
+	if(!autocvar_g_balance_hlac_reload_ammo)
+		return;
+
+	if(!W_ReloadCheck(self.ammo_cells))
+		return;
+
+	float t;
+
+	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_hlac_reload_time + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_hlac_reload_time, W_Hlac_ReloadedAndReady);
+
+	self.old_clip_load = self.clip_load;
+	self.clip_load = -1;
+}
+
 void W_HLAC_Touch (void)
 {
 	PROJECTILE_TOUCH;
@@ -21,11 +75,6 @@ void W_HLAC_Attack (void)
 {
 	local entity missile;
     float spread;
-
-    if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-    {
-        self.ammo_cells = self.ammo_cells - autocvar_g_balance_hlac_primary_ammo;
-    }
 
     spread = autocvar_g_balance_hlac_primary_spread_min + (autocvar_g_balance_hlac_primary_spread_add * self.misc_bulletcounter);
     spread = min(spread,autocvar_g_balance_hlac_primary_spread_max);
@@ -67,6 +116,18 @@ void W_HLAC_Attack (void)
 	CSQCProjectile(missile, TRUE, PROJECTILE_HLAC, TRUE);
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_hlac_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_hlac_primary_ammo;
+			self.hlac_load = self.clip_load;
+		}
+		else
+			self.ammo_cells -= autocvar_g_balance_hlac_primary_ammo;
+	}
 }
 
 void W_HLAC_Attack2f (void)
@@ -116,11 +177,6 @@ void W_HLAC_Attack2 (void)
 {
     float i;
 
-    if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-    {
-        self.ammo_cells = self.ammo_cells - autocvar_g_balance_hlac_secondary_ammo;
-    }
-
     for(i=autocvar_g_balance_hlac_secondary_shots;i>0;--i)
         W_HLAC_Attack2f();
 
@@ -128,6 +184,18 @@ void W_HLAC_Attack2 (void)
 	{
 		self.punchangle_x = random () - 0.5;
 		self.punchangle_y = random () - 0.5;
+	}
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_hlac_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_hlac_secondary_ammo;
+			self.hlac_load = self.clip_load;
+		}
+		else
+			self.ammo_cells -= autocvar_g_balance_hlac_secondary_ammo;
 	}
 }
 
@@ -171,21 +239,37 @@ float w_hlac(float req)
         self.BUTTON_ATCK = bot_aim(autocvar_g_balance_hlac_primary_speed, 0, autocvar_g_balance_hlac_primary_lifetime, FALSE);
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, autocvar_g_balance_hlac_primary_refire))
+		if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo)) // forced reload
+			W_Hlac_Reload();
+		else if (self.BUTTON_ATCK)
 		{
-			self.misc_bulletcounter = 0;
-			W_HLAC_Attack();
-			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hlac_primary_refire, HLAC_fire1_02);
+			if (weapon_prepareattack(0, autocvar_g_balance_hlac_primary_refire))
+			{
+				self.misc_bulletcounter = 0;
+				W_HLAC_Attack();
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hlac_primary_refire, HLAC_fire1_02);
+			}
 		}
 
-		if (self.BUTTON_ATCK2 && autocvar_g_balance_hlac_secondary)
-		if (weapon_prepareattack(1, autocvar_g_balance_hlac_secondary_refire))
+		else if (self.BUTTON_ATCK2 && autocvar_g_balance_hlac_secondary)
 		{
-			W_HLAC_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hlac_secondary_animtime, w_ready);
+			if (weapon_prepareattack(1, autocvar_g_balance_hlac_secondary_refire))
+			{
+				W_HLAC_Attack2();
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hlac_secondary_animtime, w_ready);
+			}
 		}
-
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_Hlac_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -196,11 +280,28 @@ float w_hlac(float req)
 
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_HLAC);
+		W_Hlac_SetAmmoCounter();
+	}
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_cells >= autocvar_g_balance_hlac_primary_ammo;
+	{
+		if(autocvar_g_balance_hlac_reload_ammo)
+			return self.hlac_load >= autocvar_g_balance_hlac_primary_ammo;
+		else
+			return self.ammo_cells >= autocvar_g_balance_hlac_primary_ammo;
+	}
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_cells >= autocvar_g_balance_hlac_secondary_ammo;
+	{
+		if(autocvar_g_balance_hlac_reload_ammo)
+			return self.hlac_load >= autocvar_g_balance_hlac_secondary_ammo;
+		else
+			return self.ammo_cells >= autocvar_g_balance_hlac_secondary_ammo;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Hlac_Reload();
+	}
 	return TRUE;
 };
 #endif

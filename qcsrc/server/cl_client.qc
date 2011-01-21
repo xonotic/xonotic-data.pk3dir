@@ -896,6 +896,8 @@ void PutClientInServer (void)
 		self.grenadelauncher_load = autocvar_g_balance_grenadelauncher_reload_ammo;
 		self.minelayer_load = autocvar_g_balance_minelayer_reload_ammo;
 		self.electro_load = autocvar_g_balance_electro_reload_ammo;
+		self.crylink_load = autocvar_g_balance_crylink_reload_ammo;
+		self.hlac_load = autocvar_g_balance_hlac_reload_ammo;
 
 		if(inWarmupStage)
 		{

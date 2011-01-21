@@ -9,6 +9,60 @@ REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 .entity queuenext;
 .entity queueprev;
 
+.float crylink_load;
+
+void W_Crylink_SetAmmoCounter()
+{
+	// set clip_load to the weapon we have switched to, if the gun uses reloading
+	if(!autocvar_g_balance_crylink_reload_ammo)
+		self.clip_load = 0; // also keeps crosshair ammo from displaying
+	else
+	{
+		self.clip_load = self.crylink_load;
+		self.clip_size = autocvar_g_balance_crylink_reload_ammo; // for the crosshair ammo display
+	}
+}
+
+void W_Crylink_ReloadedAndReady()
+{
+	float t;
+
+	// now do the ammo transfer
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.clip_load < autocvar_g_balance_crylink_reload_ammo && self.ammo_cells) // make sure we don't add more ammo than we have
+	{
+		self.clip_load += 1;
+		self.ammo_cells -= 1;
+	}
+	self.crylink_load = self.clip_load;
+
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_crylink_reload_time - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
+}
+
+void W_Crylink_Reload()
+{
+	// return if reloading is disabled for this weapon
+	if(!autocvar_g_balance_crylink_reload_ammo)
+		return;
+
+	if(!W_ReloadCheck(self.ammo_cells))
+		return;
+
+	float t;
+
+	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_crylink_reload_time + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_crylink_reload_time, W_Crylink_ReloadedAndReady);
+
+	self.old_clip_load = self.clip_load;
+	self.clip_load = -1;
+}
+
 void W_Crylink_CheckLinks(entity e)
 {
 	float i;
@@ -319,9 +373,6 @@ void W_Crylink_Attack (void)
 	vector forward, right, up;
 	float maxdmg;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - autocvar_g_balance_crylink_primary_ammo;
-
 	maxdmg = autocvar_g_balance_crylink_primary_damage*autocvar_g_balance_crylink_primary_shots;
 	maxdmg *= 1 + autocvar_g_balance_crylink_primary_bouncedamagefactor * autocvar_g_balance_crylink_primary_bounces;
 	if(autocvar_g_balance_crylink_primary_joinexplode)
@@ -414,6 +465,18 @@ void W_Crylink_Attack (void)
 		counter = counter + 1;
 	}
 	self.crylink_lastgroup = proj;
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_crylink_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_crylink_primary_ammo;
+			self.crylink_load = self.clip_load;
+		}
+		else
+			self.ammo_cells -= autocvar_g_balance_crylink_primary_ammo;
+	}
 }
 
 void W_Crylink_Attack2 (void)
@@ -421,9 +484,6 @@ void W_Crylink_Attack2 (void)
 	local float counter, shots;
 	local entity proj, prevproj, firstproj;
 	float maxdmg;
-
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - autocvar_g_balance_crylink_secondary_ammo;
 
 	maxdmg = autocvar_g_balance_crylink_secondary_damage*autocvar_g_balance_crylink_secondary_shots;
 	maxdmg *= 1 + autocvar_g_balance_crylink_secondary_bouncedamagefactor * autocvar_g_balance_crylink_secondary_bounces;
@@ -502,6 +562,18 @@ void W_Crylink_Attack2 (void)
 		counter = counter + 1;
 	}
 	self.crylink_lastgroup = proj;
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_crylink_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_crylink_secondary_ammo;
+			self.crylink_load = self.clip_load;
+		}
+		else
+			self.ammo_cells -= autocvar_g_balance_crylink_secondary_ammo;
+	}
 }
 
 void spawnfunc_weapon_crylink (void)
@@ -520,7 +592,9 @@ float w_crylink(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo)) // forced reload
+			W_Crylink_Reload();
+		else if (self.BUTTON_ATCK)
 		{
 			if (!self.crylink_waitrelease)
 			if (weapon_prepareattack(0, autocvar_g_balance_crylink_primary_refire))
@@ -578,6 +652,17 @@ float w_crylink(float req)
 				}
 			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_Crylink_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -589,20 +674,31 @@ float w_crylink(float req)
 		precache_sound ("weapons/crylink_linkjoin.wav");
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_CRYLINK);
+		W_Crylink_SetAmmoCounter();
+	}
 	else if (req == WR_CHECKAMMO1)
 	{
 		// don't "run out of ammo" and switch weapons while waiting for release
 		if(self.crylink_lastgroup && self.crylink_waitrelease)
 			return TRUE;
-		return self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
+
+		if(autocvar_g_balance_crylink_reload_ammo)
+			return self.crylink_load >= autocvar_g_balance_crylink_primary_ammo;
+		else
+			return self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		// don't "run out of ammo" and switch weapons while waiting for release
 		if(self.crylink_lastgroup && self.crylink_waitrelease)
 			return TRUE;
-		return self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
+
+		if(autocvar_g_balance_crylink_reload_ammo)
+			return self.crylink_load >= autocvar_g_balance_crylink_secondary_ammo;
+		else
+			return self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
 	}
 	return TRUE;
 };
@@ -644,6 +740,10 @@ float w_crylink(float req)
 			w_deathtypestring = "%s was too close to %s's Crylink"; // unchecked: SECONDARY
 		else
 			w_deathtypestring = "%s took a close look at %s's Crylink"; // unchecked: SECONDARY
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Crylink_Reload();
 	}
 	return TRUE;
 }
