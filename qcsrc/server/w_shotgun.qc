@@ -11,7 +11,10 @@ void W_Shotgun_SetAmmoCounter()
 	if(!autocvar_g_balance_shotgun_reload_ammo)
 		self.ammo_counter = 0; // also keeps crosshair ammo from displaying
 	else
+	{
 		self.ammo_counter = self.shotgun_load;
+		self.ammo_max = autocvar_g_balance_shotgun_reload_ammo; // for the crosshair ammo display
+	}
 }
 
 void W_Shotgun_ReloadedAndReady()

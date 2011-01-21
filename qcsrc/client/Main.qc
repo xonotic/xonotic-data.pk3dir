@@ -1092,8 +1092,6 @@ void Ent_Init()
 
 	serverflags = ReadByte();
 
-	cr_maxbullets = ReadByte();
-
 	g_trueaim_minrange = ReadCoord();
 
 	if(!postinit)

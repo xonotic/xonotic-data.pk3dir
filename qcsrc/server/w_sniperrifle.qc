@@ -15,7 +15,10 @@ void W_SniperRifle_SetAmmoCounter()
 	if(!autocvar_g_balance_sniperrifle_reload_ammo)
 		self.ammo_counter = 0; // also keeps crosshair ammo from displaying
 	else
+	{
 		self.ammo_counter = self.sniperrifle_load;
+		self.ammo_max = autocvar_g_balance_sniperrifle_reload_ammo; // for the crosshair ammo display
+	}
 }
 
 void W_SniperRifle_ReloadedAndReady()

@@ -850,7 +850,7 @@ void CSQC_UpdateView(float w, float h)
 
 			// TrueAim check
 			float shottype;
-			float bullets, ring_scale;
+			float bullets, bullets_max, ring_scale;
 			// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 			wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
 			wcross_origin_z = 0;
@@ -996,10 +996,11 @@ void CSQC_UpdateView(float w, float h)
 				nex_charge_movingavg = nex_charge;
 
 			// ring around crosshair representing bullets left in camping rifle clip
-			if (cr_maxbullets)
+			bullets = getstati(STAT_BULLETS_LOADED);
+			if (bullets)
 			{
-				bullets = getstati(STAT_BULLETS_LOADED);
-				f = bound(0, bullets / cr_maxbullets, 1);
+				bullets_max = getstati(STAT_BULLETS_MAX);
+				f = bound(0, bullets / bullets_max, 1);
 
 				a = autocvar_crosshair_ring_sniperrifle_alpha;
 				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
