@@ -893,6 +893,8 @@ void PutClientInServer (void)
 		self.shotgun_load = autocvar_g_balance_shotgun_reload_ammo;
 		self.sniperrifle_load = autocvar_g_balance_sniperrifle_reload_ammo;
 		self.uzi_load = autocvar_g_balance_uzi_reload_ammo;
+		self.grenadelauncher_load = autocvar_g_balance_grenadelauncher_reload_ammo;
+		self.minelayer_load = autocvar_g_balance_minelayer_reload_ammo;
 
 		if(inWarmupStage)
 		{

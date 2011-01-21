@@ -5,6 +5,60 @@ REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | 
 .float gl_detonate_later;
 .float gl_bouncecnt;
 
+.float grenadelauncher_load;
+
+void W_GrenadeLauncher_SetAmmoCounter()
+{
+	// set clip_load to the weapon we have switched to, if the gun uses reloading
+	if(!autocvar_g_balance_grenadelauncher_reload_ammo)
+		self.clip_load = 0; // also keeps crosshair ammo from displaying
+	else
+	{
+		self.clip_load = self.grenadelauncher_load;
+		self.clip_size = autocvar_g_balance_grenadelauncher_reload_ammo; // for the crosshair ammo display
+	}
+}
+
+void W_GrenadeLauncher_ReloadedAndReady()
+{
+	float t;
+
+	// now do the ammo transfer
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.clip_load < autocvar_g_balance_grenadelauncher_reload_ammo && self.ammo_rockets) // make sure we don't add more ammo than we have
+	{
+		self.clip_load += 1;
+		self.ammo_rockets -= 1;
+	}
+	self.grenadelauncher_load = self.clip_load;
+
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_grenadelauncher_reload_time - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
+}
+
+void W_GrenadeLauncher_Reload()
+{
+	// return if reloading is disabled for this weapon
+	if(!autocvar_g_balance_grenadelauncher_reload_ammo)
+		return;
+
+	if(!W_ReloadCheck(self.ammo_rockets))
+		return;
+
+	float t;
+
+	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_grenadelauncher_reload_time + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_grenadelauncher_reload_time, W_GrenadeLauncher_ReloadedAndReady);
+
+	self.old_clip_load = self.clip_load;
+	self.clip_load = -1;
+}
+
 void W_Grenade_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
@@ -159,10 +213,11 @@ void W_Grenade_Touch2 (void)
 
 void W_Grenade_Attack (void)
 {
+	if(autocvar_g_balance_grenadelauncher_reload_ammo && self.clip_load <= 0)
+		return; // reloading, so we are done
+
 	local entity gren;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_grenadelauncher_primary_ammo;
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CHAN_WEAPON, autocvar_g_balance_grenadelauncher_primary_damage);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
@@ -202,14 +257,24 @@ void W_Grenade_Attack (void)
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
 
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_grenadelauncher_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_grenadelauncher_primary_ammo;
+			self.grenadelauncher_load = self.clip_load;
+		}
+		else
+			self.ammo_rockets -= autocvar_g_balance_grenadelauncher_primary_ammo;
+	}
 }
 
 void W_Grenade_Attack2 (void)
 {
 	local entity gren;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_grenadelauncher_secondary_ammo;
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CHAN_WEAPON, autocvar_g_balance_grenadelauncher_secondary_damage);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
@@ -248,6 +313,18 @@ void W_Grenade_Attack2 (void)
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
 
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_grenadelauncher_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_grenadelauncher_secondary_ammo;
+			self.grenadelauncher_load = self.clip_load;
+		}
+		else
+			self.ammo_rockets -= autocvar_g_balance_grenadelauncher_secondary_ammo;
+	}
 }
 
 void spawnfunc_weapon_grenadelauncher (void)
@@ -284,13 +361,17 @@ float w_glauncher(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, autocvar_g_balance_grenadelauncher_primary_refire))
+		if(autocvar_g_balance_grenadelauncher_reload_ammo && self.clip_load <= 0) // forced reload
+			W_GrenadeLauncher_Reload();
+		else if (self.BUTTON_ATCK)
 		{
-			W_Grenade_Attack();
-			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_grenadelauncher_primary_animtime, w_ready);
+			if (weapon_prepareattack(0, autocvar_g_balance_grenadelauncher_primary_refire))
+			{
+				W_Grenade_Attack();
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_grenadelauncher_primary_animtime, w_ready);
+			}
 		}
-		if (self.BUTTON_ATCK2)
+		else if (self.BUTTON_ATCK2)
 		{
 			if (cvar("g_balance_grenadelauncher_secondary_remote_detonateprimary"))
 			{
@@ -312,6 +393,17 @@ float w_glauncher(float req)
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_grenadelauncher_secondary_animtime, w_ready);
 			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_GrenadeLauncher_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -328,11 +420,24 @@ float w_glauncher(float req)
 		precache_sound ("weapons/grenade_fire.wav");
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_GRENADE_LAUNCHER);
+		W_GrenadeLauncher_SetAmmoCounter();
+	}
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_rockets >= autocvar_g_balance_grenadelauncher_primary_ammo;
+	{
+		if(autocvar_g_balance_grenadelauncher_reload_ammo)
+			return self.grenadelauncher_load >= autocvar_g_balance_grenadelauncher_primary_ammo;
+		else
+			return self.ammo_rockets >= autocvar_g_balance_grenadelauncher_primary_ammo;
+	}
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_rockets >= autocvar_g_balance_grenadelauncher_secondary_ammo;
+	{
+		if(autocvar_g_balance_grenadelauncher_reload_ammo)
+			return self.grenadelauncher_load >= autocvar_g_balance_grenadelauncher_secondary_ammo;
+		else
+			return self.ammo_rockets >= autocvar_g_balance_grenadelauncher_secondary_ammo;
+	}
 	return TRUE;
 };
 #endif
@@ -367,6 +472,10 @@ float w_glauncher(float req)
 				w_deathtypestring = "%s almost dodged %s's grenade";
 		else // unchecked: SECONDARY, BOUNCE
 			w_deathtypestring = "%s ate %s's grenade";
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_GrenadeLauncher_Reload();
 	}
 	return TRUE;
 }

@@ -6,6 +6,60 @@ void W_Mine_Think (void);
 .float minelayer_detonate, minelayer_mines;
 .float mine_time;
 
+.float minelayer_load;
+
+void W_MineLayer_SetAmmoCounter()
+{
+	// set clip_load to the weapon we have switched to, if the gun uses reloading
+	if(!autocvar_g_balance_minelayer_reload_ammo)
+		self.clip_load = 0; // also keeps crosshair ammo from displaying
+	else
+	{
+		self.clip_load = self.minelayer_load;
+		self.clip_size = autocvar_g_balance_minelayer_reload_ammo; // for the crosshair ammo display
+	}
+}
+
+void W_MineLayer_ReloadedAndReady()
+{
+	float t;
+
+	// now do the ammo transfer
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.clip_load < autocvar_g_balance_minelayer_reload_ammo && self.ammo_rockets) // make sure we don't add more ammo than we have
+	{
+		self.clip_load += 1;
+		self.ammo_rockets -= 1;
+	}
+	self.minelayer_load = self.clip_load;
+
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_minelayer_reload_time - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
+}
+
+void W_MineLayer_Reload()
+{
+	// return if reloading is disabled for this weapon
+	if(!autocvar_g_balance_minelayer_reload_ammo)
+		return;
+
+	if(!W_ReloadCheck(self.ammo_rockets))
+		return;
+
+	float t;
+
+	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_minelayer_reload_time + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_minelayer_reload_time, W_MineLayer_ReloadedAndReady);
+
+	self.old_clip_load = self.clip_load;
+	self.clip_load = -1;
+}
+
 void spawnfunc_weapon_minelayer (void)
 {
 	weapon_defaultspawnfunc(WEP_MINE_LAYER);
@@ -195,6 +249,9 @@ void W_Mine_Damage (entity inflictor, entity attacker, float damage, float death
 
 void W_Mine_Attack (void)
 {
+	if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load <= 0)
+		return; // reloading, so we are done
+
 	entity mine;
 	entity flash;
 
@@ -213,9 +270,6 @@ void W_Mine_Attack (void)
 			return;
 		}
 	}
-
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_minelayer_ammo;
 
 	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", CHAN_WEAPON, autocvar_g_balance_minelayer_damage);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -262,6 +316,18 @@ void W_Mine_Attack (void)
 	// common properties
 
 	other = mine; MUTATOR_CALLHOOK(EditProjectile);
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_minelayer_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_minelayer_ammo;
+			self.minelayer_load = self.clip_load;
+		}
+		else
+			self.ammo_rockets -= autocvar_g_balance_minelayer_ammo;
+	}
 }
 
 void spawnfunc_weapon_minelayer (void); // defined in t_items.qc
@@ -367,7 +433,9 @@ float w_minelayer(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load <= 0) // forced reload
+			W_MineLayer_Reload();
+		else if (self.BUTTON_ATCK)
 		{
 			if(weapon_prepareattack(0, autocvar_g_balance_minelayer_refire))
 			{
@@ -376,7 +444,7 @@ float w_minelayer(float req)
 			}
 		}
 
-		if (self.BUTTON_ATCK2)
+		else if (self.BUTTON_ATCK2)
 		{
 			minfound = 0;
 			for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
@@ -390,6 +458,18 @@ float w_minelayer(float req)
 			if(minfound)
 				sound (self, CHAN_WEAPON2, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
 		}
+
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_MineLayer_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -406,6 +486,7 @@ float w_minelayer(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_MINE_LAYER);
+		W_MineLayer_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
@@ -415,7 +496,13 @@ float w_minelayer(float req)
 			return FALSE;
 	}
 	else if (req == WR_CHECKAMMO2)
+	{
 		return FALSE;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_MineLayer_Reload();
+	}
 	return TRUE;
 };
 #endif
