@@ -122,26 +122,6 @@ void W_Uzi_Attack (float deathtype)
 	// casing code
 	if (autocvar_g_casings >= 2)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
-
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_uzi_reload_ammo)
-		{
-			if (self.misc_bulletcounter == 1)
-				self.clip_load -= autocvar_g_balance_uzi_first_ammo;
-			else
-				self.clip_load -= autocvar_g_balance_uzi_sustained_ammo;
-			self.uzi_load = self.clip_load;
-		}
-		else
-		{
-			if (self.misc_bulletcounter == 1)
-				self.ammo_nails -= autocvar_g_balance_uzi_first_ammo;
-			else
-				self.ammo_nails -= autocvar_g_balance_uzi_sustained_ammo;
-		}
-	}
 }
 
 // weapon frames
