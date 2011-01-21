@@ -1,4 +1,4 @@
-void W_WepReload()
+void W_Reload()
 {
     self.wish_reload = 1;
 }
@@ -15,7 +15,7 @@ void W_SwitchWeapon(float imp)
 	}
 	else
 	{
-		W_WepReload();
+		W_Reload();
 	}
 };
 

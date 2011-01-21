@@ -98,7 +98,7 @@ void ImpulseCommands (void)
 					W_PreviousWeapon (1);
 					break;
 				case 20:
-					W_WepReload ();
+					W_Reload ();
 					break;
 			}
 		}
