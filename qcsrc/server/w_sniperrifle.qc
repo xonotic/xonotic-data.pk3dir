@@ -207,7 +207,7 @@ float w_sniperrifle(float req)
 	else if (req == WR_THINK)
 	{
 		W_SniperRifle_SetAmmoCounter();
-		if(self.ammo_counter < 0) // forced reload (e.g. because interrupted)
+		if(self.ammo_counter <= 0) // forced reload
             W_SniperRifle_Reload();
 		else
 		{

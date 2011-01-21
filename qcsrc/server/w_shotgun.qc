@@ -169,7 +169,7 @@ float w_shotgun(float req)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 	else if (req == WR_THINK)
 	{
-		if(self.ammo_counter < 0) // forced reload (e.g. because interrupted)
+		if(self.ammo_counter <= 0) // forced reload
 			W_Shotgun_Reload();
 		else
 		{
