@@ -44,7 +44,7 @@ void W_SniperRifle_Reload()
 
 	float t;
 
-	if(!W_ReloadCheck(self.ammo_nails))
+	if(!W_ReloadCheck(self.ammo_nails, autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo))
 		return;
 
 	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);

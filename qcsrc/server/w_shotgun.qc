@@ -40,7 +40,7 @@ void W_Shotgun_Reload()
 
 	float t;
 
-	if(!W_ReloadCheck(self.ammo_shells))
+	if(!W_ReloadCheck(self.ammo_shells, autocvar_g_balance_shotgun_primary_ammo, 0))
 		return;
 
 	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
