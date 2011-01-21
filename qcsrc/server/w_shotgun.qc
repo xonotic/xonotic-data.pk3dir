@@ -3,11 +3,35 @@ REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HIT
 #else
 #ifdef SVQC
 
-void W_Shotgun_DoReload()
+.float shotgun_load;
+
+void W_Shotgun_SetAmmoCounter()
 {
+	// set our ammo counter to the weapon we have switched to
+	if(!autocvar_g_balance_shotgun_reload_ammo)
+		self.ammo_counter = 0; // also keeps the crosshair ammo from displaying
+	else
+		self.ammo_counter = self.shotgun_load;
+}
+
+void W_Shotgun_Reload()
+{
+	// reloading is disabled for this weapon
+	if(!autocvar_g_balance_shotgun_reload_ammo)
+		return;
+
 	w_ready();
 	if(W_Reload(self.ammo_shells))
+	{
+		// now do the actual ammo transfer
+		for(self.shotgun_load; self.shotgun_load < autocvar_g_balance_shotgun_reload_ammo && self.ammo_shells; )
+		{
+			self.ammo_counter += 1;
+			self.shotgun_load = self.ammo_counter;
+			self.ammo_shells -= 1;
+		}
 		return;
+	}
 }
 
 void W_Shotgun_Attack (void)
@@ -23,7 +47,7 @@ void W_Shotgun_Attack (void)
 	local entity flash;
 
 	if(self.ammo_counter <= 0)
-		W_Shotgun_DoReload();
+		W_Shotgun_Reload();
 	if(self.ammo_counter < 0)
 		return; // reloading, so we are done
 
@@ -40,7 +64,12 @@ void W_Shotgun_Attack (void)
 		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, 1, bulletconstant);
 	endFireBallisticBullet();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_shells = self.ammo_shells - ammoamount;
+	{
+		if(!autocvar_g_balance_shotgun_reload_ammo)
+			self.ammo_shells = self.ammo_shells - ammoamount;
+		else
+			self.shotgun_load -= ammoamount;
+	}
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shotgun_primary_ammo);
 
@@ -169,7 +198,10 @@ float w_shotgun(float req)
 		precache_sound ("weapons/shotgun_melee.wav");
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_SHOTGUN);
+		W_Shotgun_SetAmmoCounter();
+	}
 	else if (req == WR_CHECKAMMO1)
 		return self.ammo_shells >= autocvar_g_balance_shotgun_primary_ammo;
 	else if (req == WR_CHECKAMMO2)

@@ -1616,27 +1616,10 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 // weapon reload code
 // ----------------------------------------------------------------
 
-float ammo_amount;
-
-float W_CheckMaxBullets(float checkammo)
-{
-	float maxbulls;
-	maxbulls = autocvar_g_balance_sniperrifle_magazinecapacity;
-	if(!maxbulls)
-		maxbulls = 8; // match HUD
-	if(checkammo)
-		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-			maxbulls = min(maxbulls, floor(ammo_amount / min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)));
-	if(self.ammo_counter > maxbulls || !autocvar_g_balance_sniperrifle_magazinecapacity)
-		self.ammo_counter = maxbulls;
-	return (self.ammo_counter == maxbulls);
-}
-
 void W_ReloadedAndReady()
 {
 	float t;
 	self.ammo_counter = autocvar_g_balance_sniperrifle_magazinecapacity;
-	W_CheckMaxBullets(TRUE);
 	t = ATTACK_FINISHED(self) - autocvar_g_balance_sniperrifle_reloadtime - 1;
 	ATTACK_FINISHED(self) = t;
 	w_ready();
@@ -1646,10 +1629,7 @@ float W_Reload(float ammo_value)
 {
 	float t;
 
-	W_CheckMaxBullets(TRUE);
-
-	ammo_amount = ammo_value; // save ammo to a global float
-	if(ammo_amount < min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)) // when we get here, bulletcounter must be 0 or -1
+	if(ammo_value < min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)) // when we get here, bulletcounter must be 0 or -1
 	{
 		print("cannot reload... not enough bullets\n");
 		self.ammo_counter = -1; // reload later
@@ -1657,7 +1637,7 @@ float W_Reload(float ammo_value)
 		return 0;
 	}
 	
-	if (self.ammo_counter >= autocvar_g_balance_sniperrifle_magazinecapacity)
+	if (self.ammo_counter >= autocvar_g_balance_shotgun_reload_ammo)
 		return 0;
 
 	if (self.weaponentity)

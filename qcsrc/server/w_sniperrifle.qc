@@ -7,18 +7,55 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_T
 //** In fully automatic mode some of the gas is used to extract and reload the next cartrige, thus there is less power and range.
 
 .float sniperrifle_accumulator;
+.float sniperrifle_load;
 
-void W_SniperRifle_DoReload()
+void W_SniperRifle_SetAmmoCounter()
 {
+	if(!autocvar_g_balance_sniperrifle_reload_ammo)
+		self.ammo_counter = 0; // also keeps the crosshair ammo from displaying
+	else
+		self.ammo_counter = self.sniperrifle_load;
+}
+
+void W_SniperRifle_Reload()
+{
+	// reloading is disabled for this weapon
+	if(!autocvar_g_balance_shotgun_reload_ammo)
+		return;
+
 	w_ready();
 	if(W_Reload(self.ammo_nails))
+	{
+		// now do the actual ammo transfer
+		for(self.sniperrifle_load; self.sniperrifle_load < autocvar_g_balance_shotgun_reload_ammo && self.ammo_nails; ++self.sniperrifle_load)
+			self.ammo_nails -= 1;
 		return;
+	}
+}
+
+float W_SniperRifle_CheckMaxBullets(float checkammo)
+{
+	float maxbulls;
+	maxbulls = autocvar_g_balance_sniperrifle_magazinecapacity;
+	if(!maxbulls)
+		maxbulls = 8; // match HUD
+	if(checkammo)
+		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+			maxbulls = min(maxbulls, floor(self.ammo_nails / min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)));
+	if(self.ammo_counter > maxbulls)
+		self.ammo_counter = maxbulls;
+	return (self.ammo_counter == maxbulls);
 }
 
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_nails -= pAmmo;
+	{
+		if(!autocvar_g_balance_sniperrifle_reload_ammo)
+			self.ammo_nails -= pAmmo;
+		else
+			self.sniperrifle_load -= pAmmo;
+	}
 
 	if(deathtype & HITTYPE_SECONDARY)
 		W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, "weapons/campingrifle_fire2.wav", CHAN_WEAPON, autocvar_g_balance_sniperrifle_secondary_damage + autocvar_g_balance_sniperrifle_secondary_headshotaddeddamage);
@@ -74,7 +111,7 @@ void W_SniperRifle_BulletHail_Continue()
 {
 	float r, sw, af;
 	if(self.ammo_counter <= 0)
-		W_SniperRifle_DoReload();
+		W_SniperRifle_Reload();
 	if(self.ammo_counter < 0)
 		return; // reloading, so we are done
 	sw = self.switchweapon; // make it not detect weapon changes as reason to abort firing
@@ -147,10 +184,9 @@ float w_sniperrifle(float req)
 	}
 	else if (req == WR_THINK)
 	{
+		W_SniperRifle_SetAmmoCounter();
 		if(self.ammo_counter < 0) // forced reload (e.g. because interrupted)
-		{
             self.wish_reload = 1;
-		}
 		else
 		{
 			self.sniperrifle_accumulator = bound(time - autocvar_g_balance_sniperrifle_bursttime, self.sniperrifle_accumulator, time);
@@ -206,7 +242,7 @@ float w_sniperrifle(float req)
 	{
 		weapon_setup(WEP_SNIPERRIFLE);
 
-		full = W_CheckMaxBullets(TRUE);
+		full = W_SniperRifle_CheckMaxBullets(TRUE);
 		if(autocvar_g_balance_sniperrifle_auto_reload_on_switch)
 			if(!full)
 				self.ammo_counter = -1;
@@ -223,7 +259,7 @@ float w_sniperrifle(float req)
 	{
 		self.sniperrifle_accumulator = time - autocvar_g_balance_sniperrifle_bursttime;
 		self.ammo_counter = autocvar_g_balance_sniperrifle_magazinecapacity;
-		W_CheckMaxBullets(FALSE);
+		W_SniperRifle_CheckMaxBullets(FALSE);
 	}
 	return TRUE;
 };
