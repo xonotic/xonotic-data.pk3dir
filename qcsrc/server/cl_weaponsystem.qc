@@ -1623,9 +1623,9 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 // weapon reload code
 // ----------------------------------------------------------------
 
-float W_ReloadCheck(float ammo_amount, float ammo_use_primary, float ammo_use_secondary)
+float W_ReloadCheck(float ammo_amount)
 {
-	if(ammo_amount < min(ammo_use_primary, ammo_use_secondary)) // when we get here, ammo_counter must be 0 or -1
+	if(!ammo_amount) // when we get here, ammo_counter must be 0 or -1
 	{
 		print("cannot reload... not enough ammo\n");
 		self.ammo_counter = -1; // reload later

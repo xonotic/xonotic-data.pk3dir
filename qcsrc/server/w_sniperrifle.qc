@@ -44,7 +44,7 @@ void W_SniperRifle_Reload()
 
 	float t;
 
-	if(!W_ReloadCheck(self.sniperrifle_load, autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo))
+	if(!W_ReloadCheck(self.ammo_nails))
 		return;
 
 	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
@@ -56,20 +56,6 @@ void W_SniperRifle_Reload()
 
 	self.old_ammo_counter = self.ammo_counter;
 	self.ammo_counter = -1;
-}
-
-float W_SniperRifle_CheckMaxBullets(float checkammo)
-{
-	float maxbulls;
-	maxbulls = autocvar_g_balance_sniperrifle_reload_ammo;
-	if(!maxbulls)
-		maxbulls = 8; // match HUD
-	if(checkammo)
-		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-			maxbulls = min(maxbulls, floor(self.ammo_nails / min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)));
-	if(self.ammo_counter > maxbulls)
-		self.ammo_counter = maxbulls;
-	return (self.ammo_counter == maxbulls);
 }
 
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
@@ -183,7 +169,6 @@ void W_SniperRifle_BulletHail(float mode, void(void) AttackFunc, float fr, float
 .float bot_secondary_sniperriflemooth;
 float w_sniperrifle(float req)
 {
-	float full;
 	if (req == WR_AIM)
 	{
 		self.BUTTON_ATCK=FALSE;
@@ -209,7 +194,6 @@ float w_sniperrifle(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		W_SniperRifle_SetAmmoCounter();
 		if(autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_counter <= 0) // forced reload
             W_SniperRifle_Reload();
 		else
@@ -266,11 +250,7 @@ float w_sniperrifle(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_SNIPERRIFLE);
-
-		full = W_SniperRifle_CheckMaxBullets(TRUE);
-		if(autocvar_g_balance_sniperrifle_auto_reload_on_switch)
-			if(!full)
-				self.ammo_counter = -1;
+		W_SniperRifle_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
@@ -294,7 +274,6 @@ float w_sniperrifle(float req)
 	{
 		self.sniperrifle_accumulator = time - autocvar_g_balance_sniperrifle_bursttime;
 		self.ammo_counter = autocvar_g_balance_sniperrifle_reload_ammo;
-		W_SniperRifle_CheckMaxBullets(FALSE);
 	}
 	return TRUE;
 };
