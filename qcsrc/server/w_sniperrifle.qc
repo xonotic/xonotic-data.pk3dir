@@ -61,12 +61,8 @@ void W_SniperRifle_Reload()
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(!autocvar_g_balance_sniperrifle_reload_ammo)
-			self.ammo_nails -= pAmmo;
-		else
-			self.sniperrifle_load -= pAmmo;
-	}
+	if(!autocvar_g_balance_sniperrifle_reload_ammo)
+		self.ammo_nails -= pAmmo;
 
 	if(deathtype & HITTYPE_SECONDARY)
 		W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, "weapons/campingrifle_fire2.wav", CHAN_WEAPON, autocvar_g_balance_sniperrifle_secondary_damage + autocvar_g_balance_sniperrifle_secondary_headshotaddeddamage);
@@ -89,8 +85,14 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 
 	if (autocvar_g_casings >= 2)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
-	
-	self.ammo_counter = self.ammo_counter - 1;
+
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(!autocvar_g_balance_sniperrifle_reload_ammo)
+			self.ammo_nails -= 1;
+		else
+			self.sniperrifle_load -= 1;
+	}
 }
 
 void W_SniperRifle_Attack()
@@ -233,7 +235,7 @@ float w_sniperrifle(float req)
                 if(self.weaponentity.state == WS_READY)
                 {
                     self.wish_reload = 0;
-                    W_SniperRifle_Reload(self.ammo_nails);
+                    W_SniperRifle_Reload();
                 }
             }
         }
@@ -254,17 +256,11 @@ float w_sniperrifle(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if(autocvar_g_balance_sniperrifle_reload_ammo)
-			return self.sniperrifle_load >= autocvar_g_balance_sniperrifle_primary_ammo;
-		else
-			return self.ammo_nails >= autocvar_g_balance_sniperrifle_primary_ammo;
+		return self.ammo_nails >= autocvar_g_balance_sniperrifle_primary_ammo;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		if(autocvar_g_balance_sniperrifle_reload_ammo)
-			return self.sniperrifle_load >= autocvar_g_balance_sniperrifle_secondary_ammo;
-		else
-			return self.ammo_nails >= autocvar_g_balance_sniperrifle_secondary_ammo;
+		return self.ammo_nails >= autocvar_g_balance_sniperrifle_secondary_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

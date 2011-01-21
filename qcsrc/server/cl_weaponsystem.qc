@@ -928,6 +928,13 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				f = weapon_action(wpn, WR_CHECKAMMO1);
 				f = f + weapon_action(wpn, WR_CHECKAMMO2);
 
+				// don't switch away from reloadable weapons, even if we're out of ammo, since the
+				// weapon itself might still be loaded. The reload code takes care of the switching
+				entity e;
+				e = get_weaponinfo(self.weapon);
+				if(cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
+					f = 1;
+
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				local entity mine;
 				if(wpn == WEP_MINE_LAYER)
