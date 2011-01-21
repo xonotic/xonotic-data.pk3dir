@@ -1646,6 +1646,7 @@ float W_ReloadCheck(float ammo_amount)
 			sprint(self, strcat("You don't have any ammo to reload the ^2", W_Name(self.weapon), "\n"));
 			self.reload_complain = time + 1;
 		}
+		// is there's no more ammo to reload, only switch to another weapon if there's no more load in this one
 		if(!self.ammo_counter)
 		{
 			self.ammo_counter = -1; // reload later
