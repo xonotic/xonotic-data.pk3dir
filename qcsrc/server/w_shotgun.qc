@@ -221,7 +221,12 @@ float w_shotgun(float req)
 		W_Shotgun_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_shells >= autocvar_g_balance_shotgun_primary_ammo;
+	{
+		if(autocvar_g_balance_shotgun_reload_ammo)
+			return self.shotgun_load;
+		else
+			return self.ammo_shells >= autocvar_g_balance_shotgun_primary_ammo;
+	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		return TRUE;
