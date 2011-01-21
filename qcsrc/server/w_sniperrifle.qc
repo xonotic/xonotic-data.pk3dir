@@ -60,10 +60,6 @@ void W_SniperRifle_Reload()
 
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
 {
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	if(!autocvar_g_balance_sniperrifle_reload_ammo)
-		self.ammo_nails -= pAmmo;
-
 	if(deathtype & HITTYPE_SECONDARY)
 		W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, "weapons/campingrifle_fire2.wav", CHAN_WEAPON, autocvar_g_balance_sniperrifle_secondary_damage + autocvar_g_balance_sniperrifle_secondary_headshotaddeddamage);
 	else
@@ -89,9 +85,12 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		if(!autocvar_g_balance_sniperrifle_reload_ammo)
-			self.ammo_nails -= 1;
+			self.ammo_nails -= pAmmo;
 		else
-			self.sniperrifle_load -= 1;
+		{
+			self.ammo_counter -= pAmmo;
+			self.sniperrifle_load = self.ammo_counter;
+		}
 	}
 }
 

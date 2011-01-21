@@ -81,13 +81,6 @@ void W_Shotgun_Attack (void)
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, 1, bulletconstant);
 	endFireBallisticBullet();
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(!autocvar_g_balance_shotgun_reload_ammo)
-			self.ammo_shells -= ammoamount;
-		else
-			self.shotgun_load -= ammoamount;
-	}
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shotgun_primary_ammo);
 
@@ -104,7 +97,16 @@ void W_Shotgun_Attack (void)
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');
 
-	self.ammo_counter = self.ammo_counter - 1;
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(!autocvar_g_balance_shotgun_reload_ammo)
+			self.ammo_shells -= ammoamount;
+		else
+		{
+			self.ammo_counter -= ammoamount;
+			self.shotgun_load = self.ammo_counter;
+		}
+	}
 }
 
 void shotgun_meleethink (void)
