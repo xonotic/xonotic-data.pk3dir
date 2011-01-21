@@ -889,6 +889,10 @@ void PutClientInServer (void)
 			self.nex_charge = autocvar_g_balance_nex_charge_start;
 		}
 
+		// all weapons must be fully loaded the first time we pick them up, so set their load to maximum at respawn
+		self.shotgun_load = autocvar_g_balance_shotgun_reload_ammo;
+		self.sniperrifle_load = autocvar_g_balance_sniperrifle_reload_ammo;
+
 		if(inWarmupStage)
 		{
 			self.ammo_shells = warmup_start_ammo_shells;
