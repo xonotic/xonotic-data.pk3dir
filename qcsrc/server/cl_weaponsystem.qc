@@ -928,8 +928,8 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				f = weapon_action(wpn, WR_CHECKAMMO1);
 				f = f + weapon_action(wpn, WR_CHECKAMMO2);
 
-				// don't switch away from reloadable weapons, even if we're out of ammo, since the
-				// weapon itself might still be loaded. The reload code takes care of the switching
+				// allow switching to reloadable weapons, even if we're out of ammo, since the weapon itself
+				// might still be loaded. The reload code takes care of complaining and forced switching
 				entity e;
 				e = get_weaponinfo(self.weapon);
 				if(cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
@@ -1054,8 +1054,8 @@ float weapon_prepareattack_checkammo(float secondary)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
-		// don't switch away from reloadable weapons, even if we're out of ammo, since the
-		// weapon itself might still be loaded. The reload code takes care of the switching
+		// allow switching to reloadable weapons, even if we're out of ammo, since the weapon itself
+		// might still be loaded. The reload code takes care of complaining and forced switching
 		entity e;
 		e = get_weaponinfo(self.weapon);
 		if(cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
@@ -1626,20 +1626,20 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 #define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
 #define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
 
-// ----------------------------------------------------------------
-// weapon reload code
-// ----------------------------------------------------------------
-
+// shared weapon reload code
 float W_ReloadCheck(float ammo_amount)
 {
 	entity e;
 	e = get_weaponinfo(self.weapon);
+
+	// our weapon is fully loaded, no need to reload
 	if (self.ammo_counter >= cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
 		return 0;
 
-	if(!ammo_amount) // when we get here, ammo_counter must be 0 or -1
+	// no ammo, so nothing to load
+	if(!ammo_amount)
 	{
-		print("cannot reload... not enough ammo\n");
+		print("Cannot reload, not enough ammo\n");
 		self.ammo_counter = -1; // reload later
 		W_SwitchToOtherWeapon(self);
 		return 0;
@@ -1650,13 +1650,9 @@ float W_ReloadCheck(float ammo_amount)
 		if (self.weaponentity.wframe == WFRAME_RELOAD)
 			return 0;
 
-		// allow to switch away while reloading, but this will cause a new reload!
+		// allow switching away while reloading, but this will cause a new reload!
 		self.weaponentity.state = WS_READY;
 	}
 
 	return 1;
 }
-
-// ----------------------------------------------------------------
-// end of weapon reload code
-// ----------------------------------------------------------------

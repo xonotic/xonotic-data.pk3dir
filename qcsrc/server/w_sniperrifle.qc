@@ -11,9 +11,9 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_T
 
 void W_SniperRifle_SetAmmoCounter()
 {
-	// set ammo counter to the weapon we have switched to
+	// set ammo_counter to the weapon we have switched to, if the gun uses reloading
 	if(!autocvar_g_balance_sniperrifle_reload_ammo)
-		self.ammo_counter = 0; // also keeps the crosshair ammo from displaying
+		self.ammo_counter = 0; // also keeps crosshair ammo from displaying
 	else
 		self.ammo_counter = self.sniperrifle_load;
 }
@@ -22,9 +22,9 @@ void W_SniperRifle_ReloadedAndReady()
 {
 	float t;
 
-	// now do the ammo maths
-	self.ammo_counter = self.old_ammo_counter; // restore ammo counter, in case we still had ammo in the weapon while reloading
-	while(self.ammo_counter < autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_nails) // make sure we don't add more than the amount of ammo we have
+	// now do the ammo transfer
+	self.ammo_counter = self.old_ammo_counter; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.ammo_counter < autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_nails) // make sure we don't add more ammo than we have
 	{
 		self.ammo_counter += 1;
 		self.ammo_nails -= 1;
@@ -38,14 +38,14 @@ void W_SniperRifle_ReloadedAndReady()
 
 void W_SniperRifle_Reload()
 {
-	// reloading is disabled for this weapon
+	// return if reloading is disabled for this weapon
 	if(!autocvar_g_balance_sniperrifle_reload_ammo)
 		return;
 
-	float t;
-
 	if(!W_ReloadCheck(self.ammo_nails))
 		return;
+
+	float t;
 
 	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
 
@@ -82,6 +82,7 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 	if (autocvar_g_casings >= 2)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		if(!autocvar_g_balance_sniperrifle_reload_ammo)

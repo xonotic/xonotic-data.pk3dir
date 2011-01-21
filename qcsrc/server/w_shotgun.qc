@@ -7,9 +7,9 @@ REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HIT
 
 void W_Shotgun_SetAmmoCounter()
 {
-	// set ammo counter to the weapon we have switched to
+	// set ammo_counter to the weapon we have switched to, if the gun uses reloading
 	if(!autocvar_g_balance_shotgun_reload_ammo)
-		self.ammo_counter = 0; // also keeps the crosshair ammo from displaying
+		self.ammo_counter = 0; // also keeps crosshair ammo from displaying
 	else
 		self.ammo_counter = self.shotgun_load;
 }
@@ -18,9 +18,9 @@ void W_Shotgun_ReloadedAndReady()
 {
 	float t;
 
-	// now do the ammo maths
-	self.ammo_counter = self.old_ammo_counter; // restore ammo counter, in case we still had ammo in the weapon while reloading
-	while(self.ammo_counter < autocvar_g_balance_shotgun_reload_ammo && self.ammo_shells) // make sure we don't add more than the amount of ammo we have
+	// now do the ammo transfer
+	self.ammo_counter = self.old_ammo_counter; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.ammo_counter < autocvar_g_balance_shotgun_reload_ammo && self.ammo_shells) // make sure we don't add more ammo than we have
 	{
 		self.ammo_counter += 1;
 		self.ammo_shells -= 1;
@@ -34,14 +34,14 @@ void W_Shotgun_ReloadedAndReady()
 
 void W_Shotgun_Reload()
 {
-	// reloading is disabled for this weapon
+	// return if reloading is disabled for this weapon
 	if(!autocvar_g_balance_shotgun_reload_ammo)
 		return;
 
-	float t;
-
 	if(!W_ReloadCheck(self.ammo_shells))
 		return;
+
+	float t;
 
 	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
 
@@ -97,6 +97,7 @@ void W_Shotgun_Attack (void)
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		if(!autocvar_g_balance_shotgun_reload_ammo)
@@ -229,6 +230,10 @@ float w_shotgun(float req)
 	else if (req == WR_CHECKAMMO2)
 	{
 		return TRUE;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Shotgun_Reload();
 	}
 	return TRUE;
 };
