@@ -66,10 +66,7 @@ void W_Shotgun_Attack (void)
 	local entity flash;
 
 	if(self.ammo_counter <= 0)
-	{
-		W_Shotgun_Reload();
 		return; // reloading, so we are done
-	}
 
 	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
 	bullets = autocvar_g_balance_shotgun_primary_bullets;
@@ -173,7 +170,7 @@ float w_shotgun(float req)
 	else if (req == WR_THINK)
 	{
 		if(self.ammo_counter < 0) // forced reload (e.g. because interrupted)
-            self.wish_reload = 1;
+			W_Shotgun_Reload();
 		else
 		{
 			if (self.BUTTON_ATCK)

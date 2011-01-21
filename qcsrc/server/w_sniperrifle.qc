@@ -135,10 +135,7 @@ void W_SniperRifle_BulletHail_Continue()
 {
 	float r, sw, af;
 	if(self.ammo_counter <= 0)
-	{
-		W_SniperRifle_Reload();
 		return; // reloading, so we are done
-	}
 	sw = self.switchweapon; // make it not detect weapon changes as reason to abort firing
 	af = ATTACK_FINISHED(self);
 	self.switchweapon = self.weapon;
@@ -211,7 +208,7 @@ float w_sniperrifle(float req)
 	{
 		W_SniperRifle_SetAmmoCounter();
 		if(self.ammo_counter < 0) // forced reload (e.g. because interrupted)
-            self.wish_reload = 1;
+            W_SniperRifle_Reload();
 		else
 		{
 			self.sniperrifle_accumulator = bound(time - autocvar_g_balance_sniperrifle_bursttime, self.sniperrifle_accumulator, time);
@@ -228,7 +225,7 @@ float w_sniperrifle(float req)
 				if (autocvar_g_balance_sniperrifle_secondary)
 				{
                     if(autocvar_g_balance_sniperrifle_secondary_reload)
-                        self.wish_reload = 1;
+                        W_SniperRifle_Reload();
                     else
                     {
                         if (weapon_prepareattack_check(1, autocvar_g_balance_sniperrifle_secondary_refire))
@@ -278,7 +275,7 @@ float w_sniperrifle(float req)
 		return self.ammo_nails >= autocvar_g_balance_sniperrifle_secondary_ammo;
 	else if (req == WR_RELOAD)
 	{
-        self.wish_reload = 1;
+		W_SniperRifle_Reload();
 	}
 	else if (req == WR_RESETPLAYER)
 	{
