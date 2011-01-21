@@ -23,7 +23,7 @@ void W_SniperRifle_ReloadedAndReady()
 	float t;
 
 	// now do the ammo maths
-	self.ammo_counter = 0; // when we get here it's -1
+	self.ammo_counter = self.old_ammo_counter; // restore ammo counter, in case we still had ammo in the weapon while reloading
 	while(self.ammo_counter < autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_nails) // make sure we don't add more than the amount of ammo we have
 	{
 		self.ammo_counter += 1;
@@ -54,6 +54,7 @@ void W_SniperRifle_Reload()
 
 	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_sniperrifle_reloadtime, W_SniperRifle_ReloadedAndReady);
 
+	self.old_ammo_counter = self.ammo_counter;
 	self.ammo_counter = -1;
 }
 
