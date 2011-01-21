@@ -135,8 +135,10 @@ void spawnfunc_weapon_campingrifle (void)
 void W_SniperRifle_BulletHail_Continue()
 {
 	float r, sw, af;
-	if(self.ammo_counter <= 0)
+
+	if(autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_counter <= 0)
 		return; // reloading, so we are done
+
 	sw = self.switchweapon; // make it not detect weapon changes as reason to abort firing
 	af = ATTACK_FINISHED(self);
 	self.switchweapon = self.weapon;
@@ -208,7 +210,7 @@ float w_sniperrifle(float req)
 	else if (req == WR_THINK)
 	{
 		W_SniperRifle_SetAmmoCounter();
-		if(self.ammo_counter <= 0) // forced reload
+		if(autocvar_g_balance_sniperrifle_reload_ammo && self.ammo_counter <= 0) // forced reload
             W_SniperRifle_Reload();
 		else
 		{
