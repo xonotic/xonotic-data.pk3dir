@@ -946,12 +946,6 @@ void havocbot_chooseweapon()
 	if(i < 1)
 		return;
 
-	// Workaround for rifle reloading (..)
-	// Is this still needed with the new reload system?
-	/*if(self.weapon == WEP_SNIPERRIFLE)
-	if(i < autocvar_g_balance_sniperrifle_reloadtime + 1)
-		return;*/
-
 	local float w;
 	local float distance; distance=bound(10,vlen(self.origin-self.enemy.origin)-200,10000);
 
