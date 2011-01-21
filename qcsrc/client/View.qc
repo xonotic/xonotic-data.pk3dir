@@ -996,7 +996,7 @@ void CSQC_UpdateView(float w, float h)
 				nex_charge_movingavg = nex_charge;
 
 			// ring around crosshair representing bullets left in camping rifle clip
-			if (activeweapon == WEP_SNIPERRIFLE && cr_maxbullets)
+			//if (activeweapon == WEP_SNIPERRIFLE && cr_maxbullets)
 			{
 				bullets = getstati(STAT_BULLETS_LOADED);
 				f = bound(0, bullets / cr_maxbullets, 1);
@@ -1004,7 +1004,7 @@ void CSQC_UpdateView(float w, float h)
 				a = autocvar_crosshair_ring_sniperrifle_alpha;
 				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 			}
-			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
+			/*else*/ if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
 			{
 				if(nex_chargepool || use_nex_chargepool)
 				{
