@@ -396,6 +396,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	local float take, save, waves, sdelay, dh, da, j;
 	vector v;
 	float valid_damage_for_weaponstats;
+	float excess;
+
+	if((g_arena && numspawned < 2) || (g_ca && ca_players < required_ca_players) && !inWarmupStage)
+		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
@@ -438,9 +442,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
-	if((g_arena && numspawned < 2) || (g_ca && ca_players < required_ca_players) && !inWarmupStage)
-		return;
-
 	if (!g_minstagib)
 	{
 		v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
@@ -462,6 +463,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor);
 	take = bound(0, damage_take, self.health);
 	save = bound(0, damage_save, self.armorvalue);
+	excess = max(0, damage - take - save);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
@@ -721,7 +723,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// set damage function to corpse damage
 		self.event_damage = PlayerCorpseDamage;
 		// call the corpse damage function just in case it wants to gib
-		self.event_damage(inflictor, attacker, 0, deathtype, hitloc, force);
+		self.event_damage(inflictor, attacker, excess, deathtype, hitloc, force);
 		// set up to fade out later
 		SUB_SetFade (self, time + 6 + random (), 1);
 
