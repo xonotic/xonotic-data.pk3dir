@@ -275,14 +275,14 @@ float w_sniperrifle(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		if(autocvar_g_balance_sniperrifle_reload_ammo)
-			return self.sniperrifle_load;
+			return self.sniperrifle_load >= autocvar_g_balance_sniperrifle_primary_ammo;
 		else
 			return self.ammo_nails >= autocvar_g_balance_sniperrifle_primary_ammo;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		if(autocvar_g_balance_sniperrifle_reload_ammo)
-			return self.sniperrifle_load;
+			return self.sniperrifle_load >= autocvar_g_balance_sniperrifle_secondary_ammo;
 		else
 			return self.ammo_nails >= autocvar_g_balance_sniperrifle_secondary_ammo;
 	}
