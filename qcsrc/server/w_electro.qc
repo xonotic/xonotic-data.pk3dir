@@ -316,7 +316,6 @@ void lgbeam_think()
 		remove(self);
 		return;
 	}
-	if(autocvar_g_balance_electro_reload_ammo)
 
 	if (self.owner.weaponentity.state != WS_INUSE || !lgbeam_checkammo() || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
 	{
