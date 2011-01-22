@@ -500,27 +500,27 @@ float w_electro(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s could not remember where they put plasma";
+			w_deathtypestring = _("%s could not remember where they put plasma");
 		else
-			w_deathtypestring = "%s played with plasma";
+			w_deathtypestring = _("%s played with plasma");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
 			if(w_deathtype & HITTYPE_SPLASH) // unchecked: BOUNCE
-				w_deathtypestring = "%s just noticed %s's blue ball";
+				w_deathtypestring = _("%s just noticed %s's blue ball");
 			else // unchecked: BOUNCE
-				w_deathtypestring = "%s got in touch with %s's blue ball";
+				w_deathtypestring = _("%s got in touch with %s's blue ball");
 		}
 		else
 		{
 			if(w_deathtype & HITTYPE_BOUNCE) // combo
-				w_deathtypestring = "%s felt the electrifying air of %s's combo";
+				w_deathtypestring = _("%s felt the electrifying air of %s's combo");
 			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = "%s got too close to %s's blue beam";
+				w_deathtypestring = _("%s got too close to %s's blue beam");
 			else
-				w_deathtypestring = "%s was blasted by %s's blue beam";
+				w_deathtypestring = _("%s was blasted by %s's blue beam");
 		}
 	}
 	return TRUE;

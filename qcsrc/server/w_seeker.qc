@@ -520,13 +520,13 @@ float w_seeker(float req)
 		precache_sound("weapons/tag_impact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s played with tiny rockets";
+		w_deathtypestring = _("%s played with tiny rockets");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s ran into %s's flac";
+			w_deathtypestring = _("%s ran into %s's flac");
 		else
-			w_deathtypestring = "%s was tagged by %s";
+			w_deathtypestring = _("%s was tagged by %s");
 	}
 	return TRUE;
 }

@@ -284,13 +284,13 @@ float w_uzi(float req)
 		precache_sound("weapons/ric3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s did the impossible";
+		w_deathtypestring = _("%s did the impossible");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s was sniped by %s";
+			w_deathtypestring = _("%s was sniped by %s");
 		else
-			w_deathtypestring = "%s was riddled full of holes by %s";
+			w_deathtypestring = _("%s was riddled full of holes by %s");
 	}
 	return TRUE;
 }

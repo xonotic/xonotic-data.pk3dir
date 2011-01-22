@@ -282,13 +282,13 @@ float w_laser(float req)
 		precache_sound("weapons/laserimpact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s lasered themself to hell";
+		w_deathtypestring = _("%s lasered themself to hell");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s was cut in half by %s's gauntlet"; // unchecked: SPLASH
+			w_deathtypestring = _("%s was cut in half by %s's gauntlet"); // unchecked: SPLASH
 		else
-			w_deathtypestring = "%s was lasered to death by %s"; // unchecked: SPLASH
+			w_deathtypestring = _("%s was lasered to death by %s"); // unchecked: SPLASH
 	}
 	return TRUE;
 }

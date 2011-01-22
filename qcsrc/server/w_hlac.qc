@@ -220,9 +220,9 @@ float w_hlac(float req)
 		precache_sound("weapons/laserimpact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s should have used a smaller gun";
+		w_deathtypestring = _("%s should have used a smaller gun");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "%s was cut down by %s";
+		w_deathtypestring = _("%s was cut down by %s");
 	return TRUE;
 }
 #endif

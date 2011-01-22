@@ -257,11 +257,11 @@ float w_tuba(float req)
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		w_deathtypestring = "%s hurt his own ears with the @!#%%'n Tuba";
+		w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Tuba");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
-		w_deathtypestring = "%s died of %s's great playing on the @!#%%'n Tuba";
+		w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Tuba");
 	}
 	return TRUE;
 }

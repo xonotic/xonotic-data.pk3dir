@@ -477,15 +477,15 @@ float w_rlauncher(float req)
 		precache_sound("weapons/rocket_impact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s exploded";
+		w_deathtypestring = _("%s exploded");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = "%s got too close to %s's rocket";
+			w_deathtypestring = _("%s got too close to %s's rocket");
 		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "%s almost dodged %s's rocket";
+			w_deathtypestring = _("%s almost dodged %s's rocket");
 		else
-			w_deathtypestring = "%s ate %s's rocket";
+			w_deathtypestring = _("%s ate %s's rocket");
 	}
 	return TRUE;
 }
