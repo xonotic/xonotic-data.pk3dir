@@ -892,18 +892,18 @@ void PutClientInServer (void)
 		// all weapons must be fully loaded the first time we pick them up, so set their load to maximum at respawn
 		self.laser_load = autocvar_g_balance_laser_reload_ammo;
 		self.shotgun_load = autocvar_g_balance_shotgun_reload_ammo;
-		self.sniperrifle_load = autocvar_g_balance_sniperrifle_reload_ammo;
 		self.uzi_load = autocvar_g_balance_uzi_reload_ammo;
 		self.grenadelauncher_load = autocvar_g_balance_grenadelauncher_reload_ammo;
 		self.minelayer_load = autocvar_g_balance_minelayer_reload_ammo;
 		self.electro_load = autocvar_g_balance_electro_reload_ammo;
 		self.crylink_load = autocvar_g_balance_crylink_reload_ammo;
 		self.hlac_load = autocvar_g_balance_hlac_reload_ammo;
-		self.fireball_load = autocvar_g_balance_fireball_reload_ammo;
-		self.seeker_load = autocvar_g_balance_fireball_reload_ammo;
-		self.minstanex_load = autocvar_g_balance_minstanex_reload_ammo;
 		self.nex_load = autocvar_g_balance_nex_reload_ammo;
+		self.minstanex_load = autocvar_g_balance_minstanex_reload_ammo;
+		self.sniperrifle_load = autocvar_g_balance_sniperrifle_reload_ammo;
+		self.seeker_load = autocvar_g_balance_fireball_reload_ammo;
 		self.hagar_load = autocvar_g_balance_hagar_reload_ammo;
+		self.fireball_load = autocvar_g_balance_fireball_reload_ammo;
 		self.rocketlauncher_load = autocvar_g_balance_rocketlauncher_reload_ammo;
 
 		if(inWarmupStage)
