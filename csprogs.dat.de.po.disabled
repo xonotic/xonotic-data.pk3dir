@@ -290,42 +290,42 @@ msgstr "^1%s^1 wurde von %s^1 telefragged\n"
 #: qcsrc/client/hud.qc:2764
 #, c-format
 msgid "^1%s^1 was drowned by %s\n"
-msgstr ""
+msgstr "^1%s^1 wurde von %s^1 etränkt\n"
 
 #: qcsrc/client/hud.qc:2769
 #, c-format
 msgid "^1%s^1 was slimed by %s\n"
-msgstr ""
+msgstr "^1%s^1 wurde von %s^1 im Schleim versenkt\n"
 
 #: qcsrc/client/hud.qc:2774
 #, c-format
 msgid "^1%s^1 was cooked by %s\n"
-msgstr ""
+msgstr "^1%s^1 wurde von %s^1 gebraten\n"
 
 #: qcsrc/client/hud.qc:2779
 #, c-format
 msgid "^1%s^1 was grounded by %s\n"
-msgstr ""
+msgstr "^1%a^1 wurde von %s^1 geerdet\n"
 
 #: qcsrc/client/hud.qc:2784
 #, c-format
 msgid "^1%s^1 was shot into space by %s\n"
-msgstr ""
+msgstr "^1%s^1 wurde von %s^1 ins All geschossen\n"
 
 #: qcsrc/client/hud.qc:2789
 #, c-format
 msgid "^1%s^1 was conserved by %s\n"
-msgstr ""
+msgstr "^1%s^1 wurde von %s^1 konserviert\n"
 
 #: qcsrc/client/hud.qc:2795
 #, c-format
 msgid "^1%s^1 was thrown into a world of hurt by %s\n"
-msgstr ""
+msgstr "^1%s^1 wurde von %s^1 in eine Welt des Schmerzes geworfen\n"
 
 #: qcsrc/client/hud.qc:2799
 #, c-format
 msgid "^1%s^1 was crushed by ^1%s\n"
-msgstr ""
+msgstr "^1%s^1 wurde von %s^1 zerquetscht\n"
 
 #: qcsrc/client/hud.qc:2803
 #, c-format
