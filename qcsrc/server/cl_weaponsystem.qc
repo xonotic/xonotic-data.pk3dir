@@ -931,7 +931,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				// allow switching to reloadable weapons, even if we're out of ammo, since the weapon itself
 				// might still be loaded. The reload code takes care of complaining and forced switching
 				entity e;
-				e = get_weaponinfo(self.switchweapon);
+				e = get_weaponinfo(wpn);
 				if(cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
 					f = 1;
 
