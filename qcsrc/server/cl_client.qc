@@ -902,6 +902,8 @@ void PutClientInServer (void)
 		self.seeker_load = autocvar_g_balance_fireball_reload_ammo;
 		self.minstanex_load = autocvar_g_balance_minstanex_reload_ammo;
 		self.nex_load = autocvar_g_balance_nex_reload_ammo;
+		self.hagar_load = autocvar_g_balance_hagar_reload_ammo;
+		self.rocketlauncher_load = autocvar_g_balance_rocketlauncher_reload_ammo;
 
 		if(inWarmupStage)
 		{

@@ -5,6 +5,60 @@ REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | W
 .float rl_release;
 .float rl_detonate_later;
 
+.float rocketlauncher_load;
+
+void W_RocketLauncher_SetAmmoCounter()
+{
+	// set clip_load to the weapon we have switched to, if the gun uses reloading
+	if(!autocvar_g_balance_rocketlauncher_reload_ammo)
+		self.clip_load = 0; // also keeps crosshair ammo from displaying
+	else
+	{
+		self.clip_load = self.rocketlauncher_load;
+		self.clip_size = autocvar_g_balance_rocketlauncher_reload_ammo; // for the crosshair ammo display
+	}
+}
+
+void W_RocketLauncher_ReloadedAndReady()
+{
+	float t;
+
+	// now do the ammo transfer
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.clip_load < autocvar_g_balance_rocketlauncher_reload_ammo && self.ammo_rockets) // make sure we don't add more ammo than we have
+	{
+		self.clip_load += 1;
+		self.ammo_rockets -= 1;
+	}
+	self.rocketlauncher_load = self.clip_load;
+
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_rocketlauncher_reload_time - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
+}
+
+void W_RocketLauncher_Reload()
+{
+	// return if reloading is disabled for this weapon
+	if(!autocvar_g_balance_rocketlauncher_reload_ammo)
+		return;
+
+	if(!W_ReloadCheck(self.ammo_rockets, autocvar_g_balance_rocketlauncher_ammo))
+		return;
+
+	float t;
+
+	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_rocketlauncher_reload_time + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_rocketlauncher_reload_time, W_RocketLauncher_ReloadedAndReady);
+
+	self.old_clip_load = self.clip_load;
+	self.clip_load = -1;
+}
+
 void W_Rocket_Unregister()
 {
 	if(self.owner && self.owner.lastrocket == self)
@@ -248,8 +302,17 @@ void W_Rocket_Attack (void)
 	local entity missile;
 	local entity flash;
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_rocketlauncher_ammo;
+	{
+		if(autocvar_g_balance_rocketlauncher_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_rocketlauncher_ammo;
+			self.rocketlauncher_load = self.clip_load;
+		}
+		else
+			self.ammo_rockets -= autocvar_g_balance_rocketlauncher_ammo;
+	}
 
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CHAN_WEAPON, autocvar_g_balance_rocketlauncher_damage);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -402,33 +465,49 @@ float w_rlauncher(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
-		{
-			if(self.rl_release || autocvar_g_balance_rocketlauncher_guidestop)
-			if(weapon_prepareattack(0, autocvar_g_balance_rocketlauncher_refire))
-			{
-				W_Rocket_Attack();
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_rocketlauncher_animtime, w_ready);
-				self.rl_release = 0;
-			}
-		}
+		if(autocvar_g_balance_rocketlauncher_reload_ammo && self.clip_load < autocvar_g_balance_rocketlauncher_ammo) // forced reload
+			W_RocketLauncher_Reload();
 		else
-			self.rl_release = 1;
-
-		if (self.BUTTON_ATCK2)
 		{
-			rockfound = 0;
-			for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.owner == self)
+			if (self.BUTTON_ATCK)
 			{
-				if(!rock.rl_detonate_later)
+				if(self.rl_release || autocvar_g_balance_rocketlauncher_guidestop)
+				if(weapon_prepareattack(0, autocvar_g_balance_rocketlauncher_refire))
 				{
-					rock.rl_detonate_later = TRUE;
-					rockfound = 1;
+					W_Rocket_Attack();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_rocketlauncher_animtime, w_ready);
+					self.rl_release = 0;
 				}
 			}
-			if(rockfound)
-				sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+			else
+				self.rl_release = 1;
+
+			if (self.BUTTON_ATCK2)
+			{
+				rockfound = 0;
+				for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.owner == self)
+				{
+					if(!rock.rl_detonate_later)
+					{
+						rock.rl_detonate_later = TRUE;
+						rockfound = 1;
+					}
+				}
+				if(rockfound)
+					sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_RocketLauncher_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -443,20 +522,35 @@ float w_rlauncher(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_ROCKET_LAUNCHER);
+		W_RocketLauncher_SetAmmoCounter();
 		self.rl_release = 1;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		// don't switch while guiding a missile
-		if ((ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
-			&& self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
-			return FALSE;
+		if(autocvar_g_balance_rocketlauncher_reload_ammo)
+		{
+			// don't switch while guiding a missile
+			if ((ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
+				&& self.clip_load < autocvar_g_balance_rocketlauncher_ammo)
+				return FALSE;
+		}
+		else
+		{
+			// don't switch while guiding a missile
+			if ((ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
+				&& self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
+				return FALSE;
+		}
 	}
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;
 	else if (req == WR_RESETPLAYER)
 	{
 		self.rl_release = 0;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_RocketLauncher_Reload();
 	}
 	return TRUE;
 };

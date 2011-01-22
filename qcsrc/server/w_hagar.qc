@@ -3,6 +3,61 @@ REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_CANCLI
 #else
 #ifdef SVQC
 // NO bounce protection, as bounces are limited!
+
+.float hagar_load;
+
+void W_Hagar_SetAmmoCounter()
+{
+	// set clip_load to the weapon we have switched to, if the gun uses reloading
+	if(!autocvar_g_balance_hagar_reload_ammo)
+		self.clip_load = 0; // also keeps crosshair ammo from displaying
+	else
+	{
+		self.clip_load = self.hagar_load;
+		self.clip_size = autocvar_g_balance_hagar_reload_ammo; // for the crosshair ammo display
+	}
+}
+
+void W_Hagar_ReloadedAndReady()
+{
+	float t;
+
+	// now do the ammo transfer
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.clip_load < autocvar_g_balance_hagar_reload_ammo && self.ammo_rockets) // make sure we don't add more ammo than we have
+	{
+		self.clip_load += 1;
+		self.ammo_rockets -= 1;
+	}
+	self.hagar_load = self.clip_load;
+
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_hagar_reload_time - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
+}
+
+void W_Hagar_Reload()
+{
+	// return if reloading is disabled for this weapon
+	if(!autocvar_g_balance_hagar_reload_ammo)
+		return;
+
+	if(!W_ReloadCheck(self.ammo_rockets, min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo)))
+		return;
+
+	float t;
+
+	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_hagar_reload_time + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_hagar_reload_time, W_Hagar_ReloadedAndReady);
+
+	self.old_clip_load = self.clip_load;
+	self.clip_load = -1;
+}
+
 void W_Hagar_Explode (void)
 {
 	self.event_damage = SUB_Null;
@@ -44,8 +99,18 @@ void W_Hagar_Attack (void)
 {
 	local entity missile;
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_hagar_primary_ammo;
+	{
+		if(autocvar_g_balance_hagar_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_hagar_primary_ammo;
+			self.hagar_load = self.clip_load;
+		}
+		else
+			self.ammo_rockets -= autocvar_g_balance_hagar_primary_ammo;
+	}
+
 	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_primary_damage);
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -79,8 +144,18 @@ void W_Hagar_Attack2 (void)
 {
 	local entity missile;
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_hagar_secondary_ammo;
+	{
+		if(autocvar_g_balance_hagar_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_hagar_secondary_ammo;
+			self.hagar_load = self.clip_load;
+		}
+		else
+			self.ammo_rockets -= autocvar_g_balance_hagar_secondary_ammo;
+	}
+
 	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -128,18 +203,35 @@ float w_hagar(float req)
 		}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
+		if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo)) // forced reload
+			W_Hagar_Reload();
+		else if (self.BUTTON_ATCK)
 		{
-			W_Hagar_Attack();
-			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
+			if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
+			{
+				W_Hagar_Attack();
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
+			}
 		}
-		if (self.BUTTON_ATCK2 && autocvar_g_balance_hagar_secondary)
-		if (weapon_prepareattack(1, autocvar_g_balance_hagar_secondary_refire))
+		else if (self.BUTTON_ATCK2 && autocvar_g_balance_hagar_secondary)
 		{
-			W_Hagar_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
+			if (weapon_prepareattack(1, autocvar_g_balance_hagar_secondary_refire))
+			{
+				W_Hagar_Attack2();
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
+			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_Hagar_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -149,11 +241,28 @@ float w_hagar(float req)
 		precache_sound ("weapons/hagar_fire.wav");
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_HAGAR);
+		W_Hagar_SetAmmoCounter();
+	}
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_rockets >= autocvar_g_balance_hagar_primary_ammo;
+	{
+		if(autocvar_g_balance_hagar_reload_ammo)
+			return self.hagar_load >= autocvar_g_balance_hagar_primary_ammo;
+		else
+			return self.ammo_rockets >= autocvar_g_balance_hagar_primary_ammo;
+	}
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
+	{
+		if(autocvar_g_balance_hagar_reload_ammo)
+			return self.hagar_load >= autocvar_g_balance_hagar_secondary_ammo;
+		else
+			return self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Hagar_Reload();
+	}
 	return TRUE;
 };
 #endif
