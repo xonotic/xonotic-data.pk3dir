@@ -4,8 +4,6 @@ REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_CANCLI
 #ifdef SVQC
 // NO bounce protection, as bounces are limited!
 
-.float hagar_load;
-
 void W_Hagar_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

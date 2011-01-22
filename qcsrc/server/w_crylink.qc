@@ -9,8 +9,6 @@ REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 .entity queuenext;
 .entity queueprev;
 
-.float crylink_load;
-
 void W_Crylink_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

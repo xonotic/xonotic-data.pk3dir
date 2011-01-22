@@ -3,8 +3,6 @@ REGISTER_WEAPON(NEX, w_nex, IT_CELLS, 7, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT
 #else
 #ifdef SVQC
 
-.float nex_load;
-
 void W_Nex_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

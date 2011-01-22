@@ -7,7 +7,6 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_T
 //** In fully automatic mode some of the gas is used to extract and reload the next cartrige, thus there is less power and range.
 
 .float sniperrifle_accumulator;
-.float sniperrifle_load;
 
 void W_SniperRifle_SetAmmoCounter()
 {

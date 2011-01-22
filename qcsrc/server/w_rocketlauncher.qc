@@ -5,8 +5,6 @@ REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | W
 .float rl_release;
 .float rl_detonate_later;
 
-.float rocketlauncher_load;
-
 void W_RocketLauncher_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

@@ -3,8 +3,6 @@ REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HIT
 #else
 #ifdef SVQC
 
-.float shotgun_load;
-
 void W_Shotgun_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
