@@ -41,7 +41,7 @@ void W_HLAC_Reload()
 	if(!autocvar_g_balance_hlac_reload_ammo)
 		return;
 
-	if(!W_ReloadCheck(self.ammo_cells))
+	if(!W_ReloadCheck(self.ammo_cells, min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo)))
 		return;
 
 	float t;

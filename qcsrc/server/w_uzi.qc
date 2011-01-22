@@ -41,7 +41,7 @@ void W_UZI_Reload()
 	if(!autocvar_g_balance_uzi_reload_ammo)
 		return;
 
-	if(!W_ReloadCheck(self.ammo_nails))
+	if(!W_ReloadCheck(self.ammo_nails, min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo)))
 		return;
 
 	float t;

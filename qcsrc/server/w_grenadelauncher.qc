@@ -43,7 +43,7 @@ void W_GrenadeLauncher_Reload()
 	if(!autocvar_g_balance_grenadelauncher_reload_ammo)
 		return;
 
-	if(!W_ReloadCheck(self.ammo_rockets))
+	if(!W_ReloadCheck(self.ammo_rockets, min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo)))
 		return;
 
 	float t;

@@ -45,7 +45,7 @@ void W_SniperRifle_Reload()
 	if(!autocvar_g_balance_sniperrifle_reload_ammo)
 		return;
 
-	if(!W_ReloadCheck(self.ammo_nails))
+	if(!W_ReloadCheck(self.ammo_nails, min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)))
 		return;
 
 	float t;

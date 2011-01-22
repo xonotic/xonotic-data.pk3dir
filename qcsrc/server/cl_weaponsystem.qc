@@ -1628,7 +1628,7 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 
 // shared weapon reload code
 .float reload_complain;
-float W_ReloadCheck(float ammo_amount)
+float W_ReloadCheck(float ammo_amount, float ammo_shot)
 {
 	entity e;
 	e = get_weaponinfo(self.weapon);
@@ -1646,8 +1646,8 @@ float W_ReloadCheck(float ammo_amount)
 			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));
 			self.reload_complain = time + 1;
 		}
-		// is there's no more ammo to reload, only switch to another weapon if there's no more load in this one
-		if(!self.clip_load)
+		// switch away if the loaded amount of ammo is not enough to keep using the weapon
+		if(self.clip_load < ammo_shot)
 		{
 			self.clip_load = -1; // reload later
 			W_SwitchToOtherWeapon(self);

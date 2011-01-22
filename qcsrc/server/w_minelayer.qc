@@ -44,7 +44,7 @@ void W_MineLayer_Reload()
 	if(!autocvar_g_balance_minelayer_reload_ammo)
 		return;
 
-	if(!W_ReloadCheck(self.ammo_rockets))
+	if(!W_ReloadCheck(self.ammo_rockets, autocvar_g_balance_minelayer_ammo))
 		return;
 
 	float t;

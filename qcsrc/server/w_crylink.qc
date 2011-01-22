@@ -47,7 +47,7 @@ void W_Crylink_Reload()
 	if(!autocvar_g_balance_crylink_reload_ammo)
 		return;
 
-	if(!W_ReloadCheck(self.ammo_cells))
+	if(!W_ReloadCheck(self.ammo_cells, min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo)))
 		return;
 
 	float t;

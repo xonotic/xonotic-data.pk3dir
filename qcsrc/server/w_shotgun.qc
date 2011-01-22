@@ -41,7 +41,7 @@ void W_Shotgun_Reload()
 	if(!autocvar_g_balance_shotgun_reload_ammo)
 		return;
 
-	if(!W_ReloadCheck(self.ammo_shells))
+	if(!W_ReloadCheck(self.ammo_shells, autocvar_g_balance_shotgun_primary_ammo))
 		return;
 
 	float t;
