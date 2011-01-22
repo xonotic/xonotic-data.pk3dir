@@ -5,7 +5,7 @@ REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT
 
 .float uzi_load;
 
-void W_Uzi_SetAmmoCounter()
+void W_UZI_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
 	if(!autocvar_g_balance_uzi_reload_ammo)
@@ -17,7 +17,7 @@ void W_Uzi_SetAmmoCounter()
 	}
 }
 
-void W_Uzi_ReloadedAndReady()
+void W_UZI_ReloadedAndReady()
 {
 	float t;
 
@@ -35,7 +35,7 @@ void W_Uzi_ReloadedAndReady()
 	w_ready();
 }
 
-void W_Uzi_Reload()
+void W_UZI_Reload()
 {
 	// return if reloading is disabled for this weapon
 	if(!autocvar_g_balance_uzi_reload_ammo)
@@ -51,14 +51,14 @@ void W_Uzi_Reload()
 	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_uzi_reload_time + 1;
 	ATTACK_FINISHED(self) = t;
 
-	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_uzi_reload_time, W_Uzi_ReloadedAndReady);
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_uzi_reload_time, W_UZI_ReloadedAndReady);
 
 	self.old_clip_load = self.clip_load;
 	self.clip_load = -1;
 }
 
 // leilei's fancy muzzleflash stuff
-void Uzi_Flash_Go() 
+void UZI_Flash_Go() 
 {	
 	self.frame = self.frame + 2;
 	self.scale = self.scale * 0.5;
@@ -84,7 +84,7 @@ void UziFlash()
 	setmodel(self.muzzle_flash, "models/uziflash.md3"); // precision set below
 	
 	self.muzzle_flash.scale = 0.75;
-	self.muzzle_flash.think = Uzi_Flash_Go;
+	self.muzzle_flash.think = UZI_Flash_Go;
 	self.muzzle_flash.nextthink = time + 0.02;
 	self.muzzle_flash.frame = 2;
 	self.muzzle_flash.alpha = 0.75;
@@ -93,7 +93,7 @@ void UziFlash()
 	self.muzzle_flash.owner = self;
 }
 
-void W_Uzi_Attack (float deathtype)
+void W_UZI_Attack (float deathtype)
 {
 	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CHAN_WEAPON, ((self.misc_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage));
 	if (!g_norecoil)
@@ -138,7 +138,7 @@ void uzi_fire1_02()
 			return;
 		}
 		self.misc_bulletcounter = self.misc_bulletcounter + 1;
-		W_Uzi_Attack(WEP_UZI);
+		W_UZI_Attack(WEP_UZI);
 		weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_fire1_02);
 	}
 	else
@@ -248,7 +248,7 @@ float w_uzi(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_uzi_reload_ammo && self.clip_load < min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo)) // forced reload
-			W_Uzi_Reload();
+			W_UZI_Reload();
 		else if(autocvar_g_balance_uzi_mode == 1)
 		{
 			if (self.BUTTON_ATCK)
@@ -291,7 +291,7 @@ float w_uzi(float req)
 			if (weapon_prepareattack(0, 0))
 			{
 				self.misc_bulletcounter = 1;
-				W_Uzi_Attack(WEP_UZI); // sets attack_finished
+				W_UZI_Attack(WEP_UZI); // sets attack_finished
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_fire1_02);
 			}
 
@@ -299,7 +299,7 @@ float w_uzi(float req)
 			if (weapon_prepareattack(1, 0))
 			{
 				self.misc_bulletcounter = 1;
-				W_Uzi_Attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
+				W_UZI_Attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_first_refire, w_ready);
 			}
 		}
@@ -310,7 +310,7 @@ float w_uzi(float req)
                 if(self.weaponentity.state == WS_READY)
                 {
                     self.wish_reload = 0;
-                    W_Uzi_Reload();
+                    W_UZI_Reload();
                 }
             }
         }
@@ -326,7 +326,7 @@ float w_uzi(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_UZI);
-		W_Uzi_SetAmmoCounter();
+		W_UZI_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
@@ -344,7 +344,7 @@ float w_uzi(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Uzi_Reload();
+		W_UZI_Reload();
 	}
 	return TRUE;
 };

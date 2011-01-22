@@ -5,7 +5,7 @@ REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BO
 
 .float hlac_load;
 
-void W_Hlac_SetAmmoCounter()
+void W_HLAC_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
 	if(!autocvar_g_balance_hlac_reload_ammo)
@@ -17,7 +17,7 @@ void W_Hlac_SetAmmoCounter()
 	}
 }
 
-void W_Hlac_ReloadedAndReady()
+void W_HLAC_ReloadedAndReady()
 {
 	float t;
 
@@ -35,7 +35,7 @@ void W_Hlac_ReloadedAndReady()
 	w_ready();
 }
 
-void W_Hlac_Reload()
+void W_HLAC_Reload()
 {
 	// return if reloading is disabled for this weapon
 	if(!autocvar_g_balance_hlac_reload_ammo)
@@ -51,7 +51,7 @@ void W_Hlac_Reload()
 	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_hlac_reload_time + 1;
 	ATTACK_FINISHED(self) = t;
 
-	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_hlac_reload_time, W_Hlac_ReloadedAndReady);
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_hlac_reload_time, W_HLAC_ReloadedAndReady);
 
 	self.old_clip_load = self.clip_load;
 	self.clip_load = -1;
@@ -240,7 +240,7 @@ float w_hlac(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo)) // forced reload
-			W_Hlac_Reload();
+			W_HLAC_Reload();
 		else if (self.BUTTON_ATCK)
 		{
 			if (weapon_prepareattack(0, autocvar_g_balance_hlac_primary_refire))
@@ -266,7 +266,7 @@ float w_hlac(float req)
                 if(self.weaponentity.state == WS_READY)
                 {
                     self.wish_reload = 0;
-                    W_Hlac_Reload();
+                    W_HLAC_Reload();
                 }
             }
         }
@@ -282,7 +282,7 @@ float w_hlac(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_HLAC);
-		W_Hlac_SetAmmoCounter();
+		W_HLAC_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
@@ -300,7 +300,7 @@ float w_hlac(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Hlac_Reload();
+		W_HLAC_Reload();
 	}
 	return TRUE;
 };
