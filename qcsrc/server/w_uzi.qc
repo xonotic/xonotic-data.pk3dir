@@ -322,6 +322,7 @@ float w_uzi(float req)
 		precache_model ("models/weapons/v_uzi.md3");
 		precache_model ("models/weapons/h_uzi.iqm");
 		precache_sound ("weapons/uzi_fire.wav");
+		precache_sound ("weapons/reload.wav");
 	}
 	else if (req == WR_SETUP)
 	{

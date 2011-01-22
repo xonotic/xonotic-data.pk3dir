@@ -443,6 +443,7 @@ float w_fireball(float req)
 		precache_sound ("weapons/fireball_fire.wav");
 		precache_sound ("weapons/fireball_fire2.wav");
 		precache_sound ("weapons/fireball_prefire2.wav");
+		precache_sound ("weapons/reload.wav");
 	}
 	else if (req == WR_SETUP)
 	{

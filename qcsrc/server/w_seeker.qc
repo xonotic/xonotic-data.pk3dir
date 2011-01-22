@@ -540,6 +540,7 @@ float w_seeker(float req)
 		precache_sound ("weapons/tag_fire.wav");
 		precache_sound ("weapons/flac_fire.wav");
 		precache_sound ("weapons/seeker_fire.wav");
+		precache_sound ("weapons/reload.wav");
 	}
 	else if (req == WR_SETUP)
 	{

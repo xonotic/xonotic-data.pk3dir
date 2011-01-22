@@ -317,6 +317,7 @@ float w_minstanex(float req)
 		precache_sound ("weapons/nexwhoosh1.wav");
 		precache_sound ("weapons/nexwhoosh2.wav");
 		precache_sound ("weapons/nexwhoosh3.wav");
+		precache_sound ("weapons/reload.wav");
 		w_laser(WR_PRECACHE);
 	}
 	else if (req == WR_SETUP)

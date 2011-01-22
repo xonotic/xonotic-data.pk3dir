@@ -415,6 +415,7 @@ float w_glauncher(float req)
 		precache_sound ("weapons/grenade_bounce6.wav");
 		precache_sound ("weapons/grenade_stick.wav");
 		precache_sound ("weapons/grenade_fire.wav");
+		precache_sound ("weapons/reload.wav");
 	}
 	else if (req == WR_SETUP)
 	{

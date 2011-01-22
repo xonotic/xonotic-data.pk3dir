@@ -338,6 +338,7 @@ float w_laser(float req)
 		precache_model ("models/weapons/h_laser.iqm");
 		precache_sound ("weapons/lasergun_fire.wav");
 		precache_sound ("weapons/gauntlet_fire.wav");
+		precache_sound ("weapons/reload.wav");
 	}
 	else if (req == WR_SETUP)
 	{

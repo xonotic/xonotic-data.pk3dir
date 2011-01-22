@@ -518,6 +518,7 @@ float w_rlauncher(float req)
 		precache_sound ("weapons/rocket_det.wav");
 		precache_sound ("weapons/rocket_fire.wav");
 		precache_sound ("weapons/rocket_mode.wav");
+		precache_sound ("weapons/reload.wav");
 	}
 	else if (req == WR_SETUP)
 	{

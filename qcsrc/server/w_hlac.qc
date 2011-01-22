@@ -277,6 +277,7 @@ float w_hlac(float req)
 		precache_model ("models/weapons/v_hlac.md3");
 		precache_model ("models/weapons/h_hlac.iqm");
 		precache_sound ("weapons/lasergun_fire.wav");
+		precache_sound ("weapons/reload.wav");
 
 	}
 	else if (req == WR_SETUP)

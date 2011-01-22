@@ -219,6 +219,7 @@ float w_nex(float req)
 										{
 											self.clip_load = max(autocvar_g_balance_nex_secondary_ammo, self.clip_load - autocvar_g_balance_nex_secondary_ammo * dt);
 										}
+										self.nex_load = self.clip_load;
 									}
 									else
 									{
@@ -289,6 +290,7 @@ float w_nex(float req)
 		precache_sound ("weapons/nexwhoosh1.wav");
 		precache_sound ("weapons/nexwhoosh2.wav");
 		precache_sound ("weapons/nexwhoosh3.wav");
+		precache_sound ("weapons/reload.wav");
 	}
 	else if (req == WR_SETUP)
 	{

@@ -239,6 +239,7 @@ float w_hagar(float req)
 		precache_model ("models/weapons/v_hagar.md3");
 		precache_model ("models/weapons/h_hagar.iqm");
 		precache_sound ("weapons/hagar_fire.wav");
+		precache_sound ("weapons/reload.wav");
 	}
 	else if (req == WR_SETUP)
 	{

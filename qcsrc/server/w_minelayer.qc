@@ -479,6 +479,7 @@ float w_minelayer(float req)
 		precache_sound ("weapons/mine_fire.wav");
 		precache_sound ("weapons/mine_stick.wav");
 		precache_sound ("weapons/mine_trigger.wav");
+		precache_sound ("weapons/reload.wav");
 	}
 	else if (req == WR_SETUP)
 	{

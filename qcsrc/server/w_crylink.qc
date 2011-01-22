@@ -672,6 +672,7 @@ float w_crylink(float req)
 		precache_sound ("weapons/crylink_fire.wav");
 		precache_sound ("weapons/crylink_fire2.wav");
 		precache_sound ("weapons/crylink_linkjoin.wav");
+		precache_sound ("weapons/reload.wav");
 	}
 	else if (req == WR_SETUP)
 	{
