@@ -2355,6 +2355,8 @@ void SpectateCopy(entity spectatee) {
 	self.ammo_nails = spectatee.ammo_nails;
 	self.ammo_rockets = spectatee.ammo_rockets;
 	self.ammo_fuel = spectatee.ammo_fuel;
+	self.clip_load = spectatee.clip_load;
+	self.clip_size = spectatee.clip_size;
 	self.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
 	self.health = spectatee.health;
 	self.impulse = 0;
