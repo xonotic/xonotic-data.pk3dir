@@ -503,7 +503,7 @@ float w_minelayer(float req)
 		// or we have enough ammo to reload the weapon to a usable point
 		float ammo_amount;
 		ammo_amount = autocvar_g_balance_minelayer_ammo;
-		return self.minelayer_load >= ammo_amount || self.ammo_rockets >= ammo_amount;
+		return (autocvar_g_balance_minelayer_reload_ammo && self.minelayer_load >= ammo_amount) || self.ammo_rockets >= ammo_amount;
 	}
 	return TRUE;
 };

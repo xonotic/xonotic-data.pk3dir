@@ -258,7 +258,7 @@ float w_hagar(float req)
 		// or we have enough ammo to reload the weapon to a usable point
 		float ammo_amount;
 		ammo_amount = min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo);
-		return self.hagar_load >= ammo_amount || self.ammo_rockets >= ammo_amount;
+		return (autocvar_g_balance_hagar_reload_ammo && self.hagar_load >= ammo_amount) || self.ammo_rockets >= ammo_amount;
 	}
 	return TRUE;
 };

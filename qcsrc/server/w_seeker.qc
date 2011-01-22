@@ -558,7 +558,7 @@ float w_seeker(float req)
 		// or we have enough ammo to reload the weapon to a usable point
 		float ammo_amount;
 		ammo_amount = min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo);
-		return self.seeker_load >= ammo_amount || self.ammo_rockets >= ammo_amount;
+		return (autocvar_g_balance_seeker_reload_ammo && self.seeker_load >= ammo_amount) || self.ammo_rockets >= ammo_amount;
 	}
 	return TRUE;
 };

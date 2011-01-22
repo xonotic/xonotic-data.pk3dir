@@ -272,7 +272,7 @@ float w_sniperrifle(float req)
 		// or we have enough ammo to reload the weapon to a usable point
 		float ammo_amount;
 		ammo_amount = min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo);
-		return self.sniperrifle_load >= ammo_amount || self.ammo_nails >= ammo_amount;
+		return (autocvar_g_balance_sniperrifle_reload_ammo && self.sniperrifle_load >= ammo_amount) || self.ammo_nails >= ammo_amount;
 	}
 	return TRUE;
 };

@@ -233,7 +233,7 @@ float w_shotgun(float req)
 		// or we have enough ammo to reload the weapon to a usable point
 		float ammo_amount;
 		ammo_amount = autocvar_g_balance_shotgun_primary_ammo;
-		return self.shotgun_load >= ammo_amount || self.ammo_shells >= ammo_amount;
+		return (autocvar_g_balance_shotgun_reload_ammo && self.shotgun_load >= ammo_amount) || self.ammo_shells >= ammo_amount;
 	}
 	return TRUE;
 };

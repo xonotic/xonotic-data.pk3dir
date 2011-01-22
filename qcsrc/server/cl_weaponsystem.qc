@@ -925,21 +925,13 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			{
 				oldself = self;
 				self = cl;
-				f = weapon_action(wpn, WR_CHECKAMMO1);
-				f = f + weapon_action(wpn, WR_CHECKAMMO2);
+				f = weapon_action(wpn, WR_SWITCHABLE);
 
 				// allow switching to reloadable weapons, even if we're out of ammo, since the weapon itself
 				// might still be loaded. The reload code takes care of complaining and forced switching
 				entity e;
 				e = get_weaponinfo(wpn);
 				if(wpn != WEP_TUBA && wpn != WEP_PORTO && wpn != WEP_HOOK) // skip non-reloadable weapons, or we access undefined cvars
-				if(cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
-				{
-					if(weapon_action(wpn, WR_SWITCHABLE))
-						f = 1;
-					else
-						f = 0; // necessary to avoid switching back and forth
-				}
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				local entity mine;
@@ -1060,13 +1052,9 @@ float weapon_prepareattack_checkammo(float secondary)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
-		// allow switching to reloadable weapons, even if we're out of ammo, since the weapon itself
-		// might still be loaded. The reload code takes care of complaining and forced switching
-		entity e;
-		e = get_weaponinfo(self.weapon);
-		if(self.weapon != WEP_TUBA && self.weapon != WEP_PORTO && self.weapon != WEP_HOOK) // skip non-reloadable weapons, or we access undefined cvars
-		if(cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
-		if(weapon_action(self.weapons, WR_SWITCHABLE))
+		// always allow reloadable weapons, even if we're out of ammo, since the weapon itself
+		// could still be loaded. The reload code takes care of the rest
+		if(weapon_action(self.weapon, WR_SWITCHABLE))
 			return FALSE;
 
 		// always keep the Mine Layer if we placed mines, so that we can detonate them

@@ -350,7 +350,7 @@ float w_minstanex(float req)
 		if(autocvar_g_balance_minstanex_laser_ammo)
 			ammo_amount = min(ammo_amount, autocvar_g_balance_minstanex_laser_ammo);
 
-		return self.minstanex_load >= ammo_amount || self.ammo_cells >= ammo_amount;
+		return (autocvar_g_balance_minstanex_reload_ammo && self.minstanex_load >= ammo_amount) || self.ammo_cells >= ammo_amount;
 	}
 	return TRUE;
 };

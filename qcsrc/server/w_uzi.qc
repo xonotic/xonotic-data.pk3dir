@@ -361,7 +361,7 @@ float w_uzi(float req)
 		// or we have enough ammo to reload the weapon to a usable point
 		float ammo_amount;
 		ammo_amount = min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo);
-		return self.uzi_load >= ammo_amount || self.ammo_nails >= ammo_amount;
+		return (autocvar_g_balance_uzi_reload_ammo && self.uzi_load >= ammo_amount) || self.ammo_nails >= ammo_amount;
 	}
 	return TRUE;
 };

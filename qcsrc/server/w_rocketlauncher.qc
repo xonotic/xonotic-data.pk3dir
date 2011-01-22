@@ -547,7 +547,7 @@ float w_rlauncher(float req)
 		// or we have enough ammo to reload the weapon to a usable point
 		float ammo_amount;
 		ammo_amount = autocvar_g_balance_rocketlauncher_ammo;
-		return self.rocketlauncher_load >= ammo_amount || self.ammo_rockets >= ammo_amount;
+		return (autocvar_g_balance_rocketlauncher_reload_ammo && self.rocketlauncher_load >= ammo_amount) || self.ammo_rockets >= ammo_amount;
 	}
 	return TRUE;
 };
