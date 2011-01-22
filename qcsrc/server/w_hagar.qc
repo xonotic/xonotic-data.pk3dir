@@ -219,17 +219,6 @@ float w_hagar(float req)
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
 			}
 		}
-        if(self.wish_reload)
-        {
-            if(self.switchweapon == self.weapon)
-            {
-                if(self.weaponentity.state == WS_READY)
-                {
-                    self.wish_reload = 0;
-                    W_Hagar_Reload();
-                }
-            }
-        }
 	}
 	else if (req == WR_PRECACHE)
 	{

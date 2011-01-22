@@ -317,17 +317,6 @@ float w_laser(float req)
 					W_SwitchWeapon (self.cnt);
 			}
 		}
-        if(self.wish_reload)
-        {
-            if(self.switchweapon == self.weapon)
-            {
-                if(self.weaponentity.state == WS_READY)
-                {
-                    self.wish_reload = 0;
-                    W_Laser_Reload();
-                }
-            }
-        }
 	}
 	else if (req == WR_PRECACHE)
 	{

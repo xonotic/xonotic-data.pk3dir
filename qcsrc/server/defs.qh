@@ -615,7 +615,6 @@ float client_cefc_accumulatortime;
 .float clip_load;
 .float old_clip_load;
 .float clip_size;
-.float wish_reload;
 
 // weapon load persistence, for weapons that support reloading
 .float laser_load;

@@ -227,17 +227,6 @@ float w_sniperrifle(float req)
 				}
 			}
 		}
-        if(self.wish_reload)
-        {
-            if(self.switchweapon == self.weapon)
-            {
-                if(self.weaponentity.state == WS_READY)
-                {
-                    self.wish_reload = 0;
-                    W_SniperRifle_Reload();
-                }
-            }
-        }
 	}
 	else if (req == WR_PRECACHE)
 	{

@@ -495,17 +495,6 @@ float w_rlauncher(float req)
 					sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
 			}
 		}
-        if(self.wish_reload)
-        {
-            if(self.switchweapon == self.weapon)
-            {
-                if(self.weaponentity.state == WS_READY)
-                {
-                    self.wish_reload = 0;
-                    W_RocketLauncher_Reload();
-                }
-            }
-        }
 	}
 	else if (req == WR_PRECACHE)
 	{

@@ -453,18 +453,6 @@ float w_minelayer(float req)
 			if(minfound)
 				sound (self, CHAN_WEAPON2, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
 		}
-
-        if(self.wish_reload)
-        {
-            if(self.switchweapon == self.weapon)
-            {
-                if(self.weaponentity.state == WS_READY)
-                {
-                    self.wish_reload = 0;
-                    W_MineLayer_Reload();
-                }
-            }
-        }
 	}
 	else if (req == WR_PRECACHE)
 	{
