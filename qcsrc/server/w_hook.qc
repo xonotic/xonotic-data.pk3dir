@@ -13,6 +13,12 @@ REGISTER_WEAPON(HOOK, w_hook, IT_CELLS|IT_FUEL, 0, WEP_FLAG_CANCLIMB | WEP_TYPE_
 .float hook_time_hooked;
 .float hook_time_fueldecrease;
 
+void W_Hook_SetAmmoCounter()
+{
+	// this weapon doesn't have a reload system, so always set the clip to 0 when switching to it
+	self.clip_load = self.clip_size = 0; // also keeps crosshair ammo from displaying
+}
+
 void W_Hook_ExplodeThink (void)
 {
 	float dt, dmg_remaining_next, f;
@@ -228,6 +234,7 @@ float w_hook(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_HOOK);
+		W_Hook_SetAmmoCounter();
 		self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
 	}
 	else if (req == WR_CHECKAMMO1)

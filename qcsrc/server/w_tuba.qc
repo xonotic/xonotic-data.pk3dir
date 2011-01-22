@@ -7,6 +7,12 @@ REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKU
 .entity tuba_note;
 .float tuba_smoketime;
 
+void W_Tuba_SetAmmoCounter()
+{
+	// this weapon doesn't have a reload system, so always set the clip to 0 when switching to it
+	self.clip_load = self.clip_size = 0; // also keeps crosshair ammo from displaying
+}
+
 float Tuba_GetNote(entity pl, float hittype)
 {
 	float note;
@@ -236,7 +242,10 @@ float w_tuba(float req)
 		//	precache_sound(TUBA_NOTE(i));
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_TUBA);
+		W_Porto_SetAmmoCounter();
+	}
 	else if (req == WR_CHECKAMMO1)
 		return TRUE; // TODO use fuel?
 	else if (req == WR_CHECKAMMO2)
