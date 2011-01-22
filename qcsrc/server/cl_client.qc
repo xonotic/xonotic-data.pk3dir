@@ -901,7 +901,7 @@ void PutClientInServer (void)
 		self.nex_load = autocvar_g_balance_nex_reload_ammo;
 		self.minstanex_load = autocvar_g_balance_minstanex_reload_ammo;
 		self.sniperrifle_load = autocvar_g_balance_sniperrifle_reload_ammo;
-		self.seeker_load = autocvar_g_balance_fireball_reload_ammo;
+		self.seeker_load = autocvar_g_balance_seeker_reload_ammo;
 		self.hagar_load = autocvar_g_balance_hagar_reload_ammo;
 		self.fireball_load = autocvar_g_balance_fireball_reload_ammo;
 		self.rocketlauncher_load = autocvar_g_balance_rocketlauncher_reload_ammo;
