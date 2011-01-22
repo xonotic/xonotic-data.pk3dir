@@ -932,6 +932,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				// might still be loaded. The reload code takes care of complaining and forced switching
 				entity e;
 				e = get_weaponinfo(wpn);
+				if(wpn != WEP_TUBA && wpn != WEP_PORTO && wpn != WEP_HOOK) // skip non-reloadable weapons, or we access undefined cvars
 				if(cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
 					f = 1;
 
@@ -1058,6 +1059,7 @@ float weapon_prepareattack_checkammo(float secondary)
 		// might still be loaded. The reload code takes care of complaining and forced switching
 		entity e;
 		e = get_weaponinfo(self.weapon);
+		if(self.weapon != WEP_TUBA && self.weapon != WEP_PORTO && self.weapon != WEP_HOOK) // skip non-reloadable weapons, or we access undefined cvars
 		if(cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
 			return FALSE;
 
