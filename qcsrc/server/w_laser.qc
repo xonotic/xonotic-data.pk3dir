@@ -9,12 +9,12 @@ void(float imp) W_SwitchWeapon;
 void W_Laser_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
-	if(!autocvar_g_balance_laser_reload_count)
+	if(!autocvar_g_balance_laser_reload_ammo)
 		self.clip_load = 0; // also keeps crosshair ammo from displaying
 	else
 	{
 		self.clip_load = self.laser_load;
-		self.clip_size = autocvar_g_balance_laser_reload_count; // for the crosshair ammo display
+		self.clip_size = autocvar_g_balance_laser_reload_ammo; // for the crosshair ammo display
 	}
 }
 
@@ -22,7 +22,7 @@ void W_Laser_ReloadedAndReady()
 {
 	float t;
 
-	self.clip_load = autocvar_g_balance_laser_reload_count; // maximum load since this weapon uses no ammo
+	self.clip_load = autocvar_g_balance_laser_reload_ammo; // maximum load since this weapon uses no ammo
 	self.laser_load = self.clip_load;
 
 	t = ATTACK_FINISHED(self) - autocvar_g_balance_laser_reload_time - 1;
@@ -33,7 +33,7 @@ void W_Laser_ReloadedAndReady()
 void W_Laser_Reload()
 {
 	// return if reloading is disabled for this weapon
-	if(!autocvar_g_balance_laser_reload_count)
+	if(!autocvar_g_balance_laser_reload_ammo)
 		return;
 
 	if(!W_ReloadCheck(1, 0))
@@ -273,7 +273,7 @@ float w_laser(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_laser_reload_count && self.clip_load < 1) // forced reload
+		if(autocvar_g_balance_laser_reload_ammo && self.clip_load < 1) // forced reload
 			W_Laser_Reload();
 		else if (self.BUTTON_ATCK)
 		{
@@ -282,7 +282,7 @@ float w_laser(float req)
 				// if this weapon is reloadable, decrease its load
 				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 				{
-					if(autocvar_g_balance_laser_reload_count)
+					if(autocvar_g_balance_laser_reload_ammo)
 					{
 						self.clip_load -= 1;
 						self.laser_load = self.clip_load;
@@ -300,7 +300,7 @@ float w_laser(float req)
 				// if this weapon is reloadable, decrease its load
 				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 				{
-					if(autocvar_g_balance_laser_reload_count)
+					if(autocvar_g_balance_laser_reload_ammo)
 					{
 						self.clip_load -= 1;
 						self.laser_load = self.clip_load;
