@@ -171,6 +171,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			setDependentWeird(e, someShadowCvarIsEnabled);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_coronas", _("Coronas")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_coronas_occlusionquery", _("Use Occlusion Queries")));
 	me.TR(me);
 		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom")));
 			setDependent(e, "r_hdr", 0, 0);

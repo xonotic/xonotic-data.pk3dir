@@ -48,8 +48,9 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", _("Use OpenGL 2.0 shaders (GLSL)")));
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "r_coronas_occlusionquery", _("Use Occlusion Queries")));
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "v_glslgamma", _("Use GLSL to handle color control")));
+			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Vertex Buffer Objects (VBOs)")));
@@ -61,6 +62,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "gl_vbo", "2", _("Vertices")));
 		me.TD(me, 1, 1.9, e = makeXonoticRadioButton(1, "gl_vbo", "1", _("Vertices and Triangles")));
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Depth first:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("r_depthfirst"));
@@ -90,9 +92,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Saturation:")));
 			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.5, 2.0, 0.05, "r_glsl_saturation"));
-			setDependent(e, "vid_gl20", 1, 1);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_glslgamma", _("Use GLSL to handle color control")));
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 	me.TR(me);
