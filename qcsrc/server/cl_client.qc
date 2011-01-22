@@ -899,6 +899,7 @@ void PutClientInServer (void)
 		self.crylink_load = autocvar_g_balance_crylink_reload_ammo;
 		self.hlac_load = autocvar_g_balance_hlac_reload_ammo;
 		self.fireball_load = autocvar_g_balance_fireball_reload_ammo;
+		self.seeker_load = autocvar_g_balance_fireball_reload_ammo;
 
 		if(inWarmupStage)
 		{

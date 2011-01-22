@@ -604,6 +604,8 @@ float autocvar_g_balance_seeker_tag_health;
 float autocvar_g_balance_seeker_tag_lifetime;
 float autocvar_g_balance_seeker_tag_refire;
 float autocvar_g_balance_seeker_tag_speed;
+float autocvar_g_balance_seeker_reload_ammo;
+float autocvar_g_balance_seeker_reload_time;
 float autocvar_g_balance_selfdamagepercent;
 float autocvar_g_balance_shotgun_primary_ammo;
 float autocvar_g_balance_shotgun_primary_animtime;
