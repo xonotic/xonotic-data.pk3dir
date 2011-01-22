@@ -215,6 +215,13 @@ void W_Grenade_Attack (void)
 {
 	local entity gren;
 
+	// if there's not enough ammo for this attack (but we still have the weapon), reload
+	if(autocvar_g_balance_grenadelauncher_reload_ammo && self.clip_load < autocvar_g_balance_grenadelauncher_primary_ammo)
+	{
+		W_GrenadeLauncher_Reload();
+		return;
+	}
+
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
@@ -271,6 +278,13 @@ void W_Grenade_Attack (void)
 void W_Grenade_Attack2 (void)
 {
 	local entity gren;
+
+	// if there's not enough ammo for this attack (but we still have the weapon), reload
+	if(autocvar_g_balance_grenadelauncher_reload_ammo && self.clip_load < autocvar_g_balance_grenadelauncher_secondary_ammo)
+	{
+		W_GrenadeLauncher_Reload();
+		return;
+	}
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)

@@ -373,6 +373,13 @@ void W_Crylink_Attack (void)
 	vector forward, right, up;
 	float maxdmg;
 
+	// if there's not enough ammo for this attack (but we still have the weapon), reload
+	if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < autocvar_g_balance_crylink_primary_ammo)
+	{
+		W_Crylink_Reload();
+		return;
+	}
+
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
@@ -484,6 +491,13 @@ void W_Crylink_Attack2 (void)
 	local float counter, shots;
 	local entity proj, prevproj, firstproj;
 	float maxdmg;
+
+	// if there's not enough ammo for this attack (but we still have the weapon), reload
+	if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < autocvar_g_balance_crylink_secondary_ammo)
+	{
+		W_Crylink_Reload();
+		return;
+	}
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)

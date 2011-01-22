@@ -69,6 +69,13 @@ void W_Shotgun_Attack (void)
 	float	bulletconstant;
 	local entity flash;
 
+	// if there's not enough ammo for this attack (but we still have the weapon), reload
+	if(autocvar_g_balance_shotgun_reload_ammo && self.clip_load < autocvar_g_balance_shotgun_primary_ammo)
+	{
+		W_Shotgun_Reload();
+		return;
+	}
+
 	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
 	bullets = autocvar_g_balance_shotgun_primary_bullets;
 	d = autocvar_g_balance_shotgun_primary_damage;

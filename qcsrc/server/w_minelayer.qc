@@ -268,6 +268,13 @@ void W_Mine_Attack (void)
 		}
 	}
 
+	// if there's not enough ammo for this attack (but we still have the weapon), reload
+	if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < autocvar_g_balance_minelayer_ammo)
+	{
+		W_MineLayer_Reload();
+		return;
+	}
+
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{

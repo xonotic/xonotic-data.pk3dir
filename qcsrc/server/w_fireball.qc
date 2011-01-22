@@ -252,6 +252,13 @@ void W_Fireball_Attack1_Frame1()
 
 void W_Fireball_Attack1_Frame0()
 {
+	// if there's not enough ammo for this attack (but we still have the weapon), reload
+	if(autocvar_g_balance_fireball_reload_ammo && self.clip_load < autocvar_g_balance_fireball_primary_ammo)
+	{
+		W_Fireball_Reload();
+		return;
+	}
+
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
@@ -312,6 +319,13 @@ void W_Fireball_Attack2()
 	local entity proj;
 	vector f_diff;
 	float c;
+
+	// if there's not enough ammo for this attack (but we still have the weapon), reload
+	if(autocvar_g_balance_fireball_reload_ammo && self.clip_load < autocvar_g_balance_fireball_secondary_ammo)
+	{
+		W_Fireball_Reload();
+		return;
+	}
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)

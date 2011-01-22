@@ -150,6 +150,13 @@ void uzi_mode1_fire_auto()
 {
 	float uzi_spread;
 
+	// if there's not enough ammo for this attack (but we still have the weapon), reload
+	if(autocvar_g_balance_uzi_reload_ammo && self.clip_load < max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo))
+	{
+		W_UZI_Reload();
+		return;
+	}
+
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
@@ -266,6 +273,13 @@ float w_uzi(float req)
 					W_SwitchWeapon_Force(self, w_getbestweapon(self));
 					w_ready();
 					return FALSE;
+				}
+
+				// if there's not enough ammo for this attack (but we still have the weapon), reload
+				if(autocvar_g_balance_uzi_reload_ammo && self.clip_load < autocvar_g_balance_uzi_burst_ammo)
+				{
+					W_UZI_Reload();
+					return;
 				}
 
 				// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
