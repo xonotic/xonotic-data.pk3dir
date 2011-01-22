@@ -250,6 +250,11 @@ float w_tuba(float req)
 		return TRUE; // TODO use fuel?
 	else if (req == WR_CHECKAMMO2)
 		return TRUE; // TODO use fuel?
+	else if (req == WR_SWITCHABLE)
+	{
+		// no reloading system, return true
+		return TRUE;
+	}
 	return TRUE;
 };
 #endif
