@@ -435,6 +435,10 @@ float w_glauncher(float req)
 		else
 			return self.ammo_rockets >= autocvar_g_balance_grenadelauncher_secondary_ammo;
 	}
+	else if (req == WR_RELOAD)
+	{
+		W_GrenadeLauncher_Reload();
+	}
 	return TRUE;
 };
 #endif
@@ -469,10 +473,6 @@ float w_glauncher(float req)
 				w_deathtypestring = "%s almost dodged %s's grenade";
 		else // unchecked: SECONDARY, BOUNCE
 			w_deathtypestring = "%s ate %s's grenade";
-	}
-	else if (req == WR_RELOAD)
-	{
-		W_GrenadeLauncher_Reload();
 	}
 	return TRUE;
 }

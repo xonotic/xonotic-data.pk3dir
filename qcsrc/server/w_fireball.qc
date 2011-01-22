@@ -467,6 +467,10 @@ float w_fireball(float req)
 	{
 		self.fireball_primarytime = time;
 	}
+	else if (req == WR_RELOAD)
+	{
+		W_Fireball_Reload();
+	}
 	return TRUE;
 };
 #endif
@@ -522,10 +526,6 @@ float w_fireball(float req)
 			else
 				w_deathtypestring = "%s tasted %s's fireball";
 		}
-	}
-	else if (req == WR_RELOAD)
-	{
-		W_Fireball_Reload();
 	}
 	return TRUE;
 }

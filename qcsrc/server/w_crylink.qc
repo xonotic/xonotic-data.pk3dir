@@ -700,6 +700,10 @@ float w_crylink(float req)
 		else
 			return self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
 	}
+	else if (req == WR_RELOAD)
+	{
+		W_Crylink_Reload();
+	}
 	return TRUE;
 };
 #endif
@@ -740,10 +744,6 @@ float w_crylink(float req)
 			w_deathtypestring = "%s was too close to %s's Crylink"; // unchecked: SECONDARY
 		else
 			w_deathtypestring = "%s took a close look at %s's Crylink"; // unchecked: SECONDARY
-	}
-	else if (req == WR_RELOAD)
-	{
-		W_Crylink_Reload();
 	}
 	return TRUE;
 }
