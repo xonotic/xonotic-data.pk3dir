@@ -576,7 +576,7 @@ msgstr "Создать"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:20
 msgid "Demos"
-msgstr "Demo файлы"
+msgstr "Демо"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:5
@@ -943,7 +943,7 @@ msgstr "Крюк"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:215
 msgid "Weapon arenas:"
-msgstr "Арены с оружием"
+msgstr "Арены оружия"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:218
 msgid "Regular (no arena)"
@@ -1568,10 +1568,9 @@ msgstr "5 минут"
 msgid "WRN^Both"
 msgstr "1 и 5 минут"
 
-# либо "Оповещатель о попопадании"
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:173
 msgid "Hit indicator"
-msgstr "Указатель попадания"
+msgstr "Оповещать о попадании"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:175
 msgid "Menu sounds"
@@ -1840,7 +1839,7 @@ msgstr "Фильтр мыши"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:54
 msgid "Invert mouse"
-msgstr "Инвертировать мышь"
+msgstr "Обратить мышь"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:57
 #: qcsrc/menu/xonotic/dialog_settings_input.c:59
@@ -1850,7 +1849,7 @@ msgstr "Использовать ввод с джойстика"
 #: qcsrc/menu/xonotic/dialog_settings_input.c:62
 #: qcsrc/menu/xonotic/dialog_settings_input.c:64
 msgid "Turn off OS mouse acceleration"
-msgstr "Отключить OS акселерацию мыши"
+msgstr "Отключить ускорение OS мыши"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:66
 msgid "\"enter console\" also closes"
@@ -2057,7 +2056,7 @@ msgstr "Глубина цвета:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:45
 msgid "Full screen"
-msgstr "Полный экран"
+msgstr "На весь экран"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:46
 msgid "Vertical Synchronization"
@@ -2137,15 +2136,15 @@ msgstr "Насыщенность:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:95
 msgid "Use GLSL to handle color control"
-msgstr "Использовать GLSL для контроля цвета"
+msgstr "Использовать GLSL для управления цветом"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:99
 msgid "LIT^Ambient:"
-msgstr "Фоновое освещение:"
+msgstr "Окружающее освещение:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:102
 msgid "Intensity:"
-msgstr "Интенсивность:"
+msgstr "Мощность:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:4
 msgid "Singleplayer"
