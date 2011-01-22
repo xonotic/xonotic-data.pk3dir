@@ -254,21 +254,27 @@ void minstagib_ammocheck (void)
 
 void spawnfunc_weapon_minstanex (void); // defined in t_items.qc
 
+float minstanex_ammo;
 float w_minstanex(float req)
 {
 	if (req == WR_AIM)
 	{
-		if(self.ammo_cells>0)
+		if(self.ammo_cells > 0)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 		else
 			self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE);
 	}
 	else if (req == WR_THINK)
 	{
+		if(g_minstagib)
+			minstanex_ammo = 1;
+		else
+			minstanex_ammo = autocvar_g_balance_minstanex_ammo;
+
 		// if the laser uses load, we also consider its ammo for reloading
-		if(autocvar_g_balance_minstanex_reload_ammo && W_Minstanex_LaserUsesLoad() && ((g_minstagib && self.clip_load < min(1, W_Minstanex_LaserUsesLoad())) || (!g_minstagib && self.clip_load < min(autocvar_g_balance_minstanex_ammo, W_Minstanex_LaserUsesLoad())))) // forced reload
+		if(autocvar_g_balance_minstanex_reload_ammo && W_Minstanex_LaserUsesLoad() && self.clip_load < min(minstanex_ammo, W_Minstanex_LaserUsesLoad())) // forced reload
 			W_Minstanex_Reload();
-		else if(autocvar_g_balance_minstanex_reload_ammo && ((g_minstagib && self.clip_load < 1) || (!g_minstagib && self.clip_load < autocvar_g_balance_minstanex_ammo))) // forced reload
+		else if(autocvar_g_balance_minstanex_reload_ammo && self.clip_load < minstanex_ammo) // forced reload
 			W_Minstanex_Reload();
 		else if (self.BUTTON_ATCK)
 		{
@@ -329,19 +335,9 @@ float w_minstanex(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		if(autocvar_g_balance_minstanex_reload_ammo)
-		{
-			if (g_minstagib)
-				return self.clip_load >= 1;
-			else
-				return self.clip_load >= autocvar_g_balance_minstanex_ammo;
-		}
+			return self.clip_load >= minstanex_ammo;
 		else
-		{
-			if (g_minstagib)
-				return self.ammo_cells >= 1;
-			else
-				return self.ammo_cells >= autocvar_g_balance_minstanex_ammo;
-		}
+			return self.ammo_cells >= minstanex_ammo;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
