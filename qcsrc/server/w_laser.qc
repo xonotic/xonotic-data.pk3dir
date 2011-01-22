@@ -4,6 +4,53 @@ REGISTER_WEAPON(LASER, w_laser, 0, 1, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_
 #ifdef SVQC
 void(float imp) W_SwitchWeapon;
 
+.float laser_load;
+
+void W_Laser_SetAmmoCounter()
+{
+	// set clip_load to the weapon we have switched to, if the gun uses reloading
+	if(!autocvar_g_balance_laser_reload_count)
+		self.clip_load = 0; // also keeps crosshair ammo from displaying
+	else
+	{
+		self.clip_load = self.laser_load;
+		self.clip_size = autocvar_g_balance_laser_reload_count; // for the crosshair ammo display
+	}
+}
+
+void W_Laser_ReloadedAndReady()
+{
+	float t;
+
+	self.clip_load = autocvar_g_balance_laser_reload_count; // maximum load since this weapon uses no ammo
+	self.laser_load = self.clip_load;
+
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_laser_reload_time - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
+}
+
+void W_Laser_Reload()
+{
+	// return if reloading is disabled for this weapon
+	if(!autocvar_g_balance_laser_reload_count)
+		return;
+
+	if(!W_ReloadCheck(1, 0))
+		return;
+
+	float t;
+
+	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_laser_reload_time + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_laser_reload_time, W_Laser_ReloadedAndReady);
+
+	self.clip_load = -1;
+}
+
 void W_Laser_Touch (void)
 {
 	PROJECTILE_TOUCH;
@@ -226,16 +273,40 @@ float w_laser(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
+		if(autocvar_g_balance_laser_reload_count && self.clip_load < 1) // forced reload
+			W_Laser_Reload();
+		else if (self.BUTTON_ATCK)
 		{
-			W_Laser_Attack(0);
-			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
+			if (weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
+			{
+				// if this weapon is reloadable, decrease its load
+				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+				{
+					if(autocvar_g_balance_laser_reload_count)
+					{
+						self.clip_load -= 1;
+						self.laser_load = self.clip_load;
+					}
+				}
+
+				W_Laser_Attack(0);
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
+			}
 		}
-		if (self.BUTTON_ATCK2)
+		else if (self.BUTTON_ATCK2)
 		{
 			if(autocvar_g_balance_laser_secondary)
 			{
+				// if this weapon is reloadable, decrease its load
+				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+				{
+					if(autocvar_g_balance_laser_reload_count)
+					{
+						self.clip_load -= 1;
+						self.laser_load = self.clip_load;
+					}
+				}
+
 				if (weapon_prepareattack(0, 0))
 				{
 					W_Laser_Attack2();
@@ -248,6 +319,17 @@ float w_laser(float req)
 					W_SwitchWeapon (self.cnt);
 			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_Laser_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -258,11 +340,16 @@ float w_laser(float req)
 		precache_sound ("weapons/gauntlet_fire.wav");
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_LASER);
+		W_Laser_SetAmmoCounter();
+	}
 	else if (req == WR_CHECKAMMO1)
 		return TRUE;
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
+	else if (req == WR_RELOAD)
+		W_Laser_Reload();
 	return TRUE;
 };
 #endif
