@@ -82,7 +82,6 @@ float autocvar_g_balance_armor_rot;
 float autocvar_g_balance_armor_rotlinear;
 float autocvar_g_balance_armor_rotstable;
 float autocvar_g_balance_armor_start;
-float autocvar_g_balance_sniperrifle_auto_reload_on_switch;
 float autocvar_g_balance_sniperrifle_bursttime;
 float autocvar_g_balance_sniperrifle_primary_ammo;
 float autocvar_g_balance_sniperrifle_primary_animtime;
