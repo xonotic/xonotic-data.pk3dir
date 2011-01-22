@@ -6,6 +6,64 @@ REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_TYPE_SPLASH, BOT_PICKUP_RA
 .vector fireball_impactvec;
 .float fireball_primarytime;
 
+.float fireball_load;
+
+void W_Fireball_SetAmmoCounter()
+{
+	// set clip_load to the weapon we have switched to, if the gun uses reloading
+	if(!autocvar_g_balance_fireball_reload_ammo)
+		self.clip_load = 0; // also keeps crosshair ammo from displaying
+	else
+	{
+		self.clip_load = self.fireball_load;
+		self.clip_size = autocvar_g_balance_fireball_reload_ammo; // for the crosshair ammo display
+	}
+}
+
+void W_Fireball_ReloadedAndReady()
+{
+	float t;
+
+	// now do the ammo transfer
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.clip_load < autocvar_g_balance_fireball_reload_ammo && self.ammo_fuel) // make sure we don't add more ammo than we have
+	{
+		self.clip_load += 1;
+		self.ammo_fuel -= 1;
+
+		// fuel can be a non-whole number, which brakes stuff here when between 0 and 1
+		if(self.ammo_fuel < 1)
+			self.ammo_fuel = 0;
+	}
+	self.fireball_load = self.clip_load;
+
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_fireball_reload_time - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
+}
+
+void W_Fireball_Reload()
+{
+	// return if reloading is disabled for this weapon
+	if(!autocvar_g_balance_fireball_reload_ammo)
+		return;
+
+	if(!W_ReloadCheck(self.ammo_fuel, min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo)))
+		return;
+
+	float t;
+
+	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_fireball_reload_time + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_fireball_reload_time, W_Fireball_ReloadedAndReady);
+
+	self.old_clip_load = self.clip_load;
+	self.clip_load = -1;
+}
+
 void W_Fireball_Explode (void)
 {
 	entity e;
@@ -194,8 +252,17 @@ void W_Fireball_Attack1_Frame1()
 
 void W_Fireball_Attack1_Frame0()
 {
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel = self.ammo_fuel - autocvar_g_balance_fireball_primary_ammo;
+	{
+		if(autocvar_g_balance_fireball_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_fireball_primary_ammo;
+			self.fireball_load = self.clip_load;
+		}
+		else
+			self.ammo_fuel -= autocvar_g_balance_fireball_primary_ammo;
+	}
 
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
 	sound (self, CHAN_WEAPON, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
@@ -246,8 +313,17 @@ void W_Fireball_Attack2()
 	vector f_diff;
 	float c;
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel = self.ammo_fuel - autocvar_g_balance_fireball_secondary_ammo;
+	{
+		if(autocvar_g_balance_fireball_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_fireball_secondary_ammo;
+			self.fireball_load = self.clip_load;
+		}
+		else
+			self.ammo_fuel -= autocvar_g_balance_fireball_secondary_ammo;
+	}
 
 	c = mod(self.bulletcounter, 4);
 	switch(c)
@@ -327,19 +403,36 @@ float w_fireball(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
-		if (time >= self.fireball_primarytime)
-		if (weapon_prepareattack(0, autocvar_g_balance_fireball_primary_refire))
+		if(autocvar_g_balance_fireball_reload_ammo && self.clip_load < min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo)) // forced reload
+			W_Fireball_Reload();
+		else if (self.BUTTON_ATCK)
 		{
-			W_Fireball_Attack1_Frame0();
-			self.fireball_primarytime = time + autocvar_g_balance_fireball_primary_refire2;
+			if (time >= self.fireball_primarytime)
+			if (weapon_prepareattack(0, autocvar_g_balance_fireball_primary_refire))
+			{
+				W_Fireball_Attack1_Frame0();
+				self.fireball_primarytime = time + autocvar_g_balance_fireball_primary_refire2;
+			}
 		}
-		if (self.BUTTON_ATCK2)
-		if (weapon_prepareattack(1, autocvar_g_balance_fireball_secondary_refire))
+		else if (self.BUTTON_ATCK2)
 		{
-			W_Fireball_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_fireball_secondary_animtime, w_ready);
+			if (weapon_prepareattack(1, autocvar_g_balance_fireball_secondary_refire))
+			{
+				W_Fireball_Attack2();
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_fireball_secondary_animtime, w_ready);
+			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_Fireball_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -352,11 +445,24 @@ float w_fireball(float req)
 		precache_sound ("weapons/fireball_prefire2.wav");
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_FIREBALL);
+		W_Fireball_SetAmmoCounter();
+	}
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
+	{
+		if(autocvar_g_balance_fireball_reload_ammo)
+			return self.fireball_load >= autocvar_g_balance_fireball_primary_ammo;
+		else
+			return self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
+	}
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
+	{
+		if(autocvar_g_balance_fireball_reload_ammo)
+			return self.fireball_load >= autocvar_g_balance_fireball_secondary_ammo;
+		else
+			return self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
+	}
 	else if (req == WR_RESETPLAYER)
 	{
 		self.fireball_primarytime = time;
@@ -416,6 +522,10 @@ float w_fireball(float req)
 			else
 				w_deathtypestring = "%s tasted %s's fireball";
 		}
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Fireball_Reload();
 	}
 	return TRUE;
 }
