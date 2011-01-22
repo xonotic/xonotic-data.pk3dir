@@ -4,6 +4,60 @@ REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_
 #ifdef SVQC
 .float minstanex_lasthit;
 
+.float minstanex_load;
+
+void W_Minstanex_SetAmmoCounter()
+{
+	// set clip_load to the weapon we have switched to, if the gun uses reloading
+	if(!autocvar_g_balance_minstanex_reload_ammo)
+		self.clip_load = 0; // also keeps crosshair ammo from displaying
+	else
+	{
+		self.clip_load = self.minstanex_load;
+		self.clip_size = autocvar_g_balance_minstanex_reload_ammo; // for the crosshair ammo display
+	}
+}
+
+void W_Minstanex_ReloadedAndReady()
+{
+	float t;
+
+	// now do the ammo transfer
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.clip_load < autocvar_g_balance_minstanex_reload_ammo && self.ammo_cells) // make sure we don't add more ammo than we have
+	{
+		self.clip_load += 1;
+		self.ammo_cells -= 1;
+	}
+	self.minstanex_load = self.clip_load;
+
+	t = ATTACK_FINISHED(self) - autocvar_g_balance_minstanex_reload_time - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
+}
+
+void W_Minstanex_Reload()
+{
+	// return if reloading is disabled for this weapon
+	if(!autocvar_g_balance_minstanex_reload_ammo)
+		return;
+
+	if(!W_ReloadCheck(self.ammo_cells, autocvar_g_balance_minstanex_ammo))
+		return;
+
+	float t;
+
+	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_minstanex_reload_time + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_minstanex_reload_time, W_Minstanex_ReloadedAndReady);
+
+	self.old_clip_load = self.clip_load;
+	self.clip_load = -1;
+}
+
 void W_MinstaNex_Attack (void)
 {
 	float flying;
@@ -80,12 +134,24 @@ void W_MinstaNex_Attack (void)
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		Damage_DamageInfo(trace_endpos, 10000, 0, 0, 800 * w_shotdir, WEP_MINSTANEX, self);
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		if (g_minstagib)
-			self.ammo_cells = self.ammo_cells - 1;
+		if(autocvar_g_balance_minstanex_reload_ammo)
+		{
+			if (g_minstagib)
+				self.clip_load -= - 1;
+			else
+				self.clip_load -= autocvar_g_balance_minstanex_ammo;
+			self.minstanex_load = self.clip_load;
+		}
 		else
-			self.ammo_cells = self.ammo_cells - autocvar_g_balance_minstanex_ammo;
+		{
+			if (g_minstagib)
+				self.ammo_cells -= - 1;
+			else
+				self.ammo_cells -= autocvar_g_balance_minstanex_ammo;
+		}
 	}
 }
 
@@ -182,7 +248,9 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if(autocvar_g_balance_minstanex_reload_ammo && ((g_minstagib && self.clip_load < 1) || (!g_minstagib && self.clip_load < autocvar_g_balance_minstanex_ammo))) // forced reload
+			W_Minstanex_Reload();
+		else if (self.BUTTON_ATCK)
 		{
 			if (weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
 			{
@@ -204,6 +272,17 @@ float w_minstanex(float req)
 				self.weapon = w;
 			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_Minstanex_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -220,20 +299,35 @@ float w_minstanex(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_MINSTANEX);
+		W_Minstanex_SetAmmoCounter();
 		self.minstanex_lasthit = 0;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if (g_minstagib)
-			return self.ammo_cells >= 1;
+		if(autocvar_g_balance_minstanex_reload_ammo)
+		{
+			if (g_minstagib)
+				return self.clip_load >= 1;
+			else
+				return self.clip_load >= autocvar_g_balance_minstanex_ammo;
+		}
 		else
-			return self.ammo_cells >= autocvar_g_balance_minstanex_ammo;
+		{
+			if (g_minstagib)
+				return self.ammo_cells >= 1;
+			else
+				return self.ammo_cells >= autocvar_g_balance_minstanex_ammo;
+		}
 	}
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
 	else if (req == WR_RESETPLAYER)
 	{
 		self.minstanex_lasthit = 0;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Minstanex_Reload();
 	}
 	return TRUE;
 };

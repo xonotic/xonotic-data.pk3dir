@@ -900,6 +900,8 @@ void PutClientInServer (void)
 		self.hlac_load = autocvar_g_balance_hlac_reload_ammo;
 		self.fireball_load = autocvar_g_balance_fireball_reload_ammo;
 		self.seeker_load = autocvar_g_balance_fireball_reload_ammo;
+		self.minstanex_load = autocvar_g_balance_minstanex_reload_ammo;
+		self.nex_load = autocvar_g_balance_nex_reload_ammo;
 
 		if(inWarmupStage)
 		{
