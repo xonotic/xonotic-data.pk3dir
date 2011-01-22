@@ -896,7 +896,6 @@ void Send_WeaponComplain (entity e, float wpn, string wpnname, float type)
 
 .float hasweapon_complain_spam;
 
-float W_Reload_AllowSwitching(float wpn);
 float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 {
 	local float weaponbit, f;
@@ -936,7 +935,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				if(wpn != WEP_TUBA && wpn != WEP_PORTO && wpn != WEP_HOOK) // skip non-reloadable weapons, or we access undefined cvars
 				if(cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
 				{
-					if(W_Reload_AllowSwitching(wpn))
+					if(weapon_action(wpn, WR_SWITCHABLE))
 						f = 1;
 					else
 						f = 0; // necessary to avoid switching back and forth
@@ -1067,7 +1066,7 @@ float weapon_prepareattack_checkammo(float secondary)
 		e = get_weaponinfo(self.weapon);
 		if(self.weapon != WEP_TUBA && self.weapon != WEP_PORTO && self.weapon != WEP_HOOK) // skip non-reloadable weapons, or we access undefined cvars
 		if(cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
-		if(W_Reload_AllowSwitching(self.weapon))
+		if(weapon_action(self.weapons, WR_SWITCHABLE))
 			return FALSE;
 
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
@@ -1636,68 +1635,6 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 #define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
 
 // shared weapon reload code
-float W_Reload_AllowSwitching(float wpn)
-{
-	// check each reloadable weapon and see if we can switch to it
-	// returns true if there's either enough load in the weapon to use it,
-	// or we have enough ammo to reload the weapon to a usable point.
-	// The list below is ugly, but the only way I found to do this check
-	float ammo_amount;
-	switch(wpn)
-	{
-		case WEP_SHOTGUN:
-			ammo_amount = autocvar_g_balance_shotgun_primary_ammo;
-			return self.shotgun_load >= ammo_amount || self.ammo_shells >= ammo_amount;
-		case WEP_UZI:
-			ammo_amount = min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo);
-			return self.uzi_load >= ammo_amount || self.ammo_nails >= ammo_amount;
-		case WEP_GRENADE_LAUNCHER:
-			ammo_amount = min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo);
-			return self.grenadelauncher_load >= ammo_amount || self.ammo_rockets >= ammo_amount;
-		case WEP_MINE_LAYER:
-			ammo_amount = autocvar_g_balance_minelayer_ammo;
-			return self.minelayer_load >= ammo_amount || self.ammo_rockets >= ammo_amount;
-		case WEP_ELECTRO:
-			ammo_amount = min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo);
-			return self.electro_load >= ammo_amount || self.ammo_cells >= ammo_amount;
-		case WEP_CRYLINK:
-			ammo_amount = min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo);
-			return self.crylink_load >= ammo_amount || self.ammo_cells >= ammo_amount;
-		case WEP_HLAC:
-			ammo_amount = min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo);
-			return self.hlac_load >= ammo_amount || self.ammo_cells >= ammo_amount;
-		case WEP_NEX:
-			ammo_amount = min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo);
-			return self.nex_load >= ammo_amount || self.ammo_cells >= ammo_amount;
-		case WEP_MINSTANEX:
-			if(g_minstagib)
-				ammo_amount = 1;
-			else
-				ammo_amount = autocvar_g_balance_minstanex_ammo;
-			if(autocvar_g_balance_minstanex_laser_ammo)
-				ammo_amount = min(ammo_amount, autocvar_g_balance_minstanex_laser_ammo);
-
-			return self.minstanex_load >= ammo_amount || self.ammo_cells >= ammo_amount;
-		case WEP_SNIPERRIFLE:
-			ammo_amount = min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo);
-			return self.sniperrifle_load >= ammo_amount || self.ammo_nails >= ammo_amount;
-		case WEP_SEEKER:
-			ammo_amount = min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo);
-			return self.seeker_load >= ammo_amount || self.ammo_rockets >= ammo_amount;
-		case WEP_HAGAR:
-			ammo_amount = min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo);
-			return self.hagar_load >= ammo_amount || self.ammo_rockets >= ammo_amount;
-		case WEP_FIREBALL:
-			ammo_amount = min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo);
-			return self.fireball_load >= ammo_amount || self.ammo_fuel >= ammo_amount;
-		case WEP_ROCKET_LAUNCHER:
-			ammo_amount = autocvar_g_balance_rocketlauncher_ammo;
-			return self.rocketlauncher_load >= ammo_amount || self.ammo_rockets >= ammo_amount;
-		default:
-			return TRUE;
-	}
-}
-
 .float reload_complain;
 float W_ReloadCheck(float ammo_amount, float ammo_shot)
 {

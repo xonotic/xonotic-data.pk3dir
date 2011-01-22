@@ -563,6 +563,15 @@ float w_seeker(float req)
 	{
 		W_Seeker_Reload();
 	}
+	else if (req == WR_SWITCHABLE)
+	{
+		// checks if this weapon can be switched to, when reloading is enabled
+		// returns true if there's either enough load in the weapon to use it,
+		// or we have enough ammo to reload the weapon to a usable point
+		float ammo_amount;
+		ammo_amount = min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo);
+		return self.seeker_load >= ammo_amount || self.ammo_rockets >= ammo_amount;
+	}
 	return TRUE;
 };
 #endif

@@ -591,6 +591,15 @@ float w_electro(float req)
 	{
 		W_Shotgun_Reload();
 	}
+	else if (req == WR_SWITCHABLE)
+	{
+		// checks if this weapon can be switched to, when reloading is enabled
+		// returns true if there's either enough load in the weapon to use it,
+		// or we have enough ammo to reload the weapon to a usable point
+		float ammo_amount;
+		ammo_amount = min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo);
+		return self.electro_load >= ammo_amount || self.ammo_cells >= ammo_amount;
+	}
 	return TRUE;
 };
 #endif

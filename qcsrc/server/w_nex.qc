@@ -313,6 +313,15 @@ float w_nex(float req)
 	{
 		W_Nex_Reload();
 	}
+	else if (req == WR_SWITCHABLE)
+	{
+		// checks if this weapon can be switched to, when reloading is enabled
+		// returns true if there's either enough load in the weapon to use it,
+		// or we have enough ammo to reload the weapon to a usable point
+		float ammo_amount;
+		ammo_amount = min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo);
+		return self.nex_load >= ammo_amount || self.ammo_cells >= ammo_amount;
+	}
 
 	return TRUE;
 };

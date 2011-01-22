@@ -365,6 +365,15 @@ float w_uzi(float req)
 	{
 		W_UZI_Reload();
 	}
+	else if (req == WR_SWITCHABLE)
+	{
+		// checks if this weapon can be switched to, when reloading is enabled
+		// returns true if there's either enough load in the weapon to use it,
+		// or we have enough ammo to reload the weapon to a usable point
+		float ammo_amount;
+		ammo_amount = min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo);
+		return self.uzi_load >= ammo_amount || self.ammo_nails >= ammo_amount;
+	}
 	return TRUE;
 };
 #endif

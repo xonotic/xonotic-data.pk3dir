@@ -621,6 +621,7 @@ float WR_KILLMESSAGE    = 8; // (CSQC) sets w_deathtypestring or leaves it alone
 float WR_RELOAD         = 9; // (SVQC) does not need to do anything
 float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
 float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
+float WR_SWITCHABLE	= 12; // (CSQC) impact effect
 
 
 float HUD_PANEL_WEAPONS		= 0;
