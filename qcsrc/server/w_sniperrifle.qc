@@ -63,13 +63,6 @@ void W_SniperRifle_Reload()
 
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
 {
-	// if there's not enough ammo for this attack (but we still have the weapon), reload
-	if(autocvar_g_balance_sniperrifle_reload_ammo && self.clip_load < autocvar_g_balance_sniperrifle_primary_ammo)
-	{
-		W_SniperRifle_Reload();
-		return;
-	}
-
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{

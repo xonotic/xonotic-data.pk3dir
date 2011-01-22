@@ -76,13 +76,6 @@ void W_HLAC_Attack (void)
 	local entity missile;
     float spread;
 
-	// if there's not enough ammo for this attack (but we still have the weapon), reload
-	if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < autocvar_g_balance_hlac_primary_ammo)
-	{
-		W_HLAC_Reload();
-		return;
-	}
-
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
@@ -183,13 +176,6 @@ void W_HLAC_Attack2f (void)
 void W_HLAC_Attack2 (void)
 {
     float i;
-
-	// if there's not enough ammo for this attack (but we still have the weapon), reload
-	if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < autocvar_g_balance_hlac_secondary_ammo)
-	{
-		W_HLAC_Reload();
-		return;
-	}
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)

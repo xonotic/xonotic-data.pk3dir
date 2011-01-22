@@ -164,13 +164,6 @@ void W_Electro_Attack()
 {
 	local entity proj;
 
-	// if there's not enough ammo for this attack (but we still have the weapon), reload
-	if(autocvar_g_balance_electro_reload_ammo && self.clip_load < autocvar_g_balance_electro_primary_ammo)
-	{
-		W_Electro_Reload();
-		return;
-	}
-
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
@@ -217,13 +210,6 @@ void W_Electro_Attack()
 void W_Electro_Attack2()
 {
 	local entity proj;
-
-	// if there's not enough ammo for this attack (but we still have the weapon), reload
-	if(autocvar_g_balance_electro_reload_ammo && self.clip_load < autocvar_g_balance_electro_secondary_ammo)
-	{
-		W_Electro_Reload();
-		return;
-	}
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
