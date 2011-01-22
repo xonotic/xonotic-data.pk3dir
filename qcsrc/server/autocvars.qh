@@ -446,6 +446,7 @@ float autocvar_g_balance_minstanex_ammo;
 float autocvar_g_balance_minstanex_animtime;
 float autocvar_g_balance_minstanex_refire;
 float autocvar_g_balance_minstanex_reload_ammo;
+float autocvar_g_balance_minstanex_reload_laserload;
 float autocvar_g_balance_minstanex_reload_time;
 float autocvar_g_balance_nex_charge;
 float autocvar_g_balance_nex_charge_limit;

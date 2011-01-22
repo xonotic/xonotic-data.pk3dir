@@ -6,6 +6,18 @@ REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_
 
 .float minstanex_load;
 
+float W_Minstanex_LaserUsesLoad()
+{
+	// if the minsta uses reloading, and consumption is enabled for the minsta laser, decrease clip load
+	if(!autocvar_g_balance_minstanex_reload_ammo) // reloading is disabled
+		return FALSE;
+
+	if(autocvar_g_balance_minstanex_reload_laserload)
+		return autocvar_g_balance_minstanex_reload_laserload;
+
+	return FALSE;
+}
+
 void W_Minstanex_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
@@ -42,7 +54,12 @@ void W_Minstanex_Reload()
 	if(!autocvar_g_balance_minstanex_reload_ammo)
 		return;
 
-	if(!W_ReloadCheck(self.ammo_cells, autocvar_g_balance_minstanex_ammo))
+	if(W_Minstanex_LaserUsesLoad())
+	{
+		if(!W_ReloadCheck(self.ammo_cells, min(autocvar_g_balance_minstanex_ammo, W_Minstanex_LaserUsesLoad())))
+			return;
+	}
+	else if(!W_ReloadCheck(self.ammo_cells, autocvar_g_balance_minstanex_ammo))
 		return;
 
 	float t;
@@ -248,7 +265,10 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_minstanex_reload_ammo && ((g_minstagib && self.clip_load < 1) || (!g_minstagib && self.clip_load < autocvar_g_balance_minstanex_ammo))) // forced reload
+		// if the laser uses load, we also consider its ammo for reloading
+		if(autocvar_g_balance_minstanex_reload_ammo && W_Minstanex_LaserUsesLoad() && ((g_minstagib && self.clip_load < min(1, W_Minstanex_LaserUsesLoad())) || (!g_minstagib && self.clip_load < min(autocvar_g_balance_minstanex_ammo, W_Minstanex_LaserUsesLoad())))) // forced reload
+			W_Minstanex_Reload();
+		else if(autocvar_g_balance_minstanex_reload_ammo && ((g_minstagib && self.clip_load < 1) || (!g_minstagib && self.clip_load < autocvar_g_balance_minstanex_ammo))) // forced reload
 			W_Minstanex_Reload();
 		else if (self.BUTTON_ATCK)
 		{
@@ -263,6 +283,10 @@ float w_minstanex(float req)
 			if (self.jump_interval <= time)
 			{
 				self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
+
+				// decrease clip load for the laser?
+				if(autocvar_g_balance_minstanex_reload_ammo && W_Minstanex_LaserUsesLoad())
+					self.clip_load -= W_Minstanex_LaserUsesLoad();
 
 				// ugly minstagib hack to reuse the fire mode of the laser
 				float w;
@@ -320,7 +344,12 @@ float w_minstanex(float req)
 		}
 	}
 	else if (req == WR_CHECKAMMO2)
-		return TRUE;
+	{
+		if(W_Minstanex_LaserUsesLoad())
+			return W_Minstanex_LaserUsesLoad();
+		else
+			return TRUE;
+	}
 	else if (req == WR_RESETPLAYER)
 	{
 		self.minstanex_lasthit = 0;
