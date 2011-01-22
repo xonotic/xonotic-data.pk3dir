@@ -76,6 +76,18 @@ void W_HLAC_Attack (void)
 	local entity missile;
     float spread;
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_hlac_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_hlac_primary_ammo;
+			self.hlac_load = self.clip_load;
+		}
+		else
+			self.ammo_cells -= autocvar_g_balance_hlac_primary_ammo;
+	}
+
     spread = autocvar_g_balance_hlac_primary_spread_min + (autocvar_g_balance_hlac_primary_spread_add * self.misc_bulletcounter);
     spread = min(spread,autocvar_g_balance_hlac_primary_spread_max);
     if(self.crouch)
@@ -116,18 +128,6 @@ void W_HLAC_Attack (void)
 	CSQCProjectile(missile, TRUE, PROJECTILE_HLAC, TRUE);
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
-
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_hlac_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_hlac_primary_ammo;
-			self.hlac_load = self.clip_load;
-		}
-		else
-			self.ammo_cells -= autocvar_g_balance_hlac_primary_ammo;
-	}
 }
 
 void W_HLAC_Attack2f (void)
@@ -177,15 +177,6 @@ void W_HLAC_Attack2 (void)
 {
     float i;
 
-    for(i=autocvar_g_balance_hlac_secondary_shots;i>0;--i)
-        W_HLAC_Attack2f();
-
-	if (!g_norecoil)
-	{
-		self.punchangle_x = random () - 0.5;
-		self.punchangle_y = random () - 0.5;
-	}
-
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
@@ -196,6 +187,15 @@ void W_HLAC_Attack2 (void)
 		}
 		else
 			self.ammo_cells -= autocvar_g_balance_hlac_secondary_ammo;
+	}
+
+    for(i=autocvar_g_balance_hlac_secondary_shots;i>0;--i)
+        W_HLAC_Attack2f();
+
+	if (!g_norecoil)
+	{
+		self.punchangle_x = random () - 0.5;
+		self.punchangle_y = random () - 0.5;
 	}
 }
 

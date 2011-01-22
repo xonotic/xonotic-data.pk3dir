@@ -373,6 +373,18 @@ void W_Crylink_Attack (void)
 	vector forward, right, up;
 	float maxdmg;
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_crylink_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_crylink_primary_ammo;
+			self.crylink_load = self.clip_load;
+		}
+		else
+			self.ammo_cells -= autocvar_g_balance_crylink_primary_ammo;
+	}
+
 	maxdmg = autocvar_g_balance_crylink_primary_damage*autocvar_g_balance_crylink_primary_shots;
 	maxdmg *= 1 + autocvar_g_balance_crylink_primary_bouncedamagefactor * autocvar_g_balance_crylink_primary_bounces;
 	if(autocvar_g_balance_crylink_primary_joinexplode)
@@ -465,18 +477,6 @@ void W_Crylink_Attack (void)
 		counter = counter + 1;
 	}
 	self.crylink_lastgroup = proj;
-
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_crylink_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_crylink_primary_ammo;
-			self.crylink_load = self.clip_load;
-		}
-		else
-			self.ammo_cells -= autocvar_g_balance_crylink_primary_ammo;
-	}
 }
 
 void W_Crylink_Attack2 (void)
@@ -484,6 +484,18 @@ void W_Crylink_Attack2 (void)
 	local float counter, shots;
 	local entity proj, prevproj, firstproj;
 	float maxdmg;
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_crylink_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_crylink_secondary_ammo;
+			self.crylink_load = self.clip_load;
+		}
+		else
+			self.ammo_cells -= autocvar_g_balance_crylink_secondary_ammo;
+	}
 
 	maxdmg = autocvar_g_balance_crylink_secondary_damage*autocvar_g_balance_crylink_secondary_shots;
 	maxdmg *= 1 + autocvar_g_balance_crylink_secondary_bouncedamagefactor * autocvar_g_balance_crylink_secondary_bounces;
@@ -562,18 +574,6 @@ void W_Crylink_Attack2 (void)
 		counter = counter + 1;
 	}
 	self.crylink_lastgroup = proj;
-
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_crylink_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_crylink_secondary_ammo;
-			self.crylink_load = self.clip_load;
-		}
-		else
-			self.ammo_cells -= autocvar_g_balance_crylink_secondary_ammo;
-	}
 }
 
 void spawnfunc_weapon_crylink (void)

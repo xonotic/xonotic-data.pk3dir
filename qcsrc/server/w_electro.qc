@@ -164,6 +164,18 @@ void W_Electro_Attack()
 {
 	local entity proj;
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_electro_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_electro_primary_ammo;
+			self.electro_load = self.clip_load;
+		}
+		else
+			self.ammo_cells -= autocvar_g_balance_electro_primary_ammo;
+	}
+
 	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", CHAN_WEAPON, autocvar_g_balance_electro_primary_damage);
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -193,23 +205,23 @@ void W_Electro_Attack()
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+}
+
+void W_Electro_Attack2()
+{
+	local entity proj;
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		if(autocvar_g_balance_electro_reload_ammo)
 		{
-			self.clip_load -= autocvar_g_balance_electro_primary_ammo;
+			self.clip_load -= autocvar_g_balance_electro_secondary_ammo;
 			self.electro_load = self.clip_load;
 		}
 		else
-			self.ammo_cells -= autocvar_g_balance_electro_primary_ammo;
+			self.ammo_cells -= autocvar_g_balance_electro_secondary_ammo;
 	}
-}
-
-void W_Electro_Attack2()
-{
-	local entity proj;
 
 	W_SetupShot_ProjectileSize (self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", CHAN_WEAPON, autocvar_g_balance_electro_secondary_damage);
 
@@ -255,18 +267,6 @@ void W_Electro_Attack2()
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
-
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_electro_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_electro_secondary_ammo;
-			self.electro_load = self.clip_load;
-		}
-		else
-			self.ammo_cells -= autocvar_g_balance_electro_secondary_ammo;
-	}
 }
 
 .vector hook_start, hook_end;
@@ -331,9 +331,9 @@ void lgbeam_think()
 
 	float dt, f;
 	dt = frametime;
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 		if(autocvar_g_balance_electro_primary_ammo)
 		{
 			if(autocvar_g_balance_electro_reload_ammo)

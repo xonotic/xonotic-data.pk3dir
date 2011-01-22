@@ -215,6 +215,18 @@ void W_Grenade_Attack (void)
 {
 	local entity gren;
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_grenadelauncher_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_grenadelauncher_primary_ammo;
+			self.grenadelauncher_load = self.clip_load;
+		}
+		else
+			self.ammo_rockets -= autocvar_g_balance_grenadelauncher_primary_ammo;
+	}
+
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CHAN_WEAPON, autocvar_g_balance_grenadelauncher_primary_damage);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
@@ -254,23 +266,23 @@ void W_Grenade_Attack (void)
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
 
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+}
+
+void W_Grenade_Attack2 (void)
+{
+	local entity gren;
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		if(autocvar_g_balance_grenadelauncher_reload_ammo)
 		{
-			self.clip_load -= autocvar_g_balance_grenadelauncher_primary_ammo;
+			self.clip_load -= autocvar_g_balance_grenadelauncher_secondary_ammo;
 			self.grenadelauncher_load = self.clip_load;
 		}
 		else
-			self.ammo_rockets -= autocvar_g_balance_grenadelauncher_primary_ammo;
+			self.ammo_rockets -= autocvar_g_balance_grenadelauncher_secondary_ammo;
 	}
-}
-
-void W_Grenade_Attack2 (void)
-{
-	local entity gren;
 
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CHAN_WEAPON, autocvar_g_balance_grenadelauncher_secondary_damage);
 	w_shotdir = v_forward; // no TrueAim for grenades please
@@ -310,18 +322,6 @@ void W_Grenade_Attack2 (void)
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
 
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
-
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_grenadelauncher_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_grenadelauncher_secondary_ammo;
-			self.grenadelauncher_load = self.clip_load;
-		}
-		else
-			self.ammo_rockets -= autocvar_g_balance_grenadelauncher_secondary_ammo;
-	}
 }
 
 void spawnfunc_weapon_grenadelauncher (void)

@@ -268,6 +268,18 @@ void W_Mine_Attack (void)
 		}
 	}
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_minelayer_reload_ammo)
+		{
+			self.clip_load -= autocvar_g_balance_minelayer_ammo;
+			self.minelayer_load = self.clip_load;
+		}
+		else
+			self.ammo_rockets -= autocvar_g_balance_minelayer_ammo;
+	}
+
 	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", CHAN_WEAPON, autocvar_g_balance_minelayer_damage);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -313,18 +325,6 @@ void W_Mine_Attack (void)
 	// common properties
 
 	other = mine; MUTATOR_CALLHOOK(EditProjectile);
-
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_minelayer_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_minelayer_ammo;
-			self.minelayer_load = self.clip_load;
-		}
-		else
-			self.ammo_rockets -= autocvar_g_balance_minelayer_ammo;
-	}
 }
 
 void spawnfunc_weapon_minelayer (void); // defined in t_items.qc

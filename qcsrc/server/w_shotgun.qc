@@ -77,6 +77,18 @@ void W_Shotgun_Attack (void)
 	bulletspeed = autocvar_g_balance_shotgun_primary_speed;
 	bulletconstant = autocvar_g_balance_shotgun_primary_bulletconstant;
 
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_shotgun_reload_ammo)
+		{
+			self.clip_load -= ammoamount;
+			self.shotgun_load = self.clip_load;
+		}
+		else
+			self.ammo_shells -= ammoamount;
+	}
+
 	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/shotgun_fire.wav", CHAN_WEAPON, d * bullets);
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, 1, bulletconstant);
@@ -96,18 +108,6 @@ void W_Shotgun_Attack (void)
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');
-
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_shotgun_reload_ammo)
-		{
-			self.clip_load -= ammoamount;
-			self.shotgun_load = self.clip_load;
-		}
-		else
-			self.ammo_shells -= ammoamount;
-	}
 }
 
 void shotgun_meleethink (void)

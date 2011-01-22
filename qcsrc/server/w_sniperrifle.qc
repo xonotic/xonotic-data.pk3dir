@@ -63,6 +63,18 @@ void W_SniperRifle_Reload()
 
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
 {
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(autocvar_g_balance_sniperrifle_reload_ammo)
+		{
+			self.clip_load -= pAmmo;
+			self.sniperrifle_load = self.clip_load;
+		}
+		else
+			self.ammo_nails -= pAmmo;
+	}
+
 	if(deathtype & HITTYPE_SECONDARY)
 		W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, "weapons/campingrifle_fire2.wav", CHAN_WEAPON, autocvar_g_balance_sniperrifle_secondary_damage + autocvar_g_balance_sniperrifle_secondary_headshotaddeddamage);
 	else
@@ -84,18 +96,6 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 
 	if (autocvar_g_casings >= 2)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
-
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_sniperrifle_reload_ammo)
-		{
-			self.clip_load -= pAmmo;
-			self.sniperrifle_load = self.clip_load;
-		}
-		else
-			self.ammo_nails -= pAmmo;
-	}
 }
 
 void W_SniperRifle_Attack()
