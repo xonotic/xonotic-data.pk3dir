@@ -1052,11 +1052,6 @@ float weapon_prepareattack_checkammo(float secondary)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
-		// always allow reloadable weapons, even if we're out of ammo, since the weapon itself
-		// could still be loaded. The reload code takes care of the rest
-		if(weapon_action(self.weapon, WR_SWITCHABLE))
-			return FALSE;
-
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
 		local entity mine;
 		if(self.weapon == WEP_MINE_LAYER)
