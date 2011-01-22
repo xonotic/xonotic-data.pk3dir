@@ -334,10 +334,12 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		if(autocvar_g_balance_minstanex_laser_ammo)
-			return autocvar_g_balance_minstanex_laser_ammo;
-		else
+		if(!autocvar_g_balance_minstanex_laser_ammo)
 			return TRUE;
+		if(autocvar_g_balance_minstanex_reload_ammo)
+			return self.clip_load >= autocvar_g_balance_minstanex_laser_ammo;
+		else
+			return self.ammo_cells >= autocvar_g_balance_minstanex_laser_ammo;
 	}
 	else if (req == WR_RESETPLAYER)
 	{
