@@ -537,23 +537,28 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	else
 		self.pushltime = 0;
 
-	float abot, vbot;
+	float abot, vbot, awep;
 	abot = (clienttype(attacker) == CLIENTTYPE_BOT);
 	vbot = (clienttype(self) == CLIENTTYPE_BOT);
 
 	valid_damage_for_weaponstats = 0;
 	if(vbot || clienttype(self) == CLIENTTYPE_REAL)
 	if(abot || clienttype(attacker) == CLIENTTYPE_REAL)
-	if(self != attacker)
-	if(!DEATH_ISSPECIAL(deathtype))
+	if(attacker && self != attacker)
 	if(IsDifferentTeam(self, attacker))
+	{
+		if(DEATH_ISSPECIAL(deathtype))
+			awep = attacker.weapon;
+		else
+			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
+	}
 	
 	if(valid_damage_for_weaponstats)
 	{
 		dh = dh - max(self.health, 0);
 		da = da - max(self.armorvalue, 0);
-		WeaponStats_LogDamage(DEATH_WEAPONOF(deathtype), abot, self.weapon, vbot, dh + da);
+		WeaponStats_LogDamage(awep, abot, self.weapon, vbot, dh + da);
 	}
 
 	if (self.health < 1)
@@ -568,7 +573,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		}
 
 		if(valid_damage_for_weaponstats)
-			WeaponStats_LogKill(DEATH_WEAPONOF(deathtype), abot, self.weapon, vbot);
+			WeaponStats_LogKill(awep, abot, self.weapon, vbot);
 
 		if(sv_gentle < 1) // TODO make a "gentle" version?
 		if(sound_allowed(MSG_BROADCAST, attacker))
