@@ -2796,47 +2796,47 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if(type == DEATH_SBCRUSH) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was crushed by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was crushed by %s\n"), s2, s1));
 		} else if(type == DEATH_SBMINIGUN) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 got shredded by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 got shredded by %s\n"), s2, s1));
 		} else if(type == DEATH_SBROCKET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was blased to bits by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was blasted to bits by %s\n"), s2, s1));
 		} else if(type == DEATH_SBBLOWUP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 got caught in the destruction of ^1%s's vehicle\n"), s2, s1));
+				print (sprintf(_("^1%s^1 got caught in the destruction of %s^1's vehicle\n"), s2, s1));
 		} else if(type == DEATH_WAKIGUN) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was bolted down by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was bolted down by %s\n"), s2, s1));
 		} else if(type == DEATH_WAKIROCKET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 could find no shelter from ^1%s's rockets\n"), s2, s1));
+				print (sprintf(_("^1%s^1 could find no shelter from %s^1's rockets\n"), s2, s1));
 		} else if(type == DEATH_WAKIBLOWUP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 dies when ^1%s's wakizashi dies.\n"), s2, s1));
+				print (sprintf(_("^1%s^1 dies when %s^1's wakizashi dies.\n"), s2, s1));
 		} else if(type == DEATH_TURRET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was pushed into the line of fire by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was pushed into the line of fire by %s\n"), s2, s1));
 		} else if(type == DEATH_TOUCHEXPLODE) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was pushed into an accident by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was pushed into an accident by %s\n"), s2, s1));
 		} else if(type == DEATH_CHEAT) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was unfairly eliminated by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was unfairly eliminated by %s\n"), s2, s1));
 		} else if (type == DEATH_FIRE) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was burnt to death by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was burnt to death by %s\n"), s2, s1));
 		} else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_CUSTOM);
 			if(alsoprint)

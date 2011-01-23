@@ -22,7 +22,7 @@ morphed
 
 *Concepts
 LJFHutch
-theShadow
+Pearce "theShadow" Michal
 
 *Création des cartes
 FruitieX
@@ -64,7 +64,10 @@ Calinou
 *Portugais
 Ricardo "Hellgardia" Silva
 
-*Russian (FIXME TRANSLATE THIS)
+*Roumain
+MirceaKitsune
+
+*Russe
 Lord Canistra
 Nikoli
 
@@ -80,6 +83,7 @@ Maik "SavageX" Merten
 MrBougo
 Ruszkai "C.Brutail" Ákos
 Samual Lenks
+Severin "sev" Meyer
 Stephan "esteel" Stahl
 Wolfgang "Blub\0" Bumiller
 

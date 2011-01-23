@@ -22,7 +22,7 @@ morphed
 
 *Concept Art
 LJFHutch
-theShadow
+Pearce "theShadow" Michal
 
 *Level Design
 FruitieX
@@ -64,12 +64,12 @@ Calinou
 *Portuguese
 Ricardo "Hellgardia" Silva
 
+*Romanian
+MirceaKitsune
+
 *Russian
 Lord Canistra
 Nikoli
-
-*Romanian
-MirceaKitsune
 
 **Active Contributors
 Antonio "terencehill" Piu
@@ -83,6 +83,7 @@ Maik "SavageX" Merten
 MrBougo
 Ruszkai "C.Brutail" Ákos
 Samual Lenks
+Severin "sev" Meyer
 Stephan "esteel" Stahl
 Wolfgang "Blub\0" Bumiller
 
@@ -143,7 +144,6 @@ Rick "Rat" Kelley
 Robert "ai" Kuroto
 Ronan
 Sajt
-Severin "sev" Meyer
 Shaggy
 Shank
 Simon O'Callaghan

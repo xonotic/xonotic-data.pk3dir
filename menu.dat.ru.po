@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-21 19:35+0100\n"
+"POT-Creation-Date: 2011-01-22 20:54+0100\n"
 "PO-Revision-Date: 2011-01-20 13:16+0300\n"
 "Last-Translator: Nikoli <nikoli@lavabit.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1246,10 +1246,10 @@ msgstr "Изображ. урона"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:194
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:178
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:193
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:194
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:30
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:41
-#: qcsrc/menu/xonotic/dialog_settings_video.c:106
+#: qcsrc/menu/xonotic/dialog_settings_video.c:105
 msgid "Apply immediately"
 msgstr "Применить"
 
@@ -1797,19 +1797,23 @@ msgstr "Мягкие тени"
 msgid "Coronas"
 msgstr "Короны"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:175
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:174
+msgid "Use Occlusion Queries"
+msgstr "Использовать Occlusion Queries (Проверка видимости)"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:176
 msgid "Bloom"
 msgstr "Свечение"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:177
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:178
 msgid "High Dynamic Range (HDR)"
 msgstr "High Dynamic Range (HDR)"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:181
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:182
 msgid "Motion blur:"
 msgstr "Размытие от движения:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:187
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:188
 msgid "Damage blur:"
 msgstr "Размытие от урона:"
 
@@ -2067,82 +2071,78 @@ msgid "Use OpenGL 2.0 shaders (GLSL)"
 msgstr "Использовать шейдеры OpenGL 2.0 (GLSL)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:52
-msgid "Use Occlusion Queries"
-msgstr "Использовать Occlusion Queries (Проверка видимости)"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:55
-msgid "Vertex Buffer Objects (VBOs)"
-msgstr "Использование Vertex Buffer Objects (VBOs)"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:58
-msgid "VBO^Off"
-msgstr "Отключено"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:59
-msgid "Vertices, some Tris (compatible)"
-msgstr "Вершины, некоторые треугольники (совместимо)"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:62
-msgid "Vertices"
-msgstr "Вершины"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:63
-msgid "Vertices and Triangles"
-msgstr "Вершины и треугольники"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:65
-msgid "Depth first:"
-msgstr "Сперва глубина:"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:67
-msgid "DF^Disabled"
-msgstr "Отключено"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:68
-msgid "DF^World"
-msgstr "Мир"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:69
-msgid "DF^All"
-msgstr "Всё"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:73
-msgid "Disable multithreaded OpenGL"
-msgstr "Отключить многопоточный OpenGL"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:75
-msgid "Wait for GPU to finish each frame"
-msgstr "Ждать завершения каждого кадра GPU"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:78
-msgid "Brightness:"
-msgstr "Яркость:"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:81
-msgid "Contrast:"
-msgstr "Контраст:"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:84
-msgid "Gamma:"
-msgstr "Гамма:"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:87
-msgid "Contrast boost:"
-msgstr "Усиление контраста:"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:90
-msgid "Saturation:"
-msgstr "Насыщенность:"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:95
 msgid "Use GLSL to handle color control"
 msgstr "Использовать GLSL для управления цветом"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:99
+#: qcsrc/menu/xonotic/dialog_settings_video.c:56
+msgid "Vertex Buffer Objects (VBOs)"
+msgstr "Использование Vertex Buffer Objects (VBOs)"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:59
+msgid "VBO^Off"
+msgstr "Отключено"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:60
+msgid "Vertices, some Tris (compatible)"
+msgstr "Вершины, некоторые треугольники (совместимо)"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:63
+msgid "Vertices"
+msgstr "Вершины"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:64
+msgid "Vertices and Triangles"
+msgstr "Вершины и треугольники"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:67
+msgid "Depth first:"
+msgstr "Сперва глубина:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:69
+msgid "DF^Disabled"
+msgstr "Отключено"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:70
+msgid "DF^World"
+msgstr "Мир"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:71
+msgid "DF^All"
+msgstr "Всё"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:75
+msgid "Disable multithreaded OpenGL"
+msgstr "Отключить многопоточный OpenGL"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:77
+msgid "Wait for GPU to finish each frame"
+msgstr "Ждать завершения каждого кадра GPU"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:80
+msgid "Brightness:"
+msgstr "Яркость:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:83
+msgid "Contrast:"
+msgstr "Контраст:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:86
+msgid "Gamma:"
+msgstr "Гамма:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:89
+msgid "Contrast boost:"
+msgstr "Усиление контраста:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:92
+msgid "Saturation:"
+msgstr "Насыщенность:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:98
 msgid "LIT^Ambient:"
 msgstr "Окружающее освещение:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:102
+#: qcsrc/menu/xonotic/dialog_settings_video.c:101
 msgid "Intensity:"
 msgstr "Мощность:"
 
@@ -2418,41 +2418,233 @@ msgstr "Включить панель"
 msgid "Crylink"
 msgstr "Crylink"
 
+#: qcsrc/server/w_crylink.qc:637
+#, c-format
+msgid "%s succeeded at self-destructing themself with the Crylink"
+msgstr ""
+
+#: qcsrc/server/w_crylink.qc:642
+#, c-format
+msgid "%s could not hide from %s's Crylink"
+msgstr ""
+
+#: qcsrc/server/w_crylink.qc:644
+#, c-format
+msgid "%s was too close to %s's Crylink"
+msgstr ""
+
+#: qcsrc/server/w_crylink.qc:646
+#, c-format
+msgid "%s took a close look at %s's Crylink"
+msgstr ""
+
 #: qcsrc/server/w_electro.qc:2
 msgid "Electro"
 msgstr "Electro"
+
+#: qcsrc/server/w_electro.qc:503
+#, c-format
+msgid "%s could not remember where they put plasma"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:505
+#, c-format
+msgid "%s played with plasma"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:512
+#, c-format
+msgid "%s just noticed %s's blue ball"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:514
+#, c-format
+msgid "%s got in touch with %s's blue ball"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:519
+#, c-format
+msgid "%s felt the electrifying air of %s's combo"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:521
+#, c-format
+msgid "%s got too close to %s's blue beam"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:523
+#, c-format
+msgid "%s was blasted by %s's blue beam"
+msgstr ""
 
 #: qcsrc/server/w_fireball.qc:2
 msgid "Fireball"
 msgstr "Fireball"
 
+#: qcsrc/server/w_fireball.qc:392
+#, c-format
+msgid "%s forgot about some firemine"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:394 qcsrc/server/w_hlac.qc:223
+#, c-format
+msgid "%s should have used a smaller gun"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:401
+#, c-format
+msgid "%s tried to catch %s's firemine"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:403
+#, c-format
+msgid "%s fatefully ignored %s's firemine"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:410
+#, c-format
+msgid "%s could not hide from %s's fireball"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:412
+#, c-format
+msgid "%s saw the pretty lights of %s's fireball"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:415
+#, c-format
+msgid "%s got too close to %s's fireball"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:417
+#, c-format
+msgid "%s tasted %s's fireball"
+msgstr ""
+
 #: qcsrc/server/w_grenadelauncher.qc:2
 msgid "Mortar"
 msgstr "Mortar"
+
+#: qcsrc/server/w_grenadelauncher.qc:357
+#, c-format
+msgid "%s tried out his own grenade"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:359
+#, c-format
+msgid "%s detonated"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:365
+#, c-format
+msgid "%s didn't see %s's grenade"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:367
+#, c-format
+msgid "%s almost dodged %s's grenade"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:369
+#, c-format
+msgid "%s ate %s's grenade"
+msgstr ""
 
 #: qcsrc/server/w_hagar.qc:2
 msgid "Hagar"
 msgstr "Hagar"
 
+#: qcsrc/server/w_hagar.qc:185 qcsrc/server/w_seeker.qc:523
+#, c-format
+msgid "%s played with tiny rockets"
+msgstr ""
+
+#: qcsrc/server/w_hagar.qc:189
+#, c-format
+msgid "%s hoped %s's missiles wouldn't bounce"
+msgstr ""
+
+#: qcsrc/server/w_hagar.qc:191
+#, c-format
+msgid "%s was pummeled by %s"
+msgstr ""
+
 #: qcsrc/server/w_hlac.qc:2
 msgid "Heavy Laser Assault Cannon"
 msgstr "Heavy Laser Assault Cannon"
+
+#: qcsrc/server/w_hlac.qc:225
+#, c-format
+msgid "%s was cut down by %s"
+msgstr ""
 
 #: qcsrc/server/w_hook.qc:2
 msgid "Grappling Hook"
 msgstr "Grappling Hook"
 
+#: qcsrc/server/w_hook.qc:267 qcsrc/server/w_minstanex.qc:257
+#: qcsrc/server/w_nex.qc:224 qcsrc/server/w_porto.qc:293
+#: qcsrc/server/w_shotgun.qc:179 qcsrc/server/w_uzi.qc:287
+#, c-format
+msgid "%s did the impossible"
+msgstr ""
+
+#: qcsrc/server/w_hook.qc:269
+#, c-format
+msgid "%s has run into %s's gravity bomb"
+msgstr ""
+
 #: qcsrc/server/w_laser.qc:2
 msgid "Laser"
 msgstr "Laser"
+
+#: qcsrc/server/w_laser.qc:285
+#, c-format
+msgid "%s lasered themself to hell"
+msgstr ""
+
+#: qcsrc/server/w_laser.qc:289
+#, c-format
+msgid "%s was cut in half by %s's gauntlet"
+msgstr ""
+
+#: qcsrc/server/w_laser.qc:291
+#, c-format
+msgid "%s was lasered to death by %s"
+msgstr ""
 
 #: qcsrc/server/w_minelayer.qc:2
 msgid "Mine Layer"
 msgstr "Mine Layer"
 
+#: qcsrc/server/w_minelayer.qc:438 qcsrc/server/w_rocketlauncher.qc:480
+#, c-format
+msgid "%s exploded"
+msgstr ""
+
+#: qcsrc/server/w_minelayer.qc:442
+#, c-format
+msgid "%s got too close to %s's mine"
+msgstr ""
+
+#: qcsrc/server/w_minelayer.qc:444
+#, c-format
+msgid "%s almost dodged %s's mine"
+msgstr ""
+
+#: qcsrc/server/w_minelayer.qc:446
+#, c-format
+msgid "%s stepped on %s's mine"
+msgstr ""
+
 #: qcsrc/server/w_minstanex.qc:2
 msgid "MinstaNex"
 msgstr "MinstaNex"
+
+#: qcsrc/server/w_minstanex.qc:259 qcsrc/server/w_nex.qc:226
+#, c-format
+msgid "%s has been vaporized by %s"
+msgstr ""
 
 #: qcsrc/server/w_nex.qc:2
 msgid "Nex"
@@ -2462,27 +2654,117 @@ msgstr "Nex"
 msgid "Port-O-Launch"
 msgstr "Port-O-Launch"
 
+#: qcsrc/server/w_porto.qc:295
+#, c-format
+msgid "%s felt %s doing the impossible to him"
+msgstr ""
+
 #: qcsrc/server/w_rocketlauncher.qc:2
 msgid "Rocket Launcher"
 msgstr "Rocket Launcher"
+
+#: qcsrc/server/w_rocketlauncher.qc:484
+#, c-format
+msgid "%s got too close to %s's rocket"
+msgstr ""
+
+#: qcsrc/server/w_rocketlauncher.qc:486
+#, c-format
+msgid "%s almost dodged %s's rocket"
+msgstr ""
+
+#: qcsrc/server/w_rocketlauncher.qc:488
+#, c-format
+msgid "%s ate %s's rocket"
+msgstr ""
 
 #: qcsrc/server/w_seeker.qc:2
 msgid "T.A.G. Seeker"
 msgstr "T.A.G. Seeker"
 
+#: qcsrc/server/w_seeker.qc:527
+#, c-format
+msgid "%s ran into %s's flac"
+msgstr ""
+
+#: qcsrc/server/w_seeker.qc:529
+#, c-format
+msgid "%s was tagged by %s"
+msgstr ""
+
 #: qcsrc/server/w_shotgun.qc:2
 msgid "Shotgun"
 msgstr "Shotgun"
 
+#: qcsrc/server/w_shotgun.qc:183
+#, c-format
+msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
+msgstr ""
+
+#: qcsrc/server/w_shotgun.qc:185
+#, c-format
+msgid "%s was gunned by %s"
+msgstr ""
+
 #: qcsrc/server/w_sniperrifle.qc:2
 msgid "Sniper Rifle"
 msgstr "Sniper Rifle"
+
+#: qcsrc/server/w_sniperrifle.qc:321
+#, c-format
+msgid "%s shot themself automatically"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:323
+#, c-format
+msgid "%s sniped themself somehow"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:330
+#, c-format
+msgid "%s failed to hide from %s's bullet hail"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:332
+#, c-format
+msgid "%s died in %s's bullet hail"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:339
+#, c-format
+msgid "%s failed to hide from %s's rifle"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:344
+#, c-format
+msgid "%s got hit in the head by %s"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:346 qcsrc/server/w_uzi.qc:291
+#, c-format
+msgid "%s was sniped by %s"
+msgstr ""
 
 #: qcsrc/server/w_tuba.qc:2
 #, c-format
 msgid "@!#%'n Tuba"
 msgstr "@!#%'n Tuba"
 
+#: qcsrc/server/w_tuba.qc:260
+#, c-format
+msgid "%s hurt his own ears with the @!#%%'n Tuba"
+msgstr ""
+
+#: qcsrc/server/w_tuba.qc:264
+#, c-format
+msgid "%s died of %s's great playing on the @!#%%'n Tuba"
+msgstr ""
+
 #: qcsrc/server/w_uzi.qc:2
 msgid "Machine Gun"
 msgstr "Machine Gun"
+
+#: qcsrc/server/w_uzi.qc:293
+#, c-format
+msgid "%s was riddled full of holes by %s"
+msgstr ""
