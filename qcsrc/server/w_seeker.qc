@@ -5,6 +5,9 @@ REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 //.float proxytime; = autoswitch
 //.float tl; = wait
 
+// weapon load persistence, for weapons that support reloading
+.float seeker_load;
+
 void W_Seeker_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

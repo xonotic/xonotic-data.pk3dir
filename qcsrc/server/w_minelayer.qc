@@ -6,6 +6,9 @@ void W_Mine_Think (void);
 .float minelayer_detonate, minelayer_mines;
 .float mine_time;
 
+// weapon load persistence, for weapons that support reloading
+.float minelayer_load;
+
 void W_MineLayer_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

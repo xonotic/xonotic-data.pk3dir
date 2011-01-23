@@ -8,6 +8,9 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_T
 
 .float sniperrifle_accumulator;
 
+// weapon load persistence, for weapons that support reloading
+.float sniperrifle_load;
+
 void W_SniperRifle_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

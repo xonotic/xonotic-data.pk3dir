@@ -5,6 +5,9 @@ REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | 
 .float gl_detonate_later;
 .float gl_bouncecnt;
 
+// weapon load persistence, for weapons that support reloading
+.float grenadelauncher_load;
+
 void W_GrenadeLauncher_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

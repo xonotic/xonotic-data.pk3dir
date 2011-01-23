@@ -4,6 +4,9 @@ REGISTER_WEAPON(LASER, w_laser, 0, 1, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_
 #ifdef SVQC
 void(float imp) W_SwitchWeapon;
 
+// weapon load persistence, for weapons that support reloading
+.float laser_load;
+
 void W_Laser_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

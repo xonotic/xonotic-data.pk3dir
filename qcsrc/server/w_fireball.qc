@@ -6,6 +6,9 @@ REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_TYPE_SPLASH, BOT_PICKUP_RA
 .vector fireball_impactvec;
 .float fireball_primarytime;
 
+// weapon load persistence, for weapons that support reloading
+.float fireball_load;
+
 void W_Fireball_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

@@ -4,6 +4,9 @@ REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_
 #ifdef SVQC
 .float minstanex_lasthit;
 
+// weapon load persistence, for weapons that support reloading
+.float minstanex_load;
+
 void W_Minstanex_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

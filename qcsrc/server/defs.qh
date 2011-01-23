@@ -616,23 +616,6 @@ float client_cefc_accumulatortime;
 .float old_clip_load;
 .float clip_size;
 
-// weapon load persistence, for weapons that support reloading
-.float laser_load;
-.float shotgun_load;
-.float uzi_load;
-.float grenadelauncher_load;
-.float minelayer_load;
-.float electro_load;
-.float crylink_load;
-.float hlac_load;
-.float nex_load;
-.float minstanex_load;
-.float sniperrifle_load;
-.float seeker_load;
-.float hagar_load;
-.float fireball_load;
-.float rocketlauncher_load;
-
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones
 // #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX

@@ -3,6 +3,9 @@ REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT
 #else
 #ifdef SVQC
 
+// weapon load persistence, for weapons that support reloading
+.float uzi_load;
+
 void W_UZI_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

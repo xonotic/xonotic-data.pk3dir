@@ -5,6 +5,9 @@ REGISTER_WEAPON(ELECTRO, w_electro, IT_CELLS, 5, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 .float electro_count;
 .float electro_secondarytime;
 
+// weapon load persistence, for weapons that support reloading
+.float electro_load;
+
 void W_Electro_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading

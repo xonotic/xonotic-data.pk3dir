@@ -3,6 +3,9 @@ REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BO
 #else
 #ifdef SVQC
 
+// weapon load persistence, for weapons that support reloading
+.float hlac_load;
+
 void W_HLAC_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
