@@ -284,11 +284,6 @@ float w_porto(float req)
 	{
 		self.porto_current = world;
 	}
-	else if (req == WR_SWITCHABLE)
-	{
-		// no reloading system, return true
-		return TRUE;
-	}
 	return TRUE;
 };
 #endif

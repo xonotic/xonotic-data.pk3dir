@@ -453,6 +453,18 @@ float w_minelayer(float req)
 			if(minfound)
 				sound (self, CHAN_WEAPON2, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
 		}
+
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_MineLayer_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -495,15 +507,6 @@ float w_minelayer(float req)
 	else if (req == WR_RELOAD)
 	{
 		W_MineLayer_Reload();
-	}
-	else if (req == WR_SWITCHABLE)
-	{
-		// checks if this weapon can be switched to, when reloading is enabled
-		// returns true if there's either enough load in the weapon to use it,
-		// or we have enough ammo to reload the weapon to a usable point
-		float ammo_amount;
-		ammo_amount = autocvar_g_balance_minelayer_ammo;
-		return (autocvar_g_balance_minelayer_reload_ammo && self.minelayer_load >= ammo_amount) || self.ammo_rockets >= ammo_amount;
 	}
 	return TRUE;
 };

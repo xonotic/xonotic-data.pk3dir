@@ -317,6 +317,17 @@ float w_laser(float req)
 					W_SwitchWeapon (self.cnt);
 			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_Laser_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -338,11 +349,6 @@ float w_laser(float req)
 		return TRUE;
 	else if (req == WR_RELOAD)
 		W_Laser_Reload();
-	else if (req == WR_SWITCHABLE)
-	{
-		// laser uses no ammo, always switchable
-		return TRUE;
-	}
 	return TRUE;
 };
 #endif

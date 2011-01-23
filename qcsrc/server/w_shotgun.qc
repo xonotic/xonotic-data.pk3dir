@@ -164,6 +164,7 @@ void spawnfunc_weapon_shotgun(); // defined in t_items.qc
 
 float w_shotgun(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 		if(vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_shotgun_secondary_melee_range)
 			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
@@ -194,6 +195,17 @@ float w_shotgun(float req)
 				weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);
 			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_Shotgun_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -213,27 +225,17 @@ float w_shotgun(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if(autocvar_g_balance_shotgun_reload_ammo)
-			return self.shotgun_load >= autocvar_g_balance_shotgun_primary_ammo;
-		else
-			return self.ammo_shells >= autocvar_g_balance_shotgun_primary_ammo;
+		ammo_amount = self.ammo_shells >= autocvar_g_balance_shotgun_primary_ammo;
+		ammo_amount += (autocvar_g_balance_shotgun_reload_ammo && self.shotgun_load >= autocvar_g_balance_shotgun_primary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		return TRUE;
+		return FALSE;
 	}
 	else if (req == WR_RELOAD)
 	{
 		W_Shotgun_Reload();
-	}
-	else if (req == WR_SWITCHABLE)
-	{
-		// checks if this weapon can be switched to, when reloading is enabled
-		// returns true if there's either enough load in the weapon to use it,
-		// or we have enough ammo to reload the weapon to a usable point
-		float ammo_amount;
-		ammo_amount = autocvar_g_balance_shotgun_primary_ammo;
-		return (autocvar_g_balance_shotgun_reload_ammo && self.shotgun_load >= ammo_amount) || self.ammo_shells >= ammo_amount;
 	}
 	return TRUE;
 };

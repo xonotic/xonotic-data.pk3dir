@@ -1,6 +1,6 @@
 void W_Reload()
 {
-    weapon_action(self.switchweapon, WR_RELOAD);
+    self.wish_reload = 1;
 }
 
 // switch between weapons

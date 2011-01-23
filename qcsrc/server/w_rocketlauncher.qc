@@ -495,6 +495,17 @@ float w_rlauncher(float req)
 					sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
 			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_RocketLauncher_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -539,15 +550,6 @@ float w_rlauncher(float req)
 	else if (req == WR_RELOAD)
 	{
 		W_RocketLauncher_Reload();
-	}
-	else if (req == WR_SWITCHABLE)
-	{
-		// checks if this weapon can be switched to, when reloading is enabled
-		// returns true if there's either enough load in the weapon to use it,
-		// or we have enough ammo to reload the weapon to a usable point
-		float ammo_amount;
-		ammo_amount = autocvar_g_balance_rocketlauncher_ammo;
-		return (autocvar_g_balance_rocketlauncher_reload_ammo && self.rocketlauncher_load >= ammo_amount) || self.ammo_rockets >= ammo_amount;
 	}
 	return TRUE;
 };

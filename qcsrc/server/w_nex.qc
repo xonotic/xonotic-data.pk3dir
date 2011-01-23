@@ -264,6 +264,18 @@ float w_nex(float req)
 				self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_limit) / (1 - autocvar_g_balance_nex_charge_limit);
 			}
 		}
+
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_Nex_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -300,15 +312,6 @@ float w_nex(float req)
 	else if (req == WR_RELOAD)
 	{
 		W_Nex_Reload();
-	}
-	else if (req == WR_SWITCHABLE)
-	{
-		// checks if this weapon can be switched to, when reloading is enabled
-		// returns true if there's either enough load in the weapon to use it,
-		// or we have enough ammo to reload the weapon to a usable point
-		float ammo_amount;
-		ammo_amount = min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo);
-		return (autocvar_g_balance_nex_reload_ammo && self.nex_load >= ammo_amount) || self.ammo_cells >= ammo_amount;
 	}
 
 	return TRUE;

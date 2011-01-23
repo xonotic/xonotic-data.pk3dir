@@ -321,6 +321,17 @@ float w_uzi(float req)
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_first_refire, w_ready);
 			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_UZI_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -353,15 +364,6 @@ float w_uzi(float req)
 	else if (req == WR_RELOAD)
 	{
 		W_UZI_Reload();
-	}
-	else if (req == WR_SWITCHABLE)
-	{
-		// checks if this weapon can be switched to, when reloading is enabled
-		// returns true if there's either enough load in the weapon to use it,
-		// or we have enough ammo to reload the weapon to a usable point
-		float ammo_amount;
-		ammo_amount = min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo);
-		return (autocvar_g_balance_uzi_reload_ammo && self.uzi_load >= ammo_amount) || self.ammo_nails >= ammo_amount;
 	}
 	return TRUE;
 };

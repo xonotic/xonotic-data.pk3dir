@@ -293,6 +293,17 @@ float w_minstanex(float req)
 				self.weapon = w;
 			}
 		}
+        if(self.wish_reload)
+        {
+            if(self.switchweapon == self.weapon)
+            {
+                if(self.weaponentity.state == WS_READY)
+                {
+                    self.wish_reload = 0;
+                    W_Minstanex_Reload();
+                }
+            }
+        }
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -336,21 +347,6 @@ float w_minstanex(float req)
 	else if (req == WR_RELOAD)
 	{
 		W_Minstanex_Reload();
-	}
-	else if (req == WR_SWITCHABLE)
-	{
-		// checks if this weapon can be switched to, when reloading is enabled
-		// returns true if there's either enough load in the weapon to use it,
-		// or we have enough ammo to reload the weapon to a usable point
-		float ammo_amount;
-		if(g_minstagib)
-			ammo_amount = 1;
-		else
-			ammo_amount = autocvar_g_balance_minstanex_ammo;
-		if(autocvar_g_balance_minstanex_laser_ammo)
-			ammo_amount = min(ammo_amount, autocvar_g_balance_minstanex_laser_ammo);
-
-		return (autocvar_g_balance_minstanex_reload_ammo && self.minstanex_load >= ammo_amount) || self.ammo_cells >= ammo_amount;
 	}
 	return TRUE;
 };

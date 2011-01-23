@@ -252,11 +252,6 @@ float w_hook(float req)
 	{
 		self.hook_refire = time;
 	}
-	else if (req == WR_SWITCHABLE)
-	{
-		// no reloading system, return true
-		return TRUE;
-	}
 	return TRUE;
 };
 #endif

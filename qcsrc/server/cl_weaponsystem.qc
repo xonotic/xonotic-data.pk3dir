@@ -925,13 +925,8 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			{
 				oldself = self;
 				self = cl;
-				f = weapon_action(wpn, WR_SWITCHABLE);
-
-				// allow switching to reloadable weapons, even if we're out of ammo, since the weapon itself
-				// might still be loaded. The reload code takes care of complaining and forced switching
-				entity e;
-				e = get_weaponinfo(wpn);
-				if(wpn != WEP_TUBA && wpn != WEP_PORTO && wpn != WEP_HOOK) // skip non-reloadable weapons, or we access undefined cvars
+				f = weapon_action(wpn, WR_CHECKAMMO1);
+				f = f + weapon_action(wpn, WR_CHECKAMMO2);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				local entity mine;
@@ -1617,7 +1612,6 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 #define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
 #define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
 
-// shared weapon reload code
 .float reload_complain;
 float W_ReloadCheck(float ammo_amount, float ammo_shot)
 {
