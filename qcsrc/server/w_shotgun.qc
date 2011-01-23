@@ -231,7 +231,8 @@ float w_shotgun(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		return FALSE;
+		// melee attack must always be available
+		return TRUE;
 	}
 	else if (req == WR_RELOAD)
 	{
