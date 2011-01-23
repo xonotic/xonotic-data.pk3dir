@@ -261,17 +261,14 @@ float w_sniperrifle(float req)
 	}
 	else if (req == WR_RESETPLAYER)
 	{
+		self.sniperrifle_accumulator = time - autocvar_g_balance_sniperrifle_bursttime;
+
 		// all weapons must be fully loaded when we spawn
 		self.sniperrifle_load = autocvar_g_balance_sniperrifle_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{
 		W_SniperRifle_Reload();
-	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.sniperrifle_accumulator = time - autocvar_g_balance_sniperrifle_bursttime;
-		self.clip_load = autocvar_g_balance_sniperrifle_reload_ammo;
 	}
 	return TRUE;
 };
