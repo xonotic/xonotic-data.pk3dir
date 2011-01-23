@@ -523,12 +523,15 @@ float w_rlauncher(float req)
 		// don't switch while guiding a missile
 		if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
 		{
-			if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
-				ammo_amount = FALSE;
-			if(autocvar_g_balance_electro_reload_ammo && self.minelayer_load < autocvar_g_balance_rocketlauncher_ammo)
-				ammo_amount = FALSE;
+			if(autocvar_g_balance_rocketlauncher_reload_ammo)
+			{
+				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.rocketlauncher_load < autocvar_g_balance_rocketlauncher_ammo)
+					ammo_amount = TRUE;
+			}
+			else if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
+				ammo_amount = TRUE;
+			return !ammo_amount;
 		}
-		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;

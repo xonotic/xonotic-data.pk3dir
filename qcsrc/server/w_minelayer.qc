@@ -482,12 +482,15 @@ float w_minelayer(float req)
 		// don't switch while placing a mine
 		if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
 		{
-			if(self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
-				ammo_amount = FALSE;
-			if(autocvar_g_balance_electro_reload_ammo && self.minelayer_load < autocvar_g_balance_minelayer_ammo)
-				ammo_amount = FALSE;
+			if(autocvar_g_balance_minelayer_reload_ammo)
+			{
+				if(self.ammo_rockets < autocvar_g_balance_minelayer_ammo && self.minelayer_load < autocvar_g_balance_minelayer_ammo)
+					ammo_amount = TRUE;
+			}
+			else if(self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
+				ammo_amount = TRUE;
+			return !ammo_amount;
 		}
-		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
