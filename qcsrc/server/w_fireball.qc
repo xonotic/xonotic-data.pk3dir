@@ -421,17 +421,6 @@ float w_fireball(float req)
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_fireball_secondary_animtime, w_ready);
 			}
 		}
-        if(self.wish_reload)
-        {
-            if(self.switchweapon == self.weapon)
-            {
-                if(self.weaponentity.state == WS_READY)
-                {
-                    self.wish_reload = 0;
-                    W_Fireball_Reload();
-                }
-            }
-        }
 	}
 	else if (req == WR_PRECACHE)
 	{

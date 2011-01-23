@@ -294,17 +294,6 @@ float w_minstanex(float req)
 				self.weapon = w;
 			}
 		}
-        if(self.wish_reload)
-        {
-            if(self.switchweapon == self.weapon)
-            {
-                if(self.weaponentity.state == WS_READY)
-                {
-                    self.wish_reload = 0;
-                    W_Minstanex_Reload();
-                }
-            }
-        }
 	}
 	else if (req == WR_PRECACHE)
 	{

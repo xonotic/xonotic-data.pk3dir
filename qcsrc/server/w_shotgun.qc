@@ -195,17 +195,6 @@ float w_shotgun(float req)
 				weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);
 			}
 		}
-        if(self.wish_reload)
-        {
-            if(self.switchweapon == self.weapon)
-            {
-                if(self.weaponentity.state == WS_READY)
-                {
-                    self.wish_reload = 0;
-                    W_Shotgun_Reload();
-                }
-            }
-        }
 	}
 	else if (req == WR_PRECACHE)
 	{

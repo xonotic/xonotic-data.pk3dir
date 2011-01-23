@@ -265,18 +265,6 @@ float w_nex(float req)
 				self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_limit) / (1 - autocvar_g_balance_nex_charge_limit);
 			}
 		}
-
-        if(self.wish_reload)
-        {
-            if(self.switchweapon == self.weapon)
-            {
-                if(self.weaponentity.state == WS_READY)
-                {
-                    self.wish_reload = 0;
-                    W_Nex_Reload();
-                }
-            }
-        }
 	}
 	else if (req == WR_PRECACHE)
 	{
