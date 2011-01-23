@@ -547,6 +547,11 @@ float w_seeker(float req)
 		ammo_amount += (autocvar_g_balance_seeker_reload_ammo && self.seeker_load >= autocvar_g_balance_seeker_flac_ammo);
 		return ammo_amount;
 	}
+	else if (req == WR_RESETPLAYER)
+	{
+		// all weapons must be fully loaded when we spawn
+		self.seeker_load = autocvar_g_balance_seeker_reload_ammo;
+	}
 	else if (req == WR_RELOAD)
 	{
 		W_Seeker_Reload();

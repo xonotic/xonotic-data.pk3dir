@@ -246,6 +246,11 @@ float w_hagar(float req)
 		ammo_amount += (autocvar_g_balance_hagar_reload_ammo && self.hagar_load >= autocvar_g_balance_hagar_secondary_ammo);
 		return ammo_amount;
 	}
+	else if (req == WR_RESETPLAYER)
+	{
+		// all weapons must be fully loaded when we spawn
+		self.hagar_load = autocvar_g_balance_hagar_reload_ammo;
+	}
 	else if (req == WR_RELOAD)
 	{
 		W_Hagar_Reload();

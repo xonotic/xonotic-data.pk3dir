@@ -532,6 +532,9 @@ float w_rlauncher(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.rl_release = 0;
+
+		// all weapons must be fully loaded when we spawn
+		self.rocketlauncher_load = autocvar_g_balance_rocketlauncher_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

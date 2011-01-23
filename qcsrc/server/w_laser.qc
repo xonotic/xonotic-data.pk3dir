@@ -333,11 +333,22 @@ float w_laser(float req)
 		W_Laser_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
+	{
 		return TRUE;
+	}
 	else if (req == WR_CHECKAMMO2)
+	{
 		return TRUE;
+	}
+	else if (req == WR_RESETPLAYER)
+	{
+		// all weapons must be fully loaded when we spawn
+		self.laser_load = autocvar_g_balance_laser_reload_ammo;
+	}
 	else if (req == WR_RELOAD)
+	{
 		W_Laser_Reload();
+	}
 	return TRUE;
 };
 #endif

@@ -256,6 +256,11 @@ float w_sniperrifle(float req)
 		ammo_amount += (autocvar_g_balance_sniperrifle_reload_ammo && self.sniperrifle_load >= autocvar_g_balance_sniperrifle_secondary_ammo);
 		return ammo_amount;
 	}
+	else if (req == WR_RESETPLAYER)
+	{
+		// all weapons must be fully loaded when we spawn
+		self.sniperrifle_load = autocvar_g_balance_sniperrifle_reload_ammo;
+	}
 	else if (req == WR_RELOAD)
 	{
 		W_SniperRifle_Reload();

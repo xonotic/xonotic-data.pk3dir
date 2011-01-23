@@ -220,8 +220,13 @@ float w_shotgun(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		// melee attack must always be available
+		// melee attack is always available
 		return TRUE;
+	}
+	else if (req == WR_RESETPLAYER)
+	{
+		// all weapons must be fully loaded when we spawn
+		self.shotgun_load = autocvar_g_balance_shotgun_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{
