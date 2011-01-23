@@ -233,6 +233,7 @@ void spawnfunc_weapon_hlac (void)
 
 float w_hlac(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
         self.BUTTON_ATCK = bot_aim(autocvar_g_balance_hlac_primary_speed, 0, autocvar_g_balance_hlac_primary_lifetime, FALSE);
 	else if (req == WR_THINK)
@@ -285,17 +286,15 @@ float w_hlac(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if(autocvar_g_balance_hlac_reload_ammo)
-			return self.hlac_load >= autocvar_g_balance_hlac_primary_ammo;
-		else
-			return self.ammo_cells >= autocvar_g_balance_hlac_primary_ammo;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_hlac_primary_ammo;
+		ammo_amount += (autocvar_g_balance_hlac_reload_ammo && self.hlac_load >= autocvar_g_balance_hlac_primary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		if(autocvar_g_balance_hlac_reload_ammo)
-			return self.hlac_load >= autocvar_g_balance_hlac_secondary_ammo;
-		else
-			return self.ammo_cells >= autocvar_g_balance_hlac_secondary_ammo;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_hlac_secondary_ammo;
+		ammo_amount += (autocvar_g_balance_hlac_reload_ammo && self.hlac_load >= autocvar_g_balance_hlac_secondary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
 	{

@@ -191,6 +191,7 @@ void spawnfunc_weapon_hagar (void)
 
 float w_hagar(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 		if (random()>0.15)
 			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_hagar_primary_speed, 0, autocvar_g_balance_hagar_primary_lifetime, FALSE);
@@ -246,17 +247,15 @@ float w_hagar(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if(autocvar_g_balance_hagar_reload_ammo)
-			return self.hagar_load >= autocvar_g_balance_hagar_primary_ammo;
-		else
-			return self.ammo_rockets >= autocvar_g_balance_hagar_primary_ammo;
+		ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_primary_ammo;
+		ammo_amount += (autocvar_g_balance_hagar_reload_ammo && self.hagar_load >= autocvar_g_balance_hagar_primary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		if(autocvar_g_balance_hagar_reload_ammo)
-			return self.hagar_load >= autocvar_g_balance_hagar_secondary_ammo;
-		else
-			return self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
+		ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
+		ammo_amount += (autocvar_g_balance_hagar_reload_ammo && self.hagar_load >= autocvar_g_balance_hagar_secondary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
 	{

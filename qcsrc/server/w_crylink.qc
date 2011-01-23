@@ -581,6 +581,7 @@ void spawnfunc_weapon_crylink (void)
 
 float w_crylink(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 	{
 		if (random() < 0.10)
@@ -683,10 +684,9 @@ float w_crylink(float req)
 		if(self.crylink_lastgroup && self.crylink_waitrelease)
 			return TRUE;
 
-		if(autocvar_g_balance_crylink_reload_ammo)
-			return self.crylink_load >= autocvar_g_balance_crylink_primary_ammo;
-		else
-			return self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
+		ammo_amount += (autocvar_g_balance_crylink_reload_ammo && self.crylink_load >= autocvar_g_balance_crylink_primary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
@@ -694,10 +694,9 @@ float w_crylink(float req)
 		if(self.crylink_lastgroup && self.crylink_waitrelease)
 			return TRUE;
 
-		if(autocvar_g_balance_crylink_reload_ammo)
-			return self.crylink_load >= autocvar_g_balance_crylink_secondary_ammo;
-		else
-			return self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
+		ammo_amount += (autocvar_g_balance_crylink_reload_ammo && self.crylink_load >= autocvar_g_balance_crylink_secondary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
 	{

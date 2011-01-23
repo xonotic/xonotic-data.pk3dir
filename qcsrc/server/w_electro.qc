@@ -437,6 +437,7 @@ void w_electro_checkattack()
 .float BUTTON_ATCK_prev;
 float w_electro(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 	{
 		self.BUTTON_ATCK=FALSE;
@@ -561,27 +562,24 @@ float w_electro(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
+		if(autocvar_g_balance_electro_lightning)
+			ammo_amount = !autocvar_g_balance_electro_primary_ammo || (self.ammo_cells > 0);
+		else
+			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_primary_ammo;
 		if(autocvar_g_balance_electro_reload_ammo)
 		{
 			if(autocvar_g_balance_electro_lightning)
-				return !autocvar_g_balance_electro_primary_ammo || (self.electro_load > 0);
+				ammo_amount += !autocvar_g_balance_electro_primary_ammo || (self.electro_load > 0);
 			else
-				return self.electro_load >= autocvar_g_balance_electro_primary_ammo;
+				ammo_amount += self.electro_load >= autocvar_g_balance_electro_primary_ammo;
 		}
-		else
-		{
-			if(autocvar_g_balance_electro_lightning)
-				return !autocvar_g_balance_electro_primary_ammo || (self.ammo_cells > 0);
-			else
-				return self.ammo_cells >= autocvar_g_balance_electro_primary_ammo;
-		}
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		if(autocvar_g_balance_electro_reload_ammo)
-			return self.electro_load >= autocvar_g_balance_electro_secondary_ammo;
-		else
-			return self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
+		ammo_amount += (autocvar_g_balance_electro_reload_ammo && self.electro_load >= autocvar_g_balance_electro_secondary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
 	{

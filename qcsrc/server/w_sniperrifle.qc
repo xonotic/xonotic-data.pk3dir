@@ -170,6 +170,8 @@ void W_SniperRifle_BulletHail(float mode, void(void) AttackFunc, float fr, float
 .float bot_secondary_sniperriflemooth;
 float w_sniperrifle(float req)
 {
+	float ammo_amount;
+
 	if (req == WR_AIM)
 	{
 		self.BUTTON_ATCK=FALSE;
@@ -255,17 +257,15 @@ float w_sniperrifle(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if(autocvar_g_balance_sniperrifle_reload_ammo)
-			return self.sniperrifle_load >= autocvar_g_balance_sniperrifle_primary_ammo;
-		else
-			return self.ammo_nails >= autocvar_g_balance_sniperrifle_primary_ammo;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_sniperrifle_primary_ammo;
+		ammo_amount += (autocvar_g_balance_sniperrifle_reload_ammo && self.sniperrifle_load >= autocvar_g_balance_sniperrifle_primary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		if(autocvar_g_balance_sniperrifle_reload_ammo)
-			return self.sniperrifle_load >= autocvar_g_balance_sniperrifle_secondary_ammo;
-		else
-			return self.ammo_nails >= autocvar_g_balance_sniperrifle_secondary_ammo;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_sniperrifle_secondary_ammo;
+		ammo_amount += (autocvar_g_balance_sniperrifle_reload_ammo && self.sniperrifle_load >= autocvar_g_balance_sniperrifle_secondary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
 	{

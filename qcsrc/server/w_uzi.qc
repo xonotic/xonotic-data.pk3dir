@@ -256,6 +256,7 @@ void spawnfunc_weapon_machinegun(); // defined in t_items.qc
 
 float w_uzi(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 		if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
@@ -350,16 +351,34 @@ float w_uzi(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		if(autocvar_g_balance_uzi_mode == 1)
-			return self.ammo_nails >= autocvar_g_balance_uzi_sustained_ammo;
+			ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_sustained_ammo;
 		else
-			return self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+			ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+
+		if(autocvar_g_balance_uzi_reload_ammo)
+		{
+			if(autocvar_g_balance_uzi_mode == 1)
+				ammo_amount += self.uzi_load >= autocvar_g_balance_uzi_sustained_ammo;
+			else
+				ammo_amount += self.uzi_load >= autocvar_g_balance_uzi_first_ammo;
+		}
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		if(autocvar_g_balance_uzi_mode == 1)
-			return self.ammo_nails >= autocvar_g_balance_uzi_burst_ammo;
+			ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_burst_ammo;
 		else
-			return self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+			ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+
+		if(autocvar_g_balance_uzi_reload_ammo)
+		{
+			if(autocvar_g_balance_uzi_mode == 1)
+				ammo_amount += self.uzi_load >= autocvar_g_balance_uzi_burst_ammo;
+			else
+				ammo_amount += self.uzi_load >= autocvar_g_balance_uzi_first_ammo;
+		}
+		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
 	{

@@ -492,6 +492,8 @@ void spawnfunc_weapon_seeker (void)
 
 float w_seeker(float req)
 {
+	float ammo_amount;
+
 	if (req == WR_AIM)
 		self.BUTTON_ATCK = bot_aim(autocvar_g_balance_seeker_tag_speed, 0, 20, FALSE);
 
@@ -547,17 +549,15 @@ float w_seeker(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if(autocvar_g_balance_seeker_reload_ammo)
-			return self.clip_load >= autocvar_g_balance_seeker_tag_ammo + autocvar_g_balance_seeker_missile_ammo;
-		else
-			return self.ammo_rockets >= autocvar_g_balance_seeker_tag_ammo + autocvar_g_balance_seeker_missile_ammo;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_seeker_missile_ammo;
+		ammo_amount += (autocvar_g_balance_seeker_reload_ammo && self.seeker_load >= autocvar_g_balance_seeker_missile_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		if(autocvar_g_balance_seeker_reload_ammo)
-			return self.clip_load >= autocvar_g_balance_seeker_flac_ammo;
-		else
-			return self.ammo_rockets >= autocvar_g_balance_seeker_flac_ammo;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_seeker_flac_ammo;
+		ammo_amount += (autocvar_g_balance_seeker_reload_ammo && self.seeker_load >= autocvar_g_balance_seeker_flac_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
 	{

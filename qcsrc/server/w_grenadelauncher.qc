@@ -332,6 +332,7 @@ float w_glauncher(float req)
 {
 	entity nade;
 	float nadefound;
+	float ammo_amount;
 
 	if (req == WR_AIM)
 	{
@@ -422,17 +423,15 @@ float w_glauncher(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if(autocvar_g_balance_grenadelauncher_reload_ammo)
-			return self.grenadelauncher_load >= autocvar_g_balance_grenadelauncher_primary_ammo;
-		else
-			return self.ammo_rockets >= autocvar_g_balance_grenadelauncher_primary_ammo;
+		ammo_amount = self.ammo_rockets >= autocvar_g_balance_grenadelauncher_primary_ammo;
+		ammo_amount += (autocvar_g_balance_grenadelauncher_reload_ammo && self.grenadelauncher_load >= autocvar_g_balance_grenadelauncher_primary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		if(autocvar_g_balance_grenadelauncher_reload_ammo)
-			return self.grenadelauncher_load >= autocvar_g_balance_grenadelauncher_secondary_ammo;
-		else
-			return self.ammo_rockets >= autocvar_g_balance_grenadelauncher_secondary_ammo;
+		ammo_amount = self.ammo_rockets >= autocvar_g_balance_grenadelauncher_secondary_ammo;
+		ammo_amount += (autocvar_g_balance_grenadelauncher_reload_ammo && self.grenadelauncher_load >= autocvar_g_balance_grenadelauncher_secondary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
 	{

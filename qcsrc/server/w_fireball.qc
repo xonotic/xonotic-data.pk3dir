@@ -378,6 +378,7 @@ void spawnfunc_weapon_fireball (void)
 
 float w_fireball(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 	{
 		self.BUTTON_ATCK = FALSE;
@@ -450,17 +451,15 @@ float w_fireball(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if(autocvar_g_balance_fireball_reload_ammo)
-			return self.fireball_load >= autocvar_g_balance_fireball_primary_ammo;
-		else
-			return self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
+		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
+		ammo_amount += (autocvar_g_balance_fireball_reload_ammo && self.fireball_load >= autocvar_g_balance_fireball_primary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		if(autocvar_g_balance_fireball_reload_ammo)
-			return self.fireball_load >= autocvar_g_balance_fireball_secondary_ammo;
-		else
-			return self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
+		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
+		ammo_amount += (autocvar_g_balance_fireball_reload_ammo && self.fireball_load >= autocvar_g_balance_fireball_secondary_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
 	{

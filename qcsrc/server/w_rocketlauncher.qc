@@ -366,6 +366,8 @@ float w_rlauncher(float req)
 {
 	entity rock;
 	float rockfound;
+	float ammo_amount;
+
 	if (req == WR_AIM)
 	{
 		// aim and decide to fire if appropriate
@@ -526,20 +528,15 @@ float w_rlauncher(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if(autocvar_g_balance_rocketlauncher_reload_ammo)
+		// don't switch while guiding a missile
+		if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
 		{
-			// don't switch while guiding a missile
-			if ((ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
-				&& self.clip_load < autocvar_g_balance_rocketlauncher_ammo)
-				return FALSE;
+			if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
+				ammo_amount = FALSE;
+			if(autocvar_g_balance_electro_reload_ammo && self.minelayer_load < autocvar_g_balance_rocketlauncher_ammo)
+				ammo_amount = FALSE;
 		}
-		else
-		{
-			// don't switch while guiding a missile
-			if ((ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
-				&& self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
-				return FALSE;
-		}
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;

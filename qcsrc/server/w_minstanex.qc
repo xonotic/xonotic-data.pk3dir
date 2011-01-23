@@ -243,6 +243,7 @@ void spawnfunc_weapon_minstanex (void); // defined in t_items.qc
 float minstanex_ammo;
 float w_minstanex(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 	{
 		if(self.ammo_cells > 0)
@@ -326,19 +327,17 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if(autocvar_g_balance_minstanex_reload_ammo)
-			return self.clip_load >= minstanex_ammo;
-		else
-			return self.ammo_cells >= minstanex_ammo;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_ammo;
+		ammo_amount += (autocvar_g_balance_minstanex_reload_ammo && self.minstanex_load >= autocvar_g_balance_minstanex_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		if(!autocvar_g_balance_minstanex_laser_ammo)
 			return TRUE;
-		if(autocvar_g_balance_minstanex_reload_ammo)
-			return self.clip_load >= autocvar_g_balance_minstanex_laser_ammo;
-		else
-			return self.ammo_cells >= autocvar_g_balance_minstanex_laser_ammo;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_laser_ammo;
+		ammo_amount += (autocvar_g_balance_minstanex_reload_ammo && self.minstanex_load >= autocvar_g_balance_minstanex_laser_ammo);
+		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
 	{

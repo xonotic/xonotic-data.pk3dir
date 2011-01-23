@@ -331,6 +331,8 @@ float w_minelayer(float req)
 {
 	entity mine;
 	float minfound;
+	float ammo_amount;
+
 	if (req == WR_AIM)
 	{
 		// aim and decide to fire if appropriate
@@ -487,18 +489,14 @@ float w_minelayer(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		// don't switch while placing a mine
-		if(autocvar_g_balance_electro_reload_ammo)
+		if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
 		{
-			if ((ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
-				&& self.clip_load < autocvar_g_balance_minelayer_ammo)
-				return FALSE;
+			if(self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
+				ammo_amount = FALSE;
+			if(autocvar_g_balance_electro_reload_ammo && self.minelayer_load < autocvar_g_balance_minelayer_ammo)
+				ammo_amount = FALSE;
 		}
-		else
-		{
-			if ((ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
-				&& self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
-				return FALSE;
-		}
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
