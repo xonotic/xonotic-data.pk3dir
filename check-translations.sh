@@ -9,7 +9,11 @@ for VM in menu csprogs; do
 			VMD=$VM
 			;;
 	esac
-	find qcsrc/"$VMD" -type f -not -name \*.po -not -name \*.txt | xgettext -LC -k_ -f- --from-code utf-8 -o "$VM".dat.pot >&2
+	{
+		find qcsrc/"$VMD" -type f -not -name \*.po -not -name \*.txt
+		find qcsrc/common -type f -not -name \*.po -not -name \*.txt
+		find qcsrc/server -type f -name w_\*.qc
+	} | xgettext -LC -k_ -f- --from-code utf-8 -o "$VM".dat.pot >&2
 	for X in "$VM".dat.*.po; do
 		[ -f "$X" ] || continue
 		msgmerge -F -U "$X" "$VM".dat.pot >&2

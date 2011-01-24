@@ -48,7 +48,3 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname);
 	me.TR(me); \
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", panelname)), _("Enable panel"))); \
 	DIALOG_HUDPANEL_COMMON_NOTOGGLE()
-
-string language_filename(string s);
-string CTX(string s);
-#define ZCTX(s) strzone(CTX(s))

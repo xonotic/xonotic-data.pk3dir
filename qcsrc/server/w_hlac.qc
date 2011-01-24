@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hlac", "hlac", "Heavy Laser Assault Cannon");
+REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hlac", "hlac", _("Heavy Laser Assault Cannon"))
 #else
 #ifdef SVQC
 
@@ -220,9 +220,9 @@ float w_hlac(float req)
 		precache_sound("weapons/laserimpact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s should have used a smaller gun";
+		w_deathtypestring = _("%s should have used a smaller gun");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "%s was cut down by %s";
+		w_deathtypestring = _("%s was cut down by %s");
 	return TRUE;
 }
 #endif

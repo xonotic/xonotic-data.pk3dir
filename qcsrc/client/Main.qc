@@ -46,6 +46,8 @@ string cl_announcer_prev;
 void WaypointSprite_Load();
 void CSQC_Init(void)
 {
+	prvm_language = cvar_string("prvm_language");
+	
 #ifdef USE_FTE
 #pragma target ID
 	__engine_check = checkextension("DP_SV_WRITEPICTURE");
@@ -57,7 +59,7 @@ void CSQC_Init(void)
 	}
 #pragma target FTE
 #endif
-	
+
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK

@@ -11,6 +11,46 @@ void drawstringcenter(vector, string, vector, vector, float, float);
 
 float SCOREBOARD_OFFSET = 50;
 
+// wrapper to put all possible scores titles through gettext
+string TranslateScoresLabel(string l)
+{
+	switch(l)
+	{
+		case "bckills": return CTX(_("SCO^bckills"));
+		case "caps": return CTX(_("SCO^caps"));
+		case "deaths": return CTX(_("SCO^deaths"));
+		case "destroyed": return CTX(_("SCO^destroyed"));
+		case "drops": return CTX(_("SCO^drops"));
+		case "faults": return CTX(_("SCO^faults"));
+		case "fckills": return CTX(_("SCO^fckills"));
+		case "goals": return CTX(_("SCO^goals"));
+		case "kckills": return CTX(_("SCO^kckills"));
+		case "kdratio": return CTX(_("SCO^kdratio"));
+		case "k/d": return CTX(_("SCO^k/d"));
+		case "kd": return CTX(_("SCO^kd"));
+		case "kdr": return CTX(_("SCO^kdr"));
+		case "kills": return CTX(_("SCO^kills"));
+		case "laps": return CTX(_("SCO^laps"));
+		case "lives": return CTX(_("SCO^lives"));
+		case "losses": return CTX(_("SCO^losses"));
+		case "name": return CTX(_("SCO^name"));
+		case "nick": return CTX(_("SCO^nick"));
+		case "objectives": return CTX(_("SCO^objectives"));
+		case "pickups": return CTX(_("SCO^pickups"));
+		case "ping": return CTX(_("SCO^ping"));
+		case "pl": return CTX(_("SCO^pl"));
+		case "pushes": return CTX(_("SCO^pushes"));
+		case "rank": return CTX(_("SCO^rank"));
+		case "returns": return CTX(_("SCO^returns"));
+		case "revivals": return CTX(_("SCO^revivals"));
+		case "score": return CTX(_("SCO^score"));
+		case "suicides": return CTX(_("SCO^suicides"));
+		case "takes": return CTX(_("SCO^takes"));
+		case "ticks": return CTX(_("SCO^ticks"));
+		default: return l;
+	}
+}
+
 void MapVote_Draw();
 void HUD_FinaleOverlay()
 {
@@ -321,7 +361,7 @@ void Cmd_HUD_SetFields(float argc)
 		}
 
 		strunzone(hud_title[hud_num_fields]);
-		hud_title[hud_num_fields] = strzone(str);
+		hud_title[hud_num_fields] = strzone(TranslateScoresLabel(str));
 		hud_size[hud_num_fields] = stringwidth(str, FALSE, hud_fontsize);
 		str = strtolower(str);
 
@@ -383,7 +423,7 @@ void Cmd_HUD_SetFields(float argc)
 				hud_size[i] = hud_size[i-1];
 				hud_field[i] = hud_field[i-1];
 			}
-			hud_title[0] = strzone("name");
+			hud_title[0] = strzone(TranslateScoresLabel("name"));
 			hud_field[0] = SP_NAME;
 			++hud_num_fields;
 			print(sprintf(_("fixed missing field '%s'\n"), "name"));
@@ -416,7 +456,7 @@ void Cmd_HUD_SetFields(float argc)
 		if(!have_secondary)
 		{
 			strunzone(hud_title[hud_num_fields]);
-			hud_title[hud_num_fields] = strzone(scores_label[ps_secondary]);
+			hud_title[hud_num_fields] = strzone(TranslateScoresLabel(scores_label[ps_secondary]));
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = ps_secondary;
 			++hud_num_fields;
@@ -425,7 +465,7 @@ void Cmd_HUD_SetFields(float argc)
 		if(!have_primary)
 		{
 			strunzone(hud_title[hud_num_fields]);
-			hud_title[hud_num_fields] = strzone(scores_label[ps_primary]);
+			hud_title[hud_num_fields] = strzone(TranslateScoresLabel(scores_label[ps_primary]));
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = ps_primary;
 			++hud_num_fields;
@@ -1209,12 +1249,12 @@ void HUD_DrawScoreboard()
 	if(gametype == GAME_LMS)
 	{
 		if(tl > 0)
-			str = strcat(str, sprintf(_(" for up to ^1%.1g minutes^7"), tl));
+			str = strcat(str, sprintf(_(" for up to ^1%.1f minutes^7"), tl));
 	}
 	else
 	{
 		if(tl > 0)
-			str = strcat(str, sprintf(_(" for up to ^1%.1g minutes^7"), tl));
+			str = strcat(str, sprintf(_(" for up to ^1%.1f minutes^7"), tl));
 		if(fl > 0)
 		{
 			if(tl > 0)
@@ -1222,16 +1262,16 @@ void HUD_DrawScoreboard()
 			if(teamplay)
 			{
 				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], fl), 
-					(teamscores_label[ts_primary] == "score")   ? _("points") :
-					(teamscores_label[ts_primary] == "fastest") ? _("is beaten") :
-					teamscores_label[ts_primary]));
+					(teamscores_label[ts_primary] == "score")   ? CTX(_("SCO^points")) :
+					(teamscores_label[ts_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
+					TranslateScoresLabel(teamscores_label[ts_primary])));
 			}
 			else
 			{
 				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(scores_flags[ps_primary], fl), 
-					(teamscores_label[ts_primary] == "score")   ? _("points") :
-					(teamscores_label[ts_primary] == "fastest") ? _("is beaten") :
-					teamscores_label[ts_primary]));
+					(scores_label[ps_primary] == "score")   ? CTX(_("SCO^points")) :
+					(scores_label[ps_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
+					TranslateScoresLabel(scores_label[ps_primary])));
 			}
 		}
 		if(ll > 0)
@@ -1241,16 +1281,16 @@ void HUD_DrawScoreboard()
 			if(teamplay)
 			{
 				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], ll), 
-					(teamscores_label[ts_primary] == "score")   ? _("points") :
-					(teamscores_label[ts_primary] == "fastest") ? _("is beaten") :
-					teamscores_label[ts_primary]));
+					(teamscores_label[ts_primary] == "score")   ? CTX(_("SCO^points")) :
+					(teamscores_label[ts_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
+					TranslateScoresLabel(teamscores_label[ts_primary])));
 			}
 			else
 			{
 				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(scores_flags[ps_primary], ll), 
-					(teamscores_label[ts_primary] == "score")   ? _("points") :
-					(teamscores_label[ts_primary] == "fastest") ? _("is beaten") :
-					teamscores_label[ts_primary]));
+					(scores_label[ps_primary] == "score")   ? CTX(_("SCO^points")) :
+					(scores_label[ps_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
+					TranslateScoresLabel(scores_label[ps_primary])));
 			}
 		}
 	}
