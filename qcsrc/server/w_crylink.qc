@@ -677,7 +677,7 @@ float w_crylink(float req)
 			return TRUE;
 
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
-		ammo_amount += (autocvar_g_balance_crylink_reload_ammo && self.crylink_load >= autocvar_g_balance_crylink_primary_ammo);
+		ammo_amount += self.crylink_load >= autocvar_g_balance_crylink_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
@@ -687,7 +687,7 @@ float w_crylink(float req)
 			return TRUE;
 
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
-		ammo_amount += (autocvar_g_balance_crylink_reload_ammo && self.crylink_load >= autocvar_g_balance_crylink_secondary_ammo);
+		ammo_amount += self.crylink_load >= autocvar_g_balance_crylink_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)

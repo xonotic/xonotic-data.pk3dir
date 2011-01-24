@@ -569,7 +569,7 @@ float w_electro(float req)
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
-		ammo_amount += (autocvar_g_balance_electro_reload_ammo && self.electro_load >= autocvar_g_balance_electro_secondary_ammo);
+		ammo_amount += self.electro_load >= autocvar_g_balance_electro_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)

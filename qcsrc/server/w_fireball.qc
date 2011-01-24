@@ -444,13 +444,13 @@ float w_fireball(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
-		ammo_amount += (autocvar_g_balance_fireball_reload_ammo && self.fireball_load >= autocvar_g_balance_fireball_primary_ammo);
+		ammo_amount += self.fireball_load >= autocvar_g_balance_fireball_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
-		ammo_amount += (autocvar_g_balance_fireball_reload_ammo && self.fireball_load >= autocvar_g_balance_fireball_secondary_ammo);
+		ammo_amount += self.fireball_load >= autocvar_g_balance_fireball_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)

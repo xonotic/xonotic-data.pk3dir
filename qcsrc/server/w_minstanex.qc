@@ -320,7 +320,7 @@ float w_minstanex(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_ammo;
-		ammo_amount += (autocvar_g_balance_minstanex_reload_ammo && self.minstanex_load >= autocvar_g_balance_minstanex_ammo);
+		ammo_amount += self.minstanex_load >= autocvar_g_balance_minstanex_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
@@ -328,7 +328,7 @@ float w_minstanex(float req)
 		if(!autocvar_g_balance_minstanex_laser_ammo)
 			return TRUE;
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_laser_ammo;
-		ammo_amount += (autocvar_g_balance_minstanex_reload_ammo && self.minstanex_load >= autocvar_g_balance_minstanex_laser_ammo);
+		ammo_amount += self.minstanex_load >= autocvar_g_balance_minstanex_laser_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)

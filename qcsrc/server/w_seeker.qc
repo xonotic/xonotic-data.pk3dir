@@ -541,13 +541,13 @@ float w_seeker(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_seeker_missile_ammo;
-		ammo_amount += (autocvar_g_balance_seeker_reload_ammo && self.seeker_load >= autocvar_g_balance_seeker_missile_ammo);
+		ammo_amount += self.seeker_load >= autocvar_g_balance_seeker_missile_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_seeker_flac_ammo;
-		ammo_amount += (autocvar_g_balance_seeker_reload_ammo && self.seeker_load >= autocvar_g_balance_seeker_flac_ammo);
+		ammo_amount += self.seeker_load >= autocvar_g_balance_seeker_flac_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)

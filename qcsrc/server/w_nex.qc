@@ -297,7 +297,7 @@ float w_nex(float req)
 	{
 		// don't allow charging if we don't have enough ammo
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_secondary_ammo;
-		ammo_amount += (autocvar_g_balance_nex_reload_ammo && self.nex_load >= autocvar_g_balance_nex_secondary_ammo);
+		ammo_amount += self.nex_load >= autocvar_g_balance_nex_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
