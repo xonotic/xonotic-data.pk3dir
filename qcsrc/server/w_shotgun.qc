@@ -176,7 +176,11 @@ float w_shotgun(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_shotgun_reload_ammo && self.clip_load < autocvar_g_balance_shotgun_primary_ammo) // forced reload
-			W_Shotgun_Reload();
+		{
+			// don't force reload an empty shotgun if its melee attack is active
+			if not(autocvar_g_balance_shotgun_secondary && self.ammo_shells < autocvar_g_balance_shotgun_primary_ammo)
+				W_Shotgun_Reload();
+		}
 		else
 		{
 			if (self.BUTTON_ATCK)
@@ -191,12 +195,12 @@ float w_shotgun(float req)
 					}
 				}
 			}
-			if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary)
-			if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
-			{
-				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-				weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);
-			}
+		}
+		if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary)
+		if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
+		{
+			// attempt forcing playback of the anim by switching to another anim (that we never play) here...
+			weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);
 		}
 	}
 	else if (req == WR_PRECACHE)

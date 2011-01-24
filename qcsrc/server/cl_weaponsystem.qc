@@ -1631,8 +1631,8 @@ float W_ReloadCheck(float ammo_amount, float ammo_shot)
 			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));
 			self.reload_complain = time + 1;
 		}
-		// switch away if the loaded amount of ammo is not enough to keep using this weapon
-		if(self.clip_load < ammo_shot)
+		// switch away if the amount of ammo is not enough to keep using this weapon
+		if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
 		{
 			self.clip_load = -1; // reload later
 			W_SwitchToOtherWeapon(self);
