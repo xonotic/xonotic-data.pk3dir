@@ -297,6 +297,6 @@ void ListBox_clickListBoxItem(entity me, float i, vector where)
 
 void ListBox_drawListBoxItem(entity me, float i, vector absSize, float selected)
 {
-	draw_Text('0 0 0', strcat("Item ", ftos(i)), eX * (8 / absSize_x) + eY * (8 / absSize_y), (selected ? '0 1 0' : '1 1 1'), 1, 0);
+	draw_Text('0 0 0', sprintf(_("Item %d"), i), eX * (8 / absSize_x) + eY * (8 / absSize_y), (selected ? '0 1 0' : '1 1 1'), 1, 0);
 }
 #endif

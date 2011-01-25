@@ -360,7 +360,10 @@ float buf_load(string pFilename)
 		return -1;
 	fh = fopen(pFilename, FILE_READ);
 	if(fh < 0)
-		return buf;
+	{
+		buf_del(buf);
+		return -1;
+	}
 	i = 0;
 	while((l = fgets(fh)))
 	{
@@ -1978,4 +1981,28 @@ float u8_strsize(string s)
 			++l;
 	}
 	return l;
+}
+
+// translation helpers
+string language_filename(string s)
+{
+	string fn;
+	float fh;
+	fn = prvm_language;
+	if(fn == "" || fn == "dump")
+		return s;
+	fn = strcat(s, ".", fn);
+	if((fh = fopen(fn, FILE_READ)) >= 0)
+	{
+		fclose(fh);
+		return fn;
+	}
+	return s;
+}
+string CTX(string s)
+{
+	float p = strstrofs(s, "^", 0);
+	if(p < 0)
+		return s;
+	return substring(s, p+1, -1);
 }

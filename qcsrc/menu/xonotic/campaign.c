@@ -281,8 +281,8 @@ void XonoticCampaignList_drawListBoxItem(entity me, float i, vector absSize, flo
 	if(i <= me.campaignIndex)
 		s = campaign_shortdesc[i]; // fteqcc sucks
 	else
-		s = "???";
-	s = draw_TextShortenToWidth(strcat("Level ", ftos(i + 1), ": ", s), me.columnNameSize, 0, me.realFontSize);
+		s = _("???");
+	s = draw_TextShortenToWidth(sprintf(_("Level %d: %s"), i+1, s), me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 
 	if(i <= me.campaignIndex)

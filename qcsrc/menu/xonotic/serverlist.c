@@ -354,9 +354,9 @@ void XonoticServerList_draw(entity me)
 		if(me.ipAddressBox.focused || me.ipAddressBoxFocused < 0)
 		{
 			if(IsFavorite(me.ipAddressBox.text))
-				me.favoriteButton.setText(me.favoriteButton, "Remove");
+				me.favoriteButton.setText(me.favoriteButton, _("Remove"));
 			else
-				me.favoriteButton.setText(me.favoriteButton, "Bookmark");
+				me.favoriteButton.setText(me.favoriteButton, _("Bookmark"));
 		}
 		me.ipAddressBoxFocused = me.ipAddressBox.focused;
 	}
@@ -512,11 +512,11 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.columnTypeOrigin = me.columnMapOrigin + me.columnMapSize + me.realFontSize_x;
 	me.columnPlayersOrigin = me.columnTypeOrigin + me.columnTypeSize + me.realFontSize_x;
 
-	me.positionSortButton(me, me.sortButton1, me.columnPingOrigin, me.columnPingSize, "Ping", ServerList_PingSort_Click);
-	me.positionSortButton(me, me.sortButton2, me.columnNameOrigin, me.columnNameSize, "Host name", ServerList_NameSort_Click);
-	me.positionSortButton(me, me.sortButton3, me.columnMapOrigin, me.columnMapSize, "Map", ServerList_MapSort_Click);
-	me.positionSortButton(me, me.sortButton4, me.columnTypeOrigin, me.columnTypeSize, "Type", ServerList_TypeSort_Click);
-	me.positionSortButton(me, me.sortButton5, me.columnPlayersOrigin, me.columnPlayersSize, "Players", ServerList_PlayerSort_Click);
+	me.positionSortButton(me, me.sortButton1, me.columnPingOrigin, me.columnPingSize, _("Ping"), ServerList_PingSort_Click);
+	me.positionSortButton(me, me.sortButton2, me.columnNameOrigin, me.columnNameSize, _("Host name"), ServerList_NameSort_Click);
+	me.positionSortButton(me, me.sortButton3, me.columnMapOrigin, me.columnMapSize, _("Map"), ServerList_MapSort_Click);
+	me.positionSortButton(me, me.sortButton4, me.columnTypeOrigin, me.columnTypeSize, _("Type"), ServerList_TypeSort_Click);
+	me.positionSortButton(me, me.sortButton5, me.columnPlayersOrigin, me.columnPlayersSize, _("Players"), ServerList_PlayerSort_Click);
 
 	float f;
 	f = me.currentSortField;

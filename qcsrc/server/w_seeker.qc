@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", "T.A.G. Seeker");
+REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", _("T.A.G. Seeker"))
 #else
 #ifdef SVQC
 //.float proxytime; = autoswitch
@@ -520,13 +520,13 @@ float w_seeker(float req)
 		precache_sound("weapons/tag_impact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s played with tiny rockets";
+		w_deathtypestring = _("%s played with tiny rockets");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s ran into %s's flac";
+			w_deathtypestring = _("%s ran into %s's flac");
 		else
-			w_deathtypestring = "%s was tagged by %s";
+			w_deathtypestring = _("%s was tagged by %s");
 	}
 	return TRUE;
 }

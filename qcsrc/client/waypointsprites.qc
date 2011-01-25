@@ -336,7 +336,6 @@ void Ent_WaypointSprite()
 			else
 				self.build_starthealth = 0;
 			self.build_finished = servertime + t / 32;
-			//print("build: ", ftos(self.build_finished - self.build_started), "\n");
 		}
 	}
 	else

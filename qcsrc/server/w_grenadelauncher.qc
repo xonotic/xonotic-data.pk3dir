@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "gl", "grenadelauncher", "Mortar");
+REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "gl", "grenadelauncher", _("Mortar"))
 #else
 #ifdef SVQC
 .float gl_detonate_later;
@@ -354,19 +354,19 @@ float w_glauncher(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s tried out his own grenade";
+			w_deathtypestring = _("%s tried out his own grenade");
 		else
-			w_deathtypestring = "%s detonated";
+			w_deathtypestring = _("%s detonated");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SPLASH)
 			if(w_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
-				w_deathtypestring = "%s didn't see %s's grenade";
+				w_deathtypestring = _("%s didn't see %s's grenade");
 			else // unchecked: SECONDARY
-				w_deathtypestring = "%s almost dodged %s's grenade";
+				w_deathtypestring = _("%s almost dodged %s's grenade");
 		else // unchecked: SECONDARY, BOUNCE
-			w_deathtypestring = "%s ate %s's grenade";
+			w_deathtypestring = _("%s ate %s's grenade");
 	}
 	return TRUE;
 }
