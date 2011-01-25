@@ -565,7 +565,6 @@ float w_electro(float req)
 			if(autocvar_g_balance_electro_lightning)
 				ammo_amount += self.electro_load >= autocvar_g_balance_electro_primary_ammo;
 		}
-
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
@@ -583,7 +582,7 @@ float w_electro(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Shotgun_Reload();
+		W_Electro_Reload();
 	}
 	return TRUE;
 };
