@@ -94,6 +94,10 @@ MUTATOR_HOOKABLE(FilterItem);
 	// checks if the current item may be spawned (self.items and self.weapons may be read and written to, as well as the ammo_ fields)
 	// return error to request removal
 
+MUTATOR_HOOKABLE(TurretSpawn);
+	// return error to request removal
+	// INPUT: self - turret
+	
 MUTATOR_HOOKABLE(OnEntityPreSpawn);
 	// return error to prevent entity spawn, or modify the entity
 
@@ -119,13 +123,30 @@ MUTATOR_HOOKABLE(EditProjectile);
 		entity self;
 		entity other;
 
-MUTATOR_HOOKABLE(PlayerDamage);
+MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor);
 	// called when a player gets damaged to e.g. remove stuff he was carrying.
 	// INPUT:
 		entity frag_inflictor;
 		entity frag_attacker;
 		entity frag_target; // same as self
-		vector damage_force; // NOTE: this force already HAS been applied (create and use a Damage hook to change that one)
+		vector damage_force; // NOTE: this force already HAS been applied
 	// INPUT, OUTPUT:
 		float damage_take;
 		float damage_save;
+		
+MUTATOR_HOOKABLE(PlayerDamage_Calculate);
+	// called to adjust damage and force values which are applied to the player, used for e.g. strength damage/force multiplier or runematch runes
+	// i'm not sure if I should change this around slightly (Naming of the entities, and also how they're done in g_damage).
+	// INPUT:
+		entity frag_attacker;
+		entity frag_target;
+		float frag_deathtype;
+	// INPUT, OUTPUT:
+		float frag_damage;
+		vector frag_force;
+
+MUTATOR_HOOKABLE(PlayerPowerups);
+	// called at the end of player_powerups() in cl_client.qc, used for manipulating the values which are set by powerup items.
+	// INPUT
+	entity self;
+	float olditems; // also technically output, but since it is at the end of the function it's useless for that :P 

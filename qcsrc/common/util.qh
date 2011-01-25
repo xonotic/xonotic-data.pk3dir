@@ -247,3 +247,11 @@ vector NearestPointOnBox(entity box, vector org);
 #endif
 
 float vercmp(string v1, string v2);
+
+float u8_strsize(string s);
+
+// translation helpers
+string prvm_language;
+string language_filename(string s);
+string CTX(string s);
+#define ZCTX(s) strzone(CTX(s))

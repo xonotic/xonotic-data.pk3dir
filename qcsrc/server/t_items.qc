@@ -57,7 +57,7 @@ float Item_Customize()
 	{
 		if(g_ghost_items)
 		{
-			self.colormod = stov(cvar_string("g_ghost_items_color"));
+			self.colormod = stov(autocvar_g_ghost_items_color);
 			self.glowmod = self.colormod;
 			self.alpha = g_ghost_items;
 			return TRUE;
@@ -111,7 +111,7 @@ void Item_Show (entity e, float mode)
 		// make the item translucent green and not touchable
 		e.model = e.mdl;
 		e.solid = SOLID_NOT;
-		e.colormod = stov(cvar_string("g_ghost_items_color"));
+		e.colormod = stov(autocvar_g_ghost_items_color);
 		e.glowmod = e.colormod;
 		e.alpha = g_ghost_items;
 		e.customizeentityforclient = func_null;
@@ -123,7 +123,7 @@ void Item_Show (entity e, float mode)
 		// hide the item completely
 		e.model = string_null;
 		e.solid = SOLID_NOT;
-		e.colormod = stov(cvar_string("g_ghost_items_color"));
+		e.colormod = stov(autocvar_g_ghost_items_color);
 		e.glowmod = e.colormod;
 		e.alpha = 0;
 		e.customizeentityforclient = func_null;
@@ -133,9 +133,9 @@ void Item_Show (entity e, float mode)
 
 	if (e.strength_finished || e.invincible_finished)
 		e.effects |= EF_ADDITIVE | EF_FULLBRIGHT;
-	if (cvar("g_nodepthtestitems"))
+	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
-	if (cvar("g_fullbrightitems"))
+	if (autocvar_g_fullbrightitems)
 		e.effects |= EF_FULLBRIGHT;
 
 	// relink entity (because solid may have changed)
@@ -268,8 +268,8 @@ float Item_GiveTo(entity item, entity player)
 			if (player.ammo_fuel < g_pickup_fuel_max)
 			{
 				pickedup = TRUE;
-				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
-				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + cvar("g_balance_pause_fuel_rot"));
+				player.ammo_fuel = bound(player.ammo_fuel, g_pickup_fuel_max, player.ammo_fuel + item.ammo_fuel);
+				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + autocvar_g_balance_pause_fuel_rot);
 			}
 			if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
 			{
@@ -298,7 +298,7 @@ float Item_GiveTo(entity item, entity player)
 				if (item.weapons & WEPBIT_MINSTANEX)
 					W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
 				if (item.ammo_cells)
-					player.ammo_cells = min (player.ammo_cells + cvar("g_minstagib_ammo_drop"), 999);
+					player.ammo_cells = bound(player.ammo_cells, 999, player.ammo_cells + autocvar_g_minstagib_ammo_drop);
 				player.health = 100;
 			}
 
@@ -308,7 +308,7 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				// sound not available
 				// AnnounceTo(player, "_lives");
-				player.armorvalue = min(player.armorvalue + cvar("g_minstagib_extralives"), 999);
+				player.armorvalue = bound(player.armorvalue, 999, player.armorvalue + autocvar_g_minstagib_extralives);
 				sprint(player, "^3You picked up some extra lives\n");
 			}
 
@@ -318,7 +318,7 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				// sound not available
 				// AnnounceTo(player, "invisible");
-				player.strength_finished = max(player.strength_finished, time) + cvar("g_balance_powerup_strength_time");
+				player.strength_finished = max(player.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
 			}
 
 			// speed powerup
@@ -327,15 +327,7 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				// sound not available
 				// AnnounceTo(player, "speed");
-				player.invincible_finished = max(player.invincible_finished, time) + cvar("g_balance_powerup_strength_time");
-			}
-
-			if (item.ammo_fuel)
-			if (player.ammo_fuel < g_pickup_fuel_max) 
-			{
-				pickedup = TRUE;
-				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
-				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + cvar("g_balance_pause_fuel_rot"));
+				player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_strength_time;
 			}
 		}
 	}
@@ -373,32 +365,32 @@ float Item_GiveTo(entity item, entity player)
 			if ((player.ammo_shells < g_pickup_shells_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.ammo_shells = min (player.ammo_shells + item.ammo_shells, g_pickup_shells_max);
+				player.ammo_shells = bound(player.ammo_shells, g_pickup_shells_max, player.ammo_shells + item.ammo_shells);
 			}
 			if (item.ammo_nails)
 			if ((player.ammo_nails < g_pickup_nails_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.ammo_nails = min (player.ammo_nails + item.ammo_nails, g_pickup_nails_max);
+				player.ammo_nails = bound(player.ammo_nails, g_pickup_nails_max, player.ammo_nails + item.ammo_nails);
 			}
 			if (item.ammo_rockets)
 			if ((player.ammo_rockets < g_pickup_rockets_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.ammo_rockets = min (player.ammo_rockets + item.ammo_rockets, g_pickup_rockets_max);
+				player.ammo_rockets = bound(player.ammo_rockets, g_pickup_rockets_max, player.ammo_rockets + item.ammo_rockets);
 			}
 			if (item.ammo_cells)
 			if ((player.ammo_cells < g_pickup_cells_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.ammo_cells = min (player.ammo_cells + item.ammo_cells, g_pickup_cells_max);
+				player.ammo_cells = bound(player.ammo_cells, g_pickup_cells_max, player.ammo_cells + item.ammo_cells);
 			}
 			if (item.ammo_fuel)
 			if ((player.ammo_fuel < g_pickup_fuel_max) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
-				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + cvar("g_balance_pause_fuel_rot"));
+				player.ammo_fuel = bound(player.ammo_fuel, g_pickup_fuel_max, player.ammo_fuel + item.ammo_fuel);
+				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + autocvar_g_balance_pause_fuel_rot);
 			}
 		}
 
@@ -426,27 +418,27 @@ float Item_GiveTo(entity item, entity player)
 			if (item.strength_finished)
 			{
 				pickedup = TRUE;
-				player.strength_finished = max(player.strength_finished, time) + cvar("g_balance_powerup_strength_time");
+				player.strength_finished = max(player.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
 			}
 			if (item.invincible_finished)
 			{
 				pickedup = TRUE;
-				player.invincible_finished = max(player.invincible_finished, time) + cvar("g_balance_powerup_invincible_time");
+				player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_invincible_time;
 			}
 
 			if (item.health)
 			if ((player.health < item.max_health) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.health = min(player.health + item.health, item.max_health);
-				player.pauserothealth_finished = max(player.pauserothealth_finished, time + cvar("g_balance_pause_health_rot"));
+				player.health = bound(player.health, item.max_health, player.health + item.health);
+				player.pauserothealth_finished = max(player.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
 			}
 			if (item.armorvalue)
 			if ((player.armorvalue < item.max_armorvalue) || item.pickup_anyway)
 			{
 				pickedup = TRUE;
-				player.armorvalue = min(player.armorvalue + item.armorvalue, item.max_armorvalue);
-				player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + cvar("g_balance_pause_armor_rot"));
+				player.armorvalue = bound(player.armorvalue, item.max_armorvalue, player.armorvalue + item.armorvalue);
+				player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + autocvar_g_balance_pause_armor_rot);
 			}
 		}
 	}
@@ -598,7 +590,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	// If custom weapon priorities for bots is enabled rate most wanted weapons higher
 	if( bot_custom_weapon && c )
 	{
-		for(i = WEP_FIRST; i < WEP_LAST ; ++i)
+		for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 		{
 			// Find weapon
 			if( (get_weaponinfo(i)).weapons & item.weapons  != item.weapons )
@@ -638,7 +630,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	c = 0;
 
 	// Detect needed ammo
-	for(i = WEP_FIRST; i < WEP_LAST ; ++i)
+	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
 		wi = get_weaponinfo(i);
 
@@ -787,7 +779,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		}
 		*/
 
-		if(cvar("spawn_debug") >= 2)
+		if(autocvar_spawn_debug >= 2)
 		{
 			entity otheritem;
 			for(otheritem = findradius(self.origin, 3); otheritem; otheritem = otheritem.chain)
@@ -824,7 +816,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 				return;
 			}
 		}
-		else if (!cvar("g_pickup_items") && itemid != IT_STRENGTH && itemid != IT_INVINCIBLE && itemid != IT_HEALTH)
+		else if (!autocvar_g_pickup_items && itemid != IT_STRENGTH && itemid != IT_INVINCIBLE && itemid != IT_HEALTH)
 		{
 			startitem_failed = TRUE;
 			remove (self);
@@ -1263,10 +1255,10 @@ void spawnfunc_item_health_large (void) {
 }
 
 void spawnfunc_item_health_mega (void) {
-	if(!cvar("g_powerup_superhealth"))
+	if(!autocvar_g_powerup_superhealth)
 		return;
 
-	if((g_arena || g_ca) && !cvar("g_arena_powerups"))
+	if((g_arena || g_ca) && !autocvar_g_arena_powerups)
 		return;
 
 	if(g_minstagib) {
@@ -1290,10 +1282,10 @@ void spawnfunc_item_health25() { spawnfunc_item_health_medium(); }
 void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
 
 void spawnfunc_item_strength (void) {
-	if(!cvar("g_powerup_strength"))
+	if(!autocvar_g_powerup_strength)
 		return;
 
-	if((g_arena || g_ca) && !cvar("g_arena_powerups"))
+	if((g_arena || g_ca) && !autocvar_g_arena_powerups)
 		return;
 
 	if(g_minstagib) {
@@ -1306,10 +1298,10 @@ void spawnfunc_item_strength (void) {
 }
 
 void spawnfunc_item_invincible (void) {
-	if(!cvar("g_powerup_shield"))
+	if(!autocvar_g_powerup_shield)
 		return;
 
-	if((g_arena || g_ca) && !cvar("g_arena_powerups"))
+	if((g_arena || g_ca) && !autocvar_g_arena_powerups)
 		return;
 
 	if(g_minstagib) {
@@ -1365,9 +1357,9 @@ void spawnfunc_target_items (void)
 
 	self.use = target_items_use;
 	if(!self.strength_finished)
-		self.strength_finished = cvar("g_balance_powerup_strength_time");
+		self.strength_finished = autocvar_g_balance_powerup_strength_time;
 	if(!self.invincible_finished)
-		self.invincible_finished = cvar("g_balance_powerup_invincible_time");
+		self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 
 	precache_sound("misc/itempickup.wav");
 	precache_sound("misc/megahealth.wav");
@@ -1760,9 +1752,9 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE(e, ammo_cells, 0, "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE(e, ammo_shells, 0, "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE(e, ammo_rockets, 0, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, cvar("g_balance_pause_fuel_rot"), pauseregen_finished, cvar("g_balance_pause_fuel_regen"), "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, cvar("g_balance_pause_armor_rot"), pauseregen_finished, cvar("g_balance_pause_health_regen"), "misc/armor25.wav", string_null);
-	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, cvar("g_balance_pause_health_rot"), pauseregen_finished, cvar("g_balance_pause_health_regen"), "misc/megahealth.wav", string_null);
+	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, "misc/itempickup.wav", string_null);
+	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/armor25.wav", string_null);
+	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/megahealth.wav", string_null);
 
 	if (g_minstagib)
 	{

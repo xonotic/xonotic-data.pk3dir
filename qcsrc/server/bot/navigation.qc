@@ -653,8 +653,8 @@ void navigation_routerating(entity e, float f, float rangebias)
 	// Evaluate path using jetpack
 	if(g_jetpack)
 	if(self.items & IT_JETPACK)
-	if(cvar("bot_ai_navigation_jetpack"))
-	if(vlen(self.origin - e.origin) > cvar("bot_ai_navigation_jetpack_mindistance"))
+	if(autocvar_bot_ai_navigation_jetpack)
+	if(vlen(self.origin - e.origin) > autocvar_bot_ai_navigation_jetpack_mindistance)
 	{
 		vector pointa, pointb;
 
@@ -706,9 +706,9 @@ void navigation_routerating(entity e, float f, float rangebias)
 			xydistance = vlen(pointa - pointb);
 			zdistance = fabs(pointa_z - self.origin_z);
 
-			t = zdistance / cvar("g_jetpack_maxspeed_up");
-			t += xydistance / cvar("g_jetpack_maxspeed_side");
-			fuel = t * cvar("g_jetpack_fuel") * 0.8;
+			t = zdistance / autocvar_g_jetpack_maxspeed_up;
+			t += xydistance / autocvar_g_jetpack_maxspeed_side;
+			fuel = t * autocvar_g_jetpack_fuel * 0.8;
 
 		//	dprint("jetpack ai: required fuel ", ftos(fuel), " self.ammo_fuel ", ftos(self.ammo_fuel),"\n");
 
@@ -719,8 +719,8 @@ void navigation_routerating(entity e, float f, float rangebias)
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship
 				//  - between air and ground speeds)
 
-				cost = xydistance / (cvar("g_jetpack_maxspeed_side")/cvar("sv_maxspeed"));
-				cost += zdistance / (cvar("g_jetpack_maxspeed_up")/cvar("sv_maxspeed"));
+				cost = xydistance / (autocvar_g_jetpack_maxspeed_side/autocvar_sv_maxspeed);
+				cost += zdistance / (autocvar_g_jetpack_maxspeed_up/autocvar_sv_maxspeed);
 				cost *= 1.5;
 
 				// Compare against other goals
@@ -897,6 +897,7 @@ void navigation_goalrating_start()
 	self.navigation_jetpack_goal = world;
 	navigation_bestrating = -1;
 	self.navigation_hasgoals = FALSE;
+	navigation_clearroute();
 	navigation_bestgoal = world;
 	navigation_markroutes(world);
 };

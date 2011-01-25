@@ -188,6 +188,7 @@ void() monster_spawnwanderpath =
 
 void() monster_checkbossflag =
 {
+//#NO AUTOCVARS START
 #if 0
 	local float healthboost;
 	local float r;
@@ -222,6 +223,7 @@ void() monster_checkbossflag =
 		while (self.colormod_x > 0.6 && self.colormod_y > 0.6 && self.colormod_z > 0.6);
 	}
 #endif
+//#NO AUTOCVARS END
 };
 
 

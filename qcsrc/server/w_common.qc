@@ -23,19 +23,19 @@ void W_GiveWeapon (entity e, float wep, string name)
 }
 
 .float railgundistance;
+.vector railgunforce;
 void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
 {
 	local vector hitloc, force, endpoint, dir;
 	local entity ent, endent;
 	local float endq3surfaceflags;
+	float totaldmg;
 
 	float length;
 	vector beampos;
 	string snd;
 	entity pseudoprojectile;
 	float f, ffs;
-
-	float hit;
 
 	railgun_start = start;
 	railgun_end = end;
@@ -46,6 +46,8 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 	// go a little bit into the wall because we need to hit this wall later
 	end = end + dir;
+
+	totaldmg = 0;
 
 	// trace multiple times until we hit a wall, each obstacle will be made
 	// non-solid so we can hit the next, while doing this we spawn effects and
@@ -66,6 +68,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		trace_ent.railgunhitloc = end;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		trace_ent.railgundistance = vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - start);
+		trace_ent.railgunforce = WarpZone_TransformVelocity(WarpZone_trace_transform, force);
 
 		// stop if this is a wall
 		if (trace_ent.solid == SOLID_BSP)
@@ -121,21 +124,15 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		// get the details we need to call the damage function
 		hitloc = ent.railgunhitloc;
 
-		//for stats so that team hit will count as a miss
-		if(ent.flags & FL_CLIENT)
-		if(ent.deadflag == DEAD_NO)
-			hit = 1;
-
-		if(teams_matter)
-		if(ent.team == self.team)
-			hit = 0;
-
 		f = ExponentialFalloff(mindist, maxdist, halflifedist, ent.railgundistance);
 		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, ent.railgundistance);
 
+		if(accuracy_isgooddamage(self.owner, ent))
+			totaldmg += bdamage * f;
+
 		// apply the damage
 		if (ent.takedamage)
-			Damage (ent, self, self, bdamage * f, deathtype, hitloc, force * ffs);
+			Damage (ent, self, self, bdamage * f, deathtype, hitloc, ent.railgunforce * ffs);
 
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin (explosion, hitloc);
@@ -151,16 +148,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	}
 
 	// calculate hits and fired shots for hitscan
-	if not(inWarmupStage)
-	{
-		self.stats_fired[self.weapon - 1] += 1;
-		self.stat_fired = self.weapon + 64 * floor(self.stats_fired[self.weapon - 1]);
-
-		if(hit) {
-			self.stats_hit[self.weapon - 1] += 1;
-			self.stat_hit = self.weapon + 64 * floor(self.stats_hit[self.weapon - 1]);
-		}
-	}
+	accuracy_add(self, self.weapon, 0, min(bdamage, totaldmg));
 
 	trace_endpos = endpoint;
 	trace_ent = endent;
@@ -170,11 +158,13 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 .float dmg_edge;
 .float dmg_force;
 .float dmg_radius;
+.float dmg_total;
 void W_BallisticBullet_Hit (void)
 {
-	float f;
+	float f, q, g;
 
 	f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
+	q = 1 + self.dmg_edge / self.dmg;
 
 	if(other.solid == SOLID_BSP)
 		Damage_DamageInfo(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.projectiledeathtype, self);
@@ -185,14 +175,16 @@ void W_BallisticBullet_Hit (void)
 
 		headshot = 0;
 		yoda = 0;
-		damage_headshotbonus = self.dmg_edge;
+		damage_headshotbonus = self.dmg_edge * f;
 		railgun_start = self.origin - 2 * frametime * self.velocity;
 		railgun_end = self.origin + 2 * frametime * self.velocity;
-
+		g = accuracy_isgooddamage(self.owner, other);
 		Damage(other, self, self.owner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
 		damage_headshotbonus = 0;
 
-		if(self.dmg_edge != 0)
+		if(headshot)
+			f *= q;
+		if(DEATH_WEAPONOF(self.projectiledeathtype) == WEP_SNIPERRIFLE)
 		{
 			if(headshot)
 				AnnounceTo(self.owner, "headshot");
@@ -201,13 +193,12 @@ void W_BallisticBullet_Hit (void)
 		}
 
 		// calculate hits for ballistic weapons
-		if (other.flags & FL_CLIENT)  // is the player a client
-		if (other.deadflag == DEAD_NO)  // is the victim a corpse
-		if ((!(teamplay)) | (other.team != self.owner.team))  // not teamplay (ctf, kh, tdm etc) or the victim is in the same team
-		if not(inWarmupStage)  // not in warm up stage
+		if(g)
 		{
-			self.owner.stats_hit[self.owner.weapon - 1] += 1;
-			self.owner.stat_hit = self.owner.weapon + 64 * floor(self.owner.stats_hit[self.owner.weapon - 1]);
+			// do not exceed 100%
+			q = min(self.dmg * q, self.dmg_total + f * self.dmg) - self.dmg_total;
+			self.dmg_total += f * self.dmg;
+			accuracy_add(self.owner, self.owner.weapon, 0, q);
 		}
 	}
 
@@ -260,7 +251,7 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 	// maxdist = 0.5 * v0 * v0 / constant
 	// dprint("max dist = ", ftos(maxdist), "\n");
 
-	if(maxdist <= cvar("g_ballistics_mindistance"))
+	if(maxdist <= autocvar_g_ballistics_mindistance)
 		return 0;
 
 	traceline_inverted (self.origin, self.origin + normalize(vel) * maxdist, MOVE_NORMAL, self);
@@ -270,7 +261,7 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 
 	self.W_BallisticBullet_LeaveSolid_origin = trace_endpos;
 
-	dst = max(cvar("g_ballistics_mindistance"), vlen(trace_endpos - self.origin));
+	dst = max(autocvar_g_ballistics_mindistance, vlen(trace_endpos - self.origin));
 	// E(s) = E0 - constant * s, constant = area of bullet circle * material constant / mass
 	Es_m = E0_m - constant * dst;
 	if(Es_m <= 0)
@@ -363,7 +354,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	entity pl, oldself;
 	float antilagging;
 
-	antilagging = (cvar("g_antilag_bullets") && (pSpeed >= cvar("g_antilag_bullets")));
+	antilagging = (autocvar_g_antilag_bullets && (pSpeed >= autocvar_g_antilag_bullets));
 
 	entity proj;
 	proj = spawn();
@@ -381,7 +372,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 	W_SetupProjectileVelocityEx(proj, dir, v_up, pSpeed, 0, 0, spread, antilagging);
 	proj.angles = vectoangles(proj.velocity);
-	proj.dmg_radius = cvar("g_ballistics_materialconstant") / bulletconstant;
+	proj.dmg_radius = autocvar_g_ballistics_materialconstant / bulletconstant;
 	// so: bulletconstant = bullet mass / area of bullet circle
 	setorigin(proj, start);
 	proj.flags = FL_PROJECTILE;
@@ -402,6 +393,8 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 		if(tracereffects & EF_RED)
 			eff = particleeffectnum("tr_rifle");
+		else if(tracereffects & EF_BLUE)
+			eff = particleeffectnum("tr_rifle_weak");
 		else
 			eff = particleeffectnum("tr_bullet");
 
@@ -411,7 +404,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			lag = 0;
 		if(clienttype(self) != CLIENTTYPE_REAL)
 			lag = 0;
-		if(cvar("g_antilag") == 0 || self.cvar_cl_noantilag)
+		if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
 			lag = 0; // only do hitscan, but no antilag
 
 		if(lag)
@@ -423,13 +416,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 		savetime = frametime;
 		frametime = 0.05;
-
-		// update the accuracy stats - increase shots fired by 1
-		if not(inWarmupStage)
-		{
-			oldself.stats_fired[oldself.weapon - 1] += 1;
-			oldself.stat_fired = oldself.weapon + 64 * floor(oldself.stats_fired[oldself.weapon - 1]);
-		}
 
 		for(;;)
 		{
@@ -469,6 +455,23 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 				W_BallisticBullet_Hit();
 			}
 
+			// if we hit "weapclip", bail out
+			//
+			// rationale of this check:
+			//
+			// any shader that is solid, nodraw AND trans is meant to clip weapon
+			// shots and players, but has no other effect!
+			//
+			// if it is not trans, it is caulk and should not have this side effect
+			//
+			// matching shaders:
+			//   common/weapclip (intended)
+			//   common/noimpact (is supposed to eat projectiles, but is erased farther above)
+			if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
+			if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID)
+			if not(trace_dphitcontents & DPCONTENTS_OPAQUE)
+				break;
+
 			density = other.ballistics_density;
 			if(density == 0)
 				density = 1;
@@ -489,13 +492,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		remove(proj);
 
 		return;
-	}
-
-	// update the accuracy stats
-	if not(inWarmupStage)
-	{
-		self.stats_fired[self.weapon - 1] += 1;
-		self.stat_fired = self.weapon + 64 * floor(self.stats_fired[self.weapon - 1]);
 	}
 
 	if(tracereffects & EF_RED)

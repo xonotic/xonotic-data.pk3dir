@@ -609,7 +609,7 @@ void turret_think()
     self.nextthink = time + self.ticrate;
 
     // ONS uses somewhat backwards linking.
-    if (teamplay)
+    if (teams_matter)
     {
         if not (g_onslaught)
             if (self.target)
@@ -637,6 +637,10 @@ void turret_think()
     if (self.ammo < self.ammo_max)
         self.ammo = min(self.ammo + self.ammo_recharge, self.ammo_max);
 
+    if (self.health < (self.tur_health * 0.5))
+		if(random() < 0.25)
+			te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
+			
     // Inactive turrets needs to run the think loop,
     // So they can handle animation and wake up if need be.
     if not (self.tur_active)
@@ -718,7 +722,7 @@ void turret_think()
 
         // g_turrets_targetscan_maxdelay forces a target re-scan at least this often
         float do_target_scan;
-        if((self.target_select_time + cvar("g_turrets_targetscan_maxdelay")) < time)
+        if((self.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
             do_target_scan = 1;
 
         // Old target (if any) invalid?
@@ -729,7 +733,7 @@ void turret_think()
         }
 
         // But never more often then g_turrets_targetscan_mindelay!
-        if (self.target_select_time + cvar("g_turrets_targetscan_mindelay") > time)
+        if (self.target_select_time + autocvar_g_turrets_targetscan_mindelay > time)
             do_target_scan = 0;
 
         if(do_target_scan)
@@ -753,7 +757,7 @@ void turret_think()
             return;
         }
         else
-            self.lip = time + cvar("g_turrets_aimidle_delay"); // Keep track of the last time we had a target.
+            self.lip = time + autocvar_g_turrets_aimidle_delay; // Keep track of the last time we had a target.
 
         // Predict?
         if not(self.aim_flags & TFL_AIM_NO)
@@ -777,7 +781,7 @@ void turret_think()
 
 void turret_fire()
 {
-    if (cvar("g_turrets_nofire") != 0)
+    if (autocvar_g_turrets_nofire != 0)
         return;
 
     self.turret_firefunc();
@@ -836,7 +840,7 @@ void turrets_manager_think()
     self.nextthink = time + 1;
 
     entity e;
-    if (cvar("g_turrets_reloadcvars") == 1)
+    if (autocvar_g_turrets_reloadcvars == 1)
     {
         e = nextent(world);
         while (e)
@@ -864,7 +868,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 	entity e, ee;
 
     // Are turrets allowed?
-    if (cvar("g_turrets") == 0)
+    if (autocvar_g_turrets == 0)
         return 0;
 
 
@@ -873,6 +877,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     {
         e = spawn();
 
+        /*
         setorigin(e,'0 0 0');
         setmodel(e,"models/turrets/plasma.md3");
         vector v;
@@ -883,6 +888,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
             //crash();
         }
         setmodel(e,"");
+        */
 
         e.classname = "turret_manager";
         e.think = turrets_manager_think;
@@ -913,12 +919,12 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     load_unit_settings(self,self.cvar_basename, 0);
 
     // Handle turret teams.
-    if (cvar("g_assault") != 0)
+    if (autocvar_g_assault != 0)
     {
         if not (self.team)
             self.team = 14; // Assume turrets are on the defending side if not explicitly set otehrwize
     }
-    else if not (teamplay)
+    else if not (teams_matter)
 		self.team = MAX_SHOT_DISTANCE; // Group all turrets into the same team, so they dont kill eachother.
 	else if(g_onslaught && self.targetname)
 	{
@@ -1129,6 +1135,10 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 // Offsets & origins
     if (!self.tur_shotorg)   self.tur_shotorg = '50 0 50';
 
+// Gane hooks
+	if(MUTATOR_CALLHOOK(TurretSpawn))
+		return 0;
+
 // End of default & sanety checks, start building the turret.
 
 // Spawn extra bits
@@ -1234,7 +1244,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         activator = ee;
         self.use();
     }
-
+	
 	turret_stdproc_respawn();
     return 1;
 }

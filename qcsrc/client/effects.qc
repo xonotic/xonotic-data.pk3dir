@@ -57,19 +57,16 @@ void cl_effetcs_lightningarc(vector from, vector to,float seglength,float drifts
             dirnew = normalize(direction * (1 - drift) + randomvec() * drift);
             pos = pos_l +  dirnew * steplength;
             te_lightning1(world,pos_l,pos);
-            //b_make(pos_l, pos,"particles/lightning2",0.25,64);
             if(random() < branchfactor)
                 cl_effetcs_lightningarc(pos, pos + (dirnew * length * 0.25),seglength,drifts,drifte,min(branchfactor + branchfactor_add,1),branchfactor_add);
 
             pos_l = pos;
         }
         te_lightning1(world,pos_l,to);
-        //b_make(pos_l, to,"particles/lightning2",0.25,64);
 
     }
     else
         te_lightning1(world,from,to);
-        //b_make(from, to,"particles/lightning2",0.25,64);
 
 }
 
@@ -80,7 +77,7 @@ void Net_ReadLightningarc()
     from_x = ReadCoord(); from_y = ReadCoord(); from_z = ReadCoord();
     to_x   = ReadCoord(); to_y   = ReadCoord(); to_z   = ReadCoord();
 
-    if(cvar("cl_effects_lightningarc_simple"))
+    if(autocvar_cl_effects_lightningarc_simple)
     {
         te_lightning1(world,from,to);
     }
@@ -88,11 +85,11 @@ void Net_ReadLightningarc()
     {
         float seglength, drifts, drifte, branchfactor, branchfactor_add;
 
-        seglength    = cvar("cl_effects_lightningarc_segmentlength");
-        drifts       = cvar("cl_effects_lightningarc_drift_start");
-        drifte       = cvar("cl_effects_lightningarc_drift_end");
-        branchfactor = cvar("cl_effects_lightningarc_branchfactor_start");
-        branchfactor = cvar("cl_effects_lightningarc_branchfactor_add");
+        seglength    = autocvar_cl_effects_lightningarc_segmentlength;
+        drifts       = autocvar_cl_effects_lightningarc_drift_start;
+        drifte       = autocvar_cl_effects_lightningarc_drift_end;
+        branchfactor = autocvar_cl_effects_lightningarc_branchfactor_start;
+        branchfactor = autocvar_cl_effects_lightningarc_branchfactor_add;
 
         cl_effetcs_lightningarc(from,to,seglength,drifts,drifte,branchfactor,branchfactor_add);
     }

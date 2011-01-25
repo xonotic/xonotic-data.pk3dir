@@ -19,15 +19,15 @@ TFL_AIM_GROUND
 vector turret_stdproc_aim_generic()
 {
 
-    vector pre_pos,prep;
-    float distance,impact_time,i,mintime;
+    vector pre_pos, prep;
+    float distance, impact_time, i, mintime;
 
     turret_tag_fire_update();
 
     if(self.aim_flags & TFL_AIM_SIMPLE)
         return real_origin(self.enemy);
 
-	mintime = max(self.attack_finished_single - time,0) + sys_frametime ;
+	mintime = max(self.attack_finished_single - time,0) + sys_frametime;
 
     // Baseline
     pre_pos = real_origin(self.enemy);
@@ -63,7 +63,7 @@ vector turret_stdproc_aim_generic()
 				vz = self.enemy.velocity_z;
 				for(i = 0; i < impact_time; i += sys_frametime)
 				{
-					vz = vz - (sv_gravity * sys_frametime);
+					vz = vz - (autocvar_sv_gravity * sys_frametime);
 					prep_z = prep_z + vz * sys_frametime;
 				}
 			}

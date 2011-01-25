@@ -1,8 +1,6 @@
 void W_Reload()
 {
-	if(self.switchweapon == self.weapon)
-	if(self.weaponentity.state == WS_READY)
-		weapon_action(self.weapon, WR_RELOAD);
+    self.wish_reload = 1;
 }
 
 // switch between weapons
@@ -236,6 +234,20 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 float W_IsWeaponThrowable(float w)
 {
 	float wb, wa;
+
+	if (!autocvar_g_pickup_items)
+		return 0;
+	if (g_weaponarena)
+		return 0;
+	if (g_lms)
+		return 0;
+	if (g_ca)
+		return 0;
+	if (g_cts)
+		return 0;
+	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
+		return 0;
+
 	wb = W_WeaponBit(w);
 	if(!wb)
 		return 0;
@@ -265,23 +277,13 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return; // just in case
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon))
 		return;
-	if (g_weaponarena)
+	if(!autocvar_g_weapon_throwable)
 		return;
-	if (g_lms)
+	if(autocvar_g_weapon_stay == 1)
 		return;
-	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
-		return;
-	if (!cvar("g_pickup_items"))
-		return;
-	if (g_ca)
-		return;
-	if(!cvar("g_weapon_throwable"))
-		return;
-	if(cvar("g_weapon_stay") == 1)
+	if(self.weaponentity.state != WS_READY)
 		return;
 	if(!W_IsWeaponThrowable(w))
-		return;
-	if(self.deadflag == DEAD_NO && self.weaponentity.state != WS_READY)
 		return;
 
 	wb = W_WeaponBit(w);
@@ -293,13 +295,10 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
 	if not(a)
 		return;
-	if(self.health >= 1)
-	{
-		if(a == "")
-			sprint(self, strcat("You dropped the ^2", W_Name(w), "\n"));
-		else
-			sprint(self, strcat("You dropped the ^2", W_Name(w), " with ", a, "\n"));
-	}
+	if(a == "")
+		sprint(self, strcat("You dropped the ^2", W_Name(w), "\n"));
+	else
+		sprint(self, strcat("You dropped the ^2", W_Name(w), " with ", a, "\n"));
 };
 
 // Bringed back weapon frame
@@ -310,7 +309,10 @@ void W_WeaponFrame()
 	if (frametime)
 		self.weapon_frametime = frametime;
 
-	if(((arena_roundbased || g_ca) && time < warmup) || ((time < game_starttime) && !cvar("sv_ready_restart_after_countdown")))
+	if(((arena_roundbased || g_ca || g_freezetag) && time < warmup) || ((time < game_starttime) && !autocvar_sv_ready_restart_after_countdown))
+		return;
+
+	if(g_freezetag && self.freezetag_frozen == 1)
 		return;
 
 	if (!self.weaponentity || self.health < 1)
@@ -340,7 +342,7 @@ void W_WeaponFrame()
 			weapon_action(self.switchweapon, WR_SETUP);
 			// VorteX: add player model weapon select frame here
 			// setcustomframe(PlayerWeaponRaise);
-			weapon_thinkf(WFRAME_IDLE, cvar("g_balance_weaponswitchdelay"), w_ready);
+			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_weaponswitchdelay, w_ready);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
 		}
 		else if (self.weaponentity.state == WS_READY)
@@ -353,7 +355,7 @@ void W_WeaponFrame()
 			sound (self, CHAN_WEAPON2, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
-			weapon_thinkf(WFRAME_DONTCHANGE, cvar("g_balance_weaponswitchdelay"), w_clear);
+			weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_weaponswitchdelay, w_clear);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, PLAYER_WEAPONSELECTION_RANGE);
 #ifndef INDEPENDENT_ATTACK_FINISHED
 			}
@@ -386,6 +388,7 @@ void W_WeaponFrame()
 			v_forward = fo;
 			v_right = ri;
 			v_up = up;
+			self.weaponentity_glowmod = '0 0 0'; // reset glowmod, weapon think function only *might* set it
 			weapon_action(self.weapon, WR_THINK);
 		}
 		if (time + self.weapon_frametime * 0.5 >= self.weapon_nextthink)

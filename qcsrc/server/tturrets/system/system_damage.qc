@@ -269,15 +269,15 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     if not (self.tur_active)
         return;
 
-    if (teamplay != 0)
+    if (teams_matter)
     if (self.team == attacker.team)
     {
         // This does not happen anymore. Re-enable if you fix that.
         if(clienttype(attacker) == CLIENTTYPE_REAL)
             sprint(attacker, "\{1}Turret tells you: I'm on your team!\n");
 
-        if(cvar("g_friendlyfire"))
-            damage = damage * cvar("g_friendlyfire");
+        if(autocvar_g_friendlyfire)
+            damage = damage * autocvar_g_friendlyfire;
         else
             return;
     }
@@ -287,8 +287,6 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     // thorw head slightly off aim when hit?
     if (self.damage_flags & TFL_DMG_HEADSHAKE)
     {
-        //baseent.tur_aimoff_x += (random() * damage);
-        //baseent.tur_aimoff_y += ((random()*0.75) * damage);
         self.tur_head.angles_x = self.tur_head.angles_x + (-0.5 + random()) * damage;
         self.tur_head.angles_y = self.tur_head.angles_y + (-0.5 + random()) * damage;
     }
@@ -296,11 +294,8 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     if (self.turrcaps_flags & TFL_TURRCAPS_MOVE)
         self.velocity = self.velocity + vforce;
 
-    // FIXME: Better damage feedback
-    // Start burning when we have 10% or less health left
-    //if (self.health < (self.tur_health * 0.1))
-    //    self.effects = EF_FLAME;
-
+    // FIXME: Better damage feedback?
+    
     if (self.health <= 0)
     {
         self.event_damage           = SUB_Null;

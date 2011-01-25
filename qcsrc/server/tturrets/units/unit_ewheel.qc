@@ -11,10 +11,10 @@ float ewheel_speed_stop;
 
 void turret_ewheel_loadcvars()
 {
-    ewheel_speed_fast   = cvar("g_turrets_unit_ewheel_speed_fast");
-    ewheel_speed_slow   = cvar("g_turrets_unit_ewheel_speed_slow");
-    ewheel_speed_slower = cvar("g_turrets_unit_ewheel_speed_slower");
-    ewheel_speed_stop   = cvar("g_turrets_unit_ewheel_speed_stop");
+    ewheel_speed_fast   = autocvar_g_turrets_unit_ewheel_speed_fast;
+    ewheel_speed_slow   = autocvar_g_turrets_unit_ewheel_speed_slow;
+    ewheel_speed_slower = autocvar_g_turrets_unit_ewheel_speed_slower;
+    ewheel_speed_stop   = autocvar_g_turrets_unit_ewheel_speed_stop;
 }
 
 void turret_ewheel_projectile_explode()
@@ -216,6 +216,10 @@ void ewheel_respawnhook()
 {
     entity e;
 
+    // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
+    if(self.movetype  != MOVETYPE_WALK)
+		return;
+		
     self.velocity = '0 0 0';
     self.enemy = world;
 
@@ -307,7 +311,7 @@ void turret_ewheel_dinit()
     self.tur_head.frame = 1;
 
     // Convert from dgr / sec to dgr / tic
-    self.tur_head.aim_speed = cvar("g_turrets_unit_ewheel_turnrate");
+    self.tur_head.aim_speed = autocvar_g_turrets_unit_ewheel_turnrate;
     self.tur_head.aim_speed = self.tur_head.aim_speed / (1 / self.ticrate);
 
     if (!turret_tag_fire_update())

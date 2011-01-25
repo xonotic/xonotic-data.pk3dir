@@ -156,7 +156,7 @@ float		scoreboard_showaccuracy;
 // float		coop;
 // float		deathmatch;
 
-// float		dmg_take;
+float		dmg_take;
 // float		dmg_save;
 // vector		dmg_origin;
 
@@ -258,7 +258,7 @@ float w_deathtype, w_issilent, w_random;
 string w_deathtypestring;
 vector w_org, w_backoff;
 
-float campingrifle_scope;
+float sniperrifle_scope;
 float nex_scope;
 
 float cr_maxbullets;
@@ -271,3 +271,5 @@ string weaponorder_bypriority;
 float nex_charge_movingavg;
 
 float serverflags;
+
+float uid2name_dialog;

@@ -14,7 +14,7 @@ void Drag_MoveDrag(entity from, entity to) { }
 #else
 
 .float maycheat;
-float sv_cheats;
+float gamestart_sv_cheats;
 
 #define CHIMPULSE_SPEEDRUN_INIT 30
 #define CHIMPULSE_GIVE_ALL 99
@@ -28,7 +28,7 @@ float sv_cheats;
 
 void CheatInit()
 {
-	sv_cheats = cvar("sv_cheats");
+	gamestart_sv_cheats = autocvar_sv_cheats;
 }
 
 void CheatShutdown()
@@ -61,7 +61,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 		return 1;
 	
 	// sv_cheats
-	if(sv_cheats && autocvar_sv_cheats)
+	if(gamestart_sv_cheats && autocvar_sv_cheats)
 		return 1;
 
 	// if we get here, player is not allowed to cheat. Log it.
@@ -180,10 +180,10 @@ float CheatImpulse(float i)
 					self.health = start_health;
 					self.armorvalue = start_armorvalue;
 					self.weapons |= weaponsInMap;
-					self.pauserotarmor_finished = time + cvar("g_balance_pause_armor_rot_spawn");
-					self.pauserothealth_finished = time + cvar("g_balance_pause_health_rot_spawn");
-					self.pauserotfuel_finished = time + cvar("g_balance_pause_fuel_rot_spawn");
-					self.pauseregen_finished = time + cvar("g_balance_pause_health_regen_spawn");
+					self.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
+					self.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
+					self.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
+					self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen_spawn;
 					self.strength_finished = 0;
 					self.invincible_finished = 0;
 				}
@@ -215,7 +215,7 @@ float CheatImpulse(float i)
 			break;
 		case CHIMPULSE_TELEPORT:
 			IS_CHEAT(i, 0, 0);
-			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((sv_cheats >= 2) ? 100000 : 100), 1024, 256))
+			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats >= 2) ? 100000 : 100), 1024, 256))
 			{
 				self.angles_x = -self.angles_x;
 				self.fixangle = TRUE;
@@ -303,7 +303,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   effectname
 				effectnum = particleeffectnum(argv(1));
-				W_SetupShot(self, FALSE, FALSE, "",0);
+				W_SetupShot(self, FALSE, FALSE, "", CHAN_WEAPON, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 				trailparticles(self, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
@@ -318,7 +318,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   modelname mode
 				f = stof(argv(2));
-				W_SetupShot(self, FALSE, FALSE, "", 0);
+				W_SetupShot(self, FALSE, FALSE, "", CHAN_WEAPON, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, self);
 				if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || trace_fraction == 1)
 				{
@@ -606,7 +606,7 @@ float CheatCommand(float argc)
 			break;
 		case "warp":
 			IS_CHEAT(0, argc, 0);
-			if(argc == 2) if(cvar("g_campaign"))
+			if(argc == 2) if(autocvar_g_campaign)
 			{
 				CampaignLevelWarp(stof(argv(1)));
 				DID_CHEAT();

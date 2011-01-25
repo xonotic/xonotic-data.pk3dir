@@ -108,8 +108,6 @@ void bot_serverframe();
  * Imports
  */
 
-float sv_maxspeed;
-
 void() havocbot_setupbot;
 
 float c1, c2, c3, c4;

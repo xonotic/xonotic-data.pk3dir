@@ -536,13 +536,14 @@ void spawnfunc_func_pendulum()
 
 	self.blocked = generic_plat_blocked;
 
+	self.avelocity_z = 0.0000001;
 	if not(InitMovingBrushTrigger())
 		return;
 
 	if(!self.freq)
 	{
 		// find pendulum length (same formula as Q3A)
-		self.freq = 1 / (M_PI * 2) * sqrt(cvar("sv_gravity") / (3 * max(8, fabs(self.mins_z))));
+		self.freq = 1 / (M_PI * 2) * sqrt(autocvar_sv_gravity / (3 * max(8, fabs(self.mins_z))));
 	}
 
 	// copy initial angle
@@ -1433,8 +1434,10 @@ void spawnfunc_func_door_rotating()
 	self.angles = '0 0 0';
 
 	self.max_health = self.health;
+	self.avelocity = self.movedir;
 	if not(InitMovingBrushTrigger())
 		return;
+	self.velocity = '0 0 0';
 	//self.effects |= EF_LOWPRECISION;
 	self.classname = "door_rotating";
 

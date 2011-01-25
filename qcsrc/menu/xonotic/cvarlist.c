@@ -15,7 +15,9 @@ CLASS(XonoticCvarList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticCvarList, columnValueOrigin, float, 0)
 	ATTRIB(XonoticCvarList, columnValueSize, float, 0)
 
+	METHOD(XonoticCvarList, mouseRelease, float(entity, vector))
 	METHOD(XonoticCvarList, setSelected, void(entity, float))
+
 	ATTRIB(XonoticCvarList, controlledTextbox, entity, NULL)
 	ATTRIB(XonoticCvarList, cvarNameBox, entity, NULL)
 	ATTRIB(XonoticCvarList, cvarDescriptionBox, entity, NULL)
@@ -79,15 +81,15 @@ void XonoticCvarList_setSelected(entity me, float i)
 	t = cvar_type(me.cvarName);
 	me.cvarType = "";
 	if(t & CVAR_TYPEFLAG_SAVED)
-		me.cvarType = strcat(me.cvarType, ", will be saved to config.cfg");
+		me.cvarType = strcat(me.cvarType, ", ", _("will be saved to config.cfg"));
 	else
-		me.cvarType = strcat(me.cvarType, ", will not be saved");
+		me.cvarType = strcat(me.cvarType, ", ", _("will not be saved"));
 	if(t & CVAR_TYPEFLAG_PRIVATE)
-		me.cvarType = strcat(me.cvarType, ", private");
+		me.cvarType = strcat(me.cvarType, ", ", _("private"));
 	if(t & CVAR_TYPEFLAG_ENGINE)
-		me.cvarType = strcat(me.cvarType, ", engine setting");
+		me.cvarType = strcat(me.cvarType, ", ", _("engine setting"));
 	if(t & CVAR_TYPEFLAG_READONLY)
-		me.cvarType = strcat(me.cvarType, ", read only");
+		me.cvarType = strcat(me.cvarType, ", ", _("read only"));
 	me.cvarType = strzone(substring(me.cvarType, 2, strlen(me.cvarType) - 2));
 
 	me.cvarNameBox.setText(me.cvarNameBox, me.cvarName);
@@ -162,12 +164,21 @@ float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 		CvarList_Revert_Click(world, me);
 		return 1;
 	}
+	else if(scan == K_ENTER)
+		me.cvarValueBox.parent.setFocus(me.cvarValueBox.parent, me.cvarValueBox);
 	else if(SUPER(XonoticCvarList).keyDown(me, scan, ascii, shift))
 		return 1;
 	else if(!me.controlledTextbox)
 		return 0;
 	else
 		return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
+}
+
+float XonoticCvarList_mouseRelease(entity me, vector pos)
+{
+	if(me.pressed == 2)
+		me.cvarValueBox.parent.setFocus(me.cvarValueBox.parent, me.cvarValueBox);
+	return SUPER(XonoticCvarList).mouseRelease(me, pos);
 }
 
 void CvarList_Value_Change(entity box, entity me)
@@ -180,4 +191,5 @@ void CvarList_Revert_Click(entity btn, entity me)
 	me.cvarValueBox.setText(me.cvarValueBox, me.cvarDefault);
 	me.cvarValueBox.cursorPos = strlen(me.cvarDefault);
 }
+
 #endif

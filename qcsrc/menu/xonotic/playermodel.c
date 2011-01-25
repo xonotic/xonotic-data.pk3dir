@@ -47,7 +47,7 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 	float sortbuf, glob, i;
 	string fn;
 
-	glob = search_begin(get_model_datafilename(string_null, -1, "txt"), TRUE, TRUE);
+	glob = search_begin(language_filename(get_model_datafilename(string_null, -1, "txt")), TRUE, TRUE);
 	if (glob < 0)
 		return;
 
@@ -77,11 +77,11 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN, ftos(get_model_parameters_modelskin));
 		get_model_parameters_desc = strcat(get_model_parameters_desc, "\n");
 		if(get_model_parameters_sex)
-			get_model_parameters_desc = strcat(get_model_parameters_desc, "\nSex: ", get_model_parameters_sex);
+			get_model_parameters_desc = strcat(get_model_parameters_desc, sprintf("\nSex: %s", get_model_parameters_sex));
 		if(get_model_parameters_weight)
-			get_model_parameters_desc = strcat(get_model_parameters_desc, "\nWeight: ", ftos(get_model_parameters_weight), " kg");
+			get_model_parameters_desc = strcat(get_model_parameters_desc, sprintf("\nWeight: %g kg", get_model_parameters_weight));
 		if(get_model_parameters_age)
-			get_model_parameters_desc = strcat(get_model_parameters_desc, "\nAge: ", ftos(get_model_parameters_age));
+			get_model_parameters_desc = strcat(get_model_parameters_desc, sprintf("\nAge: %g", get_model_parameters_age));
 		while(substring(get_model_parameters_desc, -1, 1) == "\n")
 			get_model_parameters_desc = substring(get_model_parameters_desc, 0, -2);
 		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_DESC, get_model_parameters_desc);
@@ -171,7 +171,7 @@ void XonoticPlayerModelSelector_draw(entity me)
 
 	if (me.numModels <= 0)
 	{
-		draw_CenterText('0.5 0.5 0', "<no model found>", me.realFontSize, '1 1 1', 0.6, FALSE);
+		draw_CenterText('0.5 0.5 0', _("<no model found>"), me.realFontSize, '1 1 1', 0.6, FALSE);
 		return;
 	}
 

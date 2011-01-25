@@ -17,7 +17,7 @@ void Ent_Wall_Draw()
 
 	if(self.lodmodelindex1)
 	{
-		d = cvar("loddebug");
+		d = autocvar_loddebug;
 		if(d > 0)
 		{
 			if(d == 1)

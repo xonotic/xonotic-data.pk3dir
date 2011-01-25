@@ -131,7 +131,7 @@ void BGMScript_InitEntity(entity e)
 		e.bgmscriptline = e.bgmscriptline0 = i;
 		if(i >= bgmscriptbufsize)
 		{
-			print("ERROR: bgmscript does not define ", e.bgmscript, "\n");
+			print(sprintf("ERROR: bgmscript does not define %s\n", e.bgmscript));
 			e.bgmscript = "";
 		}
 	}
@@ -172,7 +172,7 @@ float BGMScript(entity e)
 	if(e.bgmscript == "")
 		return 1;
 	
-	if(cvar("bgmvolume") <= 0)
+	if(autocvar_bgmvolume <= 0)
 		return -1;
 
 	e.just_toggled = FALSE;
@@ -182,7 +182,6 @@ float BGMScript(entity e)
 
 	if(bgmtime < e.bgmscripttime)
 	{
-		//print("reset ", e.bgmscript, "\n");
 		amp = GetCurrentAmplitude(e, e.bgmscripttime - e.bgmscriptstatetime + drawframetime);
 
 		e.bgmscriptline = e.bgmscriptline0;
