@@ -1186,6 +1186,10 @@ float autocvar_teamplay_lockonrestart;
 float autocvar_teamplay_mode;
 #define autocvar_timelimit cvar("timelimit")
 #define autocvar_timelimit_override cvar("timelimit_override")
+float autocvar_timelimit_increment;
+float autocvar_timelimit_decrement;
+float autocvar_timelimit_min;
+float autocvar_timelimit_max;
 float autocvar_timelimit_overtime;
 float autocvar_timelimit_overtimes;
 float autocvar_timelimit_suddendeath;
