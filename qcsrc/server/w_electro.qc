@@ -473,9 +473,25 @@ float w_electro(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_electro_reload_ammo && self.clip_load < min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo)) // forced reload
-			W_Electro_Reload();
-		else if (self.BUTTON_ATCK)
+		if(autocvar_g_balance_electro_reload_ammo) // forced reload
+		{
+			if(autocvar_g_balance_electro_lightning)
+			{
+				if(self.clip_load > 0)
+					ammo_amount = 1;
+			}
+			else if(self.clip_load >= autocvar_g_balance_electro_primary_ammo)
+				ammo_amount = 1;
+			if(self.clip_load >= autocvar_g_balance_electro_secondary_ammo)
+				ammo_amount += 1;
+
+			if(!ammo_amount)
+			{
+				W_Electro_Reload();
+				return FALSE;
+			}
+		}
+		if (self.BUTTON_ATCK)
 		{
 			if(autocvar_g_balance_electro_lightning)
 				if(self.BUTTON_ATCK_prev)
