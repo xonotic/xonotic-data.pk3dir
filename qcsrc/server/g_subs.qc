@@ -247,9 +247,12 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 		return;
 	}
 
-	// very short animations don't really show off the effect
-	// of controlled animation, so let's just use linear movement
-	if (traveltime < 0.15)
+	// Very short animations don't really show off the effect
+	// of controlled animation, so let's just use linear movement.
+	// Alternatively entities can choose to specify non-controlled movement.
+	// The default, controlled movement, is value 0, the only currently
+	// implemented alternative movement is linear, which is any other value.
+	if (traveltime < 0.15 || self.platmovetype)
 	{
 		self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
 		self.nextthink = self.ltime + traveltime;
