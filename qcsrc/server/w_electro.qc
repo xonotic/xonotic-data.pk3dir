@@ -554,16 +554,18 @@ float w_electro(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		if(autocvar_g_balance_electro_lightning)
-			ammo_amount = !autocvar_g_balance_electro_primary_ammo || (self.ammo_cells > 0);
-		else
-			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_primary_ammo;
-		if(autocvar_g_balance_electro_reload_ammo)
 		{
+			ammo_amount = !autocvar_g_balance_electro_primary_ammo || (self.ammo_cells > 0);
 			if(autocvar_g_balance_electro_lightning)
-				ammo_amount += !autocvar_g_balance_electro_primary_ammo || (self.electro_load > 0);
-			else
+				ammo_amount += self.electro_load > 0;
+		}
+		else
+		{
+			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_primary_ammo;
+			if(autocvar_g_balance_electro_lightning)
 				ammo_amount += self.electro_load >= autocvar_g_balance_electro_primary_ammo;
 		}
+
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
