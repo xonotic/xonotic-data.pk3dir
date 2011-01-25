@@ -1249,12 +1249,12 @@ void HUD_DrawScoreboard()
 	if(gametype == GAME_LMS)
 	{
 		if(tl > 0)
-			str = strcat(str, sprintf(_(" for up to ^1%.1g minutes^7"), tl));
+			str = strcat(str, sprintf(_(" for up to ^1%.1f minutes^7"), tl));
 	}
 	else
 	{
 		if(tl > 0)
-			str = strcat(str, sprintf(_(" for up to ^1%.1g minutes^7"), tl));
+			str = strcat(str, sprintf(_(" for up to ^1%.1f minutes^7"), tl));
 		if(fl > 0)
 		{
 			if(tl > 0)
