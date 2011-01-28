@@ -32,10 +32,13 @@ void W_Crylink_CheckLinks(entity e)
 
 void W_Crylink_Dequeue_Raw(entity own, entity prev, entity me, entity next)
 {
+	W_Crylink_CheckLinks(next);
 	if(me == own.crylink_lastgroup)
 		own.crylink_lastgroup = ((me == next) ? world : next);
 	prev.queuenext = next;
 	next.queueprev = prev;
+	if(me != next)
+		W_Crylink_CheckLinks(next);
 }
 
 void W_Crylink_Dequeue(entity e)
@@ -150,6 +153,8 @@ vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 		//      targ_origin -> avg_origin
 		//      p->velocity -> HUEG away from center
 	}
+
+	W_Crylink_CheckLinks(e);
 
 	return targ_origin;
 }
@@ -414,6 +419,7 @@ void W_Crylink_Attack (void)
 		counter = counter + 1;
 	}
 	self.crylink_lastgroup = proj;
+	W_Crylink_CheckLinks(proj);
 }
 
 void W_Crylink_Attack2 (void)
