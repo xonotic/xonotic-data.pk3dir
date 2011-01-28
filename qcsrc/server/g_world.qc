@@ -441,6 +441,7 @@ void cvar_changes_init()
 		BADCVAR("hostname");
 		BADCVAR("log_file");
 		BADCVAR("maxplayers");
+		BADCVAR("g_maxplayers");
 		BADCVAR("minplayers");
 		BADCVAR("net_address");
 		BADCVAR("port");
