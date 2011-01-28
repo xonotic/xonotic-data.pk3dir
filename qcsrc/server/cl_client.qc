@@ -2438,7 +2438,7 @@ void ShowRespawnCountdown()
 
 void LeaveSpectatorMode()
 {
-	if(isJoinAllowed()) {
+	if(nJoinAllowed(1)) {
 		if(!teams_matter || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
 
@@ -2475,25 +2475,30 @@ void LeaveSpectatorMode()
  * Determines whether the player is allowed to join. This depends on cvar
  * g_maxplayers, if it isn't used this function always return TRUE, otherwise
  * it checks whether the number of currently playing players exceeds g_maxplayers.
- * @return bool TRUE if the player is allowed to join, false otherwise
+ * @return int number of free slots for players, 0 if none
  */
-float isJoinAllowed() {
+float nJoinAllowed(float includeMe) {
 	if(self.team_forced < 0)
 		return FALSE; // forced spectators can never join
 
-	if (!autocvar_g_maxplayers)
-		return TRUE;
-
+	// TODO simplify this
 	local entity e;
-	local float currentlyPlaying;
-	FOR_EACH_REALPLAYER(e) {
-		if(e.classname == "player")
-			currentlyPlaying += 1;
-	}
-	if(currentlyPlaying < autocvar_g_maxplayers)
-		return TRUE;
 
-	return FALSE;
+	local float totalClients;
+	FOR_EACH_CLIENT(e)
+		totalClients += 1;
+
+	if (!autocvar_g_maxplayers)
+		return maxclients - totalClients + includeMe;
+
+	local float currentlyPlaying;
+	FOR_EACH_REALPLAYER(e)
+		currentlyPlaying += 1;
+
+	if(currentlyPlaying < autocvar_g_maxplayers)
+		return min(maxclients - totalClients + includeMe, autocvar_g_maxplayers - currentlyPlaying);
+
+	return 0;
 }
 
 /**
