@@ -16,6 +16,8 @@ void W_Crylink_CheckLinks(entity e)
 
 	if(e == world)
 		error("W_Crylink_CheckLinks: entity is world");
+	if(e.classname != "spike")
+		error("W_Crylink_CheckLinks: entity is not a spike");
 
 	p = e;
 	for(i = 0; i < 1000; ++i)
