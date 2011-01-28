@@ -237,6 +237,10 @@ void cvar_changes_init()
 #define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
 #define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
 #define BADCVAR(p) if(k == p) continue
+
+		// general excludes and namespaces for server admin used cvars
+		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
+
 		// internal
 		BADPREFIX("csqc_");
 		BADPREFIX("cvar_check_");
@@ -303,7 +307,6 @@ void cvar_changes_init()
 		BADPREFIX("sv_logscores_");
 		BADPREFIX("sv_master");
 		BADPREFIX("sv_weaponstats_");
-		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
 
 		// these can contain player IDs, so better hide
 		BADCVAR("g_forced_team_red");
