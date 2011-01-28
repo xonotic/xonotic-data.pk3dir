@@ -303,6 +303,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_logscores_");
 		BADPREFIX("sv_master");
 		BADPREFIX("sv_weaponstats_");
+		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
 
 		// these can contain player IDs, so better hide
 		BADCVAR("g_forced_team_red");
