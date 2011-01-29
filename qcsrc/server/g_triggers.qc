@@ -411,6 +411,14 @@ void spawnfunc_trigger_counter()
 	self.reset = counter_reset;
 };
 
+void trigger_hurt_use()
+{
+	if(activator.classname == "player")
+		self.enemy = activator;
+	else
+		self.enemy = world; // let's just destroy it, if taking over is too much work
+}
+
 .float triggerhurttime;
 void trigger_hurt_touch()
 {
@@ -429,7 +437,16 @@ void trigger_hurt_touch()
 		{
 			EXACTTRIGGER_TOUCH;
 			other.triggerhurttime = time + 1;
-			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+
+			entity own;
+			own = self.enemy;
+			if(own.classname != "player")
+			{
+				own = self;
+				self.enemy = world; // I still hate you all
+			}
+
+			Damage (other, self, own, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 		}
 	}
 	else
@@ -465,6 +482,8 @@ void spawnfunc_trigger_hurt()
 	EXACTTRIGGER_INIT;
 	self.active = ACTIVE_ACTIVE;
 	self.touch = trigger_hurt_touch;
+	self.use = trigger_hurt_use;
+	self.enemy = world; // I hate you all
 	if (!self.dmg)
 		self.dmg = 1000;
 	if (!self.message)
