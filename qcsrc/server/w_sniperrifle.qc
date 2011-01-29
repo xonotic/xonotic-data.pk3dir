@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "campingrifle", "sniperrifle", "Sniper Rifle");
+REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "campingrifle", "sniperrifle", _("Sniper Rifle"))
 #else
 #ifdef SVQC
 //Sniper rifle Primary mode: manually operated bolt*, Secondary: full automatic**
@@ -318,32 +318,32 @@ float w_sniperrifle(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s shot themself automatically";
+			w_deathtypestring = _("%s shot themself automatically");
 		else
-			w_deathtypestring = "%s sniped themself somehow";
+			w_deathtypestring = _("%s sniped themself somehow");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
-				w_deathtypestring = "%s failed to hide from %s's bullet hail";
+				w_deathtypestring = _("%s failed to hide from %s's bullet hail");
 			else
-				w_deathtypestring = "%s died in %s's bullet hail";
+				w_deathtypestring = _("%s died in %s's bullet hail");
 		}
 		else
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
 			{
 				// TODO special headshot message here too?
-				w_deathtypestring = "%s failed to hide from %s's rifle";
+				w_deathtypestring = _("%s failed to hide from %s's rifle");
 			}
 			else
 			{
 				if(w_deathtype & HITTYPE_HEADSHOT)
-					w_deathtypestring = "%s got hit in the head by %s";
+					w_deathtypestring = _("%s got hit in the head by %s");
 				else
-					w_deathtypestring = "%s was sniped by %s";
+					w_deathtypestring = _("%s was sniped by %s");
 			}
 		}
 	}

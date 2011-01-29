@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "shotgun", "shotgun", "Shotgun");
+REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "shotgun", "shotgun", _("Shotgun"))
 #else
 #ifdef SVQC
 void W_Shotgun_Attack (void)
@@ -176,13 +176,13 @@ float w_shotgun(float req)
 		precache_sound("weapons/ric3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s did the impossible";
+		w_deathtypestring = _("%s did the impossible");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun";
+			w_deathtypestring = _("%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun");
 		else
-			w_deathtypestring = "%s was gunned by %s";
+			w_deathtypestring = _("%s was gunned by %s");
 	}
 	return TRUE;
 }

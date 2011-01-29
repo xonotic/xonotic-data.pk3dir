@@ -249,7 +249,10 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 		m = SLIST_MASK_AND - 1;
 		resethostcachemasks();
 		if(!me.filterShowFull)
-			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL);
+		{
+			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // legacy
+			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, ":S0:", SLIST_TEST_NOTCONTAIN); // g_maxplayers support
+		}
 		if(!me.filterShowEmpty)
 			sethostcachemasknumber(++m, SLIST_FIELD_NUMHUMANS, 1, SLIST_TEST_GREATEREQUAL);
 		if(typestr != "")
@@ -571,8 +574,10 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	if(gethostcachenumber(SLIST_FIELD_NUMPLAYERS, i) >= gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i))
+	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
+	else if(strstrofs(gethostcachestring(SLIST_FIELD_QCSTATUS, i), ":S0:", 0) >= 0)
+		theAlpha = SKINALPHA_SERVERLIST_FULL; // g_maxplayers support
 	else if not(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i))
 		theAlpha = SKINALPHA_SERVERLIST_EMPTY;
 	else
