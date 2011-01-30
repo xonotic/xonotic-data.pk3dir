@@ -1050,7 +1050,14 @@ void PutClientInServer (void)
 
 		// reset fields the weapons may use
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+		{
 			weapon_action(j, WR_RESETPLAYER);
+
+			// all weapons must be fully loaded when we spawn
+			entity e;
+			e = get_weaponinfo(j);
+			self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+		}
 
 		oldself = self;
 		self = spot;

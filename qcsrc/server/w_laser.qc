@@ -318,11 +318,6 @@ float w_laser(float req)
 	{
 		return TRUE;
 	}
-	else if (req == WR_RESETPLAYER)
-	{
-		// all weapons must be fully loaded when we spawn
-		self.weapon_load[WEP_LASER] = autocvar_g_balance_laser_reload_ammo;
-	}
 	else if (req == WR_RELOAD)
 	{
 		W_Laser_Reload();

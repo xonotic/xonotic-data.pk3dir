@@ -268,11 +268,6 @@ float w_nex(float req)
 		ammo_amount += self.weapon_load[WEP_NEX] >= autocvar_g_balance_nex_secondary_ammo;
 		return ammo_amount;
 	}
-	else if (req == WR_RESETPLAYER)
-	{
-		// all weapons must be fully loaded when we spawn
-		self.weapon_load[WEP_NEX] = autocvar_g_balance_nex_reload_ammo;
-	}
 	else if (req == WR_RELOAD)
 	{
 		W_Nex_Reload();

@@ -424,9 +424,6 @@ float w_fireball(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.fireball_primarytime = time;
-
-		// all weapons must be fully loaded when we spawn
-		self.weapon_load[WEP_FIREBALL] = autocvar_g_balance_fireball_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

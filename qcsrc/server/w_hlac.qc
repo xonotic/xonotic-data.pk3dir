@@ -256,11 +256,6 @@ float w_hlac(float req)
 		ammo_amount += self.weapon_load[WEP_HLAC] >= autocvar_g_balance_hlac_secondary_ammo;
 		return ammo_amount;
 	}
-	else if (req == WR_RESETPLAYER)
-	{
-		// all weapons must be fully loaded when we spawn
-		self.weapon_load[WEP_HLAC] = autocvar_g_balance_hlac_reload_ammo;
-	}
 	else if (req == WR_RELOAD)
 	{
 		W_HLAC_Reload();

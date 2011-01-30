@@ -564,9 +564,6 @@ float w_electro(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.electro_secondarytime = time;
-
-		// all weapons must be fully loaded when we spawn
-		self.weapon_load[WEP_ELECTRO] = autocvar_g_balance_electro_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

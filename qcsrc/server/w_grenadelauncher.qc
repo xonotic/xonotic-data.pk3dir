@@ -393,11 +393,6 @@ float w_glauncher(float req)
 		ammo_amount += self.weapon_load[WEP_GRENADE_LAUNCHER] >= autocvar_g_balance_grenadelauncher_secondary_ammo;
 		return ammo_amount;
 	}
-	else if (req == WR_RESETPLAYER)
-	{
-		// all weapons must be fully loaded when we spawn
-		self.weapon_load[WEP_GRENADE_LAUNCHER] = autocvar_g_balance_grenadelauncher_reload_ammo;
-	}
 	else if (req == WR_RELOAD)
 	{
 		W_GrenadeLauncher_Reload();

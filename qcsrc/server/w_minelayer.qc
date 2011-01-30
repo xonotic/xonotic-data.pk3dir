@@ -464,11 +464,6 @@ float w_minelayer(float req)
 	{
 		return FALSE;
 	}
-	else if (req == WR_RESETPLAYER)
-	{
-		// all weapons must be fully loaded when we spawn
-		self.weapon_load[WEP_MINE_LAYER] = autocvar_g_balance_minelayer_reload_ammo;
-	}
 	else if (req == WR_RELOAD)
 	{
 		W_MineLayer_Reload();

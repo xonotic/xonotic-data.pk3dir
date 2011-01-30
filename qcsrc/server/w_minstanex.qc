@@ -300,9 +300,6 @@ float w_minstanex(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.minstanex_lasthit = 0;
-
-		// all weapons must be fully loaded when we spawn
-		self.weapon_load[WEP_MINSTANEX] = autocvar_g_balance_minstanex_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

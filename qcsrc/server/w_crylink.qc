@@ -666,11 +666,6 @@ float w_crylink(float req)
 		ammo_amount += self.weapon_load[WEP_CRYLINK] >= autocvar_g_balance_crylink_secondary_ammo;
 		return ammo_amount;
 	}
-	else if (req == WR_RESETPLAYER)
-	{
-		// all weapons must be fully loaded when we spawn
-		self.weapon_load[WEP_CRYLINK] = autocvar_g_balance_crylink_reload_ammo;
-	}
 	else if (req == WR_RELOAD)
 	{
 		W_Crylink_Reload();

@@ -230,9 +230,6 @@ float w_sniperrifle(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.sniperrifle_accumulator = time - autocvar_g_balance_sniperrifle_bursttime;
-
-		// all weapons must be fully loaded when we spawn
-		self.weapon_load[WEP_SNIPERRIFLE] = autocvar_g_balance_sniperrifle_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{
