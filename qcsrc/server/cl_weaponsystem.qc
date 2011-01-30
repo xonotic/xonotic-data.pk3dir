@@ -1617,15 +1617,12 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 .float reload_complain;
 float W_ReloadCheck(float ammo_amount, float ammo_shot)
 {
-	entity e;
-	e = get_weaponinfo(self.weapon);
-
 	// our weapon is fully loaded, no need to reload
 	if (self.clip_load >= self.reload_ammo_amount)
-		return 0;
+		return FALSE;
 
 	// no ammo, so nothing to load
-	if(!ammo_amount)
+	if(!ammo_amount && ammo_shot)
 	{
 		if(clienttype(self) == CLIENTTYPE_REAL && self.reload_complain < time)
 		{
@@ -1639,19 +1636,19 @@ float W_ReloadCheck(float ammo_amount, float ammo_shot)
 			self.clip_load = -1; // reload later
 			W_SwitchToOtherWeapon(self);
 		}
-		return 0;
+		return FALSE;
 	}
 
 	if (self.weaponentity)
 	{
 		if (self.weaponentity.wframe == WFRAME_RELOAD)
-			return 0;
+			return FALSE;
 
 		// allow switching away while reloading, but this will cause a new reload!
 		self.weaponentity.state = WS_READY;
 	}
 
-	return 1;
+	return TRUE;
 }
 
 void W_ReloadedAndReady()
@@ -1659,11 +1656,19 @@ void W_ReloadedAndReady()
 	float t;
 
 	// now do the ammo transfer
+
 	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
-	while(self.clip_load < self.reload_ammo_amount && self.(self.reload_ammo_player)) // make sure we don't add more ammo than we have
+
+	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
+	if(!self.reload_ammo_min)
+		self.clip_load = self.reload_ammo_amount;
+	else
 	{
-		self.clip_load += 1;
-		self.(self.reload_ammo_player) -= 1;
+		while(self.clip_load < self.reload_ammo_amount && self.(self.reload_ammo_player)) // make sure we don't add more ammo than we have
+		{
+			self.clip_load += 1;
+			self.(self.reload_ammo_player) -= 1;
+		}
 	}
 	self.weapon_load[self.weapon] = self.clip_load;
 
