@@ -612,6 +612,7 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
+.float weapon_load[WEP_MAXCOUNT]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(weapon_load);
 .float clip_load;
 .float old_clip_load;
 .float clip_size;

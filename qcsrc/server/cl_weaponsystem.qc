@@ -1665,7 +1665,7 @@ void W_ReloadedAndReady()
 		self.clip_load += 1;
 		self.(self.reload_ammo_player) -= 1;
 	}
-	//self.hagar_load = self.clip_load;
+	self.weapon_load[self.weapon] = self.clip_load;
 
 	t = ATTACK_FINISHED(self) - self.reload_time - 1;
 	ATTACK_FINISHED(self) = t;
