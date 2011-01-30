@@ -374,10 +374,18 @@ void WinningConditionHelper()
 	entity winnerscorekeeper;
 	entity secondscorekeeper;
 	entity sk;
+	float slots;
+
+	// format:
+	// gametype:P<pure>:S<slots>::plabel,plabel:tlabel,tlabel:teamid:tscore,tscore:teamid:tscore,tscore
+	// score labels always start with a symbol or with lower case
+	// so to match pure, match for :P0:
+	// to match full, match for :S0:
 
 	s = GetGametype();
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
+	s = strcat(s, ":S", ftos(nJoinAllowed(0)));
 	s = strcat(s, "::", GetPlayerScoreString(world, 1)); // make this 1 once we can, note: this doesn't contain any :<letter>
 
 	fullstatus = autocvar_g_full_getstatus_responses;
