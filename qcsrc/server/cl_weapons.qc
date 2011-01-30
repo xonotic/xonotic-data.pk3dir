@@ -344,7 +344,7 @@ void W_WeaponFrame()
 			// set our clip load to the load of the weapon we switched to, if it's reloadable
 			entity e;
 			e = get_weaponinfo(self.switchweapon);
-			if(e.spawnflags & WEP_FLAG_RELOADABLE && cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
+			if(e.spawnflags & WEP_FLAG_RELOADABLE && cvar(strcat("g_balance_", e.netname, "_reload_ammo"))) // prevent accessing undefined cvars
 			{
 				self.clip_load = self.weapon_load[self.switchweapon];
 				self.clip_size = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
