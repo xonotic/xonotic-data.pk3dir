@@ -340,6 +340,18 @@ void W_WeaponFrame()
 			setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.switchweapon, WR_SETUP);
+
+			// set our clip load to the load of the weapon we switched to, if it's reloadable
+			entity e;
+			e = get_weaponinfo(self.switchweapon);
+			if(e.spawnflags & WEP_FLAG_RELOADABLE && cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
+			{
+				self.clip_load = self.weapon_load[self.switchweapon];
+				self.clip_size = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+			}
+			else
+				self.clip_load = self.clip_size = 0;
+
 			// VorteX: add player model weapon select frame here
 			// setcustomframe(PlayerWeaponRaise);
 			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_weaponswitchdelay, w_ready);

@@ -4,18 +4,6 @@ REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_
 #ifdef SVQC
 .float minstanex_lasthit;
 
-void W_Minstanex_SetAmmoCounter()
-{
-	// set clip_load to the weapon we have switched to, if the gun uses reloading
-	if(!autocvar_g_balance_minstanex_reload_ammo)
-		self.clip_load = 0; // also keeps crosshair ammo from displaying
-	else
-	{
-		self.clip_load = self.weapon_load[WEP_MINSTANEX];
-		self.clip_size = autocvar_g_balance_minstanex_reload_ammo; // for the crosshair ammo display
-	}
-}
-
 void W_Minstanex_Reload()
 {
 	self.reload_ammo_player = ammo_cells;
@@ -280,7 +268,6 @@ float w_minstanex(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_MINSTANEX);
-		W_Minstanex_SetAmmoCounter();
 		self.minstanex_lasthit = 0;
 	}
 	else if (req == WR_CHECKAMMO1)

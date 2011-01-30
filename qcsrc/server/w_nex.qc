@@ -3,18 +3,6 @@ REGISTER_WEAPON(NEX, w_nex, IT_CELLS, 7, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE |
 #else
 #ifdef SVQC
 
-void W_Nex_SetAmmoCounter()
-{
-	// set clip_load to the weapon we have switched to, if the gun uses reloading
-	if(!autocvar_g_balance_nex_reload_ammo)
-		self.clip_load = 0; // also keeps crosshair ammo from displaying
-	else
-	{
-		self.clip_load = self.weapon_load[WEP_NEX];
-		self.clip_size = autocvar_g_balance_nex_reload_ammo; // for the crosshair ammo display
-	}
-}
-
 void W_Nex_Reload()
 {
 	self.reload_ammo_player = ammo_cells;
@@ -253,7 +241,6 @@ float w_nex(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_NEX);
-		W_Nex_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

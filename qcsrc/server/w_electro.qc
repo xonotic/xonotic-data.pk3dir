@@ -5,18 +5,6 @@ REGISTER_WEAPON(ELECTRO, w_electro, IT_CELLS, 5, WEP_FLAG_NORMAL | WEP_FLAG_RELO
 .float electro_count;
 .float electro_secondarytime;
 
-void W_Electro_SetAmmoCounter()
-{
-	// set clip_load to the weapon we have switched to, if the gun uses reloading
-	if(!autocvar_g_balance_electro_reload_ammo)
-		self.clip_load = 0; // also keeps crosshair ammo from displaying
-	else
-	{
-		self.clip_load = self.weapon_load[WEP_ELECTRO];
-		self.clip_size = autocvar_g_balance_electro_reload_ammo; // for the crosshair ammo display
-	}
-}
-
 void W_Electro_Reload()
 {
 	self.reload_ammo_player = ammo_cells;
@@ -537,7 +525,6 @@ float w_electro(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_ELECTRO);
-		W_Electro_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

@@ -9,18 +9,6 @@ REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_FLAG_RELO
 .entity queuenext;
 .entity queueprev;
 
-void W_Crylink_SetAmmoCounter()
-{
-	// set clip_load to the weapon we have switched to, if the gun uses reloading
-	if(!autocvar_g_balance_crylink_reload_ammo)
-		self.clip_load = 0; // also keeps crosshair ammo from displaying
-	else
-	{
-		self.clip_load = self.weapon_load[WEP_CRYLINK];
-		self.clip_size = autocvar_g_balance_crylink_reload_ammo; // for the crosshair ammo display
-	}
-}
-
 void W_Crylink_Reload()
 {
 	self.reload_ammo_player = ammo_cells;
@@ -644,7 +632,6 @@ float w_crylink(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_CRYLINK);
-		W_Crylink_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

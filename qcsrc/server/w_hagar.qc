@@ -4,18 +4,6 @@ REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_RELOAD
 #ifdef SVQC
 // NO bounce protection, as bounces are limited!
 
-void W_Hagar_SetAmmoCounter()
-{
-	// set clip_load to the weapon we have switched to, if the gun uses reloading
-	if(!autocvar_g_balance_hagar_reload_ammo)
-		self.clip_load = 0; // also keeps crosshair ammo from displaying
-	else
-	{
-		self.clip_load = self.weapon_load[WEP_HAGAR];
-		self.clip_size = autocvar_g_balance_hagar_reload_ammo; // for the crosshair ammo display
-	}
-}
-
 void W_Hagar_Reload()
 {
 	self.reload_ammo_player = ammo_rockets;
@@ -203,7 +191,6 @@ float w_hagar(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_HAGAR);
-		W_Hagar_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

@@ -5,18 +5,6 @@ REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | 
 .float gl_detonate_later;
 .float gl_bouncecnt;
 
-void W_GrenadeLauncher_SetAmmoCounter()
-{
-	// set clip_load to the weapon we have switched to, if the gun uses reloading
-	if(!autocvar_g_balance_grenadelauncher_reload_ammo)
-		self.clip_load = 0; // also keeps crosshair ammo from displaying
-	else
-	{
-		self.clip_load = self.weapon_load[WEP_GRENADE_LAUNCHER];
-		self.clip_size = autocvar_g_balance_grenadelauncher_reload_ammo; // for the crosshair ammo display
-	}
-}
-
 void W_GrenadeLauncher_Reload()
 {
 	self.reload_ammo_player = ammo_rockets;
@@ -379,7 +367,6 @@ float w_glauncher(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_GRENADE_LAUNCHER);
-		W_GrenadeLauncher_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

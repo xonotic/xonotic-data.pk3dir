@@ -5,18 +5,6 @@ REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | W
 .float rl_release;
 .float rl_detonate_later;
 
-void W_RocketLauncher_SetAmmoCounter()
-{
-	// set clip_load to the weapon we have switched to, if the gun uses reloading
-	if(!autocvar_g_balance_rocketlauncher_reload_ammo)
-		self.clip_load = 0; // also keeps crosshair ammo from displaying
-	else
-	{
-		self.clip_load = self.weapon_load[WEP_ROCKET_LAUNCHER];
-		self.clip_size = autocvar_g_balance_rocketlauncher_reload_ammo; // for the crosshair ammo display
-	}
-}
-
 void W_RocketLauncher_Reload()
 {
 	self.reload_ammo_player = ammo_rockets;
@@ -483,7 +471,6 @@ float w_rlauncher(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_ROCKET_LAUNCHER);
-		W_RocketLauncher_SetAmmoCounter();
 		self.rl_release = 1;
 	}
 	else if (req == WR_CHECKAMMO1)

@@ -3,18 +3,6 @@ REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE
 #else
 #ifdef SVQC
 
-void W_HLAC_SetAmmoCounter()
-{
-	// set clip_load to the weapon we have switched to, if the gun uses reloading
-	if(!autocvar_g_balance_hlac_reload_ammo)
-		self.clip_load = 0; // also keeps crosshair ammo from displaying
-	else
-	{
-		self.clip_load = self.weapon_load[WEP_HLAC];
-		self.clip_size = autocvar_g_balance_hlac_reload_ammo; // for the crosshair ammo display
-	}
-}
-
 void W_HLAC_Reload()
 {
 	self.reload_ammo_player = ammo_cells;
@@ -242,7 +230,6 @@ float w_hlac(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_HLAC);
-		W_HLAC_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

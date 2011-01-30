@@ -6,18 +6,6 @@ REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_FLAG_RELOADABLE | WEP_TYPE
 .vector fireball_impactvec;
 .float fireball_primarytime;
 
-void W_Fireball_SetAmmoCounter()
-{
-	// set clip_load to the weapon we have switched to, if the gun uses reloading
-	if(!autocvar_g_balance_fireball_reload_ammo)
-		self.clip_load = 0; // also keeps crosshair ammo from displaying
-	else
-	{
-		self.clip_load = self.weapon_load[WEP_FIREBALL];
-		self.clip_size = autocvar_g_balance_fireball_reload_ammo; // for the crosshair ammo display
-	}
-}
-
 void W_Fireball_Reload()
 {
 	// fuel can be a non-whole number, which brakes stuff here when between 0 and 1
@@ -407,7 +395,6 @@ float w_fireball(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_FIREBALL);
-		W_Fireball_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

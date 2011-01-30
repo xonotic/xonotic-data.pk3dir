@@ -8,18 +8,6 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_F
 
 .float sniperrifle_accumulator;
 
-void W_SniperRifle_SetAmmoCounter()
-{
-	// set clip_load to the weapon we have switched to, if the gun uses reloading
-	if(!autocvar_g_balance_sniperrifle_reload_ammo)
-		self.clip_load = 0; // also keeps crosshair ammo from displaying
-	else
-	{
-		self.clip_load = self.weapon_load[WEP_SNIPERRIFLE];
-		self.clip_size = autocvar_g_balance_sniperrifle_reload_ammo; // for the crosshair ammo display
-	}
-}
-
 void W_SniperRifle_Reload()
 {
 	self.reload_ammo_player = ammo_nails;
@@ -213,7 +201,6 @@ float w_sniperrifle(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_SNIPERRIFLE);
-		W_SniperRifle_SetAmmoCounter();
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
