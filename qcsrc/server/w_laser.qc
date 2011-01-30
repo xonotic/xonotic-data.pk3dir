@@ -18,7 +18,7 @@ void W_Laser_SetAmmoCounter()
 
 void W_Laser_Reload()
 {
-	self.(self.reload_ammo_player) = 0;
+	self.(self.reload_ammo_player) = 1;
 	self.reload_ammo_min = 0;
 	self.reload_ammo_amount = autocvar_g_balance_laser_reload_ammo;
 	self.reload_time = autocvar_g_balance_laser_reload_time;
