@@ -17,7 +17,7 @@ void W_UZI_SetAmmoCounter()
 
 void W_UZI_Reload()
 {
-	self.reload_ammo_player = ammo_fuel;
+	self.reload_ammo_player = ammo_nails;
 	self.reload_ammo_min = min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo);
 	self.reload_ammo_amount = autocvar_g_balance_uzi_reload_ammo;
 	self.reload_time = autocvar_g_balance_uzi_reload_time;

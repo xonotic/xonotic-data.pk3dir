@@ -20,7 +20,7 @@ void W_MineLayer_SetAmmoCounter()
 
 void W_MineLayer_Reload()
 {
-	self.reload_ammo_player = ammo_fuel;
+	self.reload_ammo_player = ammo_rockets;
 	self.reload_ammo_min = autocvar_g_balance_minelayer_ammo;
 	self.reload_ammo_amount = autocvar_g_balance_minelayer_reload_ammo;
 	self.reload_time = autocvar_g_balance_minelayer_reload_time;

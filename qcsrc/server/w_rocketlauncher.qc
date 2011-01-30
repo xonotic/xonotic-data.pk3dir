@@ -19,7 +19,7 @@ void W_RocketLauncher_SetAmmoCounter()
 
 void W_RocketLauncher_Reload()
 {
-	self.reload_ammo_player = ammo_fuel;
+	self.reload_ammo_player = ammo_rockets;
 	self.reload_ammo_min = autocvar_g_balance_rocketlauncher_ammo;
 	self.reload_ammo_amount = autocvar_g_balance_rocketlauncher_reload_ammo;
 	self.reload_time = autocvar_g_balance_rocketlauncher_reload_time;

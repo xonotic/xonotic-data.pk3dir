@@ -18,7 +18,7 @@ void W_Minstanex_SetAmmoCounter()
 
 void W_Minstanex_Reload()
 {
-	self.reload_ammo_player = ammo_fuel;
+	self.reload_ammo_player = ammo_cells;
 	if(autocvar_g_balance_minstanex_laser_ammo)
 		self.reload_ammo_min = min(autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo);
 	else

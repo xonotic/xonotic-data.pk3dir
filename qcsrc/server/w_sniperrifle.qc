@@ -22,7 +22,7 @@ void W_SniperRifle_SetAmmoCounter()
 
 void W_SniperRifle_Reload()
 {
-	self.reload_ammo_player = ammo_fuel;
+	self.reload_ammo_player = ammo_nails;
 	self.reload_ammo_min = min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo);
 	self.reload_ammo_amount = autocvar_g_balance_sniperrifle_reload_ammo;
 	self.reload_time = autocvar_g_balance_sniperrifle_reload_time;

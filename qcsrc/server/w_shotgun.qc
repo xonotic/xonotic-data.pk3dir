@@ -17,7 +17,7 @@ void W_Shotgun_SetAmmoCounter()
 
 void W_Shotgun_Reload()
 {
-	self.reload_ammo_player = ammo_fuel;
+	self.reload_ammo_player = ammo_shells;
 	self.reload_ammo_min = autocvar_g_balance_shotgun_primary_ammo;
 	self.reload_ammo_amount = autocvar_g_balance_shotgun_reload_ammo;
 	self.reload_time = autocvar_g_balance_shotgun_reload_time;

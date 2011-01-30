@@ -19,7 +19,7 @@ void W_Seeker_SetAmmoCounter()
 
 void W_Seeker_Reload()
 {
-	self.reload_ammo_player = ammo_fuel;
+	self.reload_ammo_player = ammo_rockets;
 	self.reload_ammo_min = min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo);
 	self.reload_ammo_amount = autocvar_g_balance_seeker_reload_ammo;
 	self.reload_time = autocvar_g_balance_seeker_reload_time;
