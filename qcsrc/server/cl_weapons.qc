@@ -1,4 +1,4 @@
-void W_DoReload()
+void W_TriggerReload()
 {
     weapon_action(self.weapon, WR_RELOAD);
 }
@@ -15,7 +15,7 @@ void W_SwitchWeapon(float imp)
 	}
 	else
 	{
-		W_DoReload();
+		W_TriggerReload();
 	}
 };
 
