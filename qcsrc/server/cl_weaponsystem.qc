@@ -1612,6 +1612,8 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 #define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
 #define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
 
+// weapon reloading code
+
 .float reload_complain;
 float W_ReloadCheck(float ammo_amount, float ammo_shot)
 {
@@ -1619,7 +1621,7 @@ float W_ReloadCheck(float ammo_amount, float ammo_shot)
 	e = get_weaponinfo(self.weapon);
 
 	// our weapon is fully loaded, no need to reload
-	if (self.clip_load >= cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
+	if (self.clip_load >= self.reload_ammo_amount)
 		return 0;
 
 	// no ammo, so nothing to load
@@ -1650,4 +1652,44 @@ float W_ReloadCheck(float ammo_amount, float ammo_shot)
 	}
 
 	return 1;
+}
+
+void W_ReloadedAndReady()
+{
+	float t;
+
+	// now do the ammo transfer
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	while(self.clip_load < self.reload_ammo_amount && self.(self.reload_ammo_player)) // make sure we don't add more ammo than we have
+	{
+		self.clip_load += 1;
+		self.(self.reload_ammo_player) -= 1;
+	}
+	//self.hagar_load = self.clip_load;
+
+	t = ATTACK_FINISHED(self) - self.reload_time - 1;
+	ATTACK_FINISHED(self) = t;
+	w_ready();
+}
+
+void W_Reload()
+{
+	// return if reloading is disabled for this weapon
+	if(!self.reload_ammo_amount)
+		return;
+
+	if(!W_ReloadCheck(self.(self.reload_ammo_player), self.reload_ammo_min))
+		return;
+
+	float t;
+
+	sound (self, CHAN_WEAPON2, self.reload_sound, VOL_BASE, ATTN_NORM);
+
+	t = max(time, ATTACK_FINISHED(self)) + self.reload_time + 1;
+	ATTACK_FINISHED(self) = t;
+
+	weapon_thinkf(WFRAME_RELOAD, self.reload_time, W_ReloadedAndReady);
+
+	self.old_clip_load = self.clip_load;
+	self.clip_load = -1;
 }

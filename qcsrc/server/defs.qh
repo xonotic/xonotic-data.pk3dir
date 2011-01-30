@@ -616,6 +616,10 @@ float client_cefc_accumulatortime;
 .float old_clip_load;
 .float clip_size;
 
+..float reload_ammo_player;
+.float reload_ammo_amount, reload_ammo_min, reload_time;
+.string reload_sound;
+
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones
 // #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX
