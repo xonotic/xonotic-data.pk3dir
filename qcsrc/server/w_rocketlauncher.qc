@@ -20,44 +20,15 @@ void W_RocketLauncher_SetAmmoCounter()
 	}
 }
 
-void W_RocketLauncher_ReloadedAndReady()
-{
-	float t;
-
-	// now do the ammo transfer
-	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
-	while(self.clip_load < autocvar_g_balance_rocketlauncher_reload_ammo && self.ammo_rockets) // make sure we don't add more ammo than we have
-	{
-		self.clip_load += 1;
-		self.ammo_rockets -= 1;
-	}
-	self.rocketlauncher_load = self.clip_load;
-
-	t = ATTACK_FINISHED(self) - autocvar_g_balance_rocketlauncher_reload_time - 1;
-	ATTACK_FINISHED(self) = t;
-	w_ready();
-}
-
 void W_RocketLauncher_Reload()
 {
-	// return if reloading is disabled for this weapon
-	if(!autocvar_g_balance_rocketlauncher_reload_ammo)
-		return;
+	self.reload_ammo_player = ammo_fuel;
+	self.reload_ammo_min = autocvar_g_balance_rocketlauncher_ammo;
+	self.reload_ammo_amount = autocvar_g_balance_rocketlauncher_reload_ammo;
+	self.reload_time = autocvar_g_balance_rocketlauncher_reload_time;
+	self.reload_sound = "weapons/reload.wav";
 
-	if(!W_ReloadCheck(self.ammo_rockets, autocvar_g_balance_rocketlauncher_ammo))
-		return;
-
-	float t;
-
-	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
-
-	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_rocketlauncher_reload_time + 1;
-	ATTACK_FINISHED(self) = t;
-
-	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_rocketlauncher_reload_time, W_RocketLauncher_ReloadedAndReady);
-
-	self.old_clip_load = self.clip_load;
-	self.clip_load = -1;
+	W_Reload();
 }
 
 void W_Rocket_Unregister()

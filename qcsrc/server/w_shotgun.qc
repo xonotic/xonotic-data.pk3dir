@@ -18,44 +18,15 @@ void W_Shotgun_SetAmmoCounter()
 	}
 }
 
-void W_Shotgun_ReloadedAndReady()
-{
-	float t;
-
-	// now do the ammo transfer
-	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
-	while(self.clip_load < autocvar_g_balance_shotgun_reload_ammo && self.ammo_shells) // make sure we don't add more ammo than we have
-	{
-		self.clip_load += 1;
-		self.ammo_shells -= 1;
-	}
-	self.shotgun_load = self.clip_load;
-
-	t = ATTACK_FINISHED(self) - autocvar_g_balance_shotgun_reload_time - 1;
-	ATTACK_FINISHED(self) = t;
-	w_ready();
-}
-
 void W_Shotgun_Reload()
 {
-	// return if reloading is disabled for this weapon
-	if(!autocvar_g_balance_shotgun_reload_ammo)
-		return;
+	self.reload_ammo_player = ammo_fuel;
+	self.reload_ammo_min = autocvar_g_balance_shotgun_primary_ammo;
+	self.reload_ammo_amount = autocvar_g_balance_shotgun_reload_ammo;
+	self.reload_time = autocvar_g_balance_shotgun_reload_time;
+	self.reload_sound = "weapons/reload.wav";
 
-	if(!W_ReloadCheck(self.ammo_shells, autocvar_g_balance_shotgun_primary_ammo))
-		return;
-
-	float t;
-
-	sound (self, CHAN_WEAPON2, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
-
-	t = max(time, ATTACK_FINISHED(self)) + autocvar_g_balance_shotgun_reload_time + 1;
-	ATTACK_FINISHED(self) = t;
-
-	weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_shotgun_reload_time, W_Shotgun_ReloadedAndReady);
-
-	self.old_clip_load = self.clip_load;
-	self.clip_load = -1;
+	W_Reload();
 }
 
 void W_Shotgun_Attack (void)
