@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hagar", "hagar", _("Hagar"))
+REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hagar", "hagar", _("Hagar"))
 #else
 #ifdef SVQC
 // NO bounce protection, as bounces are limited!

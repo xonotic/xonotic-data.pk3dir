@@ -1056,7 +1056,8 @@ void PutClientInServer (void)
 			// all weapons must be fully loaded when we spawn
 			entity e;
 			e = get_weaponinfo(j);
-			self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+			if(e.spawnflags & WEP_FLAG_RELOADABLE)
+				self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 		}
 
 		oldself = self;
