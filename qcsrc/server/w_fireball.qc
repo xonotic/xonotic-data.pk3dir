@@ -6,9 +6,6 @@ REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_TYPE_SPLASH, BOT_PICKUP_RA
 .vector fireball_impactvec;
 .float fireball_primarytime;
 
-// weapon load persistence, for weapons that support reloading
-.float fireball_load;
-
 void W_Fireball_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
@@ -16,7 +13,7 @@ void W_Fireball_SetAmmoCounter()
 		self.clip_load = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.clip_load = self.fireball_load;
+		self.clip_load = self.weapon_load[WEP_FIREBALL];
 		self.clip_size = autocvar_g_balance_fireball_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -230,7 +227,7 @@ void W_Fireball_Attack1_Frame0()
 		if(autocvar_g_balance_fireball_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_fireball_primary_ammo;
-			self.fireball_load = self.clip_load;
+			self.weapon_load[WEP_FIREBALL] = self.clip_load;
 		}
 		else
 			self.ammo_fuel -= autocvar_g_balance_fireball_primary_ammo;
@@ -291,7 +288,7 @@ void W_Fireball_Attack2()
 		if(autocvar_g_balance_fireball_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_fireball_secondary_ammo;
-			self.fireball_load = self.clip_load;
+			self.weapon_load[WEP_FIREBALL] = self.clip_load;
 		}
 		else
 			self.ammo_fuel -= autocvar_g_balance_fireball_secondary_ammo;
@@ -415,13 +412,13 @@ float w_fireball(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
-		ammo_amount += self.fireball_load >= autocvar_g_balance_fireball_primary_ammo;
+		ammo_amount += self.weapon_load[WEP_FIREBALL] >= autocvar_g_balance_fireball_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
-		ammo_amount += self.fireball_load >= autocvar_g_balance_fireball_secondary_ammo;
+		ammo_amount += self.weapon_load[WEP_FIREBALL] >= autocvar_g_balance_fireball_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
@@ -429,7 +426,7 @@ float w_fireball(float req)
 		self.fireball_primarytime = time;
 
 		// all weapons must be fully loaded when we spawn
-		self.fireball_load = autocvar_g_balance_fireball_reload_ammo;
+		self.weapon_load[WEP_FIREBALL] = autocvar_g_balance_fireball_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

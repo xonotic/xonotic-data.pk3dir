@@ -5,9 +5,6 @@ REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 //.float proxytime; = autoswitch
 //.float tl; = wait
 
-// weapon load persistence, for weapons that support reloading
-.float seeker_load;
-
 void W_Seeker_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
@@ -15,7 +12,7 @@ void W_Seeker_SetAmmoCounter()
 		self.clip_load = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.clip_load = self.seeker_load;
+		self.clip_load = self.weapon_load[WEP_SEEKER];
 		self.clip_size = autocvar_g_balance_seeker_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -190,7 +187,7 @@ void Seeker_Fire_Missile(vector f_diff)
 		if(autocvar_g_balance_seeker_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_seeker_missile_ammo;
-			self.seeker_load = self.clip_load;
+			self.weapon_load[WEP_SEEKER] = self.clip_load;
 		}
 		else
 			self.ammo_rockets -= autocvar_g_balance_seeker_missile_ammo;
@@ -335,7 +332,7 @@ void Seeker_Fire_Tag()
 		if(autocvar_g_balance_seeker_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_seeker_tag_ammo;
-			self.seeker_load = self.clip_load;
+			self.weapon_load[WEP_SEEKER] = self.clip_load;
 		}
 		else
 			self.ammo_rockets -= autocvar_g_balance_seeker_tag_ammo;
@@ -403,7 +400,7 @@ void Seeker_Fire_Flac()
 		if(autocvar_g_balance_seeker_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_seeker_flac_ammo;
-			self.seeker_load = self.clip_load;
+			self.weapon_load[WEP_SEEKER] = self.clip_load;
 		}
 		else
 			self.ammo_rockets -= autocvar_g_balance_seeker_flac_ammo;
@@ -512,19 +509,19 @@ float w_seeker(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_seeker_missile_ammo;
-		ammo_amount += self.seeker_load >= autocvar_g_balance_seeker_missile_ammo;
+		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_missile_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_seeker_flac_ammo;
-		ammo_amount += self.seeker_load >= autocvar_g_balance_seeker_flac_ammo;
+		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_flac_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
 	{
 		// all weapons must be fully loaded when we spawn
-		self.seeker_load = autocvar_g_balance_seeker_reload_ammo;
+		self.weapon_load[WEP_SEEKER] = autocvar_g_balance_seeker_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

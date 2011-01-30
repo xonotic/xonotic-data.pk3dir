@@ -8,9 +8,6 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_T
 
 .float sniperrifle_accumulator;
 
-// weapon load persistence, for weapons that support reloading
-.float sniperrifle_load;
-
 void W_SniperRifle_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
@@ -18,7 +15,7 @@ void W_SniperRifle_SetAmmoCounter()
 		self.clip_load = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.clip_load = self.sniperrifle_load;
+		self.clip_load = self.weapon_load[WEP_SNIPERRIFLE];
 		self.clip_size = autocvar_g_balance_sniperrifle_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -42,7 +39,7 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 		if(autocvar_g_balance_sniperrifle_reload_ammo)
 		{
 			self.clip_load -= pAmmo;
-			self.sniperrifle_load = self.clip_load;
+			self.weapon_load[WEP_SNIPERRIFLE] = self.clip_load;
 		}
 		else
 			self.ammo_nails -= pAmmo;
@@ -221,13 +218,13 @@ float w_sniperrifle(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_sniperrifle_primary_ammo;
-		ammo_amount += self.sniperrifle_load >= autocvar_g_balance_sniperrifle_primary_ammo;
+		ammo_amount += self.weapon_load[WEP_SNIPERRIFLE] >= autocvar_g_balance_sniperrifle_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_sniperrifle_secondary_ammo;
-		ammo_amount += self.sniperrifle_load >= autocvar_g_balance_sniperrifle_secondary_ammo;
+		ammo_amount += self.weapon_load[WEP_SNIPERRIFLE] >= autocvar_g_balance_sniperrifle_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
@@ -235,7 +232,7 @@ float w_sniperrifle(float req)
 		self.sniperrifle_accumulator = time - autocvar_g_balance_sniperrifle_bursttime;
 
 		// all weapons must be fully loaded when we spawn
-		self.sniperrifle_load = autocvar_g_balance_sniperrifle_reload_ammo;
+		self.weapon_load[WEP_SNIPERRIFLE] = autocvar_g_balance_sniperrifle_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

@@ -3,9 +3,6 @@ REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT
 #else
 #ifdef SVQC
 
-// weapon load persistence, for weapons that support reloading
-.float uzi_load;
-
 void W_UZI_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
@@ -13,7 +10,7 @@ void W_UZI_SetAmmoCounter()
 		self.clip_load = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.clip_load = self.uzi_load;
+		self.clip_load = self.weapon_load[WEP_UZI];
 		self.clip_size = autocvar_g_balance_uzi_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -101,7 +98,7 @@ void W_UZI_Attack (float deathtype)
 				self.clip_load -= autocvar_g_balance_uzi_first_ammo;
 			else
 				self.clip_load -= autocvar_g_balance_uzi_sustained_ammo;
-			self.uzi_load = self.clip_load;
+			self.weapon_load[WEP_UZI] = self.clip_load;
 		}
 		else
 		{
@@ -148,7 +145,7 @@ void uzi_mode1_fire_auto()
 		if(autocvar_g_balance_uzi_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_uzi_sustained_ammo;
-			self.uzi_load = self.clip_load;
+			self.weapon_load[WEP_UZI] = self.clip_load;
 		}
 		else
 			self.ammo_nails -= autocvar_g_balance_uzi_sustained_ammo;
@@ -267,7 +264,7 @@ float w_uzi(float req)
 					if(autocvar_g_balance_uzi_reload_ammo)
 					{
 						self.clip_load -= autocvar_g_balance_uzi_burst_ammo;
-						self.uzi_load = self.clip_load;
+						self.weapon_load[WEP_UZI] = self.clip_load;
 					}
 					else
 						self.ammo_nails -= autocvar_g_balance_uzi_burst_ammo;
@@ -321,9 +318,9 @@ float w_uzi(float req)
 		if(autocvar_g_balance_uzi_reload_ammo)
 		{
 			if(autocvar_g_balance_uzi_mode == 1)
-				ammo_amount += self.uzi_load >= autocvar_g_balance_uzi_sustained_ammo;
+				ammo_amount += self.weapon_load[WEP_UZI] >= autocvar_g_balance_uzi_sustained_ammo;
 			else
-				ammo_amount += self.uzi_load >= autocvar_g_balance_uzi_first_ammo;
+				ammo_amount += self.weapon_load[WEP_UZI] >= autocvar_g_balance_uzi_first_ammo;
 		}
 		return ammo_amount;
 	}
@@ -337,16 +334,16 @@ float w_uzi(float req)
 		if(autocvar_g_balance_uzi_reload_ammo)
 		{
 			if(autocvar_g_balance_uzi_mode == 1)
-				ammo_amount += self.uzi_load >= autocvar_g_balance_uzi_burst_ammo;
+				ammo_amount += self.weapon_load[WEP_UZI] >= autocvar_g_balance_uzi_burst_ammo;
 			else
-				ammo_amount += self.uzi_load >= autocvar_g_balance_uzi_first_ammo;
+				ammo_amount += self.weapon_load[WEP_UZI] >= autocvar_g_balance_uzi_first_ammo;
 		}
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
 	{
 		// all weapons must be fully loaded when we spawn
-		self.uzi_load = autocvar_g_balance_uzi_reload_ammo;
+		self.weapon_load[WEP_UZI] = autocvar_g_balance_uzi_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

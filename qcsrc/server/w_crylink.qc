@@ -9,9 +9,6 @@ REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 .entity queuenext;
 .entity queueprev;
 
-// weapon load persistence, for weapons that support reloading
-.float crylink_load;
-
 void W_Crylink_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
@@ -19,7 +16,7 @@ void W_Crylink_SetAmmoCounter()
 		self.clip_load = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.clip_load = self.crylink_load;
+		self.clip_load = self.weapon_load[WEP_CRYLINK];
 		self.clip_size = autocvar_g_balance_crylink_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -358,7 +355,7 @@ void W_Crylink_Attack (void)
 		if(autocvar_g_balance_crylink_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_crylink_primary_ammo;
-			self.crylink_load = self.clip_load;
+			self.weapon_load[WEP_CRYLINK] = self.clip_load;
 		}
 		else
 			self.ammo_cells -= autocvar_g_balance_crylink_primary_ammo;
@@ -471,7 +468,7 @@ void W_Crylink_Attack2 (void)
 		if(autocvar_g_balance_crylink_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_crylink_secondary_ammo;
-			self.crylink_load = self.clip_load;
+			self.weapon_load[WEP_CRYLINK] = self.clip_load;
 		}
 		else
 			self.ammo_cells -= autocvar_g_balance_crylink_secondary_ammo;
@@ -656,7 +653,7 @@ float w_crylink(float req)
 			return TRUE;
 
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
-		ammo_amount += self.crylink_load >= autocvar_g_balance_crylink_primary_ammo;
+		ammo_amount += self.weapon_load[WEP_CRYLINK] >= autocvar_g_balance_crylink_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
@@ -666,13 +663,13 @@ float w_crylink(float req)
 			return TRUE;
 
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
-		ammo_amount += self.crylink_load >= autocvar_g_balance_crylink_secondary_ammo;
+		ammo_amount += self.weapon_load[WEP_CRYLINK] >= autocvar_g_balance_crylink_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
 	{
 		// all weapons must be fully loaded when we spawn
-		self.crylink_load = autocvar_g_balance_crylink_reload_ammo;
+		self.weapon_load[WEP_CRYLINK] = autocvar_g_balance_crylink_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

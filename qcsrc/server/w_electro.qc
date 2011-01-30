@@ -5,9 +5,6 @@ REGISTER_WEAPON(ELECTRO, w_electro, IT_CELLS, 5, WEP_FLAG_NORMAL | WEP_TYPE_SPLA
 .float electro_count;
 .float electro_secondarytime;
 
-// weapon load persistence, for weapons that support reloading
-.float electro_load;
-
 void W_Electro_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
@@ -15,7 +12,7 @@ void W_Electro_SetAmmoCounter()
 		self.clip_load = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.clip_load = self.electro_load;
+		self.clip_load = self.weapon_load[WEP_ELECTRO];
 		self.clip_size = autocvar_g_balance_electro_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -142,7 +139,7 @@ void W_Electro_Attack()
 		if(autocvar_g_balance_electro_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_electro_primary_ammo;
-			self.electro_load = self.clip_load;
+			self.weapon_load[WEP_ELECTRO] = self.clip_load;
 		}
 		else
 			self.ammo_cells -= autocvar_g_balance_electro_primary_ammo;
@@ -189,7 +186,7 @@ void W_Electro_Attack2()
 		if(autocvar_g_balance_electro_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_electro_secondary_ammo;
-			self.electro_load = self.clip_load;
+			self.weapon_load[WEP_ELECTRO] = self.clip_load;
 		}
 		else
 			self.ammo_cells -= autocvar_g_balance_electro_secondary_ammo;
@@ -282,48 +279,52 @@ float lgbeam_checkammo()
 
 void lgbeam_think()
 {
-	self.owner.prevlgfire = time;
-	if (self != self.owner.lgbeam)
+	entity owner_player;
+	owner_player = self.owner;
+
+	owner_player.prevlgfire = time;
+	if (self != owner_player.lgbeam)
 	{
 		remove(self);
 		return;
 	}
 
-	if (self.owner.weaponentity.state != WS_INUSE || !lgbeam_checkammo() || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
+	if (owner_player.weaponentity.state != WS_INUSE || !lgbeam_checkammo() || owner_player.deadflag != DEAD_NO || !owner_player.BUTTON_ATCK || owner_player.freezetag_frozen)
 	{
-		if(self == self.owner.lgbeam)
-			self.owner.lgbeam = world;
+		if(self == owner_player.lgbeam)
+			owner_player.lgbeam = world;
 		remove(self);
 		return;
 	}
 
 	self.nextthink = time;
 
-	makevectors(self.owner.v_angle);
+	makevectors(owner_player.v_angle);
 
 	float dt, f;
 	dt = frametime;
+
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
+	if not(owner_player.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		if(autocvar_g_balance_electro_primary_ammo)
 		{
 			if(autocvar_g_balance_electro_reload_ammo)
 			{
-				dt = min(dt, self.owner.clip_load / autocvar_g_balance_electro_primary_ammo);
-				self.owner.clip_load = max(0, self.owner.clip_load - autocvar_g_balance_electro_primary_ammo * frametime);
-				self.owner.electro_load = self.owner.clip_load;
+				dt = min(dt, owner_player.clip_load / autocvar_g_balance_electro_primary_ammo);
+				owner_player.clip_load = max(0, owner_player.clip_load - autocvar_g_balance_electro_primary_ammo * frametime);
+				owner_player.weapon_load[WEP_ELECTRO] = owner_player.clip_load;
 			}
 			else
 			{
-				dt = min(dt, self.owner.ammo_cells / autocvar_g_balance_electro_primary_ammo);
-				self.owner.ammo_cells = max(0, self.owner.ammo_cells - autocvar_g_balance_electro_primary_ammo * frametime);
+				dt = min(dt, owner_player.ammo_cells / autocvar_g_balance_electro_primary_ammo);
+				owner_player.ammo_cells = max(0, owner_player.ammo_cells - autocvar_g_balance_electro_primary_ammo * frametime);
 			}
 		}
 	}
 
-	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, autocvar_g_balance_electro_primary_damage * dt, autocvar_g_balance_electro_primary_range);
-	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
+	W_SetupShot_Range(owner_player, TRUE, 0, "", 0, autocvar_g_balance_electro_primary_damage * dt, autocvar_g_balance_electro_primary_range);
+	WarpZone_traceline_antilag(owner_player, w_shotorg, w_shotend, MOVE_NORMAL, owner_player, ANTILAG_LATENCY(owner_player));
 
 	// apply the damage
 	if(trace_ent)
@@ -333,11 +334,11 @@ void lgbeam_think()
 
 		f = ExponentialFalloff(autocvar_g_balance_electro_primary_falloff_mindist, autocvar_g_balance_electro_primary_falloff_maxdist, autocvar_g_balance_electro_primary_falloff_halflifedist, vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg));
 
-		if(accuracy_isgooddamage(self.owner, trace_ent))
-			accuracy_add(self.owner, WEP_ELECTRO, 0, autocvar_g_balance_electro_primary_damage * dt * f);
-		Damage (trace_ent, self.owner, self.owner, autocvar_g_balance_electro_primary_damage * dt * f, WEP_ELECTRO, trace_endpos, force * dt);
+		if(accuracy_isgooddamage(owner_player, trace_ent))
+			accuracy_add(owner_player, WEP_ELECTRO, 0, autocvar_g_balance_electro_primary_damage * dt * f);
+		Damage (trace_ent, owner_player, owner_player, autocvar_g_balance_electro_primary_damage * dt * f, WEP_ELECTRO, trace_endpos, force * dt);
 	}
-	W_Plasma_TriggerCombo(trace_endpos, autocvar_g_balance_electro_primary_comboradius, self.owner);
+	W_Plasma_TriggerCombo(trace_endpos, autocvar_g_balance_electro_primary_comboradius, owner_player);
 
 	// draw effect
 	if(w_shotorg != self.hook_start)
@@ -544,20 +545,20 @@ float w_electro(float req)
 		{
 			ammo_amount = !autocvar_g_balance_electro_primary_ammo || (self.ammo_cells > 0);
 			if(autocvar_g_balance_electro_lightning)
-				ammo_amount += self.electro_load > 0;
+				ammo_amount += self.weapon_load[WEP_ELECTRO] > 0;
 		}
 		else
 		{
 			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_primary_ammo;
 			if(autocvar_g_balance_electro_lightning)
-				ammo_amount += self.electro_load >= autocvar_g_balance_electro_primary_ammo;
+				ammo_amount += self.weapon_load[WEP_ELECTRO] >= autocvar_g_balance_electro_primary_ammo;
 		}
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
-		ammo_amount += self.electro_load >= autocvar_g_balance_electro_secondary_ammo;
+		ammo_amount += self.weapon_load[WEP_ELECTRO] >= autocvar_g_balance_electro_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
@@ -565,7 +566,7 @@ float w_electro(float req)
 		self.electro_secondarytime = time;
 
 		// all weapons must be fully loaded when we spawn
-		self.electro_load = autocvar_g_balance_electro_reload_ammo;
+		self.weapon_load[WEP_ELECTRO] = autocvar_g_balance_electro_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

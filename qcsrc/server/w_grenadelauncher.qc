@@ -5,9 +5,6 @@ REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | 
 .float gl_detonate_later;
 .float gl_bouncecnt;
 
-// weapon load persistence, for weapons that support reloading
-.float grenadelauncher_load;
-
 void W_GrenadeLauncher_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
@@ -15,7 +12,7 @@ void W_GrenadeLauncher_SetAmmoCounter()
 		self.clip_load = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.clip_load = self.grenadelauncher_load;
+		self.clip_load = self.weapon_load[WEP_GRENADE_LAUNCHER];
 		self.clip_size = autocvar_g_balance_grenadelauncher_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -193,7 +190,7 @@ void W_Grenade_Attack (void)
 		if(autocvar_g_balance_grenadelauncher_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_grenadelauncher_primary_ammo;
-			self.grenadelauncher_load = self.clip_load;
+			self.weapon_load[WEP_GRENADE_LAUNCHER] = self.clip_load;
 		}
 		else
 			self.ammo_rockets -= autocvar_g_balance_grenadelauncher_primary_ammo;
@@ -250,7 +247,7 @@ void W_Grenade_Attack2 (void)
 		if(autocvar_g_balance_grenadelauncher_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_grenadelauncher_secondary_ammo;
-			self.grenadelauncher_load = self.clip_load;
+			self.weapon_load[WEP_GRENADE_LAUNCHER] = self.clip_load;
 		}
 		else
 			self.ammo_rockets -= autocvar_g_balance_grenadelauncher_secondary_ammo;
@@ -387,19 +384,19 @@ float w_glauncher(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_grenadelauncher_primary_ammo;
-		ammo_amount += self.grenadelauncher_load >= autocvar_g_balance_grenadelauncher_primary_ammo;
+		ammo_amount += self.weapon_load[WEP_GRENADE_LAUNCHER] >= autocvar_g_balance_grenadelauncher_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_grenadelauncher_secondary_ammo;
-		ammo_amount += self.grenadelauncher_load >= autocvar_g_balance_grenadelauncher_secondary_ammo;
+		ammo_amount += self.weapon_load[WEP_GRENADE_LAUNCHER] >= autocvar_g_balance_grenadelauncher_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
 	{
 		// all weapons must be fully loaded when we spawn
-		self.grenadelauncher_load = autocvar_g_balance_grenadelauncher_reload_ammo;
+		self.weapon_load[WEP_GRENADE_LAUNCHER] = autocvar_g_balance_grenadelauncher_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

@@ -5,9 +5,6 @@ REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | W
 .float rl_release;
 .float rl_detonate_later;
 
-// weapon load persistence, for weapons that support reloading
-.float rocketlauncher_load;
-
 void W_RocketLauncher_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
@@ -15,7 +12,7 @@ void W_RocketLauncher_SetAmmoCounter()
 		self.clip_load = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.clip_load = self.rocketlauncher_load;
+		self.clip_load = self.weapon_load[WEP_ROCKET_LAUNCHER];
 		self.clip_size = autocvar_g_balance_rocketlauncher_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -280,7 +277,7 @@ void W_Rocket_Attack (void)
 		if(autocvar_g_balance_rocketlauncher_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_rocketlauncher_ammo;
-			self.rocketlauncher_load = self.clip_load;
+			self.weapon_load[WEP_ROCKET_LAUNCHER] = self.clip_load;
 		}
 		else
 			self.ammo_rockets -= autocvar_g_balance_rocketlauncher_ammo;
@@ -496,7 +493,7 @@ float w_rlauncher(float req)
 		{
 			if(autocvar_g_balance_rocketlauncher_reload_ammo)
 			{
-				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.rocketlauncher_load < autocvar_g_balance_rocketlauncher_ammo)
+				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.weapon_load[WEP_ROCKET_LAUNCHER] < autocvar_g_balance_rocketlauncher_ammo)
 					ammo_amount = TRUE;
 			}
 			else if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
@@ -511,7 +508,7 @@ float w_rlauncher(float req)
 		self.rl_release = 0;
 
 		// all weapons must be fully loaded when we spawn
-		self.rocketlauncher_load = autocvar_g_balance_rocketlauncher_reload_ammo;
+		self.weapon_load[WEP_ROCKET_LAUNCHER] = autocvar_g_balance_rocketlauncher_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

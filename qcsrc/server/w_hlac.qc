@@ -3,9 +3,6 @@ REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BO
 #else
 #ifdef SVQC
 
-// weapon load persistence, for weapons that support reloading
-.float hlac_load;
-
 void W_HLAC_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
@@ -13,7 +10,7 @@ void W_HLAC_SetAmmoCounter()
 		self.clip_load = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.clip_load = self.hlac_load;
+		self.clip_load = self.weapon_load[WEP_HLAC];
 		self.clip_size = autocvar_g_balance_hlac_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -54,7 +51,7 @@ void W_HLAC_Attack (void)
 		if(autocvar_g_balance_hlac_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_hlac_primary_ammo;
-			self.hlac_load = self.clip_load;
+			self.weapon_load[WEP_HLAC] = self.clip_load;
 		}
 		else
 			self.ammo_cells -= autocvar_g_balance_hlac_primary_ammo;
@@ -155,7 +152,7 @@ void W_HLAC_Attack2 (void)
 		if(autocvar_g_balance_hlac_reload_ammo)
 		{
 			self.clip_load -= autocvar_g_balance_hlac_secondary_ammo;
-			self.hlac_load = self.clip_load;
+			self.weapon_load[WEP_HLAC] = self.clip_load;
 		}
 		else
 			self.ammo_cells -= autocvar_g_balance_hlac_secondary_ammo;
@@ -250,19 +247,19 @@ float w_hlac(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_hlac_primary_ammo;
-		ammo_amount += self.hlac_load >= autocvar_g_balance_hlac_primary_ammo;
+		ammo_amount += self.weapon_load[WEP_HLAC] >= autocvar_g_balance_hlac_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_hlac_secondary_ammo;
-		ammo_amount += self.hlac_load >= autocvar_g_balance_hlac_secondary_ammo;
+		ammo_amount += self.weapon_load[WEP_HLAC] >= autocvar_g_balance_hlac_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
 	{
 		// all weapons must be fully loaded when we spawn
-		self.hlac_load = autocvar_g_balance_hlac_reload_ammo;
+		self.weapon_load[WEP_HLAC] = autocvar_g_balance_hlac_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

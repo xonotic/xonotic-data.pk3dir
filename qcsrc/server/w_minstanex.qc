@@ -4,9 +4,6 @@ REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_
 #ifdef SVQC
 .float minstanex_lasthit;
 
-// weapon load persistence, for weapons that support reloading
-.float minstanex_load;
-
 void W_Minstanex_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
@@ -14,7 +11,7 @@ void W_Minstanex_SetAmmoCounter()
 		self.clip_load = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.clip_load = self.minstanex_load;
+		self.clip_load = self.weapon_load[WEP_MINSTANEX];
 		self.clip_size = autocvar_g_balance_minstanex_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -118,7 +115,7 @@ void W_MinstaNex_Attack (void)
 				self.clip_load -= - 1;
 			else
 				self.clip_load -= autocvar_g_balance_minstanex_ammo;
-			self.minstanex_load = self.clip_load;
+			self.weapon_load[WEP_MINSTANEX] = self.clip_load;
 		}
 		else
 		{
@@ -289,7 +286,7 @@ float w_minstanex(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_ammo;
-		ammo_amount += self.minstanex_load >= autocvar_g_balance_minstanex_ammo;
+		ammo_amount += self.weapon_load[WEP_MINSTANEX] >= autocvar_g_balance_minstanex_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
@@ -297,7 +294,7 @@ float w_minstanex(float req)
 		if(!autocvar_g_balance_minstanex_laser_ammo)
 			return TRUE;
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_laser_ammo;
-		ammo_amount += self.minstanex_load >= autocvar_g_balance_minstanex_laser_ammo;
+		ammo_amount += self.weapon_load[WEP_MINSTANEX] >= autocvar_g_balance_minstanex_laser_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
@@ -305,7 +302,7 @@ float w_minstanex(float req)
 		self.minstanex_lasthit = 0;
 
 		// all weapons must be fully loaded when we spawn
-		self.minstanex_load = autocvar_g_balance_minstanex_reload_ammo;
+		self.weapon_load[WEP_MINSTANEX] = autocvar_g_balance_minstanex_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{

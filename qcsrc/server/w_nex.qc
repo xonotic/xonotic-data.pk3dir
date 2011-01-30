@@ -3,9 +3,6 @@ REGISTER_WEAPON(NEX, w_nex, IT_CELLS, 7, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT
 #else
 #ifdef SVQC
 
-// weapon load persistence, for weapons that support reloading
-.float nex_load;
-
 void W_Nex_SetAmmoCounter()
 {
 	// set clip_load to the weapon we have switched to, if the gun uses reloading
@@ -13,7 +10,7 @@ void W_Nex_SetAmmoCounter()
 		self.clip_load = 0; // also keeps crosshair ammo from displaying
 	else
 	{
-		self.clip_load = self.nex_load;
+		self.clip_load = self.weapon_load[WEP_NEX];
 		self.clip_size = autocvar_g_balance_nex_reload_ammo; // for the crosshair ammo display
 	}
 }
@@ -107,7 +104,7 @@ void W_Nex_Attack (float issecondary)
 		if(autocvar_g_balance_nex_reload_ammo)
 		{
 			self.clip_load -= myammo;
-			self.nex_load = self.clip_load;
+			self.weapon_load[WEP_NEX] = self.clip_load;
 		}
 		else
 			self.ammo_cells -= myammo;
@@ -192,7 +189,7 @@ float w_nex(float req)
 										{
 											self.clip_load = max(autocvar_g_balance_nex_secondary_ammo, self.clip_load - autocvar_g_balance_nex_secondary_ammo * dt);
 										}
-										self.nex_load = self.clip_load;
+										self.weapon_load[WEP_NEX] = self.clip_load;
 									}
 									else
 									{
@@ -261,20 +258,20 @@ float w_nex(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_primary_ammo;
-		ammo_amount += (autocvar_g_balance_nex_reload_ammo && self.nex_load >= autocvar_g_balance_nex_primary_ammo);
+		ammo_amount += (autocvar_g_balance_nex_reload_ammo && self.weapon_load[WEP_NEX] >= autocvar_g_balance_nex_primary_ammo);
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		// don't allow charging if we don't have enough ammo
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_secondary_ammo;
-		ammo_amount += self.nex_load >= autocvar_g_balance_nex_secondary_ammo;
+		ammo_amount += self.weapon_load[WEP_NEX] >= autocvar_g_balance_nex_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
 	{
 		// all weapons must be fully loaded when we spawn
-		self.nex_load = autocvar_g_balance_nex_reload_ammo;
+		self.weapon_load[WEP_NEX] = autocvar_g_balance_nex_reload_ammo;
 	}
 	else if (req == WR_RELOAD)
 	{
