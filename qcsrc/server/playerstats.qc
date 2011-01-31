@@ -65,6 +65,29 @@ void PlayerStats_AddPlayer(entity e)
 	}
 }
 
+void PlayerStats_AddTeam(float t)
+{
+	if(playerstats_db < 0)
+		return;
+
+	string key;
+	key = sprintf("team#%d:*", t);
+	
+	string p;
+	p = db_get(playerstats_db, key);
+	if(p == "")
+	{
+		if(playerstats_last)
+		{
+			db_put(playerstats_db, key, playerstats_last);
+			strunzone(playerstats_last);
+		}
+		else
+			db_put(playerstats_db, key, "#");
+		playerstats_last = strzone(sprintf("team%d", t));
+	}
+}
+
 void PlayerStats_AddEvent(string event_id)
 {
 	if(playerstats_db < 0)
@@ -96,6 +119,16 @@ void PlayerStats_Event(entity e, string event_id, float value)
 	string key;
 	float val;
 	key = sprintf("%s:%s", e.playerstats_id, event_id);
+	val = stof(db_get(playerstats_db, key));
+	val += value;
+	db_put(playerstats_db, key, ftos(val));
+}
+
+void PlayerStats_TeamScore(float t, string event_id, float value)
+{
+	string key;
+	float val;
+	key = sprintf("team#%d:%s", t, event_id);
 	val = stof(db_get(playerstats_db, key));
 	val += value;
 	db_put(playerstats_db, key, ftos(val));
