@@ -35,7 +35,7 @@ float autocvar_bot_ai_enemydetectionradius;
 float autocvar_bot_ai_friends_aware_pickup_radius;
 float autocvar_bot_ai_ignoregoal_timeout;
 float autocvar_bot_ai_keyboard_distance;
-float autocvar_bot_ai_keyboard_treshold;
+float autocvar_bot_ai_keyboard_threshold;
 float autocvar_bot_ai_navigation_jetpack;
 float autocvar_bot_ai_navigation_jetpack_mindistance;
 float autocvar_bot_ai_strategyinterval;
