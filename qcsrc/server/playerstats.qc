@@ -140,6 +140,34 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 		playerstats_waitforme = TRUE;
 }
 
+/*
+	format spec:
+
+	A collection of lines of the format <key> SPACE <value> NEWLINE, where
+	<key> is always a single character.
+
+	The following keys are defined:
+
+	V: format version (always 1)
+	T: time at which the game ended
+	G: game type
+	M: map name
+	S: "hostname" of the server
+	C: number of "unpure" cvar changes
+	P: player ID of an existing player; this also sets the owner for all following "n" and "e" lines (lower case!)
+	n: nickname of the player (optional)
+	e: followed by an event name, a space, and the event count/score
+		event names can be:
+			alivetime: total playing time of the player
+			wins: number of games won (can only be set if matches is set)
+			matches: number of matches played to the end (not aborted by map switch)
+			joins: number of matches joined (always 1 unless player never played during the match)
+			scoreboardvalid: set to 1 if the player was there at the end of the match
+			total-<scoreboardname>: total score of that scoreboard item
+			scoreboard-<scoreboardname>: end-of-game score of that scoreboard item (can differ in non-team games)
+			achievement-<achievementname>: achievement counters
+*/
+
 //#NO AUTOCVARS START
 void PlayerStats_Shutdown()
 {
