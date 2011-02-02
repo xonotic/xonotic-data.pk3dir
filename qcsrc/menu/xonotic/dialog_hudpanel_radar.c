@@ -17,7 +17,7 @@ void XonoticHUDRadarDialog_fill(entity me)
 	string panelname = "radar";
 
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_panel_radar"));
+		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_radar"));
 			e.addValue(e, _("Panel disabled"), "0");
 			e.addValue(e, _("Panel enabled in teamgames"), "1");
 			e.addValue(e, _("Panel always enabled"), "2");
@@ -48,7 +48,7 @@ void XonoticHUDRadarDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Zoom mode:")));
-			me.TD(me, 1, 1.6, e = makeXonoticTextSlider("hud_panel_radar_zoommode"));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_radar_zoommode"));
 				e.addValue(e, _("Zoomed in"), "0");
 				e.addValue(e, _("Zoomed out"), "1");
 				e.addValue(e, _("Always zoomed"), "2");
