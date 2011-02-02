@@ -39,8 +39,8 @@ void XonoticScreenshotImage_draw(entity me)
 		SUPER(XonoticScreenshotImage).draw(me);
 		if (me.showTitle && time < me.showTitleTime + 1) // fade title out in 1 second
 		{
-			float alpha = (1 - (time - me.showTitleTime));
-			draw_CenterText('0.5 0 0', me.screenshotTitle, me.realFontSize, '1 1 1', alpha, FALSE);
+			float theAlpha = (1 - (time - me.showTitleTime));
+			draw_CenterText('0.5 0 0', me.screenshotTitle, me.realFontSize, '1 1 1', theAlpha, FALSE);
 		}
 	}
 }
