@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "tuba", "tuba", "@!#%'n Tuba");
+REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "tuba", "tuba", _("@!#%'n Tuba"))
 #else
 #ifdef SVQC
 //#define TUBA_NOTE(n) strcat("weapons/tuba_note", ftos(n), ".wav")
@@ -83,13 +83,14 @@ float W_Tuba_NoteSendEntity(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.origin_x);
 		WriteCoord(MSG_ENTITY, self.origin_y);
 		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteByte(MSG_ENTITY, self.owner != to);
 	}
 	return TRUE;
 }
 
 void W_Tuba_NoteThink()
 {
-	float needchange, dist_mult;
+	float dist_mult;
 	float vol0, vol1;
 	vector dir0, dir1;
 	vector v;
@@ -101,8 +102,7 @@ void W_Tuba_NoteThink()
 		return;
 	}
 	self.nextthink = time;
-	dist_mult = cvar("g_balance_tuba_attenuation") / cvar("snd_soundradius");
-	needchange = 0;
+	dist_mult = autocvar_g_balance_tuba_attenuation / autocvar_snd_soundradius;
 	FOR_EACH_REALCLIENT(e)
 	if(e != self.owner)
 	{
@@ -131,7 +131,7 @@ void W_Tuba_Attack(float hittype)
 {
 	vector o;
 	float c, n;
-	W_SetupShot(self, FALSE, 2, "", cvar("g_balance_tuba_damage"));
+	W_SetupShot(self, FALSE, 2, "", 0, autocvar_g_balance_tuba_damage);
 	if(self.tuba_notecount)
 	{
 		self.tuba_notecount = FALSE;
@@ -168,10 +168,10 @@ void W_Tuba_Attack(float hittype)
 		Net_LinkEntity(self.tuba_note, FALSE, 0, W_Tuba_NoteSendEntity);
 	}
 
-	self.tuba_note.teleport_time = time + cvar("g_balance_tuba_refire") * 2; // so it can get prolonged safely
+	self.tuba_note.teleport_time = time + autocvar_g_balance_tuba_refire * 2; // so it can get prolonged safely
 
-	//sound(self, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), cvar("g_balance_tuba_attenuation"));
-	RadiusDamage(self, self, cvar("g_balance_tuba_damage"), cvar("g_balance_tuba_edgedamage"), cvar("g_balance_tuba_radius"), world, cvar("g_balance_tuba_force"), hittype | WEP_TUBA, world);
+	//sound(self, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
+	RadiusDamage(self, self, autocvar_g_balance_tuba_damage, autocvar_g_balance_tuba_edgedamage, autocvar_g_balance_tuba_radius, world, autocvar_g_balance_tuba_force, hittype | WEP_TUBA, world);
 
 	o = gettaginfo(self.exteriorweaponentity, 0);
 	if(time > self.tuba_smoketime)
@@ -192,7 +192,7 @@ float w_tuba(float req)
 	{
 		// bots cannot play the Tuba well yet
 		// I think they should start with the recorder first
-		if(vlen(self.origin - self.enemy.origin) < cvar("g_balance_tuba_radius"))
+		if(vlen(self.origin - self.enemy.origin) < autocvar_g_balance_tuba_radius)
 		{
 			if(random() > 0.5)
 				self.BUTTON_ATCK = 1;
@@ -203,18 +203,18 @@ float w_tuba(float req)
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, cvar("g_balance_tuba_refire")))
+		if (weapon_prepareattack(0, autocvar_g_balance_tuba_refire))
 		{
 			W_Tuba_Attack(0);
-			//weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_tuba_animtime"), w_ready);
-			weapon_thinkf(WFRAME_IDLE, cvar("g_balance_tuba_animtime"), w_ready);
+			//weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
+			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_tuba_animtime, w_ready);
 		}
 		if (self.BUTTON_ATCK2)
-		if (weapon_prepareattack(1, cvar("g_balance_tuba_refire")))
+		if (weapon_prepareattack(1, autocvar_g_balance_tuba_refire))
 		{
 			W_Tuba_Attack(HITTYPE_SECONDARY);
-			//weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_tuba_animtime"), w_ready);
-			weapon_thinkf(WFRAME_IDLE, cvar("g_balance_tuba_animtime"), w_ready);
+			//weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_tuba_animtime, w_ready);
+			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_tuba_animtime, w_ready);
 		}
 		if(self.tuba_note)
 		{
@@ -257,11 +257,11 @@ float w_tuba(float req)
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		w_deathtypestring = "%s hurt his own ears with the @!#%%'n Tuba";
+		w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Tuba");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
-		w_deathtypestring = "%s died of %s's great playing on the @!#%%'n Tuba";
+		w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Tuba");
 	}
 	return TRUE;
 }

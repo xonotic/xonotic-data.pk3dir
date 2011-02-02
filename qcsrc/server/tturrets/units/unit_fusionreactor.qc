@@ -2,19 +2,6 @@ void spawnfunc_turret_fusionreactor();
 void turret_fusionreactor_dinit();
 void turret_fusionreactor_fire();
 
-float turret_fusionreactor_firecheck()
-{
-    if (self.enemy == world) return 0;
-    if not (self.enemy.ammo_flags & TFL_AMMO_RECIVE) return 0;
-    if not (self.enemy.ammo_flags & TFL_AMMO_ENERGY) return 0;
-    if (self.ammo < self.shot_dmg) return 0;
-    if (self.enemy.ammo >= self.enemy.ammo_max) return 0;
-    if (self.tur_dist_aimpos > self.target_range) return 0;
-    if (self.tur_dist_aimpos < self.target_range_min) return 0;
-
-    return 1;
-}
-
 void turret_fusionreactor_fire()
 {
     vector fl_org;
@@ -22,19 +9,50 @@ void turret_fusionreactor_fire()
     self.enemy.ammo = min(self.enemy.ammo + self.shot_dmg,self.enemy.ammo_max);
     fl_org = 0.5 * (self.enemy.absmin + self.enemy.absmax);
     te_smallflash(fl_org);
-    //te_lightning1(world,self.origin,self.enemy.origin);
 }
 
 void turret_fusionreactor_postthink()
 {
-    float f;
-    f = self.ammo / self.ammo_max;
-    self.tur_head.avelocity = '0 250 0' * f;
+    self.tur_head.avelocity = '0 250 0' * (self.ammo / self.ammo_max);
 }
 
+/*
 void turret_fusionreactor_respawnhook()
 {
     self.tur_head.avelocity = '0 50 0';
+}
+*/
+
+/**
+** Preforms pre-fire checks for fusionreactor
+**/
+float turret_fusionreactor_firecheck()
+{
+	if (self.attack_finished_single > time) 
+		return 0;
+
+	if (self.enemy.deadflag != DEAD_NO)
+		return 0;
+
+	if (self.enemy == world)
+		return 0;
+
+	if (self.ammo < self.shot_dmg)
+		return 0;
+
+	if (self.enemy.ammo >= self.enemy.ammo_max)
+		return 0;
+	
+	if (vlen(self.enemy.origin - self.origin) > self.target_range)
+		return 0;				
+	
+	if(self.team != self.enemy.team)
+		return 0;
+	
+	if not (self.enemy.ammo_flags & TFL_AMMO_ENERGY)
+		return 0;    
+	
+	return 1;
 }
 
 void turret_fusionreactor_dinit()
@@ -48,7 +66,7 @@ void turret_fusionreactor_dinit()
     self.shoot_flags         = TFL_SHOOT_HITALLVALID;
     self.aim_flags           = TFL_AIM_NO;
     self.track_flags         = TFL_TRACK_NO;
-    self.turret_respawnhook  = turret_fusionreactor_respawnhook;
+    // self.turret_respawnhook  = turret_fusionreactor_respawnhook;
 
     if (turret_stdproc_init("fusreac_std",0,"models/turrets/base.md3","models/turrets/reactor.md3") == 0)
     {

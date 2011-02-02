@@ -1,5 +1,5 @@
 // WEAPON PLUGIN SYSTEM
-entity weapon_info[24];
+entity weapon_info[WEP_MAXCOUNT];
 entity dummy_weapon_info;
 
 void register_weapon(float id, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname)
@@ -26,8 +26,6 @@ float w_null(float dummy)
 }
 void register_weapons_done()
 {
-	entity wi;
-
 	dummy_weapon_info = spawn();
 	dummy_weapon_info.classname = "weapon_info";
 	dummy_weapon_info.weapon = 0; // you can recognize dummies by this
@@ -45,28 +43,10 @@ void register_weapons_done()
 
 	float i;
 	weaponorder_byid = "";
-	for(i = 24; i >= 1; --i)
+	for(i = WEP_MAXCOUNT; i >= 1; --i)
 		if(weapon_info[i-1])
 			weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
-
-	float imp;
-	weaponorder_byimpulse = "";
-	for(i = 1; i <= 24; ++i)
-	{
-		wi = weapon_info[i-1];
-		if(wi && wi.impulse == 0)
-			weaponorder_byimpulse = strcat(weaponorder_byimpulse, " ", ftos(i));
-	}
-	for(imp = 9; imp > 0; --imp)
-		for(i = 1; i <= 24; ++i)
-		{
-			wi = weapon_info[i-1];
-			if(wi && wi.impulse == imp)
-				weaponorder_byimpulse = strcat(weaponorder_byimpulse, " ", ftos(i));
-		}
-
 	weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
-	weaponorder_byimpulse = strzone(substring(weaponorder_byimpulse, 1, strlen(weaponorder_byimpulse) - 1));
 }
 entity get_weaponinfo(float id)
 {
@@ -111,3 +91,54 @@ string W_NumberWeaponOrder(string order)
 {
 	return mapPriorityList(order, W_NumberWeaponOrder_MapFunc);
 }
+
+float W_FixWeaponOrder_BuildImpulseList_buf[WEP_MAXCOUNT];
+string W_FixWeaponOrder_BuildImpulseList_order;
+void W_FixWeaponOrder_BuildImpulseList_swap(float i, float j, entity pass)
+{
+	float h;
+	h = W_FixWeaponOrder_BuildImpulseList_buf[i];
+	W_FixWeaponOrder_BuildImpulseList_buf[i] = W_FixWeaponOrder_BuildImpulseList_buf[j];
+	W_FixWeaponOrder_BuildImpulseList_buf[j] = h;
+}
+float W_FixWeaponOrder_BuildImpulseList_cmp(float i, float j, entity pass)
+{
+	entity e1, e2;
+	float d;
+	e1 = get_weaponinfo(W_FixWeaponOrder_BuildImpulseList_buf[i]);
+	e2 = get_weaponinfo(W_FixWeaponOrder_BuildImpulseList_buf[j]);
+	d = mod(e1.impulse + 9, 10) - mod(e2.impulse + 9, 10);
+	if(d != 0)
+		return -d; // high impulse first!
+	return
+		strstrofs(strcat(" ", W_FixWeaponOrder_BuildImpulseList_order, " "), sprintf(" %d ", W_FixWeaponOrder_BuildImpulseList_buf[i]), 0)
+		-
+		strstrofs(strcat(" ", W_FixWeaponOrder_BuildImpulseList_order, " "), sprintf(" %d ", W_FixWeaponOrder_BuildImpulseList_buf[j]), 0)
+		; // low char index first!
+}
+string W_FixWeaponOrder_BuildImpulseList(string o)
+{
+	float i;
+	W_FixWeaponOrder_BuildImpulseList_order = o;
+	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		W_FixWeaponOrder_BuildImpulseList_buf[i - WEP_FIRST] = i;
+	heapsort(WEP_LAST - WEP_FIRST + 1, W_FixWeaponOrder_BuildImpulseList_swap, W_FixWeaponOrder_BuildImpulseList_cmp, world);
+	o = "";
+	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		o = strcat(o, " ", ftos(W_FixWeaponOrder_BuildImpulseList_buf[i - WEP_FIRST]));
+	W_FixWeaponOrder_BuildImpulseList_order = string_null;
+	return substring(o, 1, -1);
+}
+
+string W_FixWeaponOrder_AllowIncomplete(string order)
+{
+	return W_FixWeaponOrder(order, 0);
+}
+
+string W_FixWeaponOrder_ForceComplete(string order)
+{
+	if(order == "")
+		order = W_NumberWeaponOrder(cvar_defstring("cl_weaponpriority"));
+	return W_FixWeaponOrder(order, 1);
+}
+

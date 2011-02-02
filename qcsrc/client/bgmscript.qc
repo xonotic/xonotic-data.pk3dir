@@ -131,7 +131,7 @@ void BGMScript_InitEntity(entity e)
 		e.bgmscriptline = e.bgmscriptline0 = i;
 		if(i >= bgmscriptbufsize)
 		{
-			print("ERROR: bgmscript does not define ", e.bgmscript, "\n");
+			print(sprintf("ERROR: bgmscript does not define %s\n", e.bgmscript));
 			e.bgmscript = "";
 		}
 	}
@@ -167,45 +167,42 @@ float GetTimeForAmplitude(entity e, float amp)
 
 float BGMScript(entity e)
 {
-	float t;
 	float amp, vel;
 
 	if(e.bgmscript == "")
 		return 1;
 	
-	if(cvar("bgmvolume") <= 0)
+	if(autocvar_bgmvolume <= 0)
 		return -1;
 
 	e.just_toggled = FALSE;
 
-	t = gettime(GETTIME_CDTRACK);
-	if(t < 0)
+	if(bgmtime < 0)
 		return -1;
 
-	if(t < e.bgmscripttime)
+	if(bgmtime < e.bgmscripttime)
 	{
-		//print("reset ", e.bgmscript, "\n");
 		amp = GetCurrentAmplitude(e, e.bgmscripttime - e.bgmscriptstatetime + drawframetime);
 
 		e.bgmscriptline = e.bgmscriptline0;
-		e.bgmscripttime = t;
+		e.bgmscripttime = bgmtime;
 
 		// treat this as a stop event for all notes, to prevent sticking keys
 		e.bgmscriptstate = FALSE;
 		e.bgmscriptvolume = 1;
-		e.bgmscriptstatetime = t - GetTimeForAmplitude(e, amp);
+		e.bgmscriptstatetime = bgmtime - GetTimeForAmplitude(e, amp);
 	}
 
 	// find the CURRENT line
 	for(;;)
 	{
 		tokenize_console(bufstr_get(bgmscriptbuf, e.bgmscriptline));
-		if(stof(argv(1)) >= t || argv(0) != e.bgmscript)
+		if(stof(argv(1)) >= bgmtime || argv(0) != e.bgmscript)
 		{
-			e.bgmscripttime = t;
-			return GetCurrentAmplitude(e, t - e.bgmscriptstatetime);
+			e.bgmscripttime = bgmtime;
+			return GetCurrentAmplitude(e, bgmtime - e.bgmscriptstatetime);
 		}
-		else if(t >= stof(argv(1)))
+		else if(bgmtime >= stof(argv(1)))
 		{
 			e.bgmscriptline += 1;
 			e.bgmscripttime = stof(argv(1));

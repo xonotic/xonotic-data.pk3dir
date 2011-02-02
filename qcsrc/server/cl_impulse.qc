@@ -89,7 +89,7 @@ void ImpulseCommands (void)
 					break;
 				case 17:
 					if (!g_minstagib)
-						W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
+						W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, FALSE), '0 0 0', TRUE);
 					break;
 				case 18:
 					W_NextWeapon (1);
@@ -258,7 +258,7 @@ void ImpulseCommands (void)
 	}
 	else if(imp >= 103 && imp <= 107)
 	{
-		if(cvar("g_waypointeditor"))
+		if(autocvar_g_waypointeditor)
 		{
 			switch(imp)
 			{

@@ -28,7 +28,9 @@ entity pathlib_mknode(vector where,entity parent)
     node = pathlib_nodeatpoint(where);
     if(node)
     {
+    	#ifdef TURRET_DEBUG
         mark_error(where, 60);
+        #endif
         return node;
     }
 

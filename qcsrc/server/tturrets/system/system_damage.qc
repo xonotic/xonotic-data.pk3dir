@@ -17,12 +17,11 @@ void turret_trowgib(
     gib = spawn();
 
     gib.classname = "turret_gib";
-    setmodel(gib,smodel);
-    setorigin(gib,v_from);
-    SUB_SetFade(gib,time + f_lifetime,2);
+    setmodel(gib, smodel);
+    setorigin(gib, v_from);
+    SUB_SetFade(gib,time + f_lifetime, 2);
 
     gib.solid              = SOLID_BBOX;
-
     gib.movetype           = MOVETYPE_BOUNCE;
     gib.takedamage         = DAMAGE_YES;
     gib.event_damage       = turret_gib_damage;
@@ -38,7 +37,7 @@ void turret_trowgib(
         burn.effects        = EF_LOWPRECISION;//|EF_FLAME;
         setattachment(burn,gib,"");
         setorigin(burn,(gib.mins + gib.maxs) * 0.5);
-        SUB_SetFade(burn,time + (f_lifetime * 0.5) ,2);
+        SUB_SetFade(burn,time + (f_lifetime * 0.5), 2);
     }
 }
 
@@ -55,15 +54,13 @@ void turret_gib_boom()
 
         s = strcat("models/turrets/head-gib",ftos(i));
         s = strcat(s,".md3");
-        // bprint("s:",s,"\n");
-        setmodel(gib,s);
+        setmodel(gib, s);
 
         setorigin(gib,self.origin);
 
         SUB_SetFade(gib,time + 5,2);
 
         gib.solid              = SOLID_BBOX;
-
         gib.movetype           = MOVETYPE_BOUNCE;
         gib.gravity            = 0.5;
         gib.damageforcescale   = 2;
@@ -161,22 +158,21 @@ void turret_stdproc_die()
         makevectors(self.angles);
         if (random() > 0.5)
         {
-            turret_trowgib(self.origin, '0 0 0','1 1 1',"models/turrets/base-gib2.md3",min(self.respawntime,20),1,1);
+            turret_trowgib(self.origin, '0 0 0', '1 1 1', "models/turrets/base-gib2.md3", min(self.respawntime, 20), 1, 1);
+            
+            t_dir = (v_up * 700) + (randomvec() * 300);            
+            turret_trowgib(self.origin, t_dir, '1 1 1', "models/turrets/base-gib3.md3", min(self.respawntime, 10), 1, 1);
+            
             t_dir = (v_up * 700) + (randomvec() * 300);
-            turret_trowgib(self.origin, t_dir,'1 1 1',"models/turrets/base-gib3.md3",min(self.respawntime,10),1,1);
-            t_dir = (v_up * 700) + (randomvec() * 300);
-            turret_trowgib(self.origin, t_dir,'1 1 1',"models/turrets/base-gib4.md3",min(self.respawntime,10),1,1);
+            turret_trowgib(self.origin, t_dir, '1 1 1', "models/turrets/base-gib4.md3", min(self.respawntime, 10), 1, 1);
         }
         else
         {
-            turret_trowgib(self.origin, '0 0 0','1 1 1',"models/turrets/base-gib1.md3",min(self.respawntime,20),1,1);
+            turret_trowgib(self.origin, '0 0 0', '1 1 1', "models/turrets/base-gib1.md3", min(self.respawntime, 20), 1, 1);
         }
 
         // Blow the top part up into the air
-        turret_trowgib2( self.origin + (v_up * 50),
-                         v_up * 150 + randomvec() * 50,
-                         '0.2 0.2 0.2',
-                         self.tur_head,time + 0.5 + (random() * 0.5));
+        turret_trowgib2( self.origin + (v_up * 50), v_up * 150 + randomvec() * 50, '0.2 0.2 0.2', self.tur_head,time + 0.5 + (random() * 0.5));
     }
 
 // Go boom
@@ -192,31 +188,23 @@ void turret_stdproc_die()
     }
     else
     {
-    // Setup respawn
+		// Setup respawn
         self.nextthink      = time + self.respawntime;
-        //self.think          = self.turret_spawnfunc;
         self.think          = turret_stdproc_respawn;
+        
         if (self.turret_diehook)
             self.turret_diehook();
     }
-
 }
 
+var const float SUB_NullFloat();
 void turret_stdproc_respawn()
 {
     // Make sure all parts belong to the same team since
     // this function doubles as "teamchange" function.
 
-    self.tur_head.team = self.team;
-
-    /*
-    COLOR_TEAM1       = 4;  // red
-    COLOR_TEAM2       = 13; // blue
-    COLOR_TEAM3       = 12; // yellow
-    COLOR_TEAM4       = 9; // pink
-    */
-
-	self.colormod = '0 0 0';
+    self.tur_head.team 	= self.team;
+	self.colormod 		= '0 0 0';
 
 	switch(self.team)
 	{
@@ -238,17 +226,16 @@ void turret_stdproc_respawn()
 	}
 
     self.deadflag           = DEAD_NO;
-    self.effects            = 0;
+    self.effects            = EF_LOWPRECISION;
     self.tur_head.effects   = self.effects;
-
     self.solid              = SOLID_BBOX;
-
-    self.alpha = 1;
+    self.alpha 				= 1;
     self.tur_head.alpha     = self.alpha;
-    self.customizeentityforclient = SUB_True;
-    self.tur_head.customizeentityforclient = SUB_True;
+    
+    self.customizeentityforclient 			= SUB_NullFloat;
+    self.tur_head.customizeentityforclient 	= SUB_NullFloat;
 
-    self.takedamage = DAMAGE_AIM;
+    self.takedamage 			= DAMAGE_AIM;
     self.event_damage           = turret_stdproc_damage;
 
     self.avelocity              = '0 0 0';
@@ -282,15 +269,15 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     if not (self.tur_active)
         return;
 
-    if (teamplay != 0)
+    if (teams_matter)
     if (self.team == attacker.team)
     {
         // This does not happen anymore. Re-enable if you fix that.
         if(clienttype(attacker) == CLIENTTYPE_REAL)
             sprint(attacker, "\{1}Turret tells you: I'm on your team!\n");
 
-        if(cvar("g_friendlyfire"))
-            damage = damage * cvar("g_friendlyfire");
+        if(autocvar_g_friendlyfire)
+            damage = damage * autocvar_g_friendlyfire;
         else
             return;
     }
@@ -300,8 +287,6 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     // thorw head slightly off aim when hit?
     if (self.damage_flags & TFL_DMG_HEADSHAKE)
     {
-        //baseent.tur_aimoff_x += (random() * damage);
-        //baseent.tur_aimoff_y += ((random()*0.75) * damage);
         self.tur_head.angles_x = self.tur_head.angles_x + (-0.5 + random()) * damage;
         self.tur_head.angles_y = self.tur_head.angles_y + (-0.5 + random()) * damage;
     }
@@ -309,11 +294,8 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     if (self.turrcaps_flags & TFL_TURRCAPS_MOVE)
         self.velocity = self.velocity + vforce;
 
-    // FIXME: Better damage feedback
-    // Start burning when we have 10% or less health left
-    //if (self.health < (self.tur_health * 0.1))
-    //    self.effects = EF_FLAME;
-
+    // FIXME: Better damage feedback?
+    
     if (self.health <= 0)
     {
         self.event_damage           = SUB_Null;

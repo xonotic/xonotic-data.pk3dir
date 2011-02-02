@@ -58,7 +58,7 @@ void Draw_PointParticles()
 			if(self.noise != "")
 			{
 				self.origin = p;
-				sound(self, CHAN_AUTO, self.noise, VOL_BASE * self.volume, self.atten);
+				sound(self, CHAN_TRIGGER, self.noise, VOL_BASE * self.volume, self.atten);
 			}
 			self.just_toggled = 0;
 		}
@@ -286,14 +286,18 @@ void Net_ReadZCurveParticles()
 void Net_ReadNexgunBeamParticle()
 {
 	vector shotorg, endpos;
+	float charge;
 	shotorg_x = ReadCoord(); shotorg_y = ReadCoord(); shotorg_z = ReadCoord();
 	endpos_x = ReadCoord(); endpos_y = ReadCoord(); endpos_z = ReadCoord();
+	charge = ReadByte() / 255.0;
 	
 	pointparticles(particleeffectnum("nex_muzzleflash"), shotorg, normalize(endpos - shotorg) * 1000, 1);
 	
 	//draw either the old v2.3 beam or the new beam
-	if (cvar("cl_particles_oldnexbeam") && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo()))
-		WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), shotorg, endpos);
+	charge = sqrt(charge); // divide evenly among trail spacing and alpha
+	particles_alphamin = particles_alphamax = charge;
+	if (autocvar_cl_particles_oldnexbeam && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo()))
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("TE_TEI_G3"), shotorg, endpos, charge, 1);
 	else
-		WarpZone_TrailParticles(world, particleeffectnum("nex_beam"), shotorg, endpos);
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("nex_beam"), shotorg, endpos, charge, 1);
 }

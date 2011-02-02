@@ -29,13 +29,14 @@ void trigger_teleport_use()
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
-	TDEATHLOOP(org)
+	if (player.classname == "player" && player.health >= 1)
 	{
-		if ((player.classname == "player") && (player.health >= 1))
+		TDEATHLOOP(org)
 		{
-			if(head.classname == "player")
-				if(head.health >= 1)
-					return 1;
+			if not(teams_matter && autocvar_g_telefrags_teamplay && head.team == player.team)
+				if(head.classname == "player")
+					if(head.health >= 1)
+						return 1;
 		}
 	}
 	return 0;
@@ -45,15 +46,16 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 {
 	TDEATHLOOP(player.origin)
 	{
-		if ((player.classname == "player") && (player.health >= 1))
+		if (player.classname == "player" && player.health >= 1)
 		{
-			if(head.classname == "player")
-				if(head.health >= 1)
-					++tdeath_hit;
-			Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG, head.origin, '0 0 0');
+			if not(teams_matter && autocvar_g_telefrags_teamplay && head.team == player.team)
+			{
+				if(head.classname == "player")
+					if(head.health >= 1)
+						++tdeath_hit;
+				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG, head.origin, '0 0 0');
+			}
 		}
-		else if (telefragger.health < 1) // corpses gib
-			Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG, head.origin, '0 0 0');
 		else // dead bodies and monsters gib themselves instead of telefragging
 			Damage (telefragger, teleporter, telefragger, 10000, DEATH_TELEFRAG, telefragger.origin, '0 0 0');
 	}
@@ -68,9 +70,10 @@ void spawn_tdeath(vector v0, entity e, vector v)
 #define TELEPORT_FLAG_SOUND 1
 #define TELEPORT_FLAG_PARTICLES 2
 #define TELEPORT_FLAG_TDEATH 4
+#define TELEPORT_FLAG_FORCE_TDEATH 8
 
 #define TELEPORT_FLAGS_WARPZONE   0
-#define TELEPORT_FLAGS_PORTAL     (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES)
+#define TELEPORT_FLAGS_PORTAL     (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH | TELEPORT_FLAG_FORCE_TDEATH)
 #define TELEPORT_FLAGS_TELEPORTER (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH)
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
@@ -112,7 +115,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	if(player.classname == "player")
 	{
 		if(tflags & TELEPORT_FLAG_TDEATH)
-			if(player.takedamage && player.deadflag == DEAD_NO && !g_race && !g_cts && cvar("g_telefrags"))
+			if(player.takedamage && player.deadflag == DEAD_NO && !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
 				tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
 
 		// player no longer is on ground
@@ -125,7 +128,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		if(teleporter.owner)
 		{
 			player.pusher = teleporter.owner;
-			player.pushltime = time + cvar("g_maxpushtime");
+			player.pushltime = time + autocvar_g_maxpushtime;
 		}
 		else
 		{
@@ -149,7 +152,11 @@ void Teleport_Touch (void)
 	entity oldself, e;
 	vector o;
 	float p;
+	string s;
 
+	if (self.active != ACTIVE_ACTIVE)
+		return;
+	
 	if (other.health < 1)
 		return;
 	if not(other.flags & FL_CLIENT)	// FIXME: Make missiles firable through the teleport too
@@ -176,7 +183,7 @@ void Teleport_Touch (void)
 		for(e = world; (e = find(e, targetname, self.target)); )
 		{
 			p = 1;
-			if(cvar("g_telefrags_avoid"))
+			if(autocvar_g_telefrags_avoid)
 			{
 				o = e.origin + '0 0 1' * (1 - other.mins_z - 24);
 				if(check_tdeath(other, o, '0 0 0', '0 0 0'))
@@ -198,21 +205,22 @@ void Teleport_Touch (void)
 	if(e.speed)
 		if(vlen(other.velocity) > e.speed)
 			other.velocity = normalize(other.velocity) * max(0, e.speed);
-	if(cvar("g_teleport_maxspeed"))
-		if(vlen(other.velocity) > cvar("g_teleport_maxspeed"))
-			other.velocity = normalize(other.velocity) * max(0, cvar("g_teleport_maxspeed"));
+	if(autocvar_g_teleport_maxspeed)
+		if(vlen(other.velocity) > autocvar_g_teleport_maxspeed)
+			other.velocity = normalize(other.velocity) * max(0, autocvar_g_teleport_maxspeed);
 
 	o = e.origin + '0 0 1' * (1 - other.mins_z - 24);
 	TeleportPlayer(self, other, o, e.mangle, v_forward * vlen(other.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
 
-	if(e.target)
-	{
-		oldself = self;
-		activator = other;
-		self = e;
-		SUB_UseTargets();
-		self = oldself;
-	}
+	activator = other;
+	s = self.target; self.target = string_null;
+	SUB_UseTargets();
+	if not(self.target) self.target = s;
+
+	oldself = self;
+	self = e;
+	SUB_UseTargets();
+	self = oldself;
 }
 
 void spawnfunc_info_teleport_destination (void)
@@ -287,7 +295,9 @@ void spawnfunc_trigger_teleport (void)
 	self.angles = '0 0 0';
 
 	EXACTTRIGGER_INIT;
-
+	
+	self.active = ACTIVE_ACTIVE;	
+	
 	self.use = trigger_teleport_use;
 
 	// this must be called to spawn the teleport waypoints for bots

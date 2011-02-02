@@ -17,8 +17,8 @@ float require_spawnfunc_prefix; // if this float exists, only functions with spa
 
 float ctf_score_value(string parameter);
 
-float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_arena, g_ca, g_lms, g_runematch, g_race, g_nexball, g_cts;
-float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_laserguided_missile, g_midair, g_minstagib, g_pinata, g_norecoil, g_vampire, g_minstagib_invis_alpha, g_bloodloss;
+float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_arena, g_ca, g_lms, g_runematch, g_race, g_nexball, g_cts, g_freezetag, g_keepaway;
+float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minstagib, g_pinata, g_norecoil, g_minstagib_invis_alpha, g_bloodloss;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
@@ -200,6 +200,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 
 .entity weaponentity;
 .entity exteriorweaponentity;
+.vector weaponentity_glowmod;
 .float switchweapon;
 .float autoswitch;
 float weapon_action(float wpn, float wrequest);
@@ -221,10 +222,12 @@ float WS_DROP			= 2; // deselecting frame
 float WS_INUSE			= 3; // fire state
 float WS_READY			= 4; // idle frame
 
+// there is 2 weapon tics that can run in one server frame
+#define W_TICSPERFRAME 2
+
 void weapon_defaultspawnfunc(float wpn);
 
 string w_deathtypestring;
-float w_deathtype;
 
 void(entity client, string s) centerprint_builtin = #73;
 .vector dest1, dest2;
@@ -240,10 +243,6 @@ float alreadychangedlevel;
 
 .float welcomemessage_time;
 .float version;
-
-// Laser target for laser-guided weapons
-.entity lasertarget;
-.float laser_on;
 
 // minstagib vars
 .float jump_interval;    // laser refire
@@ -265,20 +264,21 @@ float blockSpectators; //if set, new or existing spectators or observers will be
 void checkSpectatorBlock();
 
 .float winning;
-.float jointime;
+.float jointime; // time of joining
+.float alivetime; // time of being alive
 
-float isJoinAllowed();
+float nJoinAllowed(float includeMe);
 #define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
 
 //sv_timeout: pauses the game by setting the gamespeed to a really low value (see TIMEOUT_SLOWMO_VALUE)
 #define TIMEOUT_SLOWMO_VALUE 0.0001
-float sys_frametime; // gets initialised in worlspawn, saves the value from cvar("sys_ticrate")
+float sys_frametime; // gets initialised in worlspawn, saves the value from autocvar_sys_ticrate
 float remainingTimeoutTime; // contains the time in seconds that the active timeout has left
 float remainingLeadTime; // contains the number of seconds left of the leadtime (before the timeout starts)
 float timeoutStatus; // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
 .float allowedTimeouts; // contains the number of allowed timeouts for each player
 entity timeoutInitiator; // contains the entity of the player who started the last timeout
-float orig_slowmo; // contains the value of cvar("slowmo") so that, after timeout finished, it isn't set to slowmo 1 necessarily
+float orig_slowmo; // contains the value of autocvar_slowmo so that, after timeout finished, it isn't set to slowmo 1 necessarily
 .vector lastV_angle; //used when pausing the game in order to force the player to keep his old view angle fixed
 entity timeoutHandler; //responsible for centerprinting the timeout countdowns and playing sounds
 void timeoutHandler_Think();
@@ -324,6 +324,11 @@ float sv_loddistance1;
 float sv_loddistance2;
 .float cvar_cl_gunalign;
 .float cvar_cl_noantilag;
+
+.string weaponorder_byimpulse;
+
+.float cvar_cl_allow_uid2name;
+.string stored_netname;
 
 void Announce(string snd);
 void AnnounceTo(entity e, string snd);
@@ -423,7 +428,6 @@ float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
 
 float sv_pogostick;
-float sv_doublejump;
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
 
 float next_pingtime;
@@ -436,6 +440,7 @@ float next_pingtime;
 // TODO implemented fall and falling
 #define ALLPLAYERSOUNDS \
 		_VOICEMSG(death) \
+		_VOICEMSG(fall) \
 		_VOICEMSG(drown) \
 		_VOICEMSG(gasp) \
 		_VOICEMSG(jump) \
@@ -495,6 +500,8 @@ void PlayerSound(.string samplefield, float channel, float voicetype);
 void GlobalSound(string samplestring, float channel, float voicetype);
 void FakeGlobalSound(string samplestring, float channel, float voicetype);
 void VoiceMessage(string type, string message);
+float GetPlayerSoundSampleField_notFound;
+.string GetVoiceMessageSampleField(string type)
 
 // autotaunt system
 .float cvar_cl_autotaunt;
@@ -518,6 +525,8 @@ string clientstuff;
 .string fog;
 
 string cvar_changes;
+string cvar_purechanges;
+float cvar_purechanges_count;
 
 float game_starttime; //point in time when the countdown is over
 .float stat_game_starttime;
@@ -525,6 +534,7 @@ float game_starttime; //point in time when the countdown is over
 .float stat_sv_airaccel_qw;
 .float stat_sv_airstrafeaccel_qw;
 .float stat_sv_airspeedlimit_nonqw;
+.float stat_sv_maxspeed;
 
 void W_Porto_Remove (entity p);
 
@@ -547,8 +557,8 @@ void target_voicescript_clear(entity pl);
 .string target4;
 .float trigger_reverse;
 
-// Nexball
-.entity ballcarried;
+// Nexball 
+.entity ballcarried; // Also used for keepaway
 .float metertime;
 float g_nexball_meter_period;
 
@@ -591,15 +601,7 @@ string matchid;
 .float hitplotfh;
 .string noise4;
 
-.float stat_hit;
-.float stat_fired;
-.float stat_count;
-
-.float stats_hit[WEP_MAXCOUNT];  // for hitscan bullets hit
-.float stats_fired[WEP_MAXCOUNT];  // for hitscan bullets fired
-
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_hit);
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(stats_fired);
+.float last_pickup;
 
 .float stat_leadlimit;
 
@@ -610,7 +612,8 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-.float campingrifle_bulletcounter;
+.float sniperrifle_bulletcounter;
+.float wish_reload;
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones
@@ -636,4 +639,27 @@ string deathmessage;
 
 .float ballistics_density; // wall piercing factor, larger = bullet can pass through more
 
+#define ACTIVE_NOT 		0
+#define ACTIVE_ACTIVE 	1
+#define ACTIVE_IDLE 	2
+#define ACTIVE_BUSY 	2
+#define ACTIVE_TOGGLE	3
+.float active;
+.float (float act_state) setactive;
 .entity realowner;
+
+.float nex_charge;
+.float nex_charge_rottime;
+.float nex_chargepool_ammo;
+
+float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
+
+float serverflags;
+
+.float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
+
+.float freezetag_frozen;
+.float freezetag_revive_progress;
+
+.entity muzzle_flash;
+.float misc_bulletcounter;	// replaces uzi & hlac bullet counter.

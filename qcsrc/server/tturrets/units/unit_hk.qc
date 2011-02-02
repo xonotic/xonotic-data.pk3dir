@@ -111,7 +111,7 @@ void turret_hk_attack()
     missile.enemy            = self.enemy;
     missile.team             = self.team;
     missile.cnt              = time + 30;
-    missile.ticrate          = max(cvar("sys_ticrate"),0.05);
+    missile.ticrate          = max(autocvar_sys_ticrate,0.05);
 
 	CSQCProjectile(missile, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, fly sound
 
@@ -289,7 +289,7 @@ void turret_hk_missile_think()
 
     // Calculate new heading
     olddir = normalize(self.velocity);
-    newdir = normalize(olddir + wishdir * cvar("g_turrets_unit_hk_std_shot_speed_turnrate"));
+    newdir = normalize(olddir + wishdir * autocvar_g_turrets_unit_hk_std_shot_speed_turnrate);
 
     // Set heading & speed
     self.velocity = newdir * myspeed;
@@ -367,13 +367,13 @@ void turret_hk_missile_explode()
 
 void turret_hk_postthink()
 {
-    if (cvar("g_turrets_reloadcvars"))
+    if (autocvar_g_turrets_reloadcvars)
     {
-        hk_maxspeed = cvar("g_turrets_unit_hk_std_shot_speed_max");
-        hk_minspeed = cvar("g_turrets_unit_hk_std_shot_speed");
-        hk_accel    = cvar("g_turrets_unit_hk_std_shot_speed_accel");
-        hk_accel2   = cvar("g_turrets_unit_hk_std_shot_speed_accel2");
-        hk_decel    = cvar("g_turrets_unit_hk_std_shot_speed_decel");
+        hk_maxspeed = autocvar_g_turrets_unit_hk_std_shot_speed_max;
+        hk_minspeed = autocvar_g_turrets_unit_hk_std_shot_speed;
+        hk_accel    = autocvar_g_turrets_unit_hk_std_shot_speed_accel;
+        hk_accel2   = autocvar_g_turrets_unit_hk_std_shot_speed_accel2;
+        hk_decel    = autocvar_g_turrets_unit_hk_std_shot_speed_decel;
     }
 
     if (self.tur_head.frame != 0)
@@ -388,11 +388,11 @@ void turret_hk_dinit()
 {
     if (self.netname == "")      self.netname  = "Hunter-killer turret";
 
-    hk_maxspeed = cvar("g_turrets_unit_hk_std_shot_speed_max");
-    hk_minspeed = cvar("g_turrets_unit_hk_std_shot_speed");
-    hk_accel    = cvar("g_turrets_unit_hk_std_shot_speed_accel");
-    hk_accel2   = cvar("g_turrets_unit_hk_std_shot_speed_accel2");
-    hk_decel    = cvar("g_turrets_unit_hk_std_shot_speed_decel");
+    hk_maxspeed = autocvar_g_turrets_unit_hk_std_shot_speed_max;
+    hk_minspeed = autocvar_g_turrets_unit_hk_std_shot_speed;
+    hk_accel    = autocvar_g_turrets_unit_hk_std_shot_speed_accel;
+    hk_accel2   = autocvar_g_turrets_unit_hk_std_shot_speed_accel2;
+    hk_decel    = autocvar_g_turrets_unit_hk_std_shot_speed_decel;
 
     self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_RECIVETARGETS;
 
@@ -417,7 +417,7 @@ void turret_hk_dinit()
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TEAMCHECK;
 
 
-    if (!turret_tag_setup())
+    if (!turret_tag_fire_update())
         dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     // Our fire routine

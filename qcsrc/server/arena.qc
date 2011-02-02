@@ -8,8 +8,8 @@ float arena_roundbased;
 entity spawnqueue_first;
 entity spawnqueue_last;
 entity champion;
+string champion_name;
 float warmup;
-float allowed_to_spawn;
 float ca_players;
 float required_ca_players;
 .float caplayer;
@@ -24,6 +24,14 @@ void func_breakable_reset();
 void assault_objective_reset();
 void target_assault_roundend_reset();
 
+float next_round;
+float stopalivecheck;
+float redalive, bluealive, yellowalive, pinkalive;
+float totalalive;
+.float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
+float redspawned, bluespawned, yellowspawned, pinkspawned;
+float totalspawned;
+
 /**
  * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
  * Sets the 'warmup' global variable.
@@ -33,11 +41,15 @@ void reset_map(float dorespawn)
 	entity oldself;
 	oldself = self;
 
-	if(g_arena && cvar("g_arena_warmup"))
-		warmup = time + cvar("g_arena_warmup");
+	if(g_arena && autocvar_g_arena_warmup)
+		warmup = time + autocvar_g_arena_warmup;
 	else if(g_ca) {
-		warmup = time + cvar("g_ca_warmup");
+		warmup = time + autocvar_g_ca_warmup;
 		allowed_to_spawn = 1;
+	}
+	else if(g_freezetag)
+	{
+		warmup = time + autocvar_g_freezetag_warmup;
 	}
 
 	lms_lowest_lives = 999;
@@ -46,7 +58,7 @@ void reset_map(float dorespawn)
 	race_ReadyRestart();
 
 	for(self = world; (self = nextent(self)); )
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	if(clienttype(self) == CLIENTTYPE_NOTACLIENT && self.items != IT_STRENGTH && self.items != IT_INVINCIBLE) // don't respawn strength or shield, that will only lead to them spawning very early each match
 	{
 		if(self.reset)
 		{
@@ -92,6 +104,11 @@ void reset_map(float dorespawn)
 				self.classname = "player";
 				PutClientInServer();
 			}
+			else if(g_freezetag)
+			{
+				if(self.classname == "player")
+					PutClientInServer();
+			}
 			else
 			{
 				/*
@@ -120,9 +137,9 @@ void reset_map(float dorespawn)
 	}
 
 	if(g_keyhunt)
-		kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_round")+(game_starttime - time), "", kh_StartRound);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round+(game_starttime - time), "", kh_StartRound);
 
-	if(g_arena || g_ca)
+	if(g_arena)
 	if(champion && champion.classname == "player" && player_count > 1)
 		UpdateFrags(champion, +1);
 
@@ -191,15 +208,20 @@ void Arena_Warmup()
 {
 	float f;
 	string msg;
+    entity e;
 
-	if((!g_arena && !g_ca) || (g_arena && !arena_roundbased) || (time < game_starttime))
+	if((!g_arena && !g_ca && !g_freezetag) || (g_arena && !arena_roundbased) || (time < game_starttime))
 		return;
 
-	f = floor(warmup - time + 1);
+	f = ceil(warmup - time);
+	if(f > 0)
+		champion = world; // this is done because a if(champion) will not execute if champion = world
 
 	allowed_to_spawn = 0;
 
-	if(g_ca && (ca_players < required_ca_players || inWarmupStage))
+	if(inWarmupStage)
+		allowed_to_spawn = 1;
+	if(ca_players < required_ca_players)
 		allowed_to_spawn = 1;
 
 	msg = NEWLINES;
@@ -208,7 +230,7 @@ void Arena_Warmup()
 		if (g_ca)
 			allowed_to_spawn = 1;
 		if(champion && g_arena)
-			msg = strcat("The Champion is ", champion.netname, "^7\n");
+			msg = strcat("The Champion is ", champion_name, "^7\n");
 			//centerprint(self, strcat(msg, "The Champion is ", champion.netname, "^7\n"));
 
 		if(f != roundStartTime_prev) {
@@ -224,7 +246,8 @@ void Arena_Warmup()
 			else if(f == 1)
 				Announce("1");
 
-			centerprint(self, msg);
+            FOR_EACH_PLAYER(e)
+                centerprint(e, msg);
 		}
 
 		if (g_arena) {
@@ -247,16 +270,104 @@ void Arena_Warmup()
 		if(g_ca) {
 			ca_players = 0;
 
-			FOR_EACH_PLAYER(self)
+            FOR_EACH_PLAYER(e)
 				ca_players += 1;
+		}
+
+        if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
+            self.movetype = MOVETYPE_WALK;
+	}
+}
+
+void count_spawned_players()
+{
+	// TODO fix "*spawned" name, it should rather be "*players" or so
+	// not doing this now to prevent merge hell with Tag
+	// fix after merging with Tag
+
+	// count amount of players in each team
+	totalspawned = redspawned = bluespawned = yellowspawned = pinkspawned = 0;
+	FOR_EACH_PLAYER(self) {
+		if (self.team == COLOR_TEAM1)
+		{
+			redspawned += 1;
+			totalspawned += 1;
+		}
+		else if (self.team == COLOR_TEAM2)
+		{
+			bluespawned += 1;
+			totalspawned += 1;
+		}
+		else if (self.team == COLOR_TEAM3)
+		{
+			yellowspawned += 1;
+			totalspawned += 1;
+		}
+		else if (self.team == COLOR_TEAM4)
+		{
+			pinkspawned += 1;
+			totalspawned += 1;
+		}
+	}
+}
+
+void count_alive_players()
+{
+	totalalive = redalive = bluealive = yellowalive = pinkalive = 0;
+	if(g_ca)
+	{
+		FOR_EACH_PLAYER(self) {
+			if (self.team == COLOR_TEAM1 && self.health >= 1)
+			{
+				redalive += 1;
+				totalalive += 1;
+			}
+			else if (self.team == COLOR_TEAM2 && self.health >= 1)
+			{
+				bluealive += 1;
+				totalalive += 1;
+			}
+		}
+		FOR_EACH_PLAYER(self) {
+			self.redalive_stat = redalive;
+			self.bluealive_stat = bluealive;
+		}
+	}
+	else if(g_freezetag)
+	{
+		// count amount of alive players in each team
+		FOR_EACH_PLAYER(self) {
+			if (self.team == COLOR_TEAM1 && self.freezetag_frozen == 0 && self.health >= 1)
+			{
+				redalive += 1;
+				totalalive += 1;
+			}
+			else if (self.team == COLOR_TEAM2 && self.freezetag_frozen == 0 && self.health >= 1)
+			{
+				bluealive += 1;
+				totalalive += 1;
+			}
+			else if (self.team == COLOR_TEAM3 && self.freezetag_frozen == 0 && self.health >= 1)
+			{
+				yellowalive += 1;
+				totalalive += 1;
+			}
+			else if (self.team == COLOR_TEAM4 && self.freezetag_frozen == 0 && self.health >= 1)
+			{
+				pinkalive += 1;
+				totalalive += 1;
+			}
+		}
+		FOR_EACH_PLAYER(self) {
+			self.redalive_stat = redalive;
+			self.bluealive_stat = bluealive;
+			self.yellowalive_stat = yellowalive;
+			self.pinkalive_stat = pinkalive;
 		}
 	}
 
-	if(self.classname == "player" && self.health > 0)
-		self.movetype = MOVETYPE_WALK;
 }
 
-float next_round;
 /**
  * This function finds out whether an arena round is over 1 player is left.
  * It determines the last player who's still alive and saves it's entity reference
@@ -266,18 +377,16 @@ float next_round;
  */
 void Spawnqueue_Check()
 {
-	if(time < warmup + 1 || inWarmupStage)
+	count_spawned_players();
+	if(g_ca || g_freezetag) // we want to perform this before the return block below (CA)...
+	{
+		count_alive_players();
+	}
+	if(time < warmup + 1 || inWarmupStage || intermission_running)
 		return;
 
 	if(g_ca) {
-		// check the amount of spawned players in each team
-		float redspawned, bluespawned;
-		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1) redspawned += 1;
-			else if (self.team == COLOR_TEAM2) bluespawned += 1;
-		}
-
-		required_ca_players = max(2, fabs(cvar("bot_vs_human") + 1));
+		required_ca_players = max(2, fabs(autocvar_bot_vs_human + 1));
 
 		if(ca_players < required_ca_players && (redspawned && bluespawned)) {
 			reset_map(TRUE);
@@ -285,32 +394,47 @@ void Spawnqueue_Check()
 		else if(ca_players < required_ca_players) {
 			FOR_EACH_PLAYER(self)
 				centerprint(self, strcat("^1Need at least 1 player in each team to play CA", "^7\n"));
-
-			allowed_to_spawn = 1;
 			return;
 		}
 		else if(!next_round) {
 			if((redspawned && !bluespawned) || (bluespawned && !redspawned)) {
 				next_round = time + 5;
-
 				champion = find(world, classname, "player");
-				string champion_team;
-				if(champion.team == COLOR_TEAM1) {
-					champion_team = "^1Red team";
-					play2all("ctf/red_capture.wav");
-				}
-				else if(champion.team == COLOR_TEAM2) {
-					champion_team = "^4Blue team";
-					play2all("ctf/blue_capture.wav");
-				}
-				FOR_EACH_CLIENT(self) centerprint(self, strcat(champion_team, "^7 wins the round.", "^7\n"));
+				if(champion_name)
+					strunzone(champion_name);
+				champion_name = strzone(champion.netname);
 			}
-			else if(!redspawned && !bluespawned) {
+			else if((!redspawned && !bluespawned) || time - warmup > autocvar_g_ca_round_timelimit) {
 				FOR_EACH_CLIENT(self) centerprint(self, strcat("^7Round tied.", "^7\n"));
 				next_round = time + 5;
 			}
+
+		}
+		if(!stopalivecheck)
+		{
+			if(redalive && !bluealive)
+			{
+				play2all("ctf/red_capture.wav");
+				FOR_EACH_CLIENT(self) centerprint(self, "^1 RED ^7team wins the round.\n");
+				TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, +1);
+				stopalivecheck = TRUE;
+			}
+			else if(bluealive && !redalive)
+			{
+				play2all("ctf/blue_capture.wav");
+				FOR_EACH_CLIENT(self) centerprint(self, "^4 BLUE ^7team wins the round.\n");
+				TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, +1);
+				stopalivecheck = TRUE;
+			}
 		}
 
+		if((next_round && next_round < time))
+		{
+			stopalivecheck = FALSE;
+			next_round = 0;
+			reset_map(TRUE);
+		}
+	} else if(g_freezetag) {
 		if((next_round && next_round < time))
 		{
 			next_round = 0;

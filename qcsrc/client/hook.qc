@@ -1,7 +1,6 @@
 .float HookType; // ENT_CLIENT_*
 .vector origin;
 .vector velocity;
-.float HookSound;
 .float HookSilent;
 .float HookRange;
 
@@ -18,13 +17,6 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 
 	// direction is perpendicular to the view normal, and perpendicular to the axis
 	thickdir = normalize(cross(axis, vieworg - from));
-
-/*
-	print("from ", vtos(from), "\n");
-	print("to ", vtos(to), "\n");
-	print("org ", vtos(view_origin), "\n");
-	print("dir ", vtos(thickdir), "\n");
-*/
 
 	A = from - thickdir * (thickness / 2);
 	B = from + thickdir * (thickness / 2);
@@ -53,19 +45,27 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 	Draw_GrapplingHook_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
 }
 
+.float teleport_time;
 void Draw_GrapplingHook()
 {
 	vector a, b, atrans;
-	string tex, snd;
+	string tex;
 	vector rgb;
 	float t;
 	float s;
 	vector vs;
 	float intensity, offset;
 
+	if(self.teleport_time)
+	if(time > self.teleport_time)
+	{
+		sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM); // safeguard
+		self.teleport_time = 0;
+	}
+
 	InterpolateOrigin_Do();
 
-	s = cvar("cl_gunalign");
+	s = autocvar_cl_gunalign;
 	if(s != 1 && s != 2 && s != 4)
 		s = 3; // default value
 	--s;
@@ -182,8 +182,16 @@ void Draw_GrapplingHook()
 	{
 		default:
 		case ENT_CLIENT_HOOK:
-			setorigin(self, trace_endpos); // hook endpoint!
-			self.angles = vectoangles(trace_endpos - atrans);
+			if(vlen(trace_endpos - atrans) > 0.5)
+			{
+				setorigin(self, trace_endpos); // hook endpoint!
+				self.angles = vectoangles(trace_endpos - atrans);
+				self.drawmask = MASK_NORMAL;
+			}
+			else
+			{
+				self.drawmask = 0;
+			}
 			break;
 		case ENT_CLIENT_LGBEAM:
 		case ENT_CLIENT_GAUNTLET:
@@ -253,7 +261,7 @@ void Ent_ReadHook(float bIsNew, float type)
 
 	InterpolateOrigin_Note();
 
-	if(bIsNew)
+	if(bIsNew || !self.teleport_time)
 	{
 		self.draw = Draw_GrapplingHook;
 		self.entremove = Remove_GrapplingHook;
@@ -274,6 +282,8 @@ void Ent_ReadHook(float bIsNew, float type)
 				break;
 		}
 	}
+
+	self.teleport_time = time + 10;
 }
 
 void Hook_Precache()

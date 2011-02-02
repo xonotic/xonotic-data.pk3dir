@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_CANCLIMB | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "minstanex", "minstanex", "MinstaNex");
+REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_CANCLIMB | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "minstanex", "minstanex", _("MinstaNex"))
 #else
 #ifdef SVQC
 .float minstanex_lasthit;
@@ -9,7 +9,7 @@ void W_MinstaNex_Attack (void)
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	W_SetupShot (self, TRUE, 0, "weapons/minstanexfire.wav", 0);
+	W_SetupShot (self, TRUE, 0, "weapons/minstanexfire.wav", CHAN_WEAPON, 10000);
 
 	yoda = 0;
 	damage_goodhits = 0;
@@ -28,7 +28,6 @@ void W_MinstaNex_Attack (void)
 		if(headshot)
 		{
 			AnnounceTo(self, "headshot");
-			print("h\n");
 		}
 		if(damage_goodhits && self.minstanex_lasthit)
 		{
@@ -44,7 +43,7 @@ void W_MinstaNex_Attack (void)
 	// teamcolor / hit beam effect
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	if(teamplay)
+	if(teams_matter)
 	{
 	    switch(self.team)
 	    {
@@ -86,7 +85,7 @@ void W_MinstaNex_Attack (void)
 		if (g_minstagib)
 			self.ammo_cells = self.ammo_cells - 1;
 		else
-			self.ammo_cells = self.ammo_cells - cvar("g_balance_minstanex_ammo");
+			self.ammo_cells = self.ammo_cells - autocvar_g_balance_minstanex_ammo;
 	}
 }
 
@@ -179,23 +178,23 @@ float w_minstanex(float req)
 		if(self.ammo_cells>0)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 		else
-			self.BUTTON_ATCK2 = bot_aim(cvar("g_balance_laser_primary_speed"), 0, cvar("g_balance_laser_primary_lifetime"), FALSE);
+			self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE);
 	}
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
 		{
-			if (weapon_prepareattack(0, cvar("g_balance_minstanex_refire")))
+			if (weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
 			{
 				W_MinstaNex_Attack();
-				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_minstanex_animtime"), w_ready);
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_minstanex_animtime, w_ready);
 			}
 		}
 		else if (self.BUTTON_ATCK2)
 		{
 			if (self.jump_interval <= time)
 			{
-				self.jump_interval = time + 0.9 * W_WeaponRateFactor();
+				self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
 
 				// ugly minstagib hack to reuse the fire mode of the laser
 				float w;
@@ -228,7 +227,7 @@ float w_minstanex(float req)
 		if (g_minstagib)
 			return self.ammo_cells >= 1;
 		else
-			return self.ammo_cells >= cvar("g_balance_minstanex_ammo");
+			return self.ammo_cells >= autocvar_g_balance_minstanex_ammo;
 	}
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
@@ -255,9 +254,9 @@ float w_minstanex(float req)
 		precache_sound("weapons/neximpact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s did the impossible";
+		w_deathtypestring = _("%s did the impossible");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "%s has been vaporized by %s";
+		w_deathtypestring = _("%s has been vaporized by %s");
 	return TRUE;
 }
 #endif

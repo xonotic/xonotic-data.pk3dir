@@ -1,43 +1,3 @@
-// checkextension wrapper for log
-float sqrt(float f); // declared later
-float exp(float f); // declared later
-float pow(float f, float e); // declared later
-float checkextension(string s); // declared later
-float log_synth(float f)
-{
-	float p, l;
-	if(f < 0)
-		return sqrt(-1); // nan? -inf?
-	if(f == 0)
-		return sqrt(-1); // ACTUALLY this should rather be -inf, but we cannot create a +inf in QC
-	if(f + f == f)
-		return l; // +inf
-	if(f < 1)
-	{
-		f = 1 / f;
-		p = -1;
-	}
-	else
-		p = 1;
-	while(f > 2)
-	{
-		f = sqrt(f);
-		p *= 2;
-	}
-	// two steps are good enough
-	l = ((6-f) * f - 5) / 4.32808512266689022212;
-	l += exp(-l) * f - 1;
-	l += exp(-l) * f - 1;
-	return l * p;
-}
-float log(float f)
-{
-	if(checkextension("DP_QC_LOG"))
-		return log_builtin(f);
-	else
-		return log_synth(f);
-}
-
 string wordwrap_buffer;
 
 void wordwrap_buffer_put(string s)
@@ -309,7 +269,8 @@ float db_load(string pFilename)
 	fh = fopen(pFilename, FILE_READ);
 	if(fh < 0)
 		return db;
-	if(stof(fgets(fh)) == DB_BUCKETS)
+	l = fgets(fh);
+	if(stof(l) == DB_BUCKETS)
 	{
 		i = 0;
 		while((l = fgets(fh)))
@@ -321,14 +282,18 @@ float db_load(string pFilename)
 	}
 	else
 	{
-		// different count of buckets?
+		// different count of buckets, or a dump?
 		// need to reorganize the database then (SLOW)
-		while((l = fgets(fh)))
+		//
+		// note: we also parse the first line (l) in case the DB file is
+		// missing the bucket count
+		do
 		{
 			n = tokenizebyseparator(l, "\\");
 			for(j = 2; j < n; j += 2)
 				db_put(db, argv(j-1), uri_unescape(argv(j)));
 		}
+		while((l = fgets(fh)));
 	}
 	fclose(fh);
 	return db;
@@ -395,7 +360,10 @@ float buf_load(string pFilename)
 		return -1;
 	fh = fopen(pFilename, FILE_READ);
 	if(fh < 0)
-		return buf;
+	{
+		buf_del(buf);
+		return -1;
+	}
 	i = 0;
 	while((l = fgets(fh)))
 	{
@@ -434,6 +402,8 @@ string GametypeNameFromType(float g)
 	else if (g == GAME_RACE) return "rc";
 	else if (g == GAME_NEXBALL) return "nexball";
 	else if (g == GAME_CTS) return "cts";
+	else if (g == GAME_FREEZETAG) return "freezetag";
+	else if (g == GAME_KEEPAWAY) return "ka";
 	return "dm";
 }
 
@@ -1870,7 +1840,13 @@ float get_model_parameters(string m, float sk)
 	fn = get_model_datafilename(m, sk, "txt");
 	fh = fopen(fn, FILE_READ);
 	if(fh < 0)
-		return 0;
+	{
+		sk = 0;
+		fn = get_model_datafilename(m, sk, "txt");
+		fh = fopen(fn, FILE_READ);
+		if(fh < 0)
+			return 0;
+	}
 
 	get_model_parameters_modelname = m;
 	get_model_parameters_modelskin = sk;
@@ -1918,4 +1894,115 @@ vector vec2(vector v)
 {
 	v_z = 0;
 	return v;
+}
+
+#ifndef MENUQC
+vector NearestPointOnBox(entity box, vector org)
+{
+	vector m1, m2, nearest;
+
+	m1 = box.mins + box.origin;
+	m2 = box.maxs + box.origin;
+
+	nearest_x = bound(m1_x, org_x, m2_x);
+	nearest_y = bound(m1_y, org_y, m2_y);
+	nearest_z = bound(m1_z, org_z, m2_z);
+
+	return nearest;
+}
+#endif
+
+float vercmp_recursive(string v1, string v2)
+{
+	float dot1, dot2;
+	string s1, s2;
+	float r;
+
+	dot1 = strstrofs(v1, ".", 0);
+	dot2 = strstrofs(v2, ".", 0);
+	if(dot1 == -1)
+		s1 = v1;
+	else
+		s1 = substring(v1, 0, dot1);
+	if(dot2 == -1)
+		s2 = v2;
+	else
+		s2 = substring(v2, 0, dot2);
+
+	r = stof(s1) - stof(s2);
+	if(r != 0)
+		return r;
+
+	r = strcasecmp(s1, s2);
+	if(r != 0)
+		return r;
+
+	if(dot1 == -1)
+		if(dot2 == -1)
+			return 0;
+		else
+			return -1;
+	else
+		if(dot2 == -1)
+			return 1;
+		else
+			return vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
+}
+
+float vercmp(string v1, string v2)
+{
+	if(strcasecmp(v1, v2) == 0) // early out check
+		return 0;
+
+	// "git" beats all
+	if(v1 == "git")
+		return 1;
+	if(v2 == "git")
+		return -1;
+
+	return vercmp_recursive(v1, v2);
+}
+
+float u8_strsize(string s)
+{
+	float l, i, c;
+	l = 0;
+	for(i = 0; ; ++i)
+	{
+		c = str2chr(s, i);
+		if(c <= 0)
+			break;
+		++l;
+		if(c >= 0x80)
+			++l;
+		if(c >= 0x800)
+			++l;
+		if(c >= 0x10000)
+			++l;
+	}
+	return l;
+}
+
+// translation helpers
+string language_filename(string s)
+{
+	string fn;
+	float fh;
+	fn = prvm_language;
+	if(fn == "" || fn == "dump")
+		return s;
+	fn = strcat(s, ".", fn);
+	if((fh = fopen(fn, FILE_READ)) >= 0)
+	{
+		fclose(fh);
+		return fn;
+	}
+	return s;
+}
+string CTX(string s)
+{
+	float p = strstrofs(s, "^", 0);
+	if(p < 0)
+		return s;
+	return substring(s, p+1, -1);
 }

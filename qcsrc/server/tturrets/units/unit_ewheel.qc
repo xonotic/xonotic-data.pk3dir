@@ -11,10 +11,10 @@ float ewheel_speed_stop;
 
 void turret_ewheel_loadcvars()
 {
-    ewheel_speed_fast   = cvar("g_turrets_unit_ewheel_speed_fast");
-    ewheel_speed_slow   = cvar("g_turrets_unit_ewheel_speed_slow");
-    ewheel_speed_slower = cvar("g_turrets_unit_ewheel_speed_slower");
-    ewheel_speed_stop   = cvar("g_turrets_unit_ewheel_speed_stop");
+    ewheel_speed_fast   = autocvar_g_turrets_unit_ewheel_speed_fast;
+    ewheel_speed_slow   = autocvar_g_turrets_unit_ewheel_speed_slow;
+    ewheel_speed_slower = autocvar_g_turrets_unit_ewheel_speed_slower;
+    ewheel_speed_stop   = autocvar_g_turrets_unit_ewheel_speed_stop;
 }
 
 void turret_ewheel_projectile_explode()
@@ -59,12 +59,13 @@ void ewheel_attack()
         proj.bot_dodgerating = self.shot_dmg;
         proj.think           = turret_ewheel_projectile_explode;
         proj.nextthink       = time + 9;
-        proj.solid           = SOLID_BBOX;
+        //proj.solid           = SOLID_TRIGGER;
         proj.movetype        = MOVETYPE_FLYMISSILE;
         proj.velocity        = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
         proj.touch           = turret_ewheel_projectile_explode;
         proj.enemy           = self.enemy;
         proj.flags           = FL_PROJECTILE | FL_NOTARGET;
+        PROJECTILE_MAKETRIGGER(proj);
 
         CSQCProjectile(proj, TRUE, PROJECTILE_LASER, TRUE);
 
@@ -215,6 +216,10 @@ void ewheel_respawnhook()
 {
     entity e;
 
+    // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
+    if(self.movetype  != MOVETYPE_WALK)
+		return;
+		
     self.velocity = '0 0 0';
     self.enemy = world;
 
@@ -285,7 +290,9 @@ void turret_ewheel_dinit()
     }
 
     self.target_select_flags   = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+    self.target_select_flags   = TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;// | TFL_TARGETSELECT_LOS;
+    self.target_validate_flags = TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;// | TFL_TARGETSELECT_LOS;
     self.damage_flags          |= TFL_DMG_DEATH_NOGIBS;
 
     self.iscreature = TRUE;
@@ -304,10 +311,10 @@ void turret_ewheel_dinit()
     self.tur_head.frame = 1;
 
     // Convert from dgr / sec to dgr / tic
-    self.tur_head.aim_speed = cvar("g_turrets_unit_ewheel_turnrate");
+    self.tur_head.aim_speed = autocvar_g_turrets_unit_ewheel_turnrate;
     self.tur_head.aim_speed = self.tur_head.aim_speed / (1 / self.ticrate);
 
-    if (!turret_tag_setup())
+    if (!turret_tag_fire_update())
         dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     //setorigin(self,self.origin + '0 0 128');

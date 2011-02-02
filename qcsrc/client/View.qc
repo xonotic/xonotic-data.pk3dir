@@ -102,7 +102,7 @@ void CheckForGamestartChange() {
 	if (previous_game_starttime != startTime) {
 		if ((time + 5.0) < startTime) {
 			//if connecting to server while restart was active don't always play prepareforbattle
-			sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
+			sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
 		}
 		if (time < startTime) {
 			restartAnnouncer = spawn();
@@ -127,17 +127,17 @@ vector GetCurrentFov(float fov)
 {
 	float zoomsensitivity, zoomspeed, zoomfactor, zoomdir, velocityzoom;
 
-	zoomsensitivity = cvar("cl_zoomsensitivity");
-	zoomfactor = cvar("cl_zoomfactor");
+	zoomsensitivity = autocvar_cl_zoomsensitivity;
+	zoomfactor = autocvar_cl_zoomfactor;
 	if(zoomfactor < 1 || zoomfactor > 16)
 		zoomfactor = 2.5;
-	zoomspeed = cvar("cl_zoomspeed");
+	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0)
 		if(zoomspeed < 0.5 || zoomspeed > 16)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
-	if((getstati(STAT_ACTIVEWEAPON) == WEP_NEX && nex_scope) || (getstati(STAT_ACTIVEWEAPON) == WEP_CAMPINGRIFLE && campingrifle_scope)) // do NOT use switchweapon here
+	if((getstati(STAT_ACTIVEWEAPON) == WEP_NEX && nex_scope) || (getstati(STAT_ACTIVEWEAPON) == WEP_SNIPERRIFLE && sniperrifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -185,11 +185,11 @@ vector GetCurrentFov(float fov)
 	else
 		setsensitivityscale(1);
 
-	velocityzoom = bound(0, drawframetime / max(0.000000001, cvar_or("cl_velocityzoomtime", 0.3)), 1);
+	velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoomtime), 1);
 	avgspeed = avgspeed * (1 - velocityzoom) + (vlen(pmove_vel) / 1000) * velocityzoom;
-	velocityzoom = exp(float2range11(avgspeed * -cvar_or("cl_velocityzoom", 0) / 1) * 1);
+	velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom / 1) * 1);
 
-	//print(ftos(avgspeed), " avgspeed, ", ftos(cvar_or("cl_velocityzoom", 0)), " cvar, ", ftos(velocityzoom), " return\n"); // for debugging
+	//print(ftos(avgspeed), " avgspeed, ", ftos(autocvar_cl_velocityzoom), " cvar, ", ftos(velocityzoom), " return\n"); // for debugging
 
 	float frustumx, frustumy, fovx, fovy;
 	frustumy = tan(fov * M_PI / 360.0) * 0.75 * current_viewzoom * velocityzoom;
@@ -274,7 +274,7 @@ float TrueAimCheck()
 		case WEP_MINSTANEX:
 			mv = MOVE_NORMAL;
 			break;
-		case WEP_CAMPINGRIFLE:
+		case WEP_SNIPERRIFLE:
 			ta = trueaim_rifle;
 			mv = MOVE_NORMAL;
 			if(zoomscript_caught)
@@ -305,6 +305,9 @@ float TrueAimCheck()
 
 	traceline(view_origin, view_origin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
 	trueaimpoint = trace_endpos;
+
+	if(vlen(trueaimpoint - view_origin) < g_trueaim_minrange)
+		trueaimpoint = view_origin + view_forward * g_trueaim_minrange;
 
 	if(vecs_x > 0)
 		vecs_y = -vecs_y;
@@ -338,7 +341,7 @@ void CSQC_common_hud(void);
 
 void PostInit(void);
 void CSQC_Demo_Camera();
-float HUD_WouldDrawScoreboard ();
+float HUD_WouldDrawScoreboard();
 float view_set;
 float camera_mode;
 float reticle_type;
@@ -347,6 +350,18 @@ void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
 
 vector freeze_pmove_org, freeze_input_angles;
+entity nightvision_noise, nightvision_noise2;
+
+float pickup_crosshair_time, pickup_crosshair_size;
+float use_nex_chargepool;
+
+float myhealth, myhealth_prev;
+float myhealth_flash;
+
+vector myhealth_gentlergb;
+
+float contentavgalpha, liquidalpha_prev;
+vector liquidcolor_prev;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -355,6 +370,7 @@ void CSQC_UpdateView(float w, float h)
 	float f, i, j;
 	vector v, vo;
 	vector vf_size, vf_min;
+	float a;
 
 	vf_size = R_SetView3fv(VF_SIZE);
 	vf_min = R_SetView3fv(VF_MIN);
@@ -381,7 +397,7 @@ void CSQC_UpdateView(float w, float h)
 	input_angles = warpzone_fixview_cl_viewangles;
 	view_angles = warpzone_fixview_angles;
 
-	if(cvar("cl_lockview") || autocvar__hud_configure)
+	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0))
 	{
 		pmove_org = freeze_pmove_org;
 		input_angles = view_angles = freeze_input_angles;
@@ -447,7 +463,7 @@ void CSQC_UpdateView(float w, float h)
 	maptimeAnnouncer();
 	carrierAnnouncer();
 
-	fov = cvar("fov");
+	fov = autocvar_fov;
 	if(button_zoom || fov <= 59.5)
 	{
 		if(!zoomscript_caught)
@@ -467,10 +483,9 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	hud_accuracy_hud = cvar_or("hud_accuracy_hud", 1);
-	ColorTranslateMode = cvar("cl_stripcolorcodes");
+	ColorTranslateMode = autocvar_cl_stripcolorcodes;
 	activeweapon = getstati(STAT_SWITCHWEAPON);
-	f = cvar("teamplay");
+	f = (serverflags & SERVERFLAG_TEAMPLAY);
 	if(f != teamplay)
 	{
 		teamplay = f;
@@ -500,16 +515,16 @@ void CSQC_UpdateView(float w, float h)
 	R_SetView(VF_DRAWWORLD, 1);
 
 	// Set the console size vars
-	vid_conwidth = cvar("vid_conwidth");
-	vid_conheight = cvar("vid_conheight");
-	vid_pixelheight = cvar("vid_pixelheight");
+	vid_conwidth = autocvar_vid_conwidth;
+	vid_conheight = autocvar_vid_conheight;
+	vid_pixelheight = autocvar_vid_pixelheight;
 
 	R_SetView(VF_FOV, GetCurrentFov(fov));
 
 	// Camera for demo playback
 	if(camera_active)
 	{
-		if(cvar("camera_enable"))
+		if(autocvar_camera_enable)
 			CSQC_Demo_Camera();
 		else
 		{
@@ -519,13 +534,13 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 #ifdef CAMERATEST
-	else if(cvar("camera_enable"))
+	else if(autocvar_camera_enable)
 #else
-	else if(cvar("camera_enable") && isdemo())
+	else if(autocvar_camera_enable && isdemo())
 #endif
 	{
 		// Enable required Darkplaces cvars
-		chase_active_backup = cvar("chase_active");
+		chase_active_backup = autocvar_chase_active;
 		cvar_set("chase_active", "2");
 		cvar_set("cl_demo_mousegrab", "1");
 		camera_active = TRUE;
@@ -533,16 +548,14 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	// Draw the Crosshair
-	float scoreboard_active;
-	scoreboard_active = HUD_WouldDrawScoreboard();
 	R_SetView(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
 
 	// Draw the Engine Status Bar (the default Quake HUD)
 	R_SetView(VF_DRAWENGINEHUD, 0);
 
 	// fetch this one only once per frame
-	hud_showbinds = cvar("hud_showbinds");
-	hud_showbinds_limit = cvar("hud_showbinds_limit");
+	hud_showbinds = autocvar_hud_showbinds;
+	hud_showbinds_limit = autocvar_hud_showbinds_limit;
 
 	// Update the mouse position
 	/*
@@ -565,18 +578,70 @@ void CSQC_UpdateView(float w, float h)
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
+	if(autocvar_r_fakelight >= 2 || autocvar_r_fullbright)
+	if not(serverflags & SERVERFLAG_ALLOW_FULLBRIGHT)
+	{
+		// apply night vision effect
+		vector rgb, tc_00, tc_01, tc_10, tc_11;
+
+		if(!nightvision_noise)
+		{
+			nightvision_noise = spawn();
+			nightvision_noise.classname = "nightvision_noise";
+		}
+		if(!nightvision_noise2)
+		{
+			nightvision_noise2 = spawn();
+			nightvision_noise2.classname = "nightvision_noise2";
+		}
+
+		// color tint in yellow
+		drawfill('0 0 0', autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', '0.5 1 0.3', 1, DRAWFLAG_MODULATE);
+
+		// draw BG
+		a = Noise_Pink(nightvision_noise, frametime * 1.5) * 0.05 + 0.15;
+		rgb = '1 1 1';
+		tc_00 = '0 0 0' + '0.2 0 0' * sin(time * 0.3) + '0 0.3 0' * cos(time * 0.7);
+		tc_01 = '0 2.25 0' + '0.6 0 0' * cos(time * 1.2) - '0 0.3 0' * sin(time * 2.2);
+		tc_10 = '1.5 0 0' - '0.2 0 0' * sin(time * 0.5) + '0 0.5 0' * cos(time * 1.7);
+		//tc_11 = '1 1 0' + '0.6 0 0' * sin(time * 0.6) + '0 0.3 0' * cos(time * 0.1);
+		tc_11 = tc_01 + tc_10 - tc_00;
+		R_BeginPolygon("gfx/nightvision-bg.tga", DRAWFLAG_ADDITIVE);
+		R_PolygonVertex('0 0 0', tc_00, rgb, a);
+		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, a);
+		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, a);
+		R_PolygonVertex(autocvar_vid_conheight * '0 1 0', tc_01, rgb, a);
+		R_EndPolygon();
+
+		// draw FG
+		a = Noise_Pink(nightvision_noise2, frametime * 0.1) * 0.05 + 0.12;
+		rgb = '0.3 0.6 0.4' + '0.1 0.4 0.2' * Noise_White(nightvision_noise2, frametime);
+		tc_00 = '0 0 0' + '1 0 0' * Noise_White(nightvision_noise2, frametime) + '0 1 0' * Noise_White(nightvision_noise2, frametime);
+		tc_01 = tc_00 + '0 3 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.2);
+		tc_10 = tc_00 + '2 0 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.3);
+		tc_11 = tc_01 + tc_10 - tc_00;
+		R_BeginPolygon("gfx/nightvision-fg.tga", DRAWFLAG_ADDITIVE);
+		R_PolygonVertex('0 0 0', tc_00, rgb, a);
+		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, a);
+		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, a);
+		R_PolygonVertex(autocvar_vid_conheight * '0 1 0', tc_01, rgb, a);
+		R_EndPolygon();
+	}
+
 	// Draw the aiming reticle for weapons that use it
 	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 	// It must be a persisted float for fading out to work properly (you let go of the zoom button for
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || getstati(STAT_HEALTH) <= 0)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
+	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_SNIPERRIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
+		reticle_type = 2; // nex zoom
 	else if(button_zoom || zoomscript_caught)
 		reticle_type = 1; // normal zoom
-	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_CAMPINGRIFLE && button_attack2)
+	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_SNIPERRIFLE && button_attack2)
 		reticle_type = 2; // nex zoom
 
-	if(cvar("cl_reticle_stretch"))
+	if(autocvar_cl_reticle_stretch)
 	{
 		reticle_size_x = vid_conwidth;
 		reticle_size_y = vid_conheight;
@@ -594,17 +659,129 @@ void CSQC_UpdateView(float w, float h)
 	f = current_zoomfraction;
 	if(zoomscript_caught)
 		f = 1;
-	if(cvar("cl_reticle_item_normal"))
+	if(autocvar_cl_reticle_item_normal)
 	{
 		precache_pic("gfx/reticle_normal");
 		if(reticle_type == 1 && f)
-			drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * cvar("cl_reticle_item_normal"), DRAWFLAG_NORMAL);
+			drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_normal, DRAWFLAG_NORMAL);
 	}
-	if(cvar("cl_reticle_item_nex"))
+	if(autocvar_cl_reticle_item_nex)
 	{
 		precache_pic("gfx/reticle_nex");
 		if(reticle_type == 2 && f)
-			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * cvar("cl_reticle_item_nex"), DRAWFLAG_NORMAL);
+			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_nex, DRAWFLAG_NORMAL);
+	}
+
+
+	// improved polyblend
+	vector rgb;
+	if(autocvar_hud_contents)
+	{
+		float contentalpha_temp, incontent, liquidalpha, contentfadetime;
+		vector liquidcolor;
+		
+		switch(pointcontents(view_origin))
+		{
+			case CONTENT_WATER:
+				liquidalpha = autocvar_hud_contents_water_alpha;
+				liquidcolor = stov(autocvar_hud_contents_water_color);
+				incontent = 1;
+				break;
+				
+			case CONTENT_LAVA:
+				liquidalpha = autocvar_hud_contents_lava_alpha;
+				liquidcolor = stov(autocvar_hud_contents_lava_color);
+				incontent = 1;
+				break;	
+							
+			case CONTENT_SLIME:
+				liquidalpha = autocvar_hud_contents_slime_alpha;
+				liquidcolor = stov(autocvar_hud_contents_slime_color);
+				incontent = 1;
+				break;
+				
+			default:
+				liquidalpha = 0;
+				liquidcolor = '0 0 0';
+				incontent = 0;
+				break;
+		}
+		
+		if(incontent) // fade in/out at different speeds so you can do e.g. instant fade when entering water and slow when leaving it.
+		{ // also lets delcare previous values for blending properties, this way it isn't reset until after you have entered a different content
+			contentfadetime = autocvar_hud_contents_fadeintime;
+			liquidalpha_prev = liquidalpha;
+			liquidcolor_prev = liquidcolor;
+		}
+		else
+			contentfadetime = autocvar_hud_contents_fadeouttime;
+			
+		contentalpha_temp = bound(0, drawframetime / max(0.0001, contentfadetime), 1);
+		contentavgalpha = contentavgalpha * (1 - contentalpha_temp) + incontent * contentalpha_temp;
+		
+		if(contentavgalpha)
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
+	}
+	
+	if(autocvar_hud_damage)
+	{
+		float myhealth_flash_temp;
+		myhealth = getstati(STAT_HEALTH);
+
+		// fade out
+		myhealth_flash = max(0, myhealth_flash - autocvar_hud_damage_fade_rate * frametime);
+		// add new damage
+		myhealth_flash = bound(0, myhealth_flash + dmg_take * autocvar_hud_damage_factor, autocvar_hud_damage_maxalpha);
+
+		float pain_threshold, pain_threshold_lower, pain_threshold_lower_health;
+		pain_threshold = autocvar_hud_damage_pain_threshold;
+		pain_threshold_lower = autocvar_hud_damage_pain_threshold_lower;
+		pain_threshold_lower_health = autocvar_hud_damage_pain_threshold_lower_health;
+
+		if(pain_threshold_lower && myhealth < pain_threshold_lower_health)
+		{
+			pain_threshold = pain_threshold - max(autocvar_hud_damage_pain_threshold_pulsating_min, fabs(sin(M_PI * time / autocvar_hud_damage_pain_threshold_pulsating_period))) * pain_threshold_lower * (1 - max(0, myhealth)/pain_threshold_lower_health);
+		}
+
+		myhealth_flash_temp = bound(0, myhealth_flash - pain_threshold, 1);
+
+		if(myhealth_prev < 1)
+		{
+			if(myhealth >= 1)
+			{
+				myhealth_flash = 0; // just spawned, clear the flash immediately
+				myhealth_flash_temp = 0;
+			}
+			else
+			{
+				myhealth_flash += autocvar_hud_damage_fade_rate * frametime; // dead
+			}
+		}
+
+		if(spectatee_status == -1 || intermission)
+		{
+			myhealth_flash = 0; // observing, or match ended
+			myhealth_flash_temp = 0;
+		}
+
+		myhealth_prev = myhealth;
+
+		if(autocvar_cl_gentle_damage || autocvar_cl_gentle)
+		{
+			if(autocvar_cl_gentle_damage == 2)
+			{
+				if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
+				{
+					myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
+				}
+			}
+			else
+				myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
+
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+		}
+		else
+			drawpic(reticle_pos, "gfx/blood", reticle_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 	}
 
 	// Draw the mouse cursor
@@ -630,31 +807,54 @@ void CSQC_UpdateView(float w, float h)
 			self.draw2d();
 	self = e;
 
+	scoreboard_active = HUD_WouldDrawScoreboard();
+
 	float hud;
 	hud = getstati(STAT_HUD);
 	if(hud == HUD_SPIDERBOT)
-	{
 		CSQC_SPIDER_HUD();
-	}
 	else if(hud == HUD_WAKIZASHI)
         CSQC_WAKIZASHI_HUD();
     else if(hud == HUD_RAPTOR)
         CSQC_RAPTOR_HUD();
 	else
 	{
-		if(cvar("r_letterbox") == 0)
-			if(cvar("viewsize") < 120)
+		if(gametype == GAME_FREEZETAG)
+		{
+			if(getstati(STAT_FROZEN))
+				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			if(getstatf(STAT_REVIVE_PROGRESS))
+			{
+				DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+				drawstring_aspect(eY * 0.64 * vid_conheight, "Revival progress", eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+			}
+		}
+
+		if(autocvar_r_letterbox == 0)
+			if(autocvar_viewsize < 120)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
 		if(!scoreboard_active && !camera_active && intermission != 2) {
+			string wcross_style;
+			float wcross_alpha, wcross_resolution;
+			wcross_style = autocvar_crosshair;
+			if (wcross_style == "0")
+				return;
+			wcross_resolution = autocvar_crosshair_size;
+			if (wcross_resolution == 0)
+				return;
+			wcross_alpha = autocvar_crosshair_alpha;
+			if (wcross_alpha == 0)
+				return;
+
 			// TrueAim check
 			float shottype;
 			float bullets, ring_scale;
 			// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 			wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
 			wcross_origin_z = 0;
-			if(cvar("crosshair_hittest"))
+			if(autocvar_crosshair_hittest)
 			{
 				vector wcross_oldorigin;
 				wcross_oldorigin = wcross_origin;
@@ -667,166 +867,216 @@ void CSQC_UpdateView(float w, float h)
 					if(vlen(v) > 0.01)
 						shottype = SHOTTYPE_HITOBSTRUCTION;
 				}
-				if(!cvar("crosshair_hittest_showimpact"))
+				if(!autocvar_crosshair_hittest_showimpact)
 					wcross_origin = wcross_oldorigin;
 			}
 			else
 				shottype = SHOTTYPE_HITWORLD;
 
-			string wcross_style;
-			wcross_style = cvar_string("crosshair");
+			vector wcross_color, wcross_size;
+			string wcross_wep, wcross_name;
+			float wcross_scale, wcross_blur;
 
-			if (wcross_style != "0") {
-				vector wcross_color, wcross_size;
-				string wcross_wep, wcross_name;
-				float wcross_alpha, wcross_scale, wcross_blur, wcross_resolution;
-
-				wcross_color_x = cvar("crosshair_color_red");
-				wcross_color_y = cvar("crosshair_color_green");
-				wcross_color_z = cvar("crosshair_color_blue");
-				wcross_alpha = cvar("crosshair_color_alpha");
-				wcross_resolution = cvar("crosshair_size");
-				if (cvar("crosshair_per_weapon")) {
-					e = get_weaponinfo(activeweapon);
-					if (e && e.netname != "")
+			if (autocvar_crosshair_per_weapon || autocvar_crosshair_color_per_weapon) {
+				e = get_weaponinfo(activeweapon);
+				if (e && e.netname != "")
+				{
+					wcross_wep = e.netname;
+					if(autocvar_crosshair_per_weapon)
 					{
-						wcross_wep = e.netname;
-						wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
-						if(wcross_style == "")
-							wcross_style = e.netname;
-
-						if(!cvar("crosshair_color_override"))
-						{
-							wcross_color_x = cvar(strcat("crosshair_", wcross_wep, "_color_red"));
-							wcross_color_y = cvar(strcat("crosshair_", wcross_wep, "_color_green"));
-							wcross_color_z = cvar(strcat("crosshair_", wcross_wep, "_color_blue"));
-						}
-
-						wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_color_alpha"));
 						wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
+						if (wcross_resolution == 0)
+							return;
+						wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_alpha"));
+						if (wcross_alpha == 0)
+							return;
+
+						wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
+						if(wcross_style == "" || wcross_style == "0")
+							wcross_style = wcross_wep;
 					}
 				}
+			}
+			if(wcross_wep != "" && autocvar_crosshair_color_per_weapon)
+				wcross_color = stov(cvar_string(strcat("crosshair_", wcross_wep, "_color")));
+			else
+				wcross_color = stov(autocvar_crosshair_color);
 
-				wcross_name = strcat("gfx/crosshair", wcross_style);
+			wcross_name = strcat("gfx/crosshair", wcross_style);
 
-				if(cvar("crosshair_effect_scalefade"))
+			if(autocvar_crosshair_effect_scalefade)
+			{
+				wcross_scale = wcross_resolution;
+				wcross_resolution = 1;
+			}
+			else
+			{
+				wcross_scale = 1;
+			}
+
+			if(autocvar_crosshair_pickup)
+			{
+				if(pickup_crosshair_time < getstatf(STAT_LAST_PICKUP))
 				{
-					wcross_scale = wcross_resolution;
-					wcross_resolution = 1;
+					pickup_crosshair_size = 1;
+					pickup_crosshair_time = getstatf(STAT_LAST_PICKUP);
+				}
+
+				if(pickup_crosshair_size > 0)
+					pickup_crosshair_size -= autocvar_crosshair_pickup_speed * frametime;
+				else
+					pickup_crosshair_size = 0;
+
+				wcross_scale += sin(pickup_crosshair_size) * autocvar_crosshair_pickup;
+			}
+
+			if(shottype == SHOTTYPE_HITENEMY)
+				wcross_scale *= autocvar_crosshair_hittest; // is not queried if hittest is 0
+			if(shottype == SHOTTYPE_HITTEAM)
+				wcross_scale /= autocvar_crosshair_hittest; // is not queried if hittest is 0
+
+			f = autocvar_crosshair_effect_speed;
+			if(f < 0)
+				f *= -2 * g_weaponswitchdelay;
+			if(wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
+			{
+				wcross_changedonetime = time + f;
+			}
+			if(wcross_name != wcross_name_goal_prev || wcross_resolution != wcross_resolution_goal_prev)
+			{
+				wcross_name_changestarttime = time;
+				wcross_name_changedonetime = time + f;
+				if(wcross_name_goal_prev_prev)
+					strunzone(wcross_name_goal_prev_prev);
+				wcross_name_goal_prev_prev = wcross_name_goal_prev;
+				wcross_name_goal_prev = strzone(wcross_name);
+				wcross_name_alpha_goal_prev_prev = wcross_name_alpha_goal_prev;
+				wcross_resolution_goal_prev_prev = wcross_resolution_goal_prev;
+				wcross_resolution_goal_prev = wcross_resolution;
+			}
+
+			wcross_scale_goal_prev = wcross_scale;
+			wcross_alpha_goal_prev = wcross_alpha;
+			wcross_color_goal_prev = wcross_color;
+
+			if(shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur && !autocvar_chase_active))
+			{
+				wcross_blur = 1;
+				wcross_alpha *= 0.75;
+			}
+			else
+				wcross_blur = 0;
+			// *_prev is at time-frametime
+			// * is at wcross_changedonetime+f
+			// what do we have at time?
+			if(time < wcross_changedonetime)
+			{
+				f = frametime / (wcross_changedonetime - time + frametime);
+				wcross_scale = f * wcross_scale + (1 - f) * wcross_scale_prev;
+				wcross_alpha = f * wcross_alpha + (1 - f) * wcross_alpha_prev;
+				wcross_color = f * wcross_color + (1 - f) * wcross_color_prev;
+			}
+
+			wcross_scale_prev = wcross_scale;
+			wcross_alpha_prev = wcross_alpha;
+			wcross_color_prev = wcross_color;
+
+			wcross_scale *= 1 - autocvar__menu_alpha;
+			wcross_alpha *= 1 - autocvar__menu_alpha;
+
+			ring_scale = autocvar_crosshair_ring_size;
+
+			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
+
+			float nex_charge, nex_chargepool;
+			nex_charge = getstatf(STAT_NEX_CHARGE);
+			nex_chargepool = getstatf(STAT_NEX_CHARGEPOOL);
+
+			if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
+				nex_charge_movingavg = nex_charge;
+
+			// ring around crosshair representing bullets left in camping rifle clip
+			if (activeweapon == WEP_SNIPERRIFLE && cr_maxbullets)
+			{
+				bullets = getstati(STAT_BULLETS_LOADED);
+				f = bound(0, bullets / cr_maxbullets, 1);
+
+				a = autocvar_crosshair_ring_sniperrifle_alpha;
+				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+			}
+			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
+			{
+				if(nex_chargepool || use_nex_chargepool)
+				{
+					use_nex_chargepool = 1;
+
+					a = autocvar_crosshair_ring_nex_inner_alpha;
+					rgb = eX * autocvar_crosshair_ring_nex_inner_color_red + eY * autocvar_crosshair_ring_nex_inner_color_green + eZ * autocvar_crosshair_ring_nex_inner_color_blue;
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", nex_chargepool, rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 				}
 				else
 				{
-					wcross_scale = 1;
+					// indicate how much we're charging right now with an inner circle
+					a = autocvar_crosshair_ring_nex_inner_alpha;
+					nex_charge_movingavg = (1 - autocvar_crosshair_ring_nex_currentcharge_movingavg_rate) * nex_charge_movingavg + autocvar_crosshair_ring_nex_currentcharge_movingavg_rate * nex_charge;
+
+					rgb = eX * autocvar_crosshair_ring_nex_inner_color_red + eY * autocvar_crosshair_ring_nex_inner_color_green + eZ * autocvar_crosshair_ring_nex_inner_color_blue;
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", bound(0, autocvar_crosshair_ring_nex_currentcharge_scale * (nex_charge - nex_charge_movingavg), 1), rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 				}
 
-				if(shottype == SHOTTYPE_HITENEMY)
-					wcross_scale *= cvar("crosshair_hittest"); // is not queried if hittest is 0
-				if(shottype == SHOTTYPE_HITTEAM)
-					wcross_scale /= cvar("crosshair_hittest"); // is not queried if hittest is 0
-
-				f = cvar("crosshair_effect_speed");
-				if(f < 0)
-					f *= -2 * g_weaponswitchdelay;
-				if(wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
-				{
-					wcross_changedonetime = time + f;
-				}
-				if(wcross_name != wcross_name_goal_prev || wcross_resolution != wcross_resolution_goal_prev)
-				{
-					wcross_name_changestarttime = time;
-					wcross_name_changedonetime = time + f;
-					if(wcross_name_goal_prev_prev)
-						strunzone(wcross_name_goal_prev_prev);
-					wcross_name_goal_prev_prev = wcross_name_goal_prev;
-					wcross_name_goal_prev = strzone(wcross_name);
-					wcross_name_alpha_goal_prev_prev = wcross_name_alpha_goal_prev;
-					wcross_resolution_goal_prev_prev = wcross_resolution_goal_prev;
-					wcross_resolution_goal_prev = wcross_resolution;
-				}
-
-				wcross_scale_goal_prev = wcross_scale;
-				wcross_alpha_goal_prev = wcross_alpha;
-				wcross_color_goal_prev = wcross_color;
-
-				if(shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && cvar("crosshair_hittest_blur") && !cvar("chase_active")))
-				{
-					wcross_blur = 1;
-					wcross_alpha *= 0.75;
-				}
-				else
-					wcross_blur = 0;
-				// *_prev is at time-frametime
-				// * is at wcross_changedonetime+f
-				// what do we have at time?
-				if(time < wcross_changedonetime)
-				{
-					f = frametime / (wcross_changedonetime - time + frametime);
-					wcross_scale = f * wcross_scale + (1 - f) * wcross_scale_prev;
-					wcross_alpha = f * wcross_alpha + (1 - f) * wcross_alpha_prev;
-					wcross_color = f * wcross_color + (1 - f) * wcross_color_prev;
-				}
-
-				wcross_scale_prev = wcross_scale;
-				wcross_alpha_prev = wcross_alpha;
-				wcross_color_prev = wcross_color;
-
-				wcross_scale *= 1 - cvar("_menu_alpha");
-				wcross_alpha *= 1 - cvar("_menu_alpha");
-
-				// ring around crosshair representing bullets left in camping rifle clip
-				if (activeweapon == WEP_CAMPINGRIFLE)
-				{
-					ring_scale = cvar("crosshair_campingrifle_ring_size");
-					bullets = bound(0, getstati(STAT_BULLETS_LOADED), 4);
-				}
-				else
-					bullets = 0;
-
-#define CROSSHAIR_DRAW_RING(i,j,sz,wcross_name,wcross_alpha) \
-				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x * ring_scale + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y * ring_scale + j * wcross_blur)), strcat("gfx/rifle_ring_", ftos(bullets)), sz * wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+				// draw the charge
+				a = autocvar_crosshair_ring_nex_outer_alpha;
+				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", nex_charge, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
-				do \
+			do \
+			{ \
+				if(wcross_blur > 0) \
 				{ \
-					if(wcross_blur > 0) \
-					{ \
-						for(i = -2; i <= 2; ++i) \
-							for(j = -2; j <= 2; ++j) \
-								M(i,j,sz,wcross_name,wcross_alpha*0.04); \
-					} \
-					else \
-					{ \
-						M(0,0,sz,wcross_name,wcross_alpha); \
-					} \
+					for(i = -2; i <= 2; ++i) \
+						for(j = -2; j <= 2; ++j) \
+							M(i,j,sz,wcross_name,wcross_alpha*0.04); \
 				} \
-				while(0)
+				else \
+				{ \
+					M(0,0,sz,wcross_name,wcross_alpha); \
+				} \
+			} \
+			while(0)
 
 #define CROSSHAIR_DRAW_SINGLE(i,j,sz,wcross_name,wcross_alpha) \
-				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y + j * wcross_blur)), wcross_name, sz * wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+			drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y + j * wcross_blur)), wcross_name, sz * wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
 
 #define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
-				CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
+			CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
 
-				if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
-				{
-					f = (wcross_name_changedonetime - time) / (wcross_name_changedonetime - wcross_name_changestarttime);
-					wcross_size = drawgetimagesize(wcross_name_goal_prev_prev) * wcross_scale;
-					CROSSHAIR_DRAW(wcross_resolution_goal_prev_prev, wcross_name_goal_prev_prev, wcross_alpha * f * wcross_name_alpha_goal_prev_prev);
-					f = 1 - f;
-				}
-				else
-				{
-					f = 1;
-				}
-
-				wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
-				if(bullets)
-				{
-					CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_RING, wcross_resolution, wcross_name, wcross_alpha);
-				}
-				CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
-				wcross_name_alpha_goal_prev = f;
+			if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
+			{
+				f = (wcross_name_changedonetime - time) / (wcross_name_changedonetime - wcross_name_changestarttime);
+				wcross_size = drawgetimagesize(wcross_name_goal_prev_prev) * wcross_scale;
+				CROSSHAIR_DRAW(wcross_resolution_goal_prev_prev, wcross_name_goal_prev_prev, wcross_alpha * f * wcross_name_alpha_goal_prev_prev);
+				f = 1 - f;
 			}
+			else
+			{
+				f = 1;
+			}
+
+			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
+			CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
+
+			if(autocvar_crosshair_dot)
+            {
+                vector wcross_color_old;
+                wcross_color_old = wcross_color;
+                if(autocvar_crosshair_dot_color != "0")
+                    wcross_color = stov(autocvar_crosshair_dot_color);
+				CROSSHAIR_DRAW(wcross_resolution * autocvar_crosshair_dot_size, "gfx/crosshairdot.tga", f * autocvar_crosshair_dot_alpha);
+                wcross_color = wcross_color_old;
+            }
+
+			wcross_name_alpha_goal_prev = f;
 		}
 		else
 		{
@@ -860,8 +1110,8 @@ void CSQC_UpdateView(float w, float h)
 	if(cs_project_is_b0rked == 0)
 	{
 		string w0, h0;
-		w0 = cvar_string("vid_conwidth");
-		h0 = cvar_string("vid_conheight");
+		w0 = ftos(autocvar_vid_conwidth);
+		h0 = ftos(autocvar_vid_conheight);
 		//R_SetView(VF_VIEWPORT, '0 0 0', '640 480 0');
 		//R_SetView(VF_FOV, '90 90 0');
 		R_SetView(VF_ORIGIN, '0 0 0');
@@ -889,11 +1139,6 @@ void CSQC_UpdateView(float w, float h)
 	// let's reset the view back to normal for the end
 	R_SetView(VF_MIN, '0 0 0');
 	R_SetView(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
-
-	// be safe against triggerbots until everyone has the fixed engine
-	// this call is meant to overwrite the trace globals by something
-	// unsuspicious
-	traceline('0 0 0', '0 0 0', MOVE_WORLDONLY, world);
 }
 
 #define spider_h "gfx/vehicles/hud_bg.tga"
@@ -918,9 +1163,9 @@ void CSQC_SPIDER_HUD()
 
     // Draw the crosshairs
     picsize = drawgetimagesize(SPIDER_CROSS);
-    picsize_x *= cvar_or("cl_vehicle_spiderbot_cross_size", 1);
-    picsize_y *= cvar_or("cl_vehicle_spiderbot_cross_size", 1);
-    drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', cvar_or("cl_vehicle_spiderbot_cross_alpha",0.6), DRAWFLAG_NORMAL);
+    picsize_x *= autocvar_cl_vehicle_spiderbot_cross_size;
+    picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
+    drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_NORMAL);
 
     hudloc_y =  4;
     hudloc_x = 4;
@@ -1019,7 +1264,7 @@ void CSQC_SPIDER_HUD()
 
 void CSQC_RAPTOR_HUD()
 {
-	float rockets, reload, heat, hp, shield, energy;
+	float reload, hp, shield, energy;
 	vector picsize, hudloc;
 
     // Fetch health & ammo stats
@@ -1030,9 +1275,9 @@ void CSQC_RAPTOR_HUD()
 
     // Draw the crosshairs
     picsize = drawgetimagesize(SPIDER_CROSS);
-    picsize_x *= cvar_or("cl_vehicle_spiderbot_cross_size", 1);
-    picsize_y *= cvar_or("cl_vehicle_spiderbot_cross_size", 1);
-    drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', cvar_or("cl_vehicle_spiderbot_cross_alpha",0.6), DRAWFLAG_NORMAL);
+    picsize_x *= autocvar_cl_vehicle_spiderbot_cross_size;
+    picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
+    drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_NORMAL);
 
     hudloc_y =  4;
     hudloc_x = 4;
@@ -1095,9 +1340,9 @@ void CSQC_WAKIZASHI_HUD()
 	vector picsize, hudloc;
 
     picsize = drawgetimagesize(SPIDER_CROSS);
-    picsize_x *= cvar_or("cl_vehicle_spiderbot_cross_size", 1);
-    picsize_y *= cvar_or("cl_vehicle_spiderbot_cross_size", 1);
-    drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', cvar_or("cl_vehicle_spiderbot_cross_alpha",0.6), DRAWFLAG_NORMAL);
+    picsize_x *= autocvar_cl_vehicle_spiderbot_cross_size;
+    picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
+    drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_NORMAL);
 
 /*
 const float STAT_VEHICLESTAT_HEALTH  = 60;
@@ -1203,18 +1448,26 @@ void CSQC_common_hud(void)
 			float i;
 			if(!(gametype == GAME_RACE || gametype == GAME_CTS))
 			{
-				acc_levels = tokenize(cvar_string("hud_panel_weapons_accuracy_color_levels"));
-				if (acc_levels > MAX_ACCURACY_LEVELS)
-					acc_levels = MAX_ACCURACY_LEVELS;
+				if(autocvar_accuracy_color_levels != acc_color_levels)
+				{
+					if(acc_color_levels)
+						strunzone(acc_color_levels);
+					acc_color_levels = strzone(autocvar_accuracy_color_levels);
+					acc_levels = tokenize(acc_color_levels);
+					if (acc_levels > MAX_ACCURACY_LEVELS)
+						acc_levels = MAX_ACCURACY_LEVELS;
 
-				for (i = 0; i < acc_levels; ++i)
-					acc_lev[i] = stof(argv(i));
+					for (i = 0; i < acc_levels; ++i)
+						acc_lev[i] = stof(argv(i)) / 100.0;
+				}
+				// let know that acc_col[] needs to be loaded
+				acc_col_x[0] = -1;
 			}
 
 			HUD_Main(); // always run these functions for alpha checks
 			HUD_DrawScoreboard();
 
-			if (scoreboard_showscores || scoreboard_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1) // scoreboard/accuracy
+			if (scoreboard_active) // scoreboard/accuracy
 			{	
 				HUD_Reset();
 				// HUD_DrawScoreboard takes care of centerprint_start
@@ -1225,12 +1478,12 @@ void CSQC_common_hud(void)
 				HUD_Reset();
 
 				centerprint_start_x = 0;
-				centerprint_start_y = cvar("scr_centerpos") * vid_conheight;
+				centerprint_start_y = autocvar_scr_centerpos * vid_conheight;
 			}
 			else // hud
 			{
 				centerprint_start_x = 0;
-				centerprint_start_y = cvar("scr_centerpos") * vid_conheight;
+				centerprint_start_y = autocvar_scr_centerpos * vid_conheight;
 			}
 
 			HUD_DrawCenterPrint();
@@ -1254,7 +1507,7 @@ void CSQC_Demo_Camera()
 	float speed, attenuation, dimensions;
 	vector tmp, delta;
 
-	if( cvar("camera_reset") || !camera_mode )
+	if( autocvar_camera_reset || !camera_mode )
 	{
 		camera_offset = '0 0 0';
 		current_angles = '0 0 0';
@@ -1270,9 +1523,9 @@ void CSQC_Demo_Camera()
 
 	// Camera angles
 	if( camera_roll )
-		mouse_angles_z += camera_roll * cvar("camera_speed_roll");
+		mouse_angles_z += camera_roll * autocvar_camera_speed_roll;
 
-	if(cvar("camera_look_player"))
+	if(autocvar_camera_look_player)
 	{
 		local vector dir;
 		local float n;
@@ -1286,7 +1539,7 @@ void CSQC_Demo_Camera()
 	else
 	{
 		tmp = getmousepos() * 0.1;
-		if(vlen(tmp)>cvar("camera_mouse_treshold"))
+		if(vlen(tmp)>autocvar_camera_mouse_treshold)
 		{
 			mouse_angles_x += tmp_y * cos(mouse_angles_z * DEG2RAD) + (tmp_x * sin(mouse_angles_z * DEG2RAD));
 			mouse_angles_y -= tmp_x * cos(mouse_angles_z * DEG2RAD) + (tmp_y * -sin(mouse_angles_z * DEG2RAD));
@@ -1305,10 +1558,10 @@ void CSQC_Demo_Camera()
 	if(mouse_angles_y > 60 && current_angles_y < -60)
 		delta = '0 -360 0';
 
-	if(cvar("camera_look_player"))
-		attenuation = cvar("camera_look_attenuation");
+	if(autocvar_camera_look_player)
+		attenuation = autocvar_camera_look_attenuation;
 	else
-		attenuation = cvar("camera_speed_attenuation");
+		attenuation = autocvar_camera_speed_attenuation;
 
 	attenuation = 1 / max(1, attenuation);
 	current_angles += (mouse_angles - current_angles + delta) * attenuation;
@@ -1326,7 +1579,7 @@ void CSQC_Demo_Camera()
 	{
 		tmp_x = camera_direction_x * cos(current_angles_y * DEG2RAD);
 		tmp_y = camera_direction_x * sin(current_angles_y * DEG2RAD);
-		if( cvar("camera_forward_follows") && !cvar("camera_look_player") )
+		if( autocvar_camera_forward_follows && !autocvar_camera_look_player )
 			tmp_z = camera_direction_x * -sin(current_angles_x * DEG2RAD);
 		++dimensions;
 	}
@@ -1345,10 +1598,10 @@ void CSQC_Demo_Camera()
 		++dimensions;
 	}
 
-	if(cvar("camera_free"))
-		speed = cvar("camera_speed_free");
+	if(autocvar_camera_free)
+		speed = autocvar_camera_speed_free;
 	else
-		speed = cvar("camera_speed_chase");
+		speed = autocvar_camera_speed_chase;
 
 	if(dimensions)
 	{
@@ -1359,7 +1612,7 @@ void CSQC_Demo_Camera()
 	current_camera_offset += (camera_offset - current_camera_offset) * attenuation;
 
 	// Camera modes
-	if( cvar("camera_free") )
+	if( autocvar_camera_free )
 	{
 		if ( camera_mode == CAMERA_CHASE )
 		{
@@ -1381,7 +1634,7 @@ void CSQC_Demo_Camera()
 
 		camera_mode = CAMERA_CHASE;
 
-		if(cvar("camera_chase_smoothly"))
+		if(autocvar_camera_chase_smoothly)
 			current_origin += (view_origin - current_origin) * attenuation;
 		else
 			current_origin = view_origin;

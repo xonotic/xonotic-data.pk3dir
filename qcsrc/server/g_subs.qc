@@ -364,13 +364,13 @@ void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst
 }
 void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	if (cvar("g_antilag") != 2 || source.cvar_cl_noantilag)
+	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
 		lag = 0;
 	traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	if (cvar("g_antilag") != 2 || source.cvar_cl_noantilag)
+	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, FALSE);
 }
@@ -380,13 +380,13 @@ void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, floa
 }
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	if (cvar("g_antilag") != 2 || source.cvar_cl_noantilag)
+	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
 		lag = 0;
 	WarpZone_traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	if (cvar("g_antilag") != 2 || source.cvar_cl_noantilag)
+	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, TRUE);
 }
@@ -605,17 +605,16 @@ float angc (float a1, float a2)
 .float loddistance1;
 .float loddistance2;
 
-vector NearestPointOnBox(entity box, vector org);
 float LOD_customize()
 {
 	float d;
 
-	if(cvar("loddebug"))
+	if(autocvar_loddebug)
 	{
-		d = cvar("loddebug");
+		d = autocvar_loddebug;
 		if(d == 1)
 			self.modelindex = self.lodmodelindex0;
-		else if(d == 2)
+		else if(d == 2 || !self.lodmodelindex2)
 			self.modelindex = self.lodmodelindex1;
 		else // if(d == 3)
 			self.modelindex = self.lodmodelindex2;
@@ -668,7 +667,7 @@ void LODmodel_attach()
 		}
 	}
 
-	if(cvar("loddebug") < 0)
+	if(autocvar_loddebug < 0)
 	{
 		self.lodmodel1 = self.lodmodel2 = ""; // don't even initialize
 	}
@@ -695,7 +694,35 @@ void LODmodel_attach()
 	}
 
 	if(self.lodmodelindex1)
-		SetCustomizer(self, LOD_customize, LOD_uncustomize);
+		if not(self.SendEntity)
+			SetCustomizer(self, LOD_customize, LOD_uncustomize);
+}
+
+void ApplyMinMaxScaleAngles(entity e)
+{
+	if(e.angles_x != 0 || e.angles_z != 0 || self.avelocity_x != 0 || self.avelocity_z != 0) // "weird" rotation
+	{
+		e.maxs = '1 1 1' * vlen(
+			'1 0 0' * max(-e.mins_x, e.maxs_x) +
+			'0 1 0' * max(-e.mins_y, e.maxs_y) +
+			'0 0 1' * max(-e.mins_z, e.maxs_z)
+		);
+		e.mins = -e.maxs;
+	}
+	else if(e.angles_y != 0 || self.avelocity_y != 0) // yaw only is a bit better
+	{
+		e.maxs_x = vlen(
+			'1 0 0' * max(-e.mins_x, e.maxs_x) +
+			'0 1 0' * max(-e.mins_y, e.maxs_y)
+		);
+		e.maxs_y = e.maxs_x;
+		e.mins_x = -e.maxs_x;
+		e.mins_y = -e.maxs_x;
+	}
+	if(e.scale)
+		setsize(e, e.mins * e.scale, e.maxs * e.scale);
+	else
+		setsize(e, e.mins, e.maxs);
 }
 
 void SetBrushEntityModel()
@@ -707,10 +734,7 @@ void SetBrushEntityModel()
 		InitializeEntity(self, LODmodel_attach, INITPRIO_FINDTARGET);
  	}
 	setorigin(self, self.origin);
-	if(self.scale)
-		setsize(self, self.mins * self.scale, self.maxs * self.scale);
-	else
-		setsize(self, self.mins, self.maxs);
+	ApplyMinMaxScaleAngles(self);
 }
 
 void SetBrushEntityModelNoLOD()
@@ -721,10 +745,7 @@ void SetBrushEntityModelNoLOD()
  		setmodel(self, self.model); // no precision needed
  	}
 	setorigin(self, self.origin);
-	if(self.scale)
-		setsize(self, self.mins * self.scale, self.maxs * self.scale);
-	else
-		setsize(self, self.mins, self.maxs);
+	ApplyMinMaxScaleAngles(self);
 }
 
 /*
@@ -750,9 +771,7 @@ void InitTrigger()
 {
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	if (self.movedir == '0 0 0')
-	if (self.angles != '0 0 0')
-		SetMovedir ();
+	SetMovedir ();
 	self.solid = SOLID_TRIGGER;
 	SetBrushEntityModel();
 	self.movetype = MOVETYPE_NONE;
@@ -764,9 +783,7 @@ void InitSolidBSPTrigger()
 {
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	if (self.movedir == '0 0 0')
-	if (self.angles != '0 0 0')
-		SetMovedir ();
+	SetMovedir ();
 	self.solid = SOLID_BSP;
 	SetBrushEntityModel();
 	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0

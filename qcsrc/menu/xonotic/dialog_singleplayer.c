@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(XonoticSingleplayerDialog) EXTENDS(XonoticDialog)
 	METHOD(XonoticSingleplayerDialog, fill, void(entity))
-	ATTRIB(XonoticSingleplayerDialog, title, string, "Singleplayer")
+	ATTRIB(XonoticSingleplayerDialog, title, string, _("Singleplayer"))
 	ATTRIB(XonoticSingleplayerDialog, color, vector, SKINCOLOR_DIALOG_SINGLEPLAYER)
 	ATTRIB(XonoticSingleplayerDialog, intendedWidth, float, 0.80)
 	ATTRIB(XonoticSingleplayerDialog, rows, float, 24)
@@ -56,14 +56,14 @@ void XonoticSingleplayerDialog_fill(entity me)
 
 	me.TR(me);
 		me.TDempty(me, (me.columns - 3) / 2);
-		me.TD(me, 2, 3, e = makeXonoticBigButton("Instant action! (random map with bots)", '0 0 0'));
+		me.TD(me, 2, 3, e = makeXonoticBigButton(_("Instant action! (random map with bots)"), '0 0 0'));
 			e.onClick = InstantAction_LoadMap;
 			e.onClickEntity = NULL;
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, btnPrev = makeXonoticButton("<<", '0 0 0'));
-		me.TD(me, 1, me.columns - 2, lblTitle = makeXonoticTextLabel(0.5, "???"));
+		me.TD(me, 1, me.columns - 2, lblTitle = makeXonoticTextLabel(0.5, _("???")));
 		me.TD(me, 1, 1, btnNext = makeXonoticButton(">>", '0 0 0'));
 	me.TR(me);
 		me.TD(me, me.rows - 5, me.columns, me.campaignBox = makeXonoticCampaignList());
@@ -77,7 +77,7 @@ void XonoticSingleplayerDialog_fill(entity me)
 			me.campaignBox.campaignGo(me.campaignBox, 0);
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton("Start Singleplayer!", '0 0 0'));
+		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Start Singleplayer!"), '0 0 0'));
 			e.onClick = CampaignList_LoadMap;
 			e.onClickEntity = me.campaignBox;
 }

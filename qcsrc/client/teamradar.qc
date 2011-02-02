@@ -172,16 +172,15 @@ float hud_panel_radar_scale;
 float hud_panel_radar_foreground_alpha;
 float hud_panel_radar_rotation;
 vector hud_panel_radar_size;
-vector hud_panel_radar_position;
 float hud_panel_radar_zoommode;
 
 void teamradar_loadcvars()
 {
-	v_flipped = cvar("v_flipped");
-	hud_panel_radar_scale = cvar("hud_panel_radar_scale");
-	hud_panel_radar_foreground_alpha = cvar("hud_panel_radar_foreground_alpha") * panel_fg_alpha;
-	hud_panel_radar_rotation = cvar("hud_panel_radar_rotation");
-	hud_panel_radar_zoommode = cvar("hud_panel_radar_zoommode");
+	v_flipped = autocvar_v_flipped;
+	hud_panel_radar_scale = autocvar_hud_panel_radar_scale;
+	hud_panel_radar_foreground_alpha = autocvar_hud_panel_radar_foreground_alpha * panel_fg_alpha;
+	hud_panel_radar_rotation = autocvar_hud_panel_radar_rotation;
+	hud_panel_radar_zoommode = autocvar_hud_panel_radar_zoommode;
 
 	// others default to 0
 	// match this to defaultXonotic.cfg!
@@ -191,8 +190,7 @@ void teamradar_loadcvars()
 	if(!hud_panel_radar_size_y) hud_panel_radar_size_y = hud_panel_radar_size_x;
 
 	hud_panel_radar_size_z = 0;
-	hud_panel_radar_nohudhack = hud_panel_radar_position_z;
-	hud_panel_radar_position_z = 0;
+	hud_panel_radar_nohudhack = 0;
 }
 
 // radar links

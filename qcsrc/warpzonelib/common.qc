@@ -1,5 +1,5 @@
 float trace_dphitcontents;
-.float dphitcontents;
+.float dphitcontentsmask;
 
 void WarpZone_Accumulator_Clear(entity acc)
 {
@@ -28,6 +28,11 @@ var float autocvar_cl_warpzone_usetrace = 1;
 vector WarpZone_camera_transform(vector org, vector ang)
 {
 	vector vf, vr, vu;
+	if(self.warpzone_fadestart)
+		if(vlen(org - self.origin - 0.5 * (self.mins + self.maxs)) > self.warpzone_fadeend + 400)
+			return org;
+			// don't transform if zone faded out (plus 400qu safety margin for typical speeds and latencies)
+			// unneeded on client, on server this helps a lot
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
@@ -61,6 +66,11 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 vector WarpZone_Camera_camera_transform(vector org, vector ang)
 {
 	// a fixed camera view
+	if(self.warpzone_fadestart)
+		if(vlen(org - self.origin - 0.5 * (self.mins + self.maxs)) > self.warpzone_fadeend + 400)
+			return org;
+			// don't transform if zone faded out (plus 400qu safety margin for typical speeds and latencies)
+			// unneeded on client, on server this helps a lot
 	trace_endpos = self.warpzone_origin;
 	makevectors(self.warpzone_angles);
 	return self.warpzone_origin;
@@ -181,6 +191,8 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	entity wz;
 	vector vf, vr, vu;
 
+	WarpZone_trace_firstzone = world;
+	WarpZone_trace_lastzone = world;
 	WarpZone_Trace_InitTransform();
 	if(!warpzone_warpzones_exist)
 	{
@@ -224,6 +236,8 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	wz = WarpZone_Find(org + mi, org + ma);
 	if(wz)
 	{
+		WarpZone_trace_firstzone = wz;
+		WarpZone_trace_lastzone = wz;
 		if(zone && wz != zone)
 		{
 			// we are in ANOTHER warpzone. This is bad. Make a zero length trace and return.
@@ -233,7 +247,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			goto fail;
 		}
 		WarpZone_Trace_AddTransform(wz);
-		org = WarpZone_TransformOrigin(wz, trace_endpos);
+		org = WarpZone_TransformOrigin(wz, org);
 		end = WarpZone_TransformOrigin(wz, end);
 	}
 	WarpZone_MakeAllSolid();
@@ -271,11 +285,15 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		}
 		if(trace_ent == wz)
 		{
+			// FIXME can this check be removed? Do we really need it?
 			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
 			trace_ent = world;
 			break;
 		}
 		wz = trace_ent;
+		if(!WarpZone_trace_firstzone)
+			WarpZone_trace_firstzone = wz;
+		WarpZone_trace_lastzone = wz;
 		if(zone && wz != zone)
 			break;
 		WarpZone_Trace_AddTransform(wz);
@@ -312,6 +330,8 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	o0 = e.origin;
 	v0 = e.velocity;
 
+	WarpZone_trace_firstzone = world;
+	WarpZone_trace_lastzone = world;
 	WarpZone_Trace_InitTransform();
 	WarpZone_tracetoss_time = 0;
 	if(!warpzone_warpzones_exist)
@@ -335,6 +355,8 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	wz = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
 	if(wz)
 	{
+		WarpZone_trace_firstzone = wz;
+		WarpZone_trace_lastzone = wz;
 		if(zone && wz != zone)
 		{
 			// we are in ANOTHER warpzone. This is bad. Make a zero length trace and return.
@@ -371,11 +393,15 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 			break;
 		if(trace_ent == wz)
 		{
+			// FIXME can this check be removed? Do we really need it?
 			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
 			trace_ent = world;
 			break;
 		}
 		wz = trace_ent;
+		if(!WarpZone_trace_firstzone)
+			WarpZone_trace_firstzone = wz;
+		WarpZone_trace_lastzone = wz;
 		if(zone && wz != zone)
 			break;
 		WarpZone_Trace_AddTransform(wz);
@@ -412,6 +438,24 @@ void WarpZone_TrailParticles(entity own, float eff, vector org, vector end)
 	WarpZone_TrailParticles_trace_callback_eff = eff;
 	WarpZone_TraceBox_ThroughZone(org, '0 0 0', '0 0 0', end, MOVE_NOMONSTERS, world, world, WarpZone_TrailParticles_trace_callback);
 }
+
+#ifdef CSQC
+float WarpZone_TrailParticles_trace_callback_f;
+float WarpZone_TrailParticles_trace_callback_flags;
+void WarpZone_TrailParticles_WithMultiplier_trace_callback(vector from, vector endpos, vector to)
+{
+	boxparticles(WarpZone_TrailParticles_trace_callback_eff, WarpZone_TrailParticles_trace_callback_own, from, endpos, WarpZone_TrailParticles_trace_callback_own.velocity, WarpZone_TrailParticles_trace_callback_own.velocity, WarpZone_TrailParticles_trace_callback_f, WarpZone_TrailParticles_trace_callback_flags);
+}
+
+void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, float boxflags)
+{
+	WarpZone_TrailParticles_trace_callback_own = own;
+	WarpZone_TrailParticles_trace_callback_eff = eff;
+	WarpZone_TrailParticles_trace_callback_f = f;
+	WarpZone_TrailParticles_trace_callback_flags = boxflags;
+	WarpZone_TraceBox_ThroughZone(org, '0 0 0', '0 0 0', end, MOVE_NOMONSTERS, world, world, WarpZone_TrailParticles_WithMultiplier_trace_callback);
+}
+#endif
 
 float WarpZone_PlaneDist(entity wz, vector v)
 {

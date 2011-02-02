@@ -295,7 +295,7 @@ void raptor_enter()
     if (clienttype(other) != CLIENTTYPE_REAL)
         return;
 
-    if(teamplay)
+    if(teams_matter)
         if(self.team)
             if(self.team != other.team)
                 return;
@@ -409,7 +409,7 @@ void raptor_exit(float eject)
         ret = spawn();
         ret.enemy = self;
         ret.think = raptor_return;
-        ret.nextthink = time + cvar("g_vehicle_racer_respawntime");
+        ret.nextthink = time + autocvar_g_vehicle_racer_respawntime;
     }
 }
 
@@ -421,7 +421,7 @@ float raptor_pplug()
     vector df;
 
 
-    if(cvar("g_vehicle_raptor_reload"))
+    if(autocvar_g_vehicle_raptor_reload)
     {
         raptor_loadsettings();
         cvar_set("g_vehicle_raptor_reload","0");
@@ -458,14 +458,14 @@ float raptor_pplug()
     //vhic.angles_z = ftmp;
 
     // Turn
-    vhic.angles_y = safeangle(vhic.angles_y + ftmp);
+    vhic.angles_y = anglemods(vhic.angles_y + ftmp);
 
     // Pitch Body
     ftmp = raptor_pitchspeed  * sys_frametime;
 
     ftmp = bound(-ftmp, shortangle_f(player.v_angle_x - vhic.angles_x,vhic.angles_x), ftmp);
 
-    vhic.angles_x = bound(-60,safeangle(vhic.angles_x + ftmp),60);
+    vhic.angles_x = bound(-60,anglemods(vhic.angles_x + ftmp),60);
     vhic.angles_x *= -1;
 
     if(raptor_movestyle == 1)

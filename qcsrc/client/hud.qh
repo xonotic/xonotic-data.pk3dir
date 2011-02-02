@@ -15,13 +15,13 @@ float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 0.25;
 float scoreboard_bottom;
-float weapon_hits[WEP_MAXCOUNT];
-float weapon_fired[WEP_MAXCOUNT];
+float weapon_accuracy[WEP_MAXCOUNT];
 
-#define acc_color(i) stov(cvar_string(strcat("hud_panel_weapons_accuracy_color", ftos(i))))
 #define MAX_ACCURACY_LEVELS 10
 float acc_lev[MAX_ACCURACY_LEVELS];
+vector acc_col[MAX_ACCURACY_LEVELS];
 float acc_levels;
+string acc_color_levels;
 
 float complain_weapon;
 string complain_weapon_name;
@@ -36,9 +36,6 @@ float weapontime;
 float weaponprevtime;
 
 float teamnagger;
-float hud_accuracy_hud;
-float hud_border_thickness;
-float hud_accuracy_border_thickness;
 
 float hud_configure_checkcollisions;
 float hud_configure_prev;
@@ -48,7 +45,9 @@ const float S_SHIFT = 1;
 const float S_CTRL = 2;
 const float S_ALT = 4;
 
-float disable_menu_alphacheck; // 0 = enable alpha check, 1 = disable for entire hud, 2 = disable for one panel
+float menu_enabled; // 1 showing the entire HUD, 2 showing only the clicked panel
+float menu_enabled_time;
+
 float hud_fade_alpha;
 
 string hud_skin_path;
@@ -80,16 +79,8 @@ var float panel_bg_border;
 var string panel_bg_border_str;
 var float panel_bg_padding;
 var string panel_bg_padding_str;
-var float panel_accuracy_yellow;
-var float panel_accuracy_onlycurrent;
-var float panel_accuracy_flip;
-var float panel_accuracy_iconalign;
-var float panel_accuracy_baralign;
-var float panel_accuracy_info_top;
-var float panel_accuracy_foreground_alpha;
-var float panel_accuracy_alreadyvoted_alpha;
 
-var string picpath;
+float current_player;
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:
 // ----------------------
@@ -98,14 +89,16 @@ var string picpath;
 // Little help for the poor people who have to make sense of this: Start from the bottom ;)
 
 #define HUD_Panel_GetProgressBarColor(item) \
+		progressbar_color = stov(cvar_string("hud_progressbar_" #item "_color"))
+#define HUD_Panel_GetProgressBarColorForString(item) \
 switch(item) {\
-	case "strength": progressbar_color = autocvar_hud_progressbar_strength_color; break;\
-	case "shield": progressbar_color = autocvar_hud_progressbar_shield_color; break;\
-	case "health": progressbar_color = autocvar_hud_progressbar_health_color; break;\
-	case "armor": progressbar_color = autocvar_hud_progressbar_armor_color; break;\
-	case "fuel": progressbar_color = autocvar_hud_progressbar_fuel_color; break;\
-	case "nexball": progressbar_color = autocvar_hud_progressbar_nexball_color; break;\
-}
+	case "strength": HUD_Panel_GetProgressBarColor(strength); break;\
+	case "shield": HUD_Panel_GetProgressBarColor(shield); break;\
+	case "health": HUD_Panel_GetProgressBarColor(health); break;\
+	case "armor": HUD_Panel_GetProgressBarColor(armor); break;\
+	case "fuel": HUD_Panel_GetProgressBarColor(fuel); break;\
+	case "nexball": HUD_Panel_GetProgressBarColor(nexball); break;\
+} ENDS_WITH_CURLY_BRACE
 
 // Get value for panel_bg: if "" fetch default, else use panel_bg_str
 // comment on last line of macro: // we probably want to see a background in config mode at all times...
@@ -134,7 +127,7 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 // Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.
 #define HUD_Panel_GetColor()\
 if((teamplay) && panel_bg_color_team) {\
-	panel_bg_color = colormapPaletteColor(mod(stof(getplayerkey(player_localentnum - 1, "colors")), 16), 1) * panel_bg_color_team;\
+	panel_bg_color = colormapPaletteColor(mod(stof(getplayerkey(current_player - 1, "colors")), 16), 1) * panel_bg_color_team;\
 } else if (autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && panel_bg_color_team) {\
 	panel_bg_color = '1 0 0' * panel_bg_color_team;\
 } else {\
@@ -142,9 +135,9 @@ if((teamplay) && panel_bg_color_team) {\
 		panel_bg_color = autocvar_hud_panel_bg_color;\
 	} else {\
 		if(panel_bg_color_str == "shirt") {\
-			panel_bg_color = colormapPaletteColor(floor(stof(getplayerkey(player_localentnum - 1, "colors")) / 16), 0);\
+			panel_bg_color = colormapPaletteColor(floor(stof(getplayerkey(current_player - 1, "colors")) / 16), 0);\
 		} else if(panel_bg_color_str == "pants") {\
-			panel_bg_color = colormapPaletteColor(mod(stof(getplayerkey(player_localentnum - 1, "colors")), 16), 1);\
+			panel_bg_color = colormapPaletteColor(mod(stof(getplayerkey(current_player - 1, "colors")), 16), 1);\
 		} else {\
 			panel_bg_color = stov(panel_bg_color_str);\
 		}\
@@ -166,13 +159,13 @@ if(panel_bg_alpha_str == "") {\
 	panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha);\
 }\
 panel_bg_alpha = stof(panel_bg_alpha_str);\
-if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel == active_panel) {\
+if(autocvar__hud_configure && menu_enabled == 2 && highlightedPanel == active_panel) {\
 	panel_bg_alpha = (1 - autocvar__menu_alpha) * max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha) + autocvar__menu_alpha * panel_bg_alpha;\
 } else if(autocvar__hud_configure) {\
 	panel_bg_alpha = max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha);\
 } if(autocvar__hud_configure && !panel_enabled) {\
 	panel_bg_alpha = 0.25;\
-} if(!(disable_menu_alphacheck == 2 && highlightedPanel == active_panel)) {\
+} if(!(menu_enabled == 2 && highlightedPanel == active_panel)) {\
 	panel_bg_alpha *= hud_fade_alpha;\
 }
 
@@ -183,7 +176,7 @@ if(autocvar__hud_configure && disable_menu_alphacheck == 2 && highlightedPanel =
 panel_fg_alpha = autocvar_hud_panel_fg_alpha;\
 if(autocvar__hud_configure && !panel_enabled)\
 	panel_fg_alpha = 0.25;\
-if(!(disable_menu_alphacheck == 2 && highlightedPanel == active_panel))\
+if(!(menu_enabled == 2 && highlightedPanel == active_panel))\
 	panel_fg_alpha *= hud_fade_alpha;
 
 // Get border. See comments above, it's similar.
@@ -192,7 +185,7 @@ if(panel_bg_border_str == "") {\
 	panel_bg_border = autocvar_hud_panel_bg_border;\
 } else {\
 	panel_bg_border = stof(panel_bg_border_str);\
-}
+} ENDS_WITH_CURLY_BRACE
 
 // Scale the pos and size vectors to absolute coordinates
 #define HUD_Panel_GetScaledVectors()\
@@ -232,7 +225,7 @@ else\
 panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_panelpos;
 
 // return smoothly faded size of given panel when a dialog is active
-var vector menu_enable_maxsize;
+var vector menu_enable_maxsize; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(menu_enable_maxsize);
 var vector menu_enable_size;
 #define HUD_Panel_GetMenuSize()\
 menu_enable_maxsize_x = 0.3 * vid_conwidth;\
@@ -259,19 +252,19 @@ else\
 // Update all common cvars of given panel name
 #define HUD_Panel_UpdateCvars(name) \
 panel_enabled = autocvar_hud_panel_##name; \
-panel_pos = autocvar_hud_panel_##name##_pos; \
-panel_size = autocvar_hud_panel_##name##_size; \
-panel_bg_str = autocvar_hud_panel_##name##_bg; \
-panel_bg_color_str = autocvar_hud_panel_##name##_bg_color; \
-panel_bg_color_team_str = autocvar_hud_panel_##name##_bg_color_team; \
-panel_bg_alpha_str = autocvar_hud_panel_##name##_bg_alpha; \
-panel_bg_border_str = autocvar_hud_panel_##name##_bg_border; \
-panel_bg_padding_str = autocvar_hud_panel_##name##_bg_padding; \
+panel_pos = stov(cvar_string("hud_panel_" #name "_pos")); \
+panel_size = stov(cvar_string("hud_panel_" #name "_size")); \
+panel_bg_str = cvar_string("hud_panel_" #name "_bg"); \
+panel_bg_color_str = cvar_string("hud_panel_" #name "_bg_color"); \
+panel_bg_color_team_str = cvar_string("hud_panel_" #name "_bg_color_team"); \
+panel_bg_alpha_str = cvar_string("hud_panel_" #name "_bg_alpha"); \
+panel_bg_border_str = cvar_string("hud_panel_" #name "_bg_border"); \
+panel_bg_padding_str = cvar_string("hud_panel_" #name "_bg_padding"); \
 HUD_Panel_StringVars()\
-if(disable_menu_alphacheck == 2 && active_panel == highlightedPanel) {\
+if(menu_enabled == 2 && active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuSize()\
 	HUD_Panel_GetMenuPos()\
-}
+} ENDS_WITH_CURLY_BRACE
 
 // Update all common cvars of given panel id
 #define HUD_Panel_UpdateCvarsForId(id) \
@@ -294,14 +287,14 @@ switch(id) { \
 }
 
 #define HUD_Panel_UpdatePosSize(name) \
-panel_pos = autocvar_hud_panel_##name##_pos; \
-panel_size = autocvar_hud_panel_##name##_size; \
+panel_pos = stov(cvar_string("hud_panel_" #name "_pos")); \
+panel_size = stov(cvar_string("hud_panel_" #name "_size")); \
 HUD_Panel_GetScaledVectors()\
-if(disable_menu_alphacheck == 2 && active_panel == highlightedPanel) {\
+if(menu_enabled == 2 && active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuSize()\
 	HUD_Panel_GetMenuPos()\
 }\
-panel_bg_border_str = autocvar_hud_panel_##name##_bg_border; \
+panel_bg_border_str = cvar_string("hud_panel_" #name "_bg_border"); \
 HUD_Panel_GetBorder()
 
 // Update pos and size of given panel id

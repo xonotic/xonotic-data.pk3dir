@@ -2,7 +2,7 @@
 CLASS(XonoticTeamSelectDialog) EXTENDS(XonoticRootDialog)
 	METHOD(XonoticTeamSelectDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
 	METHOD(XonoticTeamSelectDialog, showNotify, void(entity))
-	ATTRIB(XonoticTeamSelectDialog, title, string, "Team Selection") // ;)
+	ATTRIB(XonoticTeamSelectDialog, title, string, _("Team Selection")) // ;)
 	ATTRIB(XonoticTeamSelectDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticTeamSelectDialog, intendedWidth, float, 0.4)
 	ATTRIB(XonoticTeamSelectDialog, rows, float, 5)
@@ -38,17 +38,17 @@ void XonoticTeamSelectDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);
-		me.TD(me, 2, 4, e = makeTeamButton("join 'best' team (auto-select)", '0 0 0', "cmd selectteam auto; cmd join"));
+		me.TD(me, 2, 4, e = makeTeamButton(_("join 'best' team (auto-select)"), '0 0 0', "cmd selectteam auto; cmd join"));
 			e.preferredFocusPriority = 1;
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 2, 1, me.team1 = makeTeamButton("red", '1 0.5 0.5', "cmd selectteam red; cmd join"));
-		me.TD(me, 2, 1, me.team2 = makeTeamButton("blue", '0.5 0.5 1', "cmd selectteam blue; cmd join"));
-		me.TD(me, 2, 1, me.team3 = makeTeamButton("yellow", '1 1 0.5', "cmd selectteam yellow; cmd join"));
-		me.TD(me, 2, 1, me.team4 = makeTeamButton("pink", '1 0.5 1', "cmd selectteam pink; cmd join"));
+		me.TD(me, 2, 1, me.team1 = makeTeamButton(_("red"), '1 0.5 0.5', "cmd selectteam red; cmd join"));
+		me.TD(me, 2, 1, me.team2 = makeTeamButton(_("blue"), '0.5 0.5 1', "cmd selectteam blue; cmd join"));
+		me.TD(me, 2, 1, me.team3 = makeTeamButton(_("yellow"), '1 1 0.5', "cmd selectteam yellow; cmd join"));
+		me.TD(me, 2, 1, me.team4 = makeTeamButton(_("pink"), '1 0.5 1', "cmd selectteam pink; cmd join"));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 4, makeXonoticCommandButton("spectate", '0 0 0', "cmd spectate", 1));
+		me.TD(me, 1, 4, makeXonoticCommandButton(_("spectate"), '0 0 0', "cmd spectate", 1));
 }
 #endif
 

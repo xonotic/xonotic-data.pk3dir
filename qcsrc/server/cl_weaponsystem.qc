@@ -19,13 +19,13 @@ float W_WeaponRateFactor()
 		if(self.runes & RUNE_SPEED)
 		{
 			if(self.runes & CURSE_SLOW)
-				t = t * cvar("g_balance_rune_speed_combo_atkrate");
+				t = t * autocvar_g_balance_rune_speed_combo_atkrate;
 			else
-				t = t * cvar("g_balance_rune_speed_atkrate");
+				t = t * autocvar_g_balance_rune_speed_atkrate;
 		}
 		else if(self.runes & CURSE_SLOW)
 		{
-			t = t * cvar("g_balance_curse_slow_atkrate");
+			t = t * autocvar_g_balance_curse_slow_atkrate;
 		}
 	}
 
@@ -130,13 +130,15 @@ vector w_shotend;
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
-void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float maxdamage, float range)
+.float prevstrengthsound;
+.float prevstrengthsoundattempt;
+void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
 	local float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
-	if(ent.weapon == WEP_CAMPINGRIFLE)
+	if(ent.weapon == WEP_SNIPERRIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -156,15 +158,13 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	v_right = vr;
 	v_up = vu;
 
+	// un-adjust trueaim if shotend is too close
+	if(vlen(w_shotend - (ent.origin + ent.view_ofs)) < autocvar_g_trueaim_minrange)
+		w_shotend = ent.origin + ent.view_ofs + s_forward * autocvar_g_trueaim_minrange;
+
 	// track max damage
-	if not(inWarmupStage) {
-		entity w;
-		w = get_weaponinfo(ent.weapon);
-		if(w.spawnflags & WEP_TYPE_SPLASH) {  // splash damage
-			ent.stats_fired[ent.weapon - 1] += maxdamage;
-			ent.stat_fired = ent.weapon + 64 * floor(ent.stats_fired[ent.weapon - 1]);
-		}
-	}
+	if(accuracy_canbegooddamage(ent))
+		accuracy_add(ent, ent.weapon, maxdamage, 0);
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
@@ -195,7 +195,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	if (antilag)
 	if (!ent.cvar_cl_noantilag)
 	{
-		if (cvar("g_antilag") == 1) // switch to "ghost" if not hitting original
+		if (autocvar_g_antilag == 1) // switch to "ghost" if not hitting original
 		{
 			traceline(w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent);
 			if (!trace_ent.takedamage)
@@ -211,7 +211,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 				}
 			}
 		}
-		else if(cvar("g_antilag") == 3) // client side hitscan
+		else if(autocvar_g_antilag == 3) // client side hitscan
 		{
 			// this part MUST use prydon cursor
 			if (ent.cursor_trace_ent)                 // client was aiming at someone
@@ -241,84 +241,30 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != "")
-	{
-		sound (ent, CHAN_WEAPON, snd, VOL_BASE, ATTN_NORM);
-	}
+		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
 
-	if (ent.items & IT_STRENGTH)
-	if (!g_minstagib)
-		sound (ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+	if(ent.items & IT_STRENGTH)
+	if(!g_minstagib)
+	if(
+		(time > ent.prevstrengthsound + autocvar_sv_strengthsound_antispam_time)
+		||
+		(time > ent.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)
+	) // prevent insane sound spam
+	{
+		sound(ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+		ent.prevstrengthsound = time;
+	}
+	ent.prevstrengthsoundattempt = time;
 
 	// nudge w_shotend so a trace to w_shotend hits
 	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
 };
 
-#define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, maxdamage, MAX_SHOT_DISTANCE)
-#define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, maxdamage)
-#define W_SetupShot_Dir(ent,s_forward,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage)
-#define W_SetupShot(ent,antilag,recoil,snd,maxdamage) W_SetupShot_ProjectileSize(ent, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage)
-#define W_SetupShot_Range(ent,antilag,recoil,snd,maxdamage,range) W_SetupShot_Dir_ProjectileSize_Range(ent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage, range)
-
-void LaserTarget_Think()
-{
-	entity e;
-	vector offset;
-	float uselaser;
-	uselaser = 0;
-
-	// list of weapons that will use the laser, and the options that enable it
-	if(self.owner.laser_on && self.owner.weapon == WEP_ROCKET_LAUNCHER && g_laserguided_missile)
-		uselaser = 1;
-	// example
-	//if(self.owner.weapon == WEP_ELECTRO && cvar("g_laserguided_electro"))
-	//	uselaser = 1;
-
-
-
-	// if a laser-enabled weapon isn't selected, delete any existing laser and quit
-	if(!uselaser)
-	{
-		// rocket launcher isn't selected, so no laser target.
-		if(self.lasertarget != world)
-		{
-			remove(self.lasertarget);
-			self.lasertarget = world;
-		}
-		return;
-	}
-
-	if(!self.lasertarget)
-	{
-		// we don't have a lasertarget entity, so spawn one
-		//bprint("create laser target\n");
-		e = self.lasertarget = spawn();
-		e.owner = self.owner;			// Its owner is my owner
-		e.classname = "laser_target";
-		e.movetype = MOVETYPE_NOCLIP;	// don't touch things
-		setmodel(e, "models/laser_dot.mdl");	// what it looks like, precision set below
-		e.scale = 1.25;				// make it larger
-		e.alpha = 0.25;				// transparency
-		e.colormod = '255 0 0' * (1/255) * 8;	// change colors
-		e.effects = EF_FULLBRIGHT | EF_LOWPRECISION;
-		// make it dynamically glow
-		// you should avoid over-using this, as it can slow down the player's computer.
-		e.glow_color = 251; // red color
-		e.glow_size = 12;
-	}
-	else
-		e = self.lasertarget;
-
-	// move the laser dot to where the player is looking
-
-	makevectors(self.owner.v_angle); // set v_forward etc to the direction the player is looking
-	offset = '0 0 26' + v_right*3;
-	traceline(self.owner.origin + offset, self.owner.origin + offset + v_forward * MAX_SHOT_DISTANCE, FALSE, self); // trace forward until you hit something, like a player or wall
-	setorigin(e, trace_endpos + v_forward*8); // move me to where the traceline ended
-	if(trace_plane_normal != '0 0 0')
-		e.angles = vectoangles(trace_plane_normal);
-	else
-		e.angles = vectoangles(v_forward);
-}
+#define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, MAX_SHOT_DISTANCE)
+#define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, chan, maxdamage)
+#define W_SetupShot_Dir(ent,s_forward,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage)
+#define W_SetupShot(ent,antilag,recoil,snd,chan,maxdamage) W_SetupShot_ProjectileSize(ent, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage)
+#define W_SetupShot_Range(ent,antilag,recoil,snd,chan,maxdamage,range) W_SetupShot_Dir_ProjectileSize_Range(ent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, range)
 
 float CL_Weaponentity_CustomizeEntityForClient()
 {
@@ -661,12 +607,14 @@ void CL_Weaponentity_Think()
 	else
 		self.alpha = 1;
 
+	self.glowmod = self.owner.weaponentity_glowmod;
 	self.colormap = self.owner.colormap;
 	if (self.weaponentity)
 	{
 		self.weaponentity.effects = self.effects;
 		self.weaponentity.alpha = self.alpha;
 		self.weaponentity.colormap = self.colormap;
+		self.weaponentity.glowmod = self.glowmod;
 	}
 
 	self.angles = '0 0 0';
@@ -674,7 +622,7 @@ void CL_Weaponentity_Think()
 	f = 0;
 	if (self.state == WS_RAISE && !intermission_running)
 	{
-		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / cvar("g_balance_weaponswitchdelay");
+		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
 		if (qcweaponanimation)
 		{
@@ -684,7 +632,7 @@ void CL_Weaponentity_Think()
 	}
 	else if (self.state == WS_DROP && !intermission_running)
 	{
-		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / cvar("g_balance_weaponswitchdelay");
+		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
 		if (qcweaponanimation)
 		{
@@ -824,9 +772,6 @@ void CL_Weaponentity_Think()
 		self.owner.weapon_morph4origin = QCWEAPONANIMATION_ORIGIN(self);
 
 	}
-
-	// create or update the lasertarget entity
-	LaserTarget_Think();
 };
 
 void CL_ExteriorWeaponentity_Think()
@@ -908,6 +853,7 @@ void CL_ExteriorWeaponentity_Think()
 		self.angles = ang;
 	}
 
+	self.glowmod = self.owner.weaponentity_glowmod;
 	self.colormap = self.owner.colormap;
 };
 
@@ -981,6 +927,13 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				self = cl;
 				f = weapon_action(wpn, WR_CHECKAMMO1);
 				f = f + weapon_action(wpn, WR_CHECKAMMO2);
+
+				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
+				local entity mine;
+				if(wpn == WEP_MINE_LAYER)
+				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
+					f = 1;
+
 				self = oldself;
 			}
 			if (!f)
@@ -1006,7 +959,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			sprint(cl, strcat("You do not have the ^2", W_Name(wpn), "\n") );
 			Send_WeaponComplain (cl, wpn, W_Name(wpn), 1);
 
-			if(cvar("g_showweaponspawns"))
+			if(autocvar_g_showweaponspawns)
 			{
 				entity e;
 				string s;
@@ -1065,7 +1018,7 @@ void w_ready()
 void weapon_setup(float windex)
 {
 	entity e;
-	qcweaponanimation = cvar("sv_qcweaponanimation");
+	qcweaponanimation = autocvar_sv_qcweaponanimation;
 	e = get_weaponinfo(windex);
 	self.items &~= IT_AMMO;
 	self.items = self.items | e.items;
@@ -1088,11 +1041,24 @@ void W_SwitchToOtherWeapon(entity pl)
 	if(ww)
 		W_SwitchWeapon_Force(pl, ww);
 }
+.float prevdryfire;
 float weapon_prepareattack_checkammo(float secondary)
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
+		// always keep the Mine Layer if we placed mines, so that we can detonate them
+		local entity mine;
+		if(self.weapon == WEP_MINE_LAYER)
+		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
+			return FALSE;
+
+		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
+		{
+			sound (self, CHAN_AUTO, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
+			self.prevdryfire = time;
+		}
+
 		W_SwitchToOtherWeapon(self);
 		return FALSE;
 	}
@@ -1303,7 +1269,7 @@ void weapon_boblayer1(float spd, vector org)
 	// VorteX: haste can be added here
 };
 
-vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
+vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float forceAbsolute)
 {
 	vector mdirection;
 	float mspeed;
@@ -1316,8 +1282,8 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
 	mdirection = normalize(mvelocity);
 	mspeed = vlen(mvelocity);
 
-	nstyle = cvar("g_projectiles_newton_style");
-	if(nstyle == 0)
+	nstyle = autocvar_g_projectiles_newton_style;
+	if(nstyle == 0 || forceAbsolute)
 	{
 		// absolute velocity
 		outvelocity = mvelocity;
@@ -1353,7 +1319,7 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
 			//dprint("impossible shot, adjusting\n");
 		}
 
-		outspeed = bound(mspeed * cvar("g_projectiles_newton_style_2_minfactor"), outspeed, mspeed * cvar("g_projectiles_newton_style_2_maxfactor"));
+		outspeed = bound(mspeed * autocvar_g_projectiles_newton_style_2_minfactor, outspeed, mspeed * autocvar_g_projectiles_newton_style_2_maxfactor);
 		outvelocity = mdirection * outspeed;
 	}
 	else if(nstyle == 3)
@@ -1496,7 +1462,7 @@ vector W_CalculateProjectileSpread(vector forward, float spread)
 	spread *= g_weaponspreadfactor;
 	if(spread <= 0)
 		return forward;
-	sstyle = cvar("g_projectiles_spread_style");
+	sstyle = autocvar_g_projectiles_spread_style;
 	
 	if(sstyle == 0)
 	{
@@ -1610,7 +1576,7 @@ float mspercallsum;
 float mspercallsstyle;
 float mspercallcount;
 #endif
-void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread)
+void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread, float forceAbsolute)
 {
 	if(missile.owner == world)
 		error("Unowned missile");
@@ -1621,10 +1587,10 @@ void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float
 	dir = normalize(dir);
 
 #if 0
-	if(cvar("g_projectiles_spread_style") != mspercallsstyle)
+	if(autocvar_g_projectiles_spread_style != mspercallsstyle)
 	{
 		mspercallsum = mspercallcount = 0;
-		mspercallsstyle = cvar("g_projectiles_spread_style");
+		mspercallsstyle = autocvar_g_projectiles_spread_style;
 	}
 	mspercallsum -= gettime(GETTIME_HIRES);
 #endif
@@ -1635,13 +1601,13 @@ void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float
 	print("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
 #endif
 
-	missile.velocity = W_CalculateProjectileVelocity(missile.owner.velocity, pSpeed * dir);
+	missile.velocity = W_CalculateProjectileVelocity(missile.owner.velocity, pSpeed * dir, forceAbsolute);
 }
 
 void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 {
-	W_SetupProjectileVelocityEx(missile, w_shotdir, v_up, pSpeed, 0, 0, spread);
+	W_SetupProjectileVelocityEx(missile, w_shotdir, v_up, pSpeed, 0, 0, spread, FALSE);
 }
 
-#define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"))
-#define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"))
+#define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
+#define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)

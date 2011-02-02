@@ -171,6 +171,8 @@ sprite race-checkpoint    "Checkpoint"    ff8000 000000 0.0
 sprite race-finish        "Finish"        ff8000 000000 0.0
 sprite race-start         "Start"         ff8000 000000 0.0
 sprite nb-ball            "Ball"          e8d8a0 000000 0.0
+sprite ka-ball            "Ball"          00ffff 000000 0.0
+sprite ka-ballcarrier     "Ball carrier"  ff0000 000000 0.0
 
 sprite wpn-laser          "Laser"         ff8080 000000 0.0 # bright red
 sprite wpn-shotgun        "Shotgun"       804000 000000 0.0 # brown
@@ -187,6 +189,7 @@ sprite wpn-hookgun        "Hook"          008000 000000 0.0 # dark green
 sprite wpn-fireball       "Fireball"      ff8000 000000 0.0 # orange
 sprite wpn-hlac           "HLAC"          00ff00 000000 0.0 # green
 sprite wpn-campingrifle   "Rifle"         80ff00 000000 0.0 # orange
+sprite wpn-minelayer      "Mine Layer"    ccff00 000000 0.0 # yellowish orange
 
 sprite dom-neut           "Control point" 00ffff 000000 0.0
 sprite dom-red            "Control point" ff0000 000000 0.0
@@ -201,3 +204,5 @@ sprite item-strength      "Strength"      0050ff 000000 0.5 0050ff ffff00 0.5
 sprite item-shield        "Shield"        ff00ff 000000 0.5 ff00ff ffff00 0.5
 sprite item-fuelregen     "Fuel regen"    ff8000 000000 0.5 ff8000 ffff00 0.5
 sprite item-jetpack       "Jet Pack"      808080 000000 0.5 808080 ffff00 0.5
+
+sprite freezetag_frozen   "Frozen!"       40e6ff 000000 0.0 # bright cyan

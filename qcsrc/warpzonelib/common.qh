@@ -15,6 +15,8 @@ const void func_null(void); // never assign to this one please
 .vector warpzone_targetangles;
 .vector warpzone_targetforward;
 .vector warpzone_transform;
+.float warpzone_fadestart;
+.float warpzone_fadeend;
 void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, vector other_ang);
 
 float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig);
@@ -28,6 +30,8 @@ void WarpZone_MakeAllOther();
 typedef void(vector start, vector hit, vector end) WarpZone_trace_callback_t; // called on every elementary trace
 const var WarpZone_trace_callback_t WarpZone_trace_callback_t_null;
 entity WarpZone_trace_transform; // transform accumulator during a trace
+entity WarpZone_trace_firstzone; // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
+entity WarpZone_trace_lastzone; // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
 vector WarpZone_tracetoss_velocity; // ending velocity of a tracetoss (post-transform)
 float WarpZone_tracetoss_time; // duration of toss (approximate)
 void WarpZone_TraceBox(vector org, vector min, vector max, vector end, float nomonsters, entity forent);
@@ -36,6 +40,9 @@ void WarpZone_TraceLine(vector org, vector end, float nomonsters, entity forent)
 void WarpZone_TraceToss(entity e, entity forent);
 void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZone_trace_callback_t cb);
 void WarpZone_TrailParticles(entity own, float eff, vector org, vector end);
+#ifdef CSQC
+void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, float boxflags);
+#endif
 
 .vector WarpZone_findradius_dist;
 .vector WarpZone_findradius_nearest;

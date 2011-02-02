@@ -30,7 +30,7 @@ void turret_targettrigger_touch()
 */
 void spawnfunc_turret_targettrigger()
 {
-    if (!cvar("g_turrets"))
+    if (!autocvar_g_turrets)
     {
         remove(self);
         return;

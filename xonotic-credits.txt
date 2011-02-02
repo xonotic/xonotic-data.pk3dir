@@ -1,7 +1,7 @@
 **Core Team
 
 Rudolf "divVerent" Polzer
--z-
+Tyler "-z-" Mulligan
 Merlijn Hofstra
 morphed
 mand1nga
@@ -14,18 +14,24 @@ tZork
 Diabolik a.k.a Dib
 
 *2D Art / Web
--z- (web / game)
+Tyler "-z-" Mulligan (web / game)
 FruitieX (game / web)
 
 *3D Art
 morphed
 
+*Concept Art
+LJFHutch
+Pearce "theShadow" Michal
+
 *Level Design
 FruitieX
+MirceaKitsune
 
 *Music / Sound FX
 mand1nga
 Merlijn Hofstra
+remaxim
 
 *Engine Code Additions & QA
 Rudolf "divVerent" Polzer
@@ -36,7 +42,7 @@ FruitieX
 tZork
 
 *Marketing / PR
--z-
+Tyler "-z-" Mulligan
 mand1nga
 
 *Legal
@@ -47,11 +53,37 @@ Merlijn Hofstra
 DarkPlaces
 by Forest "LordHavoc" Hale
 
+**Translators
+
+*German
+Rudolf "divVerent" Polzer
+
+*French
+Calinou
+
+*Portuguese
+Ricardo "Hellgardia" Silva
+
+*Romanian
+MirceaKitsune
+
+*Russian
+Lord Canistra
+Nikoli
+
 **Active Contributors
+Antonio "terencehill" Piu
 Ben "MooKow" Banker
+Calinou
+chooksta
+Cuinn "Cuinnton" Herrick
 Kristian "morfar" Johansson
+kojn
 Maik "SavageX" Merten
 MrBougo
+Ruszkai "C.Brutail" Ákos
+Samual Lenks
+Severin "sev" Meyer
 Stephan "esteel" Stahl
 Wolfgang "Blub\0" Bumiller
 
@@ -100,7 +132,6 @@ MauveBib
 Mephisto
 michaelb
 Michael "Tenshihan" Quinn
-MirceaKitsune
 Munyul
 Netzwerg
 NoelCower
@@ -113,8 +144,6 @@ Rick "Rat" Kelley
 Robert "ai" Kuroto
 Ronan
 Sajt
-Samual Lenks
-Severin "sev" Meyer
 Shaggy
 Shank
 Simon O'Callaghan

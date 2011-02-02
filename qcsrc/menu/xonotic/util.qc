@@ -1,11 +1,22 @@
+float GL_CheckExtension(string ext)
+{
+	return (strstrofs(strcat(" ", cvar_string("gl_info_extensions"), " "), strcat(" ", ext, " "), 0) >= 0);
+}
+
+float GL_Have_TextureCompression()
+{
+	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
+}
+
 float tooltipdb;
 void loadTooltips()
 {
-	tooltipdb = db_load("tooltips.db");
+	tooltipdb = db_load(language_filename("tooltips.db"));
 }
 void unloadTooltips()
 {
-	db_close(tooltipdb);
+	if(tooltipdb >= 0)
+		db_close(tooltipdb);
 	tooltipdb = -1;
 }
 string getZonedTooltipForIdentifier(string s)
@@ -13,14 +24,20 @@ string getZonedTooltipForIdentifier(string s)
 	string t;
 	if(s == "")
 		return string_null;
-	t = db_get(tooltipdb, s);
-	if(t == "-")
-		return string_null;
-	if(t != "")
-		return strzone(t);
-	t = cvar_description(s);
-	if(t != "" && t != "custom cvar")
-		return strzone(t);
+	if(tooltipdb >= 0)
+	{
+		t = db_get(tooltipdb, s);
+		if(t == "-")
+			return string_null;
+		if(t != "")
+			return strzone(t);
+	}
+	if(prvm_language == "en" || prvm_language == "")
+	{
+		t = cvar_description(s);
+		if(t != "" && t != "custom cvar")
+			return strzone(t);
+	}
 	dprint("WARNING: no tooltip set for ", s, "\n");
 	return string_null;
 }
@@ -229,66 +246,81 @@ void setDependentWeird(entity e, float(entity) func)
 	setDependent_Check(e);
 }
 
-// EXTRESPONSE SYSTEM ////////////////////////////////////////////////////////
+// URI SYSTEM ////////////////////////////////////////////////////////
 
-float _Nex_ExtResponseSystem_RequestsSent;
-float _Nex_ExtResponseSystem_VersionHandled;
+float _Nex_ExtResponseSystem_Queried;
 string _Nex_ExtResponseSystem_UpdateTo;
-float _Nex_ExtResponseSystem_RetryTime;
-float _Nex_ExtResponseSystem_RetryTime_LastDelay;
 
-void() Item_Nex_ExtResponseSystem_SendQuery =
+void URI_Get_Callback(float id, float status, string data)
 {
-	dprint("Sending extended response requests...\n");
-	localcmd(strcat("packet 64.22.107.122:27950 \"getExtResponse checkUpdates xonotic ", cvar_string("g_xonoticversion"), "\"\n"));
-	_Nex_ExtResponseSystem_RequestsSent = TRUE;
-	_Nex_ExtResponseSystem_RetryTime_LastDelay = _Nex_ExtResponseSystem_RetryTime_LastDelay * 2 + 1;
-	_Nex_ExtResponseSystem_RetryTime = time + _Nex_ExtResponseSystem_RetryTime_LastDelay;
-}
-
-void(float argc) Item_Nex_ExtResponseSystem_Parse =
-{
-	dprint("Received extended response packet from ", argv(0), "\n");
-	if(!_Nex_ExtResponseSystem_RequestsSent)
+	if (id == URI_GET_DISCARD)
 	{
-		dprint("  But I haven't sent a request yet! Ignoring.\n");
-		return;
+		// discard
 	}
-	if(argv(1) == "noUpdateAvailable")
+	else if(id == URI_GET_UPDATENOTIFICATION)
 	{
-		if(_Nex_ExtResponseSystem_VersionHandled)
-		{
-			dprint("  duplicated update notice, ignored\n");
-			return;
-		}
-		_Nex_ExtResponseSystem_VersionHandled = 1;
+		UpdateNotification_URI_Get_Callback(id, status, data);
 	}
-	else if(argv(1) == "updateAvailable")
+	else if(id >= URI_GET_CURL && id <= URI_GET_CURL_END)
 	{
-		if(_Nex_ExtResponseSystem_VersionHandled)
-		{
-			dprint("  duplicated update notice, ignored\n");
-			return;
-		}
-		_Nex_ExtResponseSystem_VersionHandled = 1;
-		_Nex_ExtResponseSystem_UpdateTo = strzone(argv(2)); // note: only one packet can be handled, so this can't be a leak
+		Curl_URI_Get_Callback(id, status, data);
 	}
 	else
-		dprint("  UNKNOWN RESPONSE TYPE: ", argv(1), "\n");
-}
-
-void() Item_Nex_ExtResponseSystem_CheckForResponse =
-{
-	local string s;
-	local float argc;
-	while(strlen((s = getextresponse())))
 	{
-		argc = tokenize_console(s);
-		Item_Nex_ExtResponseSystem_Parse(argc);
+		print(sprintf(_("Received HTTP request data for an invalid id %d.\n"), id));
 	}
 }
 
-// END OF EXTRESPONSE SYSTEM /////////////////////////////////////////////////
+void UpdateNotification_URI_Get_Callback(float id, float status, string data)
+{
+	float n;
+
+	if(_Nex_ExtResponseSystem_UpdateTo)
+	{
+		dprint("error: UpdateNotification_URI_Get_Callback has been called before\n");
+		return;
+	}
+	if(status != 0)
+	{
+		print(sprintf(_("error receiving update notification: status is %d\n"), status));
+		return;
+	}
+	if(substring(data, 0, 1) == "<")
+	{
+		print(_("error: received HTML instead of an update notification\n"));
+		return;
+	}
+	if(strstrofs(data, "\r", 0) != -1)
+	{
+		print(_("error: received carriage returns from update notification server\n"));
+		return;
+	}
+
+	if(data == "")
+		n = 0;
+	else
+		n = tokenizebyseparator(data, "\n");
+	
+	if(n >= 1)
+	{
+		_Nex_ExtResponseSystem_UpdateTo = argv(0);
+
+		if(vercmp(cvar_string("g_xonoticversion"), _Nex_ExtResponseSystem_UpdateTo) >= 0)
+		{
+			_Nex_ExtResponseSystem_UpdateTo = ""; // no update needed
+		}
+		else
+		{
+			// update needed
+			if(n >= 2)
+				print(sprintf(_("Update can be downloaded at:\n%s\n"), argv(1)));
+		}
+
+		_Nex_ExtResponseSystem_UpdateTo = strzone(_Nex_ExtResponseSystem_UpdateTo);
+	}
+}
+
+// END OF URI SYSTEM ////////////////////////////////////////////////////////
 
 float preMenuInit()
 {
@@ -302,7 +334,7 @@ float preMenuInit()
 		draw_reset_cropped();
 
 		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
-		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, "Autogenerating mapinfo for newly added maps...", sz, '1 1 1', 1, 0);
+		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
 
 		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
 		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
@@ -341,26 +373,64 @@ void preMenuDraw()
 
 	if(cvar("menu_updatecheck"))
 	{
-		Item_Nex_ExtResponseSystem_CheckForResponse();
-		if(!_Nex_ExtResponseSystem_VersionHandled)
-			if(time > _Nex_ExtResponseSystem_RetryTime)
-				Item_Nex_ExtResponseSystem_SendQuery();
+		if(!_Nex_ExtResponseSystem_Queried)
+		{
+			_Nex_ExtResponseSystem_Queried = 1;
+			float startcnt;
+			string uri;
+
+			cvar_set("cl_startcount", ftos(startcnt = cvar("cl_startcount") + 1));
+
+			// for privacy, munge the start count a little
+			startcnt = floor((floor(startcnt / 10) + random()) * 10);
+			uri = sprintf("http://www.xonotic.org/dl/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
+
+#ifdef CVAR_POPCON
+			float cvar_handle, popcon_handle;
+			float n, i, j;
+			string k, s;
+			cvar_handle = buf_create();
+			buf_cvarlist(cvar_handle, "", "");
+			n = buf_getsize(cvar_handle);
+			popcon_handle = buf_create();
+			for(i= 0, j = 0; i < n; ++i)
+			{
+				k = bufstr_get(cvar_handle, i);
+				if(!(cvar_type(k) & CVAR_TYPEFLAG_SAVED))
+					continue;
+				s = sprintf("%s=%d", uri_escape(k), cvar_string(k) != cvar_defstring(k));
+				bufstr_set(popcon_handle, j, s);
+				++j;
+			}
+			buf_del(cvar_handle);
+			uri_postbuf(
+				uri, URI_GET_UPDATENOTIFICATION,
+				"application/x-www-form-urlencoded",
+				"&",
+				popcon_handle
+			);
+			buf_del(popcon_handle);
+#else
+			uri_get(uri, URI_GET_UPDATENOTIFICATION);
+#endif
+		}
 	}
 
 	if(_Nex_ExtResponseSystem_UpdateTo != "")
 	{
+		// TODO rather turn this into a dialog
 		fs = ((1/draw_scale_x) * eX + (1/draw_scale_y) * eY) * 12;
 		line = eY * fs_y;
-		sz_x = draw_TextWidth("  http://www.xonotic.com/  ", 0, fs);
+		sz_x = draw_TextWidth("  http://www.xonotic.org/  ", 0, fs);
 		sz_y = 3 * fs_y;
 
-		draw_alpha = sin(time * 0.112 - 0.3) * 0.7;
+		draw_alpha = sin(time * 0.112 - 0.3) * 10;
 		mid = eX * (0.5 + 0.5 * (1 - sz_x) * cos(time * 0.071))
 		    + eY * (0.5 + 0.5 * (1 - sz_y) * sin(time * 0.071));
 
 		draw_Fill(mid - 0.5 * sz, sz, '1 1 0', 1);
-		draw_CenterText(mid - 1 * line, strcat("Update to ", _Nex_ExtResponseSystem_UpdateTo, " now!"), fs, '1 0 0', 1, 0);
-		draw_CenterText(mid - 0 * line, "http://www.xonotic.com/", fs, '0 0 1', 1, 0);
+		draw_CenterText(mid - 1 * line, sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo), fs, '1 0 0', 1, 0);
+		draw_CenterText(mid - 0 * line, "http://www.xonotic.org/", fs, '0 0 1', 1, 0);
 	}
 	if not(campaign_name_previous)
 		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
@@ -400,4 +470,165 @@ string HUD_Panel_GetSettingName(float theSetting)
 		case HUD_MENU_ENABLE: return ""; break;
 		default: return "";
 	}
+}
+
+float updateCompression()
+{
+	float fh;
+	float have_dds, have_jpg, have_tga;
+	float can_dds;
+	if((have_dds = ((fh = fopen("dds/particles/particlefont.dds", FILE_READ)) >= 0)))
+		fclose(fh);
+	if((have_jpg = ((fh = fopen("particles/particlefont.jpg", FILE_READ)) >= 0)))
+		fclose(fh);
+	if((have_tga = ((fh = fopen("particles/particlefont.tga", FILE_READ)) >= 0)))
+		fclose(fh);
+	can_dds = GL_Have_TextureCompression();
+	if(have_dds && (have_jpg || have_tga))
+	{
+		// both? Let's only use good quality precompressed files
+		// but ONLY if we actually support it!
+		if(can_dds)
+		{
+			cvar_set("gl_texturecompression", "0");
+			return 1;
+		}
+		else
+		{
+			cvar_set("gl_texturecompression", "0");
+			cvar_set("r_texture_dds_load", "0");
+			return 0;
+		}
+	}
+	else if(have_dds)
+	{
+		// DDS only? We probably always want texture compression
+		cvar_set("gl_texturecompression", "1");
+		cvar_set("r_texture_dds_load", "1");
+		if(!can_dds)
+			print(_("^1ERROR: Texture compression is required but not supported.\n^1Expect visual problems.\n"));
+		return 0;
+	}
+	else
+	{
+		// TGA only? Allow runtime compression
+		if(can_dds)
+		{
+			cvar_set("gl_texturecompression", cvar_string("r_texture_dds_load"));
+			return 2;
+		}
+		else
+		{
+			cvar_set("gl_texturecompression", "0");
+			cvar_set("r_texture_dds_load", "0");
+			return 0;
+		}
+	}
+}
+
+// note: include only those that should be in the menu!
+#define GAMETYPES \
+	GAMETYPE(MAPINFO_TYPE_ARENA, _("Arena")) \
+	GAMETYPE(MAPINFO_TYPE_ASSAULT, _("Assault")) \
+	GAMETYPE(MAPINFO_TYPE_CTF, _("Capture The Flag")) \
+	GAMETYPE(MAPINFO_TYPE_CA, _("Clan Arena")) \
+	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, _("Deathmatch")) \
+	GAMETYPE(MAPINFO_TYPE_DOMINATION, _("Domination")) \
+	GAMETYPE(MAPINFO_TYPE_FREEZETAG, _("Freeze Tag")) \
+	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, _("Keepaway")) \
+	GAMETYPE(MAPINFO_TYPE_KEYHUNT, _("Key Hunt")) \
+	GAMETYPE(MAPINFO_TYPE_LMS, _("Last Man Standing")) \
+	GAMETYPE(MAPINFO_TYPE_NEXBALL, _("Nexball")) \
+	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, _("Onslaught")) \
+	GAMETYPE(MAPINFO_TYPE_RACE, _("Race")) \
+	GAMETYPE(MAPINFO_TYPE_CTS, _("Race CTS")) \
+	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, _("Runematch")) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, _("Team Deathmatch")) \
+	/* nothing */
+
+float GameType_GetID(float cnt)
+{
+	float i;
+	i = 0;
+#define GAMETYPE(id,name) if(i++ == cnt) return id;
+	GAMETYPES
+#undef GAMETYPE
+	return 0;
+}
+string GameType_GetName(float cnt)
+{
+	float i;
+	i = 0;
+#define GAMETYPE(id,name) if(i++ == cnt) return name;
+	GAMETYPES
+#undef GAMETYPE
+	return _("@!#%'n Tuba Throwing");
+}
+float GameType_GetCount()
+{
+	float i;
+	i = 0;
+#define GAMETYPE(id,name) ++i;
+	GAMETYPES
+#undef GAMETYPE
+	return i;
+}
+
+void dialog_hudpanel_common_notoggle(entity me, string panelname)
+{
+	float i;
+	entity e;
+
+	me.TR(me);
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Background:")));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg"))));
+				e.addValue(e, _("Default"), "");
+				e.addValue(e, _("Disable"), "0");
+				e.addValue(e, strzone(strcat("border_", panelname)), strzone(strcat("border_", panelname)));
+				e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Color:")));
+		me.TD(me, 2, 2.6, e = makeXonoticColorpickerString(strzone(strcat("hud_panel_", panelname, "_bg_color")), "hud_panel_bg_color"));
+			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_bg_color")), "");
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.0, e = makeXonoticCheckBoxString("", "1 1 1", strzone(strcat("hud_panel_", panelname, "_bg_color")), _("Use default")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Border size:")));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg_border"))));
+				e.addValue(e, _("Default"), "");
+				e.addValue(e, _("Disable"), "0");
+				for(i = 1; i <= 10; ++i)
+					e.addValue(e, strzone(ftos_decimals(i * 2, 0)), strzone(ftos(i * 2)));
+				e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Alpha:")));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg_alpha"))));
+				e.addValue(e, _("Default"), "");
+				for(i = 1; i <= 10; ++i)
+					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
+				e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Team Color:")));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg_color_team"))));
+				e.addValue(e, _("Default"), "");
+				e.addValue(e, _("Disable"), "0");
+				for(i = 1; i <= 10; ++i)
+					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
+				e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 3.6, e = makeXonoticCheckBox(0, "hud_configure_teamcolorforced", _("Test team color in configure mode")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Padding:")));
+			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg_padding"))));
+				e.addValue(e, _("Default"), "");
+				for(i = 0; i <= 10; ++i)
+					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
+				e.configureXonoticTextSliderValues(e);
 }

@@ -101,7 +101,7 @@ entity bot_getplace(string placename)
 	{
 		e = find(world, targetname, placename);
 		if(!e)
-			print("invalid place ", s, "\n");
+			print("invalid place ", placename, "\n");
 		return e;
 	}
 }
@@ -868,14 +868,14 @@ float bot_presskeys()
 		return FALSE;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_FORWARD)
-		self.movement_x = cvar("sv_maxspeed");
+		self.movement_x = autocvar_sv_maxspeed;
 	else if(self.bot_cmd_keys & BOT_CMD_KEY_BACKWARD)
-		self.movement_x = -cvar("sv_maxspeed");
+		self.movement_x = -autocvar_sv_maxspeed;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_RIGHT)
-		self.movement_y = cvar("sv_maxspeed");
+		self.movement_y = autocvar_sv_maxspeed;
 	else if(self.bot_cmd_keys & BOT_CMD_KEY_LEFT)
-		self.movement_y = -cvar("sv_maxspeed");
+		self.movement_y = -autocvar_sv_maxspeed;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_JUMP)
 		self.BUTTON_JUMP = TRUE;
@@ -1269,7 +1269,7 @@ float bot_execute_commands_once()
 	}
 	else
 	{
-		if(cvar("g_debug_bot_commands"))
+		if(autocvar_g_debug_bot_commands)
 		{
 			local string parms;
 

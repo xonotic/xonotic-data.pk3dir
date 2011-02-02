@@ -50,7 +50,7 @@ void havocbot_role_kh_carrier()
 
 	if (self.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 
 		if(kh_Key_AllOwnedByWhichTeam() == self.team)
@@ -88,7 +88,7 @@ void havocbot_role_kh_defense()
 	if (self.bot_strategytime < time)
 	{
 		float key_owner_team;
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
@@ -130,7 +130,7 @@ void havocbot_role_kh_offense()
 	{
 		float key_owner_team;
 
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
@@ -180,7 +180,7 @@ void havocbot_role_kh_freelancer()
 	{
 		float key_owner_team;
 
-		self.bot_strategytime = time + cvar("bot_ai_strategyinterval");
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();

@@ -5,10 +5,10 @@ ZIP ?= 7za a -tzip -mx=9
 ZIPEXCLUDE ?= -x\!*.pk3 -xr\!\.svn -x\!qcsrc
 DIFF ?= diff
 
-FTEQCCFLAGS_WATERMARK ?= -DWATERMARK='"^1$(shell git describe) TEST BUILD"'
-FTEQCCFLAGS ?= -Werror -Wall -Wno-mundane -O3 -Ono-c -Ono-cs -flo $(FTEQCCFLAGS_EXTRA) $(FTEQCCFLAGS_WATERMARK)
-FTEQCCFLAGS_PROGS ?= 
-FTEQCCFLAGS_MENU ?= 
+FTEQCCFLAGS_WATERMARK ?= -DWATERMARK='"^1$(shell git describe) TEST BUILD"' -DCVAR_POPCON
+FTEQCCFLAGS ?= -Werror -Wno-Q302 -O3 -Ono-c -Ono-cs $(FTEQCCFLAGS_EXTRA) $(FTEQCCFLAGS_WATERMARK)
+FTEQCCFLAGS_PROGS ?=
+FTEQCCFLAGS_MENU ?=
 
 # NOTE: use -DUSE_FTE instead of -TFTE here!
 # It will automagically add an engine check with -TID and then change back to -TFTE
@@ -38,15 +38,18 @@ skin: gfx/menu/default/skinvalues.txt
 clean:
 	rm -f progs.dat menu.dat csprogs.dat
 
-csprogs.dat: qcsrc/client/*.* qcsrc/common/*.* qcsrc/warpzonelib/*.*
+FILES_CSPROGS = $(shell find qcsrc/client qcsrc/common qcsrc/warpzonelib -type f -not -name fteqcc.log -not -name qc.asm) qcsrc/server/w_*.qc
+csprogs.dat: $(FILES_CSPROGS)
 	@echo make[1]: Entering directory \`$(PWD)/qcsrc/client\'
 	cd qcsrc/client && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_CSPROGS)
 
-progs.dat: qcsrc/server/*.* qcsrc/common/*.* qcsrc/server/*/*.* qcsrc/server/*/*/*.* qcsrc/warpzonelib/*.*
+FILES_PROGS = $(shell find qcsrc/server qcsrc/common qcsrc/warpzonelib -type f -not -name fteqcc.log -not -name qc.asm) qcsrc/server/w_*.qc
+progs.dat: $(FILES_PROGS)
 	@echo make[1]: Entering directory \`$(PWD)/qcsrc/server\'
 	cd qcsrc/server && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_PROGS)
 
-menu.dat: qcsrc/menu/*.* qcsrc/menu/*/*.* qcsrc/common/*.*
+FILES_MENU = $(shell find qcsrc/menu qcsrc/common qcsrc/warpzonelib -type f -not -name fteqcc.log -not -name qc.asm) qcsrc/server/w_*.qc
+menu.dat: $(FILES_MENU)
 	@echo make[1]: Entering directory \`$(PWD)/qcsrc/menu\'
 	cd qcsrc/menu && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_MENU)
 

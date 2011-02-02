@@ -1,5 +1,5 @@
 string GotoMap(string m);
-void race_DeleteTime(float pos);
+void race_deleteTime(string map, float pos);
 
 float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 {
@@ -626,6 +626,47 @@ void make_mapinfo_Think()
 	}
 }
 
+void changematchtime(float delta, float mi, float ma)
+{
+	float cur;
+	float new;
+	float lim;
+
+	if(delta == 0)
+		return;
+	if(autocvar_timelimit < 0)
+		return;
+
+	if(mi <= 10)
+		mi = 10; // at least ten sec in the future
+	cur = time - game_starttime;
+	if(cur > 0)
+		mi += cur; // from current time!
+
+	lim = autocvar_timelimit * 60;
+
+	if(delta > 0)
+	{
+		if(lim == 0)
+			return; // cannot increase any further
+		else if(lim < ma)
+			new = min(ma, lim + delta);
+		else // already above maximum: FAIL
+			return;
+	}
+	else
+	{
+		if(lim == 0) // infinite: try reducing to max, if we are allowed to
+			new = max(mi, ma);
+		else if(lim > mi) // above minimum: decrease
+			new = max(mi, lim + delta);
+		else // already below minimum: FAIL
+			return;
+	}
+
+	cvar_set("timelimit", ftos(new));
+}
+
 void GameCommand(string command)
 {
 	float argc;
@@ -651,7 +692,10 @@ void GameCommand(string command)
 		print("  radarmap [--force] [--quit | --loop] [sharpness]\n");
 		print("  bbox\n");
 		print("  cvar_changes\n");
+		print("  cvar_purechanges\n");
 		print("  find classname\n");
+		print("  extendmatchtime\n");
+		print("  reducematchtime\n");
 		GameCommand_Vote("help", world);
 		GameCommand_Ban("help");
 		GameCommand_Generic("help");
@@ -770,10 +814,10 @@ void GameCommand(string command)
 			if(plr.classname == "spectator" || plr.classname == "observer")
 			{
 				plr.spectatortime = time;
-				sprint(plr, strcat("^7You have to become a player within the next ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+				sprint(plr, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 			}
 		}
-		bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds!\n"));
+		bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
 		return;
 	}
 
@@ -800,16 +844,15 @@ void GameCommand(string command)
 			bprint("That command can only be used in a team-based gamemode.\n");
 		return;
 	}
-	if(argv(0) == "movetoteam")
-	if(argc == 3 || argc == 4) {
-// 	sv_cmd movetoteam  player_id  team_colour
-// 	sv_cmd movetoteam  player_id  team_colour  type_of_move
+	if(argv(0) == "movetoteam") if(argc == 3 || argc == 4) {
+		// 	sv_cmd movetoteam  player_id  team_colour
+		// 	sv_cmd movetoteam  player_id  team_colour  type_of_move
 
-// 	type of move
-// 	0 (00) automove centerprint, admin message
-// 	1 (01) automove centerprint, no admin message
-// 	2 (10) no centerprint, admin message
-// 	3 (11) no centerprint, no admin message
+		// 	type of move
+		// 	0 (00) automove centerprint, admin message
+		// 	1 (01) automove centerprint, no admin message
+		// 	2 (10) no centerprint, admin message
+		// 	3 (11) no centerprint, no admin message
 
 		if(!teams_matter) {  // death match
 			print("Currently not playing a team game\n");
@@ -824,7 +867,7 @@ void GameCommand(string command)
 			return;
 		}
 
-			client = edict_num(entno);
+		client = edict_num(entno);
 
 		// player entity is not a client
 		if not(client.flags & FL_CLIENT) {
@@ -834,43 +877,52 @@ void GameCommand(string command)
 
 		// find the team to move the player to
 		float team_colour;
+		float save;
+
+		save = client.team_forced;
+		client.team_forced = 0;
 
 		team_colour = ColourToNumber(argv(2));
 
 		if(team_colour == client.team) {  // player already on the team
 			print("Player ", argv(1), " (", client.netname, ") is already on the ", ColoredTeamName(client.team), "\n");
+			// keep the forcing undone
 			return;
 		} else if(team_colour == 0)  // auto team
 			team_colour = NumberToTeamNumber(FindSmallestTeam(client, FALSE));
+		else
+			CheckAllowedTeams(client);
+
+		client.team_forced = save;
 
 		switch(team_colour) {
 			case COLOR_TEAM1:
 				if(c1 == -1) {
 					print("Sorry, there isn't a red team\n");
 					return;
-		}
-			break;
+				}
+				break;
 
 			case COLOR_TEAM2:
 				if(c2 == -1) {
 					print("Sorry, there isn't a blue team\n");
-		return;
-	}
-			break;
+					return;
+				}
+				break;
 
 			case COLOR_TEAM3:
 				if(c3 == -1) {
 					print("Sorry, there isn't a yellow team\n");
 					return;
 				}
-			break;
+				break;
 
 			case COLOR_TEAM4:
 				if(c4 == -1) {
 					print("Sorry, there isn't a pink team\n");
 					return;
 				}
-			break;
+				break;
 
 			default:
 				print("Sorry, team ", argv(2), " doesn't exist\n");
@@ -878,6 +930,7 @@ void GameCommand(string command)
 		}
 		print("Player ", argv(1), " (", client.netname, ") has been moved to the ", ColoredTeamName(team_colour), "\n");
 
+		client.team_forced = 0;
 		MoveToTeam(client, team_colour, 6, stof(argv(3)));
 
 		return;
@@ -912,6 +965,11 @@ void GameCommand(string command)
 		print(cvar_changes);
 		return;
 	}
+	if (argv(0) == "cvar_purechanges")
+	{
+		print(cvar_purechanges);
+		return;
+	}
 	if (argv(0) == "find") if(argc == 2)
 	{
 		for(client = world; (client = find(client, classname, argv(1))); )
@@ -922,6 +980,11 @@ void GameCommand(string command)
 	{
 		for (i = 0; i < 10; ++i)
 			print(records_reply[i]);
+		return;
+	}
+	if (argv(0) == "ladder")
+	{
+		print(ladder_reply);
 		return;
 	}
 	if (argv(0) == "rankings")
@@ -1340,7 +1403,11 @@ void GameCommand(string command)
 	}
 	if(argv(0) == "delrec")
 	{
-		race_DeleteTime(stof(argv(1)));
+		if(argv(2) != "")
+			race_deleteTime(argv(2), stof(argv(1)));
+		else
+			race_deleteTime(GetMapname(), stof(argv(1)));
+
 		return;
 	}
 
@@ -1352,6 +1419,18 @@ void GameCommand(string command)
 		traceline(src, dst, MOVE_NORMAL, world);
 		trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), src, trace_endpos);
 		trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dst);
+		return;
+	}
+
+	if(argv(0) == "extendmatchtime")
+	{
+		changematchtime(autocvar_timelimit_increment* 60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
+		return;
+	}
+
+	if(argv(0) == "reducematchtime")
+	{
+		changematchtime(autocvar_timelimit_decrement*-60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
 		return;
 	}
 

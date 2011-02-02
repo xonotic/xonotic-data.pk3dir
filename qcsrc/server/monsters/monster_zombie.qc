@@ -77,10 +77,10 @@ float zombie_scoretarget(entity trg)
                 if(trace_ent != trg)
                     return 0;
 
-                return (cvar("g_monster_zombie_targetrange") - vlen(self.origin - trg.origin)) * tmp;
+                return (autocvar_g_monster_zombie_targetrange - vlen(self.origin - trg.origin)) * tmp;
             }
             else if(self.enemy == trg)
-                return (cvar("g_monster_zombie_targetrange") - vlen(self.origin - trg.origin)) * tmp;
+                return (autocvar_g_monster_zombie_targetrange - vlen(self.origin - trg.origin)) * tmp;
         }
     }
 
@@ -153,7 +153,7 @@ void zombie_die(vector dir)
     self.event_damage   = SUB_Null;
     self.enemy          = world;
     self.think          = zombie_spawn;
-    self.nextthink      = time + cvar("g_monster_zombie_respawntime");
+    self.nextthink      = time + autocvar_g_monster_zombie_respawntime;
     self.pain_finished  = self.nextthink;
 }
 
@@ -212,7 +212,7 @@ void zombie_move()
     float vz, tdiff, tspeed;
 
     tdiff = time - self.zoomstate;
-    tspeed = tdiff * cvar("g_monster_zombie_turnspeed");
+    tspeed = tdiff * autocvar_g_monster_zombie_turnspeed;
     vz = self.velocity_z;
     self.zoomstate = time;
 
@@ -235,14 +235,14 @@ void zombie_move()
 
     if(vlen(self.origin - self.moveto) > 64)
     {
-        movelib_move_simple(v_forward ,cvar("g_monster_zombie_movespeed"),0.6);
+        movelib_move_simple(v_forward ,autocvar_g_monster_zombie_movespeed,0.6);
         if(time > self.pain_finished)
             if(self.attack_finished_single < time)
                 self.frame = zombie_anim_runforward;
     }
     else
     {
-        movelib_beak_simple(cvar("g_monster_zombie_stopspeed"));
+        movelib_beak_simple(autocvar_g_monster_zombie_stopspeed);
         if(time > self.pain_finished)
             if(self.attack_finished_single < time)
                 self.frame = zombie_anim_idle;
@@ -311,8 +311,8 @@ float zombie_verb_idle(float eval)
     case VCM_DO:
         float t;
 
-        t = cvar("g_monster_zombie_idle_timer_max") -  cvar("g_monster_zombie_idle_timer_min");
-        t = cvar("g_monster_zombie_idle_timer_min") + (random() * t);
+        t = autocvar_g_monster_zombie_idle_timer_max -  autocvar_g_monster_zombie_idle_timer_min;
+        t = autocvar_g_monster_zombie_idle_timer_min + (random() * t);
 
         if(random() < 0.5)
             verbstack_push(self.verbs_idle, zombie_verb_idle_roam,  ZV_IDLE + 1, t, self);
@@ -340,7 +340,7 @@ float zombie_verb_attack_findtarget(float eval)
         entity trg, best_trg;
         float trg_score, best_trg_score;
 
-        trg = findradius(self.origin,cvar("g_monster_zombie_targetrange"));
+        trg = findradius(self.origin,autocvar_g_monster_zombie_targetrange);
         while(trg)
         {
             trg_score = zombie_scoretarget(trg);
@@ -371,13 +371,13 @@ void zombie_runattack_damage()
     oldself = self;
     self = self.owner;
 
-    if(vlen(self.origin - self.enemy.origin) > cvar("g_monster_zombie_attack_run_hitrange"))
+    if(vlen(self.origin - self.enemy.origin) > autocvar_g_monster_zombie_attack_run_hitrange)
         return;
 
     if(vlen(normalize(self.origin - self.enemy.origin) - v_forward) < 1.6)
         return;
 
-    Damage(self.enemy, self, self, cvar("g_monster_zombie_attack_run_damage"), DEATH_TURRET, self.enemy.origin, normalize(self.enemy.origin - self.origin)  * cvar("g_monster_zombie_attack_run_force"));
+    Damage(self.enemy, self, self, autocvar_g_monster_zombie_attack_run_damage, DEATH_TURRET, self.enemy.origin, normalize(self.enemy.origin - self.origin)  * autocvar_g_monster_zombie_attack_run_force);
 
     self = oldself;
     self.think = SUB_Remove;
@@ -395,7 +395,7 @@ float zombie_verb_attack_run(float eval)
         if(self.attack_finished_single > time)
             return VS_CALL_NO;
 
-        if(vlen(self.origin - self.enemy.origin) > cvar("g_monster_zombie_attack_run_range"))
+        if(vlen(self.origin - self.enemy.origin) > autocvar_g_monster_zombie_attack_run_range)
             return VS_CALL_NO;
 
         if(vlen(normalize(self.origin - self.enemy.origin) - v_forward) < 1.6)
@@ -408,7 +408,7 @@ float zombie_verb_attack_run(float eval)
         pain = spawn();
         pain.owner = self;
         pain.think = zombie_runattack_damage;
-        pain.nextthink = time + cvar("g_monster_zombie_attack_run_delay");
+        pain.nextthink = time + autocvar_g_monster_zombie_attack_run_delay;
 
         self.attack_finished_single = time + 0.7;
         self.frame = zombie_anim_attackrun1 + rint(random() * 2);
@@ -426,7 +426,7 @@ void zombie_standattack_damage()
     //self = self.owner;
 
     setorigin(self,self.owner.origin + v_forward * 32);
-    RadiusDamage(self, self.owner, cvar("g_monster_zombie_attack_stand_damage"),cvar("g_monster_zombie_attack_stand_damage"),16,self, cvar("g_monster_zombie_attack_stand_force"),DEATH_TURRET,world);
+    RadiusDamage(self, self.owner, autocvar_g_monster_zombie_attack_stand_damage,autocvar_g_monster_zombie_attack_stand_damage,16,self, autocvar_g_monster_zombie_attack_stand_force,DEATH_TURRET,world);
     //float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity)
 
 
@@ -446,7 +446,7 @@ float zombie_verb_attack_stand(float eval)
         if(self.attack_finished_single > time)
             return VS_CALL_NO;
 
-        if(vlen(self.origin - self.enemy.origin) > cvar("g_monster_zombie_attack_stand_range"))
+        if(vlen(self.origin - self.enemy.origin) > autocvar_g_monster_zombie_attack_stand_range)
             return VS_CALL_NO;
 
         if(vlen(normalize(self.origin - self.enemy.origin) - v_forward) < 1.8)
@@ -459,7 +459,7 @@ float zombie_verb_attack_stand(float eval)
         pain = spawn();
         pain.owner = self;
         pain.think = zombie_runattack_damage;
-        pain.nextthink = time + cvar("g_monster_zombie_attack_stand_delay");
+        pain.nextthink = time + autocvar_g_monster_zombie_attack_stand_delay;
 
         self.attack_finished_single = time + 0.7;
         self.frame = zombie_anim_attackstanding1 + rint(random() * 1);
@@ -507,7 +507,7 @@ void zombie_spawn()
     self.nextthink      = time + 2.1;
     self.pain_finished  = self.nextthink;
     self.movetype       = MOVETYPE_WALK;
-    self.health         = cvar("g_monster_zombie_health");
+    self.health         = autocvar_g_monster_zombie_health;
     self.velocity       = '0 0 0';
     self.angles         = self.pos2;
     self.moveto         = self.origin;
@@ -520,7 +520,7 @@ void zombie_spawn()
 
 void spawnfunc_monster_zombie()
 {
-    if not(cvar("g_monsters"))
+    if not(autocvar_g_monsters)
     {
         remove(self);
         return;

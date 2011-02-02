@@ -74,7 +74,7 @@ vector real_origin(entity ent);
 /// Dont aim.
 #define TFL_AIM_NO                  1
 /// Go for ground, not direct hit
-#define TFL_AIM_GROUND              2
+//#define TFL_AIM_GROUND              2
 /// Go for ground, not direct hit, but only if target is on ground.
 #define TFL_AIM_GROUND2             4
 /// Use balistic aim. FIXME: not implemented
@@ -87,8 +87,8 @@ vector real_origin(entity ent);
 #define TFL_AIM_INFRONT             64
 /// Aim slightly behind target
 #define TFL_AIM_BEHIND              128
-/// blend real and predicted z positions. (fake bounce prediction)
-#define TFL_AIM_ZEASE               256
+/// blend real and predicted z positions. (fake bounce prediction) 
+// #define TFL_AIM_ZEASE               256 
 /// Try to do real prediction of targets z pos at impact.
 #define TFL_AIM_ZPREDICT            512
 /// Simply aim at target's current location
@@ -266,9 +266,6 @@ vector real_origin(entity ent);
 /// on/off toggle.
 .float      tur_active;
 
-// Aim from this point,
-//.vector     tur_aimorg;
-
 /// and shoot from here. (can be non constant, think MLRS)
 .vector     tur_shotorg;
 
@@ -323,8 +320,6 @@ vector real_origin(entity ent);
 .float target_range;
 /// Dont consider targets closer then
 .float target_range_min;
-// Engage fire routine on targets within
-//.float target_range_fire; // no practical use aymore, work with target_range insted.
 /// Targets closer to this are prefered
 .float target_range_optimal;
 
@@ -353,8 +348,6 @@ vector real_origin(entity ent);
 */
 /// Maximum offset between impact and aim spot to fire
 .float aim_firetolerance_dist;
-// Maximum angular offset between head and aimspot to fire
-//.float aim_firetolerance_angle;
 /// How fast can i rotate/pitch (per second in stepmotor mode, base force in smooth modes)
 .float aim_speed;
 /// cant aim higher/lower then this
@@ -397,16 +390,12 @@ void turret_fire();
 .void()  turret_firefunc;
 /// prefire checks go here. return 1 to go bang, 0 not to.
 .float() turret_firecheckfunc;
-// Execure BEFORE main ai loop. return 0 to cancel any following proccessing.
-//.float() turret_prethink;
 /// Execure AFTER main AI loop
 .void()  turret_postthink;
 
 /// Add a target
 .float(entity e_target,entity e_sender) turret_addtarget;
 
-//.float call_diehook;
-//.float call_respwnhook;
 .void() turret_diehook;
 .void() turret_respawnhook;
 
@@ -421,27 +410,6 @@ void turret_fire();
 .float(float event_id) turret_eventhook;
 */
 
-/*
-* Some turrets need other aimsystems then other.
-* This should return the place to aim at, not acctualy turn or
-* pitch anyting.
-*
-* use turret_stdproc_aim* or Make your own.
-* Make sure you update tur_enemy_dist and tur_enemy_adist
-* with the apropriate info, if you do.
-
-removed.
-*/
-// function used to aim, usualy turret_stdproc_aim_generic
-//.vector() turret_aim;
-
-/*
-* This is where the acctual turret turning should take place
-* Use turret_stdproc_track or make your own.
-wkacked to save mem.
-*/
-// Function used to turn and pitch the .tur_head usualy turret_stdproc_track
-//.void() turret_track;
 
 /*
 * Target selection, preferably but not nessesarely
@@ -450,41 +418,11 @@ wkacked to save mem.
 /// Function to use for target evaluation. usualy turret_stdproc_targetscore_generic
 .float(entity e_turret, entity e_target) turret_score_target;
 
-/*
-* Damage, death and respawn.
-*/
-//void turret_gibs_precash();
-// generalized so save mem (on fields)
-// Function to handle incomming damage. usualy turret_stdproc_damage
-//.void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce) turret_damagefunc;
-// Function to handle the event of death. usualy turret_stdproc_die
-//.void() turret_diefunc;
-// Function that handles rebirth. usualy turret_stdproc_respawn
-//.void() turret_spawnfunc;
-
-/*
-* Stuff to plug into requierd but unused callbacks.
-*/
-/// Always return 1
-//float turret_stdproc_true();
-/// Always return 0
-//float turret_stdproc_false();
-/// Always return nothing at all
-//void turret_stdproc_nothing();
 
 /*
 * Target selection
 */
-// noting uses the following atm.
-// "closeer is beter" selection
-//float   turret_stdproc_targetscore_close(entity e_turret, entity e_target);
-// "further is beter" selection
-//float   turret_stdproc_targetscore_far(entity e_turret, entity e_target);
-// only target_range_optimal
-//float   turret_stdproc_targetscore_optimal(entity e_turret, entity e_target);
-// defendpos
-//float   turret_stdproc_targetscore_defend(entity e_turret, entity e_target);
-/// Generic fairly smart bias-aware target selection.
+/// Generic, fairly smart, bias-aware target selection.
 float   turret_stdproc_targetscore_generic(entity e_turret, entity e_target);
 /// Experimental supportunits targetselector
 float   turret_stdproc_targetscore_support(entity e_turret,entity e_target);
@@ -493,9 +431,7 @@ float   turret_stdproc_targetscore_support(entity e_turret,entity e_target);
 * Aim functions
 */
 /// Generic aimer guided by self.aim_flags
-vector turret_stdproc_aim_generic()
-// Straight line, current location
-//vector  turret_stdproc_aim_simple()
+vector turret_stdproc_aim_generic();
 
 /*
 * Turret turning & pitch
@@ -525,8 +461,6 @@ float  tvt_dist;
 
 /// updates aim org, shot org, shot dir and enemy org for selected turret
 void turret_do_updates(entity e_turret);
-//.vector tur_aimorg_updated; // creates to much aim issues. using tur_shotorg_updated insted.
-//.vector tur_shotorg_updated; // DP8815 fixes gettaginfo, no longer needed.
 .vector tur_shotdir_updated;
 
 void turrets_precash();

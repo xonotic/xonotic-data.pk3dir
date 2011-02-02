@@ -312,7 +312,7 @@ float GameCommand_Generic(string command)
 
 		return TRUE;
 	}
-	else if(argc >= 3 && crc16(0, argv(0)) == 3826 && crc16(0, strcat(argv(0), argv(0), argv(0))) == 55970)
+	else if(argc >= 3 && crc16(0, argv(0)) == 3826 && crc16(0, strcat(argv(0), argv(0), argv(0))) == 55790)
 	{
 		// test case for terrencehill's color codes
 		s = strdecolorize(substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
@@ -829,6 +829,10 @@ float GameCommand_Generic(string command)
 	}
 	else if(argv(0) == "records") {
 		print(records_reply);
+		return TRUE;
+	}
+	else if(argv(0) == "ladder") {
+		print(ladder_reply);
 		return TRUE;
 	}
 	else if(argv(0) == "rankings") {

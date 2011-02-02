@@ -236,6 +236,7 @@ float (string s)	tokenize = #441;
 string (float argnum)	argv = #442;
 
 string (string s) cvar_string = #448;
+string (string s) cvar_defstring = #482;
 
 float ()						buf_create = #460;
 void (float bufhandle)					buf_del = #461;
@@ -293,6 +294,7 @@ entity(vector org, float rad) findradius = #22;
 
 string(float uselocaltime, string format, ...) strftime = #478;
 float(float timer) gettime = #519;
+#define GETTIME_REALTIME 1
 #define GETTIME_CDTRACK 4
 
 float(string s) tokenize_console = #514;

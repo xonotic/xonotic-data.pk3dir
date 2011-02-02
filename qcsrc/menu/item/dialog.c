@@ -78,7 +78,6 @@ void Dialog_fill(entity me)
 
 void Dialog_addItemSimple(entity me, float row, float col, float rowspan, float colspan, entity e, vector v)
 {
-	//print(vtos(me.itemSpacing), " ", vtos(me.itemSize), "\n");
 	vector o, s;
 	o = me.itemOrigin + eX * ( col          * me.itemSpacing_x) + eY * ( row          * me.itemSpacing_y);
 	s = me.itemSize   + eX * ((colspan - 1) * me.itemSpacing_x) + eY * ((rowspan - 1) * me.itemSpacing_y);
@@ -156,7 +155,7 @@ void Dialog_configureDialog(entity me)
 	if(me.closable)
 	{
 		closebutton = me.closeButton = spawnButton();
-		closebutton.configureButton(closebutton, "Close", 0, me.closeButtonImage);
+		closebutton.configureButton(closebutton, "", 0, me.closeButtonImage);
 		closebutton.onClick = Dialog_Close; closebutton.onClickEntity = me;
 		closebutton.srcMulti = 0;
 		me.addItem(me, closebutton, '0 0 0', '1 1 0', 1); // put it as LAST

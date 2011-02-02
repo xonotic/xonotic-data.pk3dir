@@ -1,6 +1,21 @@
+void WarpZone_Fade_PreDraw()
+{
+	if(self.warpzone_fadestart)
+		self.alpha = bound(0, (self.warpzone_fadeend - vlen(view_origin - self.origin - 0.5 * (self.mins + self.maxs))) / (self.warpzone_fadeend - self.warpzone_fadestart), 1);
+	else
+		self.alpha = 1;
+	//print(sprintf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs)));
+	if(self.alpha <= 0)
+		self.drawmask = 0;
+	else
+		self.drawmask = MASK_NORMAL;
+}
+
 void WarpZone_Read(float isnew)
 {
-	++warpzone_warpzones_exist;
+	float f;
+
+	warpzone_warpzones_exist = 1;
 	if not(self.enemy)
 	{
 		self.enemy = spawn();
@@ -8,10 +23,16 @@ void WarpZone_Read(float isnew)
 	}
 	self.classname = "trigger_warpzone";
 
-	self.warpzone_isboxy = ReadByte();
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
+	f = ReadByte();
+	self.warpzone_isboxy = (f & 1);
+	if(f & 4)
+	{
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+	}
+	else
+		self.origin = '0 0 0';
 	self.modelindex = ReadShort();
 	self.mins_x = ReadCoord();
 	self.mins_y = ReadCoord();
@@ -33,25 +54,48 @@ void WarpZone_Read(float isnew)
 	self.avelocity_y = ReadCoord();
 	self.avelocity_z = ReadCoord();
 
+	if(f & 2)
+	{
+		self.warpzone_fadestart = ReadShort();
+		self.warpzone_fadeend = max(self.warpzone_fadestart + 1, ReadShort());
+	}
+	else
+	{
+		self.warpzone_fadestart = 0;
+		self.warpzone_fadeend = 0;
+	}
+
 	// common stuff
 	WarpZone_SetUp(self, self.enemy.oldorigin, self.enemy.avelocity, self.oldorigin, self.avelocity);
-
-	// engine currently wants this
-	self.drawmask = MASK_NORMAL;
 
 	// link me
 	//setmodel(self, self.model);
 	setorigin(self, self.origin);
 	setsize(self, self.mins, self.maxs);
+
+	// how to draw
+	// engine currently wants this
+	if(self.warpzone_fadestart)
+		self.predraw = WarpZone_Fade_PreDraw;
+	else
+		self.drawmask = MASK_NORMAL;
 }
 
 void WarpZone_Camera_Read(float isnew)
 {
-	++warpzone_cameras_exist;
+	float f;
+	warpzone_cameras_exist = 1;
 	self.classname = "func_warpzone_camera";
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
+
+	f = ReadByte();
+	if(f & 4)
+	{
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+	}
+	else
+		self.origin = '0 0 0';
 	self.modelindex = ReadShort();
 	self.mins_x = ReadCoord();
 	self.mins_y = ReadCoord();
@@ -67,6 +111,17 @@ void WarpZone_Camera_Read(float isnew)
 	self.avelocity_y = ReadCoord();
 	self.avelocity_z = ReadCoord();
 
+	if(f & 2)
+	{
+		self.warpzone_fadestart = ReadShort();
+		self.warpzone_fadeend = max(self.warpzone_fadestart + 1, ReadShort());
+	}
+	else
+	{
+		self.warpzone_fadestart = 0;
+		self.warpzone_fadeend = 0;
+	}
+
 	// common stuff
 	WarpZone_Camera_SetUp(self, self.oldorigin, self.avelocity);
 
@@ -77,6 +132,13 @@ void WarpZone_Camera_Read(float isnew)
 	//setmodel(self, self.model);
 	setorigin(self, self.origin);
 	setsize(self, self.mins, self.maxs);
+
+	// how to draw
+	// engine currently wants this
+	if(self.warpzone_fadestart)
+		self.predraw = WarpZone_Fade_PreDraw;
+	else
+		self.drawmask = MASK_NORMAL;
 }
 
 float warpzone_fixingview;
@@ -108,7 +170,6 @@ void WarpZone_Outside()
 
 vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3)
 {
-	float nearclipdistance;
 	vector mi, ma;
 	entity e;
 	float pd;
@@ -148,7 +209,7 @@ var float autocvar_cl_rollkillspeed = 10;
 #endif
 void WarpZone_FixView()
 {
-	float pd, f;
+	float f;
 	vector o;
 	entity e;
 	vector corner0, corner1, corner2, corner3, nearclip;

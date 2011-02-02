@@ -35,7 +35,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
-	grav = cvar("sv_gravity");
+	grav = autocvar_sv_gravity;
 
 	zdist = torg_z - org_z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
@@ -127,6 +127,9 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 void trigger_push_touch()
 {
+	if (self.active == ACTIVE_NOT)
+		return;
+
 	// FIXME: add a .float for whether an entity should be tossed by jumppads
 	if (!other.iscreature)
 	if (other.classname != "corpse")
@@ -134,6 +137,7 @@ void trigger_push_touch()
 	if (other.classname != "gib")
 	if (other.classname != "casing")
 	if (other.classname != "droppedweapon")
+	if (other.classname != "keepawayball")
 	if (!other.projectiledeathtype || other.classname == "bullet")
 		return;
 
@@ -167,7 +171,7 @@ void trigger_push_touch()
 		}
 		local float ct;
 		ct = clienttype(other);
-		if( ct == CLIENTTYPE_REAL)
+		if( ct == CLIENTTYPE_REAL || ct == CLIENTTYPE_BOT)
 		{
 			local float i;
 			local float found;
@@ -181,11 +185,14 @@ void trigger_push_touch()
 				other.jumppadcount = other.jumppadcount + 1;
 			}
 
-			if(self.message)
-				centerprint(other, self.message);
+			if(ct == CLIENTTYPE_REAL)
+			{
+				if(self.message)
+					centerprint(other, self.message);
+			}
+			else
+				other.lastteleporttime = time;
 		}
-		else if(ct == CLIENTTYPE_BOT)
-			other.lastteleporttime = time;
 		else
 			other.jumppadcount = TRUE;
 
@@ -229,7 +236,6 @@ void trigger_push_touch()
 };
 
 .vector dest;
-
 void trigger_push_findtarget()
 {
 	local entity e;
@@ -283,11 +289,11 @@ void trigger_push_findtarget()
  */
 void spawnfunc_trigger_push()
 {
-	if (self.angles != '0 0 0')
-		SetMovedir ();
+	SetMovedir ();
 
 	EXACTTRIGGER_INIT;
 
+	self.active = ACTIVE_ACTIVE;
 	self.use = trigger_push_use;
 	self.touch = trigger_push_touch;
 

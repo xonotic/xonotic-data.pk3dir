@@ -164,14 +164,13 @@ void SV_ParseClientCommand(string s) {
 		} else {
 			self.version = stof(argv(1));
 		}
-		if(self.version != cvar("gameversion"))
+		if(self.version < autocvar_gameversion_min || self.version > autocvar_gameversion_max)
 		{
-			self.classname = "observer";
 			self.version_mismatch = 1;
-			PutClientInServer();
-		} else if(cvar("g_campaign") || cvar("g_balance_teams") || cvar("g_balance_teams_force")) {
+			ClientKill_TeamChange(-2); // observe
+		} else if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force) {
 			//JoinBestTeam(self, FALSE, TRUE);
-		} else if(teams_matter && !cvar("sv_spectate")) {
+		} else if(teams_matter && !autocvar_sv_spectate && !(self.team_forced > 0)) {
 			self.classname = "observer";
 			stuffcmd(self,"menu_showteamselect\n");
 		}
@@ -182,16 +181,6 @@ void SV_ParseClientCommand(string s) {
 			tokens = tokenize_console(s);
 		}
 		GetCvars(1);
-#ifdef UID
-	} else if(cmd == "uid") {
-		if not(self.uid)
-		{
-			self.uid = strzone(argv(1));
-			self.uid_kicktime = 0;
-			print("Client ", etos(self), " has UID ", self.uid, "\n");
-			Ban_MaybeEnforceBan(self);
-		}
-#endif
 	} else if(cmd == "sentcvar") { // new system
 		if(tokens == 2) // undefined cvar: use the default value on the server then
 		{
@@ -220,18 +209,8 @@ void SV_ParseClientCommand(string s) {
 				return;
 			}
 		}
-		if(self.classname == "player" && cvar("sv_spectate") == 1) {
-			if(self.flagcarried)
-				DropFlag(self.flagcarried, world, world);
-			if(self.ballcarried)
-				DropBall(self.ballcarried, self.origin, self.velocity);
-			WaypointSprite_PlayerDead();
-			self.classname = "observer";
-			if(g_ca)
-				self.caplayer = 0;
-			if(blockSpectators)
-				sprint(self, strcat("^7You have to become a player within the next ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
-			PutClientInServer();
+		if(self.classname == "player" && autocvar_sv_spectate == 1) {
+			ClientKill_TeamChange(-2); // observe
 		}
 	} else if(cmd == "join") {
 		if not(self.flags & FL_CLIENT)
@@ -239,15 +218,14 @@ void SV_ParseClientCommand(string s) {
 		if(!g_arena)
 		if (self.classname != "player" && !lockteams)
 		{
-			if(isJoinAllowed()) {
+			if(nJoinAllowed(1)) {
 				self.classname = "player";
 				if(g_ca)
 					self.caplayer = 1;
 				PlayerScore_Clear(self);
 				bprint ("^4", self.netname, "^4 is playing now\n");
-				self.stat_count = WEP_LAST;
 				PutClientInServer();
-				if(cvar("g_campaign"))
+				if(autocvar_g_campaign)
 					campaign_bots_may_start = 1;
 			}
 			else {
@@ -259,21 +237,23 @@ void SV_ParseClientCommand(string s) {
 		if not(self.flags & FL_CLIENT)
 			return;
 		if( !teams_matter ) {
-			sprint( self, "selecteam can only be used in teamgames\n");
-		} else if(cvar("g_campaign")) {
+			sprint( self, "selectteam can only be used in teamgames\n");
+		} else if(autocvar_g_campaign) {
 			//JoinBestTeam(self, 0);
+		} else if(self.team_forced > 0) {
+			sprint( self, "selectteam can not be used as your team is forced\n");
 		} else if(lockteams) {
 			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 		} else if( argv(1) == "red" ) {
-			DoTeamChange(COLOR_TEAM1);
+			ClientKill_TeamChange(COLOR_TEAM1);
 		} else if( argv(1) == "blue" ) {
-			DoTeamChange(COLOR_TEAM2);
+			ClientKill_TeamChange(COLOR_TEAM2);
 		} else if( argv(1) == "yellow" ) {
-			DoTeamChange(COLOR_TEAM3);
+			ClientKill_TeamChange(COLOR_TEAM3);
 		} else if( argv(1) == "pink" ) {
-			DoTeamChange(COLOR_TEAM4);
+			ClientKill_TeamChange(COLOR_TEAM4);
 		} else if( argv(1) == "auto" ) {
-			DoTeamChange(-1);
+			ClientKill_TeamChange(-1);
 		} else {
 			sprint( self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
 		}
@@ -281,10 +261,10 @@ void SV_ParseClientCommand(string s) {
 		if not(self.flags & FL_CLIENT)
 			return;
 
-		if((inWarmupStage && 0 >= g_warmup_limit) // with unlimited warmup players have to be able to restart
-		   || cvar("sv_ready_restart") || g_race_qualifying == 2)
+		if((inWarmupStage)
+		   || autocvar_sv_ready_restart || g_race_qualifying == 2)
 		{
-			if(!readyrestart_happened || cvar("sv_ready_restart_repeatable"))
+			if(!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
 			{
 				if (self.ready) // toggle
 				{
@@ -313,6 +293,8 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "records") {
 		for(i = 0; i < 10; ++i)
 			sprint(self, records_reply[i]);
+	} else if(cmd == "ladder") {
+		sprint(self, ladder_reply);
 	} else if(cmd == "rankings") {
 		sprint(self, rankings_reply);
 	} else if(cmd == "voice") {
@@ -352,7 +334,7 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "timeout") {
 		if not(self.flags & FL_CLIENT)
 			return;
-		if(cvar("sv_timeout")) {
+		if(autocvar_sv_timeout) {
 			if(self.classname == "player") {
 				if(votecalled)
 					sprint(self, "^7Error: you can not call a timeout while a vote is active!\n");
@@ -365,13 +347,15 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "timein") {
 		if not(self.flags & FL_CLIENT)
 			return;
-		if(cvar("sv_timeout")) {
+		if(autocvar_sv_timeout) {
 			evaluateTimein();
 		}
 	} else if(cmd == "teamstatus") {
 		Score_NicePrint(self);
 	} else if(cmd == "cvar_changes") {
 		sprint(self, cvar_changes);
+	} else if(cmd == "cvar_purechanges") {
+		sprint(self, cvar_purechanges);
 	} else if(CheatCommand(tokens)) {
 	} else {
 		//if(ctf_clientcommand())
@@ -403,12 +387,12 @@ void SV_ParseClientCommand(string s) {
 		if(self.jointime > 0 && time > self.jointime + 10 && time > self.nickspamtime) // allow any changes in the first 10 seconds since joining
 		if(cmd == "name" || cmd == "playermodel") // TODO also playerskin and color?
 		{
-			if(self.nickspamtime == 0 || time > self.nickspamtime + cvar("g_nick_flood_timeout"))
+			if(self.nickspamtime == 0 || time > self.nickspamtime + autocvar_g_nick_flood_timeout)
 				// good, no serious flood
 				self.nickspamcount = 1;
 			else
 				self.nickspamcount += 1;
-			self.nickspamtime = time + cvar("g_nick_flood_penalty");
+			self.nickspamtime = time + autocvar_g_nick_flood_penalty;
 
 			if (timeoutStatus == 2) //when game is paused, no flood protection
 				self.nickspamcount = self.nickspamtime = 0;
@@ -430,8 +414,8 @@ void ReadyRestartForce()
 	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2) {
 		//we have to decrease timelimit to its original value again!!
 		float newTL;
-		newTL = cvar("timelimit");
-		newTL -= checkrules_overtimesadded * cvar("timelimit_overtime");
+		newTL = autocvar_timelimit;
+		newTL -= checkrules_overtimesadded * autocvar_timelimit_overtime;
 		cvar_set("timelimit", ftos(newTL));
 	}
 
@@ -440,7 +424,7 @@ void ReadyRestartForce()
 
 	readyrestart_happened = 1;
 	game_starttime = time;
-	if(!g_ca)
+	if(!g_ca && !g_arena)
 		game_starttime += RESTART_COUNTDOWN;
 	restart_mapalreadyrestarted = 0; //reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
@@ -452,13 +436,13 @@ void ReadyRestartForce()
 	readycount = 0;
 	Nagger_ReadyCounted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
-	if(cvar("teamplay_lockonrestart") && teams_matter) {
+	if(autocvar_teamplay_lockonrestart && teams_matter) {
 		lockteams = 1;
 		bprint("^1The teams are now locked.\n");
 	}
 
 	//initiate the restart-countdown-announcer entity
-	if(cvar("sv_ready_restart_after_countdown"))
+	if(autocvar_sv_ready_restart_after_countdown && !g_ca && !g_arena)
 	{
 		restartTimer = spawn();
 		restartTimer.think = restartTimer_Think;
@@ -466,17 +450,17 @@ void ReadyRestartForce()
 	}
 
 	//after a restart every players number of allowed timeouts gets reset, too
-	if(cvar("sv_timeout"))
+	if(autocvar_sv_timeout)
 	{
 		FOR_EACH_REALPLAYER(e)
-			e.allowedTimeouts = cvar("sv_timeout_number");
+			e.allowedTimeouts = autocvar_sv_timeout_number;
 	}
 
 	//reset map immediately if this cvar is not set
-	if (!cvar("sv_ready_restart_after_countdown"))
+	if (!autocvar_sv_ready_restart_after_countdown)
 		reset_map(TRUE);
 
-	if(cvar("sv_eventlog"))
+	if(autocvar_sv_eventlog)
 		GameLogEcho(":restart");
 }
 
@@ -493,7 +477,7 @@ void ReadyRestart()
 	// reset ALL scores, but only do that at the beginning
 	//of the countdown if sv_ready_restart_after_countdown is off!
 	//Otherwise scores could be manipulated during the countdown!
-	if (!cvar("sv_ready_restart_after_countdown"))
+	if (!autocvar_sv_ready_restart_after_countdown)
 		Score_ClearAll();
 }
 
@@ -558,13 +542,13 @@ void evaluateTimeout() {
 		return sprint(self, "^7Error: You can not call a timeout while the map is being restarted!\n");
 	if (timeoutStatus != 2) {
 		//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
-		if (cvar("timelimit")) {
+		if (autocvar_timelimit) {
 			//a timelimit was used
 			local float myTl;
-			myTl = cvar("timelimit");
+			myTl = autocvar_timelimit;
 
 			local float lastPossibleTimeout;
-			lastPossibleTimeout = (myTl*60) - cvar("sv_timeout_leadtime") - 1;
+			lastPossibleTimeout = (myTl*60) - autocvar_sv_timeout_leadtime - 1;
 
 			if (lastPossibleTimeout < time - game_starttime)
 				return sprint(self, "^7Error: It is too late to call a timeout now!\n");
@@ -576,8 +560,8 @@ void evaluateTimeout() {
 	//now all required checks are passed
 	self.allowedTimeouts -= 1;
 	bprint(self.netname, " ^7called a timeout (", ftos(self.allowedTimeouts), " timeouts left)!\n"); //write a bprint who started the timeout (and how many he has left)
-	remainingTimeoutTime = cvar("sv_timeout_length");
-	remainingLeadTime = cvar("sv_timeout_leadtime");
+	remainingTimeoutTime = autocvar_sv_timeout_length;
+	remainingLeadTime = autocvar_sv_timeout_leadtime;
 	timeoutInitiator = self;
 	if (timeoutStatus == 0) { //if another timeout was already active, don't change its status (which was 1 or 2) to 1, only change it to 1 if no timeout was active yet
 		timeoutStatus = 1;
@@ -611,9 +595,9 @@ void evaluateTimein() {
 	}
 	else if (timeoutStatus == 2) {
 		//only shorten the remainingTimeoutTime if it makes sense
-		if( remainingTimeoutTime > (cvar("sv_timeout_resumetime") + 1) ) {
+		if( remainingTimeoutTime > (autocvar_sv_timeout_resumetime + 1) ) {
 			bprint(strcat("^1Attention: ^7", self.netname, " resumed the game! Prepare for battle!\n"));
-			remainingTimeoutTime = cvar("sv_timeout_resumetime");
+			remainingTimeoutTime = autocvar_sv_timeout_resumetime;
 			timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
 		}
 		else

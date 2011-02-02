@@ -16,7 +16,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	}
 
 	w = spawn();
-	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	w.classname = "waypoint";
 	w.wpflags = f;
 	setorigin(w, (m1 + m2) * 0.5);
@@ -37,7 +37,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			}
 			else
 			{
-				if(cvar("developer"))
+				if(autocvar_developer)
 				{
 					print("A generated waypoint is stuck in solid at ", vtos(w.origin), "\n");
 					backtrace("Waypoint stuck");
@@ -50,7 +50,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	waypoint_clearlinks(w);
 	//waypoint_schedulerelink(w);
 
-	if (cvar("g_waypointeditor"))
+	if (autocvar_g_waypointeditor)
 	{
 		m1 = w.mins;
 		m2 = w.maxs;
@@ -154,8 +154,8 @@ void waypoint_think()
 	local entity e;
 	local vector sv, sm1, sm2, ev, em1, em2, dv;
 
-	stepheightvec = cvar("sv_stepheight") * '0 0 1';
-	bot_navigation_movemode = ((cvar("bot_navigation_ignoreplayers")) ? MOVE_NOMONSTERS : MOVE_NORMAL);
+	stepheightvec = autocvar_sv_stepheight * '0 0 1';
+	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
 
 	//dprint("waypoint_think wpisbox = ", ftos(self.wpisbox), "\n");
 	sm1 = self.origin + self.mins;
@@ -251,7 +251,7 @@ void waypoint_schedulerelink(entity wp)
 	if (wp == world)
 		return;
 	// TODO: add some sort of visible box in edit mode for box waypoints
-	if (cvar("g_waypointeditor"))
+	if (autocvar_g_waypointeditor)
 	{
 		local vector m1, m2;
 		m1 = wp.mins;

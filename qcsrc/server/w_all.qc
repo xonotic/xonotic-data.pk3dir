@@ -1,7 +1,11 @@
+// ONLY EVER ADD NEW WEAPONS AT THE END. IF YOU REMOVE ONE, PUT THE LAST ONE ON
+// ITS PLACE. THIS IS TO AVOID UNNECESSARY RENUMBERING OF WEAPON IMPULSES.
+// IF YOU DISREGARD THIS NOTICE, I'LL KILL YOU WITH THE @!#%'N TUBA
 #include "w_laser.qc"
 #include "w_shotgun.qc"
 #include "w_uzi.qc"
 #include "w_grenadelauncher.qc"
+#include "w_minelayer.qc"
 #include "w_electro.qc"
 #include "w_crylink.qc"
 #include "w_nex.qc"
@@ -12,6 +16,6 @@
 #include "w_hook.qc"
 #include "w_hlac.qc"
 #include "w_tuba.qc"
-#include "w_campingrifle.qc"
+#include "w_sniperrifle.qc"
 #include "w_fireball.qc"
 #include "w_seeker.qc"

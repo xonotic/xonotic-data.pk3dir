@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(PORTO, w_porto, 0, 0, WEP_TYPE_OTHER, 0, "porto" , "porto", "Port-O-Launch");
+REGISTER_WEAPON(PORTO, w_porto, 0, 0, WEP_TYPE_OTHER, 0, "porto" , "porto", _("Port-O-Launch"))
 #else
 #ifdef SVQC
 .entity porto_current;
@@ -160,7 +160,7 @@ void W_Porto_Attack (void)
 
 	if not(self.items & IT_UNLIMITED_SUPERWEAPONS)
 		self.weapons = self.weapons - (self.weapons & WEPBIT_PORTO);
-	W_SetupShot (self, FALSE, 4, "porto/fire.wav", 0);
+	W_SetupShot (self, FALSE, 4, "porto/fire.wav", CHAN_WEAPON, 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
@@ -180,13 +180,13 @@ void W_Porto_Attack (void)
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
 
-	gren.nextthink = time + cvar("g_balance_porto_primary_lifetime");
+	gren.nextthink = time + autocvar_g_balance_porto_primary_lifetime;
 	gren.think = W_Porto_Think;
 	gren.touch = W_Porto_Touch;
 	if(self.items & IT_STRENGTH)
-		W_SetupProjectileVelocity(gren, cvar("g_balance_porto_primary_speed") * cvar("g_balance_powerup_strength_force"), 0);
+		W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_primary_speed * autocvar_g_balance_powerup_strength_force, 0);
 	else
-		W_SetupProjectileVelocity(gren, cvar("g_balance_porto_primary_speed"), 0);
+		W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_primary_speed, 0);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
@@ -200,6 +200,8 @@ void W_Porto_Attack (void)
 	gren.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 
 	CSQCProjectile(gren, TRUE, PROJECTILE_PORTO_RED, TRUE);
+
+	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void spawnfunc_weapon_porto (void)
@@ -217,7 +219,7 @@ float w_porto(float req)
 	{
 		self.BUTTON_ATCK = FALSE;
 		self.BUTTON_ATCK2 = FALSE;
-		if(bot_aim(cvar("g_balance_porto_primary_speed"), 0, cvar("g_balance_grenadelauncher_primary_lifetime"), FALSE))
+		if(bot_aim(autocvar_g_balance_porto_primary_speed, 0, autocvar_g_balance_grenadelauncher_primary_lifetime, FALSE))
 			self.BUTTON_ATCK = TRUE;
 	}
 	else if (req == WR_THINK)
@@ -248,10 +250,10 @@ float w_porto(float req)
 		if (self.BUTTON_ATCK)
 		if (!self.porto_current)
 		if (!self.porto_forbidden)
-		if (weapon_prepareattack(0, cvar("g_balance_porto_primary_refire")))
+		if (weapon_prepareattack(0, autocvar_g_balance_porto_primary_refire))
 		{
 			W_Porto_Attack();
-			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_porto_primary_animtime"), w_ready);
+			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_porto_primary_animtime, w_ready);
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -288,9 +290,9 @@ float w_porto(float req)
 		// nothing to do
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s did the impossible";
+		w_deathtypestring = _("%s did the impossible");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "%s felt %s doing the impossible to him";
+		w_deathtypestring = _("%s felt %s doing the impossible to him");
 	return TRUE;
 }
 #endif

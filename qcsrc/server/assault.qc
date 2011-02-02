@@ -71,7 +71,11 @@ void assault_objective_decrease_use() {
 	}
 
 	if(other.assault_sprite)
+	{
 		WaypointSprite_Disown(other.assault_sprite, waypointsprite_deadlifetime);
+		if(other.classname == "func_assault_destructible")
+			other.sprite = world;
+	}
 	else
 		return; // already activated! cannot activate again!
 
@@ -92,6 +96,17 @@ void assault_objective_decrease_use() {
 
 			oldself = self;
 			self = oldself.enemy;
+				if(self.message)
+				{
+					entity player;
+					string s;
+					FOR_EACH_PLAYER(player)
+					{
+						s = strcat(self.message, "\n");
+						centerprint(player, s);
+					}
+				}
+					
 				oldactivator = activator;
 				activator = oldself;
 					SUB_UseTargets();
@@ -137,7 +152,11 @@ void target_objective_decrease_activate()
 	for(ent = world; (ent = find(ent, target, self.targetname)); )
 	{
 		if(ent.assault_sprite != world)
+		{
 			WaypointSprite_Disown(ent.assault_sprite, waypointsprite_deadlifetime);
+			if(ent.classname == "func_assault_destructible")
+				ent.sprite = world;
+		}
 
 		spr = WaypointSprite_SpawnFixed("<placeholder>", 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite);
 		spr.assault_decreaser = self;
@@ -145,7 +164,12 @@ void target_objective_decrease_activate()
 		spr.classname = "sprite_waypoint";
 		WaypointSprite_UpdateRule(spr, assault_attacker_team, SPRITERULE_TEAMPLAY);
 		if(ent.classname == "func_assault_destructible")
+		{
 			WaypointSprite_UpdateSprites(spr, "as-defend", "as-destroy", "as-destroy");
+			WaypointSprite_UpdateMaxHealth(spr, ent.max_health);
+			WaypointSprite_UpdateHealth(spr, ent.health);
+			ent.sprite = spr;
+		}
 		else
 			WaypointSprite_UpdateSprites(spr, "as-defend", "as-push", "as-push");
 		WaypointSprite_UpdateTeamRadar(spr, RADARICON_OBJECTIVE, '1 0.5 0');
@@ -251,31 +275,30 @@ void assault_roundstart_use() {
 	activator = self;
 	SUB_UseTargets();
 
-	/*
+	
 #ifdef TTURRETS_ENABLED
-entity ent,oldself;
+	entity ent, oldself;
 
 	//(Re)spawn all turrets
 	oldself = self;
 	ent = find(world, classname, "turret_main");
 	while(ent) {
-	// Swap turret teams
-	if(ent.team == COLOR_TEAM1)
-	ent.team = COLOR_TEAM2;
-	else
-	ent.team = COLOR_TEAM1;
+		// Swap turret teams
+		if(ent.team == COLOR_TEAM1)
+			ent.team = COLOR_TEAM2;
+		else
+			ent.team = COLOR_TEAM1;
 
-	self = ent;
+		self = ent;
 
-	// Dubbles as teamchange
-	turret_stdproc_respawn();
-	//ent.turret_spawnfunc();
+		// Dubbles as teamchange
+		turret_stdproc_respawn();
 
-	ent = find(ent, classname, "turret_main");
+		ent = find(ent, classname, "turret_main");
 	}
 	self = oldself;
 #endif
-*/
+
 
 }
 

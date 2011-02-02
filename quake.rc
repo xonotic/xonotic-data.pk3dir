@@ -1,5 +1,6 @@
 exec default.cfg
 exec config.cfg
+maxplayers $menu_maxplayers
 exec data/campaign.cfg
 exec config_update.cfg
 exec autoexec.cfg
@@ -7,5 +8,4 @@ stuffcmds
 //startdemos demos/demo1 demos/demo2 demos/demo3
 //startdemos
 //play announcer/male/welcome.ogg
-
-exec font-nimbussansl.cfg
+crypto_keygen 0 http://ca.xonotic.org/?ca=0&key=

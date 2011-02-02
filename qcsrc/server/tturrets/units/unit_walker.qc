@@ -37,21 +37,21 @@ float walker_std_rocket_turnrate;
 
 void walker_loadcvars()
 {
-    walker_meele_dmg    = cvar("g_turrets_unit_walker_std_meele_dmg");
-    walker_meele_force  = cvar("g_turrets_unit_walker_std_meele_force");
+    walker_meele_dmg    = autocvar_g_turrets_unit_walker_std_meele_dmg;
+    walker_meele_force  = autocvar_g_turrets_unit_walker_std_meele_force;
 
-    walker_speed_stop   = cvar("g_turrets_unit_walker_speed_stop");
-    walker_speed_walk   = cvar("g_turrets_unit_walker_speed_walk");
-    walker_speed_run    = cvar("g_turrets_unit_walker_speed_run");
-    walker_speed_jump   = cvar("g_turrets_unit_walker_speed_jump");
-    walker_speed_roam   = cvar("g_turrets_unit_walker_speed_roam");
-    walker_speed_swim   = cvar("g_turrets_unit_walker_speed_swim");
+    walker_speed_stop   = autocvar_g_turrets_unit_walker_speed_stop;
+    walker_speed_walk   = autocvar_g_turrets_unit_walker_speed_walk;
+    walker_speed_run    = autocvar_g_turrets_unit_walker_speed_run;
+    walker_speed_jump   = autocvar_g_turrets_unit_walker_speed_jump;
+    walker_speed_roam   = autocvar_g_turrets_unit_walker_speed_roam;
+    walker_speed_swim   = autocvar_g_turrets_unit_walker_speed_swim;
 
-    walker_std_rocket_dmg       = cvar("g_turrets_unit_walker_std_rocket_dmg");
-    walker_std_rocket_radius    = cvar("g_turrets_unit_walker_std_rocket_radius");
-    walker_std_rocket_force     = cvar("g_turrets_unit_walker_std_rocket_force");
-    walker_std_rocket_speed     = cvar("g_turrets_unit_walker_std_rocket_speed");
-    walker_std_rocket_turnrate  = cvar("g_turrets_unit_walker_std_rocket_turnrate");
+    walker_std_rocket_dmg       = autocvar_g_turrets_unit_walker_std_rocket_dmg;
+    walker_std_rocket_radius    = autocvar_g_turrets_unit_walker_std_rocket_radius;
+    walker_std_rocket_force     = autocvar_g_turrets_unit_walker_std_rocket_force;
+    walker_std_rocket_speed     = autocvar_g_turrets_unit_walker_std_rocket_speed;
+    walker_std_rocket_turnrate  = autocvar_g_turrets_unit_walker_std_rocket_turnrate;
 
 }
 
@@ -546,7 +546,7 @@ float walker_attack_meele()
 
     wish_angle = angleofs(self,self.enemy);
 
-    if (self.tur_dist_enemy > cvar("g_turrets_unit_walker_std_meele_range"))
+    if (self.tur_dist_enemy > autocvar_g_turrets_unit_walker_std_meele_range)
         return 0;
     else
         if (fabs(wish_angle_y) > 15)
@@ -564,10 +564,10 @@ float walker_attack_rockets()
     if (self.tur_head.attack_finished_single > time)
         return 0;
 
-    if (self.tur_dist_enemy < cvar("g_turrets_unit_walker_std_rockets_range_min"))
+    if (self.tur_dist_enemy < autocvar_g_turrets_unit_walker_std_rockets_range_min)
         return 0;
 
-    if (self.tur_dist_enemy > cvar("g_turrets_unit_walker_std_rockets_range"))
+    if (self.tur_dist_enemy > autocvar_g_turrets_unit_walker_std_rockets_range)
         return 0;
 
     entity rv;
@@ -578,7 +578,7 @@ float walker_attack_rockets()
     rv.cnt       = 4;
     rv.owner     = self;
 
-    self.tur_head.attack_finished_single = time + cvar("g_turrets_unit_walker_std_rocket_refire");
+    self.tur_head.attack_finished_single = time + autocvar_g_turrets_unit_walker_std_rocket_refire;
 
     return 1;
 }
@@ -615,31 +615,19 @@ void walker_postthink()
 
 void walker_attack()
 {
-    entity flash;
-
     sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET, 0, 1, cvar("g_balance_uzi_bulletconstant"));
+    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET, 0, 1, autocvar_g_balance_uzi_bulletconstant);
     endFireBallisticBullet();
-    if (self.uzi_bulletcounter == 2)
+    if (self.misc_bulletcounter == 2)
     {
 
-        flash = spawn();
+		UziFlash();
+		setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
 
-        setmodel(flash, "models/uziflash.md3");
-        setattachment(flash, self.tur_head, "tag_fire");
-
-        flash.scale     = 3;
-        flash.think     = W_Uzi_Flash_Go;
-        flash.nextthink = time + 0.02;
-        flash.frame     = 2;
-        flash.angles_z  = flash.v_angle_z + random() * 180;
-        flash.alpha     = 1;
-        flash.effects   = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-
-        self.uzi_bulletcounter = 0;
+        self.misc_bulletcounter = 0;
     }
 
-    self.uzi_bulletcounter = self.uzi_bulletcounter + 1;
+    self.misc_bulletcounter = self.misc_bulletcounter + 1;
     self.tur_head.frame    = self.tur_head.frame + 1;
 }
 
@@ -649,7 +637,11 @@ void walker_respawnhook()
     vector vtmp;
     entity e;
 
-    setorigin(self,self.wkr_spawn.origin);
+    // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
+    if(self.movetype  != MOVETYPE_WALK)
+		return;
+		
+    setorigin(self, self.wkr_spawn.origin);
 
     self.angles = self.wkr_spawn.angles;
     vtmp = self.wkr_spawn.origin;
@@ -702,7 +694,7 @@ void turret_walker_dinit()
     self.turrcaps_flags = TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_MOVE ;
     self.aim_flags = TFL_AIM_LEAD;
 
-    if (cvar("g_antilag_bullets"))
+    if (autocvar_g_antilag_bullets)
         self.turrcaps_flags |= TFL_TURRCAPS_HITSCAN;
     else
         self.aim_flags      |= TFL_AIM_SHOTTIMECOMPENSATE;
@@ -718,7 +710,7 @@ void turret_walker_dinit()
         return;
     }
 
-    if (!turret_tag_setup())
+    if (!turret_tag_fire_update())
         dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     self.damage_flags |= TFL_DMG_DEATH_NOGIBS;

@@ -8,7 +8,7 @@ void serverAnnouncer()
 	// check for pending announcement, play it and remove it
 	if(announce_snd != "")
 	{
-		sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/", announce_snd, ".wav"), VOL_BASEVOICE, ATTN_NONE);
+		sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/", announce_snd, ".wav"), VOL_BASEVOICE, ATTN_NONE);
 		strunzone(announce_snd);
 		announce_snd = "";
 	}
@@ -20,9 +20,9 @@ void restartAnnouncer_Think() {
 	countdown_rounded = floor(0.5 + countdown);
 	if(countdown <= 0) {
 		if (!spectatee_status) //do cprint only for players
-			centerprint("^1Begin!");
+			centerprint(_("^1Begin!"));
 
-		sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
+		sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
 		//reset maptime announcers now as well
 		announcer_5min = announcer_1min = FALSE;
 
@@ -31,10 +31,10 @@ void restartAnnouncer_Think() {
 	}
 	else {
 		if (!spectatee_status) //do cprint only for players
-			centerprint(strcat("^1Game starts in ", ftos(countdown_rounded), " seconds"));
+			centerprint(sprintf(_("^1Game starts in %d seconds"), countdown_rounded));
 
 		if(countdown_rounded <= 3 && countdown_rounded >= 1) {
-			sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);
+			sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);
 		}
 
 		self.nextthink = getstatf(STAT_GAMESTARTTIME) - (countdown - 1);
@@ -53,14 +53,14 @@ void maptimeAnnouncer() {
 	float warmuplimit;
 	float warmuptimeleft;
 	if(warmup_stage) {
-		warmuplimit = cvar("g_warmup_limit");
+		warmuplimit = autocvar_g_warmup_limit;
 		if(warmuplimit > 0) {
 			warmuptimeleft = max(0, warmuplimit + getstatf(STAT_GAMESTARTTIME) - time); 
 		}
 	}
 
 	//5 minute check
-	if (cvar("cl_sound_maptime_warning") >= 2) {
+	if (autocvar_cl_sound_maptime_warning >= 2) {
 		//make sure that after connect (and e.g. 4 minutes left) we will not get a wrong sound
 		if(announcer_5min)
 		{
@@ -71,13 +71,12 @@ void maptimeAnnouncer() {
 			//if we're in warmup mode, check whether there's a warmup timelimit
 			if not (warmuplimit == -1 && warmup_stage) {
 				announcer_5min = TRUE;
-				//dprint("i will play the sound, I promise!\n");
-				sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/5minutesremain.wav"), VOL_BASEVOICE, ATTN_NONE);
+				sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"), VOL_BASEVOICE, ATTN_NONE);
 			}
 	}
 
 	//1 minute check
-	if (cvar("cl_sound_maptime_warning") == 1 || cvar("cl_sound_maptime_warning") == 3) {
+	if (autocvar_cl_sound_maptime_warning == 1 || autocvar_cl_sound_maptime_warning == 3) {
 		if (announcer_1min)
 		{
 			if(((!warmup_stage || warmuplimit == 0) && timeleft > 60) || (warmup_stage && warmuplimit > 0 && warmuptimeleft > 60))
@@ -87,7 +86,7 @@ void maptimeAnnouncer() {
 			//if we're in warmup mode, check whether there's a warmup timelimit
 			if not (warmuplimit == -1 && warmup_stage) {
 				announcer_1min = TRUE;
-				sound(self, CHAN_VOICE, strcat("announcer/", cvar_string("cl_announcer"), "/1minuteremains.wav"), VOL_BASEVOICE, ATTN_NONE);
+				sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"), VOL_BASEVOICE, ATTN_NONE);
 			}
 	}
 }
@@ -102,7 +101,7 @@ void carrierAnnouncer() {
 	float pickup;
 	string item;
 
-	if not(cvar("cl_notify_carried_items"))
+	if not(autocvar_cl_notify_carried_items)
 		return;
 
 	stat_items = getstati(STAT_ITEMS);
@@ -111,24 +110,24 @@ void carrierAnnouncer() {
 	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
 
 	if (redflag == 3 && redflag != redflag_prev) {
-		item = "^1RED^7 flag";
+		item = _("^1RED^7 flag");
 		pickup = (redflag_prev == 2);
 	}
 
 	if (blueflag == 3 && blueflag != blueflag_prev) {
-		item = "^4BLUE^7 flag";
+		item = _("^4BLUE^7 flag");
 		pickup = (blueflag_prev == 2);
 	}
 
 	if (item)
 	{
 		if (pickup) {
-			if (cvar("cl_notify_carried_items") & 2)
-				centerprint(strcat("You picked up the ", item, "!"));
+			if (autocvar_cl_notify_carried_items & 2)
+				centerprint(sprintf(_("You picked up the %s!"), item));
 		}
 		else {
-			if (cvar("cl_notify_carried_items") & 1)
-				centerprint(strcat("You got the ", item, "!"));
+			if (autocvar_cl_notify_carried_items & 1)
+				centerprint(sprintf(_("You got the %s!"), item));
 		}
 	}
 
@@ -141,50 +140,50 @@ void carrierAnnouncer() {
  * TODO: announcer queues
  */
 void Announcer_Precache () {
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/1minuteremains.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/5minutesremain.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"));
 
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/electrobitch.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/airshot.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/03kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/05kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/10kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/15kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/20kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/25kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/30kills.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/botlike.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/yoda.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/amazing.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/awesome.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/headshot.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/impressive.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/electrobitch.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/airshot.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/03kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/05kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/10kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/15kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/20kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/25kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/30kills.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/botlike.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/yoda.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/amazing.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/awesome.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/headshot.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/impressive.wav"));
 
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/prepareforbattle.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/begin.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/timeoutcalled.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/1fragleft.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/2fragsleft.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/3fragsleft.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/terminated.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/begin.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/timeoutcalled.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1fragleft.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/2fragsleft.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/3fragsleft.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/terminated.wav"));
 
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/1.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/2.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/3.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/4.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/5.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/6.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/7.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/8.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/9.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/10.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/2.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/3.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/4.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/5.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/6.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/7.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/8.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/9.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/10.wav"));
 
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/lastsecond.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/narrowly.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/lastsecond.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/narrowly.wav"));
 
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/voteaccept.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/votecall.wav"));
-	precache_sound (strcat("announcer/", cvar_string("cl_announcer"), "/votefail.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/voteaccept.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/votecall.wav"));
+	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/votefail.wav"));
 }
 
 void AuditLists()
@@ -281,7 +280,7 @@ void RemoveTeam(entity Team)
 
 	if(!tm)
 	{
-		print("Trying to remove a team which is not in the teamlist!");
+		print(_("Trying to remove a team which is not in the teamlist!"));
 		return;
 	}
 	parent.sort_next = Team.sort_next;
@@ -306,12 +305,6 @@ entity GetTeam(float Team, float add)
 	return tm;
 }
 
-void CSQC_CheckEngine()
-{
-	hud_font = FONT_USER+1;
-	hud_bigfont = FONT_USER+2;
-}
-
 vector HUD_GetFontsize(string cvarname)
 {
 	vector v;
@@ -329,7 +322,7 @@ float PreviewExists(string name)
 	float f;
 	string file;
 
-	if(cvar("cl_readpicture_force"))
+	if(autocvar_cl_readpicture_force)
 		return false;
 
 	file = strcat(name, ".tga");
@@ -460,43 +453,47 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 }
 
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
-var float imgaspect;
-var float aspect;
+var float _drawpic_imgaspect;
+var float _drawpic_aspect;
+var vector _drawpic_imgsize;
+var vector _drawpic_sz;
+var vector _drawpic_oldsz;
+var string _drawpic_picpath;
 #define drawpic_aspect(pos,pic,mySize,color,alpha,drawflag)\
 	do {\
-		vector imgsize;\
-		imgsize = drawgetimagesize(pic);\
-		imgaspect = imgsize_x/imgsize_y;\
-		vector oldsz, sz;\
-		oldsz = sz = mySize;\
-		aspect = sz_x/sz_y;\
-		if(aspect > imgaspect) {\
-			sz_x = sz_y * imgaspect;\
-			drawpic(pos + eX * (oldsz_x - sz_x) * 0.5, pic, sz, color, alpha, drawflag);\
+		_drawpic_imgsize = drawgetimagesize(pic);\
+		_drawpic_imgaspect = _drawpic_imgsize_x/_drawpic_imgsize_y;\
+		_drawpic_oldsz = _drawpic_sz = mySize;\
+		_drawpic_aspect = _drawpic_sz_x/_drawpic_sz_y;\
+		if(_drawpic_aspect > _drawpic_imgaspect) {\
+			_drawpic_sz_x = _drawpic_sz_y * _drawpic_imgaspect;\
+			drawpic(pos + eX * (_drawpic_oldsz_x - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
 		} else {\
-			sz_y = sz_x / imgaspect;\
-			drawpic(pos + eY * (oldsz_y - sz_y) * 0.5, pic, sz, color, alpha, drawflag);\
+			_drawpic_sz_y = _drawpic_sz_x / _drawpic_imgaspect;\
+			drawpic(pos + eY * (_drawpic_oldsz_y - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
 		}\
 	} while(0)
 
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 #define drawpic_aspect_skin(pos,pic,sz,color,alpha,drawflag)\
 	do{\
-		picpath = strcat(hud_skin_path, "/", pic);\
-		if(precache_pic(picpath) == "") {\
-			picpath = strcat("gfx/hud/default/", pic);\
+		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
+		if(precache_pic(_drawpic_picpath) == "") {\
+			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
 		}\
-		drawpic_aspect(pos, picpath, sz, color, alpha, drawflag);\
+		drawpic_aspect(pos, _drawpic_picpath, sz, color, alpha, drawflag);\
+		_drawpic_picpath = string_null;\
 	} while(0)
 
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
 #define drawpic_skin(pos,pic,sz,color,alpha,drawflag)\
 	do{\
-		picpath = strcat(hud_skin_path, "/", pic);\
-		if(precache_pic(picpath) == "") {\
-			picpath = strcat("gfx/hud/default/", pic);\
+		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
+		if(precache_pic(_drawpic_picpath) == "") {\
+			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
 		}\
-		drawpic(pos, picpath, sz, color, alpha, drawflag);\
+		drawpic(pos, _drawpic_picpath, sz, color, alpha, drawflag);\
+		_drawpic_picpath = string_null;\
 	} while(0)
 
 void drawpic_aspect_skin_expanding(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)
@@ -627,26 +624,181 @@ void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, f
 }
 
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...
-void PolyDrawModel(entity e)
+float PolyDrawModelSurface(entity e, float i_s)
 {
-	float i_s, i_t;
+	float i_t;
 	float n_t;
 	vector tri;
 	string tex;
-	for(i_s = 0; ; ++i_s)
+	tex = getsurfacetexture(e, i_s);
+	if not(tex)
+		return 0; // this is beyond the last one
+	n_t = getsurfacenumtriangles(e, i_s);
+	for(i_t = 0; i_t < n_t; ++i_t)
 	{
-		tex = getsurfacetexture(e, i_s);
-		if not(tex)
-			break; // this is beyond the last one
-		n_t = getsurfacenumtriangles(e, i_s);
-		for(i_t = 0; i_t < n_t; ++i_t)
+		tri = getsurfacetriangle(e, i_s, i_t);
+		R_BeginPolygon(tex, 0);
+		R_PolygonVertex(getsurfacepoint(e, i_s, tri_x), getsurfacepointattribute(e, i_s, tri_x, SPA_TEXCOORDS0), '1 1 1', 1);
+		R_PolygonVertex(getsurfacepoint(e, i_s, tri_y), getsurfacepointattribute(e, i_s, tri_y, SPA_TEXCOORDS0), '1 1 1', 1);
+		R_PolygonVertex(getsurfacepoint(e, i_s, tri_z), getsurfacepointattribute(e, i_s, tri_z, SPA_TEXCOORDS0), '1 1 1', 1);
+		R_EndPolygon();
+	}
+	return 1;
+}
+void PolyDrawModel(entity e)
+{
+	float i_s;
+	for(i_s = 0; ; ++i_s)
+		if(!PolyDrawModelSurface(e, i_s))
+			break;
+}
+
+void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vector rgb, float a, float drawflag)
+{
+	float x, y, q, d;
+	vector ringsize, v, t;
+	ringsize = radius * '1 1 0';
+
+	x = cos(f * 2 * M_PI);
+	y = sin(f * 2 * M_PI);
+	q = fabs(x) + fabs(y);
+	x /= q;
+	y /= q;
+
+	if(f >= 1)
+	{
+		// draw full rectangle
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
+
+		d = q - 1;
+		if(d > 0)
 		{
-			tri = getsurfacetriangle(e, i_s, i_t);
-			R_BeginPolygon(tex, 0);
-			R_PolygonVertex(getsurfacepoint(e, i_s, tri_x), getsurfacepointattribute(e, i_s, tri_x, SPA_TEXCOORDS0), '1 1 1', 1);
-			R_PolygonVertex(getsurfacepoint(e, i_s, tri_y), getsurfacepointattribute(e, i_s, tri_y, SPA_TEXCOORDS0), '1 1 1', 1);
-			R_PolygonVertex(getsurfacepoint(e, i_s, tri_z), getsurfacepointattribute(e, i_s, tri_z, SPA_TEXCOORDS0), '1 1 1', 1);
-			R_EndPolygon();
+			R_BeginPolygon(pic, drawflag);
+				v = centre;			t = '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+
+				v = centre;			t = '0.5 0.5 0';
+				v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
 		}
+	}
+	else if(f > 0.75)
+	{
+		// draw upper and first triangle
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+		d = q - 0.75;
+		if(d <= 0)
+			R_EndPolygon();
+	}
+	else if(f > 0.5)
+	{
+		// draw upper triangle
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
+
+		d = q - 0.5;
+		if(d > 0)
+		{
+			R_BeginPolygon(pic, drawflag);
+				v = centre;			t = '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+
+				v = centre;			t = '0.5 0.5 0';
+				v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+		}
+	}
+	else if(f > 0.25)
+	{
+		// draw first triangle
+		R_BeginPolygon(pic, drawflag);
+			v = centre;			t = '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+			v = centre;			t = '0.5 0.5 0';
+			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+
+		d = q - 0.25;
+		if(d <= 0)
+			R_EndPolygon();
+	}
+	else
+	{
+		d = q;
+		if(d > 0)
+		{
+			R_BeginPolygon(pic, drawflag);
+				v = centre;			t = '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+
+				v = centre;			t = '0.5 0.5 0';
+				v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+				R_PolygonVertex(v, t, rgb, a);
+		}
+	}
+
+	if(d > 0)
+	{
+			v = centre;			t = '0.5 0.5 0';
+			v_x += x * 0.5 * ringsize_x;	t += x * '0.5 0.5 0';
+			v_y += y * 0.5 * ringsize_y;	t += y * '0.5 -0.5 0';
+			R_PolygonVertex(v, t, rgb, a);
+		R_EndPolygon();
 	}
 }
