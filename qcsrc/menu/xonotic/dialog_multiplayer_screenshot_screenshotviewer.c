@@ -52,6 +52,7 @@ float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, f
 {
 	switch(key)
 	{
+		case K_KP_LEFTARROW:
 		case K_LEFTARROW:
 			me.scrList.goScreenshot(me.scrList, -1);
 			return 1;
