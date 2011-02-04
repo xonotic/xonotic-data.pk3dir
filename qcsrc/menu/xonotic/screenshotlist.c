@@ -134,7 +134,8 @@ void XonoticScreenshotList_resizeNotify(entity me, vector relOrigin, vector relS
 
 void XonoticScreenshotList_setSelected(entity me, float i)
 {
-	me.stopSlideShow(me);
+	if (me.newSlideShowScreenshotTime)
+		me.startSlideShow(me);
 	me.prevSelectedItem = me.selectedItem;
 	SUPER(XonoticScreenshotList).setSelected(me, i);
 	if (me.pressed && me.selectedItem != me.prevSelectedItem)
@@ -211,9 +212,14 @@ void XonoticScreenshotList_draw(entity me)
 	}
 	else if (me.newSlideShowScreenshotTime && time > me.newSlideShowScreenshotTime)
 	{
-		me.goScreenshot(me, +1);
-		if (me.selectedItem < me.nItems-1)
-			me.startSlideShow(me);
+		if (me.selectedItem == me.nItems - 1) //last screenshot?
+		{
+			// restart from the first screenshot
+			me.setSelected(me, 0);
+			me.goScreenshot(me, +0);
+		}
+		else
+			me.goScreenshot(me, +1);
 	}
 	SUPER(XonoticScreenshotList).draw(me);
 }

@@ -12,6 +12,7 @@ CLASS(XonoticScreenshotViewerDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticScreenshotViewerDialog, color, vector, SKINCOLOR_DIALOG_SCREENSHOTVIEWER)
 	ATTRIB(XonoticScreenshotViewerDialog, scrList, entity, NULL)
 	ATTRIB(XonoticScreenshotViewerDialog, screenshotImage, entity, NULL)
+	ATTRIB(XonoticScreenshotViewerDialog, slideShowButton, entity, NULL)
 	ATTRIB(XonoticScreenshotViewerDialog, currentScrPath, string, string_null)
 ENDCLASS(XonoticScreenshotViewerDialog)
 #endif
@@ -34,9 +35,18 @@ void nextScreenshot_Click(entity btn, entity me)
 {
 	me.scrList.goScreenshot(me.scrList, +1);
 }
-void startSlideShow_Click(entity btn, entity me)
+void toggleSlideShow_Click(entity btn, entity me)
 {
-	me.scrList.startSlideShow(me.scrList);
+	if (me.slideShowButton.forcePressed)
+	{
+		me.scrList.stopSlideShow(me.scrList);
+		me.slideShowButton.forcePressed = 0;
+	}
+	else
+	{
+		me.scrList.startSlideShow(me.scrList);
+		me.slideShowButton.forcePressed = 1;
+	}
 }
 float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, float shift)
 {
@@ -56,7 +66,7 @@ float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, f
 			// to press buttons while browsing with only the keyboard
 			if (shift & S_CTRL)
 			{
-				me.scrList.startSlideShow(me.scrList);
+				toggleSlideShow_Click(world, me);
 				return 1;
 			}
 			return SUPER(XonoticScreenshotViewerDialog).keyDown(me, key, ascii, shift);
@@ -78,6 +88,7 @@ float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, f
 void XonoticScreenshotViewerDialog_close(entity me)
 {
 	me.scrList.stopSlideShow(me.scrList);
+	me.slideShowButton.forcePressed = 0;
 	SUPER(XonoticScreenshotViewerDialog).close(me);
 }
 void XonoticScreenshotViewerDialog_fill(entity me)
@@ -92,9 +103,10 @@ void XonoticScreenshotViewerDialog_fill(entity me)
 			e.onClick = prevScreenshot_Click;
 			e.onClickEntity = me;
 		me.TDempty(me, 1/4);
-		me.TD(me, 1, 1, e = makeXonoticButton("Start slide show", '0 0 0'));
-			e.onClick = startSlideShow_Click;
+		me.TD(me, 1, 1, e = makeXonoticButton("Slide show", '0 0 0'));
+			e.onClick = toggleSlideShow_Click;
 			e.onClickEntity = me;
+			me.slideShowButton = e;
 		me.TDempty(me, 1/4);
 		me.TD(me, 1, 1, e = makeXonoticButton("Next", '0 0 0'));
 			e.onClick = nextScreenshot_Click;
