@@ -1456,8 +1456,9 @@ void HUD_HealthArmor(void)
 			if(autocvar_hud_panel_healtharmor_progressbar)
 			{
 				HUD_Panel_GetProgressBarColor(health);
-				float p_health;
+				float p_health, pain_health_alpha;
 				p_health = health;
+				pain_health_alpha = 1;
 				if (autocvar_hud_panel_healtharmor_progressbar_gfx)
 				{
 					if (saved_health == -1)
@@ -1486,8 +1487,16 @@ void HUD_HealthArmor(void)
 							saved_health = -1; //damage effect ended
 					}
 					prev_health = health;
+
+					if (health <= 40 && saved_health != -2)
+					{
+						float BLINK_FACTOR = 0.15;
+						float BLINK_BASE = 0.85;
+						float BLINK_FREQ = 9; 
+						pain_health_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
+					}
 				}
-				HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, p_health/maxhealth, is_vertical, health_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, p_health/maxhealth, is_vertical, health_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * pain_health_alpha, DRAWFLAG_NORMAL);
 			}
 			if(autocvar_hud_panel_healtharmor_text)
 				DrawNumIcon(pos + health_offset, mySize, health, "health", is_vertical, health_iconalign, HUD_Get_Num_Color(health, maxhealth), 1);
