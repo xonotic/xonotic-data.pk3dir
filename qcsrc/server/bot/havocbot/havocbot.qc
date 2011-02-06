@@ -170,7 +170,7 @@ void havocbot_keyboard_movement(vector destorg)
 
 	local float trigger, trigger1;
 	blend = bound(0,sk*0.1,1);
-	trigger = autocvar_bot_ai_keyboard_treshold;
+	trigger = autocvar_bot_ai_keyboard_threshold;
 	trigger1 = 0 - trigger;
 
 	// categorize forward movement
