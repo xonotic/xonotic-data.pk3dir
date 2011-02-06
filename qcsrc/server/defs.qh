@@ -268,7 +268,7 @@ void checkSpectatorBlock();
 .float jointime; // time of joining
 .float alivetime; // time of being alive
 
-float isJoinAllowed();
+float nJoinAllowed(float includeMe);
 #define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
 
 //sv_timeout: pauses the game by setting the gamespeed to a really low value (see TIMEOUT_SLOWMO_VALUE)

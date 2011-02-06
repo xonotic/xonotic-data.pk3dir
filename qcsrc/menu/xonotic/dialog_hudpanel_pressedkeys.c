@@ -17,7 +17,7 @@ void XonoticHUDPressedKeysDialog_fill(entity me)
 	string panelname = "pressedkeys";
 
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_panel_pressedkeys"));
+		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_pressedkeys"));
 			e.addValue(e, _("Panel disabled"), "0");
 			e.addValue(e, _("Panel enabled when spectating"), "1");
 			e.addValue(e, _("Panel always enabled"), "2");
