@@ -237,6 +237,10 @@ void cvar_changes_init()
 #define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
 #define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
 #define BADCVAR(p) if(k == p) continue
+
+		// general excludes and namespaces for server admin used cvars
+		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
+
 		// internal
 		BADPREFIX("csqc_");
 		BADPREFIX("cvar_check_");
@@ -437,6 +441,7 @@ void cvar_changes_init()
 		BADCVAR("hostname");
 		BADCVAR("log_file");
 		BADCVAR("maxplayers");
+		BADCVAR("g_maxplayers");
 		BADCVAR("minplayers");
 		BADCVAR("net_address");
 		BADCVAR("port");

@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", "Mine Layer");
+REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", _("Mine Layer"))
 #else
 #ifdef SVQC
 void W_Mine_Think (void);
@@ -435,15 +435,15 @@ float w_minelayer(float req)
 		precache_sound("weapons/mine_exp.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s exploded";
+		w_deathtypestring = _("%s exploded");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = "%s got too close to %s's mine";
+			w_deathtypestring = _("%s got too close to %s's mine");
 		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "%s almost dodged %s's mine";
+			w_deathtypestring = _("%s almost dodged %s's mine");
 		else
-			w_deathtypestring = "%s stepped on %s's mine";
+			w_deathtypestring = _("%s stepped on %s's mine");
 	}
 	return TRUE;
 }

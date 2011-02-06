@@ -129,15 +129,15 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	        setDependent(e, "cl_decals", 1, 1);
 
 	me.gotoRC(me, 2, 3.5); me.setFirstColumn(me, me.currentColumn);
-	me.TD(me, 1, 1.3, e = makeXonoticCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
-	me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
+	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
+	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
 		setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
-	me.TD(me, 1, 0.8, e = makeXonoticCheckBox(0, "r_shadow_gloss", _("Gloss")));
+	me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "r_shadow_gloss", _("Gloss")));
 		setDependentAND3(e, "vid_gl20", 1, 1, "r_glsl_deluxemapping", 1, 2, "mod_q3bsp_nolightmaps", 0, 0);
 	me.TR(me);
-		me.TD(me, 1, 1.3, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping", _("Offset mapping")));
+		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping", _("Offset mapping")));
 			setDependent(e, "vid_gl20", 1, 1);
-		me.TD(me, 1, 1.7, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping")));
 			setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_water", _("Reflections:")));
@@ -171,6 +171,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			setDependentWeird(e, someShadowCvarIsEnabled);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_coronas", _("Coronas")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_coronas_occlusionquery", _("Use Occlusion Queries")));
 	me.TR(me);
 		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom")));
 			setDependent(e, "r_hdr", 0, 0);

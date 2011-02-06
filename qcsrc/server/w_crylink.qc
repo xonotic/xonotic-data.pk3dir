@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "crylink", "crylink", "Crylink");
+REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "crylink", "crylink", _("Crylink"));
 #else
 #ifdef SVQC
 .float gravity;
@@ -16,6 +16,8 @@ void W_Crylink_CheckLinks(entity e)
 
 	if(e == world)
 		error("W_Crylink_CheckLinks: entity is world");
+	if(e.classname != "spike")
+		error("W_Crylink_CheckLinks: entity is not a spike");
 
 	p = e;
 	for(i = 0; i < 1000; ++i)
@@ -32,10 +34,13 @@ void W_Crylink_CheckLinks(entity e)
 
 void W_Crylink_Dequeue_Raw(entity own, entity prev, entity me, entity next)
 {
+	W_Crylink_CheckLinks(next);
 	if(me == own.crylink_lastgroup)
 		own.crylink_lastgroup = ((me == next) ? world : next);
 	prev.queuenext = next;
 	next.queueprev = prev;
+	if(me != next)
+		W_Crylink_CheckLinks(next);
 }
 
 void W_Crylink_Dequeue(entity e)
@@ -150,6 +155,8 @@ vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 		//      targ_origin -> avg_origin
 		//      p->velocity -> HUEG away from center
 	}
+
+	W_Crylink_CheckLinks(e);
 
 	return targ_origin;
 }
@@ -414,6 +421,7 @@ void W_Crylink_Attack (void)
 		counter = counter + 1;
 	}
 	self.crylink_lastgroup = proj;
+	W_Crylink_CheckLinks(proj);
 }
 
 void W_Crylink_Attack2 (void)
@@ -634,16 +642,16 @@ float w_crylink(float req)
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		w_deathtypestring = "%s succeeded at self-destructing themself with the Crylink";
+		w_deathtypestring = _("%s succeeded at self-destructing themself with the Crylink");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE)
-			w_deathtypestring = "%s could not hide from %s's Crylink"; // unchecked: SPLASH (SECONDARY can't be)
+			w_deathtypestring = _("%s could not hide from %s's Crylink"); // unchecked: SPLASH (SECONDARY can't be)
 		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "%s was too close to %s's Crylink"; // unchecked: SECONDARY
+			w_deathtypestring = _("%s was too close to %s's Crylink"); // unchecked: SECONDARY
 		else
-			w_deathtypestring = "%s took a close look at %s's Crylink"; // unchecked: SECONDARY
+			w_deathtypestring = _("%s took a close look at %s's Crylink"); // unchecked: SECONDARY
 	}
 	return TRUE;
 }
