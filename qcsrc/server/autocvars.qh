@@ -419,6 +419,7 @@ float autocvar_g_balance_minelayer_edgedamage;
 float autocvar_g_balance_minelayer_force;
 float autocvar_g_balance_minelayer_health;
 float autocvar_g_balance_minelayer_lifetime;
+float autocvar_g_balance_minelayer_lifetime_countdown;
 float autocvar_g_balance_minelayer_limit;
 float autocvar_g_balance_minelayer_protection;
 float autocvar_g_balance_minelayer_proximityradius;

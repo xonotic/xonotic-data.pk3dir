@@ -131,16 +131,14 @@ void W_Mine_Think (void)
 	entity head;
 
 	self.nextthink = time;
-	if (time > self.cnt)
+	if ((time > self.cnt) && (!self.mine_time))
 	{
-		other = world;
-		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Mine_Explode();
-		return;
+		spamsound (self, CHAN_PROJECTILE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+		self.mine_time = time + autocvar_g_balance_minelayer_lifetime_countdown;
 	}
 
 	// a player's mines shall explode if he disconnects or dies
-	// TODO: Do this on team change too
+	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
 	if(self.owner.classname != "player" || self.owner.deadflag != DEAD_NO)
 	{
 		other = world;
@@ -165,7 +163,10 @@ void W_Mine_Think (void)
 
 	// explode if it's time to
 	if(self.mine_time && time >= self.mine_time)
+	{
 		W_Mine_ProximityExplode();
+		return;
+	}
 
 	// remote detonation
 	if (self.owner.weapon == WEP_MINE_LAYER)
@@ -247,7 +248,7 @@ void W_Mine_Attack (void)
 	mine.touch = W_Mine_Touch;
 	mine.think = W_Mine_Think;
 	mine.nextthink = time;
-	mine.cnt = time + autocvar_g_balance_minelayer_lifetime;
+	mine.cnt = time + (autocvar_g_balance_minelayer_lifetime - autocvar_g_balance_minelayer_lifetime_countdown);
 	mine.flags = FL_PROJECTILE;
 
 	CSQCProjectile(mine, TRUE, PROJECTILE_MINE, TRUE);
