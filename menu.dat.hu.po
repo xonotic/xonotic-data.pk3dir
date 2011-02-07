@@ -8,10 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-27 17:06+0100\n"
+"POT-Creation-Date: 2011-02-07 07:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -81,23 +82,23 @@ msgstr "???"
 msgid "Level %d: %s"
 msgstr "Szint %d: %s"
 
-#: qcsrc/menu/xonotic/cvarlist.c:84
+#: qcsrc/menu/xonotic/cvarlist.c:85
 msgid "will be saved to config.cfg"
 msgstr "A config.cfg-ba lesz mentve"
 
-#: qcsrc/menu/xonotic/cvarlist.c:86
+#: qcsrc/menu/xonotic/cvarlist.c:87
 msgid "will not be saved"
 msgstr "Nem lesz elmentve"
 
-#: qcsrc/menu/xonotic/cvarlist.c:88
+#: qcsrc/menu/xonotic/cvarlist.c:89
 msgid "private"
 msgstr "magán"
 
-#: qcsrc/menu/xonotic/cvarlist.c:90
+#: qcsrc/menu/xonotic/cvarlist.c:91
 msgid "engine setting"
 msgstr "motor beállítás"
 
-#: qcsrc/menu/xonotic/cvarlist.c:92
+#: qcsrc/menu/xonotic/cvarlist.c:93
 msgid "read only"
 msgstr "csak olvasható"
 
@@ -108,9 +109,9 @@ msgstr "Köszönetek"
 #: qcsrc/menu/xonotic/dialog_credits.c:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:82
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:269
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:46
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:41
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:55
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:59
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:61
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.c:21
 msgid "OK"
 msgstr "Rendben"
@@ -413,7 +414,7 @@ msgid "Fade out after:"
 msgstr "Elhalványulás késleltetés:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:26
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:41
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:36
 msgid "Never"
 msgstr "Soha"
 
@@ -824,7 +825,7 @@ msgid "Game types:"
 msgstr "Játék típusok:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:119
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:308
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:314
 msgid "Close"
 msgstr "Zárt"
 
@@ -1005,7 +1006,7 @@ msgid "Info..."
 msgstr "Info..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:70
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:311
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:317
 msgid "Join!"
 msgstr "Csatlakozz!"
 
@@ -1015,105 +1016,105 @@ msgstr "Szerver információ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:115
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:116
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:177
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:183
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:193
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:189
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:199
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:158
 #, c-format
-msgid "%d/%d"
-msgstr "%d/%d"
+msgid "%d/%d, %d free player slots"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:166
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
 #, c-format
 msgid "%d modified settings"
 msgstr "%d módosított beállításai"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:166
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
 msgid "Official settings"
 msgstr "Hivatalos beállítások"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:191
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:197
 msgid "N/A (can't connect)"
 msgstr "N/A (nem tud csatlakozni)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:199
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:205
 msgid "not supported (can't connect)"
 msgstr "nem támogatott (nem tud csatlakozni)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:201
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:207
 msgid "not supported (won't encrypt)"
 msgstr "nem támogatott (nem ellenörzött)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:205
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:211
 msgid "supported (will encrypt)"
 msgstr "támogatott (ellenörzött)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:207
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:213
 msgid "supported (won't encrypt)"
 msgstr "támogatott (nem ellenörzött)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:211
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:217
 msgid "requested (will encrypt)"
 msgstr "kért (ellenörzött)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:213
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:219
 msgid "requested (won't encrypt)"
 msgstr "kért (nem ellenörzött)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:217
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:223
 msgid "required (can't connect)"
 msgstr "szükséges (nem tud csatlakozni)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:219
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:225
 msgid "required (will encrypt)"
 msgstr "szükséges (ellenörzött)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:240
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:263
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:246
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:269
 msgid "Players:"
 msgstr "Játékosok:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:248
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:254
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:38
 msgid "Type:"
 msgstr "Típus:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:253
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:259
 msgid "Map:"
 msgstr "Pálya:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:258
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:264
 msgid "Gameplay:"
 msgstr "Játék:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:268
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:274
 msgid "Bots:"
 msgstr "Botok:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:273
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:279
 msgid "Mod:"
 msgstr "Mod:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:278
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:284
 msgid "Version:"
 msgstr "Verzió:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:283
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:289
 msgid "Ping:"
 msgstr "Ping:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:289
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:295
 msgid "CA:"
 msgstr "CA:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:295
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:301
 msgid "Key:"
 msgstr "Kulcs:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:301
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:307
 msgid "Encryption:"
 msgstr "Titkosítás:"
 
@@ -1252,30 +1253,26 @@ msgid "Waypoints"
 msgstr "Útpontok"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:23
-msgid "Waypoint settings:"
-msgstr "Útpont beállítások:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:26
 msgid "Show base waypoints"
 msgstr "Alap útpontok mutatása"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:29
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:25
 msgid "Waypoint scale:"
 msgstr "Útpont részletesség:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:34
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:29
 msgid "Waypoint alpha:"
 msgstr "Útpont alpha:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:39
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:34
 msgid "Show names:"
 msgstr "Nevek mutatása:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:42
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:37
 msgid "Teammates"
 msgstr "Csapattársak"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:43
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:38
 msgid "All players"
 msgstr "Minden játékos"
 
@@ -1944,7 +1941,7 @@ msgstr "Beállítás:"
 msgid "Value:"
 msgstr "Érték:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:54
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:56
 msgid "Description:"
 msgstr "Leírás:"
 
@@ -2209,31 +2206,31 @@ msgstr ""
 msgid "<no model found>"
 msgstr "<modell nem található>"
 
-#: qcsrc/menu/xonotic/serverlist.c:357
+#: qcsrc/menu/xonotic/serverlist.c:360
 msgid "Remove"
 msgstr "Eltávolítás"
 
-#: qcsrc/menu/xonotic/serverlist.c:359
+#: qcsrc/menu/xonotic/serverlist.c:362
 msgid "Bookmark"
 msgstr "Könyvjelző"
 
-#: qcsrc/menu/xonotic/serverlist.c:515
+#: qcsrc/menu/xonotic/serverlist.c:518
 msgid "Ping"
 msgstr "Ping"
 
-#: qcsrc/menu/xonotic/serverlist.c:516
+#: qcsrc/menu/xonotic/serverlist.c:519
 msgid "Host name"
 msgstr "Gazda név"
 
-#: qcsrc/menu/xonotic/serverlist.c:517
+#: qcsrc/menu/xonotic/serverlist.c:520
 msgid "Map"
 msgstr "Térkép"
 
-#: qcsrc/menu/xonotic/serverlist.c:518
+#: qcsrc/menu/xonotic/serverlist.c:521
 msgid "Type"
 msgstr "Típus"
 
-#: qcsrc/menu/xonotic/serverlist.c:519
+#: qcsrc/menu/xonotic/serverlist.c:522
 msgid "Players"
 msgstr "Játékosok"
 
@@ -2407,22 +2404,22 @@ msgstr "Panel engedélyezés"
 msgid "Crylink"
 msgstr ""
 
-#: qcsrc/server/w_crylink.qc:637
+#: qcsrc/server/w_crylink.qc:645
 #, c-format
 msgid "%s succeeded at self-destructing themself with the Crylink"
 msgstr ""
 
-#: qcsrc/server/w_crylink.qc:642
+#: qcsrc/server/w_crylink.qc:650
 #, c-format
 msgid "%s could not hide from %s's Crylink"
 msgstr ""
 
-#: qcsrc/server/w_crylink.qc:644
+#: qcsrc/server/w_crylink.qc:652
 #, c-format
 msgid "%s was too close to %s's Crylink"
 msgstr ""
 
-#: qcsrc/server/w_crylink.qc:646
+#: qcsrc/server/w_crylink.qc:654
 #, c-format
 msgid "%s took a close look at %s's Crylink"
 msgstr ""
@@ -2770,3 +2767,9 @@ msgstr ""
 #~ "Please answer a few initial questions to enhance the game experience."
 #~ msgstr ""
 #~ "A jobb játékélmény érdekében, kérlek, válaszolj pár inditó kérdésre!"
+
+#~ msgid "Waypoint settings:"
+#~ msgstr "Útpont beállítások:"
+
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"
