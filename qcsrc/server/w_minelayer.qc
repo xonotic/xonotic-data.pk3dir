@@ -110,7 +110,7 @@ void W_Mine_RemoteExplode ()
 void W_Mine_ProximityExplode ()
 {
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
-	if(autocvar_g_balance_minelayer_protection)
+	if(autocvar_g_balance_minelayer_protection && self.minelayer_mines == 0)
 	{
 		entity head;
 		head = findradius(self.origin, autocvar_g_balance_minelayer_radius);
@@ -136,8 +136,10 @@ void W_Mine_Think (void)
 	// TODO: replace this mine_trigger.wav sound with a real countdown
 	if ((time > self.cnt) && (!self.mine_time))
 	{
-		spamsound (self, CHAN_PROJECTILE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+		if(autocvar_g_balance_minelayer_lifetime_countdown > 0)
+			spamsound (self, CHAN_PROJECTILE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
 		self.mine_time = time + autocvar_g_balance_minelayer_lifetime_countdown;
+		self.minelayer_mines = 1; // make the mine super aggressive
 	}
 
 	// a player's mines shall explode if he disconnects or dies
