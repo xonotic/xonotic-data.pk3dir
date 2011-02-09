@@ -315,7 +315,8 @@ void XonoticServerList_draw(entity me)
 	me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
 
 	me.connectButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
-	me.infoButton.disabled = me.favoriteButton.disabled = ((me.nItems == 0) || !owned);
+	me.infoButton.disabled = ((me.nItems == 0) || !owned);
+	me.favoriteButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 
 	found = 0;
 	if(me.selectedServer)
