@@ -40,7 +40,7 @@ void PlayerStats_AddPlayer(entity e)
 	if(playerstats_db < 0)
 		return;
 
-	if(e.crypto_idfp != "")
+	if(e.crypto_idfp != "" && e.cvar_cl_allow_uidtracking == 1)
 		e.playerstats_id = strzone(e.crypto_idfp);
 	else if(clienttype(e) == CLIENTTYPE_BOT)
 		e.playerstats_id = strzone(sprintf("bot#%d", e.playerid));
