@@ -530,15 +530,16 @@ float w_electro(float req)
 	{
 		if(autocvar_g_balance_electro_lightning)
 		{
-			ammo_amount = !autocvar_g_balance_electro_primary_ammo || (self.ammo_cells > 0);
-			if(autocvar_g_balance_electro_lightning)
-				ammo_amount += self.weapon_load[WEP_ELECTRO] > 0;
+			if(!autocvar_g_balance_electro_primary_ammo)
+				ammo_amount = 1;
+			else
+				ammo_amount = self.ammo_cells > 0;
+			ammo_amount += self.weapon_load[WEP_ELECTRO] > 0;
 		}
 		else
 		{
 			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_primary_ammo;
-			if(autocvar_g_balance_electro_lightning)
-				ammo_amount += self.weapon_load[WEP_ELECTRO] >= autocvar_g_balance_electro_primary_ammo;
+			ammo_amount += self.weapon_load[WEP_ELECTRO] >= autocvar_g_balance_electro_primary_ammo;
 		}
 		return ammo_amount;
 	}
