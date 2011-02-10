@@ -121,7 +121,7 @@ void W_Mine_RemoteExplode ()
 void W_Mine_ProximityExplode ()
 {
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
-	if(autocvar_g_balance_minelayer_protection)
+	if(autocvar_g_balance_minelayer_protection && self.minelayer_mines == 0)
 	{
 		entity head;
 		head = findradius(self.origin, autocvar_g_balance_minelayer_radius);
@@ -142,16 +142,19 @@ void W_Mine_Think (void)
 	entity head;
 
 	self.nextthink = time;
-	if (time > self.cnt)
+	
+	// our lifetime has expired, it's time to die - mine_time just allows us to play a sound for this
+	// TODO: replace this mine_trigger.wav sound with a real countdown
+	if ((time > self.cnt) && (!self.mine_time))
 	{
-		other = world;
-		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Mine_Explode();
-		return;
+		if(autocvar_g_balance_minelayer_lifetime_countdown > 0)
+			spamsound (self, CHAN_PROJECTILE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+		self.mine_time = time + autocvar_g_balance_minelayer_lifetime_countdown;
+		self.minelayer_mines = 1; // make the mine super aggressive
 	}
 
 	// a player's mines shall explode if he disconnects or dies
-	// TODO: Do this on team change too
+	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
 	if(self.owner.classname != "player" || self.owner.deadflag != DEAD_NO)
 	{
 		other = world;
@@ -176,7 +179,10 @@ void W_Mine_Think (void)
 
 	// explode if it's time to
 	if(self.mine_time && time >= self.mine_time)
+	{
 		W_Mine_ProximityExplode();
+		return;
+	}
 
 	// remote detonation
 	if (self.owner.weapon == WEP_MINE_LAYER)
@@ -267,7 +273,7 @@ void W_Mine_Attack (void)
 	mine.touch = W_Mine_Touch;
 	mine.think = W_Mine_Think;
 	mine.nextthink = time;
-	mine.cnt = time + autocvar_g_balance_minelayer_lifetime;
+	mine.cnt = time + (autocvar_g_balance_minelayer_lifetime - autocvar_g_balance_minelayer_lifetime_countdown);
 	mine.flags = FL_PROJECTILE;
 
 	CSQCProjectile(mine, TRUE, PROJECTILE_MINE, TRUE);

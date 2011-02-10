@@ -899,6 +899,50 @@ void CSQC_UpdateView(float w, float h)
 			}
 			if(wcross_wep != "" && autocvar_crosshair_color_per_weapon)
 				wcross_color = stov(cvar_string(strcat("crosshair_", wcross_wep, "_color")));
+			else if(autocvar_crosshair_color_by_health)
+			{
+				local float x = getstati(STAT_HEALTH);
+				
+				//x = red
+				//y = green
+				//z = blue
+				
+				wcross_color_z = 0;
+				
+				if(x > 200)
+				{
+					wcross_color_x = 0;
+					wcross_color_y = 1;
+				}
+				else if(x > 150)
+				{
+					wcross_color_x = 0.4 - (x-150)*0.02 * 0.4;
+					wcross_color_y = 0.9 + (x-150)*0.02 * 0.1;
+				}
+				else if(x > 100)
+				{
+					wcross_color_x = 1 - (x-100)*0.02 * 0.6;
+					wcross_color_y = 1 - (x-100)*0.02 * 0.1;
+					wcross_color_z = 1 - (x-100)*0.02;
+				}
+				else if(x > 50)
+				{
+					wcross_color_x = 1;
+					wcross_color_y = 1;
+					wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;  
+				}
+				else if(x > 20)
+				{
+					wcross_color_x = 1;
+					wcross_color_y = (x-20)*90/27/100;
+					wcross_color_z = (x-20)*90/27/100 * 0.2;
+				}
+				else
+				{
+					wcross_color_x = 1;
+					wcross_color_y = 0;
+				}
+			}
 			else
 				wcross_color = stov(autocvar_crosshair_color);
 

@@ -356,7 +356,7 @@ void Cmd_HUD_SetFields(float argc)
 			pattern = substring(str, 0, slash);
 			str = substring(str, slash + 1, strlen(str) - (slash + 1));
 
-			if not(isGametypeInFilter(gametype, teamplay, pattern))
+			if not(isGametypeInFilter(gametype, teamplay, FALSE, pattern))
 				continue;
 		}
 
