@@ -967,11 +967,6 @@ void havocbot_chooseweapon()
 		return;
 	}
 
-	// Do not change weapon while reloading. If we do, the bot risks switching betwen empty weapons
-	// before getting to reload them, shooting none of them at all, giving lower overall performance
-	if(self.weapon && self.clip_load < 1)
-		return;
-
 	// Do not change weapon during the next second after a combo
 	i = time - self.lastcombotime;
 	if(i < 1)
