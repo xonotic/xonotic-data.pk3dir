@@ -155,17 +155,15 @@ void havocbot_ai()
 		// we are currently holding a weapon that's not fully loaded, reload it
 		if(skill > 2.5) // bots can only reload held weapons on purpose past this skill
 		if(self.clip_load < self.clip_size && self.weapon)
-		{
 			self.impulse = 20; // "press" the reload button, not sure if this is done right
-			self.clip_load = -1;
-		}
 
 		// if we're not reloading a weapon, switch to any weapon in our invnetory that's not fully loaded to reload it next
 		// the code above executes next frame, starting the reloading then
-		if(skill >= 5) // bots can only switch to unloaded weapons to reload them past this skill
-		if(self.clip_load >= 0)
+		if(skill >= 5) // bots can only look for unloaded weapons past this skill
+		if(self.clip_load >= 0) // only if we're not reloading a weapon already
+		if not(self.clip_load < self.clip_size && self.weapon) // we're already holding a weapon we can reload, don't look for another
 		{
-			for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
+			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
 				if(self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
