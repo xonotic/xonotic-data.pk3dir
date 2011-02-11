@@ -6,11 +6,6 @@ void W_Mine_Think (void);
 .float minelayer_detonate, minelayer_mines;
 .float mine_time;
 
-void W_MineLayer_Reload()
-{
-	W_Reload(ammo_rockets, autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
-}
-
 void spawnfunc_weapon_minelayer (void)
 {
 	weapon_defaultspawnfunc(WEP_MINE_LAYER);
@@ -390,7 +385,7 @@ float w_minelayer(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < autocvar_g_balance_minelayer_ammo) // forced reload
-			W_MineLayer_Reload();
+			weapon_action(self.weapon, WR_RELOAD);
 		else if (self.BUTTON_ATCK)
 		{
 			if(weapon_prepareattack(0, autocvar_g_balance_minelayer_refire))
@@ -453,7 +448,7 @@ float w_minelayer(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_MineLayer_Reload();
+		W_Reload(ammo_rockets, autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

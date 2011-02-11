@@ -9,11 +9,6 @@ REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_FLAG_RELO
 .entity queuenext;
 .entity queueprev;
 
-void W_Crylink_Reload()
-{
-	W_Reload(ammo_cells, min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo), autocvar_g_balance_crylink_reload_ammo, autocvar_g_balance_crylink_reload_time, "weapons/reload.wav");
-}
-
 void W_Crylink_CheckLinks(entity e)
 {
 	float i;
@@ -553,7 +548,7 @@ float w_crylink(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo)) // forced reload
-			W_Crylink_Reload();
+			weapon_action(self.weapon, WR_RELOAD);
 		else if (self.BUTTON_ATCK)
 		{
 			if (!self.crylink_waitrelease)
@@ -649,7 +644,7 @@ float w_crylink(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Crylink_Reload();
+		W_Reload(ammo_cells, min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo), autocvar_g_balance_crylink_reload_ammo, autocvar_g_balance_crylink_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

@@ -6,15 +6,6 @@ REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_FLAG_RELOADABLE | WEP_TYPE
 .vector fireball_impactvec;
 .float fireball_primarytime;
 
-void W_Fireball_Reload()
-{
-	// fuel can be a non-whole number, which brakes stuff here when between 0 and 1
-	if(self.ammo_fuel < 1)
-		self.ammo_fuel = 0;
-
-	W_Reload(ammo_fuel, min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo), autocvar_g_balance_fireball_reload_ammo, autocvar_g_balance_fireball_reload_time, "weapons/reload.wav");
-}
-
 void W_Fireball_Explode (void)
 {
 	entity e;
@@ -356,7 +347,7 @@ float w_fireball(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_fireball_reload_ammo && self.clip_load < min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo)) // forced reload
-			W_Fireball_Reload();
+			weapon_action(self.weapon, WR_RELOAD);
 		else if (self.BUTTON_ATCK)
 		{
 			if (time >= self.fireball_primarytime)
@@ -408,7 +399,11 @@ float w_fireball(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Fireball_Reload();
+		// fuel can be a non-whole number, which brakes stuff here when between 0 and 1
+		if(self.ammo_fuel < 1)
+			self.ammo_fuel = 0;
+
+		W_Reload(ammo_fuel, min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo), autocvar_g_balance_fireball_reload_ammo, autocvar_g_balance_fireball_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

@@ -3,11 +3,6 @@ REGISTER_WEAPON(NEX, w_nex, IT_CELLS, 7, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE |
 #else
 #ifdef SVQC
 
-void W_Nex_Reload()
-{
-	W_Reload(ammo_cells, min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo), autocvar_g_balance_nex_reload_ammo, autocvar_g_balance_nex_reload_time, "weapons/reload.wav");
-}
-
 void SendCSQCNexBeamParticle(float charge) {
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
@@ -119,7 +114,7 @@ float w_nex(float req)
 			}
 
 		if(autocvar_g_balance_nex_reload_ammo && self.clip_load < min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo)) // forced reload
-			W_Nex_Reload();
+			weapon_action(self.weapon, WR_RELOAD);
 		else
 		{
 			if (self.BUTTON_ATCK)
@@ -251,7 +246,7 @@ float w_nex(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Nex_Reload();
+		W_Reload(ammo_cells, min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo), autocvar_g_balance_nex_reload_ammo, autocvar_g_balance_nex_reload_time, "weapons/reload.wav");
 	}
 
 	return TRUE;

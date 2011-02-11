@@ -5,11 +5,6 @@ REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | 
 .float gl_detonate_later;
 .float gl_bouncecnt;
 
-void W_GrenadeLauncher_Reload()
-{
-	W_Reload(ammo_rockets, min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo), autocvar_g_balance_grenadelauncher_reload_ammo, autocvar_g_balance_grenadelauncher_reload_time, "weapons/reload.wav");
-}
-
 void W_Grenade_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
@@ -311,7 +306,7 @@ float w_glauncher(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_grenadelauncher_reload_ammo && self.clip_load < min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo)) // forced reload
-			W_GrenadeLauncher_Reload();
+			weapon_action(self.weapon, WR_RELOAD);
 		else if (self.BUTTON_ATCK)
 		{
 			if (weapon_prepareattack(0, autocvar_g_balance_grenadelauncher_primary_refire))
@@ -376,7 +371,7 @@ float w_glauncher(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_GrenadeLauncher_Reload();
+		W_Reload(ammo_rockets, min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo), autocvar_g_balance_grenadelauncher_reload_ammo, autocvar_g_balance_grenadelauncher_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

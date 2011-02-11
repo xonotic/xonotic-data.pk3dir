@@ -3,11 +3,6 @@ REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_FLAG_REL
 #else
 #ifdef SVQC
 
-void W_Shotgun_Reload()
-{
-	W_Reload(ammo_shells, autocvar_g_balance_shotgun_primary_ammo, autocvar_g_balance_shotgun_reload_ammo, autocvar_g_balance_shotgun_reload_time, "weapons/reload.wav");
-}
-
 void W_Shotgun_Attack (void)
 {
 	float	sc;
@@ -129,7 +124,7 @@ float w_shotgun(float req)
 		{
 			// don't force reload an empty shotgun if its melee attack is active
 			if not(autocvar_g_balance_shotgun_secondary && self.ammo_shells < autocvar_g_balance_shotgun_primary_ammo)
-				W_Shotgun_Reload();
+				weapon_action(self.weapon, WR_RELOAD);
 		}
 		else
 		{
@@ -181,7 +176,7 @@ float w_shotgun(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Shotgun_Reload();
+		W_Reload(ammo_shells, autocvar_g_balance_shotgun_primary_ammo, autocvar_g_balance_shotgun_reload_ammo, autocvar_g_balance_shotgun_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

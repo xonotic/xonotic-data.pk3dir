@@ -3,11 +3,6 @@ REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE
 #else
 #ifdef SVQC
 
-void W_HLAC_Reload()
-{
-	W_Reload(ammo_cells, min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo), autocvar_g_balance_hlac_reload_ammo, autocvar_g_balance_hlac_reload_time, "weapons/reload.wav");
-}
-
 void W_HLAC_Touch (void)
 {
 	PROJECTILE_TOUCH;
@@ -192,7 +187,7 @@ float w_hlac(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo)) // forced reload
-			W_HLAC_Reload();
+			weapon_action(self.weapon, WR_RELOAD);
 		else if (self.BUTTON_ATCK)
 		{
 			if (weapon_prepareattack(0, autocvar_g_balance_hlac_primary_refire))
@@ -239,7 +234,7 @@ float w_hlac(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_HLAC_Reload();
+		W_Reload(ammo_cells, min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo), autocvar_g_balance_hlac_reload_ammo, autocvar_g_balance_hlac_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

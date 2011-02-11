@@ -3,11 +3,6 @@ REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE |
 #else
 #ifdef SVQC
 
-void W_UZI_Reload()
-{
-	W_Reload(ammo_nails, min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo), autocvar_g_balance_uzi_reload_ammo, autocvar_g_balance_uzi_reload_time, "weapons/reload.wav");
-}
-
 // leilei's fancy muzzleflash stuff
 void UZI_Flash_Go() 
 {	
@@ -220,7 +215,7 @@ float w_uzi(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_uzi_reload_ammo && self.clip_load < min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo)) // forced reload
-			W_UZI_Reload();
+			weapon_action(self.weapon, WR_RELOAD);
 		else if(autocvar_g_balance_uzi_mode == 1)
 		{
 			if (self.BUTTON_ATCK)
@@ -323,7 +318,7 @@ float w_uzi(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_UZI_Reload();
+		W_Reload(ammo_nails, min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo), autocvar_g_balance_uzi_reload_ammo, autocvar_g_balance_uzi_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

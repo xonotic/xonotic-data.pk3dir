@@ -4,11 +4,6 @@ REGISTER_WEAPON(LASER, w_laser, 0, 1, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WE
 #ifdef SVQC
 void(float imp) W_SwitchWeapon;
 
-void W_Laser_Reload()
-{
-	W_Reload(zero_ammo, 0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
-}
-
 void W_Laser_Touch (void)
 {
 	PROJECTILE_TOUCH;
@@ -232,7 +227,7 @@ float w_laser(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_laser_reload_ammo && self.clip_load < 1) // forced reload
-			W_Laser_Reload();
+			weapon_action(self.weapon, WR_RELOAD);
 		else if (self.BUTTON_ATCK)
 		{
 			if (weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
@@ -301,7 +296,7 @@ float w_laser(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Laser_Reload();
+		W_Reload(zero_ammo, 0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

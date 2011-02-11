@@ -8,11 +8,6 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_F
 
 .float sniperrifle_accumulator;
 
-void W_SniperRifle_Reload()
-{
-	W_Reload(ammo_nails, min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo), autocvar_g_balance_sniperrifle_reload_ammo, autocvar_g_balance_sniperrifle_reload_time, "weapons/reload.wav");
-}
-
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
 {
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
@@ -151,7 +146,7 @@ float w_sniperrifle(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_sniperrifle_reload_ammo && self.clip_load < min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo)) // forced reload
-            W_SniperRifle_Reload();
+            weapon_action(self.weapon, WR_RELOAD);
 		else
 		{
 			self.sniperrifle_accumulator = bound(time - autocvar_g_balance_sniperrifle_bursttime, self.sniperrifle_accumulator, time);
@@ -168,7 +163,7 @@ float w_sniperrifle(float req)
 				if (autocvar_g_balance_sniperrifle_secondary)
 				{
                     if(autocvar_g_balance_sniperrifle_secondary_reload)
-                        W_SniperRifle_Reload();
+                        weapon_action(self.weapon, WR_RELOAD);
                     else
                     {
                         if (weapon_prepareattack_check(1, autocvar_g_balance_sniperrifle_secondary_refire))
@@ -214,7 +209,7 @@ float w_sniperrifle(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_SniperRifle_Reload();
+		W_Reload(ammo_nails, min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo), autocvar_g_balance_sniperrifle_reload_ammo, autocvar_g_balance_sniperrifle_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

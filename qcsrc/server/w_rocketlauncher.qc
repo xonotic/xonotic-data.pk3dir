@@ -5,11 +5,6 @@ REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | W
 .float rl_release;
 .float rl_detonate_later;
 
-void W_RocketLauncher_Reload()
-{
-	W_Reload(ammo_rockets, autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo, autocvar_g_balance_rocketlauncher_reload_time, "weapons/reload.wav");
-}
-
 void W_Rocket_Unregister()
 {
 	if(self.owner && self.owner.lastrocket == self)
@@ -419,7 +414,7 @@ float w_rlauncher(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_rocketlauncher_reload_ammo && self.clip_load < autocvar_g_balance_rocketlauncher_ammo) // forced reload
-			W_RocketLauncher_Reload();
+			weapon_action(self.weapon, WR_RELOAD);
 		else
 		{
 			if (self.BUTTON_ATCK)
@@ -490,7 +485,7 @@ float w_rlauncher(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_RocketLauncher_Reload();
+		W_Reload(ammo_rockets, autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo, autocvar_g_balance_rocketlauncher_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

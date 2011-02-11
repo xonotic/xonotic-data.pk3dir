@@ -5,11 +5,6 @@ REGISTER_WEAPON(ELECTRO, w_electro, IT_CELLS, 5, WEP_FLAG_NORMAL | WEP_FLAG_RELO
 .float electro_count;
 .float electro_secondarytime;
 
-void W_Electro_Reload()
-{
-	W_Reload(ammo_cells, min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo), autocvar_g_balance_electro_reload_ammo, autocvar_g_balance_electro_reload_time, "weapons/reload.wav");
-}
-
 void W_Plasma_Explode_Combo (void);
 
 void W_Plasma_TriggerCombo(vector org, float rad, entity own)
@@ -441,7 +436,7 @@ float w_electro(float req)
 
 			if(!ammo_amount)
 			{
-				W_Electro_Reload();
+				weapon_action(self.weapon, WR_RELOAD);
 				return FALSE;
 			}
 		}
@@ -549,7 +544,7 @@ float w_electro(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Electro_Reload();
+		W_Reload(ammo_cells, min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo), autocvar_g_balance_electro_reload_ammo, autocvar_g_balance_electro_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

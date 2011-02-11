@@ -4,14 +4,6 @@ REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_
 #ifdef SVQC
 .float minstanex_lasthit;
 
-void W_Minstanex_Reload()
-{
-	if(autocvar_g_balance_minstanex_laser_ammo)
-		W_Reload(ammo_cells, min(autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo), autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
-	else
-		W_Reload(ammo_cells, autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
-}
-
 void W_MinstaNex_Attack (void)
 {
 	float flying;
@@ -211,9 +203,9 @@ float w_minstanex(float req)
 
 		// if the laser uses load, we also consider its ammo for reloading
 		if(autocvar_g_balance_minstanex_reload_ammo && autocvar_g_balance_minstanex_laser_ammo && self.clip_load < min(minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo)) // forced reload
-			W_Minstanex_Reload();
+			weapon_action(self.weapon, WR_RELOAD);
 		else if(autocvar_g_balance_minstanex_reload_ammo && self.clip_load < minstanex_ammo) // forced reload
-			W_Minstanex_Reload();
+			weapon_action(self.weapon, WR_RELOAD);
 		else if (self.BUTTON_ATCK)
 		{
 			if (weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
@@ -284,7 +276,10 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Minstanex_Reload();
+		if(autocvar_g_balance_minstanex_laser_ammo)
+			W_Reload(ammo_cells, min(autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo), autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
+		else
+			W_Reload(ammo_cells, autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

@@ -5,11 +5,6 @@ REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_RELO
 //.float proxytime; = autoswitch
 //.float tl; = wait
 
-void W_Seeker_Reload()
-{
-	W_Reload(ammo_rockets, min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo), autocvar_g_balance_seeker_reload_ammo, autocvar_g_balance_seeker_reload_time, "weapons/reload.wav");
-}
-
 void Seeker_Missile_Explode ()
 {
 	self.event_damage = SUB_Null;
@@ -453,7 +448,7 @@ float w_seeker(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo)) // forced reload
-			W_Seeker_Reload();
+			weapon_action(self.weapon, WR_RELOAD);
 
 		else if (self.BUTTON_ATCK)
 		{
@@ -501,7 +496,7 @@ float w_seeker(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Seeker_Reload();
+		W_Reload(ammo_rockets, min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo), autocvar_g_balance_seeker_reload_ammo, autocvar_g_balance_seeker_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };
