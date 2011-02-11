@@ -1664,7 +1664,6 @@ float W_ReloadCheck()
 			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));
 			self.reload_complain = time + 1;
 		}
-
 		// switch away if the amount of ammo is not enough to keep using this weapon
 		if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
 		{
@@ -1686,7 +1685,7 @@ float W_ReloadCheck()
 	return TRUE;
 }
 
-void W_ReloadEnd()
+void W_ReloadedAndReady()
 {
 	// finish the reloading process, and do the ammo transfer
 
@@ -1714,24 +1713,6 @@ void W_ReloadEnd()
 	w_ready();
 }
 
-void W_ReloadStart()
-{
-	// begin the reloading process
-
-	sound (self, CHAN_WEAPON2, self.reload_sound, VOL_BASE, ATTN_NORM);
-
-	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
-	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
-	// so your weapon is disabled for a few seconds without reason
-
-	//ATTACK_FINISHED(self) = max(time, ATTACK_FINISHED(self)) + self.reload_time + 1;
-
-	weapon_thinkf(WFRAME_RELOAD, self.reload_time, W_ReloadEnd);
-
-	self.old_clip_load = self.clip_load;
-	self.clip_load = -1;
-}
-
 void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
 {
 	// set global values to work with
@@ -1743,6 +1724,18 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 	if(!W_ReloadCheck())
 		return;
 
-	// now begin the actual reloading
-	W_ReloadStart();
+	// now begin the reloading process
+
+	sound (self, CHAN_WEAPON2, self.reload_sound, VOL_BASE, ATTN_NORM);
+
+	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
+	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
+	// so your weapon is disabled for a few seconds without reason
+
+	//ATTACK_FINISHED(self) = max(time, ATTACK_FINISHED(self)) + self.reload_time + 1;
+
+	weapon_thinkf(WFRAME_RELOAD, self.reload_time, W_ReloadedAndReady);
+
+	self.old_clip_load = self.clip_load;
+	self.clip_load = -1;
 }
