@@ -1699,13 +1699,6 @@ void W_ReloadEnd()
 
 void W_ReloadStart()
 {
-	// return if reloading is disabled for this weapon
-	if(!self.reload_ammo_amount)
-		return;
-
-	if(!W_ReloadCheck(self.(self.current_ammo), self.reload_ammo_min))
-		return;
-
 	sound (self, CHAN_WEAPON2, self.reload_sound, VOL_BASE, ATTN_NORM);
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
@@ -1722,18 +1715,31 @@ void W_ReloadStart()
 
 void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
 {
-	entity e;
-	e = get_weaponinfo(self.weapon);
-	if not(e.spawnflags & WEP_FLAG_RELOADABLE) // don't reload weapons that don't have the RELOADABLE flag
-	{
-		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE spawnflag. Fix your code!");
-		return;
-	}
-
+	// set global values to work with
 	self.reload_ammo_min = sent_ammo_min;
 	self.reload_ammo_amount = sent_ammo_amount;
 	self.reload_time = sent_time;
 	self.reload_sound = sent_sound;
 
+	entity e;
+	e = get_weaponinfo(self.weapon);
+
+	// check if we can reload or not
+
+	// don't reload weapons that don't have the RELOADABLE flag
+	if not(e.spawnflags & WEP_FLAG_RELOADABLE)
+	{
+		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
+		return;
+	}
+
+	// return if reloading is disabled for this weapon
+	if(!self.reload_ammo_amount)
+		return;
+
+	if(!W_ReloadCheck(self.(self.current_ammo), self.reload_ammo_min))
+		return;
+
+	// now we can begin the actual reloading
 	W_ReloadStart();
 }
