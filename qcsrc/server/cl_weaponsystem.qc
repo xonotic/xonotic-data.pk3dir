@@ -1612,9 +1612,26 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 #define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
 #define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
 
+void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
+{
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(ammo_reload)
+		{
+			self.clip_load -= ammo_use;
+			self.weapon_load[self.weapon] = self.clip_load;
+		}
+		else
+		{
+			self.current_ammo = ammo_type;
+			self.(self.current_ammo) -= ammo_use;
+		}
+	}
+}
+
 // weapon reloading code
 
-..float reload_ammo_player;
 .float reload_ammo_amount, reload_ammo_min, reload_time;
 .float reload_complain;
 .string reload_sound;
@@ -1668,10 +1685,10 @@ void W_ReloadEnd()
 		self.clip_load = self.reload_ammo_amount;
 	else
 	{
-		while(self.clip_load < self.reload_ammo_amount && self.(self.reload_ammo_player)) // make sure we don't add more ammo than we have
+		while(self.clip_load < self.reload_ammo_amount && self.(self.current_ammo)) // make sure we don't add more ammo than we have
 		{
 			self.clip_load += 1;
-			self.(self.reload_ammo_player) -= 1;
+			self.(self.current_ammo) -= 1;
 		}
 	}
 	self.weapon_load[self.weapon] = self.clip_load;
@@ -1687,7 +1704,7 @@ void W_ReloadStart()
 	if(!self.reload_ammo_amount)
 		return;
 
-	if(!W_ReloadCheck(self.(self.reload_ammo_player), self.reload_ammo_min))
+	if(!W_ReloadCheck(self.(self.current_ammo), self.reload_ammo_min))
 		return;
 
 	float t;
@@ -1705,7 +1722,7 @@ void W_ReloadStart()
 
 void W_Reload(.float sent_ammo_player, float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
 {
-	self.reload_ammo_player = sent_ammo_player;
+	self.current_ammo = sent_ammo_player;
 	self.reload_ammo_min = sent_ammo_min;
 	self.reload_ammo_amount = sent_ammo_amount;
 	self.reload_time = sent_time;

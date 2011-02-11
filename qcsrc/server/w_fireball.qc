@@ -194,17 +194,7 @@ void W_Fireball_Attack1_Frame1()
 
 void W_Fireball_Attack1_Frame0()
 {
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_fireball_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_fireball_primary_ammo;
-			self.weapon_load[WEP_FIREBALL] = self.clip_load;
-		}
-		else
-			self.ammo_fuel -= autocvar_g_balance_fireball_primary_ammo;
-	}
+	W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_reload_ammo);
 
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
 	sound (self, CHAN_WEAPON, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
@@ -255,17 +245,7 @@ void W_Fireball_Attack2()
 	vector f_diff;
 	float c;
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_fireball_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_fireball_secondary_ammo;
-			self.weapon_load[WEP_FIREBALL] = self.clip_load;
-		}
-		else
-			self.ammo_fuel -= autocvar_g_balance_fireball_secondary_ammo;
-	}
+	W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_fireball_secondary_ammo, autocvar_g_balance_fireball_reload_ammo);
 
 	c = mod(self.bulletcounter, 4);
 	switch(c)

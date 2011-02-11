@@ -614,6 +614,8 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
+..float current_ammo;
+
 .float weapon_load[WEP_MAXCOUNT]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(weapon_load);
 .float zero_ammo; // used by the reloading system, must always be 0
 .float clip_load;

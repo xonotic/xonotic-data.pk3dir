@@ -248,17 +248,7 @@ void W_Rocket_Attack (void)
 	local entity missile;
 	local entity flash;
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_rocketlauncher_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_rocketlauncher_ammo;
-			self.weapon_load[WEP_ROCKET_LAUNCHER] = self.clip_load;
-		}
-		else
-			self.ammo_rockets -= autocvar_g_balance_rocketlauncher_ammo;
-	}
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo);
 
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CHAN_WEAPON, autocvar_g_balance_rocketlauncher_damage);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);

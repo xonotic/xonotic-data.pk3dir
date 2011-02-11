@@ -10,17 +10,7 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_F
 
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
 {
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_sniperrifle_reload_ammo)
-		{
-			self.clip_load -= pAmmo;
-			self.weapon_load[WEP_SNIPERRIFLE] = self.clip_load;
-		}
-		else
-			self.ammo_nails -= pAmmo;
-	}
+	W_DecreaseAmmo(ammo_nails, pAmmo, autocvar_g_balance_sniperrifle_reload_ammo);
 
 	if(deathtype & HITTYPE_SECONDARY)
 		W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, "weapons/campingrifle_fire2.wav", CHAN_WEAPON, autocvar_g_balance_sniperrifle_secondary_damage + autocvar_g_balance_sniperrifle_secondary_headshotaddeddamage);

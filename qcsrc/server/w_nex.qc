@@ -75,17 +75,7 @@ void W_Nex_Attack (float issecondary)
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		Damage_DamageInfo(trace_endpos, mydmg, 0, 0, myforce * w_shotdir, WEP_NEX, self);
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_nex_reload_ammo)
-		{
-			self.clip_load -= myammo;
-			self.weapon_load[WEP_NEX] = self.clip_load;
-		}
-		else
-			self.ammo_cells -= myammo;
-	}
+	W_DecreaseAmmo(ammo_cells, myammo, autocvar_g_balance_nex_reload_ammo);
 }
 
 void spawnfunc_weapon_nex (void); // defined in t_items.qc

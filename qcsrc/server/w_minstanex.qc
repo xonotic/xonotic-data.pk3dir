@@ -80,25 +80,10 @@ void W_MinstaNex_Attack (void)
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		Damage_DamageInfo(trace_endpos, 10000, 0, 0, 800 * w_shotdir, WEP_MINSTANEX, self);
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_minstanex_reload_ammo)
-		{
-			if (g_minstagib)
-				self.clip_load -= - 1;
-			else
-				self.clip_load -= autocvar_g_balance_minstanex_ammo;
-			self.weapon_load[WEP_MINSTANEX] = self.clip_load;
-		}
-		else
-		{
-			if (g_minstagib)
-				self.ammo_cells -= - 1;
-			else
-				self.ammo_cells -= autocvar_g_balance_minstanex_ammo;
-		}
-	}
+	if (g_minstagib)
+		W_DecreaseAmmo(ammo_cells, 1, autocvar_g_balance_minstanex_reload_ammo);
+	else
+		W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo);
 }
 
 
@@ -222,12 +207,7 @@ float w_minstanex(float req)
 
 				// decrease ammo for the laser?
 				if(autocvar_g_balance_minstanex_laser_ammo)
-				{
-					if(autocvar_g_balance_minstanex_reload_ammo)
-						self.clip_load -= autocvar_g_balance_minstanex_laser_ammo;
-					else
-						self.ammo_cells -= autocvar_g_balance_minstanex_laser_ammo;
-				}
+					W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_laser_ammo, autocvar_g_balance_minstanex_reload_ammo);
 
 				// ugly minstagib hack to reuse the fire mode of the laser
 				float w;

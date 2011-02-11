@@ -23,17 +23,7 @@ void W_Shotgun_Attack (void)
 	bulletspeed = autocvar_g_balance_shotgun_primary_speed;
 	bulletconstant = autocvar_g_balance_shotgun_primary_bulletconstant;
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_shotgun_reload_ammo)
-		{
-			self.clip_load -= ammoamount;
-			self.weapon_load[WEP_SHOTGUN] = self.clip_load;
-		}
-		else
-			self.ammo_shells -= ammoamount;
-	}
+	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
 
 	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/shotgun_fire.wav", CHAN_WEAPON, d * bullets);
 	for (sc = 0;sc < bullets;sc = sc + 1)

@@ -22,17 +22,7 @@ void W_HLAC_Attack (void)
 	local entity missile;
     float spread;
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_hlac_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_hlac_primary_ammo;
-			self.weapon_load[WEP_HLAC] = self.clip_load;
-		}
-		else
-			self.ammo_cells -= autocvar_g_balance_hlac_primary_ammo;
-	}
+	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_reload_ammo);
 
     spread = autocvar_g_balance_hlac_primary_spread_min + (autocvar_g_balance_hlac_primary_spread_add * self.misc_bulletcounter);
     spread = min(spread,autocvar_g_balance_hlac_primary_spread_max);
@@ -123,17 +113,7 @@ void W_HLAC_Attack2 (void)
 {
     float i;
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_hlac_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_hlac_secondary_ammo;
-			self.weapon_load[WEP_HLAC] = self.clip_load;
-		}
-		else
-			self.ammo_cells -= autocvar_g_balance_hlac_secondary_ammo;
-	}
+	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hlac_secondary_ammo, autocvar_g_balance_hlac_reload_ammo);
 
     for(i=autocvar_g_balance_hlac_secondary_shots;i>0;--i)
         W_HLAC_Attack2f();

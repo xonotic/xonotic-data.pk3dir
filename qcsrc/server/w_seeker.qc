@@ -158,17 +158,7 @@ void Seeker_Fire_Missile(vector f_diff)
 {
 	local entity missile;
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_seeker_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_seeker_missile_ammo;
-			self.weapon_load[WEP_SEEKER] = self.clip_load;
-		}
-		else
-			self.ammo_rockets -= autocvar_g_balance_seeker_missile_ammo;
-	}
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_reload_ammo);
 
 	makevectors(self.v_angle);
 	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/seeker_fire.wav", CHAN_WEAPON, 0);
@@ -303,17 +293,7 @@ void Seeker_Tag_Touch()
 void Seeker_Fire_Tag()
 {
 	local entity missile;
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_seeker_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_seeker_tag_ammo;
-			self.weapon_load[WEP_SEEKER] = self.clip_load;
-		}
-		else
-			self.ammo_rockets -= autocvar_g_balance_seeker_tag_ammo;
-	}
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_tag_ammo, autocvar_g_balance_seeker_reload_ammo);
 
 	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/tag_fire.wav", CHAN_WEAPON, autocvar_g_balance_seeker_missile_damage * autocvar_g_balance_seeker_missile_count);
 
@@ -371,17 +351,7 @@ void Seeker_Fire_Flac()
 	vector f_diff;
 	float c;
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_seeker_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_seeker_flac_ammo;
-			self.weapon_load[WEP_SEEKER] = self.clip_load;
-		}
-		else
-			self.ammo_rockets -= autocvar_g_balance_seeker_flac_ammo;
-	}
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_flac_ammo, autocvar_g_balance_seeker_reload_ammo);
 
 	c = mod(self.bulletcounter, 4);
 	switch(c)

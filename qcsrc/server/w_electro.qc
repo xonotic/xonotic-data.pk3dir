@@ -110,17 +110,7 @@ void W_Electro_Attack()
 {
 	local entity proj;
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_electro_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_electro_primary_ammo;
-			self.weapon_load[WEP_ELECTRO] = self.clip_load;
-		}
-		else
-			self.ammo_cells -= autocvar_g_balance_electro_primary_ammo;
-	}
+	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_reload_ammo);
 
 	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", CHAN_WEAPON, autocvar_g_balance_electro_primary_damage);
 
@@ -157,17 +147,7 @@ void W_Electro_Attack2()
 {
 	local entity proj;
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_electro_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_electro_secondary_ammo;
-			self.weapon_load[WEP_ELECTRO] = self.clip_load;
-		}
-		else
-			self.ammo_cells -= autocvar_g_balance_electro_secondary_ammo;
-	}
+	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_electro_secondary_ammo, autocvar_g_balance_electro_reload_ammo);
 
 	W_SetupShot_ProjectileSize (self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", CHAN_WEAPON, autocvar_g_balance_electro_secondary_damage);
 
