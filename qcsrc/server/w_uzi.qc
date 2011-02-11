@@ -5,13 +5,7 @@ REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE |
 
 void W_UZI_Reload()
 {
-	self.reload_ammo_player = ammo_nails;
-	self.reload_ammo_min = min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo);
-	self.reload_ammo_amount = autocvar_g_balance_uzi_reload_ammo;
-	self.reload_time = autocvar_g_balance_uzi_reload_time;
-	self.reload_sound = "weapons/reload.wav";
-
-	W_Reload();
+	W_Reload(ammo_nails, min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo), autocvar_g_balance_uzi_reload_ammo, autocvar_g_balance_uzi_reload_time, "weapons/reload.wav");
 }
 
 // leilei's fancy muzzleflash stuff

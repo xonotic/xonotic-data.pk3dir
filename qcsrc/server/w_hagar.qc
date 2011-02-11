@@ -6,13 +6,7 @@ REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_RELOAD
 
 void W_Hagar_Reload()
 {
-	self.reload_ammo_player = ammo_rockets;
-	self.reload_ammo_min = min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo);
-	self.reload_ammo_amount = autocvar_g_balance_hagar_reload_ammo;
-	self.reload_time = autocvar_g_balance_hagar_reload_time;
-	self.reload_sound = "weapons/reload.wav";
-
-	W_Reload();
+	W_Reload(ammo_rockets, min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
 }
 
 void W_Hagar_Explode (void)

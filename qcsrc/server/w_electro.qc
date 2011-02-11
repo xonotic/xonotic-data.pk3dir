@@ -7,13 +7,7 @@ REGISTER_WEAPON(ELECTRO, w_electro, IT_CELLS, 5, WEP_FLAG_NORMAL | WEP_FLAG_RELO
 
 void W_Electro_Reload()
 {
-	self.reload_ammo_player = ammo_cells;
-	self.reload_ammo_min = min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo);
-	self.reload_ammo_amount = autocvar_g_balance_electro_reload_ammo;
-	self.reload_time = autocvar_g_balance_electro_reload_time;
-	self.reload_sound = "weapons/reload.wav";
-
-	W_Reload();
+	W_Reload(ammo_cells, min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo), autocvar_g_balance_electro_reload_ammo, autocvar_g_balance_electro_reload_time, "weapons/reload.wav");
 }
 
 void W_Plasma_Explode_Combo (void);

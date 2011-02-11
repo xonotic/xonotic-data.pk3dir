@@ -6,13 +6,7 @@ void(float imp) W_SwitchWeapon;
 
 void W_Laser_Reload()
 {
-	self.reload_ammo_player = zero_ammo;
-	self.reload_ammo_min = 0;
-	self.reload_ammo_amount = autocvar_g_balance_laser_reload_ammo;
-	self.reload_time = autocvar_g_balance_laser_reload_time;
-	self.reload_sound = "weapons/reload.wav";
-
-	W_Reload();
+	W_Reload(zero_ammo, 0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
 }
 
 void W_Laser_Touch (void)

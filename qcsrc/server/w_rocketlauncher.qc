@@ -7,13 +7,7 @@ REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | W
 
 void W_RocketLauncher_Reload()
 {
-	self.reload_ammo_player = ammo_rockets;
-	self.reload_ammo_min = autocvar_g_balance_rocketlauncher_ammo;
-	self.reload_ammo_amount = autocvar_g_balance_rocketlauncher_reload_ammo;
-	self.reload_time = autocvar_g_balance_rocketlauncher_reload_time;
-	self.reload_sound = "weapons/reload.wav";
-
-	W_Reload();
+	W_Reload(ammo_rockets, autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo, autocvar_g_balance_rocketlauncher_reload_time, "weapons/reload.wav");
 }
 
 void W_Rocket_Unregister()

@@ -8,13 +8,7 @@ void W_Mine_Think (void);
 
 void W_MineLayer_Reload()
 {
-	self.reload_ammo_player = ammo_rockets;
-	self.reload_ammo_min = autocvar_g_balance_minelayer_ammo;
-	self.reload_ammo_amount = autocvar_g_balance_minelayer_reload_ammo;
-	self.reload_time = autocvar_g_balance_minelayer_reload_time;
-	self.reload_sound = "weapons/reload.wav";
-
-	W_Reload();
+	W_Reload(ammo_rockets, autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
 }
 
 void spawnfunc_weapon_minelayer (void)

@@ -6,16 +6,10 @@ REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_
 
 void W_Minstanex_Reload()
 {
-	self.reload_ammo_player = ammo_cells;
 	if(autocvar_g_balance_minstanex_laser_ammo)
-		self.reload_ammo_min = min(autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo);
+		W_Reload(ammo_cells, min(autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo), autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
 	else
-		self.reload_ammo_min = autocvar_g_balance_minstanex_ammo;
-	self.reload_ammo_amount = autocvar_g_balance_minstanex_reload_ammo;
-	self.reload_time = autocvar_g_balance_minstanex_reload_time;
-	self.reload_sound = "weapons/reload.wav";
-
-	W_Reload();
+		W_Reload(ammo_cells, autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
 }
 
 void W_MinstaNex_Attack (void)

@@ -1614,7 +1614,11 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 
 // weapon reloading code
 
+..float reload_ammo_player;
+.float reload_ammo_amount, reload_ammo_min, reload_time;
 .float reload_complain;
+.string reload_sound;
+
 float W_ReloadCheck(float ammo_amount, float ammo_shot)
 {
 	// our weapon is fully loaded, no need to reload
@@ -1651,7 +1655,7 @@ float W_ReloadCheck(float ammo_amount, float ammo_shot)
 	return TRUE;
 }
 
-void W_ReloadedAndReady()
+void W_ReloadEnd()
 {
 	float t;
 
@@ -1677,7 +1681,7 @@ void W_ReloadedAndReady()
 	w_ready();
 }
 
-void W_Reload()
+void W_ReloadStart()
 {
 	// return if reloading is disabled for this weapon
 	if(!self.reload_ammo_amount)
@@ -1693,8 +1697,19 @@ void W_Reload()
 	t = max(time, ATTACK_FINISHED(self)) + self.reload_time + 1;
 	ATTACK_FINISHED(self) = t;
 
-	weapon_thinkf(WFRAME_RELOAD, self.reload_time, W_ReloadedAndReady);
+	weapon_thinkf(WFRAME_RELOAD, self.reload_time, W_ReloadEnd);
 
 	self.old_clip_load = self.clip_load;
 	self.clip_load = -1;
+}
+
+void W_Reload(.float sent_ammo_player, float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
+{
+	self.reload_ammo_player = sent_ammo_player;
+	self.reload_ammo_min = sent_ammo_min;
+	self.reload_ammo_amount = sent_ammo_amount;
+	self.reload_time = sent_time;
+	self.reload_sound = sent_sound;
+
+	W_ReloadStart();
 }

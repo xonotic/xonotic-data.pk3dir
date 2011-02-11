@@ -5,13 +5,7 @@ REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_FLAG_REL
 
 void W_Shotgun_Reload()
 {
-	self.reload_ammo_player = ammo_shells;
-	self.reload_ammo_min = autocvar_g_balance_shotgun_primary_ammo;
-	self.reload_ammo_amount = autocvar_g_balance_shotgun_reload_ammo;
-	self.reload_time = autocvar_g_balance_shotgun_reload_time;
-	self.reload_sound = "weapons/reload.wav";
-
-	W_Reload();
+	W_Reload(ammo_shells, autocvar_g_balance_shotgun_primary_ammo, autocvar_g_balance_shotgun_reload_ammo, autocvar_g_balance_shotgun_reload_time, "weapons/reload.wav");
 }
 
 void W_Shotgun_Attack (void)

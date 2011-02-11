@@ -10,13 +10,7 @@ REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_F
 
 void W_SniperRifle_Reload()
 {
-	self.reload_ammo_player = ammo_nails;
-	self.reload_ammo_min = min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo);
-	self.reload_ammo_amount = autocvar_g_balance_sniperrifle_reload_ammo;
-	self.reload_time = autocvar_g_balance_sniperrifle_reload_time;
-	self.reload_sound = "weapons/reload.wav";
-
-	W_Reload();
+	W_Reload(ammo_nails, min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo), autocvar_g_balance_sniperrifle_reload_ammo, autocvar_g_balance_sniperrifle_reload_time, "weapons/reload.wav");
 }
 
 void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)

@@ -5,13 +5,7 @@ REGISTER_WEAPON(NEX, w_nex, IT_CELLS, 7, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE |
 
 void W_Nex_Reload()
 {
-	self.reload_ammo_player = ammo_cells;
-	self.reload_ammo_min = min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo);
-	self.reload_ammo_amount = autocvar_g_balance_nex_reload_ammo;
-	self.reload_time = autocvar_g_balance_nex_reload_time;
-	self.reload_sound = "weapons/reload.wav";
-
-	W_Reload();
+	W_Reload(ammo_cells, min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo), autocvar_g_balance_nex_reload_ammo, autocvar_g_balance_nex_reload_time, "weapons/reload.wav");
 }
 
 void SendCSQCNexBeamParticle(float charge) {

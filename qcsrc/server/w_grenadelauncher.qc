@@ -7,13 +7,7 @@ REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | 
 
 void W_GrenadeLauncher_Reload()
 {
-	self.reload_ammo_player = ammo_rockets;
-	self.reload_ammo_min = min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo);
-	self.reload_ammo_amount = autocvar_g_balance_grenadelauncher_reload_ammo;
-	self.reload_time = autocvar_g_balance_grenadelauncher_reload_time;
-	self.reload_sound = "weapons/reload.wav";
-
-	W_Reload();
+	W_Reload(ammo_rockets, min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo), autocvar_g_balance_grenadelauncher_reload_ammo, autocvar_g_balance_grenadelauncher_reload_time, "weapons/reload.wav");
 }
 
 void W_Grenade_Explode (void)
