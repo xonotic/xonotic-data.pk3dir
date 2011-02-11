@@ -180,6 +180,7 @@ float w_sniperrifle(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_SNIPERRIFLE);
+		self.current_ammo = ammo_nails;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

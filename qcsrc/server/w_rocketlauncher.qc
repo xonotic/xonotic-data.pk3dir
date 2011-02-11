@@ -450,6 +450,7 @@ float w_rlauncher(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_ROCKET_LAUNCHER);
+		self.current_ammo = ammo_rockets;
 		self.rl_release = 1;
 	}
 	else if (req == WR_CHECKAMMO1)

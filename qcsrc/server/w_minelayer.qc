@@ -416,6 +416,7 @@ float w_minelayer(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_MINE_LAYER);
+		self.current_ammo = ammo_rockets;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

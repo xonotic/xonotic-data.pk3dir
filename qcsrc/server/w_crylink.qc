@@ -601,6 +601,7 @@ float w_crylink(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_CRYLINK);
+		self.current_ammo = ammo_cells;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

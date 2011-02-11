@@ -269,6 +269,7 @@ float w_laser(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_LASER);
+		self.current_ammo = zero_ammo;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

@@ -234,6 +234,7 @@ float w_minstanex(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_MINSTANEX);
+		self.current_ammo = ammo_cells;
 		self.minstanex_lasthit = 0;
 	}
 	else if (req == WR_CHECKAMMO1)

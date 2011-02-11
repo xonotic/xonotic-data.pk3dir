@@ -220,6 +220,7 @@ float w_nex(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_NEX);
+		self.current_ammo = ammo_cells;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

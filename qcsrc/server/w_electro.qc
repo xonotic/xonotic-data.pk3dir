@@ -494,6 +494,7 @@ float w_electro(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_ELECTRO);
+		self.current_ammo = ammo_cells;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

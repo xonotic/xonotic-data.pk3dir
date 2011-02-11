@@ -451,6 +451,7 @@ float w_seeker(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_SEEKER);
+		self.current_ammo = ammo_rockets;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

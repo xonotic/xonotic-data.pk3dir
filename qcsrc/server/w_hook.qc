@@ -228,6 +228,7 @@ float w_hook(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_HOOK);
+		self.current_ammo = ammo_fuel;
 		self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
 	}
 	else if (req == WR_CHECKAMMO1)

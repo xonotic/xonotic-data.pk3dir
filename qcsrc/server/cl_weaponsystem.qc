@@ -1623,10 +1623,7 @@ void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 			self.weapon_load[self.weapon] = self.clip_load;
 		}
 		else
-		{
-			self.current_ammo = ammo_type;
 			self.(self.current_ammo) -= ammo_use;
-		}
 	}
 }
 
@@ -1722,7 +1719,7 @@ void W_ReloadStart()
 
 void W_Reload(.float sent_ammo_player, float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
 {
-	self.current_ammo = sent_ammo_player;
+	//self.current_ammo = sent_ammo_player;
 	self.reload_ammo_min = sent_ammo_min;
 	self.reload_ammo_amount = sent_ammo_amount;
 	self.reload_time = sent_time;

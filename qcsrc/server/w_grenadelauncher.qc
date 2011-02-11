@@ -336,6 +336,7 @@ float w_glauncher(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_GRENADE_LAUNCHER);
+		self.current_ammo = ammo_rockets;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
