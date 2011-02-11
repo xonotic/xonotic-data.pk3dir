@@ -145,6 +145,12 @@ void havocbot_ai()
 		bot_aimdir(v, -1);
 	}
 	havocbot_movetogoal();
+
+	// if the bot is not attacking anyone and holding a weapon that's not fully loaded,
+	// now it's a good time to try reloading it
+	if not(self.aistatus & AI_STATUS_ATTACKING)
+	if(self.clip_load < self.clip_size)
+		self.impulse = 20;
 };
 
 void havocbot_keyboard_movement(vector destorg)
