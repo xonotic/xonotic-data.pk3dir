@@ -942,6 +942,12 @@ void havocbot_chooseenemy()
 
 float havocbot_chooseweapon_checkreload(float new_weapon)
 {
+	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
+	// so skip this for them, or they'll never get to reload their weapons at all.
+	// this also allows bots under this skill to be more stupid, and reload more often during combat :)
+	if(skill < 5)
+		return FALSE;
+
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (self.weapon_load[new_weapon] < 0)
 	{
@@ -955,6 +961,7 @@ float havocbot_chooseweapon_checkreload(float new_weapon)
 		if(other_weapon_available)
 			return TRUE;
 	}
+
 	return FALSE;
 }
 
