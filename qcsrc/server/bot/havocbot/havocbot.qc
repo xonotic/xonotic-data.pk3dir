@@ -146,11 +146,30 @@ void havocbot_ai()
 	}
 	havocbot_movetogoal();
 
-	// if the bot is not attacking anyone and holding a weapon that's not fully loaded,
-	// now it's a good time to try reloading it
+	// if the bot is not attacking, go through all weapons that aren't fully loaded and reload them to keep them ready
 	if not(self.aistatus & AI_STATUS_ATTACKING)
-	if(self.clip_load < self.clip_size)
-		self.impulse = 20;
+	{
+		float i;
+		entity e;
+
+		// we are currently holding a weapon that's not fully loaded, reload it
+		if(self.clip_load < self.clip_size && self.weapon)
+		{
+			self.impulse = 20; // "press" the reload button, not sure if this is done right
+			self.clip_load = -1;
+		}
+
+		// if we're not reloading a weapon, switch to any weapon in our invnetory that's not fully loaded to reload it next
+		if(self.clip_load >= 0)
+		{
+			for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
+			{
+				e = get_weaponinfo(i);
+				if(self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
+					self.switchweapon = i;
+			}
+		}
+	}
 };
 
 void havocbot_keyboard_movement(vector destorg)
