@@ -1633,7 +1633,7 @@ void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 .float reload_complain;
 .string reload_sound;
 
-float W_ReloadCheck(float ammo_amount, float ammo_shot)
+float W_ReloadCheck()
 {
 	// check if we meet the necessary conditions to reload
 
@@ -1656,7 +1656,7 @@ float W_ReloadCheck(float ammo_amount, float ammo_shot)
 		return FALSE;
 
 	// no ammo, so nothing to load
-	if(!ammo_amount && ammo_shot)
+	if(!self.(self.current_ammo) && self.reload_ammo_min)
 	{
 		if(clienttype(self) == CLIENTTYPE_REAL && self.reload_complain < time)
 		{
@@ -1738,7 +1738,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 	self.reload_time = sent_time;
 	self.reload_sound = sent_sound;
 
-	if(!W_ReloadCheck(self.(self.current_ammo), self.reload_ammo_min))
+	if(!W_ReloadCheck())
 		return;
 
 	// now we can begin the actual reloading
