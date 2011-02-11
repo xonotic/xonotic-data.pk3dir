@@ -1688,7 +1688,7 @@ float W_ReloadCheck()
 
 void W_ReloadEnd()
 {
-	// now do the ammo transfer
+	// finish the reloading process, and do the ammo transfer
 
 	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
 
@@ -1716,6 +1716,8 @@ void W_ReloadEnd()
 
 void W_ReloadStart()
 {
+	// begin the reloading process
+
 	sound (self, CHAN_WEAPON2, self.reload_sound, VOL_BASE, ATTN_NORM);
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
@@ -1741,6 +1743,6 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 	if(!W_ReloadCheck())
 		return;
 
-	// now we can begin the actual reloading
+	// now begin the actual reloading
 	W_ReloadStart();
 }
