@@ -1635,6 +1635,22 @@ void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 
 float W_ReloadCheck(float ammo_amount, float ammo_shot)
 {
+	// check if we meet the necessary conditions to reload
+
+	entity e;
+	e = get_weaponinfo(self.weapon);
+
+	// don't reload weapons that don't have the RELOADABLE flag
+	if not(e.spawnflags & WEP_FLAG_RELOADABLE)
+	{
+		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
+		return FALSE;
+	}
+
+	// return if reloading is disabled for this weapon
+	if(!self.reload_ammo_amount)
+		return FALSE;
+
 	// our weapon is fully loaded, no need to reload
 	if (self.clip_load >= self.reload_ammo_amount)
 		return FALSE;
@@ -1648,6 +1664,7 @@ float W_ReloadCheck(float ammo_amount, float ammo_shot)
 			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));
 			self.reload_complain = time + 1;
 		}
+
 		// switch away if the amount of ammo is not enough to keep using this weapon
 		if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
 		{
@@ -1720,22 +1737,6 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 	self.reload_ammo_amount = sent_ammo_amount;
 	self.reload_time = sent_time;
 	self.reload_sound = sent_sound;
-
-	entity e;
-	e = get_weaponinfo(self.weapon);
-
-	// check if we can reload or not
-
-	// don't reload weapons that don't have the RELOADABLE flag
-	if not(e.spawnflags & WEP_FLAG_RELOADABLE)
-	{
-		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
-		return;
-	}
-
-	// return if reloading is disabled for this weapon
-	if(!self.reload_ammo_amount)
-		return;
 
 	if(!W_ReloadCheck(self.(self.current_ammo), self.reload_ammo_min))
 		return;
