@@ -1688,6 +1688,12 @@ void W_ReloadEnd()
 	}
 	self.weapon_load[self.weapon] = self.clip_load;
 
+	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
+	// then quickly switch to another weapon and back to it. Reloading is canceled, but the 2 second reload time is still there,
+	// so your weapon is delayed for 2 seconds without reason
+
+	//ATTACK_FINISHED(self) -= self.reload_time - 1;
+
 	w_ready();
 }
 
@@ -1701,6 +1707,12 @@ void W_ReloadStart()
 		return;
 
 	sound (self, CHAN_WEAPON2, self.reload_sound, VOL_BASE, ATTN_NORM);
+
+	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
+	// then quickly switch to another weapon and back to it. Reloading is canceled, but the 2 second reload time is still there,
+	// so your weapon is delayed for 2 seconds without reason
+
+	//ATTACK_FINISHED(self) = max(time, ATTACK_FINISHED(self)) + self.reload_time + 1;
 
 	weapon_thinkf(WFRAME_RELOAD, self.reload_time, W_ReloadEnd);
 
