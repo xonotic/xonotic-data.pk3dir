@@ -942,9 +942,19 @@ void havocbot_chooseenemy()
 
 float havocbot_chooseweapon_checkreload(float new_weapon)
 {
-	if (self.weapon_load[new_weapon] < 0) // this weapon is scheduled for reloading, don't switch to it during combat
-	if not (weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2)) // we are out of ammo for current weapon, so it's an emergency to switch to anything else
-		return TRUE;
+	// if this weapon is scheduled for reloading, don't switch to it during combat
+	if (self.weapon_load[new_weapon] < 0)
+	{
+		local float i, other_weapon_available;
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		{
+			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
+			if (weapon_action(i, WR_CHECKAMMO1) + weapon_action(i, WR_CHECKAMMO2))
+				other_weapon_available = TRUE;
+		}
+		if(other_weapon_available)
+			return TRUE;
+	}
 	return FALSE;
 }
 
