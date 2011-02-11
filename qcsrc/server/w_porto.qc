@@ -7,12 +7,6 @@ REGISTER_WEAPON(PORTO, w_porto, 0, 0, WEP_TYPE_OTHER, 0, "porto" , "porto", _("P
 .float porto_v_angle_held;
 .vector right_vector;
 
-void W_Porto_SetAmmoCounter()
-{
-	// this weapon doesn't have a reload system, so always set the clip to 0 when switching to it
-	self.clip_load = self.clip_size = 0; // also keeps crosshair ammo from displaying
-}
-
 void W_Porto_Success (void)
 {
 	if(self.owner == world)
@@ -278,7 +272,6 @@ float w_porto(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_PORTO);
-		W_Porto_SetAmmoCounter();
 	}
 	else if (req == WR_RESETPLAYER)
 	{
