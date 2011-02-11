@@ -281,7 +281,7 @@ float w_laser(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(zero_ammo, 0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
+		W_Reload(0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

@@ -1717,9 +1717,8 @@ void W_ReloadStart()
 	self.clip_load = -1;
 }
 
-void W_Reload(.float sent_ammo_player, float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
+void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
 {
-	//self.current_ammo = sent_ammo_player;
 	self.reload_ammo_min = sent_ammo_min;
 	self.reload_ammo_amount = sent_ammo_amount;
 	self.reload_time = sent_time;

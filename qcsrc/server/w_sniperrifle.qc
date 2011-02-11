@@ -200,7 +200,7 @@ float w_sniperrifle(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(ammo_nails, min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo), autocvar_g_balance_sniperrifle_reload_ammo, autocvar_g_balance_sniperrifle_reload_time, "weapons/reload.wav");
+		W_Reload(min(autocvar_g_balance_sniperrifle_primary_ammo, autocvar_g_balance_sniperrifle_secondary_ammo), autocvar_g_balance_sniperrifle_reload_ammo, autocvar_g_balance_sniperrifle_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };
