@@ -1671,8 +1671,6 @@ float W_ReloadCheck(float ammo_amount, float ammo_shot)
 
 void W_ReloadEnd()
 {
-	float t;
-
 	// now do the ammo transfer
 
 	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
@@ -1690,8 +1688,6 @@ void W_ReloadEnd()
 	}
 	self.weapon_load[self.weapon] = self.clip_load;
 
-	t = ATTACK_FINISHED(self) - self.reload_time - 1;
-	ATTACK_FINISHED(self) = t;
 	w_ready();
 }
 
@@ -1704,12 +1700,7 @@ void W_ReloadStart()
 	if(!W_ReloadCheck(self.(self.current_ammo), self.reload_ammo_min))
 		return;
 
-	float t;
-
 	sound (self, CHAN_WEAPON2, self.reload_sound, VOL_BASE, ATTN_NORM);
-
-	t = max(time, ATTACK_FINISHED(self)) + self.reload_time + 1;
-	ATTACK_FINISHED(self) = t;
 
 	weapon_thinkf(WFRAME_RELOAD, self.reload_time, W_ReloadEnd);
 
