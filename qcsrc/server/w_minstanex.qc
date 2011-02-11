@@ -276,10 +276,13 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
+		float used_ammo;
 		if(autocvar_g_balance_minstanex_laser_ammo)
-			W_Reload(ammo_cells, min(autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo), autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
+			used_ammo = min(autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo);
 		else
-			W_Reload(ammo_cells, autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
+			used_ammo = autocvar_g_balance_minstanex_ammo;
+
+		W_Reload(ammo_cells, used_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };
