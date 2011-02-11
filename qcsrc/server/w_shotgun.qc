@@ -131,6 +131,7 @@ float w_shotgun(float req)
 				}
 			}
 		}
+		if (self.clip_load >= 0) // we are not currently reloading
 		if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary)
 		if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
 		{
