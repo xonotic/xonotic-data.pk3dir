@@ -1722,6 +1722,14 @@ void W_ReloadStart()
 
 void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
 {
+	entity e;
+	e = get_weaponinfo(self.weapon);
+	if not(e.spawnflags & WEP_FLAG_RELOADABLE) // don't reload weapons that don't have the RELOADABLE flag
+	{
+		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE spawnflag. Fix your code!");
+		return;
+	}
+
 	self.reload_ammo_min = sent_ammo_min;
 	self.reload_ammo_amount = sent_ammo_amount;
 	self.reload_time = sent_time;
