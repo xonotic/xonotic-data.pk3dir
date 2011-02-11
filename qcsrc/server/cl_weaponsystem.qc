@@ -1614,7 +1614,7 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 
 void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 {
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		return;
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
