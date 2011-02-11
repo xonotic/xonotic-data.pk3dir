@@ -1007,6 +1007,7 @@ void havocbot_chooseweapon()
 				if ( client_hasweapon(self, w, TRUE, FALSE) )
 				{
 					if (self.weapon_load[w] < 0) // this weapon is scheduled for reloading, don't switch to it during combat
+					if not (weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2)) // we are out of ammo, so it's an emergency to switch to anything else
 						continue;
 					if ( self.weapon == w && combo)
 						continue;
@@ -1023,6 +1024,7 @@ void havocbot_chooseweapon()
 				if ( client_hasweapon(self, w, TRUE, FALSE) )
 				{
 					if (self.weapon_load[w] < 0) // this weapon is scheduled for reloading, don't switch to it during combat
+					if not (weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2)) // we are out of ammo, so it's an emergency to switch to anything else
 						continue;
 					if ( self.weapon == w && combo)
 						continue;
@@ -1038,6 +1040,7 @@ void havocbot_chooseweapon()
 			if ( client_hasweapon(self, w, TRUE, FALSE) )
 			{
 				if (self.weapon_load[w] < 0) // this weapon is scheduled for reloading, don't switch to it during combat
+				if not (weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2)) // we are out of ammo, so it's an emergency to switch to anything else
 					continue;
 				if ( self.weapon == w && combo)
 					continue;
