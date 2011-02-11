@@ -1004,7 +1004,9 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_far ) {
 			for(i=0; i < WEP_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
-				if ( client_hasweapon(self, w, TRUE, FALSE) ){
+				if ( client_hasweapon(self, w, TRUE, FALSE) )
+				if not (self.weapon_load[w] < 0) // this weapon is scheduled for reloading, don't switch to it during combat
+				{
 					if ( self.weapon == w && combo)
 						continue;
 					self.switchweapon = w;
@@ -1017,7 +1019,9 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_close) {
 			for(i=0; i < WEP_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
-				if ( client_hasweapon(self, w, TRUE, FALSE) ){
+				if ( client_hasweapon(self, w, TRUE, FALSE) )
+				if not (self.weapon_load[w] < 0) // this weapon is scheduled for reloading, don't switch to it during combat
+				{
 					if ( self.weapon == w && combo)
 						continue;
 					self.switchweapon = w;
@@ -1029,7 +1033,9 @@ void havocbot_chooseweapon()
 		// Choose weapons for close distance
 		for(i=0; i < WEP_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
-			if ( client_hasweapon(self, w, TRUE, FALSE) ){
+			if ( client_hasweapon(self, w, TRUE, FALSE) )
+			if not (self.weapon_load[w] < 0) // this weapon is scheduled for reloading, don't switch to it during combat
+			{
 				if ( self.weapon == w && combo)
 					continue;
 				self.switchweapon = w;
