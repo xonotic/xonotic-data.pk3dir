@@ -353,6 +353,7 @@ vector freeze_pmove_org, freeze_input_angles;
 entity nightvision_noise, nightvision_noise2;
 
 float pickup_crosshair_time, pickup_crosshair_size;
+float hitindication_crosshair_time, hitindication_crosshair_size;
 float use_nex_chargepool;
 
 float myhealth, myhealth_prev;
@@ -972,6 +973,27 @@ void CSQC_UpdateView(float w, float h)
 					pickup_crosshair_size = 0;
 
 				wcross_scale += sin(pickup_crosshair_size) * autocvar_crosshair_pickup;
+			}
+			
+			vector hitindication_color;
+			if(autocvar_crosshair_hitindication)
+			{
+				hitindication_color = stov(autocvar_crosshair_hitindication_color);
+				if(hitindication_crosshair_time < getstatf(STAT_HIT_TIME))
+				{
+					hitindication_crosshair_size = 1;
+					hitindication_crosshair_time = getstatf(STAT_HIT_TIME);
+				}
+
+				if(hitindication_crosshair_size > 0)
+					hitindication_crosshair_size -= autocvar_crosshair_hitindication_speed * frametime;
+				else
+					hitindication_crosshair_size = 0;
+
+				wcross_scale += sin(hitindication_crosshair_size) * autocvar_crosshair_hitindication;
+				wcross_color_x += sin(hitindication_crosshair_size) * hitindication_color_x;
+				wcross_color_y += sin(hitindication_crosshair_size) * hitindication_color_y;
+				wcross_color_z += sin(hitindication_crosshair_size) * hitindication_color_z;
 			}
 
 			if(shottype == SHOTTYPE_HITENEMY)

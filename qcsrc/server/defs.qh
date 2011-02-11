@@ -605,6 +605,8 @@ string matchid;
 
 .float last_pickup;
 
+.float hit_time; 
+
 .float stat_leadlimit;
 
 float radar_showennemies;
