@@ -66,25 +66,10 @@ void W_UZI_Attack (float deathtype)
 	if (autocvar_g_casings >= 2)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_uzi_reload_ammo)
-		{
-			if (self.misc_bulletcounter == 1)
-				self.clip_load -= autocvar_g_balance_uzi_first_ammo;
-			else
-				self.clip_load -= autocvar_g_balance_uzi_sustained_ammo;
-			self.weapon_load[WEP_UZI] = self.clip_load;
-		}
-		else
-		{
-			if (self.misc_bulletcounter == 1)
-				self.ammo_nails -= autocvar_g_balance_uzi_first_ammo;
-			else
-				self.ammo_nails -= autocvar_g_balance_uzi_sustained_ammo;
-		}
-	}
+	if (self.misc_bulletcounter == 1)
+		W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_first_ammo, autocvar_g_balance_uzi_reload_ammo);
+	else
+		W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_reload_ammo);
 }
 
 // weapon frames
@@ -116,17 +101,7 @@ void uzi_mode1_fire_auto()
 {
 	float uzi_spread;
 
-	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if(autocvar_g_balance_uzi_reload_ammo)
-		{
-			self.clip_load -= autocvar_g_balance_uzi_sustained_ammo;
-			self.weapon_load[WEP_UZI] = self.clip_load;
-		}
-		else
-			self.ammo_nails -= autocvar_g_balance_uzi_sustained_ammo;
-	}
+	W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_reload_ammo);
 	
 	if (self.BUTTON_ATCK)
 		weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_mode1_fire_auto);
@@ -235,17 +210,7 @@ float w_uzi(float req)
 					return FALSE;
 				}
 
-				// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-				{
-					if(autocvar_g_balance_uzi_reload_ammo)
-					{
-						self.clip_load -= autocvar_g_balance_uzi_burst_ammo;
-						self.weapon_load[WEP_UZI] = self.clip_load;
-					}
-					else
-						self.ammo_nails -= autocvar_g_balance_uzi_burst_ammo;
-				}
+				W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_burst_ammo, autocvar_g_balance_uzi_reload_ammo);
 
 				self.misc_bulletcounter = autocvar_g_balance_uzi_burst * -1;
 				uzi_mode1_fire_burst();
@@ -283,6 +248,7 @@ float w_uzi(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_UZI);
+		self.current_ammo = ammo_nails;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
