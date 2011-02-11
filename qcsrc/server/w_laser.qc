@@ -232,15 +232,7 @@ float w_laser(float req)
 		{
 			if (weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
 			{
-				// if this weapon is reloadable, decrease its load
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-				{
-					if(autocvar_g_balance_laser_reload_ammo)
-					{
-						self.clip_load -= 1;
-						self.weapon_load[WEP_LASER] = self.clip_load;
-					}
-				}
+				W_DecreaseAmmo(zero_ammo, 1, TRUE);
 
 				W_Laser_Attack(0);
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
@@ -250,15 +242,7 @@ float w_laser(float req)
 		{
 			if(autocvar_g_balance_laser_secondary)
 			{
-				// if this weapon is reloadable, decrease its load
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-				{
-					if(autocvar_g_balance_laser_reload_ammo)
-					{
-						self.clip_load -= 1;
-						self.weapon_load[WEP_LASER] = self.clip_load;
-					}
-				}
+				W_DecreaseAmmo(zero_ammo, 1, TRUE);
 
 				if (weapon_prepareattack(0, 0))
 				{
