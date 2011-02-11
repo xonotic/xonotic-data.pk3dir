@@ -272,7 +272,7 @@ float w_porto(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_PORTO);
-		self.current_ammo = zero_ammo;
+		self.current_ammo = ammo_none;
 	}
 	else if (req == WR_RESETPLAYER)
 	{

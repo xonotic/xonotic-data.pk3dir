@@ -232,7 +232,7 @@ float w_laser(float req)
 		{
 			if (weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
 			{
-				W_DecreaseAmmo(zero_ammo, 1, TRUE);
+				W_DecreaseAmmo(ammo_none, 1, TRUE);
 
 				W_Laser_Attack(0);
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
@@ -242,7 +242,7 @@ float w_laser(float req)
 		{
 			if(autocvar_g_balance_laser_secondary)
 			{
-				W_DecreaseAmmo(zero_ammo, 1, TRUE);
+				W_DecreaseAmmo(ammo_none, 1, TRUE);
 
 				if (weapon_prepareattack(0, 0))
 				{
@@ -269,7 +269,7 @@ float w_laser(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_LASER);
-		self.current_ammo = zero_ammo;
+		self.current_ammo = ammo_none;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
