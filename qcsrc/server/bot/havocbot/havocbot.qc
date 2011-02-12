@@ -161,7 +161,6 @@ void havocbot_ai()
 		// the code above executes next frame, starting the reloading then
 		if(skill >= 5) // bots can only look for unloaded weapons past this skill
 		if(self.clip_load >= 0) // only if we're not reloading a weapon already
-		if not(self.clip_load < self.clip_size && self.(self.current_ammo)) // we're already holding a weapon we can reload, don't look for another
 		{
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
