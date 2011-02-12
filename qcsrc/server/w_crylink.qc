@@ -282,7 +282,7 @@ void W_Crylink_Touch2 (void)
 	}
 
 	float a;
-	a = 1 - (time - self.fade_time) * self.fade_rate;
+	a = bound(0, 1 - (time - self.fade_time) * self.fade_rate, 1);
 
 	finalhit = ((self.cnt <= 0) || (other.takedamage != DAMAGE_NO));
 	if(finalhit)
