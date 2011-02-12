@@ -153,7 +153,7 @@ void havocbot_ai()
 		entity e;
 
 		// we are currently holding a weapon that's not fully loaded, reload it
-		if(skill > 2.5) // bots can only reload held weapons on purpose past this skill
+		if(skill >= 2) // bots can only reload held weapons on purpose past this skill
 		if(self.clip_load < self.clip_size && self.weapon)
 			self.impulse = 20; // "press" the reload button, not sure if this is done right
 
