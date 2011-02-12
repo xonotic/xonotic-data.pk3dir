@@ -146,7 +146,7 @@ void havocbot_ai()
 	}
 	havocbot_movetogoal();
 
-	// if the bot is not attacking, go through all weapons that aren't fully loaded and reload them to keep them ready
+	// if the bot is not attacking, consider reloading weapons
 	if not(self.aistatus & AI_STATUS_ATTACKING)
 	{
 		float i;
