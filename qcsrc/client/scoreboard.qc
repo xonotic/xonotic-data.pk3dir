@@ -17,6 +17,7 @@ string TranslateScoresLabel(string l)
 	switch(l)
 	{
 		case "bckills": return CTX(_("SCO^bckills"));
+		case "bctime": return CTX(_("SCO^bctime"));
 		case "caps": return CTX(_("SCO^caps"));
 		case "deaths": return CTX(_("SCO^deaths"));
 		case "destroyed": return CTX(_("SCO^destroyed"));
@@ -293,7 +294,7 @@ string HUD_DefaultColumnLayout()
 		"+lms/lives +lms/rank ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
-		"+as/objectives +nexball/faults +nexball/goals +ka/drops +ka/pickups +ka/bckills +ka/time +freezetag/revivals ",
+		"+as/objectives +nexball/faults +nexball/goals +ka/drops +ka/pickups +ka/bckills +ka/bctime +freezetag/revivals ",
 		"-lms,race,nexball/score");
 }
 

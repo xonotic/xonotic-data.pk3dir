@@ -200,7 +200,7 @@ void ka_TimeScoring()
 		if(autocvar_g_keepaway_score_timepoints)
 			PlayerScore_Add(self.owner, SP_SCORE, autocvar_g_keepaway_score_timepoints);
 			
-		PlayerScore_Add(self.owner, SP_KEEPAWAY_TIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
+		PlayerScore_Add(self.owner, SP_KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
 		self.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	}
 }
