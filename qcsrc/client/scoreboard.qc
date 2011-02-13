@@ -17,6 +17,7 @@ string TranslateScoresLabel(string l)
 	switch(l)
 	{
 		case "bckills": return CTX(_("SCO^bckills"));
+		case "bctime": return CTX(_("SCO^bctime"));
 		case "caps": return CTX(_("SCO^caps"));
 		case "deaths": return CTX(_("SCO^deaths"));
 		case "destroyed": return CTX(_("SCO^destroyed"));
@@ -252,7 +253,7 @@ void Cmd_HUD_Help(float argc)
 	print(_("^3frags^7                    kills - suicides\n"));
 	print(_("^3kd^7                       The kill-death ratio\n"));
 	print(_("^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured\n"));
-	print(_("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) was picked up\n"));
+	print(_("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up\n"));
 	print(_("^3fckills^7                  Number of flag carrier kills\n"));
 	print(_("^3returns^7                  Number of flag returns\n"));
 	print(_("^3drops^7                    Number of flag drops\n"));
@@ -267,6 +268,8 @@ void Cmd_HUD_Help(float argc)
 	print(_("^3fastest^7                  Time of fastest lap (race/cts)\n"));
 	print(_("^3ticks^7                    Number of ticks (DOM)\n"));
 	print(_("^3takes^7                    Number of domination points taken (DOM)\n"));
+	print(_("^3bckills^7                  Number of ball carrier kills\n"));
+	print(_("^3bctime^7                   Total amount of time holding the ball in Keepaway\n"));
 	print(_("^3score^7                    Total score\n\n"));
 
 	print(_("Before a field you can put a + or - sign, then a comma separated list\n"
@@ -293,7 +296,7 @@ string HUD_DefaultColumnLayout()
 		"+lms/lives +lms/rank ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
-		"+as/objectives +nexball/faults +nexball/goals +ka/drops +ka/pickups +ka/bckills +ka/time +freezetag/revivals ",
+		"+as/objectives +nexball/faults +nexball/goals +ka/pickups +ka/bckills +ka/bctime +freezetag/revivals ",
 		"-lms,race,nexball/score");
 }
 
