@@ -3142,7 +3142,8 @@ void HUD_Notify (void)
 	height = mySize_y/entries;
 	
 	vector fontsize;
-	fontsize = '0.5 0.5 0' * height;
+	float fontheight = height * autocvar_hud_panel_notify_fontsize;
+	fontsize = '0.5 0.5 0' * fontheight;
 
 	float a;
 	float when;
@@ -3316,7 +3317,7 @@ void HUD_Notify (void)
 			}
 			
 			attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			pos_attacker = pos + eX * (0.52 * mySize_x + height) + eY * (0.5 * fontsize_y + i * height);
+			pos_attacker = pos + eX * (0.52 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
 			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
 
 			if(s != "")
@@ -3402,8 +3403,8 @@ void HUD_Notify (void)
 			victim = textShortenToWidth(killnotify_victims[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
 :hud_config_notifyprint
 			width_attacker = stringwidth(attacker, TRUE, fontsize);
-			pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * (0.5 * fontsize_y + i * height);
-			pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * (0.5 * fontsize_y + i * height);
+			pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
+			pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
 			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
 
 			if(s != "")
