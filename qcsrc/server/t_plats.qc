@@ -956,8 +956,6 @@ void door_use()
 {
 	local entity oself;
 
-	print(sprintf("door_use: self=%s owner=%s fire\n", self.targetname, self.owner.targetname));
-
 	//dprint("door_use (model: ");dprint(self.model);dprint(")\n");
 	if (self.owner)
 	{
