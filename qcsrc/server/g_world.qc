@@ -825,6 +825,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
 	addstat(STAT_BULLETS_LOADED, AS_INT, sniperrifle_bulletcounter);
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
+	addstat(STAT_HIT_TIME, AS_FLOAT, hit_time);
 
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);

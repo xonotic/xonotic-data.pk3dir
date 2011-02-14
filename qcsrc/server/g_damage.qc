@@ -797,6 +797,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							else
 								attacker.hitsound += 1;
 							attacker.prevhitsound = time;
+							attacker.hit_time = time;
 						}
 
 						damage_goodhits += 1;
