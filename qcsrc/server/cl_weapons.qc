@@ -221,6 +221,13 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 					wep.ammofield = thisammo;
 					own.ammofield -= thisammo;
 					s = strcat(s, " and ", ftos(thisammo), " ", Item_CounterFieldName(j));
+
+					// if our weapon is loaded, give its load back to the player
+					if(self.weapon_load[self.weapon] > 0)
+					{
+						own.ammofield += self.weapon_load[self.weapon];
+						self.weapon_load[self.weapon] = -1; // schedule the weapon for reloading
+					}
 				}
 			}
 			s = substring(s, 5, -1);
