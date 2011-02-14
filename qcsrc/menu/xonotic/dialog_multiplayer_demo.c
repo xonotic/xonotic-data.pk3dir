@@ -20,9 +20,7 @@ entity makeXonoticDemoBrowserTab()
 }
 void XonoticDemoBrowserTab_fill(entity me)
 {
-	entity e;
-	entity btn;
-	entity dlist;
+	entity e, dlist;
 
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeXonoticCheckBox(0, "cl_autodemo", _("Record demos while playing")));
@@ -30,12 +28,9 @@ void XonoticDemoBrowserTab_fill(entity me)
 	dlist = makeXonoticDemoList();
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, _("Filter:")));
-		me.TD(me, 1, 0.5, btn = makeXonoticButton(_("Clear"), '0 0 0'));
-			btn.onClick = InputBox_Clear_Click;
-		me.TD(me, 1, me.columns - 1, e = makeXonoticInputBox(0, string_null));
+		me.TD(me, 1, me.columns - 0.5, e = makeXonoticInputBox(0, string_null));
 			e.onChange = DemoList_Filter_Change;
 			e.onChangeEntity = dlist;
-			btn.onClickEntity = e;
 			dlist.controlledTextbox = e;
 	me.TR(me);
 		me.TD(me, me.rows - 4, me.columns, dlist);

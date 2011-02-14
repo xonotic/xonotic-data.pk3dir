@@ -17,16 +17,13 @@ void XonoticCvarsDialog_showNotify(entity me)
 }
 void XonoticCvarsDialog_fill(entity me)
 {
-	entity e, cvarlist, btn;
+	entity e, cvarlist;
 	cvarlist = makeXonoticCvarList();
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Cvar filter:")));
-		me.TD(me, 1, 0.5, btn = makeXonoticButton(_("Clear"), '0 0 0'));
 		me.TD(me, 1, me.columns - 1.5, e = makeXonoticInputBox(0, string_null));
 			e.onChange = CvarList_Filter_Change;
 			e.onChangeEntity = cvarlist;
-			btn.onClick = InputBox_Clear_Click;
-			btn.onClickEntity = e;
 			cvarlist.controlledTextbox = e; // this COULD also be the Value box, but this leads to accidentally editing stuff
 	me.TR(me);
 		me.TD(me, me.rows - me.currentRow - 7, me.columns, cvarlist);
