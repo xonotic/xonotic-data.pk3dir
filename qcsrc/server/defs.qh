@@ -606,6 +606,7 @@ string matchid;
 .float last_pickup;
 
 .float hit_time; 
+.float typehit_time; 
 
 .float stat_leadlimit;
 

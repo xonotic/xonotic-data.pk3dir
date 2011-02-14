@@ -826,6 +826,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_BULLETS_LOADED, AS_INT, sniperrifle_bulletcounter);
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
 	addstat(STAT_HIT_TIME, AS_FLOAT, hit_time);
+	addstat(STAT_TYPEHIT_TIME, AS_FLOAT, typehit_time);
 
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
@@ -2841,16 +2842,16 @@ void EndFrame()
 		if(self.classname == "spectator")
 		{
 			if(self.enemy.typehitsound)
-				play2(self, "misc/typehit.wav");
+				self.typehit_time = time;
 			else if(self.enemy.hitsound && self.cvar_cl_hitsound)
-				play2(self, "misc/hit.wav");
+				self.hit_time = time;
 		}
 		else
 		{
 			if(self.typehitsound)
-				play2(self, "misc/typehit.wav");
+				self.typehit_time = time;
 			else if(self.hitsound && self.cvar_cl_hitsound)
-				play2(self, "misc/hit.wav");
+				self.hit_time = time;
 		}
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);

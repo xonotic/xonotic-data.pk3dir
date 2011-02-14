@@ -353,6 +353,8 @@ vector freeze_pmove_org, freeze_input_angles;
 entity nightvision_noise, nightvision_noise2;
 
 float pickup_crosshair_time, pickup_crosshair_size;
+float hit_time, typehit_time;
+float nextsound_hit_time, nextsound_typehit_time;
 float hitindication_crosshair_time, hitindication_crosshair_size;
 float use_nex_chargepool;
 
@@ -810,6 +812,19 @@ void CSQC_UpdateView(float w, float h)
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
+	hit_time = getstatf(STAT_HIT_TIME);
+	if(hit_time > nextsound_hit_time && autocvar_cl_hitsound)
+	{
+		sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+		nextsound_hit_time = time + autocvar_cl_hitsound_antispam_time;
+	}
+	typehit_time = getstatf(STAT_TYPEHIT_TIME);
+	if(typehit_time > nextsound_typehit_time)
+	{
+		sound(world, CHAN_AUTO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
+		nextsound_typehit_time = time + autocvar_cl_hitsound_antispam_time;
+	}
+
 	float hud;
 	hud = getstati(STAT_HUD);
 	if(hud == HUD_SPIDERBOT)
@@ -979,10 +994,10 @@ void CSQC_UpdateView(float w, float h)
 			if(autocvar_crosshair_hitindication)
 			{
 				hitindication_color = stov(autocvar_crosshair_hitindication_color);
-				if(hitindication_crosshair_time < getstatf(STAT_HIT_TIME))
+				if(hitindication_crosshair_time < hit_time)
 				{
 					hitindication_crosshair_size = 1;
-					hitindication_crosshair_time = getstatf(STAT_HIT_TIME);
+					hitindication_crosshair_time = hit_time;
 				}
 
 				if(hitindication_crosshair_size > 0)

@@ -1120,7 +1120,6 @@ float autocvar_sv_friction;
 float autocvar_sv_friction_on_land;
 float autocvar_sv_gameplayfix_q2airaccelerate;
 #define autocvar_sv_gravity cvar("sv_gravity")
-float autocvar_sv_hitsound_antispam_time;
 string autocvar_sv_intermission_cdtrack;
 string autocvar_sv_jumpspeedcap_max;
 float autocvar_sv_jumpspeedcap_max_disable_on_ramps;
