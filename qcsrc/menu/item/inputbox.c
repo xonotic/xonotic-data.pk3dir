@@ -34,8 +34,7 @@ CLASS(InputBox) EXTENDS(Label)
 	ATTRIB(InputBox, cb_size, vector, '0 0 0')
 	ATTRIB(InputBox, cb_pressed, float, 0)
 	ATTRIB(InputBox, cb_focused, float, 0)
-	// ATTRIB(InputBox, cb_src, string, SKINGFX_CLEARBUTTON)
-	ATTRIB(InputBox, cb_src, string, "clearbutton")
+	ATTRIB(InputBox, cb_src, string, SKINGFX_CLEARBUTTON)
 ENDCLASS(InputBox)
 void InputBox_Clear_Click(entity btn, entity me);
 #endif
