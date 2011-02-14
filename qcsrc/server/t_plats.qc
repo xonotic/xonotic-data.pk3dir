@@ -279,6 +279,12 @@ void train_next()
 
 	if(self.noise != "")
 		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+
+	entity oldself;
+	oldself = self;
+	self = targ;
+	SUB_UseTargets();
+	self = oldself;
 };
 
 void func_train_find()
