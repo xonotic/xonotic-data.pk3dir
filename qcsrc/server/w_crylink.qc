@@ -57,7 +57,10 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 	if(e == e.realowner.crylink_lastgroup)
 		e.realowner.crylink_lastgroup = world;
 
-	RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_damage * a, autocvar_g_balance_crylink_primary_edgedamage * a, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * a, e.projectiledeathtype, other);
+	if(e.projectiledeathtype & HITTYPE_SECONDARY)
+		RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_secondary_damage * a, autocvar_g_balance_crylink_secondary_edgedamage * a, autocvar_g_balance_crylink_secondary_radius, world, autocvar_g_balance_crylink_secondary_force * a, e.projectiledeathtype, other);
+	else
+		RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_damage * a, autocvar_g_balance_crylink_primary_edgedamage * a, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * a, e.projectiledeathtype, other);
 
 	if(e.queuenext != e2)
 		W_Crylink_LinkExplode(e.queuenext, e2);
@@ -279,7 +282,7 @@ void W_Crylink_Touch2 (void)
 	}
 
 	float a;
-	a = 1 - (time - self.fade_time) * self.fade_rate;
+	a = bound(0, 1 - (time - self.fade_time) * self.fade_rate, 1);
 
 	finalhit = ((self.cnt <= 0) || (other.takedamage != DAMAGE_NO));
 	if(finalhit)

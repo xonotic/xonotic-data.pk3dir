@@ -409,7 +409,6 @@ string _MapInfo_GetDefault(float t)
 		case MAPINFO_TYPE_NEXBALL:         return "5 20 0";
 		case MAPINFO_TYPE_CTS:             return "20 0 0";
 		case MAPINFO_TYPE_FREEZETAG:       return "10 20 0";
-		case MAPINFO_TYPE_KEEPAWAY:	   return "30 20 0";
 		// NOTE: DO NOT ADD ANY MORE GAME TYPES HERE
 		// THIS IS JUST LEGACY SUPPORT FOR NEXUIZ MAPS
 		// ONLY ADD NEW STUFF TO _MapInfo_GetDefaultEx
@@ -470,6 +469,7 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 		s = cdr(s);
 	}
 
+	/* keepaway wuz here
 	if(pWantedType == MAPINFO_TYPE_KEEPAWAY)
 	{
 		sa = car(s);
@@ -477,7 +477,8 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 			cvar_set("fraglimit", sa);
 		s = cdr(s);
 	}
-
+	*/
+	
 	// rc = timelimit timelimit_qualification laps laps_teamplay
 	if(pWantedType == MAPINFO_TYPE_RACE)
 	{

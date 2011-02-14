@@ -395,9 +395,9 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 	if(histime < 0)
 		return strcat(col, cpname);
 	else if(hisname == "")
-		return strcat(col, sprintf(_("%s (%s)")), cpname, timestr);
+		return strcat(col, sprintf(_("%s (%s)"), cpname, timestr));
 	else
-		return strcat(col, sprintf(_("%s (%s %s)")), cpname, timestr, strcat(hisname, col, lapstr));
+		return strcat(col, sprintf(_("%s (%s %s)"), cpname, timestr, strcat(hisname, col, lapstr)));
 }
 
 // Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
