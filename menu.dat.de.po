@@ -2433,7 +2433,7 @@ msgstr "Electro"
 #: qcsrc/server/w_electro.qc:503
 #, c-format
 msgid "%s could not remember where they put plasma"
-msgstr "%s could not remember where they put plasma"
+msgstr "%s konnte sich nicht erinnern, wo das Plasma lag"
 
 #: qcsrc/server/w_electro.qc:505
 #, c-format
@@ -2448,7 +2448,7 @@ msgstr "%s hat gerade %ss blauen Ball bemerkt"
 #: qcsrc/server/w_electro.qc:514
 #, c-format
 msgid "%s got in touch with %s's blue ball"
-msgstr "%s schaute mit den Fingern auf %ss blauen Ball"
+msgstr "%s kam in Kontakt mit %ss blauen Ball"
 
 #: qcsrc/server/w_electro.qc:519
 #, c-format
@@ -2482,7 +2482,7 @@ msgstr "%s hätte eine kleinere Waffe nehmen sollen"
 #: qcsrc/server/w_fireball.qc:401
 #, c-format
 msgid "%s tried to catch %s's firemine"
-msgstr "%s hat versucht, %ss Feuermine zu fangen"
+msgstr "%s hat versucht %ss Feuermine zu fangen"
 
 #: qcsrc/server/w_fireball.qc:403
 #, c-format
