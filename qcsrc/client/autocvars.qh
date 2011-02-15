@@ -135,6 +135,8 @@ var float autocvar_g_waypointsprite_distancefadescale = 1;
 var float autocvar_g_waypointsprite_edgefadealpha = 1;
 float autocvar_g_waypointsprite_edgefadedistance;
 var float autocvar_g_waypointsprite_edgefadescale = 1;
+float autocvar_g_waypointsprite_edgeoffset_x;
+float autocvar_g_waypointsprite_edgeoffset_y;
 float autocvar_g_waypointsprite_minalpha;
 float autocvar_g_waypointsprite_minscale;
 float autocvar_g_waypointsprite_normdistance;

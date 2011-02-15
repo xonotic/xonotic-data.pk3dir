@@ -9,6 +9,8 @@ float waypointsprite_scale;
 float waypointsprite_edgefadealpha;
 float waypointsprite_edgefadescale;
 float waypointsprite_edgefadedistance;
+float waypointsprite_edgeoffset_x;
+float waypointsprite_edgeoffset_y;
 float waypointsprite_crosshairfadealpha;
 float waypointsprite_crosshairfadescale;
 float waypointsprite_crosshairfadedistance;
@@ -182,7 +184,13 @@ void Draw_WaypointSprite()
 	o = project_3d_to_2d(self.origin);
 	rot = 0;
 
-	if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > vid_conwidth || o_y > vid_conheight)
+	print("origin: ", vtos(o), ", edgeoffsets: ", ftos(waypointsprite_edgeoffset_x), " - ", ftos(autocvar_g_waypointsprite_edgeoffset_x), ". \n");
+
+	if(o_z < 0 
+	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_x) 
+	|| o_y < (vid_conheight * waypointsprite_edgeoffset_y) 
+	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_x))  
+	|| o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_y)))
 	{
 		// scale it to be just in view
 		vector d;
@@ -210,13 +218,13 @@ void Draw_WaypointSprite()
 			if(d_z * f1 > 0)
 			{
 				// RIGHT edge
-				d = d * (0.5 / f1);
+				d = d * ((0.5 - waypointsprite_edgeoffset_x) / f1);
 				rot = 3;
 			}
 			else
 			{
 				// LEFT edge
-				d = d * (-0.5 / f1);
+				d = d * (-(0.5 - waypointsprite_edgeoffset_x) / f1);
 				rot = 1;
 			}
 		}
@@ -225,13 +233,13 @@ void Draw_WaypointSprite()
 			if(d_z * f2 > 0)
 			{
 				// BOTTOM edge
-				d = d * (0.5 / f2);
+				d = d * ((0.5 - waypointsprite_edgeoffset_y) / f2);
 				rot = 0;
 			}
 			else
 			{
 				// TOP edge
-				d = d * (-0.5 / f2);
+				d = d * (-(0.5 - waypointsprite_edgeoffset_y) / f2);
 				rot = 2;
 			}
 		}
@@ -418,6 +426,8 @@ void WaypointSprite_Load()
 	waypointsprite_edgefadealpha = autocvar_g_waypointsprite_edgefadealpha;
 	waypointsprite_edgefadescale = autocvar_g_waypointsprite_edgefadescale;
 	waypointsprite_edgefadedistance = autocvar_g_waypointsprite_edgefadedistance;
+	waypointsprite_edgeoffset_x = autocvar_g_waypointsprite_edgeoffset_x;
+	waypointsprite_edgeoffset_y = autocvar_g_waypointsprite_edgeoffset_y;
 	waypointsprite_crosshairfadealpha = autocvar_g_waypointsprite_crosshairfadealpha;
 	waypointsprite_crosshairfadescale = autocvar_g_waypointsprite_crosshairfadescale;
 	waypointsprite_crosshairfadedistance = autocvar_g_waypointsprite_crosshairfadedistance;
