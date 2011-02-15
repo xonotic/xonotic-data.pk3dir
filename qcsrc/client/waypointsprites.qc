@@ -258,8 +258,8 @@ void Draw_WaypointSprite()
 		spriteimage = strcat("models/sprites/", spriteimage, "_frame", ftos(mod(floor((max(0, time - self.spawntime)) * 2), t)));
 
 	float edgedistance_min, crosshairdistance;
-		edgedistance_min = min4((o_y - (vid_conheight * waypointsprite_edgeoffset_left)), 
-	(o_x - (vid_conwidth * waypointsprite_edgeoffset_top)),
+		edgedistance_min = min4((o_y - (vid_conheight * waypointsprite_edgeoffset_top)), 
+	(o_x - (vid_conwidth * waypointsprite_edgeoffset_left)),
 	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x, 
 	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
 
