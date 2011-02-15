@@ -1083,7 +1083,7 @@ void CSQC_UpdateView(float w, float h)
 				f = bound(0, bullets / cr_maxbullets, 1);
 
 				a = autocvar_crosshair_ring_sniperrifle_alpha;
-				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_sniperrifle.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 			}
 			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
 			{
@@ -1107,7 +1107,7 @@ void CSQC_UpdateView(float w, float h)
 
 				// draw the charge
 				a = autocvar_crosshair_ring_nex_outer_alpha;
-				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", nex_charge, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_nexgun.tga", nex_charge, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
 			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
