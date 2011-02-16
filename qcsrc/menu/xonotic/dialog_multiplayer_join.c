@@ -57,6 +57,8 @@ void XonoticServerListTab_fill(entity me)
 		me.TD(me, 1, 2.9, e = makeXonoticInputBox(0, string_null));
 			e.onEnter = ServerList_Connect_Click;
 			e.onEnterEntity = slist;
+			e.onChange = ServerList_Update_favoriteButton;
+			e.onChangeEntity = slist;
 			slist.ipAddressBox = e;
 		me.TD(me, 1, 1.5, e = makeXonoticButton("", '0 0 0'));
 			e.onClick = ServerList_Favorite_Click;
