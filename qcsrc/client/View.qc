@@ -1107,9 +1107,9 @@ void CSQC_UpdateView(float w, float h)
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 					ring_rgb = wcross_color;
 				}
-				else if (activeweapon == WEP_MINE_LAYER && autocvar_crosshair_ring_minelayer) 
+				else if (activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer) 
 				{
-					ring_value = bound(0, getstati(STAT_LAYED_MINES) / 3, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
+					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = wcross_alpha * autocvar_crosshair_ring_minelayer_alpha;
 					ring_image = "gfx/crosshair_ring.tga";
 					ring_rgb = wcross_color;
