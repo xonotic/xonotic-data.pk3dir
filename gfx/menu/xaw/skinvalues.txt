@@ -123,6 +123,7 @@ HEIGHT_DIALOGBORDER             1
 COLOR_INPUTBOX_N                '1 1 1'
 COLOR_INPUTBOX_F                '1 1 1'
 MARGIN_INPUTBOX_CHARS           1
+OFFSET_CLEARBUTTON              0
 
 // item: key grabber
 COLOR_KEYGRABBER_TITLES         '1 1 1'

@@ -32,6 +32,7 @@ CLASS(InputBox) EXTENDS(Label)
 	ATTRIB(InputBox, enableClearButton, float, 1)
 	ATTRIB(InputBox, clearButton, entity, NULL)
 	ATTRIB(InputBox, cb_size, vector, '0 0 0')
+	ATTRIB(InputBox, cb_offset, float, SKINOFFSET_CLEARBUTTON) // bound to range -1, 0
 	ATTRIB(InputBox, cb_pressed, float, 0)
 	ATTRIB(InputBox, cb_focused, float, 0)
 	ATTRIB(InputBox, cb_src, string, SKINGFX_CLEARBUTTON)
@@ -52,7 +53,8 @@ void InputBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector a
 	if (me.enableClearButton)
 	{
 		me.cb_size = eX * (absSize_y / absSize_x) + eY;
-		me.keepspaceRight = me.keepspaceRight + me.cb_size_x;
+		me.cb_offset = bound(-1, me.cb_offset, 0) * me.cb_size_x; // bound to range -1, 0
+		me.keepspaceRight = me.keepspaceRight - me.cb_offset + me.cb_size_x;
 	}
 }
 
@@ -70,8 +72,8 @@ void InputBox_Clear_Click(entity btn, entity me)
 
 float over_ClearButton(entity me, vector pos)
 {
-	if (pos_x >= 1 - me.cb_size_x)
-	if (pos_x < 1)
+	if (pos_x >= 1 + me.cb_offset - me.cb_size_x)
+	if (pos_x < 1 + me.cb_offset)
 	if (pos_y >= 0)
 	if (pos_y < me.cb_size_y)
 		return 1;
@@ -368,11 +370,11 @@ void InputBox_draw(entity me)
 	if (me.text != "")
 	{
 		if(me.focused && me.cb_pressed)
-			draw_Picture('1 1 0' - me.cb_size, strcat(me.cb_src, "_c"), me.cb_size, '1 1 1', 1);
+			draw_Picture('1 1 0' + eX * me.cb_offset - me.cb_size, strcat(me.cb_src, "_c"), me.cb_size, '1 1 1', 1);
 		else if(me.focused && me.cb_focused)
-			draw_Picture('1 1 0' - me.cb_size, strcat(me.cb_src, "_f"), me.cb_size, '1 1 1', 1);
+			draw_Picture('1 1 0' + eX * me.cb_offset - me.cb_size, strcat(me.cb_src, "_f"), me.cb_size, '1 1 1', 1);
 		else
-			draw_Picture('1 1 0' - me.cb_size, strcat(me.cb_src, "_n"), me.cb_size, '1 1 1', 1);
+			draw_Picture('1 1 0' + eX * me.cb_offset - me.cb_size, strcat(me.cb_src, "_n"), me.cb_size, '1 1 1', 1);
 	}
 }
 
