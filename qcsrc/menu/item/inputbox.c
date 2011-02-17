@@ -31,7 +31,7 @@ CLASS(InputBox) EXTENDS(Label)
 
 	ATTRIB(InputBox, enableClearButton, float, 1)
 	ATTRIB(InputBox, clearButton, entity, NULL)
-	ATTRIB(InputBox, cb_size, vector, '0 0 0')
+	ATTRIB(InputBox, cb_width, float, 0)
 	ATTRIB(InputBox, cb_pressed, float, 0)
 	ATTRIB(InputBox, cb_focused, float, 0)
 ENDCLASS(InputBox)
@@ -50,9 +50,9 @@ void InputBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector a
 	SUPER(InputBox).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	if (me.enableClearButton)
 	{
-		me.cb_size = eX * (absSize_y / absSize_x) + eY;
-		me.cb_offset = bound(-1, me.cb_offset, 0) * me.cb_size_x; // bound to range -1, 0
-		me.keepspaceRight = me.keepspaceRight - me.cb_offset + me.cb_size_x;
+		me.cb_width = absSize_y / absSize_x;
+		me.cb_offset = bound(-1, me.cb_offset, 0) * me.cb_width; // bound to range -1, 0
+		me.keepspaceRight = me.keepspaceRight - me.cb_offset + me.cb_width;
 	}
 }
 
@@ -70,10 +70,10 @@ void InputBox_Clear_Click(entity btn, entity me)
 
 float over_ClearButton(entity me, vector pos)
 {
-	if (pos_x >= 1 + me.cb_offset - me.cb_size_x)
+	if (pos_x >= 1 + me.cb_offset - me.cb_width)
 	if (pos_x < 1 + me.cb_offset)
 	if (pos_y >= 0)
-	if (pos_y < me.cb_size_y)
+	if (pos_y < 1)
 		return 1;
 	return 0;
 }
@@ -368,11 +368,11 @@ void InputBox_draw(entity me)
 	if (me.text != "")
 	{
 		if(me.focused && me.cb_pressed)
-			draw_Picture('1 1 0' + eX * me.cb_offset - me.cb_size, strcat(me.cb_src, "_c"), me.cb_size, '1 1 1', 1);
+			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_c"), eX * me.cb_width + eY, '1 1 1', 1);
 		else if(me.focused && me.cb_focused)
-			draw_Picture('1 1 0' + eX * me.cb_offset - me.cb_size, strcat(me.cb_src, "_f"), me.cb_size, '1 1 1', 1);
+			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_f"), eX * me.cb_width + eY, '1 1 1', 1);
 		else
-			draw_Picture('1 1 0' + eX * me.cb_offset - me.cb_size, strcat(me.cb_src, "_n"), me.cb_size, '1 1 1', 1);
+			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_n"), eX * me.cb_width + eY, '1 1 1', 1);
 	}
 }
 
