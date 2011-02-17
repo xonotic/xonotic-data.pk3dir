@@ -77,6 +77,7 @@ float maxclients;
 //.float	style;
 //.float	skill;
 .float	sounds;
+.float  platmovetype;
 
 .string killtarget;
 
@@ -267,7 +268,7 @@ void checkSpectatorBlock();
 .float jointime; // time of joining
 .float alivetime; // time of being alive
 
-float isJoinAllowed();
+float nJoinAllowed(float includeMe);
 #define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
 
 //sv_timeout: pauses the game by setting the gamespeed to a really low value (see TIMEOUT_SLOWMO_VALUE)
@@ -328,6 +329,7 @@ float sv_loddistance2;
 .string weaponorder_byimpulse;
 
 .float cvar_cl_allow_uid2name;
+.float cvar_cl_allow_uidtracking;
 .string stored_netname;
 
 void Announce(string snd);
@@ -602,6 +604,9 @@ string matchid;
 .string noise4;
 
 .float last_pickup;
+
+.float hit_time; 
+.float typehit_time; 
 
 .float stat_leadlimit;
 

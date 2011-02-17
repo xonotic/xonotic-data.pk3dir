@@ -177,10 +177,51 @@ void SUB_CalcMoveDone (void)
 		self.think1 ();
 }
 
+void SUB_CalcMove_controller_think (void)
+{
+	entity oldself;
+	float traveltime;
+	float phasepos;
+	float nexttick;
+	vector delta;
+	vector veloc;
+	vector nextpos;
+	if(time < self.animstate_endtime) {
+		delta = self.destvec;
+		nexttick = time + sys_frametime;
+
+		if(nexttick < self.animstate_endtime) {
+			traveltime = self.animstate_endtime - self.animstate_starttime;
+			phasepos = (nexttick - self.animstate_starttime) / traveltime; // range: [0, 1]
+			phasepos = 3.14159265 + (phasepos * 3.14159265); // range: [pi, 2pi]
+			phasepos = cos(phasepos); // cos [pi, 2pi] is in [-1, 1]
+			phasepos = phasepos + 1; // correct range to [0, 2]
+			phasepos = phasepos / 2; // correct range to [0, 1]
+			nextpos = self.origin + (delta * phasepos);
+
+			veloc = nextpos - self.owner.origin;
+			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
+
+		} else {
+			veloc = self.finaldest - self.owner.origin;
+			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
+		}
+		self.owner.velocity = veloc;
+		self.nextthink = nexttick;
+	} else {
+		oldself = self;
+		self.owner.think = self.think1;
+		self = self.owner;
+		remove(oldself);
+		self.think();
+	}
+}
+
 void SUB_CalcMove (vector tdest, float tspeed, void() func)
 {
 	vector	delta;
 	float	traveltime;
+	entity controller;
 
 	if (!tspeed)
 		objerror ("No speed is defined!");
@@ -206,9 +247,36 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 		return;
 	}
 
-	self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
+	// Very short animations don't really show off the effect
+	// of controlled animation, so let's just use linear movement.
+	// Alternatively entities can choose to specify non-controlled movement.
+        // The only currently implemented alternative movement is linear (value 1)
+	if (traveltime < 0.15 || self.platmovetype == 1)
+	{
+		self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
+		self.nextthink = self.ltime + traveltime;
+		return;
+	}
 
+	controller = spawn();
+	controller.classname = "SUB_CalcMove_controller";
+	controller.owner = self;
+	controller.origin = self.origin; // starting point
+	controller.finaldest = (tdest + '0 0 0.125'); // where do we want to end? Offset to overshoot a bit.
+	controller.destvec = delta;
+	controller.animstate_starttime = time;
+	controller.animstate_endtime = time + traveltime;
+	controller.think = SUB_CalcMove_controller_think;
+	controller.think1 = self.think;
+
+	// the thinking is now done by the controller
+	self.think = SUB_Null;
 	self.nextthink = self.ltime + traveltime;
+	
+	// invoke controller
+	self = controller;
+	self.think();
+	self = self.owner;
 }
 
 void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeed, void() func)

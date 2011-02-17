@@ -326,6 +326,13 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDamage_Calculate)
     return 1;
 }
 
+MUTATOR_HOOKFUNCTION(freezetag_ForbidThrowCurrentWeapon)
+{
+	if (self.freezetag_frozen)
+		return 1;
+	return 0;
+}
+
 MUTATOR_DEFINITION(gamemode_freezetag)
 {
 	MUTATOR_HOOK(MakePlayerObserver, freezetag_RemovePlayer, CBC_ORDER_ANY);
@@ -336,6 +343,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPhysics, freezetag_PlayerPhysics, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerDamage_Calculate, freezetag_PlayerDamage_Calculate, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ForbidThrowCurrentWeapon, freezetag_ForbidThrowCurrentWeapon, CBC_ORDER_FIRST); //first, last or any? dunno.
 
 	MUTATOR_ONADD
 	{

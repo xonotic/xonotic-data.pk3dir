@@ -16,6 +16,8 @@ void W_Crylink_CheckLinks(entity e)
 
 	if(e == world)
 		error("W_Crylink_CheckLinks: entity is world");
+	if(e.classname != "spike")
+		error("W_Crylink_CheckLinks: entity is not a spike");
 
 	p = e;
 	for(i = 0; i < 1000; ++i)
@@ -32,10 +34,13 @@ void W_Crylink_CheckLinks(entity e)
 
 void W_Crylink_Dequeue_Raw(entity own, entity prev, entity me, entity next)
 {
+	W_Crylink_CheckLinks(next);
 	if(me == own.crylink_lastgroup)
 		own.crylink_lastgroup = ((me == next) ? world : next);
 	prev.queuenext = next;
 	next.queueprev = prev;
+	if(me != next)
+		W_Crylink_CheckLinks(next);
 }
 
 void W_Crylink_Dequeue(entity e)
@@ -52,7 +57,10 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 	if(e == e.realowner.crylink_lastgroup)
 		e.realowner.crylink_lastgroup = world;
 
-	RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_damage * a, autocvar_g_balance_crylink_primary_edgedamage * a, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * a, e.projectiledeathtype, other);
+	if(e.projectiledeathtype & HITTYPE_SECONDARY)
+		RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_secondary_damage * a, autocvar_g_balance_crylink_secondary_edgedamage * a, autocvar_g_balance_crylink_secondary_radius, world, autocvar_g_balance_crylink_secondary_force * a, e.projectiledeathtype, other);
+	else
+		RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_damage * a, autocvar_g_balance_crylink_primary_edgedamage * a, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * a, e.projectiledeathtype, other);
 
 	if(e.queuenext != e2)
 		W_Crylink_LinkExplode(e.queuenext, e2);
@@ -150,6 +158,8 @@ vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 		//      targ_origin -> avg_origin
 		//      p->velocity -> HUEG away from center
 	}
+
+	W_Crylink_CheckLinks(e);
 
 	return targ_origin;
 }
@@ -272,7 +282,7 @@ void W_Crylink_Touch2 (void)
 	}
 
 	float a;
-	a = 1 - (time - self.fade_time) * self.fade_rate;
+	a = bound(0, 1 - (time - self.fade_time) * self.fade_rate, 1);
 
 	finalhit = ((self.cnt <= 0) || (other.takedamage != DAMAGE_NO));
 	if(finalhit)
@@ -414,6 +424,7 @@ void W_Crylink_Attack (void)
 		counter = counter + 1;
 	}
 	self.crylink_lastgroup = proj;
+	W_Crylink_CheckLinks(proj);
 }
 
 void W_Crylink_Attack2 (void)

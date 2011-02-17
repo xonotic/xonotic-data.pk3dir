@@ -44,6 +44,8 @@ void XonoticCvarsDialog_fill(entity me)
 			cvarlist.cvarValueBox = e;
 			e.onChange = CvarList_Value_Change;
 			e.onChangeEntity = cvarlist;
+			e.onEnter = CvarList_End_Editing;
+			e.onEnterEntity = cvarlist;
 		me.TD(me, 1, 1, e = makeXonoticButton(string_null, SKINCOLOR_CVARLIST_REVERTBUTTON));
 			cvarlist.cvarDefaultBox = e;
 			e.onClick = CvarList_Revert_Click;

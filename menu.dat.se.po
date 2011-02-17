@@ -1,18 +1,18 @@
-# Xonotic Romanian Translation.
-# Copyright (C) 2011
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# MirceaKitsune <sonichedgehog_hyperblast00@yahoo.com>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Xonotic 0.1preview\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-07 07:50+0100\n"
-"PO-Revision-Date: 2011-01-18 11:53+0100\t\n"
-"Last-Translator: MirceaKitsune <sonichedgehog_hyperblast00@yahoo.com>\n"
+"POT-Creation-Date: 2011-02-07 07:29+0100\n"
+"PO-Revision-Date: 2011-01-11 22:51+ZONE\n"
+"Last-Translator: marcus256 <marcus256@users.sourceforge.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: ro\n"
+"Language: se\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,92 +20,91 @@ msgstr ""
 #: qcsrc/menu/gamecommand.qc:47
 #, c-format
 msgid "error: status is %d\n"
-msgstr "eroare: statusul este %d\n"
+msgstr "fel: status är %d\n"
 
 #: qcsrc/menu/gamecommand.qc:65
 msgid "Usage: menu_cmd command..., where possible commands are:\n"
-msgstr "Utilizare: menu_cmd comanda..., unde comenzile posibile sunt:\n"
+msgstr "Användning: menu_cmd kommando..., där möjliga kommandon är:\n"
 
 #: qcsrc/menu/gamecommand.qc:66
 msgid "  sync - reloads all cvars on the current menu page\n"
-msgstr "  sync - reincarca toate variabilele de pe pagina de meniu curenta\n"
+msgstr "  sync - laddar om alla cvars på nuvarande menysida\n"
 
 #: qcsrc/menu/gamecommand.qc:67
 msgid "  directmenu ITEM - select a menu item as main item\n"
-msgstr ""
-"  directmenu OBIECT - selecteaza un obiect din meniu ca obiect principal\n"
+msgstr "  directmenu ITEM - utse en menyrad som huvudrad\n"
 
 #: qcsrc/menu/gamecommand.qc:193
 msgid "error creating curl handle\n"
-msgstr "eroare in crearea unei manevre curl"
+msgstr "fel vid skapande av curl handle\n"
 
 #: qcsrc/menu/gamecommand.qc:239
 msgid "Invalid command. For a list of supported commands, try menu_cmd help.\n"
 msgstr ""
-"Comanda invalida. Pentru o lista cu comenzile suportate, scrieti menu_cmd "
-"ajutor (in consola).\n"
+"Ogiltigt kommando. För en lista över giltiga kommandon, prova menu_cmd "
+"help.\n"
 
 #: qcsrc/menu/item/gecko.c:49
 msgid "Browser not initialized!"
-msgstr "Browserul nu a fost initializat!"
+msgstr ""
 
 #: qcsrc/menu/item/label.c:63
 #, c-format
 msgid "NOTE: label text %s too wide for label, condensed by factor %f\n"
-msgstr "ATENTIE: eticheta text %s este prea mare, condensata cu %f\n"
+msgstr ""
 
 #: qcsrc/menu/item/listbox.c:300
 #, c-format
 msgid "Item %d"
-msgstr "Obiect %d"
+msgstr ""
 
 #: qcsrc/menu/item/slider.c:64
 #, c-format
 msgid "%d (%s)"
-msgstr "%d (%s)"
+msgstr ""
 
 #: qcsrc/menu/item/textslider.c:29 qcsrc/menu/item/textslider.c:31
 msgid "custom"
-msgstr "personalizat"
+msgstr ""
 
 #: qcsrc/menu/menu.qc:29
 #, c-format
 msgid "^4MQC Build information: %s\n"
-msgstr "^4MQC Informatii compilare: %s\n"
+msgstr ""
 
 #: qcsrc/menu/xonotic/campaign.c:284
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:66
 msgid "???"
-msgstr "???"
+msgstr ""
 
 #: qcsrc/menu/xonotic/campaign.c:285
 #, c-format
 msgid "Level %d: %s"
-msgstr "Nivelul %d: %s"
+msgstr ""
 
 #: qcsrc/menu/xonotic/cvarlist.c:85
 msgid "will be saved to config.cfg"
-msgstr "se va salva catre config.cfg"
+msgstr ""
 
 #: qcsrc/menu/xonotic/cvarlist.c:87
 msgid "will not be saved"
-msgstr "nu se va salva"
+msgstr ""
 
 #: qcsrc/menu/xonotic/cvarlist.c:89
 msgid "private"
-msgstr "privat"
+msgstr ""
 
 #: qcsrc/menu/xonotic/cvarlist.c:91
 msgid "engine setting"
-msgstr "setari motor"
+msgstr ""
 
 #: qcsrc/menu/xonotic/cvarlist.c:93
 msgid "read only"
-msgstr "numai de citit"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_credits.c:5
 msgid "Credits"
-msgstr "Credite"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_credits.c:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:82
@@ -119,7 +118,7 @@ msgstr "OK"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:4
 msgid "Welcome"
-msgstr "Bun venit"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:33
 msgid ""
@@ -130,30 +129,32 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:38
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:35
+#, fuzzy
 msgid "Text language:"
-msgstr "Limba text:"
+msgstr "Avstånd för pikar:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:47
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:40
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:39
 msgid "Name:"
-msgstr "Nume:"
+msgstr "Namn:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:69
+#, fuzzy
 msgid "Save settings"
-msgstr "Salvare setari"
+msgstr "Inställningar"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:4
 msgid "Ammo Panel"
-msgstr "Fereastra Munitii"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:22
 msgid "Ammunition display:"
-msgstr "Afisaj mutitii:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:25
 msgid "Show only current ammo type"
-msgstr "Afiseaza numai munitia armei selectate"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:28
@@ -161,7 +162,7 @@ msgstr "Afiseaza numai munitia armei selectate"
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:40
 msgid "Left"
-msgstr "Stanga"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:30
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:30
@@ -169,162 +170,162 @@ msgstr "Stanga"
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:30
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:41
 msgid "Right"
-msgstr "Dreapta"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:4
 msgid "Chat Panel"
-msgstr "Fereastra Chat"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:22
 msgid "Chat entries:"
-msgstr "Intrari chat:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:25
 msgid "Chat size:"
-msgstr "Marime chat:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:29
 msgid "Chat lifetime:"
-msgstr "Durata chat:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:33
 msgid "Chat beep sound"
-msgstr "Sunet chat:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:4
 msgid "Engine Info Panel"
-msgstr "Fereastra Informatii Motor"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:22
 msgid "Engine info:"
-msgstr "Informatii motor:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:25
 msgid "Use an averaging algorithm for fps"
-msgstr "Utilizare algoritm centrare FPS"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:4
 msgid "Health/Armor Panel"
-msgstr "Fereastra Viata/Armura"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:22
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:22
 msgid "Enable status bar"
-msgstr "Activare bara de statut"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:24
 msgid "Status bar alignment:"
-msgstr "Aliniere bara de statut:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:42
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:42
 msgid "Inward"
-msgstr "Interior"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:34
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:43
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:34
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:43
 msgid "Outward"
-msgstr "Exterior"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:37
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:37
 msgid "Icon alignment:"
-msgstr "Aliniere iconuri:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:45
 msgid "Flip health and armor positions"
-msgstr "Oglindire pozitie viata/armura"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.c:4
 msgid "Info Messages Panel"
-msgstr "Fereastra Informatii"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.c:22
 msgid "Info messages:"
-msgstr "Informatii:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.c:25
 msgid "Flip align"
-msgstr "Oglindire pozitie"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.c:4
 msgid "Mod Icons Panel"
-msgstr "Fereastra Iconuri Moduri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:4
 msgid "Notification Panel"
-msgstr "Fereastra Notificatii"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:22
 msgid "Notifications:"
-msgstr "Notificatii:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:25
 msgid "Also print notifications to the console"
-msgstr "Printare notificatii si in consola"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:28
 msgid "Flip notify order"
-msgstr "Inversare ordine notificatii"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:31
 msgid "Entry lifetime:"
-msgstr "Durata notificare:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:35
 msgid "Entry fadetime:"
-msgstr "Durata atenuare notificatie:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:4
 msgid "Powerups Panel"
-msgstr "Fereastra Powerup"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:45
 msgid "Flip strength and shield positions"
-msgstr "Oglindire pozitie iconuri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:4
 msgid "Pressed Keys Panel"
-msgstr "Fereastra Taste Apasate"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:21
 msgid "Panel disabled"
-msgstr "Dezactivata"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:22
 msgid "Panel enabled when spectating"
-msgstr "Activa pentru spectatori"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:23
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:23
 msgid "Panel always enabled"
-msgstr "Mereu activa"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:30
 msgid "Forced aspect:"
-msgstr "Aspect fortat:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.c:4
 msgid "Race Timer Panel"
-msgstr "Fereastra Timp Curse"
+msgstr "Tidtagningspanel för Lopp"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:4
 msgid "Radar Panel"
-msgstr "Fereastra Radar"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:22
 msgid "Panel enabled in teamgames"
-msgstr "Activa in jocuri de echipa"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:29
 msgid "Radar:"
-msgstr "Radar:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:32
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:43
@@ -332,92 +333,92 @@ msgstr "Radar:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:151
 #: qcsrc/menu/xonotic/util.qc:608
 msgid "Alpha:"
-msgstr "Opacitate:"
+msgstr "Alfa:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:36
 msgid "Rotation:"
-msgstr "Rotatie:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:38
 msgid "Forward"
-msgstr "Inainte"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:39
 msgid "West"
-msgstr "Vest"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:40
 msgid "South"
-msgstr "Sud"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:41
 msgid "East"
-msgstr "Est"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:42
 msgid "North"
-msgstr "Nord"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:46
 msgid "Scale:"
-msgstr "Marime:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:50
 msgid "Zoom mode:"
-msgstr "Modalitate Zoom:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:52
 msgid "Zoomed in"
-msgstr "In interior"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:53
 msgid "Zoomed out"
-msgstr "In exterior"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:54
 msgid "Always zoomed"
-msgstr "Permanent activ"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:55
 msgid "Never zoomed"
-msgstr "Niciodata activ"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:4
 msgid "Score Panel"
-msgstr "Fereastra Scor"
+msgstr "Poängpanel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:4
 msgid "Timer Panel"
-msgstr "Fereastra Timp"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:22
 msgid "Timer:"
-msgstr "Timp:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:25
 msgid "Show elapsed time"
-msgstr "Afisaj timp ramas"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.c:4
 msgid "Vote Panel"
-msgstr "Fereastra Voturi"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.c:22
 msgid "Alpha after voting:"
-msgstr "Opacitate dupa vot:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:4
 msgid "Weapons Panel"
-msgstr "Fereastra Arme"
+msgstr "Vapenpanel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:24
 msgid "Fade out after:"
-msgstr "Atenuare opacitate dupa:"
+msgstr "Tona ut efter:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:26
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:36
 msgid "Never"
-msgstr "Niciodata"
+msgstr "Aldrig"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:28
 #, c-format
@@ -426,65 +427,63 @@ msgstr "%ds"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:32
 msgid "Fade effect:"
-msgstr "Atenuare opacitate:"
+msgstr "Uttoningseffekt:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:33
-#, fuzzy
 msgid "EF^None"
-msgstr "Nici una"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:35
 msgid "Slide"
-msgstr "Glisare"
+msgstr "Ingen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:37
 msgid "Alpha"
-msgstr "Opacitate"
+msgstr "Alfa"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:40
 msgid "Weapon icons:"
-msgstr "Iconuri arme:"
+msgstr "Vapenikoner:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:43
 msgid "Show weapon ID as:"
-msgstr "Afisaj ID arme ca:"
+msgstr "Visa vapen-ID som:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:44
-#, fuzzy
 msgid "SHOWAS^None"
-msgstr "Nici una"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:45
 msgid "Number"
-msgstr "Numar"
+msgstr "Nummer"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:46
 msgid "Bind"
-msgstr "Tasta"
+msgstr "Koppla"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:49
 msgid "Show Accuracy"
-msgstr "Afisaj Acuratete"
+msgstr "Visa Noggrannhet"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:50
 msgid "Show Ammo"
-msgstr "Afisaj Munitie"
+msgstr "Visa Ammunition"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:53
 msgid "Ammo bar color:"
-msgstr "Culoare bara munitie:"
+msgstr "Färg på ammoraden:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:59
 msgid "Ammo bar alpha:"
-msgstr "Opacitate bara munitie:"
+msgstr "Alfa på ammoraden:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:4
 msgid "Panel HUD Setup"
-msgstr "Configurate Interfata (HUD)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:21
 msgid "Panel background defaults:"
-msgstr "Setari normale fond:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:37
@@ -492,116 +491,113 @@ msgstr "Setari normale fond:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:586
 #: qcsrc/menu/xonotic/util.qc:602 qcsrc/menu/xonotic/util.qc:619
 msgid "Disable"
-msgstr "Dezactivat"
+msgstr "Inaktivera"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:30
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:591
 msgid "Color:"
-msgstr "Culoare:"
+msgstr "Färg:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:599
 msgid "Border size:"
-msgstr "Marime borduri:"
+msgstr "Ramstorlek:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:89
 msgid "Team color:"
-msgstr "Culoare echipa:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:625
 msgid "Test team color in configure mode"
-msgstr "Testare culoare echipa in timpul configurarii"
+msgstr "Testa lagfärg i konfigureringsläge"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:628
 msgid "Padding:"
-msgstr "Ajustare:"
+msgstr "Utfyllnad:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:68
 msgid "HUD Dock:"
-msgstr "Magnet ferestre:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:70
 #, fuzzy
 msgid "DOCK^Disabled"
-msgstr "Dezactivat"
+msgstr "Inaktivera"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:71
-#, fuzzy
 msgid "DOCK^Small"
-msgstr "Mic"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:72
-#, fuzzy
 msgid "DOCK^Medium"
-msgstr "Mediu"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:73
-#, fuzzy
 msgid "DOCK^Large"
-msgstr "Mare"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:96
 msgid "Grid settings:"
-msgstr "Setari grila:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:99
 msgid "Snap panels to grid"
-msgstr "Utilizare grila pentru ferestre"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:102
 msgid "Grid size:"
-msgstr "Marime grila:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:103
 msgid "X:"
-msgstr "X:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:109
 msgid "Y:"
-msgstr "Y:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:117
 msgid "Exit setup"
-msgstr "Iesire configurare"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:4
 msgid "Multiplayer"
-msgstr "Multiplayer"
+msgstr "Flera Spelare"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:18
 msgid "Servers"
-msgstr "Servere"
+msgstr "Servrar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:19
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:5
 msgid "Create"
-msgstr "Creare Joc"
+msgstr "Skapa"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:20
 msgid "Demos"
-msgstr "Demonstratii"
+msgstr "Demos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:5
 msgid "Player Setup"
-msgstr "Setari Jucator"
+msgstr "Spelarinställning"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:35
 msgid "Game type:"
-msgstr "Mod joc:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:47
 msgid "Match settings:"
-msgstr "Setari meci:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:50
 msgid "Time limit:"
-msgstr "Limita de timp:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:54
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:62
 msgid "Use map specified default"
-msgstr "Utilizare setari harta"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:57
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:156
@@ -611,417 +607,415 @@ msgstr "Utilizare setari harta"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:163
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:164
 msgid "Point limit:"
-msgstr "Limita de puncte:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:65
 msgid "Player slots:"
-msgstr "Numar maxim jucatori:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:68
 msgid "Number of bots:"
-msgstr "Numar boti:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:72
 msgid "Bot skill:"
-msgstr "Dificultate boti:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:75
 msgid "Botlike"
-msgstr "Nula"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:76
 msgid "Beginner"
-msgstr "Incepator"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:77
 msgid "You will win"
-msgstr "Vei castiga"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:78
 msgid "You can win"
-msgstr "Poti castiga"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:79
 msgid "You might win"
-msgstr "Ai putea castiga"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:80
 msgid "Advanced"
-msgstr "Avansat"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:81
 msgid "Expert"
-msgstr "Expert"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:82
 msgid "Pro"
-msgstr "Profesional"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:83
 msgid "Assassin"
-msgstr "Asasin"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:84
 msgid "Unhuman"
-msgstr "Inuman"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:85
 msgid "Godlike"
-msgstr "Dumnezeiesc"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:89
 msgid "Mutators..."
-msgstr "Modificari speciale..."
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:98
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:84
 msgid "Advanced settings..."
-msgstr "Setari avansate..."
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:105
 msgid "Map list:"
-msgstr "Lista harti:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:111
 msgid "Select all"
-msgstr "Selecteaza totul"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:114
 msgid "Select none"
-msgstr "Golire selectie"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:120
 msgid "Start Multiplayer!"
-msgstr "Pornire Joc Multiplayer!"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:155
 msgid "Capture limit:"
-msgstr "Limita de capturi:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:159
 msgid "Lives:"
-msgstr "Vieti:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:160
 msgid "Laps:"
-msgstr "Ture:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:161
 msgid "Goals:"
-msgstr "Goluri:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:165
 msgid "Frag limit:"
-msgstr "Limita de omoruri:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:6
 msgid "Advanced server settings"
-msgstr "Setari avansate server"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:25
 msgid "Game settings:"
-msgstr "Setari joc"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:28
 msgid "Allow spectating"
-msgstr "Perimite spectatori"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:31
 msgid "Spawn shield:"
-msgstr "Scut pornire:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:36
 msgid "Game speed:"
-msgstr "Viteza joc:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:40
 msgid "Teamplay settings:"
-msgstr "Setari echipe:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:43
 msgid "Friendly fire scale:"
-msgstr "Scara foc prietenesc:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:47
 msgid "Virtual friendly fire (effect only)"
-msgstr "Foc prietenesc virtual (efect)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:50
 msgid "Friendly fire penalty:"
-msgstr "Penalitate foc prietenesc:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:54
 msgid "Virtual penalty (effect only)"
-msgstr "Penalitate virtuala (efect)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:57
 msgid "Teams:"
-msgstr "Echipe:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:66
 msgid "Map voting:"
-msgstr "Vot harti:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:68
 msgid "No voting"
-msgstr "Vot dezactivat"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:69
 msgid "2 choices"
-msgstr "2 alegeri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:70
 msgid "3 choices"
-msgstr "3 alegeri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:71
 msgid "4 choices"
-msgstr "4 alegeri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:72
 msgid "5 choices"
-msgstr "5 alegeri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:73
 msgid "6 choices"
-msgstr "6 alegeri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:74
 msgid "7 choices"
-msgstr "7 alegeri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:75
 msgid "8 choices"
-msgstr "8 alegeri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:76
 msgid "9 choices"
-msgstr "9 alageri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:79
 msgid "Simple majority wins vcall"
-msgstr "Majoritatea castiga mereu"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:5
 msgid "Map Information"
-msgstr "Informatii harta:"
+msgstr "Kartinformation"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:49
 msgid "Full item placement"
-msgstr "Plasare obiecte"
+msgstr "Fullständing sakplacering"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:49
 msgid "MinstaGib only"
-msgstr "Numai MinstaGib"
+msgstr "Endast MinstaGib"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:78
 msgid "Title:"
-msgstr "Titlu:"
+msgstr "Titel:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:84
 msgid "Author:"
-msgstr "Autor:"
+msgstr "Upphovsman:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:90
 msgid "Features:"
-msgstr "Trasaturi:"
+msgstr "Egenskaper."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:95
 msgid "Game types:"
-msgstr "Moduri de joc:"
+msgstr "Speltyper:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:119
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:314
 msgid "Close"
-msgstr "Inchidere"
+msgstr "Stäng"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:122
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:46
 msgid "Play"
-msgstr "Joaca"
+msgstr "Spela"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:7
 msgid "Mutators"
-msgstr "Modificari speciale"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:33
 msgid "All Weapons Arena"
-msgstr "Toate armele"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:35
 msgid "Most Weapons Arena"
-msgstr "Cele mai multe arme"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:56
 #, c-format
 msgid "%s Arena"
-msgstr "Arena %s"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:68
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:167
 msgid "Dodging"
-msgstr "Satiruta laterala"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:70
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:250
 msgid "MinstaGib"
-msgstr "MinstaGib"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:72
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:253
 msgid "NIX"
-msgstr "NIX"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:74
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:205
 msgid "Rocket Flying"
-msgstr "Zbor Rachete"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:78
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:264
 msgid "No start weapons"
-msgstr "Fara arme initiale"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:80
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:189
 msgid "Low gravity"
-msgstr "Gravitatie scazuta"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:82
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:170
 msgid "Cloaked"
-msgstr "Jucatori transparenti"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:84
 msgid "Hook"
-msgstr "Carlig"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:86
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:173
 msgid "Midair"
-msgstr "Lovituri in aer"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:176
 msgid "Vampire"
-msgstr "Vampir"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:90
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:208
 msgid "Piñata"
-msgstr "Piñata"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:92
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:211
 msgid "Weapons stay"
-msgstr "Arme persistente"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:94
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:180
 msgid "Blood loss"
-msgstr "Pierdere de sange"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:96
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:202
 msgid "Jet pack"
-msgstr "Reactie"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:98
-#, fuzzy
 msgid "MUT^None"
-msgstr "Nici una"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:164
 msgid "Gameplay mutators:"
-msgstr "Modificari speciale joc:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:196
 msgid "Weapon & item mutators:"
-msgstr "Modificari speciale arme si obiecte:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:199
 msgid "Grappling hook"
-msgstr "Carlig"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:215
 msgid "Weapon arenas:"
-msgstr "Arene arme:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:218
 msgid "Regular (no arena)"
-msgstr "Normal (fara arene)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:239
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:256
 msgid "with laser"
-msgstr "cu arma laser"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:247
 msgid "Special arenas:"
-msgstr "Arene speciale:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:260
 msgid "Most weapons"
-msgstr "Majoritatea armelor"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:4
 msgid "Demo"
-msgstr "Demonstratie"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:28
 msgid "Record demos while playing"
-msgstr "Creare demonstratii in timpul jocului"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:32
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:28
 msgid "Filter:"
-msgstr "Filtrare:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:33
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:29
 #: qcsrc/menu/xonotic/dialog_settings_input.c:41
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:24
 msgid "Clear"
-msgstr "Curatare"
+msgstr "Rensa"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:43
 msgid "Timedemo"
-msgstr "Timedemo"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:4
 msgid "Join"
-msgstr "Alaturare"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:36
-#, fuzzy
 msgid "SRVS^Empty"
-msgstr "Gol"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:40
 #, fuzzy
 msgid "SRVS^Full"
-msgstr "Plin"
+msgstr "Fullt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:44
 msgid "Pause"
-msgstr "Pauza"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:56
 msgid "Address:"
-msgstr "Adresa:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:65
 msgid "Info..."
-msgstr "Informatii..."
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:70
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:317
 msgid "Join!"
-msgstr "Alaturare!"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:5
 msgid "Server Information"
-msgstr "Informatii Server"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:115
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:116
@@ -1029,7 +1023,7 @@ msgstr "Informatii Server"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:189
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:199
 msgid "N/A"
-msgstr "N/A"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:158
 #, c-format
@@ -1039,221 +1033,215 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
 #, c-format
 msgid "%d modified settings"
-msgstr "%d setari modificate"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
 msgid "Official settings"
-msgstr "Setarile oficiale"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:197
 msgid "N/A (can't connect)"
-msgstr "N/A (nu se poate conecta)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:205
 msgid "not supported (can't connect)"
-msgstr "nesuportat (nu se poate conecta)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:207
 msgid "not supported (won't encrypt)"
-msgstr "nesuportat (nu se poate encripta)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:211
 msgid "supported (will encrypt)"
-msgstr "suportat (se va encripta)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:213
 msgid "supported (won't encrypt)"
-msgstr "suportat (nu se va encripta)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:217
 msgid "requested (will encrypt)"
-msgstr "cerut (se va encripta)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:219
 msgid "requested (won't encrypt)"
-msgstr "cerut (nu se va encripta)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:223
 msgid "required (can't connect)"
-msgstr "necesar (nu se poate conecta)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:225
 msgid "required (will encrypt)"
-msgstr "necesar (se va encripta)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:246
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:269
 msgid "Players:"
-msgstr "Jucatori:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:254
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:38
 msgid "Type:"
-msgstr "Tip:"
+msgstr "Typ:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:259
 msgid "Map:"
-msgstr "Harta:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:264
 msgid "Gameplay:"
-msgstr "Mod:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:274
 msgid "Bots:"
-msgstr "Boti:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:279
 msgid "Mod:"
-msgstr "Modificare:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:284
 msgid "Version:"
-msgstr "Versiune:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:289
 msgid "Ping:"
-msgstr "Latenta:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:295
 msgid "CA:"
-msgstr "CA:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:301
 msgid "Key:"
-msgstr "Cheie:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:307
 msgid "Encryption:"
-msgstr "Encriptare:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:63
 msgid "Model:"
-msgstr "Model:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:88
 msgid "Field of view:"
-msgstr "Camp vizual:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:92
 msgid "View bobbing:"
-msgstr "Miscare camera mers:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:96
 msgid "Zoom factor:"
-msgstr "Factor Zoom:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:100
 msgid "Zoom speed:"
-msgstr "Viteza Zoom:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:103
 msgid "Weapon settings..."
-msgstr "Setari arme..."
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:110
 msgid "Crosshair:"
-msgstr "Ochian:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:111
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:143
 msgid "Per weapon"
-msgstr "Depinde de arma"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:130
 msgid "Crosshair size:"
-msgstr "Marime ochian:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
-msgstr "Opacitate ochian:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
 msgid "Crosshair color:"
-msgstr "Culoare ochian:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:145
 msgid "Enable center dot"
-msgstr "Utilizare punct ochian"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:148
 msgid "Size:"
-msgstr "Marime:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:155
 msgid "Hit test:"
-msgstr "Detectare tinta:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:156
-#, fuzzy
 msgid "HTST^None"
-msgstr "Nici una"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:157
 msgid "TrueAim"
-msgstr "TrueAim"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:158
 msgid "Enemies"
-msgstr "Dusmani"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:161
 msgid "Waypoints setup..."
-msgstr "Setari indicatoare..."
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:167
 msgid "Enter HUD editor"
-msgstr "Editor interfata"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:174
 msgid "Force models:"
-msgstr "Modele jucator fortate:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:175
-#, fuzzy
 msgid "MDL^None"
-msgstr "Nici una"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:176
-#, fuzzy
 msgid "MDL^Custom"
-msgstr "Personalizat"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:177
 #, fuzzy
 msgid "MDL^All"
-msgstr "Toate"
+msgstr "Alla"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:179
 msgid "Disable gore effects"
-msgstr "Dezactivare efecte violente"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:181
 msgid "Gibs:"
-msgstr "Cotlete:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:183
-#, fuzzy
 msgid "GIBS^None"
-msgstr "Nici unul"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:184
 msgid "GIBS^Few"
-msgstr "Putine"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:185
-#, fuzzy
 msgid "GIBS^Many"
-msgstr "Multe"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:186
-#, fuzzy
 msgid "GIBS^Lots"
-msgstr "Foarte multe"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:190
 msgid "Damage splash:"
-msgstr "Efect ranire:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:194
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:178
@@ -1262,108 +1250,108 @@ msgstr "Efect ranire:"
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:41
 #: qcsrc/menu/xonotic/dialog_settings_video.c:105
 msgid "Apply immediately"
-msgstr "Aplica imediat"
+msgstr "Tillämpa nu"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:5
 msgid "Waypoints"
-msgstr "Indicatoare"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:23
 msgid "Show base waypoints"
-msgstr "Afisaj indicatoare de baza"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:25
 msgid "Waypoint scale:"
-msgstr "Marime indicatoare:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:29
 msgid "Waypoint alpha:"
-msgstr "Opacitate indicatoare:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:34
 msgid "Show names:"
-msgstr "Afisaj nume:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:37
 msgid "Teammates"
-msgstr "Coechipieri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:38
 msgid "All players"
-msgstr "Toti jucatorii"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:6
 msgid "Weapon settings"
-msgstr "Setari arme"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:29
 msgid "Weapon priority list:"
-msgstr "Lista prioritate arme:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:34
 msgid "Up"
-msgstr "Sus"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:37
 msgid "Down"
-msgstr "Jos"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:41
 msgid "Use priority list for weapon cycling"
-msgstr "Utilizare lista pentru selectarea armelor"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:43
 msgid "Auto switch weapons on pickup"
-msgstr "Selectare automata a armelor obtinute"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:45
 msgid "Draw 1st person weapon model"
-msgstr "Afisaj model 1st person"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:48
 msgid "Left align"
-msgstr "Aliniere stanga"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:50
 msgid "Right align"
-msgstr "Aliniere dreapta"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:53
 msgid "Flip view horizontally"
-msgstr "Oglindire orizontala ecran"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_news.c:4
 msgid "News"
-msgstr "Stiri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_news.c:18
 msgid "http://www.xonotic.org/team/blog/"
-msgstr "http://www.xonotic.org/team/blog/"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_quit.c:4
 msgid "Quit"
-msgstr "Iesire"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_quit.c:17
 msgid "Are you sure you want to quit?"
-msgstr "Sunteti sigur ca vreti sa iesiti?"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_quit.c:20
 msgid "Yes"
-msgstr "Da"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_quit.c:21
 msgid "No"
-msgstr "Nu"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings.c:4
 msgid "Settings"
-msgstr "Setari"
+msgstr "Inställningar"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:18
 #: qcsrc/menu/xonotic/dialog_settings_input.c:4
 msgid "Input"
-msgstr "Control"
+msgstr "Inmatning"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:19
 #: qcsrc/menu/xonotic/dialog_settings_video.c:4
@@ -1373,204 +1361,202 @@ msgstr "Video"
 #: qcsrc/menu/xonotic/dialog_settings.c:20
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:4
 msgid "Effects"
-msgstr "Efecte"
+msgstr "Effekter"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:21
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:4
 msgid "Audio"
-msgstr "Audio"
+msgstr "Ljud"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:22
 #: qcsrc/menu/xonotic/dialog_settings_network.c:4
 msgid "Network"
-msgstr "Retea"
+msgstr "Nätverk"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:23
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:4
 msgid "Misc"
-msgstr "Altele"
+msgstr "Blandat"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:27
 msgid "Master:"
-msgstr "General:"
+msgstr "Master:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:33
 msgid "Music:"
-msgstr "Muzica:"
+msgstr "Musik:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:40
 #, fuzzy
 msgid "VOL^Ambient:"
-msgstr "Ambianta:"
+msgstr "Bakgrund"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:48
 msgid "Info:"
-msgstr "Informatii:"
+msgstr "Info:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:57
 msgid "Items:"
-msgstr "Obiecte:"
+msgstr "Saker:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:65
 msgid "Pain:"
-msgstr "Durere:"
+msgstr "Smärta:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:73
 msgid "Player:"
-msgstr "Jucator:"
+msgstr "Spelare:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:81
 msgid "Shots:"
-msgstr "Focuri de arma:"
+msgstr "Skott:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:88
 msgid "Voice:"
-msgstr "Voci:"
+msgstr "Röst:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:96
 msgid "Weapons:"
-msgstr "Arme:"
+msgstr "Vapen:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:103
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:161
 msgid "Frequency:"
-msgstr "Frecventa:"
+msgstr "Frekvens:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:105
 msgid "8 kHz"
-msgstr "8 kHz"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:106
 msgid "11.025 kHz"
-msgstr "11.025 kHz"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:107
 msgid "16 kHz"
-msgstr "16 kHz"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:108
 msgid "22.05 kHz"
-msgstr "22.05 kHz"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:109
 msgid "24 kHz"
-msgstr "24 kHz"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:110
 msgid "32 kHz"
-msgstr "32 kHz"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:111
 msgid "44.1 kHz"
-msgstr "44.1 kHz"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:112
 msgid "48 kHz"
-msgstr "48 kHz"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:115
 msgid "Channels:"
-msgstr "Canale:"
+msgstr "Kanaler."
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:117
 msgid "Mono"
-msgstr "Mono"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:118
 msgid "Stereo"
-msgstr "Stereo"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:119
 msgid "2.1"
-msgstr "2.1"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:120
 msgid "4"
-msgstr "4"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:121
 msgid "5"
-msgstr "5"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:122
 msgid "5.1"
-msgstr "5.1"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:123
 msgid "6.1"
-msgstr "6.1"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:124
 msgid "7.1"
-msgstr "7.1"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:128
 msgid "Swap Stereo"
-msgstr "Inversare canale stereo"
+msgstr "Växla Stereo"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:132
 msgid "Headphone friendly mode"
-msgstr "Mod casti audio"
+msgstr "Hörlursvänligt läge"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:136
 msgid "Spatial voices:"
-msgstr "Voci spatializate:"
+msgstr "Spatiala kanaler:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:137
-#, fuzzy
 msgid "VOCS^None"
-msgstr "Nici una"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:138
 #, fuzzy
 msgid "VOCS^Taunts"
-msgstr "Glume"
+msgstr "Pikar"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:139
 msgid "VOCS^All"
-msgstr "Toate"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:142
 msgid "Taunt range:"
-msgstr "Distanta voci:"
+msgstr "Avstånd för pikar:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:145
 #, fuzzy
 msgid "RNG^Very short"
-msgstr "Foarte scurta"
+msgstr "Väldigt kort"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:146
 #, fuzzy
 msgid "RNG^Short"
-msgstr "Scurta"
+msgstr "Kort"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:147
 #, fuzzy
 msgid "RNG^Normal"
-msgstr "Normala"
+msgstr "Normalt"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:148
 #, fuzzy
 msgid "RNG^Long"
-msgstr "Lunga"
+msgstr "Långt"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:149
 #, fuzzy
 msgid "RNG^Full"
-msgstr "Toate"
+msgstr "Fullt"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:156
 msgid "Automatic taunts"
-msgstr "Glume automate"
+msgstr "Automatiska pikar"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:165
 msgid "Time warning:"
-msgstr "Avertisment timp:"
+msgstr "Tidsvarning:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:167
-#, fuzzy
 msgid "WRN^None"
-msgstr "Nici una"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:168
 msgid "1 minute"
@@ -1578,773 +1564,739 @@ msgstr "1 minut"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:169
 msgid "5 minutes"
-msgstr "5 minute"
+msgstr "5 minuter"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:170
 #, fuzzy
 msgid "WRN^Both"
-msgstr "Ambele"
+msgstr "Både och"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:173
 msgid "Hit indicator"
-msgstr "Indicator lovituri"
+msgstr "Skadoindikator"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:175
 msgid "Menu sounds"
-msgstr "Sunete meniu"
+msgstr "Menyljud"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:38
 msgid "Quality preset:"
-msgstr "Setari calitate:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:41
-#, fuzzy
 msgid "PRE^OMG!"
-msgstr "SFINTE!"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:42
-#, fuzzy
 msgid "PRE^Low"
-msgstr "Scazut"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:43
-#, fuzzy
 msgid "PRE^Medium"
-msgstr "Mediu"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:44
 #, fuzzy
 msgid "PRE^Normal"
-msgstr "Normal"
+msgstr "Normalt"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:45
-#, fuzzy
 msgid "PRE^High"
-msgstr "Ridicat"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:46
-#, fuzzy
 msgid "PRE^Ultra"
-msgstr "Foarte ridicat"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:48
-#, fuzzy
 msgid "PRE^Ultimate"
-msgstr "Extrem de ridicat"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:52
 msgid "Geometry detail:"
-msgstr "Detaliu geometrie:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:54
-#, fuzzy
 msgid "DET^Lowest"
-msgstr "Cel mai scazut"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:55
-#, fuzzy
 msgid "DET^Low"
-msgstr "Scazut"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:56
 #, fuzzy
 msgid "DET^Normal"
-msgstr "Normal"
+msgstr "Normalt"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:57
-#, fuzzy
 msgid "DET^Good"
-msgstr "Ridicat"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:58
-#, fuzzy
 msgid "DET^Best"
-msgstr "Cel mai ridicat"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:59
-#, fuzzy
 msgid "DET^Insane"
-msgstr "Extrem"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:62
 msgid "Antialiasing:"
-msgstr "Margini fine:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:64
 #, fuzzy
 msgid "AA^Disabled"
-msgstr "Dezactivat"
+msgstr "Inaktivera"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:65
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:103
 msgid "2x"
-msgstr "2x"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:66
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:104
 msgid "4x"
-msgstr "4x"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:70
 msgid "Texture resolution:"
-msgstr "Calitate texturi:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:73
-#, fuzzy
 msgid "RES^Leet"
-msgstr "Minima"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:74
-#, fuzzy
 msgid "RES^Lowest"
-msgstr "Cea mai joasa"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:75
-#, fuzzy
 msgid "RES^Low"
-msgstr "Joasa"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:76
 #, fuzzy
 msgid "RES^Normal"
-msgstr "Normala"
+msgstr "Normalt"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:77
-#, fuzzy
 msgid "RES^Good"
-msgstr "Ridicata"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:78
-#, fuzzy
 msgid "RES^Best"
-msgstr "Cea mai ridicata"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:91
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:94
 msgid "Avoid lossy texture compression"
-msgstr "Evitare compresie rapida texturi"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:100
 msgid "Anisotropy:"
-msgstr "Filtrare anisotropica:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:102
 #, fuzzy
 msgid "ANISO^Disabled"
-msgstr "Dezactivat"
+msgstr "Inaktivera"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:105
 msgid "8x"
-msgstr "8x"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:106
 msgid "16x"
-msgstr "16x"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:110
 msgid "Particle quality:"
-msgstr "Calicate particule:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:113
 msgid "Particle distance:"
-msgstr "Distanta particule:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:117
 msgid "Decals"
-msgstr "Semne"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:120
 msgid "Distance:"
-msgstr "Distanta:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:126
 msgid "Time:"
-msgstr "Durata:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:132
 msgid "Use lightmaps"
-msgstr "Utilizare lightmap"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:133
 msgid "Deluxe mapping"
-msgstr "Texturi Deluxe"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:135
 msgid "Gloss"
-msgstr "Suprafete lucioase"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:138
 msgid "Offset mapping"
-msgstr "Relief"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:140
 msgid "Relief mapping"
-msgstr "Detaliu relief"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:143
 msgid "Reflections:"
-msgstr "Reflectii:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:146
 msgid "Blurred"
-msgstr "Blurate"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:147
-#, fuzzy
 msgid "REFL^Good"
-msgstr "Bune"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:148
 msgid "Sharp"
-msgstr "Ascutite"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:153
 msgid "Show surfaces"
-msgstr "Afisaj suprafete"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:155
 msgid "No dynamic lighting"
-msgstr "Luminozitate dinamica dezactivata"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:157
 msgid "Flash blend approximation"
-msgstr "Luminozitate dinamica rapida"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:159
 msgid "Realtime dynamic lighting"
-msgstr "Luminozitate dinamica in timp real"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:160
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:164
 msgid "Shadows"
-msgstr "Umbre"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:163
 msgid "Realtime world lighting"
-msgstr "Luminozitate ambienta in timp real"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:168
 msgid "Use normal maps"
-msgstr "Utilizare texturi normale"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:170
 msgid "Soft shadows"
-msgstr "Umbre fine"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:173
 msgid "Coronas"
-msgstr "Coroane lumini"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:174
 msgid "Use Occlusion Queries"
-msgstr "Utilizare Ocluzii"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:176
 msgid "Bloom"
-msgstr "Luminozitate moale"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:178
 msgid "High Dynamic Range (HDR)"
-msgstr "Distanta Dinamica Inalta (HDR)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:182
 msgid "Motion blur:"
-msgstr "Blurare viteza:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:188
 msgid "Damage blur:"
-msgstr "Blurare ranire:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
-msgstr "Taste:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:31
 msgid "Change key..."
-msgstr "Schimbare tasta..."
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:35
 msgid "Edit..."
-msgstr "Editare..."
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:46
 msgid "Sensitivity:"
-msgstr "Sensitivitate:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:49
 msgid "UI mouse speed:"
-msgstr "Viteza mouse in meniu:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:52
 msgid "Mouse filter"
-msgstr "Filtrare mouse"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:54
 msgid "Invert mouse"
-msgstr "Inversare mouse"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:57
 #: qcsrc/menu/xonotic/dialog_settings_input.c:59
 msgid "Use joystick input"
-msgstr "Utilizare joystick"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:62
 #: qcsrc/menu/xonotic/dialog_settings_input.c:64
 msgid "Turn off OS mouse acceleration"
-msgstr "Dezactivare acceleratie mouse din OS"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:66
 msgid "\"enter console\" also closes"
-msgstr "\"enter\" inchide si consola"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:5
 msgid "User defined key bind"
-msgstr "Functionalitate tasta definita:"
+msgstr "Användardefinierad tangentkoppling"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:42
 msgid "Command when pressed:"
-msgstr "Commanda apasare tasta:"
+msgstr "Kommando när nedtryckt:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:45
 msgid "Command when released:"
-msgstr "Commanda eliberare tasta:"
+msgstr "Kommando när uppsläppt:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:48
 msgid "Save"
-msgstr "Salvare"
+msgstr "Spara"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:51
 msgid "Cancel"
-msgstr "Anulare"
+msgstr "Avbryt"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:26
 msgid "Menu skins:"
-msgstr "Stil meniu:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:47
 msgid "Show current time"
-msgstr "Afisaj ora"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:49
 msgid "Show current date"
-msgstr "Afisaj data"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:51
 msgid "Show frames per second"
-msgstr "Afisaj cadre pe secunda"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:53
 msgid "Speedometer"
-msgstr "Vitezometru"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:56
 msgid "qu/s (hidden)"
-msgstr "qu/s (ascuns)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:58
 msgid "qu/s"
-msgstr "qu/s"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:60
 msgid "m/s"
-msgstr "m/s"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:64
 msgid "km/h"
-msgstr "km/h"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:66
 msgid "mph"
-msgstr "mph"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:68
 msgid "knots"
-msgstr "noduri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:71
 msgid "Show accelerometer"
-msgstr "Afisaj metru acceleratie"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:74
 msgid "Accelerometer scale:"
-msgstr "Marime metru acceleratie:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:80
 msgid "Minimize input latency"
-msgstr "Minimizare latenta control"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:5
 msgid "Advanced settings"
-msgstr "Setari avansate"
+msgstr "Avancerade inställningar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:23
 msgid "Cvar filter:"
-msgstr "Filtru variabile:"
+msgstr "Cvar-filter:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:34
 msgid "Setting:"
-msgstr "Setari:"
+msgstr "Inställning:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:42
 msgid "Value:"
-msgstr "Valoare:"
+msgstr "Värde:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:56
 msgid "Description:"
-msgstr "Descriere:"
+msgstr "Beskrivning:"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:26
 msgid "Client-side movement prediction"
-msgstr "Predictie miscare"
+msgstr "Rörelseprediktering i klienten"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:30
 msgid "Show netgraph"
-msgstr "Afisaj grafic retea"
+msgstr "Visa nätgraf"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:33
 msgid "Network speed:"
-msgstr "Viteza retea:"
+msgstr "Nätverkshastighet:"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:35
 msgid "56k"
-msgstr "56k"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:36
 msgid "ISDN"
-msgstr "ISDN"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:37
 msgid "Slow ADSL"
-msgstr "ADSL lent"
+msgstr "Långsam ADSL"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:38
 msgid "Fast ADSL"
-msgstr "ADSL rapid"
+msgstr "Snabb ADSL"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:39
 msgid "Broadband"
-msgstr "Cablu/Fibra optica"
+msgstr "Bredband"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:42
 msgid "Input packets/s:"
-msgstr "Pachete intrare/secunda:"
+msgstr "Inputpaket/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:46
 msgid "HTTP downloads:"
-msgstr "Descarcari HTTP:"
+msgstr "HTTP-nedladdningar:"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:49
 msgid "Downloads:"
-msgstr "Descarcari simultane:"
+msgstr "Nedladdningar:"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:53
 msgid "Speed (kB/s):"
-msgstr "Viteza (kB/s):"
+msgstr "Hastighet (kB/s):"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:57
 msgid "Client UDP port:"
-msgstr "Port UDP client:"
+msgstr "Klientens UDB-port:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:26
 msgid "Resolution:"
-msgstr "Rezolutie:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:29
 msgid "Font/UI size:"
-msgstr "Marime font:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:31
-#, fuzzy
 msgid "SZ^Unreadable"
-msgstr "Ilizibil"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:32
-#, fuzzy
 msgid "SZ^Tiny"
-msgstr "Minuscul"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:33
-#, fuzzy
 msgid "SZ^Little"
-msgstr "Foarte mic"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:34
-#, fuzzy
 msgid "SZ^Small"
-msgstr "Mic"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:35
-#, fuzzy
 msgid "SZ^Medium"
-msgstr "Mediu"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:36
-#, fuzzy
 msgid "SZ^Large"
-msgstr "Mare"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:37
-#, fuzzy
 msgid "SZ^Huge"
-msgstr "Foarte mare"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:38
-#, fuzzy
 msgid "SZ^Gigantic"
-msgstr "Gigantic"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:39
-#, fuzzy
 msgid "SZ^Colossal"
-msgstr "Colosal"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:42
 msgid "Color depth:"
-msgstr "Adancime culoare:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:45
 msgid "Full screen"
-msgstr "Ecran plin"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:46
 msgid "Vertical Synchronization"
-msgstr "Sincronizare Verticala"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:49
 msgid "Use OpenGL 2.0 shaders (GLSL)"
-msgstr "Utilizare OpenGL 2.0 (GLSL)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:52
 msgid "Use GLSL to handle color control"
-msgstr "Utilizare GLSL pentru culori"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:56
 msgid "Vertex Buffer Objects (VBOs)"
-msgstr "Tampon Memorie Obiecte (VBOs)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:59
-#, fuzzy
 msgid "VBO^Off"
-msgstr "Dezactivat"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:60
 msgid "Vertices, some Tris (compatible)"
-msgstr "Puncte, unele Triunghiuri (compatibil)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:63
 msgid "Vertices"
-msgstr "Puncte"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:64
 msgid "Vertices and Triangles"
-msgstr "Puncte si Triunghiuri"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:67
 msgid "Depth first:"
-msgstr "Calcul adancime:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:69
 #, fuzzy
 msgid "DF^Disabled"
-msgstr "Dezactivat"
+msgstr "Inaktivera"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:70
-#, fuzzy
 msgid "DF^World"
-msgstr "Mediul"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:71
 #, fuzzy
 msgid "DF^All"
-msgstr "Totul"
+msgstr "Alla"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:75
 msgid "Disable multithreaded OpenGL"
-msgstr "Dezactiveaza OpenGL multi-core"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:77
 msgid "Wait for GPU to finish each frame"
-msgstr "Asteapta ca GPU sa termine fiecare cadru"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:80
 msgid "Brightness:"
-msgstr "Luminozitate:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:83
 msgid "Contrast:"
-msgstr "Contrast:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:86
 msgid "Gamma:"
-msgstr "Gama:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:89
 msgid "Contrast boost:"
-msgstr "Exagerare contrast:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:92
 msgid "Saturation:"
-msgstr "Saturatie:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:98
 #, fuzzy
 msgid "LIT^Ambient:"
-msgstr "Ambianta:"
+msgstr "Bakgrund"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:101
 msgid "Intensity:"
-msgstr "Intensitate:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:4
 msgid "Singleplayer"
-msgstr "Joc singular"
+msgstr "En Spelare"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:59
 msgid "Instant action! (random map with bots)"
-msgstr "Actiune instanta! (harta aleatorie cu boti)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:80
 msgid "Start Singleplayer!"
-msgstr "Pornire Joc Singular!"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.c:4
 msgid "Winner"
-msgstr "Castigator"
+msgstr "Vinnare"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:5
 msgid "Team Selection"
-msgstr "Selectie echipa"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:41
 msgid "join 'best' team (auto-select)"
-msgstr "cea mai potrivita echipa (selectie automata)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:45
 msgid "red"
-msgstr "rosu"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:46
 msgid "blue"
-msgstr "albastru"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:47
 msgid "yellow"
-msgstr "galben"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:48
 msgid "pink"
-msgstr "roz"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:51
 msgid "spectate"
-msgstr "spectator"
+msgstr ""
 
 #: qcsrc/menu/xonotic/mainwindow.c:35 qcsrc/menu/xonotic/mainwindow.c:38
 msgid "Do not press this button again!"
-msgstr "Nu mai apasati acest buton din nou!"
+msgstr ""
 
 #: qcsrc/menu/xonotic/maplist.c:278
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"
 msgstr ""
-"Huh? Nu se poate juca asta (m este NUL). Re-filtrez pentru a preveni asta pe "
-"viitor.\n"
 
 #: qcsrc/menu/xonotic/maplist.c:286
 #, c-format
 msgid "%s's Xonotic Server"
-msgstr "Serverul Xonotic al lui %s"
+msgstr ""
 
 #: qcsrc/menu/xonotic/maplist.c:291
 msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again.\n"
 msgstr ""
-"Huh? Nu se poate juca asta (tipul jocului este invalid). Re-filtrez pentru a "
-"preveni asta pe viitor.\n"
 
 #: qcsrc/menu/xonotic/playermodel.c:174
 msgid "<no model found>"
-msgstr "<nu a fost gasit nici un model>"
+msgstr "<ingen modell funnen>"
 
 #: qcsrc/menu/xonotic/serverlist.c:360
 msgid "Remove"
-msgstr "Stergere"
+msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:362
 msgid "Bookmark"
-msgstr "Favorit"
+msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:518
 msgid "Ping"
-msgstr "Latenta"
+msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:519
 msgid "Host name"
-msgstr "Nume server"
+msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:520
 msgid "Map"
-msgstr "Harta"
+msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:521
 msgid "Type"
-msgstr "Mod"
+msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:522
 msgid "Players"
-msgstr "Jucatori"
+msgstr ""
 
 #: qcsrc/menu/xonotic/skinlist.c:105
 msgid "<TITLE>"
-msgstr "<TITLU>"
+msgstr ""
 
 #: qcsrc/menu/xonotic/skinlist.c:106
 msgid "<AUTHOR>"
-msgstr "<AUTOR>"
+msgstr ""
 
 #: qcsrc/menu/xonotic/skinlist.c:163
 #, c-format
 msgid "%s: %s"
-msgstr "%s: %s"
+msgstr ""
 
 #: qcsrc/menu/xonotic/slider_decibels.c:50
-#, fuzzy
 msgid "VOL^OFF"
-msgstr "OPRIT"
+msgstr ""
 
 #: qcsrc/menu/xonotic/slider_decibels.c:52
-#, fuzzy
 msgid "VOL^MAX"
-msgstr "MAXIM"
+msgstr ""
 
 #: qcsrc/menu/xonotic/slider_decibels.c:53
 #, c-format
 msgid "%s dB"
-msgstr "%s dB"
+msgstr ""
 
 #: qcsrc/menu/xonotic/slider_resolution.c:65
 #, c-format
 msgid "%dx%d"
-msgstr "%dx%d"
+msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:270
 #, c-format
 msgid "Received HTTP request data for an invalid id %d.\n"
-msgstr "Primit cerere HTTP pentru un id invalid %d.\n"
+msgstr "Mottog HTTP-förfrågan för en ogiltig ID %d.\n"
 
 #: qcsrc/menu/xonotic/util.qc:285
 #, c-format
 msgid "error receiving update notification: status is %d\n"
-msgstr "eroare primire notificare update: statutul este %d\n"
+msgstr "fel vid mottagande av uppdateringsnotifiering: status 'r %d\n"
 
 #: qcsrc/menu/xonotic/util.qc:290
 msgid "error: received HTML instead of an update notification\n"
-msgstr "eroare: primit HTML in schimbul unei notificari de update\n"
+msgstr "fel: mottog HTML istället för en uppdateringsnotifiering"
 
 #: qcsrc/menu/xonotic/util.qc:295
 msgid "error: received carriage returns from update notification server\n"
-msgstr "eroare: primit un mesaj eronat de la serverul de notificari update\n"
+msgstr "fel: mottog radslut från uppdateringsnotifieringsservern"
 
 #: qcsrc/menu/xonotic/util.qc:316
 #, c-format
@@ -2352,25 +2304,25 @@ msgid ""
 "Update can be downloaded at:\n"
 "%s\n"
 msgstr ""
-"Un update se poate descarca aici:\n"
+"Uppdatering kan laddas ner från:\n"
 "%s\n"
 
 #: qcsrc/menu/xonotic/util.qc:337
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr "Auto-generare mapinfo pentru hartile proaspat adaugate..."
+msgstr "Automatgenererar kartinfo för nyligen tillagda kartor..."
 
 #: qcsrc/menu/xonotic/util.qc:432
 #, c-format
 msgid "Update to %s now!"
-msgstr "Updatati la %s acum!"
+msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:509
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems.\n"
 msgstr ""
-"^1EROARE: Comprimarea texturilor este necesara dar nu si suportata.\n"
-"^1Asteptati-va la probleme vizuale.\n"
+"^1FEL: Texturkompression krävs men stöds ej.\n"
+"^1Räkna med visuella problem.\n"
 
 #: qcsrc/menu/xonotic/util.qc:531
 msgid "Arena"
@@ -2378,94 +2330,94 @@ msgstr "Arena"
 
 #: qcsrc/menu/xonotic/util.qc:532
 msgid "Assault"
-msgstr "Asalt"
+msgstr "Anfall"
 
 #: qcsrc/menu/xonotic/util.qc:533
 msgid "Capture The Flag"
-msgstr "Captureaza Steagul"
+msgstr "Erövra Flaggan"
 
 #: qcsrc/menu/xonotic/util.qc:534
 msgid "Clan Arena"
-msgstr "Clan Arena"
+msgstr "Klan Arena"
 
 #: qcsrc/menu/xonotic/util.qc:535
 msgid "Deathmatch"
-msgstr "Meciul Mortii"
+msgstr "Dödsmatch"
 
 #: qcsrc/menu/xonotic/util.qc:536
 msgid "Domination"
-msgstr "Dominatie"
+msgstr "Dominering"
 
 #: qcsrc/menu/xonotic/util.qc:537
 msgid "Freeze Tag"
-msgstr "Inghet"
+msgstr "Frys-Kull"
 
 #: qcsrc/menu/xonotic/util.qc:538
 msgid "Keepaway"
-msgstr "Keepaway"
+msgstr "Håll Dig Undan"
 
 #: qcsrc/menu/xonotic/util.qc:539
 msgid "Key Hunt"
-msgstr "Vanatoarea Cheilor"
+msgstr "Nyckeljakt"
 
 #: qcsrc/menu/xonotic/util.qc:540
 msgid "Last Man Standing"
-msgstr "Ultimul Supravietuitor"
+msgstr "Herre På Täppan"
 
 #: qcsrc/menu/xonotic/util.qc:541
 msgid "Nexball"
-msgstr "Nexball"
+msgstr "Nexboll"
 
 #: qcsrc/menu/xonotic/util.qc:542
 msgid "Onslaught"
-msgstr "Onslaught"
+msgstr "Stormning"
 
 #: qcsrc/menu/xonotic/util.qc:543
 msgid "Race"
-msgstr "Cursa"
+msgstr "Lopp"
 
 #: qcsrc/menu/xonotic/util.qc:544
 msgid "Race CTS"
-msgstr "Cursa CTS"
+msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:545
 msgid "Runematch"
-msgstr "Runematch"
+msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:546
 msgid "Team Deathmatch"
-msgstr "Meciul Mortii (in echipa)"
+msgstr "Dödsmatch i Lag"
 
 #: qcsrc/menu/xonotic/util.qc:565
 #, c-format
 msgid "@!#%'n Tuba Throwing"
-msgstr "Arunca @!#%'n Tuba"
+msgstr "@!#%'n Tubakastning"
 
 #: qcsrc/menu/xonotic/util.qc:583
 msgid "Background:"
-msgstr "Fundal:"
+msgstr "Bakgrund:"
 
 #: qcsrc/menu/xonotic/util.qc:585 qcsrc/menu/xonotic/util.qc:601
 #: qcsrc/menu/xonotic/util.qc:610 qcsrc/menu/xonotic/util.qc:618
 #: qcsrc/menu/xonotic/util.qc:630
 msgid "Default"
-msgstr "Setare normala"
+msgstr "Standard"
 
 #: qcsrc/menu/xonotic/util.qc:596
 msgid "Use default"
-msgstr "Utilizare setare normala"
+msgstr "Använd standard"
 
 #: qcsrc/menu/xonotic/util.qc:616
 msgid "Team Color:"
-msgstr "Culoare echipa:"
+msgstr "Lagfärg:"
 
 #: qcsrc/menu/xonotic/util.qh:49
 msgid "Enable panel"
-msgstr "Activare panou"
+msgstr ""
 
 #: qcsrc/server/w_crylink.qc:2
 msgid "Crylink"
-msgstr "Crylink"
+msgstr ""
 
 #: qcsrc/server/w_crylink.qc:645
 #, c-format
@@ -2489,7 +2441,7 @@ msgstr ""
 
 #: qcsrc/server/w_electro.qc:2
 msgid "Electro"
-msgstr "Electro"
+msgstr ""
 
 #: qcsrc/server/w_electro.qc:503
 #, c-format
@@ -2527,8 +2479,9 @@ msgid "%s was blasted by %s's blue beam"
 msgstr ""
 
 #: qcsrc/server/w_fireball.qc:2
+#, fuzzy
 msgid "Fireball"
-msgstr "Fireball"
+msgstr "Nexboll"
 
 #: qcsrc/server/w_fireball.qc:392
 #, c-format
@@ -2572,7 +2525,7 @@ msgstr ""
 
 #: qcsrc/server/w_grenadelauncher.qc:2
 msgid "Mortar"
-msgstr "Mortar"
+msgstr ""
 
 #: qcsrc/server/w_grenadelauncher.qc:357
 #, c-format
@@ -2601,7 +2554,7 @@ msgstr ""
 
 #: qcsrc/server/w_hagar.qc:2
 msgid "Hagar"
-msgstr "Hagar"
+msgstr ""
 
 #: qcsrc/server/w_hagar.qc:185 qcsrc/server/w_seeker.qc:523
 #, c-format
@@ -2620,7 +2573,7 @@ msgstr ""
 
 #: qcsrc/server/w_hlac.qc:2
 msgid "Heavy Laser Assault Cannon"
-msgstr "Heavy Laser Assault Cannon"
+msgstr ""
 
 #: qcsrc/server/w_hlac.qc:225
 #, c-format
@@ -2629,7 +2582,7 @@ msgstr ""
 
 #: qcsrc/server/w_hook.qc:2
 msgid "Grappling Hook"
-msgstr "Grappling Hook"
+msgstr ""
 
 #: qcsrc/server/w_hook.qc:267 qcsrc/server/w_minstanex.qc:257
 #: qcsrc/server/w_nex.qc:224 qcsrc/server/w_porto.qc:293
@@ -2644,8 +2597,9 @@ msgid "%s has run into %s's gravity bomb"
 msgstr ""
 
 #: qcsrc/server/w_laser.qc:2
+#, fuzzy
 msgid "Laser"
-msgstr "Laser"
+msgstr "Master:"
 
 #: qcsrc/server/w_laser.qc:285
 #, c-format
@@ -2663,8 +2617,9 @@ msgid "%s was lasered to death by %s"
 msgstr ""
 
 #: qcsrc/server/w_minelayer.qc:2
+#, fuzzy
 msgid "Mine Layer"
-msgstr "Mine Layer"
+msgstr "En Spelare"
 
 #: qcsrc/server/w_minelayer.qc:438 qcsrc/server/w_rocketlauncher.qc:480
 #, c-format
@@ -2688,7 +2643,7 @@ msgstr ""
 
 #: qcsrc/server/w_minstanex.qc:2
 msgid "MinstaNex"
-msgstr "MinstaNex"
+msgstr ""
 
 #: qcsrc/server/w_minstanex.qc:259 qcsrc/server/w_nex.qc:226
 #, c-format
@@ -2696,12 +2651,13 @@ msgid "%s has been vaporized by %s"
 msgstr ""
 
 #: qcsrc/server/w_nex.qc:2
+#, fuzzy
 msgid "Nex"
-msgstr "Nex"
+msgstr "Nexboll"
 
 #: qcsrc/server/w_porto.qc:2
 msgid "Port-O-Launch"
-msgstr "Port-O-Launch"
+msgstr ""
 
 #: qcsrc/server/w_porto.qc:295
 #, c-format
@@ -2710,7 +2666,7 @@ msgstr ""
 
 #: qcsrc/server/w_rocketlauncher.qc:2
 msgid "Rocket Launcher"
-msgstr "Rocket Launcher"
+msgstr ""
 
 #: qcsrc/server/w_rocketlauncher.qc:484
 #, c-format
@@ -2729,7 +2685,7 @@ msgstr ""
 
 #: qcsrc/server/w_seeker.qc:2
 msgid "T.A.G. Seeker"
-msgstr "T.A.G. Seeker"
+msgstr ""
 
 #: qcsrc/server/w_seeker.qc:527
 #, c-format
@@ -2742,8 +2698,9 @@ msgid "%s was tagged by %s"
 msgstr ""
 
 #: qcsrc/server/w_shotgun.qc:2
+#, fuzzy
 msgid "Shotgun"
-msgstr "Shotgun"
+msgstr "Kort"
 
 #: qcsrc/server/w_shotgun.qc:183
 #, c-format
@@ -2757,7 +2714,7 @@ msgstr ""
 
 #: qcsrc/server/w_sniperrifle.qc:2
 msgid "Sniper Rifle"
-msgstr "Sniper Rifle"
+msgstr ""
 
 #: qcsrc/server/w_sniperrifle.qc:321
 #, c-format
@@ -2795,9 +2752,9 @@ msgid "%s was sniped by %s"
 msgstr ""
 
 #: qcsrc/server/w_tuba.qc:2
-#, c-format
+#, fuzzy, c-format
 msgid "@!#%'n Tuba"
-msgstr "@!#%'n Tuba"
+msgstr "@!#%'n Tubakastning"
 
 #: qcsrc/server/w_tuba.qc:260
 #, c-format
@@ -2811,15 +2768,9 @@ msgstr ""
 
 #: qcsrc/server/w_uzi.qc:2
 msgid "Machine Gun"
-msgstr "Machine Gun"
+msgstr ""
 
 #: qcsrc/server/w_uzi.qc:293
 #, c-format
 msgid "%s was riddled full of holes by %s"
 msgstr ""
-
-#~ msgid "Waypoint settings:"
-#~ msgstr "Setari indicatoare:"
-
-#~ msgid "%d/%d"
-#~ msgstr "%d/%d"

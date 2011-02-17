@@ -616,6 +616,7 @@ void GetCvars(float f)
 #endif
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
+	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
@@ -1638,8 +1639,6 @@ void precache()
     precache_sound ("misc/gib_splat02.wav");
     precache_sound ("misc/gib_splat03.wav");
     precache_sound ("misc/gib_splat04.wav");
-    precache_sound ("misc/hit.wav");
-	precache_sound ("misc/typehit.wav");
     PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
     PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
     precache_sound ("misc/null.wav");
@@ -2862,65 +2861,65 @@ void SoundEntity_Detach(entity pl)
 float ParseCommandPlayerSlotTarget_firsttoken;
 entity GetCommandPlayerSlotTargetFromTokenizedCommand(float tokens, float idx) // idx = start index
 {
-    string s;
-    entity e, head;
-    float n;
+	string s;
+	entity e, head;
+	float n;
 
-    s = string_null;
+	s = string_null;
 
-    ParseCommandPlayerSlotTarget_firsttoken = -1;
+	ParseCommandPlayerSlotTarget_firsttoken = -1;
 
-    if (tokens > idx)
-    {
-        if (substring(argv(idx), 0, 1) == "#")
-        {
-            s = substring(argv(idx), 1, -1);
-            ++idx;
-            if (s == "")
-                if (tokens > idx)
-                {
-                    s = argv(idx);
-                    ++idx;
-                }
+	if (tokens > idx)
+	{
+		if (substring(argv(idx), 0, 1) == "#")
+		{
+			s = substring(argv(idx), 1, -1);
+			++idx;
+			if (s == "") if (tokens > idx)
+			{
+				s = argv(idx);
+				++idx;
+			}
 			ParseCommandPlayerSlotTarget_firsttoken = idx;
-            if (s == ftos(stof(s)))
-            {
-                e = edict_num(stof(s));
-                if (e.flags & FL_CLIENT)
-                    return e;
-            }
-        }
-        else
-        {
-            // it must be a nick name
-            s = argv(idx);
-            ++idx;
+			n = stof(s);
+			if (s == ftos(n) && n > 0 && n <= maxclients)
+			{
+				e = edict_num(n);
+				if (e.flags & FL_CLIENT)
+					return e;
+			}
+		}
+		else
+		{
+			// it must be a nick name
+			s = argv(idx);
+			++idx;
 			ParseCommandPlayerSlotTarget_firsttoken = idx;
 
-            n = 0;
-            FOR_EACH_CLIENT(head)
-            if (head.netname == s)
-            {
-                e = head;
-                ++n;
-            }
-            if (n == 1)
-                return e;
+			n = 0;
+			FOR_EACH_CLIENT(head)
+				if (head.netname == s)
+				{
+					e = head;
+					++n;
+				}
+			if (n == 1)
+				return e;
 
-            s = strdecolorize(s);
-            n = 0;
-            FOR_EACH_CLIENT(head)
-            if (strdecolorize(head.netname) == s)
-            {
-                e = head;
-                ++n;
-            }
-            if (n == 1)
-                return e;
-        }
-    }
+			s = strdecolorize(s);
+			n = 0;
+			FOR_EACH_CLIENT(head)
+				if (strdecolorize(head.netname) == s)
+				{
+					e = head;
+					++n;
+				}
+			if (n == 1)
+				return e;
+		}
+	}
 
-    return world;
+	return world;
 }
 
 .float scale2;

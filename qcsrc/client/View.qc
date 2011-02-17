@@ -353,6 +353,9 @@ vector freeze_pmove_org, freeze_input_angles;
 entity nightvision_noise, nightvision_noise2;
 
 float pickup_crosshair_time, pickup_crosshair_size;
+float hit_time, typehit_time;
+float nextsound_hit_time, nextsound_typehit_time;
+float hitindication_crosshair_time, hitindication_crosshair_size;
 float use_nex_chargepool;
 
 float myhealth, myhealth_prev;
@@ -809,6 +812,19 @@ void CSQC_UpdateView(float w, float h)
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
+	hit_time = getstatf(STAT_HIT_TIME);
+	if(hit_time > nextsound_hit_time && autocvar_cl_hitsound)
+	{
+		sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+		nextsound_hit_time = time + autocvar_cl_hitsound_antispam_time;
+	}
+	typehit_time = getstatf(STAT_TYPEHIT_TIME);
+	if(typehit_time > nextsound_typehit_time)
+	{
+		sound(world, CHAN_AUTO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
+		nextsound_typehit_time = time + autocvar_cl_hitsound_antispam_time;
+	}
+
 	float hud;
 	hud = getstati(STAT_HUD);
 	if(hud == HUD_SPIDERBOT)
@@ -899,6 +915,50 @@ void CSQC_UpdateView(float w, float h)
 			}
 			if(wcross_wep != "" && autocvar_crosshair_color_per_weapon)
 				wcross_color = stov(cvar_string(strcat("crosshair_", wcross_wep, "_color")));
+			else if(autocvar_crosshair_color_by_health)
+			{
+				local float x = getstati(STAT_HEALTH);
+				
+				//x = red
+				//y = green
+				//z = blue
+				
+				wcross_color_z = 0;
+				
+				if(x > 200)
+				{
+					wcross_color_x = 0;
+					wcross_color_y = 1;
+				}
+				else if(x > 150)
+				{
+					wcross_color_x = 0.4 - (x-150)*0.02 * 0.4;
+					wcross_color_y = 0.9 + (x-150)*0.02 * 0.1;
+				}
+				else if(x > 100)
+				{
+					wcross_color_x = 1 - (x-100)*0.02 * 0.6;
+					wcross_color_y = 1 - (x-100)*0.02 * 0.1;
+					wcross_color_z = 1 - (x-100)*0.02;
+				}
+				else if(x > 50)
+				{
+					wcross_color_x = 1;
+					wcross_color_y = 1;
+					wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;  
+				}
+				else if(x > 20)
+				{
+					wcross_color_x = 1;
+					wcross_color_y = (x-20)*90/27/100;
+					wcross_color_z = (x-20)*90/27/100 * 0.2;
+				}
+				else
+				{
+					wcross_color_x = 1;
+					wcross_color_y = 0;
+				}
+			}
 			else
 				wcross_color = stov(autocvar_crosshair_color);
 
@@ -928,6 +988,27 @@ void CSQC_UpdateView(float w, float h)
 					pickup_crosshair_size = 0;
 
 				wcross_scale += sin(pickup_crosshair_size) * autocvar_crosshair_pickup;
+			}
+			
+			vector hitindication_color;
+			if(autocvar_crosshair_hitindication)
+			{
+				hitindication_color = stov(autocvar_crosshair_hitindication_color);
+				if(hitindication_crosshair_time < hit_time)
+				{
+					hitindication_crosshair_size = 1;
+					hitindication_crosshair_time = hit_time;
+				}
+
+				if(hitindication_crosshair_size > 0)
+					hitindication_crosshair_size -= autocvar_crosshair_hitindication_speed * frametime;
+				else
+					hitindication_crosshair_size = 0;
+
+				wcross_scale += sin(hitindication_crosshair_size) * autocvar_crosshair_hitindication;
+				wcross_color_x += sin(hitindication_crosshair_size) * hitindication_color_x;
+				wcross_color_y += sin(hitindication_crosshair_size) * hitindication_color_y;
+				wcross_color_z += sin(hitindication_crosshair_size) * hitindication_color_z;
 			}
 
 			if(shottype == SHOTTYPE_HITENEMY)
@@ -1539,7 +1620,7 @@ void CSQC_Demo_Camera()
 	else
 	{
 		tmp = getmousepos() * 0.1;
-		if(vlen(tmp)>autocvar_camera_mouse_treshold)
+		if(vlen(tmp)>autocvar_camera_mouse_threshold)
 		{
 			mouse_angles_x += tmp_y * cos(mouse_angles_z * DEG2RAD) + (tmp_x * sin(mouse_angles_z * DEG2RAD));
 			mouse_angles_y -= tmp_x * cos(mouse_angles_z * DEG2RAD) + (tmp_y * -sin(mouse_angles_z * DEG2RAD));

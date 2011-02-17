@@ -40,7 +40,7 @@ void PlayerStats_AddPlayer(entity e)
 	if(playerstats_db < 0)
 		return;
 
-	if(e.crypto_idfp != "")
+	if(e.crypto_idfp != "" && e.cvar_cl_allow_uidtracking == 1)
 		e.playerstats_id = strzone(e.crypto_idfp);
 	else if(clienttype(e) == CLIENTTYPE_BOT)
 		e.playerstats_id = strzone(sprintf("bot#%d", e.playerid));
@@ -62,6 +62,29 @@ void PlayerStats_AddPlayer(entity e)
 		else
 			db_put(playerstats_db, key, "#");
 		playerstats_last = strzone(e.playerstats_id);
+	}
+}
+
+void PlayerStats_AddTeam(float t)
+{
+	if(playerstats_db < 0)
+		return;
+
+	string key;
+	key = sprintf("team#%d:*", t);
+	
+	string p;
+	p = db_get(playerstats_db, key);
+	if(p == "")
+	{
+		if(playerstats_last)
+		{
+			db_put(playerstats_db, key, playerstats_last);
+			strunzone(playerstats_last);
+		}
+		else
+			db_put(playerstats_db, key, "#");
+		playerstats_last = strzone(sprintf("team%d", t));
 	}
 }
 
@@ -101,11 +124,49 @@ void PlayerStats_Event(entity e, string event_id, float value)
 	db_put(playerstats_db, key, ftos(val));
 }
 
+void PlayerStats_TeamScore(float t, string event_id, float value)
+{
+	string key;
+	float val;
+	key = sprintf("team#%d:%s", t, event_id);
+	val = stof(db_get(playerstats_db, key));
+	val += value;
+	db_put(playerstats_db, key, ftos(val));
+}
+
 void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 {
 	if(playerstats_requested)
 		playerstats_waitforme = TRUE;
 }
+
+/*
+	format spec:
+
+	A collection of lines of the format <key> SPACE <value> NEWLINE, where
+	<key> is always a single character.
+
+	The following keys are defined:
+
+	V: format version (always 1)
+	T: time at which the game ended
+	G: game type
+	M: map name
+	S: "hostname" of the server
+	C: number of "unpure" cvar changes
+	P: player ID of an existing player; this also sets the owner for all following "n" and "e" lines (lower case!)
+	n: nickname of the player (optional)
+	e: followed by an event name, a space, and the event count/score
+		event names can be:
+			alivetime: total playing time of the player
+			wins: number of games won (can only be set if matches is set)
+			matches: number of matches played to the end (not aborted by map switch)
+			joins: number of matches joined (always 1 unless player never played during the match)
+			scoreboardvalid: set to 1 if the player was there at the end of the match
+			total-<scoreboardname>: total score of that scoreboard item
+			scoreboard-<scoreboardname>: end-of-game score of that scoreboard item (can differ in non-team games)
+			achievement-<achievementname>: achievement counters
+*/
 
 //#NO AUTOCVARS START
 void PlayerStats_Shutdown()

@@ -172,7 +172,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
-	PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1);
+	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
 	
 	// waypoints
 	WaypointSprite_Spawn("ka-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, FALSE);
@@ -200,7 +200,7 @@ void ka_TimeScoring()
 		if(autocvar_g_keepaway_score_timepoints)
 			PlayerScore_Add(self.owner, SP_SCORE, autocvar_g_keepaway_score_timepoints);
 			
-		PlayerScore_Add(self.owner, SP_KEEPAWAY_TIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
+		PlayerScore_Add(self.owner, SP_KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
 		self.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	}
 }
