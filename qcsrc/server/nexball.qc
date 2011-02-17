@@ -725,6 +725,7 @@ float w_nexball_weapon(float req)
 		precache_model ("models/elaser.mdl");
 		precache_sound ("nexball/shoot1.wav");
 		precache_sound ("nexball/shoot2.wav");
+		precache_sound ("misc/typehit.wav");
 	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_PORTO);

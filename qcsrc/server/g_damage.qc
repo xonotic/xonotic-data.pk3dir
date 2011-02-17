@@ -790,13 +790,11 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 					if(damage > 0)
 					{
 						if(deathtype != DEATH_FIRE)
-						if(attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time)
 						{
 							if(targ.BUTTON_CHAT)
 								attacker.typehitsound += 1;
 							else
 								attacker.hitsound += 1;
-							attacker.prevhitsound = time;
 						}
 
 						damage_goodhits += 1;
@@ -822,10 +820,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				else
 				{
 					if(deathtype != DEATH_FIRE)
-					if(attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time)
 					{
 						attacker.typehitsound += 1;
-						attacker.prevhitsound = time;
 					}
 					if(mirrordamage > 0)
 						if(time > attacker.teamkill_complain)

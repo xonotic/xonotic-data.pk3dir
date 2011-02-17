@@ -832,7 +832,6 @@ float autocvar_g_midair_shieldtime;
 float autocvar_g_minstagib_ammo_drop;
 float autocvar_g_minstagib_extralives;
 float autocvar_g_minstagib_speed_highspeed;
-float autocvar_g_mirrordamage;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 float autocvar_g_monster_zombie_attack_run_damage;
@@ -1148,7 +1147,6 @@ float autocvar_sv_friction;
 float autocvar_sv_friction_on_land;
 float autocvar_sv_gameplayfix_q2airaccelerate;
 #define autocvar_sv_gravity cvar("sv_gravity")
-float autocvar_sv_hitsound_antispam_time;
 string autocvar_sv_intermission_cdtrack;
 string autocvar_sv_jumpspeedcap_max;
 float autocvar_sv_jumpspeedcap_max_disable_on_ramps;
