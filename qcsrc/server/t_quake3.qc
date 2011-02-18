@@ -135,13 +135,19 @@ void spawnfunc_item_flight()         { spawnfunc_item_jetpack();       }
 .float notsingle;
 .float notfree;
 .float notq3a;
+.float notta;
 .string gametype;
 float DoesQ3ARemoveThisEntity()
 {
 	// Q3 style filters (DO NOT USE, THIS IS COMPAT ONLY)
 
 	if(self.notq3a)
-		return 1;
+		if(!teams_matter || g_tdm || g_ctf)
+			return 1;
+
+	if(self.notta)
+		if not(!teams_matter || g_tdm || g_ctf)
+			return 1;
 
 	if(self.notsingle)
 		if(maxclients == 1)
