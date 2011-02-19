@@ -65,6 +65,7 @@ void AnimHost_removeAnim(entity me, entity other)
 		n.prevSibling = p;
 	else
 		me.lastChild = p;
+	remove(other);
 }
 
 void AnimHost_removeAllAnim(entity me)
@@ -141,7 +142,6 @@ void AnimHost_finishAllAnim(entity me)
 	{
 		tmp = e;
 		e = tmp.prevSibling;
-		me.removeAnim(me, tmp);
 		tmp.finishAnim(tmp);
 	}
 }
@@ -155,7 +155,6 @@ void AnimHost_finishObjAnim(entity me, entity obj)
 		{
 			tmp = e;
 			e = tmp.prevSibling;
-			me.removeAnim(me, tmp);
 			tmp.finishAnim(tmp);
 		}
 	}
@@ -175,7 +174,6 @@ void AnimHost_tickAll(entity me)
 			tmp = e;
 			e = tmp.prevSibling;
 			me.removeAnim(me, tmp);
-			remove(tmp);
 		}
 	}
 }
