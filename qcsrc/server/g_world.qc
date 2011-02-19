@@ -2843,14 +2843,14 @@ void EndFrame()
 		{
 			if(self.enemy.typehitsound)
 				self.typehit_time = time;
-			else if(self.enemy.hitsound && self.cvar_cl_hitsound)
+			else if(self.enemy.hitsound)
 				self.hit_time = time;
 		}
 		else
 		{
 			if(self.typehitsound)
 				self.typehit_time = time;
-			else if(self.hitsound && self.cvar_cl_hitsound)
+			else if(self.hitsound)
 				self.hit_time = time;
 		}
 	}
