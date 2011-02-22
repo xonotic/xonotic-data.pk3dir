@@ -2355,6 +2355,10 @@ void SpectateCopy(entity spectatee) {
 	self.weapons = spectatee.weapons;
 	self.switchweapon = spectatee.switchweapon;
 	self.weapon = spectatee.weapon;
+	self.nex_charge = spectatee.nex_charge;
+	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
+	self.sniperrifle_bulletcounter = spectatee.sniperrifle_bulletcounter;
+	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;
 	self.v_angle = spectatee.v_angle;
