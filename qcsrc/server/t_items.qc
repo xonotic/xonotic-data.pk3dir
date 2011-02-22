@@ -735,36 +735,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			waypoint_spawnforitem(self);
 		}
 
-		if(teams_matter)
-		{
-			if(self.notteam)
-			{
-				print("removed non-teamplay ", self.classname, "\n");
-				startitem_failed = TRUE;
-				remove (self);
-				return;
-			}
-		}
-		else
-		{
-			if(self.notfree)
-			{
-				print("removed non-FFA ", self.classname, "\n");
-				startitem_failed = TRUE;
-				remove (self);
-				return;
-			}
-		}
-
-		if(self.notq3a)
-		{
-			// We aren't TA or something like that, so we keep the Q3A entities
-			print("removed non-Q3A ", self.classname, "\n");
-			startitem_failed = TRUE;
-			remove (self);
-			return;
-		}
-
 		/*
 		 * can't do it that way, as it would break maps
 		 * TODO make a target_give like entity another way, that perhaps has
