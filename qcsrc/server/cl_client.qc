@@ -2365,7 +2365,6 @@ void SpectateCopy(entity spectatee) {
 	self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
-	SetZoomState(spectatee.zoomstate);
 
 	anticheat_spectatecopy(spectatee);
 }
@@ -2401,6 +2400,8 @@ float SpectateNext() {
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
 		self.movetype = MOVETYPE_NONE;
 		accuracy_resend(self);
+
+		SetZoomState(spectatee.zoomstate);
 
 		if(!SpectateUpdate())
 			PutObserverInServer();

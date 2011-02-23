@@ -87,8 +87,26 @@ float CallbackChain_Call(entity cb)
 	return r; // callbacks return an error status, so 0 is default return value
 }
 
+#define MAX_MUTATORS 8
+float(float) mutators[MAX_MUTATORS];
 float Mutator_Add(float(float) func)
 {
+	float i, j;
+	j = -1;
+	for(i = 0; i < MAX_MUTATORS; ++i)
+	{
+		if(func == mutators[i])
+			return 1; // already added
+		if(func == func_null)
+			j = i;
+	}
+	if(j < 0)
+	{
+		backtrace("WARNING: too many mutators, cannot add any more\n");
+		return 0;
+	}
+	mutators[j] = func;
+
 	if(func(MUTATOR_ADDING) == 0)
 	{
 		// good
@@ -100,6 +118,17 @@ float Mutator_Add(float(float) func)
 }
 void Mutator_Remove(float(float) func)
 {
+	float i;
+	for(i = 0; i < MAX_MUTATORS; ++i)
+		if(func == mutators[i])
+			break;
+	if(i >= MAX_MUTATORS)
+	{
+		backtrace("WARNING: removing not-added mutator\n");
+		return 0;
+	}
+	mutators[i] = func_null;
+
 	if(func(MUTATOR_REMOVING) != 0)
 	{
 		// baaaaad
