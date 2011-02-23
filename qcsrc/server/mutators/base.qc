@@ -88,16 +88,16 @@ float CallbackChain_Call(entity cb)
 }
 
 #define MAX_MUTATORS 8
-var mutatorfunc_t mutators[MAX_MUTATORS];
-float Mutator_Add(mutatorfunc_t func)
+string loaded_mutators[MAX_MUTATORS];
+float Mutator_Add(mutatorfunc_t func, string name)
 {
 	float i, j;
 	j = -1;
 	for(i = 0; i < MAX_MUTATORS; ++i)
 	{
-		if(func == mutators[i])
+		if(name == loaded_mutators[i])
 			return 1; // already added
-		if(func == func_null)
+		if(!loaded_mutators[i])
 			j = i;
 	}
 	if(j < 0)
@@ -105,7 +105,7 @@ float Mutator_Add(mutatorfunc_t func)
 		backtrace("WARNING: too many mutators, cannot add any more\n");
 		return 0;
 	}
-	mutators[j] = func;
+	loaded_mutators[j] = name;
 
 	if(func(MUTATOR_ADDING) == 0)
 	{
@@ -113,21 +113,21 @@ float Mutator_Add(mutatorfunc_t func)
 		return 1;
 	}
 	backtrace("WARNING: when adding mutator: adding failed\n");
-	Mutator_Remove(func);
+	Mutator_Remove(func, name);
 	return 0;
 }
-void Mutator_Remove(float(float) func)
+void Mutator_Remove(float(float) func, string name)
 {
 	float i;
 	for(i = 0; i < MAX_MUTATORS; ++i)
-		if(func == mutators[i])
+		if(name == loaded_mutators[i])
 			break;
 	if(i >= MAX_MUTATORS)
 	{
 		backtrace("WARNING: removing not-added mutator\n");
 		return;
 	}
-	mutators[i] = func_null;
+	loaded_mutators[i] = string_null;
 
 	if(func(MUTATOR_REMOVING) != 0)
 	{
