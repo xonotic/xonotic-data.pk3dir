@@ -88,8 +88,8 @@ float CallbackChain_Call(entity cb)
 }
 
 #define MAX_MUTATORS 8
-float(float) mutators[MAX_MUTATORS];
-float Mutator_Add(float(float) func)
+var mutatorfunc_t mutators[MAX_MUTATORS];
+float Mutator_Add(mutatorfunc_t func)
 {
 	float i, j;
 	j = -1;
@@ -125,7 +125,7 @@ void Mutator_Remove(float(float) func)
 	if(i >= MAX_MUTATORS)
 	{
 		backtrace("WARNING: removing not-added mutator\n");
-		return 0;
+		return;
 	}
 	mutators[i] = func_null;
 

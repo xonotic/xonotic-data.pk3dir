@@ -16,8 +16,9 @@ float CallbackChain_Call(entity cb);
 
 #define MUTATOR_REMOVING 0
 #define MUTATOR_ADDING 1
-float Mutator_Add(float(float) func);
-void Mutator_Remove(float(float) func); // calls error() on fail
+typedef float(float) mutatorfunc_t;
+float Mutator_Add(mutatorfunc_t func);
+void Mutator_Remove(mutatorfunc_t func); // calls error() on fail
 
 #define MUTATOR_ADD(name) Mutator_Add(MUTATOR_##name)
 #define MUTATOR_REMOVE(name) Mutator_Remove(MUTATOR_##name)
