@@ -603,7 +603,6 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_noantilag, "cl_noantilag");
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional, "cl_voice_directional");
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional_taunt_attenuation, "cl_voice_directional_taunt_attenuation");
-	GetCvars_handleFloat(s, f, cvar_cl_hitsound, "cl_hitsound");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_share, "cl_accuracy_data_share");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_receive, "cl_accuracy_data_receive");
 
@@ -616,6 +615,7 @@ void GetCvars(float f)
 #endif
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
+	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
@@ -1638,8 +1638,6 @@ void precache()
     precache_sound ("misc/gib_splat02.wav");
     precache_sound ("misc/gib_splat03.wav");
     precache_sound ("misc/gib_splat04.wav");
-    precache_sound ("misc/hit.wav");
-	precache_sound ("misc/typehit.wav");
     PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
     PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
     precache_sound ("misc/null.wav");

@@ -136,6 +136,8 @@ void CSQC_Init(void)
 	WaypointSprite_Load();
 
 	// precaches
+	precache_sound("misc/hit.wav");
+	precache_sound("misc/typehit.wav");
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();

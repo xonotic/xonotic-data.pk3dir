@@ -77,13 +77,12 @@ float maxclients;
 //.float	style;
 //.float	skill;
 .float	sounds;
+.float  platmovetype;
 
 .string killtarget;
 
 .vector	pos1, pos2;
 .vector	mangle;
-
-.float cvar_cl_hitsound;
 
 .float	pain_finished;			//Added by Supajoe
 .float	pain_frame;			//"
@@ -328,6 +327,7 @@ float sv_loddistance2;
 .string weaponorder_byimpulse;
 
 .float cvar_cl_allow_uid2name;
+.float cvar_cl_allow_uidtracking;
 .string stored_netname;
 
 void Announce(string snd);
@@ -400,10 +400,6 @@ float assault_attacker_team;
 .float speedrunning;
 
 // Q3 support
-.float notteam;
-.float notsingle;
-.float notfree;
-.float notq3a;
 float q3acompat_machineshotgunswap;
 
 // database
@@ -602,6 +598,9 @@ string matchid;
 .string noise4;
 
 .float last_pickup;
+
+.float hit_time; 
+.float typehit_time; 
 
 .float stat_leadlimit;
 

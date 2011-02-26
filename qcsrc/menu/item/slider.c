@@ -10,6 +10,7 @@ CLASS(Slider) EXTENDS(Label)
 	METHOD(Slider, mousePress, float(entity, vector))
 	METHOD(Slider, mouseDrag, float(entity, vector))
 	METHOD(Slider, mouseRelease, float(entity, vector))
+	METHOD(Slider, focusEnter, void(entity))
 	METHOD(Slider, valueToText, string(entity, float))
 	METHOD(Slider, toString, string(entity))
 	METHOD(Slider, setValue, void(entity, float))
@@ -235,12 +236,12 @@ float Slider_mousePress(entity me, vector pos)
 			//me.mouseDrag(me, pos);
 		}
 	}
-	if(cvar("menu_sounds"))
-		localsound("sound/misc/menu2.wav");
 	return 1;
 }
 float Slider_mouseRelease(entity me, vector pos)
 {
+	if(cvar("menu_sounds"))
+		localsound("sound/misc/menu2.wav");
 	me.pressed = 0;
 	if(me.disabled)
 		return 0;
@@ -249,6 +250,12 @@ float Slider_mouseRelease(entity me, vector pos)
 void Slider_showNotify(entity me)
 {
 	me.focusable = !me.disabled;
+}
+void Slider_focusEnter(entity me)
+{
+	if(cvar("menu_sounds") > 1)
+		localsound("sound/misc/menu1.wav");
+	SUPER(Slider).focusEnter(me);
 }
 void Slider_draw(entity me)
 {

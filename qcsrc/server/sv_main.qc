@@ -232,10 +232,11 @@ void StartFrame (void)
 .float anglejitter;
 .string gametypefilter;
 .string cvarfilter;
+float DoesQ3ARemoveThisEntity();
 void SV_OnEntityPreSpawnFunction()
 {
 	if(self.gametypefilter != "")
-	if not(isGametypeInFilter(game, teams_matter, self.gametypefilter))
+	if not(isGametypeInFilter(game, teams_matter, have_team_spawns, self.gametypefilter))
 	{
 		remove(self);
 		return;
@@ -348,6 +349,12 @@ void SV_OnEntityPreSpawnFunction()
 			remove(self);
 			return;
 		}
+	}
+
+	if(DoesQ3ARemoveThisEntity())
+	{
+		remove(self);
+		return;
 	}
 
 	// support special -1 and -2 angle from radiant
