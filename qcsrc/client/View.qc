@@ -366,6 +366,8 @@ vector myhealth_gentlergb;
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
+vector damage_blurpostprocess, content_blurpostprocess;
+
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -785,6 +787,73 @@ void CSQC_UpdateView(float w, float h)
 		}
 		else
 			drawpic(reticle_pos, "gfx/blood", reticle_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+
+		if(autocvar_hud_postprocessing)
+		{
+			if(autocvar_hud_damage_blur)
+			{
+				damage_blurpostprocess_x = 1;
+				damage_blurpostprocess_y = bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage_blur;
+				damage_blurpostprocess_z = bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage_blur_alpha;
+			}
+			else
+			{
+				damage_blurpostprocess_x = 0;
+				damage_blurpostprocess_y = 0;
+				damage_blurpostprocess_z = 0;
+			}
+		}
+	}
+
+	if(autocvar_hud_postprocessing)
+	{
+		// lets apply the postprocess effects from the previous two functions if needed
+		if(damage_blurpostprocess_x || content_blurpostprocess_x)
+		{
+			float blurradius = bound(0, damage_blurpostprocess_y + content_blurpostprocess_y, autocvar_hud_postprocessing_maxblurradius);
+			float bluralpha = bound(0, damage_blurpostprocess_z + content_blurpostprocess_z, autocvar_hud_postprocessing_maxbluralpha);
+			cvar_set("r_glsl_postprocess_uservec1", strcat(ftos(blurradius), " ", ftos(bluralpha), " 0 0"));
+			cvar_set("r_glsl_postprocess_uservec1_enable", "1");
+		}
+		else
+		{
+			cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
+			cvar_set("r_glsl_postprocess_uservec1_enable", "0");
+		}
+
+		if(autocvar_hud_powerup)
+		{
+			float sharpen_intensity;
+			if (getstatf(STAT_STRENGTH_FINISHED) - time > 0)
+				sharpen_intensity += (getstatf(STAT_STRENGTH_FINISHED) - time);
+			if (getstatf(STAT_INVINCIBLE_FINISHED) - time > 0)
+				sharpen_intensity += (getstatf(STAT_INVINCIBLE_FINISHED) - time);
+			sharpen_intensity = bound(0, sharpen_intensity, 5); // powerup warning time is 5 seconds, so fade the effect from there
+
+			if(sharpen_intensity > 0)
+			{
+				cvar_set("r_glsl_postprocess_uservec2", strcat("0 ", ftos(-sharpen_intensity * cvar("hud_powerup")), " 0 0"));
+				cvar_set("r_glsl_postprocess_uservec2_enable", "1");
+			}
+			else
+			{
+				cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
+				cvar_set("r_glsl_postprocess_uservec2_enable", "0");
+			}
+		}
+	}
+
+	if not(autocvar_hud_damage && autocvar_hud_postprocessing)
+	{
+		// don't allow blur to get stuck on if we disable the cvar while damaged
+		cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
+		cvar_set("r_glsl_postprocess_uservec1_enable", "0");
+	}
+	if not(autocvar_hud_powerup && autocvar_hud_postprocessing)
+	{
+		// don't allow sharpen to get stuck on if we disable the cvar while powered up
+		cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
+		cvar_set("r_glsl_postprocess_uservec2_enable", "0");
 	}
 
 	// Draw the mouse cursor
