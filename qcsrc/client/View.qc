@@ -726,6 +726,22 @@ void CSQC_UpdateView(float w, float h)
 		
 		if(contentavgalpha)
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
+
+		if(autocvar_hud_postprocessing)
+		{
+			if(autocvar_hud_contents_blur)
+			{
+				content_blurpostprocess_x = 1;
+				content_blurpostprocess_y = contentavgalpha * autocvar_hud_contents_blur;
+				content_blurpostprocess_z = contentavgalpha * autocvar_hud_contents_blur_alpha;
+			}
+			else
+			{
+				content_blurpostprocess_x = 0;
+				content_blurpostprocess_y = 0;
+				content_blurpostprocess_z = 0;
+			}
+		}
 	}
 	
 	if(autocvar_hud_damage)
