@@ -184,7 +184,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.savedValue = 0.5; // default
 		me.TD(me, 1, 2, s);
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "hud_damage", "Damage & Water blur *"));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "hud_damage", "Damage & Water blur"));
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "hud_powerup", "Sharpening"));
 	
 	me.gotoRC(me, me.rows - 1, 0);
