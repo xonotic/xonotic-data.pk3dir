@@ -3889,7 +3889,7 @@ void HUD_VoteWindow(void)
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
 	{
 		vote_active = 1;
-		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player\" ^7in stats"));
+		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player^7\" in stats"));
         uid2name_dialog = 1;
 	}
 
