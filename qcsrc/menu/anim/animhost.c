@@ -166,9 +166,6 @@ void AnimHost_tickAll(entity me)
 	for(e = me.firstChild; e; e = e.nextSibling)
 	{
 		e.tick(e, time);
-	}
-	for(e = me.firstChild; e; e = e.nextSibling)
-	{
 		if (e.isFinished(e))
 		{
 			tmp = e;
