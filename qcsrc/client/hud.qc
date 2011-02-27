@@ -2649,7 +2649,7 @@ void HUD_Score(void)
 					}
 					else
 					{
-						s = strcat("Player", ftos(i+1));
+						s = sprintf(_("Player %d"), ftos(i+1));
 						score -= 3;
 					}
 
@@ -2976,7 +2976,7 @@ void HUD_VoteWindow(void)
 		{
 			vote_yescount = 0;
 			vote_nocount = 0;
-			print("^1You have to answer before entering hud configure mode\n");
+			print(_("^1You must answer before entering hud configure mode\n"));
 			cvar_set("_hud_configure", "0");
 		}
 		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player\" ^7in stats"));
@@ -4590,7 +4590,7 @@ void HUD_Main (void)
 			}
 		}
 		if (warning)
-			print("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
+			print(_("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n"));
 
 		cvar_set("_hud_panelorder", s);
 		if(hud_panelorder_prev)
