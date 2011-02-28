@@ -1067,10 +1067,10 @@ void Ent_Init()
 	hook_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
 	hook_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
 	hook_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	lightning_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	lightning_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	lightning_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	lightning_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 	gauntlet_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
 	gauntlet_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
 	gauntlet_shotorigin[2] = decompressShotOrigin(ReadInt24_t());

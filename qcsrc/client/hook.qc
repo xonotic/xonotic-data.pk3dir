@@ -76,7 +76,7 @@ void Draw_GrapplingHook()
 			vs = hook_shotorigin[s];
 			break;
 		case ENT_CLIENT_LGBEAM:
-			vs = electro_shotorigin[s];
+			vs = lightning_shotorigin[s];
 			break;
 		case ENT_CLIENT_GAUNTLET:
 			vs = gauntlet_shotorigin[s];
@@ -205,7 +205,7 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_HOOK:
 			break;
 		case ENT_CLIENT_LGBEAM:
-			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity);
+			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
 			break;
 		case ENT_CLIENT_GAUNTLET:
 			pointparticles(particleeffectnum("gauntlet_lightning"), b, normalize(a - b), frametime * intensity);
