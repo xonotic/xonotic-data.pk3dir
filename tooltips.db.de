@@ -1,0 +1,221 @@
+0
+\XonoticSingleplayerDialog\Spiele die Einzelspieler-Kampagne oder habe Instant-Action Spiele gegen Bots
+
+
+\XonoticMultiplayerDialog\Spiele online, gegen deine Freunde im LAN, gucke dir Demos an oder ändere deine Spieler-Einstellungen
+\XonoticMultiplayerDialog/Server\Finde Server um auf ihnen zu spielen
+\menu_slist_showempty\Zeige leere Server
+\menu_slist_showfull\Zeige volle Server, die keinen freien Platz mehr haben
+\net_slist_pause\Unterbreche die automatische Aktualisierung der Serverliste um ein "Herumspringen" zu verhindern
+\XonoticMultiplayerDialog/Info\Zeige mehr Informationen über den markierten Server
+\XonoticMultiplayerDialog/Bookmark\Setze ein Lesezeichen für den markierten Server um ihn beim nächsten mal schneller wiederzufinden
+\XonoticMultiplayerDialog/Havoc\Wechsel in den Havoc Modus, welcher zu Änderungen des Spielverhaltens führt
+\XonoticMultiplayerDialog/Starten\Hoste dein eigenes Spiel
+\XonoticMultiplayerDialog/Demos\Gucke dir Demos an
+\XonoticMultiplayerDialog/Spieler-Einstellungen\Ändere deine Spieler-Einstellungen
+
+\XonoticTeamSelectDialog/'bestem' Team beitreten\Automatische Auswahl des Teams (bevorzugt)
+\XonoticTeamSelectDialog/rot\Trete dem roten Team bei
+\XonoticTeamSelectDialog/blau\Trete dem blauen Team bei
+\XonoticTeamSelectDialog/gelb\Trete dem gelben Team bei
+\XonoticTeamSelectDialog/pink\Trete dem pinken Team bei
+
+\timelimit_override\Beim Erreichen dieses Zeitlimits in Minuten endet das Spiel
+\fraglimit_override\Die Anzahl an Frags die benötigt wird, bevor das Spiel endet
+\menu_maxplayers\Die maximale Anzahl der Spieler oder Bots, welche sich mit dem Server gleichzeitig verbinden können
+\bot_number\Anzahl von Bots auf dem Server
+\skill\Gib an, wie erfahren die Bots sein sollen
+\g_maplist_votable\Anzahl von Maps, welche am Ende des Spiels zur Wahl stehen
+\sv_vote_simple_majority_factor\Einfache Mehrheit gewinnt die Abstimmung
+\XonoticMultiplayerDialog/Erweiterte Einstellungen...\Erweiterte Einstellungen für den Server
+\XonoticMultiplayerDialog/Mutators...\Mutators und Waffen-Arenen
+\g_cloaked\Alle Spieler sind fast unsichtbar
+\g_footsteps\Aktiviere den Schrittklang
+\g_midair\Dem Gegner Schaden zuzufügen ist nur möglich, wenn er sich in der Luft befindet
+\g_vampire\Der Schaden dem du anderen Spielern zufügst, wird deiner Lebensenergie hinzugefügt
+\g_bloodloss\Höhe der Lebensenergie, bei der dein Spieler auf Grund von Blutverlust betäubt wirkt
+\sv_gravity\Lass Gegenstände langsamer zu Boden fallen, ein niedrigerer Wert verringert die Gravitation
+\g_grappling_hook\Neu erzeugte/auferstandene Spieler starten mit dem Enterhaken
+\g_jetpack\Neu erzeugte/auferstandene Spieler starten mit dem Jetpack
+\g_pinata\Spieler lassen alle Waffen fallen, die sie besaßen, wenn sie sterben
+\g_weapon_stay\Waffen bleiben liegen, auch wenn sie aufgenommen wurden
+\g_weaponarena\Auswahl einer Waffen-Arena führt dazu, dass jeder Spieler mit der gewählten Waffe startet. Diese hat unendlich viel Munition und andere Waffen sind nicht vorhanden..
+\menu_weaponarena_with_laser\Aktiviere auch Laser in der Waffen-Arena
+\g_minstagib\Alle Spieler starten mit der Minstanex, eine elektromagnetische Schienenkanone mit unendlich viel Schaden. Wenn ein Spieler keine Munition mehr hat, bleiben ihm 10 Sekunden welche zu finden, ansonsten stirbt er. Der 2. Feuermodus ist Laser, welcher keinen Schaden hinzufügen kann. Dieser eignet sich gut für Tricksprünge.
+\g_nixnex\keine Gegenstände in Xonotic - Anstelle der Möglichkeit Waffen aufzusammeln, spielen alle mit der gleichen Waffe. Nach einiger Zeit startet ein Countdown, danach wechseln alle zu einer neuen gleichen Waffe.
+\g_nixnex_with_laser\In NixNex ist immer als zweite Waffe der Laser vorhanden
+\XonoticMultiplayerDialog/All\Wähle alle Maps
+\XonoticMultiplayerDialog/None\Wähle alle Maps ab
+
+
+\XonoticMultiplayerDialog/Timedemo\Teste wie schnell dein Computer die markierte Demo abspielen kann - Es wird ein Benchmark-Test ausgeführt, dessen Ergebniss in "gamedir/data/" gespeichert wird.
+
+\fov\Sichtfeld in Grad mit einem Wert zwischen 60 und 130, Standard ist 90
+\cl_bobcycle\Setze den Wert für das "Sicht-Wackeln". Deaktivieren für kein "Sicht-Wackeln"
+\cl_zoomfactor\Setze den Vergrößerungsfaktor
+\cl_zoomsensitivity\Bestimme die Änderung der Empfindlichkeit während des Vergrößerns, Werte von 0 (geringste Sensiviät) bis 1 (keine Änderung der Sensivität sind möglich)
+\cl_zoomspeed\Bestimme wie schnell der angegebene Vergrößerungsfaktor erreicht werden soll, deaktivieren für sofortige Vergrößerung
+\XonoticMultiplayerDialog/Waffeneinstellungen...\Lege deine bevorzugten Waffen fest, sowie den automatischen Wechsel der Waffenmodelle und Weiteres
+
+\cl_weaponpriority_useforcycling\Benutze die oben angegebene Liste, wenn die Waffen mit Hilfe des Mausrads gewechselt werden
+\cl_autoswitch\Wechsel automatisch zu der neu aufgesammelten Waffe, wenn diese besser ist als die, welche Du zur Zeit trägst
+\r_drawviewmodel\Darstellung der Waffe im Spiel
+\cl_gunalign\Position der Waffe, links oder rechts; erfordert Neustart
+
+\crosshair_per_weapon\Ermögliche unterschiedliche Fadenkreuze für unterschiedliche Waffen, zu empfehlen, wenn du ohne dargstelltes Waffenmodel spielst
+\crosshair_color_override\Ermögliche unterschiedliche Farben für unterschiedliche Fandenkreuze, abhängig von der Waffe die gerade getragen wird
+\crosshair_size\Lege die Größe des Fadenkreuzes fest
+\crosshair_color_alpha\Lege die Opazität des Fadenkreuzes fest
+\crosshair_color_red\Roter Farbanteil des Fadenkreuzes
+\crosshair_color_green\grüner Farbanteil des Fadenkreuzes
+\crosshair_color_blue\blauer Farbanteil des Fadenkreuzes
+\sbar_hudselector\Benutze das alte HUD Layout
+\XonoticMultiplayerDialog/Radar, HUD & Waypoints...\Stelle Radar, HUD & Wegpunkte ein
+\_cl_name\Lege deinen Namen im Spiel fest
+
+\XonoticSettingsDialog\Ändere die Spiel-Einstellungen
+\XonoticCreditsDialog\Die Xonotic Credits
+\XonoticTeamSelectDialog\-
+\XonoticMutatorsDialog\-
+\XonoticMapInfoDialog\-
+\XonoticUserbindEditDialog\-
+\XonoticWinnerDialog\-
+\XonoticWeaponsDialog\-
+\XonoticRadarDialog\-
+\XonoticServerInfoDialog\-
+\XonoticCvarsDialog\-
+
+\XonoticQuitDialog\Beende das Spiel
+\XonoticQuitDialog/Ja\Zurück an die Arbeit...
+\XonoticQuitDialog/Nein\Ich muss noch ein paar Typen fraggen!
+
+\XonoticSettingsDialog/Eingabe\Einstellungen der Eingabe
+\sensitivity\Maus Geschwindigkeitsmultiplikator
+\menu_mouse_speed\Maus Geschwindigkeitsmultiplikator im Menü, hat keinen Effekt auf die Mausbewegung im Spiel
+\m_filter\Glättet die Mausbewegung, aber verringert die Reaktion des Zielens etwas
+\m_pitch\Umkehren der Mausbewegung entlang der Y-Achse
+\vid_dgamouse\Verwende die DGA Maus Eingabe
+\con_closeontoggleconsole\Schließen der Konsole auch mit der Taste, die zum Öffnen verwendet wird
+\sbar_showbinds\Display actions / bound keys in the strings shown during the game
+\cl_showpressedkeys\Lass dir die gedrückten Tasten anderer Spieler anzeigen
+
+\XonoticSettingsDialog/Video\Video Einstellungen
+\vid_width\Einstellung der zu verwendenden Bildschirmauflösung
+\vid_bitsperpixel\Bestimme wie viele Bits pro Pixel (BPP) gerendert werden sollen, 32 ist der bevorzugte Wert
+\vid_fullscreen\Aktiviere den Vollbildmodus (Standard: aktiviert)
+\vid_vsync\Aktiviere die vertikale Synchronization um ein Zeilenreißen zu unterdrücken, die FPS werden auf den Wert der Bildwiederholungsrate deines Monitors gesetzt (Standard: deaktiviert)
+\r_glsl\Aktiviere OpenGL 2.0 Enable OpenGL 2.0 Pixel-Shader für Lichteffekte (Standard: aktiviert)
+\gl_vbo\Speicher Eckpunkte und einige Dreiecke der statischen Geometrie im Videospeicher um ein schnelleres Rendern zu ermöglichen (Standard: aktiviert)
+\r_depthfirst\erhindere das Überblenden indem nur die das Tiefenbild der Szene vor dem Licht gerendert wird (Standard: deaktiviert)
+\gl_texturecompression\Komprimiere die Texturen für Grafikkarten mit einem geringen Grafikspeicher (Standard: deaktiviert)
+\gl_finish\Die Grafikkarte wartet bis die CPU die Berechnung eines jeden Frames beendet hat, dies kann bei merkwürdigen Verhalten der Eingabe helfen (Standard: deaktiviert)
+\v_brightness\Helligkeit von Schwarz (Standard: 0)
+\v_contrast\Helligkeit von Weiß (Standard: 1)
+\v_gamma\Korrekturwert für die Kontraststärke (Gamma-Wert), Helligkeitseffekt, der keinen Einfluss auf Weiß und Schwarz hat (Standard: 1.125)
+\v_contrastboost\Faktor für die Änderung des Kontrasts in dunklen Bildteilen (Standard: 1)
+\r_glsl_saturation\Sättigungskorrektur (0 = Graustufenbild, 1 = normales Bild, 2 = übersättigtes Bild), benötigt GLSL Farbkontrolle (Standard: 1)
+\v_glslgamma\Aktiviere die Verwendung von GLSL um die Gamma-Korrektur zu ermöglichen, kann die Leistung stark verringern (Standard: Deaktiviert)
+\r_ambient\Ambientebeleuchtung, ein zu hoch eingestellter Wert lässt das Map matt und flach erscheinenht (Standard: 4)
+\r_hdr_scenebrightness\Globales Rendern der Helligkeit (Standard: 1)
+\vid_samples\Aktiviere Antialiasing um Ecken der 3D-Geometire zu glätten. Kann die Leistung stark verringern (Standard: deaktiviert)
+\v_flipped\Linkshänder Modus für arme Leute (Standard: deaktiviert)
+
+\XonoticSettingsDialog/Effekte\Einstellungen der Effekte
+\r_subdivisions_tolerance\Ändere die Rundheit/Glattheit von Kurven in der Map (Standard: Normal)
+\gl_picmip\Ändere die Schärfe von Texturen. Ein geringerer Wert verringert die Auslastung des Speichers, aber lässt die Texturen verschwommen aussehen. (Standard: Gut)
+\r_picmipworld\Wenn aktiviert, wird nur die Texturqualität von Modellen verringert (Standard: aktiviert)
+\mod_q3bsp_nolightmaps\Verwende hochauflösende Lightmaps, welche sehr schön aussehen, aber etwas mehr Videospeicher benötigen (Standard: aktiviert)
+\cl_particles_quality\Faktor für die Anzahl von Partikel. Weniger beudetet weniger Parikel, was zu einer besseren Performance führt (Standard: 0.5)
+\r_drawparticles_drawdistance\Weiter entfernte Partikel werden nicht dargestellt (Standard 1000)
+\cl_decals\Aktiviere Dekore (Einschusslöcher und Blut) (Standard: aktiviert)
+\r_drawdecals_drawdistance\Weiter entfernte Dekore werden nicht dargestellt (Standard: 300)
+\cl_decals_time\Zeit in Sekunden nach dem Dekore verschwinden (Standard: 2)
+\cl_gentle\Blut und Fleischteile werden durch andere, nicht blutige, Effekte ersetzt (Standard: deaktiviert)
+\cl_nogibs\Verringere die Anzahl von Fleischteilen oder entferne sie vollständig (Standard: viele)
+\v_kicktime\Wert für die Dauer der Beeinträchtigung der Sicht durch einen Schaden (Standard: 0)
+\gl_texture_anisotropy\Qualität für das Filtern von Anisotropie (Standard: 1x)
+\r_glsl_deluxemapping\Verwende ein-Pixel Lichteffekte (default: enabled)
+\r_shadow_gloss\Aktiviere Glanzeffekte für Texturen, wenn die Textur es unterstützt (glossmap) (Standard: aktiviert)
+\gl_flashblend\Enable faster but uglier dynamic lights by rendering bright coronas instead of real dynamic lights (default: disabled)
+\r_shadow_realtime_dlight\Aktiviere das Rendern von dynamischen Lichtern, wie Explosionen und Raketen-Lichter (Standard: aktiviert) 
+\r_shadow_realtime_dlight_shadows\Aktiviere das Rendern von Schatten von dynamischen Lichtern (Standard: deaktiviert)
+\r_shadow_realtime_world\Aktiviere das Rendern der gesamten Echtzeit-Welt-Lichter. Hat einen großen Einfluss auf die Performance (Standard: deaktiviert)
+\r_shadow_realtime_world_shadows\Aktiviere das Rendern von Schatten von Echtzeit-Welt-Lichter (Standard: deaktiviert)
+\r_shadow_usenormalmap\Aktiviere die Verwendung von gerichteter Schattierung auf Texturen (Standard: aktiviert)
+\r_showsurfaces\Komplettes Deaktivieren von Texturen für sehr langsame Hardware. Starke Verbesserung der Performace, sieht aber sehr komisch aus. (Standard: deaktiviert)
+\r_glsl_offsetmapping\Effekt für den Tiefendruck von Texturen, dieser Effekt lässt Texturen mit Bumpmap aus der 2D Ebene "herausgedrückt" erscheinen (Deaktiviert: deaktiviert)
+\r_glsl_offsetmapping_reliefmapping\Higher quality offset mapping, which also has a huge impact on performance (default: disabled)
+\r_water\Reflektions- und Refraktionsqualität, hat einen großen Einfluss auf die Performance von Maps mit reflektierenden Oberflächen (Standard: deaktiviert)
+\r_water_resolutionmultiplier\Auflösung von Reflektion und Refraktion (Standard: gut)
+\r_coronas\Aktiviere die Korona um bestimmte Lichter (Standard: aktiviert)
+\r_coronas_occlusionquery\Verringern der Korona, der Sichtbarkeit entsprechend (Standard: deaktiviert)
+\r_bloom\Aktiviere Bloom-Effekt, der die umgebenden Pixel sehr hell erleuchteter Pixel erhellt. Dieser Effekt hat einen großen Einfluss auf die Leistung (Standard: deaktiviert)
+\r_hdr\Höhere Qualität des Bloom-Effekts, hat einen sehr gr0ßen Einfluss auf die Leistung (Standard: deaktiviert)
+\r_motionblur\Stäre der Bewegungsunschärfe - 0.5 empfohlen
+\r_damageblur\Wert für die Bewegungsunschärfe bei einer Verletzung - 0.4 empfohlen
+
+\XonoticSettingsDialog/Audio\Audio-Einstellungen
+\bgmvolume\-
+\volume\-
+\snd_staticvolume\-
+\snd_worldchannel0volume\-
+\snd_entchannel3volume\-
+\snd_playerchannel6volume\-
+\snd_playerchannel7volume\-
+\snd_entchannel4volume\-
+\snd_playerchannel2volume\-
+\snd_playerchannel1volume\-
+\snd_speed\Ausgangsfrequenz des Tons
+\snd_channels\Anzahl der Kanäle für die Audiowiedergabe
+\snd_swapstereo\Linken und rechten Kanal tauschen
+\snd_spatialization_control\Aktiviere "räumlicheren" Klang (Mischung des linken und rechten Kanals um die Stereo-Trennung leicht zu verringern, für Kopfhörer)
+\cl_voice_directional\Aktiviere richtungsunabhängige Geräusche
+\cl_voice_directional_taunt_attenuation\Distanz in der "Bemerkungen" anderer Spieler gehört werden können
+\cl_autotaunt\Automatisches "Bemerkung", wenn Gegner gefraggt wurden
+\cl_sound_maptime_warning\Ansgage-Sound für die verbleibenden Minuten des Spiels
+\cl_hitsound\Spiele einen Treffer-Sound, wenn der Spieler auf den gezielt wurde, getroffen wurde
+\menu_sounds\Sound abspielen, wenn auf ein Menüitem geklickt wird oder mit dem Mauszeiger auf das Menüitem gezeit wird
+
+\XonoticSettingsDialog/Netzwerk\Netzwerk Einstellungen
+\cl_movement\Aktiviere die Client-seitige Bewegungssimulation
+\cl_nolerp\Enable network update smoothing
+\shownetgraph\Anzeige eines Netzwerkgraphens für gesendete/empfangene Pakete und weitere Informationen
+\_cl_rate\Gib die Netzwerkgeschwindigkeit mit dem  deine Netzwerkgeschwindigkeit mit dem Schieberegler an
+\cl_netfps\Anzahl der Pakete die pro Sekunde zum Server, mit dem man verbunden ist, geschickt werden sollen
+\cl_curl_maxdownloads\Maximale Anzahl der gleichzeitigen HTTP/FTP Downloads
+\cl_curl_maxspeed\Maximale Download Geschwindigkeit
+\cl_port\Stelle den zu verwendenden UDP Port als Client ein,  wenn der Port auf 0 gesetzt ist, wird kein bestimmter Port erzwungen
+
+\XonoticSettingsDialog/Sonstiges\Sonstige Einstellungen, wie Sprache, Menü-Skins
+\showtime\Uhrzeit im Spiel anzeigen, geeignet für Screenshots
+\showdate\Datum im Spiel anzeigen, geeignet für Screenshots
+\showfps\Zeige die gerenderten Frames pro Sekunde
+\cl_showspeed\Zeige die Gescheindigkeit des Spielers
+\cl_showspeed_unit\Wähle die Einheit, in der die Geschindigkeit angezeigt werden soll, qu/s = in/s
+\cl_showacceleration\Zeige die Beschleunigung des Spielers
+\cl_showacceleration_scale\Skalierungsfaktor für das Akzelerometer
+
+\XonoticSettingsDialog/Erweiterte Einstellungen...\Erweiterte Einstellungen, in denen du jede beliebige Variable des Spiels ändern kannst
+\g_friendlyfire\Prozentualer Anteil des Schadens, der Mitspielern hinzugefügt wird
+\g_mirrordamage\Percentage of teamdamage that will be mirrored to you
+\g_tdm_teams_override\Überschreibe die Standardgröße eines Teams in Teammodi
+
+\cl_teamradar_position\-
+\cl_teamradar_size\-
+\cl_teamradar_zoommode\-
+\cl_teamradar_rotation\-
+\cl_teamradar_scale\-
+\cl_teamradar_foreground_alpha\-
+\cl_teamradar_background_alpha\Wert für die Opazität des Radar-Hintergrunds
+\viewsize\Aktiviere/Deaktiviere den HUD-Hintergrund
+\sbar_alpha_bg\Wert für die Opazität des HUD-Hintergrunds
+\sbar_color_bg_r\Roter Farbanteil des HUD-Hintergrunds
+\sbar_color_bg_g\Grüner Farbanteil des HUD-Hintergrunds
+\sbar_color_bg_b\Blauer Farbanteil des HUD-Hintergrunds
+\sbar_color_bg_team\Team-Farben Sättigung des HUD-Hintergrunds
+\cl_hidewaypoints\Lass dir verschiedene Spieltyp spezifische Wegpunkte anzeigen
+\g_waypointsprite_scale\Skalierungsfaktor für Wegpunkte
+\g_waypointsprite_alpha\Verändere den Wert der Transparenz von der Anzeige der Wegpunkte
+\cl_shownames\Lass dir den Namen des Spielers anzeigen auf den du gerade zielst.
+
+\crosshair_hittest\None: do not do hit tests for the crosshair; TrueAim: blur the crosshair when you would not hit the wall; Enemies: also enlarge the crosshair when you would hit an enemy
