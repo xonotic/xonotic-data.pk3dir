@@ -843,6 +843,8 @@ void CSQC_UpdateView(float w, float h)
 		{
 			cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
 			cvar_set("r_glsl_postprocess_uservec1_enable", "0");
+			old_blurradius = 0;
+			old_bluralpha = 0;
 		}
 
 		float sharpen_intensity;
@@ -866,6 +868,7 @@ void CSQC_UpdateView(float w, float h)
 		{
 			cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
 			cvar_set("r_glsl_postprocess_uservec2_enable", "0");
+			old_sharpen_intensity = 0;
 		}
 	}
 
