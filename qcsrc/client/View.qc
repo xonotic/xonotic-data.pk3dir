@@ -362,6 +362,7 @@ float myhealth, myhealth_prev;
 float myhealth_flash;
 
 float old_blurradius, old_bluralpha;
+float old_sharpen_intensity;
 
 vector myhealth_gentlergb;
 
@@ -819,7 +820,7 @@ void CSQC_UpdateView(float w, float h)
 				damage_blurpostprocess_x = 0;
 				damage_blurpostprocess_y = 0;
 				damage_blurpostprocess_z = 0;
-			}																		dprint(strcat(ftos(myhealth_flash_temp), "----------\n"));
+			}
 		}
 	}
 
@@ -858,13 +859,20 @@ void CSQC_UpdateView(float w, float h)
 
 			if(sharpen_intensity > 0)
 			{
-				cvar_set("r_glsl_postprocess_uservec2", strcat("0 ", ftos(-sharpen_intensity * cvar("hud_powerup")), " 0 0"));
-				cvar_set("r_glsl_postprocess_uservec2_enable", "1");
+				if(sharpen_intensity != old_sharpen_intensity) // reduce cvar_set spam as much as possible
+				{
+					cvar_set("r_glsl_postprocess_uservec2", strcat("0 ", ftos(-sharpen_intensity * cvar("hud_powerup")), " 0 0"));
+					cvar_set("r_glsl_postprocess_uservec2_enable", "1");
+					old_sharpen_intensity = sharpen_intensity;
+				}
 			}
 			else
 			{
-				cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
-				cvar_set("r_glsl_postprocess_uservec2_enable", "0");
+				if(cvar("r_glsl_postprocess_uservec2_enable")) // reduce cvar_set spam as much as possible
+				{
+					cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
+					cvar_set("r_glsl_postprocess_uservec2_enable", "0");
+				}
 			}
 		}
 	}
