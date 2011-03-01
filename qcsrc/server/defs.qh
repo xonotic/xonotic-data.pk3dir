@@ -611,6 +611,7 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
+.float minelayer_mines;
 .float sniperrifle_bulletcounter;
 .float wish_reload;
 
