@@ -871,13 +871,15 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	if not(autocvar_hud_damage && autocvar_hud_postprocessing)
+	if(autocvar_hud_postprocessing && !autocvar_hud_postprocessing_maxbluralpha)
+	if(cvar("r_glsl_postprocess_uservec1_enable"))
 	{
 		// don't allow blur to get stuck on if we disable the cvar while damaged
 		cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
 		cvar_set("r_glsl_postprocess_uservec1_enable", "0");
 	}
-	if not(autocvar_hud_powerup && autocvar_hud_postprocessing)
+	if(autocvar_hud_postprocessing && !autocvar_hud_powerup)
+	if(cvar("r_glsl_postprocess_uservec2_enable"))
 	{
 		// don't allow sharpen to get stuck on if we disable the cvar while powered up
 		cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
