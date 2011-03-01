@@ -845,45 +845,28 @@ void CSQC_UpdateView(float w, float h)
 			cvar_set("r_glsl_postprocess_uservec1_enable", "0");
 		}
 
-		if(autocvar_hud_powerup)
+		float sharpen_intensity;
+		if (getstatf(STAT_STRENGTH_FINISHED) - time > 0)
+			sharpen_intensity += (getstatf(STAT_STRENGTH_FINISHED) - time);
+		if (getstatf(STAT_INVINCIBLE_FINISHED) - time > 0)
+			sharpen_intensity += (getstatf(STAT_INVINCIBLE_FINISHED) - time);
+
+		if(autocvar_hud_powerup && sharpen_intensity > 0)
 		{
-			float sharpen_intensity;
-			if (getstatf(STAT_STRENGTH_FINISHED) - time > 0)
-				sharpen_intensity += (getstatf(STAT_STRENGTH_FINISHED) - time);
-			if (getstatf(STAT_INVINCIBLE_FINISHED) - time > 0)
-				sharpen_intensity += (getstatf(STAT_INVINCIBLE_FINISHED) - time);
 			sharpen_intensity = bound(0, sharpen_intensity, 5); // powerup warning time is 5 seconds, so fade the effect from there
 
-			if(sharpen_intensity > 0)
+			if(sharpen_intensity != old_sharpen_intensity) // reduce cvar_set spam as much as possible
 			{
-				if(sharpen_intensity != old_sharpen_intensity) // reduce cvar_set spam as much as possible
-				{
-					cvar_set("r_glsl_postprocess_uservec2", strcat("0 ", ftos(-sharpen_intensity * cvar("hud_powerup")), " 0 0"));
-					cvar_set("r_glsl_postprocess_uservec2_enable", "1");
-					old_sharpen_intensity = sharpen_intensity;
-				}
-			}
-			else if(cvar("r_glsl_postprocess_uservec2_enable")) // reduce cvar_set spam as much as possible
-			{
-				cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
-				cvar_set("r_glsl_postprocess_uservec2_enable", "0");
+				cvar_set("r_glsl_postprocess_uservec2", strcat("0 ", ftos(-sharpen_intensity * cvar("hud_powerup")), " 0 0"));
+				cvar_set("r_glsl_postprocess_uservec2_enable", "1");
+				old_sharpen_intensity = sharpen_intensity;
 			}
 		}
-	}
-
-	if(autocvar_hud_postprocessing && !autocvar_hud_postprocessing_maxbluralpha)
-	if(cvar("r_glsl_postprocess_uservec1_enable"))
-	{
-		// don't allow blur to get stuck on if we disable the cvar while damaged
-		cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
-		cvar_set("r_glsl_postprocess_uservec1_enable", "0");
-	}
-	if(autocvar_hud_postprocessing && !autocvar_hud_powerup)
-	if(cvar("r_glsl_postprocess_uservec2_enable"))
-	{
-		// don't allow sharpen to get stuck on if we disable the cvar while powered up
-		cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
-		cvar_set("r_glsl_postprocess_uservec2_enable", "0");
+		else if(cvar("r_glsl_postprocess_uservec2_enable")) // reduce cvar_set spam as much as possible
+		{
+			cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
+			cvar_set("r_glsl_postprocess_uservec2_enable", "0");
+		}
 	}
 
 	// Draw the mouse cursor
