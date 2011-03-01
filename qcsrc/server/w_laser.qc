@@ -264,7 +264,7 @@ float w_laser(float req)
 		precache_model ("models/weapons/h_laser.iqm");
 		precache_sound ("weapons/lasergun_fire.wav");
 		precache_sound ("weapons/gauntlet_fire.wav");
-		precache_sound ("weapons/reload.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{

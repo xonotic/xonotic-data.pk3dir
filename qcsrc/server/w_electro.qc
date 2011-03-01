@@ -485,7 +485,7 @@ float w_electro(float req)
 		precache_sound ("weapons/electro_fire2.wav");
 		precache_sound ("weapons/electro_impact.wav");
 		precache_sound ("weapons/electro_impact_combo.wav");
-		precache_sound ("weapons/reload.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 		if(autocvar_g_balance_electro_lightning)
 		{
 			precache_sound ("weapons/lgbeam_fire.wav");

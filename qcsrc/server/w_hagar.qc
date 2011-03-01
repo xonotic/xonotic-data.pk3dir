@@ -155,7 +155,7 @@ float w_hagar(float req)
 		precache_model ("models/weapons/v_hagar.md3");
 		precache_model ("models/weapons/h_hagar.iqm");
 		precache_sound ("weapons/hagar_fire.wav");
-		precache_sound ("weapons/reload.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{

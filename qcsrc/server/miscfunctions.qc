@@ -1664,6 +1664,7 @@ void precache()
     precache_model ("models/sprites/10.spr32");
 
     // common weapon precaches
+	precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound here
     precache_sound ("weapons/weapon_switch.wav");
     precache_sound ("weapons/weaponpickup.wav");
     precache_sound ("weapons/unavailable.wav");
