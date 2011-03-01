@@ -731,7 +731,7 @@ void CSQC_UpdateView(float w, float h)
 
 		if(autocvar_hud_postprocessing)
 		{
-			if(autocvar_hud_contents_blur)
+			if(autocvar_hud_contents_blur && contentavgalpha)
 			{
 				content_blurpostprocess_x = 1;
 				content_blurpostprocess_y = contentavgalpha * autocvar_hud_contents_blur;
@@ -808,7 +808,7 @@ void CSQC_UpdateView(float w, float h)
 
 		if(autocvar_hud_postprocessing)
 		{
-			if(autocvar_hud_damage_blur)
+			if(autocvar_hud_damage_blur && myhealth_flash_temp)
 			{
 				damage_blurpostprocess_x = 1;
 				damage_blurpostprocess_y = bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage_blur;
@@ -819,7 +819,7 @@ void CSQC_UpdateView(float w, float h)
 				damage_blurpostprocess_x = 0;
 				damage_blurpostprocess_y = 0;
 				damage_blurpostprocess_z = 0;
-			}
+			}																		dprint(strcat(ftos(myhealth_flash_temp), "----------\n"));
 		}
 	}
 
