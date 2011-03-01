@@ -361,6 +361,8 @@ float use_nex_chargepool;
 float myhealth, myhealth_prev;
 float myhealth_flash;
 
+float old_blurradius, old_bluralpha;
+
 vector myhealth_gentlergb;
 
 float contentavgalpha, liquidalpha_prev;
@@ -828,13 +830,21 @@ void CSQC_UpdateView(float w, float h)
 		{
 			float blurradius = bound(0, damage_blurpostprocess_y + content_blurpostprocess_y, autocvar_hud_postprocessing_maxblurradius);
 			float bluralpha = bound(0, damage_blurpostprocess_z + content_blurpostprocess_z, autocvar_hud_postprocessing_maxbluralpha);
-			cvar_set("r_glsl_postprocess_uservec1", strcat(ftos(blurradius), " ", ftos(bluralpha), " 0 0"));
-			cvar_set("r_glsl_postprocess_uservec1_enable", "1");
+			if(blurradius != old_blurradius || bluralpha != old_bluralpha) // reduce cvar_set spam as much as possible
+			{
+				cvar_set("r_glsl_postprocess_uservec1", strcat(ftos(blurradius), " ", ftos(bluralpha), " 0 0"));
+				cvar_set("r_glsl_postprocess_uservec1_enable", "1");
+				old_blurradius = blurradius;
+				old_bluralpha = bluralpha;
+			}
 		}
 		else
 		{
-			cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
-			cvar_set("r_glsl_postprocess_uservec1_enable", "0");
+			if(cvar("r_glsl_postprocess_uservec1_enable")) // reduce cvar_set spam as much as possible
+			{
+				cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
+				cvar_set("r_glsl_postprocess_uservec1_enable", "0");
+			}
 		}
 
 		if(autocvar_hud_powerup)
