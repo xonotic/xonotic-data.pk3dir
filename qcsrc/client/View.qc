@@ -839,13 +839,10 @@ void CSQC_UpdateView(float w, float h)
 				old_bluralpha = bluralpha;
 			}
 		}
-		else
+		else if(cvar("r_glsl_postprocess_uservec1_enable")) // reduce cvar_set spam as much as possible
 		{
-			if(cvar("r_glsl_postprocess_uservec1_enable")) // reduce cvar_set spam as much as possible
-			{
-				cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
-				cvar_set("r_glsl_postprocess_uservec1_enable", "0");
-			}
+			cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
+			cvar_set("r_glsl_postprocess_uservec1_enable", "0");
 		}
 
 		if(autocvar_hud_powerup)
@@ -866,13 +863,10 @@ void CSQC_UpdateView(float w, float h)
 					old_sharpen_intensity = sharpen_intensity;
 				}
 			}
-			else
+			else if(cvar("r_glsl_postprocess_uservec2_enable")) // reduce cvar_set spam as much as possible
 			{
-				if(cvar("r_glsl_postprocess_uservec2_enable")) // reduce cvar_set spam as much as possible
-				{
-					cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
-					cvar_set("r_glsl_postprocess_uservec2_enable", "0");
-				}
+				cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
+				cvar_set("r_glsl_postprocess_uservec2_enable", "0");
 			}
 		}
 	}
