@@ -826,6 +826,14 @@ void CSQC_UpdateView(float w, float h)
 
 	if(autocvar_hud_postprocessing)
 	{
+		// all of this should be done in the engine eventually
+
+		// enable or disable rendering types if they are used or not
+		if(cvar("r_glsl_postprocess_uservec1_enable") != (cvar("hud_postprocessing_maxbluralpha") != 0))
+			cvar_set("r_glsl_postprocess_uservec1_enable", ftos(cvar("hud_postprocessing_maxbluralpha") != 0));
+		if(cvar("r_glsl_postprocess_uservec2_enable") != (cvar("hud_powerup") != 0))
+			cvar_set("r_glsl_postprocess_uservec2_enable", ftos(cvar("hud_powerup") != 0));
+
 		// lets apply the postprocess effects from the previous two functions if needed
 		if(damage_blurpostprocess_x || content_blurpostprocess_x)
 		{
@@ -834,15 +842,13 @@ void CSQC_UpdateView(float w, float h)
 			if(blurradius != old_blurradius || bluralpha != old_bluralpha) // reduce cvar_set spam as much as possible
 			{
 				cvar_set("r_glsl_postprocess_uservec1", strcat(ftos(blurradius), " ", ftos(bluralpha), " 0 0"));
-				cvar_set("r_glsl_postprocess_uservec1_enable", "1");
 				old_blurradius = blurradius;
 				old_bluralpha = bluralpha;
 			}
 		}
-		else if(cvar("r_glsl_postprocess_uservec1_enable")) // reduce cvar_set spam as much as possible
+		else if(cvar_string("r_glsl_postprocess_uservec1") != "0 0 0 0") // reduce cvar_set spam as much as possible
 		{
 			cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
-			cvar_set("r_glsl_postprocess_uservec1_enable", "0");
 			old_blurradius = 0;
 			old_bluralpha = 0;
 		}
@@ -860,14 +866,12 @@ void CSQC_UpdateView(float w, float h)
 			if(sharpen_intensity != old_sharpen_intensity) // reduce cvar_set spam as much as possible
 			{
 				cvar_set("r_glsl_postprocess_uservec2", strcat("0 ", ftos(-sharpen_intensity * cvar("hud_powerup")), " 0 0"));
-				cvar_set("r_glsl_postprocess_uservec2_enable", "1");
 				old_sharpen_intensity = sharpen_intensity;
 			}
 		}
-		else if(cvar("r_glsl_postprocess_uservec2_enable")) // reduce cvar_set spam as much as possible
+		else if(cvar_string("r_glsl_postprocess_uservec2") != "0 0 0 0") // reduce cvar_set spam as much as possible
 		{
 			cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
-			cvar_set("r_glsl_postprocess_uservec2_enable", "0");
 			old_sharpen_intensity = 0;
 		}
 	}
