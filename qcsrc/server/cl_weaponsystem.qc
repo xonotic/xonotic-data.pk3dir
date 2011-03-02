@@ -1633,58 +1633,6 @@ void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 .float reload_complain;
 .string reload_sound;
 
-float W_ReloadCheck()
-{
-	// check if we meet the necessary conditions to reload
-
-	entity e;
-	e = get_weaponinfo(self.weapon);
-
-	// don't reload weapons that don't have the RELOADABLE flag
-	if not(e.spawnflags & WEP_FLAG_RELOADABLE)
-	{
-		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
-		return FALSE;
-	}
-
-	// return if reloading is disabled for this weapon
-	if(!self.reload_ammo_amount)
-		return FALSE;
-
-	// our weapon is fully loaded, no need to reload
-	if (self.clip_load >= self.reload_ammo_amount)
-		return FALSE;
-
-	// no ammo, so nothing to load
-	if(!self.(self.current_ammo) && self.reload_ammo_min)
-	{
-		if(clienttype(self) == CLIENTTYPE_REAL && self.reload_complain < time)
-		{
-			play2(self, "weapons/unavailable.wav");
-			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));
-			self.reload_complain = time + 1;
-		}
-		// switch away if the amount of ammo is not enough to keep using this weapon
-		if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
-		{
-			self.clip_load = -1; // reload later
-			W_SwitchToOtherWeapon(self);
-		}
-		return FALSE;
-	}
-
-	if (self.weaponentity)
-	{
-		if (self.weaponentity.wframe == WFRAME_RELOAD)
-			return FALSE;
-
-		// allow switching away while reloading, but this will cause a new reload!
-		self.weaponentity.state = WS_READY;
-	}
-
-	return TRUE;
-}
-
 void W_ReloadedAndReady()
 {
 	// finish the reloading process, and do the ammo transfer
@@ -1716,13 +1664,58 @@ void W_ReloadedAndReady()
 void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
 {
 	// set global values to work with
+
 	self.reload_ammo_min = sent_ammo_min;
 	self.reload_ammo_amount = sent_ammo_amount;
 	self.reload_time = sent_time;
 	self.reload_sound = sent_sound;
 
-	if(!W_ReloadCheck())
+	// check if we meet the necessary conditions to reload
+
+	entity e;
+	e = get_weaponinfo(self.weapon);
+
+	// don't reload weapons that don't have the RELOADABLE flag
+	if not(e.spawnflags & WEP_FLAG_RELOADABLE)
+	{
+		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
 		return;
+	}
+
+	// return if reloading is disabled for this weapon
+	if(!self.reload_ammo_amount)
+		return;
+
+	// our weapon is fully loaded, no need to reload
+	if (self.clip_load >= self.reload_ammo_amount)
+		return;
+
+	// no ammo, so nothing to load
+	if(!self.(self.current_ammo) && self.reload_ammo_min)
+	{
+		if(clienttype(self) == CLIENTTYPE_REAL && self.reload_complain < time)
+		{
+			play2(self, "weapons/unavailable.wav");
+			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));
+			self.reload_complain = time + 1;
+		}
+		// switch away if the amount of ammo is not enough to keep using this weapon
+		if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
+		{
+			self.clip_load = -1; // reload later
+			W_SwitchToOtherWeapon(self);
+		}
+		return;
+	}
+
+	if (self.weaponentity)
+	{
+		if (self.weaponentity.wframe == WFRAME_RELOAD)
+			return;
+
+		// allow switching away while reloading, but this will cause a new reload!
+		self.weaponentity.state = WS_READY;
+	}
 
 	// now begin the reloading process
 
