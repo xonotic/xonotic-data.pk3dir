@@ -1729,7 +1729,8 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 
 	weapon_thinkf(WFRAME_RELOAD, self.reload_time, W_ReloadedAndReady);
 
-	if(self.clip_load >= 0)
-		self.old_clip_load = self.clip_load;
+	if(self.clip_load < 0)
+		self.clip_load = 0;
+	self.old_clip_load = self.clip_load;
 	self.clip_load = self.weapon_load[self.weapon] = -1;
 }
