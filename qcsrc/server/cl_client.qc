@@ -1115,6 +1115,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
 	return TRUE;
 }
@@ -2361,6 +2362,9 @@ void SpectateCopy(entity spectatee) {
 	self.weapons = spectatee.weapons;
 	self.switchweapon = spectatee.switchweapon;
 	self.weapon = spectatee.weapon;
+	self.nex_charge = spectatee.nex_charge;
+	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
+	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;
 	self.v_angle = spectatee.v_angle;

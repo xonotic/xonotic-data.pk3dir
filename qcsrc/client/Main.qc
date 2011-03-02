@@ -1094,6 +1094,8 @@ void Ent_Init()
 
 	serverflags = ReadByte();
 
+	minelayer_maxmines = ReadByte();
+
 	g_trueaim_minrange = ReadCoord();
 
 	if(!postinit)

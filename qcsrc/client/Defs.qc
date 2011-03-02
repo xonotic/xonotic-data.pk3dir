@@ -261,6 +261,8 @@ vector w_org, w_backoff;
 float sniperrifle_scope;
 float nex_scope;
 
+float minelayer_maxmines;
+
 float bgmtime;
 
 string weaponorder_byimpulse;
