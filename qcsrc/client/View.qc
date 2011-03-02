@@ -1087,11 +1087,8 @@ void CSQC_UpdateView(float w, float h)
 				if (weapon_clipload) // ring around crosshair representing ammo left in weapon clip
 				{
 					weapon_clipsize = getstati(STAT_WEAPON_CLIPSIZE);
-					f = bound(0, weapon_clipload / weapon_clipsize, 1);
-					a = autocvar_crosshair_ring_sniperrifle_alpha;
-
-					ring_value = f;
-					ring_alpha = a;
+					ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
+					ring_alpha = autocvar_crosshair_ring_sniperrifle_alpha;
 					ring_image = "gfx/crosshair_ring.tga";
 					ring_rgb = wcross_color;
 				}
