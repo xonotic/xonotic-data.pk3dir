@@ -827,6 +827,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
 	addstat(STAT_HIT_TIME, AS_FLOAT, hit_time);
 	addstat(STAT_TYPEHIT_TIME, AS_FLOAT, typehit_time);
+	addstat(STAT_LAYED_MINES, AS_INT, minelayer_mines);
 
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
