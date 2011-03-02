@@ -1092,7 +1092,7 @@ void CSQC_UpdateView(float w, float h)
 
 					ring_value = f;
 					ring_alpha = a;
-					ring_image = "gfx/crosshair_ring_sniperrifle.tga";
+					ring_image = "gfx/crosshair_ring.tga";
 					ring_rgb = wcross_color;
 				}
 				else if (activeweapon == WEP_NEX && nex_charge && autocvar_crosshair_ring_nex) // ring around crosshair representing velocity-dependent damage for the nex
