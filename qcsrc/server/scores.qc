@@ -88,6 +88,7 @@ void TeamScore_Spawn(float t, string name)
 	Net_LinkEntity(ts, FALSE, 0, TeamScore_SendEntity);
 	teamscorekeepers[t - 1] = ts;
 	++teamscores_entities_count;
+	PlayerStats_AddTeam(t);
 }
 
 float TeamScore_AddToTeam(float t, float scorefield, float score)
@@ -149,6 +150,11 @@ void ScoreInfo_SetLabel_PlayerScore(float i, string label, float scoreflags)
 	{
 		scores_primary = scores[i];
 		scores_flags_primary = scoreflags;
+	}
+	if(label != "")
+	{
+		PlayerStats_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
 	}
 }
 
@@ -245,6 +251,7 @@ void PlayerScore_Clear(entity player)
 
 	if(teamscores_entities_count)
 		return;
+
 	if(g_lms) return;
 	if(g_arena || g_ca) return;
 	if(g_race && !g_race_qualifying) return;
@@ -330,6 +337,8 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	if(score)
 		if(scores_label[scorefield] != "")
 			s.SendFlags |= pow(2, scorefield);
+	PlayerStats_Event(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label[scorefield]), score);
+	s.(scores_accumulated[scorefield]) += score;
 	return (s.(scores[scorefield]) += score);
 }
 
@@ -366,10 +375,18 @@ void WinningConditionHelper()
 	entity winnerscorekeeper;
 	entity secondscorekeeper;
 	entity sk;
+	float slots;
+
+	// format:
+	// gametype:P<pure>:S<slots>::plabel,plabel:tlabel,tlabel:teamid:tscore,tscore:teamid:tscore,tscore
+	// score labels always start with a symbol or with lower case
+	// so to match pure, match for :P0:
+	// to match full, match for :S0:
 
 	s = GetGametype();
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
+	s = strcat(s, ":S", ftos(nJoinAllowed(0)));
 	s = strcat(s, "::", GetPlayerScoreString(world, 1)); // make this 1 once we can, note: this doesn't contain any :<letter>
 
 	fullstatus = autocvar_g_full_getstatus_responses;
@@ -864,3 +881,30 @@ void Score_NicePrint(entity to)
 	}
 }
 
+void PlayerScore_PlayerStats(entity p)
+{
+	entity s;
+	float i;
+	s = p.scorekeeper;
+
+	for(i = 0; i < MAX_SCORE; ++i)
+		if(s.(scores[i]) != 0)
+			if(scores_label[i] != "")
+				PlayerStats_Event(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label[i]), s.(scores[i]));
+}
+
+void PlayerScore_TeamStats(void)
+{
+	entity sk;
+	float t, i;
+	for(t = 0; t < 16; ++t)
+	{
+		sk = teamscorekeepers[t];
+		if(!sk)
+			continue;
+		for(i = 0; i < MAX_TEAMSCORE; ++i)
+			if(sk.(teamscores[i]) != 0)
+				if(teamscores_label[i] != "")
+					PlayerStats_TeamScore(t, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label[i]), sk.(teamscores[i]));
+	}
+}

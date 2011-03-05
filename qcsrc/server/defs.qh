@@ -77,13 +77,12 @@ float maxclients;
 //.float	style;
 //.float	skill;
 .float	sounds;
+.float  platmovetype;
 
 .string killtarget;
 
 .vector	pos1, pos2;
 .vector	mangle;
-
-.float cvar_cl_hitsound;
 
 .float	pain_finished;			//Added by Supajoe
 .float	pain_frame;			//"
@@ -267,7 +266,7 @@ void checkSpectatorBlock();
 .float jointime; // time of joining
 .float alivetime; // time of being alive
 
-float isJoinAllowed();
+float nJoinAllowed(float includeMe);
 #define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
 
 //sv_timeout: pauses the game by setting the gamespeed to a really low value (see TIMEOUT_SLOWMO_VALUE)
@@ -328,6 +327,7 @@ float sv_loddistance2;
 .string weaponorder_byimpulse;
 
 .float cvar_cl_allow_uid2name;
+.float cvar_cl_allow_uidtracking;
 .string stored_netname;
 
 void Announce(string snd);
@@ -400,10 +400,6 @@ float assault_attacker_team;
 .float speedrunning;
 
 // Q3 support
-.float notteam;
-.float notsingle;
-.float notfree;
-.float notq3a;
 float q3acompat_machineshotgunswap;
 
 // database
@@ -603,6 +599,9 @@ string matchid;
 
 .float last_pickup;
 
+.float hit_time; 
+.float typehit_time; 
+
 .float stat_leadlimit;
 
 float radar_showennemies;
@@ -612,7 +611,9 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-.float campingrifle_bulletcounter;
+.float minelayer_mines;
+.float sniperrifle_bulletcounter;
+.float wish_reload;
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones
@@ -658,5 +659,7 @@ float serverflags;
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
 .float freezetag_frozen;
-.float freezetag_beginrevive_time;
 .float freezetag_revive_progress;
+
+.entity muzzle_flash;
+.float misc_bulletcounter;	// replaces uzi & hlac bullet counter.

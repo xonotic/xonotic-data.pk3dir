@@ -23,7 +23,7 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
-	if(g_freezetag && self.freezetag_frozen)
+	if(self.freezetag_frozen)
 		return; // no jumping in freezetag when frozen
 
 	float mjumpheight;
@@ -796,8 +796,6 @@ void SV_PlayerPhysics()
 		bot_think();
 	}
 	
-	MUTATOR_CALLHOOK(PlayerPhysics);
-
 	self.items &~= IT_USING_JETPACK;
 
 	if(self.classname == "player")
@@ -829,6 +827,13 @@ void SV_PlayerPhysics()
 
 	if (self.movetype == MOVETYPE_NONE)
 		return;
+
+	// when we get here, disableclientprediction cannot be 2
+	self.disableclientprediction = 0;
+	if(time < self.ladder_time)
+		self.disableclientprediction = 1;
+
+	MUTATOR_CALLHOOK(PlayerPhysics);
 
 	maxspd_mod = 1;
 
@@ -989,14 +994,21 @@ void SV_PlayerPhysics()
 		// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
 		self.flags &~= FL_ONGROUND;
 
+		float g;
+		g = autocvar_sv_gravity * frametime;
+		if(self.gravity)
+			g *= self.gravity;
+		if(autocvar_sv_gameplayfix_gravityunaffectedbyticrate)
+		{
+			g *= 0.5;
+			self.velocity_z += g;
+		}
+
 		self.velocity = self.velocity * (1 - frametime * autocvar_sv_friction);
 		makevectors(self.v_angle);
 		//wishvel = v_forward * self.movement_x + v_right * self.movement_y + v_up * self.movement_z;
 		wishvel = v_forward * self.movement_x + v_right * self.movement_y + '0 0 1' * self.movement_z;
-		if (self.gravity)
-			self.velocity_z = self.velocity_z + self.gravity * autocvar_sv_gravity * frametime;
-		else
-			self.velocity_z = self.velocity_z + autocvar_sv_gravity * frametime;
+		self.velocity_z += g;
 		if (self.ladder_entity.classname == "func_water")
 		{
 			f = vlen(wishvel);

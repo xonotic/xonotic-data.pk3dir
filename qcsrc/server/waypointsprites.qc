@@ -81,8 +81,13 @@ void WaypointSprite_UpdateTeamRadar(entity e, float icon, vector col)
 	e.SendFlags |= 32;
 }
 
+.float waypointsprite_pingtime;
 void WaypointSprite_Ping(entity e)
 {
+	// anti spam
+	if(time < e.waypointsprite_pingtime)
+		return;
+	e.waypointsprite_pingtime = time + 0.3;
 	// ALWAYS sends (this causes a radar circle), thus no check
 	e.cnt |= 0x80;
 	e.SendFlags |= 32;

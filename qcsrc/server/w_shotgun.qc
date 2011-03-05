@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "shotgun", "shotgun", "Shotgun");
+REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "shotgun", "shotgun", _("Shotgun"))
 #else
 #ifdef SVQC
 void W_Shotgun_Attack (void)
@@ -56,9 +56,12 @@ void shotgun_meleethink (void)
 	vector angle;
 	angle = v_forward;
 
+	float meleetime;
+	meleetime = autocvar_g_balance_shotgun_secondary_melee_time * W_WeaponRateFactor();
+
 	// perform trace
 	float f;
-	f = (self.cnt + autocvar_g_balance_shotgun_secondary_melee_time - time) / autocvar_g_balance_shotgun_secondary_melee_time * 2 - 1;
+	f = (self.cnt + meleetime - time) / meleetime * 2 - 1;
 	vector targpos;
 	targpos = self.owner.origin + self.owner.view_ofs + angle * autocvar_g_balance_shotgun_secondary_melee_range + v_right * f * autocvar_g_balance_shotgun_secondary_melee_swing + v_up * f * autocvar_g_balance_shotgun_secondary_melee_swing;
 
@@ -74,7 +77,7 @@ void shotgun_meleethink (void)
 		Damage (trace_ent, self.owner, self.owner, autocvar_g_balance_shotgun_secondary_damage * min(1, f + 1), WEP_SHOTGUN | HITTYPE_SECONDARY , self.owner.origin + self.owner.view_ofs, force);
 		remove(self);
 	}
-	else if(time >= self.cnt + autocvar_g_balance_shotgun_secondary_melee_time) // missed, remove ent
+	else if(time >= self.cnt + meleetime) // missed, remove ent
 		remove(self);
 	else // continue swinging the weapon in hope of hitting someone :)
 		self.nextthink = time;
@@ -173,13 +176,13 @@ float w_shotgun(float req)
 		precache_sound("weapons/ric3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s did the impossible";
+		w_deathtypestring = _("%s did the impossible");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun";
+			w_deathtypestring = _("%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun");
 		else
-			w_deathtypestring = "%s was gunned by %s";
+			w_deathtypestring = _("%s was gunned by %s");
 	}
 	return TRUE;
 }

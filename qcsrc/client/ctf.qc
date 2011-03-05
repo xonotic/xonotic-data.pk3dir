@@ -1,4 +1,5 @@
-//include "main.qh"
+#ifdef CTF_EXAMPLE
+
 // NOTE: This file contains lots of debugging stuff
 // it is not really used... can be seen as another sample...
 
@@ -31,10 +32,10 @@ void() order_menu_render =
 	color = getplayerkey(player_localentnum-1, "topcolor");
 	
 	if(getstati(STAT_CTF_STATE) == CTF_STATE_COMMANDER) {
-		drawstring(ps, "\x1D\x1E\x1E\x1E\x1E Order Menu \x1E\x1E\x1E\x1E\x1F", '8 8 0', '1 1 0', 1, 0); ps += po;
-		drawstring(ps, strcat("Order: ", ctf_temp_1), '8 8 0', '1 1 0', 1, 0); ps += po;
-		drawcolorcodedstring(ps, "1) ^3previous page", '8 8 0', 1, 0); ps += po;
-		drawcolorcodedstring(ps, "2) ^3next page", '8 8 0', 1, 0); ps += po;
+		drawstring(ps, _("----- Order Menu -----"), '8 8 0', '1 1 0', 1, 0); ps += po;
+		drawstring(ps, sprintf(_("Order: %s"), ctf_temp_1), '8 8 0', '1 1 0', 1, 0); ps += po;
+		drawcolorcodedstring(ps, _("1) ^3previous page"), '8 8 0', 1, 0); ps += po;
+		drawcolorcodedstring(ps, _("2) ^3next page"), '8 8 0', 1, 0); ps += po;
 		for((n = 2), (p = i = 0); i < maxclients && n > 0; ++i) {
 			frags = getplayerkey(i, "frags");
 			if(!frags || (i+1) == player_localentnum)
@@ -51,7 +52,7 @@ void() order_menu_render =
 				drawcolorcodedstring(ps, strcat(ftos(n), ") ", GetPlayerName(i), " : ", ftos(getstatf(STAT_CTF_STATE))), '8 8 0', 1, 0); ps += po;
 			}
 		}
-		drawstring(ps, "ESC) Exit Menu", '8 8 0', '1 1 0', 1, 0); ps += po;
+		drawstring(ps, _("ESC) Exit Menu"), '8 8 0', '1 1 0', 1, 0); ps += po;
 	} else {
 		menu_close();
 	}
@@ -118,18 +119,18 @@ float(float bInputType, float nPrimary, float nSecondary) order_menu_action =
 			}
 		}
 		if(n == 0) {
-			//print(strcat("Issuing order to: ", ftos(i+1), "\n"));
+			//print(sprintf(_("Issuing order to: %d\n"), i+1));
 			//print(strcat("cmd order #", ftos(i+1), " ", ctf_temp_1, ";\n"));
 			localcmd(strcat("\ncmd order #", ftos(i+1), " ", ctf_temp_1, ";"));
 		} else {
-			print(strcat("Couldn't find player ", ftos(chose), "\n"));
+			print(sprintf(_("Couldn't find player %d\n"), chose));
 		}
 		return TRUE;
 	} else if(nSecondary == K_ESCAPE) {
 		strunzone(ctf_temp_1);
 		menu_close();
 	} else {
-		//print(strcat("Menu action ", arg, " does not exist.\n"));
+		//print(sprintf(_("Menu action %s does not exist.\n"), arg));
 		return FALSE;
 	}
 	return TRUE;
@@ -150,14 +151,14 @@ void() ctf_menu_render =
 	po = '0 8 0';
 	
 	if(getstati(STAT_CTF_STATE) == CTF_STATE_COMMANDER) {
-		drawstring(ps, "\x1D\x1E\x1E\x1E\x1E Command Menu \x1E\x1E\x1E\x1E\x1F", '8 8 0', '1 1 0', 1, 0); ps += po;
-		drawstring(ps, "Issue orders:", '8 8 0', '1 1 0', 1, 0); ps += po;
-		drawstring(ps, " 1) Attack ", '8 8 0', '1 1 0', 1, 0);
+		drawstring(ps, _("----- Command Menu -----"), '8 8 0', '1 1 0', 1, 0); ps += po;
+		drawstring(ps, _("Issue orders:"), '8 8 0', '1 1 0', 1, 0); ps += po;
+		drawstring(ps, _(" 1) Attack"), '8 8 0', '1 1 0', 1, 0);
 		drawstring(ps + '80 0 0', " \x0F", '8 8 0', '1 1 1', 1, 0); ps += po;
-		drawstring(ps, " 2) Defend \x0E", '8 8 0', '1 1 0', 1, 0); ps += po;
+		drawstring(ps, strcat(_(" 2) Defend"), " \x0E"), '8 8 0', '1 1 0', 1, 0); ps += po;
 		ps += po;
-		drawstring(ps, "3) Resign from command.", '8 8 0', '1 1 0', 1, 0); ps += po;
-		drawstring(ps, "ESC) Exit Menu", '8 8 0', '1 1 0', 1, 0); ps += po;
+		drawstring(ps, _("3) Resign from command."), '8 8 0', '1 1 0', 1, 0); ps += po;
+		drawstring(ps, _("ESC) Exit Menu"), '8 8 0', '1 1 0', 1, 0); ps += po;
 	} else {
 		menu_close();
 	}
@@ -208,9 +209,11 @@ void() ctf_view =
 	} else if(stat == CTF_STATE_DEFEND) {
 		drawpic('0 0 0', "gfx/ctf_ic_def.tga", '64 64 0', '1 1 1', 1, 0);
 	} else if(stat == CTF_STATE_COMMANDER) {
-		drawstring('0 0 0', "You're commander!", '8 8 0', '1 1 1', 1, 0);
+		drawstring('0 0 0', _("You're commander!"), '8 8 0', '1 1 1', 1, 0);
 	} else if(stat < 0) {
 	} else {
-		drawstring('0 0 0', "Awaiting orders...", '8 8 0', '1 1 1', 0.5, 0);
+		drawstring('0 0 0', _("Awaiting orders..."), '8 8 0', '1 1 1', 0.5, 0);
 	}
 };
+
+#endif

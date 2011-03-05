@@ -62,7 +62,7 @@ entity makeXonoticResolutionSlider()
 }
 void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pixelheight)
 {
-	me.addValue(me, strzone(strcat(ftos(w), "x", ftos(h))), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
+	me.addValue(me, strzone(sprintf(_("%dx%d"), w, h)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
 	// FIXME (in case you ever want to dynamically instantiate this): THIS IS NEVER FREED
 }
 void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
@@ -83,9 +83,22 @@ void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 		if(r == r0)
 			continue;
 		r0 = r;
-		if(r_x < 640 || r_y < 400)
+		if(r_x < 640 || r_y < 480)
+			continue;
+		if(r_x > 2 * r_y) // likely dualscreen resolution, skip this one
 			continue;
 		me.addResolution(me, r_x, r_y, r_z);
+	}
+
+	if(me.nValues == 0)
+	{
+		me.addResolution(me, 640, 480, 1);
+		me.addResolution(me, 800, 600, 1);
+		me.addResolution(me, 1024, 768, 1);
+		me.addResolution(me, 1280, 960, 1);
+		me.addResolution(me, 1280, 1024, 1);
+		me.addResolution(me, 1650, 1080, 1);
+		me.addResolution(me, 1920, 1080, 1);
 	}
 
 	me.configureXonoticTextSliderValues(me);

@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "crylink", "crylink", "Crylink");
+REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "crylink", "crylink", _("Crylink"));
 #else
 #ifdef SVQC
 .float gravity;
@@ -16,6 +16,8 @@ void W_Crylink_CheckLinks(entity e)
 
 	if(e == world)
 		error("W_Crylink_CheckLinks: entity is world");
+	if(e.classname != "spike")
+		error("W_Crylink_CheckLinks: entity is not a spike");
 
 	p = e;
 	for(i = 0; i < 1000; ++i)
@@ -32,10 +34,13 @@ void W_Crylink_CheckLinks(entity e)
 
 void W_Crylink_Dequeue_Raw(entity own, entity prev, entity me, entity next)
 {
+	W_Crylink_CheckLinks(next);
 	if(me == own.crylink_lastgroup)
 		own.crylink_lastgroup = ((me == next) ? world : next);
 	prev.queuenext = next;
 	next.queueprev = prev;
+	if(me != next)
+		W_Crylink_CheckLinks(next);
 }
 
 void W_Crylink_Dequeue(entity e)
@@ -52,7 +57,10 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 	if(e == e.realowner.crylink_lastgroup)
 		e.realowner.crylink_lastgroup = world;
 
-	RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_damage * a, autocvar_g_balance_crylink_primary_edgedamage * a, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * a, e.projectiledeathtype, other);
+	if(e.projectiledeathtype & HITTYPE_SECONDARY)
+		RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_secondary_damage * a, autocvar_g_balance_crylink_secondary_edgedamage * a, autocvar_g_balance_crylink_secondary_radius, world, autocvar_g_balance_crylink_secondary_force * a, e.projectiledeathtype, other);
+	else
+		RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_damage * a, autocvar_g_balance_crylink_primary_edgedamage * a, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * a, e.projectiledeathtype, other);
 
 	if(e.queuenext != e2)
 		W_Crylink_LinkExplode(e.queuenext, e2);
@@ -150,6 +158,8 @@ vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 		//      targ_origin -> avg_origin
 		//      p->velocity -> HUEG away from center
 	}
+
+	W_Crylink_CheckLinks(e);
 
 	return targ_origin;
 }
@@ -272,7 +282,7 @@ void W_Crylink_Touch2 (void)
 	}
 
 	float a;
-	a = 1 - (time - self.fade_time) * self.fade_rate;
+	a = bound(0, 1 - (time - self.fade_time) * self.fade_rate, 1);
 
 	finalhit = ((self.cnt <= 0) || (other.takedamage != DAMAGE_NO));
 	if(finalhit)
@@ -397,6 +407,7 @@ void W_Crylink_Attack (void)
 			proj.fade_rate = 1 / autocvar_g_balance_crylink_primary_other_fadetime;
 			proj.nextthink = time + autocvar_g_balance_crylink_primary_other_lifetime + autocvar_g_balance_crylink_primary_other_fadetime;
 		}
+		proj.teleport_time = time + autocvar_g_balance_crylink_primary_joindelay;
 		proj.cnt = autocvar_g_balance_crylink_primary_bounces;
 		//proj.scale = 1 + 1 * proj.cnt;
 
@@ -413,6 +424,7 @@ void W_Crylink_Attack (void)
 		counter = counter + 1;
 	}
 	self.crylink_lastgroup = proj;
+	W_Crylink_CheckLinks(proj);
 }
 
 void W_Crylink_Attack2 (void)
@@ -484,6 +496,7 @@ void W_Crylink_Attack2 (void)
 			proj.fade_rate = 1 / autocvar_g_balance_crylink_secondary_line_fadetime;
 			proj.nextthink = time + autocvar_g_balance_crylink_secondary_line_lifetime + autocvar_g_balance_crylink_secondary_line_fadetime;
 		}
+		proj.teleport_time = time + autocvar_g_balance_crylink_secondary_joindelay;
 		proj.cnt = autocvar_g_balance_crylink_secondary_bounces;
 		//proj.scale = 1 + 1 * proj.cnt;
 
@@ -542,14 +555,13 @@ float w_crylink(float req)
 		}
 		else
 		{
-			if (self.crylink_waitrelease)
+			if (self.crylink_waitrelease && (!self.crylink_lastgroup || time > self.crylink_lastgroup.teleport_time))
 			{
 				// fired and released now!
 				if(self.crylink_lastgroup)
 				{
 					vector pos;
 					entity linkjoineffect;
-
 
 					if(self.crylink_waitrelease == 1)
 					{
@@ -567,8 +579,6 @@ float w_crylink(float req)
 					linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
 					linkjoineffect.owner = self;
 					setorigin(linkjoineffect, pos);
-
-
 				}
 				self.crylink_waitrelease = 0;
 				if(!w_crylink(WR_CHECKAMMO1) && !w_crylink(WR_CHECKAMMO2))
@@ -635,16 +645,16 @@ float w_crylink(float req)
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		w_deathtypestring = "%s succeeded at self-destructing themself with the Crylink";
+		w_deathtypestring = _("%s succeeded at self-destructing themself with the Crylink");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE)
-			w_deathtypestring = "%s could not hide from %s's Crylink"; // unchecked: SPLASH (SECONDARY can't be)
+			w_deathtypestring = _("%s could not hide from %s's Crylink"); // unchecked: SPLASH (SECONDARY can't be)
 		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "%s was too close to %s's Crylink"; // unchecked: SECONDARY
+			w_deathtypestring = _("%s was too close to %s's Crylink"); // unchecked: SECONDARY
 		else
-			w_deathtypestring = "%s took a close look at %s's Crylink"; // unchecked: SECONDARY
+			w_deathtypestring = _("%s took a close look at %s's Crylink"); // unchecked: SECONDARY
 	}
 	return TRUE;
 }

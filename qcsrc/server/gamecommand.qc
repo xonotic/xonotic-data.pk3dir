@@ -626,6 +626,47 @@ void make_mapinfo_Think()
 	}
 }
 
+void changematchtime(float delta, float mi, float ma)
+{
+	float cur;
+	float new;
+	float lim;
+
+	if(delta == 0)
+		return;
+	if(autocvar_timelimit < 0)
+		return;
+
+	if(mi <= 10)
+		mi = 10; // at least ten sec in the future
+	cur = time - game_starttime;
+	if(cur > 0)
+		mi += cur; // from current time!
+
+	lim = autocvar_timelimit * 60;
+
+	if(delta > 0)
+	{
+		if(lim == 0)
+			return; // cannot increase any further
+		else if(lim < ma)
+			new = min(ma, lim + delta);
+		else // already above maximum: FAIL
+			return;
+	}
+	else
+	{
+		if(lim == 0) // infinite: try reducing to max, if we are allowed to
+			new = max(mi, ma);
+		else if(lim > mi) // above minimum: decrease
+			new = max(mi, lim + delta);
+		else // already below minimum: FAIL
+			return;
+	}
+
+	cvar_set("timelimit", ftos(new));
+}
+
 void GameCommand(string command)
 {
 	float argc;
@@ -653,6 +694,8 @@ void GameCommand(string command)
 		print("  cvar_changes\n");
 		print("  cvar_purechanges\n");
 		print("  find classname\n");
+		print("  extendmatchtime\n");
+		print("  reducematchtime\n");
 		GameCommand_Vote("help", world);
 		GameCommand_Ban("help");
 		GameCommand_Generic("help");
@@ -1376,6 +1419,18 @@ void GameCommand(string command)
 		traceline(src, dst, MOVE_NORMAL, world);
 		trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), src, trace_endpos);
 		trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dst);
+		return;
+	}
+
+	if(argv(0) == "extendmatchtime")
+	{
+		changematchtime(autocvar_timelimit_increment* 60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
+		return;
+	}
+
+	if(argv(0) == "reducematchtime")
+	{
+		changematchtime(autocvar_timelimit_decrement*-60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
 		return;
 	}
 

@@ -2,9 +2,9 @@
 CLASS(XonoticServerInfoDialog) EXTENDS(XonoticDialog)
 	METHOD(XonoticServerInfoDialog, fill, void(entity))
 	METHOD(XonoticServerInfoDialog, loadServerInfo, void(entity, float))
-	ATTRIB(XonoticServerInfoDialog, title, string, "Server Information")
+	ATTRIB(XonoticServerInfoDialog, title, string, _("Server Information"))
 	ATTRIB(XonoticServerInfoDialog, color, vector, SKINCOLOR_DIALOG_SERVERINFO)
-	ATTRIB(XonoticServerInfoDialog, intendedWidth, float, 0.68)
+	ATTRIB(XonoticServerInfoDialog, intendedWidth, float, 0.8)
 	ATTRIB(XonoticServerInfoDialog, rows, float, 15)
 	ATTRIB(XonoticServerInfoDialog, columns, float, 12)
 
@@ -56,8 +56,8 @@ void Join_Click(entity btn, entity me);
 #ifdef IMPLEMENTATION
 void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 {
-	float m, pure, j;
-	string s, typestr, versionstr, numh, maxp, k, v;
+	float m, pure, freeslots, j, numh, maxp, numb;
+	string s, typestr, versionstr, k, v;
 
 	if(me.currentServerName)
 		strunzone(me.currentServerName);
@@ -112,8 +112,8 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.cnameLabel.setText(me.cnameLabel, me.currentServerCName);
 
 	pure = -1;
-	typestr = "N/A";
-	versionstr = "N/A";
+	typestr = _("N/A");
+	versionstr = _("N/A");
 
 	SLIST_FIELD_QCSTATUS = gethostcacheindexforkey("qcstatus");
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
@@ -123,6 +123,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 		typestr = argv(0);
 		versionstr = argv(1);
 	}
+	freeslots = -1;
 	for(j = 2; j < m; ++j)
 	{
 		if(argv(j) == "")
@@ -131,6 +132,8 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 		v = substring(argv(j), 1, -1);
 		if(k == "P")
 			pure = stof(v);
+		else if(k == "S")
+			freeslots = stof(v);
 	}
 
 	me.currentServerType = strzone(typestr);
@@ -145,14 +148,17 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.rawPlayerList.setPlayerList(me.rawPlayerList, me.currentServerPlayers);
 
 	SLIST_FIELD_NUMHUMANS = gethostcacheindexforkey("numhumans");
-	numh = ftos(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i));
+	numh = gethostcachenumber(SLIST_FIELD_NUMHUMANS, i);
 	SLIST_FIELD_MAXPLAYERS = gethostcacheindexforkey("maxplayers");
-	maxp = ftos(gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i));
-	me.currentServerNumPlayers = strzone(strcat(numh,"/",maxp));
+	maxp = gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i);
+	SLIST_FIELD_NUMBOTS = gethostcacheindexforkey("numbots");
+	numb = gethostcachenumber(SLIST_FIELD_NUMBOTS, i);
+	if(freeslots < 0)
+		freeslots = maxp - numh - numb;
+	me.currentServerNumPlayers = strzone(sprintf(_("%d/%d, %d free player slots"), numh, maxp, freeslots));
 	me.numPlayersLabel.setText(me.numPlayersLabel, me.currentServerNumPlayers);
 
-	SLIST_FIELD_NUMBOTS = gethostcacheindexforkey("numbots");
-	s = ftos(gethostcachenumber(SLIST_FIELD_NUMBOTS, i));
+	s = ftos(numb);
 	me.currentServerNumBots = strzone(s);
 	me.numBotsLabel.setText(me.numBotsLabel, me.currentServerNumBots);
 
@@ -163,7 +169,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerVersion = strzone(versionstr);
 	me.versionLabel.setText(me.versionLabel, me.currentServerVersion);
 
-	me.currentServerPure = ((pure < 0) ? "N/A" : (pure == 0) ? "Official settings" : sprintf("%d modified settings", pure));
+	me.currentServerPure = ((pure < 0) ? "N/A" : (pure == 0) ? _("Official settings") : sprintf(_("%d modified settings"), pure));
 	me.currentServerPure = strzone(me.currentServerPure);
 	me.pureLabel.setText(me.pureLabel, me.currentServerPure);
 
@@ -174,13 +180,13 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 
 	s = crypto_getidfp(me.currentServerCName);
 	if not(s)
-		s = "N/A";
+		s = _("N/A");
 	me.currentServerID = strzone(s);
 	me.idLabel.setText(me.idLabel, me.currentServerID);
 
 	s = crypto_getkeyfp(me.currentServerCName);
 	if not(s)
-		s = "N/A";
+		s = _("N/A");
 	me.currentServerKey = strzone(s);
 	me.keyLabel.setText(me.keyLabel, me.currentServerKey);
 
@@ -188,35 +194,35 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	if(s == "")
 	{
 		if(cvar("crypto_aeslevel") >= 3)
-			me.currentServerEncrypt = "N/A (can't connect)";
+			me.currentServerEncrypt = _("N/A (can't connect)");
 		else
-			me.currentServerEncrypt = "N/A";
+			me.currentServerEncrypt = _("N/A");
 	}
 	else switch(stof(substring(s, 0, 1)))
 	{
 		case 0:
 			if(cvar("crypto_aeslevel") >= 3)
-				me.currentServerEncrypt = "not supported (can't connect)";
+				me.currentServerEncrypt = _("not supported (can't connect)");
 			else
-				me.currentServerEncrypt = "not supported (won't encrypt)";
+				me.currentServerEncrypt = _("not supported (won't encrypt)");
 			break;
 		case 1:
 			if(cvar("crypto_aeslevel") >= 2)
-				me.currentServerEncrypt = "supported (will encrypt)";
+				me.currentServerEncrypt = _("supported (will encrypt)");
 			else
-				me.currentServerEncrypt = "supported (won't encrypt)";
+				me.currentServerEncrypt = _("supported (won't encrypt)");
 			break;
 		case 2:
 			if(cvar("crypto_aeslevel") >= 1)
-				me.currentServerEncrypt = "requested (will encrypt)";
+				me.currentServerEncrypt = _("requested (will encrypt)");
 			else
-				me.currentServerEncrypt = "requested (won't encrypt)";
+				me.currentServerEncrypt = _("requested (won't encrypt)");
 			break;
 		case 3:
 			if(cvar("crypto_aeslevel") <= 0)
-				me.currentServerEncrypt = "required (can't connect)";
+				me.currentServerEncrypt = _("required (can't connect)");
 			else
-				me.currentServerEncrypt = "required (will encrypt)";
+				me.currentServerEncrypt = _("required (will encrypt)");
 			break;
 	}
 	me.encryptLabel.setText(me.encryptLabel, me.currentServerEncrypt);
@@ -237,7 +243,7 @@ void XonoticServerInfoDialog_fill(entity me)
 			me.cnameLabel = e;
 
 	me.TR(me);
-		me.TD(me, 1, 5.5, e = makeXonoticTextLabel(0, "Players:"));
+		me.TD(me, 1, 5.5, e = makeXonoticTextLabel(0, _("Players:")));
 	me.TR(me);
 		me.TD(me, me.rows - 4, 6, e = makeXonoticPlayerList());
 			me.rawPlayerList = e;
@@ -245,70 +251,70 @@ void XonoticServerInfoDialog_fill(entity me)
 	me.gotoRC(me, 1, 6.25); me.setFirstColumn(me, me.currentColumn);
 
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Type:"));
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, _("Type:")));
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.typeLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Map:"));
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, _("Map:")));
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.mapLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Gameplay:"));
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, _("Gameplay:")));
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.pureLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Players:"));
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, _("Players:")));
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.numPlayersLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Bots:"));
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, _("Bots:")));
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.numBotsLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Mod:"));
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, _("Mod:")));
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.modLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Version:"));
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, _("Version:")));
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.versionLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Ping:"));
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, _("Ping:")));
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.pingLabel = e;
 
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "CA:"));
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, _("CA:")));
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.keyLabel = e;
 
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Key:"));
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, _("Key:")));
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.idLabel = e;
 
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, "Encryption:"));
+		me.TD(me, 1, 1.75, e = makeXonoticTextLabel(0, _("Encryption:")));
 		me.TD(me, 1, 4.0, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = 1;
 			me.encryptLabel = e;
 
 	me.gotoRC(me, me.rows - 1, 0);
 
-		me.TD(me, 1, me.columns - 6, e = makeXonoticButton("Close", '0 0 0'));
+		me.TD(me, 1, me.columns - 6, e = makeXonoticButton(_("Close"), '0 0 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
-		me.TD(me, 1, me.columns - 6, e = makeXonoticButton("Join!", '0 0 0'));
+		me.TD(me, 1, me.columns - 6, e = makeXonoticButton(_("Join!"), '0 0 0'));
 			e.onClick = Join_Click;
 			e.onClickEntity = me;
 }

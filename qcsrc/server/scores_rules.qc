@@ -34,7 +34,6 @@ void ScoreRules_basics_end()
 }
 void ScoreRules_generic()
 {
-	CheckAllowedTeams(world);
 	if(teams_matter)
 	{
 		CheckAllowedTeams(world);
@@ -191,14 +190,22 @@ void ScoreRules_nexball(float teams)
 // Keep Away stuff
 #define SP_KEEPAWAY_PICKUPS 4
 #define SP_KEEPAWAY_CARRIERKILLS 5
-#define SP_KEEPAWAY_DROPS 6
-#define SP_KEEPAWAY_SCORE 7
+#define SP_KEEPAWAY_BCTIME 6
 void ScoreRules_keepaway()
 {
-	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, FALSE); // SFL_SORT_PRIO_PRIMARY
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_SCORE,		"score",		SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,		"pickups",		0);
+	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,			"pickups",		0);
 	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,	"bckills",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_DROPS,		"drops",		SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,			"bctime",			SFL_SORT_PRIO_SECONDARY);
+	ScoreRules_basics_end();
+}
+
+// FreezeTag stuff
+#define SP_FREEZETAG_REVIVALS 4
+void ScoreRules_freezetag()
+{
+	CheckAllowedTeams(world);
+	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS,		"revivals",		0);
 	ScoreRules_basics_end();
 }

@@ -603,7 +603,6 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_noantilag, "cl_noantilag");
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional, "cl_voice_directional");
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional_taunt_attenuation, "cl_voice_directional_taunt_attenuation");
-	GetCvars_handleFloat(s, f, cvar_cl_hitsound, "cl_hitsound");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_share, "cl_accuracy_data_share");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_receive, "cl_accuracy_data_receive");
 
@@ -616,6 +615,7 @@ void GetCvars(float f)
 #endif
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
+	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
@@ -915,8 +915,15 @@ void readplayerstartcvars()
 
 	g_weaponarena = 0;
 	s = cvar_string("g_weaponarena");
-	if (s == "0")
+	if (s == "0" || s == "")
 	{
+		if(g_lms || g_ca)
+			s = "most";
+	}
+
+	if (s == "off")
+	{
+		// forcibly turn off weaponarena
 	}
 	else if (s == "all")
 	{
@@ -981,6 +988,40 @@ void readplayerstartcvars()
 	if (g_weaponarena)
 	{
 		start_weapons = g_weaponarena;
+		if(!(g_lms || g_ca))
+			start_items |= IT_UNLIMITED_AMMO;
+	}
+	else if (g_minstagib)
+	{
+		start_health = 100;
+		start_armorvalue = 0;
+		start_weapons = WEPBIT_MINSTANEX;
+		weapon_action(WEP_MINSTANEX, WR_PRECACHE);
+		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
+
+		if (g_minstagib_invis_alpha <= 0)
+			g_minstagib_invis_alpha = -1;
+	}
+	else
+	{
+		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
+		{
+			e = get_weaponinfo(i);
+			if(want_weapon("g_start_weapon_", e, FALSE))
+				start_weapons |= e.weapons;
+		}
+	}
+
+	if(!cvar("g_use_ammunition"))
+		start_items |= IT_UNLIMITED_AMMO;
+
+	if(g_minstagib)
+	{
+		start_ammo_cells = cvar("g_minstagib_ammo_start");
+		start_ammo_fuel = cvar("g_start_ammo_fuel");
+	}
+	else if(start_items & IT_UNLIMITED_WEAPON_AMMO)
+	{
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
@@ -998,32 +1039,16 @@ void readplayerstartcvars()
 					start_ammo_fuel = 999;
 			}
 		}
-		start_items |= IT_UNLIMITED_AMMO;
-	}
-	else if (g_minstagib)
-	{
-		start_health = 100;
-		start_armorvalue = 0;
-		start_weapons = WEPBIT_MINSTANEX;
-		weapon_action(WEP_MINSTANEX, WR_PRECACHE);
-		start_ammo_cells = cvar("g_minstagib_ammo_start");
-		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
-		start_ammo_fuel = cvar("g_start_ammo_fuel");
-
-		if (g_minstagib_invis_alpha <= 0)
-			g_minstagib_invis_alpha = -1;
 	}
 	else
 	{
-		if (g_lms || g_ca)
+		if(g_lms || g_ca)
 		{
 			start_ammo_shells = cvar("g_lms_start_ammo_shells");
 			start_ammo_nails = cvar("g_lms_start_ammo_nails");
 			start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
 			start_ammo_cells = cvar("g_lms_start_ammo_cells");
 			start_ammo_fuel = cvar("g_lms_start_ammo_fuel");
-			start_health = cvar("g_lms_start_health");
-			start_armorvalue = cvar("g_lms_start_armor");
 		}
 		else
 		{
@@ -1033,13 +1058,12 @@ void readplayerstartcvars()
 			start_ammo_cells = cvar("g_start_ammo_cells");
 			start_ammo_fuel = cvar("g_start_ammo_fuel");
 		}
+	}
 
-		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
-			e = get_weaponinfo(i);
-			if(want_weapon("g_start_weapon_", e, FALSE))
-				start_weapons |= e.weapons;
-		}
+	if (g_lms || g_ca)
+	{
+		start_health = cvar("g_lms_start_health");
+		start_armorvalue = cvar("g_lms_start_armor");
 	}
 
 	if (inWarmupStage)
@@ -1078,22 +1102,6 @@ void readplayerstartcvars()
 		start_items |= IT_FUEL_REGEN;
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-	}
-
-	if(!cvar("g_use_ammunition"))
-	{
-		start_ammo_shells = cvar("g_pickup_shells_max");
-		start_ammo_nails = cvar("g_pickup_nails_max");
-		start_ammo_rockets = cvar("g_pickup_rockets_max");
-		start_ammo_cells = cvar("g_pickup_cells_max");
-		start_ammo_fuel = cvar("g_pickup_fuel_max");
-		start_items |= IT_UNLIMITED_AMMO;
-		warmup_start_ammo_shells = cvar("g_pickup_shells_max");
-		warmup_start_ammo_nails = cvar("g_pickup_nails_max");
-		warmup_start_ammo_rockets = cvar("g_pickup_rockets_max");
-		warmup_start_ammo_cells = cvar("g_pickup_cells_max");
-		warmup_start_ammo_fuel = cvar("g_pickup_fuel_max");
-		//warmup_start_items |= IT_UNLIMITED_AMMO;
 	}
 
 	if (g_jetpack)
@@ -1630,8 +1638,6 @@ void precache()
     precache_sound ("misc/gib_splat02.wav");
     precache_sound ("misc/gib_splat03.wav");
     precache_sound ("misc/gib_splat04.wav");
-    precache_sound ("misc/hit.wav");
-	precache_sound ("misc/typehit.wav");
     PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
     PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
     precache_sound ("misc/null.wav");
@@ -2545,10 +2551,7 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
         // rule 6: we must not end up in trigger_hurt
         if (tracebox_hits_trigger_hurt(start, e.mins, e.maxs, enddown))
-        {
-            dprint("trigger_hurt! ouch! and nothing else could find it!\n");
             continue;
-        }
 
         break;
     }
@@ -2857,65 +2860,65 @@ void SoundEntity_Detach(entity pl)
 float ParseCommandPlayerSlotTarget_firsttoken;
 entity GetCommandPlayerSlotTargetFromTokenizedCommand(float tokens, float idx) // idx = start index
 {
-    string s;
-    entity e, head;
-    float n;
+	string s;
+	entity e, head;
+	float n;
 
-    s = string_null;
+	s = string_null;
 
-    ParseCommandPlayerSlotTarget_firsttoken = -1;
+	ParseCommandPlayerSlotTarget_firsttoken = -1;
 
-    if (tokens > idx)
-    {
-        if (substring(argv(idx), 0, 1) == "#")
-        {
-            s = substring(argv(idx), 1, -1);
-            ++idx;
-            if (s == "")
-                if (tokens > idx)
-                {
-                    s = argv(idx);
-                    ++idx;
-                }
+	if (tokens > idx)
+	{
+		if (substring(argv(idx), 0, 1) == "#")
+		{
+			s = substring(argv(idx), 1, -1);
+			++idx;
+			if (s == "") if (tokens > idx)
+			{
+				s = argv(idx);
+				++idx;
+			}
 			ParseCommandPlayerSlotTarget_firsttoken = idx;
-            if (s == ftos(stof(s)))
-            {
-                e = edict_num(stof(s));
-                if (e.flags & FL_CLIENT)
-                    return e;
-            }
-        }
-        else
-        {
-            // it must be a nick name
-            s = argv(idx);
-            ++idx;
+			n = stof(s);
+			if (s == ftos(n) && n > 0 && n <= maxclients)
+			{
+				e = edict_num(n);
+				if (e.flags & FL_CLIENT)
+					return e;
+			}
+		}
+		else
+		{
+			// it must be a nick name
+			s = argv(idx);
+			++idx;
 			ParseCommandPlayerSlotTarget_firsttoken = idx;
 
-            n = 0;
-            FOR_EACH_CLIENT(head)
-            if (head.netname == s)
-            {
-                e = head;
-                ++n;
-            }
-            if (n == 1)
-                return e;
+			n = 0;
+			FOR_EACH_CLIENT(head)
+				if (head.netname == s)
+				{
+					e = head;
+					++n;
+				}
+			if (n == 1)
+				return e;
 
-            s = strdecolorize(s);
-            n = 0;
-            FOR_EACH_CLIENT(head)
-            if (strdecolorize(head.netname) == s)
-            {
-                e = head;
-                ++n;
-            }
-            if (n == 1)
-                return e;
-        }
-    }
+			s = strdecolorize(s);
+			n = 0;
+			FOR_EACH_CLIENT(head)
+				if (strdecolorize(head.netname) == s)
+				{
+					e = head;
+					++n;
+				}
+			if (n == 1)
+				return e;
+		}
+	}
 
-    return world;
+	return world;
 }
 
 .float scale2;

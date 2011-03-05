@@ -122,6 +122,11 @@ void func_breakable_behave_destroyed()
 void func_breakable_behave_restore()
 {
 	self.health = self.max_health;
+	if(self.sprite)
+	{
+		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
+		WaypointSprite_UpdateHealth(self.sprite, self.health);
+	}
 	self.takedamage = DAMAGE_AIM;
 	self.event_damage = func_breakable_damage;
 	self.state = 0;
@@ -180,9 +185,12 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, floa
 	if(self.team)
 		if(attacker.team == self.team)
 			return;
-	if(self.sprite)
-		WaypointSprite_Ping(self.sprite);
 	self.health = self.health - damage;
+	if(self.sprite)
+	{
+		WaypointSprite_Ping(self.sprite);
+		WaypointSprite_UpdateHealth(self.sprite, self.health);
+	}
 	func_breakable_colormod();
 
 	if(self.health <= 0)

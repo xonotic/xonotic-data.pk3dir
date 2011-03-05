@@ -1,3 +1,6 @@
+float GL_CheckExtension(string ext);
+float GL_Have_TextureCompression();
+
 void forAllDescendants(entity root, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass);
 void saveAllCvars(entity root);
 void loadAllCvars(entity root);
@@ -31,3 +34,17 @@ float URI_GET_CURL_END = 9;
 void Curl_URI_Get_Callback(float id, float status, string data);
 
 void URI_Get_Callback(float id, float status, string data);
+
+// game type list box stuff (does not NEED to contain all game types, other
+// types stay available via console)
+float GameType_GetID(float cnt);
+string GameType_GetName(float cnt);
+float GameType_GetCount();
+
+void dialog_hudpanel_common_notoggle(entity me, string panelname);
+#define DIALOG_HUDPANEL_COMMON_NOTOGGLE() \
+	dialog_hudpanel_common_notoggle(me, panelname)
+#define DIALOG_HUDPANEL_COMMON() \
+	me.TR(me); \
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", panelname)), _("Enable panel"))); \
+	DIALOG_HUDPANEL_COMMON_NOTOGGLE()

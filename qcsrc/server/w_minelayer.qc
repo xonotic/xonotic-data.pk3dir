@@ -1,9 +1,9 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", "Mine Layer");
+REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", _("Mine Layer"))
 #else
 #ifdef SVQC
 void W_Mine_Think (void);
-.float minelayer_detonate, minelayer_mines;
+.float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
 
 void spawnfunc_weapon_minelayer (void)
@@ -73,6 +73,7 @@ void W_Mine_Explode ()
 			self.owner.switchweapon = w_getbestweapon(self.owner);
 		}
 	}
+	self.owner.minelayer_mines -= 1;
 	remove (self);
 }
 
@@ -92,6 +93,7 @@ void W_Mine_DoRemoteExplode ()
 			self.owner.switchweapon = w_getbestweapon(self.owner);
 		}
 	}
+	self.owner.minelayer_mines -= 1;
 	remove (self);
 }
 
@@ -110,7 +112,7 @@ void W_Mine_RemoteExplode ()
 void W_Mine_ProximityExplode ()
 {
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
-	if(autocvar_g_balance_minelayer_protection)
+	if(autocvar_g_balance_minelayer_protection && self.mine_explodeanyway == 0)
 	{
 		entity head;
 		head = findradius(self.origin, autocvar_g_balance_minelayer_radius);
@@ -126,21 +128,34 @@ void W_Mine_ProximityExplode ()
 	W_Mine_Explode();
 }
 
+float W_Mine_Count(entity e)
+{
+	float minecount;
+	entity mine;
+	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == e)
+		minecount += 1;
+		
+	return minecount;
+}
+
 void W_Mine_Think (void)
 {
 	entity head;
 
 	self.nextthink = time;
-	if (time > self.cnt)
+	
+	// our lifetime has expired, it's time to die - mine_time just allows us to play a sound for this
+	// TODO: replace this mine_trigger.wav sound with a real countdown
+	if ((time > self.cnt) && (!self.mine_time))
 	{
-		other = world;
-		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Mine_Explode();
-		return;
+		if(autocvar_g_balance_minelayer_lifetime_countdown > 0)
+			spamsound (self, CHAN_PROJECTILE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+		self.mine_time = time + autocvar_g_balance_minelayer_lifetime_countdown;
+		self.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
 
 	// a player's mines shall explode if he disconnects or dies
-	// TODO: Do this on team change too
+	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
 	if(self.owner.classname != "player" || self.owner.deadflag != DEAD_NO)
 	{
 		other = world;
@@ -165,7 +180,10 @@ void W_Mine_Think (void)
 
 	// explode if it's time to
 	if(self.mine_time && time >= self.mine_time)
+	{
 		W_Mine_ProximityExplode();
+		return;
+	}
 
 	// remote detonation
 	if (self.owner.weapon == WEP_MINE_LAYER)
@@ -201,11 +219,8 @@ void W_Mine_Attack (void)
 	// scan how many mines we placed, and return if we reached our limit
 	if(autocvar_g_balance_minelayer_limit)
 	{
-		self.minelayer_mines = 0;
-		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
-			self.minelayer_mines += 1;
-
-		if(self.minelayer_mines >= autocvar_g_balance_minelayer_limit)
+	
+		if(W_Mine_Count(self) >= autocvar_g_balance_minelayer_limit)
 		{
 			// the refire delay keeps this message from being spammed
 			sprint(self, strcat("You cannot place more than ^2", ftos(autocvar_g_balance_minelayer_limit), " ^7mines at a time\n") );
@@ -247,7 +262,7 @@ void W_Mine_Attack (void)
 	mine.touch = W_Mine_Touch;
 	mine.think = W_Mine_Think;
 	mine.nextthink = time;
-	mine.cnt = time + autocvar_g_balance_minelayer_lifetime;
+	mine.cnt = time + (autocvar_g_balance_minelayer_lifetime - autocvar_g_balance_minelayer_lifetime_countdown);
 	mine.flags = FL_PROJECTILE;
 
 	CSQCProjectile(mine, TRUE, PROJECTILE_MINE, TRUE);
@@ -262,6 +277,8 @@ void W_Mine_Attack (void)
 	// common properties
 
 	other = mine; MUTATOR_CALLHOOK(EditProjectile);
+	
+	self.minelayer_mines = W_Mine_Count(self);
 }
 
 void spawnfunc_weapon_minelayer (void); // defined in t_items.qc
@@ -435,15 +452,15 @@ float w_minelayer(float req)
 		precache_sound("weapons/mine_exp.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s exploded";
+		w_deathtypestring = _("%s exploded");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = "%s got too close to %s's mine";
+			w_deathtypestring = _("%s got too close to %s's mine");
 		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "%s almost dodged %s's mine";
+			w_deathtypestring = _("%s almost dodged %s's mine");
 		else
-			w_deathtypestring = "%s stepped on %s's mine";
+			w_deathtypestring = _("%s stepped on %s's mine");
 	}
 	return TRUE;
 }

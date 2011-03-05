@@ -275,26 +275,30 @@ void MapList_LoadMap(entity btn, entity me)
 	m = MapInfo_BSPName_ByID(i);
 	if not(m)
 	{
-		print("Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n");
+		print(_("Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"));
+		me.refilter(me);
 		return;
 	}
 	if(MapInfo_CheckMap(m))
 	{
 		localcmd("\nmenu_loadmap_prepare\n");
 		if(cvar("menu_use_default_hostname"))
-			localcmd("hostname \"", strdecolorize(cvar_string("_cl_name")), "'s Xonotic server\"\n");
+			localcmd("hostname \"", sprintf(_("%s's Xonotic Server"), strdecolorize(cvar_string("_cl_name"))), "\"\n");
 		MapInfo_LoadMap(m);
 	}
 	else
 	{
-		print("Huh? Can't play this (invalid game type). Refiltering so this won't happen again.\n");
+		print(_("Huh? Can't play this (invalid game type). Refiltering so this won't happen again.\n"));
 		me.refilter(me);
+		return;
 	}
 }
 
 float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	string ch, save;
+	if(me.nItems <= 0)
+		return SUPER(XonoticMapList).keyDown(me, scan, ascii, shift);
 	if(scan == K_ENTER || scan == K_KP_ENTER)
 	{
 		// pop up map info screen
