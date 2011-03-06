@@ -96,7 +96,7 @@ void Item_Show (entity e, float mode)
 	}
 	else if((e.flags & FL_WEAPON) && (g_weapon_stay == 3))
 	{
-		// make the item translucent green and not touchable
+		// make the item translucent and not touchable
 		e.model = e.mdl;
 		e.solid = SOLID_TRIGGER; // can STILL be picked up!
 		e.colormod = '0 0 0';
@@ -108,7 +108,7 @@ void Item_Show (entity e, float mode)
 	}
 	else if(g_ghost_items)
 	{
-		// make the item translucent green and not touchable
+		// make the item translucent and not touchable
 		e.model = e.mdl;
 		e.solid = SOLID_NOT;
 		e.colormod = stov(autocvar_g_ghost_items_color);
@@ -123,7 +123,7 @@ void Item_Show (entity e, float mode)
 		// hide the item completely
 		e.model = string_null;
 		e.solid = SOLID_NOT;
-		e.colormod = stov(autocvar_g_ghost_items_color);
+		e.colormod = '0 0 0';
 		e.glowmod = e.colormod;
 		e.alpha = 0;
 		e.customizeentityforclient = func_null;
