@@ -1824,7 +1824,7 @@ void HUD_Weapons(void)
 
 			string s;
 			if(complain_weapon_type == 0) {
-				s = "Out of ammo";
+				s = _("Out of ammo");
 				color = stov(autocvar_hud_panel_weapons_complainbubble_color_outofammo);
 			}
 			else if(complain_weapon_type == 1) {
@@ -2751,7 +2751,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			}
 		}
 		else if(type == KILL_FIRST_BLOOD)
-			print(sprintf("^1%s^1 drew first blood\n", s1));
+			print(sprintf(_("^1%s^1 drew first blood\n"), s1));
 		else if (type == DEATH_TELEFRAG) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_TELEFRAG);
 			if(gentle)
@@ -2911,7 +2911,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if (type == DEATH_SLIME) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_SLIME);
 			if(alsoprint)
-				print (sprintf("^1%s^1 was slimed\n", s1));
+				print (sprintf(_("^1%s^1 was slimed\n"), s1));
 		} else if (type == DEATH_LAVA) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_LAVA);
 			if(alsoprint)
@@ -3890,7 +3890,7 @@ void HUD_VoteWindow(void)
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
 	{
 		vote_active = 1;
-		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player\" ^7in stats"));
+		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player^7\" in stats"));
         uid2name_dialog = 1;
 	}
 
@@ -4985,7 +4985,7 @@ void HUD_InfoMessages(void)
 					if (tm)
 					if (tm.team != COLOR_SPECTATOR)
 					if (tm.team_size == ts_max)
-						s = strcat(s, sprintf(" Press ^3%s%s to adjust", getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
+						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
 					drawInfoMessage(s)
 				}
 			}

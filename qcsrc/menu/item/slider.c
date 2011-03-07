@@ -239,11 +239,11 @@ float Slider_mousePress(entity me, vector pos)
 }
 float Slider_mouseRelease(entity me, vector pos)
 {
-	if(cvar("menu_sounds"))
-		localsound("sound/misc/menu2.wav");
 	me.pressed = 0;
 	if(me.disabled)
 		return 0;
+	if(cvar("menu_sounds"))
+		localsound("sound/misc/menu2.wav");
 	return 1;
 }
 void Slider_showNotify(entity me)
