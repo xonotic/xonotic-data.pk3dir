@@ -6,14 +6,13 @@ REGISTER_WEAPON(LIGHTNING, w_lightning, IT_CELLS, 5, WEP_FLAG_NORMAL | WEP_TYPE_
 // Declarations ========================= 
 .vector hook_start, hook_end; // used for beam
 .entity lightning_beam; // used for beam
-//.float bot_aim_whichfiretype; // ???
 .float BUTTON_ATCK_prev; // for better animation control
 .float lg_fire_prev; // for better animation control
 
 // Lightning functions ========================= 
 float W_Lightning_Beam_Send(entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LGBEAM);
+	WriteByte(MSG_ENTITY, ENT_CLIENT_LIGHTNING_BEAM);
 	sf = sf & 0x7F;
 	if(sound_allowed(MSG_BROADCAST, self.owner))
 		sf |= 0x80;
@@ -124,20 +123,6 @@ void W_Lightning_Attack1 (void)
 	self = oldself;
 }
 
-void LightningInit()
-{
-	weapon_action(WEP_LIGHTNING, WR_PRECACHE);
-	lightning_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 1);
-	lightning_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 2);
-	lightning_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 3);
-	lightning_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 4);
-}
-
-void spawnfunc_weapon_lightning (void)
-{
-	weapon_defaultspawnfunc(WEP_LIGHTNING);
-}
-
 float w_lightning(float req)
 {
 	if (req == WR_AIM)
@@ -240,6 +225,20 @@ float w_lightning(float req)
 	}
 	return TRUE;
 };
+
+void LightningInit()
+{
+	weapon_action(WEP_LIGHTNING, WR_PRECACHE);
+	lightning_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 1);
+	lightning_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 2);
+	lightning_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 3);
+	lightning_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 4);
+}
+
+void spawnfunc_weapon_lightning (void) // should this really be here?
+{
+	weapon_defaultspawnfunc(WEP_LIGHTNING);
+}
 #endif
 #ifdef CSQC
 float w_lightning(float req)
@@ -248,6 +247,7 @@ float w_lightning(float req)
 	{
 		vector org2;
 		org2 = w_org + w_backoff * 6;
+		
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
 			pointparticles(particleeffectnum("lightning_ballexplode"), org2, '0 0 0', 1);
@@ -256,19 +256,9 @@ float w_lightning(float req)
 		}
 		else
 		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-			{
-				// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
-				pointparticles(particleeffectnum("lightning_combo"), org2, '0 0 0', 1);
-				if(!w_issilent)
-					sound(self, CHAN_PROJECTILE, "weapons/lightning_impact_combo.wav", VOL_BASE, ATTN_NORM);
-			}
-			else
-			{
-				pointparticles(particleeffectnum("lightning_impact"), org2, '0 0 0', 1);
-				if(!w_issilent)
-					sound(self, CHAN_PROJECTILE, "weapons/lightning_impact.wav", VOL_BASE, ATTN_NORM);
-			}
+			pointparticles(particleeffectnum("lightning_impact"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/lightning_impact.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)
