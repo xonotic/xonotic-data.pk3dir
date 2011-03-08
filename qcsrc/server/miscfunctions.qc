@@ -921,7 +921,11 @@ void readplayerstartcvars()
 			s = "most";
 	}
 
-	if (s == "off")
+	if (s == "0" || s == "")
+	{
+		// no arena
+	}
+	else if (s == "off")
 	{
 		// forcibly turn off weaponarena
 	}
