@@ -2983,9 +2983,9 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		}
 	} else if(msg == MSG_KILL_ACTION_SPREE) {
 		if(gentle)
-			print (sprintf(_("^1%s^1 needs a restart after a %s scoring spree\n"), s1, s2));
+			print (sprintf(_("^1%s^1 needs a restart after a %d scoring spree\n"), s1, stof(s2)));
 		else
-			print (sprintf(_("^1%s^1 died with a %s kill spree\n"), s1, s2));
+			print (sprintf(_("^1%s^1 died with a %d kill spree\n"), s1, stof(s2)));
 	} else if(msg == MSG_INFO) {
 		if(type == INFO_GOTFLAG) { // here, s2 is the flag name
 			HUD_KillNotify_Push(s1, s2, 0, INFO_GOTFLAG);
