@@ -8,7 +8,6 @@ float GL_Have_TextureCompression()
 	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
 }
 
-float tooltipdb;
 void loadTooltips()
 {
 	tooltipdb = db_load(language_filename("tooltips.db"));
