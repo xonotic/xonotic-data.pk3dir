@@ -501,7 +501,10 @@ void m_tooltip(vector pos)
 
 					menuTooltipOrigin_x = -1; // unallocated
 
+					if (menuTooltipText)
+						strunzone(menuTooltipText);
 					menuTooltipText = strzone(gettooltip());
+
 					i = 0;
 					w = 0;
 					getWrappedLine_remaining = menuTooltipText;
