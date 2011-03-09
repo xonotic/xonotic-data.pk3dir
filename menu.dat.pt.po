@@ -71,7 +71,7 @@ msgstr "modificado"
 #: qcsrc/menu/menu.qc:29
 #, c-format
 msgid "^4MQC Build information: %s\n"
-msgstr "^4MQ Informação da Build %s\n"
+msgstr "^4MQC Informação da Build %s\n"
 
 #: qcsrc/menu/xonotic/campaign.c:284
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:66

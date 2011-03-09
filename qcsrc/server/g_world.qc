@@ -740,7 +740,7 @@ void spawnfunc_worldspawn (void)
 
 		// initialiation stuff, not good in the mutator system
 		if(autocvar_g_weaponarena != "0")
-			s = strcat(s, ":", autocvar_g_weaponarena, " arena");
+			s = strcat(s, ":", autocvar_g_weaponarena, "_arena");
 
 		// TODO to mutator system
 		if(autocvar_g_norecoil)
