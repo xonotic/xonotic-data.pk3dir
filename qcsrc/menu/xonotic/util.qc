@@ -22,7 +22,7 @@ void unloadTooltips()
 string getZonedTooltipForIdentifier(string s)
 {
 	string t;
-	if(s == "" || tooltipdb < 0)
+	if(s == "")
 		return string_null;
 	if(tooltipdb >= 0)
 	{
