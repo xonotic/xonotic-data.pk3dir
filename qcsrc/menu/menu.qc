@@ -328,10 +328,10 @@ vector menuTooltipSize;
 float menuTooltipAlpha;
 string menuTooltipText;
 float menuTooltipState; // 0: static, 1: fading in, 2: fading out
-float m_testmousetooltipbox()
+float m_testmousetooltipbox(vector pos)
 {
-	if(menuMousePos_x >= menuTooltipOrigin_x && menuMousePos_x < menuTooltipOrigin_x + menuTooltipSize_x)
-	if(menuMousePos_y >= menuTooltipOrigin_y && menuMousePos_y < menuTooltipOrigin_y + menuTooltipSize_y)
+	if(pos_x >= menuTooltipOrigin_x && pos_x < menuTooltipOrigin_x + menuTooltipSize_x)
+	if(pos_y >= menuTooltipOrigin_y && pos_y < menuTooltipOrigin_y + menuTooltipSize_y)
 		return FALSE;
 	return TRUE;
 }
@@ -454,7 +454,7 @@ string gettooltip()
 	}
 	return menuTooltipItem.tooltip;
 }
-void m_tooltip()
+void m_tooltip(vector pos)
 {
 	float f, i, w;
 	entity it;
@@ -473,10 +473,10 @@ void m_tooltip()
 	else
 	{
 		f = bound(0, frametime * 2, 1);
-		menuTooltipAveragedMousePos = menuTooltipAveragedMousePos * (1 - f) + menuMousePos * f;
-		f = vlen(menuMousePos - menuTooltipAveragedMousePos);
+		menuTooltipAveragedMousePos = menuTooltipAveragedMousePos * (1 - f) + pos * f;
+		f = vlen(pos - menuTooltipAveragedMousePos);
 		if(f < 0.01)
-			it = m_findtooltipitem(main, menuMousePos);
+			it = m_findtooltipitem(main, pos);
 		else
 			it = world;
 	}
@@ -531,7 +531,7 @@ void m_tooltip()
 		menuTooltipState = 1;
 
 	if(menuTooltipItem)
-		if(!m_testmousetooltipbox())
+		if(!m_testmousetooltipbox(pos))
 			menuTooltipState = 2; // fade out if mouse touches it
 
 	switch(menuTooltipState)
@@ -560,7 +560,7 @@ void m_tooltip()
 			menu_tooltips_old = menu_tooltips;
 		}
 		else if(menuTooltipOrigin_x < 0) // unallocated?
-			m_allocatetooltipbox(menuMousePos);
+			m_allocatetooltipbox(pos);
 
 		if(menuTooltipOrigin_x >= 0)
 		{
@@ -750,7 +750,7 @@ void() m_draw =
 	}
 	main.draw(main);
 
-	m_tooltip();
+	m_tooltip(menuMousePos);
 
 	draw_alpha = max(draw_alpha, SKINALPHA_CURSOR_INTRO * bound(0, menuLogoAlpha, 1));
 
