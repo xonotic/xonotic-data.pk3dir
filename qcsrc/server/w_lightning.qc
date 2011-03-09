@@ -20,7 +20,7 @@ float W_Lightning_Beam_Send(entity to, float sf)
 	if(sf & 1)
 	{
 		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
-		WriteCoord(MSG_ENTITY, autocvar_g_balance_electro_primary_range);
+		WriteCoord(MSG_ENTITY, autocvar_g_balance_lightning_primary_range);
 	}
 	if(sf & 2)
 	{
@@ -61,27 +61,27 @@ void W_Lightning_Beam_Think()
 	dt = frametime;
 	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		if(autocvar_g_balance_electro_primary_ammo)
+		if(autocvar_g_balance_lightning_primary_ammo)
 		{
-			dt = min(dt, self.owner.ammo_cells / autocvar_g_balance_electro_primary_ammo);
-			self.owner.ammo_cells = max(0, self.owner.ammo_cells - autocvar_g_balance_electro_primary_ammo * frametime);
+			dt = min(dt, self.owner.ammo_cells / autocvar_g_balance_lightning_primary_ammo);
+			self.owner.ammo_cells = max(0, self.owner.ammo_cells - autocvar_g_balance_lightning_primary_ammo * frametime);
 		}
 	}
 
-	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, autocvar_g_balance_electro_primary_damage * dt, autocvar_g_balance_electro_primary_range);
+	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, autocvar_g_balance_lightning_primary_damage * dt, autocvar_g_balance_lightning_primary_range);
 	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage
 	if(trace_ent)
 	{
 		vector force;
-		force = w_shotdir * autocvar_g_balance_electro_primary_force + '0 0 1' * autocvar_g_balance_electro_primary_force_up;
+		force = w_shotdir * autocvar_g_balance_lightning_primary_force;
 
-		f = ExponentialFalloff(autocvar_g_balance_electro_primary_falloff_mindist, autocvar_g_balance_electro_primary_falloff_maxdist, autocvar_g_balance_electro_primary_falloff_halflifedist, vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg));
+		f = ExponentialFalloff(autocvar_g_balance_lightning_primary_falloff_mindist, autocvar_g_balance_lightning_primary_falloff_maxdist, autocvar_g_balance_lightning_primary_falloff_halflifedist, vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg));
 
 		if(accuracy_isgooddamage(self.owner, trace_ent))
-			accuracy_add(self.owner, WEP_LIGHTNING, 0, autocvar_g_balance_electro_primary_damage * dt * f);
-		Damage (trace_ent, self.owner, self.owner, autocvar_g_balance_electro_primary_damage * dt * f, WEP_LIGHTNING, trace_endpos, force * dt);
+			accuracy_add(self.owner, WEP_LIGHTNING, 0, autocvar_g_balance_lightning_primary_damage * dt * f);
+		Damage (trace_ent, self.owner, self.owner, autocvar_g_balance_lightning_primary_damage * dt * f, WEP_LIGHTNING, trace_endpos, force * dt);
 	}
 
 	// draw effect
@@ -112,9 +112,9 @@ void W_Lightning_Attack1 (void)
 	beam.think = W_Lightning_Beam_Think;
 	beam.owner = self;
 	beam.movetype = MOVETYPE_NONE;
-	beam.shot_spread = 0;
+	beam.shot_spread = 1;
 	beam.bot_dodge = TRUE;
-	beam.bot_dodgerating = autocvar_g_balance_electro_primary_damage;
+	beam.bot_dodgerating = autocvar_g_balance_lightning_primary_damage;
 	Net_LinkEntity(beam, FALSE, 0, W_Lightning_Beam_Send);
 
 	oldself = self;
@@ -137,8 +137,8 @@ float w_lightning(float req)
 		{
 			float shoot;
 
-			if(autocvar_g_balance_electro_primary_speed)
-				shoot = bot_aim(autocvar_g_balance_electro_primary_speed, 0, autocvar_g_balance_electro_primary_lifetime, FALSE);
+			if(autocvar_g_balance_lightning_primary_speed)
+				shoot = bot_aim(autocvar_g_balance_lightning_primary_speed, 0, autocvar_g_balance_lightning_primary_lifetime, FALSE);
 			else
 				shoot = bot_aim(1000000, 0, 0.001, FALSE);
 
@@ -150,7 +150,7 @@ float w_lightning(float req)
 		}
 		else // todo
 		{
-			//if(bot_aim(autocvar_g_balance_electro_secondary_speed, autocvar_g_balance_grenadelauncher_secondary_speed_up, autocvar_g_balance_electro_secondary_lifetime, TRUE))
+			//if(bot_aim(autocvar_g_balance_lightning_secondary_speed, autocvar_g_balance_grenadelauncher_secondary_speed_up, autocvar_g_balance_lightning_secondary_lifetime, TRUE))
 			//{
 			//	self.BUTTON_ATCK2 = TRUE;
 			//	if(random() < 0.03) self.bot_aim_whichfiretype = 0;
@@ -164,9 +164,9 @@ float w_lightning(float req)
 		{
 			if(self.BUTTON_ATCK_prev)
 				if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
-					weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_electro_primary_animtime, w_ready);
+					weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_lightning_primary_animtime, w_ready);
 				else
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_lightning_primary_animtime, w_ready);
 			
 			if (weapon_prepareattack(0, 0))
 			{
@@ -175,7 +175,7 @@ float w_lightning(float req)
 				
 				if(!self.BUTTON_ATCK_prev)
 				{
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_lightning_primary_animtime, w_ready);
 					self.BUTTON_ATCK_prev = 1;
 				}
 			}
@@ -184,19 +184,19 @@ float w_lightning(float req)
 		{
 			if (self.BUTTON_ATCK_prev != 0)
 			{
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
-				ATTACK_FINISHED(self) = time + autocvar_g_balance_electro_primary_refire * W_WeaponRateFactor();
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_lightning_primary_animtime, w_ready);
+				ATTACK_FINISHED(self) = time + autocvar_g_balance_lightning_primary_refire * W_WeaponRateFactor();
 			}
 			self.BUTTON_ATCK_prev = 0;
 		}
 
 		//if (self.BUTTON_ATCK2)
-			//if (weapon_prepareattack(1, autocvar_g_balance_electro_secondary_refire))
+			//if (weapon_prepareattack(1, autocvar_g_balance_lightning_secondary_refire))
 			//{
 			//	W_Lightning_Attack2();
-			//	self.lightning_count = autocvar_g_balance_electro_secondary_count;
-			//	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_electro_secondary_animtime, w_lightning_checkattack);
-			//	self.lightning_secondarytime = time + autocvar_g_balance_electro_secondary_refire2 * W_WeaponRateFactor();
+			//	self.lightning_count = autocvar_g_balance_lightning_secondary_count;
+			//	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_lightning_secondary_animtime, w_lightning_checkattack);
+			//	self.lightning_secondarytime = time + autocvar_g_balance_lightning_secondary_refire2 * W_WeaponRateFactor();
 			//}
 	}
 	else if (req == WR_PRECACHE)
@@ -215,10 +215,10 @@ float w_lightning(float req)
 		weapon_setup(WEP_LIGHTNING);
 	else if (req == WR_CHECKAMMO1)
 	{
-		return !autocvar_g_balance_electro_primary_ammo || (self.ammo_cells > 0);
+		return !autocvar_g_balance_lightning_primary_ammo || (self.ammo_cells > 0);
 	}
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
+		return self.ammo_cells >= autocvar_g_balance_lightning_secondary_ammo;
 	else if (req == WR_RESETPLAYER)
 	{
 		//self.lightning_secondarytime = time;
