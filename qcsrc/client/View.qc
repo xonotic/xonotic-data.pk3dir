@@ -353,6 +353,9 @@ vector freeze_pmove_org, freeze_input_angles;
 entity nightvision_noise, nightvision_noise2;
 
 float pickup_crosshair_time, pickup_crosshair_size;
+float hit_time, typehit_time;
+float nextsound_hit_time, nextsound_typehit_time;
+float hitindication_crosshair_time, hitindication_crosshair_size;
 float use_nex_chargepool;
 
 float myhealth, myhealth_prev;
@@ -809,6 +812,19 @@ void CSQC_UpdateView(float w, float h)
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
+	hit_time = getstatf(STAT_HIT_TIME);
+	if(hit_time > nextsound_hit_time && autocvar_cl_hitsound)
+	{
+		sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+		nextsound_hit_time = time + autocvar_cl_hitsound_antispam_time;
+	}
+	typehit_time = getstatf(STAT_TYPEHIT_TIME);
+	if(typehit_time > nextsound_typehit_time)
+	{
+		sound(world, CHAN_AUTO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
+		nextsound_typehit_time = time + autocvar_cl_hitsound_antispam_time;
+	}
+
 	float hud;
 	hud = getstati(STAT_HUD);
 	if(hud == HUD_SPIDERBOT)
@@ -850,7 +866,6 @@ void CSQC_UpdateView(float w, float h)
 
 			// TrueAim check
 			float shottype;
-			float bullets, ring_scale;
 			// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 			wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
 			wcross_origin_z = 0;
@@ -899,6 +914,50 @@ void CSQC_UpdateView(float w, float h)
 			}
 			if(wcross_wep != "" && autocvar_crosshair_color_per_weapon)
 				wcross_color = stov(cvar_string(strcat("crosshair_", wcross_wep, "_color")));
+			else if(autocvar_crosshair_color_by_health)
+			{
+				local float x = getstati(STAT_HEALTH);
+				
+				//x = red
+				//y = green
+				//z = blue
+				
+				wcross_color_z = 0;
+				
+				if(x > 200)
+				{
+					wcross_color_x = 0;
+					wcross_color_y = 1;
+				}
+				else if(x > 150)
+				{
+					wcross_color_x = 0.4 - (x-150)*0.02 * 0.4;
+					wcross_color_y = 0.9 + (x-150)*0.02 * 0.1;
+				}
+				else if(x > 100)
+				{
+					wcross_color_x = 1 - (x-100)*0.02 * 0.6;
+					wcross_color_y = 1 - (x-100)*0.02 * 0.1;
+					wcross_color_z = 1 - (x-100)*0.02;
+				}
+				else if(x > 50)
+				{
+					wcross_color_x = 1;
+					wcross_color_y = 1;
+					wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;  
+				}
+				else if(x > 20)
+				{
+					wcross_color_x = 1;
+					wcross_color_y = (x-20)*90/27/100;
+					wcross_color_z = (x-20)*90/27/100 * 0.2;
+				}
+				else
+				{
+					wcross_color_x = 1;
+					wcross_color_y = 0;
+				}
+			}
 			else
 				wcross_color = stov(autocvar_crosshair_color);
 
@@ -928,6 +987,27 @@ void CSQC_UpdateView(float w, float h)
 					pickup_crosshair_size = 0;
 
 				wcross_scale += sin(pickup_crosshair_size) * autocvar_crosshair_pickup;
+			}
+			
+			vector hitindication_color;
+			if(autocvar_crosshair_hitindication)
+			{
+				hitindication_color = stov(autocvar_crosshair_hitindication_color);
+				if(hitindication_crosshair_time < hit_time)
+				{
+					hitindication_crosshair_size = 1;
+					hitindication_crosshair_time = hit_time;
+				}
+
+				if(hitindication_crosshair_size > 0)
+					hitindication_crosshair_size -= autocvar_crosshair_hitindication_speed * frametime;
+				else
+					hitindication_crosshair_size = 0;
+
+				wcross_scale += sin(hitindication_crosshair_size) * autocvar_crosshair_hitindication;
+				wcross_color_x += sin(hitindication_crosshair_size) * hitindication_color_x;
+				wcross_color_y += sin(hitindication_crosshair_size) * hitindication_color_y;
+				wcross_color_z += sin(hitindication_crosshair_size) * hitindication_color_z;
 			}
 
 			if(shottype == SHOTTYPE_HITENEMY)
@@ -983,50 +1063,63 @@ void CSQC_UpdateView(float w, float h)
 
 			wcross_scale *= 1 - autocvar__menu_alpha;
 			wcross_alpha *= 1 - autocvar__menu_alpha;
-
-			ring_scale = autocvar_crosshair_ring_size;
-
 			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
-			float nex_charge, nex_chargepool;
-			nex_charge = getstatf(STAT_NEX_CHARGE);
-			nex_chargepool = getstatf(STAT_NEX_CHARGEPOOL);
-
-			if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
-				nex_charge_movingavg = nex_charge;
-
-			// ring around crosshair representing bullets left in camping rifle clip
-			if (activeweapon == WEP_SNIPERRIFLE && cr_maxbullets)
+			if (autocvar_crosshair_ring)
 			{
-				bullets = getstati(STAT_BULLETS_LOADED);
-				f = bound(0, bullets / cr_maxbullets, 1);
-
-				a = autocvar_crosshair_ring_sniperrifle_alpha;
-				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", f, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
-			}
-			else if (activeweapon == WEP_NEX && nex_charge) // ring around crosshair representing velocity-dependent damage for the nex
-			{
-				if(nex_chargepool || use_nex_chargepool)
-				{
-					use_nex_chargepool = 1;
-
-					a = autocvar_crosshair_ring_nex_inner_alpha;
-					rgb = eX * autocvar_crosshair_ring_nex_inner_color_red + eY * autocvar_crosshair_ring_nex_inner_color_green + eZ * autocvar_crosshair_ring_nex_inner_color_blue;
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", nex_chargepool, rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+				float ring_value, ring_alpha, ring_inner_value, ring_inner_alpha;
+				string ring_image, ring_inner_image;
+				vector ring_rgb, ring_inner_rgb;
+				
+				float ring_scale = autocvar_crosshair_ring_size;
+				
+				float nex_charge, nex_chargepool;
+				nex_charge = getstatf(STAT_NEX_CHARGE);
+				nex_chargepool = getstatf(STAT_NEX_CHARGEPOOL);
+				
+				if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
+					nex_charge_movingavg = nex_charge;
+				
+				if (activeweapon == WEP_SNIPERRIFLE && cr_maxbullets && autocvar_crosshair_ring_sniperrifle) // ring around crosshair representing bullets left in camping rifle clip
+				{ 
+					ring_value = bound(0, getstati(STAT_BULLETS_LOADED) / cr_maxbullets, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
+					ring_alpha = wcross_alpha * autocvar_crosshair_ring_sniperrifle_alpha;
+					ring_image = "gfx/crosshair_ring_sniperrifle.tga";
+					ring_rgb = wcross_color;
 				}
-				else
+				else if (activeweapon == WEP_NEX && nex_charge && autocvar_crosshair_ring_nex) // ring around crosshair representing velocity-dependent damage for the nex
 				{
-					// indicate how much we're charging right now with an inner circle
-					a = autocvar_crosshair_ring_nex_inner_alpha;
-					nex_charge_movingavg = (1 - autocvar_crosshair_ring_nex_currentcharge_movingavg_rate) * nex_charge_movingavg + autocvar_crosshair_ring_nex_currentcharge_movingavg_rate * nex_charge;
+					if (nex_chargepool || use_nex_chargepool) { 
+						use_nex_chargepool = 1; 
+						ring_inner_value = nex_chargepool;
+					} else { 
+						nex_charge_movingavg = (1 - autocvar_crosshair_ring_nex_currentcharge_movingavg_rate) * nex_charge_movingavg + autocvar_crosshair_ring_nex_currentcharge_movingavg_rate * nex_charge;
+						ring_inner_value = bound(0, autocvar_crosshair_ring_nex_currentcharge_scale * (nex_charge - nex_charge_movingavg), 1); 
+					}
+						
+					ring_inner_alpha = wcross_alpha * autocvar_crosshair_ring_nex_inner_alpha;
+					ring_inner_image = "gfx/crosshair_ring_inner.tga";
+					ring_inner_rgb = eX * autocvar_crosshair_ring_nex_inner_color_red + eY * autocvar_crosshair_ring_nex_inner_color_green + eZ * autocvar_crosshair_ring_nex_inner_color_blue;
 
-					rgb = eX * autocvar_crosshair_ring_nex_inner_color_red + eY * autocvar_crosshair_ring_nex_inner_color_green + eZ * autocvar_crosshair_ring_nex_inner_color_blue;
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring_inner.tga", bound(0, autocvar_crosshair_ring_nex_currentcharge_scale * (nex_charge - nex_charge_movingavg), 1), rgb, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+					// draw the outer ring to show the current charge of the weapon
+					ring_value = nex_charge;
+					ring_alpha = wcross_alpha * autocvar_crosshair_ring_nex_alpha;
+					ring_image = "gfx/crosshair_ring_nexgun.tga";
+					ring_rgb = wcross_color;
 				}
-
-				// draw the charge
-				a = autocvar_crosshair_ring_nex_outer_alpha;
-				DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, "gfx/crosshair_ring.tga", nex_charge, wcross_color, wcross_alpha * a, DRAWFLAG_ADDITIVE);
+				else if (activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer) 
+				{
+					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
+					ring_alpha = wcross_alpha * autocvar_crosshair_ring_minelayer_alpha;
+					ring_image = "gfx/crosshair_ring.tga";
+					ring_rgb = wcross_color;
+				}
+				
+				if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, ring_inner_alpha, DRAWFLAG_ADDITIVE);
+				
+				if (ring_value)
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, ring_alpha, DRAWFLAG_ADDITIVE);
 			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
@@ -1539,7 +1632,7 @@ void CSQC_Demo_Camera()
 	else
 	{
 		tmp = getmousepos() * 0.1;
-		if(vlen(tmp)>autocvar_camera_mouse_treshold)
+		if(vlen(tmp)>autocvar_camera_mouse_threshold)
 		{
 			mouse_angles_x += tmp_y * cos(mouse_angles_z * DEG2RAD) + (tmp_x * sin(mouse_angles_z * DEG2RAD));
 			mouse_angles_y -= tmp_x * cos(mouse_angles_z * DEG2RAD) + (tmp_y * -sin(mouse_angles_z * DEG2RAD));

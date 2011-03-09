@@ -1,7 +1,7 @@
 **Core Team
 
 Rudolf "divVerent" Polzer
--z-
+Tyler "-z-" Mulligan
 Merlijn Hofstra
 morphed
 mand1nga
@@ -14,7 +14,7 @@ tZork
 Diabolik a.k.a Dib
 
 *2D Art / Web
--z- (web / game)
+Tyler "-z-" Mulligan (web / game)
 FruitieX (game / web)
 
 *3D Art
@@ -22,7 +22,7 @@ morphed
 
 *Concept Art
 LJFHutch
-theShadow
+Pearce "theShadow" Michal
 
 *Level Design
 FruitieX
@@ -42,7 +42,7 @@ FruitieX
 tZork
 
 *Marketing / PR
--z-
+Tyler "-z-" Mulligan
 mand1nga
 
 *Legal
@@ -58,14 +58,21 @@ by Forest "LordHavoc" Hale
 *German
 Rudolf "divVerent" Polzer
 
+*Finnish
+Henry "Exitium" Sanmark
+
 *French
 Calinou
 
 *Portuguese
 Ricardo "Hellgardia" Silva
 
+*Romanian
+MirceaKitsune
+
 *Russian
 Lord Canistra
+Nikoli
 
 **Active Contributors
 Antonio "terencehill" Piu
@@ -79,6 +86,7 @@ Maik "SavageX" Merten
 MrBougo
 Ruszkai "C.Brutail" Ákos
 Samual Lenks
+Severin "sev" Meyer
 Stephan "esteel" Stahl
 Wolfgang "Blub\0" Bumiller
 
@@ -139,7 +147,6 @@ Rick "Rat" Kelley
 Robert "ai" Kuroto
 Ronan
 Sajt
-Severin "sev" Meyer
 Shaggy
 Shank
 Simon O'Callaghan

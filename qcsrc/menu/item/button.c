@@ -8,6 +8,7 @@ CLASS(Button) EXTENDS(Label)
 	METHOD(Button, mousePress, float(entity, vector))
 	METHOD(Button, mouseDrag, float(entity, vector))
 	METHOD(Button, mouseRelease, float(entity, vector))
+	METHOD(Button, focusEnter, void(entity))
 	ATTRIB(Button, onClick, void(entity, entity), SUB_Null)
 	ATTRIB(Button, onClickEntity, entity, NULL)
 	ATTRIB(Button, src, string, string_null)
@@ -69,8 +70,6 @@ float Button_mouseDrag(entity me, vector pos)
 float Button_mousePress(entity me, vector pos)
 {
 	me.mouseDrag(me, pos); // verify coordinates
-	if(cvar("menu_sounds"))
-		localsound("sound/misc/menu2.wav");
 	return 1;
 }
 float Button_mouseRelease(entity me, vector pos)
@@ -79,7 +78,11 @@ float Button_mouseRelease(entity me, vector pos)
 	if(me.pressed)
 	{
 		if not(me.disabled)
+		{
+			if(cvar("menu_sounds"))
+				localsound("sound/misc/menu2.wav");
 			me.onClick(me, me.onClickEntity);
+		}
 		me.pressed = 0;
 	}
 	return 1;
@@ -88,7 +91,12 @@ void Button_showNotify(entity me)
 {
 	me.focusable = !me.disabled;
 }
-.float playedfocus;
+void Button_focusEnter(entity me)
+{
+	if(cvar("menu_sounds") > 1)
+		localsound("sound/misc/menu1.wav");
+	SUPER(Button).focusEnter(me);
+}
 void Button_draw(entity me)
 {
 	vector bOrigin, bSize;
@@ -159,14 +167,5 @@ void Button_draw(entity me)
 			me.onClick(me, me.onClickEntity);
 	}
 	me.clickTime -= frametime;
-
-	if(cvar("menu_sounds") > 1)
-		if(me.focused && !me.playedfocus)
-		{
-			localsound("sound/misc/menu1.wav");
-			me.playedfocus = 1;
-		}
-		else if(!me.focused && me.playedfocus)
-			me.playedfocus = 0;
 }
 #endif

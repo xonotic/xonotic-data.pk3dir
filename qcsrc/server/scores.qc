@@ -88,6 +88,7 @@ void TeamScore_Spawn(float t, string name)
 	Net_LinkEntity(ts, FALSE, 0, TeamScore_SendEntity);
 	teamscorekeepers[t - 1] = ts;
 	++teamscores_entities_count;
+	PlayerStats_AddTeam(t);
 }
 
 float TeamScore_AddToTeam(float t, float scorefield, float score)
@@ -374,10 +375,18 @@ void WinningConditionHelper()
 	entity winnerscorekeeper;
 	entity secondscorekeeper;
 	entity sk;
+	float slots;
+
+	// format:
+	// gametype:P<pure>:S<slots>::plabel,plabel:tlabel,tlabel:teamid:tscore,tscore:teamid:tscore,tscore
+	// score labels always start with a symbol or with lower case
+	// so to match pure, match for :P0:
+	// to match full, match for :S0:
 
 	s = GetGametype();
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
+	s = strcat(s, ":S", ftos(nJoinAllowed(0)));
 	s = strcat(s, "::", GetPlayerScoreString(world, 1)); // make this 1 once we can, note: this doesn't contain any :<letter>
 
 	fullstatus = autocvar_g_full_getstatus_responses;
@@ -882,4 +891,20 @@ void PlayerScore_PlayerStats(entity p)
 		if(s.(scores[i]) != 0)
 			if(scores_label[i] != "")
 				PlayerStats_Event(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label[i]), s.(scores[i]));
+}
+
+void PlayerScore_TeamStats(void)
+{
+	entity sk;
+	float t, i;
+	for(t = 0; t < 16; ++t)
+	{
+		sk = teamscorekeepers[t];
+		if(!sk)
+			continue;
+		for(i = 0; i < MAX_TEAMSCORE; ++i)
+			if(sk.(teamscores[i]) != 0)
+				if(teamscores_label[i] != "")
+					PlayerStats_TeamScore(t, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label[i]), sk.(teamscores[i]));
+	}
 }

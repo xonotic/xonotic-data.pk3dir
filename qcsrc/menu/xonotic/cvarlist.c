@@ -35,6 +35,7 @@ entity makeXonoticCvarList();
 void CvarList_Filter_Change(entity box, entity me);
 void CvarList_Value_Change(entity box, entity me);
 void CvarList_Revert_Click(entity btn, entity me);
+void CvarList_End_Editing(entity box, entity me);
 #endif
 
 #ifdef IMPLEMENTATION
@@ -190,6 +191,11 @@ void CvarList_Revert_Click(entity btn, entity me)
 {
 	me.cvarValueBox.setText(me.cvarValueBox, me.cvarDefault);
 	me.cvarValueBox.cursorPos = strlen(me.cvarDefault);
+}
+
+void CvarList_End_Editing(entity box, entity me)
+{
+	box.parent.setFocus(box.parent, me);
 }
 
 #endif

@@ -218,7 +218,7 @@ void SV_ParseClientCommand(string s) {
 		if(!g_arena)
 		if (self.classname != "player" && !lockteams)
 		{
-			if(isJoinAllowed()) {
+			if(nJoinAllowed(1)) {
 				self.classname = "player";
 				if(g_ca)
 					self.caplayer = 1;

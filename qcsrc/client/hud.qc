@@ -395,9 +395,9 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 	if(histime < 0)
 		return strcat(col, cpname);
 	else if(hisname == "")
-		return strcat(col, sprintf(_("%s (%s)")), cpname, timestr);
+		return strcat(col, sprintf(_("%s (%s)"), cpname, timestr));
 	else
-		return strcat(col, sprintf(_("%s (%s %s)")), cpname, timestr, strcat(hisname, col, lapstr));
+		return strcat(col, sprintf(_("%s (%s %s)"), cpname, timestr, strcat(hisname, col, lapstr)));
 }
 
 // Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
@@ -543,7 +543,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 		fclose(fh);
 	}
 	else
-		print(sprintf(_("^1Couldn't write to \n"), filename));
+		print(sprintf(_("^1Couldn't write to %s\n"), filename));
 }
 
 const float hlBorderSize = 4;
@@ -1823,7 +1823,7 @@ void HUD_Weapons(void)
 
 			string s;
 			if(complain_weapon_type == 0) {
-				s = "Out of ammo";
+				s = _("Out of ammo");
 				color = stov(autocvar_hud_panel_weapons_complainbubble_color_outofammo);
 			}
 			else if(complain_weapon_type == 1) {
@@ -2744,13 +2744,13 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			}
 			else if (stof(s2) > 2) {
 				if(gentle)
-					print (sprintf(_("^1%s's ^1%s scoring spree was ended by a team mate!\n"), s1, stof(s3)));
+					print (sprintf(_("^1%s^1's %s scoring spree was ended by a team mate!\n"), s1, stof(s3)));
 				else
-					print (sprintf(_("^1%s's ^1%s kill spree was ended by a team mate!\n"), s1, stof(s3)));
+					print (sprintf(_("^1%s^1's %s kill spree was ended by a team mate!\n"), s1, stof(s3)));
 			}
 		}
 		else if(type == KILL_FIRST_BLOOD)
-			print(sprintf("^1%s^1 drew first blood\n", s1));
+			print(sprintf(_("^1%s^1 drew first blood\n"), s1));
 		else if (type == DEATH_TELEFRAG) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_TELEFRAG);
 			if(gentle)
@@ -2796,47 +2796,47 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if(type == DEATH_SBCRUSH) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was crushed by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was crushed by %s\n"), s2, s1));
 		} else if(type == DEATH_SBMINIGUN) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 got shredded by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 got shredded by %s\n"), s2, s1));
 		} else if(type == DEATH_SBROCKET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was blased to bits by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was blasted to bits by %s\n"), s2, s1));
 		} else if(type == DEATH_SBBLOWUP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 got caught in the destruction of ^1%s's vehicle\n"), s2, s1));
+				print (sprintf(_("^1%s^1 got caught in the destruction of %s^1's vehicle\n"), s2, s1));
 		} else if(type == DEATH_WAKIGUN) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was bolted down by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was bolted down by %s\n"), s2, s1));
 		} else if(type == DEATH_WAKIROCKET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 could find no shelter from ^1%s's rockets\n"), s2, s1));
+				print (sprintf(_("^1%s^1 could find no shelter from %s^1's rockets\n"), s2, s1));
 		} else if(type == DEATH_WAKIBLOWUP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 dies when ^1%s's wakizashi dies.\n"), s2, s1));
+				print (sprintf(_("^1%s^1 dies when %s^1's wakizashi dies.\n"), s2, s1));
 		} else if(type == DEATH_TURRET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was pushed into the line of fire by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was pushed into the line of fire by %s\n"), s2, s1));
 		} else if(type == DEATH_TOUCHEXPLODE) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was pushed into an accident by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was pushed into an accident by %s\n"), s2, s1));
 		} else if(type == DEATH_CHEAT) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was unfairly eliminated by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was unfairly eliminated by %s\n"), s2, s1));
 		} else if (type == DEATH_FIRE) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was burnt to death by ^1%s\n"), s2, s1));
+				print (sprintf(_("^1%s^1 was burnt to death by %s\n"), s2, s1));
 		} else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_CUSTOM);
 			if(alsoprint)
@@ -2853,9 +2853,9 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	} else if(msg == MSG_SPREE) {
 		if(type == KILL_END_SPREE) {
 			if(gentle)
-				print (sprintf(_("^1%s's ^1%s scoring spree was ended by %s\n"), s1, s2, s3));
+				print (sprintf(_("^1%s^1's %s scoring spree was ended by %s\n"), s1, s2, s3));
 			else
-				print (sprintf(_("^1%s's ^1%s kill spree was ended by %s\n"), s1, s2, s3));
+				print (sprintf(_("^1%s^1's %s kill spree was ended by %s\n"), s1, s2, s3));
 		} else if(type == KILL_SPREE) {
 			if(gentle)
 				print (sprintf(_("^1%s^1 made %s scores in a row\n"), s1, s2));
@@ -2910,7 +2910,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if (type == DEATH_SLIME) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_SLIME);
 			if(alsoprint)
-				print (sprintf("^1%s^1 was slimed\n", s1));
+				print (sprintf(_("^1%s^1 was slimed\n"), s1));
 		} else if (type == DEATH_LAVA) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_LAVA);
 			if(alsoprint)
@@ -3001,7 +3001,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			print(sprintf(_("%s^7 returned the %s\n"), s1, s2));
 		} else if(type == INFO_CAPTUREFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_CAPTUREFLAG);
-			print(sprintf(_("%1^7 captured the %s%s\n"), s1, s2, s3));
+			print(sprintf(_("%s^7 captured the %s%s\n"), s1, s2, s3));
 		}
 	} else if(msg == MSG_RACE) {
 		if(type == RACE_SERVER_RECORD) {
@@ -3142,7 +3142,8 @@ void HUD_Notify (void)
 	height = mySize_y/entries;
 	
 	vector fontsize;
-	fontsize = '0.5 0.5 0' * height;
+	float fontheight = height * autocvar_hud_panel_notify_fontsize;
+	fontsize = '0.5 0.5 0' * fontheight;
 
 	float a;
 	float when;
@@ -3316,7 +3317,7 @@ void HUD_Notify (void)
 			}
 			
 			attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			pos_attacker = pos + eX * (0.52 * mySize_x + height) + eY * (0.5 * fontsize_y + i * height);
+			pos_attacker = pos + eX * (0.52 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
 			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
 
 			if(s != "")
@@ -3402,8 +3403,8 @@ void HUD_Notify (void)
 			victim = textShortenToWidth(killnotify_victims[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
 :hud_config_notifyprint
 			width_attacker = stringwidth(attacker, TRUE, fontsize);
-			pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * (0.5 * fontsize_y + i * height);
-			pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * (0.5 * fontsize_y + i * height);
+			pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
+			pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
 			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
 
 			if(s != "")
@@ -3888,7 +3889,7 @@ void HUD_VoteWindow(void)
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
 	{
 		vote_active = 1;
-		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player\" ^7in stats"));
+		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player^7\" in stats"));
         uid2name_dialog = 1;
 	}
 
@@ -3980,9 +3981,9 @@ void HUD_VoteWindow(void)
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, a, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
-    s = sprintf(_("Yes (%s): %d"), getcommandkey("vyes", "vyes"), ftos(vote_yescount));
+    s = sprintf(_("Yes (%s): %d"), getcommandkey("vyes", "vyes"), vote_yescount);
 	drawstring_aspect(pos + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '0 1 0', a, DRAWFLAG_NORMAL);
-    s = sprintf(_("No (%s): %d"), getcommandkey("vno", "vno"), ftos(vote_nocount));
+    s = sprintf(_("No (%s): %d"), getcommandkey("vno", "vno"), vote_nocount);
 	drawstring_aspect(pos + eX * 0.5 * mySize_x + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '1 0 0', a, DRAWFLAG_NORMAL);
 
 	// draw the progress bar backgrounds
@@ -4983,7 +4984,7 @@ void HUD_InfoMessages(void)
 					if (tm)
 					if (tm.team != COLOR_SPECTATOR)
 					if (tm.team_size == ts_max)
-						s = strcat(s, sprintf(" Press ^3%s%s to adjust", getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
+						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
 					drawInfoMessage(s)
 				}
 			}

@@ -96,7 +96,7 @@ void Item_Show (entity e, float mode)
 	}
 	else if((e.flags & FL_WEAPON) && (g_weapon_stay == 3))
 	{
-		// make the item translucent green and not touchable
+		// make the item translucent and not touchable
 		e.model = e.mdl;
 		e.solid = SOLID_TRIGGER; // can STILL be picked up!
 		e.colormod = '0 0 0';
@@ -108,7 +108,7 @@ void Item_Show (entity e, float mode)
 	}
 	else if(g_ghost_items)
 	{
-		// make the item translucent green and not touchable
+		// make the item translucent and not touchable
 		e.model = e.mdl;
 		e.solid = SOLID_NOT;
 		e.colormod = stov(autocvar_g_ghost_items_color);
@@ -123,7 +123,7 @@ void Item_Show (entity e, float mode)
 		// hide the item completely
 		e.model = string_null;
 		e.solid = SOLID_NOT;
-		e.colormod = stov(autocvar_g_ghost_items_color);
+		e.colormod = '0 0 0';
 		e.glowmod = e.colormod;
 		e.alpha = 0;
 		e.customizeentityforclient = func_null;
@@ -395,7 +395,7 @@ float Item_GiveTo(entity item, entity player)
 		}
 
 		if (item.flags & FL_WEAPON)
-		if ((it = item.weapons - (item.weapons & player.weapons)) || g_pickup_weapons_anyway)
+		if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway && !(g_weapon_stay == 3 && !e.spawnshieldtime)))
 		{
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -733,36 +733,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			// note droptofloor returns FALSE if stuck/or would fall too far
 			droptofloor();
 			waypoint_spawnforitem(self);
-		}
-
-		if(teams_matter)
-		{
-			if(self.notteam)
-			{
-				print("removed non-teamplay ", self.classname, "\n");
-				startitem_failed = TRUE;
-				remove (self);
-				return;
-			}
-		}
-		else
-		{
-			if(self.notfree)
-			{
-				print("removed non-FFA ", self.classname, "\n");
-				startitem_failed = TRUE;
-				remove (self);
-				return;
-			}
-		}
-
-		if(self.notq3a)
-		{
-			// We aren't TA or something like that, so we keep the Q3A entities
-			print("removed non-Q3A ", self.classname, "\n");
-			startitem_failed = TRUE;
-			remove (self);
-			return;
 		}
 
 		/*
