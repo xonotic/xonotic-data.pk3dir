@@ -3001,7 +3001,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			print(sprintf(_("%s^7 returned the %s\n"), s1, s2));
 		} else if(type == INFO_CAPTUREFLAG) {
 			HUD_KillNotify_Push(s1, s2, 0, INFO_CAPTUREFLAG);
-			print(sprintf(_("%1^7 captured the %s%s\n"), s1, s2, s3));
+			print(sprintf(_("%s^7 captured the %s%s\n"), s1, s2, s3));
 		}
 	} else if(msg == MSG_RACE) {
 		if(type == RACE_SERVER_RECORD) {
@@ -3981,9 +3981,9 @@ void HUD_VoteWindow(void)
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, a, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
-    s = sprintf(_("Yes (%s): %d"), getcommandkey("vyes", "vyes"), ftos(vote_yescount));
+    s = sprintf(_("Yes (%s): %d"), getcommandkey("vyes", "vyes"), vote_yescount);
 	drawstring_aspect(pos + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '0 1 0', a, DRAWFLAG_NORMAL);
-    s = sprintf(_("No (%s): %d"), getcommandkey("vno", "vno"), ftos(vote_nocount));
+    s = sprintf(_("No (%s): %d"), getcommandkey("vno", "vno"), vote_nocount);
 	drawstring_aspect(pos + eX * 0.5 * mySize_x + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '1 0 0', a, DRAWFLAG_NORMAL);
 
 	// draw the progress bar backgrounds

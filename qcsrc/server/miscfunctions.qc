@@ -921,7 +921,11 @@ void readplayerstartcvars()
 			s = "most";
 	}
 
-	if (s == "off")
+	if (s == "0" || s == "")
+	{
+		// no arena
+	}
+	else if (s == "off")
 	{
 		// forcibly turn off weaponarena
 	}
@@ -1022,23 +1026,11 @@ void readplayerstartcvars()
 	}
 	else if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = get_weaponinfo(j);
-			if(start_weapons & e.weapons)
-			{
-				if(e.items & IT_ROCKETS)
-					start_ammo_rockets = 999;
-				if(e.items & IT_SHELLS)
-					start_ammo_shells = 999;
-				if(e.items & IT_CELLS)
-					start_ammo_cells = 999;
-				if(e.items & IT_NAILS)
-					start_ammo_nails = 999;
-				if(e.items & IT_FUEL)
-					start_ammo_fuel = 999;
-			}
-		}
+		start_ammo_rockets = 999;
+		start_ammo_shells = 999;
+		start_ammo_cells = 999;
+		start_ammo_nails = 999;
+		start_ammo_fuel = 999;
 	}
 	else
 	{
