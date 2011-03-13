@@ -64,16 +64,19 @@ void W_Mine_Explode ()
 
 	RadiusDamage (self, self.owner, autocvar_g_balance_minelayer_damage, autocvar_g_balance_minelayer_edgedamage, autocvar_g_balance_minelayer_radius, world, autocvar_g_balance_minelayer_force, self.projectiledeathtype, other);
 
-	// this code causes some problems, and is not really needed since another check switches weapons when we're out of ammo
-	/*if (self.owner.weapon == WEP_MINE_LAYER)
+	if (self.owner.weapon == WEP_MINE_LAYER)
 	{
+		entity oldself;
+		oldself = self;
+		self = self.owner;
 		if (!weapon_action(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
-			self.owner.cnt = WEP_MINE_LAYER;
-			ATTACK_FINISHED(self.owner) = time;
-			self.owner.switchweapon = w_getbestweapon(self.owner);
+			self.cnt = WEP_MINE_LAYER;
+			ATTACK_FINISHED(self) = time;
+			self.switchweapon = w_getbestweapon(self);
 		}
-	}*/
+		self = oldself;
+	}
 	self.owner.minelayer_mines -= 1;
 	remove (self);
 }
@@ -85,16 +88,19 @@ void W_Mine_DoRemoteExplode ()
 
 	RadiusDamage (self, self.owner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
-	// this code causes some problems, and is not really needed since another check switches weapons when we're out of ammo
-	/*if (self.owner.weapon == WEP_MINE_LAYER)
+	if (self.owner.weapon == WEP_MINE_LAYER)
 	{
+		entity oldself;
+		oldself = self;
+		self = self.owner;
 		if (!weapon_action(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
-			self.owner.cnt = WEP_MINE_LAYER;
-			ATTACK_FINISHED(self.owner) = time;
-			self.owner.switchweapon = w_getbestweapon(self.owner);
+			self.cnt = WEP_MINE_LAYER;
+			ATTACK_FINISHED(self) = time;
+			self.switchweapon = w_getbestweapon(self);
 		}
-	}*/
+		self = oldself;
+	}
 	self.owner.minelayer_mines -= 1;
 	remove (self);
 }
