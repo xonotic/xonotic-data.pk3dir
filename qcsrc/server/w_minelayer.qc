@@ -64,15 +64,16 @@ void W_Mine_Explode ()
 
 	RadiusDamage (self, self.owner, autocvar_g_balance_minelayer_damage, autocvar_g_balance_minelayer_edgedamage, autocvar_g_balance_minelayer_radius, world, autocvar_g_balance_minelayer_force, self.projectiledeathtype, other);
 
-	if (self.owner.weapon == WEP_MINE_LAYER)
+	// this code causes some problems, and is not really needed since another check switches weapons when we're out of ammo
+	/*if (self.owner.weapon == WEP_MINE_LAYER)
 	{
-		if(self.owner.ammo_rockets < autocvar_g_balance_minelayer_ammo)
+		if (!weapon_action(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
 			self.owner.cnt = WEP_MINE_LAYER;
 			ATTACK_FINISHED(self.owner) = time;
 			self.owner.switchweapon = w_getbestweapon(self.owner);
 		}
-	}
+	}*/
 	self.owner.minelayer_mines -= 1;
 	remove (self);
 }
@@ -84,15 +85,16 @@ void W_Mine_DoRemoteExplode ()
 
 	RadiusDamage (self, self.owner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
-	if (self.owner.weapon == WEP_MINE_LAYER)
+	// this code causes some problems, and is not really needed since another check switches weapons when we're out of ammo
+	/*if (self.owner.weapon == WEP_MINE_LAYER)
 	{
-		if(self.owner.ammo_rockets < autocvar_g_balance_minelayer_ammo)
+		if (!weapon_action(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
 			self.owner.cnt = WEP_MINE_LAYER;
 			ATTACK_FINISHED(self.owner) = time;
 			self.owner.switchweapon = w_getbestweapon(self.owner);
 		}
-	}
+	}*/
 	self.owner.minelayer_mines -= 1;
 	remove (self);
 }
@@ -282,10 +284,30 @@ void W_Mine_Attack (void)
 
 void spawnfunc_weapon_minelayer (void); // defined in t_items.qc
 
-float w_minelayer(float req)
+float W_PlacedMines(float detonate)
 {
 	entity mine;
 	float minfound;
+
+	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
+	{
+		if(detonate)
+		{
+			if(!mine.minelayer_detonate)
+			{
+				mine.minelayer_detonate = TRUE;
+				minfound = 1;
+			}
+		}
+		else
+			minfound = 1;
+	}
+	return minfound;
+}
+
+float w_minelayer(float req)
+{
+	entity mine;
 	float ammo_amount;
 
 	if (req == WR_AIM)
@@ -386,7 +408,11 @@ float w_minelayer(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < autocvar_g_balance_minelayer_ammo) // forced reload
-			weapon_action(self.weapon, WR_RELOAD);
+		{
+			// not if we're holding the minelayer without enough ammo, but can detonate existing mines
+			if not (W_PlacedMines(FALSE) && self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
+				weapon_action(self.weapon, WR_RELOAD);
+		}
 		else if (self.BUTTON_ATCK)
 		{
 			if(weapon_prepareattack(0, autocvar_g_balance_minelayer_refire))
@@ -396,18 +422,9 @@ float w_minelayer(float req)
 			}
 		}
 
-		else if (self.BUTTON_ATCK2)
+		if (self.BUTTON_ATCK2)
 		{
-			minfound = 0;
-			for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
-			{
-				if(!mine.minelayer_detonate)
-				{
-					mine.minelayer_detonate = TRUE;
-					minfound = 1;
-				}
-			}
-			if(minfound)
+			if(W_PlacedMines(TRUE))
 				sound (self, CHAN_WEAPON2, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
@@ -434,19 +451,17 @@ float w_minelayer(float req)
 		// don't switch while placing a mine
 		if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
 		{
-			if(autocvar_g_balance_minelayer_reload_ammo)
-			{
-				if(self.ammo_rockets < autocvar_g_balance_minelayer_ammo && self.weapon_load[WEP_MINE_LAYER] < autocvar_g_balance_minelayer_ammo)
-					ammo_amount = TRUE;
-			}
-			else if(self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
-				ammo_amount = TRUE;
-			return !ammo_amount;
+			ammo_amount = self.ammo_rockets >= autocvar_g_balance_minelayer_ammo;
+			ammo_amount += self.weapon_load[WEP_MINE_LAYER] >= autocvar_g_balance_minelayer_ammo;
+			return ammo_amount;
 		}
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		return FALSE;
+		if (W_PlacedMines(FALSE))
+			return TRUE;
+		else
+			return FALSE;
 	}
 	else if (req == WR_RELOAD)
 	{
