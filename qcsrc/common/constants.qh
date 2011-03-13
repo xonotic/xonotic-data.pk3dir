@@ -62,8 +62,7 @@ const float TE_CSQC_TARGET_MUSIC = 111;
 const float TE_CSQC_NOTIFY = 112;
 const float TE_CSQC_WEAPONCOMPLAIN = 113;
 const float TE_CSQC_NEX_SCOPE = 116;
-const float TE_CSQC_CR_MAXBULLETS = 117;
-const float TE_CSQC_MINELAYER_MAXMINES = 118;
+const float TE_CSQC_MINELAYER_MAXMINES = 117;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -309,14 +308,15 @@ const float STAT_FUEL = 44;
 const float STAT_NB_METERSTART = 45;
 const float STAT_SHOTORG = 46; // compressShotOrigin
 const float STAT_LEADLIMIT = 47;
-const float STAT_BULLETS_LOADED = 48;
-const float STAT_NEX_CHARGE = 49;
-const float STAT_LAST_PICKUP = 50;
-const float STAT_HUD = 51;
-const float STAT_NEX_CHARGEPOOL = 52;
-const float STAT_HIT_TIME = 53;
-const float STAT_TYPEHIT_TIME = 54;
-const float STAT_LAYED_MINES = 55;
+const float STAT_WEAPON_CLIPLOAD = 48;
+const float STAT_WEAPON_CLIPSIZE = 49;
+const float STAT_NEX_CHARGE = 50;
+const float STAT_LAST_PICKUP = 51;
+const float STAT_HUD = 52;
+const float STAT_NEX_CHARGEPOOL = 53;
+const float STAT_HIT_TIME = 54;
+const float STAT_TYPEHIT_TIME = 55;
+const float STAT_LAYED_MINES = 56;
 
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
@@ -625,6 +625,7 @@ float WR_KILLMESSAGE    = 8; // (CSQC) sets w_deathtypestring or leaves it alone
 float WR_RELOAD         = 9; // (SVQC) does not need to do anything
 float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
 float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
+float WR_SWITCHABLE	= 12; // (CSQC) impact effect
 
 
 float HUD_PANEL_WEAPONS		= 0;

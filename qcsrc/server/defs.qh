@@ -611,9 +611,14 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
+..float current_ammo;
+
+.float weapon_load[WEP_MAXCOUNT]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(weapon_load);
+.float ammo_none; // used by the reloading system, must always be 0
+.float clip_load;
+.float old_clip_load;
+.float clip_size;
 .float minelayer_mines;
-.float sniperrifle_bulletcounter;
-.float wish_reload;
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones

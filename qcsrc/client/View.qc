@@ -866,6 +866,9 @@ void CSQC_UpdateView(float w, float h)
 
 			// TrueAim check
 			float shottype;
+
+			float weapon_clipload, weapon_clipsize, ring_scale;
+
 			// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 			wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
 			wcross_origin_z = 0;
@@ -1065,29 +1068,23 @@ void CSQC_UpdateView(float w, float h)
 			wcross_alpha *= 1 - autocvar__menu_alpha;
 			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
+			float ring_value, ring_scale, ring_alpha, ring_inner_value, ring_inner_alpha;
+			string ring_image, ring_inner_image;
+			vector ring_rgb, ring_inner_rgb;
+
+			// normal crosshair ring
 			if (autocvar_crosshair_ring)
 			{
-				float ring_value, ring_alpha, ring_inner_value, ring_inner_alpha;
-				string ring_image, ring_inner_image;
-				vector ring_rgb, ring_inner_rgb;
-				
-				float ring_scale = autocvar_crosshair_ring_size;
-				
+				ring_scale = autocvar_crosshair_ring_size;
+
 				float nex_charge, nex_chargepool;
 				nex_charge = getstatf(STAT_NEX_CHARGE);
 				nex_chargepool = getstatf(STAT_NEX_CHARGEPOOL);
-				
+
 				if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 					nex_charge_movingavg = nex_charge;
-				
-				if (activeweapon == WEP_SNIPERRIFLE && cr_maxbullets && autocvar_crosshair_ring_sniperrifle) // ring around crosshair representing bullets left in camping rifle clip
-				{ 
-					ring_value = bound(0, getstati(STAT_BULLETS_LOADED) / cr_maxbullets, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
-					ring_alpha = wcross_alpha * autocvar_crosshair_ring_sniperrifle_alpha;
-					ring_image = "gfx/crosshair_ring_sniperrifle.tga";
-					ring_rgb = wcross_color;
-				}
-				else if (activeweapon == WEP_NEX && nex_charge && autocvar_crosshair_ring_nex) // ring around crosshair representing velocity-dependent damage for the nex
+
+				if (activeweapon == WEP_NEX && nex_charge && autocvar_crosshair_ring_nex) // ring around crosshair representing velocity-dependent damage for the nex
 				{
 					if (nex_chargepool || use_nex_chargepool) { 
 						use_nex_chargepool = 1; 
@@ -1114,12 +1111,29 @@ void CSQC_UpdateView(float w, float h)
 					ring_image = "gfx/crosshair_ring.tga";
 					ring_rgb = wcross_color;
 				}
-				
+
 				if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
 					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, ring_inner_alpha, DRAWFLAG_ADDITIVE);
-				
+
 				if (ring_value)
 					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, ring_alpha, DRAWFLAG_ADDITIVE);
+			}
+
+			// ammo crosshair ring
+			if(autocvar_crosshair_ring_reload)
+			{
+				weapon_clipload = getstati(STAT_WEAPON_CLIPLOAD);
+				if (weapon_clipload) // ring around crosshair representing ammo left in the weapon clip
+				{
+					weapon_clipsize = getstati(STAT_WEAPON_CLIPSIZE);
+					ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
+					ring_scale = autocvar_crosshair_ring_reload_size;
+					ring_alpha = autocvar_crosshair_ring_reload_alpha;
+					ring_image = "gfx/crosshair_ring.tga";
+					ring_rgb = wcross_color;
+
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, ring_alpha, DRAWFLAG_ADDITIVE);
+				}
 			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \

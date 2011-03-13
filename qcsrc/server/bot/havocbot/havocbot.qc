@@ -145,6 +145,31 @@ void havocbot_ai()
 		bot_aimdir(v, -1);
 	}
 	havocbot_movetogoal();
+
+	// if the bot is not attacking, consider reloading weapons
+	if not(self.aistatus & AI_STATUS_ATTACKING)
+	{
+		float i;
+		entity e;
+
+		// we are currently holding a weapon that's not fully loaded, reload it
+		if(skill >= 2) // bots can only reload the held weapon on purpose past this skill
+		if(self.clip_load < self.clip_size)
+			self.impulse = 20; // "press" the reload button, not sure if this is done right
+
+		// if we're not reloading a weapon, switch to any weapon in our invnetory that's not fully loaded to reload it next
+		// the code above executes next frame, starting the reloading then
+		if(skill >= 5) // bots can only look for unloaded weapons past this skill
+		if(self.clip_load >= 0) // only if we're not reloading a weapon already
+		{
+			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+			{
+				e = get_weaponinfo(i);
+				if(self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
+					self.switchweapon = i;
+			}
+		}
+	}
 };
 
 void havocbot_keyboard_movement(vector destorg)
@@ -914,6 +939,31 @@ void havocbot_chooseenemy()
 	self.havocbot_stickenemy = TRUE;
 };
 
+float havocbot_chooseweapon_checkreload(float new_weapon)
+{
+	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
+	// so skip this for them, or they'll never get to reload their weapons at all.
+	// this also allows bots under this skill to be more stupid, and reload more often during combat :)
+	if(skill < 5)
+		return FALSE;
+
+	// if this weapon is scheduled for reloading, don't switch to it during combat
+	if (self.weapon_load[new_weapon] < 0)
+	{
+		local float i, other_weapon_available;
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		{
+			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
+			if (weapon_action(i, WR_CHECKAMMO1) + weapon_action(i, WR_CHECKAMMO2))
+				other_weapon_available = TRUE;
+		}
+		if(other_weapon_available)
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
 void havocbot_chooseweapon()
 {
 	local float i;
@@ -944,11 +994,6 @@ void havocbot_chooseweapon()
 	// Do not change weapon during the next second after a combo
 	i = time - self.lastcombotime;
 	if(i < 1)
-		return;
-
-	// Workaround for rifle reloading (..)
-	if(self.weapon == WEP_SNIPERRIFLE)
-	if(i < autocvar_g_balance_sniperrifle_reloadtime + 1)
 		return;
 
 	local float w;
@@ -983,8 +1028,9 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_far ) {
 			for(i=0; i < WEP_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
-				if ( client_hasweapon(self, w, TRUE, FALSE) ){
-					if ( self.weapon == w && combo)
+				if ( client_hasweapon(self, w, TRUE, FALSE) )
+				{
+					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
 					self.switchweapon = w;
 					return;
@@ -996,8 +1042,9 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_close) {
 			for(i=0; i < WEP_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
-				if ( client_hasweapon(self, w, TRUE, FALSE) ){
-					if ( self.weapon == w && combo)
+				if ( client_hasweapon(self, w, TRUE, FALSE) )
+				{
+					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
 					self.switchweapon = w;
 					return;
@@ -1008,8 +1055,9 @@ void havocbot_chooseweapon()
 		// Choose weapons for close distance
 		for(i=0; i < WEP_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
-			if ( client_hasweapon(self, w, TRUE, FALSE) ){
-				if ( self.weapon == w && combo)
+			if ( client_hasweapon(self, w, TRUE, FALSE) )
+			{
+				if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 					continue;
 				self.switchweapon = w;
 				return;

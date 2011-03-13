@@ -1050,7 +1050,15 @@ void PutClientInServer (void)
 
 		// reset fields the weapons may use
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+		{
 			weapon_action(j, WR_RESETPLAYER);
+
+			// all weapons must be fully loaded when we spawn
+			entity e;
+			e = get_weaponinfo(j);
+			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
+				self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+		}
 
 		oldself = self;
 		self = spot;
@@ -1064,8 +1072,6 @@ void PutClientInServer (void)
 		self.switchweapon = w_getbestweapon(self);
 		self.cnt = self.switchweapon;
 		self.weapon = 0;
-
-        self.wish_reload = 0;
 
 		if(!self.alivetime)
 			self.alivetime = time;
@@ -1109,7 +1115,6 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
-	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_magazinecapacity); // rifle max bullets
 	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
 	return TRUE;
@@ -2342,6 +2347,8 @@ void SpectateCopy(entity spectatee) {
 	self.ammo_nails = spectatee.ammo_nails;
 	self.ammo_rockets = spectatee.ammo_rockets;
 	self.ammo_fuel = spectatee.ammo_fuel;
+	self.clip_load = spectatee.clip_load;
+	self.clip_size = spectatee.clip_size;
 	self.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
 	self.health = spectatee.health;
 	self.impulse = 0;
@@ -2357,7 +2364,6 @@ void SpectateCopy(entity spectatee) {
 	self.weapon = spectatee.weapon;
 	self.nex_charge = spectatee.nex_charge;
 	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
-	self.sniperrifle_bulletcounter = spectatee.sniperrifle_bulletcounter;
 	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;
@@ -2948,6 +2954,10 @@ void PlayerPreThink (void)
 	}
 
 	target_voicescript_next(self);
+
+	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
+	if(!self.weapon)
+		self.clip_load = self.clip_size = 0;
 }
 
 float isInvisibleString(string s)

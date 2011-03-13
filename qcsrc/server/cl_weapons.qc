@@ -1,6 +1,6 @@
-void W_Reload()
+void W_TriggerReload()
 {
-    self.wish_reload = 1;
+    weapon_action(self.weapon, WR_RELOAD);
 }
 
 // switch between weapons
@@ -15,7 +15,7 @@ void W_SwitchWeapon(float imp)
 	}
 	else
 	{
-		W_Reload();
+		W_TriggerReload();
 	}
 };
 
@@ -221,6 +221,13 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 					wep.ammofield = thisammo;
 					own.ammofield -= thisammo;
 					s = strcat(s, " and ", ftos(thisammo), " ", Item_CounterFieldName(j));
+
+					// if our weapon is loaded, give its load back to the player
+					if(self.weapon_load[self.weapon] > 0)
+					{
+						own.ammofield += self.weapon_load[self.weapon];
+						self.weapon_load[self.weapon] = -1; // schedule the weapon for reloading
+					}
 				}
 			}
 			s = substring(s, 5, -1);
@@ -340,6 +347,18 @@ void W_WeaponFrame()
 			setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.switchweapon, WR_SETUP);
+
+			// set our clip load to the load of the weapon we switched to, if it's reloadable
+			entity e;
+			e = get_weaponinfo(self.switchweapon);
+			if(e.spawnflags & WEP_FLAG_RELOADABLE && cvar(strcat("g_balance_", e.netname, "_reload_ammo"))) // prevent accessing undefined cvars
+			{
+				self.clip_load = self.weapon_load[self.switchweapon];
+				self.clip_size = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+			}
+			else
+				self.clip_load = self.clip_size = 0;
+
 			// VorteX: add player model weapon select frame here
 			// setcustomframe(PlayerWeaponRaise);
 			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_weaponswitchdelay, w_ready);
