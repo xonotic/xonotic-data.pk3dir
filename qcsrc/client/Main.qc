@@ -1094,7 +1094,7 @@ void Ent_Init()
 
 	serverflags = ReadByte();
 
-	cr_maxbullets = ReadByte();
+	minelayer_maxmines = ReadByte();
 
 	g_trueaim_minrange = ReadCoord();
 

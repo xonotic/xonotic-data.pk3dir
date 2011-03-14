@@ -1333,7 +1333,7 @@ msgstr "Beenden"
 
 #: qcsrc/menu/xonotic/dialog_quit.c:17
 msgid "Are you sure you want to quit?"
-msgstr "Wollen Sie wirklich das Spiel beenden?"
+msgstr "Wollen Sie das Spiel wirklich beenden?"
 
 #: qcsrc/menu/xonotic/dialog_quit.c:20
 msgid "Yes"

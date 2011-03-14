@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", _("T.A.G. Seeker"))
+REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", _("T.A.G. Seeker"))
 #else
 #ifdef SVQC
 //.float proxytime; = autoswitch
@@ -158,8 +158,7 @@ void Seeker_Fire_Missile(vector f_diff)
 {
 	local entity missile;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_seeker_missile_ammo;
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_reload_ammo);
 
 	makevectors(self.v_angle);
 	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/seeker_fire.wav", CHAN_WEAPON, 0);
@@ -294,8 +293,7 @@ void Seeker_Tag_Touch()
 void Seeker_Fire_Tag()
 {
 	local entity missile;
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_seeker_tag_ammo;
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_tag_ammo, autocvar_g_balance_seeker_reload_ammo);
 
 	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/tag_fire.wav", CHAN_WEAPON, autocvar_g_balance_seeker_missile_damage * autocvar_g_balance_seeker_missile_count);
 
@@ -353,8 +351,7 @@ void Seeker_Fire_Flac()
 	vector f_diff;
 	float c;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_seeker_flac_ammo;
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_flac_ammo, autocvar_g_balance_seeker_reload_ammo);
 
 	c = mod(self.bulletcounter, 4);
 	switch(c)
@@ -413,25 +410,33 @@ void spawnfunc_weapon_seeker (void)
 
 float w_seeker(float req)
 {
+	float ammo_amount;
+
 	if (req == WR_AIM)
 		self.BUTTON_ATCK = bot_aim(autocvar_g_balance_seeker_tag_speed, 0, 20, FALSE);
 
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo)) // forced reload
+			weapon_action(self.weapon, WR_RELOAD);
+
+		else if (self.BUTTON_ATCK)
+		{
 			if (weapon_prepareattack(0, autocvar_g_balance_seeker_tag_refire))
 			{
 				Seeker_Fire_Tag();
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_seeker_tag_animtime, w_ready);
 			}
+		}
 
-		if (self.BUTTON_ATCK2)
+		else if (self.BUTTON_ATCK2)
+		{
 			if (weapon_prepareattack(1, autocvar_g_balance_seeker_flac_refire))
 			{
 				Seeker_Fire_Flac();
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_flac_animtime, w_ready);
 			}
-
+		}
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -441,13 +446,29 @@ float w_seeker(float req)
 		precache_sound ("weapons/tag_fire.wav");
 		precache_sound ("weapons/flac_fire.wav");
 		precache_sound ("weapons/seeker_fire.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_SEEKER);
+		self.current_ammo = ammo_rockets;
+	}
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_rockets >= autocvar_g_balance_seeker_tag_ammo + autocvar_g_balance_seeker_missile_ammo;
+	{
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_seeker_missile_ammo;
+		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_missile_ammo;
+		return ammo_amount;
+	}
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_rockets >= autocvar_g_balance_seeker_flac_ammo;
+	{
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_seeker_flac_ammo;
+		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_flac_ammo;
+		return ammo_amount;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Reload(min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo), autocvar_g_balance_seeker_reload_ammo, autocvar_g_balance_seeker_reload_time, "weapons/reload.wav");
+	}
 	return TRUE;
 };
 #endif

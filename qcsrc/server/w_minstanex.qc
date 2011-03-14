@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_CANCLIMB | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "minstanex", "minstanex", _("MinstaNex"))
+REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "minstanex", "minstanex", _("MinstaNex"))
 #else
 #ifdef SVQC
 .float minstanex_lasthit;
@@ -80,13 +80,10 @@ void W_MinstaNex_Attack (void)
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		Damage_DamageInfo(trace_endpos, 10000, 0, 0, 800 * w_shotdir, WEP_MINSTANEX, self);
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if (g_minstagib)
-			self.ammo_cells = self.ammo_cells - 1;
-		else
-			self.ammo_cells = self.ammo_cells - autocvar_g_balance_minstanex_ammo;
-	}
+	if (g_minstagib)
+		W_DecreaseAmmo(ammo_cells, 1, autocvar_g_balance_minstanex_reload_ammo);
+	else
+		W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo);
 }
 
 
@@ -171,18 +168,30 @@ void minstagib_ammocheck (void)
 
 void spawnfunc_weapon_minstanex (void); // defined in t_items.qc
 
+float minstanex_ammo;
 float w_minstanex(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 	{
-		if(self.ammo_cells>0)
+		if(self.ammo_cells > 0)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 		else
 			self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE);
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if(g_minstagib)
+			minstanex_ammo = 1;
+		else
+			minstanex_ammo = autocvar_g_balance_minstanex_ammo;
+
+		// if the laser uses load, we also consider its ammo for reloading
+		if(autocvar_g_balance_minstanex_reload_ammo && autocvar_g_balance_minstanex_laser_ammo && self.clip_load < min(minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo)) // forced reload
+			weapon_action(self.weapon, WR_RELOAD);
+		else if(autocvar_g_balance_minstanex_reload_ammo && self.clip_load < minstanex_ammo) // forced reload
+			weapon_action(self.weapon, WR_RELOAD);
+		else if (self.BUTTON_ATCK)
 		{
 			if (weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
 			{
@@ -195,6 +204,10 @@ float w_minstanex(float req)
 			if (self.jump_interval <= time)
 			{
 				self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
+
+				// decrease ammo for the laser?
+				if(autocvar_g_balance_minstanex_laser_ammo)
+					W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_laser_ammo, autocvar_g_balance_minstanex_reload_ammo);
 
 				// ugly minstagib hack to reuse the fire mode of the laser
 				float w;
@@ -215,25 +228,42 @@ float w_minstanex(float req)
 		precache_sound ("weapons/nexwhoosh1.wav");
 		precache_sound ("weapons/nexwhoosh2.wav");
 		precache_sound ("weapons/nexwhoosh3.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 		w_laser(WR_PRECACHE);
 	}
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_MINSTANEX);
+		self.current_ammo = ammo_cells;
 		self.minstanex_lasthit = 0;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if (g_minstagib)
-			return self.ammo_cells >= 1;
-		else
-			return self.ammo_cells >= autocvar_g_balance_minstanex_ammo;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_ammo;
+		ammo_amount += self.weapon_load[WEP_MINSTANEX] >= autocvar_g_balance_minstanex_ammo;
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
-		return TRUE;
+	{
+		if(!autocvar_g_balance_minstanex_laser_ammo)
+			return TRUE;
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_laser_ammo;
+		ammo_amount += self.weapon_load[WEP_MINSTANEX] >= autocvar_g_balance_minstanex_laser_ammo;
+		return ammo_amount;
+	}
 	else if (req == WR_RESETPLAYER)
 	{
 		self.minstanex_lasthit = 0;
+	}
+	else if (req == WR_RELOAD)
+	{
+		float used_ammo;
+		if(autocvar_g_balance_minstanex_laser_ammo)
+			used_ammo = min(autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo);
+		else
+			used_ammo = autocvar_g_balance_minstanex_ammo;
+
+		W_Reload(used_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

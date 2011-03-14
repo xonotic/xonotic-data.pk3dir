@@ -74,13 +74,15 @@ float Button_mousePress(entity me, vector pos)
 }
 float Button_mouseRelease(entity me, vector pos)
 {
-	if(cvar("menu_sounds"))
-		localsound("sound/misc/menu2.wav");
 	me.mouseDrag(me, pos); // verify coordinates
 	if(me.pressed)
 	{
 		if not(me.disabled)
+		{
+			if(cvar("menu_sounds"))
+				localsound("sound/misc/menu2.wav");
 			me.onClick(me, me.onClickEntity);
+		}
 		me.pressed = 0;
 	}
 	return 1;
