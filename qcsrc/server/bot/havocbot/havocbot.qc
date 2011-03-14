@@ -165,7 +165,7 @@ void havocbot_ai()
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				if(self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo")))
+				if ((e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo"))))
 					self.switchweapon = i;
 			}
 		}
