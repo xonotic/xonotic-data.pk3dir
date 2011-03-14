@@ -1067,7 +1067,7 @@ void CSQC_UpdateView(float w, float h)
 			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
 			// crosshair rings for weapon stats
-			if (autocvar_crosshair_ring)
+			if ((autocvar_crosshair_ring) || (autocvar_crosshair_ring_reload))
 			{
 				// declarations and stats
 				float ring_value, ring_scale, ring_alpha, ring_inner_value, ring_inner_alpha;
@@ -1126,7 +1126,7 @@ void CSQC_UpdateView(float w, float h)
 					
 					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
 					// if a new image for another weapon is added, add the code (and its respective file/value) here
-					if ((activeweapon == WEP_SNIPERRIFLE) && (weapon_clipsize == 8))
+					if ((activeweapon == WEP_SNIPERRIFLE) && (weapon_clipsize == 80))
 						ring_image = "gfx/crosshair_ring_sniperrifle.tga";
 					else
 						ring_image = "gfx/crosshair_ring.tga";
