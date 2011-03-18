@@ -236,9 +236,6 @@ void Seeker_Attack()
 
 void Seeker_Tracker_Think() // this think method keeps track of the tag entity created to follow/tag down a player. 
 {
-	// Update the think method information
-	self.nextthink = time;
-	
 	// commit suicide if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
 	if ((self.owner.deadflag != DEAD_NO) || (self.tag_target.deadflag != DEAD_NO) || (self.owner.switchweapon != WEP_SEEKER)
 	|| (time > self.tag_time + autocvar_g_balance_seeker_tag_lifetime))
@@ -250,6 +247,9 @@ void Seeker_Tracker_Think() // this think method keeps track of the tag entity c
 		}
 		return;
 	}
+	
+	// Update the think method information
+	self.nextthink = time;
 }
 
 void Seeker_Tag_Explode ()
