@@ -169,13 +169,14 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.2, e = makeXonoticButton(_("Enter HUD editor"), '0 0 0'));
 			e.onClick = HUDSetup_Join_Click;
 			e.onClickEntity = me;
-	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Force models:")));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, string_null, string_null, ZCTX(_("MDL^None")));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, string_null, string_null, ZCTX(_("MDL^None"))));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodelsfromxonotic", string_null, ZCTX(_("MDL^Custom"))));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodels", string_null, ZCTX(_("MDL^All"))));
 	#endif
+	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_gentle", _("Disable gore effects")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gibs:")));

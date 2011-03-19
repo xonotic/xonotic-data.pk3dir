@@ -1,10 +1,10 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "uzi", "uzi", _("Machine Gun"))
+REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "uzi", "uzi", _("Machine Gun"))
 #else
 #ifdef SVQC
 
 // leilei's fancy muzzleflash stuff
-void Uzi_Flash_Go() 
+void UZI_Flash_Go() 
 {	
 	self.frame = self.frame + 2;
 	self.scale = self.scale * 0.5;
@@ -30,7 +30,7 @@ void UziFlash()
 	setmodel(self.muzzle_flash, "models/uziflash.md3"); // precision set below
 	
 	self.muzzle_flash.scale = 0.75;
-	self.muzzle_flash.think = Uzi_Flash_Go;
+	self.muzzle_flash.think = UZI_Flash_Go;
 	self.muzzle_flash.nextthink = time + 0.02;
 	self.muzzle_flash.frame = 2;
 	self.muzzle_flash.alpha = 0.75;
@@ -39,15 +39,8 @@ void UziFlash()
 	self.muzzle_flash.owner = self;
 }
 
-void W_Uzi_Attack (float deathtype)
+void W_UZI_Attack (float deathtype)
 {
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if (self.misc_bulletcounter == 1)
-			self.ammo_nails = self.ammo_nails - autocvar_g_balance_uzi_first_ammo;
-		else
-			self.ammo_nails = self.ammo_nails - autocvar_g_balance_uzi_sustained_ammo;
-	}
 	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CHAN_WEAPON, ((self.misc_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage));
 	if (!g_norecoil)
 	{
@@ -72,6 +65,11 @@ void W_Uzi_Attack (float deathtype)
 	// casing code
 	if (autocvar_g_casings >= 2)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
+
+	if (self.misc_bulletcounter == 1)
+		W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_first_ammo, autocvar_g_balance_uzi_reload_ammo);
+	else
+		W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_reload_ammo);
 }
 
 // weapon frames
@@ -91,7 +89,7 @@ void uzi_fire1_02()
 			return;
 		}
 		self.misc_bulletcounter = self.misc_bulletcounter + 1;
-		W_Uzi_Attack(WEP_UZI);
+		W_UZI_Attack(WEP_UZI);
 		weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_fire1_02);
 	}
 	else
@@ -102,6 +100,8 @@ void uzi_fire1_02()
 void uzi_mode1_fire_auto()
 {
 	float uzi_spread;
+
+	W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_reload_ammo);
 	
 	if (self.BUTTON_ATCK)
 		weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_mode1_fire_auto);
@@ -139,10 +139,6 @@ void uzi_mode1_fire_auto()
 	
 	if (autocvar_g_casings >= 2) // casing code
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
-	
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)	
-		self.ammo_nails = self.ammo_nails - autocvar_g_balance_uzi_sustained_ammo;
-	
 }
 
 void uzi_mode1_fire_burst()
@@ -183,6 +179,7 @@ void spawnfunc_weapon_machinegun(); // defined in t_items.qc
 
 float w_uzi(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 		if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
@@ -192,7 +189,9 @@ float w_uzi(float req)
 		}
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_uzi_mode == 1)
+		if(autocvar_g_balance_uzi_reload_ammo && self.clip_load < min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo)) // forced reload
+			weapon_action(self.weapon, WR_RELOAD);
+		else if(autocvar_g_balance_uzi_mode == 1)
 		{
 			if (self.BUTTON_ATCK)
 			if (weapon_prepareattack(0, 0))
@@ -210,9 +209,8 @@ float w_uzi(float req)
 					w_ready();
 					return FALSE;
 				}
-				
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)	
-					self.ammo_nails = self.ammo_nails - autocvar_g_balance_uzi_burst_ammo;
+
+				W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_burst_ammo, autocvar_g_balance_uzi_reload_ammo);
 
 				self.misc_bulletcounter = autocvar_g_balance_uzi_burst * -1;
 				uzi_mode1_fire_burst();
@@ -225,7 +223,7 @@ float w_uzi(float req)
 			if (weapon_prepareattack(0, 0))
 			{
 				self.misc_bulletcounter = 1;
-				W_Uzi_Attack(WEP_UZI); // sets attack_finished
+				W_UZI_Attack(WEP_UZI); // sets attack_finished
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_fire1_02);
 			}
 
@@ -233,7 +231,7 @@ float w_uzi(float req)
 			if (weapon_prepareattack(1, 0))
 			{
 				self.misc_bulletcounter = 1;
-				W_Uzi_Attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
+				W_UZI_Attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_first_refire, w_ready);
 			}
 		}
@@ -245,19 +243,49 @@ float w_uzi(float req)
 		precache_model ("models/weapons/v_uzi.md3");
 		precache_model ("models/weapons/h_uzi.iqm");
 		precache_sound ("weapons/uzi_fire.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_UZI);
+		self.current_ammo = ammo_nails;
+	}
 	else if (req == WR_CHECKAMMO1)
+	{
 		if(autocvar_g_balance_uzi_mode == 1)
-			return self.ammo_nails >= autocvar_g_balance_uzi_sustained_ammo;
+			ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_sustained_ammo;
 		else
-			return self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+			ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+
+		if(autocvar_g_balance_uzi_reload_ammo)
+		{
+			if(autocvar_g_balance_uzi_mode == 1)
+				ammo_amount += self.weapon_load[WEP_UZI] >= autocvar_g_balance_uzi_sustained_ammo;
+			else
+				ammo_amount += self.weapon_load[WEP_UZI] >= autocvar_g_balance_uzi_first_ammo;
+		}
+		return ammo_amount;
+	}
 	else if (req == WR_CHECKAMMO2)
+	{
 		if(autocvar_g_balance_uzi_mode == 1)
-			return self.ammo_nails >= autocvar_g_balance_uzi_burst_ammo;
+			ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_burst_ammo;
 		else
-			return self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+			ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+
+		if(autocvar_g_balance_uzi_reload_ammo)
+		{
+			if(autocvar_g_balance_uzi_mode == 1)
+				ammo_amount += self.weapon_load[WEP_UZI] >= autocvar_g_balance_uzi_burst_ammo;
+			else
+				ammo_amount += self.weapon_load[WEP_UZI] >= autocvar_g_balance_uzi_first_ammo;
+		}
+		return ammo_amount;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Reload(min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo), autocvar_g_balance_uzi_reload_ammo, autocvar_g_balance_uzi_reload_time, "weapons/reload.wav");
+	}
 	return TRUE;
 };
 #endif

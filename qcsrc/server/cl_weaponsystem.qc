@@ -1611,3 +1611,127 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 
 #define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
 #define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
+
+void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
+{
+	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !ammo_reload)
+		return;
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if(ammo_reload)
+	{
+		self.clip_load -= ammo_use;
+		self.weapon_load[self.weapon] = self.clip_load;
+	}
+	else
+		self.(self.current_ammo) -= ammo_use;
+}
+
+// weapon reloading code
+
+.float reload_ammo_amount, reload_ammo_min, reload_time;
+.float reload_complain;
+.string reload_sound;
+
+void W_ReloadedAndReady()
+{
+	// finish the reloading process, and do the ammo transfer
+
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+
+	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
+	if(!self.reload_ammo_min)
+		self.clip_load = self.reload_ammo_amount;
+	else
+	{
+		while(self.clip_load < self.reload_ammo_amount && self.(self.current_ammo)) // make sure we don't add more ammo than we have
+		{
+			self.clip_load += 1;
+			if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+				self.(self.current_ammo) -= 1;
+		}
+	}
+	self.weapon_load[self.weapon] = self.clip_load;
+
+	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
+	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
+	// so your weapon is disabled for a few seconds without reason
+
+	//ATTACK_FINISHED(self) -= self.reload_time - 1;
+
+	w_ready();
+}
+
+void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
+{
+	// set global values to work with
+
+	self.reload_ammo_min = sent_ammo_min;
+	self.reload_ammo_amount = sent_ammo_amount;
+	self.reload_time = sent_time;
+	self.reload_sound = sent_sound;
+
+	// check if we meet the necessary conditions to reload
+
+	entity e;
+	e = get_weaponinfo(self.weapon);
+
+	// don't reload weapons that don't have the RELOADABLE flag
+	if not(e.spawnflags & WEP_FLAG_RELOADABLE)
+	{
+		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
+		return;
+	}
+
+	// return if reloading is disabled for this weapon
+	if(!self.reload_ammo_amount)
+		return;
+
+	// our weapon is fully loaded, no need to reload
+	if (self.clip_load >= self.reload_ammo_amount)
+		return;
+
+	// no ammo, so nothing to load
+	if(!self.(self.current_ammo) && self.reload_ammo_min)
+	{
+		if(clienttype(self) == CLIENTTYPE_REAL && self.reload_complain < time)
+		{
+			play2(self, "weapons/unavailable.wav");
+			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));
+			self.reload_complain = time + 1;
+		}
+		// switch away if the amount of ammo is not enough to keep using this weapon
+		if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
+		{
+			self.clip_load = -1; // reload later
+			W_SwitchToOtherWeapon(self);
+		}
+		return;
+	}
+
+	if (self.weaponentity)
+	{
+		if (self.weaponentity.wframe == WFRAME_RELOAD)
+			return;
+
+		// allow switching away while reloading, but this will cause a new reload!
+		self.weaponentity.state = WS_READY;
+	}
+
+	// now begin the reloading process
+
+	sound (self, CHAN_WEAPON2, self.reload_sound, VOL_BASE, ATTN_NORM);
+
+	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
+	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
+	// so your weapon is disabled for a few seconds without reason
+
+	//ATTACK_FINISHED(self) = max(time, ATTACK_FINISHED(self)) + self.reload_time + 1;
+
+	weapon_thinkf(WFRAME_RELOAD, self.reload_time, W_ReloadedAndReady);
+
+	if(self.clip_load < 0)
+		self.clip_load = 0;
+	self.old_clip_load = self.clip_load;
+	self.clip_load = self.weapon_load[self.weapon] = -1;
+}

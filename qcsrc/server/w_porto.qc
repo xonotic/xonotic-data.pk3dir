@@ -270,7 +270,10 @@ float w_porto(float req)
 		precache_sound ("porto/unsupported.wav");
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_PORTO);
+		self.current_ammo = ammo_none;
+	}
 	else if (req == WR_RESETPLAYER)
 	{
 		self.porto_current = world;

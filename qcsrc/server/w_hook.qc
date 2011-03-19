@@ -63,7 +63,7 @@ void W_Hook_Attack2()
 	local entity gren;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - autocvar_g_balance_hook_secondary_ammo;
+		W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hook_secondary_ammo, FALSE);
 	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CHAN_WEAPON, autocvar_g_balance_hook_secondary_damage);
 
 	gren = spawn ();
@@ -127,7 +127,7 @@ float w_hook(float req)
 			if (weapon_prepareattack(0, -1))
 			{
 				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-					self.ammo_fuel = self.ammo_fuel - autocvar_g_balance_hook_primary_fuel;
+					W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_hook_primary_fuel, FALSE);
 				self.hook_state |= HOOK_FIRING;
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hook_primary_animtime, w_ready);				
 			}
@@ -170,7 +170,7 @@ float w_hook(float req)
 					{
 						if ( self.ammo_fuel >= (time - self.hook_time_fueldecrease) * hooked_fuel )
 						{
-							self.ammo_fuel -= (time - self.hook_time_fueldecrease) * hooked_fuel;
+							W_DecreaseAmmo(ammo_fuel, (time - self.hook_time_fueldecrease) * hooked_fuel, FALSE);
 							self.hook_time_fueldecrease = time;
 							// decrease next frame again
 						}
@@ -228,6 +228,7 @@ float w_hook(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_HOOK);
+		self.current_ammo = ammo_fuel;
 		self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
 	}
 	else if (req == WR_CHECKAMMO1)

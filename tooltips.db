@@ -29,9 +29,10 @@
 \sv_vote_simple_majority_factor\Simple majority wins a vote
 \XonoticMultiplayerDialog/Advanced settings...\Advanced server settings
 \XonoticMultiplayerDialog/Mutators...\Mutators and weapon arenas
+\g_dodging\Enable dodging
 \g_cloaked\All players are almost invisible
 \g_footsteps\Enable footstep sounds
-\g_midair\Only possible to inflict damage on your enemy while he's airborn
+\g_midair\Only possible to inflict damage on your enemy while he's airborne
 \g_vampire\Damage done to your enemy gets added to your own health
 \g_bloodloss\Amount of health below which your player gets stunned because of blood loss
 \sv_gravity\Make things fall to the ground slower, lower value means lower gravity

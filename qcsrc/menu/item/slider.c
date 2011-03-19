@@ -48,7 +48,6 @@ ENDCLASS(Slider)
 void Slider_setValue(entity me, float val)
 {
 	if (me.animated) {
-		anim.stopObjAnim(anim, me);
 		anim.removeObjAnim(anim, me);
 		makeHostedEasing(me, Slider_setSliderValue, easingQuadInOut, 1, me.sliderValue, val);
 	} else {
@@ -157,7 +156,7 @@ float Slider_mouseDrag(entity me, vector pos)
 	if(me.disabled)
 		return 0;
 
-	anim.finishObjAnim(anim, me);
+	anim.removeObjAnim(anim, me);
 	animed = me.animated;
 	me.animated = false;
 
@@ -240,11 +239,11 @@ float Slider_mousePress(entity me, vector pos)
 }
 float Slider_mouseRelease(entity me, vector pos)
 {
-	if(cvar("menu_sounds"))
-		localsound("sound/misc/menu2.wav");
 	me.pressed = 0;
 	if(me.disabled)
 		return 0;
+	if(cvar("menu_sounds"))
+		localsound("sound/misc/menu2.wav");
 	return 1;
 }
 void Slider_showNotify(entity me)
