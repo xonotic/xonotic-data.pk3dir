@@ -699,13 +699,6 @@ void HUD_Weapons(void)
 	}
 
 	float i, weapid, wpnalpha, weapon_cnt;
-	weapon_cnt = 0;
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-	{
-		self = get_weaponinfo(i);
-		if(self.impulse >= 0)
-			++weapon_cnt;
-	}
 
 	// TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority)
@@ -729,6 +722,8 @@ void HUD_Weapons(void)
 				++weapon_cnt;
 			}
 		}
+		for(i = weapon_cnt; i < WEP_MAXCOUNT; ++i)
+			weaponorder[i] = NULL;
 		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
 
 		weaponorder_cmp_str = string_null;
@@ -803,11 +798,13 @@ void HUD_Weapons(void)
 
 	float weapons_st = getstati(STAT_WEAPONS);
 
-	for(i = 0; i < weapon_cnt; ++i)
+	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
+		self = weaponorder[i];
+		if (!self || self.impulse < 0)
+			continue;
 		wpnpos = panel_pos + eX * column * wpnsize_x + eY * row * wpnsize_y;
 
-		self = weaponorder[i];
 		weapid = self.impulse;
 
 		// draw background behind currently selected weapon
@@ -837,7 +834,7 @@ void HUD_Weapons(void)
 		}
 
 		// draw the weapon icon
-		if((weapid >= 0) && (weapons_st & self.weapons))
+		if(weapons_st & self.weapons)
 		{
 			drawpic_aspect_skin(wpnpos, strcat("weapon", self.netname), wpnsize, '1 1 1', wpnalpha, DRAWFLAG_NORMAL);
 
