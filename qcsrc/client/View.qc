@@ -664,13 +664,11 @@ void CSQC_UpdateView(float w, float h)
 		f = 1;
 	if(autocvar_cl_reticle_item_normal)
 	{
-		precache_pic("gfx/reticle_normal");
 		if(reticle_type == 1 && f)
 			drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_normal, DRAWFLAG_NORMAL);
 	}
 	if(autocvar_cl_reticle_item_nex)
 	{
-		precache_pic("gfx/reticle_nex");
 		if(reticle_type == 2 && f)
 			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_nex, DRAWFLAG_NORMAL);
 	}
