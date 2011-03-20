@@ -174,9 +174,7 @@ void CSQC_SPIDER_HUD()
         picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
 
         drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_ADDITIVE);
-
     }
-
 }
 
 
@@ -197,9 +195,12 @@ void CSQC_RAPTOR_HUD()
     }
 
 	movedt = time - dropmark.move_time;
-	dropmark.move_time = time;
-    vel = (view_origin - lastpos) * (1 / movedt);
-    lastpos  = view_origin;
+	if(movedt)
+	{
+        dropmark.move_time = time;
+        vel = (view_origin - lastpos) * (1 / movedt);
+        lastpos  = view_origin;
+    }
 
     // Fetch health & ammo stats
     hp      = bound(0,getstatf(STAT_VEHICLESTAT_HEALTH), 1);
@@ -268,7 +269,7 @@ void CSQC_RAPTOR_HUD()
             where_z = 0;
             drawpic(where, raptor_d, picsize, '0 2 0', 1, DRAWFLAG_ADDITIVE);
         }
-        dropmark.cnt = time + 2;
+        dropmark.cnt = time + 5;
     }
     else
     {
