@@ -115,6 +115,7 @@ const float ENT_CLIENT_GAUNTLET = 29;
 const float ENT_CLIENT_ACCURACY = 30;
 
 const float ENT_CLIENT_TURRET = 40;
+const float ENT_CLIENT_AUXILIARYXHAIR = 50;
 
 const float SPRITERULE_DEFAULT = 0;
 const float SPRITERULE_TEAMPLAY = 1;

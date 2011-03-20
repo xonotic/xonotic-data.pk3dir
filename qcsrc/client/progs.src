@@ -56,7 +56,7 @@ modeleffects.qc
 tuba.qc
 target_music.qc
 
-//vehicles/spiderbot.qc
+vehicles/vehicles.qc
 Main.qc
 View.qc
 interpolate.qc

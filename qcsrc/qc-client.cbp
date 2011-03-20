@@ -21,6 +21,8 @@
 					<CompileFile command="" />
 					<Clean command="" />
 					<DistClean command="" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -s -f $makefile $target" />
 				</MakeCommands>
 			</Target>
 			<Target title="Release">
@@ -39,6 +41,8 @@
 					<CompileFile command="" />
 					<Clean command="" />
 					<DistClean command="" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -s -f $makefile $target" />
 				</MakeCommands>
 			</Target>
 		</Build>
@@ -81,6 +85,10 @@
 		<Unit filename="client\teamradar.qc" />
 		<Unit filename="client\teamradar.qh" />
 		<Unit filename="client\tuba.qc" />
+		<Unit filename="client\vehicles\racer.qc" />
+		<Unit filename="client\vehicles\raptor.qc" />
+		<Unit filename="client\vehicles\spiderbot.qc" />
+		<Unit filename="client\vehicles\vehicles.qc" />
 		<Unit filename="client\wall.qc" />
 		<Unit filename="client\waypointsprites.qc" />
 		<Unit filename="client\waypointsprites.qh" />

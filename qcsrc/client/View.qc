@@ -1,12 +1,3 @@
-#define spider_rocket_icon "gfx/vehicles/rocket_ico.tga"
-#define spider_rocket_targ "gfx/vehicles/target.tga"
-#define SPIDER_CROSS "textures/spiderbot/cross.tga"
-#define rkt_size 32
-#define rld_size_x 256
-#define rld_size_y 16
-
-void CSQC_WAKIZASHI_HUD();
-
 entity porto;
 vector polyline[16];
 float trace_dphitcontents;
@@ -682,7 +673,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		float contentalpha_temp, incontent, liquidalpha, contentfadetime;
 		vector liquidcolor;
-		
+
 		switch(pointcontents(view_origin))
 		{
 			case CONTENT_WATER:
@@ -690,26 +681,26 @@ void CSQC_UpdateView(float w, float h)
 				liquidcolor = stov(autocvar_hud_contents_water_color);
 				incontent = 1;
 				break;
-				
+
 			case CONTENT_LAVA:
 				liquidalpha = autocvar_hud_contents_lava_alpha;
 				liquidcolor = stov(autocvar_hud_contents_lava_color);
 				incontent = 1;
-				break;	
-							
+				break;
+
 			case CONTENT_SLIME:
 				liquidalpha = autocvar_hud_contents_slime_alpha;
 				liquidcolor = stov(autocvar_hud_contents_slime_color);
 				incontent = 1;
 				break;
-				
+
 			default:
 				liquidalpha = 0;
 				liquidcolor = '0 0 0';
 				incontent = 0;
 				break;
 		}
-		
+
 		if(incontent) // fade in/out at different speeds so you can do e.g. instant fade when entering water and slow when leaving it.
 		{ // also lets delcare previous values for blending properties, this way it isn't reset until after you have entered a different content
 			contentfadetime = autocvar_hud_contents_fadeintime;
@@ -718,14 +709,14 @@ void CSQC_UpdateView(float w, float h)
 		}
 		else
 			contentfadetime = autocvar_hud_contents_fadeouttime;
-			
+
 		contentalpha_temp = bound(0, drawframetime / max(0.0001, contentfadetime), 1);
 		contentavgalpha = contentavgalpha * (1 - contentalpha_temp) + incontent * contentalpha_temp;
-		
+
 		if(contentavgalpha)
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
 	}
-	
+
 	if(autocvar_hud_damage)
 	{
 		float myhealth_flash_temp;
@@ -918,13 +909,13 @@ void CSQC_UpdateView(float w, float h)
 			else if(autocvar_crosshair_color_by_health)
 			{
 				local float x = getstati(STAT_HEALTH);
-				
+
 				//x = red
 				//y = green
 				//z = blue
-				
+
 				wcross_color_z = 0;
-				
+
 				if(x > 200)
 				{
 					wcross_color_x = 0;
@@ -945,7 +936,7 @@ void CSQC_UpdateView(float w, float h)
 				{
 					wcross_color_x = 1;
 					wcross_color_y = 1;
-					wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;  
+					wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;
 				}
 				else if(x > 20)
 				{
@@ -989,7 +980,7 @@ void CSQC_UpdateView(float w, float h)
 
 				wcross_scale += sin(pickup_crosshair_size) * autocvar_crosshair_pickup;
 			}
-			
+
 			vector hitindication_color;
 			if(autocvar_crosshair_hitindication)
 			{
@@ -1073,7 +1064,7 @@ void CSQC_UpdateView(float w, float h)
 				float ring_value, ring_scale, ring_alpha, ring_inner_value, ring_inner_alpha;
 				string ring_image, ring_inner_image;
 				vector ring_rgb, ring_inner_rgb;
-				
+
 				ring_scale = autocvar_crosshair_ring_size;
 
 				float weapon_clipload, weapon_clipsize;
@@ -1086,30 +1077,30 @@ void CSQC_UpdateView(float w, float h)
 
 				if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 					nex_charge_movingavg = nex_charge;
-					
+
 
 				// handle the values
 				if (activeweapon == WEP_NEX && nex_charge && autocvar_crosshair_ring_nex) // ring around crosshair representing velocity-dependent damage for the nex
 				{
-					if (nex_chargepool || use_nex_chargepool) { 
-						use_nex_chargepool = 1; 
+					if (nex_chargepool || use_nex_chargepool) {
+						use_nex_chargepool = 1;
 						ring_inner_value = nex_chargepool;
-					} else { 
+					} else {
 						nex_charge_movingavg = (1 - autocvar_crosshair_ring_nex_currentcharge_movingavg_rate) * nex_charge_movingavg + autocvar_crosshair_ring_nex_currentcharge_movingavg_rate * nex_charge;
-						ring_inner_value = bound(0, autocvar_crosshair_ring_nex_currentcharge_scale * (nex_charge - nex_charge_movingavg), 1); 
+						ring_inner_value = bound(0, autocvar_crosshair_ring_nex_currentcharge_scale * (nex_charge - nex_charge_movingavg), 1);
 					}
-						
+
 					ring_inner_alpha = wcross_alpha * autocvar_crosshair_ring_nex_inner_alpha;
 					ring_inner_rgb = eX * autocvar_crosshair_ring_nex_inner_color_red + eY * autocvar_crosshair_ring_nex_inner_color_green + eZ * autocvar_crosshair_ring_nex_inner_color_blue;
 					ring_inner_image = "gfx/crosshair_ring_inner.tga";
-					
+
 					// draw the outer ring to show the current charge of the weapon
 					ring_value = nex_charge;
 					ring_alpha = wcross_alpha * autocvar_crosshair_ring_nex_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 				}
-				else if (activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer) 
+				else if (activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
 				{
 					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = wcross_alpha * autocvar_crosshair_ring_minelayer_alpha;
@@ -1117,7 +1108,7 @@ void CSQC_UpdateView(float w, float h)
 					ring_image = "gfx/crosshair_ring.tga";
 				}
 
-				if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring 
+				if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring
 				{
 					// if the main ring is already used by another weapon, instead use the inner one for ammo.
 					// inner ring is secondary anyway and doesn't matter as much as main ring, so overriding it is no issue.
@@ -1134,7 +1125,7 @@ void CSQC_UpdateView(float w, float h)
 						ring_scale = autocvar_crosshair_ring_reload_size;
 						ring_alpha = autocvar_crosshair_ring_reload_alpha;
 						ring_rgb = wcross_color;
-					
+
 						// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
 						// if a new image for another weapon is added, add the code (and its respective file/value) here
 						if ((activeweapon == WEP_SNIPERRIFLE) && (weapon_clipsize == 80))
@@ -1263,298 +1254,6 @@ void CSQC_UpdateView(float w, float h)
 	R_SetView(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
 }
 
-#define spider_h "gfx/vehicles/hud_bg.tga"
-#define spider_b "gfx/vehicles/sbot.tga"
-#define spider_r "gfx/vehicles/sbot_rpods.tga"
-#define spider_g "gfx/vehicles/sbot_mguns.tga"
-#define spider_s "gfx/vehicles/shiled.tga"
-#define spider_a1 "gfx/hud/sb_rocket.tga"
-#define spider_a2 "gfx/sb_bullets.tga"
-
-void CSQC_SPIDER_HUD()
-{
-	float rockets, reload, heat, hp, shield;
-	vector picsize, hudloc;
-
-    // Fetch health & ammo stats
-    hp      = bound(0,getstatf(STAT_VEHICLESTAT_HEALTH), 1);
-	shield  = bound(0,getstatf(STAT_VEHICLESTAT_SHIELD), 1);
-	heat    = min(getstatf(STAT_VEHICLESTAT_RELOAD1), 2);
-	rockets =     getstati(STAT_VEHICLESTAT_AMMO2);
-	reload  = min(getstatf(STAT_VEHICLESTAT_RELOAD2), 1);
-
-    // Draw the crosshairs
-    picsize = drawgetimagesize(SPIDER_CROSS);
-    picsize_x *= autocvar_cl_vehicle_spiderbot_cross_size;
-    picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
-    drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_NORMAL);
-
-    hudloc_y =  4;
-    hudloc_x = 4;
-
-    picsize = drawgetimagesize(spider_h) * 0.5;
-    drawpic(hudloc, spider_h, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-    picsize = drawgetimagesize(spider_a2) * 0.5;
-    drawpic(hudloc + '120 96  0', spider_a2, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-    drawstring(hudloc + '145 19  0', strcat(ftos(rint(hp * 100)), "%"),'15 15 0','0 1 0', 1, DRAWFLAG_NORMAL);
-    drawstring(hudloc + '175 34  0', strcat(ftos(rint(shield * 100)), "%"),'15 15 0','0 0 1', 1, DRAWFLAG_NORMAL);
-    drawstring(hudloc + '136 102  0', strcat(ftos(100 - rint(heat * 100)), "%"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
-
-    picsize = drawgetimagesize(spider_a1) * 0.85;
-    if(rockets == 9)
-    {
-        drawpic(hudloc + '132 54  0', spider_a1, picsize, '-1 -1 -1', 1, DRAWFLAG_NORMAL);
-        drawstring(hudloc + '179 69 0', strcat(ftos(rint(reload * 100)), "%"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + '132 54  0', spider_a1, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        drawstring(hudloc + '179 69  0', strcat(ftos(9 - rockets), "/8"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
-    }
-
-    picsize = drawgetimagesize(spider_b) * 0.5;
-    hudloc_y = 10.5;
-    hudloc_x = 10.5;
-
-    drawpic(hudloc, spider_s, picsize, '1 1 1', shield, DRAWFLAG_NORMAL);
-    drawpic(hudloc, spider_b, picsize, '0 1 0' * hp + '1 0 0' * (1 - hp), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc, spider_r, picsize, '1 1 1' * reload + '1 0 0' * (1 - reload), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc, spider_g, picsize, '1 1 1' * (1 - heat) + '1 0 0' *  heat, 1, DRAWFLAG_NORMAL);
-
-
-	/*
-	// Draw health bar
-	p = '0.5 0 0' * (vid_conwidth - (rkt_size * 8));
-	p = p + '0 1 0' * vid_conheight - '0 32 0';
-	//pp = ('0 1 0' * hp) + ('1 0 0' * (1-hp));
-	drawfill(p, '256 0 0' * shield + '0 8 0' , '0.5 0.5 1', 0.75, DRAWFLAG_NORMAL);
-	p_y += 8;
-	drawfill(p, '256 0 0' * hp + '0 8 0' , '0 1 0', 0.75, DRAWFLAG_NORMAL);
-	p_x += 256 * hp;
-	drawfill(p, '256 0 0' * (1-hp) + '0 8 0' , '0 0 0', 0.75, DRAWFLAG_NORMAL);
-
-	// Draw minigun heat indicator
-	p = '0.5 0 0' * (vid_conwidth - 256);
-	p = p + '0 1 0' * vid_conheight - '0 34  0';
-	drawfill(p, '256 0 0' * (1-heat) + '0 2 0' ,'0 0 1', 0.5, DRAWFLAG_NORMAL);
-	p_x += 256 * (1-heat);
-	drawfill(p, '256 0 0' * heat  + '0 2 0' , '1 0 0', 0.5, DRAWFLAG_NORMAL);
-
-
-	// Draw rocket icons for loaded/empty tubes.
-	pp = '0.5 0 0' * (vid_conwidth - (rkt_size * 8));
-	pp += '0 1 0' * vid_conheight - '0 64 0';
-	for(i = 0; i < 8; ++i)
-	{
-		p = pp + '1 0 0' * (rkt_size * i);
-		if(rockets == 8)
-		{
-			if(floor(reload * 8) == i)
-			{
-				drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '1 0 0' + '0 1 0' * ((reload*8)-i), 0.75 , DRAWFLAG_NORMAL);
-			}
-			else if(i < reload * 8)
-				drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '1 1 0', 0.75 , DRAWFLAG_NORMAL);
-			else
-				drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0.5 0.5 0.5', 0.75, DRAWFLAG_NORMAL);
-		}
-		else
-		{
-			if(i < rockets)
-				drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0 0 0', 0.25, DRAWFLAG_NORMAL);
-			else
-				drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0 1 0' * reload, 0.75, DRAWFLAG_NORMAL);
-		}
-	}
-	*/
-
-	if (scoreboard_showscores)
-	{
-		HUD_DrawScoreboard();
-		HUD_DrawCenterPrint();
-	}
-
-}
-
-#define raptor_h "gfx/vehicles/hud_bg.tga"
-#define raptor_b "gfx/vehicles/raptor.tga"
-#define raptor_g1 "gfx/vehicles/raptor_guns.tga"
-#define raptor_g2 "gfx/vehicles/raptor_bombs.tga"
-#define raptor_s "gfx/vehicles/shiled.tga"
-
-void CSQC_RAPTOR_HUD()
-{
-	float reload, hp, shield, energy;
-	vector picsize, hudloc;
-
-    // Fetch health & ammo stats
-    hp      = bound(0,getstatf(STAT_VEHICLESTAT_HEALTH), 1);
-	shield  = bound(0,getstatf(STAT_VEHICLESTAT_SHIELD), 1);
-	reload  = min(getstatf(STAT_VEHICLESTAT_RELOAD1), 1);
-	energy  = min(getstatf(STAT_VEHICLESTAT_ENERGY),  1);
-
-    // Draw the crosshairs
-    picsize = drawgetimagesize(SPIDER_CROSS);
-    picsize_x *= autocvar_cl_vehicle_spiderbot_cross_size;
-    picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
-    drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_NORMAL);
-
-    hudloc_y =  4;
-    hudloc_x = 4;
-
-    picsize = drawgetimagesize(raptor_h) * 0.5;
-    drawpic(hudloc, raptor_h, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-    picsize = drawgetimagesize(spider_a2) * 0.5;
-    drawpic(hudloc + '120 96  0', spider_a2, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-    drawstring(hudloc + '145 19  0', strcat(ftos(rint(hp * 100)), "%"),'15 15 0','0 1 0', 1, DRAWFLAG_NORMAL);
-    drawstring(hudloc + '175 34  0', strcat(ftos(rint(shield * 100)), "%"),'15 15 0','0 0 1', 1, DRAWFLAG_NORMAL);
-    drawstring(hudloc + '136 102 0', strcat(ftos(rint(energy * 100)), "%"),'15 15 0','0.5 0.5 1', 1, DRAWFLAG_NORMAL);
-
-
-    picsize = drawgetimagesize(spider_a1) * 0.85;
-    if(reload == 1)
-    {
-        drawpic(hudloc + '132 54  0', spider_a1, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        drawstring(hudloc + '179 69  0', strcat(ftos(rint(reload * 100)), "%"),'14 14 0','0 1 0', 0.5, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + '132 54  0', spider_a1, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        drawstring(hudloc + '179 69  0', strcat(ftos(rint(reload * 100)), "%"),'14 14 0','0 0 1', 1, DRAWFLAG_NORMAL);
-    }
-
-    picsize = drawgetimagesize(raptor_b) * 0.5;
-    hudloc_y = 10.5;
-    hudloc_x = 10.5;
-
-    drawpic(hudloc, raptor_s, picsize, '1 1 1', shield, DRAWFLAG_NORMAL);
-    drawpic(hudloc, raptor_b, picsize, '0 1 0' * hp + '1 0 0' * (1 - hp), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc, raptor_g1, picsize, '1 1 1' * energy + '1 0 0' * (1 - energy), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc, raptor_g2, picsize, '1 1 1' * reload + '1 0 0' *  (1 - reload), 1, DRAWFLAG_NORMAL);
-
-
-	if (scoreboard_showscores)
-	{
-		HUD_DrawScoreboard();
-		HUD_DrawCenterPrint();
-	}
-
-}
-
-#define waki_h "gfx/vehicles/hud_bg.tga"
-#define waki_b "gfx/vehicles/waki.tga"
-#define waki_e "gfx/vehicles/waki_e.tga"
-#define waki_g "gfx/vehicles/waki_guns.tga"
-#define waki_r "gfx/vehicles/waki_rockets.tga"
-#define waki_s "gfx/vehicles/shiled.tga"
-
-#define waki_a1 "gfx/hud/sb_rocket.tga"
-#define waki_a2 "gfx/sb_cells.tga"
-
-void CSQC_WAKIZASHI_HUD()
-{
-	// 0--1 floats. 1 = 100%, 0.6 = 50%.
-	float health, shield, energy, rockets;
-	vector picsize, hudloc;
-
-    picsize = drawgetimagesize(SPIDER_CROSS);
-    picsize_x *= autocvar_cl_vehicle_spiderbot_cross_size;
-    picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
-    drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_NORMAL);
-
-/*
-const float STAT_VEHICLESTAT_HEALTH  = 60;
-const float STAT_VEHICLESTAT_SHIELD  = 61;
-const float STAT_VEHICLESTAT_ENERGY  = 62;
-const float STAT_VEHICLESTAT_AMMO1   = 63;
-const float STAT_VEHICLESTAT_RELAOD1 = 64;
-const float STAT_VEHICLESTAT_AMMO2   = 65;
-const float STAT_VEHICLESTAT_RELOAD2 = 66;
-*/
-    health  = min(getstatf(STAT_VEHICLESTAT_HEALTH),  1);
-	shield  = min(getstatf(STAT_VEHICLESTAT_SHIELD),  1);
-	energy  = min(getstatf(STAT_VEHICLESTAT_ENERGY),  1);
-	rockets = bound(0,getstatf(STAT_VEHICLESTAT_RELOAD1), 1);
-
-    hudloc_y =  4;
-    hudloc_x = 4;
-
-    picsize = drawgetimagesize(waki_h) * 0.5;
-    drawpic(hudloc, waki_h, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-    picsize = drawgetimagesize(waki_a2) * 0.7;
-    drawpic(hudloc + '116 92  0', waki_a2, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-
-    drawstring(hudloc + '145 19  0', strcat(ftos(rint(health * 100)), "%"),'15 15 0','0 1 0', 1, DRAWFLAG_NORMAL);
-    drawstring(hudloc + '175 34  0', strcat(ftos(rint(shield * 100)), "%"),'15 15 0','0 0 1', 1, DRAWFLAG_NORMAL);
-
-    drawstring(hudloc + '136 102  0', strcat(ftos(rint(energy * 100)), "%"),'14 14 0','1 1 1', 1, DRAWFLAG_NORMAL);
-
-    picsize = drawgetimagesize(waki_a1) * 0.75;
-    if(rockets == 1)
-    {
-        drawpic(hudloc + '140 55  0', waki_a1, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        drawpic(hudloc + '144 59  0', waki_a1, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + '140 55  0', waki_a1, picsize, '-1 -1 -1', 1, DRAWFLAG_NORMAL);
-        drawpic(hudloc + '144 59  0', waki_a1, picsize, '-1 -1 -1', 1, DRAWFLAG_NORMAL);
-        drawstring(hudloc + '165 69 0', strcat(ftos(rint(rockets * 100)), "%"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
-    }
-
-    picsize = drawgetimagesize(waki_b) * 0.5;
-    hudloc_y = 10.5;
-    hudloc_x = 10.5;
-
-    drawpic(hudloc, waki_s, picsize, '1 1 1', shield, DRAWFLAG_NORMAL);
-    drawpic(hudloc, waki_b, picsize, '0 1 0' * health + '1 0 0' * (1 - health), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc, waki_r, picsize, '1 1 1' * rockets + '1 0 0' * (1 - rockets), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc, waki_e, picsize, '1 1 1' * energy + '1 0 0' *  (1 - energy), 1, DRAWFLAG_NORMAL);
-
-
-
-	/*
-	p = '0.5 0 0' * (vid_conwidth - (rkt_size * 8));
-	p = p + '0 1 0' * vid_conheight - '0 32 0';
-
-	// Draw health bar
-	p_y += 8;
-	drawfill(p, '256 0 0' * health + '0 8 0' , '0 0.7 0', 0.75, DRAWFLAG_NORMAL);
-	p_x += 256 * health;
-	drawfill(p, '256 0 0' * (1 - health) + '0 8 0' , '0 0 0', 0.75, DRAWFLAG_NORMAL);
-
-	// Draw shiled bar
-	p_x -= 256 * health;
-	p_y += 4;
-	drawfill(p, '256 0 0' * shield + '0 4 0' , '0.25 0.25 1', 0.5, DRAWFLAG_NORMAL);
-
-	// Draw energy
-	//p_x -= 256 * health;
-	p_y -= 8;
-	drawfill(p, '256 0 0' * energy + '0 4 0' , '1 1 1', 0.75, DRAWFLAG_NORMAL);
-
-	// Draw rockets bar
-	p_y += 12;
-	drawfill(p, '256 0 0' * rockets + '0 4 0' , '1 0 0', 0.75, DRAWFLAG_NORMAL);
-	*/
-
-
-
-
-	if (scoreboard_showscores)
-	{
-		HUD_DrawScoreboard();
-		HUD_DrawCenterPrint();
-	}
-
-}
-
 
 void CSQC_common_hud(void)
 {
@@ -1590,7 +1289,7 @@ void CSQC_common_hud(void)
 			HUD_DrawScoreboard();
 
 			if (scoreboard_active) // scoreboard/accuracy
-			{	
+			{
 				HUD_Reset();
 				// HUD_DrawScoreboard takes care of centerprint_start
 			}

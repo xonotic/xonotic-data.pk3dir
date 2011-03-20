@@ -47,7 +47,7 @@ void WaypointSprite_Load();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
-	
+
 #ifdef USE_FTE
 #pragma target ID
 	__engine_check = checkextension("DP_SV_WRITEPICTURE");
@@ -884,7 +884,7 @@ void Ent_ReadAccuracy(void)
 			weapon_accuracy[w] = -1;
 		return;
 	}
-	
+
 	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w, f *= 2)
 	{
 		if(sf & f)
@@ -964,6 +964,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
+		case ENT_CLIENT_AUXILIARYXHAIR: Ent_AuxiliaryXhair(bIsNewEntity); break;
 		default:
 			error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			break;

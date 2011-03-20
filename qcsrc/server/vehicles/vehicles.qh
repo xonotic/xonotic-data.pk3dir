@@ -1,13 +1,13 @@
-//#define VEHICLES_ENABLED
+#define VEHICLES_ENABLED
 #ifdef VEHICLES_ENABLED
 
 #message "with tZork vehicles (experimental)"
 
-float SVC_SETVIEWPORT = 5;    // Net.Protocol 0x05
-float SVC_SETVIEWANGLES = 10; // Net.Protocol 0x0A
-float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
+float SVC_SETVIEWPORT   = 5;   // Net.Protocol 0x05
+float SVC_SETVIEWANGLES = 10;  // Net.Protocol 0x0A
+float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
 
-#define CCVAR(part) cvar(strcat(self.cvar_basename,part))
+//#define CCVAR(part) cvar(strcat(self.cvar_basename,part))
 //.string cvar_basename;
 
 .float vehicle_flags;
@@ -22,7 +22,7 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 .entity gun1;
 .entity gun2;
 
-.entity shield;
+//.entity shield;
 
 .float vehicle_health;
 .float vehicle_shield;
@@ -38,13 +38,11 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 .entity vehicle_viewport;
 .entity vehicle_hudmodel;
 
-//.float anim_start;
-//.float anim_end;
-
 .float dmg_time;
 
 #define VHEF_NORMAL 0
-#define VHEF_EJECT 1
+#define VHEF_EJECT  1
+#define VHEF_RELESE 2
 
 var .void(float exit_flags) vehicle_exit;
 var .void() vehicle_enter;
@@ -54,8 +52,8 @@ var .void() vehicle_spawn;
 
 #include "vehicles.qc"
 
-#include "spiderbot.qc"
 #include "racer.qc"
+#include "spiderbot.qc"
 #include "raptor.qc"
 
 #endif
