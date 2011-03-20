@@ -644,33 +644,36 @@ void CSQC_UpdateView(float w, float h)
 	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_SNIPERRIFLE && button_attack2)
 		reticle_type = 2; // nex zoom
 
-	if(autocvar_cl_reticle_stretch)
+	if (reticle_type)
 	{
-		reticle_size_x = vid_conwidth;
-		reticle_size_y = vid_conheight;
-		reticle_pos_x = 0;
-		reticle_pos_y = 0;
-	}
-	else
-	{
-		reticle_size_x = max(vid_conwidth, vid_conheight);
-		reticle_size_y = max(vid_conwidth, vid_conheight);
-		reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
-		reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
-	}
+		if(autocvar_cl_reticle_stretch)
+		{
+			reticle_size_x = vid_conwidth;
+			reticle_size_y = vid_conheight;
+			reticle_pos_x = 0;
+			reticle_pos_y = 0;
+		}
+		else
+		{
+			reticle_size_x = max(vid_conwidth, vid_conheight);
+			reticle_size_y = max(vid_conwidth, vid_conheight);
+			reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
+			reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
+		}
 
-	f = current_zoomfraction;
-	if(zoomscript_caught)
-		f = 1;
-	if(autocvar_cl_reticle_item_normal)
-	{
-		if(reticle_type == 1 && f)
-			drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_normal, DRAWFLAG_NORMAL);
-	}
-	if(autocvar_cl_reticle_item_nex)
-	{
-		if(reticle_type == 2 && f)
-			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_nex, DRAWFLAG_NORMAL);
+		f = current_zoomfraction;
+		if(zoomscript_caught)
+			f = 1;
+		if(autocvar_cl_reticle_item_normal)
+		{
+			if(reticle_type == 1 && f)
+				drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_normal, DRAWFLAG_NORMAL);
+		}
+		if(autocvar_cl_reticle_item_nex)
+		{
+			if(reticle_type == 2 && f)
+				drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_nex, DRAWFLAG_NORMAL);
+		}
 	}
 
 
