@@ -477,13 +477,6 @@ float spiderbot_frame()
     traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, spider);
     SpawnOrUpdateAuxiliaryXhair(player, trace_endpos);
 
-    //player.angles_x = 0.01 * spider.angles_x + 0.99 * player.v_angle_x;
-    //player.angles_y = 0.01 * spider.angles_y + 0.99 * player.v_angle_y;
-    player.v_angle_y = spider.angles_y;
-    //player.angles_x = player.v_angle_x;
-    //player.angles_y = player.v_angle_y;
-    //player.fixangle = TRUE;
-
     self = player;
     return 1;
 }

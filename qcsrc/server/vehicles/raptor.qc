@@ -25,7 +25,8 @@ float autocvar_g_vehicle_raptor_bombs_refire;
 
 float autocvar_g_vehicle_raptor_guns_turnspeed;
 float autocvar_g_vehicle_raptor_guns_turnlimit;
-float autocvar_g_vehicle_raptor_guns_pitchlimit;
+float autocvar_g_vehicle_raptor_guns_pitchlimit_up;
+float autocvar_g_vehicle_raptor_guns_pitchlimit_down;
 
 float autocvar_g_vehicle_raptor_cannon_cost;
 float autocvar_g_vehicle_raptor_cannon_damage;
@@ -260,6 +261,7 @@ void raptor_exit(float eject)
     if not (self.owner)
         return;
 
+    Release_AuxiliaryXhair(self.owner);
 	makevectors(self.angles);
 	if(eject)
 	{
@@ -375,25 +377,38 @@ float raptor_frame()
     ftmp2 = autocvar_g_vehicle_raptor_guns_turnspeed * frametime;
     ftmp = -ftmp2;
 
+    vector vf, ad;
     // Gun1
-    df = vectoangles(normalize(trace_endpos - gettaginfo(raptor.gun1, gettagindex(raptor.gun1, "fire1")))); // Find the direction & angle
+    df = gettaginfo(raptor.gun1, gettagindex(raptor.gun1, "fire1"));
+    ad += df;
+    vf += v_forward;
+    df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle
     df = shortangle_vxy(df - (raptor.angles + raptor.gun1.angles), raptor.angles + raptor.gun1.angles);     // Find aim offset
     // Bind to aimspeed
     df_x = bound(ftmp, df_x, ftmp2);
     df_y = bound(ftmp, df_y, ftmp2);
     // Bind to limts
-    raptor.gun1.angles_x = bound(-(autocvar_g_vehicle_raptor_guns_pitchlimit + 8), df_x + raptor.gun1.angles_x, autocvar_g_vehicle_raptor_guns_pitchlimit);
+    raptor.gun1.angles_x = bound(-autocvar_g_vehicle_raptor_guns_pitchlimit_down, df_x + raptor.gun1.angles_x, autocvar_g_vehicle_raptor_guns_pitchlimit_up);
     raptor.gun1.angles_y = bound(-autocvar_g_vehicle_raptor_guns_turnlimit,  df_y + raptor.gun1.angles_y, autocvar_g_vehicle_raptor_guns_turnlimit);
 
     //Gun 2
-    df = vectoangles(normalize(trace_endpos - gettaginfo(raptor.gun2, gettagindex(raptor.gun2, "fire1")))); // Find the direction & angle
+    df = gettaginfo(raptor.gun2, gettagindex(raptor.gun2, "fire1"));
+    ad += df;
+    vf += v_forward;
+    df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle
     df = shortangle_vxy(df - (raptor.angles + raptor.gun2.angles), raptor.angles + raptor.gun2.angles);     // Find aim offset
     // Bind to aimspeed
     df_x = bound(ftmp, df_x, ftmp2);
     df_y = bound(ftmp, df_y, ftmp2);
     // Bind to limts
-    raptor.gun2.angles_x = bound(-(autocvar_g_vehicle_raptor_guns_pitchlimit + 8), df_x + raptor.gun2.angles_x, autocvar_g_vehicle_raptor_guns_pitchlimit);
+    raptor.gun2.angles_x = bound(-autocvar_g_vehicle_raptor_guns_pitchlimit_down, df_x + raptor.gun2.angles_x, autocvar_g_vehicle_raptor_guns_pitchlimit_up);
     raptor.gun2.angles_y = bound(-autocvar_g_vehicle_raptor_guns_turnlimit,  df_y + raptor.gun2.angles_y, autocvar_g_vehicle_raptor_guns_turnlimit);
+
+
+    ad = ad * 0.5;
+    v_forward = vf * 0.5;
+    traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, raptor);
+    SpawnOrUpdateAuxiliaryXhair(player, trace_endpos);
 
 
     if(player.BUTTON_ATCK)

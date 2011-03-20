@@ -40,24 +40,32 @@ void AuxiliaryXhair_Draw2D()
     psize_z = 0;
     drawpic(loc, SPIDER_CROSS2, psize, '0 1 1', 1, DRAWFLAG_ADDITIVE);
 
+    if(time - self.cnt > 0.1)
+        remove(self);
 }
 
 void Ent_AuxiliaryXhair(float isNew)
 {
-	entity ax;
+	//entity AuxiliaryXhair;
 
     if(isNew)
     {
+        if(AuxiliaryXhair)
+            remove(AuxiliaryXhair);
+
         AuxiliaryXhair = spawn();
 		AuxiliaryXhair.draw2d = AuxiliaryXhair_Draw2D;
         setmodel(AuxiliaryXhair, "null");
 		setsize(AuxiliaryXhair, '0 0 -1', '0 0 -1');
+
     }
 
 	AuxiliaryXhair.origin_x = ReadCoord();
 	AuxiliaryXhair.origin_y = ReadCoord();
 	AuxiliaryXhair.origin_z = ReadCoord();
     AuxiliaryXhair.drawmask = MASK_NORMAL;
+
+    AuxiliaryXhair.cnt = time;
     //AuxiliaryXhair.solid = SOLID_NOT;
 }
 
@@ -248,7 +256,7 @@ void CSQC_RAPTOR_HUD()
         tracetoss(dropmark, self);
 
         // Blend old with new predicted impact to smooth out jumpyness
-        where = project_3d_to_2d(trace_endpos * 0.2 + where * 0.8);
+        where = project_3d_to_2d(trace_endpos * 0.5 + where * 0.5);
 
         setorigin(dropmark, trace_endpos);
         picsize = drawgetimagesize(raptor_d) * 0.2;

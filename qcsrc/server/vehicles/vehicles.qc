@@ -39,12 +39,11 @@ void SpawnOrUpdateAuxiliaryXhair(entity own, vector loc)
 
 void Release_AuxiliaryXhair(entity from)
 {
-
-    from.AuxiliaryXhair.drawonlytoclient = from.AuxiliaryXhair;
-    from.AuxiliaryXhair = world;
-
-    //if not (from.AuxiliaryXhair == world || wasfreed(from.AuxiliaryXhair))
+    // from.AuxiliaryXhair.drawonlytoclient = from.AuxiliaryXhair;
+    if not (from.AuxiliaryXhair == world || wasfreed(from.AuxiliaryXhair))
         remove(from.AuxiliaryXhair);
+
+    from.AuxiliaryXhair = world;
 }
 
 #define VEHICLE_UPDATE_PLAYER(fld,vhname) \
