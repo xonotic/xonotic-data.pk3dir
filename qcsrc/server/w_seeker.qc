@@ -4,6 +4,8 @@ REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_RELO
 #ifdef SVQC
 //.float proxytime; = autoswitch
 //.float tl; = wait
+.entity tag_target, wps_tag_tracker;
+.float tag_time;
 
 void Seeker_Missile_Explode ()
 {
@@ -154,7 +156,7 @@ void Seeker_Missile_Animate()
 }
 */
 
-void Seeker_Fire_Missile(vector f_diff)
+void Seeker_Fire_Missile(vector f_diff, entity m_target)
 {
 	local entity missile;
 
@@ -178,14 +180,18 @@ void Seeker_Fire_Missile(vector f_diff)
 	missile.event_damage    = Seeker_Missile_Damage;
 	missile.nextthink       = time;// + 0.2;// + cvar("g_balance_seeker_missile_activate_delay");
 	missile.cnt             = time + autocvar_g_balance_seeker_missile_lifetime;
-	missile.enemy           = self.enemy;
+	missile.enemy           = m_target;
 	missile.solid           = SOLID_BBOX;
 	missile.scale           = 2;
 	missile.takedamage      = DAMAGE_YES;
 	missile.health          = autocvar_g_balance_seeker_missile_health;
 	missile.damageforcescale = autocvar_g_balance_seeker_missile_damageforcescale;
-	missile.projectiledeathtype = WEP_SEEKER;
 	//missile.think           = Seeker_Missile_Animate; // csqc projectiles.
+	
+	if (missile.enemy != world)
+		missile.projectiledeathtype = WEP_SEEKER | HITTYPE_SECONDARY;
+	else 
+		missile.projectiledeathtype = WEP_SEEKER;
 
 
 	setorigin (missile, w_shotorg);
@@ -201,46 +207,75 @@ void Seeker_Fire_Missile(vector f_diff)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-void Seeker_Vollycontroler_Think()
+entity Seeker_Tagged_Info(entity isowner, entity istarget)
 {
-	float c;
-	entity oldself,oldenemy;
-	self.cnt = self.cnt - 1;
+	entity tag;
+	for(tag = world; (tag = find(tag, classname, "tag_tracker")); ) 
+		if ((tag.owner == isowner) && (tag.tag_target == istarget))
+			return tag;
+		
+	return world;
+}
 
-	if((!(self.owner.items & IT_UNLIMITED_AMMO) && self.owner.ammo_rockets < autocvar_g_balance_seeker_missile_ammo) || (self.cnt <= -1) || (self.owner.deadflag != DEAD_NO) || (self.owner.switchweapon != WEP_SEEKER))
+void Seeker_Attack()
+{
+	entity tracker, closest_target;
+	
+	for(tracker = world; (tracker = find(tracker, classname, "tag_tracker")); ) if (tracker.owner == self)
 	{
-		remove(self);
-		return;
+		if (closest_target)
+		{
+			if (vlen(self.origin - tracker.tag_target.origin) < vlen(self.origin - closest_target.origin))
+				closest_target = tracker.tag_target;
+		}
+		else 
+			closest_target = tracker.tag_target;
 	}
-
-	self.nextthink = time + autocvar_g_balance_seeker_missile_delay;
-
-	oldself = self;
-	self = self.owner;
-
-	oldenemy = self.enemy;
-	self.enemy = oldself.enemy;
-
-	c = mod(oldself.cnt, 4);
-	switch(c)
+		
+	traceline(self.origin + self.view_ofs, closest_target.origin, MOVE_NOMONSTERS, self);
+	if ((!closest_target) || ((trace_fraction < 1) && (trace_ent != closest_target)))
+		closest_target = world;
+	 
+	// we don't need to do this because the model is going to be changed anyway. 
+	// CLEAN THIS UP IN THE FUTURE !!!!!!!!!!!
+	/*
+	switch(mod(self.bulletcounter, 4))
 	{
 		case 0:
-			Seeker_Fire_Missile('-1.25 -3.75 0');
+			Seeker_Fire_Missile('-1.25 -3.75 0', closest_target);
 			break;
 		case 1:
-			Seeker_Fire_Missile('+1.25 -3.75 0');
+			Seeker_Fire_Missile('+1.25 -3.75 0', closest_target);
 			break;
 		case 2:
-			Seeker_Fire_Missile('-1.25 +3.75 0');
+			Seeker_Fire_Missile('-1.25 +3.75 0', closest_target);
 			break;
 		case 3:
 		default:
-			Seeker_Fire_Missile('+1.25 +3.75 0');
+			Seeker_Fire_Missile('+1.25 +3.75 0', closest_target);
 			break;
 	}
+	*/
+	
+	Seeker_Fire_Missile('0 0 0', closest_target);
+}
 
-	self.enemy = oldenemy;
-	self = oldself;
+void Seeker_Tracker_Think() 
+{
+	// commit suicide if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
+	if ((self.owner.deadflag != DEAD_NO) || (self.tag_target.deadflag != DEAD_NO) || (self.owner.switchweapon != WEP_SEEKER)
+	|| (time > self.tag_time + autocvar_g_balance_seeker_tag_tracker_lifetime))
+	{
+		if (self)
+		{
+			WaypointSprite_Kill(self.tag_target.wps_tag_tracker);
+			remove(self);
+		}
+		return;
+	}
+	
+	// Update the think method information
+	self.nextthink = time;
 }
 
 void Seeker_Tag_Explode ()
@@ -261,7 +296,6 @@ void Seeker_Tag_Damage (entity inflictor, entity attacker, float damage, float d
 		Seeker_Tag_Explode();
 }
 
-
 void Seeker_Tag_Touch()
 {
 	vector dir;
@@ -277,13 +311,31 @@ void Seeker_Tag_Touch()
 	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_HEADSHOT, self);
 
 	if (other.takedamage == DAMAGE_AIM && other.deadflag == DEAD_NO)
-	{		
-		e           = spawn();
-		e.cnt       = autocvar_g_balance_seeker_missile_count;
-		e.owner     = self.owner;
-		e.enemy     = other;
-		e.think     = Seeker_Vollycontroler_Think;
-		e.nextthink = time;
+	{
+		// check to see if this person is already tagged by me
+		entity tag = Seeker_Tagged_Info(self.owner, other);
+		
+		if (tag != world)
+		{
+			if (other.wps_tag_tracker) // don't attach another waypointsprite without killing the old one first
+				WaypointSprite_Kill(other.wps_tag_tracker);
+				
+			tag.tag_time = time;
+		}
+		else
+		{		
+			sprint(self.owner, strcat("You just tagged ^2", other.netname, "^7 with a tracking device!\n"));
+			e             = spawn();
+			e.classname   = "tag_tracker";
+			e.owner       = self.owner;
+			e.think       = Seeker_Tracker_Think;
+			e.nextthink   = time;
+			e.tag_target  = other;
+			e.tag_time    = time;
+		}
+			
+		WaypointSprite_Spawn("tagged-target", autocvar_g_balance_seeker_tag_tracker_lifetime, 0, other, '0 0 64', self.owner, 0, other, wps_tag_tracker, TRUE);
+		WaypointSprite_UpdateRule(other.wps_tag_tracker, 0, SPRITERULE_DEFAULT);
 	}
 
 	remove(self);
@@ -328,81 +380,6 @@ void Seeker_Fire_Tag()
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-
-void Seeker_Flac_Explode ()
-{
-	self.event_damage = SUB_Null;
-
-	RadiusDamage (self, self.owner, autocvar_g_balance_seeker_flac_damage, autocvar_g_balance_seeker_flac_edgedamage, autocvar_g_balance_seeker_flac_radius, world, autocvar_g_balance_seeker_flac_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void Seeker_Flac_Touch()
-{
-	PROJECTILE_TOUCH;
-
-	Seeker_Flac_Explode();
-}
-
-void Seeker_Fire_Flac()
-{
-	local entity missile;
-	vector f_diff;
-	float c;
-
-	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_flac_ammo, autocvar_g_balance_seeker_reload_ammo);
-
-	c = mod(self.bulletcounter, 4);
-	switch(c)
-	{
-		case 0:
-			f_diff = '-1.25 -3.75 0';
-			break;
-		case 1:
-			f_diff = '+1.25 -3.75 0';
-			break;
-		case 2:
-			f_diff = '-1.25 +3.75 0';
-			break;
-		case 3:
-		default:
-			f_diff = '+1.25 +3.75 0';
-			break;
-	}
-	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/flac_fire.wav", CHAN_WEAPON, autocvar_g_balance_seeker_flac_damage);
-	w_shotorg += f_diff;
-
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-
-	missile 				= spawn ();
-	missile.owner 			= missile.realowner = self;
-	missile.classname 		= "missile";
-	missile.bot_dodge 		= TRUE;
-	missile.bot_dodgerating = autocvar_g_balance_seeker_flac_damage;
-	missile.touch 			= Seeker_Flac_Explode;
-	missile.use 			= Seeker_Flac_Explode; 
-	missile.think 			= adaptor_think2use_hittype_splash;
-	missile.nextthink 		= time + autocvar_g_balance_seeker_flac_lifetime + autocvar_g_balance_seeker_flac_lifetime_rand;
-	missile.solid 			= SOLID_BBOX;
-	missile.movetype 		= MOVETYPE_FLY;	
-	missile.projectiledeathtype = WEP_SEEKER;
-	missile.projectiledeathtype = WEP_SEEKER | HITTYPE_SECONDARY;
-	missile.flags 				= FL_PROJECTILE;
-	
-	// csqc projectiles
-	//missile.angles 				= vectoangles (missile.velocity);	
-	//missile.scale = 0.4; // BUG: the model is too big 
-	
-	setorigin (missile, w_shotorg);
-	setsize (missile, '-2 -2 -2', '2 2 2');
-		
-	W_SETUPPROJECTILEVELOCITY_UP(missile, g_balance_seeker_flac);
-	CSQCProjectile(missile, TRUE, PROJECTILE_FLAC, TRUE);
-
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
-}
-
 void spawnfunc_weapon_seeker (void)
 {
 	weapon_defaultspawnfunc(WEP_SEEKER);
@@ -413,28 +390,32 @@ float w_seeker(float req)
 	float ammo_amount;
 
 	if (req == WR_AIM)
-		self.BUTTON_ATCK = bot_aim(autocvar_g_balance_seeker_tag_speed, 0, 20, FALSE);
-
+	{
+		if (Seeker_Tagged_Info(self, self.enemy) != world)
+			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_seeker_missile_speed_max, 0, autocvar_g_balance_seeker_missile_lifetime, FALSE);
+		else
+			self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_seeker_tag_speed, 0, autocvar_g_balance_seeker_tag_lifetime, FALSE);
+	}
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo)) // forced reload
 			weapon_action(self.weapon, WR_RELOAD);
-
+			
 		else if (self.BUTTON_ATCK)
 		{
-			if (weapon_prepareattack(0, autocvar_g_balance_seeker_tag_refire))
+			if (weapon_prepareattack(0, autocvar_g_balance_seeker_missile_refire))
 			{
-				Seeker_Fire_Tag();
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_seeker_tag_animtime, w_ready);
+				Seeker_Attack();
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_missile_animtime, w_ready);
 			}
 		}
 
 		else if (self.BUTTON_ATCK2)
 		{
-			if (weapon_prepareattack(1, autocvar_g_balance_seeker_flac_refire))
+			if (weapon_prepareattack(1, autocvar_g_balance_seeker_tag_refire))
 			{
-				Seeker_Fire_Flac();
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_flac_animtime, w_ready);
+				Seeker_Fire_Tag();
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_seeker_tag_animtime, w_ready);
 			}
 		}
 	}
@@ -444,7 +425,7 @@ float w_seeker(float req)
 		precache_model ("models/weapons/v_seeker.md3");
 		precache_model ("models/weapons/h_seeker.iqm");
 		precache_sound ("weapons/tag_fire.wav");
-		precache_sound ("weapons/flac_fire.wav");
+		//precache_sound ("weapons/flac_fire.wav");
 		precache_sound ("weapons/seeker_fire.wav");
 		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
@@ -455,14 +436,14 @@ float w_seeker(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		ammo_amount = self.ammo_cells >= autocvar_g_balance_seeker_missile_ammo;
+		ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_missile_ammo;
 		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_missile_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		ammo_amount = self.ammo_cells >= autocvar_g_balance_seeker_flac_ammo;
-		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_flac_ammo;
+		ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_tag_ammo;
+		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_tag_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
@@ -479,59 +460,40 @@ float w_seeker(float req)
 	{
 		vector org2;
 		org2 = w_org + w_backoff * 6;
-		if(w_deathtype & HITTYPE_SECONDARY)
+		if(w_deathtype & HITTYPE_BOUNCE)
 		{
-			pointparticles(particleeffectnum("flac_explode"), org2, '0 0 0', 1);
+			pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
 			{
 				if (w_random<0.15)
-					sound(self, CHAN_PROJECTILE, "weapons/flacexp1.wav", 1, ATTN_NORM);
+					sound(self, CHAN_PROJECTILE, "weapons/tagexp1.wav", 1, ATTN_NORM);
 				else if (w_random<0.7)
-					sound(self, CHAN_PROJECTILE, "weapons/flacexp2.wav", 1, ATTN_NORM);
+					sound(self, CHAN_PROJECTILE, "weapons/tagexp2.wav", 1, ATTN_NORM);
 				else
-					sound(self, CHAN_PROJECTILE, "weapons/flacexp3.wav", 1, ATTN_NORM);
+					sound(self, CHAN_PROJECTILE, "weapons/tagexp3.wav", 1, ATTN_NORM);
 			}
+		}
+		else if(w_deathtype & HITTYPE_HEADSHOT)
+		{
+			if(!w_issilent)
+				sound(self, CHAN_PROJECTILE, "weapons/tag_impact.wav", 1, ATTN_NORM);
 		}
 		else
 		{
-			if(w_deathtype & HITTYPE_BOUNCE)
+			pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
+			if(!w_issilent)
 			{
-				pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
-				if(!w_issilent)
-				{
-					if (w_random<0.15)
-						sound(self, CHAN_PROJECTILE, "weapons/tagexp1.wav", 1, ATTN_NORM);
-					else if (w_random<0.7)
-						sound(self, CHAN_PROJECTILE, "weapons/tagexp2.wav", 1, ATTN_NORM);
-					else
-						sound(self, CHAN_PROJECTILE, "weapons/tagexp3.wav", 1, ATTN_NORM);
-				}
-			}
-			else if(w_deathtype & HITTYPE_HEADSHOT)
-			{
-				if(!w_issilent)
-					sound(self, CHAN_PROJECTILE, "weapons/tag_impact.wav", 1, ATTN_NORM);
-			}
-			else
-			{
-				pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
-				if(!w_issilent)
-				{
-					if (w_random<0.15)
-						sound(self, CHAN_PROJECTILE, "weapons/seekerexp1.wav", 1, ATTN_NORM);
-					else if (w_random<0.7)
-						sound(self, CHAN_PROJECTILE, "weapons/seekerexp2.wav", 1, ATTN_NORM);
-					else
-						sound(self, CHAN_PROJECTILE, "weapons/seekerexp3.wav", 1, ATTN_NORM);
-				}
+				if (w_random<0.15)
+					sound(self, CHAN_PROJECTILE, "weapons/seekerexp1.wav", 1, ATTN_NORM);
+				else if (w_random<0.7)
+					sound(self, CHAN_PROJECTILE, "weapons/seekerexp2.wav", 1, ATTN_NORM);
+				else
+					sound(self, CHAN_PROJECTILE, "weapons/seekerexp3.wav", 1, ATTN_NORM);
 			}
 		}
 	}
 	else if(req == WR_PRECACHE)
 	{
-		precache_sound("weapons/flacexp1.wav");
-		precache_sound("weapons/flacexp2.wav");
-		precache_sound("weapons/flacexp3.wav");
 		precache_sound("weapons/seekerexp1.wav");
 		precache_sound("weapons/seekerexp2.wav");
 		precache_sound("weapons/seekerexp3.wav");
@@ -545,9 +507,9 @@ float w_seeker(float req)
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s ran into %s's flac");
-		else
 			w_deathtypestring = _("%s was tagged by %s");
+		else
+			w_deathtypestring = _("%s was pummeled by %s");
 	}
 	return TRUE;
 }
