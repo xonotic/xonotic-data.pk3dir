@@ -235,8 +235,9 @@ void Seeker_Attack()
 	traceline(self.origin + self.view_ofs, closest_target.origin, MOVE_NOMONSTERS, self);
 	if ((!closest_target) || ((trace_fraction < 1) && (trace_ent != closest_target)))
 		closest_target = world;
-	
-	Seeker_Fire_Missile('0 0 0', closest_target);
+	 
+	// we don't need to do this because the model is going to be changed anyway. 
+	// CLEAN THIS UP IN THE FUTURE !!!!!!!!!!!
 	/*
 	switch(mod(self.bulletcounter, 4))
 	{
@@ -255,7 +256,8 @@ void Seeker_Attack()
 			break;
 	}
 	*/
-
+	
+	Seeker_Fire_Missile('0 0 0', closest_target);
 }
 
 void Seeker_Tracker_Think() 
@@ -332,7 +334,7 @@ void Seeker_Tag_Touch()
 			e.tag_time    = time;
 		}
 			
-		WaypointSprite_Spawn("nb-ball", autocvar_g_balance_seeker_tag_tracker_lifetime, 0, other, '0 0 64', self.owner, 0, other, wps_tag_tracker, TRUE);
+		WaypointSprite_Spawn("tagged-target", autocvar_g_balance_seeker_tag_tracker_lifetime, 0, other, '0 0 64', self.owner, 0, other, wps_tag_tracker, TRUE);
 		WaypointSprite_UpdateRule(other.wps_tag_tracker, 0, SPRITERULE_DEFAULT);
 	}
 
@@ -390,9 +392,9 @@ float w_seeker(float req)
 	if (req == WR_AIM)
 	{
 		if (Seeker_Tagged_Info(self, self.enemy) != world)
-			self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_seeker_missile_speed_max, 0, autocvar_g_balance_seeker_missile_lifetime, FALSE);
+			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_seeker_missile_speed_max, 0, autocvar_g_balance_seeker_missile_lifetime, FALSE);
 		else
-			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_seeker_tag_speed, 0, autocvar_g_balance_seeker_tag_lifetime, FALSE);
+			self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_seeker_tag_speed, 0, autocvar_g_balance_seeker_tag_lifetime, FALSE);
 	}
 	else if (req == WR_THINK)
 	{
@@ -401,19 +403,19 @@ float w_seeker(float req)
 			
 		else if (self.BUTTON_ATCK)
 		{
-			if (weapon_prepareattack(0, autocvar_g_balance_seeker_tag_refire))
+			if (weapon_prepareattack(0, autocvar_g_balance_seeker_missile_refire))
 			{
-				Seeker_Fire_Tag();
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_seeker_tag_animtime, w_ready);
+				Seeker_Attack();
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_missile_animtime, w_ready);
 			}
 		}
 
 		else if (self.BUTTON_ATCK2)
 		{
-			if (weapon_prepareattack(1, autocvar_g_balance_seeker_missile_refire))
+			if (weapon_prepareattack(1, autocvar_g_balance_seeker_tag_refire))
 			{
-				Seeker_Attack();
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_missile_animtime, w_ready);
+				Seeker_Fire_Tag();
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_seeker_tag_animtime, w_ready);
 			}
 		}
 	}
@@ -434,14 +436,14 @@ float w_seeker(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_tag_ammo;
-		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_tag_ammo;
+		ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_missile_ammo;
+		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_missile_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_missile_ammo;
-		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_missile_ammo;
+		ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_tag_ammo;
+		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_tag_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
