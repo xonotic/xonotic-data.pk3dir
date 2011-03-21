@@ -642,7 +642,7 @@ float w_crylink(float req)
 		org2 = w_org + w_backoff * 2;
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
-			pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1);
+			pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1); // because it looks too pathetic the other way. Maybe later expand this to do a special effect for secondary only.
 			if(!w_issilent)
 				sound(self, CHAN_PROJECTILE, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
 		}
