@@ -36,9 +36,12 @@ void AuxiliaryXhair_Draw2D()
 
     psize = 0.5 * drawgetimagesize(SPIDER_CROSS2);
     loc = project_3d_to_2d(self.origin) - 0.5 * psize;
-    loc_z = 0;
-    psize_z = 0;
-    drawpic(loc, SPIDER_CROSS2, psize, '0 1 1', 1, DRAWFLAG_ADDITIVE);
+    if not (loc_z < 0 || loc_x < 0 || loc_y < 0 || loc_x > vid_conwidth || loc_y > vid_conheight)
+    {
+        loc_z = 0;
+        psize_z = 0;
+        drawpic(loc, SPIDER_CROSS2, psize, self.colormod, 1, DRAWFLAG_ADDITIVE);
+    }
 
     if(time - self.cnt > 0.1)
         remove(self);
@@ -63,6 +66,11 @@ void Ent_AuxiliaryXhair(float isNew)
 	AuxiliaryXhair.origin_x = ReadCoord();
 	AuxiliaryXhair.origin_y = ReadCoord();
 	AuxiliaryXhair.origin_z = ReadCoord();
+
+	AuxiliaryXhair.colormod_x = ReadByte() / 255;
+	AuxiliaryXhair.colormod_y = ReadByte() / 255;
+	AuxiliaryXhair.colormod_z = ReadByte() / 255;
+
     AuxiliaryXhair.drawmask = MASK_NORMAL;
 
     AuxiliaryXhair.cnt = time;
@@ -187,6 +195,7 @@ void CSQC_RAPTOR_HUD()
 	vector picsize, hudloc, vel;
 	float movedt;
     vector where;
+
 
     if(!dropmark)
     {

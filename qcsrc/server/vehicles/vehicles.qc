@@ -16,23 +16,26 @@ float AuxiliaryXhair_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.origin_x);
 	WriteCoord(MSG_ENTITY, self.origin_y);
 	WriteCoord(MSG_ENTITY, self.origin_z);
+
+    WriteByte(MSG_ENTITY, rint(self.colormod_x * 255));
+    WriteByte(MSG_ENTITY, rint(self.colormod_y * 255));
+    WriteByte(MSG_ENTITY, rint(self.colormod_z * 255));
+
 	return TRUE;
 }
 
-void SpawnOrUpdateAuxiliaryXhair(entity own, vector loc)
+void SpawnOrUpdateAuxiliaryXhair(entity own, vector loc, vector clr)
 {
 
     if(own.AuxiliaryXhair == world || wasfreed(own.AuxiliaryXhair))
     {
         own.AuxiliaryXhair = spawn();
         own.AuxiliaryXhair.owner = own;
-        //own.AuxiliaryXhair.customizeentityforclient = AuxiliaryXhair_customizeentityforclient;
         own.AuxiliaryXhair.drawonlytoclient = own;
-        setorigin(own.AuxiliaryXhair, loc);
         Net_LinkEntity(own.AuxiliaryXhair, FALSE, 0, AuxiliaryXhair_SendEntity);
-        return;
     }
 
+    own.AuxiliaryXhair.colormod = clr;
     setorigin(own.AuxiliaryXhair, loc);
 	own.AuxiliaryXhair.SendFlags |= 0x01;
 }
@@ -40,7 +43,7 @@ void SpawnOrUpdateAuxiliaryXhair(entity own, vector loc)
 void Release_AuxiliaryXhair(entity from)
 {
     // from.AuxiliaryXhair.drawonlytoclient = from.AuxiliaryXhair;
-    if not (from.AuxiliaryXhair == world || wasfreed(from.AuxiliaryXhair))
+    if (from.AuxiliaryXhair != world && !wasfreed(from.AuxiliaryXhair))
         remove(from.AuxiliaryXhair);
 
     from.AuxiliaryXhair = world;

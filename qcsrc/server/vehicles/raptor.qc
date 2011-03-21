@@ -28,6 +28,8 @@ float autocvar_g_vehicle_raptor_guns_turnlimit;
 float autocvar_g_vehicle_raptor_guns_pitchlimit_up;
 float autocvar_g_vehicle_raptor_guns_pitchlimit_down;
 
+float autocvar_g_vehicle_raptor_cannon_locktarget;
+float autocvar_g_vehicle_raptor_cannon_predicttarget;
 float autocvar_g_vehicle_raptor_cannon_cost;
 float autocvar_g_vehicle_raptor_cannon_damage;
 float autocvar_g_vehicle_raptor_cannon_radius;
@@ -374,10 +376,82 @@ float raptor_frame()
 
     // Aim the gunz
     crosshair_trace(player);
+    vector vf, ad;
+    if(autocvar_g_vehicle_raptor_cannon_locktarget)
+    {
+        if(trace_ent)
+        {
+            if(raptor.gun2.enemy != world)
+            {
+                if(raptor.gun2.enemy == trace_ent)
+                    raptor.gun2.cnt += 1;
+                else
+                    raptor.gun2.cnt -= 1;
+            }
+
+            raptor.gun2.enemy = trace_ent;
+
+            if(raptor.gun2.cnt < 0)
+            {
+                raptor.gun2.enemy = world;
+                raptor.gun2.cnt = 0;
+            }
+
+            if(raptor.gun2.cnt > 50)
+            {
+                raptor.gun2.enemy = world;
+                raptor.gun2.cnt = 0;
+
+                raptor.gun1.enemy = trace_ent;
+                raptor.gun1.cnt = time + 1;
+            }
+
+            // Allready have a lock?
+            if(raptor.gun1.enemy != world)
+            {
+                // Add 0.5 secs of tracking for each trace hit
+                if(trace_ent == raptor.gun1.enemy)
+                    raptor.gun1.cnt = min(raptor.gun1.cnt + 0.25, time + 5);
+
+                if(raptor.gun1.cnt < time)
+                    raptor.gun1.enemy = world;
+            }
+        }
+        else
+            raptor.gun2.cnt = max(raptor.gun2.cnt - 1, 0);
+
+        if(raptor.gun1.cnt - time < 0)
+            raptor.gun1.enemy = world;
+
+        if(autocvar_g_vehicle_raptor_cannon_predicttarget)
+        {
+            vector o;
+            if(raptor.gun1.enemy != world)
+            {
+                float i, distance, impact_time;
+
+                vf = real_origin(raptor.gun1.enemy);
+                ad = vf;
+                o = raptor.origin;
+                for(i = 0; i < 4; ++i)
+                {
+
+                    distance = vlen(ad - o);
+                    impact_time = distance / autocvar_g_vehicle_raptor_cannon_speed;
+                    ad = vf + raptor.gun1.enemy.velocity * impact_time;
+                    o = raptor.origin + raptor.velocity * impact_time;
+                }
+                trace_endpos = ad;
+
+            }
+        }
+        else
+            trace_endpos = real_origin(raptor.gun1.enemy);
+    }
+
     ftmp2 = autocvar_g_vehicle_raptor_guns_turnspeed * frametime;
     ftmp = -ftmp2;
 
-    vector vf, ad;
     // Gun1
     df = gettaginfo(raptor.gun1, gettagindex(raptor.gun1, "fire1"));
     ad += df;
@@ -405,11 +479,31 @@ float raptor_frame()
     raptor.gun2.angles_y = bound(-autocvar_g_vehicle_raptor_guns_turnlimit,  df_y + raptor.gun2.angles_y, autocvar_g_vehicle_raptor_guns_turnlimit);
 
 
-    ad = ad * 0.5;
-    v_forward = vf * 0.5;
-    traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, raptor);
-    SpawnOrUpdateAuxiliaryXhair(player, trace_endpos);
+    if(autocvar_g_vehicle_raptor_cannon_locktarget)
+    {
 
+        if(raptor.gun1.enemy)
+        {
+            SpawnOrUpdateAuxiliaryXhair(player, trace_endpos, '1 0 0');
+        }
+        else
+        {
+            ad = ad * 0.5;
+            v_forward = vf * 0.5;
+            traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, raptor);
+
+            if(raptor.gun2.enemy != world)
+            {
+                ftmp = raptor.gun2.cnt / 50;
+                SpawnOrUpdateAuxiliaryXhair(player, trace_endpos, '1 0 0' * ftmp + '1 1 1' * (1 - ftmp));
+            }
+            else
+                SpawnOrUpdateAuxiliaryXhair(player, trace_endpos, '1 1 1');
+
+        }
+    }
+    else
+        SpawnOrUpdateAuxiliaryXhair(player, trace_endpos, '1 1 1');
 
     if(player.BUTTON_ATCK)
     if(raptor.attack_finished_single <= time)

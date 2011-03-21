@@ -475,7 +475,7 @@ float spiderbot_frame()
     v_forward = vf * 0.5;
 
     traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, spider);
-    SpawnOrUpdateAuxiliaryXhair(player, trace_endpos);
+    SpawnOrUpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload1) + ('0 1 0' * (1 - player.vehicle_reload1)));
 
     self = player;
     return 1;
