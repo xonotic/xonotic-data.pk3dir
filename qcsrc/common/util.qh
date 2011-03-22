@@ -34,6 +34,8 @@ float median(float a, float b, float c);
 // works for up to 10 decimals!
 string ftos_decimals(float number, float decimals);
 
+float fexists(string f);
+
 vector colormapPaletteColor(float c, float isPants);
 
 // unzone the string, and return it as tempstring. Safe to be called on string_null

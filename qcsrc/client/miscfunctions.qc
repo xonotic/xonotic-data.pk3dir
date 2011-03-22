@@ -325,34 +325,11 @@ float PreviewExists(string name)
 	if(autocvar_cl_readpicture_force)
 		return false;
 
-	file = strcat(name, ".tga");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return true;
-	}
-	file = strcat(name, ".png");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return true;
-	}
-	file = strcat(name, ".jpg");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return true;
-	}
-	file = strcat(name, ".pcx");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return true;
-	}
+	if (fexists(strcat(name, ".tga"))) return true;
+	if (fexists(strcat(name, ".png"))) return true;
+	if (fexists(strcat(name, ".jpg"))) return true;
+	if (fexists(strcat(name, ".pcx"))) return true;
+
 	return false;
 }
 

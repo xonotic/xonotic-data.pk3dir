@@ -236,6 +236,16 @@ string fstrunzone(string s)
 	return sc;
 }
 
+float fexists(string f)
+{
+    float fh;
+    fh = fopen(f, FILE_READ);
+    if (fh < 0)
+        return FALSE;
+    fclose(fh);
+    return TRUE;
+}
+
 // Databases (hash tables)
 #define DB_BUCKETS 8192
 void db_save(float db, string pFilename)
