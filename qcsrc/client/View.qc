@@ -381,7 +381,7 @@ void CSQC_UpdateView(float w, float h)
 	vid_height = vf_size_y;
 
 	vector reticle_pos, reticle_size;
-	vector huddamage_pos, huddamage_size;
+	vector splash_pos, splash_size;
 
 	WaypointSprite_Load();
 
@@ -730,10 +730,10 @@ void CSQC_UpdateView(float w, float h)
 	
 	if(autocvar_hud_damage)
 	{
-		huddamage_size_x = max(vid_conwidth, vid_conheight);
-		huddamage_size_y = max(vid_conwidth, vid_conheight);
-		huddamage_pos_x = (vid_conwidth - huddamage_size_x) / 2;
-		huddamage_pos_y = (vid_conheight - huddamage_size_y) / 2;
+		splash_size_x = max(vid_conwidth, vid_conheight);
+		splash_size_y = max(vid_conwidth, vid_conheight);
+		splash_pos_x = (vid_conwidth - splash_size_x) / 2;
+		splash_pos_y = (vid_conheight - splash_size_y) / 2;
 
 		float myhealth_flash_temp;
 		myhealth = getstati(STAT_HEALTH);
@@ -791,7 +791,7 @@ void CSQC_UpdateView(float w, float h)
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 		}
 		else
-			drawpic(huddamage_pos, "gfx/blood", huddamage_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 	}
 
 	// Draw the mouse cursor
