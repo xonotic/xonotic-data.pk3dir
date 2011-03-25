@@ -4,6 +4,10 @@
 #define SPIDER_CROSS "gfx/vehicles/sbot-xhair.tga"
 #define SPIDER_CROSS2 "gfx/vehicles/sbot-xhair2.tga"
 
+#define axh1 "gfx/vehicles/sbot-xhair2.tga"
+#define axh2 "gfx/vehicles/sbot-xhair2.tga"
+#define axh3 "gfx/vehicles/sbot-xhair2.tga"
+
 #define spider_h "gfx/vehicles/hud_bg.tga"
 #define spider_b "gfx/vehicles/sbot.tga"
 #define spider_r "gfx/vehicles/sbot_rpods.tga"
@@ -29,52 +33,138 @@ void CSQC_WAKIZASHI_HUD();
 void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
 
-entity AuxiliaryXhair;
+#define MAX_AXH 4
+entity AuxiliaryXhair[MAX_AXH];
+const var void Draw_Not();
+
+.string axh_image;
+.float  axh_fadetime;
+.float  axh_drawflag;
+.float  axh_scale;
+
 void AuxiliaryXhair_Draw2D()
 {
     vector loc, psize;
 
-    psize = 0.5 * drawgetimagesize(SPIDER_CROSS2);
+    psize = self.axh_scale * drawgetimagesize(self.axh_image);
     loc = project_3d_to_2d(self.origin) - 0.5 * psize;
     if not (loc_z < 0 || loc_x < 0 || loc_y < 0 || loc_x > vid_conwidth || loc_y > vid_conheight)
     {
         loc_z = 0;
         psize_z = 0;
-        drawpic(loc, SPIDER_CROSS2, psize, self.colormod, 1, DRAWFLAG_ADDITIVE);
+        drawpic(loc, self.axh_image, psize, self.colormod, self.alpha, self.axh_drawflag);
     }
 
-    if(time - self.cnt > 0.1)
-        remove(self);
+    if(time - self.cnt > self.axh_fadetime)
+        self.draw2d = Draw_Not;
 }
 
-void Ent_AuxiliaryXhair(float isNew)
+
+void Net_AuXair()
 {
-	//entity AuxiliaryXhair;
+    float axh_id;
+    entity axh;
 
-    if(isNew)
+    axh_id = bound(0, ReadByte(), MAX_AXH);
+    axh = AuxiliaryXhair[axh_id];
+
+    if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
     {
-        if(AuxiliaryXhair)
-            remove(AuxiliaryXhair);
-
-        AuxiliaryXhair = spawn();
-		AuxiliaryXhair.draw2d = AuxiliaryXhair_Draw2D;
-        setmodel(AuxiliaryXhair, "null");
-		setsize(AuxiliaryXhair, '0 0 -1', '0 0 -1');
-
+        axh               = spawn();
+		axh.draw2d        = Draw_Not;
+		axh.drawmask      = MASK_NORMAL;
+		axh.axh_drawflag  = DRAWFLAG_ADDITIVE;
+		axh.axh_fadetime  = 0.1;
+		axh.axh_image     = "gfx/vehicles/axh-ring.tga";
+		axh.axh_scale     = 1;
+        axh.alpha         = 1;
+		AuxiliaryXhair[axh_id] = axh;
     }
 
-	AuxiliaryXhair.origin_x = ReadCoord();
-	AuxiliaryXhair.origin_y = ReadCoord();
-	AuxiliaryXhair.origin_z = ReadCoord();
+    axh.draw2d   = AuxiliaryXhair_Draw2D;
 
-	AuxiliaryXhair.colormod_x = ReadByte() / 255;
-	AuxiliaryXhair.colormod_y = ReadByte() / 255;
-	AuxiliaryXhair.colormod_z = ReadByte() / 255;
+	axh.origin_x = ReadCoord();
+	axh.origin_y = ReadCoord();
+	axh.origin_z = ReadCoord();
 
-    AuxiliaryXhair.drawmask = MASK_NORMAL;
+	axh.colormod_x = ReadByte() / 255;
+	axh.colormod_y = ReadByte() / 255;
+	axh.colormod_z = ReadByte() / 255;
+    axh.cnt = time;
+}
+void Net_AuXair2(float blah)
+{
+    Net_AuXair();
+}
+void Net_VehicleSetup()
+{
 
-    AuxiliaryXhair.cnt = time;
-    //AuxiliaryXhair.solid = SOLID_NOT;
+    float hud_id, i;
+    hud_id = bound(HUD_SPIDERBOT, ReadByte(), HUD_RAPTOR);
+
+    // Init auxiliary crosshairs
+//#if 1
+    entity axh;
+    for(i = 0; i < MAX_AXH; ++i)
+    {
+        axh = AuxiliaryXhair[i];
+        if(axh != world && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
+            remove(axh);
+
+        axh               = spawn();
+		axh.draw2d        = Draw_Not;
+		axh.drawmask      = MASK_NORMAL;
+		axh.axh_drawflag  = DRAWFLAG_ADDITIVE;
+		axh.axh_fadetime  = 0.1;
+		axh.axh_image     = "gfx/vehicles/axh-ring.tga";
+		axh.axh_scale     = 1;
+        axh.alpha         = 1;
+		AuxiliaryXhair[i] = axh;
+    }
+/*
+#else
+    for(i = 0; i < MAX_AXH; ++i)
+    {
+        if(AuxiliaryXhair[i] != world && !wasfreed(AuxiliaryXhair[i]))
+            remove(AuxiliaryXhair[i]);
+
+        AuxiliaryXhair[i]               = spawn();
+		AuxiliaryXhair[i].draw2d        = Draw_Not;
+		AuxiliaryXhair[i].drawmask      = MASK_NORMAL;
+		AuxiliaryXhair[i].axh_drawflag  = DRAWFLAG_ADDITIVE;
+		AuxiliaryXhair[i].axh_fadetime  = 0.1;
+		AuxiliaryXhair[i].axh_image     = "gfx/vehicles/axh-ring.tga";
+		AuxiliaryXhair[i].axh_scale     = 1;
+		AuxiliaryXhair[i].alpha         = 1;
+    }
+#endif
+*/
+    switch(hud_id)
+    {
+        case HUD_SPIDERBOT:
+            // Minigun1
+            AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-ring.tga";
+            AuxiliaryXhair[0].axh_scale   = 0.25;
+            // Minigun2
+            AuxiliaryXhair[1].axh_image   = "gfx/vehicles/axh-ring.tga";
+            AuxiliaryXhair[1].axh_scale   = 0.25;
+            // Rocket
+            AuxiliaryXhair[2].axh_image   = "gfx/vehicles/axh-special1.tga";
+            AuxiliaryXhair[2].axh_scale   = 0.5;
+            break;
+        case HUD_WAKIZASHI:
+            AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-bracket.tga";
+            AuxiliaryXhair[0].axh_scale   = 0.5;
+            break;
+        case HUD_RAPTOR:
+            AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-cross.tga";
+            AuxiliaryXhair[0].axh_scale   = 0.5;
+            AuxiliaryXhair[1].alpha       = 0.25;
+            AuxiliaryXhair[1].axh_image   = "gfx/vehicles/axh-ring.tga";
+            AuxiliaryXhair[1].axh_scale   = 0.5;
+            AuxiliaryXhair[1].alpha       = 0.5;
+            break;
+    }
 }
 
 void Vehicles_Precache()
@@ -218,10 +308,10 @@ void CSQC_RAPTOR_HUD()
 	energy  = min(getstatf(STAT_VEHICLESTAT_ENERGY),  1);
 
     // Draw the crosshairs
-    picsize = drawgetimagesize(raptor_c);
-    picsize_x *= 0.2;
-    picsize_y *= 0.2;
-    drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), raptor_c, picsize, '1 0 0' + '0 1 1' * energy, 0.5, DRAWFLAG_ADDITIVE);
+    picsize = drawgetimagesize("gfx/vehicles/axh-cross.tga");
+    picsize_x *= 0.75;
+    picsize_y *= 0.75;
+    drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), "gfx/vehicles/axh-cross.tga", picsize, '1 0 0' + '0 1 1' * energy, 0.5, DRAWFLAG_ADDITIVE);
 
     hudloc_y = 4;
     hudloc_x = 4;

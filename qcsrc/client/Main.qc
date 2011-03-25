@@ -964,7 +964,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
-		case ENT_CLIENT_AUXILIARYXHAIR: Ent_AuxiliaryXhair(bIsNewEntity); break;
+		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		default:
 			error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			break;
@@ -1397,6 +1397,14 @@ float CSQC_Parse_TempEntity()
 			Net_WeaponComplain();
 			bHandled = true;
 			break;
+        case TE_CSQC_AUXILIARYXHAIR:
+            Net_AuXair();
+            bHandled = true;
+            break;
+        case TE_CSQC_VEHICLESETUP:
+            Net_VehicleSetup();
+            bHandled = true;
+            break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;

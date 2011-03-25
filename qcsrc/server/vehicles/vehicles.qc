@@ -2,17 +2,16 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 void vehicles_return();
 void vehicles_clearrturn();
 
-.entity AuxiliaryXhair;
-float AuxiliaryXhair_customizeentityforclient()
-{
-    if(other == self.owner)
-        return TRUE;
+#define MAX_AXH 4
+.entity AuxiliaryXhair[MAX_AXH];
 
-    return FALSE;
-}
-float AuxiliaryXhair_SendEntity(entity to, float sf)
+float SendAuxiliaryXhair(entity to, float sf)
 {
+
 	WriteByte(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
+
+	WriteByte(MSG_ENTITY, self.cnt);
+
 	WriteCoord(MSG_ENTITY, self.origin_x);
 	WriteCoord(MSG_ENTITY, self.origin_y);
 	WriteCoord(MSG_ENTITY, self.origin_z);
@@ -21,33 +20,136 @@ float AuxiliaryXhair_SendEntity(entity to, float sf)
     WriteByte(MSG_ENTITY, rint(self.colormod_y * 255));
     WriteByte(MSG_ENTITY, rint(self.colormod_z * 255));
 
-	return TRUE;
+    return TRUE;
 }
 
-void SpawnOrUpdateAuxiliaryXhair(entity own, vector loc, vector clr)
+void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 {
+    entity axh;
 
-    if(own.AuxiliaryXhair == world || wasfreed(own.AuxiliaryXhair))
+    axh_id = bound(0, axh_id, MAX_AXH);
+    axh = own.AuxiliaryXhair[axh_id];
+
+    if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
     {
-        own.AuxiliaryXhair = spawn();
-        own.AuxiliaryXhair.owner = own;
-        own.AuxiliaryXhair.drawonlytoclient = own;
-        Net_LinkEntity(own.AuxiliaryXhair, FALSE, 0, AuxiliaryXhair_SendEntity);
+        axh                     = spawn();
+        axh.cnt                 = axh_id;
+        axh.drawonlytoclient    = own;
+        axh.owner               = own;
+        Net_LinkEntity(axh, FALSE, 0, SendAuxiliaryXhair);
     }
 
-    own.AuxiliaryXhair.colormod = clr;
-    setorigin(own.AuxiliaryXhair, loc);
-	own.AuxiliaryXhair.SendFlags |= 0x01;
+    setorigin(axh, loc);
+    axh.colormod            = clr;
+    axh.SendFlags           = 0x01;
+    own.AuxiliaryXhair[axh_id] = axh;
 }
 
-void Release_AuxiliaryXhair(entity from)
+/*
+// SVC_TEMPENTITY based, horrible with even 50 ping. hm.
+void SendAuxiliaryXhair2(entity own, vector loc, vector clr, float axh_id)
 {
-    // from.AuxiliaryXhair.drawonlytoclient = from.AuxiliaryXhair;
-    if (from.AuxiliaryXhair != world && !wasfreed(from.AuxiliaryXhair))
-        remove(from.AuxiliaryXhair);
+	msg_entity = own;
 
-    from.AuxiliaryXhair = world;
+	WriteByte(MSG_ONE, SVC_TEMPENTITY);
+	WriteByte(MSG_ONE, TE_CSQC_AUXILIARYXHAIR);
+
+	WriteByte(MSG_ONE, axh_id);
+
+	WriteCoord(MSG_ONE, loc_x);
+	WriteCoord(MSG_ONE, loc_y);
+	WriteCoord(MSG_ONE, loc_z);
+
+    WriteByte(MSG_ONE, rint(clr_x * 255));
+    WriteByte(MSG_ONE, rint(clr_y * 255));
+    WriteByte(MSG_ONE, rint(clr_z * 255));
+
 }
+*/
+
+void CSQCVehicleSetup(entity own, float vehicle_id)
+{
+	msg_entity = own;
+
+	WriteByte(MSG_ONE, SVC_TEMPENTITY);
+	WriteByte(MSG_ONE, TE_CSQC_VEHICLESETUP);
+	WriteByte(MSG_ONE, vehicle_id);
+}
+
+.entity lock_target;
+.float  lock_strength;
+.float  lock_time;
+void vehicles_locktarget(float deltatime)
+{
+    // no target hit by trace
+    if(trace_ent == world)
+    {
+        self.lock_strength = max(self.lock_strength - deltatime, 0);
+        if(self.lock_strength == 0)
+            self.lock_target = world;
+
+        return;
+    }
+
+    // Current have no target
+    if(self.lock_target == world)
+    {
+        // aquire
+        if(trace_ent != world)
+        {
+            self.lock_target = trace_ent;
+            self.lock_strength = deltatime;
+        }
+        return;
+    }
+
+    // Have a locking target
+    // Trace hit current target
+    if(trace_ent == self.lock_target)
+    {
+        self.lock_strength = min(self.lock_strength + deltatime, 1);
+    }
+    else
+    {
+        self.lock_strength = max(self.lock_strength - deltatime, 0);
+        if(self.lock_strength == 0)
+            self.lock_target = world;
+    }
+}
+
+
+void vehicles_locktarget2(float incr, float decr, float _lock_time)
+{
+    if(self.lock_time > time)
+        return;
+
+
+
+    if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+        self.lock_strength = min(self.lock_strength - decr, 1);
+    else if(trace_ent.deadflag != DEAD_NO)
+        self.lock_strength = min(self.lock_strength - decr, 1);
+
+    if(self.lock_target == world && trace_ent != world)
+        self.lock_target = trace_ent;
+
+    // Have a locking target
+    // Trace hit current target
+    if(trace_ent == self.lock_target && trace_ent != world)
+    {
+        self.lock_strength = min(self.lock_strength + incr, 1);
+        if(self.lock_strength == 1)
+            self.lock_time = time + _lock_time;
+    }
+    else
+    {
+        self.lock_strength = max(self.lock_strength - decr, 0);
+
+        if(self.lock_strength == 0)
+            self.lock_target = world;
+    }
+}
+
 
 #define VEHICLE_UPDATE_PLAYER(fld,vhname) \
 self.owner.vehicle_##fld = self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld
@@ -175,6 +277,8 @@ void vehicles_enter()
     }
 
     vehicles_clearrturn();
+
+    CSQCVehicleSetup(self.owner, self.hud);
 
     if(self.vehicle_enter)
         self.vehicle_enter();
@@ -366,6 +470,42 @@ void vehicles_configcheck(string  configname, float   check_cvar)
         localcmd(strcat("exec ", configname, "\n"));
 }
 
+void vehicles_common_spawn()
+{
+    entity e;
+    float _effects, _colormap;
+    vector _glowmod, _colormod;
+
+    if(autocvar_g_nodepthtestplayers)
+        _effects = EF_NODEPTHTEST;
+
+    if(autocvar_g_fullbrightplayers)
+        _colormap |= EF_FULLBRIGHT;
+
+    if(self.team == COLOR_TEAM1)
+        _colormap = 1;
+    else if (self.team == COLOR_TEAM2)
+        _colormap = 2;
+
+    _glowmod = '0 0 0';
+    _colormod = '0 0 0';
+
+    e = findchainentity(tag_entity, self);
+    while(e)
+    {
+        e.colormap = _colormap;
+        e.effects = _effects;
+        e.colormod = _colormod;
+        e.colormap = _colormap;
+        e = e.chain;
+    }
+
+    self.effects  = _effects;
+    self.colormap = _colormap;
+    self.colormod = _colormod;
+    self.colormap = _colormap;
+}
+
 float vehicle_initialize(string  net_name,
                          string  bodymodel,
                          string  topmodel,
@@ -395,6 +535,7 @@ float vehicle_initialize(string  net_name,
 	addstat(STAT_VEHICLESTAT_AMMO2,   AS_INT,   vehicle_ammo2);
 	addstat(STAT_VEHICLESTAT_RELOAD2, AS_FLOAT, vehicle_reload2);
 
+
     if(bodymodel == "")
         error("vehicles: missing bodymodel!");
 
@@ -408,6 +549,8 @@ float vehicle_initialize(string  net_name,
 
     if(self.team && !teams_matter)
         self.team = 0;
+
+    self.vehicle_flags |= VHF_ISVEHICLE;
 
     setmodel(self, bodymodel);
 
@@ -429,6 +572,12 @@ float vehicle_initialize(string  net_name,
     self.touch              = vehicles_touch;
     self.think              = spawnproc;
     self.nextthink          = time;
+
+    if(autocvar_g_nodepthtestplayers)
+        self.effects = self.effects | EF_NODEPTHTEST;
+
+    if(autocvar_g_fullbrightplayers)
+        self.effects = self.effects | EF_FULLBRIGHT;
 
     setmodel(self.vehicle_hudmodel, hudmodel);
     setmodel(self.vehicle_viewport, "null");

@@ -248,8 +248,11 @@ void spiderbot_minigun_fire(entity gun, float trail)
     v_forward = normalize(v_forward);
     v += v_forward * 50;
 
+    oldself = self;
+    self = self.owner;
     fireBullet (v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_damage,
         autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_SBMINIGUN, 0);
+    self = oldself;
 
     if(trail)
     {
@@ -315,7 +318,6 @@ void spiderbot_miniguns_do()
             }
             else
                 self.tur_head.attack_finished_single = autocvar_g_vehicle_spiderbot_minigun_refire + time;
-
         }
         return;
     }
@@ -345,6 +347,7 @@ float spiderbot_frame()
     self = spider;
 
     crosshair_trace(player);
+    UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);
     ad = vectoangles(normalize(trace_endpos - gettaginfo(spider.tur_head,gettagindex(spider.tur_head,"tag_hud")))) - (spider.tur_head.angles + spider.angles);
     if(ad_x > 180) ad_x -= 360;
     if(ad_x < -180) ad_x += 360;
@@ -465,17 +468,27 @@ float spiderbot_frame()
     if(self.vehicle_flags & VHF_HASSHIELD)
         VEHICLE_UPDATE_PLAYER(shield, spiderbot);
 
+    // Avarage gun impact point's -> aux cross
     vector vf;
-
     ad = gettaginfo(spider.gun1, gettagindex(spider.gun1, "barrels"));
     vf = v_forward;
     ad += gettaginfo(spider.gun2, gettagindex(spider.gun2, "barrels"));
     vf += v_forward;
     ad = ad * 0.5;
     v_forward = vf * 0.5;
-
     traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, spider);
-    SpawnOrUpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload1) + ('0 1 0' * (1 - player.vehicle_reload1)));
+    UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload1) + ('0 1 0' * (1 - player.vehicle_reload1)), 0);
+
+
+    /*
+    ad = gettaginfo(spider.gun1, gettagindex(spider.gun1, "barrels"));
+    traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, spider);
+    UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload1) + ('0 1 0' * (1 - player.vehicle_reload1)), 0);
+
+    ad = gettaginfo(spider.gun2, gettagindex(spider.gun2, "barrels"));
+    traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, spider);
+    UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload1) + ('0 1 0' * (1 - player.vehicle_reload1)), 1);
+    */
 
     self = player;
     return 1;
@@ -519,8 +532,6 @@ void spiderbot_exit(float eject)
 
     if not (self.owner)
         return;
-
-	Release_AuxiliaryXhair(self.owner);
 
 	makevectors(self.angles);
 	if(eject)
@@ -618,6 +629,7 @@ void spiderbot_spawn()
 
     self.tur_head.colormod = self.colormod;
 
+    vehicles_common_spawn();
 
 }
 

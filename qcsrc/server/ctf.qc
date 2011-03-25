@@ -49,7 +49,7 @@ float ctf_captureshield_shielded(entity p)
 
 	// player is in the worse half, if >= half the players are better than him, or consequently, if < half of the players are worse
 	// use this rule here
-	
+
 	if(players_worseeq >= players_total * captureshield_max_ratio)
 		return FALSE;
 
@@ -297,7 +297,7 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 	e.playerid = attacker.playerid;
 	e.ctf_droptime = time;
 	WaypointSprite_Spawn("flagdropped", 0, 0, e, '0 0 1' * 61, world, COLOR_TEAM1 + COLOR_TEAM2 - e.team, e, waypointsprite_attachedforcarrier, FALSE);
-	
+
 	if(p.waypointsprite_attachedforcarrier)
 	{
 		WaypointSprite_Ping(p.waypointsprite_attachedforcarrier);
@@ -509,10 +509,10 @@ void FlagTouch()
 	{
 		if (other.next_take_time > time)
 			return;
-			
+
 		if (autocvar_g_ctf_flag_pickup_effects) // pickup effect
 			pointparticles(particleeffectnum("smoke_ring"), 0.5 * (self.absmin + self.absmax), '0 0 0', 1);
-			
+
 		// pick up
 		self.flagpickuptime = time; // used for timing runs
 		self.speedrunning = other.speedrunning; // if speedrunning, flag will self-return and teleport the owner back after the record
@@ -597,7 +597,7 @@ void FlagTouch()
 
 			if (autocvar_g_ctf_flag_pickup_effects) // field pickup effect
 				pointparticles(particleeffectnum("smoke_ring"), 0.5 * (self.absmin + self.absmax), '0 0 0', 1);
-			
+
 			// pick up
 			self.solid = SOLID_NOT;
 			setorigin(self, self.origin); // relink
@@ -736,7 +736,7 @@ void item_flag_postspawn()
 		if(self.team == COLOR_TEAM2)
 			// Blue
 			self.glow_color = 210;
-			
+
 		self.glow_size = 25;
 		self.glow_trail = 1;
 	}
@@ -1081,7 +1081,7 @@ entity(float cteam) ctf_team_has_commander =
 	entity pl;
 	if(cteam != COLOR_TEAM1 || cteam != COLOR_TEAM2)
 		return world;
-	
+
 	FOR_EACH_REALPLAYER(pl) {
 		if(pl.team == cteam && pl.iscommander) {
 			return pl;
@@ -1099,7 +1099,7 @@ void(entity e, float st) ctf_setstate =
 void(float cteam) ctf_new_commander =
 {
 	entity pl, plmax;
-	
+
 	plmax = world;
 	FOR_EACH_REALPLAYER(pl) {
 		if(pl.team == cteam) {
@@ -1124,14 +1124,14 @@ void(float cteam) ctf_new_commander =
 void() ctf_clientconnect =
 {
 	self.iscommander = FALSE;
-	
+
 	if(!self.team || self.classname != "player") {
 		ctf_setstate(self, -1);
 	} else
 		ctf_setstate(self, 0);
 
 	self.team_saved = self.team;
-	
+
 	if(self.team != 0 && self.classname == "player" && !ctf_team_has_commander(self.team)) {
 		ctf_new_commander(self.team);
 	}
@@ -1156,9 +1156,9 @@ void() ctf_playerchanged =
 			ctf_setstate(self, -1);
 		ctf_new_commander(self.team_saved);
 	}
-	
+
 	self.team_saved = self.team;
-	
+
 	ctf_new_commander(self.team);
 };
 
