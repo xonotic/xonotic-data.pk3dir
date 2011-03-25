@@ -482,10 +482,10 @@ void vehicles_common_spawn()
     if(autocvar_g_fullbrightplayers)
         _colormap |= EF_FULLBRIGHT;
 
-    if(self.team == COLOR_TEAM1)
-        _colormap = 1;
-    else if (self.team == COLOR_TEAM2)
-        _colormap = 2;
+    if(self.team)
+        _colormap = 1024 + (self.team - 1) * 17;
+    else
+        _colormap = 1024;
 
     _glowmod = '0 0 0';
     _colormod = '0 0 0';

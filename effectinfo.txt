@@ -3889,7 +3889,7 @@ effect TE_TEI_G3RED_HIT
 trailspacing 40
 type static
 color 0xFF0000 0xFF0011
-size 10 10 
+size 10 10
 sizeincrease -6
 alpha 256 256 512
 airfriction -4
@@ -3941,14 +3941,14 @@ effect TE_TEI_G3BLUE_HIT
 trailspacing 40
 type static
 color 0x0000FF 0x1100FF
-size 10 10 
+size 10 10
 sizeincrease -6
 alpha 256 256 512
 airfriction -4
 //liquidfriction -4
 type smoke
 
-// Yellow 
+// Yellow
 effect TE_TEI_G3YELLOW
 countabsolute 1
 type beam
@@ -3990,7 +3990,7 @@ effect TE_TEI_G3YELLOW_HIT
 trailspacing 40
 type static
 color 0xffff00 0xffff11
-size 10 10 
+size 10 10
 sizeincrease -6
 alpha 256 256 512
 airfriction -4
@@ -4044,7 +4044,7 @@ effect TE_TEI_G3PINK_HIT
 trailspacing 40
 type static
 color 0xFF00FF 0xFF11FF
-size 10 10 
+size 10 10
 sizeincrease -6
 alpha 256 256 512
 airfriction -4
@@ -4107,10 +4107,10 @@ originjitter 3 3 3
 velocitymultiplier 2
 staincolor 0x808080 0x808080
 staintex 16 24
- 
+
 // effect for removing player model
 // "teleport"
- 
+
 // cl_gentle deathfx
 // used in qcsrc/client/gibs.qc:                        pointparticles(particleeffectnum("damage_dissolve"), org, vel, amount)
 // small core blood no decals
@@ -5278,7 +5278,7 @@ sizeincrease 100
 stretchfactor 3
 airfriction 6
 rotate -180 180 4000 -4000
-// smoke 
+// smoke
 effect spiderbot_minigun_impact
 count 6
 type smoke
@@ -5452,7 +5452,6 @@ liquidfriction 8
 originjitter 8 8 8
 velocityjitter 312 312 312
 
-
 effect raptor_cannon_muzzleflash
 count 16
 type spark
@@ -5479,422 +5478,3 @@ rotate -180 180 4000 -4000
 lightradius 150
 lightradiusfade 6000
 lightcolor 3 0 6
-
-
-// -----------------DOTC
-// DOTC Scout drone 
-// Muzzle flash
-// electricity
-effect dotc_scout_mflash
-count 3
-type spark
-color 0xff9c00 0xff8400
-tex 43 43
-size 5 7
-alpha 256 512 6280
-airfriction 10
-originjitter 2 2 2
-velocityjitter 150 150 150
-velocitymultiplier 0.2
-sizeincrease -100
-stretchfactor 1.3
-rotate -180 180 4000 -4000
-// fire
-effect dotc_scout_mflash
-count 6
-type spark
-color 0xff9c00 0xff8400
-tex 8 15
-size 5 7
-alpha 256 512 6280
-airfriction 12
-originjitter 2 2 2
-velocityjitter 200 200 200
-velocitymultiplier 0.2
-sizeincrease -10
-stretchfactor 0.8
-effect dotc_scout_mflash
-countabsolute 2
-type static
-tex 43 43
-color 0xff9c00 0xf6ff00
-size 32 32
-alpha 256 512 6680
-sizeincrease -100
-stretchfactor 0.1
-rotate -180 180 4000 -4000
-
-// Projectile trail
-// effect dotc_scout_ptrail
-
-// Projectile explode
-effect dotc_scout_pexplode
-countabsolute 1
-type static
-tex 38 38
-color 0xff9c00 0xff8400
-size 12 12
-alpha 256 256 512
-// cloud of bouncing sparks
-effect dotc_scout_pexplode
-count 64
-type spark
-tex 41 41
-color 0xff9c00 0xff8400
-size 1 2
-alpha 256 256 1024
-bounce 2
-stretchfactor 0.4
-//airfriction 2
-originjitter 1 1 1
-velocityjitter 112 112 112
-velocitymultiplier 40
-
-// DOTC Light tank drone 
-// Muzzle flash
-effect dotc_lighttank_mflash
-count 12
-type spark
-color 0x202020 0x0072ff
-tex 8 15
-size 16 16
-alpha 328 328 4000
-originjitter 4 4 4
-velocityjitter 380 380 380
-velocitymultiplier 0.4
-stretchfactor 2
-sizeincrease -100
-airfriction 9
-effect dotc_lighttank_mflash
-countabsolute 1
-type smoke
-tex 65 65
-color 0x202020 0x0072ff
-size 80 80
-alpha 256 512 3680
-sizeincrease -1000
-rotate -180 180 4000 -4000
-
-
-// Projectile trail
-// effect dotc_lighttank_ptrail
-
-// Projectile explode
-effect dotc_lighttank_pexplode
-countabsolute 1
-type decal
-tex 38 38
-size 32 32
-alpha 256 256 0
-originjitter 17 17 17
-lightradius 150
-lightradiusfade 250
-lightcolor 3.125 4.375 10
-// shockwave
-effect dotc_lighttank_pexplode
-countabsolute 1
-type static
-tex 33 33
-color 0x80C0FF 0x80C0FF
-size 1 1
-alpha 40 40 100
-sizeincrease 500
-// cloud of bouncing sparks
-effect dotc_lighttank_pexplode
-count 64
-type spark
-tex 41 41
-color 0xFDFFD9 0xFDFFD9
-size 4 6
-alpha 256 256 1024
-stretchfactor 0.4
-airfriction 2
-originjitter 1 1 1
-velocityjitter 512 512 512
-// inner cloud of smoke
-effect dotc_lighttank_pexplode
-countabsolute 1
-type static
-tex 65 65
-color 0x80C0FF 0xFFFFFF
-size 65 65
-alpha 64 64 90
-sizeincrease 200
-
-// DOTC Tank drone 
-// Muzzle flash
-effect dotc_tank_mflash
-count 12
-type spark
-color 0xff9c00 0xff8400
-tex 8 15
-size 16 16
-alpha 328 328 4000
-originjitter 4 4 4
-velocityjitter 380 380 380
-velocitymultiplier 0.4
-stretchfactor 2
-sizeincrease -100
-airfriction 9
-effect dotc_tank_mflash
-countabsolute 1
-type smoke
-tex 65 65
-color 0xff9c00 0xff8400
-size 80 80
-alpha 256 512 3680
-sizeincrease -1000
-rotate -180 180 4000 -4000
-effect dotc_tank_mflash
-count 18
-type smoke
-tex 0 7
-size 30 50
-color 0x646364 0x151515
-velocitymultiplier 0.1
-alpha 128 128 300
-velocityjitter 164 164 164
-rotate -180 180 0 0
-sizeincrease -100
-effect dotc_tank_mflash
-count 8
-type smoke
-tex 0 7
-size 40 60
-color 0x646364 0x151515
-velocitymultiplier 0.05
-alpha 128 128 300
-velocityjitter 164 164 164
-rotate -180 180 0 0
-sizeincrease -100
-effect dotc_tank_mflash
-countabsolute 3
-type smoke
-tex 0 7
-size 30 50
-color 0x646364 0x151515
-alpha 228 228 400
-rotate -180 180 0 0
-sizeincrease 100
-
-// Projectile trail
-// effect dotc_tank_ptrail
-// Projectile explode
-effect dotc_tank_pexplode
-count 12
-type spark
-color 0xff9c00 0xff3c00
-tex 48 55
-size 10 70
-alpha 328 328 1200
-originjitter 4 4 4
-velocityjitter 330 330 420
-velocitymultiplier 2
-stretchfactor 3
-sizeincrease 120
-// smoke
-effect dotc_tank_pexplode
-count 10
-type alphastatic
-tex 0 7
-size 10 30
-color 0x646364 0x151515
-alpha 428 428 400
-rotate -180 180 0 0
-velocityjitter 1300 1300 0
-sizeincrease 60
-airfriction 6
-effect dotc_tank_pexplode
-count 5
-type alphastatic
-tex 0 7
-size 90 100
-color 0x646364 0x151515
-alpha 428 428 400
-rotate -180 180 0 0
-velocityjitter 300 300 600
-velocityoffset 0 0 180
-sizeincrease -60
-airfriction 2
-// sparks nobounce
-effect dotc_tank_pexplode
-notunderwater
-count 12
-type spark
-tex 40 40
-color 0xffa35b 0xfff2be
-size 3 1
-alpha 644 956 784
-gravity 1
-airfriction 0.2
-liquidfriction 0.8
-velocityoffset 0 0 80
-originjitter 16 16 16
-velocityjitter 424 424 924
-effect dotc_tank_pexplode
-notunderwater
-count 12
-type alphastatic
-tex 66 68
-color 0xffa35b 0xfff2be
-size 3 10
-alpha 644 956 784
-gravity 1
-airfriction 0.2
-liquidfriction 0.8
-velocityoffset 0 0 80
-originjitter 16 16 16
-velocityjitter 324 324 624
-rotate -180 180 -1000 1000
-
-// DOTC Tank drone 
-// Muzzle flash
-effect dotc_htank_mflash
-count 24
-type smoke
-tex 0 7
-size 30 50
-color 0x646364 0x151515
-velocitymultiplier 0.1
-alpha 128 128 300
-velocityjitter 164 164 164
-rotate -180 180 0 0
-sizeincrease 100
-// Projectile trail
-// effect dotc_htank_ptrail
-// Projectile explode
-effect dotc_htank_pexplode
-
-// DOTC Rocket artillery drone 
-// Muzzle flash
-effect dotc_rart_mflash
-count 6
-type spark
-color 0xff9c00 0xff8400
-tex 8 15
-size 16 16
-alpha 328 328 4000
-originjitter 4 4 4
-velocityjitter 180 180 180
-velocitymultiplier 0.4
-stretchfactor 2
-sizeincrease -100
-airfriction 9
-effect dotc_rart_mflash
-count 18
-type smoke
-tex 0 7
-size 30 50
-color 0x646364 0x151515
-velocitymultiplier 0.1
-alpha 128 128 300
-velocityjitter 164 164 164
-rotate -180 180 0 0
-sizeincrease -50
-effect dotc_rart_mflash
-count 2
-type smoke
-tex 0 7
-size 30 50
-color 0x646364 0x151515
-alpha 128 128 200
-velocityoffset 0 0 20
-velocityjitter 64 64 64
-rotate -180 180 0 0
-sizeincrease 20
-// Projectile trail
-// effect dotc_rart_ptrail
-// Projectile explode
-effect dotc_rart_pexplode
-countabsolute 1
-type decal
-tex 8 16
-size 72 72
-alpha 256 256 0
-originjitter 23 23 23
-lightradius 100
-lightradiusfade 350
-lightcolor 8 4 1
-effect dotc_rart_pexplode
-count 8
-type smoke
-color 0xff9c00 0xff3c00
-tex 48 55
-size 1 2
-alpha 300 300 600
-originjitter 10 10 10
-velocityjitter 90 90 20
-stretchfactor 25
-sizeincrease 3
-// glow
-effect dotc_rart_pexplode
-countabsolute 1
-type static
-tex 65 65
-color 0xff9c00 0xff3c00
-size 1 1
-alpha 200 200 500
-sizeincrease 700
-// smoke
-effect dotc_rart_pexplode
-count 5
-type alphastatic
-tex 0 7
-size 1 20
-color 0x646364 0x151515
-alpha 428 428 400
-rotate -180 180 0 0
-velocityjitter 1000 1000 0
-sizeincrease 60
-airfriction 6
-effect dotc_rart_pexplode
-count 10
-type alphastatic
-tex 0 7
-size 100 120
-color 0x646364 0x151515
-alpha 428 428 400
-rotate -180 180 0 0
-velocityjitter 300 300 600
-velocityoffset 0 0 640
-gravity 0.7
-sizeincrease -40
-airfriction 2
-// sparks nobounce
-effect dotc_rart_pexplode
-notunderwater
-count 6
-type spark
-tex 40 40
-color 0xffa35b 0xfff2be
-size 3 1
-alpha 644 956 784
-gravity 1
-airfriction 0.2
-velocityoffset 0 0 350
-originjitter 16 16 16
-velocityjitter 124 124 524
-// derbis
-effect dotc_rart_pexplode
-notunderwater
-count 8
-type alphastatic
-tex 66 68
-color 0xffa35b 0xfff2be
-size 10 23
-alpha 644 756 984
-gravity 1.1
-airfriction 0.2
-sizeincrease -10
-velocityoffset 0 0 400
-originjitter 16 16 16
-velocityjitter 124 124 324
-rotate -180 180 -1000 1000
-
-// DOTC Gun artillery drone 
-// Muzzle flash
-// effect dotc_gart_mflash
-// Projectile trail
-// effect dotc_gart_ptrail
-// Projectile explode
-// effect dotc_gart_pexplode
