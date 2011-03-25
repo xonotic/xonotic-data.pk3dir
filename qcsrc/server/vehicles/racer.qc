@@ -54,9 +54,13 @@ float autocvar_g_vehicle_racer_rocket_locking_time;
 float autocvar_g_vehicle_racer_rocket_locking_releasetime;
 float autocvar_g_vehicle_racer_rocket_locked_time;
 
-
 float autocvar_g_vehicle_racer_respawntime;
 float autocvar_g_vehicle_racer_collision_multiplier;
+
+float autocvar_g_vehicle_racer_blowup_radius;
+float autocvar_g_vehicle_racer_blowup_coredamage;
+float autocvar_g_vehicle_racer_blowup_edgedamage;
+float autocvar_g_vehicle_racer_blowup_forceintensity;
 
 var vector racer_force_from_tag(string tag_name, float spring_length, float max_power);
 
@@ -552,8 +556,11 @@ void racer_blowup()
     self.deadflag    = DEAD_DEAD;
     self.vehicle_exit(VHEF_NORMAL);
 
-    // FIXME dont use hardcoded damage/force
-    RadiusDamage (self, self, 250, 15, 250, world, 250, DEATH_WAKIBLOWUP, world);
+    RadiusDamage (self, self, autocvar_g_vehicle_racer_blowup_coredamage,
+					autocvar_g_vehicle_racer_blowup_edgedamage,
+					autocvar_g_vehicle_racer_blowup_radius, world,
+					autocvar_g_vehicle_racer_blowup_forceintensity,
+					DEATH_WAKIBLOWUP, world);
 
     self.alpha = -1;
     self.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
