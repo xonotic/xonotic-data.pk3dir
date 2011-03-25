@@ -544,15 +544,15 @@ msgstr "Grande"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:96
 msgid "Grid settings:"
-msgstr "configuración de cuadrícula:"
+msgstr "Configuración de grilla:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:99
 msgid "Snap panels to grid"
-msgstr "ajustar paneles a la cuadrícula"
+msgstr "Ajustar paneles a la grilla"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:102
 msgid "Grid size:"
-msgstr "tamaño de cuadrículagrid:"
+msgstr "Tamaño de grilla:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:103
 msgid "X:"
@@ -586,7 +586,7 @@ msgstr "Demos"
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:5
 msgid "Player Setup"
-msgstr "configuración del jugador"
+msgstr "Jugador"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:35
 msgid "Game type:"
@@ -594,7 +594,7 @@ msgstr "Tipo de juego:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:47
 msgid "Match settings:"
-msgstr "configuración del enfrentamiento:"
+msgstr "Configuración del encuentro:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:50
 msgid "Time limit:"
@@ -678,7 +678,7 @@ msgstr "Mutators..."
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:98
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:84
 msgid "Advanced settings..."
-msgstr "configuración avanzada..."
+msgstr "Configuración avanzada..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:105
 msgid "Map list:"
@@ -686,11 +686,11 @@ msgstr "Lista de mapas:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:111
 msgid "Select all"
-msgstr "Selecciónar todos"
+msgstr "Seleccionar todos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:114
 msgid "Select none"
-msgstr "Selecciónar ninguno"
+msgstr "Seleccionar ninguno"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:120
 msgid "Start Multiplayer!"
@@ -722,7 +722,7 @@ msgstr "configuración avanzada del servidor"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:25
 msgid "Game settings:"
-msgstr "configuración del juego:"
+msgstr "Configuración del juego:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:28
 msgid "Allow spectating"
@@ -738,7 +738,7 @@ msgstr "Velocidad del juego:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:40
 msgid "Teamplay settings:"
-msgstr "configuración del juego en equipo:"
+msgstr "Configuración del juego en equipo:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:43
 msgid "Friendly fire scale:"
@@ -802,7 +802,7 @@ msgstr "9 opciones"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:79
 msgid "Simple majority wins vcall"
-msgstr "La simple mayoría gana vcall"
+msgstr "La mayoría simple gana"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:5
 msgid "Map Information"
@@ -1151,7 +1151,7 @@ msgstr "Velocidad de zoom:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:103
 msgid "Weapon settings..."
-msgstr "configuración de armas..."
+msgstr "Configuración de armas..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:110
 msgid "Crosshair:"
@@ -1172,7 +1172,7 @@ msgstr "Transparencia da mira:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
 msgid "Crosshair color:"
-msgstr "Color da mira:"
+msgstr "Color de mira:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:145
 msgid "Enable center dot"
@@ -1276,11 +1276,11 @@ msgstr "Mostrar puntos de camino"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:25
 msgid "Waypoint scale:"
-msgstr "Escala de puntos de camino:"
+msgstr "Escala:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:29
 msgid "Waypoint alpha:"
-msgstr "Transparencia de puntos de camino:"
+msgstr "Transparencia:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:34
 msgid "Show names:"
@@ -1360,7 +1360,7 @@ msgstr "No"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:4
 msgid "Settings"
-msgstr "configuraciones"
+msgstr "Configuración"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:18
 #: qcsrc/menu/xonotic/dialog_settings_input.c:4
@@ -1403,7 +1403,7 @@ msgstr "Musica:"
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:40
 #, fuzzy
 msgid "VOL^Ambient:"
-msgstr "ambiente:"
+msgstr "Ambiente:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:48
 msgid "Info:"
@@ -1594,7 +1594,7 @@ msgstr "Indicador de tiro acertado"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:175
 msgid "Menu sounds"
-msgstr "Sonidos del menu"
+msgstr "Sonidos del menú"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:38
 msgid "Quality preset:"
@@ -1633,7 +1633,7 @@ msgstr "Ultra"
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:48
 #, fuzzy
 msgid "PRE^Ultimate"
-msgstr "Maxima"
+msgstr "Máxima"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:52
 msgid "Geometry detail:"
@@ -1676,7 +1676,7 @@ msgstr "Antialiasing:"
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:64
 #, fuzzy
 msgid "AA^Disabled"
-msgstr "Desabilitado"
+msgstr "Deshabilitado"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:65
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:103
@@ -1734,7 +1734,7 @@ msgstr "Filtro Anisotrópico:"
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:102
 #, fuzzy
 msgid "ANISO^Disabled"
-msgstr "Desabilitado"
+msgstr "Deshabilitado"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:105
 msgid "8x"
@@ -1778,7 +1778,7 @@ msgstr "Brillo"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:138
 msgid "Offset mapping"
-msgstr "Desplazamiento de mapeado"
+msgstr "Despl. de mapeado"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:140
 msgid "Relief mapping"
@@ -1815,7 +1815,7 @@ msgstr "Aproximación de flash mezclado"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:159
 msgid "Realtime dynamic lighting"
-msgstr "iluminación dinámica en tiempo real"
+msgstr "Iluminación dinámica en tiempo real"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:160
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:164
@@ -1824,7 +1824,7 @@ msgstr "Sombras"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:163
 msgid "Realtime world lighting"
-msgstr "iluminación del mundo en tiempo real"
+msgstr "Iluminación del mundo en tiempo real"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:168
 msgid "Use normal maps"
@@ -1852,7 +1852,7 @@ msgstr "High Dynamic Range (HDR)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:182
 msgid "Motion blur:"
-msgstr "Distorsión por movimento:"
+msgstr "Distorsión p/ movimiento:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:188
 msgid "Damage blur:"
@@ -1922,7 +1922,7 @@ msgstr "Cancelar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:26
 msgid "Menu skins:"
-msgstr "Textura del menu:"
+msgstr "Textura del menú:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:47
 msgid "Show current time"
@@ -1978,7 +1978,7 @@ msgstr "Minimizar retardo de entrada"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:5
 msgid "Advanced settings"
-msgstr "configuraciones avanzadas"
+msgstr "Configuración avanzada"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:23
 msgid "Cvar filter:"
@@ -1986,7 +1986,7 @@ msgstr "Filtro de Cvar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:34
 msgid "Setting:"
-msgstr "configuración:"
+msgstr "Configuración:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:42
 msgid "Value:"
@@ -1998,7 +1998,7 @@ msgstr "Descripción:"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:26
 msgid "Client-side movement prediction"
-msgstr "Prediccion de movimento de lado del cliente"
+msgstr "Predicción de movimento de lado del cliente"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:30
 msgid "Show netgraph"
@@ -2200,7 +2200,7 @@ msgstr "Intensidad:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:4
 msgid "Singleplayer"
-msgstr "Un sólo jugador"
+msgstr "Jugador"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:59
 msgid "Instant action! (random map with bots)"
