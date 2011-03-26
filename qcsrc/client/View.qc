@@ -794,14 +794,15 @@ void CSQC_UpdateView(float w, float h)
 			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 	}
 
-	if(spectatee_status >= 0 && (autocvar_cl_chase_death || autocvar_cl_chase_intermission))
+	// event chase cam
+	if(spectatee_status >= 0)
 	{
 		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission))
 		{
 			if(!cvar("chase_active"))
 				cvar_set("chase_active", "1");
 		}
-		else if(cvar("chase_active"))
+		else if(cvar("chase_active") && (autocvar_cl_chase_death || autocvar_cl_chase_intermission))
 			cvar_set("chase_active", "0");
 	}
 
