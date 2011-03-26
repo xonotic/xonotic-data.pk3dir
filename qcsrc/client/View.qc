@@ -794,6 +794,17 @@ void CSQC_UpdateView(float w, float h)
 			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 	}
 
+	if(spectatee_status >= 0 && !intermission)
+	{
+		if(getstati(STAT_HEALTH) <= 0)
+		{
+			if(!cvar("chase_active"))
+				cvar_set("chase_active", "1");
+		}
+		else if(cvar("chase_active"))
+			cvar_set("chase_active", "0");
+	}
+
 	// Draw the mouse cursor
 	// NOTE: drawpic must happen after R_RenderScene for some reason
 	//drawpic(getmousepos(), "gfx/cursor.tga", '11 14 0', '1 1 1', 1, 0);
