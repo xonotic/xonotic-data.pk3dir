@@ -809,7 +809,7 @@ void CSQC_UpdateView(float w, float h)
 		if(cvar("chase_active"))
 		{
 			if(autocvar_cl_chase_speed && cvar("chase_back") < autocvar_cl_chase_distance)
-				cvar_set("chase_back", ftos(cvar("chase_back") + (autocvar_cl_chase_speed * frametime)));
+				cvar_set("chase_back", ftos(cvar("chase_back") + (autocvar_cl_chase_speed * (autocvar_cl_chase_distance - cvar("chase_back")) * frametime)));
 			else if(cvar("chase_back") != autocvar_cl_chase_distance)
 				cvar_set("chase_back", ftos(autocvar_cl_chase_distance));
 		}
