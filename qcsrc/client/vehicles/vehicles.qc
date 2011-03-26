@@ -26,8 +26,6 @@
 #define raptor_c  "gfx/vehicles/raptor_cross.tga"
 
 entity dropmark;
-vector lastpos;
-
 
 void CSQC_WAKIZASHI_HUD();
 void CSQC_SPIDER_HUD();
@@ -229,44 +227,6 @@ void CSQC_SPIDER_HUD()
     }
     else
     {
-
-        /*
-        float movedt, vel;
-        movedt = time - self.move_time;
-        self.move_time = time;
-        vel = (view_origin - lastpos) * (1 / movedt);
-        lastpos  = view_origin;
-        dprint("vel: ", ftos(vel), "  angles: ", vtos(self.angles), "\n");
-        */
-
-        /*
-        dprint("aim1: ", vtos(aim1), "  aim2: ", vtos(aim2), "\n");
-        aim2_x *= -1;
-        makevectors(aim2);
-        te_lightning1(self, view_origin, view_origin + v_forward * MAX_SHOT_DISTANCE);
-        traceline(view_origin, view_origin + v_forward * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, self);
-        aim2 = trace_endpos;
-
-
-        aim1 = aim1 + view_origin;
-
-        // Draw the crosshairs
-        aim1 = project_3d_to_2d(aim1);
-        aim2 = project_3d_to_2d(aim2);
-
-        picsize = 0.5 * drawgetimagesize(SPIDER_CROSS2);
-        aim2 = aim2 - 0.5 * picsize;
-        aim2_z = 0;
-        picsize_z = 0;
-        drawpic(aim2, SPIDER_CROSS2, picsize, '0 1 1', 1, DRAWFLAG_ADDITIVE);
-
-        picsize = 0.5 * drawgetimagesize(SPIDER_CROSS2);
-        aim1 = aim1 - 0.5 * picsize;
-        aim1_z = 0;
-        picsize_z = 0;
-        drawpic(aim1, SPIDER_CROSS2, picsize, '1 0 0', 1, DRAWFLAG_ADDITIVE);
-
-        */
         picsize = drawgetimagesize(SPIDER_CROSS);
         picsize_x *= autocvar_cl_vehicle_spiderbot_cross_size;
         picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
@@ -291,14 +251,6 @@ void CSQC_RAPTOR_HUD()
     {
         dropmark = spawn();
         dropmark.owner = self;
-    }
-
-	movedt = time - dropmark.move_time;
-	if(movedt)
-	{
-        dropmark.move_time = time;
-        vel = (view_origin - lastpos) * (1 / movedt);
-        lastpos  = view_origin;
     }
 
     // Fetch health & ammo stats
@@ -351,12 +303,11 @@ void CSQC_RAPTOR_HUD()
     if(reload == 1)
     {
         where = dropmark.origin;
-        setorigin(dropmark, view_origin);
-        dropmark.velocity = vel;
+        setorigin(dropmark, pmove_org);
+        dropmark.velocity = pmove_vel;
         tracetoss(dropmark, self);
 
-        // Blend old with new predicted impact to smooth out jumpyness
-        where = project_3d_to_2d(trace_endpos * 0.5 + where * 0.5);
+        where = project_3d_to_2d(trace_endpos);
 
         setorigin(dropmark, trace_endpos);
         picsize = drawgetimagesize(raptor_d) * 0.2;
