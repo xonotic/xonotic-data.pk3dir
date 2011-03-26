@@ -246,13 +246,6 @@ void CSQC_RAPTOR_HUD()
 	float movedt;
     vector where;
 
-
-    if(!dropmark)
-    {
-        dropmark = spawn();
-        dropmark.owner = self;
-    }
-
     // Fetch health & ammo stats
     hp      = bound(0,getstatf(STAT_VEHICLESTAT_HEALTH), 1);
 	shield  = bound(0,getstatf(STAT_VEHICLESTAT_SHIELD), 1);
@@ -299,6 +292,12 @@ void CSQC_RAPTOR_HUD()
     drawpic(hudloc, raptor_b, picsize, '0 1 0' * hp + '1 0 0' * (1 - hp), 1, DRAWFLAG_NORMAL);
     drawpic(hudloc, raptor_g1, picsize, '1 1 1' * energy + '1 0 0' * (1 - energy), 1, DRAWFLAG_NORMAL);
     drawpic(hudloc, raptor_g2, picsize, '1 1 1' * reload + '1 0 0' *  (1 - reload), 1, DRAWFLAG_NORMAL);
+
+    if(!dropmark)
+    {
+        dropmark = spawn();
+        dropmark.owner = self;
+    }
 
     if(reload == 1)
     {
@@ -367,15 +366,6 @@ void CSQC_WAKIZASHI_HUD()
     picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
     drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_NORMAL);
 
-/*
-const float STAT_VEHICLESTAT_HEALTH  = 60;
-const float STAT_VEHICLESTAT_SHIELD  = 61;
-const float STAT_VEHICLESTAT_ENERGY  = 62;
-const float STAT_VEHICLESTAT_AMMO1   = 63;
-const float STAT_VEHICLESTAT_RELAOD1 = 64;
-const float STAT_VEHICLESTAT_AMMO2   = 65;
-const float STAT_VEHICLESTAT_RELOAD2 = 66;
-*/
     health  = min(getstatf(STAT_VEHICLESTAT_HEALTH),  1);
 	shield  = min(getstatf(STAT_VEHICLESTAT_SHIELD),  1);
 	energy  = min(getstatf(STAT_VEHICLESTAT_ENERGY),  1);
@@ -417,36 +407,6 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
     drawpic(hudloc, waki_b, picsize, '0 1 0' * health + '1 0 0' * (1 - health), 1, DRAWFLAG_NORMAL);
     drawpic(hudloc, waki_r, picsize, '1 1 1' * rockets + '1 0 0' * (1 - rockets), 1, DRAWFLAG_NORMAL);
     drawpic(hudloc, waki_e, picsize, '1 1 1' * energy + '1 0 0' *  (1 - energy), 1, DRAWFLAG_NORMAL);
-
-
-
-	/*
-	p = '0.5 0 0' * (vid_conwidth - (rkt_size * 8));
-	p = p + '0 1 0' * vid_conheight - '0 32 0';
-
-	// Draw health bar
-	p_y += 8;
-	drawfill(p, '256 0 0' * health + '0 8 0' , '0 0.7 0', 0.75, DRAWFLAG_NORMAL);
-	p_x += 256 * health;
-	drawfill(p, '256 0 0' * (1 - health) + '0 8 0' , '0 0 0', 0.75, DRAWFLAG_NORMAL);
-
-	// Draw shiled bar
-	p_x -= 256 * health;
-	p_y += 4;
-	drawfill(p, '256 0 0' * shield + '0 4 0' , '0.25 0.25 1', 0.5, DRAWFLAG_NORMAL);
-
-	// Draw energy
-	//p_x -= 256 * health;
-	p_y -= 8;
-	drawfill(p, '256 0 0' * energy + '0 4 0' , '1 1 1', 0.75, DRAWFLAG_NORMAL);
-
-	// Draw rockets bar
-	p_y += 12;
-	drawfill(p, '256 0 0' * rockets + '0 4 0' , '1 0 0', 0.75, DRAWFLAG_NORMAL);
-	*/
-
-
-
 
 	if (scoreboard_showscores)
 	{

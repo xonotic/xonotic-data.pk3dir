@@ -480,30 +480,36 @@ void vehicles_common_spawn()
         _effects = EF_NODEPTHTEST;
 
     if(autocvar_g_fullbrightplayers)
-        _colormap |= EF_FULLBRIGHT;
+        _effects |= EF_FULLBRIGHT;
 
     if(self.team)
         _colormap = 1024 + (self.team - 1) * 17;
     else
         _colormap = 1024;
 
-    _glowmod = '0 0 0';
-    _colormod = '0 0 0';
+    _glowmod    = '0 0 0';
+    _colormod   = '0 0 0';
 
+    // Find all ents attacked to main model and setup effects, colormod etc.
     e = findchainentity(tag_entity, self);
     while(e)
     {
-        e.colormap = _colormap;
-        e.effects = _effects;
-        e.colormod = _colormod;
-        e.colormap = _colormap;
+        e.effects   = _effects;
+        e.colormod  = _colormod;
+        e.colormap  = _colormap;
+        e.alpha     = 1;
+
         e = e.chain;
     }
 
     self.effects  = _effects;
-    self.colormap = _colormap;
     self.colormod = _colormod;
     self.colormap = _colormap;
+
+    self.alpha          = 1;
+    self.avelocity      = '0 0 0';
+    self.velocity       = '0 0 0';
+
 }
 
 float vehicle_initialize(string  net_name,

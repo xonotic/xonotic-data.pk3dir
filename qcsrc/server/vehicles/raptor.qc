@@ -69,13 +69,6 @@ float raptor_altitude(float amax)
     return vlen(self.origin - trace_endpos);
 }
 
-void raptor_bombs_return()
-{
-    self.owner.bomb1.alpha = 1;
-    self.owner.bomb2.alpha = 1;
-    remove(self);
-}
-
 void raptor_bomblet_boom()
 {
     if(other == self.owner || other.owner == self.owner)
@@ -91,9 +84,6 @@ void raptor_bomblet_boom()
 
 void raptor_bomb_burst()
 {
-    self.angles = vectoangles(self.velocity);
-
-
     if(autocvar_g_vehicle_raptor_bomblet_alt)
     {
         self.nextthink = time;
@@ -107,34 +97,24 @@ void raptor_bomb_burst()
     }
 
     entity bomblet;
-    float i,v;
-    vector d;
+    float i;
 
-    v = vlen(self.velocity);
-    d = normalize(self.velocity);
     pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 
     for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
     {
-
         bomblet = spawn();
-        setorigin(bomblet,self.origin);
+        setorigin(bomblet, self.origin);
 
-        //setmodel(bomblet,"models/vehicles/raptor_bomb.dpm");
-        bomblet.scale = 0.5;
-
+        bomblet.scale       = 0.5;
         bomblet.solid       = SOLID_TRIGGER;
         bomblet.movetype    = MOVETYPE_BOUNCE;
         bomblet.touch       = raptor_bomblet_boom;
         bomblet.think       = raptor_bomblet_boom;
         bomblet.nextthink   = time + 5;
         bomblet.owner       = self.owner;
+        bomblet.velocity    = normalize(normalize(self.velocity) + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * vlen(self.velocity);
 
-        //bomblet.modelflags = MF_GRENADE;
-
-        bomblet.velocity = normalize(d + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * v;
-
-        //bomblet.angles = vectoangles(bomblet.velocity);
         CSQCProjectile(bomblet, TRUE, PROJECTILE_RAPTORBOMB, TRUE);
     }
 
@@ -150,8 +130,8 @@ void raptor_bombdrop()
 {
     entity bomb_1, bomb_2;
 
-    self.bomb1.alpha = 0.25;
-    self.bomb2.alpha = 0.25;
+    //self.bomb1.alpha = 0;
+    //self.bomb2.alpha = 0;
 
     bomb_1 = spawn();
     bomb_2 = spawn();
@@ -169,19 +149,13 @@ void raptor_bombdrop()
     else
         bomb_1.nextthink = bomb_2.nextthink  = time + autocvar_g_vehicle_raptor_bomblet_time;
 
-    //bomb_1.avelocity = bomb_2.avelocity  = '0 0 180';
     bomb_1.owner     = bomb_2.owner      = self;
     bomb_1.enemy     = bomb_2.enemy      = self.owner;
-    //bomb_1.angles    = bomb_2.angles     = self.angles;
     bomb_1.solid     = bomb_2.solid      = SOLID_BBOX;
 
     CSQCProjectile(bomb_1, TRUE, PROJECTILE_RAPTORBOMB, TRUE);
     CSQCProjectile(bomb_2, TRUE, PROJECTILE_RAPTORBOMB, TRUE);
 
-    bomb_1 = spawn();
-    bomb_1.owner = self;
-    bomb_1.think = raptor_bombs_return;
-    bomb_1.nextthink = time + autocvar_g_vehicle_raptor_bombs_refire;
 }
 
 void raptor_bolt_explode()
@@ -349,6 +323,7 @@ float raptor_frame()
     else
         makevectors(player.v_angle);
     */
+
     crosshair_trace(player);
     //df = vectoangles(normalize(trace_endpos - gettaginfo(raptor ,gettagindex(raptor, "tag_hud"))) - raptor.angles);
     df = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
@@ -536,15 +511,24 @@ float raptor_frame()
 
     player.vehicle_energy = raptor.vehicle_energy / autocvar_g_vehicle_raptor_energy;
 
+
     if(time > raptor.delay)
-    if(player.BUTTON_ATCK2)
     {
-        raptor_bombdrop();
-        raptor.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
-        raptor.lip = time;
+        if(player.BUTTON_ATCK2)
+        {
+            raptor_bombdrop();
+            raptor.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
+        }
+        player.vehicle_reload1 = 1;
+    }
+    else
+    {
+        player.vehicle_reload1 = min(time / raptor.delay, 1);
+        raptor.bomb1.alpha = raptor.bomb2.alpha = player.vehicle_reload1; //(player.vehicle_reload1 == 1 ? 1 : player.vehicle_reload1 * 0.25);
     }
 
-    player.vehicle_reload1 = (time - raptor.lip) / (raptor.delay - raptor.lip);
+
+
     VEHICLE_UPDATE_PLAYER(health, raptor);
 
     if(self.vehicle_flags & VHF_HASSHIELD)
@@ -639,13 +623,8 @@ void raptor_spawn()
     self.movetype       = MOVETYPE_FLY;
     self.solid          = SOLID_SLIDEBOX;
     self.takedamage     = DAMAGE_AIM;
-    self.alpha          = 1;
-	self.colormap       = 1024;
 	self.deadflag       = DEAD_NO;
     self.bot_attack     = TRUE;
-    self.colormod       = '1 1 1';
-    self.avelocity      = '0 0 0';
-    self.velocity       = '0 0 0';
     self.vehicle_energy = 1;
     self.vehicle_hudmodel.viewmodelforclient = self;
 
@@ -705,7 +684,10 @@ void raptor_dinit()
     setattachment(self.bomb1, self,"bombmount_left");
     setattachment(self.bomb2, self,"bombmount_right");
 
+
     // FIXME Guns mounts to angled bones
+    self.bomb1.angles = self.angles;
+    self.angles = '0 0 0';
     // This messes up gun-aim, so work arround it.
     //setattachment(self.gun1, self, "gunmount_left");
     ofs = gettaginfo(self, gettagindex(self, "gunmount_left"));
@@ -718,6 +700,10 @@ void raptor_dinit()
     ofs -= self.origin;
     setattachment(self.gun2, self, "");
     setorigin(self.gun2, ofs);
+
+    self.angles = self.bomb1.angles;
+    self.bomb1.angles = '0 0 0';
+
 
     spinner = spawn();
     spinner.owner = self;
