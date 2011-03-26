@@ -366,6 +366,9 @@ vector myhealth_gentlergb;
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
+float chase_used;
+float chase_default, chase_back_default;
+
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -799,22 +802,34 @@ void CSQC_UpdateView(float w, float h)
 	{
 		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission))
 		{
-			if(!cvar("chase_active"))
+			if(!chase_used)
+			{
 				cvar_set("chase_active", "1");
-		}
-		else if(cvar("chase_active"))
-			cvar_set("chase_active", "0");
+				cvar_set("chase_back", "0"); // start from 0
+				chase_used = TRUE;
+			}
 
-		// make the camera smooth back
-		if(cvar("chase_active"))
-		{
+			// make the camera smooth back
 			if(autocvar_cl_chase_speed && cvar("chase_back") < autocvar_cl_chase_distance)
 				cvar_set("chase_back", ftos(cvar("chase_back") + (autocvar_cl_chase_speed * (autocvar_cl_chase_distance - cvar("chase_back")) * frametime)));
 			else if(cvar("chase_back") != autocvar_cl_chase_distance)
 				cvar_set("chase_back", ftos(autocvar_cl_chase_distance));
 		}
-		else if(cvar("chase_back"))
-			cvar_set("chase_back", "0"); // start from 0 next time we fade this
+		else
+		{
+			if(chase_used)
+			{
+				cvar_set("chase_active", ftos(chase_default));
+				cvar_set("chase_back", ftos(chase_back_default));
+				chase_used = FALSE;
+			}
+
+			// keep the defaults updated
+			if(chase_default != cvar("chase_active"))
+				chase_default = cvar("chase_active");
+			if(chase_back_default != cvar("chase_back"))
+				chase_back_default = cvar("chase_back");
+		}
 	}
 
 	// Draw the mouse cursor
