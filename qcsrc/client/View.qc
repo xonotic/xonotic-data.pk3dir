@@ -795,15 +795,26 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	// event chase cam
-	if(spectatee_status >= 0)
+	if(spectatee_status >= 0 && (autocvar_cl_chase_death || autocvar_cl_chase_intermission))
 	{
 		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission))
 		{
 			if(!cvar("chase_active"))
 				cvar_set("chase_active", "1");
 		}
-		else if(cvar("chase_active") && (autocvar_cl_chase_death || autocvar_cl_chase_intermission))
+		else if(cvar("chase_active"))
 			cvar_set("chase_active", "0");
+
+		// make the camera smooth back
+		if(cvar("chase_active"))
+		{
+			if(autocvar_cl_chase_speed && cvar("chase_back") < autocvar_cl_chase_distance)
+				cvar_set("chase_back", ftos(cvar("chase_back") + (autocvar_cl_chase_speed * frametime)));
+			else if(cvar("chase_back") != autocvar_cl_chase_distance)
+				cvar_set("chase_back", ftos(autocvar_cl_chase_distance));
+		}
+		else if(cvar("chase_back"))
+			cvar_set("chase_back", "0"); // start from 0 next time we fade this
 	}
 
 	// Draw the mouse cursor
