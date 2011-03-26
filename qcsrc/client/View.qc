@@ -794,9 +794,9 @@ void CSQC_UpdateView(float w, float h)
 			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 	}
 
-	if(spectatee_status >= 0 && !intermission)
+	if(spectatee_status >= 0)
 	{
-		if(getstati(STAT_HEALTH) <= 0)
+		if((getstati(STAT_HEALTH) <= 0 && !intermission) || (intermission))
 		{
 			if(!cvar("chase_active"))
 				cvar_set("chase_active", "1");
