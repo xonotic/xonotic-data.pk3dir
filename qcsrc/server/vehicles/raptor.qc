@@ -120,7 +120,7 @@ void raptor_bomb_burst()
         bomblet = spawn();
         setorigin(bomblet,self.origin);
 
-        setmodel(bomblet,"models/vehicles/raptor_bomb.dpm");
+        //setmodel(bomblet,"models/vehicles/raptor_bomb.dpm");
         bomblet.scale = 0.5;
 
         bomblet.solid       = SOLID_TRIGGER;
@@ -130,11 +130,12 @@ void raptor_bomb_burst()
         bomblet.nextthink   = time + 5;
         bomblet.owner       = self.owner;
 
-        bomblet.modelflags = MF_GRENADE;
+        //bomblet.modelflags = MF_GRENADE;
 
         bomblet.velocity = normalize(d + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * v;
 
-        bomblet.angles = vectoangles(bomblet.velocity);
+        //bomblet.angles = vectoangles(bomblet.velocity);
+        CSQCProjectile(bomblet, TRUE, PROJECTILE_RAPTORBOMB, TRUE);
     }
 
     remove(self);
@@ -155,9 +156,6 @@ void raptor_bombdrop()
     bomb_1 = spawn();
     bomb_2 = spawn();
 
-    setmodel(bomb_1,"models/vehicles/raptor_bomb.dpm");
-    setmodel(bomb_2,"models/vehicles/raptor_bomb.dpm");
-
     setorigin(bomb_1, gettaginfo(self, gettagindex(self, "bombmount_left")));
     setorigin(bomb_2, gettaginfo(self, gettagindex(self, "bombmount_right")));
 
@@ -171,11 +169,14 @@ void raptor_bombdrop()
     else
         bomb_1.nextthink = bomb_2.nextthink  = time + autocvar_g_vehicle_raptor_bomblet_time;
 
-    bomb_1.avelocity = bomb_2.avelocity  = '0 0 180';
+    //bomb_1.avelocity = bomb_2.avelocity  = '0 0 180';
     bomb_1.owner     = bomb_2.owner      = self;
     bomb_1.enemy     = bomb_2.enemy      = self.owner;
-    bomb_1.angles    = bomb_2.angles     = self.angles;
+    //bomb_1.angles    = bomb_2.angles     = self.angles;
     bomb_1.solid     = bomb_2.solid      = SOLID_BBOX;
+
+    CSQCProjectile(bomb_1, TRUE, PROJECTILE_RAPTORBOMB, TRUE);
+    CSQCProjectile(bomb_2, TRUE, PROJECTILE_RAPTORBOMB, TRUE);
 
     bomb_1 = spawn();
     bomb_1.owner = self;
@@ -216,7 +217,7 @@ void raptor_fire_cannon(entity gun, string tagname)
     pointparticles(particleeffectnum("raptor_cannon_muzzleflash"), bolt.origin, bolt.velocity, 1);
     //pointparticles(particleeffectnum("spiderbot_minigun_muzzleflash"), bolt.origin, bolt.velocity, 1);
 
-    CSQCProjectile(bolt, TRUE, PROJECTILE_CRYLINK   , TRUE);
+    CSQCProjectile(bolt, TRUE, PROJECTILE_CRYLINK, TRUE);
 }
 
 void raptor_think()

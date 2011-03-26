@@ -195,7 +195,7 @@ void Ent_Projectile()
 	//   effects
 	//
 	// projectiles don't send angles, because they always follow the velocity
-	
+
 	f = ReadByte();
 	self.count = (f & 0x80);
 	self.iflags = (self.iflags & IFLAG_INTERNALMASK) | IFLAG_AUTOANGLES | IFLAG_ANGLES;
@@ -294,6 +294,7 @@ void Ent_Projectile()
 			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			case PROJECTILE_FLAC: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			case PROJECTILE_SEEKER: setmodel(self, "models/tagrocket.md3"); self.scale = 2; self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_RAPTORBOMB: setmodel(self, "models/vehicles/raptor_bomb.dpm"); self.gravity = 1; self.traileffect = particleeffectnum("TR_GRENADE"); break;
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
@@ -384,6 +385,10 @@ void Ent_Projectile()
 				self.mins = '-4 -4 -4';
 				self.maxs = '4 4 4';
 				break;
+            case PROJECTILE_RAPTORBOMB:
+				self.mins = '-3 -3 -3';
+				self.maxs = '3 3 3';
+				break;
 			default:
 				break;
 		}
@@ -406,7 +411,7 @@ void Ent_Projectile()
 
 	if(!(self.count & 0x80))
 		InterpolateOrigin_Note();
-	
+
 	self.draw = Projectile_Draw;
 	self.entremove = Ent_RemoveProjectile;
 }
@@ -424,9 +429,12 @@ void Projectile_Precache()
 	precache_model("models/rocket.md3");
 	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
+	precache_model("models/vehicles/raptor_bomb.dpm");
+
 	precache_sound("weapons/electro_fly.wav");
 	precache_sound("weapons/rocket_fly.wav");
 	precache_sound("weapons/fireball_fly.wav");
 	precache_sound("weapons/fireball_fly2.wav");
 	precache_sound("weapons/tag_rocket_fly.wav");
+
 }
