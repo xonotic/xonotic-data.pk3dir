@@ -305,3 +305,5 @@ float autocvar_viewsize;
 float autocvar_crosshair_color_by_health;
 float autocvar_cl_hitsound;
 float autocvar_cl_hitsound_antispam_time;
+float autocvar_cl_chase_death;
+float autocvar_cl_chase_intermission;
