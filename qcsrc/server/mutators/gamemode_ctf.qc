@@ -1,6 +1,6 @@
 // ================================================================
 //  Official capture the flag game mode coding, reworked by Samual
-//  Last updated: March 25th, 2011
+//  Last updated: March 27th, 2011
 // ================================================================
 
 // Flag constants 
@@ -33,114 +33,22 @@ float captureshield_min_negscore; // punish at -20 points
 float captureshield_max_ratio; // punish at most 30% of each team
 float captureshield_force; // push force of the shield
 
-// ===================
-// Main Flag Functions 
-// ===================
 
-float ctf_CaptureShield_CheckStatus(entity p) // check to see 
+// declare functions so they can be used in any order in the file
+void ctf_TouchEvent(void);
+void ctf_FlagThink(void);
+void ctf_SetupFlag(float, entity);
+
+
+void ctf_CreateBaseWaypoints(float teamnumber)
 {
-	float s, se;
-	entity e;
-	float players_worseeq, players_total;
-
-	if(captureshield_max_ratio <= 0)
-		return FALSE;
-
-	s = PlayerScore_Add(p, SP_SCORE, 0);
-	if(s >= -captureshield_min_negscore)
-		return FALSE;
-
-	players_total = players_worseeq = 0;
-	FOR_EACH_PLAYER(e)
-	{
-		if(e.team != p.team)
-			continue;
-		se = PlayerScore_Add(e, SP_SCORE, 0);
-		if(se <= s)
-			++players_worseeq;
-		++players_total;
-	}
-
-	// player is in the worse half, if >= half the players are better than him, or consequently, if < half of the players are worse
-	// use this rule here
-	
-	if(players_worseeq >= players_total * captureshield_max_ratio)
-		return FALSE;
-
-	return TRUE;
-}
-
-void ctf_CaptureShield_Update(entity p, float dir)
-{
-	float should;
-	if(dir == p.ctf_captureshielded) // 0: shield only, 1: unshield only
-	{
-		should = ctf_captureshield_shielded(p);
-		if(should != dir)
-		{
-			if(should)
-			{
-				centerprint_atprio(p, CENTERPRIO_SHIELDING, "^3You are now ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Make some defensive scores before trying again.");
-				// TODO csqc notifier for this
-			}
-			else
-			{
-				centerprint_atprio(p, CENTERPRIO_SHIELDING, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.");
-				// TODO csqc notifier for this
-			}
-			p.ctf_captureshielded = should;
-		}
-	}
-}
-
-float ctf_CaptureShield_customize()
-{
-	if not(other.ctf_captureshielded)
-		return FALSE;
-	if(self.team == other.team)
-		return FALSE;
-	return TRUE;
-}
-
-void ctf_CaptureShield_touch()
-{
-	if not(other.ctf_captureshielded)
-		return;
-	if(self.team == other.team)
-		return;
-	vector mymid;
-	vector othermid;
-	mymid = (self.absmin + self.absmax) * 0.5;
-	othermid = (other.absmin + other.absmax) * 0.5;
-	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * captureshield_force);
-	centerprint_atprio(other, CENTERPRIO_SHIELDING, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.");
-}
-
-void ctf_flag_spawnstuff()
-{
-	entity e;
-	e = spawn();
-	e.enemy = self;
-	e.team = self.team;
-	e.touch = ctf_captureshield_touch;
-	e.customizeentityforclient = ctf_captureshield_customize;
-	e.classname = "ctf_captureshield";
-	e.effects = EF_ADDITIVE;
-	e.movetype = MOVETYPE_NOCLIP;
-	e.solid = SOLID_TRIGGER;
-	e.avelocity = '7 0 11';
-	setorigin(e, self.origin);
-	setmodel(e, "models/ctf/shield.md3");
-	e.scale = 0.5;
-	setsize(e, e.scale * e.mins, e.scale * e.maxs);
-
 	waypoint_spawnforitem_force(self, self.origin);
 	self.nearestwaypointtimeout = 0; // activate waypointing again
 	self.basewaypoint = self.nearestwaypoint;
 
 	if(self.team == COLOR_TEAM1)
 	{
-		WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 61', self, sprite);
+		WaypointSprite_SpawnFixed(((self.team == COLOR_TEAM1) ? "redbase" : "bluebase"), self.origin + '0 0 61', self, sprite);
 		WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM1 - 1, FALSE));
 	}
 	else
@@ -149,6 +57,7 @@ void ctf_flag_spawnstuff()
 		WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM2 - 1, FALSE));
 	}
 }
+
 
 // ==================
 // Misc CTF functions
@@ -250,12 +159,10 @@ void ctf_SetStatus()
 void ctf_Reset()
 {
 	DropFlag(self, world, world);
-	
-	if(self.waypointsprite_attachedforcarrier)
-		WaypointSprite_DetachCarrier(self);
 
 	ReturnFlag(self);
 }
+
 
 // ===================
 // Main Flag Functions
@@ -306,7 +213,7 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.noise)  { flag.noise  = ((teamnumber) ? "ctf/red_taken.wav" : "ctf/blue_taken.wav"); }
 	if(!flag.noise1) { flag.noise1 = ((teamnumber) ? "ctf/red_returned.wav" : "ctf/blue_returned.wav"); }
 	if(!flag.noise2) { flag.noise2 = ((teamnumber) ? "ctf/red_capture.wav" : "ctf/blue_capture.wav"); } // blue team scores by capturing the red flag
-	if(!flag.noise3) { flag.noise3 = "ctf/flag_respawn.wav"; } 
+	if(!flag.noise3) { flag.noise3 = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
 	if(!flag.noise4) { flag.noise4 = ((teamnumber) ? "ctf/red_dropped.wav" : "ctf/blue_dropped.wav"); }
 	
 	// precache
@@ -322,46 +229,34 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 
 void ctf_PlaceFlag()
 {
-	if(self.classname != "item_flag_team")
-	{
-		backtrace("PlaceFlag a non-flag");
-		return;
-	}
+	if(self.classname != "item_flag_team") { backtrace("ctf_PlaceFlag was called incorrectly."); return; }
 
 	setattachment(self, world, "");
-	self.mdl = self.model;
+	self.mdl = self.model; // why?
 	self.flags = FL_ITEM;
 	self.solid = SOLID_TRIGGER;
 	self.movetype = MOVETYPE_NONE;
 	self.velocity = '0 0 0';
-	self.origin_z = self.origin_z + 6;
-	self.think = FlagThink;
-	self.touch = FlagTouch;
-	self.nextthink = time + 0.1;
+	self.origin_z = self.origin_z + 6; // why 6?
+	self.think = ctf_FlagThink;
+	self.touch = ctf_TouchEvent;
+	self.nextthink = time + 0.1; // why? 
 	self.cnt = FLAG_BASE;
 	self.mangle = self.angles;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	//self.effects = self.effects | EF_DIMLIGHT;
-	if(self.noalign)
-	{
-		self.dropped_origin = self.origin;
-	}
-	else
-	{
-		droptofloor();
-		self.movetype = MOVETYPE_TOSS;
-	}
+	
+	if(self.noalign) { self.dropped_origin = self.origin; }
+	else { droptofloor(); self.movetype = MOVETYPE_TOSS; }
 
-	InitializeEntity(self, ctf_flag_spawnstuff, INITPRIO_SETLOCATION);
+	ctf_CreateBaseWaypoints();
+	ctf_CaptureShield_Spawn();
+	//InitializeEntity(self, ctf_CaptureShield_Spawn, INITPRIO_SETLOCATION);
 }
 
 void ctf_RegenFlag(entity e)
 {
-	if(e.classname != "item_flag_team")
-	{
-		backtrace("RegenFlag a non-flag");
-		return;
-	}
+	if(self.classname != "item_flag_team") { backtrace("ctf_RegenFlag was called incorrectly."); return; }
 
 	if(e.waypointsprite_attachedforcarrier)
 		WaypointSprite_DetachCarrier(e);
@@ -384,11 +279,7 @@ void ctf_RegenFlag(entity e)
 
 void ctf_ReturnFlag(entity e)
 {
-	if(e.classname != "item_flag_team")
-	{
-		backtrace("ReturnFlag a non-flag");
-		return;
-	}
+	if(e.classname != "item_flag_team") { backtrace("ctf_ReturnFlag was called incorrectly."); return; }
 
 	if(e.owner)
 	if(e.owner.flagcarried == e)
@@ -403,7 +294,7 @@ void ctf_ReturnFlag(entity e)
 	RegenFlag(e);
 }
 
-void ctf_DropFlag(entity flag, entity penalty_receiver, entity attacker)
+void ctf_DropEvent(entity flag, entity penalty_receiver, entity attacker)
 {
 	local entity carrier = flag.owner;
 	
@@ -534,7 +425,7 @@ void ctf_FlagThink()
 		{
 			bprint("The ", self.netname, " has returned to base\n");
 			sound (self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
-			LogCTF("returned", self.team, world);
+			ctf_EventLog("returned", self.team, world);
 			ReturnFlag(self);
 		}
 		return;
@@ -553,16 +444,17 @@ void ctf_FlagThink()
 		DropFlag(self, e, world);
 }
 
-void FlagTouch()
+void ctf_TouchEvent()
 {
-	if(gameover) return;
-
+	if(gameover) { return; }
+	if(!self) { return; }
+	
 	local float t;
 	local entity player;
 	local string s, s0, h0, h1;
 	if(other.classname != "player")
 		return;
-	if(other.health < 1) // ignore dead players
+	if(other.health < 1)
 		return;
 
 	if(self.cnt == FLAG_CARRY)
@@ -573,6 +465,9 @@ void FlagTouch()
 	if(other.flagcarried) // he's got a flag
 	if(other.flagcarried.team != self.team) // capture
 	{
+		ctf_Handle_Capture(self, other);
+		
+		/*
 		if(other.flagcarried == world)
 		{
 			return;
@@ -615,7 +510,7 @@ void FlagTouch()
 		Send_KillNotification (other.netname, other.flagcarried.netname, s, INFO_CAPTUREFLAG, MSG_INFO);
 
 		PlayerTeamScore_Add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
-		LogCTF("capture", other.flagcarried.team, other);
+		ctf_EventLog("capture", other.flagcarried.team, other);
 		// give credit to the individual player
 		UpdateFrags(other, ctf_score_value("score_capture"));
 
@@ -637,14 +532,18 @@ void FlagTouch()
 		RegenFlag (other.flagcarried);
 		other.flagcarried = world;
 		other.next_take_time = time + 1;
+		*/
 	}
 	
 	if(self.cnt == FLAG_BASE)
-	if(other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2) // only red and blue team can steal flags
+	if(other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2) // only red and blue team can steal flags // todo: needed still if rogues are gone?
 	if(other.team != self.team)
 	if(!other.flagcarried)
 	if(!other.ctf_captureshielded)
 	{
+		ctf_Handle_Pickup(self, other);
+		
+		/*
 		if(other.next_take_time > time)
 			return;
 			
@@ -668,7 +567,7 @@ void FlagTouch()
 		UpdateFrags(other, ctf_score_value("score_pickup_base"));
 		self.ctf_dropperid = other.playerid;
 		PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
-		LogCTF("steal", self.team, other);
+		ctf_EventLog("steal", self.team, other);
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 
 		FOR_EACH_PLAYER(player)
@@ -683,6 +582,7 @@ void FlagTouch()
 		WaypointSprite_Ping(self.sprite);
 
 		return;
+		*/
 	}
 
 	if(self.cnt == FLAG_DROPPED)
@@ -724,7 +624,7 @@ void FlagTouch()
 					UpdateFrags(other, ctf_score_value("score_return_rogue"));
 			}
 			PlayerScore_Add(other, SP_CTF_RETURNS, 1);
-			LogCTF("return", self.team, other);
+			ctf_EventLog("return", self.team, other);
 			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ReturnFlag(self);
 		}
@@ -756,7 +656,7 @@ void FlagTouch()
 
 			UpdateFrags(other, f);
 			PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
-			LogCTF("pickup", self.team, other);
+			ctf_EventLog("pickup", self.team, other);
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 
 			FOR_EACH_PLAYER(player)
@@ -775,6 +675,115 @@ void FlagTouch()
 }
 
 
+// =======================
+// CaptureShield Functions 
+// =======================
+
+float ctf_CaptureShield_CheckStatus(entity p) // check to see 
+{
+	float s, se;
+	entity e;
+	float players_worseeq, players_total;
+
+	if(captureshield_max_ratio <= 0)
+		return FALSE;
+
+	s = PlayerScore_Add(p, SP_SCORE, 0);
+	if(s >= -captureshield_min_negscore)
+		return FALSE;
+
+	players_total = players_worseeq = 0;
+	FOR_EACH_PLAYER(e)
+	{
+		if(e.team != p.team)
+			continue;
+		se = PlayerScore_Add(e, SP_SCORE, 0);
+		if(se <= s)
+			++players_worseeq;
+		++players_total;
+	}
+
+	// player is in the worse half, if >= half the players are better than him, or consequently, if < half of the players are worse
+	// use this rule here
+	
+	if(players_worseeq >= players_total * captureshield_max_ratio)
+		return FALSE;
+
+	return TRUE;
+}
+
+void ctf_CaptureShield_Update(entity p, float dir)
+{
+	float should;
+	if(dir == p.ctf_captureshielded) // 0: shield only, 1: unshield only
+	{
+		should = ctf_CaptureShield_CheckStatus(p);
+		if(should != dir)
+		{
+			if(should) // TODO csqc notifier for this
+				centerprint_atprio(p, CENTERPRIO_SHIELDING, "^3You are now ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Make some defensive scores before trying again.");
+			else
+				centerprint_atprio(p, CENTERPRIO_SHIELDING, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.");
+			
+			p.ctf_captureshielded = should;
+		}
+	}
+}
+
+float ctf_CaptureShield_Customize()
+{
+	if not(other.ctf_captureshielded)
+		return FALSE;
+	if(self.team == other.team)
+		return FALSE;
+	return TRUE;
+}
+
+void ctf_CaptureShield_Touch()
+{
+	if not(other.ctf_captureshielded)
+		return;
+	if(self.team == other.team)
+		return;
+	vector mymid;
+	vector othermid;
+	mymid = (self.absmin + self.absmax) * 0.5;
+	othermid = (other.absmin + other.absmax) * 0.5;
+	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * captureshield_force);
+	centerprint_atprio(other, CENTERPRIO_SHIELDING, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.");
+}
+
+void ctf_CaptureShield_Spawn()
+{
+	entity e;
+	e = spawn();
+	e.enemy = self;
+	e.team = self.team;
+	e.touch = ctf_CaptureShield_Touch;
+	e.customizeentityforclient = ctf_CaptureShield_Customize;
+	e.classname = "ctf_captureshield";
+	e.effects = EF_ADDITIVE;
+	e.movetype = MOVETYPE_NOCLIP;
+	e.solid = SOLID_TRIGGER;
+	e.avelocity = '7 0 11';
+	setorigin(e, self.origin);
+	setmodel(e, "models/ctf/shield.md3");
+	e.scale = 0.5;
+	setsize(e, e.scale * e.mins, e.scale * e.maxs);
+}
+
+
+// ==============
+// Hook Functions
+// ==============
+
+MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
+{
+	if(self.flagcarried) { ctf_DropEvent(self); } // figure this out
+	
+	return TRUE;
+}
+
 
 // ==========
 // Spawnfuncs
@@ -792,7 +801,7 @@ void spawnfunc_info_player_team1()
 }
 
 
-/*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
+/*QUAKED spawnfunc_info_player_team2 (1 0 0) (-16 -16 -24) (16 16 24)
 CTF Starting point for a player in team two (Blue).
 Keys: "angle" viewing angle when spawning. */
 void spawnfunc_info_player_team2()
@@ -803,7 +812,7 @@ void spawnfunc_info_player_team2()
 	spawnfunc_info_player_deathmatch();
 }
 
-/*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
+/*QUAKED spawnfunc_info_player_team3 (1 0 0) (-16 -16 -24) (16 16 24)
 CTF Starting point for a player in team three (Yellow).
 Keys: "angle" viewing angle when spawning. */
 void spawnfunc_info_player_team3()
@@ -815,7 +824,7 @@ void spawnfunc_info_player_team3()
 }
 
 
-/*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
+/*QUAKED spawnfunc_info_player_team4 (1 0 0) (-16 -16 -24) (16 16 24)
 CTF Starting point for a player in team four (Purple).
 Keys: "angle" viewing angle when spawning. */
 void spawnfunc_info_player_team4()
@@ -842,7 +851,7 @@ void spawnfunc_item_flag_team1()
 	ctf_SetupFlag(1, self);
 }
 
-/*QUAKED spawnfunc_item_flag_team1 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
+/*QUAKED spawnfunc_item_flag_team2 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
 CTF flag for team two (Blue). Multiple flags are allowed.
 Keys: 
 "angle" Angle the flag will point (minus 90 degrees)... 
@@ -871,6 +880,7 @@ void spawnfunc_ctf_team()
 	self.classname = "ctf_team";
 	self.team = self.cnt + 1;
 }
+
 
 // ==============
 // Initialization
@@ -921,7 +931,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 {
 	MUTATOR_HOOK(MakePlayerObserver, ctf_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, ctf_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, ctf_Scoring, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, ctf_RemovePlayer, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(GiveFragsForKill, ctf_GiveFragsForKill, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(PlayerPreThink, ctf_PlayerPreThink, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(PlayerDamage_Calculate, ctf_PlayerDamage, CBC_ORDER_ANY);
