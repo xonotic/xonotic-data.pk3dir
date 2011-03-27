@@ -776,9 +776,9 @@ void FlagTouch()
 
 
 
-// ============================================
-// Spawnfunc Section - aka "giant f%$!ing mess"
-// ============================================
+// ==========
+// Spawnfuncs
+// ==========
 
 /*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
 CTF Starting point for a player in team one (Red).
@@ -858,7 +858,6 @@ void spawnfunc_item_flag_team2()
 	ctf_SetupFlag(0, self);
 }
 
-
 /*QUAKED spawnfunc_ctf_team (0 .5 .8) (-16 -16 -24) (16 16 32)
 Team declaration for CTF gameplay, this allows you to decide what team names and control point models are used in your map.
 Note: If you use spawnfunc_ctf_team entities you must define at least 2!  However, unlike domination, you don't need to make a blank one too.
@@ -873,8 +872,12 @@ void spawnfunc_ctf_team()
 	self.team = self.cnt + 1;
 }
 
+// ==============
+// Initialization
+// ==============
+
 // code from here on is just to support maps that don't have control point and team entities
-void ctf_spawnteam (string teamname, float teamcolor)
+void ctf_SpawnTeam (string teamname, float teamcolor)
 {
 	local entity oldself;
 	oldself = self;
@@ -888,42 +891,29 @@ void ctf_spawnteam (string teamname, float teamcolor)
 	self = oldself;
 }
 
-// spawn some default teams if the map is not set up for ctf
-void ctf_spawnteams()
-{
-	float numteams;
-
-	numteams = 2;//cvar("g_ctf_default_teams");
-
-	ctf_spawnteam("Red", COLOR_TEAM1 - 1);
-	ctf_spawnteam("Blue", COLOR_TEAM2 - 1);
-}
-
-void ctf_delayedinit()
+void ctf_DelayedInit()
 {
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "ctf_team") == world)
 	{
-		ctf_spawnteam("Red", COLOR_TEAM1 - 1);
-		ctf_spawnteam("Blue", COLOR_TEAM2 - 1);
+		ctf_SpawnTeam("Red", COLOR_TEAM1 - 1);
+		ctf_SpawnTeam("Blue", COLOR_TEAM2 - 1);
 	}
-
-	ScoreRules_ctf();
 }
 
 void ctf_Initialize()
 {
-	InitializeEntity(world, ctf_delayedinit, INITPRIO_GAMETYPE);
 	flagcaptimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));
 
 	captureshield_min_negscore = autocvar_g_ctf_shield_min_negscore;
 	captureshield_max_ratio = autocvar_g_ctf_shield_max_ratio;
 	captureshield_force = autocvar_g_ctf_shield_force;
 
-
-//#NO AUTOCVARS START
 	g_ctf_win_mode = cvar("g_ctf_win_mode");
-//#NO AUTOCVARS END
+	
+	ScoreRules_ctf();
+	
+	InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 
