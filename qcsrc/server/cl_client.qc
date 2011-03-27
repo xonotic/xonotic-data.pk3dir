@@ -2604,7 +2604,7 @@ PlayerPreThink
 Called every frame for each client before the physics are run
 =============
 */
-void() ctf_setstatus;
+//void() ctf_setstatus;
 void() nexball_setstatus;
 .float items_added;
 void PlayerPreThink (void)
@@ -2893,8 +2893,8 @@ void PlayerPreThink (void)
 		if (g_minstagib)
 			minstagib_ammocheck();
 
-		if(g_ctf)
-			ctf_setstatus();
+		//if(g_ctf)
+		//	ctf_setstatus();
 
 		if(g_nexball)
 			nexball_setstatus();

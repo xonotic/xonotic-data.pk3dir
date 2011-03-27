@@ -1,0 +1,10 @@
+// these are needed since mutators are compiled last
+
+// used in t_quake3.qc
+void spawnfunc_info_player_team1();
+void spawnfunc_info_player_team2();
+void spawnfunc_info_player_team3();
+void spawnfunc_info_player_team4();
+void spawnfunc_item_flag_team1();
+void spawnfunc_item_flag_team2();
+void spawnfunc_ctf_team();

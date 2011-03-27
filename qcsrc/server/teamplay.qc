@@ -68,7 +68,7 @@ string TeamNoName(float t)
 }
 
 void dom_init();
-void ctf_init();
+//void ctf_init();
 void runematch_init();
 void tdm_init();
 void nb_init();
@@ -249,7 +249,7 @@ void InitGameplayMode()
 			fraglimit_override = autocvar_capturelimit_override;
 			leadlimit_override = autocvar_captureleadlimit_override;
 		}
-		ctf_init();
+		MUTATOR_ADD(gamemode_ctf);
 		have_team_spawns = -1; // request team spawns
 	}
 
