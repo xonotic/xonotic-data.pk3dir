@@ -2388,6 +2388,23 @@ void SpectateCopy(entity spectatee) {
 	SetZoomState(spectatee.zoomstate);
 
 	anticheat_spectatecopy(spectatee);
+
+	//self.vehicle = spectatee.vehicle;
+
+	self.hud = spectatee.hud;
+	if(spectatee.vehicle)
+    {
+        self.vehicle_health = spectatee.vehicle_health;
+        self.vehicle_shield = spectatee.vehicle_shield;
+        self.vehicle_energy = spectatee.vehicle_energy;
+        self.vehicle_ammo1 = spectatee.vehicle_ammo1;
+        self.vehicle_ammo2 = spectatee.vehicle_ammo2;
+        self.vehicle_reload1 = spectatee.vehicle_reload1;
+        self.vehicle_reload2 = spectatee.vehicle_reload2;
+        msg_entity = self;
+        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
+        WriteEntity(MSG_ONE, spectatee.vehicle.vehicle_viewport);
+    }
 }
 
 float SpectateUpdate() {

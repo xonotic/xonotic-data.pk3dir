@@ -5452,6 +5452,7 @@ liquidfriction 8
 originjitter 8 8 8
 velocityjitter 312 312 312
 
+
 effect raptor_cannon_muzzleflash
 count 16
 type spark
@@ -5478,3 +5479,67 @@ rotate -180 180 4000 -4000
 lightradius 150
 lightradiusfade 6000
 lightcolor 3 0 6
+
+// decal
+effect raptor_bomb_impact
+countabsolute 1
+type decal
+tex 8 16
+size 84 84
+alpha 256 256 0
+originjitter 16 16 16
+rotate -180 180 0 0
+//spark vertical
+effect raptor_bomb_impact
+count 6
+type spark
+color 0xff9c00 0xff3c00
+tex 48 55
+size 30 60
+alpha 300 300 600
+originjitter 10 10 10
+velocityjitter 80 80 120
+stretchfactor 240
+sizeincrease 50
+//fire
+effect raptor_bomb_impact
+count 8
+type smoke
+color 0xff9c00 0xff3c00
+tex 48 55
+size 80 160
+alpha 300 300 500
+originjitter 10 10 10
+velocityjitter 950 950 0
+sizeincrease 290
+airfriction 2
+//smoke
+effect raptor_bomb_impact
+count 5
+type spark
+blend alpha
+tex 0 7
+size 140 200
+color 0x646364 0x151515
+alpha 428 428 600
+rotate -180 180 0 0
+velocityjitter 200 200 300
+velocityoffset 0 0 280
+originjitter 30 30 10
+stretchfactor 20
+//smoke 2
+effect raptor_bomb_impact
+count 4
+type alphastatic
+tex 0 7
+size 40 100
+color 0x646364 0x151515
+alpha 328 328 350
+rotate -180 180 0 0
+velocityjitter 200 200 300
+velocityoffset 0 0 380
+originjitter 30 30 10
+sizeincrease 60
+airfriction 0.6
+
+

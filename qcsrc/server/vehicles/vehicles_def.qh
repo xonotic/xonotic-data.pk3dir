@@ -1,6 +1,8 @@
 #define VEHICLES_ENABLED
 #ifdef VEHICLES_ENABLED
 
+//#define VEHICLES_VIEWROTATE_CROSSHAIR
+
 #message "with tZork vehicles (experimental)"
 
 float SVC_SETVIEWPORT   = 5;   // Net.Protocol 0x05

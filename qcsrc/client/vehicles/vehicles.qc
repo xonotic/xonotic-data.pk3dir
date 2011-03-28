@@ -152,15 +152,18 @@ void Net_VehicleSetup()
             break;
         case HUD_WAKIZASHI:
             AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-bracket.tga";
-            AuxiliaryXhair[0].axh_scale   = 0.5;
+            AuxiliaryXhair[0].axh_scale   = 0.25;
             break;
         case HUD_RAPTOR:
             AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-cross.tga";
             AuxiliaryXhair[0].axh_scale   = 0.5;
-            AuxiliaryXhair[1].alpha       = 0.25;
-            AuxiliaryXhair[1].axh_image   = "gfx/vehicles/axh-ring.tga";
-            AuxiliaryXhair[1].axh_scale   = 0.5;
-            AuxiliaryXhair[1].alpha       = 0.5;
+            AuxiliaryXhair[0].alpha       = 0.25;
+
+            AuxiliaryXhair[1].axh_image   = "gfx/vehicles/axh-bracket.tga";
+            AuxiliaryXhair[1].axh_scale   = 0.25;
+            AuxiliaryXhair[1].alpha       = 0.75;
+            AuxiliaryXhair[1].axh_drawflag  = DRAWFLAG_NORMAL;
+
             break;
     }
 }

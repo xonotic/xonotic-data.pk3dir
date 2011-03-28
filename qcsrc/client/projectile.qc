@@ -294,7 +294,7 @@ void Ent_Projectile()
 			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			case PROJECTILE_FLAC: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			case PROJECTILE_SEEKER: setmodel(self, "models/tagrocket.md3"); self.scale = 2; self.traileffect = particleeffectnum("TR_ROCKET"); break;
-			case PROJECTILE_RAPTORBOMB: setmodel(self, "models/vehicles/raptor_bomb.dpm"); self.gravity = 1; self.avelocity  = '0 0 180'; self.traileffect = particleeffectnum("TR_GRENADE"); break;
+			case PROJECTILE_RAPTORBOMB: setmodel(self, "models/vehicles/raptor_bomb.dpm"); self.gravity = 1; self.avelocity  = '0 0 180'; self.traileffect = particleeffectnum(""); break;
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
