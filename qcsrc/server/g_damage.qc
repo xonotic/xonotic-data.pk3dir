@@ -839,7 +839,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if (vlen(force))
 	if (self.classname != "player" || time >= self.spawnshieldtime || g_midair)
 	{
-		self.velocity = self.velocity + self.damageforcescale * force;
+		self.velocity = self.velocity + self.damageforcescale * damage_explosion_calcpush(force, self.velocity, autocvar_g_damagepush_speedfactor);
 		self.flags &~= FL_ONGROUND;
 		UpdateCSQCProjectile(self);
 	}
