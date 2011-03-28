@@ -42,9 +42,8 @@ vector damage_explosion_calcpush(vector explosion_f, vector target_v, float spee
 	if(speedfactor < 1)
 		return explosion_f;
 
-	float m;
-
 #if 0
+	float m;
 	// find m so that
 	//   speedfactor * (1 + e) * m / (1 + m) == 1
 	m = 1 / ((1 + 0) * speedfactor - 1);
@@ -59,5 +58,5 @@ vector damage_explosion_calcpush(vector explosion_f, vector target_v, float spee
 		(target_v + v) * (target_v + v)));
 	return v;
 #endif
-	return explosion_f * explosion_calcpush_getmultiplier(explosion_f * speedfactor, target_v) * (1.0 / speedfactor);
+	return explosion_f * explosion_calcpush_getmultiplier(explosion_f * speedfactor, target_v);
 }
