@@ -603,7 +603,7 @@ void PutObserverInServer (void)
 	}
 
 	if(self.flagcarried)
-		DropFlag(self.flagcarried, world, world);
+		ctf_Handle_Drop(self); // FIXCTF
 
 	if(self.ballcarried && g_nexball)
 		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
@@ -1800,7 +1800,7 @@ void ClientDisconnect (void)
 	Portal_ClearAll(self);
 
 	if(self.flagcarried)
-		DropFlag(self.flagcarried, world, world);
+		ctf_Handle_Drop(self); // FIXCTF
 	if(self.ballcarried && g_nexball)
 		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
 

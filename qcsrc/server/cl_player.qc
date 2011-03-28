@@ -630,12 +630,13 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(self.flagcarried)
 		{
+			// FIXCTF
 			if(attacker.classname != "player" && attacker.classname != "gib")
-				DropFlag(self.flagcarried, self, attacker); // penalty for flag loss by suicide
+				ctf_Handle_Drop(self); // penalty for flag loss by suicide
 			else if(attacker.team == self.team)
-				DropFlag(self.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill
+				ctf_Handle_Drop(self); // penalty for flag loss by suicide/teamkill
 			else
-				DropFlag(self.flagcarried, world, attacker);
+				ctf_Handle_Drop(self);
 		}
 		if(self.ballcarried && g_nexball)
 			DropBall(self.ballcarried, self.origin, self.velocity);

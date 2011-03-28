@@ -396,7 +396,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				if(g_ctf && targ.flagcarried)
 				{
-					UpdateFrags(attacker, ctf_score_value("score_kill"));
+					UpdateFrags(attacker, ctf_ReadScore("score_kill")); // FIXCTF
 					PlayerScore_Add(attacker, SP_CTF_FCKILLS, 1);
 					GiveFrags(attacker, targ, 0, deathtype); // for logging
 				}

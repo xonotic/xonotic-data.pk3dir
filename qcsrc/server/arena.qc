@@ -16,7 +16,7 @@ float required_ca_players;
 
 void PutObserverInServer();
 void PutClientInServer();
-void(entity e) ReturnFlag;
+void ctf_RespawnFlag(entity); // FIXCTF
 void dom_controlpoint_setup();
 void onslaught_generator_reset();
 void onslaught_controlpoint_reset();

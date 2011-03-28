@@ -154,7 +154,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	player.right_vector = -1 * AnglesTransform_Apply(transform, player.right_vector);
 
 	if(player.flagcarried)
-		DropFlag(player.flagcarried, player, world);
+		ctf_Handle_Drop(player); // FIXCTF
 
 	if not(teleporter.enemy)
 	{

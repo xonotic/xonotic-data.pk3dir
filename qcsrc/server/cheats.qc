@@ -167,7 +167,7 @@ float CheatImpulse(float i)
 					if(self.flagcarried)
 					{
 						bprint("The ", self.flagcarried.netname, " was returned to base by its carrier\n");
-						ReturnFlag(self.flagcarried);
+						ctf_RespawnFlag(self); // FIXCTF
 					}
 				}
 				if(g_ctf)
