@@ -158,7 +158,6 @@ void ctf_SetStatus() // re-write this in some less shitty way
 void ctf_Reset()
 {
 	ctf_Handle_Drop(self);
-
 	ctf_RespawnFlag(self);
 }
 
@@ -441,13 +440,13 @@ void ctf_FlagTouch()
 	if(gameover) { return; }
 	if(!self) { return; }
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-	{ // The ball fell off the map, respawn it since players can't get to it
+	{ // The flag fell off the map, respawn it since players can't get to it
 		ctf_RespawnFlag(self);
 		return;
 	}
 	if(other.deadflag != DEAD_NO) { return; }
 	if(other.classname != "player") 
-	{  // the flag just touched an object, most likely the world
+	{  // The flag just touched an object, most likely the world
 		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
 		sound(self, CHAN_AUTO, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
 		return; 
