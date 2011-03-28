@@ -17,6 +17,7 @@ post-builtins.qh
 ../common/constants.qh
 ../common/util.qh
 ../common/items.qh
+../common/explosion_equation.qh
 
 autocvars.qh
 constants.qh
@@ -179,6 +180,8 @@ playerdemo.qc
 anticheat.qc
 cheats.qc
 playerstats.qc
+
+../common/explosion_equation.qc
 
 mutators/base.qc
 mutators/gamemode_ctf.qc
