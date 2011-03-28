@@ -8,17 +8,15 @@
 #define FLAG_MAX (PL_MAX + '0 0 -13')
 #define FLAG_CARRY_POS '-15 0 7'
 
-// Flag waypointsprite
-.entity basewaypoint; 
-.entity sprite; 
+.entity bot_basewaypoint; // Flag waypointsprite
+.entity wps_flagbase; 
 
-// CTF flags in the map
-entity ctf_worldflaglist;
+entity ctf_worldflaglist; // CTF flags in the map
 .entity ctf_worldflagnext;
 
-// Don't allow spam of dropping the flag. 
-.float ctf_dropperid;
+.float ctf_dropperid; // Don't allow spam of dropping the flag
 .float ctf_droptime;
+.float ctf_status; // status of the flag (FLAG_BASE, FLAG_DROPPED, FLAG_CARRY declared globally)
 
 // Delay between when the person can pick up a flag // replace with .wait? 
 .float next_take_time;
@@ -38,25 +36,6 @@ float captureshield_force; // push force of the shield
 void ctf_TouchEvent(void);
 void ctf_FlagThink(void);
 void ctf_SetupFlag(float, entity);
-
-
-void ctf_CreateBaseWaypoints(float teamnumber)
-{
-	waypoint_spawnforitem_force(self, self.origin);
-	self.nearestwaypointtimeout = 0; // activate waypointing again
-	self.basewaypoint = self.nearestwaypoint;
-
-	if(self.team == COLOR_TEAM1)
-	{
-		WaypointSprite_SpawnFixed(((self.team == COLOR_TEAM1) ? "redbase" : "bluebase"), self.origin + '0 0 61', self, sprite);
-		WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM1 - 1, FALSE));
-	}
-	else
-	{
-		WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 61', self, sprite);
-		WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM2 - 1, FALSE));
-	}
-}
 
 
 // ==================
@@ -97,6 +76,18 @@ void ctf_EventLog(string mode, float flagteam, entity actor)
 void ctf_CaptureShockwave(vector org)
 {
 	shockwave_spawn("models/ctf/shockwavetransring.md3", org - '0 0 15', -0.8, 0, 1);
+}
+
+void ctf_CreateBaseWaypoints(entity flag, float teamnumber)
+{
+	// for bots
+	waypoint_spawnforitem_force(flag, flag.origin);
+	flag.nearestwaypointtimeout = 0; // activate waypointing again
+	flag.bot_basewaypoint = flag.nearestwaypoint;
+
+	// waypointsprites
+	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), flag.origin + '0 0 61', flag, wps_flagbase);
+	WaypointSprite_UpdateTeamRadar(flag.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
 }
 
 void ctf_SetStatus_ForType(entity flag, float type)
@@ -171,29 +162,51 @@ void ctf_Reset()
 void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc 
 {
 	// declarations
-	teamnumber = fabs(teamnumber - bound(0, g_ctf_reverse, 1));
+	teamnumber = fabs(teamnumber - bound(0, g_ctf_reverse, 1)); // if we were originally 1, this will become 0. If we were originally 0, this will become 1. 
 	string flag_team_by_name;
 	
 	// main setup
 	flag.ctf_worldflagnext = ctf_worldflaglist; // link flag into ctf_worldflaglist // todo: find out if this can be simplified
 	ctf_worldflaglist = flag;
-	
+
+	setattachment(flag, world, "");	
+
 	flag.netname = ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag");
 	flag.team = ((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2); // COLOR_TEAM1: color 4 team (red) - COLOR_TEAM2: color 13 team (blue)
 	flag.items = ((teamnumber) ? IT_KEY2 : IT_KEY1); // IT_KEY2: gold key (redish enough) - IT_KEY1: silver key (bluish enough)
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
-	flag.noalign = (flag.spawnflags & 1);
+	flag.flags = FL_ITEM;
+	flag.solid = SOLID_TRIGGER;
+	flag.velocity = '0 0 0';
+	flag.ctf_status = FLAG_BASE;
+	flag.mangle = flag.angles;
+	flag.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	
-	flag.nextthink = time + 0.2; // start after doors etc // Samual: 0.2 though? Why? 
-	flag.think = ctf_PlaceFlag; // todo: needs renaming
+	if((flag.spawnflags & 1) 
+	{ 	
+		flag.noalign = TRUE;
+		flag.dropped_origin = flag.origin; 
+		flag.movetype = MOVETYPE_NONE;
+	}
+	else 
+	{ 
+		flag.noalign = FALSE;
+		droptofloor(); 
+		flag.movetype = MOVETYPE_TOSS; 
+	}	
+	
 	flag.reset = ctf_Reset;
+	flag.touch = ctf_TouchEvent;
+	flag.think = ctf_RespawnFlag;
+	flag.nextthink = time + 0.2; // start after doors etc // Samual: 0.2 though? Why? 
 
 	// appearence
 	if(!flag.model) { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
 	setmodel (flag, flag.model); // precision set below
 	setsize(flag, FLAG_MIN, FLAG_MAX);
 	setorigin(flag, flag.origin + '0 0 37');
+	flag.origin_z = flag.origin_z + 6; // why 6?
 	if(!flag.scale) { flag.scale = 0.6; }
 	
 	flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin);
@@ -225,33 +238,15 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	precache_model(flag.model);
 	precache_model("models/ctf/shield.md3");
 	precache_model("models/ctf/shockwavetransring.md3");
+
+	// other initialization stuff
+	ctf_CreateBaseWaypoints(flag, teamnumber);
+	ctf_CaptureShield_Spawn(flag, teamnumber);
+	//InitializeEntity(self, ctf_CaptureShield_Spawn, INITPRIO_SETLOCATION);
 }
 
-void ctf_PlaceFlag()
+void ctf_RespawnFlag(entity flag)
 {
-	if(self.classname != "item_flag_team") { backtrace("ctf_PlaceFlag was called incorrectly."); return; }
-
-	setattachment(self, world, "");
-	self.mdl = self.model; // why?
-	self.flags = FL_ITEM;
-	self.solid = SOLID_TRIGGER;
-	self.movetype = MOVETYPE_NONE;
-	self.velocity = '0 0 0';
-	self.origin_z = self.origin_z + 6; // why 6?
-	self.think = ctf_FlagThink;
-	self.touch = ctf_TouchEvent;
-	self.nextthink = time + 0.1; // why? 
-	self.cnt = FLAG_BASE;
-	self.mangle = self.angles;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-	//self.effects = self.effects | EF_DIMLIGHT;
-	
-	if(self.noalign) { self.dropped_origin = self.origin; }
-	else { droptofloor(); self.movetype = MOVETYPE_TOSS; }
-
-	ctf_CreateBaseWaypoints();
-	ctf_CaptureShield_Spawn();
-	//InitializeEntity(self, ctf_CaptureShield_Spawn, INITPRIO_SETLOCATION);
 }
 
 void ctf_RegenFlag(entity e)
@@ -288,79 +283,59 @@ void ctf_ReturnFlag(entity e)
 		e.owner.flagcarried = world;
 
 		if(e.speedrunning)
-			FakeTimeLimit(e.owner, -1);
+			ctf_FakeTimeLimit(e.owner, -1);
 	}
 	e.owner = world;
 	RegenFlag(e);
 }
 
-void ctf_DropEvent(entity flag, entity penalty_receiver, entity attacker)
+void ctf_Handle_Drop(entity player)
 {
-	local entity carrier = flag.owner;
-	
-	// Called on an entity that is not a flag?
-	if(flag.classname != "item_flag_team") { 
-		backtrace("DropFlag a non-flag");
-		return; }
-		
-	// Reset the flag when speedrunning is enabled.
-	if(flag.speedrunning) {
-		ReturnFlag(flag);
-		return; }
-		
-	// HOW OFTEN DO THESE EVEN HAPPEN? IS THIS NEEDED? todo: remove if not needed.
-	if(!flag.owner) {
-		dprint("FLAG: drop - no owner?!?!\n");
-		return; }
-	if(carrier.flagcarried != flag) {
-		dprint("FLAG: drop - owner is not carrying this flag??\n");
-		return; }
-	
-	//bprint(p.netname, "^7 lost the ", e.netname, "\n");
-	Send_KillNotification (carrier.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
+	entity flag = player.flagcarried;
 
+	if(!flag) { return; }
+	if(flag.speedrunning) { ReturnFlag(flag); return; }
+	
+	// reset the flag
+	setattachment(flag, world, "");
+	flag.owner.flagcarried = world;
+	flag.owner = world;
+	flag.ctf_status = FLAG_DROPPED;
+	flag.movetype = MOVETYPE_TOSS;
+	flag.solid = SOLID_TRIGGER;
+	flag.damageforcescale = autocvar_g_balance_ctf_damageforcescale; // should this really be set here? I don't think so
+	flag.takedamage = DAMAGE_YES;
+	flag.flags = FL_ITEM; // does this need set?
+	setorigin(flag, p.origin - '0 0 24' + '0 0 37');
+	flag.ctf_status = FLAG_DROPPED;
+	flag.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
+	flag.pain_finished = time + autocvar_g_ctf_flag_returntime;//30;
+	
+	flag.ctf_droptime = time;
+	
+	// reset the player
+	
+	
+	// messages and sounds
+	Send_KillNotification(carrier.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
+	sound(flag, CHAN_TRIGGER, flag.noise4, VOL_BASE, ATTN_NONE);
+	ctf_EventLog("dropped", carrier.team, carrier);
+	
+	// scoring
+	PlayerScore_Add(carrier, SP_CTF_DROPS, 1);
 	if(penalty_receiver)
 		UpdateFrags(penalty_receiver, -ctf_score_value("penalty_suicidedrop"));
 	else
 		UpdateFrags(carrier, -ctf_score_value("penalty_drop"));
+	
+	// waypoints
+	WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, (COLOR_TEAM1 + COLOR_TEAM2 - flag.team), flag, waypointsprite_attachedforcarrier, FALSE);
+	WaypointSprite_Ping(carrier.waypointsprite_attachedforcarrier);
+	WaypointSprite_DetachCarrier(carrier);
 
-	PlayerScore_Add(carrier, SP_CTF_DROPS, +1);
 	ctf_captureshield_update(carrier, 0); // shield only
-	flag.playerid = attacker.playerid;
-	flag.ctf_droptime = time;
-	WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 1' * 61, world, COLOR_TEAM1 + COLOR_TEAM2 - flag.team, flag, waypointsprite_attachedforcarrier, FALSE);
-	
-	if(carrier.waypointsprite_attachedforcarrier)
-	{
-		WaypointSprite_Ping(carrier.waypointsprite_attachedforcarrier);
-		WaypointSprite_DetachCarrier(carrier);
-	}
-	else
-	{
-		bprint("\{1}^1Flag carrier had no flag sprite?!?\n");
-		backtrace("Flag carrier had no flag sprite?!?");
-	}
-	
-	ctf_EventLog("dropped", carrier.team, carrier);
-	sound (self, CHAN_TRIGGER, self.noise4, VOL_BASE, ATTN_NONE);
 
-	setattachment(flag, world, "");
-	flag.damageforcescale = autocvar_g_balance_ctf_damageforcescale;
-	flag.takedamage = DAMAGE_YES;
-
-	if(carrier.flagcarried == flag)
-		carrier.flagcarried = world;
-	flag.owner = world;
-
-	flag.flags = FL_ITEM; // clear FL_ONGROUND and any other junk
-	flag.solid = SOLID_TRIGGER;
-	flag.movetype = MOVETYPE_TOSS;
-	// setsize(e, '-16 -16 0', '16 16 74');
-	setorigin(flag, p.origin - '0 0 24' + '0 0 37');
-	flag.cnt = FLAG_DROPPED;
-	flag.velocity = '0 0 300';
-	flag.pain_finished = time + autocvar_g_ctf_flag_returntime;//30;
-
+	// eh? 
 	trace_startsolid = FALSE;
 	tracebox(flag.origin, flag.mins, flag.maxs, flag.origin, TRUE, flag);
 	if(trace_startsolid)
@@ -448,229 +423,40 @@ void ctf_TouchEvent()
 {
 	if(gameover) { return; }
 	if(!self) { return; }
-	
-	local float t;
-	local entity player;
-	local string s, s0, h0, h1;
-	if(other.classname != "player")
+	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+	{ // The ball fell off the map, respawn it since players can't get to it
+		ctf_RespawnFlag();
 		return;
-	if(other.health < 1)
-		return;
-
-	if(self.cnt == FLAG_CARRY)
-		return;
-
-	if(self.cnt == FLAG_BASE)
-	if(other.team == self.team)
-	if(other.flagcarried) // he's got a flag
-	if(other.flagcarried.team != self.team) // capture
-	{
-		ctf_Handle_Capture(self, other);
-		
-		/*
-		if(other.flagcarried == world)
-		{
-			return;
-		}
-		if(autocvar_g_ctf_captimerecord_always || player_count - currentbots <= 1) // at most one human
-		{
-			t = time - other.flagcarried.flagpickuptime;
-			s = ftos_decimals(t, 2);
-			s0 = ftos_decimals(flagcaptimerecord, 2);
-			h0 = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
-			h1 = other.netname;
-			if(h0 == h1)
-				h0 = "their";
-			else
-				h0 = strcat(h0, "^7's"); // h0: display text for previous netname
-			if(flagcaptimerecord == 0)
-			{
-				s = strcat(" in ", s, " seconds");
-				flagcaptimerecord = t;
-				db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(t));
-				db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), h1);
-				write_recordmarker(other, time - t, t);
-			}
-			else if(t < flagcaptimerecord)
-			{
-				s = strcat(" in ", s, " seconds, breaking ", h0, " previous record of ", s0, " seconds");
-				flagcaptimerecord = t;
-				db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(t));
-				db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), h1);
-				write_recordmarker(other, time - t, t);
-			}
-			else
-			{
-				s = strcat(" in ", s, " seconds, failing to break ", h0, " record of ", s0, " seconds");
-			}
-		}
-		else
-			s = "";
-
-		Send_KillNotification (other.netname, other.flagcarried.netname, s, INFO_CAPTUREFLAG, MSG_INFO);
-
-		PlayerTeamScore_Add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
-		ctf_EventLog("capture", other.flagcarried.team, other);
-		// give credit to the individual player
-		UpdateFrags(other, ctf_score_value("score_capture"));
-
-		if(autocvar_g_ctf_flag_capture_effects) {
-			if(other.team == COLOR_TEAM1) { // red team scores effect
-				pointparticles(particleeffectnum("red_ground_quake"), self.origin, '0 0 0', 1);
-				flag_cap_ring_spawn(self.origin);
-			}
-			if(other.team == COLOR_TEAM2) { // blue team scores effect
-				pointparticles(particleeffectnum("blue_ground_quake"), self.origin, '0 0 0', 1);
-				flag_cap_ring_spawn(self.origin);
-			}
-		}
-
-		sound (other, CHAN_AUTO, self.noise2, VOL_BASE, ATTN_NONE);
-		WaypointSprite_DetachCarrier(other);
-		if(self.speedrunning)
-			FakeTimeLimit(other, -1);
-		RegenFlag (other.flagcarried);
-		other.flagcarried = world;
-		other.next_take_time = time + 1;
-		*/
 	}
-	
-	if(self.cnt == FLAG_BASE)
-	if(other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2) // only red and blue team can steal flags // todo: needed still if rogues are gone?
-	if(other.team != self.team)
-	if(!other.flagcarried)
-	if(!other.ctf_captureshielded)
-	{
-		ctf_Handle_Pickup(self, other);
-		
-		/*
-		if(other.next_take_time > time)
-			return;
-			
-		if(autocvar_g_ctf_flag_pickup_effects) // pickup effect
-			pointparticles(particleeffectnum("smoke_ring"), 0.5 * (self.absmin + self.absmax), '0 0 0', 1);
-			
-		// pick up
-		self.flagpickuptime = time; // used for timing runs
-		self.speedrunning = other.speedrunning; // if speedrunning, flag will self-return and teleport the owner back after the record
-		if(other.speedrunning)
-		if(flagcaptimerecord)
-			FakeTimeLimit(other, time + flagcaptimerecord);
-		self.solid = SOLID_NOT;
-		setorigin(self, self.origin); // relink
-		self.owner = other;
-		other.flagcarried = self;
-		self.cnt = FLAG_CARRY;
-		self.angles = '0 0 0';
-		//bprint(other.netname, "^7 got the ", self.netname, "\n");
-		Send_KillNotification (other.netname, self.netname, "", INFO_GOTFLAG, MSG_INFO);
-		UpdateFrags(other, ctf_score_value("score_pickup_base"));
-		self.ctf_dropperid = other.playerid;
-		PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
-		ctf_EventLog("steal", self.team, other);
-		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
-
-		FOR_EACH_PLAYER(player)
-			if(player.team == self.team)
-				centerprint(player, "The enemy got your flag! Retrieve it!");
-
-		self.movetype = MOVETYPE_NONE;
-		setorigin(self, FLAG_CARRY_POS);
-		setattachment(self, other, "");
-		WaypointSprite_AttachCarrier("flagcarrier", other);
-		WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
-		WaypointSprite_Ping(self.sprite);
-
-		return;
-		*/
+	if(other.deadflag != DEAD_NO) { return; }
+	if(other.classname != "player") 
+	{  // the flag just touched an object, most likely the world
+		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
+		sound(self, CHAN_AUTO, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
+		return; 
 	}
+	else if(self.wait > time) { return; }
 
-	if(self.cnt == FLAG_DROPPED)
-	{
-		self.flags = FL_ITEM; // clear FL_ONGROUND and any other junk
-		if(other.team == self.team || (other.team != COLOR_TEAM1 && other.team != COLOR_TEAM2))
-		{
-			// return flag
-			Send_KillNotification (other.netname, self.netname, "", INFO_RETURNFLAG, MSG_INFO);
-			//bprint(other.netname, "^7 returned the ", self.netname, "\n");
-
-			// punish the player who last had it
-			FOR_EACH_PLAYER(player)
-				if(player.playerid == self.ctf_dropperid)
-				{
-					PlayerScore_Add(player, SP_SCORE, -ctf_score_value("penalty_returned"));
-					ctf_captureshield_update(player, 0); // shield only
-				}
-
-			// punish the team who was last carrying it
-			if(self.team == COLOR_TEAM1)
-				TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, -ctf_score_value("penalty_returned"));
-			else
-				TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, -ctf_score_value("penalty_returned"));
-
-			// reward the player who returned it
-			if(other.playerid == self.playerid) // is this the guy who killed the FC last?
-			{
-				if(other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2)
-					UpdateFrags(other, ctf_score_value("score_return_by_killer"));
-				else
-					UpdateFrags(other, ctf_score_value("score_return_rogue_by_killer"));
-			}
-			else
-			{
-				if(other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2)
-					UpdateFrags(other, ctf_score_value("score_return"));
-				else
-					UpdateFrags(other, ctf_score_value("score_return_rogue"));
-			}
-			PlayerScore_Add(other, SP_CTF_RETURNS, 1);
-			ctf_EventLog("return", self.team, other);
-			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
-			ReturnFlag(self);
-		}
-		else if(!other.flagcarried && (other.playerid != self.ctf_dropperid || time > self.ctf_droptime + autocvar_g_balance_ctf_delay_collect))
-		{
-			if(self.waypointsprite_attachedforcarrier)
-				WaypointSprite_DetachCarrier(self);
-
-			if(autocvar_g_ctf_flag_pickup_effects) // field pickup effect
-				pointparticles(particleeffectnum("smoke_ring"), 0.5 * (self.absmin + self.absmax), '0 0 0', 1);
-			
-			// pick up
-			self.solid = SOLID_NOT;
-			setorigin(self, self.origin); // relink
-			self.owner = other;
-			other.flagcarried = self;
-			self.cnt = FLAG_CARRY;
-			Send_KillNotification (other.netname, self.netname, "", INFO_PICKUPFLAG, MSG_INFO);
-			//bprint(other.netname, "^7 picked up the ", self.netname, "\n");
-
-			float f;
-			f = bound(0, (self.pain_finished - time) / autocvar_g_ctf_flag_returntime, 1);
-			//print("factor is ", ftos(f), "\n");
-			f = ctf_score_value("score_pickup_dropped_late") * (1-f)
-			  + ctf_score_value("score_pickup_dropped_early") * f;
-			f = floor(f + 0.5);
-			self.ctf_dropperid = other.playerid;
-			//print("score is ", ftos(f), "\n");
-
-			UpdateFrags(other, f);
-			PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
-			ctf_EventLog("pickup", self.team, other);
-			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
-
-			FOR_EACH_PLAYER(player)
-				if(player.team == self.team)
-					centerprint(player, "The enemy got your flag! Retrieve it!");
-
-			self.movetype = MOVETYPE_NONE;	// flag must have MOVETYPE_NONE here, otherwise it will drop through the floor...
-			setorigin(self, FLAG_CARRY_POS);
-			setattachment(self, other, "");
-			self.damageforcescale = 0;
-			self.takedamage = DAMAGE_NO;
-			WaypointSprite_AttachCarrier("flagcarrier", other);
-			WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
-		}
+	switch(self.ctf_status) 
+	{	
+		case FLAG_BASE:
+			if((other.team == self.team) && (other.flagcarried) && (other.flagcarried.team != self.team))
+				ctf_Handle_Capture(self, other); // other just captured the enemies flag to his base
+			else if((other.team != self.team) && (!other.flagcarried) && (!other.ctf_captureshielded))
+				ctf_Handle_Pickup_Base(self, other); // other just stole the enemies flag
+			break;
+		
+		case FLAG_DROPPED:
+			if(other.team == self.team)
+				ctf_Handle_Return(self, other); // other just returned his own flag
+			else if((!other.flagcarried) && ((other.playerid != self.ctf_dropperid) || (time > self.ctf_droptime + autocvar_g_balance_ctf_delay_collect)))
+				ctf_Handle_Pickup_Dropped(self, other); // other just picked up a dropped enemy flag
+			break;
+				
+		case FLAG_CARRY:
+		default:
+			dprint("Someone touched a flag even though it was being carried? wtf?\n");
+			break; // this should never happen
 	}
 }
 
@@ -886,7 +672,7 @@ void spawnfunc_ctf_team()
 // Initialization
 // ==============
 
-// code from here on is just to support maps that don't have control point and team entities
+// code from here on is just to support maps that don't have flag and team entities
 void ctf_SpawnTeam (string teamname, float teamcolor)
 {
 	local entity oldself;
