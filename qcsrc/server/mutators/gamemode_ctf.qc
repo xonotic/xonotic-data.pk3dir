@@ -1,6 +1,6 @@
 // ================================================================
 //  Official capture the flag game mode coding, reworked by Samual
-//  Last updated: March 27th, 2011
+//  Last updated: March 28th, 2011
 // ================================================================
 
 // Flag constants 
@@ -32,7 +32,6 @@ float flagcaptimerecord;
 float captureshield_min_negscore; // punish at -20 points
 float captureshield_max_ratio; // punish at most 30% of each team
 float captureshield_force; // push force of the shield
-
 
 // declare functions so they can be used in any order in the file
 void ctf_FlagTouch(void);
