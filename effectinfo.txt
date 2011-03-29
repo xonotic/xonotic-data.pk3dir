@@ -1691,11 +1691,11 @@ effect crylink_impact
 countabsolute 1
 type decal
 tex 47 47
-size 24 24
+size 8 8
 alpha 256 256 0
 originjitter 12 12 12
-//lightradius 200
-//lightradiusfade 800
+//lightradius 60
+//lightradiusfade 300
 //lightcolor 3.2 0.4 4
 // purple flare effect
 effect crylink_impact
@@ -1703,34 +1703,34 @@ countabsolute 1
 type static
 tex 39 39
 color 0x504060 0x504060
-size 24 24
+size 8 8
 alpha 256 256 512
 // purple sparks
 effect crylink_impact
-count 40
+count 10
 type spark
 tex 41 41
 color 0xA040C0 0xA040C0
 bounce 2
-size 6 6
+size 1 2
 alpha 256 256 1024
-velocityjitter 512 512 512
+velocityjitter 256 256 256
 // purple splash
 effect crylink_impact
 count 1.5
 type static
 color 0xE070FF 0xE070FF
-size 16 16
+size 8 8
 alpha 256 256 512
-velocityjitter 32 32 32
+velocityjitter 8 8 8
 // purple splash
 effect crylink_impact
-count 3
+count 1.5
 type static
 color 0xE070FF 0xE070FF
-size 16 16
+size 8 8
 alpha 256 256 1024
-velocityjitter 256 256 256
+velocityjitter 32 32 32
 
 
 
@@ -3889,7 +3889,7 @@ effect TE_TEI_G3RED_HIT
 trailspacing 40
 type static
 color 0xFF0000 0xFF0011
-size 10 10
+size 10 10 
 sizeincrease -6
 alpha 256 256 512
 airfriction -4
@@ -3941,14 +3941,14 @@ effect TE_TEI_G3BLUE_HIT
 trailspacing 40
 type static
 color 0x0000FF 0x1100FF
-size 10 10
+size 10 10 
 sizeincrease -6
 alpha 256 256 512
 airfriction -4
 //liquidfriction -4
 type smoke
 
-// Yellow
+// Yellow 
 effect TE_TEI_G3YELLOW
 countabsolute 1
 type beam
@@ -3990,7 +3990,7 @@ effect TE_TEI_G3YELLOW_HIT
 trailspacing 40
 type static
 color 0xffff00 0xffff11
-size 10 10
+size 10 10 
 sizeincrease -6
 alpha 256 256 512
 airfriction -4
@@ -4044,7 +4044,7 @@ effect TE_TEI_G3PINK_HIT
 trailspacing 40
 type static
 color 0xFF00FF 0xFF11FF
-size 10 10
+size 10 10 
 sizeincrease -6
 alpha 256 256 512
 airfriction -4
@@ -4107,10 +4107,10 @@ originjitter 3 3 3
 velocitymultiplier 2
 staincolor 0x808080 0x808080
 staintex 16 24
-
+ 
 // effect for removing player model
 // "teleport"
-
+ 
 // cl_gentle deathfx
 // used in qcsrc/client/gibs.qc:                        pointparticles(particleeffectnum("damage_dissolve"), org, vel, amount)
 // small core blood no decals
@@ -5195,7 +5195,6 @@ velocitymultiplier 15
 airfriction -1
 rotate 0 360 -180 180
 
-<<<<<<< HEAD
 // ---------------vechicles
 
 effect spiderbot_minigun_trail
@@ -5279,7 +5278,7 @@ sizeincrease 100
 stretchfactor 3
 airfriction 6
 rotate -180 180 4000 -4000
-// smoke
+// smoke 
 effect spiderbot_minigun_impact
 count 6
 type smoke
@@ -5490,121 +5489,79 @@ size 84 84
 alpha 256 256 0
 originjitter 16 16 16
 rotate -180 180 0 0
+
 //spark vertical
 effect raptor_bomb_impact
-count 6
+count 3
 type spark
 color 0xff9c00 0xff3c00
 tex 48 55
-size 30 60
+size 20 40
 alpha 300 300 600
 originjitter 10 10 10
-velocityjitter 80 80 120
-stretchfactor 240
+velocityjitter 40 40 120
+stretchfactor 210
 sizeincrease 50
+
 //fire
 effect raptor_bomb_impact
-count 8
-type smoke
+count 4
+type static 
 color 0xff9c00 0xff3c00
 tex 48 55
-size 80 160
+size 30 120
 alpha 300 300 500
 originjitter 10 10 10
 velocityjitter 950 950 0
-sizeincrease 290
+sizeincrease 230
 airfriction 2
+
 //smoke
 effect raptor_bomb_impact
-count 5
+count 4
 type spark
-blend alpha
+blend invmod
 tex 0 7
-size 140 200
+size 120 180
 color 0x646364 0x151515
 alpha 428 428 600
 rotate -180 180 0 0
-velocityjitter 200 200 300
+velocityjitter 200 200 280
 velocityoffset 0 0 280
 originjitter 30 30 10
-stretchfactor 20
+stretchfactor 10
+
 //smoke 2
 effect raptor_bomb_impact
 count 4
-type alphastatic
+//type alphastatic
+type spark
+blend invmod
 tex 0 7
 size 40 100
 color 0x646364 0x151515
 alpha 328 328 350
 rotate -180 180 0 0
 velocityjitter 200 200 300
-velocityoffset 0 0 380
+velocityoffset 0 0 580
 originjitter 30 30 10
 sizeincrease 60
 airfriction 0.6
+gravity 2
 
-
-=======
-// seeker missile trail
-effect TR_SEEKER
-trailspacing 10
-type smoke
-notunderwater
-color 0x000000 0x666666
-tex 0 8
-size 2 2
-bounce 1
-sizeincrease 11
-alpha 200 300 200
-lightradius 100
-lighttime 0
-lightcolor 6 3 1
-originjitter 2 2 2
-velocityjitter 3 3 3
-velocitymultiplier -0.02
-rotate -180 180 -30 30
-//gravity -0.11
-// fire
-effect TR_SEEKER
-trailspacing 4
-type static
-color 0xffdf72 0x811200
-tex 48 55
-size 5 5
-sizeincrease -30
-alpha 100 144 588
-airfriction 8
-velocityjitter 32 32 32
-velocitymultiplier -1.5
-// bubbles
-effect TR_SEEKER
-type bubble
-underwater
-trailspacing 16
-tex 62 62
-size 1 2
-alpha 256 256 256
-gravity -0.125
-bounce 1.5
-liquidfriction 4
-velocityjitter 16 16 16
-velocitymultiplier -0.31
-rotate 0 0 0 0
 // sparks
-effect TR_SEEKER
+effect raptor_bomb_impact
 notunderwater
-trailspacing 20
+count 5
 type spark
 tex 40 40
-color 0xFFFDD9 0xFFFDD9
-size 0.5 0.5
-alpha 444 512 1866
-stretchfactor 0.3
-//gravity 1
-bounce 1
-//velocityoffset 0 0 15
-airfriction 5
-originjitter 1 1 1
-velocityjitter 100 100 100
-velocitymultiplier -0.31
->>>>>>> origin/master
+color 0xffa35b 0xfff2be
+size 3 5
+alpha 644 956 984
+gravity 1
+airfriction 0.3
+velocityoffset 0 0 350
+originjitter 16 16 16
+velocityjitter 174 174 924
+stretchfactor 2
+
