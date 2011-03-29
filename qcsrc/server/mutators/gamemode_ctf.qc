@@ -178,7 +178,7 @@ void ctf_Handle_Drop(entity player) // make sure this works
 	flag.flags = FL_ITEM; // does this need set? same as above.
 	setorigin(flag, player.origin - '0 0 24' + '0 0 37'); // eh wtf is with these weird values?
 	flag.velocity = ('0 0 200' + ('0 100 0' * crandom()) + ('100 0 0' * crandom()));
-	flag.pain_finished = time + autocvar_g_ctf_flag_returntime;
+	flag.pain_finished = time + autocvar_g_ctf_flag_returntime; // replace this later
 	
 	flag.ctf_droptime = time;
 	flag.ctf_dropperid = player.playerid;
@@ -304,7 +304,6 @@ void ctf_Handle_Return(entity flag, entity player) // todo: re-write this
 
 void ctf_Handle_Pickup_Base(entity flag, entity player) // todo: re-write this
 {
-	/*
 	if (player.next_take_time > time)
 		return;
 			
@@ -316,18 +315,18 @@ void ctf_Handle_Pickup_Base(entity flag, entity player) // todo: re-write this
 	flag.speedrunning = player.speedrunning; // if speedrunning, flag will flag-return and teleport the owner back after the record
 	if(player.speedrunning)
 	if(ctf_captimerecord)
-		FakeTimeLimit(player, time + ctf_captimerecord);
+		ctf_FakeTimeLimit(player, time + ctf_captimerecord);
 	flag.solid = SOLID_NOT;
 	setorigin(flag, flag.origin); // relink
 	flag.owner = player;
 	player.flagcarried = flag;
-	flag.cnt = FLAG_CARRY;
+	flag.ctf_status = FLAG_CARRY;
 	flag.angles = '0 0 0';
 	Send_KillNotification (player.netname, flag.netname, "", INFO_GOTFLAG, MSG_INFO);
 	UpdateFrags(player, ctf_ReadScore("score_pickup_base"));
-	flag.dropperid = player.playerid;
+	flag.ctf_dropperid = player.playerid;
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
-	LogCTF("steal", flag.team, player);
+	ctf_EventLog("steal", flag.team, player);
 	sound (player, CHAN_AUTO, flag.noise, VOL_BASE, ATTN_NONE);
 
 	FOR_EACH_PLAYER(player)
@@ -340,7 +339,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player) // todo: re-write this
 	WaypointSprite_AttachCarrier("flagcarrier", player);
 	WaypointSprite_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
 	WaypointSprite_Ping(flag.sprite);
-	*/
+
 }
  
 void ctf_Handle_Pickup_Dropped(entity flag, entity player) // todo: re-write this
@@ -439,8 +438,8 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.model) { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
 	setmodel (flag, flag.model); // precision set below
 	setsize(flag, FLAG_MIN, FLAG_MAX);
-	setorigin(flag, flag.origin + '0 0 37');
-	flag.origin_z = flag.origin_z + 6; // why 6?
+	setorigin(flag, flag.origin);// + '0 0 37');
+	//flag.origin_z = flag.origin_z + 6; // why 6?
 	if(!flag.scale) { flag.scale = 0.6; }
 	
 	flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin);
