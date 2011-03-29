@@ -25,10 +25,10 @@ float autocvar_g_vehicle_raptor_bomblet_force;
 float autocvar_g_vehicle_raptor_bomblet_explode_delay;
 float autocvar_g_vehicle_raptor_bombs_refire;
 
-float autocvar_g_vehicle_raptor_guns_turnspeed;
-float autocvar_g_vehicle_raptor_guns_turnlimit;
-float autocvar_g_vehicle_raptor_guns_pitchlimit_up;
-float autocvar_g_vehicle_raptor_guns_pitchlimit_down;
+float autocvar_g_vehicle_raptor_cannon_turnspeed;
+float autocvar_g_vehicle_raptor_cannon_turnlimit;
+float autocvar_g_vehicle_raptor_cannon_pitchlimit_up;
+float autocvar_g_vehicle_raptor_cannon_pitchlimit_down;
 
 float autocvar_g_vehicle_raptor_cannon_locktarget;
 float autocvar_g_vehicle_raptor_cannon_locking_time;
@@ -459,7 +459,7 @@ float raptor_frame()
     }
 
     // Aim the gunz
-    ftmp2 = autocvar_g_vehicle_raptor_guns_turnspeed * frametime;
+    ftmp2 = autocvar_g_vehicle_raptor_cannon_turnspeed * frametime;
     ftmp = -ftmp2;
 
     // Gun1
@@ -472,8 +472,8 @@ float raptor_frame()
     df_x = bound(ftmp, df_x, ftmp2);
     df_y = bound(ftmp, df_y, ftmp2);
     // Bind to limts
-    raptor.gun1.angles_x = bound(-autocvar_g_vehicle_raptor_guns_pitchlimit_down, df_x + raptor.gun1.angles_x, autocvar_g_vehicle_raptor_guns_pitchlimit_up);
-    raptor.gun1.angles_y = bound(-autocvar_g_vehicle_raptor_guns_turnlimit,  df_y + raptor.gun1.angles_y, autocvar_g_vehicle_raptor_guns_turnlimit);
+    raptor.gun1.angles_x = bound(-autocvar_g_vehicle_raptor_cannon_pitchlimit_down, df_x + raptor.gun1.angles_x, autocvar_g_vehicle_raptor_cannon_pitchlimit_up);
+    raptor.gun1.angles_y = bound(-autocvar_g_vehicle_raptor_cannon_turnlimit,  df_y + raptor.gun1.angles_y, autocvar_g_vehicle_raptor_cannon_turnlimit);
 
     //df = vectoangles(normalize(trace_endpos - df));
 
@@ -487,8 +487,8 @@ float raptor_frame()
     df_x = bound(ftmp, df_x, ftmp2);
     df_y = bound(ftmp, df_y, ftmp2);
     // Bind to limts
-    raptor.gun2.angles_x = bound(-autocvar_g_vehicle_raptor_guns_pitchlimit_down, df_x + raptor.gun2.angles_x, autocvar_g_vehicle_raptor_guns_pitchlimit_up);
-    raptor.gun2.angles_y = bound(-autocvar_g_vehicle_raptor_guns_turnlimit,  df_y + raptor.gun2.angles_y, autocvar_g_vehicle_raptor_guns_turnlimit);
+    raptor.gun2.angles_x = bound(-autocvar_g_vehicle_raptor_cannon_pitchlimit_down, df_x + raptor.gun2.angles_x, autocvar_g_vehicle_raptor_cannon_pitchlimit_up);
+    raptor.gun2.angles_y = bound(-autocvar_g_vehicle_raptor_cannon_turnlimit,  df_y + raptor.gun2.angles_y, autocvar_g_vehicle_raptor_cannon_turnlimit);
 
 
     /*
@@ -551,6 +551,7 @@ float raptor_frame()
 
 void raptor_touch()
 {
+    vehicles_touch();
     if(self.owner)
     {
         if(vlen(self.velocity) == 0)
@@ -650,7 +651,7 @@ void raptor_spawn()
     pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
     self.delay = time;
 
-    vehicles_common_spawn();
+    vehicles_reset_colors();
 }
 
 void raptor_dinit()
@@ -733,6 +734,8 @@ void raptor_dinit()
     spinner.movetype = MOVETYPE_NOCLIP;
     spinner.avelocity = '0 -90 0';
     self.bomb1.gun2 = spinner;
+
+    self.mass               = 2200;
 }
 
 void spawnfunc_vehicle_raptor()

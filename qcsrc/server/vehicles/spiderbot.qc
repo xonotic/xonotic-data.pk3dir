@@ -577,6 +577,7 @@ float spiderbot_crushable(entity e)
 
 void spiderbot_touch()
 {
+    vehicles_touch();
     if(self.owner)
     {
         if(vlen(self.velocity) == 0)
@@ -630,7 +631,7 @@ void spiderbot_spawn()
     setorigin(self, self.pos1 + '0 0 128');
     self.angles = self.pos2;
 
-    vehicles_common_spawn();
+    vehicles_reset_colors();
 
 }
 
@@ -769,6 +770,7 @@ void vewhicle_spiderbot_dinit()
     setattachment(self.gun2, self.tur_head, "tag_hardpoint02");
 
     self.gravity            = 2;
+    self.mass               = 5000;
 }
 
 void spawnfunc_vehicle_spiderbot()

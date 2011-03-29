@@ -47,6 +47,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 
 /*
 // SVC_TEMPENTITY based, horrible with even 50 ping. hm.
+// WriteByte(MSG_ONE, SVC_TEMPENTITY) uses reliable messagess, never use for thinsg that need continous updates.
 void SendAuxiliaryXhair2(entity own, vector loc, vector clr, float axh_id)
 {
 	msg_entity = own;
@@ -79,51 +80,10 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 .entity lock_target;
 .float  lock_strength;
 .float  lock_time;
-void vehicles_locktarget(float deltatime)
-{
-    // no target hit by trace
-    if(trace_ent == world)
-    {
-        self.lock_strength = max(self.lock_strength - deltatime, 0);
-        if(self.lock_strength == 0)
-            self.lock_target = world;
-
-        return;
-    }
-
-    // Current have no target
-    if(self.lock_target == world)
-    {
-        // aquire
-        if(trace_ent != world)
-        {
-            self.lock_target = trace_ent;
-            self.lock_strength = deltatime;
-        }
-        return;
-    }
-
-    // Have a locking target
-    // Trace hit current target
-    if(trace_ent == self.lock_target)
-    {
-        self.lock_strength = min(self.lock_strength + deltatime, 1);
-    }
-    else
-    {
-        self.lock_strength = max(self.lock_strength - deltatime, 0);
-        if(self.lock_strength == 0)
-            self.lock_target = world;
-    }
-}
-
-
 void vehicles_locktarget2(float incr, float decr, float _lock_time)
 {
     if(self.lock_time > time)
         return;
-
-
 
     if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
         self.lock_strength = min(self.lock_strength - decr, 1);
@@ -196,6 +156,23 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
 
 void vehicles_touch()
 {
+    // Vehicle currently
+    if(self.owner)
+    {
+        // Colided with world?
+        if(other == world)
+        {
+            // Apply velocity based self damage here
+        }
+        else
+        {
+            if(other.vehicle_flags & VHF_ISVEHICLE)
+            {
+                other.velocity += self.velocity * (self.mass / other.mass);
+            }
+        }
+    }
+
     if(other.classname != "player")
         return;
 
@@ -218,7 +195,8 @@ void vehicles_enter()
     if (clienttype(other) != CLIENTTYPE_REAL)
         return;
 
-    self.colormod = self.tur_head.colormod = '0 0 0';
+    if(self.phase > time)
+        return;
 
     if(teams_matter)
     if(self.team)
@@ -286,21 +264,6 @@ void vehicles_enter()
 
 void vehicles_exit(float eject)
 {
-	self.colormap   = 1024;
-	self.tur_head.colormap   = 1024;
-
-    if (teams_matter)
-    {
-        if (self.team == COLOR_TEAM1)
-            self.colormod = '1.4 0.8 0.8';
-
-        if (self.team == COLOR_TEAM2)
-            self.colormod = '0.8 0.8 1.4';
-
-        self.tur_head.colormod = self.colormod;
-    }
-
-
 	self.flags |= FL_NOTARGET;
 
     if (self.owner)
@@ -309,12 +272,12 @@ void vehicles_exit(float eject)
         WriteByte (MSG_ONE, SVC_SETVIEWPORT);
         WriteEntity( MSG_ONE, self.owner);
 
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);    // 10 = SVC_SETVIEWANGLES
-        WriteAngle(MSG_ONE,  0);                   // tilt
-        WriteAngle(MSG_ONE,  self.angles_y);        // yaw
-        WriteAngle(MSG_ONE,  0);                   // roll
+        WriteByte (MSG_ONE, SVC_SETVIEWANGLES); // 10 = SVC_SETVIEWANGLES
+        WriteAngle(MSG_ONE, 0);                 // tilt
+        WriteAngle(MSG_ONE, self.angles_y);     // yaw
+        WriteAngle(MSG_ONE, 0);                 // roll
 
-        setsize(self.owner,PL_MIN,PL_MAX);
+        setsize(self.owner, PL_MIN,PL_MAX);
 
         self.owner.takedamage     = DAMAGE_AIM;
         self.owner.solid          = SOLID_SLIDEBOX;
@@ -331,6 +294,11 @@ void vehicles_exit(float eject)
 
     self.vehicle_hudmodel.viewmodelforclient = self;
 	self.tur_head.nodrawtoclient             = self;
+
+    self.phase = time + 1;
+
+    if(!teams_matter)
+        self.team = 0;
 
     if(self.vehicle_exit)
         self.vehicle_exit(eject);
@@ -384,7 +352,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 
         self.tur_head.enemy.colormod    = '1 1 1';
         self.tur_head.enemy.alpha       = 0.45;
-        self.tur_head.enemy.scale       = (256 / vlen(self.maxs - self.mins));
+        self.tur_head.enemy.scale       = 256 / vlen(self.maxs - self.mins);
         self.tur_head.enemy.angles      = vectoangles(normalize(hitloc - self.origin)) - self.angles;
         self.tur_head.enemy.think       = shieldhit_think;
         self.tur_head.enemy.nextthink   = time;
@@ -392,7 +360,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         self.vehicle_shield -= damage;
         if(self.vehicle_shield < 0)
         {
-            self.tur_head.enemy.colormod = '10 0 -1';
+            self.tur_head.enemy.colormod = '2 0 0';
             ddmg_take = fabs(self.vehicle_shield);
             self.vehicle_shield         = 0;
             self.tur_head.enemy.alpha   = 0.75;
@@ -458,19 +426,16 @@ void vehicles_setreturn(float retime, void() respawn_proc)
 
 float vehicles_customizeentityforclient()
 {
-    if(self.deadflag == DEAD_DEAD)
-        return FALSE;
-
-    return TRUE;
+    return self.deadflag == DEAD_DEAD ? FALSE : TRUE;
 }
 
-void vehicles_configcheck(string  configname, float   check_cvar)
+void vehicles_configcheck(string  configname, float check_cvar)
 {
     if(check_cvar == 0)
         localcmd(strcat("exec ", configname, "\n"));
 }
 
-void vehicles_common_spawn()
+void vehicles_reset_colors()
 {
     entity e;
     float _effects, _colormap;
@@ -616,11 +581,13 @@ float vehicle_initialize(string  net_name,
     return TRUE;
 }
 
+
 void bugmenot()
 {
     self.vehicle_exit       = self.vehicle_exit;
     self.vehicle_enter      = self.vehicle_exit;
     self.vehicle_die        = self.vehicle_exit;
     self.vehicle_spawn      = self.vehicle_exit;
+    self.AuxiliaryXhair     = self.AuxiliaryXhair;
     //self.vehicle_message    = self.vehicle_exit;
 }

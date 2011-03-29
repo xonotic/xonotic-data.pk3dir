@@ -459,8 +459,8 @@ float racer_frame()
     if(time > racer.delay)
     if(player.BUTTON_ATCK2)
     {
-        racer_fire_rocket("tag_rocket_r", ((self.lock_strength == 1 && self.lock_target) ? self.lock_target : world));
-        racer_fire_rocket("tag_rocket_l", ((self.lock_strength == 1 && self.lock_target) ? self.lock_target : world));
+        racer_fire_rocket("tag_rocket_r", (self.lock_strength == 1 && self.lock_target) ? self.lock_target : world);
+        racer_fire_rocket("tag_rocket_l", (self.lock_strength == 1 && self.lock_target) ? self.lock_target : world);
 
         self.lock_strength  = 0;
         self.lock_target    = world;
@@ -558,6 +558,7 @@ void racer_exit(float eject)
 
 void racer_touch()
 {
+    vehicles_touch();
     if(self.owner)
     {
         //self.velocity = 0.999 * self.velocity;
@@ -612,7 +613,7 @@ void racer_spawn()
     pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
     self.delay = time;
 
-    vehicles_common_spawn();
+    vehicles_reset_colors();
 }
 
 void racer_blowup()
@@ -709,6 +710,8 @@ void racer_dinit()
     self.scale = 0.5;
     setattachment(self.vehicle_hudmodel, self, "");
     setattachment(self.vehicle_viewport, self, "tag_viewport");
+
+    self.mass               = 900;
 }
 
 void spawnfunc_vehicle_racer()
