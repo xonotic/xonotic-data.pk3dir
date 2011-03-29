@@ -94,6 +94,7 @@ void minstagib_ammocheck (void)
 		return;
 
 	if (self.ammo_cells <= 0)
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		if (self.health == 5)
 		{
@@ -168,10 +169,17 @@ void minstagib_ammocheck (void)
 
 void spawnfunc_weapon_minstanex (void); // defined in t_items.qc
 
-float minstanex_ammo;
 float w_minstanex(float req)
 {
 	float ammo_amount;
+	float minstanex_ammo;
+
+	// now multiple WR_s use this
+	if(g_minstagib)
+		minstanex_ammo = 1;
+	else
+		minstanex_ammo = autocvar_g_balance_minstanex_ammo;
+
 	if (req == WR_AIM)
 	{
 		if(self.ammo_cells > 0)
@@ -181,11 +189,6 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(g_minstagib)
-			minstanex_ammo = 1;
-		else
-			minstanex_ammo = autocvar_g_balance_minstanex_ammo;
-
 		// if the laser uses load, we also consider its ammo for reloading
 		if(autocvar_g_balance_minstanex_reload_ammo && autocvar_g_balance_minstanex_laser_ammo && self.clip_load < min(minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo)) // forced reload
 			weapon_action(self.weapon, WR_RELOAD);
@@ -239,8 +242,8 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_ammo;
-		ammo_amount += self.weapon_load[WEP_MINSTANEX] >= autocvar_g_balance_minstanex_ammo;
+		ammo_amount = self.ammo_cells >= minstanex_ammo;
+		ammo_amount += self.weapon_load[WEP_MINSTANEX] >= minstanex_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
@@ -259,9 +262,9 @@ float w_minstanex(float req)
 	{
 		float used_ammo;
 		if(autocvar_g_balance_minstanex_laser_ammo)
-			used_ammo = min(autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo);
+			used_ammo = min(minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo);
 		else
-			used_ammo = autocvar_g_balance_minstanex_ammo;
+			used_ammo = minstanex_ammo;
 
 		W_Reload(used_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
 	}

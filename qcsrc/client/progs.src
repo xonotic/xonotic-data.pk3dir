@@ -14,6 +14,7 @@ csqc_builtins.qc
 
 ../common/util.qh
 ../common/items.qh
+../common/explosion_equation.qh
 
 ../common/mapinfo.qh
 
@@ -71,8 +72,11 @@ noise.qc
 ../common/mapinfo.qc
 ../common/items.qc
 ../server/w_all.qc
+../common/explosion_equation.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/common.qc
 ../warpzonelib/client.qc
+
+../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail
