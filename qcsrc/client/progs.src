@@ -78,3 +78,5 @@ noise.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/common.qc
 ../warpzonelib/client.qc
+
+../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail
