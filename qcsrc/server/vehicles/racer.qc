@@ -561,8 +561,6 @@ void racer_touch()
     vehicles_touch();
     if(self.owner)
     {
-        //self.velocity = 0.999 * self.velocity;
-        // TO-DO Impact reaction (crush players, damage self on high speed impact etc)
         return;
     }
 

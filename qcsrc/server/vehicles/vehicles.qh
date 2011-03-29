@@ -1,4 +1,5 @@
 #ifdef VEHICLES_ENABLED
+//#include "collision.qc"
 #include "vehicles.qc"
 #include "racer.qc"
 #include "spiderbot.qc"

@@ -82,13 +82,28 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 .float  lock_time;
 void vehicles_locktarget2(float incr, float decr, float _lock_time)
 {
+    if(self.lock_target && self.lock_target.deadflag != DEAD_NO)
+        self.lock_target = world;
+
+    if(trace_ent != world)
+    {
+        if(teams_matter && trace_ent.team == self.team)
+            trace_ent = world;
+
+        if(trace_ent.deadflag != DEAD_NO)
+            trace_ent = world;
+
+        if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+            trace_ent = world;
+    }
+
     if(self.lock_time > time)
         return;
 
-    if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+    /*if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
         self.lock_strength = min(self.lock_strength - decr, 1);
     else if(trace_ent.deadflag != DEAD_NO)
-        self.lock_strength = min(self.lock_strength - decr, 1);
+        self.lock_strength = min(self.lock_strength - decr, 1);*/
 
     if(self.lock_target == world && trace_ent != world)
         self.lock_target = trace_ent;
@@ -153,7 +168,7 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
     return v_forward  * force_fromtag_power;
 }
 
-
+void vehicles_enter();
 void vehicles_touch()
 {
     // Vehicle currently
@@ -168,7 +183,7 @@ void vehicles_touch()
         {
             if(other.vehicle_flags & VHF_ISVEHICLE)
             {
-                other.velocity += self.velocity * (self.mass / other.mass);
+                //other.velocity += self.velocity * (self.mass / other.mass);
             }
         }
     }
@@ -186,7 +201,7 @@ void vehicles_touch()
     if (clienttype(other) != CLIENTTYPE_REAL)
         return;
 
-    self.vehicle_enter();
+    vehicles_enter();
 }
 
 void vehicles_enter()
@@ -426,7 +441,10 @@ void vehicles_setreturn(float retime, void() respawn_proc)
 
 float vehicles_customizeentityforclient()
 {
-    return self.deadflag == DEAD_DEAD ? FALSE : TRUE;
+    if(self.deadflag  == DEAD_DEAD)
+        return FALSE;
+    else
+        return TRUE;
 }
 
 void vehicles_configcheck(string  configname, float check_cvar)

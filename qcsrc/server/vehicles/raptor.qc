@@ -313,6 +313,9 @@ float raptor_frame()
         self = player;
         return 1;
     }
+
+    //collision_run();
+
     crosshair_trace(player);
 
 #if VEHICLES_VIEWROTATE_CROSSHAIR
@@ -633,7 +636,7 @@ void raptor_spawn()
     self.touch          = raptor_touch;
     self.iscreature     = TRUE;
     self.movetype       = MOVETYPE_FLY;
-    self.solid          = SOLID_SLIDEBOX;
+    self.solid          = SOLID_BBOX;
     self.takedamage     = DAMAGE_AIM;
 	self.deadflag       = DEAD_NO;
     self.bot_attack     = TRUE;
