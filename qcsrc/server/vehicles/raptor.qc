@@ -506,13 +506,22 @@ float raptor_frame()
     if(raptor.vehicle_energy > autocvar_g_vehicle_raptor_cannon_cost)
     {
         raptor.misc_bulletcounter += 1;
-        if(mod(raptor.misc_bulletcounter, 2))
+        raptor.attack_finished_single = time + autocvar_g_vehicle_raptor_cannon_refire;
+        //if(mod(raptor.misc_bulletcounter, 2))
+        if(raptor.misc_bulletcounter <= 2)
             raptor_fire_cannon(self.gun1, "fire1");
-        else
+        else if(raptor.misc_bulletcounter == 3)
             raptor_fire_cannon(self.gun2, "fire1");
+        else
+        {
+            raptor.attack_finished_single = time + autocvar_g_vehicle_raptor_cannon_refire * 2;
+            raptor_fire_cannon(self.gun2, "fire1");
+            raptor.misc_bulletcounter = 0;
+        }
+
 
         raptor.vehicle_energy -= autocvar_g_vehicle_raptor_cannon_cost;
-        raptor.attack_finished_single = time + autocvar_g_vehicle_raptor_cannon_refire;
+
         self.cnt = time;
     }
 
@@ -552,9 +561,9 @@ float raptor_frame()
     return 1;
 }
 
-void raptor_touch()
+/*void raptor_touch()
 {
-    vehicles_touch();
+    //vehicles_touch();
     if(self.owner)
     {
         if(vlen(self.velocity) == 0)
@@ -576,7 +585,7 @@ void raptor_touch()
         return;
 
     vehicles_enter();
-}
+}*/
 
 void raptor_blowup()
 {
@@ -633,7 +642,8 @@ void raptor_spawn()
     self.vehicle_health = autocvar_g_vehicle_raptor_health;
     self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
     self.event_damage   = vehicles_damage;
-    self.touch          = raptor_touch;
+    //self.touch          = raptor_touch;
+    self.touch          = vehicles_touch;
     self.iscreature     = TRUE;
     self.movetype       = MOVETYPE_FLY;
     self.solid          = SOLID_BBOX;

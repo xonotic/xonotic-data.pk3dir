@@ -459,14 +459,22 @@ float racer_frame()
     if(time > racer.delay)
     if(player.BUTTON_ATCK2)
     {
-        racer_fire_rocket("tag_rocket_r", (self.lock_strength == 1 && self.lock_target) ? self.lock_target : world);
-        racer_fire_rocket("tag_rocket_l", (self.lock_strength == 1 && self.lock_target) ? self.lock_target : world);
+        self.misc_bulletcounter += 1;
+        racer.delay = time + 0.2;
+        if(self.misc_bulletcounter == 1)
+            racer_fire_rocket("tag_rocket_r", (self.lock_strength == 1 && self.lock_target) ? self.lock_target : world);
+        else if(self.misc_bulletcounter == 2)
+            racer_fire_rocket("tag_rocket_l", (self.lock_strength == 1 && self.lock_target) ? self.lock_target : world);
+        else
+        {
+            self.lock_strength  = 0;
+            self.lock_target    = world;
+            self.misc_bulletcounter = 0;
 
-        self.lock_strength  = 0;
-        self.lock_target    = world;
+            racer.delay = time + autocvar_g_vehicle_racer_rocket_refire;
+            racer.lip = time;
 
-        racer.delay = time + autocvar_g_vehicle_racer_rocket_refire;
-        racer.lip = time;
+        }
     }
 
     player.fire2_waspressed = player.BUTTON_ATCK2;
@@ -556,9 +564,9 @@ void racer_exit(float eject)
     self.owner = world;
 }
 
-void racer_touch()
+/*void racer_touch()
 {
-    vehicles_touch();
+    //vehicles_touch();
     if(self.owner)
     {
         return;
@@ -574,7 +582,7 @@ void racer_touch()
         return;
 
     vehicles_enter();
-}
+}*/
 
 void racer_spawn()
 {
@@ -588,7 +596,8 @@ void racer_spawn()
     self.vehicle_shield = autocvar_g_vehicle_racer_shield;
 
     self.event_damage = vehicles_damage;
-    self.touch      = racer_touch;
+    //self.touch      = racer_touch;
+    self.touch          = vehicles_touch;
 
     self.iscreature = TRUE;
     self.scale      = 0.5;

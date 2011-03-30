@@ -1,3 +1,6 @@
+float autocvar_g_vehicles_crush_dmg;
+float autocvar_g_vehicles_crush_force;
+
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void vehicles_return();
 void vehicles_clearrturn();
@@ -168,6 +171,21 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
     return v_forward  * force_fromtag_power;
 }
 
+// Better way of determening whats crushable needed! (fl_crushable?)
+float vehicles_crushable(entity e)
+{
+    if(e.classname == "corpse")
+        return TRUE;
+
+    if(e.classname == "player")
+        return TRUE;
+
+    if(e.classname == "monster_zombie")
+        return TRUE;
+
+    return FALSE;
+}
+
 void vehicles_enter();
 void vehicles_touch()
 {
@@ -185,7 +203,14 @@ void vehicles_touch()
             {
                 //other.velocity += self.velocity * (self.mass / other.mass);
             }
+            else if(vehicles_crushable(other))
+            {
+                if(vlen(self.velocity) != 0)
+                    Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_SBCRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
+            }
         }
+
+        return;
     }
 
     if(other.classname != "player")
@@ -384,6 +409,8 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
     }
     else
         self.vehicle_health -= damage;
+
+    self.velocity += force * (vlen(force) / self.mass);
 
     if(self.vehicle_health <= 0)
     {
@@ -607,5 +634,4 @@ void bugmenot()
     self.vehicle_die        = self.vehicle_exit;
     self.vehicle_spawn      = self.vehicle_exit;
     self.AuxiliaryXhair     = self.AuxiliaryXhair;
-    //self.vehicle_message    = self.vehicle_exit;
 }

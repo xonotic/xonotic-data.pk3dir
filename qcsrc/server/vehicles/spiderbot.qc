@@ -575,9 +575,9 @@ float spiderbot_crushable(entity e)
     return 0;
 }
 
-void spiderbot_touch()
+/*void spiderbot_touch(
 {
-    vehicles_touch();
+    //vehicles_touch();
     if(self.owner)
     {
         if(vlen(self.velocity) == 0)
@@ -602,7 +602,7 @@ void spiderbot_touch()
         return;
 
     vehicles_enter();
-}
+}*/
 
 
 void spiderbot_spawn()
@@ -619,7 +619,8 @@ void spiderbot_spawn()
     self.movetype           = MOVETYPE_WALK;
     self.solid              = SOLID_SLIDEBOX;
     self.takedamage         = DAMAGE_AIM;
-    self.touch              = spiderbot_touch;
+    //self.touch              = spiderbot_touch;
+    self.touch              = vehicles_touch;
     self.alpha              = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = 1;
     self.tur_head.angles    = '0 0 0';
 	self.deadflag           = DEAD_NO;
