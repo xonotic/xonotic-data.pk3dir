@@ -494,7 +494,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 entity damage_targ;
 entity damage_inflictor;
 entity damage_attacker;
-.float prevhitsound;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -840,7 +839,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if (vlen(force))
 	if (self.classname != "player" || time >= self.spawnshieldtime || g_midair)
 	{
-		self.velocity = self.velocity + self.damageforcescale * force;
+		self.velocity = self.velocity + damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		self.flags &~= FL_ONGROUND;
 		UpdateCSQCProjectile(self);
 	}
