@@ -21,11 +21,12 @@ void SUB_Null() { };
 void() m_init =
 {
 	cvar_set("_menu_alpha", "0");
+	prvm_language = strzone(cvar_string("prvm_language"));
 
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print("^4MQC Build information: ", WATERMARK(), "\n");
+	print(sprintf(_("^4MQC Build information: %s\n"), WATERMARK()));
 #endif
 
 	// list all game dirs (TEST)
@@ -38,7 +39,7 @@ void() m_init =
 			s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
 			if not(s)
 				break;
-			print(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
+			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
 	}
 }
@@ -115,18 +116,18 @@ void() m_init_delayed =
 	if(cvar_string("menu_skin") != "")
 	{
 		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+		fh = fopen(language_filename(strcat(draw_currentSkin, "/skinvalues.txt")), FILE_READ);
 	}
 	if(fh < 0)
 	if(cvar_defstring("menu_skin") != "")
 	{
 		draw_currentSkin = strcat("gfx/menu/", cvar_defstring("menu_skin"));
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+		fh = fopen(language_filename(strcat(draw_currentSkin, "/skinvalues.txt")), FILE_READ);
 	}
 	if(fh < 0)
 	{
 		draw_currentSkin = "gfx/menu/default";
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+		fh = fopen(language_filename(strcat(draw_currentSkin, "/skinvalues.txt")), FILE_READ);
 	}
 	draw_currentSkin = strzone(draw_currentSkin);
 	while((s = fgets(fh)))
@@ -183,7 +184,7 @@ void(float key, float ascii) m_keyup =
 		if(mouseButtonsPressed < 0)
 		{
 			mouseButtonsPressed = 0;
-			print("Warning: released an already released button\n");
+			dprint("Warning: released an already released button\n");
 		}
 	}
 	if(key == K_ALT) menuShiftState -= (menuShiftState & S_ALT);
@@ -221,7 +222,7 @@ void(float key, float ascii) m_keydown =
 		if(mouseButtonsPressed > 10)
 		{
 			mouseButtonsPressed = 10;
-			print("Warning: pressed an already pressed button\n");
+			dprint("Warning: pressed an already pressed button\n");
 		}
 	}
 	if(key == K_ALT) menuShiftState |= S_ALT;
@@ -341,11 +342,6 @@ float m_testtooltipbox(vector tooltippos)
 		return FALSE;
 	if(tooltippos_y + menuTooltipSize_y > 1)
 		return FALSE;
-	/*
-	menuTooltipOrigin_x = rint(tooltippos_x * cvar("vid_width")) / cvar("vid_width");
-	menuTooltipOrigin_y = rint(tooltippos_y * cvar("vid_height")) / cvar("vid_height");
-	menuTooltipOrigin_z = 0;
-	*/
 	menuTooltipOrigin = tooltippos;
 	return TRUE;
 }
@@ -354,12 +350,12 @@ float m_allocatetooltipbox(vector pos)
 	vector avoidplus, avoidminus;
 	vector v;
 
-	avoidplus_x = (SKINAVOID_TOOLTIP_x + SKINSIZE_CURSOR_x - SKINOFFSET_CURSOR_x) / conwidth;
-	avoidplus_y = (SKINAVOID_TOOLTIP_y + SKINSIZE_CURSOR_y - SKINOFFSET_CURSOR_y) / conheight;
+	avoidplus_x = (SKINAVOID_TOOLTIP_x + SKINSIZE_CURSOR_x - SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth;
+	avoidplus_y = (SKINAVOID_TOOLTIP_y + SKINSIZE_CURSOR_y - SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight;
 	avoidplus_z = 0;
 
-	avoidminus_x = (SKINAVOID_TOOLTIP_x + SKINOFFSET_CURSOR_x) / conwidth + menuTooltipSize_x;
-	avoidminus_y = (SKINAVOID_TOOLTIP_y + SKINOFFSET_CURSOR_y) / conheight + menuTooltipSize_y;
+	avoidminus_x = (SKINAVOID_TOOLTIP_x + SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth + menuTooltipSize_x;
+	avoidminus_y = (SKINAVOID_TOOLTIP_y + SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight + menuTooltipSize_y;
 	avoidminus_z = 0;
 
 	// bottom right
@@ -565,9 +561,11 @@ void() m_draw =
 		if(Menu_Active)
 		if(!cvar("menu_video_played"))
 		{
-			localcmd("set menu_video_played 1; cd loop $menu_cdtrack; play sound/announcer/default/welcome.ogg\n");
-			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading
+			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.ogg\n");
+			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading FIXME
 		}
+		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!
+		localcmd("set menu_video_played 1\n");
 	}
 
 	t = gettime();
@@ -839,7 +837,9 @@ void(string itemname) m_goto =
 	}
 	else
 	{
-		e = findstring(NULL, name, itemname);
+		for(e = NULL; (e = findstring(e, name, itemname)); )
+			if(e.classname != "vtbl")
+				break;
 		if(e)
 		{
 			m_hide();
@@ -858,10 +858,18 @@ void() m_goto_skin_selector =
 	m_goto("skinselector");
 }
 
+void() m_goto_language_selector =
+{
+	if(!menuInitialized)
+		return;
+	// TODO add code to switch back to the language selector (no idea how to do it now)
+	m_goto("languageselector");
+}
+
 void() m_goto_video_settings =
 {
 	if(!menuInitialized)
 		return;
-	// TODO add code to switch back to the skin selector (no idea how to do it now)
+	// TODO add code to switch back to the video settings (no idea how to do it now)
 	m_goto("videosettings");
 }

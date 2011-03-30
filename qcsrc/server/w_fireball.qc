@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", "Fireball");
+REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", _("Fireball"));
 #else
 #ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is
@@ -389,32 +389,32 @@ float w_fireball(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s forgot about some firemine";
+			w_deathtypestring = _("%s forgot about some firemine");
 		else
-			w_deathtypestring = "%s should have used a smaller gun";
+			w_deathtypestring = _("%s should have used a smaller gun");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
 			if(w_deathtype & HITTYPE_HEADSHOT)
-				w_deathtypestring = "%s tried to catch %s's firemine";
+				w_deathtypestring = _("%s tried to catch %s's firemine");
 			else
-				w_deathtypestring = "%s fatefully ignored %s's firemine";
+				w_deathtypestring = _("%s fatefully ignored %s's firemine");
 		}
 		else
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
 			{
 				if(w_deathtype & HITTYPE_SPLASH) // BFG effect
-					w_deathtypestring = "%s could not hide from %s's fireball";
+					w_deathtypestring = _("%s could not hide from %s's fireball");
 				else // laser
-					w_deathtypestring = "%s saw the pretty lights of %s's fireball";
+					w_deathtypestring = _("%s saw the pretty lights of %s's fireball");
 			}
 			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = "%s got too close to %s's fireball";
+				w_deathtypestring = _("%s got too close to %s's fireball");
 			else
-				w_deathtypestring = "%s tasted %s's fireball";
+				w_deathtypestring = _("%s tasted %s's fireball");
 		}
 	}
 	return TRUE;

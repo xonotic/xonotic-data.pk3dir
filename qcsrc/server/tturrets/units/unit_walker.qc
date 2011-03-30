@@ -618,16 +618,16 @@ void walker_attack()
     sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
     fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET, 0, 1, autocvar_g_balance_uzi_bulletconstant);
     endFireBallisticBullet();
-    if (self.uzi_bulletcounter == 2)
+    if (self.misc_bulletcounter == 2)
     {
 
 		UziFlash();
 		setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
 
-        self.uzi_bulletcounter = 0;
+        self.misc_bulletcounter = 0;
     }
 
-    self.uzi_bulletcounter = self.uzi_bulletcounter + 1;
+    self.misc_bulletcounter = self.misc_bulletcounter + 1;
     self.tur_head.frame    = self.tur_head.frame + 1;
 }
 

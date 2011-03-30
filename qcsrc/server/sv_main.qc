@@ -2,7 +2,7 @@
 void CreatureFrame (void)
 {
 	local entity oldself;
-	local float dm, maxspeed;
+	local float dm;
 	oldself = self;
 	self = findfloat(world, iscreature, TRUE);
 	while (self)
@@ -67,9 +67,10 @@ void CreatureFrame (void)
 				self.dmg = 2;
 			}
 			// check for falling damage
+			float velocity_len = vlen(self.velocity);
 			if(!self.hook.state && !g_ca && !(g_cts && !autocvar_g_cts_selfdamage))
 			{
-				dm = vlen(self.oldvelocity) - vlen(self.velocity); // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
+				dm = vlen(self.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
 				if (self.deadflag)
 					dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
 				else
@@ -78,15 +79,14 @@ void CreatureFrame (void)
 					Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
 			}
 
-			maxspeed = autocvar_g_maxspeed;
-			if(maxspeed > 0 && vlen(self.velocity) > maxspeed)
+			if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
 				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
 
 			// play stupid sounds
 			if (g_footsteps)
 			if (!gameover)
 			if (self.flags & FL_ONGROUND)
-			if (vlen(self.velocity) > autocvar_sv_maxspeed * 0.6)
+			if (velocity_len > autocvar_sv_maxspeed * 0.6)
 			if (!self.deadflag)
 			if (time < self.lastground + 0.2)
 			{
@@ -232,10 +232,11 @@ void StartFrame (void)
 .float anglejitter;
 .string gametypefilter;
 .string cvarfilter;
+float DoesQ3ARemoveThisEntity();
 void SV_OnEntityPreSpawnFunction()
 {
 	if(self.gametypefilter != "")
-	if not(isGametypeInFilter(game, teams_matter, self.gametypefilter))
+	if not(isGametypeInFilter(game, teams_matter, have_team_spawns, self.gametypefilter))
 	{
 		remove(self);
 		return;
@@ -348,6 +349,12 @@ void SV_OnEntityPreSpawnFunction()
 			remove(self);
 			return;
 		}
+	}
+
+	if(DoesQ3ARemoveThisEntity())
+	{
+		remove(self);
+		return;
 	}
 
 	// support special -1 and -2 angle from radiant

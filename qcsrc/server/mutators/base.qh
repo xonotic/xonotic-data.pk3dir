@@ -16,11 +16,12 @@ float CallbackChain_Call(entity cb);
 
 #define MUTATOR_REMOVING 0
 #define MUTATOR_ADDING 1
-float Mutator_Add(float(float) func);
-void Mutator_Remove(float(float) func); // calls error() on fail
+typedef float(float) mutatorfunc_t;
+float Mutator_Add(mutatorfunc_t func, string name);
+void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
 
-#define MUTATOR_ADD(name) Mutator_Add(MUTATOR_##name)
-#define MUTATOR_REMOVE(name) Mutator_Remove(MUTATOR_##name)
+#define MUTATOR_ADD(name) Mutator_Add(MUTATOR_##name, #name)
+#define MUTATOR_REMOVE(name) Mutator_Remove(MUTATOR_##name, #name)
 #define MUTATOR_DEFINITION(name) float MUTATOR_##name(float mode)
 #define MUTATOR_DECLARATION(name) float MUTATOR_##name(float mode)
 #define MUTATOR_HOOKFUNCTION(name) float HOOKFUNCTION_##name()
@@ -94,6 +95,10 @@ MUTATOR_HOOKABLE(FilterItem);
 	// checks if the current item may be spawned (self.items and self.weapons may be read and written to, as well as the ammo_ fields)
 	// return error to request removal
 
+MUTATOR_HOOKABLE(TurretSpawn);
+	// return error to request removal
+	// INPUT: self - turret
+	
 MUTATOR_HOOKABLE(OnEntityPreSpawn);
 	// return error to prevent entity spawn, or modify the entity
 

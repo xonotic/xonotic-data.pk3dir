@@ -1,8 +1,7 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "uzi", "uzi", "Machine Gun");
+REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "uzi", "uzi", _("Machine Gun"))
 #else
 #ifdef SVQC
-.entity muzzle_flash;
 
 // leilei's fancy muzzleflash stuff
 void Uzi_Flash_Go() 
@@ -40,17 +39,16 @@ void UziFlash()
 	self.muzzle_flash.owner = self;
 }
 
-.float uzi_bulletcounter;
 void W_Uzi_Attack (float deathtype)
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		if (self.uzi_bulletcounter == 1)
+		if (self.misc_bulletcounter == 1)
 			self.ammo_nails = self.ammo_nails - autocvar_g_balance_uzi_first_ammo;
 		else
 			self.ammo_nails = self.ammo_nails - autocvar_g_balance_uzi_sustained_ammo;
 	}
-	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CHAN_WEAPON, ((self.uzi_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage));
+	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CHAN_WEAPON, ((self.misc_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage));
 	if (!g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
@@ -60,7 +58,7 @@ void W_Uzi_Attack (float deathtype)
 	// this attack_finished just enforces a cooldown at the end of a burst
 	ATTACK_FINISHED(self) = time + autocvar_g_balance_uzi_first_refire * W_WeaponRateFactor();
 
-	if (self.uzi_bulletcounter == 1)
+	if (self.misc_bulletcounter == 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_first_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_first_damage, 0, autocvar_g_balance_uzi_first_force, deathtype, 0, 1, autocvar_g_balance_uzi_bulletconstant);
 	else
 		fireBallisticBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_sustained_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_sustained_damage, 0, autocvar_g_balance_uzi_sustained_force, deathtype, 0, 1, autocvar_g_balance_uzi_bulletconstant);
@@ -92,7 +90,7 @@ void uzi_fire1_02()
 			w_ready();
 			return;
 		}
-		self.uzi_bulletcounter = self.uzi_bulletcounter + 1;
+		self.misc_bulletcounter = self.misc_bulletcounter + 1;
 		W_Uzi_Attack(WEP_UZI);
 		weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_fire1_02);
 	}
@@ -128,11 +126,11 @@ void uzi_mode1_fire_auto()
 		self.punchangle_y = random () - 0.5;
 	}
 	
-	uzi_spread = bound(autocvar_g_balance_uzi_spread_min, autocvar_g_balance_uzi_spread_min + (autocvar_g_balance_uzi_spread_add * self.uzi_bulletcounter), autocvar_g_balance_uzi_spread_max);
+	uzi_spread = bound(autocvar_g_balance_uzi_spread_min, autocvar_g_balance_uzi_spread_min + (autocvar_g_balance_uzi_spread_add * self.misc_bulletcounter), autocvar_g_balance_uzi_spread_max);
 	fireBallisticBullet(w_shotorg, w_shotdir, uzi_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_sustained_damage, 0, autocvar_g_balance_uzi_sustained_force, WEP_UZI, 0, 1, autocvar_g_balance_uzi_bulletconstant);
 	endFireBallisticBullet();
 	
-	self.uzi_bulletcounter = self.uzi_bulletcounter + 1;
+	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 	
 	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -168,13 +166,15 @@ void uzi_mode1_fire_burst()
 	if (autocvar_g_casings >= 2) // casing code
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 
-	self.uzi_bulletcounter = self.uzi_bulletcounter + 1;
-	if (self.uzi_bulletcounter == 0)
-		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_burst_refire2, w_ready);
+	self.misc_bulletcounter = self.misc_bulletcounter + 1;
+	if (self.misc_bulletcounter == 0)
+	{
+		ATTACK_FINISHED(self) = time + autocvar_g_balance_uzi_burst_refire2 * W_WeaponRateFactor();
+		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_burst_animtime, w_ready);
+	}
 	else
 	{
 		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_burst_refire, uzi_mode1_fire_burst);
-		dprint("bullets:", ftos(self.uzi_bulletcounter),"\n");
 	}
 		
 }
@@ -197,7 +197,7 @@ float w_uzi(float req)
 			if (self.BUTTON_ATCK)
 			if (weapon_prepareattack(0, 0))
 			{				
-				self.uzi_bulletcounter = 0;
+				self.misc_bulletcounter = 0;
 				uzi_mode1_fire_auto();
 			}
 			
@@ -214,7 +214,7 @@ float w_uzi(float req)
 				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)	
 					self.ammo_nails = self.ammo_nails - autocvar_g_balance_uzi_burst_ammo;
 
-				self.uzi_bulletcounter = autocvar_g_balance_uzi_burst * -1;
+				self.misc_bulletcounter = autocvar_g_balance_uzi_burst * -1;
 				uzi_mode1_fire_burst();
 			}
 		}
@@ -224,7 +224,7 @@ float w_uzi(float req)
 			if (self.BUTTON_ATCK)
 			if (weapon_prepareattack(0, 0))
 			{
-				self.uzi_bulletcounter = 1;
+				self.misc_bulletcounter = 1;
 				W_Uzi_Attack(WEP_UZI); // sets attack_finished
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_fire1_02);
 			}
@@ -232,7 +232,7 @@ float w_uzi(float req)
 			if (self.BUTTON_ATCK2 && autocvar_g_balance_uzi_first)
 			if (weapon_prepareattack(1, 0))
 			{
-				self.uzi_bulletcounter = 1;
+				self.misc_bulletcounter = 1;
 				W_Uzi_Attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_first_refire, w_ready);
 			}
@@ -284,13 +284,13 @@ float w_uzi(float req)
 		precache_sound("weapons/ric3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s did the impossible";
+		w_deathtypestring = _("%s did the impossible");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s was sniped by %s";
+			w_deathtypestring = _("%s was sniped by %s");
 		else
-			w_deathtypestring = "%s was riddled full of holes by %s";
+			w_deathtypestring = _("%s was riddled full of holes by %s");
 	}
 	return TRUE;
 }

@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(ELECTRO, w_electro, IT_CELLS, 5, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "electro", "electro", "Electro");
+REGISTER_WEAPON(ELECTRO, w_electro, IT_CELLS, 5, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "electro", "electro", _("Electro"));
 #else
 #ifdef SVQC
 .float electro_count;
@@ -232,7 +232,7 @@ void lgbeam_think()
 		remove(self);
 		return;
 	}
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || (g_freezetag && self.owner.freezetag_frozen))
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
 	{
 		if(self == self.owner.lgbeam)
 			self.owner.lgbeam = world;
@@ -295,6 +295,7 @@ void W_Electro_Attack3 (void)
 	entity beam, oldself;
 
 	self.lgbeam = beam = spawn();
+	beam.classname = "lgbeam";
 	beam.solid = SOLID_NOT;
 	beam.think = lgbeam_think;
 	beam.owner = self;
@@ -377,6 +378,15 @@ float w_electro(float req)
 	{
 		if (self.BUTTON_ATCK)
 		{
+			if(autocvar_g_balance_electro_lightning)
+				if(self.BUTTON_ATCK_prev)
+				{
+					// prolong the animtime while the gun is being fired
+					if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
+						weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_electro_primary_animtime, w_ready);
+					else
+						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
+				}
 			if (weapon_prepareattack(0, (autocvar_g_balance_electro_lightning ? 0 : autocvar_g_balance_electro_primary_refire)))
 			{
 				if(autocvar_g_balance_electro_lightning)
@@ -385,19 +395,24 @@ float w_electro(float req)
 					{
 						W_Electro_Attack3();
 					}
-					self.BUTTON_ATCK_prev = 1;
+					if(!self.BUTTON_ATCK_prev)
+					{
+						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
+						self.BUTTON_ATCK_prev = 1;
+					}
 				}
 				else
 				{
 					W_Electro_Attack();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
 				}
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
 			}
 		} else {
 			if(autocvar_g_balance_electro_lightning)
 			{
 				if (self.BUTTON_ATCK_prev != 0)
 				{
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
 					ATTACK_FINISHED(self) = time + autocvar_g_balance_electro_primary_refire * W_WeaponRateFactor();
 				}
 				self.BUTTON_ATCK_prev = 0;
@@ -411,7 +426,7 @@ float w_electro(float req)
 			W_Electro_Attack2();
 			self.electro_count = autocvar_g_balance_electro_secondary_count;
 			weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_electro_secondary_animtime, w_electro_checkattack);
-			self.electro_secondarytime = time + autocvar_g_balance_electro_secondary_refire2;
+			self.electro_secondarytime = time + autocvar_g_balance_electro_secondary_refire2 * W_WeaponRateFactor();
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -485,27 +500,27 @@ float w_electro(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s could not remember where they put plasma";
+			w_deathtypestring = _("%s could not remember where they put plasma");
 		else
-			w_deathtypestring = "%s played with plasma";
+			w_deathtypestring = _("%s played with plasma");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
 			if(w_deathtype & HITTYPE_SPLASH) // unchecked: BOUNCE
-				w_deathtypestring = "%s just noticed %s's blue ball";
+				w_deathtypestring = _("%s just noticed %s's blue ball");
 			else // unchecked: BOUNCE
-				w_deathtypestring = "%s got in touch with %s's blue ball";
+				w_deathtypestring = _("%s got in touch with %s's blue ball");
 		}
 		else
 		{
 			if(w_deathtype & HITTYPE_BOUNCE) // combo
-				w_deathtypestring = "%s felt the electrifying air of %s's combo";
+				w_deathtypestring = _("%s felt the electrifying air of %s's combo");
 			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = "%s got too close to %s's blue beam";
+				w_deathtypestring = _("%s got too close to %s's blue beam");
 			else
-				w_deathtypestring = "%s was blasted by %s's blue beam";
+				w_deathtypestring = _("%s was blasted by %s's blue beam");
 		}
 	}
 	return TRUE;

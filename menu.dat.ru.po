@@ -1,0 +1,2772 @@
+# Xonotic Menu
+# Copyright (C) 2011 Team Xonotic
+# This file is distributed under the same license as the Xonotic package.
+# Lord Canistra <lordcanistra@gmail.com>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1preview\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-02-07 07:50+0100\n"
+"PO-Revision-Date: 2011-01-20 13:16+0300\n"
+"Last-Translator: Nikoli <nikoli@lavabit.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: qcsrc/menu/gamecommand.qc:47
+#, c-format
+msgid "error: status is %d\n"
+msgstr "ошибка: статус %d\n"
+
+#: qcsrc/menu/gamecommand.qc:65
+msgid "Usage: menu_cmd command..., where possible commands are:\n"
+msgstr "Использование: menu_cmd command..., где возможные команды:\n"
+
+#: qcsrc/menu/gamecommand.qc:66
+msgid "  sync - reloads all cvars on the current menu page\n"
+msgstr "  синх. - обновляет все cvar на текущей странице меню\n"
+
+#: qcsrc/menu/gamecommand.qc:67
+msgid "  directmenu ITEM - select a menu item as main item\n"
+msgstr "  directmenu ITEM - определить элемент меню как главный элемент\n"
+
+#: qcsrc/menu/gamecommand.qc:193
+msgid "error creating curl handle\n"
+msgstr "ошибка при создании curl handle\n"
+
+#: qcsrc/menu/gamecommand.qc:239
+msgid "Invalid command. For a list of supported commands, try menu_cmd help.\n"
+msgstr ""
+"Неверная команда. Попробуйте menu_cmd help, чтобы получить список доступных "
+"команд.\n"
+
+#: qcsrc/menu/item/gecko.c:49
+msgid "Browser not initialized!"
+msgstr "Браузер не запущен!"
+
+#: qcsrc/menu/item/label.c:63
+#, c-format
+msgid "NOTE: label text %s too wide for label, condensed by factor %f\n"
+msgstr "ВНИМАНИЕ: текст %s слишком широк для надписи, сжат до %f раз\n"
+
+#: qcsrc/menu/item/listbox.c:300
+#, c-format
+msgid "Item %d"
+msgstr "Предмет %d"
+
+#: qcsrc/menu/item/slider.c:64
+#, c-format
+msgid "%d (%s)"
+msgstr "%d (%s)"
+
+#: qcsrc/menu/item/textslider.c:29 qcsrc/menu/item/textslider.c:31
+msgid "custom"
+msgstr "особо"
+
+#: qcsrc/menu/menu.qc:29
+#, c-format
+msgid "^4MQC Build information: %s\n"
+msgstr "^4Сведения о сборке MQC: %s\n"
+
+#: qcsrc/menu/xonotic/campaign.c:284
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:66
+msgid "???"
+msgstr "???"
+
+#: qcsrc/menu/xonotic/campaign.c:285
+#, c-format
+msgid "Level %d: %s"
+msgstr "Уровень %d: %s"
+
+#: qcsrc/menu/xonotic/cvarlist.c:85
+msgid "will be saved to config.cfg"
+msgstr "будет сохранено в config.cfg"
+
+#: qcsrc/menu/xonotic/cvarlist.c:87
+msgid "will not be saved"
+msgstr "не будет сохранено"
+
+# личное, частное
+#: qcsrc/menu/xonotic/cvarlist.c:89
+msgid "private"
+msgstr "личное"
+
+#: qcsrc/menu/xonotic/cvarlist.c:91
+msgid "engine setting"
+msgstr "установка движка"
+
+#: qcsrc/menu/xonotic/cvarlist.c:93
+msgid "read only"
+msgstr "только чтение"
+
+#: qcsrc/menu/xonotic/dialog_credits.c:5
+msgid "Credits"
+msgstr "Разработчики"
+
+#: qcsrc/menu/xonotic/dialog_credits.c:21
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:82
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:269
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:41
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:55
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:61
+#: qcsrc/menu/xonotic/dialog_singleplayer_winner.c:21
+msgid "OK"
+msgstr "ОК"
+
+#: qcsrc/menu/xonotic/dialog_firstrun.c:4
+msgid "Welcome"
+msgstr "Добро пожаловать"
+
+#: qcsrc/menu/xonotic/dialog_firstrun.c:33
+msgid ""
+"Welcome to Xonotic, please select your language preference and enter your "
+"player name to get started.  You can change these options later through the "
+"menu system."
+msgstr ""
+"Добро пожаловать в Xonotic. Для начала, пожалуйста, выберите ваш язык и "
+"введите ваше имя. Позже вы сможете изменить эти настройки в меню."
+
+#: qcsrc/menu/xonotic/dialog_firstrun.c:38
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:35
+msgid "Text language:"
+msgstr "Язык меню:"
+
+#: qcsrc/menu/xonotic/dialog_firstrun.c:47
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:40
+#: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:39
+msgid "Name:"
+msgstr "Имя:"
+
+#: qcsrc/menu/xonotic/dialog_firstrun.c:69
+msgid "Save settings"
+msgstr "Сохранить настройки:"
+
+# делать транслитерацию вместо перевода нежелательно, panel можно перевести как:
+# область, табло, (приборная) доска, щит, лист, плата, плита, список
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:4
+msgid "Ammo Panel"
+msgstr "Панель боеприпасов"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:22
+msgid "Ammunition display:"
+msgstr "Показ боеприпасов:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:25
+msgid "Show only current ammo type"
+msgstr "Показывать только текущий вид боеприпасов"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:40
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:40
+msgid "Left"
+msgstr "Слева"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:41
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:41
+msgid "Right"
+msgstr "Справа"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:4
+msgid "Chat Panel"
+msgstr "Панель чата"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:22
+msgid "Chat entries:"
+msgstr "Записи в чате:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:25
+msgid "Chat size:"
+msgstr "Размер чата:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:29
+msgid "Chat lifetime:"
+msgstr "Время жизни:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:33
+msgid "Chat beep sound"
+msgstr "Звук чата:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:4
+msgid "Engine Info Panel"
+msgstr "Панель сведений о движке"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:22
+msgid "Engine info:"
+msgstr "Сведения о движке:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:25
+msgid "Use an averaging algorithm for fps"
+msgstr "Исп. алгоритм усреднения для FPS"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:4
+msgid "Health/Armor Panel"
+msgstr "Панель здоровья/брони"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:22
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:22
+msgid "Enable status bar"
+msgstr "Включить полосу состояния"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:24
+msgid "Status bar alignment:"
+msgstr "Выравнивание полосы состояния:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:42
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:42
+msgid "Inward"
+msgstr "Внутрь"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:43
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:43
+msgid "Outward"
+msgstr "Наружу"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:37
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:37
+msgid "Icon alignment:"
+msgstr "Выравнивание иконок:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:45
+msgid "Flip health and armor positions"
+msgstr "Поменять местами здоровье и броню"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.c:4
+msgid "Info Messages Panel"
+msgstr "Панель информационных сообщений"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.c:22
+msgid "Info messages:"
+msgstr "Инф. сообщения:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.c:25
+msgid "Flip align"
+msgstr "Перевернуть выравнивание"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.c:4
+msgid "Mod Icons Panel"
+msgstr "Панель иконок мода"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:4
+msgid "Notification Panel"
+msgstr "Панель уведомлений"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:22
+msgid "Notifications:"
+msgstr "Уведомления:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:25
+msgid "Also print notifications to the console"
+msgstr "Также показывать уведомления в консоли"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:28
+msgid "Flip notify order"
+msgstr "Обратить порядок уведомлений"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:31
+msgid "Entry lifetime:"
+msgstr "Время видимости:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:35
+msgid "Entry fadetime:"
+msgstr "Время исчезновения:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:4
+msgid "Powerups Panel"
+msgstr "Панель бонусов"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:45
+msgid "Flip strength and shield positions"
+msgstr "Поменять местами Силу и Щит"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:4
+msgid "Pressed Keys Panel"
+msgstr "Панель нажатых кнопок"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:21
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:21
+msgid "Panel disabled"
+msgstr "Отключена"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:22
+msgid "Panel enabled when spectating"
+msgstr "Включена при наблюдении"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:23
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:23
+msgid "Panel always enabled"
+msgstr "Всегда включена"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:30
+msgid "Forced aspect:"
+msgstr "Соотношение:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.c:4
+msgid "Race Timer Panel"
+msgstr "Панель Гоночного Таймера"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:4
+msgid "Radar Panel"
+msgstr "Панель радара"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:22
+msgid "Panel enabled in teamgames"
+msgstr "Панель включена в командных играх"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:29
+msgid "Radar:"
+msgstr "Радар:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:32
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:43
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:82
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:151
+#: qcsrc/menu/xonotic/util.qc:608
+msgid "Alpha:"
+msgstr "Прозрачность:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:36
+msgid "Rotation:"
+msgstr "Поворот:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:38
+msgid "Forward"
+msgstr "Взгляд"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:39
+msgid "West"
+msgstr "Запад"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:40
+msgid "South"
+msgstr "Юг"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:41
+msgid "East"
+msgstr "Восток"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:42
+msgid "North"
+msgstr "Север"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:46
+msgid "Scale:"
+msgstr "Размер:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:50
+msgid "Zoom mode:"
+msgstr "Режим увел.:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:52
+msgid "Zoomed in"
+msgstr "Приближён"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:53
+msgid "Zoomed out"
+msgstr "Не приближён"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:54
+msgid "Always zoomed"
+msgstr "Всегда приближён"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:55
+msgid "Never zoomed"
+msgstr "Никогда не приближён"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_score.c:4
+msgid "Score Panel"
+msgstr "Таблица Очков"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:4
+msgid "Timer Panel"
+msgstr "Панель таймера"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:22
+msgid "Timer:"
+msgstr "Таймер:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:25
+msgid "Show elapsed time"
+msgstr "Показывать прошедшее время"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_vote.c:4
+msgid "Vote Panel"
+msgstr "Панель голосования"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_vote.c:22
+msgid "Alpha after voting:"
+msgstr "Прозр. после голосования:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:4
+msgid "Weapons Panel"
+msgstr "Панель оружия"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:24
+msgid "Fade out after:"
+msgstr "Исчезать после:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:26
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:36
+msgid "Never"
+msgstr "Никогда"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:28
+#, c-format
+msgid "%ds"
+msgstr "%dс"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:32
+msgid "Fade effect:"
+msgstr "Эффект исчезновения:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:33
+msgid "EF^None"
+msgstr "Отсутствует"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:35
+msgid "Slide"
+msgstr "Скольжение"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:37
+msgid "Alpha"
+msgstr "Исчезновение"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:40
+msgid "Weapon icons:"
+msgstr "Иконки оружия:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:43
+msgid "Show weapon ID as:"
+msgstr "Показывать ID оружия как:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:44
+msgid "SHOWAS^None"
+msgstr "Не показывать"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:45
+msgid "Number"
+msgstr "Число"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:46
+msgid "Bind"
+msgstr "Привязка"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:49
+msgid "Show Accuracy"
+msgstr "Показывать Точность"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:50
+msgid "Show Ammo"
+msgstr "Показывать Боеприпасы"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:53
+msgid "Ammo bar color:"
+msgstr "Цвет полосы боеприпасов"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:59
+msgid "Ammo bar alpha:"
+msgstr "Прозрачность полосы боеприпасов:"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:4
+msgid "Panel HUD Setup"
+msgstr "Настройка панелей"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:21
+msgid "Panel background defaults:"
+msgstr "Фон по умолчанию:"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:25
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:37
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:52
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:586
+#: qcsrc/menu/xonotic/util.qc:602 qcsrc/menu/xonotic/util.qc:619
+msgid "Disable"
+msgstr "Отключить"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:30
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:591
+msgid "Color:"
+msgstr "Цвет:"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:599
+msgid "Border size:"
+msgstr "Ширина краёв:"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:50
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:89
+msgid "Team color:"
+msgstr "Цвет команды:"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:625
+msgid "Test team color in configure mode"
+msgstr "Проверить цвет команды в режиме настройки"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:628
+msgid "Padding:"
+msgstr "Промежуток:"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:68
+msgid "HUD Dock:"
+msgstr "Область HUD:"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:70
+msgid "DOCK^Disabled"
+msgstr "Отключено"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:71
+msgid "DOCK^Small"
+msgstr "Небольшая"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:72
+msgid "DOCK^Medium"
+msgstr "Средняя"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:73
+msgid "DOCK^Large"
+msgstr "Большая"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:96
+msgid "Grid settings:"
+msgstr "Настройки сетки:"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:99
+msgid "Snap panels to grid"
+msgstr "Передвижение панелей по сетке"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:102
+msgid "Grid size:"
+msgstr "Шаг сетки:"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:103
+msgid "X:"
+msgstr "X:"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:109
+msgid "Y:"
+msgstr "Y:"
+
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:117
+msgid "Exit setup"
+msgstr "Выйти из настроек"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer.c:4
+msgid "Multiplayer"
+msgstr "Игра по сети"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer.c:18
+msgid "Servers"
+msgstr "Серверы"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer.c:19
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:5
+msgid "Create"
+msgstr "Создать"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer.c:20
+msgid "Demos"
+msgstr "Демо"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer.c:21
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:5
+msgid "Player Setup"
+msgstr "Настройки игрока"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:35
+msgid "Game type:"
+msgstr "Вид игры:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:47
+msgid "Match settings:"
+msgstr "Настройки состязания:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:50
+msgid "Time limit:"
+msgstr "Предел времени:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:54
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:62
+msgid "Use map specified default"
+msgstr "Исп. предел карты"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:57
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:156
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:157
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:158
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:162
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:163
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:164
+msgid "Point limit:"
+msgstr "Предел очков:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:65
+msgid "Player slots:"
+msgstr "Кол-во игроков:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:68
+msgid "Number of bots:"
+msgstr "Кол-во ботов:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:72
+msgid "Bot skill:"
+msgstr "Уровень ботов:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:75
+msgid "Botlike"
+msgstr "Ботоподобный"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:76
+msgid "Beginner"
+msgstr "Новичок"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:77
+msgid "You will win"
+msgstr "Легко победить"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:78
+msgid "You can win"
+msgstr "Можно победить"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:79
+msgid "You might win"
+msgstr "Возможно победить"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:80
+msgid "Advanced"
+msgstr "Продвинутый"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:81
+msgid "Expert"
+msgstr "Опытный"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:82
+msgid "Pro"
+msgstr "Профессионал"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:83
+msgid "Assassin"
+msgstr "Убийца"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:84
+msgid "Unhuman"
+msgstr "Сверхчеловек"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:85
+msgid "Godlike"
+msgstr "Богоподобный"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:89
+msgid "Mutators..."
+msgstr "Мутаторы..."
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:98
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:84
+msgid "Advanced settings..."
+msgstr "Доп. настройки..."
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:105
+msgid "Map list:"
+msgstr "Список карт:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:111
+msgid "Select all"
+msgstr "Выбрать все"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:114
+msgid "Select none"
+msgstr "Снять выделение"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:120
+msgid "Start Multiplayer!"
+msgstr "Начать игру по сети"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:155
+msgid "Capture limit:"
+msgstr "Предел захватов:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:159
+msgid "Lives:"
+msgstr "Жизни:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:160
+msgid "Laps:"
+msgstr "Круги:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:161
+msgid "Goals:"
+msgstr "Цели:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:165
+msgid "Frag limit:"
+msgstr "Предел убийств:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:6
+msgid "Advanced server settings"
+msgstr "Доп. серверные настройки"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:25
+msgid "Game settings:"
+msgstr "Настройки игры:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:28
+msgid "Allow spectating"
+msgstr "Разрешить наблюдение"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:31
+msgid "Spawn shield:"
+msgstr "Защита при возрождении"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:36
+msgid "Game speed:"
+msgstr "Скорость игры:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:40
+msgid "Teamplay settings:"
+msgstr "Настройки команд:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:43
+msgid "Friendly fire scale:"
+msgstr "Огонь по союзникам:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:47
+msgid "Virtual friendly fire (effect only)"
+msgstr "Мнимый огонь по союзникам (только впечатление)"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:50
+msgid "Friendly fire penalty:"
+msgstr "Штраф за огонь по союзникам"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:54
+msgid "Virtual penalty (effect only)"
+msgstr "Мнимый штраф (только впечатление)"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:57
+msgid "Teams:"
+msgstr "Команды:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:66
+msgid "Map voting:"
+msgstr "Голосование за карты:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:68
+msgid "No voting"
+msgstr "Без голосования"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:69
+msgid "2 choices"
+msgstr "2 выбора"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:70
+msgid "3 choices"
+msgstr "3 выбора"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:71
+msgid "4 choices"
+msgstr "4 выбора"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:72
+msgid "5 choices"
+msgstr "5 выборов"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:73
+msgid "6 choices"
+msgstr "6 выборов"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:74
+msgid "7 choices"
+msgstr "7 выборов"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:75
+msgid "8 choices"
+msgstr "8 выборов"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:76
+msgid "9 choices"
+msgstr "9 выборов"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:79
+msgid "Simple majority wins vcall"
+msgstr "Простое большинство выигрывает"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:5
+msgid "Map Information"
+msgstr "Сведения о карте"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:49
+msgid "Full item placement"
+msgstr "С оружием"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:49
+msgid "MinstaGib only"
+msgstr "Только MinstaGib"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:78
+msgid "Title:"
+msgstr "Заголовок:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:84
+msgid "Author:"
+msgstr "Автор:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:90
+msgid "Features:"
+msgstr "Особенности:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:95
+msgid "Game types:"
+msgstr "Режимы игры:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:119
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:314
+msgid "Close"
+msgstr "Закрыть"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:122
+#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:46
+msgid "Play"
+msgstr "Играть"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:7
+msgid "Mutators"
+msgstr "Мутаторы"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:33
+msgid "All Weapons Arena"
+msgstr "Арена со всем оружием"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:35
+msgid "Most Weapons Arena"
+msgstr "Арена с большинством оружия"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:56
+#, c-format
+msgid "%s Arena"
+msgstr "%s Арена"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:68
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:167
+msgid "Dodging"
+msgstr "Уклонение"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:70
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:250
+msgid "MinstaGib"
+msgstr "MinstaGib"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:72
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:253
+msgid "NIX"
+msgstr "NIX"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:74
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:205
+msgid "Rocket Flying"
+msgstr "Ракетный полёт"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:78
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:264
+msgid "No start weapons"
+msgstr "Начинать без оружия"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:80
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:189
+msgid "Low gravity"
+msgstr "Низкая гравитация"
+
+# В игре это включает не невидимость, а полупрозрачность, хотя так переводить вполне уместно.
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:82
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:170
+msgid "Cloaked"
+msgstr "Невидимость"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:84
+msgid "Hook"
+msgstr "Крюк"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:86
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:173
+msgid "Midair"
+msgstr "Воздушный бой"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:88
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:176
+msgid "Vampire"
+msgstr "Вампиризм"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:90
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:208
+msgid "Piñata"
+msgstr "Piñata"
+
+# "Неисчерпаемое Оружие" - неправильно, галка не даёт бесконечный боеприпас, а сохраняет все подобранные оружия после каждого возраждения.
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:92
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:211
+msgid "Weapons stay"
+msgstr "Оружия остаются"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:94
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:180
+msgid "Blood loss"
+msgstr "Кровотечение"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:96
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:202
+msgid "Jet pack"
+msgstr "Реактивный ранец"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:98
+msgid "MUT^None"
+msgstr "Отсутствуют"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:164
+msgid "Gameplay mutators:"
+msgstr "Мутаторы игрового процесса:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:196
+msgid "Weapon & item mutators:"
+msgstr "Мутаторы оружия и предметов:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:199
+msgid "Grappling hook"
+msgstr "Крюк"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:215
+msgid "Weapon arenas:"
+msgstr "Арены оружия"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:218
+msgid "Regular (no arena)"
+msgstr "Обычная (не арена)"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:239
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:256
+msgid "with laser"
+msgstr "с лазером"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:247
+msgid "Special arenas:"
+msgstr "Особые арены:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:260
+msgid "Most weapons"
+msgstr "Большинство оружия"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:4
+msgid "Demo"
+msgstr "Демо"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:28
+msgid "Record demos while playing"
+msgstr "Записывать демо во время игры"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:32
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:28
+msgid "Filter:"
+msgstr "Фильтр:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:33
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:29
+#: qcsrc/menu/xonotic/dialog_settings_input.c:41
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:24
+msgid "Clear"
+msgstr "Очистить"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:43
+msgid "Timedemo"
+msgstr "Проверка производительности"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:4
+msgid "Join"
+msgstr "Присоединиться"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:36
+msgid "SRVS^Empty"
+msgstr "Пустые"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:40
+msgid "SRVS^Full"
+msgstr "Полные"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:44
+msgid "Pause"
+msgstr "Пауза"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:56
+msgid "Address:"
+msgstr "Адрес:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:65
+msgid "Info..."
+msgstr "Сведения..."
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:70
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:317
+msgid "Join!"
+msgstr "Присоединиться"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:5
+msgid "Server Information"
+msgstr "Сведения о сервере"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:115
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:116
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:183
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:189
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:199
+msgid "N/A"
+msgstr "Н/Д"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:158
+#, c-format
+msgid "%d/%d, %d free player slots"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
+#, c-format
+msgid "%d modified settings"
+msgstr "кол-во изменённых настроек: %d"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
+msgid "Official settings"
+msgstr "Официальные настройки"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:197
+msgid "N/A (can't connect)"
+msgstr "Н/Д (не могу подключиться)"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:205
+msgid "not supported (can't connect)"
+msgstr "не поддерживается (не могу подключиться)"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:207
+msgid "not supported (won't encrypt)"
+msgstr "не поддерживается (шифрования не будет)"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:211
+msgid "supported (will encrypt)"
+msgstr "поддерживается (будет шифрование)"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:213
+msgid "supported (won't encrypt)"
+msgstr "поддерживается (шифрования не будет)"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:217
+msgid "requested (will encrypt)"
+msgstr "запрошено (будет шифрование)"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:219
+msgid "requested (won't encrypt)"
+msgstr "запрошено (шифрования не будет)"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:223
+msgid "required (can't connect)"
+msgstr "требуется (не могу подключиться)"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:225
+msgid "required (will encrypt)"
+msgstr "требуется (будет шифрование)"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:246
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:269
+msgid "Players:"
+msgstr "Игроки:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:254
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:38
+msgid "Type:"
+msgstr "Вид:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:259
+msgid "Map:"
+msgstr "Карта:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:264
+msgid "Gameplay:"
+msgstr "Геймплей:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:274
+msgid "Bots:"
+msgstr "Боты:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:279
+msgid "Mod:"
+msgstr "Мод:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:284
+msgid "Version:"
+msgstr "Версия:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:289
+msgid "Ping:"
+msgstr "Пинг:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:295
+msgid "CA:"
+msgstr "CA:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:301
+msgid "Key:"
+msgstr "Ключ:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:307
+msgid "Encryption:"
+msgstr "Шифрование:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:63
+msgid "Model:"
+msgstr "Модель:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:88
+msgid "Field of view:"
+msgstr "Угол обзора:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:92
+msgid "View bobbing:"
+msgstr "Качание вида:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:96
+msgid "Zoom factor:"
+msgstr "Множитель увеличения:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:100
+msgid "Zoom speed:"
+msgstr "Скорость увеличения:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:103
+msgid "Weapon settings..."
+msgstr "Настройки оружия..."
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:110
+msgid "Crosshair:"
+msgstr "Прицел:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:111
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:143
+msgid "Per weapon"
+msgstr "Зависит от оружия"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:130
+msgid "Crosshair size:"
+msgstr "Величина прицела:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
+msgid "Crosshair alpha:"
+msgstr "Прозрачность:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+msgid "Crosshair color:"
+msgstr "Цвет прицела:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:145
+msgid "Enable center dot"
+msgstr "Точка в центре"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:148
+msgid "Size:"
+msgstr "Размер:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:155
+msgid "Hit test:"
+msgstr "Проверка на попадание:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:156
+msgid "HTST^None"
+msgstr "Отключена"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:157
+msgid "TrueAim"
+msgstr "TrueAim"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:158
+msgid "Enemies"
+msgstr "Враги"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:161
+msgid "Waypoints setup..."
+msgstr "Настройка отметок..."
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:167
+msgid "Enter HUD editor"
+msgstr "Войти в редактор HUD"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:174
+msgid "Force models:"
+msgstr "Использовать свои модели:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:175
+msgid "MDL^None"
+msgstr "Нет"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:176
+msgid "MDL^Custom"
+msgstr "Вместо нестандартных"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:177
+msgid "MDL^All"
+msgstr "Вместо всех"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:179
+msgid "Disable gore effects"
+msgstr "Отключить эффекты жестокости"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:181
+msgid "Gibs:"
+msgstr "Ошмётки:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:183
+msgid "GIBS^None"
+msgstr "Нет"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:184
+msgid "GIBS^Few"
+msgstr "Мало"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:185
+msgid "GIBS^Many"
+msgstr "Много"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:186
+msgid "GIBS^Lots"
+msgstr "Тонны"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:190
+msgid "Damage splash:"
+msgstr "Изображ. урона"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:194
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:178
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:194
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:30
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:41
+#: qcsrc/menu/xonotic/dialog_settings_video.c:105
+msgid "Apply immediately"
+msgstr "Применить"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:5
+msgid "Waypoints"
+msgstr "Отметки"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:23
+msgid "Show base waypoints"
+msgstr "Показывать основные отметки"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:25
+msgid "Waypoint scale:"
+msgstr "Размер отметок:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:29
+msgid "Waypoint alpha:"
+msgstr "Прозрачность отметок:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:34
+msgid "Show names:"
+msgstr "Показывать имена:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:37
+msgid "Teammates"
+msgstr "Союзники"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:38
+msgid "All players"
+msgstr "Все игроки"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:6
+msgid "Weapon settings"
+msgstr "Настройки оружия"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:29
+msgid "Weapon priority list:"
+msgstr "Список приоритета оружия:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:34
+msgid "Up"
+msgstr "Вверх"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:37
+msgid "Down"
+msgstr "Вниз"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:41
+msgid "Use priority list for weapon cycling"
+msgstr "Использовать приоритеты для прокрутки оружия"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:43
+msgid "Auto switch weapons on pickup"
+msgstr "Автоматически переключаться на поднятое оружие"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:45
+msgid "Draw 1st person weapon model"
+msgstr "Показывать модель оружия в руках"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:48
+msgid "Left align"
+msgstr "Слева"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:50
+msgid "Right align"
+msgstr "Справа"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:53
+msgid "Flip view horizontally"
+msgstr "Перевернуть изображение по горизонтали"
+
+#: qcsrc/menu/xonotic/dialog_news.c:4
+msgid "News"
+msgstr "Новости"
+
+#: qcsrc/menu/xonotic/dialog_news.c:18
+msgid "http://www.xonotic.org/team/blog/"
+msgstr "http://www.xonotic.org/team/blog/"
+
+#: qcsrc/menu/xonotic/dialog_quit.c:4
+msgid "Quit"
+msgstr "Выход"
+
+#: qcsrc/menu/xonotic/dialog_quit.c:17
+msgid "Are you sure you want to quit?"
+msgstr "Вы точно желаете выйти?"
+
+#: qcsrc/menu/xonotic/dialog_quit.c:20
+msgid "Yes"
+msgstr "Да"
+
+#: qcsrc/menu/xonotic/dialog_quit.c:21
+msgid "No"
+msgstr "Нет"
+
+#: qcsrc/menu/xonotic/dialog_settings.c:4
+msgid "Settings"
+msgstr "Настройки"
+
+#: qcsrc/menu/xonotic/dialog_settings.c:18
+#: qcsrc/menu/xonotic/dialog_settings_input.c:4
+msgid "Input"
+msgstr "Ввод"
+
+#: qcsrc/menu/xonotic/dialog_settings.c:19
+#: qcsrc/menu/xonotic/dialog_settings_video.c:4
+msgid "Video"
+msgstr "Изображение"
+
+#: qcsrc/menu/xonotic/dialog_settings.c:20
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:4
+msgid "Effects"
+msgstr "Эффекты"
+
+#: qcsrc/menu/xonotic/dialog_settings.c:21
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:4
+msgid "Audio"
+msgstr "Звук"
+
+#: qcsrc/menu/xonotic/dialog_settings.c:22
+#: qcsrc/menu/xonotic/dialog_settings_network.c:4
+msgid "Network"
+msgstr "Сеть"
+
+#: qcsrc/menu/xonotic/dialog_settings.c:23
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:4
+msgid "Misc"
+msgstr "Разное"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:27
+msgid "Master:"
+msgstr "Главный:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:33
+msgid "Music:"
+msgstr "Музыка:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:40
+msgid "VOL^Ambient:"
+msgstr "Фоновые звуки:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:48
+msgid "Info:"
+msgstr "Инфо:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:57
+msgid "Items:"
+msgstr "Предметы:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:65
+msgid "Pain:"
+msgstr "Боль:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:73
+msgid "Player:"
+msgstr "Игрок:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:81
+msgid "Shots:"
+msgstr "Выстрелы:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:88
+msgid "Voice:"
+msgstr "Голос:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:96
+msgid "Weapons:"
+msgstr "Оружие:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:103
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:161
+msgid "Frequency:"
+msgstr "Частота:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:105
+msgid "8 kHz"
+msgstr "8 кГц"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:106
+msgid "11.025 kHz"
+msgstr "11.025 кГц"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:107
+msgid "16 kHz"
+msgstr "16 кГц"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:108
+msgid "22.05 kHz"
+msgstr "22.05 кГц"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:109
+msgid "24 kHz"
+msgstr "24 кГц"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:110
+msgid "32 kHz"
+msgstr "32 кГц"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:111
+msgid "44.1 kHz"
+msgstr "44.1 кГц"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:112
+msgid "48 kHz"
+msgstr "48 кГц"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:115
+msgid "Channels:"
+msgstr "Каналы:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:117
+msgid "Mono"
+msgstr "Моно"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:118
+msgid "Stereo"
+msgstr "Стерео"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:119
+msgid "2.1"
+msgstr "2.1"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:120
+msgid "4"
+msgstr "4"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:121
+msgid "5"
+msgstr "5"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:122
+msgid "5.1"
+msgstr "5.1"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:123
+msgid "6.1"
+msgstr "6.1"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:124
+msgid "7.1"
+msgstr "7.1"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:128
+msgid "Swap Stereo"
+msgstr "Обмен местами каналов"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:132
+msgid "Headphone friendly mode"
+msgstr "Ориентированный на наушники режим"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:136
+msgid "Spatial voices:"
+msgstr "Объёмные голоса:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:137
+msgid "VOCS^None"
+msgstr "Отключены"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:138
+msgid "VOCS^Taunts"
+msgstr "Насмешки"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:139
+msgid "VOCS^All"
+msgstr "Все"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:142
+msgid "Taunt range:"
+msgstr "Радиус насмешек:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:145
+msgid "RNG^Very short"
+msgstr "Очень маленький"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:146
+msgid "RNG^Short"
+msgstr "Маленький"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:147
+msgid "RNG^Normal"
+msgstr "Обычный"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:148
+msgid "RNG^Long"
+msgstr "Большой"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:149
+msgid "RNG^Full"
+msgstr "Полный"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:156
+msgid "Automatic taunts"
+msgstr "Автоматические насмешки"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:165
+msgid "Time warning:"
+msgstr "Предупреждение о таймауте за:"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:167
+msgid "WRN^None"
+msgstr "Нет"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:168
+msgid "1 minute"
+msgstr "1 минуту"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:169
+msgid "5 minutes"
+msgstr "5 минут"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:170
+msgid "WRN^Both"
+msgstr "1 и 5 минут"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:173
+msgid "Hit indicator"
+msgstr "Оповещать о попадании"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:175
+msgid "Menu sounds"
+msgstr "Звуки меню"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:38
+msgid "Quality preset:"
+msgstr "Предустановки качества:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:41
+msgid "PRE^OMG!"
+msgstr "Ужасное"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:42
+msgid "PRE^Low"
+msgstr "Низкое"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:43
+msgid "PRE^Medium"
+msgstr "Среднее"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:44
+msgid "PRE^Normal"
+msgstr "Обычное"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:45
+msgid "PRE^High"
+msgstr "Высокое"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:46
+msgid "PRE^Ultra"
+msgstr "Сверх"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:48
+msgid "PRE^Ultimate"
+msgstr "Предельное"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:52
+msgid "Geometry detail:"
+msgstr "Подробность геометрии:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:54
+msgid "DET^Lowest"
+msgstr "Нижайшая"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:55
+msgid "DET^Low"
+msgstr "Низкая"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:56
+msgid "DET^Normal"
+msgstr "Обычная"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:57
+msgid "DET^Good"
+msgstr "Хорошая"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:58
+msgid "DET^Best"
+msgstr "Лучшая"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:59
+msgid "DET^Insane"
+msgstr "Высочайшая"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:62
+msgid "Antialiasing:"
+msgstr "Сглаживание:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:64
+msgid "AA^Disabled"
+msgstr "Отключено"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:65
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:103
+msgid "2x"
+msgstr "2x"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:66
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:104
+msgid "4x"
+msgstr "4x"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:70
+msgid "Texture resolution:"
+msgstr "Разрешение текстур:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:73
+msgid "RES^Leet"
+msgstr "Ужасное"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:74
+msgid "RES^Lowest"
+msgstr "Нижайшее"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:75
+msgid "RES^Low"
+msgstr "Низкое"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:76
+msgid "RES^Normal"
+msgstr "Обычное"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:77
+msgid "RES^Good"
+msgstr "Хорошее"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:78
+msgid "RES^Best"
+msgstr "Лучшее"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:91
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:94
+msgid "Avoid lossy texture compression"
+msgstr "Избегать сжатия текстур с потерями"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:100
+msgid "Anisotropy:"
+msgstr "Анизотропия:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:102
+msgid "ANISO^Disabled"
+msgstr "Отключена"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:105
+msgid "8x"
+msgstr "8x"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:106
+msgid "16x"
+msgstr "16x"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:110
+msgid "Particle quality:"
+msgstr "Качество частиц:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:113
+msgid "Particle distance:"
+msgstr "Дальность частиц:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:117
+msgid "Decals"
+msgstr "Декали:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:120
+msgid "Distance:"
+msgstr "Дальность:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:126
+msgid "Time:"
+msgstr "Время:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:132
+msgid "Use lightmaps"
+msgstr "Использовать карты освещения"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:133
+msgid "Deluxe mapping"
+msgstr "Особое качество"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:135
+msgid "Gloss"
+msgstr "Блеск"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:138
+msgid "Offset mapping"
+msgstr "Офсетное текстурирование"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:140
+msgid "Relief mapping"
+msgstr "Рельефное текстурирование"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:143
+msgid "Reflections:"
+msgstr "Отражения:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:146
+msgid "Blurred"
+msgstr "Размытые"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:147
+msgid "REFL^Good"
+msgstr "Хорошие"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:148
+msgid "Sharp"
+msgstr "Резкие"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:153
+msgid "Show surfaces"
+msgstr "Показывать поверхности"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:155
+msgid "No dynamic lighting"
+msgstr "Без динамического освещения"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:157
+msgid "Flash blend approximation"
+msgstr "Грубая имитация"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:159
+msgid "Realtime dynamic lighting"
+msgstr "Дин. освещение в реальном времени"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:160
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:164
+msgid "Shadows"
+msgstr "Тени"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:163
+msgid "Realtime world lighting"
+msgstr "Дин. освещение мира в реальном времени"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:168
+msgid "Use normal maps"
+msgstr "Использовать карты нормалей"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:170
+msgid "Soft shadows"
+msgstr "Мягкие тени"
+
+# Перевод может быть неверным.
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:173
+msgid "Coronas"
+msgstr "Короны"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:174
+msgid "Use Occlusion Queries"
+msgstr "Использовать Occlusion Queries (Проверка видимости)"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:176
+msgid "Bloom"
+msgstr "Свечение"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:178
+msgid "High Dynamic Range (HDR)"
+msgstr "High Dynamic Range (HDR)"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:182
+msgid "Motion blur:"
+msgstr "Размытие от движения:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:188
+msgid "Damage blur:"
+msgstr "Размытие от урона:"
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:26
+msgid "Key bindings:"
+msgstr "Привязки клавиш:"
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:31
+msgid "Change key..."
+msgstr "Сменить кнопку..."
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:35
+msgid "Edit..."
+msgstr "Изменить..."
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:46
+msgid "Sensitivity:"
+msgstr "Чувствительность:"
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:49
+msgid "UI mouse speed:"
+msgstr "Скорость мыши в UI:"
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:52
+msgid "Mouse filter"
+msgstr "Фильтр мыши"
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:54
+msgid "Invert mouse"
+msgstr "Обратить мышь"
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:57
+#: qcsrc/menu/xonotic/dialog_settings_input.c:59
+msgid "Use joystick input"
+msgstr "Использовать ввод с джойстика"
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:62
+#: qcsrc/menu/xonotic/dialog_settings_input.c:64
+msgid "Turn off OS mouse acceleration"
+msgstr "Отключить ускорение OS мыши"
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:66
+msgid "\"enter console\" also closes"
+msgstr "\"открыть консоль\" также закрывает"
+
+#: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:5
+msgid "User defined key bind"
+msgstr "Определённая пользователем привязка клавиш"
+
+#: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:42
+msgid "Command when pressed:"
+msgstr "Команда при нажатии:"
+
+#: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:45
+msgid "Command when released:"
+msgstr "Команда при отжатии:"
+
+#: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:48
+msgid "Save"
+msgstr "Сохранение"
+
+#: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:51
+msgid "Cancel"
+msgstr "Отмена"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:26
+msgid "Menu skins:"
+msgstr "Оформления:"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:47
+msgid "Show current time"
+msgstr "Показывать время"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:49
+msgid "Show current date"
+msgstr "Показывать дату"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:51
+msgid "Show frames per second"
+msgstr "Показывать кадры/с (FPS)"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:53
+msgid "Speedometer"
+msgstr "Спидометр"
+
+# "quake units per second"
+# you can also translate it as inch/second
+# as it is roughly the same
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:56
+msgid "qu/s (hidden)"
+msgstr "qu/s (без назв.)"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:58
+msgid "qu/s"
+msgstr "qu/s"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:60
+msgid "m/s"
+msgstr "м/с"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:64
+msgid "km/h"
+msgstr "км/ч"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:66
+msgid "mph"
+msgstr "м/ч"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:68
+msgid "knots"
+msgstr "узлы"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:71
+msgid "Show accelerometer"
+msgstr "Показывать акселерометр"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:74
+msgid "Accelerometer scale:"
+msgstr "Размер акселерометра:"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:80
+msgid "Minimize input latency"
+msgstr "Уменьшить задержку ввода"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:5
+msgid "Advanced settings"
+msgstr "Доп. настройки"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:23
+msgid "Cvar filter:"
+msgstr "Фильтр Cvar:"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:34
+msgid "Setting:"
+msgstr "Настройка:"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:42
+msgid "Value:"
+msgstr "Значение:"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:56
+msgid "Description:"
+msgstr "Описание:"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:26
+msgid "Client-side movement prediction"
+msgstr "Предсказание движения на стороне клиента"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:30
+msgid "Show netgraph"
+msgstr "Показывать netgraph"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:33
+msgid "Network speed:"
+msgstr "Скорость соединения:"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:35
+msgid "56k"
+msgstr "56k"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:36
+msgid "ISDN"
+msgstr "ISDN"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:37
+msgid "Slow ADSL"
+msgstr "Медленный ADSL"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:38
+msgid "Fast ADSL"
+msgstr "Быстрый ADSL"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:39
+msgid "Broadband"
+msgstr "Широкополосное"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:42
+msgid "Input packets/s:"
+msgstr "Кол-во пакетов/с"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:46
+msgid "HTTP downloads:"
+msgstr "HTTP загрузки:"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:49
+msgid "Downloads:"
+msgstr "Загрузки:"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:53
+msgid "Speed (kB/s):"
+msgstr "Скорость (кБ/с):"
+
+#: qcsrc/menu/xonotic/dialog_settings_network.c:57
+msgid "Client UDP port:"
+msgstr "UDP порт клиента:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:26
+msgid "Resolution:"
+msgstr "Разрешение:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:29
+msgid "Font/UI size:"
+msgstr "Размера шрифта/UI"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:31
+msgid "SZ^Unreadable"
+msgstr "Нечитаемый"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:32
+msgid "SZ^Tiny"
+msgstr "Крошечный"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:33
+msgid "SZ^Little"
+msgstr "Маленький"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:34
+msgid "SZ^Small"
+msgstr "Небольшой"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:35
+msgid "SZ^Medium"
+msgstr "Средний"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:36
+msgid "SZ^Large"
+msgstr "Большой"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:37
+msgid "SZ^Huge"
+msgstr "Огромный"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:38
+msgid "SZ^Gigantic"
+msgstr "Гигантский"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:39
+msgid "SZ^Colossal"
+msgstr "Колоссальный"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:42
+msgid "Color depth:"
+msgstr "Глубина цвета:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:45
+msgid "Full screen"
+msgstr "На весь экран"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:46
+msgid "Vertical Synchronization"
+msgstr "Вертикальная синхронизация"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:49
+msgid "Use OpenGL 2.0 shaders (GLSL)"
+msgstr "Использовать шейдеры OpenGL 2.0 (GLSL)"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:52
+msgid "Use GLSL to handle color control"
+msgstr "Использовать GLSL для управления цветом"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:56
+msgid "Vertex Buffer Objects (VBOs)"
+msgstr "Использование Vertex Buffer Objects (VBOs)"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:59
+msgid "VBO^Off"
+msgstr "Отключено"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:60
+msgid "Vertices, some Tris (compatible)"
+msgstr "Вершины, некоторые треугольники (совместимо)"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:63
+msgid "Vertices"
+msgstr "Вершины"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:64
+msgid "Vertices and Triangles"
+msgstr "Вершины и треугольники"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:67
+msgid "Depth first:"
+msgstr "Сперва глубина:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:69
+msgid "DF^Disabled"
+msgstr "Отключено"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:70
+msgid "DF^World"
+msgstr "Мир"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:71
+msgid "DF^All"
+msgstr "Всё"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:75
+msgid "Disable multithreaded OpenGL"
+msgstr "Отключить многопоточный OpenGL"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:77
+msgid "Wait for GPU to finish each frame"
+msgstr "Ждать завершения каждого кадра GPU"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:80
+msgid "Brightness:"
+msgstr "Яркость:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:83
+msgid "Contrast:"
+msgstr "Контраст:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:86
+msgid "Gamma:"
+msgstr "Гамма:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:89
+msgid "Contrast boost:"
+msgstr "Усиление контраста:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:92
+msgid "Saturation:"
+msgstr "Насыщенность:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:98
+msgid "LIT^Ambient:"
+msgstr "Окружающее освещение:"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:101
+msgid "Intensity:"
+msgstr "Мощность:"
+
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:4
+msgid "Singleplayer"
+msgstr "Одиночная игра"
+
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:59
+msgid "Instant action! (random map with bots)"
+msgstr "Быстрая игра (случайная карта с ботами)"
+
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:80
+msgid "Start Singleplayer!"
+msgstr "Начать одиночную игру"
+
+#: qcsrc/menu/xonotic/dialog_singleplayer_winner.c:4
+msgid "Winner"
+msgstr "Победитель"
+
+#: qcsrc/menu/xonotic/dialog_teamselect.c:5
+msgid "Team Selection"
+msgstr "Выбор команды"
+
+#: qcsrc/menu/xonotic/dialog_teamselect.c:41
+msgid "join 'best' team (auto-select)"
+msgstr "Выбрать 'лучшую' команду (автовыбор)"
+
+#: qcsrc/menu/xonotic/dialog_teamselect.c:45
+msgid "red"
+msgstr "красная"
+
+#: qcsrc/menu/xonotic/dialog_teamselect.c:46
+msgid "blue"
+msgstr "синяя"
+
+#: qcsrc/menu/xonotic/dialog_teamselect.c:47
+msgid "yellow"
+msgstr "жёлтая"
+
+#: qcsrc/menu/xonotic/dialog_teamselect.c:48
+msgid "pink"
+msgstr "розовая"
+
+#: qcsrc/menu/xonotic/dialog_teamselect.c:51
+msgid "spectate"
+msgstr "наблюдать"
+
+#: qcsrc/menu/xonotic/mainwindow.c:35 qcsrc/menu/xonotic/mainwindow.c:38
+msgid "Do not press this button again!"
+msgstr "Не нажимайте снова эту кнопку!"
+
+#: qcsrc/menu/xonotic/maplist.c:278
+msgid ""
+"Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"
+msgstr ""
+"Что? Не могу зайти (m = NULL). Перефильтрую, чтобы такого больше не "
+"случалось.\n"
+
+#: qcsrc/menu/xonotic/maplist.c:286
+#, c-format
+msgid "%s's Xonotic Server"
+msgstr "Сервер Xonotic от %s"
+
+#: qcsrc/menu/xonotic/maplist.c:291
+msgid ""
+"Huh? Can't play this (invalid game type). Refiltering so this won't happen "
+"again.\n"
+msgstr ""
+"Что? Не могу зайти (неверный вид игры). Перефильтрую, чтобы такого больше не "
+"случалось.\n"
+
+#: qcsrc/menu/xonotic/playermodel.c:174
+msgid "<no model found>"
+msgstr "<модель игрока не найдена>"
+
+#: qcsrc/menu/xonotic/serverlist.c:360
+msgid "Remove"
+msgstr "Убрать"
+
+#: qcsrc/menu/xonotic/serverlist.c:362
+msgid "Bookmark"
+msgstr "В закладки"
+
+#: qcsrc/menu/xonotic/serverlist.c:518
+msgid "Ping"
+msgstr "Пинг"
+
+#: qcsrc/menu/xonotic/serverlist.c:519
+msgid "Host name"
+msgstr "Имя сервера"
+
+#: qcsrc/menu/xonotic/serverlist.c:520
+msgid "Map"
+msgstr "Карта"
+
+#: qcsrc/menu/xonotic/serverlist.c:521
+msgid "Type"
+msgstr "Вид"
+
+#: qcsrc/menu/xonotic/serverlist.c:522
+msgid "Players"
+msgstr "Игроки"
+
+#: qcsrc/menu/xonotic/skinlist.c:105
+msgid "<TITLE>"
+msgstr "<ЗАГОЛОВОК>"
+
+#: qcsrc/menu/xonotic/skinlist.c:106
+msgid "<AUTHOR>"
+msgstr "<АВТОР>"
+
+#: qcsrc/menu/xonotic/skinlist.c:163
+#, c-format
+msgid "%s: %s"
+msgstr "%s: %s"
+
+#: qcsrc/menu/xonotic/slider_decibels.c:50
+msgid "VOL^OFF"
+msgstr "Отключено"
+
+#: qcsrc/menu/xonotic/slider_decibels.c:52
+msgid "VOL^MAX"
+msgstr "Максимум"
+
+#: qcsrc/menu/xonotic/slider_decibels.c:53
+#, c-format
+msgid "%s dB"
+msgstr "%s дБ"
+
+#: qcsrc/menu/xonotic/slider_resolution.c:65
+#, c-format
+msgid "%dx%d"
+msgstr "%dx%d"
+
+#: qcsrc/menu/xonotic/util.qc:270
+#, c-format
+msgid "Received HTTP request data for an invalid id %d.\n"
+msgstr "Получены данные HTTP запроса для неверного id %d.\n"
+
+#: qcsrc/menu/xonotic/util.qc:285
+#, c-format
+msgid "error receiving update notification: status is %d\n"
+msgstr "ошибка при получении уведомления об обновлении: статус %d\n"
+
+#: qcsrc/menu/xonotic/util.qc:290
+msgid "error: received HTML instead of an update notification\n"
+msgstr "ошибка: получение HTML вместо уведомления об обновлении\n"
+
+#: qcsrc/menu/xonotic/util.qc:295
+msgid "error: received carriage returns from update notification server\n"
+msgstr ""
+"ошибка: получены символы возврата строки от сервера уведомлений об "
+"обновлениях\n"
+
+#: qcsrc/menu/xonotic/util.qc:316
+#, c-format
+msgid ""
+"Update can be downloaded at:\n"
+"%s\n"
+msgstr ""
+"Обновление может быть загружено с:\n"
+"%s\n"
+
+#: qcsrc/menu/xonotic/util.qc:337
+msgid "Autogenerating mapinfo for newly added maps..."
+msgstr "Автоматическое создание mapinfo для новых карт..."
+
+#: qcsrc/menu/xonotic/util.qc:432
+#, c-format
+msgid "Update to %s now!"
+msgstr "Обновитесь до %s сейчас же!"
+
+#: qcsrc/menu/xonotic/util.qc:509
+msgid ""
+"^1ERROR: Texture compression is required but not supported.\n"
+"^1Expect visual problems.\n"
+msgstr ""
+"1^ОШИБКА: Сжатие текстур требуется, но не поддерживается.\n"
+"1^Ожидайте проблемы с отображением.\n"
+
+#: qcsrc/menu/xonotic/util.qc:531
+msgid "Arena"
+msgstr "Arena"
+
+#: qcsrc/menu/xonotic/util.qc:532
+msgid "Assault"
+msgstr "Assault"
+
+#: qcsrc/menu/xonotic/util.qc:533
+msgid "Capture The Flag"
+msgstr "Capture The Flag"
+
+#: qcsrc/menu/xonotic/util.qc:534
+msgid "Clan Arena"
+msgstr "Clan Arena"
+
+#: qcsrc/menu/xonotic/util.qc:535
+msgid "Deathmatch"
+msgstr "Deathmatch"
+
+#: qcsrc/menu/xonotic/util.qc:536
+msgid "Domination"
+msgstr "Domination"
+
+#: qcsrc/menu/xonotic/util.qc:537
+msgid "Freeze Tag"
+msgstr "Freeze Tag"
+
+#: qcsrc/menu/xonotic/util.qc:538
+msgid "Keepaway"
+msgstr "Keepaway"
+
+#: qcsrc/menu/xonotic/util.qc:539
+msgid "Key Hunt"
+msgstr "Key Hunt"
+
+#: qcsrc/menu/xonotic/util.qc:540
+msgid "Last Man Standing"
+msgstr "Last Man Standing"
+
+#: qcsrc/menu/xonotic/util.qc:541
+msgid "Nexball"
+msgstr "Nexball"
+
+#: qcsrc/menu/xonotic/util.qc:542
+msgid "Onslaught"
+msgstr "Onslaught"
+
+#: qcsrc/menu/xonotic/util.qc:543
+msgid "Race"
+msgstr "Race"
+
+#: qcsrc/menu/xonotic/util.qc:544
+msgid "Race CTS"
+msgstr "Race CTS"
+
+#: qcsrc/menu/xonotic/util.qc:545
+msgid "Runematch"
+msgstr "Runematch"
+
+#: qcsrc/menu/xonotic/util.qc:546
+msgid "Team Deathmatch"
+msgstr "Team Deathmatch"
+
+#: qcsrc/menu/xonotic/util.qc:565
+#, c-format
+msgid "@!#%'n Tuba Throwing"
+msgstr "@!#%'n Швыряние Тубой"
+
+#: qcsrc/menu/xonotic/util.qc:583
+msgid "Background:"
+msgstr "Фон:"
+
+#: qcsrc/menu/xonotic/util.qc:585 qcsrc/menu/xonotic/util.qc:601
+#: qcsrc/menu/xonotic/util.qc:610 qcsrc/menu/xonotic/util.qc:618
+#: qcsrc/menu/xonotic/util.qc:630
+msgid "Default"
+msgstr "По умолчанию"
+
+#: qcsrc/menu/xonotic/util.qc:596
+msgid "Use default"
+msgstr "Исп. настройки по умолчанию"
+
+#: qcsrc/menu/xonotic/util.qc:616
+msgid "Team Color:"
+msgstr "Цвет команды:"
+
+#: qcsrc/menu/xonotic/util.qh:49
+msgid "Enable panel"
+msgstr "Включить панель"
+
+#: qcsrc/server/w_crylink.qc:2
+msgid "Crylink"
+msgstr "Crylink"
+
+#: qcsrc/server/w_crylink.qc:645
+#, c-format
+msgid "%s succeeded at self-destructing themself with the Crylink"
+msgstr ""
+
+#: qcsrc/server/w_crylink.qc:650
+#, c-format
+msgid "%s could not hide from %s's Crylink"
+msgstr ""
+
+#: qcsrc/server/w_crylink.qc:652
+#, c-format
+msgid "%s was too close to %s's Crylink"
+msgstr ""
+
+#: qcsrc/server/w_crylink.qc:654
+#, c-format
+msgid "%s took a close look at %s's Crylink"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:2
+msgid "Electro"
+msgstr "Electro"
+
+#: qcsrc/server/w_electro.qc:503
+#, c-format
+msgid "%s could not remember where they put plasma"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:505
+#, c-format
+msgid "%s played with plasma"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:512
+#, c-format
+msgid "%s just noticed %s's blue ball"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:514
+#, c-format
+msgid "%s got in touch with %s's blue ball"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:519
+#, c-format
+msgid "%s felt the electrifying air of %s's combo"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:521
+#, c-format
+msgid "%s got too close to %s's blue beam"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:523
+#, c-format
+msgid "%s was blasted by %s's blue beam"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:2
+msgid "Fireball"
+msgstr "Fireball"
+
+#: qcsrc/server/w_fireball.qc:392
+#, c-format
+msgid "%s forgot about some firemine"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:394 qcsrc/server/w_hlac.qc:223
+#, c-format
+msgid "%s should have used a smaller gun"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:401
+#, c-format
+msgid "%s tried to catch %s's firemine"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:403
+#, c-format
+msgid "%s fatefully ignored %s's firemine"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:410
+#, c-format
+msgid "%s could not hide from %s's fireball"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:412
+#, c-format
+msgid "%s saw the pretty lights of %s's fireball"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:415
+#, c-format
+msgid "%s got too close to %s's fireball"
+msgstr ""
+
+#: qcsrc/server/w_fireball.qc:417
+#, c-format
+msgid "%s tasted %s's fireball"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:2
+msgid "Mortar"
+msgstr "Mortar"
+
+#: qcsrc/server/w_grenadelauncher.qc:357
+#, c-format
+msgid "%s tried out his own grenade"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:359
+#, c-format
+msgid "%s detonated"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:365
+#, c-format
+msgid "%s didn't see %s's grenade"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:367
+#, c-format
+msgid "%s almost dodged %s's grenade"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:369
+#, c-format
+msgid "%s ate %s's grenade"
+msgstr ""
+
+#: qcsrc/server/w_hagar.qc:2
+msgid "Hagar"
+msgstr "Hagar"
+
+#: qcsrc/server/w_hagar.qc:185 qcsrc/server/w_seeker.qc:523
+#, c-format
+msgid "%s played with tiny rockets"
+msgstr ""
+
+#: qcsrc/server/w_hagar.qc:189
+#, c-format
+msgid "%s hoped %s's missiles wouldn't bounce"
+msgstr ""
+
+#: qcsrc/server/w_hagar.qc:191
+#, c-format
+msgid "%s was pummeled by %s"
+msgstr ""
+
+#: qcsrc/server/w_hlac.qc:2
+msgid "Heavy Laser Assault Cannon"
+msgstr "Heavy Laser Assault Cannon"
+
+#: qcsrc/server/w_hlac.qc:225
+#, c-format
+msgid "%s was cut down by %s"
+msgstr ""
+
+#: qcsrc/server/w_hook.qc:2
+msgid "Grappling Hook"
+msgstr "Grappling Hook"
+
+#: qcsrc/server/w_hook.qc:267 qcsrc/server/w_minstanex.qc:257
+#: qcsrc/server/w_nex.qc:224 qcsrc/server/w_porto.qc:293
+#: qcsrc/server/w_shotgun.qc:179 qcsrc/server/w_uzi.qc:287
+#, c-format
+msgid "%s did the impossible"
+msgstr ""
+
+#: qcsrc/server/w_hook.qc:269
+#, c-format
+msgid "%s has run into %s's gravity bomb"
+msgstr ""
+
+#: qcsrc/server/w_laser.qc:2
+msgid "Laser"
+msgstr "Laser"
+
+#: qcsrc/server/w_laser.qc:285
+#, c-format
+msgid "%s lasered themself to hell"
+msgstr ""
+
+#: qcsrc/server/w_laser.qc:289
+#, c-format
+msgid "%s was cut in half by %s's gauntlet"
+msgstr ""
+
+#: qcsrc/server/w_laser.qc:291
+#, c-format
+msgid "%s was lasered to death by %s"
+msgstr ""
+
+#: qcsrc/server/w_minelayer.qc:2
+msgid "Mine Layer"
+msgstr "Mine Layer"
+
+#: qcsrc/server/w_minelayer.qc:438 qcsrc/server/w_rocketlauncher.qc:480
+#, c-format
+msgid "%s exploded"
+msgstr ""
+
+#: qcsrc/server/w_minelayer.qc:442
+#, c-format
+msgid "%s got too close to %s's mine"
+msgstr ""
+
+#: qcsrc/server/w_minelayer.qc:444
+#, c-format
+msgid "%s almost dodged %s's mine"
+msgstr ""
+
+#: qcsrc/server/w_minelayer.qc:446
+#, c-format
+msgid "%s stepped on %s's mine"
+msgstr ""
+
+#: qcsrc/server/w_minstanex.qc:2
+msgid "MinstaNex"
+msgstr "MinstaNex"
+
+#: qcsrc/server/w_minstanex.qc:259 qcsrc/server/w_nex.qc:226
+#, c-format
+msgid "%s has been vaporized by %s"
+msgstr ""
+
+#: qcsrc/server/w_nex.qc:2
+msgid "Nex"
+msgstr "Nex"
+
+#: qcsrc/server/w_porto.qc:2
+msgid "Port-O-Launch"
+msgstr "Port-O-Launch"
+
+#: qcsrc/server/w_porto.qc:295
+#, c-format
+msgid "%s felt %s doing the impossible to him"
+msgstr ""
+
+#: qcsrc/server/w_rocketlauncher.qc:2
+msgid "Rocket Launcher"
+msgstr "Rocket Launcher"
+
+#: qcsrc/server/w_rocketlauncher.qc:484
+#, c-format
+msgid "%s got too close to %s's rocket"
+msgstr ""
+
+#: qcsrc/server/w_rocketlauncher.qc:486
+#, c-format
+msgid "%s almost dodged %s's rocket"
+msgstr ""
+
+#: qcsrc/server/w_rocketlauncher.qc:488
+#, c-format
+msgid "%s ate %s's rocket"
+msgstr ""
+
+#: qcsrc/server/w_seeker.qc:2
+msgid "T.A.G. Seeker"
+msgstr "T.A.G. Seeker"
+
+#: qcsrc/server/w_seeker.qc:527
+#, c-format
+msgid "%s ran into %s's flac"
+msgstr ""
+
+#: qcsrc/server/w_seeker.qc:529
+#, c-format
+msgid "%s was tagged by %s"
+msgstr ""
+
+#: qcsrc/server/w_shotgun.qc:2
+msgid "Shotgun"
+msgstr "Shotgun"
+
+#: qcsrc/server/w_shotgun.qc:183
+#, c-format
+msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
+msgstr ""
+
+#: qcsrc/server/w_shotgun.qc:185
+#, c-format
+msgid "%s was gunned by %s"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:2
+msgid "Sniper Rifle"
+msgstr "Sniper Rifle"
+
+#: qcsrc/server/w_sniperrifle.qc:321
+#, c-format
+msgid "%s shot themself automatically"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:323
+#, c-format
+msgid "%s sniped themself somehow"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:330
+#, c-format
+msgid "%s failed to hide from %s's bullet hail"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:332
+#, c-format
+msgid "%s died in %s's bullet hail"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:339
+#, c-format
+msgid "%s failed to hide from %s's rifle"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:344
+#, c-format
+msgid "%s got hit in the head by %s"
+msgstr ""
+
+#: qcsrc/server/w_sniperrifle.qc:346 qcsrc/server/w_uzi.qc:291
+#, c-format
+msgid "%s was sniped by %s"
+msgstr ""
+
+#: qcsrc/server/w_tuba.qc:2
+#, c-format
+msgid "@!#%'n Tuba"
+msgstr "@!#%'n Tuba"
+
+#: qcsrc/server/w_tuba.qc:260
+#, c-format
+msgid "%s hurt his own ears with the @!#%%'n Tuba"
+msgstr ""
+
+#: qcsrc/server/w_tuba.qc:264
+#, c-format
+msgid "%s died of %s's great playing on the @!#%%'n Tuba"
+msgstr ""
+
+#: qcsrc/server/w_uzi.qc:2
+msgid "Machine Gun"
+msgstr "Machine Gun"
+
+#: qcsrc/server/w_uzi.qc:293
+#, c-format
+msgid "%s was riddled full of holes by %s"
+msgstr ""
+
+#~ msgid "Waypoint settings:"
+#~ msgstr "Настройки отметок:"
+
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"

@@ -1,26 +1,18 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hlac", "hlac", "Heavy Laser Assault Cannon");
+REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hlac", "hlac", _("Heavy Laser Assault Cannon"))
 #else
 #ifdef SVQC
-.float HLAC_bulletcounter;
+
 void W_HLAC_Touch (void)
 {
 	PROJECTILE_TOUCH;
 
 	self.event_damage = SUB_Null;
-
-    RadiusDamage (self, self.owner, autocvar_g_balance_hlac_primary_damage, autocvar_g_balance_hlac_primary_edgedamage, autocvar_g_balance_hlac_primary_radius, world, autocvar_g_balance_hlac_primary_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void W_HLAC_Touch2 (void)
-{
-	PROJECTILE_TOUCH;
-
-	self.event_damage = SUB_Null;
-
-    RadiusDamage (self, self.owner, autocvar_g_balance_hlac_secondary_damage, autocvar_g_balance_hlac_secondary_edgedamage, autocvar_g_balance_hlac_secondary_radius, world, autocvar_g_balance_hlac_secondary_force, self.projectiledeathtype, other);
+	
+	if(self.projectiledeathtype & HITTYPE_SECONDARY)
+		RadiusDamage (self, self.owner, autocvar_g_balance_hlac_secondary_damage, autocvar_g_balance_hlac_secondary_edgedamage, autocvar_g_balance_hlac_secondary_radius, world, autocvar_g_balance_hlac_secondary_force, self.projectiledeathtype, other);
+	else
+		RadiusDamage (self, self.owner, autocvar_g_balance_hlac_primary_damage, autocvar_g_balance_hlac_primary_edgedamage, autocvar_g_balance_hlac_primary_radius, world, autocvar_g_balance_hlac_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -35,7 +27,7 @@ void W_HLAC_Attack (void)
         self.ammo_cells = self.ammo_cells - autocvar_g_balance_hlac_primary_ammo;
     }
 
-    spread = autocvar_g_balance_hlac_primary_spread_min + (autocvar_g_balance_hlac_primary_spread_add * self.HLAC_bulletcounter);
+    spread = autocvar_g_balance_hlac_primary_spread_min + (autocvar_g_balance_hlac_primary_spread_add * self.misc_bulletcounter);
     spread = min(spread,autocvar_g_balance_hlac_primary_spread_max);
     if(self.crouch)
         spread = spread * autocvar_g_balance_hlac_primary_spread_crouchmod;
@@ -51,7 +43,6 @@ void W_HLAC_Attack (void)
 	missile = spawn ();
 	missile.owner = self;
 	missile.classname = "hlacbolt";
-	// missile.dmg = issecondary;
 	missile.bot_dodge = TRUE;
 
     missile.bot_dodgerating = autocvar_g_balance_hlac_primary_damage;
@@ -63,7 +54,7 @@ void W_HLAC_Attack (void)
 	setsize(missile, '0 0 0', '0 0 0');
 
 	W_SetupProjectileVelocity(missile, autocvar_g_balance_hlac_primary_speed, spread);
-	missile.angles = vectoangles (missile.velocity);
+	//missile.angles = vectoangles (missile.velocity); // csqc
 
 	missile.touch = W_HLAC_Touch;
 	missile.think = SUB_Remove;
@@ -95,7 +86,6 @@ void W_HLAC_Attack2f (void)
 	missile = spawn ();
 	missile.owner = self;
 	missile.classname = "hlacbolt";
-	// missile.dmg = issecondary;
 	missile.bot_dodge = TRUE;
 
     missile.bot_dodgerating = autocvar_g_balance_hlac_secondary_damage;
@@ -107,9 +97,9 @@ void W_HLAC_Attack2f (void)
 	setsize(missile, '0 0 0', '0 0 0');
 
 	W_SetupProjectileVelocity(missile, autocvar_g_balance_hlac_secondary_speed, spread);
-	missile.angles = vectoangles (missile.velocity);
+	//missile.angles = vectoangles (missile.velocity); // csqc
 
-	missile.touch = W_HLAC_Touch2;
+	missile.touch = W_HLAC_Touch;
 	missile.think = SUB_Remove;
 
     missile.nextthink = time + autocvar_g_balance_hlac_secondary_lifetime;
@@ -161,7 +151,7 @@ void HLAC_fire1_02()
 
 		ATTACK_FINISHED(self) = time + autocvar_g_balance_hlac_primary_refire * W_WeaponRateFactor();
 		W_HLAC_Attack();
-		self.HLAC_bulletcounter = self.HLAC_bulletcounter + 1;
+		self.misc_bulletcounter = self.misc_bulletcounter + 1;
         weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hlac_primary_refire, HLAC_fire1_02);
 	}
 	else
@@ -184,7 +174,7 @@ float w_hlac(float req)
 		if (self.BUTTON_ATCK)
 		if (weapon_prepareattack(0, autocvar_g_balance_hlac_primary_refire))
 		{
-			self.HLAC_bulletcounter = 0;
+			self.misc_bulletcounter = 0;
 			W_HLAC_Attack();
 			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hlac_primary_refire, HLAC_fire1_02);
 		}
@@ -230,9 +220,9 @@ float w_hlac(float req)
 		precache_sound("weapons/laserimpact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s should have used a smaller gun";
+		w_deathtypestring = _("%s should have used a smaller gun");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "%s was cut down by %s";
+		w_deathtypestring = _("%s was cut down by %s");
 	return TRUE;
 }
 #endif

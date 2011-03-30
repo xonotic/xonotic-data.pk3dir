@@ -20,8 +20,10 @@ var float(float bInputType, float nPrimary, float nSecondary) menu_action;
 // --------------------------------------------------------------------------
 // CTF
 
+#ifdef CTF_EXAMPLE
 void() ctf_menu_show;
 string ctf_temp_1;
+#endif
 
 // --------------------------------------------------------------------------
 // Onslaught
@@ -79,9 +81,6 @@ float hud_field[MAX_HUD_FIELDS + 1];
 float hud_size[MAX_HUD_FIELDS + 1];
 string hud_title[MAX_HUD_FIELDS + 1];
 float hud_num_fields;
-
-float hud_font;
-float hud_bigfont;
 
 string scores_label[MAX_SCORE];
 float scores_flags[MAX_SCORE];
@@ -165,3 +164,4 @@ float g_balance_grenadelauncher_bouncefactor;
 float g_balance_grenadelauncher_bouncestop;
 float g_balance_electro_secondary_bouncefactor;
 float g_balance_electro_secondary_bouncestop;
+float g_trueaim_minrange;

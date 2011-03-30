@@ -2,15 +2,8 @@ void race_send_recordtime(float msg);
 void race_SendRankings(float pos, float prevpos, float del, float msg);
 
 void send_CSQC_teamnagger() {
-	WriteByte(0, SVC_TEMPENTITY);
-	WriteByte(0, TE_CSQC_TEAMNAGGER);
-}
-
-void send_CSQC_cr_maxbullets(entity e) {
-	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_CR_MAXBULLETS);
-	WriteByte(MSG_ONE, autocvar_g_balance_campingrifle_magazinecapacity);
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
 void Announce(string snd) {
@@ -1072,6 +1065,8 @@ void PutClientInServer (void)
 		self.cnt = self.switchweapon;
 		self.weapon = 0;
 
+        self.wish_reload = 0;
+
 		if(!self.alivetime)
 			self.alivetime = time;
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
@@ -1112,8 +1107,11 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_grenadelauncher_bouncefactor
 	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_grenadelauncher_bouncestop
 	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
-	WriteByte(MSG_ENTITY, autocvar_g_balance_campingrifle_secondary); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_magazinecapacity); // rifle max bullets
+	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
+	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
 	return TRUE;
 }
 
@@ -1371,7 +1369,7 @@ void ClientKill (void)
 	{
 		// do nothing
 	}
-    else if(g_freezetag && self.freezetag_frozen == 1)
+    else if(self.freezetag_frozen)
     {
         // do nothing
     }
@@ -1741,8 +1739,6 @@ void ClientConnect (void)
 	else if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
 
-	send_CSQC_cr_maxbullets(self);
-
 	CheatInitClient();
 
 	PlayerStats_AddPlayer(self);
@@ -2048,7 +2044,7 @@ void player_powerups (void)
 		self.modelflags &~= MF_ROCKET;
 	}
 
-	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
+	self.effects &~= (EF_DIMLIGHT | EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
 	if(!self.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
@@ -2351,6 +2347,7 @@ void SpectateCopy(entity spectatee) {
 	self.impulse = 0;
 	self.items = spectatee.items;
 	self.last_pickup = spectatee.last_pickup;
+	self.hit_time = spectatee.hit_time;
 	self.metertime = spectatee.metertime;
 	self.strength_finished = spectatee.strength_finished;
 	self.invincible_finished = spectatee.invincible_finished;
@@ -2358,6 +2355,10 @@ void SpectateCopy(entity spectatee) {
 	self.weapons = spectatee.weapons;
 	self.switchweapon = spectatee.switchweapon;
 	self.weapon = spectatee.weapon;
+	self.nex_charge = spectatee.nex_charge;
+	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
+	self.sniperrifle_bulletcounter = spectatee.sniperrifle_bulletcounter;
+	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;
 	self.v_angle = spectatee.v_angle;
@@ -2443,7 +2444,7 @@ void ShowRespawnCountdown()
 
 void LeaveSpectatorMode()
 {
-	if(isJoinAllowed()) {
+	if(nJoinAllowed(1)) {
 		if(!teams_matter || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
 
@@ -2480,25 +2481,30 @@ void LeaveSpectatorMode()
  * Determines whether the player is allowed to join. This depends on cvar
  * g_maxplayers, if it isn't used this function always return TRUE, otherwise
  * it checks whether the number of currently playing players exceeds g_maxplayers.
- * @return bool TRUE if the player is allowed to join, false otherwise
+ * @return int number of free slots for players, 0 if none
  */
-float isJoinAllowed() {
+float nJoinAllowed(float includeMe) {
 	if(self.team_forced < 0)
 		return FALSE; // forced spectators can never join
 
-	if (!autocvar_g_maxplayers)
-		return TRUE;
-
+	// TODO simplify this
 	local entity e;
-	local float currentlyPlaying;
-	FOR_EACH_REALPLAYER(e) {
-		if(e.classname == "player")
-			currentlyPlaying += 1;
-	}
-	if(currentlyPlaying < autocvar_g_maxplayers)
-		return TRUE;
 
-	return FALSE;
+	local float totalClients;
+	FOR_EACH_CLIENT(e)
+		totalClients += 1;
+
+	if (!autocvar_g_maxplayers)
+		return maxclients - totalClients + includeMe;
+
+	local float currentlyPlaying;
+	FOR_EACH_REALPLAYER(e)
+		currentlyPlaying += 1;
+
+	if(currentlyPlaying < autocvar_g_maxplayers)
+		return min(maxclients - totalClients + includeMe, autocvar_g_maxplayers - currentlyPlaying);
+
+	return 0;
 }
 
 /**
@@ -2901,7 +2907,7 @@ void PlayerPreThink (void)
 	}
 
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_CAMPINGRIFLE && autocvar_g_balance_campingrifle_secondary == 0));
+		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_SNIPERRIFLE && autocvar_g_balance_sniperrifle_secondary == 0));
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;
@@ -3095,7 +3101,7 @@ void PlayerPostThink (void)
 
 	playerdemo_write();
 
-	if((g_cts || g_race) && self.cvar_cl_allow_uid2name == 1)
+	if((g_cts || g_race) && self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
 	{
 		if(!self.stored_netname)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));

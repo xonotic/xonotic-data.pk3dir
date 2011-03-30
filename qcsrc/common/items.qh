@@ -60,6 +60,14 @@ string W_FixWeaponOrder(string order, float complete);
 string W_NameWeaponOrder(string order);
 string W_NumberWeaponOrder(string order);
 
+// ammo types
+.float ammo_shells;
+.float ammo_nails;
+.float ammo_rockets;
+.float ammo_cells;
+.float ammo_fuel;
+.float ammo_batteries; // dummy
+
 // entity properties of weaponinfo:
 .float weapon; // WEP_...
 .float weapons; // WEPBIT_...
@@ -73,8 +81,7 @@ string W_NumberWeaponOrder(string order);
 .float impulse; // weapon impulse
 .float bot_pickupbasevalue; // bot weapon priority
 .string model2; // wpn- sprite name
-
-
+..float ammo_field; // main ammo field
 
 // dynamic weapon adding
 float w_null(float dummy);

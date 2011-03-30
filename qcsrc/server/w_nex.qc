@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(NEX, w_nex, IT_CELLS, 7, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "nex", "nex", "Nex");
+REGISTER_WEAPON(NEX, w_nex, IT_CELLS, 7, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "nex", "nex", _("Nex"))
 #else
 #ifdef SVQC
 void SendCSQCNexBeamParticle(float charge) {
@@ -47,8 +47,8 @@ void W_Nex_Attack (float issecondary)
 	{
 		charge = autocvar_g_balance_nex_charge_mindmg / mydmg + (1 - autocvar_g_balance_nex_charge_mindmg / mydmg) * self.nex_charge;
 		self.nex_charge *= autocvar_g_balance_nex_charge_shot_multiplier; // do this AFTER setting mydmg/myforce
-		                                                                 // O RLY? -- divVerent
-                                                                         // YA RLY -- FruitieX
+		// O RLY? -- divVerent
+		// YA RLY -- FruitieX
 	}
 	else
 		charge = 1;
@@ -56,10 +56,10 @@ void W_Nex_Attack (float issecondary)
 	myforce *= charge;
 
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", CHAN_WEAPON, mydmg);
-    if(charge > autocvar_g_balance_nex_charge_limit && autocvar_g_balance_nex_charge_limit) // if the Nex is overcharged, we play an extra sound
-    {
-        sound (self, CHAN_WEAPON2, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * autocvar_g_balance_nex_charge_limit) / (1 - 0.5 * autocvar_g_balance_nex_charge_limit), ATTN_NORM);
-    }
+	if(charge > autocvar_g_balance_nex_charge_animlimit && autocvar_g_balance_nex_charge_animlimit) // if the Nex is overcharged, we play an extra sound
+	{
+		sound (self, CHAN_WEAPON2, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * autocvar_g_balance_nex_charge_animlimit) / (1 - 0.5 * autocvar_g_balance_nex_charge_animlimit), ATTN_NORM);
+	}
 
 	yoda = 0;
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_NEX);
@@ -69,7 +69,7 @@ void W_Nex_Attack (float issecondary)
 
 	//beam and muzzle flash done on client
 	SendCSQCNexBeamParticle(charge);
-	
+
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		Damage_DamageInfo(trace_endpos, mydmg, 0, 0, myforce * w_shotdir, WEP_NEX, self);
@@ -94,27 +94,13 @@ float w_nex(float req)
 		if(autocvar_g_balance_nex_charge && self.nex_charge < autocvar_g_balance_nex_charge_limit)
 			self.nex_charge = min(1, self.nex_charge + autocvar_g_balance_nex_charge_rate * frametime / W_TICSPERFRAME);
 
-        if(autocvar_g_balance_nex_charge)
-        {
-            self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_limit);
-            self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_limit);
-            self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_limit);
-
-            if(self.nex_charge > autocvar_g_balance_nex_charge_limit)
-            {
-                self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - autocvar_g_balance_nex_charge_limit) / (1 - autocvar_g_balance_nex_charge_limit);
-                self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - autocvar_g_balance_nex_charge_limit) / (1 - autocvar_g_balance_nex_charge_limit);
-                self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_limit) / (1 - autocvar_g_balance_nex_charge_limit);
-            }
-        }
-
 		if(autocvar_g_balance_nex_secondary_chargepool)
-		if(self.nex_chargepool_ammo < 1)
-		{
-			if(self.nex_chargepool_pauseregen_finished < time)
-				self.nex_chargepool_ammo = min(1, self.nex_chargepool_ammo + autocvar_g_balance_nex_secondary_chargepool_regen * frametime / W_TICSPERFRAME);
-			self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_nex_secondary_chargepool_pause_health_regen);
-		}
+			if(self.nex_chargepool_ammo < 1)
+			{
+				if(self.nex_chargepool_pauseregen_finished < time)
+					self.nex_chargepool_ammo = min(1, self.nex_chargepool_ammo + autocvar_g_balance_nex_secondary_chargepool_regen * frametime / W_TICSPERFRAME);
+				self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_nex_secondary_chargepool_pause_health_regen);
+			}
 
 		if (self.BUTTON_ATCK)
 		{
@@ -124,43 +110,52 @@ float w_nex(float req)
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nex_primary_animtime, w_ready);
 			}
 		}
-		if (self.BUTTON_ATCK2)
+		if ((autocvar_g_balance_nex_secondary_charge && !autocvar_g_balance_nex_secondary) ? self.BUTTON_ZOOM : self.BUTTON_ATCK2)
 		{
 			if(autocvar_g_balance_nex_secondary_charge)
 			{
 				self.nex_charge_rottime = time + autocvar_g_balance_nex_charge_rot_pause;
 				dt = frametime / W_TICSPERFRAME;
 
-				if(autocvar_g_balance_nex_secondary_chargepool)
+				if(self.nex_charge < 1)
 				{
-					if(autocvar_g_balance_nex_secondary_ammo)
+					if(autocvar_g_balance_nex_secondary_chargepool)
 					{
-						// always deplete if secondary is held
-						self.nex_chargepool_ammo = max(0, self.nex_chargepool_ammo - autocvar_g_balance_nex_secondary_ammo * dt);
-
-						dt = min(dt, (1 - self.nex_charge) / autocvar_g_balance_nex_secondary_charge_rate);
-						self.nex_chargepool_pauseregen_finished = time + autocvar_g_balance_nex_secondary_chargepool_pause_regen;
-						dt = min(dt, self.nex_chargepool_ammo);
-						dt = max(0, dt);
-
-						self.nex_charge += dt * autocvar_g_balance_nex_secondary_charge_rate;
-					}
-				}
-
-				else if(autocvar_g_balance_nex_secondary_ammo)
-				{
-					if(self.nex_charge < 1)
-					{
-						dt = min(dt, (1 - self.nex_charge) / autocvar_g_balance_nex_secondary_charge_rate);
-						if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+						if(autocvar_g_balance_nex_secondary_ammo)
 						{
-							dt = min(dt, (self.ammo_cells - autocvar_g_balance_nex_primary_ammo) / autocvar_g_balance_nex_secondary_ammo);
+							// always deplete if secondary is held
+							self.nex_chargepool_ammo = max(0, self.nex_chargepool_ammo - autocvar_g_balance_nex_secondary_ammo * dt);
+
+							dt = min(dt, (1 - self.nex_charge) / autocvar_g_balance_nex_secondary_charge_rate);
+							self.nex_chargepool_pauseregen_finished = time + autocvar_g_balance_nex_secondary_chargepool_pause_regen;
+							dt = min(dt, self.nex_chargepool_ammo);
 							dt = max(0, dt);
-							if(dt > 0)
-							{
-								self.ammo_cells = max(autocvar_g_balance_nex_secondary_ammo, self.ammo_cells - autocvar_g_balance_nex_secondary_ammo * dt);
-							}
+
+							self.nex_charge += dt * autocvar_g_balance_nex_secondary_charge_rate;
 						}
+					}
+
+					else if(autocvar_g_balance_nex_secondary_ammo)
+					{
+						if(self.BUTTON_ATCK2) // only eat ammo when the button is pressed
+						{
+							dt = min(dt, (1 - self.nex_charge) / autocvar_g_balance_nex_secondary_charge_rate);
+							if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+							{
+								dt = min(dt, (self.ammo_cells - autocvar_g_balance_nex_primary_ammo) / autocvar_g_balance_nex_secondary_ammo);
+								dt = max(0, dt);
+								if(dt > 0)
+								{
+									self.ammo_cells = max(autocvar_g_balance_nex_secondary_ammo, self.ammo_cells - autocvar_g_balance_nex_secondary_ammo * dt);
+								}
+							}
+							self.nex_charge += dt * autocvar_g_balance_nex_secondary_charge_rate;
+						}
+					}
+
+					else
+					{
+						dt = min(dt, (1 - self.nex_charge) / autocvar_g_balance_nex_secondary_charge_rate);
 						self.nex_charge += dt * autocvar_g_balance_nex_secondary_charge_rate;
 					}
 				}
@@ -172,6 +167,20 @@ float w_nex(float req)
 					W_Nex_Attack(1);
 					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nex_secondary_animtime, w_ready);
 				}
+			}
+		}
+
+		if(autocvar_g_balance_nex_charge)
+		{
+			self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+			self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+			self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+
+			if(self.nex_charge > autocvar_g_balance_nex_charge_animlimit)
+			{
+				self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+				self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+				self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
 			}
 		}
 	}
@@ -212,9 +221,9 @@ float w_nex(float req)
 		precache_sound("weapons/neximpact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s did the impossible";
+		w_deathtypestring = _("%s did the impossible");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "%s has been vaporized by %s";
+		w_deathtypestring = _("%s has been vaporized by %s");
 	return TRUE;
 }
 #endif

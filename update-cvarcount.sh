@@ -14,6 +14,7 @@ for b in balance*.cfg; do
 		awk '/^seta? g_/ { print $2; }' "$b"                     | sort -u | tr -d '\r' > "$B"
 		diff "$A" "$B" | grep '^[<>]' | sort
 		rm -f "$A" "$B"
-		exit 1
+		echo "Please wait for 30 seconds, so you have had enough time to read this..."
+		sleep 30
 	fi
 done

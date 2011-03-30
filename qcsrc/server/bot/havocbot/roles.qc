@@ -315,7 +315,6 @@ void havocbot_chooserole_ka()
 void havocbot_chooserole()
 {
 	dprint("choosing a role...\n");
-	navigation_clearroute();
 	self.bot_strategytime = 0;
 	if (g_ctf)
 		havocbot_chooserole_ctf();

@@ -332,6 +332,9 @@ void FireGrapplingHook (void)
 	if((arena_roundbased && time < warmup) || (time < game_starttime))
 		return;
 
+    if(self.freezetag_frozen)
+        return;
+
 	makevectors(self.v_angle);
 
 	s = self.cvar_cl_gunalign;
@@ -370,7 +373,7 @@ void FireGrapplingHook (void)
 	//missile.glow_size = 120;
 	missile.touch = GrapplingHookTouch;
 	missile.think = GrapplingHookThink;
-	missile.nextthink = time + 0.1;
+	missile.nextthink = time;
 
 	missile.effects = /*EF_FULLBRIGHT | EF_ADDITIVE |*/ EF_LOWPRECISION;
 

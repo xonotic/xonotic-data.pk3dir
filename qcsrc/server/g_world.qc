@@ -237,6 +237,10 @@ void cvar_changes_init()
 #define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
 #define BADPRESUFFIX(p,s) if(substring(k, 0, strlen(p)) == p && substring(k, -strlen(s), -1) == s) continue
 #define BADCVAR(p) if(k == p) continue
+
+		// general excludes and namespaces for server admin used cvars
+		BADPREFIX("help_"); // PN's server has this listed as changed, let's not rat him out for THAT
+
 		// internal
 		BADPREFIX("csqc_");
 		BADPREFIX("cvar_check_");
@@ -311,31 +315,32 @@ void cvar_changes_init()
 		BADCVAR("g_forced_team_pink");
 
 		// mapinfo
-		BADCVAR("timelimit");
 		BADCVAR("fraglimit");
-		BADCVAR("leadlimit");
-		BADCVAR("g_tdm_teams");
-		BADCVAR("g_keyhunt_teams");
-		BADCVAR("g_domination_default_teams");
-		BADCVAR("g_race_qualifying_timelimit");
-		BADCVAR("g_lms");
 		BADCVAR("g_arena");
-		BADCVAR("g_ca");
 		BADCVAR("g_assault");
+		BADCVAR("g_ca");
 		BADCVAR("g_ctf");
+		BADCVAR("g_cts");
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");
+		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_freezetag");
+		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
+		BADCVAR("g_keyhunt_teams");
+		BADCVAR("g_lms");
+		BADCVAR("g_nexball");
 		BADCVAR("g_onslaught");
 		BADCVAR("g_race");
-		BADCVAR("g_cts");
+		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_runematch");
 		BADCVAR("g_tdm");
-		BADCVAR("g_nexball");
-		BADCVAR("g_keepaway");
+		BADCVAR("g_tdm_teams");
+		BADCVAR("leadlimit");
+		BADCVAR("nextmap");
 		BADCVAR("teamplay");
+		BADCVAR("timelimit");
 
 		// long
 		BADCVAR("hostname");
@@ -363,22 +368,33 @@ void cvar_changes_init()
 		// does nothing visible
 		BADCVAR("captureleadlimit_override");
 		BADCVAR("g_arena_point_leadlimit");
+		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_ca_point_leadlimit");
+		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_capture_leadlimit");
+		BADCVAR("g_ctf_flag_capture_effects");
+		BADCVAR("g_ctf_flag_glowtrails");
+		BADCVAR("g_ctf_flag_pickup_effects");
 		BADCVAR("g_domination_point_leadlimit");
+		BADCVAR("g_forced_respawn");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_runematch_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
-		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("pausable");
+		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_timeout");
+		BADCVAR("welcome_message_time");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
+		BADPREFIX("g_ctf_captimerecord_");
+		BADPREFIX("g_maplist_votable_");
 		BADPREFIX("net_");
 		BADPREFIX("prvm_");
+		BADPREFIX("skill_");
 		BADPREFIX("sv_fragmessage_");
+		BADPREFIX("sv_maxidle_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
 
@@ -425,6 +441,7 @@ void cvar_changes_init()
 		BADCVAR("hostname");
 		BADCVAR("log_file");
 		BADCVAR("maxplayers");
+		BADCVAR("g_maxplayers");
 		BADCVAR("minplayers");
 		BADCVAR("net_address");
 		BADCVAR("port");
@@ -455,6 +472,7 @@ void cvar_changes_init()
 		BADCVAR("timelimit_override");
 		BADCVAR("g_warmup");
 		BADPREFIX("g_warmup_");
+		BADCVAR("teamplay_mode");
 
 		if(autocvar_g_minstagib)
 		{
@@ -805,8 +823,11 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
-	addstat(STAT_BULLETS_LOADED, AS_INT, campingrifle_bulletcounter);
+	addstat(STAT_BULLETS_LOADED, AS_INT, sniperrifle_bulletcounter);
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
+	addstat(STAT_HIT_TIME, AS_FLOAT, hit_time);
+	addstat(STAT_TYPEHIT_TIME, AS_FLOAT, typehit_time);
+	addstat(STAT_LAYED_MINES, AS_INT, minelayer_mines);
 
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
@@ -1510,11 +1531,6 @@ void DumpStats(float final)
 		fputs(file, ":end\n");
 		fclose(file);
 	}
-
-	// send statistics
-	FOR_EACH_CLIENT(e)
-		PlayerStats_AddGlobalInfo(e);
-	PlayerStats_Shutdown();
 }
 
 void FixIntermissionClient(entity e)
@@ -1582,6 +1598,13 @@ void NextLevel()
 	VoteReset();
 
 	DumpStats(TRUE);
+
+	// send statistics
+	entity e;
+	PlayerStats_EndMatch(1);
+	FOR_EACH_CLIENT(e)
+		PlayerStats_AddGlobalInfo(e);
+	PlayerStats_Shutdown();
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
@@ -2820,16 +2843,16 @@ void EndFrame()
 		if(self.classname == "spectator")
 		{
 			if(self.enemy.typehitsound)
-				play2(self, "misc/typehit.wav");
-			else if(self.enemy.hitsound && self.cvar_cl_hitsound)
-				play2(self, "misc/hit.wav");
+				self.typehit_time = time;
+			else if(self.enemy.hitsound)
+				self.hit_time = time;
 		}
 		else
 		{
 			if(self.typehitsound)
-				play2(self, "misc/typehit.wav");
-			else if(self.hitsound && self.cvar_cl_hitsound)
-				play2(self, "misc/hit.wav");
+				self.typehit_time = time;
+			else if(self.hitsound)
+				self.hit_time = time;
 		}
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
@@ -2927,6 +2950,7 @@ void SV_Shutdown()
 		print("Saving persistent data...\n");
 		Ban_SaveBans();
 
+		PlayerStats_EndMatch(0);
 		FOR_EACH_CLIENT(e)
 			PlayerStats_AddGlobalInfo(e);
 		PlayerStats_Shutdown();

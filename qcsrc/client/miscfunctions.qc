@@ -20,7 +20,7 @@ void restartAnnouncer_Think() {
 	countdown_rounded = floor(0.5 + countdown);
 	if(countdown <= 0) {
 		if (!spectatee_status) //do cprint only for players
-			centerprint("^1Begin!");
+			centerprint(_("^1Begin!"));
 
 		sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
 		//reset maptime announcers now as well
@@ -31,7 +31,7 @@ void restartAnnouncer_Think() {
 	}
 	else {
 		if (!spectatee_status) //do cprint only for players
-			centerprint(strcat("^1Game starts in ", ftos(countdown_rounded), " seconds"));
+			centerprint(sprintf(_("^1Game starts in %d seconds"), countdown_rounded));
 
 		if(countdown_rounded <= 3 && countdown_rounded >= 1) {
 			sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);
@@ -71,7 +71,6 @@ void maptimeAnnouncer() {
 			//if we're in warmup mode, check whether there's a warmup timelimit
 			if not (warmuplimit == -1 && warmup_stage) {
 				announcer_5min = TRUE;
-				//dprint("i will play the sound, I promise!\n");
 				sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"), VOL_BASEVOICE, ATTN_NONE);
 			}
 	}
@@ -111,12 +110,12 @@ void carrierAnnouncer() {
 	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
 
 	if (redflag == 3 && redflag != redflag_prev) {
-		item = "^1RED^7 flag";
+		item = _("^1RED^7 flag");
 		pickup = (redflag_prev == 2);
 	}
 
 	if (blueflag == 3 && blueflag != blueflag_prev) {
-		item = "^4BLUE^7 flag";
+		item = _("^4BLUE^7 flag");
 		pickup = (blueflag_prev == 2);
 	}
 
@@ -124,11 +123,11 @@ void carrierAnnouncer() {
 	{
 		if (pickup) {
 			if (autocvar_cl_notify_carried_items & 2)
-				centerprint(strcat("You picked up the ", item, "!"));
+				centerprint(sprintf(_("You picked up the %s!"), item));
 		}
 		else {
 			if (autocvar_cl_notify_carried_items & 1)
-				centerprint(strcat("You got the ", item, "!"));
+				centerprint(sprintf(_("You got the %s!"), item));
 		}
 	}
 
@@ -281,7 +280,7 @@ void RemoveTeam(entity Team)
 
 	if(!tm)
 	{
-		print("Trying to remove a team which is not in the teamlist!");
+		print(_("Trying to remove a team which is not in the teamlist!"));
 		return;
 	}
 	parent.sort_next = Team.sort_next;
@@ -304,12 +303,6 @@ entity GetTeam(float Team, float add)
 	teamslots[num] = tm;
 	RegisterTeam(tm);
 	return tm;
-}
-
-void CSQC_CheckEngine()
-{
-	hud_font = FONT_USER+1;
-	hud_bigfont = FONT_USER+2;
 }
 
 vector HUD_GetFontsize(string cvarname)

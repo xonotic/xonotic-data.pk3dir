@@ -2,69 +2,53 @@ float weaponstats_buffer;
 
 void WeaponStats_Init()
 {
-	if(autocvar_sv_weaponstats_killfile != "" || autocvar_sv_weaponstats_damagefile != "")
+	if(autocvar_sv_weaponstats_file != "")
 		weaponstats_buffer = buf_create();
 	else
 		weaponstats_buffer = -1;
 }
 
-#define WEAPONSTATS_GETINDEX(awep,vwep) ((vwep) + (awep) * (WEP_LAST - WEP_FIRST + 1) - (WEP_FIRST + WEP_FIRST * (WEP_LAST - WEP_FIRST + 1)))
+#define WEAPONSTATS_GETINDEX(awep,abot,vwep,vbot) (((vwep) + (awep) * (WEP_LAST - WEP_FIRST + 1) - (WEP_FIRST + WEP_FIRST * (WEP_LAST - WEP_FIRST + 1))) * 4 + (abot) * 2 + (vbot))
 
 void WeaponStats_Shutdown()
 {
-	float i, j, idx, f;
+	float i, j, ibot, jbot, idx;
 	float fh;
+	vector v;
 	string prefix;
 	if(weaponstats_buffer < 0)
 		return;
 	prefix = strcat(autocvar_hostname, "\t", GetGametype(), "_", GetMapname(), "\t");
-	if(autocvar_sv_weaponstats_killfile != "")
+	if(autocvar_sv_weaponstats_file != "")
 	{
-		fh = fopen(autocvar_sv_weaponstats_killfile, FILE_APPEND);
+		fh = fopen(autocvar_sv_weaponstats_file, FILE_APPEND);
 		if(fh >= 0)
 		{
-			fputs(fh, "#begin killfile\n");
+			fputs(fh, "#begin statsfile\n");
 			fputs(fh, strcat("#date ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
 			fputs(fh, strcat("#config ", ftos(crc16(FALSE, cvar_changes)), "\n"));
-			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
+			for(i = WEP_FIRST; i <= WEP_LAST; ++i) for(ibot = 0; ibot <= 1; ++ibot)
+				for(j = WEP_FIRST; j <= WEP_LAST; ++j) for(jbot = 0; jbot <= 1; ++jbot)
 				{
-					idx = WEAPONSTATS_GETINDEX(i, j);
-					f = stov(bufstr_get(weaponstats_buffer, idx)) * '0 1 0';
-					if(f != 0)
-						fputs(fh, strcat(prefix, ftos(i), "\t", ftos(j), "\t", ftos(f), "\n"));
+					idx = WEAPONSTATS_GETINDEX(i, ibot, j, jbot);
+					v = stov(bufstr_get(weaponstats_buffer, idx));
+					if(v != '0 0 0')
+					{
+						//vector is: kills hits damage
+						fputs(fh, sprintf("%s%d %d\t%d %d\t", prefix, i, ibot, j, jbot));
+						fputs(fh, sprintf("%d %d %g\n", v_x, v_y, v_z));
+					}
 				}
 			fputs(fh, "#end\n\n");
 			fclose(fh);
-			print("Weapon kill stats written\n");
-		}
-	}
-	if(autocvar_sv_weaponstats_damagefile != "")
-	{
-		fh = fopen(autocvar_sv_weaponstats_damagefile, FILE_APPEND);
-		if(fh >= 0)
-		{
-			fputs(fh, "#begin damagefile\n");
-			fputs(fh, strcat("#date ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
-			fputs(fh, strcat("#config ", ftos(crc16(FALSE, cvar_changes)), "\n"));
-			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-				{
-					idx = WEAPONSTATS_GETINDEX(i, j);
-					f = stov(bufstr_get(weaponstats_buffer, idx)) * '1 0 0';
-					if(f != 0)
-						fputs(fh, strcat(prefix, ftos(i), "\t", ftos(j), "\t", ftos(f), "\n"));
-				}
-			fputs(fh, "#end\n\n");
-			fclose(fh);
-			print("Weapon damage stats written\n");
+			print("Weapon stats written\n");
 		}
 	}
 	buf_del(weaponstats_buffer);
 	weaponstats_buffer = -1;
 }
 
-void WeaponStats_LogItem(float awep, float vwep, vector item)
+void WeaponStats_LogItem(float awep, float abot, float vwep, float vbot, vector item)
 {
 	float idx;
 	if(weaponstats_buffer < 0)
@@ -73,18 +57,18 @@ void WeaponStats_LogItem(float awep, float vwep, vector item)
 		return;
 	if(awep > WEP_LAST || vwep > WEP_LAST)
 		return;
-	idx = WEAPONSTATS_GETINDEX(awep,vwep);
+	idx = WEAPONSTATS_GETINDEX(awep,abot,vwep,vbot);
 	bufstr_set(weaponstats_buffer, idx, vtos(stov(bufstr_get(weaponstats_buffer, idx)) + item));
 }
-void WeaponStats_LogDamage(float awep, float vwep, float damage)
+void WeaponStats_LogDamage(float awep, float abot, float vwep, float vbot, float damage)
 {
 	if(damage < 0)
 		error("negative damage?");
-	WeaponStats_LogItem(awep, vwep, '1 0 0' * damage);
+	WeaponStats_LogItem(awep, abot, vwep, vbot, '0 0 1' * damage + '0 1 0');
 }
-void WeaponStats_LogKill(float awep, float vwep)
+void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot)
 {
-	WeaponStats_LogItem(awep, vwep, '0 1 0');
+	WeaponStats_LogItem(awep, abot, vwep, vbot, '1 0 0');
 }
 
 // changes by LordHavoc on 03/29/04 and 03/30/04 at Vermeulen's request
@@ -325,11 +309,14 @@ void SpawnThrownWeapon (vector org, float w)
 		{
 			if(self.weapons & W_WeaponBit(j))
 				if(W_IsWeaponThrowable(j))
-					W_ThrowNewWeapon(self, j, FALSE, self.origin, randomvec() * 175 + '0 0 325');
+					W_ThrowNewWeapon(self, j, FALSE, org, randomvec() * 175 + '0 0 325');
 		}
 	}
 	else
-		W_ThrowWeapon(randomvec() * 125 + '0 0 200', org - self.origin, FALSE);
+	{
+		if(W_IsWeaponThrowable(self.weapon))
+			W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
+	}
 }
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
@@ -371,7 +358,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	if (self.health <= -100 && self.modelindex != 0)
+	if (self.health <= -150 && self.modelindex != 0)
 	{
 		// don't use any animations as a gib
 		self.frame = 0;
@@ -387,13 +374,16 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 
 void ClientKill_Now_TeamChange();
 void freezetag_CheckWinner();
-void freezetag_Unfreeze();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	local float take, save, waves, sdelay, dh, da, j;
 	vector v;
 	float valid_damage_for_weaponstats;
+	float excess;
+
+	if((g_arena && numspawned < 2) || (g_ca && ca_players < required_ca_players) && !inWarmupStage)
+		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
@@ -436,9 +426,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
-	if((g_arena && numspawned < 2) || (g_ca && ca_players < required_ca_players) && !inWarmupStage)
-		return;
-
 	if (!g_minstagib)
 	{
 		v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
@@ -460,6 +447,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor);
 	take = bound(0, damage_take, self.health);
 	save = bound(0, damage_save, self.armorvalue);
+	excess = max(0, damage - take - save);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
@@ -549,19 +537,28 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	else
 		self.pushltime = 0;
 
+	float abot, vbot, awep;
+	abot = (clienttype(attacker) == CLIENTTYPE_BOT);
+	vbot = (clienttype(self) == CLIENTTYPE_BOT);
+
 	valid_damage_for_weaponstats = 0;
-	if(clienttype(self) == CLIENTTYPE_REAL)
-	if(clienttype(attacker) == CLIENTTYPE_REAL)
-	if(self != attacker)
-	if(!DEATH_ISSPECIAL(deathtype))
+	if(vbot || clienttype(self) == CLIENTTYPE_REAL)
+	if(abot || clienttype(attacker) == CLIENTTYPE_REAL)
+	if(attacker && self != attacker)
 	if(IsDifferentTeam(self, attacker))
+	{
+		if(DEATH_ISSPECIAL(deathtype))
+			awep = attacker.weapon;
+		else
+			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
+	}
 	
 	if(valid_damage_for_weaponstats)
 	{
 		dh = dh - max(self.health, 0);
 		da = da - max(self.armorvalue, 0);
-		WeaponStats_LogDamage(DEATH_WEAPONOF(deathtype), self.weapon, dh + da);
+		WeaponStats_LogDamage(awep, abot, self.weapon, vbot, dh + da);
 	}
 
 	if (self.health < 1)
@@ -576,7 +573,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		}
 
 		if(valid_damage_for_weaponstats)
-			WeaponStats_LogKill(DEATH_WEAPONOF(deathtype), self.weapon);
+			WeaponStats_LogKill(awep, abot, self.weapon, vbot);
 
 		if(sv_gentle < 1) // TODO make a "gentle" version?
 		if(sound_allowed(MSG_BROADCAST, attacker))
@@ -631,9 +628,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		frag_target = self;
 		MUTATOR_CALLHOOK(PlayerDies);
 
-		if(g_freezetag)
-            return;
-
 		if(self.flagcarried)
 		{
 			if(attacker.classname != "player" && attacker.classname != "gib")
@@ -646,8 +640,31 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(self.ballcarried && g_nexball)
 			DropBall(self.ballcarried, self.origin, self.velocity);
 		Portal_ClearAllLater(self);
-		// clear waypoints
+
+		if(clienttype(self) == CLIENTTYPE_REAL)
+		{
+			stuffcmd(self, "-zoom\n");
+			self.fixangle = TRUE;
+			//msg_entity = self;
+			//WriteByte (MSG_ONE, SVC_SETANGLE);
+			//WriteAngle (MSG_ONE, self.v_angle_x);
+			//WriteAngle (MSG_ONE, self.v_angle_y);
+			//WriteAngle (MSG_ONE, 80);
+		}
+
+		if(defer_ClientKill_Now_TeamChange) // TODO does this work with FreezeTag?
+			ClientKill_Now_TeamChange();
+
+		if(g_arena)
+			Spawnqueue_Unmark(self);
+
+		if(g_freezetag)
+			return;
+
+		// when we get here, player actually dies
+		// clear waypoints (do this AFTER FreezeTag)
 		WaypointSprite_PlayerDead();
+
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;
 		self.angles_z = 0;
@@ -669,12 +686,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		waves = 0;
 		sdelay = cvar(strcat("g_", GetGametype(), "_respawn_delay"));
 		if(!sdelay)
-        {
-            if(g_cts)
-                sdelay = 0; // no respawn delay in CTS
-            else
-                sdelay = autocvar_g_respawn_delay;
-        }
+		{
+			if(g_cts)
+				sdelay = 0; // no respawn delay in CTS
+			else
+				sdelay = autocvar_g_respawn_delay;
+		}
 		waves = cvar(strcat("g_", GetGametype(), "_respawn_waves"));
 		if(!waves)
 			waves = autocvar_g_respawn_waves;
@@ -699,25 +716,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// set damage function to corpse damage
 		self.event_damage = PlayerCorpseDamage;
 		// call the corpse damage function just in case it wants to gib
-		self.event_damage(inflictor, attacker, 0, deathtype, hitloc, force);
+		self.event_damage(inflictor, attacker, excess, deathtype, hitloc, force);
 		// set up to fade out later
 		SUB_SetFade (self, time + 6 + random (), 1);
-
-		if(clienttype(self) == CLIENTTYPE_REAL)
-		{
-			self.fixangle = TRUE;
-			//msg_entity = self;
-			//WriteByte (MSG_ONE, SVC_SETANGLE);
-			//WriteAngle (MSG_ONE, self.v_angle_x);
-			//WriteAngle (MSG_ONE, self.v_angle_y);
-			//WriteAngle (MSG_ONE, 80);
-		}
-
-		if(g_arena)
-			Spawnqueue_Unmark(self);
-
-		if(defer_ClientKill_Now_TeamChange)
-			ClientKill_Now_TeamChange();
 
 		if(sv_gentle > 0 || autocvar_ekg) {
 			// remove corpse
@@ -725,9 +726,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		}
 
 		// reset fields the weapons may use just in case
-        for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-            weapon_action(j, WR_RESETPLAYER);
+			weapon_action(j, WR_RESETPLAYER);
 			ATTACK_FINISHED_FOR(self, j) = 0;
 		}
 	}

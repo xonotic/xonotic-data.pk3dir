@@ -23,7 +23,7 @@ void spawnfunc_weapon_plasmagun()    { spawnfunc_weapon_hagar();        }
 void spawnfunc_ammo_cells()          { spawnfunc_item_rockets();        }
 
 // Rail -> Rifle
-void spawnfunc_weapon_railgun()      { spawnfunc_weapon_campingrifle(); }
+void spawnfunc_weapon_railgun()      { spawnfunc_weapon_sniperrifle();  }
 void spawnfunc_ammo_slugs()          { spawnfunc_item_bullets();        }
 
 // BFG -> Crylink
@@ -130,3 +130,54 @@ void spawnfunc_team_CTF_redspawn()   { spawnfunc_info_player_team1();  }
 void spawnfunc_team_CTF_bluespawn()  { spawnfunc_info_player_team2();  }
 
 void spawnfunc_item_flight()         { spawnfunc_item_jetpack();       }
+
+.float notteam;
+.float notsingle;
+.float notfree;
+.float notq3a;
+.float notta;
+.string gametype;
+float DoesQ3ARemoveThisEntity()
+{
+	// Q3 style filters (DO NOT USE, THIS IS COMPAT ONLY)
+
+	if(self.notq3a)
+		if(!teams_matter || g_tdm || g_ctf)
+			return 1;
+
+	if(self.notta)
+		if not(!teams_matter || g_tdm || g_ctf)
+			return 1;
+
+	if(self.notsingle)
+		if(maxclients == 1)
+			return 1;
+
+	if(self.notteam)
+		if(teams_matter)
+			return 1;
+
+	if(self.notfree)
+		if(!teams_matter)
+			return 1;
+
+	if(self.gametype)
+	{
+		string gametypename;
+		// static char *gametypeNames[] = {"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk", "harvester", "teamtournament"};
+		gametypename = "ffa";
+		if(teams_matter)
+			gametypename = "team";
+		if(g_arena)
+			gametypename = "tournament";
+		if(g_ctf)
+			gametypename = "ctf";
+		if(maxclients == 1)
+			gametypename = "single";
+		// we do not have the other types (oneflag, obelisk, harvester, teamtournament)
+		if(strstrofs(self.gametype, gametypename, 0) < 0)
+			return 1;
+	}
+
+	return 0;
+}
