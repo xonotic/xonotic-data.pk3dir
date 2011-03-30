@@ -23,7 +23,7 @@ void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplay
 .float havocbot_cantfindflag;
 .float havocbot_role_timeout;
 .entity ctf_worldflagnext;
-.entity basewaypoint;
+.entity bot_basewaypoint;
 
 entity ctf_worldflaglist;
 vector havocbot_ctf_middlepoint;
@@ -102,7 +102,7 @@ void havocbot_goalrating_ctf_ourbase(float ratingscale)
 	if not(head)
 		return;
 
-	navigation_routerating(head.basewaypoint, ratingscale, 10000);
+	navigation_routerating(head.bot_basewaypoint, ratingscale, 10000);
 };
 
 void havocbot_goalrating_ctf_enemyflag(float ratingscale)
@@ -134,7 +134,7 @@ void havocbot_goalrating_ctf_enemybase(float ratingscale)
 	if not(head)
 		return;
 
-	navigation_routerating(head.basewaypoint, ratingscale, 10000);
+	navigation_routerating(head.bot_basewaypoint, ratingscale, 10000);
 };
 
 void havocbot_goalrating_ctf_ourstolenflag(float ratingscale)

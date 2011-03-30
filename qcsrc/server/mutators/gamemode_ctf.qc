@@ -252,11 +252,7 @@ void ctf_Handle_Return(entity flag, entity player) // todo: re-write this
 void ctf_Handle_Pickup_Base(entity flag, entity player) // todo: re-write this
 {
 	entity tmp_player;
-	if (player.next_take_time > time)
-		return;
-			
-	if (autocvar_g_ctf_flag_pickup_effects) // pickup effect
-		pointparticles(particleeffectnum("smoke_ring"), 0.5 * (flag.absmin + flag.absmax), '0 0 0', 1);
+	string verbosename;
 		
 	// attach the flag to the player
 	flag.owner = player;
@@ -275,9 +271,12 @@ void ctf_Handle_Pickup_Base(entity flag, entity player) // todo: re-write this
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_GOTFLAG, MSG_INFO);
 	sound(player, CHAN_AUTO, flag.noise, VOL_BASE, ATTN_NONE);
+	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat("(", player.netname, ")") : ""); // replace TRUE with an autocvar for it.
 	FOR_EACH_PLAYER(tmp_player)
 		if(tmp_player.team == flag.team)
-			centerprint(tmp_player, "The enemy got your flag! Retrieve it!");
+			centerprint(tmp_player, strcat("The enemy ", verbosename, " got your flag! Retrieve it!"));
+		else if((tmp_player.team == player.team) && (tmp_player != player))
+			centerprint(tmp_player, strcat("Your team mate ", verbosename, " got the flag! Protect them!"));
 	
 	// scoring
 	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_pickup_base"));
@@ -289,13 +288,18 @@ void ctf_Handle_Pickup_Base(entity flag, entity player) // todo: re-write this
 	if((player.speedrunning) && (ctf_captimerecord))
 		ctf_FakeTimeLimit(player, time + ctf_captimerecord);
 		
+	// effects
+	if (autocvar_g_ctf_flag_pickup_effects)
+	{
+		pointparticles(particleeffectnum("smoke_ring"), 0.5 * (flag.absmin + flag.absmax), '0 0 0', 1); // 
+	}
+	
 	// waypoints 
 	WaypointSprite_Spawn("flagcarrier", 0, 0, player, '0 0 64', world, player.team, player, wps_flagcarrier, FALSE); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
 	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
 	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent));
 	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
 	WaypointSprite_Ping(player.wps_flagcarrier);
-	
 }
  
 void ctf_Handle_Pickup_Dropped(entity flag, entity player) // todo: re-write this
@@ -692,13 +696,11 @@ MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
 {
 	if(self.flagcarried) { ctf_Handle_Drop(self); } // figure this out
 	
-	return TRUE;
+	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 {
-	// declarations 
-	float redflags, blueflags;
 	local entity flag;
 	
 	// initially clear items so they can be set as necessary later.
@@ -725,38 +727,6 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 		ctf_Handle_Drop(self);
 	
 	return 0;
-
-	/* this shit fucking sucks
-	// figure out what flags we already own
-	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
-	{
-		if(flag.items & IT_KEY2) // blue
-			++redflags;
-		else if(flag.items & IT_KEY1) // red
-			++blueflags;
-	}
-
-	// blinking magic: if there is more than one flag, show one of these in a clever way // wtf?
-	if(redflags)
-		redflags = mod(floor(time * redflags * 0.75), redflags);
-		
-	if(blueflags)
-		blueflags = mod(floor(time * blueflags * 0.75), blueflags);
-
-	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
-	{
-		if(flag.items & IT_KEY2) // blue
-		{
-			if(--redflags == -1) // happens exactly once (redflags is in 0..count-1, and will --'ed count times) // WHAT THE FUCK DOES THIS MEAN? whoever wrote this is shitty at explaining things.
-				ctf_SetStatus_ForType(flag, IT_RED_FLAG_TAKEN);
-		}
-		else if(flag.items & IT_KEY1) // red
-		{
-			if(--blueflags == -1) // happens exactly once
-				ctf_SetStatus_ForType(flag, IT_BLUE_FLAG_TAKEN);
-		}
-	}
-	*/
 }
 
 
