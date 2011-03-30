@@ -90,63 +90,6 @@ void ctf_CreateBaseWaypoints(entity flag, float teamnumber)
 	WaypointSprite_UpdateTeamRadar(flag.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
 }
 
-void ctf_SetStatus_ForType(entity flag, float type)
-{
-	if(flag.cnt ==	FLAG_CARRY)
-	{
-		if(flag.owner == self)
-			self.items |= type * 3; // carrying: self is currently carrying the flag
-		else 
-			self.items |= type * 1; // taken: someone on self's team is carrying the flag
-	}
-	else if(flag.cnt == FLAG_DROPPED) 
-		self.items |= type * 2; // lost: the flag is dropped somewhere on the map
-}
-
-void ctf_SetStatus() // re-write this in some less shitty way
-{
-	// declarations 
-	float redflags, blueflags;
-	local entity flag;
-	
-	// initially clear items so they can be set as necessary later.
-	self.items &~= (IT_RED_FLAG_TAKEN | IT_RED_FLAG_LOST | IT_BLUE_FLAG_TAKEN | IT_BLUE_FLAG_LOST | IT_CTF_SHIELDED);
-
-	// item for stopping players from capturing the flag too often
-	if(self.ctf_captureshielded)
-		self.items |= IT_CTF_SHIELDED;
-
-	// figure out what flags we already own
-	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
-	{
-		if(flag.items & IT_KEY2) // blue
-			++redflags;
-		else if(flag.items & IT_KEY1) // red
-			++blueflags;
-	}
-
-	// blinking magic: if there is more than one flag, show one of these in a clever way // wtf?
-	if(redflags)
-		redflags = mod(floor(time * redflags * 0.75), redflags);
-		
-	if(blueflags)
-		blueflags = mod(floor(time * blueflags * 0.75), blueflags);
-
-	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
-	{
-		if(flag.items & IT_KEY2) // blue
-		{
-			if(--redflags == -1) // happens exactly once (redflags is in 0..count-1, and will --'ed count times) // WHAT THE FUCK DOES THIS MEAN? whoever wrote this is shitty at explaining things.
-				ctf_SetStatus_ForType(flag, IT_RED_FLAG_TAKEN);
-		}
-		else if(flag.items & IT_KEY1) // red
-		{
-			if(--blueflags == -1) // happens exactly once
-				ctf_SetStatus_ForType(flag, IT_BLUE_FLAG_TAKEN);
-		}
-	}
-}
-
 void ctf_Reset()
 {
 	if(self.owner)
@@ -187,11 +130,11 @@ void ctf_Handle_Drop(entity player) // make sure this works
 	// messages and sounds
 	Send_KillNotification(player.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
 	sound(flag, CHAN_TRIGGER, flag.noise4, VOL_BASE, ATTN_NONE);
-	ctf_EventLog("dropped", player.team, player);
 	
 	// scoring
+	PlayerTeamScore_AddScore(player, -ctf_ReadScore("penalty_drop"));	
 	PlayerScore_Add(player, SP_CTF_DROPS, 1);
-	UpdateFrags(player, -ctf_ReadScore("penalty_drop"));
+	ctf_EventLog("dropped", player.team, player);
 
 	// waypoints
 	WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, player.team, flag, wps_flagdropped, FALSE); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
@@ -240,9 +183,9 @@ void ctf_Handle_Capture(entity flag, entity player) // make sure this works
 	sound(player, CHAN_AUTO, flag.noise2, VOL_BASE, ATTN_NONE);
 	
 	// scoring
+	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_capture"));
 	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, 1);
 	ctf_EventLog("capture", player.flagcarried.team, player);
-	UpdateFrags(player, ctf_ReadScore("score_capture"));
 
 	// effects
 	if (autocvar_g_ctf_flag_capture_effects) 
@@ -451,8 +394,7 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.model) { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
 	setmodel (flag, flag.model); // precision set below
 	setsize(flag, FLAG_MIN, FLAG_MAX);
-	setorigin(flag, flag.origin);// + '0 0 37');
-	//flag.origin_z = flag.origin_z + 6; // why 6?
+	setorigin(flag, flag.origin);
 	if(!flag.scale) { flag.scale = 0.6; }
 	
 	flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin);
@@ -600,10 +542,6 @@ void ctf_FlagThink() // todo: re-write this
 		ctf_Handle_Drop(e);
 		return;
 	}
-
-	if(autocvar_g_ctf_allow_drop)
-	if(e.BUTTON_USE)
-		ctf_Handle_Drop(self);
 }
 
 void ctf_FlagTouch()
@@ -757,6 +695,70 @@ MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
+{
+	// declarations 
+	float redflags, blueflags;
+	local entity flag;
+	
+	// initially clear items so they can be set as necessary later.
+	self.items &~= (IT_RED_FLAG_CARRYING | IT_RED_FLAG_TAKEN | IT_RED_FLAG_LOST 
+		| IT_BLUE_FLAG_CARRYING | IT_BLUE_FLAG_TAKEN | IT_BLUE_FLAG_LOST | IT_CTF_SHIELDED);
+
+	// item for stopping players from capturing the flag too often
+	if(self.ctf_captureshielded)
+		self.items |= IT_CTF_SHIELDED;
+
+	// scan through all the flags and notify the client about them 
+	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
+	{
+		if(flag.ctf_status ==	FLAG_CARRY)
+			if(flag.owner == self)
+				self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_CARRYING : IT_BLUE_FLAG_CARRYING); // carrying: self is currently carrying the flag
+			else 
+				self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_TAKEN : IT_BLUE_FLAG_TAKEN); // taken: someone on self's team is carrying the flag
+		else if(flag.ctf_status == FLAG_DROPPED) 
+			self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_LOST : IT_BLUE_FLAG_LOST); // lost: the flag is dropped somewhere on the map
+	}
+	
+	if((autocvar_g_ctf_allow_drop) && (self.BUTTON_USE))
+		ctf_Handle_Drop(self);
+	
+	return 0;
+
+	/* this shit fucking sucks
+	// figure out what flags we already own
+	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
+	{
+		if(flag.items & IT_KEY2) // blue
+			++redflags;
+		else if(flag.items & IT_KEY1) // red
+			++blueflags;
+	}
+
+	// blinking magic: if there is more than one flag, show one of these in a clever way // wtf?
+	if(redflags)
+		redflags = mod(floor(time * redflags * 0.75), redflags);
+		
+	if(blueflags)
+		blueflags = mod(floor(time * blueflags * 0.75), blueflags);
+
+	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
+	{
+		if(flag.items & IT_KEY2) // blue
+		{
+			if(--redflags == -1) // happens exactly once (redflags is in 0..count-1, and will --'ed count times) // WHAT THE FUCK DOES THIS MEAN? whoever wrote this is shitty at explaining things.
+				ctf_SetStatus_ForType(flag, IT_RED_FLAG_TAKEN);
+		}
+		else if(flag.items & IT_KEY1) // red
+		{
+			if(--blueflags == -1) // happens exactly once
+				ctf_SetStatus_ForType(flag, IT_BLUE_FLAG_TAKEN);
+		}
+	}
+	*/
+}
+
 
 // ==========
 // Spawnfuncs
@@ -879,6 +881,7 @@ void ctf_DelayedInit()
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "ctf_team") == world)
 	{
+		print("NO TEAMS FOUND FOR CTF! creating them anyway.\n");
 		ctf_SpawnTeam("Red", COLOR_TEAM1 - 1);
 		ctf_SpawnTeam("Blue", COLOR_TEAM2 - 1);
 	}
@@ -896,7 +899,8 @@ void ctf_Initialize()
 	
 	ScoreRules_ctf();
 	
-	InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);
+	ctf_DelayedInit();
+	//InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 
@@ -906,7 +910,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(ClientDisconnect, ctf_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, ctf_RemovePlayer, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(GiveFragsForKill, ctf_GiveFragsForKill, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(PlayerPreThink, ctf_PlayerPreThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPreThink, ctf_PlayerPreThink, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(PlayerDamage_Calculate, ctf_PlayerDamage, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(PlayerPowerups, ctf_PlayerPowerups, CBC_ORDER_ANY);
 
