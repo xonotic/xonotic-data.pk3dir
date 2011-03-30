@@ -18,6 +18,7 @@ entity ctf_worldflaglist; // CTF flags in the map
 
 float ctf_captimerecord; // record time for capturing the flag
 .float ctf_pickuptime;
+.float ctf_pickupid;
 .float ctf_dropperid; // don't allow spam of dropping the flag
 .float ctf_droptime;
 .float ctf_status; // status of the flag (FLAG_BASE, FLAG_DROPPED, FLAG_CARRY declared globally)
@@ -85,7 +86,7 @@ void ctf_CreateBaseWaypoints(entity flag, float teamnumber)
 	flag.bot_basewaypoint = flag.nearestwaypoint;
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), flag.origin + '0 0 61', flag, wps_flagbase);
+	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), flag.origin + '0 0 64', flag, wps_flagbase);
 	WaypointSprite_UpdateTeamRadar(flag.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
 }
 
@@ -169,19 +170,19 @@ void ctf_Handle_Drop(entity player) // make sure this works
 	
 	// reset the flag
 	setattachment(flag, world, "");
+	setorigin(flag, player.origin - '0 0 24' + '0 0 37');
 	flag.owner.flagcarried = world;
 	flag.owner = world;
-	flag.ctf_status = FLAG_DROPPED;
 	flag.movetype = MOVETYPE_TOSS;
 	flag.solid = SOLID_TRIGGER;
 	flag.takedamage = DAMAGE_YES;
-	flag.flags = FL_ITEM; // does this need set? same as above.
-	setorigin(flag, player.origin - '0 0 24' + '0 0 37'); // eh wtf is with these weird values?
+	//flag.flags = FL_ITEM; // does this need set? same as above. // eh wtf is with these weird values?
 	flag.velocity = ('0 0 200' + ('0 100 0' * crandom()) + ('100 0 0' * crandom()));
 	flag.pain_finished = time + autocvar_g_ctf_flag_returntime; // replace this later
 	
 	flag.ctf_droptime = time;
 	flag.ctf_dropperid = player.playerid;
+	flag.ctf_status = FLAG_DROPPED;
 
 	// messages and sounds
 	Send_KillNotification(player.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
@@ -193,7 +194,7 @@ void ctf_Handle_Drop(entity player) // make sure this works
 	UpdateFrags(player, -ctf_ReadScore("penalty_drop"));
 
 	// waypoints
-	WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, (COLOR_TEAM1 + COLOR_TEAM2 - flag.team), flag, wps_flagcarrier, FALSE);
+	WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, player.team, flag, wps_flagdropped, FALSE); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
 	WaypointSprite_Ping(player.wps_flagcarrier);
 	WaypointSprite_Kill(player.wps_flagcarrier);
 
@@ -207,7 +208,7 @@ void ctf_Handle_Drop(entity player) // make sure this works
 		dprint("FLAG FALLTHROUGH will happen SOON\n");
 }
 
-void ctf_Handle_Capture(entity flag, entity player) // this too
+void ctf_Handle_Capture(entity flag, entity player) // make sure this works
 {
 	// declarations
 	float cap_time, cap_record, success;
@@ -216,12 +217,12 @@ void ctf_Handle_Capture(entity flag, entity player) // this too
 	// records
 	if((autocvar_g_ctf_captimerecord_always) || (player_count - currentbots)) {
 		cap_record = ctf_captimerecord;
-		cap_time = (time - flag.ctf_pickuptime);
+		cap_time = (time - player.flagcarried.ctf_pickuptime);
 
 		refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
 		refername = ((refername == player.netname) ? "their" : strcat(refername, "^7's"));
 
-		if(ctf_captimerecord) 
+		if(!ctf_captimerecord) 
 			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds"); success = TRUE; }
 		else if(cap_time < cap_record) 
 			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, breaking ", refername, " previous record of ", ftos_decimals(cap_record, 2), " seconds"); success = TRUE; }
@@ -251,7 +252,10 @@ void ctf_Handle_Capture(entity flag, entity player) // this too
 	}
 
 	// waypointsprites // todo: improve this vvvv
-	WaypointSprite_DetachCarrier(player);
+	//	WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, player.team, flag, wps_flagdropped, FALSE); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
+	//WaypointSprite_Ping(player.wps_flagcarrier);
+	WaypointSprite_Kill(player.wps_flagcarrier);
+	//WaypointSprite_DetachCarrier(player);
 
 	// reset the flag
 	if(flag.speedrunning)
@@ -304,42 +308,51 @@ void ctf_Handle_Return(entity flag, entity player) // todo: re-write this
 
 void ctf_Handle_Pickup_Base(entity flag, entity player) // todo: re-write this
 {
+	entity tmp_player;
 	if (player.next_take_time > time)
 		return;
 			
 	if (autocvar_g_ctf_flag_pickup_effects) // pickup effect
 		pointparticles(particleeffectnum("smoke_ring"), 0.5 * (flag.absmin + flag.absmax), '0 0 0', 1);
-			
-	// pick up
-	flag.ctf_pickuptime = time; // used for timing runs
-	flag.speedrunning = player.speedrunning; // if speedrunning, flag will flag-return and teleport the owner back after the record
-	if(player.speedrunning)
-	if(ctf_captimerecord)
-		ctf_FakeTimeLimit(player, time + ctf_captimerecord);
-	flag.solid = SOLID_NOT;
-	setorigin(flag, flag.origin); // relink
+		
+	// attach the flag to the player
 	flag.owner = player;
 	player.flagcarried = flag;
-	flag.ctf_status = FLAG_CARRY;
+	setattachment(flag, player, "");
+	setorigin(flag, FLAG_CARRY_POS);
+	
+	// set up the flag
+	flag.movetype = MOVETYPE_NONE;
+	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
+	flag.ctf_pickuptime = time; // used for timing runs
+	flag.ctf_pickupid = player.playerid;
+	flag.ctf_status = FLAG_CARRY;
+	
+	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_GOTFLAG, MSG_INFO);
-	UpdateFrags(player, ctf_ReadScore("score_pickup_base"));
-	flag.ctf_dropperid = player.playerid;
+	sound(player, CHAN_AUTO, flag.noise, VOL_BASE, ATTN_NONE);
+	FOR_EACH_PLAYER(tmp_player)
+		if(tmp_player.team == flag.team)
+			centerprint(tmp_player, "The enemy got your flag! Retrieve it!");
+	
+	// scoring
+	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_pickup_base"));
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
 	ctf_EventLog("steal", flag.team, player);
-	sound (player, CHAN_AUTO, flag.noise, VOL_BASE, ATTN_NONE);
-
-	FOR_EACH_PLAYER(player)
-		if(player.team == flag.team)
-			centerprint(player, "The enemy got your flag! Retrieve it!");
-
-	flag.movetype = MOVETYPE_NONE;
-	setorigin(flag, FLAG_CARRY_POS);
-	setattachment(flag, player, "");
-	WaypointSprite_AttachCarrier("flagcarrier", player);
-	WaypointSprite_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
-	WaypointSprite_Ping(flag.sprite);
-
+	
+	// speedrunning
+	flag.speedrunning = player.speedrunning; // if speedrunning, flag will flag-return and teleport the owner back after the record
+	if((player.speedrunning) && (ctf_captimerecord))
+		ctf_FakeTimeLimit(player, time + ctf_captimerecord);
+		
+	// waypoints 
+	WaypointSprite_Spawn("flagcarrier", 0, 0, player, '0 0 64', world, player.team, player, wps_flagcarrier, FALSE); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
+	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
+	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent));
+	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+	WaypointSprite_Ping(player.wps_flagcarrier);
+	
 }
  
 void ctf_Handle_Pickup_Dropped(entity flag, entity player) // todo: re-write this
@@ -461,6 +474,7 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.noise2) { flag.noise2 = ((teamnumber) ? "ctf/red_capture.wav" : "ctf/blue_capture.wav"); } // blue team scores by capturing the red flag
 	if(!flag.noise3) { flag.noise3 = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
 	if(!flag.noise4) { flag.noise4 = ((teamnumber) ? "ctf/red_dropped.wav" : "ctf/blue_dropped.wav"); }
+	//if(!flag.noise5) { flag.noise5 = "ctf/flag_touch.wav"; }
 	
 	// precache
 	precache_sound(flag.noise);
@@ -468,6 +482,7 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	precache_sound(flag.noise2);
 	precache_sound(flag.noise3);
 	precache_sound(flag.noise4);
+	//precache_sound(flag.noise5);
 	precache_model(flag.model);
 	precache_model("models/ctf/shield.md3");
 	precache_model("models/ctf/shockwavetransring.md3");
