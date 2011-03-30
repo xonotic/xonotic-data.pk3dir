@@ -1437,7 +1437,6 @@ void DumpStats(float final)
 	float to_eventlog;
 	float to_file;
 	float i;
-	entity e;
 
 	to_console = autocvar_sv_logscores_console;
 	to_eventlog = autocvar_sv_eventlog;
