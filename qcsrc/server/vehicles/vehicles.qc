@@ -189,7 +189,7 @@ float vehicles_crushable(entity e)
 void vehicles_enter();
 void vehicles_touch()
 {
-    // Vehicle currently
+    // Vehicle currently in use
     if(self.owner)
     {
         // Colided with world?
@@ -411,6 +411,11 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         self.vehicle_health -= damage;
 
     self.velocity += force * (vlen(force) / self.mass);
+
+    if not(self.owner)
+    {
+		self.movetype &~= MOVETYPE_TOSS;
+    }
 
     if(self.vehicle_health <= 0)
     {
