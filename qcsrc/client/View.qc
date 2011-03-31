@@ -421,15 +421,15 @@ void CSQC_UpdateView(float w, float h)
 			else if(chase_current_distance != autocvar_cl_chase_distance)
 				chase_current_distance = autocvar_cl_chase_distance;
 
-			vector target_origin;
-			target_origin = pmove_org - view_forward * chase_current_distance;
+			vector chase_target_origin;
+			chase_target_origin = pmove_org - view_forward * chase_current_distance;
 
 			// don't allow the camera to go through walls
-			traceline(pmove_org, target_origin, MOVE_NORMAL, self);
+			traceline(pmove_org, chase_target_origin, MOVE_NORMAL, self);
 			if(trace_fraction == 1)
 			{
 				makevectors(view_angles);
-				R_SetView(VF_ORIGIN, target_origin);
+				R_SetView(VF_ORIGIN, chase_target_origin);
 			}
 		}
 		else if(autocvar_chase_active < 0)
