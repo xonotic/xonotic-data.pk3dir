@@ -410,16 +410,24 @@ void CSQC_UpdateView(float w, float h)
 		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission) && intermission <= 1) // not during the map voting screen
 		{
 			if(!autocvar_chase_active)
-				cvar_set("chase_active", "-1"); // -1 enables chase_active as well as marking it as enabled by this code, and not by the user (which would be 1)
+				cvar_set("chase_active", "-1"); // -1 enables chase_active as well as marking it as set by this code, and not by the user (which would be 1)
 
 			// make the camera smooth back
 			if(autocvar_cl_chase_speed && chase_current_distance < autocvar_cl_chase_distance)
-				chase_current_distance += autocvar_cl_chase_speed * (autocvar_cl_chase_distance - chase_current_distance) * frametime;
+				chase_current_distance += autocvar_cl_chase_speed * (autocvar_cl_chase_distance - chase_current_distance) * frametime; // slow down smoothly
 			else if(chase_current_distance != autocvar_cl_chase_distance)
 				chase_current_distance = autocvar_cl_chase_distance;
 
-			makevectors(view_angles);
-			R_SetView(VF_ORIGIN, pmove_org - view_forward * chase_current_distance);
+			vector target_origin;
+			target_origin = pmove_org - view_forward * chase_current_distance;
+
+			// don't allow the camera to go through walls
+			traceline(pmove_org, target_origin, MOVE_NORMAL, self);
+			if(trace_fraction == 1)
+			{
+				makevectors(view_angles);
+				R_SetView(VF_ORIGIN, target_origin);
+			}
 		}
 		else if(autocvar_chase_active < 0)
 		{
