@@ -367,6 +367,7 @@ float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
 float chase_current_distance;
+vector chase_target_origin;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -407,7 +408,7 @@ void CSQC_UpdateView(float w, float h)
 	if(spectatee_status >= 0 && (autocvar_cl_chase_death || autocvar_cl_chase_intermission))
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually
 	{
-		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission) && intermission <= 1) // not during the map voting screen
+		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission))
 		{
 			// We must set chase_active in order to get a third person view (1st person weapon model hidden and own player model showing).
 			// Ideally, there should be another way to enable third person mode, such as an R_SetView() function specifically for this purpose.
@@ -421,13 +422,24 @@ void CSQC_UpdateView(float w, float h)
 			else if(chase_current_distance != autocvar_cl_chase_distance)
 				chase_current_distance = autocvar_cl_chase_distance;
 
-			vector chase_target_origin;
-			makevectors(view_angles);
-			chase_target_origin = pmove_org - view_forward * chase_current_distance; // pass 1, used to check where the camera would go and obtain the trace_fraction
+			if not(intermission > 1) // not during the map voting screen
+			{
+				makevectors(view_angles);
+				chase_target_origin = pmove_org - view_forward * chase_current_distance; // pass 1, used to check where the camera would go and obtain the trace_fraction
 
-			// don't allow the camera to go through walls
-			traceline(pmove_org, chase_target_origin, MOVE_NORMAL, self);
-			chase_target_origin = pmove_org - view_forward * chase_current_distance * trace_fraction; // pass 2, also multiplying view_forward with trace_fraction now, to avoid sticking the camera in solid
+				// don't allow the camera to go through walls
+				traceline(pmove_org, chase_target_origin, MOVE_NORMAL, self);
+				chase_target_origin = pmove_org - view_forward * chase_current_distance * trace_fraction; // pass 2, also multiplying view_forward with trace_fraction now, to avoid sticking the camera in solid
+			}
+			else
+			{
+				// we need to freeze the angles to avoid the mouse moving the camera during the map voting screen, due to VF_ORIGIN being set (not sure why that happens)
+				// use the freeze_input_angles below to do this
+				input_angles = view_angles = freeze_input_angles;
+				R_SetView(VF_ANGLES, view_angles);
+				//R_SetView(VF_CL_VIEWANGLES, input_angles);
+			}
+
 			R_SetView(VF_ORIGIN, chase_target_origin);
 		}
 		else if(autocvar_chase_active < 0)
