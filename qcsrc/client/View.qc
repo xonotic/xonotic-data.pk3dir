@@ -404,6 +404,17 @@ void CSQC_UpdateView(float w, float h)
 	input_angles = warpzone_fixview_cl_viewangles;
 	view_angles = warpzone_fixview_angles;
 
+	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0) || intermission > 1)
+	{
+		pmove_org = freeze_pmove_org;
+		input_angles = view_angles = freeze_input_angles;
+		R_SetView(VF_ORIGIN, pmove_org + vo);
+		R_SetView(VF_ANGLES, view_angles);
+		//R_SetView(VF_CL_VIEWANGLES, input_angles);
+	}
+	freeze_pmove_org = pmove_org;
+	freeze_input_angles = input_angles;
+
 	// event chase cam
 	if(spectatee_status >= 0 && (autocvar_cl_chase_death || autocvar_cl_chase_intermission))
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually
@@ -422,7 +433,7 @@ void CSQC_UpdateView(float w, float h)
 			else if(chase_current_distance != autocvar_cl_chase_distance)
 				chase_current_distance = autocvar_cl_chase_distance;
 
-			if not(intermission > 1) // not during the map voting screen
+			if not(intermission > 1) // don't update during the map voting screen
 			{
 				makevectors(view_angles);
 				chase_target_origin = pmove_org - view_forward * chase_current_distance; // pass 1, used to check where the camera would go and obtain the trace_fraction
@@ -430,14 +441,6 @@ void CSQC_UpdateView(float w, float h)
 				// don't allow the camera to go through walls
 				traceline(pmove_org, chase_target_origin, MOVE_NORMAL, self);
 				chase_target_origin = pmove_org - view_forward * chase_current_distance * trace_fraction; // pass 2, also multiplying view_forward with trace_fraction now, to avoid sticking the camera in solid
-			}
-			else
-			{
-				// we need to freeze the angles to avoid the mouse moving the camera during the map voting screen, due to VF_ORIGIN being set (not sure why that happens)
-				// use the freeze_input_angles below to do this
-				input_angles = view_angles = freeze_input_angles;
-				R_SetView(VF_ANGLES, view_angles);
-				//R_SetView(VF_CL_VIEWANGLES, input_angles);
 			}
 
 			R_SetView(VF_ORIGIN, chase_target_origin);
@@ -448,17 +451,6 @@ void CSQC_UpdateView(float w, float h)
 			chase_current_distance = 0; // start from 0
 		}
 	}
-
-	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0))
-	{
-		pmove_org = freeze_pmove_org;
-		input_angles = view_angles = freeze_input_angles;
-		R_SetView(VF_ORIGIN, pmove_org + vo);
-		R_SetView(VF_ANGLES, view_angles);
-		//R_SetView(VF_CL_VIEWANGLES, input_angles);
-	}
-	freeze_pmove_org = pmove_org;
-	freeze_input_angles = input_angles;
 
 	// Render the Scene
 	if(!intermission || !view_set || (intermission && autocvar_cl_chase_intermission))
