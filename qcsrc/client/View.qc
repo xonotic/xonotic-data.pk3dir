@@ -1074,7 +1074,7 @@ void CSQC_UpdateView(float w, float h)
 			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
 			// crosshair rings for weapon stats
-			if ((autocvar_crosshair_ring) || (autocvar_crosshair_ring_reload))
+			if (autocvar_crosshair_ring || autocvar_crosshair_ring_reload)
 			{
 				// declarations and stats
 				float ring_value, ring_scale, ring_alpha, ring_inner_value, ring_inner_alpha;
@@ -1106,56 +1106,44 @@ void CSQC_UpdateView(float w, float h)
 						ring_inner_value = bound(0, autocvar_crosshair_ring_nex_currentcharge_scale * (nex_charge - nex_charge_movingavg), 1); 
 					}
 						
-					ring_inner_alpha = wcross_alpha * autocvar_crosshair_ring_nex_inner_alpha;
+					ring_inner_alpha = autocvar_crosshair_ring_nex_inner_alpha;
 					ring_inner_rgb = eX * autocvar_crosshair_ring_nex_inner_color_red + eY * autocvar_crosshair_ring_nex_inner_color_green + eZ * autocvar_crosshair_ring_nex_inner_color_blue;
 					ring_inner_image = "gfx/crosshair_ring_inner.tga";
 					
 					// draw the outer ring to show the current charge of the weapon
 					ring_value = nex_charge;
-					ring_alpha = wcross_alpha * autocvar_crosshair_ring_nex_alpha;
+					ring_alpha = autocvar_crosshair_ring_nex_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 				}
 				else if (activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer) 
 				{
 					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
-					ring_alpha = wcross_alpha * autocvar_crosshair_ring_minelayer_alpha;
+					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
 
 				if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring 
 				{
-					// if the main ring is already used by another weapon, instead use the inner one for ammo.
-					// inner ring is secondary anyway and doesn't matter as much as main ring, so overriding it is no issue.
-					if(ring_value && autocvar_crosshair_ring_reload_inner)
-					{
-						ring_inner_value = bound(0, weapon_clipload / weapon_clipsize, 1);
-						ring_inner_alpha = autocvar_crosshair_ring_reload_alpha;
-						ring_inner_rgb = wcross_color;
-						ring_inner_image = "gfx/crosshair_ring_inner.tga";
-					}
-					else
-					{
-						ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
-						ring_scale = autocvar_crosshair_ring_reload_size;
-						ring_alpha = autocvar_crosshair_ring_reload_alpha;
-						ring_rgb = wcross_color;
+					ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
+					ring_scale = autocvar_crosshair_ring_reload_size;
+					ring_alpha = autocvar_crosshair_ring_reload_alpha;
+					ring_rgb = wcross_color;
 					
-						// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
-						// if a new image for another weapon is added, add the code (and its respective file/value) here
-						if ((activeweapon == WEP_SNIPERRIFLE) && (weapon_clipsize == 80))
-							ring_image = "gfx/crosshair_ring_sniperrifle.tga";
-						else
-							ring_image = "gfx/crosshair_ring.tga";
-					}
+					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
+					// if a new image for another weapon is added, add the code (and its respective file/value) here
+					if ((activeweapon == WEP_SNIPERRIFLE) && (weapon_clipsize == 80))
+						ring_image = "gfx/crosshair_ring_sniperrifle.tga";
+					else
+						ring_image = "gfx/crosshair_ring.tga";
 				}
 
-				if ((autocvar_crosshair_ring_inner || autocvar_crosshair_ring_reload_inner) && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, ring_inner_alpha, DRAWFLAG_ADDITIVE);
+				if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, wcross_alpha * ring_inner_alpha, DRAWFLAG_ADDITIVE);
 
 				if (ring_value)
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, ring_alpha, DRAWFLAG_ADDITIVE);
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
 			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
