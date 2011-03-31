@@ -367,7 +367,6 @@ float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
 float eventchase_current_distance;
-vector eventchase_target_origin;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -432,6 +431,7 @@ void CSQC_UpdateView(float w, float h)
 			else if(eventchase_current_distance != autocvar_cl_eventchase_distance)
 				eventchase_current_distance = autocvar_cl_eventchase_distance;
 
+			vector eventchase_target_origin;
 			makevectors(view_angles);
 			// pass 1, used to check where the camera would go and obtain the trace_fraction
 			eventchase_target_origin = pmove_org - view_forward * eventchase_current_distance;
