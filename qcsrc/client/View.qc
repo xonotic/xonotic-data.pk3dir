@@ -429,6 +429,8 @@ void CSQC_UpdateView(float w, float h)
 			traceline(pmove_org, chase_target_origin, MOVE_NORMAL, self);
 			if(trace_fraction == 1)
 				R_SetView(VF_ORIGIN, chase_target_origin);
+			else
+				R_SetView(VF_ORIGIN, pmove_org);
 		}
 		else if(autocvar_chase_active < 0)
 		{
