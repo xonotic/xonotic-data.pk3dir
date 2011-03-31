@@ -366,8 +366,8 @@ vector myhealth_gentlergb;
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
-float chase_current_distance;
-vector chase_target_origin;
+float eventchase_current_distance;
+vector eventchase_target_origin;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -427,26 +427,26 @@ void CSQC_UpdateView(float w, float h)
 				cvar_set("chase_active", "-1"); // -1 enables chase_active while marking it as set by this code, and not by the user (which would be 1)
 
 			// make the camera smooth back
-			if(autocvar_cl_eventchase_speed && chase_current_distance < autocvar_cl_eventchase_distance)
-				chase_current_distance += autocvar_cl_eventchase_speed * (autocvar_cl_eventchase_distance - chase_current_distance) * frametime; // slow down the further we get
-			else if(chase_current_distance != autocvar_cl_eventchase_distance)
-				chase_current_distance = autocvar_cl_eventchase_distance;
+			if(autocvar_cl_eventchase_speed && eventchase_current_distance < autocvar_cl_eventchase_distance)
+				eventchase_current_distance += autocvar_cl_eventchase_speed * (autocvar_cl_eventchase_distance - eventchase_current_distance) * frametime; // slow down the further we get
+			else if(eventchase_current_distance != autocvar_cl_eventchase_distance)
+				eventchase_current_distance = autocvar_cl_eventchase_distance;
 
 			makevectors(view_angles);
 			// pass 1, used to check where the camera would go and obtain the trace_fraction
-			chase_target_origin = pmove_org - view_forward * chase_current_distance;
+			eventchase_target_origin = pmove_org - view_forward * eventchase_current_distance;
 
-			traceline(pmove_org, chase_target_origin, MOVE_NORMAL, self);
+			traceline(pmove_org, eventchase_target_origin, MOVE_NORMAL, self);
 			// pass 2, also multiplying view_forward with trace_fraction, to prevent the camera from going through walls
 			// The 0.1 subtraction is to not limit the camera precisely at the wall surface, as that allows the view to poke through
-			chase_target_origin = pmove_org - view_forward * chase_current_distance * (trace_fraction - 0.1);
+			eventchase_target_origin = pmove_org - view_forward * eventchase_current_distance * (trace_fraction - 0.1);
 
-			R_SetView(VF_ORIGIN, chase_target_origin);
+			R_SetView(VF_ORIGIN, eventchase_target_origin);
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
 			cvar_set("chase_active", "0");
-			chase_current_distance = 0; // start from 0 next time
+			eventchase_current_distance = 0; // start from 0 next time
 		}
 	}
 
