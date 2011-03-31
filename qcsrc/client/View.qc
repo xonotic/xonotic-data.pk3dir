@@ -440,7 +440,7 @@ void CSQC_UpdateView(float w, float h)
 
 				// don't allow the camera to go through walls
 				traceline(pmove_org, chase_target_origin, MOVE_NORMAL, self);
-				chase_target_origin = pmove_org - view_forward * chase_current_distance * trace_fraction; // pass 2, also multiplying view_forward with trace_fraction, to avoid sticking the camera in solid
+				chase_target_origin = pmove_org - view_forward * chase_current_distance * (trace_fraction - 0.1); // pass 2, also multiplying view_forward with trace_fraction, to avoid sticking the camera in solid
 			}
 
 			R_SetView(VF_ORIGIN, chase_target_origin);
