@@ -367,7 +367,6 @@ float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
 float chase_current_distance;
-vector chase_final_origin;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -424,13 +423,12 @@ void CSQC_UpdateView(float w, float h)
 
 			vector chase_target_origin;
 			makevectors(view_angles);
-			chase_target_origin = pmove_org - view_forward * chase_current_distance;
+			chase_target_origin = pmove_org - view_forward * chase_current_distance; // pass 1, used to check where the camera would go and obtain the trace_fraction
 
 			// don't allow the camera to go through walls
 			traceline(pmove_org, chase_target_origin, MOVE_NORMAL, self);
-			if(trace_fraction == 1)
-				chase_final_origin = chase_target_origin;
-			R_SetView(VF_ORIGIN, chase_final_origin);
+			chase_target_origin = pmove_org - view_forward * chase_current_distance * trace_fraction; // pass 2, also multiplying view_forward with trace_fraction now, to avoid sticking the camera in solid
+			R_SetView(VF_ORIGIN, chase_target_origin);
 		}
 		else if(autocvar_chase_active < 0)
 		{
