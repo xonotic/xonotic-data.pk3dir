@@ -415,16 +415,16 @@ void CSQC_UpdateView(float w, float h)
 	freeze_pmove_org = pmove_org;
 	freeze_input_angles = input_angles;
 
-	// event chase cam
+	// event chase camera
 	if(spectatee_status >= 0 && (autocvar_cl_chase_death || autocvar_cl_chase_intermission))
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually
 	{
 		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission))
 		{
-			// We must enable chase_active to get a third person view (weapon view model hidden and own player model showing).
-			// Ideally, there should be another way to enable third person cameras, such as an R_SetView() function.
+			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
+			// Ideally, there should be another way to enable third person cameras, such as through R_SetView()
 			if(!autocvar_chase_active)
-				cvar_set("chase_active", "-1"); // -1 enables chase_active while marking it as set by this code, not by the user (which would be 1)
+				cvar_set("chase_active", "-1"); // -1 enables chase_active while marking it as set by this code, and not by the user (which would be 1)
 
 			// make the camera smooth back
 			if(autocvar_cl_chase_speed && chase_current_distance < autocvar_cl_chase_distance)
@@ -439,7 +439,7 @@ void CSQC_UpdateView(float w, float h)
 				chase_target_origin = pmove_org - view_forward * chase_current_distance;
 
 				traceline(pmove_org, chase_target_origin, MOVE_NORMAL, self);
-				// pass 2, also multiplying view_forward with trace_fraction, to prevent the camera going through walls
+				// pass 2, also multiplying view_forward with trace_fraction, to prevent the camera from going through walls
 				// The 0.1 subtraction is to not limit the camera precisely at the wall surface, as that allows the view to poke through
 				chase_target_origin = pmove_org - view_forward * chase_current_distance * (trace_fraction - 0.1);
 			}
