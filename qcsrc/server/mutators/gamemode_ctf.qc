@@ -66,16 +66,10 @@ void ctf_FakeTimeLimit(entity e, float t)
 		WriteCoord(MSG_ONE, (t + 1) / 60);
 }
 
-void ctf_EventLog(string mode, float flagteam, entity actor)
+void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for easy changing and quick editing later
 {
-	string s;
-	if(!autocvar_sv_eventlog)
-		return;
-	s = strcat(":ctf:", mode);
-	s = strcat(s, ":", ftos(flagteam));
-	if(actor != world)
-		s = strcat(s, ":", ftos(actor.playerid));
-	GameLogEcho(s);
+	if(autocvar_sv_eventlog)
+		GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (":", ftos(actor.playerid)) : "")));
 }
 
 void ctf_CreateBaseWaypoints(entity flag, float teamnumber)
@@ -88,15 +82,6 @@ void ctf_CreateBaseWaypoints(entity flag, float teamnumber)
 	// waypointsprites
 	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), flag.origin + '0 0 64', flag, wps_flagbase);
 	WaypointSprite_UpdateTeamRadar(flag.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
-}
-
-void ctf_Reset()
-{
-	if(self.owner)
-		if(self.owner.classname == "player")
-			ctf_Handle_Drop(self.owner);
-			
-	ctf_RespawnFlag(self);
 }
 
 
@@ -130,11 +115,11 @@ void ctf_Handle_Drop(entity player) // make sure this works
 	// messages and sounds
 	Send_KillNotification(player.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
 	sound(flag, CHAN_TRIGGER, flag.noise4, VOL_BASE, ATTN_NONE);
+	ctf_EventLog("dropped", player.team, player);
 	
 	// scoring
 	PlayerTeamScore_AddScore(player, -ctf_ReadScore("penalty_drop"));	
 	PlayerScore_Add(player, SP_CTF_DROPS, 1);
-	ctf_EventLog("dropped", player.team, player);
 
 	// waypoints
 	WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, player.team, flag, wps_flagdropped, FALSE); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
@@ -180,79 +165,58 @@ void ctf_Handle_Capture(entity flag, entity player) // make sure this works
 	
 	// messages and sounds
 	Send_KillNotification(player.netname, player.flagcarried.netname, cap_message, INFO_CAPTUREFLAG, MSG_INFO);
-	sound(player, CHAN_AUTO, flag.noise2, VOL_BASE, ATTN_NONE);
+	sound(player, CHAN_AUTO, flag.noise2, VOL_BASE, ATTN_NONE); // "ctf/*_capture.wav"
+	ctf_EventLog("capture", player.flagcarried.team, player);
 	
 	// scoring
 	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_capture"));
 	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, 1);
-	ctf_EventLog("capture", player.flagcarried.team, player);
 
 	// effects
 	if (autocvar_g_ctf_flag_capture_effects) 
 	{
 		pointparticles(particleeffectnum((player.team == COLOR_TEAM1) ? "red_ground_quake" : "blue_ground_quake"), flag.origin, '0 0 0', 1);
-		shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
+		//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 	}
 
-	// waypointsprites // todo: improve this vvvv
-	//	WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, player.team, flag, wps_flagdropped, FALSE); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
-	//WaypointSprite_Ping(player.wps_flagcarrier);
+	// waypointsprites
 	WaypointSprite_Kill(player.wps_flagcarrier);
-	//WaypointSprite_DetachCarrier(player);
 
 	// reset the flag
-	if(flag.speedrunning)
-		ctf_FakeTimeLimit(player, -1);
+	if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
 	
 	ctf_RespawnFlag(player.flagcarried);
-	//player.flagcarried = world;
-	//player.next_take_time = time + 1;
 }
 
-void ctf_Handle_Return(entity flag, entity player) // todo: re-write this
+void ctf_Handle_Return(entity flag, entity player) // make sure this works
 {
-	/*
-	// return flag
+	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
-	//bprint(player.netname, "^7 returned the ", flag.netname, "\n");
-
-	// punish the player who last had it
-	FOR_EACH_PLAYER(player)
-		if(player.playerid == flag.ctf_dropperid)
-		{
-			PlayerScore_Add(player, SP_SCORE, -ctf_ReadScore("penalty_returned"));
-			ctf_captureshield_update(player, 0); // shield only
-		}
-
-	// punish the team who was last carrying it
-	TeamScore_AddToTeam(((flag.team == COLOR_TEAM1) ? COLOR_TEAM2 : COLOR_TEAM1), ST_SCORE, -ctf_ReadScore("penalty_returned"));
-
-	// reward the player who returned it
-	if(player.playerid == flag.playerid) // is this the guy who killed the FC last?
-	{
-		if (player.team == COLOR_TEAM1 || player.team == COLOR_TEAM2)
-			UpdateFrags(player, ctf_ReadScore("score_return_by_killer"));
-		else
-			UpdateFrags(player, ctf_ReadScore("score_return_rogue_by_killer"));
-	}
-	else
-	{
-		if (player.team == COLOR_TEAM1 || player.team == COLOR_TEAM2)
-			UpdateFrags(player, ctf_ReadScore("score_return"));
-		else
-			UpdateFrags(player, ctf_ReadScore("score_return_rogue"));
-	}
-	PlayerScore_Add(player, SP_CTF_RETURNS, 1);
-	ctf_EventLog("return", flag.team, player);
 	sound(player, CHAN_AUTO, flag.noise1, VOL_BASE, ATTN_NONE);
-	ReturnFlag(flag);
-	*/
+	ctf_EventLog("return", flag.team, player);
+
+	// scoring
+	PlayerTeamScore_AddScore(player, ctf_ReadScore(strcat("score_return", ((player.playerid == flag.playerid) ? "_by_killer" : "")))); // reward for return
+	PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
+
+	TeamScore_AddToTeam(((flag.team == COLOR_TEAM1) ? COLOR_TEAM2 : COLOR_TEAM1), ST_SCORE, -ctf_ReadScore("penalty_returned")); // punish the team who was last carrying it
+	FOR_EACH_PLAYER(player) if(player.playerid == flag.ctf_dropperid) // punish the player who dropped the flag
+	{
+		PlayerScore_Add(player, SP_SCORE, -ctf_ReadScore("penalty_returned"));
+		ctf_CaptureShield_Update(player, 0); // shield only
+	}
+
+	// waypointsprites 
+	WaypointSprite_Kill(player.wps_flagdropped);
+	
+	// reset the flag
+	ctf_RespawnFlag(flag);
 }
 
-void ctf_Handle_Pickup_Base(entity flag, entity player) // todo: re-write this
+void ctf_Handle_Pickup_Base(entity flag, entity player) // make sure this works
 {
-	entity tmp_player;
-	string verbosename;
+	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
+	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
 		
 	// attach the flag to the player
 	flag.owner = player;
@@ -271,17 +235,17 @@ void ctf_Handle_Pickup_Base(entity flag, entity player) // todo: re-write this
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_GOTFLAG, MSG_INFO);
 	sound(player, CHAN_AUTO, flag.noise, VOL_BASE, ATTN_NONE);
+	ctf_EventLog("steal", flag.team, player);
 	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat("(", player.netname, ")") : ""); // replace TRUE with an autocvar for it.
 	FOR_EACH_PLAYER(tmp_player)
 		if(tmp_player.team == flag.team)
-			centerprint(tmp_player, strcat("The enemy ", verbosename, " got your flag! Retrieve it!"));
+			centerprint(tmp_player, strcat("The enemy ", verbosename, "got your flag! Retrieve it!"));
 		else if((tmp_player.team == player.team) && (tmp_player != player))
-			centerprint(tmp_player, strcat("Your team mate ", verbosename, " got the flag! Protect them!"));
+			centerprint(tmp_player, strcat("Your team mate ", verbosename, "got the flag! Protect them!"));
 	
 	// scoring
 	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_pickup_base"));
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
-	ctf_EventLog("steal", flag.team, player);
 	
 	// speedrunning
 	flag.speedrunning = player.speedrunning; // if speedrunning, flag will flag-return and teleport the owner back after the record
@@ -291,7 +255,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player) // todo: re-write this
 	// effects
 	if (autocvar_g_ctf_flag_pickup_effects)
 	{
-		pointparticles(particleeffectnum("smoke_ring"), 0.5 * (flag.absmin + flag.absmax), '0 0 0', 1); // 
+		pointparticles(particleeffectnum("smoke_ring"), 0.5 * (flag.absmin + flag.absmax), '0 0 0', 1);
 	}
 	
 	// waypoints 
@@ -353,6 +317,15 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player) // todo: re-write thi
 // Main Flag Functions
 // ===================
 
+void ctf_Reset()
+{
+	if(self.owner)
+		if(self.owner.classname == "player")
+			ctf_Handle_Drop(self.owner);
+			
+	ctf_RespawnFlag(self);
+}
+
 void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc 
 {
 	// declarations
@@ -381,18 +354,18 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 		flag.noalign = TRUE;
 		flag.dropped_origin = flag.origin; 
 		flag.movetype = MOVETYPE_NONE;
+		print("This map was loaded with flags using MOVETYPE_NONE\n");
 	}
 	else 
 	{ 
 		flag.noalign = FALSE;
 		droptofloor(); 
 		flag.movetype = MOVETYPE_TOSS; 
+		print("This map was loaded with flags using MOVETYPE_TOSS\n");
 	}	
 	
 	flag.reset = ctf_Reset;
 	flag.touch = ctf_FlagTouch;
-	//flag.think = ctf_RespawnFlag;
-	//flag.nextthink = time + 0.2; // start after doors etc // Samual: 0.2 though? Why? 
 
 	// appearence
 	if(!flag.model) { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
@@ -433,11 +406,17 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	precache_model("models/ctf/shield.md3");
 	precache_model("models/ctf/shockwavetransring.md3");
 
-	// other initialization stuff
-	ctf_CreateBaseWaypoints(flag, teamnumber);
+	// bot waypoints
+	waypoint_spawnforitem_force(flag, flag.origin);
+	flag.nearestwaypointtimeout = 0; // activate waypointing again
+	flag.bot_basewaypoint = flag.nearestwaypoint;
+
+	// waypointsprites
+	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), flag.origin + '0 0 64', flag, wps_flagbase);
+	WaypointSprite_UpdateTeamRadar(flag.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
+
+	// captureshield setup
 	ctf_CaptureShield_Spawn(flag);
-	//InitializeEntity(flag, ctf_RespawnFlag, INITPRIO_SETLOCATION);
-	//InitializeEntity(self, ctf_CaptureShield_Spawn, INITPRIO_SETLOCATION);
 }
 
 void ctf_RespawnFlag(entity flag) // todo: re-write this
@@ -497,7 +476,7 @@ void ctf_FlagThink() // todo: re-write this
 	}
 
 	if(self.speedrunning)
-	if(self.cnt == FLAG_CARRY)
+	if(self.ctf_status == FLAG_CARRY)
 	{
 		if(self.owner)
 		if(ctf_captimerecord)
@@ -517,10 +496,10 @@ void ctf_FlagThink() // todo: re-write this
 		}
 	}
 
-	if(self.cnt == FLAG_BASE)
+	if(self.ctf_status == FLAG_BASE)
 		return;
 
-	if(self.cnt == FLAG_DROPPED)
+	if(self.ctf_status == FLAG_DROPPED)
 	{
 		// flag fallthrough? FIXME remove this if bug is really fixed now
 		if(self.origin_z < -131072)
@@ -554,7 +533,7 @@ void ctf_FlagTouch()
 	if(!self) { return; }
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{ // The flag fell off the map, respawn it since players can't get to it
-		ctf_RespawnFlag(self);
+		//ctf_RespawnFlag(self);
 		return;
 	}
 	if(other.deadflag != DEAD_NO) { return; }
@@ -627,21 +606,17 @@ float ctf_CaptureShield_CheckStatus(entity p) // check to see
 	return TRUE;
 }
 
-void ctf_CaptureShield_Update(entity p, float dir)
+void ctf_CaptureShield_Update(entity player, float wanted_status)
 {
-	float should;
-	if(dir == p.ctf_captureshielded) // 0: shield only, 1: unshield only
+	float updated_status = ctf_CaptureShield_CheckStatus(player);
+	if((wanted_status == player.ctf_captureshielded) && (updated_status != wanted_status)) // 0: shield only, 1: unshield only
 	{
-		should = ctf_CaptureShield_CheckStatus(p);
-		if(should != dir)
-		{
-			if(should) // TODO csqc notifier for this
-				centerprint_atprio(p, CENTERPRIO_SHIELDING, "^3You are now ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Make some defensive scores before trying again.");
-			else
-				centerprint_atprio(p, CENTERPRIO_SHIELDING, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.");
+		if(updated_status) // TODO csqc notifier for this // Samual: How?
+			centerprint_atprio(player, CENTERPRIO_SHIELDING, "^3You are now ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Make some defensive scores before trying again.");
+		else
+			centerprint_atprio(player, CENTERPRIO_SHIELDING, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.");
 			
-			p.ctf_captureshielded = should;
-		}
+		player.ctf_captureshielded = updated_status;
 	}
 }
 
@@ -793,7 +768,7 @@ void spawnfunc_item_flag_team1()
 {
 	if(!g_ctf) { remove(self); return; }
 
-	ctf_SetupFlag(1, self);
+	ctf_SetupFlag(1, self); // 1 = red
 }
 
 /*QUAKED spawnfunc_item_flag_team2 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
@@ -809,7 +784,7 @@ void spawnfunc_item_flag_team2()
 {
 	if(!g_ctf) { remove(self); return; }
 
-	ctf_SetupFlag(0, self);
+	ctf_SetupFlag(0, self); // the 0 is misleading, but -- 0 = blue.
 }
 
 /*QUAKED spawnfunc_ctf_team (0 .5 .8) (-16 -16 -24) (16 16 32)
