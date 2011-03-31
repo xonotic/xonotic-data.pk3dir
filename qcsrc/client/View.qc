@@ -409,6 +409,9 @@ void CSQC_UpdateView(float w, float h)
 	{
 		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission) && intermission <= 1) // not during the map voting screen
 		{
+			// We must set chase_active in order to get a third person view (1st person weapon model hidden and own player model showing).
+			// Ideally, there should be another way to enable third person mode, such as an R_SetView() function specifically for this purpose.
+
 			if(!autocvar_chase_active)
 				cvar_set("chase_active", "-1"); // -1 enables chase_active as well as marking it as set by this code, and not by the user (which would be 1)
 
