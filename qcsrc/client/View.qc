@@ -367,7 +367,8 @@ float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
 float chase_used;
-float chase_default, chase_back_default;
+float chase_default;
+float chase_current_distance;
 
 void CSQC_UpdateView(float w, float h)
 {
@@ -403,6 +404,42 @@ void CSQC_UpdateView(float w, float h)
 	pmove_org = warpzone_fixview_origin - vo;
 	input_angles = warpzone_fixview_cl_viewangles;
 	view_angles = warpzone_fixview_angles;
+
+	// event chase cam
+	if(spectatee_status >= 0 && (autocvar_cl_chase_death || autocvar_cl_chase_intermission))
+	{
+		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission))
+		{
+			if(!chase_used)
+			{
+				cvar_set("chase_active", "1");
+				chase_used = TRUE;
+			}
+
+			// make the camera smooth back
+			if(autocvar_cl_chase_speed && chase_current_distance < autocvar_cl_chase_distance)
+				chase_current_distance += autocvar_cl_chase_speed * (autocvar_cl_chase_distance - chase_current_distance) * frametime;
+			else if(chase_current_distance != autocvar_cl_chase_distance)
+				chase_current_distance = autocvar_cl_chase_distance;
+
+			makevectors(view_angles);
+			R_SetView(VF_ORIGIN_X, pmove_org_x - view_forward_x * chase_current_distance);
+			R_SetView(VF_ORIGIN_Y, pmove_org_y - view_forward_y * chase_current_distance);
+		}
+		else
+		{
+			if(chase_used)
+			{
+				cvar_set("chase_active", ftos(chase_default));
+				chase_current_distance = 0; // start from 0
+				chase_used = FALSE;
+			}
+
+			// keep the defaults updated
+			if(chase_default != cvar("chase_active"))
+				chase_default = cvar("chase_active");
+		}
+	}
 
 	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0))
 	{
@@ -795,41 +832,6 @@ void CSQC_UpdateView(float w, float h)
 		}
 		else
 			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
-	}
-
-	// event chase cam
-	if(spectatee_status >= 0 && (autocvar_cl_chase_death || autocvar_cl_chase_intermission))
-	{
-		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission))
-		{
-			if(!chase_used)
-			{
-				cvar_set("chase_active", "1");
-				cvar_set("chase_back", "0"); // start from 0
-				chase_used = TRUE;
-			}
-
-			// make the camera smooth back
-			if(autocvar_cl_chase_speed && cvar("chase_back") < autocvar_cl_chase_distance)
-				cvar_set("chase_back", ftos(cvar("chase_back") + (autocvar_cl_chase_speed * (autocvar_cl_chase_distance - cvar("chase_back")) * frametime)));
-			else if(cvar("chase_back") != autocvar_cl_chase_distance)
-				cvar_set("chase_back", ftos(autocvar_cl_chase_distance));
-		}
-		else
-		{
-			if(chase_used)
-			{
-				cvar_set("chase_active", ftos(chase_default));
-				cvar_set("chase_back", ftos(chase_back_default));
-				chase_used = FALSE;
-			}
-
-			// keep the defaults updated
-			if(chase_default != cvar("chase_active"))
-				chase_default = cvar("chase_active");
-			if(chase_back_default != cvar("chase_back"))
-				chase_back_default = cvar("chase_back");
-		}
 	}
 
 	// Draw the mouse cursor
