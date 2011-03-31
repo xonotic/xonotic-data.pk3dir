@@ -407,7 +407,7 @@ void CSQC_UpdateView(float w, float h)
 	if(spectatee_status >= 0 && (autocvar_cl_chase_death || autocvar_cl_chase_intermission))
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually
 	{
-		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission))
+		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission) && intermission <= 1) // not during the map voting screen
 		{
 			if(!autocvar_chase_active)
 				cvar_set("chase_active", "-1"); // -1 enables chase_active as well as marking it as enabled by this code, and not by the user (which would be 1)
