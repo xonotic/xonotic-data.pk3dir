@@ -366,8 +366,6 @@ vector myhealth_gentlergb;
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
-float chase_used;
-float chase_default;
 float chase_current_distance;
 
 void CSQC_UpdateView(float w, float h)
@@ -407,14 +405,12 @@ void CSQC_UpdateView(float w, float h)
 
 	// event chase cam
 	if(spectatee_status >= 0 && (autocvar_cl_chase_death || autocvar_cl_chase_intermission))
+	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually
 	{
 		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission))
 		{
-			if(!chase_used)
-			{
-				cvar_set("chase_active", "1");
-				chase_used = TRUE;
-			}
+			if(!autocvar_chase_active)
+				cvar_set("chase_active", "-1"); // -1 enables chase_active as well as marking it as enabled by this code, and not by the user (which would be 1)
 
 			// make the camera smooth back
 			if(autocvar_cl_chase_speed && chase_current_distance < autocvar_cl_chase_distance)
@@ -426,18 +422,10 @@ void CSQC_UpdateView(float w, float h)
 			R_SetView(VF_ORIGIN_X, pmove_org_x - view_forward_x * chase_current_distance);
 			R_SetView(VF_ORIGIN_Y, pmove_org_y - view_forward_y * chase_current_distance);
 		}
-		else
+		else if(autocvar_chase_active < 0)
 		{
-			if(chase_used)
-			{
-				cvar_set("chase_active", ftos(chase_default));
-				chase_current_distance = 0; // start from 0
-				chase_used = FALSE;
-			}
-
-			// keep the defaults updated
-			if(chase_default != cvar("chase_active"))
-				chase_default = cvar("chase_active");
+			cvar_set("chase_active", "0");
+			chase_current_distance = 0; // start from 0
 		}
 	}
 
