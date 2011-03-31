@@ -416,10 +416,10 @@ void CSQC_UpdateView(float w, float h)
 	freeze_input_angles = input_angles;
 
 	// event chase camera
-	if(spectatee_status >= 0 && (autocvar_cl_chase_death || autocvar_cl_chase_intermission))
+	if(spectatee_status >= 0 && (autocvar_cl_eventchase_death || autocvar_cl_eventchase_intermission))
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually
 	{
-		if((autocvar_cl_chase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_chase_intermission && intermission))
+		if((autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_eventchase_intermission && intermission))
 		{
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
 			// Ideally, there should be another way to enable third person cameras, such as through R_SetView()
@@ -427,10 +427,10 @@ void CSQC_UpdateView(float w, float h)
 				cvar_set("chase_active", "-1"); // -1 enables chase_active while marking it as set by this code, and not by the user (which would be 1)
 
 			// make the camera smooth back
-			if(autocvar_cl_chase_speed && chase_current_distance < autocvar_cl_chase_distance)
-				chase_current_distance += autocvar_cl_chase_speed * (autocvar_cl_chase_distance - chase_current_distance) * frametime; // slow down the further we get
-			else if(chase_current_distance != autocvar_cl_chase_distance)
-				chase_current_distance = autocvar_cl_chase_distance;
+			if(autocvar_cl_eventchase_speed && chase_current_distance < autocvar_cl_eventchase_distance)
+				chase_current_distance += autocvar_cl_eventchase_speed * (autocvar_cl_eventchase_distance - chase_current_distance) * frametime; // slow down the further we get
+			else if(chase_current_distance != autocvar_cl_eventchase_distance)
+				chase_current_distance = autocvar_cl_eventchase_distance;
 
 			makevectors(view_angles);
 			// pass 1, used to check where the camera would go and obtain the trace_fraction
@@ -451,7 +451,7 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	// Render the Scene
-	if(!intermission || !view_set || (intermission && autocvar_cl_chase_intermission))
+	if(!intermission || !view_set || (intermission && autocvar_cl_eventchase_intermission))
 	{
 		view_origin = pmove_org + vo;
 		view_angles = input_angles;
