@@ -433,14 +433,14 @@ void CSQC_UpdateView(float w, float h)
 			else if(chase_current_distance != autocvar_cl_chase_distance)
 				chase_current_distance = autocvar_cl_chase_distance;
 
-			if not(intermission > 1) // don't update during the map voting screen
+			if not(intermission > 1) // don't update view origin during the map voting screen
 			{
 				makevectors(view_angles);
 				chase_target_origin = pmove_org - view_forward * chase_current_distance; // pass 1, used to check where the camera would go and obtain the trace_fraction
 
 				// don't allow the camera to go through walls
 				traceline(pmove_org, chase_target_origin, MOVE_NORMAL, self);
-				chase_target_origin = pmove_org - view_forward * chase_current_distance * trace_fraction; // pass 2, also multiplying view_forward with trace_fraction now, to avoid sticking the camera in solid
+				chase_target_origin = pmove_org - view_forward * chase_current_distance * trace_fraction; // pass 2, also multiplying view_forward with trace_fraction, to avoid sticking the camera in solid
 			}
 
 			R_SetView(VF_ORIGIN, chase_target_origin);
