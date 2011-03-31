@@ -419,8 +419,7 @@ void CSQC_UpdateView(float w, float h)
 				chase_current_distance = autocvar_cl_chase_distance;
 
 			makevectors(view_angles);
-			R_SetView(VF_ORIGIN_X, pmove_org_x - view_forward_x * chase_current_distance);
-			R_SetView(VF_ORIGIN_Y, pmove_org_y - view_forward_y * chase_current_distance);
+			R_SetView(VF_ORIGIN, pmove_org - view_forward * chase_current_distance);
 		}
 		else if(autocvar_chase_active < 0)
 		{
