@@ -451,7 +451,7 @@ void CSQC_UpdateView(float w, float h)
 	freeze_input_angles = input_angles;
 
 	// Render the Scene
-	if(!intermission || !view_set)
+	if(!intermission || !view_set || (intermission && autocvar_cl_chase_intermission))
 	{
 		view_origin = pmove_org + vo;
 		view_angles = input_angles;
