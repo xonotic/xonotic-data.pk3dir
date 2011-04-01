@@ -680,7 +680,7 @@ void GameCommand(string command)
 	if(argv(0) == "help" || argc == 0)
 	{
 		print("Usage: sv_cmd COMMAND..., where possible commands are:\n");
-		print("  adminmsg clientnumber \"message\"\n");
+		print("  adminmsg clientnumber \"message\" [infobartime]\n");
 		print("  teamstatus\n");
 		print("  printstats\n");
 		print("  make_mapinfo\n");
@@ -761,7 +761,7 @@ void GameCommand(string command)
 	}
 
 	if(argv(0) == "adminmsg")
-	if(argc == 3)
+	if(argc >= 3 && argc <= 4)
 	{
 		entno = stof(argv(1));
 
@@ -774,8 +774,20 @@ void GameCommand(string command)
 
 		if(client.flags & FL_CLIENT)
 		{
-			centerprint_atprio(client, CENTERPRIO_ADMIN, strcat("^3", admin_name(), ":\n\n^7", argv(2)));
-			sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", argv(2), "\n"));
+			if(argc == 4)
+			{
+				s = argv(2);
+				s = strreplace(s, "\n", "");
+				s = strreplace(s, "\\", "\\\\");
+				s = strreplace(s, "$", "$$");
+				s = strreplace(s, "\"", "\\\"");
+				stuffcmd(client, sprintf("\ninfobar %f \"%s\"\n", stof(argv(3)), s));
+			}
+			else
+			{
+				centerprint_atprio(client, CENTERPRIO_ADMIN, strcat("^3", admin_name(), ":\n\n^7", argv(2)));
+				sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", argv(2), "\n"));
+			}
 			print("Message sent to ", client.netname, "\n");
 		}
 		else
