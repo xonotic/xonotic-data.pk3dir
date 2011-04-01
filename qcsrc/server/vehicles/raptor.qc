@@ -613,8 +613,8 @@ void raptor_die()
     self.colormod = '-0.5 -0.5 -0.5';
 
 	self.touch     = raptor_blowup;
-	self.think     = raptor_spawn;
-	self.nextthink = time + autocvar_g_vehicle_raptor_respawntime;
+	//self.think     = raptor_spawn;
+	//self.nextthink = time + autocvar_g_vehicle_raptor_respawntime;
 }
 
 void raptor_spawn()
@@ -622,31 +622,18 @@ void raptor_spawn()
     self.flags     = FL_NOTARGET;
     self.effects   = 0;
 
+    self.frame          = 0;
     self.vehicle_health = autocvar_g_vehicle_raptor_health;
     self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
-    self.event_damage   = vehicles_damage;
-    self.touch          = vehicles_touch;
-    self.iscreature     = TRUE;
-    self.movetype       = MOVETYPE_FLY;
+    self.movetype       = MOVETYPE_TOSS;
     self.solid          = SOLID_BBOX;
-    self.takedamage     = DAMAGE_AIM;
-	self.deadflag       = DEAD_NO;
-    self.bot_attack     = TRUE;
     self.vehicle_energy = 1;
-    self.vehicle_hudmodel.viewmodelforclient = self;
 
     self.bomb1.gun1.avelocity_y = 90;
     self.bomb1.gun2.avelocity_y = -90;
-    self.frame = 0;
-
-    setorigin(self, self.pos1);
-    self.angles = self.pos2;
 
     setsize(self, RAPTOR_MIN, RAPTOR_MAX );
-    pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
     self.delay = time;
-
-    vehicles_reset_colors();
 }
 
 void raptor_dinit()

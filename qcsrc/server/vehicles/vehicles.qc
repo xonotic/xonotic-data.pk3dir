@@ -7,7 +7,7 @@ void vehicles_enter();
 void vehicles_touch();
 void vehicles_reset_colors();
 void vehicles_clearrturn();
-void vehicles_setreturn(float retime, void() respawn_proc);
+void vehicles_setreturn();
 
 
 #define MAX_AXH 4
@@ -180,14 +180,15 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
 void vehicles_spawn()
 {
     dprint("Spawning vehicle: ", self.netname, "\n");
+
     self.vehicle_hudmodel.viewmodelforclient = self;
     self.owner              = world;
+    self.touch              = vehicles_touch;
     self.event_damage       = vehicles_damage;
     self.iscreature         = TRUE;
     self.movetype           = MOVETYPE_WALK;
     self.solid              = SOLID_SLIDEBOX;
     self.takedamage         = DAMAGE_AIM;
-    self.touch              = vehicles_touch;
 	self.deadflag           = DEAD_NO;
     self.bot_attack         = TRUE;
     self.flags              = FL_NOTARGET;
@@ -267,6 +268,12 @@ void vehicles_enter()
     if(self.team)
     if(self.team != other.team)
         return;
+
+    self.vehicle_ammo1   = 0;
+    self.vehicle_ammo2   = 0;
+    self.vehicle_reload1 = 0;
+    self.vehicle_reload2 = 0;
+    self.vehicle_energy  = 0;
 
     self.owner          = other;
     self.switchweapon   = other.switchweapon;
@@ -358,7 +365,7 @@ void vehicles_exit(float eject)
 
     self.vehicle_hudmodel.viewmodelforclient = self;
 	self.tur_head.nodrawtoclient             = self;
-    vehicles_setreturn(self.vehicle_respawntime, self.vehicle_spawn);
+    vehicles_setreturn();
 
     self.phase = time + 1;
 
@@ -366,7 +373,6 @@ void vehicles_exit(float eject)
         self.team = 0;
 
     self.vehicle_exit(eject);
-
     self.owner = world;
 }
 
@@ -445,14 +451,17 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
                 vehicles_exit(VHEF_RELESE);
 
         self.vehicle_die();
+        vehicles_setreturn();
     }
 }
 
 void vehicles_return()
 {
     pointparticles(particleeffectnum("teleport"), self.enemy.origin + '0 0 64', '0 0 0', 1);
-    self.enemy.think     = self.use;    // This is the vehicles respwn procedure
+
+    self.enemy.think     = vehicles_spawn;
     self.enemy.nextthink = time;
+
     remove(self);
 }
 
@@ -465,29 +474,27 @@ void vehicles_clearrturn()
     {
         if(ret.enemy == self)
         {
-            ret.think = SUB_Remove;
-            ret.nextthink = time + 0.1;
+            ret.classname   = "";
+            ret.think       = SUB_Remove;
+            ret.nextthink   = time + 0.1;
             return;
         }
+
         ret = ret.chain;
     }
 }
 
-void vehicles_setreturn(float retime, void() respawn_proc)
+void vehicles_setreturn()
 {
+    entity ret;
+
     vehicles_clearrturn();
 
-    if (self.deadflag == DEAD_NO)
-    {
-        entity ret;
-
-        ret = spawn();
-        ret.classname = "vehicle_return";
-        ret.enemy = self;
-        ret.think = vehicles_return;
-        ret.nextthink = time + retime;
-        ret.use = respawn_proc;
-    }
+    ret = spawn();
+    ret.classname   = "vehicle_return";
+    ret.enemy       = self;
+    ret.think       = vehicles_return;
+    ret.nextthink   = time + self.vehicle_respawntime;
 }
 
 float vehicles_customizeentityforclient()

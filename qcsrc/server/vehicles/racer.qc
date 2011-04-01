@@ -568,10 +568,12 @@ void racer_spawn()
     self.nextthink      = time;
     self.vehicle_health = autocvar_g_vehicle_racer_health;
     self.vehicle_shield = autocvar_g_vehicle_racer_shield;
+
     self.movetype       = MOVETYPE_TOSS;
     self.solid          = SOLID_SLIDEBOX;
     self.delay          = time;
     self.scale          = 0.5;
+
     setsize(self, RACER_MIN * 0.5, RACER_MAX * 0.5);
 }
 
