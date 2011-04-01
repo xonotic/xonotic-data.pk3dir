@@ -43,6 +43,9 @@ float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
 
 .float dmg_time;
 
+.float  vehicle_respawntime;
+.void() vehicle_spawn;
+
 var .void(float exit_flags) vehicle_exit;
 #define VHEF_NORMAL 0
 #define VHEF_EJECT  1
@@ -54,3 +57,6 @@ var .void() vehicle_spawn;
 
 #endif
 
+void(entity e, float physics_enabled) physics_enable = #540; // enable or disable physics on object
+void(entity e, vector force, vector force_pos) physics_addforce = #541; // apply a force from certain origin, length of force vector is power of force
+void(entity e, vector torque) physics_addtorque = #542; // add relative torque

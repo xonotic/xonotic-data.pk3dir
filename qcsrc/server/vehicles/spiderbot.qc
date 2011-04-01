@@ -519,6 +519,7 @@ void spiderbot_think()
 
 void spiderbot_enter()
 {
+    self.movetype   = MOVETYPE_WALK;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_spiderbot_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_spiderbot_shield);
 }
@@ -526,8 +527,6 @@ void spiderbot_enter()
 void spiderbot_exit(float eject)
 {
     entity e;
-
-    vehicles_setreturn(autocvar_g_vehicle_spiderbot_respawntime, spiderbot_spawn);
 
     e = findchain(classname,"spiderbot_rocket");
     while(e)
@@ -544,6 +543,7 @@ void spiderbot_exit(float eject)
     self.think      = spiderbot_think;
     self.nextthink  = time;
     self.frame      = 5;
+    self.movetype   = MOVETYPE_WALK;
 
     if not (self.owner)
         return;
@@ -607,7 +607,6 @@ float spiderbot_crushable(entity e)
 
 void spiderbot_spawn()
 {
-
     self.frame              = 5;
     self.think              = spiderbot_think;
     self.nextthink          = time;
@@ -619,7 +618,6 @@ void spiderbot_spawn()
     self.movetype           = MOVETYPE_WALK;
     self.solid              = SOLID_SLIDEBOX;
     self.takedamage         = DAMAGE_AIM;
-    //self.touch              = spiderbot_touch;
     self.touch              = vehicles_touch;
     self.alpha              = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = 1;
     self.tur_head.angles    = '0 0 0';
@@ -633,7 +631,6 @@ void spiderbot_spawn()
     self.angles = self.pos2;
 
     vehicles_reset_colors();
-
 }
 
 void spiderbot_headfade()
@@ -659,9 +656,7 @@ void spiderbot_blowup()
     sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 
     for(i = 0; i < 5; ++i)
-    {
-        pointparticles(particleeffectnum("rocket_explode"), self.origin + (randomvec() * 200) + '0 0 100', '0 0 0', 1);
-    }
+        pointparticles(particleeffectnum("rocket_explode"), self.origin + (randomvec() * 100) + '0 0 100', '0 0 0', 1);
 
     entity h, g1, g2, b;
     b = spawn();
@@ -753,7 +748,8 @@ void vewhicle_spiderbot_dinit()
              HUD_SPIDERBOT,
              SPIDERBOT_MIN, SPIDERBOT_MAX,
              FALSE,
-             spiderbot_spawn, spiderbot_frame,
+             spiderbot_spawn, autocvar_g_vehicle_spiderbot_respawntime,
+             spiderbot_frame,
              spiderbot_enter, spiderbot_exit,
              spiderbot_die,   spiderbot_think))
     {

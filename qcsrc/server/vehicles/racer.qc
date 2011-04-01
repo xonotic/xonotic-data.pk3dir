@@ -441,7 +441,7 @@ float racer_frame()
 
     if(autocvar_g_vehicle_racer_rocket_locktarget)
     {
-        vehicles_locktarget2((1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
+        vehicles_locktarget((1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
                          (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * frametime,
                          autocvar_g_vehicle_racer_rocket_locked_time);
 
@@ -534,18 +534,16 @@ void racer_think()
 
 void racer_enter()
 {
+    self.movetype = MOVETYPE_BOUNCEMISSILE;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield);
 }
 
-void racer_spawn();
-
 void racer_exit(float eject)
 {
-    vehicles_setreturn(autocvar_g_vehicle_racer_respawntime, racer_spawn);
-
     self.think      = racer_think;
     self.nextthink  = time;
+    self.movetype   = MOVETYPE_BOUNCEMISSILE;
 
     if not (self.owner)
         return;
@@ -564,64 +562,19 @@ void racer_exit(float eject)
     self.owner = world;
 }
 
-/*void racer_touch()
-{
-    //vehicles_touch();
-    if(self.owner)
-    {
-        return;
-    }
-
-    if(other.classname != "player")
-        return;
-
-    if(other.deadflag != DEAD_NO)
-        return;
-
-    if(other.vehicle != world)
-        return;
-
-    vehicles_enter();
-}*/
-
 void racer_spawn()
 {
-    self.think = racer_think;
-    self.nextthink = time;
-
-    self.flags      = FL_NOTARGET;
-    self.effects   = 0;
-
+    self.think          = racer_think;
+    self.nextthink      = time;
     self.vehicle_health = autocvar_g_vehicle_racer_health;
     self.vehicle_shield = autocvar_g_vehicle_racer_shield;
-
-    self.event_damage = vehicles_damage;
-    //self.touch      = racer_touch;
-    self.touch          = vehicles_touch;
-
-    self.iscreature = TRUE;
-    self.scale      = 0.5;
-    self.movetype   = MOVETYPE_BOUNCEMISSILE;
-    self.solid      = SOLID_SLIDEBOX;
-    self.takedamage = DAMAGE_AIM;
-
-    self.alpha      = 1;
-	self.colormap   = 1024;
-	self.deadflag   = DEAD_NO;
-    self.bot_attack = TRUE;
-
-    self.vehicle_energy = 1;
-    self.vehicle_hudmodel.viewmodelforclient = self;
-
-    setorigin(self, self.pos1);
-    self.angles = self.pos2;
-
+    self.movetype       = MOVETYPE_TOSS;
+    self.solid          = SOLID_SLIDEBOX;
+    self.delay          = time;
+    self.scale          = 0.5;
     setsize(self, RACER_MIN * 0.5, RACER_MAX * 0.5);
-    pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
-    self.delay = time;
-
-    vehicles_reset_colors();
 }
+
 
 void racer_blowup()
 {
@@ -649,6 +602,8 @@ void racer_blowup()
     self.velocity  = '0 0 0';
 
     setorigin(self, self.pos1);
+	self.think     = racer_spawn;
+	self.nextthink = time + autocvar_g_vehicle_racer_respawntime;
 }
 
 void racer_deadtouch()
@@ -674,15 +629,13 @@ void racer_die()
 
     pointparticles(particleeffectnum("rocket_explode"), findbetterlocation (self.origin, 16), '0 0 0', 1);
 
-    self.velocity     += '0 0 700';
-
     if(random() < 0.5)
         self.avelocity_z  = 16;
     else
         self.avelocity_z  = -16;
 
     self.avelocity_x = -vlen(self.velocity) * 0.2;
-
+    self.velocity     += '0 0 700';
     self.colormod = '-0.5 -0.5 -0.5';
 
 	self.think     = racer_blowup;
@@ -700,7 +653,8 @@ void racer_dinit()
              HUD_WAKIZASHI,
              0.5 * RACER_MIN, 0.5 * RACER_MAX,
              FALSE,
-             racer_spawn, racer_frame,
+             racer_spawn, autocvar_g_vehicle_racer_respawntime,
+             racer_frame,
              racer_enter, racer_exit,
              racer_die,   racer_think))
     {

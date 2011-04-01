@@ -57,13 +57,11 @@ float autocvar_g_vehicle_raptor_shield_regen;
 float autocvar_g_vehicle_raptor_shield_regen_pause;
 
 void raptor_spawn();
-//void raptor_return();
 float raptor_frame();
-//float raptor_takeoff();
 
 .entity bomb1;
 .entity bomb2;
-//.entity camera;
+
 //#define RAPTOR_RETARDCAMERA
 
 float raptor_altitude(float amax)
@@ -218,7 +216,8 @@ void raptor_think()
 
 void raptor_enter()
 {
-    self.movetype   = MOVETYPE_BOUNCEMISSILE;
+    self.movetype       = MOVETYPE_BOUNCEMISSILE;
+    self.solid          = SOLID_BBOX;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_raptor_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_raptor_shield);
     self.velocity_z = 1;
@@ -245,7 +244,7 @@ void raptor_land()
 
     if(hgt < 16)
     {
-        self.movetype   = MOVETYPE_BOUNCE;
+        self.movetype   = MOVETYPE_TOSS;
         self.think      = raptor_think;
     }
 
@@ -257,7 +256,6 @@ void raptor_exit(float eject)
 
     if(self.deadflag == DEAD_NO)
     {
-        vehicles_setreturn(autocvar_g_vehicle_raptor_respawntime, raptor_spawn);
         self.think      = raptor_land;
         self.nextthink  = time;
     }
@@ -287,7 +285,7 @@ float raptor_frame()
     raptor   = self.vehicle;
     self    = raptor;
 
-    if(player.BUTTON_USE)
+    if(player.BUTTON_USE && raptor.deadflag == DEAD_NO)
     {
         self = raptor;
         vehicles_exit(VHEF_NORMAL);
@@ -330,38 +328,47 @@ float raptor_frame()
     ftmp = bound(-ftmp, shortangle_f(df_y - raptor.angles_y, raptor.angles_y), ftmp);
 
     // Turn
-    raptor.angles_y = anglemods(raptor.angles_y + ftmp);
+    //raptor.angles_y = anglemods(raptor.angles_y + ftmp);
+    raptor.avelocity_y = anglemods(raptor.angles_y + ftmp);
 
     // Pitch Body
     ftmp = autocvar_g_vehicle_raptor_pitchspeed  * sys_frametime;
     ftmp = bound(-ftmp, shortangle_f(df_x - raptor.angles_x, raptor.angles_x), ftmp);
 
-    raptor.angles_x = bound(-autocvar_g_vehicle_raptor_pitchlimit, anglemods(raptor.angles_x + ftmp), autocvar_g_vehicle_raptor_pitchlimit);
+    //raptor.angles_x = bound(-autocvar_g_vehicle_raptor_pitchlimit, anglemods(raptor.angles_x + ftmp), autocvar_g_vehicle_raptor_pitchlimit);
+    raptor.avelocity_x = bound(-autocvar_g_vehicle_raptor_pitchlimit, anglemods(raptor.angles_x + ftmp), autocvar_g_vehicle_raptor_pitchlimit);
 #else
-    raptor.angles_x *= -1;
-    // Rotate Body
-    ftmp = autocvar_g_vehicle_raptor_turnspeed * sys_frametime;
-    ftmp = bound(-ftmp, shortangle_f(player.v_angle_y - raptor.angles_y, raptor.angles_y), ftmp);
+    vector vang;
+    vang = raptor.angles;
+    df = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
+    vang_x *= -1;
+    df_x *= -1;
+    if(df_x > 180)  df_x -= 360;
+    if(df_x < -180) df_x += 360;
+    if(df_y > 180)  df_y -= 360;
+    if(df_y < -180) df_y += 360;
 
-    // Turn
-    raptor.angles_y = anglemods(raptor.angles_y + ftmp);
+    ftmp = shortangle_f(player.v_angle_y - vang_y, vang_y);
+    if(ftmp > 180)  ftmp -= 360; if(ftmp < -180) ftmp += 360;
+    raptor.avelocity_y = bound(-autocvar_g_vehicle_raptor_turnspeed, ftmp + raptor.avelocity_y * 0.9, autocvar_g_vehicle_raptor_turnspeed);
 
-    // Pitch Body
-    ftmp = autocvar_g_vehicle_raptor_pitchspeed  * sys_frametime;
-    ftmp2 = shortangle_f(player.v_angle_x - raptor.angles_x, raptor.angles_x);
+    // Pitch
+    ftmp = 0;
+    if(player.movement_x > 0 && vang_x < autocvar_g_vehicle_raptor_pitchlimit) ftmp = 5;
+    else if(player.movement_x < 0 && vang_x > -autocvar_g_vehicle_raptor_pitchlimit) ftmp = -20;
 
-    if(player.movement_x > 0)
-        ftmp2 += 20 * ftmp;
-    else if(player.movement_x < 0)
-        ftmp2 -= 45 * ftmp;
+    df_x = bound(-autocvar_g_vehicle_raptor_pitchlimit, df_x , autocvar_g_vehicle_raptor_pitchlimit);
+    ftmp = vang_x - bound(-autocvar_g_vehicle_raptor_pitchlimit, df_x + ftmp, autocvar_g_vehicle_raptor_pitchlimit);
+    raptor.avelocity_x = bound(-autocvar_g_vehicle_raptor_pitchspeed, ftmp + raptor.avelocity_x * 0.9, autocvar_g_vehicle_raptor_pitchspeed);
 
-    ftmp = bound(-ftmp, ftmp2, ftmp);
-    raptor.angles_x = bound(-autocvar_g_vehicle_raptor_pitchlimit, anglemods(raptor.angles_x + ftmp), autocvar_g_vehicle_raptor_pitchlimit);
-    raptor.angles_x *= -1;
+    raptor.angles_x = anglemods(raptor.angles_x);
+    raptor.angles_y = anglemods(raptor.angles_y);
+    raptor.angles_z = anglemods(raptor.angles_z);
+
 #endif
 
     if(autocvar_g_vehicle_raptor_movestyle == 1)
-        fixedmakevectors('0 1 0' * raptor.angles_y);
+        makevectors(raptor.angles + ('-1 0 0' * raptor.angles_x));
     else
         makevectors(player.v_angle);
 
@@ -396,19 +403,21 @@ float raptor_frame()
         else if(player.movement_y > 0)
             df += v_right * autocvar_g_vehicle_raptor_speed_strafe;
 
-        raptor.angles_z = bound(-30,raptor.angles_z + (player.movement_y / autocvar_g_vehicle_raptor_speed_strafe),30);
+        //raptor.angles_z = bound(-30,raptor.angles_z + (player.movement_y / autocvar_g_vehicle_raptor_speed_strafe),30);
     }
     else
     {
-        raptor.angles_z *= 0.95;
+        /*raptor.angles_z *= 0.95;
         if(raptor.angles_z >= -1 && raptor.angles_z <= -1)
-            raptor.angles_z = 0;
+            raptor.angles_z = 0;*/
     }
 
     if(player.BUTTON_CROUCH)
         df -=   v_up * autocvar_g_vehicle_raptor_speed_down;
     else if (player.BUTTON_JUMP)
         df +=  v_up * autocvar_g_vehicle_raptor_speed_up;
+
+
 
     raptor.velocity  += df * frametime;
     player.velocity = player.movement  = raptor.velocity;
@@ -419,7 +428,7 @@ float raptor_frame()
     if(autocvar_g_vehicle_raptor_cannon_locktarget)
     {
 
-        vehicles_locktarget2((1 / autocvar_g_vehicle_raptor_cannon_locking_time) * frametime,
+        vehicles_locktarget((1 / autocvar_g_vehicle_raptor_cannon_locking_time) * frametime,
                              (1 / autocvar_g_vehicle_raptor_cannon_locking_releasetime) * frametime,
                              autocvar_g_vehicle_raptor_cannon_locked_time);
 
@@ -561,32 +570,6 @@ float raptor_frame()
     return 1;
 }
 
-/*void raptor_touch()
-{
-    //vehicles_touch();
-    if(self.owner)
-    {
-        if(vlen(self.velocity) == 0)
-            return;
-
-        if(other.classname != "player")
-            return;
-
-        return;
-    }
-
-    if(other.classname != "player")
-        return;
-
-    if(other.deadflag != DEAD_NO)
-        return;
-
-    if(other.vehicle != world)
-        return;
-
-    vehicles_enter();
-}*/
-
 void raptor_blowup()
 {
     sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
@@ -642,7 +625,6 @@ void raptor_spawn()
     self.vehicle_health = autocvar_g_vehicle_raptor_health;
     self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
     self.event_damage   = vehicles_damage;
-    //self.touch          = raptor_touch;
     self.touch          = vehicles_touch;
     self.iscreature     = TRUE;
     self.movetype       = MOVETYPE_FLY;
@@ -681,14 +663,15 @@ void raptor_dinit()
              HUD_RAPTOR,
              RAPTOR_MIN, RAPTOR_MAX,
              FALSE,
-             raptor_spawn, raptor_frame,
+             raptor_spawn, autocvar_g_vehicle_raptor_respawntime,
+             raptor_frame,
              raptor_enter, raptor_exit,
              raptor_die,   raptor_think))
     {
         remove(self);
         return;
     }
-
+    setorigin(self, self.origin + '0 0 50');
     //FIXME: Camera is in a bad place in HUD model.
     setorigin(self.vehicle_viewport, '5 0 5');
 
@@ -748,7 +731,7 @@ void raptor_dinit()
     spinner.avelocity = '0 -90 0';
     self.bomb1.gun2 = spinner;
 
-    self.mass               = 2200;
+    self.mass               = 1 ;
 }
 
 void spawnfunc_vehicle_raptor()

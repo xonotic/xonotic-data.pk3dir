@@ -3,7 +3,12 @@ float autocvar_g_vehicles_crush_force;
 
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void vehicles_return();
+void vehicles_enter();
+void vehicles_touch();
+void vehicles_reset_colors();
 void vehicles_clearrturn();
+void vehicles_setreturn(float retime, void() respawn_proc);
+
 
 #define MAX_AXH 4
 .entity AuxiliaryXhair[MAX_AXH];
@@ -83,10 +88,14 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 .entity lock_target;
 .float  lock_strength;
 .float  lock_time;
-void vehicles_locktarget2(float incr, float decr, float _lock_time)
+void vehicles_locktarget(float incr, float decr, float _lock_time)
 {
     if(self.lock_target && self.lock_target.deadflag != DEAD_NO)
-        self.lock_target = world;
+    {
+        self.lock_target    = world;
+        self.lock_strength  = 0;
+        self.lock_time      = 0;
+    }
 
     if(trace_ent != world)
     {
@@ -102,11 +111,6 @@ void vehicles_locktarget2(float incr, float decr, float _lock_time)
 
     if(self.lock_time > time)
         return;
-
-    /*if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
-        self.lock_strength = min(self.lock_strength - decr, 1);
-    else if(trace_ent.deadflag != DEAD_NO)
-        self.lock_strength = min(self.lock_strength - decr, 1);*/
 
     if(self.lock_target == world && trace_ent != world)
         self.lock_target = trace_ent;
@@ -171,12 +175,34 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
     return v_forward  * force_fromtag_power;
 }
 
+
+
+void vehicles_spawn()
+{
+    dprint("Spawning vehicle: ", self.netname, "\n");
+    self.vehicle_hudmodel.viewmodelforclient = self;
+    self.owner              = world;
+    self.event_damage       = vehicles_damage;
+    self.iscreature         = TRUE;
+    self.movetype           = MOVETYPE_WALK;
+    self.solid              = SOLID_SLIDEBOX;
+    self.takedamage         = DAMAGE_AIM;
+    self.touch              = vehicles_touch;
+	self.deadflag           = DEAD_NO;
+    self.bot_attack         = TRUE;
+    self.flags              = FL_NOTARGET;
+    self.angles             = self.pos2;
+
+    setorigin(self, self.pos1 + '0 0 128');
+    pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
+
+    vehicles_reset_colors();
+    self.vehicle_spawn();
+}
+
 // Better way of determening whats crushable needed! (fl_crushable?)
 float vehicles_crushable(entity e)
 {
-    if(e.classname == "corpse")
-        return TRUE;
-
     if(e.classname == "player")
         return TRUE;
 
@@ -186,7 +212,6 @@ float vehicles_crushable(entity e)
     return FALSE;
 }
 
-void vehicles_enter();
 void vehicles_touch()
 {
     // Vehicle currently in use
@@ -298,8 +323,7 @@ void vehicles_enter()
 
     CSQCVehicleSetup(self.owner, self.hud);
 
-    if(self.vehicle_enter)
-        self.vehicle_enter();
+    self.vehicle_enter();
 }
 
 void vehicles_exit(float eject)
@@ -334,14 +358,14 @@ void vehicles_exit(float eject)
 
     self.vehicle_hudmodel.viewmodelforclient = self;
 	self.tur_head.nodrawtoclient             = self;
+    vehicles_setreturn(self.vehicle_respawntime, self.vehicle_spawn);
 
     self.phase = time + 1;
 
     if(!teams_matter)
         self.team = 0;
 
-    if(self.vehicle_exit)
-        self.vehicle_exit(eject);
+    self.vehicle_exit(eject);
 
     self.owner = world;
 }
@@ -410,12 +434,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
     else
         self.vehicle_health -= damage;
 
-    self.velocity += force * (vlen(force) / self.mass);
-
-    if not(self.owner)
-    {
-		self.movetype &~= MOVETYPE_TOSS;
-    }
+    self.velocity += force; // * (vlen(force) / self.mass);
 
     if(self.vehicle_health <= 0)
     {
@@ -432,7 +451,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 void vehicles_return()
 {
     pointparticles(particleeffectnum("teleport"), self.enemy.origin + '0 0 64', '0 0 0', 1);
-    self.enemy.think = self.use;
+    self.enemy.think     = self.use;    // This is the vehicles respwn procedure
     self.enemy.nextthink = time;
     remove(self);
 }
@@ -539,6 +558,7 @@ float vehicle_initialize(string  net_name,
                          vector max_s,
                          float  nodrop,
                          void()  spawnproc,
+                         float   _respawntime,
                          float() physproc,
                          void()  enterproc,
                          void(float extflag) exitfunc,
@@ -585,14 +605,16 @@ float vehicle_initialize(string  net_name,
     self.hud                = vhud;
 
     self.customizeentityforclient = vehicles_customizeentityforclient;
-    self.vehicle_die        = dieproc;
-    self.vehicle_exit       = exitfunc;
-    self.vehicle_enter      = enterproc;
-    self.PlayerPhysplug     = physproc;
-    self.event_damage       = vehicles_damage;
-    self.touch              = vehicles_touch;
-    self.think              = spawnproc;
-    self.nextthink          = time;
+    self.vehicle_die         = dieproc;
+    self.vehicle_exit        = exitfunc;
+    self.vehicle_enter       = enterproc;
+    self.PlayerPhysplug      = physproc;
+    self.event_damage        = vehicles_damage;
+    self.touch               = vehicles_touch;
+    self.think               = vehicles_spawn;
+    self.nextthink           = time;
+    self.vehicle_respawntime = _respawntime;
+    self.vehicle_spawn       = spawnproc;
 
     if(autocvar_g_nodepthtestplayers)
         self.effects = self.effects | EF_NODEPTHTEST;
@@ -602,6 +624,7 @@ float vehicle_initialize(string  net_name,
 
     setmodel(self.vehicle_hudmodel, hudmodel);
     setmodel(self.vehicle_viewport, "null");
+
 
     if(topmodel != "")
     {
