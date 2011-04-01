@@ -69,19 +69,7 @@ void ctf_FakeTimeLimit(entity e, float t)
 void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (":", ftos(actor.playerid)) : "")));
-}
-
-void ctf_CreateBaseWaypoints(entity flag, float teamnumber)
-{
-	// for bots
-	waypoint_spawnforitem_force(flag, flag.origin);
-	flag.nearestwaypointtimeout = 0; // activate waypointing again
-	flag.bot_basewaypoint = flag.nearestwaypoint;
-
-	// waypointsprites
-	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), flag.origin + '0 0 64', flag, wps_flagbase);
-	WaypointSprite_UpdateTeamRadar(flag.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
+		GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
 
