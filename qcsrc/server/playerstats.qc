@@ -148,7 +148,8 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 
 	The following keys are defined:
 
-	V: format version (always 1)
+	V: format version (always 1) - this MUST be the first line!
+	#: comment (MUST be ignored by any parser)
 	R: release information on the server
 	T: time at which the game ended
 	G: game type
