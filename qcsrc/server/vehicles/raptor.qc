@@ -599,7 +599,6 @@ void raptor_die()
     self.takedamage   = DAMAGE_NO;
     self.deadflag     = DEAD_DYING;
     self.movetype     = MOVETYPE_BOUNCE;
-    //self.wait         = time;
 
     pointparticles(particleeffectnum("rocket_explode"), findbetterlocation (self.origin, 16), '0 0 0', 1);
 
@@ -611,17 +610,11 @@ void raptor_die()
         self.avelocity_z  = -45 + random() * -270;
 
     self.colormod = '-0.5 -0.5 -0.5';
-
 	self.touch     = raptor_blowup;
-	//self.think     = raptor_spawn;
-	//self.nextthink = time + autocvar_g_vehicle_raptor_respawntime;
 }
 
 void raptor_spawn()
 {
-    self.flags     = FL_NOTARGET;
-    self.effects   = 0;
-
     self.frame          = 0;
     self.vehicle_health = autocvar_g_vehicle_raptor_health;
     self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
