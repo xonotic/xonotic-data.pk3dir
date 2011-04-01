@@ -415,10 +415,9 @@ void CSQC_UpdateView(float w, float h)
 	freeze_input_angles = input_angles;
 
 	// event chase camera
-	if(spectatee_status >= 0 && (autocvar_cl_eventchase_death || autocvar_cl_eventchase_intermission))
-	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually
+	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if((autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_eventchase_intermission && intermission))
+		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_eventchase_intermission && intermission))
 		{
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
 			// Ideally, there should be another way to enable third person cameras, such as through R_SetView()
