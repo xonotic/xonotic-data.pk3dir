@@ -192,7 +192,9 @@ void PlayerStats_Shutdown()
 		db_dump(playerstats_db, "foo.db");
 
 		bufstr_set(b, i++, "V 1");
+#ifdef WATERMARK
 		bufstr_set(b, i++, sprintf("R %s", WATERMARK()));
+#endif
 		bufstr_set(b, i++, sprintf("T %s.%06d", strftime(FALSE, "%s"), floor(random() * 1000000)));
 		bufstr_set(b, i++, sprintf("G %s", GetGametype()));
 		bufstr_set(b, i++, sprintf("M %s", GetMapname()));
