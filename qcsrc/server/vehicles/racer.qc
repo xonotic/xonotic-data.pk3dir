@@ -464,16 +464,14 @@ float racer_frame()
         if(self.misc_bulletcounter == 1)
             racer_fire_rocket("tag_rocket_r", (self.lock_strength == 1 && self.lock_target) ? self.lock_target : world);
         else if(self.misc_bulletcounter == 2)
-            racer_fire_rocket("tag_rocket_l", (self.lock_strength == 1 && self.lock_target) ? self.lock_target : world);
-        else
         {
+            racer_fire_rocket("tag_rocket_l", (self.lock_strength == 1 && self.lock_target) ? self.lock_target : world);
             self.lock_strength  = 0;
             self.lock_target    = world;
             self.misc_bulletcounter = 0;
 
             racer.delay = time + autocvar_g_vehicle_racer_rocket_refire;
             racer.lip = time;
-
         }
     }
 

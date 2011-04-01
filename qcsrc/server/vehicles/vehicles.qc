@@ -181,6 +181,7 @@ void vehicles_spawn()
 {
     dprint("Spawning vehicle: ", self.netname, "\n");
 
+    // De-own & reset
     self.vehicle_hudmodel.viewmodelforclient = self;
     self.owner              = world;
     self.touch              = vehicles_touch;
@@ -192,9 +193,17 @@ void vehicles_spawn()
 	self.deadflag           = DEAD_NO;
     self.bot_attack         = TRUE;
     self.flags              = FL_NOTARGET;
-    self.angles             = self.pos2;
+    self.avelocity          = '0 0 0';
 
+    // Reset locking
+    self.lock_strength      = 0;
+    self.lock_target        = world;
+    self.misc_bulletcounter = 0;
+
+    // Return to spawn
+    self.angles             = self.pos2;
     setorigin(self, self.pos1 + '0 0 128');
+    // Show it
     pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 
     vehicles_reset_colors();
@@ -362,6 +371,9 @@ void vehicles_exit(float eject)
         self.owner.hud            = HUD_NORMAL;
         self.owner.switchweapon   = self.switchweapon;
     }
+
+    if(self.deadflag == DEAD_NO)
+        self.avelocity          = '0 0 0';
 
     self.vehicle_hudmodel.viewmodelforclient = self;
 	self.tur_head.nodrawtoclient             = self;
