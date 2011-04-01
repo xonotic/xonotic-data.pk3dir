@@ -1614,7 +1614,7 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 
 void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 {
-	if(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !ammo_reload)
 		return;
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
@@ -1640,7 +1640,7 @@ void W_ReloadedAndReady()
 	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
 
 	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
-	if(!self.reload_ammo_min)
+	if(!self.reload_ammo_min || self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.clip_load = self.reload_ammo_amount;
 	else
 	{
@@ -1692,6 +1692,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 
 	// no ammo, so nothing to load
 	if(!self.(self.current_ammo) && self.reload_ammo_min)
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		if(clienttype(self) == CLIENTTYPE_REAL && self.reload_complain < time)
 		{

@@ -62,8 +62,7 @@ void W_Hook_Attack2()
 {
 	local entity gren;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hook_secondary_ammo, FALSE);
+	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hook_secondary_ammo, FALSE);
 	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CHAN_WEAPON, autocvar_g_balance_hook_secondary_damage);
 
 	gren = spawn ();
@@ -126,8 +125,7 @@ float w_hook(float req)
 			if (time > self.hook_refire)
 			if (weapon_prepareattack(0, -1))
 			{
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-					W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_hook_primary_fuel, FALSE);
+				W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_hook_primary_fuel, FALSE);
 				self.hook_state |= HOOK_FIRING;
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hook_primary_animtime, w_ready);				
 			}

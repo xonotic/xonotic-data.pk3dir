@@ -319,7 +319,7 @@ void W_WeaponFrame()
 	if(((arena_roundbased || g_ca || g_freezetag) && time < warmup) || ((time < game_starttime) && !autocvar_sv_ready_restart_after_countdown))
 		return;
 
-	if(g_freezetag && self.freezetag_frozen == 1)
+	if(self.freezetag_frozen == 1)
 		return;
 
 	if (!self.weaponentity || self.health < 1)
