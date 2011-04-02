@@ -76,7 +76,7 @@ void Violence_WeaponDamage_DoRepeat()
 	}
 
 	Violence_WeaponDamage(self.owner, self.cnt);
-	self.nextthink = time + 0.5; // TO BE CVARED
+	self.nextthink = time + autocvar_sv_damageeffect_tick;
 }
 
 void Violence_WeaponDamage_SetRepeat(entity pl, float type)
@@ -91,7 +91,7 @@ void Violence_WeaponDamage_SetRepeat(entity pl, float type)
 	repeater.owner = pl;
 	repeater.origin = pl.origin;
 	repeater.cnt = type;
-	repeater.lifetime = time + 3; // TO BE CVARED
+	repeater.lifetime = time + autocvar_sv_damageeffect_lifetime;
 	repeater.think = Violence_WeaponDamage_DoRepeat;
 	repeater.nextthink = time;
 
