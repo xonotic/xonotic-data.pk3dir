@@ -297,6 +297,10 @@ void Ent_DamageEffect()
 	specstr = species_prefix(specnum2);
 
 	effectnum = strcat("weapondamage_", e.netname);
+	// If the weapon is a bullet weapon, its damage effect is blood.
+	// Since blood is species dependent, we make this effect per-species.
+	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_SNIPERRIFLE)
+		effectnum = strcat(effectnum, specstr);
 
 	dprint(strcat("Origin is: ", vtos(org), " and weapon is: ", e.netname, " and species is: ", specstr, "\n"));
 	pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
