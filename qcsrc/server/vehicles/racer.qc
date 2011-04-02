@@ -327,9 +327,11 @@ float racer_frame()
     }
 
     racer_align4point();
-    // Move abt crosshir insted of v_angle. this allows custom chase camera.
+
     crosshair_trace(player);
+
 #if VEHICLES_VIEWROTATE_CROSSHAIR
+    // Move abt crosshir insted of v_angle. this allows custom chase camera.
     racer.angles_x *= -1;
     df = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
     if(df_x > 180)  df_x -= 360;
@@ -338,7 +340,7 @@ float racer_frame()
     if(df_y < -180) df_y += 360;
 
     // Yaw
-    ftmp = autocvar_g_vehicle_racer_turnspeed * sys_frametime;
+    ftmp = autocvar_g_vehicle_racer_turnspeed * frametime;
     ftmp2 = ftmp * -1;
 
     ftmp = bound(ftmp2, shortangle_f(df_y - racer.angles_y, racer.angles_y), ftmp);
@@ -353,7 +355,7 @@ float racer_frame()
     racer.angles_y = ftmp2;
 
     // Pitch
-    ftmp = autocvar_g_vehicle_racer_pitchspeed * sys_frametime;
+    ftmp = autocvar_g_vehicle_racer_pitchspeed * frametime;
     ftmp2 = ftmp * -1;
 
     ftmp = bound(ftmp2, shortangle_f(player.v_angle_x - racer.angles_x, racer.angles_x), ftmp);
@@ -365,15 +367,15 @@ float racer_frame()
     racer.angles_x *= -1;
 
     // Yaw
-    ftmp = autocvar_g_vehicle_racer_turnspeed * sys_frametime;
+    ftmp = autocvar_g_vehicle_racer_turnspeed * frametime;
     ftmp = bound(-ftmp, shortangle_f(player.v_angle_y - racer.angles_y, racer.angles_y), ftmp);
     racer.angles_y = anglemods(racer.angles_y + ftmp);
 
     // Roll
-    racer.angles_z += -ftmp * autocvar_g_vehicle_racer_turnroll * sys_frametime;
+    racer.angles_z += -ftmp * autocvar_g_vehicle_racer_turnroll * frametime;
 
     // Pitch
-    ftmp = autocvar_g_vehicle_racer_pitchspeed  * sys_frametime;
+    ftmp = autocvar_g_vehicle_racer_pitchspeed  * frametime;
     ftmp = bound(-ftmp, shortangle_f(player.v_angle_x - racer.angles_x, racer.angles_x), ftmp);
     racer.angles_x = bound(-30, anglemods(racer.angles_x + ftmp), 30);
 
@@ -400,8 +402,8 @@ float racer_frame()
     }
 
     // limit _z to avoid flying on normal thrust
-    if(df_z > 0)
-        df_z = min(df_z, 700);
+    //if(df_z > 0)
+    //    df_z = min(df_z, 700);
 
     // Afterburn
     if (player.BUTTON_JUMP)
