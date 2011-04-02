@@ -497,7 +497,7 @@ entity damage_attacker;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	dprint(strcat(ftos(DEATH_WEAPONOF(deathtype)), "--\n"));
+	Violence_WeaponDamage_SetRepeat(targ, DEATH_WEAPONOF(deathtype));
 
 	float mirrordamage;
 	float mirrorforce;
