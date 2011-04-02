@@ -306,6 +306,5 @@ void Ent_DamageEffect()
 		effectnum = substring(effectnum, 0, strlen(effectnum) - 1); // remove the _ symbol at the end of the species name
 	}
 
-	dprint(strcat(effectnum, "\n"));
 	pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
 }
