@@ -967,7 +967,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
-		case ENT_CLIENT_WEAPONDAMAGE: Ent_WeaponDamage(); break;
+		case ENT_CLIENT_DAMAGEEFFECT: Ent_DamageEffect(); break;
 		default:
 			error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			break;

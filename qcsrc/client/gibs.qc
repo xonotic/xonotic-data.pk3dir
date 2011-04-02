@@ -275,7 +275,7 @@ void GibSplash_Precache()
     precache_sound ("misc/gib_splat04.wav");
 }
 
-void Ent_WeaponDamage()
+void Ent_DamageEffect()
 {
 	float type, specnum1, specnum2;
 	vector org;

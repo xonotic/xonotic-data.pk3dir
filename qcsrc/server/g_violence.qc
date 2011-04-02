@@ -38,9 +38,9 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 	Violence_GibSplash_At(source.origin + source.view_ofs, source.velocity, type, amount, source, attacker);
 }
 
-float Violence_WeaponDamage_SendEntity(entity to, float sf)
+float Violence_DamageEffect_SendEntity(entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WEAPONDAMAGE);
+	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEEFFECT);
 	WriteByte(MSG_ENTITY, self.cnt); // the damage weapon
 	WriteByte(MSG_ENTITY, self.state); // species
 	WriteCoord(MSG_ENTITY, floor(self.origin_x));
@@ -49,7 +49,7 @@ float Violence_WeaponDamage_SendEntity(entity to, float sf)
 	return TRUE;
 }
 
-void Violence_WeaponDamage(entity pl, float type)
+void Violence_DamageEffect(entity pl, float type)
 {
 	entity e;
 
@@ -59,30 +59,30 @@ void Violence_WeaponDamage(entity pl, float type)
 	e.state |= 8 * pl.species; // gib type, ranges from 0 to 15
 	setorigin(e, pl.origin);
 
-	Net_LinkEntity(e, FALSE, 0.2, Violence_WeaponDamage_SendEntity);
+	Net_LinkEntity(e, FALSE, 0.2, Violence_DamageEffect_SendEntity);
 }
 
 .float lifetime;
-.float player_weapondamage_active;
+.float player_damageeffect_active;
 
-void Violence_WeaponDamage_DoRepeat()
+void Violence_DamageEffect_DoRepeat()
 {
 	if(time > self.lifetime)
 	{
-		self.owner.player_weapondamage_active = FALSE;
+		self.owner.player_damageeffect_active = FALSE;
 		self.nextthink = 0;
 		remove(self);
 		return;
 	}
 
-	Violence_WeaponDamage(self.owner, self.cnt);
+	Violence_DamageEffect(self.owner, self.cnt);
 	self.nextthink = time + autocvar_sv_damageeffect_tick;
 }
 
-void Violence_WeaponDamage_SetRepeat(entity pl, float type)
+void Violence_DamageEffect_SetRepeat(entity pl, float type)
 {
 	// return if we already have a damage effect active, else too many damage effects get spammed
-	if(pl.player_weapondamage_active)
+	if(pl.player_damageeffect_active)
 		return;
 
 	entity repeater;
@@ -92,8 +92,8 @@ void Violence_WeaponDamage_SetRepeat(entity pl, float type)
 	repeater.origin = pl.origin;
 	repeater.cnt = type;
 	repeater.lifetime = time + autocvar_sv_damageeffect_lifetime;
-	repeater.think = Violence_WeaponDamage_DoRepeat;
+	repeater.think = Violence_DamageEffect_DoRepeat;
 	repeater.nextthink = time;
 
-	pl.player_weapondamage_active = TRUE;
+	pl.player_damageeffect_active = TRUE;
 }
