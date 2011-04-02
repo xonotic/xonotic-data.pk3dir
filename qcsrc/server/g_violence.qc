@@ -62,16 +62,15 @@ void Violence_DamageEffect(entity pl, float type)
 	Net_LinkEntity(e, FALSE, 0.2, Violence_DamageEffect_SendEntity);
 }
 
-.entity player_damageeffect_repeater;
-.float player_damageeffect_active;
+.entity damageeffect_repeater;
 .float lifetime;
 
 void Violence_DamageEffect_DoRepeat()
 {
 	if(time > self.lifetime)
 	{
-		self.owner.player_damageeffect_active = FALSE;
 		self.nextthink = 0;
+		self = world;
 		remove(self);
 		return;
 	}
@@ -82,21 +81,20 @@ void Violence_DamageEffect_DoRepeat()
 
 void Violence_DamageEffect_SetRepeat(entity pl, float damage, float type)
 {
-	if(sv_gentle)
+	// return if gentle mode is enabled or the damage was not caused by a weapon
+	if(sv_gentle || !type)
 		return;
-	if(!type)
-		return; // return if the damage was not caused by a weapon
-	if(pl.player_damageeffect_active)
-		return; // return if we already have a damage effect active, else too many damage effects get spammed
 
-	pl.player_damageeffect_repeater = spawn();
-	pl.player_damageeffect_repeater.classname = "weapondamage_repeater";
-	pl.player_damageeffect_repeater.owner = pl;
-	pl.player_damageeffect_repeater.origin = pl.origin;
-	pl.player_damageeffect_repeater.cnt = type;
-	pl.player_damageeffect_repeater.lifetime = time + (autocvar_sv_damageeffect_lifetime * damage);
-	pl.player_damageeffect_repeater.think = Violence_DamageEffect_DoRepeat;
-	pl.player_damageeffect_repeater.nextthink = time;
+	// if a repeater doesn't exist, spawn one, else update the existing one
+	if(pl.damageeffect_repeater == world)
+	{
+		pl.damageeffect_repeater = spawn();
+		pl.damageeffect_repeater.classname = "damageeffect_repeater";
+		pl.damageeffect_repeater.owner = pl;
+		pl.damageeffect_repeater.think = Violence_DamageEffect_DoRepeat;
+	}
 
-	pl.player_damageeffect_active = TRUE;
+	pl.damageeffect_repeater.cnt = type;
+	pl.damageeffect_repeater.lifetime = time + (autocvar_sv_damageeffect_lifetime * damage);
+	pl.damageeffect_repeater.nextthink = time;
 }
