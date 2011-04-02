@@ -5268,10 +5268,10 @@ effect weapondamage_laser
 count 5
 type smoke
 tex 0 8
-color 0x110000 0x331100
-size 32 64
-sizeincrease 20
-alpha 32 64 32
+color 0x880000 0xff4400
+size 16 32
+sizeincrease 15
+alpha 128 64 128
 gravity 0
 originjitter 0 0 0
 velocityjitter 0.4 0.4 0.6
