@@ -97,6 +97,9 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
         self.lock_time      = 0;
     }
 
+    if(self.lock_time > time)
+        return;
+
     if(trace_ent != world)
     {
         if(teams_matter && trace_ent.team == self.team)
@@ -108,9 +111,6 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
         if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
             trace_ent = world;
     }
-
-    if(self.lock_time > time)
-        return;
 
     if(self.lock_target == world && trace_ent != world)
         self.lock_target = trace_ent;
@@ -125,7 +125,10 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
     }
     else
     {
-        self.lock_strength = max(self.lock_strength - decr, 0);
+        if(trace_ent)
+            self.lock_strength = max(self.lock_strength - decr * 2, 0);
+        else
+            self.lock_strength = max(self.lock_strength - decr, 0);
 
         if(self.lock_strength == 0)
             self.lock_target = world;

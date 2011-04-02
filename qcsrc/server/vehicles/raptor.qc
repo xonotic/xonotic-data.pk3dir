@@ -58,6 +58,7 @@ float autocvar_g_vehicle_raptor_shield_regen_pause;
 
 void raptor_spawn();
 float raptor_frame();
+float raptor_takeoff();
 
 .entity bomb1;
 .entity bomb2;
@@ -164,7 +165,7 @@ void raptor_bombdrop()
     bomb_1.owner     = bomb_2.owner      = self;
     bomb_1.realowner = bomb_2.realowner  = self.owner;
     bomb_1.solid     = bomb_2.solid      = SOLID_BBOX;
-    bomb_1.gravity     = bomb_2.gravity      = 1;
+    bomb_1.gravity   = bomb_2.gravity    = 1;
 
     PROJECTILE_MAKETRIGGER(bomb_1);
     PROJECTILE_MAKETRIGGER(bomb_2);
@@ -216,11 +217,13 @@ void raptor_think()
 
 void raptor_enter()
 {
-    self.movetype       = MOVETYPE_BOUNCEMISSILE;
+    self.owner.PlayerPhysplug = raptor_takeoff;
+    self.movetype       = MOVETYPE_FLY;
     self.solid          = SOLID_BBOX;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_raptor_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_raptor_shield);
     self.velocity_z = 1;
+
 #ifdef RAPTOR_RETARDCAMERA
     setorigin(self.vehicle_viewport, self.origin);
 #endif
@@ -275,6 +278,34 @@ void raptor_exit(float eject)
     self.owner = world;
 }
 
+float raptor_takeoff()
+{
+    entity player, raptor;
+    float ftmp, ftmp2;
+    vector df;
+
+    player = self;
+    raptor = self.vehicle;
+    self   = raptor;
+
+    // Takeoff sequense
+    if(raptor.frame < 25)
+    {
+        raptor.frame += 0.25;
+        raptor.velocity_z = min(raptor.velocity_z * 1.5, 256);
+        self.bomb1.gun1.avelocity_y = 90 + ((raptor.frame / 25) * 25000);
+        self.bomb1.gun2.avelocity_y = -self.bomb1.gun1.avelocity_y;
+        player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
+
+        setorigin(player, raptor.origin + '0 0 32');
+    }
+    else
+        player.PlayerPhysplug = raptor_frame;
+
+    self = player;
+    return 1;
+}
+
 float raptor_frame()
 {
     entity player, raptor;
@@ -282,8 +313,8 @@ float raptor_frame()
     vector df;
 
     player = self;
-    raptor   = self.vehicle;
-    self    = raptor;
+    raptor = self.vehicle;
+    self   = raptor;
 
     if(player.BUTTON_USE && raptor.deadflag == DEAD_NO)
     {
@@ -300,19 +331,7 @@ float raptor_frame()
         return 1;
     }
 
-    // Takeoff sequense
-    if(raptor.frame < 25)
-    {
-        raptor.frame += 0.25;
-        raptor.velocity_z = min(raptor.velocity_z * 1.5, 256);
-        self.bomb1.gun1.avelocity_y = 90 + ((raptor.frame / 25) * 2000);
-        self.bomb1.gun2.avelocity_y = -self.bomb1.gun1.avelocity_y;
-        player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
-        self = player;
-        return 1;
-    }
 
-    //collision_run();
 
     crosshair_trace(player);
 
@@ -368,7 +387,7 @@ float raptor_frame()
 #endif
 
     if(autocvar_g_vehicle_raptor_movestyle == 1)
-        makevectors(raptor.angles + ('-1 0 0' * raptor.angles_x));
+        makevectors('0 1 0' * raptor.angles_y);
     else
         makevectors(player.v_angle);
 
@@ -403,21 +422,19 @@ float raptor_frame()
         else if(player.movement_y > 0)
             df += v_right * autocvar_g_vehicle_raptor_speed_strafe;
 
-        //raptor.angles_z = bound(-30,raptor.angles_z + (player.movement_y / autocvar_g_vehicle_raptor_speed_strafe),30);
+        raptor.angles_z = bound(-30,raptor.angles_z + (player.movement_y / autocvar_g_vehicle_raptor_speed_strafe),30);
     }
     else
     {
-        /*raptor.angles_z *= 0.95;
+        raptor.angles_z *= 0.95;
         if(raptor.angles_z >= -1 && raptor.angles_z <= -1)
-            raptor.angles_z = 0;*/
+            raptor.angles_z = 0;
     }
 
     if(player.BUTTON_CROUCH)
         df -=   v_up * autocvar_g_vehicle_raptor_speed_down;
     else if (player.BUTTON_JUMP)
         df +=  v_up * autocvar_g_vehicle_raptor_speed_up;
-
-
 
     raptor.velocity  += df * frametime;
     player.velocity = player.movement  = raptor.velocity;
@@ -432,23 +449,22 @@ float raptor_frame()
                              (1 / autocvar_g_vehicle_raptor_cannon_locking_releasetime) * frametime,
                              autocvar_g_vehicle_raptor_cannon_locked_time);
 
-        if(autocvar_g_vehicle_raptor_cannon_predicttarget && self.lock_strength == 1)
+        if(self.lock_target != world)
+        if(autocvar_g_vehicle_raptor_cannon_predicttarget)
+        if(self.lock_strength == 1)
         {
-            if(self.lock_target != world)
-            {
-                float i, distance, impact_time;
+            float i, distance, impact_time;
 
-                vf = real_origin(raptor.lock_target);
-                ad = vf;
-                for(i = 0; i < 4; ++i)
-                {
-                    distance = vlen(ad - raptor.origin);
-                    impact_time = distance / autocvar_g_vehicle_raptor_cannon_speed;
-                    ad = vf + raptor.lock_target.velocity * impact_time;
-                }
-                trace_endpos = ad;
-                UpdateAuxiliaryXhair(player, trace_endpos, '1 1 1', 0);
+            vf = real_origin(raptor.lock_target);
+            ad = vf;
+            for(i = 0; i < 4; ++i)
+            {
+                distance = vlen(ad - raptor.origin);
+                impact_time = distance / autocvar_g_vehicle_raptor_cannon_speed;
+                ad = vf + raptor.lock_target.velocity * impact_time;
             }
+            trace_endpos = ad;
+            //UpdateAuxiliaryXhair(player, trace_endpos, '1 1 1', 0);
         }
 
         if(self.lock_target)
@@ -460,14 +476,6 @@ float raptor_frame()
             else if(self.lock_strength < 0.5)
                 UpdateAuxiliaryXhair(player, real_origin(raptor.lock_target), '0 0 1', 1);
         }
-
-        /*
-        if(self.lock_target != world)
-        if(self.lock_strength == 1)
-            UpdateAuxiliaryXhair(player, real_origin(self.lock_target), '0 0 1', 1);
-        else
-            UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * (1 - self.lock_strength)) + '0 1 0' * self.lock_strength, 1);
-        */
     }
 
     // Aim the gunz
@@ -476,8 +484,8 @@ float raptor_frame()
 
     // Gun1
     df = gettaginfo(raptor.gun1, gettagindex(raptor.gun1, "fire1"));
-    ad = df;
-    vf = v_forward;
+    //ad = df;
+    //vf = v_forward;
     df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle
     df = shortangle_vxy(df - (raptor.angles + raptor.gun1.angles), raptor.angles + raptor.gun1.angles);     // Find aim offset
     // Bind to aimspeed
@@ -491,8 +499,8 @@ float raptor_frame()
 
     //Gun 2
     df = gettaginfo(raptor.gun2, gettagindex(raptor.gun2, "fire1"));
-    ad += df;
-    vf += v_forward;
+    //ad += df;
+    //vf += v_forward;
     df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle
     df = shortangle_vxy(df - (raptor.angles + raptor.gun2.angles), raptor.angles + raptor.gun2.angles);     // Find aim offset
     // Bind to aimspeed
@@ -501,7 +509,6 @@ float raptor_frame()
     // Bind to limts
     raptor.gun2.angles_x = bound(-autocvar_g_vehicle_raptor_cannon_pitchlimit_down, df_x + raptor.gun2.angles_x, autocvar_g_vehicle_raptor_cannon_pitchlimit_up);
     raptor.gun2.angles_y = bound(-autocvar_g_vehicle_raptor_cannon_turnlimit,  df_y + raptor.gun2.angles_y, autocvar_g_vehicle_raptor_cannon_turnlimit);
-
 
     /*
     ad = ad * 0.5;
@@ -516,7 +523,6 @@ float raptor_frame()
     {
         raptor.misc_bulletcounter += 1;
         raptor.attack_finished_single = time + autocvar_g_vehicle_raptor_cannon_refire;
-        //if(mod(raptor.misc_bulletcounter, 2))
         if(raptor.misc_bulletcounter <= 2)
             raptor_fire_cannon(self.gun1, "fire1");
         else if(raptor.misc_bulletcounter == 3)
@@ -527,10 +533,7 @@ float raptor_frame()
             raptor_fire_cannon(self.gun2, "fire1");
             raptor.misc_bulletcounter = 0;
         }
-
-
         raptor.vehicle_energy -= autocvar_g_vehicle_raptor_cannon_cost;
-
         self.cnt = time;
     }
 
@@ -543,28 +546,24 @@ float raptor_frame()
     if(self.vehicle_flags  & VHF_ENERGYREGEN)
         vehicles_regen(cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime);
 
-    player.vehicle_energy = raptor.vehicle_energy / autocvar_g_vehicle_raptor_energy;
-
 
     if(time > raptor.delay)
+    if(player.BUTTON_ATCK2)
     {
-        if(player.BUTTON_ATCK2)
-        {
-            raptor_bombdrop();
-            raptor.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
-        }
-        player.vehicle_reload1 = 1;
+        raptor_bombdrop();
+        raptor.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
+        raptor.lip   = time;
     }
-    else
-    {
-        player.vehicle_reload1 = min(time / raptor.delay, 1);
-        //raptor.bomb1.alpha = raptor.bomb2.alpha = player.vehicle_reload1;
-    }
+
+    player.vehicle_reload1 = (time - raptor.lip) / (raptor.delay - raptor.lip);
+    raptor.bomb1.alpha = raptor.bomb2.alpha = player.vehicle_reload1;
 
     VEHICLE_UPDATE_PLAYER(health, raptor);
-
+    VEHICLE_UPDATE_PLAYER(energy, raptor);
     if(self.vehicle_flags & VHF_HASSHIELD)
         VEHICLE_UPDATE_PLAYER(shield, raptor);
+
+
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
     return 1;

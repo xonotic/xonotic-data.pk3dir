@@ -297,13 +297,11 @@ void racer_fire_rocket(string tagname, entity trg)
     CSQCProjectile(rocket, TRUE, PROJECTILE_WAKIROCKET, TRUE);
 }
 
-.float fire1_waspressed;
-.float fire2_waspressed;
 float racer_frame()
 {
     entity player, racer;
     vector df;
-    float ftmp, ftmp2;
+    float ftmp;
 
     player          = self;
     racer           = self.vehicle;
@@ -331,7 +329,7 @@ float racer_frame()
     crosshair_trace(player);
 
 #if VEHICLES_VIEWROTATE_CROSSHAIR
-    // Move abt crosshir insted of v_angle. this allows custom chase camera.
+    float ftmp2;
     racer.angles_x *= -1;
     df = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
     if(df_x > 180)  df_x -= 360;
@@ -400,10 +398,6 @@ float racer_frame()
         else if(player.movement_y > 0)
             df += v_right * autocvar_g_vehicle_racer_speed_strafe;
     }
-
-    // limit _z to avoid flying on normal thrust
-    //if(df_z > 0)
-    //    df_z = min(df_z, 700);
 
     // Afterburn
     if (player.BUTTON_JUMP)
@@ -478,9 +472,6 @@ float racer_frame()
             racer.lip = time;
         }
     }
-
-    player.fire2_waspressed = player.BUTTON_ATCK2;
-
     player.vehicle_reload1 = (time - racer.lip) / (racer.delay - racer.lip);
 
     if(self.vehicle_flags  & VHF_SHIELDREGEN)
