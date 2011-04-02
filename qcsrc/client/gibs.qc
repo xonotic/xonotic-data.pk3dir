@@ -288,6 +288,8 @@ void Ent_DamageEffect()
 	org_y = ReadCoord();
 	org_z = ReadCoord();
 
+	if not(autocvar_cl_damageeffect)
+		return;
 	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
 
