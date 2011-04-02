@@ -79,7 +79,7 @@ void Violence_DamageEffect_DoRepeat()
 	self.nextthink = time + autocvar_sv_damageeffect_tick;
 }
 
-void Violence_DamageEffect_SetRepeat(entity pl, float type)
+void Violence_DamageEffect_SetRepeat(entity pl, float damage, float type)
 {
 	if(sv_gentle)
 		return;
@@ -94,7 +94,7 @@ void Violence_DamageEffect_SetRepeat(entity pl, float type)
 	repeater.owner = pl;
 	repeater.origin = pl.origin;
 	repeater.cnt = type;
-	repeater.lifetime = time + autocvar_sv_damageeffect_lifetime;
+	repeater.lifetime = time + (autocvar_sv_damageeffect_lifetime * damage);
 	repeater.think = Violence_DamageEffect_DoRepeat;
 	repeater.nextthink = time;
 
