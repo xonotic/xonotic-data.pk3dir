@@ -290,5 +290,5 @@ void Ent_WeaponDamage()
 	specnum2 = (specnum1 & 0x78) / 8; // blood type: using four bits (0..7, bit indexes 3,4,5)
 	specstr = species_prefix(specnum2);
 
-	dprint(strcat("Origin is: ", vtos(org), " and weapon type is: ", ftos(type)));
+	dprint(strcat("Origin is: ", vtos(org), " and weapon type is: ", ftos(type), "\n"));
 }
