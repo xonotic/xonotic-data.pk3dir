@@ -557,9 +557,10 @@ void vehicles_reset_colors()
         e = e.chain;
     }
 
-    self.effects  = _effects;
-    self.colormod = _colormod;
-    self.colormap = _colormap;
+
+    self.vehicle_hudmodel.effects  = self.effects  = _effects;
+    self.vehicle_hudmodel.colormod = self.colormod = _colormod;
+    self.vehicle_hudmodel.colormap = self.colormap = _colormap;
 
     self.alpha          = 1;
     self.avelocity      = '0 0 0';

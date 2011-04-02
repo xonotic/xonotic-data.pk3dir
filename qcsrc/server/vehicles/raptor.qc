@@ -652,7 +652,7 @@ void raptor_dinit()
     }
     setorigin(self, self.origin + '0 0 50');
     //FIXME: Camera is in a bad place in HUD model.
-    setorigin(self.vehicle_viewport, '5 0 5');
+    setorigin(self.vehicle_viewport, '25 0 5');
 
     self.frame = 0;
 
