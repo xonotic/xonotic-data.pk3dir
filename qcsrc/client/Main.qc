@@ -1336,7 +1336,7 @@ void Net_ShowNames()
     shownames_netname = strzone(ReadString());
     shownames_health = ReadByte();
     shownames_armor = ReadByte();
-    shownames_time = time + 0.25;
+    shownames_time = time + autocvar_hud_panel_shownames_sustain;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
