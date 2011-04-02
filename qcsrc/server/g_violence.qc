@@ -84,6 +84,8 @@ void Violence_DamageEffect_SetRepeat(entity pl, float damage, float type)
 	// return if gentle mode is enabled or the damage was not caused by a weapon
 	if(sv_gentle || !type)
 		return;
+	if not(autocvar_sv_damageeffect_tick && autocvar_sv_damageeffect_lifetime)
+		return;
 
 	// if a repeater doesn't exist, spawn one, else update the existing one
 	if(pl.damageeffect_repeater == world)
