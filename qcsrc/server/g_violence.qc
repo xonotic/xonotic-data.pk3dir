@@ -63,7 +63,6 @@ void Violence_WeaponDamage(entity pl, float type)
 }
 
 .float lifetime;
-.float weapondamage_counter;
 
 void Violence_WeaponDamage_DoRepeat()
 {
@@ -74,11 +73,8 @@ void Violence_WeaponDamage_DoRepeat()
 		return;
 	}
 
-	if(time > self.weapondamage_counter)
-	{
-		Violence_WeaponDamage(self.owner, self.cnt);
-		self.weapondamage_counter = time + 0.5; // TO BE CVARED
-	}
+	Violence_WeaponDamage(self.owner, self.cnt);
+	self.nextthink = time + 0.5; // TO BE CVARED
 }
 
 void Violence_WeaponDamage_SetRepeat(entity pl, float type)
