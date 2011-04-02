@@ -274,3 +274,19 @@ void GibSplash_Precache()
     precache_sound ("misc/gib_splat03.wav");
     precache_sound ("misc/gib_splat04.wav");
 }
+
+void Ent_WeaponDamage()
+{
+	float type, specnum1, specnum2;
+	vector org;
+	string specstr;
+
+	type = ReadByte(); // damage weapon
+	specnum1 = ReadByte(); // player species
+	org_x = ReadCoord();
+	org_y = ReadCoord();
+	org_z = ReadCoord();
+
+	specnum2 = (specnum1 & 0x78) / 8; // blood type: using four bits (0..7, bit indexes 3,4,5)
+	specstr = species_prefix(specnum2);
+}
