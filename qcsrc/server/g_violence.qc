@@ -70,8 +70,8 @@ void Violence_DamageEffect_DoRepeat()
 	if(time > self.lifetime)
 	{
 		self.nextthink = 0;
-		self = world;
-		remove(self);
+		remove(self.owner.damageeffect_repeater);
+		self.owner.damageeffect_repeater = world;
 		return;
 	}
 
@@ -92,9 +92,16 @@ void Violence_DamageEffect_SetRepeat(entity pl, float damage, float type)
 		pl.damageeffect_repeater.classname = "damageeffect_repeater";
 		pl.damageeffect_repeater.owner = pl;
 		pl.damageeffect_repeater.think = Violence_DamageEffect_DoRepeat;
+
+		pl.damageeffect_repeater.lifetime = time + (autocvar_sv_damageeffect_lifetime * damage);
+	}
+	else
+	{
+		// if the repeater is being updated, increase its lifetime instead of re-setting it entirely
+		// this fixes the shotgun among other things, where only the damage of one bullet would be taken into account
+		pl.damageeffect_repeater.lifetime += (autocvar_sv_damageeffect_lifetime * damage);
 	}
 
 	pl.damageeffect_repeater.cnt = type;
-	pl.damageeffect_repeater.lifetime = time + (autocvar_sv_damageeffect_lifetime * damage);
 	pl.damageeffect_repeater.nextthink = time;
 }
