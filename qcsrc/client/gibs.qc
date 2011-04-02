@@ -301,8 +301,11 @@ void Ent_DamageEffect()
 	// Since blood is species dependent, we make this effect per-species.
 	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_SNIPERRIFLE)
 	if(specstr != "")
+	{
 		effectnum = strcat(effectnum, "_", specstr);
+		effectnum = substring(effectnum, 0, strlen(effectnum) - 1); // remove the _ symbol at the end of the species name
+	}
 
-	dprint(strcat("Origin is: ", vtos(org), " and weapon is: ", e.netname, " and species is: ", specstr, "\n"));
+	dprint(strcat(effectnum, "\n"));
 	pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
 }
