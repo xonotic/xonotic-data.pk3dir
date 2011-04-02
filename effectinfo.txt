@@ -5257,3 +5257,28 @@ airfriction 5
 originjitter 1 1 1
 velocityjitter 100 100 100
 velocitymultiplier -0.31
+
+// --------------------------------
+// Weapon Damage Effects
+// --------------------------------
+
+// laser damage effect
+// used in qcsrc/client/gibs.qc:			pointparticles()
+effect weapondamage_laser
+count 5
+type smoke
+tex 0 8
+color 0x110000 0x331100
+size 32 64
+sizeincrease 20
+alpha 32 64 32
+gravity 0
+originjitter 0 0 0
+velocityjitter 0.4 0.4 0.6
+velocitymultiplier 0
+airfriction -0.35
+rotate 0 180 -30 30
+
+// --------------------------------
+// End of Weapon Damage Effects
+// --------------------------------
