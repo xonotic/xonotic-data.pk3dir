@@ -62,8 +62,9 @@ void Violence_DamageEffect(entity pl, float type)
 	Net_LinkEntity(e, FALSE, 0.2, Violence_DamageEffect_SendEntity);
 }
 
-.float lifetime;
+.entity player_damageeffect_repeater;
 .float player_damageeffect_active;
+.float lifetime;
 
 void Violence_DamageEffect_DoRepeat()
 {
@@ -88,15 +89,14 @@ void Violence_DamageEffect_SetRepeat(entity pl, float damage, float type)
 	if(pl.player_damageeffect_active)
 		return; // return if we already have a damage effect active, else too many damage effects get spammed
 
-	entity repeater;
-	repeater = spawn();
-	repeater.classname = "weapondamage_repeater";
-	repeater.owner = pl;
-	repeater.origin = pl.origin;
-	repeater.cnt = type;
-	repeater.lifetime = time + (autocvar_sv_damageeffect_lifetime * damage);
-	repeater.think = Violence_DamageEffect_DoRepeat;
-	repeater.nextthink = time;
+	pl.player_damageeffect_repeater = spawn();
+	pl.player_damageeffect_repeater.classname = "weapondamage_repeater";
+	pl.player_damageeffect_repeater.owner = pl;
+	pl.player_damageeffect_repeater.origin = pl.origin;
+	pl.player_damageeffect_repeater.cnt = type;
+	pl.player_damageeffect_repeater.lifetime = time + (autocvar_sv_damageeffect_lifetime * damage);
+	pl.player_damageeffect_repeater.think = Violence_DamageEffect_DoRepeat;
+	pl.player_damageeffect_repeater.nextthink = time;
 
 	pl.player_damageeffect_active = TRUE;
 }
