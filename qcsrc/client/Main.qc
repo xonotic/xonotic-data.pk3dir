@@ -1329,6 +1329,16 @@ void Net_WeaponComplain() {
 	weapontime = time; // ping the weapon panel
 }
 
+void Net_ShowNames()
+{
+    if(shownames_netname)
+        strunzone(shownames_netname);
+    shownames_netname = strzone(ReadString());
+    shownames_health = ReadByte();
+    shownames_armor = ReadByte();
+    shownames_time = time + 0.25;
+}
+
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1399,6 +1409,10 @@ float CSQC_Parse_TempEntity()
 			Net_WeaponComplain();
 			bHandled = true;
 			break;
+		case TE_CSQC_SHOWNAMES:
+            Net_ShowNames();
+            bHandled = true;
+            break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;

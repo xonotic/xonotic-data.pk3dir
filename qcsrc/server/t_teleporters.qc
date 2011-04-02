@@ -77,7 +77,6 @@ void spawn_tdeath(vector v0, entity e, vector v)
 #define TELEPORT_FLAGS_TELEPORTER (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH)
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
-	entity oldself;
 	entity telefragger;
 	vector from;
 
@@ -136,14 +135,6 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		}
 
 		player.lastteleporttime = time;
-
-		// stop player name display
-		{
-			oldself = self;
-			self = player;
-			ClearSelectedPlayer();
-			self = oldself;
-		}
 	}
 }
 

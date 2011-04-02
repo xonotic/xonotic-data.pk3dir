@@ -5003,6 +5003,88 @@ void HUD_InfoMessages(void)
 	}
 }
 
+// ShowNames (#15)
+//
+float shownames_alpha;
+void HUD_ShowNames(void)
+{
+    if(shownames_time < time && shownames_alpha == 0 && !autocvar__hud_configure)
+        return;
+
+    if(autocvar__hud_configure)
+    {
+        shownames_alpha = 1;
+    }
+    else
+    {
+        if(shownames_time < time)
+            shownames_alpha = bound(0, shownames_alpha - 2 * frametime, 1);
+        else
+            shownames_alpha = bound(0, shownames_alpha + 4 * frametime, 1);
+    }
+    
+
+	if(!autocvar_hud_panel_shownames && !autocvar__hud_configure)
+		return;
+
+	active_panel = HUD_PANEL_SHOWNAMES;
+	HUD_Panel_UpdateCvars(shownames);
+    panel_fg_alpha *= shownames_alpha;
+	vector myPos, mySize;
+	myPos = panel_pos;
+	mySize = panel_size;
+
+	HUD_Panel_DrawBg(shownames_alpha);
+	if(panel_bg_padding)
+	{
+		myPos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+
+    vector iconpos, iconsize;
+    vector namepos, namesize;
+    if(mySize_x/mySize_y > 6)
+    {
+        iconpos = myPos;
+        iconsize = eX * 2 * mySize_y + eY * mySize_y;
+
+        namepos = myPos + eX * 2 * mySize_y;
+        namesize = eX * mySize_x - eX * 2 * mySize_y + eY * mySize_y;
+    }
+    else
+    {
+        iconpos = myPos + eX * 0.5 * mySize_x - eX * 0.5 * mySize_y;
+        iconsize = eX * mySize_y + eY * 0.5 * mySize_y;
+
+        namepos = myPos + eY * 0.5 * mySize_y;
+        namesize = eX * mySize_x + eY * 0.5 * mySize_y;
+    }
+
+    if(shownames_health > 0) // otherwise player is an enemy
+    {
+        // "ghost" backgrounds
+        drawpic_aspect_skin(iconpos, "health", '1 1 0' * iconsize_y, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+        drawpic_aspect_skin(iconpos + '0.5 0 0' * iconsize_x, "armor", '1 1 0' * iconsize_y, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+
+        drawsetcliparea(0, myPos_y + iconsize_y - iconsize_y * min(1, shownames_health/200), vid_conwidth, myPos_y + iconsize_y);
+        drawpic_aspect_skin(iconpos, "health", '1 1 0' * iconsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+        drawsetcliparea(0, myPos_y + iconsize_y - iconsize_y * min(1, shownames_armor/200), vid_conwidth, myPos_y + iconsize_y);
+        drawpic_aspect_skin(iconpos + '0.5 0 0' * iconsize_x, "armor", '1 1 0' * iconsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+        drawresetcliparea();
+    }
+    else
+    {
+        drawpic_aspect_skin(iconpos, "health_unknown", '1 1 0' * iconsize_y, '0 0 0', panel_fg_alpha, DRAWFLAG_NORMAL);
+        drawpic_aspect_skin(iconpos + '0.5 0 0' * iconsize_x, "armor_unknown", '1 1 0' * iconsize_y, '0 0 0', panel_fg_alpha, DRAWFLAG_NORMAL);
+    }
+
+    if(autocvar__hud_configure)
+        drawcolorcodedstring_aspect(namepos, "Player1234", namesize, panel_fg_alpha, DRAWFLAG_NORMAL);
+    else
+        drawcolorcodedstring_aspect(namepos, shownames_netname, namesize, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
 /*
 ==================
 Main HUD system
@@ -5143,6 +5225,8 @@ switch (id) {\
 		HUD_EngineInfo(); break;\
 	case (HUD_PANEL_INFOMESSAGES):\
 		 HUD_InfoMessages(); break;\
+	case (HUD_PANEL_SHOWNAMES):\
+		 HUD_ShowNames(); break;\
 } ENDS_WITH_CURLY_BRACE
 
 void HUD_Main (void)

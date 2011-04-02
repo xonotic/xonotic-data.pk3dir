@@ -266,7 +266,16 @@ if(menu_enabled == 2 && active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuPos()\
 } ENDS_WITH_CURLY_BRACE
 
+// FTEQCC I HATE YOU WHY DO YOU MAKE ME DO THIS??? :(
+// max macro length is 1024 characters, I must split it up :(
+
 // Update all common cvars of given panel id
+#define HUD_Panel_UpdateCvarsForId2(id) \
+switch(id) { \
+	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdateCvars(infomessages) break; \
+	case HUD_PANEL_SHOWNAMES: HUD_Panel_UpdateCvars(shownames) break; \
+}
+
 #define HUD_Panel_UpdateCvarsForId(id) \
 switch(id) { \
 	case HUD_PANEL_WEAPONS: HUD_Panel_UpdateCvars(weapons) break; \
@@ -283,8 +292,8 @@ switch(id) { \
 	case HUD_PANEL_PRESSEDKEYS: HUD_Panel_UpdateCvars(pressedkeys) break; \
 	case HUD_PANEL_CHAT: HUD_Panel_UpdateCvars(chat) break; \
 	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdateCvars(engineinfo) break; \
-	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdateCvars(infomessages) break; \
-}
+} \
+HUD_Panel_UpdateCvarsForId2(id)
 
 #define HUD_Panel_UpdatePosSize(name) \
 panel_pos = stov(cvar_string("hud_panel_" #name "_pos")); \
@@ -298,6 +307,12 @@ panel_bg_border_str = cvar_string("hud_panel_" #name "_bg_border"); \
 HUD_Panel_GetBorder()
 
 // Update pos and size of given panel id
+#define HUD_Panel_UpdatePosSizeForId2(id) \
+switch(id) { \
+	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdatePosSize(infomessages)\
+	case HUD_PANEL_SHOWNAMES: HUD_Panel_UpdatePosSize(shownames)\
+}
+
 #define HUD_Panel_UpdatePosSizeForId(id) \
 switch(id) { \
 	case HUD_PANEL_WEAPONS: HUD_Panel_UpdatePosSize(weapons) break;\
@@ -314,5 +329,5 @@ switch(id) { \
 	case HUD_PANEL_PRESSEDKEYS: HUD_Panel_UpdatePosSize(pressedkeys) break;\
 	case HUD_PANEL_CHAT: HUD_Panel_UpdatePosSize(chat) break;\
 	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdatePosSize(engineinfo) break;\
-	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdatePosSize(infomessages)\
-}
+} \
+HUD_Panel_UpdatePosSizeForId2(id)
