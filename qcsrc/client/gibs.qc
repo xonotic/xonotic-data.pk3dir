@@ -279,7 +279,7 @@ void Ent_DamageEffect()
 {
 	float type, specnum1, specnum2;
 	vector org;
-	string specstr;
+	string specstr, effectnum;
 	entity e;
 
 	type = ReadByte(); // damage weapon
@@ -296,5 +296,8 @@ void Ent_DamageEffect()
 	specnum2 = (specnum1 & 0x78) / 8; // blood type: using four bits (0..7, bit indexes 3,4,5)
 	specstr = species_prefix(specnum2);
 
+	effectnum = strcat("weapondamage_", e.netname);
+
 	dprint(strcat("Origin is: ", vtos(org), " and weapon is: ", e.netname, " and species is: ", specstr, "\n"));
+	pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
 }
