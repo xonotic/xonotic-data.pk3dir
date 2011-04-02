@@ -70,29 +70,30 @@ void racer_align4point()
     vector push_vector, v_add;
     float fl_push, fr_push, bl_push, br_push;
 
+
     push_vector  = racer_force_from_tag("tag_engine_fr", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
     fr_push      = force_fromtag_normpower;
-    vehicles_sweap_collision(force_fromtag_origin, self.velocity, frametime, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+    //vehicles_sweap_collision(force_fromtag_origin, self.velocity, frametime, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
     push_vector += racer_force_from_tag("tag_engine_fl", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
     fl_push      = force_fromtag_normpower;
-    vehicles_sweap_collision(force_fromtag_origin, self.velocity, frametime, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+    //vehicles_sweap_collision(force_fromtag_origin, self.velocity, frametime, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
     push_vector += racer_force_from_tag("tag_engine_br", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
     br_push      = force_fromtag_normpower;
-    vehicles_sweap_collision(force_fromtag_origin, self.velocity, frametime, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+    //vehicles_sweap_collision(force_fromtag_origin, self.velocity, frametime, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
     push_vector += racer_force_from_tag("tag_engine_bl", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
     bl_push      = force_fromtag_normpower;
-    vehicles_sweap_collision(force_fromtag_origin, self.velocity, frametime, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+    //vehicles_sweap_collision(force_fromtag_origin, self.velocity, frametime, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
     self.velocity += (push_vector * frametime);
 
     // Anti ocilation
     if(self.velocity_z  > 0)
-        self.velocity_z  *= autocvar_g_vehicle_racer_upforcedamper;
+        self.velocity_z *= 1 - (autocvar_g_vehicle_racer_upforcedamper * frametime);
 
-    self.velocity += v_add;
+    self.velocity   += v_add;
     self.velocity_z -= autocvar_sv_gravity * frametime;
 
     push_vector_x =  (fl_push - bl_push);
@@ -106,6 +107,7 @@ void racer_align4point()
     // Apply angle diffrance
     self.angles_z += push_vector_z * frametime;
     self.angles_x += push_vector_x * frametime;
+
     // Apply stabilizer
     self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * frametime);
     self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * frametime);
@@ -507,8 +509,6 @@ void racer_think()
 {
     float a, b, c;
 
-    self.nextthink = time;
-
     a = autocvar_g_vehicle_racer_anglestabilizer;
     b = autocvar_g_vehicle_racer_springlength;
     c = autocvar_g_vehicle_racer_hoverpower;
@@ -517,10 +517,10 @@ void racer_think()
     autocvar_g_vehicle_racer_springlength = 96;
     autocvar_g_vehicle_racer_hoverpower = 300;
 
-    racer_align4point();
+    racer_align4point(); //time - self.nextthink);
 
-    if(self.velocity_z < 0)
-        self.velocity_z *= 0.95;
+    //if(self.velocity_z > 0)
+    //    self.velocity_z *= 0.95;
 
     autocvar_g_vehicle_racer_anglestabilizer = a;
     autocvar_g_vehicle_racer_springlength = b;
@@ -528,11 +528,13 @@ void racer_think()
 
     self.velocity_x *= 0.95;
     self.velocity_y *= 0.95;
+
+    self.nextthink = time + 0.05;
 }
 
 void racer_enter()
 {
-    self.movetype = MOVETYPE_BOUNCEMISSILE;
+    self.movetype = MOVETYPE_BOUNCE; //MISSILE;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield);
 }

@@ -244,7 +244,6 @@ void vehicles_touch()
                     Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_SBCRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
             }
         }
-
         return;
     }
 
