@@ -741,6 +741,7 @@ void net_shownames(entity selected, float teammate)
         teammate_armor = selected.armorvalue;
     }
 
+    msg_entity = self;
 	WRITESPECTATABLE_MSG_ONE({
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_SHOWNAMES);
@@ -780,9 +781,7 @@ void UpdateSelectedPlayer()
 
 	if(selected)
 	{
-        msg_entity = self;
-        if(teams_matter)
-            if(self.team == selected.team)
+        if(teams_matter && self.team == selected.team)
                 net_shownames(selected, 1);
         else
             net_shownames(selected, 0);
