@@ -288,6 +288,9 @@ void Ent_DamageEffect()
 	org_y = ReadCoord();
 	org_z = ReadCoord();
 
+	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
+		return;
+
 	e = get_weaponinfo(type);
 
 	specnum2 = (specnum1 & 0x78) / 8; // blood type: using four bits (0..7, bit indexes 3,4,5)

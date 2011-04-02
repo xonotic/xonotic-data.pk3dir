@@ -81,6 +81,8 @@ void Violence_DamageEffect_DoRepeat()
 
 void Violence_DamageEffect_SetRepeat(entity pl, float type)
 {
+	if(sv_gentle)
+		return;
 	// return if we already have a damage effect active, else too many damage effects get spammed
 	if(pl.player_damageeffect_active)
 		return;
