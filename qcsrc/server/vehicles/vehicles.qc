@@ -595,7 +595,6 @@ float vehicle_initialize(string  net_name,
 	addstat(STAT_VEHICLESTAT_AMMO2,   AS_INT,   vehicle_ammo2);
 	addstat(STAT_VEHICLESTAT_RELOAD2, AS_FLOAT, vehicle_reload2);
 
-
     if(bodymodel == "")
         error("vehicles: missing bodymodel!");
 

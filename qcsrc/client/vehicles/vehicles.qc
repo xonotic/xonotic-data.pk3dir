@@ -300,6 +300,7 @@ void CSQC_RAPTOR_HUD()
     {
         dropmark = spawn();
         dropmark.owner = self;
+        dropmark.gravity = 1;
     }
 
     if(reload == 1)

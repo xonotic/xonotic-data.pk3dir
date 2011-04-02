@@ -117,17 +117,16 @@ void raptor_bomb_burst()
         bomblet = spawn();
         setorigin(bomblet, self.origin);
 
-        bomblet.scale       = 0.5;
-        bomblet.solid       = SOLID_TRIGGER;
+        //bomblet.solid       = SOLID_TRIGGER;
         bomblet.movetype    = MOVETYPE_TOSS;
         bomblet.touch       = raptor_bomblet_touch;
         bomblet.think       = raptor_bomblet_boom;
         bomblet.nextthink   = time + 5;
-        bomblet.owner   = self.owner;
+        bomblet.owner       = self.owner;
         bomblet.realowner   = self.realowner;
         bomblet.velocity    = normalize(normalize(self.velocity) + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * vlen(self.velocity);
         PROJECTILE_MAKETRIGGER(bomblet);
-        CSQCProjectile(bomblet, TRUE, PROJECTILE_RAPTORBOMB, TRUE);
+        CSQCProjectile(bomblet, TRUE, PROJECTILE_RAPTORBOMBLET, TRUE);
     }
 
     remove(self);
@@ -165,6 +164,7 @@ void raptor_bombdrop()
     bomb_1.owner     = bomb_2.owner      = self;
     bomb_1.realowner = bomb_2.realowner  = self.owner;
     bomb_1.solid     = bomb_2.solid      = SOLID_BBOX;
+    bomb_1.gravity     = bomb_2.gravity      = 1;
 
     PROJECTILE_MAKETRIGGER(bomb_1);
     PROJECTILE_MAKETRIGGER(bomb_2);
@@ -207,7 +207,7 @@ void raptor_fire_cannon(entity gun, string tagname)
     pointparticles(particleeffectnum("raptor_cannon_muzzleflash"), bolt.origin, bolt.velocity, 1);
     //pointparticles(particleeffectnum("spiderbot_minigun_muzzleflash"), bolt.origin, bolt.velocity, 1);
 
-    CSQCProjectile(bolt, TRUE, PROJECTILE_CRYLINK, TRUE);
+    CSQCProjectile(bolt, TRUE, PROJECTILE_RAPTORCANNON, TRUE);
 }
 
 void raptor_think()
@@ -666,8 +666,8 @@ void raptor_dinit()
     setattachment(self.vehicle_viewport, world, "");
 #endif
 
-    setmodel(self.bomb1,"models/vehicles/raptor_bomb.dpm");
-    setmodel(self.bomb2,"models/vehicles/raptor_bomb.dpm");
+    setmodel(self.bomb1,"models/vehicles/clusterbomb.md3");
+    setmodel(self.bomb2,"models/vehicles/clusterbomb.md3");
     setmodel(self.gun1, "models/vehicles/raptor_gun.dpm");
     setmodel(self.gun2, "models/vehicles/raptor_gun.dpm");
 
@@ -734,7 +734,7 @@ void spawnfunc_vehicle_raptor()
     precache_model ("models/vehicles/raptor_gun.dpm");
     precache_model ("models/vehicles/spinner.dpm");
     precache_model ("models/vehicles/raptor_cockpit.dpm");
-    precache_model ("models/vehicles/raptor_bomb.dpm");
+    precache_model ("models/vehicles/clusterbomb.md3");
 
     self.think = raptor_dinit;
     self.nextthink = time + 1;

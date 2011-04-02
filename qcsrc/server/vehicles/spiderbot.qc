@@ -225,7 +225,7 @@ void spiderbot_rocket_do()
     rocket.solid           = SOLID_TRIGGER;
     rocket.pos1            = trace_endpos;
 
-	CSQCProjectile(rocket, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
+	CSQCProjectile(rocket, FALSE, PROJECTILE_SPIDERROCKET, FALSE); // no culling, has fly sound
 
     self.tur_head.frame += 1;
     if (self.tur_head.frame == 9)

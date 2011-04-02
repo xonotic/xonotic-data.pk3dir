@@ -165,7 +165,7 @@ void racer_fire_cannon(string tagname)
 
     pointparticles(particleeffectnum("wakizashi_gun_muzzleflash"), bolt.origin, bolt.velocity, 1);
 
-    CSQCProjectile(bolt, TRUE, PROJECTILE_LASER, TRUE);
+    CSQCProjectile(bolt, TRUE, PROJECTILE_WAKICANNON, TRUE);
 }
 
 void racer_rocket_groundhugger()
@@ -292,7 +292,7 @@ void racer_fire_rocket(string tagname, entity trg)
     rocket.nextthink        = time;
     rocket.enemy            = trg;
 
-    CSQCProjectile(rocket, TRUE, PROJECTILE_ROCKET, TRUE);
+    CSQCProjectile(rocket, TRUE, PROJECTILE_WAKIROCKET, TRUE);
 }
 
 .float fire1_waspressed;
