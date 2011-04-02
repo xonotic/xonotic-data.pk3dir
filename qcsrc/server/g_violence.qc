@@ -63,11 +63,13 @@ void Violence_WeaponDamage(entity pl, float type)
 }
 
 .float lifetime;
+.float player_weapondamage_active;
 
 void Violence_WeaponDamage_DoRepeat()
 {
 	if(time > self.lifetime)
 	{
+		self.owner.player_weapondamage_active = FALSE;
 		self.nextthink = 0;
 		remove(self);
 		return;
@@ -79,6 +81,10 @@ void Violence_WeaponDamage_DoRepeat()
 
 void Violence_WeaponDamage_SetRepeat(entity pl, float type)
 {
+	// return if we already have a damage effect active, else too many damage effects get spammed
+	if(pl.player_weapondamage_active)
+		return;
+
 	entity repeater;
 	repeater = spawn();
 	repeater.classname = "weapondamage_repeater";
@@ -88,4 +94,6 @@ void Violence_WeaponDamage_SetRepeat(entity pl, float type)
 	repeater.lifetime = time + 3; // TO BE CVARED
 	repeater.think = Violence_WeaponDamage_DoRepeat;
 	repeater.nextthink = time;
+
+	pl.player_weapondamage_active = TRUE;
 }
