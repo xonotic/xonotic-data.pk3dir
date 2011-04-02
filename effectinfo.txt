@@ -5265,15 +5265,15 @@ velocitymultiplier -0.31
 // laser damage effect
 // used in qcsrc/client/gibs.qc:			pointparticles()
 effect weapondamage_laser
-count 5
+count 3
 type smoke
 tex 0 8
 color 0x880000 0xff4400
-size 16 32
-sizeincrease 15
-alpha 128 64 128
+size 8 16
+sizeincrease 10
+alpha 128 32 128
 gravity 0
-originjitter 0 0 0
+originjitter 4 4 16
 velocityjitter 0.4 0.4 0.6
 velocitymultiplier 0
 airfriction -0.35
