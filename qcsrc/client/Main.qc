@@ -1331,12 +1331,31 @@ void Net_WeaponComplain() {
 
 void Net_ShowNames()
 {
+    string thename;
+    float thehealth, thearmor;
+
     if(shownames_netname)
         strunzone(shownames_netname);
-    shownames_netname = strzone(ReadString());
-    shownames_health = ReadByte();
-    shownames_armor = ReadByte();
-    shownames_time = time + autocvar_hud_panel_shownames_sustain;
+    thename = strzone(ReadString());
+    thehealth = ReadByte();
+    thearmor = ReadByte();
+
+    if(autocvar_hud_panel_shownames == 1 && thehealth > 0) // teammates only
+    {
+        shownames_netname = thename;
+        shownames_health = thehealth;
+        shownames_armor = thearmor;
+
+        shownames_time = time + autocvar_hud_panel_shownames_sustain;
+    }
+    else if(autocvar_hud_panel_shownames == 2)
+    {
+        shownames_netname = thename;
+        shownames_health = thehealth;
+        shownames_armor = thearmor;
+
+        shownames_time = time + autocvar_hud_panel_shownames_sustain;
+    }
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
