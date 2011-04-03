@@ -236,6 +236,8 @@ void relocate_spawnpoint()
     if (have_team_spawns != 0)
         if (self.team)
             have_team_spawns = 1;
+    if (!self.team)
+        have_noteam_spawns = 1;
 
     if (autocvar_r_showbboxes)
     {
@@ -603,7 +605,6 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_noantilag, "cl_noantilag");
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional, "cl_voice_directional");
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional_taunt_attenuation, "cl_voice_directional_taunt_attenuation");
-	GetCvars_handleFloat(s, f, cvar_cl_hitsound, "cl_hitsound");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_share, "cl_accuracy_data_share");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_receive, "cl_accuracy_data_receive");
 
@@ -922,7 +923,11 @@ void readplayerstartcvars()
 			s = "most";
 	}
 
-	if (s == "off")
+	if (s == "0" || s == "")
+	{
+		// no arena
+	}
+	else if (s == "off")
 	{
 		// forcibly turn off weaponarena
 	}
@@ -1023,23 +1028,11 @@ void readplayerstartcvars()
 	}
 	else if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = get_weaponinfo(j);
-			if(start_weapons & e.weapons)
-			{
-				if(e.items & IT_ROCKETS)
-					start_ammo_rockets = 999;
-				if(e.items & IT_SHELLS)
-					start_ammo_shells = 999;
-				if(e.items & IT_CELLS)
-					start_ammo_cells = 999;
-				if(e.items & IT_NAILS)
-					start_ammo_nails = 999;
-				if(e.items & IT_FUEL)
-					start_ammo_fuel = 999;
-			}
-		}
+		start_ammo_rockets = 999;
+		start_ammo_shells = 999;
+		start_ammo_cells = 999;
+		start_ammo_nails = 999;
+		start_ammo_fuel = 999;
 	}
 	else
 	{
@@ -1665,6 +1658,7 @@ void precache()
     precache_model ("models/sprites/10.spr32");
 
     // common weapon precaches
+	precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound here
     precache_sound ("weapons/weapon_switch.wav");
     precache_sound ("weapons/weaponpickup.wav");
     precache_sound ("weapons/unavailable.wav");

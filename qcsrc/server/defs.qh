@@ -84,8 +84,6 @@ float maxclients;
 .vector	pos1, pos2;
 .vector	mangle;
 
-.float cvar_cl_hitsound;
-
 .float	pain_finished;			//Added by Supajoe
 .float	pain_frame;			//"
 .float	statdraintime;			// record the one-second intervals between draining health and armour when they're over 100
@@ -402,10 +400,6 @@ float assault_attacker_team;
 .float speedrunning;
 
 // Q3 support
-.float notteam;
-.float notsingle;
-.float notfree;
-.float notq3a;
 float q3acompat_machineshotgunswap;
 
 // database
@@ -416,6 +410,7 @@ float TemporaryDB;
 
 float some_spawn_has_been_used;
 float have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
+float have_noteam_spawns; // 0 = no no-team spawns, 1 = no-team spawns exist
 
 // set when showing a kill countdown
 .entity killindicator;
@@ -617,8 +612,14 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-.float sniperrifle_bulletcounter;
-.float wish_reload;
+..float current_ammo;
+
+.float weapon_load[WEP_MAXCOUNT]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(weapon_load);
+.float ammo_none; // used by the reloading system, must always be 0
+.float clip_load;
+.float old_clip_load;
+.float clip_size;
+.float minelayer_mines;
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones

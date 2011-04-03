@@ -358,7 +358,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	if (self.health <= -150 && self.modelindex != 0)
+	if (self.health <= -autocvar_sv_gibhealth && self.modelindex != 0)
 	{
 		// don't use any animations as a gib
 		self.frame = 0;

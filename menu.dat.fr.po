@@ -1,21 +1,23 @@
 # Xonotic French Translation.
 # Copyright (C) 2011
 # This file is distributed under the same license as the PACKAGE package.
-# Calinou <hugohachel@gmail.com>, 2011.
 #
-#, fuzzy
+# Calinou <hugohachel@gmail.com>, 2011.
+# Maxime Paradis <taximus.micro@gmail.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-02-07 07:50+0100\n"
-"PO-Revision-Date: 2011-01-18 11:53+0100\t\n"
-"Last-Translator: Calinou <hugohachel@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2011-03-09 15:48-0500\n"
+"Last-Translator: Maxime Paradis <taximus.micro@gmail.com>\n"
+"Language-Team: French <kde-i18n-doc@kde.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.2\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: qcsrc/menu/gamecommand.qc:47
 #, c-format
@@ -33,7 +35,7 @@ msgstr "  sync - recharge toutes les variables sur la page actuelle\n"
 #: qcsrc/menu/gamecommand.qc:67
 msgid "  directmenu ITEM - select a menu item as main item\n"
 msgstr ""
-"  directmenu OBJET - séléctionner un objet de menu comme objet principal\n"
+"  directmenu OBJET - sélectionner un objet de menu comme objet principal\n"
 
 #: qcsrc/menu/gamecommand.qc:193
 msgid "error creating curl handle\n"
@@ -68,7 +70,7 @@ msgstr "%d (%s)"
 
 #: qcsrc/menu/item/textslider.c:29 qcsrc/menu/item/textslider.c:31
 msgid "custom"
-msgstr "personalisé"
+msgstr "personnalisé"
 
 #: qcsrc/menu/menu.qc:29
 #, c-format
@@ -129,7 +131,7 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
-"Bienvenue sur Xonotic, veuillez séléctionner votre langue et entrer votre "
+"Bienvenue sur Xonotic, veuillez sélectionner votre langue et entrer votre "
 "pseudonyme pour commencer. Vous pouvez changer ces options plus tard dans "
 "les menus."
 
@@ -304,12 +306,12 @@ msgstr "Panneau désactivé"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:22
 msgid "Panel enabled when spectating"
-msgstr "Paneau activé en spectateur"
+msgstr "Panneau activé en spectateur"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:23
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:23
 msgid "Panel always enabled"
-msgstr "Paneau toujours activé"
+msgstr "Panneau toujours activé"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:30
 msgid "Forced aspect:"
@@ -471,7 +473,7 @@ msgstr "Monter la précision"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:50
 msgid "Show Ammo"
-msgstr "Montrer barre de monitions"
+msgstr "Montrer barre de munitions"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:53
 msgid "Ammo bar color:"
@@ -513,7 +515,7 @@ msgstr "Couleur d'équipe:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:625
 msgid "Test team color in configure mode"
-msgstr "Affichier la couleur d'équipe en mode configuration"
+msgstr "Afficher la couleur d'équipe en mode configuration"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:628
 msgid "Padding:"
@@ -549,7 +551,7 @@ msgstr "Paramètres grille:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:99
 msgid "Snap panels to grid"
-msgstr "Coller paneaux sur la grille"
+msgstr "Coller panneaux sur la grille"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:102
 msgid "Grid size:"
@@ -658,7 +660,7 @@ msgstr "Expert"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:82
 msgid "Pro"
-msgstr "Professionel"
+msgstr "Professionnel"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:83
 msgid "Assassin"
@@ -687,11 +689,11 @@ msgstr "Liste de cartes:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:111
 msgid "Select all"
-msgstr "Tout séléctionner"
+msgstr "Tout sélectionner"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:114
 msgid "Select none"
-msgstr "Ne rien séléctionner"
+msgstr "Ne rien sélectionner"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:120
 msgid "Start Multiplayer!"
@@ -1067,11 +1069,11 @@ msgstr "supporté (pas de cryptage)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:217
 msgid "requested (will encrypt)"
-msgstr "démandé (cryptage)"
+msgstr "demandé (cryptage)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:219
 msgid "requested (won't encrypt)"
-msgstr "démandé (pas de cryptage)"
+msgstr "demandé (pas de cryptage)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:223
 msgid "required (can't connect)"
@@ -1194,7 +1196,7 @@ msgstr "TrueAim"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:158
 msgid "Enemies"
-msgstr "Enemis"
+msgstr "Ennemis"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:161
 msgid "Waypoints setup..."
@@ -1323,7 +1325,7 @@ msgstr "À droite"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:53
 msgid "Flip view horizontally"
-msgstr "Vue Mirroir"
+msgstr "Vue Miroir"
 
 #: qcsrc/menu/xonotic/dialog_news.c:4
 msgid "News"
@@ -1392,9 +1394,8 @@ msgid "Music:"
 msgstr "Musique:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:40
-#, fuzzy
 msgid "VOL^Ambient:"
-msgstr "Ambience:"
+msgstr "Ambiance:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:48
 msgid "Info:"
@@ -1690,7 +1691,7 @@ msgstr "Éviter la compression rapide"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:100
 msgid "Anisotropy:"
-msgstr "Filtrage Anistrope:"
+msgstr "Filtrage Anisotrope:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:102
 msgid "ANISO^Disabled"
@@ -1746,7 +1747,7 @@ msgstr "Textures relief avancé"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:143
 msgid "Reflections:"
-msgstr "Réflections:"
+msgstr "Réflexions:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:146
 msgid "Blurred"
@@ -1831,7 +1832,7 @@ msgstr "Éditer..."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:46
 msgid "Sensitivity:"
-msgstr "Senstitivité:"
+msgstr "Sensibilité:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:49
 msgid "UI mouse speed:"
@@ -1861,7 +1862,7 @@ msgstr "\"ouvrir la console\" ferme aussi la console"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:5
 msgid "User defined key bind"
-msgstr "Touche d'éxécution:"
+msgstr "Touche d'exécution:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:42
 msgid "Command when pressed:"
@@ -1869,7 +1870,7 @@ msgstr "Commande quand appuyée:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:45
 msgid "Command when released:"
-msgstr "Commande quand relachée:"
+msgstr "Commande quand relâchée:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:48
 msgid "Save"
@@ -2061,18 +2062,18 @@ msgstr "Plein écran"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:46
 msgid "Vertical Synchronization"
-msgstr "Syncronisation verticale"
+msgstr "Synchronisation verticale"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:49
 msgid "Use OpenGL 2.0 shaders (GLSL)"
-msgstr "Utiliser OpenGL 2.0 (GLSL)"
+msgstr "Utiliser shader OpenGL 2.0 (GLSL)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:52
 msgid "Use GLSL to handle color control"
 msgstr "Utiliser GLSL pour gérer les couleurs"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:56
-msgid "Vertex Buffer Objects (VBOs)"ourd
+msgid "Vertex Buffer Objects (VBOs)\"ourd"
 msgstr "Objets en tampon mémoire (VBOs)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:59
@@ -2093,6 +2094,7 @@ msgid "Vertices and Triangles"
 msgstr "Points et Triangles"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:67
+#, fuzzy
 msgid "Depth first:"
 msgstr "Fixeur profondeur:"
 
@@ -2140,9 +2142,8 @@ msgid "Saturation:"
 msgstr "Saturation:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:98
-#, fuzzy
 msgid "LIT^Ambient:"
-msgstr "Ambience:"
+msgstr "Ambiance:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:101
 msgid "Intensity:"
@@ -2166,11 +2167,11 @@ msgstr "Gagné"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:5
 msgid "Team Selection"
-msgstr "Séléction d'équipe"
+msgstr "Sélection d'équipe"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:41
 msgid "join 'best' team (auto-select)"
-msgstr "auto-séléction équipe (recommandé)"
+msgstr "auto-sélection équipe (recommandé)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:45
 msgid "red"
@@ -2286,7 +2287,8 @@ msgstr "A reçu la demande HTTP d'ID invalide %d.\n"
 #: qcsrc/menu/xonotic/util.qc:285
 #, c-format
 msgid "error receiving update notification: status is %d\n"
-msgstr "error pour recevoir la notification de mise à jour: le statut est %d\n"
+msgstr ""
+"erreur pour recevoir la notification de mise à jour: le statut est %d\n"
 
 #: qcsrc/menu/xonotic/util.qc:290
 msgid "error: received HTML instead of an update notification\n"
@@ -2467,7 +2469,7 @@ msgstr "%s s'est fait toucher par la boule plasma de %s"
 #: qcsrc/server/w_electro.qc:519
 #, c-format
 msgid "%s felt the electrifying air of %s's combo"
-msgstr "%s se sent éléctrisé par le combo de %s"
+msgstr "%s se sent électrisé par le combo de %s"
 
 #: qcsrc/server/w_electro.qc:521
 #, c-format
