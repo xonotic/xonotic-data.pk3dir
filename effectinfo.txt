@@ -5271,7 +5271,7 @@ tex 0 8
 color 0x880000 0xff4400
 size 8 16
 sizeincrease 10
-alpha 128 32 128
+alpha 128 16 128
 gravity 0
 originjitter 4 4 16
 velocityjitter 0.4 0.4 0.6
@@ -5443,7 +5443,7 @@ count 2
 type smoke
 tex 48 55
 size 6 12
-alpha 256 32 256
+alpha 256 16 256
 gravity -0.5
 color 0x8f0d00 0xff5a00
 sizeincrease -10
@@ -5457,7 +5457,7 @@ count 2
 tex 0 8
 size 4 8
 sizeincrease 5
-alpha 128 48 128
+alpha 128 32 128
 color 0x000000 0x111111
 gravity -0.3
 originoffset 0 0 10
@@ -5478,7 +5478,7 @@ count 2
 type smoke
 tex 48 55
 size 6 12
-alpha 256 32 256
+alpha 256 16 256
 gravity -0.5
 color 0x8f0d00 0xff5a00
 sizeincrease -10
@@ -5492,7 +5492,7 @@ count 2
 tex 0 8
 size 4 8
 sizeincrease 5
-alpha 128 48 128
+alpha 128 32 128
 color 0x000000 0x111111
 gravity -0.3
 originoffset 0 0 10
@@ -5514,7 +5514,7 @@ tex 47 47
 color 0x66ffff 0x2288ff
 size 6 12
 sizeincrease -16
-alpha 64 16 64
+alpha 64 8 64
 gravity -0.0001
 airfriction 0.2
 liquidfriction 0.8
@@ -5531,7 +5531,7 @@ tex 0 8
 color 0x2244ff 0x002266
 size 4 8
 sizeincrease 10
-alpha 64 32 64
+alpha 64 16 64
 gravity 0
 originjitter 4 4 16
 velocityjitter 0.4 0.4 0.6
@@ -5554,7 +5554,7 @@ tex 38 38
 color 0xff44ff 0x9966ff
 size 5 10
 sizeincrease -8
-alpha 48 32 48
+alpha 48 16 48
 gravity -0.0001
 airfriction 0.6
 liquidfriction 0.8
@@ -5571,7 +5571,7 @@ tex 0 8
 color 0x8844ff 0x662244
 size 6 12
 sizeincrease 6
-alpha 64 32 64
+alpha 64 16 64
 gravity 0.001
 originjitter 6 6 12
 velocityjitter 0.4 0.4 0.6
