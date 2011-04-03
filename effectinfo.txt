@@ -5514,7 +5514,7 @@ tex 47 47
 color 0x66ffff 0x2288ff
 size 10 20
 sizeincrease -16
-alpha 64 8 64
+alpha 48 8 48
 gravity -0.0001
 airfriction 0.2
 liquidfriction 0.8
