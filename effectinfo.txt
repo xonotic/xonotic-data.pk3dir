@@ -5760,6 +5760,76 @@ alpha 100 256 400
 color 0x000000 0x301860
 originjitter 11 11 11
 
+// seeker damage effect
+// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+effect weapondamage_seeker
+//notunderwater
+count 2
+type smoke
+tex 48 55
+size 5 10
+alpha 256 16 256
+gravity -0.5
+color 0x8f0d00 0xff5a00
+sizeincrease -10
+originoffset 0 0 10
+originjitter 5 5 7
+velocityjitter 22 22 50
+// smoke
+effect weapondamage_seeker
+type alphastatic
+count 2
+tex 0 8
+size 3 6
+sizeincrease 5
+alpha 128 32 128
+color 0x000000 0x111111
+gravity -0.3
+originoffset 0 0 10
+originjitter 5 5 7
+velocityjitter 11 11 50
+// light
+effect weapondamage_seeker
+trailspacing 8
+lightradius 65
+lightradiusfade 280
+lightcolor 0.9 0.7 0.2
+
+// hagar damage effect
+// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+effect weapondamage_hagar
+//notunderwater
+count 2
+type smoke
+tex 48 55
+size 5 10
+alpha 256 16 256
+gravity -0.5
+color 0x8f0d00 0xff5a00
+sizeincrease -10
+originoffset 0 0 10
+originjitter 5 5 7
+velocityjitter 22 22 50
+// smoke
+effect weapondamage_hagar
+type alphastatic
+count 2
+tex 0 8
+size 3 6
+sizeincrease 5
+alpha 128 32 128
+color 0x000000 0x111111
+gravity -0.3
+originoffset 0 0 10
+originjitter 5 5 7
+velocityjitter 11 11 50
+// light
+effect weapondamage_hagar
+trailspacing 8
+lightradius 65
+lightradiusfade 280
+lightcolor 0.9 0.7 0.2
+
 // --------------------------------
 // End of Weapon Damage Effects
 // --------------------------------
