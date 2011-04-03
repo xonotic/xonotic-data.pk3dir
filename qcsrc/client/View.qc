@@ -675,7 +675,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		float contentalpha_temp, incontent, liquidalpha, contentfadetime;
 		vector liquidcolor;
-
+		
 		switch(pointcontents(view_origin))
 		{
 			case CONTENT_WATER:
@@ -683,26 +683,26 @@ void CSQC_UpdateView(float w, float h)
 				liquidcolor = stov(autocvar_hud_contents_water_color);
 				incontent = 1;
 				break;
-
+				
 			case CONTENT_LAVA:
 				liquidalpha = autocvar_hud_contents_lava_alpha;
 				liquidcolor = stov(autocvar_hud_contents_lava_color);
 				incontent = 1;
-				break;
-
+				break;	
+							
 			case CONTENT_SLIME:
 				liquidalpha = autocvar_hud_contents_slime_alpha;
 				liquidcolor = stov(autocvar_hud_contents_slime_color);
 				incontent = 1;
 				break;
-
+				
 			default:
 				liquidalpha = 0;
 				liquidcolor = '0 0 0';
 				incontent = 0;
 				break;
 		}
-
+		
 		if(incontent) // fade in/out at different speeds so you can do e.g. instant fade when entering water and slow when leaving it.
 		{ // also lets delcare previous values for blending properties, this way it isn't reset until after you have entered a different content
 			contentfadetime = autocvar_hud_contents_fadeintime;
@@ -711,14 +711,14 @@ void CSQC_UpdateView(float w, float h)
 		}
 		else
 			contentfadetime = autocvar_hud_contents_fadeouttime;
-
+			
 		contentalpha_temp = bound(0, drawframetime / max(0.0001, contentfadetime), 1);
 		contentavgalpha = contentavgalpha * (1 - contentalpha_temp) + incontent * contentalpha_temp;
-
+		
 		if(contentavgalpha)
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
 	}
-
+	
 	if(autocvar_hud_damage)
 	{
 		splash_size_x = max(vid_conwidth, vid_conheight);
@@ -916,13 +916,13 @@ void CSQC_UpdateView(float w, float h)
 			else if(autocvar_crosshair_color_by_health)
 			{
 				local float x = getstati(STAT_HEALTH);
-
+				
 				//x = red
 				//y = green
 				//z = blue
-
+				
 				wcross_color_z = 0;
-
+				
 				if(x > 200)
 				{
 					wcross_color_x = 0;
@@ -943,7 +943,7 @@ void CSQC_UpdateView(float w, float h)
 				{
 					wcross_color_x = 1;
 					wcross_color_y = 1;
-					wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;
+					wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;  
 				}
 				else if(x > 20)
 				{
@@ -987,7 +987,7 @@ void CSQC_UpdateView(float w, float h)
 
 				wcross_scale += sin(pickup_crosshair_size) * autocvar_crosshair_pickup;
 			}
-
+			
 			vector hitindication_color;
 			if(autocvar_crosshair_hitindication)
 			{
@@ -1065,13 +1065,13 @@ void CSQC_UpdateView(float w, float h)
 			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
 			// crosshair rings for weapon stats
-			if ((autocvar_crosshair_ring) || (autocvar_crosshair_ring_reload))
+			if (autocvar_crosshair_ring || autocvar_crosshair_ring_reload)
 			{
 				// declarations and stats
 				float ring_value, ring_scale, ring_alpha, ring_inner_value, ring_inner_alpha;
 				string ring_image, ring_inner_image;
 				vector ring_rgb, ring_inner_rgb;
-
+				
 				ring_scale = autocvar_crosshair_ring_size;
 
 				float weapon_clipload, weapon_clipsize;
@@ -1084,69 +1084,57 @@ void CSQC_UpdateView(float w, float h)
 
 				if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 					nex_charge_movingavg = nex_charge;
-
+					
 
 				// handle the values
 				if (activeweapon == WEP_NEX && nex_charge && autocvar_crosshair_ring_nex) // ring around crosshair representing velocity-dependent damage for the nex
 				{
-					if (nex_chargepool || use_nex_chargepool) {
-						use_nex_chargepool = 1;
+					if (nex_chargepool || use_nex_chargepool) { 
+						use_nex_chargepool = 1; 
 						ring_inner_value = nex_chargepool;
-					} else {
+					} else { 
 						nex_charge_movingavg = (1 - autocvar_crosshair_ring_nex_currentcharge_movingavg_rate) * nex_charge_movingavg + autocvar_crosshair_ring_nex_currentcharge_movingavg_rate * nex_charge;
-						ring_inner_value = bound(0, autocvar_crosshair_ring_nex_currentcharge_scale * (nex_charge - nex_charge_movingavg), 1);
+						ring_inner_value = bound(0, autocvar_crosshair_ring_nex_currentcharge_scale * (nex_charge - nex_charge_movingavg), 1); 
 					}
-
-					ring_inner_alpha = wcross_alpha * autocvar_crosshair_ring_nex_inner_alpha;
+						
+					ring_inner_alpha = autocvar_crosshair_ring_nex_inner_alpha;
 					ring_inner_rgb = eX * autocvar_crosshair_ring_nex_inner_color_red + eY * autocvar_crosshair_ring_nex_inner_color_green + eZ * autocvar_crosshair_ring_nex_inner_color_blue;
 					ring_inner_image = "gfx/crosshair_ring_inner.tga";
-
+					
 					// draw the outer ring to show the current charge of the weapon
 					ring_value = nex_charge;
-					ring_alpha = wcross_alpha * autocvar_crosshair_ring_nex_alpha;
+					ring_alpha = autocvar_crosshair_ring_nex_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 				}
-				else if (activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
+				else if (activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer) 
 				{
 					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
-					ring_alpha = wcross_alpha * autocvar_crosshair_ring_minelayer_alpha;
+					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
 
-				if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring
+				if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring 
 				{
-					// if the main ring is already used by another weapon, instead use the inner one for ammo.
-					// inner ring is secondary anyway and doesn't matter as much as main ring, so overriding it is no issue.
-					if(ring_value && autocvar_crosshair_ring_reload_inner)
-					{
-						ring_inner_value = bound(0, weapon_clipload / weapon_clipsize, 1);
-						ring_inner_alpha = autocvar_crosshair_ring_reload_alpha;
-						ring_inner_rgb = wcross_color;
-						ring_inner_image = "gfx/crosshair_ring_inner.tga";
-					}
+					ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
+					ring_scale = autocvar_crosshair_ring_reload_size;
+					ring_alpha = autocvar_crosshair_ring_reload_alpha;
+					ring_rgb = wcross_color;
+					
+					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
+					// if a new image for another weapon is added, add the code (and its respective file/value) here
+					if ((activeweapon == WEP_SNIPERRIFLE) && (weapon_clipsize == 80))
+						ring_image = "gfx/crosshair_ring_sniperrifle.tga";
 					else
-					{
-						ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
-						ring_scale = autocvar_crosshair_ring_reload_size;
-						ring_alpha = autocvar_crosshair_ring_reload_alpha;
-						ring_rgb = wcross_color;
-
-						// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
-						// if a new image for another weapon is added, add the code (and its respective file/value) here
-						if ((activeweapon == WEP_SNIPERRIFLE) && (weapon_clipsize == 80))
-							ring_image = "gfx/crosshair_ring_sniperrifle.tga";
-						else
-							ring_image = "gfx/crosshair_ring.tga";
-					}
+						ring_image = "gfx/crosshair_ring.tga";
 				}
 
-				if ((autocvar_crosshair_ring_inner || autocvar_crosshair_ring_reload_inner) && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, ring_inner_alpha, DRAWFLAG_ADDITIVE);
+				if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, wcross_alpha * ring_inner_alpha, DRAWFLAG_ADDITIVE);
 
 				if (ring_value)
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, ring_alpha, DRAWFLAG_ADDITIVE);
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
 			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
@@ -1261,7 +1249,6 @@ void CSQC_UpdateView(float w, float h)
 	R_SetView(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
 }
 
-
 void CSQC_common_hud(void)
 {
 	// HUD_SortFrags(); done in HUD_Draw
@@ -1296,7 +1283,7 @@ void CSQC_common_hud(void)
 			HUD_DrawScoreboard();
 
 			if (scoreboard_active) // scoreboard/accuracy
-			{
+			{	
 				HUD_Reset();
 				// HUD_DrawScoreboard takes care of centerprint_start
 			}

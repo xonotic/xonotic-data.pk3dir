@@ -1152,6 +1152,7 @@ float autocvar_sv_warsowbunny_backtosideratio;
 float autocvar_sv_warsowbunny_topspeed;
 float autocvar_sv_warsowbunny_turnaccel;
 string autocvar_sv_weaponstats_file;
+float autocvar_sv_gibhealth;
 float autocvar_sys_ticrate;
 float autocvar_teamplay_lockonrestart;
 float autocvar_teamplay_mode;
