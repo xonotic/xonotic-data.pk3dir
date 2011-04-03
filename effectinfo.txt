@@ -5602,6 +5602,164 @@ velocitymultiplier 0
 airfriction -0.35
 rotate 0 180 -30 30
 
+// nex damage effect
+// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+effect weapondamage_nex
+count 1
+type static
+tex 47 47
+color 0xffffff 0x88ffff
+size 7 14
+sizeincrease -14
+alpha 64 8 64
+gravity -0.0001
+airfriction 0.1
+liquidfriction 0.6
+originjitter 4 4 8
+velocityjitter 8 8 16
+velocitymultiplier 0
+airfriction -0.5
+rotate 180 360 -30 30
+// plasma smoke
+effect weapondamage_nex
+count 2
+type smoke
+tex 0 8
+color 0x6688ff 0x226688
+size 5 10
+sizeincrease 8
+alpha 64 16 64
+gravity 0
+originjitter 6 6 12
+velocityjitter 0.5 0.5 0.8
+velocitymultiplier 0
+airfriction -0.35
+rotate 0 180 -30 30
+// light
+effect weapondamage_nex
+trailspacing 8
+lightradius 60
+lightradiusfade 280
+lightcolor 0.8 1.0 1.0
+
+// minstanex damage effect
+// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+effect weapondamage_minstanex
+count 2
+type static
+tex 47 47
+color 0xffffff 0x88ffff
+size 10 20
+sizeincrease -14
+alpha 64 8 64
+gravity -0.0001
+airfriction 0.1
+liquidfriction 0.6
+originjitter 4 4 8
+velocityjitter 8 8 16
+velocitymultiplier 0
+airfriction -0.5
+rotate 180 360 -30 30
+// plasma smoke
+effect weapondamage_minstanex
+count 4
+type smoke
+tex 0 8
+color 0x6688ff 0x226688
+size 8 16
+sizeincrease 8
+alpha 64 16 64
+gravity 0
+originjitter 6 6 12
+velocityjitter 0.5 0.5 0.8
+velocitymultiplier 0
+airfriction -0.35
+rotate 0 180 -30 30
+// light
+effect weapondamage_minstanex
+trailspacing 8
+lightradius 60
+lightradiusfade 240
+lightcolor 0.8 1.0 1.0
+
+// sniperrifle damage effect, normal blood
+// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+effect weapondamage_sniperrifle
+count 0.25
+type blood
+tex 24 32
+size 3 8
+alpha 256 256 64
+color 0xA8FFFF 0xA8FFFFF
+bounce -1
+airfriction 1
+liquidfriction 4
+velocityjitter 64 64 64
+velocitymultiplier 5
+staincolor 0x808080 0x808080
+staintex 16 24
+//blood mist
+effect weapondamage_sniperrifle
+countabsolute 1
+type alphastatic
+tex 0 8
+size 6 12
+alpha 100 256 400
+color 0x000000 0x420000
+originjitter 11 11 11
+
+// sniperrifle damage effect, alien blood
+// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+effect weapondamage_sniperrifle_alien
+count 0.25
+type blood
+tex 24 32
+size 3 8
+alpha 256 256 64
+color 0xDC9BCD 0xDC9BCD
+bounce -1
+airfriction 1
+liquidfriction 4
+velocityjitter 64 64 64
+velocitymultiplier 5
+staincolor 0x808080 0x808080
+staintex 16 24
+//blood mist
+effect weapondamage_sniperrifle_alien
+countabsolute 1
+type alphastatic
+tex 0 8
+size 6 12
+alpha 100 256 400
+color 0x000000 0x204010
+originjitter 11 11 11
+
+// sniperrifle damage effect, robot blood
+// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+effect weapondamage_sniperrifle_robot
+count 0.25
+type blood
+tex 24 32
+size 3 8
+alpha 256 256 64
+color 0xC0D890 0xC0D890
+bounce -1
+airfriction 1
+liquidfriction 4
+velocityjitter 64 64 64
+velocitymultiplier 5
+staincolor 0x808080 0x808080
+staintex 16 24
+//blood mist
+effect weapondamage_sniperrifle_robot
+countabsolute 1
+type alphastatic
+tex 0 8
+size 6 12
+alpha 100 256 400
+color 0x000000 0x301860
+originjitter 11 11 11
+
 // --------------------------------
 // End of Weapon Damage Effects
 // --------------------------------
