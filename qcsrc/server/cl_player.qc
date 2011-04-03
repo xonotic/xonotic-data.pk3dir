@@ -148,6 +148,7 @@ void CopyBody(float keepvelocity)
 
 	Violence_DamageEffect_Copy(oldself, self);
 
+	self.owner = oldself;
 	self = oldself;
 }
 
