@@ -29,7 +29,7 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticCheckBox(0, "hud_panel_physics_progressbar", _("Status bar")));
-		me.TD(me, 1, 1.6, e = makeXonoticTextSlider("hud_panel_physics_baralign"));
+		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_physics_baralign"));
 			e.addValue(e, _("Left align")   , "0");
 			e.addValue(e, _("Right align")  , "1");
 			e.addValue(e, _("Inward align") , "2");
