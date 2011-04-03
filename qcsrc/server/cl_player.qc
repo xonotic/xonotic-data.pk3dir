@@ -372,6 +372,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 		Violence_GibSplash(self, 1, 1, attacker);
 		self.modelindex = 0; // restore later
 		self.solid = SOLID_NOT; // restore later
+		self.takedamage = DAMAGE_NO; // restore later
 	}
 }
 
