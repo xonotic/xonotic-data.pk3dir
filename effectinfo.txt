@@ -5508,11 +5508,11 @@ lightcolor 0.9 0.6 0.2
 // electro damage effect
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
 effect weapondamage_electro
-count 4
+count 2
 type static
 tex 47 47
 color 0x66ffff 0x2288ff
-size 6 12
+size 10 20
 sizeincrease -16
 alpha 64 8 64
 gravity -0.0001
@@ -5525,11 +5525,11 @@ airfriction -0.5
 rotate 180 360 -30 30
 // plasma smoke
 effect weapondamage_electro
-count 3
+count 4
 type smoke
 tex 0 8
 color 0x2244ff 0x002266
-size 4 8
+size 8 16
 sizeincrease 10
 alpha 64 16 64
 gravity 0
@@ -5548,11 +5548,11 @@ lightcolor 0.2 0.8 1.0
 // crylink damage effect
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
 effect weapondamage_crylink
-count 3
+count 2
 type static
 tex 38 38
 color 0xff44ff 0x9966ff
-size 5 10
+size 8 16
 sizeincrease -8
 alpha 48 16 48
 gravity -0.0001
@@ -5565,11 +5565,11 @@ airfriction -0.5
 rotate 180 360 -30 30
 // plasma smoke
 effect weapondamage_crylink
-count 3
+count 4
 type smoke
 tex 0 8
 color 0x8844ff 0x662244
-size 6 12
+size 10 20
 sizeincrease 6
 alpha 64 16 64
 gravity 0.001
