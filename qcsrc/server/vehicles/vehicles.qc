@@ -178,7 +178,94 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
     return v_forward  * force_fromtag_power;
 }
 
+void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+    self.health -= damage;
+    self.velocity += force;
+    if(self.health < 1)
+    {
+        self.takedamage = DAMAGE_NO;
+        self.event_damage = SUB_Null;
+        self.think = self.use;
+        self.nextthink = time;
+    }
 
+}
+
+void vehicles_projectile_explode()
+{
+    if(self.owner && other != world)
+    {
+        if(other == self.owner.vehicle)
+            return;
+
+        if(other == self.owner.vehicle.tur_head)
+            return;
+    }
+
+	PROJECTILE_TOUCH;
+
+	self.event_damage = SUB_Null;
+    sound (self, CHAN_PROJECTILE, self.target2, VOL_BASE, ATTN_NORM);
+    pointparticles(particleeffectnum(self.target3), findbetterlocation (self.origin, 16), '0 0 0', 1);
+    RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, self.shot_force, self.totalfrags, other);
+
+    remove (self);
+}
+
+entity vehicles_projectile(string _impactfx, string _impactsnd, string _mzlfx, string _mzlsound,
+                           vector _org, vector _vel,
+                           float _dmg, float _radi, float _force,  float _size,
+                           float _deahtype, float _projtype, float _health)
+{
+    entity proj;
+
+    proj = spawn();
+
+    PROJECTILE_MAKETRIGGER(proj);
+    setorigin(proj, _org);
+
+    proj.shot_dmg         = _dmg;
+    proj.shot_radius      = _radi;
+    proj.shot_force       = _force;
+    proj.totalfrags       = _deahtype;
+    proj.target2          = _impactsnd;
+    proj.target3          = _impactfx;
+    proj.solid            = SOLID_BBOX;
+    proj.movetype         = MOVETYPE_FLYMISSILE;
+    proj.flags            = FL_PROJECTILE;
+    proj.bot_dodge        = TRUE;
+    proj.bot_dodgerating  = _dmg;
+    proj.velocity         = _vel;
+    proj.touch            = vehicles_projectile_explode;
+    proj.use              = vehicles_projectile_explode;
+    proj.owner            = self;
+    proj.realowner        = self.owner;
+    proj.think            = SUB_Remove;
+    proj.nextthink        = time + 30;
+
+    if(_health)
+    {
+        proj.takedamage       = DAMAGE_AIM;
+        proj.event_damage     = vehicles_projectile_damage;
+        proj.health           = _health;
+    }
+    else
+        proj.flags           = FL_PROJECTILE | FL_NOTARGET;
+
+    if(_mzlsound)
+        sound (self, CHAN_WEAPON, _mzlsound, VOL_BASE, ATTN_NORM);
+
+    if(_mzlfx)
+        pointparticles(particleeffectnum(_mzlfx), proj.origin, proj.velocity, 1);
+
+
+    setsize (proj, '-1 -1 -1' * _size, '1 1 1' * _size);
+
+    CSQCProjectile(proj, TRUE, _projtype, TRUE);
+
+    return proj;
+}
 
 void vehicles_spawn()
 {
@@ -372,6 +459,7 @@ void vehicles_exit(float eject)
         self.owner.event_damage   = PlayerDamage;
         self.owner.hud            = HUD_NORMAL;
         self.owner.switchweapon   = self.switchweapon;
+        self.owner.BUTTON_USE     = 0;
     }
 
     if(self.deadflag == DEAD_NO)

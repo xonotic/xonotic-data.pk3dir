@@ -42,7 +42,7 @@ float autocvar_g_vehicle_raptor_cannon_radius;
 float autocvar_g_vehicle_raptor_cannon_refire;
 float autocvar_g_vehicle_raptor_cannon_speed;
 float autocvar_g_vehicle_raptor_cannon_spread;
-
+float autocvar_g_vehicle_raptor_cannon_force;
 
 float autocvar_g_vehicle_raptor_energy;
 float autocvar_g_vehicle_raptor_energy_regen;
@@ -175,40 +175,16 @@ void raptor_bombdrop()
 
 }
 
-void raptor_bolt_explode()
-{
-	PROJECTILE_TOUCH;
-    pointparticles(particleeffectnum("raptor_cannon_impact"), findbetterlocation (self.origin, 8), trace_plane_normal * 1000, 1);
-    RadiusDamage (self, self.realowner, autocvar_g_vehicle_raptor_cannon_damage, 0, autocvar_g_vehicle_raptor_cannon_radius, world, 25, DEATH_WAKIGUN, world);
-    sound (self, CHAN_PROJECTILE, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
-    remove (self);
-}
 
 void raptor_fire_cannon(entity gun, string tagname)
 {
     entity bolt;
-
-    bolt = spawn();
-
-    PROJECTILE_MAKETRIGGER(bolt);
-    sound (gun, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
-    setorigin(bolt, gettaginfo(gun, gettagindex(gun, tagname)));
-
-    bolt.movetype        = MOVETYPE_FLYMISSILE;
-    bolt.flags           = FL_PROJECTILE | FL_NOTARGET;
-    bolt.owner           = self;
-    bolt.realowner       = self.owner;
-    bolt.touch           = raptor_bolt_explode;
-    bolt.think           = raptor_bolt_explode;
-    bolt.nextthink       = time + 9;
-    bolt.bot_dodge       = TRUE;
-    bolt.bot_dodgerating = autocvar_g_vehicle_raptor_cannon_damage;
-    bolt.velocity        = normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed;
-
-    pointparticles(particleeffectnum("raptor_cannon_muzzleflash"), bolt.origin, bolt.velocity, 1);
-    //pointparticles(particleeffectnum("spiderbot_minigun_muzzleflash"), bolt.origin, bolt.velocity, 1);
-
-    CSQCProjectile(bolt, TRUE, PROJECTILE_RAPTORCANNON, TRUE);
+    vector b_org;
+    b_org = gettaginfo(gun, gettagindex(gun, tagname));
+    bolt = vehicles_projectile("raptor_cannon_impact", "weapons/laserimpact.wav", "raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
+                           b_org, normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
+                           autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
+                           DEATH_WAKIGUN, PROJECTILE_RAPTORCANNON, 0);
 }
 
 void raptor_think()
@@ -281,8 +257,6 @@ void raptor_exit(float eject)
 float raptor_takeoff()
 {
     entity player, raptor;
-    float ftmp, ftmp2;
-    vector df;
 
     player = self;
     raptor = self.vehicle;
@@ -650,7 +624,6 @@ void raptor_dinit()
         remove(self);
         return;
     }
-    setorigin(self, self.origin + '0 0 50');
     //FIXME: Camera is in a bad place in HUD model.
     setorigin(self.vehicle_viewport, '25 0 5');
 

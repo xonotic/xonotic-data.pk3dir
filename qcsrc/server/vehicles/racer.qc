@@ -36,15 +36,18 @@ float autocvar_g_vehicle_racer_shield;
 float autocvar_g_vehicle_racer_shield_regen;
 float autocvar_g_vehicle_racer_shield_regen_pause;
 
-float autocvar_g_vehicle_racer_laser_cost;
-float autocvar_g_vehicle_racer_laser_damage;
-float autocvar_g_vehicle_racer_laser_radius;
-float autocvar_g_vehicle_racer_laser_refire;
-float autocvar_g_vehicle_racer_laser_speed;
+float autocvar_g_vehicle_racer_cannon_cost;
+float autocvar_g_vehicle_racer_cannon_damage;
+float autocvar_g_vehicle_racer_cannon_radius;
+float autocvar_g_vehicle_racer_cannon_refire;
+float autocvar_g_vehicle_racer_cannon_speed;
+float autocvar_g_vehicle_racer_cannon_spread;
+float autocvar_g_vehicle_racer_cannon_force;
 
 float autocvar_g_vehicle_racer_rocket_accel;
 float autocvar_g_vehicle_racer_rocket_damage;
 float autocvar_g_vehicle_racer_rocket_radius;
+float autocvar_g_vehicle_racer_rocket_force;
 float autocvar_g_vehicle_racer_rocket_refire;
 float autocvar_g_vehicle_racer_rocket_speed;
 float autocvar_g_vehicle_racer_rocket_turnrate;
@@ -113,61 +116,21 @@ void racer_align4point()
     self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * frametime);
 }
 
-void racer_rocket_explode()
-{
-	PROJECTILE_TOUCH;
-    if(other.owner == self.owner)
-        return;
-
-	self.event_damage = SUB_Null;
-
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum("rocket_explode"), findbetterlocation (self.origin, 16), '0 0 0', 1);
-    RadiusDamage (self, self.realowner ,autocvar_g_vehicle_racer_rocket_damage, 0, autocvar_g_vehicle_racer_rocket_radius, world, 150, DEATH_WAKIROCKET, world);
-
-    remove (self);
-}
-
-void racer_bolt_explode()
-{
-	PROJECTILE_TOUCH;
-    pointparticles(particleeffectnum("wakizashi_gun_impact"), findbetterlocation (self.origin, 8), trace_plane_normal * 1000, 1);
-    RadiusDamage (self, self.realowner, autocvar_g_vehicle_racer_laser_damage, 0, autocvar_g_vehicle_racer_laser_radius, world, 150, DEATH_WAKIGUN, world);
-    sound (self, CHAN_PROJECTILE, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
-    remove (self);
-}
-
 void racer_fire_cannon(string tagname)
 {
-    entity bolt;
     vector v;
+    entity bolt;
 
-    bolt = spawn();
-    sound (self, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
-
-    setorigin(bolt, gettaginfo(self, gettagindex(self, tagname)));
-    PROJECTILE_MAKETRIGGER(bolt);
-
-    bolt.movetype        = MOVETYPE_FLYMISSILE;
-    bolt.flags           = FL_PROJECTILE | FL_NOTARGET;
-    bolt.owner           = self;
-    bolt.realowner       = self.owner;
-    bolt.touch           = racer_bolt_explode;
-    bolt.think           = racer_bolt_explode;
-    bolt.nextthink       = time + 9;
-
-    bolt.bot_dodge       = TRUE;
-    bolt.bot_dodgerating = autocvar_g_vehicle_racer_laser_damage;
+    v = gettaginfo(self, gettagindex(self, tagname));
+    bolt = vehicles_projectile("wakizashi_gun_impact", "weapons/laserimpact.wav", "wakizashi_gun_muzzleflash", "weapons/lasergun_fire.wav",
+                           v, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
+                           autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
+                           DEATH_WAKIGUN, PROJECTILE_WAKICANNON, 0);
 
 	// Fix z-aim (for chase mode)
     v = normalize(trace_endpos - bolt.origin);
     v_forward_z = v_z * 0.5;
-
-    bolt.velocity = v_forward * autocvar_g_vehicle_racer_laser_speed;
-
-    pointparticles(particleeffectnum("wakizashi_gun_muzzleflash"), bolt.origin, bolt.velocity, 1);
-
-    CSQCProjectile(bolt, TRUE, PROJECTILE_WAKICANNON, TRUE);
+    bolt.velocity = v_forward * autocvar_g_vehicle_racer_cannon_speed;
 }
 
 void racer_rocket_groundhugger()
@@ -177,9 +140,9 @@ void racer_rocket_groundhugger()
 
     self.nextthink  = time;
 
-    if ((self.owner.deadflag != DEAD_NO) || (self.cnt < time))
+    if(self.owner.deadflag != DEAD_NO || self.cnt < time)
     {
-        racer_rocket_explode();
+        self.use();
         return;
     }
 
@@ -225,9 +188,9 @@ void racer_rocket_tracker()
 
     self.nextthink  = time;
 
-    if ((self.owner.deadflag != DEAD_NO) || (self.cnt < time))
+    if (self.owner.deadflag != DEAD_NO || self.cnt < time)
     {
-        racer_rocket_explode();
+        self.use();
         return;
     }
 
@@ -265,36 +228,25 @@ void racer_rocket_tracker()
 
 void racer_fire_rocket(string tagname, entity trg)
 {
+    vector v;
     entity rocket;
 
-    sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
-
-    rocket = spawn();
-    setsize (rocket, '-1 -1 -1', '1 1 1');
-    setorigin(rocket, gettaginfo(self, gettagindex(self, tagname)));
+    v = gettaginfo(self, gettagindex(self, tagname));
+    rocket = vehicles_projectile("rocket_explode", "weapons/rocket_impact.wav", "", "weapons/rocket_fire.wav",
+                           v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
+                           autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
+                           DEATH_WAKIROCKET, PROJECTILE_WAKIROCKET, 20);
 
     rocket.lip              = autocvar_g_vehicle_racer_rocket_accel * sys_frametime;
     rocket.wait             = autocvar_g_vehicle_racer_rocket_turnrate;
-    rocket.solid            = SOLID_BBOX;
-    rocket.movetype         = MOVETYPE_FLYMISSILE;
-    rocket.flags            = FL_PROJECTILE;
-    rocket.owner            = self;
-    rocket.realowner        = self.owner;
-    rocket.touch            = racer_rocket_explode;
-    rocket.bot_dodge        = TRUE;
-    rocket.bot_dodgerating  = autocvar_g_vehicle_racer_rocket_damage;
-    rocket.cnt              = time + 9;
-    rocket.velocity         = v_forward * autocvar_g_vehicle_racer_rocket_speed;
+    rocket.nextthink        = time;
+    rocket.enemy            = trg;
+    rocket.cnt              = time + 15;
 
     if(trg)
         rocket.think            = racer_rocket_tracker;
     else
         rocket.think            = racer_rocket_groundhugger;
-
-    rocket.nextthink        = time;
-    rocket.enemy            = trg;
-
-    CSQCProjectile(rocket, TRUE, PROJECTILE_WAKIROCKET, TRUE);
 }
 
 float racer_frame()
@@ -417,9 +369,9 @@ float racer_frame()
 
     if(player.BUTTON_ATCK)
     if(time > racer.attack_finished_single)
-    if(racer.vehicle_energy >= autocvar_g_vehicle_racer_laser_cost)
+    if(racer.vehicle_energy >= autocvar_g_vehicle_racer_cannon_cost)
     {
-        racer.vehicle_energy -= autocvar_g_vehicle_racer_laser_cost;
+        racer.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
         racer.wait = time;
 
         crosshair_trace(player);
@@ -433,7 +385,7 @@ float racer_frame()
             racer_fire_cannon("tag_fire2");
             racer.cnt = 1;
         }
-        racer.attack_finished_single = time + autocvar_g_vehicle_racer_laser_refire;
+        racer.attack_finished_single = time + autocvar_g_vehicle_racer_cannon_refire;
         self.owner.vehicle_energy = racer.vehicle_energy / autocvar_g_vehicle_racer_energy;
     }
 
@@ -681,7 +633,6 @@ void spawnfunc_vehicle_racer()
     precache_model ("models/vhshield.md3");
     precache_model ("models/vehicles/wakizashi.dpm");
     precache_model ("models/vehicles/wakizashi_cockpit.dpm");
-
 
     vehicles_configcheck("vehicle_racer.cfg", autocvar_g_vehicle_racer_health);
     if(autocvar_g_vehicle_racer_energy)
