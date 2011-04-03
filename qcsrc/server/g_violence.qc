@@ -47,6 +47,7 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 
 void Violence_DamageEffect_Remove(entity pl)
 {
+	pl.damageeffect_repeater.nextthink = 0;
 	remove(pl.damageeffect_repeater);
 	pl.damageeffect_repeater = world;
 }
@@ -91,7 +92,6 @@ void Violence_DamageEffect_DoRepeat()
 {
 	if(time > self.lifetime || (self.owner.classname != "player" && self.owner.classname != "body"))
 	{
-		self.nextthink = 0;
 		Violence_DamageEffect_Remove(self.owner);
 		return;
 	}
