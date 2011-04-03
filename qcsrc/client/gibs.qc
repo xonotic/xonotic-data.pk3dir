@@ -277,13 +277,14 @@ void GibSplash_Precache()
 
 void Ent_DamageEffect()
 {
-	float type, specnum1, specnum2;
+	float type, specnum1, specnum2, isself;
 	vector org;
 	string specstr, effectnum;
 	entity e;
 
 	type = ReadByte(); // damage weapon
 	specnum1 = ReadByte(); // player species
+	isself = ReadByte(); // is self
 	org_x = ReadCoord();
 	org_y = ReadCoord();
 	org_z = ReadCoord();

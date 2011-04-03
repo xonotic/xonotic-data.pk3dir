@@ -43,6 +43,7 @@ float Violence_DamageEffect_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEEFFECT);
 	WriteByte(MSG_ENTITY, self.cnt); // the damage weapon
 	WriteByte(MSG_ENTITY, self.state); // species
+	WriteByte(MSG_ENTITY, self.team); // is self
 	WriteCoord(MSG_ENTITY, floor(self.origin_x));
 	WriteCoord(MSG_ENTITY, floor(self.origin_y));
 	WriteCoord(MSG_ENTITY, floor(self.origin_z));
@@ -79,7 +80,7 @@ void Violence_DamageEffect_DoRepeat()
 	self.nextthink = time + autocvar_sv_damageeffect_tick;
 }
 
-void Violence_DamageEffect_SetRepeat(entity pl, float damage, float type)
+void Violence_DamageEffect_SetRepeat(entity pl, float damage, float type, float isself)
 {
 	if not(autocvar_sv_damageeffect_tick && autocvar_sv_damageeffect_lifetime)
 		return;
@@ -94,6 +95,7 @@ void Violence_DamageEffect_SetRepeat(entity pl, float damage, float type)
 		pl.damageeffect_repeater.owner = pl;
 		pl.damageeffect_repeater.think = Violence_DamageEffect_DoRepeat;
 
+		pl.damageeffect_repeater.team = isself;
 		pl.damageeffect_repeater.lifetime = time + (autocvar_sv_damageeffect_lifetime * damage);
 	}
 	else
