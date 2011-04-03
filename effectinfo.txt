@@ -5505,6 +5505,45 @@ lightradius 65
 lightradiusfade 300
 lightcolor 0.9 0.6 0.2
 
+// electro damage effect
+// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+effect weapondamage_electro
+count 5
+type static
+tex 47 47
+color 0x66ffff 0x2288ff
+size 6 12
+sizeincrease -16
+alpha 64 16 64
+gravity -0.0001
+airfriction 0.2
+liquidfriction 0.8
+originjitter 16 16 32
+velocityjitter 8 8 16
+velocitymultiplier 0
+airfriction -0.5
+rotate 180 360 -30 30
+effect weapondamage_electro
+count 3
+type smoke
+tex 0 8
+color 0x2244ff 0x0022ff
+size 4 8
+sizeincrease 8
+alpha 64 32 64
+gravity 0
+originjitter 4 4 16
+velocityjitter 0.4 0.4 0.6
+velocitymultiplier 0
+airfriction -0.35
+rotate 0 180 -30 30
+// light
+effect weapondamage_electro
+trailspacing 8
+lightradius 50
+lightradiusfade 200
+lightcolor 0.2 0.8 1.0
+
 // --------------------------------
 // End of Weapon Damage Effects
 // --------------------------------
