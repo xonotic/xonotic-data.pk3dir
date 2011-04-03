@@ -701,7 +701,7 @@ void HUD_Weapons(void)
 	float i, weapid, wpnalpha, weapon_cnt;
 
 	// TODO make this configurable
-	if(weaponorder_bypriority != autocvar_cl_weaponpriority)
+	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
 	{
 		if(weaponorder_bypriority)
 			strunzone(weaponorder_bypriority);

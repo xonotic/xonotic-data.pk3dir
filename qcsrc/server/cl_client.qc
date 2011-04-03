@@ -132,9 +132,9 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 	prio = 0;
 
 	// filter out spots for the wrong team
-	if(teamcheck)
-	if(spot.team != teamcheck)
-		return '-1 0 0';
+	if(teamcheck >= 0)
+		if(spot.team != teamcheck)
+			return '-1 0 0';
 
 	if(race_spawns)
 		if(spot.target == "")
@@ -269,7 +269,7 @@ entity Spawn_FilterOutBadSpots(entity firstspot, entity playerlist, float mindis
 					spotlist = spot;
 
 				/*
-				if(teamcheck)
+				if(teamcheck >= 0)
 				if(spot.team != teamcheck)
 					error("invalid spawn added");
 
@@ -283,7 +283,7 @@ entity Spawn_FilterOutBadSpots(entity firstspot, entity playerlist, float mindis
 
 	/*
 		entity e;
-		if(teamcheck)
+		if(teamcheck >= 0)
 			for(e = spotlist; e; e = e.chain)
 			{
 				print("seen ", etos(e), "\n");
@@ -325,10 +325,15 @@ entity SelectSpawnPoint (float anypoint)
 	if (spot)
 		return spot;
 
-	teamcheck = 0;
-
-	if(!anypoint && have_team_spawns > 0)
-		teamcheck = self.team;
+	if(anypoint)
+		teamcheck = -1;
+	else if(have_team_spawns > 0)
+		teamcheck = self.team; // MUST be team
+	else if(have_team_spawns == 0 && have_noteam_spawns)
+		teamcheck = 0; // MUST be noteam
+	else
+		teamcheck = -1;
+		// if we get here, we either require team spawns but have none, or we require non-team spawns and have none; use any spawn then
 
 	// get the list of players
 	playerlist = findchain(classname, "player");
@@ -368,7 +373,7 @@ entity SelectSpawnPoint (float anypoint)
 		print("spot mindistance: ", vtos(spot.spawnpoint_score), "\n");
 
 		entity e;
-		if(teamcheck)
+		if(teamcheck >= 0)
 			for(e = firstspot; e; e = e.chain)
 				if(e.team != teamcheck)
 					error("invalid spawn found");
