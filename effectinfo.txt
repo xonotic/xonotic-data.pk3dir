@@ -5861,6 +5861,41 @@ velocityjitter 11 11 50
 // light
 effect weapondamage_fireball
 trailspacing 8
+lightradius 65
+lightradiusfade 280
+lightcolor 0.9 0.6 0.2
+
+// rocketlauncher damage effect
+// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+effect weapondamage_rocketlauncher
+//notunderwater
+count 3
+type smoke
+tex 48 55
+size 7 14
+alpha 256 16 256
+gravity -0.5
+color 0x8f0d00 0xff5a00
+sizeincrease -10
+originoffset 0 0 10
+originjitter 6 6 8
+velocityjitter 22 22 50
+// smoke
+effect weapondamage_rocketlauncher
+type alphastatic
+count 3
+tex 0 8
+size 5 10
+sizeincrease 5
+alpha 128 32 128
+color 0x000000 0x111111
+gravity -0.3
+originoffset 0 0 10
+originjitter 6 6 8
+velocityjitter 11 11 50
+// light
+effect weapondamage_rocketlauncher
+trailspacing 8
 lightradius 60
 lightradiusfade 280
 lightcolor 0.9 0.6 0.2
