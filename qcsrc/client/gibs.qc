@@ -277,14 +277,14 @@ void GibSplash_Precache()
 
 void Ent_DamageEffect()
 {
-	float type, specnum1, specnum2, isself;
+	float type, specnum1, specnum2, entnumber;
 	vector org;
 	string specstr, effectnum;
 	entity e;
 
 	type = ReadByte(); // damage weapon
 	specnum1 = ReadByte(); // player species
-	isself = ReadByte(); // is self
+	entnumber = ReadByte(); // player entnum
 	org_x = ReadCoord();
 	org_y = ReadCoord();
 	org_z = ReadCoord();
@@ -292,6 +292,9 @@ void Ent_DamageEffect()
 	if not(autocvar_cl_damageeffect)
 		return;
 	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
+		return;
+	// if we aren't in third person mode, hide our own damage effect
+	if(entnumber == player_localentnum && !autocvar_chase_active)
 		return;
 
 	e = get_weaponinfo(type);
