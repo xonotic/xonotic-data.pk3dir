@@ -82,13 +82,7 @@ void Violence_DamageEffect(entity pl, float type)
 	e.classname = "weapondamage";
 	e.cnt = type;
 	e.state |= 8 * pl.species; // gib type, ranges from 0 to 15
-
-	// if this is a dead body, send the num of its player
-	if(pl.classname == "body")
-		e.team = num_for_edict(pl.owner);
-	else
-		e.team = num_for_edict(pl);
-
+	e.team = num_for_edict(pl);
 	setorigin(e, pl.origin);
 
 	Net_LinkEntity(e, FALSE, 0.2, Violence_DamageEffect_SendEntity);
