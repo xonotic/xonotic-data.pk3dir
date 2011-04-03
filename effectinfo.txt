@@ -5585,6 +5585,23 @@ lightradius 50
 lightradiusfade 240
 lightcolor 0.8 0.2 1.0
 
+// hlac damage effect
+// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+effect weapondamage_hlac
+count 3
+type smoke
+tex 0 8
+color 0x880000 0xff4400
+size 8 16
+sizeincrease 10
+alpha 128 16 128
+gravity 0
+originjitter 4 4 16
+velocityjitter 0.4 0.4 0.6
+velocitymultiplier 0
+airfriction -0.35
+rotate 0 180 -30 30
+
 // --------------------------------
 // End of Weapon Damage Effects
 // --------------------------------
