@@ -40,6 +40,27 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 	Violence_GibSplash_At(source.origin + source.view_ofs, source.velocity, type, amount, source, attacker);
 }
 
+// damage effect
+
+.float lifetime;
+.entity damageeffect_repeater;
+
+void Violence_DamageEffect_Remove(entity pl)
+{
+	remove(pl.damageeffect_repeater);
+	pl.damageeffect_repeater = world;
+}
+
+void Violence_DamageEffect_Copy(entity old_pl, entity pl)
+{
+	if(pl.damageeffect_repeater != world)
+		Violence_DamageEffect_Remove(pl);
+
+	pl.damageeffect_repeater = spawn();
+	copyentity(old_pl.damageeffect_repeater, pl.damageeffect_repeater);
+	pl.damageeffect_repeater.owner = pl;
+}
+
 float Violence_DamageEffect_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEEFFECT);
@@ -66,16 +87,12 @@ void Violence_DamageEffect(entity pl, float type)
 	Net_LinkEntity(e, FALSE, 0.2, Violence_DamageEffect_SendEntity);
 }
 
-.entity damageeffect_repeater;
-.float lifetime;
-
 void Violence_DamageEffect_DoRepeat()
 {
-	if(time > self.lifetime)
+	if(time > self.lifetime || (self.owner.classname != "player" && self.owner.classname != "body"))
 	{
 		self.nextthink = 0;
-		remove(self.owner.damageeffect_repeater);
-		self.owner.damageeffect_repeater = world;
+		Violence_DamageEffect_Remove(self.owner);
 		return;
 	}
 

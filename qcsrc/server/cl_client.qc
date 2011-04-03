@@ -1980,6 +1980,7 @@ void respawn(void)
 	}
 
 	CopyBody(1);
+	Violence_DamageEffect_Remove(self);
 	self.effects |= EF_NODRAW; // prevent another CopyBody
 	if(self.oldcolormap)
 	{
