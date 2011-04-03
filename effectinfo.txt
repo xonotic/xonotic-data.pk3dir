@@ -5467,7 +5467,7 @@ velocityjitter 11 11 50
 effect weapondamage_minelayer
 trailspacing 8
 lightradius 65
-lightradiusfade 240
+lightradiusfade 280
 lightcolor 0.9 0.6 0.2
 
 // grenadelauncher damage effect
@@ -5502,7 +5502,7 @@ velocityjitter 11 11 50
 effect weapondamage_grenadelauncher
 trailspacing 8
 lightradius 65
-lightradiusfade 240
+lightradiusfade 280
 lightcolor 0.9 0.6 0.2
 
 // electro damage effect
@@ -5542,7 +5542,7 @@ rotate 0 180 -30 30
 effect weapondamage_electro
 trailspacing 8
 lightradius 50
-lightradiusfade 180
+lightradiusfade 220
 lightcolor 0.2 0.8 1.0
 
 // crylink damage effect
@@ -5582,7 +5582,7 @@ rotate 0 180 -30 30
 effect weapondamage_crylink
 trailspacing 8
 lightradius 50
-lightradiusfade 200
+lightradiusfade 240
 lightcolor 0.8 0.2 1.0
 
 // --------------------------------
