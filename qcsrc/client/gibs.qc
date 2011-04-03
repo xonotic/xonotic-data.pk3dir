@@ -315,5 +315,21 @@ void Ent_DamageEffect()
 		effectnum = substring(effectnum, 0, strlen(effectnum) - 1); // remove the _ symbol at the end of the species name
 	}
 
-	pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+	entity head;
+	float foundgib;
+
+	// Scan the owner of all gibs in the world. If a gib owner is the same as the player we're applying the
+	// effect to, it means our player is gibbed. Therefore, apply the particles to the gibs instead.
+	for(head = world; (head = find(head, classname, "gib")); )
+	{
+		if(head.team == entnumber)
+		{
+			pointparticles(particleeffectnum(effectnum), head.origin, '0 0 0', 1);
+			foundgib = TRUE;
+		}
+	}
+
+	// If our player isn't gibbed, apply the effect to him instead.
+	if(!foundgib)
+		pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
 }
