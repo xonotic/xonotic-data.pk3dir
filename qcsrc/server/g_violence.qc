@@ -51,23 +51,6 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 .float lifetime;
 .entity damageeffect_repeater;
 
-void Violence_DamageEffect_Remove(entity pl)
-{
-	pl.damageeffect_repeater.nextthink = 0;
-	remove(pl.damageeffect_repeater);
-	pl.damageeffect_repeater = world;
-}
-
-void Violence_DamageEffect_Copy(entity old_pl, entity pl)
-{
-	if(pl.damageeffect_repeater != world)
-		Violence_DamageEffect_Remove(pl);
-
-	pl.damageeffect_repeater = spawn();
-	copyentity(old_pl.damageeffect_repeater, pl.damageeffect_repeater);
-	pl.damageeffect_repeater.owner = pl;
-}
-
 float Violence_DamageEffect_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEEFFECT);
@@ -89,8 +72,6 @@ void Violence_DamageEffect(entity pl, float type)
 	e.cnt = type;
 	e.state |= 8 * pl.species; // gib type, ranges from 0 to 15
 
-	e.team = num_for_edict(pl);
-
 	// if this is a copied dead body, send the num of its player instead
 	if(pl.classname == "body")
 		e.team = num_for_edict(pl.owner);
@@ -102,6 +83,7 @@ void Violence_DamageEffect(entity pl, float type)
 	Net_LinkEntity(e, FALSE, 0.2, Violence_DamageEffect_SendEntity);
 }
 
+void Violence_DamageEffect_Remove(entity pl);
 void Violence_DamageEffect_DoRepeat()
 {
 	if(time > self.lifetime || (self.owner.classname != "player" && self.owner.classname != "body"))
@@ -140,4 +122,20 @@ void Violence_DamageEffect_SetRepeat(entity pl, float damage, float type)
 
 	pl.damageeffect_repeater.cnt = type;
 	pl.damageeffect_repeater.nextthink = time;
+}
+
+void Violence_DamageEffect_Remove(entity pl)
+{
+	pl.damageeffect_repeater.nextthink = 0;
+	remove(pl.damageeffect_repeater);
+	pl.damageeffect_repeater = world;
+}
+
+void Violence_DamageEffect_Copy(entity old_pl, entity pl)
+{
+	if(pl.damageeffect_repeater != world)
+		Violence_DamageEffect_Remove(pl);
+
+	Violence_DamageEffect_SetRepeat(pl, 0, old_pl.damageeffect_repeater.cnt); // spawn a new repeater
+	pl.damageeffect_repeater.lifetime = old_pl.damageeffect_repeater.lifetime; // copy the lifetime
 }
