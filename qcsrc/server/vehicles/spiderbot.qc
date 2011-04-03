@@ -1,5 +1,5 @@
 const vector SPIDERBOT_MIN = '-75 -75 10';
-const vector SPIDERBOT_MAX  = '75 75 110';
+const vector SPIDERBOT_MAX  = '75 75 125';
 
 float autocvar_g_vehicle_spiderbot_respawntime;
 
@@ -170,8 +170,6 @@ void spiderbot_rocket_do()
         self.attack_finished_single = autocvar_g_vehicle_spiderbot_rocket_refire;
 
     self.gun2.cnt = time + self.attack_finished_single;
-
-
 }
 
 void spiderbot_minigun_fire(entity gun, float trail)

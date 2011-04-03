@@ -97,7 +97,7 @@ void racer_align4point()
         self.velocity_z *= 1 - (autocvar_g_vehicle_racer_upforcedamper * frametime);
 
     self.velocity   += v_add;
-    self.velocity_z -= autocvar_sv_gravity * frametime;
+    //self.velocity_z -= autocvar_sv_gravity * frametime;
 
     push_vector_x =  (fl_push - bl_push);
     push_vector_x += (fr_push - br_push);
@@ -452,28 +452,31 @@ float racer_frame()
 
 void racer_think()
 {
-    float a, b, c;
-
-    a = autocvar_g_vehicle_racer_anglestabilizer;
+    /*
+    float a, b, c;a = autocvar_g_vehicle_racer_anglestabilizer;
     b = autocvar_g_vehicle_racer_springlength;
     c = autocvar_g_vehicle_racer_hoverpower;
 
     autocvar_g_vehicle_racer_anglestabilizer = 36;
     autocvar_g_vehicle_racer_springlength = 96;
     autocvar_g_vehicle_racer_hoverpower = 300;
+    */
 
     racer_align4point(); //time - self.nextthink);
 
+    /*
     //if(self.velocity_z > 0)
     //    self.velocity_z *= 0.95;
 
     autocvar_g_vehicle_racer_anglestabilizer = a;
     autocvar_g_vehicle_racer_springlength = b;
     autocvar_g_vehicle_racer_hoverpower = c;
+    */
 
-    self.velocity_x *= 0.95;
-    self.velocity_y *= 0.95;
-
+    self.velocity_x *= 0.9;
+    self.velocity_y *= 0.9;
+    self.velocity_z *= 0.8;
+    self.velocity_z += sin(time * 2) * 16;
     self.nextthink = time + 0.05;
 }
 
@@ -488,7 +491,7 @@ void racer_exit(float eject)
 {
     self.think      = racer_think;
     self.nextthink  = time;
-    self.movetype   = MOVETYPE_BOUNCEMISSILE;
+    self.movetype   = MOVETYPE_TOSS;
 
     if not (self.owner)
         return;
@@ -525,7 +528,6 @@ void racer_spawn()
 
 void racer_blowup()
 {
-
     sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 
@@ -582,8 +584,8 @@ void racer_die()
         self.avelocity_z  = -16;
 
     self.avelocity_x = -vlen(self.velocity) * 0.2;
-    self.velocity     += '0 0 700';
-    self.colormod = '-0.5 -0.5 -0.5';
+    self.velocity   += '0 0 700';
+    self.colormod    = '-0.5 -0.5 -0.5';
 
 	self.think     = racer_blowup;
 	self.nextthink = 2 + time + random() * 3;
@@ -616,8 +618,8 @@ void racer_dinit()
 
     // FIXME: this be hakkz, fix the models insted (scale body, add tag_viewport to the hudmodel).
     self.scale = 0.5;
-    setattachment(self.vehicle_hudmodel, self, "");
-    setattachment(self.vehicle_viewport, self, "tag_viewport");
+    //setattachment(self.vehicle_hudmodel, self, "");
+    //setattachment(self.vehicle_viewport, self, "tag_viewport");
 
     self.mass               = 900;
 }

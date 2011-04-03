@@ -98,6 +98,7 @@ void raptor_bomb_burst()
     if(self.cnt > time)
     if(autocvar_g_vehicle_raptor_bomblet_alt)
     {
+        UpdateCSQCProjectile(self);
         self.nextthink = time;
         traceline(self.origin, self.origin + (normalize(self.velocity) * autocvar_g_vehicle_raptor_bomblet_alt), MOVE_NORMAL, self);
         if(trace_fraction == 1.0)
@@ -151,7 +152,7 @@ void raptor_bombdrop()
     setorigin(bomb_1, gettaginfo(self, gettagindex(self, "bombmount_left")));
     setorigin(bomb_2, gettaginfo(self, gettagindex(self, "bombmount_right")));
 
-    bomb_1.movetype     = bomb_2.movetype   = MOVETYPE_TOSS;
+    bomb_1.movetype     = bomb_2.movetype   = MOVETYPE_BOUNCE;
     bomb_1.velocity     = bomb_2.velocity   = self.velocity;
     bomb_1.touch        = bomb_2.touch      = raptor_bomb_touch;
     bomb_1.think        = bomb_2.think      = raptor_bomb_burst;
@@ -198,7 +199,8 @@ void raptor_enter()
     self.solid          = SOLID_BBOX;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_raptor_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_raptor_shield);
-    self.velocity_z = 1;
+
+    self.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
 
 #ifdef RAPTOR_RETARDCAMERA
     setorigin(self.vehicle_viewport, self.origin);
@@ -624,8 +626,9 @@ void raptor_dinit()
         remove(self);
         return;
     }
+
     //FIXME: Camera is in a bad place in HUD model.
-    setorigin(self.vehicle_viewport, '25 0 5');
+    //setorigin(self.vehicle_viewport, '25 0 5');
 
     self.frame = 0;
 
@@ -665,7 +668,6 @@ void raptor_dinit()
 
     self.angles = self.bomb1.angles;
     self.bomb1.angles = '0 0 0';
-
 
     spinner = spawn();
     spinner.owner = self;

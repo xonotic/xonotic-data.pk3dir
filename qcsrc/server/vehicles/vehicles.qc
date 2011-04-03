@@ -399,6 +399,10 @@ void vehicles_enter()
     self.owner.vehicle_reload1  = self.vehicle_reload1;
     self.owner.vehicle_reload2  = self.vehicle_reload2;
 
+    // Cnnt do this, hides attached objects too.
+    //self.exteriormodeltoclient = self.owner;
+    //self.tur_head.exteriormodeltoclient = self.owner;
+
     other.flags &~= FL_ONGROUND;
     self.flags  &~= FL_ONGROUND;
 
@@ -409,19 +413,19 @@ void vehicles_enter()
     WriteByte (MSG_ONE, SVC_SETVIEWPORT);
     WriteEntity(MSG_ONE, self.vehicle_viewport);
 
-    WriteByte (MSG_ONE, SVC_SETVIEWANGLES);  // 10 = SVC_SETVIEWANGLES
+    WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
     if(self.tur_head)
     {
-        WriteAngle(MSG_ONE, self.tur_head.angles_x + self.angles_x);    // tilt
-        WriteAngle(MSG_ONE, self.tur_head.angles_y + self.angles_y);    // yaw
-        WriteAngle(MSG_ONE, 0);    // roll
+        WriteAngle(MSG_ONE, self.tur_head.angles_x + self.angles_x); // tilt
+        WriteAngle(MSG_ONE, self.tur_head.angles_y + self.angles_y); // yaw
+        WriteAngle(MSG_ONE, 0);                                      // roll
     }
     else
     {
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES); // 10 = SVC_SETVIEWANGLES
-        WriteAngle(MSG_ONE,  self.angles_x * -1);    // tilt
-        WriteAngle(MSG_ONE,  self.angles_y);    // yaw
-        WriteAngle(MSG_ONE,  0);                // roll
+        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+        WriteAngle(MSG_ONE,  self.angles_x * -1); // tilt
+        WriteAngle(MSG_ONE,  self.angles_y);      // yaw
+        WriteAngle(MSG_ONE,  0);                  // roll
     }
 
     vehicles_clearrturn();
@@ -496,7 +500,7 @@ void shieldhit_think()
     self.alpha -= 0.1;
     if (self.alpha <= 0)
     {
-        setmodel(self, "");
+        //setmodel(self, "");
         self.alpha = -1;
     }
     else
@@ -507,36 +511,36 @@ void shieldhit_think()
 
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-    float ddmg_take;
-
     self.dmg_time = time;
 
     if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0))
     {
-        if (wasfreed(self.tur_head.enemy) || self.tur_head.enemy == world)
+        if (wasfreed(self.vehicle_shieldent) || self.vehicle_shieldent == world)
         {
-            self.tur_head.enemy = spawn();
-            self.tur_head.enemy.effects = EF_LOWPRECISION;
+            self.vehicle_shieldent = spawn();
+            self.vehicle_shieldent.effects = EF_LOWPRECISION;
+
+            setmodel(self.vehicle_shieldent, "models/vhshield.md3");
+            setattachment(self.vehicle_shieldent, self, "");
+            setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
+            self.vehicle_shieldent.scale       = 256 / vlen(self.maxs - self.mins);
+            self.vehicle_shieldent.think       = shieldhit_think;
         }
 
-        setmodel(self.tur_head.enemy, "models/vhshield.md3");
-        setattachment(self.tur_head.enemy, self, "");
 
-        self.tur_head.enemy.colormod    = '1 1 1';
-        self.tur_head.enemy.alpha       = 0.45;
-        self.tur_head.enemy.scale       = 256 / vlen(self.maxs - self.mins);
-        self.tur_head.enemy.angles      = vectoangles(normalize(hitloc - self.origin)) - self.angles;
-        self.tur_head.enemy.think       = shieldhit_think;
-        self.tur_head.enemy.nextthink   = time;
+        self.vehicle_shieldent.colormod    = '1 1 1';
+        self.vehicle_shieldent.alpha       = 0.45;
+        self.vehicle_shieldent.angles      = vectoangles(normalize(hitloc - (self.origin + self.vehicle_shieldent.origin))) - self.angles;
+        self.vehicle_shieldent.nextthink   = time;
 
         self.vehicle_shield -= damage;
+
         if(self.vehicle_shield < 0)
         {
-            self.tur_head.enemy.colormod = '2 0 0';
-            ddmg_take = fabs(self.vehicle_shield);
-            self.vehicle_shield         = 0;
-            self.tur_head.enemy.alpha   = 0.75;
-            self.vehicle_health         -= ddmg_take;
+            self.vehicle_shieldent.colormod = '2 0 0';
+            self.vehicle_shield             = 0;
+            self.vehicle_shieldent.alpha    = 0.75;
+            self.vehicle_health            -= fabs(self.vehicle_shield);
         }
     }
     else
@@ -637,14 +641,15 @@ void vehicles_reset_colors()
     e = findchainentity(tag_entity, self);
     while(e)
     {
-        e.effects   = _effects;
-        e.colormod  = _colormod;
-        e.colormap  = _colormap;
-        e.alpha     = 1;
-
+        if(e != self.vehicle_shieldent)
+        {
+            e.effects   = _effects;
+            e.colormod  = _colormod;
+            e.colormap  = _colormap;
+            e.alpha     = 1;
+        }
         e = e.chain;
     }
-
 
     self.vehicle_hudmodel.effects  = self.effects  = _effects;
     self.vehicle_hudmodel.colormod = self.colormod = _colormod;
