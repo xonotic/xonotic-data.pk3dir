@@ -16,6 +16,7 @@ float autocvar_g_vehicle_racer_speed_forward;
 float autocvar_g_vehicle_racer_speed_strafe;
 float autocvar_g_vehicle_racer_springlength;
 float autocvar_g_vehicle_racer_upforcedamper;
+float autocvar_g_vehicle_racer_friction;
 
 float autocvar_g_vehicle_racer_hovertype;
 float autocvar_g_vehicle_racer_hoverpower;
@@ -333,7 +334,7 @@ float racer_frame()
     racer.angles_x *= -1;
 #endif
 
-    df = racer.velocity * -0.5;
+    df = racer.velocity * -autocvar_g_vehicle_racer_friction;
 
     if(player.movement_x != 0)
     {
@@ -482,7 +483,7 @@ void racer_think()
 
 void racer_enter()
 {
-    self.movetype = MOVETYPE_BOUNCE; //MISSILE;
+    self.movetype = MOVETYPE_BOUNCE;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield);
 }

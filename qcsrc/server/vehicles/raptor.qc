@@ -180,7 +180,7 @@ void raptor_bombdrop()
 void raptor_fire_cannon(entity gun, string tagname)
 {
     entity bolt;
-    vector b_org;
+    vector b_org;    
     b_org = gettaginfo(gun, gettagindex(gun, tagname));
     bolt = vehicles_projectile("raptor_cannon_impact", "weapons/laserimpact.wav", "raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
                            b_org, normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
@@ -199,8 +199,8 @@ void raptor_enter()
     self.solid          = SOLID_BBOX;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_raptor_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_raptor_shield);
-
     self.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
+    self.tur_head.exteriormodeltoclient = self.owner;
 
 #ifdef RAPTOR_RETARDCAMERA
     setorigin(self.vehicle_viewport, self.origin);
@@ -234,7 +234,8 @@ void raptor_land()
 
 void raptor_exit(float eject)
 {
-
+    self.tur_head.exteriormodeltoclient = world;
+    
     if(self.deadflag == DEAD_NO)
     {
         self.think      = raptor_land;
@@ -636,18 +637,20 @@ void raptor_dinit()
     self.bomb2 = spawn();
     self.gun1  = spawn();
     self.gun2  = spawn();
-
+            
 #ifdef RAPTOR_RETARDCAMERA
     setattachment(self.vehicle_viewport, world, "");
 #endif
 
-    setmodel(self.bomb1,"models/vehicles/clusterbomb.md3");
-    setmodel(self.bomb2,"models/vehicles/clusterbomb.md3");
+    setmodel(self.bomb1,"models/vehicles/clusterbomb_folded.md3");
+    setmodel(self.bomb2,"models/vehicles/clusterbomb_folded.md3");
     setmodel(self.gun1, "models/vehicles/raptor_gun.dpm");
     setmodel(self.gun2, "models/vehicles/raptor_gun.dpm");
+    setmodel(self.tur_head, "models/vehicles/raptor_body.dpm");
 
     setattachment(self.bomb1, self,"bombmount_left");
     setattachment(self.bomb2, self,"bombmount_right");
+    setattachment(self.tur_head, self,"root");
 
 
     // FIXME Guns mounts to angled bones
@@ -709,6 +712,8 @@ void spawnfunc_vehicle_raptor()
     precache_model ("models/vehicles/spinner.dpm");
     precache_model ("models/vehicles/raptor_cockpit.dpm");
     precache_model ("models/vehicles/clusterbomb.md3");
+    precache_model ("models/vehicles/clusterbomb_folded.md3");
+    precache_model ("models/vehicles/raptor_body.dpm");
 
     self.think = raptor_dinit;
     self.nextthink = time + 1;

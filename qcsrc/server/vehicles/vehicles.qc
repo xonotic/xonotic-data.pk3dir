@@ -661,6 +661,42 @@ void vehicles_reset_colors()
 
 }
 
+//#define VEHICLES_CSQC
+#ifdef VEHICLES_CSQC
+#define VSF_ORG 2
+#define VSF_VEL 4
+#define VSF_ANG 8
+#define VSF_COLORMAP 16
+#define VSF_STAT1 32
+
+float SendVehicle(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_VEHICLE_RACER);
+
+	WriteByte(MSG_ENTITY, self.cnt);
+
+	WriteCoord(MSG_ENTITY, self.origin_x);
+	WriteCoord(MSG_ENTITY, self.origin_y);
+	WriteCoord(MSG_ENTITY, self.origin_z);
+
+	WriteCoord(MSG_ENTITY, self.velocity_x);
+	WriteCoord(MSG_ENTITY, self.velocity_y);
+	WriteCoord(MSG_ENTITY, self.velocity_z);
+
+	WriteAngle(MSG_ENTITY, self.angles_x);
+	WriteAngle(MSG_ENTITY, self.angles_y);
+	WriteAngle(MSG_ENTITY, self.angles_z);
+
+    return TRUE;
+}
+
+void NetLinkVehicle()
+{    
+    self.SendFlags = 0xFFFFFF;
+    Net_LinkEntity(self, FALSE, 0, SendVehicle);    
+}
+#endif
+
 float vehicle_initialize(string  net_name,
                          string  bodymodel,
                          string  topmodel,
