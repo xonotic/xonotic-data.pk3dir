@@ -120,6 +120,8 @@ void Violence_DamageEffect_SetRepeat(entity pl, float damage, float type)
 		pl.damageeffect_repeater.lifetime += (autocvar_sv_damageeffect_lifetime * damage);
 	}
 
+	pl.damageeffect_repeater.lifetime = bound(0, pl.damageeffect_repeater.lifetime, time + autocvar_sv_damageeffect_lifetime_max);
+
 	pl.damageeffect_repeater.cnt = type;
 	pl.damageeffect_repeater.nextthink = time;
 }
