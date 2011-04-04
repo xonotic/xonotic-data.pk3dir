@@ -323,6 +323,7 @@ void Ent_DamageEffect()
 	for(head = world; (head = find(head, classname, "gib")); )
 	{
 		if(head.team == entnumber)
+		if(random() < autocvar_cl_damageeffect_gib_probability)
 		{
 			pointparticles(particleeffectnum(effectnum), head.origin, '0 0 0', 1);
 			foundgib = TRUE;
