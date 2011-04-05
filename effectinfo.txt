@@ -5691,6 +5691,21 @@ velocityjitter 60 60 60
 velocitymultiplier 100
 stretchfactor 3
 
+effect wakizashi_booster_smoke
+type alphastatic
+notunderwater
+tex 0 8
+count 3
+size 60 100
+sizeincrease 10
+gravity -0.1
+alpha 200 750 200
+velocityjitter 40 40 40
+originjitter 60 60 60
+airfriction 2
+color 0xA69A80 0xB3B39F
+rotate -180 180 -20 20
+
 // decal
 effect raptor_cannon_impact
 countabsolute 1
