@@ -148,10 +148,10 @@ void spiderbot_rocket_do()
         return;
 
     crosshair_trace(self.owner);
-
+//normalize(v_forward + (v_up * 0.5) + randomvec() * 0.25) * autocvar_g_vehicle_spiderbot_rocket_speed,
     v = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
     rocket = vehicles_projectile("spiderbot_rocket_explode", "weapons/rocket_impact.wav", "spiderbot_rocket_launch", "weapons/rocket_fire.wav",
-                           v, normalize(v_forward + (v_up * 0.5) + randomvec() * 0.25) * autocvar_g_vehicle_spiderbot_rocket_speed,
+                           v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                            autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
                            DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health);
 
@@ -274,7 +274,10 @@ float spiderbot_frame()
     }
 
     self = spider;
-
+    
+    //vector v;
+    //v = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
+    //te_lightning1(world, v, v + normalize(v_forward + (v_up * 0.5) + randomvec() * 0.25) * autocvar_g_vehicle_spiderbot_rocket_speed);
     crosshair_trace(player);
     //UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);
 
