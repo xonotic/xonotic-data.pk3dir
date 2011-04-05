@@ -97,29 +97,27 @@ void raptor_bomb_burst()
 {
     if(self.cnt > time)
     if(autocvar_g_vehicle_raptor_bomblet_alt)
-    {
-        UpdateCSQCProjectile(self);
+    {        
         self.nextthink = time;
         traceline(self.origin, self.origin + (normalize(self.velocity) * autocvar_g_vehicle_raptor_bomblet_alt), MOVE_NORMAL, self);
-        if(trace_fraction == 1.0)
+        if((trace_fraction == 1.0) || (vlen(self.origin - self.owner.origin) < autocvar_g_vehicle_raptor_bomblet_radius))
+        {
+            UpdateCSQCProjectile(self);
             return;
-
-        if(vlen(self.origin - self.owner.origin) < autocvar_g_vehicle_raptor_bomblet_radius)
-            return;
+        }
     }
 
     entity bomblet;
     float i;
 
     sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum("rocket_explode"), self.origin, self.velocity, 1);
+    pointparticles(particleeffectnum("raptor_bomb_spread"), self.origin, self.velocity, 1);
 
     for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
     {
         bomblet = spawn();
         setorigin(bomblet, self.origin);
 
-        //bomblet.solid       = SOLID_TRIGGER;
         bomblet.movetype    = MOVETYPE_TOSS;
         bomblet.touch       = raptor_bomblet_touch;
         bomblet.think       = raptor_bomblet_boom;
@@ -127,6 +125,7 @@ void raptor_bomb_burst()
         bomblet.owner       = self.owner;
         bomblet.realowner   = self.realowner;
         bomblet.velocity    = normalize(normalize(self.velocity) + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * vlen(self.velocity);
+        
         PROJECTILE_MAKETRIGGER(bomblet);
         CSQCProjectile(bomblet, TRUE, PROJECTILE_RAPTORBOMBLET, TRUE);
     }

@@ -2793,7 +2793,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_HURTTRIGGER);
 			if(alsoprint)
 				print(sprintf(_("^1%s^1 was thrown into a world of hurt by %s\n"), s2, s1));
-		} else if(type == DEATH_SBCRUSH) {
+		} else if(type == DEATH_VHCRUSH) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
 				print (sprintf(_("^1%s^1 was crushed by %s\n"), s2, s1));

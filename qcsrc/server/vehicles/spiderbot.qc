@@ -150,7 +150,7 @@ void spiderbot_rocket_do()
     crosshair_trace(self.owner);
 
     v = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
-    rocket = vehicles_projectile("rocket_explode", "weapons/rocket_impact.wav", "", "weapons/rocket_fire.wav",
+    rocket = vehicles_projectile("spiderbot_rocket_explode", "weapons/rocket_impact.wav", "spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                            v, normalize(v_forward + (v_up * 0.5) + randomvec() * 0.25) * autocvar_g_vehicle_spiderbot_rocket_speed,
                            autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
                            DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health);
@@ -161,7 +161,7 @@ void spiderbot_rocket_do()
     rocket.think      = spiderbot_rocket_guided;
     rocket.nextthink  = time;
     rocket.cnt        = time + autocvar_g_vehicle_spiderbot_rocket_lifetime;
-    te_explosion (rocket.origin);
+    
 
     self.tur_head.frame += 1;
     if (self.tur_head.frame == 9)
@@ -531,7 +531,7 @@ float spiderbot_crushable(entity e)
 
         //todo: add check for velocity/angle here (so we dont cush players runing into us from behind)
 
-        Damage(other, self, self.owner,autocvar_g_vehicle_spiderbot_crush_dmg,DEATH_SBCRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicle_spiderbot_crush_force);
+        Damage(other, self, self.owner,autocvar_g_vehicle_spiderbot_crush_dmg,DEATH_VHCRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicle_spiderbot_crush_force);
         return;
     }
 

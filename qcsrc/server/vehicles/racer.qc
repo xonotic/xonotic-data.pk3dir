@@ -233,7 +233,7 @@ void racer_fire_rocket(string tagname, entity trg)
     entity rocket;
 
     v = gettaginfo(self, gettagindex(self, tagname));
-    rocket = vehicles_projectile("rocket_explode", "weapons/rocket_impact.wav", "", "weapons/rocket_fire.wav",
+    rocket = vehicles_projectile("wakizashi_rocket_explode", "weapons/rocket_impact.wav", "wakizashi_rocket_launch", "weapons/rocket_fire.wav",
                            v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
                            DEATH_WAKIROCKET, PROJECTILE_WAKIROCKET, 20);
