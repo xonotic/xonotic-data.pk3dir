@@ -5462,30 +5462,85 @@ alpha 40 40 300
 
 effect spiderbot_rocket_thrust
 notunderwater
-count 5
+count 3
 type spark
 tex 48 55
 color 0x8f0d00 0xff5a00
-size 10 15
-sizeincrease -2
+size 5 10
+sizeincrease -40
 alpha 200 256 1600
+velocityjitter 20 20 20
+velocitymultiplier -1.4
+stretchfactor 0.9
+effect spiderbot_rocket_thrust
+notunderwater
+count 4
+type static
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 25 25
+sizeincrease -3000
+alpha 200 200 9000
 velocityjitter 60 60 60
-velocitymultiplier 100
-stretchfactor 3
+velocitymultiplier -1.4
+stretchfactor 1
+rotate -180 180 -500 500
 
+
+
+// long lasting smoke
 effect spiderbot_rocket_launch
 notunderwater
-count 5
+count 8
+type smoke
+tex 0 8
+color 0xFFFFFF 0xD9C4B0
+size 30 30
+sizeincrease 20
+alpha 100 156 60
+velocityjitter 60 60 60
+velocitymultiplier -0.1
+airfriction 0.3
+gravity -0.01
+// fast smoke
+effect spiderbot_rocket_launch
+notunderwater
+count 14
+type smoke
+tex 0 8
+color 0xFFFFFF 0xD9C4B0
+size 30 30
+sizeincrease 20
+alpha 100 156 260
+gravity -0.3
+velocityjitter 160 160 60
+airfriction 0.3
+// fire
+effect spiderbot_rocket_launch
+notunderwater
+count 14
 type spark
 tex 48 55
 color 0x8f0d00 0xff5a00
-size 10 15
-sizeincrease -2
-alpha 200 256 1600
+size 30 30
+sizeincrease 40
+velocitymultiplier 0.5
+alpha 200 256 1960
 velocityjitter 60 60 60
-velocitymultiplier 100
+airfriction 0.3
 stretchfactor 3
-
+airfriction 0.3
+//sparks
+effect spiderbot_rocket_launch
+notunderwater
+count 10
+type spark
+tex 40 40
+color 0xFFFFFF 0xD9C4B0
+size 1 4
+alpha 200 256 1000
+velocityjitter 160 160 160
+velocitymultiplier -0.5
 
 effect wakizashi_gun_impact
 count 15
@@ -5667,29 +5722,66 @@ alpha 40 40 300
 
 effect wakizashi_rocket_thrust
 notunderwater
-count 5
+countabsolute 3
 type spark
 tex 48 55
-color 0x8f0d00 0xff5a00
-size 10 15
+color 0x00FFDD 0x6200FF
+size 14 19
 sizeincrease -2
 alpha 200 256 1600
 velocityjitter 60 60 60
-velocitymultiplier 100
+velocitymultiplier -1.1
+stretchfactor 1
+effect wakizashi_rocket_thrust
+notunderwater
+countabsolute 2
+type spark
+tex 48 55
+color 0xFFFF33 0xFFEE00
+size 5 10
+sizeincrease -2
+alpha 200 256 1900
+velocityjitter 60 60 60
+velocitymultiplier -0.3
 stretchfactor 3
 
+// long lasting smoke
 effect wakizashi_rocket_launch
 notunderwater
-count 5
+count 8
+type smoke
+tex 0 8
+color 0xFFFFFF 0xD9C4B0
+size 3 30
+sizeincrease 20
+alpha 100 156 60
+velocityjitter 160 160 60
+velocitymultiplier -0.1
+airfriction 0.3
+// fast smoke
+effect wakizashi_rocket_launch
+notunderwater
+count 14
+type smoke
+tex 0 8
+color 0xFFFFFF 0xD9C4B0
+size 30 30
+sizeincrease 20
+alpha 100 156 260
+velocityjitter 160 160 60
+velocitymultiplier 0.4
+airfriction 0.3
+//sparks
+effect wakizashi_rocket_launch
+notunderwater
+count 10
 type spark
-tex 48 55
-color 0x8f0d00 0xff5a00
-size 10 15
-sizeincrease -2
-alpha 200 256 1600
+tex 40 40
+color 0xFFFFFF 0xD9C4B0
+size 1 4
+alpha 200 256 1000
 velocityjitter 60 60 60
-velocitymultiplier 100
-stretchfactor 3
+velocitymultiplier -1.5
 
 effect wakizashi_booster_smoke
 type alphastatic
