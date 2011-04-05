@@ -279,6 +279,7 @@ float raptor_takeoff()
     else
         player.PlayerPhysplug = raptor_frame;
 
+    player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
     self = player;
     return 1;
 }
@@ -605,6 +606,15 @@ void raptor_spawn()
     self.delay = time;
 }
 
+// If we dont do this ever now and then, the raptors rotors
+// stop working, presumably due to angle overflow. cute.
+void raptor_rotor_anglefix()
+{
+    self.gun1.angles_y = anglemods(self.gun1.angles_y);
+    self.gun2.angles_y = anglemods(self.gun2.angles_y);
+    self.nextthink = time + 15;
+}
+
 void raptor_dinit()
 {
     entity spinner;
@@ -687,7 +697,11 @@ void raptor_dinit()
     spinner.movetype = MOVETYPE_NOCLIP;
     spinner.avelocity = '0 -90 0';
     self.bomb1.gun2 = spinner;
-
+    
+    // Sigh.
+    self.bomb1.think = raptor_rotor_anglefix;
+    self.bomb1.nextthink = time;
+    
     self.mass               = 1 ;
 }
 

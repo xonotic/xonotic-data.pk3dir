@@ -273,6 +273,7 @@ void vehicles_spawn()
 
     // De-own & reset
     self.vehicle_hudmodel.viewmodelforclient = self;
+    
     self.owner              = world;
     self.touch              = vehicles_touch;
     self.event_damage       = vehicles_damage;
@@ -375,8 +376,12 @@ void vehicles_enter()
 
     self.owner          = other;
     self.switchweapon   = other.switchweapon;
+    
+    // .viewmodelforclient works better.
+    //self.vehicle_hudmodel.drawonlytoclient = self.owner;
 
-    self.vehicle_hudmodel.viewmodelforclient = self.owner;
+    self.vehicle_hudmodel.viewmodelforclient = self.owner;        
+    
     self.event_damage         = vehicles_damage;
     self.nextthink            = 0;
     self.owner.angles         = self.angles;
@@ -470,7 +475,7 @@ void vehicles_exit(float eject)
         self.avelocity          = '0 0 0';
 
     self.vehicle_hudmodel.viewmodelforclient = self;
-	self.tur_head.nodrawtoclient             = self;
+	self.tur_head.nodrawtoclient             = world;
     vehicles_setreturn();
 
     self.phase = time + 1;
@@ -754,7 +759,7 @@ float vehicle_initialize(string  net_name,
     self.iscreature         = TRUE;
     self.hud                = vhud;
 
-    self.customizeentityforclient = vehicles_customizeentityforclient;
+    //self.customizeentityforclient = vehicles_customizeentityforclient;
     self.vehicle_die         = dieproc;
     self.vehicle_exit        = exitfunc;
     self.vehicle_enter       = enterproc;
@@ -797,7 +802,8 @@ float vehicle_initialize(string  net_name,
         tracebox(self.origin + '0 0 100', min_s, max_s, self.origin - '0 0 10000', MOVE_WORLDONLY, self);
         setorigin(self, trace_endpos);
     }
-
+    
+    //self.vehicle_hudmodel.effects = EF_NODEPTHTEST;
     self.pos1 = self.origin;
     self.pos2 = self.angles;
 

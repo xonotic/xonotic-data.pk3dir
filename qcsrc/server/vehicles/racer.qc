@@ -334,8 +334,10 @@ float racer_frame()
     racer.angles_x *= -1;
 #endif
 
+    ftmp = racer.velocity_z;
     df = racer.velocity * -autocvar_g_vehicle_racer_friction;
-
+    racer.velocity_z = ftmp;
+    
     if(player.movement_x != 0)
     {
         if(player.movement_x > 0)
@@ -619,8 +621,8 @@ void racer_dinit()
 
     // FIXME: this be hakkz, fix the models insted (scale body, add tag_viewport to the hudmodel).
     self.scale = 0.5;
-    //setattachment(self.vehicle_hudmodel, self, "");
-    //setattachment(self.vehicle_viewport, self, "tag_viewport");
+    setattachment(self.vehicle_hudmodel, self, "");
+    setattachment(self.vehicle_viewport, self, "tag_viewport");
 
     self.mass               = 900;
 }
