@@ -722,7 +722,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(sv_gentle > 0 || autocvar_ekg) {
 			// remove corpse
-			PlayerCorpseDamage (inflictor, attacker, 100.0, deathtype, hitloc, force);
+			PlayerCorpseDamage (inflictor, attacker, autocvar_sv_gibhealth+1.0, deathtype, hitloc, force);
 		}
 
 		// reset fields the weapons may use just in case
