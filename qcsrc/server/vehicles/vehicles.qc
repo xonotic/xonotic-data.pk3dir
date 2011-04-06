@@ -655,6 +655,7 @@ void vehicles_reset_colors()
     self.vehicle_hudmodel.effects  = self.effects  = _effects | EF_LOWPRECISION;
     self.vehicle_hudmodel.colormod = self.colormod = _colormod;
     self.vehicle_hudmodel.colormap = self.colormap = _colormap;
+    self.vehicle_viewport.effects = (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT);
 
     self.alpha          = 1;
     self.avelocity      = '0 0 0';

@@ -451,12 +451,6 @@ void Projectile_Precache()
 	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
 
-	precache_model("models/vehicles/bomblet.md3");
-	precache_model("models/vehicles/clusterbomb.md3");
-	precache_model("models/vehicles/clusterbomb_fragment.md3");
-	precache_model("models/vehicles/rocket01.md3");
-	precache_model("models/vehicles/rocket02.md3");
-
 	precache_sound("weapons/electro_fly.wav");
 	precache_sound("weapons/rocket_fly.wav");
 	precache_sound("weapons/fireball_fly.wav");

@@ -31,6 +31,7 @@ bgmscript.qh
 noise.qh
 
 main.qh
+vehicles/vehicles.qh
 
 sortlist.qc
 miscfunctions.qc

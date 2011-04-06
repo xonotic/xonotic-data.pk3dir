@@ -213,13 +213,6 @@ void Net_VehicleSetup()
     }
 }
 
-void Vehicles_Precache()
-{
-	//precache_model("models/ax_shell.mdl");
-	//precache_sound("weapons/brass1.wav");
-}
-
-
 void CSQC_SPIDER_HUD()
 {
 	float rockets, reload, heat, hp, shield;
@@ -464,3 +457,56 @@ void CSQC_WAKIZASHI_HUD()
 	}
 
 }
+
+void Vehicles_Precache()
+{
+	precache_model("models/vehicles/bomblet.md3");
+	precache_model("models/vehicles/clusterbomb.md3");
+	precache_model("models/vehicles/clusterbomb_fragment.md3");
+	precache_model("models/vehicles/rocket01.md3");
+	precache_model("models/vehicles/rocket02.md3");
+}
+
+
+void RaptorCBShellfragDraw()
+{
+	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
+	if(wasfreed(self))
+		return;
+
+	self.move_avelocity += randomvec() * 15;
+	self.renderflags = 0;
+	self.alpha = bound(0, self.nextthink - time, 1);
+
+	if(self.alpha < ALPHA_MIN_VISIBLE)
+        remove(self);
+
+}
+void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
+{
+    entity sfrag;
+    
+    sfrag = spawn();
+    setmodel(sfrag, "models/vehicles/clusterbomb_fragment.md3");
+    setorigin(sfrag, _org);
+    
+	sfrag.move_movetype = MOVETYPE_BOUNCE;
+	sfrag.gravity = 0.15;
+	sfrag.solid = SOLID_CORPSE;
+
+	sfrag.draw = RaptorCBShellfragDraw;
+
+	sfrag.move_origin = sfrag.origin = _org;
+	sfrag.move_velocity = _vel;
+	sfrag.move_avelocity = prandomvec() * vlen(sfrag.move_velocity);
+	sfrag.angles = self.move_angles = _ang;
+	
+	sfrag.move_time = time;
+	sfrag.damageforcescale = 4;
+
+	sfrag.nextthink = time + 2 * (1 + prandom() * 2);
+    sfrag.drawmask = MASK_NORMAL;
+    
+    
+}
+                    

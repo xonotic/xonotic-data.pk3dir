@@ -118,6 +118,16 @@ void Ent_DamageInfo(float isNew)
                 pointparticles(particleeffectnum("raptor_cannon_impact"), self.origin, w_backoff * 1000, 1);
                 break;
             case DEATH_RAPTOR_BOMB_SPLIT:
+                float i;
+                vector ang, vel;
+                for(i = 1; i <= 4; ++i)
+                {
+                    vel = normalize(w_org - (w_org + normalize(force) * 16)) + randomvec() * 128;
+                    ang = vectoangles(vel);
+                    RaptorCBShellfragToss(w_org, vel, ang + '0 0 1' * (120 * i));
+                }
+                    
+                
                 sound(self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
                 pointparticles(particleeffectnum("raptor_bomb_spread"), self.origin, w_backoff * 1000, 1);
                 break;
