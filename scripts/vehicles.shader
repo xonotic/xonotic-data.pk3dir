@@ -14,3 +14,11 @@ wakazachi
 		rgbgen lightingDiffuse
 	}
 }
+cockpit
+{
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/cockpit.tga
+		rgbgen lightingDiffuse
+	}
+}
