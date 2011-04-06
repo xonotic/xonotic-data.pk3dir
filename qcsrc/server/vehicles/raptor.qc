@@ -184,7 +184,7 @@ void raptor_fire_cannon(entity gun, string tagname)
     bolt = vehicles_projectile("raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
                            b_org, normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
                            autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
-                           DEATH_RAPTOR_CANNON, PROJECTILE_RAPTORCANNON, 0);
+                           DEATH_RAPTOR_CANNON, PROJECTILE_RAPTORCANNON, 0, TRUE, TRUE);
 }
 
 void raptor_think()

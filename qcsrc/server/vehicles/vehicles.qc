@@ -213,7 +213,8 @@ void vehicles_projectile_explode()
 entity vehicles_projectile(string _mzlfx, string _mzlsound,
                            vector _org, vector _vel,
                            float _dmg, float _radi, float _force,  float _size,
-                           float _deahtype, float _projtype, float _health)
+                           float _deahtype, float _projtype, float _health, 
+                           float _cull, float _clianim)
 {
     entity proj;
 
@@ -257,7 +258,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 
     setsize (proj, '-1 -1 -1' * _size, '1 1 1' * _size);
 
-    CSQCProjectile(proj, TRUE, _projtype, TRUE);
+    CSQCProjectile(proj, _clianim, _projtype, _cull);
 
     return proj;
 }
@@ -628,7 +629,7 @@ void vehicles_reset_colors()
 
     if(autocvar_g_fullbrightplayers)
         _effects |= EF_FULLBRIGHT;
-
+        
     if(self.team)
         _colormap = 1024 + (self.team - 1) * 17;
     else
@@ -643,22 +644,22 @@ void vehicles_reset_colors()
     {
         if(e != self.vehicle_shieldent)
         {
-            e.effects   = _effects;
+            e.effects   = _effects  | EF_LOWPRECISION;
             e.colormod  = _colormod;
             e.colormap  = _colormap;
             e.alpha     = 1;
         }
         e = e.chain;
     }
-
-    self.vehicle_hudmodel.effects  = self.effects  = _effects;
+    
+    self.vehicle_hudmodel.effects  = self.effects  = _effects | EF_LOWPRECISION;
     self.vehicle_hudmodel.colormod = self.colormod = _colormod;
     self.vehicle_hudmodel.colormap = self.colormap = _colormap;
 
     self.alpha          = 1;
     self.avelocity      = '0 0 0';
     self.velocity       = '0 0 0';
-
+    self.effects        = _effects;
 }
 
 //#define VEHICLES_CSQC

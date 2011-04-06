@@ -153,7 +153,7 @@ void spiderbot_rocket_do()
     rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                            v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                            autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                           DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health);
+                           DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, FALSE);
 
     rocket.cnt        = time + 15;
     rocket.classname  = "spiderbot_rocket";
