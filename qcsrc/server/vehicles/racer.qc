@@ -123,7 +123,7 @@ void racer_fire_cannon(string tagname)
     entity bolt;
 
     v = gettaginfo(self, gettagindex(self, tagname));
-    bolt = vehicles_projectile("wakizashi_gun_impact", "weapons/laserimpact.wav", "wakizashi_gun_muzzleflash", "weapons/lasergun_fire.wav",
+    bolt = vehicles_projectile("wakizashi_gun_muzzleflash", "weapons/lasergun_fire.wav",
                            v, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
                            autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
                            DEATH_WAKIGUN, PROJECTILE_WAKICANNON, 0);
@@ -233,7 +233,7 @@ void racer_fire_rocket(string tagname, entity trg)
     entity rocket;
 
     v = gettaginfo(self, gettagindex(self, tagname));
-    rocket = vehicles_projectile("wakizashi_rocket_explode", "weapons/rocket_impact.wav", "wakizashi_rocket_launch", "weapons/rocket_fire.wav",
+    rocket = vehicles_projectile("wakizashi_rocket_launch", "weapons/rocket_fire.wav",
                            v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
                            DEATH_WAKIROCKET, PROJECTILE_WAKIROCKET, 20);

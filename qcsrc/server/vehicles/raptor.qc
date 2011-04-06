@@ -74,12 +74,10 @@ float raptor_altitude(float amax)
 
 void raptor_bomblet_boom()
 {
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum("raptor_bomb_impact"), self.origin, trace_plane_normal * 1000, 1);
     RadiusDamage (self, self.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
                                     autocvar_g_vehicle_raptor_bomblet_edgedamage,
                                     autocvar_g_vehicle_raptor_bomblet_radius, world,
-                                    autocvar_g_vehicle_raptor_bomblet_force, DEATH_SBROCKET, world);
+                                    autocvar_g_vehicle_raptor_bomblet_force, DEATH_RAPTOR_BOMB, world);
     remove(self);
 }
 
@@ -110,9 +108,11 @@ void raptor_bomb_burst()
     entity bomblet;
     float i;
 
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum("raptor_bomb_spread"), self.origin, self.velocity, 1);
-
+    //sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+    //pointparticles(particleeffectnum("raptor_bomb_spread"), self.origin, self.velocity, 1);
+    
+    Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_RAPTOR_BOMB_SPLIT, self);
+    
     for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
     {
         bomblet = spawn();
@@ -181,10 +181,10 @@ void raptor_fire_cannon(entity gun, string tagname)
     entity bolt;
     vector b_org;    
     b_org = gettaginfo(gun, gettagindex(gun, tagname));
-    bolt = vehicles_projectile("raptor_cannon_impact", "weapons/laserimpact.wav", "raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
+    bolt = vehicles_projectile("raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
                            b_org, normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
                            autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
-                           DEATH_WAKIGUN, PROJECTILE_RAPTORCANNON, 0);
+                           DEATH_RAPTOR_CANNON, PROJECTILE_RAPTORCANNON, 0);
 }
 
 void raptor_think()

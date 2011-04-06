@@ -150,7 +150,7 @@ void spiderbot_rocket_do()
     crosshair_trace(self.owner);
 //normalize(v_forward + (v_up * 0.5) + randomvec() * 0.25) * autocvar_g_vehicle_spiderbot_rocket_speed,
     v = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
-    rocket = vehicles_projectile("spiderbot_rocket_explode", "weapons/rocket_impact.wav", "spiderbot_rocket_launch", "weapons/rocket_fire.wav",
+    rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                            v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                            autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
                            DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health);
@@ -188,7 +188,7 @@ void spiderbot_minigun_fire(entity gun, float trail)
         sound (gun, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
         trailparticles(self, particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
         pointparticles(particleeffectnum("spiderbot_minigun_muzzleflash"), v, v_forward * 2500, 1);
-        pointparticles(particleeffectnum("spiderbot_minigun_impact"), trace_endpos, trace_plane_normal * 2500,1);
+        //pointparticles(particleeffectnum("spiderbot_minigun_impact"), trace_endpos, trace_plane_normal * 2500,1);
     }
 }
 

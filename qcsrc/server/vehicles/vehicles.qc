@@ -135,7 +135,6 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
     }
 }
 
-
 #define VEHICLE_UPDATE_PLAYER(fld,vhname) \
 self.owner.vehicle_##fld = self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld
 
@@ -206,14 +205,12 @@ void vehicles_projectile_explode()
 	PROJECTILE_TOUCH;
 
 	self.event_damage = SUB_Null;
-    sound (self, CHAN_PROJECTILE, self.target2, VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum(self.target3), findbetterlocation (self.origin, 16), '0 0 0', 1);
     RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, self.shot_force, self.totalfrags, other);
 
     remove (self);
 }
 
-entity vehicles_projectile(string _impactfx, string _impactsnd, string _mzlfx, string _mzlsound,
+entity vehicles_projectile(string _mzlfx, string _mzlsound,
                            vector _org, vector _vel,
                            float _dmg, float _radi, float _force,  float _size,
                            float _deahtype, float _projtype, float _health)
@@ -229,8 +226,6 @@ entity vehicles_projectile(string _impactfx, string _impactsnd, string _mzlfx, s
     proj.shot_radius      = _radi;
     proj.shot_force       = _force;
     proj.totalfrags       = _deahtype;
-    proj.target2          = _impactsnd;
-    proj.target3          = _impactfx;
     proj.solid            = SOLID_BBOX;
     proj.movetype         = MOVETYPE_FLYMISSILE;
     proj.flags            = FL_PROJECTILE;
