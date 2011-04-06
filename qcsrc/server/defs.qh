@@ -410,6 +410,7 @@ float TemporaryDB;
 
 float some_spawn_has_been_used;
 float have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
+float have_noteam_spawns; // 0 = no no-team spawns, 1 = no-team spawns exist
 
 // set when showing a kill countdown
 .entity killindicator;
