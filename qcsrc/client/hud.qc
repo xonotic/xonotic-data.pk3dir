@@ -4958,7 +4958,7 @@ void HUD_InfoMessages(void)
 		}
 		else if(warmup_stage && !intermission && !spectatee_status)
 		{
-			s = strcat("^2Press ^3%s^2 to end warmup", getcommandkey("ready", "ready"));
+			s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey("ready", "ready"));
 			drawInfoMessage(s)
 		}
 
