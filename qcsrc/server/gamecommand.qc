@@ -779,10 +779,10 @@ void GameCommand(string command)
 				if(argc == 4)
 				{
 					s = argv(2);
-					s = strreplace(s, "\n", "");
-					s = strreplace(s, "\\", "\\\\");
-					s = strreplace(s, "$", "$$");
-					s = strreplace(s, "\"", "\\\"");
+					s = strreplace("\n", "", s);
+					s = strreplace("\\", "\\\\", s);
+					s = strreplace("$", "$$", s);
+					s = strreplace("\"", "\\\"", s);
 					stuffcmd(client, sprintf("\ninfobar %f \"%s\"\n", stof(argv(3)), s));
 				}
 				else
