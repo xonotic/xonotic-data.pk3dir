@@ -501,7 +501,7 @@ void drawpic_aspect_skin_expanding(vector position, string pic, vector scale, ve
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
-	drawpic_skin(position + expandingbox_resize_centered_box_offset(sz, scale, 1), pic, scale * sz, rgb, alpha * (1 - fadelerp), flag);
+	drawpic_aspect_skin(position + expandingbox_resize_centered_box_offset(sz, scale, 1), pic, scale * sz, rgb, alpha * (1 - fadelerp), flag);
 }
 
 void drawpic_aspect_skin_expanding_two(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)
