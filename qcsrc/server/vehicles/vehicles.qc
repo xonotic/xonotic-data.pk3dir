@@ -814,15 +814,26 @@ float VSF_SETUP       = 2;          /// Send vehicle type etc
 float VSF_ORIGIN      = 4;          /// Send location
 float VSF_MOVEMENT    = 8;          /// Send movement update (and angle/avelocity)
 float VSF_STATS       = 16;         /// Send ammo, health etc
-float VSF_EXTRA       = 32;         /// Send additional data (turret rotations and such) handeld per vehicle type.
+float VSF_EXTRA       = 32;         /// Send additional data (turret rotations and such). Handeld per vehicle type.
+float VSF_ANIMINFO    = 64;         /// Animation info
 float VSF_FULL_UPDATE = 16777215    /// Send everything
 
 
 #ifdef SVQC
 float send_vehile(entity to, float sf)
 {
+	float dist;
+	
+	// Always send a compleate update to owner, minus VSF_SETUP
+	if(to == self.owner && self.owner != world && sf != VSF_FULL_UPDATE)
+        sf |= (VSF_FULL_UPDATE &~= VSF_SETUP);
+    
+    dist = vlen(self.origin - to.origin);
+    // TODO: Distance based message filtering
+    
 	WriteByte(MSG_ENTITY, ENT_CLIENT_VEHICLE);
-
+	
+	// We need to know client-side what was sent
 	WriteByte(MSG_ENTITY, sf);
 	
 	if(sf & VSF_SETUP)
@@ -885,15 +896,6 @@ void Net_ReadVehicle(float bIsNew)
 {
     float sf;
     
-    sf = ReadByte();
-    
-    if(sf & VSF_SETUP)
-    {
-        float vhtype;
-        vhtype = ReadByte();
-        
-    }
-    
     if(bIsNew)
     {
         setmodel(self, "models/vehicles/wakizashi.dpm");
@@ -903,24 +905,38 @@ void Net_ReadVehicle(float bIsNew)
         self.draw = VehicleRacerDraw;
         self.scale = 0.5;
     }
-    
-    self.cnt = ReadByte();
-    
-    self.origin_x = ReadCoord();
-    self.origin_y = ReadCoord();
-    self.origin_z = ReadCoord();
-    
-    self.velocity_x = ReadCoord();
-    self.velocity_y = ReadCoord();
-    self.velocity_z = ReadCoord();
 
-    self.angles_x = ReadAngle();
-    self.angles_y = ReadAngle();
-    self.angles_z = ReadAngle();
+    sf = ReadByte();    
+	if(sf & VSF_SETUP)
+	{
+        self.hud        = ReadByte();
+        self.team       = ReadByte();
+        self.colormap   = ReadShort();
+	}        
+    
+    if(sf & if(sf & VSF_ORIGIN))
+    {        
+        self.origin_x       = ReadCoord();
+        self.origin_y       = ReadCoord();
+        self.origin_z       = ReadCoord();
+        self.move_origin    = self.origin;
+    }
+    
+    if(sf & VSF_MOVEMENT)
+    {    
+        self.velocity_x     = ReadCoord();
+        self.velocity_y     = ReadCoord();
+        self.velocity_z     = ReadCoord();
 
-    self.move_origin    = self.origin;
-    self.move_velocity  = self.velocity;
-    self.move_angles    = self.angles;
+        self.angles_x       = ReadAngle();
+        self.angles_y       = ReadAngle();
+        self.angles_z       = ReadAngle();
+        
+        self.move_velocity  = self.velocity;
+        self.move_angles    = self.angles;
+
+    }
+    
 }
 #endif // CSQC
 
