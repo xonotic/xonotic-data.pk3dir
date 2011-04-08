@@ -93,6 +93,7 @@
 		<Unit filename="client\teamradar.qh" />
 		<Unit filename="client\tuba.qc" />
 		<Unit filename="client\vehicles\vehicles.qc" />
+		<Unit filename="client\vehicles\vehicles.qh" />
 		<Unit filename="client\wall.qc" />
 		<Unit filename="client\waypointsprites.qc" />
 		<Unit filename="client\waypointsprites.qh" />
