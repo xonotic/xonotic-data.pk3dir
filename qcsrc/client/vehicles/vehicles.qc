@@ -57,6 +57,10 @@ void AuxiliaryXhair_Draw2D()
         self.draw2d = Draw_Not;
 }
 
+void Net_Vehicle(float IsNew)
+{
+    //entnum
+}
 
 void Net_AuXair2(float bIsNew)
 {
@@ -476,6 +480,7 @@ void RaptorCBShellfragDraw()
 
 	self.move_avelocity += randomvec() * 15;
 	self.renderflags = 0;
+	if(self.cnt < time)
 	self.alpha = bound(0, self.nextthink - time, 1);
 
 	if(self.alpha < ALPHA_MIN_VISIBLE)
@@ -504,7 +509,8 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 	sfrag.move_time = time;
 	sfrag.damageforcescale = 4;
 
-	sfrag.nextthink = time + 2 * (1 + prandom() * 2);
+	sfrag.nextthink = time + 3;
+	sfrag.cnt = time + 2;
     sfrag.drawmask = MASK_NORMAL;
     
     

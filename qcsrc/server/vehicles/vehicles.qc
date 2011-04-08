@@ -10,7 +10,10 @@ void vehicles_clearrturn();
 void vehicles_setreturn();
 
 
-#define MAX_AXH 4
+/** AuxiliaryXhair* 
+    Send addictional points of interest to be drawn, to vehicle owner
+**/
+float MAX_AXH = 4;
 .entity AuxiliaryXhair[MAX_AXH];
 
 float SendAuxiliaryXhair(entity to, float sf)
@@ -75,6 +78,7 @@ void SendAuxiliaryXhair2(entity own, vector loc, vector clr, float axh_id)
 
 }
 */
+// End AuxiliaryXhair
 
 void CSQCVehicleSetup(entity own, float vehicle_id)
 {
@@ -85,6 +89,19 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 	WriteByte(MSG_ONE, vehicle_id);
 }
 
+/** vehicles_locktarget
+    
+    Generic target locking.
+    
+    Figure out if what target is "locked" (if any), for missile tracking as such.
+    
+    after calling, "if(self.lock_target != world && self.lock_strength == 1)" mean
+    you have a locked in target.
+    
+    Exspects a crosshair_trace() or equivalent to be
+    dont before calling.
+    
+**/
 .entity lock_target;
 .float  lock_strength;
 .float  lock_time;
@@ -143,6 +160,7 @@ traceline(orig, orig + vel * dt, MOVE_NORMAL, self); \
 if(trace_fraction != 1) \
     acm += normalize(self.origin - trace_endpos) * (vlen(vel) * mult)
 
+// Hover movement support
 float  force_fromtag_power;
 float  force_fromtag_normpower;
 vector force_fromtag_origin;
@@ -158,6 +176,8 @@ vector vehicles_force_fromtag_hover(string tag_name, float spring_length, float 
     return v_forward  * force_fromtag_power;
 }
 
+// Experimental hovermode wich uses attraction/repulstion from surface unsted of gravity/repulsion
+// Can possibly be use to move abt any surface (inclusing walls/celings)
 vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float max_power)
 {
 
@@ -165,6 +185,7 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
     v_forward  = normalize(v_forward) * -1;
     traceline(force_fromtag_origin, force_fromtag_origin - (v_forward  * spring_length), MOVE_NORMAL, self);
 
+    // TODO - this may NOT be compatible with wall/celing movement, unhardcode 0.25 (engine count multiplier)
     if(trace_fraction == 1.0)
     {
         force_fromtag_normpower = -0.25;
@@ -177,6 +198,7 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
     return v_forward  * force_fromtag_power;
 }
 
+// Generic vehile projectile system
 void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
     self.health -= damage;
@@ -262,7 +284,12 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 
     return proj;
 }
+// End generic vehile projectile system
 
+/** vehicles_spawn
+    Exetuted for all vehiles on (re)spawn.
+    Sets defaults for newly spawned units.
+**/
 void vehicles_spawn()
 {
     dprint("Spawning vehicle: ", self.netname, "\n");
@@ -663,42 +690,6 @@ void vehicles_reset_colors()
     self.effects        = _effects;
 }
 
-//#define VEHICLES_CSQC
-#ifdef VEHICLES_CSQC
-#define VSF_ORG 2
-#define VSF_VEL 4
-#define VSF_ANG 8
-#define VSF_COLORMAP 16
-#define VSF_STAT1 32
-
-float SendVehicle(entity to, float sf)
-{
-	WriteByte(MSG_ENTITY, ENT_CLIENT_VEHICLE_RACER);
-
-	WriteByte(MSG_ENTITY, self.cnt);
-
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
-
-	WriteCoord(MSG_ENTITY, self.velocity_x);
-	WriteCoord(MSG_ENTITY, self.velocity_y);
-	WriteCoord(MSG_ENTITY, self.velocity_z);
-
-	WriteAngle(MSG_ENTITY, self.angles_x);
-	WriteAngle(MSG_ENTITY, self.angles_y);
-	WriteAngle(MSG_ENTITY, self.angles_z);
-
-    return TRUE;
-}
-
-void NetLinkVehicle()
-{    
-    self.SendFlags = 0xFFFFFF;
-    Net_LinkEntity(self, FALSE, 0, SendVehicle);    
-}
-#endif
-
 float vehicle_initialize(string  net_name,
                          string  bodymodel,
                          string  topmodel,
@@ -816,3 +807,121 @@ void bugmenot()
     self.vehicle_spawn      = self.vehicle_exit;
     self.AuxiliaryXhair     = self.AuxiliaryXhair;
 }
+
+#ifdef VEHICLES_CSQC
+// SendFlags
+float VSF_SETUP       = 2;          /// Send vehicle type etc
+float VSF_ORIGIN      = 4;          /// Send location
+float VSF_MOVEMENT    = 8;          /// Send movement update (and angle/avelocity)
+float VSF_STATS       = 16;         /// Send ammo, health etc
+float VSF_EXTRA       = 32;         /// Send additional data (turret rotations and such) handeld per vehicle type.
+float VSF_FULL_UPDATE = 16777215    /// Send everything
+
+
+#ifdef SVQC
+float send_vehile(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_VEHICLE);
+
+	WriteByte(MSG_ENTITY, sf);
+	
+	if(sf & VSF_SETUP)
+	{
+        WriteByte(MSG_ENTITY,   self.hud);        //vehicle type = hud
+        WriteByte(MSG_ENTITY,   self.team);
+        WriteShort(MSG_ENTITY,  self.colormap);
+	}
+    
+    if(sf & VSF_ORIGIN)
+    {
+        WriteCoord(MSG_ENTITY, self.origin_x);
+        WriteCoord(MSG_ENTITY, self.origin_y);
+        WriteCoord(MSG_ENTITY, self.origin_z);        
+    }
+    
+    if(sf & VSF_MOVEMENT)
+    {    
+        WriteCoord(MSG_ENTITY, self.velocity_x);
+        WriteCoord(MSG_ENTITY, self.velocity_y);
+        WriteCoord(MSG_ENTITY, self.velocity_z);
+
+        WriteAngle(MSG_ENTITY, self.angles_x);
+        WriteAngle(MSG_ENTITY, self.angles_y);
+        WriteAngle(MSG_ENTITY, self.angles_z);
+
+        WriteCoord(MSG_ENTITY, self.avelocity_x);
+        WriteCoord(MSG_ENTITY, self.avelocity_y);
+        WriteCoord(MSG_ENTITY, self.avelocity_z);
+    }
+    
+    if(sf & VSF_STATS)
+    {
+        WriteShort(MSG_ENTITY, self.vehicle_health);
+        WriteShort(MSG_ENTITY, self.vehicle_shield);
+        WriteShort(MSG_ENTITY, self.vehicle_energy);
+        WriteShort(MSG_ENTITY, self.vehicle_ammo1);
+        WriteShort(MSG_ENTITY, self.vehicle_reload1);
+        WriteShort(MSG_ENTITY, self.vehicle_ammo2);
+        WriteShort(MSG_ENTITY, self.vehicle_reload2);
+    }
+    
+    if(sf & VSF_EXTRA)
+    {
+        self.vehile_send_exta(to);
+    }
+    
+    return TRUE;
+}
+
+void net_link_vehile()
+{    
+    self.SendFlags = 0xFFFFFF;
+    Net_LinkEntity(self, FALSE, 0, send_vehile);    
+}
+#endif // SVQC
+
+#ifdef CSQC
+void Net_ReadVehicle(float bIsNew)
+{
+    float sf;
+    
+    sf = ReadByte();
+    
+    if(sf & VSF_SETUP)
+    {
+        float vhtype;
+        vhtype = ReadByte();
+        
+    }
+    
+    if(bIsNew)
+    {
+        setmodel(self, "models/vehicles/wakizashi.dpm");
+        self.move_movetype = MOVETYPE_BOUNCE;        
+        self.entremove = VehicleRacerRemove;
+        setsize(self,  '-60 -60 -20', '60 60 20');        
+        self.draw = VehicleRacerDraw;
+        self.scale = 0.5;
+    }
+    
+    self.cnt = ReadByte();
+    
+    self.origin_x = ReadCoord();
+    self.origin_y = ReadCoord();
+    self.origin_z = ReadCoord();
+    
+    self.velocity_x = ReadCoord();
+    self.velocity_y = ReadCoord();
+    self.velocity_z = ReadCoord();
+
+    self.angles_x = ReadAngle();
+    self.angles_y = ReadAngle();
+    self.angles_z = ReadAngle();
+
+    self.move_origin    = self.origin;
+    self.move_velocity  = self.velocity;
+    self.move_angles    = self.angles;
+}
+#endif // CSQC
+
+#endif // VEHICLES_CSQC

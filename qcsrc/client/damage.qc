@@ -120,7 +120,7 @@ void Ent_DamageInfo(float isNew)
             case DEATH_RAPTOR_BOMB_SPLIT:
                 float i;
                 vector ang, vel;
-                for(i = 1; i <= 4; ++i)
+                for(i = 1; i < 4; ++i)
                 {
                     vel = normalize(w_org - (w_org + normalize(force) * 16)) + randomvec() * 128;
                     ang = vectoangles(vel);
