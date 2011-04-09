@@ -1,15 +1,5 @@
 #define cvar_base "g_turrets_unit_"
 
-float TNSF_UPDATE       = 2;
-float TNSF_STATUS       = 4;
-float TNSF_SETUP        = 8;
-
-float TNSF_ANG1         = 16;
-float TNSF_AVEL1        = 32;
-float TNSF_ANG2         = 64;
-float TNSF_AVEL2        = 128;
-
-float TNSF_FULL_UPDATE  = 16777215;
 float turret_send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
@@ -27,10 +17,14 @@ float turret_send(entity to, float sf)
 	    WriteAngle(MSG_ENTITY, self.angles_y);
     }
     
-    if(sf & TNSF_UPDATE)
+    if(sf & TNSF_ANG)
     {        
         WriteAngle(MSG_ENTITY, self.tur_head.angles_x);
 	    WriteAngle(MSG_ENTITY, self.tur_head.angles_y);	    
+    }
+    
+    if(sf & TNSF_AVEL)
+    {        
 	    WriteAngle(MSG_ENTITY, self.tur_head.avelocity_x);
 	    WriteAngle(MSG_ENTITY, self.tur_head.avelocity_y);
     }
@@ -222,6 +216,7 @@ vector turret_fovsearch_random()
 ** Handles head rotation according to
 ** the units .track_type and .track_flags
 **/
+.float turret_framecounter;
 void turret_stdproc_track()
 {
     vector target_angle; // This is where we want to aim
@@ -281,7 +276,8 @@ void turret_stdproc_track()
             
             // CSQC
             if(self.SendEntity)
-                self.SendFlags  = TNSF_STATUS;
+                self.SendFlags  = TNSF_ANG;
+            
             return;
 
         case TFL_TRACKTYPE_FLUIDINERTIA:
@@ -307,12 +303,18 @@ void turret_stdproc_track()
         {
             self.tur_head.avelocity_x = 0;
             self.tur_head.angles_x = self.aim_maxpitch;
+            
+            if(self.SendEntity)
+                self.SendFlags  |= TNSF_ANG | TNSF_AVEL;
         }
         
         if((self.tur_head.angles_x + self.tur_head.avelocity_x * self.ticrate) < -self.aim_maxpitch)
         {
             self.tur_head.avelocity_x = 0;
             self.tur_head.angles_x = -self.aim_maxpitch;
+            
+            if(self.SendEntity)
+                self.SendFlags  |= TNSF_ANG | TNSF_AVEL;
         }
     }
 
@@ -325,14 +327,34 @@ void turret_stdproc_track()
         {
             self.tur_head.avelocity_y = 0;
             self.tur_head.angles_y = self.aim_maxrot;
+            
+            if(self.SendEntity)
+                self.SendFlags  |= TNSF_ANG | TNSF_AVEL;
         }
 
         if((self.tur_head.angles_y + self.tur_head.avelocity_y * self.ticrate) < -self.aim_maxrot)
         {
             self.tur_head.avelocity_y = 0;
             self.tur_head.angles_y = -self.aim_maxrot;
+            
+            if(self.SendEntity)
+                self.SendFlags  |= TNSF_ANG | TNSF_AVEL;
         }
     }
+    
+    if(self.SendEntity)
+    {        
+        self.turret_framecounter += 1;
+        if(self.turret_framecounter >= 4)
+        {
+            self.SendFlags  |= TNSF_ANG | TNSF_AVEL;
+            self.turret_framecounter = 0;
+        }
+        else
+            self.SendFlags |= TNSF_AVEL;
+    }
+            
+
 }
 
 
@@ -636,7 +658,8 @@ void turret_think()
     entity e;
 
     self.nextthink = time + self.ticrate;
-
+    self.SendFlags = TNSF_UPDATE | TNSF_STATUS | TNSF_ANG | TNSF_AVEL;
+    
     // ONS uses somewhat backwards linking.
     if (teams_matter)
     {
@@ -929,7 +952,9 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         e.think = turrets_manager_think;
         e.nextthink = time + 2;
     }
-
+#ifndef TTURRETS_CSQC
+    csqc_shared = 0;
+#endif
     /*
     if(csqc_shared)
     {
@@ -1278,14 +1303,16 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         self.use();
     }
     
+    Net_LinkEntity(self, TRUE, 0, turret_send);
 	turret_stdproc_respawn();
 	
     // Initiate the main AI loop
+    /*self.nextthink = time;
     if(csqc_shared)
         self.think     = turret_link;
     else
         self.think     = turret_think;
-
+    */
     return 1;
 }
 

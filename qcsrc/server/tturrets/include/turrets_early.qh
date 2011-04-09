@@ -1,5 +1,6 @@
 // Comment out below to skip turrets
 #define TTURRETS_ENABLED
+//#define TTURRETS_CSQC
 
 #ifdef TTURRETS_ENABLED
 #ifdef SVQC
@@ -466,6 +467,7 @@ void turret_do_updates(entity e_turret);
 void turrets_precash();
 #endif // SVQC
 
+// common
 .float turret_type;
 float TID_EWHEEL        = 1;
 float TID_FLAC          = 2;
@@ -480,6 +482,13 @@ float TID_PLASMA_DUAL   = 10;
 float TID_TESLA         = 11;
 float TID_WALKER        = 12;
 float TID_LAST          = 12;
+
+float TNSF_UPDATE       = 2;
+float TNSF_STATUS       = 4;
+float TNSF_SETUP        = 8;
+float TNSF_ANG          = 16;
+float TNSF_AVEL         = 32;
+float TNSF_FULL_UPDATE  = 16777215;
 
 #endif // TTURRETS_ENABLED
 

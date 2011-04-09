@@ -297,6 +297,10 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     {
         self.tur_head.angles_x = self.tur_head.angles_x + (-0.5 + random()) * damage;
         self.tur_head.angles_y = self.tur_head.angles_y + (-0.5 + random()) * damage;
+        
+        if(self.SendEntity)
+            self.SendFlags  |= TNSF_ANG;
+
     }
 
     if (self.turrcaps_flags & TFL_TURRCAPS_MOVE)
@@ -315,6 +319,6 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     
     // CSQC
     if(self.SendEntity)
-        self.SendFlags  = TNSF_STATUS;
+        self.SendFlags  |= TNSF_STATUS;
 
 }

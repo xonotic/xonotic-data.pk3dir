@@ -29,7 +29,8 @@ movetypes.qh
 prandom.qh
 bgmscript.qh
 noise.qh
-
+tturrets.qh
+../server/tturrets/include/turrets_early.qh
 main.qh
 
 sortlist.qc
@@ -58,6 +59,7 @@ tuba.qc
 target_music.qc
 
 //vehicles/spiderbot.qc
+
 Main.qc
 View.qc
 interpolate.qc
@@ -78,5 +80,6 @@ noise.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/common.qc
 ../warpzonelib/client.qc
+tturrets.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

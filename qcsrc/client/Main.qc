@@ -143,6 +143,7 @@ void CSQC_Init(void)
 	GibSplash_Precache();
 	Casings_Precache();
 	DamageInfo_Precache();
+	turrets_precache();
 	if(autocvar_cl_announcer != cl_announcer_prev) {
 		Announcer_Precache();
 		if(cl_announcer_prev)
@@ -967,6 +968,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
+		case ENT_CLIENT_TURRET: ent_turret(); break; 
 		default:
 			error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			break;
