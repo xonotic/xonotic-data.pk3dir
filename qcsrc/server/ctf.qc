@@ -173,7 +173,7 @@ void place_flag()
 
 	setattachment(self, world, "");
 	self.mdl = self.model;
-	self.flags = FL_ITEM;
+	self.flags = FL_ITEM | FL_NOTARGET;
 	self.solid = SOLID_TRIGGER;
 	self.movetype = MOVETYPE_NONE;
 	self.velocity = '0 0 0';
@@ -234,7 +234,7 @@ void RegenFlag(entity e)
 	e.angles = e.mangle;
 	e.cnt = FLAG_BASE;
 	e.owner = world;
-	e.flags = FL_ITEM; // clear FL_ONGROUND and any other junk
+	e.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND and any other junk
 };
 
 void ReturnFlag(entity e)
@@ -319,7 +319,7 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 		p.flagcarried = world;
 	e.owner = world;
 
-	e.flags = FL_ITEM; // clear FL_ONGROUND and any other junk
+	e.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND and any other junk
 	e.solid = SOLID_TRIGGER;
 	e.movetype = MOVETYPE_TOSS;
 	// setsize(e, '-16 -16 0', '16 16 74');
@@ -549,7 +549,7 @@ void FlagTouch()
 
 	if (self.cnt == FLAG_DROPPED)
 	{
-		self.flags = FL_ITEM; // clear FL_ONGROUND and any other junk
+		self.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND and any other junk
 		if (other.team == self.team || (other.team != COLOR_TEAM1 && other.team != COLOR_TEAM2))
 		{
 			// return flag
