@@ -58,6 +58,9 @@ by Forest "LordHavoc" Hale
 *Allemand
 Rudolf "divVerent" Polzer
 
+*Finnish (TODO TRANSLATE THIS)
+Henry "Exitium" Sanmark
+
 *Français
 Calinou
 

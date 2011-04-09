@@ -236,7 +236,10 @@ float w_tuba(float req)
 		//	precache_sound(TUBA_NOTE(i));
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_TUBA);
+		self.current_ammo = ammo_none;
+	}
 	else if (req == WR_CHECKAMMO1)
 		return TRUE; // TODO use fuel?
 	else if (req == WR_CHECKAMMO2)

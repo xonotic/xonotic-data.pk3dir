@@ -297,6 +297,8 @@ void MapList_LoadMap(entity btn, entity me)
 float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	string ch, save;
+	if(me.nItems <= 0)
+		return SUPER(XonoticMapList).keyDown(me, scan, ascii, shift);
 	if(scan == K_ENTER || scan == K_KP_ENTER)
 	{
 		// pop up map info screen

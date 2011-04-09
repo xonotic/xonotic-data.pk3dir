@@ -1,7 +1,8 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "shotgun", "shotgun", _("Shotgun"))
+REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "shotgun", "shotgun", _("Shotgun"))
 #else
 #ifdef SVQC
+
 void W_Shotgun_Attack (void)
 {
 	float	sc;
@@ -22,12 +23,12 @@ void W_Shotgun_Attack (void)
 	bulletspeed = autocvar_g_balance_shotgun_primary_speed;
 	bulletconstant = autocvar_g_balance_shotgun_primary_bulletconstant;
 
+	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
+
 	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/shotgun_fire.wav", CHAN_WEAPON, d * bullets);
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, 1, bulletconstant);
 	endFireBallisticBullet();
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_shells = self.ammo_shells - ammoamount;
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shotgun_primary_ammo);
 
@@ -43,7 +44,6 @@ void W_Shotgun_Attack (void)
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');
-
 }
 
 void shotgun_meleethink (void)
@@ -102,6 +102,7 @@ void spawnfunc_weapon_shotgun(); // defined in t_items.qc
 
 float w_shotgun(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 		if(vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_shotgun_secondary_melee_range)
 			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
@@ -109,18 +110,28 @@ float w_shotgun(float req)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if(autocvar_g_balance_shotgun_reload_ammo && self.clip_load < autocvar_g_balance_shotgun_primary_ammo) // forced reload
 		{
-			if (time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+			// don't force reload an empty shotgun if its melee attack is active
+			if not(autocvar_g_balance_shotgun_secondary && self.ammo_shells < autocvar_g_balance_shotgun_primary_ammo)
+				weapon_action(self.weapon, WR_RELOAD);
+		}
+		else
+		{
+			if (self.BUTTON_ATCK)
 			{
-				if(weapon_prepareattack(0, autocvar_g_balance_shotgun_primary_animtime))
+				if (time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
 				{
-					W_Shotgun_Attack();
-					self.shotgun_primarytime = time + autocvar_g_balance_shotgun_primary_refire;
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_primary_animtime, w_ready);
+					if(weapon_prepareattack(0, autocvar_g_balance_shotgun_primary_animtime))
+					{
+						W_Shotgun_Attack();
+						self.shotgun_primarytime = time + autocvar_g_balance_shotgun_primary_refire;
+						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_primary_animtime, w_ready);
+					}
 				}
 			}
 		}
+		if (self.clip_load >= 0) // we are not currently reloading
 		if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary)
 		if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
 		{
@@ -137,14 +148,27 @@ float w_shotgun(float req)
 		precache_sound ("misc/itempickup.wav");
 		precache_sound ("weapons/shotgun_fire.wav");
 		precache_sound ("weapons/shotgun_melee.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_SHOTGUN);
+		self.current_ammo = ammo_shells;
+	}
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_shells >= autocvar_g_balance_shotgun_primary_ammo;
+	{
+		ammo_amount = self.ammo_shells >= autocvar_g_balance_shotgun_primary_ammo;
+		ammo_amount += self.weapon_load[WEP_SHOTGUN] >= autocvar_g_balance_shotgun_primary_ammo;
+		return ammo_amount;
+	}
 	else if (req == WR_CHECKAMMO2)
 	{
+		// melee attack is always available
 		return TRUE;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Reload(autocvar_g_balance_shotgun_primary_ammo, autocvar_g_balance_shotgun_reload_ammo, autocvar_g_balance_shotgun_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };

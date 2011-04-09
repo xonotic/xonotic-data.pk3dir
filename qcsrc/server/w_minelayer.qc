@@ -1,9 +1,9 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", _("Mine Layer"))
+REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", _("Mine Layer"))
 #else
 #ifdef SVQC
 void W_Mine_Think (void);
-.float minelayer_detonate, minelayer_mines;
+.float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
 
 void spawnfunc_weapon_minelayer (void)
@@ -66,13 +66,18 @@ void W_Mine_Explode ()
 
 	if (self.owner.weapon == WEP_MINE_LAYER)
 	{
-		if(self.owner.ammo_rockets < autocvar_g_balance_minelayer_ammo)
+		entity oldself;
+		oldself = self;
+		self = self.owner;
+		if (!weapon_action(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
-			self.owner.cnt = WEP_MINE_LAYER;
-			ATTACK_FINISHED(self.owner) = time;
-			self.owner.switchweapon = w_getbestweapon(self.owner);
+			self.cnt = WEP_MINE_LAYER;
+			ATTACK_FINISHED(self) = time;
+			self.switchweapon = w_getbestweapon(self);
 		}
+		self = oldself;
 	}
+	self.owner.minelayer_mines -= 1;
 	remove (self);
 }
 
@@ -85,13 +90,18 @@ void W_Mine_DoRemoteExplode ()
 
 	if (self.owner.weapon == WEP_MINE_LAYER)
 	{
-		if(self.owner.ammo_rockets < autocvar_g_balance_minelayer_ammo)
+		entity oldself;
+		oldself = self;
+		self = self.owner;
+		if (!weapon_action(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
-			self.owner.cnt = WEP_MINE_LAYER;
-			ATTACK_FINISHED(self.owner) = time;
-			self.owner.switchweapon = w_getbestweapon(self.owner);
+			self.cnt = WEP_MINE_LAYER;
+			ATTACK_FINISHED(self) = time;
+			self.switchweapon = w_getbestweapon(self);
 		}
+		self = oldself;
 	}
+	self.owner.minelayer_mines -= 1;
 	remove (self);
 }
 
@@ -110,7 +120,7 @@ void W_Mine_RemoteExplode ()
 void W_Mine_ProximityExplode ()
 {
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
-	if(autocvar_g_balance_minelayer_protection)
+	if(autocvar_g_balance_minelayer_protection && self.mine_explodeanyway == 0)
 	{
 		entity head;
 		head = findradius(self.origin, autocvar_g_balance_minelayer_radius);
@@ -126,21 +136,34 @@ void W_Mine_ProximityExplode ()
 	W_Mine_Explode();
 }
 
+float W_Mine_Count(entity e)
+{
+	float minecount;
+	entity mine;
+	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == e)
+		minecount += 1;
+		
+	return minecount;
+}
+
 void W_Mine_Think (void)
 {
 	entity head;
 
 	self.nextthink = time;
-	if (time > self.cnt)
+	
+	// our lifetime has expired, it's time to die - mine_time just allows us to play a sound for this
+	// TODO: replace this mine_trigger.wav sound with a real countdown
+	if ((time > self.cnt) && (!self.mine_time))
 	{
-		other = world;
-		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Mine_Explode();
-		return;
+		if(autocvar_g_balance_minelayer_lifetime_countdown > 0)
+			spamsound (self, CHAN_PROJECTILE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+		self.mine_time = time + autocvar_g_balance_minelayer_lifetime_countdown;
+		self.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
 
 	// a player's mines shall explode if he disconnects or dies
-	// TODO: Do this on team change too
+	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
 	if(self.owner.classname != "player" || self.owner.deadflag != DEAD_NO)
 	{
 		other = world;
@@ -165,7 +188,10 @@ void W_Mine_Think (void)
 
 	// explode if it's time to
 	if(self.mine_time && time >= self.mine_time)
+	{
 		W_Mine_ProximityExplode();
+		return;
+	}
 
 	// remote detonation
 	if (self.owner.weapon == WEP_MINE_LAYER)
@@ -201,11 +227,8 @@ void W_Mine_Attack (void)
 	// scan how many mines we placed, and return if we reached our limit
 	if(autocvar_g_balance_minelayer_limit)
 	{
-		self.minelayer_mines = 0;
-		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
-			self.minelayer_mines += 1;
-
-		if(self.minelayer_mines >= autocvar_g_balance_minelayer_limit)
+	
+		if(W_Mine_Count(self) >= autocvar_g_balance_minelayer_limit)
 		{
 			// the refire delay keeps this message from being spammed
 			sprint(self, strcat("You cannot place more than ^2", ftos(autocvar_g_balance_minelayer_limit), " ^7mines at a time\n") );
@@ -214,8 +237,7 @@ void W_Mine_Attack (void)
 		}
 	}
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_minelayer_ammo;
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo);
 
 	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", CHAN_WEAPON, autocvar_g_balance_minelayer_damage);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -247,7 +269,7 @@ void W_Mine_Attack (void)
 	mine.touch = W_Mine_Touch;
 	mine.think = W_Mine_Think;
 	mine.nextthink = time;
-	mine.cnt = time + autocvar_g_balance_minelayer_lifetime;
+	mine.cnt = time + (autocvar_g_balance_minelayer_lifetime - autocvar_g_balance_minelayer_lifetime_countdown);
 	mine.flags = FL_PROJECTILE;
 
 	CSQCProjectile(mine, TRUE, PROJECTILE_MINE, TRUE);
@@ -262,14 +284,38 @@ void W_Mine_Attack (void)
 	// common properties
 
 	other = mine; MUTATOR_CALLHOOK(EditProjectile);
+	
+	self.minelayer_mines = W_Mine_Count(self);
 }
 
 void spawnfunc_weapon_minelayer (void); // defined in t_items.qc
 
-float w_minelayer(float req)
+float W_PlacedMines(float detonate)
 {
 	entity mine;
 	float minfound;
+
+	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
+	{
+		if(detonate)
+		{
+			if(!mine.minelayer_detonate)
+			{
+				mine.minelayer_detonate = TRUE;
+				minfound = 1;
+			}
+		}
+		else
+			minfound = 1;
+	}
+	return minfound;
+}
+
+float w_minelayer(float req)
+{
+	entity mine;
+	float ammo_amount;
+
 	if (req == WR_AIM)
 	{
 		// aim and decide to fire if appropriate
@@ -367,7 +413,13 @@ float w_minelayer(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < autocvar_g_balance_minelayer_ammo) // forced reload
+		{
+			// not if we're holding the minelayer without enough ammo, but can detonate existing mines
+			if not (W_PlacedMines(FALSE) && self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
+				weapon_action(self.weapon, WR_RELOAD);
+		}
+		else if (self.BUTTON_ATCK)
 		{
 			if(weapon_prepareattack(0, autocvar_g_balance_minelayer_refire))
 			{
@@ -378,16 +430,7 @@ float w_minelayer(float req)
 
 		if (self.BUTTON_ATCK2)
 		{
-			minfound = 0;
-			for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
-			{
-				if(!mine.minelayer_detonate)
-				{
-					mine.minelayer_detonate = TRUE;
-					minfound = 1;
-				}
-			}
-			if(minfound)
+			if(W_PlacedMines(TRUE))
 				sound (self, CHAN_WEAPON2, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
@@ -402,20 +445,34 @@ float w_minelayer(float req)
 		precache_sound ("weapons/mine_fire.wav");
 		precache_sound ("weapons/mine_stick.wav");
 		precache_sound ("weapons/mine_trigger.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_MINE_LAYER);
+		self.current_ammo = ammo_rockets;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
 		// don't switch while placing a mine
-		if ((ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
-			&& self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
-			return FALSE;
+		if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
+		{
+			ammo_amount = self.ammo_rockets >= autocvar_g_balance_minelayer_ammo;
+			ammo_amount += self.weapon_load[WEP_MINE_LAYER] >= autocvar_g_balance_minelayer_ammo;
+			return ammo_amount;
+		}
 	}
 	else if (req == WR_CHECKAMMO2)
-		return FALSE;
+	{
+		if (W_PlacedMines(FALSE))
+			return TRUE;
+		else
+			return FALSE;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Reload(autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
+	}
 	return TRUE;
 };
 #endif

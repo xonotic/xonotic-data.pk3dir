@@ -494,7 +494,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 entity damage_targ;
 entity damage_inflictor;
 entity damage_attacker;
-.float prevhitsound;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -789,15 +788,12 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				{
 					if(damage > 0)
 					{
-						if(attacker.weapon != WEP_LASER
-						&& (attacker.weapon != WEP_ELECTRO || !autocvar_g_balance_electro_lightning)
-						&& attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time)
+						if(deathtype != DEATH_FIRE)
 						{
 							if(targ.BUTTON_CHAT)
 								attacker.typehitsound += 1;
 							else
 								attacker.hitsound += 1;
-							attacker.prevhitsound = time;
 						}
 
 						damage_goodhits += 1;
@@ -822,11 +818,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				}
 				else
 				{
-					if(deathtype != DEATH_FIRE
-					&& attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time)
+					if(deathtype != DEATH_FIRE)
 					{
 						attacker.typehitsound += 1;
-						attacker.prevhitsound = time;
 					}
 					if(mirrordamage > 0)
 						if(time > attacker.teamkill_complain)
@@ -845,7 +839,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if (vlen(force))
 	if (self.classname != "player" || time >= self.spawnshieldtime || g_midair)
 	{
-		self.velocity = self.velocity + self.damageforcescale * force;
+		self.velocity = self.velocity + damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		self.flags &~= FL_ONGROUND;
 		UpdateCSQCProjectile(self);
 	}

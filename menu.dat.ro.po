@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-27 17:06+0100\n"
+"POT-Creation-Date: 2011-02-07 07:50+0100\n"
 "PO-Revision-Date: 2011-01-18 11:53+0100\t\n"
 "Last-Translator: MirceaKitsune <sonichedgehog_hyperblast00@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ro\n"
 
 #: qcsrc/menu/gamecommand.qc:47
 #, c-format
@@ -83,23 +83,23 @@ msgstr "???"
 msgid "Level %d: %s"
 msgstr "Nivelul %d: %s"
 
-#: qcsrc/menu/xonotic/cvarlist.c:84
+#: qcsrc/menu/xonotic/cvarlist.c:85
 msgid "will be saved to config.cfg"
 msgstr "se va salva catre config.cfg"
 
-#: qcsrc/menu/xonotic/cvarlist.c:86
+#: qcsrc/menu/xonotic/cvarlist.c:87
 msgid "will not be saved"
 msgstr "nu se va salva"
 
-#: qcsrc/menu/xonotic/cvarlist.c:88
+#: qcsrc/menu/xonotic/cvarlist.c:89
 msgid "private"
 msgstr "privat"
 
-#: qcsrc/menu/xonotic/cvarlist.c:90
+#: qcsrc/menu/xonotic/cvarlist.c:91
 msgid "engine setting"
 msgstr "setari motor"
 
-#: qcsrc/menu/xonotic/cvarlist.c:92
+#: qcsrc/menu/xonotic/cvarlist.c:93
 msgid "read only"
 msgstr "numai de citit"
 
@@ -110,9 +110,9 @@ msgstr "Credite"
 #: qcsrc/menu/xonotic/dialog_credits.c:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:82
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:269
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:46
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:41
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:55
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:59
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:61
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.c:21
 msgid "OK"
 msgstr "OK"
@@ -415,7 +415,7 @@ msgid "Fade out after:"
 msgstr "Atenuare opacitate dupa:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:26
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:41
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:36
 msgid "Never"
 msgstr "Niciodata"
 
@@ -831,7 +831,7 @@ msgid "Game types:"
 msgstr "Moduri de joc:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:119
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:308
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:314
 msgid "Close"
 msgstr "Inchidere"
 
@@ -1015,7 +1015,7 @@ msgid "Info..."
 msgstr "Informatii..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:70
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:311
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:317
 msgid "Join!"
 msgstr "Alaturare!"
 
@@ -1025,105 +1025,105 @@ msgstr "Informatii Server"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:115
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:116
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:177
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:183
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:193
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:189
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:199
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:158
 #, c-format
-msgid "%d/%d"
-msgstr "%d/%d"
+msgid "%d/%d, %d free player slots"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:166
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
 #, c-format
 msgid "%d modified settings"
 msgstr "%d setari modificate"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:166
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
 msgid "Official settings"
 msgstr "Setarile oficiale"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:191
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:197
 msgid "N/A (can't connect)"
 msgstr "N/A (nu se poate conecta)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:199
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:205
 msgid "not supported (can't connect)"
 msgstr "nesuportat (nu se poate conecta)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:201
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:207
 msgid "not supported (won't encrypt)"
 msgstr "nesuportat (nu se poate encripta)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:205
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:211
 msgid "supported (will encrypt)"
 msgstr "suportat (se va encripta)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:207
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:213
 msgid "supported (won't encrypt)"
 msgstr "suportat (nu se va encripta)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:211
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:217
 msgid "requested (will encrypt)"
 msgstr "cerut (se va encripta)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:213
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:219
 msgid "requested (won't encrypt)"
 msgstr "cerut (nu se va encripta)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:217
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:223
 msgid "required (can't connect)"
 msgstr "necesar (nu se poate conecta)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:219
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:225
 msgid "required (will encrypt)"
 msgstr "necesar (se va encripta)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:240
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:263
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:246
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:269
 msgid "Players:"
 msgstr "Jucatori:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:248
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:254
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:38
 msgid "Type:"
 msgstr "Tip:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:253
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:259
 msgid "Map:"
 msgstr "Harta:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:258
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:264
 msgid "Gameplay:"
 msgstr "Mod:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:268
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:274
 msgid "Bots:"
 msgstr "Boti:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:273
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:279
 msgid "Mod:"
 msgstr "Modificare:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:278
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:284
 msgid "Version:"
 msgstr "Versiune:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:283
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:289
 msgid "Ping:"
 msgstr "Latenta:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:289
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:295
 msgid "CA:"
 msgstr "CA:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:295
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:301
 msgid "Key:"
 msgstr "Cheie:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:301
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:307
 msgid "Encryption:"
 msgstr "Encriptare:"
 
@@ -1269,30 +1269,26 @@ msgid "Waypoints"
 msgstr "Indicatoare"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:23
-msgid "Waypoint settings:"
-msgstr "Setari indicatoare:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:26
 msgid "Show base waypoints"
 msgstr "Afisaj indicatoare de baza"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:29
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:25
 msgid "Waypoint scale:"
 msgstr "Marime indicatoare:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:34
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:29
 msgid "Waypoint alpha:"
 msgstr "Opacitate indicatoare:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:39
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:34
 msgid "Show names:"
 msgstr "Afisaj nume:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:42
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:37
 msgid "Teammates"
 msgstr "Coechipieri"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:43
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:38
 msgid "All players"
 msgstr "Toti jucatorii"
 
@@ -1993,7 +1989,7 @@ msgstr "Setari:"
 msgid "Value:"
 msgstr "Valoare:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:54
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:56
 msgid "Description:"
 msgstr "Descriere:"
 
@@ -2271,31 +2267,31 @@ msgstr ""
 msgid "<no model found>"
 msgstr "<nu a fost gasit nici un model>"
 
-#: qcsrc/menu/xonotic/serverlist.c:357
+#: qcsrc/menu/xonotic/serverlist.c:360
 msgid "Remove"
 msgstr "Stergere"
 
-#: qcsrc/menu/xonotic/serverlist.c:359
+#: qcsrc/menu/xonotic/serverlist.c:362
 msgid "Bookmark"
 msgstr "Favorit"
 
-#: qcsrc/menu/xonotic/serverlist.c:515
+#: qcsrc/menu/xonotic/serverlist.c:518
 msgid "Ping"
 msgstr "Latenta"
 
-#: qcsrc/menu/xonotic/serverlist.c:516
+#: qcsrc/menu/xonotic/serverlist.c:519
 msgid "Host name"
 msgstr "Nume server"
 
-#: qcsrc/menu/xonotic/serverlist.c:517
+#: qcsrc/menu/xonotic/serverlist.c:520
 msgid "Map"
 msgstr "Harta"
 
-#: qcsrc/menu/xonotic/serverlist.c:518
+#: qcsrc/menu/xonotic/serverlist.c:521
 msgid "Type"
 msgstr "Mod"
 
-#: qcsrc/menu/xonotic/serverlist.c:519
+#: qcsrc/menu/xonotic/serverlist.c:522
 msgid "Players"
 msgstr "Jucatori"
 
@@ -2471,22 +2467,22 @@ msgstr "Activare panou"
 msgid "Crylink"
 msgstr "Crylink"
 
-#: qcsrc/server/w_crylink.qc:637
+#: qcsrc/server/w_crylink.qc:645
 #, c-format
 msgid "%s succeeded at self-destructing themself with the Crylink"
 msgstr ""
 
-#: qcsrc/server/w_crylink.qc:642
+#: qcsrc/server/w_crylink.qc:650
 #, c-format
 msgid "%s could not hide from %s's Crylink"
 msgstr ""
 
-#: qcsrc/server/w_crylink.qc:644
+#: qcsrc/server/w_crylink.qc:652
 #, c-format
 msgid "%s was too close to %s's Crylink"
 msgstr ""
 
-#: qcsrc/server/w_crylink.qc:646
+#: qcsrc/server/w_crylink.qc:654
 #, c-format
 msgid "%s took a close look at %s's Crylink"
 msgstr ""
@@ -2821,3 +2817,9 @@ msgstr "Machine Gun"
 #, c-format
 msgid "%s was riddled full of holes by %s"
 msgstr ""
+
+#~ msgid "Waypoint settings:"
+#~ msgstr "Setari indicatoare:"
+
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"

@@ -136,6 +136,8 @@ void CSQC_Init(void)
 	WaypointSprite_Load();
 
 	// precaches
+	precache_sound("misc/hit.wav");
+	precache_sound("misc/typehit.wav");
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();
@@ -148,6 +150,9 @@ void CSQC_Init(void)
 		cl_announcer_prev = strzone(autocvar_cl_announcer);
 	}
 	Tuba_Precache();
+
+	if(autocvar_cl_reticle_item_normal) precache_pic("gfx/reticle_normal");
+	if(autocvar_cl_reticle_item_nex) precache_pic("gfx/reticle_nex");
 
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
 	minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
@@ -1092,7 +1097,7 @@ void Ent_Init()
 
 	serverflags = ReadByte();
 
-	cr_maxbullets = ReadByte();
+	minelayer_maxmines = ReadByte();
 
 	g_trueaim_minrange = ReadCoord();
 

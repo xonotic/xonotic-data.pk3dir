@@ -132,9 +132,9 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 	prio = 0;
 
 	// filter out spots for the wrong team
-	if(teamcheck)
-	if(spot.team != teamcheck)
-		return '-1 0 0';
+	if(teamcheck >= 0)
+		if(spot.team != teamcheck)
+			return '-1 0 0';
 
 	if(race_spawns)
 		if(spot.target == "")
@@ -269,7 +269,7 @@ entity Spawn_FilterOutBadSpots(entity firstspot, entity playerlist, float mindis
 					spotlist = spot;
 
 				/*
-				if(teamcheck)
+				if(teamcheck >= 0)
 				if(spot.team != teamcheck)
 					error("invalid spawn added");
 
@@ -283,7 +283,7 @@ entity Spawn_FilterOutBadSpots(entity firstspot, entity playerlist, float mindis
 
 	/*
 		entity e;
-		if(teamcheck)
+		if(teamcheck >= 0)
 			for(e = spotlist; e; e = e.chain)
 			{
 				print("seen ", etos(e), "\n");
@@ -325,10 +325,15 @@ entity SelectSpawnPoint (float anypoint)
 	if (spot)
 		return spot;
 
-	teamcheck = 0;
-
-	if(!anypoint && have_team_spawns > 0)
-		teamcheck = self.team;
+	if(anypoint)
+		teamcheck = -1;
+	else if(have_team_spawns > 0)
+		teamcheck = self.team; // MUST be team
+	else if(have_team_spawns == 0 && have_noteam_spawns)
+		teamcheck = 0; // MUST be noteam
+	else
+		teamcheck = -1;
+		// if we get here, we either require team spawns but have none, or we require non-team spawns and have none; use any spawn then
 
 	// get the list of players
 	playerlist = findchain(classname, "player");
@@ -368,7 +373,7 @@ entity SelectSpawnPoint (float anypoint)
 		print("spot mindistance: ", vtos(spot.spawnpoint_score), "\n");
 
 		entity e;
-		if(teamcheck)
+		if(teamcheck >= 0)
 			for(e = firstspot; e; e = e.chain)
 				if(e.team != teamcheck)
 					error("invalid spawn found");
@@ -1050,7 +1055,15 @@ void PutClientInServer (void)
 
 		// reset fields the weapons may use
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+		{
 			weapon_action(j, WR_RESETPLAYER);
+
+			// all weapons must be fully loaded when we spawn
+			entity e;
+			e = get_weaponinfo(j);
+			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
+				self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+		}
 
 		oldself = self;
 		self = spot;
@@ -1064,8 +1077,6 @@ void PutClientInServer (void)
 		self.switchweapon = w_getbestweapon(self);
 		self.cnt = self.switchweapon;
 		self.weapon = 0;
-
-        self.wish_reload = 0;
 
 		if(!self.alivetime)
 			self.alivetime = time;
@@ -1109,7 +1120,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
-	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_magazinecapacity); // rifle max bullets
+	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
 	return TRUE;
 }
@@ -2341,11 +2352,14 @@ void SpectateCopy(entity spectatee) {
 	self.ammo_nails = spectatee.ammo_nails;
 	self.ammo_rockets = spectatee.ammo_rockets;
 	self.ammo_fuel = spectatee.ammo_fuel;
+	self.clip_load = spectatee.clip_load;
+	self.clip_size = spectatee.clip_size;
 	self.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
 	self.health = spectatee.health;
 	self.impulse = 0;
 	self.items = spectatee.items;
 	self.last_pickup = spectatee.last_pickup;
+	self.hit_time = spectatee.hit_time;
 	self.metertime = spectatee.metertime;
 	self.strength_finished = spectatee.strength_finished;
 	self.invincible_finished = spectatee.invincible_finished;
@@ -2353,6 +2367,9 @@ void SpectateCopy(entity spectatee) {
 	self.weapons = spectatee.weapons;
 	self.switchweapon = spectatee.switchweapon;
 	self.weapon = spectatee.weapon;
+	self.nex_charge = spectatee.nex_charge;
+	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
+	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;
 	self.v_angle = spectatee.v_angle;
@@ -2942,6 +2959,10 @@ void PlayerPreThink (void)
 	}
 
 	target_voicescript_next(self);
+
+	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
+	if(!self.weapon)
+		self.clip_load = self.clip_size = 0;
 }
 
 float isInvisibleString(string s)
@@ -3095,7 +3116,7 @@ void PlayerPostThink (void)
 
 	playerdemo_write();
 
-	if((g_cts || g_race) && self.cvar_cl_allow_uid2name == 1)
+	if((g_cts || g_race) && self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
 	{
 		if(!self.stored_netname)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));

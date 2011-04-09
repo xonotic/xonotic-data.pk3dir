@@ -823,8 +823,12 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
-	addstat(STAT_BULLETS_LOADED, AS_INT, sniperrifle_bulletcounter);
+	addstat(STAT_WEAPON_CLIPLOAD, AS_INT, clip_load);
+	addstat(STAT_WEAPON_CLIPSIZE, AS_INT, clip_size);
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
+	addstat(STAT_HIT_TIME, AS_FLOAT, hit_time);
+	addstat(STAT_TYPEHIT_TIME, AS_FLOAT, typehit_time);
+	addstat(STAT_LAYED_MINES, AS_INT, minelayer_mines);
 
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
@@ -1433,7 +1437,6 @@ void DumpStats(float final)
 	float to_eventlog;
 	float to_file;
 	float i;
-	entity e;
 
 	to_console = autocvar_sv_logscores_console;
 	to_eventlog = autocvar_sv_eventlog;
@@ -2840,16 +2843,16 @@ void EndFrame()
 		if(self.classname == "spectator")
 		{
 			if(self.enemy.typehitsound)
-				play2(self, "misc/typehit.wav");
-			else if(self.enemy.hitsound && self.cvar_cl_hitsound)
-				play2(self, "misc/hit.wav");
+				self.typehit_time = time;
+			else if(self.enemy.hitsound)
+				self.hit_time = time;
 		}
 		else
 		{
 			if(self.typehitsound)
-				play2(self, "misc/typehit.wav");
-			else if(self.hitsound && self.cvar_cl_hitsound)
-				play2(self, "misc/hit.wav");
+				self.typehit_time = time;
+			else if(self.hitsound)
+				self.hit_time = time;
 		}
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);

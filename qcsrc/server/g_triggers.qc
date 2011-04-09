@@ -1722,6 +1722,7 @@ void follow_init()
 			attach_sameorigin(dst, src, self.message);
 		}
 
+		dst.solid = SOLID_NOT; // solid doesn't work with attachment
 		remove(self);
 	}
 	else
