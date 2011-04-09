@@ -89,7 +89,7 @@ void turret_flac_dinit()
     self.ammo_flags     = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
     self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
 
-    if (turret_stdproc_init("flac_std",0,"models/turrets/base.md3","models/turrets/flac.md3") == 0)
+    if (turret_stdproc_init("flac_std", TRUE, "models/turrets/base.md3", "models/turrets/flac.md3", TID_FLAC) == 0)
     {
         remove(self);
         return;

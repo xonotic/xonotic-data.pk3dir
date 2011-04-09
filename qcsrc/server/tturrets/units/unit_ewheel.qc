@@ -283,7 +283,7 @@ void turret_ewheel_dinit()
 
     self.turret_diehook = ewheel_diehook;
 
-    if (turret_stdproc_init("ewheel_std",0,"models/turrets/ewheel-base2.md3","models/turrets/ewheel-gun1.md3") == 0)
+    if (turret_stdproc_init("ewheel_std", TRUE, "models/turrets/ewheel-base2.md3", "models/turrets/ewheel-gun1.md3", TID_EWHEEL) == 0)
     {
         remove(self);
         return;

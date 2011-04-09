@@ -2,8 +2,8 @@
 #define TTURRETS_ENABLED
 
 #ifdef TTURRETS_ENABLED
-
-#message "with tZork turrets"
+#ifdef SVQC
+//#message "with tZork turrets"
 
 float turret_count;
 
@@ -464,8 +464,22 @@ void turret_do_updates(entity e_turret);
 .vector tur_shotdir_updated;
 
 void turrets_precash();
+#endif // SVQC
 
-
+.float turret_type;
+float TID_EWHEEL        = 1;
+float TID_FLAC          = 2;
+float TID_FUSION        = 3;
+float TID_HELLION       = 4;
+float TID_HK            = 5;
+float TID_MACHINEGUN    = 6;
+float TID_MLRS          = 7;
+float TID_PHASER        = 8;
+float TID_PLASMA        = 9;
+float TID_PLASMA_DUAL   = 10;
+float TID_TESLA         = 11;
+float TID_WALKER        = 12;
+float TID_LAST          = 12;
 
 #endif // TTURRETS_ENABLED
 

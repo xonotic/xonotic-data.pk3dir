@@ -116,7 +116,7 @@ void turret_phaser_dinit()
     self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
     self.aim_flags = TFL_AIM_LEAD;
 
-    if (turret_stdproc_init("phaser_std",0,"models/turrets/base.md3","models/turrets/phaser.md3") == 0)
+    if (turret_stdproc_init("phaser_std", TRUE, "models/turrets/base.md3","models/turrets/phaser.md3", TID_PHASER) == 0)
     {
         remove(self);
         return;

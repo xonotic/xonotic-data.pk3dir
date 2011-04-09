@@ -28,7 +28,7 @@ void turret_machinegun_std_init()
 	if not (autocvar_g_antilag_bullets)
 		self.turrcaps_flags |= TFL_TURRCAPS_HITSCAN;
 
-    if (turret_stdproc_init("machinegun_std",0,"models/turrets/base.md3","models/turrets/machinegun.md3") == 0)
+    if (turret_stdproc_init("machinegun_std", TRUE, "models/turrets/base.md3", "models/turrets/machinegun.md3", TID_MACHINEGUN) == 0)
     {
         remove(self);
         return;

@@ -248,7 +248,15 @@ void turret_stdproc_respawn()
     self.ammo                   = self.ammo_max;
 
     self.nextthink  = time + self.ticrate;
-    self.think      = turret_think;
+    
+    if(self.SendEntity)
+    {
+        self.SendFlags  = TNSF_FULL_UPDATE;
+        self.think      = turret_link;  // CSQC?
+    }
+        
+    else
+        self.think      = turret_think; // Or not?
 
     if (self.turret_respawnhook)
         self.turret_respawnhook();
@@ -304,4 +312,9 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
         self.nextthink = time;
         self.think = turret_stdproc_die;
     }
+    
+    // CSQC
+    if(self.SendEntity)
+        self.SendFlags  = TNSF_STATUS;
+
 }

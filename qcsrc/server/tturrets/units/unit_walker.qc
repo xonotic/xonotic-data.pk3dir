@@ -704,7 +704,7 @@ void turret_walker_dinit()
     self.turret_diehook = walker_diehook;
 
     self.ticrate = 0.05;
-    if (turret_stdproc_init("walker_std",FALSE,"models/turrets/walker_body.md3","models/turrets/walker_head_minigun.md3") == 0)
+    if (turret_stdproc_init("walker_std", TRUE, "models/turrets/walker_body.md3", "models/turrets/walker_head_minigun.md3", TID_WALKER) == 0)
     {
         remove(self);
         return;

@@ -1,23 +1,48 @@
 #define cvar_base "g_turrets_unit_"
 
-/*
-float turret_customizeentityforclient()
-{
-}
+float TNSF_UPDATE       = 2;
+float TNSF_STATUS       = 4;
+float TNSF_SETUP        = 8;
 
-float Turret_SendEntity(entity to, float sf)
-{
+float TNSF_ANG1         = 16;
+float TNSF_AVEL1        = 32;
+float TNSF_ANG2         = 64;
+float TNSF_AVEL2        = 128;
 
+float TNSF_FULL_UPDATE  = 16777215;
+float turret_send(entity to, float sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
-	WriteCoord(MSG_ENTITY, self.tur_head.angles_x);
-	WriteCoord(MSG_ENTITY, self.tur_head.angles_y);
-    WriteByte(MSG_ENTITY, self.tur_head.frame);
-
-	//WriteCoord(MSG_ENTITY, self.tur_head.angles_z);
-
+	
+	WriteByte(MSG_ENTITY, sf);
+	if(sf & TNSF_SETUP)
+	{
+	    WriteByte(MSG_ENTITY, self.turret_type);
+	    
+	    WriteCoord(MSG_ENTITY, self.origin_x);
+	    WriteCoord(MSG_ENTITY, self.origin_y);
+	    WriteCoord(MSG_ENTITY, self.origin_z);
+	    
+	    WriteAngle(MSG_ENTITY, self.angles_x);
+	    WriteAngle(MSG_ENTITY, self.angles_y);
+    }
+    
+    if(sf & TNSF_UPDATE)
+    {        
+        WriteAngle(MSG_ENTITY, self.tur_head.angles_x);
+	    WriteAngle(MSG_ENTITY, self.tur_head.angles_y);	    
+	    WriteAngle(MSG_ENTITY, self.tur_head.avelocity_x);
+	    WriteAngle(MSG_ENTITY, self.tur_head.avelocity_y);
+    }
+    
+    if(sf & TNSF_STATUS)
+    {        
+        WriteByte(MSG_ENTITY, self.team);
+        WriteByte(MSG_ENTITY, rint((self.health / self.tur_health) * 255));
+    }
+    
 	return TRUE;
 }
-*/
 
 void load_unit_settings(entity ent, string unitname, float is_reload)
 {
@@ -116,8 +141,6 @@ void turret_do_updates(entity t_turret)
             self.tur_dist_impact_to_aimpos = 0;
         else
             self.tur_dist_impact_to_aimpos = vlen(trace_endpos - self.tur_aimpos);
-
-
     }
     else
         tracebox(self.tur_shotorg, '-1 -1 -1','1 1 1', self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos),MOVE_NORMAL,self);
@@ -204,7 +227,10 @@ void turret_stdproc_track()
     vector target_angle; // This is where we want to aim
     vector move_angle;   // This is where we can aim
     float f_tmp;
-
+    vector v1, v2;
+    v1 = self.tur_head.angles;
+    v2 = self.tur_head.avelocity;
+    
     if (self.track_flags == TFL_TRACK_NO)
         return;
 
@@ -252,7 +278,10 @@ void turret_stdproc_track()
                 if(self.tur_head.angles_y  < -self.aim_maxrot)
                     self.tur_head.angles_y = self.aim_maxrot;
             }
-
+            
+            // CSQC
+            if(self.SendEntity)
+                self.SendFlags  = TNSF_STATUS;
             return;
 
         case TFL_TRACKTYPE_FLUIDINERTIA:
@@ -830,7 +859,7 @@ void turret_stdproc_use()
 
 void turret_link()
 {
-    //Net_LinkEntity(self, FALSE, 0, Turret_SendEntity);
+    Net_LinkEntity(self, TRUE, 0, turret_send);
     self.think      = turret_think;
     self.nextthink  = time;
 }
@@ -863,15 +892,21 @@ void turrets_manager_think()
 * (unless you have a very good reason not to)
 * if the return value is 0, the turret should be removed.
 */
-float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base, string head)
+float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base, string head, float _turret_type)
 {
 	entity e, ee;
 
     // Are turrets allowed?
     if (autocvar_g_turrets == 0)
         return 0;
-
-
+    
+    if(_turret_type < 1 || _turret_type > TID_LAST)
+    {
+        dprint("Invalid / Unkown turret type\"", ftos(_turret_type), "\", aborting!\n");
+        return 0;
+    }    
+    self.turret_type = _turret_type;
+    
     e = find(world, classname, "turret_manager");
     if not (e)
     {
@@ -895,17 +930,20 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         e.nextthink = time + 2;
     }
 
+    /*
     if(csqc_shared)
     {
         dprint("WARNING: turret requested csqc_shared but this is not implemented. Expect strange things to happen.\n");
         csqc_shared = 0;
     }
-
+    */
+    
     if not (self.spawnflags & TSF_SUSPENDED)
         droptofloor_builtin();
 
     // Terrainbase spawnflag. This puts a enlongated model
     // under the turret, so it looks ok on uneaven surfaces.
+    /*  TODO: Handle this with CSQC
     if (self.spawnflags & TSF_TERRAINBASE)
     {
         entity tb;
@@ -914,9 +952,10 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         setorigin(tb,self.origin);
         tb.solid = SOLID_BBOX;
     }
+    */
 
     self.cvar_basename = cvar_base_name;
-    load_unit_settings(self,self.cvar_basename, 0);
+    load_unit_settings(self, self.cvar_basename, 0);
 
     // Handle turret teams.
     if (autocvar_g_assault != 0)
@@ -1208,12 +1247,6 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     self.use = turret_stdproc_use;
     self.bot_attack = TRUE;
 
-    // Initiate the main AI loop
-    if(csqc_shared)
-        self.think     = turret_link;
-    else
-        self.think     = turret_think;
-
     ++turret_count;
     self.nextthink = time + 1;
     self.nextthink +=  turret_count * sys_frametime;
@@ -1244,8 +1277,15 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         activator = ee;
         self.use();
     }
-	
+    
 	turret_stdproc_respawn();
+	
+    // Initiate the main AI loop
+    if(csqc_shared)
+        self.think     = turret_link;
+    else
+        self.think     = turret_think;
+
     return 1;
 }
 
