@@ -281,7 +281,6 @@ void GibSplash_Precache()
 void Ent_DamageEffect()
 {
 	float type, specnum1, specnum2, entnumber;
-	float is_body;
 	vector org;
 	string specstr, effectnum;
 	entity e;
@@ -299,15 +298,6 @@ void Ent_DamageEffect()
 		return;
 
 	e = get_weaponinfo(type);
-
-	if(specnum1 >= 16)
-	{
-		// The server sends the specnum increased by 16 when the target is a dead body (a trick used to save bandwidth)
-		// Species range from 0 to 15, so 16 could never be reached, and may be used for other info.
-		// Revert the species back and mark that this is a dead body.
-		specnum1 -= 16;
-		is_body = TRUE;
-	}
 
 	specnum2 = (specnum1 & 0x78) / 8; // blood type: using four bits (0..7, bit indexes 3,4,5)
 	specstr = species_prefix(specnum2);
