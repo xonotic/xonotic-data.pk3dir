@@ -296,9 +296,6 @@ void Ent_DamageEffect()
 		return;
 	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
-	// if we aren't in third person mode, hide our own damage effect
-	if(entnumber == player_localentnum && !autocvar_chase_active)
-		return;
 
 	e = get_weaponinfo(type);
 
@@ -326,6 +323,10 @@ void Ent_DamageEffect()
 		if(random() < autocvar_cl_damageeffect_gibs)
 			pointparticles(particleeffectnum(effectnum), head.origin, '0 0 0', 1);
 	}
+
+	// if we aren't in third person mode, hide our own damage effect
+	if(entnumber == player_localentnum && !autocvar_chase_active)
+		return;
 
 	// Now apply the effect to the player. This shouldn't be done on gibbed bodies, but there's no way
 	// to tell between them and the respawned player, if both have damage effects at the same time.
