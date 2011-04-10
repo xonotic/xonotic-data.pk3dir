@@ -48,7 +48,7 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 
 // damage effect
 
-.float lifetime;
+.float damageeffect_lifetime;
 .entity damageeffect_repeater;
 
 float Violence_DamageEffect_SendEntity(entity to, float sf)
@@ -97,7 +97,7 @@ void Violence_DamageEffect(entity pl, float type)
 void Violence_DamageEffect_Remove(entity pl);
 void Violence_DamageEffect_DoRepeat()
 {
-	if(time > self.lifetime || (self.owner.classname != "player" && self.owner.classname != "body"))
+	if(time > self.damageeffect_lifetime || (self.owner.classname != "player" && self.owner.classname != "body"))
 	{
 		Violence_DamageEffect_Remove(self.owner);
 		return;
@@ -122,17 +122,17 @@ void Violence_DamageEffect_SetRepeat(entity pl, float damage, float type)
 		pl.damageeffect_repeater.owner = pl;
 		pl.damageeffect_repeater.think = Violence_DamageEffect_DoRepeat;
 
-		pl.damageeffect_repeater.lifetime = time + (autocvar_sv_damageeffect_lifetime * damage);
+		pl.damageeffect_repeater.damageeffect_lifetime = time + (autocvar_sv_damageeffect_lifetime * damage);
 	}
 	else
 	{
 		// if the repeater is being updated, increase its lifetime instead of re-setting it entirely
 		// this fixes the shotgun among other things, where only the damage of one bullet would be taken into account
-		pl.damageeffect_repeater.lifetime += (autocvar_sv_damageeffect_lifetime * damage);
+		pl.damageeffect_repeater.damageeffect_lifetime += (autocvar_sv_damageeffect_lifetime * damage);
 	}
 
 	if(autocvar_sv_damageeffect_lifetime_max)
-		pl.damageeffect_repeater.lifetime = bound(0, pl.damageeffect_repeater.lifetime, time + autocvar_sv_damageeffect_lifetime_max);
+		pl.damageeffect_repeater.damageeffect_lifetime = bound(0, pl.damageeffect_repeater.damageeffect_lifetime, time + autocvar_sv_damageeffect_lifetime_max);
 
 	pl.damageeffect_repeater.cnt = type;
 	pl.damageeffect_repeater.nextthink = time;
@@ -151,5 +151,5 @@ void Violence_DamageEffect_Copy(entity old_pl, entity pl)
 		Violence_DamageEffect_Remove(pl);
 
 	Violence_DamageEffect_SetRepeat(pl, 0, old_pl.damageeffect_repeater.cnt); // spawn a new repeater
-	pl.damageeffect_repeater.lifetime = old_pl.damageeffect_repeater.lifetime; // copy the lifetime
+	pl.damageeffect_repeater.damageeffect_lifetime = old_pl.damageeffect_repeater.damageeffect_lifetime; // copy the lifetime
 }
