@@ -53,7 +53,10 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 
 float Violence_DamageEffect_SendEntity(entity to, float sf)
 {
-	// if the client cannot see the damaged player, don't send to him and waste bandwidth
+	// if the client doesn't have the effect enabled, don't send to him and waste bandwidth
+	if not(to.cvar_cl_damageeffect)
+		return FALSE;
+	// if the client cannot see the damaged player, avoid sending and further save bandwidth
 	if not(checkpvs(to.origin + to.view_ofs, self))
 		return FALSE;
 
