@@ -68,7 +68,7 @@ void Violence_DamageEffect(entity pl, float type)
 	entity e;
 
 	e = spawn();
-	e.classname = "weapondamage";
+	e.classname = "damageeffect";
 	e.cnt = type;
 	e.state |= 8 * pl.species; // gib type, ranges from 0 to 15
 

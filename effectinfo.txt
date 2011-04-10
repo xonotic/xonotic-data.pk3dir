@@ -5258,10 +5258,6 @@ originjitter 1 1 1
 velocityjitter 100 100 100
 velocitymultiplier -0.31
 
-// --------------------------------
-// Weapon Damage Effects
-// --------------------------------
-
 // tuba does not use the weapon damage effect
 
 // laser damage effect
@@ -5905,7 +5901,3 @@ lightcolor 0.9 0.6 0.2
 // porto does not use the weapon damage effect
 
 // hook does not use the weapon damage effect
-
-// --------------------------------
-// End of Weapon Damage Effects
-// --------------------------------
