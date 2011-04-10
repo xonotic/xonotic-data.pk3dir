@@ -61,8 +61,8 @@ float Violence_DamageEffect_SendEntity(entity to, float sf)
 		return FALSE;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEEFFECT);
-	WriteByte(MSG_ENTITY, self.cnt); // the damage weapon
-	WriteByte(MSG_ENTITY, self.state); // species
+	WriteByte(MSG_ENTITY, self.cnt); // damage weapon
+	WriteByte(MSG_ENTITY, self.state); // player species
 	WriteByte(MSG_ENTITY, self.team); // player entnum
 	WriteCoord(MSG_ENTITY, floor(self.origin_x));
 	WriteCoord(MSG_ENTITY, floor(self.origin_y));
