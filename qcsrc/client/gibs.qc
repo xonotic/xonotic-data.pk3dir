@@ -319,6 +319,7 @@ void Ent_DamageEffect()
 
 	// Scan the owner of all gibs in the world. If a gib owner is the same as the player we're applying the
 	// effect to, it means our player is gibbed. Therefore, apply the particles to the gibs as well.
+	if(autocvar_cl_damageeffect_gibs)
 	for(head = world; (head = find(head, classname, "gib")); )
 	{
 		if(head.team == entnumber)
