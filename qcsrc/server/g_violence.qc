@@ -85,7 +85,11 @@ void Violence_DamageEffect(entity pl, float type)
 	else
 		e.team = num_for_edict(pl);
 
-	setorigin(e, pl.origin);
+	// if the player is dead, show the effect lower, else it appears floating above the body
+	if(pl.health <= 0)
+		setorigin(e, pl.origin - '0 0 25');
+	else
+		setorigin(e, pl.origin);
 
 	Net_LinkEntity(e, FALSE, 0.2, Violence_DamageEffect_SendEntity);
 }
