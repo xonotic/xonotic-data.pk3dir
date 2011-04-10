@@ -326,7 +326,7 @@ void Ent_DamageEffect()
 	}
 
 	// if we aren't in third person mode, hide our own damage effect
-	if(entnumber == player_localentnum && !autocvar_chase_active)
+	if(!body && entnumber == player_localentnum && !autocvar_chase_active)
 		return;
 
 	// Now apply the effect to the player. This shouldn't be done on gibbed bodies, but there's no way
