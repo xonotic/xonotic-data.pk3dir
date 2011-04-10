@@ -140,7 +140,7 @@ void TossGib (string mdlname, vector org, vector vconst, vector vrand, float spe
 
 void Ent_GibSplash(float isNew)
 {
-	float amount, type, specnum, entnumber, body;
+	float amount, type, specnum, entnumber;
 	vector org, vel;
 	string specstr;
 	float issilent;
@@ -151,7 +151,6 @@ void Ent_GibSplash(float isNew)
 	type = ReadByte(); // gibbage type
 	amount = ReadByte() / 16.0; // gibbage amount
 	entnumber = ReadByte(); // player num
-	body = ReadByte(); // is dead body / gibbed
 	org_x = ReadShort() * 4 + 2;
 	org_y = ReadShort() * 4 + 2;
 	org_z = ReadShort() * 4 + 2;
@@ -281,7 +280,7 @@ void GibSplash_Precache()
 
 void Ent_DamageEffect()
 {
-	float type, specnum1, specnum2, entnumber;
+	float type, specnum1, specnum2, entnumber, body;
 	vector org;
 	string specstr, effectnum;
 	entity e;
@@ -289,6 +288,7 @@ void Ent_DamageEffect()
 	type = ReadByte(); // damage weapon
 	specnum1 = ReadByte(); // player species
 	entnumber = ReadByte(); // player entnum
+	body = ReadByte(); // is dead body / gibbed
 	org_x = ReadCoord();
 	org_y = ReadCoord();
 	org_z = ReadCoord();
