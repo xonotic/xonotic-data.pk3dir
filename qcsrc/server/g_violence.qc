@@ -64,6 +64,7 @@ float Violence_DamageEffect_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, self.cnt); // damage weapon
 	WriteByte(MSG_ENTITY, self.state); // player species
 	WriteByte(MSG_ENTITY, self.team); // player entnum
+	WriteByte(MSG_ENTITY, self.deadflag); // is dead body / gibbed
 	WriteCoord(MSG_ENTITY, floor(self.origin_x));
 	WriteCoord(MSG_ENTITY, floor(self.origin_y));
 	WriteCoord(MSG_ENTITY, floor(self.origin_z));
@@ -84,6 +85,12 @@ void Violence_DamageEffect(entity pl, float type)
 		e.team = num_for_edict(pl.owner);
 	else
 		e.team = num_for_edict(pl);
+
+	// is this a whole dead body, or a gibbed body / player?
+	if(!pl.modelindex) // gibbed
+		e.deadflag = 2;
+	else if(pl.classname == "body")
+		e.deadflag = 1;
 
 	// if the player is dead, show the effect lower, else it appears floating above the body
 	if(pl.health <= 0)

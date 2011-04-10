@@ -140,7 +140,7 @@ void TossGib (string mdlname, vector org, vector vconst, vector vrand, float spe
 
 void Ent_GibSplash(float isNew)
 {
-	float amount, type, specnum, entnumber;
+	float amount, type, specnum, entnumber, body;
 	vector org, vel;
 	string specstr;
 	float issilent;
@@ -151,6 +151,7 @@ void Ent_GibSplash(float isNew)
 	type = ReadByte(); // gibbage type
 	amount = ReadByte() / 16.0; // gibbage amount
 	entnumber = ReadByte(); // player num
+	body = ReadByte(); // is dead body / gibbed
 	org_x = ReadShort() * 4 + 2;
 	org_y = ReadShort() * 4 + 2;
 	org_z = ReadShort() * 4 + 2;
