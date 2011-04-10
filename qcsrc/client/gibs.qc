@@ -317,7 +317,7 @@ void Ent_DamageEffect()
 
 	// Scan the owner of all gibs in the world. If a gib owner is the same as the player we're applying the
 	// effect to, it means our player is gibbed. Therefore, apply the particles to the gibs as well.
-	if(autocvar_cl_damageeffect_gibs)
+	if(autocvar_cl_damageeffect_gibs && body > 1)
 	for(head = world; (head = find(head, classname, "gib")); )
 	{
 		if(head.team == entnumber)
@@ -326,11 +326,14 @@ void Ent_DamageEffect()
 	}
 
 	// if we aren't in third person mode, hide our own damage effect
-	if(!body && entnumber == player_localentnum && !autocvar_chase_active)
+	if(entnumber == player_localentnum && !body)
+	if(!autocvar_chase_active)
+		return;
+	// if this is a gibbed dead body, don't apply the effects to it, only the gibs as done above
+	if(body > 1)
 		return;
 
-	// Now apply the effect to the player. This shouldn't be done on gibbed bodies, but there's no way
-	// to tell between them and the respawned player, if both have damage effects at the same time.
+	// Now apply the effect to the actual player.
 	if(random() < autocvar_cl_damageeffect)
 		pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
 }
