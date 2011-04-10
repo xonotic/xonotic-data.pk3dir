@@ -81,7 +81,14 @@ void Violence_DamageEffect(entity pl, float type)
 
 	// if this is a copied dead body, send the num of its player instead
 	if(pl.classname == "body")
+	{
 		e.team = num_for_edict(pl.owner);
+
+		// Use a trick to indicate this is a copied dead body and not an alive player to the client (saves an extra WriteByte).
+		// Do this by increasing species with 100 (species range from 0 to 15, and there could never be 100 of them).
+		// The client will notice this and turn them back, while also noting what the server is trying to say.
+		e.state += 100;
+	}
 	else
 		e.team = num_for_edict(pl);
 
