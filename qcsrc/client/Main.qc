@@ -203,6 +203,10 @@ void CSQC_Shutdown(void)
 	if(camera_active)
 		cvar_set("chase_active",ftos(chase_active_backup));
 
+	// unset the event chasecam's chase_active
+	if(autocvar_chase_active < 0)
+		cvar_set("chase_active", "0");
+
 	if not(isdemo())
 	{
 		if not(calledhooks & HOOK_START)
