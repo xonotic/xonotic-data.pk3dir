@@ -508,6 +508,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_progressbar");
 					HUD_Write_PanelCvar_q("_progressbar_strength");
 					HUD_Write_PanelCvar_q("_progressbar_shield");
+					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
 					HUD_Write_PanelCvar_q("_flip");
@@ -520,6 +521,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case HUD_PANEL_NOTIFY:
 					HUD_Write_PanelCvar_q("_flip");
+					HUD_Write_PanelCvar_q("_fontsize");
 					HUD_Write_PanelCvar_q("_print");
 					break;
 				case HUD_PANEL_RADAR:
