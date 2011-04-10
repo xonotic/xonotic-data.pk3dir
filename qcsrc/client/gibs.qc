@@ -322,11 +322,12 @@ void Ent_DamageEffect()
 	for(head = world; (head = find(head, classname, "gib")); )
 	{
 		if(head.team == entnumber)
-		if(random() < autocvar_cl_damageeffect_gib_probability)
-			pointparticles(particleeffectnum(effectnum), head.origin, '0 0 0', autocvar_cl_damageeffect);
+		if(random() < autocvar_cl_damageeffect_gibs)
+			pointparticles(particleeffectnum(effectnum), head.origin, '0 0 0', 1);
 	}
 
 	// Now apply the effect to the player. This shouldn't be done on gibbed bodies, but there's no way
 	// to tell between them and the respawned player, if both have damage effects at the same time.
-	pointparticles(particleeffectnum(effectnum), org, '0 0 0', autocvar_cl_damageeffect);
+	if(random() < autocvar_cl_damageeffect)
+		pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
 }
