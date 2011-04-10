@@ -300,12 +300,12 @@ void Ent_DamageEffect()
 
 	e = get_weaponinfo(type);
 
-	if(specnum1 >= 100)
+	if(specnum1 >= 16)
 	{
-		// The server sends the specnum increased by 100 when the target is a dead body (a trick used to save bandwidth)
-		// Species range from 0 to 15, and could never reach 100, so this should never risk causing a conflict.
+		// The server sends the specnum increased by 16 when the target is a dead body (a trick used to save bandwidth)
+		// Species range from 0 to 15, so 16 could never be reached, and may be used for other info.
 		// Revert the species back and mark that this is a dead body.
-		specnum1 -= 100;
+		specnum1 -= 16;
 		is_body = TRUE;
 	}
 
