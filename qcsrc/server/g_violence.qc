@@ -54,7 +54,7 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 float Violence_DamageEffect_SendEntity(entity to, float sf)
 {
 	// if the client cannot see the damaged player, don't send to him and waste bandwidth
-	if not(checkpvs(to.origin + to.view_ofs, self.owner))
+	if not(checkpvs(to.origin + to.view_ofs, self))
 		return FALSE;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEEFFECT);
@@ -75,7 +75,6 @@ void Violence_DamageEffect(entity pl, float type)
 	e.classname = "damageeffect";
 	e.cnt = type;
 	e.state |= 8 * pl.species; // gib type, ranges from 0 to 15
-	e.owner = pl;
 
 	// if this is a copied dead body, send the num of its player instead
 	if(pl.classname == "body")
