@@ -147,7 +147,7 @@ void W_Hagar_Attack2_Load (void)
 			self.hagar_load += 1;
 			sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
-			self.hagarload_refire = time + autocvar_g_balance_hagar_secondary_refire;
+			self.hagarload_refire = time + autocvar_g_balance_hagar_secondary_load_speed;
 		}
 	}
 	else if(self.hagar_load && (!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && !autocvar_g_balance_hagar_secondary_load_hold)))
