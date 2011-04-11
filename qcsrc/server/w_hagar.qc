@@ -140,7 +140,8 @@ void W_Hagar_Attack2_Load (void)
 			self.hagarload_refire = time + autocvar_g_balance_hagar_secondary_refire;
 		}
 	}
-	else if(self.hagar_load)
+
+	if(self.hagar_load && (!self.BUTTON_ATCK2 || (self.hagarload_loaded && !autocvar_g_balance_hagar_secondary_load_canhold)))
 	{
 		W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
 		pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
