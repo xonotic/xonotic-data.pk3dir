@@ -1125,7 +1125,7 @@ void CSQC_UpdateView(float w, float h)
 				}
 				else if (activeweapon == WEP_HAGAR && getstati(STAT_HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
 				{
-					ring_value = bound(0, getstati(STAT_HAGAR_LOAD) / getstati(STAT_HAGAR_MAXLOAD), 1);
+					ring_value = bound(0, getstati(STAT_HAGAR_LOAD) / hagar_maxrockets, 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";

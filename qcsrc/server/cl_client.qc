@@ -1121,6 +1121,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
+	WriteByte(MSG_ENTITY, autocvar_g_balance_hagar_secondary_load_maxload); // hagar max loadable rockets
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
 	return TRUE;
 }
@@ -2370,7 +2371,6 @@ void SpectateCopy(entity spectatee) {
 	self.nex_charge = spectatee.nex_charge;
 	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
 	self.hagar_load = spectatee.hagar_load;
-	self.hagar_maxload = spectatee.hagar_maxload;
 	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;
