@@ -143,6 +143,8 @@ void W_Hagar_Attack2_Load (void)
 		W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
 		pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
+		W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load, autocvar_g_balance_hagar_reload_ammo);
+
 		forward = v_forward;
 		right = v_right;
 		up = v_up;
