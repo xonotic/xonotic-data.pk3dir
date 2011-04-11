@@ -920,13 +920,13 @@ void Ent_ShowNames()
         playerslots[the_entnum].origin_x = ReadShort();
         playerslots[the_entnum].origin_y = ReadShort();
         playerslots[the_entnum].origin_z = ReadShort();
-        print("Updated origin = ", vtos(playerslots[the_entnum].origin), " for player # ", ftos(the_entnum), "\n");
+        print("Updated origin = ", vtos(playerslots[the_entnum].origin), " for player ", GetPlayerName(the_entnum-1), "\n");
     }
     if(sf & 2)
     {
         playerslots[the_entnum].health = ReadByte();
         playerslots[the_entnum].armorvalue = ReadByte();
-        print("Updated health/armor = ", ftos(playerslots[the_entnum].health), "/", ftos(playerslots[the_entnum].health), " for player # ", ftos(the_entnum), "\n");
+        print("Updated health/armor = ", ftos(playerslots[the_entnum].health), "/", ftos(playerslots[the_entnum].health), "\n");
     }
 
     /*
