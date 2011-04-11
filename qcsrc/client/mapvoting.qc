@@ -26,7 +26,7 @@ string MapVote_FormatMapItem(float id, string map, float count, float maxwidth, 
 	{
 		if(count == 1)
 			post = _(" (1 vote)");
-		else
+		else if(count >= 0)
 			post = sprintf(_(" (%d votes)"), count);
 	}
 	else

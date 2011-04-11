@@ -89,11 +89,12 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 
 vector HUD_Get_Num_Color (float x, float maxvalue)
 {
+	float blinkingamt;
 	vector color;
-	if(x > maxvalue) {
-		color_x = 0;
+	if(x >= maxvalue) {
+		color_x = sin(2*M_PI*time);
 		color_y = 1;
-		color_z = 0;
+		color_z = sin(2*M_PI*time);
 	}
 	else if(x > maxvalue * 0.75) {
 		color_x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
@@ -119,6 +120,14 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 		color_x = 1;
 		color_y = 0;
 		color_z = 0;
+	}
+
+	blinkingamt = (1 - x/maxvalue/0.25);
+	if(blinkingamt > 0)
+	{
+		color_x = color_x - color_x * blinkingamt * sin(2*M_PI*time);
+		color_y = color_y - color_y * blinkingamt * sin(2*M_PI*time);
+		color_z = color_z - color_z * blinkingamt * sin(2*M_PI*time);
 	}
 	return color;
 }
@@ -4154,7 +4163,7 @@ void HUD_InfoMessages(void)
 		}
 		else if(warmup_stage && !intermission && !spectatee_status)
 		{
-			s = strcat("^2Press ^3%s^2 to end warmup", getcommandkey("ready", "ready"));
+			s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey("ready", "ready"));
 			drawInfoMessage(s)
 		}
 
@@ -4199,11 +4208,91 @@ void HUD_InfoMessages(void)
 	}
 }
 
-// Physics panel (#15)
+// ShowNames (#15)
+//
+float shownames_alpha;
+void HUD_ShowNames(void)
+{
+    if(shownames_time < time && shownames_alpha == 0 && !autocvar__hud_configure)
+        return;
+
+    if(autocvar__hud_configure)
+    {
+        shownames_alpha = 1;
+    }
+    else
+    {
+        if(shownames_time < time)
+            shownames_alpha = bound(0, shownames_alpha - 2 * frametime, 1);
+        else
+            shownames_alpha = bound(0, shownames_alpha + 4 * frametime, 1);
+    }
+
+	if(!autocvar_hud_panel_shownames && !autocvar__hud_configure)
+		return;
+
+	hud_configure_active_panel = HUD_PANEL_SHOWNAMES;
+	HUD_Panel_UpdateCvars(shownames);
+    panel_fg_alpha *= shownames_alpha;
+	vector myPos, mySize;
+	myPos = panel_pos;
+	mySize = panel_size;
+
+	HUD_Panel_DrawBg(shownames_alpha);
+	if(panel_bg_padding)
+	{
+		myPos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+
+    vector iconpos, iconsize;
+    vector namepos, namesize;
+    if(mySize_x/mySize_y > 6)
+    {
+        iconpos = myPos;
+        iconsize = eX * 2 * mySize_y + eY * mySize_y;
+
+        namepos = myPos + eX * 2 * mySize_y;
+        namesize = eX * mySize_x - eX * 2 * mySize_y + eY * mySize_y;
+    }
+    else
+    {
+        iconpos = myPos + eX * 0.5 * mySize_x - eX * 0.5 * mySize_y;
+        iconsize = eX * mySize_y + eY * 0.5 * mySize_y;
+
+        namepos = myPos + eY * 0.5 * mySize_y;
+        namesize = eX * mySize_x + eY * 0.5 * mySize_y;
+    }
+
+    if(shownames_health > 0) // otherwise player is an enemy
+    {
+        // "ghost" backgrounds
+        drawpic_aspect_skin(iconpos, "health", '1 1 0' * iconsize_y, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+        drawpic_aspect_skin(iconpos + '0.5 0 0' * iconsize_x, "armor", '1 1 0' * iconsize_y, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+
+        drawsetcliparea(0, myPos_y + iconsize_y - iconsize_y * min(1, shownames_health/autocvar_hud_panel_healtharmor_maxhealth), vid_conwidth, myPos_y + iconsize_y);
+        drawpic_aspect_skin(iconpos, "health", '1 1 0' * iconsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+        drawsetcliparea(0, myPos_y + iconsize_y - iconsize_y * min(1, shownames_armor/autocvar_hud_panel_healtharmor_maxarmor), vid_conwidth, myPos_y + iconsize_y);
+        drawpic_aspect_skin(iconpos + '0.5 0 0' * iconsize_x, "armor", '1 1 0' * iconsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+        drawresetcliparea();
+    }
+    else
+    {
+        drawpic_aspect_skin(iconpos, "health_unknown", '1 1 0' * iconsize_y, '0 0 0', panel_fg_alpha, DRAWFLAG_NORMAL);
+        drawpic_aspect_skin(iconpos + '0.5 0 0' * iconsize_x, "armor_unknown", '1 1 0' * iconsize_y, '0 0 0', panel_fg_alpha, DRAWFLAG_NORMAL);
+    }
+
+    if(autocvar__hud_configure)
+        drawcolorcodedstring_aspect(namepos, "Player1234", namesize, panel_fg_alpha, DRAWFLAG_NORMAL);
+    else
+        drawcolorcodedstring_aspect(namepos, shownames_netname, namesize, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
+// Physics panel (#16)
 //
 vector acc_prevspeed;
 float acc_prevtime, acc_avg, top_speed, top_speed_time;
-
 void HUD_Physics(void)
 {
 	if(!autocvar__hud_configure)
@@ -4419,7 +4508,7 @@ void HUD_Physics(void)
 			HUD_Panel_GetProgressBarColor(acceleration_neg);
 		else
 			HUD_Panel_GetProgressBarColor(acceleration);
-		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset, panel_size, "progressbar", acceleration/autocvar_hud_panel_physics_acceleration_max, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset, panel_size, "accelbar", acceleration/autocvar_hud_panel_physics_acceleration_max, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 3)
 		drawstring_aspect(panel_pos + acceleration_offset, strcat(ftos_decimals(acceleration, 2), "g"), panel_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -4474,6 +4563,8 @@ switch (id) {\
 		 HUD_InfoMessages(); break;\
 	case (HUD_PANEL_PHYSICS):\
 		 HUD_Physics(); break;\
+	case (HUD_PANEL_SHOWNAMES):\
+		 HUD_ShowNames(); break;\
 } ENDS_WITH_CURLY_BRACE
 
 void HUD_Main (void)

@@ -274,3 +274,8 @@ float nex_charge_movingavg;
 float serverflags;
 
 float uid2name_dialog;
+
+string shownames_netname;
+float shownames_health;
+float shownames_armor;
+float shownames_time;

@@ -19,7 +19,7 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 	float i;
 
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_panel_physics"));
+		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_physics"));
 			e.addValue(e, _("Panel disabled"), "0");
 			e.addValue(e, _("Panel enabled if not observing"), "1");
 			e.addValue(e, _("Panel always enabled"), "2");
