@@ -130,7 +130,7 @@ void W_Hagar_Attack2_Load (void)
 	local vector s;
 	vector forward, right, up;
 
-	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_maxload;
+	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max;
 
 	// check if we have enough ammo for another rocket
 	used_ammo = autocvar_g_balance_hagar_secondary_ammo;
@@ -150,7 +150,7 @@ void W_Hagar_Attack2_Load (void)
 			self.hagarload_refire = time + autocvar_g_balance_hagar_secondary_refire;
 		}
 	}
-	else if(self.hagar_load && (!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && !autocvar_g_balance_hagar_secondary_load_canhold)))
+	else if(self.hagar_load && (!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && !autocvar_g_balance_hagar_secondary_load_hold)))
 	{
 		// time to release the rockets we've loaded
 
