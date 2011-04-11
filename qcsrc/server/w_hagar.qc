@@ -115,7 +115,7 @@ void W_Hagar_Attack2 (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-.float hagarload_refire, hagarload_loaded;
+.float hagarload_refire;
 
 void W_Hagar_Attack2_Load (void)
 {
@@ -123,25 +123,24 @@ void W_Hagar_Attack2_Load (void)
 		return;
 
 	local entity missile, prevmissile, firstmissile;
-	local float counter, shots;
+	local float counter, shots, loaded;
 	local vector s;
 	vector forward, right, up;
 
-	if(self.BUTTON_ATCK2 && !self.hagarload_loaded)
+	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_maxload;
+
+	if(self.BUTTON_ATCK2 && !loaded)
 	{
 		if(self.hagarload_refire < time)
 		{
 			self.hagar_load += 1;
 			sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
-			if(self.hagar_load >= autocvar_g_balance_hagar_secondary_load_maxload)
-				self.hagarload_loaded = TRUE;
-
 			self.hagarload_refire = time + autocvar_g_balance_hagar_secondary_refire;
 		}
 	}
 
-	if(self.hagar_load && (!self.BUTTON_ATCK2 || (self.hagarload_loaded && !autocvar_g_balance_hagar_secondary_load_canhold)))
+	if(self.hagar_load && (!self.BUTTON_ATCK2 || (loaded && !autocvar_g_balance_hagar_secondary_load_canhold)))
 	{
 		W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
 		pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -216,7 +215,6 @@ void W_Hagar_Attack2_Load (void)
 		}
 
 		self.hagar_load = 0;
-		self.hagarload_loaded = FALSE;
 	}
 }
 
@@ -274,7 +272,6 @@ float w_hagar(float req)
 		self.current_ammo = ammo_rockets;
 
 		self.hagar_load = 0;
-		self.hagarload_loaded = FALSE;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
