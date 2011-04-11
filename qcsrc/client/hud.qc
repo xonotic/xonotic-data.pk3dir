@@ -508,6 +508,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_progressbar");
 					HUD_Write_PanelCvar_q("_progressbar_strength");
 					HUD_Write_PanelCvar_q("_progressbar_shield");
+					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
 					HUD_Write_PanelCvar_q("_flip");
@@ -520,6 +521,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case HUD_PANEL_NOTIFY:
 					HUD_Write_PanelCvar_q("_flip");
+					HUD_Write_PanelCvar_q("_fontsize");
 					HUD_Write_PanelCvar_q("_print");
 					break;
 				case HUD_PANEL_RADAR:
@@ -4958,7 +4960,7 @@ void HUD_InfoMessages(void)
 		}
 		else if(warmup_stage && !intermission && !spectatee_status)
 		{
-			s = strcat("^2Press ^3%s^2 to end warmup", getcommandkey("ready", "ready"));
+			s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey("ready", "ready"));
 			drawInfoMessage(s)
 		}
 
@@ -5179,9 +5181,9 @@ void HUD_ShowAcceleration(void)
 	}
 
 	if (acceleration > 0)
-        HUD_Panel_DrawProgressBar(pos, eX * (vid_conwidth - pos_x) + eY * sz, "statusbar", 0, 0, acceleration * scale, rgb, alpha * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+        HUD_Panel_DrawProgressBar(pos, eX * (vid_conwidth - pos_x) + eY * sz, "accelbar", 0, 0, acceleration * scale, rgb, alpha * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	else
-        HUD_Panel_DrawProgressBar(eY * pos_y, eX * pos_x + eY * sz, "statusbar", 0, 1, -acceleration * scale, rgb, alpha * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+        HUD_Panel_DrawProgressBar(eY * pos_y, eX * pos_x + eY * sz, "accelbar", 0, 1, -acceleration * scale, rgb, alpha * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 void HUD_Reset (void)
