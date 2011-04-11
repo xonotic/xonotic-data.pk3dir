@@ -115,7 +115,7 @@ void W_Hagar_Attack2 (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-.float hagarload_refire;
+.float hagar_loadtime;
 void W_Hagar_Attack2_Load (void)
 {
 	if not(weapon_action(self.weapon, WR_CHECKAMMO2))
@@ -142,12 +142,12 @@ void W_Hagar_Attack2_Load (void)
 	if(self.BUTTON_ATCK2 && !loaded && enough_ammo)
 	{
 		// we can attempt to load another rocket
-		if(self.hagarload_refire < time)
+		if(self.hagar_loadtime < time)
 		{
 			self.hagar_load += 1;
 			sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
-			self.hagarload_refire = time + autocvar_g_balance_hagar_secondary_load_speed;
+			self.hagar_loadtime = time + autocvar_g_balance_hagar_secondary_load_speed;
 		}
 	}
 	else if(self.hagar_load && (!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && !autocvar_g_balance_hagar_secondary_load_hold)))
@@ -226,7 +226,7 @@ void W_Hagar_Attack2_Load (void)
 		}
 
 		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
-		self.hagarload_refire = time + autocvar_g_balance_hagar_secondary_refire;
+		self.hagar_loadtime = time + autocvar_g_balance_hagar_secondary_refire;
 		self.hagar_load = 0;
 	}
 }
