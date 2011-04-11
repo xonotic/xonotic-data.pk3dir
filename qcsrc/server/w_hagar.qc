@@ -237,7 +237,7 @@ float w_hagar(float req)
 	{
 		if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo)) // forced reload
 			weapon_action(self.weapon, WR_RELOAD);
-		else if (self.BUTTON_ATCK)
+		else if (self.BUTTON_ATCK && !self.hagar_load) // not while loading secondary fire
 		{
 			if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
 			{
@@ -246,7 +246,7 @@ float w_hagar(float req)
 			}
 		}
 		else if(autocvar_g_balance_hagar_secondary_load)
-			W_Hagar_Attack2_Load();
+			W_Hagar_Attack2_Load(); // must run each frame
 		else if (self.BUTTON_ATCK2 && autocvar_g_balance_hagar_secondary)
 		{
 			if (weapon_prepareattack(1, autocvar_g_balance_hagar_secondary_refire))
