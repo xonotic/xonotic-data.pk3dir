@@ -833,7 +833,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
 
-	addstat(STAT_HAGAR_LOAD, AS_FLOAT, hagar_load);
+	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
 
 	if(g_ca || g_freezetag)
 	{
