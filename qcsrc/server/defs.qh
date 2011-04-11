@@ -658,6 +658,9 @@ string deathmessage;
 .float nex_charge_rottime;
 .float nex_chargepool_ammo;
 
+.float hagar_load;
+.float hagar_maxload;
+
 float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
 
 float serverflags;

@@ -2369,6 +2369,8 @@ void SpectateCopy(entity spectatee) {
 	self.weapon = spectatee.weapon;
 	self.nex_charge = spectatee.nex_charge;
 	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
+	self.hagar_load = spectatee.hagar_load;
+	self.hagar_maxload = spectatee.hagar_maxload;
 	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;

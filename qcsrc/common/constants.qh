@@ -317,6 +317,8 @@ const float STAT_NEX_CHARGEPOOL = 53;
 const float STAT_HIT_TIME = 54;
 const float STAT_TYPEHIT_TIME = 55;
 const float STAT_LAYED_MINES = 56;
+const float STAT_HAGAR_LOAD = 57;
+const float STAT_HAGAR_MAXLOAD = 58;
 
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
