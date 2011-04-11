@@ -132,6 +132,8 @@ void W_Hagar_Attack2_Load (void)
 		if(self.hagarload_refire < time)
 		{
 			self.hagar_load += 1;
+			sound(self, CHAN_WEAPON, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
+
 			if(self.hagar_load >= autocvar_g_balance_hagar_secondary_load_maxload)
 				self.hagarload_loaded = TRUE;
 
@@ -262,6 +264,7 @@ float w_hagar(float req)
 		precache_model ("models/weapons/v_hagar.md3");
 		precache_model ("models/weapons/h_hagar.iqm");
 		precache_sound ("weapons/hagar_fire.wav");
+		precache_sound ("weapons/hagar_load.wav");
 		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
