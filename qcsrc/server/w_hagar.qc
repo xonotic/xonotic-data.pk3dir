@@ -124,12 +124,19 @@ void W_Hagar_Attack2_Load (void)
 
 	local entity missile, prevmissile, firstmissile;
 	local float counter, shots, loaded;
+	local float used_ammo, enough_ammo;
 	local vector s;
 	vector forward, right, up;
 
 	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_maxload;
 
-	if(self.BUTTON_ATCK2 && !loaded)
+	used_ammo = autocvar_g_balance_hagar_secondary_ammo;
+	if(autocvar_g_balance_hagar_reload_ammo)
+		enough_ammo = self.weapon_load[WEP_HAGAR] >= used_ammo + (used_ammo * self.hagar_load);
+	else
+		enough_ammo = self.ammo_rockets >= used_ammo + (used_ammo * self.hagar_load);
+
+	if(self.BUTTON_ATCK2 && !loaded && enough_ammo)
 	{
 		if(self.hagarload_refire < time)
 		{
@@ -139,8 +146,7 @@ void W_Hagar_Attack2_Load (void)
 			self.hagarload_refire = time + autocvar_g_balance_hagar_secondary_refire;
 		}
 	}
-
-	if(self.hagar_load && (!self.BUTTON_ATCK2 || (loaded && !autocvar_g_balance_hagar_secondary_load_canhold)))
+	else if(self.hagar_load && (!self.BUTTON_ATCK2 || (loaded && !autocvar_g_balance_hagar_secondary_load_canhold)))
 	{
 		W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
 		pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
