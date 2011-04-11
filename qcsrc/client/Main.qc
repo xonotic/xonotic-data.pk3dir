@@ -928,8 +928,6 @@ void Ent_ShowNames()
         playerslots[the_entnum].armorvalue = ReadByte();
         print("Updated health/armor = ", ftos(playerslots[the_entnum].health), "/", ftos(playerslots[the_entnum].health), " for player # ", ftos(the_entnum), "\n");
     }
-    if(sf & 4)
-        playerslots[the_entnum].netname = ReadString();
 
     /*
     string thename;
