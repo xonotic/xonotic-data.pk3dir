@@ -907,6 +907,59 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
+.float health, armorvalue;
+void Ent_ShowNames()
+{
+    float sf, the_entnum;
+
+    sf = ReadByte();
+    the_entnum = ReadByte();
+
+    if(sf & 1)
+    {
+        playerslots[the_entnum].origin_x = ReadShort();
+        playerslots[the_entnum].origin_y = ReadShort();
+        playerslots[the_entnum].origin_z = ReadShort();
+        print("Updated origin = ", vtos(playerslots[the_entnum].origin), " for player # ", ftos(the_entnum), "\n");
+    }
+    if(sf & 2)
+    {
+        playerslots[the_entnum].health = ReadByte();
+        playerslots[the_entnum].armorvalue = ReadByte();
+        print("Updated health/armor = ", ftos(playerslots[the_entnum].health), "/", ftos(playerslots[the_entnum].health), " for player # ", ftos(the_entnum), "\n");
+    }
+    if(sf & 4)
+        playerslots[the_entnum].netname = ReadString();
+
+    /*
+    string thename;
+    float thehealth, thearmor;
+
+    if(shownames_netname)
+        strunzone(shownames_netname);
+    thename = strzone(ReadString());
+    thehealth = ReadByte();
+    thearmor = ReadByte();
+
+    if(autocvar_hud_panel_shownames == 1 && thehealth > 0) // teammates only
+    {
+        shownames_netname = thename;
+        shownames_health = thehealth;
+        shownames_armor = thearmor;
+
+        shownames_time = time + autocvar_hud_panel_shownames_sustain;
+    }
+    else if(autocvar_hud_panel_shownames == 2)
+    {
+        shownames_netname = thename;
+        shownames_health = thehealth;
+        shownames_armor = thearmor;
+
+        shownames_time = time + autocvar_hud_panel_shownames_sustain;
+    }
+    */
+}
+
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void Ent_RadarLink();
@@ -971,6 +1024,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
+		case ENT_CLIENT_SHOWNAMES: Ent_ShowNames(); break;
 		default:
 			error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			break;
@@ -1324,35 +1378,6 @@ void Net_WeaponComplain() {
 	weapontime = time; // ping the weapon panel
 }
 
-void Net_ShowNames()
-{
-    string thename;
-    float thehealth, thearmor;
-
-    if(shownames_netname)
-        strunzone(shownames_netname);
-    thename = strzone(ReadString());
-    thehealth = ReadByte();
-    thearmor = ReadByte();
-
-    if(autocvar_hud_panel_shownames == 1 && thehealth > 0) // teammates only
-    {
-        shownames_netname = thename;
-        shownames_health = thehealth;
-        shownames_armor = thearmor;
-
-        shownames_time = time + autocvar_hud_panel_shownames_sustain;
-    }
-    else if(autocvar_hud_panel_shownames == 2)
-    {
-        shownames_netname = thename;
-        shownames_health = thehealth;
-        shownames_armor = thearmor;
-
-        shownames_time = time + autocvar_hud_panel_shownames_sustain;
-    }
-}
-
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1423,10 +1448,6 @@ float CSQC_Parse_TempEntity()
 			Net_WeaponComplain();
 			bHandled = true;
 			break;
-		case TE_CSQC_SHOWNAMES:
-            Net_ShowNames();
-            bHandled = true;
-            break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;

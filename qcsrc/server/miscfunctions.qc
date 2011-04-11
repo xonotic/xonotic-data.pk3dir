@@ -461,11 +461,6 @@ string formatmessage(string msg)
 			replacement = cursor_ent.netname;
 			if (!replacement || !cursor_ent)
 				replacement = "nothing";
-		} else if (escape == "p") {
-			if (self.last_selected_player)
-				replacement = self.last_selected_player.netname;
-			else
-				replacement = "(nobody)";
 		} else if (escape == "s")
 			replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1'));
 		else if (escape == "S")
@@ -586,7 +581,6 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
 	GetCvars_handleFloat(s, f, cvar_scr_centertime, "scr_centertime");
-	GetCvars_handleFloat(s, f, cvar_cl_shownames, "cl_shownames");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
