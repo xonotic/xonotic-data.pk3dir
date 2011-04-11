@@ -2,6 +2,11 @@
 
 float turret_send(entity to, float sf)
 {
+    float dist;
+    dist = vlen(self.origin - to.origin);
+    if(dist > 1024) // When far away, write angles/avelocity as short insted of angle.
+        sf |= TNSF_FAR;
+        
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
 	
 	WriteByte(MSG_ENTITY, sf);
@@ -18,21 +23,37 @@ float turret_send(entity to, float sf)
     }
     
     if(sf & TNSF_ANG)
-    {        
-        WriteAngle(MSG_ENTITY, self.tur_head.angles_x);
-	    WriteAngle(MSG_ENTITY, self.tur_head.angles_y);	    
+    {
+        if(sf & TNSF_FAR)
+        {
+            WriteShort(MSG_ENTITY, rint(self.tur_head.angles_x));
+            WriteShort(MSG_ENTITY, rint(self.tur_head.angles_y));
+        }
+        else
+        {            
+            WriteAngle(MSG_ENTITY, self.tur_head.angles_x);
+            WriteAngle(MSG_ENTITY, self.tur_head.angles_y);	    
+        }
     }
     
     if(sf & TNSF_AVEL)
     {        
-	    WriteAngle(MSG_ENTITY, self.tur_head.avelocity_x);
-	    WriteAngle(MSG_ENTITY, self.tur_head.avelocity_y);
+        if(sf & TNSF_FAR)
+        {
+            WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_x));
+            WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_y));
+        }
+        else
+        {
+            WriteAngle(MSG_ENTITY, self.tur_head.avelocity_x);
+            WriteAngle(MSG_ENTITY, self.tur_head.avelocity_y);            
+        }
     }
     
     if(sf & TNSF_STATUS)
     {        
         WriteByte(MSG_ENTITY, self.team);
-        WriteByte(MSG_ENTITY, rint((self.health / self.tur_health) * 255));
+        WriteByte(MSG_ENTITY, rint((self.health / self.tur_health) * 255)); // Send health as 0-255 insted of real value, where 255 = 100%
     }
     
 	return TRUE;
@@ -305,7 +326,7 @@ void turret_stdproc_track()
             self.tur_head.angles_x = self.aim_maxpitch;
             
             if(self.SendEntity)
-                self.SendFlags  |= TNSF_ANG | TNSF_AVEL;
+                self.SendFlags  |= TNSF_ANG;
         }
         
         if((self.tur_head.angles_x + self.tur_head.avelocity_x * self.ticrate) < -self.aim_maxpitch)
@@ -314,7 +335,7 @@ void turret_stdproc_track()
             self.tur_head.angles_x = -self.aim_maxpitch;
             
             if(self.SendEntity)
-                self.SendFlags  |= TNSF_ANG | TNSF_AVEL;
+                self.SendFlags  |= TNSF_ANG;
         }
     }
 
@@ -329,7 +350,7 @@ void turret_stdproc_track()
             self.tur_head.angles_y = self.aim_maxrot;
             
             if(self.SendEntity)
-                self.SendFlags  |= TNSF_ANG | TNSF_AVEL;
+                self.SendFlags  |= TNSF_ANG;
         }
 
         if((self.tur_head.angles_y + self.tur_head.avelocity_y * self.ticrate) < -self.aim_maxrot)
@@ -338,23 +359,22 @@ void turret_stdproc_track()
             self.tur_head.angles_y = -self.aim_maxrot;
             
             if(self.SendEntity)
-                self.SendFlags  |= TNSF_ANG | TNSF_AVEL;
+                self.SendFlags  |= TNSF_ANG;
         }
     }
-    
+        
     if(self.SendEntity)
     {        
+        self.SendFlags  |= TNSF_AVEL;
+        
+        // Push a angle update every 10'th frame
         self.turret_framecounter += 1;
-        if(self.turret_framecounter >= 4)
+        if(self.turret_framecounter >= 10)
         {
-            self.SendFlags  |= TNSF_ANG | TNSF_AVEL;
+            self.SendFlags  |= TNSF_ANG;
             self.turret_framecounter = 0;
-        }
-        else
-            self.SendFlags |= TNSF_AVEL;
-    }
-            
-
+        }            
+    }            
 }
 
 
@@ -658,7 +678,7 @@ void turret_think()
     entity e;
 
     self.nextthink = time + self.ticrate;
-    self.SendFlags = TNSF_UPDATE | TNSF_STATUS | TNSF_ANG | TNSF_AVEL;
+    //self.SendFlags = TNSF_UPDATE | TNSF_STATUS | TNSF_ANG | TNSF_AVEL;
     
     // ONS uses somewhat backwards linking.
     if (teams_matter)
@@ -688,10 +708,6 @@ void turret_think()
     if not (self.spawnflags & TSF_NO_AMMO_REGEN)
     if (self.ammo < self.ammo_max)
         self.ammo = min(self.ammo + self.ammo_recharge, self.ammo_max);
-
-    if (self.health < (self.tur_health * 0.5))
-		if(random() < 0.25)
-			te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 			
     // Inactive turrets needs to run the think loop,
     // So they can handle animation and wake up if need be.

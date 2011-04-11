@@ -26,10 +26,12 @@ void turrets_precache()
     precache_sound ("weapons/uzi_fire.wav");
 }
 
-
+//.entity tur_base;
 void turret_remove()
 {
+    dprint("Removing turret type ", ftos(self.turret_type), "\n");
     remove(self.tur_head);
+    self.tur_head = world;
 }
 
 void turret_changeteam()
@@ -38,11 +40,11 @@ void turret_changeteam()
 	switch(self.team)
 	{
         case COLOR_TEAM1: // Red
-            self.colormod = '1.4 0.8 0.8';
+            self.colormod = '2 0.5 0.5';
             break;
 
         case COLOR_TEAM2: // Blue
-            self.colormod = '0.8 0.8 1.4';
+            self.colormod = '0.5 0.5 2';
             break;
 
         case COLOR_TEAM3: // Yellow
@@ -58,24 +60,36 @@ void turret_changeteam()
 }
 
 void turret_head_draw()
-{
-    self.drawmask = MASK_NORMAL;    
+{    
+    float dt;
+    dt = time - self.move_time;
+    self.move_time = time;
+    if(dt <= 0)
+        return;
+    
+    self.angles += dt * self.move_avelocity;    
+    self.drawmask = MASK_NORMAL;
 }
 
 void turret_draw()
 {
+    //float dt;
+    
+    if (self.health < 127)
+    if(random() < 0.25)
+        te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
+    
     self.drawmask = MASK_NORMAL;    
 }
 
-void(entity e, entity tagentity, string tagname) setattachment = #443;
-.entity tur_base;
+//void(entity e, entity tagentity, string tagname) setattachment = #443;
 void turret_construct()
 {
     string sbase, shead;
     vector _min, _max;
     
-    self.tur_head = spawn();
-    self.tur_base = spawn();
+    if(self.tur_head == world)
+        self.tur_head = spawn();
     
     sbase = "models/turrets/base.md3";
     _min = '-32 -32 0';
@@ -92,6 +106,8 @@ void turret_construct()
             break;
         case TID_FUSION:
             shead = "models/turrets/reactor.md3";
+            _min = '-34 -34 0';
+            _max = '34 34 90';
             break;
         case TID_HELLION:
             shead = "models/turrets/hellion.md3";
@@ -117,37 +133,40 @@ void turret_construct()
         case TID_TESLA:
             sbase = "models/turrets/tesla_base.md3";
             shead = "models/turrets/tesla_head.md3";
+            _min = '-60 -60 0';
+            _max  ='60 60 128';
             break;
         case TID_WALKER:
             sbase = "models/turrets/walker_body.md3";
             shead = "models/turrets/walker_head_minigun.md3";
+            _min = '-70 -70 0';
+            _max = '70 70 95';
             break;
     }
     
     setorigin(self, self.origin);
-    setorigin(self.tur_base, self.origin);
-    
+        
     self.tur_head.classname = "turret_head";
     self.tur_head.owner   = self;
-    self.tur_base.owner   = self;
 
-    setmodel(self.tur_base, sbase);
+    setmodel(self, sbase);
     setmodel(self.tur_head, shead);
-
-    setsize(self.tur_base, _min, _max);
+    
+    self.tur_head.move_movetype = MOVETYPE_NOCLIP;
+    self.move_movetype = MOVETYPE_NOCLIP;
+    
+    setsize(self, _min, _max);
     setsize(self.tur_head, '0 0 0', '0 0 0');
-    //setattachment(self.tur_head, self.tur_base, "tag_head");
-    setorigin(self.tur_head, self.origin + '0 0 32');
-    self.health = 255;
-
-    self.solid               = SOLID_BBOX;
-    self.tur_head.solid      = SOLID_NOT;
-    //self.takedamage          = DAMAGE_AIM;
-    self.tur_base.movetype            = MOVETYPE_NOCLIP;
-    self.tur_head.movetype   = MOVETYPE_NOCLIP;    
-    self.tur_base.draw = turret_draw;
-    self.tur_head.draw = turret_head_draw;
-    self.entremove = turret_remove;
+    
+    setorigin(self.tur_head, gettaginfo(self, gettagindex(self, "tag_head")));
+    self.health             = 255;
+    self.solid              = SOLID_BBOX;
+    self.tur_head.solid     = SOLID_NOT;
+    self.movetype           = MOVETYPE_NOCLIP;
+    self.tur_head.movetype  = MOVETYPE_NOCLIP;    
+    self.draw               = turret_draw;
+    self.tur_head.draw      = turret_head_draw;
+    self.entremove          = turret_remove;
 }
 
 void ent_turret()
@@ -156,8 +175,9 @@ void ent_turret()
     sf = ReadByte();
 
 	if(sf & TNSF_SETUP)
-	{
+	{	    
 	    self.turret_type = ReadByte();
+	    dprint("Constructing turret type ", ftos(self.turret_type), "\n");
 	    	    
 	    self.origin_x = ReadCoord();
 	    self.origin_y = ReadCoord();
@@ -171,20 +191,38 @@ void ent_turret()
     
     if(sf & TNSF_ANG)
     {
-        self.tur_head.angles_x = ReadAngle();
-        self.tur_head.angles_y = ReadAngle();
+        if(sf & TNSF_FAR)
+        {            
+            self.tur_head.move_angles_x = ReadShort();
+            self.tur_head.move_angles_y = ReadShort();
+        }
+        else
+        {
+            self.tur_head.move_angles_x = ReadAngle();
+            self.tur_head.move_angles_y = ReadAngle();
+        }        
+        self.tur_head.angles = self.angles + self.tur_head.move_angles;
     }
     
     if(sf & TNSF_AVEL)
-    {        
-        self.tur_head.avelocity_x = ReadAngle();
-        self.tur_head.avelocity_y = ReadAngle();
+    {
+        if(sf & TNSF_FAR)
+        {
+            self.tur_head.move_avelocity_x = ReadShort();
+            self.tur_head.move_avelocity_y = ReadShort();            
+        }
+        else
+        {            
+            self.tur_head.move_avelocity_x = ReadAngle();
+            self.tur_head.move_avelocity_y = ReadAngle();
+        }        
     }
     
     if(sf & TNSF_STATUS)
-    {
+    {        
         float _team;
         _team = ReadByte();
+        _team -= 1; // /&)=(%&#)&%)/#&)=½!!!½!!". thanks.
         self.health = ReadByte();
         if(_team != self.team)
         {
