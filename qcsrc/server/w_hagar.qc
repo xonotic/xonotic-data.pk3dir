@@ -151,6 +151,7 @@ void W_Hagar_Attack2_Load (void)
 		}
 	}
 	else if(self.hagar_load && (!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && !autocvar_g_balance_hagar_secondary_load_hold)))
+	if(weapon_prepareattack(0, autocvar_g_balance_hagar_secondary_refire))
 	{
 		// time to release the rockets we've loaded
 
@@ -224,6 +225,7 @@ void W_Hagar_Attack2_Load (void)
 			counter = counter + 1;
 		}
 
+		weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_hagar_secondary_refire, w_ready);
 		self.hagar_load = 0;
 	}
 }
