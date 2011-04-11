@@ -170,7 +170,7 @@ void W_Hagar_Attack2_Load (void)
 		missile.touch = W_Hagar_Touch;
 		missile.use = W_Hagar_Explode;
 		missile.think = adaptor_think2use_hittype_splash;
-		//missile.nextthink = time + autocvar_g_balance_hagar_secondary_lifetime;
+		missile.nextthink = time + autocvar_g_balance_hagar_secondary_lifetime_min + random() * autocvar_g_balance_hagar_secondary_lifetime_rand;
 		PROJECTILE_MAKETRIGGER(missile);
 		missile.projectiledeathtype = WEP_HAGAR;
 		setorigin (missile, w_shotorg);
