@@ -115,89 +115,103 @@ void W_Hagar_Attack2 (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-.float temp_limit;
+.float hagarload_refire, hagarload_loaded;
 
 void W_Hagar_Attack2_Load (void)
 {
-	if not(self.BUTTON_ATCK2 && autocvar_g_balance_hagar_secondary)
+	if not(autocvar_g_balance_hagar_secondary)
 		return;
-	if(self.temp_limit > time)
-		return;
-	self.temp_limit = time + 0.5;
 
 	local entity missile, prevmissile, firstmissile;
 	local float counter, shots;
 	local vector s;
 	vector forward, right, up;
 
-	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-
-	forward = v_forward;
-	right = v_right;
-	up = v_up;
-
-	shots = autocvar_g_balance_hagar_secondary_load_maxload;
-	missile = world;
-	while (counter < shots)
+	if(self.BUTTON_ATCK2 && !self.hagarload_loaded)
 	{
-
-		missile = spawn ();
-		missile.owner = missile.realowner = self;
-		missile.classname = "missile";
-		missile.bot_dodge = TRUE;
-		missile.bot_dodgerating = autocvar_g_balance_hagar_secondary_damage;
-		if(shots == 1) {
-			missile.queuenext = missile;
-			missile.queueprev = missile;
-		}
-		else if(counter == 0) { // first projectile, store in firstmissile for now
-			firstmissile = missile;
-		}
-		else if(counter == shots - 1) { // last projectile, link up with first projectile
-			prevmissile.queuenext = missile;
-			firstmissile.queueprev = missile;
-			missile.queuenext = firstmissile;
-			missile.queueprev = prevmissile;
-		}
-		else { // else link up with previous projectile
-			prevmissile.queuenext = missile;
-			missile.queueprev = prevmissile;
-		}
-
-		prevmissile = missile;
-
-		missile.touch = W_Hagar_Touch;
-		missile.use = W_Hagar_Explode;
-		missile.think = adaptor_think2use_hittype_splash;
-		missile.nextthink = time + autocvar_g_balance_hagar_secondary_lifetime_min + random() * autocvar_g_balance_hagar_secondary_lifetime_rand;
-		PROJECTILE_MAKETRIGGER(missile);
-		missile.projectiledeathtype = WEP_HAGAR;
-		setorigin (missile, w_shotorg);
-		setsize(missile, '0 0 0', '0 0 0');
-
-		missile.movetype = MOVETYPE_FLY;
-
-		s = '0 0 0';
-		if (counter == 0)
-			s = '0 0 0';
-		else
+		if(self.hagarload_refire < time)
 		{
-			makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
-			s_y = v_forward_x;
-			s_z = v_forward_y;
+			self.hagar_load += 1;
+			if(self.hagar_load >= autocvar_g_balance_hagar_secondary_load_maxload)
+				self.hagarload_loaded = TRUE;
+
+			self.hagarload_refire = time + autocvar_g_balance_hagar_secondary_refire;
 		}
-		s = s * autocvar_g_balance_hagar_secondary_load_spread * g_weaponspreadfactor;
-		W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_hagar_secondary_speed"), 0, 0, 0, FALSE);
+	}
+	else if(self.hagar_load)
+	{
+		W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
+		pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-		missile.angles = vectoangles (missile.velocity);
-		missile.flags = FL_PROJECTILE;
+		forward = v_forward;
+		right = v_right;
+		up = v_up;
 
-		CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR, TRUE);
+		shots = self.hagar_load;
+		missile = world;
+		while (counter < shots)
+		{
 
-		other = missile; MUTATOR_CALLHOOK(EditProjectile);
+			missile = spawn ();
+			missile.owner = missile.realowner = self;
+			missile.classname = "missile";
+			missile.bot_dodge = TRUE;
+			missile.bot_dodgerating = autocvar_g_balance_hagar_secondary_damage;
+			if(shots == 1) {
+				missile.queuenext = missile;
+				missile.queueprev = missile;
+			}
+			else if(counter == 0) { // first projectile, store in firstmissile for now
+				firstmissile = missile;
+			}
+			else if(counter == shots - 1) { // last projectile, link up with first projectile
+				prevmissile.queuenext = missile;
+				firstmissile.queueprev = missile;
+				missile.queuenext = firstmissile;
+				missile.queueprev = prevmissile;
+			}
+			else { // else link up with previous projectile
+				prevmissile.queuenext = missile;
+				missile.queueprev = prevmissile;
+			}
 
-		counter = counter + 1;
+			prevmissile = missile;
+
+			missile.touch = W_Hagar_Touch;
+			missile.use = W_Hagar_Explode;
+			missile.think = adaptor_think2use_hittype_splash;
+			missile.nextthink = time + autocvar_g_balance_hagar_secondary_lifetime_min + random() * autocvar_g_balance_hagar_secondary_lifetime_rand;
+			PROJECTILE_MAKETRIGGER(missile);
+			missile.projectiledeathtype = WEP_HAGAR;
+			setorigin (missile, w_shotorg);
+			setsize(missile, '0 0 0', '0 0 0');
+
+			missile.movetype = MOVETYPE_FLY;
+
+			s = '0 0 0';
+			if (counter == 0)
+				s = '0 0 0';
+			else
+			{
+				makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
+				s_y = v_forward_x;
+				s_z = v_forward_y;
+			}
+			s = s * autocvar_g_balance_hagar_secondary_load_spread * g_weaponspreadfactor;
+			W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_hagar_secondary_speed"), 0, 0, 0, FALSE);
+
+			missile.angles = vectoangles (missile.velocity);
+			missile.flags = FL_PROJECTILE;
+
+			CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR, TRUE);
+
+			other = missile; MUTATOR_CALLHOOK(EditProjectile);
+
+			counter = counter + 1;
+		}
+
+		self.hagar_load = 0;
+		self.hagarload_loaded = FALSE;
 	}
 }
 
