@@ -116,7 +116,6 @@ void W_Hagar_Attack2 (void)
 }
 
 .float hagarload_refire;
-
 void W_Hagar_Attack2_Load (void)
 {
 	if not(weapon_action(self.weapon, WR_CHECKAMMO2))
@@ -124,8 +123,6 @@ void W_Hagar_Attack2_Load (void)
 		W_SwitchToOtherWeapon(self);
 		return;
 	}
-	if not(autocvar_g_balance_hagar_secondary)
-		return;
 
 	local entity missile, prevmissile, firstmissile;
 	local float counter, shots, loaded;
@@ -135,6 +132,7 @@ void W_Hagar_Attack2_Load (void)
 
 	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_maxload;
 
+	// check if we have enough ammo for another rocket
 	used_ammo = autocvar_g_balance_hagar_secondary_ammo;
 	if(autocvar_g_balance_hagar_reload_ammo)
 		enough_ammo = self.weapon_load[WEP_HAGAR] >= used_ammo + (used_ammo * self.hagar_load);
@@ -143,6 +141,7 @@ void W_Hagar_Attack2_Load (void)
 
 	if(self.BUTTON_ATCK2 && !loaded && enough_ammo)
 	{
+		// we can attempt to load another rocket
 		if(self.hagarload_refire < time)
 		{
 			self.hagar_load += 1;
@@ -153,6 +152,8 @@ void W_Hagar_Attack2_Load (void)
 	}
 	else if(self.hagar_load && (!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && !autocvar_g_balance_hagar_secondary_load_canhold)))
 	{
+		// time to release the rockets we've loaded
+
 		W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
 		pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -166,12 +167,12 @@ void W_Hagar_Attack2_Load (void)
 		missile = world;
 		while (counter < shots)
 		{
-
 			missile = spawn ();
 			missile.owner = missile.realowner = self;
 			missile.classname = "missile";
 			missile.bot_dodge = TRUE;
 			missile.bot_dodgerating = autocvar_g_balance_hagar_secondary_damage;
+
 			if(shots == 1) {
 				missile.queuenext = missile;
 				missile.queueprev = missile;
@@ -189,7 +190,6 @@ void W_Hagar_Attack2_Load (void)
 				prevmissile.queuenext = missile;
 				missile.queueprev = prevmissile;
 			}
-
 			prevmissile = missile;
 
 			missile.touch = W_Hagar_Touch;
@@ -200,7 +200,6 @@ void W_Hagar_Attack2_Load (void)
 			missile.projectiledeathtype = WEP_HAGAR;
 			setorigin (missile, w_shotorg);
 			setsize(missile, '0 0 0', '0 0 0');
-
 			missile.movetype = MOVETYPE_FLY;
 
 			s = '0 0 0';
@@ -249,7 +248,7 @@ float w_hagar(float req)
 	{
 		if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo)) // forced reload
 			weapon_action(self.weapon, WR_RELOAD);
-		else if (self.BUTTON_ATCK && !self.hagar_load) // not while loading secondary fire
+		else if (self.BUTTON_ATCK && !self.hagar_load) // not while loading the secondary fire
 		{
 			if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
 			{
@@ -257,7 +256,7 @@ float w_hagar(float req)
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
 			}
 		}
-		else if(autocvar_g_balance_hagar_secondary_load)
+		else if(autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary)
 			W_Hagar_Attack2_Load(); // must run each frame
 		else if (self.BUTTON_ATCK2 && autocvar_g_balance_hagar_secondary)
 		{
