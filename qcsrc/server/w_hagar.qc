@@ -132,7 +132,7 @@ void W_Hagar_Attack2_Load (void)
 		if(self.hagarload_refire < time)
 		{
 			self.hagar_load += 1;
-			sound(self, CHAN_WEAPON, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
 			if(self.hagar_load >= autocvar_g_balance_hagar_secondary_load_maxload)
 				self.hagarload_loaded = TRUE;
