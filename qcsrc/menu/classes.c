@@ -102,6 +102,7 @@
 #include "xonotic/dialog_hudpanel_chat.c"
 #include "xonotic/dialog_hudpanel_engineinfo.c"
 #include "xonotic/dialog_hudpanel_infomessages.c"
+#include "xonotic/dialog_hudpanel_shownames.c"
 #include "xonotic/dialog_hudpanel_weapons.c"
 #include "xonotic/dialog_hudpanel_physics.c"
 #include "xonotic/slider_picmip.c"

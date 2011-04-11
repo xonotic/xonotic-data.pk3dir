@@ -220,6 +220,7 @@ switch(id) {\
 	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; break; \
 	case HUD_PANEL_INFOMESSAGES: panel_name = HUD_PANELNAME_INFOMESSAGES; break; \
 	case HUD_PANEL_PHYSICS: panel_name = HUD_PANELNAME_PHYSICS; break; \
+	case HUD_PANEL_SHOWNAMES: panel_name = HUD_PANELNAME_SHOWNAMES; break; \
 } ENDS_WITH_CURLY_BRACE
 
 // Get name of specified panel id
@@ -238,8 +239,8 @@ switch(id) { \
 	case HUD_PANEL_MODICONS: panel_name = HUD_PANELNAME_MODICONS; break; \
 	case HUD_PANEL_PRESSEDKEYS: panel_name = HUD_PANELNAME_PRESSEDKEYS; break; \
 	case HUD_PANEL_CHAT: panel_name = HUD_PANELNAME_CHAT; break; \
-}\
-HUD_Panel_GetName_Part2(id)
+    default: HUD_Panel_GetName_Part2(id)\
+}
 
 vector vec2(vector v);
 

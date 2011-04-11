@@ -275,11 +275,15 @@ if(menu_enabled == 2 && hud_configure_active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuPos()\
 } ENDS_WITH_CURLY_BRACE
 
+// FTEQCC I HATE YOU WHY DO YOU MAKE ME DO THIS??? :(
+// max macro length is 1024 characters, I must split it up :(
+
 // Update all common cvars of given panel id
 #define HUD_Panel_UpdateCvarsForId_Part2(id) \
 switch(id) { \
 	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdateCvars(infomessages) break; \
 	case HUD_PANEL_PHYSICS: HUD_Panel_UpdateCvars(physics); break;\
+	case HUD_PANEL_SHOWNAMES: HUD_Panel_UpdateCvars(shownames) break; \
 }
 
 #define HUD_Panel_UpdateCvarsForId(id) \
@@ -317,7 +321,9 @@ HUD_Panel_GetBorder()
 switch(id) { \
 	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdatePosSize(infomessages) break;\
 	case HUD_PANEL_PHYSICS: HUD_Panel_UpdatePosSize(physics); break;\
+	case HUD_PANEL_SHOWNAMES: HUD_Panel_UpdatePosSize(shownames)\
 }
+
 #define HUD_Panel_UpdatePosSizeForId(id) \
 switch(id) { \
 	case HUD_PANEL_WEAPONS: HUD_Panel_UpdatePosSize(weapons) break;\
