@@ -773,8 +773,9 @@ void shownames_think()
     }
     if(self.the_entnum != num_for_edict(self.owner))
     {
-        self.the_entnum = num_for_edict(self);
+        self.the_entnum = num_for_edict(self.owner);
     }
+    self.nextthink = time;
 }
 
 .float muted; // to be used by prvm_edictset server playernumber muted 1

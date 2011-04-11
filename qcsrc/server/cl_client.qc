@@ -1760,6 +1760,7 @@ void ClientConnect (void)
     self.shownames = spawn();
     self.shownames.owner = self;
     self.shownames.think = shownames_think;
+    self.shownames.nextthink = time;
     Net_LinkEntity(self.shownames, FALSE, 0, SendEntity_ShowNames);
 }
 
