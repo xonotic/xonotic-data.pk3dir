@@ -137,7 +137,7 @@ void W_Hagar_Attack2_Load (void)
 	right = v_right;
 	up = v_up;
 
-	shots = autocvar_g_balance_crylink_primary_shots;
+	shots = autocvar_g_balance_hagar_secondary_load_maxload;
 	missile = world;
 	while (counter < shots)
 	{
