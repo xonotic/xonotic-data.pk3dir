@@ -225,7 +225,7 @@ void W_Hagar_Attack2_Load (void)
 			counter = counter + 1;
 		}
 
-		weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_hagar_secondary_refire, w_ready);
+		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
 		self.hagarload_refire = time + autocvar_g_balance_hagar_secondary_refire;
 		self.hagar_load = 0;
 	}
