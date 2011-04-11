@@ -4,9 +4,6 @@ REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_RELOAD
 #ifdef SVQC
 // NO bounce protection, as bounces are limited!
 
-.entity queuenext;
-.entity queueprev;
-
 void W_Hagar_Explode (void)
 {
 	self.event_damage = SUB_Null;
@@ -124,7 +121,7 @@ void W_Hagar_Attack2_Load (void)
 		return;
 	}
 
-	local entity missile, prevmissile, firstmissile;
+	local entity missile;
 	local float counter, shots, loaded;
 	local float used_ammo, enough_ammo;
 	local vector s;
@@ -173,25 +170,6 @@ void W_Hagar_Attack2_Load (void)
 			missile.classname = "missile";
 			missile.bot_dodge = TRUE;
 			missile.bot_dodgerating = autocvar_g_balance_hagar_secondary_damage;
-
-			if(shots == 1) {
-				missile.queuenext = missile;
-				missile.queueprev = missile;
-			}
-			else if(counter == 0) { // first projectile, store in firstmissile for now
-				firstmissile = missile;
-			}
-			else if(counter == shots - 1) { // last projectile, link up with first projectile
-				prevmissile.queuenext = missile;
-				firstmissile.queueprev = missile;
-				missile.queuenext = firstmissile;
-				missile.queueprev = prevmissile;
-			}
-			else { // else link up with previous projectile
-				prevmissile.queuenext = missile;
-				missile.queueprev = prevmissile;
-			}
-			prevmissile = missile;
 
 			missile.touch = W_Hagar_Touch; // not bouncy
 			missile.use = W_Hagar_Explode2;
