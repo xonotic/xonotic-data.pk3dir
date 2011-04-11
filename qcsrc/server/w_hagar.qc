@@ -141,14 +141,8 @@ void W_Hagar_Attack2_Load (void)
 		// we can attempt to load another rocket
 		if(self.hagar_loadtime < time)
 		{
-			// if there's no loading speed, fill in the rockets
-			if(autocvar_g_balance_hagar_secondary_load_speed)
-			{
-				self.hagar_load += 1;
-				sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
-			}
-			else
-				self.hagar_load = autocvar_g_balance_hagar_secondary_load_max;
+			self.hagar_load += 1;
+			sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
 			self.hagar_loadtime = time + autocvar_g_balance_hagar_secondary_load_speed;
 		}
