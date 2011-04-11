@@ -268,6 +268,9 @@ float w_hagar(float req)
 	{
 		weapon_setup(WEP_HAGAR);
 		self.current_ammo = ammo_rockets;
+
+		self.hagar_load = 0;
+		self.hagarload_loaded = FALSE;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
