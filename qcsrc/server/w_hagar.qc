@@ -266,6 +266,8 @@ float w_hagar(float req)
 	{
 		weapon_setup(WEP_HAGAR);
 		self.current_ammo = ammo_rockets;
+		if(self.hagar_maxload != autocvar_g_balance_hagar_secondary_load_maxload)
+			self.hagar_maxload = autocvar_g_balance_hagar_secondary_load_maxload;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
