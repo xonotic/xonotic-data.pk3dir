@@ -211,7 +211,7 @@ void W_Hagar_Attack2_Load (void)
 				s_y = v_forward_x;
 				s_z = v_forward_y;
 			}
-			s = s * autocvar_g_balance_hagar_secondary_load_spread * g_weaponspreadfactor;
+			s = s * cvar("g_balance_hagar_secondary_spread") * g_weaponspreadfactor;
 			W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_hagar_secondary_speed"), 0, 0, 0, FALSE);
 
 			missile.angles = vectoangles (missile.velocity);
