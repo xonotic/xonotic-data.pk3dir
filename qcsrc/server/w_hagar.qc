@@ -154,10 +154,10 @@ void W_Hagar_Attack2_Load (void)
 	{
 		// time to release the rockets we've loaded
 
+		W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load, autocvar_g_balance_hagar_reload_ammo);
+
 		W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
 		pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-
-		W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load, autocvar_g_balance_hagar_reload_ammo);
 
 		forward = v_forward;
 		right = v_right;
@@ -192,8 +192,8 @@ void W_Hagar_Attack2_Load (void)
 			}
 			prevmissile = missile;
 
-			missile.touch = W_Hagar_Touch;
-			missile.use = W_Hagar_Explode;
+			missile.touch = W_Hagar_Touch; // not bouncy
+			missile.use = W_Hagar_Explode2;
 			missile.think = adaptor_think2use_hittype_splash;
 			missile.nextthink = time + autocvar_g_balance_hagar_secondary_lifetime_min + random() * autocvar_g_balance_hagar_secondary_lifetime_rand;
 			PROJECTILE_MAKETRIGGER(missile);
