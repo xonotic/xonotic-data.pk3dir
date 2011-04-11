@@ -5024,7 +5024,6 @@ void HUD_ShowNames(void)
         else
             shownames_alpha = bound(0, shownames_alpha + 4 * frametime, 1);
     }
-    
 
 	if(!autocvar_hud_panel_shownames && !autocvar__hud_configure)
 		return;
