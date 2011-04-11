@@ -89,11 +89,12 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 
 vector HUD_Get_Num_Color (float x, float maxvalue)
 {
+    float blinkingamt;
 	vector color;
-	if(x > maxvalue) {
-		color_x = 0;
+	if(x >= maxvalue) {
+		color_x = sin(2*M_PI*time);
 		color_y = 1;
-		color_z = 0;
+		color_z = sin(2*M_PI*time);
 	}
 	else if(x > maxvalue * 0.75) {
 		color_x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
@@ -120,6 +121,14 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 		color_y = 0;
 		color_z = 0;
 	}
+
+    blinkingamt = (1 - x/maxvalue/0.25);
+    if(blinkingamt > 0)
+    {
+        color_x = color_x - color_x * blinkingamt * sin(2*M_PI*time);
+        color_y = color_y - color_y * blinkingamt * sin(2*M_PI*time);
+        color_z = color_z - color_z * blinkingamt * sin(2*M_PI*time);
+    }
 	return color;
 }
 
