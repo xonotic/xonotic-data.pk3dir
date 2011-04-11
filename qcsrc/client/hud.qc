@@ -4270,10 +4270,10 @@ void HUD_ShowNames(void)
         drawpic_aspect_skin(iconpos, "health", '1 1 0' * iconsize_y, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
         drawpic_aspect_skin(iconpos + '0.5 0 0' * iconsize_x, "armor", '1 1 0' * iconsize_y, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 
-        drawsetcliparea(0, myPos_y + iconsize_y - iconsize_y * min(1, shownames_health/200), vid_conwidth, myPos_y + iconsize_y);
+        drawsetcliparea(0, myPos_y + iconsize_y - iconsize_y * min(1, shownames_health/autocvar_hud_panel_healtharmor_maxhealth), vid_conwidth, myPos_y + iconsize_y);
         drawpic_aspect_skin(iconpos, "health", '1 1 0' * iconsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
-        drawsetcliparea(0, myPos_y + iconsize_y - iconsize_y * min(1, shownames_armor/200), vid_conwidth, myPos_y + iconsize_y);
+        drawsetcliparea(0, myPos_y + iconsize_y - iconsize_y * min(1, shownames_armor/autocvar_hud_panel_healtharmor_maxarmor), vid_conwidth, myPos_y + iconsize_y);
         drawpic_aspect_skin(iconpos + '0.5 0 0' * iconsize_x, "armor", '1 1 0' * iconsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
         drawresetcliparea();
     }
