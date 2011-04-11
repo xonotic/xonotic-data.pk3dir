@@ -103,6 +103,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case HUD_PANEL_NOTIFY:
 					HUD_Write_PanelCvar_q("_flip");
+					HUD_Write_PanelCvar_q("_fontsize");
 					HUD_Write_PanelCvar_q("_print");
 					break;
 				case HUD_PANEL_RADAR:

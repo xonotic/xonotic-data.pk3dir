@@ -17,6 +17,7 @@ post-builtins.qh
 ../common/constants.qh
 ../common/util.qh
 ../common/items.qh
+../common/explosion_equation.qh
 
 autocvars.qh
 constants.qh
@@ -179,6 +180,8 @@ anticheat.qc
 cheats.qc
 playerstats.qc
 
+../common/explosion_equation.qc
+
 mutators/base.qc
 mutators/gamemode_keyhunt.qc
 mutators/gamemode_freezetag.qc
@@ -193,3 +196,5 @@ mutators/mutator_vampire.qc
 ../warpzonelib/common.qc
 ../warpzonelib/util_server.qc
 ../warpzonelib/server.qc
+
+../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

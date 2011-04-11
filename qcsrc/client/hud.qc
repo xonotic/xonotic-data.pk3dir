@@ -89,11 +89,12 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 
 vector HUD_Get_Num_Color (float x, float maxvalue)
 {
+	float blinkingamt;
 	vector color;
-	if(x > maxvalue) {
-		color_x = 0;
+	if(x >= maxvalue) {
+		color_x = sin(2*M_PI*time);
 		color_y = 1;
-		color_z = 0;
+		color_z = sin(2*M_PI*time);
 	}
 	else if(x > maxvalue * 0.75) {
 		color_x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
@@ -119,6 +120,14 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 		color_x = 1;
 		color_y = 0;
 		color_z = 0;
+	}
+
+	blinkingamt = (1 - x/maxvalue/0.25);
+	if(blinkingamt > 0)
+	{
+		color_x = color_x - color_x * blinkingamt * sin(2*M_PI*time);
+		color_y = color_y - color_y * blinkingamt * sin(2*M_PI*time);
+		color_z = color_z - color_z * blinkingamt * sin(2*M_PI*time);
 	}
 	return color;
 }
@@ -701,7 +710,7 @@ void HUD_Weapons(void)
 	float i, weapid, wpnalpha, weapon_cnt;
 
 	// TODO make this configurable
-	if(weaponorder_bypriority != autocvar_cl_weaponpriority)
+	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
 	{
 		if(weaponorder_bypriority)
 			strunzone(weaponorder_bypriority);
@@ -4154,7 +4163,7 @@ void HUD_InfoMessages(void)
 		}
 		else if(warmup_stage && !intermission && !spectatee_status)
 		{
-			s = strcat("^2Press ^3%s^2 to end warmup", getcommandkey("ready", "ready"));
+			s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey("ready", "ready"));
 			drawInfoMessage(s)
 		}
 
@@ -4419,7 +4428,7 @@ void HUD_Physics(void)
 			HUD_Panel_GetProgressBarColor(acceleration_neg);
 		else
 			HUD_Panel_GetProgressBarColor(acceleration);
-		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset, panel_size, "progressbar", acceleration/autocvar_hud_panel_physics_acceleration_max, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset, panel_size, "accelbar", acceleration/autocvar_hud_panel_physics_acceleration_max, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 3)
 		drawstring_aspect(panel_pos + acceleration_offset, strcat(ftos_decimals(acceleration, 2), "g"), panel_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);

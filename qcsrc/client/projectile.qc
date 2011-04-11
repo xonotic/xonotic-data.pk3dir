@@ -292,8 +292,8 @@ void Ent_Projectile()
 			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("fireball"); break; // particle effect is good enough
 			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("firemine"); break; // particle effect is good enough
 			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
-			case PROJECTILE_FLAC: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum("TR_ROCKET"); break;
-			case PROJECTILE_SEEKER: setmodel(self, "models/tagrocket.md3"); self.scale = 2; self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_FLAC: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum("TR_SEEKER"); break;
+			case PROJECTILE_SEEKER: setmodel(self, "models/tagrocket.md3"); self.traileffect = particleeffectnum("TR_SEEKER"); break;
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
@@ -372,7 +372,6 @@ void Ent_Projectile()
 				self.maxs = '4 4 4';
 				break;
 			case PROJECTILE_TAG:
-				loopsound(self, CHAN_PROJECTILE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
 				self.mins = '-2 -2 -2';
 				self.maxs = '2 2 2';
 				break;
@@ -381,6 +380,7 @@ void Ent_Projectile()
 				self.maxs = '2 2 2';
 				break;
 			case PROJECTILE_SEEKER:
+				loopsound(self, CHAN_PROJECTILE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
 				self.mins = '-4 -4 -4';
 				self.maxs = '4 4 4';
 				break;
