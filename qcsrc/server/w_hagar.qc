@@ -115,6 +115,8 @@ void W_Hagar_Attack2 (void)
 .float hagar_loadtime, hagar_loadreset;
 void W_Hagar_Attack2_Load (void)
 {
+	// loadable hagar secondary attack, must always run each frame
+
 	if not(weapon_action(self.weapon, WR_CHECKAMMO2))
 	{
 		W_SwitchToOtherWeapon(self);
@@ -246,28 +248,31 @@ float w_hagar(float req)
 		}
 	else if (req == WR_THINK)
 	{
-		local float loadable_secondary;
-		loadable_secondary = autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary;
-
 		if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo)) // forced reload
 			weapon_action(self.weapon, WR_RELOAD);
-		else if (self.BUTTON_ATCK && !(self.BUTTON_ATCK2 && loadable_secondary))
+		else
 		{
-			if (!self.hagar_load) // not while the secondary fire is loaded
-			if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
+			local float loadable_secondary;
+			loadable_secondary = autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary;
+
+			if (loadable_secondary)
+				W_Hagar_Attack2_Load(); // must run each frame, even when no firing buttons are pressed
+			if (self.BUTTON_ATCK && !(self.BUTTON_ATCK2 && loadable_secondary))
 			{
-				W_Hagar_Attack();
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
+				if (!self.hagar_load) // not while the secondary fire is loaded
+				if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
+				{
+					W_Hagar_Attack();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
+				}
 			}
-		}
-		else if (loadable_secondary)
-			W_Hagar_Attack2_Load(); // must run each frame
-		else if (self.BUTTON_ATCK2 && autocvar_g_balance_hagar_secondary)
-		{
-			if (weapon_prepareattack(1, autocvar_g_balance_hagar_secondary_refire))
+			else if (self.BUTTON_ATCK2 && !loadable_secondary && autocvar_g_balance_hagar_secondary)
 			{
-				W_Hagar_Attack2();
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
+				if (weapon_prepareattack(1, autocvar_g_balance_hagar_secondary_refire))
+				{
+					W_Hagar_Attack2();
+					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
+				}
 			}
 		}
 	}
