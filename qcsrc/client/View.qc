@@ -1096,7 +1096,7 @@ void CSQC_UpdateView(float w, float h)
 					
 
 				// handle the values
-				if (activeweapon == WEP_NEX && nex_charge && autocvar_crosshair_ring_nex) // ring around crosshair representing velocity-dependent damage for the nex
+				if (autocvar_crosshair_ring && activeweapon == WEP_NEX && nex_charge && autocvar_crosshair_ring_nex) // ring around crosshair representing velocity-dependent damage for the nex
 				{
 					if (nex_chargepool || use_nex_chargepool) { 
 						use_nex_chargepool = 1; 
@@ -1116,7 +1116,7 @@ void CSQC_UpdateView(float w, float h)
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 				}
-				else if (activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer) 
+				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer) 
 				{
 					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
