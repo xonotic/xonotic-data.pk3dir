@@ -330,6 +330,14 @@ float w_hagar(float req)
 		if(self.hagar_load && autocvar_g_balance_hagar_secondary_load_releasedeath)
 			W_Hagar_Attack2_Load_Release();
 	}
+	else if (req == WR_DROP)
+	{
+		if(self.hagar_load)
+		{
+			W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo if necessary
+			self.hagar_load = 0;
+		}
+	}
 	else if (req == WR_RELOAD)
 	{
 		W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");

@@ -179,6 +179,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	string s;
 	var .float ammofield;
 
+	weapon_action(own.weapon, WR_DROP);
+
 	wep = spawn();
 
 	setorigin(wep, org);
