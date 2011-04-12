@@ -112,7 +112,7 @@ void W_Hagar_Attack2 (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-.float hagar_loadtime;
+.float hagar_loadtime, hagar_loadreset;
 void W_Hagar_Attack2_Load (void)
 {
 	if not(weapon_action(self.weapon, WR_CHECKAMMO2))
@@ -140,16 +140,17 @@ void W_Hagar_Attack2_Load (void)
 	{
 		if(self.hagar_load)
 		{
-			// if we press the primary fire button while loading rockets, unload them and abort
+			// if we press the primary fire button while loading rockets, unload them and abort the loading
 			self.hagar_load = 0;
 			sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 		}
-		// make sure we don't start loading again next frame after releasing the button
-		self.hagar_loadtime = time + autocvar_g_balance_hagar_secondary_load_speed;
+		// require letting go of both firing buttons before we can load again
+		self.hagar_loadreset = TRUE;
 	}
-	else if(self.BUTTON_ATCK2 && !loaded && enough_ammo)
+	else if(self.BUTTON_ATCK2)
 	{
-		// we can attempt to load another rocket
+		// check if we can attempt to load another rocket
+		if(!self.hagar_loadreset && !loaded && enough_ammo)
 		if(self.hagar_loadtime < time)
 		{
 			self.hagar_load += 1;
@@ -157,6 +158,10 @@ void W_Hagar_Attack2_Load (void)
 
 			self.hagar_loadtime = time + autocvar_g_balance_hagar_secondary_load_speed;
 		}
+	}
+	else if(self.hagar_loadreset)
+	{
+		self.hagar_loadreset = FALSE;
 	}
 
 	if(self.hagar_load)
