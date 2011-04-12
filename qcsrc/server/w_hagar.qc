@@ -146,7 +146,7 @@ void W_Hagar_Attack2_Load (void)
 			{
 				// if we pressed primary fire while loading, unload all rockets and abort
 				self.hagar_load = 0;
-				sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CHAN_WEAPON, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
 
 				// pause until we can load rockets again, once we re-press the alt fire button
 				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
@@ -164,7 +164,7 @@ void W_Hagar_Attack2_Load (void)
 				self.hagar_load += 1;
 				sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
-				// if this is the last rocket we can load, play a beep sound to notify the player of that
+				// if this is the last rocket we can load, play the beep sound to notify the player of that
 				if(self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max)
 					sound(self, CHAN_WEAPON, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
 
