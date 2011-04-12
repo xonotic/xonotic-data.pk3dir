@@ -164,6 +164,10 @@ void W_Hagar_Attack2_Load (void)
 				self.hagar_load += 1;
 				sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
+				// if this is the last rocket we can load, play a beep sound to notify the player of that
+				if(self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max)
+					sound(self, CHAN_WEAPON, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+
 				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
 			}
 		}
@@ -289,6 +293,7 @@ float w_hagar(float req)
 		precache_model ("models/weapons/h_hagar.iqm");
 		precache_sound ("weapons/hagar_fire.wav");
 		precache_sound ("weapons/hagar_load.wav");
+		precache_sound ("weapons/hagar_beep.wav");
 		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
