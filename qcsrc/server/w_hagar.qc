@@ -136,7 +136,18 @@ void W_Hagar_Attack2_Load (void)
 	else
 		enough_ammo = self.ammo_rockets >= used_ammo + (used_ammo * self.hagar_load);
 
-	if(self.BUTTON_ATCK2 && !loaded && enough_ammo)
+	if(self.BUTTON_ATCK)
+	{
+		if(self.hagar_load)
+		{
+			// if we press the primary fire button while loading rockets, unload them and abort
+			self.hagar_load = 0;
+			sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
+		}
+		// make sure we don't start loading again next frame after releasing the button
+		self.hagar_loadtime = time + autocvar_g_balance_hagar_secondary_load_speed;
+	}
+	else if(self.BUTTON_ATCK2 && !loaded && enough_ammo)
 	{
 		// we can attempt to load another rocket
 		if(self.hagar_loadtime < time)
@@ -229,9 +240,12 @@ float w_hagar(float req)
 		}
 	else if (req == WR_THINK)
 	{
+		local float loadable_secondary;
+		loadable_secondary = autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary;
+
 		if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo)) // forced reload
 			weapon_action(self.weapon, WR_RELOAD);
-		else if (self.BUTTON_ATCK && !self.hagar_load) // not while loading the secondary fire
+		else if (self.BUTTON_ATCK && (!self.BUTTON_ATCK2 && loadable_secondary) && !self.hagar_load) // not while loading the secondary fire
 		{
 			if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
 			{
@@ -239,7 +253,7 @@ float w_hagar(float req)
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
 			}
 		}
-		else if(autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary)
+		else if(loadable_secondary)
 			W_Hagar_Attack2_Load(); // must run each frame
 		else if (self.BUTTON_ATCK2 && autocvar_g_balance_hagar_secondary)
 		{
@@ -263,7 +277,6 @@ float w_hagar(float req)
 	{
 		weapon_setup(WEP_HAGAR);
 		self.current_ammo = ammo_rockets;
-
 		self.hagar_load = 0;
 	}
 	else if (req == WR_CHECKAMMO1)
