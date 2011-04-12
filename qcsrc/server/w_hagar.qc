@@ -144,12 +144,13 @@ void W_Hagar_Attack2_Load (void)
 		{
 			if(self.hagar_load)
 			{
-				// if we press the primary fire button while loading rockets, unload them and abort the loading
+				// if we pressed primary fire while loading, unload all rockets and abort
 				self.hagar_load = 0;
 				sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
+
+				// require letting go of the alt fire button before we can load again
+				self.hagar_loadreset = TRUE;
 			}
-			// require letting go of both firing buttons before we can load again
-			self.hagar_loadreset = TRUE;
 		}
 		else
 		{
@@ -166,7 +167,7 @@ void W_Hagar_Attack2_Load (void)
 	}
 	else if(self.hagar_loadreset)
 	{
-		// both firing buttons were released, which means we can load again
+		// the alt fire button was released, so re-enable loading if blocked
 		self.hagar_loadreset = FALSE;
 	}
 
@@ -260,9 +261,8 @@ float w_hagar(float req)
 
 			if (loadable_secondary)
 				W_Hagar_Attack2_Load(); // must run each frame, even when no firing buttons are pressed
-			if (self.BUTTON_ATCK && !(self.BUTTON_ATCK2 && loadable_secondary))
+			if (self.BUTTON_ATCK && !self.hagar_load && !self.hagar_loadreset) // not while secondary is loaded or awaiting reset
 			{
-				if (!self.hagar_load) // not while the secondary fire is loaded
 				if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
 				{
 					W_Hagar_Attack();
