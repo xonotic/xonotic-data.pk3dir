@@ -324,7 +324,9 @@ float w_hagar(float req)
 	}
 	else if (req == WR_PLAYERDEATH)
 	{
-		dprint("!!!!!!!!!!!!!!!!!!!!!!!\n");
+		// if we have any rockets loaded when we die, release them
+		if(self.hagar_load)
+			W_Hagar_Attack2_Load_Release();
 	}
 	else if (req == WR_RELOAD)
 	{
