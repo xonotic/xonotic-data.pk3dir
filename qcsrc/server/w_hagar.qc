@@ -125,6 +125,8 @@ void W_Hagar_Attack2_Load_Release (void)
 	if(!self.hagar_load)
 		return;
 
+	weapon_prepareattack_do(1, autocvar_g_balance_hagar_secondary_refire);
+
 	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -183,23 +185,10 @@ void W_Hagar_Attack2_Load (void)
 {
 	// loadable hagar secondary attack, must always run each frame
 
-	if not(weapon_action(self.weapon, WR_CHECKAMMO2))
-	{
-		W_SwitchToOtherWeapon(self);
-		return;
-	}
-
 	local float loaded;
-	local float used_ammo, enough_ammo;
+	local float enough_ammo;
 
 	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max;
-
-	// check if we have enough ammo for another rocket
-	used_ammo = autocvar_g_balance_hagar_secondary_ammo;
-	if(autocvar_g_balance_hagar_reload_ammo)
-		enough_ammo = self.weapon_load[WEP_HAGAR] >= used_ammo + (used_ammo * self.hagar_load);
-	else
-		enough_ammo = self.ammo_rockets >= used_ammo + (used_ammo * self.hagar_load);
 
 	if(self.BUTTON_ATCK2)
 	{
@@ -221,6 +210,12 @@ void W_Hagar_Attack2_Load (void)
 		}
 		else
 		{
+			// check if we have enough ammo for another rocket
+			if(autocvar_g_balance_hagar_reload_ammo)
+				enough_ammo = self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_secondary_ammo;
+			else
+				enough_ammo = self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
+
 			// check if we can attempt to load another rocket
 			if(!self.hagar_loadblock && !loaded && enough_ammo)
 			if(self.hagar_loadstep < time)
@@ -245,8 +240,14 @@ void W_Hagar_Attack2_Load (void)
 
 	if(self.hagar_load)
 	if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
-	if(weapon_prepareattack(0, autocvar_g_balance_hagar_secondary_refire))
 		W_Hagar_Attack2_Load_Release();
+
+	// we aren't checking ammo during an attack, so we must do it here
+	if not(weapon_action(self.weapon, WR_CHECKAMMO2))
+	{
+		W_SwitchToOtherWeapon(self);
+		return;
+	}
 }
 
 void spawnfunc_weapon_hagar (void)
