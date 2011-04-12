@@ -34,9 +34,8 @@ float W_WeaponRateFactor()
 
 void W_SwitchWeapon_Force(entity e, float w)
 {
-	// don't allow switching to another weapon if we're loading rockets into the hagar
-	if(e.weapon == WEP_HAGAR && e.hagar_load)
-	if(e.weapons & WEPBIT_HAGAR) // only if we still have the hagar, prevents a bug with dropping
+	// don't switch to another weapon if we're not allowed to
+	if(e.weapon_forbidchange)
 		return;
 
 	e.cnt = e.switchweapon;

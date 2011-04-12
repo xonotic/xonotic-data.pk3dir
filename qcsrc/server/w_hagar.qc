@@ -231,8 +231,14 @@ void W_Hagar_Attack2_Load (void)
 	}
 
 	if(self.hagar_load)
-	if(!self.BUTTON_ATCK2 || ((loaded || !weapon_action(self.weapon, WR_CHECKAMMO2)) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
-		W_Hagar_Attack2_Load_Release();
+	{
+		self.weapon_forbidchange = TRUE;
+
+		if(!self.BUTTON_ATCK2 || ((loaded || !weapon_action(self.weapon, WR_CHECKAMMO2)) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
+			W_Hagar_Attack2_Load_Release();
+	}
+	else
+		self.weapon_forbidchange = FALSE;
 
 	// we aren't checking ammo during an attack, so we must do it here
 	if not(weapon_action(self.weapon, WR_CHECKAMMO2))
