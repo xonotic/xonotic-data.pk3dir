@@ -138,27 +138,30 @@ void W_Hagar_Attack2_Load (void)
 	else
 		enough_ammo = self.ammo_rockets >= used_ammo + (used_ammo * self.hagar_load);
 
-	if(self.BUTTON_ATCK)
+	if(self.BUTTON_ATCK2)
 	{
-		if(self.hagar_load)
+		if(self.BUTTON_ATCK)
 		{
-			// if we press the primary fire button while loading rockets, unload them and abort the loading
-			self.hagar_load = 0;
-			sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
+			if(self.hagar_load)
+			{
+				// if we press the primary fire button while loading rockets, unload them and abort the loading
+				self.hagar_load = 0;
+				sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
+			}
+			// require letting go of both firing buttons before we can load again
+			self.hagar_loadreset = TRUE;
 		}
-		// require letting go of both firing buttons before we can load again
-		self.hagar_loadreset = TRUE;
-	}
-	else if(self.BUTTON_ATCK2)
-	{
-		// check if we can attempt to load another rocket
-		if(!self.hagar_loadreset && !loaded && enough_ammo)
-		if(self.hagar_loadtime < time)
+		else
 		{
-			self.hagar_load += 1;
-			sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
+			// check if we can attempt to load another rocket
+			if(!self.hagar_loadreset && !loaded && enough_ammo)
+			if(self.hagar_loadtime < time)
+			{
+				self.hagar_load += 1;
+				sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
-			self.hagar_loadtime = time + autocvar_g_balance_hagar_secondary_load_speed;
+				self.hagar_loadtime = time + autocvar_g_balance_hagar_secondary_load_speed;
+			}
 		}
 	}
 	else if(self.hagar_loadreset)
