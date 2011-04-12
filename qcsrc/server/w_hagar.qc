@@ -314,6 +314,10 @@ float w_hagar(float req)
 		ammo_amount += self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_secondary_ammo;
 		return ammo_amount;
 	}
+	else if (req == WR_PLAYERDEATH)
+	{
+		dprint("!!!!!!!!!!!!!!!!!!!!!!!\n");
+	}
 	else if (req == WR_RELOAD)
 	{
 		W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
