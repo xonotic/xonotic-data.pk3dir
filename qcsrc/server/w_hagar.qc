@@ -301,7 +301,12 @@ float w_hagar(float req)
 	{
 		weapon_setup(WEP_HAGAR);
 		self.current_ammo = ammo_rockets;
-		self.hagar_load = 0;
+
+		if(self.hagar_load)
+		{
+			W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo if necessary
+			self.hagar_load = 0;
+		}
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
@@ -314,6 +319,10 @@ float w_hagar(float req)
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
 		ammo_amount += self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_secondary_ammo;
 		return ammo_amount;
+	}
+	else if (req == WR_RESETPLAYER)
+	{
+		self.hagar_load = 0;
 	}
 	else if (req == WR_PLAYERDEATH)
 	{
