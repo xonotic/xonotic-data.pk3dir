@@ -186,8 +186,6 @@ void W_Hagar_Attack2_Load (void)
 	// loadable hagar secondary attack, must always run each frame
 
 	local float loaded;
-	local float enough_ammo;
-
 	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max;
 
 	if(self.BUTTON_ATCK2)
@@ -210,14 +208,8 @@ void W_Hagar_Attack2_Load (void)
 		}
 		else
 		{
-			// check if we have enough ammo for another rocket
-			if(autocvar_g_balance_hagar_reload_ammo)
-				enough_ammo = self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_secondary_ammo;
-			else
-				enough_ammo = self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
-
 			// check if we can attempt to load another rocket
-			if(!self.hagar_loadblock && !loaded && enough_ammo)
+			if(!self.hagar_loadblock && !loaded && weapon_action(self.weapon, WR_CHECKAMMO2))
 			if(self.hagar_loadstep < time)
 			{
 				W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
@@ -239,7 +231,7 @@ void W_Hagar_Attack2_Load (void)
 	}
 
 	if(self.hagar_load)
-	if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
+	if(!self.BUTTON_ATCK2 || ((loaded || !weapon_action(self.weapon, WR_CHECKAMMO2)) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
 		W_Hagar_Attack2_Load_Release();
 
 	// we aren't checking ammo during an attack, so we must do it here
