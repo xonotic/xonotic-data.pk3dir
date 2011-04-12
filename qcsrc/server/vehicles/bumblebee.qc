@@ -117,7 +117,7 @@ float bumb_pilot_frame()
         else if(pilot.movement_y > 0)
             newvel += v_right * autocvar_g_vehicle_bumblebee_speed_strafe;
         ftmp = newvel * v_right;
-        ftmp / autocvar_g_vehicle_bumblebee_speed_strafe;
+        //ftmp /= autocvar_g_vehicle_bumblebee_speed_strafe;
         ftmp *= frametime * 0.1;
         vehic.angles_z = bound(-15, vehic.angles_z + ftmp, 15);
     }
