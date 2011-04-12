@@ -112,7 +112,7 @@ void W_Hagar_Attack2 (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-.float hagar_loadtime, hagar_loadreset;
+.float hagar_loadstep, hagar_loadblock;
 void W_Hagar_Attack2_Load (void)
 {
 	// loadable hagar secondary attack, must always run each frame
@@ -149,30 +149,30 @@ void W_Hagar_Attack2_Load (void)
 				sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
 				// require letting go of the alt fire button before we can load again
-				self.hagar_loadreset = TRUE;
+				self.hagar_loadblock = TRUE;
 			}
 		}
 		else
 		{
 			// check if we can attempt to load another rocket
-			if(!self.hagar_loadreset && !loaded && enough_ammo)
-			if(self.hagar_loadtime < time)
+			if(!self.hagar_loadblock && !loaded && enough_ammo)
+			if(self.hagar_loadstep < time)
 			{
 				self.hagar_load += 1;
 				sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
-				self.hagar_loadtime = time + autocvar_g_balance_hagar_secondary_load_speed;
+				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
 			}
 		}
 	}
-	else if(self.hagar_loadreset)
+	else if(self.hagar_loadblock)
 	{
 		// the alt fire button was released, so re-enable loading if blocked
-		self.hagar_loadreset = FALSE;
+		self.hagar_loadblock = FALSE;
 	}
 
 	if(self.hagar_load)
-	if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadtime < time && !autocvar_g_balance_hagar_secondary_load_hold))
+	if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
 	if(weapon_prepareattack(0, autocvar_g_balance_hagar_secondary_refire))
 	{
 		// time to release the rockets we've loaded
@@ -229,7 +229,7 @@ void W_Hagar_Attack2_Load (void)
 		}
 
 		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
-		self.hagar_loadtime = time + autocvar_g_balance_hagar_secondary_refire;
+		self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_refire;
 		self.hagar_load = 0;
 	}
 }
@@ -261,7 +261,7 @@ float w_hagar(float req)
 
 			if (loadable_secondary)
 				W_Hagar_Attack2_Load(); // must run each frame, even when no firing buttons are pressed
-			if (self.BUTTON_ATCK && !self.hagar_load && !self.hagar_loadreset) // not while secondary is loaded or awaiting reset
+			if (self.BUTTON_ATCK && !self.hagar_load && !self.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
 				if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
 				{
