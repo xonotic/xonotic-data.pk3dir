@@ -161,6 +161,7 @@ void W_Hagar_Attack2_Load (void)
 	}
 	else if(self.hagar_loadreset)
 	{
+		// both firing buttons were released, which means we can load again
 		self.hagar_loadreset = FALSE;
 	}
 
@@ -250,15 +251,16 @@ float w_hagar(float req)
 
 		if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo)) // forced reload
 			weapon_action(self.weapon, WR_RELOAD);
-		else if (self.BUTTON_ATCK && (!self.BUTTON_ATCK2 && loadable_secondary) && !self.hagar_load) // not while loading the secondary fire
+		else if (self.BUTTON_ATCK && !(self.BUTTON_ATCK2 && loadable_secondary))
 		{
+			if (!self.hagar_load) // not while the secondary fire is loaded
 			if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
 			{
 				W_Hagar_Attack();
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
 			}
 		}
-		else if(loadable_secondary)
+		else if (loadable_secondary)
 			W_Hagar_Attack2_Load(); // must run each frame
 		else if (self.BUTTON_ATCK2 && autocvar_g_balance_hagar_secondary)
 		{
