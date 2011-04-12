@@ -140,7 +140,7 @@ void W_Hagar_Attack2_Load (void)
 
 	if(self.BUTTON_ATCK2)
 	{
-		if(self.BUTTON_ATCK)
+		if(self.BUTTON_ATCK && autocvar_g_balance_hagar_secondary_load_abort)
 		{
 			if(self.hagar_load)
 			{
