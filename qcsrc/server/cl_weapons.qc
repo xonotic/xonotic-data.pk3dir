@@ -295,6 +295,10 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	if(!W_IsWeaponThrowable(w))
 		return;
 
+	// don't allow throwing the hager if we're loading rockets into it
+	if(self.weapon == WEP_HAGAR && self.hagar_load)
+		return;
+
 	wb = W_WeaponBit(w);
 	if(self.weapons & wb != wb)
 		return;
