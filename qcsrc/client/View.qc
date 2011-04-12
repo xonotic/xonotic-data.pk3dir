@@ -831,6 +831,8 @@ void CSQC_UpdateView(float w, float h)
         CSQC_WAKIZASHI_HUD();
     else if(hud == HUD_RAPTOR)
         CSQC_RAPTOR_HUD();
+    else if(hud == HUD_BUMBLEBEE)
+        CSQC_BUMBLE_HUD();
 	else
 	{
 		if(gametype == GAME_FREEZETAG)
@@ -1311,6 +1313,11 @@ void CSQC_common_hud(void)
 		case HUD_WAKIZASHI:
 			CSQC_WAKIZASHI_HUD();
 			break;
+			
+        case HUD_BUMBLEBEE:
+            CSQC_BUMBLE_HUD();
+            break;
+
 	}
 }
 

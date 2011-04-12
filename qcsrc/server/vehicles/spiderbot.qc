@@ -453,51 +453,6 @@ void spiderbot_exit(float eject)
     self.owner = world;
 }
 
-// Better way of determening whats crushable needed! (fl_crushable?)
-float spiderbot_crushable(entity e)
-{
-    if(e.classname == "corpse")
-        return 1;
-
-    if(e.classname == "player")
-        return 1;
-
-    if(e.classname == "monster_zombie")
-        return 1;
-
-    return 0;
-}
-
-/*void spiderbot_touch(
-{
-    //vehicles_touch();
-    if(self.owner)
-    {
-        if(vlen(self.velocity) == 0)
-            return;
-
-        if not (spiderbot_crushable(other))
-            return;
-
-        //todo: add check for velocity/angle here (so we dont cush players runing into us from behind)
-
-        Damage(other, self, self.owner,autocvar_g_vehicle_spiderbot_crush_dmg,DEATH_VHCRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicle_spiderbot_crush_force);
-        return;
-    }
-
-    if(other.classname != "player")
-        return;
-
-    if(other.deadflag != DEAD_NO)
-        return;
-
-    if(other.vehicle != world)
-        return;
-
-    vehicles_enter();
-}*/
-
-
 void spiderbot_spawn()
 {
     self.frame              = 5;

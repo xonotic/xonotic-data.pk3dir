@@ -5,4 +5,5 @@
 #include "racer.qc"
 #include "spiderbot.qc"
 #include "raptor.qc"
+#include "bumblebee.qc"
 #endif

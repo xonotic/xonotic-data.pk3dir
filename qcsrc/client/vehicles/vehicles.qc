@@ -30,6 +30,7 @@ entity dropmark;
 void CSQC_WAKIZASHI_HUD();
 void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
+void CSQC_BUMBLE_HUD();
 
 #define MAX_AXH 4
 entity AuxiliaryXhair[MAX_AXH];
@@ -193,7 +194,14 @@ void Net_VehicleSetup()
             AuxiliaryXhair[1].axh_scale   = 0.25;
             AuxiliaryXhair[1].alpha       = 0.75;
             AuxiliaryXhair[1].axh_drawflag  = DRAWFLAG_NORMAL;
-
+            break;
+        case HUD_BUMBLEBEE:
+            // Plasma cannons
+            AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-ring.tga";
+            AuxiliaryXhair[0].axh_scale   = 0.25;
+            // Raygun
+            AuxiliaryXhair[1].axh_image   = "gfx/vehicles/axh-special1.tga";
+            AuxiliaryXhair[1].axh_scale   = 0.25;
             break;
     }
 }
@@ -205,6 +213,69 @@ void Net_VehicleSetup()
 	float reload1   = getstati(STAT_VEHICLESTAT_RELOAD1); \
 	float ammo2     = getstati(STAT_VEHICLESTAT_AMMO2); \
 	float reload2   = getstati(STAT_VEHICLESTAT_RELOAD2);
+
+void CSQC_BUMBLE_HUD()
+{
+	vector picsize, hudloc;
+
+    // Fetch health & ammo stats
+	HUD_GETSTATS
+	
+    hudloc_y = 4;
+    hudloc_x = 4;
+    
+    picsize = drawgetimagesize(spider_h) * 0.5;
+    drawpic(hudloc, spider_h, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+
+    picsize = drawgetimagesize(spider_a2) * 0.5;
+    drawpic(hudloc + '120 96  0', spider_a2, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+
+    drawstring(hudloc + '145 19  0',  strcat(ftos(health), "%"),'15 15 0','0 1 0', 1, DRAWFLAG_NORMAL);
+    drawstring(hudloc + '175 34  0',  strcat(ftos(shield), "%"),'15 15 0','0 0 1', 1, DRAWFLAG_NORMAL);
+    drawstring(hudloc + '136 102  0', strcat(ftos(ammo1), "%"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
+
+    picsize = drawgetimagesize(spider_a1) * 0.85;
+    if(ammo2 == 9)
+    {
+        drawpic(hudloc + '132 54  0', spider_a1, picsize, '-1 -1 -1', 1, DRAWFLAG_NORMAL);
+        drawstring(hudloc + '179 69 0', strcat(ftos(reload2), "%"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
+    }
+    else
+    {
+        drawpic(hudloc + '132 54  0', spider_a1, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+        drawstring(hudloc + '179 69  0', strcat(ftos(9 - ammo2), " / 8"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
+    }
+
+    picsize = drawgetimagesize(spider_b) * 0.5;
+    hudloc_y = 10.5;
+    hudloc_x = 10.5;
+    
+    ammo1  /= 100; 
+    shield /= 100;
+    health /= 100;
+    reload2 /= 100;
+    
+    drawpic(hudloc, spider_s, picsize, '1 1 1', shield, DRAWFLAG_NORMAL);
+    drawpic(hudloc, spider_b, picsize, '0 1 0' * health + '1 0 0' * (1 - health), 1, DRAWFLAG_NORMAL);
+    drawpic(hudloc, spider_r, picsize, '1 1 1' * reload2 + '1 0 0' * (1 - reload2), 1, DRAWFLAG_NORMAL);
+    drawpic(hudloc, spider_g, picsize, '1 1 1' * ammo1 + '1 0 0' *  (1 - ammo1), 1, DRAWFLAG_NORMAL);
+
+
+	if (scoreboard_showscores)
+	{
+		HUD_DrawScoreboard();
+		HUD_DrawCenterPrint();
+    }
+    else
+    {
+        picsize = drawgetimagesize(SPIDER_CROSS);
+        picsize_x *= autocvar_cl_vehicle_spiderbot_cross_size;
+        picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
+
+        drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_ADDITIVE);
+    }
+}
+
 
 void CSQC_SPIDER_HUD()
 {
