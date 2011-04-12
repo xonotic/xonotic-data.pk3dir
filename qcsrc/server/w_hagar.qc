@@ -125,8 +125,6 @@ void W_Hagar_Attack2_Load_Release (void)
 	if(!self.hagar_load)
 		return;
 
-	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load, autocvar_g_balance_hagar_reload_ammo);
-
 	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -210,6 +208,7 @@ void W_Hagar_Attack2_Load (void)
 			if(self.hagar_load)
 			{
 				// if we pressed primary fire while loading, unload all rockets and abort
+				W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo
 				self.hagar_load = 0;
 				sound(self, CHAN_WEAPON, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
 
@@ -226,6 +225,7 @@ void W_Hagar_Attack2_Load (void)
 			if(!self.hagar_loadblock && !loaded && enough_ammo)
 			if(self.hagar_loadstep < time)
 			{
+				W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
 				self.hagar_load += 1;
 				sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
