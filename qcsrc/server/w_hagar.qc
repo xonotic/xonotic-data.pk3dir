@@ -113,6 +113,74 @@ void W_Hagar_Attack2 (void)
 }
 
 .float hagar_loadstep, hagar_loadblock;
+void W_Hagar_Attack2_Load_Release (void)
+{
+	// time to release the rockets we've loaded
+
+	local entity missile;
+	local float counter, shots;
+	local vector s;
+	vector forward, right, up;
+
+	if(!self.hagar_load)
+		return;
+
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load, autocvar_g_balance_hagar_reload_ammo);
+
+	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
+	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+
+	forward = v_forward;
+	right = v_right;
+	up = v_up;
+
+	shots = self.hagar_load;
+	missile = world;
+	while (counter < shots)
+	{
+		missile = spawn ();
+		missile.owner = missile.realowner = self;
+		missile.classname = "missile";
+		missile.bot_dodge = TRUE;
+		missile.bot_dodgerating = autocvar_g_balance_hagar_secondary_damage;
+
+		missile.touch = W_Hagar_Touch; // not bouncy
+		missile.use = W_Hagar_Explode2;
+		missile.think = adaptor_think2use_hittype_splash;
+		missile.nextthink = time + autocvar_g_balance_hagar_secondary_lifetime_min + random() * autocvar_g_balance_hagar_secondary_lifetime_rand;
+		PROJECTILE_MAKETRIGGER(missile);
+		missile.projectiledeathtype = WEP_HAGAR;
+		setorigin (missile, w_shotorg);
+		setsize(missile, '0 0 0', '0 0 0');
+		missile.movetype = MOVETYPE_FLY;
+
+		s = '0 0 0';
+		if (counter == 0)
+			s = '0 0 0';
+		else
+		{
+			makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
+			s_y = v_forward_x;
+			s_z = v_forward_y;
+		}
+		s = s * cvar("g_balance_hagar_secondary_spread") * g_weaponspreadfactor;
+		W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_hagar_secondary_speed"), 0, 0, 0, FALSE);
+
+		missile.angles = vectoangles (missile.velocity);
+		missile.flags = FL_PROJECTILE;
+
+		CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR, TRUE);
+
+		other = missile; MUTATOR_CALLHOOK(EditProjectile);
+
+		counter = counter + 1;
+	}
+
+	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
+	self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_refire;
+	self.hagar_load = 0;
+}
+
 void W_Hagar_Attack2_Load (void)
 {
 	// loadable hagar secondary attack, must always run each frame
@@ -123,11 +191,8 @@ void W_Hagar_Attack2_Load (void)
 		return;
 	}
 
-	local entity missile;
-	local float counter, shots, loaded;
+	local float loaded;
 	local float used_ammo, enough_ammo;
-	local vector s;
-	vector forward, right, up;
 
 	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max;
 
@@ -181,64 +246,7 @@ void W_Hagar_Attack2_Load (void)
 	if(self.hagar_load)
 	if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
 	if(weapon_prepareattack(0, autocvar_g_balance_hagar_secondary_refire))
-	{
-		// time to release the rockets we've loaded
-
-		W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load, autocvar_g_balance_hagar_reload_ammo);
-
-		W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
-		pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-
-		forward = v_forward;
-		right = v_right;
-		up = v_up;
-
-		shots = self.hagar_load;
-		missile = world;
-		while (counter < shots)
-		{
-			missile = spawn ();
-			missile.owner = missile.realowner = self;
-			missile.classname = "missile";
-			missile.bot_dodge = TRUE;
-			missile.bot_dodgerating = autocvar_g_balance_hagar_secondary_damage;
-
-			missile.touch = W_Hagar_Touch; // not bouncy
-			missile.use = W_Hagar_Explode2;
-			missile.think = adaptor_think2use_hittype_splash;
-			missile.nextthink = time + autocvar_g_balance_hagar_secondary_lifetime_min + random() * autocvar_g_balance_hagar_secondary_lifetime_rand;
-			PROJECTILE_MAKETRIGGER(missile);
-			missile.projectiledeathtype = WEP_HAGAR;
-			setorigin (missile, w_shotorg);
-			setsize(missile, '0 0 0', '0 0 0');
-			missile.movetype = MOVETYPE_FLY;
-
-			s = '0 0 0';
-			if (counter == 0)
-				s = '0 0 0';
-			else
-			{
-				makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
-				s_y = v_forward_x;
-				s_z = v_forward_y;
-			}
-			s = s * cvar("g_balance_hagar_secondary_spread") * g_weaponspreadfactor;
-			W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_hagar_secondary_speed"), 0, 0, 0, FALSE);
-
-			missile.angles = vectoangles (missile.velocity);
-			missile.flags = FL_PROJECTILE;
-
-			CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR, TRUE);
-
-			other = missile; MUTATOR_CALLHOOK(EditProjectile);
-
-			counter = counter + 1;
-		}
-
-		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
-		self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_refire;
-		self.hagar_load = 0;
-	}
+		W_Hagar_Attack2_Load_Release();
 }
 
 void spawnfunc_weapon_hagar (void)
