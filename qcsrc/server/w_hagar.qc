@@ -307,6 +307,7 @@ float w_hagar(float req)
 	{
 		weapon_setup(WEP_HAGAR);
 		self.current_ammo = ammo_rockets;
+		self.hagar_loadblock = FALSE;
 
 		if(self.hagar_load)
 		{
