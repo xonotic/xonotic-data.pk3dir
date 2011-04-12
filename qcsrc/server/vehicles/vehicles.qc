@@ -153,7 +153,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 }
 
 #define VEHICLE_UPDATE_PLAYER(fld,vhname) \
-self.owner.vehicle_##fld = self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld
+self.owner.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
 
 #define vehicles_sweap_collision(orig,vel,dt,acm,mult) \
 traceline(orig, orig + vel * dt, MOVE_NORMAL, self); \
@@ -519,7 +519,7 @@ void vehicles_regen(.float timer, .float regen_field, float field_max, float rpa
         self.regen_field = min(self.regen_field + regen * delta_time, field_max);
 
         if(self.owner)
-            self.owner.regen_field = self.regen_field / field_max;
+            self.owner.regen_field = (self.regen_field / field_max) * 100;
     }
 }
 
@@ -710,15 +710,15 @@ float vehicle_initialize(string  net_name,
                          void() thinkproc )
 {
     addstat(STAT_HUD, AS_INT,  hud);
-	addstat(STAT_VEHICLESTAT_HEALTH,  AS_FLOAT, vehicle_health);
-	addstat(STAT_VEHICLESTAT_SHIELD,  AS_FLOAT, vehicle_shield);
-	addstat(STAT_VEHICLESTAT_ENERGY,  AS_FLOAT, vehicle_energy);
+	addstat(STAT_VEHICLESTAT_HEALTH,  AS_INT, vehicle_health);
+	addstat(STAT_VEHICLESTAT_SHIELD,  AS_INT, vehicle_shield);
+	addstat(STAT_VEHICLESTAT_ENERGY,  AS_INT, vehicle_energy);
 
 	addstat(STAT_VEHICLESTAT_AMMO1,   AS_INT,   vehicle_ammo1);
-	addstat(STAT_VEHICLESTAT_RELOAD1, AS_FLOAT, vehicle_reload1);
+	addstat(STAT_VEHICLESTAT_RELOAD1, AS_INT, vehicle_reload1);
 
 	addstat(STAT_VEHICLESTAT_AMMO2,   AS_INT,   vehicle_ammo2);
-	addstat(STAT_VEHICLESTAT_RELOAD2, AS_FLOAT, vehicle_reload2);
+	addstat(STAT_VEHICLESTAT_RELOAD2, AS_INT, vehicle_reload2);
 
     if(bodymodel == "")
         error("vehicles: missing bodymodel!");
@@ -818,7 +818,6 @@ float VSF_EXTRA       = 32;         /// Send additional data (turret rotations a
 float VSF_ANIMINFO    = 64;         /// Animation info
 float VSF_FULL_UPDATE = 16777215    /// Send everything
 
-
 #ifdef SVQC
 float send_vehile(entity to, float sf)
 {
@@ -867,13 +866,15 @@ float send_vehile(entity to, float sf)
     
     if(sf & VSF_STATS)
     {
-        WriteShort(MSG_ENTITY, self.vehicle_health);
-        WriteShort(MSG_ENTITY, self.vehicle_shield);
-        WriteShort(MSG_ENTITY, self.vehicle_energy);
-        WriteShort(MSG_ENTITY, self.vehicle_ammo1);
-        WriteShort(MSG_ENTITY, self.vehicle_reload1);
-        WriteShort(MSG_ENTITY, self.vehicle_ammo2);
-        WriteShort(MSG_ENTITY, self.vehicle_reload2);
+        WriteByte(MSG_ENTITY, self.vehicle_health);
+        WriteByte(MSG_ENTITY, self.vehicle_shield);
+        WriteByte(MSG_ENTITY, self.vehicle_energy);
+        
+        WriteByte(MSG_ENTITY, self.vehicle_ammo1);
+        WriteByte(MSG_ENTITY, self.vehicle_reload1);
+        
+        WriteByte(MSG_ENTITY, self.vehicle_ammo2);
+        WriteByte(MSG_ENTITY, self.vehicle_reload2);
     }
     
     if(sf & VSF_EXTRA)

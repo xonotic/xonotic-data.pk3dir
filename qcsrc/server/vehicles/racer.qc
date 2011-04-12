@@ -353,7 +353,7 @@ float racer_frame()
         else if(player.movement_y > 0)
             df += v_right * autocvar_g_vehicle_racer_speed_strafe;
     }
-
+    
     // Afterburn
     if (player.BUTTON_JUMP)
     if(racer.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * frametime))
@@ -361,7 +361,7 @@ float racer_frame()
         racer.wait = time;
         racer.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * frametime;
         df += (v_forward * autocvar_g_vehicle_racer_speed_afterburn);
-        self.owner.vehicle_energy = racer.vehicle_energy / autocvar_g_vehicle_racer_energy;
+        //self.owner.vehicle_energy = racer.vehicle_energy / autocvar_g_vehicle_racer_energy;
     }
 
     racer.velocity  += df * frametime;
@@ -389,7 +389,7 @@ float racer_frame()
             racer.cnt = 1;
         }
         racer.attack_finished_single = time + autocvar_g_vehicle_racer_cannon_refire;
-        self.owner.vehicle_energy = racer.vehicle_energy / autocvar_g_vehicle_racer_energy;
+        //self.owner.vehicle_energy = racer.vehicle_energy / autocvar_g_vehicle_racer_energy;
     }
 
     if(autocvar_g_vehicle_racer_rocket_locktarget)
@@ -427,7 +427,7 @@ float racer_frame()
             racer.lip = time;
         }
     }
-    player.vehicle_reload1 = (time - racer.lip) / (racer.delay - racer.lip);
+    player.vehicle_reload1 = bound(0, 100 * ((time - racer.lip) / (racer.delay - racer.lip)), 100);
 
     if(self.vehicle_flags  & VHF_SHIELDREGEN)
         vehicles_regen(dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime);
@@ -440,6 +440,7 @@ float racer_frame()
 
 
     VEHICLE_UPDATE_PLAYER(health, racer);
+    VEHICLE_UPDATE_PLAYER(energy, racer);
 
     if(self.vehicle_flags & VHF_HASSHIELD)
         VEHICLE_UPDATE_PLAYER(shield, racer);

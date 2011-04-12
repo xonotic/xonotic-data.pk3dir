@@ -308,8 +308,6 @@ float raptor_frame()
         return 1;
     }
 
-
-
     crosshair_trace(player);
 
 #if VEHICLES_VIEWROTATE_CROSSHAIR
@@ -531,9 +529,9 @@ float raptor_frame()
         raptor.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
         raptor.lip   = time;
     }
-
-    player.vehicle_reload1 = (time - raptor.lip) / (raptor.delay - raptor.lip);
-    raptor.bomb1.alpha = raptor.bomb2.alpha = player.vehicle_reload1;
+    
+    raptor.bomb1.alpha = raptor.bomb2.alpha = (time - raptor.lip) / (raptor.delay - raptor.lip);
+    player.vehicle_reload2 = bound(0, raptor.bomb1.alpha * 100, 100);
 
     VEHICLE_UPDATE_PLAYER(health, raptor);
     VEHICLE_UPDATE_PLAYER(energy, raptor);
