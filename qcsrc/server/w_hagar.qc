@@ -148,7 +148,8 @@ void W_Hagar_Attack2_Load (void)
 		}
 	}
 
-	if(self.hagar_load && (!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && !autocvar_g_balance_hagar_secondary_load_hold)))
+	if(self.hagar_load)
+	if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadtime < time && !autocvar_g_balance_hagar_secondary_load_hold))
 	if(weapon_prepareattack(0, autocvar_g_balance_hagar_secondary_refire))
 	{
 		// time to release the rockets we've loaded
