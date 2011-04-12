@@ -148,6 +148,9 @@ void W_Hagar_Attack2_Load (void)
 				self.hagar_load = 0;
 				sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
+				// pause until we can load rockets again, once we re-press the alt fire button
+				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
+
 				// require letting go of the alt fire button before we can load again
 				self.hagar_loadblock = TRUE;
 			}
