@@ -737,11 +737,11 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 float SendEntity_ShowNames(entity to, float sendflags)
 {
     if(vlen(to.origin - self.origin) < autocvar_sv_shownames_cull_distance) // distance cull
-        return;
+        return FALSE;
 
     WriteByte(MSG_ENTITY, ENT_CLIENT_SHOWNAMES);
-    //sendflags &= 127;
-    if(teams_matter && self.team == to.team)
+    sendflags = sendflags & 127;
+    if(teams_matter && self.owner.team == to.team)
         sendflags |= 128;
     else
         sendflags &~= 2;
@@ -768,10 +768,10 @@ void shownames_think()
         setorigin(self, self.owner.origin);
         self.SendFlags |= 1;
     }
-    if(self.health != self.owner.health || self.armorvalue != self.owner.armorvalue)
+    if(self.health != floor(self.owner.health) || self.armorvalue != floor(self.owner.armorvalue))
     {
-        self.health = self.owner.health;
-        self.armorvalue = self.owner.armorvalue;
+        self.health = floor(self.owner.health);
+        self.armorvalue = floor(self.owner.armorvalue);
         self.SendFlags |= 2;
     }
     if(self.the_entnum != num_for_edict(self.owner))

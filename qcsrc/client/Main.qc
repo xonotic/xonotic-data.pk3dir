@@ -907,27 +907,24 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
-.float health, armorvalue;
+.float healthvalue, armorvalue;
 void Ent_ShowNames()
 {
     float sf, the_entnum;
 
     sf = ReadByte();
     the_entnum = ReadByte();
-    print("sendflags: ", ftos(sf), "\n");
 
     if(sf & 1)
     {
-        playerslots[the_entnum].origin_x = ReadShort();
-        playerslots[the_entnum].origin_y = ReadShort();
-        playerslots[the_entnum].origin_z = ReadShort();
-        print("Updated origin = ", vtos(playerslots[the_entnum].origin), " for player ", GetPlayerName(the_entnum-1), "\n");
-        print("Their health/armor = ", playerslots[the_entnum].health, "/", playerslots[the_entnum].armorvalue, "\n");
+        playerslots[the_entnum-1].origin_x = ReadShort();
+        playerslots[the_entnum-1].origin_y = ReadShort();
+        playerslots[the_entnum-1].origin_z = ReadShort();
     }
     if(sf & 2)
     {
-        playerslots[the_entnum].health = ReadByte();
-        playerslots[the_entnum].armorvalue = ReadByte();
+        playerslots[the_entnum-1].healthvalue = ReadByte();
+        playerslots[the_entnum-1].armorvalue = ReadByte();
     }
 
     /*
