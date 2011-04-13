@@ -732,7 +732,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 }
 
-.float the_entnum;
 // sendflags use: 1 = origin, 2 = health/armor, 0x80 = same team (includes health)
 float SendEntity_ShowNames(entity to, float sendflags)
 {
@@ -746,7 +745,7 @@ float SendEntity_ShowNames(entity to, float sendflags)
     else
         sendflags &~= 2;
     WriteByte(MSG_ENTITY, sendflags);
-    WriteByte(MSG_ENTITY, self.the_entnum);
+    WriteByte(MSG_ENTITY, num_for_edict(self.owner));
     if(sendflags & 1)
     {
         WriteShort(MSG_ENTITY, rint(self.origin_x));
@@ -773,10 +772,6 @@ void shownames_think()
         self.health = floor(self.owner.health);
         self.armorvalue = floor(self.owner.armorvalue);
         self.SendFlags |= 2;
-    }
-    if(self.the_entnum != num_for_edict(self.owner))
-    {
-        self.the_entnum = num_for_edict(self.owner);
     }
     self.nextthink = time;
 }
