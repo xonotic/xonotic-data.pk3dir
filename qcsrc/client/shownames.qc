@@ -11,16 +11,20 @@ void Draw_ShowNames()
 
     if(self.sameteam || (!self.sameteam && autocvar_hud_shownames_enemies))
     {
-        float a;
-        a = autocvar_hud_panel_fg_alpha;
-
         InterpolateOrigin_Do();
 
         if(!self.sameteam)
         {
             traceline(self.origin, view_origin, 1, self);
-            if(trace_endpos != view_origin)
-                return;
+            if(trace_endpos != view_origin) // fade out
+            {
+                self.alpha = max(0, self.alpha - 4 * frametime);
+                if(!self.alpha)
+                    return;
+            }
+            else // fade in
+                self.alpha = min(1, self.alpha + 4 * frametime);
+
 
             /* WIP, why does trace_ent != self not work as intended here?
             if(autocvar_hud_shownames_enemies != 2) // player has to point at enemy if so
@@ -31,6 +35,11 @@ void Draw_ShowNames()
                     return;
             }*/
         }
+
+        // otherwise, increase alpha until 1
+
+        float a;
+        a = autocvar_hud_panel_fg_alpha * self.alpha;
 
         // draw the sprite image
         vector o;
