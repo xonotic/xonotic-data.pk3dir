@@ -71,6 +71,12 @@ void Draw_ShowNames()
             string s;
             s = GetPlayerName(self.the_entnum-1);
             s = textShortenToWidth(s, namesize, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
+
+            float width;
+            width = stringwidth(s, TRUE, '1 1 0' * autocvar_hud_shownames_fontsize);
+
+            if (width != namesize)
+                namepos_x += (namesize - width) / 2;
             drawcolorcodedstring(namepos, s, '1 1 0' * autocvar_hud_shownames_fontsize, a, DRAWFLAG_NORMAL);
         }
     }
