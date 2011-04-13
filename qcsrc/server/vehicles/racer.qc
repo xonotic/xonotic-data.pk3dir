@@ -1,7 +1,7 @@
 #define RACER_MIN '-120 -120 -40'
 #define RACER_MAX '120 120 40'
-#define RACER_TICRATE 0.05
 
+#ifdef SVQC
 void racer_exit(float eject);
 void racer_enter();
 
@@ -595,6 +595,13 @@ void racer_die()
 	self.nextthink = 2 + time + random() * 3;
 }
 
+#ifdef VEHICLES_CSQC
+void racer_send_exta(entity to)
+{
+    
+}
+#endif
+
 void racer_dinit()
 {
     if not (vehicle_initialize(
@@ -657,3 +664,12 @@ void spawnfunc_vehicle_racer()
     self.think = racer_dinit;
     self.nextthink = time + 1;
 }
+
+#endif // SVQC
+
+#ifdef CSQC
+void racer_read_extra()
+{
+    
+}
+#endif //CSQC

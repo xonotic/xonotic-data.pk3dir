@@ -437,6 +437,9 @@ void vehicles_enter()
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
 
+#if 0    
+    other.clientcamera = self.vehicle_viewport;
+#else
     msg_entity = other;
     WriteByte (MSG_ONE, SVC_SETVIEWPORT);
     WriteEntity(MSG_ONE, self.vehicle_viewport);
@@ -455,6 +458,7 @@ void vehicles_enter()
         WriteAngle(MSG_ONE,  self.angles_y);      // yaw
         WriteAngle(MSG_ONE,  0);                  // roll
     }
+#endif
 
     vehicles_clearrturn();
 
@@ -864,6 +868,7 @@ float send_vehile(entity to, float sf)
         WriteCoord(MSG_ENTITY, self.avelocity_z);
     }
     
+    /*
     if(sf & VSF_STATS)
     {
         WriteByte(MSG_ENTITY, self.vehicle_health);
@@ -876,6 +881,7 @@ float send_vehile(entity to, float sf)
         WriteByte(MSG_ENTITY, self.vehicle_ammo2);
         WriteByte(MSG_ENTITY, self.vehicle_reload2);
     }
+    */
     
     if(sf & VSF_EXTRA)
     {
@@ -935,7 +941,6 @@ void Net_ReadVehicle(float bIsNew)
         
         self.move_velocity  = self.velocity;
         self.move_angles    = self.angles;
-
     }
     
 }
