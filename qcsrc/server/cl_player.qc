@@ -732,13 +732,20 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 }
 
-// sendflags use: 1 = origin, 2 = health/armor, 0x80 = same team (includes health)
+// sendflags use: 1 = origin, 2 = health/armor, 0x80 = same team (includes health), 4 = entity out of range/culled
 float SendEntity_ShowNames(entity to, float sendflags)
 {
-    if(vlen(to.origin - self.origin) < autocvar_sv_shownames_cull_distance) // distance cull
-        return FALSE;
+    if(self.owner == to) // no need to spam own coordinates/health
+        return TRUE;
 
     WriteByte(MSG_ENTITY, ENT_CLIENT_SHOWNAMES);
+    if(vlen(to.origin - self.origin) < autocvar_sv_shownames_cull_distance)
+    {
+        WriteByte(MSG_ENTITY, sendflags | 4);
+        WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+        return FALSE;
+    }
+
     sendflags = sendflags & 127;
     if(teams_matter && self.owner.team == to.team)
         sendflags |= 128;

@@ -907,13 +907,20 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
-.float healthvalue, armorvalue;
+.float healthvalue, armorvalue, isactive, sameteam;
 void Ent_ShowNames()
 {
     float sf, the_entnum;
 
     sf = ReadByte();
     the_entnum = ReadByte();
+
+    if(sf & 4) // entity is out of range/culled by pvs, i.e. we do not need any origin/status info, only the knowledge that we should ignore this ent
+    {
+        playerslots[the_entnum-1].isactive = FALSE;
+        return;
+    }
+    playerslots[the_entnum-1].isactive = TRUE; // otherwise, player is in range
 
     if(sf & 1)
     {
@@ -927,33 +934,10 @@ void Ent_ShowNames()
         playerslots[the_entnum-1].armorvalue = ReadByte();
     }
 
-    /*
-    string thename;
-    float thehealth, thearmor;
-
-    if(shownames_netname)
-        strunzone(shownames_netname);
-    thename = strzone(ReadString());
-    thehealth = ReadByte();
-    thearmor = ReadByte();
-
-    if(autocvar_hud_panel_shownames == 1 && thehealth > 0) // teammates only
-    {
-        shownames_netname = thename;
-        shownames_health = thehealth;
-        shownames_armor = thearmor;
-
-        shownames_time = time + autocvar_hud_panel_shownames_sustain;
-    }
-    else if(autocvar_hud_panel_shownames == 2)
-    {
-        shownames_netname = thename;
-        shownames_health = thehealth;
-        shownames_armor = thearmor;
-
-        shownames_time = time + autocvar_hud_panel_shownames_sustain;
-    }
-    */
+    if(sf & 128) // same team
+        playerslots[the_entnum-1].sameteam = TRUE;
+    else
+        playerslots[the_entnum-1].sameteam = FALSE;
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.

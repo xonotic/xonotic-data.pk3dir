@@ -63,6 +63,7 @@ Main.qc
 View.qc
 interpolate.qc
 waypointsprites.qc
+shownames.qc
 movetypes.qc
 prandom.qc
 bgmscript.qc

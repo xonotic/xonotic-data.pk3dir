@@ -1548,6 +1548,7 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 
 }
 
+void View_ShowNames();
 
 void CSQC_common_hud(void)
 {
@@ -1559,6 +1560,8 @@ void CSQC_common_hud(void)
 	switch(hud)
 	{
 		case HUD_NORMAL:
+            View_ShowNames();
+
 			// do some accuracy var caching
 			float i;
 			if(!(gametype == GAME_RACE || gametype == GAME_CTS))
@@ -1605,10 +1608,12 @@ void CSQC_common_hud(void)
 			break;
 
 		case HUD_SPIDERBOT:
+            View_ShowNames();
 			CSQC_SPIDER_HUD();
 			break;
 
 		case HUD_WAKIZASHI:
+            View_ShowNames();
 			CSQC_WAKIZASHI_HUD();
 			break;
 	}
