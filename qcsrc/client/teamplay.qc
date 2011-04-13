@@ -1,6 +1,3 @@
-float teamplay;
-float myteam;
-
 float TeamByColor(float color)
 {
 	switch(color)

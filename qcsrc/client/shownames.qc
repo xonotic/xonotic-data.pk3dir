@@ -111,6 +111,9 @@ void Draw_ShowNames()
 
             string s;
             s = GetPlayerName(self.the_entnum-1);
+            if((autocvar_hud_shownames_decolorize == 1 && teamplay) || autocvar_hud_shownames_decolorize == 2)
+                s = playername(s, GetPlayerColor(self.the_entnum-1));
+
             drawfontscale = '1 1 0' * resize;
             s = textShortenToWidth(s, namesize, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
 
