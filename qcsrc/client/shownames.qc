@@ -16,6 +16,13 @@ void Draw_ShowNames()
 
         InterpolateOrigin_Do();
 
+        if(!self.sameteam)
+        {
+            traceline(self.origin, view_origin, 1, self);
+            if(trace_endpos != view_origin)
+                return;
+        }
+
         // draw the sprite image
         vector o;
         o = project_3d_to_2d(self.origin);
