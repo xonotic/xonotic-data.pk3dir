@@ -22,6 +22,7 @@ void PlayerStats_Init()
 	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
 	PlayerStats_AddEvent(PLAYERSTATS_JOINS);
 	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
+	PlayerStats_AddEvent(PLAYERSTATS_TEAM);
 
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
@@ -273,6 +274,7 @@ void PlayerStats_EndMatch(float finished)
 		{
 			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
 			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
+			PlayerStats_Event(p, PLAYERSTATS_TEAM, p.team);
 		}
 	}
 }
