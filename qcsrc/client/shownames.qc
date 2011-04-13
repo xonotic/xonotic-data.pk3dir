@@ -57,7 +57,7 @@ void Draw_ShowNames()
                     drawpic_aspect_skin(iconpos + '0.5 0 0' * iconsize_x, "armor", '1 1 0' * iconsize_y, '1 1 1', a, DRAWFLAG_NORMAL);
                     drawresetcliparea();
                 }
-                else if(autocvar_hud_shownames_status == 2)
+                else if(autocvar_hud_shownames_status == 2 && teamplay)
                 {
                     iconsize = eX * 2 * mySize_y + eY * mySize_y;
                     drawpic_aspect_skin(iconpos, "health_unknown", '1 1 0' * iconsize_y, '0 0 0', a, DRAWFLAG_NORMAL);
@@ -72,19 +72,6 @@ void Draw_ShowNames()
             s = GetPlayerName(self.the_entnum-1);
             s = textShortenToWidth(s, namesize, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
             drawcolorcodedstring(namepos, s, '1 1 0' * autocvar_hud_shownames_fontsize, a, DRAWFLAG_NORMAL);
-
-            /* Or maybe a health bar instead?
-             *
-            if(self.health >= 0)
-            {
-                float align;
-                if(self.build_finished)
-                    align = 0.5;
-                else
-                    align = 0;
-                drawhealthbar(o, rot * 90 * DEG2RAD, self.health, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, SPRITE_HEALTHBAR_WIDTH * t, SPRITE_HEALTHBAR_HEIGHT * t, SPRITE_HEALTHBAR_MARGIN * t, SPRITE_HEALTHBAR_BORDER * t, align, self.teamradar_color, a * SPRITE_HEALTHBAR_BORDERALPHA, self.teamradar_color, a * SPRITE_HEALTHBAR_HEALTHALPHA, DRAWFLAG_NORMAL);
-            }
-            */
         }
     }
 }
