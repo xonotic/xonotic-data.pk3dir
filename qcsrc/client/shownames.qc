@@ -38,17 +38,24 @@ void Draw_ShowNames()
 
         // otherwise, increase alpha until 1
 
+        float dist;
+        dist = vlen(self.origin - view_origin);
+
         float a;
-        a = autocvar_hud_panel_fg_alpha;
+        a = autocvar_hud_shownames_alpha;
         if(self.alpha)
             a *= self.alpha;
         if(autocvar_hud_shownames_maxdistance)
         {
-            float dist;
-            dist = vlen(self.origin - view_origin);
-
+            if(dist >= autocvar_hud_shownames_maxdistance)
+                return;
             a *= ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
         }
+
+        float resize;
+        resize = 1;
+        if(autocvar_hud_shownames_resize) // limit resize so its never smaller than 0.5... gets unreadable
+            resize = 0.5 + 0.5 * ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
 
         // draw the sprite image
         vector o;
@@ -62,9 +69,16 @@ void Draw_ShowNames()
             mySize = (eX * autocvar_hud_shownames_aspect + eY) * autocvar_hud_shownames_height;
             myPos = o - '0.5 0 0' * mySize_x - '0 1 0' * mySize_y;
 
-            vector iconpos, iconsize;
-            vector namepos;
-            float namesize;
+            // size scaling
+            mySize_x *= resize;
+            mySize_y *= resize;
+
+            myPos_x += 0.5 * (mySize_x / resize - mySize_x);
+            myPos_y += (mySize_y / resize - mySize_y);
+
+            vector iconpos, iconsize; // these determine icon position/size, if any
+            vector namepos; // this is where the origin of the string
+            float namesize; // total area where we can draw the string
 
             iconpos = myPos;
 
@@ -92,11 +106,12 @@ void Draw_ShowNames()
                 }
             }
 
-            namepos = myPos + eX * 2 * iconsize_y + eY * 0.5 * (autocvar_hud_shownames_height - autocvar_hud_shownames_fontsize);
+            namepos = myPos + eX * 2 * iconsize_y + eY * 0.5 * resize * (autocvar_hud_shownames_height - autocvar_hud_shownames_fontsize);
             namesize = mySize_x - 2 * iconsize_y;
 
             string s;
             s = GetPlayerName(self.the_entnum-1);
+            drawfontscale = '1 1 0' * resize;
             s = textShortenToWidth(s, namesize, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
 
             float width;
@@ -105,6 +120,7 @@ void Draw_ShowNames()
             if (width != namesize)
                 namepos_x += (namesize - width) / 2;
             drawcolorcodedstring(namepos, s, '1 1 0' * autocvar_hud_shownames_fontsize, a, DRAWFLAG_NORMAL);
+            drawfontscale = '1 1 0';
         }
     }
 }

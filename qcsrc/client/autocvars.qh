@@ -278,6 +278,8 @@ float autocvar_hud_shownames_status;
 float autocvar_hud_shownames_height;
 float autocvar_hud_shownames_aspect;
 float autocvar_hud_shownames_fontsize;
+float autocvar_hud_shownames_alpha;
+float autocvar_hud_shownames_resize;
 float autocvar_hud_shownames_mindistance;
 float autocvar_hud_shownames_maxdistance;
 string autocvar_hud_skin;
