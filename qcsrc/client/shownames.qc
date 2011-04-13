@@ -21,6 +21,15 @@ void Draw_ShowNames()
             traceline(self.origin, view_origin, 1, self);
             if(trace_endpos != view_origin)
                 return;
+
+            /* WIP, why does trace_ent != self not work as intended here?
+            if(autocvar_hud_shownames_enemies != 2) // player has to point at enemy if so
+            {
+                traceline(view_origin, view_origin + view_forward * MAX_SHOT_DISTANCE, MOVETYPE_FLY, world);
+                print("trace_endpos: ", vtos(trace_endpos), " view_origin: ", vtos(view_origin), "\n");
+                if(trace_ent != self)
+                    return;
+            }*/
         }
 
         // draw the sprite image

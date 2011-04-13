@@ -914,6 +914,9 @@ void Ent_ShowNames()
     // entity init, TODO can this be done only once somehow?
     self.the_entnum = ReadByte(); // TODO: fixme to only send once somehow
     self.draw2d = Draw_ShowNames;
+    //self.movetype = MOVETYPE_FLY; // movetype needed so we can traceline?
+    self.mins = '-20 -20 -24';
+    self.maxs = '20 20 45';
 
     sf = ReadByte();
 
