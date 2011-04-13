@@ -59,11 +59,12 @@ tuba.qc
 target_music.qc
 
 //vehicles/spiderbot.qc
+shownames.qh
+shownames.qc
 Main.qc
 View.qc
 interpolate.qc
 waypointsprites.qc
-shownames.qc
 movetypes.qc
 prandom.qc
 bgmscript.qc

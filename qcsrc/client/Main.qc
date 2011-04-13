@@ -907,37 +907,33 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
-.float healthvalue, armorvalue, isactive, sameteam;
 void Ent_ShowNames()
 {
-    float sf, the_entnum;
+    float sf;
+
+    // entity init, TODO can this be done only once somehow?
+    self.the_entnum = ReadByte(); // TODO: fixme to only send once somehow
+    self.think = ShowNames_Think;
+    self.nextthink = time;
 
     sf = ReadByte();
-    the_entnum = ReadByte();
-
-    if(sf & 4) // entity is out of range/culled by pvs, i.e. we do not need any origin/status info, only the knowledge that we should ignore this ent
-    {
-        playerslots[the_entnum-1].isactive = FALSE;
-        return;
-    }
-    playerslots[the_entnum-1].isactive = TRUE; // otherwise, player is in range
 
     if(sf & 1)
     {
-        playerslots[the_entnum-1].origin_x = ReadShort();
-        playerslots[the_entnum-1].origin_y = ReadShort();
-        playerslots[the_entnum-1].origin_z = ReadShort();
+        self.origin_x = ReadShort();
+        self.origin_y = ReadShort();
+        self.origin_z = ReadShort();
     }
     if(sf & 2)
     {
-        playerslots[the_entnum-1].healthvalue = ReadByte();
-        playerslots[the_entnum-1].armorvalue = ReadByte();
+        self.healthvalue = ReadByte();
+        self.armorvalue = ReadByte();
     }
 
     if(sf & 128) // same team
-        playerslots[the_entnum-1].sameteam = TRUE;
+        self.sameteam = TRUE;
     else
-        playerslots[the_entnum-1].sameteam = FALSE;
+        self.sameteam = FALSE;
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.

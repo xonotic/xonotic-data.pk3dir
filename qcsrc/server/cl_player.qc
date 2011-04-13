@@ -739,12 +739,7 @@ float SendEntity_ShowNames(entity to, float sendflags)
         return TRUE;
 
     WriteByte(MSG_ENTITY, ENT_CLIENT_SHOWNAMES);
-    if(vlen(to.origin - self.origin) < autocvar_sv_shownames_cull_distance)
-    {
-        WriteByte(MSG_ENTITY, sendflags | 4);
-        WriteByte(MSG_ENTITY, num_for_edict(self.owner));
-        return FALSE;
-    }
+    WriteByte(MSG_ENTITY, num_for_edict(self.owner));
 
     sendflags = sendflags & 127;
     if(teams_matter && self.owner.team == to.team)
@@ -752,7 +747,6 @@ float SendEntity_ShowNames(entity to, float sendflags)
     else
         sendflags &~= 2;
     WriteByte(MSG_ENTITY, sendflags);
-    WriteByte(MSG_ENTITY, num_for_edict(self.owner));
     if(sendflags & 1)
     {
         WriteShort(MSG_ENTITY, rint(self.origin_x));
@@ -781,6 +775,14 @@ void shownames_think()
         self.SendFlags |= 2;
     }
     self.nextthink = time;
+}
+
+float shownames_customize()
+{
+    if(vlen(other.origin - self.origin) < autocvar_sv_shownames_cull_distance)
+        return TRUE;
+    else
+        return FALSE;
 }
 
 .float muted; // to be used by prvm_edictset server playernumber muted 1
