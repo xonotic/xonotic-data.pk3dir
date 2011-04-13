@@ -42,6 +42,13 @@ void Draw_ShowNames()
         a = autocvar_hud_panel_fg_alpha;
         if(self.alpha)
             a *= self.alpha;
+        if(autocvar_hud_shownames_maxdistance)
+        {
+            float dist;
+            dist = vlen(self.origin - view_origin);
+
+            a *= ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
+        }
 
         // draw the sprite image
         vector o;
