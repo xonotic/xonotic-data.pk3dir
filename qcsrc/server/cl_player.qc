@@ -735,9 +735,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 // sendflags use: 1 = origin, 2 = health/armor, 0x80 = same team (includes health), 4 = entity out of range/culled
 float SendEntity_ShowNames(entity to, float sendflags)
 {
-    if(self.owner == to) // no need to spam own coordinates/health
-        return TRUE;
-
     WriteByte(MSG_ENTITY, ENT_CLIENT_SHOWNAMES);
     WriteByte(MSG_ENTITY, num_for_edict(self.owner));
 
@@ -779,10 +776,13 @@ void shownames_think()
 
 float shownames_customize()
 {
+    return TRUE;
     if(vlen(other.origin - self.origin) < autocvar_sv_shownames_cull_distance)
+    if(self.owner != other) // no need to spam own coordinates
+    if(self.owner.team == other.team || (self.owner.team != other.team && checkpvs(self.origin, other)))
         return TRUE;
-    else
-        return FALSE;
+
+    return FALSE;
 }
 
 .float muted; // to be used by prvm_edictset server playernumber muted 1
