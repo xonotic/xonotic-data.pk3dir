@@ -766,10 +766,10 @@ void shownames_think()
         setorigin(self, self.owner.origin + SHOWNAMES_ORIGIN_OFFSET);
         self.SendFlags |= 1;
     }
-    if(self.health != floor(self.owner.health) || self.armorvalue != floor(self.owner.armorvalue))
+    if(self.health != max(0, floor(self.owner.health)) || self.armorvalue != max(0, floor(self.owner.armorvalue)))
     {
-        self.health = floor(self.owner.health);
-        self.armorvalue = floor(self.owner.armorvalue);
+        self.health = max(0, floor(self.owner.health));
+        self.armorvalue = max(0, floor(self.owner.armorvalue));
         self.SendFlags |= 2;
     }
     self.nextthink = time;
