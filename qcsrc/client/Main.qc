@@ -913,8 +913,7 @@ void Ent_ShowNames()
 
     // entity init, TODO can this be done only once somehow?
     self.the_entnum = ReadByte(); // TODO: fixme to only send once somehow
-    self.think = ShowNames_Think;
-    self.nextthink = time;
+    self.draw2d = Draw_ShowNames;
 
     sf = ReadByte();
 

@@ -72,13 +72,5 @@ void Draw_ShowNames()
             drawhealthbar(o, rot * 90 * DEG2RAD, self.health, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, SPRITE_HEALTHBAR_WIDTH * t, SPRITE_HEALTHBAR_HEIGHT * t, SPRITE_HEALTHBAR_MARGIN * t, SPRITE_HEALTHBAR_BORDER * t, align, self.teamradar_color, a * SPRITE_HEALTHBAR_BORDERALPHA, self.teamradar_color, a * SPRITE_HEALTHBAR_HEALTHALPHA, DRAWFLAG_NORMAL);
         }
         */
-        print(vtos(o), "\n");
     }
-}
-
-void ShowNames_Think()
-{
-    self.draw2d = Draw_ShowNames;
-    self.nextthink = time;
-    print("think!\n");
 }
