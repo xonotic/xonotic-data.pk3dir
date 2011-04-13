@@ -277,6 +277,7 @@ float autocvar_hud_shownames_enemies;
 float autocvar_hud_shownames_status;
 float autocvar_hud_shownames_height;
 float autocvar_hud_shownames_aspect;
+float autocvar_hud_shownames_fontsize;
 string autocvar_hud_skin;
 float autocvar_loddebug;
 float autocvar_menu_mouse_speed;

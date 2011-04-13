@@ -758,11 +758,12 @@ float SendEntity_ShowNames(entity to, float sendflags)
     return TRUE;
 }
 
+const vector SHOWNAMES_ORIGIN_OFFSET = '0 0 48';
 void shownames_think()
 {
-    if(self.origin != self.owner.origin)
+    if(self.origin - SHOWNAMES_ORIGIN_OFFSET != self.owner.origin)
     {
-        setorigin(self, self.owner.origin);
+        setorigin(self, self.owner.origin + SHOWNAMES_ORIGIN_OFFSET);
         self.SendFlags |= 1;
     }
     if(self.health != floor(self.owner.health) || self.armorvalue != floor(self.owner.armorvalue))

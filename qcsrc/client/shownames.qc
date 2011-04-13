@@ -27,7 +27,8 @@ void Draw_ShowNames()
         myPos = o - '0.5 0 0' * mySize_x - '0 1 0' * mySize_y;
 
         vector iconpos, iconsize;
-        vector namepos, namesize;
+        vector namepos;
+        float namesize;
 
         iconpos = myPos;
 
@@ -55,10 +56,13 @@ void Draw_ShowNames()
             }
         }
 
-        namepos = myPos + eX * 2 * iconsize_y;
-        namesize = eX * mySize_x - eX * 2 * iconsize_y + eY * mySize_y;
+        namepos = myPos + eX * 2 * iconsize_y + eY * 0.5 * (autocvar_hud_shownames_height - autocvar_hud_shownames_fontsize);
+        namesize = mySize_x - 2 * iconsize_y;
 
-        drawcolorcodedstring_aspect(namepos, GetPlayerName(self.the_entnum-1), namesize, a, DRAWFLAG_NORMAL);
+        string s;
+        s = GetPlayerName(self.the_entnum-1);
+		s = textShortenToWidth(s, namesize, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
+        drawcolorcodedstring(namepos, s, '1 1 0' * autocvar_hud_shownames_fontsize, a, DRAWFLAG_NORMAL);
 
         /* Or maybe a health bar instead?
          *
