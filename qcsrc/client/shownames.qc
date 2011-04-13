@@ -39,7 +39,9 @@ void Draw_ShowNames()
         // otherwise, increase alpha until 1
 
         float a;
-        a = autocvar_hud_panel_fg_alpha * self.alpha;
+        a = autocvar_hud_panel_fg_alpha;
+        if(self.alpha)
+            a *= self.alpha;
 
         // draw the sprite image
         vector o;
