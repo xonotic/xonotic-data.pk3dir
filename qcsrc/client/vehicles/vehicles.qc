@@ -96,53 +96,6 @@ void Net_AuXair2(float bIsNew)
     axh.cnt = time;
 }
 
-
-
-void VehicleRacerDraw()
-{
-    Movetype_Physics_NoMatchServer();
-    self.drawmask = MASK_NORMAL;
-}
-
-void VehicleRacerRemove()
-{
-}
-
-void Net_VehicleRacer(float bIsNew)
-{
-    if(bIsNew)
-    {
-        setmodel(self, "models/vehicles/wakizashi.dpm");
-        self.move_movetype = MOVETYPE_BOUNCE;
-        self.entremove = VehicleRacerRemove;
-        setsize(self,  '-60 -60 -20', '60 60 20');
-        self.draw = VehicleRacerDraw;
-        self.scale = 0.5;
-    }
-
-    self.cnt = ReadByte();
-
-    self.origin_x = ReadCoord();
-    self.origin_y = ReadCoord();
-    self.origin_z = ReadCoord();
-
-    self.velocity_x = ReadCoord();
-    self.velocity_y = ReadCoord();
-    self.velocity_z = ReadCoord();
-
-    self.angles_x = ReadAngle();
-    self.angles_y = ReadAngle();
-    self.angles_z = ReadAngle();
-
-    self.move_origin    = self.origin;
-    self.move_velocity  = self.velocity;
-    self.move_angles    = self.angles;
-
-    setorigin(self, self.origin);
-}
-
-
-
 void Net_VehicleSetup()
 {
 

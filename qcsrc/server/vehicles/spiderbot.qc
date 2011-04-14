@@ -39,19 +39,16 @@ float autocvar_g_vehicle_spiderbot_minigun_ammo_max;
 float autocvar_g_vehicle_spiderbot_minigun_ammo_regen;
 float autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause;
 
-
 float autocvar_g_vehicle_spiderbot_rocket_damage;
-float autocvar_g_vehicle_spiderbot_rocket_edgedamage;
 float autocvar_g_vehicle_spiderbot_rocket_force;
-float autocvar_g_vehicle_spiderbot_rocket_health;
-float autocvar_g_vehicle_spiderbot_rocket_lifetime;
-float autocvar_g_vehicle_spiderbot_rocket_noise;
 float autocvar_g_vehicle_spiderbot_rocket_radius;
+float autocvar_g_vehicle_spiderbot_rocket_speed;
 float autocvar_g_vehicle_spiderbot_rocket_refire;
 float autocvar_g_vehicle_spiderbot_rocket_reload;
-float autocvar_g_vehicle_spiderbot_rocket_speed;
+float autocvar_g_vehicle_spiderbot_rocket_health;
+float autocvar_g_vehicle_spiderbot_rocket_noise;
 float autocvar_g_vehicle_spiderbot_rocket_turnrate;
-
+float autocvar_g_vehicle_spiderbot_rocket_lifetime;
 
 void spiderbot_exit(float eject);
 void spiderbot_enter();
@@ -233,10 +230,11 @@ float spiderbot_frame()
     spider.tur_head.angles_y = bound(autocvar_g_vehicle_spiderbot_head_turnlimit * -1, spider.tur_head.angles_y + ad_y, autocvar_g_vehicle_spiderbot_head_turnlimit);
 
     // Pitch head
+#if 0 // Enable to pich by cross-trace (more precise in chase, but less predictable)
     ad = vectoangles(normalize(trace_endpos - gettaginfo(spider.tur_head,gettagindex(spider.tur_head,"tag_hud")))) - (spider.tur_head.angles + spider.angles);
     if(ad_x > 180) ad_x -= 360;
     if(ad_x < -180) ad_x += 360;
-
+#endif
     ftmp = autocvar_g_vehicle_spiderbot_head_pitchspeed * sys_frametime;
     ad_x = bound(ftmp * -1, ad_x, ftmp);
     spider.tur_head.angles_x = bound(autocvar_g_vehicle_spiderbot_head_pitchlimit_down, spider.tur_head.angles_x + ad_x, autocvar_g_vehicle_spiderbot_head_pitchlimit_up);
@@ -246,15 +244,15 @@ float spiderbot_frame()
     ftmp = bound(-ftmp, spider.tur_head.angles_y, ftmp);
 
 #endif
-    makevectors(spider.angles + '-1 0 0' * spider.angles_x);
+    makevectors(spider.angles + '-2 0 0' * spider.angles_x);
 
-    /*
+/*
     vector ofs;
     ofs = self.origin + v_up * 128;
     te_lightning1(world, ofs, ofs + v_up * 32);
     te_lightning1(world, ofs, ofs + v_right * 128);
     te_lightning1(world, ofs, ofs + v_forward * 256);
-    */
+*/
 
     movelib_groundalign4point(autocvar_g_vehicle_spiderbot_springlength, autocvar_g_vehicle_spiderbot_springup, autocvar_g_vehicle_spiderbot_springblend);
 
@@ -349,8 +347,6 @@ float spiderbot_frame()
         vehicles_regen(cnt, vehicle_ammo1, autocvar_g_vehicle_spiderbot_minigun_ammo_max,
                                            autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause,
                                            autocvar_g_vehicle_spiderbot_minigun_ammo_regen, frametime);
-
-    dprint("1: ammo1:", ftos(spider.vehicle_ammo1), "\n");
     
     spiderbot_rocket_do();
 
@@ -364,9 +360,9 @@ float spiderbot_frame()
     player.vehicle_ammo2 = spider.tur_head.frame;
 
     if(spider.gun2.cnt <= time)
-        player.vehicle_reload2 = 1;
+        player.vehicle_reload2 = 100;
     else
-        player.vehicle_reload2 = 1 - ((spider.gun2.cnt - time) / spider.attack_finished_single);
+        player.vehicle_reload2 = 100 - ((spider.gun2.cnt - time) / spider.attack_finished_single) * 100;
 
     setorigin(player, spider.origin + '0 0 1' * SPIDERBOT_MAX_z);
     player.velocity = spider.velocity;
@@ -594,7 +590,8 @@ void vewhicle_spiderbot_dinit()
              spiderbot_spawn, autocvar_g_vehicle_spiderbot_respawntime,
              spiderbot_frame,
              spiderbot_enter, spiderbot_exit,
-             spiderbot_die,   spiderbot_think))
+             spiderbot_die,   spiderbot_think, 
+             FALSE))
     {
         remove(self);
         return;

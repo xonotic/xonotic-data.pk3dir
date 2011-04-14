@@ -332,10 +332,12 @@ const float CTF_STATE_DEFEND = 2;
 const float CTF_STATE_COMMANDER = 3;
 
 const float HUD_NORMAL = 0;
-const float HUD_SPIDERBOT = 10;
-const float HUD_WAKIZASHI = 11;
-const float HUD_RAPTOR    = 12;
-const float HUD_BUMBLEBEE = 13;
+const float HUD_VEHICLE_FIRST   = 10;
+const float HUD_SPIDERBOT       = 10;
+const float HUD_WAKIZASHI       = 11;
+const float HUD_RAPTOR          = 12;
+const float HUD_BUMBLEBEE       = 13;
+const float HUD_VEHICLE_LAST    = 13;
 
 const vector eX = '1 0 0';
 const vector eY = '0 1 0';
@@ -528,20 +530,19 @@ float DEATH_TURRET = 10020;
 float DEATH_QUIET = 10021;
 float DEATH_HEADSHOT = 10022;
 
-
-#define DEATH_VHFIRST       10030
-#define DEATH_VHCRUSH       10030
-#define DEATH_SBMINIGUN     10031
-#define DEATH_SBROCKET      10032
-#define DEATH_SBBLOWUP      10033
-#define DEATH_WAKIGUN       10034
-#define DEATH_WAKIROCKET    10035
-#define DEATH_WAKIBLOWUP    10036
-#define DEATH_RAPTOR_CANNON 10037
-#define DEATH_RAPTOR_BOMB   10038
-#define DEATH_RAPTOR_BOMB_SPLIT 10039
-#define DEATH_RAPTOR_DEATH  10040
-#define DEATH_VHLAST        10040
+float  DEATH_VHFIRST       = 10030;
+float  DEATH_VHCRUSH       = 10030;
+float  DEATH_SBMINIGUN     = 10031;
+float  DEATH_SBROCKET      = 10032;
+float  DEATH_SBBLOWUP      = 10033;
+float  DEATH_WAKIGUN       = 10034;
+float  DEATH_WAKIROCKET    = 10035;
+float  DEATH_WAKIBLOWUP    = 10036;
+float  DEATH_RAPTOR_CANNON = 10037;
+float  DEATH_RAPTOR_BOMB   = 10038;
+float  DEATH_RAPTOR_BOMB_SPLIT = 10039;
+float  DEATH_RAPTOR_DEATH  = 10040;
+float  DEATH_VHLAST        = 10040;
 #define DEATH_ISVEHICLE(t)  ((t) >= DEATH_VHFIRST && (t) <= DEATH_VHLAST)
 
 float DEATH_GENERIC = 10050;

@@ -60,7 +60,6 @@ float autocvar_g_vehicle_racer_rocket_locked_time;
 float autocvar_g_vehicle_racer_rocket_locked_maxangle;
 
 float autocvar_g_vehicle_racer_respawntime;
-float autocvar_g_vehicle_racer_collision_multiplier;
 
 float autocvar_g_vehicle_racer_blowup_radius;
 float autocvar_g_vehicle_racer_blowup_coredamage;
@@ -616,7 +615,8 @@ void racer_dinit()
              racer_spawn, autocvar_g_vehicle_racer_respawntime,
              racer_frame,
              racer_enter, racer_exit,
-             racer_die,   racer_think))
+             racer_die,   racer_think, 
+             FALSE))
     {
         remove(self);
         return;

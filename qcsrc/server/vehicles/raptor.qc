@@ -629,7 +629,8 @@ void raptor_dinit()
              raptor_spawn, autocvar_g_vehicle_raptor_respawntime,
              raptor_frame,
              raptor_enter, raptor_exit,
-             raptor_die,   raptor_think))
+             raptor_die,   raptor_think, 
+             FALSE))
     {
         remove(self);
         return;

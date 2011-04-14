@@ -28,13 +28,18 @@ float autocvar_g_vehicle_bumblebee_cannon_speed;
 float autocvar_g_vehicle_bumblebee_cannon_spread;
 float autocvar_g_vehicle_bumblebee_cannon_force;
 
+float autocvar_g_vehicle_bumblebee_cannon_turnspeed;
+float autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down;
+float autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up;
+float autocvar_g_vehicle_bumblebee_cannon_turnlimit_in;
+float autocvar_g_vehicle_bumblebee_cannon_turnlimit_out;
+
 float autocvar_g_vehicle_bumblebee_respawntime;
 
 float autocvar_g_vehicle_bumblebee_blowup_radius;
 float autocvar_g_vehicle_bumblebee_blowup_coredamage;
 float autocvar_g_vehicle_bumblebee_blowup_edgedamage;
 float autocvar_g_vehicle_bumblebee_blowup_forceintensity;
-
 
 #define BUMB_MIN '-120 -120 -40'
 #define BUMB_MAX '120 120 40'
@@ -56,20 +61,18 @@ float bumb_gunner_frame()
     vehic.solid = SOLID_NOT;    
     crosshair_trace(gunner);
     
-    ftmp2 = autocvar_g_vehicle_raptor_cannon_turnspeed * frametime;
-    ftmp = -ftmp2;
-    
     //vtmp = gettaginfo(vehic, gettagindexvehic, "tag_hardpoint01"));
     vtmp = gettaginfo(gun, gettagindex(gun, "muzzle"));
     vtmp = vectoangles(normalize(trace_endpos - vtmp)); // Find the direction & angle
     vtmp = shortangle_vxy(vtmp - (vehic.angles + gun.angles), vehic.angles + gun.angles);     // Find aim offset
     
     // Bind to aimspeed
+    ftmp2 = autocvar_g_vehicle_bumblebee_cannon_turnspeed * frametime; ftmp = -ftmp2;
     vtmp_x = bound(ftmp, vtmp_x, ftmp2);
     vtmp_y = bound(ftmp, vtmp_y, ftmp2);
     // Bind to limts
-    gun.angles_x = bound(-autocvar_g_vehicle_raptor_cannon_pitchlimit_down, vtmp_x + gun.angles_x, autocvar_g_vehicle_raptor_cannon_pitchlimit_up);
-    gun.angles_y = bound(-autocvar_g_vehicle_raptor_cannon_turnlimit,  vtmp_y + gun.angles_y, autocvar_g_vehicle_raptor_cannon_turnlimit);    
+    gun.angles_x = bound(-autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down, vtmp_x + gun.angles_x, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up);
+    gun.angles_y = bound(-autocvar_g_vehicle_bumblebee_cannon_turnlimit_in,  vtmp_y + gun.angles_y, autocvar_g_vehicle_bumblebee_cannon_turnlimit_out);    
 
     if(gunner.BUTTON_ATCK && gun.cnt <= time)
     {
@@ -281,7 +284,8 @@ void bumb_dinit()
              bumb_spawn, autocvar_g_vehicle_bumblebee_respawntime,
              bumb_pilot_frame,
              bumb_enter, bumb_exit,
-             bumb_die,   bumb_think))
+             bumb_die,   bumb_think,
+             FALSE))
     {
         remove(self);
         return;

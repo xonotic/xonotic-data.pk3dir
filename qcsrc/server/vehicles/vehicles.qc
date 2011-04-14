@@ -176,7 +176,7 @@ vector vehicles_force_fromtag_hover(string tag_name, float spring_length, float 
     return v_forward  * force_fromtag_power;
 }
 
-// Experimental hovermode wich uses attraction/repulstion from surface unsted of gravity/repulsion
+// Experimental hovermode wich uses attraction/repulstion from surface insted of gravity/repulsion
 // Can possibly be use to move abt any surface (inclusing walls/celings)
 vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float max_power)
 {
@@ -308,7 +308,8 @@ void vehicles_spawn()
     self.bot_attack         = TRUE;
     self.flags              = FL_NOTARGET;
     self.avelocity          = '0 0 0';
-
+    self.velocity           = '0 0 0';
+    
     // Reset locking
     self.lock_strength      = 0;
     self.lock_target        = world;
@@ -427,7 +428,7 @@ void vehicles_enter()
     self.owner.vehicle_reload1  = self.vehicle_reload1;
     self.owner.vehicle_reload2  = self.vehicle_reload2;
 
-    // Cnnt do this, hides attached objects too.
+    // Cant do this, hides attached objects too.
     //self.exteriormodeltoclient = self.owner;
     //self.tur_head.exteriormodeltoclient = self.owner;
 
@@ -477,8 +478,8 @@ void vehicles_exit(float eject)
         WriteByte (MSG_ONE, SVC_SETVIEWPORT);
         WriteEntity( MSG_ONE, self.owner);
 
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES); // 10 = SVC_SETVIEWANGLES
-        WriteAngle(MSG_ONE, 0);                 // tilt
+        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+        WriteAngle(MSG_ONE, 0);                 // pich
         WriteAngle(MSG_ONE, self.angles_y);     // yaw
         WriteAngle(MSG_ONE, 0);                 // roll
 
@@ -666,8 +667,8 @@ void vehicles_reset_colors()
     else
         _colormap = 1024;
 
-    _glowmod    = '0 0 0';
-    _colormod   = '0 0 0';
+    _glowmod  = '0 0 0';
+    _colormod = '0 0 0';
 
     // Find all ents attacked to main model and setup effects, colormod etc.
     e = findchainentity(tag_entity, self);
@@ -688,10 +689,10 @@ void vehicles_reset_colors()
     self.vehicle_hudmodel.colormap = self.colormap = _colormap;
     self.vehicle_viewport.effects = (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT);
 
-    self.alpha          = 1;
-    self.avelocity      = '0 0 0';
-    self.velocity       = '0 0 0';
-    self.effects        = _effects;
+    self.alpha     = 1;
+    self.avelocity = '0 0 0';
+    self.velocity  = '0 0 0';
+    self.effects   = _effects;
 }
 
 float vehicle_initialize(string  net_name,
@@ -702,16 +703,17 @@ float vehicle_initialize(string  net_name,
                          string  hudtag,
                          string  viewtag,
                          float   vhud,
-                         vector min_s,
-                         vector max_s,
-                         float  nodrop,
+                         vector  min_s,
+                         vector  max_s,
+                         float   nodrop,
                          void()  spawnproc,
                          float   _respawntime,
                          float() physproc,
                          void()  enterproc,
                          void(float extflag) exitfunc,
                          void() dieproc,
-                         void() thinkproc )
+                         void() thinkproc,
+                         float  use_csqc)
 {
     addstat(STAT_HUD, AS_INT,  hud);
 	addstat(STAT_VEHICLESTAT_HEALTH,  AS_INT, vehicle_health);
@@ -794,11 +796,13 @@ float vehicle_initialize(string  net_name,
         tracebox(self.origin + '0 0 100', min_s, max_s, self.origin - '0 0 10000', MOVE_WORLDONLY, self);
         setorigin(self, trace_endpos);
     }
-    
-    //self.vehicle_hudmodel.effects = EF_NODEPTHTEST;
+        
     self.pos1 = self.origin;
     self.pos2 = self.angles;
-
+#ifdef VEHICLES_CSQC
+    if(use_csqc)
+        net_link_vehile();
+#endif    
     return TRUE;
 }
 
@@ -811,139 +815,3 @@ void bugmenot()
     self.vehicle_spawn      = self.vehicle_exit;
     self.AuxiliaryXhair     = self.AuxiliaryXhair;
 }
-
-#ifdef VEHICLES_CSQC
-// SendFlags
-float VSF_SETUP       = 2;          /// Send vehicle type etc
-float VSF_ORIGIN      = 4;          /// Send location
-float VSF_MOVEMENT    = 8;          /// Send movement update (and angle/avelocity)
-float VSF_STATS       = 16;         /// Send ammo, health etc
-float VSF_EXTRA       = 32;         /// Send additional data (turret rotations and such). Handeld per vehicle type.
-float VSF_ANIMINFO    = 64;         /// Animation info
-float VSF_FULL_UPDATE = 16777215    /// Send everything
-
-#ifdef SVQC
-float send_vehile(entity to, float sf)
-{
-	float dist;
-	
-	// Always send a compleate update to owner, minus VSF_SETUP
-	if(to == self.owner && self.owner != world && sf != VSF_FULL_UPDATE)
-        sf |= (VSF_FULL_UPDATE &~= VSF_SETUP);
-    
-    dist = vlen(self.origin - to.origin);
-    // TODO: Distance based message filtering
-    
-	WriteByte(MSG_ENTITY, ENT_CLIENT_VEHICLE);
-	
-	// We need to know client-side what was sent
-	WriteByte(MSG_ENTITY, sf);
-	
-	if(sf & VSF_SETUP)
-	{
-        WriteByte(MSG_ENTITY,   self.hud);        //vehicle type = hud
-        WriteByte(MSG_ENTITY,   self.team);
-        WriteShort(MSG_ENTITY,  self.colormap);
-	}
-    
-    if(sf & VSF_ORIGIN)
-    {
-        WriteCoord(MSG_ENTITY, self.origin_x);
-        WriteCoord(MSG_ENTITY, self.origin_y);
-        WriteCoord(MSG_ENTITY, self.origin_z);        
-    }
-    
-    if(sf & VSF_MOVEMENT)
-    {    
-        WriteCoord(MSG_ENTITY, self.velocity_x);
-        WriteCoord(MSG_ENTITY, self.velocity_y);
-        WriteCoord(MSG_ENTITY, self.velocity_z);
-
-        WriteAngle(MSG_ENTITY, self.angles_x);
-        WriteAngle(MSG_ENTITY, self.angles_y);
-        WriteAngle(MSG_ENTITY, self.angles_z);
-
-        WriteCoord(MSG_ENTITY, self.avelocity_x);
-        WriteCoord(MSG_ENTITY, self.avelocity_y);
-        WriteCoord(MSG_ENTITY, self.avelocity_z);
-    }
-    
-    /*
-    if(sf & VSF_STATS)
-    {
-        WriteByte(MSG_ENTITY, self.vehicle_health);
-        WriteByte(MSG_ENTITY, self.vehicle_shield);
-        WriteByte(MSG_ENTITY, self.vehicle_energy);
-        
-        WriteByte(MSG_ENTITY, self.vehicle_ammo1);
-        WriteByte(MSG_ENTITY, self.vehicle_reload1);
-        
-        WriteByte(MSG_ENTITY, self.vehicle_ammo2);
-        WriteByte(MSG_ENTITY, self.vehicle_reload2);
-    }
-    */
-    
-    if(sf & VSF_EXTRA)
-    {
-        self.vehile_send_exta(to);
-    }
-    
-    return TRUE;
-}
-
-void net_link_vehile()
-{    
-    self.SendFlags = 0xFFFFFF;
-    Net_LinkEntity(self, FALSE, 0, send_vehile);    
-}
-#endif // SVQC
-
-#ifdef CSQC
-void Net_ReadVehicle(float bIsNew)
-{
-    float sf;
-    
-    if(bIsNew)
-    {
-        setmodel(self, "models/vehicles/wakizashi.dpm");
-        self.move_movetype = MOVETYPE_BOUNCE;        
-        self.entremove = VehicleRacerRemove;
-        setsize(self,  '-60 -60 -20', '60 60 20');        
-        self.draw = VehicleRacerDraw;
-        self.scale = 0.5;
-    }
-
-    sf = ReadByte();    
-	if(sf & VSF_SETUP)
-	{
-        self.hud        = ReadByte();
-        self.team       = ReadByte();
-        self.colormap   = ReadShort();
-	}        
-    
-    if(sf & if(sf & VSF_ORIGIN))
-    {        
-        self.origin_x       = ReadCoord();
-        self.origin_y       = ReadCoord();
-        self.origin_z       = ReadCoord();
-        self.move_origin    = self.origin;
-    }
-    
-    if(sf & VSF_MOVEMENT)
-    {    
-        self.velocity_x     = ReadCoord();
-        self.velocity_y     = ReadCoord();
-        self.velocity_z     = ReadCoord();
-
-        self.angles_x       = ReadAngle();
-        self.angles_y       = ReadAngle();
-        self.angles_z       = ReadAngle();
-        
-        self.move_velocity  = self.velocity;
-        self.move_angles    = self.angles;
-    }
-    
-}
-#endif // CSQC
-
-#endif // VEHICLES_CSQC

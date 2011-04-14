@@ -32,6 +32,7 @@ noise.qh
 
 main.qh
 vehicles/vehicles.qh
+../server/vehicles/vehicles_def.qh
 
 sortlist.qc
 miscfunctions.qc
@@ -58,7 +59,10 @@ modeleffects.qc
 tuba.qc
 target_music.qc
 
+
 vehicles/vehicles.qc
+../server/vehicles/network.qc
+
 Main.qc
 View.qc
 interpolate.qc

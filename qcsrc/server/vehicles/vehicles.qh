@@ -1,9 +1,10 @@
 #ifdef VEHICLES_ENABLED
 //#include "collision.qc"
+#include "network.qc"
 #include "vehicles.qc"
 
 #include "racer.qc"
 #include "spiderbot.qc"
 #include "raptor.qc"
-#include "bumblebee.qc"
+//#include "bumblebee.qc"
 #endif
