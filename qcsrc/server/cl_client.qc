@@ -975,7 +975,6 @@ void PutClientInServer (void)
 		self.punchvector = '0 0 0';
 		self.oldvelocity = self.velocity;
 		self.fire_endtime = -1;
-		self.lastteleporttime = time;
 
 		msg_entity = self;
 		WRITESPECTATABLE_MSG_ONE({
@@ -998,6 +997,7 @@ void PutClientInServer (void)
 		self.oldorigin = self.origin;
 		self.prevorigin = self.origin;
 		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
+		self.lastteleporttime = time; // prevent insane speeds due to changing origin
 
 		if(g_arena)
 		{
