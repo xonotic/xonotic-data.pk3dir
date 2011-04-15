@@ -1,4 +1,5 @@
 float playerstats_db;
+string teamstats_last;
 string playerstats_last;
 string events_last;
 .float playerstats_addedglobalinfo;
@@ -47,6 +48,9 @@ void PlayerStats_AddPlayer(entity e)
 		e.playerstats_id = strzone(sprintf("bot#%d", e.playerid));
 	else
 		e.playerstats_id = strzone(sprintf("player#%d", e.playerid));
+
+    if(teams_matter)
+
 	
 	string key;
 	key = sprintf("%s:*", e.playerstats_id);
@@ -72,20 +76,20 @@ void PlayerStats_AddTeam(float t)
 		return;
 
 	string key;
-	key = sprintf("team#%d:*", t);
+	key = sprintf("%d", t);
 	
 	string p;
 	p = db_get(playerstats_db, key);
 	if(p == "")
 	{
-		if(playerstats_last)
+		if(teamstats_last)
 		{
-			db_put(playerstats_db, key, playerstats_last);
-			strunzone(playerstats_last);
+			db_put(playerstats_db, key, teamstats_last);
+			strunzone(teamstats_last);
 		}
 		else
 			db_put(playerstats_db, key, "#");
-		playerstats_last = strzone(sprintf("team%d", t));
+		teamstats_last = strzone(key);
 	}
 }
 
@@ -157,6 +161,8 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 	M: map name
 	S: "hostname" of the server
 	C: number of "unpure" cvar changes
+    W: winning team ID
+	t: team ID; all following "P" lines will be players on this team
 	P: player ID of an existing player; this also sets the owner for all following "n" and "e" lines (lower case!)
 	n: nickname of the player (optional)
 	e: followed by an event name, a space, and the event count/score
@@ -169,14 +175,16 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 			total-<scoreboardname>: total score of that scoreboard item
 			scoreboard-<scoreboardname>: end-of-game score of that scoreboard item (can differ in non-team games)
 			achievement-<achievementname>: achievement counters
+            player-rank <number>: rank of player
 */
 
 //#NO AUTOCVARS START
 void PlayerStats_Shutdown()
 {
+    string t, tn;
 	string p, pn;
 	string e, en;
-	string nn;
+	string nn, tt;
 	float b;
 	float i;
 	string uri;
@@ -201,21 +209,50 @@ void PlayerStats_Shutdown()
 		bufstr_set(b, i++, sprintf("M %s", GetMapname()));
 		bufstr_set(b, i++, sprintf("S %s", cvar_string("hostname")));
 		bufstr_set(b, i++, sprintf("C %d", cvar_purechanges_count));
-		for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
-		{
-			bufstr_set(b, i++, sprintf("P %s", p));
-			nn = db_get(playerstats_db, sprintf("%s:_netname", p));
-			if(nn != "")
-				bufstr_set(b, i++, sprintf("n %s", nn));
-			for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
-			{
-				float v;
-				v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
-				if(v != 0)
-					bufstr_set(b, i++, sprintf("e %s %g", e, v));
-			}
-		}
-		bufstr_set(b, i++, "");
+        if(teams_matter)
+        {
+            for(t = teamstats_last; (tn = db_get(playerstats_db, sprintf("%s", t))) != ""; t = tn)
+            {
+                bufstr_set(b, i++, strcat("t ", t));
+                for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
+                {
+                    tt = db_get(playerstats_db, sprintf("%s:_team", p));
+                    if(t != tt)
+                        continue;
+
+                    bufstr_set(b, i++, sprintf("P %s", p));
+                    nn = db_get(playerstats_db, sprintf("%s:_netname", p));
+                    if(nn != "")
+                        bufstr_set(b, i++, sprintf("n %s", nn));
+                    for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
+                    {
+                        float v;
+                        v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
+                        if(v != 0)
+                            bufstr_set(b, i++, sprintf("e %s %g", e, v));
+                    }
+                }
+                bufstr_set(b, i++, "");
+            }
+            bufstr_set(b, i++, "");
+        }
+        else {
+            for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
+            {
+                bufstr_set(b, i++, sprintf("P %s", p));
+                nn = db_get(playerstats_db, sprintf("%s:_netname", p));
+                if(nn != "")
+                    bufstr_set(b, i++, sprintf("n %s", nn));
+                for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
+                {
+                    float v;
+                    v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
+                    if(v != 0)
+                        bufstr_set(b, i++, sprintf("e %s %g", e, v));
+                }
+            }
+            bufstr_set(b, i++, "");
+        }
 
 		if(autocvar_g_playerstats_debug)
 		{
@@ -256,6 +293,9 @@ void PlayerStats_AddGlobalInfo(entity p)
 	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
 
+    if(teams_matter)
+		db_put(playerstats_db, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
+
 	if(p.alivetime > 0)
 		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
@@ -274,7 +314,6 @@ void PlayerStats_EndMatch(float finished)
 		{
 			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
 			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
-			PlayerStats_Event(p, PLAYERSTATS_TEAM, p.team);
 		}
 	}
 }
