@@ -975,6 +975,7 @@ void PutClientInServer (void)
 		self.punchvector = '0 0 0';
 		self.oldvelocity = self.velocity;
 		self.fire_endtime = -1;
+		self.lastteleporttime = time;
 
 		msg_entity = self;
 		WRITESPECTATABLE_MSG_ONE({
