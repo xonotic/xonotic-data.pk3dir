@@ -23,7 +23,7 @@ void PlayerStats_Init()
 	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
 	PlayerStats_AddEvent(PLAYERSTATS_JOINS);
 	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
-	PlayerStats_AddEvent(PLAYERSTATS_TEAM);
+	PlayerStats_AddEvent(PLAYERSTATS_RANK);
 
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
@@ -175,7 +175,7 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 			total-<scoreboardname>: total score of that scoreboard item
 			scoreboard-<scoreboardname>: end-of-game score of that scoreboard item (can differ in non-team games)
 			achievement-<achievementname>: achievement counters
-            player-rank <number>: rank of player
+            rank <number>: rank of player
 */
 
 //#NO AUTOCVARS START
@@ -211,6 +211,9 @@ void PlayerStats_Shutdown()
 		bufstr_set(b, i++, sprintf("C %d", cvar_purechanges_count));
         if(teams_matter)
         {
+            entity winner;
+            winner = PlayerScore_Sort(score_dummyfield);
+            bufstr_set(b, i++, sprintf("W %d", winner.team));
             for(t = teamstats_last; (tn = db_get(playerstats_db, sprintf("%s", t))) != ""; t = tn)
             {
                 bufstr_set(b, i++, strcat("t ", t));
@@ -234,7 +237,6 @@ void PlayerStats_Shutdown()
                 }
                 bufstr_set(b, i++, "");
             }
-            bufstr_set(b, i++, "");
         }
         else {
             for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
@@ -305,7 +307,8 @@ void PlayerStats_AddGlobalInfo(entity p)
 
 void PlayerStats_EndMatch(float finished)
 {
-	entity p;
+	entity p, winner;
+    winner = PlayerScore_Sort(score_dummyfield);
 	FOR_EACH_PLAYER(p)
 	{
 		PlayerScore_PlayerStats(p);
@@ -314,6 +317,7 @@ void PlayerStats_EndMatch(float finished)
 		{
 			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
 			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
+			PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
 		}
 	}
 }
