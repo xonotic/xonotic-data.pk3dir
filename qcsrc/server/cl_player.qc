@@ -778,7 +778,7 @@ void shownames_think()
 float shownames_customize()
 {
     if(self.owner != other) // no need to spam own coordinates
-    //if(vlen(other.origin + self.origin) < autocvar_sv_shownames_cull_distance) // distance cull
+    if(vlen(other.origin - self.origin) < autocvar_sv_shownames_cull_distance) // distance cull
     if(self.owner.team == other.team || (self.owner.team != other.team && checkpvs(self.origin, other)))
         return TRUE;
 
