@@ -120,6 +120,7 @@ float cmd_floodcheck()
 	return FALSE;
 }
 
+.float checkfail;
 void SV_ParseClientCommand(string s) {
 	string cmd;
 	float tokens;
@@ -144,6 +145,9 @@ void SV_ParseClientCommand(string s) {
 		return;
 	} else if(GameCommand_MapVote(argv(0))) {
 		return;
+	} else if(cmd == "checkfail") {
+		print(sprintf("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1))));
+		self.checkfail = 1;
 	} else if(cmd == "autoswitch") {
 		// be backwards compatible with older clients (enabled)
 		self.autoswitch = ("0" != argv(1));
