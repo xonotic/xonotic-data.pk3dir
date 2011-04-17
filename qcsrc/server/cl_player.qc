@@ -732,60 +732,57 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 }
 
-void net_shownames(entity selected, float teammate)
+// sendflags use: 1 = origin, 2 = health/armor, 0x80 = same team (includes health), 4 = entity out of range/culled
+float SendEntity_ShowNames(entity to, float sendflags)
 {
-    float teammate_health, teammate_armor;
-    if(teammate)
-    {
-        teammate_health = selected.health;
-        teammate_armor = selected.armorvalue;
-    }
+    WriteByte(MSG_ENTITY, ENT_CLIENT_SHOWNAMES);
+    WriteByte(MSG_ENTITY, num_for_edict(self.owner));
 
-    msg_entity = self;
-	WRITESPECTATABLE_MSG_ONE({
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_SHOWNAMES);
-		WriteString(MSG_ONE, playername(selected));
-        WriteByte(MSG_ONE, teammate_health);
-        WriteByte(MSG_ONE, teammate_armor);
-        });
+    sendflags = sendflags & 127;
+    if(teams_matter && self.owner.team == to.team)
+        sendflags |= 128;
+    else
+        sendflags &~= 2;
+    WriteByte(MSG_ENTITY, sendflags);
+    if(sendflags & 1)
+    {
+        WriteShort(MSG_ENTITY, rint(self.origin_x));
+        WriteShort(MSG_ENTITY, rint(self.origin_y));
+        WriteShort(MSG_ENTITY, rint(self.origin_z));
+    }
+    if(sendflags & 2)
+    {
+        WriteByte(MSG_ENTITY, self.health);
+        WriteByte(MSG_ENTITY, self.armorvalue);
+    }
+    return TRUE;
 }
 
-void UpdateSelectedPlayer()
+const vector SHOWNAMES_ORIGIN_OFFSET = '0 0 48';
+void shownames_think()
 {
-    entity selected;
-    selected = world;
-
-	if(!autocvar_sv_allow_shownames)
-		return;
-
-	if(clienttype(self) != CLIENTTYPE_REAL)
-		return;
-
-	if(self.cvar_cl_shownames == 0)
-		return;
-
-	makevectors(self.v_angle); // sets v_forward
-
-	// cursor trace
-	if(self.selected_player_display_timeout < time)
+    if(self.origin - SHOWNAMES_ORIGIN_OFFSET != self.owner.origin)
     {
-        WarpZone_crosshair_trace(self);
-        if(trace_ent && trace_ent.classname == "player" && !trace_ent.deadflag)
-        {
-            selected = trace_ent;
-            self.last_selected_player = selected;
-            self.selected_player_display_timeout = time + 0.1; // update at 0.1s intervals
-        }
+        setorigin(self, self.owner.origin + SHOWNAMES_ORIGIN_OFFSET);
+        self.SendFlags |= 1;
     }
+    if(self.health != max(0, floor(self.owner.health)) || self.armorvalue != max(0, floor(self.owner.armorvalue)))
+    {
+        self.health = max(0, floor(self.owner.health));
+        self.armorvalue = max(0, floor(self.owner.armorvalue));
+        self.SendFlags |= 2;
+    }
+    self.nextthink = time;
+}
 
-	if(selected)
-	{
-        if(teams_matter && self.team == selected.team)
-                net_shownames(selected, 1);
-        else
-            net_shownames(selected, 0);
-    }
+float shownames_customize()
+{
+    if(self.owner != other) // no need to spam own coordinates
+    if(vlen(other.origin - self.origin) < autocvar_sv_shownames_cull_distance) // distance cull
+    if(self.owner.team == other.team || (self.owner.team != other.team && checkpvs(self.origin, other)))
+        return TRUE;
+
+    return FALSE;
 }
 
 .float muted; // to be used by prvm_edictset server playernumber muted 1

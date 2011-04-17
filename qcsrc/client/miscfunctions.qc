@@ -375,6 +375,33 @@ string ColorTranslateRGB(string s)
 		return s;
 }
 
+string Team_ColorCode(float teamid)
+{
+    if (teamid == COLOR_TEAM1)
+        return "^1";
+    else if (teamid == COLOR_TEAM2)
+        return "^4";
+    else if (teamid == COLOR_TEAM3)
+        return "^3";
+    else if (teamid == COLOR_TEAM4)
+        return "^6";
+    else
+        return "^7";
+}
+
+// decolorizes and team colors the player name when needed
+string playername(string thename, float teamid)
+{
+    string t;
+    if (teamplay)
+    {
+        t = Team_ColorCode(teamid);
+        return strcat(t, strdecolorize(thename));
+    }
+    else
+        return strdecolorize(thename);
+}
+
 float cvar_or(string cv, float v)
 {
 	string s;

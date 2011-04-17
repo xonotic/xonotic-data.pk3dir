@@ -907,6 +907,37 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
+void Ent_ShowNames()
+{
+    float sf;
+
+    // entity init, TODO can this be done only once somehow?
+    self.the_entnum = ReadByte(); // TODO: fixme to only send once somehow
+    self.draw2d = Draw_ShowNames;
+    //self.movetype = MOVETYPE_FLY; // movetype needed so we can traceline?
+    self.mins = '-20 -20 -24';
+    self.maxs = '20 20 45';
+
+    sf = ReadByte();
+
+    if(sf & 1)
+    {
+        self.origin_x = ReadShort();
+        self.origin_y = ReadShort();
+        self.origin_z = ReadShort();
+    }
+    if(sf & 2)
+    {
+        self.healthvalue = ReadByte();
+        self.armorvalue = ReadByte();
+    }
+
+    if(sf & 128) // same team
+        self.sameteam = TRUE;
+    else
+        self.sameteam = FALSE;
+}
+
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void Ent_RadarLink();
@@ -971,6 +1002,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
+		case ENT_CLIENT_SHOWNAMES: Ent_ShowNames(); break;
 		default:
 			error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			break;
@@ -1324,35 +1356,6 @@ void Net_WeaponComplain() {
 	weapontime = time; // ping the weapon panel
 }
 
-void Net_ShowNames()
-{
-    string thename;
-    float thehealth, thearmor;
-
-    if(shownames_netname)
-        strunzone(shownames_netname);
-    thename = strzone(ReadString());
-    thehealth = ReadByte();
-    thearmor = ReadByte();
-
-    if(autocvar_hud_panel_shownames == 1 && thehealth > 0) // teammates only
-    {
-        shownames_netname = thename;
-        shownames_health = thehealth;
-        shownames_armor = thearmor;
-
-        shownames_time = time + autocvar_hud_panel_shownames_sustain;
-    }
-    else if(autocvar_hud_panel_shownames == 2)
-    {
-        shownames_netname = thename;
-        shownames_health = thehealth;
-        shownames_armor = thearmor;
-
-        shownames_time = time + autocvar_hud_panel_shownames_sustain;
-    }
-}
-
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1423,10 +1426,6 @@ float CSQC_Parse_TempEntity()
 			Net_WeaponComplain();
 			bHandled = true;
 			break;
-		case TE_CSQC_SHOWNAMES:
-            Net_ShowNames();
-            bHandled = true;
-            break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;

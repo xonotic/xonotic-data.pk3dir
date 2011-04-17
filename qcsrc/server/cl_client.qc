@@ -1756,6 +1756,13 @@ void ClientConnect (void)
 	CheatInitClient();
 
 	PlayerStats_AddPlayer(self);
+
+    self.shownames = spawn();
+    self.shownames.owner = self;
+    self.shownames.think = shownames_think;
+    self.shownames.nextthink = time;
+	self.shownames.customizeentityforclient = shownames_customize;
+    Net_LinkEntity(self.shownames, FALSE, 0, SendEntity_ShowNames);
 }
 
 /*
@@ -1854,6 +1861,8 @@ void ClientDisconnect (void)
 
 	self.playerid = 0;
 	ReadyCount();
+
+    remove(self.shownames);
 
 	// free cvars
 	GetCvars(-1);
@@ -2708,9 +2717,6 @@ void PlayerPreThink (void)
 			self.teleport_time = 0;
 			self.effects = self.effects - (self.effects & EF_NODRAW);
 		}
-
-		if(frametime > 0) // don't do this in cl_movement frames, just in server ticks
-			UpdateSelectedPlayer();
 
 		//don't allow the player to turn around while game is paused!
 		if(timeoutStatus == 2) {

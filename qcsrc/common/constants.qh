@@ -63,7 +63,6 @@ const float TE_CSQC_NOTIFY = 112;
 const float TE_CSQC_WEAPONCOMPLAIN = 113;
 const float TE_CSQC_NEX_SCOPE = 116;
 const float TE_CSQC_MINELAYER_MAXMINES = 117;
-const float TE_CSQC_SHOWNAMES = 118;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -114,6 +113,7 @@ const float ENT_CLIENT_HOOK = 27;
 const float ENT_CLIENT_LGBEAM = 28;
 const float ENT_CLIENT_GAUNTLET = 29;
 const float ENT_CLIENT_ACCURACY = 30;
+const float ENT_CLIENT_SHOWNAMES = 31;
 
 const float ENT_CLIENT_TURRET = 40;
 
@@ -650,8 +650,7 @@ float HUD_PANEL_CHAT		= 12;
 float HUD_PANEL_ENGINEINFO	= 13;
 float HUD_PANEL_INFOMESSAGES	= 14;
 float HUD_PANEL_PHYSICS	= 15;
-float HUD_PANEL_SHOWNAMES	= 16;
-float HUD_PANEL_NUM		= 17; // always last panel id + 1, please increment when adding a new panel
+float HUD_PANEL_NUM		= 16; // always last panel id + 1, please increment when adding a new panel
 
 string HUD_PANELNAME_WEAPONS 		= "weapons";
 string HUD_PANELNAME_AMMO	 	= "ammo";
@@ -669,7 +668,6 @@ string HUD_PANELNAME_CHAT	 	= "chat";
 string HUD_PANELNAME_ENGINEINFO	 	= "engineinfo";
 string HUD_PANELNAME_INFOMESSAGES	= "infomessages";
 string HUD_PANELNAME_PHYSICS	= "physics";
-string HUD_PANELNAME_SHOWNAMES  	= "shownames";
 
 float HUD_MENU_ENABLE		= 0;
 
