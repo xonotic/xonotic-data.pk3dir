@@ -37,7 +37,7 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "hud_panel_physics_progressbar", 1, 3);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_physics_flip", _("Flip speed/acceleration positions")));
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_physics_flip", _("Flip speed/acceleration positions")));
 
 //speed
 	me.TR(me);

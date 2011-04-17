@@ -19,7 +19,7 @@ void XonoticHUDScoreDialog_fill(entity me)
 	DIALOG_HUDPANEL_COMMON();
 
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, "Score:"));
+		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, "Score:"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Rankings:"));
