@@ -29,7 +29,7 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, "Fade effect:"));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Fade effect:")));
 		setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_timeout_effect"))));
 				e.addValue(e, ZCTX(_("EF^None")),  "0");

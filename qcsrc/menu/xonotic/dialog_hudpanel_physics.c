@@ -41,7 +41,7 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 
 //speed
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Speed:"));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Speed:")));
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_physics_speed_vertical", _("Include vertical speed")));
 	// me.TR(me);
 		// me.TDempty(me, 0.2);
