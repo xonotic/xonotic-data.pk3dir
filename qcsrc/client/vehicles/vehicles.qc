@@ -173,10 +173,10 @@ void CSQC_BUMBLE_HUD()
 
     // Fetch health & ammo stats
 	HUD_GETSTATS
-	
+
     hudloc_y = 4;
     hudloc_x = 4;
-    
+
     picsize = drawgetimagesize(spider_h) * 0.5;
     drawpic(hudloc, spider_h, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 
@@ -202,12 +202,12 @@ void CSQC_BUMBLE_HUD()
     picsize = drawgetimagesize(spider_b) * 0.5;
     hudloc_y = 10.5;
     hudloc_x = 10.5;
-    
-    ammo1  /= 100; 
+
+    ammo1  /= 100;
     shield /= 100;
     health /= 100;
     reload2 /= 100;
-    
+
     drawpic(hudloc, spider_s, picsize, '1 1 1', shield, DRAWFLAG_NORMAL);
     drawpic(hudloc, spider_b, picsize, '0 1 0' * health + '1 0 0' * (1 - health), 1, DRAWFLAG_NORMAL);
     drawpic(hudloc, spider_r, picsize, '1 1 1' * reload2 + '1 0 0' * (1 - reload2), 1, DRAWFLAG_NORMAL);
@@ -236,10 +236,10 @@ void CSQC_SPIDER_HUD()
 
     // Fetch health & ammo stats
 	HUD_GETSTATS
-	
+
     hudloc_y = 4;
     hudloc_x = 4;
-    
+
     picsize = drawgetimagesize(spider_h) * 0.5;
     drawpic(hudloc, spider_h, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 
@@ -265,12 +265,12 @@ void CSQC_SPIDER_HUD()
     picsize = drawgetimagesize(spider_b) * 0.5;
     hudloc_y = 10.5;
     hudloc_x = 10.5;
-    
-    ammo1  /= 100; 
+
+    ammo1  /= 100;
     shield /= 100;
     health /= 100;
     reload2 /= 100;
-    
+
     drawpic(hudloc, spider_s, picsize, '1 1 1', shield, DRAWFLAG_NORMAL);
     drawpic(hudloc, spider_b, picsize, '0 1 0' * health + '1 0 0' * (1 - health), 1, DRAWFLAG_NORMAL);
     drawpic(hudloc, spider_r, picsize, '1 1 1' * reload2 + '1 0 0' * (1 - reload2), 1, DRAWFLAG_NORMAL);
@@ -297,15 +297,14 @@ void CSQC_RAPTOR_HUD()
 {
 	if(autocvar_r_letterbox)
         return;
-	
-	vector picsize, hudloc, vel;
-	float movedt;
+
+	vector picsize, hudloc;
     vector where;
 
 
     // Fetch health & ammo stats
     HUD_GETSTATS
-    
+
     // Draw the crosshairs
     picsize = drawgetimagesize("gfx/vehicles/axh-cross.tga");
     picsize_x *= 0.75;
@@ -428,9 +427,9 @@ void CSQC_WAKIZASHI_HUD()
 	energy  = min(getstatf(STAT_VEHICLESTAT_ENERGY),  1);
 	rockets = bound(0,getstatf(STAT_VEHICLESTAT_RELOAD1), 1);
 	*/
-    
+
     HUD_GETSTATS
-    
+
     hudloc_y =  4;
     hudloc_x = 4;
 
@@ -461,12 +460,12 @@ void CSQC_WAKIZASHI_HUD()
     picsize = drawgetimagesize(waki_b) * 0.5;
     hudloc_y = 10.5;
     hudloc_x = 10.5;
-    
+
     health /= 100;
     energy /= 100;
     shield /= 100;
     reload1 /= 100;
-    
+
     drawpic(hudloc, waki_s, picsize, '1 1 1', shield, DRAWFLAG_NORMAL);
     drawpic(hudloc, waki_b, picsize, '0 1 0' * health + '1 0 0'  * (1 - health), 1, DRAWFLAG_NORMAL);
     drawpic(hudloc, waki_r, picsize, '1 1 1' * reload1 + '1 0 0' * (1 - reload1), 1, DRAWFLAG_NORMAL);
@@ -489,7 +488,6 @@ void Vehicles_Precache()
 	precache_model("models/vehicles/rocket02.md3");
 }
 
-
 void RaptorCBShellfragDraw()
 {
 	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
@@ -505,6 +503,7 @@ void RaptorCBShellfragDraw()
         remove(self);
 
 }
+
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 {
     entity sfrag;
@@ -530,6 +529,4 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 	sfrag.nextthink = time + 3;
 	sfrag.cnt = time + 2;
     sfrag.drawmask = MASK_NORMAL;
-
-
 }

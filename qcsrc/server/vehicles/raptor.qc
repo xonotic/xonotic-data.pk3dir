@@ -1,3 +1,4 @@
+#fdef SVQC
 #define RAPTOR_MIN '-80 -80 0'
 #define RAPTOR_MAX '80 80 70'
 
@@ -95,7 +96,7 @@ void raptor_bomb_burst()
 {
     if(self.cnt > time)
     if(autocvar_g_vehicle_raptor_bomblet_alt)
-    {        
+    {
         self.nextthink = time;
         traceline(self.origin, self.origin + (normalize(self.velocity) * autocvar_g_vehicle_raptor_bomblet_alt), MOVE_NORMAL, self);
         if((trace_fraction == 1.0) || (vlen(self.origin - self.owner.origin) < autocvar_g_vehicle_raptor_bomblet_radius))
@@ -110,9 +111,9 @@ void raptor_bomb_burst()
 
     //sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     //pointparticles(particleeffectnum("raptor_bomb_spread"), self.origin, self.velocity, 1);
-    
+
     Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_RAPTOR_BOMB_SPLIT, self);
-    
+
     for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
     {
         bomblet = spawn();
@@ -125,7 +126,7 @@ void raptor_bomb_burst()
         bomblet.owner       = self.owner;
         bomblet.realowner   = self.realowner;
         bomblet.velocity    = normalize(normalize(self.velocity) + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * vlen(self.velocity);
-        
+
         PROJECTILE_MAKETRIGGER(bomblet);
         CSQCProjectile(bomblet, TRUE, PROJECTILE_RAPTORBOMBLET, TRUE);
     }
@@ -179,7 +180,7 @@ void raptor_bombdrop()
 void raptor_fire_cannon(entity gun, string tagname)
 {
     entity bolt;
-    vector b_org;    
+    vector b_org;
     b_org = gettaginfo(gun, gettagindex(gun, tagname));
     bolt = vehicles_projectile("raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
                            b_org, normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
@@ -234,7 +235,7 @@ void raptor_land()
 void raptor_exit(float eject)
 {
     self.tur_head.exteriormodeltoclient = world;
-    
+
     if(self.deadflag == DEAD_NO)
     {
         self.think      = raptor_land;
@@ -529,7 +530,7 @@ float raptor_frame()
         raptor.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
         raptor.lip   = time;
     }
-    
+
     raptor.bomb1.alpha = raptor.bomb2.alpha = (time - raptor.lip) / (raptor.delay - raptor.lip);
     player.vehicle_reload2 = bound(0, raptor.bomb1.alpha * 100, 100);
 
@@ -629,7 +630,7 @@ void raptor_dinit()
              raptor_spawn, autocvar_g_vehicle_raptor_respawntime,
              raptor_frame,
              raptor_enter, raptor_exit,
-             raptor_die,   raptor_think, 
+             raptor_die,   raptor_think,
              FALSE))
     {
         remove(self);
@@ -645,7 +646,7 @@ void raptor_dinit()
     self.bomb2 = spawn();
     self.gun1  = spawn();
     self.gun2  = spawn();
-            
+
 #ifdef RAPTOR_RETARDCAMERA
     setattachment(self.vehicle_viewport, world, "");
 #endif
@@ -695,11 +696,11 @@ void raptor_dinit()
     spinner.movetype = MOVETYPE_NOCLIP;
     spinner.avelocity = '0 -90 0';
     self.bomb1.gun2 = spinner;
-    
+
     // Sigh.
     self.bomb1.think = raptor_rotor_anglefix;
     self.bomb1.nextthink = time;
-    
+
     self.mass               = 1 ;
 }
 
@@ -730,3 +731,26 @@ void spawnfunc_vehicle_raptor()
     self.think = raptor_dinit;
     self.nextthink = time + 1;
 }
+#endif // SVQC
+
+#ifdef CSQC
+void raptor_draw()
+{
+
+}
+
+void raptor_draw2d()
+{
+
+}
+
+void raptor_read_extra()
+{
+
+}
+
+void vehicle_raptor_assemble()
+{
+
+}
+#endif //CSQC

@@ -1,6 +1,7 @@
 const vector SPIDERBOT_MIN = '-75 -75 10';
 const vector SPIDERBOT_MAX  = '75 75 125';
 
+#ifdef SVQC
 float autocvar_g_vehicle_spiderbot_respawntime;
 
 float autocvar_g_vehicle_spiderbot_speed_stop;
@@ -312,7 +313,7 @@ float spiderbot_frame()
 
     self.angles_x = bound(-45, self.angles_x, 45);
     self.angles_z = bound(-45, self.angles_z, 45);
-    
+
     if(player.BUTTON_ATCK)
     {
         spider.cnt = time;
@@ -321,9 +322,9 @@ float spiderbot_frame()
             entity gun;
             vector v;
             spider.misc_bulletcounter += 1;
-            
+
             self = player;
-            
+
             mod(spider.misc_bulletcounter, 2) ? gun = spider.gun1 : gun = spider.gun2;
             v = gettaginfo(gun, gettagindex(gun, "barrels"));
             v_forward = normalize(v_forward);
@@ -335,9 +336,9 @@ float spiderbot_frame()
             sound (gun, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
             trailparticles(self, particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
             pointparticles(particleeffectnum("spiderbot_minigun_muzzleflash"), v, v_forward * 2500, 1);
-            
+
             self = spider;
-            
+
             spider.vehicle_ammo1 -= autocvar_g_vehicle_spiderbot_minigun_ammo_cost;
             spider.tur_head.attack_finished_single = time + autocvar_g_vehicle_spiderbot_minigun_refire;
             player.vehicle_ammo1 = (spider.vehicle_ammo1 / autocvar_g_vehicle_spiderbot_minigun_ammo_max) * 100;
@@ -347,7 +348,7 @@ float spiderbot_frame()
         vehicles_regen(cnt, vehicle_ammo1, autocvar_g_vehicle_spiderbot_minigun_ammo_max,
                                            autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause,
                                            autocvar_g_vehicle_spiderbot_minigun_ammo_regen, frametime);
-    
+
     spiderbot_rocket_do();
 
     if(self.vehicle_flags  & VHF_SHIELDREGEN)
@@ -590,7 +591,7 @@ void vewhicle_spiderbot_dinit()
              spiderbot_spawn, autocvar_g_vehicle_spiderbot_respawntime,
              spiderbot_frame,
              spiderbot_enter, spiderbot_exit,
-             spiderbot_die,   spiderbot_think, 
+             spiderbot_die,   spiderbot_think,
              FALSE))
     {
         remove(self);
@@ -636,3 +637,26 @@ void spawnfunc_vehicle_spiderbot()
     self.think = vewhicle_spiderbot_dinit;
     self.nextthink = time + 0.5;
 }
+#endif // SVQC
+
+#ifdef CSQC
+void spiderbot_draw()
+{
+
+}
+
+void spiderbot_draw2d()
+{
+
+}
+
+void spiderbot_read_extra()
+{
+
+}
+
+void vehicle_spiderbot_assemble()
+{
+
+}
+#endif //CSQC

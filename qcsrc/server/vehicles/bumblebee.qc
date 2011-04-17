@@ -1,3 +1,4 @@
+#ifdef SVQC
 // Auto cvars
 float autocvar_g_vehicle_bumblebee_speed_forward;
 float autocvar_g_vehicle_bumblebee_speed_strafe;
@@ -52,27 +53,27 @@ float bumb_gunner_frame()
     entity vehic, gun, gunner;
     float ftmp, ftmp2;
     vector vtmp;
-    
+
     vehic   = self.vehicle;
     gun     = self.vehicle.gun1;
     gunner  = self;
-    
+
     self    = vehic;
-    vehic.solid = SOLID_NOT;    
+    vehic.solid = SOLID_NOT;
     crosshair_trace(gunner);
-    
+
     //vtmp = gettaginfo(vehic, gettagindexvehic, "tag_hardpoint01"));
     vtmp = gettaginfo(gun, gettagindex(gun, "muzzle"));
     vtmp = vectoangles(normalize(trace_endpos - vtmp)); // Find the direction & angle
     vtmp = shortangle_vxy(vtmp - (vehic.angles + gun.angles), vehic.angles + gun.angles);     // Find aim offset
-    
+
     // Bind to aimspeed
     ftmp2 = autocvar_g_vehicle_bumblebee_cannon_turnspeed * frametime; ftmp = -ftmp2;
     vtmp_x = bound(ftmp, vtmp_x, ftmp2);
     vtmp_y = bound(ftmp, vtmp_y, ftmp2);
     // Bind to limts
     gun.angles_x = bound(-autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down, vtmp_x + gun.angles_x, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up);
-    gun.angles_y = bound(-autocvar_g_vehicle_bumblebee_cannon_turnlimit_in,  vtmp_y + gun.angles_y, autocvar_g_vehicle_bumblebee_cannon_turnlimit_out);    
+    gun.angles_y = bound(-autocvar_g_vehicle_bumblebee_cannon_turnlimit_in,  vtmp_y + gun.angles_y, autocvar_g_vehicle_bumblebee_cannon_turnlimit_out);
 
     if(gunner.BUTTON_ATCK && gun.cnt <= time)
     {
@@ -82,14 +83,14 @@ float bumb_gunner_frame()
 
         fireBullet (vtmp, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_damage,
             autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_SBMINIGUN, 0);
-        
+
         gun.cnt = time + 0.1;
     }
-    
+
     setorigin(gunner, vehic.origin);
     gunner.velocity = vehic.velocity;
-    
-    vehic.solid = SOLID_BBOX;    
+
+    vehic.solid = SOLID_BBOX;
     gunner.BUTTON_ATCK = gunner.BUTTON_ATCK2 = gunner.BUTTON_CROUCH = 0;
     self = gunner;
     return 1;
@@ -99,7 +100,7 @@ void bumb_gunner_enter()
 {
     if(self.gunner1 != world)
         return;
-    
+
     self.gunner1         = other;
     self.gunner1.vehicle = self;
 
@@ -120,7 +121,7 @@ float bumb_pilot_frame()
 {
     entity pilot, gunner, vehic;
     vector newvel;
-    
+
     pilot = self;
     vehic = self.vehicle;
     self   = vehic;
@@ -141,10 +142,10 @@ float bumb_pilot_frame()
     }
 
     crosshair_trace(pilot);
-    
+
     vector vang;
     float ftmp;
-    
+
     vang = vehic.angles;
     newvel = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
     vang_x *= -1;
@@ -188,7 +189,7 @@ float bumb_pilot_frame()
             newvel -= v_right * autocvar_g_vehicle_bumblebee_speed_strafe;
         else if(pilot.movement_y > 0)
             newvel += v_right * autocvar_g_vehicle_bumblebee_speed_strafe;
-        ftmp = newvel * v_right;        
+        ftmp = newvel * v_right;
         ftmp *= frametime * 0.1;
         vehic.angles_z = bound(-15, vehic.angles_z + ftmp, 15);
     }
@@ -225,7 +226,7 @@ float bumb_pilot_frame()
 
     pilot.BUTTON_ATCK = pilot.BUTTON_ATCK2 = pilot.BUTTON_CROUCH = 0;
     self = pilot;
-    
+
     return 1;
 }
 
@@ -247,7 +248,7 @@ void bumb_exit(float eject)
 }
 
 void bumb_spawn()
-{    
+{
     self.vehicle_health = autocvar_g_vehicle_bumblebee_health;
     self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
     self.movetype       = MOVETYPE_TOSS;
@@ -293,16 +294,16 @@ void bumb_dinit()
     self.gun1 = spawn();
     setmodel(self.gun1, "models/vehicles/bumblebee_ray.dpm");
     setattachment(self.gun1, self, "tag_hardpoint03");
-    
+
     self.gun1 = spawn();
     self.gun2 = spawn();
-    
+
     self.gun1.owner = self;
     self.gun2.owner = self;
-    
+
     setmodel(self.gun1, "models/vehicles/bumblebee_plasma_right.dpm");
     setmodel(self.gun2, "models/vehicles/bumblebee_plasma_left.dpm");
-    
+
     setattachment(self.gun1, self, "tag_hardpoint01");
     setattachment(self.gun2, self, "tag_hardpoint02");
 
@@ -311,7 +312,7 @@ void bumb_dinit()
     ofs -= self.origin;
     setattachment(self.gun1, self, "");
     setorigin(self.gun1, ofs);
-    
+
     ofs = gettaginfo(self, gettagindex(self, "tag_hardpoint02"));
     ofs -= self.origin;
     setattachment(self.gun2, self, "");
@@ -329,7 +330,7 @@ void spawnfunc_vehicle_bumblebee()
     precache_model ("models/vehicles/bumblebee_ray.dpm");
 
     //vehicles_configcheck("vehicle_bumblebee.cfg", autocvar_g_vehicle_bumblebee_health);
-    
+
     if(autocvar_g_vehicle_bumblebee_energy)
         if(autocvar_g_vehicle_bumblebee_energy_regen)
             self.vehicle_flags |= VHF_ENERGYREGEN;
@@ -344,5 +345,28 @@ void spawnfunc_vehicle_bumblebee()
         self.vehicle_flags |= VHF_HEALTHREGEN;
 
     self.think = bumb_dinit;
-    self.nextthink = time + 1;    
+    self.nextthink = time + 1;
 }
+#endif // SVQC
+
+#ifdef CSQC
+void bumblebee_draw()
+{
+
+}
+
+void bumblebee_draw2d()
+{
+
+}
+
+void bumblebee_read_extra()
+{
+
+}
+
+void vehicle_bumblebee_assemble()
+{
+
+}
+#endif //CSQC

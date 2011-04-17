@@ -1,4 +1,4 @@
-// #define VEHICLES_CSQC
+#define VEHICLES_CSQC
 // #define VEHICLES_USE_ODE
 #define VEHICLES_ENABLED
 #ifdef VEHICLES_ENABLED
@@ -14,15 +14,15 @@ float VHF_HEALTHREGEN   = 16;   /// Vehicles health regenerates
 float VHF_ENERGYREGEN   = 32;   /// Vehicles energy regenerates
 float VHF_DEATHEJECT    = 64;   /// Vehicle ejects pilot upon fatal damage
 float VHF_MOVE_GROUND   = 128;  /// Vehicle moves on gound
-float VHF_MOVE_HOVER    = 256;  /// Vehicle hover close to gound 
+float VHF_MOVE_HOVER    = 256;  /// Vehicle hover close to gound
 float VHF_MOVE_FLY      = 512;  /// Vehicle is airborn
 
 .entity gun1;
 .entity gun2;
 
-.float vehicle_health;      /// If self is player this is 0..1 indicating precentage of health left on vehicle. If self is vehile, this is the real health value.
-.float vehicle_energy;      /// If self is player this is 0..1 indicating precentage of energy left on vehicle. If self is vehile, this is the real energy value.
-.float vehicle_shield;      /// If self is player this is 0..1 indicating precentage of shield left on vehicle. If self is vehile, this is the real shield value.
+.float vehicle_health;      /// If self is player this is 0..100 indicating precentage of health left on vehicle. If self is vehile, this is the real health value.
+.float vehicle_energy;      /// If self is player this is 0..100 indicating precentage of energy left on vehicle. If self is vehile, this is the real energy value.
+.float vehicle_shield;      /// If self is player this is 0..100 indicating precentage of shield left on vehicle. If self is vehile, this is the real shield value.
 .entity vehicle_shieldent;  /// Entity to disply the shild effect on damage
 
 .float vehicle_ammo1;   /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real ammo1 value.
@@ -54,7 +54,7 @@ var .void() vehicle_die;    /// Vehicles custom function to be executed when veh
 var .void() vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
 
 #ifdef VEHICLES_CSQC
-var .void(entity to, float sflags) vehile_send_exta;  /// Vehicles custom send code (for extra bits, stats and whatnot)
+var .void(entity to, float sflags) vehile_send_exta;  /// Vehicles custom send func
 void net_link_vehile();                 /// Initiates csqc networking for vehicle
 #endif //VEHICLES_CSQC
 #endif //SVQC
@@ -62,10 +62,10 @@ void net_link_vehile();                 /// Initiates csqc networking for vehicl
 #ifdef CSQC
 #ifdef VEHICLES_CSQC
 .float vehicle_hud;
-void vehicle_spiderbot_assemble() {};
-void vehicle_racer_assemble() {};
-void vehicle_raptor_assemble() {};
-void vehicle_bumblebee_assemble() {};
+void vehicle_spiderbot_assemble();
+void vehicle_racer_assemble();
+void vehicle_raptor_assemble();
+void vehicle_bumblebee_assemble();
 void Net_ReadVehicle(float bIsNew);
 var .void (float sf)vehile_read_exta;
 #endif //VEHICLES_CSQC

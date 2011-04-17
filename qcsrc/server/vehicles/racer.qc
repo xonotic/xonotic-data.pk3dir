@@ -336,7 +336,7 @@ float racer_frame()
     ftmp = racer.velocity_z;
     df = racer.velocity * -autocvar_g_vehicle_racer_friction;
     racer.velocity_z = ftmp;
-    
+
     if(player.movement_x != 0)
     {
         if(player.movement_x > 0)
@@ -352,7 +352,7 @@ float racer_frame()
         else if(player.movement_y > 0)
             df += v_right * autocvar_g_vehicle_racer_speed_strafe;
     }
-    
+
     // Afterburn
     if (player.BUTTON_JUMP)
     if(racer.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * frametime))
@@ -597,7 +597,7 @@ void racer_die()
 #ifdef VEHICLES_CSQC
 void racer_send_exta(entity to)
 {
-    
+
 }
 #endif
 
@@ -615,7 +615,7 @@ void racer_dinit()
              racer_spawn, autocvar_g_vehicle_racer_respawntime,
              racer_frame,
              racer_enter, racer_exit,
-             racer_die,   racer_think, 
+             racer_die,   racer_think,
              FALSE))
     {
         remove(self);
@@ -668,8 +668,23 @@ void spawnfunc_vehicle_racer()
 #endif // SVQC
 
 #ifdef CSQC
+void racer_draw()
+{
+
+}
+
+void racer_draw2d()
+{
+
+}
+
 void racer_read_extra()
 {
-    
+
+}
+
+void vehicle_racer_assemble()
+{
+
 }
 #endif //CSQC
