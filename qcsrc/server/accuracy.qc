@@ -80,7 +80,7 @@ void accuracy_set(entity e, float w, float fired, float hit)
 
     if(hit)
         a.(accuracy_cnt_hit[w]) = 1;
-	a.(accuracy_cnt_fired[w]) = 1;
+    a.(accuracy_cnt_fired[w]) = 1;
 
 	if(b == accuracy_byte(hit, fired))
 		return;
@@ -91,6 +91,9 @@ void accuracy_set(entity e, float w, float fired, float hit)
 			if(a.enemy == e)
 				a.SendFlags |= w;
 }
+
+.float hit_time;
+.float fired_time;
 
 void accuracy_add(entity e, float w, float fired, float hit)
 {
@@ -106,9 +109,17 @@ void accuracy_add(entity e, float w, float fired, float hit)
 	if(fired)
 		a.(accuracy_fired[w]) += fired;
 
-    if(hit)
+    if(hit && a.hit_time != time) // only run this once per frame
+    {
         a.(accuracy_cnt_hit[w]) += 1;
-	a.(accuracy_cnt_fired[w]) += 1;
+        a.hit_time = time;
+    }
+
+    if(fired && a.fired_time != time) // only run this once per frame
+    {
+        a.(accuracy_cnt_fired[w]) += 1;
+        a.fired_time = time;
+    }
 
 	if(b == accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w])))
 		return;
