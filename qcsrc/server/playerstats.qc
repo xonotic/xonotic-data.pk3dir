@@ -25,6 +25,37 @@ void PlayerStats_Init()
 	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
 	PlayerStats_AddEvent(PLAYERSTATS_RANK);
 
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_LASER_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_LASER_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_SHOTGUN_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_SHOTGUN_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_UZI_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_UZI_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_GRENADE_LAUNCHER_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_GRENADE_LAUNCHER_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_ELECTRO_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_ELECTRO_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_CRYLINK_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_CRYLINK_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_NEX_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_NEX_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_HAGAR_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_HAGAR_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_ROCKET_LAUNCHER_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_ROCKET_LAUNCHER_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_MINSTANEX_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_MINSTANEX_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_SNIPERRIFLE_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_SNIPERRIFLE_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_FIREBALL_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_FIREBALL_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_MINE_LAYER_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_MINE_LAYER_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_SEEKER_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_SEEKER_FIRED);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_TUBA_HIT);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_TUBA_FIRED);
+
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10);
@@ -305,6 +336,43 @@ void PlayerStats_AddGlobalInfo(entity p)
 	p.playerstats_id = string_null;
 }
 
+void PlayerStats_Accuracy(entity p)
+{
+    entity a;
+    a = p.accuracy;
+
+    PlayerStats_Event(p, PLAYERSTATS_ACC_LASER_HIT, a.accuracy_hit[WEP_LASER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_LASER_FIRED, a.accuracy_fired[WEP_LASER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_SHOTGUN_HIT, a.accuracy_hit[WEP_SHOTGUN-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_SHOTGUN_FIRED, a.accuracy_fired[WEP_SHOTGUN-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_UZI_HIT, a.accuracy_hit[WEP_UZI-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_UZI_FIRED, a.accuracy_fired[WEP_UZI-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_GRENADE_LAUNCHER_HIT, a.accuracy_hit[WEP_GRENADE_LAUNCHER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_GRENADE_LAUNCHER_FIRED, a.accuracy_fired[WEP_GRENADE_LAUNCHER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_ELECTRO_HIT, a.accuracy_hit[WEP_ELECTRO-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_ELECTRO_FIRED, a.accuracy_fired[WEP_ELECTRO-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_CRYLINK_HIT, a.accuracy_hit[WEP_CRYLINK-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_CRYLINK_FIRED, a.accuracy_fired[WEP_CRYLINK-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_NEX_HIT, a.accuracy_hit[WEP_NEX-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_NEX_FIRED, a.accuracy_fired[WEP_NEX-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_HAGAR_HIT, a.accuracy_hit[WEP_HAGAR-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_HAGAR_FIRED, a.accuracy_fired[WEP_HAGAR-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_ROCKET_LAUNCHER_HIT, a.accuracy_hit[WEP_ROCKET_LAUNCHER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_ROCKET_LAUNCHER_FIRED, a.accuracy_fired[WEP_ROCKET_LAUNCHER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_MINSTANEX_HIT, a.accuracy_hit[WEP_MINSTANEX-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_MINSTANEX_FIRED, a.accuracy_fired[WEP_MINSTANEX-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_SNIPERRIFLE_HIT, a.accuracy_hit[WEP_SNIPERRIFLE-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_SNIPERRIFLE_FIRED, a.accuracy_fired[WEP_SNIPERRIFLE-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_FIREBALL_HIT, a.accuracy_hit[WEP_FIREBALL-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_FIREBALL_FIRED, a.accuracy_fired[WEP_FIREBALL-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_MINE_LAYER_HIT, a.accuracy_hit[WEP_MINE_LAYER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_MINE_LAYER_FIRED, a.accuracy_fired[WEP_MINE_LAYER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_SEEKER_HIT, a.accuracy_hit[WEP_SEEKER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_SEEKER_FIRED, a.accuracy_fired[WEP_SEEKER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_TUBA_HIT, a.accuracy_hit[WEP_TUBA-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_TUBA_FIRED, a.accuracy_fired[WEP_TUBA-1]);
+}
+
 void PlayerStats_EndMatch(float finished)
 {
 	entity p, winner;
@@ -312,6 +380,7 @@ void PlayerStats_EndMatch(float finished)
 	FOR_EACH_PLAYER(p)
 	{
 		PlayerScore_PlayerStats(p);
+		PlayerStats_Accuracy(p);
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
 		if(finished)
 		{

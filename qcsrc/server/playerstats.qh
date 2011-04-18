@@ -6,6 +6,37 @@ string PLAYERSTATS_JOINS = "joins";
 string PLAYERSTATS_SCOREBOARD_VALID = "scoreboardvalid";
 string PLAYERSTATS_RANK = "rank";
 
+string PLAYERSTATS_ACC_LASER_HIT = "acc-laser-hit";
+string PLAYERSTATS_ACC_LASER_FIRED = "acc-laser-fired";
+string PLAYERSTATS_ACC_SHOTGUN_HIT = "acc-sg-hit";
+string PLAYERSTATS_ACC_SHOTGUN_FIRED = "acc-sg-fired";
+string PLAYERSTATS_ACC_UZI_HIT = "acc-uzi-hit";
+string PLAYERSTATS_ACC_UZI_FIRED = "acc-uzi-fired";
+string PLAYERSTATS_ACC_GRENADE_LAUNCHER_HIT = "acc-gl-hit";
+string PLAYERSTATS_ACC_GRENADE_LAUNCHER_FIRED = "acc-gl-fired";
+string PLAYERSTATS_ACC_ELECTRO_HIT = "acc-electro-hit";
+string PLAYERSTATS_ACC_ELECTRO_FIRED = "acc-electro-fired";
+string PLAYERSTATS_ACC_CRYLINK_HIT = "acc-crylink-hit";
+string PLAYERSTATS_ACC_CRYLINK_FIRED = "acc-crylink-fired";
+string PLAYERSTATS_ACC_NEX_HIT = "acc-nex-hit";
+string PLAYERSTATS_ACC_NEX_FIRED = "acc-nex-fired";
+string PLAYERSTATS_ACC_HAGAR_HIT = "acc-hagar-hit";
+string PLAYERSTATS_ACC_HAGAR_FIRED = "acc-hagar-fired";
+string PLAYERSTATS_ACC_ROCKET_LAUNCHER_HIT = "acc-rl-hit";
+string PLAYERSTATS_ACC_ROCKET_LAUNCHER_FIRED = "acc-rl-fired";
+string PLAYERSTATS_ACC_MINSTANEX_HIT = "acc-minstanex-hit";
+string PLAYERSTATS_ACC_MINSTANEX_FIRED = "acc-minstanex-fired";
+string PLAYERSTATS_ACC_SNIPERRIFLE_HIT = "acc-rifle-hit";
+string PLAYERSTATS_ACC_SNIPERRIFLE_FIRED = "acc-rifle-fired";
+string PLAYERSTATS_ACC_FIREBALL_HIT = "acc-fireball-hit";
+string PLAYERSTATS_ACC_FIREBALL_FIRED = "acc-fireball-fired";
+string PLAYERSTATS_ACC_MINE_LAYER_HIT = "acc-minelayer-hit";
+string PLAYERSTATS_ACC_MINE_LAYER_FIRED = "acc-minelayer-fired";
+string PLAYERSTATS_ACC_SEEKER_HIT = "acc-seeker-hit";
+string PLAYERSTATS_ACC_SEEKER_FIRED = "acc-seeker-fired";
+string PLAYERSTATS_ACC_TUBA_HIT = "acc-tuba-hit";
+string PLAYERSTATS_ACC_TUBA_FIRED = "acc-tuba-fired";
+
 string PLAYERSTATS_TOTAL = "total-";
 string PLAYERSTATS_SCOREBOARD = "scoreboard-";
 
