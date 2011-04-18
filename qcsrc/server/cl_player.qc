@@ -1,3 +1,7 @@
+.entity accuracy;
+.float accuracy_frags[WEP_MAXCOUNT];
+FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_frags);
+
 float weaponstats_buffer;
 
 void WeaponStats_Init()
@@ -614,6 +618,14 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
 		DropAllRunes(self);
+
+        // increment frag counter for used weapon type
+        float w;
+        w = DEATH_WEAPONOF(deathtype);
+        if(WEP_VALID(w))
+        if(self.classname == "player")
+        if(self != attacker)
+        attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
 		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
 		{

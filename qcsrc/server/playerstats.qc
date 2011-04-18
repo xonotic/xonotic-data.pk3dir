@@ -87,6 +87,22 @@ void PlayerStats_Init()
 	PlayerStats_AddEvent(PLAYERSTATS_ACC_TUBA_CNT_HIT);
 	PlayerStats_AddEvent(PLAYERSTATS_ACC_TUBA_CNT_FIRED);
 
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_LASER_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_SHOTGUN_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_UZI_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_GRENADE_LAUNCHER_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_ELECTRO_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_CRYLINK_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_NEX_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_HAGAR_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_ROCKET_LAUNCHER_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_MINSTANEX_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_SNIPERRIFLE_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_FIREBALL_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_MINE_LAYER_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_SEEKER_FRAGS);
+	PlayerStats_AddEvent(PLAYERSTATS_ACC_TUBA_FRAGS);
+
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10);
@@ -433,6 +449,22 @@ void PlayerStats_Accuracy(entity p)
     PlayerStats_Event(p, PLAYERSTATS_ACC_SEEKER_CNT_FIRED, a.accuracy_cnt_fired[WEP_SEEKER-1]);
     PlayerStats_Event(p, PLAYERSTATS_ACC_TUBA_CNT_HIT, a.accuracy_cnt_hit[WEP_TUBA-1]);
     PlayerStats_Event(p, PLAYERSTATS_ACC_TUBA_CNT_FIRED, a.accuracy_cnt_fired[WEP_TUBA-1]);
+
+    PlayerStats_Event(p, PLAYERSTATS_ACC_LASER_FRAGS, a.accuracy_frags[WEP_LASER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_SHOTGUN_FRAGS, a.accuracy_frags[WEP_SHOTGUN-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_UZI_FRAGS, a.accuracy_frags[WEP_UZI-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_GRENADE_LAUNCHER_FRAGS, a.accuracy_frags[WEP_GRENADE_LAUNCHER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_ELECTRO_FRAGS, a.accuracy_frags[WEP_ELECTRO-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_CRYLINK_FRAGS, a.accuracy_frags[WEP_CRYLINK-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_NEX_FRAGS, a.accuracy_frags[WEP_NEX-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_HAGAR_FRAGS, a.accuracy_frags[WEP_HAGAR-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_ROCKET_LAUNCHER_FRAGS, a.accuracy_frags[WEP_ROCKET_LAUNCHER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_MINSTANEX_FRAGS, a.accuracy_frags[WEP_MINSTANEX-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_SNIPERRIFLE_FRAGS, a.accuracy_frags[WEP_SNIPERRIFLE-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_FIREBALL_FRAGS, a.accuracy_frags[WEP_FIREBALL-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_MINE_LAYER_FRAGS, a.accuracy_frags[WEP_MINE_LAYER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_SEEKER_FRAGS, a.accuracy_frags[WEP_SEEKER-1]);
+    PlayerStats_Event(p, PLAYERSTATS_ACC_TUBA_FRAGS, a.accuracy_frags[WEP_TUBA-1]);
 }
 
 void PlayerStats_EndMatch(float finished)

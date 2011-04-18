@@ -68,6 +68,22 @@ string PLAYERSTATS_ACC_SEEKER_CNT_FIRED = "acc-seeker-cnt-fired";
 string PLAYERSTATS_ACC_TUBA_CNT_HIT = "acc-tuba-cnt-hit";
 string PLAYERSTATS_ACC_TUBA_CNT_FIRED = "acc-tuba-cnt-fired";
 
+string PLAYERSTATS_ACC_LASER_FRAGS = "acc-laser-frags";
+string PLAYERSTATS_ACC_SHOTGUN_FRAGS = "acc-sg-frags";
+string PLAYERSTATS_ACC_UZI_FRAGS = "acc-uzi-frags";
+string PLAYERSTATS_ACC_GRENADE_LAUNCHER_FRAGS = "acc-gl-frags";
+string PLAYERSTATS_ACC_ELECTRO_FRAGS = "acc-electro-frags";
+string PLAYERSTATS_ACC_CRYLINK_FRAGS = "acc-crylink-frags";
+string PLAYERSTATS_ACC_NEX_FRAGS = "acc-nex-frags";
+string PLAYERSTATS_ACC_HAGAR_FRAGS = "acc-hagar-frags";
+string PLAYERSTATS_ACC_ROCKET_LAUNCHER_FRAGS = "acc-rl-frags";
+string PLAYERSTATS_ACC_MINSTANEX_FRAGS = "acc-minstanex-frags";
+string PLAYERSTATS_ACC_SNIPERRIFLE_FRAGS = "acc-rifle-frags";
+string PLAYERSTATS_ACC_FIREBALL_FRAGS = "acc-fireball-frags";
+string PLAYERSTATS_ACC_MINE_LAYER_FRAGS = "acc-minelayer-frags";
+string PLAYERSTATS_ACC_SEEKER_FRAGS = "acc-seeker-frags";
+string PLAYERSTATS_ACC_TUBA_FRAGS = "acc-tuba-frags";
+
 string PLAYERSTATS_TOTAL = "total-";
 string PLAYERSTATS_SCOREBOARD = "scoreboard-";
 

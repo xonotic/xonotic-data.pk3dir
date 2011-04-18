@@ -1,4 +1,3 @@
-.entity accuracy;
 .float accuracy_hit[WEP_MAXCOUNT];
 .float accuracy_fired[WEP_MAXCOUNT];
 .float accuracy_cnt_hit[WEP_MAXCOUNT];
