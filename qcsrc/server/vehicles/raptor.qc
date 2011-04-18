@@ -1,4 +1,4 @@
-#fdef SVQC
+#ifdef SVQC
 #define RAPTOR_MIN '-80 -80 0'
 #define RAPTOR_MAX '80 80 70'
 
