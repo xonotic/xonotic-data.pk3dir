@@ -37,6 +37,37 @@ string PLAYERSTATS_ACC_SEEKER_FIRED = "acc-seeker-fired";
 string PLAYERSTATS_ACC_TUBA_HIT = "acc-tuba-hit";
 string PLAYERSTATS_ACC_TUBA_FIRED = "acc-tuba-fired";
 
+string PLAYERSTATS_ACC_LASER_CNT_HIT = "acc-laser-cnt-hit";
+string PLAYERSTATS_ACC_LASER_CNT_FIRED = "acc-laser-cnt-fired";
+string PLAYERSTATS_ACC_SHOTGUN_CNT_HIT = "acc-sg-cnt-hit";
+string PLAYERSTATS_ACC_SHOTGUN_CNT_FIRED = "acc-sg-cnt-fired";
+string PLAYERSTATS_ACC_UZI_CNT_HIT = "acc-uzi-cnt-hit";
+string PLAYERSTATS_ACC_UZI_CNT_FIRED = "acc-uzi-cnt-fired";
+string PLAYERSTATS_ACC_GRENADE_LAUNCHER_CNT_HIT = "acc-gl-cnt-hit";
+string PLAYERSTATS_ACC_GRENADE_LAUNCHER_CNT_FIRED = "acc-gl-cnt-fired";
+string PLAYERSTATS_ACC_ELECTRO_CNT_HIT = "acc-electro-cnt-hit";
+string PLAYERSTATS_ACC_ELECTRO_CNT_FIRED = "acc-electro-cnt-fired";
+string PLAYERSTATS_ACC_CRYLINK_CNT_HIT = "acc-crylink-cnt-hit";
+string PLAYERSTATS_ACC_CRYLINK_CNT_FIRED = "acc-crylink-cnt-fired";
+string PLAYERSTATS_ACC_NEX_CNT_HIT = "acc-nex-cnt-hit";
+string PLAYERSTATS_ACC_NEX_CNT_FIRED = "acc-nex-cnt-fired";
+string PLAYERSTATS_ACC_HAGAR_CNT_HIT = "acc-hagar-cnt-hit";
+string PLAYERSTATS_ACC_HAGAR_CNT_FIRED = "acc-hagar-cnt-fired";
+string PLAYERSTATS_ACC_ROCKET_LAUNCHER_CNT_HIT = "acc-rl-cnt-hit";
+string PLAYERSTATS_ACC_ROCKET_LAUNCHER_CNT_FIRED = "acc-rl-cnt-fired";
+string PLAYERSTATS_ACC_MINSTANEX_CNT_HIT = "acc-minstanex-cnt-hit";
+string PLAYERSTATS_ACC_MINSTANEX_CNT_FIRED = "acc-minstanex-cnt-fired";
+string PLAYERSTATS_ACC_SNIPERRIFLE_CNT_HIT = "acc-rifle-cnt-hit";
+string PLAYERSTATS_ACC_SNIPERRIFLE_CNT_FIRED = "acc-rifle-cnt-fired";
+string PLAYERSTATS_ACC_FIREBALL_CNT_HIT = "acc-fireball-cnt-hit";
+string PLAYERSTATS_ACC_FIREBALL_CNT_FIRED = "acc-fireball-cnt-fired";
+string PLAYERSTATS_ACC_MINE_LAYER_CNT_HIT = "acc-minelayer-cnt-hit";
+string PLAYERSTATS_ACC_MINE_LAYER_CNT_FIRED = "acc-minelayer-cnt-fired";
+string PLAYERSTATS_ACC_SEEKER_CNT_HIT = "acc-seeker-cnt-hit";
+string PLAYERSTATS_ACC_SEEKER_CNT_FIRED = "acc-seeker-cnt-fired";
+string PLAYERSTATS_ACC_TUBA_CNT_HIT = "acc-tuba-cnt-hit";
+string PLAYERSTATS_ACC_TUBA_CNT_FIRED = "acc-tuba-cnt-fired";
+
 string PLAYERSTATS_TOTAL = "total-";
 string PLAYERSTATS_SCOREBOARD = "scoreboard-";
 
