@@ -43,9 +43,7 @@ void debugresetnodes();
 void debugnode(vector node);
 void debugnodestatus(vector position, float status);
 
-#ifdef DEBUG_BOT_GOALSTACK
 void debuggoalstack();
-#endif
 
 float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode);
 
