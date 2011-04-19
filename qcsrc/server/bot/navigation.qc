@@ -14,10 +14,11 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	local float ignorehazards;
 	local float swimming;
 
-	#ifdef DEBUG_TRACEWALK
+	if(autocvar_bot_debug_tracewalk)
+	{
 		debugresetnodes();
 		debugnode(start);
-	#endif
+	}
 
 	move = end - start;
 	move_z = 0;
@@ -44,9 +45,9 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	if (trace_startsolid)
 	{
 		// Bad start
-		#ifdef DEBUG_TRACEWALK
+		if(autocvar_bot_debug_tracewalk)
 			debugnodestatus(start, DEBUG_NODE_FAIL);
-		#endif
+
 		//print("tracewalk: ", vtos(start), " is a bad start\n");
 		return FALSE;
 	}
@@ -59,15 +60,14 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 		if (boxesoverlap(end, end, org + m1 + '-1 -1 -1', org + m2 + '1 1 1'))
 		{
 			// Succeeded
-			#ifdef DEBUG_TRACEWALK
+			if(autocvar_bot_debug_tracewalk)
 				debugnodestatus(org, DEBUG_NODE_SUCCESS);
-			#endif
+
 			//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
 			return TRUE;
 		}
-		#ifdef DEBUG_TRACEWALK
+		if(autocvar_bot_debug_tracewalk)
 			debugnode(org);
-		#endif
 
 		if (dist <= 0)
 			break;
@@ -80,9 +80,9 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 			{
 				// hazards blocking path
-				#ifdef DEBUG_TRACEWALK
+				if(autocvar_bot_debug_tracewalk)
 					debugnodestatus(org, DEBUG_NODE_FAIL);
-				#endif
+
 				//print("tracewalk: ", vtos(start), " hits a hazard when trying to reach ", vtos(end), "\n");
 				return FALSE;
 			}
@@ -92,9 +92,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			move = normalize(end - org);
 			tracebox(org, m1, m2, org + move * stepdist, movemode, e);
 
-			#ifdef DEBUG_TRACEWALK
+			if(autocvar_bot_debug_tracewalk)
 				debugnode(trace_endpos);
-			#endif
 
 			if (trace_fraction < 1)
 			{
@@ -102,18 +101,18 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
 				for(; org_z < end_z + self.maxs_z; org_z += stepdist)
 				{
-						#ifdef DEBUG_TRACEWALK
+						if(autocvar_bot_debug_tracewalk)
 							debugnode(org);
-						#endif
+
 				        if(pointcontents(org) == CONTENT_EMPTY)
 							break;
 				}
 
 				if not (pointcontents(org + '0 0 1') == CONTENT_EMPTY)
 				{
-					#ifdef DEBUG_TRACEWALK
+					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(org, DEBUG_NODE_FAIL);
-					#endif
+
 					return FALSE;
 					//print("tracewalk: ", vtos(start), " failed under water\n");
 				}
@@ -128,9 +127,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			move = dir * stepdist + org;
 			tracebox(org, m1, m2, move, movemode, e);
 
-			#ifdef DEBUG_TRACEWALK
+			if(autocvar_bot_debug_tracewalk)
 				debugnode(trace_endpos);
-			#endif
 
 			// hit something
 			if (trace_fraction < 1)
@@ -139,9 +137,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 				tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
 				if (trace_fraction < 1 || trace_startsolid)
 				{
-					#ifdef DEBUG_TRACEWALK
+					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
-					#endif
 
 					// check for doors
 					traceline( org, move, movemode, e);
@@ -158,9 +155,9 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 					}
 					else
 					{
-						#ifdef DEBUG_TRACEWALK
+						if(autocvar_bot_debug_tracewalk)
 							debugnodestatus(trace_endpos, DEBUG_NODE_FAIL);
-						#endif
+
 						//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
 						//te_explosion(trace_endpos);
 						//print(ftos(e.dphitcontentsmask), "\n");
@@ -197,9 +194,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	//print("tracewalk: ", vtos(start), " did not arrive at ", vtos(end), " but at ", vtos(org), "\n");
 
 	// moved but didn't arrive at the intended destination
-	#ifdef DEBUG_TRACEWALK
+	if(autocvar_bot_debug_tracewalk)
 		debugnodestatus(org, DEBUG_NODE_FAIL);
-	#endif
 
 	return FALSE;
 };
@@ -970,8 +966,6 @@ void botframe_updatedangerousobjects(float maxupdate)
 	}
 };
 
-#ifdef DEBUG_TRACEWALK
-
 void debugresetnodes()
 {
 	debuglastnode = '0 0 0';
@@ -994,27 +988,25 @@ void debugnode(vector node)
 
 void debugnodestatus(vector position, float status)
 {
-	vector color;
+	vector c;
 
 	switch (status)
 	{
 		case DEBUG_NODE_SUCCESS:
-			color = '0 15 0';
+			c = '0 15 0';
 			break;
 		case DEBUG_NODE_WARNING:
-			color = '15 15 0';
+			c = '15 15 0';
 			break;
 		case DEBUG_NODE_FAIL:
-			color = '15 0 0';
+			c = '15 0 0';
 			break;
 		default:
-			color = '15 15 15';
+			c = '15 15 15';
 	}
 
-	te_customflash(position, 40,  2, color);
+	te_customflash(position, 40,  2, c);
 }
-
-#endif
 
 #ifdef DEBUG_BOT_GOALSTACK
 
