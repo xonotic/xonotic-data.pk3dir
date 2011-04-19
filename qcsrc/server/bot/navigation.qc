@@ -14,10 +14,11 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	local float ignorehazards;
 	local float swimming;
 
-	#ifdef DEBUG_TRACEWALK
+	if(autocvar_bot_debug_tracewalk)
+	{
 		debugresetnodes();
 		debugnode(start);
-	#endif
+	}
 
 	move = end - start;
 	move_z = 0;
@@ -44,9 +45,9 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	if (trace_startsolid)
 	{
 		// Bad start
-		#ifdef DEBUG_TRACEWALK
+		if(autocvar_bot_debug_tracewalk)
 			debugnodestatus(start, DEBUG_NODE_FAIL);
-		#endif
+
 		//print("tracewalk: ", vtos(start), " is a bad start\n");
 		return FALSE;
 	}
@@ -59,15 +60,14 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 		if (boxesoverlap(end, end, org + m1 + '-1 -1 -1', org + m2 + '1 1 1'))
 		{
 			// Succeeded
-			#ifdef DEBUG_TRACEWALK
+			if(autocvar_bot_debug_tracewalk)
 				debugnodestatus(org, DEBUG_NODE_SUCCESS);
-			#endif
+
 			//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
 			return TRUE;
 		}
-		#ifdef DEBUG_TRACEWALK
+		if(autocvar_bot_debug_tracewalk)
 			debugnode(org);
-		#endif
 
 		if (dist <= 0)
 			break;
@@ -80,9 +80,9 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 			{
 				// hazards blocking path
-				#ifdef DEBUG_TRACEWALK
+				if(autocvar_bot_debug_tracewalk)
 					debugnodestatus(org, DEBUG_NODE_FAIL);
-				#endif
+
 				//print("tracewalk: ", vtos(start), " hits a hazard when trying to reach ", vtos(end), "\n");
 				return FALSE;
 			}
@@ -92,9 +92,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			move = normalize(end - org);
 			tracebox(org, m1, m2, org + move * stepdist, movemode, e);
 
-			#ifdef DEBUG_TRACEWALK
+			if(autocvar_bot_debug_tracewalk)
 				debugnode(trace_endpos);
-			#endif
 
 			if (trace_fraction < 1)
 			{
@@ -102,18 +101,18 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
 				for(; org_z < end_z + self.maxs_z; org_z += stepdist)
 				{
-						#ifdef DEBUG_TRACEWALK
+						if(autocvar_bot_debug_tracewalk)
 							debugnode(org);
-						#endif
+
 				        if(pointcontents(org) == CONTENT_EMPTY)
 							break;
 				}
 
 				if not (pointcontents(org + '0 0 1') == CONTENT_EMPTY)
 				{
-					#ifdef DEBUG_TRACEWALK
+					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(org, DEBUG_NODE_FAIL);
-					#endif
+
 					return FALSE;
 					//print("tracewalk: ", vtos(start), " failed under water\n");
 				}
@@ -128,9 +127,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			move = dir * stepdist + org;
 			tracebox(org, m1, m2, move, movemode, e);
 
-			#ifdef DEBUG_TRACEWALK
+			if(autocvar_bot_debug_tracewalk)
 				debugnode(trace_endpos);
-			#endif
 
 			// hit something
 			if (trace_fraction < 1)
@@ -139,9 +137,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 				tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
 				if (trace_fraction < 1 || trace_startsolid)
 				{
-					#ifdef DEBUG_TRACEWALK
+					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
-					#endif
 
 					// check for doors
 					traceline( org, move, movemode, e);
@@ -158,9 +155,9 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 					}
 					else
 					{
-						#ifdef DEBUG_TRACEWALK
+						if(autocvar_bot_debug_tracewalk)
 							debugnodestatus(trace_endpos, DEBUG_NODE_FAIL);
-						#endif
+
 						//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
 						//te_explosion(trace_endpos);
 						//print(ftos(e.dphitcontentsmask), "\n");
@@ -197,9 +194,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	//print("tracewalk: ", vtos(start), " did not arrive at ", vtos(end), " but at ", vtos(org), "\n");
 
 	// moved but didn't arrive at the intended destination
-	#ifdef DEBUG_TRACEWALK
+	if(autocvar_bot_debug_tracewalk)
 		debugnodestatus(org, DEBUG_NODE_FAIL);
-	#endif
 
 	return FALSE;
 };
@@ -970,7 +966,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 	}
 };
 
-#ifdef DEBUG_TRACEWALK
+// Support for debugging tracewalk visually
 
 void debugresetnodes()
 {
@@ -994,29 +990,27 @@ void debugnode(vector node)
 
 void debugnodestatus(vector position, float status)
 {
-	vector color;
+	vector c;
 
 	switch (status)
 	{
 		case DEBUG_NODE_SUCCESS:
-			color = '0 15 0';
+			c = '0 15 0';
 			break;
 		case DEBUG_NODE_WARNING:
-			color = '15 15 0';
+			c = '15 15 0';
 			break;
 		case DEBUG_NODE_FAIL:
-			color = '15 0 0';
+			c = '15 0 0';
 			break;
 		default:
-			color = '15 15 15';
+			c = '15 15 15';
 	}
 
-	te_customflash(position, 40,  2, color);
+	te_customflash(position, 40,  2, c);
 }
 
-#endif
-
-#ifdef DEBUG_BOT_GOALSTACK
+// Support for debugging the goal stack visually
 
 .float goalcounter;
 .vector lastposition;
@@ -1024,43 +1018,43 @@ void debugnodestatus(vector position, float status)
 // Debug the goal stack visually
 void debuggoalstack()
 {
-	local entity target;
+	local entity goal;
 	local vector org;
 
-	if(self.goalcounter==0)target=self.goalcurrent;
-	else if(self.goalcounter==1)target=self.goalstack01;
-	else if(self.goalcounter==2)target=self.goalstack02;
-	else if(self.goalcounter==3)target=self.goalstack03;
-	else if(self.goalcounter==4)target=self.goalstack04;
-	else if(self.goalcounter==5)target=self.goalstack05;
-	else if(self.goalcounter==6)target=self.goalstack06;
-	else if(self.goalcounter==7)target=self.goalstack07;
-	else if(self.goalcounter==8)target=self.goalstack08;
-	else if(self.goalcounter==9)target=self.goalstack09;
-	else if(self.goalcounter==10)target=self.goalstack10;
-	else if(self.goalcounter==11)target=self.goalstack11;
-	else if(self.goalcounter==12)target=self.goalstack12;
-	else if(self.goalcounter==13)target=self.goalstack13;
-	else if(self.goalcounter==14)target=self.goalstack14;
-	else if(self.goalcounter==15)target=self.goalstack15;
-	else if(self.goalcounter==16)target=self.goalstack16;
-	else if(self.goalcounter==17)target=self.goalstack17;
-	else if(self.goalcounter==18)target=self.goalstack18;
-	else if(self.goalcounter==19)target=self.goalstack19;
-	else if(self.goalcounter==20)target=self.goalstack20;
-	else if(self.goalcounter==21)target=self.goalstack21;
-	else if(self.goalcounter==22)target=self.goalstack22;
-	else if(self.goalcounter==23)target=self.goalstack23;
-	else if(self.goalcounter==24)target=self.goalstack24;
-	else if(self.goalcounter==25)target=self.goalstack25;
-	else if(self.goalcounter==26)target=self.goalstack26;
-	else if(self.goalcounter==27)target=self.goalstack27;
-	else if(self.goalcounter==28)target=self.goalstack28;
-	else if(self.goalcounter==29)target=self.goalstack29;
-	else if(self.goalcounter==30)target=self.goalstack30;
-	else if(self.goalcounter==31)target=self.goalstack31;
+	if(self.goalcounter==0)goal=self.goalcurrent;
+	else if(self.goalcounter==1)goal=self.goalstack01;
+	else if(self.goalcounter==2)goal=self.goalstack02;
+	else if(self.goalcounter==3)goal=self.goalstack03;
+	else if(self.goalcounter==4)goal=self.goalstack04;
+	else if(self.goalcounter==5)goal=self.goalstack05;
+	else if(self.goalcounter==6)goal=self.goalstack06;
+	else if(self.goalcounter==7)goal=self.goalstack07;
+	else if(self.goalcounter==8)goal=self.goalstack08;
+	else if(self.goalcounter==9)goal=self.goalstack09;
+	else if(self.goalcounter==10)goal=self.goalstack10;
+	else if(self.goalcounter==11)goal=self.goalstack11;
+	else if(self.goalcounter==12)goal=self.goalstack12;
+	else if(self.goalcounter==13)goal=self.goalstack13;
+	else if(self.goalcounter==14)goal=self.goalstack14;
+	else if(self.goalcounter==15)goal=self.goalstack15;
+	else if(self.goalcounter==16)goal=self.goalstack16;
+	else if(self.goalcounter==17)goal=self.goalstack17;
+	else if(self.goalcounter==18)goal=self.goalstack18;
+	else if(self.goalcounter==19)goal=self.goalstack19;
+	else if(self.goalcounter==20)goal=self.goalstack20;
+	else if(self.goalcounter==21)goal=self.goalstack21;
+	else if(self.goalcounter==22)goal=self.goalstack22;
+	else if(self.goalcounter==23)goal=self.goalstack23;
+	else if(self.goalcounter==24)goal=self.goalstack24;
+	else if(self.goalcounter==25)goal=self.goalstack25;
+	else if(self.goalcounter==26)goal=self.goalstack26;
+	else if(self.goalcounter==27)goal=self.goalstack27;
+	else if(self.goalcounter==28)goal=self.goalstack28;
+	else if(self.goalcounter==29)goal=self.goalstack29;
+	else if(self.goalcounter==30)goal=self.goalstack30;
+	else if(self.goalcounter==31)goal=self.goalstack31;
 
-	if(target==world)
+	if(goal==world)
 	{
 		self.goalcounter = 0;
 		self.lastposition='0 0 0';
@@ -1073,10 +1067,8 @@ void debuggoalstack()
 		org = self.lastposition;
 
 
-	te_lightning2(world, org, target.origin);
-	self.lastposition = target.origin;
+	te_lightning2(world, org, goal.origin);
+	self.lastposition = goal.origin;
 
 	self.goalcounter++;
 }
-
-#endif
