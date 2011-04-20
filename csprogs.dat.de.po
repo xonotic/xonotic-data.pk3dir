@@ -465,7 +465,7 @@ msgstr "%s^7 hat ^1ZWANZIG PUNKTE HINTEREINANDER\n"
 #: qcsrc/client/hud.qc:2899
 #, c-format
 msgid "%s^7 is a ^1BERSERKER!\n"
-msgstr "%s^7 ist ein ^1BERSERKER!\\n"
+msgstr "%s^7 ist ein ^1BERSERKER!\n"
 
 #: qcsrc/client/hud.qc:2902
 #, c-format
