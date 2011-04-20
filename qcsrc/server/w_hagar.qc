@@ -112,7 +112,7 @@ void W_Hagar_Attack2 (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-.float hagar_loadstep, hagar_loadblock;
+.float hagar_loadstep, hagar_loadblock, hagar_loadbeep;
 void W_Hagar_Attack2_Load_Release (void)
 {
 	// time to release the rockets we've loaded
@@ -215,36 +215,42 @@ void W_Hagar_Attack2_Load (void)
 		else
 		{
 			// check if we can attempt to load another rocket
-			if(!self.hagar_loadblock && !loaded && enough_ammo)
-			if(self.hagar_loadstep < time)
+			if(!loaded && enough_ammo)
 			{
-				W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
-				self.hagar_load += 1;
-				sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
+				if(!self.hagar_loadblock && self.hagar_loadstep < time)
+				{
+					W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
+					self.hagar_load += 1;
+					sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
-				// if this is the last rocket we can load, play the beep sound to notify the player of that
-				if(self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max)
-					sound(self, CHAN_WEAPON, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
-
-				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
+					self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
+				}
+			}
+			else if(!self.hagar_loadbeep && self.hagar_load) // prevents the beep from playing each frame
+			{
+				// if this is the last rocket we can load, play a beep sound to notify the player
+				sound(self, CHAN_WEAPON, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				self.hagar_loadbeep = TRUE;
 			}
 		}
 	}
 	else if(self.hagar_loadblock)
 	{
-		// the alt fire button was released, so re-enable loading if blocked
+		// the alt fire button has been released, so re-enable loading if blocked
 		self.hagar_loadblock = FALSE;
 	}
 
 	if(self.hagar_load)
 	{
 		self.weapon_forbidchange = TRUE;
-
 		if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
 			W_Hagar_Attack2_Load_Release();
 	}
 	else
+	{
 		self.weapon_forbidchange = FALSE;
+		self.hagar_loadbeep = FALSE;
+	}
 
 	// we aren't checking ammo during an attack, so we must do it here
 	if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
