@@ -99,6 +99,10 @@ void bot_think()
 		}
 	}
 
+	//
+	if(self.aistatus & AI_STATUS_STUCK)
+		navigation_unstuck();
+
 	// now call the current bot AI (havocbot for example)
 	self.bot_ai();
 };
@@ -374,6 +378,8 @@ void bot_clientdisconnect()
 	self.playermodel_freeme = string_null;
 	self.playerskin_freeme = string_null;
 	remove(self.bot_cmd_current);
+	if(navigation_wander_owner==self)
+		navigation_wander_owner = world;
 }
 
 void bot_clientconnect()

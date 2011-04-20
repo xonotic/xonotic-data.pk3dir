@@ -890,6 +890,9 @@ void navigation_poptouchedgoals()
 // begin a goal selection session (queries spawnfunc_waypoint network)
 void navigation_goalrating_start()
 {
+	if(self.aistatus & AI_STATUS_STUCK)
+		return;
+
 	self.navigation_jetpack_goal = world;
 	navigation_bestrating = -1;
 	self.navigation_hasgoals = FALSE;
@@ -901,31 +904,21 @@ void navigation_goalrating_start()
 // ends a goal selection session (updates goal stack to the best goal)
 void navigation_goalrating_end()
 {
+	if(self.aistatus & AI_STATUS_STUCK)
+		return;
+
 	navigation_routetogoal(navigation_bestgoal, self.origin);
 //	dprint("best goal ", self.goalcurrent.classname , "\n");
 
-	// Hack: if it can't walk to any goal just move blindly to the first visible waypoint
+	// If the bot got stuck then try to reach the farthest waypoint
 	if not (self.navigation_hasgoals)
 	if (autocvar_bot_wander_enable)
 	{
-		if not(autocvar_g_campaign)
-			dprint(self.netname, " can't walk to any goal, going to a near waypoint\n");
-
-		entity head;
-
-		RandomSelection_Init();
-		head = findradius(self.origin,1000);
-		while(head)
+		if not(self.aistatus & AI_STATUS_STUCK)
 		{
-			if(head.classname=="waypoint")
-			if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
-			if(vlen(self.origin-head.origin)>100)
-			if(checkpvs(self.view_ofs,head))
-				RandomSelection_Add(head, 0, string_null, 1 + (vlen(self.origin-head.origin)<500), 0);
-			head = head.chain;
+			dprint(self.netname, " cannot walk to any goal\n");
+			self.aistatus |= AI_STATUS_STUCK;
 		}
-		if(RandomSelection_chosen_ent)
-			navigation_routetogoal(RandomSelection_chosen_ent, self.origin);
 
 		self.navigation_hasgoals = FALSE; // Reset this value
 	}
@@ -967,6 +960,90 @@ void botframe_updatedangerousobjects(float maxupdate)
 		botframe_dangerwaypoint = find(botframe_dangerwaypoint, classname, "waypoint");
 	}
 };
+
+void navigation_unstuck()
+{
+	if not(navigation_wander_owner)
+	{
+		dprint(self.netname, " taking over the waypoints queue\n");
+		navigation_wander_owner = self;
+		navigation_wander_bestgoal = world;
+		navigation_wander_bestgoalrating = 0;
+	}
+
+	if(navigation_wander_owner!=self)
+		return;
+
+	if (navigation_wander_goal)
+	{
+		// evaluate the next goal on the queue
+		float d = vlen(self.origin - navigation_wander_goal.origin);
+		dprint(self.netname, " evaluating ", navigation_wander_goal.classname, " with distance ", ftos(d), "\n");
+		if(tracewalk(navigation_wander_goal, self.origin, PL_MIN, PL_MAX, navigation_wander_goal.origin, bot_navigation_movemode))
+		{
+			if( d > navigation_wander_bestgoalrating)
+			{
+				navigation_wander_bestgoalrating = d;
+				navigation_wander_bestgoal = navigation_wander_goal;
+			}
+		}
+		navigation_wander_goal = navigation_wander_goal.navigation_wander_nextgoal;
+
+		if not(navigation_wander_goal)
+		{
+			if (navigation_wander_bestgoal)
+			{
+				navigation_routetogoal(navigation_wander_bestgoal, self.origin);
+				self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+				self.aistatus &~= AI_STATUS_STUCK;
+			}
+			else
+			{
+				dprint(self.netname, " got BADLY stuck, giving up.\n");
+			}
+
+			navigation_wander_owner = world;
+		}
+	}
+	else
+	{
+		// build a new queue
+		dprint(self.netname, " building a new wayoints queue\n");
+
+		entity first, head, prev;
+		head = findradius(self.origin, 1000);
+
+		while(head)
+		{
+			if(head.classname=="waypoint")
+			if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
+			if(vlen(self.origin-head.origin)>100)
+			{
+				if (first==world)
+				{
+					first = head;
+					navigation_wander_goal = head;
+				}
+				else
+				{
+					prev = navigation_wander_goal;
+					navigation_wander_goal = head;
+					prev.navigation_wander_nextgoal = head;
+					navigation_wander_goal.navigation_wander_nextgoal = world;
+				}
+			}
+
+			head = head.chain;
+		}
+
+		if (first)
+			navigation_wander_goal = first;
+		else
+		{
+			dprint(self.netname, " got BADLY stuck, giving up.\n");
+		}
+	}
+}
 
 // Support for debugging tracewalk visually
 

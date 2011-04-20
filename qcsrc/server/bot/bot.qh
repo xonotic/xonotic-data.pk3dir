@@ -13,6 +13,7 @@ float AI_STATUS_WAYPOINT_PERSONAL_GOING		= 128;	// Going to a personal waypoint
 float AI_STATUS_WAYPOINT_PERSONAL_REACHED	= 256;	// Personal waypoint reached
 float AI_STATUS_JETPACK_FLYING			= 512;
 float AI_STATUS_JETPACK_LANDING			= 1024;
+float AI_STATUS_STUCK			= 2048; // bot cannot reach any useful goal
 
 .float isbot; // true if this client is actually a bot
 .float aistatus;
