@@ -926,7 +926,7 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:2902
 #, c-format
-msgid "%s^7 made ^1TWENTY FIFE SCORES IN A ROW!\n"
+msgid "%s^7 made ^1TWENTY FIVE SCORES IN A ROW!\n"
 msgstr ""
 
 #: qcsrc/client/hud.qc:2904
