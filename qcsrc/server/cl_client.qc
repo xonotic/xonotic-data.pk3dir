@@ -643,7 +643,7 @@ void PutObserverInServer (void)
 	self.iscreature = FALSE;
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
-	self.solid = SOLID_TRIGGER; // FIXME: SOLID_TRIGGER doesn't work for doors, and SOLID_NOT doesn't work for teleporters... can we do what warpzones do to fix this?
+	self.solid = SOLID_NOT;
 	self.movetype = MOVETYPE_FLY;
 	self.flags = FL_CLIENT | FL_NOTARGET;
 	self.armorvalue = 666;

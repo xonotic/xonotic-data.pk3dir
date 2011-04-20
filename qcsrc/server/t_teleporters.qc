@@ -77,6 +77,7 @@ void spawn_tdeath(vector v0, entity e, vector v)
 #define TELEPORT_FLAGS_TELEPORTER (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH)
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
+	print("Calling TeleportPlayer\n");
 	entity oldself;
 	entity telefragger;
 	vector from;
@@ -150,17 +151,57 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	}
 }
 
+void Simple_TeleportPlayer(entity teleporter, entity player)
+{
+	print("Calling Simple_TeleportPlayer\n");
+	vector locout;
+	entity e;
+	float p;
+	
+	// Find the output teleporter
+	if(!teleporter.enemy)
+	{ 
+		RandomSelection_Init();
+		for(e = world; (e = find(e, targetname, teleporter.target)); )
+		{
+			p = 1;
+			if(autocvar_g_telefrags_avoid)
+			{
+				locout = e.origin + '0 0 1' * (1 - player.mins_z - 24);
+				if(check_tdeath(player, locout, '0 0 0', '0 0 0'))
+					p = 0;
+			}
+			RandomSelection_Add(e, 0, string_null, (e.cnt ? e.cnt : 1), p);
+		}
+		teleporter.enemy = RandomSelection_chosen_ent;
+	}
+
+	if(!teleporter.enemy) { sprint(player, "Teleport destination vanished. Sorry... please complain to the mapper.\n"); }
+	
+	makevectors(teleporter.enemy.mangle);
+
+	if(teleporter.enemy.speed)
+		if(vlen(player.velocity) > teleporter.enemy.speed)
+			player.velocity = normalize(player.velocity) * max(0, teleporter.enemy.speed);
+			
+	if(autocvar_g_teleport_maxspeed)
+		if(vlen(player.velocity) > autocvar_g_teleport_maxspeed)
+			player.velocity = normalize(player.velocity) * max(0, autocvar_g_teleport_maxspeed);
+
+	locout = teleporter.enemy.origin + '0 0 1' * (1 - player.mins_z - 24);
+	TeleportPlayer(teleporter, player, locout, teleporter.enemy.mangle, v_forward * vlen(player.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
+}
+
 void Teleport_Touch (void)
 {
-	entity oldself, e;
-	vector o;
-	float p;
+	print("Calling Teleport_Touch\n");
+	entity oldself;
 	string s;
 
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 	
-	if (other.deadflag != DEAD_NO) // Samual: Allow observers, instead of health value lets use deadflags
+	if (other.deadflag != DEAD_NO)
 		return;
 	if not(other.flags & FL_CLIENT)	// FIXME: Make missiles firable through the teleport too
 		return;
@@ -171,49 +212,10 @@ void Teleport_Touch (void)
 
 	EXACTTRIGGER_TOUCH;
 
-	makevectors(self.enemy.mangle);
-
 	if(other.classname == "player")
 		RemoveGrapplingHook(other);
-	
-	if(self.enemy)
-	{
-		e = self.enemy;
-	}
-	else
-	{
-		RandomSelection_Init();
-		for(e = world; (e = find(e, targetname, self.target)); )
-		{
-			p = 1;
-			if(autocvar_g_telefrags_avoid)
-			{
-				o = e.origin + '0 0 1' * (1 - other.mins_z - 24);
-				if(check_tdeath(other, o, '0 0 0', '0 0 0'))
-					p = 0;
-			}
-			if(e.cnt)
-				RandomSelection_Add(e, 0, string_null, e.cnt, p);
-			else
-				RandomSelection_Add(e, 0, string_null, 1, p);
-		}
-		e = RandomSelection_chosen_ent;
-	}
-
-	if(!e)
-	{
-		sprint(other, "Teleport destination vanished. Sorry... please complain to the mapper.\n");
-	}
-
-	if(e.speed)
-		if(vlen(other.velocity) > e.speed)
-			other.velocity = normalize(other.velocity) * max(0, e.speed);
-	if(autocvar_g_teleport_maxspeed)
-		if(vlen(other.velocity) > autocvar_g_teleport_maxspeed)
-			other.velocity = normalize(other.velocity) * max(0, autocvar_g_teleport_maxspeed);
-
-	o = e.origin + '0 0 1' * (1 - other.mins_z - 24);
-	TeleportPlayer(self, other, o, e.mangle, v_forward * vlen(other.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
+		
+	Simple_TeleportPlayer(self, other);
 
 	activator = other;
 	s = self.target; self.target = string_null;
@@ -221,7 +223,7 @@ void Teleport_Touch (void)
 	if not(self.target) self.target = s;
 
 	oldself = self;
-	self = e;
+	self = self.enemy;
 	SUB_UseTargets();
 	self = oldself;
 }
@@ -293,6 +295,17 @@ void teleport_findtarget (void)
 	self.touch = Teleport_Touch;
 }
 
+entity Teleport_Find(vector mi, vector ma)
+{
+	entity e;
+	for(e = world; (e = find(e, classname, "trigger_teleport")); )
+		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, world))
+			return e;
+	return world;
+}
+
+entity teleport_first; 
+.entity teleport_next;
 void spawnfunc_trigger_teleport (void)
 {
 	self.angles = '0 0 0';
@@ -311,6 +324,9 @@ void spawnfunc_trigger_teleport (void)
 		objerror ("Teleporter with no target");
 		return;
 	}
+	
+	self.teleport_next = teleport_first;
+	teleport_first = self;
 }
 
 void WarpZone_PostTeleportPlayer_Callback(entity pl)

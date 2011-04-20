@@ -605,40 +605,46 @@ void WarpZone_StartFrame()
 		WarpZones_Reconnect();
 	}
 
-	if(warpzone_warpzones_exist)
+	entity oldself, oldother;
+	oldself = self;
+	oldother = other;
+	for(e = world; (e = nextent(e)); )
 	{
-		entity oldself, oldother;
-		oldself = self;
-		oldother = other;
-		for(e = world; (e = nextent(e)); )
+		if(warpzone_warpzones_exist) { WarpZone_StoreProjectileData(e); }
+		
+		float f = clienttype(e);
+		if(f == CLIENTTYPE_REAL)
 		{
-			WarpZone_StoreProjectileData(e);
-			float f;
-			f = clienttype(e);
-			if(f == CLIENTTYPE_REAL)
+			if(e.solid == SOLID_NOT) // not spectating?
+			if(e.movetype == MOVETYPE_NOCLIP || e.movetype == MOVETYPE_FLY) // not spectating? (this is to catch observers)
 			{
-				if(e.solid != SOLID_NOT) // not spectating?
-					continue;
-				if(e.movetype != MOVETYPE_NOCLIP && e.movetype != MOVETYPE_FLY) // not spectating? (this is to catch observers)
-					continue;
-				self = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
-				if(!self)
-					continue;
-				other = e;
-				if(WarpZoneLib_ExactTrigger_Touch())
-					continue;
-				WarpZone_Teleport(e); // NOT triggering targets by this!
-			}
-			if(f == CLIENTTYPE_NOTACLIENT)
-			{
-				for(; (e = nextent(e)); )
-					WarpZone_StoreProjectileData(e);
-				break;
+				other = e; // player
+			
+				// warpzones
+				if(warpzone_warpzones_exist) { 
+				self = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs); 
+				if(self)
+				if(!WarpZoneLib_ExactTrigger_Touch())
+					WarpZone_Teleport(e); } // NOT triggering targets by this!
+			
+				// teleporters
+				self = Teleport_Find(e.origin + e.mins, e.origin + e.maxs);
+				if(self)
+				if(!WarpZoneLib_ExactTrigger_Touch())
+					Simple_TeleportPlayer(self, other); // NOT triggering targets by this!
 			}
 		}
-		self = oldself;
-		other = oldother;
+		
+		if(f == CLIENTTYPE_NOTACLIENT)
+		{
+			if(warpzone_warpzones_exist)
+				for(; (e = nextent(e)); )
+					WarpZone_StoreProjectileData(e);
+			break;
+		}
 	}
+	self = oldself;
+	other = oldother;
 }
 
 .float warpzone_reconnecting;
