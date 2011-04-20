@@ -11,7 +11,7 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 
 	W_DecreaseAmmo(ammo_nails, pAmmo, autocvar_g_balance_sniperrifle_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, pSound, CHAN_WEAPON, pDamage + pHeadshotAddedDamage);
+	W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, pSound, CHAN_WEAPON, (pDamage + pHeadshotAddedDamage) * pShots);
 
 	pointparticles(particleeffectnum("sniperrifle_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
 
