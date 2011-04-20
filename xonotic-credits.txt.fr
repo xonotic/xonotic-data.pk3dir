@@ -1,7 +1,7 @@
 **Dévlopeurs principaux
 
 Rudolf "divVerent" Polzer
--z-
+Tyler "-z-" Mulligan
 Merlijn Hofstra
 morphed
 mand1nga
@@ -14,7 +14,7 @@ tZork
 Diabolik a.k.a Dib
 
 *Textures / Web
--z- (web / game)
+Tyler "-z-" Mulligan (web / game)
 FruitieX (game / web)
 
 *Modèles 3D
@@ -22,7 +22,7 @@ morphed
 
 *Concepts
 LJFHutch
-theShadow
+Pearce "theShadow" Michal
 
 *Création des cartes
 FruitieX
@@ -42,7 +42,7 @@ FruitieX
 tZork
 
 *Marketing / Management du Projet
--z-
+Tyler "-z-" Mulligan
 mand1nga
 
 *Légalité
@@ -58,11 +58,21 @@ by Forest "LordHavoc" Hale
 *Allemand
 Rudolf "divVerent" Polzer
 
+*Finnish (TODO TRANSLATE THIS)
+Henry "Exitium" Sanmark
+
 *Français
 Calinou
 
 *Portugais
 Ricardo "Hellgardia" Silva
+
+*Roumain
+MirceaKitsune
+
+*Russe
+Lord Canistra
+Nikoli
 
 **Contribueurs actifs
 Antonio "terencehill" Piu
@@ -76,6 +86,7 @@ Maik "SavageX" Merten
 MrBougo
 Ruszkai "C.Brutail" Ákos
 Samual Lenks
+Severin "sev" Meyer
 Stephan "esteel" Stahl
 Wolfgang "Blub\0" Bumiller
 

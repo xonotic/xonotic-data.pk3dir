@@ -1367,18 +1367,22 @@ string textShortenToLength(string theText, float maxWidth, textLengthUpToLength_
 		return strcat(substring(theText, 0, textLengthUpToLength(theText, maxWidth - tw("..."), tw)), "...");
 }
 
-float isGametypeInFilter(float gt, float tp, string pattern)
+float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 {
-	string subpattern, subpattern2, subpattern3;
+	string subpattern, subpattern2, subpattern3, subpattern4;
 	subpattern = strcat(",", GametypeNameFromType(gt), ",");
 	if(tp)
 		subpattern2 = ",teams,";
 	else
 		subpattern2 = ",noteams,";
-	if(gt == GAME_RACE || gt == GAME_CTS)
-		subpattern3 = ",race,";
+	if(ts)
+		subpattern3 = ",teamspawns,";
 	else
-		subpattern3 = string_null;
+		subpattern3 = ",noteamspawns,";
+	if(gt == GAME_RACE || gt == GAME_CTS)
+		subpattern4 = ",race,";
+	else
+		subpattern4 = string_null;
 
 	if(substring(pattern, 0, 1) == "-")
 	{
@@ -1387,7 +1391,9 @@ float isGametypeInFilter(float gt, float tp, string pattern)
 			return 0;
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) >= 0)
 			return 0;
-		if(subpattern3 && strstrofs(strcat(",", pattern, ","), subpattern3, 0) >= 0)
+		if(strstrofs(strcat(",", pattern, ","), subpattern3, 0) >= 0)
+			return 0;
+		if(subpattern4 && strstrofs(strcat(",", pattern, ","), subpattern4, 0) >= 0)
 			return 0;
 	}
 	else
@@ -1396,7 +1402,8 @@ float isGametypeInFilter(float gt, float tp, string pattern)
 			pattern = substring(pattern, 1, strlen(pattern) - 1);
 		if(strstrofs(strcat(",", pattern, ","), subpattern, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) < 0)
-		if((!subpattern3) || strstrofs(strcat(",", pattern, ","), subpattern3, 0) < 0)
+		if(strstrofs(strcat(",", pattern, ","), subpattern3, 0) < 0)
+		if((!subpattern4) || strstrofs(strcat(",", pattern, ","), subpattern4, 0) < 0)
 			return 0;
 	}
 	return 1;
@@ -1516,12 +1523,6 @@ vector solve_quadratic(float a, float b, float c) // ax^2 + bx + c = 0
 	}
 	return v;
 }
-
-
-float _unacceptable_compiler_bug_1_a(float b, float c) { return b == c; }
-float _unacceptable_compiler_bug_1_b() { return 1; }
-float _unacceptable_compiler_bug_1_c(float d) { return 2 * d; }
-float _unacceptable_compiler_bug_1_d() { return 1; }
 
 void check_unacceptable_compiler_bugs()
 {
@@ -1981,4 +1982,28 @@ float u8_strsize(string s)
 			++l;
 	}
 	return l;
+}
+
+// translation helpers
+string language_filename(string s)
+{
+	string fn;
+	float fh;
+	fn = prvm_language;
+	if(fn == "" || fn == "dump")
+		return s;
+	fn = strcat(s, ".", fn);
+	if((fh = fopen(fn, FILE_READ)) >= 0)
+	{
+		fclose(fh);
+		return fn;
+	}
+	return s;
+}
+string CTX(string s)
+{
+	float p = strstrofs(s, "^", 0);
+	if(p < 0)
+		return s;
+	return substring(s, p+1, -1);
 }

@@ -77,13 +77,12 @@ float maxclients;
 //.float	style;
 //.float	skill;
 .float	sounds;
+.float  platmovetype;
 
 .string killtarget;
 
 .vector	pos1, pos2;
 .vector	mangle;
-
-.float cvar_cl_hitsound;
 
 .float	pain_finished;			//Added by Supajoe
 .float	pain_frame;			//"
@@ -267,7 +266,7 @@ void checkSpectatorBlock();
 .float jointime; // time of joining
 .float alivetime; // time of being alive
 
-float isJoinAllowed();
+float nJoinAllowed(float includeMe);
 #define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
 
 //sv_timeout: pauses the game by setting the gamespeed to a really low value (see TIMEOUT_SLOWMO_VALUE)
@@ -328,6 +327,7 @@ float sv_loddistance2;
 .string weaponorder_byimpulse;
 
 .float cvar_cl_allow_uid2name;
+.float cvar_cl_allow_uidtracking;
 .string stored_netname;
 
 void Announce(string snd);
@@ -400,10 +400,6 @@ float assault_attacker_team;
 .float speedrunning;
 
 // Q3 support
-.float notteam;
-.float notsingle;
-.float notfree;
-.float notq3a;
 float q3acompat_machineshotgunswap;
 
 // database
@@ -414,6 +410,7 @@ float TemporaryDB;
 
 float some_spawn_has_been_used;
 float have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
+float have_noteam_spawns; // 0 = no no-team spawns, 1 = no-team spawns exist
 
 // set when showing a kill countdown
 .entity killindicator;
@@ -603,6 +600,9 @@ string matchid;
 
 .float last_pickup;
 
+.float hit_time; 
+.float typehit_time; 
+
 .float stat_leadlimit;
 
 float radar_showennemies;
@@ -612,8 +612,14 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-.float sniperrifle_bulletcounter;
-.float wish_reload;
+..float current_ammo;
+
+.float weapon_load[WEP_MAXCOUNT]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(weapon_load);
+.float ammo_none; // used by the reloading system, must always be 0
+.float clip_load;
+.float old_clip_load;
+.float clip_size;
+.float minelayer_mines;
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones

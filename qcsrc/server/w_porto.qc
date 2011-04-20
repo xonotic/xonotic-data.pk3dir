@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(PORTO, w_porto, 0, 0, WEP_TYPE_OTHER, 0, "porto" , "porto", "Port-O-Launch");
+REGISTER_WEAPON(PORTO, w_porto, 0, 0, WEP_TYPE_OTHER, 0, "porto" , "porto", _("Port-O-Launch"))
 #else
 #ifdef SVQC
 .entity porto_current;
@@ -270,7 +270,10 @@ float w_porto(float req)
 		precache_sound ("porto/unsupported.wav");
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_PORTO);
+		self.current_ammo = ammo_none;
+	}
 	else if (req == WR_RESETPLAYER)
 	{
 		self.porto_current = world;
@@ -290,9 +293,9 @@ float w_porto(float req)
 		// nothing to do
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s did the impossible";
+		w_deathtypestring = _("%s did the impossible");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "%s felt %s doing the impossible to him";
+		w_deathtypestring = _("%s felt %s doing the impossible to him");
 	return TRUE;
 }
 #endif

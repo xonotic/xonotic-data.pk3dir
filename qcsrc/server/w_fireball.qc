@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", "Fireball");
+REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", _("Fireball"));
 #else
 #ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is
@@ -194,8 +194,7 @@ void W_Fireball_Attack1_Frame1()
 
 void W_Fireball_Attack1_Frame0()
 {
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel = self.ammo_fuel - autocvar_g_balance_fireball_primary_ammo;
+	W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_reload_ammo);
 
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
 	sound (self, CHAN_WEAPON, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
@@ -246,8 +245,7 @@ void W_Fireball_Attack2()
 	vector f_diff;
 	float c;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel = self.ammo_fuel - autocvar_g_balance_fireball_secondary_ammo;
+	W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_fireball_secondary_ammo, autocvar_g_balance_fireball_reload_ammo);
 
 	c = mod(self.bulletcounter, 4);
 	switch(c)
@@ -304,6 +302,7 @@ void spawnfunc_weapon_fireball (void)
 
 float w_fireball(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 	{
 		self.BUTTON_ATCK = FALSE;
@@ -327,18 +326,24 @@ float w_fireball(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
-		if (time >= self.fireball_primarytime)
-		if (weapon_prepareattack(0, autocvar_g_balance_fireball_primary_refire))
+		if(autocvar_g_balance_fireball_reload_ammo && self.clip_load < min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo)) // forced reload
+			weapon_action(self.weapon, WR_RELOAD);
+		else if (self.BUTTON_ATCK)
 		{
-			W_Fireball_Attack1_Frame0();
-			self.fireball_primarytime = time + autocvar_g_balance_fireball_primary_refire2;
+			if (time >= self.fireball_primarytime)
+			if (weapon_prepareattack(0, autocvar_g_balance_fireball_primary_refire))
+			{
+				W_Fireball_Attack1_Frame0();
+				self.fireball_primarytime = time + autocvar_g_balance_fireball_primary_refire2;
+			}
 		}
-		if (self.BUTTON_ATCK2)
-		if (weapon_prepareattack(1, autocvar_g_balance_fireball_secondary_refire))
+		else if (self.BUTTON_ATCK2)
 		{
-			W_Fireball_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_fireball_secondary_animtime, w_ready);
+			if (weapon_prepareattack(1, autocvar_g_balance_fireball_secondary_refire))
+			{
+				W_Fireball_Attack2();
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_fireball_secondary_animtime, w_ready);
+			}
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -350,16 +355,36 @@ float w_fireball(float req)
 		precache_sound ("weapons/fireball_fire.wav");
 		precache_sound ("weapons/fireball_fire2.wav");
 		precache_sound ("weapons/fireball_prefire2.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_FIREBALL);
+		self.current_ammo = ammo_fuel;
+	}
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
+	{
+		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
+		ammo_amount += self.weapon_load[WEP_FIREBALL] >= autocvar_g_balance_fireball_primary_ammo;
+		return ammo_amount;
+	}
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
+	{
+		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
+		ammo_amount += self.weapon_load[WEP_FIREBALL] >= autocvar_g_balance_fireball_secondary_ammo;
+		return ammo_amount;
+	}
 	else if (req == WR_RESETPLAYER)
 	{
 		self.fireball_primarytime = time;
+	}
+	else if (req == WR_RELOAD)
+	{
+		// fuel can be a non-whole number, which brakes stuff here when between 0 and 1
+		if(self.ammo_fuel < 1)
+			self.ammo_fuel = 0;
+
+		W_Reload(min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo), autocvar_g_balance_fireball_reload_ammo, autocvar_g_balance_fireball_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };
@@ -389,32 +414,32 @@ float w_fireball(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s forgot about some firemine";
+			w_deathtypestring = _("%s forgot about some firemine");
 		else
-			w_deathtypestring = "%s should have used a smaller gun";
+			w_deathtypestring = _("%s should have used a smaller gun");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
 			if(w_deathtype & HITTYPE_HEADSHOT)
-				w_deathtypestring = "%s tried to catch %s's firemine";
+				w_deathtypestring = _("%s tried to catch %s's firemine");
 			else
-				w_deathtypestring = "%s fatefully ignored %s's firemine";
+				w_deathtypestring = _("%s fatefully ignored %s's firemine");
 		}
 		else
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
 			{
 				if(w_deathtype & HITTYPE_SPLASH) // BFG effect
-					w_deathtypestring = "%s could not hide from %s's fireball";
+					w_deathtypestring = _("%s could not hide from %s's fireball");
 				else // laser
-					w_deathtypestring = "%s saw the pretty lights of %s's fireball";
+					w_deathtypestring = _("%s saw the pretty lights of %s's fireball");
 			}
 			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = "%s got too close to %s's fireball";
+				w_deathtypestring = _("%s got too close to %s's fireball");
 			else
-				w_deathtypestring = "%s tasted %s's fireball";
+				w_deathtypestring = _("%s tasted %s's fireball");
 		}
 	}
 	return TRUE;

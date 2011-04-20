@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(LASER, w_laser, 0, 1, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "laser", "laser", "Laser");
+REGISTER_WEAPON(LASER, w_laser, 0, 1, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "laser", "laser", _("Laser"))
 #else
 #ifdef SVQC
 void(float imp) W_SwitchWeapon;
@@ -226,16 +226,24 @@ float w_laser(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
+		if(autocvar_g_balance_laser_reload_ammo && self.clip_load < 1) // forced reload
+			weapon_action(self.weapon, WR_RELOAD);
+		else if (self.BUTTON_ATCK)
 		{
-			W_Laser_Attack(0);
-			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
+			if (weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
+			{
+				W_DecreaseAmmo(ammo_none, 1, TRUE);
+
+				W_Laser_Attack(0);
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
+			}
 		}
-		if (self.BUTTON_ATCK2)
+		else if (self.BUTTON_ATCK2)
 		{
 			if(autocvar_g_balance_laser_secondary)
 			{
+				W_DecreaseAmmo(ammo_none, 1, TRUE);
+
 				if (weapon_prepareattack(0, 0))
 				{
 					W_Laser_Attack2();
@@ -256,13 +264,25 @@ float w_laser(float req)
 		precache_model ("models/weapons/h_laser.iqm");
 		precache_sound ("weapons/lasergun_fire.wav");
 		precache_sound ("weapons/gauntlet_fire.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_LASER);
+		self.current_ammo = ammo_none;
+	}
 	else if (req == WR_CHECKAMMO1)
+	{
 		return TRUE;
+	}
 	else if (req == WR_CHECKAMMO2)
+	{
 		return TRUE;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Reload(0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
+	}
 	return TRUE;
 };
 #endif
@@ -282,13 +302,13 @@ float w_laser(float req)
 		precache_sound("weapons/laserimpact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s lasered themself to hell";
+		w_deathtypestring = _("%s lasered themself to hell");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s was cut in half by %s's gauntlet"; // unchecked: SPLASH
+			w_deathtypestring = _("%s was cut in half by %s's gauntlet"); // unchecked: SPLASH
 		else
-			w_deathtypestring = "%s was lasered to death by %s"; // unchecked: SPLASH
+			w_deathtypestring = _("%s was lasered to death by %s"); // unchecked: SPLASH
 	}
 	return TRUE;
 }

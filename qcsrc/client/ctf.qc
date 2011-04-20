@@ -153,9 +153,9 @@ void() ctf_menu_render =
 	if(getstati(STAT_CTF_STATE) == CTF_STATE_COMMANDER) {
 		drawstring(ps, _("----- Command Menu -----"), '8 8 0', '1 1 0', 1, 0); ps += po;
 		drawstring(ps, _("Issue orders:"), '8 8 0', '1 1 0', 1, 0); ps += po;
-		drawstring(ps, _(" 1) Attack "), '8 8 0', '1 1 0', 1, 0);
-		drawstring(ps + '80 0 0', _(" \x0F"), '8 8 0', '1 1 1', 1, 0); ps += po;
-		drawstring(ps, _(" 2) Defend \x0E"), '8 8 0', '1 1 0', 1, 0); ps += po;
+		drawstring(ps, _(" 1) Attack"), '8 8 0', '1 1 0', 1, 0);
+		drawstring(ps + '80 0 0', " \x0F", '8 8 0', '1 1 1', 1, 0); ps += po;
+		drawstring(ps, strcat(_(" 2) Defend"), " \x0E"), '8 8 0', '1 1 0', 1, 0); ps += po;
 		ps += po;
 		drawstring(ps, _("3) Resign from command."), '8 8 0', '1 1 0', 1, 0); ps += po;
 		drawstring(ps, _("ESC) Exit Menu"), '8 8 0', '1 1 0', 1, 0); ps += po;

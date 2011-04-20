@@ -1,8 +1,9 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hagar", "hagar", "Hagar");
+REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hagar", "hagar", _("Hagar"))
 #else
 #ifdef SVQC
 // NO bounce protection, as bounces are limited!
+
 void W_Hagar_Explode (void)
 {
 	self.event_damage = SUB_Null;
@@ -44,8 +45,8 @@ void W_Hagar_Attack (void)
 {
 	local entity missile;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_hagar_primary_ammo;
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_reload_ammo);
+
 	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_primary_damage);
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -79,8 +80,8 @@ void W_Hagar_Attack2 (void)
 {
 	local entity missile;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_hagar_secondary_ammo;
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
+
 	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CHAN_WEAPON, autocvar_g_balance_hagar_secondary_damage);
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -118,6 +119,7 @@ void spawnfunc_weapon_hagar (void)
 
 float w_hagar(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 		if (random()>0.15)
 			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_hagar_primary_speed, 0, autocvar_g_balance_hagar_primary_lifetime, FALSE);
@@ -128,17 +130,23 @@ float w_hagar(float req)
 		}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
+		if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo)) // forced reload
+			weapon_action(self.weapon, WR_RELOAD);
+		else if (self.BUTTON_ATCK)
 		{
-			W_Hagar_Attack();
-			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
+			if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
+			{
+				W_Hagar_Attack();
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
+			}
 		}
-		if (self.BUTTON_ATCK2 && autocvar_g_balance_hagar_secondary)
-		if (weapon_prepareattack(1, autocvar_g_balance_hagar_secondary_refire))
+		else if (self.BUTTON_ATCK2 && autocvar_g_balance_hagar_secondary)
 		{
-			W_Hagar_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
+			if (weapon_prepareattack(1, autocvar_g_balance_hagar_secondary_refire))
+			{
+				W_Hagar_Attack2();
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
+			}
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -147,13 +155,29 @@ float w_hagar(float req)
 		precache_model ("models/weapons/v_hagar.md3");
 		precache_model ("models/weapons/h_hagar.iqm");
 		precache_sound ("weapons/hagar_fire.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_HAGAR);
+		self.current_ammo = ammo_rockets;
+	}
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_rockets >= autocvar_g_balance_hagar_primary_ammo;
+	{
+		ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_primary_ammo;
+		ammo_amount += self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_primary_ammo;
+		return ammo_amount;
+	}
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
+	{
+		ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
+		ammo_amount += self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_secondary_ammo;
+		return ammo_amount;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
+	}
 	return TRUE;
 };
 #endif
@@ -182,13 +206,13 @@ float w_hagar(float req)
 		precache_sound("weapons/hagexp3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s played with tiny rockets";
+		w_deathtypestring = _("%s played with tiny rockets");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH
-			w_deathtypestring = "%s hoped %s's missiles wouldn't bounce";
+			w_deathtypestring = _("%s hoped %s's missiles wouldn't bounce");
 		else // unchecked: SPLASH, SECONDARY
-			w_deathtypestring = "%s was pummeled by %s";
+			w_deathtypestring = _("%s was pummeled by %s");
 	}
 	return TRUE;
 }

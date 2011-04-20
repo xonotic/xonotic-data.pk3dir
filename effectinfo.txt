@@ -1691,11 +1691,11 @@ effect crylink_impact
 countabsolute 1
 type decal
 tex 47 47
-size 8 8
+size 24 24
 alpha 256 256 0
 originjitter 12 12 12
-//lightradius 60
-//lightradiusfade 300
+//lightradius 200
+//lightradiusfade 800
 //lightcolor 3.2 0.4 4
 // purple flare effect
 effect crylink_impact
@@ -1703,34 +1703,34 @@ countabsolute 1
 type static
 tex 39 39
 color 0x504060 0x504060
-size 8 8
+size 24 24
 alpha 256 256 512
 // purple sparks
 effect crylink_impact
-count 10
+count 40
 type spark
 tex 41 41
 color 0xA040C0 0xA040C0
 bounce 2
-size 1 2
+size 6 6
+alpha 256 256 1024
+velocityjitter 512 512 512
+// purple splash
+effect crylink_impact
+count 1.5
+type static
+color 0xE070FF 0xE070FF
+size 16 16
+alpha 256 256 512
+velocityjitter 32 32 32
+// purple splash
+effect crylink_impact
+count 3
+type static
+color 0xE070FF 0xE070FF
+size 16 16
 alpha 256 256 1024
 velocityjitter 256 256 256
-// purple splash
-effect crylink_impact
-count 1.5
-type static
-color 0xE070FF 0xE070FF
-size 8 8
-alpha 256 256 512
-velocityjitter 8 8 8
-// purple splash
-effect crylink_impact
-count 1.5
-type static
-color 0xE070FF 0xE070FF
-size 8 8
-alpha 256 256 1024
-velocityjitter 32 32 32
 
 
 
@@ -5194,3 +5194,66 @@ velocityjitter 0 0 5
 velocitymultiplier 15
 airfriction -1
 rotate 0 360 -180 180
+
+// seeker missile trail
+effect TR_SEEKER
+trailspacing 10
+type smoke
+notunderwater
+color 0x000000 0x666666
+tex 0 8
+size 2 2
+bounce 1
+sizeincrease 11
+alpha 200 300 200
+lightradius 100
+lighttime 0
+lightcolor 6 3 1
+originjitter 2 2 2
+velocityjitter 3 3 3
+velocitymultiplier -0.02
+rotate -180 180 -30 30
+//gravity -0.11
+// fire
+effect TR_SEEKER
+trailspacing 4
+type static
+color 0xffdf72 0x811200
+tex 48 55
+size 5 5
+sizeincrease -30
+alpha 100 144 588
+airfriction 8
+velocityjitter 32 32 32
+velocitymultiplier -1.5
+// bubbles
+effect TR_SEEKER
+type bubble
+underwater
+trailspacing 16
+tex 62 62
+size 1 2
+alpha 256 256 256
+gravity -0.125
+bounce 1.5
+liquidfriction 4
+velocityjitter 16 16 16
+velocitymultiplier -0.31
+rotate 0 0 0 0
+// sparks
+effect TR_SEEKER
+notunderwater
+trailspacing 20
+type spark
+tex 40 40
+color 0xFFFDD9 0xFFFDD9
+size 0.5 0.5
+alpha 444 512 1866
+stretchfactor 0.3
+//gravity 1
+bounce 1
+//velocityoffset 0 0 15
+airfriction 5
+originjitter 1 1 1
+velocityjitter 100 100 100
+velocitymultiplier -0.31

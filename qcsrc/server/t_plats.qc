@@ -245,37 +245,43 @@ void spawnfunc_func_plat()
 void() train_next;
 void train_wait()
 {
-	self.think = train_next;
-	self.nextthink = self.ltime + self.wait;
-
 	if(self.noise != "")
 		stopsoundto(MSG_BROADCAST, self, CHAN_TRIGGER); // send this as unreliable only, as the train will resume operation shortly anyway
+
+	if(self.wait < 0)
+	{
+		train_next();
+	}
+	else
+	{
+		self.think = train_next;
+		self.nextthink = self.ltime + self.wait;
+	}
+
+	entity oldself;
+	oldself = self;
+	self = self.enemy;
+	SUB_UseTargets();
+	self = oldself;
+	self.enemy = world;
 };
 
 void train_next()
 {
 	local entity targ;
 	targ = find(world, targetname, self.target);
+	self.enemy = targ;
 	self.target = targ.target;
 	if (!self.target)
 		objerror("train_next: no next target");
 	self.wait = targ.wait;
 	if (!self.wait)
 		self.wait = 0.1;
-	if(self.wait < 0)
-	{
-		if (targ.speed)
-			SUB_CalcMove(targ.origin - self.mins, targ.speed, train_next);
-		else
-			SUB_CalcMove(targ.origin - self.mins, self.speed, train_next);
-	}
+
+	if (targ.speed)
+		SUB_CalcMove(targ.origin - self.mins, targ.speed, train_wait);
 	else
-	{
-		if (targ.speed)
-			SUB_CalcMove(targ.origin - self.mins, targ.speed, train_wait);
-		else
-			SUB_CalcMove(targ.origin - self.mins, self.speed, train_wait);
-	}
+		SUB_CalcMove(targ.origin - self.mins, self.speed, train_wait);
 
 	if(self.noise != "")
 		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);

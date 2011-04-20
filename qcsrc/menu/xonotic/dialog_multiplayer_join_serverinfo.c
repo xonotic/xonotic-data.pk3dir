@@ -56,7 +56,7 @@ void Join_Click(entity btn, entity me);
 #ifdef IMPLEMENTATION
 void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 {
-	float m, pure, j, numh, maxp;
+	float m, pure, freeslots, j, numh, maxp, numb;
 	string s, typestr, versionstr, k, v;
 
 	if(me.currentServerName)
@@ -123,6 +123,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 		typestr = argv(0);
 		versionstr = argv(1);
 	}
+	freeslots = -1;
 	for(j = 2; j < m; ++j)
 	{
 		if(argv(j) == "")
@@ -131,6 +132,8 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 		v = substring(argv(j), 1, -1);
 		if(k == "P")
 			pure = stof(v);
+		else if(k == "S")
+			freeslots = stof(v);
 	}
 
 	me.currentServerType = strzone(typestr);
@@ -148,11 +151,14 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	numh = gethostcachenumber(SLIST_FIELD_NUMHUMANS, i);
 	SLIST_FIELD_MAXPLAYERS = gethostcacheindexforkey("maxplayers");
 	maxp = gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i);
-	me.currentServerNumPlayers = strzone(sprintf(_("%d/%d"), numh, maxp));
+	SLIST_FIELD_NUMBOTS = gethostcacheindexforkey("numbots");
+	numb = gethostcachenumber(SLIST_FIELD_NUMBOTS, i);
+	if(freeslots < 0)
+		freeslots = maxp - numh - numb;
+	me.currentServerNumPlayers = strzone(sprintf(_("%d/%d, %d free player slots"), numh, maxp, freeslots));
 	me.numPlayersLabel.setText(me.numPlayersLabel, me.currentServerNumPlayers);
 
-	SLIST_FIELD_NUMBOTS = gethostcacheindexforkey("numbots");
-	s = ftos(gethostcachenumber(SLIST_FIELD_NUMBOTS, i));
+	s = ftos(numb);
 	me.currentServerNumBots = strzone(s);
 	me.numBotsLabel.setText(me.numBotsLabel, me.currentServerNumBots);
 

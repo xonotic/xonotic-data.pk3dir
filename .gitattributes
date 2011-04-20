@@ -195,6 +195,7 @@ strip crlf=input
 TMAP -diff -crlf
 todo crlf=input
 TODO crlf=input
+tooltips.db diff crlf=input
 *.ttf -diff -crlf
 *.TTF -diff -crlf
 *.txt crlf=input

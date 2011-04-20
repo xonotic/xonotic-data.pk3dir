@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "rl", "rocketlauncher", "Rocket Launcher");
+REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "rl", "rocketlauncher", _("Rocket Launcher"))
 #else
 #ifdef SVQC
 .float rl_release;
@@ -248,8 +248,7 @@ void W_Rocket_Attack (void)
 	local entity missile;
 	local entity flash;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_rocketlauncher_ammo;
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo);
 
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CHAN_WEAPON, autocvar_g_balance_rocketlauncher_damage);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -305,6 +304,8 @@ float w_rlauncher(float req)
 {
 	entity rock;
 	float rockfound;
+	float ammo_amount;
+
 	if (req == WR_AIM)
 	{
 		// aim and decide to fire if appropriate
@@ -402,32 +403,37 @@ float w_rlauncher(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
-		{
-			if(self.rl_release || autocvar_g_balance_rocketlauncher_guidestop)
-			if(weapon_prepareattack(0, autocvar_g_balance_rocketlauncher_refire))
-			{
-				W_Rocket_Attack();
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_rocketlauncher_animtime, w_ready);
-				self.rl_release = 0;
-			}
-		}
+		if(autocvar_g_balance_rocketlauncher_reload_ammo && self.clip_load < autocvar_g_balance_rocketlauncher_ammo) // forced reload
+			weapon_action(self.weapon, WR_RELOAD);
 		else
-			self.rl_release = 1;
-
-		if (self.BUTTON_ATCK2)
 		{
-			rockfound = 0;
-			for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.owner == self)
+			if (self.BUTTON_ATCK)
 			{
-				if(!rock.rl_detonate_later)
+				if(self.rl_release || autocvar_g_balance_rocketlauncher_guidestop)
+				if(weapon_prepareattack(0, autocvar_g_balance_rocketlauncher_refire))
 				{
-					rock.rl_detonate_later = TRUE;
-					rockfound = 1;
+					W_Rocket_Attack();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_rocketlauncher_animtime, w_ready);
+					self.rl_release = 0;
 				}
 			}
-			if(rockfound)
-				sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+			else
+				self.rl_release = 1;
+
+			if (self.BUTTON_ATCK2)
+			{
+				rockfound = 0;
+				for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.owner == self)
+				{
+					if(!rock.rl_detonate_later)
+					{
+						rock.rl_detonate_later = TRUE;
+						rockfound = 1;
+					}
+				}
+				if(rockfound)
+					sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+			}
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -439,24 +445,38 @@ float w_rlauncher(float req)
 		precache_sound ("weapons/rocket_det.wav");
 		precache_sound ("weapons/rocket_fire.wav");
 		precache_sound ("weapons/rocket_mode.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_ROCKET_LAUNCHER);
+		self.current_ammo = ammo_rockets;
 		self.rl_release = 1;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
 		// don't switch while guiding a missile
-		if ((ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
-			&& self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
-			return FALSE;
+		if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
+		{
+			if(autocvar_g_balance_rocketlauncher_reload_ammo)
+			{
+				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.weapon_load[WEP_ROCKET_LAUNCHER] < autocvar_g_balance_rocketlauncher_ammo)
+					ammo_amount = TRUE;
+			}
+			else if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
+				ammo_amount = TRUE;
+			return !ammo_amount;
+		}
 	}
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;
 	else if (req == WR_RESETPLAYER)
 	{
 		self.rl_release = 0;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Reload(autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo, autocvar_g_balance_rocketlauncher_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };
@@ -477,15 +497,15 @@ float w_rlauncher(float req)
 		precache_sound("weapons/rocket_impact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s exploded";
+		w_deathtypestring = _("%s exploded");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = "%s got too close to %s's rocket";
+			w_deathtypestring = _("%s got too close to %s's rocket");
 		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "%s almost dodged %s's rocket";
+			w_deathtypestring = _("%s almost dodged %s's rocket");
 		else
-			w_deathtypestring = "%s ate %s's rocket";
+			w_deathtypestring = _("%s ate %s's rocket");
 	}
 	return TRUE;
 }

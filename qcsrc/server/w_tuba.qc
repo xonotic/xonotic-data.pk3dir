@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "tuba", "tuba", "@!#%'n Tuba");
+REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "tuba", "tuba", _("@!#%'n Tuba"))
 #else
 #ifdef SVQC
 //#define TUBA_NOTE(n) strcat("weapons/tuba_note", ftos(n), ".wav")
@@ -236,7 +236,10 @@ float w_tuba(float req)
 		//	precache_sound(TUBA_NOTE(i));
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_TUBA);
+		self.current_ammo = ammo_none;
+	}
 	else if (req == WR_CHECKAMMO1)
 		return TRUE; // TODO use fuel?
 	else if (req == WR_CHECKAMMO2)
@@ -257,11 +260,11 @@ float w_tuba(float req)
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		w_deathtypestring = "%s hurt his own ears with the @!#%%'n Tuba";
+		w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Tuba");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
-		w_deathtypestring = "%s died of %s's great playing on the @!#%%'n Tuba";
+		w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Tuba");
 	}
 	return TRUE;
 }

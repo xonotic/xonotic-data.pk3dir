@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "gl", "grenadelauncher", "Mortar");
+REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "gl", "grenadelauncher", _("Mortar"))
 #else
 #ifdef SVQC
 .float gl_detonate_later;
@@ -161,8 +161,8 @@ void W_Grenade_Attack (void)
 {
 	local entity gren;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_grenadelauncher_primary_ammo;
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_reload_ammo);
+
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CHAN_WEAPON, autocvar_g_balance_grenadelauncher_primary_damage);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
@@ -208,8 +208,8 @@ void W_Grenade_Attack2 (void)
 {
 	local entity gren;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_rockets = self.ammo_rockets - autocvar_g_balance_grenadelauncher_secondary_ammo;
+	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_grenadelauncher_secondary_ammo, autocvar_g_balance_grenadelauncher_reload_ammo);
+
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CHAN_WEAPON, autocvar_g_balance_grenadelauncher_secondary_damage);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
@@ -260,6 +260,7 @@ float w_glauncher(float req)
 {
 	entity nade;
 	float nadefound;
+	float ammo_amount;
 
 	if (req == WR_AIM)
 	{
@@ -284,13 +285,17 @@ float w_glauncher(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, autocvar_g_balance_grenadelauncher_primary_refire))
+		if(autocvar_g_balance_grenadelauncher_reload_ammo && self.clip_load < min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo)) // forced reload
+			weapon_action(self.weapon, WR_RELOAD);
+		else if (self.BUTTON_ATCK)
 		{
-			W_Grenade_Attack();
-			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_grenadelauncher_primary_animtime, w_ready);
+			if (weapon_prepareattack(0, autocvar_g_balance_grenadelauncher_primary_refire))
+			{
+				W_Grenade_Attack();
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_grenadelauncher_primary_animtime, w_ready);
+			}
 		}
-		if (self.BUTTON_ATCK2)
+		else if (self.BUTTON_ATCK2)
 		{
 			if (cvar("g_balance_grenadelauncher_secondary_remote_detonateprimary"))
 			{
@@ -326,13 +331,29 @@ float w_glauncher(float req)
 		precache_sound ("weapons/grenade_bounce6.wav");
 		precache_sound ("weapons/grenade_stick.wav");
 		precache_sound ("weapons/grenade_fire.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_GRENADE_LAUNCHER);
+		self.current_ammo = ammo_rockets;
+	}
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_rockets >= autocvar_g_balance_grenadelauncher_primary_ammo;
+	{
+		ammo_amount = self.ammo_rockets >= autocvar_g_balance_grenadelauncher_primary_ammo;
+		ammo_amount += self.weapon_load[WEP_GRENADE_LAUNCHER] >= autocvar_g_balance_grenadelauncher_primary_ammo;
+		return ammo_amount;
+	}
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_rockets >= autocvar_g_balance_grenadelauncher_secondary_ammo;
+	{
+		ammo_amount = self.ammo_rockets >= autocvar_g_balance_grenadelauncher_secondary_ammo;
+		ammo_amount += self.weapon_load[WEP_GRENADE_LAUNCHER] >= autocvar_g_balance_grenadelauncher_secondary_ammo;
+		return ammo_amount;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Reload(min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo), autocvar_g_balance_grenadelauncher_reload_ammo, autocvar_g_balance_grenadelauncher_reload_time, "weapons/reload.wav");
+	}
 	return TRUE;
 };
 #endif
@@ -354,19 +375,19 @@ float w_glauncher(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "%s tried out his own grenade";
+			w_deathtypestring = _("%s tried out his own grenade");
 		else
-			w_deathtypestring = "%s detonated";
+			w_deathtypestring = _("%s detonated");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SPLASH)
 			if(w_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
-				w_deathtypestring = "%s didn't see %s's grenade";
+				w_deathtypestring = _("%s didn't see %s's grenade");
 			else // unchecked: SECONDARY
-				w_deathtypestring = "%s almost dodged %s's grenade";
+				w_deathtypestring = _("%s almost dodged %s's grenade");
 		else // unchecked: SECONDARY, BOUNCE
-			w_deathtypestring = "%s ate %s's grenade";
+			w_deathtypestring = _("%s ate %s's grenade");
 	}
 	return TRUE;
 }
