@@ -77,7 +77,6 @@ void spawn_tdeath(vector v0, entity e, vector v)
 #define TELEPORT_FLAGS_TELEPORTER (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH)
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
-	print("Calling TeleportPlayer\n");
 	entity oldself;
 	entity telefragger;
 	vector from;
@@ -153,7 +152,6 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 
 void Simple_TeleportPlayer(entity teleporter, entity player)
 {
-	print("Calling Simple_TeleportPlayer\n");
 	vector locout;
 	entity e;
 	float p;
@@ -194,7 +192,6 @@ void Simple_TeleportPlayer(entity teleporter, entity player)
 
 void Teleport_Touch (void)
 {
-	print("Calling Teleport_Touch\n");
 	entity oldself;
 	string s;
 
