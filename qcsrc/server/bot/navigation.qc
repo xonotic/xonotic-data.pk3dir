@@ -1020,7 +1020,6 @@ void navigation_unstuck()
 		{
 			if(head.classname=="waypoint")
 			if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
-			if(vlen(self.origin-head.origin)>100)
 			{
 				if (first==world)
 				{
