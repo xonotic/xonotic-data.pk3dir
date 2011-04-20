@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:36+0200\n"
+"POT-Creation-Date: 2011-04-20 15:38+0200\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -398,12 +398,12 @@ msgid "^1%s^1 was fragged by %s\n"
 msgstr "^1%s^1 wurde von %s^1 gefraggt\n"
 
 #: qcsrc/client/hud.qc:2867
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1's %s scoring spree was ended by %s\n"
 msgstr "^1%s^1's Punkte-Folge wurde von %s^1 beendet\n"
 
 #: qcsrc/client/hud.qc:2869
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1's %s kill spree was ended by %s\n"
 msgstr "^1%s^1's Kill-Spree wurde von %s^1 beendet\n"
 
@@ -468,7 +468,7 @@ msgid "%s^7 is a ^1BERSERKER!\n"
 msgstr "%s^7 ist ein ^1BERSERKER!\\n"
 
 #: qcsrc/client/hud.qc:2902
-#, fuzzy, c-format
+#, c-format
 msgid "%s^7 made ^1TWENTY FIVE SCORES IN A ROW!\n"
 msgstr "%s^7 hat ^1FÜNFUNDZWANZIG PUNKTE HINTEREINANDER!\n"
 
@@ -1472,17 +1472,17 @@ msgstr "%s kam mit %ss blauer Kugel in Kontakt"
 #: qcsrc/server/w_electro.qc:587
 #, c-format
 msgid "%s felt the electrifying air of %s's combo"
-msgstr ""
+msgstr "%s hat gespürt, wie %ss Combo die Luft elektrisierte"
 
 #: qcsrc/server/w_electro.qc:589
 #, c-format
 msgid "%s got too close to %s's blue beam"
-msgstr ""
+msgstr "%s kam zu nah an %ss blauen Strahl"
 
 #: qcsrc/server/w_electro.qc:591
 #, c-format
 msgid "%s was blasted by %s's blue beam"
-msgstr ""
+msgstr "%s wurde von %ss blauen Strahl erwischt"
 
 #: qcsrc/server/w_fireball.qc:2
 msgid "Fireball"
@@ -1491,42 +1491,42 @@ msgstr "Fireball"
 #: qcsrc/server/w_fireball.qc:417
 #, c-format
 msgid "%s forgot about some firemine"
-msgstr ""
+msgstr "%s hat den Platz einer Feuermine vergessen"
 
 #: qcsrc/server/w_fireball.qc:419 qcsrc/server/w_hlac.qc:240
 #, c-format
 msgid "%s should have used a smaller gun"
-msgstr ""
+msgstr "%s hätte eine kleinere Waffe nehmen sollen"
 
 #: qcsrc/server/w_fireball.qc:426
 #, c-format
 msgid "%s tried to catch %s's firemine"
-msgstr ""
+msgstr "%s hat versucht %ss Feuermine zu fangen"
 
 #: qcsrc/server/w_fireball.qc:428
 #, c-format
 msgid "%s fatefully ignored %s's firemine"
-msgstr ""
+msgstr "%s hat tragischerweise %ss Feuermine ignoriert"
 
 #: qcsrc/server/w_fireball.qc:435
 #, c-format
 msgid "%s could not hide from %s's fireball"
-msgstr ""
+msgstr "%s konnte sich nicht vor %ss Feuerball verstecken"
 
 #: qcsrc/server/w_fireball.qc:437
 #, c-format
 msgid "%s saw the pretty lights of %s's fireball"
-msgstr ""
+msgstr "%s hat die hübschen Lichter von %ss Feuerball gesehen"
 
 #: qcsrc/server/w_fireball.qc:440
 #, c-format
 msgid "%s got too close to %s's fireball"
-msgstr ""
+msgstr "%s ist %ss Feuerball zu nahe getreten"
 
 #: qcsrc/server/w_fireball.qc:442
 #, c-format
 msgid "%s tasted %s's fireball"
-msgstr ""
+msgstr "%s hat von %ss Feuerball probiert"
 
 #: qcsrc/server/w_grenadelauncher.qc:2
 msgid "Mortar"
@@ -1535,27 +1535,27 @@ msgstr "Mortar"
 #: qcsrc/server/w_grenadelauncher.qc:378
 #, c-format
 msgid "%s tried out his own grenade"
-msgstr ""
+msgstr "%s wollte wissen, ob seine Granate funktioniert"
 
 #: qcsrc/server/w_grenadelauncher.qc:380
 #, c-format
 msgid "%s detonated"
-msgstr ""
+msgstr "%s verfing sich in der eigenen Detonation"
 
 #: qcsrc/server/w_grenadelauncher.qc:386
 #, c-format
 msgid "%s didn't see %s's grenade"
-msgstr ""
+msgstr "%s hat %ss Granate nicht gesehen"
 
 #: qcsrc/server/w_grenadelauncher.qc:388
 #, c-format
 msgid "%s almost dodged %s's grenade"
-msgstr ""
+msgstr "%s ist fast %ss Granate ausgewichen"
 
 #: qcsrc/server/w_grenadelauncher.qc:390
 #, c-format
 msgid "%s ate %s's grenade"
-msgstr ""
+msgstr "%s nahm %ss Granate in den Mund"
 
 #: qcsrc/server/w_hagar.qc:2
 msgid "Hagar"
@@ -1564,12 +1564,12 @@ msgstr "Hagar"
 #: qcsrc/server/w_hagar.qc:209 qcsrc/server/w_seeker.qc:655
 #, c-format
 msgid "%s played with tiny rockets"
-msgstr ""
+msgstr "%s hat mit kleinen Raketen gespielt"
 
 #: qcsrc/server/w_hagar.qc:213
 #, c-format
 msgid "%s hoped %s's missiles wouldn't bounce"
-msgstr ""
+msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
 
 #: qcsrc/server/w_hagar.qc:215 qcsrc/server/w_seeker.qc:661
 #, c-format
@@ -1594,12 +1594,12 @@ msgstr "Grappling Hook"
 #: qcsrc/server/w_shotgun.qc:203 qcsrc/server/w_uzi.qc:317
 #, c-format
 msgid "%s did the impossible"
-msgstr ""
+msgstr "%s hat das Unmögliche geschafft"
 
 #: qcsrc/server/w_hook.qc:268
 #, c-format
 msgid "%s has run into %s's gravity bomb"
-msgstr ""
+msgstr "%s ist in %ss Gravitationsbombe reingelaufen"
 
 #: qcsrc/server/w_laser.qc:2
 msgid "Laser"
@@ -1608,12 +1608,12 @@ msgstr "Laser"
 #: qcsrc/server/w_laser.qc:305
 #, c-format
 msgid "%s lasered themself to hell"
-msgstr ""
+msgstr "%s hat sich in die Hölle gelasert"
 
 #: qcsrc/server/w_laser.qc:309
 #, c-format
 msgid "%s was cut in half by %s's gauntlet"
-msgstr ""
+msgstr "%s ist von %ss Gauntlet halbiert worden"
 
 #: qcsrc/server/w_laser.qc:311
 #, c-format
@@ -1627,22 +1627,22 @@ msgstr "Mine Layer"
 #: qcsrc/server/w_minelayer.qc:495 qcsrc/server/w_rocketlauncher.qc:500
 #, c-format
 msgid "%s exploded"
-msgstr ""
+msgstr "%s ist explodiert"
 
 #: qcsrc/server/w_minelayer.qc:499
 #, c-format
 msgid "%s got too close to %s's mine"
-msgstr ""
+msgstr "%s ist %ss Mine zu nahe getreten"
 
 #: qcsrc/server/w_minelayer.qc:501
 #, c-format
 msgid "%s almost dodged %s's mine"
-msgstr ""
+msgstr "%s ist fast %ss Mine ausgewichen"
 
 #: qcsrc/server/w_minelayer.qc:503
 #, c-format
 msgid "%s stepped on %s's mine"
-msgstr ""
+msgstr "%s ist auf %ss Mine gelatscht"
 
 #: qcsrc/server/w_minstanex.qc:2
 msgid "MinstaNex"
@@ -1664,7 +1664,7 @@ msgstr "Port-O-Launch"
 #: qcsrc/server/w_porto.qc:298
 #, c-format
 msgid "%s felt %s doing the impossible to him"
-msgstr ""
+msgstr "%s hat gespürt, wie %s das Unmögliche für ihn getan hat"
 
 #: qcsrc/server/w_rocketlauncher.qc:2
 msgid "Rocket Launcher"
@@ -1673,17 +1673,17 @@ msgstr "Rocket Launcher"
 #: qcsrc/server/w_rocketlauncher.qc:504
 #, c-format
 msgid "%s got too close to %s's rocket"
-msgstr ""
+msgstr "%s ist %ss Rakete zu nahe getreten"
 
 #: qcsrc/server/w_rocketlauncher.qc:506
 #, c-format
 msgid "%s almost dodged %s's rocket"
-msgstr ""
+msgstr "%s ist fast %ss Rakete ausgewichen"
 
 #: qcsrc/server/w_rocketlauncher.qc:508
 #, c-format
 msgid "%s ate %s's rocket"
-msgstr ""
+msgstr "%s hat %ss Rakete in den Mund genommen"
 
 #: qcsrc/server/w_seeker.qc:2
 msgid "T.A.G. Seeker"
@@ -1701,7 +1701,7 @@ msgstr "Shotgun"
 #: qcsrc/server/w_shotgun.qc:207
 #, c-format
 msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
-msgstr ""
+msgstr "%2$1s ^7hat %1$s ^7ein wenig mit einer großen Schrotflinte geschlagen"
 
 #: qcsrc/server/w_shotgun.qc:209
 #, c-format
@@ -1715,32 +1715,32 @@ msgstr "Sniper Rifle"
 #: qcsrc/server/w_sniperrifle.qc:229
 #, c-format
 msgid "%s shot themself automatically"
-msgstr ""
+msgstr "%s hat sich vollautomatisch selbst erschossen"
 
 #: qcsrc/server/w_sniperrifle.qc:231
 #, c-format
 msgid "%s sniped themself somehow"
-msgstr ""
+msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
 
 #: qcsrc/server/w_sniperrifle.qc:238
 #, c-format
 msgid "%s failed to hide from %s's bullet hail"
-msgstr ""
+msgstr "%s hat es nicht geschafft, sich vor %ss Kugelhagel zu verstecken"
 
 #: qcsrc/server/w_sniperrifle.qc:240
 #, c-format
 msgid "%s died in %s's bullet hail"
-msgstr ""
+msgstr "%s ist in %ss Kugelhagel gefallen"
 
 #: qcsrc/server/w_sniperrifle.qc:247
 #, c-format
 msgid "%s failed to hide from %s's rifle"
-msgstr ""
+msgstr "%s hat es nicht geschafft, sich vor %ss Gewehr zu verstecken"
 
 #: qcsrc/server/w_sniperrifle.qc:252
 #, c-format
 msgid "%s got hit in the head by %s"
-msgstr ""
+msgstr "%s hat ein Loch im Kopf bekommen; schuld war %s"
 
 #: qcsrc/server/w_sniperrifle.qc:254 qcsrc/server/w_uzi.qc:321
 #, c-format
@@ -1756,11 +1756,14 @@ msgstr "@!#%'n Tuba"
 #, c-format
 msgid "%s hurt his own ears with the @!#%%'n Tuba"
 msgstr ""
+"%s haben die Ohren geschmerzt von seinem eigenen Spiel auf der @!#%%'n Tuba"
 
 #: qcsrc/server/w_tuba.qc:267
 #, c-format
 msgid "%s died of %s's great playing on the @!#%%'n Tuba"
 msgstr ""
+"%s ist an seinen Ohrenschmerzen, die von %ss großartigem Spiel auf der @!#"
+"%%'n Tuba stammten, gestorben"
 
 #: qcsrc/server/w_uzi.qc:2
 msgid "Machine Gun"
@@ -1769,4 +1772,4 @@ msgstr "Machine Gun"
 #: qcsrc/server/w_uzi.qc:323
 #, c-format
 msgid "%s was riddled full of holes by %s"
-msgstr ""
+msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"

@@ -1,4 +1,4 @@
-# Xonotic Menu
+# Xonotic CSQC
 # Copyright (C) 2011 Team Xonotic
 # This file is distributed under the same license as the Xonotic package.
 # Rudolf Polzer <divVerent@xonotic.org>, 2011.
@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 10:37+0200\n"
-"PO-Revision-Date: 2011-04-20 10:44+0200\n"
+"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2413,7 +2413,7 @@ msgstr "Crylink"
 #: qcsrc/server/w_crylink.qc:664
 #, c-format
 msgid "%s succeeded at self-destructing themself with the Crylink"
-msgstr "%s hat sich erfolgreich mit der Crylink selbst zerstört"
+msgstr "%s zerstörte sich selbst erfolgreich mit der Crylink"
 
 #: qcsrc/server/w_crylink.qc:669
 #, c-format
@@ -2423,12 +2423,12 @@ msgstr "%s konnte sich nicht vor %ss Crylink verstecken"
 #: qcsrc/server/w_crylink.qc:671
 #, c-format
 msgid "%s was too close to %s's Crylink"
-msgstr "%s ist %ss Crylink zu nahe getreten"
+msgstr "%s trat %ss Crylink zu nahe"
 
 #: qcsrc/server/w_crylink.qc:673
 #, c-format
 msgid "%s took a close look at %s's Crylink"
-msgstr "%s hat %ss Crylink genau unter die Lupe genommen"
+msgstr "%s schaute sich %ss Crylink sehr genau an"
 
 #: qcsrc/server/w_electro.qc:2
 msgid "Electro"
@@ -2437,22 +2437,22 @@ msgstr "Electro"
 #: qcsrc/server/w_electro.qc:571
 #, c-format
 msgid "%s could not remember where they put plasma"
-msgstr "%s konnte sich nicht erinnern, wo das Plasma lag"
+msgstr "%s vergaß, wo er das Plasma hingetan hatte"
 
 #: qcsrc/server/w_electro.qc:573
 #, c-format
 msgid "%s played with plasma"
-msgstr "%s hat mit Plasma gespielt"
+msgstr "%s spielte mit Plasma"
 
 #: qcsrc/server/w_electro.qc:580
 #, c-format
 msgid "%s just noticed %s's blue ball"
-msgstr "%s hat gerade %ss blauen Ball bemerkt"
+msgstr "%s hat gerade %ss blaue Kugel bemerkt"
 
 #: qcsrc/server/w_electro.qc:582
 #, c-format
 msgid "%s got in touch with %s's blue ball"
-msgstr "%s kam in Kontakt mit %ss blauen Ball"
+msgstr "%s kam mit %ss blauer Kugel in Kontakt"
 
 #: qcsrc/server/w_electro.qc:587
 #, c-format
@@ -2559,7 +2559,7 @@ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
 #: qcsrc/server/w_hagar.qc:215 qcsrc/server/w_seeker.qc:661
 #, c-format
 msgid "%s was pummeled by %s"
-msgstr "%s hat sich von %s zerlegen lassen"
+msgstr "^1%s^1 wurde von %s^1 erwischt"
 
 #: qcsrc/server/w_hlac.qc:2
 msgid "Heavy Laser Assault Cannon"
@@ -2568,7 +2568,7 @@ msgstr "Heavy Laser Assault Cannon"
 #: qcsrc/server/w_hlac.qc:242
 #, c-format
 msgid "%s was cut down by %s"
-msgstr "%s ist von %s niedergeschossen worden"
+msgstr "^1%s^1 wurde von %s^1 niedergehauen"
 
 #: qcsrc/server/w_hook.qc:2
 msgid "Grappling Hook"
@@ -2603,7 +2603,7 @@ msgstr "%s ist von %ss Gauntlet halbiert worden"
 #: qcsrc/server/w_laser.qc:311
 #, c-format
 msgid "%s was lasered to death by %s"
-msgstr "%s ist von %s zu Tode gelasert worden"
+msgstr "^1%s^1 wurde von %s^1 zu Tode gelasert"
 
 #: qcsrc/server/w_minelayer.qc:2
 msgid "Mine Layer"
@@ -2636,7 +2636,7 @@ msgstr "MinstaNex"
 #: qcsrc/server/w_minstanex.qc:292 qcsrc/server/w_nex.qc:269
 #, c-format
 msgid "%s has been vaporized by %s"
-msgstr "%s hat sich, dank %ss Nex, in Luft aufgelöst"
+msgstr "^1%s^1 wurde von %s^1 vernichtet"
 
 #: qcsrc/server/w_nex.qc:2
 msgid "Nex"
@@ -2677,7 +2677,7 @@ msgstr "T.A.G. Seeker"
 #: qcsrc/server/w_seeker.qc:659
 #, c-format
 msgid "%s was tagged by %s"
-msgstr "%s wurde von %s getaggt"
+msgstr "^1%s^1 wurde von %s^1 getagged"
 
 #: qcsrc/server/w_shotgun.qc:2
 msgid "Shotgun"
@@ -2691,7 +2691,7 @@ msgstr "%2$1s ^7hat %1$s ^7ein wenig mit einer großen Schrotflinte geschlagen"
 #: qcsrc/server/w_shotgun.qc:209
 #, c-format
 msgid "%s was gunned by %s"
-msgstr "%s ist von %s abgeballert worden"
+msgstr "^1%s^1 wurde von %s^1 erschossen"
 
 #: qcsrc/server/w_sniperrifle.qc:2
 msgid "Sniper Rifle"
@@ -2730,7 +2730,7 @@ msgstr "%s hat ein Loch im Kopf bekommen; schuld war %s"
 #: qcsrc/server/w_sniperrifle.qc:254 qcsrc/server/w_uzi.qc:321
 #, c-format
 msgid "%s was sniped by %s"
-msgstr "%s ist von Scharfschütze %s getroffen worden"
+msgstr "^1%s^1 wurde von %s^1 erledigt"
 
 #: qcsrc/server/w_tuba.qc:2
 #, c-format
