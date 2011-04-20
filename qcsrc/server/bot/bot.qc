@@ -98,9 +98,7 @@ void bot_think()
 			self.bot_strategytime = 0;
 		}
 	}
-
-	//
-	if(self.aistatus & AI_STATUS_STUCK)
+	else if(self.aistatus & AI_STATUS_STUCK)
 		navigation_unstuck();
 
 	// now call the current bot AI (havocbot for example)
