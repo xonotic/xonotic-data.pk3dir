@@ -29,7 +29,7 @@ msgstr "Uso: menu_cmd command..., dove i possibili comandi sono:\n"
 
 #: qcsrc/menu/gamecommand.qc:66
 msgid "  sync - reloads all cvars on the current menu page\n"
-msgstr "sync - ricarica tutte le cvar sulla corrente pagina\n"
+msgstr "  sync - ricarica tutte le cvar sulla corrente pagina\n"
 
 #: qcsrc/menu/gamecommand.qc:67
 msgid "  directmenu ITEM - select a menu item as main item\n"
@@ -288,7 +288,7 @@ msgstr "Pannello dei Powerup"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:45
 msgid "Flip strength and shield positions"
-msgstr "Inverti posizioni di armatura e vita"
+msgstr "Inverti posizioni di forza e scudo"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:4
 msgid "Pressed Keys Panel"
