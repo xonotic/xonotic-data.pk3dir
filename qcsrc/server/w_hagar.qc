@@ -247,7 +247,7 @@ void W_Hagar_Attack2_Load (void)
 		self.weapon_forbidchange = FALSE;
 
 	// we aren't checking ammo during an attack, so we must do it here
-	if not(weapon_action(self.weapon, WR_CHECKAMMO2))
+	if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
 	{
 		W_SwitchToOtherWeapon(self);
 		return;
