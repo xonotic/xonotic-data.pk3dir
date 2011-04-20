@@ -963,6 +963,9 @@ void botframe_updatedangerousobjects(float maxupdate)
 
 void navigation_unstuck()
 {
+	if not(autocvar_bot_wander_enable)
+		return;
+
 	if not(navigation_wander_owner)
 	{
 		dprint(self.netname, " taking over the waypoints queue\n");
@@ -978,7 +981,7 @@ void navigation_unstuck()
 	{
 		// evaluate the next goal on the queue
 		float d = vlen(self.origin - navigation_wander_goal.origin);
-		dprint(self.netname, " evaluating ", navigation_wander_goal.classname, " with distance ", ftos(d), "\n");
+		// dprint(self.netname, " evaluating ", navigation_wander_goal.classname, " with distance ", ftos(d), "\n");
 		if(tracewalk(navigation_wander_goal, self.origin, PL_MIN, PL_MAX, navigation_wander_goal.origin, bot_navigation_movemode))
 		{
 			if( d > navigation_wander_bestgoalrating)
