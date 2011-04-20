@@ -185,8 +185,14 @@ void W_Hagar_Attack2_Load (void)
 {
 	// loadable hagar secondary attack, must always run each frame
 
-	local float loaded;
+	local float loaded, enough_ammo;
 	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max;
+
+	// this is different than WR_CHECKAMMO when it comes to reloading
+	if(autocvar_g_balance_hagar_reload_ammo)
+		enough_ammo = self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_secondary_ammo;
+	else
+		enough_ammo = self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
 
 	if(self.BUTTON_ATCK2)
 	{
@@ -209,7 +215,7 @@ void W_Hagar_Attack2_Load (void)
 		else
 		{
 			// check if we can attempt to load another rocket
-			if(!self.hagar_loadblock && !loaded && weapon_action(self.weapon, WR_CHECKAMMO2))
+			if(!self.hagar_loadblock && !loaded && enough_ammo)
 			if(self.hagar_loadstep < time)
 			{
 				W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
@@ -234,7 +240,7 @@ void W_Hagar_Attack2_Load (void)
 	{
 		self.weapon_forbidchange = TRUE;
 
-		if(!self.BUTTON_ATCK2 || ((loaded || !weapon_action(self.weapon, WR_CHECKAMMO2)) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
+		if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
 			W_Hagar_Attack2_Load_Release();
 	}
 	else
@@ -266,30 +272,27 @@ float w_hagar(float req)
 		}
 	else if (req == WR_THINK)
 	{
+		local float loadable_secondary;
+		loadable_secondary = autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary;
+
+		if (loadable_secondary)
+			W_Hagar_Attack2_Load(); // must always run each frame
 		if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo)) // forced reload
 			weapon_action(self.weapon, WR_RELOAD);
-		else
+		else if (self.BUTTON_ATCK && !self.hagar_load && !self.hagar_loadblock) // not while secondary is loaded or awaiting reset
 		{
-			local float loadable_secondary;
-			loadable_secondary = autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary;
-
-			if (loadable_secondary)
-				W_Hagar_Attack2_Load(); // must run each frame, even when no firing buttons are pressed
-			if (self.BUTTON_ATCK && !self.hagar_load && !self.hagar_loadblock) // not while secondary is loaded or awaiting reset
+			if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
 			{
-				if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
-				{
-					W_Hagar_Attack();
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
-				}
+				W_Hagar_Attack();
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
 			}
-			else if (self.BUTTON_ATCK2 && !loadable_secondary && autocvar_g_balance_hagar_secondary)
+		}
+		else if (self.BUTTON_ATCK2 && !loadable_secondary && autocvar_g_balance_hagar_secondary)
+		{
+			if (weapon_prepareattack(1, autocvar_g_balance_hagar_secondary_refire))
 			{
-				if (weapon_prepareattack(1, autocvar_g_balance_hagar_secondary_refire))
-				{
-					W_Hagar_Attack2();
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
-				}
+				W_Hagar_Attack2();
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
 			}
 		}
 	}
@@ -339,7 +342,8 @@ float w_hagar(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
+		if not(self.hagar_load) // require releasing loaded rockets first
+			W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };
