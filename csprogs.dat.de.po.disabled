@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-04-20 10:37+0200\n"
-"PO-Revision-Date: 2011-01-20 20:16+0100\n"
+"PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -36,7 +36,7 @@ msgstr "^4CSQC Build-Information: %s (deutsch)\n"
 #: qcsrc/client/Main.qc:232 qcsrc/client/Main.qc:248
 #, c-format
 msgid "trying to switch to unsupported team %d\n"
-msgstr "es wurde versucht, in das nicht unterstützte Team %d zu wechseln"
+msgstr "es wurde versucht, in das nicht unterstützte Team %d zu wechseln\n"
 
 #: qcsrc/client/Main.qc:364 qcsrc/client/scoreboard.qc:241
 msgid "Usage:\n"
@@ -1570,7 +1570,7 @@ msgstr ""
 #: qcsrc/server/w_hagar.qc:215 qcsrc/server/w_seeker.qc:661
 #, c-format
 msgid "%s was pummeled by %s"
-msgstr "^1%s^1 wurde von %s^1 erwischt\n"
+msgstr "^1%s^1 wurde von %s^1 erwischt"
 
 #: qcsrc/server/w_hlac.qc:2
 msgid "Heavy Laser Assault Cannon"
@@ -1579,7 +1579,7 @@ msgstr "Heavy Laser Assault Cannon"
 #: qcsrc/server/w_hlac.qc:242
 #, c-format
 msgid "%s was cut down by %s"
-msgstr "^1%s^1 wurde von %s^1 niedergehauen\n"
+msgstr "^1%s^1 wurde von %s^1 niedergehauen"
 
 #: qcsrc/server/w_hook.qc:2
 msgid "Grappling Hook"
@@ -1612,9 +1612,9 @@ msgid "%s was cut in half by %s's gauntlet"
 msgstr ""
 
 #: qcsrc/server/w_laser.qc:311
-#, fuzzy, c-format
+#, c-format
 msgid "%s was lasered to death by %s"
-msgstr "^1%s^1 wurde von %s^1 konserviert\n"
+msgstr "^1%s^1 wurde von %s^1 zu Tode gelasert"
 
 #: qcsrc/server/w_minelayer.qc:2
 msgid "Mine Layer"
@@ -1645,9 +1645,9 @@ msgid "MinstaNex"
 msgstr "MinstaNex"
 
 #: qcsrc/server/w_minstanex.qc:292 qcsrc/server/w_nex.qc:269
-#, fuzzy, c-format
+#, c-format
 msgid "%s has been vaporized by %s"
-msgstr "^1%s^1 wurde von %s^1 telefragged\n"
+msgstr "^1%s^1 wurde von %s^1 vernichtet"
 
 #: qcsrc/server/w_nex.qc:2
 msgid "Nex"
@@ -1686,9 +1686,9 @@ msgid "T.A.G. Seeker"
 msgstr "T.A.G. Seeker"
 
 #: qcsrc/server/w_seeker.qc:659
-#, fuzzy, c-format
+#, c-format
 msgid "%s was tagged by %s"
-msgstr "^1%s^1 wurde von %s^1 telefragged\n"
+msgstr "^1%s^1 wurde von %s^1 getagged"
 
 #: qcsrc/server/w_shotgun.qc:2
 msgid "Shotgun"
@@ -1702,7 +1702,7 @@ msgstr ""
 #: qcsrc/server/w_shotgun.qc:209
 #, c-format
 msgid "%s was gunned by %s"
-msgstr "^1%s^1 wurde von %s^1 erschossen\n"
+msgstr "^1%s^1 wurde von %s^1 erschossen"
 
 #: qcsrc/server/w_sniperrifle.qc:2
 msgid "Sniper Rifle"
@@ -1739,9 +1739,9 @@ msgid "%s got hit in the head by %s"
 msgstr ""
 
 #: qcsrc/server/w_sniperrifle.qc:254 qcsrc/server/w_uzi.qc:321
-#, fuzzy, c-format
+#, c-format
 msgid "%s was sniped by %s"
-msgstr "^1%s^1 wurde von %s^1 im Schleim versenkt\n"
+msgstr "^1%s^1 wurde von %s^1 erledigt"
 
 #: qcsrc/server/w_tuba.qc:2
 #, c-format
