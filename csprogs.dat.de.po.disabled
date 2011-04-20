@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 10:37+0200\n"
+"POT-Creation-Date: 2011-04-20 14:33+0200\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr "^4CSQC Build-Information: %s (deutsch)\n"
 #: qcsrc/client/Main.qc:232 qcsrc/client/Main.qc:248
 #, c-format
 msgid "trying to switch to unsupported team %d\n"
-msgstr "es wurde versucht, in das nicht unterstützte Team %d zu wechseln\n"
+msgstr "es wurde versucht, in das nicht unterstützte Team %d zu wechseln"
 
 #: qcsrc/client/Main.qc:364 qcsrc/client/scoreboard.qc:241
 msgid "Usage:\n"
@@ -198,7 +198,7 @@ msgstr "^1Konnte nicht nach %s schreiben\n"
 
 #: qcsrc/client/hud.qc:1837
 msgid "Out of ammo"
-msgstr ""
+msgstr "Keine Munition mehr."
 
 #: qcsrc/client/hud.qc:1841
 msgid "Don't have"
@@ -355,7 +355,7 @@ msgstr "^1%s^1 wurde von %s^1 in die Luft gejagt\n"
 #: qcsrc/client/hud.qc:2822
 #, c-format
 msgid "^1%s^1 got caught in the destruction of %s^1's vehicle\n"
-msgstr ""
+msgstr "^1%s^1 wurde von der Explosion von %s^1s Fahrzeug erwischt\n"
 
 #: qcsrc/client/hud.qc:2826
 #, c-format
@@ -365,12 +365,12 @@ msgstr "^1%s^1 wurde von %s^1 niedergeschmettert\n"
 #: qcsrc/client/hud.qc:2830
 #, c-format
 msgid "^1%s^1 could find no shelter from %s^1's rockets\n"
-msgstr ""
+msgstr "^1%s^1 fand keine Deckung vor %s^1s Raketen\n"
 
 #: qcsrc/client/hud.qc:2834
 #, c-format
 msgid "^1%s^1 dies when %s^1's wakizashi dies.\n"
-msgstr ""
+msgstr "^1%s^1 starb zusammen mit %s^1's Wakizashi.\n"
 
 #: qcsrc/client/hud.qc:2838
 #, c-format
@@ -395,107 +395,107 @@ msgstr "^1%s^1 wurde von %s verbrannt\n"
 #: qcsrc/client/hud.qc:2862
 #, c-format
 msgid "^1%s^1 was fragged by %s\n"
-msgstr ""
+msgstr "^1%s^1 wurde von %s^1 gefraggt\n"
 
 #: qcsrc/client/hud.qc:2867
-#, c-format
+#, fuzzy, c-format
 msgid "^1%s^1's %s scoring spree was ended by %s\n"
-msgstr ""
+msgstr "^1%s^1's Punkte-Folge wurde von %s^1 beendet\n"
 
 #: qcsrc/client/hud.qc:2869
-#, c-format
+#, fuzzy, c-format
 msgid "^1%s^1's %s kill spree was ended by %s\n"
-msgstr ""
+msgstr "^1%s^1's Kill-Spree wurde von %s^1 beendet\n"
 
 #: qcsrc/client/hud.qc:2872
 #, c-format
 msgid "^1%s^1 made %s scores in a row\n"
-msgstr ""
+msgstr "^1%s^1 machte %s Punkte hintereinander\n"
 
 #: qcsrc/client/hud.qc:2874
 #, c-format
 msgid "^1%s^1 has %s frags in a row\n"
-msgstr ""
+msgstr "^1%s^1 hat %s Frags hintereinander\n"
 
 #: qcsrc/client/hud.qc:2877
 #, c-format
 msgid "%s^7 made a ^1TRIPLE SCORE\n"
-msgstr ""
+msgstr "%s^7 hat einen ^1TRIPLE SCORE\n"
 
 #: qcsrc/client/hud.qc:2879
 #, c-format
 msgid "%s^7 made a ^1TRIPLE FRAG\n"
-msgstr ""
+msgstr "%s^7 hat einen ^1TRIPLE FRAG\n"
 
 #: qcsrc/client/hud.qc:2882
 #, c-format
 msgid "%s^7 unleashes ^1SCORING RAGE\n"
-msgstr ""
+msgstr "%s^7 hat ^1PUNKTE-RASEN\n"
 
 #: qcsrc/client/hud.qc:2884
 #, c-format
 msgid "%s^7 unleashes ^1RAGE\n"
-msgstr ""
+msgstr "%s^7 ^1RAST VOR ZORN\n"
 
 #: qcsrc/client/hud.qc:2887
 #, c-format
 msgid "%s^7 made ^1TEN SCORES IN A ROW!\n"
-msgstr ""
+msgstr "%s^7 hat ^1ZEHN PUNKTE HINTEREINANDER!\n"
 
 #: qcsrc/client/hud.qc:2889
 #, c-format
 msgid "%s^7 starts the ^1MASSACRE!\n"
-msgstr ""
+msgstr "%s^7 beginnt das ^1MASSAKER!\n"
 
 #: qcsrc/client/hud.qc:2892
 #, c-format
 msgid "%s^7 made ^1FIFTEEN SCORES IN A ROW!\n"
-msgstr ""
+msgstr "%s^7 hat ^1FÜNFZEHN PUNKTE HINTEREINANDER\n"
 
 #: qcsrc/client/hud.qc:2894
 #, c-format
 msgid "%s^7 executes ^1MAYHEM!\n"
-msgstr ""
+msgstr "%s^7 erzeugt das ^1CHAOS!\n"
 
 #: qcsrc/client/hud.qc:2897
 #, c-format
 msgid "%s^7 made ^1TWENTY SCORES IN A ROW!\n"
-msgstr ""
+msgstr "%s^7 hat ^1ZWANZIG PUNKTE HINTEREINANDER\n"
 
 #: qcsrc/client/hud.qc:2899
 #, c-format
 msgid "%s^7 is a ^1BERSERKER!\n"
-msgstr ""
+msgstr "%s^7 ist ein ^1BERSERKER!\\n"
 
 #: qcsrc/client/hud.qc:2902
-#, c-format
+#, fuzzy, c-format
 msgid "%s^7 made ^1TWENTY FIVE SCORES IN A ROW!\n"
-msgstr ""
+msgstr "%s^7 hat ^1FÜNFUNDZWANZIG PUNKTE HINTEREINANDER!\n"
 
 #: qcsrc/client/hud.qc:2904
 #, c-format
 msgid "%s^7 inflicts ^1CARNAGE!\n"
-msgstr ""
+msgstr "%s^7 hält ein ^1BLUTBAD!\n"
 
 #: qcsrc/client/hud.qc:2907
 #, c-format
 msgid "%s^7 made ^1THIRTY SCORES IN A ROW!\n"
-msgstr ""
+msgstr "%s^7 hat ^1DREISSIG PUNKTE HINTEREINANDER\n"
 
 #: qcsrc/client/hud.qc:2909
 #, c-format
 msgid "%s^7 unleashes ^1ARMAGEDDON!\n"
-msgstr ""
+msgstr "%s^7 lässt die ^1APOKALYPSE^7 los!\n"
 
 #: qcsrc/client/hud.qc:2917
 #, c-format
 msgid "^1%s^1 was in the water for too long\n"
-msgstr ""
+msgstr "^1%s^1 war zu lange im Wasser\n"
 
 #: qcsrc/client/hud.qc:2919
 #, c-format
 msgid "^1%s^1 drowned\n"
-msgstr ""
+msgstr "^1%s^1 ertrank\n"
 
 #: qcsrc/client/hud.qc:2924
 #, c-format
@@ -505,67 +505,67 @@ msgstr "^1%s^1 wurde im Schleim versenkt\n"
 #: qcsrc/client/hud.qc:2930
 #, c-format
 msgid "^1%s^1 found a hot place\n"
-msgstr ""
+msgstr "^1%s^1 fand einen heißen Ort\n"
 
 #: qcsrc/client/hud.qc:2932
 #, c-format
 msgid "^1%s^1 turned into hot slag\n"
-msgstr ""
+msgstr "^1%s^1 verwandelte sich in heiße Schlacke\n"
 
 #: qcsrc/client/hud.qc:2939
 #, c-format
 msgid "^1%s^1 tested gravity (and it worked)\n"
-msgstr ""
+msgstr "^1%s^1 probierte die Gravitation aus (und sie funktionierte)\n"
 
 #: qcsrc/client/hud.qc:2941
 #, c-format
 msgid "^1%s^1 hit the ground with a crunch\n"
-msgstr ""
+msgstr "^1%s^1 landete mit einem Knall auf dem Boden\n"
 
 #: qcsrc/client/hud.qc:2946
 #, c-format
 msgid "^1%s^1 became a shooting star\n"
-msgstr ""
+msgstr "^1%s^1 wurde zu einer Sternschnuppe\n"
 
 #: qcsrc/client/hud.qc:2952
 #, c-format
 msgid "^1%s^1 discovered a swamp\n"
-msgstr ""
+msgstr "^1%s^1 entdeckte einen Sumpf\n"
 
 #: qcsrc/client/hud.qc:2954
 #, c-format
 msgid "^1%s^1 is now conserved for centuries to come\n"
-msgstr ""
+msgstr "^1%s^1 ist jetzt für Jahrhunderte konserviert\n"
 
 #: qcsrc/client/hud.qc:2959
 #, c-format
 msgid "^1%s^1 was mowed down by a turret \n"
-msgstr ""
+msgstr "^1%s^1 wurde von einem Turret niedergemäht\n"
 
 #: qcsrc/client/hud.qc:2971
 #, c-format
 msgid "^1%s^1 died in an accident\n"
-msgstr ""
+msgstr "^1%s^1 starb an einem Unfall\n"
 
 #: qcsrc/client/hud.qc:2975
 #, c-format
 msgid "^1%s^1 was unfairly eliminated\n"
-msgstr ""
+msgstr "^1%s^1 wurde auf unfaire Weise eliminiert\n"
 
 #: qcsrc/client/hud.qc:2981
 #, c-format
 msgid "^1%s^1 felt a little hot\n"
-msgstr ""
+msgstr "^1%s^1 fand es ein wenig zu warm\n"
 
 #: qcsrc/client/hud.qc:2983
 #, c-format
 msgid "^1%s^1 burnt to death\n"
-msgstr ""
+msgstr "^1%s^1 verbrannte\n"
 
 #: qcsrc/client/hud.qc:2990
 #, c-format
 msgid "^1%s^1 needs a restart\n"
-msgstr ""
+msgstr "^1%s^1 braucht einen Neustart\n"
 
 #: qcsrc/client/hud.qc:2997
 #, c-format
@@ -626,11 +626,11 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:3057
 msgid "^1Reconsider your tactics, camper!"
-msgstr ""
+msgstr "^1Ändere dein Verhalten, Camper!"
 
 #: qcsrc/client/hud.qc:3059
 msgid "^1Die camper!"
-msgstr ""
+msgstr "^1Stirb, Camper!"
 
 #: qcsrc/client/hud.qc:3062
 msgid "^1You are reinserted into the game for running out of ammo..."
@@ -906,36 +906,36 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:5037
 msgid " qu/s"
-msgstr ""
+msgstr "qu/s"
 
 #: qcsrc/client/hud.qc:5041
 msgid " m/s"
-msgstr ""
+msgstr "m/s"
 
 #: qcsrc/client/hud.qc:5045
 msgid " km/h"
-msgstr ""
+msgstr "km/h"
 
 #: qcsrc/client/hud.qc:5049
 msgid " mph"
-msgstr ""
+msgstr "mph"
 
 #: qcsrc/client/hud.qc:5053
 msgid " knots"
-msgstr ""
+msgstr "Knoten"
 
 #: qcsrc/client/mapvoting.qc:28
 msgid " (1 vote)"
-msgstr ""
+msgstr "(1 Stimme)"
 
 #: qcsrc/client/mapvoting.qc:30
 #, c-format
 msgid " (%d votes)"
-msgstr ""
+msgstr "(%d Stimmen)"
 
 #: qcsrc/client/mapvoting.qc:113
 msgid "Don't care"
-msgstr ""
+msgstr "Egal"
 
 #: qcsrc/client/mapvoting.qc:194
 msgid "Vote for a map"
