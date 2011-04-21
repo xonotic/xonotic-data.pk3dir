@@ -30,26 +30,20 @@ entity navigation_bestgoal;
 .entity navigation_jetpack_goal;
 .vector navigation_jetpack_point;
 
-#ifdef DEBUG_TRACEWALK
 float DEBUG_NODE_SUCCESS        = 1;
 float DEBUG_NODE_WARNING        = 2;
 float DEBUG_NODE_FAIL           = 3;
 vector debuglastnode;
-#endif
 
 /*
  * Functions
  */
 
-#ifdef DEBUG_TRACEWALK
 void debugresetnodes();
 void debugnode(vector node);
 void debugnodestatus(vector position, float status);
-#endif
 
-#ifdef DEBUG_BOT_GOALSTACK
 void debuggoalstack();
-#endif
 
 float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode);
 

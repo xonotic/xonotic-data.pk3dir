@@ -148,7 +148,9 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 
 	The following keys are defined:
 
-	V: format version (always 1)
+	V: format version (always 1) - this MUST be the first line!
+	#: comment (MUST be ignored by any parser)
+	R: release information on the server
 	T: time at which the game ended
 	G: game type
 	M: map name
@@ -190,6 +192,9 @@ void PlayerStats_Shutdown()
 		db_dump(playerstats_db, "foo.db");
 
 		bufstr_set(b, i++, "V 1");
+#ifdef WATERMARK
+		bufstr_set(b, i++, sprintf("R %s", WATERMARK()));
+#endif
 		bufstr_set(b, i++, sprintf("T %s.%06d", strftime(FALSE, "%s"), floor(random() * 1000000)));
 		bufstr_set(b, i++, sprintf("G %s", GetGametype()));
 		bufstr_set(b, i++, sprintf("M %s", GetMapname()));

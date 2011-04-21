@@ -87,8 +87,13 @@ float w_nex(float req)
 	float ammo_amount;
 	if (req == WR_AIM)
 	{
-		self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
-		self.BUTTON_ATCK2 = bot_aim(1000000, 0, 1, FALSE);
+		if(bot_aim(1000000, 0, 1, FALSE))
+			self.BUTTON_ATCK = TRUE;
+		else
+		{
+			if(autocvar_g_balance_nex_charge)
+				self.BUTTON_ATCK2 = TRUE;
+		}
 	}
 	else if (req == WR_THINK)
 	{
