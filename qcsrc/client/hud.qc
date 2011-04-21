@@ -2899,7 +2899,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 				print (sprintf(_("%s^7 is a ^1BERSERKER!\n"), s1));
 		} else if(type == KILL_SPREE_25) {
 			if(gentle)
-				print (sprintf(_("%s^7 made ^1TWENTY FIFE SCORES IN A ROW!\n"), s1));
+				print (sprintf(_("%s^7 made ^1TWENTY FIVE SCORES IN A ROW!\n"), s1));
 			else
 				print (sprintf(_("%s^7 inflicts ^1CARNAGE!\n"), s1));
 		} else if(type == KILL_SPREE_30) {

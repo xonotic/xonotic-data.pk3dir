@@ -365,7 +365,7 @@ void Cmd_HUD_SetFields(float argc)
 
 		strunzone(hud_title[hud_num_fields]);
 		hud_title[hud_num_fields] = strzone(TranslateScoresLabel(str));
-		hud_size[hud_num_fields] = stringwidth(str, FALSE, hud_fontsize);
+		hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 		str = strtolower(str);
 
 		if(str == "ping") {
