@@ -443,12 +443,12 @@ void CSQC_UpdateView(float w, float h)
 			vector eventchase_target_origin;
 			makevectors(view_angles);
 			// pass 1, used to check where the camera would go and obtain the trace_fraction
-			eventchase_target_origin = pmove_org - view_forward * eventchase_current_distance;
+			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance;
 
 			traceline(pmove_org, eventchase_target_origin, MOVE_WORLDONLY, self);
 			// pass 2, also multiplying view_forward with trace_fraction, to prevent the camera from going through walls
 			// The 0.1 subtraction is to not limit the camera precisely at the wall surface, as that allows the view to poke through
-			eventchase_target_origin = pmove_org - view_forward * eventchase_current_distance * (trace_fraction - 0.1);
+			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
 
 			R_SetView(VF_ORIGIN, eventchase_target_origin);
 		}
