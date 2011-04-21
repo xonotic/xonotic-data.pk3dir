@@ -2655,7 +2655,7 @@ void HUD_Score(void)
 					}
 					else
 					{
-						s = sprintf(_("Player %d"), ftos(i+1));
+						s = sprintf(_("Player %d"), i+1);
 						score -= 3;
 					}
 
