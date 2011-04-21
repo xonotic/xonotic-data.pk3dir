@@ -906,8 +906,10 @@ void navigation_goalrating_end()
 
 	// Hack: if it can't walk to any goal just move blindly to the first visible waypoint
 	if not (self.navigation_hasgoals)
+	if (autocvar_bot_wander_enable)
 	{
-		dprint(self.netname, " can't walk to any goal, going to a near waypoint\n");
+		if not(autocvar_g_campaign)
+			dprint(self.netname, " can't walk to any goal, going to a near waypoint\n");
 
 		entity head;
 

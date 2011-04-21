@@ -27,4 +27,8 @@ for VM in menu csprogs; do
 			echo
 		fi
 	done
+	for X in "$VM".dat.*.po.disabled; do
+		[ -f "$X" ] || continue
+		msgmerge -F -U "$X" "$VM".dat.pot >/dev/null 2>&1
+	done
 done
