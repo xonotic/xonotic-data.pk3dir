@@ -262,6 +262,6 @@ void spawnfunc_func_breakable() {
 }
 
 // for use in maps with a "model" key set
-void spawnfunc_misc_breakable() {
+void spawnfunc_misc_breakablemodel() {
 	spawnfunc_func_breakable();
 }
