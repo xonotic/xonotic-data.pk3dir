@@ -376,8 +376,8 @@ void bot_clientdisconnect()
 	self.playermodel_freeme = string_null;
 	self.playerskin_freeme = string_null;
 	remove(self.bot_cmd_current);
-	if(navigation_wander_owner==self)
-		navigation_wander_owner = world;
+	if(bot_waypoint_queue_owner==self)
+		bot_waypoint_queue_owner = world;
 }
 
 void bot_clientconnect()

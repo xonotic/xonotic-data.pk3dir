@@ -966,37 +966,37 @@ void navigation_unstuck()
 	if not(autocvar_bot_wander_enable)
 		return;
 
-	if not(navigation_wander_owner)
+	if not(bot_waypoint_queue_owner)
 	{
 		dprint(self.netname, " taking over the waypoints queue\n");
-		navigation_wander_owner = self;
-		navigation_wander_bestgoal = world;
-		navigation_wander_bestgoalrating = 0;
+		bot_waypoint_queue_owner = self;
+		bot_waypoint_queue_bestgoal = world;
+		bot_waypoint_queue_bestgoalrating = 0;
 	}
 
-	if(navigation_wander_owner!=self)
+	if(bot_waypoint_queue_owner!=self)
 		return;
 
-	if (navigation_wander_goal)
+	if (bot_waypoint_queue_goal)
 	{
 		// evaluate the next goal on the queue
-		float d = vlen(self.origin - navigation_wander_goal.origin);
-		// dprint(self.netname, " evaluating ", navigation_wander_goal.classname, " with distance ", ftos(d), "\n");
-		if(tracewalk(navigation_wander_goal, self.origin, PL_MIN, PL_MAX, navigation_wander_goal.origin, bot_navigation_movemode))
+		float d = vlen(self.origin - bot_waypoint_queue_goal.origin);
+		// dprint(self.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d), "\n");
+		if(tracewalk(bot_waypoint_queue_goal, self.origin, PL_MIN, PL_MAX, bot_waypoint_queue_goal.origin, bot_navigation_movemode))
 		{
-			if( d > navigation_wander_bestgoalrating)
+			if( d > bot_waypoint_queue_bestgoalrating)
 			{
-				navigation_wander_bestgoalrating = d;
-				navigation_wander_bestgoal = navigation_wander_goal;
+				bot_waypoint_queue_bestgoalrating = d;
+				bot_waypoint_queue_bestgoal = bot_waypoint_queue_goal;
 			}
 		}
-		navigation_wander_goal = navigation_wander_goal.navigation_wander_nextgoal;
+		bot_waypoint_queue_goal = bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal;
 
-		if not(navigation_wander_goal)
+		if not(bot_waypoint_queue_goal)
 		{
-			if (navigation_wander_bestgoal)
+			if (bot_waypoint_queue_bestgoal)
 			{
-				navigation_routetogoal(navigation_wander_bestgoal, self.origin);
+				navigation_routetogoal(bot_waypoint_queue_bestgoal, self.origin);
 				self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 				self.aistatus &~= AI_STATUS_STUCK;
 			}
@@ -1005,7 +1005,7 @@ void navigation_unstuck()
 				dprint(self.netname, " got BADLY stuck, giving up.\n");
 			}
 
-			navigation_wander_owner = world;
+			bot_waypoint_queue_owner = world;
 		}
 	}
 	else
@@ -1027,14 +1027,14 @@ void navigation_unstuck()
 				if (first==world)
 				{
 					first = head;
-					navigation_wander_goal = head;
+					bot_waypoint_queue_goal = head;
 				}
 				else
 				{
-					prev = navigation_wander_goal;
-					navigation_wander_goal = head;
-					prev.navigation_wander_nextgoal = head;
-					navigation_wander_goal.navigation_wander_nextgoal = world;
+					prev = bot_waypoint_queue_goal;
+					bot_waypoint_queue_goal = head;
+					prev.bot_waypoint_queue_nextgoal = head;
+					bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = world;
 				}
 			}
 
@@ -1042,7 +1042,7 @@ void navigation_unstuck()
 		}
 
 		if (first)
-			navigation_wander_goal = first;
+			bot_waypoint_queue_goal = first;
 		else
 		{
 			dprint(self.netname, " got BADLY stuck, giving up.\n");

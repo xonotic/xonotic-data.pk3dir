@@ -35,11 +35,11 @@ float DEBUG_NODE_WARNING        = 2;
 float DEBUG_NODE_FAIL           = 3;
 vector debuglastnode;
 
-entity navigation_wander_owner; 	// Owner of the temporary list of goals
-entity navigation_wander_goal;		// Head of the temporary list of goals
-.entity navigation_wander_nextgoal;
-entity navigation_wander_bestgoal;
-float navigation_wander_bestgoalrating;
+entity bot_waypoint_queue_owner; 	// Owner of the temporary list of goals
+entity bot_waypoint_queue_goal;		// Head of the temporary list of goals
+.entity bot_waypoint_queue_nextgoal;
+entity bot_waypoint_queue_bestgoal;
+float bot_waypoint_queue_bestgoalrating;
 
 /*
  * Functions
