@@ -963,12 +963,14 @@ void botframe_updatedangerousobjects(float maxupdate)
 
 void navigation_unstuck()
 {
+	float search_radius = 1000;
+
 	if not(autocvar_bot_wander_enable)
 		return;
 
 	if not(bot_waypoint_queue_owner)
 	{
-		dprint(self.netname, " taking over the waypoints queue\n");
+	//	dprint(self.netname, " sutck, taking over the waypoints queue\n");
 		bot_waypoint_queue_owner = self;
 		bot_waypoint_queue_bestgoal = world;
 		bot_waypoint_queue_bestgoalrating = 0;
@@ -996,13 +998,14 @@ void navigation_unstuck()
 		{
 			if (bot_waypoint_queue_bestgoal)
 			{
+				dprint(self.netname, " stuck, reachable waypoint found, heading to it\n");
 				navigation_routetogoal(bot_waypoint_queue_bestgoal, self.origin);
 				self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 				self.aistatus &~= AI_STATUS_STUCK;
 			}
 			else
 			{
-				dprint(self.netname, " got BADLY stuck, giving up.\n");
+				dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
 			}
 
 			bot_waypoint_queue_owner = world;
@@ -1014,12 +1017,12 @@ void navigation_unstuck()
 			return;
 
 		// build a new queue
-		dprint(self.netname, " building a new wayoints queue\n");
+		dprint(self.netname, " stuck, scanning reachable waypoints within ", ftos(search_radius)," qu\n");
 
 		entity head, first;
 
 		first = world;
-		head = findradius(self.origin, 1000);
+		head = findradius(self.origin, search_radius);
 
 		while(head)
 		{
@@ -1042,7 +1045,7 @@ void navigation_unstuck()
 			bot_waypoint_queue_goal = first;
 		else
 		{
-			dprint(self.netname, " got BADLY stuck, giving up.\n");
+			dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
 		}
 	}
 }
