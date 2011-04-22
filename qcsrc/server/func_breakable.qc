@@ -260,3 +260,8 @@ void spawnfunc_func_breakable() {
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
 }
+
+// for use in maps with a "model" key set
+void spawnfunc_misc_breakable() {
+	spawnfunc_func_breakable();
+}

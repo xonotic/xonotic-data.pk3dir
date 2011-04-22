@@ -2,20 +2,16 @@
 REGISTER_WEAPON(SNIPERRIFLE, w_sniperrifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "campingrifle", "sniperrifle", _("Sniper Rifle"))
 #else
 #ifdef SVQC
-//Sniper rifle Primary mode: manually operated bolt*, Secondary: full automatic**
-//* Manually operating the bolt means that all the power of the gas is used to propell the bullet. In this mode the bolt is prevented from moving backwards in response to the firing of the bullet.
-//** In fully automatic mode some of the gas is used to extract and reload the next cartrige, thus there is less power and range.
 
 .float sniperrifle_accumulator;
 
-void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
+void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant, float pTracer, float pShots, string pSound)
 {
+	float i;
+
 	W_DecreaseAmmo(ammo_nails, pAmmo, autocvar_g_balance_sniperrifle_reload_ammo);
 
-	if(deathtype & HITTYPE_SECONDARY)
-		W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, "weapons/campingrifle_fire2.wav", CHAN_WEAPON, autocvar_g_balance_sniperrifle_secondary_damage + autocvar_g_balance_sniperrifle_secondary_headshotaddeddamage);
-	else
-		W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, "weapons/campingrifle_fire.wav", CHAN_WEAPON, autocvar_g_balance_sniperrifle_primary_damage + autocvar_g_balance_sniperrifle_primary_headshotaddeddamage);
+	W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, pSound, CHAN_WEAPON, (pDamage + pHeadshotAddedDamage) * pShots);
 
 	pointparticles(particleeffectnum("sniperrifle_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
 
@@ -25,10 +21,8 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 		w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 	}
 
-	if(deathtype & HITTYPE_SECONDARY)
-		fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, (autocvar_g_balance_sniperrifle_secondary_tracer ? EF_RED : EF_BLUE), 1, pBulletConstant);
-	else
-		fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, (autocvar_g_balance_sniperrifle_primary_tracer ? EF_RED : EF_BLUE), 1, pBulletConstant);
+	for(i = 0; i < pShots; ++i)
+		fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE), 1, pBulletConstant);
 	endFireBallisticBullet();
 
 	if (autocvar_g_casings >= 2)
@@ -37,12 +31,12 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 
 void W_SniperRifle_Attack()
 {
-	W_SniperRifle_FireBullet(autocvar_g_balance_sniperrifle_primary_spread, autocvar_g_balance_sniperrifle_primary_damage, autocvar_g_balance_sniperrifle_primary_headshotaddeddamage, autocvar_g_balance_sniperrifle_primary_force, autocvar_g_balance_sniperrifle_primary_speed, autocvar_g_balance_sniperrifle_primary_lifetime, autocvar_g_balance_sniperrifle_primary_ammo, WEP_SNIPERRIFLE, autocvar_g_balance_sniperrifle_primary_bulletconstant);
+	W_SniperRifle_FireBullet(autocvar_g_balance_sniperrifle_primary_spread, autocvar_g_balance_sniperrifle_primary_damage, autocvar_g_balance_sniperrifle_primary_headshotaddeddamage, autocvar_g_balance_sniperrifle_primary_force, autocvar_g_balance_sniperrifle_primary_speed, autocvar_g_balance_sniperrifle_primary_lifetime, autocvar_g_balance_sniperrifle_primary_ammo, WEP_SNIPERRIFLE, autocvar_g_balance_sniperrifle_primary_bulletconstant, autocvar_g_balance_sniperrifle_primary_tracer, autocvar_g_balance_sniperrifle_primary_shots, "weapons/campingrifle_fire.wav");
 }
 
 void W_SniperRifle_Attack2()
 {
-	W_SniperRifle_FireBullet(autocvar_g_balance_sniperrifle_secondary_spread, autocvar_g_balance_sniperrifle_secondary_damage, autocvar_g_balance_sniperrifle_secondary_headshotaddeddamage, autocvar_g_balance_sniperrifle_secondary_force, autocvar_g_balance_sniperrifle_secondary_speed, autocvar_g_balance_sniperrifle_secondary_lifetime, autocvar_g_balance_sniperrifle_secondary_ammo, WEP_SNIPERRIFLE | HITTYPE_SECONDARY, autocvar_g_balance_sniperrifle_secondary_bulletconstant);
+	W_SniperRifle_FireBullet(autocvar_g_balance_sniperrifle_secondary_spread, autocvar_g_balance_sniperrifle_secondary_damage, autocvar_g_balance_sniperrifle_secondary_headshotaddeddamage, autocvar_g_balance_sniperrifle_secondary_force, autocvar_g_balance_sniperrifle_secondary_speed, autocvar_g_balance_sniperrifle_secondary_lifetime, autocvar_g_balance_sniperrifle_secondary_ammo, WEP_SNIPERRIFLE | HITTYPE_SECONDARY, autocvar_g_balance_sniperrifle_secondary_bulletconstant, autocvar_g_balance_sniperrifle_secondary_tracer, autocvar_g_balance_sniperrifle_secondary_shots, "weapons/campingrifle_fire2.wav");
 }
 
 void spawnfunc_weapon_sniperrifle (void)
