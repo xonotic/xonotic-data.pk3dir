@@ -1016,7 +1016,9 @@ void navigation_unstuck()
 		// build a new queue
 		dprint(self.netname, " building a new wayoints queue\n");
 
-		entity first, head, prev;
+		entity head, first;
+
+		first = world;
 		head = findradius(self.origin, 1000);
 
 		while(head)
@@ -1024,18 +1026,13 @@ void navigation_unstuck()
 			if(head.classname=="waypoint")
 			if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
 			{
-				if (first==world)
-				{
-					first = head;
-					bot_waypoint_queue_goal = head;
-				}
+				if(bot_waypoint_queue_goal)
+					bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = head;
 				else
-				{
-					prev = bot_waypoint_queue_goal;
-					bot_waypoint_queue_goal = head;
-					prev.bot_waypoint_queue_nextgoal = head;
-					bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = world;
-				}
+					first = head;
+
+				bot_waypoint_queue_goal = head;
+				bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = world;
 			}
 
 			head = head.chain;
