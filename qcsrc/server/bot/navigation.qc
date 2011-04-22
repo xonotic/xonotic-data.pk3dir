@@ -1046,6 +1046,7 @@ void navigation_unstuck()
 		else
 		{
 			dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
+			bot_waypoint_queue_owner = world;
 		}
 	}
 }
