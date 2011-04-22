@@ -130,6 +130,7 @@ void func_breakable_behave_restore()
 	self.takedamage = DAMAGE_AIM;
 	self.event_damage = func_breakable_damage;
 	self.state = 0;
+	self.nextthink = 0; // cancel auto respawn
 	func_breakable_colormod();
 }
 
@@ -172,7 +173,7 @@ void func_breakable_destroy() {
 	if(self.respawntime)
 	{
 		self.think = func_breakable_restore;
-		self.nextthink = time + self.respawntime;
+		self.nextthink = time + self.respawntime + crandom() * self.respawntimejitter;
 	}
 
 	oldmsg = self.message;
