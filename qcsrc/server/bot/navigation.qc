@@ -1010,6 +1010,9 @@ void navigation_unstuck()
 	}
 	else
 	{
+		if(bot_strategytoken!=self)
+			return;
+
 		// build a new queue
 		dprint(self.netname, " building a new wayoints queue\n");
 
