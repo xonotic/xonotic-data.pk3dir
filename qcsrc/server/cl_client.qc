@@ -2701,13 +2701,6 @@ void PlayerPreThink (void)
 			return;					// the think tics
 		}
 
-		if(self.teleport_time)
-		if(time > self.teleport_time)
-		{
-			self.teleport_time = 0;
-			self.effects = self.effects - (self.effects & EF_NODRAW);
-		}
-
 		if(frametime > 0) // don't do this in cl_movement frames, just in server ticks
 			UpdateSelectedPlayer();
 

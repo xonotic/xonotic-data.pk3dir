@@ -890,6 +890,9 @@ void navigation_poptouchedgoals()
 // begin a goal selection session (queries spawnfunc_waypoint network)
 void navigation_goalrating_start()
 {
+	if(self.aistatus & AI_STATUS_STUCK)
+		return;
+
 	self.navigation_jetpack_goal = world;
 	navigation_bestrating = -1;
 	self.navigation_hasgoals = FALSE;
@@ -901,29 +904,21 @@ void navigation_goalrating_start()
 // ends a goal selection session (updates goal stack to the best goal)
 void navigation_goalrating_end()
 {
+	if(self.aistatus & AI_STATUS_STUCK)
+		return;
+
 	navigation_routetogoal(navigation_bestgoal, self.origin);
 //	dprint("best goal ", self.goalcurrent.classname , "\n");
 
-	// Hack: if it can't walk to any goal just move blindly to the first visible waypoint
+	// If the bot got stuck then try to reach the farthest waypoint
 	if not (self.navigation_hasgoals)
+	if (autocvar_bot_wander_enable)
 	{
-		dprint(self.netname, " can't walk to any goal, going to a near waypoint\n");
-
-		entity head;
-
-		RandomSelection_Init();
-		head = findradius(self.origin,1000);
-		while(head)
+		if not(self.aistatus & AI_STATUS_STUCK)
 		{
-			if(head.classname=="waypoint")
-			if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
-			if(vlen(self.origin-head.origin)>100)
-			if(checkpvs(self.view_ofs,head))
-				RandomSelection_Add(head, 0, string_null, 1 + (vlen(self.origin-head.origin)<500), 0);
-			head = head.chain;
+			dprint(self.netname, " cannot walk to any goal\n");
+			self.aistatus |= AI_STATUS_STUCK;
 		}
-		if(RandomSelection_chosen_ent)
-			navigation_routetogoal(RandomSelection_chosen_ent, self.origin);
 
 		self.navigation_hasgoals = FALSE; // Reset this value
 	}
@@ -965,6 +960,96 @@ void botframe_updatedangerousobjects(float maxupdate)
 		botframe_dangerwaypoint = find(botframe_dangerwaypoint, classname, "waypoint");
 	}
 };
+
+void navigation_unstuck()
+{
+	float search_radius = 1000;
+
+	if not(autocvar_bot_wander_enable)
+		return;
+
+	if not(bot_waypoint_queue_owner)
+	{
+	//	dprint(self.netname, " sutck, taking over the waypoints queue\n");
+		bot_waypoint_queue_owner = self;
+		bot_waypoint_queue_bestgoal = world;
+		bot_waypoint_queue_bestgoalrating = 0;
+	}
+
+	if(bot_waypoint_queue_owner!=self)
+		return;
+
+	if (bot_waypoint_queue_goal)
+	{
+		// evaluate the next goal on the queue
+		float d = vlen(self.origin - bot_waypoint_queue_goal.origin);
+		// dprint(self.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d), "\n");
+		if(tracewalk(bot_waypoint_queue_goal, self.origin, PL_MIN, PL_MAX, bot_waypoint_queue_goal.origin, bot_navigation_movemode))
+		{
+			if( d > bot_waypoint_queue_bestgoalrating)
+			{
+				bot_waypoint_queue_bestgoalrating = d;
+				bot_waypoint_queue_bestgoal = bot_waypoint_queue_goal;
+			}
+		}
+		bot_waypoint_queue_goal = bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal;
+
+		if not(bot_waypoint_queue_goal)
+		{
+			if (bot_waypoint_queue_bestgoal)
+			{
+				dprint(self.netname, " stuck, reachable waypoint found, heading to it\n");
+				navigation_routetogoal(bot_waypoint_queue_bestgoal, self.origin);
+				self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+				self.aistatus &~= AI_STATUS_STUCK;
+			}
+			else
+			{
+				dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
+			}
+
+			bot_waypoint_queue_owner = world;
+		}
+	}
+	else
+	{
+		if(bot_strategytoken!=self)
+			return;
+
+		// build a new queue
+		dprint(self.netname, " stuck, scanning reachable waypoints within ", ftos(search_radius)," qu\n");
+
+		entity head, first;
+
+		first = world;
+		head = findradius(self.origin, search_radius);
+
+		while(head)
+		{
+			if(head.classname=="waypoint")
+			if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
+			{
+				if(bot_waypoint_queue_goal)
+					bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = head;
+				else
+					first = head;
+
+				bot_waypoint_queue_goal = head;
+				bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = world;
+			}
+
+			head = head.chain;
+		}
+
+		if (first)
+			bot_waypoint_queue_goal = first;
+		else
+		{
+			dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
+			bot_waypoint_queue_owner = world;
+		}
+	}
+}
 
 // Support for debugging tracewalk visually
 

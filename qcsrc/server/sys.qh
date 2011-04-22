@@ -116,7 +116,7 @@ void		end_sys_globals;
 .float		colormap;
 .float		team;
 .float		max_health;
-.float		teleport_time;
+.float		teleport_time; // movement input is blocked till that time; set e.g. by waterjump logic - BUT, movement and friction still takes place
 .float		armortype;
 .float		armorvalue;
 .float		waterlevel;
