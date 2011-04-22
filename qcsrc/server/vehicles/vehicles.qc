@@ -10,7 +10,7 @@ void vehicles_clearrturn();
 void vehicles_setreturn();
 
 
-/** AuxiliaryXhair* 
+/** AuxiliaryXhair*
     Send addictional points of interest to be drawn, to vehicle owner
 **/
 float MAX_AXH = 4;
@@ -90,17 +90,17 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 }
 
 /** vehicles_locktarget
-    
+
     Generic target locking.
-    
+
     Figure out if what target is "locked" (if any), for missile tracking as such.
-    
+
     after calling, "if(self.lock_target != world && self.lock_strength == 1)" mean
     you have a locked in target.
-    
+
     Exspects a crosshair_trace() or equivalent to be
     dont before calling.
-    
+
 **/
 .entity lock_target;
 .float  lock_strength;
@@ -235,7 +235,7 @@ void vehicles_projectile_explode()
 entity vehicles_projectile(string _mzlfx, string _mzlsound,
                            vector _org, vector _vel,
                            float _dmg, float _radi, float _force,  float _size,
-                           float _deahtype, float _projtype, float _health, 
+                           float _deahtype, float _projtype, float _health,
                            float _cull, float _clianim)
 {
     entity proj;
@@ -296,7 +296,7 @@ void vehicles_spawn()
 
     // De-own & reset
     self.vehicle_hudmodel.viewmodelforclient = self;
-    
+
     self.owner              = world;
     self.touch              = vehicles_touch;
     self.event_damage       = vehicles_damage;
@@ -309,7 +309,7 @@ void vehicles_spawn()
     self.flags              = FL_NOTARGET;
     self.avelocity          = '0 0 0';
     self.velocity           = '0 0 0';
-    
+
     // Reset locking
     self.lock_strength      = 0;
     self.lock_target        = world;
@@ -400,12 +400,13 @@ void vehicles_enter()
 
     self.owner          = other;
     self.switchweapon   = other.switchweapon;
-    
+
     // .viewmodelforclient works better.
     //self.vehicle_hudmodel.drawonlytoclient = self.owner;
 
-    self.vehicle_hudmodel.viewmodelforclient = self.owner;        
-    
+    if not (self.SendEntity)
+        self.vehicle_hudmodel.viewmodelforclient = self.owner;
+
     self.event_damage         = vehicles_damage;
     self.nextthink            = 0;
     self.owner.angles         = self.angles;
@@ -438,10 +439,10 @@ void vehicles_enter()
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
 
-#if 0    
+#if 0
     other.clientcamera = self.vehicle_viewport;
 #else
-    msg_entity = other;
+    /*msg_entity = other;
     WriteByte (MSG_ONE, SVC_SETVIEWPORT);
     WriteEntity(MSG_ONE, self.vehicle_viewport);
 
@@ -458,7 +459,7 @@ void vehicles_enter()
         WriteAngle(MSG_ONE,  self.angles_x * -1); // tilt
         WriteAngle(MSG_ONE,  self.angles_y);      // yaw
         WriteAngle(MSG_ONE,  0);                  // roll
-    }
+    }*/
 #endif
 
     vehicles_clearrturn();
@@ -661,7 +662,7 @@ void vehicles_reset_colors()
 
     if(autocvar_g_fullbrightplayers)
         _effects |= EF_FULLBRIGHT;
-        
+
     if(self.team)
         _colormap = 1024 + (self.team - 1) * 17;
     else
@@ -683,7 +684,7 @@ void vehicles_reset_colors()
         }
         e = e.chain;
     }
-    
+
     self.vehicle_hudmodel.effects  = self.effects  = _effects | EF_LOWPRECISION;
     self.vehicle_hudmodel.colormod = self.colormod = _colormod;
     self.vehicle_hudmodel.colormap = self.colormap = _colormap;
@@ -796,13 +797,13 @@ float vehicle_initialize(string  net_name,
         tracebox(self.origin + '0 0 100', min_s, max_s, self.origin - '0 0 10000', MOVE_WORLDONLY, self);
         setorigin(self, trace_endpos);
     }
-        
+
     self.pos1 = self.origin;
     self.pos2 = self.angles;
 #ifdef VEHICLES_CSQC
     if(use_csqc)
         net_link_vehile();
-#endif    
+#endif
     return TRUE;
 }
 

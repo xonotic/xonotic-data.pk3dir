@@ -262,6 +262,18 @@ float racer_frame()
 
     self = racer;
 
+#ifdef VEHICLES_CSQC
+    racer.SendFlags |= VSF_MOVEMENT;
+
+    // Send a origin update every 10'th serevr frame.
+    racer.framecounter += 1;
+    if(racer.framecounter >= 600)
+    {
+        racer.SendFlags |= VSF_ORIGIN;
+        racer.framecounter = 0;
+    }
+#endif
+
     if(player.BUTTON_USE)
     {
         vehicles_exit(VHEF_NORMAL);
@@ -466,7 +478,17 @@ void racer_think()
     */
 
     racer_align4point(); //time - self.nextthink);
+#ifdef VEHICLES_CSQC
+    self.SendFlags |= VSF_MOVEMENT;
 
+    // Send a origin update every 10'th serevr frame.
+    self.framecounter += 1;
+    if(self.framecounter >= 10)
+    {
+        self.SendFlags |= VSF_ORIGIN;
+        self.framecounter = 0;
+    }
+#endif
     /*
     //if(self.velocity_z > 0)
     //    self.velocity_z *= 0.95;
@@ -480,7 +502,7 @@ void racer_think()
     self.velocity_y *= 0.9;
     self.velocity_z *= 0.8;
     self.velocity_z += sin(time * 2) * 16;
-    self.nextthink = time + 0.05;
+    self.nextthink = time; // + 0.05;
 }
 
 void racer_enter()
@@ -488,6 +510,8 @@ void racer_enter()
     self.movetype = MOVETYPE_BOUNCE;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield);
+    if(self.SendEntity)
+        self.SendFlags |= VSF_SETUP;
 }
 
 void racer_exit(float eject)
@@ -616,12 +640,14 @@ void racer_dinit()
              racer_frame,
              racer_enter, racer_exit,
              racer_die,   racer_think,
-             FALSE))
+             TRUE))
     {
         remove(self);
         return;
     }
-
+#ifdef VEHICLES_CSQC
+    self.vehile_send_exta = racer_send_exta;
+#endif
     if(autocvar_g_vehicle_racer_hovertype != 0)
         racer_force_from_tag = vehicles_force_fromtag_maglev;
     else
@@ -668,8 +694,26 @@ void spawnfunc_vehicle_racer()
 #endif // SVQC
 
 #ifdef CSQC
+#ifdef VEHICLES_CSQC
 void racer_draw()
 {
+    /*float dt;
+
+    dt = time - self.lastupdate;
+    self.lastupdate = time;
+    if(dt < 0)
+        return;
+    */
+    //self.origin += dt * self.velocity;
+    //self.origin_z -= dt * getstatf(STAT_MOVEVARS_GRAVITY);
+    //setorigin(self, self.origin);
+
+    if(vehicle_hudmodel.owner  == self)
+    {
+        setorigin(vehicle_hudmodel, self.origin);
+        vehicle_hudmodel.angles = self.angles;
+    }
+
 
 }
 
@@ -683,8 +727,38 @@ void racer_read_extra()
 
 }
 
-void vehicle_racer_assemble()
+entity racer_hud;
+entity racer_vp;
+void racer_hud_draw()
 {
 
 }
+
+void vehicle_racer_assemble()
+{
+    setmodel(self, "models/vehicles/wakizashi.dpm");
+    self.scale = 0.5;
+    self.movetype = MOVETYPE_BOUNCE;
+
+    //self.entremove = VehicleRacerRemove;
+    setsize(self,  '-60 -60 -20', '60 60 20');
+    self.draw = racer_draw;
+    self.drawmask = MASK_NORMAL;
+    self.solid = SOLID_BBOX;
+    self.lastupdate = time;
+    self.vehile_read_exta = racer_read_extra;
+
+    if(racer_hud == world)
+    {
+        dprint("SpawnHUUUOOOUUUDDD\n");
+        racer_hud = spawn();
+        setmodel(racer_hud, "models/vehicles/wakizashi_cockpit.dpm");
+        racer_hud.drawmask = MASK_NORMAL;
+        racer_hud.renderflags = RF_VIEWMODEL;
+        racer_hud.scale = 0.5;
+    }
+    vehicle_hudmodel = racer_hud; // FIXME!!
+    racer_hud.draw   = racer_hud_draw;
+}
+#endif
 #endif //CSQC

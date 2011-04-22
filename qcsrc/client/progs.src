@@ -62,6 +62,7 @@ target_music.qc
 
 vehicles/vehicles.qc
 ../server/vehicles/network.qc
+../server/vehicles/racer.qc
 
 Main.qc
 View.qc

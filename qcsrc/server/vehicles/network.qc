@@ -7,19 +7,26 @@ float VSF_AVEL        = 8;          /// Send Angular velocity
 float VSF_STATS       = 16;         /// Send ammo, health etc
 float VSF_EXTRA       = 32;         /// Send additional data (turret rotations etc). Handeld per vehicle type.
 float VSF_ANIMINFO    = 64;         /// Animation info
-float VSF_FAR         = 128;
 float VSF_FULL_UPDATE = 16777215;    /// Send everything
 
+float VSX_FAR   = 1;
+float VSX_OWNER = 2;
+float VSX_GUN1  = 4;
+float VSX_GUN2  = 8;
+
 #ifdef SVQC
-#define VSF_FARDISTANCE 2000
+#define VSX_FARDISTANCE 2000
 float send_vehile(entity to, float sf)
 {
-	float dist;
+	float dist, xf;
+
     var void WriteFunc(float, float);
 
     dist = vlen(self.origin - to.origin);
-    if(dist > VSF_FARDISTANCE && to != self.owner)
-        sf |= VSF_FAR;
+    if(to == self.owner)
+        xf |= VSX_OWNER;
+    else if(dist > VSX_FARDISTANCE)
+        xf |= VSX_FAR;
 
 	// Always send a movement and origin to owner
 	if(to == self.owner)
@@ -29,6 +36,7 @@ float send_vehile(entity to, float sf)
 
 	// We need to know client-side what was sent
 	WriteByte(MSG_ENTITY, sf);
+	WriteByte(MSG_ENTITY, xf);
 
 	if(sf & VSF_SETUP)
 	{
@@ -40,7 +48,7 @@ float send_vehile(entity to, float sf)
 
     if(sf & VSF_ORIGIN)
     {
-        WriteFunc = ((sf & VSF_FAR) ? WriteShort : WriteCoord);
+        WriteFunc = ((xf & VSX_FAR) ? WriteShort : WriteCoord);
         WriteFunc(MSG_ENTITY, self.origin_x);
         WriteFunc(MSG_ENTITY, self.origin_y);
         WriteFunc(MSG_ENTITY, self.origin_z);
@@ -48,12 +56,12 @@ float send_vehile(entity to, float sf)
 
     if(sf & VSF_MOVEMENT)
     {
-        WriteFunc = ((sf & VSF_FAR) ? WriteShort : WriteCoord);
+        WriteFunc = ((xf & VSX_FAR) ? WriteShort : WriteCoord);
         WriteFunc(MSG_ENTITY, self.velocity_x);
         WriteFunc(MSG_ENTITY, self.velocity_y);
         WriteFunc(MSG_ENTITY, self.velocity_z);
 
-        WriteFunc = ((sf & VSF_FAR) ? WriteShort : WriteAngle);
+        WriteFunc = ((xf & VSX_FAR) ? WriteShort : WriteAngle);
         WriteFunc(MSG_ENTITY, self.angles_x);
         WriteFunc(MSG_ENTITY, self.angles_y);
         WriteFunc(MSG_ENTITY, self.angles_z);
@@ -61,7 +69,7 @@ float send_vehile(entity to, float sf)
 
     if(sf & VSF_AVEL)
     {
-        WriteFunc = ((sf & VSF_FAR) ? WriteShort : WriteCoord);
+        WriteFunc = ((xf & VSX_FAR) ? WriteShort : WriteCoord);
         WriteFunc(MSG_ENTITY, self.avelocity_x);
         WriteFunc(MSG_ENTITY, self.avelocity_y);
         WriteFunc(MSG_ENTITY, self.avelocity_z);
@@ -69,9 +77,9 @@ float send_vehile(entity to, float sf)
 
     if(sf & VSF_STATS)
     {
-        if(to == self.owner)
+        WriteByte(MSG_ENTITY, self.vehicle_health);
+        if(xf & VSX_OWNER)
         {
-            WriteByte(MSG_ENTITY, 1);
             WriteByte(MSG_ENTITY, self.vehicle_shield);
             WriteByte(MSG_ENTITY, self.vehicle_energy);
 
@@ -82,10 +90,6 @@ float send_vehile(entity to, float sf)
             WriteByte(MSG_ENTITY, self.vehicle_reload2);
 
         }
-        else
-            WriteByte(MSG_ENTITY, 0);
-
-        WriteByte(MSG_ENTITY, self.vehicle_health);
     }
 
     if(sf & VSF_EXTRA)
@@ -107,11 +111,6 @@ void vehicle_spiderbot_assemble()
 
 }
 
-void vehicle_racer_assemble()
-{
-
-}
-
 void vehicle_raptor_assemble()
 {
 
@@ -122,22 +121,18 @@ void vehicle_bumblebee_assemble()
 
 }
 
-void Net_ReadVehicle(float bIsNew)
+.float lastupdate;
+void read_vehicle(float bIsNew)
 {
-    float sf;
+    float sf, xf;
     var float ReadFunc();
 
-    if(bIsNew)
-    {
-        /*setmodel(self, "models/vehicles/wakizashi.dpm");
-        self.move_movetype = MOVETYPE_BOUNCE;
-        self.entremove = VehicleRacerRemove;
-        setsize(self,  '-60 -60 -20', '60 60 20');
-        self.draw = VehicleRacerDraw;
-        self.scale = 0.5;*/
-    }
-
     sf = ReadByte();
+    xf = ReadByte();
+
+    if(xf & VSX_OWNER)
+        vehicle = self;
+
 	if(sf & VSF_SETUP)
 	{
         self.vehicle_hud   = ReadByte();
@@ -164,42 +159,57 @@ void Net_ReadVehicle(float bIsNew)
         }
 	}
 
+	if(self.vehicle_hud == HUD_WAKIZASHI && xf & VSX_OWNER)
+	{
+
+        vehicle_hudmodel.owner  = self;
+	}
+
+    //if(xf & VSX_FAR)
+    //    dprint("Client vehicle faaar set\n");
+
     if(sf & VSF_ORIGIN)
     {
-        ReadFunc = ((sf & VSF_FAR) ? ReadShort : ReadCoord);
-        self.origin_x       = ReadCoord();
-        self.origin_y       = ReadCoord();
-        self.origin_z       = ReadCoord();
-        self.move_origin    = self.origin;
+        ReadFunc = ((xf & VSX_FAR) ? ReadShort : ReadCoord);
+        self.origin_x = ReadFunc();
+        self.origin_y = ReadFunc();
+        self.origin_z = ReadFunc();
+
+        setorigin(self, self.origin);
+        //self.lastupdate = time;
     }
 
     if(sf & VSF_MOVEMENT)
     {
-        ReadFunc = ((sf & VSF_FAR) ? ReadShort : ReadCoord);
-        self.velocity_x     = ReadFunc();
-        self.velocity_y     = ReadFunc();
-        self.velocity_z     = ReadFunc();
+        ReadFunc = ((xf & VSX_FAR) ? ReadShort : ReadCoord);
+        self.velocity_x  = ReadFunc();
+        self.velocity_y  = ReadFunc();
+        self.velocity_z  = ReadFunc();
 
-        ReadFunc = ((sf & VSF_FAR) ? ReadShort : ReadAngle);
-        self.angles_x       = ReadFunc();
-        self.angles_y       = ReadFunc();
-        self.angles_z       = ReadFunc();
+        ReadFunc = ((sf & VSX_FAR) ? ReadShort : ReadAngle);
+        self.angles_x = ReadFunc();
+        self.angles_y = ReadFunc();
+        self.angles_z = ReadFunc();
 
-        self.move_velocity  = self.velocity;
-        self.move_angles    = self.angles;
+        //self.lastupdate = time;
+        // self.move_velocity  = self.velocity;
+        // self.move_angles    = self.angles;
     }
 
     if(sf & VSF_AVEL)
     {
-        ReadFunc = ((sf & VSF_FAR) ? ReadShort : ReadCoord);
-        self.avelocity_x     = ReadFunc();
-        self.avelocity_y     = ReadFunc();
-        self.avelocity_z     = ReadFunc();
+        ReadFunc = ((xf & VSX_FAR) ? ReadShort : ReadCoord);
+        self.avelocity_x = ReadFunc();
+        self.avelocity_y = ReadFunc();
+        self.avelocity_z = ReadFunc();
+
+        // self.move_avelocity  = self.avelocity;
     }
 
     if(sf & VSF_STATS)
     {
-        if(ReadByte() == 1)
+        self.vehicle_health = ReadByte();
+        if(xf & VSX_OWNER)
         {
             self.vehicle_shield  = ReadByte();
             self.vehicle_energy  = ReadByte();
@@ -208,7 +218,6 @@ void Net_ReadVehicle(float bIsNew)
             self.vehicle_ammo2   = ReadByte();
             self.vehicle_reload2 = ReadByte();
         }
-        self.vehicle_health = ReadByte();
     }
 
     if(sf & VSF_EXTRA)
@@ -217,5 +226,12 @@ void Net_ReadVehicle(float bIsNew)
 }
 
 #endif // CSQC
+#else
+#ifdef CSQC
+.float lastupdate;
+void read_vehicle(float bIsNew)
+{
 
+}
+#endif
 #endif // VEHICLES_CSQC

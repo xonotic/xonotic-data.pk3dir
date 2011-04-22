@@ -58,11 +58,6 @@ void AuxiliaryXhair_Draw2D()
         self.draw2d = Draw_Not;
 }
 
-void Net_Vehicle(float IsNew)
-{
-    //entnum
-}
-
 void Net_AuXair2(float bIsNew)
 {
     float axh_id;
@@ -481,6 +476,8 @@ void CSQC_WAKIZASHI_HUD()
 
 void Vehicles_Precache()
 {
+	precache_model("models/vehicles/wakizashi.dpm");
+
 	precache_model("models/vehicles/bomblet.md3");
 	precache_model("models/vehicles/clusterbomb.md3");
 	precache_model("models/vehicles/clusterbomb_fragment.md3");

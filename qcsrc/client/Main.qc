@@ -144,7 +144,7 @@ void CSQC_Init(void)
 	Casings_Precache();
 	DamageInfo_Precache();
 	Vehicles_Precache();
-	
+
 	if(autocvar_cl_announcer != cl_announcer_prev) {
 		Announcer_Precache();
 		if(cl_announcer_prev)
@@ -970,7 +970,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
-		case ENT_CLIENT_VEHICLE: Net_Vehicle(bIsNewEntity); break;
+		case ENT_CLIENT_VEHICLE: read_vehicle(bIsNewEntity); break;
 		default:
 			error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			break;

@@ -1,4 +1,4 @@
-//#define VEHICLES_CSQC
+#define VEHICLES_CSQC
 // #define VEHICLES_USE_ODE
 #define VEHICLES_ENABLED
 #ifdef VEHICLES_ENABLED
@@ -30,11 +30,11 @@ float VHF_MOVE_FLY      = 512;  /// Vehicle is airborn
 .float vehicle_ammo2;   /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real ammo2 value.
 .float vehicle_reload2; /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real reload2 value.
 
+#ifdef SVQC
 .entity vehicle;
 .entity vehicle_viewport;
 .entity vehicle_hudmodel;
 
-#ifdef SVQC
 .float hud;
 .float dmg_time;
 .float  vehicle_respawntime;
@@ -54,6 +54,7 @@ var .void() vehicle_die;    /// Vehicles custom function to be executed when veh
 var .void() vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
 
 #ifdef VEHICLES_CSQC
+.float framecounter; /// Used to count server frames, so that we may send soem updates less often
 var .void(entity to, float sflags) vehile_send_exta;  /// Vehicles custom send func
 void net_link_vehile();                 /// Initiates csqc networking for vehicle
 #endif //VEHICLES_CSQC
@@ -62,11 +63,16 @@ void net_link_vehile();                 /// Initiates csqc networking for vehicl
 #ifdef CSQC
 #ifdef VEHICLES_CSQC
 .float vehicle_hud;
+
+entity vehicle;
+entity vehicle_viewport;
+entity vehicle_hudmodel;
+
 void vehicle_spiderbot_assemble();
 void vehicle_racer_assemble();
 void vehicle_raptor_assemble();
 void vehicle_bumblebee_assemble();
-void Net_ReadVehicle(float bIsNew);
+void read_vehicle(float bIsNew);
 var .void (float sf)vehile_read_exta;
 #endif //VEHICLES_CSQC
 #endif //CSQC
