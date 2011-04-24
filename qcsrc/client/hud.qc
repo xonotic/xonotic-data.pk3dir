@@ -1330,31 +1330,18 @@ void HUD_HealthArmor(void)
 			health_time = -1;
 			return;
 		}
-		if (autocvar_hud_panel_healtharmor_progressbar_gfx)
-		{
-			if ( (prev_spectatee_status == -1 && spectatee_status > 0) //before observing, now spectating
-			  || (prev_spectatee_status > 0 && spectatee_status > 0 && prev_spectatee_status != spectatee_status) //changed spectated player
-			)
-			{
-				//no effect
-				saved_health = 0;
-				saved_armor = 0;
-				health_time = 0;
-				armor_time = 0;
-			}
-			else if(prev_spectatee_status == -1 || (prev_spectatee_status > 0 && !spectatee_status)) //before spectating/observing, now playing
-				health_time = -1;
 
-			if (health_time == -1)
-			{
-				//start the load effect
-				saved_health = -2;
-				saved_armor = -2;
-				health_time = time;
-				armor_time = time;
-				prev_health = 0;
-				prev_armor = 0;
-			}
+		// code to check for spectatee_status changes is in Ent_ClientData()
+
+		if (health_time == -1)
+		{
+			//start the load effect
+			saved_health = -2;
+			saved_armor = -2;
+			health_time = time;
+			armor_time = time;
+			prev_health = 0;
+			prev_armor = 0;
 		}
 		armor = getstati(STAT_ARMOR);
 		fuel = getstati(STAT_FUEL);
