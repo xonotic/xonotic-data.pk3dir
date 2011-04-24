@@ -1300,10 +1300,22 @@ void HUD_Powerups(void)
 
 // Health/armor (#3)
 //
-float health_time, prev_health;
-float armor_time, prev_armor;
+
+// prev_* vars contain the health/armor at the previous FRAME
+float prev_health, prev_armor;
+
+// *_time vars contain time at which damage happened
+	// health_time -1 remembers that player was dead
+float health_time, armor_time;
+
+// saved_* vars contain the old health/armor value (before the damage happened)
+	// special cases:
+	// -2: during the load effect (spawning)
+	// -1: load or damage effect are ended normally
+	//  0: when effects are forcedly stopped; this is to avoid unintended effects as soon as we switch spectated player (e.g. from playerX: 70h to playerY: 50h)
 var float saved_health = -2;
 var float saved_armor = -2;
+
 void HUD_HealthArmor(void)
 {
 	float armor, health, fuel;
