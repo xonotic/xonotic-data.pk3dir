@@ -1466,9 +1466,9 @@ void HUD_HealthArmor(void)
 				pain_health_alpha = 1;
 				if (autocvar_hud_panel_healtharmor_progressbar_gfx)
 				{
-					if (saved_health == -1)
+					if (autocvar_hud_panel_healtharmor_progressbar_gfx_damage > 0 && saved_health == -1)
 					{
-						if (prev_health == 0 || prev_health - health >= 3)
+						if (prev_health == 0 || prev_health - health >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage)
 						{
 							health_time = time;
 							saved_health = prev_health;
@@ -1484,7 +1484,7 @@ void HUD_HealthArmor(void)
 							else
 							{
 								HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, saved_health/maxhealth, is_vertical, health_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * (1 - d * d), DRAWFLAG_NORMAL);
-								if (prev_health - health >= 1) //refresh the effect if repeatedly damaged
+								if (prev_health - health >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage) //refresh the effect if repeatedly damaged
 									health_time = time;
 							}
 						}
@@ -1516,9 +1516,9 @@ void HUD_HealthArmor(void)
 				p_armor = armor;
 				if (autocvar_hud_panel_healtharmor_progressbar_gfx)
 				{
-					if (saved_armor == -1)
+					if (autocvar_hud_panel_healtharmor_progressbar_gfx_damage > 0 && saved_armor == -1)
 					{
-						if (prev_armor == 0 || prev_armor - armor >= 3)
+						if (prev_armor == 0 || prev_armor - armor >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage)
 						{
 							armor_time = time;
 							saved_armor = prev_armor;
@@ -1534,7 +1534,7 @@ void HUD_HealthArmor(void)
 							else
 							{
 								HUD_Panel_DrawProgressBar(pos + armor_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, saved_armor/maxarmor, is_vertical, armor_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * (1 - d * d), DRAWFLAG_NORMAL);
-								if (prev_armor - armor >= 1) //refresh the effect if repeatedly damaged
+								if (prev_armor - armor >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage) //refresh the effect if repeatedly damaged
 									armor_time = time;
 							}
 						}
