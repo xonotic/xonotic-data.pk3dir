@@ -1309,14 +1309,15 @@ float prev_health, prev_armor;
 float health_time, armor_time;
 
 // saved_* vars contain the old health/armor value (before the damage happened)
-	// special cases:
-	// -1: load or damage effect are ended normally
-	//  0: when effects are forcedly stopped; this is to avoid unintended effects as soon as we switch spectated player (e.g. from playerX: 70h to playerY: 50h)
+// set to -1 when load or damage effect are ended normally
 float saved_health;
 var float saved_armor = -2;
 
+// old_* vars keep track of previous values when smoothing value changes of the progressbar
 float old_health;
 float old_healthtime;
+
+// set to -1 to forcedly stop effects when we switch spectated player (e.g. from playerX: 70h to playerY: 50h)
 float last_p_health;
 
 void HUD_HealthArmor(void)
@@ -1335,10 +1336,15 @@ void HUD_HealthArmor(void)
 		}
 
 		// code to check for spectatee_status changes is in Ent_ClientData()
+		// last_p_health and health_time can be set to -1 there
 
 		if (last_p_health == -1)
 		{
 			// no effect
+			saved_health = 0;
+			saved_armor = 0;
+			health_time = 0;
+			armor_time = 0;
 			prev_health = health;
 			old_health = health;
 			last_p_health = health;

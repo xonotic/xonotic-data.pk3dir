@@ -840,18 +840,9 @@ void Ent_ClientData()
 		if ( (spectatee_status == -1 && newspectatee_status > 0) //before observing, now spectating
 		  || (spectatee_status > 0 && newspectatee_status > 0 && spectatee_status != newspectatee_status) //changed spectated player
 		)
-		{
-			//no effect
-			saved_health = 0;
-			saved_armor = 0;
-			health_time = 0;
-			armor_time = 0;
 			last_p_health = -1;
-		}
 		else if(spectatee_status && !newspectatee_status) //before observing/spectating, now playing
-		{
 			health_time = -1;
-		}
 	}
 	spectatee_status = newspectatee_status;
 }
