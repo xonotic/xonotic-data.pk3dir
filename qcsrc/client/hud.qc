@@ -1302,20 +1302,13 @@ void HUD_Powerups(void)
 //
 
 // prev_* vars contain the health/armor at the previous FRAME
-float prev_health, prev_armor;
-
-// *_damagetime vars contain time at which damage happened
 // set to -1 when player is dead or was not playing
+float prev_health, prev_armor;
 float health_damagetime, armor_damagetime;
-
-// *_beforedamage vars contain the old health/armor value (before the damage happened)
-// set to -1 when load or damage effect are ended normally
 float health_beforedamage, armor_beforedamage;
-
 // old_p_* vars keep track of previous values when smoothing value changes of the progressbar
 float old_p_health, old_p_armor;
 float old_p_healthtime, old_p_armortime;
-
 // prev_p_* vars contain the health/armor progressbar value at the previous FRAME
 // set to -1 to forcedly stop effects when we switch spectated player (e.g. from playerX: 70h to playerY: 50h)
 float prev_p_health, prev_p_armor;
@@ -1331,13 +1324,13 @@ void HUD_HealthArmor(void)
 		health = getstati(STAT_HEALTH);
 		if(health <= 0)
 		{
-			health_damagetime = -1;
+			prev_health = -1;
 			return;
 		}
 		armor = getstati(STAT_ARMOR);
 
 		// code to check for spectatee_status changes is in Ent_ClientData()
-		// prev_p_health and health_damagetime can be set to -1 there
+		// prev_p_health and prev_health can be set to -1 there
 
 		if (prev_p_health == -1)
 		{
@@ -1353,11 +1346,11 @@ void HUD_HealthArmor(void)
 			prev_p_health = health;
 			prev_p_armor = armor;
 		}
-		else if (health_damagetime == -1)
+		else if (prev_health == -1)
 		{
 			//start the load effect
-			health_damagetime = time;
-			armor_damagetime = time;
+			health_damagetime = 0;
+			armor_damagetime = 0;
 			prev_health = 0;
 			prev_armor = 0;
 		}
@@ -1496,25 +1489,19 @@ void HUD_HealthArmor(void)
 						p_health += (old_p_health - health) * (1 - (time - old_p_healthtime));
 						prev_p_health = p_health;
 					}
-					if (autocvar_hud_panel_healtharmor_progressbar_gfx_damage > 0 && health_beforedamage == -1)
+					if (autocvar_hud_panel_healtharmor_progressbar_gfx_damage > 0)
 					{
-						if (prev_health == 0 || prev_health - health >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage)
+						if (prev_health - health >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage)
 						{
+							if (time - health_damagetime >= 1)
+								health_beforedamage = prev_health;
 							health_damagetime = time;
-							health_beforedamage = prev_health;
 						}
-					}
-					if (health_beforedamage != -1)
-					{
-						float d = time - health_damagetime;
-						if (d < 1)
+						if (time - health_damagetime < 1)
 						{
-							HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, health_beforedamage/maxhealth, is_vertical, health_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * (1 - d * d), DRAWFLAG_NORMAL);
-							if (prev_health - health >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage) //refresh the effect if repeatedly damaged
-								health_damagetime = time;
+							float health_damagealpha = 1 - (time - health_damagetime)*(time - health_damagetime);
+							HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, health_beforedamage/maxhealth, is_vertical, health_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * health_damagealpha, DRAWFLAG_NORMAL);
 						}
-						else
-							health_beforedamage = -1; //damage effect ended
 					}
 					prev_health = health;
 
@@ -1554,25 +1541,19 @@ void HUD_HealthArmor(void)
 						p_armor += (old_p_armor - armor) * (1 - (time - old_p_armortime));
 						prev_p_armor = p_armor;
 					}
-					if (autocvar_hud_panel_healtharmor_progressbar_gfx_damage > 0 && armor_beforedamage == -1)
+					if (autocvar_hud_panel_healtharmor_progressbar_gfx_damage > 0)
 					{
-						if (prev_armor == 0 || prev_armor - armor >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage)
+						if (prev_armor - armor >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage)
 						{
+							if (time - armor_damagetime >= 1)
+								armor_beforedamage = prev_armor;
 							armor_damagetime = time;
-							armor_beforedamage = prev_armor;
 						}
-					}
-					if (armor_beforedamage != -1)
-					{
-						float d = time - armor_damagetime;
-						if (d < 1)
+						if (time - armor_damagetime < 1)
 						{
-							HUD_Panel_DrawProgressBar(pos + armor_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, armor_beforedamage/maxarmor, is_vertical, armor_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * (1 - d * d), DRAWFLAG_NORMAL);
-							if (prev_armor - armor >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage) //refresh the effect if repeatedly damaged
-								armor_damagetime = time;
+							float armor_damagealpha = 1 - (time - armor_damagetime)*(time - armor_damagetime);
+							HUD_Panel_DrawProgressBar(pos + armor_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, armor_beforedamage/maxarmor, is_vertical, armor_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * armor_damagealpha, DRAWFLAG_NORMAL);
 						}
-						else
-							armor_beforedamage = -1; //damage effect ended
 					}
 					prev_armor = armor;
 				}
