@@ -919,6 +919,9 @@ void spawnfunc_worldspawn (void)
 	{
 		fd = search_begin("*.serverpackage", TRUE, FALSE);
 		s = "";
+		for(i = 0; i < n; ++i)
+			if(substring(argv(i), -14, -1) != ".serverpackage")
+				s = strcat(s, " ", argv(i));
 		if(fd >= 0)
 		{
 			j = search_getsize(fd);
@@ -926,6 +929,7 @@ void spawnfunc_worldspawn (void)
 				s = strcat(s, " ", search_getfilename(fd, i));
 			search_end(fd);
 		}
+		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
 		cvar_set("sv_curl_serverpackages", substring(s, 1, -1));
 	}
 
