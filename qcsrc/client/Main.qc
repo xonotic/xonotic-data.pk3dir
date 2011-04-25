@@ -846,6 +846,7 @@ void Ent_ClientData()
 			saved_armor = 0;
 			health_time = 0;
 			armor_time = 0;
+			last_p_health = -1;
 		}
 		else if(spectatee_status && !newspectatee_status) //before observing/spectating, now playing
 		{

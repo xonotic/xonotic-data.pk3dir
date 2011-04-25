@@ -1310,10 +1310,9 @@ float health_time, armor_time;
 
 // saved_* vars contain the old health/armor value (before the damage happened)
 	// special cases:
-	// -2: during the load effect (spawning)
 	// -1: load or damage effect are ended normally
 	//  0: when effects are forcedly stopped; this is to avoid unintended effects as soon as we switch spectated player (e.g. from playerX: 70h to playerY: 50h)
-var float saved_health = -2;
+float saved_health;
 var float saved_armor = -2;
 
 float old_health;
@@ -1337,10 +1336,16 @@ void HUD_HealthArmor(void)
 
 		// code to check for spectatee_status changes is in Ent_ClientData()
 
-		if (health_time == -1)
+		if (last_p_health == -1)
+		{
+			// no effect
+			prev_health = health;
+			old_health = health;
+			last_p_health = health;
+		}
+		else if (health_time == -1)
 		{
 			//start the load effect
-			saved_health = -2;
 			saved_armor = -2;
 			health_time = time;
 			armor_time = time;
@@ -1470,7 +1475,7 @@ void HUD_HealthArmor(void)
 				pain_health_alpha = 1;
 				if (autocvar_hud_panel_healtharmor_progressbar_gfx)
 				{
-					if (fabs(prev_health - health) >= 2 && saved_health != -2)
+					if (fabs(prev_health - health) >= 2)
 					{
 						if (time - old_healthtime < 1)
 							old_health = last_p_health;
@@ -1496,21 +1501,16 @@ void HUD_HealthArmor(void)
 						float d = time - health_time;
 						if (d < 1)
 						{
-							if (saved_health == -2)
-								p_health *= sqrt(d);
-							else
-							{
-								HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, saved_health/maxhealth, is_vertical, health_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * (1 - d * d), DRAWFLAG_NORMAL);
-								if (prev_health - health >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage) //refresh the effect if repeatedly damaged
-									health_time = time;
-							}
+							HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, saved_health/maxhealth, is_vertical, health_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * (1 - d * d), DRAWFLAG_NORMAL);
+							if (prev_health - health >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage) //refresh the effect if repeatedly damaged
+								health_time = time;
 						}
 						else
 							saved_health = -1; //damage effect ended
 					}
 					prev_health = health;
 
-					if (health <= 40 && saved_health != -2)
+					if (health <= 40)
 					{
 						float BLINK_FACTOR = 0.15;
 						float BLINK_BASE = 0.85;
