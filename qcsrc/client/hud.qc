@@ -1316,6 +1316,10 @@ float health_time, armor_time;
 var float saved_health = -2;
 var float saved_armor = -2;
 
+float old_health;
+float old_healthtime;
+float last_p_health;
+
 void HUD_HealthArmor(void)
 {
 	float armor, health, fuel;
@@ -1466,6 +1470,19 @@ void HUD_HealthArmor(void)
 				pain_health_alpha = 1;
 				if (autocvar_hud_panel_healtharmor_progressbar_gfx)
 				{
+					if (fabs(prev_health - health) >= 2 && saved_health != -2)
+					{
+						if (time - old_healthtime < 1)
+							old_health = last_p_health;
+						else
+							old_health = prev_health;
+						old_healthtime = time;
+					}
+					if (time - old_healthtime < 1)
+					{
+						p_health += (old_health - health) * (1 - (time - old_healthtime));
+						last_p_health = p_health;
+					}
 					if (autocvar_hud_panel_healtharmor_progressbar_gfx_damage > 0 && saved_health == -1)
 					{
 						if (prev_health == 0 || prev_health - health >= autocvar_hud_panel_healtharmor_progressbar_gfx_damage)
