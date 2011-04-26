@@ -328,12 +328,27 @@ entity SelectSpawnPoint (float anypoint)
 	if(anypoint)
 		teamcheck = -1;
 	else if(have_team_spawns > 0)
-		teamcheck = self.team; // MUST be team
-	else if(have_team_spawns == 0 && have_noteam_spawns)
+	{
+		if(have_team_spawns_forteam[self.team] == 0)
+		{
+			// we request a spawn for a team, and we have team
+			// spawns, but that team has no spawns?
+			if(have_team_spawns[0])
+				// try noteam spawns
+				teamcheck = 0;
+			else
+				// if not, any spawn has to do
+				teamcheck = -1;
+		}
+		else
+			teamcheck = self.team; // MUST be team
+	}
+	else if(have_team_spawns == 0 && have_team_spawns[0])
 		teamcheck = 0; // MUST be noteam
 	else
 		teamcheck = -1;
 		// if we get here, we either require team spawns but have none, or we require non-team spawns and have none; use any spawn then
+
 
 	// get the list of players
 	playerlist = findchain(classname, "player");
@@ -2696,13 +2711,6 @@ void PlayerPreThink (void)
 		{
 			IntermissionThink ();	// otherwise a button could be missed between
 			return;					// the think tics
-		}
-
-		if(self.teleport_time)
-		if(time > self.teleport_time)
-		{
-			self.teleport_time = 0;
-			self.effects = self.effects - (self.effects & EF_NODRAW);
 		}
 
 		if(frametime > 0) // don't do this in cl_movement frames, just in server ticks

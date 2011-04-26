@@ -89,11 +89,12 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 
 vector HUD_Get_Num_Color (float x, float maxvalue)
 {
+	float blinkingamt;
 	vector color;
-	if(x > maxvalue) {
-		color_x = 0;
+	if(x >= maxvalue) {
+		color_x = sin(2*M_PI*time);
 		color_y = 1;
-		color_z = 0;
+		color_z = sin(2*M_PI*time);
 	}
 	else if(x > maxvalue * 0.75) {
 		color_x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
@@ -119,6 +120,14 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 		color_x = 1;
 		color_y = 0;
 		color_z = 0;
+	}
+
+	blinkingamt = (1 - x/maxvalue/0.25);
+	if(blinkingamt > 0)
+	{
+		color_x = color_x - color_x * blinkingamt * sin(2*M_PI*time);
+		color_y = color_y - color_y * blinkingamt * sin(2*M_PI*time);
+		color_z = color_z - color_z * blinkingamt * sin(2*M_PI*time);
 	}
 	return color;
 }
@@ -508,6 +517,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_progressbar");
 					HUD_Write_PanelCvar_q("_progressbar_strength");
 					HUD_Write_PanelCvar_q("_progressbar_shield");
+					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
 					HUD_Write_PanelCvar_q("_flip");
@@ -520,6 +530,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case HUD_PANEL_NOTIFY:
 					HUD_Write_PanelCvar_q("_flip");
+					HUD_Write_PanelCvar_q("_fontsize");
 					HUD_Write_PanelCvar_q("_print");
 					break;
 				case HUD_PANEL_RADAR:
@@ -2888,7 +2899,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 				print (sprintf(_("%s^7 is a ^1BERSERKER!\n"), s1));
 		} else if(type == KILL_SPREE_25) {
 			if(gentle)
-				print (sprintf(_("%s^7 made ^1TWENTY FIFE SCORES IN A ROW!\n"), s1));
+				print (sprintf(_("%s^7 made ^1TWENTY FIVE SCORES IN A ROW!\n"), s1));
 			else
 				print (sprintf(_("%s^7 inflicts ^1CARNAGE!\n"), s1));
 		} else if(type == KILL_SPREE_30) {
