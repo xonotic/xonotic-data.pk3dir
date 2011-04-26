@@ -2579,7 +2579,7 @@ void HUD_Radar(void)
 // Score (#7)
 //
 void HUD_UpdatePlayerTeams();
-void HUD_Score_Rankings(vector pos, vector mySize, entity me)
+void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 {
 	float score;
 	entity tm, pl;
@@ -2595,12 +2595,28 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 
 	const float name_size = mySize_x*0.75;
 	const float highlight_alpha = 0.2;
-	float i, me_printed;
+	float i, me_printed, first_pl;
 	string s;
+	i, first_pl = 0;
 	if (autocvar__hud_configure)
 	{
+		if (team_count)
+		{
+			// show team scores in the first line
+			float score_size = mySize_x / team_count;
+			for(tm = teams.sort_next; tm; tm = tm.sort_next) {
+				if(tm.team == COLOR_SPECTATOR)
+					continue;
+				if (tm.team == myteam)
+					HUD_Panel_DrawHighlight(pos - eY * (height * (1 - 0.9) / 2) + eX * score_size * i, eX * score_size + eY * height, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(pos + eX * score_size * i, ftos(123), eX * score_size + eY * fontsize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+				++i;
+			}
+			first_pl = 1;
+			pos_y += height;
+		}
 		score = 10 + SCOREPANEL_MAX_ENTRIES * 3;
-		for (i=0; i<entries; ++i)
+		for (i=first_pl; i<entries; ++i)
 		{
 			//simulate my score is lower than all displayed players,
 			//so that I don't appear at all showing pure rankings.
@@ -2628,8 +2644,23 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 
 	if (!scoreboard_fade_alpha) // the scoreboard too calls HUD_UpdatePlayerTeams
 		HUD_UpdatePlayerTeams();
-
-	for (pl = players.sort_next, i=0; pl && i<entries; pl = pl.sort_next, ++i)
+	if (team_count)
+	{
+		// show team scores in the first line
+		float score_size = mySize_x / team_count;
+		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
+			if(tm.team == COLOR_SPECTATOR)
+				continue;
+			if (tm.team == myteam)
+				drawfill(pos - eY * (height * (1 - 0.9) / 2) + eX * score_size * i, eX * score_size + eY * height, '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(pos + eX * score_size * i, ftos(tm.(teamscores[ts_primary])), eX * score_size + eY * fontsize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+			++i;
+		}
+		first_pl = 1;
+		pos_y += height;
+	}
+	i = first_pl;
+	for (pl = players.sort_next; pl && i<entries; pl = pl.sort_next, ++i)
 	{
 		if (pl.team == COLOR_SPECTATOR)
 			continue;
@@ -2650,7 +2681,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 
 		if (pl == me)
 		{
-			if (i == 0)
+			if (i == first_pl)
 				rgb = '0 1 0'; //first: green
 			me_printed = 1;
 			drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2726,7 +2757,7 @@ void HUD_Score(void)
 	} else if (!teamplay) { // non-teamgames
 		if ((spectatee_status == -1 && !autocvar__hud_configure) || autocvar_hud_panel_score_rankings)
 		{
-			HUD_Score_Rankings(pos, mySize, me);
+			HUD_Score_Rankings(pos, mySize, me, 0);
 			return;
 		}
 		// me vector := [team/connected frags id]
@@ -2765,13 +2796,10 @@ void HUD_Score(void)
 		drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring_aspect(pos + eX * 0.75 * mySize_x, distribution_str, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else { // teamgames
-		float max_fragcount;
-		max_fragcount = -99;
-
 		float scores_count, row, column, rows, columns;
 		vector offset;
 		vector score_pos, score_size; //for scores other than myteam
-		if (spectatee_status == -1)
+		if (spectatee_status == -1 || autocvar_hud_panel_score_rankings)
 		{
 			if (autocvar__hud_configure)
 				scores_count = 4;
@@ -2779,6 +2807,11 @@ void HUD_Score(void)
 				if(tm.team == COLOR_SPECTATOR)
 					continue;
 				++scores_count;
+			}
+			if (autocvar_hud_panel_score_rankings)
+			{
+				HUD_Score_Rankings(pos, mySize, me, scores_count);
+				return;
 			}
 			rows = mySize_y/mySize_x;
 			rows = bound(1, floor((sqrt(4 * (3/1) * rows * scores_count + rows * rows) + rows + 0.5) / 2), scores_count);
@@ -2806,6 +2839,9 @@ void HUD_Score(void)
 		}
 		else
 			score_size = eX * mySize_x*(1/4) + eY * mySize_y*(1/3);
+
+		float max_fragcount;
+		max_fragcount = -99;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
 			if(tm.team == COLOR_SPECTATOR)
 				continue;
