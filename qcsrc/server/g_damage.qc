@@ -208,7 +208,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 			}
 			f = 0;
 		}
-		else if(g_ctf)
+		else if(g_ctf) // FIXCTF
 		{
 			if(g_ctf_ignore_frags)
 				f = 0;
@@ -710,15 +710,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				damage = 0;
 			else
 				damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
-		}
-
-		// CTF: reduce damage/force
-		if(g_ctf)
-		if(targ == attacker)
-		if(targ.flagcarried)
-		{
-			damage = damage * autocvar_g_ctf_flagcarrier_selfdamage;
-			force = force * autocvar_g_ctf_flagcarrier_selfforce;
 		}
 
 		if(g_runematch)
