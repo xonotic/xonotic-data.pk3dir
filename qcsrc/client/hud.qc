@@ -1476,18 +1476,21 @@ void HUD_HealthArmor(void)
 				pain_health_alpha = 1;
 				if (autocvar_hud_panel_healtharmor_progressbar_gfx)
 				{
-					if (fabs(prev_health - health) >= 2)
+					if (autocvar_hud_panel_healtharmor_progressbar_gfx_smooth > 0)
 					{
+						if (fabs(prev_health - health) >= autocvar_hud_panel_healtharmor_progressbar_gfx_smooth)
+						{
+							if (time - old_p_healthtime < 1)
+								old_p_health = prev_p_health;
+							else
+								old_p_health = prev_health;
+							old_p_healthtime = time;
+						}
 						if (time - old_p_healthtime < 1)
-							old_p_health = prev_p_health;
-						else
-							old_p_health = prev_health;
-						old_p_healthtime = time;
-					}
-					if (time - old_p_healthtime < 1)
-					{
-						p_health += (old_p_health - health) * (1 - (time - old_p_healthtime));
-						prev_p_health = p_health;
+						{
+							p_health += (old_p_health - health) * (1 - (time - old_p_healthtime));
+							prev_p_health = p_health;
+						}
 					}
 					if (autocvar_hud_panel_healtharmor_progressbar_gfx_damage > 0)
 					{
@@ -1505,7 +1508,7 @@ void HUD_HealthArmor(void)
 					}
 					prev_health = health;
 
-					if (health <= 40)
+					if (health <= autocvar_hud_panel_healtharmor_progressbar_gfx_lowhealth)
 					{
 						float BLINK_FACTOR = 0.15;
 						float BLINK_BASE = 0.85;
@@ -1528,18 +1531,21 @@ void HUD_HealthArmor(void)
 				p_armor = armor;
 				if (autocvar_hud_panel_healtharmor_progressbar_gfx)
 				{
-					if (fabs(prev_armor - armor) >= 2)
+					if (autocvar_hud_panel_healtharmor_progressbar_gfx_smooth > 0)
 					{
+						if (fabs(prev_armor - armor) >= autocvar_hud_panel_healtharmor_progressbar_gfx_smooth)
+						{
+							if (time - old_p_armortime < 1)
+								old_p_armor = prev_p_armor;
+							else
+								old_p_armor = prev_armor;
+							old_p_armortime = time;
+						}
 						if (time - old_p_armortime < 1)
-							old_p_armor = prev_p_armor;
-						else
-							old_p_armor = prev_armor;
-						old_p_armortime = time;
-					}
-					if (time - old_p_armortime < 1)
-					{
-						p_armor += (old_p_armor - armor) * (1 - (time - old_p_armortime));
-						prev_p_armor = p_armor;
+						{
+							p_armor += (old_p_armor - armor) * (1 - (time - old_p_armortime));
+							prev_p_armor = p_armor;
+						}
 					}
 					if (autocvar_hud_panel_healtharmor_progressbar_gfx_damage > 0)
 					{
