@@ -2579,6 +2579,89 @@ void HUD_Radar(void)
 // Score (#7)
 //
 void HUD_UpdatePlayerTeams();
+void HUD_Score_Rankings(vector pos, vector mySize, entity me)
+{
+	float score;
+	entity tm, pl;
+#define SCOREPANEL_MAX_ENTRIES 6
+#define SCOREPANEL_ASPECTRATIO 2
+	const float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
+	const float height = mySize_y/entries;
+	const vector fontsize = '0.9 0.9 0' * height;
+	pos_y += height * (1 - 0.9) / 2;
+
+	vector rgb;
+	rgb = '1 1 1';
+
+	const float name_size = mySize_x*0.75;
+	const float highlight_alpha = 0.2;
+	float i, me_printed;
+	string s;
+	if (autocvar__hud_configure)
+	{
+		score = 10 + SCOREPANEL_MAX_ENTRIES * 3;
+		for (i=0; i<entries; ++i)
+		{
+			//simulate my score is lower than all displayed players,
+			//so that I don't appear at all showing pure rankings.
+			//This is to better show the difference between the 2 ranking views
+			if (i == entries-1 && autocvar_hud_panel_score_rankings == 1)
+			{
+				rgb = '1 1 0';
+				drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				s = GetPlayerName(pl.sv_entnum);
+				score = 7;
+			}
+			else
+			{
+				s = sprintf(_("Player %d"), i+1);
+				score -= 3;
+			}
+
+			s = textShortenToWidth(s, name_size, fontsize, stringwidth_colors);
+			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring(pos + eX * mySize_x*0.79, ftos(score), fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			pos_y += height;
+		}
+		return;
+	}
+
+	if (!scoreboard_fade_alpha) // the scoreboard too calls HUD_UpdatePlayerTeams
+		HUD_UpdatePlayerTeams();
+
+	for (pl = players.sort_next, i=0; pl && i<entries; pl = pl.sort_next, ++i)
+	{
+		if (pl.team == COLOR_SPECTATOR)
+			continue;
+
+		if (i == entries-1 && !me_printed && pl != me)
+		if (autocvar_hud_panel_score_rankings == 1 && spectatee_status != -1)
+		{
+			for (pl = me.sort_next; pl; pl = pl.sort_next)
+				if (pl.team != COLOR_SPECTATOR)
+					break;
+
+			if (pl)
+				rgb = '1 1 0'; //not last but not among the leading players: yellow
+			else
+				rgb = '1 0 0'; //last: red
+			pl = me;
+		}
+
+		if (pl == me)
+		{
+			if (i == 0)
+				rgb = '0 1 0'; //first: green
+			me_printed = 1;
+			drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
+		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + eX * mySize_x*0.79, ftos(pl.(scores[ps_primary])), fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		pos_y += height;
+	}
+}
+
 void HUD_Score(void)
 {
 	if(!autocvar__hud_configure)
@@ -2643,83 +2726,7 @@ void HUD_Score(void)
 	} else if (!teamplay) { // non-teamgames
 		if ((spectatee_status == -1 && !autocvar__hud_configure) || autocvar_hud_panel_score_rankings)
 		{
-#define SCOREPANEL_MAX_ENTRIES 6
-#define SCOREPANEL_ASPECTRATIO 2
-			const float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
-			const float height = mySize_y/entries;
-			const vector fontsize = '0.9 0.9 0' * height;
-			pos_y += height * (1 - 0.9) / 2;
-
-			vector rgb;
-			rgb = '1 1 1';
-
-			const float name_size = mySize_x*0.75;
-			const float highlight_alpha = 0.2;
-			float i, me_printed;
-			string s;
-			if (autocvar__hud_configure)
-			{
-				score = 10 + SCOREPANEL_MAX_ENTRIES * 3;
-				for (i=0; i<entries; ++i)
-				{
-					//simulate my score is lower than all displayed players,
-					//so that I don't appear at all showing pure rankings.
-					//This is to better show the difference between the 2 ranking views
-					if (i == entries-1 && autocvar_hud_panel_score_rankings == 1)
-					{
-						rgb = '1 1 0';
-						drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-						s = GetPlayerName(pl.sv_entnum);
-						score = 7;
-					}
-					else
-					{
-						s = sprintf(_("Player %d"), i+1);
-						score -= 3;
-					}
-
-					s = textShortenToWidth(s, name_size, fontsize, stringwidth_colors);
-					drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-					drawstring(pos + eX * mySize_x*0.79, ftos(score), fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-					pos_y += height;
-				}
-				return;
-			}
-
-			if (!scoreboard_fade_alpha) // the scoreboard too calls HUD_UpdatePlayerTeams
-				HUD_UpdatePlayerTeams();
-
-			for (pl = players.sort_next, i=0; pl && i<entries; pl = pl.sort_next, ++i)
-			{
-				if (pl.team == COLOR_SPECTATOR)
-					continue;
-
-				if (i == entries-1 && !me_printed && pl != me)
-				if (autocvar_hud_panel_score_rankings == 1 && spectatee_status != -1)
-				{
-					for (pl = me.sort_next; pl; pl = pl.sort_next)
-						if (pl.team != COLOR_SPECTATOR)
-							break;
-
-					if (pl)
-						rgb = '1 1 0'; //not last but not among the leading players: yellow
-					else
-						rgb = '1 0 0'; //last: red
-					pl = me;
-				}
-
-				if (pl == me)
-				{
-					if (i == 0)
-						rgb = '0 1 0'; //first: green
-					me_printed = 1;
-					drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-				}
-				s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
-				drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring(pos + eX * mySize_x*0.79, ftos(pl.(scores[ps_primary])), fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				pos_y += height;
-			}
+			HUD_Score_Rankings(pos, mySize, me);
 			return;
 		}
 		// me vector := [team/connected frags id]
