@@ -16,12 +16,15 @@
 entity ctf_worldflaglist; // CTF flags in the map
 .entity ctf_worldflagnext;
 
+.vector ctf_spawnorigin; // stored vector for where the flag is placed on the map itself. 
+
 float ctf_captimerecord; // record time for capturing the flag
 .float ctf_pickuptime;
 .float ctf_pickupid;
 .float ctf_dropperid; // don't allow spam of dropping the flag
 .float ctf_droptime;
 .float ctf_status; // status of the flag (FLAG_BASE, FLAG_DROPPED, FLAG_CARRY declared globally)
+
 
 .float next_take_time; // Delay between when the person can pick up a flag // is this obsolete from the stuff above?
 
@@ -31,13 +34,7 @@ float ctf_captureshield_min_negscore; // punish at -20 points
 float ctf_captureshield_max_ratio; // punish at most 30% of each team
 float ctf_captureshield_force; // push force of the shield
 
-// declare functions so they can be used in any order in the file
-/*
-void ctf_FlagTouch(void);
-void ctf_FlagThink(void);
-void ctf_SetupFlag(float, entity);
-void ctf_RespawnFlag(entity);
-*/
+// after game mode is finished, these will be changed to use #define with other entities so as to not create many more.
 
 // ==================
 // Misc CTF functions
@@ -167,7 +164,7 @@ void ctf_CaptureShield_Spawn(entity flag)
 // Event Handlers
 // ==============
 
-void ctf_Handle_Drop(entity player) // make sure this works
+void ctf_Handle_Drop(entity player)
 {
 	entity flag = player.flagcarried;
 
@@ -213,7 +210,7 @@ void ctf_Handle_Drop(entity player) // make sure this works
 		dprint("FLAG FALLTHROUGH will happen SOON\n");
 }
 
-void ctf_Handle_Capture(entity flag, entity player) // make sure this works
+void ctf_Handle_Capture(entity flag, entity player)
 {
 	// declarations
 	float cap_time, cap_record, success;
@@ -265,7 +262,7 @@ void ctf_Handle_Capture(entity flag, entity player) // make sure this works
 	ctf_RespawnFlag(player.flagcarried);
 }
 
-void ctf_Handle_Return(entity flag, entity player) // make sure this works
+void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
@@ -290,7 +287,7 @@ void ctf_Handle_Return(entity flag, entity player) // make sure this works
 	ctf_RespawnFlag(flag);
 }
 
-void ctf_Handle_Pickup_Base(entity flag, entity player) // make sure this works
+void ctf_Handle_Pickup_Base(entity flag, entity player)
 {
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
@@ -362,7 +359,7 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this wor
 	flag.takedamage = DAMAGE_NO;
 	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
-	flag.ctf_pickuptime = time; // used for timing runs
+	//flag.ctf_pickuptime = time; // don't update pickuptime since this isn't a real steal. 
 	flag.ctf_pickupid = player.playerid;
 	flag.ctf_status = FLAG_CARRY;
 
@@ -403,12 +400,12 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this wor
 // Main Flag Functions
 // ===================
 
-void ctf_FlagThink() // make sure this works
+void ctf_FlagThink()
 {
 	// declarations
 	entity tmp_entity;
 
-	self.nextthink = time + 0.1;
+	self.nextthink = time + 0.1; // only 10 fps, more is unnecessary.
 
 	// captureshield
 	if(self == ctf_worldflaglist) // only for the first flag
@@ -466,9 +463,9 @@ void ctf_FlagThink() // make sure this works
 			}
 			return;
 
-		default:
+		default: // this should never happen
 			dprint("Think: Flag exists with no status?\n");
-			return; // this should never happen
+			return;
 	}
 }
 
@@ -510,16 +507,14 @@ void ctf_FlagTouch()
 			dprint("Someone touched a flag even though it was being carried?\n");
 			break;
 
-		default:
-			dprint("Flag exists with no status?\n");
-			break; // this should never happen
+		default: // this should never happen
+			dprint("Touch: Flag exists with no status?\n");
+			break;
 	}
 }
 
-void ctf_RespawnFlag(entity flag) // make sure this works
+void ctf_RespawnFlag(entity flag)
 {
-	if(flag.classname != "item_flag_team") { backtrace("ctf_RespawnFlag was called incorrectly."); return; }
-
 	// reset the player (if there is one)
 	if((flag.owner) && (flag.owner.flagcarried == flag))
 	{
@@ -532,14 +527,14 @@ void ctf_RespawnFlag(entity flag) // make sure this works
 
 	// reset the flag
 	setattachment(flag, world, "");
-	setorigin(flag, flag.dropped_origin); // replace with flag.ctf_spawnorigin
+	setorigin(flag, flag.ctf_spawnorigin); // replace with flag.ctf_spawnorigin
 	flag.movetype = ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS);
 	flag.takedamage = DAMAGE_NO;
 	flag.solid = SOLID_TRIGGER;
 	flag.velocity = '0 0 0';
 	flag.angles = flag.mangle;
 	flag.ctf_status = FLAG_BASE;
-	flag.flags = FL_ITEM;
+	flag.flags = FL_ITEM | FL_NOTARGET;
 	flag.owner = world;
 }
 
@@ -568,24 +563,23 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	flag.items = ((teamnumber) ? IT_KEY2 : IT_KEY1); // IT_KEY2: gold key (redish enough) - IT_KEY1: silver key (bluish enough)
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
-	flag.flags = FL_ITEM;
+	flag.flags = FL_ITEM | FL_NOTARGET;
 	flag.solid = SOLID_TRIGGER;
 	flag.velocity = '0 0 0';
 	flag.ctf_status = FLAG_BASE;
+	flag.ctf_spawnorigin = flag.origin; 
 	flag.mangle = flag.angles;
 	flag.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	
 	if(flag.spawnflags & 1) // I don't understand what all this is about.
 	{ 	
 		flag.noalign = TRUE;
-		flag.dropped_origin = flag.origin; 
 		flag.movetype = MOVETYPE_NONE;
 		print("This map was loaded with flags using MOVETYPE_NONE\n");
 	}
 	else 
 	{ 
 		flag.noalign = FALSE;
-		droptofloor(); 
 		flag.movetype = MOVETYPE_TOSS; 
 		print("This map was loaded with flags using MOVETYPE_TOSS\n");
 	}	
@@ -827,7 +821,7 @@ void ctf_SpawnTeam (string teamname, float teamcolor)
 	self = oldself;
 }
 
-void ctf_DelayedInit()
+void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
 {
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "ctf_team") == world)
@@ -836,6 +830,8 @@ void ctf_DelayedInit()
 		ctf_SpawnTeam("Red", COLOR_TEAM1 - 1);
 		ctf_SpawnTeam("Blue", COLOR_TEAM2 - 1);
 	}
+	
+	ScoreRules_ctf();
 }
 
 void ctf_Initialize()
@@ -848,11 +844,7 @@ void ctf_Initialize()
 
 	g_ctf_win_mode = cvar("g_ctf_win_mode");
 	
-	ScoreRules_ctf();
-	
-	// does it really need to be delayed? todo: Find out with a map that is broken.
-	ctf_DelayedInit();
-	//InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);
+	InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 
