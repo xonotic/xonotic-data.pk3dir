@@ -55,29 +55,40 @@ for VM in menu csprogs; do
 					read -r yesno
 					case "$yesno" in
 						y)
-							zip -9r "$X"-todo.zip "$X".untranslated "$X".fuzzy
+							attach=
+							if [ $nu -gt 0 ]; then
+								attach="$attach $X.untranslated"
+							fi
+							if [ $nf -gt 0 ]; then
+								attach="$attach $X.fuzzy"
+							fi
 							{
 								cat <<EOF
 Hi,
 
-we need updates to the translations you made for Xonotic.
+as you provided us with translations in the past, we kindly ask you
+to update the translation to match changes in the Xonotic source. Can
+you please work on them and provide updates to us?
+
+If you do not wish to be contacted for translation updates any more,
+please tell us in a reply to this message.
 
 EOF
 								if [ $nu -gt 0 ]; then
 									cat <<EOF
-The attached zip file contains a file
+Attached to this message is a file
 $X.untranslated
-with $nu yet to be translated messages. Please translate them and reply with
-the file containing the translations in the "msgstr" fields.
+with $nu yet to be translated messages. Please translate them and reply
+with the file containing the translations in the "msgstr" fields.
 
 EOF
 								fi
 								if [ $nf -gt 0 ]; then
 									cat <<EOF
-The attached zip file contains a file
+Attached to this message is a file
 $X.fuzzy
-with $nf automatically generated translations. Please verify and/or fix them
-and reply with the file having been verified by you.
+with $nf automatically generated translations. Please verify and/or fix
+them and reply with the file having been verified by you.
 
 EOF
 								fi
@@ -86,14 +97,17 @@ Thanks in advance,
 
 Team Xonotic
 EOF
-							} | mail \
+							} | mutt \
+								-e "set from=\"divVerent@xonotic.org\"" \
+								-e "set use_from=yes" \
+								-e "set use_envelope_from=yes" \
 								-s "Need update for translations: $X" \
-								-a "$X"-todo.zip \
 								-c "$cc" \
 								-b "divVerent@xonotic.org" \
-								-S from="divVerent@xonotic.org" \
+								-a $attach -- \
 								"$to"
-EOF
+							break
+							;;
 						n)
 							break
 							;;
