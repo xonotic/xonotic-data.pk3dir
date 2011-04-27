@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-27 06:05+0200\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
@@ -1373,7 +1373,7 @@ msgstr "es wird auf ^2%s^7 gespielt"
 
 #: qcsrc/client/scoreboard.qc:1255 qcsrc/client/scoreboard.qc:1260
 #, c-format
-msgid " for up to ^1%.1f minutes^7"
+msgid " for up to ^1%1.0f minutes^7"
 msgstr " für bis zu ^1%.1f Minuten^7"
 
 #: qcsrc/client/scoreboard.qc:1264 qcsrc/client/scoreboard.qc:1283

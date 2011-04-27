@@ -917,8 +917,12 @@ void spawnfunc_worldspawn (void)
 	// fill sv_curl_serverpackages from .serverpackage files
 	if(autocvar_sv_curl_serverpackages_auto)
 	{
-		fd = search_begin("*.serverpackage", TRUE, FALSE);
 		s = "";
+		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
+		for(i = 0; i < n; ++i)
+			if(substring(argv(i), -14, -1) != ".serverpackage")
+				s = strcat(s, " ", argv(i));
+		fd = search_begin("*.serverpackage", TRUE, FALSE);
 		if(fd >= 0)
 		{
 			j = search_getsize(fd);
