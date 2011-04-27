@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-27 06:05+0200\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
@@ -1161,6 +1161,10 @@ msgstr "Größe:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
 msgstr "Alpha:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+msgid "Crosshair color:"
+msgstr "Farbe:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"

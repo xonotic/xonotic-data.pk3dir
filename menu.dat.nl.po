@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-27 06:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1159,6 +1159,10 @@ msgstr "Richtkruis grootte:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
 msgstr "Richtkruis alpha:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+msgid "Crosshair color:"
+msgstr "Richtkruis kleur:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"
@@ -2755,11 +2759,8 @@ msgstr "Machine Gun"
 msgid "%s was riddled full of holes by %s"
 msgstr ""
 
-#~ msgid "%d/%d"
-#~ msgstr "%d/%d"
-
 #~ msgid "Waypoint settings:"
 #~ msgstr "Wegwijzer instellingen"
 
-#~ msgid "Crosshair color:"
-#~ msgstr "Richtkruis kleur:"
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"

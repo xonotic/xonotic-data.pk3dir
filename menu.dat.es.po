@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-27 06:05+0200\n"
 "Last-Translator: Rodrigo Mouton Laudin <ratogenesis@gmail.com>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -1168,6 +1168,10 @@ msgstr "Tamaño da mira:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
 msgstr "Transparencia da mira:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+msgid "Crosshair color:"
+msgstr "Color de mira:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"
@@ -2823,14 +2827,11 @@ msgstr "Machine Gun"
 msgid "%s was riddled full of holes by %s"
 msgstr "%s fue totalmente acribillado por %s"
 
-#~ msgid "%d/%d"
-#~ msgstr "%d/%d"
+#~ msgid "%s ran into %s's flac"
+#~ msgstr "%s se cruzó con el flac de %s"
 
 #~ msgid "Waypoint settings:"
 #~ msgstr "configuración de puntos de camino:"
 
-#~ msgid "%s ran into %s's flac"
-#~ msgstr "%s se cruzó con el flac de %s"
-
-#~ msgid "Crosshair color:"
-#~ msgstr "Color de mira:"
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xontoic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-27 06:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Ricardo 'Hellgardia' Silva <ricardo.mccs@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1167,6 +1167,10 @@ msgstr "Tamanho da mira:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
 msgstr "Alfa da mira:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+msgid "Crosshair color:"
+msgstr "Cor da mira:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"
@@ -2821,11 +2825,8 @@ msgstr "Machine Gun"
 msgid "%s was riddled full of holes by %s"
 msgstr ""
 
-#~ msgid "%d/%d"
-#~ msgstr "%d/%d"
-
 #~ msgid "Waypoint settings:"
 #~ msgstr "Definições dos caminhos:"
 
-#~ msgid "Crosshair color:"
-#~ msgstr "Cor da mira:"
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"

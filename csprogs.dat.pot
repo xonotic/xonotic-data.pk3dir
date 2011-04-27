@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-27 06:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -376,7 +376,7 @@ msgstr ""
 
 #: qcsrc/client/scoreboard.qc:1255 qcsrc/client/scoreboard.qc:1260
 #, c-format
-msgid " for up to ^1%.1f minutes^7"
+msgid " for up to ^1%1.0f minutes^7"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:1264 qcsrc/client/scoreboard.qc:1283
