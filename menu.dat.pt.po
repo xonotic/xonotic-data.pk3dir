@@ -2555,7 +2555,7 @@ msgid ""
 "Welcome to Xonotic, please select your language preference and enter your "
 "player name to get started.  You can change these options later through the "
 "menu system."
-msgstr ""
+msgstr "Bem-vindo ao Xonotic, por favor escolhe a linguagem de preferência e insere o nick para começar. Pode mudar as opções mais tarde nas opções." 
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:39
 msgid "West"
