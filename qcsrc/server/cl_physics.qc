@@ -884,6 +884,8 @@ void SV_PlayerPhysics()
 	if (self.deadflag)
 		goto end;
 
+	WarpZoneLib_PlayerPhysics_FixVAngle();
+
 	if (!self.fixangle && !g_bugrigs)
 	{
 		self.angles_x = 0;

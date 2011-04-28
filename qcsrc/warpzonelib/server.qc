@@ -89,7 +89,8 @@ float WarpZone_Teleport(entity player)
 	WarpZone_RefSys_Add(player, self);
 	WarpZone_TeleportPlayer(self, player, o1 - player.view_ofs, a1, v1);
 	WarpZone_StoreProjectileData(player);
-	player.warpzone_teleport_time = time;
+	player.warpzone_teleport_time = servertime;
+	player.warpzone_teleport_zone = self;
 
 	return 1;
 }
@@ -684,4 +685,10 @@ void spawnfunc_trigger_warpzone_reconnect()
 void spawnfunc_target_warpzone_reconnect()
 {
 	spawnfunc_trigger_warpzone_reconnect(); // both names make sense here :(
+}
+
+void WarpZone_PlayerPhysics_FixVAngle(void)
+{
+	if(time < self.warpzone_teleport_time)
+		self.v_angle = WarpZone_TransformVAngles(self.warpzone_teleport_zone, self.v_angle);
 }
