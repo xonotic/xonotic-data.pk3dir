@@ -2590,8 +2590,9 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 	const vector fontsize = '0.9 0.9 0' * height;
 	pos_y += height * (1 - 0.9) / 2;
 
-	vector rgb;
+	vector rgb, score_color;
 	rgb = '1 1 1';
+	score_color = '1 1 1';
 
 	const float name_size = mySize_x*0.75;
 	const float highlight_alpha = 0.2;
@@ -2630,13 +2631,15 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			}
 			else
 			{
-				s = sprintf(_("Player %d"), i+1);
+				s = sprintf(_("Player %d"), i + 1 - first_pl);
 				score -= 3;
 			}
 
+			if (team_count)
+				score_color = GetTeamRGB(ColorByTeam(mod(i + 2, team_count))) * 0.8;
 			s = textShortenToWidth(s, name_size, fontsize, stringwidth_colors);
 			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring(pos + eX * mySize_x*0.79, ftos(score), fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring(pos + eX * mySize_x*0.79, ftos(score), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos_y += height;
 		}
 		return;
@@ -2686,9 +2689,11 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			me_printed = 1;
 			drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
+		if (team_count)
+			score_color = GetTeamRGB(pl.team) * 0.8;
 		s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
 		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + eX * mySize_x*0.79, ftos(pl.(scores[ps_primary])), fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + eX * mySize_x*0.79, ftos(pl.(scores[ps_primary])), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos_y += height;
 	}
 }
@@ -2801,13 +2806,8 @@ void HUD_Score(void)
 		vector score_pos, score_size; //for scores other than myteam
 		if (spectatee_status == -1 || autocvar_hud_panel_score_rankings)
 		{
-			if (autocvar__hud_configure)
-				scores_count = 4;
-			else for(tm = teams.sort_next; tm; tm = tm.sort_next) {
-				if(tm.team == COLOR_SPECTATOR)
-					continue;
+			for(tm = teams.sort_next; tm, tm.team != COLOR_SPECTATOR; tm = tm.sort_next)
 				++scores_count;
-			}
 			if (autocvar_hud_panel_score_rankings)
 			{
 				HUD_Score_Rankings(pos, mySize, me, scores_count);
