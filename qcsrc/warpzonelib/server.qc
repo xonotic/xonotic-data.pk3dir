@@ -690,9 +690,9 @@ void spawnfunc_target_warpzone_reconnect()
 
 void WarpZone_PlayerPhysics_FixVAngle(void)
 {
-#ifdef WARPZONE_FIX_VANGLE
-	if(self.v_angle_z <= 360)
+#ifndef WARPZONE_DONT_FIX_VANGLE
 	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(self.v_angle_z <= 360) // if not already adjusted
 	if(time - self.ping * 0.001 < self.warpzone_teleport_time)
 	{
 		self.v_angle = WarpZone_TransformVAngles(self.warpzone_teleport_zone, self.v_angle);
