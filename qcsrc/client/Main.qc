@@ -962,6 +962,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_TUBANOTE: Ent_TubaNote(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE: WarpZone_Read(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE_CAMERA: WarpZone_Camera_Read(bIsNewEntity); break;
+		case ENT_CLIENT_WARPZONE_TELEPORTED: WarpZone_Teleported_Read(bIsNewEntity); break;
 		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
 		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;

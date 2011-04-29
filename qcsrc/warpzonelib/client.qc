@@ -141,6 +141,19 @@ void WarpZone_Camera_Read(float isnew)
 		self.drawmask = MASK_NORMAL;
 }
 
+void WarpZone_Teleported_Read(float isnew)
+{
+	vector v;
+	self.classname = "warpzone_teleported";
+	v_x = ReadCoord();
+	v_y = ReadCoord();
+	v_z = ReadCoord();
+	if(!isnew)
+		return;
+	self.warpzone_transform = v;
+	R_SetView3fv(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(self, R_SetView3fv(VF_CL_VIEWANGLES)));
+}
+
 float warpzone_fixingview;
 float warpzone_fixingview_drawexteriormodel;
 //float warpzone_fixingview_sidespeed;
