@@ -667,6 +667,8 @@ void SV_PlayerPhysics()
 	float buttons_prev;
 	float not_allowed_to_move;
 	string c;
+
+	WarpZone_PlayerPhysics_FixVAngle();
 	
 	maxspd_mod = 1;
 	if(g_minstagib && (self.items & IT_INVINCIBLE))

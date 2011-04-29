@@ -1,5 +1,6 @@
 .vector warpzone_oldorigin, warpzone_oldvelocity, warpzone_oldangles;
 .float warpzone_teleport_time;
+.entity warpzone_teleport_zone;
 
 void WarpZone_StoreProjectileData(entity e)
 {
@@ -90,6 +91,7 @@ float WarpZone_Teleport(entity player)
 	WarpZone_TeleportPlayer(self, player, o1 - player.view_ofs, a1, v1);
 	WarpZone_StoreProjectileData(player);
 	player.warpzone_teleport_time = time;
+	player.warpzone_teleport_zone = self;
 
 	return 1;
 }
@@ -690,4 +692,17 @@ void spawnfunc_trigger_warpzone_reconnect()
 void spawnfunc_target_warpzone_reconnect()
 {
 	spawnfunc_trigger_warpzone_reconnect(); // both names make sense here :(
+}
+
+void WarpZone_PlayerPhysics_FixVAngle(void)
+{
+#ifndef WARPZONE_DONT_FIX_VANGLE
+	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(self.v_angle_z <= 360) // if not already adjusted
+	if(time - self.ping * 0.001 < self.warpzone_teleport_time)
+	{
+		self.v_angle = WarpZone_TransformVAngles(self.warpzone_teleport_zone, self.v_angle);
+		self.v_angle_z += 720; // mark as adjusted
+	}
+#endif
 }

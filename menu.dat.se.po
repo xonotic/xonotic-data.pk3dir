@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 10:37+0200\n"
+"POT-Creation-Date: 2011-04-27 06:05+0200\n"
 "PO-Revision-Date: 2011-01-11 22:51+ZONE\n"
 "Last-Translator: marcus256 <marcus256@users.sourceforge.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1161,6 +1161,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
 msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+#, fuzzy
+msgid "Crosshair color:"
+msgstr "Färg på ammoraden:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"
