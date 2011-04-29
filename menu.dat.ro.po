@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-27 06:17+0200\n"
 "PO-Revision-Date: 2011-01-18 11:53+0100\t\n"
 "Last-Translator: MirceaKitsune <sonichedgehog_hyperblast00@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1167,6 +1167,10 @@ msgstr "Marime ochian:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
 msgstr "Opacitate ochian:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+msgid "Crosshair color:"
+msgstr "Culoare ochian:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"
@@ -2818,11 +2822,8 @@ msgstr "Machine Gun"
 msgid "%s was riddled full of holes by %s"
 msgstr ""
 
-#~ msgid "%d/%d"
-#~ msgstr "%d/%d"
-
 #~ msgid "Waypoint settings:"
 #~ msgstr "Setari indicatoare:"
 
-#~ msgid "Crosshair color:"
-#~ msgstr "Culoare ochian:"
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"

@@ -35,6 +35,12 @@ float DEBUG_NODE_WARNING        = 2;
 float DEBUG_NODE_FAIL           = 3;
 vector debuglastnode;
 
+entity bot_waypoint_queue_owner; 	// Owner of the temporary list of goals
+entity bot_waypoint_queue_goal;		// Head of the temporary list of goals
+.entity bot_waypoint_queue_nextgoal;
+entity bot_waypoint_queue_bestgoal;
+float bot_waypoint_queue_bestgoalrating;
+
 /*
  * Functions
  */
@@ -60,6 +66,7 @@ void navigation_routerating(entity e, float f, float rangebias);
 void navigation_poptouchedgoals();
 void navigation_goalrating_start();
 void navigation_goalrating_end();
+void navigation_unstuck();
 
 void botframe_updatedangerousobjects(float maxupdate);
 
