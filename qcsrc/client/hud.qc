@@ -2595,6 +2595,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 	score_color = '1 1 1';
 
 	const float name_size = mySize_x*0.75;
+	const float spacing_size = mySize_x*0.04;
 	const float highlight_alpha = 0.2;
 	float i, me_printed, first_pl;
 	string s;
@@ -2639,7 +2640,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 				score_color = GetTeamRGB(ColorByTeam(mod(i + 2, team_count))) * 0.8;
 			s = textShortenToWidth(s, name_size, fontsize, stringwidth_colors);
 			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring(pos + eX * mySize_x*0.79, ftos(score), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring(pos + eX * (name_size + spacing_size), ftos(score), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos_y += height;
 		}
 		return;
@@ -2693,7 +2694,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			score_color = GetTeamRGB(pl.team) * 0.8;
 		s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
 		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + eX * mySize_x*0.79, ftos(pl.(scores[ps_primary])), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores[ps_primary])), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos_y += height;
 	}
 }
