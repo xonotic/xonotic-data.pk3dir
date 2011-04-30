@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the PACKAGE package.
 # MirceaKitsune <sonichedgehog_hyperblast00@yahoo.com>, 2011.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
@@ -69,7 +68,7 @@ msgid "custom"
 msgstr "personalizat"
 
 #: qcsrc/menu/menu.qc:29
-#, fuzzy, c-format
+#, c-format
 msgid "^4MQC Build information: ^1%s\n"
 msgstr "^4MQC Informatii compilare: %s\n"
 
@@ -432,7 +431,6 @@ msgid "Fade effect:"
 msgstr "Atenuare opacitate:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:33
-#, fuzzy
 msgid "EF^None"
 msgstr "Nici una"
 
@@ -453,7 +451,6 @@ msgid "Show weapon ID as:"
 msgstr "Afisaj ID arme ca:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:44
-#, fuzzy
 msgid "SHOWAS^None"
 msgstr "Nici una"
 
@@ -524,22 +521,18 @@ msgid "HUD Dock:"
 msgstr "Magnet ferestre:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:70
-#, fuzzy
 msgid "DOCK^Disabled"
 msgstr "Dezactivat"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:71
-#, fuzzy
 msgid "DOCK^Small"
 msgstr "Mic"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:72
-#, fuzzy
 msgid "DOCK^Medium"
 msgstr "Mediu"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:73
-#, fuzzy
 msgid "DOCK^Large"
 msgstr "Mare"
 
@@ -930,7 +923,6 @@ msgid "Jet pack"
 msgstr "Reactie"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:98
-#, fuzzy
 msgid "MUT^None"
 msgstr "Nici una"
 
@@ -996,12 +988,10 @@ msgid "Join"
 msgstr "Alaturare"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:36
-#, fuzzy
 msgid "SRVS^Empty"
 msgstr "Gol"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:40
-#, fuzzy
 msgid "SRVS^Full"
 msgstr "Plin"
 
@@ -1180,7 +1170,6 @@ msgid "By health"
 msgstr "Dupa sanatate"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:143
-#, fuzzy
 msgid "Custom"
 msgstr "personalizat"
 
@@ -1197,7 +1186,6 @@ msgid "Hit test:"
 msgstr "Detectare tinta:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:159
-#, fuzzy
 msgid "HTST^None"
 msgstr "Nici una"
 
@@ -1222,17 +1210,14 @@ msgid "Force models:"
 msgstr "Modele jucator fortate:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:175
-#, fuzzy
 msgid "MDL^None"
 msgstr "Nici una"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:176
-#, fuzzy
 msgid "MDL^Custom"
 msgstr "Personalizat"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:177
-#, fuzzy
 msgid "MDL^All"
 msgstr "Toate"
 
@@ -1245,7 +1230,6 @@ msgid "Gibs:"
 msgstr "Cotlete:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:184
-#, fuzzy
 msgid "GIBS^None"
 msgstr "Nici unul"
 
@@ -1254,12 +1238,10 @@ msgid "GIBS^Few"
 msgstr "Putine"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:186
-#, fuzzy
 msgid "GIBS^Many"
 msgstr "Multe"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:187
-#, fuzzy
 msgid "GIBS^Lots"
 msgstr "Foarte multe"
 
@@ -1411,7 +1393,6 @@ msgid "Music:"
 msgstr "Muzica:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:40
-#, fuzzy
 msgid "VOL^Ambient:"
 msgstr "Ambianta:"
 
@@ -1529,12 +1510,10 @@ msgid "Spatial voices:"
 msgstr "Voci spatializate:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:137
-#, fuzzy
 msgid "VOCS^None"
 msgstr "Nici una"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:138
-#, fuzzy
 msgid "VOCS^Taunts"
 msgstr "Glume"
 
@@ -1547,27 +1526,22 @@ msgid "Taunt range:"
 msgstr "Distanta voci:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:145
-#, fuzzy
 msgid "RNG^Very short"
 msgstr "Foarte scurta"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:146
-#, fuzzy
 msgid "RNG^Short"
 msgstr "Scurta"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:147
-#, fuzzy
 msgid "RNG^Normal"
 msgstr "Normala"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:148
-#, fuzzy
 msgid "RNG^Long"
 msgstr "Lunga"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:149
-#, fuzzy
 msgid "RNG^Full"
 msgstr "Toate"
 
@@ -1580,7 +1554,6 @@ msgid "Time warning:"
 msgstr "Avertisment timp:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:167
-#, fuzzy
 msgid "WRN^None"
 msgstr "Nici una"
 
@@ -1593,7 +1566,6 @@ msgid "5 minutes"
 msgstr "5 minute"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:170
-#, fuzzy
 msgid "WRN^Both"
 msgstr "Ambele"
 
@@ -1610,37 +1582,30 @@ msgid "Quality preset:"
 msgstr "Setari calitate:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:41
-#, fuzzy
 msgid "PRE^OMG!"
 msgstr "SFINTE!"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:42
-#, fuzzy
 msgid "PRE^Low"
 msgstr "Scazut"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:43
-#, fuzzy
 msgid "PRE^Medium"
 msgstr "Mediu"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:44
-#, fuzzy
 msgid "PRE^Normal"
 msgstr "Normal"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:45
-#, fuzzy
 msgid "PRE^High"
 msgstr "Ridicat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:46
-#, fuzzy
 msgid "PRE^Ultra"
 msgstr "Foarte ridicat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:48
-#, fuzzy
 msgid "PRE^Ultimate"
 msgstr "Extrem de ridicat"
 
@@ -1649,32 +1614,26 @@ msgid "Geometry detail:"
 msgstr "Detaliu geometrie:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:54
-#, fuzzy
 msgid "DET^Lowest"
 msgstr "Cel mai scazut"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:55
-#, fuzzy
 msgid "DET^Low"
 msgstr "Scazut"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:56
-#, fuzzy
 msgid "DET^Normal"
 msgstr "Normal"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:57
-#, fuzzy
 msgid "DET^Good"
 msgstr "Ridicat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:58
-#, fuzzy
 msgid "DET^Best"
 msgstr "Cel mai ridicat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:59
-#, fuzzy
 msgid "DET^Insane"
 msgstr "Extrem"
 
@@ -1683,7 +1642,6 @@ msgid "Antialiasing:"
 msgstr "Margini fine:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:64
-#, fuzzy
 msgid "AA^Disabled"
 msgstr "Dezactivat"
 
@@ -1702,32 +1660,26 @@ msgid "Texture resolution:"
 msgstr "Calitate texturi:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:73
-#, fuzzy
 msgid "RES^Leet"
 msgstr "Minima"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:74
-#, fuzzy
 msgid "RES^Lowest"
 msgstr "Cea mai joasa"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:75
-#, fuzzy
 msgid "RES^Low"
 msgstr "Joasa"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:76
-#, fuzzy
 msgid "RES^Normal"
 msgstr "Normala"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:77
-#, fuzzy
 msgid "RES^Good"
 msgstr "Ridicata"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:78
-#, fuzzy
 msgid "RES^Best"
 msgstr "Cea mai ridicata"
 
@@ -1741,7 +1693,6 @@ msgid "Anisotropy:"
 msgstr "Filtrare anisotropica:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:102
-#, fuzzy
 msgid "ANISO^Disabled"
 msgstr "Dezactivat"
 
@@ -1802,7 +1753,6 @@ msgid "Blurred"
 msgstr "Blurate"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:147
-#, fuzzy
 msgid "REFL^Good"
 msgstr "Bune"
 
@@ -2066,47 +2016,38 @@ msgid "Font/UI size:"
 msgstr "Marime font:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:31
-#, fuzzy
 msgid "SZ^Unreadable"
 msgstr "Ilizibil"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:32
-#, fuzzy
 msgid "SZ^Tiny"
 msgstr "Minuscul"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:33
-#, fuzzy
 msgid "SZ^Little"
 msgstr "Foarte mic"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:34
-#, fuzzy
 msgid "SZ^Small"
 msgstr "Mic"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:35
-#, fuzzy
 msgid "SZ^Medium"
 msgstr "Mediu"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:36
-#, fuzzy
 msgid "SZ^Large"
 msgstr "Mare"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:37
-#, fuzzy
 msgid "SZ^Huge"
 msgstr "Foarte mare"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:38
-#, fuzzy
 msgid "SZ^Gigantic"
 msgstr "Gigantic"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:39
-#, fuzzy
 msgid "SZ^Colossal"
 msgstr "Colosal"
 
@@ -2135,7 +2076,6 @@ msgid "Vertex Buffer Objects (VBOs)"
 msgstr "Tampon Memorie Obiecte (VBOs)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:59
-#, fuzzy
 msgid "VBO^Off"
 msgstr "Dezactivat"
 
@@ -2156,17 +2096,14 @@ msgid "Depth first:"
 msgstr "Calcul adancime:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:69
-#, fuzzy
 msgid "DF^Disabled"
 msgstr "Dezactivat"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:70
-#, fuzzy
 msgid "DF^World"
 msgstr "Mediul"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:71
-#, fuzzy
 msgid "DF^All"
 msgstr "Totul"
 
@@ -2199,7 +2136,6 @@ msgid "Saturation:"
 msgstr "Saturatie:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:98
-#, fuzzy
 msgid "LIT^Ambient:"
 msgstr "Ambianta:"
 
@@ -2321,12 +2257,10 @@ msgid "%s: %s"
 msgstr "%s: %s"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:50
-#, fuzzy
 msgid "VOL^OFF"
 msgstr "OPRIT"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:52
-#, fuzzy
 msgid "VOL^MAX"
 msgstr "MAXIM"
 
