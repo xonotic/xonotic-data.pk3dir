@@ -17,6 +17,7 @@ for VM in menu csprogs; do
 	for X in "$VM".dat.*.po; do
 		[ -f "$X" ] || continue
 		for Y in "$X".*.new; do
+			[ -f "$Y" ] || continue
 			msgcat -F --use-first "$Y" "$X" > "$X".new
 			mv "$X".new "$X"
 		done
