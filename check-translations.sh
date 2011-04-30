@@ -16,7 +16,7 @@ for VM in menu csprogs; do
 	} | xgettext -LC -k_ -f- --from-code utf-8 -o "$VM".dat.pot >&2
 	for X in "$VM".dat.*.po; do
 		[ -f "$X" ] || continue
-		for Y in "$X".*.new; do
+		for Y in ~/check-translations/"$X".*; do
 			[ -f "$Y" ] || continue
 			msgcat -F --use-first "$Y" "$X" > "$X".new
 			mv "$X".new "$X"
