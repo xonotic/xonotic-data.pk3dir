@@ -16,6 +16,10 @@ for VM in menu csprogs; do
 	} | xgettext -LC -k_ -f- --from-code utf-8 -o "$VM".dat.pot >&2
 	for X in "$VM".dat.*.po; do
 		[ -f "$X" ] || continue
+		for Y in "$X".*.new; do
+			msgcat -F --use-first "$Y" "$X" > "$X".new
+			mv "$X".new "$X"
+		done
 		msgmerge -F -U "$X" "$VM".dat.pot >&2
 		msgattrib --untranslated "$X" | grep . > "$X".untranslated || rm -f "$X".untranslated
 		msgattrib --fuzzy "$X"        | grep . > "$X".fuzzy        || rm -f "$X".fuzzy
