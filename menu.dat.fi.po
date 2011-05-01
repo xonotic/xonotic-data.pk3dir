@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-27 06:17+0200\n"
+"POT-Creation-Date: 2011-04-30 10:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Henry 'Exitium' Sanmark <henry.sanmark@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,8 +68,8 @@ msgid "custom"
 msgstr "omavalintainen"
 
 #: qcsrc/menu/menu.qc:29
-#, c-format
-msgid "^4MQC Build information: %s\n"
+#, fuzzy, c-format
+msgid "^4MQC Build information: ^1%s\n"
 msgstr "^4MQC Version tiedot: %s\n"
 
 #: qcsrc/menu/xonotic/campaign.c:284
@@ -2303,6 +2303,11 @@ msgstr ""
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr ""
 "Luodaan automaattisesti karttatietoja vastikään lisätyille kartoille..."
+
+#: qcsrc/menu/xonotic/util.qc:367
+#, c-format
+msgid "^1%s TEST BUILD"
+msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:432
 #, c-format
