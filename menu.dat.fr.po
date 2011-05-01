@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-07 07:50+0100\n"
+"POT-Creation-Date: 2011-04-30 10:07+0200\n"
 "PO-Revision-Date: 2011-03-09 15:48-0500\n"
 "Last-Translator: Maxime Paradis <taximus.micro@gmail.com>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
@@ -73,8 +73,8 @@ msgid "custom"
 msgstr "personnalisé"
 
 #: qcsrc/menu/menu.qc:29
-#, c-format
-msgid "^4MQC Build information: %s\n"
+#, fuzzy, c-format
+msgid "^4MQC Build information: ^1%s\n"
 msgstr "^4MQC Build information : %s (français)\n"
 
 #: qcsrc/menu/xonotic/campaign.c:284
@@ -336,7 +336,7 @@ msgstr "Mini-carte:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:32
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:43
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:82
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:154
 #: qcsrc/menu/xonotic/util.qc:608
 msgid "Alpha:"
 msgstr "Opacité:"
@@ -1012,11 +1012,11 @@ msgstr "Pause"
 msgid "Address:"
 msgstr "Adresse:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:65
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:67
 msgid "Info..."
 msgstr "Info..."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:70
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:72
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:317
 msgid "Join!"
 msgstr "Joindre !"
@@ -1158,7 +1158,7 @@ msgid "Crosshair:"
 msgstr "Viseur:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:111
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:143
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:139
 msgid "Per weapon"
 msgstr "Par arme"
 
@@ -1174,35 +1174,44 @@ msgstr "Opacité viseur:"
 msgid "Crosshair color:"
 msgstr "Couleur viseur:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:145
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
+msgid "By health"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:143
+#, fuzzy
+msgid "Custom"
+msgstr "personnalisé"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:148
 msgid "Enable center dot"
 msgstr "Activer point central"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:148
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:151
 msgid "Size:"
 msgstr "Taille:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:155
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:158
 msgid "Hit test:"
 msgstr "Détection toucher:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:156
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:159
 msgid "HTST^None"
 msgstr "Aucun"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:157
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:160
 msgid "TrueAim"
 msgstr "TrueAim"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:158
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:161
 msgid "Enemies"
 msgstr "Ennemis"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:161
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:164
 msgid "Waypoints setup..."
 msgstr "Paramètres Waypoints..."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:167
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:169
 msgid "Enter HUD editor"
 msgstr "Éditer l'interface"
 
@@ -1222,35 +1231,35 @@ msgstr "Personnalisé"
 msgid "MDL^All"
 msgstr "Tout"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:179
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:180
 msgid "Disable gore effects"
 msgstr "Désactiver effets gore"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:181
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:182
 msgid "Gibs:"
 msgstr "Gibs:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:183
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:184
 msgid "GIBS^None"
 msgstr "Aucun"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:184
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:185
 msgid "GIBS^Few"
 msgstr "Quelques"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:185
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:186
 msgid "GIBS^Many"
 msgstr "Plusieurs"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:186
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:187
 msgid "GIBS^Lots"
 msgstr "Beaucoup"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:190
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:191
 msgid "Damage splash:"
 msgstr "Effet santé faible:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:194
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:195
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:178
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:194
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:30
@@ -2073,7 +2082,8 @@ msgid "Use GLSL to handle color control"
 msgstr "Utiliser GLSL pour gérer les couleurs"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:56
-msgid "Vertex Buffer Objects (VBOs)\"ourd"
+#, fuzzy
+msgid "Vertex Buffer Objects (VBOs)"
 msgstr "Objets en tampon mémoire (VBOs)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:59
@@ -2220,31 +2230,31 @@ msgstr ""
 msgid "<no model found>"
 msgstr "<modèle non trouvé>"
 
-#: qcsrc/menu/xonotic/serverlist.c:360
+#: qcsrc/menu/xonotic/serverlist.c:185
 msgid "Remove"
 msgstr "Supprimer"
 
-#: qcsrc/menu/xonotic/serverlist.c:362
+#: qcsrc/menu/xonotic/serverlist.c:187
 msgid "Bookmark"
 msgstr "Marque-page"
 
-#: qcsrc/menu/xonotic/serverlist.c:518
+#: qcsrc/menu/xonotic/serverlist.c:523
 msgid "Ping"
 msgstr "Latence"
 
-#: qcsrc/menu/xonotic/serverlist.c:519
+#: qcsrc/menu/xonotic/serverlist.c:524
 msgid "Host name"
 msgstr "Nom d'Hôte"
 
-#: qcsrc/menu/xonotic/serverlist.c:520
+#: qcsrc/menu/xonotic/serverlist.c:525
 msgid "Map"
 msgstr "Carte"
 
-#: qcsrc/menu/xonotic/serverlist.c:521
+#: qcsrc/menu/xonotic/serverlist.c:526
 msgid "Type"
 msgstr "Mode"
 
-#: qcsrc/menu/xonotic/serverlist.c:522
+#: qcsrc/menu/xonotic/serverlist.c:527
 msgid "Players"
 msgstr "Joueurs"
 
@@ -2313,6 +2323,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:337
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Génération des mapinfo pour les nouvelles cartes ajoutées..."
+
+#: qcsrc/menu/xonotic/util.qc:367
+#, c-format
+msgid "^1%s TEST BUILD"
+msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:432
 #, c-format
@@ -2422,22 +2437,22 @@ msgstr "Activer ce panneau"
 msgid "Crylink"
 msgstr "Crylink"
 
-#: qcsrc/server/w_crylink.qc:645
+#: qcsrc/server/w_crylink.qc:664
 #, c-format
 msgid "%s succeeded at self-destructing themself with the Crylink"
 msgstr "%s a réussi à se suicider avec le Crylink"
 
-#: qcsrc/server/w_crylink.qc:650
+#: qcsrc/server/w_crylink.qc:669
 #, c-format
 msgid "%s could not hide from %s's Crylink"
 msgstr "%s n'a pas pu se cacher du Crylink de %s"
 
-#: qcsrc/server/w_crylink.qc:652
+#: qcsrc/server/w_crylink.qc:671
 #, c-format
 msgid "%s was too close to %s's Crylink"
 msgstr "%s a été trop près du Crylink de %s"
 
-#: qcsrc/server/w_crylink.qc:654
+#: qcsrc/server/w_crylink.qc:673
 #, c-format
 msgid "%s took a close look at %s's Crylink"
 msgstr "%s a voulu voir se qui se trouvait dans le Crylink de %s"
@@ -2446,37 +2461,37 @@ msgstr "%s a voulu voir se qui se trouvait dans le Crylink de %s"
 msgid "Electro"
 msgstr "Electro"
 
-#: qcsrc/server/w_electro.qc:503
+#: qcsrc/server/w_electro.qc:571
 #, c-format
 msgid "%s could not remember where they put plasma"
 msgstr "%s ne se souvenait pas où il a tiré du plasma"
 
-#: qcsrc/server/w_electro.qc:505
+#: qcsrc/server/w_electro.qc:573
 #, c-format
 msgid "%s played with plasma"
 msgstr "%s a joué avec du plasma"
 
-#: qcsrc/server/w_electro.qc:512
+#: qcsrc/server/w_electro.qc:580
 #, c-format
 msgid "%s just noticed %s's blue ball"
 msgstr "%s vient de remarquer la boule plasma de %s"
 
-#: qcsrc/server/w_electro.qc:514
+#: qcsrc/server/w_electro.qc:582
 #, c-format
 msgid "%s got in touch with %s's blue ball"
 msgstr "%s s'est fait toucher par la boule plasma de %s"
 
-#: qcsrc/server/w_electro.qc:519
+#: qcsrc/server/w_electro.qc:587
 #, c-format
 msgid "%s felt the electrifying air of %s's combo"
 msgstr "%s se sent électrisé par le combo de %s"
 
-#: qcsrc/server/w_electro.qc:521
+#: qcsrc/server/w_electro.qc:589
 #, c-format
 msgid "%s got too close to %s's blue beam"
 msgstr "%s a été trop près du rayon plasma de %s"
 
-#: qcsrc/server/w_electro.qc:523
+#: qcsrc/server/w_electro.qc:591
 #, c-format
 msgid "%s was blasted by %s's blue beam"
 msgstr "%s a été désintégré à cause du rayon plasma de %s"
@@ -2486,42 +2501,42 @@ msgstr "%s a été désintégré à cause du rayon plasma de %s"
 msgid "Fireball"
 msgstr "Fireball"
 
-#: qcsrc/server/w_fireball.qc:392
+#: qcsrc/server/w_fireball.qc:417
 #, c-format
 msgid "%s forgot about some firemine"
 msgstr "%s n'a pas étudié la combustion des boules de feu"
 
-#: qcsrc/server/w_fireball.qc:394 qcsrc/server/w_hlac.qc:223
+#: qcsrc/server/w_fireball.qc:419 qcsrc/server/w_hlac.qc:240
 #, c-format
 msgid "%s should have used a smaller gun"
 msgstr "%s aurait dû utiliser une arme plus petite"
 
-#: qcsrc/server/w_fireball.qc:401
+#: qcsrc/server/w_fireball.qc:426
 #, c-format
 msgid "%s tried to catch %s's firemine"
 msgstr "%s a pensé que la boule de feu de %s était un ballon de football"
 
-#: qcsrc/server/w_fireball.qc:403
+#: qcsrc/server/w_fireball.qc:428
 #, c-format
 msgid "%s fatefully ignored %s's firemine"
 msgstr "%s a ignoré la boule de feu de %s"
 
-#: qcsrc/server/w_fireball.qc:410
+#: qcsrc/server/w_fireball.qc:435
 #, c-format
 msgid "%s could not hide from %s's fireball"
 msgstr "%s n'a pas réussi à se cacher de la boule de feu de %s"
 
-#: qcsrc/server/w_fireball.qc:412
+#: qcsrc/server/w_fireball.qc:437
 #, c-format
 msgid "%s saw the pretty lights of %s's fireball"
 msgstr "%s a vu les belles lumières de la boule de feu de %s"
 
-#: qcsrc/server/w_fireball.qc:415
+#: qcsrc/server/w_fireball.qc:440
 #, c-format
 msgid "%s got too close to %s's fireball"
 msgstr "%s s'est trop approché de la boule de feu de %s"
 
-#: qcsrc/server/w_fireball.qc:417
+#: qcsrc/server/w_fireball.qc:442
 #, c-format
 msgid "%s tasted %s's fireball"
 msgstr "%s a goûté la boule de feu de %s"
@@ -2530,27 +2545,27 @@ msgstr "%s a goûté la boule de feu de %s"
 msgid "Mortar"
 msgstr "Mortier"
 
-#: qcsrc/server/w_grenadelauncher.qc:357
+#: qcsrc/server/w_grenadelauncher.qc:378
 #, c-format
 msgid "%s tried out his own grenade"
 msgstr "%s a mangé sa propre grenade"
 
-#: qcsrc/server/w_grenadelauncher.qc:359
+#: qcsrc/server/w_grenadelauncher.qc:380
 #, c-format
 msgid "%s detonated"
 msgstr "%s a fait boum"
 
-#: qcsrc/server/w_grenadelauncher.qc:365
+#: qcsrc/server/w_grenadelauncher.qc:386
 #, c-format
 msgid "%s didn't see %s's grenade"
 msgstr "%s n'a pas vu la grenade de %s"
 
-#: qcsrc/server/w_grenadelauncher.qc:367
+#: qcsrc/server/w_grenadelauncher.qc:388
 #, c-format
 msgid "%s almost dodged %s's grenade"
 msgstr "%s a presque réussi à esquiver la grenade de %s"
 
-#: qcsrc/server/w_grenadelauncher.qc:369
+#: qcsrc/server/w_grenadelauncher.qc:390
 #, c-format
 msgid "%s ate %s's grenade"
 msgstr "%s a mangé la grenade de %s"
@@ -2559,17 +2574,17 @@ msgstr "%s a mangé la grenade de %s"
 msgid "Hagar"
 msgstr "Hagar"
 
-#: qcsrc/server/w_hagar.qc:185 qcsrc/server/w_seeker.qc:523
+#: qcsrc/server/w_hagar.qc:209 qcsrc/server/w_seeker.qc:655
 #, c-format
 msgid "%s played with tiny rockets"
 msgstr "%s a joué avec des petits missiles"
 
-#: qcsrc/server/w_hagar.qc:189
+#: qcsrc/server/w_hagar.qc:213
 #, c-format
 msgid "%s hoped %s's missiles wouldn't bounce"
 msgstr "%s a pensé que les petits missiles de %s ne rebondissaient pas"
 
-#: qcsrc/server/w_hagar.qc:191
+#: qcsrc/server/w_hagar.qc:215 qcsrc/server/w_seeker.qc:661
 #, c-format
 msgid "%s was pummeled by %s"
 msgstr "%s a trop mangé de mini-missiles de la part de %s"
@@ -2578,7 +2593,7 @@ msgstr "%s a trop mangé de mini-missiles de la part de %s"
 msgid "Heavy Laser Assault Cannon"
 msgstr "Canon Laser Lourd d'Assaut "
 
-#: qcsrc/server/w_hlac.qc:225
+#: qcsrc/server/w_hlac.qc:242
 #, c-format
 msgid "%s was cut down by %s"
 msgstr "%s s'est fait couper par %s"
@@ -2588,14 +2603,14 @@ msgstr "%s s'est fait couper par %s"
 msgid "Grappling Hook"
 msgstr "Grappin"
 
-#: qcsrc/server/w_hook.qc:267 qcsrc/server/w_minstanex.qc:257
-#: qcsrc/server/w_nex.qc:224 qcsrc/server/w_porto.qc:293
-#: qcsrc/server/w_shotgun.qc:179 qcsrc/server/w_uzi.qc:287
+#: qcsrc/server/w_hook.qc:266 qcsrc/server/w_minstanex.qc:290
+#: qcsrc/server/w_nex.qc:267 qcsrc/server/w_porto.qc:296
+#: qcsrc/server/w_shotgun.qc:203 qcsrc/server/w_uzi.qc:317
 #, c-format
 msgid "%s did the impossible"
 msgstr "%s a fait l'impossible"
 
-#: qcsrc/server/w_hook.qc:269
+#: qcsrc/server/w_hook.qc:268
 #, c-format
 msgid "%s has run into %s's gravity bomb"
 msgstr "%s a été emprisonné par la bombe à gravité de %s"
@@ -2604,17 +2619,17 @@ msgstr "%s a été emprisonné par la bombe à gravité de %s"
 msgid "Laser"
 msgstr "Laser"
 
-#: qcsrc/server/w_laser.qc:285
+#: qcsrc/server/w_laser.qc:305
 #, c-format
 msgid "%s lasered themself to hell"
 msgstr "%s s'est suicidé au laser"
 
-#: qcsrc/server/w_laser.qc:289
+#: qcsrc/server/w_laser.qc:309
 #, c-format
 msgid "%s was cut in half by %s's gauntlet"
 msgstr "%s s'est fait couper en deux par le laser de %s"
 
-#: qcsrc/server/w_laser.qc:291
+#: qcsrc/server/w_laser.qc:311
 #, c-format
 msgid "%s was lasered to death by %s"
 msgstr "%s a été désintégré par le laser de %s"
@@ -2624,22 +2639,22 @@ msgstr "%s a été désintégré par le laser de %s"
 msgid "Mine Layer"
 msgstr "Lance-Mines"
 
-#: qcsrc/server/w_minelayer.qc:438 qcsrc/server/w_rocketlauncher.qc:480
+#: qcsrc/server/w_minelayer.qc:495 qcsrc/server/w_rocketlauncher.qc:500
 #, c-format
 msgid "%s exploded"
 msgstr "%s a explosé"
 
-#: qcsrc/server/w_minelayer.qc:442
+#: qcsrc/server/w_minelayer.qc:499
 #, c-format
 msgid "%s got too close to %s's mine"
 msgstr "%s s'est trop approché de la mine de %s"
 
-#: qcsrc/server/w_minelayer.qc:444
+#: qcsrc/server/w_minelayer.qc:501
 #, c-format
 msgid "%s almost dodged %s's mine"
 msgstr "%s a presque esquivé la mine de %s"
 
-#: qcsrc/server/w_minelayer.qc:446
+#: qcsrc/server/w_minelayer.qc:503
 #, c-format
 msgid "%s stepped on %s's mine"
 msgstr "%s a marché sur la mine de %s"
@@ -2649,7 +2664,7 @@ msgstr "%s a marché sur la mine de %s"
 msgid "MinstaNex"
 msgstr "MinstaNex"
 
-#: qcsrc/server/w_minstanex.qc:259 qcsrc/server/w_nex.qc:226
+#: qcsrc/server/w_minstanex.qc:292 qcsrc/server/w_nex.qc:269
 #, c-format
 msgid "%s has been vaporized by %s"
 msgstr "%s s'est fait vaporiser par %s"
@@ -2663,7 +2678,7 @@ msgstr "Nex"
 msgid "Port-O-Launch"
 msgstr "Lance-O-Port"
 
-#: qcsrc/server/w_porto.qc:295
+#: qcsrc/server/w_porto.qc:298
 #, c-format
 msgid "%s felt %s doing the impossible to him"
 msgstr "%s a eu tort de prendre le portail de %s"
@@ -2672,17 +2687,17 @@ msgstr "%s a eu tort de prendre le portail de %s"
 msgid "Rocket Launcher"
 msgstr "Lance-Roquettes"
 
-#: qcsrc/server/w_rocketlauncher.qc:484
+#: qcsrc/server/w_rocketlauncher.qc:504
 #, c-format
 msgid "%s got too close to %s's rocket"
 msgstr "%s s'est trop approché de la roquette de %s"
 
-#: qcsrc/server/w_rocketlauncher.qc:486
+#: qcsrc/server/w_rocketlauncher.qc:506
 #, c-format
 msgid "%s almost dodged %s's rocket"
 msgstr "%s a presque esquivé la roquette de %s"
 
-#: qcsrc/server/w_rocketlauncher.qc:488
+#: qcsrc/server/w_rocketlauncher.qc:508
 #, c-format
 msgid "%s ate %s's rocket"
 msgstr "%s a mangé la roquette de %s"
@@ -2691,12 +2706,7 @@ msgstr "%s a mangé la roquette de %s"
 msgid "T.A.G. Seeker"
 msgstr "T.A.G. Chercheur"
 
-#: qcsrc/server/w_seeker.qc:527
-#, c-format
-msgid "%s ran into %s's flac"
-msgstr "%s n'a pas eu peur des missiles de %s"
-
-#: qcsrc/server/w_seeker.qc:529
+#: qcsrc/server/w_seeker.qc:659
 #, c-format
 msgid "%s was tagged by %s"
 msgstr "%s s'est fait tagguer par %s"
@@ -2706,12 +2716,12 @@ msgstr "%s s'est fait tagguer par %s"
 msgid "Shotgun"
 msgstr "Fusil"
 
-#: qcsrc/server/w_shotgun.qc:183
+#: qcsrc/server/w_shotgun.qc:207
 #, c-format
 msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
 msgstr "%2$s ^7a baffé %1$s ^7avec un ^2fusil"
 
-#: qcsrc/server/w_shotgun.qc:185
+#: qcsrc/server/w_shotgun.qc:209
 #, c-format
 msgid "%s was gunned by %s"
 msgstr "%s s'est fait fusiller par %s"
@@ -2720,37 +2730,37 @@ msgstr "%s s'est fait fusiller par %s"
 msgid "Sniper Rifle"
 msgstr "Fusil Sniper"
 
-#: qcsrc/server/w_sniperrifle.qc:321
+#: qcsrc/server/w_sniperrifle.qc:229
 #, c-format
 msgid "%s shot themself automatically"
 msgstr "%s s'est suicidé au sniper"
 
-#: qcsrc/server/w_sniperrifle.qc:323
+#: qcsrc/server/w_sniperrifle.qc:231
 #, c-format
 msgid "%s sniped themself somehow"
 msgstr "%s a oublié le cran de sûreté en chargeant"
 
-#: qcsrc/server/w_sniperrifle.qc:330
+#: qcsrc/server/w_sniperrifle.qc:238
 #, c-format
 msgid "%s failed to hide from %s's bullet hail"
 msgstr "%s n'a pas pu se cacher de la nuée de balles de %s"
 
-#: qcsrc/server/w_sniperrifle.qc:332
+#: qcsrc/server/w_sniperrifle.qc:240
 #, c-format
 msgid "%s died in %s's bullet hail"
 msgstr "%s est mort de la nuée de balles de %s"
 
-#: qcsrc/server/w_sniperrifle.qc:339
+#: qcsrc/server/w_sniperrifle.qc:247
 #, c-format
 msgid "%s failed to hide from %s's rifle"
 msgstr "%s n'a pas réussi à se cacher du sniper de %s"
 
-#: qcsrc/server/w_sniperrifle.qc:344
+#: qcsrc/server/w_sniperrifle.qc:252
 #, c-format
 msgid "%s got hit in the head by %s"
 msgstr "%s s'est fait décapiter au sniper par %s"
 
-#: qcsrc/server/w_sniperrifle.qc:346 qcsrc/server/w_uzi.qc:291
+#: qcsrc/server/w_sniperrifle.qc:254 qcsrc/server/w_uzi.qc:321
 #, c-format
 msgid "%s was sniped by %s"
 msgstr "%s s'est fait descendre au sniper par %s"
@@ -2760,12 +2770,12 @@ msgstr "%s s'est fait descendre au sniper par %s"
 msgid "@!#%'n Tuba"
 msgstr "@!#%'n Tuba"
 
-#: qcsrc/server/w_tuba.qc:260
+#: qcsrc/server/w_tuba.qc:263
 #, c-format
 msgid "%s hurt his own ears with the @!#%%'n Tuba"
 msgstr "%s s'est fait casser les tympans par son propre tuba"
 
-#: qcsrc/server/w_tuba.qc:264
+#: qcsrc/server/w_tuba.qc:267
 #, c-format
 msgid "%s died of %s's great playing on the @!#%%'n Tuba"
 msgstr "%s n'a pas aimé la musique de %s et en est mort"
@@ -2774,10 +2784,13 @@ msgstr "%s n'a pas aimé la musique de %s et en est mort"
 msgid "Machine Gun"
 msgstr "Mitraillette"
 
-#: qcsrc/server/w_uzi.qc:293
+#: qcsrc/server/w_uzi.qc:323
 #, c-format
 msgid "%s was riddled full of holes by %s"
 msgstr "%s s'est fait trouer par %s"
+
+#~ msgid "%s ran into %s's flac"
+#~ msgstr "%s n'a pas eu peur des missiles de %s"
 
 #~ msgid "Waypoint settings:"
 #~ msgstr "Paramètres Waypoint (flèches 3D sur la carte):"

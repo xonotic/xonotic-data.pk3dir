@@ -366,6 +366,8 @@ vector myhealth_gentlergb;
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
+float eventchase_current_distance;
+
 float checkfail[16];
 
 void CSQC_UpdateView(float w, float h)
@@ -411,7 +413,7 @@ void CSQC_UpdateView(float w, float h)
 	input_angles = warpzone_fixview_cl_viewangles;
 	view_angles = warpzone_fixview_angles;
 
-	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0))
+	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0) || intermission > 1)
 	{
 		pmove_org = freeze_pmove_org;
 		input_angles = view_angles = freeze_input_angles;
@@ -422,8 +424,43 @@ void CSQC_UpdateView(float w, float h)
 	freeze_pmove_org = pmove_org;
 	freeze_input_angles = input_angles;
 
+	// event chase camera
+	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
+	{
+		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_eventchase_intermission && intermission))
+		{
+			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
+			// Ideally, there should be another way to enable third person cameras, such as through R_SetView()
+			if(!autocvar_chase_active)
+				cvar_set("chase_active", "-1"); // -1 enables chase_active while marking it as set by this code, and not by the user (which would be 1)
+
+			// make the camera smooth back
+			if(autocvar_cl_eventchase_speed && eventchase_current_distance < autocvar_cl_eventchase_distance)
+				eventchase_current_distance += autocvar_cl_eventchase_speed * (autocvar_cl_eventchase_distance - eventchase_current_distance) * frametime; // slow down the further we get
+			else if(eventchase_current_distance != autocvar_cl_eventchase_distance)
+				eventchase_current_distance = autocvar_cl_eventchase_distance;
+
+			vector eventchase_target_origin;
+			makevectors(view_angles);
+			// pass 1, used to check where the camera would go and obtain the trace_fraction
+			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance;
+
+			traceline(pmove_org, eventchase_target_origin, MOVE_WORLDONLY, self);
+			// pass 2, also multiplying view_forward with trace_fraction, to prevent the camera from going through walls
+			// The 0.1 subtraction is to not limit the camera precisely at the wall surface, as that allows the view to poke through
+			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
+
+			R_SetView(VF_ORIGIN, eventchase_target_origin);
+		}
+		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
+		{
+			cvar_set("chase_active", "0");
+			eventchase_current_distance = 0; // start from 0 next time
+		}
+	}
+
 	// Render the Scene
-	if(!intermission || !view_set)
+	if(!intermission || !view_set || (intermission && autocvar_cl_eventchase_intermission))
 	{
 		view_origin = pmove_org + vo;
 		view_angles = input_angles;

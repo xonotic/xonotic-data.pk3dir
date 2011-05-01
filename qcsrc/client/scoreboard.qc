@@ -365,7 +365,7 @@ void Cmd_HUD_SetFields(float argc)
 
 		strunzone(hud_title[hud_num_fields]);
 		hud_title[hud_num_fields] = strzone(TranslateScoresLabel(str));
-		hud_size[hud_num_fields] = stringwidth(str, FALSE, hud_fontsize);
+		hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 		str = strtolower(str);
 
 		if(str == "ping") {
@@ -1252,12 +1252,12 @@ void HUD_DrawScoreboard()
 	if(gametype == GAME_LMS)
 	{
 		if(tl > 0)
-			str = strcat(str, sprintf(_(" for up to ^1%.1f minutes^7"), tl));
+			str = strcat(str, sprintf(_(" for up to ^1%1.0f minutes^7"), tl));
 	}
 	else
 	{
 		if(tl > 0)
-			str = strcat(str, sprintf(_(" for up to ^1%.1f minutes^7"), tl));
+			str = strcat(str, sprintf(_(" for up to ^1%1.0f minutes^7"), tl));
 		if(fl > 0)
 		{
 			if(tl > 0)
