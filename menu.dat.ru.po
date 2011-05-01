@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-30 10:07+0200\n"
 "PO-Revision-Date: 2011-01-20 13:16+0300\n"
 "Last-Translator: Nikoli <nikoli@lavabit.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,8 +67,8 @@ msgid "custom"
 msgstr "особо"
 
 #: qcsrc/menu/menu.qc:29
-#, c-format
-msgid "^4MQC Build information: %s\n"
+#, fuzzy, c-format
+msgid "^4MQC Build information: ^1%s\n"
 msgstr "^4Сведения о сборке MQC: %s\n"
 
 #: qcsrc/menu/xonotic/campaign.c:284
@@ -1163,6 +1163,10 @@ msgstr "Величина прицела:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
 msgstr "Прозрачность:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+msgid "Crosshair color:"
+msgstr "Цвет прицела:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"
@@ -2311,6 +2315,11 @@ msgstr ""
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Автоматическое создание mapinfo для новых карт..."
 
+#: qcsrc/menu/xonotic/util.qc:367
+#, c-format
+msgid "^1%s TEST BUILD"
+msgstr ""
+
 #: qcsrc/menu/xonotic/util.qc:432
 #, c-format
 msgid "Update to %s now!"
@@ -2765,11 +2774,8 @@ msgstr "Machine Gun"
 msgid "%s was riddled full of holes by %s"
 msgstr ""
 
-#~ msgid "%d/%d"
-#~ msgstr "%d/%d"
-
 #~ msgid "Waypoint settings:"
 #~ msgstr "Настройки отметок:"
 
-#~ msgid "Crosshair color:"
-#~ msgstr "Цвет прицела:"
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"

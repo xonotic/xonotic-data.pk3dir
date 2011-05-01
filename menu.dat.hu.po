@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-30 10:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,8 +68,8 @@ msgid "custom"
 msgstr "egyéni"
 
 #: qcsrc/menu/menu.qc:29
-#, c-format
-msgid "^4MQC Build information: %s\n"
+#, fuzzy, c-format
+msgid "^4MQC Build information: ^1%s\n"
 msgstr "^4MQC Épitési információ: %s\n"
 
 #: qcsrc/menu/xonotic/campaign.c:284
@@ -1158,6 +1158,10 @@ msgstr "Célkereszt mérete:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
 msgstr "Célkereszt alpha:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+msgid "Crosshair color:"
+msgstr "Célkereszt színe:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"
@@ -2301,6 +2305,11 @@ msgstr ""
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Önállóan előállitott MapInfo az újonnan hozzáadott térképekhez..."
 
+#: qcsrc/menu/xonotic/util.qc:367
+#, c-format
+msgid "^1%s TEST BUILD"
+msgstr ""
+
 #: qcsrc/menu/xonotic/util.qc:432
 #, c-format
 msgid "Update to %s now!"
@@ -2763,16 +2772,13 @@ msgstr ""
 msgid "%s was riddled full of holes by %s"
 msgstr ""
 
-#~ msgid "%d/%d"
-#~ msgstr "%d/%d"
-
-#~ msgid "Waypoint settings:"
-#~ msgstr "Útpont beállítások:"
-
 #~ msgid ""
 #~ "Please answer a few initial questions to enhance the game experience."
 #~ msgstr ""
 #~ "A jobb játékélmény érdekében, kérlek, válaszolj pár inditó kérdésre!"
 
-#~ msgid "Crosshair color:"
-#~ msgstr "Célkereszt színe:"
+#~ msgid "Waypoint settings:"
+#~ msgstr "Útpont beállítások:"
+
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"

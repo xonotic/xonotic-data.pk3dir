@@ -63,7 +63,7 @@ void CSQC_Init(void)
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print(sprintf(_("^4CSQC Build information: %s\n"), WATERMARK()));
+	print(sprintf(_("^4CSQC Build information: ^1%s\n"), WATERMARK()));
 #endif
 
 	float i;
@@ -202,6 +202,10 @@ void CSQC_Shutdown(void)
 
 	if(camera_active)
 		cvar_set("chase_active",ftos(chase_active_backup));
+
+	// unset the event chasecam's chase_active
+	if(autocvar_chase_active < 0)
+		cvar_set("chase_active", "0");
 
 	if not(isdemo())
 	{
@@ -962,6 +966,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_TUBANOTE: Ent_TubaNote(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE: WarpZone_Read(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE_CAMERA: WarpZone_Camera_Read(bIsNewEntity); break;
+		case ENT_CLIENT_WARPZONE_TELEPORTED: WarpZone_Teleported_Read(bIsNewEntity); break;
 		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
 		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;

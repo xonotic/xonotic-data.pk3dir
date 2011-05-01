@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-30 10:05+0200\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
@@ -70,8 +70,8 @@ msgstr "benutzerdefiniert"
 
 #: qcsrc/menu/menu.qc:29
 #, c-format
-msgid "^4MQC Build information: %s\n"
-msgstr "^4MQC Build-Information: %s (deutsch)\n"
+msgid "^4MQC Build information: ^1%s\n"
+msgstr "^4MQC Build-Information: ^1%s (deutsch)\n"
 
 #: qcsrc/menu/xonotic/campaign.c:284
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:66
@@ -1161,6 +1161,10 @@ msgstr "Größe:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
 msgstr "Alpha:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+msgid "Crosshair color:"
+msgstr "Farbe:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"
@@ -2301,6 +2305,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:337
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Automatische Generierung von mapinfo-Dateien..."
+
+#: qcsrc/menu/xonotic/util.qc:367
+#, c-format
+msgid "^1%s TEST BUILD"
+msgstr "^1%s TESTVERSION"
 
 #: qcsrc/menu/xonotic/util.qc:432
 #, c-format

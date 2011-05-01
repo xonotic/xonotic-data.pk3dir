@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 10:37+0200\n"
+"POT-Creation-Date: 2011-04-30 10:06+0200\n"
 "PO-Revision-Date: 2011-01-11 22:51+ZONE\n"
 "Last-Translator: marcus256 <marcus256@users.sourceforge.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,7 +69,7 @@ msgstr ""
 
 #: qcsrc/menu/menu.qc:29
 #, c-format
-msgid "^4MQC Build information: %s\n"
+msgid "^4MQC Build information: ^1%s\n"
 msgstr ""
 
 #: qcsrc/menu/xonotic/campaign.c:284
@@ -1161,6 +1161,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
 msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+#, fuzzy
+msgid "Crosshair color:"
+msgstr "Färg på ammoraden:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"
@@ -2314,6 +2319,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:337
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Automatgenererar kartinfo för nyligen tillagda kartor..."
+
+#: qcsrc/menu/xonotic/util.qc:367
+#, c-format
+msgid "^1%s TEST BUILD"
+msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:432
 #, c-format
