@@ -54,6 +54,9 @@ float autocvar_bot_sound_monopoly;
 #define autocvar_bot_suffix cvar_string("bot_suffix")
 float autocvar_bot_usemodelnames;
 float autocvar_bot_vs_human;
+float autocvar_bot_debug_tracewalk;
+float autocvar_bot_debug_goalstack;
+float autocvar_bot_wander_enable;
 float autocvar_captureleadlimit_override;
 #define autocvar_capturelimit_override cvar("capturelimit_override")
 float autocvar_deathmatch_force_teamplay;
@@ -93,6 +96,7 @@ float autocvar_g_balance_sniperrifle_primary_force;
 float autocvar_g_balance_sniperrifle_primary_headshotaddeddamage;
 float autocvar_g_balance_sniperrifle_primary_lifetime;
 float autocvar_g_balance_sniperrifle_primary_refire;
+float autocvar_g_balance_sniperrifle_primary_shots;
 float autocvar_g_balance_sniperrifle_primary_speed;
 float autocvar_g_balance_sniperrifle_primary_spread;
 float autocvar_g_balance_sniperrifle_primary_tracer;
@@ -108,6 +112,7 @@ float autocvar_g_balance_sniperrifle_secondary_headshotaddeddamage;
 float autocvar_g_balance_sniperrifle_secondary_lifetime;
 float autocvar_g_balance_sniperrifle_secondary_reload;
 float autocvar_g_balance_sniperrifle_secondary_refire;
+float autocvar_g_balance_sniperrifle_secondary_shots;
 float autocvar_g_balance_sniperrifle_secondary_speed;
 float autocvar_g_balance_sniperrifle_secondary_spread;
 float autocvar_g_balance_sniperrifle_secondary_tracer;
