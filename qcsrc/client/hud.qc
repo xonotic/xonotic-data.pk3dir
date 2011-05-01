@@ -4560,7 +4560,18 @@ void HUD_Main (void)
 		hud_fade_alpha = (1 - scoreboard_fade_alpha);
 
 	if(intermission == 2) // no hud during mapvote
+	{
+		if (autocvar__hud_configure) //force exit from hud config
+		{
+			if (menu_enabled)
+			{
+				menu_enabled = 0;
+				localcmd("togglemenu\n");
+			}
+			cvar_set("_hud_configure", "0");
+		}
 		hud_fade_alpha = 0;
+	}
 	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
 		hud_fade_alpha = 1;
 
