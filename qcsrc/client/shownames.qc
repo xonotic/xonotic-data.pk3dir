@@ -4,6 +4,7 @@
 // self.armorvalue
 // self.sameteam = player is on same team as local client
 //
+const float SHOWNAMES_FADESPEED = 4;
 void Draw_ShowNames()
 {
     if(!autocvar_hud_shownames)
@@ -16,15 +17,6 @@ void Draw_ShowNames()
         if(!self.sameteam)
         {
             traceline(self.origin, view_origin, 1, self);
-            if(trace_endpos != view_origin) // fade out
-            {
-                self.alpha = max(0, self.alpha - 4 * frametime);
-                if(!self.alpha)
-                    return;
-            }
-            else // fade in
-                self.alpha = min(1, self.alpha + 4 * frametime);
-
 
             /* WIP, why does trace_ent != self not work as intended here?
             if(autocvar_hud_shownames_enemies != 2) // player has to point at enemy if so
@@ -36,7 +28,15 @@ void Draw_ShowNames()
             }*/
         }
 
-        // otherwise, increase alpha until 1
+        if(!self.sameteam && trace_endpos != view_origin) // out of view, fade out
+            self.alpha = max(0, self.alpha - SHOWNAMES_FADESPEED * frametime);
+        else if(!self.healthvalue) // dead player, fade out slowly
+            self.alpha = max(0, self.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
+        else // fade in
+            self.alpha = min(1, self.alpha + SHOWNAMES_FADESPEED * frametime);
+
+        if(!self.alpha)
+            return;
 
         float dist;
         dist = vlen(self.origin - view_origin);
@@ -82,7 +82,7 @@ void Draw_ShowNames()
 
             iconpos = myPos;
 
-            if(autocvar_hud_shownames_status)
+            if(autocvar_hud_shownames_status && teamplay)
             {
                 if(self.sameteam)
                 {
@@ -104,7 +104,7 @@ void Draw_ShowNames()
                     }
                     drawresetcliparea();
                 }
-                else if(autocvar_hud_shownames_status == 2 && teamplay)
+                else if(autocvar_hud_shownames_status == 2)
                 {
                     iconsize = eX * 2 * mySize_y + eY * mySize_y;
                     drawpic_aspect_skin(iconpos, "health_unknown", '1 1 0' * iconsize_y, '0 0 0', a, DRAWFLAG_NORMAL);

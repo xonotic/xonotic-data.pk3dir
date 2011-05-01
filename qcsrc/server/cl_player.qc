@@ -732,17 +732,21 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 }
 
-// sendflags use: 1 = origin, 2 = health/armor, 0x80 = same team (includes health), 4 = entity out of range/culled
+// sendflags use: 1 = origin, 2 = health (0 or 1 for dead/alive on enemies), 4 = armor, 0x80 = same team (includes health)
 float SendEntity_ShowNames(entity to, float sendflags)
 {
+    float the_health;
+    the_health = self.health;
+
     WriteByte(MSG_ENTITY, ENT_CLIENT_SHOWNAMES);
     WriteByte(MSG_ENTITY, num_for_edict(self.owner));
 
     sendflags = sendflags & 127;
     if(teams_matter && self.owner.team == to.team)
         sendflags |= 128;
-    else
-        sendflags &~= 2;
+    else if(self.owner.health >= 1)
+        the_health = 1;
+
     WriteByte(MSG_ENTITY, sendflags);
     if(sendflags & 1)
     {
@@ -752,7 +756,10 @@ float SendEntity_ShowNames(entity to, float sendflags)
     }
     if(sendflags & 2)
     {
-        WriteByte(MSG_ENTITY, self.health);
+        WriteByte(MSG_ENTITY, the_health);
+    }
+    if(sendflags & 4)
+    {
         WriteByte(MSG_ENTITY, self.armorvalue);
     }
     return TRUE;
@@ -771,6 +778,11 @@ void shownames_think()
         self.health = max(0, floor(self.owner.health));
         self.armorvalue = max(0, floor(self.owner.armorvalue));
         self.SendFlags |= 2;
+    }
+    if(self.armorvalue != max(0, floor(self.owner.armorvalue)))
+    {
+        self.armorvalue = max(0, floor(self.owner.armorvalue));
+        self.SendFlags |= 4;
     }
     self.nextthink = time;
 }

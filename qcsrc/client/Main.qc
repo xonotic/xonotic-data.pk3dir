@@ -930,6 +930,7 @@ void Ent_ShowNames()
     //self.movetype = MOVETYPE_FLY; // movetype needed so we can traceline?
     self.mins = '-20 -20 -24';
     self.maxs = '20 20 45';
+    self.classname = "shownames_tag";
 
     sf = ReadByte();
 
@@ -942,6 +943,9 @@ void Ent_ShowNames()
     if(sf & 2)
     {
         self.healthvalue = ReadByte();
+    }
+    if(sf & 4)
+    {
         self.armorvalue = ReadByte();
     }
 
