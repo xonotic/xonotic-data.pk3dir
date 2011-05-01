@@ -30,22 +30,25 @@ void Draw_ShowNames()
 
         vector o, eo;
         o = project_3d_to_2d(self.origin);
-
-        // fade tag out if another tag that is closer to you overlaps
-        entity e;
         float overlap;
-        for(e = world; (e = find(e, classname, "shownames_tag")); )
+
+        if(autocvar_hud_shownames_antioverlap)
         {
-            if(e == self)
-                continue;
-            eo = project_3d_to_2d(e.origin);
-            if not(eo_z < 0 || eo_x < 0 || eo_y < 0 || eo_x > vid_conwidth || eo_y > vid_conheight)
+            // fade tag out if another tag that is closer to you overlaps
+            entity e;
+            for(e = world; (e = find(e, classname, "shownames_tag")); )
             {
-                eo_z = 0;
-                if(vlen((eX * o_x + eY * o_y) - eo) < autocvar_hud_shownames_antioverlap_distance && vlen(self.origin - view_origin) > vlen(e.origin - view_origin))
+                if(e == self)
+                    continue;
+                eo = project_3d_to_2d(e.origin);
+                if not(eo_z < 0 || eo_x < 0 || eo_y < 0 || eo_x > vid_conwidth || eo_y > vid_conheight)
                 {
-                    overlap = TRUE;
-                    break;
+                    eo_z = 0;
+                    if(vlen((eX * o_x + eY * o_y) - eo) < autocvar_hud_shownames_antioverlap_distance && vlen(self.origin - view_origin) > vlen(e.origin - view_origin))
+                    {
+                        overlap = TRUE;
+                        break;
+                    }
                 }
             }
         }
