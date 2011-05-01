@@ -28,10 +28,34 @@ void Draw_ShowNames()
             }*/
         }
 
+        vector o, eo;
+        o = project_3d_to_2d(self.origin);
+
+        // fade tag out if another tag that is closer to you overlaps
+        entity e;
+        float overlap;
+        for(e = world; (e = find(e, classname, "shownames_tag")); )
+        {
+            if(e == self)
+                continue;
+            eo = project_3d_to_2d(e.origin);
+            if not(eo_z < 0 || eo_x < 0 || eo_y < 0 || eo_x > vid_conwidth || eo_y > vid_conheight)
+            {
+                eo_z = 0;
+                if(vlen((eX * o_x + eY * o_y) - eo) < autocvar_hud_shownames_antioverlap_distance && vlen(self.origin - view_origin) > vlen(e.origin - view_origin))
+                {
+                    overlap = TRUE;
+                    break;
+                }
+            }
+        }
+
         if(!self.sameteam && trace_endpos != view_origin) // out of view, fade out
             self.alpha = max(0, self.alpha - SHOWNAMES_FADESPEED * frametime);
         else if(!self.healthvalue) // dead player, fade out slowly
             self.alpha = max(0, self.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
+        else if(overlap) // tag overlap detected, fade out
+            self.alpha = max(0, self.alpha - SHOWNAMES_FADESPEED * frametime);
         else // fade in
             self.alpha = min(1, self.alpha + SHOWNAMES_FADESPEED * frametime);
 
@@ -43,8 +67,7 @@ void Draw_ShowNames()
 
         float a;
         a = autocvar_hud_shownames_alpha;
-        if(self.alpha)
-            a *= self.alpha;
+        a *= self.alpha;
         if(autocvar_hud_shownames_maxdistance)
         {
             if(dist >= autocvar_hud_shownames_maxdistance)
@@ -52,15 +75,15 @@ void Draw_ShowNames()
             a *= ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
         }
 
+        if(!a)
+            return;
+
         float resize;
         resize = 1;
         if(autocvar_hud_shownames_resize) // limit resize so its never smaller than 0.5... gets unreadable
             resize = 0.5 + 0.5 * ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
 
         // draw the sprite image
-        vector o;
-        o = project_3d_to_2d(self.origin);
-
         if not(o_z < 0 || o_x < 0 || o_y < 0 || o_x > vid_conwidth || o_y > vid_conheight)
         {
             o_z = 0;
