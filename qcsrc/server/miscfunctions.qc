@@ -236,8 +236,7 @@ void relocate_spawnpoint()
     if (have_team_spawns != 0)
         if (self.team)
             have_team_spawns = 1;
-    if (!self.team)
-        have_noteam_spawns = 1;
+    have_team_spawns_forteam[self.team] = 1;
 
     if (autocvar_r_showbboxes)
     {

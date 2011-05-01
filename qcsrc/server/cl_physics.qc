@@ -61,7 +61,7 @@ void PlayerJump (void)
 	if(!doublejump && self.multijump_ready && self.multijump_count < autocvar_g_multijump && self.velocity_z > autocvar_g_multijump_speed)
 	{
 		// doublejump = FALSE; // checked above in the if
-		if (autocvar_g_multijump > 0)
+		if (autocvar_g_multijump)
 		{
 			if (autocvar_g_multijump_add == 0) // in this case we make the z velocity == jumpvelocity
 			{
@@ -93,7 +93,8 @@ void PlayerJump (void)
 					self.velocity_y = wishdir_y * curspeed;
 					// keep velocity_z unchanged!
 				}
-				self.multijump_count += 1;
+				if (autocvar_g_multijump > 0)
+					self.multijump_count += 1;
 			}
 		}
 		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
@@ -666,6 +667,8 @@ void SV_PlayerPhysics()
 	float buttons_prev;
 	float not_allowed_to_move;
 	string c;
+
+	WarpZone_PlayerPhysics_FixVAngle();
 	
 	maxspd_mod = 1;
 	if(g_minstagib && (self.items & IT_INVINCIBLE))
