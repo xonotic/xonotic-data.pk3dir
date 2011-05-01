@@ -835,6 +835,15 @@ void Ent_ClientData()
 		race_laptime = 0;
 		race_checkpointtime = 0;
 	}
+	if (autocvar_hud_panel_healtharmor_progressbar_gfx)
+	{
+		if ( (spectatee_status == -1 && newspectatee_status > 0) //before observing, now spectating
+		  || (spectatee_status > 0 && newspectatee_status > 0 && spectatee_status != newspectatee_status) //changed spectated player
+		)
+			prev_p_health = -1;
+		else if(spectatee_status && !newspectatee_status) //before observing/spectating, now playing
+			prev_health = -1;
+	}
 	spectatee_status = newspectatee_status;
 }
 

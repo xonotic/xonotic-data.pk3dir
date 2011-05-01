@@ -19,9 +19,9 @@ void XonoticHUDPowerupsDialog_fill(entity me)
 	DIALOG_HUDPANEL_COMMON();
 
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_powerups_progressbar", _("Enable status bar")));
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_powerups_progressbar", _("Enable status bar")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Status bar alignment:")));
+		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Status bar alignment:")));
 			setDependent(e, "hud_panel_powerups_progressbar", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -34,7 +34,7 @@ void XonoticHUDPowerupsDialog_fill(entity me)
 			me.TD(me, 1, 0.95, e = makeXonoticRadioButton(2, "hud_panel_powerups_baralign", "3", _("Outward")));
 			setDependent(e, "hud_panel_powerups_progressbar", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Icon alignment:")));
+		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Icon alignment:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 			me.TD(me, 1, 0.95, e = makeXonoticRadioButton(3, "hud_panel_powerups_iconalign", "0", _("Left")));
@@ -42,6 +42,6 @@ void XonoticHUDPowerupsDialog_fill(entity me)
 			me.TD(me, 1, 0.95, e = makeXonoticRadioButton(3, "hud_panel_powerups_iconalign", "2", _("Inward")));
 			me.TD(me, 1, 0.95, e = makeXonoticRadioButton(3, "hud_panel_powerups_iconalign", "3", _("Outward")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_powerups_flip", _("Flip strength and shield positions")));
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_powerups_flip", _("Flip strength and shield positions")));
 }
 #endif

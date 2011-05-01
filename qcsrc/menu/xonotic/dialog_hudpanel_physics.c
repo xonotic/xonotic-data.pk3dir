@@ -29,7 +29,7 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticCheckBox(0, "hud_panel_physics_progressbar", _("Status bar")));
-		me.TD(me, 1, 1.6, e = makeXonoticTextSlider("hud_panel_physics_baralign"));
+		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_physics_baralign"));
 			e.addValue(e, _("Left align")   , "0");
 			e.addValue(e, _("Right align")  , "1");
 			e.addValue(e, _("Inward align") , "2");
@@ -37,11 +37,11 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "hud_panel_physics_progressbar", 1, 3);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_physics_flip", _("Flip speed/acceleration positions")));
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_physics_flip", _("Flip speed/acceleration positions")));
 
 //speed
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Speed:"));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Speed:")));
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_physics_speed_vertical", _("Include vertical speed")));
 	// me.TR(me);
 		// me.TDempty(me, 0.2);

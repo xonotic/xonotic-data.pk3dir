@@ -1253,8 +1253,6 @@ void CSQC_UpdateView(float w, float h)
 		cvar_set("vid_conheight", h0);
 	}
 
-	prev_spectatee_status = spectatee_status;
-
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
 

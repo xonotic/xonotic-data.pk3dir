@@ -32,20 +32,16 @@ float pps_red;
 float pps_blue;
 float pps_yellow;
 float pps_pink;
-void set_dom_state(void)
+void set_dom_state(entity e)
 {
 	// BIG ugly hack to make stat sending work
-	self.dom_total_pps = total_pps;
-	self.dom_pps_red = pps_red;
-	self.dom_pps_blue = pps_blue;
+	e.dom_total_pps = total_pps;
+	e.dom_pps_red = pps_red;
+	e.dom_pps_blue = pps_blue;
 	if(c3 >= 0)
-	{
-		self.dom_pps_yellow = pps_yellow;
-	}
+		e.dom_pps_yellow = pps_yellow;
 	if(c4 >= 0)
-	{
-		self.dom_pps_pink = pps_pink;
-	}
+		e.dom_pps_pink = pps_pink;
 }
 
 void() dom_controlpoint_setup;
@@ -178,13 +174,13 @@ void dompoint_captured ()
 			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
 	}
 
-	FOR_EACH_PLAYER(self)
-		set_dom_state();
-
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
 
 	self.captime = time;
+
+	FOR_EACH_PLAYER(head)
+		set_dom_state(head);
 };
 
 void AnimateDomPoint()

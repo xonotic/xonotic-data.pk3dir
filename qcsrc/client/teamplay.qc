@@ -9,6 +9,17 @@ float TeamByColor(float color)
 	default: return 0;
 	}
 }
+float ColorByTeam(float i)
+{
+	switch(i)
+	{
+	case 0: return COLOR_TEAM1;
+	case 1: return COLOR_TEAM2;
+	case 2: return COLOR_TEAM3;
+	case 3: return COLOR_TEAM4;
+	default: return COLOR_TEAM1;
+	}
+}
 
 float GetPlayerColorForce(float i)
 {
