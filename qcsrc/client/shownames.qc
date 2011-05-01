@@ -4,6 +4,7 @@
 // self.armorvalue
 // self.sameteam = player is on same team as local client
 //
+const float SHOWNAMES_FADESPEED = 4;
 void Draw_ShowNames()
 {
     if(!autocvar_hud_shownames)
@@ -16,15 +17,6 @@ void Draw_ShowNames()
         if(!self.sameteam)
         {
             traceline(self.origin, view_origin, 1, self);
-            if(trace_endpos != view_origin) // fade out
-            {
-                self.alpha = max(0, self.alpha - 4 * frametime);
-                if(!self.alpha)
-                    return;
-            }
-            else // fade in
-                self.alpha = min(1, self.alpha + 4 * frametime);
-
 
             /* WIP, why does trace_ent != self not work as intended here?
             if(autocvar_hud_shownames_enemies != 2) // player has to point at enemy if so
@@ -36,15 +28,49 @@ void Draw_ShowNames()
             }*/
         }
 
-        // otherwise, increase alpha until 1
+        vector o, eo;
+        o = project_3d_to_2d(self.origin);
+        float overlap;
+
+        if(autocvar_hud_shownames_antioverlap)
+        {
+            // fade tag out if another tag that is closer to you overlaps
+            entity e;
+            for(e = world; (e = find(e, classname, "shownames_tag")); )
+            {
+                if(e == self)
+                    continue;
+                eo = project_3d_to_2d(e.origin);
+                if not(eo_z < 0 || eo_x < 0 || eo_y < 0 || eo_x > vid_conwidth || eo_y > vid_conheight)
+                {
+                    eo_z = 0;
+                    if(vlen((eX * o_x + eY * o_y) - eo) < autocvar_hud_shownames_antioverlap_distance && vlen(self.origin - view_origin) > vlen(e.origin - view_origin))
+                    {
+                        overlap = TRUE;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(!self.sameteam && trace_endpos != view_origin) // out of view, fade out
+            self.alpha = max(0, self.alpha - SHOWNAMES_FADESPEED * frametime);
+        else if(!self.healthvalue) // dead player, fade out slowly
+            self.alpha = max(0, self.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
+        else if(overlap) // tag overlap detected, fade out
+            self.alpha = max(0, self.alpha - SHOWNAMES_FADESPEED * frametime);
+        else // fade in
+            self.alpha = min(1, self.alpha + SHOWNAMES_FADESPEED * frametime);
+
+        if(!self.alpha)
+            return;
 
         float dist;
         dist = vlen(self.origin - view_origin);
 
         float a;
         a = autocvar_hud_shownames_alpha;
-        if(self.alpha)
-            a *= self.alpha;
+        a *= self.alpha;
         if(autocvar_hud_shownames_maxdistance)
         {
             if(dist >= autocvar_hud_shownames_maxdistance)
@@ -52,15 +78,15 @@ void Draw_ShowNames()
             a *= ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
         }
 
+        if(!a)
+            return;
+
         float resize;
         resize = 1;
         if(autocvar_hud_shownames_resize) // limit resize so its never smaller than 0.5... gets unreadable
             resize = 0.5 + 0.5 * ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
 
         // draw the sprite image
-        vector o;
-        o = project_3d_to_2d(self.origin);
-
         if not(o_z < 0 || o_x < 0 || o_y < 0 || o_x > vid_conwidth || o_y > vid_conheight)
         {
             o_z = 0;
@@ -82,7 +108,7 @@ void Draw_ShowNames()
 
             iconpos = myPos;
 
-            if(autocvar_hud_shownames_status)
+            if(autocvar_hud_shownames_status && teamplay)
             {
                 if(self.sameteam)
                 {
@@ -104,7 +130,7 @@ void Draw_ShowNames()
                     }
                     drawresetcliparea();
                 }
-                else if(autocvar_hud_shownames_status == 2 && teamplay)
+                else if(autocvar_hud_shownames_status == 2)
                 {
                     iconsize = eX * 2 * mySize_y + eY * mySize_y;
                     drawpic_aspect_skin(iconpos, "health_unknown", '1 1 0' * iconsize_y, '0 0 0', a, DRAWFLAG_NORMAL);
