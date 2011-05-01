@@ -4136,16 +4136,14 @@ void HUD_InfoMessages(void)
 	fontsize = '0.20 0.20 0' * mySize_y;
 	
 	float a;
-	if(spectatee_status != 0)
-		a = 1;
-	else
-		a = panel_fg_alpha;
+	a = panel_fg_alpha;
 
 	string s;
 	if(!autocvar__hud_configure)
 	{
 		if(spectatee_status && !intermission)
 		{
+			a = 1;
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
