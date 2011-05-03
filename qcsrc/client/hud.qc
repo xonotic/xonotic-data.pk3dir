@@ -2609,7 +2609,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			for(i=0; i<team_count; ++i) {
 				if (i == floor((entries - 2) / players_per_team) || (entries == 1 && i == 0))
 					HUD_Panel_DrawHighlight(pos + eX * score_size * i, eX * score_size + eY * fontsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(pos + eX * score_size * i, ftos(123), eX * score_size + eY * fontsize_y, GetTeamRGB(ColorByTeam(i)) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(pos + eX * score_size * i, ftos(175 - 23*i), eX * score_size + eY * fontsize_y, GetTeamRGB(ColorByTeam(i)) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			first_pl = 1;
 			pos_y += fontsize_y;
