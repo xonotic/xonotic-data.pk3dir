@@ -2602,17 +2602,16 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 	i, first_pl = 0;
 	if (autocvar__hud_configure)
 	{
+		float players_per_team;
 		if (team_count)
 		{
 			// show team scores in the first line
 			float score_size = mySize_x / team_count;
-			for(tm = teams.sort_next; tm; tm = tm.sort_next) {
-				if(tm.team == COLOR_SPECTATOR)
-					continue;
-				if (tm.team == myteam)
+			players_per_team = max(2, ceil((entries - 1) / team_count));
+			for(i=0; i<team_count; ++i) {
+				if (i == floor((entries - 2) / players_per_team) || (entries == 1 && i == 0))
 					HUD_Panel_DrawHighlight(pos - eY * (height * (1 - 0.9) / 2) + eX * score_size * i, eX * score_size + eY * height, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(pos + eX * score_size * i, ftos(123), eX * score_size + eY * fontsize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
-				++i;
+				drawstring_aspect(pos + eX * score_size * i, ftos(123), eX * score_size + eY * fontsize_y, GetTeamRGB(ColorByTeam(i)) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			first_pl = 1;
 			pos_y += height;
@@ -2637,7 +2636,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			}
 
 			if (team_count)
-				score_color = GetTeamRGB(ColorByTeam(mod(i + 2, team_count))) * 0.8;
+				score_color = GetTeamRGB(ColorByTeam(floor((i - first_pl) / players_per_team))) * 0.8;
 			s = textShortenToWidth(s, name_size, fontsize, stringwidth_colors);
 			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			drawstring(pos + eX * (name_size + spacing_size), ftos(score), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2662,11 +2661,14 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 		}
 		first_pl = 1;
 		pos_y += height;
+		tm = teams.sort_next;
 	}
 	i = first_pl;
-	for (pl = players.sort_next; pl && i<entries; pl = pl.sort_next, ++i)
+
+	do
+	for (pl = players.sort_next; pl && i<entries; pl = pl.sort_next)
 	{
-		if (pl.team == COLOR_SPECTATOR)
+		if ((team_count && pl.team != tm.team) || pl.team == COLOR_SPECTATOR)
 			continue;
 
 		if (i == entries-1 && !me_printed && pl != me)
@@ -2696,7 +2698,9 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores[ps_primary])), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos_y += height;
+		++i;
 	}
+	while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != COLOR_SPECTATOR || (tm = tm.sort_next)));
 }
 
 void HUD_Score(void)
