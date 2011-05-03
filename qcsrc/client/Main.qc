@@ -717,7 +717,8 @@ void Ent_ReadPlayerScore()
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 	if(!isNew && n != self.sv_entnum)
 	{
-		print(_("A CSQC entity changed its owner!\n"));
+		//print(_("A CSQC entity changed its owner!\n"));
+		print(sprintf(_("A CSQC entity changed its owner! (edict: %d, classname: %s)\n"), num_for_edict(self), self.classname));
 		isNew = true;
 		Ent_Remove();
 		self.enttype = ENT_CLIENT_SCORES;
@@ -931,7 +932,8 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 	if(self.enttype)
 		if(t != self.enttype)
 		{
-			print(_("A CSQC entity changed its type!\n"));
+			//print(_("A CSQC entity changed its type!\n"));
+			print(sprintf(_("A CSQC entity changed its type! (edict: %d, classname: %s)\n"), num_for_edict(self), self.classname));
 			Ent_Remove();
 			bIsNewEntity = 1;
 		}
@@ -968,7 +970,8 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		default:
-			error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
+			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
+			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
 			break;
 	}
 
