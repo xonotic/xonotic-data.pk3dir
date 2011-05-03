@@ -113,6 +113,7 @@ const float ENT_CLIENT_HOOK = 27;
 const float ENT_CLIENT_LGBEAM = 28;
 const float ENT_CLIENT_GAUNTLET = 29;
 const float ENT_CLIENT_ACCURACY = 30;
+const float ENT_CLIENT_WARPZONE_TELEPORTED = 31;
 
 const float ENT_CLIENT_TURRET = 40;
 
