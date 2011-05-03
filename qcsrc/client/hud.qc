@@ -2586,9 +2586,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 #define SCOREPANEL_MAX_ENTRIES 6
 #define SCOREPANEL_ASPECTRATIO 2
 	const float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
-	const float height = mySize_y/entries;
-	const vector fontsize = '0.9 0.9 0' * height;
-	pos_y += height * (1 - 0.9) / 2;
+	const vector fontsize = '1 1 0' * (mySize_y/entries);
 
 	vector rgb, score_color;
 	rgb = '1 1 1';
@@ -2610,11 +2608,11 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			players_per_team = max(2, ceil((entries - 1) / team_count));
 			for(i=0; i<team_count; ++i) {
 				if (i == floor((entries - 2) / players_per_team) || (entries == 1 && i == 0))
-					HUD_Panel_DrawHighlight(pos - eY * (height * (1 - 0.9) / 2) + eX * score_size * i, eX * score_size + eY * height, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					HUD_Panel_DrawHighlight(pos + eX * score_size * i, eX * score_size + eY * fontsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawstring_aspect(pos + eX * score_size * i, ftos(123), eX * score_size + eY * fontsize_y, GetTeamRGB(ColorByTeam(i)) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			first_pl = 1;
-			pos_y += height;
+			pos_y += fontsize_y;
 		}
 		score = 10 + SCOREPANEL_MAX_ENTRIES * 3;
 		for (i=first_pl; i<entries; ++i)
@@ -2625,7 +2623,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			if (i == entries-1 && autocvar_hud_panel_score_rankings == 1)
 			{
 				rgb = '1 1 0';
-				drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawfill(pos, eX * mySize_x + eY * fontsize_y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				s = GetPlayerName(pl.sv_entnum);
 				score = 7;
 			}
@@ -2640,7 +2638,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			s = textShortenToWidth(s, name_size, fontsize, stringwidth_colors);
 			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			drawstring(pos + eX * (name_size + spacing_size), ftos(score), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-			pos_y += height;
+			pos_y += fontsize_y;
 		}
 		return;
 	}
@@ -2655,12 +2653,12 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			if(tm.team == COLOR_SPECTATOR)
 				continue;
 			if (tm.team == myteam)
-				drawfill(pos - eY * (height * (1 - 0.9) / 2) + eX * score_size * i, eX * score_size + eY * height, '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawfill(pos + eX * score_size * i, eX * score_size + eY * fontsize_y, '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			drawstring_aspect(pos + eX * score_size * i, ftos(tm.(teamscores[ts_primary])), eX * score_size + eY * fontsize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			++i;
 		}
 		first_pl = 1;
-		pos_y += height;
+		pos_y += fontsize_y;
 		tm = teams.sort_next;
 	}
 	i = first_pl;
@@ -2690,14 +2688,14 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			if (i == first_pl)
 				rgb = '0 1 0'; //first: green
 			me_printed = 1;
-			drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos, eX * mySize_x + eY * fontsize_y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		if (team_count)
 			score_color = GetTeamRGB(pl.team) * 0.8;
 		s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
 		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores[ps_primary])), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-		pos_y += height;
+		pos_y += fontsize_y;
 		++i;
 	}
 	while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != COLOR_SPECTATOR || (tm = tm.sort_next)));
