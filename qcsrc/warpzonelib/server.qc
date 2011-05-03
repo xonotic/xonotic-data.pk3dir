@@ -33,6 +33,15 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	WarpZone_PostTeleportPlayer_Callback(player);
 }
 
+float WarpZone_Teleported_Send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
+	WriteCoord(MSG_ENTITY, self.angles_x);
+	WriteCoord(MSG_ENTITY, self.angles_y);
+	WriteCoord(MSG_ENTITY, self.angles_z);
+	return TRUE;
+}
+
 float WarpZone_Teleport(entity player)
 {
 	vector o0, a0, v0, o1, a1, v1;
@@ -92,6 +101,23 @@ float WarpZone_Teleport(entity player)
 	WarpZone_StoreProjectileData(player);
 	player.warpzone_teleport_time = time;
 	player.warpzone_teleport_zone = self;
+#ifndef WARPZONE_USE_FIXANGLE
+	// instead of fixangle, send the transform to the client for smoother operation
+	player.fixangle = FALSE;
+
+	entity ts = spawn();
+	setmodel(ts, "null");
+	ts.SendEntity = WarpZone_Teleported_Send;
+	ts.SendFlags = 0xFFFFFF;
+	ts.drawonlytoclient = player;
+	ts.think = SUB_Remove;
+	ts.nextthink = time + 1;
+	ts.owner = player;
+	ts.enemy = self;
+	ts.effects = EF_NODEPTHTEST;
+	ts.classname = "warpzone_teleported";
+	ts.angles = self.warpzone_transform;
+#endif
 
 	return 1;
 }
