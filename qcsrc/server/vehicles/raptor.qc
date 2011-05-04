@@ -202,6 +202,9 @@ void raptor_enter()
     self.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
     self.tur_head.exteriormodeltoclient = self.owner;
 
+    self.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
+    self.lip   = time;
+
 #ifdef RAPTOR_RETARDCAMERA
     setorigin(self.vehicle_viewport, self.origin);
 #endif
@@ -279,6 +282,24 @@ float raptor_takeoff()
     else
         player.PlayerPhysplug = raptor_frame;
 
+    if(self.vehicle_flags  & VHF_SHIELDREGEN)
+        vehicles_regen(dmg_time, vehicle_shield, autocvar_g_vehicle_raptor_shield, autocvar_g_vehicle_raptor_shield_regen_pause, autocvar_g_vehicle_raptor_shield_regen, frametime);
+
+    if(self.vehicle_flags  & VHF_HEALTHREGEN)
+        vehicles_regen(dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, frametime);
+
+    if(self.vehicle_flags  & VHF_ENERGYREGEN)
+        vehicles_regen(cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime);
+
+
+    raptor.bomb1.alpha = raptor.bomb2.alpha = (time - raptor.lip) / (raptor.delay - raptor.lip);
+    player.vehicle_reload2 = bound(0, raptor.bomb1.alpha * 100, 100);
+
+    VEHICLE_UPDATE_PLAYER(health, raptor);
+    VEHICLE_UPDATE_PLAYER(energy, raptor);
+    if(self.vehicle_flags & VHF_HASSHIELD)
+        VEHICLE_UPDATE_PLAYER(shield, raptor);
+
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
     self = player;
     return 1;
@@ -288,7 +309,7 @@ float raptor_frame()
 {
     entity player, raptor;
     float ftmp, ftmp2;
-    vector df;
+    vector df, ra;
 
     player = self;
     raptor = self.vehicle;
@@ -413,8 +434,9 @@ float raptor_frame()
         df +=  v_up * autocvar_g_vehicle_raptor_speed_up;
 
     raptor.velocity  += df * frametime;
-    player.velocity = player.movement  = raptor.velocity;
-    setorigin(player,raptor.origin + '0 0 32');
+    //player.velocity = player.movement  = raptor.velocity;
+    player.velocity = raptor.velocity;
+    //setorigin(player,raptor.origin + '0 0 32');
 
     vector vf, ad;
     // Target lock & predict
@@ -454,6 +476,8 @@ float raptor_frame()
         }
     }
 
+    ra = raptor.angles;
+    ra_z = 0;
     // Aim the gunz
     ftmp2 = autocvar_g_vehicle_raptor_cannon_turnspeed * frametime;
     ftmp = -ftmp2;
@@ -463,7 +487,7 @@ float raptor_frame()
     //ad = df;
     //vf = v_forward;
     df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle
-    df = shortangle_vxy(df - (raptor.angles + raptor.gun1.angles), raptor.angles + raptor.gun1.angles);     // Find aim offset
+    df = shortangle_vxy(df - (ra + raptor.gun1.angles), ra + raptor.gun1.angles);     // Find aim offset
     // Bind to aimspeed
     df_x = bound(ftmp, df_x, ftmp2);
     df_y = bound(ftmp, df_y, ftmp2);
@@ -478,7 +502,7 @@ float raptor_frame()
     //ad += df;
     //vf += v_forward;
     df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle
-    df = shortangle_vxy(df - (raptor.angles + raptor.gun2.angles), raptor.angles + raptor.gun2.angles);     // Find aim offset
+    df = shortangle_vxy(df - (ra + raptor.gun2.angles), ra + raptor.gun2.angles);     // Find aim offset
     // Bind to aimspeed
     df_x = bound(ftmp, df_x, ftmp2);
     df_y = bound(ftmp, df_y, ftmp2);
@@ -538,8 +562,6 @@ float raptor_frame()
     VEHICLE_UPDATE_PLAYER(energy, raptor);
     if(self.vehicle_flags & VHF_HASSHIELD)
         VEHICLE_UPDATE_PLAYER(shield, raptor);
-
-
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
     return 1;

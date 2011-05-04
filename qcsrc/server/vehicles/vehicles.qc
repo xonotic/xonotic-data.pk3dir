@@ -404,8 +404,9 @@ void vehicles_enter()
     // .viewmodelforclient works better.
     //self.vehicle_hudmodel.drawonlytoclient = self.owner;
 
-    if not (self.SendEntity)
+#ifndef VEHICLES_CSQC
         self.vehicle_hudmodel.viewmodelforclient = self.owner;
+#endif
 
     self.event_damage         = vehicles_damage;
     self.nextthink            = 0;
@@ -439,10 +440,8 @@ void vehicles_enter()
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
 
-#if 0
-    other.clientcamera = self.vehicle_viewport;
-#else
-    /*msg_entity = other;
+#ifndef VEHICLES_CSQC
+    msg_entity = other;
     WriteByte (MSG_ONE, SVC_SETVIEWPORT);
     WriteEntity(MSG_ONE, self.vehicle_viewport);
 
@@ -459,7 +458,8 @@ void vehicles_enter()
         WriteAngle(MSG_ONE,  self.angles_x * -1); // tilt
         WriteAngle(MSG_ONE,  self.angles_y);      // yaw
         WriteAngle(MSG_ONE,  0);                  // roll
-    }*/
+    }
+#endif
 #endif
 
     vehicles_clearrturn();

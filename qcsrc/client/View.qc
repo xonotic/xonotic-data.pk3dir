@@ -420,6 +420,7 @@ void CSQC_UpdateView(float w, float h)
 	// Render the Scene
 	if(!intermission || !view_set)
 	{
+	    #ifdef VEHICLES_CSQC
 	    if(hud)
 	    {
             view_origin = vehicle_hudmodel.origin; //pmove_org + vo + randomvec() * 20;
@@ -433,6 +434,7 @@ void CSQC_UpdateView(float w, float h)
 	    }
 	    else
 	    {
+        #endif
             view_origin = pmove_org + vo;
             view_angles = input_angles;
             makevectors(view_angles);
@@ -440,8 +442,9 @@ void CSQC_UpdateView(float w, float h)
             view_right = v_right;
             view_up = v_up;
             view_set = 1;
-            dprint("Bong!\n");
+	    #ifdef VEHICLES_CSQC
 	    }
+        #endif
 	}
 
 #ifdef BLURTEST

@@ -1,4 +1,4 @@
-#define VEHICLES_CSQC
+//#define VEHICLES_CSQC
 // #define VEHICLES_USE_ODE
 #define VEHICLES_ENABLED
 #ifdef VEHICLES_ENABLED
