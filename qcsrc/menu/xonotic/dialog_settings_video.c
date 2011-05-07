@@ -84,14 +84,14 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(1.0, 3.0, 0.05, "v_contrast"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gamma:")));
-			setDependent(e, "r_glsl", 1, 1, "v_glslgamma", 1, 1);
+			setDependentAND(e, "r_glsl", 1, 1, "v_glslgamma", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.5, 2.0, 0.05, "v_gamma"));
-			setDependent(e, "r_glsl", 1, 1, "v_glslgamma", 1, 1);
+			setDependentAND(e, "r_glsl", 1, 1, "v_glslgamma", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Contrast boost:")));
-			setDependent(e, "r_glsl", 1, 1, "v_glslgamma", 1, 1);
+			setDependentAND(e, "r_glsl", 1, 1, "v_glslgamma", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(1.0, 5.0, 0.1, "v_contrastboost"));
-			setDependent(e, "r_glsl", 1, 1, "v_glslgamma", 1, 1);
+			setDependentAND(e, "r_glsl", 1, 1, "v_glslgamma", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Saturation:")));
 			setDependent(e, "r_glsl", 1, 1);
