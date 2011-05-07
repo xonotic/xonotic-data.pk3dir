@@ -22,3 +22,27 @@ cockpit
 		rgbgen lightingDiffuse
 	}
 }
+vehicles/tracercore
+{
+	surfaceparm nonsolid
+	surfaceparm nolightmap
+	deformVertexes autosprite
+	{
+	map models/vehicles/tracercore.tga
+		blendfunc add
+		rgbGen lightingDiffuse
+	}
+	}
+vehicles/tracertrail
+{
+	surfaceparm nonsolid
+	surfaceparm nolightmap
+	cull none
+	deformVertexes autosprite2
+	{
+		map models/vehicles/tracertrail.tga
+		blendfunc add
+		rgbGen lightingDiffuse
+	}
+}
+	
