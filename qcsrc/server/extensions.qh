@@ -476,6 +476,14 @@ void(entity e, entity tagentity, string tagname) setattachment = #443; // attach
 .float button6;
 .float button7;
 .float button8;
+.float button9;
+.float button10;
+.float button11;
+.float button12;
+.float button13;
+.float button14;
+.float button15;
+.float button16;
 //description:
 //set to the state of the +button3, +button4, +button5, +button6, +button7, and +button8 buttons from the client, this does not involve protocol changes (the extra 6 button bits were simply not used).
 //the exact mapping of protocol button bits on the server is:
