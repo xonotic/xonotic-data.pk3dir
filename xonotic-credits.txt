@@ -10,7 +10,7 @@ Jakob "tZork" Markström Gröhn
 **Coordinators
 
 *Art
-Diabolik a.k.a Dib
+Sahil "DiaboliK" Singhal
 
 *2D Art / Web
 Tyler "-z-" Mulligan (web / game)
@@ -22,6 +22,10 @@ morphed
 *Concept Art
 LJFHutch
 Pearce "theShadow" Michal
+
+*Animation
+Sahil "DiaboliK" Singhal
+nifrek
 
 *Level Design
 FruitieX
