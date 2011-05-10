@@ -129,7 +129,7 @@ void SV_ParseClientCommand(string s) {
 
 	tokens = tokenize_console(s);
 
-	cmd = argv(0);
+	cmd = strtolower(argv(0));
 	if(cmd != "reportcvar")
 	if(cmd != "sentcvar")
 	if(cmd != "pause")
@@ -362,6 +362,7 @@ void SV_ParseClientCommand(string s) {
 		sprint(self, cvar_purechanges);
 	} else if(CheatCommand(tokens)) {
 	} else {
+#if 0
 		//if(ctf_clientcommand())
 		//	return;
 		// grep for Cmd_AddCommand_WithClientCommand to find them all
@@ -387,6 +388,7 @@ void SV_ParseClientCommand(string s) {
 			print("WARNING: Invalid clientcommand by ", self.netname, ": ", s, "\n");
 			return;
 		}
+#endif
 
 		if(self.jointime > 0 && time > self.jointime + 10 && time > self.nickspamtime) // allow any changes in the first 10 seconds since joining
 		if(cmd == "name" || cmd == "playermodel") // TODO also playerskin and color?

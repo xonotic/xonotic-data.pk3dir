@@ -91,10 +91,6 @@ void CSQC_Init(void)
 	registercmd("hud_save");
 	//registercmd("menu_action");
 
-	registercmd("+button3");
-	registercmd("-button3");
-	registercmd("+button4");
-	registercmd("-button4");
 	registercmd("+showscores");registercmd("-showscores");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
 
@@ -371,29 +367,6 @@ float CSQC_ConsoleCommand(string strMessage)
 		else
 			HUD_Panel_ExportCfg(argv(1));
 		return true;
-	} else if(strCmd == "+button4") { // zoom
-		// return false, because the message shall be sent to the server anyway (for demos/speccing)
-		if(ignore_plus_zoom)
-		{
-			--ignore_plus_zoom;
-			return false;
-		}
-		button_zoom = 1;
-		return true;
-	} else if(strCmd == "-button4") { // zoom
-		if(ignore_minus_zoom)
-		{
-			--ignore_minus_zoom;
-			return false;
-		}
-		button_zoom = 0;
-		return true;
-	} else if(strCmd == "+button3") { // secondary
-		button_attack2 = 1;
-		return false;
-	} else if(strCmd == "-button3") { // secondary
-		button_attack2 = 0;
-		return false;
 	} else if(strCmd == "+showscores") {
 		scoreboard_showscores = true;
 		return true;
