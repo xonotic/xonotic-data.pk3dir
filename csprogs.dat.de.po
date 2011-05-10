@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-30 10:06+0200\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
@@ -30,8 +30,8 @@ msgstr ""
 
 #: qcsrc/client/Main.qc:66
 #, c-format
-msgid "^4CSQC Build information: %s\n"
-msgstr "^4CSQC Build-Information: %s (deutsch)\n"
+msgid "^4CSQC Build information: ^1%s\n"
+msgstr "^4CSQC Build-Information: ^1%s (deutsch)\n"
 
 #: qcsrc/client/Main.qc:232 qcsrc/client/Main.qc:248
 #, c-format
@@ -70,17 +70,17 @@ msgstr "Ein CSQC-Entity hat seinen Besitzer gewechselt!\n"
 msgid "A CSQC entity changed its type!\n"
 msgstr "Ein CSQC-Entity hat seinen Typ gewechselt!\n"
 
-#: qcsrc/client/Main.qc:971
+#: qcsrc/client/Main.qc:972
 #, c-format
 msgid "unknown entity type in CSQC_Ent_Update: %d\n"
 msgstr "unbekannter Entity-Typ in CSQC_Ent_Update: %d\n"
 
-#: qcsrc/client/Main.qc:1443
+#: qcsrc/client/Main.qc:1444
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (nicht zugewiesen)"
 
-#: qcsrc/client/Main.qc:1448 qcsrc/client/hud.qc:407
+#: qcsrc/client/Main.qc:1449 qcsrc/client/hud.qc:407
 #, c-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
@@ -1373,7 +1373,7 @@ msgstr "es wird auf ^2%s^7 gespielt"
 
 #: qcsrc/client/scoreboard.qc:1255 qcsrc/client/scoreboard.qc:1260
 #, c-format
-msgid " for up to ^1%.1f minutes^7"
+msgid " for up to ^1%1.0f minutes^7"
 msgstr " für bis zu ^1%.1f Minuten^7"
 
 #: qcsrc/client/scoreboard.qc:1264 qcsrc/client/scoreboard.qc:1283

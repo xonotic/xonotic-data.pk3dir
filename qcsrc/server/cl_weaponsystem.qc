@@ -1258,7 +1258,10 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (!self.crouch) // shoot anim stands up, this looks bad
 	{
 		local vector anim;
-		anim = self.anim_shoot;
+		if(self.weapon == WEP_SHOTGUN && self.BUTTON_ATCK2)
+			anim = self.anim_melee;
+		else
+			anim = self.anim_shoot;
 		anim_z = anim_y / (t + sys_frametime);
 		setanim(self, anim, FALSE, TRUE, TRUE);
 	}

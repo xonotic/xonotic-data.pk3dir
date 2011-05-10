@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-30 10:07+0200\n"
 "PO-Revision-Date: 2011-03-09 15:48-0500\n"
 "Last-Translator: Maxime Paradis <taximus.micro@gmail.com>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
@@ -73,8 +73,8 @@ msgid "custom"
 msgstr "personnalisé"
 
 #: qcsrc/menu/menu.qc:29
-#, c-format
-msgid "^4MQC Build information: %s\n"
+#, fuzzy, c-format
+msgid "^4MQC Build information: ^1%s\n"
 msgstr "^4MQC Build information : %s (français)\n"
 
 #: qcsrc/menu/xonotic/campaign.c:284
@@ -1169,6 +1169,10 @@ msgstr "Taille viseur:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
 msgstr "Opacité viseur:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+msgid "Crosshair color:"
+msgstr "Couleur viseur:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"
@@ -2320,6 +2324,11 @@ msgstr ""
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Génération des mapinfo pour les nouvelles cartes ajoutées..."
 
+#: qcsrc/menu/xonotic/util.qc:367
+#, c-format
+msgid "^1%s TEST BUILD"
+msgstr ""
+
 #: qcsrc/menu/xonotic/util.qc:432
 #, c-format
 msgid "Update to %s now!"
@@ -2780,14 +2789,11 @@ msgstr "Mitraillette"
 msgid "%s was riddled full of holes by %s"
 msgstr "%s s'est fait trouer par %s"
 
-#~ msgid "%d/%d"
-#~ msgstr "%d/%d"
+#~ msgid "%s ran into %s's flac"
+#~ msgstr "%s n'a pas eu peur des missiles de %s"
 
 #~ msgid "Waypoint settings:"
 #~ msgstr "Paramètres Waypoint (flèches 3D sur la carte):"
 
-#~ msgid "%s ran into %s's flac"
-#~ msgstr "%s n'a pas eu peur des missiles de %s"
-
-#~ msgid "Crosshair color:"
-#~ msgstr "Couleur viseur:"
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"

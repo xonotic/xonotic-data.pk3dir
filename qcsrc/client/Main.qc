@@ -63,7 +63,7 @@ void CSQC_Init(void)
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print(sprintf(_("^4CSQC Build information: %s\n"), WATERMARK()));
+	print(sprintf(_("^4CSQC Build information: ^1%s\n"), WATERMARK()));
 #endif
 
 	float i;
@@ -91,10 +91,6 @@ void CSQC_Init(void)
 	registercmd("hud_save");
 	//registercmd("menu_action");
 
-	registercmd("+button3");
-	registercmd("-button3");
-	registercmd("+button4");
-	registercmd("-button4");
 	registercmd("+showscores");registercmd("-showscores");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
 
@@ -202,6 +198,10 @@ void CSQC_Shutdown(void)
 
 	if(camera_active)
 		cvar_set("chase_active",ftos(chase_active_backup));
+
+	// unset the event chasecam's chase_active
+	if(autocvar_chase_active < 0)
+		cvar_set("chase_active", "0");
 
 	if not(isdemo())
 	{
@@ -367,29 +367,6 @@ float CSQC_ConsoleCommand(string strMessage)
 		else
 			HUD_Panel_ExportCfg(argv(1));
 		return true;
-	} else if(strCmd == "+button4") { // zoom
-		// return false, because the message shall be sent to the server anyway (for demos/speccing)
-		if(ignore_plus_zoom)
-		{
-			--ignore_plus_zoom;
-			return false;
-		}
-		button_zoom = 1;
-		return true;
-	} else if(strCmd == "-button4") { // zoom
-		if(ignore_minus_zoom)
-		{
-			--ignore_minus_zoom;
-			return false;
-		}
-		button_zoom = 0;
-		return true;
-	} else if(strCmd == "+button3") { // secondary
-		button_attack2 = 1;
-		return false;
-	} else if(strCmd == "-button3") { // secondary
-		button_attack2 = 0;
-		return false;
 	} else if(strCmd == "+showscores") {
 		scoreboard_showscores = true;
 		return true;
@@ -962,6 +939,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_TUBANOTE: Ent_TubaNote(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE: WarpZone_Read(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE_CAMERA: WarpZone_Camera_Read(bIsNewEntity); break;
+		case ENT_CLIENT_WARPZONE_TELEPORTED: WarpZone_Teleported_Read(bIsNewEntity); break;
 		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
 		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;

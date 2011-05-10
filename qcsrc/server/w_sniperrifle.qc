@@ -15,7 +15,7 @@ void W_SniperRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdded
 
 	pointparticles(particleeffectnum("sniperrifle_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
 
-	if(self.BUTTON_ZOOM) // if zoomed, shoot from the eye
+	if(self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) // if zoomed, shoot from the eye
 	{
 		w_shotdir = v_forward;
 		w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;

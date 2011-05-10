@@ -614,22 +614,15 @@ void dom_delayedinit()
 	// if no control points are found, spawn defaults
 	if (find(world, classname, "dom_controlpoint") == world)
 	{
-		// here follow default domination points for each map
-		/*
-		if (world.model == "maps/e1m1.bsp")
+		// TODO in a few months (maybe 2011/08): change this into error() and remove this very poor dom point selection
+		backtrace("This map contains no dom_controlpoint entities. A very poor dom point placement will be chosen. Please fix the map.");
+
+		// if no supported map was found, make every deathmatch spawn a point
+		head = find(world, classname, "info_player_deathmatch");
+		while (head)
 		{
-			dom_spawnpoint('0 0 0');
-		}
-		else
-		*/
-		{
-			// if no supported map was found, make every deathmatch spawn a point
-			head = find(world, classname, "info_player_deathmatch");
-			while (head)
-			{
-				dom_spawnpoint(head.origin);
-				head = find(head, classname, "info_player_deathmatch");
-			}
+			dom_spawnpoint(head.origin);
+			head = find(head, classname, "info_player_deathmatch");
 		}
 	}
 

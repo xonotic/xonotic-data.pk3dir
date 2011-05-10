@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 15:38+0200\n"
+"POT-Creation-Date: 2011-04-30 10:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Henry 'Exitium' Sanmark <henry.sanmark@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,8 +68,8 @@ msgid "custom"
 msgstr "omavalintainen"
 
 #: qcsrc/menu/menu.qc:29
-#, c-format
-msgid "^4MQC Build information: %s\n"
+#, fuzzy, c-format
+msgid "^4MQC Build information: ^1%s\n"
 msgstr "^4MQC Version tiedot: %s\n"
 
 #: qcsrc/menu/xonotic/campaign.c:284
@@ -1157,6 +1157,10 @@ msgstr "Tähtäimen suuruus:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
 msgstr "Tähtäimen alpha:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+msgid "Crosshair color:"
+msgstr "Tähtäimen väri:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"
@@ -2300,6 +2304,11 @@ msgid "Autogenerating mapinfo for newly added maps..."
 msgstr ""
 "Luodaan automaattisesti karttatietoja vastikään lisätyille kartoille..."
 
+#: qcsrc/menu/xonotic/util.qc:367
+#, c-format
+msgid "^1%s TEST BUILD"
+msgstr ""
+
 #: qcsrc/menu/xonotic/util.qc:432
 #, c-format
 msgid "Update to %s now!"
@@ -2760,11 +2769,8 @@ msgstr ""
 msgid "%s was riddled full of holes by %s"
 msgstr ""
 
-#~ msgid "Crosshair color:"
-#~ msgstr "Tähtäimen väri:"
-
-#~ msgid "%d/%d"
-#~ msgstr "%d/%d"
+#~ msgid "Waypoint settings:"
+#~ msgstr "Välimatkojen asetukset:"
 
 #~ msgid ""
 #~ "Please answer a few initial questions to enhance the game experience."
@@ -2772,5 +2778,5 @@ msgstr ""
 #~ "Ole hyvä ja vastaa muutamaan alustavaan kysymykseen parantaaksesi "
 #~ "pelikokemustasi."
 
-#~ msgid "Waypoint settings:"
-#~ msgstr "Välimatkojen asetukset:"
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"
