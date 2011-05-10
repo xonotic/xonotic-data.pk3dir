@@ -407,7 +407,6 @@ void W_WeaponFrame()
 			v_forward = fo;
 			v_right = ri;
 			v_up = up;
-			self.weaponentity_glowmod = '0 0 0'; // reset glowmod, weapon think function only *might* set it
 			weapon_action(self.weapon, WR_THINK);
 		}
 		if (time + self.weapon_frametime * 0.5 >= self.weapon_nextthink)
