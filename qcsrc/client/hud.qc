@@ -612,7 +612,7 @@ float GetAmmoTypeForWep(float i)
 
 void HUD_Weapons(void)
 {
-	float f, screen_ar;
+	float i, f, screen_ar;
 	float center_x, center_y;
 
 	if(!autocvar__hud_configure)
@@ -643,6 +643,33 @@ void HUD_Weapons(void)
 	}
 
 	HUD_Panel_UpdateCvars(weapons);
+
+	float weapons_st = getstati(STAT_WEAPONS);
+	float weapon_count;
+	if (!autocvar__hud_configure && autocvar_hud_panel_weapons_onlyowned)
+	{
+		vector old_panel_size;
+		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
+		{
+			if(weapons_st & weaponorder[i].weapons)
+				++weapon_count;
+		}
+		// reduce size of the panel
+		if (panel_size_y > panel_size_x)
+		{
+			old_panel_size_y = panel_size_y;
+			panel_size_y *= weapon_count / WEP_COUNT;
+			panel_pos_y += (old_panel_size_y - panel_size_y) / 2;
+		}
+		else
+		{
+			old_panel_size_x = panel_size_x;
+			panel_size_x *= weapon_count / WEP_COUNT;
+			panel_pos_x += (old_panel_size_x - panel_size_x) / 2;
+		}
+	}
+	else
+		weapon_count = WEP_COUNT;
 
 	if (timeout && time >= weapontime + timeout && !autocvar__hud_configure)
 	{
@@ -707,7 +734,7 @@ void HUD_Weapons(void)
 		}
 	}
 
-	float i, weapid, wpnalpha, weapon_cnt;
+	float weapid, wpnalpha, weapon_cnt;
 
 	// TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
@@ -756,9 +783,9 @@ void HUD_Weapons(void)
 	float rows, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 	rows = panel_size_y/panel_size_x;
-	rows = bound(1, floor((sqrt(4 * aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
+	rows = bound(1, floor((sqrt(4 * aspect * rows * weapon_count + rows * rows) + rows + 0.5) / 2), weapon_count);
 
-	columns = ceil(WEP_COUNT/rows);
+	columns = ceil(weapon_count/rows);
 	float row, column;
 
 	float a, type, fullammo;
@@ -805,12 +832,14 @@ void HUD_Weapons(void)
 				acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 	}
 
-	float weapons_st = getstati(STAT_WEAPONS);
-
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
 		self = weaponorder[i];
 		if (!self || self.impulse < 0)
+			continue;
+		if (autocvar_hud_panel_weapons_onlyowned)
+		if (!(weapons_st & self.weapons))
+		if (!autocvar__hud_configure)
 			continue;
 		wpnpos = panel_pos + eX * column * wpnsize_x + eY * row * wpnsize_y;
 
