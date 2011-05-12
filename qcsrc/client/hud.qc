@@ -734,11 +734,10 @@ void HUD_Weapons(void)
 		}
 	}
 
-	float weapid, wpnalpha, weapon_cnt;
-
 	// TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
 	{
+		float weapon_cnt;
 		if(weaponorder_bypriority)
 			strunzone(weaponorder_bypriority);
 		if(weaponorder_byimpulse)
@@ -771,6 +770,8 @@ void HUD_Weapons(void)
 		panel_pos += '1 1 0' * panel_bg_padding;
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
+
+	float weapid, wpnalpha;
 
 	if(autocvar_hud_panel_weapons_fade)
 	{
