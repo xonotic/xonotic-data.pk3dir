@@ -2,16 +2,17 @@
 
 float require_spawnfunc_prefix; // if this float exists, only functions with spawnfunc_ name prefix qualify as spawn functions
 
-#define BUTTON_ATCK   button0
-#define BUTTON_JUMP   button2
-#define BUTTON_ATCK2  button3
-#define BUTTON_ZOOM   button4
-#define BUTTON_CROUCH button5
-#define BUTTON_HOOK   button6
-#define BUTTON_INFO   button7
-#define BUTTON_CHAT   buttonchat
-#define BUTTON_USE    buttonuse
-#define BUTTON_DRAG   button8
+#define BUTTON_ATCK       button0
+#define BUTTON_JUMP       button2
+#define BUTTON_ATCK2      button3
+#define BUTTON_ZOOM       button4
+#define BUTTON_CROUCH     button5
+#define BUTTON_HOOK       button6
+#define BUTTON_INFO       button7
+#define BUTTON_CHAT       buttonchat
+#define BUTTON_USE        buttonuse
+#define BUTTON_DRAG       button8
+#define BUTTON_ZOOMSCRIPT button9
 
 // Globals
 
@@ -147,6 +148,7 @@ float maxclients;
 .vector anim_forwardleft; // player running forward and left
 .vector anim_backright; // player running backward and right
 .vector anim_backleft; // player running back and left
+.vector anim_melee; // player doing the melee action
 
 // weapon animation vectors:
 .vector anim_fire1;
