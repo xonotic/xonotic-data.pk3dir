@@ -454,6 +454,7 @@ void CSQC_UpdateView(float w, float h)
 			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
 
 			R_SetView(VF_ORIGIN, eventchase_target_origin);
+			R_SetView(VF_ANGLES, view_angles);
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
