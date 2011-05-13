@@ -197,6 +197,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		self = oldself;
 		if(startitem_failed)
 			return string_null;
+		wep.glowmod = own.weaponentity_glowmod;
 		wep.think = thrown_wep_think;
 		wep.nextthink = time + 0.5;
 		return "";
@@ -232,6 +233,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			}
 			s = substring(s, 5, -1);
 		}
+		wep.glowmod = own.weaponentity_glowmod;
 		wep.think = thrown_wep_think;
 		wep.nextthink = time + 0.5;
 		return s;
@@ -409,7 +411,6 @@ void W_WeaponFrame()
 			v_forward = fo;
 			v_right = ri;
 			v_up = up;
-			self.weaponentity_glowmod = '0 0 0'; // reset glowmod, weapon think function only *might* set it
 			weapon_action(self.weapon, WR_THINK);
 		}
 		if (time + self.weapon_frametime * 0.5 >= self.weapon_nextthink)
