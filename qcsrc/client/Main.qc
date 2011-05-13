@@ -1078,6 +1078,8 @@ void Ent_Init()
 
 	minelayer_maxmines = ReadByte();
 
+	hagar_maxrockets = ReadByte();
+
 	g_trueaim_minrange = ReadCoord();
 
 	if(!postinit)
