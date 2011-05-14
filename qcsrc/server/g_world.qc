@@ -946,19 +946,6 @@ void spawnfunc_light (void)
 	remove(self);
 }
 
-float TryFile( string pFilename )
-{
-	local float lHandle;
-	dprint("TryFile(\"", pFilename, "\")\n");
-	lHandle = fopen( pFilename, FILE_READ );
-	if( lHandle != -1 ) {
-		fclose( lHandle );
-		return TRUE;
-	} else {
-		return FALSE;
-	}
-};
-
 string GetGametype()
 {
 	return GametypeNameFromType(game);
@@ -1002,14 +989,12 @@ float MapHasRightSize(string map)
 	if(autocvar_g_maplist_check_waypoints)
 	{
 		dprint("checkwp "); dprint(map);
-		fh = fopen(strcat("maps/", map, ".waypoints"), FILE_READ);
-		if(fh < 0)
+		if(!fexists(strcat("maps/", map, ".waypoints")))
 		{
 			dprint(": no waypoints\n");
 			return FALSE;
 		}
 		dprint(": has waypoints\n");
-		fclose(fh);
 	}
 
 	// open map size restriction file
