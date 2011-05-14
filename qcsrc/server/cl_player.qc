@@ -765,10 +765,9 @@ float SendEntity_ShowNames(entity to, float sendflags)
 void shownames_think()
 {
     self.origin = self.owner.origin + '0 0 1' * 48;
-    if(self.health != max(0, floor(self.owner.health)) || self.armorvalue != max(0, floor(self.owner.armorvalue)))
+    if(self.health != max(0, floor(self.owner.health)))
     {
         self.health = max(0, floor(self.owner.health));
-        self.armorvalue = max(0, floor(self.owner.armorvalue));
         self.SendFlags |= 1;
     }
     if(self.armorvalue != max(0, floor(self.owner.armorvalue)))
