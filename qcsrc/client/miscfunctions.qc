@@ -767,7 +767,8 @@ vector getplayerorigin(float pl)
 
 	e = entcs_receiver[pl];
 	if(e.classname == "entcs_receiver")
-		return e.origin;
+		if(e.sv_entnum == pl)
+			return e.origin;
 
 	return GETPLAYERORIGIN_ERROR;
 }
