@@ -64,12 +64,10 @@
 \cl_gunalign\Position of the weapon model; requires reconnect
 
 \crosshair_per_weapon\Set a different crosshair for each weapon, good if you play without weapon models
-\crosshair_color_override\Also set the color of the crosshair depending on the weapon you are currently holding
+\crosshair_color_per_weapon\Set the color of the crosshair depending on the weapon you are currently holding
 \crosshair_size\Adjust the size of the crosshair
-\crosshair_color_alpha\Adjust the opacity of the crosshair
-\crosshair_color_red\Red color component of the crosshair color
-\crosshair_color_green\Green color component of the crosshair color
-\crosshair_color_blue\Blue color component of the crosshair color
+\crosshair_alpha\Adjust the opacity of the crosshair
+\crosshair_color\Adjust the crosshair color
 \sbar_hudselector\Use the old HUD layout
 \XonoticMultiplayerDialog/Radar, HUD & Waypoints...\Adjust the radar, HUD and waypoints
 \_cl_name\Name under which you will appear in the game
@@ -97,8 +95,6 @@
 \m_pitch\Invert mouse movement on the Y-axis
 \vid_dgamouse\Make use of DGA mouse input
 \con_closeontoggleconsole\Allow the console toggling bind to also close the console
-\sbar_showbinds\Display actions / bound keys in the strings shown during the game
-\cl_showpressedkeys\Show which movement keys the player is pressing
 
 \XonoticSettingsDialog/Video\Video settings
 \vid_width\Screen resolution
@@ -191,29 +187,13 @@
 \showtime\Show current time of day, useful on screenshots
 \showdate\Show current date, useful on screenshots
 \showfps\Show your rendered frames per second
-\cl_showspeed\Show the speed of the player
-\cl_showspeed_unit\Select the unit used by the speedometer. qu/s = in/s
-\cl_showacceleration\Show the acceleration of the player
-\cl_showacceleration_scale\Excaggerate the accelerometer by this scale multiplier
 
 \XonoticSettingsDialog/Advanced settings...\Advanced settings where you can tweak every single variable of the game
 \g_friendlyfire\Percentage of damage dealt to teammates
 \g_mirrordamage\Percentage of teamdamage that will be mirrored to you
 \g_tdm_teams_override\Override the default amount of teams in teamgames
 
-\cl_teamradar_position\-
-\cl_teamradar_size\-
-\cl_teamradar_zoommode\-
-\cl_teamradar_rotation\-
-\cl_teamradar_scale\-
-\cl_teamradar_foreground_alpha\-
-\cl_teamradar_background_alpha\Opacity value of the radar background
 \viewsize\Enable/disable the HUD background
-\sbar_alpha_bg\Opacity value of the HUD background
-\sbar_color_bg_r\Red color component of the HUD background
-\sbar_color_bg_g\Green color component of the HUD background
-\sbar_color_bg_b\Blue color component of the HUD background
-\sbar_color_bg_team\Team color saturation of the HUD background
 \cl_hidewaypoints\Show various gametype specific waypoints
 \g_waypointsprite_scale\Scale multiplier of the waypoints
 \g_waypointsprite_alpha\Control transparency of the waypoints

@@ -1525,6 +1525,7 @@ Called when a client connects to the server
 string ColoredTeamName(float t);
 void DecodeLevelParms (void);
 //void dom_player_join_team(entity pl);
+void set_dom_state(entity e);
 void ClientConnect (void)
 {
 	float t;
@@ -1766,9 +1767,19 @@ void ClientConnect (void)
 	else if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
 
+	if (g_domination)
+		set_dom_state(self);
+
 	CheatInitClient();
 
 	PlayerStats_AddPlayer(self);
+
+    self.shownames = spawn();
+    self.shownames.owner = self;
+    self.shownames.think = shownames_think;
+    self.shownames.nextthink = time;
+	self.shownames.customizeentityforclient = shownames_customize;
+    Net_LinkEntity(self.shownames, FALSE, 0, SendEntity_ShowNames);
 }
 
 /*
@@ -1867,6 +1878,8 @@ void ClientDisconnect (void)
 
 	self.playerid = 0;
 	ReadyCount();
+
+    remove(self.shownames);
 
 	// free cvars
 	GetCvars(-1);
@@ -2717,9 +2730,6 @@ void PlayerPreThink (void)
 			IntermissionThink ();	// otherwise a button could be missed between
 			return;					// the think tics
 		}
-
-		if(frametime > 0) // don't do this in cl_movement frames, just in server ticks
-			UpdateSelectedPlayer();
 
 		//don't allow the player to turn around while game is paused!
 		if(timeoutStatus == 2) {

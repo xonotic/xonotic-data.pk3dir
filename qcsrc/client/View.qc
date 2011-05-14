@@ -459,6 +459,7 @@ void CSQC_UpdateView(float w, float h)
 			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
 
 			R_SetView(VF_ORIGIN, eventchase_target_origin);
+			R_SetView(VF_ANGLES, view_angles);
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
@@ -609,10 +610,6 @@ void CSQC_UpdateView(float w, float h)
 
 	// Draw the Engine Status Bar (the default Quake HUD)
 	R_SetView(VF_DRAWENGINEHUD, 0);
-
-	// fetch this one only once per frame
-	hud_showbinds = autocvar_hud_showbinds;
-	hud_showbinds_limit = autocvar_hud_showbinds_limit;
 
 	// Update the mouse position
 	/*
@@ -1693,7 +1690,6 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 	}
 
 }
-
 
 void CSQC_common_hud(void)
 {
