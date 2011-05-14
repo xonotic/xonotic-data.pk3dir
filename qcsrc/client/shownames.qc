@@ -12,12 +12,15 @@ void Draw_ShowNames()
 
     if(self.sameteam || (!self.sameteam && autocvar_hud_shownames_enemies))
     {
-        InterpolateOrigin_Do();
+        string temporigin;
+        temporigin = getplayerkey(self.the_entnum-1, "TEMPHACK_origin");
+        if(temporigin == "")
+            return;
+        self.origin = stov(temporigin);
+        self.origin_z += autocvar_hud_shownames_offset;
 
         if(!self.sameteam)
         {
-            traceline(self.origin, view_origin, 1, self);
-
             /* WIP, why does trace_ent != self not work as intended here?
             if(autocvar_hud_shownames_enemies != 2) // player has to point at enemy if so
             {
@@ -26,6 +29,8 @@ void Draw_ShowNames()
                 if(trace_ent != self)
                     return;
             }*/
+
+            traceline(self.origin, view_origin, 1, self);
         }
 
         vector o, eo;

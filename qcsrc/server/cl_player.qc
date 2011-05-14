@@ -735,7 +735,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 }
 
-// sendflags use: 1 = origin, 2 = health (0 or 1 for dead/alive on enemies), 4 = armor, 0x80 = same team (includes health)
+// sendflags use: 1 = health (value is 0 or 1 for dead/alive on enemies), 2 = armor, 0x80 = same team (includes health)
 float SendEntity_ShowNames(entity to, float sendflags)
 {
     float the_health;
@@ -753,49 +753,38 @@ float SendEntity_ShowNames(entity to, float sendflags)
     WriteByte(MSG_ENTITY, sendflags);
     if(sendflags & 1)
     {
-        WriteShort(MSG_ENTITY, rint(self.origin_x));
-        WriteShort(MSG_ENTITY, rint(self.origin_y));
-        WriteShort(MSG_ENTITY, rint(self.origin_z));
-    }
-    if(sendflags & 2)
-    {
         WriteByte(MSG_ENTITY, the_health);
     }
-    if(sendflags & 4)
+    if(sendflags & 2)
     {
         WriteByte(MSG_ENTITY, self.armorvalue);
     }
     return TRUE;
 }
 
-const vector SHOWNAMES_ORIGIN_OFFSET = '0 0 48';
 void shownames_think()
 {
-    if(self.origin - SHOWNAMES_ORIGIN_OFFSET != self.owner.origin)
-    {
-        setorigin(self, self.owner.origin + SHOWNAMES_ORIGIN_OFFSET);
-        self.SendFlags |= 1;
-    }
+    self.origin = self.owner.origin + '0 0 1' * 48;
     if(self.health != max(0, floor(self.owner.health)) || self.armorvalue != max(0, floor(self.owner.armorvalue)))
     {
         self.health = max(0, floor(self.owner.health));
         self.armorvalue = max(0, floor(self.owner.armorvalue));
-        self.SendFlags |= 2;
+        self.SendFlags |= 1;
     }
     if(self.armorvalue != max(0, floor(self.owner.armorvalue)))
     {
         self.armorvalue = max(0, floor(self.owner.armorvalue));
-        self.SendFlags |= 4;
+        self.SendFlags |= 2;
     }
-    self.nextthink = time + autocvar_sv_shownames_delay;
+    self.nextthink = time;
 }
 
 float shownames_customize()
 {
     if(self.owner.classname == "player") // only send players, no spectators!
-    if(self.owner != other) // no need to spam own coordinates
+    if(self.owner != other) // no need to spam own info
     if(vlen(other.origin - self.origin) < autocvar_sv_shownames_cull_distance) // distance cull
-    if(self.owner.team == other.team || (self.owner.team != other.team && checkpvs(self.origin, other)))
+    if((teams_matter && self.owner.team == other.team) || checkpvs(self.origin, other))
         return TRUE;
 
     return FALSE;

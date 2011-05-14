@@ -897,26 +897,19 @@ void Ent_ShowNames()
     // entity init, TODO can this be done only once somehow?
     self.the_entnum = ReadByte(); // TODO: fixme to only send once somehow
     self.draw2d = Draw_ShowNames;
-	InterpolateOrigin_Undo();
 
     //self.movetype = MOVETYPE_FLY; // movetype needed so we can traceline?
-    self.mins = '-20 -20 -24';
-    self.maxs = '20 20 45';
+    //self.mins = '-20 -20 -24';
+    //self.maxs = '20 20 45';
     self.classname = "shownames_tag";
 
     sf = ReadByte();
 
     if(sf & 1)
     {
-        self.origin_x = ReadShort();
-        self.origin_y = ReadShort();
-        self.origin_z = ReadShort();
-    }
-    if(sf & 2)
-    {
         self.healthvalue = ReadByte();
     }
-    if(sf & 4)
+    if(sf & 2)
     {
         self.armorvalue = ReadByte();
     }
@@ -925,7 +918,6 @@ void Ent_ShowNames()
         self.sameteam = TRUE;
     else
         self.sameteam = FALSE;
-	InterpolateOrigin_Note();
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.

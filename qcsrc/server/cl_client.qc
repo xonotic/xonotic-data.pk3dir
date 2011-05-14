@@ -1774,15 +1774,12 @@ void ClientConnect (void)
 
 	PlayerStats_AddPlayer(self);
 
-    if(autocvar_sv_shownames)
-    {
-        self.shownames = spawn();
-        self.shownames.owner = self;
-        self.shownames.think = shownames_think;
-        self.shownames.nextthink = time;
-        self.shownames.customizeentityforclient = shownames_customize;
-        Net_LinkEntity(self.shownames, FALSE, 0, SendEntity_ShowNames);
-    }
+    self.shownames = spawn();
+    self.shownames.owner = self;
+    self.shownames.think = shownames_think;
+    self.shownames.nextthink = time;
+    self.shownames.customizeentityforclient = shownames_customize;
+    Net_LinkEntity(self.shownames, FALSE, 0, SendEntity_ShowNames);
 }
 
 /*

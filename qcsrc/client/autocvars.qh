@@ -291,6 +291,7 @@ float autocvar_hud_shownames_mindistance;
 float autocvar_hud_shownames_maxdistance;
 float autocvar_hud_shownames_antioverlap;
 float autocvar_hud_shownames_antioverlap_distance;
+float autocvar_hud_shownames_offset;
 string autocvar_hud_skin;
 float autocvar_loddebug;
 float autocvar_menu_mouse_speed;
