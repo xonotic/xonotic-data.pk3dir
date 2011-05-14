@@ -118,7 +118,7 @@ void Draw_ShowNames()
                         HUD_Panel_DrawProgressBar(namepos + '0 1 0' * autocvar_hud_shownames_fontsize * resize, eX * 0.5 * mySize_x + eY * resize * autocvar_hud_shownames_statusbar_height, "nametag_statusbar", self.healthvalue/autocvar_hud_panel_healtharmor_maxhealth, 0, 1, '1 0 0', a, DRAWFLAG_NORMAL);
 
                         if(self.armorvalue > 0)
-                            HUD_Panel_DrawProgressBar(namepos + '0 1 0' * autocvar_hud_shownames_fontsize * resize + eX * 0.5 * mySize_x, eX * mySize_x + eY * resize * autocvar_hud_shownames_statusbar_height, "nametag_statusbar", self.armorvalue/autocvar_hud_panel_healtharmor_maxarmor, 0, 0, '0 1 0', a, DRAWFLAG_NORMAL);
+                            HUD_Panel_DrawProgressBar(namepos + '0 1 0' * autocvar_hud_shownames_fontsize * resize + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * resize * autocvar_hud_shownames_statusbar_height, "nametag_statusbar", self.armorvalue/autocvar_hud_panel_healtharmor_maxarmor, 0, 0, '0 1 0', a, DRAWFLAG_NORMAL);
                     }
                 }
             }
