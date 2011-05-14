@@ -887,7 +887,7 @@ void CSQC_UpdateView(float w, float h)
 			cvar_set("r_glsl_postprocess_uservec2_enable", ftos(cvar("hud_powerup") != 0));
 
 		// lets apply the postprocess effects from the previous two functions if needed
-		if(damage_blurpostprocess_x || content_blurpostprocess_x)
+		if((damage_blurpostprocess_x || content_blurpostprocess_x) && autocvar_chase_active >= 0) // not while the event camera is active
 		{
 			float blurradius = bound(0, damage_blurpostprocess_y + content_blurpostprocess_y, autocvar_hud_postprocessing_maxblurradius);
 			float bluralpha = bound(0, damage_blurpostprocess_z + content_blurpostprocess_z, autocvar_hud_postprocessing_maxbluralpha);
@@ -911,7 +911,7 @@ void CSQC_UpdateView(float w, float h)
 		if (getstatf(STAT_INVINCIBLE_FINISHED) - time > 0)
 			sharpen_intensity += (getstatf(STAT_INVINCIBLE_FINISHED) - time);
 
-		if(autocvar_hud_powerup && sharpen_intensity > 0)
+		if(autocvar_hud_powerup && sharpen_intensity > 0 && autocvar_chase_active >= 0) // not while the event camera is active
 		{
 			sharpen_intensity = bound(0, sharpen_intensity, 5); // powerup warning time is 5 seconds, so fade the effect from there
 
