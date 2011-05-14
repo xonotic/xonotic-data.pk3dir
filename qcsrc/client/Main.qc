@@ -665,6 +665,7 @@ void Ent_ReadEntCS()
 	self.origin_z = ReadShort();
 	self.angles_y = ReadByte() * 360.0 / 256;
 	self.origin_z = self.angles_x = self.angles_z = 0;
+	entcs_receiver[self.sv_entnum] = self;
 
 	InterpolateOrigin_Note();
 }
