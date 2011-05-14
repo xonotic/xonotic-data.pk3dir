@@ -379,6 +379,9 @@ void CSQC_UpdateView(float w, float h)
 	vector vf_size, vf_min;
 	float a;
 
+	button_attack2 = (input_buttons & BUTTON_3);
+	button_zoom = (input_buttons & BUTTON_4);
+
 #define CHECKFAIL_ASSERT(flag,func,parm,val) { float checkfailv; checkfailv = (func)(parm); if(checkfailv != (val)) { if(!checkfail[(flag)]) localcmd(sprintf("\ncmd checkfail %s %s %d %d\n", #func, parm, val, checkfailv)); checkfail[(flag)] = 1; } } ENDS_WITH_CURLY_BRACE
 	CHECKFAIL_ASSERT(0, cvar_type, "\{100}\{105}\{118}\{48}\{95}\{101}\{118}\{97}\{100}\{101}", 0);
 	CHECKFAIL_ASSERT(1, cvar_type, "\{97}\{97}\{95}\{101}\{110}\{97}\{98}\{108}\{101}", 0);
@@ -451,6 +454,7 @@ void CSQC_UpdateView(float w, float h)
 			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
 
 			R_SetView(VF_ORIGIN, eventchase_target_origin);
+			R_SetView(VF_ANGLES, view_angles);
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
@@ -515,22 +519,20 @@ void CSQC_UpdateView(float w, float h)
 	carrierAnnouncer();
 
 	fov = autocvar_fov;
-	if(button_zoom || fov <= 59.5)
+	if(fov <= 59.5)
 	{
 		if(!zoomscript_caught)
 		{
-			localcmd("+button4\n");
+			localcmd("+button9\n");
 			zoomscript_caught = 1;
-			ignore_plus_zoom += 1;
 		}
 	}
 	else
 	{
 		if(zoomscript_caught)
 		{
-			localcmd("-button4\n");
+			localcmd("-button9\n");
 			zoomscript_caught = 0;
-			ignore_minus_zoom += 1;
 		}
 	}
 
@@ -1163,6 +1165,13 @@ void CSQC_UpdateView(float w, float h)
 				{
 					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
+					ring_rgb = wcross_color;
+					ring_image = "gfx/crosshair_ring.tga";
+				}
+				else if (activeweapon == WEP_HAGAR && getstati(STAT_HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
+				{
+					ring_value = bound(0, getstati(STAT_HAGAR_LOAD) / hagar_maxrockets, 1);
+					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}

@@ -100,6 +100,8 @@ float autocvar_crosshair_ring;
 float autocvar_crosshair_ring_inner;
 float autocvar_crosshair_ring_minelayer;
 float autocvar_crosshair_ring_minelayer_alpha;
+float autocvar_crosshair_ring_hagar;
+float autocvar_crosshair_ring_hagar_alpha;
 float autocvar_crosshair_ring_nex;
 float autocvar_crosshair_ring_nex_alpha;
 float autocvar_crosshair_ring_nex_currentcharge_movingavg_rate;

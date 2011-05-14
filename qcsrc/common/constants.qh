@@ -63,6 +63,7 @@ const float TE_CSQC_NOTIFY = 112;
 const float TE_CSQC_WEAPONCOMPLAIN = 113;
 const float TE_CSQC_NEX_SCOPE = 116;
 const float TE_CSQC_MINELAYER_MAXMINES = 117;
+const float TE_CSQC_HAGAR_MAXROCKETS = 118;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -319,6 +320,7 @@ const float STAT_NEX_CHARGEPOOL = 53;
 const float STAT_HIT_TIME = 54;
 const float STAT_TYPEHIT_TIME = 55;
 const float STAT_LAYED_MINES = 56;
+const float STAT_HAGAR_LOAD = 57;
 
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
@@ -634,6 +636,7 @@ float WR_RELOAD         = 9; // (SVQC) does not need to do anything
 float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
 float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
 float WR_SWITCHABLE	= 12; // (CSQC) impact effect
+float WR_PLAYERDEATH    = 13; // (SVQC) does not need to do anything
 
 float HUD_PANEL_WEAPONS		= 0;
 float HUD_PANEL_AMMO		= 1;

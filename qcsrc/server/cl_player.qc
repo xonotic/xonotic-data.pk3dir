@@ -188,6 +188,7 @@ void player_setupanimsformodel()
 	self.anim_forwardleft = '20 1 1';
 	self.anim_backright = '21 1 1';
 	self.anim_backleft  = '22 1 1';
+	self.anim_melee = '23 1 1';
 	animparseerror = FALSE;
 	animfilename = strcat(self.model, ".animinfo");
 	animfile = fopen(animfilename, FILE_READ);
@@ -214,6 +215,7 @@ void player_setupanimsformodel()
 		self.anim_forwardleft  = animparseline(animfile);
 		self.anim_backright    = animparseline(animfile);
 		self.anim_backleft     = animparseline(animfile);
+		self.anim_melee	       = animparseline(animfile);
 		fclose(animfile);
 
 		// derived anims
@@ -625,6 +627,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		frag_inflictor = inflictor;
 		frag_target = self;
 		MUTATOR_CALLHOOK(PlayerDies);
+		weapon_action(self.weapon, WR_PLAYERDEATH);
 
 		if(self.flagcarried)
 		{

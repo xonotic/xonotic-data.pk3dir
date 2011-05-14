@@ -91,10 +91,6 @@ void CSQC_Init(void)
 	registercmd("hud_save");
 	//registercmd("menu_action");
 
-	registercmd("+button3");
-	registercmd("-button3");
-	registercmd("+button4");
-	registercmd("-button4");
 	registercmd("+showscores");registercmd("-showscores");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
 
@@ -373,29 +369,6 @@ float CSQC_ConsoleCommand(string strMessage)
 		else
 			HUD_Panel_ExportCfg(argv(1));
 		return true;
-	} else if(strCmd == "+button4") { // zoom
-		// return false, because the message shall be sent to the server anyway (for demos/speccing)
-		if(ignore_plus_zoom)
-		{
-			--ignore_plus_zoom;
-			return false;
-		}
-		button_zoom = 1;
-		return true;
-	} else if(strCmd == "-button4") { // zoom
-		if(ignore_minus_zoom)
-		{
-			--ignore_minus_zoom;
-			return false;
-		}
-		button_zoom = 0;
-		return true;
-	} else if(strCmd == "+button3") { // secondary
-		button_attack2 = 1;
-		return false;
-	} else if(strCmd == "-button3") { // secondary
-		button_attack2 = 0;
-		return false;
 	} else if(strCmd == "+showscores") {
 		scoreboard_showscores = true;
 		return true;
@@ -725,7 +698,8 @@ void Ent_ReadPlayerScore()
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 	if(!isNew && n != self.sv_entnum)
 	{
-		print(_("A CSQC entity changed its owner!\n"));
+		//print(_("A CSQC entity changed its owner!\n"));
+		print(sprintf(_("A CSQC entity changed its owner! (edict: %d, classname: %s)\n"), num_for_edict(self), self.classname));
 		isNew = true;
 		Ent_Remove();
 		self.enttype = ENT_CLIENT_SCORES;
@@ -795,10 +769,6 @@ void Ent_ReadTeamScore()
 		}
 
 	HUD_UpdateTeamPos(o);
-}
-
-void Net_Reset()
-{
 }
 
 void Ent_ClientData()
@@ -983,7 +953,8 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 	if(self.enttype)
 		if(t != self.enttype)
 		{
-			print(_("A CSQC entity changed its type!\n"));
+			//print(_("A CSQC entity changed its type!\n"));
+			print(sprintf(_("A CSQC entity changed its type! (edict: %d, classname: %s)\n"), num_for_edict(self), self.classname));
 			Ent_Remove();
 			bIsNewEntity = 1;
 		}
@@ -1022,7 +993,8 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_SHOWNAMES: Ent_ShowNames(); break;
 		default:
-			error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
+			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
+			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
 			break;
 	}
 
@@ -1143,6 +1115,8 @@ void Ent_Init()
 	serverflags = ReadByte();
 
 	minelayer_maxmines = ReadByte();
+
+	hagar_maxrockets = ReadByte();
 
 	g_trueaim_minrange = ReadCoord();
 

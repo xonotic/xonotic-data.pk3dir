@@ -620,16 +620,6 @@ void GetCvars(float f)
 	}
 }
 
-float fexists(string f)
-{
-    float fh;
-    fh = fopen(f, FILE_READ);
-    if (fh < 0)
-        return FALSE;
-    fclose(fh);
-    return TRUE;
-}
-
 void backtrace(string msg)
 {
     float dev, war;
@@ -1995,7 +1985,8 @@ float SUB_NoImpactCheck()
 	// these stop the projectile from moving, so...
 	if(trace_dphitcontents == 0)
 	{
-		dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
+		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
+		dprint(sprintf(_("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.origin)));
 		checkclient();
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
