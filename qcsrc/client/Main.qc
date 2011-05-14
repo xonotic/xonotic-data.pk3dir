@@ -654,6 +654,10 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
+void Ent_RemoveEntCS()
+{
+	entcs_receiver[self.sv_entnum] = world;
+}
 void Ent_ReadEntCS()
 {
 	InterpolateOrigin_Undo();
@@ -664,7 +668,9 @@ void Ent_ReadEntCS()
 	self.origin_y = ReadShort();
 	self.origin_z = ReadShort();
 	self.angles_y = ReadByte() * 360.0 / 256;
-	self.origin_z = self.angles_x = self.angles_z = 0;
+	self.angles_x = self.angles_z = 0;
+	entcs_receiver[self.sv_entnum] = self;
+	self.entremove = Ent_RemoveEntCS;
 
 	InterpolateOrigin_Note();
 }
