@@ -779,17 +779,6 @@ void shownames_think()
     self.nextthink = time;
 }
 
-float shownames_customize()
-{
-    if(self.owner.classname == "player") // only send players, no spectators!
-    if(self.owner != other) // no need to spam own info
-    if(vlen(other.origin - self.origin) < autocvar_sv_shownames_cull_distance) // distance cull
-    if((teams_matter && self.owner.team == other.team) || checkpvs(self.origin, other))
-        return TRUE;
-
-    return FALSE;
-}
-
 .float muted; // to be used by prvm_edictset server playernumber muted 1
 float Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol)
 // message "": do not say, just test flood control

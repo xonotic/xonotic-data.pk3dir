@@ -12,11 +12,7 @@ void Draw_ShowNames()
 
     if(self.sameteam || (!self.sameteam && autocvar_hud_shownames_enemies))
     {
-        string temporigin;
-        temporigin = getplayerkey(self.the_entnum-1, "TEMPHACK_origin");
-        if(temporigin == "")
-            return;
-        self.origin = stov(temporigin);
+        self.origin = getplayerorigin(self.the_entnum-1);
         self.origin_z += autocvar_hud_shownames_offset;
 
         if(!self.sameteam)
@@ -97,7 +93,7 @@ void Draw_ShowNames()
             o_z = 0;
 
             vector myPos, mySize;
-            mySize = (eX * autocvar_hud_shownames_aspect + eY) * autocvar_hud_shownames_height;
+            mySize = (eX * autocvar_hud_shownames_aspect + eY) * autocvar_hud_shownames_fontsize;
             myPos = o - '0.5 0 0' * mySize_x - '0 1 0' * mySize_y;
 
             // size scaling
@@ -107,44 +103,25 @@ void Draw_ShowNames()
             myPos_x += 0.5 * (mySize_x / resize - mySize_x);
             myPos_y += (mySize_y / resize - mySize_y);
 
-            vector iconpos, iconsize; // these determine icon position/size, if any
             vector namepos; // this is where the origin of the string
-            float namesize; // total area where we can draw the string
+            float namewidth;
 
-            iconpos = myPos;
+            namepos = myPos;
+            namewidth = mySize_x;
 
             if(autocvar_hud_shownames_status && teamplay)
             {
                 if(self.sameteam)
                 {
-                    iconsize = eX * 2 * mySize_y + eY * mySize_y;
-                    // "ghost" backgrounds
-                    drawpic_aspect_skin(iconpos, "health", '1 1 0' * iconsize_y, '0 0 0', a * 0.5, DRAWFLAG_NORMAL);
-                    drawpic_aspect_skin(iconpos + '0.5 0 0' * iconsize_x, "armor", '1 1 0' * iconsize_y, '0 0 0', a * 0.5, DRAWFLAG_NORMAL);
-
                     if(self.healthvalue > 0)
                     {
-                        drawsetcliparea(0, myPos_y + iconsize_y - iconsize_y * min(1, self.healthvalue/autocvar_hud_panel_healtharmor_maxhealth), vid_conwidth, myPos_y + iconsize_y);
-                        drawpic_aspect_skin(iconpos, "health", '1 1 0' * iconsize_y, '1 1 1', a, DRAWFLAG_NORMAL);
-                    }
+                        HUD_Panel_DrawProgressBar(namepos + '0 1 0' * autocvar_hud_shownames_fontsize * resize, eX * mySize_x + eY * resize * autocvar_hud_shownames_statusbar_height, "nametag_statusbar", self.healthvalue, 0, 0, '1 0 0', a, DRAWFLAG_NORMAL);
 
-                    if(self.armorvalue > 0)
-                    {
-                        drawsetcliparea(0, myPos_y + iconsize_y - iconsize_y * min(1, self.armorvalue/autocvar_hud_panel_healtharmor_maxarmor), vid_conwidth, myPos_y + iconsize_y);
-                        drawpic_aspect_skin(iconpos + '0.5 0 0' * iconsize_x, "armor", '1 1 0' * iconsize_y, '1 1 1', a, DRAWFLAG_NORMAL);
+                        if(self.armorvalue > 0)
+                            HUD_Panel_DrawProgressBar(namepos + '0 1 0' * autocvar_hud_shownames_fontsize * resize + eY * resize * autocvar_hud_shownames_statusbar_height, eX * mySize_x + eY * resize * autocvar_hud_shownames_statusbar_height, "nametag_statusbar", self.armorvalue, 0, 0, '0 1 0', a, DRAWFLAG_NORMAL);
                     }
-                    drawresetcliparea();
-                }
-                else if(autocvar_hud_shownames_status == 2)
-                {
-                    iconsize = eX * 2 * mySize_y + eY * mySize_y;
-                    drawpic_aspect_skin(iconpos, "health_unknown", '1 1 0' * iconsize_y, '0 0 0', a, DRAWFLAG_NORMAL);
-                    drawpic_aspect_skin(iconpos + '0.5 0 0' * iconsize_x, "armor_unknown", '1 1 0' * iconsize_y, '0 0 0', a, DRAWFLAG_NORMAL);
                 }
             }
-
-            namepos = myPos + eX * 2 * iconsize_y + eY * 0.5 * resize * (autocvar_hud_shownames_height - autocvar_hud_shownames_fontsize);
-            namesize = mySize_x - 2 * iconsize_y;
 
             string s;
             s = GetPlayerName(self.the_entnum-1);
@@ -152,13 +129,13 @@ void Draw_ShowNames()
                 s = playername(s, GetPlayerColor(self.the_entnum-1));
 
             drawfontscale = '1 1 0' * resize;
-            s = textShortenToWidth(s, namesize, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
+            s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
 
             float width;
             width = stringwidth(s, TRUE, '1 1 0' * autocvar_hud_shownames_fontsize);
 
-            if (width != namesize)
-                namepos_x += (namesize - width) / 2;
+            if (width != namewidth)
+                namepos_x += (namewidth - width) / 2;
             drawcolorcodedstring(namepos, s, '1 1 0' * autocvar_hud_shownames_fontsize, a, DRAWFLAG_NORMAL);
             drawfontscale = '1 1 0';
         }
