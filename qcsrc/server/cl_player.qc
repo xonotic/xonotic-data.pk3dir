@@ -787,7 +787,7 @@ void shownames_think()
         self.armorvalue = max(0, floor(self.owner.armorvalue));
         self.SendFlags |= 4;
     }
-    self.nextthink = time;
+    self.nextthink = time + autocvar_sv_shownames_delay;
 }
 
 float shownames_customize()
