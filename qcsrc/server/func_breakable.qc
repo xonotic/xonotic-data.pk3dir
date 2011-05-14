@@ -130,6 +130,7 @@ void func_breakable_behave_restore()
 	self.takedamage = DAMAGE_AIM;
 	self.event_damage = func_breakable_damage;
 	self.state = 0;
+	self.nextthink = 0; // cancel auto respawn
 	func_breakable_colormod();
 }
 
@@ -168,6 +169,12 @@ void func_breakable_destroy() {
 
 	if(self.cnt)
 		pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);
+
+	if(self.respawntime)
+	{
+		self.think = func_breakable_restore;
+		self.nextthink = time + self.respawntime + crandom() * self.respawntimejitter;
+	}
 
 	oldmsg = self.message;
 	self.message = "";
@@ -259,4 +266,9 @@ void spawnfunc_func_breakable() {
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
+}
+
+// for use in maps with a "model" key set
+void spawnfunc_misc_breakablemodel() {
+	spawnfunc_func_breakable();
 }

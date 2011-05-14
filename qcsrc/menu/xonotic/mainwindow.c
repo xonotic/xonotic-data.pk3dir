@@ -114,7 +114,11 @@ void MainWindow_configureMainWindow(entity me)
 	i = spawnXonoticHUDInfoMessagesDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
+	
+	i = spawnXonoticHUDPhysicsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
 	me.screenshotViewerDialog = i = spawnXonoticScreenshotViewerDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);

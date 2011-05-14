@@ -328,12 +328,27 @@ entity SelectSpawnPoint (float anypoint)
 	if(anypoint)
 		teamcheck = -1;
 	else if(have_team_spawns > 0)
-		teamcheck = self.team; // MUST be team
-	else if(have_team_spawns == 0 && have_noteam_spawns)
+	{
+		if(have_team_spawns_forteam[self.team] == 0)
+		{
+			// we request a spawn for a team, and we have team
+			// spawns, but that team has no spawns?
+			if(have_team_spawns[0])
+				// try noteam spawns
+				teamcheck = 0;
+			else
+				// if not, any spawn has to do
+				teamcheck = -1;
+		}
+		else
+			teamcheck = self.team; // MUST be team
+	}
+	else if(have_team_spawns == 0 && have_team_spawns[0])
 		teamcheck = 0; // MUST be noteam
 	else
 		teamcheck = -1;
 		// if we get here, we either require team spawns but have none, or we require non-team spawns and have none; use any spawn then
+
 
 	// get the list of players
 	playerlist = findchain(classname, "player");
@@ -1064,6 +1079,7 @@ void PutClientInServer (void)
 			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
 				self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 		}
+		self.weapon_forbidchange = FALSE;
 
 		oldself = self;
 		self = spot;
@@ -1121,6 +1137,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
+	WriteByte(MSG_ENTITY, autocvar_g_balance_hagar_secondary_load_max); // hagar max loadable rockets
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
 	return TRUE;
 }
@@ -1508,6 +1525,7 @@ Called when a client connects to the server
 string ColoredTeamName(float t);
 void DecodeLevelParms (void);
 //void dom_player_join_team(entity pl);
+void set_dom_state(entity e);
 void ClientConnect (void)
 {
 	float t;
@@ -1524,7 +1542,7 @@ void ClientConnect (void)
 	DecodeLevelParms();
 
 #ifdef WATERMARK
-	sprint(self, strcat("^4SVQC Build information: ", WATERMARK(), "\n"));
+	sprint(self, strcat("^4SVQC Build information: ^1", WATERMARK(), "\n"));
 #endif
 
 	self.classname = "player_joining";
@@ -1749,9 +1767,19 @@ void ClientConnect (void)
 	else if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
 
+	if (g_domination)
+		set_dom_state(self);
+
 	CheatInitClient();
 
 	PlayerStats_AddPlayer(self);
+
+    self.shownames = spawn();
+    self.shownames.owner = self;
+    self.shownames.think = shownames_think;
+    self.shownames.nextthink = time;
+	self.shownames.customizeentityforclient = shownames_customize;
+    Net_LinkEntity(self.shownames, FALSE, 0, SendEntity_ShowNames);
 }
 
 /*
@@ -1850,6 +1878,8 @@ void ClientDisconnect (void)
 
 	self.playerid = 0;
 	ReadyCount();
+
+    remove(self.shownames);
 
 	// free cvars
 	GetCvars(-1);
@@ -2369,6 +2399,7 @@ void SpectateCopy(entity spectatee) {
 	self.weapon = spectatee.weapon;
 	self.nex_charge = spectatee.nex_charge;
 	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
+	self.hagar_load = spectatee.hagar_load;
 	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;
@@ -2614,6 +2645,8 @@ void() nexball_setstatus;
 .float items_added;
 void PlayerPreThink (void)
 {
+	WarpZone_PlayerPhysics_FixVAngle();
+
 	self.stat_game_starttime = game_starttime;
 	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
@@ -2698,16 +2731,6 @@ void PlayerPreThink (void)
 			return;					// the think tics
 		}
 
-		if(self.teleport_time)
-		if(time > self.teleport_time)
-		{
-			self.teleport_time = 0;
-			self.effects = self.effects - (self.effects & EF_NODRAW);
-		}
-
-		if(frametime > 0) // don't do this in cl_movement frames, just in server ticks
-			UpdateSelectedPlayer();
-
 		//don't allow the player to turn around while game is paused!
 		if(timeoutStatus == 2) {
 			self.v_angle = self.lastV_angle;
@@ -2733,7 +2756,26 @@ void PlayerPreThink (void)
 					self.glowmod_z = -1;
 			}
 			else
+			{
+				// set weapon and player glowmod
 				self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+
+				if(self.weapon == WEP_NEX && autocvar_g_balance_nex_charge)
+				{
+					self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+					self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+					self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+
+					if(self.nex_charge > autocvar_g_balance_nex_charge_animlimit)
+					{
+						self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+						self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+						self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+					}
+				}
+				else
+					self.weaponentity_glowmod = self.glowmod;
+			}
 			player_powerups();
 		}
 
@@ -2918,7 +2960,7 @@ void PlayerPreThink (void)
 	}
 
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_SNIPERRIFLE && autocvar_g_balance_sniperrifle_secondary == 0));
+		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_SNIPERRIFLE && autocvar_g_balance_sniperrifle_secondary == 0));
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;

@@ -63,7 +63,7 @@ void CSQC_Init(void)
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print(sprintf(_("^4CSQC Build information: %s\n"), WATERMARK()));
+	print(sprintf(_("^4CSQC Build information: ^1%s\n"), WATERMARK()));
 #endif
 
 	float i;
@@ -91,10 +91,6 @@ void CSQC_Init(void)
 	registercmd("hud_save");
 	//registercmd("menu_action");
 
-	registercmd("+button3");
-	registercmd("-button3");
-	registercmd("+button4");
-	registercmd("-button4");
 	registercmd("+showscores");registercmd("-showscores");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
 
@@ -173,7 +169,9 @@ void CSQC_Init(void)
 	minimapname = strzone(minimapname);
 
 	WarpZone_Init();
+
 	hud_configure_prev = -1;
+	tab_panel = -1;
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -202,6 +200,10 @@ void CSQC_Shutdown(void)
 
 	if(camera_active)
 		cvar_set("chase_active",ftos(chase_active_backup));
+
+	// unset the event chasecam's chase_active
+	if(autocvar_chase_active < 0)
+		cvar_set("chase_active", "0");
 
 	if not(isdemo())
 	{
@@ -367,29 +369,6 @@ float CSQC_ConsoleCommand(string strMessage)
 		else
 			HUD_Panel_ExportCfg(argv(1));
 		return true;
-	} else if(strCmd == "+button4") { // zoom
-		// return false, because the message shall be sent to the server anyway (for demos/speccing)
-		if(ignore_plus_zoom)
-		{
-			--ignore_plus_zoom;
-			return false;
-		}
-		button_zoom = 1;
-		return true;
-	} else if(strCmd == "-button4") { // zoom
-		if(ignore_minus_zoom)
-		{
-			--ignore_minus_zoom;
-			return false;
-		}
-		button_zoom = 0;
-		return true;
-	} else if(strCmd == "+button3") { // secondary
-		button_attack2 = 1;
-		return false;
-	} else if(strCmd == "-button3") { // secondary
-		button_attack2 = 0;
-		return false;
 	} else if(strCmd == "+showscores") {
 		scoreboard_showscores = true;
 		return true;
@@ -615,6 +594,7 @@ void GameCommand(string msg)
             vote_prev = 0;
             cvar_set("cl_allow_uid2name", "1");
             vote_change = -9999;
+			uid2name_dialog = 0;
         }
         else
         {
@@ -629,6 +609,7 @@ void GameCommand(string msg)
             vote_prev = 0;
             cvar_set("cl_allow_uid2name", "0");
             vote_change = -9999;
+			uid2name_dialog = 0;
         }
         else
         {
@@ -717,7 +698,8 @@ void Ent_ReadPlayerScore()
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 	if(!isNew && n != self.sv_entnum)
 	{
-		print(_("A CSQC entity changed its owner!\n"));
+		//print(_("A CSQC entity changed its owner!\n"));
+		print(sprintf(_("A CSQC entity changed its owner! (edict: %d, classname: %s)\n"), num_for_edict(self), self.classname));
 		isNew = true;
 		Ent_Remove();
 		self.enttype = ENT_CLIENT_SCORES;
@@ -789,10 +771,6 @@ void Ent_ReadTeamScore()
 	HUD_UpdateTeamPos(o);
 }
 
-void Net_Reset()
-{
-}
-
 void Ent_ClientData()
 {
 	float f;
@@ -830,6 +808,15 @@ void Ent_ClientData()
 		// clear race stuff
 		race_laptime = 0;
 		race_checkpointtime = 0;
+	}
+	if (autocvar_hud_panel_healtharmor_progressbar_gfx)
+	{
+		if ( (spectatee_status == -1 && newspectatee_status > 0) //before observing, now spectating
+		  || (spectatee_status > 0 && newspectatee_status > 0 && spectatee_status != newspectatee_status) //changed spectated player
+		)
+			prev_p_health = -1;
+		else if(spectatee_status && !newspectatee_status) //before observing/spectating, now playing
+			prev_health = -1;
 	}
 	spectatee_status = newspectatee_status;
 }
@@ -903,6 +890,41 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
+void Ent_ShowNames()
+{
+    float sf;
+
+    // entity init, TODO can this be done only once somehow?
+    self.the_entnum = ReadByte(); // TODO: fixme to only send once somehow
+    self.draw2d = Draw_ShowNames;
+    //self.movetype = MOVETYPE_FLY; // movetype needed so we can traceline?
+    self.mins = '-20 -20 -24';
+    self.maxs = '20 20 45';
+    self.classname = "shownames_tag";
+
+    sf = ReadByte();
+
+    if(sf & 1)
+    {
+        self.origin_x = ReadShort();
+        self.origin_y = ReadShort();
+        self.origin_z = ReadShort();
+    }
+    if(sf & 2)
+    {
+        self.healthvalue = ReadByte();
+    }
+    if(sf & 4)
+    {
+        self.armorvalue = ReadByte();
+    }
+
+    if(sf & 128) // same team
+        self.sameteam = TRUE;
+    else
+        self.sameteam = FALSE;
+}
+
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void Ent_RadarLink();
@@ -931,7 +953,8 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 	if(self.enttype)
 		if(t != self.enttype)
 		{
-			print(_("A CSQC entity changed its type!\n"));
+			//print(_("A CSQC entity changed its type!\n"));
+			print(sprintf(_("A CSQC entity changed its type! (edict: %d, classname: %s)\n"), num_for_edict(self), self.classname));
 			Ent_Remove();
 			bIsNewEntity = 1;
 		}
@@ -962,13 +985,16 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_TUBANOTE: Ent_TubaNote(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE: WarpZone_Read(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE_CAMERA: WarpZone_Camera_Read(bIsNewEntity); break;
+		case ENT_CLIENT_WARPZONE_TELEPORTED: WarpZone_Teleported_Read(bIsNewEntity); break;
 		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
 		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
+		case ENT_CLIENT_SHOWNAMES: Ent_ShowNames(); break;
 		default:
-			error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
+			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
+			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
 			break;
 	}
 
@@ -998,15 +1024,6 @@ void CSQC_Ent_Remove()
 
 void Gamemode_Init()
 {
-	if(gametype == GAME_ONSLAUGHT) {
-		print(strcat("Using ", minimapname, " as minimap.\n"));
-		precache_pic("gfx/ons-cp-neutral.tga");
-		precache_pic("gfx/ons-cp-red.tga");
-		precache_pic("gfx/ons-cp-blue.tga");
-		precache_pic("gfx/ons-frame.tga");
-		precache_pic("gfx/ons-frame-team.tga");
-	}
-
 	if not(isdemo())
 	{
 		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), "\n");
@@ -1098,6 +1115,8 @@ void Ent_Init()
 	serverflags = ReadByte();
 
 	minelayer_maxmines = ReadByte();
+
+	hagar_maxrockets = ReadByte();
 
 	g_trueaim_minrange = ReadCoord();
 
@@ -1413,7 +1432,7 @@ string getcommandkey(string text, string command)
 	string keys;
 	float n, j, k, l;
 
-	if (!hud_showbinds)
+	if (!autocvar_hud_showbinds)
 		return text;
 
 	keys = db_get(binddb, command);
@@ -1431,7 +1450,7 @@ string getcommandkey(string text, string command)
 					keys = strcat(keys, ", ", keynumtostring(k));
 
 				++l;
-				if (hud_showbinds_limit > 0 && hud_showbinds_limit >= l) break;
+				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit >= l) break;
 			}
 
 		}
@@ -1439,12 +1458,12 @@ string getcommandkey(string text, string command)
 	}
 
 	if ("" == keys) {
-		if (hud_showbinds > 1)
+		if (autocvar_hud_showbinds > 1)
 			return sprintf(_("%s (not bound)"), text);
 		else
 			return text;
 	}
-	else if (hud_showbinds > 1)
+	else if (autocvar_hud_showbinds > 1)
 		return sprintf(_("%s (%s)"), text, keys);
 	else
 		return keys;

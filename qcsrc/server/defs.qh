@@ -2,16 +2,17 @@
 
 float require_spawnfunc_prefix; // if this float exists, only functions with spawnfunc_ name prefix qualify as spawn functions
 
-#define BUTTON_ATCK   button0
-#define BUTTON_JUMP   button2
-#define BUTTON_ATCK2  button3
-#define BUTTON_ZOOM   button4
-#define BUTTON_CROUCH button5
-#define BUTTON_HOOK   button6
-#define BUTTON_INFO   button7
-#define BUTTON_CHAT   buttonchat
-#define BUTTON_USE    buttonuse
-#define BUTTON_DRAG   button8
+#define BUTTON_ATCK       button0
+#define BUTTON_JUMP       button2
+#define BUTTON_ATCK2      button3
+#define BUTTON_ZOOM       button4
+#define BUTTON_CROUCH     button5
+#define BUTTON_HOOK       button6
+#define BUTTON_INFO       button7
+#define BUTTON_CHAT       buttonchat
+#define BUTTON_USE        buttonuse
+#define BUTTON_DRAG       button8
+#define BUTTON_ZOOMSCRIPT button9
 
 // Globals
 
@@ -147,6 +148,7 @@ float maxclients;
 .vector anim_forwardleft; // player running forward and left
 .vector anim_backright; // player running backward and right
 .vector anim_backleft; // player running back and left
+.vector anim_melee; // player doing the melee action
 
 // weapon animation vectors:
 .vector anim_fire1;
@@ -208,6 +210,7 @@ void w_clear();
 void w_ready();
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
 .float weapon_nextthink;
+.float weapon_forbidchange;
 .void() weapon_think;
 
 //float	PLAYER_WEAPONSELECTION_DELAY = );
@@ -310,7 +313,6 @@ float default_weapon_alpha;
 .float cvar_cl_handicap;
 .float cvar_cl_playerdetailreduction;
 .float cvar_scr_centertime;
-.float cvar_cl_shownames;
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];
@@ -362,15 +364,6 @@ float W_AmmoItemCode(float wpn);
 float W_WeaponBit(float wpn);
 string W_Name(float weaponid);
 
-void UpdateSelectedPlayer();
-void ClearSelectedPlayer();
-.entity selected_player;
-.entity last_selected_player;
-.float selected_player_time; // when this player has been selected
-.float selected_player_count; // how long this player has been directly pointed to
-.float selected_player_display_needs_update; // are regular updates necessary? (health)
-.float selected_player_display_timeout; // when the selection will time out
-
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
@@ -410,7 +403,7 @@ float TemporaryDB;
 
 float some_spawn_has_been_used;
 float have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
-float have_noteam_spawns; // 0 = no no-team spawns, 1 = no-team spawns exist
+float have_team_spawns_forteam[17]; // 0 = this team has no spawns, 1 = this team has spawns; team 0 is the "no-team"
 
 // set when showing a kill countdown
 .entity killindicator;
@@ -658,6 +651,8 @@ string deathmessage;
 .float nex_charge_rottime;
 .float nex_chargepool_ammo;
 
+.float hagar_load;
+
 float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
 
 float serverflags;
@@ -669,3 +664,6 @@ float serverflags;
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
+
+.entity shownames;
+void shownames_think();

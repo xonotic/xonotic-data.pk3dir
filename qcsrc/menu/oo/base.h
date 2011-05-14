@@ -2,6 +2,7 @@
 entity Object_vtbl;
 .string vtblname;
 .entity vtblbase;
+// THIS LINE INTENTIONALLY LEFT BLANK
 entity spawnVtbl(entity e, entity b)
 {
 	entity v;
