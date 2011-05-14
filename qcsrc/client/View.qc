@@ -606,10 +606,6 @@ void CSQC_UpdateView(float w, float h)
 	// Draw the Engine Status Bar (the default Quake HUD)
 	R_SetView(VF_DRAWENGINEHUD, 0);
 
-	// fetch this one only once per frame
-	hud_showbinds = autocvar_hud_showbinds;
-	hud_showbinds_limit = autocvar_hud_showbinds_limit;
-
 	// Update the mouse position
 	/*
 	   mousepos_x = vid_conwidth;
@@ -1605,7 +1601,6 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 	}
 
 }
-
 
 void CSQC_common_hud(void)
 {

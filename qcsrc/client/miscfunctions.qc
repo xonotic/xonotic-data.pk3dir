@@ -375,6 +375,33 @@ string ColorTranslateRGB(string s)
 		return s;
 }
 
+string Team_ColorCode(float teamid)
+{
+    if (teamid == COLOR_TEAM1)
+        return "^1";
+    else if (teamid == COLOR_TEAM2)
+        return "^4";
+    else if (teamid == COLOR_TEAM3)
+        return "^3";
+    else if (teamid == COLOR_TEAM4)
+        return "^6";
+    else
+        return "^7";
+}
+
+// decolorizes and team colors the player name when needed
+string playername(string thename, float teamid)
+{
+    string t;
+    if (teamplay)
+    {
+        t = Team_ColorCode(teamid);
+        return strcat(t, strdecolorize(thename));
+    }
+    else
+        return strdecolorize(thename);
+}
+
 float cvar_or(string cv, float v)
 {
 	string s;
@@ -454,23 +481,23 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
 var float _drawpic_imgaspect;
-var float _drawpic_aspect;
 var vector _drawpic_imgsize;
 var vector _drawpic_sz;
-var vector _drawpic_oldsz;
+var float _drawpic_oldsz;
 var string _drawpic_picpath;
 #define drawpic_aspect(pos,pic,mySize,color,alpha,drawflag)\
 	do {\
 		_drawpic_imgsize = drawgetimagesize(pic);\
 		_drawpic_imgaspect = _drawpic_imgsize_x/_drawpic_imgsize_y;\
-		_drawpic_oldsz = _drawpic_sz = mySize;\
-		_drawpic_aspect = _drawpic_sz_x/_drawpic_sz_y;\
-		if(_drawpic_aspect > _drawpic_imgaspect) {\
+		_drawpic_sz = mySize;\
+		if(_drawpic_sz_x/_drawpic_sz_y > _drawpic_imgaspect) {\
+			_drawpic_oldsz = _drawpic_sz_x;\
 			_drawpic_sz_x = _drawpic_sz_y * _drawpic_imgaspect;\
-			drawpic(pos + eX * (_drawpic_oldsz_x - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
+			drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
 		} else {\
+			_drawpic_oldsz = _drawpic_sz_y;\
 			_drawpic_sz_y = _drawpic_sz_x / _drawpic_imgaspect;\
-			drawpic(pos + eY * (_drawpic_oldsz_y - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
+			drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
 		}\
 	} while(0)
 
@@ -509,49 +536,29 @@ void drawpic_aspect_skin_expanding_two(vector position, string pic, vector scale
 	drawpic_aspect_skin_expanding(position, pic, scale, rgb, alpha, flag, fadelerp);
 	drawpic_skin(position, pic, scale, rgb, alpha * fadelerp, flag);
 }
+#define SET_POS_AND_SZ_Y_ASPECT(allow_colors)\
+	float textaspect, oldsz;\
+	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz_y) / sz_y;\
+	if(sz_x/sz_y > textaspect) {\
+		oldsz = sz_x;\
+		sz_x = sz_y * textaspect;\
+		pos_x += (oldsz - sz_x) * 0.5;\
+	} else {\
+		oldsz = sz_y;\
+		sz_y = sz_x / textaspect; \
+		pos_y += (oldsz - sz_y) * 0.5;\
+	}
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect(vector pos, string text, vector sz, vector color, float alpha, float drawflag) {
-	vector textsize;
-	textsize = eX * stringwidth(text, FALSE, '1 1 1' * sz_y) + eY * sz_y;
-
-	float textaspect;
-	textaspect = textsize_x/textsize_y;
-
-	vector oldsz;
-	oldsz = sz;
-	float aspect;
-	aspect = sz_x/sz_y;
-
-	if(aspect > textaspect) {
-		sz_x = sz_y * textaspect;
-		drawstring(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag);
-	} else {
-		sz_y = sz_x / textaspect; 
-		drawstring(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag);
-	}
+	SET_POS_AND_SZ_Y_ASPECT(FALSE)
+	drawstring(pos, text, '1 1 0' * sz_y, color, alpha, drawflag);
 }
 
 // drawstring wrapper to draw a colorcodedstring as large as possible with preserved aspect ratio into a box
 void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float alpha, float drawflag) {
-	vector textsize;
-	textsize = eX * stringwidth(text, TRUE, '1 1 1' * sz_y) + eY * sz_y;
-
-	float textaspect;
-	textaspect = textsize_x/textsize_y;
-
-	vector oldsz;
-	oldsz = sz;
-	float aspect;
-	aspect = sz_x/sz_y;
-
-	if(aspect > textaspect) {
-		sz_x = sz_y * textaspect;
-		drawcolorcodedstring(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag);
-	} else {
-		sz_y = sz_x / textaspect; 
-		drawcolorcodedstring(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag);
-	}
+	SET_POS_AND_SZ_Y_ASPECT(TRUE)
+	drawcolorcodedstring(pos, text, '1 1 0' * sz_y, alpha, drawflag);
 }
 
 vector drawfontscale;
@@ -571,24 +578,8 @@ void drawstring_expanding(vector position, string text, vector scale, vector rgb
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect_expanding(vector pos, string text, vector sz, vector color, float alpha, float drawflag, float fadelerp) {
-	vector textsize;
-	textsize = eX * stringwidth(text, FALSE, '1 1 1' * sz_y) + eY * sz_y;
-
-	float textaspect;
-	textaspect = textsize_x/textsize_y;
-
-	vector oldsz;
-	oldsz = sz;
-	float aspect;
-	aspect = sz_x/sz_y;
-
-	if(aspect > textaspect) {
-		sz_x = sz_y * textaspect;
-		drawstring_expanding(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag, fadelerp);
-	} else {
-		sz_y = sz_x / textaspect; 
-		drawstring_expanding(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag, fadelerp);
-	}
+	SET_POS_AND_SZ_Y_ASPECT(FALSE)
+	drawstring_expanding(pos, text, '1 1 0' * sz_y, color, alpha, drawflag, fadelerp);
 }
 
 void drawcolorcodedstring_expanding(vector position, string text, vector scale, float alpha, float flag, float fadelerp)
@@ -603,24 +594,8 @@ void drawcolorcodedstring_expanding(vector position, string text, vector scale, 
 }
 
 void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, float alpha, float drawflag, float fadelerp) {
-	vector textsize;
-	textsize = eX * stringwidth(text, TRUE, '1 1 1' * sz_y) + eY * sz_y;
-	
-	float textaspect;
-	textaspect = textsize_x/textsize_y;
-
-	vector oldsz;
-	oldsz = sz;
-	float aspect;
-	aspect = sz_x/sz_y;
-
-	if(aspect > textaspect) {
-		sz_x = sz_y * textaspect;
-		drawcolorcodedstring_expanding(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag, fadelerp);
-	} else {
-		sz_y = sz_x / textaspect; 
-		drawcolorcodedstring_expanding(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag, fadelerp);
-	}
+	SET_POS_AND_SZ_Y_ASPECT(TRUE)
+	drawcolorcodedstring_expanding(pos, text, '1 1 0' * sz_y, alpha, drawflag, fadelerp);
 }
 
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...
