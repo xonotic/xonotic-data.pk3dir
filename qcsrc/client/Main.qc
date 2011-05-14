@@ -767,10 +767,6 @@ void Ent_ReadTeamScore()
 	HUD_UpdateTeamPos(o);
 }
 
-void Net_Reset()
-{
-}
-
 void Ent_ClientData()
 {
 	float f;
