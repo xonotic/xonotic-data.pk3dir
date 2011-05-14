@@ -754,3 +754,15 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 		R_EndPolygon();
 	}
 }
+
+const vector GETPLAYERORIGIN_ERROR = '1123581321 2357111317 3141592653'; // way out of bounds for anything on the map
+vector getplayerorigin(float pl)
+{
+	string s;
+	s = getplayerkey(pl, "TEMPHACK_origin");
+	if(s != "")
+		return stov(s);
+	if(entcs_receiver[pl].classname == "entcs_receiver")
+		return entcs_receiver[pl].origin;
+	return GETPLAYERORIGIN_ERROR;
+}
