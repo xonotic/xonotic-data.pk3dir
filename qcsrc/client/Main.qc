@@ -897,6 +897,8 @@ void Ent_ShowNames()
     // entity init, TODO can this be done only once somehow?
     self.the_entnum = ReadByte(); // TODO: fixme to only send once somehow
     self.draw2d = Draw_ShowNames;
+	InterpolateOrigin_Undo();
+
     //self.movetype = MOVETYPE_FLY; // movetype needed so we can traceline?
     self.mins = '-20 -20 -24';
     self.maxs = '20 20 45';
@@ -923,6 +925,7 @@ void Ent_ShowNames()
         self.sameteam = TRUE;
     else
         self.sameteam = FALSE;
+	InterpolateOrigin_Note();
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
