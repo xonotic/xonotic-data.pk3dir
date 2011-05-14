@@ -759,10 +759,15 @@ const vector GETPLAYERORIGIN_ERROR = '1123581321 2357111317 3141592653'; // way 
 vector getplayerorigin(float pl)
 {
 	string s;
+	entity e;
+
 	s = getplayerkey(pl, "TEMPHACK_origin");
 	if(s != "")
 		return stov(s);
-	if(entcs_receiver[pl].classname == "entcs_receiver")
-		return entcs_receiver[pl].origin;
+
+	e = entcs_receiver[pl];
+	if(e)
+		return e.origin;
+
 	return GETPLAYERORIGIN_ERROR;
 }
