@@ -10,6 +10,9 @@ void Draw_ShowNames()
     if(!autocvar_hud_shownames)
         return;
 
+    if(self.the_entnum == player_localentnum && !autocvar_chase_active)
+        return;
+
     if(self.sameteam || (!self.sameteam && autocvar_hud_shownames_enemies))
     {
         self.origin = getplayerorigin(self.the_entnum-1);
