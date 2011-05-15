@@ -172,7 +172,7 @@ void Draw_ShowNames_All()
 		{
 			e.healthvalue = entcs.healthvalue;
 			e.armorvalue = entcs.armorvalue;
-			e.sameteam = (teamplay && (t == myteam));
+			e.sameteam = 1; /* (teamplay && (t == myteam)); */
 		}
 		else
 		{

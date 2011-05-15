@@ -683,10 +683,6 @@ void Ent_ReadEntCS()
 		self.healthvalue = ReadByte() * 10;
 	if(sf & 16)
 		self.armorvalue = ReadByte() * 10;
-	if(sf & 128) // same team
-		self.sameteam = TRUE;
-	else
-		self.sameteam = FALSE;
 
 	entcs_receiver[self.sv_entnum] = self;
 	self.entremove = Ent_RemoveEntCS;

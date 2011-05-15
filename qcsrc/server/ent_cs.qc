@@ -39,12 +39,6 @@ float entcs_customize()
 
 float entcs_send(entity to, float sf)
 {
-	// a simple safeguard, should not REALLY be needed
-	sf |= 128;
-	if(teams_matter && !radar_showennemies)
-		if(to.team != self.team)
-			sf &~= (8 | 16 | 128); // don't send h/a for enemies
-
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)
@@ -66,7 +60,7 @@ float entcs_send(entity to, float sf)
 
 void entcs_think()
 {
-	self.nextthink = time;
+	self.nextthink = time + 0.033333333333; // increase this to like 0.15 once the client can do smoothing
 
 	entity o;
 	o = self.owner;
