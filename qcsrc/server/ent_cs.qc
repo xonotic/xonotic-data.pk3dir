@@ -42,11 +42,17 @@ float entcs_send(entity to, float sf)
 	entity o;
 	o = self.owner;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
-	WriteByte(MSG_ENTITY, num_for_edict(o));
-	WriteShort(MSG_ENTITY, o.origin_x);
-	WriteShort(MSG_ENTITY, o.origin_y);
-	WriteShort(MSG_ENTITY, o.origin_z);
-	WriteByte(MSG_ENTITY, o.angles_y * 256.0 / 360);
+	WriteByte(MSG_ENTITY, sf);
+	if(sf & 1)
+		WriteByte(MSG_ENTITY, num_for_edict(o));
+	if(sf & 2)
+	{
+		WriteShort(MSG_ENTITY, o.origin_x);
+		WriteShort(MSG_ENTITY, o.origin_y);
+		WriteShort(MSG_ENTITY, o.origin_z);
+	}
+	if(sf & 4)
+		WriteByte(MSG_ENTITY, o.angles_y * 256.0 / 360);
 	return TRUE;
 };
 
@@ -57,11 +63,15 @@ void entcs_think()
 	entity o;
 	o = self.owner;
 
-	if(o.origin != self.origin || o.angles != self.angles)
+	if(o.origin != self.origin)
 	{
 		setorigin(self, o.origin);
+		self.SendFlags |= 2;
+	}
+	if(o.angles_y != self.angles_y)
+	{
 		self.angles = o.angles;
-		self.SendFlags |= 1;
+		self.SendFlags |= 4;
 	}
 };
 

@@ -660,15 +660,26 @@ void Ent_RemoveEntCS()
 }
 void Ent_ReadEntCS()
 {
+	float sf;
 	InterpolateOrigin_Undo();
 
 	self.classname = "entcs_receiver";
-	self.sv_entnum = ReadByte() - 1;
-	self.origin_x = ReadShort();
-	self.origin_y = ReadShort();
-	self.origin_z = ReadShort();
-	self.angles_y = ReadByte() * 360.0 / 256;
-	self.angles_x = self.angles_z = 0;
+	sf = ReadByte();
+
+	if(sf & 1)
+		self.sv_entnum = ReadByte() - 1;
+	if(sf & 2)
+	{
+		self.origin_x = ReadShort();
+		self.origin_y = ReadShort();
+		self.origin_z = ReadShort();
+	}
+	if(sf & 4)
+	{
+		self.angles_y = ReadByte() * 360.0 / 256;
+		self.angles_x = self.angles_z = 0;
+	}
+
 	entcs_receiver[self.sv_entnum] = self;
 	self.entremove = Ent_RemoveEntCS;
 
