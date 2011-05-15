@@ -35,7 +35,7 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 {
 	entity e, btn, slist;
 	slist = makeXonoticScreenshotList();
-	const float slist_height = 8;
+	const float slist_height = me.rows - 1;
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, "Filter:"));
 		me.TD(me, 1, 0.5, btn = makeXonoticButton("Clear", '0 0 0'));
@@ -56,11 +56,13 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 		me.TD(me, 1, me.columns, e = makeXonoticButton("Open in the viewer", '0 0 0'));
 			e.onClick = StartScreenshot_Click;
 			e.onClickEntity = slist;
+/*
 	me.TR(me);
 		me.TD(me, me.rows - me.currentRow, me.columns, e = makeXonoticScreenshotImage());
 			e.showTitle = 0;
 			me.screenshotImage = e;
 			slist.screenshotPreview = e;
 			slist.screenshotBrowserDialog = me;
+*/
 }
 #endif
