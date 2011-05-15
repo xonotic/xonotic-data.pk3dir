@@ -1,29 +1,40 @@
 #define spider_rocket_icon "gfx/vehicles/rocket_ico.tga"
 #define spider_rocket_targ "gfx/vehicles/target.tga"
 //#define SPIDER_CROSS "textures/spiderbot/cross.tga"
-#define SPIDER_CROSS "gfx/vehicles/sbot-xhair.tga"
-#define SPIDER_CROSS2 "gfx/vehicles/sbot-xhair2.tga"
+#define SPIDER_CROSS "gfx/vehicles/axh-special1.tga"
 
+/*
 #define axh1 "gfx/vehicles/sbot-xhair2.tga"
 #define axh2 "gfx/vehicles/sbot-xhair2.tga"
 #define axh3 "gfx/vehicles/sbot-xhair2.tga"
+*/
 
-#define spider_h "gfx/vehicles/hud_bg.tga"
-#define spider_b "gfx/vehicles/sbot.tga"
-#define spider_r "gfx/vehicles/sbot_rpods.tga"
-#define spider_g "gfx/vehicles/sbot_mguns.tga"
-#define spider_s "gfx/vehicles/shiled.tga"
-#define spider_a1 "gfx/vehicles/sb_rocket.tga"
-#define spider_a2 "gfx/vehicles/sb_bullets.tga"
+#define hud_bg "gfx/vehicles/frame.tga"
+#define hud_sh "gfx/vehicles/vh-shield.tga"
 
-#define raptor_h  "gfx/vehicles/hud_bg.tga"
-#define raptor_s  "gfx/vehicles/shiled.tga"
+#define hud_hp_bar "gfx/vehicles/bar_up_left.tga"
+#define hud_hp_ico "gfx/vehicles/health.tga"
+#define hud_sh_bar "gfx/vehicles/bar_dwn_left.tga"
+#define hud_sh_ico "gfx/vehicles/shield.tga"
 
-#define raptor_b  "gfx/vehicles/raptor.tga"
-#define raptor_g1 "gfx/vehicles/raptor_guns.tga"
-#define raptor_g2 "gfx/vehicles/raptor_bombs.tga"
-#define raptor_d  "gfx/vehicles/dropcross.tga"
-#define raptor_c  "gfx/vehicles/raptor_cross.tga"
+#define hud_ammo1_bar "gfx/vehicles/bar_up_right.tga"
+#define hud_ammo1_ico "gfx/vehicles/bullets.tga"
+#define hud_ammo2_bar "gfx/vehicles/bar_dwn_right.tga"
+#define hud_ammo2_ico "gfx/vehicles/rocket.tga"
+
+#define spider_ico  "gfx/vehicles/sbot.tga"
+#define spider_rkt  "gfx/vehicles/sbot_rpods.tga"
+#define spider_mgun "gfx/vehicles/sbot_mguns.tga"
+
+#define raptor_ico  "gfx/vehicles/raptor.tga"
+#define raptor_gun  "gfx/vehicles/raptor_guns.tga"
+#define raptor_bomb "gfx/vehicles/raptor_bombs.tga"
+#define raptor_drop "gfx/vehicles/axh-dropcross.tga"
+
+#define waki_ico "gfx/vehicles/waki.tga"
+#define waki_eng "gfx/vehicles/waki_e.tga"
+#define waki_gun "gfx/vehicles/waki_guns.tga"
+#define waki_rkt "gfx/vehicles/waki_rockets.tga"
 
 entity dropmark;
 
@@ -129,10 +140,12 @@ void Net_VehicleSetup()
             AuxiliaryXhair[2].axh_image   = "gfx/vehicles/axh-special1.tga";
             AuxiliaryXhair[2].axh_scale   = 0.5;
             break;
+
         case HUD_WAKIZASHI:
             AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-bracket.tga";
             AuxiliaryXhair[0].axh_scale   = 0.25;
             break;
+
         case HUD_RAPTOR:
             AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-cross.tga";
             AuxiliaryXhair[0].axh_scale   = 0.5;
@@ -143,6 +156,7 @@ void Net_VehicleSetup()
             AuxiliaryXhair[1].alpha       = 0.75;
             AuxiliaryXhair[1].axh_drawflag  = DRAWFLAG_NORMAL;
             break;
+
         case HUD_BUMBLEBEE:
             // Plasma cannons
             AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-ring.tga";
@@ -164,6 +178,7 @@ void Net_VehicleSetup()
 
 void CSQC_BUMBLE_HUD()
 {
+    /*
 	vector picsize, hudloc;
 
     // Fetch health & ammo stats
@@ -221,56 +236,106 @@ void CSQC_BUMBLE_HUD()
         picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
 
         drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_ADDITIVE);
-    }
+    */
 }
 
-
+float autocvar_cl_vehicles_hudscale;
 void CSQC_SPIDER_HUD()
 {
-	vector picsize, hudloc;
+    vector picsize, hudloc, pic2size, picloc;
+
+
 
     // Fetch health & ammo stats
 	HUD_GETSTATS
 
-    hudloc_y = 4;
-    hudloc_x = 4;
+    picsize = drawgetimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
+    hudloc_y = vid_conheight - picsize_y;
+    hudloc_x = vid_conwidth * 0.5 - picsize_x * 0.5;
 
-    picsize = drawgetimagesize(spider_h) * 0.5;
-    drawpic(hudloc, spider_h, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+    drawpic(hudloc, hud_bg, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 
-    picsize = drawgetimagesize(spider_a2) * 0.5;
-    drawpic(hudloc + '120 96  0', spider_a2, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+    //picsize = drawgetimagesize(spider_a2) * 0.5;
+    //drawpic(hudloc + '120 96  0', spider_a2, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 
-    drawstring(hudloc + '145 19  0', strcat(ftos(health), "%"),'15 15 0','0 1 0', 1, DRAWFLAG_NORMAL);
-    drawstring(hudloc + '175 34  0', strcat(ftos(shield), "%"),'15 15 0','0 0 1', 1, DRAWFLAG_NORMAL);
-    drawstring(hudloc + '136 102  0', strcat(ftos(ammo1), "%"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
+    //drawstring(hudloc + '145 19  0', strcat(ftos(health), "%"),'15 15 0','0 1 0', 1, DRAWFLAG_NORMAL);
+    //drawstring(hudloc + '175 34  0', strcat(ftos(shield), "%"),'15 15 0','0 0 1', 1, DRAWFLAG_NORMAL);
+    //drawstring(hudloc + '136 102  0', strcat(ftos(ammo1), "%"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
 
-    picsize = drawgetimagesize(spider_a1) * 0.85;
+    pic2size = drawgetimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
     if(ammo2 == 9)
     {
-        drawpic(hudloc + '132 54  0', spider_a1, picsize, '-1 -1 -1', 1, DRAWFLAG_NORMAL);
-        drawstring(hudloc + '179 69 0', strcat(ftos(reload2), "%"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
+        picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
+        drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '-1 -1 -1', 1, DRAWFLAG_NORMAL);
+        //drawstring(hudloc + '179 69 0', strcat(ftos(reload2), "%"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
     }
     else
     {
-        drawpic(hudloc + '132 54  0', spider_a1, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        drawstring(hudloc + '179 69  0', strcat(ftos(9 - ammo2), " / 8"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
+        picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
+        drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 1 1', 1, DRAWFLAG_NORMAL);
+        //drawstring(hudloc + '179 69  0', strcat(ftos(9 - ammo2), " / 8"),'14 14 0','1 1 0', 1, DRAWFLAG_NORMAL);
     }
-
-    picsize = drawgetimagesize(spider_b) * 0.5;
-    hudloc_y = 10.5;
-    hudloc_x = 10.5;
 
     ammo1  /= 100;
     shield /= 100;
     health /= 100;
     reload2 /= 100;
 
-    drawpic(hudloc, spider_s, picsize, '1 1 1', shield, DRAWFLAG_NORMAL);
-    drawpic(hudloc, spider_b, picsize, '0 1 0' * health + '1 0 0' * (1 - health), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc, spider_r, picsize, '1 1 1' * reload2 + '1 0 0' * (1 - reload2), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc, spider_g, picsize, '1 1 1' * ammo1 + '1 0 0' *  (1 - ammo1), 1, DRAWFLAG_NORMAL);
+    pic2size = drawgetimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale - 0.1);
+    picloc = picsize * 0.5 - pic2size * 0.5;
+    drawpic(hudloc + picloc, spider_ico, pic2size,  '1 1 1' * health  + '1 0 0' * (1 - health),     1, DRAWFLAG_NORMAL);
+    drawpic(hudloc + picloc, spider_rkt, pic2size,  '1 1 1' * reload2 + '1 0 0' * (1 - reload2),    1, DRAWFLAG_NORMAL);
+    drawpic(hudloc + picloc, spider_mgun, pic2size, '1 1 1' * ammo1   + '1 0 0' * (1 - ammo1),      1, DRAWFLAG_NORMAL);
+    drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
 
+
+    // Health icon & bar
+    picsize = drawgetimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
+    picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
+    drawpic(hudloc + picloc, hud_hp_ico, picsize, '0 1 0' * health + '1 0 0' * (1 - health), 1, DRAWFLAG_NORMAL);
+
+    picsize = drawgetimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
+    picloc = '69 69 0' * autocvar_cl_vehicles_hudscale;
+    //drawsetcliparea(0, 0, hudloc_x + (picsize_x * shield), vid_conheight);
+    drawpic(hudloc + picloc, hud_hp_bar, picsize, '1 1 1', health, DRAWFLAG_NORMAL);
+    //drawresetcliparea();
+
+    // Shield icon & bar
+    picloc = '40 136 0' * autocvar_cl_vehicles_hudscale;
+    picsize = drawgetimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
+    drawpic(hudloc + picloc, hud_sh_ico, picsize,'0.15 0.25 1' * shield + '0 0 0' * (1 - shield), 1, DRAWFLAG_NORMAL);
+
+    picsize = drawgetimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
+    picloc = '69 140 0' * autocvar_cl_vehicles_hudscale;
+    //drawsetcliparea(0, 0, hudloc_x + (picsize_x * shield), vid_conheight);
+    drawpic(hudloc + picloc, hud_sh_bar, picsize, '1 1 1', shield, DRAWFLAG_NORMAL);
+    //drawresetcliparea();
+
+
+    // Minigun ammo icon & bar
+    picsize = drawgetimagesize(hud_ammo1_ico) * autocvar_cl_vehicles_hudscale;
+    picloc = '664 60 0' * autocvar_cl_vehicles_hudscale;
+    drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 1 1' * ammo1 + '1 0 0' *  (1 - ammo1), 1, DRAWFLAG_NORMAL);
+
+    picsize = drawgetimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
+    picloc = '450 69 0' * autocvar_cl_vehicles_hudscale;
+    drawsetcliparea(picloc_x, picloc_y, hudloc_x + (picsize_x * ammo1), vid_conheight);
+    drawpic(hudloc + picloc, hud_ammo1_bar, picsize, '1 1 1', health, DRAWFLAG_NORMAL);
+    drawresetcliparea();
+
+
+    // Rocket ammo icon and bar
+    /*
+    picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
+    picsize = drawgetimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
+    drawpic(hudloc + picloc, hud_ammo2_ico, picsize, '1 1 1' * reload2 + '1 0 0' * (1 - reload2), 1, DRAWFLAG_NORMAL);
+    */
+
+    picsize = drawgetimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
+    picloc = '450 140 0' * autocvar_cl_vehicles_hudscale;
+    //drawsetcliparea(0, 0, hudloc_x + (picsize_x * shield), vid_conheight);
+    drawpic(hudloc + picloc, hud_ammo2_bar, picsize, '1 1 1', health, DRAWFLAG_NORMAL);
+    //drawresetcliparea();
 
 	if (scoreboard_showscores)
 	{
@@ -290,6 +355,7 @@ void CSQC_SPIDER_HUD()
 
 void CSQC_RAPTOR_HUD()
 {
+/*
 	if(autocvar_r_letterbox)
         return;
 
@@ -394,34 +460,18 @@ void CSQC_RAPTOR_HUD()
 		HUD_DrawScoreboard();
 		HUD_DrawCenterPrint();
 	}
-
+*/
 }
-
-#define waki_h "gfx/vehicles/hud_bg.tga"
-#define waki_b "gfx/vehicles/waki.tga"
-#define waki_e "gfx/vehicles/waki_e.tga"
-#define waki_g "gfx/vehicles/waki_guns.tga"
-#define waki_r "gfx/vehicles/waki_rockets.tga"
-#define waki_s "gfx/vehicles/shiled.tga"
-
-#define waki_a1 "gfx/vehicles/sb_rocket.tga"
-#define waki_a2 "gfx/vehicles/sb_cells.tga"
 
 void CSQC_WAKIZASHI_HUD()
 {
+/*
 	vector picsize, hudloc;
 
     picsize = drawgetimagesize(SPIDER_CROSS);
     picsize_x *= autocvar_cl_vehicle_spiderbot_cross_size;
     picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
     drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), SPIDER_CROSS, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_NORMAL);
-
-    /*
-    health  = min(getstatf(STAT_VEHICLESTAT_HEALTH),  1);
-	shield  = min(getstatf(STAT_VEHICLESTAT_SHIELD),  1);
-	energy  = min(getstatf(STAT_VEHICLESTAT_ENERGY),  1);
-	rockets = bound(0,getstatf(STAT_VEHICLESTAT_RELOAD1), 1);
-	*/
 
     HUD_GETSTATS
 
@@ -471,7 +521,7 @@ void CSQC_WAKIZASHI_HUD()
 		HUD_DrawScoreboard();
 		HUD_DrawCenterPrint();
 	}
-
+*/
 }
 
 void Vehicles_Precache()
