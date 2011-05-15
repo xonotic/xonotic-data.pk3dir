@@ -735,7 +735,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 }
 
-// sendflags use: 1 = origin, 2 = health (0 or 1 for dead/alive on enemies), 4 = armor, 0x80 = same team (includes health)
+// sendflags use: 1 = health (value is 0 or 1 for dead/alive on enemies), 2 = armor, 0x80 = same team (includes health)
 float SendEntity_ShowNames(entity to, float sendflags)
 {
     float the_health;
@@ -753,52 +753,29 @@ float SendEntity_ShowNames(entity to, float sendflags)
     WriteByte(MSG_ENTITY, sendflags);
     if(sendflags & 1)
     {
-        WriteShort(MSG_ENTITY, rint(self.origin_x));
-        WriteShort(MSG_ENTITY, rint(self.origin_y));
-        WriteShort(MSG_ENTITY, rint(self.origin_z));
-    }
-    if(sendflags & 2)
-    {
         WriteByte(MSG_ENTITY, the_health);
     }
-    if(sendflags & 4)
+    if(sendflags & 2)
     {
         WriteByte(MSG_ENTITY, self.armorvalue);
     }
     return TRUE;
 }
 
-const vector SHOWNAMES_ORIGIN_OFFSET = '0 0 48';
 void shownames_think()
 {
-    if(self.origin - SHOWNAMES_ORIGIN_OFFSET != self.owner.origin)
+    self.origin = self.owner.origin + '0 0 1' * 48;
+    if(self.health != max(0, ceil(self.owner.health/10)))
     {
-        setorigin(self, self.owner.origin + SHOWNAMES_ORIGIN_OFFSET);
+        self.health = max(0, ceil(self.owner.health/10));
         self.SendFlags |= 1;
     }
-    if(self.health != max(0, floor(self.owner.health)) || self.armorvalue != max(0, floor(self.owner.armorvalue)))
+    if(self.armorvalue != max(0, ceil(self.owner.armorvalue/10)))
     {
-        self.health = max(0, floor(self.owner.health));
-        self.armorvalue = max(0, floor(self.owner.armorvalue));
+        self.armorvalue = max(0, ceil(self.owner.armorvalue/10));
         self.SendFlags |= 2;
     }
-    if(self.armorvalue != max(0, floor(self.owner.armorvalue)))
-    {
-        self.armorvalue = max(0, floor(self.owner.armorvalue));
-        self.SendFlags |= 4;
-    }
     self.nextthink = time;
-}
-
-float shownames_customize()
-{
-    if(self.owner.classname == "player") // only send players, no spectators!
-    if(self.owner != other) // no need to spam own coordinates
-    if(vlen(other.origin - self.origin) < autocvar_sv_shownames_cull_distance) // distance cull
-    if(self.owner.team == other.team || (self.owner.team != other.team && checkpvs(self.origin, other)))
-        return TRUE;
-
-    return FALSE;
 }
 
 .float muted; // to be used by prvm_edictset server playernumber muted 1

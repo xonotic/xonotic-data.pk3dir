@@ -660,15 +660,26 @@ void Ent_RemoveEntCS()
 }
 void Ent_ReadEntCS()
 {
+	float sf;
 	InterpolateOrigin_Undo();
 
 	self.classname = "entcs_receiver";
-	self.sv_entnum = ReadByte() - 1;
-	self.origin_x = ReadShort();
-	self.origin_y = ReadShort();
-	self.origin_z = ReadShort();
-	self.angles_y = ReadByte() * 360.0 / 256;
-	self.angles_x = self.angles_z = 0;
+	sf = ReadByte();
+
+	if(sf & 1)
+		self.sv_entnum = ReadByte() - 1;
+	if(sf & 2)
+	{
+		self.origin_x = ReadShort();
+		self.origin_y = ReadShort();
+		self.origin_z = ReadShort();
+	}
+	if(sf & 4)
+	{
+		self.angles_y = ReadByte() * 360.0 / 256;
+		self.angles_x = self.angles_z = 0;
+	}
+
 	entcs_receiver[self.sv_entnum] = self;
 	self.entremove = Ent_RemoveEntCS;
 
@@ -903,26 +914,21 @@ void Ent_ShowNames()
     // entity init, TODO can this be done only once somehow?
     self.the_entnum = ReadByte(); // TODO: fixme to only send once somehow
     self.draw2d = Draw_ShowNames;
+
     //self.movetype = MOVETYPE_FLY; // movetype needed so we can traceline?
-    self.mins = '-20 -20 -24';
-    self.maxs = '20 20 45';
+    //self.mins = '-20 -20 -24';
+    //self.maxs = '20 20 45';
     self.classname = "shownames_tag";
 
     sf = ReadByte();
 
     if(sf & 1)
     {
-        self.origin_x = ReadShort();
-        self.origin_y = ReadShort();
-        self.origin_z = ReadShort();
+        self.healthvalue = ReadByte() * 10;
     }
     if(sf & 2)
     {
-        self.healthvalue = ReadByte();
-    }
-    if(sf & 4)
-    {
-        self.armorvalue = ReadByte();
+        self.armorvalue = ReadByte() * 10;
     }
 
     if(sf & 128) // same team
