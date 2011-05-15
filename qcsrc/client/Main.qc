@@ -913,11 +913,11 @@ void Ent_ShowNames()
 
     if(sf & 1)
     {
-        self.healthvalue = ReadByte();
+        self.healthvalue = ReadByte() * 10;
     }
     if(sf & 2)
     {
-        self.armorvalue = ReadByte();
+        self.armorvalue = ReadByte() * 10;
     }
 
     if(sf & 128) // same team
