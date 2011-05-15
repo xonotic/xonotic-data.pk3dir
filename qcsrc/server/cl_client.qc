@@ -735,9 +735,6 @@ void PutObserverInServer (void)
 	}
 	else
 		self.frags = FRAGS_SPECTATOR;
-
-    if(self.shownames)
-        remove(self.shownames);
 }
 
 void FixPlayermodel()
@@ -1102,15 +1099,6 @@ void PutClientInServer (void)
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
 		PutObserverInServer ();
 	}
-
-    if(!self.shownames)
-    {
-        self.shownames = spawn();
-        self.shownames.owner = self;
-        self.shownames.think = shownames_think;
-        self.shownames.nextthink = time;
-        Net_LinkEntity(self.shownames, FALSE, 0, SendEntity_ShowNames);
-    }
 
 	//if(g_ctf)
 	//	ctf_playerchanged();
@@ -1879,8 +1867,6 @@ void ClientDisconnect (void)
 
 	self.playerid = 0;
 	ReadyCount();
-
-    remove(self.shownames);
 
 	// free cvars
 	GetCvars(-1);
