@@ -333,7 +333,7 @@ entity SelectSpawnPoint (float anypoint)
 		{
 			// we request a spawn for a team, and we have team
 			// spawns, but that team has no spawns?
-			if(have_team_spawns[0])
+			if(have_team_spawns_forteam[0])
 				// try noteam spawns
 				teamcheck = 0;
 			else
@@ -343,7 +343,7 @@ entity SelectSpawnPoint (float anypoint)
 		else
 			teamcheck = self.team; // MUST be team
 	}
-	else if(have_team_spawns == 0 && have_team_spawns[0])
+	else if(have_team_spawns == 0 && have_team_spawns_forteam[0])
 		teamcheck = 0; // MUST be noteam
 	else
 		teamcheck = -1;
