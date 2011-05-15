@@ -1555,7 +1555,6 @@ void precache()
 {
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
-    precache_model ("models/misc/teambubble.spr");
     if (g_runematch)
     {
         precache_model ("models/runematch/curse.mdl");
