@@ -31,7 +31,7 @@ float entcs_customize()
 	if(other == o)
 		return FALSE;
 	if(other.classname == "player")
-		if(o.team != other.team)
+		if(!teams_matter || o.team != other.team)
 			if not (radar_showennemies)
 				return FALSE;
 	return TRUE;
@@ -39,6 +39,7 @@ float entcs_customize()
 
 float entcs_send(entity to, float sf)
 {
+	// a simple safeguard, should not REALLY be needed
 	sf |= 128;
 	if(teams_matter && !radar_showennemies)
 		if(to.team != self.team)
@@ -47,7 +48,7 @@ float entcs_send(entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)
-		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+		WriteByte(MSG_ENTITY, num_for_edict(self.owner)-1);
 	if(sf & 2)
 	{
 		WriteShort(MSG_ENTITY, self.origin_x);

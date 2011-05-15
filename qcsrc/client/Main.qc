@@ -667,7 +667,7 @@ void Ent_ReadEntCS()
 	sf = ReadByte();
 
 	if(sf & 1)
-		self.sv_entnum = ReadByte() - 1;
+		self.sv_entnum = ReadByte();
 	if(sf & 2)
 	{
 		self.origin_x = ReadShort();
@@ -690,7 +690,6 @@ void Ent_ReadEntCS()
 
 	entcs_receiver[self.sv_entnum] = self;
 	self.entremove = Ent_RemoveEntCS;
-	self.draw2d = Draw_ShowNames;
 
 	InterpolateOrigin_Note();
 }

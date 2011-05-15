@@ -1701,8 +1701,7 @@ void ClientConnect (void)
 		ctf_clientconnect();
 	}*/
 
-	if(teams_matter || radar_showennemies)
-		attach_entcs();
+	attach_entcs();
 
 	bot_relinkplayerlist();
 
