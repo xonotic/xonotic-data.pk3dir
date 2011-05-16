@@ -667,7 +667,7 @@ void Ent_ReadEntCS()
 	sf = ReadByte();
 
 	if(sf & 1)
-		self.sv_entnum = ReadByte() - 1;
+		self.sv_entnum = ReadByte();
 	if(sf & 2)
 	{
 		self.origin_x = ReadShort();
@@ -679,6 +679,10 @@ void Ent_ReadEntCS()
 		self.angles_y = ReadByte() * 360.0 / 256;
 		self.angles_x = self.angles_z = 0;
 	}
+	if(sf & 8)
+		self.healthvalue = ReadByte() * 10;
+	if(sf & 16)
+		self.armorvalue = ReadByte() * 10;
 
 	entcs_receiver[self.sv_entnum] = self;
 	self.entremove = Ent_RemoveEntCS;
@@ -907,36 +911,6 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
-void Ent_ShowNames()
-{
-    float sf;
-
-    // entity init, TODO can this be done only once somehow?
-    self.the_entnum = ReadByte(); // TODO: fixme to only send once somehow
-    self.draw2d = Draw_ShowNames;
-
-    //self.movetype = MOVETYPE_FLY; // movetype needed so we can traceline?
-    //self.mins = '-20 -20 -24';
-    //self.maxs = '20 20 45';
-    self.classname = "shownames_tag";
-
-    sf = ReadByte();
-
-    if(sf & 1)
-    {
-        self.healthvalue = ReadByte() * 10;
-    }
-    if(sf & 2)
-    {
-        self.armorvalue = ReadByte() * 10;
-    }
-
-    if(sf & 128) // same team
-        self.sameteam = TRUE;
-    else
-        self.sameteam = FALSE;
-}
-
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void Ent_RadarLink();
@@ -1003,7 +977,6 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
-		case ENT_CLIENT_SHOWNAMES: Ent_ShowNames(); break;
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));

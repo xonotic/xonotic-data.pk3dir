@@ -333,7 +333,7 @@ entity SelectSpawnPoint (float anypoint)
 		{
 			// we request a spawn for a team, and we have team
 			// spawns, but that team has no spawns?
-			if(have_team_spawns[0])
+			if(have_team_spawns_forteam[0])
 				// try noteam spawns
 				teamcheck = 0;
 			else
@@ -343,7 +343,7 @@ entity SelectSpawnPoint (float anypoint)
 		else
 			teamcheck = self.team; // MUST be team
 	}
-	else if(have_team_spawns == 0 && have_team_spawns[0])
+	else if(have_team_spawns == 0 && have_team_spawns_forteam[0])
 		teamcheck = 0; // MUST be noteam
 	else
 		teamcheck = -1;
@@ -735,9 +735,6 @@ void PutObserverInServer (void)
 	}
 	else
 		self.frags = FRAGS_SPECTATOR;
-
-    if(self.shownames)
-        remove(self.shownames);
 }
 
 void FixPlayermodel()
@@ -1102,15 +1099,6 @@ void PutClientInServer (void)
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
 		PutObserverInServer ();
 	}
-
-    if(!self.shownames)
-    {
-        self.shownames = spawn();
-        self.shownames.owner = self;
-        self.shownames.think = shownames_think;
-        self.shownames.nextthink = time;
-        Net_LinkEntity(self.shownames, FALSE, 0, SendEntity_ShowNames);
-    }
 
 	//if(g_ctf)
 	//	ctf_playerchanged();
@@ -1713,8 +1701,7 @@ void ClientConnect (void)
 		ctf_clientconnect();
 	}*/
 
-	if(teams_matter || radar_showennemies)
-		attach_entcs();
+	attach_entcs();
 
 	bot_relinkplayerlist();
 
@@ -1879,8 +1866,6 @@ void ClientDisconnect (void)
 
 	self.playerid = 0;
 	ReadyCount();
-
-    remove(self.shownames);
 
 	// free cvars
 	GetCvars(-1);

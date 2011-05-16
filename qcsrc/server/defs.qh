@@ -667,6 +667,3 @@ float serverflags;
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
-
-.entity shownames;
-void shownames_think();

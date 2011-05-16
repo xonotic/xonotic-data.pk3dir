@@ -861,6 +861,7 @@ void CSQC_UpdateView(float w, float h)
 		if(self.draw2d)
 			self.draw2d();
 	self = e;
+	Draw_ShowNames_All();
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 

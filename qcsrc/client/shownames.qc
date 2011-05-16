@@ -5,142 +5,186 @@
 // self.sameteam = player is on same team as local client
 //
 const float SHOWNAMES_FADESPEED = 4;
-void Draw_ShowNames()
+void Draw_ShowNames(entity ent)
 {
-    if(!autocvar_hud_shownames)
-        return;
+	if(!autocvar_hud_shownames)
+		return;
 
-    if(self.the_entnum == player_localentnum && !autocvar_chase_active)
-        return;
+	if(ent.sv_entnum == player_localentnum && !autocvar_chase_active)
+		return;
 
-    if(self.sameteam || (!self.sameteam && autocvar_hud_shownames_enemies))
-    {
-        self.origin = getplayerorigin(self.the_entnum-1);
-        self.origin_z += autocvar_hud_shownames_offset;
+	if(ent.sameteam || (!ent.sameteam && autocvar_hud_shownames_enemies))
+	{
+		ent.origin_z += autocvar_hud_shownames_offset;
 
-        if(!self.sameteam)
-        {
-            /* WIP, why does trace_ent != self not work as intended here?
-            if(autocvar_hud_shownames_enemies != 2) // player has to point at enemy if so
-            {
-                traceline(view_origin, view_origin + view_forward * MAX_SHOT_DISTANCE, MOVETYPE_FLY, world);
-                print("trace_endpos: ", vtos(trace_endpos), " view_origin: ", vtos(view_origin), "\n");
-                if(trace_ent != self)
-                    return;
-            }*/
+		if(!ent.sameteam)
+		{
+			/* WIP, why does trace_ent != ent not work as intended here?
+			   if(autocvar_hud_shownames_enemies != 2) // player has to point at enemy if so
+			   {
+			   traceline(view_origin, view_origin + view_forward * MAX_SHOT_DISTANCE, MOVETYPE_FLY, world);
+			   print("trace_endpos: ", vtos(trace_endpos), " view_origin: ", vtos(view_origin), "\n");
+			   if(trace_ent != ent)
+			   return;
+			   }*/
 
-            traceline(self.origin, view_origin, 1, self);
-        }
+			traceline(ent.origin, view_origin, 1, ent);
+		}
 
-        vector o, eo;
-        o = project_3d_to_2d(self.origin);
-        float overlap;
+		vector o, eo;
+		o = project_3d_to_2d(ent.origin);
+		float overlap;
 
-        if(autocvar_hud_shownames_antioverlap)
-        {
-            // fade tag out if another tag that is closer to you overlaps
-            entity e;
-            for(e = world; (e = find(e, classname, "shownames_tag")); )
-            {
-                if(e == self)
-                    continue;
-                eo = project_3d_to_2d(e.origin);
-                if not(eo_z < 0 || eo_x < 0 || eo_y < 0 || eo_x > vid_conwidth || eo_y > vid_conheight)
-                {
-                    eo_z = 0;
-                    if(vlen((eX * o_x + eY * o_y) - eo) < autocvar_hud_shownames_antioverlap_distance && vlen(self.origin - view_origin) > vlen(e.origin - view_origin))
-                    {
-                        overlap = TRUE;
-                        break;
-                    }
-                }
-            }
-        }
+		if(autocvar_hud_shownames_antioverlap)
+		{
+			// fade tag out if another tag that is closer to you overlaps
+			entity e;
+			for(e = world; (e = find(e, classname, "shownames_tag")); )
+			{
+				if(e == ent)
+					continue;
+				eo = project_3d_to_2d(e.origin);
+				if not(eo_z < 0 || eo_x < 0 || eo_y < 0 || eo_x > vid_conwidth || eo_y > vid_conheight)
+				{
+					eo_z = 0;
+					if(vlen((eX * o_x + eY * o_y) - eo) < autocvar_hud_shownames_antioverlap_distance && vlen(ent.origin - view_origin) > vlen(e.origin - view_origin))
+					{
+						overlap = TRUE;
+						break;
+					}
+				}
+			}
+		}
 
-        if(!self.sameteam && trace_endpos != view_origin) // out of view, fade out
-            self.alpha = max(0, self.alpha - SHOWNAMES_FADESPEED * frametime);
-        else if(!self.healthvalue) // dead player, fade out slowly
-            self.alpha = max(0, self.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
-        else if(overlap) // tag overlap detected, fade out
-            self.alpha = max(0, self.alpha - SHOWNAMES_FADESPEED * frametime);
-        else // fade in
-            self.alpha = min(1, self.alpha + SHOWNAMES_FADESPEED * frametime);
+		if(!ent.sameteam && trace_endpos != view_origin) // out of view, fade out
+			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * frametime);
+		else if(ent.healthvalue < 1) // dead player, fade out slowly
+			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
+		else if(overlap) // tag overlap detected, fade out
+			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * frametime);
+		else // fade in
+			ent.alpha = min(1, ent.alpha + SHOWNAMES_FADESPEED * frametime);
 
-        if(!self.alpha)
-            return;
+		if(!ent.alpha)
+			return;
 
-        float dist;
-        dist = vlen(self.origin - view_origin);
+		float dist;
+		dist = vlen(ent.origin - view_origin);
 
-        float a;
-        a = autocvar_hud_shownames_alpha;
-        a *= self.alpha;
-        if(autocvar_hud_shownames_maxdistance)
-        {
-            if(dist >= autocvar_hud_shownames_maxdistance)
-                return;
-            a *= ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
-        }
+		float a;
+		a = autocvar_hud_shownames_alpha;
+		a *= ent.alpha;
+		if(autocvar_hud_shownames_maxdistance)
+		{
+			if(dist >= autocvar_hud_shownames_maxdistance)
+				return;
+			a *= ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
+		}
 
-        if(!a)
-            return;
+		if(!a)
+			return;
 
-        float resize;
-        resize = 1;
-        if(autocvar_hud_shownames_resize) // limit resize so its never smaller than 0.5... gets unreadable
-            resize = 0.5 + 0.5 * ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
+		float resize;
+		resize = 1;
+		if(autocvar_hud_shownames_resize) // limit resize so its never smaller than 0.5... gets unreadable
+			resize = 0.5 + 0.5 * ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
 
-        // draw the sprite image
-        if not(o_z < 0 || o_x < 0 || o_y < 0 || o_x > vid_conwidth || o_y > vid_conheight)
-        {
-            o_z = 0;
+		// draw the sprite image
+		if not(o_z < 0 || o_x < 0 || o_y < 0 || o_x > vid_conwidth || o_y > vid_conheight)
+		{
+			o_z = 0;
 
-            vector myPos, mySize;
-            mySize = (eX * autocvar_hud_shownames_aspect + eY) * autocvar_hud_shownames_fontsize;
-            myPos = o - '0.5 0 0' * mySize_x - '0 1 0' * mySize_y;
+			vector myPos, mySize;
+			mySize = (eX * autocvar_hud_shownames_aspect + eY) * autocvar_hud_shownames_fontsize;
+			myPos = o - '0.5 0 0' * mySize_x - '0 1 0' * mySize_y;
 
-            // size scaling
-            mySize_x *= resize;
-            mySize_y *= resize;
+			// size scaling
+			mySize_x *= resize;
+			mySize_y *= resize;
 
-            myPos_x += 0.5 * (mySize_x / resize - mySize_x);
-            myPos_y += (mySize_y / resize - mySize_y);
+			myPos_x += 0.5 * (mySize_x / resize - mySize_x);
+			myPos_y += (mySize_y / resize - mySize_y);
 
-            vector namepos; // this is where the origin of the string
-            float namewidth;
+			vector namepos; // this is where the origin of the string
+			float namewidth;
 
-            namepos = myPos;
-            namewidth = mySize_x;
+			namepos = myPos;
+			namewidth = mySize_x;
 
-            if(autocvar_hud_shownames_status && teamplay)
-            {
-                if(self.sameteam)
-                {
-                    if(self.healthvalue > 0)
-                    {
-                        HUD_Panel_DrawProgressBar(namepos + '0 1 0' * autocvar_hud_shownames_fontsize * resize, eX * 0.5 * mySize_x + eY * resize * autocvar_hud_shownames_statusbar_height, "nametag_statusbar", self.healthvalue/autocvar_hud_panel_healtharmor_maxhealth, 0, 1, '1 0 0', a, DRAWFLAG_NORMAL);
+			if(autocvar_hud_shownames_status && teamplay)
+			{
+				if(ent.sameteam)
+				{
+					if(ent.healthvalue > 0)
+					{
+						HUD_Panel_DrawProgressBar(namepos + '0 1 0' * autocvar_hud_shownames_fontsize * resize, eX * 0.5 * mySize_x + eY * resize * autocvar_hud_shownames_statusbar_height, "nametag_statusbar", ent.healthvalue/autocvar_hud_panel_healtharmor_maxhealth, 0, 1, '1 0 0', a, DRAWFLAG_NORMAL);
 
-                        if(self.armorvalue > 0)
-                            HUD_Panel_DrawProgressBar(namepos + '0 1 0' * autocvar_hud_shownames_fontsize * resize + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * resize * autocvar_hud_shownames_statusbar_height, "nametag_statusbar", self.armorvalue/autocvar_hud_panel_healtharmor_maxarmor, 0, 0, '0 1 0', a, DRAWFLAG_NORMAL);
-                    }
-                }
-            }
+						if(ent.armorvalue > 0)
+							HUD_Panel_DrawProgressBar(namepos + '0 1 0' * autocvar_hud_shownames_fontsize * resize + eX * 0.5 * mySize_x, eX * 0.5 * mySize_x + eY * resize * autocvar_hud_shownames_statusbar_height, "nametag_statusbar", ent.armorvalue/autocvar_hud_panel_healtharmor_maxarmor, 0, 0, '0 1 0', a, DRAWFLAG_NORMAL);
+					}
+				}
+			}
 
-            string s;
-            s = GetPlayerName(self.the_entnum-1);
-            if((autocvar_hud_shownames_decolorize == 1 && teamplay) || autocvar_hud_shownames_decolorize == 2)
-                s = playername(s, GetPlayerColor(self.the_entnum-1));
+			string s;
+			s = GetPlayerName(ent.sv_entnum-1);
+			if((autocvar_hud_shownames_decolorize == 1 && teamplay) || autocvar_hud_shownames_decolorize == 2)
+				s = playername(s, GetPlayerColor(ent.sv_entnum-1));
 
-            drawfontscale = '1 1 0' * resize;
-            s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
+			drawfontscale = '1 1 0' * resize;
+			s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
 
-            float width;
-            width = stringwidth(s, TRUE, '1 1 0' * autocvar_hud_shownames_fontsize);
+			float width;
+			width = stringwidth(s, TRUE, '1 1 0' * autocvar_hud_shownames_fontsize);
 
-            if (width != namewidth)
-                namepos_x += (namewidth - width) / 2;
-            drawcolorcodedstring(namepos, s, '1 1 0' * autocvar_hud_shownames_fontsize, a, DRAWFLAG_NORMAL);
-            drawfontscale = '1 1 0';
-        }
-    }
+			if (width != namewidth)
+				namepos_x += (namewidth - width) / 2;
+			drawcolorcodedstring(namepos, s, '1 1 0' * autocvar_hud_shownames_fontsize, a, DRAWFLAG_NORMAL);
+			drawfontscale = '1 1 0';
+		}
+	}
+}
+
+entity shownames_ent[255];
+void Draw_ShowNames_All()
+{
+	float i;
+	for(i = 0; i < maxclients; ++i)
+	{
+		vector o;
+		float t;
+		t = GetPlayerColor(i);
+		if(t == COLOR_SPECTATOR)
+			continue;
+
+		entity e;
+		e = shownames_ent[i];
+		if(!e)
+		{
+			e = spawn();
+			e.classname = "shownames_tag";
+			e.sv_entnum = i+1;
+			shownames_ent[i] = e;
+		}
+
+		entity entcs;
+		entcs = entcs_receiver[i];
+		if(entcs)
+		{
+			e.healthvalue = entcs.healthvalue;
+			e.armorvalue = entcs.armorvalue;
+			e.sameteam = 1; /* (teamplay && (t == myteam)); */
+		}
+		else
+		{
+			e.healthvalue = 2342;
+			e.armorvalue = 0;
+			e.sameteam = 0;
+		}
+
+		e.origin = getplayerorigin(i);
+		if(e.origin == GETPLAYERORIGIN_ERROR)
+			continue;
+
+		Draw_ShowNames(e);
+	}
 }

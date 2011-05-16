@@ -735,49 +735,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 }
 
-// sendflags use: 1 = health (value is 0 or 1 for dead/alive on enemies), 2 = armor, 0x80 = same team (includes health)
-float SendEntity_ShowNames(entity to, float sendflags)
-{
-    float the_health;
-    the_health = self.health;
-
-    WriteByte(MSG_ENTITY, ENT_CLIENT_SHOWNAMES);
-    WriteByte(MSG_ENTITY, num_for_edict(self.owner));
-
-    sendflags = sendflags & 127;
-    if(teams_matter && self.owner.team == to.team)
-        sendflags |= 128;
-    else if(self.owner.health >= 1)
-        the_health = 1;
-
-    WriteByte(MSG_ENTITY, sendflags);
-    if(sendflags & 1)
-    {
-        WriteByte(MSG_ENTITY, the_health);
-    }
-    if(sendflags & 2)
-    {
-        WriteByte(MSG_ENTITY, self.armorvalue);
-    }
-    return TRUE;
-}
-
-void shownames_think()
-{
-    self.origin = self.owner.origin + '0 0 1' * 48;
-    if(self.health != max(0, ceil(self.owner.health/10)))
-    {
-        self.health = max(0, ceil(self.owner.health/10));
-        self.SendFlags |= 1;
-    }
-    if(self.armorvalue != max(0, ceil(self.owner.armorvalue/10)))
-    {
-        self.armorvalue = max(0, ceil(self.owner.armorvalue/10));
-        self.SendFlags |= 2;
-    }
-    self.nextthink = time;
-}
-
 .float muted; // to be used by prvm_edictset server playernumber muted 1
 float Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol)
 // message "": do not say, just test flood control
