@@ -659,7 +659,7 @@ void PutObserverInServer (void)
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_NOT;
-	self.movetype = (self.cvar_cl_noclipspectating ? MOVETYPE_NOCLIP : MOVETYPE_FLY);
+	self.movetype = MOVETYPE_FLY; //(self.cvar_cl_clippedspectating ? MOVETYPE_NOCLIP : MOVETYPE_FLY); // it's too early for this anyway, lets just set it in playerprethink
 	self.flags = FL_CLIENT | FL_NOTARGET;
 	self.armorvalue = 666;
 	self.effects = 0;
@@ -2519,6 +2519,7 @@ void checkSpectatorBlock() {
 
 void ObserverThink()
 {
+	float prefered_movetype;
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
 			self.welcomemessage_time = 0;
@@ -2530,6 +2531,10 @@ void ObserverThink()
 			if(SpectateNext() == 1) {
 				self.classname = "spectator";
 			}
+		} else {
+			prefered_movetype = (self.cvar_cl_clippedspectating ? MOVETYPE_FLY : MOVETYPE_NOCLIP);
+			if (self.movetype != prefered_movetype)
+				self.movetype = prefered_movetype;
 		}
 	} else {
 		if (!(self.BUTTON_ATCK || self.BUTTON_JUMP)) {
