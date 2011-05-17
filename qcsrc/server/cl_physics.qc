@@ -516,9 +516,20 @@ void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float acce
 	float vel_xy_backward, vel_xy_forward;
 	float speedclamp;
 
-	speedclamp = (accelqw < 0);
-	if(speedclamp)
+	if(accelqw < 0)
+	{
+#ifdef SPEEDCLAMP
+		speedclamp = SPEEDCLAMP;
+#else
+		speedclamp = 0.000001; // no strafe accel
+#endif
 		accelqw = -accelqw;
+	}
+	else
+		speedclamp = 0;
+	// speedclamp usage:
+	// > 0: max acceleration in qu/s^2 in excess of regular (try 50, 100)
+	// < 0: max acceleration factor in excess of regular (try -0.1)
 
 	if(autocvar_sv_gameplayfix_q2airaccelerate)
 		wishspeed0 = wishspeed;
@@ -560,10 +571,13 @@ void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float acce
 	
 	vel_xy = vel_straight * wishdir + vel_perpend;
 	
-	if(speedclamp)
+	if(speedclamp != 0)
 	{
 		// ensure we don't get too fast or decelerate faster than we should
-		vel_xy_current = min(vlen(vel_xy), vel_xy_forward);
+		if(speedclamp > 0)
+			vel_xy_current = min(vlen(vel_xy), vel_xy_forward + frametime * speedclamp);
+		else
+			vel_xy_current = min(vlen(vel_xy), vel_xy_current + (vel_xy_forward - vel_xy_current) * (1 - frametime * speedclamp));
 		if(vel_xy_current > 0) // prevent division by zero
 			vel_xy = normalize(vel_xy) * vel_xy_current;
 	}
