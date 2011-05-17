@@ -65,9 +65,6 @@ void PlayerStats_AddPlayer(entity e)
 	else
 		e.playerstats_id = strzone(sprintf("player#%d", e.playerid));
 
-    if(teams_matter)
-
-	
 	string key;
 	key = sprintf("%s:*", e.playerstats_id);
 	
@@ -86,7 +83,7 @@ void PlayerStats_AddPlayer(entity e)
 	}
 }
 
-void PlayerStats_AddTeam(float t)
+void PlayerStats_AddTeam(float t) // TODO: doesn't this remain unused?
 {
 	if(playerstats_db < 0)
 		return;
@@ -145,7 +142,7 @@ void PlayerStats_Event(entity e, string event_id, float value)
 	db_put(playerstats_db, key, ftos(val));
 }
 
-void PlayerStats_TeamScore(float t, string event_id, float value)
+void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn't this remain unused?
 {
 	string key;
 	float val;
@@ -178,9 +175,9 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 	S: "hostname" of the server
 	C: number of "unpure" cvar changes
     W: winning team ID
-	t: team ID; all following "P" lines will be players on this team
 	P: player ID of an existing player; this also sets the owner for all following "n" and "e" lines (lower case!)
 	n: nickname of the player (optional)
+    t: team ID
 	e: followed by an event name, a space, and the event count/score
 		event names can be:
 			alivetime: total playing time of the player
@@ -202,7 +199,6 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 //#NO AUTOCVARS START
 void PlayerStats_Shutdown()
 {
-    string t, tn;
 	string p, pn;
 	string e, en;
 	string nn, tt;
@@ -230,52 +226,26 @@ void PlayerStats_Shutdown()
 		bufstr_set(b, i++, sprintf("M %s", GetMapname()));
 		bufstr_set(b, i++, sprintf("S %s", cvar_string("hostname")));
 		bufstr_set(b, i++, sprintf("C %d", cvar_purechanges_count));
-        if(teams_matter)
+        for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
         {
-            entity winner;
-            winner = PlayerScore_Sort(score_dummyfield);
-            bufstr_set(b, i++, sprintf("W %d", winner.team));
-            for(t = teamstats_last; (tn = db_get(playerstats_db, sprintf("%s", t))) != ""; t = tn)
+            bufstr_set(b, i++, sprintf("P %s", p));
+            nn = db_get(playerstats_db, sprintf("%s:_netname", p));
+            if(nn != "")
+                bufstr_set(b, i++, sprintf("n %s", nn));
+            if(teams_matter)
             {
-                bufstr_set(b, i++, strcat("t ", t));
-                for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
-                {
-                    tt = db_get(playerstats_db, sprintf("%s:_team", p));
-                    if(t != tt)
-                        continue;
-
-                    bufstr_set(b, i++, sprintf("P %s", p));
-                    nn = db_get(playerstats_db, sprintf("%s:_netname", p));
-                    if(nn != "")
-                        bufstr_set(b, i++, sprintf("n %s", nn));
-                    for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
-                    {
-                        float v;
-                        v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
-                        if(v != 0)
-                            bufstr_set(b, i++, sprintf("e %s %g", e, v));
-                    }
-                }
-                bufstr_set(b, i++, "");
+                tt = db_get(playerstats_db, sprintf("%s:_team", p));
+                bufstr_set(b, i++, sprintf("t %s", tt));
+            }
+            for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
+            {
+                float v;
+                v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
+                if(v != 0)
+                    bufstr_set(b, i++, sprintf("e %s %g", e, v));
             }
         }
-        else {
-            for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
-            {
-                bufstr_set(b, i++, sprintf("P %s", p));
-                nn = db_get(playerstats_db, sprintf("%s:_netname", p));
-                if(nn != "")
-                    bufstr_set(b, i++, sprintf("n %s", nn));
-                for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
-                {
-                    float v;
-                    v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
-                    if(v != 0)
-                        bufstr_set(b, i++, sprintf("e %s %g", e, v));
-                }
-            }
-            bufstr_set(b, i++, "");
-        }
+        bufstr_set(b, i++, "");
 
 		if(autocvar_g_playerstats_debug)
 		{
