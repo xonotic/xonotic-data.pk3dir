@@ -1118,6 +1118,7 @@ float autocvar_sv_accelerate;
 var float autocvar_sv_accuracy_data_share = 1;
 string autocvar_sv_adminnick;
 float autocvar_sv_airaccel_qw;
+float autocvar_sv_airaccel_qw_stretchfactor;
 float autocvar_sv_airaccel_sideways_friction;
 float autocvar_sv_airaccelerate;
 float autocvar_sv_aircontrol;
