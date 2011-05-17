@@ -236,8 +236,7 @@ void relocate_spawnpoint()
     if (have_team_spawns != 0)
         if (self.team)
             have_team_spawns = 1;
-    if (!self.team)
-        have_noteam_spawns = 1;
+    have_team_spawns_forteam[self.team] = 1;
 
     if (autocvar_r_showbboxes)
     {
@@ -461,11 +460,6 @@ string formatmessage(string msg)
 			replacement = cursor_ent.netname;
 			if (!replacement || !cursor_ent)
 				replacement = "nothing";
-		} else if (escape == "p") {
-			if (self.last_selected_player)
-				replacement = self.last_selected_player.netname;
-			else
-				replacement = "(nobody)";
 		} else if (escape == "s")
 			replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1'));
 		else if (escape == "S")
@@ -586,7 +580,6 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
 	GetCvars_handleFloat(s, f, cvar_scr_centertime, "scr_centertime");
-	GetCvars_handleFloat(s, f, cvar_cl_shownames, "cl_shownames");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
@@ -625,16 +618,6 @@ void GetCvars(float f)
 		if (s == "cl_weaponpriority")
 			self.switchweapon = w_getbestweapon(self);
 	}
-}
-
-float fexists(string f)
-{
-    float fh;
-    fh = fopen(f, FILE_READ);
-    if (fh < 0)
-        return FALSE;
-    fclose(fh);
-    return TRUE;
 }
 
 void backtrace(string msg)
@@ -1572,7 +1555,6 @@ void precache()
 {
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
-    precache_model ("models/misc/teambubble.spr");
     if (g_runematch)
     {
         precache_model ("models/runematch/curse.mdl");
@@ -2002,7 +1984,8 @@ float SUB_NoImpactCheck()
 	// these stop the projectile from moving, so...
 	if(trace_dphitcontents == 0)
 	{
-		dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
+		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
+		dprint(sprintf(_("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.origin)));
 		checkclient();
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)

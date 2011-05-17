@@ -61,7 +61,7 @@ void PlayerJump (void)
 	if(!doublejump && self.multijump_ready && self.multijump_count < autocvar_g_multijump && self.velocity_z > autocvar_g_multijump_speed)
 	{
 		// doublejump = FALSE; // checked above in the if
-		if (autocvar_g_multijump > 0)
+		if (autocvar_g_multijump)
 		{
 			if (autocvar_g_multijump_add == 0) // in this case we make the z velocity == jumpvelocity
 			{
@@ -93,7 +93,8 @@ void PlayerJump (void)
 					self.velocity_y = wishdir_y * curspeed;
 					// keep velocity_z unchanged!
 				}
-				self.multijump_count += 1;
+				if (autocvar_g_multijump > 0)
+					self.multijump_count += 1;
 			}
 		}
 		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
@@ -515,8 +516,14 @@ void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float acce
 	float vel_xy_backward, vel_xy_forward;
 	float speedclamp;
 
-	speedclamp = (accelqw < 0);
-	if(speedclamp)
+	if(autocvar_sv_airaccel_qw_stretchfactor > 0)
+		speedclamp = autocvar_sv_airaccel_qw_stretchfactor;
+	else if(accelqw < 0)
+		speedclamp = 1; // full clamping, no stretch
+	else
+		speedclamp = -1; // no clamping
+
+	if(accelqw < 0)
 		accelqw = -accelqw;
 
 	if(autocvar_sv_gameplayfix_q2airaccelerate)
@@ -559,12 +566,16 @@ void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float acce
 	
 	vel_xy = vel_straight * wishdir + vel_perpend;
 	
-	if(speedclamp)
+	if(speedclamp >= 0)
 	{
-		// ensure we don't get too fast or decelerate faster than we should
-		vel_xy_current = min(vlen(vel_xy), vel_xy_forward);
-		if(vel_xy_current > 0) // prevent division by zero
-			vel_xy = normalize(vel_xy) * vel_xy_current;
+		float vel_xy_preclamp;
+		vel_xy_preclamp = vlen(vel_xy);
+		if(vel_xy_preclamp > 0) // prevent division by zero
+		{
+			vel_xy_current += (vel_xy_forward - vel_xy_current) * speedclamp;
+			if(vel_xy_current < vel_xy_preclamp)
+				vel_xy = vel_xy * (vel_xy_current / vel_xy_preclamp);
+		}
 	}
 
 	self.velocity = vel_xy + vel_z * '0 0 1';
@@ -666,6 +677,8 @@ void SV_PlayerPhysics()
 	float buttons_prev;
 	float not_allowed_to_move;
 	string c;
+
+	WarpZone_PlayerPhysics_FixVAngle();
 	
 	maxspd_mod = 1;
 	if(g_minstagib && (self.items & IT_INVINCIBLE))

@@ -34,6 +34,10 @@ float W_WeaponRateFactor()
 
 void W_SwitchWeapon_Force(entity e, float w)
 {
+	// don't switch to another weapon if we're not allowed to
+	if(e.weapon_forbidchange)
+		return;
+
 	e.cnt = e.switchweapon;
 	e.switchweapon = w;
 	e.selectweapon = w;
@@ -1253,15 +1257,21 @@ void weapon_thinkf(float fr, float t, void() func)
 	self.weapon_think = func;
 	//dprint("next ", ftos(self.weapon_nextthink), "\n");
 
+    // The shoot animation looks TERRIBLE without animation blending! Yay for moonwalking while shooting!
+    /*
 	if (restartanim)
 	if (t)
 	if (!self.crouch) // shoot anim stands up, this looks bad
 	{
 		local vector anim;
-		anim = self.anim_shoot;
+		if(self.weapon == WEP_SHOTGUN && self.BUTTON_ATCK2)
+			anim = self.anim_melee;
+		else
+			anim = self.anim_shoot;
 		anim_z = anim_y / (t + sys_frametime);
 		setanim(self, anim, FALSE, TRUE, TRUE);
 	}
+    */
 };
 
 void weapon_boblayer1(float spd, vector org)

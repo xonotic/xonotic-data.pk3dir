@@ -1,1 +1,3 @@
-http://www.alientrap.org/devwiki/index.php?n=Xonotic.Todo (and get this Todo actually updated :P)
+http://dev.xonotic.org/projects/xonotic/issues
+
+also: Maybe actually decide upon what to do with this todo file? No one uses it :P Just use the development tracker.
