@@ -192,6 +192,11 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 			scoreboard-<scoreboardname>: end-of-game score of that scoreboard item (can differ in non-team games)
 			achievement-<achievementname>: achievement counters
             rank <number>: rank of player
+            acc-<weapon netname>-hit: total damage dealt
+            acc-<weapon netname>-fired: total damage that all fired projectiles *could* have dealt
+            acc-<weapon netname>-cnt-hit: amount of shots that actually hit
+            acc-<weapon netname>-cnt-fired: amount of fired shots
+            acc-<weapon netname>-frags: amount of frags dealt by weapon
 */
 
 //#NO AUTOCVARS START
