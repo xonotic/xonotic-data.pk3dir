@@ -175,7 +175,7 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 	S: "hostname" of the server
 	C: number of "unpure" cvar changes
     W: winning team ID
-	P: player ID of an existing player; this also sets the owner for all following "n" and "e" lines (lower case!)
+	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
 	n: nickname of the player (optional)
     t: team ID
 	e: followed by an event name, a space, and the event count/score
