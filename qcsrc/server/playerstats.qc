@@ -57,6 +57,8 @@ void PlayerStats_AddPlayer(entity e)
 {
 	if(playerstats_db < 0)
 		return;
+	if(e.playerstats_id)
+		return;
 
 	if(e.crypto_idfp != "" && e.cvar_cl_allow_uidtracking == 1)
 		e.playerstats_id = strzone(e.crypto_idfp);
