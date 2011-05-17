@@ -617,6 +617,8 @@ void GetCvars(float f)
 	{
 		if (s == "cl_weaponpriority")
 			self.switchweapon = w_getbestweapon(self);
+		if (s == "cl_allow_uidtracking")
+			PlayerStats_AddPlayer(self);
 	}
 }
 
