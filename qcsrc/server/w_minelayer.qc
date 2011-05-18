@@ -30,6 +30,8 @@ void W_Mine_Stick ()
 	setmodel(newmine, "models/mine.md3");
 	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
 
+	newmine.oldvelocity = self.velocity;
+
 	newmine.takedamage = self.takedamage;
 	newmine.damageforcescale = self.damageforcescale;
 	newmine.health = self.health;
@@ -85,6 +87,9 @@ void W_Mine_DoRemoteExplode ()
 {
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
+
+	if(self.movetype == MOVETYPE_NONE)
+		self.velocity = self.oldvelocity;
 
 	RadiusDamage (self, self.owner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
