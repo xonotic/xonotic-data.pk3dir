@@ -627,9 +627,10 @@ void Vehicles_Precache()
 
 void RaptorCBShellfragDraw()
 {
+	
 	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
 	if(wasfreed(self))
-		return;
+		return;	    
 
 	self.move_avelocity += randomvec() * 15;
 	self.renderflags = 0;
@@ -638,13 +639,12 @@ void RaptorCBShellfragDraw()
 
 	if(self.alpha < ALPHA_MIN_VISIBLE)
         remove(self);
-
 }
 
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 {
     entity sfrag;
-
+    
     sfrag = spawn();
     setmodel(sfrag, "models/vehicles/clusterbomb_fragment.md3");
     setorigin(sfrag, _org);
@@ -665,5 +665,6 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 
 	sfrag.nextthink = time + 3;
 	sfrag.cnt = time + 2;
+	sfrag.alpha = 1;
     sfrag.drawmask = MASK_NORMAL;
 }
