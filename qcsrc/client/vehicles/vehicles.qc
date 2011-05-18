@@ -12,6 +12,9 @@
 #define hud_ammo2_ico "gfx/vehicles/rocket.tga"
 
 entity dropmark;
+float autocvar_cl_vehicles_hudscale;
+float autocvar_cl_vehicles_hudalpha;
+float flashtime;
 
 void CSQC_WAKIZASHI_HUD();
 void CSQC_SPIDER_HUD();
@@ -219,10 +222,6 @@ void CSQC_BUMBLE_HUD()
 #define spider_rkt  "gfx/vehicles/sbot_rpods.tga"
 #define spider_mgun "gfx/vehicles/sbot_mguns.tga"
 #define spider_xhair "gfx/vehicles/axh-special1.tga"
-
-float autocvar_cl_vehicles_hudscale;
-float autocvar_cl_vehicles_hudalpha;
-float flashtime;
 void CSQC_SPIDER_HUD()
 {
 	if(autocvar_r_letterbox)
@@ -616,6 +615,11 @@ void CSQC_WAKIZASHI_HUD()
 
 void Vehicles_Precache()
 {
+// HAAAAKKKZZZ!!!!!!!!!!!!
+    autocvar_cl_vehicles_hudscale = 0.5;
+    autocvar_cl_vehicles_hudalpha = 0.75;
+
+
 	precache_model("models/vehicles/wakizashi.dpm");
 
 	precache_model("models/vehicles/bomblet.md3");
