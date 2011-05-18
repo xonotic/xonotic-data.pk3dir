@@ -5,7 +5,7 @@ ZIP ?= 7za a -tzip -mx=9
 ZIPEXCLUDE ?= -x\!*.pk3 -xr\!\.svn -x\!qcsrc
 DIFF ?= diff
 
-FTEQCCFLAGS_WATERMARK ?= -DWATERMARK='"^1$(shell git describe) TEST BUILD"' -DCVAR_POPCON
+FTEQCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"' -DCVAR_POPCON
 FTEQCCFLAGS ?= -Werror -Wno-Q302 -O3 -Ono-c -Ono-cs $(FTEQCCFLAGS_EXTRA) $(FTEQCCFLAGS_WATERMARK)
 FTEQCCFLAGS_PROGS ?=
 FTEQCCFLAGS_MENU ?=

@@ -197,6 +197,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		self = oldself;
 		if(startitem_failed)
 			return string_null;
+		wep.glowmod = own.weaponentity_glowmod;
 		wep.think = thrown_wep_think;
 		wep.nextthink = time + 0.5;
 		return "";
@@ -232,6 +233,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			}
 			s = substring(s, 5, -1);
 		}
+		wep.glowmod = own.weaponentity_glowmod;
 		wep.think = thrown_wep_think;
 		wep.nextthink = time + 0.5;
 		return s;
@@ -282,6 +284,8 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	w = self.weapon;
 	if (w == 0)
 		return; // just in case
+	if(self.weapon_forbidchange)
+		return;
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon))
 		return;
 	if(!autocvar_g_weapon_throwable)
@@ -344,7 +348,7 @@ void W_WeaponFrame()
 	{
 		if (self.weaponentity.state == WS_CLEAR)
 		{
-			setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
+			//setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.switchweapon, WR_SETUP);
 
@@ -407,7 +411,6 @@ void W_WeaponFrame()
 			v_forward = fo;
 			v_right = ri;
 			v_up = up;
-			self.weaponentity_glowmod = '0 0 0'; // reset glowmod, weapon think function only *might* set it
 			weapon_action(self.weapon, WR_THINK);
 		}
 		if (time + self.weapon_frametime * 0.5 >= self.weapon_nextthink)

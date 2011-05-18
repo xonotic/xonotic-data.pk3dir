@@ -184,7 +184,7 @@ void W_BallisticBullet_Hit (void)
 
 		if(headshot)
 			f *= q;
-		if(DEATH_WEAPONOF(self.projectiledeathtype) == WEP_SNIPERRIFLE)
+		if(self.dmg_edge > 0)
 		{
 			if(headshot)
 				AnnounceTo(self.owner, "headshot");

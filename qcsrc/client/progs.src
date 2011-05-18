@@ -29,6 +29,7 @@ movetypes.qh
 prandom.qh
 bgmscript.qh
 noise.qh
+teamplay.qh
 
 main.qh
 vehicles/vehicles.qh
@@ -41,6 +42,7 @@ teamplay.qc
 ctf.qc
 
 teamradar.qc
+hud_config.qc
 hud.qc
 scoreboard.qc
 mapvoting.qc
@@ -58,7 +60,6 @@ wall.qc
 modeleffects.qc
 tuba.qc
 target_music.qc
-
 
 vehicles/vehicles.qc
 ../server/vehicles/network.qc

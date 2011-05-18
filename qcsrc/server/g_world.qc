@@ -833,6 +833,8 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
 
+	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
+
 	if(g_ca || g_freezetag)
 	{
 		addstat(STAT_REDALIVE, AS_INT, redalive_stat);
@@ -917,8 +919,12 @@ void spawnfunc_worldspawn (void)
 	// fill sv_curl_serverpackages from .serverpackage files
 	if(autocvar_sv_curl_serverpackages_auto)
 	{
-		fd = search_begin("*.serverpackage", TRUE, FALSE);
 		s = "";
+		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
+		for(i = 0; i < n; ++i)
+			if(substring(argv(i), -14, -1) != ".serverpackage")
+				s = strcat(s, " ", argv(i));
+		fd = search_begin("*.serverpackage", TRUE, FALSE);
 		if(fd >= 0)
 		{
 			j = search_getsize(fd);
@@ -939,19 +945,6 @@ void spawnfunc_light (void)
 	//makestatic (self); // Who the f___ did that?
 	remove(self);
 }
-
-float TryFile( string pFilename )
-{
-	local float lHandle;
-	dprint("TryFile(\"", pFilename, "\")\n");
-	lHandle = fopen( pFilename, FILE_READ );
-	if( lHandle != -1 ) {
-		fclose( lHandle );
-		return TRUE;
-	} else {
-		return FALSE;
-	}
-};
 
 string GetGametype()
 {
@@ -996,14 +989,12 @@ float MapHasRightSize(string map)
 	if(autocvar_g_maplist_check_waypoints)
 	{
 		dprint("checkwp "); dprint(map);
-		fh = fopen(strcat("maps/", map, ".waypoints"), FILE_READ);
-		if(fh < 0)
+		if(!fexists(strcat("maps/", map, ".waypoints")))
 		{
 			dprint(": no waypoints\n");
 			return FALSE;
 		}
 		dprint(": has waypoints\n");
-		fclose(fh);
 	}
 
 	// open map size restriction file

@@ -77,7 +77,7 @@ void shotgun_meleethink (void)
 		Damage (trace_ent, self.owner, self.owner, autocvar_g_balance_shotgun_secondary_damage * min(1, f + 1), WEP_SHOTGUN | HITTYPE_SECONDARY , self.owner.origin + self.owner.view_ofs, force);
 		remove(self);
 	}
-	else if(time >= self.cnt + meleetime) // missed, remove ent
+	else if(time >= self.cnt + meleetime || (self.owner.deadflag != DEAD_NO && autocvar_g_balance_shotgun_secondary_melee_no_doubleslap)) // missed or owner died, remove ent
 		remove(self);
 	else // continue swinging the weapon in hope of hitting someone :)
 		self.nextthink = time;
