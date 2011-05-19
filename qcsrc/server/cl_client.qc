@@ -1770,8 +1770,6 @@ void ClientConnect (void)
 		set_dom_state(self);
 
 	CheatInitClient();
-
-	PlayerStats_AddPlayer(self);
 }
 
 /*
