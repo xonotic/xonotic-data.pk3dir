@@ -179,7 +179,7 @@ void dompoint_captured ()
 
 	self.captime = time;
 
-	FOR_EACH_PLAYER(head)
+	FOR_EACH_REALCLIENT(head)
 		set_dom_state(head);
 };
 

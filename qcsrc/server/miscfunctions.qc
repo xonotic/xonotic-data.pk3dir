@@ -617,6 +617,8 @@ void GetCvars(float f)
 	{
 		if (s == "cl_weaponpriority")
 			self.switchweapon = w_getbestweapon(self);
+		if (s == "cl_allow_uidtracking")
+			PlayerStats_AddPlayer(self);
 	}
 }
 
@@ -1555,7 +1557,6 @@ void precache()
 {
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
-    precache_model ("models/misc/teambubble.spr");
     if (g_runematch)
     {
         precache_model ("models/runematch/curse.mdl");
