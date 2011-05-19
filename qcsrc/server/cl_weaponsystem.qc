@@ -1258,7 +1258,6 @@ void weapon_thinkf(float fr, float t, void() func)
 	//dprint("next ", ftos(self.weapon_nextthink), "\n");
 
     // The shoot animation looks TERRIBLE without animation blending! Yay for moonwalking while shooting!
-    /*
 	if (restartanim)
 	if (t)
 	if (!self.crouch) // shoot anim stands up, this looks bad
@@ -1266,12 +1265,11 @@ void weapon_thinkf(float fr, float t, void() func)
 		local vector anim;
 		if(self.weapon == WEP_SHOTGUN && self.BUTTON_ATCK2)
 			anim = self.anim_melee;
-		else
-			anim = self.anim_shoot;
+		/*else
+			anim = self.anim_shoot;*/
 		anim_z = anim_y / (t + sys_frametime);
 		setanim(self, anim, FALSE, TRUE, TRUE);
 	}
-    */
 };
 
 void weapon_boblayer1(float spd, vector org)
