@@ -85,6 +85,8 @@ void freezetag_Freeze(entity attacker)
 	freezetag_Ice_Think();
 	self = oldself;
 
+	RemoveGrapplingHook(self);
+
 	// add waypoint
 	WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE);
 	if(self.waypointsprite_attached)

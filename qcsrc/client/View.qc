@@ -454,6 +454,7 @@ void CSQC_UpdateView(float w, float h)
 			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
 
 			R_SetView(VF_ORIGIN, eventchase_target_origin);
+			R_SetView(VF_ANGLES, view_angles);
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
@@ -860,6 +861,7 @@ void CSQC_UpdateView(float w, float h)
 		if(self.draw2d)
 			self.draw2d();
 	self = e;
+	Draw_ShowNames_All();
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
@@ -902,7 +904,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !camera_active && intermission != 2) {
+		if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1) {
 			string wcross_style;
 			float wcross_alpha, wcross_resolution;
 			wcross_style = autocvar_crosshair;
@@ -1164,6 +1166,13 @@ void CSQC_UpdateView(float w, float h)
 				{
 					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
+					ring_rgb = wcross_color;
+					ring_image = "gfx/crosshair_ring.tga";
+				}
+				else if (activeweapon == WEP_HAGAR && getstati(STAT_HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
+				{
+					ring_value = bound(0, getstati(STAT_HAGAR_LOAD) / hagar_maxrockets, 1);
+					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}

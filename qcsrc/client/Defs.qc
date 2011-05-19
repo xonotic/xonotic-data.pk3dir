@@ -263,6 +263,8 @@ float nex_scope;
 
 float minelayer_maxmines;
 
+float hagar_maxrockets;
+
 float bgmtime;
 
 string weaponorder_byimpulse;

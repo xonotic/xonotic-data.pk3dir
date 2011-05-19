@@ -325,34 +325,11 @@ float PreviewExists(string name)
 	if(autocvar_cl_readpicture_force)
 		return false;
 
-	file = strcat(name, ".tga");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return true;
-	}
-	file = strcat(name, ".png");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return true;
-	}
-	file = strcat(name, ".jpg");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return true;
-	}
-	file = strcat(name, ".pcx");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return true;
-	}
+	if (fexists(strcat(name, ".tga"))) return true;
+	if (fexists(strcat(name, ".png"))) return true;
+	if (fexists(strcat(name, ".jpg"))) return true;
+	if (fexists(strcat(name, ".pcx"))) return true;
+
 	return false;
 }
 
@@ -776,4 +753,21 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 			R_PolygonVertex(v, t, rgb, a);
 		R_EndPolygon();
 	}
+}
+
+const vector GETPLAYERORIGIN_ERROR = '1123581321 2357111317 3141592653'; // way out of bounds for anything on the map
+vector getplayerorigin(float pl)
+{
+	string s;
+	entity e;
+
+	s = getplayerkey(pl, "TEMPHACK_origin");
+	if(s != "")
+		return stov(s);
+
+	e = entcs_receiver[pl];
+	if(e)
+		return e.origin;
+
+	return GETPLAYERORIGIN_ERROR;
 }

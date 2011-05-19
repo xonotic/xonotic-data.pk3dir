@@ -617,17 +617,9 @@ void GetCvars(float f)
 	{
 		if (s == "cl_weaponpriority")
 			self.switchweapon = w_getbestweapon(self);
+		if (s == "cl_allow_uidtracking")
+			PlayerStats_AddPlayer(self);
 	}
-}
-
-float fexists(string f)
-{
-    float fh;
-    fh = fopen(f, FILE_READ);
-    if (fh < 0)
-        return FALSE;
-    fclose(fh);
-    return TRUE;
 }
 
 void backtrace(string msg)
@@ -1565,7 +1557,6 @@ void precache()
 {
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
-    precache_model ("models/misc/teambubble.spr");
     if (g_runematch)
     {
         precache_model ("models/runematch/curse.mdl");
@@ -1995,7 +1986,8 @@ float SUB_NoImpactCheck()
 	// these stop the projectile from moving, so...
 	if(trace_dphitcontents == 0)
 	{
-		dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
+		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
+		dprint(sprintf(_("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.origin)));
 		checkclient();
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
