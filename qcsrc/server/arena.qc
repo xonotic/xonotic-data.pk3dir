@@ -375,6 +375,7 @@ void count_alive_players()
  *
  * Gets called in StartFrame()
  */
+float warntime;
 void Spawnqueue_Check()
 {
 	count_spawned_players();
@@ -392,8 +393,12 @@ void Spawnqueue_Check()
 			reset_map(TRUE);
 		}
 		else if(ca_players < required_ca_players) {
-			FOR_EACH_PLAYER(self)
-				centerprint(self, strcat("^1Need at least 1 player in each team to play CA", "^7\n"));
+			if (time > warntime)
+			{
+				FOR_EACH_PLAYER(self)
+					centerprint(self, strcat("^1Need at least 1 player in each team to play CA", "^7\n"));
+				warntime = time + 1;
+			}
 			return;
 		}
 		else if(!next_round) {

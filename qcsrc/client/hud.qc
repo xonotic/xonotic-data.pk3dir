@@ -302,11 +302,14 @@ void HUD_DrawCenterPrint (void)
 		centerprint_start_y = scoreboard_bottom + centerprint_fontsize_y;
 
 	pos = centerprint_start;
+	drawfontscale = sz * '1 1 0';
 	for (i=0; i<centerprint_num; i = i + 1)
 	{
 		ts = centerprint_messages[i];
-		drawfontscale = sz * '1 1 0';
-		pos_x = (vid_conwidth - stringwidth(ts, TRUE, centerprint_fontsize)) * 0.5;
+		if (sz == 1)
+			pos_x = (vid_conwidth - centerprint_width[i]) * 0.5;
+		else
+			pos_x = (vid_conwidth - stringwidth(ts, TRUE, centerprint_fontsize)) * 0.5;
 		if (ts != "")
 		{
 			drawcolorcodedstring(pos + '0 1 0' * (1 - sz) * 0.5 *centerprint_fontsize_y, ts, centerprint_fontsize, a, DRAWFLAG_NORMAL);
@@ -315,8 +318,8 @@ void HUD_DrawCenterPrint (void)
 		else
 			// half height for empty lines looks better
 			pos_y = pos_y + sz * centerprint_fontsize_y * 0.5;
-		drawfontscale = '1 1 0';
 	}
+	drawfontscale = '1 1 0';
 }
 
 void drawstringright(vector position, string text, vector scale, vector rgb, float alpha, float flag)
