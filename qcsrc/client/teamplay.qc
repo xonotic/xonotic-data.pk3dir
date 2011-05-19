@@ -1,6 +1,3 @@
-float teamplay;
-float myteam;
-
 float TeamByColor(float color)
 {
 	switch(color)
@@ -10,6 +7,17 @@ float TeamByColor(float color)
 	case COLOR_TEAM3: return 2;
 	case COLOR_TEAM4: return 3;
 	default: return 0;
+	}
+}
+float ColorByTeam(float i)
+{
+	switch(i)
+	{
+	case 0: return COLOR_TEAM1;
+	case 1: return COLOR_TEAM2;
+	case 2: return COLOR_TEAM3;
+	case 3: return COLOR_TEAM4;
+	default: return COLOR_TEAM1;
 	}
 }
 

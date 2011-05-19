@@ -236,6 +236,16 @@ string fstrunzone(string s)
 	return sc;
 }
 
+float fexists(string f)
+{
+    float fh;
+    fh = fopen(f, FILE_READ);
+    if (fh < 0)
+        return FALSE;
+    fclose(fh);
+    return TRUE;
+}
+
 // Databases (hash tables)
 #define DB_BUCKETS 8192
 void db_save(float db, string pFilename)
@@ -1523,12 +1533,6 @@ vector solve_quadratic(float a, float b, float c) // ax^2 + bx + c = 0
 	}
 	return v;
 }
-
-
-float _unacceptable_compiler_bug_1_a(float b, float c) { return b == c; }
-float _unacceptable_compiler_bug_1_b() { return 1; }
-float _unacceptable_compiler_bug_1_c(float d) { return 2 * d; }
-float _unacceptable_compiler_bug_1_d() { return 1; }
 
 void check_unacceptable_compiler_bugs()
 {

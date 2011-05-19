@@ -14,6 +14,7 @@ csqc_builtins.qc
 
 ../common/util.qh
 ../common/items.qh
+../common/explosion_equation.qh
 
 ../common/mapinfo.qh
 
@@ -28,6 +29,7 @@ movetypes.qh
 prandom.qh
 bgmscript.qh
 noise.qh
+teamplay.qh
 
 main.qh
 
@@ -38,6 +40,7 @@ teamplay.qc
 ctf.qc
 
 teamradar.qc
+hud_config.qc
 hud.qc
 scoreboard.qc
 mapvoting.qc
@@ -57,6 +60,8 @@ tuba.qc
 target_music.qc
 
 //vehicles/spiderbot.qc
+shownames.qh
+shownames.qc
 Main.qc
 View.qc
 interpolate.qc
@@ -71,8 +76,11 @@ noise.qc
 ../common/mapinfo.qc
 ../common/items.qc
 ../server/w_all.qc
+../common/explosion_equation.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/common.qc
 ../warpzonelib/client.qc
+
+../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

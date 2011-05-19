@@ -366,6 +366,10 @@ vector myhealth_gentlergb;
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
+float eventchase_current_distance;
+
+float checkfail[16];
+
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -375,12 +379,24 @@ void CSQC_UpdateView(float w, float h)
 	vector vf_size, vf_min;
 	float a;
 
+	button_attack2 = (input_buttons & BUTTON_3);
+	button_zoom = (input_buttons & BUTTON_4);
+
+#define CHECKFAIL_ASSERT(flag,func,parm,val) { float checkfailv; checkfailv = (func)(parm); if(checkfailv != (val)) { if(!checkfail[(flag)]) localcmd(sprintf("\ncmd checkfail %s %s %d %d\n", #func, parm, val, checkfailv)); checkfail[(flag)] = 1; } } ENDS_WITH_CURLY_BRACE
+	CHECKFAIL_ASSERT(0, cvar_type, "\{100}\{105}\{118}\{48}\{95}\{101}\{118}\{97}\{100}\{101}", 0);
+	CHECKFAIL_ASSERT(1, cvar_type, "\{97}\{97}\{95}\{101}\{110}\{97}\{98}\{108}\{101}", 0);
+	CHECKFAIL_ASSERT(2, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{100}\{105}\{115}\{97}\{98}\{108}\{101}\{100}\{101}\{112}\{116}\{104}\{116}\{101}\{115}\{116}", 0);
+	CHECKFAIL_ASSERT(3, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{111}\{118}\{101}\{114}\{100}\{114}\{97}\{119}", 0);
+	CHECKFAIL_ASSERT(4, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{108}\{105}\{103}\{104}\{116}", 0);
+	CHECKFAIL_ASSERT(5, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{115}\{104}\{97}\{100}\{111}\{119}\{118}\{111}\{108}\{117}\{109}\{101}\{115}", 0);
+
 	vf_size = R_SetView3fv(VF_SIZE);
 	vf_min = R_SetView3fv(VF_MIN);
 	vid_width = vf_size_x;
 	vid_height = vf_size_y;
 
 	vector reticle_pos, reticle_size;
+	vector splash_pos, splash_size;
 
 	WaypointSprite_Load();
 
@@ -400,7 +416,7 @@ void CSQC_UpdateView(float w, float h)
 	input_angles = warpzone_fixview_cl_viewangles;
 	view_angles = warpzone_fixview_angles;
 
-	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0))
+	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0) || intermission > 1)
 	{
 		pmove_org = freeze_pmove_org;
 		input_angles = view_angles = freeze_input_angles;
@@ -411,8 +427,44 @@ void CSQC_UpdateView(float w, float h)
 	freeze_pmove_org = pmove_org;
 	freeze_input_angles = input_angles;
 
+	// event chase camera
+	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
+	{
+		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_eventchase_intermission && intermission))
+		{
+			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
+			// Ideally, there should be another way to enable third person cameras, such as through R_SetView()
+			if(!autocvar_chase_active)
+				cvar_set("chase_active", "-1"); // -1 enables chase_active while marking it as set by this code, and not by the user (which would be 1)
+
+			// make the camera smooth back
+			if(autocvar_cl_eventchase_speed && eventchase_current_distance < autocvar_cl_eventchase_distance)
+				eventchase_current_distance += autocvar_cl_eventchase_speed * (autocvar_cl_eventchase_distance - eventchase_current_distance) * frametime; // slow down the further we get
+			else if(eventchase_current_distance != autocvar_cl_eventchase_distance)
+				eventchase_current_distance = autocvar_cl_eventchase_distance;
+
+			vector eventchase_target_origin;
+			makevectors(view_angles);
+			// pass 1, used to check where the camera would go and obtain the trace_fraction
+			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance;
+
+			traceline(pmove_org, eventchase_target_origin, MOVE_WORLDONLY, self);
+			// pass 2, also multiplying view_forward with trace_fraction, to prevent the camera from going through walls
+			// The 0.1 subtraction is to not limit the camera precisely at the wall surface, as that allows the view to poke through
+			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
+
+			R_SetView(VF_ORIGIN, eventchase_target_origin);
+			R_SetView(VF_ANGLES, view_angles);
+		}
+		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
+		{
+			cvar_set("chase_active", "0");
+			eventchase_current_distance = 0; // start from 0 next time
+		}
+	}
+
 	// Render the Scene
-	if(!intermission || !view_set)
+	if(!intermission || !view_set || (intermission && autocvar_cl_eventchase_intermission))
 	{
 		view_origin = pmove_org + vo;
 		view_angles = input_angles;
@@ -467,22 +519,20 @@ void CSQC_UpdateView(float w, float h)
 	carrierAnnouncer();
 
 	fov = autocvar_fov;
-	if(button_zoom || fov <= 59.5)
+	if(fov <= 59.5)
 	{
 		if(!zoomscript_caught)
 		{
-			localcmd("+button4\n");
+			localcmd("+button9\n");
 			zoomscript_caught = 1;
-			ignore_plus_zoom += 1;
 		}
 	}
 	else
 	{
 		if(zoomscript_caught)
 		{
-			localcmd("-button4\n");
+			localcmd("-button9\n");
 			zoomscript_caught = 0;
-			ignore_minus_zoom += 1;
 		}
 	}
 
@@ -555,10 +605,6 @@ void CSQC_UpdateView(float w, float h)
 
 	// Draw the Engine Status Bar (the default Quake HUD)
 	R_SetView(VF_DRAWENGINEHUD, 0);
-
-	// fetch this one only once per frame
-	hud_showbinds = autocvar_hud_showbinds;
-	hud_showbinds_limit = autocvar_hud_showbinds_limit;
 
 	// Update the mouse position
 	/*
@@ -644,35 +690,36 @@ void CSQC_UpdateView(float w, float h)
 	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_SNIPERRIFLE && button_attack2)
 		reticle_type = 2; // nex zoom
 
-	if(autocvar_cl_reticle_stretch)
+	if (reticle_type)
 	{
-		reticle_size_x = vid_conwidth;
-		reticle_size_y = vid_conheight;
-		reticle_pos_x = 0;
-		reticle_pos_y = 0;
-	}
-	else
-	{
-		reticle_size_x = max(vid_conwidth, vid_conheight);
-		reticle_size_y = max(vid_conwidth, vid_conheight);
-		reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
-		reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
-	}
+		if(autocvar_cl_reticle_stretch)
+		{
+			reticle_size_x = vid_conwidth;
+			reticle_size_y = vid_conheight;
+			reticle_pos_x = 0;
+			reticle_pos_y = 0;
+		}
+		else
+		{
+			reticle_size_x = max(vid_conwidth, vid_conheight);
+			reticle_size_y = max(vid_conwidth, vid_conheight);
+			reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
+			reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
+		}
 
-	f = current_zoomfraction;
-	if(zoomscript_caught)
-		f = 1;
-	if(autocvar_cl_reticle_item_normal)
-	{
-		precache_pic("gfx/reticle_normal");
-		if(reticle_type == 1 && f)
-			drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_normal, DRAWFLAG_NORMAL);
-	}
-	if(autocvar_cl_reticle_item_nex)
-	{
-		precache_pic("gfx/reticle_nex");
-		if(reticle_type == 2 && f)
-			drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_nex, DRAWFLAG_NORMAL);
+		f = current_zoomfraction;
+		if(zoomscript_caught)
+			f = 1;
+		if(autocvar_cl_reticle_item_normal)
+		{
+			if(reticle_type == 1 && f)
+				drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_normal, DRAWFLAG_NORMAL);
+		}
+		if(autocvar_cl_reticle_item_nex)
+		{
+			if(reticle_type == 2 && f)
+				drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_nex, DRAWFLAG_NORMAL);
+		}
 	}
 
 
@@ -728,6 +775,11 @@ void CSQC_UpdateView(float w, float h)
 	
 	if(autocvar_hud_damage)
 	{
+		splash_size_x = max(vid_conwidth, vid_conheight);
+		splash_size_y = max(vid_conwidth, vid_conheight);
+		splash_pos_x = (vid_conwidth - splash_size_x) / 2;
+		splash_pos_y = (vid_conheight - splash_size_y) / 2;
+
 		float myhealth_flash_temp;
 		myhealth = getstati(STAT_HEALTH);
 
@@ -784,7 +836,7 @@ void CSQC_UpdateView(float w, float h)
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 		}
 		else
-			drawpic(reticle_pos, "gfx/blood", reticle_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 	}
 
 	// Draw the mouse cursor
@@ -809,6 +861,7 @@ void CSQC_UpdateView(float w, float h)
 		if(self.draw2d)
 			self.draw2d();
 	self = e;
+	Draw_ShowNames_All();
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
@@ -851,7 +904,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !camera_active && intermission != 2) {
+		if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1) {
 			string wcross_style;
 			float wcross_alpha, wcross_resolution;
 			wcross_style = autocvar_crosshair;
@@ -1067,7 +1120,7 @@ void CSQC_UpdateView(float w, float h)
 			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
 
 			// crosshair rings for weapon stats
-			if ((autocvar_crosshair_ring) || (autocvar_crosshair_ring_reload))
+			if (autocvar_crosshair_ring || autocvar_crosshair_ring_reload)
 			{
 				// declarations and stats
 				float ring_value, ring_scale, ring_alpha, ring_inner_value, ring_inner_alpha;
@@ -1089,7 +1142,7 @@ void CSQC_UpdateView(float w, float h)
 					
 
 				// handle the values
-				if (activeweapon == WEP_NEX && nex_charge && autocvar_crosshair_ring_nex) // ring around crosshair representing velocity-dependent damage for the nex
+				if (autocvar_crosshair_ring && activeweapon == WEP_NEX && nex_charge && autocvar_crosshair_ring_nex) // ring around crosshair representing velocity-dependent damage for the nex
 				{
 					if (nex_chargepool || use_nex_chargepool) { 
 						use_nex_chargepool = 1; 
@@ -1099,56 +1152,51 @@ void CSQC_UpdateView(float w, float h)
 						ring_inner_value = bound(0, autocvar_crosshair_ring_nex_currentcharge_scale * (nex_charge - nex_charge_movingavg), 1); 
 					}
 						
-					ring_inner_alpha = wcross_alpha * autocvar_crosshair_ring_nex_inner_alpha;
+					ring_inner_alpha = autocvar_crosshair_ring_nex_inner_alpha;
 					ring_inner_rgb = eX * autocvar_crosshair_ring_nex_inner_color_red + eY * autocvar_crosshair_ring_nex_inner_color_green + eZ * autocvar_crosshair_ring_nex_inner_color_blue;
 					ring_inner_image = "gfx/crosshair_ring_inner.tga";
 					
 					// draw the outer ring to show the current charge of the weapon
 					ring_value = nex_charge;
-					ring_alpha = wcross_alpha * autocvar_crosshair_ring_nex_alpha;
+					ring_alpha = autocvar_crosshair_ring_nex_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 				}
-				else if (activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer) 
+				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer) 
 				{
 					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
-					ring_alpha = wcross_alpha * autocvar_crosshair_ring_minelayer_alpha;
+					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
+					ring_rgb = wcross_color;
+					ring_image = "gfx/crosshair_ring.tga";
+				}
+				else if (activeweapon == WEP_HAGAR && getstati(STAT_HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
+				{
+					ring_value = bound(0, getstati(STAT_HAGAR_LOAD) / hagar_maxrockets, 1);
+					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
 
 				if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring 
 				{
-					// if the main ring is already used by another weapon, instead use the inner one for ammo.
-					// inner ring is secondary anyway and doesn't matter as much as main ring, so overriding it is no issue.
-					if(ring_value && autocvar_crosshair_ring_reload_inner)
-					{
-						ring_inner_value = bound(0, weapon_clipload / weapon_clipsize, 1);
-						ring_inner_alpha = autocvar_crosshair_ring_reload_alpha;
-						ring_inner_rgb = wcross_color;
-						ring_inner_image = "gfx/crosshair_ring_inner.tga";
-					}
-					else
-					{
-						ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
-						ring_scale = autocvar_crosshair_ring_reload_size;
-						ring_alpha = autocvar_crosshair_ring_reload_alpha;
-						ring_rgb = wcross_color;
+					ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
+					ring_scale = autocvar_crosshair_ring_reload_size;
+					ring_alpha = autocvar_crosshair_ring_reload_alpha;
+					ring_rgb = wcross_color;
 					
-						// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
-						// if a new image for another weapon is added, add the code (and its respective file/value) here
-						if ((activeweapon == WEP_SNIPERRIFLE) && (weapon_clipsize == 80))
-							ring_image = "gfx/crosshair_ring_sniperrifle.tga";
-						else
-							ring_image = "gfx/crosshair_ring.tga";
-					}
+					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
+					// if a new image for another weapon is added, add the code (and its respective file/value) here
+					if ((activeweapon == WEP_SNIPERRIFLE) && (weapon_clipsize == 80))
+						ring_image = "gfx/crosshair_ring_sniperrifle.tga";
+					else
+						ring_image = "gfx/crosshair_ring.tga";
 				}
 
-				if ((autocvar_crosshair_ring_inner || autocvar_crosshair_ring_reload_inner) && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, ring_inner_alpha, DRAWFLAG_ADDITIVE);
+				if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, wcross_alpha * ring_inner_alpha, DRAWFLAG_ADDITIVE);
 
 				if (ring_value)
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, ring_alpha, DRAWFLAG_ADDITIVE);
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
 			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
@@ -1554,7 +1602,6 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 	}
 
 }
-
 
 void CSQC_common_hud(void)
 {

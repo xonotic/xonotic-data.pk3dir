@@ -57,7 +57,7 @@ void Ent_DamageInfo(float isNew)
 		if(self.damageforcescale)
 			if(vlen(thisforce))
 			{
-				self.move_velocity = self.move_velocity + self.damageforcescale * thisforce;
+				self.move_velocity = self.move_velocity + damage_explosion_calcpush(self.damageforcescale * thisforce, self.move_velocity, autocvar_g_balance_damagepush_speedfactor);
 				self.move_flags &~= FL_ONGROUND;
 			}
 

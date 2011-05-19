@@ -141,6 +141,23 @@ void WarpZone_Camera_Read(float isnew)
 		self.drawmask = MASK_NORMAL;
 }
 
+void CL_RotateMoves(vector ang) = #638;
+void WarpZone_Teleported_Read(float isnew)
+{
+	vector v;
+	self.classname = "warpzone_teleported";
+	v_x = ReadCoord();
+	v_y = ReadCoord();
+	v_z = ReadCoord();
+	if(!isnew)
+		return;
+	self.warpzone_transform = v;
+	R_SetView3fv(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(self, R_SetView3fv(VF_CL_VIEWANGLES)));
+	if(checkextension("DP_CSQC_ROTATEMOVES"))
+		CL_RotateMoves(v);
+		//CL_RotateMoves('0 90 0');
+}
+
 float warpzone_fixingview;
 float warpzone_fixingview_drawexteriormodel;
 //float warpzone_fixingview_sidespeed;

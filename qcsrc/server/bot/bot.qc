@@ -98,6 +98,8 @@ void bot_think()
 			self.bot_strategytime = 0;
 		}
 	}
+	else if(self.aistatus & AI_STATUS_STUCK)
+		navigation_unstuck();
 
 	// now call the current bot AI (havocbot for example)
 	self.bot_ai();
@@ -374,6 +376,8 @@ void bot_clientdisconnect()
 	self.playermodel_freeme = string_null;
 	self.playerskin_freeme = string_null;
 	remove(self.bot_cmd_current);
+	if(bot_waypoint_queue_owner==self)
+		bot_waypoint_queue_owner = world;
 }
 
 void bot_clientconnect()

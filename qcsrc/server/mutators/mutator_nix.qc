@@ -191,7 +191,7 @@ MUTATOR_HOOKFUNCTION(nix_FilterItem)
 
 MUTATOR_HOOKFUNCTION(nix_OnEntityPreSpawn)
 {
-	if(self.classname == "target_items") // items triggers cannot work in nixnex (as they change weapons/ammo)
+	if(self.classname == "target_items") // items triggers cannot work in nix (as they change weapons/ammo)
 		return 1;
 	return 0;
 }

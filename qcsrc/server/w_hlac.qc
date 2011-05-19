@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hlac", "hlac", _("Heavy Laser Assault Cannon"))
+REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hlac", "hlac", _("Heavy Laser Assault Cannon"))
 #else
 #ifdef SVQC
 
@@ -137,6 +137,7 @@ void HLAC_fire1_02()
 	if (self.BUTTON_ATCK)
 	{
 		if (!weapon_action(self.weapon, WR_CHECKAMMO1))
+		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
 			w_ready();
