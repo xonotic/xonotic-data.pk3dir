@@ -204,17 +204,20 @@ void centerprint(string strMessage)
 			centerprint_width[i] = stringwidth(s, TRUE, centerprint_fontsize);
 			++i;
 
+#if 0
 			// half height for empty lines looks better
 			if(s == "")
 				hcount += 0.5;
 			else
 				hcount += 1;
+#endif
 
 			if(i >= CENTERPRINT_MAX_LINES)
 				break;
 		}
 	}
 
+#if 0
 	float h, havail;
 	h = centerprint_fontsize_y*hcount;
 
@@ -224,7 +227,6 @@ void centerprint(string strMessage)
 	if(havail > vid_conheight - 70)
 		havail = vid_conheight - 70; // avoid overlapping HUD
 
-#if 0
 	float forbiddenmin, forbiddenmax, allowedmin, allowedmax, preferred;
 
 	// here, the centerprint would cover the crosshair. REALLY BAD.
