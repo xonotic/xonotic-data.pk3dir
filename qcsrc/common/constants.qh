@@ -63,6 +63,7 @@ const float TE_CSQC_NOTIFY = 112;
 const float TE_CSQC_WEAPONCOMPLAIN = 113;
 const float TE_CSQC_NEX_SCOPE = 116;
 const float TE_CSQC_MINELAYER_MAXMINES = 117;
+const float TE_CSQC_HAGAR_MAXROCKETS = 118;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -113,7 +114,8 @@ const float ENT_CLIENT_HOOK = 27;
 const float ENT_CLIENT_LGBEAM = 28;
 const float ENT_CLIENT_GAUNTLET = 29;
 const float ENT_CLIENT_ACCURACY = 30;
-const float ENT_CLIENT_WARPZONE_TELEPORTED = 31;
+const float ENT_CLIENT_SHOWNAMES = 31;
+const float ENT_CLIENT_WARPZONE_TELEPORTED = 32;
 
 const float ENT_CLIENT_TURRET = 40;
 
@@ -318,6 +320,7 @@ const float STAT_NEX_CHARGEPOOL = 53;
 const float STAT_HIT_TIME = 54;
 const float STAT_TYPEHIT_TIME = 55;
 const float STAT_LAYED_MINES = 56;
+const float STAT_HAGAR_LOAD = 57;
 
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
@@ -354,6 +357,12 @@ const float STAT_PINKALIVE = 103;
 // freeze tag
 const float STAT_FROZEN = 104;
 const float STAT_REVIVE_PROGRESS = 105;
+
+const float STAT_DOM_TOTAL_PPS = 100;
+const float STAT_DOM_PPS_RED = 101;
+const float STAT_DOM_PPS_BLUE = 102;
+const float STAT_DOM_PPS_PINK = 103;
+const float STAT_DOM_PPS_YELLOW = 104;
 
 //const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
 //const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin
@@ -627,7 +636,7 @@ float WR_RELOAD         = 9; // (SVQC) does not need to do anything
 float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
 float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
 float WR_SWITCHABLE	= 12; // (CSQC) impact effect
-
+float WR_PLAYERDEATH    = 13; // (SVQC) does not need to do anything
 
 float HUD_PANEL_WEAPONS		= 0;
 float HUD_PANEL_AMMO		= 1;
@@ -644,7 +653,8 @@ float HUD_PANEL_PRESSEDKEYS	= 11;
 float HUD_PANEL_CHAT		= 12;
 float HUD_PANEL_ENGINEINFO	= 13;
 float HUD_PANEL_INFOMESSAGES	= 14;
-float HUD_PANEL_NUM		= 15; // always last panel id + 1, please increment when adding a new panel
+float HUD_PANEL_PHYSICS	= 15;
+float HUD_PANEL_NUM		= 16; // always last panel id + 1, please increment when adding a new panel
 
 string HUD_PANELNAME_WEAPONS 		= "weapons";
 string HUD_PANELNAME_AMMO	 	= "ammo";
@@ -661,6 +671,7 @@ string HUD_PANELNAME_PRESSEDKEYS 	= "pressedkeys";
 string HUD_PANELNAME_CHAT	 	= "chat";
 string HUD_PANELNAME_ENGINEINFO	 	= "engineinfo";
 string HUD_PANELNAME_INFOMESSAGES	= "infomessages";
+string HUD_PANELNAME_PHYSICS	= "physics";
 
 float HUD_MENU_ENABLE		= 0;
 

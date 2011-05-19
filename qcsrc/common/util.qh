@@ -34,6 +34,8 @@ float median(float a, float b, float c);
 // works for up to 10 decimals!
 string ftos_decimals(float number, float decimals);
 
+float fexists(string f);
+
 vector colormapPaletteColor(float c, float isPants);
 
 // unzone the string, and return it as tempstring. Safe to be called on string_null
@@ -219,6 +221,7 @@ float get_model_parameters(string mod, float skn); // call with string_null to c
 switch(id) {\
 	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; break; \
 	case HUD_PANEL_INFOMESSAGES: panel_name = HUD_PANELNAME_INFOMESSAGES; break; \
+	case HUD_PANEL_PHYSICS: panel_name = HUD_PANELNAME_PHYSICS; break; \
 } ENDS_WITH_CURLY_BRACE
 
 // Get name of specified panel id
@@ -237,8 +240,8 @@ switch(id) { \
 	case HUD_PANEL_MODICONS: panel_name = HUD_PANELNAME_MODICONS; break; \
 	case HUD_PANEL_PRESSEDKEYS: panel_name = HUD_PANELNAME_PRESSEDKEYS; break; \
 	case HUD_PANEL_CHAT: panel_name = HUD_PANELNAME_CHAT; break; \
-}\
-HUD_Panel_GetName_Part2(id)
+    default: HUD_Panel_GetName_Part2(id)\
+}
 
 vector vec2(vector v);
 

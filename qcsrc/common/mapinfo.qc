@@ -875,12 +875,8 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 				if(MapInfo_Map_supportedGametypes & i)
 					fputs(fh, sprintf("gametype %s // defaults: %s\n", MapInfo_Type_ToString(i), _MapInfo_GetDefaultEx(i)));
 
-			fh2 = fopen(strcat("scripts/", pFilename, ".arena"), FILE_READ);
-			if(fh2 >= 0)
-			{
-				fclose(fh2);
+			if(fexists(strcat("scripts/", pFilename, ".arena")))
 				fputs(fh, "settemp_for_type all sv_q3acompat_machineshotgunswap 1\n");
-			}
 
 			fputs(fh, "// optional: fog density red green blue alpha mindist maxdist\n");
 			fputs(fh, "// optional: settemp_for_type (all|gametypename) cvarname value\n");

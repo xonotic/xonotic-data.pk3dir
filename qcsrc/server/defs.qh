@@ -210,6 +210,7 @@ void w_clear();
 void w_ready();
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
 .float weapon_nextthink;
+.float weapon_forbidchange;
 .void() weapon_think;
 
 //float	PLAYER_WEAPONSELECTION_DELAY = );
@@ -312,7 +313,6 @@ float default_weapon_alpha;
 .float cvar_cl_handicap;
 .float cvar_cl_playerdetailreduction;
 .float cvar_scr_centertime;
-.float cvar_cl_shownames;
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];
@@ -363,15 +363,6 @@ floatfield Item_CounterField(float it);
 float W_AmmoItemCode(float wpn);
 float W_WeaponBit(float wpn);
 string W_Name(float weaponid);
-
-void UpdateSelectedPlayer();
-void ClearSelectedPlayer();
-.entity selected_player;
-.entity last_selected_player;
-.float selected_player_time; // when this player has been selected
-.float selected_player_count; // how long this player has been directly pointed to
-.float selected_player_display_needs_update; // are regular updates necessary? (health)
-.float selected_player_display_timeout; // when the selection will time out
 
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
@@ -659,6 +650,8 @@ string deathmessage;
 .float nex_charge;
 .float nex_charge_rottime;
 .float nex_chargepool_ammo;
+
+.float hagar_load;
 
 float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
 

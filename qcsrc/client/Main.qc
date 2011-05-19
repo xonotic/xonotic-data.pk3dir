@@ -169,7 +169,9 @@ void CSQC_Init(void)
 	minimapname = strzone(minimapname);
 
 	WarpZone_Init();
+
 	hud_configure_prev = -1;
+	tab_panel = -1;
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -592,6 +594,7 @@ void GameCommand(string msg)
             vote_prev = 0;
             cvar_set("cl_allow_uid2name", "1");
             vote_change = -9999;
+			uid2name_dialog = 0;
         }
         else
         {
@@ -606,6 +609,7 @@ void GameCommand(string msg)
             vote_prev = 0;
             cvar_set("cl_allow_uid2name", "0");
             vote_change = -9999;
+			uid2name_dialog = 0;
         }
         else
         {
@@ -650,17 +654,38 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
+void Ent_RemoveEntCS()
+{
+	entcs_receiver[self.sv_entnum] = world;
+}
 void Ent_ReadEntCS()
 {
+	float sf;
 	InterpolateOrigin_Undo();
 
 	self.classname = "entcs_receiver";
-	self.sv_entnum = ReadByte() - 1;
-	self.origin_x = ReadShort();
-	self.origin_y = ReadShort();
-	self.origin_z = ReadShort();
-	self.angles_y = ReadByte() * 360.0 / 256;
-	self.origin_z = self.angles_x = self.angles_z = 0;
+	sf = ReadByte();
+
+	if(sf & 1)
+		self.sv_entnum = ReadByte();
+	if(sf & 2)
+	{
+		self.origin_x = ReadShort();
+		self.origin_y = ReadShort();
+		self.origin_z = ReadShort();
+	}
+	if(sf & 4)
+	{
+		self.angles_y = ReadByte() * 360.0 / 256;
+		self.angles_x = self.angles_z = 0;
+	}
+	if(sf & 8)
+		self.healthvalue = ReadByte() * 10;
+	if(sf & 16)
+		self.armorvalue = ReadByte() * 10;
+
+	entcs_receiver[self.sv_entnum] = self;
+	self.entremove = Ent_RemoveEntCS;
 
 	InterpolateOrigin_Note();
 }
@@ -694,7 +719,8 @@ void Ent_ReadPlayerScore()
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 	if(!isNew && n != self.sv_entnum)
 	{
-		print(_("A CSQC entity changed its owner!\n"));
+		//print(_("A CSQC entity changed its owner!\n"));
+		print(sprintf(_("A CSQC entity changed its owner! (edict: %d, classname: %s)\n"), num_for_edict(self), self.classname));
 		isNew = true;
 		Ent_Remove();
 		self.enttype = ENT_CLIENT_SCORES;
@@ -766,10 +792,6 @@ void Ent_ReadTeamScore()
 	HUD_UpdateTeamPos(o);
 }
 
-void Net_Reset()
-{
-}
-
 void Ent_ClientData()
 {
 	float f;
@@ -807,6 +829,15 @@ void Ent_ClientData()
 		// clear race stuff
 		race_laptime = 0;
 		race_checkpointtime = 0;
+	}
+	if (autocvar_hud_panel_healtharmor_progressbar_gfx)
+	{
+		if ( (spectatee_status == -1 && newspectatee_status > 0) //before observing, now spectating
+		  || (spectatee_status > 0 && newspectatee_status > 0 && spectatee_status != newspectatee_status) //changed spectated player
+		)
+			prev_p_health = -1;
+		else if(spectatee_status && !newspectatee_status) //before observing/spectating, now playing
+			prev_health = -1;
 	}
 	spectatee_status = newspectatee_status;
 }
@@ -908,7 +939,8 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 	if(self.enttype)
 		if(t != self.enttype)
 		{
-			print(_("A CSQC entity changed its type!\n"));
+			//print(_("A CSQC entity changed its type!\n"));
+			print(sprintf(_("A CSQC entity changed its type! (edict: %d, classname: %s)\n"), num_for_edict(self), self.classname));
 			Ent_Remove();
 			bIsNewEntity = 1;
 		}
@@ -946,7 +978,8 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		default:
-			error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
+			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
+			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
 			break;
 	}
 
@@ -976,15 +1009,6 @@ void CSQC_Ent_Remove()
 
 void Gamemode_Init()
 {
-	if(gametype == GAME_ONSLAUGHT) {
-		print(strcat("Using ", minimapname, " as minimap.\n"));
-		precache_pic("gfx/ons-cp-neutral.tga");
-		precache_pic("gfx/ons-cp-red.tga");
-		precache_pic("gfx/ons-cp-blue.tga");
-		precache_pic("gfx/ons-frame.tga");
-		precache_pic("gfx/ons-frame-team.tga");
-	}
-
 	if not(isdemo())
 	{
 		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), "\n");
@@ -1076,6 +1100,8 @@ void Ent_Init()
 	serverflags = ReadByte();
 
 	minelayer_maxmines = ReadByte();
+
+	hagar_maxrockets = ReadByte();
 
 	g_trueaim_minrange = ReadCoord();
 
@@ -1391,7 +1417,7 @@ string getcommandkey(string text, string command)
 	string keys;
 	float n, j, k, l;
 
-	if (!hud_showbinds)
+	if (!autocvar_hud_showbinds)
 		return text;
 
 	keys = db_get(binddb, command);
@@ -1409,7 +1435,7 @@ string getcommandkey(string text, string command)
 					keys = strcat(keys, ", ", keynumtostring(k));
 
 				++l;
-				if (hud_showbinds_limit > 0 && hud_showbinds_limit >= l) break;
+				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit >= l) break;
 			}
 
 		}
@@ -1417,12 +1443,12 @@ string getcommandkey(string text, string command)
 	}
 
 	if ("" == keys) {
-		if (hud_showbinds > 1)
+		if (autocvar_hud_showbinds > 1)
 			return sprintf(_("%s (not bound)"), text);
 		else
 			return text;
 	}
-	else if (hud_showbinds > 1)
+	else if (autocvar_hud_showbinds > 1)
 		return sprintf(_("%s (%s)"), text, keys);
 	else
 		return keys;
