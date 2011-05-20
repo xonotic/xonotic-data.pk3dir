@@ -5,9 +5,11 @@ CLASS(Image) EXTENDS(Item)
 	METHOD(Image, toString, string(entity))
 	METHOD(Image, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(Image, updateAspect, void(entity))
+	METHOD(Image, setZoom, void(entity, float))
 	ATTRIB(Image, src, string, string_null)
 	ATTRIB(Image, color, vector, '1 1 1')
 	ATTRIB(Image, forcedAspect, float, 0)
+	ATTRIB(Image, zoomFactor, float, 1)
 	ATTRIB(Image, imgOrigin, vector, '0 0 0')
 	ATTRIB(Image, imgSize, vector, '0 0 0')
 ENDCLASS(Image)
@@ -21,10 +23,15 @@ string Image_toString(entity me)
 void Image_configureImage(entity me, string path)
 {
 	me.src = path;
+	me.zoomFactor = 1;
 }
 void Image_draw(entity me)
 {
+	if (me.zoomFactor > 1)
+		draw_SetClip();
 	draw_Picture(me.imgOrigin, me.src, me.imgSize, me.color, 1);
+	if (me.zoomFactor > 1)
+		draw_ClearClip();
 }
 void Image_updateAspect(entity me)
 {
@@ -56,8 +63,21 @@ void Image_updateAspect(entity me)
 			// y too large, so center y-wise
 			me.imgSize = eX + eY * (me.size_x / (asp * me.size_y));
 		}
+		if (me.zoomFactor)
+			me.imgSize = me.imgSize * me.zoomFactor;
 		me.imgOrigin = '0.5 0.5 0' - 0.5 * me.imgSize;
 	}
+}
+void Image_setZoom(entity me, float z)
+{
+	if (z < 0)
+		me.zoomFactor = -z;
+	else if (z == 0)
+		me.zoomFactor = 1;
+	else
+		me.zoomFactor *= z;
+	me.zoomFactor = bound(1/16, me.zoomFactor, 16);
+	me.updateAspect(me);
 }
 void Image_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {

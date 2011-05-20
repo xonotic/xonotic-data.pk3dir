@@ -35,6 +35,18 @@ void nextScreenshot_Click(entity btn, entity me)
 {
 	me.scrList.goScreenshot(me.scrList, +1);
 }
+void increaseZoom_Click(entity btn, entity me)
+{
+	me.screenshotImage.setZoom(me.screenshotImage, 2);
+}
+void decreaseZoom_Click(entity btn, entity me)
+{
+	me.screenshotImage.setZoom(me.screenshotImage, 1/2);
+}
+void resetZoom_Click(entity btn, entity me)
+{
+	me.screenshotImage.setZoom(me.screenshotImage, 0);
+}
 void toggleSlideShow_Click(entity btn, entity me)
 {
 	if (me.slideShowButton.forcePressed)
@@ -99,18 +111,29 @@ void XonoticScreenshotViewerDialog_fill(entity me)
 		me.TD(me, me.rows - 1, me.columns, e = makeXonoticScreenshotImage());
 			me.screenshotImage = e;
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TDempty(me, 1/4);
-		me.TD(me, 1, 1, e = makeXonoticButton("Previous", '0 0 0'));
+		me.TDempty(me, 1/20 * me.columns);
+		me.TD(me, 1, 1/20 * me.columns, e = makeXonoticButton("-", '0 0 0'));
+			e.onClick = decreaseZoom_Click;
+			e.onClickEntity = me;
+		me.TD(me, 1, 1/20 * me.columns, e = makeXonoticButton("+", '0 0 0'));
+			e.onClick = increaseZoom_Click;
+			e.onClickEntity = me;
+		me.TD(me, 1, 2/20 * me.columns, e = makeXonoticButton("reset", '0 0 0'));
+			e.onClick = resetZoom_Click;
+			e.onClickEntity = me;
+
+		me.TDempty(me, 2/20 * me.columns);
+		me.TD(me, 1, 3/20 * me.columns, e = makeXonoticButton("Previous", '0 0 0'));
 			e.onClick = prevScreenshot_Click;
 			e.onClickEntity = me;
-		me.TDempty(me, 1/4);
-		me.TD(me, 1, 1, e = makeXonoticButton("Slide show", '0 0 0'));
+		me.TD(me, 1, 3/20 * me.columns, e = makeXonoticButton("Next", '0 0 0'));
+			e.onClick = nextScreenshot_Click;
+			e.onClickEntity = me;
+
+		me.TDempty(me, 2/20 * me.columns);
+		me.TD(me, 1, 4/20 * me.columns, e = makeXonoticButton("Slide show", '0 0 0'));
 			e.onClick = toggleSlideShow_Click;
 			e.onClickEntity = me;
 			me.slideShowButton = e;
-		me.TDempty(me, 1/4);
-		me.TD(me, 1, 1, e = makeXonoticButton("Next", '0 0 0'));
-			e.onClick = nextScreenshot_Click;
-			e.onClickEntity = me;
 }
 #endif
