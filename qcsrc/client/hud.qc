@@ -142,10 +142,11 @@ float stringwidth_nocolors(string s, vector theSize)
 	return stringwidth(s, FALSE, theSize);
 }
 
-#define CENTERPRINT_MAX_LINES 30
+#define CENTERPRINT_MAX_LINES 10
+float cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_LINES];
 float centerprint_width[CENTERPRINT_MAX_LINES];
-float centerprint_time;
+float centerprint_time[CENTERPRINT_MAX_LINES];
 float centerprint_expire;
 float centerprint_num;
 float centerprint_offset_hint;
@@ -185,10 +186,27 @@ void centerprint(string strMessage)
 	if(strMessage == "")
 		return;
 
-	// if we get here, we have a message. Initialize its height.
-	centerprint_num = 0;
+	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_LINES; ++i, ++j)
+	{
+		if (j == CENTERPRINT_MAX_LINES)
+			j = 0;
+		if(centerprint_messages[j] == strMessage)
+		{
+			centerprint_time[j] = time;
+			return;
+		}
+	}
 
-	n = tokenizebyseparator(strMessage, "\n");
+	--cpm_index;
+	if (cpm_index == -1)
+		cpm_index = CENTERPRINT_MAX_LINES - 1;
+	if(centerprint_messages[cpm_index])
+		strunzone(centerprint_messages[cpm_index]);
+	centerprint_messages[cpm_index] = strzone(strMessage);
+	centerprint_time[cpm_index] = time;
+
+
+#if 0
 	i = hcount = 0;
 	for(j = 0; j < n; ++j)
 	{
@@ -204,18 +222,17 @@ void centerprint(string strMessage)
 			centerprint_width[i] = stringwidth(s, TRUE, centerprint_fontsize);
 			++i;
 
-#if 0
 			// half height for empty lines looks better
 			if(s == "")
 				hcount += 0.5;
 			else
 				hcount += 1;
-#endif
 
 			if(i >= CENTERPRINT_MAX_LINES)
 				break;
 		}
 	}
+#endif
 
 #if 0
 	float h, havail;
@@ -278,50 +295,66 @@ void centerprint(string strMessage)
 #else
 #endif
 
-	centerprint_num = i;
+	// centerprint_num = i;
 
 	centerprint_expire = time + autocvar_scr_centertime;
 }
 
 void HUD_DrawCenterPrint (void)
 {
-	float i;
+	float i, j, k, n;
 	vector pos;
 	string ts;
-	float a, sz;
+	float a, sz, fade;
 
-	if(time - centerprint_time < 0.25)
-		a = (time - centerprint_time) / 0.25;
-	else
-		a = bound(0, 1 - 4 * (time - centerprint_expire), 1);
-
-	if(a <= 0)
-		return;
-
-	sz = 0.8 + (a / 5);
-
-	if(centerprint_num * autocvar_scr_centersize > 24 && scoreboard_active) // 24 = height of Scoreboard text
-		centerprint_start_y = scoreboard_bottom + centerprint_fontsize_y;
+	// if(centerprint_num * autocvar_scr_centersize > 24 && scoreboard_active) // 24 = height of Scoreboard text
+		// centerprint_start_y = scoreboard_bottom + centerprint_fontsize_y;
 
 	pos = centerprint_start;
-	drawfontscale = sz * '1 1 0';
-	for (i=0; i<centerprint_num; i = i + 1)
+	fade = min(autocvar_scr_centertime/8, 0.25);
+	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_LINES; ++i, ++j)
 	{
-		ts = centerprint_messages[i];
-		if (sz == 1)
-			pos_x = (vid_conwidth - centerprint_width[i]) * 0.5;
-		else
-			pos_x = (vid_conwidth - stringwidth(ts, TRUE, centerprint_fontsize)) * 0.5;
-		if (ts != "")
+		if (j == CENTERPRINT_MAX_LINES)
+			j = 0;
+		if (centerprint_time[j] + autocvar_scr_centertime < time)
+			continue;
+		else if (centerprint_time[j] + autocvar_scr_centertime - fade > time)
 		{
-			drawcolorcodedstring(pos + '0 1 0' * (1 - sz) * 0.5 *centerprint_fontsize_y, ts, centerprint_fontsize, a, DRAWFLAG_NORMAL);
-			pos_y = pos_y + centerprint_fontsize_y;
+			a = 1;
+			sz = 1;
 		}
-		else
-			// half height for empty lines looks better
-			pos_y = pos_y + sz * centerprint_fontsize_y * 0.5;
+		else if (centerprint_time[j] + autocvar_scr_centertime > time)
+		{
+			a = (centerprint_time[j] + autocvar_scr_centertime - time) / fade;
+			sz = 0.8 + a * (1 - 0.8);
+		}
+
+		drawfontscale = sz * '1 1 0';
+		n = tokenizebyseparator(centerprint_messages[j], "\n");
+		for(k = 0; k < n; ++k)
+		{
+			getWrappedLine_remaining = argv(k);
+			while(getWrappedLine_remaining)
+			{
+				ts = getWrappedLine(vid_conwidth * 0.75, centerprint_fontsize, stringwidth_colors);
+				if (cvar("debug"))
+				{
+					ts = strcat(ftos(i), " -", ts, "-");
+					print(sprintf("^x8f0ts = %s\n", ts));
+				}
+				pos_x = (vid_conwidth - stringwidth(ts, TRUE, centerprint_fontsize)) * 0.5;
+				if (ts != "")
+				{
+					drawcolorcodedstring(pos + '0 1 0' * (1 - sz) * 0.5 *centerprint_fontsize_y, ts, centerprint_fontsize, a, DRAWFLAG_NORMAL);
+					pos_y = pos_y + centerprint_fontsize_y;
+				}
+				else
+					// half height for empty lines looks better
+					pos_y = pos_y + sz * centerprint_fontsize_y * 0.5;
+			}
+		}
+		drawfontscale = '1 1 0';
 	}
-	drawfontscale = '1 1 0';
 }
 
 void drawstringright(vector position, string text, vector scale, vector rgb, float alpha, float flag)
