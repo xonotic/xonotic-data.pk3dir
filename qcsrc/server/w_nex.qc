@@ -87,8 +87,13 @@ float w_nex(float req)
 	float ammo_amount;
 	if (req == WR_AIM)
 	{
-		self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
-		self.BUTTON_ATCK2 = bot_aim(1000000, 0, 1, FALSE);
+		if(bot_aim(1000000, 0, 1, FALSE))
+			self.BUTTON_ATCK = TRUE;
+		else
+		{
+			if(autocvar_g_balance_nex_charge)
+				self.BUTTON_ATCK2 = TRUE;
+		}
 	}
 	else if (req == WR_THINK)
 	{
@@ -115,7 +120,7 @@ float w_nex(float req)
 					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nex_primary_animtime, w_ready);
 				}
 			}
-			if ((autocvar_g_balance_nex_secondary_charge && !autocvar_g_balance_nex_secondary) ? self.BUTTON_ZOOM : self.BUTTON_ATCK2)
+			if ((autocvar_g_balance_nex_secondary_charge && !autocvar_g_balance_nex_secondary) ? (self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) : self.BUTTON_ATCK2)
 			{
 				if(autocvar_g_balance_nex_secondary_charge)
 				{
@@ -187,20 +192,6 @@ float w_nex(float req)
 						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nex_secondary_animtime, w_ready);
 					}
 				}
-			}
-		}
-
-		if(autocvar_g_balance_nex_charge)
-		{
-			self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
-			self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
-			self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
-
-			if(self.nex_charge > autocvar_g_balance_nex_charge_animlimit)
-			{
-				self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
-				self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
-				self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
 			}
 		}
 	}

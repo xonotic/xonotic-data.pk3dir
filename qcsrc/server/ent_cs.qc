@@ -31,7 +31,7 @@ float entcs_customize()
 	if(other == o)
 		return FALSE;
 	if(other.classname == "player")
-		if(o.team != other.team)
+		if(!teams_matter || o.team != other.team)
 			if not (radar_showennemies)
 				return FALSE;
 	return TRUE;
@@ -39,29 +39,51 @@ float entcs_customize()
 
 float entcs_send(entity to, float sf)
 {
-	entity o;
-	o = self.owner;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
-	WriteByte(MSG_ENTITY, num_for_edict(o));
-	WriteShort(MSG_ENTITY, o.origin_x);
-	WriteShort(MSG_ENTITY, o.origin_y);
-	WriteShort(MSG_ENTITY, o.origin_z);
-	WriteByte(MSG_ENTITY, o.angles_y * 256.0 / 360);
+	WriteByte(MSG_ENTITY, sf);
+	if(sf & 1)
+		WriteByte(MSG_ENTITY, num_for_edict(self.owner)-1);
+	if(sf & 2)
+	{
+		WriteShort(MSG_ENTITY, self.origin_x);
+		WriteShort(MSG_ENTITY, self.origin_y);
+		WriteShort(MSG_ENTITY, self.origin_z);
+	}
+	if(sf & 4)
+		WriteByte(MSG_ENTITY, self.angles_y * 256.0 / 360);
+	if(sf & 8)
+		WriteByte(MSG_ENTITY, self.health / 10); // FIXME use a better scale?
+	if(sf & 16)
+		WriteByte(MSG_ENTITY, self.armorvalue / 10); // FIXME use a better scale?
 	return TRUE;
 };
 
 void entcs_think()
 {
-	self.nextthink = time;
+	self.nextthink = time + 0.033333333333; // increase this to like 0.15 once the client can do smoothing
 
 	entity o;
 	o = self.owner;
 
-	if(o.origin != self.origin || o.angles != self.angles)
+	if(o.origin != self.origin)
 	{
 		setorigin(self, o.origin);
+		self.SendFlags |= 2;
+	}
+	if(o.angles_y != self.angles_y)
+	{
 		self.angles = o.angles;
-		self.SendFlags |= 1;
+		self.SendFlags |= 4;
+	}
+	if(o.health != self.health)
+	{
+		self.health = o.health;
+		self.SendFlags |= 8;
+	}
+	if(o.armorvalue != self.armorvalue)
+	{
+		self.armorvalue = o.armorvalue;
+		self.SendFlags |= 16;
 	}
 };
 
