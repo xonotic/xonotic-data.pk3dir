@@ -353,6 +353,7 @@ void HUD_DrawCenterPrint (void)
 					pos_y = pos_y + sz * centerprint_fontsize_y * 0.5;
 			}
 		}
+		pos_y += centerprint_fontsize_y * 0.5;
 		drawfontscale = '1 1 0';
 	}
 }
