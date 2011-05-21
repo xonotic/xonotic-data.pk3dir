@@ -21,6 +21,29 @@ Note: The only teams who can use dom control points are identified by spawnfunc_
 .entity sprite;
 .float captime;
 
+// pps: points per second
+.float dom_total_pps;
+.float dom_pps_red;
+.float dom_pps_blue;
+.float dom_pps_yellow;
+.float dom_pps_pink;
+float total_pps;
+float pps_red;
+float pps_blue;
+float pps_yellow;
+float pps_pink;
+void set_dom_state(entity e)
+{
+	// BIG ugly hack to make stat sending work
+	e.dom_total_pps = total_pps;
+	e.dom_pps_red = pps_red;
+	e.dom_pps_blue = pps_blue;
+	if(c3 >= 0)
+		e.dom_pps_yellow = pps_yellow;
+	if(c4 >= 0)
+		e.dom_pps_pink = pps_pink;
+}
+
 void() dom_controlpoint_setup;
 
 void LogDom(string mode, float team_before, entity actor)
@@ -107,25 +130,57 @@ void dompoint_captured ()
 	self.delay = old_delay;
 	self.team = old_team;
 
+	switch(self.team)
+	{
+		// "fix" pps when slightly under 0 because of approximation errors
+		case COLOR_TEAM1:
+			pps_red -= (points/wait_time);
+			if (pps_red < 0) pps_red = 0;
+			break;
+		case COLOR_TEAM2:
+			pps_blue -= (points/wait_time);
+			if (pps_blue < 0) pps_blue = 0;
+			break;
+		case COLOR_TEAM3:
+			pps_yellow -= (points/wait_time);
+			if (pps_yellow < 0) pps_yellow = 0;
+			break;
+		case COLOR_TEAM4:
+			pps_pink -= (points/wait_time);
+			if (pps_pink < 0) pps_pink = 0;
+	}
+
 	switch(self.goalentity.team)
 	{
+		// "fix" pps when slightly over total_pps because of approximation errors
 		case COLOR_TEAM1:
+			pps_red += (points/wait_time);
+			if (pps_red > total_pps) pps_red = total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-red", "", "");
 			break;
 		case COLOR_TEAM2:
+			pps_blue += (points/wait_time);
+			if (pps_blue > total_pps) pps_blue = total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-blue", "", "");
 			break;
 		case COLOR_TEAM3:
+			pps_yellow += (points/wait_time);
+			if (pps_yellow > total_pps) pps_yellow = total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-yellow", "", "");
 			break;
 		case COLOR_TEAM4:
+			pps_pink += (points/wait_time);
+			if (pps_pink > total_pps) pps_pink = total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
-			break;
 	}
+
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
 
 	self.captime = time;
+
+	FOR_EACH_REALCLIENT(head)
+		set_dom_state(head);
 };
 
 void AnimateDomPoint()
@@ -305,10 +360,22 @@ void dom_controlpoint_setup()
 	if(!self.message)
 		self.message = " has captured a control point";
 
-	if(!self.DOMPOINTFRAGS)
+	if(self.DOMPOINTFRAGS <= 0)
 		self.DOMPOINTFRAGS = 1;
-	if(!self.wait)
+	if(self.wait <= 0)
 		self.wait = 5;
+
+	float points, waittime;
+	if (autocvar_g_domination_point_rate)
+		points = autocvar_g_domination_point_rate;
+	else
+		points = self.frags;
+	if (autocvar_g_domination_point_amt)
+		waittime = autocvar_g_domination_point_amt;
+	else
+		waittime = self.wait;
+
+	total_pps += points/waittime;
 
 	if(!self.t_width)
 		self.t_width = 0.02; // frame animation rate
@@ -641,5 +708,11 @@ void dom_init()
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
+
+	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);
+	addstat(STAT_DOM_PPS_RED, AS_FLOAT, dom_pps_red);
+	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
+	if(c3 >= 0) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
+	if(c4 >= 0) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
 };
 

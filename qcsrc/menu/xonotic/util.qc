@@ -464,25 +464,13 @@ string resolvemod(string m)
 		return m;
 }
 
-string HUD_Panel_GetSettingName(float theSetting)
-{
-	switch(theSetting) {
-		case HUD_MENU_ENABLE: return ""; break;
-		default: return "";
-	}
-}
-
 float updateCompression()
 {
-	float fh;
 	float have_dds, have_jpg, have_tga;
 	float can_dds;
-	if((have_dds = ((fh = fopen("dds/particles/particlefont.dds", FILE_READ)) >= 0)))
-		fclose(fh);
-	if((have_jpg = ((fh = fopen("particles/particlefont.jpg", FILE_READ)) >= 0)))
-		fclose(fh);
-	if((have_tga = ((fh = fopen("particles/particlefont.tga", FILE_READ)) >= 0)))
-		fclose(fh);
+	have_dds = (fexists("dds/particles/particlefont.dds"));
+	have_dds = (fexists("particles/particlefont.jpg"));
+	have_dds = (fexists("particles/particlefont.tga"));
 	can_dds = GL_Have_TextureCompression();
 	if(have_dds && (have_jpg || have_tga))
 	{
