@@ -142,12 +142,12 @@ float stringwidth_nocolors(string s, vector theSize)
 	return stringwidth(s, FALSE, theSize);
 }
 
-#define CENTERPRINT_MAX_LINES 10
+#define CENTERPRINT_MAX_MSGS 10
 float cpm_index;
-string centerprint_messages[CENTERPRINT_MAX_LINES];
-float centerprint_msgID[CENTERPRINT_MAX_LINES];
-float centerprint_width[CENTERPRINT_MAX_LINES];
-float centerprint_time[CENTERPRINT_MAX_LINES];
+string centerprint_messages[CENTERPRINT_MAX_MSGS];
+float centerprint_msgID[CENTERPRINT_MAX_MSGS];
+float centerprint_width[CENTERPRINT_MAX_MSGS];
+float centerprint_time[CENTERPRINT_MAX_MSGS];
 float centerprint_expire;
 float centerprint_num;
 vector centerprint_fontsize;
@@ -179,9 +179,9 @@ void centerprint(string strMessage)
 
 	float new_id = get_CPID(strMessage);
 
-	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_LINES; ++i, ++j)
+	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
-		if (j == CENTERPRINT_MAX_LINES)
+		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
 		if (new_id && new_id == centerprint_msgID[j])
 		{
@@ -201,7 +201,7 @@ void centerprint(string strMessage)
 
 	--cpm_index;
 	if (cpm_index == -1)
-		cpm_index = CENTERPRINT_MAX_LINES - 1;
+		cpm_index = CENTERPRINT_MAX_MSGS - 1;
 	if(centerprint_messages[cpm_index])
 		strunzone(centerprint_messages[cpm_index]);
 	if (new_id)
@@ -234,7 +234,7 @@ void centerprint(string strMessage)
 			else
 				hcount += 1;
 
-			if(i >= CENTERPRINT_MAX_LINES)
+			if(i >= CENTERPRINT_MAX_MSGS)
 				break;
 		}
 	}
@@ -318,9 +318,9 @@ void HUD_DrawCenterPrint (void)
 
 	pos = centerprint_start;
 	fade = min(autocvar_scr_centertime/8, 0.25);
-	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_LINES; ++i, ++j)
+	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
-		if (j == CENTERPRINT_MAX_LINES)
+		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
 		if (centerprint_time[j] + autocvar_scr_centertime < time)
 			continue;
