@@ -158,7 +158,7 @@ string strip_CPID(string s)
 }
 float get_CPID(string s)
 {
-	if(substring(s, 0, 1) != "#")
+	if(substring(s, 0, 1) != "\r")
 		return 0;
 	return stof(substring(s, 1, strstrofs(s, " ", 0)));
 }
