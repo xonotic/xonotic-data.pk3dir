@@ -98,13 +98,13 @@ void NIX_GiveCurrentWeapon()
 		if(dt >= 1 && dt <= 5)
 			self.nix_lastinfotime = -42;
 		else
-			centerprint(self, strcat("\n\n^2Active weapon: ^3", W_Name(nix_weapon)));
+			centerprint(self, strcat(CPID_NIX_WPNCHANGE, "\n\n^2Active weapon: ^3", W_Name(nix_weapon)));
 	}
 	if(self.nix_lastinfotime != dt)
 	{
 		self.nix_lastinfotime = dt; // initial value 0 should count as "not seen"
 		if(dt >= 1 && dt <= 5)
-			centerprint(self, strcat("^3", ftos(dt), "^2 seconds until weapon change...\n\nNext weapon: ^3", W_Name(nix_nextweapon), "\n"));
+			centerprint(self, strcat(CPID_NIX_WPNCHANGE, "^3", ftos(dt), "^2 seconds until weapon change...\n\nNext weapon: ^3", W_Name(nix_nextweapon), "\n"));
 	}
 
 	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO) && time > self.nix_nextincr)

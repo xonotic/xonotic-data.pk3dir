@@ -231,11 +231,9 @@ void Arena_Warmup()
 			allowed_to_spawn = 1;
 		if(champion && g_arena)
 			msg = strcat("The Champion is ", champion_name, "^7\n");
-			//centerprint(self, strcat(msg, "The Champion is ", champion.netname, "^7\n"));
 
 		if(f != roundStartTime_prev) {
-			msg = strcat(msg, "Round will start in ", ftos(f),"\n");
-			//centerprint(self, strcat("Round will start in ", ftos(f),"\n"));
+			msg = strcat(CPID_ROUND_STARTING, msg, "Round will start in ", ftos(f),"\n");
 			roundStartTime_prev = f;
 			if(f == 5)
 				Announce("prepareforbattle");

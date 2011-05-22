@@ -1302,14 +1302,14 @@ void KillIndicator_Think()
 			if(self.owner.killindicator_teamchange)
 			{
 				if(self.owner.killindicator_teamchange == -1)
-					centerprint(self.owner, strcat("Changing team in ", ftos(self.cnt), " seconds"));
+					centerprint(self.owner, strcat(CPID_TEAMCHANGE, "Changing team in ", ftos(self.cnt), " seconds"));
 				else if(self.owner.killindicator_teamchange == -2)
-					centerprint(self.owner, strcat("Spectating in ", ftos(self.cnt), " seconds"));
+					centerprint(self.owner, strcat(CPID_TEAMCHANGE, "Spectating in ", ftos(self.cnt), " seconds"));
 				else
-					centerprint(self.owner, strcat("Changing to ", ColoredTeamName(self.owner.killindicator_teamchange), " in ", ftos(self.cnt), " seconds"));
+					centerprint(self.owner, strcat(CPID_TEAMCHANGE, "Changing to ", ColoredTeamName(self.owner.killindicator_teamchange), " in ", ftos(self.cnt), " seconds"));
 			}
 			else
-				centerprint(self.owner, strcat("^1Suicide in ", ftos(self.cnt), " seconds"));
+				centerprint(self.owner, strcat(CPID_KILL, "^1Suicide in ", ftos(self.cnt), " seconds"));
 		}
 		self.nextthink = time + 1;
 		self.cnt -= 1;
@@ -1983,24 +1983,24 @@ string getTimeoutText(float addOneSecond) {
 		else {
 			retStr = strcat("Timeout begins in ", ftos(remainingLeadTime), " seconds!\n");
 		}
-		return retStr;
+		return strcat(CPID_TIMEOUT_COUNTDOWN, retStr);
 	}
 	else if (timeoutStatus == 2) {
 		if (addOneSecond) {
 			retStr = strcat("Timeout ends in ", ftos(remainingTimeoutTime + 1), " seconds!\n");
 			//don't show messages like "Timeout ends in 0 seconds"...
 			if ((remainingTimeoutTime + 1) > 0)
-				return retStr;
+				return strcat(CPID_TIMEOUT_COUNTDOWN, retStr);
 			else
-				return "";
+				return strcat(CPID_TIMEOUT_COUNTDOWN, "");
 		}
 		else {
 			retStr = strcat("Timeout ends in ", ftos(remainingTimeoutTime), " seconds!\n");
 			//don't show messages like "Timeout ends in 0 seconds"...
-			if (remainingTimeoutTime > 0)
-				return retStr;
+			if ((remainingTimeoutTime) > 0)
+				return strcat(CPID_TIMEOUT_COUNTDOWN, retStr);
 			else
-				return "";
+				return strcat(CPID_TIMEOUT_COUNTDOWN, "");
 		}
 	}
 	else return "";
@@ -3016,7 +3016,7 @@ void PlayerPostThink (void)
 		{
 			if(timeleft != self.idlekick_lasttimeleft)
 			{
-				centerprint_atprio(self, CENTERPRIO_IDLEKICK, strcat("^3Stop idling!\n^3Disconnecting in ", ftos(timeleft), "..."));
+				centerprint_atprio(self, CENTERPRIO_IDLEKICK, strcat(CPID_DISCONNECT_IDLING, "^3Stop idling!\n^3Disconnecting in ", ftos(timeleft), "..."));
 				AnnounceTo(self, strcat(ftos(timeleft), ""));
 			}
 		}

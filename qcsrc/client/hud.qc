@@ -145,13 +145,23 @@ float stringwidth_nocolors(string s, vector theSize)
 #define CENTERPRINT_MAX_LINES 10
 float cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_LINES];
+float centerprint_msgID[CENTERPRINT_MAX_LINES];
 float centerprint_width[CENTERPRINT_MAX_LINES];
 float centerprint_time[CENTERPRINT_MAX_LINES];
 float centerprint_expire;
 float centerprint_num;
-float centerprint_offset_hint;
 vector centerprint_fontsize;
 
+string strip_CPID(string s)
+{
+	return substring(s, strstrofs(s, " ", 0) + 1, strlen(s));
+}
+float get_CPID(string s)
+{
+	if(substring(s, 0, 1) != "#")
+		return 0;
+	return stof(substring(s, 1, strstrofs(s, " ", 0)));
+}
 void centerprint(string strMessage)
 {
 	float i, j, n, hcount;
@@ -167,32 +177,24 @@ void centerprint(string strMessage)
 	if(strMessage == "")
 		return;
 
-	// strip trailing newlines
-	j = strlen(strMessage) - 1;
-	while(substring(strMessage, j, 1) == "\n" && j >= 0)
-		j = j - 1;
-	strMessage = substring(strMessage, 0, j + 1);
-
-	if(strMessage == "")
-		return;
-
-	// strip leading newlines and remember them, they are a hint that the message should be lower on the screen
-	j = 0;
-	while(substring(strMessage, j, 1) == "\n" && j < strlen(strMessage))
-		j = j + 1;
-	strMessage = substring(strMessage, j, strlen(strMessage) - j);
-	centerprint_offset_hint = j;
-
-	if(strMessage == "")
-		return;
+	float new_id = get_CPID(strMessage);
 
 	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_LINES; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_LINES)
 			j = 0;
+		if (new_id && new_id == centerprint_msgID[j])
+		{
+			if(centerprint_messages[j])
+				strunzone(centerprint_messages[j]);
+			centerprint_messages[j] == strzone(strip_CPID(strMessage));
+			centerprint_time[j] = time;
+			return;
+		}
 		if(centerprint_messages[j] == strMessage)
 		{
 			centerprint_time[j] = time;
+			centerprint_msgID[j] = new_id;
 			return;
 		}
 	}
@@ -202,7 +204,11 @@ void centerprint(string strMessage)
 		cpm_index = CENTERPRINT_MAX_LINES - 1;
 	if(centerprint_messages[cpm_index])
 		strunzone(centerprint_messages[cpm_index]);
-	centerprint_messages[cpm_index] = strzone(strMessage);
+	if (new_id)
+		centerprint_messages[cpm_index] = strzone(strip_CPID(strMessage));
+	else
+		centerprint_messages[cpm_index] = strzone(strMessage);
+	centerprint_msgID[cpm_index] = new_id;
 	centerprint_time[cpm_index] = time;
 
 
