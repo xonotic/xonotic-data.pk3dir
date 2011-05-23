@@ -206,6 +206,7 @@ float autocvar_hud_panel_healtharmor_progressbar_gfx_lowhealth;
 float autocvar_hud_panel_healtharmor_progressbar_gfx_smooth;
 
 float autocvar_hud_panel_centerprint;
+float autocvar_hud_panel_centerprint_align;
 float autocvar_hud_panel_centerprint_fontscale;
 float autocvar_hud_panel_centerprint_time;
 float autocvar_hud_panel_healtharmor_text;

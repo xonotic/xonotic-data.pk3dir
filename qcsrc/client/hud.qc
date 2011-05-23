@@ -4411,12 +4411,13 @@ void HUD_CenterPrint (void)
 	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
 
 	float i, j, k, n;
+	float a, sz, fade, align;
 	vector pos;
 	string ts;
-	float a, sz, fade;
 
 	pos = panel_pos;
 	fade = min(autocvar_hud_panel_centerprint_time/8, 0.25);
+	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
 	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
@@ -4442,9 +4443,10 @@ void HUD_CenterPrint (void)
 			while(getWrappedLine_remaining)
 			{
 				ts = getWrappedLine(panel_size_x, fontsize, stringwidth_colors);
-				pos_x = panel_pos_x + (panel_size_x - stringwidth(ts, TRUE, fontsize)) * 0.5;
 				if (ts != "")
 				{
+					if (align)
+						pos_x = panel_pos_x + (panel_size_x - stringwidth(ts, TRUE, fontsize)) * align;
 					drawcolorcodedstring(pos + '0 1 0' * 1.5 * (1 - sz) * fontsize_y, ts, fontsize, a, DRAWFLAG_NORMAL);
 					pos_y += fontsize_y * 1.5;
 				}
