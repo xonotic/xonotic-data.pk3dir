@@ -589,6 +589,7 @@ float MAX_SHOT_DISTANCE = 32768;
 #define CPID_ROUND_STARTING		"\r6 "
 #define CPID_GAME_STARTING		"\r7 "
 #define CPID_TIMEOUT_COUNTDOWN	"\r8 "
+#define CPID_MOTD				"\r9 "
 
 // CSQC centerprint/notify message types
 float MSG_SUICIDE = 0;

@@ -2440,7 +2440,7 @@ void LeaveSpectatorMode()
 				bprint ("^4", self.netname, "^4 is playing now\n");
 
 			if(!autocvar_g_campaign)
-				centerprint(self,""); // clear MOTD
+				centerprint(self, CPID_MOTD); // clear MOTD
 
 			return;
 		} else {

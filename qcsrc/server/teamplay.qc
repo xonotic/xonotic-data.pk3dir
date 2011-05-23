@@ -484,12 +484,11 @@ void PrintWelcomeMessage(entity pl)
 	{
 		// TODO get rid of this too
 		local string specString;
-		specString = NEWLINES;
 		//if(time < game_starttime) //also show the countdown when being a spectator
 		//	specString = strcat(specString, "\n\n^1Game starts in ", ftos(ceil(game_starttime - time)), " seconds^7");
 		//else
 		if (timeoutStatus != 0)
-			specString = strcat(specString, "\n\n", getTimeoutText(1));
+			specString = getTimeoutText(1);
 		else
 		{
 			if(self.classname == "player")
@@ -536,7 +535,7 @@ void PrintWelcomeMessage(entity pl)
 	local string versionmessage;
 	versionmessage = GetClientVersionMessage();
 
-	s = strcat(s, NEWLINES, "This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
+	s = strcat(CPID_MOTD, "This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
 	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
 
 	if(modifications != "")

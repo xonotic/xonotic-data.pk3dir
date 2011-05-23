@@ -224,7 +224,6 @@ void Arena_Warmup()
 	if(ca_players < required_ca_players)
 		allowed_to_spawn = 1;
 
-	msg = NEWLINES;
 	if(time < warmup && !inWarmupStage)
 	{
 		if (g_ca)
@@ -263,7 +262,7 @@ void Arena_Warmup()
 	{
 		roundStartTime_prev = f;
 		Announce("begin");
-		centerprint(self, "^1Begin!\n");
+		centerprint(self, strcat(CPID_ROUND_STARTING, "^1Begin!\n"));
 
 		if(g_ca) {
 			ca_players = 0;
