@@ -4326,7 +4326,7 @@ string centerprint_messages[CENTERPRINT_MAX_MSGS];
 float centerprint_msgID[CENTERPRINT_MAX_MSGS];
 float centerprint_time[CENTERPRINT_MAX_MSGS];
 
-string strip_CPID(string s)
+string msg_without_CPID(string s)
 {
 	return substring(s, strstrofs(s, " ", 0) + 1, strlen(s));
 }
@@ -4356,7 +4356,7 @@ void centerprint(string strMessage)
 		{
 			if(centerprint_messages[j])
 				strunzone(centerprint_messages[j]);
-			centerprint_messages[j] == strzone(strip_CPID(strMessage));
+			centerprint_messages[j] == strzone(msg_without_CPID(strMessage));
 			centerprint_time[j] = time;
 			return;
 		}
@@ -4374,7 +4374,7 @@ void centerprint(string strMessage)
 	if(centerprint_messages[cpm_index])
 		strunzone(centerprint_messages[cpm_index]);
 	if (new_id)
-		centerprint_messages[cpm_index] = strzone(strip_CPID(strMessage));
+		centerprint_messages[cpm_index] = strzone(msg_without_CPID(strMessage));
 	else
 		centerprint_messages[cpm_index] = strzone(strMessage);
 	centerprint_msgID[cpm_index] = new_id;
