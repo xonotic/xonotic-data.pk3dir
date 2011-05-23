@@ -4352,7 +4352,7 @@ void centerprint(string strMessage)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
-		if (new_id && new_id == centerprint_msgID[j])
+		if (new_id && new_id == centerprint_msgID[j] && centerprint_time[j] + autocvar_hud_panel_centerprint_time >= time)
 		{
 			if(centerprint_messages[j])
 				strunzone(centerprint_messages[j]);
