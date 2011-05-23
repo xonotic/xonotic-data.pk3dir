@@ -283,6 +283,7 @@ if(menu_enabled == 2 && hud_configure_active_panel == highlightedPanel) {\
 switch(id) { \
 	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdateCvars(infomessages) break; \
 	case HUD_PANEL_PHYSICS: HUD_Panel_UpdateCvars(physics); break;\
+	case HUD_PANEL_CENTERPRINT: HUD_Panel_UpdateCvars(centerprint); break;\
 }
 
 #define HUD_Panel_UpdateCvarsForId(id) \
@@ -320,6 +321,7 @@ HUD_Panel_GetBorder()
 switch(id) { \
 	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdatePosSize(infomessages) break;\
 	case HUD_PANEL_PHYSICS: HUD_Panel_UpdatePosSize(physics); break;\
+	case HUD_PANEL_CENTERPRINT: HUD_Panel_UpdatePosSize(centerprint); break;\
 }
 
 #define HUD_Panel_UpdatePosSizeForId(id) \

@@ -142,230 +142,6 @@ float stringwidth_nocolors(string s, vector theSize)
 	return stringwidth(s, FALSE, theSize);
 }
 
-#define CENTERPRINT_MAX_MSGS 10
-float cpm_index;
-string centerprint_messages[CENTERPRINT_MAX_MSGS];
-float centerprint_msgID[CENTERPRINT_MAX_MSGS];
-float centerprint_width[CENTERPRINT_MAX_MSGS];
-float centerprint_time[CENTERPRINT_MAX_MSGS];
-float centerprint_expire;
-float centerprint_num;
-vector centerprint_fontsize;
-
-string strip_CPID(string s)
-{
-	return substring(s, strstrofs(s, " ", 0) + 1, strlen(s));
-}
-float get_CPID(string s)
-{
-	if(substring(s, 0, 1) != "\r")
-		return 0;
-	return stof(substring(s, 1, strstrofs(s, " ", 0)));
-}
-void centerprint(string strMessage)
-{
-	float i, j, n, hcount;
-	string s;
-
-	centerprint_fontsize = HUD_GetFontsize("scr_centersize");
-
-	centerprint_expire = min(centerprint_expire, time); // if any of the returns happens, this message will fade out
-
-	if(autocvar_scr_centertime <= 0)
-		return;
-
-	if(strMessage == "")
-		return;
-
-	float new_id = get_CPID(strMessage);
-
-	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
-	{
-		if (j == CENTERPRINT_MAX_MSGS)
-			j = 0;
-		if (new_id && new_id == centerprint_msgID[j])
-		{
-			if(centerprint_messages[j])
-				strunzone(centerprint_messages[j]);
-			centerprint_messages[j] == strzone(strip_CPID(strMessage));
-			centerprint_time[j] = time;
-			return;
-		}
-		if(centerprint_messages[j] == strMessage)
-		{
-			centerprint_time[j] = time;
-			centerprint_msgID[j] = new_id;
-			return;
-		}
-	}
-
-	--cpm_index;
-	if (cpm_index == -1)
-		cpm_index = CENTERPRINT_MAX_MSGS - 1;
-	if(centerprint_messages[cpm_index])
-		strunzone(centerprint_messages[cpm_index]);
-	if (new_id)
-		centerprint_messages[cpm_index] = strzone(strip_CPID(strMessage));
-	else
-		centerprint_messages[cpm_index] = strzone(strMessage);
-	centerprint_msgID[cpm_index] = new_id;
-	centerprint_time[cpm_index] = time;
-
-
-#if 0
-	i = hcount = 0;
-	for(j = 0; j < n; ++j)
-	{
-		getWrappedLine_remaining = argv(j);
-		while(getWrappedLine_remaining)
-		{
-			s = getWrappedLine(vid_conwidth * 0.75, centerprint_fontsize, stringwidth_colors);
-			if(centerprint_messages[i] != s) // don't fade the same message in, looks stupid
-				centerprint_time = time;
-			if(centerprint_messages[i])
-				strunzone(centerprint_messages[i]);
-			centerprint_messages[i] = strzone(s);
-			centerprint_width[i] = stringwidth(s, TRUE, centerprint_fontsize);
-			++i;
-
-			// half height for empty lines looks better
-			if(s == "")
-				hcount += 0.5;
-			else
-				hcount += 1;
-
-			if(i >= CENTERPRINT_MAX_MSGS)
-				break;
-		}
-	}
-#endif
-
-#if 0
-	float h, havail;
-	h = centerprint_fontsize_y*hcount;
-
-	havail = vid_conheight;
-	if(autocvar_con_chatpos < 0)
-		havail -= (-autocvar_con_chatpos + autocvar_con_chat) * autocvar_con_chatsize; // avoid overlapping chat
-	if(havail > vid_conheight - 70)
-		havail = vid_conheight - 70; // avoid overlapping HUD
-
-	float forbiddenmin, forbiddenmax, allowedmin, allowedmax, preferred;
-
-	// here, the centerprint would cover the crosshair. REALLY BAD.
-	forbiddenmin = vid_conheight * 0.5 - h - 16;
-	forbiddenmax = vid_conheight * 0.5 + 16;
-
-	allowedmin = scoreboard_bottom;
-	allowedmax = havail - h;
-	preferred = (havail - h)/2;
-
-
-	// possible orderings (total: 4! / 4 = 6)
-	//  allowedmin allowedmax forbiddenmin forbiddenmax
-	//  forbiddenmin forbiddenmax allowedmin allowedmax
-	if(allowedmax < forbiddenmin || allowedmin > forbiddenmax)
-	{
-		// forbidden doesn't matter in this case
-		centerprint_start_y = bound(allowedmin, preferred, allowedmax);
-	}
-	//  allowedmin forbiddenmin allowedmax forbiddenmax
-	else if(allowedmin < forbiddenmin && allowedmax < forbiddenmax)
-	{
-		centerprint_start_y = bound(allowedmin, preferred, forbiddenmin);
-	}
-	//  allowedmin forbiddenmin forbiddenmax allowedmax
-	else if(allowedmin < forbiddenmin)
-	{
-		// make sure the forbidden zone is not covered
-		if(preferred > (forbiddenmin + forbiddenmax) * 0.5)
-			centerprint_start_y = bound(allowedmin, preferred, forbiddenmin);
-		else
-			centerprint_start_y = bound(forbiddenmax, preferred, allowedmin);
-	}
-	//  forbiddenmin allowedmin allowedmax forbiddenmax
-	else if(allowedmax < forbiddenmax)
-	{
-		// it's better to leave the allowed zone (overlap with scoreboard) than
-		// to cover the forbidden zone (crosshair)
-		if(preferred > (forbiddenmin + forbiddenmax) * 0.5)
-			centerprint_start_y = forbiddenmax;
-		else
-			centerprint_start_y = forbiddenmin;
-	}
-	//  forbiddenmin allowedmin forbiddenmax allowedmax
-	else
-	{
-		centerprint_start_y = bound(forbiddenmax, preferred, allowedmax);
-	}
-#else
-#endif
-
-	// centerprint_num = i;
-
-	centerprint_expire = time + autocvar_scr_centertime;
-}
-
-void HUD_DrawCenterPrint (void)
-{
-	float i, j, k, n;
-	vector pos;
-	string ts;
-	float a, sz, fade;
-
-	// if(centerprint_num * autocvar_scr_centersize > 24 && scoreboard_active) // 24 = height of Scoreboard text
-		// centerprint_start_y = scoreboard_bottom + centerprint_fontsize_y;
-
-	pos = centerprint_start;
-	fade = min(autocvar_scr_centertime/8, 0.25);
-	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
-	{
-		if (j == CENTERPRINT_MAX_MSGS)
-			j = 0;
-		if (centerprint_time[j] + autocvar_scr_centertime < time)
-			continue;
-		else if (centerprint_time[j] + autocvar_scr_centertime - fade > time)
-		{
-			a = 1;
-			sz = 1;
-		}
-		else if (centerprint_time[j] + autocvar_scr_centertime > time)
-		{
-			a = (centerprint_time[j] + autocvar_scr_centertime - time) / fade;
-			sz = 0.8 + a * (1 - 0.8);
-		}
-
-		drawfontscale = sz * '1 1 0';
-		n = tokenizebyseparator(centerprint_messages[j], "\n");
-		for(k = 0; k < n; ++k)
-		{
-			getWrappedLine_remaining = argv(k);
-			while(getWrappedLine_remaining)
-			{
-				ts = getWrappedLine(vid_conwidth * 0.75, centerprint_fontsize, stringwidth_colors);
-				if (cvar("debug"))
-				{
-					ts = strcat(ftos(i), " -", ts, "-");
-					print(sprintf("^x8f0ts = %s\n", ts));
-				}
-				pos_x = (vid_conwidth - stringwidth(ts, TRUE, centerprint_fontsize)) * 0.5;
-				if (ts != "")
-				{
-					drawcolorcodedstring(pos + '0 1 0' * (1 - sz) * 0.5 *centerprint_fontsize_y, ts, centerprint_fontsize, a, DRAWFLAG_NORMAL);
-					pos_y = pos_y + centerprint_fontsize_y;
-				}
-				else
-					// half height for empty lines looks better
-					pos_y = pos_y + sz * centerprint_fontsize_y * 0.5;
-			}
-		}
-		pos_y += centerprint_fontsize_y * 0.5;
-		if (a < 1)
-			pos_y -= 1.5 * centerprint_fontsize_y * (1 - a*a);
-		drawfontscale = '1 1 0';
-	}
-}
-
 void drawstringright(vector position, string text, vector scale, vector rgb, float alpha, float flag)
 {
 	position_x -= 2 / 3 * strlen(text) * scale_x;
@@ -4543,6 +4319,150 @@ void HUD_Physics(void)
 		drawstring_aspect(panel_pos + acceleration_offset, strcat(ftos_decimals(acceleration, 2), "g"), panel_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
+#define CENTERPRINT_MAX_MSGS 10
+#define CENTERPRINT_MAX_ENTRIES 50
+float cpm_index;
+string centerprint_messages[CENTERPRINT_MAX_MSGS];
+float centerprint_msgID[CENTERPRINT_MAX_MSGS];
+float centerprint_time[CENTERPRINT_MAX_MSGS];
+
+string strip_CPID(string s)
+{
+	return substring(s, strstrofs(s, " ", 0) + 1, strlen(s));
+}
+float get_CPID(string s)
+{
+	if(substring(s, 0, 1) != "\r")
+		return 0;
+	return stof(substring(s, 1, strstrofs(s, " ", 0)));
+}
+void centerprint(string strMessage)
+{
+	float i, j;
+
+	if(autocvar_hud_panel_centerprint_time <= 0)
+		return;
+
+	if(strMessage == "")
+		return;
+
+	float new_id = get_CPID(strMessage);
+
+	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
+	{
+		if (j == CENTERPRINT_MAX_MSGS)
+			j = 0;
+		if (new_id && new_id == centerprint_msgID[j])
+		{
+			if(centerprint_messages[j])
+				strunzone(centerprint_messages[j]);
+			centerprint_messages[j] == strzone(strip_CPID(strMessage));
+			centerprint_time[j] = time;
+			return;
+		}
+		if(centerprint_messages[j] == strMessage)
+		{
+			centerprint_time[j] = time;
+			centerprint_msgID[j] = new_id;
+			return;
+		}
+	}
+
+	--cpm_index;
+	if (cpm_index == -1)
+		cpm_index = CENTERPRINT_MAX_MSGS - 1;
+	if(centerprint_messages[cpm_index])
+		strunzone(centerprint_messages[cpm_index]);
+	if (new_id)
+		centerprint_messages[cpm_index] = strzone(strip_CPID(strMessage));
+	else
+		centerprint_messages[cpm_index] = strzone(strMessage);
+	centerprint_msgID[cpm_index] = new_id;
+	centerprint_time[cpm_index] = time;
+}
+
+// CenterPrint (#16)
+//
+void HUD_CenterPrint (void)
+{
+	if(!autocvar__hud_configure)
+	{
+		if(!autocvar_hud_panel_centerprint) return;
+	}
+	else
+		hud_configure_active_panel = HUD_PANEL_CENTERPRINT;
+
+	HUD_Panel_UpdateCvars(centerprint);
+
+	HUD_Panel_DrawBg(1);
+	if(panel_bg_padding)
+	{
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
+	}
+
+	float entries, height;
+	vector fontsize;
+	// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
+	// height = panel_size_y/entries;
+	// fontsize = '1 1 0' * height;
+	height = vid_conheight/40 * autocvar_hud_panel_centerprint_fontscale;
+	fontsize = '1 1 0' * height;
+	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
+
+	float i, j, k, n;
+	vector pos;
+	string ts;
+	float a, sz, fade;
+
+	pos = panel_pos;
+	fade = min(autocvar_hud_panel_centerprint_time/8, 0.25);
+	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
+	{
+		if (j == CENTERPRINT_MAX_MSGS)
+			j = 0;
+		if (centerprint_time[j] + autocvar_hud_panel_centerprint_time < time)
+			continue;
+		else if (centerprint_time[j] + autocvar_hud_panel_centerprint_time - fade > time)
+		{
+			a = 1;
+			sz = 1;
+		}
+		else if (centerprint_time[j] + autocvar_hud_panel_centerprint_time > time)
+		{
+			a = (centerprint_time[j] + autocvar_hud_panel_centerprint_time - time) / fade;
+			sz = 0.8 + a * (1 - 0.8);
+		}
+
+		drawfontscale = sz * '1 1 0';
+		n = tokenizebyseparator(centerprint_messages[j], "\n");
+		for(k = 0; k < n; ++k)
+		{
+			getWrappedLine_remaining = argv(k);
+			while(getWrappedLine_remaining)
+			{
+				ts = getWrappedLine(panel_size_x, fontsize, stringwidth_colors);
+				pos_x = panel_pos_x + (panel_size_x - stringwidth(ts, TRUE, fontsize)) * 0.5;
+				if (ts != "")
+				{
+					drawcolorcodedstring(pos + '0 1 0' * 1.5 * (1 - sz) * fontsize_y, ts, fontsize, a, DRAWFLAG_NORMAL);
+					pos_y += fontsize_y * 1.5;
+				}
+				else
+					pos_y += fontsize_y;
+				if (pos_y > panel_pos_y + panel_size_y - fontsize_y)
+				{
+					drawfontscale = '1 1 0';
+					return;
+				}
+			}
+		}
+		if (a < 1)
+			pos_y -= 1.5 * fontsize_y * (1 - a*a);
+		drawfontscale = '1 1 0';
+	}
+}
+
 /*
 ==================
 Main HUD system
@@ -4592,6 +4512,8 @@ switch (id) {\
 		 HUD_InfoMessages(); break;\
 	case (HUD_PANEL_PHYSICS):\
 		 HUD_Physics(); break;\
+	case (HUD_PANEL_CENTERPRINT):\
+		 HUD_CenterPrint(); break;\
 } ENDS_WITH_CURLY_BRACE
 
 void HUD_Main (void)

@@ -1421,7 +1421,6 @@ void CSQC_SPIDER_HUD()
 	if (scoreboard_showscores)
 	{
 		HUD_DrawScoreboard();
-		HUD_DrawCenterPrint();
 	}
 
 }
@@ -1488,7 +1487,6 @@ void CSQC_RAPTOR_HUD()
 	if (scoreboard_showscores)
 	{
 		HUD_DrawScoreboard();
-		HUD_DrawCenterPrint();
 	}
 
 }
@@ -1598,7 +1596,6 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 	if (scoreboard_showscores)
 	{
 		HUD_DrawScoreboard();
-		HUD_DrawCenterPrint();
 	}
 
 }
@@ -1637,25 +1634,12 @@ void CSQC_common_hud(void)
 			HUD_DrawScoreboard();
 
 			if (scoreboard_active) // scoreboard/accuracy
-			{	
 				HUD_Reset();
-				// HUD_DrawScoreboard takes care of centerprint_start
-			}
 			else if (intermission == 2) // map voting screen
 			{
 				HUD_FinaleOverlay();
 				HUD_Reset();
-
-				centerprint_start_x = 0;
-				centerprint_start_y = autocvar_scr_centerpos * vid_conheight;
 			}
-			else // hud
-			{
-				centerprint_start_x = 0;
-				centerprint_start_y = autocvar_scr_centerpos * vid_conheight;
-			}
-
-			HUD_DrawCenterPrint();
 			break;
 
 		case HUD_SPIDERBOT:
