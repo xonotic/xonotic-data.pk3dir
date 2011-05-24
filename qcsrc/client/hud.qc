@@ -654,6 +654,8 @@ void HUD_Weapons(void)
 			if(weapons_st & weaponorder[i].weapons)
 				++weapon_count;
 		}
+		if (weapon_count == 0)
+			return;
 		// reduce size of the panel
 		if (panel_size_y > panel_size_x)
 		{
