@@ -123,6 +123,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case HUD_PANEL_CENTERPRINT:
 					HUD_Write_PanelCvar_q("_align");
+					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_fontscale");
 					HUD_Write_PanelCvar_q("_time");
 					break;

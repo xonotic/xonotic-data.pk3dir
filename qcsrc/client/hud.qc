@@ -4409,11 +4409,13 @@ void HUD_CenterPrint (void)
 	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
 
 	float i, j, k, n;
-	float a, sz, fade, align;
+	float a, sz, fade, align, next_msg_pos_y;
 	vector pos;
 	string ts;
 
 	pos = panel_pos;
+	if (autocvar_hud_panel_centerprint_flip)
+		pos_y += panel_size_y - fontsize_y;
 	fade = min(autocvar_hud_panel_centerprint_time/8, 0.25);
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
 	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
@@ -4435,6 +4437,23 @@ void HUD_CenterPrint (void)
 
 		drawfontscale = sz * '1 1 0';
 		n = tokenizebyseparator(centerprint_messages[j], "\n");
+		if (autocvar_hud_panel_centerprint_flip)
+		{
+			// check if the message can be entirely shown
+			for(k = 0; k < n; ++k)
+			{
+				getWrappedLine_remaining = argv(k);
+				ts = getWrappedLine(panel_size_x, fontsize, stringwidth_colors);
+				if (ts != "")
+					pos_y -= fontsize_y * 1.5;
+				else
+					pos_y -= fontsize_y;
+				if (pos_y < panel_pos_y) // check if the next line can be shown
+					return;
+			}
+			next_msg_pos_y = pos_y; // save pos of the next message
+		}
+
 		for(k = 0; k < n; ++k)
 		{
 			getWrappedLine_remaining = argv(k);
@@ -4450,15 +4469,24 @@ void HUD_CenterPrint (void)
 				}
 				else
 					pos_y += fontsize_y;
-				if (pos_y > panel_pos_y + panel_size_y - fontsize_y)
+				if (pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
 				{
 					drawfontscale = '1 1 0';
 					return;
 				}
 			}
 		}
-		if (a < 1)
-			pos_y -= 1.5 * fontsize_y * (1 - a*a);
+		if (autocvar_hud_panel_centerprint_flip)
+		{
+			pos_y = next_msg_pos_y;
+			if (a < 1)
+				pos_y += 1.5 * fontsize_y * (1 - a*a);
+		}
+		else
+		{
+			if (a < 1)
+				pos_y -= 1.5 * fontsize_y * (1 - a*a);
+		}
 		drawfontscale = '1 1 0';
 	}
 }
