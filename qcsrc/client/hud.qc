@@ -2034,9 +2034,9 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 	} else if(msg == MSG_KILL) {
 		if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1Moron! You went against %s, a team mate!"), s1)));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1Moron! You went against ^7%s^1, a team mate!"), s1)));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1Moron! You fragged %s, a team mate!"), s1)));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1Moron! You fragged ^7%s^1, a team mate!"), s1)));
 			}
 		} else if (type == KILL_FIRST_BLOOD) {
 			if(gentle) {
