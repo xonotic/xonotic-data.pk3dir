@@ -2498,7 +2498,7 @@ msgstr ""
 msgid "Machine Gun"
 msgstr ""
 
-#: qcsrc/server/w_uzi.qc:321 qcsrc/server/w_sniperrifle.qc:254
+#: qcsrc/server/w_uzi.qc:321 qcsrc/server/w_rifle.qc:254
 #, c-format
 msgid "%s was sniped by %s"
 msgstr ""
@@ -2508,36 +2508,36 @@ msgstr ""
 msgid "%s was riddled full of holes by %s"
 msgstr ""
 
-#: qcsrc/server/w_sniperrifle.qc:2
+#: qcsrc/server/w_rifle.qc:2
 msgid "Sniper Rifle"
 msgstr ""
 
-#: qcsrc/server/w_sniperrifle.qc:229
+#: qcsrc/server/w_rifle.qc:229
 #, c-format
 msgid "%s shot themself automatically"
 msgstr ""
 
-#: qcsrc/server/w_sniperrifle.qc:231
+#: qcsrc/server/w_rifle.qc:231
 #, c-format
 msgid "%s sniped themself somehow"
 msgstr ""
 
-#: qcsrc/server/w_sniperrifle.qc:238
+#: qcsrc/server/w_rifle.qc:238
 #, c-format
 msgid "%s failed to hide from %s's bullet hail"
 msgstr ""
 
-#: qcsrc/server/w_sniperrifle.qc:240
+#: qcsrc/server/w_rifle.qc:240
 #, c-format
 msgid "%s died in %s's bullet hail"
 msgstr ""
 
-#: qcsrc/server/w_sniperrifle.qc:247
+#: qcsrc/server/w_rifle.qc:247
 #, c-format
 msgid "%s failed to hide from %s's rifle"
 msgstr ""
 
-#: qcsrc/server/w_sniperrifle.qc:252
+#: qcsrc/server/w_rifle.qc:252
 #, c-format
 msgid "%s got hit in the head by %s"
 msgstr ""
