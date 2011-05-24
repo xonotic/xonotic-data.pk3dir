@@ -600,7 +600,7 @@ float GetAmmoTypeForWep(float i)
 		case WEP_HLAC: return 3;
 		case WEP_MINSTANEX: return 3;
 		case WEP_NEX: return 3;
-		case WEP_SNIPERRIFLE: return 1;
+		case WEP_RIFLE: return 1;
 		case WEP_HAGAR: return 2;
 		case WEP_ROCKET_LAUNCHER: return 2;
 		case WEP_SEEKER: return 2;
@@ -1710,7 +1710,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			if((w == WEP_SNIPERRIFLE || w == WEP_MINSTANEX) && type & HITTYPE_HEADSHOT) // all headshot weapons go here
+			if((w == WEP_RIFLE || w == WEP_MINSTANEX) && type & HITTYPE_HEADSHOT) // all headshot weapons go here
 				HUD_KillNotify_Push(s1, s2, 1, DEATH_HEADSHOT);
 			else
 				HUD_KillNotify_Push(s1, s2, 1, type);

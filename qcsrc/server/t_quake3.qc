@@ -23,7 +23,7 @@ void spawnfunc_weapon_plasmagun()    { spawnfunc_weapon_hagar();        }
 void spawnfunc_ammo_cells()          { spawnfunc_item_rockets();        }
 
 // Rail -> Rifle
-void spawnfunc_weapon_railgun()      { spawnfunc_weapon_sniperrifle();  }
+void spawnfunc_weapon_railgun()      { spawnfunc_weapon_rifle();  }
 void spawnfunc_ammo_slugs()          { spawnfunc_item_bullets();        }
 
 // BFG -> Crylink
