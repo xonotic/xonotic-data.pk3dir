@@ -1,0 +1,7 @@
+name Mega Erebus
+species human
+sex Male
+weight 210
+age 26
+
+Heavyweight Xonotic Solider
