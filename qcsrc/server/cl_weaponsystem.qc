@@ -1257,18 +1257,23 @@ void weapon_thinkf(float fr, float t, void() func)
 	self.weapon_think = func;
 	//dprint("next ", ftos(self.weapon_nextthink), "\n");
 
-    // The shoot animation looks TERRIBLE without animation blending! Yay for moonwalking while shooting!
 	if (restartanim)
 	if (t)
 	if (!self.crouch) // shoot anim stands up, this looks bad
 	{
 		local vector anim;
 		if(self.weapon == WEP_SHOTGUN && self.BUTTON_ATCK2)
+		{
 			anim = self.anim_melee;
-		/*else
-			anim = self.anim_shoot;*/
-		anim_z = anim_y / (t + sys_frametime);
-		setanim(self, anim, FALSE, TRUE, TRUE);
+			anim_z = anim_y / (t + sys_frametime);
+			setanim(self, anim, FALSE, TRUE, TRUE);
+		}
+		else if (self.animstate_startframe == 7) // only allow shoot anim to override idle animation until we have animation blending
+		{
+			anim = self.anim_shoot;
+			anim_z = anim_y / (t + sys_frametime);
+			setanim(self, anim, FALSE, TRUE, TRUE);
+		}
 	}
 };
 
