@@ -674,6 +674,9 @@ void HUD_Weapons(void)
 		weaponorder_cmp_str = string_null;
 	}
 
+	float when, fadetime;
+	when = autocvar_hud_panel_weapons_complainbubble_time;
+	fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
 	float weapons_st = getstati(STAT_WEAPONS);
 	float weapon_count;
 	if (!autocvar__hud_configure && autocvar_hud_panel_weapons_onlyowned)
@@ -684,6 +687,8 @@ void HUD_Weapons(void)
 			if(weapons_st & weaponorder[i].weapons)
 				++weapon_count;
 		}
+		if(autocvar_hud_panel_weapons_complainbubble && time - complain_weapon_time < when + fadetime)// && complain_weapon >= 0
+			++weapon_count;
 		if (weapon_count == 0)
 			return;
 		// reduce size of the panel
@@ -792,10 +797,6 @@ void HUD_Weapons(void)
 	float row, column;
 
 	float a, type, fullammo;
-	float when;
-	when = autocvar_hud_panel_weapons_complainbubble_time;
-	float fadetime;
-	fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
 
 	vector color;
 	vector wpnpos;
@@ -841,7 +842,7 @@ void HUD_Weapons(void)
 		if (!self || self.impulse < 0)
 			continue;
 		if (autocvar_hud_panel_weapons_onlyowned)
-		if (!(weapons_st & self.weapons))
+		if (!((weapons_st & self.weapons) || (self.weapon == complain_weapon && time - complain_weapon_time < when + fadetime && autocvar_hud_panel_weapons_complainbubble)))
 		if (!autocvar__hud_configure)
 			continue;
 		wpnpos = panel_pos + eX * column * wpnsize_x + eY * row * wpnsize_y;
