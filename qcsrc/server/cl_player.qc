@@ -486,10 +486,13 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 				if(sv_gentle < 1) {
 					if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
 					{
-						if (random() > 0.5)
-							setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
-						else
-							setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
+						if (!self.animstate_override)
+						{
+							if (random() > 0.5)
+								setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
+							else
+								setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
+						}
 					}
 
 					if(sound_allowed(MSG_BROADCAST, attacker))
