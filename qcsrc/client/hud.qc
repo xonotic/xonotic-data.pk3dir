@@ -644,6 +644,36 @@ void HUD_Weapons(void)
 
 	HUD_Panel_UpdateCvars(weapons);
 
+	// TODO make this configurable
+	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
+	{
+		float weapon_cnt;
+		if(weaponorder_bypriority)
+			strunzone(weaponorder_bypriority);
+		if(weaponorder_byimpulse)
+			strunzone(weaponorder_byimpulse);
+
+		weaponorder_bypriority = strzone(autocvar_cl_weaponpriority);
+		weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority))));
+		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
+
+		weapon_cnt = 0;
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		{
+			self = get_weaponinfo(i);
+			if(self.impulse >= 0)
+			{
+				weaponorder[weapon_cnt] = self;
+				++weapon_cnt;
+			}
+		}
+		for(i = weapon_cnt; i < WEP_MAXCOUNT; ++i)
+			weaponorder[i] = NULL;
+		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
+
+		weaponorder_cmp_str = string_null;
+	}
+
 	float weapons_st = getstati(STAT_WEAPONS);
 	float weapon_count;
 	if (!autocvar__hud_configure && autocvar_hud_panel_weapons_onlyowned)
@@ -734,36 +764,6 @@ void HUD_Weapons(void)
 					panel_pos_y -= f * (panel_pos_y + panel_size_y);
 			}
 		}
-	}
-
-	// TODO make this configurable
-	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
-	{
-		float weapon_cnt;
-		if(weaponorder_bypriority)
-			strunzone(weaponorder_bypriority);
-		if(weaponorder_byimpulse)
-			strunzone(weaponorder_byimpulse);
-
-		weaponorder_bypriority = strzone(autocvar_cl_weaponpriority);
-		weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority))));
-		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
-
-		weapon_cnt = 0;
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
-			self = get_weaponinfo(i);
-			if(self.impulse >= 0)
-			{
-				weaponorder[weapon_cnt] = self;
-				++weapon_cnt;
-			}
-		}
-		for(i = weapon_cnt; i < WEP_MAXCOUNT; ++i)
-			weaponorder[i] = NULL;
-		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
-
-		weaponorder_cmp_str = string_null;
 	}
 
 	HUD_Panel_DrawBg(1);
