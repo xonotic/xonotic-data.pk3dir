@@ -168,6 +168,9 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 			if (distance < 100 || distance > sradius)
 				continue;
 
+			if (head.freezetag_frozen)
+				continue;
+
 			if(g_minstagib)
 			if(head.items & IT_STRENGTH)
 				continue;
