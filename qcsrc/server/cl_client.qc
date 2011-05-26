@@ -2817,7 +2817,7 @@ void PlayerPreThink (void)
 
 		self.prevorigin = self.origin;
 
-		if ((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss)
+		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != 23) // prevent crouching if using melee attack
 		{
 			if (!self.crouch)
 			{
