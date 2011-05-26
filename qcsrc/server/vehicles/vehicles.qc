@@ -460,7 +460,7 @@ void vehicles_enter()
         WriteAngle(MSG_ONE,  0);                  // roll
     }
 #endif
-#endif
+//#endif
 
     vehicles_clearrturn();
 

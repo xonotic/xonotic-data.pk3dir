@@ -596,7 +596,7 @@ void FixPlayermodel();
 void PutObserverInServer (void)
 {
 	entity	spot;
-
+    self.hud = HUD_NORMAL;
 	race_PreSpawnObserver();
 
 	spot = SelectSpawnPoint (TRUE);
@@ -2368,6 +2368,10 @@ void SpectateCopy(entity spectatee) {
 	self.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
+        setorigin(self, spectatee.origin);
+        self.velocity = spectatee.vehicle.velocity;
+        self.v_angle += spectatee.vehicle.angles;
+        //self.v_angle_x *= -1;
         self.vehicle_health = spectatee.vehicle_health;
         self.vehicle_shield = spectatee.vehicle_shield;
         self.vehicle_energy = spectatee.vehicle_energy;
@@ -2375,15 +2379,17 @@ void SpectateCopy(entity spectatee) {
         self.vehicle_ammo2 = spectatee.vehicle_ammo2;
         self.vehicle_reload1 = spectatee.vehicle_reload1;
         self.vehicle_reload2 = spectatee.vehicle_reload2;
+        
         msg_entity = self;
         WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-        WriteEntity(MSG_ONE, spectatee.vehicle.vehicle_viewport);
+        WriteEntity(MSG_ONE, spectatee);
+        //self.tur_head = spectatee.vehicle.vehicle_viewport;
     }
 }
 
 float SpectateUpdate() {
 	if(!self.enemy)
-		return 0;
+	    return 0;		
 
 	if (self == self.enemy)
 		return 0;
@@ -2406,17 +2412,28 @@ float SpectateNext() {
 		self.enemy = other;
 
 	if(self.enemy.classname == "player") {
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self.enemy);
-	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
-		self.movetype = MOVETYPE_NONE;
-		accuracy_resend(self);
+	    if(self.enemy.vehicle)
+	    {	   
+            msg_entity = self;
+            WriteByte(MSG_ONE, SVC_SETVIEWPORT);
+            WriteEntity(MSG_ONE, self.enemy);
+            //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            self.movetype = MOVETYPE_NONE;
+            accuracy_resend(self);
+	    }
+	    else 
+	    {	        
+            msg_entity = self;
+            WriteByte(MSG_ONE, SVC_SETVIEW);
+            WriteEntity(MSG_ONE, self.enemy);
+            //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            self.movetype = MOVETYPE_NONE;
+            accuracy_resend(self);
 
-		if(!SpectateUpdate())
-			PutObserverInServer();
-
-		return 1;
+            if(!SpectateUpdate())
+                PutObserverInServer();
+        }
+        return 1;
 	} else {
 		return 0;
 	}

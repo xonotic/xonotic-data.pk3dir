@@ -195,8 +195,8 @@ void raptor_think()
 void raptor_enter()
 {
     self.owner.PlayerPhysplug = raptor_takeoff;
-    self.movetype       = MOVETYPE_FLY;
-    self.solid          = SOLID_BBOX;
+    self.movetype       = MOVETYPE_BOUNCEMISSILE;
+    self.solid          = SOLID_SLIDEBOX;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_raptor_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_raptor_shield);
     self.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
@@ -616,7 +616,7 @@ void raptor_spawn()
     self.vehicle_health = autocvar_g_vehicle_raptor_health;
     self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
     self.movetype       = MOVETYPE_TOSS;
-    self.solid          = SOLID_BBOX;
+    self.solid          = SOLID_SLIDEBOX;
     self.vehicle_energy = 1;
 
     self.bomb1.gun1.avelocity_y = 90;

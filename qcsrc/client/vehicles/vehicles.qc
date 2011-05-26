@@ -609,13 +609,14 @@ void CSQC_WAKIZASHI_HUD()
         picsize_x *= 0.5;
         picsize_y *= 0.5;
 
+
         drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), waki_xhair, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     }
 }
 
 void Vehicles_Precache()
 {
-// HAAAAKKKZZZ!!!!!!!!!!!!
+// fixme: HAAAAKKKZZZ!!!!!!!!!!!! (this belongs as a setting in default.cfg)
     autocvar_cl_vehicles_hudscale = 0.5;
     autocvar_cl_vehicles_hudalpha = 0.75;
 
