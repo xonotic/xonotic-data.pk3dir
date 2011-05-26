@@ -1,8 +1,11 @@
-.entity accuracy;
 .float accuracy_hit[WEP_MAXCOUNT];
 .float accuracy_fired[WEP_MAXCOUNT];
+.float accuracy_cnt_hit[WEP_MAXCOUNT];
+.float accuracy_cnt_fired[WEP_MAXCOUNT];
 FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_hit);
 FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_fired);
+FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_cnt_hit);
+FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_cnt_fired);
 
 float accuracy_byte(float n, float d)
 {
@@ -74,6 +77,11 @@ void accuracy_set(entity e, float w, float fired, float hit)
 	b = accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w]));
 	a.(accuracy_hit[w]) = hit;
 	a.(accuracy_fired[w]) = fired;
+
+    if(hit)
+        a.(accuracy_cnt_hit[w]) = 1;
+    a.(accuracy_cnt_fired[w]) = 1;
+
 	if(b == accuracy_byte(hit, fired))
 		return;
 	w = pow(2, w);
@@ -83,6 +91,9 @@ void accuracy_set(entity e, float w, float fired, float hit)
 			if(a.enemy == e)
 				a.SendFlags |= w;
 }
+
+.float hit_time;
+.float fired_time;
 
 void accuracy_add(entity e, float w, float fired, float hit)
 {
@@ -97,6 +108,19 @@ void accuracy_add(entity e, float w, float fired, float hit)
 		a.(accuracy_hit[w]) += hit;
 	if(fired)
 		a.(accuracy_fired[w]) += fired;
+
+    if(hit && a.hit_time != time) // only run this once per frame
+    {
+        a.(accuracy_cnt_hit[w]) += 1;
+        a.hit_time = time;
+    }
+
+    if(fired && a.fired_time != time) // only run this once per frame
+    {
+        a.(accuracy_cnt_fired[w]) += 1;
+        a.fired_time = time;
+    }
+
 	if(b == accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w])))
 		return;
 	w = pow(2, w);

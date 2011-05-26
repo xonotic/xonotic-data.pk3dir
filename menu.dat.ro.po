@@ -2701,41 +2701,41 @@ msgstr "%2$s ^7l-a plesnit pe %1$s ^7cu o ^2Pusca ^7foarte mare"
 msgid "%s was gunned by %s"
 msgstr "%s a fost impuscat de %s"
 
-#: qcsrc/server/w_sniperrifle.qc:2
+#: qcsrc/server/w_rifle.qc:2
 msgid "Sniper Rifle"
 msgstr "Sniper Rifle"
 
-#: qcsrc/server/w_sniperrifle.qc:229
+#: qcsrc/server/w_rifle.qc:229
 #, c-format
 msgid "%s shot themself automatically"
 msgstr "%s s-a impuscat automat"
 
-#: qcsrc/server/w_sniperrifle.qc:231
+#: qcsrc/server/w_rifle.qc:231
 #, c-format
 msgid "%s sniped themself somehow"
 msgstr "%s s-a impuscat oarecum cu luneta"
 
-#: qcsrc/server/w_sniperrifle.qc:238
+#: qcsrc/server/w_rifle.qc:238
 #, c-format
 msgid "%s failed to hide from %s's bullet hail"
 msgstr "%s nu a reusit sa se ascunda de ploaia de gloante a lui %s"
 
-#: qcsrc/server/w_sniperrifle.qc:240
+#: qcsrc/server/w_rifle.qc:240
 #, c-format
 msgid "%s died in %s's bullet hail"
 msgstr "%s a murit in ploaia de gloante a lui %s"
 
-#: qcsrc/server/w_sniperrifle.qc:247
+#: qcsrc/server/w_rifle.qc:247
 #, c-format
 msgid "%s failed to hide from %s's rifle"
 msgstr "%s nu a reusit sa se ascunda de luneta lui %s"
 
-#: qcsrc/server/w_sniperrifle.qc:252
+#: qcsrc/server/w_rifle.qc:252
 #, c-format
 msgid "%s got hit in the head by %s"
 msgstr "%s a fost lovit in cap de %s"
 
-#: qcsrc/server/w_sniperrifle.qc:254 qcsrc/server/w_uzi.qc:321
+#: qcsrc/server/w_rifle.qc:254 qcsrc/server/w_uzi.qc:321
 #, c-format
 msgid "%s was sniped by %s"
 msgstr "%s a fost nimerit cu luneta de %s"

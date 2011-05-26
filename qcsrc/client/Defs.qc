@@ -258,7 +258,7 @@ float w_deathtype, w_issilent, w_random;
 string w_deathtypestring;
 vector w_org, w_backoff;
 
-float sniperrifle_scope;
+float rifle_scope;
 float nex_scope;
 
 float minelayer_maxmines;

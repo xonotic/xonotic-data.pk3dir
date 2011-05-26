@@ -128,7 +128,7 @@ vector GetCurrentFov(float fov)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
-	if((getstati(STAT_ACTIVEWEAPON) == WEP_NEX && nex_scope) || (getstati(STAT_ACTIVEWEAPON) == WEP_SNIPERRIFLE && sniperrifle_scope)) // do NOT use switchweapon here
+	if((getstati(STAT_ACTIVEWEAPON) == WEP_NEX && nex_scope) || (getstati(STAT_ACTIVEWEAPON) == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -265,7 +265,7 @@ float TrueAimCheck()
 		case WEP_MINSTANEX:
 			mv = MOVE_NORMAL;
 			break;
-		case WEP_SNIPERRIFLE:
+		case WEP_RIFLE:
 			ta = trueaim_rifle;
 			mv = MOVE_NORMAL;
 			if(zoomscript_caught)
@@ -694,11 +694,11 @@ void CSQC_UpdateView(float w, float h)
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || getstati(STAT_HEALTH) <= 0)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
-	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_SNIPERRIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
+	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_RIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
 		reticle_type = 2; // nex zoom
 	else if(button_zoom || zoomscript_caught)
 		reticle_type = 1; // normal zoom
-	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_SNIPERRIFLE && button_attack2)
+	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_RIFLE && button_attack2)
 		reticle_type = 2; // nex zoom
 
 	if (reticle_type)
@@ -1197,8 +1197,8 @@ void CSQC_UpdateView(float w, float h)
 
 					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
 					// if a new image for another weapon is added, add the code (and its respective file/value) here
-					if ((activeweapon == WEP_SNIPERRIFLE) && (weapon_clipsize == 80))
-						ring_image = "gfx/crosshair_ring_sniperrifle.tga";
+					if ((activeweapon == WEP_RIFLE) && (weapon_clipsize == 80))
+						ring_image = "gfx/crosshair_ring_rifle.tga";
 					else
 						ring_image = "gfx/crosshair_ring.tga";
 				}

@@ -1099,7 +1099,7 @@ void Ent_Init()
 	g_balance_electro_secondary_bouncestop = ReadCoord();
 
 	nex_scope = !ReadByte();
-	sniperrifle_scope = !ReadByte();
+	rifle_scope = !ReadByte();
 
 	serverflags = ReadByte();
 
