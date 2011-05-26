@@ -262,7 +262,7 @@ void player_anim (void)
 			if (self.crouch)
 			{
 				traceline(self.origin + '0 0 1' * PL_CROUCH_MIN_z, self.origin + '0 0 1' * (PL_CROUCH_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-				if(!trace_startsolid && trace_fraction == 1)
+				if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == 7) // don't get stuck on idle animation in midair
 				{
 					setanim(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
 					self.restart_jump = FALSE;
@@ -271,7 +271,7 @@ void player_anim (void)
 			else
 			{
 				traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-				if(!trace_startsolid && trace_fraction == 1)
+				if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == 7) // don't get stuck on idle animation in midair
 				{
 					setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
 					self.restart_jump = FALSE;
