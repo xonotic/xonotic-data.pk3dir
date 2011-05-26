@@ -196,9 +196,9 @@ void trigger_push_touch()
 			if (!other.animstate_override)
 			{
 				if (other.crouch)
-					setanim(other, other.anim_duckjump, TRUE, TRUE, TRUE);
+					setanim(other, other.anim_duckjump, FALSE, TRUE, TRUE);
 				else
-					setanim(other, other.anim_jump, TRUE, TRUE, TRUE);
+					setanim(other, other.anim_jump, FALSE, TRUE, TRUE);
 			}
 		}
 		else
