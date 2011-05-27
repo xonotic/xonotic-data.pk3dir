@@ -1268,7 +1268,7 @@ void weapon_thinkf(float fr, float t, void() func)
 			anim_z = anim_y / (t + sys_frametime);
 			setanim(self, anim, FALSE, TRUE, TRUE);
 		}
-		else if (self.animstate_startframe == 7) // only allow shoot anim to override idle animation until we have animation blending
+		else if (self.animstate_startframe == self.anim_idle_x) // only allow shoot anim to override idle animation until we have animation blending
 		{
 			anim = self.anim_shoot;
 			anim_z = anim_y / (t + sys_frametime);

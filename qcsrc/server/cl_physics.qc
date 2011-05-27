@@ -163,7 +163,7 @@ void PlayerJump (void)
 
 	if (self.crouch)
 		setanim(self, self.anim_duckjump, FALSE, TRUE, TRUE);
-	else if (self.animstate_startframe != 23) // jump animation shouldn't override melee until we have animation blending
+	else if (self.animstate_startframe != self.anim_melee_x) // jump animation shouldn't override melee until we have animation blending
 		setanim(self, self.anim_jump, FALSE, TRUE, TRUE);
 
 	if(g_jump_grunt)
