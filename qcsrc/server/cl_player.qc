@@ -193,6 +193,7 @@ void player_setupanimsformodel()
 	self.anim_backright = '21 1 1';
 	self.anim_backleft  = '22 1 1';
 	self.anim_melee = '23 1 1';
+	self.anim_fly = '24 1 1';
 	animparseerror = FALSE;
 	animfilename = strcat(self.model, ".animinfo");
 	animfile = fopen(animfilename, FILE_READ);
@@ -220,6 +221,7 @@ void player_setupanimsformodel()
 		self.anim_backright    = animparseline(animfile);
 		self.anim_backleft     = animparseline(animfile);
 		self.anim_melee	       = animparseline(animfile);
+		self.anim_fly          = animparseline(animfile);
 		fclose(animfile);
 
 		// derived anims
@@ -257,7 +259,13 @@ void player_anim (void)
 
 	if (!self.animstate_override)
 	{
-		if (!(self.flags & FL_ONGROUND))
+		if((self.animstate_startframe == self.anim_jump_x && time - self.animstate_starttime >= self.anim_jump_y/self.anim_jump_z) || (self.animstate_startframe == self.anim_duckjump_x && time - self.animstate_starttime >= self.anim_duckjump_y/self.anim_duckjump_z))
+		{
+			print("self.anim_fly_x = ", ftos(self.anim_fly_x), "self.anim_fly_y = ", ftos(self.anim_fly_y), "self.anim_fly_z = ", ftos(self.anim_fly_z), "\n");
+			setanim(self, self.anim_fly, FALSE, TRUE, TRUE);
+		}
+
+		if (!(self.flags & FL_ONGROUND) && self.animstate_startframe != self.anim_fly_x) // don't trace if we are playing fly animation
 		{
 			if (self.crouch && self.animstate_startframe != 5) // don't perform another trace if already playing the crouch jump anim
 			{
