@@ -259,30 +259,30 @@ void player_anim (void)
 
 	if (!self.animstate_override)
 	{
-		if((self.animstate_startframe == self.anim_jump_x && time - self.animstate_starttime >= self.anim_jump_y/self.anim_jump_z) || (self.animstate_startframe == self.anim_duckjump_x && time - self.animstate_starttime >= self.anim_duckjump_y/self.anim_duckjump_z))
+		if (!(self.flags & FL_ONGROUND))
 		{
-			print("self.anim_fly_x = ", ftos(self.anim_fly_x), "self.anim_fly_y = ", ftos(self.anim_fly_y), "self.anim_fly_z = ", ftos(self.anim_fly_z), "\n");
-			setanim(self, self.anim_fly, FALSE, TRUE, TRUE);
-		}
+			if((self.animstate_startframe == self.anim_jump_x && time - self.animstate_starttime >= 21/25) || (self.animstate_startframe == self.anim_duckjump_x && time - self.animstate_starttime >= 21/25))
+				setanim(self, self.anim_fly, TRUE, FALSE, FALSE);
 
-		if (!(self.flags & FL_ONGROUND) && self.animstate_startframe != self.anim_fly_x) // don't trace if we are playing fly animation
-		{
-			if (self.crouch && self.animstate_startframe != 5) // don't perform another trace if already playing the crouch jump anim
+			if(self.animstate_startframe != self.anim_fly_x) // no tracing if we're in the fly anim
 			{
-				traceline(self.origin + '0 0 1' * PL_CROUCH_MIN_z, self.origin + '0 0 1' * (PL_CROUCH_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-				if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == 7) // don't get stuck on idle animation in midair
+				if (self.crouch && self.animstate_startframe != 5) // don't perform another trace if already playing the crouch jump anim
 				{
-					setanim(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
-					self.restart_jump = FALSE;
+					traceline(self.origin + '0 0 1' * PL_CROUCH_MIN_z, self.origin + '0 0 1' * (PL_CROUCH_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
+					if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == 7) // don't get stuck on idle animation in midair
+					{
+						setanim(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
+						self.restart_jump = FALSE;
+					}
 				}
-			}
-			else if (self.animstate_startframe != 8) // don't perform another trace if already playing the jump anim
-			{
-				traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-				if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == 7) // don't get stuck on idle animation in midair
+				else if (self.animstate_startframe != 8) // don't perform another trace if already playing the jump anim
 				{
-					setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
-					self.restart_jump = FALSE;
+					traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
+					if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == 7) // don't get stuck on idle animation in midair
+					{
+						setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
+						self.restart_jump = FALSE;
+					}
 				}
 			}
 		}
@@ -316,6 +316,7 @@ void player_anim (void)
 		}
 		else
 			setanim(self, self.anim_idle, TRUE, FALSE, FALSE);
+		print("self.animstate_startframe = ", ftos(self.animstate_startframe), "\n");
 	}
 
 	if (self.weaponentity)
