@@ -342,7 +342,6 @@ void CSQC_common_hud(void);
 void PostInit(void);
 void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard();
-float view_set;
 float camera_mode;
 float reticle_type;
 string NextFrameCommand;
@@ -430,7 +429,7 @@ void CSQC_UpdateView(float w, float h)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_eventchase_intermission && intermission))
+		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || intermission)
 		{
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
 			// Ideally, there should be another way to enable third person cameras, such as through R_SetView()
@@ -464,16 +463,12 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	// Render the Scene
-	if(!intermission || !view_set || (intermission && autocvar_cl_eventchase_intermission))
-	{
-		view_origin = pmove_org + vo;
-		view_angles = input_angles;
-		makevectors(view_angles);
-		view_forward = v_forward;
-		view_right = v_right;
-		view_up = v_up;
-		view_set = 1;
-	}
+	view_origin = pmove_org + vo;
+	view_angles = input_angles;
+	makevectors(view_angles);
+	view_forward = v_forward;
+	view_right = v_right;
+	view_up = v_up;
 
 #ifdef BLURTEST
 	if(time > blurtest_time0 && time < blurtest_time1)
