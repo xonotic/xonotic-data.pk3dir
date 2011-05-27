@@ -464,8 +464,8 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	// Render the Scene
-	view_origin = pmove_org + vo;
-	view_angles = input_angles;
+	view_origin = R_SetView3fv(VF_ORIGIN);
+	view_angles = R_SetView3fv(VF_ANGLES);
 	makevectors(view_angles);
 	view_forward = v_forward;
 	view_right = v_right;
@@ -554,6 +554,8 @@ void CSQC_UpdateView(float w, float h)
 
 	// ALWAYS Clear Current Scene First
 	R_ClearScene();
+	R_SetView(VF_ORIGIN, view_origin);
+	R_SetView(VF_ANGLES, view_angles);
 
 	// FIXME engine bug? VF_SIZE and VF_MIN are not restored to sensible values by this
 	R_SetView(VF_SIZE, vf_size);
