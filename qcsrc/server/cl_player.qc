@@ -259,7 +259,7 @@ void player_anim (void)
 
 	if (!self.animstate_override)
 	{
-		if (!(self.flags & FL_ONGROUND))
+		if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
 		{
 			if((self.animstate_startframe == self.anim_jump_x && time - self.animstate_starttime >= 21/25) || (self.animstate_startframe == self.anim_duckjump_x && time - self.animstate_starttime >= 21/25))
 				setanim(self, self.anim_fly, TRUE, FALSE, FALSE);
