@@ -1,4 +1,4 @@
-%entity pingplreport;
+entity pingplreport;
 void PingPLReport_Think()
 {
 	float delta;
