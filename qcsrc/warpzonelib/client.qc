@@ -1,7 +1,11 @@
 void WarpZone_Fade_PreDraw()
 {
 	if(self.warpzone_fadestart)
-		self.alpha = bound(0, (self.warpzone_fadeend - vlen(view_origin - self.origin - 0.5 * (self.mins + self.maxs))) / (self.warpzone_fadeend - self.warpzone_fadestart), 1);
+	{
+		vector org;
+		org = R_SetView3fv(VF_ORIGIN);
+		self.alpha = bound(0, (self.warpzone_fadeend - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.warpzone_fadeend - self.warpzone_fadestart), 1);
+	}
 	else
 		self.alpha = 1;
 	//print(sprintf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs)));
