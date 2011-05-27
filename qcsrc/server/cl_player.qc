@@ -316,7 +316,6 @@ void player_anim (void)
 		}
 		else
 			setanim(self, self.anim_idle, TRUE, FALSE, FALSE);
-		print("self.animstate_startframe = ", ftos(self.animstate_startframe), "\n");
 	}
 
 	if (self.weaponentity)
