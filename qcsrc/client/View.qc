@@ -455,6 +455,16 @@ void CSQC_UpdateView(float w, float h)
 
 			R_SetView(VF_ORIGIN, trace_endpos);
 			R_SetView(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
+
+			vector o, corner0, corner1, corner2, corner3, nearclip;
+			nearclip = '0 0 1' * (cvar("r_nearclip") * 1.125);
+			corner0 = cs_unproject('0 0 0' + nearclip);
+			corner1 = cs_unproject('1 0 0' * cvar("vid_conwidth") + nearclip);
+			corner2 = cs_unproject('0 1 0' * cvar("vid_conheight") + nearclip);
+			corner3 = cs_unproject('1 0 0' * cvar("vid_conwidth") + '0 1 0' * cvar("vid_conheight") + nearclip);
+			o = trace_endpos;
+			o = o + WarpZone_FixNearClip(trace_endpos, corner0, corner1, corner2, corner3);
+			R_SetView(VF_ORIGIN, o);
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{

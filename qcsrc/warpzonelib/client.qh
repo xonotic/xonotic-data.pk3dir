@@ -7,6 +7,7 @@ vector warpzone_fixview_angles;
 vector warpzone_fixview_cl_viewangles;
 void WarpZone_FixView(); // this saves the previous values
 void WarpZone_UnFixView(); // and restores them
+vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3);
 
 void WarpZone_Init();
 void WarpZone_Shutdown();
