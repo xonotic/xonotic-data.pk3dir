@@ -164,14 +164,7 @@ void WarpZone_Teleported_Read(float isnew)
 
 float warpzone_fixingview;
 float warpzone_fixingview_drawexteriormodel;
-void WarpZone_View_Inside()
-{
-	if(warpzone_fixingview)
-		return;
-	warpzone_fixingview = 1;
-	warpzone_fixingview_drawexteriormodel = cvar("r_drawexteriormodel");
-	cvar_set("r_drawexteriormodel", "0");
-}
+float autocvar_chase_active;
 
 void WarpZone_View_Outside()
 {
@@ -179,8 +172,20 @@ void WarpZone_View_Outside()
 		return;
 	warpzone_fixingview = 0;
 	cvar_set("r_drawexteriormodel", ftos(warpzone_fixingview_drawexteriormodel));
-	//cvar_set("cl_sidespeed", ftos(warpzone_fixingview_sidespeed));
-	//cvar_set("cl_forwardspeed", ftos(warpzone_fixingview_forwardspeed));
+}
+
+void WarpZone_View_Inside()
+{
+	if(autocvar_chase_active)
+	{
+		WarpZone_View_Outside();
+		return;
+	}
+	if(warpzone_fixingview)
+		return;
+	warpzone_fixingview = 1;
+	warpzone_fixingview_drawexteriormodel = cvar("r_drawexteriormodel");
+	cvar_set("r_drawexteriormodel", "0");
 }
 
 vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3)
