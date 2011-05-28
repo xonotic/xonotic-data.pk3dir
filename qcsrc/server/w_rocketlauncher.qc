@@ -21,8 +21,9 @@ void W_Rocket_Explode ()
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
 			if(IsDifferentTeam(self.owner, other))
-				if(IsFlying(other))
-					AnnounceTo(self.owner, "airshot");
+				if(other.deadflag == DEAD_NO)
+					if(IsFlying(other))
+						AnnounceTo(self.owner, "airshot");
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
