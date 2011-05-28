@@ -348,7 +348,7 @@ string NextFrameCommand;
 void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
 
-vector freeze_pmove_org, freeze_input_angles;
+vector freeze_org, freeze_ang;
 entity nightvision_noise, nightvision_noise2;
 
 float pickup_crosshair_time, pickup_crosshair_size;
@@ -407,24 +407,16 @@ void CSQC_UpdateView(float w, float h)
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 	vo = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
-	warpzone_fixview_origin = pmove_org + vo;
-	warpzone_fixview_cl_viewangles = input_angles;
-	warpzone_fixview_angles = view_angles;
-	WarpZone_FixView();
-	pmove_org = warpzone_fixview_origin - vo;
-	input_angles = warpzone_fixview_cl_viewangles;
-	view_angles = warpzone_fixview_angles;
-
 	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0) || intermission > 1)
 	{
-		pmove_org = freeze_pmove_org;
-		input_angles = view_angles = freeze_input_angles;
-		R_SetView(VF_ORIGIN, pmove_org + vo);
-		R_SetView(VF_ANGLES, view_angles);
-		//R_SetView(VF_CL_VIEWANGLES, input_angles);
+		R_SetView(VF_ORIGIN, freeze_org);
+		R_SetView(VF_ANGLES, freeze_ang);
 	}
-	freeze_pmove_org = pmove_org;
-	freeze_input_angles = input_angles;
+	else
+	{
+		freeze_org = R_SetView3fv(VF_ORIGIN);
+		freeze_ang = R_SetView3fv(VF_ANGLES);
+	}
 
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
@@ -445,26 +437,16 @@ void CSQC_UpdateView(float w, float h)
 			vector eventchase_target_origin;
 			makevectors(view_angles);
 			// pass 1, used to check where the camera would go and obtain the trace_fraction
-			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance;
+			eventchase_target_origin = freeze_org - v_forward * eventchase_current_distance;
 
-			WarpZone_TraceLine(pmove_org, eventchase_target_origin, MOVE_WORLDONLY, self);
+			WarpZone_TraceLine(freeze_org, eventchase_target_origin, MOVE_WORLDONLY, self);
 			// pass 2, also multiplying view_forward with trace_fraction, to prevent the camera from going through walls
 			// The 0.1 subtraction is to not limit the camera precisely at the wall surface, as that allows the view to poke through
-			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
-			WarpZone_TraceLine(pmove_org, eventchase_target_origin, MOVE_WORLDONLY, self);
+			eventchase_target_origin = freeze_org - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
+			WarpZone_TraceLine(freeze_org, eventchase_target_origin, MOVE_WORLDONLY, self);
 
 			R_SetView(VF_ORIGIN, trace_endpos);
 			R_SetView(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
-
-			vector o, corner0, corner1, corner2, corner3, nearclip;
-			nearclip = '0 0 1' * (cvar("r_nearclip") * 1.125);
-			corner0 = cs_unproject('0 0 0' + nearclip);
-			corner1 = cs_unproject('1 0 0' * cvar("vid_conwidth") + nearclip);
-			corner2 = cs_unproject('0 1 0' * cvar("vid_conheight") + nearclip);
-			corner3 = cs_unproject('1 0 0' * cvar("vid_conwidth") + '0 1 0' * cvar("vid_conheight") + nearclip);
-			o = trace_endpos;
-			o = o + WarpZone_FixNearClip(trace_endpos, corner0, corner1, corner2, corner3);
-			R_SetView(VF_ORIGIN, o);
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
@@ -472,6 +454,9 @@ void CSQC_UpdateView(float w, float h)
 			eventchase_current_distance = 0; // start from 0 next time
 		}
 	}
+
+	WarpZone_FixView();
+	//WarpZone_FixPMove();
 
 	// Render the Scene
 	view_origin = R_SetView3fv(VF_ORIGIN);
@@ -847,14 +832,6 @@ void CSQC_UpdateView(float w, float h)
 			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 	}
 
-	// Draw the mouse cursor
-	// NOTE: drawpic must happen after R_RenderScene for some reason
-	//drawpic(getmousepos(), "gfx/cursor.tga", '11 14 0', '1 1 1', 1, 0);
-	//drawstring('50 50', ftos(game), '10 10 0', '1 1 1', 1, 0);
-	//self = edict_num(player_localnum);
-	//drawstring('0 0', vtos(pmove_org), '8 8 0', '1 1 1', 1, 0);
-	//drawstring('0 8', strcat("ORG: ", vtos(self.origin), " state: ", ftos(self.ctf_state), " HP: ", ftos(self.health)), '8 8 0', '1 1 1', 1, 0);
-	// as long as the ctf part isn't in, this is useless
 	if(menu_visible)
 		menu_show();
 
