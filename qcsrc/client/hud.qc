@@ -4354,7 +4354,7 @@ void centerprint(string strMessage)
 		{
 			if(centerprint_messages[j])
 				strunzone(centerprint_messages[j]);
-			centerprint_messages[j] == strzone(msg_without_CPID(strMessage));
+			centerprint_messages[j] = strzone(msg_without_CPID(strMessage));
 			centerprint_time[j] = time;
 			return;
 		}
