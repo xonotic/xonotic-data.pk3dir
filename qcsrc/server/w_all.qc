@@ -16,6 +16,6 @@
 #include "w_hook.qc"
 #include "w_hlac.qc"
 #include "w_tuba.qc"
-#include "w_sniperrifle.qc"
+#include "w_rifle.qc"
 #include "w_fireball.qc"
 #include "w_seeker.qc"

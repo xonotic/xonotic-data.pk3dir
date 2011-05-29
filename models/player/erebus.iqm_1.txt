@@ -1,7 +1,0 @@
-name Glowing Erebus
-species human
-sex Male
-weight 106
-age 26
-
-Heavyweight Xonotic Solider with LEDs
