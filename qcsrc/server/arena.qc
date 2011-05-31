@@ -257,7 +257,6 @@ void Arena_Warmup()
 			self.velocity = '0 0 0';
 			self.avelocity = '0 0 0';
 			self.movement = '0 0 0';
-			//self.fixangle = TRUE;
 		}
 	}
 

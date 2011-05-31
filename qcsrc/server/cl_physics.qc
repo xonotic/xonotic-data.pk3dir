@@ -780,7 +780,7 @@ void SV_PlayerPhysics()
 			self.angles_x = random() * 360;
 			self.angles_y = random() * 360;
 			// at least I'm not forcing retardedview by also assigning to angles_z
-			self.fixangle = 1;
+			self.fixangle = TRUE;
 		}
 	}
 

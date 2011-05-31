@@ -137,7 +137,7 @@ vector GetCurrentFov(float fov)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
-	if((getstati(STAT_ACTIVEWEAPON) == WEP_NEX && nex_scope) || (getstati(STAT_ACTIVEWEAPON) == WEP_SNIPERRIFLE && sniperrifle_scope)) // do NOT use switchweapon here
+	if((getstati(STAT_ACTIVEWEAPON) == WEP_NEX && nex_scope) || (getstati(STAT_ACTIVEWEAPON) == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -274,7 +274,7 @@ float TrueAimCheck()
 		case WEP_MINSTANEX:
 			mv = MOVE_NORMAL;
 			break;
-		case WEP_SNIPERRIFLE:
+		case WEP_RIFLE:
 			ta = trueaim_rifle;
 			mv = MOVE_NORMAL;
 			if(zoomscript_caught)
@@ -342,14 +342,13 @@ void CSQC_common_hud(void);
 void PostInit(void);
 void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard();
-float view_set;
 float camera_mode;
 float reticle_type;
 string NextFrameCommand;
 void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
 
-vector freeze_pmove_org, freeze_input_angles;
+vector freeze_org, freeze_ang;
 entity nightvision_noise, nightvision_noise2;
 
 float pickup_crosshair_time, pickup_crosshair_size;
@@ -408,29 +407,21 @@ void CSQC_UpdateView(float w, float h)
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 	vo = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
-	warpzone_fixview_origin = pmove_org + vo;
-	warpzone_fixview_cl_viewangles = input_angles;
-	warpzone_fixview_angles = view_angles;
-	WarpZone_FixView();
-	pmove_org = warpzone_fixview_origin - vo;
-	input_angles = warpzone_fixview_cl_viewangles;
-	view_angles = warpzone_fixview_angles;
-
 	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0) || intermission > 1)
 	{
-		pmove_org = freeze_pmove_org;
-		input_angles = view_angles = freeze_input_angles;
-		R_SetView(VF_ORIGIN, pmove_org + vo);
-		R_SetView(VF_ANGLES, view_angles);
-		//R_SetView(VF_CL_VIEWANGLES, input_angles);
+		R_SetView(VF_ORIGIN, freeze_org);
+		R_SetView(VF_ANGLES, freeze_ang);
 	}
-	freeze_pmove_org = pmove_org;
-	freeze_input_angles = input_angles;
+	else
+	{
+		freeze_org = R_SetView3fv(VF_ORIGIN);
+		freeze_ang = R_SetView3fv(VF_ANGLES);
+	}
 
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || (autocvar_cl_eventchase_intermission && intermission))
+		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || intermission)
 		{
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
 			// Ideally, there should be another way to enable third person cameras, such as through R_SetView()
@@ -446,15 +437,16 @@ void CSQC_UpdateView(float w, float h)
 			vector eventchase_target_origin;
 			makevectors(view_angles);
 			// pass 1, used to check where the camera would go and obtain the trace_fraction
-			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance;
+			eventchase_target_origin = freeze_org - v_forward * eventchase_current_distance;
 
-			traceline(pmove_org, eventchase_target_origin, MOVE_WORLDONLY, self);
+			WarpZone_TraceLine(freeze_org, eventchase_target_origin, MOVE_WORLDONLY, self);
 			// pass 2, also multiplying view_forward with trace_fraction, to prevent the camera from going through walls
 			// The 0.1 subtraction is to not limit the camera precisely at the wall surface, as that allows the view to poke through
-			eventchase_target_origin = pmove_org - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
+			eventchase_target_origin = freeze_org - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
+			WarpZone_TraceLine(freeze_org, eventchase_target_origin, MOVE_WORLDONLY, self);
 
-			R_SetView(VF_ORIGIN, eventchase_target_origin);
-			R_SetView(VF_ANGLES, view_angles);
+			R_SetView(VF_ORIGIN, trace_endpos);
+			R_SetView(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
@@ -463,17 +455,16 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
+	WarpZone_FixView();
+	//WarpZone_FixPMove();
+
 	// Render the Scene
-	if(!intermission || !view_set || (intermission && autocvar_cl_eventchase_intermission))
-	{
-		view_origin = pmove_org + vo;
-		view_angles = input_angles;
-		makevectors(view_angles);
-		view_forward = v_forward;
-		view_right = v_right;
-		view_up = v_up;
-		view_set = 1;
-	}
+	view_origin = R_SetView3fv(VF_ORIGIN);
+	view_angles = R_SetView3fv(VF_ANGLES);
+	makevectors(view_angles);
+	view_forward = v_forward;
+	view_right = v_right;
+	view_up = v_up;
 
 #ifdef BLURTEST
 	if(time > blurtest_time0 && time < blurtest_time1)
@@ -558,6 +549,8 @@ void CSQC_UpdateView(float w, float h)
 
 	// ALWAYS Clear Current Scene First
 	R_ClearScene();
+	R_SetView(VF_ORIGIN, view_origin);
+	R_SetView(VF_ANGLES, view_angles);
 
 	// FIXME engine bug? VF_SIZE and VF_MIN are not restored to sensible values by this
 	R_SetView(VF_SIZE, vf_size);
@@ -683,11 +676,11 @@ void CSQC_UpdateView(float w, float h)
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || getstati(STAT_HEALTH) <= 0)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
-	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_SNIPERRIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
+	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_RIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
 		reticle_type = 2; // nex zoom
 	else if(button_zoom || zoomscript_caught)
 		reticle_type = 1; // normal zoom
-	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_SNIPERRIFLE && button_attack2)
+	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_RIFLE && button_attack2)
 		reticle_type = 2; // nex zoom
 
 	if (reticle_type)
@@ -773,7 +766,7 @@ void CSQC_UpdateView(float w, float h)
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
 	}
 	
-	if(autocvar_hud_damage)
+	if(autocvar_hud_damage && !autocvar_chase_active)
 	{
 		splash_size_x = max(vid_conwidth, vid_conheight);
 		splash_size_y = max(vid_conwidth, vid_conheight);
@@ -839,14 +832,6 @@ void CSQC_UpdateView(float w, float h)
 			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 	}
 
-	// Draw the mouse cursor
-	// NOTE: drawpic must happen after R_RenderScene for some reason
-	//drawpic(getmousepos(), "gfx/cursor.tga", '11 14 0', '1 1 1', 1, 0);
-	//drawstring('50 50', ftos(game), '10 10 0', '1 1 1', 1, 0);
-	//self = edict_num(player_localnum);
-	//drawstring('0 0', vtos(pmove_org), '8 8 0', '1 1 1', 1, 0);
-	//drawstring('0 8', strcat("ORG: ", vtos(self.origin), " state: ", ftos(self.ctf_state), " HP: ", ftos(self.health)), '8 8 0', '1 1 1', 1, 0);
-	// as long as the ctf part isn't in, this is useless
 	if(menu_visible)
 		menu_show();
 
@@ -1186,8 +1171,8 @@ void CSQC_UpdateView(float w, float h)
 					
 					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
 					// if a new image for another weapon is added, add the code (and its respective file/value) here
-					if ((activeweapon == WEP_SNIPERRIFLE) && (weapon_clipsize == 80))
-						ring_image = "gfx/crosshair_ring_sniperrifle.tga";
+					if ((activeweapon == WEP_RIFLE) && (weapon_clipsize == 80))
+						ring_image = "gfx/crosshair_ring_rifle.tga";
 					else
 						ring_image = "gfx/crosshair_ring.tga";
 				}
