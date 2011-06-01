@@ -2717,6 +2717,7 @@ void PlayerPreThink (void)
 
 		//don't allow the player to turn around while game is paused!
 		if(timeoutStatus == 2) {
+			// FIXME turn this into CSQC stuff
 			self.v_angle = self.lastV_angle;
 			self.angles = self.lastV_angle;
 			self.fixangle = TRUE;

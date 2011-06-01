@@ -354,7 +354,7 @@ float raptor_frame()
 #if VEHICLES_VIEWROTATE_CROSSHAIR
     df = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
     if(df_x > 180)  df_x -= 360;
-    if(df_x < -180) df_x += 360;
+    if(df_x < -180) df_x += 360;--
     if(df_y > 180)  df_y -= 360;
     if(df_y < -180) df_y += 360;
 
