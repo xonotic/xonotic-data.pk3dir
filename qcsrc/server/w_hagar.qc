@@ -221,9 +221,12 @@ void W_Hagar_Attack2_Load (void)
 				{
 					W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
 					self.hagar_load += 1;
-					sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
 
-					self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
+					if (self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max)
+						self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_hold;
+					else
+						self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
 				}
 			}
 			else if(!self.hagar_loadbeep && self.hagar_load) // prevents the beep from playing each frame
@@ -243,7 +246,7 @@ void W_Hagar_Attack2_Load (void)
 	if(self.hagar_load)
 	{
 		self.weapon_forbidchange = TRUE;
-		if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
+		if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && autocvar_g_balance_hagar_secondary_load_hold >= 0))
 			W_Hagar_Attack2_Load_Release();
 	}
 	else
