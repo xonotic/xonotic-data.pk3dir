@@ -259,8 +259,17 @@ float spiderbot_frame()
 
     if(spider.flags & FL_ONGROUND)
     {
-        if(player.BUTTON_JUMP && self.tur_head.wait < time)
+        if(spider.frame == 4 && self.tur_head.wait != 0)
         {
+            sound (self, CHAN_VOICE, "vehicles/spiderbot_land.wav", VOL_BASE, ATTN_NORM);
+            spider.frame = 5;            
+        }
+        
+        if(player.BUTTON_JUMP && self.tur_head.wait < time)
+        {        
+            sound (self, CHAN_VOICE, "vehicles/spiderbot_jump.wav", VOL_BASE, ATTN_NORM);
+            self.delay = 0;
+
             self.tur_head.wait = time + 2;
             player.BUTTON_JUMP = 0;
             spider.velocity   = v_forward * 700 + v_up * 600;
@@ -270,6 +279,12 @@ float spiderbot_frame()
         {
             if(vlen(player.movement) == 0)
             {
+                if(self.sound_nexttime < time || self.delay != 3)
+                {                        
+                    self.delay = 3;
+                    self.sound_nexttime = time + soundlength("vehicles/spiderbot_idle.wav");
+                    sound (self, CHAN_VOICE, "vehicles/spiderbot_idle.wav", VOL_BASE, ATTN_NORM);
+                }                
                 movelib_beak_simple(autocvar_g_vehicle_spiderbot_speed_stop);
                 spider.frame = 5;
             }
@@ -292,6 +307,14 @@ float spiderbot_frame()
                     }
                     player.movement_y = 0;
                     movelib_move_simple(normalize(v_forward * player.movement_x),autocvar_g_vehicle_spiderbot_speed_walk,autocvar_g_vehicle_spiderbot_movement_inertia);
+
+                    if(self.sound_nexttime < time || self.delay != 1)
+                    {                        
+                        self.delay = 1;
+                        self.sound_nexttime = time + soundlength("vehicles/spiderbot_walk.wav");
+                        sound (self, CHAN_VOICE, "vehicles/spiderbot_walk.wav", VOL_BASE, ATTN_NORM);
+                    }
+
                 }
                 else if(player.movement_y != 0)
                 {
@@ -306,6 +329,12 @@ float spiderbot_frame()
                         spider.frame = 3;
                     }
                     movelib_move_simple(normalize(v_right * player.movement_y),autocvar_g_vehicle_spiderbot_speed_strafe,autocvar_g_vehicle_spiderbot_movement_inertia);
+                    if(self.sound_nexttime < time || self.delay != 2)
+                    {                        
+                        self.delay = 2;
+                        self.sound_nexttime = time + soundlength("vehicles/spiderbot_strafe.wav");
+                        sound (self, CHAN_VOICE, "vehicles/spiderbot_strafe.wav", VOL_BASE, ATTN_NORM);
+                    }
                 }
             }
         }
@@ -559,7 +588,8 @@ void spiderbot_blowup()
 
 void spiderbot_die()
 {
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CHAN_VOICE, "vehicles/spiderbot_die.wav", VOL_BASE, ATTN_NORM);
+    //sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("rocket_explode"), self.origin + '0 0 100', '0 0 0', 1);
 
     self.health         = 0;
@@ -622,7 +652,14 @@ void spawnfunc_vehicle_spiderbot()
 
     precache_sound ( "weapons/rocket_impact.wav" );
     precache_sound ( "weapons/uzi_fire.wav" );
-    precache_sound ( "weapons/rocket_impact.wav" );
+    precache_sound ( "weapons/rocket_impact.wav");
+    
+    precache_sound ( "vehicles/spiderbot_die.wav");
+    precache_sound ( "vehicles/spiderbot_idle.wav");
+    precache_sound ( "vehicles/spiderbot_jump.wav");
+    precache_sound ( "vehicles/spiderbot_strafe.wav");
+    precache_sound ( "vehicles/spiderbot_walk.wav");
+    precache_sound ( "vehicles/spiderbot_land.wav");
 
     vehicles_configcheck("vehicle_spiderbot.cfg", autocvar_g_vehicle_spiderbot_health);
     if(autocvar_g_vehicle_spiderbot_shield)

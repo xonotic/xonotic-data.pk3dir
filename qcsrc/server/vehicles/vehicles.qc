@@ -105,6 +105,7 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 .entity lock_target;
 .float  lock_strength;
 .float  lock_time;
+.float  lock_soundtime;
 void vehicles_locktarget(float incr, float decr, float _lock_time)
 {
     if(self.lock_target && self.lock_target.deadflag != DEAD_NO)
@@ -115,7 +116,17 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
     }
 
     if(self.lock_time > time)
+    {
+        if(self.lock_target)
+        if(self.lock_soundtime < time)
+        {
+            self.lock_soundtime = time + 0.5;
+            play2(self.owner, "vehicles/locked.wav");
+        }
+        
         return;
+    }
+        
 
     if(trace_ent != world)
     {
@@ -131,7 +142,22 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 
     if(self.lock_target == world && trace_ent != world)
         self.lock_target = trace_ent;
-
+    
+    if(self.lock_target && trace_ent == self.lock_target) 
+    {            
+        if(self.lock_strength != 1 && self.lock_strength + incr >= 1)
+        {
+            play2(self.owner, "vehicles/lock.wav");
+            self.lock_soundtime = time + 0.8;
+        }        
+        else if (self.lock_strength != 1 && self.lock_soundtime < time)
+        {            
+            play2(self.owner, "vehicles/locking.wav");
+            self.lock_soundtime = time + 0.3;
+        }
+        
+    }    
+        
     // Have a locking target
     // Trace hit current target
     if(trace_ent == self.lock_target && trace_ent != world)

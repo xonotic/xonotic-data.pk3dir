@@ -1,7 +1,7 @@
 #ifdef SVQC
 #define RAPTOR_MIN '-80 -80 0'
 #define RAPTOR_MAX '80 80 70'
-
+//#define RAPTOR_ENGINE "sound/vehicles/raptor.wav"
 float autocvar_g_vehicle_raptor_respawntime;
 
 float autocvar_g_vehicle_raptor_movestyle;
@@ -263,10 +263,16 @@ void raptor_exit(float eject)
 float raptor_takeoff()
 {
     entity player, raptor;
-
+    
     player = self;
     raptor = self.vehicle;
     self   = raptor;
+    
+    if(self.sound_nexttime < time)
+    {        
+        self.sound_nexttime = time + soundlength("vehicles/raptor_fly.wav");
+        sound (self, CHAN_VOICE, "vehicles/raptor_fly.wav", VOL_BASE, ATTN_NORM);
+    }   
 
     // Takeoff sequense
     if(raptor.frame < 25)
@@ -314,7 +320,21 @@ float raptor_frame()
     player = self;
     raptor = self.vehicle;
     self   = raptor;
-
+    
+    ftmp = vlen(self.velocity);
+    if(ftmp > autocvar_g_vehicle_raptor_speed_forward) 
+        ftmp = 1;
+    else  
+        ftmp = ftmp / autocvar_g_vehicle_raptor_speed_forward;
+    
+    if(fabs(ftmp - self.wait) > 0.2 || self.sound_nexttime < time)
+    {        
+        self.sound_nexttime = time + soundlength("vehicles/raptor_fly.wav");
+        sound (self, CHAN_VOICE, "vehicles/raptor_fly.wav", 1 - ftmp,   ATTN_NORM );
+        sound (self, CHAN_PLAYER, "vehicles/raptor_speed.wav", ftmp, ATTN_NORM);
+        self.wait = ftmp;
+    }    
+    
     if(player.BUTTON_USE && raptor.deadflag == DEAD_NO)
     {
         self = raptor;
@@ -329,7 +349,6 @@ float raptor_frame()
         player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
         return 1;
     }
-
     crosshair_trace(player);
 
 #if VEHICLES_VIEWROTATE_CROSSHAIR
@@ -729,6 +748,8 @@ void raptor_dinit()
 void spawnfunc_vehicle_raptor()
 {
     vehicles_configcheck("vehicle_raptor.cfg", autocvar_g_vehicle_raptor_health);
+    
+    
 
     if(autocvar_g_vehicle_raptor_shield)
         self.vehicle_flags |= VHF_HASSHIELD;
@@ -749,7 +770,9 @@ void spawnfunc_vehicle_raptor()
     precache_model ("models/vehicles/clusterbomb.md3");
     precache_model ("models/vehicles/clusterbomb_folded.md3");
     precache_model ("models/vehicles/raptor_body.dpm");
-
+    precache_sound ("vehicles/raptor_fly.wav");
+    precache_sound ("vehicles/raptor_speed.wav");
+    
     self.think = raptor_dinit;
     self.nextthink = time + 1;
 }

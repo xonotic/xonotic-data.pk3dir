@@ -35,6 +35,8 @@ float VHF_MOVE_FLY      = 512;  /// Vehicle is airborn
 .entity vehicle_viewport;
 .entity vehicle_hudmodel;
 
+.float sound_nexttime;
+
 .float hud;
 .float dmg_time;
 .float  vehicle_respawntime;

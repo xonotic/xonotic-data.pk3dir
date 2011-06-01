@@ -1,5 +1,6 @@
 #define RACER_MIN '-120 -120 -40'
 #define RACER_MAX '120 120 40'
+#define RACER_ENGINE "sound/vehicles/racer.wav"
 
 #ifdef SVQC
 void racer_exit(float eject);
@@ -261,7 +262,7 @@ float racer_frame()
     player.BUTTON_ZOOM = player.BUTTON_CROUCH = 0;
 
     self = racer;
-
+    
 #ifdef VEHICLES_CSQC
     racer.SendFlags |= VSF_MOVEMENT;
 
@@ -364,16 +365,46 @@ float racer_frame()
         else if(player.movement_y > 0)
             df += v_right * autocvar_g_vehicle_racer_speed_strafe;
     }
-
+    
+    if(vlen(player.movement) != 0)
+    {
+        if(self.sound_nexttime < time || self.sounds != 1)
+        {        
+            self.sounds = 1;
+            self.sound_nexttime = time + soundlength("vehicles/racer_move.wav");
+            sound (self, CHAN_VOICE, "vehicles/racer_move.wav", VOL_BASE, ATTN_NORM);
+        }
+    }
+    else
+    {        
+        if(self.sound_nexttime < time || self.sounds != 0)
+        {        
+            self.sounds = 0;
+            self.sound_nexttime = time + soundlength("vehicles/racer_idle.wav");
+            sound (self, CHAN_VOICE, "vehicles/racer_idle.wav", VOL_BASE, ATTN_NORM);
+        }        
+    }
+    
     // Afterburn
-    if (player.BUTTON_JUMP)
-    if(racer.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * frametime))
+    if (player.BUTTON_JUMP && racer.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * frametime))
     {
         racer.wait = time;
         racer.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * frametime;
         df += (v_forward * autocvar_g_vehicle_racer_speed_afterburn);
-        //self.owner.vehicle_energy = racer.vehicle_energy / autocvar_g_vehicle_racer_energy;
+        
+        if(self.strength_finished < time)
+        {        
+            //self.sounds = 2;
+            self.strength_finished = time + soundlength("vehicles/racer_boost.wav");
+            sound (self, CHAN_PLAYER, "vehicles/racer_boost.wav", VOL_BASE, ATTN_NORM);
+        }        
     }
+    else
+    {
+        self.strength_finished = 0;
+        sound (self, CHAN_PLAYER, "misc/null.wav", VOL_BASE, ATTN_NORM);
+    }
+        
 
     racer.velocity  += df * frametime;
 
@@ -670,6 +701,10 @@ void spawnfunc_vehicle_racer()
     precache_sound ("weapons/lasergun_fire.wav");
     precache_sound ("weapons/rocket_fire.wav");
     precache_sound ("weapons/rocket_impact.wav");
+    
+    precache_sound ("vehicles/racer_idle.wav");
+    precache_sound ("vehicles/racer_move.wav");
+    precache_sound ("vehicles/racer_boost.wav");
 
     precache_model ("models/vhshield.md3");
     precache_model ("models/vehicles/wakizashi.dpm");
