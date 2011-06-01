@@ -195,7 +195,10 @@ void CSQC_SPIDER_HUD()
 
     pic2size = drawgetimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
     picloc = picsize * 0.5 - pic2size * 0.5;
-    drawpic(hudloc + picloc, spider_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
+    if(vh_health < 0.25)
+        drawpic(hudloc + picloc, spider_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
+    else
+        drawpic(hudloc + picloc, spider_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);    
     drawpic(hudloc + picloc, spider_rkt, pic2size,  '1 1 1' * reload2 + '1 0 0' * (1 - reload2), 1, DRAWFLAG_NORMAL);
     drawpic(hudloc + picloc, spider_mgun, pic2size, '1 1 1' * ammo1   + '1 0 0' * (1 - ammo1),   1, DRAWFLAG_NORMAL);
     drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
@@ -351,7 +354,10 @@ void CSQC_RAPTOR_HUD()
 
     pic2size = drawgetimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
     picloc = picsize * 0.5 - pic2size * 0.5;
-    drawpic(hudloc + picloc, raptor_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
+    if(vh_health < 0.25)
+        drawpic(hudloc + picloc, raptor_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
+    else
+        drawpic(hudloc + picloc, raptor_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
     drawpic(hudloc + picloc, raptor_bomb, pic2size,  '1 1 1' * reload1 + '1 0 0' * (1 - reload1), 1, DRAWFLAG_NORMAL);
     drawpic(hudloc + picloc, raptor_gun, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
     drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
@@ -367,9 +373,9 @@ void CSQC_RAPTOR_HUD()
     picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
     if(vh_health < 0.25)
     {
-        if(self.lip < time)
+        if(alarm1time < time)
         {
-            self.lip = time + 2;
+            alarm1time = time + 2;
             sound(self, CHAN_PAIN, strcat("vehicles/alarm.wav"), VOL_BASEVOICE, ATTN_NONE);
         }
         
@@ -378,12 +384,11 @@ void CSQC_RAPTOR_HUD()
     else
     {
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        if(self.lip)
+        if(alarm1time)
         {
             sound(self, CHAN_PAIN, strcat("misc/null.wav"), VOL_BASEVOICE, ATTN_NONE);
-            self.lip = 0;
+            alarm1time = 0;
         }
-        
     }
 
 // Shield bar
@@ -538,7 +543,10 @@ void CSQC_WAKIZASHI_HUD()
 
     pic2size = drawgetimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
     picloc = picsize * 0.5 - pic2size * 0.5;
-    drawpic(hudloc + picloc, waki_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
+    if(vh_health < 0.25)
+        drawpic(hudloc + picloc, waki_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
+    else
+        drawpic(hudloc + picloc, waki_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
     drawpic(hudloc + picloc, waki_eng, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
     drawpic(hudloc + picloc, waki_gun, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
     drawpic(hudloc + picloc, waki_rkt, pic2size,  '1 1 1' * reload1 + '1 0 0' * (1 - reload1), 1, DRAWFLAG_NORMAL);
@@ -555,9 +563,9 @@ void CSQC_WAKIZASHI_HUD()
     picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
     if(vh_health < 0.25)
     {
-        if(self.lip < time)
+        if(alarm1time < time)
         {
-            self.lip = time + 2;
+            alarm1time = time + 2;
             sound(self, CHAN_PAIN, strcat("vehicles/alarm.wav"), VOL_BASEVOICE, ATTN_NONE);
         }
         
@@ -566,12 +574,11 @@ void CSQC_WAKIZASHI_HUD()
     else
     {
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        if(self.lip)
+        if(alarm1time)
         {
             sound(self, CHAN_PAIN, strcat("misc/null.wav"), VOL_BASEVOICE, ATTN_NONE);
-            self.lip = 0;
-        }
-        
+            alarm1time = 0;
+        }        
     }
         
 
