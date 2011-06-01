@@ -268,6 +268,7 @@ float spiderbot_frame()
         if(player.BUTTON_JUMP && self.tur_head.wait < time)
         {        
             sound (self, CHAN_VOICE, "vehicles/spiderbot_jump.wav", VOL_BASE, ATTN_NORM);
+            //dprint("spiderbot_jump:", ftos(soundlength("vehicles/spiderbot_jump.wav")), "\n");
             self.delay = 0;
 
             self.tur_head.wait = time + 2;
@@ -282,7 +283,8 @@ float spiderbot_frame()
                 if(self.sound_nexttime < time || self.delay != 3)
                 {                        
                     self.delay = 3;
-                    self.sound_nexttime = time + soundlength("vehicles/spiderbot_idle.wav");
+                    self.sound_nexttime = time + 6.486500; //soundlength("vehicles/spiderbot_idle.wav");
+                    //dprint("spiderbot_idle:", ftos(soundlength("vehicles/spiderbot_idle.wav")), "\n");
                     sound (self, CHAN_VOICE, "vehicles/spiderbot_idle.wav", VOL_BASE, ATTN_NORM);
                 }                
                 movelib_beak_simple(autocvar_g_vehicle_spiderbot_speed_stop);
@@ -311,8 +313,9 @@ float spiderbot_frame()
                     if(self.sound_nexttime < time || self.delay != 1)
                     {                        
                         self.delay = 1;
-                        self.sound_nexttime = time + soundlength("vehicles/spiderbot_walk.wav");
+                        self.sound_nexttime = time + 6.486500; //soundlength("vehicles/spiderbot_walk.wav");
                         sound (self, CHAN_VOICE, "vehicles/spiderbot_walk.wav", VOL_BASE, ATTN_NORM);
+                        //dprint("spiderbot_walk:", ftos(soundlength("vehicles/spiderbot_walk.wav")), "\n");
                     }
 
                 }
@@ -332,8 +335,9 @@ float spiderbot_frame()
                     if(self.sound_nexttime < time || self.delay != 2)
                     {                        
                         self.delay = 2;
-                        self.sound_nexttime = time + soundlength("vehicles/spiderbot_strafe.wav");
+                        self.sound_nexttime = time + 6.486500; //soundlength("vehicles/spiderbot_strafe.wav");
                         sound (self, CHAN_VOICE, "vehicles/spiderbot_strafe.wav", VOL_BASE, ATTN_NORM);
+                        //dprint("spiderbot_strafe:", ftos(soundlength("vehicles/spiderbot_strafe.wav")), "\n");
                     }
                 }
             }

@@ -371,7 +371,7 @@ float racer_frame()
         if(self.sound_nexttime < time || self.sounds != 1)
         {        
             self.sounds = 1;
-            self.sound_nexttime = time + soundlength("vehicles/racer_move.wav");
+            self.sound_nexttime = time + 10.922667; //soundlength("vehicles/racer_move.wav");
             sound (self, CHAN_VOICE, "vehicles/racer_move.wav", VOL_BASE, ATTN_NORM);
         }
     }
@@ -380,7 +380,7 @@ float racer_frame()
         if(self.sound_nexttime < time || self.sounds != 0)
         {        
             self.sounds = 0;
-            self.sound_nexttime = time + soundlength("vehicles/racer_idle.wav");
+            self.sound_nexttime = time + 11.888604; //soundlength("vehicles/racer_idle.wav");
             sound (self, CHAN_VOICE, "vehicles/racer_idle.wav", VOL_BASE, ATTN_NORM);
         }        
     }
@@ -395,7 +395,7 @@ float racer_frame()
         if(self.strength_finished < time)
         {        
             //self.sounds = 2;
-            self.strength_finished = time + soundlength("vehicles/racer_boost.wav");
+            self.strength_finished = time + 10.922667; //soundlength("vehicles/racer_boost.wav");
             sound (self, CHAN_PLAYER, "vehicles/racer_boost.wav", VOL_BASE, ATTN_NORM);
         }        
     }

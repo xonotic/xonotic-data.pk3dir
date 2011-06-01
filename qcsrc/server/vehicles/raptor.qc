@@ -270,7 +270,7 @@ float raptor_takeoff()
     
     if(self.sound_nexttime < time)
     {        
-        self.sound_nexttime = time + soundlength("vehicles/raptor_fly.wav");
+        self.sound_nexttime = time + 7.955812; //soundlength("vehicles/raptor_fly.wav");
         sound (self, CHAN_VOICE, "vehicles/raptor_fly.wav", VOL_BASE, ATTN_NORM);
     }   
 
@@ -329,7 +329,7 @@ float raptor_frame()
     
     if(fabs(ftmp - self.wait) > 0.2 || self.sound_nexttime < time)
     {        
-        self.sound_nexttime = time + soundlength("vehicles/raptor_fly.wav");
+        self.sound_nexttime = time + 7.955812; //soundlength("vehicles/raptor_fly.wav");
         sound (self, CHAN_VOICE, "vehicles/raptor_fly.wav", 1 - ftmp,   ATTN_NORM );
         sound (self, CHAN_PLAYER, "vehicles/raptor_speed.wav", ftmp, ATTN_NORM);
         self.wait = ftmp;
