@@ -469,8 +469,8 @@ float updateCompression()
 	float have_dds, have_jpg, have_tga;
 	float can_dds;
 	have_dds = (fexists("dds/particles/particlefont.dds"));
-	have_dds = (fexists("particles/particlefont.jpg"));
-	have_dds = (fexists("particles/particlefont.tga"));
+	have_jpg = (fexists("particles/particlefont.jpg"));
+	have_tga = (fexists("particles/particlefont.tga"));
 	can_dds = GL_Have_TextureCompression();
 	if(have_dds && (have_jpg || have_tga))
 	{
