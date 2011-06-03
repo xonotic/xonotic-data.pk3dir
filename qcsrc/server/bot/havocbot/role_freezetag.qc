@@ -8,25 +8,46 @@ void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradiu
 
 	FOR_EACH_PLAYER(head)
 	{
-		if ((head != self) && (head.team == self.team) && (head.freezetag_frozen))
+		if ((head != self) && (head.team == self.team))
 		{
-			distance = vlen(head.origin - org);
-			if (distance > sradius)
-				continue;
-			navigation_routerating(head, ratingscale, 2000);
+			if (head.freezetag_frozen)
+			{
+				distance = vlen(head.origin - org);
+				if (distance > sradius)
+					continue;
+				navigation_routerating(head, ratingscale, 2000);
+			}
+			else
+			{
+				// If teamate is not frozen still seek them out as fight better
+				// in a group.
+				navigation_routerating(head, ratingscale/3, 2000);
+			}
 		}
 	}
 };
 
 void havocbot_role_ft_offense()
 {
+	local entity head;
+	float unfrozen;
+
 	if(self.deadflag != DEAD_NO)
 		return;
 
 	if (!self.havocbot_role_timeout)
 		self.havocbot_role_timeout = time + random() * 10 + 20;
 
-	if (time > self.havocbot_role_timeout)
+	// Count how many players on team are unfrozen.
+	unfrozen = 0;
+	FOR_EACH_PLAYER(head)
+	{
+		if ((head.team == self.team) && (!head.freezetag_frozen))
+			unfrozen++;
+	}
+
+	// If only one left on team or if role has timed out then start trying to free players.
+	if (((unfrozen == 0) && (!self.freezetag_frozen)) || (time > self.havocbot_role_timeout))
 	{
 		dprint("changing role to freeing\n");
 		self.havocbot_role = havocbot_role_ft_freeing;
