@@ -488,7 +488,10 @@ void CSQC_UpdateView(float w, float h)
 	TargetMusic_Advance();
 	Fog_Force();
 
-	drawframetime = max(0.000001, time - drawtime);
+	if(drawtime == 0)
+		drawframetime = 0.01666667; // when we don't know fps yet, we assume 60fps
+	else
+		drawframetime = bound(0.000001, time - drawtime, 1);
 	drawtime = time;
 
 	// watch for gametype changes here...
