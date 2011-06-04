@@ -113,6 +113,10 @@ float bot_shouldattack(entity e)
 		if(e.freezetag_frozen)
 			return FALSE;
 
+	if (g_keepaway)
+		if (!e.ballcarried && !self.ballcarried)
+			return FALSE;
+
 	if(teams_matter)
 	{
 		if(e.team==0)
