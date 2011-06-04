@@ -488,7 +488,7 @@ void CSQC_UpdateView(float w, float h)
 	TargetMusic_Advance();
 	Fog_Force();
 
-	drawframetime = max(0.000001, time - drawtime);
+	drawframetime = bound(0.000001, time - drawtime, 1);
 	drawtime = time;
 
 	// watch for gametype changes here...
