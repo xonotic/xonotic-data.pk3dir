@@ -1,4 +1,5 @@
 
+entity ka_ball;
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,
 // returns TRUE only if it hit targ (don't target non-solid entities)
@@ -113,8 +114,10 @@ float bot_shouldattack(entity e)
 		if(e.freezetag_frozen)
 			return FALSE;
 
+	// If neither player has ball then don't attack unless the ball is on the
+	// ground.
 	if (g_keepaway)
-		if (!e.ballcarried && !self.ballcarried)
+		if (!e.ballcarried && !self.ballcarried && ka_ball.owner)
 			return FALSE;
 
 	if(teams_matter)
