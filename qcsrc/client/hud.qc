@@ -600,7 +600,7 @@ float GetAmmoTypeForWep(float i)
 		case WEP_HLAC: return 3;
 		case WEP_MINSTANEX: return 3;
 		case WEP_NEX: return 3;
-		case WEP_SNIPERRIFLE: return 1;
+		case WEP_RIFLE: return 1;
 		case WEP_HAGAR: return 2;
 		case WEP_ROCKET_LAUNCHER: return 2;
 		case WEP_SEEKER: return 2;
@@ -1680,7 +1680,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			if((w == WEP_SNIPERRIFLE || w == WEP_MINSTANEX) && type & HITTYPE_HEADSHOT) // all headshot weapons go here
+			if((w == WEP_RIFLE || w == WEP_MINSTANEX) && type & HITTYPE_HEADSHOT) // all headshot weapons go here
 				HUD_KillNotify_Push(s1, s2, 1, DEATH_HEADSHOT);
 			else
 				HUD_KillNotify_Push(s1, s2, 1, type);
@@ -2034,9 +2034,9 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 	} else if(msg == MSG_KILL) {
 		if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1Moron! You went against %s, a team mate!"), s1)));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1Moron! You went against ^7%s^1, a team mate!"), s1)));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1Moron! You fragged %s, a team mate!"), s1)));
+				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1Moron! You fragged ^7%s^1, a team mate!"), s1)));
 			}
 		} else if (type == KILL_FIRST_BLOOD) {
 			if(gentle) {
@@ -2586,9 +2586,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 #define SCOREPANEL_MAX_ENTRIES 6
 #define SCOREPANEL_ASPECTRATIO 2
 	const float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
-	const float height = mySize_y/entries;
-	const vector fontsize = '0.9 0.9 0' * height;
-	pos_y += height * (1 - 0.9) / 2;
+	const vector fontsize = '1 1 0' * (mySize_y/entries);
 
 	vector rgb, score_color;
 	rgb = '1 1 1';
@@ -2602,20 +2600,19 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 	i, first_pl = 0;
 	if (autocvar__hud_configure)
 	{
+		float players_per_team;
 		if (team_count)
 		{
 			// show team scores in the first line
 			float score_size = mySize_x / team_count;
-			for(tm = teams.sort_next; tm; tm = tm.sort_next) {
-				if(tm.team == COLOR_SPECTATOR)
-					continue;
-				if (tm.team == myteam)
-					HUD_Panel_DrawHighlight(pos - eY * (height * (1 - 0.9) / 2) + eX * score_size * i, eX * score_size + eY * height, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(pos + eX * score_size * i, ftos(123), eX * score_size + eY * fontsize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
-				++i;
+			players_per_team = max(2, ceil((entries - 1) / team_count));
+			for(i=0; i<team_count; ++i) {
+				if (i == floor((entries - 2) / players_per_team) || (entries == 1 && i == 0))
+					HUD_Panel_DrawHighlight(pos + eX * score_size * i, eX * score_size + eY * fontsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(pos + eX * score_size * i, ftos(175 - 23*i), eX * score_size + eY * fontsize_y, GetTeamRGB(ColorByTeam(i)) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			first_pl = 1;
-			pos_y += height;
+			pos_y += fontsize_y;
 		}
 		score = 10 + SCOREPANEL_MAX_ENTRIES * 3;
 		for (i=first_pl; i<entries; ++i)
@@ -2626,7 +2623,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			if (i == entries-1 && autocvar_hud_panel_score_rankings == 1)
 			{
 				rgb = '1 1 0';
-				drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawfill(pos, eX * mySize_x + eY * fontsize_y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				s = GetPlayerName(pl.sv_entnum);
 				score = 7;
 			}
@@ -2637,11 +2634,11 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			}
 
 			if (team_count)
-				score_color = GetTeamRGB(ColorByTeam(mod(i + 2, team_count))) * 0.8;
+				score_color = GetTeamRGB(ColorByTeam(floor((i - first_pl) / players_per_team))) * 0.8;
 			s = textShortenToWidth(s, name_size, fontsize, stringwidth_colors);
 			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			drawstring(pos + eX * (name_size + spacing_size), ftos(score), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-			pos_y += height;
+			pos_y += fontsize_y;
 		}
 		return;
 	}
@@ -2656,17 +2653,20 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			if(tm.team == COLOR_SPECTATOR)
 				continue;
 			if (tm.team == myteam)
-				drawfill(pos - eY * (height * (1 - 0.9) / 2) + eX * score_size * i, eX * score_size + eY * height, '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawfill(pos + eX * score_size * i, eX * score_size + eY * fontsize_y, '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			drawstring_aspect(pos + eX * score_size * i, ftos(tm.(teamscores[ts_primary])), eX * score_size + eY * fontsize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			++i;
 		}
 		first_pl = 1;
-		pos_y += height;
+		pos_y += fontsize_y;
+		tm = teams.sort_next;
 	}
 	i = first_pl;
-	for (pl = players.sort_next; pl && i<entries; pl = pl.sort_next, ++i)
+
+	do
+	for (pl = players.sort_next; pl && i<entries; pl = pl.sort_next)
 	{
-		if (pl.team == COLOR_SPECTATOR)
+		if ((team_count && pl.team != tm.team) || pl.team == COLOR_SPECTATOR)
 			continue;
 
 		if (i == entries-1 && !me_printed && pl != me)
@@ -2688,15 +2688,17 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			if (i == first_pl)
 				rgb = '0 1 0'; //first: green
 			me_printed = 1;
-			drawfill(pos - eY * (height * (1 - 0.9) / 2), eX * mySize_x + eY * height, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos, eX * mySize_x + eY * fontsize_y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		if (team_count)
 			score_color = GetTeamRGB(pl.team) * 0.8;
 		s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
 		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores[ps_primary])), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-		pos_y += height;
+		pos_y += fontsize_y;
+		++i;
 	}
+	while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != COLOR_SPECTATOR || (tm = tm.sort_next)));
 }
 
 void HUD_Score(void)
@@ -4136,16 +4138,14 @@ void HUD_InfoMessages(void)
 	fontsize = '0.20 0.20 0' * mySize_y;
 	
 	float a;
-	if(spectatee_status != 0)
-		a = 1;
-	else
-		a = panel_fg_alpha;
+	a = panel_fg_alpha;
 
 	string s;
 	if(!autocvar__hud_configure)
 	{
 		if(spectatee_status && !intermission)
 		{
+			a = 1;
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
@@ -4560,7 +4560,18 @@ void HUD_Main (void)
 		hud_fade_alpha = (1 - scoreboard_fade_alpha);
 
 	if(intermission == 2) // no hud during mapvote
+	{
+		if (autocvar__hud_configure) //force exit from hud config
+		{
+			if (menu_enabled)
+			{
+				menu_enabled = 0;
+				localcmd("togglemenu\n");
+			}
+			cvar_set("_hud_configure", "0");
+		}
 		hud_fade_alpha = 0;
+	}
 	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
 		hud_fade_alpha = 1;
 

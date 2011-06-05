@@ -259,7 +259,7 @@ void havocbot_bunnyhop(vector dir)
 	// Don't jump when using some weapons
 	/*
 	if(self.aistatus & AI_STATUS_ATTACKING)
-	if(self.weapon == WEP_SNIPERRIFLE)
+	if(self.weapon == WEP_RIFLE)
 		return;
 
 	if(self.goalcurrent.classname == "player")
@@ -918,7 +918,7 @@ void havocbot_chooseenemy()
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if(best || self.weapons) // || self.weapon == WEP_SNIPERRIFLE
+		if(best || self.weapons) // || self.weapon == WEP_RIFLE
 			break;
 		if(i)
 			break;

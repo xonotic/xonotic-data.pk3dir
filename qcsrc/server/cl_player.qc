@@ -1,3 +1,7 @@
+.entity accuracy;
+.float accuracy_frags[WEP_MAXCOUNT];
+FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_frags);
+
 float weaponstats_buffer;
 
 void WeaponStats_Init()
@@ -615,6 +619,14 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		race_PreDie();
 		DropAllRunes(self);
 
+        // increment frag counter for used weapon type
+        float w;
+        w = DEATH_WEAPONOF(deathtype);
+        if(WEP_VALID(w))
+        if(self.classname == "player")
+        if(self != attacker)
+        attacker.accuracy.(accuracy_frags[w-1]) += 1;
+
 		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
 		{
 			PutClientInServer();
@@ -733,72 +745,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			ATTACK_FINISHED_FOR(self, j) = 0;
 		}
 	}
-}
-
-// sendflags use: 1 = origin, 2 = health (0 or 1 for dead/alive on enemies), 4 = armor, 0x80 = same team (includes health)
-float SendEntity_ShowNames(entity to, float sendflags)
-{
-    float the_health;
-    the_health = self.health;
-
-    WriteByte(MSG_ENTITY, ENT_CLIENT_SHOWNAMES);
-    WriteByte(MSG_ENTITY, num_for_edict(self.owner));
-
-    sendflags = sendflags & 127;
-    if(teams_matter && self.owner.team == to.team)
-        sendflags |= 128;
-    else if(self.owner.health >= 1)
-        the_health = 1;
-
-    WriteByte(MSG_ENTITY, sendflags);
-    if(sendflags & 1)
-    {
-        WriteShort(MSG_ENTITY, rint(self.origin_x));
-        WriteShort(MSG_ENTITY, rint(self.origin_y));
-        WriteShort(MSG_ENTITY, rint(self.origin_z));
-    }
-    if(sendflags & 2)
-    {
-        WriteByte(MSG_ENTITY, the_health);
-    }
-    if(sendflags & 4)
-    {
-        WriteByte(MSG_ENTITY, self.armorvalue);
-    }
-    return TRUE;
-}
-
-const vector SHOWNAMES_ORIGIN_OFFSET = '0 0 48';
-void shownames_think()
-{
-    if(self.origin - SHOWNAMES_ORIGIN_OFFSET != self.owner.origin)
-    {
-        setorigin(self, self.owner.origin + SHOWNAMES_ORIGIN_OFFSET);
-        self.SendFlags |= 1;
-    }
-    if(self.health != max(0, floor(self.owner.health)) || self.armorvalue != max(0, floor(self.owner.armorvalue)))
-    {
-        self.health = max(0, floor(self.owner.health));
-        self.armorvalue = max(0, floor(self.owner.armorvalue));
-        self.SendFlags |= 2;
-    }
-    if(self.armorvalue != max(0, floor(self.owner.armorvalue)))
-    {
-        self.armorvalue = max(0, floor(self.owner.armorvalue));
-        self.SendFlags |= 4;
-    }
-    self.nextthink = time;
-}
-
-float shownames_customize()
-{
-    if(self.owner.classname == "player") // only send players, no spectators!
-    if(self.owner != other) // no need to spam own coordinates
-    if(vlen(other.origin - self.origin) < autocvar_sv_shownames_cull_distance) // distance cull
-    if(self.owner.team == other.team || (self.owner.team != other.team && checkpvs(self.origin, other)))
-        return TRUE;
-
-    return FALSE;
 }
 
 .float muted; // to be used by prvm_edictset server playernumber muted 1

@@ -16,6 +16,9 @@ void spawnfunc_info_null (void)
 
 void setanim(entity e, vector anim, float looping, float override, float restart)
 {
+	if (!anim)
+		return; // no animation was given to us! We can't use this. 
+		
 	if (anim_x == e.animstate_startframe)
 	if (anim_y == e.animstate_numframes)
 	if (anim_z == e.animstate_framerate)

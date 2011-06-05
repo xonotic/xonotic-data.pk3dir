@@ -142,7 +142,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	local float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
-	if(ent.weapon == WEP_SNIPERRIFLE)
+	if(ent.weapon == WEP_RIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -828,33 +828,36 @@ void CL_ExteriorWeaponentity_Think()
 	else
 		self.alpha = 1;
 
-	ang_x = bound(sv_pitch_min, self.owner.v_angle_x, sv_pitch_max);
-	ang_y = 0;
-	ang_z = 0;
+	if (!intermission_running)
+	{
+		ang_x = bound(sv_pitch_min, self.owner.v_angle_x, sv_pitch_max);
+		ang_y = 0;
+		ang_z = 0;
 
-	if(sv_pitch_fixyaw) // workaround for stupid player models that don't aim forward
-	{
-		ang_y = self.owner.v_angle_y;
-		makevectors(ang);
-		var vector v = v_forward;
-		var float t = self.tag_entity.frame1time;
-		var float f = self.tag_entity.frame;
-		self.tag_entity.frame1time = time;
-		self.tag_entity.frame = self.tag_entity.anim_idle_x;
-		gettaginfo(self.tag_entity, self.tag_index);
-		self.tag_entity.frame1time = t;
-		self.tag_entity.frame = f;
-		// untransform v according to this coordinate space
-		vector w;
-		w_x = v_forward * v;
-		w_y = -v_right * v;
-		w_z = v_up * v;
-		self.angles = vectoangles(w);
-	}
-	else
-	{
-		ang_x = -/* don't ask */ang_x;
-		self.angles = ang;
+		if(sv_pitch_fixyaw) // workaround for stupid player models that don't aim forward
+		{
+			ang_y = self.owner.v_angle_y;
+			makevectors(ang);
+			var vector v = v_forward;
+			var float t = self.tag_entity.frame1time;
+			var float f = self.tag_entity.frame;
+			self.tag_entity.frame1time = time;
+			self.tag_entity.frame = self.tag_entity.anim_idle_x;
+			gettaginfo(self.tag_entity, self.tag_index);
+			self.tag_entity.frame1time = t;
+			self.tag_entity.frame = f;
+			// untransform v according to this coordinate space
+			vector w;
+			w_x = v_forward * v;
+			w_y = -v_right * v;
+			w_z = v_up * v;
+			self.angles = vectoangles(w);
+		}
+		else
+		{
+			ang_x = -/* don't ask */ang_x;
+			self.angles = ang;
+		}
 	}
 
 	self.glowmod = self.owner.weaponentity_glowmod;
@@ -1257,21 +1260,20 @@ void weapon_thinkf(float fr, float t, void() func)
 	self.weapon_think = func;
 	//dprint("next ", ftos(self.weapon_nextthink), "\n");
 
-    // The shoot animation looks TERRIBLE without animation blending! Yay for moonwalking while shooting!
-    /*
+	// The shoot animation looks TERRIBLE without animation blending! Yay for moonwalking while shooting!
+	//anim = self.anim_shoot;
 	if (restartanim)
 	if (t)
 	if (!self.crouch) // shoot anim stands up, this looks bad
 	{
-		local vector anim;
+		vector anim;
 		if(self.weapon == WEP_SHOTGUN && self.BUTTON_ATCK2)
+		{
 			anim = self.anim_melee;
-		else
-			anim = self.anim_shoot;
-		anim_z = anim_y / (t + sys_frametime);
-		setanim(self, anim, FALSE, TRUE, TRUE);
+			anim_z = anim_y / (t + sys_frametime);
+			setanim(self, anim, FALSE, TRUE, TRUE);
+		}
 	}
-    */
 };
 
 void weapon_boblayer1(float spd, vector org)

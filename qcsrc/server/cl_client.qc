@@ -333,7 +333,7 @@ entity SelectSpawnPoint (float anypoint)
 		{
 			// we request a spawn for a team, and we have team
 			// spawns, but that team has no spawns?
-			if(have_team_spawns[0])
+			if(have_team_spawns_forteam[0])
 				// try noteam spawns
 				teamcheck = 0;
 			else
@@ -343,7 +343,7 @@ entity SelectSpawnPoint (float anypoint)
 		else
 			teamcheck = self.team; // MUST be team
 	}
-	else if(have_team_spawns == 0 && have_team_spawns[0])
+	else if(have_team_spawns == 0 && have_team_spawns_forteam[0])
 		teamcheck = 0; // MUST be noteam
 	else
 		teamcheck = -1;
@@ -1134,7 +1134,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_grenadelauncher_bouncefactor
 	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_grenadelauncher_bouncestop
 	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
-	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_secondary); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, autocvar_g_balance_rifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
 	WriteByte(MSG_ENTITY, autocvar_g_balance_hagar_secondary_load_max); // hagar max loadable rockets
@@ -1639,6 +1639,9 @@ void ClientConnect (void)
 
 	self.playerid = (playerid_last = playerid_last + 1);
 
+    if(clienttype(self) == CLIENTTYPE_BOT)
+        PlayerStats_AddPlayer(self);
+
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((clienttype(self) == CLIENTTYPE_REAL) ? self.netaddress : "bot"), ":", self.netname));
 
@@ -1701,8 +1704,7 @@ void ClientConnect (void)
 		ctf_clientconnect();
 	}*/
 
-	if(teams_matter || radar_showennemies)
-		attach_entcs();
+	attach_entcs();
 
 	bot_relinkplayerlist();
 
@@ -1771,15 +1773,6 @@ void ClientConnect (void)
 		set_dom_state(self);
 
 	CheatInitClient();
-
-	PlayerStats_AddPlayer(self);
-
-    self.shownames = spawn();
-    self.shownames.owner = self;
-    self.shownames.think = shownames_think;
-    self.shownames.nextthink = time;
-	self.shownames.customizeentityforclient = shownames_customize;
-    Net_LinkEntity(self.shownames, FALSE, 0, SendEntity_ShowNames);
 }
 
 /*
@@ -1790,7 +1783,6 @@ Called when a client disconnects from the server
 =============
 */
 .entity chatbubbleentity;
-.entity teambubbleentity;
 void ReadyCount();
 void ClientDisconnect (void)
 {
@@ -1844,9 +1836,6 @@ void ClientDisconnect (void)
 	if (self.chatbubbleentity)
 		remove (self.chatbubbleentity);
 
-	if (self.teambubbleentity)
-		remove (self.teambubbleentity);
-
 	if (self.killindicator)
 		remove (self.killindicator);
 
@@ -1878,8 +1867,6 @@ void ClientDisconnect (void)
 
 	self.playerid = 0;
 	ReadyCount();
-
-    remove(self.shownames);
 
 	// free cvars
 	GetCvars(-1);
@@ -1928,52 +1915,6 @@ void UpdateChatBubble()
 	}
 }
 
-
-void TeamBubbleThink()
-{
-	self.nextthink = time;
-	if (!self.owner.modelindex || self.owner.teambubbleentity != self)
-	{
-		if(self.owner) // but why can that ever be world?
-			self.owner.teambubbleentity = world;
-		remove(self);
-		return;
-	}
-//	setorigin(self, self.owner.origin + '0 0 15' + self.owner.maxs_z * '0 0 1');  // bandwidth hog. setattachment does this now
-	if (self.owner.BUTTON_CHAT || self.owner.deadflag || self.owner.killindicator)
-		self.model = "";
-	else
-		self.model = self.mdl;
-
-};
-
-float TeamBubble_customizeentityforclient()
-{
-	return (self.owner != other && self.owner.team == other.team && other.killcount > -666);
-}
-
-void UpdateTeamBubble()
-{
-	if (!self.modelindex || !teams_matter)
-		return;
-	// spawn a teambubble entity if needed
-	if (!self.teambubbleentity && teams_matter)
-	{
-		self.teambubbleentity = spawn();
-		self.teambubbleentity.owner = self;
-		self.teambubbleentity.exteriormodeltoclient = self;
-		self.teambubbleentity.think = TeamBubbleThink;
-		self.teambubbleentity.nextthink = time;
-		setmodel(self.teambubbleentity, "models/misc/teambubble.spr"); // precision set below
-//		setorigin(self.teambubbleentity, self.origin + '0 0 15' + self.maxs_z * '0 0 1');
-		setorigin(self.teambubbleentity, '0 0 15' + self.maxs_z * '0 0 1');
-		setattachment(self.teambubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth
-		self.teambubbleentity.mdl = self.teambubbleentity.model;
-		self.teambubbleentity.model = self.teambubbleentity.mdl;
-		self.teambubbleentity.customizeentityforclient = TeamBubble_customizeentityforclient;
-		self.teambubbleentity.effects = EF_LOWPRECISION;
-	}
-}
 
 // LordHavoc: this hack will be removed when proper _pants/_shirt layers are
 // added to the model skins
@@ -2733,6 +2674,7 @@ void PlayerPreThink (void)
 
 		//don't allow the player to turn around while game is paused!
 		if(timeoutStatus == 2) {
+			// FIXME turn this into CSQC stuff
 			self.v_angle = self.lastV_angle;
 			self.angles = self.lastV_angle;
 			self.fixangle = TRUE;
@@ -2960,7 +2902,7 @@ void PlayerPreThink (void)
 	}
 
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_SNIPERRIFLE && autocvar_g_balance_sniperrifle_secondary == 0));
+		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE && autocvar_g_balance_rifle_secondary == 0));
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;
@@ -3101,7 +3043,6 @@ void PlayerPostThink (void)
 	if(self.classname == "player") {
 		CheckRules_Player();
 		UpdateChatBubble();
-		UpdateTeamBubble();
 		if (self.impulse)
 			ImpulseCommands();
 		if (intermission_running)
