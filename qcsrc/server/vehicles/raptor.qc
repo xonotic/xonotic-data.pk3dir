@@ -237,6 +237,7 @@ void raptor_land()
 
 void raptor_exit(float eject)
 {
+    vector spot;
     self.tur_head.exteriormodeltoclient = world;
 
     if(self.deadflag == DEAD_NO)
@@ -251,12 +252,18 @@ void raptor_exit(float eject)
 	makevectors(self.angles);
 	if(eject)
 	{
-	    setorigin(self.owner,self.origin + v_forward * 100 + '0 0 64');
+	    spot = self.origin + v_forward * 100 + '0 0 64';
+	    spot = vehicles_findgoodexit(spot);
+	    setorigin(self.owner , spot);
 	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
 	}
 	else
-        setorigin(self.owner,self.origin - v_forward * 200 + '0 0 64');
-
+	{
+	    spot = self.origin - v_forward * 200 + '0 0 64';
+	    spot = vehicles_findgoodexit(spot);
+	    setorigin(self.owner , spot);
+	}
+	
     self.owner = world;
 }
 

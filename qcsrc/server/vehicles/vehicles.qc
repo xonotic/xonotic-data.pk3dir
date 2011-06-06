@@ -495,6 +495,54 @@ void vehicles_enter()
     self.vehicle_enter();
 }
 
+vector vehicles_findgoodexit(vector prefer_spot)
+{
+    vector exitspot;
+    float mysize;
+    
+    tracebox(self.origin + '0 0 32', PL_MIN, PL_MAX, prefer_spot, MOVE_NORMAL, self.owner);
+    if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
+        return prefer_spot;
+    
+    mysize = vlen(self.maxs - self.mins);
+    float i;
+    vector v, v2;
+    v2 = 0.5 * (self.absmin + self.absmax);
+    for(i = 0; i < 100; ++i)
+    {        
+        v = randomvec();
+        v_z = 0;
+        v = v2 + normalize(v) * mysize;
+        tracebox(v2, PL_MIN, PL_MAX, v, MOVE_NORMAL, self.owner);
+        if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
+            return v;
+    }
+    
+    /*
+    exitspot = (self.origin + '0 0 48') + v_forward * mysize;
+    tracebox(self.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, self.owner);
+    if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
+        return exitspot;
+    
+    exitspot = (self.origin + '0 0 48') - v_forward * mysize;
+    tracebox(self.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, self.owner);
+    if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
+        return exitspot;
+
+    exitspot = (self.origin + '0 0 48') + v_right * mysize;
+    tracebox(self.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, self.owner);
+    if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
+        return exitspot;
+    
+    exitspot = (self.origin + '0 0 48') - v_right * mysize;
+    tracebox(self.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, self.owner);
+    if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
+        return exitspot;
+    */
+    
+    return self.origin;
+}
+
 void vehicles_exit(float eject)
 {
 	self.flags |= FL_NOTARGET;

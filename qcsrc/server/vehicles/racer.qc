@@ -549,6 +549,8 @@ void racer_enter()
 
 void racer_exit(float eject)
 {
+    vector spot;
+    
     self.think      = racer_think;
     self.nextthink  = time;
     self.movetype   = MOVETYPE_TOSS;
@@ -559,14 +561,18 @@ void racer_exit(float eject)
 	makevectors(self.angles);
 	if(eject)
 	{
-	    setorigin(self.owner, self.origin + v_forward * 100 + v_up * 32);
+	    spot = self.origin + v_forward * 100 + '0 0 64';
+	    spot = vehicles_findgoodexit(spot);
+	    setorigin(self.owner , spot);
 	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
 	}
 	else
 	{
-	    setorigin(self.owner, self.origin - v_forward * 100 + v_up * 32);
-	    self.owner.velocity = v_forward * -150;
+	    spot = self.origin - v_forward * 200 + '0 0 64';
+	    spot = vehicles_findgoodexit(spot);
+	    setorigin(self.owner , spot);
 	}
+	
     self.owner = world;
 }
 

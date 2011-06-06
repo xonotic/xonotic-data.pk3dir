@@ -317,7 +317,6 @@ float spiderbot_frame()
                         sound (self, CHAN_VOICE, "vehicles/spiderbot_walk.wav", VOL_BASE, ATTN_NORM);
                         //dprint("spiderbot_walk:", ftos(soundlength("vehicles/spiderbot_walk.wav")), "\n");
                     }
-
                 }
                 else if(player.movement_y != 0)
                 {
@@ -450,7 +449,8 @@ void spiderbot_enter()
 void spiderbot_exit(float eject)
 {
     entity e;
-
+    vector spot;
+    
     e = findchain(classname,"spiderbot_rocket");
     while(e)
     {
@@ -474,12 +474,18 @@ void spiderbot_exit(float eject)
 	makevectors(self.angles);
 	if(eject)
 	{
-	    setorigin(self.owner ,self.origin + v_forward * 100 + '0 0 64');
+	    spot = self.origin + v_forward * 100 + '0 0 64';
+	    spot = vehicles_findgoodexit(spot);
+	    setorigin(self.owner , spot);
 	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
 	}
 	else
-        setorigin(self.owner, self.origin - v_forward * 200 + '0 0 64');
-
+	{
+	    spot = self.origin - v_forward * 200 + '0 0 64';
+	    spot = vehicles_findgoodexit(spot);
+	    setorigin(self.owner , spot);
+	}
+        
     self.owner = world;
 }
 
