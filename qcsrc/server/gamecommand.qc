@@ -665,7 +665,7 @@ void changematchtime(float delta, float mi, float ma)
 			return;
 	}
 
-	cvar_set("timelimit", ftos(new));
+	cvar_set("timelimit", ftos(lim / 60));
 }
 
 void GameCommand(string command)
