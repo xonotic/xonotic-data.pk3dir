@@ -732,7 +732,7 @@ void spawnfunc_vehicle_racer()
         self.vehicle_flags |= VHF_HEALTHREGEN;
 
     self.think = racer_dinit;
-    self.nextthink = time + 1;
+    self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_racer_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
 }
 
 #endif // SVQC

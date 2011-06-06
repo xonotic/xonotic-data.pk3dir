@@ -795,7 +795,7 @@ void spawnfunc_vehicle_raptor()
     precache_sound ("vehicles/raptor_speed.wav");
     
     self.think = raptor_dinit;
-    self.nextthink = time + 1;
+    self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_raptor_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
 }
 #endif // SVQC
 
