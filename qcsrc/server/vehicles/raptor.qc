@@ -361,7 +361,7 @@ float raptor_frame()
 #if VEHICLES_VIEWROTATE_CROSSHAIR
     df = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
     if(df_x > 180)  df_x -= 360;
-    if(df_x < -180) df_x += 360;--
+    if(df_x < -180) df_x += 360;
     if(df_y > 180)  df_y -= 360;
     if(df_y < -180) df_y += 360;
 
@@ -596,7 +596,7 @@ float raptor_frame()
 void raptor_blowup()
 {
     sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+    pointparticles(particleeffectnum("explosion_big"), self.origin, '0 0 0', 1);
 
     self.deadflag    = DEAD_DEAD;
     self.vehicle_exit(VHEF_NORMAL);
@@ -611,6 +611,20 @@ void raptor_blowup()
 
     setorigin(self, self.pos1);
     self.touch = SUB_Null;
+    self.nextthink = 0;
+}
+
+void raptor_diethink()
+{
+    //self.avelocity += '0 0.5 1' * (random() * 5);
+    //self.avelocity -= '0 0.5 1' * (random() * 5);
+
+    if(random() < 0.1)
+    {
+        sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+        pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+    }
+    self.nextthink = time + 0.1;
 }
 
 void raptor_die()
@@ -622,15 +636,15 @@ void raptor_die()
     self.takedamage   = DAMAGE_NO;
     self.deadflag     = DEAD_DYING;
     self.movetype     = MOVETYPE_BOUNCE;
+    self.think        = raptor_diethink;
+    self.nextthink    = time;
+    
+    pointparticles(particleeffectnum("explosion_medium"), findbetterlocation (self.origin, 16), '0 0 0', 1);
 
-    pointparticles(particleeffectnum("rocket_explode"), findbetterlocation (self.origin, 16), '0 0 0', 1);
+    self.velocity_z += 600;
 
-    self.velocity_z += 128;
-
-    if(random() < 0.5)
-        self.avelocity_z  = 45 + random() * 270;
-    else
-        self.avelocity_z  = -45 + random() * -270;
+    self.avelocity = '0 0.5 1' * (random() * 400);
+    self.avelocity -= '0 0.5 1' * (random() * 400);
 
     self.colormod = '-0.5 -0.5 -0.5';
 	self.touch     = raptor_blowup;

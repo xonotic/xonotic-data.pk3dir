@@ -1,5 +1,6 @@
 float autocvar_g_vehicles_crush_dmg;
 float autocvar_g_vehicles_crush_force;
+float autocvar_g_vehicles_delayspawn;
 
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void vehicles_return();
@@ -544,7 +545,7 @@ vector vehicles_findgoodexit(vector prefer_spot)
 }
 
 void vehicles_exit(float eject)
-{
+{	
 	self.flags |= FL_NOTARGET;
 
     if (self.owner)
@@ -836,7 +837,12 @@ float vehicle_initialize(string  net_name,
     self.event_damage        = vehicles_damage;
     self.touch               = vehicles_touch;
     self.think               = vehicles_spawn;
-    self.nextthink           = time;
+    
+    if(autocvar_g_vehicles_delayspawn)
+        self.nextthink           = time + _respawntime;
+    else
+        self.nextthink           = time;
+        
     self.vehicle_respawntime = _respawntime;
     self.vehicle_spawn       = spawnproc;
 

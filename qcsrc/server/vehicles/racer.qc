@@ -595,7 +595,7 @@ void racer_spawn()
 void racer_blowup()
 {
     sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+    pointparticles(particleeffectnum("explosion_big"), self.origin, '0 0 0', 1);
 
     self.deadflag    = DEAD_DEAD;
     self.vehicle_exit(VHEF_NORMAL);
@@ -623,6 +623,7 @@ void racer_blowup()
 
 void racer_deadtouch()
 {
+    dprint("Boink!\n");
     self.avelocity_x *= 0.7;
     self.cnt -= 1;
     if(self.cnt <= 0)
@@ -639,15 +640,15 @@ void racer_die()
     self.deadflag     = DEAD_DYING;
     self.movetype     = MOVETYPE_BOUNCE;
     self.wait         = time;
-    self.cnt          = 1 + random() * 3;
+    self.cnt          = 1 + random() * 2;
     self.touch        = racer_deadtouch;
-
-    pointparticles(particleeffectnum("rocket_explode"), findbetterlocation (self.origin, 16), '0 0 0', 1);
+    
+    pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);    
 
     if(random() < 0.5)
-        self.avelocity_z  = 16;
+        self.avelocity_z  = 32;
     else
-        self.avelocity_z  = -16;
+        self.avelocity_z  = -32;
 
     self.avelocity_x = -vlen(self.velocity) * 0.2;
     self.velocity   += '0 0 700';

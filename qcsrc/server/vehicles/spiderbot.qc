@@ -517,7 +517,7 @@ void spiderbot_headfade()
         if(self.alpha > 0.1)
         {
             sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-            pointparticles(particleeffectnum("rocket_explode"), self.origin + '0 0 100', '0 0 0', 1);
+            pointparticles(particleeffectnum("explosion_big"), self.origin + '0 0 100', '0 0 0', 1);
         }
         remove(self);
     }
@@ -525,12 +525,17 @@ void spiderbot_headfade()
 
 void spiderbot_blowup()
 {
-    float i;
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-
-    for(i = 0; i < 5; ++i)
-        pointparticles(particleeffectnum("rocket_explode"), self.origin + (randomvec() * 100) + '0 0 100', '0 0 0', 1);
-
+    if(self.cnt > time)
+    {
+        if(random() < 0.1)
+        {
+            sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+            pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+        }
+        self.nextthink = time + 0.1;
+        return;
+    }
+    
     entity h, g1, g2, b;
     b = spawn();
     h = spawn();
@@ -589,25 +594,21 @@ void spiderbot_blowup()
     self.solid      = SOLID_NOT;
     self.tur_head.effects  &~=  EF_FLAME;
 	self.vehicle_hudmodel.viewmodelforclient = self;
-
-    //self.nextthink  = time + autocvar_g_vehicle_spiderbot_respawntime;
-    //self.think      = spiderbot_spawn;
-
-    //setorigin(self, self.tur_aimpos);
 }
 
 void spiderbot_die()
 {
     sound (self, CHAN_VOICE, "vehicles/spiderbot_die.wav", VOL_BASE, ATTN_NORM);
     //sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum("rocket_explode"), self.origin + '0 0 100', '0 0 0', 1);
+    pointparticles(particleeffectnum("explosion_medium"), self.origin + '0 0 100', '0 0 0', 1);
 
     self.health         = 0;
     self.event_damage   = SUB_Null;
     self.takedamage     = DAMAGE_NO;
     self.touch          = SUB_Null;
-    self.nextthink      = 3.4 + time + random() * 2;
+    self.cnt            = 3.4 + time + random() * 2;
     self.think          = spiderbot_blowup;
+    self.nextthink      = time;
     self.deadflag       = DEAD_DYING;
 	self.frame          = 5;
 	self.tur_head.effects        |= EF_FLAME;
