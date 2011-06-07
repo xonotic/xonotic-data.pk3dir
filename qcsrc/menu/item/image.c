@@ -6,10 +6,15 @@ CLASS(Image) EXTENDS(Item)
 	METHOD(Image, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(Image, updateAspect, void(entity))
 	METHOD(Image, setZoom, void(entity, float))
+	METHOD(Image, startZoomMove, float(entity, vector))
+	METHOD(Image, zoomMove, float(entity, vector))
 	ATTRIB(Image, src, string, string_null)
 	ATTRIB(Image, color, vector, '1 1 1')
 	ATTRIB(Image, forcedAspect, float, 0)
 	ATTRIB(Image, zoomFactor, float, 1)
+	ATTRIB(Image, zoomOffset, vector, '0.5 0.5 0')
+	ATTRIB(Image, start_zoomOffset, vector, '0 0 0')
+	ATTRIB(Image, start_coords, vector, '0 0 0')
 	ATTRIB(Image, imgOrigin, vector, '0 0 0')
 	ATTRIB(Image, imgSize, vector, '0 0 0')
 ENDCLASS(Image)
@@ -23,6 +28,7 @@ string Image_toString(entity me)
 void Image_configureImage(entity me, string path)
 {
 	me.src = path;
+	me.zoomOffset = '0.5 0.5 0';
 	me.zoomFactor = 1;
 }
 void Image_draw(entity me)
@@ -64,9 +70,35 @@ void Image_updateAspect(entity me)
 			me.imgSize = eX + eY * (me.size_x / (asp * me.size_y));
 		}
 		if (me.zoomFactor)
+		{
+			if (me.zoomFactor > 1)
+			{
+				me.zoomOffset_x = bound(0, me.zoomOffset_x, 1);
+				me.zoomOffset_y = bound(0, me.zoomOffset_y, 1);
+			}
 			me.imgSize = me.imgSize * me.zoomFactor;
-		me.imgOrigin = '0.5 0.5 0' - 0.5 * me.imgSize;
+		}
+		me.imgOrigin_x = 0.5 - me.zoomOffset_x * me.imgSize_x;
+		me.imgOrigin_y = 0.5 - me.zoomOffset_y * me.imgSize_y;
 	}
+}
+float Image_startZoomMove(entity me, vector coords)
+{
+	if (me.zoomFactor > 1)
+	{
+		me.start_zoomOffset = me.zoomOffset;
+		me.start_coords = coords;
+	}
+	return 1;
+}
+float Image_zoomMove(entity me, vector coords)
+{
+	if (me.zoomFactor > 1)
+	{
+		me.zoomOffset = me.start_zoomOffset + (me.start_coords - coords)*(1/me.zoomFactor);
+		me.updateAspect(me);
+	}
+	return 1;
 }
 void Image_setZoom(entity me, float z)
 {
@@ -77,6 +109,8 @@ void Image_setZoom(entity me, float z)
 	else
 		me.zoomFactor *= z;
 	me.zoomFactor = bound(1/16, me.zoomFactor, 16);
+	if (me.zoomFactor <= 1)
+		me.zoomOffset = '0.5 0.5 0';
 	me.updateAspect(me);
 }
 void Image_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)

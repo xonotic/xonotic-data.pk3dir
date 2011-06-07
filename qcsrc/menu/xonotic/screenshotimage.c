@@ -2,6 +2,9 @@
 CLASS(XonoticScreenshotImage) EXTENDS(Image)
 	METHOD(XonoticScreenshotImage, configureXonoticScreenshotImage, void(entity, string))
 	METHOD(XonoticScreenshotImage, draw, void(entity))
+	ATTRIB(XonoticScreenshotImage, focusable, float, 1) // mousePress and mouseDrag work only if focusable is set
+	METHOD(XonoticScreenshotImage, mousePress, float(entity, vector))
+	METHOD(XonoticScreenshotImage, mouseDrag, float(entity, vector))
 	METHOD(XonoticScreenshotImage, resizeNotify, void(entity, vector, vector, vector, vector))
 	ATTRIB(XonoticScreenshotImage, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticScreenshotImage, fontSize, float, SKINFONTSIZE_NORMAL)
@@ -30,6 +33,16 @@ void XonoticScreenshotImage_configureXonoticScreenshotImage(entity me, string th
 	if (me.screenshotTitle)
 		strunzone(me.screenshotTitle);
 	me.screenshotTitle = strzone(substring(me.src, 13, strlen(theImage) - 13)); //strip "/screenshots/"
+}
+
+float XonoticScreenshotImage_mousePress(entity me, vector coords)
+{
+	return me.startZoomMove(me, coords);
+}
+
+float XonoticScreenshotImage_mouseDrag(entity me, vector coords)
+{
+	return me.zoomMove(me, coords);
 }
 
 void XonoticScreenshotImage_draw(entity me)
