@@ -102,12 +102,12 @@ float Image_zoomMove(entity me, vector coords)
 }
 void Image_setZoom(entity me, float z)
 {
-	if (z < 0)
-		me.zoomFactor = -z;
-	else if (z == 0)
+	if (z < 0) // multiply by the current zoomFactor
+		me.zoomFactor *= -z;
+	else if (z == 0) // reset (no zoom)
 		me.zoomFactor = 1;
-	else
-		me.zoomFactor *= z;
+	else // directly set
+		me.zoomFactor = z;
 	me.zoomFactor = bound(1/16, me.zoomFactor, 16);
 	if (me.zoomFactor <= 1)
 		me.zoomOffset = '0.5 0.5 0';
