@@ -37,15 +37,15 @@ void nextScreenshot_Click(entity btn, entity me)
 }
 void increaseZoom_Click(entity btn, entity me)
 {
-	me.screenshotImage.setZoom(me.screenshotImage, -2);
+	me.screenshotImage.setZoom(me.screenshotImage, -2, FALSE);
 }
 void decreaseZoom_Click(entity btn, entity me)
 {
-	me.screenshotImage.setZoom(me.screenshotImage, -1/2);
+	me.screenshotImage.setZoom(me.screenshotImage, -1/2, FALSE);
 }
 void resetZoom_Click(entity btn, entity me)
 {
-	me.screenshotImage.setZoom(me.screenshotImage, 0);
+	me.screenshotImage.setZoom(me.screenshotImage, 0, FALSE);
 }
 void toggleSlideShow_Click(entity btn, entity me)
 {
@@ -86,12 +86,12 @@ float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, f
 		default:
 			if (key == K_MWHEELUP || ascii == '+')
 			{
-				me.screenshotImage.setZoom(me.screenshotImage, -2);
+				me.screenshotImage.setZoom(me.screenshotImage, -2, (key == K_MWHEELUP));
 				return 1;
 			}
 			else if (key == K_MWHEELDOWN || ascii == '-')
 			{
-				me.screenshotImage.setZoom(me.screenshotImage, -1/2);
+				me.screenshotImage.setZoom(me.screenshotImage, -1/2, (key == K_MWHEELDOWN));
 				return 1;
 			}
 			if (me.scrList.keyDown(me.scrList, key, ascii, shift))

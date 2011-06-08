@@ -5,7 +5,7 @@ CLASS(Image) EXTENDS(Item)
 	METHOD(Image, toString, string(entity))
 	METHOD(Image, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(Image, updateAspect, void(entity))
-	METHOD(Image, setZoom, void(entity, float))
+	METHOD(Image, setZoom, void(entity, float, float))
 	METHOD(Image, startZoomMove, float(entity, vector))
 	METHOD(Image, zoomMove, float(entity, vector))
 	ATTRIB(Image, src, string, string_null)
@@ -84,7 +84,7 @@ void Image_updateAspect(entity me)
 }
 float Image_startZoomMove(entity me, vector coords)
 {
-	if (me.zoomFactor > 1)
+	//if (me.zoomFactor > 1) //mousewheel zoom may start from a non-zoomed-in image
 	{
 		me.start_zoomOffset = me.zoomOffset;
 		me.start_coords = coords;
@@ -100,8 +100,10 @@ float Image_zoomMove(entity me, vector coords)
 	}
 	return 1;
 }
-void Image_setZoom(entity me, float z)
+void Image_setZoom(entity me, float z, float atMousePosition)
 {
+	float prev_zoomFactor;
+	prev_zoomFactor = me.zoomFactor;
 	if (z < 0) // multiply by the current zoomFactor
 		me.zoomFactor *= -z;
 	else if (z == 0) // reset (no zoom)
@@ -111,6 +113,8 @@ void Image_setZoom(entity me, float z)
 	me.zoomFactor = bound(1/16, me.zoomFactor, 16);
 	if (me.zoomFactor <= 1)
 		me.zoomOffset = '0.5 0.5 0';
+	else if (atMousePosition && prev_zoomFactor != me.zoomFactor)
+		me.zoomOffset = me.start_zoomOffset + (me.start_coords - '0.5 0.5 0') * (1/prev_zoomFactor);
 	me.updateAspect(me);
 }
 void Image_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)

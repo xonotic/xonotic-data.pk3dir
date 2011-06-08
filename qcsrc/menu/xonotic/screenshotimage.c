@@ -5,6 +5,7 @@ CLASS(XonoticScreenshotImage) EXTENDS(Image)
 	ATTRIB(XonoticScreenshotImage, focusable, float, 1) // mousePress and mouseDrag work only if focusable is set
 	METHOD(XonoticScreenshotImage, mousePress, float(entity, vector))
 	METHOD(XonoticScreenshotImage, mouseDrag, float(entity, vector))
+	METHOD(XonoticScreenshotImage, mouseMove, float(entity, vector))
 	METHOD(XonoticScreenshotImage, resizeNotify, void(entity, vector, vector, vector, vector))
 	ATTRIB(XonoticScreenshotImage, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticScreenshotImage, fontSize, float, SKINFONTSIZE_NORMAL)
@@ -43,6 +44,11 @@ float XonoticScreenshotImage_mousePress(entity me, vector coords)
 float XonoticScreenshotImage_mouseDrag(entity me, vector coords)
 {
 	return me.zoomMove(me, coords);
+}
+
+float XonoticScreenshotImage_mouseMove(entity me, vector coords)
+{
+	return me.startZoomMove(me, coords);
 }
 
 void XonoticScreenshotImage_draw(entity me)
