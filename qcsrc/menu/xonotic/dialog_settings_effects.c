@@ -132,8 +132,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
 	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
 		setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
-	me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "r_shadow_gloss", _("Gloss")));
-		setDependentAND3(e, "vid_gl20", 1, 1, "r_glsl_deluxemapping", 1, 2, "mod_q3bsp_nolightmaps", 0, 0);
+	me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "r_shadow_gloss", _("Gloss"))); // FIXME move this box elsewhere, it has nothing to do with Q3BSP lightmaps
+		setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping", _("Offset mapping")));
 			setDependent(e, "vid_gl20", 1, 1);
