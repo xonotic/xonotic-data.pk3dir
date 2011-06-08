@@ -6,8 +6,8 @@ CLASS(Image) EXTENDS(Item)
 	METHOD(Image, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(Image, updateAspect, void(entity))
 	METHOD(Image, setZoom, void(entity, float, float))
-	METHOD(Image, startZoomMove, float(entity, vector))
-	METHOD(Image, zoomMove, float(entity, vector))
+	METHOD(Image, drag_setStartPos, float(entity, vector))
+	METHOD(Image, drag, float(entity, vector))
 	ATTRIB(Image, src, string, string_null)
 	ATTRIB(Image, color, vector, '1 1 1')
 	ATTRIB(Image, forcedAspect, float, 0)
@@ -82,7 +82,7 @@ void Image_updateAspect(entity me)
 		me.imgOrigin_y = 0.5 - me.zoomOffset_y * me.imgSize_y;
 	}
 }
-float Image_startZoomMove(entity me, vector coords)
+float Image_drag_setStartPos(entity me, vector coords)
 {
 	//if (me.zoomFactor > 1) //mousewheel zoom may start from a non-zoomed-in image
 	{
@@ -91,7 +91,7 @@ float Image_startZoomMove(entity me, vector coords)
 	}
 	return 1;
 }
-float Image_zoomMove(entity me, vector coords)
+float Image_drag(entity me, vector coords)
 {
 	if (me.zoomFactor > 1)
 	{

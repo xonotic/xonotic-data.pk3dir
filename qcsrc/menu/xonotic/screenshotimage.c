@@ -38,17 +38,17 @@ void XonoticScreenshotImage_configureXonoticScreenshotImage(entity me, string th
 
 float XonoticScreenshotImage_mousePress(entity me, vector coords)
 {
-	return me.startZoomMove(me, coords);
+	return me.drag_setStartPos(me, coords);
 }
 
 float XonoticScreenshotImage_mouseDrag(entity me, vector coords)
 {
-	return me.zoomMove(me, coords);
+	return me.drag(me, coords);
 }
 
 float XonoticScreenshotImage_mouseMove(entity me, vector coords)
 {
-	return me.startZoomMove(me, coords);
+	return me.drag_setStartPos(me, coords);
 }
 
 void XonoticScreenshotImage_draw(entity me)
