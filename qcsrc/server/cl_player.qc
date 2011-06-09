@@ -284,7 +284,7 @@ void player_anim (void)
 					if (self.animstate_startframe != self.anim_jump_x) // don't perform another trace if already playing the jump anim
 					{
 						traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-						if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == self.anim_idle_x) // don't get stuck on idle animation in midair
+						if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == self.anim_idle_x || (self.animstate_startframe == self.anim_melee_x && time - self.animstate_starttime >= 21/20)) // don't get stuck on idle animation in midair, nor melee after it finished
 						{
 							setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
 							self.restart_jump = FALSE;
@@ -323,7 +323,6 @@ void player_anim (void)
 		}
 		else
 			setanim(self, self.anim_idle, TRUE, FALSE, FALSE);
-		print(ftos(time), " ", ftos(self.animstate_startframe), "\n");
 	}
 
 	if (self.weaponentity)
