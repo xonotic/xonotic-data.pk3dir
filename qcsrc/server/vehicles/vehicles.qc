@@ -13,7 +13,7 @@ void vehicles_setreturn();
 
 
 /** AuxiliaryXhair*
-    Send addictional points of interest to be drawn, to vehicle owner
+    Send additional points of interest to be drawn, to vehicle owner
 **/
 float MAX_AXH = 4;
 .entity AuxiliaryXhair[MAX_AXH];
@@ -82,6 +82,12 @@ void SendAuxiliaryXhair2(entity own, vector loc, vector clr, float axh_id)
 */
 // End AuxiliaryXhair
 
+/**
+    Notifies the client that he enterd a vehicle, and sends 
+    realavent data.
+    
+    only sends vehicle_id atm (wich is a HUD_* constant, ex. HUD_SPIDERBOT)
+**/
 void CSQCVehicleSetup(entity own, float vehicle_id)
 {
 	msg_entity = own;
@@ -128,7 +134,6 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
         
         return;
     }
-        
 
     if(trace_ent != world)
     {
@@ -315,7 +320,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 // End generic vehile projectile system
 
 /** vehicles_spawn
-    Exetuted for all vehiles on (re)spawn.
+    Exetuted for all vehicles on (re)spawn.
     Sets defaults for newly spawned units.
 **/
 void vehicles_spawn()
@@ -432,9 +437,7 @@ void vehicles_enter()
     // .viewmodelforclient works better.
     //self.vehicle_hudmodel.drawonlytoclient = self.owner;
 
-#ifndef VEHICLES_CSQC
-        self.vehicle_hudmodel.viewmodelforclient = self.owner;
-#endif
+    self.vehicle_hudmodel.viewmodelforclient = self.owner;
 
     self.event_damage         = vehicles_damage;
     self.nextthink            = 0;
@@ -468,7 +471,6 @@ void vehicles_enter()
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
 
-#ifndef VEHICLES_CSQC
     msg_entity = other;
     WriteByte (MSG_ONE, SVC_SETVIEWPORT);
     WriteEntity(MSG_ONE, self.vehicle_viewport);
@@ -487,8 +489,6 @@ void vehicles_enter()
         WriteAngle(MSG_ONE,  self.angles_y);      // yaw
         WriteAngle(MSG_ONE,  0);                  // roll
     }
-#endif
-//#endif
 
     vehicles_clearrturn();
 
@@ -497,6 +497,11 @@ void vehicles_enter()
     self.vehicle_enter();
 }
 
+/** vehicles_findgoodexit
+    Locates a valid location for the player to exit the vehicle.
+    Will first try prefer_spot, then up 100 random spots arround the vehicle
+    wich are in direct line of sight and empty enougth to hold a players bbox
+**/
 vector vehicles_findgoodexit(vector prefer_spot)
 {
     vector exitspot;
@@ -545,6 +550,10 @@ vector vehicles_findgoodexit(vector prefer_spot)
     return self.origin;
 }
 
+/** vehicles_exit
+    Standarrd vehicle release fucntion.
+    custom code goes in self.vehicle_exit
+**/
 void vehicles_exit(float eject)
 {	
 	self.flags |= FL_NOTARGET;
@@ -695,7 +704,6 @@ void vehicles_clearrturn()
             ret.nextthink   = time + 0.1;
             return;
         }
-
         ret = ret.chain;
     }
 }
@@ -711,15 +719,7 @@ void vehicles_setreturn()
     ret.enemy       = self;
     ret.think       = vehicles_return;
     ret.nextthink   = time + self.vehicle_respawntime;
-}
-
-float vehicles_customizeentityforclient()
-{
-    if(self.deadflag  == DEAD_DEAD)
-        return FALSE;
-    else
-        return TRUE;
-}
+} 
 
 void vehicles_configcheck(string  configname, float check_cvar)
 {
@@ -830,7 +830,6 @@ float vehicle_initialize(string  net_name,
     self.iscreature         = TRUE;
     self.hud                = vhud;
 
-    //self.customizeentityforclient = vehicles_customizeentityforclient;
     self.vehicle_die         = dieproc;
     self.vehicle_exit        = exitfunc;
     self.vehicle_enter       = enterproc;
@@ -876,13 +875,9 @@ float vehicle_initialize(string  net_name,
 
     self.pos1 = self.origin;
     self.pos2 = self.angles;
-#ifdef VEHICLES_CSQC
-    if(use_csqc)
-        net_link_vehile();
-#endif
+
     return TRUE;
 }
-
 
 void bugmenot()
 {

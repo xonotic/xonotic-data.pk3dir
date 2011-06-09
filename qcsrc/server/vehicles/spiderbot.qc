@@ -177,6 +177,7 @@ float spiderbot_frame()
 
     player = self;
     spider = self.vehicle;
+    self   = spider;
 
     player.BUTTON_ZOOM      = 0;
     player.BUTTON_CROUCH    = 0;
@@ -184,38 +185,13 @@ float spiderbot_frame()
 
     if(player.BUTTON_USE)
     {
-        self = spider;
         vehicles_exit(VHEF_NORMAL);
         self = player;
         return 0;
     }
 
-    self = spider;
-
     crosshair_trace(player);
     //UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);
-
-#if VEHICLES_VIEWROTATE_CROSSHAIR
-    ad = vectoangles(normalize(trace_endpos - gettaginfo(spider.tur_head,gettagindex(spider.tur_head,"tag_hud")))) - (spider.tur_head.angles + spider.angles);
-    if(ad_x > 180) ad_x -= 360;
-    if(ad_x < -180) ad_x += 360;
-    if(ad_y > 180) ad_y -= 360;
-    if(ad_y < -180) ad_y += 360;
-
-    // Rotate head
-    ftmp = autocvar_g_vehicle_spiderbot_head_turnspeed * sys_frametime;
-    ad_y = bound(-ftmp, ad_y, ftmp);
-    spider.tur_head.angles_y = bound(autocvar_g_vehicle_spiderbot_head_turnlimit * -1, spider.tur_head.angles_y + ad_y, autocvar_g_vehicle_spiderbot_head_turnlimit);
-
-    // Pitch head
-    ftmp = autocvar_g_vehicle_spiderbot_head_pitchspeed * sys_frametime;
-    //ad_x = bound(-ftmp, ad_x, ftmp);
-    spider.tur_head.angles_x = bound(autocvar_g_vehicle_spiderbot_head_pitchlimit_down, spider.tur_head.angles_x + ad_x, autocvar_g_vehicle_spiderbot_head_pitchlimit_up);
-
-    // Turn Body
-    ftmp = autocvar_g_vehicle_spiderbot_turnspeed * sys_frametime;
-    ftmp = bound(-ftmp, spider.tur_head.angles_y, ftmp);
-#else
 
     player.v_angle_x *= -1;
     ad = player.v_angle - (spider.tur_head.angles + spider.angles);
@@ -244,7 +220,6 @@ float spiderbot_frame()
     ftmp = autocvar_g_vehicle_spiderbot_turnspeed * sys_frametime;
     ftmp = bound(-ftmp, spider.tur_head.angles_y, ftmp);
 
-#endif
     makevectors(spider.angles + '-2 0 0' * spider.angles_x);
 
 /*
@@ -261,13 +236,13 @@ float spiderbot_frame()
     {
         if(spider.frame == 4 && self.tur_head.wait != 0)
         {
-            sound (self, CHAN_VOICE, "vehicles/spiderbot_land.wav", VOL_BASE, ATTN_NORM);
+            sound (self, CHAN_VOICE, "vehicles/spiderbot_land.wav", VOL_VEHICLEENGINE, ATTN_NORM);
             spider.frame = 5;            
         }
         
         if(player.BUTTON_JUMP && self.tur_head.wait < time)
         {        
-            sound (self, CHAN_VOICE, "vehicles/spiderbot_jump.wav", VOL_BASE, ATTN_NORM);
+            sound (self, CHAN_VOICE, "vehicles/spiderbot_jump.wav", VOL_VEHICLEENGINE, ATTN_NORM);
             //dprint("spiderbot_jump:", ftos(soundlength("vehicles/spiderbot_jump.wav")), "\n");
             self.delay = 0;
 
@@ -285,7 +260,7 @@ float spiderbot_frame()
                     self.delay = 3;
                     self.sound_nexttime = time + 6.486500; //soundlength("vehicles/spiderbot_idle.wav");
                     //dprint("spiderbot_idle:", ftos(soundlength("vehicles/spiderbot_idle.wav")), "\n");
-                    sound (self, CHAN_VOICE, "vehicles/spiderbot_idle.wav", VOL_BASE, ATTN_NORM);
+                    sound (self, CHAN_VOICE, "vehicles/spiderbot_idle.wav", VOL_VEHICLEENGINE, ATTN_NORM);
                 }                
                 movelib_beak_simple(autocvar_g_vehicle_spiderbot_speed_stop);
                 spider.frame = 5;
@@ -314,7 +289,7 @@ float spiderbot_frame()
                     {                        
                         self.delay = 1;
                         self.sound_nexttime = time + 6.486500; //soundlength("vehicles/spiderbot_walk.wav");
-                        sound (self, CHAN_VOICE, "vehicles/spiderbot_walk.wav", VOL_BASE, ATTN_NORM);
+                        sound (self, CHAN_VOICE, "vehicles/spiderbot_walk.wav", VOL_VEHICLEENGINE, ATTN_NORM);
                         //dprint("spiderbot_walk:", ftos(soundlength("vehicles/spiderbot_walk.wav")), "\n");
                     }
                 }
@@ -335,7 +310,7 @@ float spiderbot_frame()
                     {                        
                         self.delay = 2;
                         self.sound_nexttime = time + 6.486500; //soundlength("vehicles/spiderbot_strafe.wav");
-                        sound (self, CHAN_VOICE, "vehicles/spiderbot_strafe.wav", VOL_BASE, ATTN_NORM);
+                        sound (self, CHAN_VOICE, "vehicles/spiderbot_strafe.wav", VOL_VEHICLEENGINE, ATTN_NORM);
                         //dprint("spiderbot_strafe:", ftos(soundlength("vehicles/spiderbot_strafe.wav")), "\n");
                     }
                 }
@@ -599,7 +574,6 @@ void spiderbot_blowup()
 void spiderbot_die()
 {
     sound (self, CHAN_VOICE, "vehicles/spiderbot_die.wav", VOL_BASE, ATTN_NORM);
-    //sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("explosion_medium"), self.origin + '0 0 100', '0 0 0', 1);
 
     self.health         = 0;
@@ -686,25 +660,3 @@ void spawnfunc_vehicle_spiderbot()
     self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_spiderbot_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
 }
 #endif // SVQC
-
-#ifdef CSQC
-void spiderbot_draw()
-{
-
-}
-
-void spiderbot_draw2d()
-{
-
-}
-
-void spiderbot_read_extra()
-{
-
-}
-
-void vehicle_spiderbot_assemble()
-{
-
-}
-#endif //CSQC

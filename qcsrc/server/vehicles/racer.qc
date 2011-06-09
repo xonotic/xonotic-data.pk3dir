@@ -262,18 +262,6 @@ float racer_frame()
     player.BUTTON_ZOOM = player.BUTTON_CROUCH = 0;
 
     self = racer;
-    
-#ifdef VEHICLES_CSQC
-    racer.SendFlags |= VSF_MOVEMENT;
-
-    // Send a origin update every 10'th serevr frame.
-    racer.framecounter += 1;
-    if(racer.framecounter >= 600)
-    {
-        racer.SendFlags |= VSF_ORIGIN;
-        racer.framecounter = 0;
-    }
-#endif
 
     if(player.BUTTON_USE)
     {
@@ -293,40 +281,6 @@ float racer_frame()
 
     crosshair_trace(player);
 
-#if VEHICLES_VIEWROTATE_CROSSHAIR
-    float ftmp2;
-    racer.angles_x *= -1;
-    df = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
-    if(df_x > 180)  df_x -= 360;
-    if(df_x < -180) df_x += 360;
-    if(df_y > 180)  df_y -= 360;
-    if(df_y < -180) df_y += 360;
-
-    // Yaw
-    ftmp = autocvar_g_vehicle_racer_turnspeed * frametime;
-    ftmp2 = ftmp * -1;
-
-    ftmp = bound(ftmp2, shortangle_f(df_y - racer.angles_y, racer.angles_y), ftmp);
-    ftmp2 = anglemods(racer.angles_y + ftmp);
-
-    // Roll
-    ftmp = bound(-45, shortangle_f(df_z + ((racer.angles_y - ftmp2) * autocvar_g_vehicle_racer_turnroll), racer.angles_z), 45);
-    ftmp = anglemods(racer.angles_z + ftmp) * frametime;
-    racer.angles_z = bound(-65, racer.angles_z + ftmp, 65);
-
-    // Turn
-    racer.angles_y = ftmp2;
-
-    // Pitch
-    ftmp = autocvar_g_vehicle_racer_pitchspeed * frametime;
-    ftmp2 = ftmp * -1;
-
-    ftmp = bound(ftmp2, shortangle_f(player.v_angle_x - racer.angles_x, racer.angles_x), ftmp);
-    racer.angles_x = anglemods(racer.angles_x + ftmp);
-
-    makevectors(racer.angles);
-    racer.angles_x *= -1;
-#else
     racer.angles_x *= -1;
 
     // Yaw
@@ -344,7 +298,7 @@ float racer_frame()
 
     makevectors(racer.angles);
     racer.angles_x *= -1;
-#endif
+
 
     ftmp = racer.velocity_z;
     df = racer.velocity * -autocvar_g_vehicle_racer_friction;
@@ -372,7 +326,7 @@ float racer_frame()
         {        
             self.sounds = 1;
             self.sound_nexttime = time + 10.922667; //soundlength("vehicles/racer_move.wav");
-            sound (self, CHAN_VOICE, "vehicles/racer_move.wav", VOL_BASE, ATTN_NORM);
+            sound (self, CHAN_VOICE, "vehicles/racer_move.wav", VOL_VEHICLEENGINE, ATTN_NORM);
         }
     }
     else
@@ -381,7 +335,7 @@ float racer_frame()
         {        
             self.sounds = 0;
             self.sound_nexttime = time + 11.888604; //soundlength("vehicles/racer_idle.wav");
-            sound (self, CHAN_VOICE, "vehicles/racer_idle.wav", VOL_BASE, ATTN_NORM);
+            sound (self, CHAN_VOICE, "vehicles/racer_idle.wav", VOL_VEHICLEENGINE, ATTN_NORM);
         }        
     }
     
@@ -396,13 +350,13 @@ float racer_frame()
         {        
             //self.sounds = 2;
             self.strength_finished = time + 10.922667; //soundlength("vehicles/racer_boost.wav");
-            sound (self, CHAN_PLAYER, "vehicles/racer_boost.wav", VOL_BASE, ATTN_NORM);
+            sound (self, CHAN_PLAYER, "vehicles/racer_boost.wav", VOL_VEHICLEENGINE, ATTN_NORM);
         }        
     }
     else
     {
         self.strength_finished = 0;
-        sound (self, CHAN_PLAYER, "misc/null.wav", VOL_BASE, ATTN_NORM);
+        sound (self, CHAN_PLAYER, "misc/null.wav", VOL_VEHICLEENGINE, ATTN_NORM);
     }
         
 
@@ -509,17 +463,7 @@ void racer_think()
     */
 
     racer_align4point(); //time - self.nextthink);
-#ifdef VEHICLES_CSQC
-    self.SendFlags |= VSF_MOVEMENT;
 
-    // Send a origin update every 10'th serevr frame.
-    self.framecounter += 1;
-    if(self.framecounter >= 10)
-    {
-        self.SendFlags |= VSF_ORIGIN;
-        self.framecounter = 0;
-    }
-#endif
     /*
     //if(self.velocity_z > 0)
     //    self.velocity_z *= 0.95;
@@ -541,10 +485,6 @@ void racer_enter()
     self.movetype = MOVETYPE_BOUNCE;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield);
-#ifdef VEHICLES_CSQC
-    if(self.SendEntity)
-        self.SendFlags |= VSF_SETUP;
-#endif
 }
 
 void racer_exit(float eject)
@@ -658,13 +598,6 @@ void racer_die()
 	self.nextthink = 2 + time + random() * 3;
 }
 
-#ifdef VEHICLES_CSQC
-void racer_send_exta(entity to)
-{
-
-}
-#endif
-
 void racer_dinit()
 {
     if not (vehicle_initialize(
@@ -685,9 +618,7 @@ void racer_dinit()
         remove(self);
         return;
     }
-#ifdef VEHICLES_CSQC
-    self.vehile_send_exta = racer_send_exta;
-#endif
+
     if(autocvar_g_vehicle_racer_hovertype != 0)
         racer_force_from_tag = vehicles_force_fromtag_maglev;
     else
@@ -734,75 +665,4 @@ void spawnfunc_vehicle_racer()
     self.think = racer_dinit;
     self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_racer_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
 }
-
 #endif // SVQC
-
-#ifdef CSQC
-#ifdef VEHICLES_CSQC
-void racer_draw()
-{
-    /*float dt;
-
-    dt = time - self.lastupdate;
-    self.lastupdate = time;
-    if(dt < 0)
-        return;
-    */
-    //self.origin += dt * self.velocity;
-    //self.origin_z -= dt * getstatf(STAT_MOVEVARS_GRAVITY);
-    //setorigin(self, self.origin);
-
-    if(vehicle_hudmodel.owner  == self)
-    {
-        setorigin(vehicle_hudmodel, self.origin);
-        vehicle_hudmodel.angles = self.angles;
-    }
-
-
-}
-
-void racer_draw2d()
-{
-
-}
-
-void racer_read_extra()
-{
-
-}
-
-entity racer_hud;
-entity racer_vp;
-void racer_hud_draw()
-{
-
-}
-
-void vehicle_racer_assemble()
-{
-    setmodel(self, "models/vehicles/wakizashi.dpm");
-    self.scale = 0.5;
-    self.movetype = MOVETYPE_BOUNCE;
-
-    //self.entremove = VehicleRacerRemove;
-    setsize(self,  '-60 -60 -20', '60 60 20');
-    self.draw = racer_draw;
-    self.drawmask = MASK_NORMAL;
-    self.solid = SOLID_BBOX;
-    self.lastupdate = time;
-    self.vehile_read_exta = racer_read_extra;
-
-    if(racer_hud == world)
-    {
-        dprint("SpawnHUUUOOOUUUDDD\n");
-        racer_hud = spawn();
-        setmodel(racer_hud, "models/vehicles/wakizashi_cockpit.dpm");
-        racer_hud.drawmask = MASK_NORMAL;
-        racer_hud.renderflags = RF_VIEWMODEL;
-        racer_hud.scale = 0.5;
-    }
-    vehicle_hudmodel = racer_hud; // FIXME!!
-    racer_hud.draw   = racer_hud_draw;
-}
-#endif
-#endif //CSQC

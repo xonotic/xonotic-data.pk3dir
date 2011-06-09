@@ -64,8 +64,6 @@ float raptor_takeoff();
 .entity bomb1;
 .entity bomb2;
 
-//#define RAPTOR_RETARDCAMERA
-
 float raptor_altitude(float amax)
 {
 	tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * amax), TRUE, self);
@@ -109,9 +107,6 @@ void raptor_bomb_burst()
     entity bomblet;
     float i;
 
-    //sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    //pointparticles(particleeffectnum("raptor_bomb_spread"), self.origin, self.velocity, 1);
-
     Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_RAPTOR_BOMB_SPLIT, self);
 
     for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
@@ -142,9 +137,6 @@ void raptor_bomb_touch()
 void raptor_bombdrop()
 {
     entity bomb_1, bomb_2;
-
-    //self.bomb1.alpha = 0;
-    //self.bomb2.alpha = 0;
 
     bomb_1 = spawn();
     bomb_2 = spawn();
@@ -205,9 +197,6 @@ void raptor_enter()
     self.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
     self.lip   = time;
 
-#ifdef RAPTOR_RETARDCAMERA
-    setorigin(self.vehicle_viewport, self.origin);
-#endif
 }
 
 void raptor_land()
@@ -278,7 +267,7 @@ float raptor_takeoff()
     if(self.sound_nexttime < time)
     {        
         self.sound_nexttime = time + 7.955812; //soundlength("vehicles/raptor_fly.wav");
-        sound (self, CHAN_VOICE, "vehicles/raptor_fly.wav", VOL_BASE, ATTN_NORM);
+        sound (self, CHAN_VOICE, "vehicles/raptor_fly.wav", VOL_VEHICLEENGINE, ATTN_NORM);
     }   
 
     // Takeoff sequense
@@ -358,28 +347,7 @@ float raptor_frame()
     }
     crosshair_trace(player);
 
-#if VEHICLES_VIEWROTATE_CROSSHAIR
-    df = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
-    if(df_x > 180)  df_x -= 360;
-    if(df_x < -180) df_x += 360;
-    if(df_y > 180)  df_y -= 360;
-    if(df_y < -180) df_y += 360;
 
-    // Rotate Body
-    ftmp = autocvar_g_vehicle_raptor_turnspeed * sys_frametime;
-    ftmp = bound(-ftmp, shortangle_f(df_y - raptor.angles_y, raptor.angles_y), ftmp);
-
-    // Turn
-    //raptor.angles_y = anglemods(raptor.angles_y + ftmp);
-    raptor.avelocity_y = anglemods(raptor.angles_y + ftmp);
-
-    // Pitch Body
-    ftmp = autocvar_g_vehicle_raptor_pitchspeed  * sys_frametime;
-    ftmp = bound(-ftmp, shortangle_f(df_x - raptor.angles_x, raptor.angles_x), ftmp);
-
-    //raptor.angles_x = bound(-autocvar_g_vehicle_raptor_pitchlimit, anglemods(raptor.angles_x + ftmp), autocvar_g_vehicle_raptor_pitchlimit);
-    raptor.avelocity_x = bound(-autocvar_g_vehicle_raptor_pitchlimit, anglemods(raptor.angles_x + ftmp), autocvar_g_vehicle_raptor_pitchlimit);
-#else
     vector vang;
     vang = raptor.angles;
     df = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
@@ -407,26 +375,11 @@ float raptor_frame()
     raptor.angles_y = anglemods(raptor.angles_y);
     raptor.angles_z = anglemods(raptor.angles_z);
 
-#endif
 
     if(autocvar_g_vehicle_raptor_movestyle == 1)
         makevectors('0 1 0' * raptor.angles_y);
     else
         makevectors(player.v_angle);
-
-#ifdef RAPTOR_RETARDCAMERA
-    float spd, back, up;
-    spd = vlen(self.velocity) + 0.01;
-    back = spd / autocvar_g_vehicle_raptor_speed_forward;
-    up = 1 - back;
-    back = back;
-    back = back * 1250;
-    back += 150;
-    up = up * 200;
-    up = up + 100;
-
-    setorigin(self.vehicle_viewport, self.origin + (v_up * up) + (v_forward * -back));
-#endif
 
     df = raptor.velocity * -autocvar_g_vehicle_raptor_friction;
 
@@ -709,10 +662,6 @@ void raptor_dinit()
     self.gun1  = spawn();
     self.gun2  = spawn();
 
-#ifdef RAPTOR_RETARDCAMERA
-    setattachment(self.vehicle_viewport, world, "");
-#endif
-
     setmodel(self.bomb1,"models/vehicles/clusterbomb_folded.md3");
     setmodel(self.bomb2,"models/vehicles/clusterbomb_folded.md3");
     setmodel(self.gun1, "models/vehicles/raptor_gun.dpm");
@@ -798,25 +747,3 @@ void spawnfunc_vehicle_raptor()
     self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_raptor_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
 }
 #endif // SVQC
-
-#ifdef CSQC
-void raptor_draw()
-{
-
-}
-
-void raptor_draw2d()
-{
-
-}
-
-void raptor_read_extra()
-{
-
-}
-
-void vehicle_raptor_assemble()
-{
-
-}
-#endif //CSQC

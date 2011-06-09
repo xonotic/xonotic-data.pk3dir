@@ -1,9 +1,7 @@
-//#define VEHICLES_CSQC
 // #define VEHICLES_USE_ODE
 #define VEHICLES_ENABLED
 #ifdef VEHICLES_ENABLED
 
-//#define VEHICLES_VIEWROTATE_CROSSHAIR
 //#message "with tZork vehicles (experimental)"
 
 .float vehicle_flags;
@@ -30,12 +28,12 @@ float VHF_MOVE_FLY      = 512;  /// Vehicle is airborn
 .float vehicle_ammo2;   /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real ammo2 value.
 .float vehicle_reload2; /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real reload2 value.
 
-#ifdef SVQC
 .entity vehicle;
 .entity vehicle_viewport;
 .entity vehicle_hudmodel;
 
 .float sound_nexttime;
+#define VOL_VEHICLEENGINE 1
 
 .float hud;
 .float dmg_time;
@@ -54,30 +52,6 @@ float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
 var .void() vehicle_enter;  /// Vehicles custom funciton to be executed when owner exit it
 var .void() vehicle_die;    /// Vehicles custom function to be executed when vehile die
 var .void() vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
-
-#ifdef VEHICLES_CSQC
-.float framecounter; /// Used to count server frames, so that we may send soem updates less often
-var .void(entity to, float sflags) vehile_send_exta;  /// Vehicles custom send func
-void net_link_vehile();                 /// Initiates csqc networking for vehicle
-#endif //VEHICLES_CSQC
-#endif //SVQC
-
-#ifdef CSQC
-#ifdef VEHICLES_CSQC
-.float vehicle_hud;
-
-entity vehicle;
-entity vehicle_viewport;
-entity vehicle_hudmodel;
-
-void vehicle_spiderbot_assemble();
-void vehicle_racer_assemble();
-void vehicle_raptor_assemble();
-void vehicle_bumblebee_assemble();
-void read_vehicle(float bIsNew);
-var .void (float sf)vehile_read_exta;
-#endif //VEHICLES_CSQC
-#endif //CSQC
 
 #ifdef VEHICLES_USE_ODE
 void(entity e, float physics_enabled) physics_enable = #540; // enable or disable physics on object
