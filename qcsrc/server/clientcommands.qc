@@ -25,6 +25,9 @@ float Nagger_SendEntity(entity to, float sendflags)
 	if(sendflags & 128)
 		nags |= 128;
 
+	if(!(nags & 4)) // no vote called? send no string
+		nags &~= 128;
+
 	WriteByte(MSG_ENTITY, nags);
 
 	if(nags & 128)
