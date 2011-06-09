@@ -409,7 +409,7 @@ float racer_frame()
     if(player.BUTTON_ATCK2)
     {
         self.misc_bulletcounter += 1;
-        racer.delay = time + 0.2;
+        racer.delay = time + 0.3;
         if(self.misc_bulletcounter == 1)
             racer_fire_rocket("tag_rocket_r", (self.lock_strength == 1 && self.lock_target) ? self.lock_target : world);
         else if(self.misc_bulletcounter == 2)

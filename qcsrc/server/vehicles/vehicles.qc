@@ -234,6 +234,10 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
 // Generic vehile projectile system
 void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
+    // Ignore damage from oterh projectiles from my owner (dont mess up volly's)
+    if(inflictor.owner = self.owner)
+        return; 
+    
     self.health -= damage;
     self.velocity += force;
     if(self.health < 1)

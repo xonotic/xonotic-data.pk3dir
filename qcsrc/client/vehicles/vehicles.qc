@@ -125,7 +125,7 @@ void Net_VehicleSetup()
             break;
 
         case HUD_RAPTOR:
-            AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-cross.tga";
+            AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-special2.tga";
             AuxiliaryXhair[0].axh_scale   = 0.5;
             //AuxiliaryXhair[0].alpha       = 0.5;
 
@@ -327,7 +327,7 @@ void CSQC_SPIDER_HUD()
 #define raptor_gun  "gfx/vehicles/raptor_guns.tga"
 #define raptor_bomb "gfx/vehicles/raptor_bombs.tga"
 #define raptor_drop "gfx/vehicles/axh-dropcross.tga"
-#define raptor_xhair "gfx/vehicles/axh-cross.tga"
+#define raptor_xhair "gfx/vehicles/axh-ring.tga"
 void CSQC_RAPTOR_HUD()
 {
 	if(autocvar_r_letterbox)
