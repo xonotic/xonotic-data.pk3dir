@@ -261,12 +261,9 @@ void player_anim (void)
 	{
 		if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
 		{
-			if((self.animstate_startframe == self.anim_jump_x && time - self.animstate_starttime >= 21/25) || (self.animstate_startframe == self.anim_duckjump_x && time - self.animstate_starttime >= 21/25))
-				setanim(self, self.anim_fly, TRUE, FALSE, FALSE);
-
-			if(self.animstate_startframe != self.anim_fly_x) // no tracing if we're in the fly anim
+			if (self.crouch)
 			{
-				if (self.crouch && self.animstate_startframe != self.anim_duckjump_x) // don't perform another trace if already playing the crouch jump anim
+				if (self.animstate_startframe != self.anim_duckjump_x) // don't perform another trace if already playing the crouch jump anim
 				{
 					traceline(self.origin + '0 0 1' * PL_CROUCH_MIN_z, self.origin + '0 0 1' * (PL_CROUCH_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
 					if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == self.anim_idle_x) // don't get stuck on idle animation in midair
@@ -275,13 +272,23 @@ void player_anim (void)
 						self.restart_jump = FALSE;
 					}
 				}
-				else if (self.animstate_startframe != self.anim_jump_x) // don't perform another trace if already playing the jump anim
+			}
+			else
+			{
+				// 21/25 is the magic number here for how long the jump animation takes to play once (numframes/framerate)
+				if((self.animstate_startframe == self.anim_jump_x && time - self.animstate_starttime >= 21/25))
+					setanim(self, self.anim_fly, TRUE, FALSE, FALSE);
+
+				if(self.animstate_startframe != self.anim_fly_x) // no tracing if we're in the fly anim
 				{
-					traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-					if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == self.anim_idle_x) // don't get stuck on idle animation in midair
+					if (self.animstate_startframe != self.anim_jump_x) // don't perform another trace if already playing the jump anim
 					{
-						setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
-						self.restart_jump = FALSE;
+						traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
+						if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == self.anim_idle_x) // don't get stuck on idle animation in midair
+						{
+							setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
+							self.restart_jump = FALSE;
+						}
 					}
 				}
 			}
