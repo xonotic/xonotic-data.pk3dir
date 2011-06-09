@@ -40,6 +40,7 @@ float VHF_MOVE_FLY      = 512;  /// Vehicle is airborn
 .float  vehicle_respawntime;
 .void() vehicle_spawn;
 
+void vehicles_exit(float eject);
 var .void(float exit_flags) vehicle_exit;
 float VHEF_NORMAL = 0;  /// User pressed exit key
 float VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying

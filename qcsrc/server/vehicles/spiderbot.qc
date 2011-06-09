@@ -576,20 +576,19 @@ void spiderbot_die()
     sound (self, CHAN_TRIGGER, "vehicles/spiderbot_die.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("explosion_medium"), self.origin + '0 0 100', '0 0 0', 1);
 
-    self.health         = 0;
-    self.event_damage   = SUB_Null;
-    self.takedamage     = DAMAGE_NO;
-    self.touch          = SUB_Null;
-    self.cnt            = 3.4 + time + random() * 2;
-    self.think          = spiderbot_blowup;
-    self.nextthink      = time;
-    self.deadflag       = DEAD_DYING;
-	self.frame          = 5;
-	self.tur_head.effects        |= EF_FLAME;
-	self.colormod = self.tur_head.colormod = '-1 -1 -1';
-	self.frame = 10;
-	self.movetype = MOVETYPE_TOSS;
-
+    self.health             = 0;
+    self.event_damage       = SUB_Null;
+    self.takedamage         = DAMAGE_NO;
+    self.touch              = SUB_Null;
+    self.cnt                = 3.4 + time + random() * 2;
+    self.think              = spiderbot_blowup;
+    self.nextthink          = time;
+    self.deadflag           = DEAD_DYING;
+	self.frame              = 5;
+	self.tur_head.effects  |= EF_FLAME;
+	self.colormod           = self.tur_head.colormod = '-1 -1 -1';
+	self.frame              = 10;
+	self.movetype           = MOVETYPE_TOSS;
 }
 
 void vewhicle_spiderbot_dinit()

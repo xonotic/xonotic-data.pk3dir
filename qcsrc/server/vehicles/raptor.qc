@@ -316,29 +316,30 @@ float raptor_frame()
     player = self;
     raptor = self.vehicle;
     self   = raptor;
-    
+        
     /*
     ftmp = vlen(self.velocity);
     if(ftmp > autocvar_g_vehicle_raptor_speed_forward) 
         ftmp = 1;
     else  
         ftmp = ftmp / autocvar_g_vehicle_raptor_speed_forward;
-    */    
+    */
+        
     if(self.sound_nexttime < time)
     {        
         self.sound_nexttime = time + 7.955812; 
-        //dprint("LEN:", ftos(soundlength("vehicles/raptor_fly.wav")), "\n");
-        //sound (self, CHAN_VOICE, "vehicles/raptor_fly.wav", 1 - ftmp,   ATTN_NORM );
-        sound (self, CHAN_TRIGGER, "vehicles/raptor_speed.wav", VOL_VEHICLEENGINE, ATTN_NORM);        
-        //self.wait = ftmp;
-    }    
+        //sound (self.tur_head, CHAN_TRIGGER, "vehicles/raptor_fly.wav", 1 - ftmp,   ATTN_NORM );
+        sound (self, CHAN_TRIGGER, "vehicles/raptor_speed.wav", 1, ATTN_NORM);        
+        self.wait = ftmp;
+    }        
     /*
     else if(fabs(ftmp - self.wait) > 0.2)
     {
-        sound (self, CHAN_VOICE, "", 1 - ftmp,   ATTN_NORM );
-        sound (self, CHAN_PLAYER, "", ftmp, ATTN_NORM);        
+        sound (self.tur_head, CHAN_TRIGGER, "", 1 - ftmp,   ATTN_NORM );
+        sound (self, CHAN_TRIGGER, "", ftmp, ATTN_NORM);        
         self.wait = ftmp;
-    }*/
+    }
+    */
     
     if(player.BUTTON_USE && raptor.deadflag == DEAD_NO)
     {
@@ -728,8 +729,6 @@ void spawnfunc_vehicle_raptor()
 {
     vehicles_configcheck("vehicle_raptor.cfg", autocvar_g_vehicle_raptor_health);
     
-    
-
     if(autocvar_g_vehicle_raptor_shield)
         self.vehicle_flags |= VHF_HASSHIELD;
 
@@ -749,8 +748,10 @@ void spawnfunc_vehicle_raptor()
     precache_model ("models/vehicles/clusterbomb.md3");
     precache_model ("models/vehicles/clusterbomb_folded.md3");
     precache_model ("models/vehicles/raptor_body.dpm");
+    
     precache_sound ("vehicles/raptor_fly.wav");
     precache_sound ("vehicles/raptor_speed.wav");
+    precache_sound ("");
     
     self.think = raptor_dinit;
     self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_raptor_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);

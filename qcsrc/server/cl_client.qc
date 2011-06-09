@@ -1791,7 +1791,7 @@ void ClientDisconnect (void)
 	    entity oldself;
 	    oldself = self;
 	    self = self.vehicle;
-	    self.vehicle_exit(VHEF_RELESE);
+	    vehicles_exit(VHEF_RELESE);
 	    self = oldself;
 	}
 
