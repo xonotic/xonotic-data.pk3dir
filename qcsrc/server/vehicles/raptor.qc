@@ -267,7 +267,7 @@ float raptor_takeoff()
     if(self.sound_nexttime < time)
     {        
         self.sound_nexttime = time + 7.955812; //soundlength("vehicles/raptor_fly.wav");
-        sound (self, CHAN_VOICE, "vehicles/raptor_fly.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+        sound (self, CHAN_TRIGGER, "vehicles/raptor_speed.wav", VOL_VEHICLEENGINE, ATTN_NORM);
     }   
 
     // Takeoff sequense
@@ -317,19 +317,28 @@ float raptor_frame()
     raptor = self.vehicle;
     self   = raptor;
     
+    /*
     ftmp = vlen(self.velocity);
     if(ftmp > autocvar_g_vehicle_raptor_speed_forward) 
         ftmp = 1;
     else  
         ftmp = ftmp / autocvar_g_vehicle_raptor_speed_forward;
-    
-    if(fabs(ftmp - self.wait) > 0.2 || self.sound_nexttime < time)
+    */    
+    if(self.sound_nexttime < time)
     {        
-        self.sound_nexttime = time + 7.955812; //soundlength("vehicles/raptor_fly.wav");
-        sound (self, CHAN_VOICE, "vehicles/raptor_fly.wav", 1 - ftmp,   ATTN_NORM );
-        sound (self, CHAN_PLAYER, "vehicles/raptor_speed.wav", ftmp, ATTN_NORM);
-        self.wait = ftmp;
+        self.sound_nexttime = time + 7.955812; 
+        //dprint("LEN:", ftos(soundlength("vehicles/raptor_fly.wav")), "\n");
+        //sound (self, CHAN_VOICE, "vehicles/raptor_fly.wav", 1 - ftmp,   ATTN_NORM );
+        sound (self, CHAN_TRIGGER, "vehicles/raptor_speed.wav", VOL_VEHICLEENGINE, ATTN_NORM);        
+        //self.wait = ftmp;
     }    
+    /*
+    else if(fabs(ftmp - self.wait) > 0.2)
+    {
+        sound (self, CHAN_VOICE, "", 1 - ftmp,   ATTN_NORM );
+        sound (self, CHAN_PLAYER, "", ftmp, ATTN_NORM);        
+        self.wait = ftmp;
+    }*/
     
     if(player.BUTTON_USE && raptor.deadflag == DEAD_NO)
     {

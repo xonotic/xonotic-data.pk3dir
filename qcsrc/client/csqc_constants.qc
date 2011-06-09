@@ -164,7 +164,6 @@ const float BUTTON_14 = 65536;
 const float BUTTON_15 = 131072;
 const float BUTTON_16 = 262144;
 
-
 const float DRAWFLAG_NORMAL = 0;
 const float DRAWFLAG_ADDITIVE = 1;
 const float DRAWFLAG_MODULATE = 2;
