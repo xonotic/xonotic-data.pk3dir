@@ -66,8 +66,8 @@ void Draw_GrapplingHook()
 	InterpolateOrigin_Do();
 
 	s = autocvar_cl_gunalign;
-	if(s != 1 && s != 2 && s != 4)
-		s = 3; // default value
+	if(s != 2 && s != 3 && s != 4)
+		s = 1; // default value
 	--s;
 	switch(self.HookType)
 	{
