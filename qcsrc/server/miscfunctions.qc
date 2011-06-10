@@ -2670,7 +2670,8 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 	{
 		if (visual)
 		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE, algn);
+			vecs_y = 0;
+			vecs_z -= 2;
 		}
 		else
 		{
@@ -2680,15 +2681,8 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 	}
 	else if (autocvar_g_shootfromcenter)
 	{
-		if (visual)
-		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE, algn);
-		}
-		else
-		{
-			vecs_y = 0;
-			vecs_z -= 2;
-		}
+		vecs_y = 0;
+		vecs_z -= 2;
 	}
 	else if ((s = autocvar_g_shootfromfixedorigin) != "")
 	{
