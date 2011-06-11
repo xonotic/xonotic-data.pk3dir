@@ -338,8 +338,8 @@ void FireGrapplingHook (void)
 	makevectors(self.v_angle);
 
 	s = self.cvar_cl_gunalign;
-	if(s != 2 && s != 3 && s != 4)
-		s = 1; // default value
+	if(s != 1 && s != 2 && s != 4)
+		s = 3; // default value
 	--s;
 	vs = hook_shotorigin[s];
 

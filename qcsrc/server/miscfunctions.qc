@@ -2623,15 +2623,16 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 {
 	switch(algn)
 	{
-		case 1: // right
+		default:
+		case 3: // right
 			break;
 
-		case 2: // left
+		case 4: // left
 			vecs_y = -vecs_y;
 			break;
 
 		default:
-		case 3:
+		case 1:
 			if(allowcenter) // 2: allow center handedness
 			{
 				// center
@@ -2644,7 +2645,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			}
 			break;
 
-		case 4:
+		case 2:
 			if(allowcenter) // 2: allow center handedness
 			{
 				// center
