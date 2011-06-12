@@ -684,16 +684,6 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
     }
 }
 
-void vehicles_return()
-{
-    pointparticles(particleeffectnum("teleport"), self.enemy.origin + '0 0 64', '0 0 0', 1);
-
-    self.enemy.think     = vehicles_spawn;
-    self.enemy.nextthink = time;
-
-    remove(self);
-}
-
 void vehicles_clearrturn()
 {
     entity ret;
@@ -705,25 +695,115 @@ void vehicles_clearrturn()
         {
             ret.classname   = "";
             ret.think       = SUB_Remove;
-            ret.nextthink   = time + 0.1;
+            ret.nextthink   = time + 0.1;            
+            
+            if(ret.waypointsprite_attached)
+                WaypointSprite_Kill(ret.waypointsprite_attached);
+            
             return;
         }
         ret = ret.chain;
     }
 }
 
+void vehicles_return()
+{
+    pointparticles(particleeffectnum("teleport"), self.enemy.origin + '0 0 64', '0 0 0', 1);
+
+    self.enemy.think     = vehicles_spawn;
+    self.enemy.nextthink = time;
+
+    if(self.waypointsprite_attached)
+        WaypointSprite_Kill(self.waypointsprite_attached);
+            
+    remove(self);
+}
+
+void vehicles_showwp_goaway()
+{
+    if(self.waypointsprite_attached)
+        WaypointSprite_Kill(self.waypointsprite_attached);
+            
+    remove(self);
+    
+}
+
+void vehicles_showwp()
+{
+    entity oldself;
+    
+    if(self.cnt)
+    {        
+        self.think      = vehicles_return;
+        self.nextthink  = self.cnt;
+    }    
+    else
+    {
+        self.think      = vehicles_return;
+        self.nextthink  = time +1;
+        
+        oldself = self;
+        self = spawn();
+        setmodel(self, "null");
+        self.team = oldself.enemy.team;
+        self.enemy = oldself.enemy;
+        setorigin(self, oldself.enemy.pos1);
+        
+        self.nextthink = time + 5;
+        self.think = vehicles_showwp_goaway;
+    }
+    
+    WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
+    if(self.waypointsprite_attached)
+    {
+        
+        if(teams_matter && self.team)
+            WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, TeamColor(self.team));
+        else
+            WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, '1 1 1');
+        
+        WaypointSprite_UpdateRule(self.waypointsprite_attached, self.enemy.team, SPRITERULE_DEFAULT);        
+        if(oldself == world)
+        {
+            WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, self.nextthink);        
+            dprint("Oldies is goldies\n");
+        }
+            
+        WaypointSprite_Ping(self.waypointsprite_attached);
+    }    
+    
+    if(oldself != world)
+        self = oldself;
+}
+
 void vehicles_setreturn()
 {
     entity ret;
-
+    
     vehicles_clearrturn();
 
     ret = spawn();
     ret.classname   = "vehicle_return";
-    ret.enemy       = self;
-    ret.think       = vehicles_return;
-    ret.nextthink   = time + self.vehicle_respawntime;
-} 
+    ret.enemy       = self;    
+    ret.team        = self.team;
+    ret.think       = vehicles_showwp;        
+    
+    if(self.deadflag != DEAD_NO)
+    {
+        ret.cnt         = time + self.vehicle_respawntime;
+        ret.nextthink   = min(time + self.vehicle_respawntime, time + self.vehicle_respawntime - 5);        
+    }        
+    else
+    {
+        ret.nextthink   = min(time + self.vehicle_respawntime, time + self.vehicle_respawntime - 1);        
+    }
+        
+    
+    
+    setmodel(ret, "null");
+    setorigin(ret, self.pos1 + '0 0 96');
+    	
+}
 
 void vehicles_configcheck(string  configname, float check_cvar)
 {
