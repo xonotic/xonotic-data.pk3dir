@@ -1084,7 +1084,11 @@ void PutClientInServer (void)
 		oldself = self;
 		self = spot;
 			activator = oldself;
+				string s;
+				s = self.target;
+				self.target = string_null;
 				SUB_UseTargets();
+				self.target = s;
 			activator = world;
 		self = oldself;
 
