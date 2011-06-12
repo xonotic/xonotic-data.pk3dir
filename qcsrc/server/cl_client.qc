@@ -2585,6 +2585,8 @@ void PlayerUseKey()
 	// a use key was pressed; call handlers
 	if(ctf_usekey())
 		return;
+
+	MUTATOR_CALLHOOK(PlayerUseKey);
 }
 
 .float touchexplode_time;

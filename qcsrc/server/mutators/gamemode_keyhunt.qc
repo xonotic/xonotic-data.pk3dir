@@ -653,23 +653,6 @@ void kh_Key_Think()  // runs all the time
 		makevectors('0 1 0' * (self.cnt + mod(time, 360) * KH_KEY_XYSPEED));
 		setorigin(self, v_forward * KH_KEY_XYDIST + '0 0 1' * self.origin_z);
 #endif
-
-		if(self.owner.BUTTON_USE)
-		if(time >= self.owner.kh_droptime + autocvar_g_balance_keyhunt_delay_drop)
-		{
-			self.owner.kh_droptime = time;
-			self.kh_droptime = time;  // prevent collecting this one for some time
-			self.enemy = self.owner;
-			self.pusher = world;
-			kh_Scores_Event(self.owner, self, "dropkey", 0, 0);
-			bprint(self.owner.netname, "^7 dropped the ", self.netname, "\n");
-			sound(self.owner, CHAN_AUTO, kh_sound_drop, VOL_BASE, ATTN_NORM);
-			makevectors(self.owner.v_angle);
-			self.velocity = W_CalculateProjectileVelocity(self.owner.velocity, autocvar_g_balance_keyhunt_throwvelocity * v_forward, FALSE);
-			kh_Key_AssignTo(self, world);
-			self.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
-			self.kh_dropperteam = self.team;
-		}
 	}
 
 	// if in nodrop or time over, end the round
@@ -797,6 +780,28 @@ float kh_Key_AllOwnedByWhichTeam()  // constantly called. check to see if all th
 	if(keys != 0)
 		return -1;
 	return teem;
+}
+
+void kh_Key_DropOne(entity key)
+{
+	// prevent collecting this one for some time
+	entity player;
+	player = key.owner;
+
+	key.kh_droptime = time;
+	key.enemy = player;
+
+	kh_Scores_Event(player, key, "dropkey", 0, 0);
+	PlayerScore_Add(player, SP_KH_LOSSES, 1);
+	bprint(player.netname, "^7 dropped the ", key.netname, "\n");
+	kh_Key_AssignTo(key, world);
+	makevectors(player.v_angle);
+	key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_throwvelocity * v_forward, FALSE);
+	key.pusher = world;
+	key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
+	key.kh_dropperteam = key.team;
+
+	sound(player, CHAN_AUTO, kh_sound_drop, VOL_BASE, ATTN_NORM);
 }
 
 void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
@@ -1049,6 +1054,21 @@ MUTATOR_HOOKFUNCTION(kh_SpectateCopy)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
+{
+	if(MUTATOR_RETURNVALUE == 0)
+	{
+		entity k;
+		k = self.kh_next;
+		if(k)
+		{
+			kh_Key_DropOne(self, k);
+			return 1;
+		}
+	}
+	return 0;
+}
+
 MUTATOR_DEFINITION(gamemode_keyhunt)
 {
 	MUTATOR_HOOK(MakePlayerObserver, kh_Key_DropAll, CBC_ORDER_ANY);
@@ -1058,6 +1078,7 @@ MUTATOR_DEFINITION(gamemode_keyhunt)
 	MUTATOR_HOOK(MatchEnd, kh_finalize, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, kh_GetTeamCount, CBC_ORDER_EXCLUSIVE);
 	MUTATOR_HOOK(SpectateCopy, kh_SpectateCopy, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerUseKey, kh_PlayerUseKey, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
