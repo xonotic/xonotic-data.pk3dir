@@ -105,6 +105,10 @@ void ImpulseCommands (void)
 		else
 			self.impulse = imp; // retry in next frame
 	}
+	else if(imp == 21)
+	{
+		PlayerUseKey ();
+	}
 	else if(imp >= 200 && imp <= 229)
 	{
 		if(self.deadflag == DEAD_NO)

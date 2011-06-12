@@ -2576,6 +2576,17 @@ void SpectatorThink()
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
+float ctf_usekey();
+void PlayerUseKey()
+{
+	if(self.classname != "player")
+		return;
+
+	// a use key was pressed; call handlers
+	if(ctf_usekey())
+		return;
+}
+
 .float touchexplode_time;
 
 /*
@@ -2585,6 +2596,7 @@ PlayerPreThink
 Called every frame for each client before the physics are run
 =============
 */
+.float usekeypressed;
 void() ctf_setstatus;
 void() nexball_setstatus;
 .float items_added;
@@ -2661,6 +2673,10 @@ void PlayerPreThink (void)
 #endif
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
+
+	if(self.BUTTON_USE && !self.usekeypressed)
+		PlayerUseKey();
+	self.usekeypressed = self.BUTTON_USE;
 
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
