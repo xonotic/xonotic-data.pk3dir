@@ -2722,6 +2722,9 @@ void PlayerPreThink (void)
 			player_powerups();
 		}
 
+		if (g_minstagib)
+			minstagib_ammocheck();
+
 		if (self.deadflag != DEAD_NO)
 		{
 			float button_pressed, force_respawn;
@@ -2769,6 +2772,8 @@ void PlayerPreThink (void)
 			}
 			return;
 		}
+		// FIXME from now on self.deadflag is always 0 (and self.health is never < 1)
+		// so (self.deadflag == DEAD_NO) is always true in the code below
 
 		if(g_touchexplode)
 		if(time > self.touchexplode_time)
@@ -2876,9 +2881,6 @@ void PlayerPreThink (void)
 		// rot nex charge to the charge limit
 		if(autocvar_g_balance_nex_charge_rot_rate && self.nex_charge > autocvar_g_balance_nex_charge_limit && self.nex_charge_rottime < time)
 			self.nex_charge = bound(autocvar_g_balance_nex_charge_limit, self.nex_charge - autocvar_g_balance_nex_charge_rot_rate * frametime / W_TICSPERFRAME, 1);
-
-		if (g_minstagib)
-			minstagib_ammocheck();
 
 		if(frametime)
 			player_anim();
