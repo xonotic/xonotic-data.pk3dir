@@ -623,13 +623,7 @@ void PutObserverInServer (void)
 	}
 
 	if(self.vehicle)
-	{
-	    entity oldself;
-	    oldself = self;
-	    self = self.vehicle;
 	    vehicles_exit(VHEF_RELESE);
-	    self = oldself;
-	}
 
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
@@ -1275,16 +1269,12 @@ void ClientKill_Now()
 {
 	if(self.vehicle)
 	{
-	    entity oldself;
-	    oldself = self;
-	    self = self.vehicle;
 	    vehicles_exit(VHEF_RELESE);
-	    if(!oldself.killindicator_teamchange)
+	    if(!self.killindicator_teamchange)
 	    {
             self.vehicle_health = -1;
             Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');	        
 	    }
-	    self = oldself;
 	}
 	
 	remove(self.killindicator);
@@ -1814,13 +1804,7 @@ void ReadyCount();
 void ClientDisconnect (void)
 {
 	if(self.vehicle)
-	{
-	    entity oldself;
-	    oldself = self;
-	    self = self.vehicle;
 	    vehicles_exit(VHEF_RELESE);
-	    self = oldself;
-	}
 
 	if not(self.flags & FL_CLIENT)
 	{
@@ -2650,12 +2634,7 @@ void PlayerUseKey()
 
 	if(self.vehicle)
 	{
-	    dprint("Use cought for vehicle\n");
-	    entity oldself;
-	    oldself = self;
-	    self = self.vehicle;
         vehicles_exit(VHEF_NORMAL);
-        self = oldself;
         return;
 	}
 	

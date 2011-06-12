@@ -573,6 +573,13 @@ vector vehicles_findgoodexit(vector prefer_spot)
 **/
 void vehicles_exit(float eject)
 {	
+    entity oldself;
+    if(self.flags & FL_CLIENT)
+    {
+        oldself = self;
+        self = self.vehicle;
+    }
+    
 	self.flags |= FL_NOTARGET;
 
     if (self.owner)
@@ -623,6 +630,9 @@ void vehicles_exit(float eject)
     
     self.vehicle_exit(eject);
     self.owner = world;
+    
+    if(oldself)
+        self = oldself;
 }
 
 

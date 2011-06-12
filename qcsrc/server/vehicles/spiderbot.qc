@@ -183,15 +183,6 @@ float spiderbot_frame()
     player.BUTTON_CROUCH    = 0;
     player.switchweapon     = 0;
 
-    /*
-    if(player.BUTTON_USE)
-    {
-        vehicles_exit(VHEF_NORMAL);
-        self = player;
-        return 0;
-    }
-    */
-
     crosshair_trace(player);
     //UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);
 
@@ -418,7 +409,6 @@ void spiderbot_think()
 
 void spiderbot_enter()
 {
-
     self.movetype   = MOVETYPE_WALK;
 
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_spiderbot_health);
@@ -429,8 +419,6 @@ void spiderbot_enter()
         setattachment(self.owner.flagcarried, self.tur_head, ""); 
         setorigin(self.owner.flagcarried, '-20 0 120'); 
     }
-       
-
 }
 
 void spiderbot_exit(float eject)

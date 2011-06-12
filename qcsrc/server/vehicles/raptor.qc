@@ -344,16 +344,7 @@ float raptor_frame()
         self.wait = ftmp;
     }
     */
-    
-    /*
-    if(player.BUTTON_USE && raptor.deadflag == DEAD_NO)
-    {
-        self = raptor;
-        vehicles_exit(VHEF_NORMAL);
-        self = player;
-        return 0;
-    }    
-    */
+
     
     if(raptor.deadflag != DEAD_NO)
     {
