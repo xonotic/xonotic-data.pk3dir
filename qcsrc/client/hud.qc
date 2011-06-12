@@ -1783,6 +1783,18 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
 				print (sprintf(_("^1%s^1 dies when %s^1's wakizashi dies.\n"), s2, s1));
+		} else if(type == DEATH_RAPTOR_CANNON) {
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print (sprintf(_("^1%s^1 nailed to hell %s\n"), s2, s1));
+		} else if(type == DEATH_RAPTOR_BOMB) {
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print (sprintf(_("^1%s^1 cluster crushed by %s\n"), s2, s1));
+		} else if(type == DEATH_RAPTOR_DEATH) {
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print (sprintf(_("^1%s^1 dies when %s^1's raptor dies.\n"), s2, s1));
 		} else if(type == DEATH_TURRET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
