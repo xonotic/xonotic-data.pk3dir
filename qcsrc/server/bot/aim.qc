@@ -104,7 +104,7 @@ float bot_shouldattack(entity e)
 	{
 		if (e == self)
 			return FALSE;
-		if (teams_matter)
+		if (teamplay)
 		if (e.team != 0)
 			return FALSE;
 	}
@@ -113,7 +113,7 @@ float bot_shouldattack(entity e)
 		if(e.freezetag_frozen)
 			return FALSE;
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		if(e.team==0)
 			return FALSE;

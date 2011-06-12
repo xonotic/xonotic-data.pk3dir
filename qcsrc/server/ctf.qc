@@ -405,11 +405,17 @@ void FlagThink()
 		DropFlag(self, world, world);
 		return;
 	}
-
-	if(autocvar_g_ctf_allow_drop)
-	if(e.BUTTON_USE)
-		DropFlag(self, e, world);
 };
+
+float ctf_usekey()
+{
+	if(self.flagcarried)
+	{
+		DropFlag(self.flagcarried, self, world);
+		return TRUE;
+	}
+	return FALSE;
+}
 
 void flag_cap_ring_spawn(vector org)
 {

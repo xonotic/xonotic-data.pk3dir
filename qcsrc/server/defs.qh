@@ -348,7 +348,6 @@ void AnnounceTo(entity e, string snd);
 .entity jumppadsused[NUM_JUMPPADSUSED];
 
 string gamemode_name;
-float teams_matter;
 
 float startitem_failed;
 
@@ -545,6 +544,7 @@ void target_voicescript_clear(entity pl);
 .string target2;
 .string target3;
 .string target4;
+.float target_random;
 .float trigger_reverse;
 
 // Nexball 
@@ -664,3 +664,5 @@ float serverflags;
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
+
+void PlayerUseKey();

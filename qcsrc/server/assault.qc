@@ -30,9 +30,6 @@ void assault_objective_reset() {
 }
 
 void assault_objective_use() {
-	if(other.classname == "info_player_deathmatch") // a spawn, a spawn
-		return;
-
 	// activate objective
 	self.health = 100;
 	//print("^2Activated objective ", self.targetname, "=", etos(self), "\n");

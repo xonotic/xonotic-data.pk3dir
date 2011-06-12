@@ -765,7 +765,7 @@ void centerprint(entity e, string s)
 string playername(entity p)
 {
     string t;
-    if (teams_matter && !intermission_running && p.classname == "player")
+    if (teamplay && !intermission_running && p.classname == "player")
     {
         t = Team_ColorCode(p.team);
         return strcat(t, strdecolorize(p.netname));
@@ -2646,15 +2646,15 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 {
 	switch(algn)
 	{
-		case 1: // right
+		default:
+		case 3: // right
 			break;
 
-		case 2: // left
+		case 4: // left
 			vecs_y = -vecs_y;
 			break;
 
-		default:
-		case 3:
+		case 1:
 			if(allowcenter) // 2: allow center handedness
 			{
 				// center
@@ -2667,7 +2667,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			}
 			break;
 
-		case 4:
+		case 2:
 			if(allowcenter) // 2: allow center handedness
 			{
 				// center
@@ -2693,7 +2693,8 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 	{
 		if (visual)
 		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE, algn);
+			vecs_y = 0;
+			vecs_z -= 2;
 		}
 		else
 		{
@@ -2703,15 +2704,8 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 	}
 	else if (autocvar_g_shootfromcenter)
 	{
-		if (visual)
-		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE, algn);
-		}
-		else
-		{
-			vecs_y = 0;
-			vecs_z -= 2;
-		}
+		vecs_y = 0;
+		vecs_z -= 2;
 	}
 	else if ((s = autocvar_g_shootfromfixedorigin) != "")
 	{

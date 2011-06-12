@@ -88,6 +88,9 @@ void SUB_UseTargets()
 	stemp = self;
 	otemp = other;
 
+	if(stemp.target_random)
+		RandomSelection_Init();
+
 	for(i = 0; i < 4; ++i)
 	{
 		switch(i)
@@ -103,13 +106,27 @@ void SUB_UseTargets()
 			for(t = world; (t = find(t, targetname, s)); )
 			if(t.use)
 			{
-				//print(stemp.classname, " ", stemp.targetname, " -> ", t.classname, " ", t.targetname, "\n");
-				self = t;
-				other = stemp;
-				activator = act;
-				self.use();
+				if(stemp.target_random)
+				{
+					RandomSelection_Add(t, 0, string_null, 1, 0);
+				}
+				else
+				{
+					self = t;
+					other = stemp;
+					activator = act;
+					self.use();
+				}
 			}
 		}
+	}
+
+	if(stemp.target_random && RandomSelection_chosen_ent)
+	{
+		self = RandomSelection_chosen_ent;
+		other = stemp;
+		activator = act;
+		self.use();
 	}
 
 	activator = act;

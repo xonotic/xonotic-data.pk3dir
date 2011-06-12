@@ -53,7 +53,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 			}
 		}
 
-		if(teams_matter)
+		if(teamplay)
 		{
 			discard = FALSE;
 
@@ -148,7 +148,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 {
 	local entity head;
 	local float t, noteam, distance;
-	noteam = ((self.team == 0) || !teams_matter); // fteqcc sucks
+	noteam = ((self.team == 0) || !teamplay); // fteqcc sucks
 
 	if (autocvar_bot_nofire)
 		return;
