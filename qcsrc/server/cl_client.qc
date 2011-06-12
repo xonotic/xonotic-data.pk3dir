@@ -622,6 +622,15 @@ void PutObserverInServer (void)
 		self.alivetime = 0;
 	}
 
+	if(self.vehicle)
+	{
+	    entity oldself;
+	    oldself = self;
+	    self = self.vehicle;
+	    vehicles_exit(VHEF_RELESE);
+	    self = oldself;
+	}
+
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
 
@@ -1260,6 +1269,17 @@ void ClientKill_Now_TeamChange()
 
 void ClientKill_Now()
 {
+	if(self.vehicle)
+	{
+	    entity oldself;
+	    oldself = self;
+	    self = self.vehicle;
+	    vehicles_exit(VHEF_RELESE);
+	    self.vehicle_health = -1;
+	    Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');
+	    self = oldself;
+	}
+	
 	remove(self.killindicator);
 	self.killindicator = world;
 
