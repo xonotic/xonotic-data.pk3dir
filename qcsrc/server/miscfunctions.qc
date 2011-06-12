@@ -728,6 +728,7 @@ float NumberToTeamNumber(float number)
 #define CENTERPRIO_ADMIN 99
 .float centerprint_priority;
 .float centerprint_expires;
+void Send_CSQC_Centerprint_Generic(entity e, float id, string s1, float duration, float countdown_num);
 void centerprint_atprio(entity e, float prio, string s)
 {
     if (intermission_running)
@@ -742,7 +743,8 @@ void centerprint_atprio(entity e, float prio, string s)
             e.centerprint_expires = time + (e.cvar_hud_panel_centerprint_time * TIMEOUT_SLOWMO_VALUE);
         else
             e.centerprint_expires = time + e.cvar_hud_panel_centerprint_time;
-        centerprint_builtin(e, s);
+        // centerprint_builtin(e, s);
+        Send_CSQC_Centerprint_Generic(e, 0, s, 0, 0);
     }
 }
 void centerprint_expire(entity e, float prio)
@@ -750,7 +752,8 @@ void centerprint_expire(entity e, float prio)
     if (prio == e.centerprint_priority)
     {
         e.centerprint_priority = 0;
-        centerprint_builtin(e, "");
+        // centerprint_builtin(e, "");
+        Send_CSQC_Centerprint_Generic(e, 0, "", 0, 0);
     }
 }
 void centerprint(entity e, string s)
@@ -1689,6 +1692,26 @@ void precache()
 #define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 
+
+void Send_CSQC_Centerprint_Generic(entity e, float id, string s1, float duration, float countdown_num)
+{
+	if (clienttype(e) == CLIENTTYPE_REAL)
+	{
+		msg_entity = e;
+		WRITESPECTATABLE_MSG_ONE({
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
+			WriteByte(MSG_ONE, CSQC_CENTERPRINT_GENERIC);
+			WriteByte(MSG_ONE, id);
+			WriteString(MSG_ONE, s1);
+			if (id != 0)
+			{
+				WriteByte(MSG_ONE, duration);
+				WriteByte(MSG_ONE, countdown_num);
+			}
+		});
+	}
+}
 // WARNING: this kills the trace globals
 #define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init()

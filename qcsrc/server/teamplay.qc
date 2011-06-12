@@ -455,8 +455,6 @@ void PrintWelcomeMessage(entity pl)
 {
 	string s, modifications, motd;
 
-	if(self.cvar_hud_panel_centerprint_time == 0) return;
-
 	if(autocvar_g_campaign)
 	{
 		if(self.classname == "player" && !self.BUTTON_INFO)
@@ -466,11 +464,6 @@ void PrintWelcomeMessage(entity pl)
 	{
 		if((time - self.jointime) > autocvar_welcome_message_time && !self.BUTTON_INFO)
 			return;
-	}
-
-	if( !(timeoutStatus >= 1) ) { //really print the WelcomeMessage to the player every frame when timeout-seconds are shown or the game is restarted, to make sure that the shown number is accurate
-		if(self.welcomemessage_time > time) return;
-		self.welcomemessage_time = time + max(0.5, self.cvar_hud_panel_centerprint_time * 0.6);
 	}
 
 	if(autocvar_g_campaign)
@@ -495,7 +488,7 @@ void PrintWelcomeMessage(entity pl)
 				return;
 			goto normal;
 		}
-		return centerprint_atprio(self, CENTERPRIO_SPAM, specString);
+		return centerprint_atprio(self, CENTERPRIO_SPAM, specString); // TODO: convert to Send_CSQC_Centerprint_Generic(self, CPID_TIMEOUT_COUNTDOWN, ...
 	}
 
 :normal
@@ -535,7 +528,7 @@ void PrintWelcomeMessage(entity pl)
 	local string versionmessage;
 	versionmessage = GetClientVersionMessage();
 
-	s = strcat(CPID_MOTD, "This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
+	s = strcat("This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
 	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
 
 	if(modifications != "")
@@ -567,7 +560,7 @@ void PrintWelcomeMessage(entity pl)
 	}
 	s = strcat(s, "\n");
 
-	centerprint(pl, s);
+	Send_CSQC_Centerprint_Generic(pl, CPID_MOTD, s, autocvar_welcome_message_time, 0);
 }
 
 

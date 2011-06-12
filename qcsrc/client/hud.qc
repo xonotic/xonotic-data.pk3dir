@@ -4339,45 +4339,41 @@ float cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
 float centerprint_msgID[CENTERPRINT_MAX_MSGS];
 float centerprint_time[CENTERPRINT_MAX_MSGS];
+float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
+float centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
 
-string msg_without_CPID(string s)
-{
-	return substring(s, strstrofs(s, " ", 0) + 1, strlen(s));
-}
-float get_CPID(string s)
-{
-	if(substring(s, 0, 1) != "\r")
-		return 0;
-	return stof(substring(s, 1, strstrofs(s, " ", 0)));
-}
-void centerprint(string strMessage)
+void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num)
 {
 	float i, j;
 
-	if(autocvar_hud_panel_centerprint_time <= 0)
+	if(strMessage == "" && new_id == 0)
 		return;
 
-	if(strMessage == "")
-		return;
-
-	float new_id = get_CPID(strMessage);
+	if(duration == 0)
+		duration = autocvar_hud_panel_centerprint_time;
 
 	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
-		if (new_id && new_id == centerprint_msgID[j] && centerprint_time[j] + autocvar_hud_panel_centerprint_time >= time)
+		if (new_id && new_id == centerprint_msgID[j]) // && centerprint_expire_time[j] >= time
 		{
 			if(centerprint_messages[j])
 				strunzone(centerprint_messages[j]);
-			centerprint_messages[j] = strzone(msg_without_CPID(strMessage));
-			centerprint_time[j] = time;
+			centerprint_messages[j] = strzone(strMessage);
+
+			centerprint_time[j] = duration;
+			centerprint_expire_time[j] = time + duration;
+			centerprint_countdown_num[j] = countdown_num;
 			return;
 		}
 		if(centerprint_messages[j] == strMessage)
 		{
-			centerprint_time[j] = time;
 			centerprint_msgID[j] = new_id;
+
+			centerprint_time[j] = duration;
+			centerprint_expire_time[j] = time + duration;
+			centerprint_countdown_num[j] = countdown_num;
 			return;
 		}
 	}
@@ -4387,12 +4383,16 @@ void centerprint(string strMessage)
 		cpm_index = CENTERPRINT_MAX_MSGS - 1;
 	if(centerprint_messages[cpm_index])
 		strunzone(centerprint_messages[cpm_index]);
-	if (new_id)
-		centerprint_messages[cpm_index] = strzone(msg_without_CPID(strMessage));
-	else
-		centerprint_messages[cpm_index] = strzone(strMessage);
+	centerprint_messages[cpm_index] = strzone(strMessage);
 	centerprint_msgID[cpm_index] = new_id;
-	centerprint_time[cpm_index] = time;
+	centerprint_time[cpm_index] = duration;
+	centerprint_expire_time[cpm_index] = time + duration;
+	centerprint_countdown_num[cpm_index] = countdown_num;
+}
+
+void centerprint(string strMessage)
+{
+	centerprint_generic(0, strMessage, autocvar_hud_panel_centerprint_time, 0);
 }
 
 // CenterPrint (#16)
@@ -4457,21 +4457,34 @@ void HUD_CenterPrint (void)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
-		if (centerprint_time[j] + autocvar_hud_panel_centerprint_time < time)
-			continue;
-		else if (centerprint_time[j] + autocvar_hud_panel_centerprint_time - fade > time)
+		if (centerprint_expire_time[j] < time)
+		{
+			if (centerprint_countdown_num[j])
+			{
+				centerprint_countdown_num[j] = centerprint_countdown_num[j] - 1;
+				if (centerprint_countdown_num[j] == 0)
+					continue;
+				centerprint_expire_time[j] = centerprint_expire_time[j] + centerprint_time[j];
+			}
+			else
+				continue;
+		}
+		if (centerprint_expire_time[j] - fade > time)
 		{
 			a = 1 * alpha_factor;
 			sz = 1;
 		}
-		else if (centerprint_time[j] + autocvar_hud_panel_centerprint_time > time)
+		else if (centerprint_expire_time[j] > time)
 		{
-			a = (centerprint_time[j] + autocvar_hud_panel_centerprint_time - time) / fade * alpha_factor;
+			a = (centerprint_expire_time[j] - time) / fade * alpha_factor;
 			sz = 0.8 + a * (1 - 0.8);
 		}
 
 		drawfontscale = sz * '1 1 0';
-		n = tokenizebyseparator(centerprint_messages[j], "\n");
+		if (centerprint_countdown_num[j])
+			n = tokenizebyseparator(sprintf(centerprint_messages[j], centerprint_countdown_num[j]), "\n");
+		else
+			n = tokenizebyseparator(centerprint_messages[j], "\n");
 		if (autocvar_hud_panel_centerprint_flip)
 		{
 			// check if the message can be entirely shown
@@ -4514,12 +4527,12 @@ void HUD_CenterPrint (void)
 		if (autocvar_hud_panel_centerprint_flip)
 		{
 			pos_y = next_msg_pos_y;
-			if (a < 1)
+			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y += 1.5 * fontsize_y * (1 - a*a);
 		}
 		else
 		{
-			if (a < 1)
+			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y -= 1.5 * fontsize_y * (1 - a*a);
 		}
 		drawfontscale = '1 1 0';

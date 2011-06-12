@@ -614,6 +614,9 @@ void PutObserverInServer (void)
 	DropAllRunes(self);
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
+	if (g_minstagib)
+		minstagib_stop_countdown();
+
 	Portal_ClearAll(self);
 
 	if(self.alivetime)
@@ -1299,17 +1302,18 @@ void KillIndicator_Think()
 		{
 			if(self.cnt <= 10)
 				AnnounceTo(self.owner, strcat(ftos(self.cnt), ""));
+			// TODO: Send_CSQC_Centerprint_Generic only once
 			if(self.owner.killindicator_teamchange)
 			{
 				if(self.owner.killindicator_teamchange == -1)
-					centerprint(self.owner, strcat(CPID_TEAMCHANGE, "Changing team in ", ftos(self.cnt), " seconds"));
+					Send_CSQC_Centerprint_Generic(self.owner, CPID_TEAMCHANGE, "Changing team in %d seconds", 1, self.cnt);
 				else if(self.owner.killindicator_teamchange == -2)
-					centerprint(self.owner, strcat(CPID_TEAMCHANGE, "Spectating in ", ftos(self.cnt), " seconds"));
+					Send_CSQC_Centerprint_Generic(self.owner, CPID_TEAMCHANGE, "Spectating in %d seconds", 1, self.cnt);
 				else
-					centerprint(self.owner, strcat(CPID_TEAMCHANGE, "Changing to ", ColoredTeamName(self.owner.killindicator_teamchange), " in ", ftos(self.cnt), " seconds"));
+					Send_CSQC_Centerprint_Generic(self.owner, CPID_TEAMCHANGE, strcat("Changing to ", ColoredTeamName(self.owner.killindicator_teamchange), " in %d seconds"), 1, self.cnt);
 			}
 			else
-				centerprint(self.owner, strcat(CPID_KILL, "^1Suicide in ", ftos(self.cnt), " seconds"));
+				Send_CSQC_Centerprint_Generic(self.owner, CPID_KILL, "^1Suicide in %d seconds", 1, self.cnt);
 		}
 		self.nextthink = time + 1;
 		self.cnt -= 1;
@@ -1658,8 +1662,6 @@ void ClientConnect (void)
 
 	bprint("\n");
 
-	self.welcomemessage_time = 0;
-
 	stuffcmd(self, strcat(clientstuff, "\n"));
 	stuffcmd(self, strcat("exec maps/", mapname, ".cfg\n"));
 	stuffcmd(self, "cl_particles_reloadeffects\n");
@@ -1773,6 +1775,9 @@ void ClientConnect (void)
 		set_dom_state(self);
 
 	CheatInitClient();
+
+	// FIXME: .BUTTON_INFO in PrintWelcomeMessage must be checked at every frame, not just here
+	PrintWelcomeMessage(self);
 }
 
 /*
@@ -1986,24 +1991,24 @@ string getTimeoutText(float addOneSecond) {
 		else {
 			retStr = strcat("Timeout begins in ", ftos(remainingLeadTime), " seconds!\n");
 		}
-		return strcat(CPID_TIMEOUT_COUNTDOWN, retStr);
+		return retStr;
 	}
 	else if (timeoutStatus == 2) {
 		if (addOneSecond) {
 			retStr = strcat("Timeout ends in ", ftos(remainingTimeoutTime + 1), " seconds!\n");
 			//don't show messages like "Timeout ends in 0 seconds"...
 			if ((remainingTimeoutTime + 1) > 0)
-				return strcat(CPID_TIMEOUT_COUNTDOWN, retStr);
+				return retStr;
 			else
-				return strcat(CPID_TIMEOUT_COUNTDOWN, "");
+				return "";
 		}
 		else {
 			retStr = strcat("Timeout ends in ", ftos(remainingTimeoutTime), " seconds!\n");
 			//don't show messages like "Timeout ends in 0 seconds"...
 			if ((remainingTimeoutTime) > 0)
-				return strcat(CPID_TIMEOUT_COUNTDOWN, retStr);
+				return retStr;
 			else
-				return strcat(CPID_TIMEOUT_COUNTDOWN, "");
+				return "";
 		}
 	}
 	else return "";
@@ -2443,7 +2448,7 @@ void LeaveSpectatorMode()
 				bprint ("^4", self.netname, "^4 is playing now\n");
 
 			if(!autocvar_g_campaign)
-				centerprint(self, CPID_MOTD); // clear MOTD
+				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, "", 1, 0); // clear MOTD
 
 			return;
 		} else {
@@ -2528,7 +2533,6 @@ void ObserverThink()
 			}
 		}
 	}
-	PrintWelcomeMessage(self);
 }
 
 void SpectatorThink()
@@ -2568,7 +2572,6 @@ void SpectatorThink()
 		}
 	}
 
-	PrintWelcomeMessage(self);
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
@@ -2663,8 +2666,6 @@ void PlayerPreThink (void)
 //			bprint(self.classname, "\n");
 
 		CheckRules_Player();
-
-		PrintWelcomeMessage(self);
 
 		if (intermission_running)
 		{
@@ -2876,11 +2877,11 @@ void PlayerPreThink (void)
 		if(autocvar_g_balance_nex_charge_rot_rate && self.nex_charge > autocvar_g_balance_nex_charge_limit && self.nex_charge_rottime < time)
 			self.nex_charge = bound(autocvar_g_balance_nex_charge_limit, self.nex_charge - autocvar_g_balance_nex_charge_rot_rate * frametime / W_TICSPERFRAME, 1);
 
-		if(frametime)
-			player_anim();
-
 		if (g_minstagib)
 			minstagib_ammocheck();
+
+		if(frametime)
+			player_anim();
 
 		if(g_ctf)
 			ctf_setstatus();
@@ -3020,13 +3021,14 @@ void PlayerPostThink (void)
 		{
 			if(timeleft != self.idlekick_lasttimeleft)
 			{
-				centerprint_atprio(self, CENTERPRIO_IDLEKICK, strcat(CPID_DISCONNECT_IDLING, "^3Stop idling!\n^3Disconnecting in ", ftos(timeleft), "..."));
+				// TODO: send this msg only once
+				Send_CSQC_Centerprint_Generic(self, CPID_DISCONNECT_IDLING, "^3Stop idling!\n^3Disconnecting in %d seconds...", 1, timeleft);
 				AnnounceTo(self, strcat(ftos(timeleft), ""));
 			}
 		}
 		else
 		{
-			centerprint_expire(self, CENTERPRIO_IDLEKICK);
+			Send_CSQC_Centerprint_Generic(self, CPID_DISCONNECT_IDLING, "", 1, timeleft);
 		}
 		self.idlekick_lasttimeleft = timeleft;
 	}

@@ -1318,6 +1318,16 @@ void Net_Notify() {
 	{
 		HUD_Centerprint(ReadString(), ReadString(), ReadShort(), ReadByte());
 	}
+	else if(type == CSQC_CENTERPRINT_GENERIC)
+	{
+								//	id			string		time	countdown_num
+		float id;
+		id = ReadByte();
+		if (id == 0)
+			centerprint_generic(id, ReadString(), 0, 0);
+		else
+			centerprint_generic(id, ReadString(), ReadByte(), ReadByte());
+	}
 }
 
 void Net_WeaponComplain() {

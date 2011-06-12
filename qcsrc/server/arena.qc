@@ -229,10 +229,13 @@ void Arena_Warmup()
 		if (g_ca)
 			allowed_to_spawn = 1;
 		if(champion && g_arena)
+		{
 			msg = strcat("The Champion is ", champion_name, "^7\n");
+			FOR_EACH_PLAYER(e)
+				centerprint(e, msg); // TODO: send this msg only once
+		}
 
 		if(f != roundStartTime_prev) {
-			msg = strcat(CPID_ROUND_STARTING, msg, "Round will start in ", ftos(f),"\n");
 			roundStartTime_prev = f;
 			if(f == 5)
 				Announce("prepareforbattle");
@@ -243,8 +246,8 @@ void Arena_Warmup()
 			else if(f == 1)
 				Announce("1");
 
-            FOR_EACH_PLAYER(e)
-                centerprint(e, msg);
+			FOR_EACH_PLAYER(e)
+				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d\n", 1, f); // TODO: send this msg only once
 		}
 
 		if (g_arena) {
@@ -261,7 +264,7 @@ void Arena_Warmup()
 	{
 		roundStartTime_prev = f;
 		Announce("begin");
-		centerprint(self, strcat(CPID_ROUND_STARTING, "^1Begin!\n"));
+		Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!\n", 1, 0);
 
 		if(g_ca) {
 			ca_players = 0;
