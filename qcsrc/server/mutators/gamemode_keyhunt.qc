@@ -1062,7 +1062,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
 		k = self.kh_next;
 		if(k)
 		{
-			kh_Key_DropOne(self, k);
+			kh_Key_DropOne(k);
 			return 1;
 		}
 	}
