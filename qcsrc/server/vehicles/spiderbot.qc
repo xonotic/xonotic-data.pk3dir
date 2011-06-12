@@ -183,12 +183,14 @@ float spiderbot_frame()
     player.BUTTON_CROUCH    = 0;
     player.switchweapon     = 0;
 
+    /*
     if(player.BUTTON_USE)
     {
         vehicles_exit(VHEF_NORMAL);
         self = player;
         return 0;
     }
+    */
 
     crosshair_trace(player);
     //UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);

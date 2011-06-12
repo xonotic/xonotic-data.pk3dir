@@ -586,7 +586,7 @@ void vehicles_exit(float eject)
         self.owner.event_damage   = PlayerDamage;
         self.owner.hud            = HUD_NORMAL;
         self.owner.switchweapon   = self.switchweapon;
-        self.owner.BUTTON_USE     = 0;
+        //self.owner.BUTTON_USE     = 0;
     }
 
     if(self.deadflag == DEAD_NO)

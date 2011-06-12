@@ -2648,6 +2648,17 @@ void PlayerUseKey()
 	if(self.classname != "player")
 		return;
 
+	if(self.vehicle)
+	{
+	    dprint("Use cought for vehicle\n");
+	    entity oldself;
+	    oldself = self;
+	    self = self.vehicle;
+        vehicles_exit(VHEF_NORMAL);
+        self = oldself;
+        return;
+	}
+	
 	// a use key was pressed; call handlers
 	if(ctf_usekey())
 		return;

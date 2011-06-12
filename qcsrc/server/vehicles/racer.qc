@@ -263,13 +263,15 @@ float racer_frame()
 
     self = racer;
 
+    /*
     if(player.BUTTON_USE)
     {
         vehicles_exit(VHEF_NORMAL);
         self = player;
         return 0;
     }
-
+    */
+    
     if(racer.deadflag != DEAD_NO)
     {
         self = player;
