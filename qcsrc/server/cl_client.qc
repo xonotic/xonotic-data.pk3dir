@@ -1275,8 +1275,11 @@ void ClientKill_Now()
 	    oldself = self;
 	    self = self.vehicle;
 	    vehicles_exit(VHEF_RELESE);
-	    self.vehicle_health = -1;
-	    Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');
+	    if(!oldself.killindicator_teamchange)
+	    {
+            self.vehicle_health = -1;
+            Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');	        
+	    }
 	    self = oldself;
 	}
 	
