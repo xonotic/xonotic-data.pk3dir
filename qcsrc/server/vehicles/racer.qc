@@ -256,13 +256,14 @@ float racer_frame()
     vector df;
     float ftmp;
 
-    player          = self;
-    racer           = self.vehicle;
-
+    player  = self;
+    racer   = self.vehicle;
+    self    = racer;
+    
     player.BUTTON_ZOOM = player.BUTTON_CROUCH = 0;
-
-    self = racer;
-
+    
+    vehicles_painframe();
+    
     if(racer.deadflag != DEAD_NO)
     {
         self = player;
@@ -346,11 +347,10 @@ float racer_frame()
         {            
             traceline(self.origin, self.origin - '0 0 256', MOVE_NORMAL, self);
             if(trace_fraction != 1.0)
-                pointparticles(particleeffectnum("smoke_small"), trace_endpos, '0 0 0', 1);                
+                pointparticles(particleeffectnum("smoke_small"), trace_endpos, '0 0 0', 1);
             
             self.invincible_finished = time + 0.1 + (random() * 0.1);
         }
-        
 
         if(self.strength_finished < time)
         {        
@@ -644,6 +644,8 @@ void racer_dinit()
 
 void spawnfunc_vehicle_racer()
 {
+    self.vehicle_flags |= VHF_DMGSHAKE;
+    self.vehicle_flags |= VHF_DMGROLL;
 
     precache_sound ("weapons/laserimpact.wav");
     precache_sound ("weapons/lasergun_fire.wav");

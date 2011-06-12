@@ -663,6 +663,30 @@ void shieldhit_think()
     }
 }
 
+void vehicles_painframe()
+{
+//.float	pain_finished;			//Added by Supajoe
+    
+    if(self.owner.vehicle_health <= 50)
+    if(self.pain_frame < time)
+    {  
+        float _ftmp;  
+        _ftmp = self.owner.vehicle_health / 50;
+        self.pain_frame = time + 0.1 + (random() * 0.5 * _ftmp);
+        pointparticles(particleeffectnum("smoke_small"), (self.origin + (randomvec() * 80)), '0 0 0', 1);
+        
+        if(self.vehicle_flags & VHF_DMGSHAKE)
+            self.velocity += randomvec() * 30;
+        
+        if(self.vehicle_flags & VHF_DMGROLL)
+            if(self.vehicle_flags & VHF_DMGHEADROLL)
+                self.tur_head.angles += randomvec();
+            else
+                self.angles += randomvec();
+        
+    }    
+}
+
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
     self.dmg_time = time;
@@ -933,7 +957,7 @@ float vehicle_initialize(string  net_name,
         self.team = 0;
 
     self.vehicle_flags |= VHF_ISVEHICLE;
-
+    
     setmodel(self, bodymodel);
 
     self.vehicle_viewport   = spawn();

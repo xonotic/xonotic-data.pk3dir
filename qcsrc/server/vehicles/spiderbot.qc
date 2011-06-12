@@ -179,6 +179,8 @@ float spiderbot_frame()
     spider = self.vehicle;
     self   = spider;
 
+    vehicles_painframe();
+    
     player.BUTTON_ZOOM      = 0;
     player.BUTTON_CROUCH    = 0;
     player.switchweapon     = 0;
@@ -628,6 +630,10 @@ void vewhicle_spiderbot_dinit()
 
 void spawnfunc_vehicle_spiderbot()
 {
+    self.vehicle_flags |= VHF_DMGSHAKE;
+    //self.vehicle_flags |= VHF_DMGROLL;
+    //self.vehicle_flags |= VHF_DMGHEADROLL;
+    
     precache_model ( "models/vhshield.md3");
     precache_model ( "models/vehicles/spiderbot.dpm");
     precache_model ( "models/vehicles/spiderbot_top.dpm");

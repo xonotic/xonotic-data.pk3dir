@@ -320,7 +320,8 @@ float raptor_frame()
     player = self;
     raptor = self.vehicle;
     self   = raptor;
-        
+    
+    vehicles_painframe();
     /*
     ftmp = vlen(self.velocity);
     if(ftmp > autocvar_g_vehicle_raptor_speed_forward) 
@@ -735,7 +736,10 @@ void raptor_dinit()
 void spawnfunc_vehicle_raptor()
 {
     vehicles_configcheck("vehicle_raptor.cfg", autocvar_g_vehicle_raptor_health);
-    
+
+    self.vehicle_flags |= VHF_DMGSHAKE;
+    self.vehicle_flags |= VHF_DMGROLL;
+   
     if(autocvar_g_vehicle_raptor_shield)
         self.vehicle_flags |= VHF_HASSHIELD;
 

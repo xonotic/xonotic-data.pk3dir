@@ -14,6 +14,9 @@ float VHF_DEATHEJECT    = 64;   /// Vehicle ejects pilot upon fatal damage
 float VHF_MOVE_GROUND   = 128;  /// Vehicle moves on gound
 float VHF_MOVE_HOVER    = 256;  /// Vehicle hover close to gound
 float VHF_MOVE_FLY      = 512;  /// Vehicle is airborn
+float VHF_DMGSHAKE      = 1024;
+float VHF_DMGROLL       = 2048;
+float VHF_DMGHEADROLL   = 4096;
 
 .entity gun1;
 .entity gun2;
