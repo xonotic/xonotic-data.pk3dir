@@ -2,6 +2,7 @@ float autocvar_g_vehicles_crush_dmg;
 float autocvar_g_vehicles_crush_force;
 float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
+float autocvar_g_vehicles_allow_flagcarry;
 
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void vehicles_return();
@@ -500,9 +501,14 @@ void vehicles_enter()
     
     if(other.flagcarried)
     {
-        other.flagcarried.scale = 1;
-        setattachment(other.flagcarried, self, ""); 
-        setorigin(other, '0 0 96');
+        if(!autocvar_g_vehicles_allow_flagcarry)
+            DropFlag(other.flagcarried, world, world);
+        else
+        {            
+            other.flagcarried.scale = 1;
+            setattachment(other.flagcarried, self, ""); 
+            setorigin(other, '0 0 96');
+        }
     }
     
     self.vehicle_enter();
