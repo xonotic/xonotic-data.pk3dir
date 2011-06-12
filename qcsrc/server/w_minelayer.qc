@@ -356,7 +356,7 @@ float w_minelayer(float req)
 					// count potential damage according to type of target
 					if (targ == self)
 						selfdamage = selfdamage + d;
-					else if (targ.team == self.team && teams_matter)
+					else if (targ.team == self.team && teamplay)
 						teamdamage = teamdamage + d;
 					else if (bot_shouldattack(targ))
 						enemydamage = enemydamage + d;
@@ -368,7 +368,7 @@ float w_minelayer(float req)
 			desirabledamage = enemydamage;
 			if (time > self.invincible_finished && time > self.spawnshieldtime)
 				desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
-			if (teams_matter && self.team)
+			if (teamplay && self.team)
 				desirabledamage = desirabledamage - teamdamage;
 
 			mine = find(world, classname, "mine");

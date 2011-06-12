@@ -762,7 +762,7 @@ void centerprint(entity e, string s)
 string playername(entity p)
 {
     string t;
-    if (teams_matter && !intermission_running && p.classname == "player")
+    if (teamplay && !intermission_running && p.classname == "player")
     {
         t = Team_ColorCode(p.team);
         return strcat(t, strdecolorize(p.netname));

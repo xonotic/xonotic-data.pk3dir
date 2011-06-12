@@ -166,7 +166,7 @@ void ImpulseCommands (void)
 				}
 				break;
 			case 33:
-				if(self.deadflag == DEAD_NO && teams_matter)
+				if(self.deadflag == DEAD_NO && teamplay)
 				{
 					wp = WaypointSprite_Attach("helpme", TRUE);
 					if(wp)
