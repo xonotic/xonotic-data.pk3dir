@@ -10,7 +10,7 @@ float trigger_push_calculatevelocity_flighttime;
 
 void trigger_push_use()
 {
-	if(teams_matter)
+	if(teamplay)
 		self.team = activator.team;
 }
 

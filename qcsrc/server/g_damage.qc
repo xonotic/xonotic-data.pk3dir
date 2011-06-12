@@ -61,7 +61,7 @@ float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after u
 
 float IsDifferentTeam(entity a, entity b)
 {
-	if(teams_matter)
+	if(teamplay)
 	{
 		if(a.team == b.team)
 			return 0;
@@ -323,7 +323,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			if (targ.killcount > 2)
 				msg = ftos(targ.killcount);
-			if(teams_matter && deathtype == DEATH_MIRRORDAMAGE)
+			if(teamplay && deathtype == DEATH_MIRRORDAMAGE)
 			{
 				if(attacker.team == COLOR_TEAM1)
 					deathtype = KILL_TEAM_RED;
@@ -335,7 +335,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		}
 		else if (attacker.classname == "player" || attacker.classname == "gib")
 		{
-			if(teams_matter && attacker.team == targ.team)
+			if(teamplay && attacker.team == targ.team)
 			{
 				if(attacker.team == COLOR_TEAM1)
 					type = KILL_TEAM_RED;
@@ -564,7 +564,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(teams_matter && attacker.team == targ.team)
+			else if(teamplay && attacker.team == targ.team)
 			{
 				if(autocvar_teamplay_mode == 1)
 					damage = 0;

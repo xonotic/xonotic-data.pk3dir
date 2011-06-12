@@ -348,7 +348,6 @@ void AnnounceTo(entity e, string snd);
 .entity jumppadsused[NUM_JUMPPADSUSED];
 
 string gamemode_name;
-float teams_matter;
 
 float startitem_failed;
 
@@ -665,3 +664,5 @@ float serverflags;
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
+
+void PlayerUseKey();

@@ -137,7 +137,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 
     if(trace_ent != world)
     {
-        if(teams_matter && trace_ent.team == self.team)
+        if(teamplay && trace_ent.team == self.team)
             trace_ent = world;
 
         if(trace_ent.deadflag != DEAD_NO)
@@ -424,7 +424,7 @@ void vehicles_enter()
     if(self.phase > time)
         return;
 
-    if(teams_matter)
+    if(teamplay)
     if(self.team)
     if(self.team != other.team)
         return;
@@ -598,7 +598,7 @@ void vehicles_exit(float eject)
 
     self.phase = time + 1;
 
-    if(!teams_matter)
+    if(!teamplay)
         self.team = 0;
 
     self.vehicle_exit(eject);
@@ -757,7 +757,7 @@ void vehicles_showwp()
     if(self.waypointsprite_attached)
     {
         
-        if(teams_matter && self.team)
+        if(teamplay && self.team)
             WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, TeamColor(self.team));
         else
             WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, '1 1 1');
@@ -898,7 +898,7 @@ float vehicle_initialize(string  net_name,
     else
         self.netname = net_name;
 
-    if(self.team && !teams_matter)
+    if(self.team && !teamplay)
         self.team = 0;
 
     self.vehicle_flags |= VHF_ISVEHICLE;

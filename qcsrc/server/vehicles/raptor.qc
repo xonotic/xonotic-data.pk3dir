@@ -201,8 +201,9 @@ void raptor_enter()
 
 void raptor_land()
 {
-    float hgt;
 
+    float hgt;
+    
     hgt = raptor_altitude(512);
     self.velocity = (self.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * sys_frametime);
     self.angles_x *= 0.95;

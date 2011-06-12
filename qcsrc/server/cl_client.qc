@@ -112,7 +112,7 @@ void spawnfunc_info_player_deathmatch (void)
 
 void spawnpoint_use()
 {
-	if(teams_matter)
+	if(teamplay)
 	if(have_team_spawns > 0)
 	{
 		self.team = activator.team;
@@ -757,7 +757,7 @@ void FixPlayermodel()
 	if(autocvar_sv_defaultcharacter == 1) {
 		defaultskin = 0;
 
-		if(teams_matter)
+		if(teamplay)
 		{
 			string s;
 			s = Team_ColorNameLowerCase(self.team);
@@ -813,7 +813,7 @@ void FixPlayermodel()
 	if(chmdl || oldskin != self.skinindex)
 		self.species = player_getspecies(); // model or skin has changed
 
-	if(!teams_matter)
+	if(!teamplay)
 		if(strlen(autocvar_sv_defaultplayercolors))
 			if(self.clientcolors != stof(autocvar_sv_defaultplayercolors))
 				setcolor(self, stof(autocvar_sv_defaultplayercolors));
@@ -1093,7 +1093,11 @@ void PutClientInServer (void)
 		oldself = self;
 		self = spot;
 			activator = oldself;
+				string s;
+				s = self.target;
+				self.target = string_null;
 				SUB_UseTargets();
+				self.target = s;
 			activator = world;
 		self = oldself;
 
@@ -1441,7 +1445,7 @@ void CTS_ClientKill (entity e) // silent version of ClientKill, used when player
 void DoTeamChange(float destteam)
 {
 	float t, c0;
-	if(!teams_matter)
+	if(!teamplay)
 	{
 		if(destteam >= 0)
 			SetPlayerColors(self, destteam);
@@ -1632,7 +1636,7 @@ void ClientConnect (void)
 	else
 		self.team_forced = 0;
 
-	if(!teams_matter)
+	if(!teamplay)
 		if(self.team_forced > 0)
 			self.team_forced = 0;
 
@@ -1641,7 +1645,7 @@ void ClientConnect (void)
 	if((autocvar_sv_spectate == 1 && !g_lms) || autocvar_g_campaign || self.team_forced < 0) {
 		self.classname = "observer";
 	} else {
-		if(teams_matter)
+		if(teamplay)
 		{
 			if(autocvar_g_balance_teams || autocvar_g_balance_teams_force)
 			{
@@ -1705,7 +1709,7 @@ void ClientConnect (void)
 	GetCvars(0);
 
 	// notify about available teams
-	if(teams_matter)
+	if(teamplay)
 	{
 		CheckAllowedTeams(self);
 		t = 0; if(c1 >= 0) t |= 1; if(c2 >= 0) t |= 2; if(c3 >= 0) t |= 4; if(c4 >= 0) t |= 8;
@@ -1955,7 +1959,7 @@ void UpdateChatBubble()
 	local float c;
 	c = self.clientcolors & 15;
 	// LordHavoc: only bothering to support white, green, red, yellow, blue
-	     if (!teams_matter) self.colormod = '0 0 0';
+	     if (!teamplay) self.colormod = '0 0 0';
 	else if (c ==  0) self.colormod = '1.00 1.00 1.00';
 	else if (c ==  3) self.colormod = '0.10 1.73 0.10';
 	else if (c ==  4) self.colormod = '1.73 0.10 0.10';
@@ -2494,7 +2498,7 @@ void ShowRespawnCountdown()
 void LeaveSpectatorMode()
 {
 	if(nJoinAllowed(1)) {
-		if(!teams_matter || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
+		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force)
@@ -2638,6 +2642,19 @@ void SpectatorThink()
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
+float ctf_usekey();
+void PlayerUseKey()
+{
+	if(self.classname != "player")
+		return;
+
+	// a use key was pressed; call handlers
+	if(ctf_usekey())
+		return;
+
+	MUTATOR_CALLHOOK(PlayerUseKey);
+}
+
 .float touchexplode_time;
 
 /*
@@ -2647,6 +2664,7 @@ PlayerPreThink
 Called every frame for each client before the physics are run
 =============
 */
+.float usekeypressed;
 void() ctf_setstatus;
 void() nexball_setstatus;
 .float items_added;
@@ -2723,6 +2741,10 @@ void PlayerPreThink (void)
 #endif
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
+
+	if(self.BUTTON_USE && !self.usekeypressed)
+		PlayerUseKey();
+	self.usekeypressed = self.BUTTON_USE;
 
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")

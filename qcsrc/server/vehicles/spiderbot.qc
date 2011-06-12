@@ -416,7 +416,9 @@ void spiderbot_think()
 
 void spiderbot_enter()
 {
+
     self.movetype   = MOVETYPE_WALK;
+
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_spiderbot_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_spiderbot_shield);
 }
@@ -442,7 +444,7 @@ void spiderbot_exit(float eject)
     self.nextthink  = time;
     self.frame      = 5;
     self.movetype   = MOVETYPE_WALK;
-
+    
     if not (self.owner)
         return;
 
@@ -611,6 +613,7 @@ void vewhicle_spiderbot_dinit()
         remove(self);
         return;
     }
+
 
     self.gun1               = spawn();
     self.gun2               = spawn();
