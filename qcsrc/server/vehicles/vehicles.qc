@@ -628,6 +628,7 @@ void vehicles_exit(float eject)
         setorigin(self.owner.flagcarried, FLAG_CARRY_POS);
     }
     
+    sound (self, CHAN_TRIGGER, "misc/null.wav", 1, ATTN_NORM);
     self.vehicle_exit(eject);
     self.owner = world;
     
