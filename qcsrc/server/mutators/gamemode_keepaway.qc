@@ -241,10 +241,17 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 	if(self.ballcarried)
 		self.items |= IT_KEY1;
 
-	// drop the ball if the player presses the use button
-	if(self.BUTTON_USE)
-		if(self.ballcarried) { ka_DropEvent(self); } 
+	return 0;
+}
 
+MUTATOR_HOOKFUNCTION(ka_PlayerUseKey)
+{
+	if(MUTATOR_RETURNVALUE == 0)
+	if(self.ballcarried)
+	{
+		ka_DropEvent(self);
+		return 1;
+	}
 	return 0;
 }
 
@@ -307,6 +314,7 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 	MUTATOR_HOOK(PlayerPreThink, ka_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ka_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, ka_PlayerPowerups, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerUseKey, ka_PlayerUseKey, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

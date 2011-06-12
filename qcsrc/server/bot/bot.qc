@@ -453,7 +453,7 @@ void bot_removenewest()
 	local float besttime;
 	local entity best, head;
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		bot_removefromlargestteam();
 		return;
@@ -567,7 +567,7 @@ void bot_serverframe()
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = FALSE;
-	if (teams_matter && autocvar_bot_vs_human && (c3==-1 && c4==-1))
+	if (teamplay && autocvar_bot_vs_human && (c3==-1 && c4==-1))
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{

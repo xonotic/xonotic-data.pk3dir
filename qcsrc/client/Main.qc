@@ -848,6 +848,13 @@ void Ent_Nagger()
 
 	nags = ReadByte();
 
+	if(!(nags & 4))
+	{
+		if(vote_called_vote)
+			strunzone(vote_called_vote);
+		vote_called_vote = string_null;
+	}
+
 	if(nags & 128)
 	{
 		if(vote_called_vote)

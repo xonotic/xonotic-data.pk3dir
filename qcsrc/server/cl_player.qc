@@ -772,7 +772,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	if(source.classname != "player")
 		colorstr = "^0"; // black for spectators
-	else if(teams_matter)
+	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
 	else
 		teamsay = FALSE;
@@ -1261,7 +1261,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 			break;
 		case VOICETYPE_TEAMRADIO:
 			FOR_EACH_REALCLIENT(msg_entity)
-				if(!teams_matter || msg_entity.team == self.team)
+				if(!teamplay || msg_entity.team == self.team)
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
 						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
