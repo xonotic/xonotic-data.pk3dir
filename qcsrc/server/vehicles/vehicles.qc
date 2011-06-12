@@ -497,7 +497,14 @@ void vehicles_enter()
     vehicles_clearrturn();
 
     CSQCVehicleSetup(self.owner, self.hud);
-
+    
+    if(other.flagcarried)
+    {
+        other.flagcarried.scale = 1;
+        setattachment(other.flagcarried, self, ""); 
+        setorigin(other, '0 0 96');
+    }
+    
     self.vehicle_enter();
 }
 
@@ -508,7 +515,7 @@ void vehicles_enter()
 **/
 vector vehicles_findgoodexit(vector prefer_spot)
 {
-    vector exitspot;
+    //vector exitspot;
     float mysize;
     
     tracebox(self.origin + '0 0 32', PL_MIN, PL_MAX, prefer_spot, MOVE_NORMAL, self.owner);
@@ -601,6 +608,13 @@ void vehicles_exit(float eject)
     if(!teamplay)
         self.team = 0;
 
+    if(self.owner.flagcarried)
+    {
+        self.owner.flagcarried.scale = 0.6;
+        setattachment(self.owner.flagcarried, self.owner, ""); 
+        setorigin(self.owner.flagcarried, FLAG_CARRY_POS);
+    }
+    
     self.vehicle_exit(eject);
     self.owner = world;
 }

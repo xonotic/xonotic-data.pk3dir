@@ -197,6 +197,9 @@ void raptor_enter()
     self.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
     self.lip   = time;
 
+    if(self.owner.flagcarried)
+       setorigin(self.owner.flagcarried, '-20 0 96');
+
 }
 
 void raptor_land()

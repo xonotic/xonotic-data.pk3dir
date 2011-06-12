@@ -423,6 +423,14 @@ void spiderbot_enter()
 
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_spiderbot_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_spiderbot_shield);
+
+    if(self.owner.flagcarried)
+    {
+        setattachment(self.owner.flagcarried, self.tur_head, ""); 
+        setorigin(self.owner.flagcarried, '-20 0 120'); 
+    }
+       
+
 }
 
 void spiderbot_exit(float eject)

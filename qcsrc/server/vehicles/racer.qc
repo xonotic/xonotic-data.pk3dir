@@ -487,6 +487,9 @@ void racer_enter()
     self.movetype = MOVETYPE_BOUNCE;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health);
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield);
+    
+    if(self.owner.flagcarried)
+       setorigin(self.owner.flagcarried, '-190 0 96');
 }
 
 void racer_exit(float eject)
