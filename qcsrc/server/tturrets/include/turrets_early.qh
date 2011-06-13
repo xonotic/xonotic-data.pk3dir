@@ -1,6 +1,5 @@
 // Comment out below to skip turrets
 #define TTURRETS_ENABLED
-//#define TTURRETS_CSQC
 
 #ifdef TTURRETS_ENABLED
 #ifdef SVQC
@@ -475,6 +474,9 @@ float TNSF_STATUS       = 4;
 float TNSF_SETUP        = 8;
 float TNSF_ANG          = 16;
 float TNSF_AVEL         = 32;
+float TNSF_DIE          = 64;
+float TNSF_FIRE         = 128;
+
 float TNSF_FULL_UPDATE  = 16777215;
 
 #endif // TTURRETS_ENABLED

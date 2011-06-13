@@ -903,7 +903,7 @@ void turrets_manager_think()
 * (unless you have a very good reason not to)
 * if the return value is 0, the turret should be removed.
 */
-float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base, string head, float _turret_type)
+float turret_stdproc_init (string cvar_base_name, string base, string head, float _turret_type)
 {
 	entity e, ee;
 
@@ -940,9 +940,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         e.think = turrets_manager_think;
         e.nextthink = time + 2;
     }
-#ifndef TTURRETS_CSQC
-    csqc_shared = 0;
-#endif
+
     /*
     if(csqc_shared)
     {
@@ -1159,7 +1157,6 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 
     self.target_validate_flags = self.target_select_flags;
 
-
 // Ammo stuff
     if not (self.ammo_max)
         self.ammo_max = self.shot_dmg * 10;
@@ -1186,8 +1183,11 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 
 // Offsets & origins
     if (!self.tur_shotorg)   self.tur_shotorg = '50 0 50';
+    
+    if (!self.health)
+        self.health = 150;
 
-// Gane hooks
+// Game hooks
 	if(MUTATOR_CALLHOOK(TurretSpawn))
 		return 0;
 
@@ -1207,9 +1207,6 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 
     setorigin(self.tur_head, '0 0 0');
     setattachment(self.tur_head, self, "tag_head");
-
-    if (!self.health)
-        self.health = 150;
 
     self.tur_health          = self.health;
     self.solid               = SOLID_BBOX;
@@ -1238,20 +1235,14 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         self.idle_aim  = '0 0 0';
 
     // Attach stdprocs. override when and what needed
+    self.turret_firecheckfunc   = turret_stdproc_firecheck;
+    self.turret_firefunc        = turret_stdproc_fire;
+    self.event_damage           = turret_stdproc_damage;
+    
     if (self.turrcaps_flags & TFL_TURRCAPS_SUPPORT)
-    {
         self.turret_score_target    = turret_stdproc_targetscore_support;
-        self.turret_firecheckfunc   = turret_stdproc_firecheck;
-        self.turret_firefunc        = turret_stdproc_fire;
-        self.event_damage           = turret_stdproc_damage;
-    }
     else
-    {
         self.turret_score_target    = turret_stdproc_targetscore_generic;
-        self.turret_firecheckfunc   = turret_stdproc_firecheck;
-        self.turret_firefunc        = turret_stdproc_fire;
-        self.event_damage           = turret_stdproc_damage;
-    }
 
     self.use = turret_stdproc_use;
     self.bot_attack = TRUE;
@@ -1287,16 +1278,11 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         self.use();
     }
     
-    Net_LinkEntity(self, TRUE, 0, turret_send);
 	turret_stdproc_respawn();
-	
-    // Initiate the main AI loop
-    /*self.nextthink = time;
-    if(csqc_shared)
-        self.think     = turret_link;
-    else
-        self.think     = turret_think;
-    */
+	    
+    if (!turret_tag_fire_update())
+        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+    
     return 1;
 }
 

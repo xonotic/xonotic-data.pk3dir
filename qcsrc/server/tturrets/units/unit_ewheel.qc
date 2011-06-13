@@ -248,7 +248,7 @@ void ewheel_diehook()
 {
     self.velocity = '0 0 0';
 
-    turret_trowgib2(self.origin, self.velocity + '0 0 400', '-0.6 -0.2 -02', self, 3 + time + random() * 2);
+    //turret_trowgib2(self.origin, self.velocity + '0 0 400', '-0.6 -0.2 -02', self, 3 + time + random() * 2);
 
     if (self.pathcurrent)
         pathlib_deletepath(self.pathcurrent.owner);
@@ -283,7 +283,7 @@ void turret_ewheel_dinit()
 
     self.turret_diehook = ewheel_diehook;
 
-    if (turret_stdproc_init("ewheel_std", TRUE, "models/turrets/ewheel-base2.md3", "models/turrets/ewheel-gun1.md3", TID_EWHEEL) == 0)
+    if (turret_stdproc_init("ewheel_std", "models/turrets/ewheel-base2.md3", "models/turrets/ewheel-gun1.md3", TID_EWHEEL) == 0)
     {
         remove(self);
         return;
@@ -313,9 +313,6 @@ void turret_ewheel_dinit()
     // Convert from dgr / sec to dgr / tic
     self.tur_head.aim_speed = autocvar_g_turrets_unit_ewheel_turnrate;
     self.tur_head.aim_speed = self.tur_head.aim_speed / (1 / self.ticrate);
-
-    if (!turret_tag_fire_update())
-        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     //setorigin(self,self.origin + '0 0 128');
     if (self.target != "")

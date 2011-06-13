@@ -26,14 +26,12 @@ void turrets_precache()
     precache_sound ("weapons/uzi_fire.wav");
 }
 
-//.entity tur_base;
 void turret_remove()
 {
-    entity th;
     dprint("Removing turret type ", ftos(self.turret_type), "\n");
-    th = self.tur_head;
-    self.tur_head = world;
-    remove(th);
+    
+    remove(self.tur_head);
+    self.tur_head = world;    
 }
 
 void turret_changeteam()
@@ -79,84 +77,90 @@ void turret_draw()
     if(random() < 0.25)
         te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
     
-    self.drawmask = MASK_NORMAL;    
+    self.drawmask = MASK_NORMAL;
+}
+
+string tid2info_base;
+string tid2info_head;
+vector  tid2info_min;
+vector  tid2info_max;
+void turret_tid2info(float _tid)
+{
+    tid2info_base = "models/turrets/base.md3";
+    tid2info_min = '-32 -32 0';
+    tid2info_max = '32 32 64';
+
+    switch(_tid)
+    {
+        case TID_EWHEEL:
+            tid2info_base = "models/turrets/ewheel-base2.md3";
+            tid2info_head = "models/turrets/ewheel-gun1.md3";
+            break;
+        case TID_FLAC:
+            tid2info_head = "models/turrets/flac.md3";
+            break;
+        case TID_FUSION:
+            tid2info_head = "models/turrets/reactor.md3";
+            tid2info_min = '-34 -34 0';
+            tid2info_max = '34 34 90';
+            break;
+        case TID_HELLION:
+            tid2info_head = "models/turrets/hellion.md3";
+            break;
+        case TID_HK:
+            tid2info_head = "models/turrets/hk.md3";
+            break;
+        case TID_MACHINEGUN:
+            tid2info_head = "models/turrets/machinegun.md3";
+            break;
+        case TID_MLRS:
+            tid2info_head = "models/turrets/mlrs.md3";
+            break;
+        case TID_PHASER:
+            tid2info_head = "models/turrets/phaser.md3";
+            break;
+        case TID_PLASMA:
+            tid2info_head = "models/turrets/plasma.md3";
+            break;
+        case TID_PLASMA_DUAL:
+            tid2info_head = "models/turrets/plasmad.md3";
+            break;
+        case TID_TESLA:
+            tid2info_base = "models/turrets/tesla_base.md3";
+            tid2info_head = "models/turrets/tesla_head.md3";
+            tid2info_min = '-60 -60 0';
+            tid2info_max  ='60 60 128';
+            break;
+        case TID_WALKER:
+            tid2info_base = "models/turrets/walker_body.md3";
+            tid2info_head = "models/turrets/walker_head_minigun.md3";
+            tid2info_min = '-70 -70 0';
+            tid2info_max = '70 70 95';
+            break;
+    }    
 }
 
 //void(entity e, entity tagentity, string tagname) setattachment = #443;
 void turret_construct()
-{
-    string sbase, shead;
-    vector _min, _max;
-    
+{    
     if(self.tur_head == world)
         self.tur_head = spawn();
     
-    sbase = "models/turrets/base.md3";
-    _min = '-32 -32 0';
-    _max = '32 32 64';
-    
-    switch(self.turret_type)
-    {
-        case TID_EWHEEL:
-            sbase = "models/turrets/ewheel-base2.md3";
-            shead = "models/turrets/ewheel-gun1.md3";
-            break;
-        case TID_FLAC:
-            shead = "models/turrets/flac.md3";
-            break;
-        case TID_FUSION:
-            shead = "models/turrets/reactor.md3";
-            _min = '-34 -34 0';
-            _max = '34 34 90';
-            break;
-        case TID_HELLION:
-            shead = "models/turrets/hellion.md3";
-            break;
-        case TID_HK:
-            shead = "models/turrets/hk.md3";
-            break;
-        case TID_MACHINEGUN:
-            shead = "models/turrets/machinegun.md3";
-            break;
-        case TID_MLRS:
-            shead = "models/turrets/mlrs.md3";
-            break;
-        case TID_PHASER:
-            shead = "models/turrets/phaser.md3";
-            break;
-        case TID_PLASMA:
-            shead = "models/turrets/plasma.md3";
-            break;
-        case TID_PLASMA_DUAL:
-            shead = "models/turrets/plasmad.md3";
-            break;
-        case TID_TESLA:
-            sbase = "models/turrets/tesla_base.md3";
-            shead = "models/turrets/tesla_head.md3";
-            _min = '-60 -60 0';
-            _max  ='60 60 128';
-            break;
-        case TID_WALKER:
-            sbase = "models/turrets/walker_body.md3";
-            shead = "models/turrets/walker_head_minigun.md3";
-            _min = '-70 -70 0';
-            _max = '70 70 95';
-            break;
-    }
+    turret_tid2info(self.turret_type);
     
     setorigin(self, self.origin);
-        
+    
     self.tur_head.classname = "turret_head";
     self.tur_head.owner   = self;
 
-    setmodel(self, sbase);
-    setmodel(self.tur_head, shead);
+    setmodel(self, tid2info_base);
+    setmodel(self.tur_head, tid2info_head);
     
     self.tur_head.move_movetype = MOVETYPE_NOCLIP;
     self.move_movetype = MOVETYPE_NOCLIP;
     self.tur_head.angles = self.angles;
     
-    setsize(self, _min, _max);
+    setsize(self, tid2info_min, tid2info_max);
     setsize(self.tur_head, '0 0 0', '0 0 0');
     
     setorigin(self.tur_head, gettaginfo(self, gettagindex(self, "tag_head")));
@@ -168,6 +172,107 @@ void turret_construct()
     self.draw               = turret_draw;
     self.tur_head.draw      = turret_head_draw;
     self.entremove          = turret_remove;
+}
+
+entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode);
+void turret_gibboom();
+
+void turret_gib_draw()
+{
+    Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
+    self.drawmask = MASK_NORMAL;
+	
+	if(self.cnt)
+	{
+	    if(time >= self.nextthink)
+	    {
+            turret_gibboom();
+            remove(self);
+	    }
+	}
+	else
+	{
+        self.alpha = bound(0, self.nextthink - time, 1);
+        if(self.alpha < ALPHA_MIN_VISIBLE)
+            remove(self);	    
+	}
+}
+
+void turret_gibboom()
+{
+    float i;
+    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+    pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+
+    for (i = 1; i < 5; i = i +1)
+        turret_gibtoss(strcat("models/turrets/head-gib", ftos(i), ".md3"), self.origin, self.velocity + randomvec() * 700, '0 0 0', FALSE);
+}
+
+entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode)
+{
+    entity gib;
+
+    gib = spawn();
+    setorigin(gib, _from);
+    setmodel(gib, _model);
+    gib.colormod = _cmod;
+	gib.solid = SOLID_CORPSE;
+    gib.draw = turret_gib_draw;    
+    gib.cnt = _explode;
+    
+    if(_explode)
+    {
+        gib.nextthink = time + 0.2 * (autocvar_cl_gibs_lifetime * (1 + prandom() * 0.15));
+        gib.effects = EF_FLAME;
+    }        
+    else
+        gib.nextthink = time + autocvar_cl_gibs_lifetime * (1 + prandom() * 0.15);
+    
+    gib.gravity = 1;
+	gib.move_movetype = MOVETYPE_BOUNCE;
+	gib.move_origin = gib.origin = _from;
+	gib.move_velocity = _to;	
+	gib.move_avelocity = prandomvec() * 32;
+	gib.move_time = time;
+	gib.damageforcescale = 1;
+	
+	return gib;
+}
+
+void turret_die()
+{    
+    entity headgib;
+    
+    setmodel(self, "");
+    setmodel(self.tur_head, "");
+    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+    pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+    turret_tid2info(self.turret_type);
+
+    // Base
+    if(self.turret_type == TID_EWHEEL)
+        turret_gibtoss(tid2info_base, self.origin, self.velocity, '-1 -1 -1', FALSE);
+    else if (self.turret_type == TID_WALKER)
+        turret_gibtoss(tid2info_base, self.origin, self.velocity, '-1 -1 -1', FALSE);
+    else if (self.turret_type == TID_TESLA)
+        turret_gibtoss(tid2info_base, self.origin, self.velocity, '-1 -1 -1', FALSE);
+    else
+    {        
+        if (random() > 0.5)
+        {
+            turret_gibtoss("models/turrets/base-gib2.md3", self.origin + '0 0 2', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
+            turret_gibtoss("models/turrets/base-gib3.md3", self.origin + '0 0 2', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
+            turret_gibtoss("models/turrets/base-gib4.md3", self.origin + '0 0 2', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
+        }
+        else
+            turret_gibtoss("models/turrets/base-gib1.md3", self.origin, '0 0 0', '0 0 0', TRUE);
+    }
+    
+    headgib = turret_gibtoss(tid2info_head, self.origin + '0 0 32', '0 0 200' + randomvec() * 200, '-1 -1 -1', TRUE);
+    headgib.angles = headgib.move_angles = self.tur_head.angles;
+    headgib.avelocity = headgib.move_avelocity = self.tur_head.move_avelocity + randomvec() * 45;
+    headgib.avelocity_y = headgib.move_avelocity_y = headgib.move_avelocity_y * 5;
+    headgib.gravity = 0.5;
 }
 
 void ent_turret()
@@ -214,5 +319,8 @@ void ent_turret()
             self.team = _team;
             turret_changeteam();        
         }
-    }
+    } 
+    
+    if(sf == TNSF_DIE)
+        turret_die();
 }

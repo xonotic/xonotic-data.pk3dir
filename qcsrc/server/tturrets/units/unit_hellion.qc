@@ -188,14 +188,11 @@ void turret_hellion_dinit()
     self.firecheck_flags = TFL_FIRECHECK_WORLD | TFL_FIRECHECK_DEAD | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_TEAMCECK | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF | TFL_FIRECHECK_OWM_AMMO;
     self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
 
-    if (turret_stdproc_init("hellion_std", TRUE, "models/turrets/base.md3", "models/turrets/hellion.md3", TID_HELLION) == 0)
+    if (turret_stdproc_init("hellion_std", "models/turrets/base.md3", "models/turrets/hellion.md3", TID_HELLION) == 0)
     {
         remove(self);
         return;
     }
-
-    if (!turret_tag_fire_update())
-        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     self.turret_firefunc  = turret_hellion_attack;
     self.turret_postthink = turret_hellion_postthink;

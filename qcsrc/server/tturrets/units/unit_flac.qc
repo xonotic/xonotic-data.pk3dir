@@ -40,21 +40,13 @@ void turret_flac_projectile_explode()
 {
     float ftmp;
 
-    // FIXME: tur_impacttime is not accurate enougth, this is a dirty hakk to make flac work.
-
-    //w_deathtypestring = "got caught in the flack.";
-
-
-
     if( (self.enemy != world) &&
         (vlen(self.origin - self.enemy.origin) < self.owner.shot_radius * 3) )
     {
         // OMG HAXX!
         setorigin(self,self.enemy.origin + randomvec() * self.owner.shot_radius);
     }
-
-
-
+    
     te_explosion (self.origin);
 
     ftmp = crandom();
@@ -89,7 +81,7 @@ void turret_flac_dinit()
     self.ammo_flags     = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
     self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
 
-    if (turret_stdproc_init("flac_std", TRUE, "models/turrets/base.md3", "models/turrets/flac.md3", TID_FLAC) == 0)
+    if (turret_stdproc_init("flac_std", "models/turrets/base.md3", "models/turrets/flac.md3", TID_FLAC) == 0)
     {
         remove(self);
         return;
@@ -99,8 +91,6 @@ void turret_flac_dinit()
     self.damage_flags |= TFL_DMG_HEADSHAKE;
     self.target_select_flags |= TFL_TARGETSELECT_NOTURRETS | TFL_TARGETSELECT_MISSILESONLY;
 
-    if (!turret_tag_fire_update())
-        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     // Our fire routine
     self.turret_firefunc  = turret_flac_attack;

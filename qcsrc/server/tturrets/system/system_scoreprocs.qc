@@ -1,21 +1,7 @@
-/*
-.float target_select_flags; /// target selection flags
-float TFL_TARGETSELECT_NO            = 1;   /// Dont select a target on its own.
-float TFL_TARGETSELECT_LOS           = 2;   /// Need line of sight
-float TFL_TARGETSELECT_PLAYERS       = 4;   /// Players are valid targets
-float TFL_TARGETSELECT_MISSILES      = 8;   /// Missiles are valid targets
-float TFL_TARGETSELECT_TRIGGERTARGET = 16;  /// Responds to turret_trigger_target events
-float TFL_TARGETSELECT_ANGLELIMITS   = 32;  /// Angular limitations of turret head limits target selection
-float TFL_TARGETSELECT_RANGELIMTS    = 64;  /// Range limits apply in targetselection
-float TFL_TARGETSELECT_TEAMCHECK     = 128; /// Consider team own <-> targets team
-float TFL_TARGETSELECT_NOBUILTIN     = 256; /// Cant select targets on its own. needs to be triggerd or slaved.
-float TFL_TARGETSELECT_OWNTEAM       = 512;
-*/
-
 float turret_stdproc_targetscore_support(entity _turret,entity _target)
 {
     float score;        // Total score
-    float s_score,d_score;
+    float s_score, d_score;
 
     if (_turret.enemy == _target) s_score = 1;
 
@@ -32,11 +18,8 @@ float turret_stdproc_targetscore_support(entity _turret,entity _target)
 */
 float turret_stdproc_targetscore_generic(entity _turret, entity _target)
 {
-    //vector v_tmp;
     float d_dist;       // Defendmode Distance
-
     float score;        // Total score
-
     float d_score;      // Distance score
     float a_score;      // Angular score
     float m_score;      // missile score
@@ -53,22 +36,9 @@ float turret_stdproc_targetscore_generic(entity _turret, entity _target)
     {
         // Make a normlized value base on the targets distance from our optimal killzone
         ikr = _turret.target_range_optimal;
-        d_score = min(ikr,tvt_dist) / max(ikr,tvt_dist);
+        d_score = min(ikr, tvt_dist) / max(ikr, tvt_dist);
     }
 
-    /*
-    // Determine the maximum time it could take this turrent to aim at someting.
-    max_aim_delay = (max(_turret.aim_maxrot,_turret.aim_maxpitch) / _turret.aim_speed * 2);
-
-    // Find out how long it would take to aim at this taget.
-    aim_delay = (thadf+0.01) / _turret.aim_speed;
-
-    // Turn this info into a normalized value.
-    aim_delay = (min(max_aim_delay,aim_delay) / max_aim_delay);
-    a_score = 1 - aim_delay;
-    */
-
-    //a_score = 1 - (tvt_thadf / max(_turret.aim_maxrot,_turret.aim_maxpitch));
     a_score = 1 - tvt_thadf / _turret.aim_maxrot;
 
     if ((_turret.target_select_missilebias > 0) && (_target.flags & FL_PROJECTILE))

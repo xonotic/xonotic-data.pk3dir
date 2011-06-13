@@ -101,7 +101,7 @@ void turret_mlrs_dinit()
     self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
     self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;// | TFL_AIM_GROUND2;
 
-    if (turret_stdproc_init("mlrs_std", TRUE, "models/turrets/base.md3", "models/turrets/mlrs.md3", TID_MLRS) == 0)
+    if (turret_stdproc_init("mlrs_std", "models/turrets/base.md3", "models/turrets/mlrs.md3", TID_MLRS) == 0)
     {
         remove(self);
         return;
@@ -110,9 +110,6 @@ void turret_mlrs_dinit()
     self.damage_flags |= TFL_DMG_HEADSHAKE;
     self.shoot_flags  |= TFL_SHOOT_VOLLYALWAYS;
     self.volly_counter = self.shot_volly;
-
-    if (!turret_tag_fire_update())
-        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     // Our fire routine
     self.turret_firefunc  = turret_mlrs_attack;

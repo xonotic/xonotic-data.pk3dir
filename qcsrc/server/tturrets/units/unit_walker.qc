@@ -669,8 +669,8 @@ void walker_respawnhook()
 
 void walker_diehook()
 {
-    turret_trowgib2(self.origin, self.velocity + v_up * 200, '-0.6 -0.2 -02', self,time + random() * 1);
-    turret_trowgib2(self.origin + '0 0 64', self.velocity + v_forward * 150 + v_up * 150, '-0.2 -0.2 -02', self.tur_head, 3 + time + random() * 2);
+    //turret_trowgib2(self.origin, self.velocity + v_up * 200, '-0.6 -0.2 -02', self,time + random() * 1);
+    //turret_trowgib2(self.origin + '0 0 64', self.velocity + v_forward * 150 + v_up * 150, '-0.2 -0.2 -02', self.tur_head, 3 + time + random() * 2);
 
     if (self.pathcurrent)
         pathlib_deletepath(self.pathcurrent.owner);
@@ -704,14 +704,11 @@ void turret_walker_dinit()
     self.turret_diehook = walker_diehook;
 
     self.ticrate = 0.05;
-    if (turret_stdproc_init("walker_std", TRUE, "models/turrets/walker_body.md3", "models/turrets/walker_head_minigun.md3", TID_WALKER) == 0)
+    if (turret_stdproc_init("walker_std", "models/turrets/walker_body.md3", "models/turrets/walker_head_minigun.md3", TID_WALKER) == 0)
     {
         remove(self);
         return;
     }
-
-    if (!turret_tag_fire_update())
-        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     self.damage_flags |= TFL_DMG_DEATH_NOGIBS;
     self.target_select_flags   = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
