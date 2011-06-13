@@ -665,7 +665,7 @@ void changematchtime(float delta, float mi, float ma)
 			return;
 	}
 
-	cvar_set("timelimit", ftos(new));
+	cvar_set("timelimit", ftos(new / 60));
 }
 
 void GameCommand(string command)
@@ -840,7 +840,7 @@ void GameCommand(string command)
 
 	if (argv(0) == "lockteams")
 	{
-		if(teams_matter)
+		if(teamplay)
 		{
 			lockteams = 1;
 			bprint("^1The teams are now locked.\n");
@@ -852,7 +852,7 @@ void GameCommand(string command)
 
 	if (argv(0) == "unlockteams")
 	{
-		if(teams_matter)
+		if(teamplay)
 		{
 			lockteams = 0;
 			bprint("^1The teams are now unlocked.\n");
@@ -871,7 +871,7 @@ void GameCommand(string command)
 		// 	2 (10) no centerprint, admin message
 		// 	3 (11) no centerprint, no admin message
 
-		if(!teams_matter) {  // death match
+		if(!teamplay) {  // death match
 			print("Currently not playing a team game\n");
 			return;
 		}

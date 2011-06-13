@@ -236,6 +236,16 @@ string fstrunzone(string s)
 	return sc;
 }
 
+float fexists(string f)
+{
+    float fh;
+    fh = fopen(f, FILE_READ);
+    if (fh < 0)
+        return FALSE;
+    fclose(fh);
+    return TRUE;
+}
+
 // Databases (hash tables)
 #define DB_BUCKETS 8192
 void db_save(float db, string pFilename)
@@ -1524,12 +1534,6 @@ vector solve_quadratic(float a, float b, float c) // ax^2 + bx + c = 0
 	return v;
 }
 
-
-float _unacceptable_compiler_bug_1_a(float b, float c) { return b == c; }
-float _unacceptable_compiler_bug_1_b() { return 1; }
-float _unacceptable_compiler_bug_1_c(float d) { return 2 * d; }
-float _unacceptable_compiler_bug_1_d() { return 1; }
-
 void check_unacceptable_compiler_bugs()
 {
 	if(cvar("_allow_unacceptable_compiler_bugs"))
@@ -2012,4 +2016,38 @@ string CTX(string s)
 	if(p < 0)
 		return s;
 	return substring(s, p+1, -1);
+}
+
+// x-encoding (encoding as zero length invisible string)
+const string XENCODE_2  = "xX";
+const string XENCODE_22 = "0123456789abcdefABCDEF";
+string xencode(float f)
+{
+	float a, b, c, d;
+	d = mod(f, 22); f = floor(f / 22);
+	c = mod(f, 22); f = floor(f / 22);
+	b = mod(f, 22); f = floor(f / 22);
+	a = mod(f,  2); // f = floor(f /  2);
+	return strcat(
+		"^",
+		substring(XENCODE_2,  a, 1),
+		substring(XENCODE_22, b, 1),
+		substring(XENCODE_22, c, 1),
+		substring(XENCODE_22, d, 1)
+	);
+}
+float xdecode(string s)
+{
+	float a, b, c, d;
+	if(substring(s, 0, 1) != "^")
+		return -1;
+	if(strlen(s) < 5)
+		return -1;
+	a = strstrofs(XENCODE_2,  substring(s, 1, 1), 0);
+	b = strstrofs(XENCODE_22, substring(s, 2, 1), 0);
+	c = strstrofs(XENCODE_22, substring(s, 3, 1), 0);
+	d = strstrofs(XENCODE_22, substring(s, 4, 1), 0);
+	if(a < 0 || b < 0 || c < 0 || d < 0)
+		return -1;
+	return ((a * 22 + b) * 22 + c) * 22 + d;
 }

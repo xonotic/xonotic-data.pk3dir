@@ -2,11 +2,6 @@
 
 float turret_send(entity to, float sf)
 {
-    float dist;
-    dist = vlen(self.origin - to.origin);
-    if(dist > 1024) // When far away, write angles/avelocity as short insted of angle.
-        sf |= TNSF_FAR;
-        
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
 	
 	WriteByte(MSG_ENTITY, sf);
@@ -24,30 +19,14 @@ float turret_send(entity to, float sf)
     
     if(sf & TNSF_ANG)
     {
-        if(sf & TNSF_FAR)
-        {
-            WriteShort(MSG_ENTITY, rint(self.tur_head.angles_x));
-            WriteShort(MSG_ENTITY, rint(self.tur_head.angles_y));
-        }
-        else
-        {            
-            WriteAngle(MSG_ENTITY, self.tur_head.angles_x);
-            WriteAngle(MSG_ENTITY, self.tur_head.angles_y);	    
-        }
+        WriteShort(MSG_ENTITY, rint(self.tur_head.angles_x));
+        WriteShort(MSG_ENTITY, rint(self.tur_head.angles_y));
     }
     
     if(sf & TNSF_AVEL)
     {        
-        if(sf & TNSF_FAR)
-        {
-            WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_x));
-            WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_y));
-        }
-        else
-        {
-            WriteAngle(MSG_ENTITY, self.tur_head.avelocity_x);
-            WriteAngle(MSG_ENTITY, self.tur_head.avelocity_y);            
-        }
+        WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_x));
+        WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_y));
     }
     
     if(sf & TNSF_STATUS)
@@ -681,7 +660,7 @@ void turret_think()
     //self.SendFlags = TNSF_UPDATE | TNSF_STATUS | TNSF_ANG | TNSF_AVEL;
     
     // ONS uses somewhat backwards linking.
-    if (teams_matter)
+    if (teamplay)
     {
         if not (g_onslaught)
             if (self.target)
@@ -901,6 +880,7 @@ void turret_link()
     Net_LinkEntity(self, TRUE, 0, turret_send);
     self.think      = turret_think;
     self.nextthink  = time;
+    self.tur_head.effects = EF_NODRAW;
 }
 
 void turrets_manager_think()
@@ -1004,7 +984,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         if not (self.team)
             self.team = 14; // Assume turrets are on the defending side if not explicitly set otehrwize
     }
-    else if not (teams_matter)
+    else if not (teamplay)
 		self.team = MAX_SHOT_DISTANCE; // Group all turrets into the same team, so they dont kill eachother.
 	else if(g_onslaught && self.targetname)
 	{

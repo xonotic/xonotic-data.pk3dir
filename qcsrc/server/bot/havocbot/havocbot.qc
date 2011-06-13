@@ -259,7 +259,7 @@ void havocbot_bunnyhop(vector dir)
 	// Don't jump when using some weapons
 	/*
 	if(self.aistatus & AI_STATUS_ATTACKING)
-	if(self.weapon == WEP_SNIPERRIFLE)
+	if(self.weapon == WEP_RIFLE)
 		return;
 
 	if(self.goalcurrent.classname == "player")
@@ -416,10 +416,11 @@ void havocbot_movetogoal()
 	if(self.goalcurrent==self.navigation_jetpack_goal)
 	if(self.ammo_fuel)
 	{
-		#ifdef DEBUG_BOT_GOALSTACK
+		if(autocvar_bot_debug_goalstack)
+		{
 			debuggoalstack();
 			te_wizspike(self.navigation_jetpack_point);
-		#endif
+		}
 
 		// Take off
 		if not(self.aistatus & AI_STATUS_JETPACK_FLYING)
@@ -653,9 +654,8 @@ void havocbot_movetogoal()
 		return;
 	}
 
-#ifdef DEBUG_BOT_GOALSTACK
-	debuggoalstack();
-#endif
+	if(autocvar_bot_debug_goalstack)
+		debuggoalstack();
 
 	m1 = self.goalcurrent.origin + self.goalcurrent.mins;
 	m2 = self.goalcurrent.origin + self.goalcurrent.maxs;
@@ -918,7 +918,7 @@ void havocbot_chooseenemy()
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if(best || self.weapons) // || self.weapon == WEP_SNIPERRIFLE
+		if(best || self.weapons) // || self.weapon == WEP_RIFLE
 			break;
 		if(i)
 			break;
@@ -1139,9 +1139,8 @@ float havocbot_moveto(vector pos)
 			}
 		}
 
-		#ifdef DEBUG_BOT_GOALSTACK
+		if(autocvar_bot_debug_goalstack)
 			debuggoalstack();
-		#endif
 
 		// Heading
 		local vector dir = self.goalcurrent.origin - (self.origin + self.view_ofs);

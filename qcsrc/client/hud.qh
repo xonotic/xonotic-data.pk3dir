@@ -10,7 +10,6 @@ vector panel_click_distance; // mouse cursor distance from the top left corner o
 vector panel_click_resizeorigin; // coordinates for opposite point when resizing
 float resizeCorner; // 1 = topleft, 2 = topright, 3 = bottomleft, 4 = bottomright
 var float highlightedPanel = -1;
-var float highlightedPanel_prev = -1;
 float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 0.25;
@@ -39,6 +38,8 @@ float teamnagger;
 
 float hud_configure_checkcollisions;
 float hud_configure_prev;
+vector hud_configure_gridSize;
+vector hud_configure_realGridSize;
 
 float hudShiftState;
 const float S_SHIFT = 1;
@@ -61,7 +62,7 @@ var vector panel_size_backup;
 var float highlightedPanel_copied = -1; //this is good only to know if there is something copied
 var vector panel_size_copied;
 
-var float active_panel; // this panel has recently referred the UpdateCvars macro
+var float hud_configure_active_panel; // this panel has recently referred the UpdateCvars macro
 var string panel_name;
 var float panel_enabled;
 var vector panel_pos;
@@ -92,12 +93,15 @@ float current_player;
 		progressbar_color = stov(cvar_string("hud_progressbar_" #item "_color"))
 #define HUD_Panel_GetProgressBarColorForString(item) \
 switch(item) {\
-	case "strength": HUD_Panel_GetProgressBarColor(strength); break;\
-	case "shield": HUD_Panel_GetProgressBarColor(shield); break;\
 	case "health": HUD_Panel_GetProgressBarColor(health); break;\
 	case "armor": HUD_Panel_GetProgressBarColor(armor); break;\
+	case "strength": HUD_Panel_GetProgressBarColor(strength); break;\
+	case "shield": HUD_Panel_GetProgressBarColor(shield); break;\
 	case "fuel": HUD_Panel_GetProgressBarColor(fuel); break;\
 	case "nexball": HUD_Panel_GetProgressBarColor(nexball); break;\
+	case "speed": HUD_Panel_GetProgressBarColor(speed); break;\
+	case "acceleration": HUD_Panel_GetProgressBarColor(acceleration); break;\
+	case "acceleration_neg": HUD_Panel_GetProgressBarColor(acceleration_neg); break;\
 } ENDS_WITH_CURLY_BRACE
 
 // Get value for panel_bg: if "" fetch default, else use panel_bg_str
@@ -159,13 +163,14 @@ if(panel_bg_alpha_str == "") {\
 	panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha);\
 }\
 panel_bg_alpha = stof(panel_bg_alpha_str);\
-if(autocvar__hud_configure && menu_enabled == 2 && highlightedPanel == active_panel) {\
-	panel_bg_alpha = (1 - autocvar__menu_alpha) * max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha) + autocvar__menu_alpha * panel_bg_alpha;\
-} else if(autocvar__hud_configure) {\
-	panel_bg_alpha = max(autocvar_hud_configure_bg_minalpha, panel_bg_alpha);\
-} if(autocvar__hud_configure && !panel_enabled) {\
-	panel_bg_alpha = 0.25;\
-} if(!(menu_enabled == 2 && highlightedPanel == active_panel)) {\
+if(autocvar__hud_configure) {\
+	if(!panel_enabled)\
+		panel_bg_alpha = 0.25;\
+	else if(menu_enabled == 2 && highlightedPanel == hud_configure_active_panel)\
+		panel_bg_alpha = (1 - autocvar__menu_alpha) * max(cvar("hud_configure_bg_minalpha"), panel_bg_alpha) + autocvar__menu_alpha * panel_bg_alpha;\
+	else\
+		panel_bg_alpha = max(cvar("hud_configure_bg_minalpha"), panel_bg_alpha);\
+} if(!(menu_enabled == 2 && highlightedPanel == hud_configure_active_panel)) {\
 	panel_bg_alpha *= hud_fade_alpha;\
 }
 
@@ -176,7 +181,7 @@ if(autocvar__hud_configure && menu_enabled == 2 && highlightedPanel == active_pa
 panel_fg_alpha = autocvar_hud_panel_fg_alpha;\
 if(autocvar__hud_configure && !panel_enabled)\
 	panel_fg_alpha = 0.25;\
-if(!(menu_enabled == 2 && highlightedPanel == active_panel))\
+if(!(menu_enabled == 2 && highlightedPanel == hud_configure_active_panel))\
 	panel_fg_alpha *= hud_fade_alpha;
 
 // Get border. See comments above, it's similar.
@@ -205,13 +210,15 @@ if(panel_bg_padding_str == "") {\
 panel_bg_padding = min(min(panel_size_x, panel_size_y)/2 - 5, panel_bg_padding);
 
 // Point to the macros above (stupid max macro length)
-#define HUD_Panel_StringVars()\
+#define HUD_Panel_GetStringVars()\
 HUD_Panel_GetBg()\
-HUD_Panel_GetColorTeam()\
-HUD_Panel_GetColor()\
-HUD_Panel_GetBgAlpha()\
+if (panel_bg != "0") {\
+	HUD_Panel_GetColorTeam()\
+	HUD_Panel_GetColor()\
+	HUD_Panel_GetBgAlpha()\
+	HUD_Panel_GetBorder()\
+}\
 HUD_Panel_GetFgAlpha()\
-HUD_Panel_GetBorder()\
 HUD_Panel_GetScaledVectors()\
 HUD_Panel_GetPadding()
 
@@ -225,7 +232,9 @@ else\
 panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_panelpos;
 
 // return smoothly faded size of given panel when a dialog is active
-var vector menu_enable_maxsize; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(menu_enable_maxsize);
+//var vector menu_enable_maxsize; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(menu_enable_maxsize);
+var float menu_enable_maxsize_x;
+var float menu_enable_maxsize_y;
 var vector menu_enable_size;
 #define HUD_Panel_GetMenuSize()\
 menu_enable_maxsize_x = 0.3 * vid_conwidth;\
@@ -260,13 +269,22 @@ panel_bg_color_team_str = cvar_string("hud_panel_" #name "_bg_color_team"); \
 panel_bg_alpha_str = cvar_string("hud_panel_" #name "_bg_alpha"); \
 panel_bg_border_str = cvar_string("hud_panel_" #name "_bg_border"); \
 panel_bg_padding_str = cvar_string("hud_panel_" #name "_bg_padding"); \
-HUD_Panel_StringVars()\
-if(menu_enabled == 2 && active_panel == highlightedPanel) {\
+HUD_Panel_GetStringVars()\
+if(menu_enabled == 2 && hud_configure_active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuSize()\
 	HUD_Panel_GetMenuPos()\
 } ENDS_WITH_CURLY_BRACE
 
+// FTEQCC I HATE YOU WHY DO YOU MAKE ME DO THIS??? :(
+// max macro length is 1024 characters, I must split it up :(
+
 // Update all common cvars of given panel id
+#define HUD_Panel_UpdateCvarsForId_Part2(id) \
+switch(id) { \
+	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdateCvars(infomessages) break; \
+	case HUD_PANEL_PHYSICS: HUD_Panel_UpdateCvars(physics); break;\
+}
+
 #define HUD_Panel_UpdateCvarsForId(id) \
 switch(id) { \
 	case HUD_PANEL_WEAPONS: HUD_Panel_UpdateCvars(weapons) break; \
@@ -283,14 +301,14 @@ switch(id) { \
 	case HUD_PANEL_PRESSEDKEYS: HUD_Panel_UpdateCvars(pressedkeys) break; \
 	case HUD_PANEL_CHAT: HUD_Panel_UpdateCvars(chat) break; \
 	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdateCvars(engineinfo) break; \
-	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdateCvars(infomessages) break; \
+	default: HUD_Panel_UpdateCvarsForId_Part2(id)\
 }
 
 #define HUD_Panel_UpdatePosSize(name) \
 panel_pos = stov(cvar_string("hud_panel_" #name "_pos")); \
 panel_size = stov(cvar_string("hud_panel_" #name "_size")); \
 HUD_Panel_GetScaledVectors()\
-if(menu_enabled == 2 && active_panel == highlightedPanel) {\
+if(menu_enabled == 2 && hud_configure_active_panel == highlightedPanel) {\
 	HUD_Panel_GetMenuSize()\
 	HUD_Panel_GetMenuPos()\
 }\
@@ -298,6 +316,12 @@ panel_bg_border_str = cvar_string("hud_panel_" #name "_bg_border"); \
 HUD_Panel_GetBorder()
 
 // Update pos and size of given panel id
+#define HUD_Panel_UpdatePosSizeForId_Part2(id) \
+switch(id) { \
+	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdatePosSize(infomessages) break;\
+	case HUD_PANEL_PHYSICS: HUD_Panel_UpdatePosSize(physics); break;\
+}
+
 #define HUD_Panel_UpdatePosSizeForId(id) \
 switch(id) { \
 	case HUD_PANEL_WEAPONS: HUD_Panel_UpdatePosSize(weapons) break;\
@@ -314,5 +338,5 @@ switch(id) { \
 	case HUD_PANEL_PRESSEDKEYS: HUD_Panel_UpdatePosSize(pressedkeys) break;\
 	case HUD_PANEL_CHAT: HUD_Panel_UpdatePosSize(chat) break;\
 	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdatePosSize(engineinfo) break;\
-	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdatePosSize(infomessages)\
+	default: HUD_Panel_UpdatePosSizeForId_Part2(id)\
 }

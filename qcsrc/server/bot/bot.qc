@@ -98,6 +98,8 @@ void bot_think()
 			self.bot_strategytime = 0;
 		}
 	}
+	else if(self.aistatus & AI_STATUS_STUCK)
+		navigation_unstuck();
 
 	// now call the current bot AI (havocbot for example)
 	self.bot_ai();
@@ -374,6 +376,8 @@ void bot_clientdisconnect()
 	self.playermodel_freeme = string_null;
 	self.playerskin_freeme = string_null;
 	remove(self.bot_cmd_current);
+	if(bot_waypoint_queue_owner==self)
+		bot_waypoint_queue_owner = world;
 }
 
 void bot_clientconnect()
@@ -449,7 +453,7 @@ void bot_removenewest()
 	local float besttime;
 	local entity best, head;
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		bot_removefromlargestteam();
 		return;
@@ -563,7 +567,7 @@ void bot_serverframe()
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = FALSE;
-	if (teams_matter && autocvar_bot_vs_human && (c3==-1 && c4==-1))
+	if (teamplay && autocvar_bot_vs_human && (c3==-1 && c4==-1))
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{

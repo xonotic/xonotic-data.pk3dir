@@ -29,9 +29,11 @@ void turrets_precache()
 //.entity tur_base;
 void turret_remove()
 {
+    entity th;
     dprint("Removing turret type ", ftos(self.turret_type), "\n");
-    remove(self.tur_head);
+    th = self.tur_head;
     self.tur_head = world;
+    remove(th);
 }
 
 void turret_changeteam()
@@ -191,31 +193,15 @@ void ent_turret()
     
     if(sf & TNSF_ANG)
     {
-        if(sf & TNSF_FAR)
-        {            
-            self.tur_head.move_angles_x = ReadShort();
-            self.tur_head.move_angles_y = ReadShort();
-        }
-        else
-        {
-            self.tur_head.move_angles_x = ReadAngle();
-            self.tur_head.move_angles_y = ReadAngle();
-        }        
+        self.tur_head.move_angles_x = ReadShort();
+        self.tur_head.move_angles_y = ReadShort();
         self.tur_head.angles = self.angles + self.tur_head.move_angles;
     }
     
     if(sf & TNSF_AVEL)
     {
-        if(sf & TNSF_FAR)
-        {
-            self.tur_head.move_avelocity_x = ReadShort();
-            self.tur_head.move_avelocity_y = ReadShort();            
-        }
-        else
-        {            
-            self.tur_head.move_avelocity_x = ReadAngle();
-            self.tur_head.move_avelocity_y = ReadAngle();
-        }        
+        self.tur_head.move_avelocity_x = ReadShort();
+        self.tur_head.move_avelocity_y = ReadShort();            
     }
     
     if(sf & TNSF_STATUS)

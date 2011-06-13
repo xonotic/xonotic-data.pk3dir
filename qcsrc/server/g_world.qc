@@ -833,6 +833,8 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
 
+	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
+
 	if(g_ca || g_freezetag)
 	{
 		addstat(STAT_REDALIVE, AS_INT, redalive_stat);
@@ -917,8 +919,12 @@ void spawnfunc_worldspawn (void)
 	// fill sv_curl_serverpackages from .serverpackage files
 	if(autocvar_sv_curl_serverpackages_auto)
 	{
-		fd = search_begin("*.serverpackage", TRUE, FALSE);
 		s = "";
+		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
+		for(i = 0; i < n; ++i)
+			if(substring(argv(i), -14, -1) != ".serverpackage")
+				s = strcat(s, " ", argv(i));
+		fd = search_begin("*.serverpackage", TRUE, FALSE);
 		if(fd >= 0)
 		{
 			j = search_getsize(fd);
@@ -939,19 +945,6 @@ void spawnfunc_light (void)
 	//makestatic (self); // Who the f___ did that?
 	remove(self);
 }
-
-float TryFile( string pFilename )
-{
-	local float lHandle;
-	dprint("TryFile(\"", pFilename, "\")\n");
-	lHandle = fopen( pFilename, FILE_READ );
-	if( lHandle != -1 ) {
-		fclose( lHandle );
-		return TRUE;
-	} else {
-		return FALSE;
-	}
-};
 
 string GetGametype()
 {
@@ -996,14 +989,12 @@ float MapHasRightSize(string map)
 	if(autocvar_g_maplist_check_waypoints)
 	{
 		dprint("checkwp "); dprint(map);
-		fh = fopen(strcat("maps/", map, ".waypoints"), FILE_READ);
-		if(fh < 0)
+		if(!fexists(strcat("maps/", map, ".waypoints")))
 		{
 			dprint(": no waypoints\n");
 			return FALSE;
 		}
 		dprint(": has waypoints\n");
-		fclose(fh);
 	}
 
 	// open map size restriction file
@@ -1499,7 +1490,7 @@ void DumpStats(float final)
 		}
 	}
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		s = strcat(":labels:teamscores:", GetTeamScoreString(0, 0));
 		if(to_console)
@@ -1538,8 +1529,6 @@ void FixIntermissionClient(entity e)
 	string s;
 	if(!e.autoscreenshot) // initial call
 	{
-		e.angles = e.v_angle;
-		e.angles_x = -e.angles_x;
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
 		e.health = -2342;
 		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
@@ -1562,11 +1551,6 @@ void FixIntermissionClient(entity e)
 			WriteByte(MSG_ONE, SVC_INTERMISSION);
 		}
 	}
-
-	//e.velocity = '0 0 0';
-	//e.fixangle = TRUE;
-
-	// TODO halt weapon animation
 }
 
 
@@ -1945,7 +1929,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper();
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		team1_score = TeamScore_GetCompareValue(COLOR_TEAM1);
 		team2_score = TeamScore_GetCompareValue(COLOR_TEAM2);

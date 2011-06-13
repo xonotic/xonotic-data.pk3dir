@@ -1,3 +1,7 @@
+.entity accuracy;
+.float accuracy_frags[WEP_MAXCOUNT];
+FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_frags);
+
 float weaponstats_buffer;
 
 void WeaponStats_Init()
@@ -188,6 +192,7 @@ void player_setupanimsformodel()
 	self.anim_forwardleft = '20 1 1';
 	self.anim_backright = '21 1 1';
 	self.anim_backleft  = '22 1 1';
+	self.anim_melee = '23 1 1';
 	animparseerror = FALSE;
 	animfilename = strcat(self.model, ".animinfo");
 	animfile = fopen(animfilename, FILE_READ);
@@ -214,6 +219,7 @@ void player_setupanimsformodel()
 		self.anim_forwardleft  = animparseline(animfile);
 		self.anim_backright    = animparseline(animfile);
 		self.anim_backleft     = animparseline(animfile);
+		self.anim_melee	       = animparseline(animfile);
 		fclose(animfile);
 
 		// derived anims
@@ -604,8 +610,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		{
 			// become fully visible
 			self.alpha = 1;
-			// clear selected player display
-			ClearSelectedPlayer();
 			// throw a weapon
 			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
 		}
@@ -614,6 +618,14 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
 		DropAllRunes(self);
+
+        // increment frag counter for used weapon type
+        float w;
+        w = DEATH_WEAPONOF(deathtype);
+        if(WEP_VALID(w))
+        if(self.classname == "player")
+        if(self != attacker)
+        attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
 		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
 		{
@@ -627,6 +639,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		frag_inflictor = inflictor;
 		frag_target = self;
 		MUTATOR_CALLHOOK(PlayerDies);
+		weapon_action(self.weapon, WR_PLAYERDEATH);
 
 		if(self.flagcarried)
 		{
@@ -734,154 +747,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 }
 
-float UpdateSelectedPlayer_countvalue(float v)
-{
-	return max(0, (v - 1.0) / 0.5);
-}
-
-// returns: -2 if no hit, otherwise cos of the angle
-// uses the global v_angle
-float UpdateSelectedPlayer_canSee(entity p, float mincosangle, float maxdist)
-{
-	vector so, d;
-	float c;
-
-	if(p == self)
-		return -2;
-
-	if(p.deadflag)
-		return -2;
-
-	so = self.origin + self.view_ofs;
-	d = p.origin - so;
-
-	// misaimed?
-	if(dist_point_line(d, '0 0 0', v_forward) > maxdist)
-		return -2;
-
-	// now find the cos of the angle...
-	c = normalize(d) * v_forward;
-
-	if(c <= mincosangle)
-		return -2;
-
-	// not visible in any way? forget it
-	if(!checkpvs(so, p))
-		return -2;
-
-	traceline(so, p.origin, MOVE_NOMONSTERS, self);
-	if(trace_fraction < 1)
-		return -2;
-
-	return c;
-}
-
-void ClearSelectedPlayer()
-{
-	if(self.selected_player)
-	{
-		centerprint_expire(self, CENTERPRIO_POINT);
-		self.selected_player = world;
-		self.selected_player_display_needs_update = FALSE;
-	}
-}
-
-void UpdateSelectedPlayer()
-{
-	entity selected;
-	float selected_score;
-	selected = world;
-	selected_score = 0.95; // 18 degrees
-
-	if(!autocvar_sv_allow_shownames)
-		return;
-
-	if(clienttype(self) != CLIENTTYPE_REAL)
-		return;
-
-	if(self.cvar_cl_shownames == 0)
-		return;
-
-	if(self.cvar_cl_shownames == 1 && !teams_matter)
-		return;
-
-	makevectors(self.v_angle); // sets v_forward
-
-	// 1. cursor trace is always right
-	WarpZone_crosshair_trace(self);
-	if(trace_ent && trace_ent.classname == "player" && !trace_ent.deadflag)
-	{
-		selected = trace_ent;
-	}
-	else
-	{
-		// 2. if we don't have a cursor trace, find the player which is least
-		//    mis-aimed at
-		entity p;
-		FOR_EACH_PLAYER(p)
-		{
-			float c;
-			c = UpdateSelectedPlayer_canSee(p, selected_score, 100); // 100 = 2.5 meters
-			if(c >= -1)
-			{
-				selected = p;
-				selected_score = c;
-			}
-		}
-	}
-
-	if(selected)
-	{
-		self.selected_player_display_timeout = time + self.cvar_scr_centertime;
-	}
-	else
-	{
-		if(time < self.selected_player_display_timeout)
-			if(UpdateSelectedPlayer_canSee(self.selected_player, 0.7, 200) >= -1) // 5 meters, 45 degrees
-				selected = self.selected_player;
-	}
-
-	if(selected)
-	{
-		if(selected == self.selected_player)
-		{
-			float save;
-			save = UpdateSelectedPlayer_countvalue(self.selected_player_count);
-			self.selected_player_count = self.selected_player_count + frametime;
-			if(save != UpdateSelectedPlayer_countvalue(self.selected_player_count))
-			{
-				string namestr, healthstr;
-				namestr = playername(selected);
-				if(teams_matter)
-				{
-					healthstr = ftos(floor(selected.health));
-					if(self.team == selected.team)
-					{
-						namestr = strcat(namestr, " (", healthstr, "%)");
-						self.selected_player_display_needs_update = TRUE;
-					}
-				}
-				centerprint_atprio(self, CENTERPRIO_POINT, namestr);
-			}
-		}
-		else
-		{
-			ClearSelectedPlayer();
-			self.selected_player = selected;
-			self.selected_player_time = time;
-			self.selected_player_count = 0;
-			self.selected_player_display_needs_update = FALSE;
-		}
-	}
-	else
-	{
-		ClearSelectedPlayer();
-	}
-
-	if(self.selected_player)
-		self.last_selected_player = self.selected_player;
-}
-
 .float muted; // to be used by prvm_edictset server playernumber muted 1
 float Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol)
 // message "": do not say, just test flood control
@@ -907,7 +772,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	if(source.classname != "player")
 		colorstr = "^0"; // black for spectators
-	else if(teams_matter)
+	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
 	else
 		teamsay = FALSE;
@@ -1396,7 +1261,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 			break;
 		case VOICETYPE_TEAMRADIO:
 			FOR_EACH_REALCLIENT(msg_entity)
-				if(!teams_matter || msg_entity.team == self.team)
+				if(!teamplay || msg_entity.team == self.team)
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
 						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);

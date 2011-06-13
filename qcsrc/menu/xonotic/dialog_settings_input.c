@@ -46,8 +46,11 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Sensitivity:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(1, 32, 0.2, "sensitivity"));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("UI mouse speed:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0.2, 4.0, 0.1, "menu_mouse_speed"));
+		if(cvar("menu_mouse_absolute") == 0) // TODO remove this entirely later
+		{
+			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("UI mouse speed:")));
+			me.TD(me, 1, 2, e = makeXonoticSlider(0.2, 4.0, 0.1, "menu_mouse_speed"));
+		}
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "m_filter", _("Mouse filter")));
 	me.TR(me);

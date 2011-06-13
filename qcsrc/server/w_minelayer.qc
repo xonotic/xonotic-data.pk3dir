@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", _("Mine Layer"))
+REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", _("Mine Layer"))
 #else
 #ifdef SVQC
 void W_Mine_Think (void);
@@ -30,6 +30,8 @@ void W_Mine_Stick ()
 	setmodel(newmine, "models/mine.md3");
 	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
 
+	newmine.oldvelocity = self.velocity;
+
 	newmine.takedamage = self.takedamage;
 	newmine.damageforcescale = self.damageforcescale;
 	newmine.health = self.health;
@@ -56,8 +58,9 @@ void W_Mine_Explode ()
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
 			if(IsDifferentTeam(self.owner, other))
-				if(IsFlying(other))
-					AnnounceTo(self.owner, "airshot");
+				if(other.deadflag == DEAD_NO)
+					if(IsFlying(other))
+						AnnounceTo(self.owner, "airshot");
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
@@ -85,6 +88,9 @@ void W_Mine_DoRemoteExplode ()
 {
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
+
+	if(self.movetype == MOVETYPE_NONE)
+		self.velocity = self.oldvelocity;
 
 	RadiusDamage (self, self.owner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
@@ -350,7 +356,7 @@ float w_minelayer(float req)
 					// count potential damage according to type of target
 					if (targ == self)
 						selfdamage = selfdamage + d;
-					else if (targ.team == self.team && teams_matter)
+					else if (targ.team == self.team && teamplay)
 						teamdamage = teamdamage + d;
 					else if (bot_shouldattack(targ))
 						enemydamage = enemydamage + d;
@@ -362,7 +368,7 @@ float w_minelayer(float req)
 			desirabledamage = enemydamage;
 			if (time > self.invincible_finished && time > self.spawnshieldtime)
 				desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
-			if (teams_matter && self.team)
+			if (teamplay && self.team)
 				desirabledamage = desirabledamage - teamdamage;
 
 			mine = find(world, classname, "mine");

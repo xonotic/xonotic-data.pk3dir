@@ -236,7 +236,7 @@ float DoesQ3ARemoveThisEntity();
 void SV_OnEntityPreSpawnFunction()
 {
 	if(self.gametypefilter != "")
-	if not(isGametypeInFilter(game, teams_matter, have_team_spawns, self.gametypefilter))
+	if not(isGametypeInFilter(game, teamplay, have_team_spawns, self.gametypefilter))
 	{
 		remove(self);
 		return;

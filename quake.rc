@@ -4,6 +4,7 @@ maxplayers $menu_maxplayers
 exec data/campaign.cfg
 exec config_update.cfg
 exec font-xolonium.cfg
+exec autoexec/*.cfg
 exec autoexec.cfg
 stuffcmds
 //startdemos demos/demo1 demos/demo2 demos/demo3

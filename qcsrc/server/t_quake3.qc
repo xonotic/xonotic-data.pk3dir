@@ -23,7 +23,7 @@ void spawnfunc_weapon_plasmagun()    { spawnfunc_weapon_hagar();        }
 void spawnfunc_ammo_cells()          { spawnfunc_item_rockets();        }
 
 // Rail -> Rifle
-void spawnfunc_weapon_railgun()      { spawnfunc_weapon_sniperrifle();  }
+void spawnfunc_weapon_railgun()      { spawnfunc_weapon_rifle();  }
 void spawnfunc_ammo_slugs()          { spawnfunc_item_bullets();        }
 
 // BFG -> Crylink
@@ -142,11 +142,11 @@ float DoesQ3ARemoveThisEntity()
 	// Q3 style filters (DO NOT USE, THIS IS COMPAT ONLY)
 
 	if(self.notq3a)
-		if(!teams_matter || g_tdm || g_ctf)
+		if(!teamplay || g_tdm || g_ctf)
 			return 1;
 
 	if(self.notta)
-		if not(!teams_matter || g_tdm || g_ctf)
+		if not(!teamplay || g_tdm || g_ctf)
 			return 1;
 
 	if(self.notsingle)
@@ -154,11 +154,11 @@ float DoesQ3ARemoveThisEntity()
 			return 1;
 
 	if(self.notteam)
-		if(teams_matter)
+		if(teamplay)
 			return 1;
 
 	if(self.notfree)
-		if(!teams_matter)
+		if(!teamplay)
 			return 1;
 
 	if(self.gametype)
@@ -166,7 +166,7 @@ float DoesQ3ARemoveThisEntity()
 		string gametypename;
 		// static char *gametypeNames[] = {"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk", "harvester", "teamtournament"};
 		gametypename = "ffa";
-		if(teams_matter)
+		if(teamplay)
 			gametypename = "team";
 		if(g_arena)
 			gametypename = "tournament";
