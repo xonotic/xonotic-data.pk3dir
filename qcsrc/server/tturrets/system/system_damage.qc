@@ -269,7 +269,7 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     if not (self.tur_active)
         return;
 
-    if (teams_matter)
+    if (teamplay)
     if (self.team == attacker.team)
     {
         // This does not happen anymore. Re-enable if you fix that.
