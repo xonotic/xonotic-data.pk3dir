@@ -2465,7 +2465,7 @@ void LeaveSpectatorMode()
 	}
 	else {
 		//player may not join because of g_maxplayers is set
-		centerprint_atprio(self, CENTERPRIO_MAPVOTE, PREVENT_JOIN_TEXT);
+		centerprint(self, PREVENT_JOIN_TEXT);
 	}
 }
 

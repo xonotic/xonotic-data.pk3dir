@@ -216,7 +216,7 @@ MUTATOR_HOOKFUNCTION(ka_Scoring)
 		}
 		else if(!frag_attacker.ballcarried)
 			if(autocvar_g_keepaway_noncarrier_warn)
-				centerprint_atprio(frag_attacker, (CENTERPRIO_SPAM + 5), "Killing people while you don't have the ball gives no points!");
+				centerprint(frag_attacker, "Killing people while you don't have the ball gives no points!");
 
 		if(frag_attacker.ballcarried) // add to amount of kills while ballcarrier
 			PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_keepaway_score_killac);

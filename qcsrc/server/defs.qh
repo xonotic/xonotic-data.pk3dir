@@ -368,8 +368,6 @@ void FixClientCvars(entity e);
 
 float weaponsInMap;
 
-void centerprint_atprio(entity e, float prio, string s);
-void centerprint_expire(entity e, float prio);
 void centerprint(entity e, string s);
 
 .float respawn_countdown; // next number to count

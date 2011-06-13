@@ -152,9 +152,10 @@ void kh_Controller_Think()  // called a lot
 
 			//dprint(s, "\n");
 
+			// TODO limit centerprint spam and set the appropriated duration for each centerprinted msg 
 			FOR_EACH_PLAYER(e)
 				if(clienttype(e) == CLIENTTYPE_REAL)
-					centerprint_atprio(e, CENTERPRIO_SPAM, s);
+					Send_CSQC_Centerprint_Generic(e, CPID_KH_MSG, s, 2, 0); // duration > 1 works with all the messages
 		}
 		self.cnt -= 1;
 	}
@@ -686,11 +687,11 @@ void kh_Key_Think()  // runs all the time
 		{
 			if(head.team == kh_interferemsg_team)
 				if(head.kh_next)
-					centerprint(head, "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!");
+					Send_CSQC_Centerprint_Generic(head, CPID_KH_MSG, "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!", 0, 0);
 				else
-					centerprint(head, "All keys are in your team's hands!\n\nHelp the key carriers to meet!");
+					Send_CSQC_Centerprint_Generic(head, CPID_KH_MSG, "All keys are in your team's hands!\n\nHelp the key carriers to meet!", 0, 0);
 			else
-				centerprint(head, strcat("All keys are in the ", ColoredTeamName(kh_interferemsg_team), "^7's hands!\n\nInterfere ^1NOW^7!"));
+				Send_CSQC_Centerprint_Generic(head, CPID_KH_MSG, strcat("All keys are in the ", ColoredTeamName(kh_interferemsg_team), "^7's hands!\n\nInterfere ^1NOW^7!"), 0, 0);
 		}
 	}
 
@@ -881,7 +882,7 @@ void kh_EnableTrackingDevice()  // runs after each round
 
 	FOR_EACH_PLAYER(player)
 		if(clienttype(player) == CLIENTTYPE_REAL)
-			centerprint_expire(player, CENTERPRIO_SPAM);
+			Send_CSQC_Centerprint_Generic(player, CPID_KH_MSG, "", 1, 0);
 
 	kh_tracking_enabled = TRUE;
 }
@@ -907,7 +908,7 @@ void kh_StartRound()  // runs at the start of each round
 
 	FOR_EACH_PLAYER(player)
 		if(clienttype(player) == CLIENTTYPE_REAL)
-			centerprint_expire(player, CENTERPRIO_SPAM);
+			Send_CSQC_Centerprint_Generic(player, CPID_KH_MSG, "", 1, 0);
 
 	for(i = 0; i < kh_teams; ++i)
 	{

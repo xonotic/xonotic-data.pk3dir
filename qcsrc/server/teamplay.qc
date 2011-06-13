@@ -488,7 +488,7 @@ void PrintWelcomeMessage(entity pl)
 				return;
 			goto normal;
 		}
-		return centerprint_atprio(self, CENTERPRIO_SPAM, specString); // TODO: convert to Send_CSQC_Centerprint_Generic(self, CPID_TIMEOUT_COUNTDOWN, ...
+		return centerprint(self, specString);
 	}
 
 :normal

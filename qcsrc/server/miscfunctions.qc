@@ -718,47 +718,10 @@ float NumberToTeamNumber(float number)
 	return -1;
 }
 
-#define CENTERPRIO_POINT 1
-#define CENTERPRIO_SPAM 2
-#define CENTERPRIO_VOTE 4
-#define CENTERPRIO_NORMAL 5
-#define CENTERPRIO_SHIELDING 7
-#define CENTERPRIO_MAPVOTE 9
-#define CENTERPRIO_IDLEKICK 50
-#define CENTERPRIO_ADMIN 99
-.float centerprint_priority;
-.float centerprint_expires;
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s1, float duration, float countdown_num);
-void centerprint_atprio(entity e, float prio, string s)
-{
-    if (intermission_running)
-        if (prio < CENTERPRIO_MAPVOTE)
-            return;
-    if (time > e.centerprint_expires)
-        e.centerprint_priority = 0;
-    if (prio >= e.centerprint_priority)
-    {
-        e.centerprint_priority = prio;
-        if (timeoutStatus == 2)
-            e.centerprint_expires = time + (e.cvar_hud_panel_centerprint_time * TIMEOUT_SLOWMO_VALUE);
-        else
-            e.centerprint_expires = time + e.cvar_hud_panel_centerprint_time;
-        // centerprint_builtin(e, s);
-        Send_CSQC_Centerprint_Generic(e, 0, s, 0, 0);
-    }
-}
-void centerprint_expire(entity e, float prio)
-{
-    if (prio == e.centerprint_priority)
-    {
-        e.centerprint_priority = 0;
-        // centerprint_builtin(e, "");
-        Send_CSQC_Centerprint_Generic(e, 0, "", 0, 0);
-    }
-}
 void centerprint(entity e, string s)
 {
-    centerprint_atprio(e, CENTERPRIO_NORMAL, s);
+	Send_CSQC_Centerprint_Generic(e, 0, s, 0, 0);
 }
 
 // decolorizes and team colors the player name when needed

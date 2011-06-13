@@ -287,7 +287,6 @@ float GameCommand_Vote(string s, entity e) {
 				VoteDialog_UpdateHighlight(1);
 				print_to(e, "^1You accepted the vote.");
 				e.vote_vote = 1;
-				centerprint_expire(e, CENTERPRIO_VOTE);
 				if(!autocvar_sv_vote_singlecount) {
 					VoteCount();
 				}
@@ -305,7 +304,6 @@ float GameCommand_Vote(string s, entity e) {
 				VoteDialog_UpdateHighlight(2);
 				print_to(e, "^1You rejected the vote.");
 				e.vote_vote = -1;
-				centerprint_expire(e, CENTERPRIO_VOTE);
 				if(!autocvar_sv_vote_singlecount) {
 					VoteCount();
 				}
@@ -323,7 +321,6 @@ float GameCommand_Vote(string s, entity e) {
 				VoteDialog_UpdateHighlight(3);
 				print_to(e, "^1You abstained from your vote.");
 				e.vote_vote = -2;
-				centerprint_expire(e, CENTERPRIO_VOTE);
 				if(!autocvar_sv_vote_singlecount) {
 					VoteCount();
 				}
@@ -466,7 +463,6 @@ void VoteReset() {
 	FOR_EACH_CLIENT(player)
 	{
 		player.vote_vote = 0;
-		centerprint_expire(player, CENTERPRIO_VOTE);
 	}
 
 	if(votecalled)
