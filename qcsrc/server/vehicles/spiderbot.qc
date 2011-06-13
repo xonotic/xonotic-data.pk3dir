@@ -176,7 +176,7 @@ float spiderbot_frame()
     float ftmp;
 
 	if(intermission_running)
-		return;
+		return 1;
 		
     player = self;
     spider = self.vehicle;
