@@ -220,21 +220,21 @@ void W_Mine_Think (void)
 
 void W_Mine_Touch (void)
 {
+	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
+		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
+
 	PROJECTILE_TOUCH;
 
 	if(other && other.takedamage == DAMAGE_AIM)
 	{
 		// hit some enemy
 		// we do nothing, other than clearing velocity (falling straight down)
-		// but only if we're still moving (not stuck yet)
-		if(self.movetype != MOVETYPE_NONE && self.movetype != MOVETYPE_FOLLOW)
-		{
-			// allow falling down, but no other movement, when hit an enemy
-			self.velocity_x = 0;
-			self.velocity_y = 0;
-			if(self.velocity_z > 0)
-				self.velocity_z = 0;
-		}
+
+		// allow falling down, but no other movement, when hit an enemy
+		self.velocity_x = 0;
+		self.velocity_y = 0;
+		if(self.velocity_z > 0)
+			self.velocity_z = 0;
 	}
 	else
 	{
