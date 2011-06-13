@@ -316,6 +316,9 @@ float raptor_frame()
     entity player, raptor;
     float ftmp, ftmp2;
     vector df, ra;
+    
+	if(intermission_running)
+		return;
 
     player = self;
     raptor = self.vehicle;

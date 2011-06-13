@@ -175,6 +175,9 @@ float spiderbot_frame()
     entity player, spider;
     float ftmp;
 
+	if(intermission_running)
+		return;
+		
     player = self;
     spider = self.vehicle;
     self   = spider;

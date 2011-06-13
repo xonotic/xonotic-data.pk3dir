@@ -256,6 +256,9 @@ float racer_frame()
     vector df;
     float ftmp;
 
+	if(intermission_running)
+		return;
+
     player  = self;
     racer   = self.vehicle;
     self    = racer;

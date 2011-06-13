@@ -859,15 +859,17 @@ void CSQC_UpdateView(float w, float h)
 		sound(world, CHAN_AUTO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
 		nextsound_typehit_time = time + autocvar_cl_hitsound_antispam_time;
 	}
-
-	if(hud == HUD_SPIDERBOT)
-		CSQC_SPIDER_HUD();
-	else if(hud == HUD_WAKIZASHI)
-        CSQC_WAKIZASHI_HUD();
-    else if(hud == HUD_RAPTOR)
-        CSQC_RAPTOR_HUD();
-    else if(hud == HUD_BUMBLEBEE)
-        CSQC_BUMBLE_HUD();
+    if(hud && !intermission)
+    {        
+        if(hud == HUD_SPIDERBOT)
+            CSQC_SPIDER_HUD();
+        else if(hud == HUD_WAKIZASHI)
+            CSQC_WAKIZASHI_HUD();
+        else if(hud == HUD_RAPTOR)
+            CSQC_RAPTOR_HUD();
+        else if(hud == HUD_BUMBLEBEE)
+            CSQC_BUMBLE_HUD();
+    }
 	else
 	{
 		if(gametype == GAME_FREEZETAG)
@@ -1299,6 +1301,9 @@ void CSQC_common_hud(void)
 	// HUD_SortFrags(); done in HUD_Draw
 	float hud;
 	hud = getstati(STAT_HUD);
+
+    if(intermission)
+        hud = HUD_NORMAL;
 
 	//hud = 10;
 	switch(hud)
