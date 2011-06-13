@@ -614,7 +614,7 @@ void HUD_Weapons(void)
 {
 	float f, screen_ar;
 	float center_x, center_y;
-
+    if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_weapons) return;
@@ -1019,6 +1019,7 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 
 void HUD_Ammo(void)
 {
+    if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_ammo) return;
@@ -1319,6 +1320,7 @@ void HUD_HealthArmor(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_healtharmor) return;
+		if(hud != HUD_NORMAL) return;
 		if(spectatee_status == -1) return;
 
 		health = getstati(STAT_HEALTH);

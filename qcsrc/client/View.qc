@@ -368,7 +368,6 @@ void CSQC_UpdateView(float w, float h)
 	vector v, vo;
 	vector vf_size, vf_min;
 	float a;
-	float hud;
 	hud = getstati(STAT_HUD);
 
 	button_attack2 = (input_buttons & BUTTON_3);
@@ -859,18 +858,8 @@ void CSQC_UpdateView(float w, float h)
 		sound(world, CHAN_AUTO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
 		nextsound_typehit_time = time + autocvar_cl_hitsound_antispam_time;
 	}
-    if(hud && !intermission)
-    {        
-        if(hud == HUD_SPIDERBOT)
-            CSQC_SPIDER_HUD();
-        else if(hud == HUD_WAKIZASHI)
-            CSQC_WAKIZASHI_HUD();
-        else if(hud == HUD_RAPTOR)
-            CSQC_RAPTOR_HUD();
-        else if(hud == HUD_BUMBLEBEE)
-            CSQC_BUMBLE_HUD();
-    }
-	else
+
+	//else
 	{
 		if(gametype == GAME_FREEZETAG)
 		{
@@ -888,7 +877,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1) {
+		if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL) {
 			string wcross_style;
 			float wcross_alpha, wcross_resolution;
 			wcross_style = autocvar_crosshair;
@@ -1289,7 +1278,18 @@ void CSQC_UpdateView(float w, float h)
 
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
-
+    
+    if(hud && !intermission)
+    {        
+        if(hud == HUD_SPIDERBOT)
+            CSQC_SPIDER_HUD();
+        else if(hud == HUD_WAKIZASHI)
+            CSQC_WAKIZASHI_HUD();
+        else if(hud == HUD_RAPTOR)
+            CSQC_RAPTOR_HUD();
+        else if(hud == HUD_BUMBLEBEE)
+            CSQC_BUMBLE_HUD();
+    }
 	// let's reset the view back to normal for the end
 	R_SetView(VF_MIN, '0 0 0');
 	R_SetView(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
@@ -1298,62 +1298,51 @@ void CSQC_UpdateView(float w, float h)
 
 void CSQC_common_hud(void)
 {
-	// HUD_SortFrags(); done in HUD_Draw
-	float hud;
-	hud = getstati(STAT_HUD);
+    // do some accuracy var caching
+    float i;
+    if(!(gametype == GAME_RACE || gametype == GAME_CTS))
+    {
+        if(autocvar_accuracy_color_levels != acc_color_levels)
+        {
+            if(acc_color_levels)
+                strunzone(acc_color_levels);
+            acc_color_levels = strzone(autocvar_accuracy_color_levels);
+            acc_levels = tokenize(acc_color_levels);
+            if (acc_levels > MAX_ACCURACY_LEVELS)
+                acc_levels = MAX_ACCURACY_LEVELS;
 
-    if(intermission)
-        hud = HUD_NORMAL;
+            for (i = 0; i < acc_levels; ++i)
+                acc_lev[i] = stof(argv(i)) / 100.0;
+        }
+        // let know that acc_col[] needs to be loaded
+        acc_col_x[0] = -1;
+    }
 
-	//hud = 10;
+    HUD_Main(); // always run these functions for alpha checks
+    HUD_DrawScoreboard();
+
+    if (scoreboard_active) // scoreboard/accuracy
+    {
+        HUD_Reset();
+        // HUD_DrawScoreboard takes care of centerprint_start
+    }
+    else if (intermission == 2) // map voting screen
+    {
+        HUD_FinaleOverlay();
+        HUD_Reset();
+
+        centerprint_start_x = 0;
+        centerprint_start_y = autocvar_scr_centerpos * vid_conheight;
+    }
+    else // hud
+    {
+        centerprint_start_x = 0;
+        centerprint_start_y = autocvar_scr_centerpos * vid_conheight;
+    }
+
+	/*
 	switch(hud)
 	{
-		case HUD_NORMAL:
-			// do some accuracy var caching
-			float i;
-			if(!(gametype == GAME_RACE || gametype == GAME_CTS))
-			{
-				if(autocvar_accuracy_color_levels != acc_color_levels)
-				{
-					if(acc_color_levels)
-						strunzone(acc_color_levels);
-					acc_color_levels = strzone(autocvar_accuracy_color_levels);
-					acc_levels = tokenize(acc_color_levels);
-					if (acc_levels > MAX_ACCURACY_LEVELS)
-						acc_levels = MAX_ACCURACY_LEVELS;
-
-					for (i = 0; i < acc_levels; ++i)
-						acc_lev[i] = stof(argv(i)) / 100.0;
-				}
-				// let know that acc_col[] needs to be loaded
-				acc_col_x[0] = -1;
-			}
-
-			HUD_Main(); // always run these functions for alpha checks
-			HUD_DrawScoreboard();
-
-			if (scoreboard_active) // scoreboard/accuracy
-			{
-				HUD_Reset();
-				// HUD_DrawScoreboard takes care of centerprint_start
-			}
-			else if (intermission == 2) // map voting screen
-			{
-				HUD_FinaleOverlay();
-				HUD_Reset();
-
-				centerprint_start_x = 0;
-				centerprint_start_y = autocvar_scr_centerpos * vid_conheight;
-			}
-			else // hud
-			{
-				centerprint_start_x = 0;
-				centerprint_start_y = autocvar_scr_centerpos * vid_conheight;
-			}
-
-			HUD_DrawCenterPrint();
-			break;
-
 		case HUD_SPIDERBOT:
 			CSQC_SPIDER_HUD();
 			break;
@@ -1365,8 +1354,11 @@ void CSQC_common_hud(void)
         case HUD_BUMBLEBEE:
             CSQC_BUMBLE_HUD();
             break;
-
 	}
+	*/
+	
+    HUD_DrawCenterPrint();
+    
 }
 
 
