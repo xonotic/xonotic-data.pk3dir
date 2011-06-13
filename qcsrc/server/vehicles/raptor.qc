@@ -318,7 +318,7 @@ float raptor_frame()
     vector df, ra;
     
 	if(intermission_running)
-		return;
+		return 1;
 
     player = self;
     raptor = self.vehicle;

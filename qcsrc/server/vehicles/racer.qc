@@ -257,7 +257,7 @@ float racer_frame()
     float ftmp;
 
 	if(intermission_running)
-		return;
+		return 1;
 
     player  = self;
     racer   = self.vehicle;
