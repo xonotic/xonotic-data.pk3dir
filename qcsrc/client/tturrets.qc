@@ -74,9 +74,7 @@ void turret_head_draw()
 }
 
 void turret_draw()
-{
-    //float dt;
-    
+{        
     if (self.health < 127)
     if(random() < 0.25)
         te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
@@ -156,6 +154,7 @@ void turret_construct()
     
     self.tur_head.move_movetype = MOVETYPE_NOCLIP;
     self.move_movetype = MOVETYPE_NOCLIP;
+    self.tur_head.angles = self.angles;
     
     setsize(self, _min, _max);
     setsize(self.tur_head, '0 0 0', '0 0 0');

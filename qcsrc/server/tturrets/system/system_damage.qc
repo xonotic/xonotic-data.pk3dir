@@ -124,7 +124,7 @@ void turret_stdproc_die()
 
     self.deadflag           = DEAD_DEAD;
     self.tur_head.deadflag  = self.deadflag;
-
+    
     sound (self, CHAN_PLAYER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     org2 = self.origin + '0 0 40';
 
@@ -139,16 +139,10 @@ void turret_stdproc_die()
     self.solid              = SOLID_NOT;
     self.tur_head.solid     = self.solid;
 
-    self.alpha             = -1;
-    self.tur_head.alpha    = self.alpha;
-    self.customizeentityforclient = SUB_False;
-    self.tur_head.customizeentityforclient = SUB_False;
-
     self.event_damage           = SUB_Null;
     self.takedamage             = DAMAGE_NO;
 
-    self.effects            = 0;
-    self.tur_head.effects   = self.effects;
+    self.effects            = EF_NODRAW;
     self.health             = 0;
 
 // Trow fake parts arround
@@ -197,44 +191,18 @@ void turret_stdproc_die()
     }
 }
 
-var const float SUB_NullFloat();
 void turret_stdproc_respawn()
 {
     // Make sure all parts belong to the same team since
     // this function doubles as "teamchange" function.
 
     self.tur_head.team 	= self.team;
-	self.colormod 		= '0 0 0';
 
-	switch(self.team)
-	{
-        case COLOR_TEAM1: // Red
-            self.colormod = '1.4 0.8 0.8';
-            break;
-
-        case COLOR_TEAM2: // Blue
-            self.colormod = '0.8 0.8 1.4';
-            break;
-
-        case COLOR_TEAM3: // Yellow
-            self.colormod = '1.4 1.4 0.6';
-            break;
-
-        case COLOR_TEAM4: // Pink
-            self.colormod = '1.4 0.6 1.4';
-            break;
-	}
-
+    self.effects             &~= EF_NODRAW;
     self.deadflag           = DEAD_NO;
     self.effects            = EF_LOWPRECISION;
-    self.tur_head.effects   = self.effects;
     self.solid              = SOLID_BBOX;
-    self.alpha 				= 1;
-    self.tur_head.alpha     = self.alpha;
     
-    self.customizeentityforclient 			= SUB_NullFloat;
-    self.tur_head.customizeentityforclient 	= SUB_NullFloat;
-
     self.takedamage 			= DAMAGE_AIM;
     self.event_damage           = turret_stdproc_damage;
 
@@ -249,14 +217,8 @@ void turret_stdproc_respawn()
 
     self.nextthink  = time + self.ticrate;
     
-    if(self.SendEntity)
-    {
-        self.SendFlags  = TNSF_FULL_UPDATE;
-        self.think      = turret_link;  // CSQC?
-    }
-        
-    else
-        self.think      = turret_think; // Or not?
+    self.SendFlags  = TNSF_FULL_UPDATE;
+    self.think      = turret_link;  // CSQC?
 
     if (self.turret_respawnhook)
         self.turret_respawnhook();
@@ -298,8 +260,7 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
         self.tur_head.angles_x = self.tur_head.angles_x + (-0.5 + random()) * damage;
         self.tur_head.angles_y = self.tur_head.angles_y + (-0.5 + random()) * damage;
         
-        if(self.SendEntity)
-            self.SendFlags  |= TNSF_ANG;
+        self.SendFlags  |= TNSF_ANG;
 
     }
 
@@ -318,7 +279,6 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     }
     
     // CSQC
-    if(self.SendEntity)
-        self.SendFlags  |= TNSF_STATUS;
+    self.SendFlags  |= TNSF_STATUS;
 
 }

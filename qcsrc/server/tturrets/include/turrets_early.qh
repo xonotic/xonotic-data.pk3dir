@@ -341,7 +341,7 @@ vector real_origin(entity ent);
 .float target_select_playerbias;
 /// Field of view
 //.float target_select_fov;
-/// Last thimestamp this surret aquierd a valid target
+/// Last timestamp this turret aquierd a valid target
 .float target_select_time;
 
 /*
@@ -401,32 +401,19 @@ void turret_fire();
 .void() turret_respawnhook;
 
 /*
-#define TEH_THINK 2
-#define TEH_DAMAGE 4
-#define TEH_DIE 8
-#define TEH_RESPAWN 16
-#define TEH_TRACK 32
-#define TEH_AIM 64
-#define TEH_SELECT 128
-.float(float event_id) turret_eventhook;
-*/
-
-
-/*
 * Target selection, preferably but not nessesarely
 * return a normalized result.
 */
 /// Function to use for target evaluation. usualy turret_stdproc_targetscore_generic
-.float(entity e_turret, entity e_target) turret_score_target;
-
+.float(entity _turret, entity _target) turret_score_target;
 
 /*
 * Target selection
 */
 /// Generic, fairly smart, bias-aware target selection.
-float   turret_stdproc_targetscore_generic(entity e_turret, entity e_target);
+float   turret_stdproc_targetscore_generic(entity _turret, entity _target);
 /// Experimental supportunits targetselector
-float   turret_stdproc_targetscore_support(entity e_turret,entity e_target);
+float   turret_stdproc_targetscore_support(entity _turret,entity _target);
 
 /*
 * Aim functions

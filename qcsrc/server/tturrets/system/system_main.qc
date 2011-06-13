@@ -2,8 +2,8 @@
 
 float turret_send(entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
-	
+	dprint("Sending update\n");
+	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);    
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & TNSF_SETUP)
 	{
@@ -275,8 +275,7 @@ void turret_stdproc_track()
             }
             
             // CSQC
-            if(self.SendEntity)
-                self.SendFlags  = TNSF_ANG;
+            self.SendFlags  = TNSF_ANG;
             
             return;
 
@@ -304,17 +303,15 @@ void turret_stdproc_track()
             self.tur_head.avelocity_x = 0;
             self.tur_head.angles_x = self.aim_maxpitch;
             
-            if(self.SendEntity)
-                self.SendFlags  |= TNSF_ANG;
+            self.SendFlags  |= TNSF_ANG;
         }
         
         if((self.tur_head.angles_x + self.tur_head.avelocity_x * self.ticrate) < -self.aim_maxpitch)
         {
             self.tur_head.avelocity_x = 0;
             self.tur_head.angles_x = -self.aim_maxpitch;
-            
-            if(self.SendEntity)
-                self.SendFlags  |= TNSF_ANG;
+                        
+            self.SendFlags  |= TNSF_ANG;
         }
     }
 
@@ -328,8 +325,7 @@ void turret_stdproc_track()
             self.tur_head.avelocity_y = 0;
             self.tur_head.angles_y = self.aim_maxrot;
             
-            if(self.SendEntity)
-                self.SendFlags  |= TNSF_ANG;
+            self.SendFlags  |= TNSF_ANG;
         }
 
         if((self.tur_head.angles_y + self.tur_head.avelocity_y * self.ticrate) < -self.aim_maxrot)
@@ -337,22 +333,18 @@ void turret_stdproc_track()
             self.tur_head.avelocity_y = 0;
             self.tur_head.angles_y = -self.aim_maxrot;
             
-            if(self.SendEntity)
-                self.SendFlags  |= TNSF_ANG;
+            self.SendFlags  |= TNSF_ANG;
         }
     }
         
-    if(self.SendEntity)
+    self.SendFlags  |= TNSF_AVEL;
+    
+    // Force a angle update every 10'th frame
+    self.turret_framecounter += 1;
+    if(self.turret_framecounter >= 10)
     {        
-        self.SendFlags  |= TNSF_AVEL;
-        
-        // Push a angle update every 10'th frame
-        self.turret_framecounter += 1;
-        if(self.turret_framecounter >= 10)
-        {
-            self.SendFlags  |= TNSF_ANG;
-            self.turret_framecounter = 0;
-        }            
+        self.SendFlags |= TNSF_ANG;
+        self.turret_framecounter = 0;
     }            
 }
 
@@ -1244,10 +1236,6 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
         self.idle_aim  = self.tur_head.angles + angleofs(self.tur_head, self.tur_defend);
     else
         self.idle_aim  = '0 0 0';
-
-    // Team color
-    if (self.team == COLOR_TEAM1) self.colormod = '1.4 0.8 0.8';
-    if (self.team == COLOR_TEAM2) self.colormod = '0.8 0.8 1.4';
 
     // Attach stdprocs. override when and what needed
     if (self.turrcaps_flags & TFL_TURRCAPS_SUPPORT)
