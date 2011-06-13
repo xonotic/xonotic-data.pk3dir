@@ -225,16 +225,10 @@ void W_Mine_Touch (void)
 
 	PROJECTILE_TOUCH;
 
-	if(other && other.takedamage == DAMAGE_AIM)
+	if(other && other.classname == "player" && other.deadflag == DEAD_NO)
 	{
-		// hit some enemy
-		// we do nothing, other than clearing velocity (falling straight down)
-
-		// allow falling down, but no other movement, when hit an enemy
-		self.velocity_x = 0;
-		self.velocity_y = 0;
-		if(self.velocity_z > 0)
-			self.velocity_z = 0;
+		// hit a player
+		// don't stick
 	}
 	else
 	{
