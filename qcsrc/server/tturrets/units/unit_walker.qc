@@ -609,8 +609,11 @@ void walker_postthink()
             walker_move_enemy();
     }
 
-
     walker_animate();
+    
+    //if(vlen(self.velocity))
+    self.SendFlags |= TNSF_MOVE;
+
 }
 
 void walker_attack()

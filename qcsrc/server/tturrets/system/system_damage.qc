@@ -64,7 +64,7 @@ void turret_stdproc_die()
     else
     {
 		// Setup respawn
-        self.SendFlags      = TNSF_DIE;
+        self.SendFlags      |= TNSF_STATUS;
         self.nextthink      = time + 0.2;
         self.think          = turret_hide;
         

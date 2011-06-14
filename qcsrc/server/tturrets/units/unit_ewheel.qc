@@ -210,6 +210,9 @@ void ewheel_postthink()
 
 
     self.velocity_z = vz;
+    
+    if(vlen(self.velocity))
+        self.SendFlags |= TNSF_MOVE;
 }
 
 void ewheel_respawnhook()
@@ -290,9 +293,8 @@ void turret_ewheel_dinit()
     }
 
     self.target_select_flags   = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-    self.target_select_flags   = TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-    self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;// | TFL_TARGETSELECT_LOS;
-    self.target_validate_flags = TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;// | TFL_TARGETSELECT_LOS;
+    self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+
     self.damage_flags          |= TFL_DMG_DEATH_NOGIBS;
 
     self.iscreature = TRUE;

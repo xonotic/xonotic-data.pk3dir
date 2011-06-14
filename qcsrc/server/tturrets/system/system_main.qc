@@ -29,10 +29,31 @@ float turret_send(entity to, float sf)
         WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_y));
     }
     
+    if(sf & TNSF_MOVE)
+    {
+        WriteShort(MSG_ENTITY, rint(self.origin_x));
+        WriteShort(MSG_ENTITY, rint(self.origin_y));
+        WriteShort(MSG_ENTITY, rint(self.origin_z));
+
+        WriteShort(MSG_ENTITY, rint(self.velocity_x));
+        WriteShort(MSG_ENTITY, rint(self.velocity_y));
+        WriteShort(MSG_ENTITY, rint(self.velocity_z));        
+        
+        WriteShort(MSG_ENTITY, rint(self.angles_y));        
+    }
+    
+    if(sf & TNSF_ANIM)
+    {
+        
+    }
+    
     if(sf & TNSF_STATUS)
     {        
         WriteByte(MSG_ENTITY, self.team);
-        WriteByte(MSG_ENTITY, rint((self.health / self.tur_health) * 255)); // Send health as 0-255 insted of real value, where 255 = 100%
+        if(self.health <= 0)
+            WriteByte(MSG_ENTITY, 0);
+        else
+            WriteByte(MSG_ENTITY, rint((self.health / self.tur_health) * 255)); // Send health as 0-255 insted of real value, where 255 = 100%
     }
     
 	return TRUE;

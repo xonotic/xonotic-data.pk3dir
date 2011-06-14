@@ -80,6 +80,34 @@ void turret_draw()
     self.drawmask = MASK_NORMAL;
 }
 
+void turret_moving_head_draw()
+{        
+    self.drawmask = MASK_NORMAL;
+}
+
+void turret_moving_draw()
+{        
+    float dt;
+        
+    dt = time - self.move_time;
+    self.move_time = time;
+    if(dt <= 0)
+        return;
+    
+    setorigin(self, self.origin + self.velocity * dt);
+    if(self.turret_type == TID_WALKER)
+        setorigin(self.tur_head, gettaginfo(self, gettagindex(self, "tag_head")));
+    else
+        setorigin(self.tur_head, self.origin);
+    self.tur_head.angles += dt * self.tur_head.move_avelocity;
+    
+    if (self.health < 127)
+    if(random() < 0.25)
+        te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
+    
+    self.drawmask = MASK_NORMAL;
+}
+
 string tid2info_base;
 string tid2info_head;
 vector  tid2info_min;
@@ -172,6 +200,19 @@ void turret_construct()
     self.draw               = turret_draw;
     self.tur_head.draw      = turret_head_draw;
     self.entremove          = turret_remove;
+
+    if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
+    {
+        self.gravity = 1;
+        self.move_movetype = MOVETYPE_BOUNCE;
+        self.move_origin = self.origin;                
+        self.move_time = time;        
+   
+        self.movetype           = MOVETYPE_NOCLIP;
+        self.tur_head.movetype  = MOVETYPE_NOCLIP;    
+        self.draw               = turret_moving_draw;
+        self.tur_head.draw      = turret_moving_head_draw;
+    }
 }
 
 entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode);
@@ -180,6 +221,7 @@ void turret_gibboom();
 void turret_gib_draw()
 {
     Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
+    
     self.drawmask = MASK_NORMAL;
 	
 	if(self.cnt)
@@ -308,6 +350,31 @@ void ent_turret()
         self.tur_head.move_avelocity_y = ReadShort();            
     }
     
+    if(sf & TNSF_AVEL)
+    {        
+        //WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_x));
+        //WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_y));
+    }
+    
+    if(sf & TNSF_MOVE)
+    {
+        self.origin_x = ReadShort();
+        self.origin_y = ReadShort();
+        self.origin_z = ReadShort();
+        setorigin(self, self.origin);
+        
+        self.velocity_x = ReadShort();
+        self.velocity_y = ReadShort();
+        self.velocity_z = ReadShort();
+        
+        self.angles_y = ReadShort();
+        
+        self.move_time = time;
+        self.move_velocity = self.velocity;
+        self.move_origin = self.origin;
+    }
+    
+
     if(sf & TNSF_STATUS)
     {        
         float _team;
@@ -321,6 +388,7 @@ void ent_turret()
         }
     } 
     
-    if(sf == TNSF_DIE)
+    //if(sf == TNSF_DIE)
+    if(self.health == 0)
         turret_die();
 }
