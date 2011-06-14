@@ -436,6 +436,7 @@ void walker_move_path()
 }
 
 .vector enemy_last_loc;
+.float enemy_last_time;
 void walker_move_enemy()
 {
     switch (self.waterlevel)
@@ -459,8 +460,30 @@ void walker_move_enemy()
     self.moveto = self.enemy.origin;
     self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
     self.enemy_last_loc = self.enemy.origin;
-    
+    self.enemy_last_time = time;
 }
+
+void walker_move_enemy_last_loc()
+{
+    switch (self.waterlevel)
+    {
+    case 0:
+        self.animflag = ANIM_WALK;
+    case 1:
+    case 2:
+        if (self.animflag != ANIM_SWIM)
+            self.animflag = ANIM_WALK;
+        else
+            self.animflag = ANIM_SWIM;
+        break;
+    case 3:
+        self.animflag = ANIM_SWIM;
+    }
+
+    self.moveto = self.enemy_last_loc;
+    self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+}
+
 
 void walker_move_idle_pause()
 {
@@ -531,7 +554,14 @@ void walker_postthink()
         walker_move_path();
     else if (self.enemy == world)
     {
-        if(self.pathcurrent)
+        if(self.enemy_last_loc != '0 0 0')
+        {
+            if(vlen(self.origin - self.enemy_last_loc) < 128 || time - self.enemy_last_time > 10)                    
+                self.enemy_last_loc = '0 0 0';
+            else
+                walker_move_enemy_last_loc();
+        }
+        else if(self.pathcurrent)
             walker_move_path();
         else
             walker_move_idle_pause();
