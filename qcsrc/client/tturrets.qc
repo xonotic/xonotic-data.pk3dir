@@ -1,3 +1,4 @@
+
 void turrets_precache()
 {
     precache_model ("models/turrets/ewheel-base2.md3");
@@ -93,6 +94,9 @@ void turret_moving_draw()
     self.move_time = time;
     if(dt <= 0)
         return;
+    
+    fixedmakevectors(self.angles);
+    movelib_groundalign4point(300, 100, 0.25);
     
     setorigin(self, self.origin + self.velocity * dt);
     if(self.turret_type == TID_WALKER)

@@ -32,6 +32,7 @@ noise.qh
 teamplay.qh
 tturrets.qh
 ../server/tturrets/include/turrets_early.qh
+../server/movelib.qc
 main.qh
 
 sortlist.qc

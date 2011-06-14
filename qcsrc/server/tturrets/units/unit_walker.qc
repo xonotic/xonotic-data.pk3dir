@@ -12,50 +12,11 @@
 #define ANIM_ROAM       11
 
 .float animflag;
-.entity wkr_spawn;
 
 #define WALKER_MIN '-70 -70 0'
 #define WALKER_MAX '70 70 95'
 
 #define WALKER_PATH(s,e) pathlib_astar(s,e)
-
-float walker_meele_dmg;
-float walker_meele_force;
-
-float walker_speed_stop;
-float walker_speed_walk;
-float walker_speed_run;
-float walker_speed_jump;
-float walker_speed_roam;
-float walker_speed_swim;
-
-float walker_std_rocket_dmg;
-float walker_std_rocket_radius;
-float walker_std_rocket_force;
-float walker_std_rocket_speed;
-float walker_std_rocket_turnrate;
-
-void walker_loadcvars()
-{
-    walker_meele_dmg    = autocvar_g_turrets_unit_walker_std_meele_dmg;
-    walker_meele_force  = autocvar_g_turrets_unit_walker_std_meele_force;
-
-    walker_speed_stop   = autocvar_g_turrets_unit_walker_speed_stop;
-    walker_speed_walk   = autocvar_g_turrets_unit_walker_speed_walk;
-    walker_speed_run    = autocvar_g_turrets_unit_walker_speed_run;
-    walker_speed_jump   = autocvar_g_turrets_unit_walker_speed_jump;
-    walker_speed_roam   = autocvar_g_turrets_unit_walker_speed_roam;
-    walker_speed_swim   = autocvar_g_turrets_unit_walker_speed_swim;
-
-    walker_std_rocket_dmg       = autocvar_g_turrets_unit_walker_std_rocket_dmg;
-    walker_std_rocket_radius    = autocvar_g_turrets_unit_walker_std_rocket_radius;
-    walker_std_rocket_force     = autocvar_g_turrets_unit_walker_std_rocket_force;
-    walker_std_rocket_speed     = autocvar_g_turrets_unit_walker_std_rocket_speed;
-    walker_std_rocket_turnrate  = autocvar_g_turrets_unit_walker_std_rocket_turnrate;
-
-}
-
-
 
 float walker_firecheck()
 {
@@ -69,33 +30,24 @@ void walker_meele_do_dmg()
 {
     vector where;
     entity e;
+    
     makevectors(self.angles);
     where = self.origin + v_forward * 128;
 
-    //w_deathtypestring = "tried to hug the cute spider thingy.";
     e = findradius(where,32);
     while (e)
     {
         if (turret_validate_target(self,e,self.target_validate_flags))
             if (e != self && e.owner != self)
-                Damage(e, self, self, walker_meele_dmg ,DEATH_TURRET,'0 0 0', v_forward * walker_meele_force);
+                Damage(e, self, self, autocvar_g_turrets_unit_walker_std_meele_dmg ,DEATH_TURRET,'0 0 0', v_forward * autocvar_g_turrets_unit_walker_std_meele_force);
 
         e = e.chain;
     }
 }
 void walker_setnoanim()
 {
-    self.frame = ANIM_NO;
+    turrets_setframe(ANIM_NO, FALSE);
     self.animflag = self.owner.frame;
-    dprint("walker_setnoanim\n");
-
-}
-
-void walker_dly_meele_do_dmg()
-{
-    walker_meele_do_dmg();
-    dprint("walker_dly_meele_do_dmg\n");
-
 }
 
 void walker_animate()
@@ -111,19 +63,13 @@ void walker_animate()
 
     if (self.tur_head.frame > 12)
         self.tur_head.frame = 0;
-
-    if(self.frame != self.animflag)
-    {
-        self.SendFlags |= TNSF_ANIM;
-        self.anim_start_time = time;
-    }
-    
+        
     switch (self.animflag)
     {
 
     case ANIM_NO:
-        self.frame = 0;
-        movelib_beak_simple(walker_speed_stop);
+        turrets_setframe(0, FALSE);
+        movelib_beak_simple(autocvar_g_turrets_unit_walker_speed_stop);
         break;
 
     /*
@@ -132,7 +78,7 @@ void walker_animate()
             self.frame = 25;
 
         self.frame = self.frame -1;
-        movelib_move_simple(v_forward * -1, walker_speed_walk, 0.6);
+        movelib_move_simple(v_forward * -1, autocvar_g_turrets_unit_walker_speed_walk, 0.6);
 
         if (self.frame < 5)
             self.frame = 25;
@@ -141,75 +87,63 @@ void walker_animate()
     */
 
     case ANIM_TURN:
-        self.frame = ANIM_TURN;
         self.angles_y += bound(-15, shortangle_f(real_angle_y, self.angles_y), 15);
-        movelib_beak_simple(walker_speed_stop);
+        movelib_beak_simple(autocvar_g_turrets_unit_walker_speed_stop);
         break;
 
     case ANIM_WALK:
-        self.frame = ANIM_WALK;
         self.angles_y += bound(-10, shortangle_f(real_angle_y, self.angles_y), 10);
-        movelib_move_simple(v_forward, walker_speed_walk, 0.6);
+        movelib_move_simple(v_forward, autocvar_g_turrets_unit_walker_speed_walk, 0.6);
         break;
 
     case ANIM_RUN:
-        self.frame = ANIM_RUN;
         self.angles_y += bound(-5, shortangle_f(real_angle_y, self.angles_y), 5);
-        movelib_move_simple(v_forward, walker_speed_run, 0.6);
+        movelib_move_simple(v_forward, autocvar_g_turrets_unit_walker_speed_run, 0.6);
         break;
 
     case ANIM_STRAFE_L:
-        self.frame = ANIM_STRAFE_L;
         self.angles_y += bound(-2.5, shortangle_f(real_angle_y, self.angles_y), 2.5);
-        movelib_move_simple(v_right * -1, walker_speed_walk, 0.8);
+        movelib_move_simple(v_right * -1, autocvar_g_turrets_unit_walker_speed_walk, 0.8);
         break;
 
     case ANIM_STRAFE_R:
-        self.frame = ANIM_STRAFE_R;
         self.angles_y += bound(-2.5, shortangle_f(real_angle_y, self.angles_y), 2.5);
-        movelib_move_simple(v_right, walker_speed_walk, 0.8);
+        movelib_move_simple(v_right, autocvar_g_turrets_unit_walker_speed_walk, 0.8);
         break;
 
     case ANIM_JUMP:
-        self.frame = ANIM_JUMP;
-        self.velocity += '0 0 1' * walker_speed_jump;
+        self.velocity += '0 0 1' * autocvar_g_turrets_unit_walker_speed_jump;
         break;
 
     case ANIM_LAND:
-        self.frame = ANIM_LAND;
         break;
 
     case ANIM_PAIN:
         if(self.frame != ANIM_PAIN)
-            defer(0.25,walker_setnoanim);
-
-        self.frame = ANIM_PAIN;
-
+            defer(0.25, walker_setnoanim);
+        
         break;
 
     case ANIM_MEELE:
         if(self.frame != ANIM_MEELE)
         {
             defer(0.41, walker_setnoanim);
-            defer(0.21, walker_dly_meele_do_dmg);
+            defer(0.21, walker_meele_do_dmg);
         }
 
-        self.frame = ANIM_MEELE;
-        movelib_beak_simple(walker_speed_stop);
+        movelib_beak_simple(autocvar_g_turrets_unit_walker_speed_stop);
         break;
 
     case ANIM_SWIM:
-        self.frame = ANIM_SWIM;
         self.angles_y += bound(-10, shortangle_f(real_angle_y, self.angles_y), 10);
         self.angles_x += bound(-10, shortangle_f(real_angle_x, self.angles_x), 10);
-        movelib_move_simple(v_forward, walker_speed_swim, 0.3);
+        movelib_move_simple(v_forward, autocvar_g_turrets_unit_walker_speed_swim, 0.3);
         vz = self.velocity_z + sin(time * 4) * 8;
         break;
 
     case ANIM_ROAM:
-        self.frame = ANIM_ROAM;
         self.angles_y += bound(-5, shortangle_f(real_angle_y, self.angles_y), 5);
-        movelib_move_simple(v_forward ,walker_speed_roam, 0.5);
+        movelib_move_simple(v_forward ,autocvar_g_turrets_unit_walker_speed_roam, 0.5);
         break;
 
     }
@@ -238,7 +172,7 @@ void walker_rocket_explode()
     org2 = findbetterlocation (self.origin, 16);
 
     pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
-    RadiusDamage (self, self.owner, walker_std_rocket_dmg, 0, walker_std_rocket_radius, world,walker_std_rocket_force, DEATH_TURRET, world);
+    RadiusDamage (self, self.owner, autocvar_g_turrets_unit_walker_std_rocket_dmg, 0, autocvar_g_turrets_unit_walker_std_rocket_radius, world,autocvar_g_turrets_unit_walker_std_rocket_force, DEATH_TURRET, world);
 
     remove (self);
 }
@@ -251,7 +185,7 @@ void walker_rocket_damage (entity inflictor, entity attacker, float damage, floa
         walker_rocket_explode();
 }
 
-#define WALKER_ROCKET_MOVE movelib_move_simple(newdir, walker_std_rocket_speed, walker_std_rocket_turnrate); UpdateCSQCProjectile(self)
+#define WALKER_ROCKET_MOVE movelib_move_simple(newdir, autocvar_g_turrets_unit_walker_std_rocket_speed, autocvar_g_turrets_unit_walker_std_rocket_turnrate); UpdateCSQCProjectile(self)
 void walker_rocket_loop();
 void walker_rocket_think()
 {
@@ -326,7 +260,7 @@ void walker_rocket_loop3()
         return;
     }
 
-    if (vlen(self.origin - self.tur_shotorg) < 128 )
+    if (vlen(self.origin - self.tur_shotorg) < 100 )
     {
         self.think = walker_rocket_think;
         return;
@@ -350,7 +284,7 @@ void walker_rocket_loop2()
         return;
     }
 
-    if (vlen(self.origin - self.tur_shotorg) < 128 )
+    if (vlen(self.origin - self.tur_shotorg) < 100 )
     {
         self.tur_shotorg = self.origin - '0 0 200';
         self.think = walker_rocket_loop3;
@@ -364,7 +298,7 @@ void walker_rocket_loop2()
 void walker_rocket_loop()
 {
     self.nextthink = time;
-    self.tur_shotorg = self.origin + '0 0 400';
+    self.tur_shotorg = self.origin + '0 0 300';
     self.think = walker_rocket_loop2;
     self.shot_dmg = 1337;
 }
@@ -410,7 +344,7 @@ void walker_fire_rocket(vector org)
 
     rocket.nextthink          = time;// + 0.25;
     rocket.movetype           = MOVETYPE_FLY;
-    rocket.velocity           = normalize((v_forward + v_up * 0.5) + (randomvec() * 0.2)) * walker_std_rocket_speed;
+    rocket.velocity           = normalize((v_forward + v_up * 0.5) + (randomvec() * 0.2)) * autocvar_g_turrets_unit_walker_std_rocket_speed;
     rocket.angles             = vectoangles(rocket.velocity);
     rocket.touch              = walker_rocket_explode;
     rocket.flags              = FL_PROJECTILE;
@@ -501,6 +435,7 @@ void walker_move_path()
 
 }
 
+.vector enemy_last_loc;
 void walker_move_enemy()
 {
     switch (self.waterlevel)
@@ -522,8 +457,9 @@ void walker_move_enemy()
     }
 
     self.moveto = self.enemy.origin;
-    self.steerto = steerlib_attract2(self.moveto,0.5,500,0.95);
-
+    self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+    self.enemy_last_loc = self.enemy.origin;
+    
 }
 
 void walker_move_idle_pause()
@@ -543,14 +479,12 @@ void walker_move_idle()
 
 float walker_attack_meele()
 {
-
     vector wish_angle;
-
 
     if (self.animflag == ANIM_SWIM || self.animflag == ANIM_MEELE)
         return 0;
 
-    wish_angle = angleofs(self,self.enemy);
+    wish_angle = angleofs(self, self.enemy);
 
     if (self.tur_dist_enemy > autocvar_g_turrets_unit_walker_std_meele_range)
         return 0;
@@ -559,7 +493,7 @@ float walker_attack_meele()
             return 0;
 
     self.moveto   = self.enemy.origin;
-    self.steerto  = steerlib_attract2(self.moveto,0.5,500,0.95);
+    self.steerto  = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
     self.animflag = ANIM_MEELE;
 
     return 1;
@@ -591,10 +525,7 @@ float walker_attack_rockets()
 
 void walker_postthink()
 {
-
-    //self.angles_x *= -1;
     fixedmakevectors(self.angles);
-    //self.angles_x *= -1;
 
     if ((self.spawnflags & TSF_NO_PATHBREAK) && self.pathcurrent)
         walker_move_path();
@@ -617,46 +548,36 @@ void walker_postthink()
 
     walker_animate();
     
-    //if(vlen(self.velocity))
-    self.SendFlags |= TNSF_MOVE;
+    if(self.origin != self.oldorigin)
+        self.SendFlags |= TNSF_MOVE;
+    
+    self.oldorigin = self.origin;
+    turrets_setframe(self.animflag, FALSE);
 
 }
 
 void walker_attack()
 {
     sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET, 0, 1, autocvar_g_balance_uzi_bulletconstant);
     endFireBallisticBullet();
-    if (self.misc_bulletcounter == 2)
-    {
-
-		UziFlash();
-		setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
-
-        self.misc_bulletcounter = 0;
-    }
-
-    self.misc_bulletcounter = self.misc_bulletcounter + 1;
+    pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+    
     self.tur_head.frame    = self.tur_head.frame + 1;
 }
 
 
 void walker_respawnhook()
 {
-    vector vtmp;
     entity e;
 
     // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
     if(self.movetype  != MOVETYPE_WALK)
 		return;
 		
-    setorigin(self, self.wkr_spawn.origin);
-
-    self.angles = self.wkr_spawn.angles;
-    vtmp = self.wkr_spawn.origin;
-    vtmp_z += self.wkr_spawn.maxs_z;
-    setorigin(self,vtmp);
-
+    setorigin(self, self.pos1);
+    self.angles = self.pos2;
+    
     if (self.target != "")
     {
         e = find(world,targetname,self.target);
@@ -674,21 +595,15 @@ void walker_respawnhook()
             self.pathgoal = e;
         }
     }
+    self.colormod = randomvec() * 5;
 }
 
 void walker_diehook()
 {
-    //turret_trowgib2(self.origin, self.velocity + v_up * 200, '-0.6 -0.2 -02', self,time + random() * 1);
-    //turret_trowgib2(self.origin + '0 0 64', self.velocity + v_forward * 150 + v_up * 150, '-0.2 -0.2 -02', self.tur_head, 3 + time + random() * 2);
-
     if (self.pathcurrent)
         pathlib_deletepath(self.pathcurrent.owner);
 
     self.pathcurrent = world;
-
-    if (self.damage_flags & TFL_DMG_DEATH_NORESPAWN)
-        remove(self.wkr_spawn);
-
 }
 
 void turret_walker_dinit()
@@ -697,7 +612,6 @@ void turret_walker_dinit()
     entity e;
 
     if (self.netname == "")      self.netname     = "Walker Turret";
-    self.wkr_spawn = spawn();
 
     self.ammo_flags = TFL_AMMO_BULLETS | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
     self.turrcaps_flags = TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_MOVE ;
@@ -728,20 +642,15 @@ void turret_walker_dinit()
     self.solid      = SOLID_SLIDEBOX;
     self.takedamage = DAMAGE_AIM;
 
-    setmodel(self.wkr_spawn,"models/turrets/walker_spawn.md3");
-
-    self.wkr_spawn.angles   = self.angles;
-    self.wkr_spawn.solid    = SOLID_NOT;
 
     setsize(self, WALKER_MIN, WALKER_MAX);
 
-    setorigin(self,self.origin);
-    //traceline(self.origin + '0 0 128', self.origin - '0 0 10000', MOVE_NORMAL, self);
+    setorigin(self, self.origin);
     tracebox(self.origin + '0 0 128', self.mins,self.maxs,self.origin - '0 0 10000', MOVE_NORMAL, self);
-
-    setorigin(self.wkr_spawn, trace_endpos + '0 0 4');
-    setorigin(self, self.wkr_spawn.origin);
-
+    setorigin(self, trace_endpos + '0 0 4');
+    self.pos1 = self.origin;
+    self.pos2 = self.angles;
+    
     self.idle_aim = '0 0 0';
     self.turret_firecheckfunc = walker_firecheck;
     self.turret_firefunc      = walker_attack;
@@ -769,14 +678,10 @@ void turret_walker_dinit()
 
 void spawnfunc_turret_walker()
 {
-    walker_loadcvars();
-
     g_turrets_common_precash();
 
     precache_model ("models/turrets/walker_head_minigun.md3");
     precache_model ("models/turrets/walker_body.md3");
-    precache_model ("models/turrets/walker_props.md3");
-    precache_model ("models/turrets/walker_spawn.md3");
     precache_model ( "models/turrets/rocket.md3");
     precache_sound ( "weapons/rocket_impact.wav" );
 

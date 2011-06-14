@@ -1,8 +1,23 @@
 #define cvar_base "g_turrets_unit_"
+.float clientframe;
+void turrets_setframe(float _frame, float client_only)
+{        
+    if((client_only ? self.clientframe : self.frame ) != _frame)
+    {
+        self.SendFlags |= TNSF_ANIM;
+        self.anim_start_time = time;
+    }
+    
+     if(client_only)
+        self.clientframe = _frame;
+    else
+        self.frame = _frame;
+   
+}
 
 float turret_send(entity to, float sf)
 {
-	dprint("Sending update\n");
+	
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);    
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & TNSF_SETUP)
@@ -990,6 +1005,8 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     self.cvar_basename = cvar_base_name;
     load_unit_settings(self, self.cvar_basename, 0);
 
+    self.effects = EF_NODRAW;
+    
     // Handle turret teams.
     if (autocvar_g_assault != 0)
     {
@@ -1300,6 +1317,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
         self.use();
     }
     
+	//turret_link();
 	turret_stdproc_respawn();
 	    
     if (!turret_tag_fire_update())

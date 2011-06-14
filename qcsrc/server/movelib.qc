@@ -1,3 +1,4 @@
+#ifdef SVQC 
 .vector moveto;
 
 /**
@@ -183,6 +184,8 @@ void movelib_beak_simple(float force)
 Pitches and rolls the entity to match the gound.
 Yed need to set v_up and v_forward (generally by calling makevectors) before calling this.
 **/
+#endif
+
 void movelib_groundalign4point(float spring_length, float spring_up, float blendrate)
 {
     vector a, b, c, d, e, r, push_angle, ahead, side;

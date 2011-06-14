@@ -11,9 +11,6 @@ void turret_hide()
 
 void turret_stdproc_die()
 {
-    vector org2;
-    vector t_dir;
-
     self.deadflag           = DEAD_DEAD;
     self.tur_head.deadflag  = self.deadflag;
 
@@ -25,34 +22,10 @@ void turret_stdproc_die()
     self.takedamage             = DAMAGE_NO;
 
     self.health             = 0;
-/*
-// Trow fake parts arround
-    // base
-    if not(self.damage_flags & TFL_DMG_DEATH_NOGIBS)
-    {
-        makevectors(self.angles);
-        if (random() > 0.5)
-        {
-            turret_trowgib(self.origin, '0 0 0', '1 1 1', "models/turrets/base-gib2.md3", min(self.respawntime, 20), 1, 1);
-            
-            t_dir = (v_up * 700) + (randomvec() * 300);            
-            turret_trowgib(self.origin, t_dir, '1 1 1', "models/turrets/base-gib3.md3", min(self.respawntime, 10), 1, 1);
-            
-            t_dir = (v_up * 700) + (randomvec() * 300);
-            turret_trowgib(self.origin, t_dir, '1 1 1', "models/turrets/base-gib4.md3", min(self.respawntime, 10), 1, 1);
-        }
-        else
-        {
-            turret_trowgib(self.origin, '0 0 0', '1 1 1', "models/turrets/base-gib1.md3", min(self.respawntime, 20), 1, 1);
-        }
-
-        // Blow the top part up into the air
-        turret_trowgib2( self.origin + (v_up * 50), v_up * 150 + randomvec() * 50, '0.2 0.2 0.2', self.tur_head,time + 0.5 + (random() * 0.5));
-    }
 
 // Go boom
     //RadiusDamage (self,self, min(self.ammo,50),min(self.ammo,50) * 0.25,250,world,min(self.ammo,50)*5,DEATH_TURRET,world);
-*/
+
     if(self.damage_flags & TFL_DMG_DEATH_NORESPAWN)
     {
         if (self.turret_diehook)
@@ -77,7 +50,6 @@ void turret_stdproc_respawn()
 {
     // Make sure all parts belong to the same team since
     // this function doubles as "teamchange" function.
-
     self.tur_head.team 	= self.team;
 
     self.effects             &~= EF_NODRAW;
@@ -98,9 +70,10 @@ void turret_stdproc_respawn()
     self.ammo                   = self.ammo_max;
 
     self.nextthink  = time + self.ticrate;
+    //self.think      = turret_think;
+    self.think      = turret_link;
     
     self.SendFlags  = TNSF_FULL_UPDATE;
-    self.think      = turret_link;
 
     if (self.turret_respawnhook)
         self.turret_respawnhook();
@@ -111,7 +84,6 @@ void turret_stdproc_respawn()
 */
 void turret_stdproc_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
 {
-
     // Enougth allready!
     if (self.health <= 0)
         return;
