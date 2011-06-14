@@ -350,12 +350,6 @@ void ent_turret()
         self.tur_head.move_avelocity_y = ReadShort();            
     }
     
-    if(sf & TNSF_AVEL)
-    {        
-        //WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_x));
-        //WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_y));
-    }
-    
     if(sf & TNSF_MOVE)
     {
         self.origin_x = ReadShort();
@@ -373,7 +367,13 @@ void ent_turret()
         self.move_velocity = self.velocity;
         self.move_origin = self.origin;
     }
-    
+        
+    if(sf & TNSF_ANIM)
+    {
+        self.frame1time = ReadCoord();
+        self.frame = ReadByte();
+    }
+
 
     if(sf & TNSF_STATUS)
     {        

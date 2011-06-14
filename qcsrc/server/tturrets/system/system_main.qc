@@ -44,7 +44,8 @@ float turret_send(entity to, float sf)
     
     if(sf & TNSF_ANIM)
     {
-        
+        WriteCoord(MSG_ENTITY, self.anim_start_time);
+        WriteByte(MSG_ENTITY, self.frame);
     }
     
     if(sf & TNSF_STATUS)

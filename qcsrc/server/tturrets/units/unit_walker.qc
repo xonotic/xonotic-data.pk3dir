@@ -107,11 +107,17 @@ void walker_animate()
     vz         = self.velocity_z;
 
     if (self.tur_head.frame != 0)
-        self.tur_head.frame = self.tur_head.frame +1;
+        self.tur_head.frame = self.tur_head.frame + 1;
 
     if (self.tur_head.frame > 12)
         self.tur_head.frame = 0;
 
+    if(self.frame != self.animflag)
+    {
+        self.SendFlags |= TNSF_ANIM;
+        self.anim_start_time = time;
+    }
+    
     switch (self.animflag)
     {
 
