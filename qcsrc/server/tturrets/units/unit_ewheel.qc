@@ -122,6 +122,8 @@ void ewheel_move_path()
 void  ewheel_move_enemy()
 {
 
+    float newframe;
+    
     self.steerto = steerlib_arrive(self.enemy.origin,self.target_range_optimal);
 
     //self.steerto = steerlib_standoff(self.enemy.origin,self.target_range_optimal);
@@ -132,36 +134,49 @@ void  ewheel_move_enemy()
     {
         if ( self.tur_head.spawnshieldtime < 1 )
         {
-            self.frame = ewheel_amin_fwd_fast;
+            newframe = ewheel_amin_fwd_fast;
             movelib_move_simple(v_forward, ewheel_speed_fast, 0.4);
         }
         else if (self.tur_head.spawnshieldtime < 2)
         {
 
-            self.frame = ewheel_amin_fwd_slow;
+            newframe = ewheel_amin_fwd_slow;
             movelib_move_simple(v_forward, ewheel_speed_slow, 0.4);
        }
         else
         {
-            self.frame = ewheel_amin_fwd_slow;
+            newframe = ewheel_amin_fwd_slow;
             movelib_move_simple(v_forward, ewheel_speed_slower, 0.4);
         }
     }
     else if (self.tur_dist_enemy < self.target_range_optimal * 0.5)
     {
-        self.frame = ewheel_amin_bck_slow;
+        newframe = ewheel_amin_bck_slow;
         movelib_move_simple(v_forward * -1, ewheel_speed_slow, 0.4);
     }
     else
     {
-        self.frame = ewheel_amin_stop;
+        newframe = ewheel_amin_stop;
         movelib_beak_simple(ewheel_speed_stop);
+    }
+    
+    if(self.frame != newframe)
+    {
+        self.frame = newframe;
+        self.SendFlags |= TNSF_ANIM;
+        self.anim_start_time = time;
     }
 }
 
 
 void ewheel_move_idle()
 {
+    if(self.frame != 0)
+    {
+        self.SendFlags |= TNSF_ANIM;
+        self.anim_start_time = time;
+    }
+
     self.frame = 0;
     if (vlen(self.velocity))
         movelib_beak_simple(ewheel_speed_stop);
