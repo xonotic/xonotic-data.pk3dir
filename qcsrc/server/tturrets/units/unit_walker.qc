@@ -595,7 +595,6 @@ void walker_respawnhook()
             self.pathgoal = e;
         }
     }
-    self.colormod = randomvec() * 5;
 }
 
 void walker_diehook()

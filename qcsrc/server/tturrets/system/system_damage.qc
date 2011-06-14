@@ -70,8 +70,7 @@ void turret_stdproc_respawn()
     self.ammo                   = self.ammo_max;
 
     self.nextthink  = time + self.ticrate;
-    //self.think      = turret_think;
-    self.think      = turret_link;
+    self.think      = turret_think;
     
     self.SendFlags  = TNSF_FULL_UPDATE;
 

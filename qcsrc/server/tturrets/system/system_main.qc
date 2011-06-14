@@ -1317,7 +1317,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
         self.use();
     }
     
-	//turret_link();
+	turret_link();
 	turret_stdproc_respawn();
 	    
     if (!turret_tag_fire_update())
