@@ -1780,8 +1780,8 @@ void ClientConnect (void)
 
 	CheatInitClient();
 
-	// FIXME: .BUTTON_INFO in PrintWelcomeMessage must be checked at every frame, not just here
-	PrintWelcomeMessage(self);
+	if(!autocvar_g_campaign)
+		Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), autocvar_welcome_message_time, 0);
 }
 
 /*
@@ -2605,6 +2605,7 @@ Called every frame for each client before the physics are run
 void() ctf_setstatus;
 void() nexball_setstatus;
 .float items_added;
+.float motd_actived_time; // used for both motd and campaign_message
 void PlayerPreThink (void)
 {
 	WarpZone_PlayerPhysics_FixVAngle();
@@ -2682,6 +2683,40 @@ void PlayerPreThink (void)
 	if(self.BUTTON_USE && !self.usekeypressed)
 		PlayerUseKey();
 	self.usekeypressed = self.BUTTON_USE;
+
+	if (self.motd_actived_time == 0) {
+		if (autocvar_g_campaign) {
+			if (self.classname == "player" && self.BUTTON_INFO) {
+				self.motd_actived_time = time;
+				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, campaign_message, 999, 0);
+			}
+		} else {
+			if ((self.classname == "player" || time - self.jointime > autocvar_welcome_message_time) && self.BUTTON_INFO) {
+				self.motd_actived_time = time;
+				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), 999, 0);
+			}
+		}
+	} else { // showing MOTD or campaign message
+		if (autocvar_g_campaign) {
+			if (self.classname == "player") {
+				if (self.BUTTON_INFO)
+					self.motd_actived_time = time;
+				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
+					self.motd_actived_time = 0;
+					Send_CSQC_Centerprint_Generic(self, CPID_MOTD, "", 1, 0);
+				}
+			}
+		} else {
+			if (self.classname == "player" || (time - self.jointime) > autocvar_welcome_message_time) {
+				if (self.BUTTON_INFO)
+					self.motd_actived_time = time;
+				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
+					self.motd_actived_time = 0;
+					Send_CSQC_Centerprint_Generic(self, CPID_MOTD, "", 1, 0);
+				}
+			}
+		}
+	}
 
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")

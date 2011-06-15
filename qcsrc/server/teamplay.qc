@@ -450,48 +450,10 @@ string GetClientVersionMessage() {
 	return versionmsg;
 }
 
-
-void PrintWelcomeMessage(entity pl)
+string getwelcomemessage(void)
 {
 	string s, modifications, motd;
 
-	if(autocvar_g_campaign)
-	{
-		if(self.classname == "player" && !self.BUTTON_INFO)
-			return;
-	}
-	else
-	{
-		if((time - self.jointime) > autocvar_welcome_message_time && !self.BUTTON_INFO)
-			return;
-	}
-
-	if(autocvar_g_campaign)
-	{
-		centerprint(pl, campaign_message);
-		return;
-	}
-
-//TODO GreEn`mArine: make the timeout-messages clientside as well (just like the ready restart countdown)!
-	if(!self.BUTTON_INFO)
-	{
-		// TODO get rid of this too
-		local string specString;
-		//if(time < game_starttime) //also show the countdown when being a spectator
-		//	specString = strcat(specString, "\n\n^1Game starts in ", ftos(ceil(game_starttime - time)), " seconds^7");
-		//else
-		if (timeoutStatus != 0)
-			specString = getTimeoutText(1);
-		else
-		{
-			if(self.classname == "player")
-				return;
-			goto normal;
-		}
-		return centerprint(self, specString);
-	}
-
-:normal
 	ret_string = "";
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString);
 	modifications = ret_string;
@@ -558,11 +520,8 @@ void PrintWelcomeMessage(entity pl)
 	if (motd != "") {
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
-	s = strcat(s, "\n");
-
-	Send_CSQC_Centerprint_Generic(pl, CPID_MOTD, s, autocvar_welcome_message_time, 0);
+	return s;
 }
-
 
 void SetPlayerColors(entity pl, float _color)
 {
