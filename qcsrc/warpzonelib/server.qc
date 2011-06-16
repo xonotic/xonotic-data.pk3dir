@@ -22,13 +22,10 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	player.fixangle = TRUE;
 	player.velocity = to_velocity;
 
-	if(player.effects & EF_TELEPORT_BIT)
-		player.effects &~= EF_TELEPORT_BIT;
-	else
-		player.effects |= EF_TELEPORT_BIT;
+	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
 
 	if(player.classname == "player")
-		player.flags &~= FL_ONGROUND;
+		BITCLR_ASSIGN(player.flags, FL_ONGROUND);
 
 	WarpZone_PostTeleportPlayer_Callback(player);
 }
@@ -171,11 +168,11 @@ float WarpZone_Send(entity to, float sendflags)
 	// we must send this flag for clientside to match properly too
 	f = 0;
 	if(self.warpzone_isboxy)
-		f |= 1;
+		BITSET_ASSIGN(f, 1);
 	if(self.warpzone_fadestart)
-		f |= 2;
+		BITSET_ASSIGN(f, 2);
 	if(self.origin != '0 0 0')
-		f |= 4;
+		BITSET_ASSIGN(f, 4);
 	WriteByte(MSG_ENTITY, f);
 
 	// we need THESE to render the warpzone (and cull properly)...
@@ -224,9 +221,9 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
 
 	if(self.warpzone_fadestart)
-		f |= 2;
+		BITSET_ASSIGN(f, 2);
 	if(self.origin != '0 0 0')
-		f |= 4;
+		BITSET_ASSIGN(f, 4);
 	WriteByte(MSG_ENTITY, f);
 
 	// we need THESE to render the warpzone (and cull properly)...
@@ -572,7 +569,7 @@ void spawnfunc_trigger_warpzone(void)
 		setsize(self, self.mins, self.maxs);
 	self.SendEntity = WarpZone_Send;
 	self.SendFlags = 0xFFFFFF;
-	self.effects |= EF_NODEPTHTEST;
+	BITSET_ASSIGN(self.effects, EF_NODEPTHTEST);
 	self.warpzone_next = warpzone_first;
 	warpzone_first = self;
 }
