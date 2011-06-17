@@ -410,7 +410,7 @@ void WarpZoneCamera_InitStep_FindTarget()
 	warpzone_cameras_exist = 1;
 	WarpZone_Camera_SetUp(self, self.enemy.origin, self.enemy.angles);
 	self.SendFlags = 0xFFFFFF;
-	if(self.spawnflags & 2)
+	if(self.spawnflags & 1)
 	{
 		self.think = WarpZoneCamera_Think;
 		self.nextthink = time;
@@ -554,7 +554,7 @@ void WarpZone_InitStep_FinalizeTransform()
 	WarpZone_SetUp(self, self.warpzone_origin, self.warpzone_angles, self.enemy.warpzone_origin, self.enemy.warpzone_angles);
 	self.touch = WarpZone_Touch;
 	self.SendFlags = 0xFFFFFF;
-	if(self.spawnflags & 2)
+	if(self.spawnflags & 1)
 	{
 		self.think = WarpZone_Think;
 		self.nextthink = time;
