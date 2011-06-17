@@ -1,3 +1,10 @@
+// for think function
+.vector warpzone_save_origin;
+.vector warpzone_save_angles;
+.vector warpzone_save_eorigin;
+.vector warpzone_save_eangles;
+
+// for all entities
 .vector warpzone_oldorigin, warpzone_oldvelocity, warpzone_oldangles;
 .float warpzone_teleport_time;
 .entity warpzone_teleport_zone;
@@ -366,6 +373,22 @@ void WarpZonePosition_InitStep_FindTarget()
 	self.enemy.aiment = self;
 }
 
+void WarpZoneCamera_Think(void)
+{
+	if(self.warpzone_save_origin != self.origin
+	|| self.warpzone_save_angles != self.angles
+	|| self.warpzone_save_eorigin != self.enemy.origin
+	|| self.warpzone_save_eangles != self.enemy.angles)
+	{
+		WarpZone_Camera_SetUp(self, self.enemy.origin, self.enemy.angles);
+		self.warpzone_save_origin = self.origin;
+		self.warpzone_save_angles = self.angles;
+		self.warpzone_save_eorigin = self.enemy.origin;
+		self.warpzone_save_eangles = self.enemy.angles;
+	}
+	self.nextthink = time;
+}
+
 void WarpZoneCamera_InitStep_FindTarget()
 {
 	entity e;
@@ -387,6 +410,13 @@ void WarpZoneCamera_InitStep_FindTarget()
 	warpzone_cameras_exist = 1;
 	WarpZone_Camera_SetUp(self, self.enemy.origin, self.enemy.angles);
 	self.SendFlags = 0xFFFFFF;
+	if(self.spawnflags & 2)
+	{
+		self.think = WarpZoneCamera_Think;
+		self.nextthink = time;
+	}
+	else
+		self.nextthink = 0;
 }
 
 void WarpZone_InitStep_UpdateTransform()
@@ -511,6 +541,7 @@ void WarpZone_InitStep_FindTarget()
 	}
 }
 
+void WarpZone_Think();
 void WarpZone_InitStep_FinalizeTransform()
 {
 	if(!self.enemy || self.enemy.enemy != self)
@@ -523,6 +554,13 @@ void WarpZone_InitStep_FinalizeTransform()
 	WarpZone_SetUp(self, self.warpzone_origin, self.warpzone_angles, self.enemy.warpzone_origin, self.enemy.warpzone_angles);
 	self.touch = WarpZone_Touch;
 	self.SendFlags = 0xFFFFFF;
+	if(self.spawnflags & 2)
+	{
+		self.think = WarpZone_Think;
+		self.nextthink = time;
+	}
+	else
+		self.nextthink = 0;
 }
 
 float warpzone_initialized;
@@ -611,6 +649,31 @@ void WarpZones_Reconnect()
 	for(self = warpzone_first; self; self = self.warpzone_next)
 		WarpZone_InitStep_FinalizeTransform();
 	self = e;
+}
+
+void WarpZone_Think()
+{
+	if(self.warpzone_save_origin != self.origin
+	|| self.warpzone_save_angles != self.angles
+	|| self.warpzone_save_eorigin != self.enemy.origin
+	|| self.warpzone_save_eangles != self.enemy.angles)
+	{
+		entity oldself;
+		oldself = self;
+		WarpZone_InitStep_UpdateTransform();
+		self = self.enemy;
+		WarpZone_InitStep_UpdateTransform();
+		self = oldself;
+		WarpZone_InitStep_FinalizeTransform();
+		self = self.enemy;
+		WarpZone_InitStep_FinalizeTransform();
+		self = oldself;
+		self.warpzone_save_origin = self.origin;
+		self.warpzone_save_angles = self.angles;
+		self.warpzone_save_eorigin = self.enemy.origin;
+		self.warpzone_save_eangles = self.enemy.angles;
+	}
+	self.nextthink = time;
 }
 
 void WarpZone_StartFrame()
