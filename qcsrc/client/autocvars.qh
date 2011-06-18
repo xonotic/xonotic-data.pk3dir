@@ -137,6 +137,7 @@ float autocvar_g_waypointsprite_minalpha;
 float autocvar_g_waypointsprite_minscale;
 float autocvar_g_waypointsprite_normdistance;
 var float autocvar_g_waypointsprite_scale = 1;
+var float autocvar_g_waypointsprite_fontsize = 12;
 float autocvar_g_waypointsprite_timealphaexponent;
 var float autocvar_hud_colorflash_alpha = 0.5;
 float autocvar_hud_configure_bg_minalpha;
