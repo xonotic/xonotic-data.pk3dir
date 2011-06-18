@@ -520,7 +520,8 @@ void Draw_WaypointSprite()
 	
 	string txt;
 	txt = spritelookuptext(spriteimage);
-	txt = strtoupper(txt);
+	if(autocvar_g_waypointsprite_uppercase)
+		txt = strtoupper(txt);
 
 	if(self.health >= 0)
 	{

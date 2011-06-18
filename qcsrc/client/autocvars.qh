@@ -122,6 +122,7 @@ float autocvar_g_balance_tuba_attenuation;
 float autocvar_g_balance_tuba_fadetime;
 float autocvar_g_balance_tuba_volume;
 float autocvar_g_warmup_limit;
+var float autocvar_g_waypointsprite_uppercase = 1;
 var float autocvar_g_waypointsprite_alpha = 1;
 var float autocvar_g_waypointsprite_crosshairfadealpha = 1;
 float autocvar_g_waypointsprite_crosshairfadedistance;
