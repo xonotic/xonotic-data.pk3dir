@@ -142,8 +142,6 @@ void turret_draw()
 {        
     float dt;
 
-    self.drawmask = MASK_NORMAL;
-    
     dt = time - self.move_time;
     self.move_time = time;
     if(dt <= 0)
@@ -156,17 +154,11 @@ void turret_draw()
         te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);    
 }
 
-void turret_moving_head_draw()
-{        
-    self.drawmask = MASK_NORMAL;
-}
 
 void turret_moving_draw()
 {        
     float dt;
-
-    self.drawmask = MASK_NORMAL;
-        
+            
     dt = time - self.move_time;
     self.move_time = time;
     if(dt <= 0)
@@ -180,9 +172,10 @@ void turret_moving_draw()
         setorigin(self.tur_head, gettaginfo(self, gettagindex(self, "tag_head")));
     else
         setorigin(self.tur_head, self.origin);
+    
     self.tur_head.angles += dt * self.tur_head.move_avelocity;
     
-    //self.angles_y += (self.move_angles_y - self.angles_y)* dt;
+    self.angles_y = self.move_angles_y;
     
     if (self.health < 127)
     if(random() < 0.25)
@@ -214,18 +207,19 @@ void turret_construct()
     self.tur_head.solid         = SOLID_NOT;
     self.movetype               = MOVETYPE_NOCLIP;
     self.tur_head.movetype      = MOVETYPE_NOCLIP;    
-    self.draw                   = turret_draw;
-    self.tur_head.draw          = turret_head_draw;
+    //self.draw                   = turret_draw;
     self.entremove              = turret_remove;
+    self.drawmask = MASK_NORMAL;
+    self.tur_head.drawmask = MASK_NORMAL;
 
     if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
     {
         self.gravity            = 1;
+        self.movetype           = MOVETYPE_BOUNCE;
         self.move_movetype      = MOVETYPE_BOUNCE;
         self.move_origin        = self.origin;                
         self.move_time          = time;        
         self.draw               = turret_moving_draw;
-        self.tur_head.draw      = turret_moving_head_draw;
     }
 }
 
@@ -375,10 +369,11 @@ void ent_turret()
         self.velocity_y = ReadShort();
         self.velocity_z = ReadShort();
         
-        self.angles_y       = ReadShort();
-        self.move_time      = time;
-        self.move_velocity  = self.velocity;
-        self.move_origin    = self.origin;
+        self.move_angles_y = ReadShort();
+            
+        self.move_time     = time;
+        self.move_velocity = self.velocity;
+        self.move_origin   = self.origin;
     }
         
     if(sf & TNSF_ANIM)
@@ -388,7 +383,7 @@ void ent_turret()
     }
 
     if(sf & TNSF_STATUS)
-    {        
+    {
         float _team;
         _team = ReadByte();
         _team -= 1; // /&)=(%&#)&%)/#&)=½!!!½!!". thanks.
