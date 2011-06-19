@@ -1977,47 +1977,6 @@ void play_countdown(float finished, string samp)
 				sound (self, CHAN_AUTO, samp, VOL_BASE, ATTN_NORM);
 }
 
-/**
- * When sv_timeout is used this function returs strings like
- * "Timeout begins in 2 seconds!\n" or "Timeout ends in 23 seconds!\n".
- * Called by centerprint functions
- * @param addOneSecond boolean, set to 1 if the welcome-message centerprint asks for the text
- */
-string getTimeoutText(float addOneSecond) {
-	if (!autocvar_sv_timeout || !timeoutStatus)
-		return "";
-
-	local string retStr;
-	if (timeoutStatus == 1) {
-		if (addOneSecond == 1) {
-			retStr = strcat("Timeout begins in ", ftos(remainingLeadTime + 1), " seconds!\n");
-		}
-		else {
-			retStr = strcat("Timeout begins in ", ftos(remainingLeadTime), " seconds!\n");
-		}
-		return retStr;
-	}
-	else if (timeoutStatus == 2) {
-		if (addOneSecond) {
-			retStr = strcat("Timeout ends in ", ftos(remainingTimeoutTime + 1), " seconds!\n");
-			//don't show messages like "Timeout ends in 0 seconds"...
-			if ((remainingTimeoutTime + 1) > 0)
-				return retStr;
-			else
-				return "";
-		}
-		else {
-			retStr = strcat("Timeout ends in ", ftos(remainingTimeoutTime), " seconds!\n");
-			//don't show messages like "Timeout ends in 0 seconds"...
-			if ((remainingTimeoutTime) > 0)
-				return retStr;
-			else
-				return "";
-		}
-	}
-	else return "";
-}
-
 void player_powerups (void)
 {
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook

@@ -101,17 +101,15 @@ void fteqcc_testbugs()
  * players. Also plays reminder sounds.
  */
 void timeoutHandler_Think() {
-	local string timeStr;
 	local entity plr;
 	// NOTE: the below Send_CSQC_Centerprint_Generic send msgs with countdown_num
 	// parameter set as 0, even if the msgs are part of a countdown
 	if (timeoutStatus == 1) {
 		if (remainingLeadTime > 0) {
 			//centerprint the information to every player
-			timeStr = getTimeoutText(0);
 			FOR_EACH_REALCLIENT(plr) {
 				if(plr.classname == "player") {
-					Send_CSQC_Centerprint_Generic(plr, CPID_TIMEOUT_COUNTDOWN, timeStr, 1, 0);
+					Send_CSQC_Centerprint_Generic(plr, CPID_TIMEOUT_COUNTDOWN, "Timeout begins in %d seconds!", 1, remainingLeadTime);
 				}
 			}
 			remainingLeadTime -= 1;
@@ -135,10 +133,9 @@ void timeoutHandler_Think() {
 	}
 	else if (timeoutStatus == 2) {
 		if (remainingTimeoutTime > 0) {
-			timeStr = getTimeoutText(0);
 			FOR_EACH_REALCLIENT(plr) {
 				if(plr.classname == "player") {
-					Send_CSQC_Centerprint_Generic(plr, CPID_TIMEOUT_COUNTDOWN, timeStr, 1, 0);
+					Send_CSQC_Centerprint_Generic(plr, CPID_TIMEOUT_COUNTDOWN, "Timeout ends in %d seconds!", 1, remainingTimeoutTime);
 				}
 			}
 			if(remainingTimeoutTime == autocvar_sv_timeout_resumetime) { //play a warning sound when only <sv_timeout_resumetime> seconds are left
