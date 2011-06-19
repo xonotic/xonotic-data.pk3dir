@@ -191,11 +191,13 @@ float spiderbot_frame()
     crosshair_trace(player);
     //UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);
 
-    player.v_angle_x *= -1;
-    gettaginfo(spider.tur_head, 0);
-    ad = player.v_angle - vectoangles2(v_forward, v_up);
+    //player.v_angle_x *= -1;
+    //gettaginfo(spider.tur_head, 0);
+    //ad = player.v_angle - vectoangles2(v_forward, v_up);
     //ad = player.v_angle - (spider.tur_head.angles + spider.angles);
-    player.v_angle_x *= -1;
+    //player.v_angle_x *= -1;
+    ad = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(spider.angles), AnglesTransform_FromVAngles(player.v_angle))) - spider.tur_head.angles;
+
     if(ad_x > 180)  ad_x -= 360;
     if(ad_x < -180) ad_x += 360;
     if(ad_y > 180)  ad_y -= 360;

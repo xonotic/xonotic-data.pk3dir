@@ -315,7 +315,7 @@ float raptor_frame()
 {
     entity player, raptor;
     float ftmp, ftmp2;
-    vector df, ra;
+    vector df;
     
 	if(intermission_running)
 		return 1;
@@ -466,8 +466,6 @@ float raptor_frame()
         }
     }
 
-    ra = raptor.angles;
-    ra_z = 0;
     // Aim the gunz
     ftmp2 = autocvar_g_vehicle_raptor_cannon_turnspeed * frametime;
     ftmp = -ftmp2;
@@ -476,13 +474,9 @@ float raptor_frame()
     df = gettaginfo(raptor.gun1, gettagindex(raptor.gun1, "fire1"));
     ad = df;
     vf = v_forward;
-    //if(self.lock_strength == 1)
-    //{
-        df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle
-        df = shortangle_vxy(df - (ra + raptor.gun1.angles), ra + raptor.gun1.angles);     // Find aim offset        
-    //}
-    //else    
-    //    df = '0 0 0';
+    df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle    
+    df = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(raptor.angles), AnglesTransform_FromAngles(df))) - raptor.gun1.angles;
+    df = shortangle_vxy(df, raptor.gun1.angles);
         
     // Bind to aimspeed
     df_x = bound(ftmp, df_x, ftmp2);
@@ -495,14 +489,10 @@ float raptor_frame()
     df = gettaginfo(raptor.gun2, gettagindex(raptor.gun2, "fire1"));
     ad += df;
     vf += v_forward;
-    //if(self.lock_strength == 1)
-    //{
-        df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle
-        df = shortangle_vxy(df - (ra + raptor.gun2.angles), ra + raptor.gun2.angles);     // Find aim offset        
-    //}
-    //else    
-    //    df = '0 0 0';
-        
+    df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle    
+    df = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(raptor.angles), AnglesTransform_FromAngles(df))) - raptor.gun2.angles;
+    df = shortangle_vxy(df, raptor.gun2.angles);
+    
     // Bind to aimspeed
     df_x = bound(ftmp, df_x, ftmp2);
     df_y = bound(ftmp, df_y, ftmp2);
