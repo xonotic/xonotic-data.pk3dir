@@ -61,7 +61,6 @@ void turret_mlrs_rocket_touch()
 
 void turret_mlrs_rocket_explode()
 {
-    vector org2;
 
     if(self.event_damage != SUB_Null)
     {
@@ -71,19 +70,14 @@ void turret_mlrs_rocket_explode()
         return;
     }
 
-
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    org2 = findbetterlocation (self.origin, 16);
-    pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
-    //w_deathtypestring = "dident escape the rocket barrage";
 #ifdef TURRET_DEBUG
     float d;
 
-    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET, world);
+    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_MLRS, world);
     self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d; //self.owner.shot_dmg;
     self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
 #else
-    RadiusDamage (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg * 0.5, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET, world);
+    RadiusDamage (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg * 0.5, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_MLRS, world);
 #endif
 
     // Target dead, Tell turret.

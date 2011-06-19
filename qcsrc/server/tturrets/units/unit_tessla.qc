@@ -35,11 +35,9 @@ entity toast(entity from, float range, float damage)
     }
 
     if (etarget)
-    {
-        te_smallflash(etarget.origin);
+    {        
         te_csqc_lightningarc(from.origin,etarget.origin);
-        dprint("DMG:",ftos(damage),"\n");
-        Damage(etarget, self, self, damage, DEATH_TURRET, etarget.origin, '0 0 0');
+        Damage(etarget, self, self, damage, DEATH_TURRET_TESLA, etarget.origin, '0 0 0');
         etarget.railgunhit = 1;
     }
 

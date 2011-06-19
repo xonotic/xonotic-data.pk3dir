@@ -19,21 +19,15 @@ void turret_ewheel_loadcvars()
 
 void turret_ewheel_projectile_explode()
 {
-    vector org2;
-
-    org2 = findbetterlocation (self.origin, 8);
-    pointparticles(particleeffectnum("laser_impact"), org2, trace_plane_normal * 1000, 1);
-    //w_deathtypestring = "saw the eweel. to late.";
 #ifdef TURRET_DEBUG
     float d;
 
-    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET, world);
+    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_EWHEEL, world);
     self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d;
     self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
 #else
-    RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET, world);
+    RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_EWHEEL, world);
 #endif
-    sound (self, CHAN_PROJECTILE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
 
     remove (self);
 }

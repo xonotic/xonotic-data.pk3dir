@@ -69,8 +69,73 @@ void Ent_DamageInfo(float isNew)
 	}
 
 	self = oldself;
-
+	
 	// TODO spawn particle effects and sounds based on w_deathtype
+	if(DEATH_ISTURRET(w_deathtype))
+	{	    
+	    traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
+	    if(trace_plane_normal != '0 0 0')	    
+            w_backoff = trace_plane_normal;
+        else
+            w_backoff = -1 * normalize(w_org - (w_org + normalize(force) * 16));
+	    
+	    setorigin(self, w_org + w_backoff * 2); // for sound() calls
+	    
+	    switch(w_deathtype)
+	    {   
+             case DEATH_TURRET_EWHEEL:
+                sound(self, CHAN_PROJECTILE, "weapons/laserimpact.wav", VOL_BASE, ATTN_MIN);
+                pointparticles(particleeffectnum("electro_impact"), self.origin, w_backoff * 1000, 1);
+                break;
+             
+             case DEATH_TURRET_FLAC:
+                vector org2;
+                org2 = w_org + w_backoff * 6;
+                pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
+                if (w_random<0.15)
+                    sound(self, CHAN_PROJECTILE, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
+                else if (w_random<0.7)
+                    sound(self, CHAN_PROJECTILE, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
+                else
+                    sound(self, CHAN_PROJECTILE, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
+                
+                break;
+                
+             case DEATH_TURRET_MLRS:
+             case DEATH_TURRET_HK:
+             case DEATH_TURRET_WALKER_ROCKET:
+             case DEATH_TURRET_HELLION:
+                sound(self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_MIN);
+                pointparticles(particleeffectnum("rocket_explode"), self.origin, w_backoff * 1000, 1);
+                break;
+             
+             case DEATH_TURRET_MACHINEGUN:
+             case DEATH_TURRET_WALKER_GUN:
+                string _snd;
+                _snd = strcat("weapons/ric", ftos(1 + rint(random() * 2)), ".waw");
+                sound(self, CHAN_PROJECTILE, _snd, VOL_BASE, ATTN_NORM);
+                pointparticles(particleeffectnum("machinegun_impact"), self.origin, w_backoff * 1000, 1);
+                break;
+                          
+             case DEATH_TURRET_PLASMA:
+                sound(self, CHAN_PROJECTILE, "weapons/electro_impact.wav", VOL_BASE, ATTN_MIN);
+                pointparticles(particleeffectnum("electro_impact"), self.origin, w_backoff * 1000, 1);
+                break;
+                          
+             case DEATH_TURRET_WALKER_MEELE:
+                sound(self, CHAN_PROJECTILE, "weapons/ric1.wav", VOL_BASE, ATTN_MIN);
+                pointparticles(particleeffectnum("TE_SPARK"), self.origin, w_backoff * 1000, 1);
+                break;
+
+             case DEATH_TURRET_PHASER:
+                break;
+                
+             case DEATH_TURRET_TESLA:
+                te_smallflash(self.origin);
+                break;
+
+        }        
+	}
 	
 	if(!DEATH_ISSPECIAL(w_deathtype))
 	{

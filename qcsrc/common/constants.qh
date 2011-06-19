@@ -528,7 +528,6 @@ float DEATH_MIRRORDAMAGE = 10014;
 float DEATH_TOUCHEXPLODE = 10015;
 float DEATH_CHEAT = 10016;
 float DEATH_FIRE = 10017;
-float DEATH_TURRET = 10020;
 float DEATH_QUIET = 10021;
 float DEATH_HEADSHOT = 10022;
 
@@ -547,6 +546,20 @@ float DEATH_WEAPON = 10100;
 
 float DEATH_CUSTOM = 10300;
 
+float DEATH_TURRET                  = 10500;
+float DEATH_TURRET_EWHEEL           = 10501;
+float DEATH_TURRET_FLAC             = 10502;
+float DEATH_TURRET_MACHINEGUN       = 10503;
+float DEATH_TURRET_WALKER_GUN       = 10504;
+float DEATH_TURRET_WALKER_MEELE     = 10505;
+float DEATH_TURRET_WALKER_ROCKET    = 10506;
+float DEATH_TURRET_HELLION          = 10507;
+float DEATH_TURRET_HK               = 10508;
+float DEATH_TURRET_MLRS             = 10509;
+float DEATH_TURRET_PLASMA           = 10510;
+float DEATH_TURRET_PHASER           = 10511;
+float DEATH_TURRET_TESLA            = 10512;
+float DEATH_TURRET_LAST            = 10512;
 
 float DEATH_WEAPONMASK = 0xFF;
 float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
@@ -557,6 +570,7 @@ float HITTYPE_HEADSHOT = 0x800;
 float HITTYPE_RESERVED = 0x1000; // unused yet
 
 // macros to access these
+#define DEATH_ISTURRET(t)            ((t) >= DEATH_TURRET && (t) <= DEATH_TURRET_LAST)
 #define DEATH_ISSPECIAL(t)            ((t) >= DEATH_SPECIAL_START)
 #define DEATH_WEAPONOFWEAPONDEATH(t)  ((t) & DEATH_WEAPONMASK)
 #define DEATH_ISWEAPON(t,w)           (!DEATH_ISSPECIAL(t) && DEATH_WEAPONOFWEAPONDEATH(t) == (w))

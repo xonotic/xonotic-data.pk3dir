@@ -324,7 +324,6 @@ void turret_hk_missile_think()
 
 void turret_hk_missile_explode()
 {
-    vector org2;
     float d;
 
     if(self.event_damage != SUB_Null)
@@ -338,20 +337,8 @@ void turret_hk_missile_explode()
     if ((other == self.owner)||(other == self.owner.tur_head))
         return;
 
-    //w_deathtypestring = "got hunted to extinction";
-    //vector	org2;
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    org2 = findbetterlocation (self.origin, 16);
-
-    // LordHavoc: TE_TEI_BIGEXPLOSION
-    WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-    WriteByte (MSG_BROADCAST, 78);
-    WriteCoord (MSG_BROADCAST, org2_x);
-    WriteCoord (MSG_BROADCAST, org2_y);
-    WriteCoord (MSG_BROADCAST, org2_z);
-
     self.event_damage = SUB_Null;
-    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET, world);
+    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_HK, world);
 
 #ifdef TURRET_DEBUG
     self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d; //self.owner.shot_dmg;

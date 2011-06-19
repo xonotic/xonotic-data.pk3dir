@@ -38,7 +38,7 @@ void walker_meele_do_dmg()
     {
         if (turret_validate_target(self,e,self.target_validate_flags))
             if (e != self && e.owner != self)
-                Damage(e, self, self, autocvar_g_turrets_unit_walker_std_meele_dmg ,DEATH_TURRET,'0 0 0', v_forward * autocvar_g_turrets_unit_walker_std_meele_force);
+                Damage(e, self, self, autocvar_g_turrets_unit_walker_std_meele_dmg ,DEATH_TURRET_WALKER_MEELE,'0 0 0', v_forward * autocvar_g_turrets_unit_walker_std_meele_force);
 
         e = e.chain;
     }
@@ -51,8 +51,6 @@ void walker_setnoanim()
 }
 void walker_rocket_explode()
 {
-    vector org2;
-
     if (self.event_damage != SUB_Null)
     {
         self.event_damage = SUB_Null;
@@ -61,11 +59,7 @@ void walker_rocket_explode()
         return;
     }
 
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    org2 = findbetterlocation (self.origin, 16);
-
-    pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
-    RadiusDamage (self, self.owner, autocvar_g_turrets_unit_walker_std_rocket_dmg, 0, autocvar_g_turrets_unit_walker_std_rocket_radius, world,autocvar_g_turrets_unit_walker_std_rocket_force, DEATH_TURRET, world);
+    RadiusDamage (self, self.owner, autocvar_g_turrets_unit_walker_std_rocket_dmg, 0, autocvar_g_turrets_unit_walker_std_rocket_radius, world,autocvar_g_turrets_unit_walker_std_rocket_force, DEATH_TURRET_WALKER_ROCKET, world);
 
     remove (self);
 }
@@ -518,7 +512,7 @@ void walker_postthink()
 void walker_attack()
 {
     sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET_WALKER_GUN, 0, 1, autocvar_g_balance_uzi_bulletconstant);
     endFireBallisticBullet();
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 }

@@ -5,12 +5,8 @@ void turret_machinegun_attack();
 //.float bulletcounter;
 void turret_machinegun_attack()
 {
-    sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET_MACHINEGUN, 0, 1, autocvar_g_balance_uzi_bulletconstant);
     endFireBallisticBullet();
-
-    //w_deathtypestring = "had an alergic reaction due to 10 kilos of led";
-    te_smallflash(self.tur_shotorg);
 
     UziFlash();
     setattachment(self.muzzle_flash, self.tur_head, "tag_fire");

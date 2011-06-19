@@ -84,31 +84,17 @@ void turret_plasma_dual_attack()
 
 void turret_plasma_projectile_explode()
 {
-    vector org2;
-
-    org2 = findbetterlocation (self.origin, 8);
-    WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-    WriteByte (MSG_BROADCAST, 79);
-    WriteCoord (MSG_BROADCAST, org2_x);
-    WriteCoord (MSG_BROADCAST, org2_y);
-    WriteCoord (MSG_BROADCAST, org2_z);
-    WriteCoord (MSG_BROADCAST, 0);		// SeienAbunae: groan... Useless clutter
-    WriteCoord (MSG_BROADCAST, 0);
-    WriteCoord (MSG_BROADCAST, 0);
-    WriteByte (MSG_BROADCAST, 155);
-
     self.event_damage = SUB_Null;
     //w_deathtypestring = "ate to much plasma";
 #ifdef TURRET_DEBUG
     float d;
 
-    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET, world);
+    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_PLASMA, world);
     self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d; //self.owner.shot_dmg;
     self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
 #else
-    RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET, world);
+    RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_PLASMA, world);
 #endif
-    sound (self, CHAN_PROJECTILE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
 
     remove (self);
 }

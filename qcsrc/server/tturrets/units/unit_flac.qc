@@ -38,35 +38,21 @@ void turret_flac_attack()
 
 void turret_flac_projectile_explode()
 {
-    float ftmp;
-
     if( (self.enemy != world) &&
         (vlen(self.origin - self.enemy.origin) < self.owner.shot_radius * 3) )
     {
         // OMG HAXX!
         setorigin(self,self.enemy.origin + randomvec() * self.owner.shot_radius);
     }
-    
-    te_explosion (self.origin);
-
-    ftmp = crandom();
-    if (ftmp<-0.7)
-        sound (self, CHAN_PROJECTILE, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
-    else if (ftmp<0.4)
-        sound (self, CHAN_PROJECTILE, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
-    else if (ftmp<1)
-        sound (self, CHAN_PROJECTILE, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
-
-
     self.event_damage = SUB_Null;
 
-
 #ifdef TURRET_DEBUG
-    ftmp = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET, world);
+    float ftmp;
+    ftmp = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_FLAC, world);
     self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + ftmp; //self.owner.shot_dmg;
     self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
 #else
-    RadiusDamage (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg * 0.5, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET, world);
+    RadiusDamage (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg * 0.5, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_FLAC, world);
 #endif
 
     remove (self);
