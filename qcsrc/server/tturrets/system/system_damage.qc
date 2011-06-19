@@ -118,8 +118,6 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
 
     if (self.turrcaps_flags & TFL_TURRCAPS_MOVE)
         self.velocity = self.velocity + vforce;
-
-    // FIXME: Better damage feedback?
     
     if (self.health <= 0)
     {

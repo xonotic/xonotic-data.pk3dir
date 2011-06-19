@@ -1,3 +1,8 @@
+string tid2info_base;
+string tid2info_head;
+string tid2info_name;
+vector  tid2info_min;
+vector  tid2info_max;
 
 void turrets_precache()
 {
@@ -18,8 +23,6 @@ void turrets_precache()
     precache_model ("models/turrets/tesla_base.md3");
     precache_model ("models/turrets/walker_head_minigun.md3");
     precache_model ("models/turrets/walker_body.md3");
-    precache_model ("models/turrets/walker_props.md3");
-    precache_model ("models/turrets/walker_spawn.md3");
     precache_model ("models/turrets/rocket.md3");
     
     precache_sound ("turrets/phaser.wav");
@@ -27,9 +30,78 @@ void turrets_precache()
     precache_sound ("weapons/uzi_fire.wav");
 }
 
+void turret_tid2info(float _tid)
+{
+    tid2info_base = "models/turrets/base.md3";
+    tid2info_min = '-32 -32 0';
+    tid2info_max = '32 32 64';
+
+    switch(_tid)
+    {
+        case TID_EWHEEL:
+            tid2info_base = "models/turrets/ewheel-base2.md3";
+            tid2info_head = "models/turrets/ewheel-gun1.md3";
+            tid2info_name = "eWheel";
+            break;
+        case TID_FLAC:
+            tid2info_head = "models/turrets/flac.md3";
+            tid2info_name = "Flac Cannon";
+            break;
+        case TID_FUSION:
+            tid2info_head = "models/turrets/reactor.md3";
+            tid2info_name = "Fusion Reactor";
+            tid2info_min = '-34 -34 0';
+            tid2info_max = '34 34 90';
+            break;
+        case TID_HELLION:
+            tid2info_head = "models/turrets/hellion.md3";
+            tid2info_name = "Hellion";
+            break;
+        case TID_HK:
+            tid2info_head = "models/turrets/hk.md3";
+            tid2info_name = "Hunter-Killer";
+            break;
+        case TID_MACHINEGUN:
+            tid2info_head = "models/turrets/machinegun.md3";
+            tid2info_name = "Machinegun";
+            break;
+        case TID_MLRS:
+            tid2info_head = "models/turrets/mlrs.md3";
+            tid2info_name = "MLRS";
+            break;
+        case TID_PHASER:
+            tid2info_head = "models/turrets/phaser.md3";
+            tid2info_name = "Phaser";
+            break;
+        case TID_PLASMA:
+            tid2info_head = "models/turrets/plasma.md3";
+            tid2info_name = "Plasma";
+            break;
+        case TID_PLASMA_DUAL:
+            tid2info_head = "models/turrets/plasmad.md3";
+            tid2info_name = "Dual Plasma";
+            break;
+        case TID_TESLA:
+            tid2info_base = "models/turrets/tesla_base.md3";
+            tid2info_head = "models/turrets/tesla_head.md3";
+            tid2info_name = "Tesla coil";
+            tid2info_min = '-60 -60 0';
+            tid2info_max  ='60 60 128';
+            break;
+        case TID_WALKER:
+            tid2info_base = "models/turrets/walker_body.md3";
+            tid2info_head = "models/turrets/walker_head_minigun.md3";
+            tid2info_name = "Walker";
+            tid2info_min = '-70 -70 0';
+            tid2info_max = '70 70 95';
+            break;
+    }    
+}
+
 void turret_remove()
 {
-    dprint("Removing turret type ", ftos(self.turret_type), "\n");
+    turret_tid2info(self.turret_type);
+    dprint("Removing ", tid2info_name, " turrret.\n");
     
     remove(self.tur_head);
     self.tur_head = world;    
@@ -38,6 +110,7 @@ void turret_remove()
 void turret_changeteam()
 {
 	self.colormod = '0 0 0';
+	
 	switch(self.team)
 	{
         case COLOR_TEAM1: // Red
@@ -62,23 +135,25 @@ void turret_changeteam()
 
 void turret_head_draw()
 {    
-    float dt;
-    dt = time - self.move_time;
-    self.move_time = time;
-    if(dt <= 0)
-        return;
-    
-    self.angles += dt * self.move_avelocity;    
     self.drawmask = MASK_NORMAL;
 }
 
 void turret_draw()
 {        
+    float dt;
+
+    self.drawmask = MASK_NORMAL;
+    
+    dt = time - self.move_time;
+    self.move_time = time;
+    if(dt <= 0)
+        return;
+    
+    self.tur_head.angles += dt * self.tur_head.move_avelocity;
+
     if (self.health < 127)
     if(random() < 0.25)
-        te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
-    
-    self.drawmask = MASK_NORMAL;
+        te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);    
 }
 
 void turret_moving_head_draw()
@@ -89,6 +164,8 @@ void turret_moving_head_draw()
 void turret_moving_draw()
 {        
     float dt;
+
+    self.drawmask = MASK_NORMAL;
         
     dt = time - self.move_time;
     self.move_time = time;
@@ -105,115 +182,48 @@ void turret_moving_draw()
         setorigin(self.tur_head, self.origin);
     self.tur_head.angles += dt * self.tur_head.move_avelocity;
     
+    //self.angles_y += (self.move_angles_y - self.angles_y)* dt;
+    
     if (self.health < 127)
     if(random() < 0.25)
-        te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
-    
-    self.drawmask = MASK_NORMAL;
+        te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);    
 }
 
-string tid2info_base;
-string tid2info_head;
-vector  tid2info_min;
-vector  tid2info_max;
-void turret_tid2info(float _tid)
-{
-    tid2info_base = "models/turrets/base.md3";
-    tid2info_min = '-32 -32 0';
-    tid2info_max = '32 32 64';
-
-    switch(_tid)
-    {
-        case TID_EWHEEL:
-            tid2info_base = "models/turrets/ewheel-base2.md3";
-            tid2info_head = "models/turrets/ewheel-gun1.md3";
-            break;
-        case TID_FLAC:
-            tid2info_head = "models/turrets/flac.md3";
-            break;
-        case TID_FUSION:
-            tid2info_head = "models/turrets/reactor.md3";
-            tid2info_min = '-34 -34 0';
-            tid2info_max = '34 34 90';
-            break;
-        case TID_HELLION:
-            tid2info_head = "models/turrets/hellion.md3";
-            break;
-        case TID_HK:
-            tid2info_head = "models/turrets/hk.md3";
-            break;
-        case TID_MACHINEGUN:
-            tid2info_head = "models/turrets/machinegun.md3";
-            break;
-        case TID_MLRS:
-            tid2info_head = "models/turrets/mlrs.md3";
-            break;
-        case TID_PHASER:
-            tid2info_head = "models/turrets/phaser.md3";
-            break;
-        case TID_PLASMA:
-            tid2info_head = "models/turrets/plasma.md3";
-            break;
-        case TID_PLASMA_DUAL:
-            tid2info_head = "models/turrets/plasmad.md3";
-            break;
-        case TID_TESLA:
-            tid2info_base = "models/turrets/tesla_base.md3";
-            tid2info_head = "models/turrets/tesla_head.md3";
-            tid2info_min = '-60 -60 0';
-            tid2info_max  ='60 60 128';
-            break;
-        case TID_WALKER:
-            tid2info_base = "models/turrets/walker_body.md3";
-            tid2info_head = "models/turrets/walker_head_minigun.md3";
-            tid2info_min = '-70 -70 0';
-            tid2info_max = '70 70 95';
-            break;
-    }    
-}
-
-//void(entity e, entity tagentity, string tagname) setattachment = #443;
 void turret_construct()
 {    
     if(self.tur_head == world)
         self.tur_head = spawn();
     
     turret_tid2info(self.turret_type);
-    
-    setorigin(self, self.origin);
-    
-    self.tur_head.classname = "turret_head";
-    self.tur_head.owner   = self;
+    dprint("Constructing ", tid2info_name , " turret (", ftos(self.turret_type), ")\n");
 
+    setorigin(self, self.origin);
     setmodel(self, tid2info_base);
     setmodel(self.tur_head, tid2info_head);
-    
-    self.tur_head.move_movetype = MOVETYPE_NOCLIP;
-    self.move_movetype = MOVETYPE_NOCLIP;
-    self.tur_head.angles = self.angles;
-    
     setsize(self, tid2info_min, tid2info_max);
     setsize(self.tur_head, '0 0 0', '0 0 0');
-    
     setorigin(self.tur_head, gettaginfo(self, gettagindex(self, "tag_head")));
-    self.health             = 255;
-    self.solid              = SOLID_BBOX;
-    self.tur_head.solid     = SOLID_NOT;
-    self.movetype           = MOVETYPE_NOCLIP;
-    self.tur_head.movetype  = MOVETYPE_NOCLIP;    
-    self.draw               = turret_draw;
-    self.tur_head.draw      = turret_head_draw;
-    self.entremove          = turret_remove;
+
+    self.tur_head.classname     = "turret_head";
+    self.tur_head.owner         = self;
+    self.tur_head.move_movetype = MOVETYPE_NOCLIP;
+    self.move_movetype          = MOVETYPE_NOCLIP;
+    self.tur_head.angles        = self.angles;
+    self.health                 = 255;
+    self.solid                  = SOLID_BBOX;
+    self.tur_head.solid         = SOLID_NOT;
+    self.movetype               = MOVETYPE_NOCLIP;
+    self.tur_head.movetype      = MOVETYPE_NOCLIP;    
+    self.draw                   = turret_draw;
+    self.tur_head.draw          = turret_head_draw;
+    self.entremove              = turret_remove;
 
     if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
     {
-        self.gravity = 1;
-        self.move_movetype = MOVETYPE_BOUNCE;
-        self.move_origin = self.origin;                
-        self.move_time = time;        
-   
-        self.movetype           = MOVETYPE_NOCLIP;
-        self.tur_head.movetype  = MOVETYPE_NOCLIP;    
+        self.gravity            = 1;
+        self.move_movetype      = MOVETYPE_BOUNCE;
+        self.move_origin        = self.origin;                
+        self.move_time          = time;        
         self.draw               = turret_moving_draw;
         self.tur_head.draw      = turret_moving_head_draw;
     }
@@ -221,7 +231,6 @@ void turret_construct()
 
 entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode);
 void turret_gibboom();
-
 void turret_gib_draw()
 {
     Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
@@ -247,10 +256,11 @@ void turret_gib_draw()
 void turret_gibboom()
 {
     float i;
+    
     sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 
-    for (i = 1; i < 5; i = i +1)
+    for (i = 1; i < 5; i = i + 1)
         turret_gibtoss(strcat("models/turrets/head-gib", ftos(i), ".md3"), self.origin, self.velocity + randomvec() * 700, '0 0 0', FALSE);
 }
 
@@ -261,10 +271,10 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
     gib = spawn();
     setorigin(gib, _from);
     setmodel(gib, _model);
-    gib.colormod = _cmod;
-	gib.solid = SOLID_CORPSE;
-    gib.draw = turret_gib_draw;    
-    gib.cnt = _explode;
+    gib.colormod    = _cmod;
+	gib.solid       = SOLID_CORPSE;
+    gib.draw        = turret_gib_draw;    
+    gib.cnt         = _explode;
     
     if(_explode)
     {
@@ -274,12 +284,12 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
     else
         gib.nextthink = time + autocvar_cl_gibs_lifetime * (1 + prandom() * 0.15);
     
-    gib.gravity = 1;
-	gib.move_movetype = MOVETYPE_BOUNCE;
-	gib.move_origin = gib.origin = _from;
-	gib.move_velocity = _to;	
-	gib.move_avelocity = prandomvec() * 32;
-	gib.move_time = time;
+    gib.gravity         = 1;
+	gib.move_movetype   = MOVETYPE_BOUNCE;
+	gib.move_origin     = gib.origin = _from;
+	gib.move_velocity   = _to;	
+	gib.move_avelocity  = prandomvec() * 32;
+	gib.move_time       = time;
 	gib.damageforcescale = 1;
 	
 	return gib;
@@ -294,7 +304,8 @@ void turret_die()
     sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
     turret_tid2info(self.turret_type);
-
+    dprint("Turret ", tid2info_name, " dies.\n");
+    
     // Base
     if(self.turret_type == TID_EWHEEL)
         turret_gibtoss(tid2info_base, self.origin, self.velocity, '-1 -1 -1', FALSE);
@@ -311,7 +322,7 @@ void turret_die()
             turret_gibtoss("models/turrets/base-gib4.md3", self.origin + '0 0 2', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
         }
         else
-            turret_gibtoss("models/turrets/base-gib1.md3", self.origin, '0 0 0', '0 0 0', TRUE);
+            turret_gibtoss("models/turrets/base-gib1.md3", self.origin + '0 0 4', '0 0 0', '0 0 0', TRUE);
     }
     
     headgib = turret_gibtoss(tid2info_head, self.origin + '0 0 32', '0 0 200' + randomvec() * 200, '-1 -1 -1', TRUE);
@@ -329,7 +340,6 @@ void ent_turret()
 	if(sf & TNSF_SETUP)
 	{	    
 	    self.turret_type = ReadByte();
-	    dprint("Constructing turret type ", ftos(self.turret_type), "\n");
 	    	    
 	    self.origin_x = ReadCoord();
 	    self.origin_y = ReadCoord();
@@ -365,19 +375,17 @@ void ent_turret()
         self.velocity_y = ReadShort();
         self.velocity_z = ReadShort();
         
-        self.angles_y = ReadShort();
-        
-        self.move_time = time;
-        self.move_velocity = self.velocity;
-        self.move_origin = self.origin;
+        self.angles_y       = ReadShort();
+        self.move_time      = time;
+        self.move_velocity  = self.velocity;
+        self.move_origin    = self.origin;
     }
         
     if(sf & TNSF_ANIM)
     {
         self.frame1time = ReadCoord();
-        self.frame = ReadByte();
+        self.frame      = ReadByte();
     }
-
 
     if(sf & TNSF_STATUS)
     {        
@@ -392,7 +400,6 @@ void ent_turret()
         }
     } 
     
-    //if(sf == TNSF_DIE)
     if(self.health == 0)
         turret_die();
 }
