@@ -109,28 +109,34 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 // returns location of sprite text
 vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 {
+	float SQRT2 = 1.414;
+	float BORDER; BORDER = 1.5 * t;
+	float TSIZE; TSIZE = 8 * t;
+	float RLENGTH; RLENGTH = 8 * t;
+	float RWIDTH; RWIDTH = 4 * t;
+
 	R_BeginPolygon("", DRAWFLAG_NORMAL);
-	R_PolygonVertex(o + rotate('-11.5 9.5 0'*t, ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate('11.5 9.5 0'*t, ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate('0 -2 0'*t, ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(eX * -(TSIZE + BORDER * (1 + SQRT2)) + eY * (TSIZE + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(eX *  (TSIZE + BORDER * (1 + SQRT2)) + eY * (TSIZE + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(eY * -(        BORDER *      SQRT2),                          ang), '0 0 0', '0 0 0', a);
 	R_EndPolygon();
 	R_BeginPolygon("", DRAWFLAG_NORMAL);
-	R_PolygonVertex(o + rotate('-5.5 9.5 0'*t, ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate('-5.5 17.5 0'*t, ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate('5.5 17.5 0'*t, ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate('5.5 9.5 0'*t, ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(eX * -(RWIDTH + BORDER) + eY * (TSIZE           + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(eX * -(RWIDTH + BORDER) + eY * (TSIZE + RLENGTH + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(eX *  (RWIDTH + BORDER) + eY * (TSIZE + RLENGTH + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(eX *  (RWIDTH + BORDER) + eY * (TSIZE           + BORDER), ang), '0 0 0', '0 0 0', a);
 	R_EndPolygon();
 
 	R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-	R_PolygonVertex(o + rotate('-8 8 0'*t, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate('8 8 0'*t, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate('0 0 0'*t, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eX * -TSIZE + eY * TSIZE, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eX *  TSIZE + eY * TSIZE, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate('0 0 0',                  ang), '0 0 0', rgb, a);
 	R_EndPolygon();
 	R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-	R_PolygonVertex(o + rotate('-4 8 0'*t, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate('-4 16 0'*t, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate('4 16 0'*t, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate('4 8 0'*t, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eX * -RWIDTH + eY *  TSIZE,            ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eX * -RWIDTH + eY * (TSIZE + RLENGTH), ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eX *  RWIDTH + eY * (TSIZE + RLENGTH), ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eX *  RWIDTH + eY *  TSIZE,            ang), '0 0 0', rgb, a);
 	R_EndPolygon();
 
 	return
