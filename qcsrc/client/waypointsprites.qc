@@ -425,6 +425,11 @@ void Draw_WaypointSprite()
 	vector rgb;
 	rgb = self.teamradar_color;
 	rgb = spritelookupcolor(spriteimage, rgb);
+	if(rgb == '0 0 0')
+	{
+		self.teamradar_color = '1 0 1';
+		print(sprintf("WARNING: sprite of name %s has no color, using pink so you notice it\n")); 
+	}
 
 	if(time - floor(time) > 0.5)
 		a *= spritelookupblinkvalue(spriteimage);
