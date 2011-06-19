@@ -810,8 +810,7 @@ void vehicles_showwp()
     
     WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
     if(self.waypointsprite_attached)
-    {
-        
+    {        
         if(teamplay && self.team)
             WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, TeamColor(self.team));
         else
@@ -819,10 +818,7 @@ void vehicles_showwp()
         
         WaypointSprite_UpdateRule(self.waypointsprite_attached, self.enemy.team, SPRITERULE_DEFAULT);        
         if(oldself == world)
-        {
             WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, self.nextthink);        
-            dprint("Oldies is goldies\n");
-        }
             
         WaypointSprite_Ping(self.waypointsprite_attached);
     }    
@@ -892,7 +888,7 @@ void vehicles_reset_colors()
     {
         if(e != self.vehicle_shieldent)
         {
-            e.effects   = _effects  | EF_LOWPRECISION;
+            e.effects   = _effects; //  | EF_LOWPRECISION;
             e.colormod  = _colormod;
             e.colormap  = _colormap;
             e.alpha     = 1;
@@ -900,7 +896,7 @@ void vehicles_reset_colors()
         e = e.chain;
     }
 
-    self.vehicle_hudmodel.effects  = self.effects  = _effects | EF_LOWPRECISION;
+    self.vehicle_hudmodel.effects  = self.effects  = _effects; // | EF_LOWPRECISION;
     self.vehicle_hudmodel.colormod = self.colormod = _colormod;
     self.vehicle_hudmodel.colormap = self.colormap = _colormap;
     self.vehicle_viewport.effects = (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT);
