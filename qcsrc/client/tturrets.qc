@@ -155,7 +155,7 @@ void turret_draw()
 }
 
 
-void turret_moving_draw()
+void turret_walker_draw()
 {        
     float dt;
             
@@ -168,12 +168,37 @@ void turret_moving_draw()
     movelib_groundalign4point(300, 100, 0.25);
     
     setorigin(self, self.origin + self.velocity * dt);
-    if(self.turret_type == TID_WALKER)
-        setorigin(self.tur_head, gettaginfo(self, gettagindex(self, "tag_head")));
-    else
-        setorigin(self.tur_head, self.origin);
+    setorigin(self.tur_head, gettaginfo(self, gettagindex(self, "tag_head")));
     
     self.tur_head.angles += dt * self.tur_head.move_avelocity;
+    
+    self.angles_y = self.move_angles_y;
+    
+    if (self.health < 127)
+    if(random() < 0.25)
+        te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);    
+}
+
+void turret_ewheel_draw()
+{        
+    float dt;
+            
+    dt = time - self.move_time;
+    self.move_time = time;
+    if(dt <= 0)
+        return;
+    
+    fixedmakevectors(self.angles);
+    movelib_groundalign4point(300, 100, 0.25);
+    
+    setorigin(self, self.origin + self.velocity * dt);
+    setorigin(self.tur_head, self.origin);
+    
+    self.tur_head.angles += dt * self.tur_head.move_avelocity;
+    
+    // Simulate banking
+    self.angles_z -= self.angles_z * dt * 2;
+    self.angles_z = bound(-45, self.angles_z  + ((self.move_angles_y - self.angles_y * -25) * dt), 45);
     
     self.angles_y = self.move_angles_y;
     
@@ -218,8 +243,16 @@ void turret_construct()
         self.movetype           = MOVETYPE_BOUNCE;
         self.move_movetype      = MOVETYPE_BOUNCE;
         self.move_origin        = self.origin;                
-        self.move_time          = time;        
-        self.draw               = turret_moving_draw;
+        self.move_time          = time;
+        switch(self.turret_type)
+        {
+            case TID_EWHEEL:
+                self.draw               = turret_ewheel_draw;
+                break;
+            case TID_WALKER:
+                self.draw               = turret_walker_draw;
+        }
+        
     }
 }
 

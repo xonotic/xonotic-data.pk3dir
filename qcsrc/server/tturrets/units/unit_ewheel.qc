@@ -4,19 +4,6 @@
 #define ewheel_amin_bck_slow 3
 #define ewheel_amin_bck_fast 4
 
-float ewheel_speed_fast;
-float ewheel_speed_slow;
-float ewheel_speed_slower;
-float ewheel_speed_stop;
-
-void turret_ewheel_loadcvars()
-{
-    ewheel_speed_fast   = autocvar_g_turrets_unit_ewheel_speed_fast;
-    ewheel_speed_slow   = autocvar_g_turrets_unit_ewheel_speed_slow;
-    ewheel_speed_slower = autocvar_g_turrets_unit_ewheel_speed_slower;
-    ewheel_speed_stop   = autocvar_g_turrets_unit_ewheel_speed_stop;
-}
-
 void turret_ewheel_projectile_explode()
 {
 #ifdef TURRET_DEBUG
@@ -107,7 +94,7 @@ void ewheel_move_path()
         self.moveto = self.pathcurrent.origin;
         self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
 
-        movelib_move_simple(v_forward, ewheel_speed_fast, 0.4);
+        movelib_move_simple(v_forward, autocvar_g_turrets_unit_ewheel_speed_fast, 0.4);
 
         return;
     }
@@ -129,29 +116,29 @@ void  ewheel_move_enemy()
         if ( self.tur_head.spawnshieldtime < 1 )
         {
             newframe = ewheel_amin_fwd_fast;
-            movelib_move_simple(v_forward, ewheel_speed_fast, 0.4);
+            movelib_move_simple(v_forward, autocvar_g_turrets_unit_ewheel_speed_fast, 0.4);
         }
         else if (self.tur_head.spawnshieldtime < 2)
         {
 
             newframe = ewheel_amin_fwd_slow;
-            movelib_move_simple(v_forward, ewheel_speed_slow, 0.4);
+            movelib_move_simple(v_forward, autocvar_g_turrets_unit_ewheel_speed_slow, 0.4);
        }
         else
         {
             newframe = ewheel_amin_fwd_slow;
-            movelib_move_simple(v_forward, ewheel_speed_slower, 0.4);
+            movelib_move_simple(v_forward, autocvar_g_turrets_unit_ewheel_speed_slower, 0.4);
         }
     }
     else if (self.tur_dist_enemy < self.target_range_optimal * 0.5)
     {
         newframe = ewheel_amin_bck_slow;
-        movelib_move_simple(v_forward * -1, ewheel_speed_slow, 0.4);
+        movelib_move_simple(v_forward * -1, autocvar_g_turrets_unit_ewheel_speed_slow, 0.4);
     }
     else
     {
         newframe = ewheel_amin_stop;
-        movelib_beak_simple(ewheel_speed_stop);
+        movelib_beak_simple(autocvar_g_turrets_unit_ewheel_speed_stop);
     }
     
     if(self.frame != newframe)
@@ -173,42 +160,29 @@ void ewheel_move_idle()
 
     self.frame = 0;
     if (vlen(self.velocity))
-        movelib_beak_simple(ewheel_speed_stop);
+        movelib_beak_simple(autocvar_g_turrets_unit_ewheel_speed_stop);
 }
 
 void ewheel_postthink()
 {
     float vz;
-    vector wish_angle,real_angle;
-
-    /*
-    if(self.enemy)
-        dprint("enemy!\n");
-    else
-        dprint("nothign =(!\n");
-    */
+    vector wish_angle, real_angle;
 
     vz = self.velocity_z;
 
     self.angles_x = anglemods(self.angles_x);
     self.angles_y = anglemods(self.angles_y);
 
-    //self.angles_x *= -1;
     fixedmakevectors(self.angles);
-    //self.angles_x *= -1;
 
     wish_angle = normalize(self.steerto);
     wish_angle = vectoangles(wish_angle);
     real_angle = wish_angle - self.angles;
-    real_angle = shortangle_vxy(real_angle,self.tur_head.angles);
+    real_angle = shortangle_vxy(real_angle, self.tur_head.angles);
 
     self.tur_head.spawnshieldtime = fabs(real_angle_y);
-    real_angle_y  = bound(-self.tur_head.aim_speed,real_angle_y,self.tur_head.aim_speed);
+    real_angle_y  = bound(-self.tur_head.aim_speed, real_angle_y, self.tur_head.aim_speed);
     self.angles_y = (self.angles_y + real_angle_y);
-
-    // Simulate banking
-    self.angles_z -= self.angles_z * frametime * 2;
-    self.angles_z = bound(-45,self.angles_z  + ((real_angle_y * -25) * frametime),45);
 
     if(self.enemy)
         ewheel_move_enemy();
@@ -229,7 +203,7 @@ void ewheel_respawnhook()
     entity e;
 
     // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
-    if(self.movetype  != MOVETYPE_WALK)
+    if(self.movetype != MOVETYPE_WALK)
 		return;
 		
     self.velocity = '0 0 0';
@@ -260,8 +234,6 @@ void ewheel_diehook()
 {
     self.velocity = '0 0 0';
 
-    //turret_trowgib2(self.origin, self.velocity + '0 0 400', '-0.6 -0.2 -02', self, 3 + time + random() * 2);
-
     if (self.pathcurrent)
         pathlib_deletepath(self.pathcurrent.owner);
 
@@ -272,7 +244,8 @@ void turret_ewheel_dinit()
 {
     entity e;
 
-    if (self.netname == "")      self.netname     = "eWheel Turret";
+    if (self.netname == "")      
+        self.netname     = "eWheel Turret";
 
     if (self.target != "")
     {
@@ -351,12 +324,6 @@ void spawnfunc_turret_ewheel()
 
     precache_model ("models/turrets/ewheel-base2.md3");
     precache_model ("models/turrets/ewheel-gun1.md3");
-
-    precache_model ("models/pathlib/goodsquare.md3");
-    precache_model ("models/pathlib/badsquare.md3");
-    precache_model ("models/pathlib/square.md3");
-
-    turret_ewheel_loadcvars();
 
     self.think = turret_ewheel_dinit;
     self.nextthink = time + 0.5;

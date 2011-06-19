@@ -70,7 +70,6 @@ void Ent_DamageInfo(float isNew)
 
 	self = oldself;
 	
-	// TODO spawn particle effects and sounds based on w_deathtype
 	if(DEATH_ISTURRET(w_deathtype))
 	{	    
 	    traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
@@ -137,6 +136,7 @@ void Ent_DamageInfo(float isNew)
         }        
 	}
 	
+	// TODO spawn particle effects and sounds based on w_deathtype
 	if(!DEATH_ISSPECIAL(w_deathtype))
 	{
 		float hitwep;
