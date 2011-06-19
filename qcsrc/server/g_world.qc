@@ -158,7 +158,7 @@ void timeoutHandler_Think() {
 			//get rid of the countdown message
 			FOR_EACH_REALCLIENT(plr) {
 				if(plr.classname == "player") {
-					Send_CSQC_Centerprint_Generic(plr, CPID_TIMEOUT_COUNTDOWN, "", 1, 0);
+					Send_CSQC_Centerprint_Generic_Expire(plr, CPID_TIMEOUT_COUNTDOWN);
 				}
 			}
 			remove(self);
@@ -169,7 +169,7 @@ void timeoutHandler_Think() {
 	else if (timeoutStatus == 0) { //if a player called the resumegame command (which set timeoutStatus to 0 already)
 		FOR_EACH_REALCLIENT(plr) {
 			if(plr.classname == "player") {
-				Send_CSQC_Centerprint_Generic(plr, CPID_TIMEOUT_COUNTDOWN, "", 1, 0);
+				Send_CSQC_Centerprint_Generic_Expire(plr, CPID_TIMEOUT_COUNTDOWN);
 			}
 		}
 		remove(self);

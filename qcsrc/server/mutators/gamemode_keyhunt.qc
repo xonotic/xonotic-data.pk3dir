@@ -882,7 +882,7 @@ void kh_EnableTrackingDevice()  // runs after each round
 
 	FOR_EACH_PLAYER(player)
 		if(clienttype(player) == CLIENTTYPE_REAL)
-			Send_CSQC_Centerprint_Generic(player, CPID_KH_MSG, "", 1, 0);
+			Send_CSQC_Centerprint_Generic_Expire(player, CPID_KH_MSG);
 
 	kh_tracking_enabled = TRUE;
 }
@@ -908,7 +908,7 @@ void kh_StartRound()  // runs at the start of each round
 
 	FOR_EACH_PLAYER(player)
 		if(clienttype(player) == CLIENTTYPE_REAL)
-			Send_CSQC_Centerprint_Generic(player, CPID_KH_MSG, "", 1, 0);
+			Send_CSQC_Centerprint_Generic_Expire(player, CPID_KH_MSG);
 
 	for(i = 0; i < kh_teams; ++i)
 	{

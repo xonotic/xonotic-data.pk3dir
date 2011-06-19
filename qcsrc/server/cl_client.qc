@@ -2452,7 +2452,7 @@ void LeaveSpectatorMode()
 				bprint ("^4", self.netname, "^4 is playing now\n");
 
 			if(!autocvar_g_campaign)
-				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, "", 1, 0); // clear MOTD
+				Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD); // clear MOTD
 
 			return;
 		} else {
@@ -2703,7 +2703,7 @@ void PlayerPreThink (void)
 					self.motd_actived_time = time;
 				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
 					self.motd_actived_time = 0;
-					Send_CSQC_Centerprint_Generic(self, CPID_MOTD, "", 1, 0);
+					Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
 				}
 			}
 		} else {
@@ -2712,7 +2712,7 @@ void PlayerPreThink (void)
 					self.motd_actived_time = time;
 				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
 					self.motd_actived_time = 0;
-					Send_CSQC_Centerprint_Generic(self, CPID_MOTD, "", 1, 0);
+					Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
 				}
 			}
 		}

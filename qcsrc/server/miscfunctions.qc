@@ -1674,6 +1674,10 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s1, float duration
 		});
 	}
 }
+void Send_CSQC_Centerprint_Generic_Expire(entity e, float id)
+{
+	Send_CSQC_Centerprint_Generic(e, id, "", 1, 0);
+}
 // WARNING: this kills the trace globals
 #define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init()

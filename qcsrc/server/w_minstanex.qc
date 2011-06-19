@@ -94,7 +94,7 @@ void minstagib_stop_countdown(void)
 	if (self.minstagib_needammo)
 	{
 		self.health = 100;
-		Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "", 1, 0);
+		Send_CSQC_Centerprint_Generic_Expire(self, CPID_MINSTA_FINDAMMO);
 	}
 	self.minstagib_needammo = FALSE;
 }
