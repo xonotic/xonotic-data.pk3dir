@@ -192,13 +192,15 @@ float spiderbot_frame()
     //UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);
 
     player.v_angle_x *= -1;
-    ad = player.v_angle - (spider.tur_head.angles + spider.angles);
+    gettaginfo(spider.tur_head, 0);
+    ad = player.v_angle - vectoangles2(v_forward, v_up);
+    //ad = player.v_angle - (spider.tur_head.angles + spider.angles);
     player.v_angle_x *= -1;
     if(ad_x > 180)  ad_x -= 360;
     if(ad_x < -180) ad_x += 360;
     if(ad_y > 180)  ad_y -= 360;
     if(ad_y < -180) ad_y += 360;
-
+    
     // Rotate head
     ftmp = autocvar_g_vehicle_spiderbot_head_turnspeed * sys_frametime;
     ad_y = bound(-ftmp, ad_y, ftmp);
