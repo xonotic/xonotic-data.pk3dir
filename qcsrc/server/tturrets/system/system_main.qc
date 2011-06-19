@@ -285,9 +285,10 @@ void turret_stdproc_track()
 
     // Find the diffrence between where we currently aim and where we want to aim
     //move_angle = target_angle - (self.angles + self.tur_head.angles);
-    move_angle = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(self.angles), AnglesTransform_FromAngles(target_angle))) - self.tur_head.angles;
- 
-    move_angle = shortangle_vxy(move_angle,(self.angles + self.tur_head.angles));
+    //move_angle = shortangle_vxy(move_angle,(self.angles + self.tur_head.angles));
+    
+    move_angle = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(self.angles), AnglesTransform_FromAngles(target_angle))) - self.tur_head.angles; 
+    move_angle = shortangle_vxy(move_angle, self.tur_head.angles);
 
     switch(self.track_type)
     {

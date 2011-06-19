@@ -197,8 +197,8 @@ void turret_ewheel_draw()
     self.tur_head.angles += dt * self.tur_head.move_avelocity;
     
     // Simulate banking
-    self.angles_z -= self.angles_z * dt * 2;
-    self.angles_z = bound(-45, self.angles_z  + ((self.move_angles_y - self.angles_y * -25) * dt), 45);
+    //self.angles_z -= self.angles_z * dt * 2;
+    //self.angles_z = bound(-45, self.angles_z  + ((self.move_angles_y - self.angles_y * -25) * dt), 45);
     
     self.angles_y = self.move_angles_y;
     
@@ -232,7 +232,7 @@ void turret_construct()
     self.tur_head.solid         = SOLID_NOT;
     self.movetype               = MOVETYPE_NOCLIP;
     self.tur_head.movetype      = MOVETYPE_NOCLIP;    
-    //self.draw                   = turret_draw;
+    self.draw                   = turret_draw;
     self.entremove              = turret_remove;
     self.drawmask = MASK_NORMAL;
     self.tur_head.drawmask = MASK_NORMAL;
