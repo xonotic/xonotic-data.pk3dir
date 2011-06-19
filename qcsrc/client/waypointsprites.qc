@@ -114,6 +114,7 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 	float TSIZE; TSIZE = 8 * t;
 	float RLENGTH; RLENGTH = 8 * t;
 	float RWIDTH; RWIDTH = 4 * t;
+	float MLENGTH; MLENGTH = 4 * t;
 
 	R_BeginPolygon("", DRAWFLAG_NORMAL);
 	R_PolygonVertex(o + rotate(eX * -(TSIZE + BORDER * (1 + SQRT2)) + eY * (TSIZE + BORDER), ang), '0 0 0', '0 0 0', a);
@@ -140,7 +141,7 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 	R_EndPolygon();
 
 	return
-		o + rotate('0 20 0'*t, ang);
+		o + rotate(eY * (TSIZE + RLENGTH + MLENGTH), ang);
 }
 
 // returns location of sprite healthbar
