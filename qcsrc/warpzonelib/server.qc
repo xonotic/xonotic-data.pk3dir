@@ -588,6 +588,11 @@ void spawnfunc_trigger_warpzone(void)
 	//              the map, with another killtarget to designate its
 	//              orientation
 
+#ifndef WARPZONE_USE_FIXANGLE
+	// used when teleporting
+	precache_model("null");
+#endif
+
 	if(!self.scale)
 		self.scale = self.modelscale;
 	if(!self.scale)
