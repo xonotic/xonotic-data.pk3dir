@@ -348,7 +348,6 @@ float raptor_frame()
         self.wait = ftmp;
     }
     */
-
     
     if(raptor.deadflag != DEAD_NO)
     {
@@ -357,7 +356,6 @@ float raptor_frame()
         return 1;
     }
     crosshair_trace(player);
-
 
     vector vang;
     vang = raptor.angles;
@@ -452,7 +450,6 @@ float raptor_frame()
                 ad = vf + raptor.lock_target.velocity * impact_time;
             }
             trace_endpos = ad;
-            //UpdateAuxiliaryXhair(player, trace_endpos, '1 1 1', 0);
         }
 
         if(self.lock_target)
@@ -472,8 +469,8 @@ float raptor_frame()
 
     // Gun1
     df = gettaginfo(raptor.gun1, gettagindex(raptor.gun1, "fire1"));
-    ad = df;
-    vf = v_forward;
+    //ad = df;
+    //vf = v_forward;
     df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle    
     df = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(raptor.angles), AnglesTransform_FromAngles(df))) - raptor.gun1.angles;
     df = shortangle_vxy(df, raptor.gun1.angles);
@@ -487,8 +484,8 @@ float raptor_frame()
 
     // Gun2
     df = gettaginfo(raptor.gun2, gettagindex(raptor.gun2, "fire1"));
-    ad += df;
-    vf += v_forward;
+    //ad += df;
+    //vf += v_forward;
     df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle    
     df = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(raptor.angles), AnglesTransform_FromAngles(df))) - raptor.gun2.angles;
     df = shortangle_vxy(df, raptor.gun2.angles);
