@@ -384,7 +384,6 @@ float raptor_frame()
     raptor.angles_y = anglemods(raptor.angles_y);
     raptor.angles_z = anglemods(raptor.angles_z);
 
-
     if(autocvar_g_vehicle_raptor_movestyle == 1)
         makevectors('0 1 0' * raptor.angles_y);
     else
@@ -422,7 +421,6 @@ float raptor_frame()
         df +=  v_up * autocvar_g_vehicle_raptor_speed_up;
 
     raptor.velocity  += df * frametime;
-    //player.velocity = raptor.velocity;
     player.velocity = player.movement  = raptor.velocity;
     setorigin(player, raptor.origin + '0 0 32');
 
