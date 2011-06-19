@@ -496,9 +496,6 @@ string getwelcomemessage(void)
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
 
-	if(timeoutStatus != 0)
-		s = strcat(s, "\n\n", getTimeoutText(1));
-
 	if (g_grappling_hook)
 		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
 
