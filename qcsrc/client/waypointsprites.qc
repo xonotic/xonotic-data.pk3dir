@@ -121,12 +121,12 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 	R_PolygonVertex(o + rotate('5.5 9.5 0'*t, ang), '0 0 0', '0 0 0', a);
 	R_EndPolygon();
 
-	R_BeginPolygon("", DRAWFLAG_NORMAL);
+	R_BeginPolygon("", DRAWFLAG_ADDITIVE);
 	R_PolygonVertex(o + rotate('-8 8 0'*t, ang), '0 0 0', rgb, a);
 	R_PolygonVertex(o + rotate('8 8 0'*t, ang), '0 0 0', rgb, a);
 	R_PolygonVertex(o + rotate('0 0 0'*t, ang), '0 0 0', rgb, a);
 	R_EndPolygon();
-	R_BeginPolygon("", DRAWFLAG_NORMAL);
+	R_BeginPolygon("", DRAWFLAG_ADDITIVE);
 	R_PolygonVertex(o + rotate('-4 8 0'*t, ang), '0 0 0', rgb, a);
 	R_PolygonVertex(o + rotate('-4 16 0'*t, ang), '0 0 0', rgb, a);
 	R_PolygonVertex(o + rotate('4 16 0'*t, ang), '0 0 0', rgb, a);
