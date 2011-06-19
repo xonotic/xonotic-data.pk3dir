@@ -52,7 +52,7 @@ vector WarpZone_camera_transform(vector org, vector ang)
 
 void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, vector other_ang)
 {
-	e.warpzone_transform = AnglesTransform_Divide(other_ang, AnglesTransform_TurnDirectionFR(my_ang));
+	e.warpzone_transform = AnglesTransform_RightDivide(other_ang, AnglesTransform_TurnDirectionFR(my_ang));
 	e.warpzone_shift = AnglesTransform_PrePostShift_GetPostShift(my_org, e.warpzone_transform, other_org);
 	e.warpzone_origin = my_org;
 	e.warpzone_targetorigin = other_org;
