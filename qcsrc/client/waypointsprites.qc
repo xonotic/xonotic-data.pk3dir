@@ -494,7 +494,13 @@ void Draw_WaypointSprite()
 	}
 	else
 	{
+#if 1
 		ang = M_PI;
+#else
+		vector d;
+		d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
+		ang = atan2(-d_x, -d_y);
+#endif
 	}
 	o_z = 0;
 
