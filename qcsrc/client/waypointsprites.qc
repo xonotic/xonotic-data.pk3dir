@@ -209,6 +209,14 @@ float spritelookupblinkvalue(string s)
 		default:                 return 1;
 	}
 }
+vector spritelookupcolor(string s, vector def)
+{
+	switch(s)
+	{
+		case "keycarrier-friend": return '0 1 0';
+		default:                  return def;
+	}
+}
 string spritelookuptext(string s)
 {
 	switch(s)
@@ -409,6 +417,7 @@ void Draw_WaypointSprite()
 
 	vector rgb;
 	rgb = self.teamradar_color;
+	rgb = spritelookupcolor(spriteimage, rgb);
 
 	if(time - floor(time) > 0.5)
 		a *= spritelookupblinkvalue(spriteimage);
