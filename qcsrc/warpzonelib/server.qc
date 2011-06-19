@@ -1,3 +1,10 @@
+// for think function
+.vector warpzone_save_origin;
+.vector warpzone_save_angles;
+.vector warpzone_save_eorigin;
+.vector warpzone_save_eangles;
+
+// for all entities
 .vector warpzone_oldorigin, warpzone_oldvelocity, warpzone_oldangles;
 .float warpzone_teleport_time;
 .entity warpzone_teleport_zone;
@@ -22,13 +29,10 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	player.fixangle = TRUE;
 	player.velocity = to_velocity;
 
-	if(player.effects & EF_TELEPORT_BIT)
-		player.effects &~= EF_TELEPORT_BIT;
-	else
-		player.effects |= EF_TELEPORT_BIT;
+	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
 
 	if(player.classname == "player")
-		player.flags &~= FL_ONGROUND;
+		BITCLR_ASSIGN(player.flags, FL_ONGROUND);
 
 	WarpZone_PostTeleportPlayer_Callback(player);
 }
@@ -171,11 +175,11 @@ float WarpZone_Send(entity to, float sendflags)
 	// we must send this flag for clientside to match properly too
 	f = 0;
 	if(self.warpzone_isboxy)
-		f |= 1;
+		BITSET_ASSIGN(f, 1);
 	if(self.warpzone_fadestart)
-		f |= 2;
+		BITSET_ASSIGN(f, 2);
 	if(self.origin != '0 0 0')
-		f |= 4;
+		BITSET_ASSIGN(f, 4);
 	WriteByte(MSG_ENTITY, f);
 
 	// we need THESE to render the warpzone (and cull properly)...
@@ -224,9 +228,9 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
 
 	if(self.warpzone_fadestart)
-		f |= 2;
+		BITSET_ASSIGN(f, 2);
 	if(self.origin != '0 0 0')
-		f |= 4;
+		BITSET_ASSIGN(f, 4);
 	WriteByte(MSG_ENTITY, f);
 
 	// we need THESE to render the warpzone (and cull properly)...
@@ -369,6 +373,22 @@ void WarpZonePosition_InitStep_FindTarget()
 	self.enemy.aiment = self;
 }
 
+void WarpZoneCamera_Think(void)
+{
+	if(self.warpzone_save_origin != self.origin
+	|| self.warpzone_save_angles != self.angles
+	|| self.warpzone_save_eorigin != self.enemy.origin
+	|| self.warpzone_save_eangles != self.enemy.angles)
+	{
+		WarpZone_Camera_SetUp(self, self.enemy.origin, self.enemy.angles);
+		self.warpzone_save_origin = self.origin;
+		self.warpzone_save_angles = self.angles;
+		self.warpzone_save_eorigin = self.enemy.origin;
+		self.warpzone_save_eangles = self.enemy.angles;
+	}
+	self.nextthink = time;
+}
+
 void WarpZoneCamera_InitStep_FindTarget()
 {
 	entity e;
@@ -390,6 +410,13 @@ void WarpZoneCamera_InitStep_FindTarget()
 	warpzone_cameras_exist = 1;
 	WarpZone_Camera_SetUp(self, self.enemy.origin, self.enemy.angles);
 	self.SendFlags = 0xFFFFFF;
+	if(self.spawnflags & 1)
+	{
+		self.think = WarpZoneCamera_Think;
+		self.nextthink = time;
+	}
+	else
+		self.nextthink = 0;
 }
 
 void WarpZone_InitStep_UpdateTransform()
@@ -411,7 +438,7 @@ void WarpZone_InitStep_UpdateTransform()
 		tex = getsurfacetexture(self, i_s);
 		if not(tex)
 			break; // this is beyond the last one
-		if(tex == "textures/common/trigger")
+		if(tex == "textures/common/trigger" || tex == "trigger")
 			continue;
 		n_t = getsurfacenumtriangles(self, i_s);
 		for(i_t = 0; i_t < n_t; ++i_t)
@@ -514,6 +541,7 @@ void WarpZone_InitStep_FindTarget()
 	}
 }
 
+void WarpZone_Think();
 void WarpZone_InitStep_FinalizeTransform()
 {
 	if(!self.enemy || self.enemy.enemy != self)
@@ -526,6 +554,13 @@ void WarpZone_InitStep_FinalizeTransform()
 	WarpZone_SetUp(self, self.warpzone_origin, self.warpzone_angles, self.enemy.warpzone_origin, self.enemy.warpzone_angles);
 	self.touch = WarpZone_Touch;
 	self.SendFlags = 0xFFFFFF;
+	if(self.spawnflags & 1)
+	{
+		self.think = WarpZone_Think;
+		self.nextthink = time;
+	}
+	else
+		self.nextthink = 0;
 }
 
 float warpzone_initialized;
@@ -553,6 +588,11 @@ void spawnfunc_trigger_warpzone(void)
 	//              the map, with another killtarget to designate its
 	//              orientation
 
+#ifndef WARPZONE_USE_FIXANGLE
+	// used when teleporting
+	precache_model("null");
+#endif
+
 	if(!self.scale)
 		self.scale = self.modelscale;
 	if(!self.scale)
@@ -572,7 +612,7 @@ void spawnfunc_trigger_warpzone(void)
 		setsize(self, self.mins, self.maxs);
 	self.SendEntity = WarpZone_Send;
 	self.SendFlags = 0xFFFFFF;
-	self.effects |= EF_NODEPTHTEST;
+	BITSET_ASSIGN(self.effects, EF_NODEPTHTEST);
 	self.warpzone_next = warpzone_first;
 	warpzone_first = self;
 }
@@ -614,6 +654,31 @@ void WarpZones_Reconnect()
 	for(self = warpzone_first; self; self = self.warpzone_next)
 		WarpZone_InitStep_FinalizeTransform();
 	self = e;
+}
+
+void WarpZone_Think()
+{
+	if(self.warpzone_save_origin != self.origin
+	|| self.warpzone_save_angles != self.angles
+	|| self.warpzone_save_eorigin != self.enemy.origin
+	|| self.warpzone_save_eangles != self.enemy.angles)
+	{
+		entity oldself;
+		oldself = self;
+		WarpZone_InitStep_UpdateTransform();
+		self = self.enemy;
+		WarpZone_InitStep_UpdateTransform();
+		self = oldself;
+		WarpZone_InitStep_FinalizeTransform();
+		self = self.enemy;
+		WarpZone_InitStep_FinalizeTransform();
+		self = oldself;
+		self.warpzone_save_origin = self.origin;
+		self.warpzone_save_angles = self.angles;
+		self.warpzone_save_eorigin = self.enemy.origin;
+		self.warpzone_save_eangles = self.enemy.angles;
+	}
+	self.nextthink = time;
 }
 
 void WarpZone_StartFrame()

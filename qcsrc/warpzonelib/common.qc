@@ -230,7 +230,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			break;
 	}
 	if((contentshack = (forent.dphitcontentsmask && !(forent.dphitcontentsmask & DPCONTENTS_SOLID))))
-		forent.dphitcontentsmask |= DPCONTENTS_SOLID;
+		BITSET_ASSIGN(forent.dphitcontentsmask, DPCONTENTS_SOLID);
 
 	// if starting in warpzone, first transform
 	wz = WarpZone_Find(org + mi, org + ma);
@@ -304,7 +304,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	WarpZone_MakeAllOther();
 :fail
 	if(contentshack)
-		forent.dphitcontentsmask &~= DPCONTENTS_SOLID;
+		BITCLR_ASSIGN(forent.dphitcontentsmask, DPCONTENTS_SOLID);
 	trace_startsolid = sol;
 	v_forward = vf;
 	v_right = vr;
