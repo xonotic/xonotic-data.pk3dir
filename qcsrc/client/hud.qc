@@ -4356,20 +4356,11 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
-		if (new_id && new_id == centerprint_msgID[j]) // && centerprint_expire_time[j] >= time
+		if (new_id && new_id == centerprint_msgID[j])
 		{
 			if(centerprint_messages[j])
 				strunzone(centerprint_messages[j]);
 			centerprint_messages[j] = strzone(strMessage);
-
-			centerprint_time[j] = duration;
-			centerprint_expire_time[j] = time + duration;
-			centerprint_countdown_num[j] = countdown_num;
-			return;
-		}
-		if(centerprint_messages[j] == strMessage)
-		{
-			centerprint_msgID[j] = new_id;
 
 			centerprint_time[j] = duration;
 			centerprint_expire_time[j] = time + duration;
