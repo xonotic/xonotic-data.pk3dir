@@ -3032,7 +3032,21 @@ void PlayerPostThink (void)
 	{
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		float timeleft;
+		if (time - self.parm_idlesince < 1) // instead of (time == self.parm_idlesince) to support sv_maxidle <= 10
+		{
+			if(self.idlekick_lasttimeleft)
+			{
+				Send_CSQC_Centerprint_Generic_Expire(self, CPID_DISCONNECT_IDLING);
+				self.idlekick_lasttimeleft = 0;
+			}
+			return;
+		}
 		timeleft = ceil(sv_maxidle - (time - self.parm_idlesince));
+		if(timeleft == min(10, sv_maxidle - 1)) // - 1 to support sv_maxidle <= 10
+		{
+			if(!self.idlekick_lasttimeleft)
+				Send_CSQC_Centerprint_Generic(self, CPID_DISCONNECT_IDLING, "^3Stop idling!\n^3Disconnecting in %d seconds...", 1, timeleft);
+		}
 		if(timeleft <= 0)
 		{
 			bprint("^3", self.netname, "^3 was kicked for idling.\n");
@@ -3043,17 +3057,9 @@ void PlayerPostThink (void)
 		else if(timeleft <= 10)
 		{
 			if(timeleft != self.idlekick_lasttimeleft)
-			{
-				// TODO: send this msg only once
-				Send_CSQC_Centerprint_Generic(self, CPID_DISCONNECT_IDLING, "^3Stop idling!\n^3Disconnecting in %d seconds...", 1, timeleft);
-				AnnounceTo(self, strcat(ftos(timeleft), ""));
-			}
+				AnnounceTo(self, ftos(timeleft));
+			self.idlekick_lasttimeleft = timeleft;
 		}
-		else
-		{
-			Send_CSQC_Centerprint_Generic(self, CPID_DISCONNECT_IDLING, "", 1, timeleft);
-		}
-		self.idlekick_lasttimeleft = timeleft;
 	}
 
 #ifdef TETRIS
