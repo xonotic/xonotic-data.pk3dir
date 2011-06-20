@@ -8,7 +8,6 @@ float arena_roundbased;
 entity spawnqueue_first;
 entity spawnqueue_last;
 entity champion;
-string champion_name;
 float warmup;
 float ca_players;
 float required_ca_players;
@@ -207,15 +206,12 @@ float roundStartTime_prev; // prevent networkspam
 void Arena_Warmup()
 {
 	float f;
-	string msg;
     entity e;
 
 	if((!g_arena && !g_ca && !g_freezetag) || (g_arena && !arena_roundbased) || (time < game_starttime))
 		return;
 
 	f = ceil(warmup - time);
-	if(f > 0)
-		champion = world; // this is done because a if(champion) will not execute if champion = world
 
 	allowed_to_spawn = 0;
 
@@ -230,9 +226,8 @@ void Arena_Warmup()
 			allowed_to_spawn = 1;
 		if(champion && g_arena)
 		{
-			msg = strcat("The Champion is ", champion_name, "^7\n");
 			FOR_EACH_PLAYER(e)
-				centerprint(e, msg); // TODO: send this msg only once
+				centerprint(e, strcat("The Champion is ", champion.netname));
 		}
 
 		if(f != roundStartTime_prev) {
@@ -247,7 +242,7 @@ void Arena_Warmup()
 				Announce("1");
 
 			FOR_EACH_PLAYER(e)
-				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d\n", 1, f); // TODO: send this msg only once
+				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
 		}
 
 		if (g_arena) {
@@ -259,12 +254,12 @@ void Arena_Warmup()
 			self.movement = '0 0 0';
 		}
 	}
-
 	else if(f > -1 && f != roundStartTime_prev)
 	{
 		roundStartTime_prev = f;
 		Announce("begin");
-		Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!\n", 1, 0);
+		FOR_EACH_PLAYER(e)
+			Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
 
 		if(g_ca) {
 			ca_players = 0;
@@ -275,7 +270,12 @@ void Arena_Warmup()
 
         if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
             self.movetype = MOVETYPE_WALK;
+
 	}
+
+	// clear champion to avoid centerprinting again the champion msg
+	if (champion)
+		champion = world;
 }
 
 void count_spawned_players()
@@ -403,10 +403,6 @@ void Spawnqueue_Check()
 		else if(!next_round) {
 			if((redspawned && !bluespawned) || (bluespawned && !redspawned)) {
 				next_round = time + 5;
-				champion = find(world, classname, "player");
-				if(champion_name)
-					strunzone(champion_name);
-				champion_name = strzone(champion.netname);
 			}
 			else if((!redspawned && !bluespawned) || time - warmup > autocvar_g_ca_round_timelimit) {
 				FOR_EACH_CLIENT(self) centerprint(self, strcat("^7Round tied.", "^7\n"));
