@@ -582,9 +582,6 @@ void spiderbot_blowup()
 
 void spiderbot_die()
 {
-    sound (self, CHAN_TRIGGER, "vehicles/spiderbot_die.wav", VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum("explosion_medium"), self.origin + '0 0 100', '0 0 0', 1);
-
     self.health             = 0;
     self.event_damage       = SUB_Null;
     self.takedamage         = DAMAGE_NO;
@@ -648,7 +645,6 @@ void spawnfunc_vehicle_spiderbot()
     precache_model ( "models/vehicles/spiderbot_cockpit.dpm");
     precache_model ( "models/uziflash.md3");
 
-    precache_sound ( "weapons/rocket_impact.wav" );
     precache_sound ( "weapons/uzi_fire.wav" );
     precache_sound ( "weapons/rocket_impact.wav");
     

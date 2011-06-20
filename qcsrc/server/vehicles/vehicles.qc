@@ -383,7 +383,6 @@ void vehicles_touch()
         // Colided with world?
         if(other == world)
         {
-            // Apply velocity based self damage here
         }
         else
         {

@@ -1,6 +1,5 @@
 #define RACER_MIN '-120 -120 -40'
 #define RACER_MAX '120 120 40'
-#define RACER_ENGINE "sound/vehicles/racer.wav"
 
 #ifdef SVQC
 void racer_exit(float eject);
@@ -547,9 +546,6 @@ void racer_spawn()
 
 void racer_blowup()
 {
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum("explosion_big"), self.origin, '0 0 0', 1);
-
     self.deadflag    = DEAD_DEAD;
     self.vehicle_exit(VHEF_NORMAL);
 
@@ -559,7 +555,6 @@ void racer_blowup()
 					autocvar_g_vehicle_racer_blowup_forceintensity,
 					DEATH_WAKIBLOWUP, world);
 
-    self.alpha = -1;
     self.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
     self.think      = racer_spawn;
     self.movetype   = MOVETYPE_NONE;
@@ -576,7 +571,6 @@ void racer_blowup()
 
 void racer_deadtouch()
 {
-    dprint("Boink!\n");
     self.avelocity_x *= 0.7;
     self.cnt -= 1;
     if(self.cnt <= 0)
@@ -650,10 +644,8 @@ void spawnfunc_vehicle_racer()
     self.vehicle_flags |= VHF_DMGSHAKE;
     self.vehicle_flags |= VHF_DMGROLL;
 
-    precache_sound ("weapons/laserimpact.wav");
     precache_sound ("weapons/lasergun_fire.wav");
     precache_sound ("weapons/rocket_fire.wav");
-    precache_sound ("weapons/rocket_impact.wav");
     
     precache_sound ("vehicles/racer_idle.wav");
     precache_sound ("vehicles/racer_move.wav");

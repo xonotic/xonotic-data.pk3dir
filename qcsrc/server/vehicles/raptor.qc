@@ -1,7 +1,7 @@
 #ifdef SVQC
 #define RAPTOR_MIN '-80 -80 0'
 #define RAPTOR_MAX '80 80 70'
-//#define RAPTOR_ENGINE "sound/vehicles/raptor.wav"
+
 float autocvar_g_vehicle_raptor_respawntime;
 
 float autocvar_g_vehicle_raptor_movestyle;
@@ -129,11 +129,6 @@ void raptor_bomb_burst()
     remove(self);
 }
 
-void raptor_bomb_touch()
-{
-    raptor_bomb_burst();
-}
-
 void raptor_bombdrop()
 {
     entity bomb_1, bomb_2;
@@ -146,7 +141,7 @@ void raptor_bombdrop()
 
     bomb_1.movetype     = bomb_2.movetype   = MOVETYPE_BOUNCE;
     bomb_1.velocity     = bomb_2.velocity   = self.velocity;
-    bomb_1.touch        = bomb_2.touch      = raptor_bomb_touch;
+    bomb_1.touch        = bomb_2.touch      = raptor_bomb_burst;
     bomb_1.think        = bomb_2.think      = raptor_bomb_burst;
     bomb_1.cnt          = bomb_2.cnt        = time + 10;
 
@@ -165,17 +160,13 @@ void raptor_bombdrop()
 
     CSQCProjectile(bomb_1, TRUE, PROJECTILE_RAPTORBOMB, TRUE);
     CSQCProjectile(bomb_2, TRUE, PROJECTILE_RAPTORBOMB, TRUE);
-
 }
 
 
 void raptor_fire_cannon(entity gun, string tagname)
 {
-    entity bolt;
-    vector b_org;
-    b_org = gettaginfo(gun, gettagindex(gun, tagname));
-    bolt = vehicles_projectile("raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
-                           b_org, normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
+    vehicles_projectile("raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
+                           gettaginfo(gun, gettagindex(gun, tagname)), normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
                            autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
                            DEATH_RAPTOR_CANNON, PROJECTILE_RAPTORCANNON, 0, TRUE, TRUE);
 }
@@ -267,7 +258,6 @@ float raptor_takeoff()
     player = self;
     raptor = self.vehicle;
     self   = raptor;
-    
     if(self.sound_nexttime < time)
     {        
         self.sound_nexttime = time + 7.955812; //soundlength("vehicles/raptor_fly.wav");
@@ -323,7 +313,6 @@ float raptor_frame()
     player = self;
     raptor = self.vehicle;
     self   = raptor;
-    
     vehicles_painframe();
     /*
     ftmp = vlen(self.velocity);
@@ -554,9 +543,6 @@ float raptor_frame()
 
 void raptor_blowup()
 {
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum("explosion_big"), self.origin, '0 0 0', 1);
-
     self.deadflag    = DEAD_DEAD;
     self.vehicle_exit(VHEF_NORMAL);
     RadiusDamage (self, self, 250, 15, 250, world, 250, DEATH_WAKIBLOWUP, world);
@@ -575,9 +561,6 @@ void raptor_blowup()
 
 void raptor_diethink()
 {
-    //self.avelocity += '0 0.5 1' * (random() * 5);
-    //self.avelocity -= '0 0.5 1' * (random() * 5);
-
     if(random() < 0.1)
     {
         sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
@@ -744,13 +727,12 @@ void spawnfunc_vehicle_raptor()
     precache_model ("models/vehicles/raptor_gun.dpm");
     precache_model ("models/vehicles/spinner.dpm");
     precache_model ("models/vehicles/raptor_cockpit.dpm");
-    precache_model ("models/vehicles/clusterbomb.md3");
+    //precache_model ("models/vehicles/clusterbomb.md3");
     precache_model ("models/vehicles/clusterbomb_folded.md3");
     precache_model ("models/vehicles/raptor_body.dpm");
     
     precache_sound ("vehicles/raptor_fly.wav");
     precache_sound ("vehicles/raptor_speed.wav");
-    precache_sound ("");
     
     self.think = raptor_dinit;
     self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_raptor_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
