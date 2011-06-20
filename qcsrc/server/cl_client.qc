@@ -1306,18 +1306,6 @@ void KillIndicator_Think()
 		{
 			if(self.cnt <= 10)
 				AnnounceTo(self.owner, strcat(ftos(self.cnt), ""));
-			// TODO: Send_CSQC_Centerprint_Generic only once
-			if(self.owner.killindicator_teamchange)
-			{
-				if(self.owner.killindicator_teamchange == -1)
-					Send_CSQC_Centerprint_Generic(self.owner, CPID_TEAMCHANGE, "Changing team in %d seconds", 1, self.cnt);
-				else if(self.owner.killindicator_teamchange == -2)
-					Send_CSQC_Centerprint_Generic(self.owner, CPID_TEAMCHANGE, "Spectating in %d seconds", 1, self.cnt);
-				else
-					Send_CSQC_Centerprint_Generic(self.owner, CPID_TEAMCHANGE, strcat("Changing to ", ColoredTeamName(self.owner.killindicator_teamchange), " in %d seconds"), 1, self.cnt);
-			}
-			else
-				Send_CSQC_Centerprint_Generic(self.owner, CPID_KILL, "^1Suicide in %d seconds", 1, self.cnt);
 		}
 		self.nextthink = time + 1;
 		self.cnt -= 1;
@@ -1388,14 +1376,31 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 	if(self.killindicator)
 	{
 		if(targetteam == 0) // just die
+		{
 			self.killindicator.colormod = '0 0 0';
+			if(clienttype(self) == CLIENTTYPE_REAL)
+				Send_CSQC_Centerprint_Generic(self, CPID_KILL, "^1Suicide in %d seconds", 1, self.killindicator.cnt);
+		}
 		else if(targetteam == -1) // auto
+		{
 			self.killindicator.colormod = '0 1 0';
+			if(clienttype(self) == CLIENTTYPE_REAL)
+				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, "Changing team in %d seconds", 1, self.killindicator.cnt);
+		}
 		else if(targetteam == -2) // spectate
+		{
 			self.killindicator.colormod = '0.5 0.5 0.5';
+			if(clienttype(self) == CLIENTTYPE_REAL)
+				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, "Spectating in %d seconds", 1, self.killindicator.cnt);
+		}
 		else
+		{
 			self.killindicator.colormod = TeamColor(targetteam);
+			if(clienttype(self) == CLIENTTYPE_REAL)
+				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, strcat("Changing to ", ColoredTeamName(targetteam), " in %d seconds"), 1, self.killindicator.cnt);
+		}
 	}
+
 }
 
 void ClientKill (void)
