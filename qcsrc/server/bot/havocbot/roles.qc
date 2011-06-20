@@ -168,6 +168,9 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 			if (distance < 100 || distance > sradius)
 				continue;
 
+			if (head.freezetag_frozen)
+				continue;
+
 			if(g_minstagib)
 			if(head.items & IT_STRENGTH)
 				continue;
@@ -310,7 +313,7 @@ void havocbot_chooserole_dom()
 void havocbot_chooserole_ka()
 {
 	self.havocbot_role = havocbot_role_ka;
-}
+};
 
 void havocbot_chooserole()
 {
@@ -328,6 +331,8 @@ void havocbot_chooserole()
 		havocbot_chooserole_ons();
 	else if (g_keepaway)
 		havocbot_chooserole_ka();
+	else if (g_freezetag)
+		havocbot_chooserole_ft();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
 };
