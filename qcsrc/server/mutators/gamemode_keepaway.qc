@@ -4,6 +4,8 @@ void ka_RespawnBall(void);
 void ka_DropEvent(entity);
 void ka_TimeScoring(void);
 
+entity ka_ball;
+
 float ka_ballcarrier_waypointsprite_visible_for_player(entity);
 
 void ka_Initialize() // run at the start of a match, initiates game mode
@@ -50,6 +52,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e.reset = ka_Reset;
 	e.touch = ka_TouchEvent;
 	e.owner = world;
+	ka_ball = e;
 
 	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So. 
 }
