@@ -1234,6 +1234,7 @@ void CSQC_UpdateView(float w, float h)
 					if(autocvar_crosshair_dot_color != "0")
 						wcross_color = stov(autocvar_crosshair_dot_color);
 					CROSSHAIR_DRAW(wcross_resolution * autocvar_crosshair_dot_size, "gfx/crosshairdot.tga", f * autocvar_crosshair_dot_alpha);
+					// FIXME why don't we use wcross_alpha here?
 					wcross_color = wcross_color_old;
 				}
 			}
