@@ -3,6 +3,7 @@
 #include "role_onslaught.qc"
 #include "role_keyhunt.qc"
 #include "role_freezetag.qc"
+#include "role_keepaway.qc"
 #include "roles.qc"
 
 void havocbot_ai()
