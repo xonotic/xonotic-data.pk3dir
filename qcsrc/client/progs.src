@@ -34,6 +34,7 @@ tturrets.qh
 ../server/tturrets/include/turrets_early.qh
 ../server/movelib.qc
 main.qh
+vehicles/vehicles.qh
 
 sortlist.qc
 miscfunctions.qc
@@ -61,9 +62,10 @@ modeleffects.qc
 tuba.qc
 target_music.qc
 
-//vehicles/spiderbot.qc
+vehicles/vehicles.qc
 shownames.qh
 shownames.qc
+
 Main.qc
 View.qc
 interpolate.qc

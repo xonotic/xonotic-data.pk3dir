@@ -162,10 +162,14 @@ void movelib_update(vector dir,float force)
 }
 */
 
+/*
 void movelib_move_simple(vector newdir,float velo,float blendrate)
 {
     self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo;
 }
+*/
+#define movelib_move_simple(newdir,velo,blendrate) \
+    self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo
 
 void movelib_beak_simple(float force)
 {

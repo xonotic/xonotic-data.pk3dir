@@ -213,6 +213,7 @@ float spritelookupblinkvalue(string s)
 		case "item-shueld":      return 2;
 		case "item-fuelregen":   return 2;
 		case "item-jetpack":     return 2;
+		case "tagged-target":    return 2;
 		default:                 return 1;
 	}
 }
@@ -429,7 +430,7 @@ void Draw_WaypointSprite()
 	if(rgb == '0 0 0')
 	{
 		self.teamradar_color = '1 0 1';
-		print(sprintf("WARNING: sprite of name %s has no color, using pink so you notice it\n")); 
+		print(sprintf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage)); 
 	}
 
 	if(time - floor(time) > 0.5)
