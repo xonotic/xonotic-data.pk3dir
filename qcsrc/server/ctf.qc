@@ -125,15 +125,9 @@ void ctf_flag_spawnstuff()
 	self.basewaypoint = self.nearestwaypoint;
 
 	if(self.team == COLOR_TEAM1)
-	{
-		WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 61', self, sprite);
-		WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM1 - 1, FALSE));
-	}
+		WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 61', self, sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM1 - 1, FALSE));
 	else
-	{
-		WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 61', self, sprite);
-		WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM2 - 1, FALSE));
-	}
+		WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 61', self, sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM2 - 1, FALSE));
 }
 
 float ctf_score_value(string parameter)

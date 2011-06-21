@@ -344,10 +344,11 @@ entity WaypointSprite_SpawnFixed(
 	string spr,
 	vector ofs,
 	entity own,
-	.entity ownfield
+	.entity ownfield,
+	float icon, vector rgb // initial icon and color
 )
 {
-	return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, own, ownfield, TRUE, 0, '0 0 0');
+	return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, own, ownfield, TRUE, icon, rgb);
 }
 
 .entity waypointsprite_deployed_fixed;
