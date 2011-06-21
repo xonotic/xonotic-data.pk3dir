@@ -135,33 +135,24 @@ void ImpulseCommands (void)
 		switch(imp)
 		{
 			case 30:
-				wp = WaypointSprite_DeployPersonal("waypoint", self.origin);
+				wp = WaypointSprite_DeployPersonal("waypoint", self.origin, RADARICON_WAYPOINT, '0 1 1');
 				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
 					WaypointSprite_Ping(wp);
-				}
 				sprint(self, "personal waypoint spawned at location\n");
 				break;
 			case 31:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployPersonal("waypoint", trace_endpos);
+				wp = WaypointSprite_DeployPersonal("waypoint", trace_endpos, RADARICON_WAYPOINT, '0 1 1');
 				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
 					WaypointSprite_Ping(wp);
-				}
 				sprint(self, "personal waypoint spawned at crosshair\n");
 				break;
 			case 32:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployPersonal("waypoint", self.death_origin);
+					wp = WaypointSprite_DeployPersonal("waypoint", self.death_origin, RADARICON_WAYPOINT, '0 1 1');
 					if(wp)
-					{
-						WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
 						WaypointSprite_Ping(wp);
-					}
 					sprint(self, "personal waypoint spawned at death location\n");
 				}
 				break;

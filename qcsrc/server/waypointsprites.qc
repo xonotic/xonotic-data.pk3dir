@@ -373,10 +373,11 @@ entity WaypointSprite_DeployFixed(
 .entity waypointsprite_deployed_personal;
 entity WaypointSprite_DeployPersonal(
 	string spr,
-	vector ofs
+	vector ofs,
+	float icon, vector rgb // initial icon and color
 )
 {
-	return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, self, waypointsprite_deployed_personal, FALSE, 0, '0 0 0');
+	return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, self, waypointsprite_deployed_personal, FALSE, icon, rgb);
 }
 
 .entity waypointsprite_attached;
