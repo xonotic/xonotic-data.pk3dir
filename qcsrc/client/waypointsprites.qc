@@ -435,10 +435,13 @@ void Draw_WaypointSprite()
 		print(sprintf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage)); 
 	}
 
-	if(self.helpme && time < self.helpme)
-		a *= SPRITE_HELPME_BLINK;
-	else if(time - floor(time) > 0.5)
-		a *= spritelookupblinkvalue(spriteimage);
+	if(time - floor(time) > 0.5)
+	{
+		if(self.helpme && time < self.helpme)
+			a *= SPRITE_HELPME_BLINK;
+		else
+			a *= spritelookupblinkvalue(spriteimage);
+	}
 
 	if(a > 1)
 	{
