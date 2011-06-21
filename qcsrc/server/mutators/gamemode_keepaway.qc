@@ -75,8 +75,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 		pointparticles(particleeffectnum("electro_combo"), oldballorigin, '0 0 0', 1);
 		pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 1);
 
-		WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE);
-		WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 1');
+		WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
 		WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);	
 
 		sound(self, CHAN_AUTO, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
@@ -178,9 +177,8 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
 	
 	// waypoints
-	WaypointSprite_Spawn("ka-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, FALSE);
+	WaypointSprite_Spawn("ka-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-	WaypointSprite_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 1');
 	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);	
 	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
 }

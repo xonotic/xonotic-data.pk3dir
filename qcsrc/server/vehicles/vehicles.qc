@@ -785,6 +785,7 @@ void vehicles_showwp_goaway()
 void vehicles_showwp()
 {
     entity oldself;
+    vector rgb;
     
     if(self.cnt)
     {        
@@ -807,18 +808,16 @@ void vehicles_showwp()
         self.think = vehicles_showwp_goaway;
     }
     
-    WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
+    if(teamplay && self.team)
+	    rgb = TeamColor(self.team);
+    else
+	    rgb = '1 1 1';
+    WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
     if(self.waypointsprite_attached)
     {        
-        if(teamplay && self.team)
-            WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, TeamColor(self.team));
-        else
-            WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, '1 1 1');
-        
         WaypointSprite_UpdateRule(self.waypointsprite_attached, self.enemy.team, SPRITERULE_DEFAULT);        
         if(oldself == world)
             WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, self.nextthink);        
-            
         WaypointSprite_Ping(self.waypointsprite_attached);
     }    
     

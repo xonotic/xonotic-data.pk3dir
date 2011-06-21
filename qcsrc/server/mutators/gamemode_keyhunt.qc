@@ -751,9 +751,8 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 
 	centerprint(initial_owner, strcat("You are starting with the ", key.netname, "\n"));  // message to player at start of round
 
-	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, FALSE);
+	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAG, '0 1 1');
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
-	WaypointSprite_UpdateTeamRadar(key.waypointsprite_attachedforcarrier, RADARICON_FLAG, '0 1 1');
 
 	kh_Key_AssignTo(key, initial_owner);
 }

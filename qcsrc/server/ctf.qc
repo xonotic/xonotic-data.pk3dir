@@ -296,8 +296,7 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 	ctf_captureshield_update(p, 0); // shield only
 	e.playerid = attacker.playerid;
 	e.ctf_droptime = time;
-	WaypointSprite_Spawn("flagdropped", 0, 0, e, '0 0 1' * 61, world, COLOR_TEAM1 + COLOR_TEAM2 - e.team, e, waypointsprite_attachedforcarrier, FALSE);
-	WaypointSprite_UpdateTeamRadar(e.waypointsprite_attachedforcarrier, RADARICON_FLAG, '0 1 1');
+	WaypointSprite_Spawn("flagdropped", 0, 0, e, '0 0 1' * 61, world, COLOR_TEAM1 + COLOR_TEAM2 - e.team, e, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAG, '0 1 1');
 	WaypointSprite_Ping(e.waypointsprite_attachedforcarrier);
 	
 	if(p.waypointsprite_attachedforcarrier)
