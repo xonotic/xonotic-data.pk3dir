@@ -32,6 +32,7 @@ noise.qh
 teamplay.qh
 
 main.qh
+vehicles/vehicles.qh
 
 sortlist.qc
 miscfunctions.qc
@@ -59,9 +60,10 @@ modeleffects.qc
 tuba.qc
 target_music.qc
 
-//vehicles/spiderbot.qc
+vehicles/vehicles.qc
 shownames.qh
 shownames.qc
+
 Main.qc
 View.qc
 interpolate.qc
