@@ -343,7 +343,7 @@ void walker_postthink()
                 
                 if(self.idletime < time)
                 {
-                    if(random() < 0.5)
+                    if(random() < 0.5 || self.team != MAX_SHOT_DISTANCE)
                     {
                         self.idletime = time + 1 + random() * 5;
                         self.moveto = self.origin;
