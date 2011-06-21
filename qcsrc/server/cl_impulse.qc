@@ -179,64 +179,46 @@ void ImpulseCommands (void)
 				}
 				break;
 			case 34:
-				wp = WaypointSprite_DeployFixed("here", FALSE, self.origin);
+				wp = WaypointSprite_DeployFixed("here", FALSE, self.origin, RADARICON_HERE, '0 1 0');
 				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
 					WaypointSprite_Ping(wp);
-				}
 				sprint(self, "HERE spawned at location\n");
 				break;
 			case 35:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployFixed("here", FALSE, trace_endpos);
+				wp = WaypointSprite_DeployFixed("here", FALSE, trace_endpos, RADARICON_HERE, '0 1 0');
 				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
 					WaypointSprite_Ping(wp);
-				}
 				sprint(self, "HERE spawned at crosshair\n");
 				break;
 			case 36:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployFixed("here", FALSE, self.death_origin);
+					wp = WaypointSprite_DeployFixed("here", FALSE, self.death_origin, RADARICON_HERE, '0 1 0');
 					if(wp)
-					{
-						WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
 						WaypointSprite_Ping(wp);
-					}
 					sprint(self, "HERE spawned at death location\n");
 				}
 				break;
 			case 37:
-				wp = WaypointSprite_DeployFixed("danger", FALSE, self.origin);
+				wp = WaypointSprite_DeployFixed("danger", FALSE, self.origin, RADARICON_DANGER, '1 0.5 0');
 				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
 					WaypointSprite_Ping(wp);
-				}
 				sprint(self, "DANGER spawned at location\n");
 				break;
 			case 38:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployFixed("danger", FALSE, trace_endpos);
+				wp = WaypointSprite_DeployFixed("danger", FALSE, trace_endpos, RADARICON_DANGER, '1 0.5 0');
 				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
 					WaypointSprite_Ping(wp);
-				}
 				sprint(self, "DANGER spawned at crosshair\n");
 				break;
 			case 39:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployFixed("danger", FALSE, self.death_origin);
+					wp = WaypointSprite_DeployFixed("danger", FALSE, self.death_origin, RADARICON_DANGER, '1 0.5 0');
 					if(wp)
-					{
-						WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
 						WaypointSprite_Ping(wp);
-					}
 					sprint(self, "DANGER spawned at death location\n");
 				}
 				break;

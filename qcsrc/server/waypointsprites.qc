@@ -354,7 +354,8 @@ entity WaypointSprite_SpawnFixed(
 entity WaypointSprite_DeployFixed(
 	string spr,
 	float limited_range,
-	vector ofs
+	vector ofs,
+	float icon, vector rgb // initial icon and color
 )
 {
 	float t, maxdistance;
@@ -366,7 +367,7 @@ entity WaypointSprite_DeployFixed(
 		maxdistance = waypointsprite_limitedrange;
 	else
 		maxdistance = 0;
-	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, world, ofs, world, t, self, waypointsprite_deployed_fixed, FALSE, RADARICON_NONE, '0 0 0');
+	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, world, ofs, world, t, self, waypointsprite_deployed_fixed, FALSE, icon, rgb);
 }
 
 .entity waypointsprite_deployed_personal;
