@@ -134,10 +134,9 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	PlayerScore_Add(other, SP_KEEPAWAY_PICKUPS, 1);
 
 	// waypoints
-	WaypointSprite_AttachCarrier("ka-ballcarrier", other);
+	WaypointSprite_AttachCarrier("ka-ballcarrier", other, RADARICON_FLAGCARRIER, '1 0 0');
 	other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ka_ballcarrier_waypointsprite_visible_for_player;
 	WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-	WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 0 0');
 	WaypointSprite_Ping(other.waypointsprite_attachedforcarrier);	
 	WaypointSprite_Kill(self.waypointsprite_attachedforcarrier);
 }

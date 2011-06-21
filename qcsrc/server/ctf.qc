@@ -546,8 +546,7 @@ void FlagTouch()
 		self.movetype = MOVETYPE_NONE;
 		setorigin(self, FLAG_CARRY_POS);
 		setattachment(self, other, "");
-		WaypointSprite_AttachCarrier("flagcarrier", other);
-		WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+		WaypointSprite_AttachCarrier("flagcarrier", other, RADARICON_FLAGCARRIER, '1 1 0');
 		WaypointSprite_Ping(self.sprite);
 
 		return;
@@ -636,8 +635,7 @@ void FlagTouch()
 			setattachment(self, other, "");
 			self.damageforcescale = 0;
 			self.takedamage = DAMAGE_NO;
-			WaypointSprite_AttachCarrier("flagcarrier", other);
-			WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+			WaypointSprite_AttachCarrier("flagcarrier", other, RADARICON_FLAGCARRIER, '1 1 0');
 		}
 	}
 };

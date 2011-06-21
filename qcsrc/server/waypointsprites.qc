@@ -384,7 +384,8 @@ entity WaypointSprite_DeployPersonal(
 .entity waypointsprite_attachedforcarrier;
 entity WaypointSprite_Attach(
 	string spr,
-	float limited_range
+	float limited_range,
+	float icon, vector rgb // initial icon and color
 )
 {
 	float t, maxdistance;
@@ -398,17 +399,18 @@ entity WaypointSprite_Attach(
 		maxdistance = waypointsprite_limitedrange;
 	else
 		maxdistance = 0;
-	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, self, '0 0 64', world, t, self, waypointsprite_attached, FALSE, RADARICON_NONE, '0 0 0');
+	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, self, '0 0 64', world, t, self, waypointsprite_attached, FALSE, icon, rgb);
 }
 
 entity WaypointSprite_AttachCarrier(
 	string spr,
-	entity carrier
+	entity carrier,
+	float icon, vector rgb // initial icon and color
 )
 {
 	entity e;
 	WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
-	e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, FALSE, RADARICON_NONE, '0 0 0');
+	e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, FALSE, icon, rgb);
 	if(e)
 	{
 		WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
