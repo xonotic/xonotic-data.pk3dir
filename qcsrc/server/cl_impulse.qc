@@ -163,7 +163,7 @@ void ImpulseCommands (void)
 					if(!wp)
 						wp = self.waypointsprite_attachedforcarrier; // flag sprite?
 					if(wp)
-						WaypointSprite_Ping(wp);
+						WaypointSprite_HelpMePing(wp);
 					sprint(self, "HELP ME attached\n");
 				}
 				break;

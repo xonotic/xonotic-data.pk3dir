@@ -18,6 +18,7 @@ float waypointsprite_distancefadescale;
 float waypointsprite_distancefadedistance;
 float waypointsprite_alpha;
 
+.float helpme;
 .float rule;
 .string netname; // primary picture
 .string netname2; // secondary picture
@@ -40,6 +41,7 @@ float SPRITE_HEALTHBAR_BORDER = 2;
 float SPRITE_HEALTHBAR_BORDERALPHA = 1;
 float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
 float SPRITE_ARROW_SCALE = 1.0;
+float SPRITE_HELPME_BLINK = 2;
 
 void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f)
 {
@@ -433,7 +435,9 @@ void Draw_WaypointSprite()
 		print(sprintf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage)); 
 	}
 
-	if(time - floor(time) > 0.5)
+	if(self.helpme && time < self.helpme)
+		a *= SPRITE_HELPME_BLINK;
+	else if(time - floor(time) > 0.5)
 		a *= spritelookupblinkvalue(spriteimage);
 
 	if(a > 1)
@@ -549,6 +553,8 @@ void Draw_WaypointSprite()
 	
 	string txt;
 	txt = spritelookuptext(spriteimage);
+	if(self.helpme && time < self.helpme)
+		txt = sprintf(_("%s needing help!"), txt);
 	if(autocvar_g_waypointsprite_uppercase)
 		txt = strtoupper(txt);
 
@@ -691,6 +697,9 @@ void Ent_WaypointSprite()
 		self.teamradar_color_x = ReadByte() / 255.0;
 		self.teamradar_color_y = ReadByte() / 255.0;
 		self.teamradar_color_z = ReadByte() / 255.0;
+		self.helpme = ReadByte() * 0.1;
+		if(self.helpme > 0)
+			self.helpme += servertime;
 	}
 
 	InterpolateOrigin_Note();

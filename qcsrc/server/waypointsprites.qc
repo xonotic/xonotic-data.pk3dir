@@ -82,6 +82,7 @@ void WaypointSprite_UpdateTeamRadar(entity e, float icon, vector col)
 }
 
 .float waypointsprite_pingtime;
+.float waypointsprite_helpmetime;
 void WaypointSprite_Ping(entity e)
 {
 	// anti spam
@@ -90,6 +91,15 @@ void WaypointSprite_Ping(entity e)
 	e.waypointsprite_pingtime = time + 0.3;
 	// ALWAYS sends (this causes a radar circle), thus no check
 	e.cnt |= 0x80;
+	e.SendFlags |= 32;
+}
+
+float waypointsprite_limitedrange, waypointsprite_deployed_lifetime, waypointsprite_deadlifetime;
+
+void WaypointSprite_HelpMePing(entity e)
+{
+	WaypointSprite_Ping(e);
+	e.waypointsprite_helpmetime = time + waypointsprite_deployed_lifetime;
 	e.SendFlags |= 32;
 }
 
@@ -115,7 +125,6 @@ void WaypointSprite_FadeOutIn(entity e, float t)
 	e.SendFlags |= 16;
 }
 
-float waypointsprite_limitedrange, waypointsprite_deployed_lifetime, waypointsprite_deadlifetime;
 void WaypointSprite_Init()
 {
 	waypointsprite_limitedrange = autocvar_g_waypointsprite_limitedrange;
@@ -280,6 +289,13 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 		WriteByte(MSG_ENTITY, self.colormod_x * 255.0);
 		WriteByte(MSG_ENTITY, self.colormod_y * 255.0);
 		WriteByte(MSG_ENTITY, self.colormod_z * 255.0);
+
+		dt = (self.waypointsprite_helpmetime - time) / 0.1;
+		if(dt < 0)
+			dt = 0;
+		if(dt > 255)
+			dt = 255;
+		WriteByte(MSG_ENTITY, dt);
 	}
 
 	return TRUE;
