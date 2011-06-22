@@ -11,7 +11,7 @@ void spawnfunc_weapon_minelayer (void)
 	weapon_defaultspawnfunc(WEP_MINE_LAYER);
 }
 
-void W_Mine_Stick ()
+void W_Mine_Stick (entity to)
 {
 	spamsound (self, CHAN_PROJECTILE, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
 
@@ -51,6 +51,9 @@ void W_Mine_Stick ()
 
 	remove(self);
 	self = newmine;
+
+	if(to)
+		SetMovetypeFollow(self, to);
 }
 
 void W_Mine_Explode ()
@@ -89,7 +92,7 @@ void W_Mine_DoRemoteExplode ()
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
 
-	if(self.movetype == MOVETYPE_NONE)
+	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
 		self.velocity = self.oldvelocity;
 
 	RadiusDamage (self, self.owner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
@@ -157,6 +160,15 @@ void W_Mine_Think (void)
 	entity head;
 
 	self.nextthink = time;
+
+	if(self.movetype == MOVETYPE_FOLLOW)
+	{
+		if(LostMovetypeFollow(self))
+		{
+			UnsetMovetypeFollow(self);
+			self.movetype = MOVETYPE_NONE;
+		}
+	}
 	
 	// our lifetime has expired, it's time to die - mine_time just allows us to play a sound for this
 	// TODO: replace this mine_trigger.wav sound with a real countdown
@@ -208,11 +220,20 @@ void W_Mine_Think (void)
 
 void W_Mine_Touch (void)
 {
+	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
+		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
+
 	PROJECTILE_TOUCH;
-	if(!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))
-		W_Mine_Stick();
-	else if(self.movetype != MOVETYPE_NONE) // don't unstick a locked mine when someone touches it
-		self.velocity = '0 0 0';
+
+	if(other && other.classname == "player" && other.deadflag == DEAD_NO)
+	{
+		// hit a player
+		// don't stick
+	}
+	else
+	{
+		W_Mine_Stick(other);
+	}
 }
 
 void W_Mine_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)

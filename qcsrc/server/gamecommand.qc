@@ -668,6 +668,34 @@ void changematchtime(float delta, float mi, float ma)
 	cvar_set("timelimit", ftos(new / 60));
 }
 
+float g_clientmodel_genericsendentity (entity to, float sf);
+void modelbug_make_svqc();
+void modelbug_make_csqc()
+{
+	Net_LinkEntity(self, TRUE, 0, g_clientmodel_genericsendentity);
+	self.think = modelbug_make_svqc;
+	self.nextthink = time + 1;
+	setorigin(self, self.origin - '0 0 8');
+}
+void modelbug_make_svqc()
+{
+	self.SendEntity = func_null;
+	self.think = modelbug_make_csqc;
+	self.nextthink = time + 1;
+	setorigin(self, self.origin + '0 0 8');
+}
+
+void modelbug()
+{
+	entity e;
+	e = spawn();
+	setorigin(e, nextent(world).origin);
+	precache_model("models_portal.md3");
+	setmodel(e, "models/portal.md3");
+	e.think = modelbug_make_svqc;
+	e.nextthink = time + 1;
+}
+
 void GameCommand(string command)
 {
 	float argc;
@@ -1448,6 +1476,12 @@ void GameCommand(string command)
 	if(argv(0) == "reducematchtime")
 	{
 		changematchtime(autocvar_timelimit_decrement*-60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
+		return;
+	}
+
+	if(argv(0) == "modelbug")
+	{
+		modelbug();
 		return;
 	}
 

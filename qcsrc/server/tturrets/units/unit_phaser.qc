@@ -68,7 +68,7 @@ void beam_think()
                     self.shot_force,
                     oldself.shot_dmg,
                     0.75,
-                    DEATH_TURRET);
+                    DEATH_TURRET_PHASER);
     self = oldself;
     self.scale = vlen(self.owner.tur_shotorg - trace_endpos) / 256;
 
@@ -116,14 +116,11 @@ void turret_phaser_dinit()
     self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
     self.aim_flags = TFL_AIM_LEAD;
 
-    if (turret_stdproc_init("phaser_std",0,"models/turrets/base.md3","models/turrets/phaser.md3") == 0)
+    if (turret_stdproc_init("phaser_std", "models/turrets/base.md3","models/turrets/phaser.md3", TID_PHASER) == 0)
     {
         remove(self);
         return;
     }
-
-    if (!turret_tag_fire_update())
-        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     self.turret_firecheckfunc = turret_phaser_firecheck;
     self.turret_firefunc  = turret_phaser_attack;
