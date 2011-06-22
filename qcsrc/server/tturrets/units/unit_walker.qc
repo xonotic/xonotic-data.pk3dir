@@ -357,7 +357,7 @@ void walker_postthink()
                 
                 if(self.idletime < time)
                 {
-                    if(random() < 0.5 || self.team != MAX_SHOT_DISTANCE)
+                    if(random() < 0.5 || self.spawnflasg & TSL_ROAM)
                     {
                         self.idletime = time + 1 + random() * 5;
                         self.moveto = self.origin;
