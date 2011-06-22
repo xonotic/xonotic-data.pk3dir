@@ -34,7 +34,7 @@ void turret_precache(float _tid)
     turret_tid2info(_tid);
     if(turret_is_precache[_tid])
     {
-        dprint("turret_precache: ", tid2info_name, "allready precache, skipping.\n");
+        dprint("turret_precache: ", tid2info_name, " allready precachd, skipping.\n");
         return;
     }
     else
@@ -209,8 +209,22 @@ void turret_draw()
     self.tur_head.angles += dt * self.tur_head.move_avelocity;
 
     if (self.health < 127)
-    if(random() < 0.25)
-        te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);    
+    {
+        dt = random();
+        
+        if(dt < 0.25)
+            te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);    
+        
+    }
+    
+    if(self.health < 85)    
+    if(dt < 0.1)
+        pointparticles(particleeffectnum("smoke_small"), (self.origin + (randomvec() * 80)), '0 0 0', 1);        
+    
+    if(self.health < 32)
+    if(dt < 0.1)
+        pointparticles(particleeffectnum("smoke_large"), (self.origin + (randomvec() * 80)), '0 0 0', 1);        
+    
 }
 
 
@@ -310,8 +324,7 @@ void turret_construct()
                 break;
             case TID_WALKER:
                 self.draw               = turret_walker_draw;
-        }
-        
+        }        
     }
 }
 
