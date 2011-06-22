@@ -57,10 +57,10 @@ void ewheel_attack()
     }
 
 }
-
+//#define EWHEEL_FANCYPATH
 void ewheel_move_path()
 {
-
+#ifdef EWHEEL_FANCYPATH
     // Are we close enougth to a path node to switch to the next?
     if (vlen(self.origin  - self.pathcurrent.origin) < 64)
         if (self.pathcurrent.path_next == world)
@@ -86,7 +86,10 @@ void ewheel_move_path()
         else
             self.pathcurrent = self.pathcurrent.path_next;
 
-
+#else
+    if (vlen(self.origin - self.pathcurrent.origin) < 64)    
+        self.pathcurrent = self.pathcurrent.enemy;
+#endif
 
     if (self.pathcurrent)
     {
@@ -95,8 +98,6 @@ void ewheel_move_path()
         self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
 
         movelib_move_simple(v_forward, autocvar_g_turrets_unit_ewheel_speed_fast, 0.4);
-
-        return;
     }
 }
 
@@ -224,8 +225,13 @@ void ewheel_respawnhook()
             dprint("Warning: not a turrret path\n");
         else
         {
+
+#ifdef EWHEEL_FANCYPATH
             self.pathcurrent = WALKER_PATH(self.origin,e.origin);
             self.pathgoal = e;
+#else
+            self.pathcurrent  = e;
+#endif
         }
     }
 }
@@ -234,9 +240,10 @@ void ewheel_diehook()
 {
     self.velocity = '0 0 0';
 
+#ifdef EWHEEL_FANCYPATH
     if (self.pathcurrent)
         pathlib_deletepath(self.pathcurrent.owner);
-
+#endif
     self.pathcurrent = world;
 }
 
@@ -312,8 +319,12 @@ void turret_ewheel_dinit()
             dprint("Warning: not a turrret path\n");
         else
         {
+#ifdef EWHEEL_FANCYPATH
             self.pathcurrent = WALKER_PATH(self.origin, e.origin);
             self.pathgoal = e;
+#else
+            self.pathcurrent = e;
+#endif
         }
     }
 }
