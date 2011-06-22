@@ -227,7 +227,6 @@ void turret_draw()
     
 }
 
-
 void turret_walker_draw()
 {        
     float dt;

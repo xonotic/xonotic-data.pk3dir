@@ -140,7 +140,6 @@ void load_unit_settings(entity ent, string unitname, float is_reload)
             ent.turret_respawnhook();
 }
 
-
 /**
 ** updates enemy distances, predicted impact point/time
 ** and updated aim<->predict impact distance.
@@ -689,7 +688,6 @@ void turret_think()
     entity e;
 
     self.nextthink = time + self.ticrate;
-    //self.SendFlags = TNSF_UPDATE | TNSF_STATUS | TNSF_ANG | TNSF_AVEL;
     
     // ONS uses somewhat backwards linking.
     if (teamplay)
@@ -805,9 +803,11 @@ void turret_think()
             do_target_scan = 1;
 
         // Old target (if any) invalid?
+        if(self.target_validate_time < time)
         if (turret_validate_target(self, self.enemy, self.target_validate_flags) <= 0)
         {
         	self.enemy = world;
+        	self.target_validate_time = time + 0.5;
         	do_target_scan = 1;
         }
 

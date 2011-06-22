@@ -342,7 +342,8 @@ vector real_origin(entity ent);
 //.float target_select_fov;
 /// Last timestamp this turret aquierd a valid target
 .float target_select_time;
-
+/// Throttle re-validation of current target
+.float target_validate_time;
 /*
 * Aim refers to real aiming, not gun pos (thats done by track)
 */
