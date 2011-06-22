@@ -259,8 +259,11 @@ void walker_move_to(vector _target, float _dist)
     }
 }
 
+//#define WALKER_FANCYPATHING
+
 void walker_move_path()
 {
+#ifdef WALKER_FANCYPATHING
     // Are we close enougth to a path node to switch to the next?
     if (vlen(self.origin  - self.pathcurrent.origin) < 64)
         if (self.pathcurrent.path_next == world)
@@ -290,6 +293,17 @@ void walker_move_path()
     self.steerto = steerlib_attract2(self.moveto,0.5,500,0.95);
     walker_move_to(self.moveto, 0);
 
+#else
+    if (vlen(self.origin - self.pathcurrent.origin) < 64)    
+        self.pathcurrent = self.pathcurrent.enemy;
+    
+    if(!self.pathcurrent)
+        return;
+    
+    self.moveto = self.pathcurrent.origin;
+    self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+    walker_move_to(self.moveto, 0);
+#endif
 }
 
 .float idletime;
@@ -550,8 +564,10 @@ void walker_respawnhook()
 
 void walker_diehook()
 {
+#ifdef self.pathcurrent
     if (self.pathcurrent)
         pathlib_deletepath(self.pathcurrent.owner);
+#endif
 
     self.pathcurrent = world;
 }
@@ -608,7 +624,7 @@ void turret_walker_dinit()
 
     if (self.target != "")
     {
-        e = find(world,targetname,self.target);
+        e = find(world, targetname, self.target);
         if (!e)
         {
             dprint("Initital waypoint for walker does NOT exsist, fix your map!\n");
@@ -619,8 +635,12 @@ void turret_walker_dinit()
             dprint("Warning: not a turrret path\n");
         else
         {
-            self.pathcurrent = WALKER_PATH(self.origin,e.origin);
+#ifdef WALKER_FANCYPATHING
+            self.pathcurrent = WALKER_PATH(self.origin, e.origin);
             self.pathgoal = e;
+#else
+            self.pathcurrent = e;
+#endif
         }
     }
 }
