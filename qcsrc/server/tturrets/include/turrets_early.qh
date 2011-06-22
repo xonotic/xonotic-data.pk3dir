@@ -455,19 +455,20 @@ void turrets_precash();
 
 // common
 .float turret_type;
-float TID_EWHEEL        = 1;
-float TID_FLAC          = 2;
-float TID_FUSION        = 3;
-float TID_HELLION       = 4;
-float TID_HK            = 5;
-float TID_MACHINEGUN    = 6;
-float TID_MLRS          = 7;
-float TID_PHASER        = 8;
-float TID_PLASMA        = 9;
-float TID_PLASMA_DUAL   = 10;
-float TID_TESLA         = 11;
-float TID_WALKER        = 12;
-float TID_LAST          = 12;
+float TID_COMMON        = 1;
+float TID_EWHEEL        = 2;
+float TID_FLAC          = 3;
+float TID_FUSION        = 4;
+float TID_HELLION       = 5;
+float TID_HK            = 6;
+float TID_MACHINEGUN    = 7;
+float TID_MLRS          = 8;
+float TID_PHASER        = 9;
+float TID_PLASMA        = 10;
+float TID_PLASMA_DUAL   = 11;
+float TID_TESLA         = 12;
+float TID_WALKER        = 13;
+float TID_LAST          = 13;
 
 float TNSF_UPDATE       = 2;
 float TNSF_STATUS       = 4;

@@ -4,30 +4,89 @@ string tid2info_name;
 vector  tid2info_min;
 vector  tid2info_max;
 
+void turret_tid2info(float _tid);
+void turret_precache(float _tid);
+float turret_is_precache[TID_LAST];
+
 void turrets_precache()
 {
-    precache_model ("models/turrets/ewheel-base2.md3");
-    precache_model ("models/turrets/ewheel-gun1.md3");
-    precache_model ("models/turrets/base.md3");
-    precache_model ("models/turrets/flac.md3");
-    precache_model ("models/turrets/reactor.md3");
-    precache_model ("models/turrets/hellion.md3");
-    precache_model ("models/turrets/hk.md3");
-    precache_model ("models/turrets/machinegun.md3");
-    precache_model ("models/turrets/mlrs.md3");
-    precache_model ("models/turrets/phaser.md3");
-    precache_model ("models/turrets/phaser_beam.md3");
-    precache_model ("models/turrets/plasma.md3");
-    precache_model ("models/turrets/plasmad.md3");
-    precache_model ("models/turrets/tesla_head.md3");
-    precache_model ("models/turrets/tesla_base.md3");
-    precache_model ("models/turrets/walker_head_minigun.md3");
-    precache_model ("models/turrets/walker_body.md3");
-    precache_model ("models/turrets/rocket.md3");
-    
-    precache_sound ("turrets/phaser.wav");
-    precache_sound ("weapons/rocket_impact.wav");
-    precache_sound ("weapons/uzi_fire.wav");
+    turret_precache(TID_COMMON);
+}
+
+void turret_precache(float _tid)
+{    
+    if (!turret_is_precache[TID_COMMON])
+    {
+        dprint("turret_precache TID_COMMON\n");
+        precache_sound ("weapons/rocket_impact.wav");
+        precache_model ("models/turrets/base-gib1.md3");
+        precache_model ("models/turrets/base-gib2.md3");
+        precache_model ("models/turrets/base-gib3.md3");
+        precache_model ("models/turrets/base-gib4.md3");
+        precache_model ("models/turrets/head-gib1.md3");
+        precache_model ("models/turrets/head-gib2.md3");
+        precache_model ("models/turrets/head-gib3.md3");
+        precache_model ("models/turrets/head-gib4.md3");
+        precache_model ("models/turrets/terrainbase.md3");
+        precache_model ("models/turrets/base.md3");
+        precache_model ("models/turrets/rocket.md3");
+    }
+    turret_tid2info(_tid);
+    if(turret_is_precache[_tid])
+    {
+        dprint("turret_precache: ", tid2info_name, "allready precache, skipping.\n");
+        return;
+    }
+    else
+        dprint("turret_precache: ", tid2info_name, " precaching.\n");
+
+    switch(_tid)
+    {
+        case TID_EWHEEL:
+            precache_model ("models/turrets/ewheel-base2.md3");
+            precache_model ("models/turrets/ewheel-gun1.md3");            
+            break;
+        case TID_FLAC:
+            precache_model ("models/turrets/flac.md3");
+            break;
+        case TID_FUSION:
+            precache_model ("models/turrets/reactor.md3");    
+            break;
+        case TID_HELLION:
+            precache_model ("models/turrets/hellion.md3");
+            break;
+        case TID_HK:
+            precache_model ("models/turrets/hk.md3");
+            break;
+        case TID_MACHINEGUN:
+            precache_model ("models/turrets/machinegun.md3");
+            precache_sound ("weapons/uzi_fire.wav");
+            break;
+        case TID_MLRS:
+            precache_model ("models/turrets/mlrs.md3");
+            break;
+        case TID_PHASER:
+            precache_model ("models/turrets/phaser.md3");
+            precache_model ("models/turrets/phaser_beam.md3");
+            precache_sound ("turrets/phaser.wav");
+            break;
+        case TID_PLASMA:
+            precache_model ("models/turrets/plasma.md3");
+            break;
+        case TID_PLASMA_DUAL:
+            precache_model ("models/turrets/plasmad.md3");
+            break;
+        case TID_TESLA:
+            precache_model ("models/turrets/tesla_head.md3");
+            precache_model ("models/turrets/tesla_base.md3");
+            break;
+        case TID_WALKER:
+            precache_model ("models/turrets/walker_head_minigun.md3");
+            precache_model ("models/turrets/walker_body.md3");
+            precache_sound ("weapons/uzi_fire.wav");
+            break;
+    }    
+    turret_is_precache[_tid] = TRUE;
 }
 
 void turret_tid2info(float _tid)
@@ -375,6 +434,7 @@ void ent_turret()
 	    self.angles_x = ReadAngle();
 	    self.angles_y = ReadAngle();
 	    
+	    turret_precache(self.turret_type);
 	    turret_construct();
     }
     

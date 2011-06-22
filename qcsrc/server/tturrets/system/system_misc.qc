@@ -221,17 +221,6 @@ void turrets_precache_debug_models()
 
 void turrets_precash()
 {
-    precache_model ("models/turrets/base-gib1.md3");
-    precache_model ("models/turrets/base-gib2.md3");
-    precache_model ("models/turrets/base-gib3.md3");
-    precache_model ("models/turrets/base-gib4.md3");
-
-    precache_model ("models/turrets/head-gib1.md3");
-    precache_model ("models/turrets/head-gib2.md3");
-    precache_model ("models/turrets/head-gib3.md3");
-    precache_model ("models/turrets/head-gib4.md3");
-    precache_model ("models/turrets/terrainbase.md3");
-
     //precache_model ("models/turrets/base.md3");
     //precache_model ("models/turrets/flac.md3");
     //precache_model ("models/turrets/pd_proj.md3");
