@@ -11,7 +11,11 @@
 			<Build command="$make -src $makefile" />
 			<CompileFile command="$make -src $makefile" />
 			<Clean command="$make -src $makefile" />
+<<<<<<< HEAD
+			<DistClean command="$make -f $makefile distclean$target" />
+=======
 			<DistClean command="" />
+>>>>>>> origin/master
 			<AskRebuildNeeded command="" />
 			<SilentBuild command="$make -src $makefile" />
 		</MakeCommands>
@@ -45,12 +49,21 @@
 					<Add option="-s" />
 				</Linker>
 				<MakeCommands>
+<<<<<<< HEAD
+					<Build command="$make -src $makefile" />
+					<CompileFile command="$make -src $makefile" />
+					<Clean command="$make -src $makefile" />
+					<DistClean command="" />
+					<AskRebuildNeeded command="" />
+					<SilentBuild command="$make -src $makefile" />
+=======
 					<Build command="$make -DRELEASE -src $makefile" />
 					<CompileFile command="$make -DRELEASE -src $makefile" />
 					<Clean command="$make -DRELEASE -src $makefile" />
 					<DistClean command="" />
 					<AskRebuildNeeded command="" />
 					<SilentBuild command="$make -DRELEASE -src $makefile" />
+>>>>>>> origin/master
 				</MakeCommands>
 			</Target>
 		</Build>
@@ -71,6 +84,9 @@
 		<Unit filename="client\effects.qc" />
 		<Unit filename="client\gibs.qc" />
 		<Unit filename="client\hook.qc" />
+		<Unit filename="client\hud.qc" />
+		<Unit filename="client\hud.qh" />
+		<Unit filename="client\hud_config.qc" />
 		<Unit filename="client\interpolate.qc" />
 		<Unit filename="client\interpolate.qh" />
 		<Unit filename="client\laser.qc" />
@@ -80,17 +96,33 @@
 		<Unit filename="client\modeleffects.qc" />
 		<Unit filename="client\movetypes.qc" />
 		<Unit filename="client\movetypes.qh" />
+		<Unit filename="client\noise.qc" />
+		<Unit filename="client\noise.qh" />
 		<Unit filename="client\particles.qc" />
 		<Unit filename="client\prandom.qc" />
 		<Unit filename="client\prandom.qh" />
 		<Unit filename="client\pre.qh" />
 		<Unit filename="client\progs.src" />
+		<Unit filename="client\progs.src.BASE.src" />
+		<Unit filename="client\progs.src.LOCAL.src" />
+		<Unit filename="client\progs.src.REMOTE.src" />
 		<Unit filename="client\projectile.qc" />
 		<Unit filename="client\rubble.qc" />
+<<<<<<< HEAD
+		<Unit filename="client\scoreboard.qc" />
+		<Unit filename="client\scoreboard.qh" />
+		<Unit filename="client\shownames.qc" />
+		<Unit filename="client\shownames.qh" />
+=======
+>>>>>>> origin/master
 		<Unit filename="client\sortlist.qc" />
+		<Unit filename="client\target_music.qc" />
 		<Unit filename="client\teamplay.qc" />
+		<Unit filename="client\teamplay.qh" />
 		<Unit filename="client\teamradar.qc" />
 		<Unit filename="client\teamradar.qh" />
+		<Unit filename="client\tturrets.qc" />
+		<Unit filename="client\tturrets.qh" />
 		<Unit filename="client\tuba.qc" />
 		<Unit filename="client\vehicles\vehicles.qc" />
 		<Unit filename="client\vehicles\vehicles.qh" />
