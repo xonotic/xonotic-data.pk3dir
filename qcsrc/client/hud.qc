@@ -4364,7 +4364,7 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 		return;
 
 	if(duration == 0)
-		duration = autocvar_hud_panel_centerprint_time;
+		duration = max(1, autocvar_hud_panel_centerprint_time);
 
 	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
