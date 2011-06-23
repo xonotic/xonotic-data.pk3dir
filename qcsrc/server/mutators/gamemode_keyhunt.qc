@@ -58,6 +58,7 @@ float kh_interferemsg_time, kh_interferemsg_team;
 .float kh_dropperteam;
 .entity kh_previous_owner;
 .float kh_previous_owner_playerid;
+.float kh_cp_duration;
 
 string kh_sound_capture = "kh/capture.wav";
 string kh_sound_destroy = "kh/destroy.wav";
@@ -121,7 +122,7 @@ void kh_update_state()
 
 
 var kh_Think_t kh_Controller_Thinkfunc;
-void kh_Controller_SetThink(float t, string msg, kh_Think_t func)  // runs occasionaly
+void kh_Controller_SetThink(float t, string msg, float centerprint_duration, kh_Think_t func)  // runs occasionaly
 {
 	kh_Controller_Thinkfunc = func;
 	kh_controller.cnt = ceil(t);
@@ -130,9 +131,16 @@ void kh_Controller_SetThink(float t, string msg, kh_Think_t func)  // runs occas
 	if(msg == "")
 		kh_Controller_Waitmsg = "";
 	else
+	{
+		kh_controller.kh_cp_duration = centerprint_duration;
 		kh_Controller_Waitmsg = strzone(msg);
+	}
 	if(t == 0)
 		kh_controller.nextthink = time; // force
+}
+void kh_Controller_SetThink_NoMsg(float t, kh_Think_t func)  // runs occasionaly
+{
+	kh_Controller_SetThink(t, "", 0, func);
 }
 
 void kh_Controller_Think()  // called a lot
@@ -152,10 +160,9 @@ void kh_Controller_Think()  // called a lot
 
 			//dprint(s, "\n");
 
-			// TODO limit centerprint spam and set the appropriated duration for each centerprinted msg 
 			FOR_EACH_PLAYER(e)
 				if(clienttype(e) == CLIENTTYPE_REAL)
-					Send_CSQC_Centerprint_Generic(e, CPID_KH_MSG, s, 2, 0); // duration > 1 works with all the messages
+					Send_CSQC_Centerprint_Generic(e, CPID_KH_MSG, s, self.kh_cp_duration, 0);
 		}
 		self.cnt -= 1;
 	}
@@ -487,7 +494,7 @@ void kh_FinishRound()  // runs when a team captures the keys
 		kh_Key_Remove(key);
 	kh_no_radar_circles = FALSE;
 
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, "Round starts in ", kh_StartRound);
+	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, "Round starts in ", 1, kh_StartRound);
 }
 
 void kh_WinnerTeam(float teem)  // runs when a team wins
@@ -863,15 +870,15 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 
 	if(time < game_starttime)
 	{
-		kh_Controller_SetThink(game_starttime - time + 0.1, "", kh_WaitForPlayers);
+		kh_Controller_SetThink_NoMsg(game_starttime - time + 0.1, kh_WaitForPlayers);
 		return;
 	}
 
 	teams_missing = kh_CheckEnoughPlayers();
 	if(teams_missing == "")
-		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, "Round starts in ", kh_StartRound);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, "Round starts in ", 1, kh_StartRound);
 	else
-		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), kh_WaitForPlayers);
+		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), 999, kh_WaitForPlayers);
 }
 
 void kh_EnableTrackingDevice()  // runs after each round
@@ -893,14 +900,14 @@ void kh_StartRound()  // runs at the start of each round
 
 	if(time < game_starttime)
 	{
-		kh_Controller_SetThink(game_starttime - time + 0.1, "", kh_WaitForPlayers);
+		kh_Controller_SetThink_NoMsg(game_starttime - time + 0.1, kh_WaitForPlayers);
 		return;
 	}
 
 	teams_missing = kh_CheckEnoughPlayers();
 	if(teams_missing != "")
 	{
-		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), kh_WaitForPlayers);
+		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), 999, kh_WaitForPlayers);
 		return;
 	}
 
@@ -926,7 +933,7 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	kh_tracking_enabled = FALSE;
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, "Scanning frequency range...", kh_EnableTrackingDevice);
+	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, "Scanning frequency range...", 999, kh_EnableTrackingDevice);
 }
 
 float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the player score
@@ -978,7 +985,7 @@ void kh_Initialize()  // sets up th KH environment
 	// make a KH entity for controlling the game
 	kh_controller = spawn();
 	kh_controller.think = kh_Controller_Think;
-	kh_Controller_SetThink(0, "", kh_WaitForPlayers);
+	kh_Controller_SetThink_NoMsg(0, kh_WaitForPlayers);
 
 	setmodel(kh_controller, "models/keyhunt/key.md3");
 	kh_key_dropped = kh_controller.modelindex;
