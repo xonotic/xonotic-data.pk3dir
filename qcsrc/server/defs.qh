@@ -243,7 +243,6 @@ float alreadychangedlevel;
 .float runes;
 
 
-.float welcomemessage_time;
 .float version;
 
 // minstagib vars
