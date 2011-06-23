@@ -488,7 +488,6 @@ void vehicles_enter()
     }
     else
     {
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
         WriteAngle(MSG_ONE,  self.angles_x * -1); // tilt
         WriteAngle(MSG_ONE,  self.angles_y);      // yaw
         WriteAngle(MSG_ONE,  0);                  // roll
