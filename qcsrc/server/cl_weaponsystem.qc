@@ -986,7 +986,8 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 						world, e.origin,
 						self, 0,
 						world, enemy,
-						0
+						0,
+						RADARICON_NONE, '0 0 0'
 					);
 				}
 			}

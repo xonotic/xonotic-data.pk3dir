@@ -596,7 +596,7 @@ void FixPlayermodel();
 void PutObserverInServer (void)
 {
 	entity	spot;
-
+    self.hud = HUD_NORMAL;
 	race_PreSpawnObserver();
 
 	spot = SelectSpawnPoint (TRUE);
@@ -621,6 +621,9 @@ void PutObserverInServer (void)
 		PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
+
+	if(self.vehicle)
+	    vehicles_exit(VHEF_RELESE);
 
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
@@ -1264,6 +1267,16 @@ void ClientKill_Now_TeamChange()
 
 void ClientKill_Now()
 {
+	if(self.vehicle)
+	{
+	    vehicles_exit(VHEF_RELESE);
+	    if(!self.killindicator_teamchange)
+	    {
+            self.vehicle_health = -1;
+            Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');	        
+	    }
+	}
+	
 	remove(self.killindicator);
 	self.killindicator = world;
 
@@ -1569,7 +1582,7 @@ void ClientConnect (void)
 	playerdemo_init();
 
 	anticheat_init();
-	
+
 	race_PreSpawnObserver();
 
 	//if(g_domination)
@@ -1790,6 +1803,9 @@ Called when a client disconnects from the server
 void ReadyCount();
 void ClientDisconnect (void)
 {
+	if(self.vehicle)
+	    vehicles_exit(VHEF_RELESE);
+
 	if not(self.flags & FL_CLIENT)
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
@@ -2017,7 +2033,7 @@ void player_powerups (void)
 {
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	olditems = self.items;
-	
+
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
 	{
 		SoundEntity_StartSound(self, CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
@@ -2033,7 +2049,7 @@ void player_powerups (void)
 
 	if(!self.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
-	
+
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
@@ -2139,7 +2155,7 @@ void player_powerups (void)
 		if (time < self.spawnshieldtime)
 			self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 	}
-	
+
 	MUTATOR_CALLHOOK(PlayerPowerups);
 }
 
@@ -2354,17 +2370,40 @@ void SpectateCopy(entity spectatee) {
 	self.dmg_save = spectatee.dmg_save;
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.angles = spectatee.v_angle;
-	self.fixangle = TRUE;
+	//self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
 
 	anticheat_spectatecopy(spectatee);
+
+	//self.vehicle = spectatee.vehicle;
+
+	self.hud = spectatee.hud;
+	if(spectatee.vehicle)
+    {
+        setorigin(self, spectatee.origin);
+        self.velocity = spectatee.vehicle.velocity;
+        //self.v_angle += spectatee.vehicle.angles;
+        //self.v_angle_x *= -1;
+        self.vehicle_health = spectatee.vehicle_health;
+        self.vehicle_shield = spectatee.vehicle_shield;
+        self.vehicle_energy = spectatee.vehicle_energy;
+        self.vehicle_ammo1 = spectatee.vehicle_ammo1;
+        self.vehicle_ammo2 = spectatee.vehicle_ammo2;
+        self.vehicle_reload1 = spectatee.vehicle_reload1;
+        self.vehicle_reload2 = spectatee.vehicle_reload2;
+        
+        msg_entity = self;
+        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
+        WriteEntity(MSG_ONE, spectatee);
+        //self.tur_head = spectatee.vehicle.vehicle_viewport;
+    }
 }
 
 float SpectateUpdate() {
 	if(!self.enemy)
-		return 0;
+	    return 0;		
 
 	if (self == self.enemy)
 		return 0;
@@ -2387,17 +2426,28 @@ float SpectateNext() {
 		self.enemy = other;
 
 	if(self.enemy.classname == "player") {
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self.enemy);
-	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
-		self.movetype = MOVETYPE_NONE;
-		accuracy_resend(self);
+	    if(self.enemy.vehicle)
+	    {	   
+            msg_entity = self;
+            WriteByte(MSG_ONE, SVC_SETVIEWPORT);
+            WriteEntity(MSG_ONE, self.enemy);
+            //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            self.movetype = MOVETYPE_NONE;
+            accuracy_resend(self);
+	    }
+	    else 
+	    {	        
+            msg_entity = self;
+            WriteByte(MSG_ONE, SVC_SETVIEW);
+            WriteEntity(MSG_ONE, self.enemy);
+            //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            self.movetype = MOVETYPE_NONE;
+            accuracy_resend(self);
 
-		if(!SpectateUpdate())
-			PutObserverInServer();
-
-		return 1;
+            if(!SpectateUpdate())
+                PutObserverInServer();
+        }
+        return 1;
 	} else {
 		return 0;
 	}
@@ -2582,6 +2632,12 @@ void PlayerUseKey()
 	if(self.classname != "player")
 		return;
 
+	if(self.vehicle)
+	{
+        vehicles_exit(VHEF_NORMAL);
+        return;
+	}
+	
 	// a use key was pressed; call handlers
 	if(ctf_usekey())
 		return;
@@ -3098,7 +3154,7 @@ void PlayerPostThink (void)
 
 	if(self.waypointsprite_attachedforcarrier)
 		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
-	
+
 	if(self.classname == "player" && self.deadflag == DEAD_NO && autocvar_r_showbboxes)
 	{
 		if(!self.showheadshotbbox)

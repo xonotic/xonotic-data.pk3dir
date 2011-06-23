@@ -454,7 +454,7 @@ void Seeker_Tag_Touch()
 		
 		if	(autocvar_g_balance_seeker_type == 1)
 		{
-			WaypointSprite_Spawn("tagged-target", autocvar_g_balance_seeker_tag_tracker_lifetime, 0, other, '0 0 64', self.owner, 0, other, wps_tag_tracker, TRUE);
+			WaypointSprite_Spawn("tagged-target", autocvar_g_balance_seeker_tag_tracker_lifetime, 0, other, '0 0 64', self.owner, 0, other, wps_tag_tracker, TRUE, RADARICON_TAGGED, '0.5 1 0');
 			WaypointSprite_UpdateRule(other.wps_tag_tracker, 0, SPRITERULE_DEFAULT);
 		}
 	}

@@ -84,9 +84,14 @@ vector AnglesTransform_TurnDirectionFU(vector transform)
 	return transform;
 }
 
-vector AnglesTransform_Divide(vector to_transform, vector from_transform)
+vector AnglesTransform_RightDivide(vector to_transform, vector from_transform)
 {
 	return AnglesTransform_Multiply(to_transform, AnglesTransform_Invert(from_transform));
+}
+
+vector AnglesTransform_LeftDivide(vector from_transform, vector to_transform)
+{
+	return AnglesTransform_Multiply(AnglesTransform_Invert(from_transform), to_transform);
 }
 
 vector AnglesTransform_Normalize(vector t, float minimize_roll)

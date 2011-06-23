@@ -155,7 +155,7 @@ void target_objective_decrease_activate()
 				ent.sprite = world;
 		}
 
-		spr = WaypointSprite_SpawnFixed("<placeholder>", 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite);
+		spr = WaypointSprite_SpawnFixed("<placeholder>", 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite, RADARICON_OBJECTIVE, '1 0.5 0');
 		spr.assault_decreaser = self;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
 		spr.classname = "sprite_waypoint";
@@ -169,7 +169,6 @@ void target_objective_decrease_activate()
 		}
 		else
 			WaypointSprite_UpdateSprites(spr, "as-defend", "as-push", "as-push");
-		WaypointSprite_UpdateTeamRadar(spr, RADARICON_OBJECTIVE, '1 0.5 0');
 	}
 }
 

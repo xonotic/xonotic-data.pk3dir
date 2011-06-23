@@ -517,11 +517,10 @@ void fireBullet (vector start, vector dir, float spread, float damage, float for
 
 	if ((trace_fraction != 1.0) && (pointcontents (trace_endpos) != CONTENT_SKY))
 	{
-		pointparticles(particleeffectnum("TE_KNIGHTSPIKE"),end,trace_plane_normal * 2500,1);
-		if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, self);
+		if not (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, self);                    
+
 		Damage (trace_ent, self, self, damage, dtype, trace_endpos, dir * force);
-		//void(float effectnum, vector org, vector vel, float howmany) pointparticles = #337; // same as in CSQC
 	}
 	trace_endpos = end;
 }

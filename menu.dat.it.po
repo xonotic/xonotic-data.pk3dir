@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-05-01 13:33+0200\n"
-"PO-Revision-Date: 2011-04-29 16:29+0100\n"
-"Last-Translator: Antonio 'terencehill' Piu <piuntn@gmail.com>\n"
+"PO-Revision-Date: 2011-06-04 12:39+0100\n"
+"Last-Translator: Felice Sallustio <fel.sallustio@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,9 +41,7 @@ msgstr "error creating curl handle\n"
 
 #: qcsrc/menu/gamecommand.qc:239
 msgid "Invalid command. For a list of supported commands, try menu_cmd help.\n"
-msgstr ""
-"Comando non valido. Per una lista dei comandi supportati, prova menu_cmd "
-"help.\n"
+msgstr "Comando non valido. Per una lista dei comandi supportati, prova menu_cmd help.\n"
 
 #: qcsrc/menu/item/gecko.c:49
 msgid "Browser not initialized!"
@@ -52,9 +50,7 @@ msgstr "Browser non inizializzato!"
 #: qcsrc/menu/item/label.c:63
 #, c-format
 msgid "NOTE: label text %s too wide for label, condensed by factor %f\n"
-msgstr ""
-"NOTA: testo dell'etichetta %s troppo grande per l'etichetta, compresso di un "
-"fattore %f\n"
+msgstr "NOTA: testo dell'etichetta %s troppo grande per l'etichetta, compresso di un fattore %f\n"
 
 #: qcsrc/menu/item/listbox.c:300
 #, c-format
@@ -66,7 +62,8 @@ msgstr "Oggetto %d"
 msgid "%d (%s)"
 msgstr "%d (%s)"
 
-#: qcsrc/menu/item/textslider.c:29 qcsrc/menu/item/textslider.c:31
+#: qcsrc/menu/item/textslider.c:29
+#: qcsrc/menu/item/textslider.c:31
 msgid "custom"
 msgstr "personalizzato"
 
@@ -124,14 +121,8 @@ msgid "Welcome"
 msgstr "Benvenuto"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:33
-msgid ""
-"Welcome to Xonotic, please select your language preference and enter your "
-"player name to get started.  You can change these options later through the "
-"menu system."
-msgstr ""
-"Benvenuto in Xonotic, per favore selezione la tua lingua e inserisci il tuo "
-"nome come giocatore per iniziare.  Puoi cambiare queste opzioni più tardi "
-"tramite il menu."
+msgid "Welcome to Xonotic, please select your language preference and enter your player name to get started.  You can change these options later through the menu system."
+msgstr "Benvenuto in Xonotic, per favore selezione la tua lingua e inserisci il tuo nome come giocatore per iniziare.  Puoi cambiare queste opzioni più tardi tramite il menu."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:38
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:35
@@ -492,17 +483,21 @@ msgstr "Sfondo del pannello predefinito:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:37
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:52
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:586
-#: qcsrc/menu/xonotic/util.qc:602 qcsrc/menu/xonotic/util.qc:619
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91
+#: qcsrc/menu/xonotic/util.qc:586
+#: qcsrc/menu/xonotic/util.qc:602
+#: qcsrc/menu/xonotic/util.qc:619
 msgid "Disable"
 msgstr "Disabilita"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:30
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:591
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77
+#: qcsrc/menu/xonotic/util.qc:591
 msgid "Color:"
 msgstr "Colore:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:599
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35
+#: qcsrc/menu/xonotic/util.qc:599
 msgid "Border size:"
 msgstr "Dimensioni del bordo:"
 
@@ -511,11 +506,13 @@ msgstr "Dimensioni del bordo:"
 msgid "Team color:"
 msgstr "Colore team:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:625
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58
+#: qcsrc/menu/xonotic/util.qc:625
 msgid "Test team color in configure mode"
 msgstr "Prova colore team in modalità configurazione"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:628
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61
+#: qcsrc/menu/xonotic/util.qc:628
 msgid "Padding:"
 msgstr "Riempimento:"
 
@@ -2190,15 +2187,14 @@ msgstr "rosa"
 msgid "spectate"
 msgstr "spettatore"
 
-#: qcsrc/menu/xonotic/mainwindow.c:35 qcsrc/menu/xonotic/mainwindow.c:38
+#: qcsrc/menu/xonotic/mainwindow.c:35
+#: qcsrc/menu/xonotic/mainwindow.c:38
 msgid "Do not press this button again!"
 msgstr "Non premere questo tasto di nuovo!"
 
 #: qcsrc/menu/xonotic/maplist.c:278
-msgid ""
-"Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"
-msgstr ""
-"Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"
+msgid "Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"
+msgstr "Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"
 
 #: qcsrc/menu/xonotic/maplist.c:286
 #, c-format
@@ -2206,12 +2202,8 @@ msgid "%s's Xonotic Server"
 msgstr "Server Xonotic di %s"
 
 #: qcsrc/menu/xonotic/maplist.c:291
-msgid ""
-"Huh? Can't play this (invalid game type). Refiltering so this won't happen "
-"again.\n"
-msgstr ""
-"Huh? Can't play this (invalid game type). Refiltering so this won't happen "
-"again.\n"
+msgid "Huh? Can't play this (invalid game type). Refiltering so this won't happen again.\n"
+msgstr "Huh? Can't play this (invalid game type). Refiltering so this won't happen again.\n"
 
 #: qcsrc/menu/xonotic/playermodel.c:174
 msgid "<no model found>"
@@ -2284,8 +2276,7 @@ msgstr "Ricevuta richiesta HTTP per un invalido id %d.\n"
 #: qcsrc/menu/xonotic/util.qc:285
 #, c-format
 msgid "error receiving update notification: status is %d\n"
-msgstr ""
-"errore durante la notifica d'aggiornamento: lo stato è impostato su %d\n"
+msgstr "errore durante la notifica d'aggiornamento: lo stato è impostato su %d\n"
 
 #: qcsrc/menu/xonotic/util.qc:290
 msgid "error: received HTML instead of an update notification\n"
@@ -2399,8 +2390,10 @@ msgstr "@!#%'n Tuba Throwing"
 msgid "Background:"
 msgstr "Sfondo:"
 
-#: qcsrc/menu/xonotic/util.qc:585 qcsrc/menu/xonotic/util.qc:601
-#: qcsrc/menu/xonotic/util.qc:610 qcsrc/menu/xonotic/util.qc:618
+#: qcsrc/menu/xonotic/util.qc:585
+#: qcsrc/menu/xonotic/util.qc:601
+#: qcsrc/menu/xonotic/util.qc:610
+#: qcsrc/menu/xonotic/util.qc:618
 #: qcsrc/menu/xonotic/util.qc:630
 msgid "Default"
 msgstr "Predefinito"
@@ -2489,7 +2482,8 @@ msgstr "Fireball"
 msgid "%s forgot about some firemine"
 msgstr "%s s'è dimenticato di alcune mine infuocate"
 
-#: qcsrc/server/w_fireball.qc:419 qcsrc/server/w_hlac.qc:240
+#: qcsrc/server/w_fireball.qc:419
+#: qcsrc/server/w_hlac.qc:240
 #, c-format
 msgid "%s should have used a smaller gun"
 msgstr "%s avrebbe dovuto usare un'arma più piccola"
@@ -2557,7 +2551,8 @@ msgstr "%s ha mangiato la granata di %s"
 msgid "Hagar"
 msgstr "Hagar"
 
-#: qcsrc/server/w_hagar.qc:209 qcsrc/server/w_seeker.qc:655
+#: qcsrc/server/w_hagar.qc:209
+#: qcsrc/server/w_seeker.qc:655
 #, c-format
 msgid "%s played with tiny rockets"
 msgstr "%s ha giocato con piccoli razzi"
@@ -2567,7 +2562,8 @@ msgstr "%s ha giocato con piccoli razzi"
 msgid "%s hoped %s's missiles wouldn't bounce"
 msgstr "%s ha sperato che il missile di %s non rimbalzasse"
 
-#: qcsrc/server/w_hagar.qc:215 qcsrc/server/w_seeker.qc:661
+#: qcsrc/server/w_hagar.qc:215
+#: qcsrc/server/w_seeker.qc:661
 #, c-format
 msgid "%s was pummeled by %s"
 msgstr "%s è stato preso a pugni da %s"
@@ -2585,9 +2581,12 @@ msgstr "%s è stato abbattuto da %s"
 msgid "Grappling Hook"
 msgstr "Grappling Hook"
 
-#: qcsrc/server/w_hook.qc:266 qcsrc/server/w_minstanex.qc:290
-#: qcsrc/server/w_nex.qc:267 qcsrc/server/w_porto.qc:296
-#: qcsrc/server/w_shotgun.qc:203 qcsrc/server/w_uzi.qc:317
+#: qcsrc/server/w_hook.qc:266
+#: qcsrc/server/w_minstanex.qc:290
+#: qcsrc/server/w_nex.qc:267
+#: qcsrc/server/w_porto.qc:296
+#: qcsrc/server/w_shotgun.qc:203
+#: qcsrc/server/w_uzi.qc:317
 #, c-format
 msgid "%s did the impossible"
 msgstr "%s ha fatto l'impossibile"
@@ -2620,7 +2619,8 @@ msgstr "%s è stato \"laserato\" alla morte da %s"
 msgid "Mine Layer"
 msgstr "Mine Layer"
 
-#: qcsrc/server/w_minelayer.qc:495 qcsrc/server/w_rocketlauncher.qc:500
+#: qcsrc/server/w_minelayer.qc:495
+#: qcsrc/server/w_rocketlauncher.qc:500
 #, c-format
 msgid "%s exploded"
 msgstr "%s è esploso"
@@ -2644,7 +2644,8 @@ msgstr "%s è passato sopra la mina di %s"
 msgid "MinstaNex"
 msgstr "MinstaNex"
 
-#: qcsrc/server/w_minstanex.qc:292 qcsrc/server/w_nex.qc:269
+#: qcsrc/server/w_minstanex.qc:292
+#: qcsrc/server/w_nex.qc:269
 #, c-format
 msgid "%s has been vaporized by %s"
 msgstr "%s è stato vaporizzato da %s"
@@ -2738,7 +2739,8 @@ msgstr "%s non è riuscito a nascondersi dal fucile di %s"
 msgid "%s got hit in the head by %s"
 msgstr "%s ha preso un colpo in testa da %s"
 
-#: qcsrc/server/w_rifle.qc:254 qcsrc/server/w_uzi.qc:321
+#: qcsrc/server/w_rifle.qc:254
+#: qcsrc/server/w_uzi.qc:321
 #, c-format
 msgid "%s was sniped by %s"
 msgstr "%s è stato fucilato da %s"
@@ -2769,12 +2771,11 @@ msgstr "%s è stato riempito di buchi da %s"
 
 #~ msgid "%d/%d"
 #~ msgstr "%d/%d"
-
 #~ msgid ""
 #~ "Please answer a few initial questions to enhance the game experience."
 #~ msgstr ""
 #~ "Per favore rispondi a poche domande iniziali per migliorare l'esperienza "
 #~ "di gioco."
-
 #~ msgid "Waypoint settings:"
 #~ msgstr "Impostazioni dei waypoint"
+

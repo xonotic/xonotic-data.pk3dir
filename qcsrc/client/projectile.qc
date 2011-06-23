@@ -27,10 +27,12 @@ void Projectile_ResetTrail(vector to)
 	self.trail_oldorigin = to;
 	self.trail_oldtime = time;
 }
+
 void Projectile_DrawTrail(vector to)
 {
 	vector from;
 	float t0;
+
 	from = self.trail_oldorigin;
 	t0 = self.trail_oldtime;
 	self.trail_oldorigin = to;
@@ -195,7 +197,7 @@ void Ent_Projectile()
 	//   effects
 	//
 	// projectiles don't send angles, because they always follow the velocity
-	
+
 	f = ReadByte();
 	self.count = (f & 0x80);
 	self.iflags = (self.iflags & IFLAG_INTERNALMASK) | IFLAG_AUTOANGLES | IFLAG_ANGLES;
@@ -294,6 +296,14 @@ void Ent_Projectile()
 			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			case PROJECTILE_FLAC: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum("TR_SEEKER"); break;
 			case PROJECTILE_SEEKER: setmodel(self, "models/tagrocket.md3"); self.traileffect = particleeffectnum("TR_SEEKER"); break;
+
+			case PROJECTILE_RAPTORBOMB:    setmodel(self, "models/vehicles/clusterbomb.md3"); self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(""); break;
+			case PROJECTILE_RAPTORBOMBLET: setmodel(self, "models/vehicles/bomblet.md3");     self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(""); break;
+			case PROJECTILE_RAPTORCANNON:  setmodel(self, "models/plasmatrail.mdl"); self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
+
+			case PROJECTILE_SPIDERROCKET: setmodel(self, "models/vehicles/rocket02.md3"); self.traileffect = particleeffectnum("spiderbot_rocket_thrust"); break;
+			case PROJECTILE_WAKIROCKET:   setmodel(self, "models/vehicles/rocket01.md3");  self.traileffect = particleeffectnum("wakizashi_rocket_thrust"); break;
+			case PROJECTILE_WAKICANNON:   setmodel(self, "models/laser.mdl");  self.traileffect = particleeffectnum(""); break;
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
@@ -384,6 +394,22 @@ void Ent_Projectile()
 				self.mins = '-4 -4 -4';
 				self.maxs = '4 4 4';
 				break;
+            case PROJECTILE_RAPTORBOMB:
+				self.mins = '-3 -3 -3';
+				self.maxs = '3 3 3';
+				break;
+            case PROJECTILE_RAPTORBOMBLET:
+				break;
+            case PROJECTILE_RAPTORCANNON:
+				break;
+            case PROJECTILE_SPIDERROCKET:
+                loopsound(self, CHAN_PROJECTILE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
+				break;
+            case PROJECTILE_WAKIROCKET:
+                loopsound(self, CHAN_PROJECTILE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
+				break;
+            case PROJECTILE_WAKICANNON:
+				break;
 			default:
 				break;
 		}
@@ -406,7 +432,7 @@ void Ent_Projectile()
 
 	if(!(self.count & 0x80))
 		InterpolateOrigin_Note();
-	
+
 	self.draw = Projectile_Draw;
 	self.entremove = Ent_RemoveProjectile;
 }
@@ -424,9 +450,11 @@ void Projectile_Precache()
 	precache_model("models/rocket.md3");
 	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
+
 	precache_sound("weapons/electro_fly.wav");
 	precache_sound("weapons/rocket_fly.wav");
 	precache_sound("weapons/fireball_fly.wav");
 	precache_sound("weapons/fireball_fly2.wav");
 	precache_sound("weapons/tag_rocket_fly.wav");
+
 }
