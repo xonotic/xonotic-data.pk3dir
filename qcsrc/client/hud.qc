@@ -4371,28 +4371,29 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
 		if (new_id && new_id == centerprint_msgID[j])
-		{
-			if(centerprint_messages[j])
-				strunzone(centerprint_messages[j]);
-			centerprint_messages[j] = strzone(strMessage);
-
-			centerprint_time[j] = duration;
-			centerprint_expire_time[j] = time + duration;
-			centerprint_countdown_num[j] = countdown_num;
-			return;
-		}
+			break; // found a msg with the same id, at position j
 	}
 
-	--cpm_index;
-	if (cpm_index == -1)
-		cpm_index = CENTERPRINT_MAX_MSGS - 1;
-	if(centerprint_messages[cpm_index])
-		strunzone(centerprint_messages[cpm_index]);
-	centerprint_messages[cpm_index] = strzone(strMessage);
-	centerprint_msgID[cpm_index] = new_id;
-	centerprint_time[cpm_index] = duration;
-	centerprint_expire_time[cpm_index] = time + duration;
-	centerprint_countdown_num[cpm_index] = countdown_num;
+	if (i == CENTERPRINT_MAX_MSGS)
+	{
+		// a msg with the same id was not found, add the msg at the next position
+		--cpm_index;
+		if (cpm_index == -1)
+			cpm_index = CENTERPRINT_MAX_MSGS - 1;
+		j = cpm_index;
+	}
+	if(centerprint_messages[j])
+		strunzone(centerprint_messages[j]);
+	centerprint_messages[j] = strzone(strMessage);
+	centerprint_msgID[j] = new_id;
+	if (duration < 0)
+		centerprint_time[j] = -1;
+	else
+	{
+		centerprint_time[j] = duration;
+		centerprint_expire_time[j] = time + duration;
+	}
+	centerprint_countdown_num[j] = countdown_num;
 }
 
 void centerprint(string strMessage)
@@ -4462,7 +4463,7 @@ void HUD_CenterPrint (void)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
-		if (centerprint_expire_time[j] < time)
+		if (centerprint_time[j] > 0 && centerprint_expire_time[j] < time)
 		{
 			if (centerprint_countdown_num[j])
 			{
@@ -4474,7 +4475,7 @@ void HUD_CenterPrint (void)
 			else
 				continue;
 		}
-		if (centerprint_expire_time[j] - fade > time)
+		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - fade > time)
 		{
 			a = 1 * alpha_factor;
 			sz = 1;

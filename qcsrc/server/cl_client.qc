@@ -2708,12 +2708,12 @@ void PlayerPreThink (void)
 		if (autocvar_g_campaign) {
 			if (self.classname == "player" && self.BUTTON_INFO) {
 				self.motd_actived_time = time;
-				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, campaign_message, 999, 0);
+				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, campaign_message, -1, 0);
 			}
 		} else {
 			if ((self.classname == "player" || time - self.jointime > autocvar_welcome_message_time) && self.BUTTON_INFO) {
 				self.motd_actived_time = time;
-				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), 999, 0);
+				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), -1, 0);
 			}
 		}
 	} else { // showing MOTD or campaign message

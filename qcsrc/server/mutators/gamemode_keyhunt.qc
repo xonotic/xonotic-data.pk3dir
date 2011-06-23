@@ -878,7 +878,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	if(teams_missing == "")
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, "Round starts in ", 1, kh_StartRound);
 	else
-		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), 999, kh_WaitForPlayers);
+		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), -1, kh_WaitForPlayers);
 }
 
 void kh_EnableTrackingDevice()  // runs after each round
@@ -907,7 +907,7 @@ void kh_StartRound()  // runs at the start of each round
 	teams_missing = kh_CheckEnoughPlayers();
 	if(teams_missing != "")
 	{
-		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), 999, kh_WaitForPlayers);
+		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), -1, kh_WaitForPlayers);
 		return;
 	}
 
@@ -933,7 +933,7 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	kh_tracking_enabled = FALSE;
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, "Scanning frequency range...", 999, kh_EnableTrackingDevice);
+	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, "Scanning frequency range...", -1, kh_EnableTrackingDevice);
 }
 
 float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the player score
