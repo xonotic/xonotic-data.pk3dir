@@ -2620,6 +2620,8 @@ void SpectatorThink()
 				return;
 			}
 		}
+		if(!SpectateUpdate())
+			PutObserverInServer();
 	}
 
 	PrintWelcomeMessage(self);
