@@ -4403,14 +4403,48 @@ void centerprint(string strMessage)
 
 // CenterPrint (#16)
 //
+float hud_configure_cp_generation_time;
+void reset_centerprint_messages(void)
+{
+	float i;
+	for (i=0; i<CENTERPRINT_MAX_MSGS; ++i)
+	{
+		centerprint_expire_time[i] = 0;
+		centerprint_time[i] = 1;
+		centerprint_msgID[i] = 0;
+		if(centerprint_messages[i])
+			strunzone(centerprint_messages[i]);
+		centerprint_messages[i] = strzone("");
+	}
+}
 void HUD_CenterPrint (void)
 {
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_centerprint) return;
+
+		if (hud_configure_prev)
+			reset_centerprint_messages();
 	}
 	else
+	{
 		hud_configure_active_panel = HUD_PANEL_CENTERPRINT;
+
+		if (!hud_configure_prev)
+			reset_centerprint_messages();
+		if (time > hud_configure_cp_generation_time)
+		{
+			float r;
+			r = random();
+			if (r > 0.9)
+				centerprint_generic(floor(r*1000), strcat(sprintf("Countdown message at time %d", time), " %d seconds left"), 1, 10);
+			else if (r > 0.7)
+				centerprint_generic(0, sprintf("Multiline message at time %d that\nlasts longer than normal", time), 25, 0);
+			else
+				centerprint(sprintf("Message at time %d", time));
+			hud_configure_cp_generation_time = time + 1 + random()*4;
+		}
+	}
 
 	HUD_Panel_UpdateCvars(centerprint);
 
