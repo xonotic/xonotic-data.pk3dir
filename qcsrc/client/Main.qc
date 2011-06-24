@@ -1332,7 +1332,6 @@ void Net_Notify() {
 	}
 	else if(type == CSQC_CENTERPRINT_GENERIC)
 	{
-								//	id			string		time	countdown_num
 		float id;
 		id = ReadByte();
 		if (id == 0)
