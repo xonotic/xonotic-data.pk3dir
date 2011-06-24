@@ -4480,13 +4480,13 @@ void HUD_CenterPrint (void)
 	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
 
 	float i, j, k, n;
-	float a, sz, fade, align, next_msg_pos_y;
+	float a, sz, fade, align, current_msg_pos_y;
 	vector pos;
 	string ts;
 
 	pos = panel_pos;
 	if (autocvar_hud_panel_centerprint_flip)
-		pos_y += panel_size_y - fontsize_y;
+		pos_y += panel_size_y;
 	fade = min(autocvar_hud_panel_centerprint_time/8, 0.25);
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
 	float alpha_factor;
@@ -4539,7 +4539,7 @@ void HUD_CenterPrint (void)
 				if (pos_y < panel_pos_y) // check if the next line can be shown
 					return;
 			}
-			next_msg_pos_y = pos_y; // save pos of the next message
+			current_msg_pos_y = pos_y; // save starting pos (first line) of the current message
 		}
 
 		for(k = 0; k < n; ++k)
@@ -4557,7 +4557,7 @@ void HUD_CenterPrint (void)
 				}
 				else
 					pos_y += fontsize_y;
-				if (pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
+				if (!autocvar_hud_panel_centerprint_flip && pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
 				{
 					drawfontscale = '1 1 0';
 					return;
@@ -4566,7 +4566,7 @@ void HUD_CenterPrint (void)
 		}
 		if (autocvar_hud_panel_centerprint_flip)
 		{
-			pos_y = next_msg_pos_y;
+			pos_y = current_msg_pos_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y += 1.5 * fontsize_y * (1 - a*a);
 		}
