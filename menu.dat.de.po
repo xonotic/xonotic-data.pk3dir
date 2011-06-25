@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-20 20:46+0200\n"
+"POT-Creation-Date: 2011-06-25 13:06+0200\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
 
 #: qcsrc/menu/gamecommand.qc:47
 #, c-format
@@ -1368,7 +1368,7 @@ msgstr "Schadenseffekt:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:195
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:178
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:194
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:191
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:30
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:41
 #: qcsrc/menu/xonotic/dialog_settings_video.c:109
@@ -1926,9 +1926,15 @@ msgstr "Lichtdynamik (HDR)"
 msgid "Motion blur:"
 msgstr "Bewegungsunschärfe:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:188
-msgid "Damage blur:"
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:187
+#, fuzzy
+msgid "Damage & water blur"
 msgstr "Schadensunschärfe:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:188
+#, fuzzy
+msgid "Powerup sharpen"
+msgstr "Bonus-Panel"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
@@ -2828,8 +2834,8 @@ msgstr ""
 #, c-format
 msgid "%s died of %s's great playing on the @!#%%'n Tuba"
 msgstr ""
-"%s ist an seinen Ohrenschmerzen, die von %ss großartigem Spiel auf der @!#"
-"%%'n Tuba stammten, gestorben"
+"%s ist an seinen Ohrenschmerzen, die von %ss großartigem Spiel auf der @!#%"
+"%'n Tuba stammten, gestorben"
 
 #: qcsrc/server/w_uzi.qc:2
 msgid "Machine Gun"
@@ -2840,17 +2846,17 @@ msgstr "Machine Gun"
 msgid "%s was riddled full of holes by %s"
 msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
 
-#~ msgid "Speedometer"
-#~ msgstr "Tachometer"
-
-#~ msgid "qu/s (hidden)"
-#~ msgstr "qu/s (ohne Einheit)"
-
-#~ msgid "Show accelerometer"
-#~ msgstr "Akzelerometer anzeigen"
+#~ msgid "Sniper Rifle"
+#~ msgstr "Sniper Rifle"
 
 #~ msgid "Accelerometer scale:"
 #~ msgstr "Akzelerometer-Skalierung:"
 
-#~ msgid "Sniper Rifle"
-#~ msgstr "Sniper Rifle"
+#~ msgid "Show accelerometer"
+#~ msgstr "Akzelerometer anzeigen"
+
+#~ msgid "qu/s (hidden)"
+#~ msgstr "qu/s (ohne Einheit)"
+
+#~ msgid "Speedometer"
+#~ msgstr "Tachometer"
