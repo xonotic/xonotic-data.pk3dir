@@ -4489,10 +4489,6 @@ void HUD_CenterPrint (void)
 		pos_y += panel_size_y;
 	fade = min(autocvar_hud_panel_centerprint_time/8, 0.25);
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
-	float alpha_factor;
-	alpha_factor = panel_fg_alpha;
-	if (autocvar__menu_alpha)
-		alpha_factor *= hud_fade_alpha;
 	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
@@ -4511,12 +4507,12 @@ void HUD_CenterPrint (void)
 		}
 		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - fade > time)
 		{
-			a = 1 * alpha_factor;
+			a = 1;
 			sz = 1;
 		}
 		else if (centerprint_expire_time[j] > time)
 		{
-			a = (centerprint_expire_time[j] - time) / fade * alpha_factor;
+			a = (centerprint_expire_time[j] - time) / fade;
 			sz = 0.8 + a * (1 - 0.8);
 		}
 
@@ -4552,7 +4548,7 @@ void HUD_CenterPrint (void)
 				{
 					if (align)
 						pos_x = panel_pos_x + (panel_size_x - stringwidth(ts, TRUE, fontsize)) * align;
-					drawcolorcodedstring(pos + '0 1 0' * 1.5 * (1 - sz) * fontsize_y, ts, fontsize, a, DRAWFLAG_NORMAL);
+					drawcolorcodedstring(pos + '0 1 0' * 1.5 * (1 - sz) * fontsize_y, ts, fontsize, a * panel_fg_alpha, DRAWFLAG_NORMAL);
 					pos_y += fontsize_y * 1.5;
 				}
 				else
