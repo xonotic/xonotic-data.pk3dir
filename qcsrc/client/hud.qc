@@ -4529,9 +4529,9 @@ void HUD_CenterPrint (void)
 				getWrappedLine_remaining = argv(k);
 				ts = getWrappedLine(panel_size_x, fontsize, stringwidth_colors);
 				if (ts != "")
-					pos_y -= fontsize_y * 1.5;
-				else
 					pos_y -= fontsize_y;
+				else
+					pos_y -= fontsize_y * 0.35;
 				if (pos_y < panel_pos_y) // check if the next line can be shown
 					return;
 			}
@@ -4549,10 +4549,10 @@ void HUD_CenterPrint (void)
 					if (align)
 						pos_x = panel_pos_x + (panel_size_x - stringwidth(ts, TRUE, fontsize)) * align;
 					drawcolorcodedstring(pos + '0 1 0' * 1.5 * (1 - sz) * fontsize_y, ts, fontsize, a * panel_fg_alpha, DRAWFLAG_NORMAL);
-					pos_y += fontsize_y * 1.5;
+					pos_y += fontsize_y;
 				}
 				else
-					pos_y += fontsize_y;
+					pos_y += fontsize_y * 0.35;
 				if (!autocvar_hud_panel_centerprint_flip && pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
 				{
 					drawfontscale = '1 1 0';
@@ -4562,12 +4562,13 @@ void HUD_CenterPrint (void)
 		}
 		if (autocvar_hud_panel_centerprint_flip)
 		{
-			pos_y = current_msg_pos_y;
+			pos_y = current_msg_pos_y - 0.7 * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y += 1.5 * fontsize_y * (1 - a*a);
 		}
 		else
 		{
+			pos_y += 0.7 * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y -= 1.5 * fontsize_y * (1 - a*a);
 		}
