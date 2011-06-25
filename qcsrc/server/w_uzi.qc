@@ -314,7 +314,7 @@ float w_uzi(float req)
 		precache_sound("weapons/ric3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s did the impossible");
+		w_deathtypestring = _("%s is now thinking with portals");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
