@@ -101,7 +101,7 @@ void NIX_GiveCurrentWeapon()
 		if(dt >= 1 && dt <= 5)
 			self.nix_lastinfotime = -42;
 		else
-			Send_CSQC_Centerprint_Generic(self, CPID_NIX_WPNCHANGE, strcat("^2Active weapon: ^3", W_Name(nix_weapon)), 2, 0);
+			Send_CSQC_Centerprint_Generic(self, CPID_NIX_WPNCHANGE, strcat("^2Active weapon: ^3", W_Name(nix_weapon)), 0, 0);
 	}
 	if(self.nix_lastinfotime != dt)
 	{
