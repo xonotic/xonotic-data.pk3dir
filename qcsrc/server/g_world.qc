@@ -102,8 +102,6 @@ void fteqcc_testbugs()
  */
 void timeoutHandler_Think() {
 	local entity plr;
-	// NOTE: the below Send_CSQC_Centerprint_Generic send msgs with countdown_num
-	// parameter set as 0, even if the msgs are part of a countdown
 	if (timeoutStatus == 1) {
 		if (remainingLeadTime > 0) {
 			//centerprint the information to every player
