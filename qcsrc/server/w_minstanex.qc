@@ -155,7 +155,7 @@ void minstagib_ammocheck(void)
 		}
 		else if (self.health == 90)
 		{
-			Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "^1%d^7 second left to find some ammo", 1, 9);
+			Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "^1%d^7 seconds left to find some ammo", 1, 9);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "9");
 		}
