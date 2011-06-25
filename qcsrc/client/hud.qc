@@ -4783,9 +4783,6 @@ void HUD_Main (void)
 	if(autocvar__con_chat_maximized)
 		HUD_Chat(); // HUD_DrawPanel(HUD_PANEL_CHAT);
 
-	if (autocvar__hud_configure && spectatee_status && hud_configure_prev == -1) // try to join if we are in hud_configure mode, but still spectating, and in the first frame (in order to get rid of motd when launching a server via the menu "HUD Setup" button)
-		localcmd("cmd selectteam auto; cmd join\n");
-
 	if(autocvar__hud_configure && tab_panel != -1)
 	{
 		HUD_Panel_UpdatePosSizeForId(tab_panel)
