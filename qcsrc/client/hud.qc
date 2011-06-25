@@ -4437,11 +4437,11 @@ void HUD_CenterPrint (void)
 			float r;
 			r = random();
 			if (r > 0.9)
-				centerprint_generic(floor(r*1000), strcat(sprintf("Countdown message at time %d", time), " %d seconds left"), 1, 10);
-			else if (r > 0.7)
-				centerprint_generic(0, sprintf("Multiline message at time %d that\nlasts longer than normal", time), 25, 0);
+				centerprint_generic(floor(r*1000), strcat(sprintf("^3Countdown message at time %s", seconds_tostring(time)), ", seconds left: %d"), 1, 10);
+			else if (r > 0.8)
+				centerprint_generic(0, sprintf("^1Multiline message at time %s that\n^1lasts longer than normal", seconds_tostring(time)), 20, 0);
 			else
-				centerprint(sprintf("Message at time %d", time));
+				centerprint(sprintf("Message at time %s", seconds_tostring(time)));
 			hud_configure_cp_generation_time = time + 1 + random()*4;
 		}
 	}
