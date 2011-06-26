@@ -264,6 +264,8 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 
 float WarpZone_CheckProjectileImpact()
 {
+	// FIXME make this use WarpZone_Teleport
+
 	// if self hit a warpzone, abort
 	vector o0, v0, a0;
 	float mpd, pd, dpd;
@@ -305,9 +307,15 @@ float WarpZone_CheckProjectileImpact()
 			return 0;
 		}
 	}
+
 	WarpZone_RefSys_Add(self, wz);
+
+	BITXOR_ASSIGN(self.effects, EF_TELEPORT_BIT);
+	WarpZone_PostTeleportPlayer_Callback(self);
+
 	WarpZone_StoreProjectileData(self);
 	self.warpzone_teleport_time = time;
+	self.warpzone_teleport_zone = wz;
 
 	return +1;
 }
