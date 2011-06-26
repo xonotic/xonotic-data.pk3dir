@@ -4553,7 +4553,10 @@ void HUD_CenterPrint (void)
 				else
 					pos_y -= fontsize_y * 0.35;
 				if (pos_y < panel_pos_y) // check if the next line can be shown
+				{
+					drawfontscale = '1 1 0';
 					return;
+				}
 			}
 			current_msg_pos_y = pos_y; // save starting pos (first line) of the current message
 		}
