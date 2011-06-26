@@ -43,63 +43,56 @@ float WarpZone_Teleported_Send(entity to, float sf)
 
 float WarpZone_Teleport(entity player)
 {
+	entity wz;
+	wz = self;
 	vector o0, a0, v0, o1, a1, v1;
 
 	o0 = player.origin + player.view_ofs;
 	v0 = player.velocity;
 	a0 = player.angles;
 
-	if(WarpZone_PlaneDist(self, o0) >= 0) // wrong side of the trigger_warpzone
+	if(WarpZone_PlaneDist(wz, o0) >= 0) // wrong side of the trigger_warpzone
 		return 2;
 	// no failure, we simply don't want to teleport yet; TODO in
 	// this situation we may want to create a temporary clone
 	// entity of the player to fix graphics glitch
 
-	o1 = WarpZone_TransformOrigin(self, o0);
-	v1 = WarpZone_TransformVelocity(self, v0);
+	o1 = WarpZone_TransformOrigin(wz, o0);
+	v1 = WarpZone_TransformVelocity(wz, v0);
 	if(clienttype(player) != CLIENTTYPE_NOTACLIENT)
-		a1 = WarpZone_TransformVAngles(self, player.v_angle);
+		a1 = WarpZone_TransformVAngles(wz, player.v_angle);
 	else
-		a1 = WarpZone_TransformAngles(self, a0);
+		a1 = WarpZone_TransformAngles(wz, a0);
 
 	// put him inside solid
 	tracebox(o1 - player.view_ofs, player.mins, player.maxs, o1 - player.view_ofs, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{
-		vector mi, ma;
-		mi = player.mins;
-		ma = player.maxs;
-		setsize(player, mi - player.view_ofs, ma - player.view_ofs);
-		setorigin(player, o1);
+		setorigin(player, o1 - player.view_ofs);
 		if(WarpZoneLib_MoveOutOfSolid(player))
 		{
-			o1 = player.origin;
-			setsize(player, mi, ma);
-			setorigin(player, o0);
+			o1 = player.origin + player.view_ofs;
+			setorigin(player, o0 - player.view_ofs);
 		}
 		else
 		{
 			print("would have to put player in solid, won't do that\n");
-			setsize(player, mi, ma);
 			setorigin(player, o0 - player.view_ofs);
 			return 0; // cannot fix
 		}
 	}
 
-	if(WarpZone_TargetPlaneDist(self, o1) <= 0)
+	if(WarpZone_TargetPlaneDist(wz, o1) <= 0)
 	{
 		print("inconsistent warp zones or evil roundoff error\n");
 		return 0;
 	}
 
-	//print(sprintf("warpzone: %f %f %f -> %f %f %f\n", o0_x, o0_y, o0_z, o1_x, o1_y, o1_z));
-
-	//o1 = trace_endpos;
-	WarpZone_RefSys_Add(player, self);
-	WarpZone_TeleportPlayer(self, player, o1 - player.view_ofs, a1, v1);
+	WarpZone_RefSys_Add(player, wz);
+	WarpZone_TeleportPlayer(wz, player, o1 - player.view_ofs, a1, v1);
 	WarpZone_StoreProjectileData(player);
 	player.warpzone_teleport_time = time;
-	player.warpzone_teleport_zone = self;
+	player.warpzone_teleport_zone = wz;
 
 #ifndef WARPZONE_USE_FIXANGLE
 	// instead of fixangle, send the transform to the client for smoother operation
@@ -113,10 +106,10 @@ float WarpZone_Teleport(entity player)
 	ts.think = SUB_Remove;
 	ts.nextthink = time + 1;
 	ts.owner = player;
-	ts.enemy = self;
+	ts.enemy = wz;
 	ts.effects = EF_NODEPTHTEST;
 	ts.classname = "warpzone_teleported";
-	ts.angles = self.warpzone_transform;
+	ts.angles = wz.warpzone_transform;
 #endif
 
 	return 1;
@@ -265,16 +258,21 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 
 float WarpZone_CheckProjectileImpact()
 {
-	// FIXME make this use WarpZone_Teleport
+	entity player;
+	player = self;
+	vector o0, a0, v0, o1, a1, v1;
 
-	// if self hit a warpzone, abort
-	vector o, v, a;
+	o0 = player.origin + player.view_ofs;
+	v0 = player.velocity;
+	a0 = player.angles;
+
+	// if player hit a warpzone, abort
 	float mpd, pd, dpd;
 	entity wz;
-	wz = WarpZone_Find(self.origin + self.mins, self.origin + self.maxs);
+	wz = WarpZone_Find(o0 + player.mins, o0 + player.maxs);
 	if(!wz)
 		return 0;
-	if(self.warpzone_teleport_time == time)
+	if(player.warpzone_teleport_time == time)
 	{
 		// just ignore if we got teleported this frame already and now hit a wall and are in a warpzone again (this will cause a detonation)
 		// print("2 warps 1 frame\n");
@@ -285,39 +283,37 @@ float WarpZone_CheckProjectileImpact()
 	// not properly retain the projectile trail (but we can't retain it
 	// easily anyway without delaying the projectile by two frames, so who
 	// cares)
-	WarpZone_TraceBox_ThroughZone(self.warpzone_oldorigin, self.mins, self.maxs, self.warpzone_oldorigin + self.warpzone_oldvelocity * frametime, MOVE_NORMAL, self, wz, WarpZone_trace_callback_t_null); // this will get us through the warpzone
-	o = trace_endpos;
-	a = WarpZone_TransformAngles(WarpZone_trace_transform, self.angles);
-	v = WarpZone_TransformVelocity(WarpZone_trace_transform, self.warpzone_oldvelocity);
+	WarpZone_TraceBox_ThroughZone(player.warpzone_oldorigin, player.mins, player.maxs, player.warpzone_oldorigin + player.warpzone_oldvelocity * frametime, MOVE_NORMAL, player, wz, WarpZone_trace_callback_t_null); // this will get us through the warpzone
+	o1 = trace_endpos + player.view_ofs;
+	a1 = WarpZone_TransformAngles(WarpZone_trace_transform, a0);
+	v1 = WarpZone_TransformVelocity(WarpZone_trace_transform, player.warpzone_oldvelocity);
 	
 	// in case we are in our warp zone post-teleport, shift the projectile forward a bit
-	mpd = max(vlen(self.mins), vlen(self.maxs));
-	pd = WarpZone_TargetPlaneDist(wz, o);
+	mpd = max(vlen(player.mins), vlen(player.maxs));
+	pd = WarpZone_TargetPlaneDist(wz, o1);
 	if(pd < mpd)
 	{
-		dpd = normalize(self.velocity) * wz.warpzone_targetforward;
-		o = o + normalize(self.velocity) * ((mpd - pd) / dpd);
-		vector o0;
-		o0 = self.origin;
-		setorigin(self, o);
-		if(WarpZoneLib_MoveOutOfSolid(self))
+		dpd = normalize(v1) * wz.warpzone_targetforward;
+		o1 = o1 + normalize(v1) * ((mpd - pd) / dpd);
+		setorigin(player, o1 - player.view_ofs);
+		if(WarpZoneLib_MoveOutOfSolid(player))
 		{
-			o = self.origin;
-			setorigin(self, o0);
+			o1 = player.origin + player.view_ofs;
+			setorigin(player, o0 - player.view_ofs);
 		}
 		else
 		{
-			print("would have to put projectile in solid, won't do that\n");
-			setorigin(self, o0);
-			return 0;
+			print("would have to put player in solid, won't do that\n");
+			setorigin(player, o0 - player.view_ofs);
+			return 0; // cannot fix
 		}
 	}
 
-	WarpZone_RefSys_Add(self, wz);
-	WarpZone_TeleportPlayer(wz, self, o, a, v);
-	WarpZone_StoreProjectileData(self);
-	self.warpzone_teleport_time = time;
-	self.warpzone_teleport_zone = wz;
+	WarpZone_RefSys_Add(player, wz);
+	WarpZone_TeleportPlayer(wz, player, o1 - player.view_ofs, a1, v1);
+	WarpZone_StoreProjectileData(player);
+	player.warpzone_teleport_time = time;
+	player.warpzone_teleport_zone = wz;
 
 	return +1;
 }
