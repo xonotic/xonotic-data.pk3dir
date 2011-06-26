@@ -100,6 +100,7 @@ float WarpZone_Teleport(entity player)
 	WarpZone_StoreProjectileData(player);
 	player.warpzone_teleport_time = time;
 	player.warpzone_teleport_zone = self;
+
 #ifndef WARPZONE_USE_FIXANGLE
 	// instead of fixangle, send the transform to the client for smoother operation
 	player.fixangle = FALSE;
@@ -267,7 +268,7 @@ float WarpZone_CheckProjectileImpact()
 	// FIXME make this use WarpZone_Teleport
 
 	// if self hit a warpzone, abort
-	vector o0, v0, a0;
+	vector o, v, a;
 	float mpd, pd, dpd;
 	entity wz;
 	wz = WarpZone_Find(self.origin + self.mins, self.origin + self.maxs);
@@ -279,40 +280,41 @@ float WarpZone_CheckProjectileImpact()
 		// print("2 warps 1 frame\n");
 		return -1;
 	}
-	o0 = self.origin;
-	v0 = self.velocity;
-	a0 = self.angles;
 
 	// this approach transports the projectile at its full speed, but does
 	// not properly retain the projectile trail (but we can't retain it
 	// easily anyway without delaying the projectile by two frames, so who
 	// cares)
 	WarpZone_TraceBox_ThroughZone(self.warpzone_oldorigin, self.mins, self.maxs, self.warpzone_oldorigin + self.warpzone_oldvelocity * frametime, MOVE_NORMAL, self, wz, WarpZone_trace_callback_t_null); // this will get us through the warpzone
-	setorigin(self, trace_endpos);
-	self.angles = WarpZone_TransformAngles(WarpZone_trace_transform, self.angles);
-	self.velocity = WarpZone_TransformVelocity(WarpZone_trace_transform, self.warpzone_oldvelocity);
+	o = trace_endpos;
+	a = WarpZone_TransformAngles(WarpZone_trace_transform, self.angles);
+	v = WarpZone_TransformVelocity(WarpZone_trace_transform, self.warpzone_oldvelocity);
 	
 	// in case we are in our warp zone post-teleport, shift the projectile forward a bit
 	mpd = max(vlen(self.mins), vlen(self.maxs));
-	pd = WarpZone_TargetPlaneDist(wz, self.origin);
+	pd = WarpZone_TargetPlaneDist(wz, o);
 	if(pd < mpd)
 	{
 		dpd = normalize(self.velocity) * wz.warpzone_targetforward;
-		setorigin(self, self.origin + normalize(self.velocity) * ((mpd - pd) / dpd));
-		if(!WarpZoneLib_MoveOutOfSolid(self))
+		o = o + normalize(self.velocity) * ((mpd - pd) / dpd);
+		vector o0;
+		o0 = self.origin;
+		setorigin(self, o);
+		if(WarpZoneLib_MoveOutOfSolid(self))
 		{
+			o = self.origin;
 			setorigin(self, o0);
-			self.angles = a0;
-			self.velocity = v0;
+		}
+		else
+		{
+			print("would have to put projectile in solid, won't do that\n");
+			setorigin(self, o0);
 			return 0;
 		}
 	}
 
 	WarpZone_RefSys_Add(self, wz);
-
-	BITXOR_ASSIGN(self.effects, EF_TELEPORT_BIT);
-	WarpZone_PostTeleportPlayer_Callback(self);
-
+	WarpZone_TeleportPlayer(wz, self, o, a, v);
 	WarpZone_StoreProjectileData(self);
 	self.warpzone_teleport_time = time;
 	self.warpzone_teleport_zone = wz;
