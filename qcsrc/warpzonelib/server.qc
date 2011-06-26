@@ -84,6 +84,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	{
 		// retry last move but behind the warpzone!
 		// we must first go back as far as we can, then forward again, to not cause double touch events!
+
 		tracebox(o1 - player.view_ofs + v1 * frametime * f1, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f0, MOVE_WORLDONLY, player);
 		{
 			entity own;
@@ -93,6 +94,12 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 			player.owner = own;
 		}
 		o1 = trace_endpos + player.view_ofs;
+
+		float d, dv;
+		d = WarpZone_TargetPlaneDist(wz, o1);
+		dv = WarpZone_TargetPlaneDist(wz, v1);
+		if(d < 0)
+			o1 = o1 - v1 * (d / dv);
 	}
 
 	// put him inside solid
@@ -764,7 +771,7 @@ void WarpZone_StartFrame()
 				other = e;
 				if(WarpZoneLib_ExactTrigger_Touch())
 					continue;
-				if(WarpZone_PlaneDist(self, e.origin + e.view_ofs) >= 0)
+				if(WarpZone_PlaneDist(self, e.origin + e.view_ofs) <= 0)
 					WarpZone_Teleport(self, e); // NOT triggering targets by this!
 			}
 			if(f == CLIENTTYPE_NOTACLIENT)
