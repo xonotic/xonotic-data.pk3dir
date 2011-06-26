@@ -135,7 +135,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 void WarpZone_Touch (void)
 {
-	entity oldself, e;
+	entity oldself;
 
 	if(other.classname == "trigger_warpzone")
 		return;
@@ -279,35 +279,48 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 	return TRUE;
 }
 
-float WarpZone_CheckProjectileImpact()
+float WarpZone_CheckProjectileImpact(entity player)
 {
-	entity player;
-	player = self;
-	vector o0, a0, v0, o1, a1, v1;
+	vector o0, a0, v0;
 
 	o0 = player.origin + player.view_ofs;
 	v0 = player.velocity;
 	a0 = player.angles;
 
 	// if player hit a warpzone, abort
-	float mpd, pd, dpd;
 	entity wz;
 	wz = WarpZone_Find(o0 + player.mins, o0 + player.maxs);
 	if(!wz)
 		return 0;
-	if(player.warpzone_teleport_time == time)
-	{
-		// just ignore if we got teleported this frame already and now hit a wall and are in a warpzone again (this will cause a detonation)
-		// print("2 warps 1 frame\n");
-		return -1;
-	}
+
+	print("impactfilter found something - and it even gets handled correctly - please tell divVerent that this code apparently gets triggered again\n");
 
 	// retry previous move
 	setorigin(player, player.warpzone_oldorigin);
 	player.velocity = player.warpzone_oldvelocity;
 	if(WarpZone_Teleport(wz, player, 0, 1))
 	{
-		print(sprintf("teleported by impact filter!\n"));
+		entity oldself;
+		string save1, save2;
+
+		oldself = self;
+		self = wz;
+		other = player;
+		activator = player;
+
+		save1 = self.target; self.target = string_null;
+		save2 = self.target3; self.target3 = string_null;
+		SUB_UseTargets();
+		if not(self.target) self.target = save1;
+		if not(self.target3) self.target3 = save2;
+
+		self = self.enemy;
+		save1 = self.target; self.target = string_null;
+		save2 = self.target2; self.target2 = string_null;
+		SUB_UseTargets();
+		if not(self.target) self.target = save1;
+		if not(self.target2) self.target2 = save2;
+		self = oldself;
 	}
 	else
 	{
@@ -327,7 +340,7 @@ float WarpZone_Projectile_Touch()
 	if(self.warpzone_teleport_time == time)
 		return TRUE;
 
-#if 0
+	// this SEEMS to not happen at the moment, but if it did, it would be more reliable
 	{
 		float save_dpstartcontents;
 		float save_dphitcontents;
@@ -355,7 +368,7 @@ float WarpZone_Projectile_Touch()
 		save_ent = trace_ent;
 		save_inopen = trace_inopen;
 		save_inwater = trace_inwater;
-		if((f = WarpZone_CheckProjectileImpact()) != 0)
+		if((f = WarpZone_CheckProjectileImpact(self)) != 0)
 			return (f > 0);
 		trace_dpstartcontents = save_dpstartcontents;
 		trace_dphitcontents = save_dphitcontents;
@@ -371,7 +384,6 @@ float WarpZone_Projectile_Touch()
 		trace_inopen = save_inopen;
 		trace_inwater = save_inwater;
 	}
-#endif
 
 	if(WarpZone_Projectile_Touch_ImpactFilter_Callback())
 		return TRUE;
