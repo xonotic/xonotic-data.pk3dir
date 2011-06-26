@@ -663,7 +663,7 @@ void WarpZone_RefSys_AddIncrementally(entity me, entity ref)
 	t = AnglesTransform_Invert(me.WarpZone_refsys_incremental_transform);
 	s = AnglesTransform_PrePostShift_GetPostShift(me.WarpZone_refsys_incremental_shift, t, '0 0 0');
 	WarpZone_Accumulator_AddTransform(me.WarpZone_refsys, t, s);
-	WarpZone_Accumulator_Add(me.WarpZone_refsys, ref);
+	WarpZone_Accumulator_Add(me.WarpZone_refsys, ref.WarpZone_refsys);
 	me.WarpZone_refsys_incremental_shift = ref.WarpZone_refsys.warpzone_shift;
 	me.WarpZone_refsys_incremental_transform = ref.WarpZone_refsys.warpzone_transform;
 }
