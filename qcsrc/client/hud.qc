@@ -4547,7 +4547,7 @@ void HUD_CenterPrint (void)
 			for(k = 0; k < n; ++k)
 			{
 				getWrappedLine_remaining = argv(k);
-				ts = getWrappedLine(panel_size_x, fontsize, stringwidth_colors);
+				ts = getWrappedLine(panel_size_x * sz, fontsize, stringwidth_colors);
 				if (ts != "")
 					pos_y -= fontsize_y;
 				else
@@ -4566,7 +4566,7 @@ void HUD_CenterPrint (void)
 			getWrappedLine_remaining = argv(k);
 			while(getWrappedLine_remaining)
 			{
-				ts = getWrappedLine(panel_size_x, fontsize, stringwidth_colors);
+				ts = getWrappedLine(panel_size_x * sz, fontsize, stringwidth_colors);
 				if (ts != "")
 				{
 					if (align)
