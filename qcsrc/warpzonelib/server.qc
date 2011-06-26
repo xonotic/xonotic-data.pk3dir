@@ -784,7 +784,7 @@ void WarpZone_StartFrame()
 				if(WarpZoneLib_ExactTrigger_Touch())
 					continue;
 				if(WarpZone_PlaneDist(self, e.origin + e.view_ofs) <= 0)
-					WarpZone_Teleport(self, e); // NOT triggering targets by this!
+					WarpZone_Teleport(self, e, -1, 0); // NOT triggering targets by this!
 			}
 			if(f == CLIENTTYPE_NOTACLIENT)
 			{
