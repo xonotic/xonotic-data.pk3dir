@@ -4363,6 +4363,26 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 	if(strMessage == "" && new_id == 0)
 		return;
 
+	// strip trailing newlines
+	j = strlen(strMessage) - 1;
+	while(substring(strMessage, j, 1) == "\n" && j >= 0)
+		--j;
+	if (j < strlen(strMessage) - 1)
+		strMessage = substring(strMessage, 0, j + 1);
+
+	if(strMessage == "" && new_id == 0)
+		return;
+
+	// strip leading newlines
+	j = 0;
+	while(substring(strMessage, j, 1) == "\n" && j < strlen(strMessage))
+		++j;
+	if (j > 0)
+		strMessage = substring(strMessage, j, strlen(strMessage) - j);
+
+	if(strMessage == "" && new_id == 0)
+		return;
+
 	if(duration == 0)
 		duration = max(1, autocvar_hud_panel_centerprint_time);
 
