@@ -4547,15 +4547,18 @@ void HUD_CenterPrint (void)
 			for(k = 0; k < n; ++k)
 			{
 				getWrappedLine_remaining = argv(k);
-				ts = getWrappedLine(panel_size_x * sz, fontsize, stringwidth_colors);
-				if (ts != "")
-					pos_y -= fontsize_y;
-				else
-					pos_y -= fontsize_y * 0.35;
-				if (pos_y < panel_pos_y) // check if the next line can be shown
+				while(getWrappedLine_remaining)
 				{
-					drawfontscale = '1 1 0';
-					return;
+					ts = getWrappedLine(panel_size_x * sz, fontsize, stringwidth_colors);
+					if (ts != "")
+						pos_y -= fontsize_y;
+					else
+						pos_y -= fontsize_y * 0.35;
+					if (pos_y < panel_pos_y) // check if the next line can be shown
+					{
+						drawfontscale = '1 1 0';
+						return;
+					}
 				}
 			}
 			current_msg_pos_y = pos_y; // save starting pos (first line) of the current message
