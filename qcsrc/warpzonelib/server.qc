@@ -42,6 +42,7 @@ float WarpZone_Teleported_Send(entity to, float sf)
 }
 
 #define WARPZONE_TELEPORT_FIXSOLID(ret) \
+	do \
 	{ \
 		setorigin(player, o1 - player.view_ofs); \
 		if(WarpZoneLib_MoveOutOfSolid(player)) \
@@ -55,15 +56,18 @@ float WarpZone_Teleported_Send(entity to, float sf)
 			setorigin(player, o0 - player.view_ofs); \
 			return (ret); \
 		} \
-	}
+	} \
+	while(0)
 #define WARPZONE_TELEPORT_DOTELEPORT() \
+	do \
 	{ \
 		WarpZone_RefSys_Add(player, wz); \
 		WarpZone_TeleportPlayer(wz, player, o1 - player.view_ofs, a1, v1); \
 		WarpZone_StoreProjectileData(player); \
 		player.warpzone_teleport_time = time; \
 		player.warpzone_teleport_zone = wz; \
-	}
+	} \
+	while(0)
 
 float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 {
