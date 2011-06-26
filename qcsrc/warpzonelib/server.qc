@@ -18,11 +18,6 @@ void WarpZone_StoreProjectileData(entity e)
 
 void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity)
 {
-	vector from;
-
-	makevectors (to_angles);
-
-	from = player.origin;
 	setorigin (player, to);
 	player.oldorigin = to; // for DP's unsticking
 	player.angles = to_angles;
