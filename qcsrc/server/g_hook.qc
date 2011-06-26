@@ -247,13 +247,6 @@ void GrapplingHookThink()
 
 void GrapplingHookTouch (void)
 {
-	if(SUB_OwnerCheck())
-		return;
-	if(SUB_NoImpactCheck())
-	{
-		RemoveGrapplingHook(self.realowner);
-		return;
-	}
 	PROJECTILE_TOUCH;
 
 	GrapplingHook_Stop();
