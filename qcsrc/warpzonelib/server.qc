@@ -80,20 +80,21 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	else
 		a1 = WarpZone_TransformAngles(wz, a0);
 
-	// retry last move but behind the warpzone!
-	// we must first go back as far as we can, then forward again, to not cause double touch events!
-	print(sprintf("%v ", o1));
-	tracebox(o1 - player.view_ofs + v1 * frametime * f1, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f0, MOVE_WORLDONLY, player);
+	if(f0 != 0 || f1 != 0)
 	{
-		entity own;
-		own = player.owner;
-		player.owner = world;
-		tracebox(trace_endpos, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f1, MOVE_NORMAL, player); // this should get us through the warpzone
-		player.owner = own;
+		// retry last move but behind the warpzone!
+		// we must first go back as far as we can, then forward again, to not cause double touch events!
+		tracebox(o1 - player.view_ofs + v1 * frametime * f1, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f0, MOVE_WORLDONLY, player);
+		{
+			entity own;
+			own = player.owner;
+			player.owner = world;
+			tracebox(trace_endpos, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f1, MOVE_NORMAL, player); // this should get us through the warpzone
+			player.owner = own;
+		}
+		o1 = trace_endpos + player.view_ofs;
 	}
-	o1 = trace_endpos + player.view_ofs;
-	print(sprintf("-> %v\n", o1));
-		
+
 	// put him inside solid
 	tracebox(o1 - player.view_ofs, player.mins, player.maxs, o1 - player.view_ofs, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
@@ -130,6 +131,9 @@ void WarpZone_Touch (void)
 	entity oldself, e;
 
 	if(other.classname == "trigger_warpzone")
+		return;
+
+	if(other.warpzone_teleport_time == time) // already teleported this frame
 		return;
 
 	// FIXME needs a better check to know what is safe to teleport and what not
@@ -291,10 +295,12 @@ float WarpZone_CheckProjectileImpact()
 		return -1;
 	}
 
+	// retry previous move
 	setorigin(player, player.warpzone_oldorigin);
 	player.velocity = player.warpzone_oldvelocity;
 	if(WarpZone_Teleport(wz, player, 0, 1))
 	{
+		print(sprintf("teleported by impact filter!\n"));
 	}
 	else
 	{
@@ -314,6 +320,7 @@ float WarpZone_Projectile_Touch()
 	if(self.warpzone_teleport_time == time)
 		return TRUE;
 
+#if 0
 	{
 		float save_dpstartcontents;
 		float save_dphitcontents;
@@ -357,6 +364,7 @@ float WarpZone_Projectile_Touch()
 		trace_inopen = save_inopen;
 		trace_inwater = save_inwater;
 	}
+#endif
 
 	if(WarpZone_Projectile_Touch_ImpactFilter_Callback())
 		return TRUE;
