@@ -604,9 +604,6 @@ float HITTYPE_RESERVED = 0x1000; // unused yet
 #define FRAGS_PLAYER_NONSOLID -616
 // we can use this frags value for both
 
-//misc. stuff
-#define NEWLINES "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-
 // water levels
 float WATERLEVEL_NONE = 0;
 float WATERLEVEL_WETFEET = 1;
