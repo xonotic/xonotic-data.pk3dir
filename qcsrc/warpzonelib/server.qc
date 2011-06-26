@@ -85,11 +85,6 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		// retry last move but behind the warpzone!
 		// we must first go back as far as we can, then forward again, to not cause double touch events!
 
-		float d0;
-		d0 = WarpZone_TargetPlaneDist(wz, o1);
-		if(d0 < 0)
-			dprint("warpzone: target is not outside warp!\n");
-
 		tracebox(o1 - player.view_ofs + v1 * frametime * f1, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f0, MOVE_WORLDONLY, player);
 		{
 			entity own;
@@ -103,9 +98,8 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		float d, dv;
 		d = WarpZone_TargetPlaneDist(wz, o1);
 		dv = WarpZone_TargetPlaneDist(wz, v1);
-		if(d0 >= 0)
-			if(d < 0)
-				o1 = o1 - v1 * (d / dv);
+		if(d < 0)
+			o1 = o1 - v1 * (d / dv);
 	}
 
 	// put him inside solid
@@ -141,7 +135,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 void WarpZone_Touch (void)
 {
-	entity oldself;
+	entity oldself, e;
 
 	if(other.classname == "trigger_warpzone")
 		return;
@@ -285,8 +279,47 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 	return TRUE;
 }
 
+float WarpZone_CheckProjectileImpact()
+{
+	entity player;
+	player = self;
+	vector o0, a0, v0, o1, a1, v1;
+
+	o0 = player.origin + player.view_ofs;
+	v0 = player.velocity;
+	a0 = player.angles;
+
+	// if player hit a warpzone, abort
+	float mpd, pd, dpd;
+	entity wz;
+	wz = WarpZone_Find(o0 + player.mins, o0 + player.maxs);
+	if(!wz)
+		return 0;
+	if(player.warpzone_teleport_time == time)
+	{
+		// just ignore if we got teleported this frame already and now hit a wall and are in a warpzone again (this will cause a detonation)
+		// print("2 warps 1 frame\n");
+		return -1;
+	}
+
+	// retry previous move
+	setorigin(player, player.warpzone_oldorigin);
+	player.velocity = player.warpzone_oldvelocity;
+	if(WarpZone_Teleport(wz, player, 0, 1))
+	{
+		print(sprintf("teleported by impact filter!\n"));
+	}
+	else
+	{
+		setorigin(player, o0);
+		player.velocity = v0;
+	}
+
+	return +1;
+}
 float WarpZone_Projectile_Touch()
 {
+	float f;
 	if(other.classname == "trigger_warpzone")
 		return TRUE;
 
@@ -294,9 +327,64 @@ float WarpZone_Projectile_Touch()
 	if(self.warpzone_teleport_time == time)
 		return TRUE;
 
+#if 0
+	{
+		float save_dpstartcontents;
+		float save_dphitcontents;
+		float save_dphitq3surfaceflags;
+		string save_dphittexturename;
+		float save_allsolid;
+		float save_startsolid;
+		float save_fraction;
+		vector save_endpos;
+		vector save_plane_normal;
+		float save_plane_dist;
+		entity save_ent;
+		float save_inopen;
+		float save_inwater;
+		save_dpstartcontents = trace_dpstartcontents;
+		save_dphitcontents = trace_dphitcontents;
+		save_dphitq3surfaceflags = trace_dphitq3surfaceflags;
+		save_dphittexturename = trace_dphittexturename;
+		save_allsolid = trace_allsolid;
+		save_startsolid = trace_startsolid;
+		save_fraction = trace_fraction;
+		save_endpos = trace_endpos;
+		save_plane_normal = trace_plane_normal;
+		save_plane_dist = trace_plane_dist;
+		save_ent = trace_ent;
+		save_inopen = trace_inopen;
+		save_inwater = trace_inwater;
+		if((f = WarpZone_CheckProjectileImpact()) != 0)
+			return (f > 0);
+		trace_dpstartcontents = save_dpstartcontents;
+		trace_dphitcontents = save_dphitcontents;
+		trace_dphitq3surfaceflags = save_dphitq3surfaceflags;
+		trace_dphittexturename = save_dphittexturename;
+		trace_allsolid = save_allsolid;
+		trace_startsolid = save_startsolid;
+		trace_fraction = save_fraction;
+		trace_endpos = save_endpos;
+		trace_plane_normal = save_plane_normal;
+		trace_plane_dist = save_plane_dist;
+		trace_ent = save_ent;
+		trace_inopen = save_inopen;
+		trace_inwater = save_inwater;
+	}
+#endif
+
 	if(WarpZone_Projectile_Touch_ImpactFilter_Callback())
 		return TRUE;
 
+	if(self.warpzone_teleport_time == time)
+	{
+		// sequence: hit warpzone, get teleported, hit wall
+		// print("2 hits 1 frame\n");
+		setorigin(self, self.warpzone_oldorigin);
+		self.velocity = self.warpzone_oldvelocity;
+		self.angles = self.warpzone_oldangles;
+		return TRUE;
+	}
 	return FALSE;
 }
 
