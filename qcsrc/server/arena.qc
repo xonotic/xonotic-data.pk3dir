@@ -395,7 +395,7 @@ void Spawnqueue_Check()
 			if (time > warntime)
 			{
 				FOR_EACH_PLAYER(self)
-					centerprint(self, strcat("^1Need at least 1 player in each team to play CA", "^7\n"));
+					centerprint(self, "^1Need at least 1 player in each team to play CA");
 				warntime = time + 1;
 			}
 			return;
@@ -405,7 +405,7 @@ void Spawnqueue_Check()
 				next_round = time + 5;
 			}
 			else if((!redspawned && !bluespawned) || time - warmup > autocvar_g_ca_round_timelimit) {
-				FOR_EACH_CLIENT(self) centerprint(self, strcat("^7Round tied.", "^7\n"));
+				FOR_EACH_CLIENT(self) centerprint(self, "^7Round tied");
 				next_round = time + 5;
 			}
 
@@ -415,14 +415,14 @@ void Spawnqueue_Check()
 			if(redalive && !bluealive)
 			{
 				play2all("ctf/red_capture.wav");
-				FOR_EACH_CLIENT(self) centerprint(self, "^1 RED ^7team wins the round.\n");
+				FOR_EACH_CLIENT(self) centerprint(self, "^1RED ^7team wins the round");
 				TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, +1);
 				stopalivecheck = TRUE;
 			}
 			else if(bluealive && !redalive)
 			{
 				play2all("ctf/blue_capture.wav");
-				FOR_EACH_CLIENT(self) centerprint(self, "^4 BLUE ^7team wins the round.\n");
+				FOR_EACH_CLIENT(self) centerprint(self, "^4BLUE ^7team wins the round");
 				TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, +1);
 				stopalivecheck = TRUE;
 			}

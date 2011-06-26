@@ -1841,34 +1841,34 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 		if (type == DEATH_TEAMCHANGE) {
 			centerprint(strcat(sprintf(_("You are now on: %s"), s1)));
 		} else if (type == DEATH_AUTOTEAMCHANGE) {
-			centerprint(strcat(sprintf(_("You have been moved into a different team to improve team balance\nYou are now on: %s"), s1)));
+			centerprint(sprintf(_("You have been moved into a different team to improve team balance\nYou are now on: %s"), s1));
 		} else if (type == DEATH_CAMP) {
 			if(gentle)
-				centerprint(strcat(_("^1Reconsider your tactics, camper!")));
+				centerprint(_("^1Reconsider your tactics, camper!"));
 			else
-				centerprint(strcat(_("^1Die camper!")));
+				centerprint(_("^1Die camper!"));
 		} else if (type == DEATH_NOAMMO) {
 			if(gentle)
-				centerprint(strcat(_("^1You are reinserted into the game for running out of ammo...")));
+				centerprint(_("^1You are reinserted into the game for running out of ammo..."));
 			else
-				centerprint(strcat(_("^1You were killed for running out of ammo...")));
+				centerprint(_("^1You were killed for running out of ammo..."));
 		} else if (type == DEATH_ROT) {
 			if(gentle)
-				centerprint(strcat(_("^1You need to preserve your health")));
+				centerprint(_("^1You need to preserve your health"));
 			else
-				centerprint(strcat(_("^1You grew too old without taking your medicine")));
+				centerprint(_("^1You grew too old without taking your medicine"));
 		} else if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(gentle)
-				centerprint(strcat(_("^1Don't go against team mates!")));
+				centerprint(_("^1Don't go against team mates!"));
 			else
-				centerprint(strcat(_("^1Don't shoot your team mates!")));
+				centerprint(_("^1Don't shoot your team mates!"));
 		} else if (type == DEATH_QUIET) {
 			// do nothing
 		} else { // generic message
 			if(gentle)
-				centerprint(strcat(_("^1You need to be more careful!")));
+				centerprint(_("^1You need to be more careful!"));
 			else
-				centerprint(strcat(_("^1You killed your own dumb self!")));
+				centerprint(_("^1You killed your own dumb self!"));
 		}
 	} else if(msg == MSG_KILL) {
 		if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
@@ -1879,15 +1879,15 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 			}
 		} else if (type == KILL_FIRST_BLOOD) {
 			if(gentle) {
-				centerprint(strcat(_("^1First score")));
+				centerprint(_("^1First score"));
 			} else {
-				centerprint(strcat(_("^1First blood")));
+				centerprint(_("^1First blood"));
 			}
 		} else if (type == KILL_FIRST_VICTIM) {
 			if(gentle) {
-				centerprint(strcat(_("^1First casualty")));
+				centerprint(_("^1First casualty"));
 			} else {
-				centerprint(strcat(_("^1First victim")));
+				centerprint(_("^1First victim"));
 			}
 		} else if (type == KILL_TYPEFRAG) { // s2 contains "advanced kill messages" such as ping, handicap...
 			if(gentle) {
@@ -1916,7 +1916,7 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 		}
 	} else if(msg == MSG_KILL_ACTION) {
 		// TODO: invent more centerprints here?
-		centerprint(strcat(_("^1Watch your step!")));
+		centerprint(_("^1Watch your step!"));
 	}
 }
 
