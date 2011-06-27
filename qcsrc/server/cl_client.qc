@@ -2339,7 +2339,7 @@ void SpectateCopy(entity spectatee) {
 	self.dmg_save = spectatee.dmg_save;
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.angles = spectatee.v_angle;
-	//self.fixangle = TRUE;
+	self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
@@ -2353,7 +2353,7 @@ void SpectateCopy(entity spectatee) {
     {
         setorigin(self, spectatee.origin);
         self.velocity = spectatee.vehicle.velocity;
-        //self.v_angle += spectatee.vehicle.angles;
+        self.v_angle += spectatee.vehicle.angles;
         //self.v_angle_x *= -1;
         self.vehicle_health = spectatee.vehicle_health;
         self.vehicle_shield = spectatee.vehicle_shield;
@@ -2583,6 +2583,8 @@ void SpectatorThink()
 				return;
 			}
 		}
+		if(!SpectateUpdate())
+			PutObserverInServer();
 	}
 
 	self.flags |= FL_CLIENT | FL_NOTARGET;

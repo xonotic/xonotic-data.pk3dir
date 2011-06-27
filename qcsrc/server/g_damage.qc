@@ -780,15 +780,21 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			if(deathtype & HITTYPE_HEADSHOT)
 				damage *= 1 + damage_headshotbonus;
 
-			if(targ.classname == "player")
+			entity victim;
+			if((targ.vehicle_flags & VHF_ISVEHICLE) && targ.owner)
+				victim = targ.owner;
+			else
+				victim = targ;
+
+			if(victim.classname == "player")
 			{
-				if(IsDifferentTeam(targ, attacker))
+				if(IsDifferentTeam(victim, attacker))
 				{
 					if(damage > 0)
 					{
 						if(deathtype != DEATH_FIRE)
 						{
-							if(targ.BUTTON_CHAT)
+							if(victim.BUTTON_CHAT)
 								attacker.typehitsound += 1;
 							else
 								attacker.hitsound += 1;
@@ -799,12 +805,13 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 						if not(DEATH_ISSPECIAL(deathtype))
 						{
+							if(targ.classname == "player") // don't do this for vehicles
 							if(!g_minstagib)
-							if(IsFlying(targ))
+							if(IsFlying(victim))
 								yoda = 1;
 
 							if(g_minstagib)
-							if(targ.items & IT_STRENGTH)
+							if(victim.items & IT_STRENGTH)
 								yoda = 1;
 
 							if(deathtype & HITTYPE_HEADSHOT)

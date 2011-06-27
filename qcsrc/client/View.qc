@@ -352,12 +352,17 @@ float use_nex_chargepool;
 float myhealth, myhealth_prev;
 float myhealth_flash;
 
+float old_blurradius, old_bluralpha;
+float old_sharpen_intensity;
+
 vector myhealth_gentlergb;
 
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
 float eventchase_current_distance;
+
+vector damage_blurpostprocess, content_blurpostprocess;
 
 float checkfail[16];
 
@@ -760,6 +765,22 @@ void CSQC_UpdateView(float w, float h)
 
 		if(contentavgalpha)
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
+
+		if(autocvar_hud_postprocessing)
+		{
+			if(autocvar_hud_contents_blur && contentavgalpha)
+			{
+				content_blurpostprocess_x = 1;
+				content_blurpostprocess_y = contentavgalpha * autocvar_hud_contents_blur;
+				content_blurpostprocess_z = contentavgalpha * autocvar_hud_contents_blur_alpha;
+			}
+			else
+			{
+				content_blurpostprocess_x = 0;
+				content_blurpostprocess_y = 0;
+				content_blurpostprocess_z = 0;
+			}
+		}
 	}
 	
 	if(autocvar_hud_damage && !autocvar_chase_active)
@@ -827,6 +848,74 @@ void CSQC_UpdateView(float w, float h)
 		}
 		else
 			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+
+		if(autocvar_hud_postprocessing)
+		{
+			if(autocvar_hud_damage_blur && myhealth_flash_temp)
+			{
+				damage_blurpostprocess_x = 1;
+				damage_blurpostprocess_y = bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage_blur;
+				damage_blurpostprocess_z = bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage_blur_alpha;
+			}
+			else
+			{
+				damage_blurpostprocess_x = 0;
+				damage_blurpostprocess_y = 0;
+				damage_blurpostprocess_z = 0;
+			}
+		}
+	}
+
+	if(autocvar_hud_postprocessing)
+	{
+		// all of this should be done in the engine eventually
+
+		// enable or disable rendering types if they are used or not
+		if(cvar("r_glsl_postprocess_uservec1_enable") != (cvar("hud_postprocessing_maxbluralpha") != 0))
+			cvar_set("r_glsl_postprocess_uservec1_enable", ftos(cvar("hud_postprocessing_maxbluralpha") != 0));
+		if(cvar("r_glsl_postprocess_uservec2_enable") != (cvar("hud_powerup") != 0))
+			cvar_set("r_glsl_postprocess_uservec2_enable", ftos(cvar("hud_powerup") != 0));
+
+		// lets apply the postprocess effects from the previous two functions if needed
+		if((damage_blurpostprocess_x || content_blurpostprocess_x) && autocvar_chase_active >= 0) // not while the event chase camera is active
+		{
+			float blurradius = bound(0, damage_blurpostprocess_y + content_blurpostprocess_y, autocvar_hud_postprocessing_maxblurradius);
+			float bluralpha = bound(0, damage_blurpostprocess_z + content_blurpostprocess_z, autocvar_hud_postprocessing_maxbluralpha);
+			if(blurradius != old_blurradius || bluralpha != old_bluralpha) // reduce cvar_set spam as much as possible
+			{
+				cvar_set("r_glsl_postprocess_uservec1", strcat(ftos(blurradius), " ", ftos(bluralpha), " 0 0"));
+				old_blurradius = blurradius;
+				old_bluralpha = bluralpha;
+			}
+		}
+		else if(cvar_string("r_glsl_postprocess_uservec1") != "0 0 0 0") // reduce cvar_set spam as much as possible
+		{
+			cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
+			old_blurradius = 0;
+			old_bluralpha = 0;
+		}
+
+		float sharpen_intensity;
+		if (getstatf(STAT_STRENGTH_FINISHED) - time > 0)
+			sharpen_intensity += (getstatf(STAT_STRENGTH_FINISHED) - time);
+		if (getstatf(STAT_INVINCIBLE_FINISHED) - time > 0)
+			sharpen_intensity += (getstatf(STAT_INVINCIBLE_FINISHED) - time);
+
+		if(autocvar_hud_powerup && sharpen_intensity > 0 && autocvar_chase_active >= 0) // not while the event chase camera is active
+		{
+			sharpen_intensity = bound(0, sharpen_intensity, 5); // powerup warning time is 5 seconds, so fade the effect from there
+
+			if(sharpen_intensity != old_sharpen_intensity) // reduce cvar_set spam as much as possible
+			{
+				cvar_set("r_glsl_postprocess_uservec2", strcat("0 ", ftos(-sharpen_intensity * cvar("hud_powerup")), " 0 0"));
+				old_sharpen_intensity = sharpen_intensity;
+			}
+		}
+		else if(cvar_string("r_glsl_postprocess_uservec2") != "0 0 0 0") // reduce cvar_set spam as much as possible
+		{
+			cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
+			old_sharpen_intensity = 0;
+		}
 	}
 
 	if(menu_visible)

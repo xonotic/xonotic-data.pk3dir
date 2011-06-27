@@ -15,7 +15,7 @@ void UZI_Flash_Go()
 	{
 		self.think = SUB_Remove;
 		self.nextthink = time;
-		self.owner.muzzle_flash = world;
+		self.realowner.muzzle_flash = world;
 		return;
 	}
 	
@@ -36,7 +36,7 @@ void UziFlash()
 	self.muzzle_flash.alpha = 0.75;
 	self.muzzle_flash.angles_z = random() * 180;
 	self.muzzle_flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	self.muzzle_flash.owner = self;
+	self.muzzle_flash.owner = self.muzzle_flash.realowner = self;
 }
 
 void W_UZI_Attack (float deathtype)
@@ -314,7 +314,7 @@ float w_uzi(float req)
 		precache_sound("weapons/ric3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s did the impossible");
+		w_deathtypestring = _("%s is now thinking with portals");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
