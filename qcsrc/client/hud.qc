@@ -4598,8 +4598,8 @@ void HUD_CenterPrint (void)
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y -= 1.5 * fontsize_y * (1 - a*a);
 		}
-		drawfontscale = '1 1 0';
 	}
+	drawfontscale = '1 1 0';
 }
 
 /*
