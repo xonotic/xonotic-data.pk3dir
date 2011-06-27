@@ -4349,6 +4349,7 @@ void HUD_Physics(void)
 
 #define CENTERPRINT_MAX_MSGS 10
 #define CENTERPRINT_MAX_ENTRIES 50
+#define CENTERPRINT_FADETIME 0.25
 float cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
 float centerprint_msgID[CENTERPRINT_MAX_MSGS];
@@ -4387,15 +4388,22 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 	if (!centerprint_showing)
 		centerprint_showing = TRUE;
 
-	if(duration == 0)
-		duration = max(1, autocvar_hud_panel_centerprint_time);
-
 	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
 		if (new_id && new_id == centerprint_msgID[j])
+		{
+			if (strMessage == "" && centerprint_messages[j] != "" && centerprint_countdown_num[j] == 0)
+			{
+				// fade out the current msg (duration and countdown_num are ignored)
+				centerprint_time[j] = CENTERPRINT_FADETIME;
+				if (centerprint_expire_time[j] > time + CENTERPRINT_FADETIME || centerprint_expire_time[j] < time)
+					centerprint_expire_time[j] = time + CENTERPRINT_FADETIME;
+				return;
+			}
 			break; // found a msg with the same id, at position j
+		}
 	}
 
 	if (i == CENTERPRINT_MAX_MSGS)
@@ -4414,6 +4422,8 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 		centerprint_time[j] = -1;
 	else
 	{
+		if(duration == 0)
+			duration = max(1, autocvar_hud_panel_centerprint_time);
 		centerprint_time[j] = duration;
 		centerprint_expire_time[j] = time + duration;
 	}
@@ -4508,7 +4518,7 @@ void HUD_CenterPrint (void)
 	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
 
 	float i, j, k, n;
-	float a, sz, fade, align, current_msg_pos_y;
+	float a, sz, align, current_msg_pos_y;
 	vector pos;
 	string ts;
 
@@ -4517,7 +4527,6 @@ void HUD_CenterPrint (void)
 	pos = panel_pos;
 	if (autocvar_hud_panel_centerprint_flip)
 		pos_y += panel_size_y;
-	fade = min(autocvar_hud_panel_centerprint_time/8, 0.25);
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
 	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
@@ -4535,14 +4544,14 @@ void HUD_CenterPrint (void)
 			else
 				continue;
 		}
-		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - fade > time)
+		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - CENTERPRINT_FADETIME > time)
 		{
 			a = 1;
 			sz = 1;
 		}
 		else if (centerprint_expire_time[j] > time)
 		{
-			a = (centerprint_expire_time[j] - time) / fade;
+			a = (centerprint_expire_time[j] - time) / CENTERPRINT_FADETIME;
 			sz = 0.8 + a * (1 - 0.8);
 		}
 
