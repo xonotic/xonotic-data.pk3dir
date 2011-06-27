@@ -289,7 +289,10 @@ float WarpZone_CheckProjectileImpact(entity player)
 
 	o0 = player.origin + player.view_ofs;
 	v0 = player.velocity;
-	a0 = player.angles;
+
+	// if we teleported shortly before, abort
+	if(time < player.warpzone_teleport_time + 0.1)
+		return 0;
 
 	// if player hit a warpzone, abort
 	entity wz;
@@ -328,7 +331,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 	}
 	else
 	{
-		setorigin(player, o0);
+		setorigin(player, o0 - player.view_ofs);
 		player.velocity = v0;
 	}
 
