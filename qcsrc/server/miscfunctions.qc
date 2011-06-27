@@ -2014,13 +2014,17 @@ float SUB_NoImpactCheck()
 
 #define SUB_OwnerCheck() (other && (other == self.owner))
 
+void RemoveGrapplingHook(entity pl);
 float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 {
 	if(SUB_OwnerCheck())
 		return TRUE;
 	if(SUB_NoImpactCheck())
 	{
-		remove(self);
+		if(self.classname == "grapplinghook")
+			RemoveGrapplingHook(self.realowner);
+		else
+			remove(self);
 		return TRUE;
 	}
 	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)

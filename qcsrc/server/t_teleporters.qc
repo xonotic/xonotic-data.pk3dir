@@ -304,6 +304,9 @@ void spawnfunc_trigger_teleport (void)
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {
 	UpdateCSQCProjectileAfterTeleport(pl);
+	// "disown" projectiles after teleport
+	if(pl.owner == pl.realowner)
+		pl.owner = world;
 	if(pl.classname == "player")
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)

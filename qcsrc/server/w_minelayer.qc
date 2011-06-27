@@ -25,6 +25,7 @@ void W_Mine_Stick (entity to)
 	newmine.bot_dodgerating = self.bot_dodgerating;
 
 	newmine.owner = self.owner;
+	newmine.realowner = self.realowner;
 	setsize(newmine, '-4 -4 -4', '4 4 4');
 	setorigin(newmine, self.origin);
 	setmodel(newmine, "models/mine.md3");
@@ -60,21 +61,21 @@ void W_Mine_Explode ()
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
-			if(IsDifferentTeam(self.owner, other))
+			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.owner, "airshot");
+						AnnounceTo(self.realowner, "airshot");
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.owner, autocvar_g_balance_minelayer_damage, autocvar_g_balance_minelayer_edgedamage, autocvar_g_balance_minelayer_radius, world, autocvar_g_balance_minelayer_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_damage, autocvar_g_balance_minelayer_edgedamage, autocvar_g_balance_minelayer_radius, world, autocvar_g_balance_minelayer_force, self.projectiledeathtype, other);
 
-	if (self.owner.weapon == WEP_MINE_LAYER)
+	if (self.realowner.weapon == WEP_MINE_LAYER)
 	{
 		entity oldself;
 		oldself = self;
-		self = self.owner;
+		self = self.realowner;
 		if (!weapon_action(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
 			self.cnt = WEP_MINE_LAYER;
@@ -83,7 +84,7 @@ void W_Mine_Explode ()
 		}
 		self = oldself;
 	}
-	self.owner.minelayer_mines -= 1;
+	self.realowner.minelayer_mines -= 1;
 	remove (self);
 }
 
@@ -95,13 +96,13 @@ void W_Mine_DoRemoteExplode ()
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
 		self.velocity = self.oldvelocity;
 
-	RadiusDamage (self, self.owner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
-	if (self.owner.weapon == WEP_MINE_LAYER)
+	if (self.realowner.weapon == WEP_MINE_LAYER)
 	{
 		entity oldself;
 		oldself = self;
-		self = self.owner;
+		self = self.realowner;
 		if (!weapon_action(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
 			self.cnt = WEP_MINE_LAYER;
@@ -110,16 +111,16 @@ void W_Mine_DoRemoteExplode ()
 		}
 		self = oldself;
 	}
-	self.owner.minelayer_mines -= 1;
+	self.realowner.minelayer_mines -= 1;
 	remove (self);
 }
 
 void W_Mine_RemoteExplode ()
 {
-	if(self.owner.deadflag == DEAD_NO)
+	if(self.realowner.deadflag == DEAD_NO)
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
-			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > autocvar_g_balance_minelayer_remote_radius) // safety device
+			: (vlen(NearestPointOnBox(self.realowner, self.origin) - self.origin) > autocvar_g_balance_minelayer_remote_radius) // safety device
 		)
 		{
 			W_Mine_DoRemoteExplode();
@@ -135,7 +136,7 @@ void W_Mine_ProximityExplode ()
 		head = findradius(self.origin, autocvar_g_balance_minelayer_radius);
 		while(head)
 		{
-			if(head == self.owner || !IsDifferentTeam(head, self.owner))
+			if(head == self.realowner || !IsDifferentTeam(head, self.realowner))
 				return;
 			head = head.chain;
 		}
@@ -149,7 +150,7 @@ float W_Mine_Count(entity e)
 {
 	float minecount;
 	entity mine;
-	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == e)
+	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == e)
 		minecount += 1;
 		
 	return minecount;
@@ -182,7 +183,7 @@ void W_Mine_Think (void)
 
 	// a player's mines shall explode if he disconnects or dies
 	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
-	if(self.owner.classname != "player" || self.owner.deadflag != DEAD_NO)
+	if(self.realowner.classname != "player" || self.realowner.deadflag != DEAD_NO)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -195,7 +196,7 @@ void W_Mine_Think (void)
 	while(head)
 	{
 		if(head.classname == "player" && head.deadflag == DEAD_NO)
-		if(head != self.owner && IsDifferentTeam(head, self.owner)) // don't trigger for team mates
+		if(head != self.realowner && IsDifferentTeam(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
 			spamsound (self, CHAN_PROJECTILE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
@@ -212,8 +213,8 @@ void W_Mine_Think (void)
 	}
 
 	// remote detonation
-	if (self.owner.weapon == WEP_MINE_LAYER)
-	if (self.owner.deadflag == DEAD_NO)
+	if (self.realowner.weapon == WEP_MINE_LAYER)
+	if (self.realowner.deadflag == DEAD_NO)
 	if (self.minelayer_detonate)
 		W_Mine_RemoteExplode();
 }
@@ -270,7 +271,7 @@ void W_Mine_Attack (void)
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
-	mine.owner = self;
+	mine.owner = mine.realowner = self;
 	if(autocvar_g_balance_minelayer_detonatedelay >= 0)
 		mine.spawnshieldtime = time + autocvar_g_balance_minelayer_detonatedelay;
 	else
@@ -322,7 +323,7 @@ float W_PlacedMines(float detonate)
 	entity mine;
 	float minfound;
 
-	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
+	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == self)
 	{
 		if(detonate)
 		{
@@ -364,7 +365,7 @@ float w_minelayer(float req)
 			mine = find(world, classname, "mine");
 			while (mine)
 			{
-				if (mine.owner != self)
+				if (mine.realowner != self)
 				{
 					mine = find(mine, classname, "mine");
 					continue;
@@ -395,7 +396,7 @@ float w_minelayer(float req)
 			mine = find(world, classname, "mine");
 			while (mine)
 			{
-				if (mine.owner != self)
+				if (mine.realowner != self)
 				{
 					mine = find(mine, classname, "mine");
 					continue;
