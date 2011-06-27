@@ -4355,6 +4355,7 @@ float centerprint_msgID[CENTERPRINT_MAX_MSGS];
 float centerprint_time[CENTERPRINT_MAX_MSGS];
 float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
 float centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
+float centerprint_showing;
 
 void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num)
 {
@@ -4382,6 +4383,9 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 
 	if(strMessage == "" && new_id == 0)
 		return;
+
+	if (!centerprint_showing)
+		centerprint_showing = TRUE;
 
 	if(duration == 0)
 		duration = max(1, autocvar_hud_panel_centerprint_time);
@@ -4484,6 +4488,10 @@ void HUD_CenterPrint (void)
 	}
 
 	HUD_Panel_DrawBg(1);
+
+	if (!centerprint_showing)
+		return;
+
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;
@@ -4503,6 +4511,8 @@ void HUD_CenterPrint (void)
 	float a, sz, fade, align, current_msg_pos_y;
 	vector pos;
 	string ts;
+
+	n = -1; // if no msg will be displayed, n stays -1
 
 	pos = panel_pos;
 	if (autocvar_hud_panel_centerprint_flip)
@@ -4600,6 +4610,11 @@ void HUD_CenterPrint (void)
 		}
 	}
 	drawfontscale = '1 1 0';
+	if (n == -1)
+	{
+		centerprint_showing = FALSE;
+		reset_centerprint_messages();
+	}
 }
 
 /*
