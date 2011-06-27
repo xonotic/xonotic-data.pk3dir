@@ -424,7 +424,7 @@ vector steerlib_beamsteer(vector dir, float length, float step, float step_up, f
     vr = vectoangles(dir);
     //vr_x *= -1;
 
-    tracebox(self.origin , self.mins,self.maxs,self.origin +  (dir * length) ,MOVE_NOMONSTERS,self);
+    tracebox(self.origin + '0 0 1' * step_up, self.mins, self.maxs, ('0 0 1' * step_up) + self.origin +  (dir * length), MOVE_NOMONSTERS, self);
     if(trace_fraction == 1.0)
     {
         //te_lightning1(self,self.origin,self.origin +  (dir * length));

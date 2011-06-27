@@ -614,7 +614,7 @@ void HUD_Weapons(void)
 {
 	float f, screen_ar;
 	float center_x, center_y;
-
+    if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_weapons) return;
@@ -1019,6 +1019,7 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 
 void HUD_Ammo(void)
 {
+    if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_ammo) return;
@@ -1319,6 +1320,7 @@ void HUD_HealthArmor(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_healtharmor) return;
+		if(hud != HUD_NORMAL) return;
 		if(spectatee_status == -1) return;
 
 		health = getstati(STAT_HEALTH);
@@ -1755,7 +1757,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_HURTTRIGGER);
 			if(alsoprint)
 				print(sprintf(_("^1%s^1 was thrown into a world of hurt by %s\n"), s2, s1));
-		} else if(type == DEATH_SBCRUSH) {
+		} else if(type == DEATH_VHCRUSH) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
 				print (sprintf(_("^1%s^1 was crushed by %s\n"), s2, s1));
@@ -1783,6 +1785,18 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
 				print (sprintf(_("^1%s^1 dies when %s^1's wakizashi dies.\n"), s2, s1));
+		} else if(type == DEATH_RAPTOR_CANNON) {
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print (sprintf(_("^1%s^1 nailed to hell by %s\n"), s2, s1));
+		} else if(type == DEATH_RAPTOR_BOMB) {
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print (sprintf(_("^1%s^1 cluster crushed by %s\n"), s2, s1));
+		} else if(type == DEATH_RAPTOR_DEATH) {
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print (sprintf(_("^1%s^1 dies when %s^1's raptor dies.\n"), s2, s1));
 		} else if(type == DEATH_TURRET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)

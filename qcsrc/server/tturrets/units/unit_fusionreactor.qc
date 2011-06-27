@@ -68,7 +68,7 @@ void turret_fusionreactor_dinit()
     self.track_flags         = TFL_TRACK_NO;
     // self.turret_respawnhook  = turret_fusionreactor_respawnhook;
 
-    if (turret_stdproc_init("fusreac_std",0,"models/turrets/base.md3","models/turrets/reactor.md3") == 0)
+    if (turret_stdproc_init("fusreac_std", "models/turrets/base.md3", "models/turrets/reactor.md3", TID_FUSION) == 0)
     {
         remove(self);
         return;
