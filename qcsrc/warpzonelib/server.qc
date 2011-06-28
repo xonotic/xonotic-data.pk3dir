@@ -165,7 +165,12 @@ void WarpZone_Touch (void)
 	if(WarpZone_PlaneDist(self, other.origin + other.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
 		return;
 
-	if(WarpZone_Teleport(self, other, -1000, 0))
+	float f;
+	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+		f = min(-1, -64 / vlen(self.velocity));
+	else
+		f = -1;
+	if(WarpZone_Teleport(self, other, f, 0))
 	{
 		string save1, save2;
 		activator = other;
