@@ -351,12 +351,20 @@ float spiderbot_frame()
             spider.vehicle_ammo1 -= autocvar_g_vehicle_spiderbot_minigun_ammo_cost;
             spider.tur_head.attack_finished_single = time + autocvar_g_vehicle_spiderbot_minigun_refire;
             player.vehicle_ammo1 = (spider.vehicle_ammo1 / autocvar_g_vehicle_spiderbot_minigun_ammo_max) * 100;
+            spider.gun1.angles_z += 45;
+            spider.gun2.angles_z -= 45;
+            if(spider.gun1.angles_z >= 360)
+            {
+                spider.gun1.angles_z = 0;
+                spider.gun2.angles_z = 0;
+            }
         }
     }
     else
         vehicles_regen(cnt, vehicle_ammo1, autocvar_g_vehicle_spiderbot_minigun_ammo_max,
                                            autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause,
                                            autocvar_g_vehicle_spiderbot_minigun_ammo_regen, frametime);
+        
 
     spiderbot_rocket_do();
 
