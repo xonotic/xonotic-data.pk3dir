@@ -4349,6 +4349,7 @@ void HUD_Physics(void)
 
 #define CENTERPRINT_MAX_MSGS 10
 #define CENTERPRINT_MAX_ENTRIES 50
+#define CENTERPRINT_SPACING 0.7
 float cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
 float centerprint_msgID[CENTERPRINT_MAX_MSGS];
@@ -4574,7 +4575,7 @@ void HUD_CenterPrint (void)
 					if (ts != "")
 						pos_y -= fontsize_y;
 					else
-						pos_y -= fontsize_y * 0.35;
+						pos_y -= fontsize_y * CENTERPRINT_SPACING/2;
 					if (pos_y < panel_pos_y) // check if the next line can be shown
 					{
 						drawfontscale = '1 1 0';
@@ -4600,7 +4601,7 @@ void HUD_CenterPrint (void)
 					pos_y += fontsize_y;
 				}
 				else
-					pos_y += fontsize_y * 0.35;
+					pos_y += fontsize_y * CENTERPRINT_SPACING/2;
 				if (!autocvar_hud_panel_centerprint_flip && pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
 				{
 					drawfontscale = '1 1 0';
@@ -4611,15 +4612,15 @@ void HUD_CenterPrint (void)
 		msg_size = pos_y - msg_size;
 		if (autocvar_hud_panel_centerprint_flip)
 		{
-			pos_y = current_msg_pos_y - 0.7 * fontsize_y;
+			pos_y = current_msg_pos_y - CENTERPRINT_SPACING * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				pos_y += (msg_size + 0.7 * fontsize_y) * (1 - sqrt(a));
+				pos_y += (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(a));
 		}
 		else
 		{
-			pos_y += 0.7 * fontsize_y;
+			pos_y += CENTERPRINT_SPACING * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				pos_y -= (msg_size + 0.7 * fontsize_y) * (1 - sqrt(a));
+				pos_y -= (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(a));
 		}
 	}
 	drawfontscale = '1 1 0';
