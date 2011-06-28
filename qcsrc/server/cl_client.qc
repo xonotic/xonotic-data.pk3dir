@@ -3176,7 +3176,8 @@ void PlayerPostThink (void)
 	else
 	{
 		if(self.showheadshotbbox)
-			remove(self.showheadshotbbox);
+			if(self.showheadshotbbox && !wasfreed(self.showheadshotbbox))
+                remove(self.showheadshotbbox);
 	}
 
 	playerdemo_write();
