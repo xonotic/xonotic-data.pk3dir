@@ -4613,13 +4613,13 @@ void HUD_CenterPrint (void)
 		{
 			pos_y = current_msg_pos_y - 0.7 * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				pos_y += (msg_size + 0.7 * fontsize_y) * (1 - a*a);
+				pos_y += (msg_size + 0.7 * fontsize_y) * (1 - sqrt(a));
 		}
 		else
 		{
 			pos_y += 0.7 * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				pos_y -= (msg_size + 0.7 * fontsize_y) * (1 - a*a);
+				pos_y -= (msg_size + 0.7 * fontsize_y) * (1 - sqrt(a));
 		}
 	}
 	drawfontscale = '1 1 0';
