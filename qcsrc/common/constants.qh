@@ -614,7 +614,7 @@ float MAX_SHOT_DISTANCE = 32768;
 
 //centerprint ID list
 float CPID_TEAMCHANGE = 1;
-float CPID_KILL = 2;
+
 float CPID_MINSTA_FINDAMMO = 3;
 float CPID_NIX_WPNCHANGE = 4;
 float CPID_DISCONNECT_IDLING = 5;

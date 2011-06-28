@@ -1392,24 +1392,28 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 		{
 			self.killindicator.colormod = '0 0 0';
 			if(clienttype(self) == CLIENTTYPE_REAL)
-				Send_CSQC_Centerprint_Generic(self, CPID_KILL, "^1Suicide in %d seconds", 1, self.killindicator.cnt);
+			if(self.killindicator.cnt > 0)
+				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, "^1Suicide in %d seconds", 1, self.killindicator.cnt);
 		}
 		else if(targetteam == -1) // auto
 		{
 			self.killindicator.colormod = '0 1 0';
 			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(self.killindicator.cnt > 0)
 				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, "Changing team in %d seconds", 1, self.killindicator.cnt);
 		}
 		else if(targetteam == -2) // spectate
 		{
 			self.killindicator.colormod = '0.5 0.5 0.5';
 			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(self.killindicator.cnt > 0)
 				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, "Spectating in %d seconds", 1, self.killindicator.cnt);
 		}
 		else
 		{
 			self.killindicator.colormod = TeamColor(targetteam);
 			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(self.killindicator.cnt > 0)
 				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, strcat("Changing to ", ColoredTeamName(targetteam), " in %d seconds"), 1, self.killindicator.cnt);
 		}
 	}
