@@ -4349,13 +4349,13 @@ void HUD_Physics(void)
 
 #define CENTERPRINT_MAX_MSGS 10
 #define CENTERPRINT_MAX_ENTRIES 50
-#define CENTERPRINT_FADETIME 0.25
 float cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
 float centerprint_msgID[CENTERPRINT_MAX_MSGS];
 float centerprint_time[CENTERPRINT_MAX_MSGS];
 float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
 float centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
+float centerprint_fadetime;
 float centerprint_showing;
 
 void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num)
@@ -4388,6 +4388,8 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 	if (!centerprint_showing)
 		centerprint_showing = TRUE;
 
+	centerprint_fadetime = bound(0, autocvar_hud_panel_centerprint_fadetime, 1);
+
 	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
@@ -4397,9 +4399,9 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 			if (strMessage == "" && centerprint_messages[j] != "" && centerprint_countdown_num[j] == 0)
 			{
 				// fade out the current msg (duration and countdown_num are ignored)
-				centerprint_time[j] = CENTERPRINT_FADETIME;
-				if (centerprint_expire_time[j] > time + CENTERPRINT_FADETIME || centerprint_expire_time[j] < time)
-					centerprint_expire_time[j] = time + CENTERPRINT_FADETIME;
+				centerprint_time[j] = centerprint_fadetime;
+				if (centerprint_expire_time[j] > time + centerprint_fadetime || centerprint_expire_time[j] < time)
+					centerprint_expire_time[j] = time + centerprint_fadetime;
 				return;
 			}
 			break; // found a msg with the same id, at position j
@@ -4544,14 +4546,14 @@ void HUD_CenterPrint (void)
 			else
 				continue;
 		}
-		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - CENTERPRINT_FADETIME > time)
+		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - centerprint_fadetime > time)
 		{
 			a = 1;
 			sz = 1;
 		}
 		else if (centerprint_expire_time[j] > time)
 		{
-			a = (centerprint_expire_time[j] - time) / CENTERPRINT_FADETIME;
+			a = (centerprint_expire_time[j] - time) / centerprint_fadetime;
 			sz = 0.8 + a * (1 - 0.8);
 		}
 
