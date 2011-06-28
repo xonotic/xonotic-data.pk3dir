@@ -4520,7 +4520,7 @@ void HUD_CenterPrint (void)
 	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
 
 	float i, j, k, n;
-	float a, sz, align, current_msg_pos_y;
+	float a, sz, align, current_msg_pos_y, msg_size;
 	vector pos;
 	string ts;
 
@@ -4585,6 +4585,7 @@ void HUD_CenterPrint (void)
 			current_msg_pos_y = pos_y; // save starting pos (first line) of the current message
 		}
 
+		msg_size = pos_y;
 		for(k = 0; k < n; ++k)
 		{
 			getWrappedLine_remaining = argv(k);
@@ -4607,17 +4608,18 @@ void HUD_CenterPrint (void)
 				}
 			}
 		}
+		msg_size = pos_y - msg_size;
 		if (autocvar_hud_panel_centerprint_flip)
 		{
 			pos_y = current_msg_pos_y - 0.7 * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				pos_y += 1.5 * fontsize_y * (1 - a*a);
+				pos_y += (msg_size + 0.7 * fontsize_y) * (1 - a*a);
 		}
 		else
 		{
 			pos_y += 0.7 * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				pos_y -= 1.5 * fontsize_y * (1 - a*a);
+				pos_y -= (msg_size + 0.7 * fontsize_y) * (1 - a*a);
 		}
 	}
 	drawfontscale = '1 1 0';
