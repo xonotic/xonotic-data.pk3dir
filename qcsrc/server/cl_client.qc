@@ -3135,7 +3135,7 @@ void PlayerPostThink (void)
 	} else if (self.classname == "spectator") {
 		//do nothing
 	}
-
+	
 	/*
 	float i;
 	for(i = 0; i < 1000; ++i)

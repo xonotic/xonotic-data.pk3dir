@@ -703,7 +703,6 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
             self.vehicle_shieldent.think       = shieldhit_think;
         }
 
-
         self.vehicle_shieldent.colormod    = '1 1 1';
         self.vehicle_shieldent.alpha       = 0.45;
         self.vehicle_shieldent.angles      = vectoangles(normalize(hitloc - (self.origin + self.vehicle_shieldent.origin))) - self.angles;
@@ -713,14 +712,26 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 
         if(self.vehicle_shield < 0)
         {
+            self.vehicle_health            -= fabs(self.vehicle_shield);
             self.vehicle_shieldent.colormod = '2 0 0';
             self.vehicle_shield             = 0;
             self.vehicle_shieldent.alpha    = 0.75;
-            self.vehicle_health            -= fabs(self.vehicle_shield);
+            
+        	if(sound_allowed(MSG_BROADCAST, attacker))
+                spamsound (self, CHAN_PROJECTILE, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);   // FIXME: PLACEHOLDER
         }
+        else
+        	if(sound_allowed(MSG_BROADCAST, attacker))
+                spamsound (self, CHAN_PROJECTILE, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+
     }
     else
+    {
         self.vehicle_health -= damage;
+
+        if(sound_allowed(MSG_BROADCAST, attacker))
+            spamsound (self, CHAN_PROJECTILE, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+    }
 
     self.velocity += force; // * (vlen(force) / self.mass);
 
