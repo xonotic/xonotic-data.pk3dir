@@ -1333,11 +1333,13 @@ void Net_Notify() {
 	else if(type == CSQC_CENTERPRINT_GENERIC)
 	{
 		float id;
+		string s;
 		id = ReadByte();
-		if (id == 0)
-			centerprint_generic(id, ReadString(), 0, 0);
+		s = ReadString();
+		if (id != 0 && s != "")
+			centerprint_generic(id, s, ReadByte(), ReadByte());
 		else
-			centerprint_generic(id, ReadString(), ReadByte(), ReadByte());
+			centerprint_generic(id, s, 0, 0);
 	}
 }
 

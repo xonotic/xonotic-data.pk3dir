@@ -1655,7 +1655,7 @@ void precache()
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 
 
-void Send_CSQC_Centerprint_Generic(entity e, float id, string s1, float duration, float countdown_num)
+void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
 {
 	if (clienttype(e) == CLIENTTYPE_REAL)
 	{
@@ -1665,8 +1665,8 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s1, float duration
 			WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
 			WriteByte(MSG_ONE, CSQC_CENTERPRINT_GENERIC);
 			WriteByte(MSG_ONE, id);
-			WriteString(MSG_ONE, s1);
-			if (id != 0)
+			WriteString(MSG_ONE, s);
+			if (id != 0 && s != "")
 			{
 				WriteByte(MSG_ONE, duration);
 				WriteByte(MSG_ONE, countdown_num);
