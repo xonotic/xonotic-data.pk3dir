@@ -1277,7 +1277,9 @@ void ClientKill_Now()
 	    }
 	}
 	
-	remove(self.killindicator);
+	if(self.killindicator && !wasfreed(self.killindicator))
+        remove(self.killindicator);
+	
 	self.killindicator = world;
 
 	if(self.killindicator_teamchange)
