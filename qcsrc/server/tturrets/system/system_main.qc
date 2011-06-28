@@ -64,12 +64,13 @@ float turret_send(entity to, float sf)
     }
     
     if(sf & TNSF_STATUS)
-    {        
+    {
         WriteByte(MSG_ENTITY, self.team);
+        
         if(self.health <= 0)
             WriteByte(MSG_ENTITY, 0);
         else
-            WriteByte(MSG_ENTITY, rint((self.health / self.tur_health) * 255)); // Send health as 0-255 insted of real value, where 255 = 100%
+            WriteByte(MSG_ENTITY, ceil((self.health / self.tur_health) * 255));
     }
     
 	return TRUE;
