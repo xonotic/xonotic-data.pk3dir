@@ -4347,6 +4347,8 @@ void HUD_Physics(void)
 		drawstring_aspect(panel_pos + acceleration_offset, strcat(ftos_decimals(acceleration, 2), "g"), panel_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
+// CenterPrint (#16)
+//
 #define CENTERPRINT_MAX_MSGS 10
 #define CENTERPRINT_MAX_ENTRIES 50
 #define CENTERPRINT_SPACING 0.7
@@ -4438,9 +4440,6 @@ void centerprint(string strMessage)
 	centerprint_generic(0, strMessage, autocvar_hud_panel_centerprint_time, 0);
 }
 
-// CenterPrint (#16)
-//
-float hud_configure_cp_generation_time;
 void reset_centerprint_messages(void)
 {
 	float i;
@@ -4451,9 +4450,10 @@ void reset_centerprint_messages(void)
 		centerprint_msgID[i] = 0;
 		if(centerprint_messages[i])
 			strunzone(centerprint_messages[i]);
-		centerprint_messages[i] = strzone("");
+		centerprint_messages[i] = string_null;
 	}
 }
+float hud_configure_cp_generation_time;
 void HUD_CenterPrint (void)
 {
 	if(!autocvar__hud_configure)
