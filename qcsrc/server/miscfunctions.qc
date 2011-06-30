@@ -3135,13 +3135,12 @@ float isPushable(entity e)
 	switch(e.classname)
 	{
 		case "body":
-		case "corpse":
 		case "droppedweapon":
 		case "keepawayball":
 		case "nexball_basketball":
 		case "nexball_football":
 			return TRUE;
-		case "bullet":
+		case "bullet": // antilagged bullets can't hit this either
 			return FALSE;
 	}
 	if (e.projectiledeathtype)
