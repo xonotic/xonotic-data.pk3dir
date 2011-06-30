@@ -788,7 +788,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			else
 				victim = targ;
 
-			if(victim.classname == "player")
+			if(victim.classname == "player" || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 			{
 				if(IsDifferentTeam(victim, attacker))
 				{

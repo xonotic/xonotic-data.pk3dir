@@ -1277,7 +1277,9 @@ void ClientKill_Now()
 	    }
 	}
 	
-	remove(self.killindicator);
+	if(self.killindicator && !wasfreed(self.killindicator))
+        remove(self.killindicator);
+	
 	self.killindicator = world;
 
 	if(self.killindicator_teamchange)
@@ -3133,7 +3135,7 @@ void PlayerPostThink (void)
 	} else if (self.classname == "spectator") {
 		//do nothing
 	}
-
+	
 	/*
 	float i;
 	for(i = 0; i < 1000; ++i)
@@ -3174,7 +3176,8 @@ void PlayerPostThink (void)
 	else
 	{
 		if(self.showheadshotbbox)
-			remove(self.showheadshotbbox);
+			if(self.showheadshotbbox && !wasfreed(self.showheadshotbbox))
+                remove(self.showheadshotbbox);
 	}
 
 	playerdemo_write();
