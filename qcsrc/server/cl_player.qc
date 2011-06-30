@@ -530,7 +530,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// escape a lava pit or similar
 		//self.pushltime = 0;
 	}
-	else if(attacker.classname == "player" || attacker.classname == "gib")
+	else if(attacker.classname == "player")
 	{
 		self.pusher = attacker;
 		self.pushltime = time + autocvar_g_maxpushtime;
@@ -643,7 +643,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(self.flagcarried)
 		{
-			if(attacker.classname != "player" && attacker.classname != "gib")
+			if(attacker.classname != "player")
 				DropFlag(self.flagcarried, self, attacker); // penalty for flag loss by suicide
 			else if(attacker.team == self.team)
 				DropFlag(self.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill

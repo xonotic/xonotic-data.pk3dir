@@ -130,22 +130,7 @@ void trigger_push_touch()
 	if (self.active == ACTIVE_NOT)
 		return;
 
-	if not(other.iscreature)
-	if (other.classname != "body")
-	if (other.classname != "casing")
-	if (other.classname != "corpse")
-	if (other.classname != "droppedweapon")
-	if (other.classname != "gib")
-	if (other.classname != "keepawayball")
-	if (other.classname != "nexball_basketball")
-	if (other.classname != "nexball_football")
-	if (!other.projectiledeathtype || other.classname == "bullet")
-		return;
-
-	if(!isPushable(other))
-		return;
-
-	if (other.deadflag && other.iscreature)
+	if (!isPushable(other))
 		return;
 
 	if(self.team)
