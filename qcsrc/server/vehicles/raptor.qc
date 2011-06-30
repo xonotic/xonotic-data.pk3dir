@@ -573,7 +573,6 @@ void raptor_die()
 {
     self.health       = 0;
     self.event_damage = SUB_Null;
-    self.iscreature   = FALSE;
     self.solid        = SOLID_CORPSE;
     self.takedamage   = DAMAGE_NO;
     self.deadflag     = DEAD_DYING;
