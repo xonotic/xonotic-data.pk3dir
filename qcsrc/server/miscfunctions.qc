@@ -3127,3 +3127,24 @@ float LostMovetypeFollow(entity ent)
 	}
 	return 0;
 }
+
+float isPushable(entity e)
+{
+	if(e.iscreature)
+		return TRUE;
+	switch(e.classname)
+	{
+		case "body":
+		case "corpse":
+		case "droppedweapon":
+		case "keepawayball":
+		case "nexball_basketball":
+		case "nexball_football":
+			return TRUE;
+		case "bullet":
+			return FALSE;
+	}
+	if (e.projectiledeathtype)
+		return TRUE;
+	return FALSE;
+}

@@ -156,7 +156,7 @@ void WarpZone_Touch (void)
 		return;
 
 	// FIXME needs a better check to know what is safe to teleport and what not
-	if(other.movetype == MOVETYPE_NONE || other.movetype == MOVETYPE_FOLLOW)
+	if(other.movetype == MOVETYPE_NONE || other.movetype == MOVETYPE_FOLLOW || other.tag_entity)
 		return;
 
 	if(WarpZoneLib_ExactTrigger_Touch())

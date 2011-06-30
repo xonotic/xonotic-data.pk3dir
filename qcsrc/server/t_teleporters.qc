@@ -148,9 +148,14 @@ void Teleport_Touch (void)
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 	
-	if (other.health < 1)
+	if not(other.iscreature)
 		return;
-	if not(other.flags & FL_CLIENT)	// FIXME: Make missiles firable through the teleport too
+
+	// for gameplay: vehicles can't teleport
+	if (other.vehicle_flags & VHF_ISVEHICLE)
+		return;
+
+	if (other.deadflag != DEAD_NO)
 		return;
 
 	if(self.team)
