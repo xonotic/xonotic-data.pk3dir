@@ -4,18 +4,20 @@ void CreatureFrame (void)
 	local entity oldself;
 	local float dm;
 	oldself = self;
-	self = findfloat(world, iscreature, TRUE);
-	while (self)
+	for(self = world; (self = findfloat(self, iscreature, TRUE)); )
 	{
-		if (self.movetype != MOVETYPE_NOCLIP)
+		if (self.movetype == MOVETYPE_NOCLIP)
+			continue;
+		float vehic = (self.vehicle_flags & VHF_ISVEHICLE);
+		if (self.waterlevel)
 		{
-			if (self.waterlevel)
+			if (!(self.flags & FL_INWATER))
 			{
-				if (!(self.flags & FL_INWATER))
-				{
-					self.flags |= FL_INWATER;
-					self.dmgtime = 0;
-				}
+				self.flags |= FL_INWATER;
+				self.dmgtime = 0;
+			}
+			if(!vehic) // vehicles don't drown
+			{
 				if (self.waterlevel != WATERLEVEL_SUBMERGED)
 				{
 					if(self.air_finished < time + 9)
@@ -32,40 +34,44 @@ void CreatureFrame (void)
 						self.pain_finished = time + 0.5;
 					}
 				}
-				if (self.dmgtime < time)
-				{
-					self.dmgtime = time + 0.2;
-					if (self.watertype == CONTENT_LAVA)
-					{
-						if (self.watersound_finished < time)
-						{
-							self.watersound_finished = time + 0.5;
-							sound (self, CHAN_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
-						}
-						Damage (self, world, world, 6 * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
-					}
-					else if (self.watertype == CONTENT_SLIME)
-					{
-						if (self.watersound_finished < time)
-						{
-							self.watersound_finished = time + 0.5;
-							sound (self, CHAN_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
-						}
-						Damage (self, world, world, 2 * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
-					}
-				}
 			}
-			else
+			if (self.dmgtime < time)
 			{
-				if (self.flags & FL_INWATER)
+				self.dmgtime = time + 0.2;
+				if (self.watertype == CONTENT_LAVA)
 				{
-					// play leave water sound
-					self.flags &~= FL_INWATER;
-					self.dmgtime = 0;
+					if (self.watersound_finished < time)
+					{
+						self.watersound_finished = time + 0.5;
+						sound (self, CHAN_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
+					}
+					Damage (self, world, world, 6 * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
 				}
-				self.air_finished = time + 12;
-				self.dmg = 2;
+				else if (self.watertype == CONTENT_SLIME)
+				{
+					if (self.watersound_finished < time)
+					{
+						self.watersound_finished = time + 0.5;
+						sound (self, CHAN_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
+					}
+					Damage (self, world, world, 2 * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+				}
 			}
+		}
+		else
+		{
+			if (self.flags & FL_INWATER)
+			{
+				// play leave water sound
+				self.flags &~= FL_INWATER;
+				self.dmgtime = 0;
+			}
+			self.air_finished = time + 12;
+			self.dmg = 2;
+		}
+
+		if(!vehic) // vehicles don't get falling damage
+		{
 			// check for falling damage
 			float velocity_len = vlen(self.velocity);
 			if(!self.hook.state && !g_ca && !(g_cts && !autocvar_g_cts_selfdamage))
@@ -78,41 +84,41 @@ void CreatureFrame (void)
 				if (dm > 0)
 					Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
 			}
+		}
 
-			if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
-				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
+		if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
+			Damage (self, world, world, 100000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
 
-			// play stupid sounds
-			if (g_footsteps)
-			if (!gameover)
-			if (self.flags & FL_ONGROUND)
-			if (velocity_len > autocvar_sv_maxspeed * 0.6)
-			if (!self.deadflag)
-			if (time < self.lastground + 0.2)
+		// play stupid sounds
+		if (!vehic) // vehicles don't get footsteps
+		if (g_footsteps)
+		if (!gameover)
+		if (self.flags & FL_ONGROUND)
+		if (velocity_len > autocvar_sv_maxspeed * 0.6)
+		if (!self.deadflag)
+		if (time < self.lastground + 0.2)
+		{
+			if((time > self.nextstep) || (time < (self.nextstep - 10.0)))
 			{
-				if((time > self.nextstep) || (time < (self.nextstep - 10.0)))
+				self.nextstep = time + 0.3 + random() * 0.1;
+				trace_dphitq3surfaceflags = 0;
+				tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
+				/*
+				if(trace_fraction == 1)
+					dprint("nohit\n");
+				else
+					dprint(ftos(trace_dphitq3surfaceflags), "\n");
+				*/
+				if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
 				{
-					self.nextstep = time + 0.3 + random() * 0.1;
-					trace_dphitq3surfaceflags = 0;
-					tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
-					/*
-					if(trace_fraction == 1)
-						dprint("nohit\n");
+					if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
+						GlobalSound(globalsound_metalstep, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
 					else
-						dprint(ftos(trace_dphitq3surfaceflags), "\n");
-					*/
-					if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
-					{
-						if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-							GlobalSound(globalsound_metalstep, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
-						else
-							GlobalSound(globalsound_step, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
-					}
+						GlobalSound(globalsound_step, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
 				}
 			}
-			self.oldvelocity = self.velocity;
 		}
-		self = findfloat(self, iscreature, TRUE);
+		self.oldvelocity = self.velocity;
 	}
 	self = oldself;
 }

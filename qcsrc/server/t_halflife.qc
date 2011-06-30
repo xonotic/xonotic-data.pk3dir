@@ -39,6 +39,8 @@ void func_ladder_touch()
 {
 	if not(other.iscreature)
 		return;
+	if (other.vehicle_flags & VHF_ISVEHICLE)
+		return;
 
 	EXACTTRIGGER_TOUCH;
 
