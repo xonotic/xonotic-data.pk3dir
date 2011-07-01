@@ -395,7 +395,7 @@ void Spawnqueue_Check()
 			if (time > warntime)
 			{
 				FOR_EACH_PLAYER(self)
-					centerprint(self, "^1Need at least 1 player in each team to play CA");
+					Send_CSQC_Centerprint_Generic(self, CPID_ROUND_STARTING, "^1Need at least 1 player in each team to play CA", 2, 0);
 				warntime = time + 1;
 			}
 			return;
