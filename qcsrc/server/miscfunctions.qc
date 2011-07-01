@@ -717,12 +717,6 @@ float NumberToTeamNumber(float number)
 	return -1;
 }
 
-void Send_CSQC_Centerprint_Generic(entity e, float id, string s1, float duration, float countdown_num);
-void centerprint(entity e, string s)
-{
-	Send_CSQC_Centerprint_Generic(e, 0, s, 0, 0);
-}
-
 // decolorizes and team colors the player name when needed
 string playername(entity p)
 {
