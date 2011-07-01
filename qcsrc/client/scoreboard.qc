@@ -1163,9 +1163,6 @@ void HUD_DrawScoreboard()
 
 	// Heading
 	drawstring(pos, _("Scoreboard"), '24 24 0', '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	
-	centerprint_start_x = vid_conwidth - 0.5 * (pos_x + stringwidth(_("Scoreboard"), FALSE, '24 24 0'));
-	centerprint_start_y = pos_y;
 
 	pos_y += 24;
 
