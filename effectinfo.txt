@@ -4,6 +4,7 @@
 // used in qcsrc/server/bots.qc:		//te_wizspike(e.nearestwaypoint.wpnearestpoint)
 // used in qcsrc/server/havocbot.qc:			//	te_wizspike(newgoal.origin)
 effect TE_WIZSPIKE
+velocitymultiplier 0
 countabsolute 1
 type static
 color 0x63F2EA 0x63f2EA
@@ -14,6 +15,7 @@ lightradiusfade 200
 lightcolor 0.4 0.9 0.9
 // cloud of particles which expand rapidly and then slow to form a ball
 effect TE_WIZSPIKE
+velocitymultiplier 0
 count 50
 type static
 color 0x63F2EA 0x63f2EA
@@ -28,6 +30,7 @@ velocityjitter 32 32 32
 // decal
 // used in qcsrc/server/w_seeker.qc:	te_knightspike(org2)
 effect TE_KNIGHTSPIKE
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 47 47
@@ -39,6 +42,7 @@ lightradiusfade 1000
 lightcolor 4 0.2 0.2
 // flare effect
 effect TE_KNIGHTSPIKE
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 39 39
@@ -47,6 +51,7 @@ alpha 256 256 1024
 size 24 24
 // sparks that rapidly expand and rapidly slow down to form an interesting spherical effect
 effect TE_KNIGHTSPIKE
+velocitymultiplier 0
 count 128
 type spark
 color 0x800000 0xFF8020
@@ -62,6 +67,7 @@ velocityjitter 256 256 256
 // bullet impact decal
 // used nowhere in code
 effect TE_SPIKE
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 56 59
@@ -70,6 +76,7 @@ alpha 256 256 0
 originjitter 6 6 6
 // dust/smoke drifting away from the impact
 effect TE_SPIKE
+velocitymultiplier 0
 count 4
 type smoke
 tex 0 8
@@ -81,6 +88,7 @@ originjitter 0 0 0
 velocityjitter 8 8 8
 // dust/smoke staying at the impact
 effect TE_SPIKE
+velocitymultiplier 0
 count 0.5
 type smoke
 tex 0 8
@@ -92,6 +100,7 @@ originjitter 0 0 0
 velocityjitter 0 0 0
 // bouncing sparks
 effect TE_SPIKE
+velocitymultiplier 0
 count 10
 type spark
 color 0x8f4333 0xfff31b
@@ -106,6 +115,7 @@ velocityjitter 64 64 64
 // decal
 // used nowhere in code
 effect TE_SPIKEQUAD
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 59 59
@@ -117,6 +127,7 @@ lightradiusfade 200
 lightcolor 2 2.5 3
 // flare effect
 effect TE_SPIKEQUAD
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 38 38
@@ -125,6 +136,7 @@ size 48 48
 alpha 256 256 128
 // large sparks
 effect TE_SPIKEQUAD
+velocitymultiplier 0
 count 10
 type static
 color 0x2030FF 0x80C0FF
@@ -141,6 +153,7 @@ velocityjitter 512 512 512
 // decal
 // used nowhere in code
 effect TE_SUPERSPIKE
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 56 59
@@ -149,6 +162,7 @@ alpha 256 256 0
 originjitter 6 6 6
 // dust/smoke drifting away from the impact
 effect TE_SUPERSPIKE
+velocitymultiplier 0
 count 4
 type smoke
 tex 0 8
@@ -160,6 +174,7 @@ originjitter 0 0 0
 velocityjitter 8 8 8
 // dust/smoke staying at the impact
 effect TE_SUPERSPIKE
+velocitymultiplier 0
 count 0.5
 type smoke
 tex 0 8
@@ -171,6 +186,7 @@ originjitter 0 0 0
 velocityjitter 0 0 0
 // sparks that disappear on impact
 effect TE_SUPERSPIKE
+velocitymultiplier 0
 count 15
 type spark
 color 0x8f4333 0xfff31b
@@ -185,6 +201,7 @@ velocityjitter 64 64 64
 // decal
 // used nowhere in code
 effect TE_SUPERSPIKEQUAD
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 56 59
@@ -196,6 +213,7 @@ lightradiusfade 500
 lightcolor 0.15 0.15 1.5
 // dust/smoke drifting away from the impact
 effect TE_SUPERSPIKEQUAD
+velocitymultiplier 0
 count 4
 type smoke
 tex 0 8
@@ -207,6 +225,7 @@ originjitter 0 0 0
 velocityjitter 8 8 8
 // dust/smoke staying at the impact
 effect TE_SUPERSPIKEQUAD
+velocitymultiplier 0
 count 0.5
 type smoke
 tex 0 8
@@ -218,6 +237,7 @@ originjitter 0 0 0
 velocityjitter 0 0 0
 // sparks that disappear on impact
 effect TE_SUPERSPIKEQUAD
+velocitymultiplier 0
 count 15
 type spark
 color 0x8f4333 0xfff31b
@@ -232,6 +252,7 @@ velocityjitter 64 64 64
 // decal
 // used nowhere in code
 effect TE_GUNSHOT
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 56 59
@@ -240,6 +261,7 @@ alpha 256 256 0
 originjitter 6 6 6
 // dust/smoke drifting away from the impact
 effect TE_GUNSHOT
+velocitymultiplier 0
 count 0.8
 type smoke
 tex 0 8
@@ -251,6 +273,7 @@ originjitter 0 0 0
 velocityjitter 8 8 8
 // dust/smoke staying at the impact
 effect TE_GUNSHOT
+velocitymultiplier 0
 count 0.2
 type smoke
 tex 0 8
@@ -262,6 +285,7 @@ originjitter 0 0 0
 velocityjitter 0 0 0
 // bouncing sparks
 effect TE_GUNSHOT
+velocitymultiplier 0
 count 2.5
 type spark
 color 0x8f4333 0xfff31b
@@ -276,6 +300,7 @@ velocityjitter 64 64 64
 // decal
 // used nowhere in code
 effect TE_GUNSHOTQUAD
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 47 47
@@ -287,6 +312,7 @@ originjitter 12 12 12
 //lightcolor 0.5 0.5 0.5
 // purple flare effect
 effect TE_GUNSHOTQUAD
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 39 39
@@ -295,6 +321,7 @@ size 8 8
 alpha 256 256 512
 // purple sparks
 effect TE_GUNSHOTQUAD
+velocitymultiplier 0
 count 6
 type spark
 color 0xA040C0 0xFFFFFF
@@ -309,6 +336,7 @@ velocityjitter 128 128 128
 // decal
 // used in qcsrc/server/cl_client.qc:	te_explosion(org)
 effect TE_EXPLOSION
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -320,6 +348,7 @@ lightradiusfade 300
 lightcolor 4 2 0.5
 // flare effect
 effect TE_EXPLOSION
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 35 37
@@ -328,6 +357,7 @@ size 48 48
 alpha 192 192 64
 // fire effect which expands then slows
 effect TE_EXPLOSION
+velocitymultiplier 0
 notunderwater
 count 64
 type static
@@ -342,6 +372,7 @@ originjitter 8 8 8
 velocityjitter 256 256 256
 // underwater bubbles
 effect TE_EXPLOSION
+velocitymultiplier 0
 underwater
 count 16
 type bubble
@@ -356,6 +387,7 @@ originjitter 16 16 16
 velocityjitter 96 96 96
 // bouncing sparks
 effect TE_EXPLOSION
+velocitymultiplier 0
 notunderwater
 count 16
 type spark
@@ -373,6 +405,7 @@ velocityjitter 256 256 256
 // decal
 // used nowhere in code
 effect TE_EXPLOSIONQUAD
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -384,6 +417,7 @@ lightradiusfade 700
 lightcolor 4 2 8
 // smoke cloud
 effect TE_EXPLOSIONQUAD
+velocitymultiplier 0
 notunderwater
 count 16
 type smoke
@@ -394,6 +428,7 @@ alpha 32 32 64
 velocityjitter 48 48 48
 // underwater bubbles
 effect TE_EXPLOSIONQUAD
+velocitymultiplier 0
 underwater
 count 16
 type bubble
@@ -408,6 +443,7 @@ originjitter 16 16 16
 velocityjitter 96 96 96
 // sparks which go through walls
 effect TE_EXPLOSIONQUAD
+velocitymultiplier 0
 notunderwater
 count 64
 type spark
@@ -424,6 +460,7 @@ velocityjitter 256 256 256
 // decal
 // used in qcsrc/server/keyhunt.qc:	te_tarexplosion(lostkey.origin)
 effect TE_TAREXPLOSION
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -435,6 +472,7 @@ lightradiusfade 1200
 lightcolor 1.6 0.8 2
 // smoke cloud
 effect TE_TAREXPLOSION
+velocitymultiplier 0
 notunderwater
 count 16
 type smoke
@@ -445,6 +483,7 @@ alpha 32 32 64
 velocityjitter 48 48 48
 // underwater bubbles
 effect TE_TAREXPLOSION
+velocitymultiplier 0
 underwater
 count 16
 type bubble
@@ -459,6 +498,7 @@ originjitter 16 16 16
 velocityjitter 96 96 96
 // sparks which go through walls
 effect TE_TAREXPLOSION
+velocitymultiplier 0
 notunderwater
 count 64
 type spark
@@ -509,6 +549,7 @@ velocitymultiplier 1
 // decal
 // used in qcsrc/server/bots.qc:		te_plasmaburn(org)
 effect TE_PLASMABURN
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 47 47
@@ -520,6 +561,7 @@ lightradiusfade 400
 lightcolor 1 1 1
 // flare effect
 effect TE_PLASMABURN
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 37 37
@@ -528,6 +570,7 @@ size 8 8
 alpha 256 256 512
 // small sparks which form a sphere as they slow down
 effect TE_PLASMABURN
+velocitymultiplier 0
 count 128
 type spark
 color 0x2030FF 0x80C0FF
@@ -542,6 +585,7 @@ velocityjitter 128 128 128
 // used in qcsrc/server/bots.qc:	//te_smallflash((e.absmin + e.absmax) * 0.5)
 // used in qcsrc/server/bots.qc:		//te_smallflash((e.absmin + e.absmax) * 0.5)
 effect TE_SMALLFLASH
+velocitymultiplier 0
 lightradius 200
 lightradiusfade 1000
 lightcolor 2 2 2
@@ -564,6 +608,7 @@ velocitymultiplier 1
 // quake effect
 // used nowhere in code
 effect TE_LAVASPLASH
+velocitymultiplier 0
 count 32
 type alphastatic
 color 0x6f0f00 0xe3974f
@@ -578,6 +623,7 @@ velocityjitter 128 128 0
 // player teleport effect
 // used nowhere in code
 effect TE_TELEPORT
+velocitymultiplier 0
 count 56
 type static
 color 0xA0A0A0 0xFFFFFF
@@ -593,6 +639,7 @@ velocityjitter 0 0 256
 // used in qcsrc/server/w_minstanex.qc:	trailparticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, trace_endpos)
 // used in qcsrc/client/particles.qc:		trailparticles(world, particleeffectnum("TE_TEI_G3"), shotorg, endpos)
 effect TE_TEI_G3
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -601,6 +648,7 @@ size 4 4
 alpha 128 128 256
 // experimental
 effect TE_TEI_G3
+velocitymultiplier 0
 trailspacing 4
 type static
 color 0x202020 0x404040
@@ -628,6 +676,7 @@ velocitymultiplier 1
 // decal
 // used nowhere in code
 effect TE_TEI_BIGEXPLOSION
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -639,6 +688,7 @@ lightradiusfade 500
 lightcolor 4 2 0.5
 // flare effect
 effect TE_TEI_BIGEXPLOSION
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 35 37
@@ -647,6 +697,7 @@ size 72 72
 alpha 192 192 64
 // fire effect
 effect TE_TEI_BIGEXPLOSION
+velocitymultiplier 0
 notunderwater
 count 128
 type static
@@ -661,6 +712,7 @@ originjitter 8 8 8
 velocityjitter 512 512 512
 // underwater bubbles
 effect TE_TEI_BIGEXPLOSION
+velocitymultiplier 0
 underwater
 count 32
 type bubble
@@ -675,6 +727,7 @@ originjitter 16 16 16
 velocityjitter 144 144 144
 // bouncing sparks
 effect TE_TEI_BIGEXPLOSION
+velocitymultiplier 0
 notunderwater
 count 64
 type spark
@@ -692,6 +745,7 @@ velocityjitter 384 384 384
 // decal
 // used nowhere in code
 effect TE_TEI_PLASMAHIT
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 59 59
@@ -703,6 +757,7 @@ lightradiusfade 600
 lightcolor 2.4 4.8 8
 // flare effect
 effect TE_TEI_PLASMAHIT
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 38 38
@@ -711,6 +766,7 @@ size 32 32
 alpha 256 256 512
 // cloud of bouncing sparks
 effect TE_TEI_PLASMAHIT
+velocitymultiplier 0
 count 0.5
 type spark
 color 0x2030FF 0x80C0FF
@@ -754,6 +810,7 @@ staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
 effect blood
+velocitymultiplier 0
 countabsolute 1
 type alphastatic
 tex 0 8
@@ -782,6 +839,7 @@ velocitymultiplier 0.5
 airfriction 2
 stretchfactor 0.6
 effect teleport
+velocitymultiplier 0
 countabsolute 1
 type smoke
 tex 65 65
@@ -834,6 +892,7 @@ staintex 16 24
 // used in qcsrc/server/g_triggers.qc:	self.effects = EF_STARDUST
 // used in qcsrc/server/portals.qc:	portal.effects = EF_STARDUST | EF_BLUE
 effect EF_STARDUST
+velocitymultiplier 0
 count 37.5
 type static
 color 0xfff368 0xfff368
@@ -852,6 +911,7 @@ velocityjitter 32 32 0
 // used in qcsrc/server/t_items.qc:	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1)
 // used in qcsrc/server/t_items.qc:	pointparticles(particleeffectnum("item_respawn"), self.origin + 0.5 * (self.mins + self.maxs), '0 0 0', 1)
 effect item_respawn
+velocitymultiplier 0
 countabsolute 1
 type static
 color 0x63F2EA 0x63f2EA
@@ -859,6 +919,7 @@ size 32 32
 alpha 128 128 128
 // cloud of particles which expand rapidly and then slow to form a ball
 effect item_respawn
+velocitymultiplier 0
 count 128
 type spark
 tex 41 41
@@ -872,6 +933,7 @@ velocityjitter 256 256 256
 
 // used in qcsrc/server/t_jumppads.qc:			pointparticles(particleeffectnum("jumppad_activate"), other.origin, other.velocity, 1)
 effect jumppad_activate
+velocitymultiplier 0
 lightradius 200
 lightradiusfade 2000
 lightcolor 2 2 2
@@ -882,6 +944,7 @@ lightcolor 2 2 2
 // used in qcsrc/server/w_hlac.qc:	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
 // used in qcsrc/server/w_laser.qc:	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
 effect laser_muzzleflash
+velocitymultiplier 0
 // glow and light
 countabsolute 1
 type smoke
@@ -930,6 +993,7 @@ stretchfactor 2
 // used in qcsrc/client/damage.qc:				pointparticles(particleeffectnum("laser_impact"), org2, backoff * 1000, 1)
 // used in qcsrc/client/damage.qc:				pointparticles(particleeffectnum("laser_impact"), org2, backoff * 1000, 1)
 effect laser_impact
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 47 47
@@ -941,6 +1005,7 @@ lightradiusfade 500
 lightcolor 8 0.4 0.4
 // flare effect
 effect laser_impact
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 39 39
@@ -949,6 +1014,7 @@ alpha 256 256 1024
 size 24 24
 // sparks that rapidly expand and rapidly slow down to form an interesting spherical effect
 effect laser_impact
+velocitymultiplier 0
 count 128
 type spark
 color 0x800000 0xFF8020
@@ -1008,6 +1074,7 @@ velocitymultiplier 0.5
 // decal
 // used in qcsrc/client/damage.qc:				pointparticles(particleeffectnum("shotgun_impact"), org2, backoff * 1000, 1)
 effect shotgun_impact
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 56 59
@@ -1096,6 +1163,7 @@ airfriction 12
 // used in qcsrc/client/damage.qc:				pointparticles(particleeffectnum("machinegun_impact"), org2, backoff * 1000, 1)
 // decal
 effect machinegun_impact
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 56 59
@@ -1233,6 +1301,7 @@ velocityjitter 32 32 32
 velocitymultiplier -1.0
 // bubbles
 effect TR_GRENADE
+velocitymultiplier 0
 underwater
 trailspacing 16
 type bubble
@@ -1268,6 +1337,7 @@ velocitymultiplier -0.02
 gravity -0.11
 //marker
 effect TR_KNIGHTSPIKE // used for MF_TRACER2
+velocitymultiplier 0
 type alphastatic
 color 0x666666 0x000000
 tex 62 62
@@ -1277,6 +1347,7 @@ trailspacing 2
 alpha 256 256 720
 // bubbles
 effect TR_KNIGHTSPIKE // used for MF_TRACER2
+velocitymultiplier 0
 underwater
 trailspacing 32
 type bubble
@@ -1294,6 +1365,7 @@ velocityjitter 16 16 16
 // decal
 // used in qcsrc/client/damage.qc:				pointparticles(particleeffectnum("grenade_explode"), org2, '0 0 0', 1)
 effect grenade_explode
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -1305,6 +1377,7 @@ lightradiusfade 400
 lightcolor 8 4 1
 // fire effect which expands then slows
 effect grenade_explode
+velocitymultiplier 0
 notunderwater
 count 40
 type static
@@ -1320,6 +1393,7 @@ originjitter 8 8 8
 velocityjitter 256 256 256
 // fire effect which make brigt dot inside
 effect grenade_explode
+velocitymultiplier 0
 notunderwater
 count 15
 type static
@@ -1335,6 +1409,7 @@ originjitter 8 8 8
 velocityjitter 256 256 256
 // smoke
 effect grenade_explode
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -1348,6 +1423,7 @@ color 0x000000 0x111111
 bounce 6
 // underwater bubbles
 effect grenade_explode
+velocitymultiplier 0
 underwater
 count 32
 type bubble
@@ -1373,6 +1449,7 @@ alpha 40 40 300
 velocitymultiplier 0.3
 // bouncing sparks
 effect grenade_explode
+velocitymultiplier 0
 notunderwater
 count 16
 type spark
@@ -1389,6 +1466,7 @@ originjitter 16 16 16
 velocityjitter 424 424 624
 // derbis
 effect grenade_explode
+velocitymultiplier 0
 notunderwater
 count 12
 type alphastatic
@@ -1466,6 +1544,7 @@ lightcolor 1.5 3 6
 velocitymultiplier -0.1
 // bright sparks
 effect TR_NEXUIZPLASMA
+velocitymultiplier 0
 trailspacing 12
 count 1.5
 type snow
@@ -1485,6 +1564,7 @@ velocityjitter 50 50 50
 // decal
 // used in qcsrc/client/damage.qc:						pointparticles(particleeffectnum("electro_impact"), org2, '0 0 0', 1)
 effect electro_impact
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 59 59
@@ -1506,6 +1586,7 @@ alpha 40 40 350
 velocitymultiplier 44
 // flare effect
 effect electro_impact
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 38 38
@@ -1514,6 +1595,7 @@ size 12 32
 alpha 256 256 512
 // cloud of bouncing sparks
 effect electro_impact
+velocitymultiplier 0
 count 30
 type smoke
 tex 42 42
@@ -1529,6 +1611,7 @@ velocityjitter 512 512 512
 rotate -180 180 -9999 9999
 // inner cloud of smoke
 effect electro_impact
+velocitymultiplier 0
 count 30
 type smoke
 color 0x629dff 0x0018ff
@@ -1543,6 +1626,7 @@ velocityjitter 320 320 320
 // decal
 // used in qcsrc/client/damage.qc:					pointparticles(particleeffectnum("electro_ballexplode"), org2, '0 0 0', 1)
 effect electro_ballexplode
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 59 59
@@ -1554,6 +1638,7 @@ lightradiusfade 250
 lightcolor 3.125 4.375 10
 // flare effect
 effect electro_ballexplode
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 38 38
@@ -1562,6 +1647,7 @@ size 32 32
 alpha 256 256 512
 // cloud of bouncing sparks
 effect electro_ballexplode
+velocitymultiplier 0
 count 64
 type spark
 tex 41 41
@@ -1575,6 +1661,7 @@ originjitter 1 1 1
 velocityjitter 512 512 512
 // inner cloud of smoke
 effect electro_ballexplode
+velocitymultiplier 0
 count 8
 type smoke
 color 0x202020 0x404040
@@ -1589,6 +1676,7 @@ velocityjitter 32 32 32
 // decal
 // used in qcsrc/client/damage.qc:						pointparticles(particleeffectnum("electro_combo"), org2, '0 0 0', 1)
 effect electro_combo
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 59 59
@@ -1600,6 +1688,7 @@ lightradiusfade 300
 lightcolor 4 5 6
 // flare effect
 effect electro_combo
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 38 38
@@ -1608,6 +1697,7 @@ size 48 48
 alpha 128 128 64
 // large sparks
 effect electro_combo
+velocitymultiplier 0
 count 5
 type static
 color 0x2030FF 0x80C0FF
@@ -1636,6 +1726,7 @@ originjitter 1 1 1
 velocityjitter 312 312 312
 // inner cloud of smoke
 effect electro_combo
+velocitymultiplier 0
 count 0.125
 type smoke
 color 0x202020 0x404040
@@ -1688,6 +1779,7 @@ stretchfactor 1.5
 // decal
 // used in qcsrc/client/damage.qc:					pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1)
 effect crylink_impact
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 47 47
@@ -1699,6 +1791,7 @@ originjitter 12 12 12
 //lightcolor 3.2 0.4 4
 // purple flare effect
 effect crylink_impact
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 39 39
@@ -1707,6 +1800,7 @@ size 24 24
 alpha 256 256 512
 // purple sparks
 effect crylink_impact
+velocitymultiplier 0
 count 40
 type spark
 tex 41 41
@@ -1717,6 +1811,7 @@ alpha 256 256 1024
 velocityjitter 512 512 512
 // purple splash
 effect crylink_impact
+velocitymultiplier 0
 count 1.5
 type static
 color 0xE070FF 0xE070FF
@@ -1725,6 +1820,7 @@ alpha 256 256 512
 velocityjitter 32 32 32
 // purple splash
 effect crylink_impact
+velocitymultiplier 0
 count 3
 type static
 color 0xE070FF 0xE070FF
@@ -1777,6 +1873,7 @@ airfriction 9
 // nex beam: ring smoke
 // used in qcsrc/client/particles.qc:		trailparticles(world, particleeffectnum("nex_beam"), shotorg, endpos)
 effect nex_beam
+velocitymultiplier 0
 trailspacing 64
 color 0x1680A0 0x1680A0
 size 4 4
@@ -1787,6 +1884,7 @@ sizeincrease 2
 type static
 // nex beam: drifting smoke
 effect nex_beam
+velocitymultiplier 0
 trailspacing 12
 color 0x5080A0 0x5080A0
 size 1 1
@@ -1798,6 +1896,7 @@ velocityjitter 64 64 64
 type static
 // nex beam: bright core
 effect nex_beam
+velocitymultiplier 0
 trailspacing 12
 color 0x80CDFF 0x80CDFF
 size 4 4
@@ -1806,6 +1905,7 @@ alpha 256 256 1280
 type static
 //sparks
 effect nex_beam
+velocitymultiplier 0
 trailspacing 16
 color 0x1680A0 0x1680A0
 size 1 1
@@ -1820,6 +1920,7 @@ type snow
 // used in qcsrc/client/damage.qc:				pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1)
 // used in qcsrc/client/damage.qc:				pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1)
 effect nex_impact
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 47 47
@@ -1832,6 +1933,7 @@ lightcolor 4 6 8
 rotate -180 180 0 0
 // rotating something
 effect nex_impact
+velocitymultiplier 0
 count 5
 type smoke
 tex 46 46
@@ -1842,6 +1944,7 @@ alpha 55 55 50
 rotate 180 -180 500 -500
 // shockwave
 effect nex_impact
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 33 33
@@ -1851,6 +1954,7 @@ alpha 50 50 400
 sizeincrease 900
 // shockwave2
 effect nex_impact
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 65 65
@@ -1861,6 +1965,7 @@ sizeincrease 500
 
 // flare effect
 effect nex_impact
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 37 37
@@ -1973,6 +2078,7 @@ airfriction 12
 // used in qcsrc/client/damage.qc:						pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1)
 // used in qcsrc/client/damage.qc:						pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1)
 effect hagar_explode
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -1984,6 +2090,7 @@ lightradiusfade 400
 lightcolor 8 4 1
 // fire effect which make bright dot inside
 effect hagar_explode
+velocitymultiplier 0
 notunderwater
 count 3.5
 type smoke
@@ -1999,6 +2106,7 @@ originjitter 8 8 8
 velocityjitter 156 156 156
 // fire effect which expands then slows
 effect hagar_explode
+velocitymultiplier 0
 notunderwater
 count 12
 type static
@@ -2015,6 +2123,7 @@ velocityjitter 286 286 286
 
 // smoke
 effect hagar_explode
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -2029,6 +2138,7 @@ bounce 2
 
 // underwater bubbles
 effect hagar_explode
+velocitymultiplier 0
 underwater
 count 16
 type bubble
@@ -2043,6 +2153,7 @@ originjitter 16 16 16
 velocityjitter 96 96 96
 // bouncing sparks
 effect hagar_explode
+velocitymultiplier 0
 notunderwater
 count 4
 type spark
@@ -2162,6 +2273,7 @@ velocitymultiplier -0.31
 
 // rocket explosion (bigger than mortar and hagar)
 effect rocket_explode
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -2173,6 +2285,7 @@ lightradiusfade 750
 lightcolor 8 4 1
 // fire effect
 effect rocket_explode
+velocitymultiplier 0
 notunderwater
 count 32
 type static
@@ -2188,6 +2301,7 @@ originjitter 8 8 8
 velocityjitter 512 512 512
 // fire effect 2
 effect rocket_explode
+velocitymultiplier 0
 notunderwater
 count 14
 type smoke
@@ -2203,6 +2317,7 @@ originjitter 8 8 8
 velocityjitter 912 912 912
 // smoke
 effect rocket_explode
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -2216,6 +2331,7 @@ color 0x000000 0x111111
 bounce 2
 // underwater bubbles
 effect rocket_explode
+velocitymultiplier 0
 underwater
 count 32
 type bubble
@@ -2240,6 +2356,7 @@ alpha 40 40 300
 velocitymultiplier 0.3
 // bouncing sparks
 effect rocket_explode
+velocitymultiplier 0
 notunderwater
 count 16
 type spark
@@ -2256,6 +2373,7 @@ originjitter 16 16 16
 velocityjitter 424 424 624
 // derbis
 effect rocket_explode
+velocitymultiplier 0
 notunderwater
 count 12
 type alphastatic
@@ -2271,6 +2389,7 @@ rotate -180 180 -1000 1000
 
 // used in qcsrc/server/g_hook.qc:	pointparticles(particleeffectnum("grapple_muzzleflash"), org, '0 0 0', 1)
 effect grapple_muzzleflash
+velocitymultiplier 0
 lightradius 160
 lightradiusfade 800
 lightcolor 1 0 0
@@ -2279,6 +2398,7 @@ lightcolor 1 0 0
 
 // used in qcsrc/server/g_hook.qc:	pointparticles(particleeffectnum("grapple_impact"), self.origin, '0 0 0', 1)
 effect grapple_impact
+velocitymultiplier 0
 lightradius 160
 lightradiusfade 800
 lightcolor 1 0 0
@@ -2287,6 +2407,7 @@ lightcolor 1 0 0
 
 // used nowhere in code
 effect nex242_misc_laser_beam
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -2311,6 +2432,7 @@ velocitymultiplier 100
 
 // used nowhere in code
 effect nex242_misc_laser_beam_fast
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -2334,6 +2456,7 @@ velocitymultiplier 100
 // additional laser colors (mike)
 // used nowhere in code
 effect nex242_misc_laser_green_beam
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -2356,6 +2479,7 @@ velocitymultiplier 100
 
 // used nowhere in code
 effect nex242_misc_laser_blue_beam
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -2378,6 +2502,7 @@ velocitymultiplier 100
 
 // used nowhere in code
 effect nex242_misc_laser_yellow_beam
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -2400,6 +2525,7 @@ velocitymultiplier 100
 
 // used nowhere in code
 effect nex242_misc_laser_cyan_beam
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -2422,6 +2548,7 @@ velocitymultiplier 100
 
 // used nowhere in code
 effect nex242_misc_laser_magenta_beam
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -2444,6 +2571,7 @@ velocitymultiplier 100
 
 // used nowhere in code
 effect nex242_misc_laser_white_beam
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -2466,6 +2594,7 @@ velocitymultiplier 100
 
 // used nowhere in code
 effect nex242_misc_laser_black_beam
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -2488,6 +2617,7 @@ velocitymultiplier 100
 
 // used nowhere in code
 effect nex242_misc_laser_orange_beam
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -2515,6 +2645,7 @@ velocitymultiplier 100
 // decal
 // used in qcsrc/client/damage.qc:					pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1)
 effect crylink_impactbig
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 47 47
@@ -2526,6 +2657,7 @@ originjitter 12 12 12
 //lightcolor 3.2 0.4 4
 // purple flare effect
 effect crylink_impactbig
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 39 39
@@ -2534,6 +2666,7 @@ size 24 24
 alpha 256 256 512
 // purple sparks
 effect crylink_impactbig
+velocitymultiplier 0
 count 40
 type spark
 tex 41 41
@@ -2544,6 +2677,7 @@ alpha 256 256 1024
 velocityjitter 512 512 512
 // purple splash
 effect crylink_impactbig
+velocitymultiplier 0
 count 1.5
 type static
 color 0xE070FF 0xE070FF
@@ -2552,6 +2686,7 @@ alpha 256 256 512
 velocityjitter 32 32 32
 // purple splash
 effect crylink_impactbig
+velocitymultiplier 0
 count 3
 type static
 color 0xE070FF 0xE070FF
@@ -2564,6 +2699,7 @@ velocityjitter 256 256 256
 // impact effect indicating damage
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum("damage_hit"), org, vel, amount * 16)
 effect damage_hit
+velocitymultiplier 0
 tex 48 55
 count 0.5
 type alphastatic
@@ -2577,6 +2713,7 @@ airfriction 5
 liquidfriction 10
 velocityjitter 256 256 256
 effect damage_hit
+velocitymultiplier 0
 tex 48 55
 count 0.5
 type alphastatic
@@ -2590,6 +2727,7 @@ airfriction 5
 liquidfriction 10
 velocityjitter 256 256 256
 effect damage_hit
+velocitymultiplier 0
 tex 48 55
 count 0.5
 type alphastatic
@@ -2609,6 +2747,7 @@ velocityjitter 256 256 256
 // large sparks
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum("damage_dissolve"), org, vel, amount)
 effect damage_dissolve
+velocitymultiplier 0
 tex 48 55
 count 15
 type alphastatic
@@ -2622,6 +2761,7 @@ airfriction 3
 liquidfriction 6
 velocityjitter 512 512 512
 effect damage_dissolve
+velocitymultiplier 0
 tex 48 55
 count 15
 type alphastatic
@@ -2635,6 +2775,7 @@ airfriction 3
 liquidfriction 6
 velocityjitter 512 512 512
 effect damage_dissolve
+velocitymultiplier 0
 tex 48 55
 count 15
 type alphastatic
@@ -2653,6 +2794,7 @@ velocityjitter 512 512 512
 // used in qcsrc/server/g_triggers.qc:					self.cnt = particleeffectnum("laser_deadly")
 // used in qcsrc/server/g_triggers.qc:			self.cnt = particleeffectnum("laser_deadly")
 effect laser_deadly
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 56 59
@@ -2694,6 +2836,7 @@ velocitymultiplier 100
 //fire
 // used nowhere in code
 effect torch_small
+velocitymultiplier 0
 //notunderwater
 count 8
 type smoke
@@ -2708,6 +2851,7 @@ originjitter 5 5 5
 velocityjitter 1 1 50
 // smoke
 effect torch_small
+velocitymultiplier 0
 type alphastatic
 count 4
 tex 0 8
@@ -2740,6 +2884,7 @@ velocitymultiplier 2
 // decal
 // used in qcsrc/client/damage.qc:				pointparticles(particleeffectnum("hookbomb_explode"), org2, '0 0 0', 1)
 effect hookbomb_explode
+velocitymultiplier 0
 count 25
 type static
 tex 38 38
@@ -2755,6 +2900,7 @@ velocityjitter 550 550 550
 airfriction 10
 // decal in the air
 effect hookbomb_explode
+velocitymultiplier 0
 countabsolute 3
 type static
 tex 38 38
@@ -2765,6 +2911,7 @@ sizeincrease -60
 originoffset 0 0 6
 // decal on the ground
 effect hookbomb_explode
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 39 39
@@ -2790,6 +2937,7 @@ airfriction 2
 
 // smoke
 effect EF_MGTURRETTRAIL
+velocitymultiplier 0
 notunderwater
 trailspacing 10
 type smoke
@@ -2801,6 +2949,7 @@ sizeincrease -8
 gravity -0.01
 // bubbles
 effect EF_MGTURRETTRAIL
+velocitymultiplier 0
 underwater
 trailspacing 32
 type bubble
@@ -2817,6 +2966,7 @@ velocityjitter 16 16 16
 //fire
 // used nowhere in code
 effect fire_big
+velocitymultiplier 0
 //notunderwater
 count 26
 type smoke
@@ -2831,6 +2981,7 @@ originjitter 33 33 33
 velocityjitter 22 22 50
 // smoke
 effect fire_big
+velocitymultiplier 0
 type alphastatic
 count 11
 tex 0 8
@@ -2847,6 +2998,7 @@ bounce 2
 //smoke
 // used nowhere in code
 effect red_flare
+velocitymultiplier 0
 type alphastatic
 count 10.5
 tex 0 8
@@ -2863,6 +3015,7 @@ bounce 1
 //smoke
 // used nowhere in code
 effect blue_flare
+velocitymultiplier 0
 type alphastatic
 count 10.5
 tex 0 8
@@ -2879,6 +3032,7 @@ bounce 1
 //smoke
 // used in qcsrc/server/ctf.qc:		pointparticles(particleeffectnum("smoke_ring"), 0.5 * (self.absmin + self.absmax), '0 0 0', 1);
 effect smoke_ring
+velocitymultiplier 0
 type smoke
 count 45
 tex 0 8
@@ -2897,6 +3051,7 @@ notunderwater
 //smoke
 // used nowhere in code
 effect smoke_large
+velocitymultiplier 0
 type alphastatic
 count 25
 tex 0 8
@@ -2964,6 +3119,7 @@ notunderwater
 // smoke emiter
 // used nowhere in code
 effect smoking
+velocitymultiplier 0
 count 10
 type alphastatic
 tex 0 8
@@ -2981,6 +3137,7 @@ airfriction -1
 //golden dust (create it once per second to cover large area in small yellow particles)
 // used nowhere in code
 effect goldendust
+velocitymultiplier 0
 count 25
 type snow
 tex 38 38
@@ -2997,6 +3154,7 @@ velocityjitter 0.1 0.1 0.1
 
 // used nowhere in code
 effect healing_fx
+velocitymultiplier 0
 count 25
 type spark
 tex 40 40
@@ -3013,6 +3171,7 @@ airfriction -0.5
 
 // used nowhere in code
 effect armorrepair_fx
+velocitymultiplier 0
 count 25
 type spark
 tex 40 40
@@ -3029,6 +3188,7 @@ airfriction -0.5
 
 // used nowhere in code
 effect ammoregen_fx
+velocitymultiplier 0
 count 25
 type spark
 tex 40 40
@@ -3046,6 +3206,7 @@ airfriction -0.5
 // red-yellow flame like fx
 // used nowhere in code
 effect rage
+velocitymultiplier 0
 count 2.5
 type smoke
 tex 35 36
@@ -3061,6 +3222,7 @@ airfriction 2
 // pieces of glass or ice falling on the floor
 // used nowhere in code
 effect iceorglass
+velocitymultiplier 0
 count 15
 type alphastatic
 tex 44 44
@@ -3078,6 +3240,7 @@ airfriction 3
 // cover small area in poison gas, spawn it once per second
 // used nowhere in code
 effect poisonfield
+velocitymultiplier 0
 count 15
 type smoke
 tex 0 8
@@ -3094,6 +3257,7 @@ airfriction 1
 // cover small area in icy mist, spawn it once per second
 // used nowhere in code
 effect icefield
+velocitymultiplier 0
 count 10
 type smoke
 tex 0 8
@@ -3107,6 +3271,7 @@ originjitter 333 333 0
 velocityjitter 5 5 30
 airfriction 1
 effect icefield
+velocitymultiplier 0
 count 5
 type smoke
 tex 48 55
@@ -3122,6 +3287,7 @@ originjitter 333 333 0
 // flames that go up
 // used nowhere in code
 effect firefield
+velocitymultiplier 0
 count 100
 type smoke
 tex 48 55
@@ -3136,6 +3302,7 @@ velocityjitter 5 5 30
 airfriction 1
 //flames that stay on the ground
 effect firefield
+velocitymultiplier 0
 count 50
 type smoke
 tex 48 55
@@ -3146,6 +3313,7 @@ alpha 50 256 200
 originjitter 180 180 0
 // smoke
 effect firefield
+velocitymultiplier 0
 count 20
 type alphastatic
 tex 0 8
@@ -3247,6 +3415,7 @@ lightcolor 1.5 3 6
 velocitymultiplier -0.1
 // bright sparks
 effect TR_WIZSPIKE
+velocitymultiplier 0
 trailspacing 12
 count 1.5
 type snow
@@ -3279,6 +3448,7 @@ lightcolor 1.5 3 6
 velocitymultiplier -0.1
 // bright sparks
 effect TR_VORESPIKE
+velocitymultiplier 0
 trailspacing 12
 count 1.5
 type snow
@@ -3295,6 +3465,7 @@ velocityjitter 50 50 50
 
 // used in qcsrc/client/damage.qc:					pointparticles(particleeffectnum("flac_explode"), org2, '0 0 0', 1)
 effect flac_explode
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -3306,6 +3477,7 @@ lightradiusfade 400
 lightcolor 8 4 1
 // fire effect which make bright dot inside
 effect flac_explode
+velocitymultiplier 0
 notunderwater
 count 3
 type smoke
@@ -3321,6 +3493,7 @@ originjitter 8 8 8
 velocityjitter 156 156 156
 // fire effect which expands then slows
 effect flac_explode
+velocitymultiplier 0
 notunderwater
 count 6
 type static
@@ -3337,6 +3510,7 @@ velocityjitter 256 256 256
 
 // smoke
 effect flac_explode
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -3351,6 +3525,7 @@ bounce 2
 
 // underwater bubbles
 effect flac_explode
+velocitymultiplier 0
 underwater
 count 8
 type bubble
@@ -3365,6 +3540,7 @@ originjitter 16 16 16
 velocityjitter 96 96 96
 // bouncing sparks
 effect flac_explode
+velocitymultiplier 0
 notunderwater
 count 4
 type spark
@@ -3395,6 +3571,7 @@ velocitymultiplier 0.7
 // smoke emitter for small pipes
 // used nowhere in code
 effect smoking_smallemitter
+velocitymultiplier 0
 count 10
 type alphastatic
 tex 0 8
@@ -3439,6 +3616,7 @@ velocityjitter 2 2 2
 velocitymultiplier 0.01
 
 effect cherryblossom
+velocitymultiplier 0
 count 1.5
 type static
 color 0xb123ff 0xb183ff
@@ -3470,6 +3648,7 @@ staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
 effect alien_blood
+velocitymultiplier 0
 countabsolute 1
 type alphastatic
 tex 0 8
@@ -3494,6 +3673,7 @@ staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
 effect robot_blood
+velocitymultiplier 0
 countabsolute 1
 type alphastatic
 tex 0 8
@@ -3566,6 +3746,7 @@ staintex 16 24
 // flare particle and light
 // used in qcsrc/server/t_items.qc:	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1)
 effect item_pickup
+velocitymultiplier 0
 countabsolute 1
 type static
 color 0x63F2EA 0xB0C5C4
@@ -3573,6 +3754,7 @@ size 8 16
 alpha 128 64 64
 // cloud of particles which expand rapidly and then slow to form a ball
 effect item_pickup
+velocitymultiplier 0
 count 32
 type spark
 tex 41 41
@@ -3632,6 +3814,7 @@ staintex 16 24
 //smoke
 // used in qsrc/server/ctf.qc:		pointparticles(particleeffectnum("red_ground_quake"), self.origin, '0 0 0', 1);
 effect red_ground_quake
+velocitymultiplier 0
 type smoke
 count 90
 tex 0 8
@@ -3647,6 +3830,7 @@ velocityjitter 190 190 50
 bounce 1.1
 notunderwater
 effect red_ground_quake
+velocitymultiplier 0
 type smoke
 count 40
 tex 0 8
@@ -3662,6 +3846,7 @@ velocityjitter 190 190 50
 bounce 1.2
 notunderwater
 effect red_ground_quake
+velocitymultiplier 0
 //notunderwater
 count 16
 type smoke
@@ -3677,6 +3862,7 @@ originjitter 33 33 33
 velocityjitter 22 22 50
 // smoke
 effect red_ground_quake
+velocitymultiplier 0
 type alphastatic
 count 11
 tex 0 8
@@ -3694,6 +3880,7 @@ bounce 2
 //smoke
 // used in qsrc/server/ctf.qc:		pointparticles(particleeffectnum("blue_ground_quake"), self.origin, '0 0 0', 1);
 effect blue_ground_quake
+velocitymultiplier 0
 type smoke
 count 90
 tex 0 8
@@ -3709,6 +3896,7 @@ velocityjitter 190 190 50
 bounce 1.1
 notunderwater
 effect blue_ground_quake
+velocitymultiplier 0
 type smoke
 count 40
 tex 0 8
@@ -3724,6 +3912,7 @@ velocityjitter 190 190 50
 bounce 1.2
 notunderwater
 effect blue_ground_quake
+velocitymultiplier 0
 //notunderwater
 count 16
 type smoke
@@ -3739,6 +3928,7 @@ originjitter 33 33 33
 velocityjitter 22 22 50
 // smoke
 effect blue_ground_quake
+velocitymultiplier 0
 type alphastatic
 count 11
 tex 0 8
@@ -3758,6 +3948,7 @@ bounce 2
 // maintained by morphed
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum("damage_hit"), org, vel, amount * 16)
 effect morphed_damage_hit
+velocitymultiplier 0
 tex 43 43
 count 0.5
 type spark
@@ -3771,6 +3962,7 @@ liquidfriction 10
 velocityjitter 356 356 456
 
 effect morphed_damage_hit
+velocitymultiplier 0
 tex 0 8
 count 0.5
 type smoke
@@ -3789,6 +3981,7 @@ originjitter 10 10 10
 // cl_gentle deathfx
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum("damage_dissolve"), org, vel, amount)
 effect morphed_damage_dissolve
+velocitymultiplier 0
 tex 43 43
 count 10
 type smoke
@@ -3803,6 +3996,7 @@ velocityjitter 256 256 512
 rotate -180 180 -399 -99
 
 effect morphed_damage_dissolve
+velocitymultiplier 0
 tex 43 43
 count 2.5
 type smoke
@@ -3817,6 +4011,7 @@ velocityjitter 256 256 512
 rotate -180 180 0 0
 
 effect morphed_damage_dissolve
+velocitymultiplier 0
 tex 65 65
 count 5
 type smoke
@@ -3829,6 +4024,7 @@ liquidfriction 6
 originjitter 22 22 76
 
 effect morphed_damage_dissolve
+velocitymultiplier 0
 tex 46 46
 count 15
 type smoke
@@ -3845,6 +4041,7 @@ rotate -180 180 999 -999
 
 // Team / hit minsta effects
 effect TE_TEI_G3RED
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -3853,6 +4050,7 @@ size 4 4
 alpha 128 128 256
 // experimental
 effect TE_TEI_G3RED
+velocitymultiplier 0
 trailspacing 8
 type static
 color 0x200000 0x400000
@@ -3866,6 +4064,7 @@ velocityjitter 3 3 3
 type smoke
 
 effect TE_TEI_G3RED_HIT
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -3874,6 +4073,7 @@ size 8 8
 alpha 128 128 256
 // experimental
 effect TE_TEI_G3RED_HIT
+velocitymultiplier 0
 trailspacing 20
 type static
 color 0xFFFFFF 0xFF0011
@@ -3886,6 +4086,7 @@ velocityjitter 2 2 2
 type smoke
 // rings
 effect TE_TEI_G3RED_HIT
+velocitymultiplier 0
 trailspacing 40
 type static
 color 0xFF0000 0xFF0011
@@ -3897,6 +4098,7 @@ airfriction -4
 type smoke
 
 effect TE_TEI_G3BLUE
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -3905,6 +4107,7 @@ size 4 4
 alpha 128 128 256
 // experimental
 effect TE_TEI_G3BLUE
+velocitymultiplier 0
 trailspacing 8
 type static
 color 0x000020 0x000040
@@ -3918,6 +4121,7 @@ velocityjitter 3 3 3
 type smoke
 
 effect TE_TEI_G3BLUE_HIT
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -3926,6 +4130,7 @@ size 8 8
 alpha 128 128 256
 // experimental
 effect TE_TEI_G3BLUE_HIT
+velocitymultiplier 0
 trailspacing 20
 type static
 color 0xFFFFFF 0x100FF
@@ -3938,6 +4143,7 @@ velocityjitter 2 2 2
 type smoke
 // rings
 effect TE_TEI_G3BLUE_HIT
+velocitymultiplier 0
 trailspacing 40
 type static
 color 0x0000FF 0x1100FF
@@ -3950,6 +4156,7 @@ type smoke
 
 // Yellow 
 effect TE_TEI_G3YELLOW
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -3957,6 +4164,7 @@ color 0xffff00 0xffff11
 size 4 4
 alpha 128 128 256
 effect TE_TEI_G3YELLOW
+velocitymultiplier 0
 trailspacing 8
 type static
 color 0x202000 0x404000
@@ -3969,6 +4177,7 @@ velocityjitter 3 3 3
 type smoke
 
 effect TE_TEI_G3YELLOW_HIT
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -3976,6 +4185,7 @@ color 0xffff00 0xffff11
 size 8 8
 alpha 128 128 256
 effect TE_TEI_G3YELLOW_HIT
+velocitymultiplier 0
 trailspacing 20
 type static
 color 0xFFFFFF 0xffff10
@@ -3987,6 +4197,7 @@ velocityjitter 2 2 2
 type smoke
 // rings
 effect TE_TEI_G3YELLOW_HIT
+velocitymultiplier 0
 trailspacing 40
 type static
 color 0xffff00 0xffff11
@@ -4000,6 +4211,7 @@ type smoke
 
 // Pink
 effect TE_TEI_G3PINK
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -4008,6 +4220,7 @@ size 4 4
 alpha 128 128 256
 // experimental
 effect TE_TEI_G3PINK
+velocitymultiplier 0
 trailspacing 8
 type static
 color 0x200020 0x400040
@@ -4021,6 +4234,7 @@ velocityjitter 3 3 3
 type smoke
 
 effect TE_TEI_G3PINK_HIT
+velocitymultiplier 0
 countabsolute 1
 type beam
 tex 200 200
@@ -4029,6 +4243,7 @@ size 8 8
 alpha 128 128 256
 // experimental
 effect TE_TEI_G3PINK_HIT
+velocitymultiplier 0
 trailspacing 20
 type static
 color 0xFFFFFF 0xFF10FF
@@ -4041,6 +4256,7 @@ velocityjitter 2 2 2
 type smoke
 // rings
 effect TE_TEI_G3PINK_HIT
+velocitymultiplier 0
 trailspacing 40
 type static
 color 0xFF00FF 0xFF11FF
@@ -4059,6 +4275,7 @@ type smoke
 // used in qcsrc/client/gibs.qc:                        pointparticles(particleeffectnum("damage_hit"), org, vel, amount * 16)
 // core decal
 effect particlegibs_damage_hit
+velocitymultiplier 0
 type blood
 count 0.5
 tex 0 8
@@ -4115,6 +4332,7 @@ staintex 16 24
 // used in qcsrc/client/gibs.qc:                        pointparticles(particleeffectnum("damage_dissolve"), org, vel, amount)
 // small core blood no decals
 effect particlegibs_damage_dissolve
+velocitymultiplier 0
 type blood
 count 32
 tex 0 8
@@ -4130,6 +4348,7 @@ staincolor 0x808080 0x808080
 staintex 16 24
 // core decal
 effect particlegibs_damage_dissolve
+velocitymultiplier 0
 type blood
 count 12
 tex 0 8
@@ -4182,6 +4401,7 @@ staincolor 0x808080 0x808080
 staintex 16 24
 // small bits
 effect particlegibs_damage_dissolve
+velocitymultiplier 0
 type blood
 count 75
 tex 24 32
@@ -4199,6 +4419,7 @@ staintex 16 24
 
 // fire effect which expands then slows
 effect onslaught_generator_gib_explode
+velocitymultiplier 0
 notunderwater
 count 17
 type static
@@ -4215,6 +4436,7 @@ velocityjitter 286 286 286
 
 // smoke
 effect onslaught_generator_gib_explode
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -4230,6 +4452,7 @@ bounce 2
 
 // underwater bubbles
 effect onslaught_generator_gib_explode
+velocitymultiplier 0
 underwater
 count 16
 type bubble
@@ -4245,6 +4468,7 @@ velocityjitter 96 96 96
 
 // fire effect which expands then slows
 effect onslaught_generator_gib_flame
+velocitymultiplier 0
 notunderwater
 count 15
 type static
@@ -4260,6 +4484,7 @@ originjitter 3 3 3
 velocityjitter 86 86 86
 // smoke
 effect onslaught_generator_gib_flame
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -4275,6 +4500,7 @@ bounce 2
 
 // underwater bubbles
 effect onslaught_generator_gib_flame
+velocitymultiplier 0
 underwater
 count 16
 type bubble
@@ -4291,6 +4517,7 @@ velocityjitter 96 96 96
 
 // used nowhere in code
 effect firemine
+velocitymultiplier 0
 trailspacing 2
 count 0.5
 type smoke
@@ -4305,6 +4532,7 @@ velocityjitter 10 10 2
 airfriction 1.2
 //slowfire
 effect firemine
+velocitymultiplier 0
 trailspacing 2
 count 0.5
 type smoke
@@ -4319,6 +4547,7 @@ velocityjitter 10 10 10
 airfriction 1.2
 // very slow and small fire
 effect firemine
+velocitymultiplier 0
 trailspacing 4
 count 0.5
 type smoke
@@ -4333,6 +4562,7 @@ velocityjitter 8 8 8
 airfriction 0.3
 //decreasing fire
 effect firemine
+velocitymultiplier 0
 trailspacing 4
 count 0.5
 type smoke
@@ -4347,6 +4577,7 @@ velocityjitter 3 3 3
 airfriction 0.3
 //smoke
 effect firemine
+velocitymultiplier 0
 trailspacing 8
 count 0.5
 type alphastatic
@@ -4361,6 +4592,7 @@ velocityoffset 0 0 3
 airfriction 1
 //fastfire
 effect firemine
+velocitymultiplier 0
 trailspacing 1
 count 0.5
 type smoke
@@ -4375,6 +4607,7 @@ velocityjitter 0 0 0
 airfriction 1.2
 // light only
 effect firemine
+velocitymultiplier 0
 trailspacing 16
 lightradius 50
 lightradiusfade 50000
@@ -4382,6 +4615,7 @@ lightcolor 2.7 2.7 0.6
 
 // used nowhere in code
 effect fireball
+velocitymultiplier 0
 trailspacing 2
 count 0.5
 type smoke
@@ -4396,6 +4630,7 @@ velocityjitter 40 40 11
 airfriction 1.2
 //slowfire
 effect fireball
+velocitymultiplier 0
 trailspacing 2
 count 0.5
 type smoke
@@ -4410,6 +4645,7 @@ velocityjitter 40 40 40
 airfriction 1.2
 // very slow and small fire
 effect fireball
+velocitymultiplier 0
 trailspacing 4
 count 0.5
 type smoke
@@ -4424,6 +4660,7 @@ velocityjitter 30 30 30
 airfriction 0.3
 //decreasing fire
 effect fireball
+velocitymultiplier 0
 trailspacing 4
 count 0.5
 type smoke
@@ -4438,6 +4675,7 @@ velocityjitter 10 10 10
 airfriction 0.3
 //smoke
 effect fireball
+velocitymultiplier 0
 trailspacing 8
 count 0.5
 type alphastatic
@@ -4452,6 +4690,7 @@ velocityoffset 0 0 10
 airfriction 1
 //fastfire
 effect fireball
+velocitymultiplier 0
 trailspacing 1
 count 0.5
 type smoke
@@ -4466,6 +4705,7 @@ velocityjitter 0 0 0
 airfriction 1.2
 // light only
 effect fireball
+velocitymultiplier 0
 trailspacing 16
 lightradius 300
 lightradiusfade 3000
@@ -4486,6 +4726,7 @@ stretchfactor 0.7
 // decal
 // used nowhere in code
 effect fireball_explode
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -4497,6 +4738,7 @@ lightradiusfade 500
 lightcolor 4 2 0.5
 // flare effect
 effect fireball_explode
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 35 37
@@ -4505,6 +4747,7 @@ size 72 72
 alpha 192 192 64
 // fire effect
 effect fireball_explode
+velocitymultiplier 0
 notunderwater
 count 128
 type static
@@ -4519,6 +4762,7 @@ originjitter 8 8 8
 velocityjitter 512 512 512
 // underwater bubbles
 effect fireball_explode
+velocitymultiplier 0
 underwater
 count 32
 type bubble
@@ -4533,6 +4777,7 @@ originjitter 16 16 16
 velocityjitter 144 144 144
 // bouncing sparks
 effect fireball_explode
+velocitymultiplier 0
 notunderwater
 count 64
 type spark
@@ -4625,6 +4870,7 @@ airfriction 12
 //fire
 // used nowhere in code
 effect EF_FLAME
+velocitymultiplier 0
 //notunderwater
 count 100
 type smoke
@@ -4640,6 +4886,7 @@ originjitter 12 12 34
 velocityjitter 22 22 50
 // smoke
 effect EF_FLAME
+velocitymultiplier 0
 type alphastatic
 count 50
 tex 0 8
@@ -4653,6 +4900,7 @@ originjitter 12 12 34
 velocityjitter 11 11 50
 bounce 2
 effect EF_FLAME
+velocitymultiplier 0
 count 0.5
 lightradius 200
 lightradiusfade 10000
@@ -4670,6 +4918,7 @@ size 1.5 1.5
 stretchfactor 1
 velocitymultiplier 0.7
 effect tr_rifle
+velocitymultiplier 0
 notunderwater
 tex 0 8
 trailspacing 8
@@ -4682,6 +4931,7 @@ airfriction -4
 velocityjitter 4 4 4
 type smoke
 effect tr_rifle
+velocitymultiplier 0
 underwater
 trailspacing 32
 type bubble
@@ -4728,6 +4978,7 @@ velocityjitter 156 156 156
 velocitymultiplier -0.3
 stretchfactor 0.4
 effect rocket_guide
+velocitymultiplier 0
 countabsolute 1
 type smoke
 tex 65 65
@@ -4772,6 +5023,7 @@ stretchfactor 2
 
 // muzzle flash
 effect laser_gauntletmuzzleflash
+velocitymultiplier 0
 // glow and light
 countabsolute 1
 type smoke
@@ -4888,6 +5140,7 @@ airfriction 1
 
 //happy death fx for cl_gentle
 effect happy_damage_dissolve
+velocitymultiplier 0
 tex 69 69
 count 15
 type alphastatic
@@ -4901,6 +5154,7 @@ airfriction 3
 liquidfriction 6
 velocityjitter 312 312 312
 effect happy_damage_dissolve
+velocitymultiplier 0
 tex 69 69
 count 15
 type alphastatic
@@ -4914,6 +5168,7 @@ airfriction 3
 liquidfriction 6
 velocityjitter 312 312 312
 effect happy_damage_dissolve
+velocitymultiplier 0
 tex 69 69
 count 15
 type alphastatic
@@ -4930,6 +5185,7 @@ velocityjitter 312 312 312
 
 //happy damage fx for cl_gentle
 effect happy_damage_hit
+velocitymultiplier 0
 tex 69 69
 count 0.1
 type alphastatic
@@ -4943,6 +5199,7 @@ airfriction 5
 liquidfriction 10
 velocityjitter 156 156 156
 effect happy_damage_hit
+velocitymultiplier 0
 tex 69 69
 count 0.1
 type alphastatic
@@ -4956,6 +5213,7 @@ airfriction 5
 liquidfriction 10
 velocityjitter 156 156 156
 effect happy_damage_hit
+velocitymultiplier 0
 tex 69 69
 count 0.1
 type alphastatic
@@ -4974,6 +5232,7 @@ velocityjitter 156 156 156
 // used in qcsrc/server/w_electro.qc:	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
 // used in qcsrc/server/w_electro.qc:	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
 effect electro_lightning
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 59 59
@@ -5064,6 +5323,7 @@ stretchfactor 0.1
 // decal
 // used in qcsrc/client/damage.qc:					pointparticles(particleeffectnum("crylink_joinexplode"), org2, '0 0 0', 1)
 effect crylink_joinexplode
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 47 47
@@ -5075,6 +5335,7 @@ originjitter 12 12 12
 //lightcolor 3.2 0.4 4
 // purple flare effect
 effect crylink_joinexplode
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 39 39
@@ -5083,6 +5344,7 @@ size 24 24
 alpha 256 256 512
 // purple sparks
 effect crylink_joinexplode
+velocitymultiplier 0
 count 40
 type spark
 tex 41 41
@@ -5093,6 +5355,7 @@ alpha 256 256 1024
 velocityjitter 512 512 512
 // purple splash
 effect crylink_joinexplode
+velocitymultiplier 0
 count 1.5
 type static
 color 0xE070FF 0xE070FF
@@ -5101,6 +5364,7 @@ alpha 256 256 512
 velocityjitter 32 32 32
 // purple splash
 effect crylink_joinexplode
+velocitymultiplier 0
 count 3
 type static
 color 0xE070FF 0xE070FF
@@ -5137,6 +5401,7 @@ size 1.5 1.5
 stretchfactor 1
 velocitymultiplier 0.7
 effect tr_rifle_weak
+velocitymultiplier 0
 notunderwater
 tex 0 8
 trailspacing 48
@@ -5149,6 +5414,7 @@ airfriction -4
 velocityjitter 4 4 4
 type smoke
 effect tr_rifle_weak
+velocitymultiplier 0
 underwater
 trailspacing 192
 type bubble
@@ -5261,6 +5527,7 @@ velocitymultiplier -0.31
 // --------------- vehicles
 
 effect spiderbot_minigun_trail
+velocitymultiplier 0
 notunderwater
 trailspacing 10
 type smoke
@@ -5302,6 +5569,7 @@ velocitymultiplier 0.2
 sizeincrease -10
 stretchfactor 0.8
 effect spiderbot_minigun_muzzleflash
+velocitymultiplier 0
 countabsolute 2
 type static
 tex 48 55
@@ -5316,6 +5584,7 @@ lightradiusfade 8000
 lightcolor 3 3 0
 
 effect spiderbot_minigun_impact
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 65 65
@@ -5387,6 +5656,7 @@ velocityjitter 124 124 224
 rotate -180 180 -1000 1000
 // decal
 effect spiderbot_minigun_impact
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 56 59
@@ -5396,6 +5666,7 @@ originjitter 16 16 16
 rotate -180 180 0 0
 
 effect spiderbot_rocket_explode
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -5407,6 +5678,7 @@ lightradiusfade 1750
 lightcolor 8 4 0
 // shockwave
 effect spiderbot_rocket_explode
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 33 33 
@@ -5416,6 +5688,7 @@ color 0x8f0d00 0xff5a00
 sizeincrease 2400
 // glow
 effect spiderbot_rocket_explode
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 64 64
@@ -5425,6 +5698,7 @@ color 0x8f0d00 0xff5a00
 sizeincrease 240
 // fire effect
 effect spiderbot_rocket_explode
+velocitymultiplier 0
 notunderwater
 count 32
 type static
@@ -5440,6 +5714,7 @@ velocityjitter 512 512 512
 rotate -180 180 -50 50
 // fire effect 2
 effect spiderbot_rocket_explode
+velocitymultiplier 0
 notunderwater
 count 16
 type spark
@@ -5455,6 +5730,7 @@ rotate -180 180 -150 150
 stretchfactor 10
 // fire rays
 effect spiderbot_rocket_explode
+velocitymultiplier 0
 notunderwater
 count 10
 type spark
@@ -5470,6 +5746,7 @@ velocityjitter 712 712 712
 stretchfactor 10
 // smoke
 effect spiderbot_rocket_explode
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -5484,6 +5761,7 @@ color 0x4F4B46 0x000000
 rotate -180 180 -20 20
 // smoke2
 effect spiderbot_rocket_explode
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -5499,6 +5777,7 @@ color 0x4F4B46 0x000000
 rotate -180 180 -20 20
 // underwater bubbles
 effect spiderbot_rocket_explode
+velocitymultiplier 0
 underwater
 count 32
 type bubble
@@ -5513,6 +5792,7 @@ originjitter 160 160 160
 velocityjitter 144 144 144
 // underwatershockwave
 effect spiderbot_rocket_explode
+velocitymultiplier 0
 underwater
 type smoke
 countabsolute 1
@@ -5566,6 +5846,7 @@ airfriction 0.3
 gravity -0.01
 // fast smoke
 effect spiderbot_rocket_launch
+velocitymultiplier 0
 notunderwater
 count 14
 type smoke
@@ -5605,6 +5886,7 @@ velocityjitter 160 160 160
 velocitymultiplier -0.5
 
 effect wakizashi_gun_impact
+velocitymultiplier 0
 count 15
 type spark
 color 0xff0000 0xc03535
@@ -5618,6 +5900,7 @@ velocityjitter 350 350 550
 velocityoffset 0 0 700
 stretchfactor 0.9
 effect wakizashi_gun_impact
+velocitymultiplier 0
 type smoke
 count 24
 color 0xd0d0a0 0xc03535
@@ -5632,6 +5915,7 @@ airfriction 4
 sizeincrease 80
 rotate -180 180 0 0
 effect wakizashi_gun_impact
+velocitymultiplier 0
 countabsolute 1
 type smoke
 tex 65 65
@@ -5640,6 +5924,7 @@ size 82 82
 alpha 250 300 680
 sizeincrease -180
 effect wakizashi_gun_impact
+velocitymultiplier 0
 countabsolute 1
 type smoke
 tex 33 33
@@ -5649,6 +5934,7 @@ alpha 50 100 620
 sizeincrease 900
 rotate -180 180 400 -400
 effect wakizashi_gun_impact
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 59 59
@@ -5672,6 +5958,7 @@ sizeincrease -10
 stretchfactor 0.7
 
 effect wakizashi_rocket_explode
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -5683,6 +5970,7 @@ lightradiusfade 1750
 lightcolor 8 4 0
 // shockwave
 effect wakizashi_rocket_explode
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 33 33 
@@ -5692,6 +5980,7 @@ color 0x8f0d00 0xff5a00
 sizeincrease 2400
 // glow
 effect wakizashi_rocket_explode
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 64 64
@@ -5701,6 +5990,7 @@ color 0x8f0d00 0xff5a00
 sizeincrease 240
 // fire effect
 effect wakizashi_rocket_explode
+velocitymultiplier 0
 notunderwater
 count 64
 type static
@@ -5716,6 +6006,7 @@ velocityjitter 512 512 512
 rotate -180 180 -50 50
 // fire rays
 effect wakizashi_rocket_explode
+velocitymultiplier 0
 notunderwater
 count 10
 type spark
@@ -5731,6 +6022,7 @@ velocityjitter 512 512 512
 stretchfactor 10
 // smoke
 effect wakizashi_rocket_explode
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -5745,6 +6037,7 @@ color 0x4F4B46 0x000000
 rotate -180 180 -20 20
 // bouncing sparks
 effect wakizashi_rocket_explode
+velocitymultiplier 0
 notunderwater
 count 14
 type spark
@@ -5760,6 +6053,7 @@ originjitter 60 60 60
 velocityjitter 524 524 524
 // underwater bubbles
 effect wakizashi_rocket_explode
+velocitymultiplier 0
 underwater
 count 32
 type bubble
@@ -5774,6 +6068,7 @@ originjitter 160 160 160
 velocityjitter 144 144 144
 // underwatershockwave
 effect wakizashi_rocket_explode
+velocitymultiplier 0
 underwater
 type smoke
 countabsolute 1
@@ -5846,6 +6141,7 @@ velocityjitter 60 60 60
 velocitymultiplier -1.5
 
 effect wakizashi_booster_smoke
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -5862,6 +6158,7 @@ rotate -180 180 -20 20
 
 // decal
 effect raptor_cannon_impact
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 47 47
@@ -5871,6 +6168,7 @@ originjitter 16 16 16
 rotate -180 180 0 0
 //spark
 effect raptor_cannon_impact
+velocitymultiplier 0
 notunderwater
 count 6
 type spark
@@ -5885,6 +6183,7 @@ originjitter 16 16 16
 velocityjitter 124 124 524
 // smoke
 effect raptor_cannon_impact
+velocitymultiplier 0
 count 4
 type alphastatic
 tex 0 7
@@ -5898,6 +6197,7 @@ gravity 0.7
 airfriction 2
 // fire
 effect raptor_cannon_impact
+velocitymultiplier 0
 notunderwater
 count 10
 type static
@@ -5927,6 +6227,7 @@ velocitymultiplier 0.2
 sizeincrease -10
 stretchfactor 0.6
 effect raptor_cannon_muzzleflash
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 48 55
@@ -5942,6 +6243,7 @@ lightcolor 3 0 6
 
 // decal
 effect raptor_bomb_impact
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -5952,6 +6254,7 @@ rotate -180 180 0 0
 
 //spark vertical
 effect raptor_bomb_impact
+velocitymultiplier 0
 count 3
 type spark
 color 0xff9c00 0xff3c00
@@ -5965,6 +6268,7 @@ sizeincrease 50
 
 //fire
 effect raptor_bomb_impact
+velocitymultiplier 0
 count 4
 type static 
 color 0xff9c00 0xff3c00
@@ -5978,6 +6282,7 @@ airfriction 2
 
 //smoke
 effect raptor_bomb_impact
+velocitymultiplier 0
 count 4
 type spark
 blend alpha
@@ -5993,6 +6298,7 @@ stretchfactor 10
 
 //smoke 2
 effect raptor_bomb_impact
+velocitymultiplier 0
 count 4
 //type alphastatic
 type spark
@@ -6011,6 +6317,7 @@ gravity 2
 
 // sparks
 effect raptor_bomb_impact
+velocitymultiplier 0
 notunderwater
 count 5
 type spark
@@ -6026,6 +6333,7 @@ velocityjitter 174 174 924
 stretchfactor 2
 
 effect raptor_bomb_spread
+velocitymultiplier 0
 notunderwater
 count 34
 type spark
@@ -6042,6 +6350,7 @@ velocityjitter 324 324 324
 
 // generic explosion size:big (biggest explosion ever)
 effect explosion_big
+velocitymultiplier 0
 countabsolute 1
 type decal
 tex 8 16
@@ -6053,6 +6362,7 @@ lightradiusfade 1750
 lightcolor 8 4 0
 // shockwave
 effect explosion_big
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 33 33 
@@ -6062,6 +6372,7 @@ color 0x8f0d00 0xff5a00
 sizeincrease 4400
 // fire effect
 effect explosion_big
+velocitymultiplier 0
 notunderwater
 count 64
 type static
@@ -6076,6 +6387,7 @@ originjitter 80 80 80
 velocityjitter 2512 2512 2512
 // fire rays
 effect explosion_big
+velocitymultiplier 0
 notunderwater
 count 64
 type spark
@@ -6091,6 +6403,7 @@ velocityjitter 512 512 512
 stretchfactor 10
 // smoke
 effect explosion_big
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -6103,6 +6416,7 @@ airfriction 8
 color 0x4F4B46 0x000000
 // bouncing sparks
 effect explosion_big
+velocitymultiplier 0
 notunderwater
 count 34
 type spark
@@ -6119,6 +6433,7 @@ velocityjitter 924 924 924
 stretchfactor 0.7
 // derbis
 effect explosion_big
+velocitymultiplier 0
 notunderwater
 count 16
 type alphastatic
@@ -6134,6 +6449,7 @@ sizeincrease -5
 rotate -180 180 -1000 1000
 // underwater bubbles
 effect explosion_big
+velocitymultiplier 0
 underwater
 count 32
 type bubble
@@ -6161,6 +6477,7 @@ velocitymultiplier 0.3
 // generic explosion size:medium (it leaves rising smoke for a longer time)
 // shockwave
 effect explosion_medium
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 33 33 
@@ -6170,6 +6487,7 @@ color 0x8f0d00 0xff5a00
 sizeincrease 2400
 // fire effect
 effect explosion_medium
+velocitymultiplier 0
 notunderwater
 count 32
 type static
@@ -6185,6 +6503,7 @@ velocityjitter 1512 1512 1512
 rotate -180 180 -500 500
 // fire effect 2
 effect explosion_medium
+velocitymultiplier 0
 notunderwater
 count 32
 type static
@@ -6201,6 +6520,7 @@ velocityjitter 1512 1512 1512
 rotate -180 180 -150 150
 // fire rays
 effect explosion_medium
+velocitymultiplier 0
 notunderwater
 count 14
 type spark
@@ -6216,6 +6536,7 @@ velocityjitter 512 512 512
 stretchfactor 8
 // smoke 
 effect explosion_medium
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -6230,6 +6551,7 @@ color 0x4F4B46 0x000000
 rotate -180 180 -20 20
 // smoke 2
 effect explosion_medium
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -6246,6 +6568,7 @@ color 0x4F4B46 0x000000
 rotate -180 180 -20 20
 // smoke rays
 effect explosion_medium
+velocitymultiplier 0
 type spark
 notunderwater
 tex 0 8
@@ -6259,6 +6582,7 @@ color 0x4F4B46 0x000000
 stretchfactor 50
 // bouncing sparks
 effect explosion_medium
+velocitymultiplier 0
 notunderwater
 count 14
 type spark
@@ -6275,6 +6599,7 @@ velocityjitter 624 624 624
 stretchfactor 0.7
 // underwater bubbles
 effect explosion_medium
+velocitymultiplier 0
 underwater
 count 32
 type bubble
@@ -6301,6 +6626,7 @@ velocitymultiplier 0.3
 // generic explosion size:small (its fire only, made to support other explosions)
 // shockwave
 effect explosion_small
+velocitymultiplier 0
 countabsolute 1
 type static
 tex 33 33 
@@ -6310,6 +6636,7 @@ color 0x8f0d00 0xff5a00
 sizeincrease 2400
 // fire effect
 effect explosion_small
+velocitymultiplier 0
 notunderwater
 count 16
 type static
@@ -6324,6 +6651,7 @@ velocityjitter 512 512 512
 rotate -180 180 -500 500
 // fire effect 2
 effect explosion_small
+velocitymultiplier 0
 notunderwater
 count 16
 type static
@@ -6338,6 +6666,7 @@ velocityjitter 912 912 912
 rotate -180 180 -150 150
 // fire rays
 effect explosion_small
+velocitymultiplier 0
 notunderwater
 count 14
 type spark
@@ -6353,6 +6682,7 @@ velocityjitter 512 512 512
 stretchfactor 8
 // underwater bubbles
 effect explosion_small
+velocitymultiplier 0
 underwater
 count 32
 type bubble
@@ -6367,6 +6697,7 @@ originjitter 160 160 160
 velocityjitter 144 144 144
 // underwatershockwave
 effect explosion_small
+velocitymultiplier 0
 underwater
 type smoke
 countabsolute 1
@@ -6377,6 +6708,7 @@ alpha 40 40 300
 
 // big smoke ( for spamming on damaged stuff )
 effect smoke_big
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
@@ -6394,6 +6726,7 @@ rotate -180 180 -20 20
 
 // small smoke ( more precise than big one, for spamming on damaged parts like raptors spinner )
 effect smoke_small
+velocitymultiplier 0
 type alphastatic
 notunderwater
 tex 0 8
