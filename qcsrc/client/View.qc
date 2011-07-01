@@ -371,7 +371,7 @@ void CSQC_UpdateView(float w, float h)
 	entity e;
 	float fov;
 	float f, i, j;
-	vector v, vo;
+	vector v;
 	vector vf_size, vf_min;
 	float a;
 	hud = getstati(STAT_HUD);
@@ -403,7 +403,6 @@ void CSQC_UpdateView(float w, float h)
 		myteam = GetPlayerColor(player_localentnum - 1);
 
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
-	vo = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
 	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0) || intermission > 1)
 	{
