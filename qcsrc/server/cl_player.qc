@@ -1134,8 +1134,9 @@ void UpdatePlayerSounds()
 	self.skinindex_for_playersound = self.skinindex;
 	ClearPlayerSounds();
 	LoadPlayerSounds("sound/player/default.sounds", 1);
-	if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skinindex, "sounds"), 0))
-		LoadPlayerSounds(get_model_datafilename(self.model, 0, "sounds"), 0);
+	if(!autocvar_g_debug_defaultsounds)
+		if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skinindex, "sounds"), 0))
+			LoadPlayerSounds(get_model_datafilename(self.model, 0, "sounds"), 0);
 }
 
 void FakeGlobalSound(string sample, float chan, float voicetype)
