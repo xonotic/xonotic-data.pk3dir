@@ -1361,6 +1361,8 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
     entno = num_for_edict(e);
     idx = precache_sound_index(samp);
 
+    chan = ((chan & 0x07) | ((chan & 0x1F0) / 2));
+
     float sflags;
     sflags = 0;
 
@@ -1385,7 +1387,7 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
     if (sflags & SND_LARGEENTITY)
     {
         WriteShort(dest, entno);
-        WriteByte(dest, chan & 0xFF);
+        WriteByte(dest, chan);
     }
     else
     {
@@ -1412,7 +1414,7 @@ void soundto(float dest, entity e, float chan, string samp, float vol, float att
 }
 void soundat(entity e, vector o, float chan, string samp, float vol, float atten)
 {
-    soundtoat(MSG_BROADCAST, e, o, chan, samp, vol, atten);
+    soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, atten);
 }
 void stopsoundto(float dest, entity e, float chan)
 {
