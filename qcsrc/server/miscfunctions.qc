@@ -1371,7 +1371,7 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
         sflags |= SND_VOLUME;
     if (atten != 64)
         sflags |= SND_ATTENUATION;
-    if (entno >= 8192)
+    if (entno >= 8192 || chan < 0 || chan > 7)
         sflags |= SND_LARGEENTITY;
     if (idx >= 256)
         sflags |= SND_LARGESOUND;
@@ -1385,7 +1385,7 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
     if (sflags & SND_LARGEENTITY)
     {
         WriteShort(dest, entno);
-        WriteByte(dest, chan);
+        WriteByte(dest, chan & 0xFF);
     }
     else
     {
