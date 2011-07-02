@@ -1373,7 +1373,7 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
         sflags |= SND_VOLUME;
     if (atten != 64)
         sflags |= SND_ATTENUATION;
-    if (entno >= 8192 || chan < 0 || chan > 7)
+    if (entno >= 8192 || chan > 7)
         sflags |= SND_LARGEENTITY;
     if (idx >= 256)
         sflags |= SND_LARGESOUND;
@@ -1424,8 +1424,9 @@ void stopsoundto(float dest, entity e, float chan)
         return;
 
     entno = num_for_edict(e);
+    chan = ((chan & 0x07) | ((chan & 0x1F0) / 2));
 
-    if (entno >= 8192)
+    if (entno >= 8192 || chan > 7)
     {
         float idx, sflags;
         idx = precache_sound_index("misc/null.wav");
