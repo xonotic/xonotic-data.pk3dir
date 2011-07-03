@@ -47,7 +47,7 @@ void WaypointSprite_Load();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
-	
+
 #ifdef USE_FTE
 #pragma target ID
 	__engine_check = checkextension("DP_SV_WRITEPICTURE");
@@ -139,6 +139,9 @@ void CSQC_Init(void)
 	GibSplash_Precache();
 	Casings_Precache();
 	DamageInfo_Precache();
+	Vehicles_Precache();
+	turrets_precache();
+
 	if(autocvar_cl_announcer != cl_announcer_prev) {
 		Announcer_Precache();
 		if(cl_announcer_prev)
@@ -902,7 +905,7 @@ void Ent_ReadAccuracy(void)
 			weapon_accuracy[w] = -1;
 		return;
 	}
-	
+
 	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w, f *= 2)
 	{
 		if(sf & f)
@@ -984,6 +987,8 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
+		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
+		case ENT_CLIENT_TURRET: ent_turret(); break; 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
@@ -1410,6 +1415,10 @@ float CSQC_Parse_TempEntity()
 			Net_WeaponComplain();
 			bHandled = true;
 			break;
+        case TE_CSQC_VEHICLESETUP:
+            Net_VehicleSetup();
+            bHandled = true;
+            break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;

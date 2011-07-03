@@ -75,7 +75,7 @@ void Ent_Casing(float isNew)
 {
 	entity casing;
 
-	casing = RubbleNew("casing");
+    casing = RubbleNew("casing");
 	casing.state = ReadByte();
 	casing.silent = (casing.state & 0x80);
 	casing.state = (casing.state & 0x7F);

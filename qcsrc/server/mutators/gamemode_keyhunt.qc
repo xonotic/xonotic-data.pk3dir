@@ -350,7 +350,7 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 		if(key.kh_next == world)
 		{
 			// player is now a key carrier
-			WaypointSprite_AttachCarrier("", player);
+			WaypointSprite_AttachCarrier("", player, RADARICON_FLAGCARRIER, colormapPaletteColor(player.team - 1, 0));
 			player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_KeyCarrier_waypointsprite_visible_for_player;
 			WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, player.team, SPRITERULE_TEAMPLAY);
 			if(player.team == COLOR_TEAM1)
@@ -361,7 +361,6 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-yellow", "keycarrier-friend", "keycarrier-yellow");
 			else if(player.team == COLOR_TEAM4)
 				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-pink", "keycarrier-friend", "keycarrier-pink");
-			WaypointSprite_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, colormapPaletteColor(player.team - 1, 0));
 			if(!kh_no_radar_circles)
 				WaypointSprite_Ping(player.waypointsprite_attachedforcarrier);
 		}
@@ -751,9 +750,8 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 
 	centerprint(initial_owner, strcat("You are starting with the ", key.netname, "\n"));  // message to player at start of round
 
-	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, FALSE);
+	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAG, '0 1 1');
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
-	WaypointSprite_UpdateTeamRadar(key.waypointsprite_attachedforcarrier, RADARICON_FLAG, '0 1 1');
 
 	kh_Key_AssignTo(key, initial_owner);
 }
@@ -1023,7 +1021,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 {
 	if(self == other)
 		kh_Key_DropAll(self, TRUE);
-	else if(other.classname == "player" || other.classname == "gib")
+	else if(other.classname == "player")
 		kh_Key_DropAll(self, FALSE);
 	else
 		kh_Key_DropAll(self, TRUE);

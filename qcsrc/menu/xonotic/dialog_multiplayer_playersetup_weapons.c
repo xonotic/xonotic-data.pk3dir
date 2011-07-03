@@ -6,7 +6,7 @@ CLASS(XonoticWeaponsDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticWeaponsDialog, title, string, _("Weapon settings"))
 	ATTRIB(XonoticWeaponsDialog, color, vector, SKINCOLOR_DIALOG_WEAPONS)
 	ATTRIB(XonoticWeaponsDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticWeaponsDialog, rows, float, 17)
+	ATTRIB(XonoticWeaponsDialog, rows, float, 18)
 	ATTRIB(XonoticWeaponsDialog, columns, float, 3)
 	ATTRIB(XonoticWeaponsDialog, weaponsList, entity, NULL)
 ENDCLASS(XonoticWeaponsDialog)
@@ -28,8 +28,8 @@ void XonoticWeaponsDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, makeXonoticTextLabel(0, _("Weapon priority list:")));
 	me.TR(me);
-		me.TD(me, 9, 3, e = me.weaponsList = makeXonoticWeaponsList());
-	me.gotoRC(me, 10, 0);
+		me.TD(me, 10, 3, e = me.weaponsList = makeXonoticWeaponsList());
+	me.gotoRC(me, 11, 0);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Up"), '0 0 0'));
 			e.onClick = WeaponsList_MoveUp_Click;

@@ -79,7 +79,7 @@ void InterpolateOrigin_Do()
 	if(self.itime1 && self.itime2 && self.itime1 != self.itime2)
 	{
 		float f;
-		f = bound(0, (time - self.itime1) / (self.itime2 - self.itime1), 1);
+		f = bound(0, (time - self.itime1) / (self.itime2 - self.itime1), 1 + autocvar_cl_lerpexcess);
 		self.origin = (1 - f) * self.iorigin1 + f * self.iorigin2;
 		if(self.iflags & IFLAG_ANGLES)
 		{

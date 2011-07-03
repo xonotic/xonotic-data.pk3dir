@@ -287,7 +287,7 @@ float w_minstanex(float req)
 		precache_sound("weapons/neximpact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s did the impossible");
+		w_deathtypestring = _("%s is now thinking with portals");
 	else if (req == WR_KILLMESSAGE)
 		w_deathtypestring = _("%s has been vaporized by %s");
 	return TRUE;

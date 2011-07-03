@@ -30,6 +30,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	local entity ent, endent;
 	local float endq3surfaceflags;
 	float totaldmg;
+	entity o;
 
 	float length;
 	vector beampos;
@@ -52,12 +53,18 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	// trace multiple times until we hit a wall, each obstacle will be made
 	// non-solid so we can hit the next, while doing this we spawn effects and
 	// note down which entities were hit so we can damage them later
+	o = self;
 	while (1)
 	{
 		if(self.antilag_debug)
-			WarpZone_traceline_antilag (self, start, end, FALSE, self, self.antilag_debug);
+			WarpZone_traceline_antilag (self, start, end, FALSE, o, self.antilag_debug);
 		else
-			WarpZone_traceline_antilag (self, start, end, FALSE, self, ANTILAG_LATENCY(self));
+			WarpZone_traceline_antilag (self, start, end, FALSE, o, ANTILAG_LATENCY(self));
+		if(o && WarpZone_trace_firstzone)
+		{
+			o = world;
+			continue;
+		}
 
 		// if it is world we can't hurt it so stop now
 		if (trace_ent == world || trace_fraction == 1)
@@ -127,7 +134,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		f = ExponentialFalloff(mindist, maxdist, halflifedist, ent.railgundistance);
 		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, ent.railgundistance);
 
-		if(accuracy_isgooddamage(self.owner, ent))
+		if(accuracy_isgooddamage(self.realowner, ent))
 			totaldmg += bdamage * f;
 
 		// apply the damage
@@ -178,8 +185,8 @@ void W_BallisticBullet_Hit (void)
 		damage_headshotbonus = self.dmg_edge * f;
 		railgun_start = self.origin - 2 * frametime * self.velocity;
 		railgun_end = self.origin + 2 * frametime * self.velocity;
-		g = accuracy_isgooddamage(self.owner, other);
-		Damage(other, self, self.owner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
+		g = accuracy_isgooddamage(self.realowner, other);
+		Damage(other, self, self.realowner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
 		damage_headshotbonus = 0;
 
 		if(headshot)
@@ -187,9 +194,9 @@ void W_BallisticBullet_Hit (void)
 		if(self.dmg_edge > 0)
 		{
 			if(headshot)
-				AnnounceTo(self.owner, "headshot");
+				AnnounceTo(self.realowner, "headshot");
 			if(yoda)
-				AnnounceTo(self.owner, "awesome");
+				AnnounceTo(self.realowner, "awesome");
 		}
 
 		// calculate hits for ballistic weapons
@@ -198,7 +205,7 @@ void W_BallisticBullet_Hit (void)
 			// do not exceed 100%
 			q = min(self.dmg * q, self.dmg_total + f * self.dmg) - self.dmg_total;
 			self.dmg_total += f * self.dmg;
-			accuracy_add(self.owner, self.owner.weapon, 0, q);
+			accuracy_add(self.realowner, self.realowner.weapon, 0, q);
 		}
 	}
 
@@ -359,7 +366,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	entity proj;
 	proj = spawn();
 	proj.classname = "bullet";
-	proj.owner = self;
+	proj.owner = proj.realowner = self;
 	PROJECTILE_MAKETRIGGER(proj);
 	if(gravityfactor > 0)
 	{
@@ -431,7 +438,16 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			trace_fraction = 0;
 			fireBallisticBullet_trace_callback_ent = self;
 			fireBallisticBullet_trace_callback_eff = eff;
-			WarpZone_TraceToss_ThroughZone(self, oldself, world, fireBallisticBullet_trace_callback);
+			// FIXME can we somehow do this with just ONE trace?
+			WarpZone_TraceToss(self, self.owner);
+			if(self.owner && WarpZone_trace_firstzone)
+			{
+				self.owner = world;
+				self.velocity = v0;
+				self.gravity = g0;
+				continue;
+			}
+			WarpZone_TraceToss_ThroughZone(self, self.owner, world, fireBallisticBullet_trace_callback);
 			self.velocity = v0;
 			self.gravity = g0;
 
@@ -517,11 +533,10 @@ void fireBullet (vector start, vector dir, float spread, float damage, float for
 
 	if ((trace_fraction != 1.0) && (pointcontents (trace_endpos) != CONTENT_SKY))
 	{
-		pointparticles(particleeffectnum("TE_KNIGHTSPIKE"),end,trace_plane_normal * 2500,1);
-		if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, self);
+		if not (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, self);                    
+
 		Damage (trace_ent, self, self, damage, dtype, trace_endpos, dir * force);
-		//void(float effectnum, vector org, vector vel, float howmany) pointparticles = #337; // same as in CSQC
 	}
 	trace_endpos = end;
 }

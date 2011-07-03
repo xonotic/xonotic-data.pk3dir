@@ -1361,6 +1361,8 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
     entno = num_for_edict(e);
     idx = precache_sound_index(samp);
 
+    chan = ((chan & 0x07) | ((chan & 0x1F0) / 2));
+
     float sflags;
     sflags = 0;
 
@@ -1371,7 +1373,7 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
         sflags |= SND_VOLUME;
     if (atten != 64)
         sflags |= SND_ATTENUATION;
-    if (entno >= 8192)
+    if (entno >= 8192 || chan > 7)
         sflags |= SND_LARGEENTITY;
     if (idx >= 256)
         sflags |= SND_LARGESOUND;
@@ -1412,7 +1414,7 @@ void soundto(float dest, entity e, float chan, string samp, float vol, float att
 }
 void soundat(entity e, vector o, float chan, string samp, float vol, float atten)
 {
-    soundtoat(MSG_BROADCAST, e, o, chan, samp, vol, atten);
+    soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, atten);
 }
 void stopsoundto(float dest, entity e, float chan)
 {
@@ -1422,8 +1424,9 @@ void stopsoundto(float dest, entity e, float chan)
         return;
 
     entno = num_for_edict(e);
+    chan = ((chan & 0x07) | ((chan & 0x1F0) / 2));
 
-    if (entno >= 8192)
+    if (entno >= 8192 || chan > 7)
     {
         float idx, sflags;
         idx = precache_sound_index("misc/null.wav");
@@ -2014,13 +2017,17 @@ float SUB_NoImpactCheck()
 
 #define SUB_OwnerCheck() (other && (other == self.owner))
 
+void RemoveGrapplingHook(entity pl);
 float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 {
 	if(SUB_OwnerCheck())
 		return TRUE;
 	if(SUB_NoImpactCheck())
 	{
-		remove(self);
+		if(self.classname == "grapplinghook")
+			RemoveGrapplingHook(self.realowner);
+		else
+			remove(self);
 		return TRUE;
 	}
 	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
@@ -3085,4 +3092,61 @@ void defer(float fdelay, void() func)
     e.use       = func;
     e.think     = defer_think;
     e.nextthink = time + fdelay;
+}
+
+.string aiment_classname;
+.float aiment_deadflag;
+void SetMovetypeFollow(entity ent, entity e)
+{
+	// FIXME this may not be warpzone aware
+	ent.movetype = MOVETYPE_FOLLOW; // make the hole follow
+	ent.solid = SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid - this means this cannot be teleported by warpzones any more! Instead, we must notice when our owner gets teleported.
+	ent.aiment = e; // make the hole follow bmodel
+	ent.punchangle = e.angles; // the original angles of bmodel
+	ent.view_ofs = ent.origin - e.origin; // relative origin
+	ent.v_angle = ent.angles - e.angles; // relative angles
+	ent.aiment_classname = strzone(e.classname);
+	ent.aiment_deadflag = e.deadflag;
+}
+void UnsetMovetypeFollow(entity ent)
+{
+	ent.movetype = MOVETYPE_FLY;
+	PROJECTILE_MAKETRIGGER(ent);
+	ent.aiment = world;
+}
+float LostMovetypeFollow(entity ent)
+{
+/*
+	if(ent.movetype != MOVETYPE_FOLLOW)
+		if(ent.aiment)
+			error("???");
+*/
+	if(ent.aiment)
+	{
+		if(ent.aiment.classname != ent.aiment_classname)
+			return 1;
+		if(ent.aiment.deadflag != ent.aiment_deadflag)
+			return 1;
+	}
+	return 0;
+}
+
+float isPushable(entity e)
+{
+	if(e.iscreature)
+		return TRUE;
+	switch(e.classname)
+	{
+		case "body":
+		case "droppedweapon":
+		case "keepawayball":
+		case "nexball_basketball":
+		case "nexball_football":
+			return TRUE;
+		case "bullet": // antilagged bullets can't hit this either
+			return FALSE;
+	}
+	if (e.projectiledeathtype)
+		return TRUE;
+	return FALSE;
 }
