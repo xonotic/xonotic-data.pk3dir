@@ -10,9 +10,9 @@ void W_Laser_Touch (void)
 
 	self.event_damage = SUB_Null;
 	if (self.dmg)
-		RadiusDamage (self, self.owner, autocvar_g_balance_laser_secondary_damage, autocvar_g_balance_laser_secondary_edgedamage, autocvar_g_balance_laser_secondary_radius, world, autocvar_g_balance_laser_secondary_force, self.projectiledeathtype, other);
+		RadiusDamage (self, self.realowner, autocvar_g_balance_laser_secondary_damage, autocvar_g_balance_laser_secondary_edgedamage, autocvar_g_balance_laser_secondary_radius, world, autocvar_g_balance_laser_secondary_force, self.projectiledeathtype, other);
 	else
-		RadiusDamage (self, self.owner, autocvar_g_balance_laser_primary_damage, autocvar_g_balance_laser_primary_edgedamage, autocvar_g_balance_laser_primary_radius, world, autocvar_g_balance_laser_primary_force, self.projectiledeathtype, other);
+		RadiusDamage (self, self.realowner, autocvar_g_balance_laser_primary_damage, autocvar_g_balance_laser_primary_edgedamage, autocvar_g_balance_laser_primary_radius, world, autocvar_g_balance_laser_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -52,7 +52,7 @@ void W_Laser_Attack (float issecondary)
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
-	missile.owner = self;
+	missile.owner = missile.realowner = self;
 	missile.classname = "laserbolt";
 	missile.dmg = 0;
 	if(!nodamage)
@@ -95,12 +95,12 @@ float gauntletbeam_send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_GAUNTLET);
 	sf = sf & 0x7F;
-	if(sound_allowed(MSG_BROADCAST, self.owner))
+	if(sound_allowed(MSG_BROADCAST, self.realowner))
 		sf |= 0x80;
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)
 	{
-		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+		WriteByte(MSG_ENTITY, num_for_edict(self.realowner));
 	}
 	if(sf & 2)
 	{
@@ -118,6 +118,7 @@ float gauntletbeam_send(entity to, float sf)
 }
 .entity gauntletbeam;
 .float prevgauntletfire;
+entity lgbeam_owner_ent;
 void gauntletbeam_think()
 {
 	float damage, myforce, myradius;
@@ -125,8 +126,8 @@ void gauntletbeam_think()
 	myforce = autocvar_g_balance_laser_secondary_force;
 	myradius = autocvar_g_balance_laser_secondary_radius;
 
-	self.owner.prevgauntletfire = time;
-	if (self.owner.weaponentity.state != WS_INUSE || self != self.owner.gauntletbeam || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK2)
+	self.realowner.prevgauntletfire = time;
+	if (self.realowner.weaponentity.state != WS_INUSE || self != self.realowner.gauntletbeam || self.realowner.deadflag != DEAD_NO || !self.realowner.BUTTON_ATCK2)
 	{
 		remove(self);
 		return;
@@ -134,13 +135,18 @@ void gauntletbeam_think()
 
 	self.nextthink = time;
 
-	makevectors(self.owner.v_angle);
+	makevectors(self.realowner.v_angle);
 
 	float dt;
 	dt = frametime;
 
-	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, damage * dt, myradius);
-	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
+	W_SetupShot_Range(self.realowner, TRUE, 0, "", 0, damage * dt, myradius);
+	if(!lgbeam_owner_ent)
+	{
+		lgbeam_owner_ent = spawn();
+		lgbeam_owner_ent.classname = "lgbeam_owner_ent";
+	}
+	WarpZone_traceline_antilag(lgbeam_owner_ent, w_shotorg, w_shotend, MOVE_NORMAL, lgbeam_owner_ent, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage
 	if(trace_ent)

@@ -53,7 +53,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 			}
 		}
 
-		if(teams_matter)
+		if(teamplay)
 		{
 			discard = FALSE;
 
@@ -148,7 +148,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 {
 	local entity head;
 	local float t, noteam, distance;
-	noteam = ((self.team == 0) || !teams_matter); // fteqcc sucks
+	noteam = ((self.team == 0) || !teamplay); // fteqcc sucks
 
 	if (autocvar_bot_nofire)
 		return;
@@ -166,6 +166,9 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 		{
 			distance = vlen(head.origin - org);
 			if (distance < 100 || distance > sradius)
+				continue;
+
+			if (head.freezetag_frozen)
 				continue;
 
 			if(g_minstagib)
@@ -274,24 +277,6 @@ void havocbot_role_race()
 	}
 };
 
-// Keepaway
-// If you don't have the ball, get it; if you do, kill people.
-void havocbot_role_ka()
-{
-	if(self.deadflag != DEAD_NO)
-		return;
-
-	if (self.bot_strategytime < time)
-	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
-		havocbot_goalrating_items(10000, self.origin, 10000);
-		havocbot_goalrating_enemyplayers(20000, self.origin, 10000);
-		//havocbot_goalrating_waypoints(1, self.origin, 1000);
-		navigation_goalrating_end();
-	}
-}
-
 void havocbot_chooserole_dm()
 {
 	self.havocbot_role = havocbot_role_dm;
@@ -306,11 +291,6 @@ void havocbot_chooserole_dom()
 {
 	self.havocbot_role = havocbot_role_dom;
 };
-
-void havocbot_chooserole_ka()
-{
-	self.havocbot_role = havocbot_role_ka;
-}
 
 void havocbot_chooserole()
 {
@@ -328,6 +308,8 @@ void havocbot_chooserole()
 		havocbot_chooserole_ons();
 	else if (g_keepaway)
 		havocbot_chooserole_ka();
+	else if (g_freezetag)
+		havocbot_chooserole_ft();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
 };

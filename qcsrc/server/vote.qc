@@ -478,6 +478,8 @@ void VoteReset() {
 	votecalled = FALSE;
 	votecalledmaster = FALSE;
 	votefinished = 0;
+	votecalledvote = string_null;
+	votecalledvote_display = string_null;
 }
 
 void VoteAccept() {

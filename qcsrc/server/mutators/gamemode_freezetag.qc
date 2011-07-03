@@ -88,11 +88,7 @@ void freezetag_Freeze(entity attacker)
 	RemoveGrapplingHook(self);
 
 	// add waypoint
-	WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE);
-	if(self.waypointsprite_attached)
-	{
-		WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_WAYPOINT, '0.25 0.90 1');
-	}
+	WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
 
 	if(attacker == self)
 	{

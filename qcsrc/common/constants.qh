@@ -64,6 +64,7 @@ const float TE_CSQC_WEAPONCOMPLAIN = 113;
 const float TE_CSQC_NEX_SCOPE = 116;
 const float TE_CSQC_MINELAYER_MAXMINES = 117;
 const float TE_CSQC_HAGAR_MAXROCKETS = 118;
+const float TE_CSQC_VEHICLESETUP = 119;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -118,10 +119,13 @@ const float ENT_CLIENT_SHOWNAMES = 31;
 const float ENT_CLIENT_WARPZONE_TELEPORTED = 32;
 
 const float ENT_CLIENT_TURRET = 40;
+const float ENT_CLIENT_AUXILIARYXHAIR = 50;
+const float ENT_CLIENT_VEHICLE = 60;
 
 const float SPRITERULE_DEFAULT = 0;
 const float SPRITERULE_TEAMPLAY = 1;
 
+const float RADARICON_NONE = 0;
 const float RADARICON_FLAG = 1;
 const float RADARICON_FLAGCARRIER = 1;
 const float RADARICON_HERE = 1; // TODO make these 3 and 4, and make images for them
@@ -133,6 +137,7 @@ const float RADARICON_GENERATOR = 1;
 const float RADARICON_OBJECTIVE = 1;
 const float RADARICON_DOMPOINT = 1;
 const float RADARICON_POWERUP = 1;
+const float RADARICON_TAGGED = 1;
 
 ///////////////////////////
 // key constants
@@ -333,9 +338,13 @@ const float CTF_STATE_DEFEND = 2;
 const float CTF_STATE_COMMANDER = 3;
 
 const float HUD_NORMAL = 0;
-const float HUD_SPIDERBOT = 10;
-const float HUD_WAKIZASHI = 11;
-const float HUD_RAPTOR    = 12;
+const float HUD_VEHICLE_FIRST   = 10;
+const float HUD_SPIDERBOT       = 10;
+const float HUD_WAKIZASHI       = 11;
+const float HUD_RAPTOR          = 12;
+const float HUD_BUMBLEBEE       = 13;
+const float HUD_VEHICLE_LAST    = 13;
+
 const vector eX = '1 0 0';
 const vector eY = '0 1 0';
 const vector eZ = '0 0 1';
@@ -358,6 +367,7 @@ const float STAT_PINKALIVE = 103;
 const float STAT_FROZEN = 104;
 const float STAT_REVIVE_PROGRESS = 105;
 
+
 const float STAT_DOM_TOTAL_PPS = 100;
 const float STAT_DOM_PPS_RED = 101;
 const float STAT_DOM_PPS_BLUE = 102;
@@ -366,9 +376,6 @@ const float STAT_DOM_PPS_YELLOW = 104;
 
 //const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
 //const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin
-
-
-
 
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
@@ -499,6 +506,13 @@ float PROJECTILE_FIREBALL = 21;
 float PROJECTILE_FIREMINE = 22;
 float PROJECTILE_BULLET_GLOWING_TRACER = 23;
 
+float PROJECTILE_RAPTORCANNON   = 24;
+float PROJECTILE_RAPTORBOMB     = 25;
+float PROJECTILE_RAPTORBOMBLET  = 26;
+float PROJECTILE_SPIDERROCKET   = 27;
+float PROJECTILE_WAKIROCKET     = 28;
+float PROJECTILE_WAKICANNON     = 29;
+
 float SPECIES_HUMAN        =  0;
 float SPECIES_ROBOT_SOLID  =  1;
 float SPECIES_ALIEN        =  2;
@@ -528,18 +542,23 @@ float DEATH_MIRRORDAMAGE = 10014;
 float DEATH_TOUCHEXPLODE = 10015;
 float DEATH_CHEAT = 10016;
 float DEATH_FIRE = 10017;
-float DEATH_TURRET = 10020;
 float DEATH_QUIET = 10021;
 float DEATH_HEADSHOT = 10022;
 
-float DEATH_SBMINIGUN = 10030;
-float DEATH_SBROCKET  = 10031;
-float DEATH_SBCRUSH   = 10032;
-float DEATH_SBBLOWUP  = 10033;
-
-float DEATH_WAKIGUN    = 10040;
-float DEATH_WAKIROCKET = 10041;
-float DEATH_WAKIBLOWUP = 10042;
+float  DEATH_VHFIRST       = 10030;
+float  DEATH_VHCRUSH       = 10030;
+float  DEATH_SBMINIGUN     = 10031;
+float  DEATH_SBROCKET      = 10032;
+float  DEATH_SBBLOWUP      = 10033;
+float  DEATH_WAKIGUN       = 10034;
+float  DEATH_WAKIROCKET    = 10035;
+float  DEATH_WAKIBLOWUP    = 10036;
+float  DEATH_RAPTOR_CANNON = 10037;
+float  DEATH_RAPTOR_BOMB   = 10038;
+float  DEATH_RAPTOR_BOMB_SPLIT = 10039;
+float  DEATH_RAPTOR_DEATH  = 10040;
+float  DEATH_VHLAST        = 10040;
+#define DEATH_ISVEHICLE(t)  ((t) >= DEATH_VHFIRST && (t) <= DEATH_VHLAST)
 
 float DEATH_GENERIC = 10050;
 
@@ -547,6 +566,20 @@ float DEATH_WEAPON = 10100;
 
 float DEATH_CUSTOM = 10300;
 
+float DEATH_TURRET                  = 10500;
+float DEATH_TURRET_EWHEEL           = 10501;
+float DEATH_TURRET_FLAC             = 10502;
+float DEATH_TURRET_MACHINEGUN       = 10503;
+float DEATH_TURRET_WALKER_GUN       = 10504;
+float DEATH_TURRET_WALKER_MEELE     = 10505;
+float DEATH_TURRET_WALKER_ROCKET    = 10506;
+float DEATH_TURRET_HELLION          = 10507;
+float DEATH_TURRET_HK               = 10508;
+float DEATH_TURRET_MLRS             = 10509;
+float DEATH_TURRET_PLASMA           = 10510;
+float DEATH_TURRET_PHASER           = 10511;
+float DEATH_TURRET_TESLA            = 10512;
+float DEATH_TURRET_LAST            = 10512;
 
 float DEATH_WEAPONMASK = 0xFF;
 float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
@@ -557,6 +590,7 @@ float HITTYPE_HEADSHOT = 0x800;
 float HITTYPE_RESERVED = 0x1000; // unused yet
 
 // macros to access these
+#define DEATH_ISTURRET(t)            ((t) >= DEATH_TURRET && (t) <= DEATH_TURRET_LAST)
 #define DEATH_ISSPECIAL(t)            ((t) >= DEATH_SPECIAL_START)
 #define DEATH_WEAPONOFWEAPONDEATH(t)  ((t) & DEATH_WEAPONMASK)
 #define DEATH_ISWEAPON(t,w)           (!DEATH_ISSPECIAL(t) && DEATH_WEAPONOFWEAPONDEATH(t) == (w))

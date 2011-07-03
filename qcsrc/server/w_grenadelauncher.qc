@@ -9,10 +9,10 @@ void W_Grenade_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
-			if(IsDifferentTeam(self.owner, other))
+			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.owner, "airshot");
+						AnnounceTo(self.realowner, "airshot");
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
@@ -20,7 +20,7 @@ void W_Grenade_Explode (void)
 	if(self.movetype == MOVETYPE_NONE)
 		self.velocity = self.oldvelocity;
 
-	RadiusDamage (self, self.owner, autocvar_g_balance_grenadelauncher_primary_damage, autocvar_g_balance_grenadelauncher_primary_edgedamage, autocvar_g_balance_grenadelauncher_primary_radius, world, autocvar_g_balance_grenadelauncher_primary_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_grenadelauncher_primary_damage, autocvar_g_balance_grenadelauncher_primary_edgedamage, autocvar_g_balance_grenadelauncher_primary_radius, world, autocvar_g_balance_grenadelauncher_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -29,9 +29,10 @@ void W_Grenade_Explode2 (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
-			if(IsDifferentTeam(self.owner, other))
-				if(IsFlying(other))
-					AnnounceTo(self.owner, "airshot");
+			if(IsDifferentTeam(self.realowner, other))
+				if(other.deadflag == DEAD_NO)
+					if(IsFlying(other))
+						AnnounceTo(self.realowner, "airshot");
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
@@ -39,7 +40,7 @@ void W_Grenade_Explode2 (void)
 	if(self.movetype == MOVETYPE_NONE)
 		self.velocity = self.oldvelocity;
 
-	RadiusDamage (self, self.owner, autocvar_g_balance_grenadelauncher_secondary_damage, autocvar_g_balance_grenadelauncher_secondary_edgedamage, autocvar_g_balance_grenadelauncher_secondary_radius, world, autocvar_g_balance_grenadelauncher_secondary_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_grenadelauncher_secondary_damage, autocvar_g_balance_grenadelauncher_secondary_edgedamage, autocvar_g_balance_grenadelauncher_secondary_radius, world, autocvar_g_balance_grenadelauncher_secondary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -169,7 +170,7 @@ void W_Grenade_Attack (void)
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn ();
-	gren.owner = self;
+	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = autocvar_g_balance_grenadelauncher_primary_damage;
@@ -216,7 +217,7 @@ void W_Grenade_Attack2 (void)
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn ();
-	gren.owner = self;
+	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = autocvar_g_balance_grenadelauncher_secondary_damage;
@@ -300,7 +301,7 @@ float w_glauncher(float req)
 			if (cvar("g_balance_grenadelauncher_secondary_remote_detonateprimary"))
 			{
 				nadefound = 0;
-				for(nade = world; (nade = find(nade, classname, "grenade")); ) if(nade.owner == self)
+				for(nade = world; (nade = find(nade, classname, "grenade")); ) if(nade.realowner == self)
 				{
 					if(!nade.gl_detonate_later)
 					{

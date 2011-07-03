@@ -57,7 +57,7 @@ entity havocbot_ctf_find_enemy_flag(entity bot)
 
 float havocbot_ctf_teamcount(entity bot, vector org, float radius)
 {
-	if not(teams_matter)
+	if not(teamplay)
 		return 0;
 
 	float c;

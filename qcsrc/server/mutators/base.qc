@@ -83,7 +83,10 @@ float CallbackChain_Call(entity cb)
 	entity e;
 	r = 0;
 	for(e = cb; e.cbc_next; e = e.cbc_next)
+	{
+		CallbackChain_ReturnValue = r;
 		r |= e.cbc_next.cbc_func();
+	}
 	return r; // callbacks return an error status, so 0 is default return value
 }
 

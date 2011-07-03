@@ -1,6 +1,6 @@
 void trigger_teleport_use()
 {
-	if(teams_matter)
+	if(teamplay)
 		self.team = activator.team;
 }
 
@@ -33,7 +33,7 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 	{
 		TDEATHLOOP(org)
 		{
-			if not(teams_matter && autocvar_g_telefrags_teamplay && head.team == player.team)
+			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
 				if(head.classname == "player")
 					if(head.health >= 1)
 						return 1;
@@ -48,7 +48,7 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 	{
 		if (player.classname == "player" && player.health >= 1)
 		{
-			if not(teams_matter && autocvar_g_telefrags_teamplay && head.team == player.team)
+			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
 			{
 				if(head.classname == "player")
 					if(head.health >= 1)
@@ -148,9 +148,14 @@ void Teleport_Touch (void)
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 	
-	if (other.health < 1)
+	if not(other.iscreature)
 		return;
-	if not(other.flags & FL_CLIENT)	// FIXME: Make missiles firable through the teleport too
+
+	// for gameplay: vehicles can't teleport
+	if (other.vehicle_flags & VHF_ISVEHICLE)
+		return;
+
+	if (other.deadflag != DEAD_NO)
 		return;
 
 	if(self.team)
@@ -304,6 +309,9 @@ void spawnfunc_trigger_teleport (void)
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {
 	UpdateCSQCProjectileAfterTeleport(pl);
+	// "disown" projectiles after teleport
+	if(pl.owner == pl.realowner)
+		pl.owner = world;
 	if(pl.classname == "player")
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)

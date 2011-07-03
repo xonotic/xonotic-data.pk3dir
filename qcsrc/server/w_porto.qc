@@ -9,42 +9,42 @@ REGISTER_WEAPON(PORTO, w_porto, 0, 0, WEP_TYPE_OTHER, 0, "porto" , "porto", _("P
 
 void W_Porto_Success (void)
 {
-	if(self.owner == world)
+	if(self.realowner == world)
 	{
 		objerror("Cannot succeed successfully: no owner\n");
 		return;
 	}
 
-	self.owner.porto_current = world;
+	self.realowner.porto_current = world;
 	remove(self);
 }
 
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
 void W_Porto_Fail (float failhard)
 {
-	if(self.owner == world)
+	if(self.realowner == world)
 	{
 		objerror("Cannot fail successfully: no owner\n");
 		return;
 	}
 
 	// no portals here!
-	Portal_ClearWithID(self.owner, self.portal_id);
-	self.owner.porto_current = world;
+	Portal_ClearWithID(self.realowner, self.portal_id);
+	self.realowner.porto_current = world;
 
-	if(!failhard && self.owner.playerid == self.playerid && self.owner.deadflag == DEAD_NO && !(self.owner.weapons & WEPBIT_PORTO))
+	if(!failhard && self.realowner.playerid == self.playerid && self.realowner.deadflag == DEAD_NO && !(self.realowner.weapons & WEPBIT_PORTO))
 	{
 		setsize (self, '-16 -16 0', '16 16 32');
 		setorigin(self, self.origin + trace_plane_normal);
 		if(move_out_of_solid(self))
 		{
 			self.flags = FL_ITEM;
-			self.velocity = trigger_push_calculatevelocity(self.origin, self.owner, 128);
+			self.velocity = trigger_push_calculatevelocity(self.origin, self.realowner, 128);
 			tracetoss(self, self);
-			if(vlen(trace_endpos - self.owner.origin) < 128)
+			if(vlen(trace_endpos - self.realowner.origin) < 128)
 			{
-				W_ThrowNewWeapon(self.owner, WEP_PORTO, 0, self.origin, self.velocity);
-				centerprint(self.owner, "^1Portal deployment failed.\n\n^2Catch it to try again!");
+				W_ThrowNewWeapon(self.realowner, WEP_PORTO, 0, self.origin, self.velocity);
+				centerprint(self.realowner, "^1Portal deployment failed.\n\n^2Catch it to try again!");
 			}
 		}
 	}
@@ -66,7 +66,7 @@ void W_Porto_Remove (entity p)
 void W_Porto_Think (void)
 {
 	trace_plane_normal = '0 0 0';
-	if(self.owner.playerid != self.playerid)
+	if(self.realowner.playerid != self.playerid)
 		remove(self);
 	else
 		W_Porto_Fail(0);
@@ -93,7 +93,7 @@ void W_Porto_Touch (void)
 			return;
 	}
 
-	if(self.owner.playerid != self.playerid)
+	if(self.realowner.playerid != self.playerid)
 	{
 		sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 		remove(self);
@@ -113,11 +113,11 @@ void W_Porto_Touch (void)
 	else if(self.effects & EF_RED)
 	{
 		self.effects += EF_BLUE - EF_RED;
-		if(Portal_SpawnInPortalAtTrace(self.owner, self.right_vector, self.portal_id))
+		if(Portal_SpawnInPortalAtTrace(self.realowner, self.right_vector, self.portal_id))
 		{
 			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
-			centerprint(self.owner, "^1In^7-portal created.");
+			centerprint(self.realowner, "^1In^7-portal created.");
 			self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * norm);
 			self.angles = vectoangles(self.velocity - 2 * trace_plane_normal * (self.velocity * norm));
 			CSQCProjectile(self, TRUE, PROJECTILE_PORTO_BLUE, TRUE); // change type
@@ -131,13 +131,13 @@ void W_Porto_Touch (void)
 	}
 	else
 	{
-		if(self.owner.portal_in.portal_id == self.portal_id)
+		if(self.realowner.portal_in.portal_id == self.portal_id)
 		{
-			if(Portal_SpawnOutPortalAtTrace(self.owner, self.right_vector, self.portal_id))
+			if(Portal_SpawnOutPortalAtTrace(self.realowner, self.right_vector, self.portal_id))
 			{
 				sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
 				trace_plane_normal = norm;
-				centerprint(self.owner, "^4Out^7-portal created.");
+				centerprint(self.realowner, "^4Out^7-portal created.");
 				W_Porto_Success();
 			}
 			else
@@ -168,7 +168,7 @@ void W_Porto_Attack (void)
 	//pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn ();
-	gren.owner = self;
+	gren.owner = gren.realowner = self;
 	gren.playerid = self.playerid;
 	gren.classname = "porto";
 	gren.bot_dodge = TRUE;

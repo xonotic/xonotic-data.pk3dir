@@ -10,7 +10,7 @@ float trigger_push_calculatevelocity_flighttime;
 
 void trigger_push_use()
 {
-	if(teams_matter)
+	if(teamplay)
 		self.team = activator.team;
 }
 
@@ -130,18 +130,7 @@ void trigger_push_touch()
 	if (self.active == ACTIVE_NOT)
 		return;
 
-	// FIXME: add a .float for whether an entity should be tossed by jumppads
-	if (!other.iscreature)
-	if (other.classname != "corpse")
-	if (other.classname != "body")
-	if (other.classname != "gib")
-	if (other.classname != "casing")
-	if (other.classname != "droppedweapon")
-	if (other.classname != "keepawayball")
-	if (!other.projectiledeathtype || other.classname == "bullet")
-		return;
-
-	if (other.deadflag && other.iscreature)
+	if (!isPushable(other))
 		return;
 
 	if(self.team)

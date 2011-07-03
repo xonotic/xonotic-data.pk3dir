@@ -4,8 +4,6 @@
 float warpzone_warpzones_exist;
 float warpzone_cameras_exist;
 
-const void func_null(void); // never assign to this one please
-
 .float warpzone_isboxy;
 .vector warpzone_shift;
 .vector warpzone_origin;
@@ -71,3 +69,22 @@ vector WarpZone_RefSys_TransformVelocity(entity from, entity to, vector vel);
 vector WarpZone_RefSys_TransformAngles(entity from, entity to, vector ang);
 vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang);
 entity WarpZone_RefSys_SpawnSameRefSys(entity me);
+
+#ifndef BITCLR
+# define BITCLR(a,b) ((a) - ((a) & (b)))
+#endif
+#ifndef BITSET
+# define BITSET(a,b) ((a) | (b))
+#endif
+#ifndef BITXOR
+# define BITXOR(a,b) (((a) | (b)) - ((a) & (b)))
+#endif
+#ifndef BITCLR_ASSIGN
+# define BITCLR_ASSIGN(a,b) ((a) = (a) - ((a) & (b)))
+#endif
+#ifndef BITSET_ASSIGN
+# define BITSET_ASSIGN(a,b) ((a) |= (b))
+#endif
+#ifndef BITXOR_ASSIGN
+# define BITXOR_ASSIGN(a,b) ((a) = ((a) | (b)) - ((a) & (b)))
+#endif
