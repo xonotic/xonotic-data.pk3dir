@@ -310,7 +310,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
         proj.flags           = FL_PROJECTILE | FL_NOTARGET;
 
     if(_mzlsound)
-        sound (self, CHAN_WEAPON, _mzlsound, VOL_BASE, ATTN_NORM);
+        sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTN_NORM);
 
     if(_mzlfx)
         pointparticles(particleeffectnum(_mzlfx), proj.origin, proj.velocity, 1);

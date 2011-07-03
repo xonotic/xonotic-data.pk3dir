@@ -9,7 +9,7 @@ void turret_flac_attack()
 
     turret_tag_fire_update();
 
-    sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CH_WEAPON_A, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
     proj = spawn ();
     setorigin(proj, self.tur_shotorg);
     setsize(proj, '0 0 0', '0 0 0');

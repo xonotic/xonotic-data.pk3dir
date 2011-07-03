@@ -342,7 +342,7 @@ float spiderbot_frame()
             fireBullet (v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_damage,
                 autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_SBMINIGUN, 0);
 
-            sound (gun, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
+            sound (gun, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
             trailparticles(self, particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
             pointparticles(particleeffectnum("spiderbot_minigun_muzzleflash"), v, v_forward * 2500, 1);
 

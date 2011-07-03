@@ -22,7 +22,7 @@ void turret_mlrs_attack()
 
     turret_tag_fire_update();
 
-    sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CH_WEAPON_A, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 
     missile                    = spawn ();
     setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
