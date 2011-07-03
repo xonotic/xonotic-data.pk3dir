@@ -222,7 +222,7 @@ void InitBall (void)
 	self.teamtime = 0;
 	self.pusher = world;
 	self.team = FALSE;
-	sound (self, CHAN_PROJECTILE, self.noise1, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
 	LogNB("init", world);
 }
@@ -262,7 +262,7 @@ void football_touch (void)
 	if (other.solid == SOLID_BSP) {
 		if (time > self.lastground + 0.1)
 		{
-			sound (self, CHAN_PROJECTILE, self.noise, VOL_BASE, ATTN_NORM);
+			sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NORM);
 			self.lastground = time;
 		}
 		if (vlen(self.velocity) && !self.cnt)
@@ -308,7 +308,7 @@ void basketball_touch (void)
 		LogNB("caught", other);
 		GiveBall(other, self);
 	} else if (other.solid == SOLID_BSP) {
-		sound (self, CHAN_PROJECTILE, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NORM);
 		if (vlen(self.velocity) && !self.cnt)
 			self.nextthink = min(time + g_nexball_delay_idle, self.teamtime);
 	}

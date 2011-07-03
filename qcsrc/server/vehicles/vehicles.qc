@@ -718,11 +718,11 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
             self.vehicle_shieldent.alpha    = 0.75;
             
         	if(sound_allowed(MSG_BROADCAST, attacker))
-                spamsound (self, CHAN_PROJECTILE, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);   // FIXME: PLACEHOLDER
+                spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);   // FIXME: PLACEHOLDER
         }
         else
         	if(sound_allowed(MSG_BROADCAST, attacker))
-                spamsound (self, CHAN_PROJECTILE, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+                spamsound (self, CH_PAIN, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
 
     }
     else
@@ -730,7 +730,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         self.vehicle_health -= damage;
 
         if(sound_allowed(MSG_BROADCAST, attacker))
-            spamsound (self, CHAN_PROJECTILE, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+            spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
     }
 
     self.velocity += force; // * (vlen(force) / self.mass);
