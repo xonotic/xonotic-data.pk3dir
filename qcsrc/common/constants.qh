@@ -431,30 +431,28 @@ const float STAT_DOM_PPS_YELLOW = 104;
 
 #ifdef XON020_CHANNELS
 float CH_INFO = 0; // only on world and csqc
-float CH_TRIGGER = 0; // only on players
+float CH_TRIGGER = 0; // only on players; compat: FALSELY CONTROLLED BY "Info"
 float CH_WEAPON_A = 1; // only on players and entities
-float CH_VOICE = 2; // only on players
-float CH_BGM = 2; // only on csqc
+float CH_VOICE = 2; // only on players; compat: FALSELY CONTROLLED BY "BGM"
+float CH_BGM_SINGLE = 2; // only on csqc
 float CH_TRIGGER_SINGLE = 3; // only on players, entities, csqc
 float CH_SHOTS_SINGLE = 4; // only on players, entities, csqc
 float CH_WEAPON_B = 5; // only on players and entities
 float CH_PAIN = 6; // only on players and csqc
 float CH_PAIN_SINGLE = 6; // only on players and csqc
 float CH_PLAYER = 7; // only on players and entities
-float CH_TRIGGER2_SINGLE = 6; // only on entities
 #else
-float CH_INFO = 0;
+float CH_INFO = 0; // only on world and csqc!
 float CH_TRIGGER = 256;
 float CH_WEAPON_A = 257;
 float CH_VOICE = 258;
-float CH_BGM = 259;
+float CH_BGM = 2;
 float CH_TRIGGER_SINGLE = 3;
 float CH_SHOTS_SINGLE = 4;
 float CH_WEAPON_B = 257;
-float CH_PAIN = 260;
+float CH_PAIN = 259;
 float CH_PAIN_SINGLE = 6;
-float CH_PLAYER = 261;
-float CH_TRIGGER2_SINGLE = 2;
+float CH_PLAYER = 260;
 #endif
 
 #ifdef LEGACY_CHANS

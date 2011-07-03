@@ -358,13 +358,13 @@ float racer_frame()
         {        
             //self.sounds = 2;
             self.strength_finished = time + 10.922667; //soundlength("vehicles/racer_boost.wav");
-            sound (self, CH_TRIGGER2_SINGLE, "vehicles/racer_boost.wav", VOL_VEHICLEENGINE, ATTN_NORM);            
+            sound (self.tur_head, CH_TRIGGER_SINGLE, "vehicles/racer_boost.wav", VOL_VEHICLEENGINE, ATTN_NORM);            
         }        
     }
     else
     {
         self.strength_finished = 0;
-        sound (self, CH_TRIGGER2_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+        sound (self.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTN_NORM);
     }
         
 
@@ -505,7 +505,7 @@ void racer_exit(float eject)
     self.think      = racer_think;
     self.nextthink  = time;
     self.movetype   = MOVETYPE_TOSS;
-    sound (self, CH_TRIGGER2_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+    sound (self.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTN_NORM);
     
     if not (self.owner)
         return;
@@ -609,7 +609,7 @@ void racer_dinit()
     if not (vehicle_initialize(
              "Wakizashi",
              "models/vehicles/wakizashi.dpm",
-             "",
+             "null", // we need this so tur_head is networked and usable for sounds
              "models/vehicles/wakizashi_cockpit.dpm",
              "", "", "tag_viewport",
              HUD_WAKIZASHI,
