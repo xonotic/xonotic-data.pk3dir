@@ -604,7 +604,7 @@ void W_Nexball_Touch (void)
 		if(!attacker.ballcarried)
 		{
 			LogNB("stole", attacker);
-			sound (other, CH_ITEMS, ball.noise2, VOL_BASE, ATTN_NORM);
+			sound (other, CH_TRIGGER, ball.noise2, VOL_BASE, ATTN_NORM);
 
 			if(attacker.team == other.team && time > attacker.teamkill_complain)
 			{

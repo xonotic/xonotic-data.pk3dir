@@ -457,6 +457,7 @@ float CH_PLAYER = 263;
 float CH_TRIGGER2_SINGLE = 16;
 #endif
 
+#ifdef LEGACY_CHANS
 // this assignment must match menu/xonotic/dialog_settings_misc.c!
 float	CHAN_AUTO				= 0;
 	// on world: announcers, ...                     INFO
@@ -498,6 +499,7 @@ float	CHAN_PLAYER				= 7; // Player body
 	// on players: player sounds                     PLAYER
 	// on entities: player sounds                    PLAYER
 	// on csqc: UNUSED
+#endif
 
 float	ATTN_NONE				= 0;
 float	ATTN_MIN				= 0.015625;
