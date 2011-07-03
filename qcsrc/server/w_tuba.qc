@@ -130,18 +130,8 @@ void W_Tuba_NoteThink()
 void W_Tuba_Attack(float hittype)
 {
 	vector o;
-	float c, n;
+	float n;
 	W_SetupShot(self, FALSE, 2, "", 0, autocvar_g_balance_tuba_damage);
-	if(self.tuba_notecount)
-	{
-		self.tuba_notecount = FALSE;
-		c = CHAN_WEAPON;
-	}
-	else
-	{
-		self.tuba_notecount = TRUE;
-		c = CHAN_WEAPON2;
-	}
 
 	n = Tuba_GetNote(self, hittype);
 

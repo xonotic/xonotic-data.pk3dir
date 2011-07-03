@@ -459,7 +459,7 @@ float w_minelayer(float req)
 		if (self.BUTTON_ATCK2)
 		{
 			if(W_PlacedMines(TRUE))
-				sound (self, CHAN_WEAPON2, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if (req == WR_PRECACHE)

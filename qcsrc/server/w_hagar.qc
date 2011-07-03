@@ -221,7 +221,7 @@ void W_Hagar_Attack2_Load (void)
 				{
 					W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
 					self.hagar_load += 1;
-					sound(self, CHAN_WEAPON2, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
 					self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
 				}

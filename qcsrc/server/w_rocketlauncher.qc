@@ -209,7 +209,7 @@ void W_Rocket_Think (void)
 			{
 				pointparticles(particleeffectnum("rocket_guide"), self.origin, self.velocity, 1);
 				// TODO add a better sound here
-				sound (self.realowner, CHAN_WEAPON2, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);
+				sound (self.realowner, CH_WEAPON_B, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);
 				self.count = 1;
 			}
 		}
@@ -433,7 +433,7 @@ float w_rlauncher(float req)
 					}
 				}
 				if(rockfound)
-					sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+					sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
 			}
 		}
 	}

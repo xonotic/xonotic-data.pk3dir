@@ -310,7 +310,7 @@ float w_glauncher(float req)
 					}
 				}
 				if(nadefound)
-					sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+					sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
 			}
 			else if (weapon_prepareattack(1, autocvar_g_balance_grenadelauncher_secondary_refire))
 			{
