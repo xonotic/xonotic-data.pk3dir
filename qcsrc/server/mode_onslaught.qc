@@ -1104,9 +1104,9 @@ void onslaught_controlpoint_icon_think()
 		pointparticles(particleeffectnum("electricity_sparks"), self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
 		if(random() > 0.8)
-			sound(self, CHAN_PAIN, "onslaught/ons_spark1.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_PAIN, "onslaught/ons_spark1.wav", VOL_BASE, ATTN_NORM);
 		else if (random() > 0.5)
-			sound(self, CHAN_PAIN, "onslaught/ons_spark2.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_PAIN, "onslaught/ons_spark2.wav", VOL_BASE, ATTN_NORM);
 	}
 };
 

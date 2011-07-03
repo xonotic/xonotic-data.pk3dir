@@ -135,9 +135,6 @@ void W_Electro_Attack()
 	setsize(proj, '0 0 -3', '0 0 -3');
 	proj.flags = FL_PROJECTILE;
 
-	//sound (proj, CHAN_PAIN, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
-	//sounds bad
-
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
