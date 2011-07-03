@@ -721,7 +721,7 @@ void target_speaker_use_activator()
 	else
 		snd = self.noise;
 	msg_entity = activator;
-	soundto(MSG_ONE, self, CHAN_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
+	soundto(MSG_ONE, self, CH_TRIGGER_SINGLE, snd, VOL_BASE * self.volume, self.atten);
 }
 void target_speaker_use_on()
 {
@@ -747,13 +747,13 @@ void target_speaker_use_on()
 	}
 	else
 		snd = self.noise;
-	sound(self, CHAN_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
+	sound(self, CH_TRIGGER_SINGLE, snd, VOL_BASE * self.volume, self.atten);
 	if(self.spawnflags & 3)
 		self.use = target_speaker_use_off;
 }
 void target_speaker_use_off()
 {
-	sound(self, CHAN_TRIGGER, "misc/null.wav", VOL_BASE * self.volume, self.atten);
+	sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASE * self.volume, self.atten);
 	self.use = target_speaker_use_on;
 }
 void target_speaker_reset()

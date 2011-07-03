@@ -366,7 +366,7 @@ void GoalTouch (void)
 		pscore = 1;
 	}
 
-	sound (ball, CH_TRIGGERS_SINGLE, self.noise, VOL_BASE, ATTN_NONE);
+	sound (ball, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NONE);
 
 	if(ball.team && pscore)
 	{
