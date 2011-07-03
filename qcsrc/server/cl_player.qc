@@ -1336,9 +1336,9 @@ void VoiceMessage(string type, string msg)
 	flood = Say(self, ownteam, world, msg, 1);
 
 	if (flood > 0)
-		GlobalSound(self.sample, CHAN_VOICE, voicetype);
+		GlobalSound(self.sample, CH_VOICE, voicetype);
 	else if (flood < 0)
-		FakeGlobalSound(self.sample, CHAN_VOICE, voicetype);
+		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
 }
 
 void MoveToTeam(entity client, float team_colour, float type, float show_message)

@@ -434,7 +434,6 @@ float CH_INFO = 0; // only on world and csqc
 float CH_ITEMS = 0; // only on players
 float CH_WEAPON_A = 1; // only on players and entities
 float CH_VOICE = 2; // only on players
-float CH_AMBIENT = 2; // only on entities
 float CH_BGM = 2; // only on csqc
 float CH_TRIGGERS_SINGLE = 3; // only on players, entities, csqc
 float CH_SHOTS_SINGLE = 4; // only on players, entities, csqc
@@ -448,7 +447,6 @@ float CH_SHOTS_SINGLE = 4;
 float CH_ITEMS = 256;
 float CH_WEAPON_A = 257;
 float CH_VOICE = 258;
-float CH_AMBIENT = 259;
 float CH_BGM = 260;
 float CH_WEAPON_B = 257;
 float CH_PAIN = 262;
@@ -469,7 +467,7 @@ float	CHAN_WEAPON				= 1; // Weapon fire
 float	CHAN_VOICE				= 2; // Voice/Radio
 	// on world: UNUSED
 	// on players: voice                             VOICE
-	// on entities: ambient                          AMBIENT
+	// on entities: UNUSED
 	// on csqc: background music                     BGM
 float	CHAN_TRIGGER			= 3; // Triggers/Items
 	// on world: UNUSED
