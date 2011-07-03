@@ -429,7 +429,7 @@ const float STAT_DOM_PPS_YELLOW = 104;
 #define SP_SCORE 3
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 
-#ifdef XON020_CHANNELS
+#ifdef COMPAT_XON010_CHANNELS
 float CH_INFO = 0; // only on world and csqc
 float CH_TRIGGER = 0; // only on players; compat: FALSELY CONTROLLED BY "Info"
 float CH_WEAPON_A = 1; // only on players and entities
