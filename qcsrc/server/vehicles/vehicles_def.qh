@@ -1,0 +1,65 @@
+// #define VEHICLES_USE_ODE
+#define VEHICLES_ENABLED
+#ifdef VEHICLES_ENABLED
+
+//#message "with tZork vehicles (experimental)"
+
+.float vehicle_flags;
+float VHF_ISVEHICLE     = 2;    /// Indicates vehicle
+float VHF_HASSHIELD     = 4;    /// Vehicle has shileding
+float VHF_SHIELDREGEN   = 8;    /// Vehicles shield regenerates
+float VHF_HEALTHREGEN   = 16;   /// Vehicles health regenerates
+float VHF_ENERGYREGEN   = 32;   /// Vehicles energy regenerates
+float VHF_DEATHEJECT    = 64;   /// Vehicle ejects pilot upon fatal damage
+float VHF_MOVE_GROUND   = 128;  /// Vehicle moves on gound
+float VHF_MOVE_HOVER    = 256;  /// Vehicle hover close to gound
+float VHF_MOVE_FLY      = 512;  /// Vehicle is airborn
+float VHF_DMGSHAKE      = 1024;
+float VHF_DMGROLL       = 2048;
+float VHF_DMGHEADROLL   = 4096;
+
+.entity gun1;
+.entity gun2;
+
+.float vehicle_health;      /// If self is player this is 0..100 indicating precentage of health left on vehicle. If self is vehile, this is the real health value.
+.float vehicle_energy;      /// If self is player this is 0..100 indicating precentage of energy left on vehicle. If self is vehile, this is the real energy value.
+.float vehicle_shield;      /// If self is player this is 0..100 indicating precentage of shield left on vehicle. If self is vehile, this is the real shield value.
+.entity vehicle_shieldent;  /// Entity to disply the shild effect on damage
+
+.float vehicle_ammo1;   /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real ammo1 value.
+.float vehicle_reload1; /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real reload1 value.
+.float vehicle_ammo2;   /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real ammo2 value.
+.float vehicle_reload2; /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real reload2 value.
+
+.entity vehicle;
+.entity vehicle_viewport;
+.entity vehicle_hudmodel;
+
+.float sound_nexttime;
+#define VOL_VEHICLEENGINE 1
+
+.float hud;
+.float dmg_time;
+.float  vehicle_respawntime;
+.void() vehicle_spawn;
+
+void vehicles_exit(float eject);
+var .void(float exit_flags) vehicle_exit;
+float VHEF_NORMAL = 0;  /// User pressed exit key
+float VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
+float VHEF_RELESE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
+
+float SVC_SETVIEWPORT   = 5;   // Net.Protocol 0x05
+float SVC_SETVIEWANGLES = 10;  // Net.Protocol 0x0A
+float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
+
+var .void() vehicle_enter;  /// Vehicles custom funciton to be executed when owner exit it
+var .void() vehicle_die;    /// Vehicles custom function to be executed when vehile die
+var .void() vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
+
+#ifdef VEHICLES_USE_ODE
+void(entity e, float physics_enabled) physics_enable = #540; // enable or disable physics on object
+void(entity e, vector force, vector force_pos) physics_addforce = #541; // apply a force from certain origin, length of force vector is power of force
+void(entity e, vector torque) physics_addtorque = #542; // add relative torque
+#endif  // VEHICLES_USE_ODE
+#endif  // VEHICLES_ENABLED

@@ -31,7 +31,7 @@ float entcs_customize()
 	if(other == o)
 		return FALSE;
 	if(other.classname == "player")
-		if(!teams_matter || o.team != other.team)
+		if(!teamplay || o.team != other.team)
 			if not (radar_showennemies)
 				return FALSE;
 	return TRUE;

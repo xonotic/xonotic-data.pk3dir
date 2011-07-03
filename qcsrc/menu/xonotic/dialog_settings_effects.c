@@ -132,8 +132,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
 	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
 		setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
-	me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "r_shadow_gloss", _("Gloss")));
-		setDependentAND3(e, "vid_gl20", 1, 1, "r_glsl_deluxemapping", 1, 2, "mod_q3bsp_nolightmaps", 0, 0);
+	me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "r_shadow_gloss", _("Gloss"))); // FIXME move this box elsewhere, it has nothing to do with Q3BSP lightmaps
+		setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping", _("Offset mapping")));
 			setDependent(e, "vid_gl20", 1, 1);
@@ -184,11 +184,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.savedValue = 0.5; // default
 		me.TD(me, 1, 2, s);
 	me.TR(me);
-		s = makeXonoticSlider(0.1, 1, 0.1, "r_damageblur");
-		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, s, _("Damage blur:")));
-		if(s.value != e.savedValue)
-			e.savedValue = 0.4; // default
-		me.TD(me, 1, 2, s);
+		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Damage & water blur")));
+		me.TD(me, 1, 1, e = makeXonoticCheckBoxEx(0.5, 0, "hud_powerup", _("Powerup sharpen")));
 	
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY));

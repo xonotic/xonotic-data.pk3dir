@@ -4,6 +4,8 @@ void ka_RespawnBall(void);
 void ka_DropEvent(entity);
 void ka_TimeScoring(void);
 
+entity ka_ball;
+
 float ka_ballcarrier_waypointsprite_visible_for_player(entity);
 
 void ka_Initialize() // run at the start of a match, initiates game mode
@@ -50,6 +52,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e.reset = ka_Reset;
 	e.touch = ka_TouchEvent;
 	e.owner = world;
+	ka_ball = e;
 
 	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So. 
 }
@@ -72,8 +75,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 		pointparticles(particleeffectnum("electro_combo"), oldballorigin, '0 0 0', 1);
 		pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 1);
 
-		WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE);
-		WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 1');
+		WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
 		WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);	
 
 		sound(self, CHAN_AUTO, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
@@ -132,10 +134,9 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	PlayerScore_Add(other, SP_KEEPAWAY_PICKUPS, 1);
 
 	// waypoints
-	WaypointSprite_AttachCarrier("ka-ballcarrier", other);
+	WaypointSprite_AttachCarrier("ka-ballcarrier", other, RADARICON_FLAGCARRIER, '1 0 0');
 	other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ka_ballcarrier_waypointsprite_visible_for_player;
 	WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-	WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 0 0');
 	WaypointSprite_Ping(other.waypointsprite_attachedforcarrier);	
 	WaypointSprite_Kill(self.waypointsprite_attachedforcarrier);
 }
@@ -175,9 +176,8 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
 	
 	// waypoints
-	WaypointSprite_Spawn("ka-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, FALSE);
+	WaypointSprite_Spawn("ka-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-	WaypointSprite_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '0 1 1');
 	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);	
 	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
 }
@@ -241,10 +241,17 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 	if(self.ballcarried)
 		self.items |= IT_KEY1;
 
-	// drop the ball if the player presses the use button
-	if(self.BUTTON_USE)
-		if(self.ballcarried) { ka_DropEvent(self); } 
+	return 0;
+}
 
+MUTATOR_HOOKFUNCTION(ka_PlayerUseKey)
+{
+	if(MUTATOR_RETURNVALUE == 0)
+	if(self.ballcarried)
+	{
+		ka_DropEvent(self);
+		return 1;
+	}
 	return 0;
 }
 
@@ -307,6 +314,7 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 	MUTATOR_HOOK(PlayerPreThink, ka_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ka_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, ka_PlayerPowerups, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerUseKey, ka_PlayerUseKey, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

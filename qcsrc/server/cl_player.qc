@@ -530,7 +530,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// escape a lava pit or similar
 		//self.pushltime = 0;
 	}
-	else if(attacker.classname == "player" || attacker.classname == "gib")
+	else if(attacker.classname == "player")
 	{
 		self.pusher = attacker;
 		self.pushltime = time + autocvar_g_maxpushtime;
@@ -559,7 +559,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
 	}
-	
+
 	if(valid_damage_for_weaponstats)
 	{
 		dh = dh - max(self.health, 0);
@@ -643,7 +643,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(self.flagcarried)
 		{
-			if(attacker.classname != "player" && attacker.classname != "gib")
+			if(attacker.classname != "player")
 				DropFlag(self.flagcarried, self, attacker); // penalty for flag loss by suicide
 			else if(attacker.team == self.team)
 				DropFlag(self.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill
@@ -772,7 +772,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	if(source.classname != "player")
 		colorstr = "^0"; // black for spectators
-	else if(teams_matter)
+	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
 	else
 		teamsay = FALSE;
@@ -1134,8 +1134,9 @@ void UpdatePlayerSounds()
 	self.skinindex_for_playersound = self.skinindex;
 	ClearPlayerSounds();
 	LoadPlayerSounds("sound/player/default.sounds", 1);
-	if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skinindex, "sounds"), 0))
-		LoadPlayerSounds(get_model_datafilename(self.model, 0, "sounds"), 0);
+	if(!autocvar_g_debug_defaultsounds)
+		if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skinindex, "sounds"), 0))
+			LoadPlayerSounds(get_model_datafilename(self.model, 0, "sounds"), 0);
 }
 
 void FakeGlobalSound(string sample, float chan, float voicetype)
@@ -1261,7 +1262,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 			break;
 		case VOICETYPE_TEAMRADIO:
 			FOR_EACH_REALCLIENT(msg_entity)
-				if(!teams_matter || msg_entity.team == self.team)
+				if(!teamplay || msg_entity.team == self.team)
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
 						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);

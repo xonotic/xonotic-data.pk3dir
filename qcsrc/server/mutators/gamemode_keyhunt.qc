@@ -350,7 +350,7 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 		if(key.kh_next == world)
 		{
 			// player is now a key carrier
-			WaypointSprite_AttachCarrier("", player);
+			WaypointSprite_AttachCarrier("", player, RADARICON_FLAGCARRIER, colormapPaletteColor(player.team - 1, 0));
 			player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_KeyCarrier_waypointsprite_visible_for_player;
 			WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, player.team, SPRITERULE_TEAMPLAY);
 			if(player.team == COLOR_TEAM1)
@@ -361,7 +361,6 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-yellow", "keycarrier-friend", "keycarrier-yellow");
 			else if(player.team == COLOR_TEAM4)
 				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-pink", "keycarrier-friend", "keycarrier-pink");
-			WaypointSprite_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, colormapPaletteColor(player.team - 1, 0));
 			if(!kh_no_radar_circles)
 				WaypointSprite_Ping(player.waypointsprite_attachedforcarrier);
 		}
@@ -653,23 +652,6 @@ void kh_Key_Think()  // runs all the time
 		makevectors('0 1 0' * (self.cnt + mod(time, 360) * KH_KEY_XYSPEED));
 		setorigin(self, v_forward * KH_KEY_XYDIST + '0 0 1' * self.origin_z);
 #endif
-
-		if(self.owner.BUTTON_USE)
-		if(time >= self.owner.kh_droptime + autocvar_g_balance_keyhunt_delay_drop)
-		{
-			self.owner.kh_droptime = time;
-			self.kh_droptime = time;  // prevent collecting this one for some time
-			self.enemy = self.owner;
-			self.pusher = world;
-			kh_Scores_Event(self.owner, self, "dropkey", 0, 0);
-			bprint(self.owner.netname, "^7 dropped the ", self.netname, "\n");
-			sound(self.owner, CHAN_AUTO, kh_sound_drop, VOL_BASE, ATTN_NORM);
-			makevectors(self.owner.v_angle);
-			self.velocity = W_CalculateProjectileVelocity(self.owner.velocity, autocvar_g_balance_keyhunt_throwvelocity * v_forward, FALSE);
-			kh_Key_AssignTo(self, world);
-			self.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
-			self.kh_dropperteam = self.team;
-		}
 	}
 
 	// if in nodrop or time over, end the round
@@ -768,9 +750,8 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 
 	centerprint(initial_owner, strcat("You are starting with the ", key.netname, "\n"));  // message to player at start of round
 
-	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, FALSE);
+	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAG, '0 1 1');
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
-	WaypointSprite_UpdateTeamRadar(key.waypointsprite_attachedforcarrier, RADARICON_FLAG, '0 1 1');
 
 	kh_Key_AssignTo(key, initial_owner);
 }
@@ -797,6 +778,28 @@ float kh_Key_AllOwnedByWhichTeam()  // constantly called. check to see if all th
 	if(keys != 0)
 		return -1;
 	return teem;
+}
+
+void kh_Key_DropOne(entity key)
+{
+	// prevent collecting this one for some time
+	entity player;
+	player = key.owner;
+
+	key.kh_droptime = time;
+	key.enemy = player;
+
+	kh_Scores_Event(player, key, "dropkey", 0, 0);
+	PlayerScore_Add(player, SP_KH_LOSSES, 1);
+	bprint(player.netname, "^7 dropped the ", key.netname, "\n");
+	kh_Key_AssignTo(key, world);
+	makevectors(player.v_angle);
+	key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_throwvelocity * v_forward, FALSE);
+	key.pusher = world;
+	key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
+	key.kh_dropperteam = key.team;
+
+	sound(player, CHAN_AUTO, kh_sound_drop, VOL_BASE, ATTN_NORM);
 }
 
 void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
@@ -1018,7 +1021,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 {
 	if(self == other)
 		kh_Key_DropAll(self, TRUE);
-	else if(other.classname == "player" || other.classname == "gib")
+	else if(other.classname == "player")
 		kh_Key_DropAll(self, FALSE);
 	else
 		kh_Key_DropAll(self, TRUE);
@@ -1049,6 +1052,21 @@ MUTATOR_HOOKFUNCTION(kh_SpectateCopy)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
+{
+	if(MUTATOR_RETURNVALUE == 0)
+	{
+		entity k;
+		k = self.kh_next;
+		if(k)
+		{
+			kh_Key_DropOne(k);
+			return 1;
+		}
+	}
+	return 0;
+}
+
 MUTATOR_DEFINITION(gamemode_keyhunt)
 {
 	MUTATOR_HOOK(MakePlayerObserver, kh_Key_DropAll, CBC_ORDER_ANY);
@@ -1058,6 +1076,7 @@ MUTATOR_DEFINITION(gamemode_keyhunt)
 	MUTATOR_HOOK(MatchEnd, kh_finalize, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, kh_GetTeamCount, CBC_ORDER_EXCLUSIVE);
 	MUTATOR_HOOK(SpectateCopy, kh_SpectateCopy, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerUseKey, kh_PlayerUseKey, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

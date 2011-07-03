@@ -1,6 +1,17 @@
-1   30  20 1 // forward
-32  30  20 1 // backward
-63  30  20 1 // left
-94  30 20 1 // right
-125 30 20 0 // jump
-0   1   20 0 // idle
+/*
+Generated framegroups file for spiderbot
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 31 30 1 // spiderbot forward
+32 31 30 1 // spiderbot backwards
+63 31 20 1 // spiderbot left
+94 31 20 1 // spiderbot right
+125 31 20 0 // spiderbot jump
+156 1 1 0 // spiderbot idle
+157 12 20 0 // spiderbot jump2
+169 7 20 0 // spiderbot jump_charge
+176 11 15 0 // spiderbot jump_fly
+187 21 20 0 // spiderbot jump_land
+208 51 15 0 // spiderbot death
+259 3 1 0 // spiderbot dead

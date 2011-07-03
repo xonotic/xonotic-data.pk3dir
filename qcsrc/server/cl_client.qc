@@ -112,7 +112,7 @@ void spawnfunc_info_player_deathmatch (void)
 
 void spawnpoint_use()
 {
-	if(teams_matter)
+	if(teamplay)
 	if(have_team_spawns > 0)
 	{
 		self.team = activator.team;
@@ -596,7 +596,7 @@ void FixPlayermodel();
 void PutObserverInServer (void)
 {
 	entity	spot;
-
+    self.hud = HUD_NORMAL;
 	race_PreSpawnObserver();
 
 	spot = SelectSpawnPoint (TRUE);
@@ -621,6 +621,9 @@ void PutObserverInServer (void)
 		PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
+
+	if(self.vehicle)
+	    vehicles_exit(VHEF_RELESE);
 
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
@@ -748,7 +751,7 @@ void FixPlayermodel()
 	if(autocvar_sv_defaultcharacter == 1) {
 		defaultskin = 0;
 
-		if(teams_matter)
+		if(teamplay)
 		{
 			string s;
 			s = Team_ColorNameLowerCase(self.team);
@@ -804,7 +807,7 @@ void FixPlayermodel()
 	if(chmdl || oldskin != self.skinindex)
 		self.species = player_getspecies(); // model or skin has changed
 
-	if(!teams_matter)
+	if(!teamplay)
 		if(strlen(autocvar_sv_defaultplayercolors))
 			if(self.clientcolors != stof(autocvar_sv_defaultplayercolors))
 				setcolor(self, stof(autocvar_sv_defaultplayercolors));
@@ -1084,7 +1087,11 @@ void PutClientInServer (void)
 		oldself = self;
 		self = spot;
 			activator = oldself;
+				string s;
+				s = self.target;
+				self.target = string_null;
 				SUB_UseTargets();
+				self.target = s;
 			activator = world;
 		self = oldself;
 
@@ -1260,7 +1267,19 @@ void ClientKill_Now_TeamChange()
 
 void ClientKill_Now()
 {
-	remove(self.killindicator);
+	if(self.vehicle)
+	{
+	    vehicles_exit(VHEF_RELESE);
+	    if(!self.killindicator_teamchange)
+	    {
+            self.vehicle_health = -1;
+            Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');	        
+	    }
+	}
+	
+	if(self.killindicator && !wasfreed(self.killindicator))
+        remove(self.killindicator);
+	
 	self.killindicator = world;
 
 	if(self.killindicator_teamchange)
@@ -1418,7 +1437,7 @@ void CTS_ClientKill (entity e) // silent version of ClientKill, used when player
 void DoTeamChange(float destteam)
 {
 	float t, c0;
-	if(!teams_matter)
+	if(!teamplay)
 	{
 		if(destteam >= 0)
 			SetPlayerColors(self, destteam);
@@ -1565,7 +1584,7 @@ void ClientConnect (void)
 	playerdemo_init();
 
 	anticheat_init();
-	
+
 	race_PreSpawnObserver();
 
 	//if(g_domination)
@@ -1609,7 +1628,7 @@ void ClientConnect (void)
 	else
 		self.team_forced = 0;
 
-	if(!teams_matter)
+	if(!teamplay)
 		if(self.team_forced > 0)
 			self.team_forced = 0;
 
@@ -1618,7 +1637,7 @@ void ClientConnect (void)
 	if((autocvar_sv_spectate == 1 && !g_lms) || autocvar_g_campaign || self.team_forced < 0) {
 		self.classname = "observer";
 	} else {
-		if(teams_matter)
+		if(teamplay)
 		{
 			if(autocvar_g_balance_teams || autocvar_g_balance_teams_force)
 			{
@@ -1682,7 +1701,7 @@ void ClientConnect (void)
 	GetCvars(0);
 
 	// notify about available teams
-	if(teams_matter)
+	if(teamplay)
 	{
 		CheckAllowedTeams(self);
 		t = 0; if(c1 >= 0) t |= 1; if(c2 >= 0) t |= 2; if(c3 >= 0) t |= 4; if(c4 >= 0) t |= 8;
@@ -1786,6 +1805,9 @@ Called when a client disconnects from the server
 void ReadyCount();
 void ClientDisconnect (void)
 {
+	if(self.vehicle)
+	    vehicles_exit(VHEF_RELESE);
+
 	if not(self.flags & FL_CLIENT)
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
@@ -1923,7 +1945,7 @@ void UpdateChatBubble()
 	local float c;
 	c = self.clientcolors & 15;
 	// LordHavoc: only bothering to support white, green, red, yellow, blue
-	     if (!teams_matter) self.colormod = '0 0 0';
+	     if (!teamplay) self.colormod = '0 0 0';
 	else if (c ==  0) self.colormod = '1.00 1.00 1.00';
 	else if (c ==  3) self.colormod = '0.10 1.73 0.10';
 	else if (c ==  4) self.colormod = '1.73 0.10 0.10';
@@ -2013,7 +2035,7 @@ void player_powerups (void)
 {
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	olditems = self.items;
-	
+
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
 	{
 		SoundEntity_StartSound(self, CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
@@ -2029,7 +2051,7 @@ void player_powerups (void)
 
 	if(!self.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
-	
+
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
@@ -2135,7 +2157,7 @@ void player_powerups (void)
 		if (time < self.spawnshieldtime)
 			self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 	}
-	
+
 	MUTATOR_CALLHOOK(PlayerPowerups);
 }
 
@@ -2356,11 +2378,34 @@ void SpectateCopy(entity spectatee) {
 	SetZoomState(spectatee.zoomstate);
 
 	anticheat_spectatecopy(spectatee);
+
+	//self.vehicle = spectatee.vehicle;
+
+	self.hud = spectatee.hud;
+	if(spectatee.vehicle)
+    {
+        setorigin(self, spectatee.origin);
+        self.velocity = spectatee.vehicle.velocity;
+        self.v_angle += spectatee.vehicle.angles;
+        //self.v_angle_x *= -1;
+        self.vehicle_health = spectatee.vehicle_health;
+        self.vehicle_shield = spectatee.vehicle_shield;
+        self.vehicle_energy = spectatee.vehicle_energy;
+        self.vehicle_ammo1 = spectatee.vehicle_ammo1;
+        self.vehicle_ammo2 = spectatee.vehicle_ammo2;
+        self.vehicle_reload1 = spectatee.vehicle_reload1;
+        self.vehicle_reload2 = spectatee.vehicle_reload2;
+        
+        msg_entity = self;
+        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
+        WriteEntity(MSG_ONE, spectatee);
+        //self.tur_head = spectatee.vehicle.vehicle_viewport;
+    }
 }
 
 float SpectateUpdate() {
 	if(!self.enemy)
-		return 0;
+	    return 0;		
 
 	if (self == self.enemy)
 		return 0;
@@ -2383,17 +2428,28 @@ float SpectateNext() {
 		self.enemy = other;
 
 	if(self.enemy.classname == "player") {
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self.enemy);
-	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
-		self.movetype = MOVETYPE_NONE;
-		accuracy_resend(self);
+	    if(self.enemy.vehicle)
+	    {	   
+            msg_entity = self;
+            WriteByte(MSG_ONE, SVC_SETVIEWPORT);
+            WriteEntity(MSG_ONE, self.enemy);
+            //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            self.movetype = MOVETYPE_NONE;
+            accuracy_resend(self);
+	    }
+	    else 
+	    {	        
+            msg_entity = self;
+            WriteByte(MSG_ONE, SVC_SETVIEW);
+            WriteEntity(MSG_ONE, self.enemy);
+            //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            self.movetype = MOVETYPE_NONE;
+            accuracy_resend(self);
 
-		if(!SpectateUpdate())
-			PutObserverInServer();
-
-		return 1;
+            if(!SpectateUpdate())
+                PutObserverInServer();
+        }
+        return 1;
 	} else {
 		return 0;
 	}
@@ -2428,7 +2484,7 @@ void ShowRespawnCountdown()
 void LeaveSpectatorMode()
 {
 	if(nJoinAllowed(1)) {
-		if(!teams_matter || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
+		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force)
@@ -2566,10 +2622,31 @@ void SpectatorThink()
 				return;
 			}
 		}
+		if(!SpectateUpdate())
+			PutObserverInServer();
 	}
 
 	PrintWelcomeMessage(self);
 	self.flags |= FL_CLIENT | FL_NOTARGET;
+}
+
+float ctf_usekey();
+void PlayerUseKey()
+{
+	if(self.classname != "player")
+		return;
+
+	if(self.vehicle)
+	{
+        vehicles_exit(VHEF_NORMAL);
+        return;
+	}
+	
+	// a use key was pressed; call handlers
+	if(ctf_usekey())
+		return;
+
+	MUTATOR_CALLHOOK(PlayerUseKey);
 }
 
 .float touchexplode_time;
@@ -2581,6 +2658,7 @@ PlayerPreThink
 Called every frame for each client before the physics are run
 =============
 */
+.float usekeypressed;
 void() ctf_setstatus;
 void() nexball_setstatus;
 .float items_added;
@@ -2657,6 +2735,10 @@ void PlayerPreThink (void)
 #endif
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
+
+	if(self.BUTTON_USE && !self.usekeypressed)
+		PlayerUseKey();
+	self.usekeypressed = self.BUTTON_USE;
 
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
@@ -3053,7 +3135,7 @@ void PlayerPostThink (void)
 	} else if (self.classname == "spectator") {
 		//do nothing
 	}
-
+	
 	/*
 	float i;
 	for(i = 0; i < 1000; ++i)
@@ -3076,7 +3158,7 @@ void PlayerPostThink (void)
 
 	if(self.waypointsprite_attachedforcarrier)
 		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
-	
+
 	if(self.classname == "player" && self.deadflag == DEAD_NO && autocvar_r_showbboxes)
 	{
 		if(!self.showheadshotbbox)
@@ -3094,7 +3176,8 @@ void PlayerPostThink (void)
 	else
 	{
 		if(self.showheadshotbbox)
-			remove(self.showheadshotbbox);
+			if(self.showheadshotbbox && !wasfreed(self.showheadshotbbox))
+                remove(self.showheadshotbbox);
 	}
 
 	playerdemo_write();

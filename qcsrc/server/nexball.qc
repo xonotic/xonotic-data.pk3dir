@@ -166,9 +166,8 @@ void GiveBall (entity plyr, entity ball)
 	ball.effects |= EF_NOSHADOW;
 	ball.scale = 1; // scale down.
 
-	WaypointSprite_AttachCarrier("nb-ball", plyr);
+	WaypointSprite_AttachCarrier("nb-ball", plyr, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 	WaypointSprite_UpdateRule(plyr.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-	WaypointSprite_UpdateTeamRadar(plyr.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 
 	if (g_nexball_basketball_delay_hold)
 	{
@@ -201,10 +200,8 @@ void DropBall (entity ball, vector org, vector vel)
 	}
 
 	WaypointSprite_Kill(ball.owner.waypointsprite_attachedforcarrier);
-	//WaypointSprite_AttachCarrier("nb-ball", ball);
-	WaypointSprite_Spawn("nb-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, FALSE); // no health bar please
+	WaypointSprite_Spawn("nb-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR); // no health bar please
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-	WaypointSprite_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 
 	ball.owner.ballcarried = world;
 	ball.owner = world;
@@ -491,8 +488,7 @@ void SpawnBall (void)
 	precache_sound (self.noise1);
 	precache_sound (self.noise2);
 
-	WaypointSprite_AttachCarrier("nb-ball", self); // the ball's team is not set yet, no rule update needed
-	WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
+	WaypointSprite_AttachCarrier("nb-ball", self, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR); // the ball's team is not set yet, no rule update needed
 
 	self.reset = ball_restart;
 	self.think = InitBall;
@@ -601,7 +597,7 @@ void W_Nexball_Touch (void)
 
 	PROJECTILE_TOUCH;
 	if(attacker.team != other.team || g_nexball_basketball_teamsteal)
-	if((ball = other.ballcarried) && (attacker.classname == "player" || attacker.classname == "gib"))
+	if((ball = other.ballcarried) && (attacker.classname == "player"))
 	{
 		other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 		other.flags &~= FL_ONGROUND;

@@ -10,9 +10,9 @@ void W_HLAC_Touch (void)
 	self.event_damage = SUB_Null;
 	
 	if(self.projectiledeathtype & HITTYPE_SECONDARY)
-		RadiusDamage (self, self.owner, autocvar_g_balance_hlac_secondary_damage, autocvar_g_balance_hlac_secondary_edgedamage, autocvar_g_balance_hlac_secondary_radius, world, autocvar_g_balance_hlac_secondary_force, self.projectiledeathtype, other);
+		RadiusDamage (self, self.realowner, autocvar_g_balance_hlac_secondary_damage, autocvar_g_balance_hlac_secondary_edgedamage, autocvar_g_balance_hlac_secondary_radius, world, autocvar_g_balance_hlac_secondary_force, self.projectiledeathtype, other);
 	else
-		RadiusDamage (self, self.owner, autocvar_g_balance_hlac_primary_damage, autocvar_g_balance_hlac_primary_edgedamage, autocvar_g_balance_hlac_primary_radius, world, autocvar_g_balance_hlac_primary_force, self.projectiledeathtype, other);
+		RadiusDamage (self, self.realowner, autocvar_g_balance_hlac_primary_damage, autocvar_g_balance_hlac_primary_edgedamage, autocvar_g_balance_hlac_primary_radius, world, autocvar_g_balance_hlac_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -38,7 +38,7 @@ void W_HLAC_Attack (void)
 	}
 
 	missile = spawn ();
-	missile.owner = self;
+	missile.owner = missile.realowner = self;
 	missile.classname = "hlacbolt";
 	missile.bot_dodge = TRUE;
 
@@ -81,7 +81,7 @@ void W_HLAC_Attack2f (void)
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
-	missile.owner = self;
+	missile.owner = missile.realowner = self;
 	missile.classname = "hlacbolt";
 	missile.bot_dodge = TRUE;
 

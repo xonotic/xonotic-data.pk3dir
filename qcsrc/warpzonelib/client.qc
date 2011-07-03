@@ -242,12 +242,19 @@ void WarpZone_FixView()
 
 	org = R_SetView3fv(VF_ORIGIN);
 	ang = R_SetView3fv(VF_ANGLES);
+#ifdef WORKAROUND_XON010
+	float dirty;
+	dirty = checkextension("DP_CSQC_ROTATEMOVES");
+#endif
 
 	e = WarpZone_Find(org, org);
 	if(e)
 	{
 		org = WarpZone_TransformOrigin(e, org);
 		ang = WarpZone_TransformVAngles(e, ang);
+#ifdef WORKAROUND_XON010
+		dirty = 1;
+#endif
 		WarpZone_View_Inside();
 	}
 	else
@@ -264,11 +271,22 @@ void WarpZone_FixView()
 	rick *= f;
 	R_SetView(VF_CL_VIEWANGLES_Z, rick);
 
+#ifdef WORKAROUND_XON010
+	if(ang_z > 1 || ang_z < -1)
+		dirty = 1;
+#endif
 	ang_z *= f;
 #endif
 
+#ifdef WORKAROUND_XON010
+	if(dirty)
+	{
+#endif
 	R_SetView(VF_ORIGIN, org);
 	R_SetView(VF_ANGLES, ang);
+#ifdef WORKAROUND_XON010
+	}
+#endif
 
 	nearclip = '0 0 1' * (cvar("r_nearclip") * 1.125);
 	corner0 = cs_unproject('0 0 0' + nearclip);

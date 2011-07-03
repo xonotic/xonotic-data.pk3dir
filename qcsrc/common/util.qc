@@ -2017,3 +2017,37 @@ string CTX(string s)
 		return s;
 	return substring(s, p+1, -1);
 }
+
+// x-encoding (encoding as zero length invisible string)
+const string XENCODE_2  = "xX";
+const string XENCODE_22 = "0123456789abcdefABCDEF";
+string xencode(float f)
+{
+	float a, b, c, d;
+	d = mod(f, 22); f = floor(f / 22);
+	c = mod(f, 22); f = floor(f / 22);
+	b = mod(f, 22); f = floor(f / 22);
+	a = mod(f,  2); // f = floor(f /  2);
+	return strcat(
+		"^",
+		substring(XENCODE_2,  a, 1),
+		substring(XENCODE_22, b, 1),
+		substring(XENCODE_22, c, 1),
+		substring(XENCODE_22, d, 1)
+	);
+}
+float xdecode(string s)
+{
+	float a, b, c, d;
+	if(substring(s, 0, 1) != "^")
+		return -1;
+	if(strlen(s) < 5)
+		return -1;
+	a = strstrofs(XENCODE_2,  substring(s, 1, 1), 0);
+	b = strstrofs(XENCODE_22, substring(s, 2, 1), 0);
+	c = strstrofs(XENCODE_22, substring(s, 3, 1), 0);
+	d = strstrofs(XENCODE_22, substring(s, 4, 1), 0);
+	if(a < 0 || b < 0 || c < 0 || d < 0)
+		return -1;
+	return ((a * 22 + b) * 22 + c) * 22 + d;
+}

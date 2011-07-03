@@ -88,6 +88,9 @@ void SUB_UseTargets()
 	stemp = self;
 	otemp = other;
 
+	if(stemp.target_random)
+		RandomSelection_Init();
+
 	for(i = 0; i < 4; ++i)
 	{
 		switch(i)
@@ -103,13 +106,27 @@ void SUB_UseTargets()
 			for(t = world; (t = find(t, targetname, s)); )
 			if(t.use)
 			{
-				//print(stemp.classname, " ", stemp.targetname, " -> ", t.classname, " ", t.targetname, "\n");
-				self = t;
-				other = stemp;
-				activator = act;
-				self.use();
+				if(stemp.target_random)
+				{
+					RandomSelection_Add(t, 0, string_null, 1, 0);
+				}
+				else
+				{
+					self = t;
+					other = stemp;
+					activator = act;
+					self.use();
+				}
 			}
 		}
+	}
+
+	if(stemp.target_random && RandomSelection_chosen_ent)
+	{
+		self = RandomSelection_chosen_ent;
+		other = stemp;
+		activator = act;
+		self.use();
 	}
 
 	activator = act;
@@ -1360,24 +1377,7 @@ void trigger_impulse_touch1()
 	if (self.active != ACTIVE_ACTIVE) 
 		return;
 
-	// FIXME: Better checking for what to push and not.
-	if not(other.iscreature)
-	if (other.classname != "corpse")
-	if (other.classname != "body")
-	if (other.classname != "gib")
-	if (other.classname != "missile")
-	if (other.classname != "rocket")
-	if (other.classname != "casing")
-	if (other.classname != "grenade")
-	if (other.classname != "plasma")
-	if (other.classname != "plasma_prim")
-	if (other.classname != "plasma_chain")
-	if (other.classname != "droppedweapon")
-	if (other.classname != "nexball_basketball")
-	if (other.classname != "nexball_football")
-		return;
-
-	if (other.deadflag && other.iscreature)
+	if (!isPushable(other))
 		return;
 
 	EXACTTRIGGER_TOUCH;
@@ -1415,24 +1415,7 @@ void trigger_impulse_touch2()
 	if (self.active != ACTIVE_ACTIVE) 
 		return;
 
-	// FIXME: Better checking for what to push and not.
-	if not(other.iscreature)
-	if (other.classname != "corpse")
-	if (other.classname != "body")
-	if (other.classname != "gib")
-	if (other.classname != "missile")
-	if (other.classname != "rocket")
-	if (other.classname != "casing")
-	if (other.classname != "grenade")
-	if (other.classname != "plasma")
-	if (other.classname != "plasma_prim")
-	if (other.classname != "plasma_chain")
-	if (other.classname != "droppedweapon")
-	if (other.classname != "nexball_basketball")
-	if (other.classname != "nexball_football")
-		return;
-
-	if (other.deadflag && other.iscreature)
+	if (!isPushable(other))
 		return;
 
 	EXACTTRIGGER_TOUCH;
@@ -1456,24 +1439,7 @@ void trigger_impulse_touch3()
 	if (self.active != ACTIVE_ACTIVE) 
 		return;
 
-	// FIXME: Better checking for what to push and not.
-	if not(other.iscreature)
-	if (other.classname != "corpse")
-	if (other.classname != "body")
-	if (other.classname != "gib")
-	if (other.classname != "missile")
-	if (other.classname != "rocket")
-	if (other.classname != "casing")
-	if (other.classname != "grenade")
-	if (other.classname != "plasma")
-	if (other.classname != "plasma_prim")
-	if (other.classname != "plasma_chain")
-	if (other.classname != "droppedweapon")
-	if (other.classname != "nexball_basketball")
-	if (other.classname != "nexball_football")
-		return;
-
-	if (other.deadflag && other.iscreature)
+	if (!isPushable(other))
 		return;
 
 	EXACTTRIGGER_TOUCH;

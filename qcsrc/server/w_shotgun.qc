@@ -46,13 +46,14 @@ void W_Shotgun_Attack (void)
 	W_AttachToShotorg(flash, '5 0 0');
 }
 
+entity lgbeam_owner_ent;
 void shotgun_meleethink (void)
 {
 	// store time when we started swinging down inside self.cnt
 	if(!self.cnt)
 		self.cnt = time;
 
-	makevectors(self.owner.v_angle);
+	makevectors(self.realowner.v_angle);
 	vector angle;
 	angle = v_forward;
 
@@ -63,21 +64,26 @@ void shotgun_meleethink (void)
 	float f;
 	f = (self.cnt + meleetime - time) / meleetime * 2 - 1;
 	vector targpos;
-	targpos = self.owner.origin + self.owner.view_ofs + angle * autocvar_g_balance_shotgun_secondary_melee_range + v_right * f * autocvar_g_balance_shotgun_secondary_melee_swing + v_up * f * autocvar_g_balance_shotgun_secondary_melee_swing;
+	targpos = self.realowner.origin + self.realowner.view_ofs + angle * autocvar_g_balance_shotgun_secondary_melee_range + v_right * f * autocvar_g_balance_shotgun_secondary_melee_swing + v_up * f * autocvar_g_balance_shotgun_secondary_melee_swing;
 
-	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, targpos, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	if(!lgbeam_owner_ent)
+	{
+		lgbeam_owner_ent = spawn();
+		lgbeam_owner_ent.classname = "lgbeam_owner_ent";
+	}
+	WarpZone_traceline_antilag(lgbeam_owner_ent, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, lgbeam_owner_ent, ANTILAG_LATENCY(self.realowner));
 
 	// apply the damage, also remove self
 	if(trace_fraction < 1 && trace_ent.takedamage == DAMAGE_AIM && (trace_ent.classname == "player" || trace_ent.classname == "body"))
 	{
 		vector force;
 		force = angle * autocvar_g_balance_shotgun_secondary_force;
-		if(accuracy_isgooddamage(self.owner, trace_ent))
-			accuracy_add(self.owner, WEP_SHOTGUN, 0, autocvar_g_balance_shotgun_secondary_damage * min(1, f + 1));
-		Damage (trace_ent, self.owner, self.owner, autocvar_g_balance_shotgun_secondary_damage * min(1, f + 1), WEP_SHOTGUN | HITTYPE_SECONDARY , self.owner.origin + self.owner.view_ofs, force);
+		if(accuracy_isgooddamage(self.realowner, trace_ent))
+			accuracy_add(self.realowner, WEP_SHOTGUN, 0, autocvar_g_balance_shotgun_secondary_damage * min(1, f + 1));
+		Damage (trace_ent, self.realowner, self.realowner, autocvar_g_balance_shotgun_secondary_damage * min(1, f + 1), WEP_SHOTGUN | HITTYPE_SECONDARY , self.realowner.origin + self.realowner.view_ofs, force);
 		remove(self);
 	}
-	else if(time >= self.cnt + meleetime || (self.owner.deadflag != DEAD_NO && autocvar_g_balance_shotgun_secondary_melee_no_doubleslap)) // missed or owner died, remove ent
+	else if(time >= self.cnt + meleetime || (self.realowner.deadflag != DEAD_NO && autocvar_g_balance_shotgun_secondary_melee_no_doubleslap)) // missed or owner died, remove ent
 		remove(self);
 	else // continue swinging the weapon in hope of hitting someone :)
 		self.nextthink = time;
@@ -90,7 +96,7 @@ void W_Shotgun_Attack2 (void)
 
 	entity meleetemp;
 	meleetemp = spawn();
-	meleetemp.owner = self;
+	meleetemp.owner = meleetemp.realowner = self;
 	meleetemp.think = shotgun_meleethink;
 	meleetemp.nextthink = time + autocvar_g_balance_shotgun_secondary_melee_delay;
 	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_shotgun_secondary_damage, autocvar_g_balance_shotgun_secondary_melee_range);
@@ -200,7 +206,7 @@ float w_shotgun(float req)
 		precache_sound("weapons/ric3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s did the impossible");
+		w_deathtypestring = _("%s is now thinking with portals");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
