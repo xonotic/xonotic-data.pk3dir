@@ -2,3 +2,4 @@
 #pragma flag enable lo
 
 #define WORKAROUND_XON010
+#define XON020_CHANNELS
