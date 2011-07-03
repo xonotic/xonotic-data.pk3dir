@@ -58,7 +58,7 @@ void Draw_PointParticles()
 			if(self.noise != "")
 			{
 				self.origin = p;
-				sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE * self.volume, self.atten);
+				sound(self, CH_AMBIENT, self.noise, VOL_BASE * self.volume, self.atten);
 			}
 			self.just_toggled = 0;
 		}

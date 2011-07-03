@@ -89,7 +89,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "snd_channel257volume");
-		makeMulti(s, "snd_channel1volume snd_channel5volume"); // legacy
+		//makeMulti(s, "snd_channel1volume");
+		makeMulti(s, "snd_channel1volume snd_channel5volume"); // snd_channel5volume is legacy
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Weapons:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
