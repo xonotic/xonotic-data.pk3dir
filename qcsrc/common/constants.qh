@@ -431,25 +431,25 @@ const float STAT_DOM_PPS_YELLOW = 104;
 
 #ifdef XON020_CHANNELS
 float CH_INFO = 0; // only on world and csqc
-float CH_ITEMS_AUTO = 0; // only on players
+float CH_ITEMS = 0; // only on players
 float CH_WEAPON_A = 1; // only on players and entities
 float CH_VOICE = 2; // only on players
 float CH_AMBIENT = 2; // only on entities
 float CH_BGM = 2; // only on csqc
-float CH_TRIGGERS = 3; // only on players, entities, csqc
-float CH_SHOTS_NOAUTO = 4; // only on players, entities, csqc
+float CH_TRIGGERS_SINGLE = 3; // only on players, entities, csqc
+float CH_SHOTS_SINGLE = 4; // only on players, entities, csqc
 float CH_WEAPON_B = 5; // only on players and entities
 float CH_PAIN = 6; // only on players and csqc
 float CH_PLAYER = 7; // only on players and entities
 #else
 float CH_INFO = 0;
-float CH_SHOTS_NOAUTO = 4;
+float CH_TRIGGERS_SINGLE = 3;
+float CH_SHOTS_SINGLE = 4;
 float CH_ITEMS = 256;
 float CH_WEAPON_A = 257;
 float CH_VOICE = 258;
 float CH_AMBIENT = 259;
 float CH_BGM = 260;
-float CH_TRIGGERS = 261;
 float CH_WEAPON_B = 257;
 float CH_PAIN = 262;
 float CH_PLAYER = 263;
