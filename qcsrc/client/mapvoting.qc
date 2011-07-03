@@ -436,7 +436,7 @@ void MapVote_UpdateMask()
 
 	if(oldmask & mv_maps_mask != oldmask)
 		if(oldmask & mv_maps_mask == mv_maps_mask)
-			 sound(world, CHAN_AUTO, "misc_invshot.wav", VOL_BASE, ATTN_NONE);
+			 sound(world, CH_INFO, "misc_invshot.wav", VOL_BASE, ATTN_NONE);
 
 	// remove votes that no longer apply
 	for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)

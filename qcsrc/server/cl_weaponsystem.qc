@@ -255,7 +255,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		(time > ent.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)
 	) // prevent insane sound spam
 	{
-		sound(ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+		sound(ent, CH_ITEMS, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
 		ent.prevstrengthsound = time;
 	}
 	ent.prevstrengthsoundattempt = time;
@@ -1063,7 +1063,7 @@ float weapon_prepareattack_checkammo(float secondary)
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
-			sound (self, CHAN_AUTO, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
 			self.prevdryfire = time;
 		}
 

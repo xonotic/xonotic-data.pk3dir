@@ -1987,7 +1987,7 @@ void play_countdown(float finished, string samp)
 	if(clienttype(self) == CLIENTTYPE_REAL)
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
-				sound (self, CHAN_AUTO, samp, VOL_BASE, ATTN_NORM);
+				sound (self, CH_INFO, samp, VOL_BASE, ATTN_NORM);
 }
 
 /**

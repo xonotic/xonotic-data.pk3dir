@@ -171,7 +171,7 @@ void multi_trigger()
 	}
 
 	if (self.noise)
-		sound (self.enemy, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self.enemy, CH_ITEMS, self.noise, VOL_BASE, ATTN_NORM);
 
 // don't trigger again until reset
 	self.takedamage = DAMAGE_NO;
@@ -554,7 +554,7 @@ void trigger_heal_touch()
 			{
 				other.health = min(other.health + self.health, self.max_health);
 				other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-				sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+				sound (other, CH_ITEMS, self.noise, VOL_BASE, ATTN_NORM);
 			}
 		}
 	}
@@ -665,7 +665,7 @@ void trigger_gravity_touch()
 	{
 		other.gravity = g;
 		if(self.noise != "")
-			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+			sound (other, CH_ITEMS, self.noise, VOL_BASE, ATTN_NORM);
 		UpdateCSQCProjectile(self.owner);
 	}
 };

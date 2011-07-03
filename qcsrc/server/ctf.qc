@@ -493,7 +493,7 @@ void FlagTouch()
 			}
 		}
 
-		sound (other, CHAN_AUTO, self.noise2, VOL_BASE, ATTN_NONE);
+		sound (other, CH_ITEMS, self.noise2, VOL_BASE, ATTN_NONE);
 		WaypointSprite_DetachCarrier(other);
 		if(self.speedrunning)
 			FakeTimeLimit(other, -1);
@@ -531,7 +531,7 @@ void FlagTouch()
 		self.dropperid = other.playerid;
 		PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
 		LogCTF("steal", self.team, other);
-		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
+		sound (other, CH_ITEMS, self.noise, VOL_BASE, ATTN_NONE);
 
 		FOR_EACH_PLAYER(player)
 			if(player.team == self.team)
@@ -586,7 +586,7 @@ void FlagTouch()
 			}
 			PlayerScore_Add(other, SP_CTF_RETURNS, 1);
 			LogCTF("return", self.team, other);
-			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
+			sound (other, CH_ITEMS, self.noise1, VOL_BASE, ATTN_NONE);
 			ReturnFlag(self);
 		}
 		else if (!other.flagcarried && (other.playerid != self.dropperid || time > self.ctf_droptime + autocvar_g_balance_ctf_delay_collect))
@@ -618,7 +618,7 @@ void FlagTouch()
 			UpdateFrags(other, f);
 			PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
 			LogCTF("pickup", self.team, other);
-			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
+			sound (other, CH_ITEMS, self.noise, VOL_BASE, ATTN_NONE);
 
 			FOR_EACH_PLAYER(player)
 				if(player.team == self.team)

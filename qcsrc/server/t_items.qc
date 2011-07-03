@@ -447,7 +447,7 @@ float Item_GiveTo(entity item, entity player)
 	if (!pickedup)
 		return 0;
 
-	sound (player, CHAN_AUTO, item.item_pickupsound, VOL_BASE, ATTN_NORM);
+	sound (player, CH_ITEMS, item.item_pickupsound, VOL_BASE, ATTN_NORM);
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
 			W_SwitchWeapon_Force(player, w_getbestweapon(player));
@@ -1532,12 +1532,12 @@ void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string sn
 	if(v1 <= v0 - t)
 	{
 		if(snd_decr != "")
-			sound (e, CHAN_AUTO, snd_decr, VOL_BASE, ATTN_NORM);
+			sound (e, CH_ITEMS, snd_decr, VOL_BASE, ATTN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
 		if(snd_incr != "")
-			sound (e, CHAN_AUTO, snd_incr, VOL_BASE, ATTN_NORM);
+			sound (e, CH_ITEMS, snd_incr, VOL_BASE, ATTN_NORM);
 	}
 }
 

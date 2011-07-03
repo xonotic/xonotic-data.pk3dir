@@ -366,7 +366,7 @@ void GoalTouch (void)
 		pscore = 1;
 	}
 
-	sound (ball, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
+	sound (ball, CH_TRIGGERS_SINGLE, self.noise, VOL_BASE, ATTN_NONE);
 
 	if(ball.team && pscore)
 	{
@@ -604,7 +604,7 @@ void W_Nexball_Touch (void)
 		if(!attacker.ballcarried)
 		{
 			LogNB("stole", attacker);
-			sound (other, CHAN_AUTO, ball.noise2, VOL_BASE, ATTN_NORM);
+			sound (other, CH_ITEMS, ball.noise2, VOL_BASE, ATTN_NORM);
 
 			if(attacker.team == other.team && time > attacker.teamkill_complain)
 			{
