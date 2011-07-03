@@ -115,8 +115,10 @@ void() t_movetarget =
 	self = other;
 	other = temp;
 
+	/* PLEASE FIX THE SOUND CHANNEL BEFORE ACTIVATING THIS
 	if (self.classname == "monster_ogre")
 		sound (self, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE);// play chainsaw drag sound
+	*/
 
 //dprint ("t_movetarget\n");
 	self.goalentity = self.movetarget = find (world, targetname, other.target);
@@ -168,8 +170,10 @@ void() monster_wanderpathtouch =
 	if (other.enemy)
 		return;		// fighting, not following a path
 
+	/* PLEASE FIX THE SOUND CHANNEL BEFORE ACTIVATING THIS
 	if (other.classname == "monster_ogre")
 		sound (other, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE);// play chainsaw drag sound
+	*/
 	monster_wanderpaththink();
 };
 

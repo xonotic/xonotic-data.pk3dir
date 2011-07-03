@@ -283,7 +283,6 @@ void turret_hk_missile_think()
         self.cnt = time + 0.25;
         self.nextthink = 0;
         self.movetype         = MOVETYPE_BOUNCE;
-        sound    (self, CHAN_VOICE, "", 0.4 * VOL_BASE, ATTN_NORM);
         return;
     }
 
