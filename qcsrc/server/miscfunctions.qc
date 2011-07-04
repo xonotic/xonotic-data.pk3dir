@@ -1422,7 +1422,6 @@ void stopsoundto(float dest, entity e, float chan)
         return;
 
     entno = num_for_edict(e);
-    chan = ((chan & 0x07) | ((chan & 0x1F0) / 2));
 
     if (entno >= 8192 || chan > 7)
     {
