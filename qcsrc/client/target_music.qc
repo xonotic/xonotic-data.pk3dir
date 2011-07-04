@@ -19,7 +19,7 @@ void TargetMusic_Advance()
 	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); ) if(e.noise)
 	{
 		vol0 = e.lastvol;
-		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
+		if(getsoundtime(e, CH_BGM) < 0)
 		{
 			vol0 = -1;
 		}
@@ -43,16 +43,16 @@ void TargetMusic_Advance()
 		if(vol != vol0)
 		{
 			if(vol0 < 0)
-				sound(e, CH_BGM_SINGLE, e.noise, vol, ATTN_NONE); // restart
+				csound(e, CH_BGM, e.noise, vol, ATTN_NONE); // restart
 			else
-				sound(e, CH_BGM_SINGLE, "", vol, ATTN_NONE);
+				csound(e, CH_BGM, "", vol, ATTN_NONE);
 			e.lastvol = vol;
 		}
 	}
 	music_trigger = world;
 
 	if(best)
-		bgmtime = getsoundtime(best, CH_BGM_SINGLE);
+		bgmtime = getsoundtime(best, CH_BGM);
 	else
 		bgmtime = gettime(GETTIME_CDTRACK);
 }
@@ -87,8 +87,8 @@ void Net_TargetMusic()
 			strunzone(e.noise);
 		e.noise = strzone(noi);
 		precache_sound(e.noise);
-		sound(e, CH_BGM_SINGLE, e.noise, 0, ATTN_NONE);
-		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
+		csound(e, CH_BGM, e.noise, 0, ATTN_NONE);
+		if(getsoundtime(e, CH_BGM) < 0)
 		{
 			print(sprintf(_("Cannot initialize sound %s\n"), e.noise));
 			strunzone(e.noise);
@@ -175,8 +175,8 @@ void Ent_ReadTriggerMusic()
 		if(self.noise != s)
 		{
 			precache_sound(self.noise);
-			sound(self, CH_BGM_SINGLE, self.noise, 0, ATTN_NONE);
-			if(getsoundtime(self, CH_BGM_SINGLE) < 0)
+			csound(self, CH_BGM, self.noise, 0, ATTN_NONE);
+			if(getsoundtime(self, CH_BGM) < 0)
 			{
 				print(sprintf(_("Cannot initialize sound %s\n"), self.noise));
 				strunzone(self.noise);

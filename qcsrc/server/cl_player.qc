@@ -341,11 +341,11 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CH_SHOTS_SINGLE, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
+			asound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
 		else if (take > 30)
-			sound (self, CH_SHOTS_SINGLE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
+			asound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
 		else if (take > 10)
-			sound (self, CH_SHOTS_SINGLE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
+			asound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
 	}
 
 	if (take > 50)
@@ -458,11 +458,11 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CH_SHOTS_SINGLE, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
+			asound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
 		else if (take > 30)
-			sound (self, CH_SHOTS_SINGLE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
+			asound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
 		else if (take > 10)
-			sound (self, CH_SHOTS_SINGLE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM); // FIXME possibly remove them?
+			asound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM); // FIXME possibly remove them?
 	}
 
 	if (take > 50)
@@ -1163,15 +1163,15 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 			{
 				msg_entity = self;
 				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
+					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE, 0, SOUNDFLAG_AUTO);
 			}
 			break;
 		case VOICETYPE_TEAMRADIO:
 			msg_entity = self;
 			if(msg_entity.cvar_cl_voice_directional == 1)
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN, 0, SOUNDFLAG_AUTO);
 			else
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE, 0, SOUNDFLAG_AUTO);
 			break;
 		case VOICETYPE_AUTOTAUNT:
 			if(!sv_autotaunt)
@@ -1185,9 +1185,9 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 			if (tauntrand < msg_entity.cvar_cl_autotaunt)
 			{
 				if (msg_entity.cvar_cl_voice_directional >= 1)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX), 0, SOUNDFLAG_AUTO);
 				else
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE, 0, SOUNDFLAG_AUTO);
 			}
 			break;
 		case VOICETYPE_TAUNT:
@@ -1200,13 +1200,13 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 				break;
 			msg_entity = self;
 			if (msg_entity.cvar_cl_voice_directional >= 1)
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX), 0, SOUNDFLAG_AUTO);
 			else
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE, 0, SOUNDFLAG_AUTO);
 			break;
 		case VOICETYPE_PLAYERSOUND:
 			msg_entity = self;
-			soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NORM);
+			soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NORM, 0, SOUNDFLAG_AUTO);
 			break;
 		default:
 			backtrace("Invalid voice type!");
@@ -1238,9 +1238,9 @@ void GlobalSound(string sample, float chan, float voicetype)
 				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN, 0, SOUNDFLAG_AUTO);
 					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE, 0, SOUNDFLAG_AUTO);
 				}
 			}
 			break;
@@ -1251,13 +1251,13 @@ void GlobalSound(string sample, float chan, float voicetype)
 				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN, 0, SOUNDFLAG_AUTO);
 					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE, 0, SOUNDFLAG_AUTO);
 				}
 				msg_entity = self;
 				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
+					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE, 0, SOUNDFLAG_AUTO);
 			}
 			break;
 		case VOICETYPE_TEAMRADIO:
@@ -1265,9 +1265,9 @@ void GlobalSound(string sample, float chan, float voicetype)
 				if(!teamplay || msg_entity.team == self.team)
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN, 0, SOUNDFLAG_AUTO);
 					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE, 0, SOUNDFLAG_AUTO);
 				}
 			break;
 		case VOICETYPE_AUTOTAUNT:
@@ -1282,9 +1282,9 @@ void GlobalSound(string sample, float chan, float voicetype)
 				if (tauntrand < msg_entity.cvar_cl_autotaunt)
 				{
 					if (msg_entity.cvar_cl_voice_directional >= 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX), 0, SOUNDFLAG_AUTO);
 					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE, 0, SOUNDFLAG_AUTO);
 				}
 			break;
 		case VOICETYPE_TAUNT:
@@ -1298,13 +1298,13 @@ void GlobalSound(string sample, float chan, float voicetype)
 			FOR_EACH_REALCLIENT(msg_entity)
 			{
 				if (msg_entity.cvar_cl_voice_directional >= 1)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX), 0, SOUNDFLAG_AUTO);
 				else
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE, 0, SOUNDFLAG_AUTO);
 			}
 			break;
 		case VOICETYPE_PLAYERSOUND:
-			sound(self, chan, sample, VOL_BASE, ATTN_NORM);
+			asound(self, chan, sample, VOL_BASE, ATTN_NORM);
 			break;
 		default:
 			backtrace("Invalid voice type!");

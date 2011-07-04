@@ -1060,7 +1060,7 @@ void PutClientInServer (void)
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
 
 		if (autocvar_g_spawnsound)
-			sound (self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
+			asound (self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 
 		if(g_assault) {
 			if(self.team == assault_attacker_team)
@@ -1987,7 +1987,7 @@ void play_countdown(float finished, string samp)
 	if(clienttype(self) == CLIENTTYPE_REAL)
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
-				sound (self, CH_INFO, samp, VOL_BASE, ATTN_NORM);
+				asound (self, CH_INFO, samp, VOL_BASE, ATTN_NORM);
 }
 
 /**
@@ -2038,12 +2038,12 @@ void player_powerups (void)
 
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
 	{
-		SoundEntity_StartSound(self, CH_TRIGGER_SINGLE, "misc/jetpack_fly.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+		SoundEntity_StartSound(self, CH_TRIGGER, "misc/jetpack_fly.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
 		self.modelflags |= MF_ROCKET;
 	}
 	else
 	{
-		SoundEntity_StopSound(self, CH_TRIGGER_SINGLE);
+		SoundEntity_StopSound(self, CH_TRIGGER);
 		self.modelflags &~= MF_ROCKET;
 	}
 

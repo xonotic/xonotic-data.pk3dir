@@ -375,7 +375,7 @@ void W_WeaponFrame()
 			{
 #endif
 			// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
-			sound (self, CH_WEAPON_B, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
+			asound (self, CH_WEAPON_B, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
 			weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_weaponswitchdelay, w_clear);

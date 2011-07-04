@@ -1344,25 +1344,41 @@ float sound_allowed(float dest, entity e)
     return TRUE;
 }
 
+#undef asound
+#undef csound
 #ifdef COMPAT_XON010_CHANNELS
 void(entity e, float chan, string samp, float vol, float atten) sound_builtin = #8;
-void sound(entity e, float chan, string samp, float vol, float atten)
+void asound(entity e, float chan, string samp, float vol, float atten)
+{
+    if (!sound_allowed(MSG_BROADCAST, e))
+        return;
+    if(chan == CH_TRIGGER && e.flags & FL_CLIENT)
+	    chan = 0;
+    sound_builtin(e, chan, samp, vol, atten);
+}
+void csound(entity e, float chan, string samp, float vol, float atten)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
         return;
     sound_builtin(e, chan, samp, vol, atten);
 }
 #else
-#undef sound
-void sound(entity e, float chan, string samp, float vol, float atten)
+void asound(entity e, float chan, string samp, float vol, float atten)
+{
+    if (!sound_allowed(MSG_BROADCAST, e))
+        return;
+    sound7(e, chan, samp, vol, atten, 0, SOUNDFLAG_AUTO);
+}
+void csound(entity e, float chan, string samp, float vol, float atten)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
         return;
     sound7(e, chan, samp, vol, atten, 0, 0);
 }
 #endif
+#define sound DONOTUSE
 
-void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten)
+void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten, float pitchshift, float fl)
 {
     float entno, idx;
 
@@ -1371,6 +1387,18 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
 
     entno = num_for_edict(e);
     idx = precache_sound_index(samp);
+
+    chan &~= 0x80;
+    if(fl & SOUNDFLAG_AUTO)
+    {
+	    if(chan != 0)
+		    chan |= 0x80;
+    }
+    else
+    {
+	    if(chan == 0)
+		    chan |= 0x80;
+    }
 
     float sflags;
     sflags = 0;
@@ -1411,7 +1439,7 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
     WriteCoord(dest, o_y);
     WriteCoord(dest, o_z);
 }
-void soundto(float dest, entity e, float chan, string samp, float vol, float atten)
+void soundto(float dest, entity e, float chan, string samp, float vol, float atten, float pitchshift, float pl)
 {
     vector o;
 
@@ -1419,11 +1447,11 @@ void soundto(float dest, entity e, float chan, string samp, float vol, float att
         return;
 
     o = e.origin + 0.5 * (e.mins + e.maxs);
-    soundtoat(dest, e, o, chan, samp, vol, atten);
+    soundtoat(dest, e, o, chan, samp, vol, atten, pitchshift, pl);
 }
-void soundat(entity e, vector o, float chan, string samp, float vol, float atten)
+void soundat(entity e, vector o, float chan, string samp, float vol, float atten, float pitchshift, float pl)
 {
-    soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, atten);
+    soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, atten, pitchshift, pl);
 }
 void stopsoundto(float dest, entity e, float chan)
 {
@@ -1472,7 +1500,7 @@ void play2(entity e, string filename)
 {
     //stuffcmd(e, strcat("play2 ", filename, "\n"));
     msg_entity = e;
-    soundtoat(MSG_ONE, world, '0 0 0', CH_INFO, filename, VOL_BASE, ATTN_NONE);
+    soundtoat(MSG_ONE, world, '0 0 0', CH_INFO, filename, VOL_BASE, ATTN_NONE, 0, SOUNDFLAG_AUTO);
 }
 
 // use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame)
@@ -1485,7 +1513,7 @@ float spamsound(entity e, float chan, string samp, float vol, float atten)
     if (time > e.spamtime)
     {
         e.spamtime = time;
-        sound(e, chan, samp, vol, atten);
+        asound(e, chan, samp, vol, atten);
         return TRUE;
     }
     return FALSE;
@@ -1510,7 +1538,7 @@ void play2all(string samp)
     if (autocvar_bot_sound_monopoly)
         return;
 
-    sound(world, CH_INFO, samp, VOL_BASE, ATTN_NONE);
+    asound(world, CH_INFO, samp, VOL_BASE, ATTN_NONE);
 }
 
 void PrecachePlayerSounds(string f);
@@ -2814,7 +2842,7 @@ void SoundEntity_StartSound(entity pl, float chan, string samp, float vol, float
     p = pow(2, chan);
     if (pl.soundentity.cnt & p)
         return;
-    soundtoat(MSG_ALL, pl.soundentity, gettaginfo(pl.soundentity, 0), chan, samp, vol, attn);
+    soundtoat(MSG_ALL, pl.soundentity, gettaginfo(pl.soundentity, 0), chan, samp, vol, attn, 0, 0);
     pl.soundentity.cnt |= p;
 }
 

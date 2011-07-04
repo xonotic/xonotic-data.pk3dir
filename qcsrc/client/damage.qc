@@ -78,7 +78,7 @@ void Ent_DamageInfo(float isNew)
         else
             w_backoff = -1 * normalize(w_org - (w_org + normalize(force) * 16));
 	    
-	    setorigin(self, w_org + w_backoff * 2); // for sound() calls
+	    setorigin(self, w_org + w_backoff * 2); // for sound calls
 	    
 	    switch(w_deathtype)
 	    {            
@@ -88,33 +88,33 @@ void Ent_DamageInfo(float isNew)
             case DEATH_SBMINIGUN:
                 string _snd;
                 _snd = strcat("weapons/ric", ftos(1 + rint(random() * 2)), ".waw");
-                sound(self, CH_SHOTS_SINGLE, _snd, VOL_BASE, ATTN_NORM);
+                asound(self, CH_SHOTS, _snd, VOL_BASE, ATTN_NORM);
                 pointparticles(particleeffectnum("spiderbot_minigun_impact"), self.origin, w_backoff * 1000, 1);
                 break;
             case DEATH_SBROCKET:
-                sound(self, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+                asound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
                 pointparticles(particleeffectnum("spiderbot_rocket_explode"), self.origin, w_backoff * 1000, 1);
                 break;
             case DEATH_SBBLOWUP:
-                sound(self, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_MIN);
+                asound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_MIN);
                 pointparticles(particleeffectnum("explosion_big"), self.origin, w_backoff * 1000, 1);
                 break;
                 
             case DEATH_WAKIGUN:
-                sound(self, CH_SHOTS_SINGLE, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+                asound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
                 pointparticles(particleeffectnum("wakizashi_gun_impact"), self.origin, w_backoff * 1000, 1);
                 break;
             case DEATH_WAKIROCKET:
-                sound(self, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+                asound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
                 pointparticles(particleeffectnum("wakizashi_rocket_explode"), self.origin, w_backoff * 1000, 1);
                 break;
             case DEATH_WAKIBLOWUP:
-                sound(self, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_MIN);
+                asound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_MIN);
                 pointparticles(particleeffectnum("explosion_big"), self.origin, w_backoff * 1000, 1);
                 break;
                 
             case DEATH_RAPTOR_CANNON:
-                sound(self, CH_SHOTS_SINGLE, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+                asound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
                 pointparticles(particleeffectnum("raptor_cannon_impact"), self.origin, w_backoff * 1000, 1);
                 break;
             case DEATH_RAPTOR_BOMB_SPLIT:
@@ -128,15 +128,15 @@ void Ent_DamageInfo(float isNew)
                 }
                     
                 
-                sound(self, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+                asound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
                 pointparticles(particleeffectnum("raptor_bomb_spread"), self.origin, w_backoff * 1000, 1);
                 break;
             case DEATH_RAPTOR_BOMB:
-                sound(self, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+                asound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
                 pointparticles(particleeffectnum("raptor_bomb_impact"), self.origin, w_backoff * 1000, 1);
                 break;
             case DEATH_RAPTOR_DEATH:
-                sound(self, CH_SHOTS_SINGLE, "weapons/laserimpact.wav", VOL_BASE, ATTN_MIN);
+                asound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_MIN);
                 pointparticles(particleeffectnum("explosion_big"), self.origin, w_backoff * 1000, 1);
                 break;
 	    }
@@ -151,12 +151,12 @@ void Ent_DamageInfo(float isNew)
         else
             w_backoff = -1 * normalize(w_org - (w_org + normalize(force) * 16));
 	    
-	    setorigin(self, w_org + w_backoff * 2); // for sound() calls
+	    setorigin(self, w_org + w_backoff * 2); // for sound calls
 	    
 	    switch(w_deathtype)
 	    {   
              case DEATH_TURRET_EWHEEL:
-                sound(self, CH_SHOTS_SINGLE, "weapons/laserimpact.wav", VOL_BASE, ATTN_MIN);
+                asound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_MIN);
                 pointparticles(particleeffectnum("electro_impact"), self.origin, w_backoff * 1000, 1);
                 break;
              
@@ -165,11 +165,11 @@ void Ent_DamageInfo(float isNew)
                 org2 = w_org + w_backoff * 6;
                 pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
                 if (w_random<0.15)
-                    sound(self, CH_SHOTS_SINGLE, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
+                    asound(self, CH_SHOTS, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
                 else if (w_random<0.7)
-                    sound(self, CH_SHOTS_SINGLE, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
+                    asound(self, CH_SHOTS, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
                 else
-                    sound(self, CH_SHOTS_SINGLE, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
+                    asound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
                 
                 break;
                 
@@ -177,7 +177,7 @@ void Ent_DamageInfo(float isNew)
              case DEATH_TURRET_HK:
              case DEATH_TURRET_WALKER_ROCKET:
              case DEATH_TURRET_HELLION:
-                sound(self, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_MIN);
+                asound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_MIN);
                 pointparticles(particleeffectnum("rocket_explode"), self.origin, w_backoff * 1000, 1);
                 break;
              
@@ -185,17 +185,17 @@ void Ent_DamageInfo(float isNew)
              case DEATH_TURRET_WALKER_GUN:
                 string _snd;
                 _snd = strcat("weapons/ric", ftos(1 + rint(random() * 2)), ".waw");
-                sound(self, CH_SHOTS_SINGLE, _snd, VOL_BASE, ATTN_NORM);
+                asound(self, CH_SHOTS, _snd, VOL_BASE, ATTN_NORM);
                 pointparticles(particleeffectnum("machinegun_impact"), self.origin, w_backoff * 1000, 1);
                 break;
                           
              case DEATH_TURRET_PLASMA:
-                sound(self, CH_SHOTS_SINGLE, "weapons/electro_impact.wav", VOL_BASE, ATTN_MIN);
+                asound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTN_MIN);
                 pointparticles(particleeffectnum("electro_impact"), self.origin, w_backoff * 1000, 1);
                 break;
                           
              case DEATH_TURRET_WALKER_MEELE:
-                sound(self, CH_SHOTS_SINGLE, "weapons/ric1.wav", VOL_BASE, ATTN_MIN);
+                asound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_MIN);
                 pointparticles(particleeffectnum("TE_SPARK"), self.origin, w_backoff * 1000, 1);
                 break;
 
@@ -222,7 +222,7 @@ void Ent_DamageInfo(float isNew)
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -1 * normalize(force);
-		setorigin(self, w_org + w_backoff * 2); // for sound() calls
+		setorigin(self, w_org + w_backoff * 2); // for sound calls
 
 		(get_weaponinfo(hitwep)).weapon_func(WR_IMPACTEFFECT);
 	}

@@ -93,7 +93,7 @@ void CheckForGamestartChange() {
 	if (previous_game_starttime != startTime) {
 		if ((time + 5.0) < startTime) {
 			//if connecting to server while restart was active don't always play prepareforbattle
-			sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
+			asound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
 		}
 		if (time < startTime) {
 			restartAnnouncer = spawn();
@@ -945,13 +945,13 @@ void CSQC_UpdateView(float w, float h)
 	hit_time = getstatf(STAT_HIT_TIME);
 	if(hit_time > nextsound_hit_time && autocvar_cl_hitsound)
 	{
-		sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+		asound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
 		nextsound_hit_time = time + autocvar_cl_hitsound_antispam_time;
 	}
 	typehit_time = getstatf(STAT_TYPEHIT_TIME);
 	if(typehit_time > nextsound_typehit_time)
 	{
-		sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
+		asound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
 		nextsound_typehit_time = time + autocvar_cl_hitsound_antispam_time;
 	}
 

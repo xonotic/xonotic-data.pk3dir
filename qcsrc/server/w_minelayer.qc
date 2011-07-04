@@ -13,7 +13,7 @@ void spawnfunc_weapon_minelayer (void)
 
 void W_Mine_Stick (entity to)
 {
-	spamsound (self, CH_SHOTS_SINGLE, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
+	spamsound (self, CH_SHOTS, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
@@ -176,7 +176,7 @@ void W_Mine_Think (void)
 	if ((time > self.cnt) && (!self.mine_time))
 	{
 		if(autocvar_g_balance_minelayer_lifetime_countdown > 0)
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
 		self.mine_time = time + autocvar_g_balance_minelayer_lifetime_countdown;
 		self.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
@@ -199,7 +199,7 @@ void W_Mine_Think (void)
 		if(head != self.realowner && IsDifferentTeam(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
 			self.mine_time = time + autocvar_g_balance_minelayer_time;
 		}
 		head = head.chain;
@@ -459,7 +459,7 @@ float w_minelayer(float req)
 		if (self.BUTTON_ATCK2)
 		{
 			if(W_PlacedMines(TRUE))
-				sound (self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
+				asound (self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -513,7 +513,7 @@ float w_minelayer(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS_SINGLE, "weapons/mine_exp.wav", VOL_BASE, ATTN_NORM);
+			asound(self, CH_SHOTS, "weapons/mine_exp.wav", VOL_BASE, ATTN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

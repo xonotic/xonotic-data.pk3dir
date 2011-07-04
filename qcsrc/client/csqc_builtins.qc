@@ -329,3 +329,6 @@ float CVAR_TYPEFLAG_PRIVATE = 4;
 float CVAR_TYPEFLAG_ENGINE = 8;
 float CVAR_TYPEFLAG_HASDESCRIPTION = 16;
 float CVAR_TYPEFLAG_READONLY = 32;
+
+float SOUNDFLAG_AUTO = 128;
+void(entity e, float chan, string samp, float vol, float atten, float speed, float flags) sound7 = #8;
