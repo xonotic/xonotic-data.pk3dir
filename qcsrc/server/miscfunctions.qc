@@ -1313,7 +1313,6 @@ void readlevelcvars(void)
 
 // Sound functions
 string precache_sound (string s) = #19;
-void(entity e, float chan, string samp, float vol, float atten) sound_builtin = #8;
 float precache_sound_index (string s) = #19;
 
 #define SND_VOLUME      1
@@ -1345,12 +1344,24 @@ float sound_allowed(float dest, entity e)
     return TRUE;
 }
 
+#ifdef COMPAT_XON010_CHANNELS
+void(entity e, float chan, string samp, float vol, float atten) sound_builtin = #8;
 void sound(entity e, float chan, string samp, float vol, float atten)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
         return;
     sound_builtin(e, chan, samp, vol, atten);
 }
+#else
+#undef sound
+void sound(entity e, float chan, string samp, float vol, float atten)
+{
+    if (!sound_allowed(MSG_BROADCAST, e))
+        return;
+    sound7(e, chan, samp, vol, atten, 0, 0);
+}
+#endif
+
 void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten)
 {
     float entno, idx;

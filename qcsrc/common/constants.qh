@@ -444,7 +444,6 @@ float CH_PAIN = 6; // only on players and csqc
 float CH_PAIN_SINGLE = 6; // only on players and csqc
 float CH_PLAYER = 7; // only on players and entities
 #else
-// FIXME convert back to float .... =
 float CH_INFO = 0;
 float CH_TRIGGER = -3;
 float CH_WEAPON_A = -1;
@@ -458,7 +457,6 @@ float CH_WEAPON_B = -1;
 float CH_PAIN = -6;
 float CH_PAIN_SINGLE = 6;
 float CH_PLAYER = -7;
-#define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
 #endif
 
 float	ATTN_NONE				= 0;
