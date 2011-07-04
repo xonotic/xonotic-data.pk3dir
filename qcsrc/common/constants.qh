@@ -434,9 +434,9 @@ float CH_INFO = 0; // only on world and csqc
 float CH_TRIGGER = 0; // only on players; compat: FALSELY CONTROLLED BY "Info"
 float CH_WEAPON_A = 1; // only on players and entities
 float CH_WEAPON_SINGLE = 1; // only on players and entities
-float CH_VOICE = 2; // only on players; compat: FALSELY CONTROLLED BY "BGM"
-float CH_BGM_SINGLE = 2; // only on csqc
-float CH_AMBIENT = 2; // only on csqc; compat: FALSELY CONTROLLED BY "BGM"
+float CH_VOICE = 2; // only on players
+float CH_BGM_SINGLE = 2; // only on csqc; compat: FALSELY CONTROLLED BY "Voice"
+float CH_AMBIENT = 2; // only on csqc; compat: FALSELY CONTROLLED BY "Voice"
 float CH_TRIGGER_SINGLE = 3; // only on players, entities, csqc
 float CH_SHOTS_SINGLE = 4; // only on players, entities, csqc
 float CH_WEAPON_B = 5; // only on players and entities
@@ -444,19 +444,19 @@ float CH_PAIN = 6; // only on players and csqc
 float CH_PAIN_SINGLE = 6; // only on players and csqc
 float CH_PLAYER = 7; // only on players and entities
 #else
-float CH_INFO = 0; // only on world and csqc!
-float CH_TRIGGER = 256;
-float CH_WEAPON_A = 257;
-float CH_WEAPON_SINGLE = 1;
-float CH_VOICE = 258;
-float CH_BGM_SINGLE = 2;
-float CH_AMBIENT = 261;
-float CH_TRIGGER_SINGLE = 3;
-float CH_SHOTS_SINGLE = 4;
-float CH_WEAPON_B = 257;
-float CH_PAIN = 259;
-float CH_PAIN_SINGLE = 6;
-float CH_PLAYER = 260;
+#define CH_INFO                  (0)
+#define CH_TRIGGER               (3 | CHANFLAG_FORCEAUTO)
+#define CH_WEAPON_A              (1 | CHANFLAG_FORCEAUTO)
+#define CH_WEAPON_SINGLE         (1)
+#define CH_VOICE                 (2 | CHANFLAG_FORCEAUTO)
+#define CH_BGM_SINGLE            (0 | CHAN_EXTRA1)
+#define CH_AMBIENT               (1 | CHAN_EXTRA1 | CHANFLAG_FORCEAUTO)
+#define CH_TRIGGER_SINGLE        (3)
+#define CH_SHOTS_SINGLE          (4)
+#define CH_WEAPON_B              (1 | CHANFLAG_FORCEAUTO)
+#define CH_PAIN                  (6 | CHANFLAG_FORCEAUTO)
+#define CH_PAIN_SINGLE           (6)
+#define CH_PLAYER                (7 | CHANFLAG_FORCEAUTO)
 #endif
 
 float	ATTN_NONE				= 0;
