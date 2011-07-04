@@ -29,7 +29,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "bgmvolume");
-		makeMulti(s, "snd_channel0extra1volume");
+		makeMulti(s, "snd_channel8volume");
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Music:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
@@ -37,7 +37,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "snd_staticvolume");
-		makeMulti(s, "snd_channel1extra1volume");
+		makeMulti(s, "snd_channel9volume");
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, ZCTX(_("VOL^Ambient:"))));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");

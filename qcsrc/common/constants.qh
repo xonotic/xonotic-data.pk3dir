@@ -444,19 +444,21 @@ float CH_PAIN = 6; // only on players and csqc
 float CH_PAIN_SINGLE = 6; // only on players and csqc
 float CH_PLAYER = 7; // only on players and entities
 #else
-#define CH_INFO                  (0)
-#define CH_TRIGGER               (3 | CHANFLAG_FORCEAUTO)
-#define CH_WEAPON_A              (1 | CHANFLAG_FORCEAUTO)
-#define CH_WEAPON_SINGLE         (1)
-#define CH_VOICE                 (2 | CHANFLAG_FORCEAUTO)
-#define CH_BGM_SINGLE            (0 | CHAN_EXTRA1)
-#define CH_AMBIENT               (1 | CHAN_EXTRA1 | CHANFLAG_FORCEAUTO)
-#define CH_TRIGGER_SINGLE        (3)
-#define CH_SHOTS_SINGLE          (4)
-#define CH_WEAPON_B              (1 | CHANFLAG_FORCEAUTO)
-#define CH_PAIN                  (6 | CHANFLAG_FORCEAUTO)
-#define CH_PAIN_SINGLE           (6)
-#define CH_PLAYER                (7 | CHANFLAG_FORCEAUTO)
+// FIXME convert back to float .... =
+float CH_INFO = 0;
+float CH_TRIGGER = -3;
+float CH_WEAPON_A = -1;
+float CH_WEAPON_SINGLE = 1;
+float CH_VOICE = -2;
+float CH_BGM_SINGLE = 8;
+float CH_AMBIENT = -9;
+float CH_TRIGGER_SINGLE = 3;
+float CH_SHOTS_SINGLE = 4;
+float CH_WEAPON_B = -1;
+float CH_PAIN = -6;
+float CH_PAIN_SINGLE = 6;
+float CH_PLAYER = -7;
+#define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
 #endif
 
 float	ATTN_NONE				= 0;
