@@ -2472,6 +2472,7 @@ void LeaveSpectatorMode()
 				bprint ("^4", self.netname, "^4 is playing now\n");
 
 			if(!autocvar_g_campaign)
+			if (time < self.jointime + autocvar_welcome_message_time)
 				Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD); // clear MOTD
 
 			return;
