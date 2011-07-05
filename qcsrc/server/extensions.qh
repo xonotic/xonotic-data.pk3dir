@@ -296,29 +296,6 @@ float EF_LOWPRECISION = 4194304;
 //description:
 //this is a very special capability, attachs the entity to the view of the client specified, origin and angles become relative to the view of that client, all effects can be used (multiple skins on a weapon model etc)...  the entity is not visible to any other client.
 
-//DP_GECKO_SUPPORT
-//idea: Res2k, BlackHC
-//darkplaces implementation: Res2k, BlackHC
-//constant definitions:
-float GECKO_BUTTON_DOWN         = 0;
-float GECKO_BUTTON_UP           = 1;
-// either use down and up or just press but not all of them!
-float GECKO_BUTTON_PRESS        = 2;
-// use this for mouse events if needed?
-float GECKO_BUTTON_DOUBLECLICK  = 3;
-//builtin definitions:
-float(string name) gecko_create( string name ) = #487;
-void(string name) gecko_destroy( string name ) = #488;
-void(string name) gecko_navigate( string name, string URI ) = #489;
-float(string name) gecko_keyevent( string name, float key, float eventtype ) = #490;
-void gecko_mousemove( string name, float x, float y ) = #491;
-void gecko_resize( string name, float w, float h ) = #492;
-vector gecko_get_texture_extent( string name ) = #493;
-//engine-called QC prototypes:
-//string(string name, string query) Qecko_Query;
-//description:
-//provides an interface to the offscreengecko library and allows for internet browsing in games
-
 //DP_GFX_EXTERNALTEXTURES
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
@@ -1238,25 +1215,23 @@ float SOUNDFLAG_RELIABLE = 1;
 //description:
 //plays a sound, with some more flags
 //extensions to sound():
-//- channel may be in the range from -128 to +127; channels -128 to 0 are
-//  "automatic" channels, i.e. they can run multiple voices at once
-//  like CHAN_AUTO does
+//- channel may be in the range from -128 to 127; channels -128 to 0 are "auto",
+//  i.e. support multiple sounds at once, but cannot be stopped/restarted
 //- a speed parameter has been reserved for later addition of pitch shifting.
 //  it MUST be set to 0 for now, meaning "no pitch change"
 //- the flag SOUNDFLAG_RELIABLE can be specified, which makes the sound send
 //  to MSG_ALL (reliable) instead of MSG_BROADCAST (unreliable, default);
 //  similarily, SOUNDFLAG_RELIABLE_TO_ONE sends to MSG_ONE
-//- channel 0 is controlled by snd_channel0volume; channels +1 and -1 are
-//  controlled by snd_channel1volume, etc. (so positive and negative same numbered
-//  channel use the same control cvar); however, the mod MUST define
-//  snd_channel8volume and upwards in default.cfg if they are to be used,
-//  as the engine does not create them to not litter the cvar list
+//- channel 0 is controlled by snd_channel0volume; channel 1 and -1 by
+//  snd_channel1volume, etc. (so, a channel shares the cvar with its respective
+//  auto-channel); however, the mod MUST define snd_channel8volume and upwards
+//  in default.cfg if they are to be used, as the engine does not create them
+//  to not litter the cvar list
 //- this extension applies to CSQC as well; CSQC_Event_Sound will get speed and
 //  flags as extra 7th and 8th argument
 //- WIP2 ideas: SOUNDFLAG_RELIABLE_TO_ONE, SOUNDFLAG_NOPHS, SOUNDFLAG_FORCELOOP
 //- NOTE: to check for this, ALSO OR a check with DP_SND_SOUND7 to also support
 //  the finished extension once done
-
 
 //DP_SND_OGGVORBIS
 //idea: Transfusion
