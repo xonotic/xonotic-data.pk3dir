@@ -231,7 +231,6 @@ void weapon_defaultspawnfunc(float wpn);
 
 string w_deathtypestring;
 
-// void(entity client, string s) centerprint_builtin = #73;
 .vector dest1, dest2;
 
 float gameover;
@@ -364,8 +363,6 @@ void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
 float weaponsInMap;
-
-void centerprint(entity e, string s);
 
 .float respawn_countdown; // next number to count
 
