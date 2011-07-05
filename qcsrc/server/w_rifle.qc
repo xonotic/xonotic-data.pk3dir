@@ -214,11 +214,11 @@ float w_rifle(float req)
 		if(!w_issilent)
 		{
 			if(w_random < 0.2)
-				asound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS_SINGLE, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
 			else if(w_random < 0.4)
-				asound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS_SINGLE, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
 			else if(w_random < 0.5)
-				asound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS_SINGLE, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)

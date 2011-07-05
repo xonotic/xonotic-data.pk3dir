@@ -55,7 +55,7 @@ void Casing_Touch()
 						break;
 				}
 
-				asound (self, CH_SHOTS, s, VOL_BASE, ATTN_NORM);
+				sound (self, CH_SHOTS_SINGLE, s, VOL_BASE, ATTN_NORM);
 			}
 		}
 	}

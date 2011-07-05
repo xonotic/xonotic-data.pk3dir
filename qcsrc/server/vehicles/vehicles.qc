@@ -310,7 +310,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
         proj.flags           = FL_PROJECTILE | FL_NOTARGET;
 
     if(_mzlsound)
-        asound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTN_NORM);
+        sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTN_NORM);
 
     if(_mzlfx)
         pointparticles(particleeffectnum(_mzlfx), proj.origin, proj.velocity, 1);
@@ -626,7 +626,7 @@ void vehicles_exit(float eject)
         setorigin(self.owner.flagcarried, FLAG_CARRY_POS);
     }
     
-    csound (self, CH_TRIGGER, "misc/null.wav", 1, ATTN_NORM);
+    sound (self, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
     self.vehicle_exit(eject);
     self.owner = world;
     

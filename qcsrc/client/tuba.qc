@@ -13,18 +13,18 @@ void Ent_TubaNote_Think()
 	self.nextthink = time;
 	if(self.cnt <= 0)
 	{
-		csound(self, CH_SHOTS, "misc/null.wav", 0, 0);
+		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", 0, 0);
 		remove(self);
 	}
 	else
-		csound(self, CH_SHOTS, "", self.cnt, self.attenuate * autocvar_g_balance_tuba_attenuation);
+		sound(self, CH_SHOTS_SINGLE, "", self.cnt, self.attenuate * autocvar_g_balance_tuba_attenuation);
 }
 
 void Ent_TubaNote_UpdateSound()
 {
 	self.enemy.cnt = bound(0, VOL_BASE * autocvar_g_balance_tuba_volume, 1);
 	self.enemy.count = self.enemy.cnt;
-	csound(self.enemy, CH_SHOTS, TUBA_STARTNOTE(self.cnt), self.enemy.cnt, self.enemy.attenuate * autocvar_g_balance_tuba_attenuation);
+	sound(self.enemy, CH_SHOTS_SINGLE, TUBA_STARTNOTE(self.cnt), self.enemy.cnt, self.enemy.attenuate * autocvar_g_balance_tuba_attenuation);
 }
 
 void Ent_TubaNote_StopSound()

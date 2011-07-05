@@ -59,7 +59,7 @@ void Draw_GrapplingHook()
 	if(self.teleport_time)
 	if(time > self.teleport_time)
 	{
-		csound (self, CH_SHOTS, "misc/null.wav", VOL_BASE, ATTN_NORM); // safeguard
+		sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM); // safeguard
 		self.teleport_time = 0;
 	}
 
@@ -215,7 +215,7 @@ void Draw_GrapplingHook()
 
 void Remove_GrapplingHook()
 {
-	csound (self, CH_SHOTS, "misc/null.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 }
 
 void Ent_ReadHook(float bIsNew, float type)
@@ -275,10 +275,10 @@ void Ent_ReadHook(float bIsNew, float type)
 				self.drawmask = MASK_NORMAL;
 				break;
 			case ENT_CLIENT_LGBEAM:
-				csound (self, CH_SHOTS, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
 				break;
 			case ENT_CLIENT_GAUNTLET:
-				csound (self, CH_SHOTS, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_SHOTS_SINGLE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTN_NORM);
 				break;
 		}
 	}

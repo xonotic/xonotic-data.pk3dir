@@ -109,9 +109,9 @@ void dompoint_captured ()
 
 	if (head.noise != "")
 		if(self.enemy)
-			asound(self.enemy, CH_TRIGGER, head.noise, VOL_BASE, ATTN_NORM);
+			sound(self.enemy, CH_TRIGGER, head.noise, VOL_BASE, ATTN_NORM);
 		else
-			asound(self, CH_TRIGGER, head.noise, VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER_SINGLE, head.noise, VOL_BASE, ATTN_NORM);
 	if (head.noise1 != "")
 		play2all(head.noise1);
 

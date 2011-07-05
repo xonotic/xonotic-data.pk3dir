@@ -95,19 +95,19 @@ void W_Porto_Touch (void)
 
 	if(self.realowner.playerid != self.playerid)
 	{
-		asound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_SHOTS_SINGLE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 		remove(self);
 	}
 	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
 	{
-		spamsound(self, CH_SHOTS, "porto/bounce.wav", VOL_BASE, ATTN_NORM);
+		spamsound(self, CH_SHOTS_SINGLE, "porto/bounce.wav", VOL_BASE, ATTN_NORM);
 		// just reflect
 		self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * trace_plane_normal);
 		self.angles = vectoangles(self.velocity - 2 * trace_plane_normal * (self.velocity * trace_plane_normal));
 	}
 	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
-		asound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_SHOTS_SINGLE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 		W_Porto_Fail(0);
 	}
 	else if(self.effects & EF_RED)
@@ -115,7 +115,7 @@ void W_Porto_Touch (void)
 		self.effects += EF_BLUE - EF_RED;
 		if(Portal_SpawnInPortalAtTrace(self.realowner, self.right_vector, self.portal_id))
 		{
-			asound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS_SINGLE, "porto/create.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
 			centerprint(self.realowner, "^1In^7-portal created.");
 			self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * norm);
@@ -124,7 +124,7 @@ void W_Porto_Touch (void)
 		}
 		else
 		{
-			asound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS_SINGLE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
 			W_Porto_Fail(0);
 		}
@@ -135,20 +135,20 @@ void W_Porto_Touch (void)
 		{
 			if(Portal_SpawnOutPortalAtTrace(self.realowner, self.right_vector, self.portal_id))
 			{
-				asound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS_SINGLE, "porto/create.wav", VOL_BASE, ATTN_NORM);
 				trace_plane_normal = norm;
 				centerprint(self.realowner, "^4Out^7-portal created.");
 				W_Porto_Success();
 			}
 			else
 			{
-				asound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS_SINGLE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 				W_Porto_Fail(0);
 			}
 		}
 		else
 		{
-			asound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS_SINGLE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 			W_Porto_Fail(0);
 		}
 	}

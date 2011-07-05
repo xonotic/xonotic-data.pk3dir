@@ -394,14 +394,14 @@ void Portal_Remove(entity portal, float killed)
 	if(killed)
 	{
 		fixedmakevectors(portal.mangle);
-		asound(portal, CH_SHOTS, "porto/explode.wav", VOL_BASE, ATTN_NORM);
+		sound(portal, CH_SHOTS_SINGLE, "porto/explode.wav", VOL_BASE, ATTN_NORM);
 		pointparticles(particleeffectnum("rocket_explode"), portal.origin + v_forward * 16, v_forward * 1024, 4);
 		remove(portal);
 	}
 	else
 	{
 		Portal_MakeBrokenPortal(portal);
-		asound(portal, CH_SHOTS, "porto/expire.wav", VOL_BASE, ATTN_NORM);
+		sound(portal, CH_SHOTS_SINGLE, "porto/expire.wav", VOL_BASE, ATTN_NORM);
 		SUB_SetFade(portal, time, 0.5);
 	}
 }

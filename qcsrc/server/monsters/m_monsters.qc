@@ -105,7 +105,7 @@ void(float a) monster_setalpha =
 			{
 				// blink for an instant, this causes the appear sound, alarming the player as if under attack
 				/* PLEASE FIX THE SOUND CHANNEL BEFORE ACTIVATING THIS
-				asound(self, CHAN_AUTO, "wizard/wsight.wav", 1, ATTN_NORM);
+				sound(self, CHAN_AUTO, "wizard/wsight.wav", 1, ATTN_NORM);
 				*/
 				a = 1;
 			}
@@ -121,7 +121,7 @@ void(float a) monster_setalpha =
 			// if unghosting, make sure we have an enemy, otherwise stay ghosted (even if blinking) so we can't be shot while blinking
 			/* PLEASE FIX THE SOUND CHANNEL BEFORE ACTIVATING THIS
 			if (self.solid != SOLID_SLIDEBOX)
-				asound(self, CHAN_AUTO, "wizard/wsight.wav", 1, ATTN_NORM);
+				sound(self, CHAN_AUTO, "wizard/wsight.wav", 1, ATTN_NORM);
 			*/
 			self.solid = SOLID_SLIDEBOX;
 			self.takedamage = DAMAGE_AIM;

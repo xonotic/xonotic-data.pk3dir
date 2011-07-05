@@ -203,7 +203,7 @@ void W_Hagar_Attack2_Load (void)
 				// if we pressed primary fire while loading, unload all rockets and abort
 				W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo
 				self.hagar_load = 0;
-				asound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
 
 				// pause until we can load rockets again, once we re-press the alt fire button
 				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
@@ -221,7 +221,7 @@ void W_Hagar_Attack2_Load (void)
 				{
 					W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
 					self.hagar_load += 1;
-					asound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
 					self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
 				}
@@ -229,7 +229,7 @@ void W_Hagar_Attack2_Load (void)
 			else if(!self.hagar_loadbeep && self.hagar_load) // prevents the beep from playing each frame
 			{
 				// if this is the last rocket we can load, play a beep sound to notify the player
-				asound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
 				self.hagar_loadbeep = TRUE;
 			}
 		}
@@ -365,11 +365,11 @@ float w_hagar(float req)
 		if(!w_issilent)
 		{
 			if (w_random<0.15)
-				asound(self, CH_SHOTS, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS_SINGLE, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
 			else if (w_random<0.7)
-				asound(self, CH_SHOTS, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS_SINGLE, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
 			else
-				asound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS_SINGLE, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)

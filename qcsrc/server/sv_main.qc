@@ -43,7 +43,7 @@ void CreatureFrame (void)
 					if (self.watersound_finished < time)
 					{
 						self.watersound_finished = time + 0.5;
-						asound (self, CH_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
+						sound (self, CH_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
 					}
 					Damage (self, world, world, 6 * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
 				}
@@ -52,7 +52,7 @@ void CreatureFrame (void)
 					if (self.watersound_finished < time)
 					{
 						self.watersound_finished = time + 0.5;
-						asound (self, CH_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
+						sound (self, CH_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
 					}
 					Damage (self, world, world, 2 * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 				}

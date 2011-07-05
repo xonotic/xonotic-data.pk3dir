@@ -117,7 +117,7 @@ void() t_movetarget =
 
 	/* PLEASE FIX THE SOUND CHANNEL BEFORE ACTIVATING THIS
 	if (self.classname == "monster_ogre")
-		asound (self, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE);// play chainsaw drag sound
+		sound (self, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE);// play chainsaw drag sound
 	*/
 
 //dprint ("t_movetarget\n");
@@ -172,7 +172,7 @@ void() monster_wanderpathtouch =
 
 	/* PLEASE FIX THE SOUND CHANNEL BEFORE ACTIVATING THIS
 	if (other.classname == "monster_ogre")
-		asound (other, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE);// play chainsaw drag sound
+		sound (other, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE);// play chainsaw drag sound
 	*/
 	monster_wanderpaththink();
 };
