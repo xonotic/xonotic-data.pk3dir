@@ -4597,7 +4597,7 @@ void HUD_CenterPrint (void)
 				{
 					if (align)
 						pos_x = panel_pos_x + (panel_size_x - stringwidth(ts, TRUE, fontsize)) * align;
-					drawcolorcodedstring(pos + '0 1 0' * 1.5 * (1 - sz) * fontsize_y, ts, fontsize, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawcolorcodedstring(pos + eY * 0.5 * (1 - sz) * fontsize_y, ts, fontsize, a * panel_fg_alpha, DRAWFLAG_NORMAL);
 					pos_y += fontsize_y;
 				}
 				else
