@@ -1839,7 +1839,7 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
 	if(msg == MSG_SUICIDE) {
 		if (type == DEATH_TEAMCHANGE) {
-			centerprint(strcat(sprintf(_("You are now on: %s"), s1)));
+			centerprint(sprintf(_("You are now on: %s"), s1));
 		} else if (type == DEATH_AUTOTEAMCHANGE) {
 			centerprint(sprintf(_("You have been moved into a different team to improve team balance\nYou are now on: %s"), s1));
 		} else if (type == DEATH_CAMP) {
@@ -1873,9 +1873,9 @@ void HUD_Centerprint(string s1, string s2, float type, float msg)
 	} else if(msg == MSG_KILL) {
 		if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(gentle) {
-				centerprint(strcat(sprintf(_("^1Moron! You went against ^7%s^1, a team mate!"), s1)));
+				centerprint(sprintf(_("^1Moron! You went against ^7%s^1, a team mate!"), s1));
 			} else {
-				centerprint(strcat(sprintf(_("^1Moron! You fragged ^7%s^1, a team mate!"), s1)));
+				centerprint(sprintf(_("^1Moron! You fragged ^7%s^1, a team mate!"), s1));
 			}
 		} else if (type == KILL_FIRST_BLOOD) {
 			if(gentle) {
