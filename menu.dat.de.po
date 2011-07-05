@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-20 20:46+0200\n"
+"POT-Creation-Date: 2011-06-27 18:26+0200\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
@@ -1368,7 +1368,7 @@ msgstr "Schadenseffekt:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:195
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:178
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:194
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:191
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:30
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:41
 #: qcsrc/menu/xonotic/dialog_settings_video.c:109
@@ -1926,9 +1926,13 @@ msgstr "Lichtdynamik (HDR)"
 msgid "Motion blur:"
 msgstr "Bewegungsunschärfe:"
 
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:187
+msgid "Damage & water blur"
+msgstr "Schadens-Unschärfe"
+
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:188
-msgid "Damage blur:"
-msgstr "Schadensunschärfe:"
+msgid "Powerup sharpen"
+msgstr "Bonus-Schärfe"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
@@ -2515,37 +2519,37 @@ msgstr "%s schaute sich %ss Crylink sehr genau an"
 msgid "Electro"
 msgstr "Electro"
 
-#: qcsrc/server/w_electro.qc:571
+#: qcsrc/server/w_electro.qc:577
 #, c-format
 msgid "%s could not remember where they put plasma"
 msgstr "%s vergaß, wo er das Plasma hingetan hatte"
 
-#: qcsrc/server/w_electro.qc:573
+#: qcsrc/server/w_electro.qc:579
 #, c-format
 msgid "%s played with plasma"
 msgstr "%s spielte mit Plasma"
 
-#: qcsrc/server/w_electro.qc:580
+#: qcsrc/server/w_electro.qc:586
 #, c-format
 msgid "%s just noticed %s's blue ball"
 msgstr "%s hat gerade %ss blaue Kugel bemerkt"
 
-#: qcsrc/server/w_electro.qc:582
+#: qcsrc/server/w_electro.qc:588
 #, c-format
 msgid "%s got in touch with %s's blue ball"
 msgstr "%s kam mit %ss blauer Kugel in Kontakt"
 
-#: qcsrc/server/w_electro.qc:587
+#: qcsrc/server/w_electro.qc:593
 #, c-format
 msgid "%s felt the electrifying air of %s's combo"
 msgstr "%s hat gespürt, wie %ss Combo die Luft elektrisierte"
 
-#: qcsrc/server/w_electro.qc:589
+#: qcsrc/server/w_electro.qc:595
 #, c-format
 msgid "%s got too close to %s's blue beam"
 msgstr "%s kam zu nah an %ss blauen Strahl"
 
-#: qcsrc/server/w_electro.qc:591
+#: qcsrc/server/w_electro.qc:597
 #, c-format
 msgid "%s was blasted by %s's blue beam"
 msgstr "%s wurde von %ss blauen Strahl erwischt"
@@ -2655,9 +2659,7 @@ msgstr "^1%s^1 wurde von %s^1 niedergehauen"
 msgid "Grappling Hook"
 msgstr "Grappling Hook"
 
-#: qcsrc/server/w_hook.qc:266 qcsrc/server/w_minstanex.qc:290
-#: qcsrc/server/w_nex.qc:253 qcsrc/server/w_porto.qc:296
-#: qcsrc/server/w_shotgun.qc:203 qcsrc/server/w_uzi.qc:317
+#: qcsrc/server/w_hook.qc:266 qcsrc/server/w_porto.qc:296
 #, c-format
 msgid "%s did the impossible"
 msgstr "%s hat das Unmögliche geschafft"
@@ -2671,17 +2673,17 @@ msgstr "%s ist in %ss Gravitationsbombe reingelaufen"
 msgid "Laser"
 msgstr "Laser"
 
-#: qcsrc/server/w_laser.qc:305
+#: qcsrc/server/w_laser.qc:311
 #, c-format
 msgid "%s lasered themself to hell"
 msgstr "%s hat sich in die Hölle gelasert"
 
-#: qcsrc/server/w_laser.qc:309
+#: qcsrc/server/w_laser.qc:315
 #, c-format
 msgid "%s was cut in half by %s's gauntlet"
 msgstr "%s ist von %ss Gauntlet halbiert worden"
 
-#: qcsrc/server/w_laser.qc:311
+#: qcsrc/server/w_laser.qc:317
 #, c-format
 msgid "%s was lasered to death by %s"
 msgstr "^1%s^1 wurde von %s^1 zu Tode gelasert"
@@ -2690,22 +2692,22 @@ msgstr "^1%s^1 wurde von %s^1 zu Tode gelasert"
 msgid "Mine Layer"
 msgstr "Mine Layer"
 
-#: qcsrc/server/w_minelayer.qc:522 qcsrc/server/w_rocketlauncher.qc:501
+#: qcsrc/server/w_minelayer.qc:523 qcsrc/server/w_rocketlauncher.qc:501
 #, c-format
 msgid "%s exploded"
 msgstr "%s ist explodiert"
 
-#: qcsrc/server/w_minelayer.qc:526
+#: qcsrc/server/w_minelayer.qc:527
 #, c-format
 msgid "%s got too close to %s's mine"
 msgstr "%s ist %ss Mine zu nahe getreten"
 
-#: qcsrc/server/w_minelayer.qc:528
+#: qcsrc/server/w_minelayer.qc:529
 #, c-format
 msgid "%s almost dodged %s's mine"
 msgstr "%s ist fast %ss Mine ausgewichen"
 
-#: qcsrc/server/w_minelayer.qc:530
+#: qcsrc/server/w_minelayer.qc:531
 #, c-format
 msgid "%s stepped on %s's mine"
 msgstr "%s ist auf %ss Mine gelatscht"
@@ -2713,6 +2715,12 @@ msgstr "%s ist auf %ss Mine gelatscht"
 #: qcsrc/server/w_minstanex.qc:2
 msgid "MinstaNex"
 msgstr "MinstaNex"
+
+#: qcsrc/server/w_minstanex.qc:290 qcsrc/server/w_nex.qc:253
+#: qcsrc/server/w_shotgun.qc:209 qcsrc/server/w_uzi.qc:317
+#, c-format
+msgid "%s is now thinking with portals"
+msgstr "%s kann jetzt mit Portalen denken"
 
 #: qcsrc/server/w_minstanex.qc:292 qcsrc/server/w_nex.qc:255
 #, c-format
@@ -2803,12 +2811,12 @@ msgstr "^1%s^1 wurde von %s^1 getagged"
 msgid "Shotgun"
 msgstr "Shotgun"
 
-#: qcsrc/server/w_shotgun.qc:207
+#: qcsrc/server/w_shotgun.qc:213
 #, c-format
 msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
 msgstr "%2$1s ^7hat %1$s ^7ein wenig mit einer großen Schrotflinte geschlagen"
 
-#: qcsrc/server/w_shotgun.qc:209
+#: qcsrc/server/w_shotgun.qc:215
 #, c-format
 msgid "%s was gunned by %s"
 msgstr "^1%s^1 wurde von %s^1 erschossen"

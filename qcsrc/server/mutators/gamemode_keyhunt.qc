@@ -1029,7 +1029,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 {
 	if(self == other)
 		kh_Key_DropAll(self, TRUE);
-	else if(other.classname == "player" || other.classname == "gib")
+	else if(other.classname == "player")
 		kh_Key_DropAll(self, FALSE);
 	else
 		kh_Key_DropAll(self, TRUE);

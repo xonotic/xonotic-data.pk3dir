@@ -498,8 +498,9 @@ void ent_turret()
             self.team = _team;
             turret_changeteam();        
         }
+        
+        if(self.health == 0)
+            turret_die();
     } 
     
-    if(self.health == 0)
-        turret_die();
 }

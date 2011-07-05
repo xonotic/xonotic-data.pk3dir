@@ -597,7 +597,7 @@ void W_Nexball_Touch (void)
 
 	PROJECTILE_TOUCH;
 	if(attacker.team != other.team || g_nexball_basketball_teamsteal)
-	if((ball = other.ballcarried) && (attacker.classname == "player" || attacker.classname == "gib"))
+	if((ball = other.ballcarried) && (attacker.classname == "player"))
 	{
 		other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 		other.flags &~= FL_ONGROUND;

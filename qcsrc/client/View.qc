@@ -371,7 +371,7 @@ void CSQC_UpdateView(float w, float h)
 	entity e;
 	float fov;
 	float f, i, j;
-	vector v, vo;
+	vector v;
 	vector vf_size, vf_min;
 	float a;
 	hud = getstati(STAT_HUD);
@@ -403,7 +403,6 @@ void CSQC_UpdateView(float w, float h)
 		myteam = GetPlayerColor(player_localentnum - 1);
 
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
-	vo = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
 	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0) || intermission > 1)
 	{
@@ -550,8 +549,15 @@ void CSQC_UpdateView(float w, float h)
 
 	// ALWAYS Clear Current Scene First
 	R_ClearScene();
+#ifdef WORKAROUND_XON010
+	if(checkextension("DP_CSQC_ROTATEMOVES"))
+	{
+#endif
 	R_SetView(VF_ORIGIN, view_origin);
 	R_SetView(VF_ANGLES, view_angles);
+#ifdef WORKAROUND_XON010
+	}
+#endif
 
 	// FIXME engine bug? VF_SIZE and VF_MIN are not restored to sensible values by this
 	R_SetView(VF_SIZE, vf_size);

@@ -1,2 +1,4 @@
 #pragma flag enable subscope
 #pragma flag enable lo
+
+#define WORKAROUND_XON010
