@@ -4460,7 +4460,7 @@ void HUD_CenterPrint (void)
 	{
 		if(!autocvar_hud_panel_centerprint) return;
 
-		if (hud_configure_prev)
+		if (hud_configure_prev && hud_configure_prev != -1)
 			reset_centerprint_messages();
 	}
 	else
