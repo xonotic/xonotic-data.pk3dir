@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-25 13:06+0200\n"
-"PO-Revision-Date: 2011-06-25 16:43+0100\n"
+"POT-Creation-Date: 2011-07-06 20:54+0200\n"
+"PO-Revision-Date: 2011-07-06 21:21+0100\n"
 "Last-Translator: Felice Sallustio <fel.sallustio@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -282,7 +282,7 @@ msgstr "Durata dissolvenza:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:4
 msgid "Physics Panel"
-msgstr "Pannello fisica"
+msgstr "Pannello Fisica"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:23
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:21
@@ -316,7 +316,7 @@ msgstr "Allinea a destra"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:35
 msgid "Inward align"
-msgstr "Allineamento Interno"
+msgstr "Allineamento interno"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:36
 msgid "Outward align"
@@ -364,7 +364,7 @@ msgstr "Mostra"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:67
 msgid "Top speed"
-msgstr "Velocità massima:"
+msgstr "Velocità massima"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:73
 msgid "Acceleration:"
@@ -1367,7 +1367,7 @@ msgid "Damage splash:"
 msgstr "Schizzo del danno:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:195
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:178
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:173
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:191
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:30
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:41
@@ -1505,7 +1505,7 @@ msgstr "Master:"
 msgid "Music:"
 msgstr "Musica:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:40
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:41
 msgid "VOL^Ambient:"
 msgstr "VOL^Ambiente:"
 
@@ -1513,180 +1513,180 @@ msgstr "VOL^Ambiente:"
 msgid "Info:"
 msgstr "Info:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:57
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:55
 msgid "Items:"
 msgstr "Oggetti:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:65
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:62
 msgid "Pain:"
 msgstr "Dolore:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:73
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:69
 msgid "Player:"
 msgstr "Giocatore:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:81
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:76
 msgid "Shots:"
 msgstr "Spari:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:88
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:83
 msgid "Voice:"
 msgstr "Voce:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:96
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:91
 msgid "Weapons:"
 msgstr "Armi:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:103
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:161
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:98
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:156
 msgid "Frequency:"
 msgstr "Frequenza:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:105
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:100
 msgid "8 kHz"
 msgstr "8 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:106
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:101
 msgid "11.025 kHz"
 msgstr "11.025 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:107
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:102
 msgid "16 kHz"
 msgstr "16 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:108
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:103
 msgid "22.05 kHz"
 msgstr "22.05 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:109
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:104
 msgid "24 kHz"
 msgstr "24 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:110
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:105
 msgid "32 kHz"
 msgstr "32 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:111
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:106
 msgid "44.1 kHz"
 msgstr "44.1 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:112
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:107
 msgid "48 kHz"
 msgstr "48 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:115
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:110
 msgid "Channels:"
 msgstr "Canali:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:117
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:112
 msgid "Mono"
 msgstr "Mono"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:118
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:113
 msgid "Stereo"
 msgstr "Stereo"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:119
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:114
 msgid "2.1"
 msgstr "2.1"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:120
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:115
 msgid "4"
 msgstr "4"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:121
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:116
 msgid "5"
 msgstr "5"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:122
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:117
 msgid "5.1"
 msgstr "5.1"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:123
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:118
 msgid "6.1"
 msgstr "6.1"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:124
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:119
 msgid "7.1"
 msgstr "7.1"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:128
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:123
 msgid "Swap Stereo"
 msgstr "Scambia canali stereo"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:132
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:127
 msgid "Headphone friendly mode"
 msgstr "Modalità cuffie"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:136
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:131
 msgid "Spatial voices:"
 msgstr "Voci spaziali:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:137
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:132
 msgid "VOCS^None"
 msgstr "VOCS^Nessuna"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:138
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:133
 msgid "VOCS^Taunts"
 msgstr "VOCS^Insulti"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:139
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:134
 msgid "VOCS^All"
 msgstr "VOCS^Tutte"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:142
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:137
 msgid "Taunt range:"
 msgstr "Range di insulti:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:145
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:140
 msgid "RNG^Very short"
 msgstr "RNG^Molto ristretto"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:146
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:141
 msgid "RNG^Short"
 msgstr "RNG^Ristretto"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:147
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:142
 msgid "RNG^Normal"
 msgstr "RNG^Normale"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:148
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:143
 msgid "RNG^Long"
 msgstr "RNG^Lungo"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:149
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:144
 msgid "RNG^Full"
 msgstr "RNG^Pieno"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:156
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:151
 msgid "Automatic taunts"
 msgstr "Insulti automatici"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:165
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:160
 msgid "Time warning:"
 msgstr "Avvertimento di tempo:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:167
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:162
 msgid "WRN^None"
 msgstr "WRN^Nessuno"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:168
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:163
 msgid "1 minute"
 msgstr "1 minuto"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:169
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:164
 msgid "5 minutes"
 msgstr "5 minuti"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:170
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:165
 msgid "WRN^Both"
 msgstr "WNR^Entrambi"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:173
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:168
 msgid "Hit indicator"
 msgstr "Indicatore di colpo"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:175
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:170
 msgid "Menu sounds"
 msgstr "Suoni del menu"
 
@@ -1928,7 +1928,7 @@ msgstr "Sfocatura da movimento:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:187
 msgid "Damage & water blur"
-msgstr "Sfocatura danno & acqua"
+msgstr "Sfocatura da danno & acqua:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:188
 msgid "Powerup sharpen"
@@ -2515,37 +2515,37 @@ msgstr "%s ha visto da vicino il Crylink di %s"
 msgid "Electro"
 msgstr "Electro"
 
-#: qcsrc/server/w_electro.qc:571
+#: qcsrc/server/w_electro.qc:574
 #, c-format
 msgid "%s could not remember where they put plasma"
 msgstr "%s non s'è ricordato dove aveva messo il plasma"
 
-#: qcsrc/server/w_electro.qc:573
+#: qcsrc/server/w_electro.qc:576
 #, c-format
 msgid "%s played with plasma"
 msgstr "%s ha giocato col plasma"
 
-#: qcsrc/server/w_electro.qc:580
+#: qcsrc/server/w_electro.qc:583
 #, c-format
 msgid "%s just noticed %s's blue ball"
 msgstr "%s ha appena notato la palla blu di %s"
 
-#: qcsrc/server/w_electro.qc:582
+#: qcsrc/server/w_electro.qc:585
 #, c-format
 msgid "%s got in touch with %s's blue ball"
 msgstr "%s è entrato in contatto con la palla blu di %s"
 
-#: qcsrc/server/w_electro.qc:587
+#: qcsrc/server/w_electro.qc:590
 #, c-format
 msgid "%s felt the electrifying air of %s's combo"
 msgstr "%s ha sentito l'aria elettrificata della combo di %s"
 
-#: qcsrc/server/w_electro.qc:589
+#: qcsrc/server/w_electro.qc:592
 #, c-format
 msgid "%s got too close to %s's blue beam"
 msgstr "%s s'è avvicinato troppo al raggio blu di %s"
 
-#: qcsrc/server/w_electro.qc:591
+#: qcsrc/server/w_electro.qc:594
 #, c-format
 msgid "%s was blasted by %s's blue beam"
 msgstr "%s è stato fatto saltare in aria dal raggio blu di %s"
@@ -2659,11 +2659,7 @@ msgid "Grappling Hook"
 msgstr "Grappling Hook"
 
 #: qcsrc/server/w_hook.qc:266
-#: qcsrc/server/w_minstanex.qc:290
-#: qcsrc/server/w_nex.qc:253
 #: qcsrc/server/w_porto.qc:296
-#: qcsrc/server/w_shotgun.qc:203
-#: qcsrc/server/w_uzi.qc:317
 #, c-format
 msgid "%s did the impossible"
 msgstr "%s ha fatto l'impossibile"
@@ -2677,17 +2673,17 @@ msgstr "%s è corso nella bomba di gravità di %s"
 msgid "Laser"
 msgstr "Laser"
 
-#: qcsrc/server/w_laser.qc:305
+#: qcsrc/server/w_laser.qc:311
 #, c-format
 msgid "%s lasered themself to hell"
 msgstr "%s si è \"laserato\" all'inferno"
 
-#: qcsrc/server/w_laser.qc:309
+#: qcsrc/server/w_laser.qc:315
 #, c-format
 msgid "%s was cut in half by %s's gauntlet"
 msgstr "%s è stato tagliato a metà dal guanto di %s"
 
-#: qcsrc/server/w_laser.qc:311
+#: qcsrc/server/w_laser.qc:317
 #, c-format
 msgid "%s was lasered to death by %s"
 msgstr "%s è stato \"laserato\" alla morte da %s"
@@ -2696,23 +2692,23 @@ msgstr "%s è stato \"laserato\" alla morte da %s"
 msgid "Mine Layer"
 msgstr "Mine Layer"
 
-#: qcsrc/server/w_minelayer.qc:522
+#: qcsrc/server/w_minelayer.qc:523
 #: qcsrc/server/w_rocketlauncher.qc:501
 #, c-format
 msgid "%s exploded"
 msgstr "%s è esploso"
 
-#: qcsrc/server/w_minelayer.qc:526
+#: qcsrc/server/w_minelayer.qc:527
 #, c-format
 msgid "%s got too close to %s's mine"
 msgstr "%s s'è avvicinato troppo alla mina di %s"
 
-#: qcsrc/server/w_minelayer.qc:528
+#: qcsrc/server/w_minelayer.qc:529
 #, c-format
 msgid "%s almost dodged %s's mine"
 msgstr "%s ha quasi schivato la mina di %s"
 
-#: qcsrc/server/w_minelayer.qc:530
+#: qcsrc/server/w_minelayer.qc:531
 #, c-format
 msgid "%s stepped on %s's mine"
 msgstr "%s è passato sopra la mina di %s"
@@ -2720,6 +2716,14 @@ msgstr "%s è passato sopra la mina di %s"
 #: qcsrc/server/w_minstanex.qc:2
 msgid "MinstaNex"
 msgstr "MinstaNex"
+
+#: qcsrc/server/w_minstanex.qc:290
+#: qcsrc/server/w_nex.qc:253
+#: qcsrc/server/w_shotgun.qc:209
+#: qcsrc/server/w_uzi.qc:317
+#, c-format
+msgid "%s is now thinking with portals"
+msgstr "%s sta ora pensando con i portali"
 
 #: qcsrc/server/w_minstanex.qc:292
 #: qcsrc/server/w_nex.qc:255
@@ -2812,12 +2816,12 @@ msgstr "%s è stato contrassegnato da %s"
 msgid "Shotgun"
 msgstr "Shotgun"
 
-#: qcsrc/server/w_shotgun.qc:207
+#: qcsrc/server/w_shotgun.qc:213
 #, c-format
 msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
 msgstr "%2$s ^7ha schiaffeggiato %1$s ^7un pò con un grosso ^2shotgun"
 
-#: qcsrc/server/w_shotgun.qc:209
+#: qcsrc/server/w_shotgun.qc:215
 #, c-format
 msgid "%s was gunned by %s"
 msgstr "%s è stato sparato da %s"
@@ -2827,12 +2831,12 @@ msgstr "%s è stato sparato da %s"
 msgid "@!#%'n Tuba"
 msgstr "@!#%'n Tuba"
 
-#: qcsrc/server/w_tuba.qc:263
+#: qcsrc/server/w_tuba.qc:253
 #, c-format
 msgid "%s hurt his own ears with the @!#%%'n Tuba"
 msgstr "%s s'è fatto male alle orecchie con la @!#%%'n Tuba"
 
-#: qcsrc/server/w_tuba.qc:267
+#: qcsrc/server/w_tuba.qc:257
 #, c-format
 msgid "%s died of %s's great playing on the @!#%%'n Tuba"
 msgstr "%s è morto nella gran esibizione di %s con la @!#%%'n Tuba"
