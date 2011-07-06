@@ -1061,7 +1061,7 @@ float bot_cmd_sound()
 	f = bot_cmd.bot_cmd_parm_string;
 
 	precache_sound(f);
-	sound(self, CHAN_WEAPON2, f, VOL_BASE, ATTN_MIN);
+	sound(self, CH_WEAPON_B, f, VOL_BASE, ATTN_MIN);
 
 	return CMD_STATUS_FINISHED;
 }
