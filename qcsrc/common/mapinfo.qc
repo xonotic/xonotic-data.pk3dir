@@ -802,7 +802,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 {
 	string fn;
 	string s, t;
-	float fh, fh2;
+	float fh;
 	float r, f, n, i, p;
 	string acl;
 
