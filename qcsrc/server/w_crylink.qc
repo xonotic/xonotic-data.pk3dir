@@ -17,7 +17,7 @@ void W_Crylink_CheckLinks(entity e)
 	if(e == world)
 		error("W_Crylink_CheckLinks: entity is world");
 	if(e.classname != "spike")
-		error("W_Crylink_CheckLinks: entity is not a spike");
+		error(sprintf("W_Crylink_CheckLinks: entity is not a spike but a %s (freed: %d)", e.classname, wasfreed(e)));
 
 	p = e;
 	for(i = 0; i < 1000; ++i)
