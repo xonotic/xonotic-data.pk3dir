@@ -493,8 +493,6 @@ vector steerlib_beamsteer(vector dir, float length, float step, float step_up, f
 #ifdef TLIBS_TETSLIBS
 void flocker_die()
 {
-	sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-
 	pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 
     self.owner.cnt += 1;

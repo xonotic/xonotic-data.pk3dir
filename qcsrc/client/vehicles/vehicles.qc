@@ -217,7 +217,7 @@ void CSQC_SPIDER_HUD()
         if(alarm1time < time)
         {
             alarm1time = time + 2;
-            sound(world, CHAN_PAIN, "vehicles/alarm.wav", VOL_BASEVOICE, ATTN_NONE);
+            sound(world, CH_PAIN, "vehicles/alarm.wav", VOL_BASEVOICE, ATTN_NONE);
         }        
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     }        
@@ -226,7 +226,7 @@ void CSQC_SPIDER_HUD()
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm1time)
         {
-            sound(world, CHAN_PAIN, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
+            sound(world, CH_PAIN, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
             alarm1time = 0;
         }        
     }
@@ -244,7 +244,7 @@ void CSQC_SPIDER_HUD()
         if(alarm2time < time)
         {
             alarm2time = time + 1;
-            sound(world, CHAN_TRIGGER, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTN_NONE);
+            sound(world, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTN_NONE);
         }
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     }
@@ -253,7 +253,7 @@ void CSQC_SPIDER_HUD()
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm2time)
         {            
-            sound(world, CHAN_TRIGGER, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
+            sound(world, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
             alarm2time = 0;
         }
     }
@@ -373,7 +373,7 @@ void CSQC_RAPTOR_HUD()
         if(alarm1time < time)
         {
             alarm1time = time + 2;
-            sound(self, CHAN_PAIN, "vehicles/alarm.wav", VOL_BASEVOICE, ATTN_NONE);
+            sound(self, CH_PAIN_SINGLE, "vehicles/alarm.wav", VOL_BASEVOICE, ATTN_NONE);
         }
         
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
@@ -383,7 +383,7 @@ void CSQC_RAPTOR_HUD()
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm1time)
         {
-            sound(self, CHAN_PAIN, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
+            sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
             alarm1time = 0;
         }
     }
@@ -402,7 +402,7 @@ void CSQC_RAPTOR_HUD()
         if(alarm2time < time)
         {
             alarm2time = time + 1;
-            sound(world, CHAN_TRIGGER, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTN_NONE);
+            sound(world, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTN_NONE);
         }
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     }
@@ -411,7 +411,7 @@ void CSQC_RAPTOR_HUD()
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm2time)
         {            
-            sound(world, CHAN_TRIGGER, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
+            sound(world, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
             alarm2time = 0;
         }
     }
@@ -561,7 +561,7 @@ void CSQC_WAKIZASHI_HUD()
         if(alarm1time < time)
         {
             alarm1time = time + 2;
-            sound(self, CHAN_PAIN, "vehicles/alarm.wav", VOL_BASEVOICE, ATTN_NONE);
+            sound(self, CH_PAIN_SINGLE, "vehicles/alarm.wav", VOL_BASEVOICE, ATTN_NONE);
         }
         
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
@@ -571,7 +571,7 @@ void CSQC_WAKIZASHI_HUD()
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm1time)
         {
-            sound(self, CHAN_PAIN, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
+            sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
             alarm1time = 0;
         }        
     }
@@ -591,7 +591,7 @@ void CSQC_WAKIZASHI_HUD()
         if(alarm2time < time)
         {
             alarm2time = time + 1;
-            sound(world, CHAN_TRIGGER, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTN_NONE);
+            sound(world, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTN_NONE);
         }
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     }
@@ -600,7 +600,7 @@ void CSQC_WAKIZASHI_HUD()
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm2time)
         {            
-            sound(world, CHAN_TRIGGER, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
+            sound(world, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
             alarm2time = 0;
         }
     }

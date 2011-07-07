@@ -306,7 +306,7 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 		backtrace("Flag carrier had no flag sprite?!?");
 	}
 	LogCTF("dropped", p.team, p);
-	sound (self, CHAN_TRIGGER, self.noise4, VOL_BASE, ATTN_NONE);
+	sound (p, CH_TRIGGER, self.noise4, VOL_BASE, ATTN_NONE);
 
 	setattachment(e, world, "");
 	e.damageforcescale = autocvar_g_balance_ctf_damageforcescale;
@@ -361,7 +361,7 @@ void FlagThink()
 		{
 			bprint("The ", self.netname, " became impatient after ", ftos_decimals(flagcaptimerecord, 2), " seconds and returned itself\n");
 
-			sound (self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
+			sound (self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NONE);
 			self.owner.impulse = 141; // returning!
 
 			e = self;
@@ -388,7 +388,7 @@ void FlagThink()
 		if (time > self.pain_finished)
 		{
 			bprint("The ", self.netname, " has returned to base\n");
-			sound (self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
+			sound (self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NONE);
 			LogCTF("returned", self.team, world);
 			ReturnFlag(self);
 		}
@@ -496,7 +496,7 @@ void FlagTouch()
 			}
 		}
 
-		sound (other, CHAN_AUTO, self.noise2, VOL_BASE, ATTN_NONE);
+		sound (other, CH_TRIGGER, self.noise2, VOL_BASE, ATTN_NONE);
 		WaypointSprite_DetachCarrier(other);
 		if(self.speedrunning)
 			FakeTimeLimit(other, -1);
@@ -534,7 +534,7 @@ void FlagTouch()
 		self.dropperid = other.playerid;
 		PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
 		LogCTF("steal", self.team, other);
-		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
+		sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NONE);
 
 		FOR_EACH_PLAYER(player)
 			if(player.team == self.team)
@@ -589,7 +589,7 @@ void FlagTouch()
 			}
 			PlayerScore_Add(other, SP_CTF_RETURNS, 1);
 			LogCTF("return", self.team, other);
-			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
+			sound (other, CH_TRIGGER, self.noise1, VOL_BASE, ATTN_NONE);
 			ReturnFlag(self);
 		}
 		else if (!other.flagcarried && (other.playerid != self.dropperid || time > self.ctf_droptime + autocvar_g_balance_ctf_delay_collect))
@@ -621,7 +621,7 @@ void FlagTouch()
 			UpdateFrags(other, f);
 			PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
 			LogCTF("pickup", self.team, other);
-			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
+			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NONE);
 
 			FOR_EACH_PLAYER(player)
 				if(player.team == self.team)

@@ -29,7 +29,7 @@ void ewheel_attack()
     {
         turret_do_updates(self);
 
-        sound (self, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
+        sound (self, CH_WEAPON_A, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
         pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
         proj                    = spawn ();

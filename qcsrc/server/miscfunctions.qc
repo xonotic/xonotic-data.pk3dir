@@ -1272,7 +1272,6 @@ void readlevelcvars(void)
 
 // Sound functions
 string precache_sound (string s) = #19;
-void(entity e, float chan, string samp, float vol, float atten) sound_builtin = #8;
 float precache_sound_index (string s) = #19;
 
 #define SND_VOLUME      1
@@ -1304,12 +1303,24 @@ float sound_allowed(float dest, entity e)
     return TRUE;
 }
 
+#ifdef COMPAT_XON010_CHANNELS
+void(entity e, float chan, string samp, float vol, float atten) sound_builtin = #8;
 void sound(entity e, float chan, string samp, float vol, float atten)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
         return;
     sound_builtin(e, chan, samp, vol, atten);
 }
+#else
+#undef sound
+void sound(entity e, float chan, string samp, float vol, float atten)
+{
+    if (!sound_allowed(MSG_BROADCAST, e))
+        return;
+    sound7(e, chan, samp, vol, atten, 0, 0);
+}
+#endif
+
 void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten)
 {
     float entno, idx;
@@ -1319,8 +1330,6 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
 
     entno = num_for_edict(e);
     idx = precache_sound_index(samp);
-
-    chan = ((chan & 0x07) | ((chan & 0x1F0) / 2));
 
     float sflags;
     sflags = 0;
@@ -1332,7 +1341,7 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
         sflags |= SND_VOLUME;
     if (atten != 64)
         sflags |= SND_ATTENUATION;
-    if (entno >= 8192 || chan > 7)
+    if (entno >= 8192 || chan < 0 || chan > 7)
         sflags |= SND_LARGEENTITY;
     if (idx >= 256)
         sflags |= SND_LARGESOUND;
@@ -1383,9 +1392,8 @@ void stopsoundto(float dest, entity e, float chan)
         return;
 
     entno = num_for_edict(e);
-    chan = ((chan & 0x07) | ((chan & 0x1F0) / 2));
 
-    if (entno >= 8192 || chan > 7)
+    if (entno >= 8192 || chan < 0 || chan > 7)
     {
         float idx, sflags;
         idx = precache_sound_index("misc/null.wav");
@@ -1423,7 +1431,7 @@ void play2(entity e, string filename)
 {
     //stuffcmd(e, strcat("play2 ", filename, "\n"));
     msg_entity = e;
-    soundtoat(MSG_ONE, world, '0 0 0', CHAN_AUTO, filename, VOL_BASE, ATTN_NONE);
+    soundtoat(MSG_ONE, world, '0 0 0', CH_INFO, filename, VOL_BASE, ATTN_NONE);
 }
 
 // use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame)
@@ -1461,7 +1469,7 @@ void play2all(string samp)
     if (autocvar_bot_sound_monopoly)
         return;
 
-    sound(world, CHAN_AUTO, samp, VOL_BASE, ATTN_NONE);
+    sound(world, CH_INFO, samp, VOL_BASE, ATTN_NONE);
 }
 
 void PrecachePlayerSounds(string f);

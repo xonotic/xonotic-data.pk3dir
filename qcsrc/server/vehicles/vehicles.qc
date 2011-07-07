@@ -310,7 +310,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
         proj.flags           = FL_PROJECTILE | FL_NOTARGET;
 
     if(_mzlsound)
-        sound (self, CHAN_WEAPON, _mzlsound, VOL_BASE, ATTN_NORM);
+        sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTN_NORM);
 
     if(_mzlfx)
         pointparticles(particleeffectnum(_mzlfx), proj.origin, proj.velocity, 1);
@@ -626,7 +626,7 @@ void vehicles_exit(float eject)
         setorigin(self.owner.flagcarried, FLAG_CARRY_POS);
     }
     
-    sound (self, CHAN_TRIGGER, "misc/null.wav", 1, ATTN_NORM);
+    sound (self, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
     self.vehicle_exit(eject);
     self.owner = world;
     
@@ -718,11 +718,11 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
             self.vehicle_shieldent.alpha    = 0.75;
             
         	if(sound_allowed(MSG_BROADCAST, attacker))
-                spamsound (self, CHAN_PROJECTILE, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);   // FIXME: PLACEHOLDER
+                spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);   // FIXME: PLACEHOLDER
         }
         else
         	if(sound_allowed(MSG_BROADCAST, attacker))
-                spamsound (self, CHAN_PROJECTILE, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+                spamsound (self, CH_PAIN, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
 
     }
     else
@@ -730,7 +730,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         self.vehicle_health -= damage;
 
         if(sound_allowed(MSG_BROADCAST, attacker))
-            spamsound (self, CHAN_PROJECTILE, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+            spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
     }
 
     self.velocity += force; // * (vlen(force) / self.mass);
