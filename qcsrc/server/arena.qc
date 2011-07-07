@@ -29,8 +29,8 @@ float stopalivecheck;
 float redalive, bluealive, yellowalive, pinkalive;
 float totalalive;
 .float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
-float redspawned, bluespawned, yellowspawned, pinkspawned;
-float totalspawned;
+float red_players, blue_players, yellow_players, pink_players;
+float total_players;
 
 /**
  * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
@@ -275,34 +275,30 @@ void Arena_Warmup()
 	}
 }
 
-void count_spawned_players()
+void count_players()
 {
-	// TODO fix "*spawned" name, it should rather be "*players" or so
-	// not doing this now to prevent merge hell with Tag
-	// fix after merging with Tag
-
 	// count amount of players in each team
-	totalspawned = redspawned = bluespawned = yellowspawned = pinkspawned = 0;
+	total_players = red_players = blue_players = yellow_players = pink_players = 0;
 	FOR_EACH_PLAYER(self) {
 		if (self.team == COLOR_TEAM1)
 		{
-			redspawned += 1;
-			totalspawned += 1;
+			red_players += 1;
+			total_players += 1;
 		}
 		else if (self.team == COLOR_TEAM2)
 		{
-			bluespawned += 1;
-			totalspawned += 1;
+			blue_players += 1;
+			total_players += 1;
 		}
 		else if (self.team == COLOR_TEAM3)
 		{
-			yellowspawned += 1;
-			totalspawned += 1;
+			yellow_players += 1;
+			total_players += 1;
 		}
 		else if (self.team == COLOR_TEAM4)
 		{
-			pinkspawned += 1;
-			totalspawned += 1;
+			pink_players += 1;
+			total_players += 1;
 		}
 	}
 }
@@ -373,7 +369,7 @@ void count_alive_players()
  */
 void Spawnqueue_Check()
 {
-	count_spawned_players();
+	count_players();
 	if(g_ca || g_freezetag) // we want to perform this before the return block below (CA)...
 	{
 		count_alive_players();
@@ -384,7 +380,7 @@ void Spawnqueue_Check()
 	if(g_ca) {
 		required_ca_players = max(2, fabs(autocvar_bot_vs_human + 1));
 
-		if(ca_players < required_ca_players && (redspawned && bluespawned)) {
+		if(ca_players < required_ca_players && (red_players && blue_players)) {
 			reset_map(TRUE);
 		}
 		else if(ca_players < required_ca_players) {
@@ -393,14 +389,14 @@ void Spawnqueue_Check()
 			return;
 		}
 		else if(!next_round) {
-			if((redspawned && !bluespawned) || (bluespawned && !redspawned)) {
+			if((red_players && !blue_players) || (blue_players && !red_players)) {
 				next_round = time + 5;
 				champion = find(world, classname, "player");
 				if(champion_name)
 					strunzone(champion_name);
 				champion_name = strzone(champion.netname);
 			}
-			else if((!redspawned && !bluespawned) || time - warmup > autocvar_g_ca_round_timelimit) {
+			else if((!red_players && !blue_players) || time - warmup > autocvar_g_ca_round_timelimit) {
 				FOR_EACH_CLIENT(self) centerprint(self, strcat("^7Round tied.", "^7\n"));
 				next_round = time + 5;
 			}
