@@ -63,7 +63,7 @@ msgstr "  scoreboard_columns_help\n"
 #: qcsrc/client/Main.qc:726
 #, c-format
 msgid "A CSQC entity changed its owner! (edict: %d, classname: %s)\n"
-msgstr "Una entity CSQC ha cambiato il suo tipo! (edict: %d, classname: %s)\n"
+msgstr "Una entity CSQC ha cambiato il suo dominio! (edict: %d, classname: %s)\n"
 
 #: qcsrc/client/Main.qc:953
 #, c-format
@@ -78,7 +78,7 @@ msgstr "Entity type sconosciuto in CSQC_Ent_Update (enttype: %d, edict: %d, clas
 #: qcsrc/client/Main.qc:1463
 #, c-format
 msgid "%s (not bound)"
-msgstr ""
+msgstr "%s (nessun limite)"
 
 #: qcsrc/client/Main.qc:1468
 #: qcsrc/client/hud.qc:407
@@ -764,7 +764,7 @@ msgstr "^2PENALITÀ: %.1f (%s)"
 
 #: qcsrc/client/hud.qc:3064
 msgid "^1You must answer before entering hud configure mode\n"
-msgstr "^1Devi rispondere ad alcune domande prima di entrare nella modalità di configurazione dell'hud\n"
+msgstr "^1Devi rispondere ad alcune domande prima di entrare nella modalità di configurazione dell'HUD\n"
 
 #: qcsrc/client/hud.qc:3067
 msgid "^2Name ^7instead of \"^1Unregistered player^7\" in stats"
@@ -944,7 +944,7 @@ msgstr " nodi"
 
 #: qcsrc/client/hud.qc:4686
 msgid "Automatically fixed wrong/missing panel numbers in _hud_panelorder\n"
-msgstr "Corretto autoticamente numeri sul pannello sbagliati/mancanti in _hud_panelorder\n"
+msgstr "Corretti automaticamente numeri sul pannello sbagliati/mancanti in _hud_panelorder\n"
 
 #: qcsrc/client/hud_config.qc:132
 #, c-format
@@ -1157,7 +1157,7 @@ msgstr "SCO^presi"
 
 #: qcsrc/client/scoreboard.qc:50
 msgid "SCO^ticks"
-msgstr ""
+msgstr "SCO^tick"
 
 #: qcsrc/client/scoreboard.qc:239
 msgid "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
@@ -1277,7 +1277,7 @@ msgstr "^3giro più veloce^7                  Tempo del giro più veloce (corsa/
 
 #: qcsrc/client/scoreboard.qc:269
 msgid "^3ticks^7                    Number of ticks (DOM)\n"
-msgstr ""
+msgstr "^3tick^7                    Numero di tick (DOM)\n"
 
 #: qcsrc/client/scoreboard.qc:270
 msgid "^3takes^7                    Number of domination points taken (DOM)\n"
@@ -1504,7 +1504,7 @@ msgstr "Corri qui"
 
 #: qcsrc/client/waypointsprites.qc:250
 msgid "Red base"
-msgstr "Base Rosso"
+msgstr "Base Rossa"
 
 #: qcsrc/client/waypointsprites.qc:251
 msgid "Waypoint"
@@ -1623,7 +1623,7 @@ msgstr ""
 #: qcsrc/client/waypointsprites.qc:283
 #: qcsrc/server/w_rifle.qc:2
 msgid "Rifle"
-msgstr ""
+msgstr "Fucile"
 
 #: qcsrc/client/waypointsprites.qc:284
 #: qcsrc/server/w_minelayer.qc:2
