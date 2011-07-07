@@ -10,8 +10,7 @@ entity spawnqueue_last;
 entity champion;
 string champion_name;
 float warmup;
-float ca_players;
-float required_ca_players;
+float ca_teams_ok;
 .float caplayer;
 
 void PutObserverInServer();
@@ -218,7 +217,7 @@ void Arena_Warmup()
 
 	if(inWarmupStage)
 		allowed_to_spawn = 1;
-	if(ca_players < required_ca_players)
+	if(g_ca && !ca_teams_ok)
 		allowed_to_spawn = 1;
 
 	msg = NEWLINES;
@@ -264,10 +263,16 @@ void Arena_Warmup()
 		centerprint(self, "^1Begin!\n");
 
 		if(g_ca) {
-			ca_players = 0;
+			float start_red_ca_players, start_blue_ca_players;
 
-            FOR_EACH_PLAYER(e)
-				ca_players += 1;
+			FOR_EACH_PLAYER(e) {
+				if (e.team == COLOR_TEAM1)
+					start_red_ca_players += 1;
+				else if (e.team == COLOR_TEAM2)
+					start_blue_ca_players += 1;
+			}
+			// teams are ok if there's at least 1 player in each team
+			ca_teams_ok = (start_red_ca_players && start_blue_ca_players);
 		}
 
         if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
@@ -378,12 +383,10 @@ void Spawnqueue_Check()
 		return;
 
 	if(g_ca) {
-		required_ca_players = max(2, fabs(autocvar_bot_vs_human + 1));
-
-		if(ca_players < required_ca_players && (red_players && blue_players)) {
+		if(!ca_teams_ok && (red_players && blue_players)) {
 			reset_map(TRUE);
 		}
-		else if(ca_players < required_ca_players) {
+		else if(!ca_teams_ok) {
 			FOR_EACH_PLAYER(self)
 				centerprint(self, strcat("^1Need at least 1 player in each team to play CA", "^7\n"));
 			return;
