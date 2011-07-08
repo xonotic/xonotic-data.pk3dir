@@ -358,7 +358,7 @@ void FlagThink()
 		{
 			bprint("The ", self.netname, " became impatient after ", ftos_decimals(flagcaptimerecord, 2), " seconds and returned itself\n");
 
-			sound (self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NONE);
+			sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
 			self.owner.impulse = 141; // returning!
 
 			e = self;
@@ -385,7 +385,7 @@ void FlagThink()
 		if (time > self.pain_finished)
 		{
 			bprint("The ", self.netname, " has returned to base\n");
-			sound (self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NONE);
+			sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
 			LogCTF("returned", self.team, world);
 			ReturnFlag(self);
 		}
