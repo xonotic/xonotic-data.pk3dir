@@ -169,13 +169,8 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	// messages and sounds
 	Send_KillNotification(plyr.netname, "", "", KA_DROPBALL, MSG_KA);
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
-<<<<<<< HEAD
-	WriteString(MSG_BROADCAST, strcat("\n\n", plyr.netname, "^7 has dropped the ball!\n"));
-	sound(plyr, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
-=======
 	WriteString(MSG_BROADCAST, strcat(plyr.netname, "^7 has dropped the ball!"));
-	sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
->>>>>>> terencehill/centerprint_stuff
+	sound(other, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
 	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
