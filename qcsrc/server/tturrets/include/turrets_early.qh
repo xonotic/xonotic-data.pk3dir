@@ -479,7 +479,6 @@ float TNSF_SETUP        = 8;
 float TNSF_ANG          = 16;
 float TNSF_AVEL         = 32;
 float TNSF_MOVE         = 64;
-.float anim_start_time;
 float TNSF_ANIM         = 128;
 
 float TNSF_FULL_UPDATE  = 16777215;

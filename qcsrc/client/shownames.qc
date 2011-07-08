@@ -150,7 +150,6 @@ void Draw_ShowNames_All()
 	float i;
 	for(i = 0; i < maxclients; ++i)
 	{
-		vector o;
 		float t;
 		t = GetPlayerColor(i);
 		if(t == COLOR_SPECTATOR)
