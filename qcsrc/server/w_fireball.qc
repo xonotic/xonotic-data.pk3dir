@@ -197,7 +197,7 @@ void W_Fireball_Attack1_Frame0()
 	W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_reload_ammo);
 
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
-	sound (self, CH_WEAPON_A, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_SINGLE, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_fireball_primary_animtime, W_Fireball_Attack1_Frame1);
 }
 
