@@ -19,8 +19,19 @@ void Draw_ShowNames(entity ent)
 	{
 		ent.origin_z += autocvar_hud_shownames_offset;
 
-		if(!ent.sameteam)
-			traceline(ent.origin, view_origin, 1, ent);
+		float hit;
+		if(ent.sameteam)
+		{
+			hit = 1;
+		}
+		else
+		{
+			traceline(view_origin, ent.origin, MOVE_NORMAL, ent);
+			if(trace_fraction < 1 && trace_networkentity != ent.sv_entnum)
+				hit = 0;
+			else
+				hit = 1;
+		}
 
 		vector o, eo;
 		o = project_3d_to_2d(ent.origin);
@@ -49,7 +60,7 @@ void Draw_ShowNames(entity ent)
 
 		onscreen = (o_z >= 0 && o_x >= 0 && o_y >= 0 && o_x <= vid_conwidth && o_y <= vid_conheight);
 
-		if(!ent.sameteam && (!onscreen || trace_endpos != view_origin)) // out of view, fade out
+		if(!ent.sameteam && (!onscreen || !hit)) // out of view, fade out
 			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * frametime);
 		else if(ent.healthvalue < 1) // dead player, fade out slowly
 			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
