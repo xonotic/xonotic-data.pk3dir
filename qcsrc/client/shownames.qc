@@ -20,16 +20,11 @@ void Draw_ShowNames(entity ent)
 		ent.origin_z += autocvar_hud_shownames_offset;
 
 		if(!ent.sameteam)
-		{
-			if((ent.origin - view_origin) * v_forward < 0)
-				trace_endpos = view_origin + '0 0 65536'; // mismatches, so fade out
-			else
-				traceline(ent.origin, view_origin, 1, ent);
-		}
+			traceline(ent.origin, view_origin, 1, ent);
 
 		vector o, eo;
 		o = project_3d_to_2d(ent.origin);
-		float overlap;
+		float overlap, onscreen;
 
 		if(autocvar_hud_shownames_antioverlap)
 		{
@@ -52,7 +47,9 @@ void Draw_ShowNames(entity ent)
 			}
 		}
 
-		if(!ent.sameteam && trace_endpos != view_origin) // out of view, fade out
+		onscreen = (o_z >= 0 && o_x >= 0 && o_y >= 0 && o_x <= vid_conwidth && o_y <= vid_conheight);
+
+		if(!ent.sameteam && (!onscreen || trace_endpos != view_origin)) // out of view, fade out
 			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * frametime);
 		else if(ent.healthvalue < 1) // dead player, fade out slowly
 			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
@@ -86,7 +83,7 @@ void Draw_ShowNames(entity ent)
 			resize = 0.5 + 0.5 * ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
 
 		// draw the sprite image
-		if not(o_z < 0 || o_x < 0 || o_y < 0 || o_x > vid_conwidth || o_y > vid_conheight)
+		if(o_z >= 0)
 		{
 			o_z = 0;
 
