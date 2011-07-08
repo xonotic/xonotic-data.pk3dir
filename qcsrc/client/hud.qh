@@ -232,7 +232,7 @@ else\
 panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_panelpos;
 
 // return smoothly faded size of given panel when a dialog is active
-//var vector menu_enable_maxsize; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(menu_enable_maxsize);
+//var vector menu_enable_maxsize;
 var float menu_enable_maxsize_x;
 var float menu_enable_maxsize_y;
 var vector menu_enable_size;

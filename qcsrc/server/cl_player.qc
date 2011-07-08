@@ -1,6 +1,5 @@
 .entity accuracy;
 .float accuracy_frags[WEP_MAXCOUNT];
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_frags);
 
 float weaponstats_buffer;
 
