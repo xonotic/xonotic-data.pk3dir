@@ -491,7 +491,7 @@ float w_rlauncher(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

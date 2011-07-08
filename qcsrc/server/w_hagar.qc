@@ -365,11 +365,11 @@ float w_hagar(float req)
 		if(!w_issilent)
 		{
 			if (w_random<0.15)
-				sound(self, CH_SHOTS_SINGLE, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
 			else if (w_random<0.7)
-				sound(self, CH_SHOTS_SINGLE, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
 			else
-				sound(self, CH_SHOTS_SINGLE, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)

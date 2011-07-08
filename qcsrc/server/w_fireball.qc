@@ -404,7 +404,7 @@ float w_fireball(float req)
 			org2 = w_org + w_backoff * 16;
 			pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS_SINGLE, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
+				sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
 		}
 	}
 	else if(req == WR_PRECACHE)

@@ -40,7 +40,7 @@ void beam_think()
         self.owner.attack_finished_single = time + self.owner.shot_refire;
         self.owner.fireflag = 2;
         self.owner.tur_head.frame = 10;
-        sound (self, CH_SHOTS_SINGLE, "", VOL_BASE, ATTN_NORM);
+        sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
         remove(self);
         return;
     }
@@ -102,7 +102,7 @@ void turret_phaser_attack()
 
     setattachment(beam,self.tur_head,"tag_fire");
 
-    soundat (self, trace_endpos, CH_SHOTS_SINGLE, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+    soundat (self, trace_endpos, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
 
     if (self.tur_head.frame == 0)
         self.tur_head.frame = 1;
