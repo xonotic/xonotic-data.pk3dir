@@ -13,22 +13,18 @@ void Draw_ShowNames(entity ent)
 	if(ent.sv_entnum == player_localentnum && !autocvar_chase_active)
 		return;
 
+	makevectors(view_angles);
+
 	if(ent.sameteam || (!ent.sameteam && autocvar_hud_shownames_enemies))
 	{
 		ent.origin_z += autocvar_hud_shownames_offset;
 
 		if(!ent.sameteam)
 		{
-			/* WIP, why does trace_ent != ent not work as intended here?
-			   if(autocvar_hud_shownames_enemies != 2) // player has to point at enemy if so
-			   {
-			   traceline(view_origin, view_origin + view_forward * MAX_SHOT_DISTANCE, MOVETYPE_FLY, world);
-			   print("trace_endpos: ", vtos(trace_endpos), " view_origin: ", vtos(view_origin), "\n");
-			   if(trace_ent != ent)
-			   return;
-			   }*/
-
-			traceline(ent.origin, view_origin, 1, ent);
+			if((ent.origin - view_origin) * v_forward < 0)
+				trace_endpos = view_origin + '0 0 65536'; // mismatches, so fade out
+			else
+				traceline(ent.origin, view_origin, 1, ent);
 		}
 
 		vector o, eo;
