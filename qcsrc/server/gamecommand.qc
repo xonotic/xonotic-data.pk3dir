@@ -1247,6 +1247,31 @@ void GameCommand_gametype(float request, string command)
 	}
 }
 
+void GameCommand_gotomap(float request, string command)
+{
+	float argc = tokenize_console(command);
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  gotomap - Simple command to switch to another map\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			if(argc == 2)
+			{
+				print(GotoMap(argv(1)), "\n");
+				return;
+			}
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd gotomap map\n");
+			print("  Where map is the *.bsp file to change to.\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -1283,6 +1308,7 @@ void GameCommand(string command)
 			GameCommand_extendmatchtime(GC_REQUEST_HELP);
 			GameCommand_find(GC_REQUEST_HELP, "");
 			GameCommand_gametype(GC_REQUEST_HELP, "");
+			GameCommand_gotomap(GC_REQUEST_HELP, "");
 			print("  teamstatus\n");
 			print("  printstats\n");
 			print("  make_mapinfo\n");
@@ -1331,6 +1357,7 @@ void GameCommand(string command)
 		case "extendmatchtime": GameCommand_extendmatchtime(search_request_type); break;
 		case "find": GameCommand_find(search_request_type, command); break; 
 		case "gametype": GameCommand_gametype(search_request_type, command); break;
+		case "gotomap": GameCommand_gotomap(search_request_type, command); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
