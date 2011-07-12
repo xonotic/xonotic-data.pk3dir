@@ -374,8 +374,8 @@ void W_WeaponFrame()
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{
 #endif
-			// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
-			sound (self, CHAN_WEAPON2, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
+			// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
+			sound (self, CH_WEAPON_B, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
 			weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_weaponswitchdelay, w_clear);

@@ -32,7 +32,7 @@ void turret_hellion_attack()
 	else
 		self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire2"));
     
-    sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CH_WEAPON_A, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
 
     missile = spawn ();
     setorigin(missile, self.tur_shotorg);

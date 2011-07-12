@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-06 20:55+0200\n"
+"POT-Creation-Date: 2011-06-27 18:24+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Felice Sallustio <fel.sallustio@gmail.com>\n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "X-Poedit-Language: Italian\n"
 
 #: qcsrc/client/Main.qc:30
@@ -29,14 +29,12 @@ msgstr ""
 msgid "^4CSQC Build information: ^1%s\n"
 msgstr "^4Informazioni sulla build CSQC: ^1%s\n"
 
-#: qcsrc/client/Main.qc:237
-#: qcsrc/client/Main.qc:253
+#: qcsrc/client/Main.qc:237 qcsrc/client/Main.qc:253
 #, c-format
 msgid "trying to switch to unsupported team %d\n"
 msgstr "tentando di passare al team non supportato %d\n"
 
-#: qcsrc/client/Main.qc:369
-#: qcsrc/client/scoreboard.qc:241
+#: qcsrc/client/Main.qc:369 qcsrc/client/scoreboard.qc:241
 msgid "Usage:\n"
 msgstr "Uso:\n"
 
@@ -61,27 +59,28 @@ msgid "  scoreboard_columns_help\n"
 msgstr "  scoreboard_columns_help\n"
 
 #: qcsrc/client/Main.qc:726
-#, c-format
+#, fuzzy, c-format
 msgid "A CSQC entity changed its owner! (edict: %d, classname: %s)\n"
-msgstr "Una entity CSQC ha cambiato il suo dominio! (edict: %d, classname: %s)\n"
+msgstr "Una entity CSQC ha cambiato il suo tipo!\n"
 
 #: qcsrc/client/Main.qc:953
-#, c-format
+#, fuzzy, c-format
 msgid "A CSQC entity changed its type! (edict: %d, classname: %s)\n"
-msgstr "Una entity CSQC ha cambiato il suo tipo! (edict: %d, classname: %s)\n"
+msgstr "Una entity CSQC ha cambiato il suo tipo!\n"
 
 #: qcsrc/client/Main.qc:994
-#, c-format
-msgid "Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"
-msgstr "Entity type sconosciuto in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"
+#, fuzzy, c-format
+msgid ""
+"Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: "
+"%s)\n"
+msgstr "entity type sconosciuto in CSQC_Ent_Update: %d\n"
 
 #: qcsrc/client/Main.qc:1463
 #, c-format
 msgid "%s (not bound)"
-msgstr "%s (nessun limite)"
+msgstr ""
 
-#: qcsrc/client/Main.qc:1468
-#: qcsrc/client/hud.qc:407
+#: qcsrc/client/Main.qc:1468 qcsrc/client/hud.qc:407
 #, c-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
@@ -103,8 +102,7 @@ msgstr "1) ^3pagina precedente"
 msgid "2) ^3next page"
 msgstr "2) ^3pagina successiva"
 
-#: qcsrc/client/ctf.qc:55
-#: qcsrc/client/ctf.qc:161
+#: qcsrc/client/ctf.qc:55 qcsrc/client/ctf.qc:161
 msgid "ESC) Exit Menu"
 msgstr "ESC) Esci dal menu"
 
@@ -172,8 +170,7 @@ msgstr " (+%dG)"
 msgid "Start line"
 msgstr "Linea di partenza"
 
-#: qcsrc/client/hud.qc:398
-#: qcsrc/client/hud.qc:402
+#: qcsrc/client/hud.qc:398 qcsrc/client/hud.qc:402
 msgid "Finish line"
 msgstr "Linea d'arrivo"
 
@@ -204,8 +201,7 @@ msgstr "Non disponibile"
 msgid "^1%s^1 couldn't take it anymore\n"
 msgstr "^1%s^1 non ce l'ha più fatta\n"
 
-#: qcsrc/client/hud.qc:1653
-#: qcsrc/client/hud.qc:1957
+#: qcsrc/client/hud.qc:1653 qcsrc/client/hud.qc:1957
 #, c-format
 msgid "^1%s^1 died\n"
 msgstr "^1%s^1 è morto\n"
@@ -213,7 +209,8 @@ msgstr "^1%s^1 è morto\n"
 #: qcsrc/client/hud.qc:1657
 #, c-format
 msgid "^7%s^7 committed suicide. What's the point of living without ammo?\n"
-msgstr "^7%s^7 ha commesso il suicidio. Qual'è il motivo di vivere senza munizioni?\n"
+msgstr ""
+"^7%s^7 ha commesso il suicidio. Qual'è il motivo di vivere senza munizioni?\n"
 
 #: qcsrc/client/hud.qc:1661
 #, c-format
@@ -258,22 +255,30 @@ msgstr "^1%s^1 è stato falciato da un compagno di squadra\n"
 #: qcsrc/client/hud.qc:1705
 #, c-format
 msgid "^1%s^1 ended a %d scoring spree by going against a team mate\n"
-msgstr "^1%s^1 ha concluso una serie di %d punti per esser andato contro un compagno di squadra\n"
+msgstr ""
+"^1%s^1 ha concluso una serie di %d punti per esser andato contro un compagno "
+"di squadra\n"
 
 #: qcsrc/client/hud.qc:1707
 #, c-format
 msgid "^1%s^1 ended a %d kill spree by killing a team mate\n"
-msgstr "^1%s^1 ha concluso una serie di %d uccisioni per aver ammazzato un compagno di squadra\n"
+msgstr ""
+"^1%s^1 ha concluso una serie di %d uccisioni per aver ammazzato un compagno "
+"di squadra\n"
 
 #: qcsrc/client/hud.qc:1711
 #, c-format
 msgid "^1%s^1's %s scoring spree was ended by a team mate!\n"
-msgstr "^1La serie di ^1%s^1 di ^1%s^1 punti è stata conclusa da un compagno di squadra!\n"
+msgstr ""
+"^1La serie di ^1%s^1 di ^1%s^1 punti è stata conclusa da un compagno di "
+"squadra!\n"
 
 #: qcsrc/client/hud.qc:1713
 #, c-format
 msgid "^1%s^1's %s kill spree was ended by a team mate!\n"
-msgstr "^1La serie di ^1%s ^1di ^1%s ^1uccisioni è stata conclusa da un compagno di squadra!\n"
+msgstr ""
+"^1La serie di ^1%s ^1di ^1%s ^1uccisioni è stata conclusa da un compagno di "
+"squadra!\n"
 
 #: qcsrc/client/hud.qc:1717
 #, c-format
@@ -361,19 +366,19 @@ msgid "^1%s^1 dies when %s^1's wakizashi dies.\n"
 msgstr "^1%s^1 muore mentre il wakizashi di %s^1 muore.\n"
 
 #: qcsrc/client/hud.qc:1791
-#, c-format
+#, fuzzy, c-format
 msgid "^1%s^1 nailed to hell by %s\n"
-msgstr "^1%s^1 è stato inchiodato all'inferno da %s\n"
+msgstr "^1%s^1 è stato disintegrato da %s\n"
 
 #: qcsrc/client/hud.qc:1795
-#, c-format
+#, fuzzy, c-format
 msgid "^1%s^1 cluster crushed by %s\n"
-msgstr "^1L'ammasso di ^1%s^1 è stato schiacciato da %s\n"
+msgstr "^1%s^1 è stato schiacciato da %s\n"
 
 #: qcsrc/client/hud.qc:1799
-#, c-format
+#, fuzzy, c-format
 msgid "^1%s^1 dies when %s^1's raptor dies.\n"
-msgstr "^1%s^1 muore mentre il raptor di %s^1 muore.\n"
+msgstr "^1%s^1 muore mentre il wakizashi di %s^1 muore.\n"
 
 #: qcsrc/client/hud.qc:1803
 #, c-format
@@ -403,12 +408,12 @@ msgstr "^1%s^1 è stato fraggato da %s\n"
 #: qcsrc/client/hud.qc:1832
 #, c-format
 msgid "^1%s^1's %s scoring spree was ended by %s\n"
-msgstr "^1La serie di ^1%s ^1di ^1%s^1 punti è stata conclusa da %s\n"
+msgstr "^1La serie di ^1%s ^1 di ^1%s^1 punti è stata conclusa da %s\n"
 
 #: qcsrc/client/hud.qc:1834
 #, c-format
 msgid "^1%s^1's %s kill spree was ended by %s\n"
-msgstr "^1La serie di %s^1 di ^1%s^1 uccisioni è stata conclusa da %s\n"
+msgstr "^1La serie di %s ^1 di ^1%s^1 uccisioni è stata conclusa da %s\n"
 
 #: qcsrc/client/hud.qc:1837
 #, c-format
@@ -626,7 +631,8 @@ msgid ""
 "You have been moved into a different team to improve team balance\n"
 "You are now on: %s"
 msgstr ""
-"Sei stato spostato in una squadra differente per aumentare il bilanciamento delle squadre\n"
+"Sei stato spostato in una squadra differente per aumentare il bilanciamento "
+"delle squadre\n"
 "Sei ora in: %s"
 
 #: qcsrc/client/hud.qc:2022
@@ -670,14 +676,14 @@ msgid "^1You killed your own dumb self!"
 msgstr "^1Ti sei ammazzato da solo!"
 
 #: qcsrc/client/hud.qc:2051
-#, c-format
+#, fuzzy, c-format
 msgid "^1Moron! You went against ^7%s^1, a team mate!"
-msgstr "^1Idiota! Sei andato contro ^7%s^1, un compagno di squadra!"
+msgstr "^1Idiota! Sei andato contro %s, un compagno di squadra!"
 
 #: qcsrc/client/hud.qc:2053
-#, c-format
+#, fuzzy, c-format
 msgid "^1Moron! You fragged ^7%s^1, a team mate!"
-msgstr "^1Idiota! Hai fraggato ^7%s^1, un compagno di squadra!"
+msgstr "^1Idiota! Hai fraggato %s, un compagno di squadra!"
 
 #: qcsrc/client/hud.qc:2057
 msgid "^1First score"
@@ -737,11 +743,9 @@ msgstr "^1Sei stato fraggato da ^7%s"
 
 #: qcsrc/client/hud.qc:2094
 msgid "^1Watch your step!"
-msgstr "^1Attento a dove metti i piedi!"
+msgstr "^1Attendo a dove metti i piedi!"
 
-#: qcsrc/client/hud.qc:2162
-#: qcsrc/client/hud.qc:2163
-#: qcsrc/client/hud.qc:2646
+#: qcsrc/client/hud.qc:2162 qcsrc/client/hud.qc:2163 qcsrc/client/hud.qc:2646
 #, c-format
 msgid "Player %d"
 msgstr "Giocatore %d"
@@ -750,9 +754,7 @@ msgstr "Giocatore %d"
 msgid "^1Intermediate 1 (+15.42)"
 msgstr "^1Intermedio 1 (+15.42)"
 
-#: qcsrc/client/hud.qc:2951
-#: qcsrc/client/hud.qc:2993
-#: qcsrc/client/hud.qc:3034
+#: qcsrc/client/hud.qc:2951 qcsrc/client/hud.qc:2993 qcsrc/client/hud.qc:3034
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
 msgstr "^1PENALITÀ: %.1f (%s)"
@@ -764,7 +766,7 @@ msgstr "^2PENALITÀ: %.1f (%s)"
 
 #: qcsrc/client/hud.qc:3064
 msgid "^1You must answer before entering hud configure mode\n"
-msgstr "^1Devi rispondere ad alcune domande prima di entrare nella modalità di configurazione dell'HUD\n"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3067
 msgid "^2Name ^7instead of \"^1Unregistered player^7\" in stats"
@@ -792,15 +794,11 @@ msgstr "Sì (%s): %d"
 msgid "No (%s): %d"
 msgstr "No (%s): %d"
 
-#: qcsrc/client/hud.qc:3667
-#: qcsrc/client/hud.qc:3670
-#: qcsrc/client/hud.qc:3672
+#: qcsrc/client/hud.qc:3667 qcsrc/client/hud.qc:3670 qcsrc/client/hud.qc:3672
 msgid "Personal best"
 msgstr "Miglior personale"
 
-#: qcsrc/client/hud.qc:3685
-#: qcsrc/client/hud.qc:3688
-#: qcsrc/client/hud.qc:3690
+#: qcsrc/client/hud.qc:3685 qcsrc/client/hud.qc:3688 qcsrc/client/hud.qc:3690
 msgid "Server best"
 msgstr "Migliori del server"
 
@@ -859,8 +857,7 @@ msgstr "^1La partita è già iniziata"
 msgid "^1You have no more lives left"
 msgstr "^1Non hai più vite a disposizione"
 
-#: qcsrc/client/hud.qc:4195
-#: qcsrc/client/hud.qc:4198
+#: qcsrc/client/hud.qc:4195 qcsrc/client/hud.qc:4198
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Premi ^3%s^1 per entrare"
@@ -944,7 +941,7 @@ msgstr " nodi"
 
 #: qcsrc/client/hud.qc:4686
 msgid "Automatically fixed wrong/missing panel numbers in _hud_panelorder\n"
-msgstr "Corretti automaticamente numeri sul pannello sbagliati/mancanti in _hud_panelorder\n"
+msgstr ""
 
 #: qcsrc/client/hud_config.qc:132
 #, c-format
@@ -979,7 +976,8 @@ msgid "%d seconds left"
 msgstr "%d secondi rimanenti"
 
 #: qcsrc/client/mapvoting.qc:263
-msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
+msgid ""
+"mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
 msgstr "mv_mapdownload: ^3Non avrai creduto di poter usare questo comando!\n"
 
 #: qcsrc/client/mapvoting.qc:273
@@ -1157,11 +1155,13 @@ msgstr "SCO^presi"
 
 #: qcsrc/client/scoreboard.qc:50
 msgid "SCO^ticks"
-msgstr "SCO^tick"
+msgstr ""
 
 #: qcsrc/client/scoreboard.qc:239
-msgid "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
-msgstr "Puoi modificare lo scoreboard usando il comando ^2scoreboard_columns_set.\n"
+msgid ""
+"You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
+msgstr ""
+"Puoi modificare lo scoreboard usando il comando ^2scoreboard_columns_set.\n"
 
 #: qcsrc/client/scoreboard.qc:240
 msgid "^3|---------------------------------------------------------------|\n"
@@ -1220,16 +1220,25 @@ msgid "^3kd^7                       The kill-death ratio\n"
 msgstr "^3kd^7                       Rapporto uccisioni-morti\n"
 
 #: qcsrc/client/scoreboard.qc:255
-msgid "^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured\n"
-msgstr "^3catture^7                     Per quante volte una bandiera (CTF) o una chiave (KeyHunt) è stata catturata\n"
+msgid ""
+"^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was "
+"captured\n"
+msgstr ""
+"^3catture^7                     Per quante volte una bandiera (CTF) o una "
+"chiave (KeyHunt) è stata catturata\n"
 
 #: qcsrc/client/scoreboard.qc:256
-msgid "^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up\n"
-msgstr "^3raccolte^7                  Per quante volte una bandiera (CTF) o una chiave (KeyHunt) o una palla (Keepaway) viene raccolta\n"
+msgid ""
+"^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a "
+"ball (Keepaway) was picked up\n"
+msgstr ""
+"^3raccolte^7                  Per quante volte una bandiera (CTF) o una "
+"chiave (KeyHunt) o una palla (Keepaway) viene raccolta\n"
 
 #: qcsrc/client/scoreboard.qc:257
 msgid "^3fckills^7                  Number of flag carrier kills\n"
-msgstr "^3fckills^7                  Numero di uccisioni dei portatori di bandiere\n"
+msgstr ""
+"^3fckills^7                  Numero di uccisioni dei portatori di bandiere\n"
 
 #: qcsrc/client/scoreboard.qc:258
 msgid "^3returns^7                  Number of flag returns\n"
@@ -1249,19 +1258,26 @@ msgstr "^3posizione^7                     Posizione del giocatore\n"
 
 #: qcsrc/client/scoreboard.qc:262
 msgid "^3pushes^7                   Number of players pushed into void\n"
-msgstr "^3buttati^7                  Numero di giocatori buttati giù nel nulla\n"
+msgstr ""
+"^3buttati^7                  Numero di giocatori buttati giù nel nulla\n"
 
 #: qcsrc/client/scoreboard.qc:263
-msgid "^3destroyed^7                Number of keys destroyed by pushing them into void\n"
-msgstr "^3distrutte^7                  Numero di chiavi distrutte buttandole giù nel nulla\n"
+msgid ""
+"^3destroyed^7                Number of keys destroyed by pushing them into "
+"void\n"
+msgstr ""
+"^3distrutte^7                  Numero di chiavi distrutte buttandole giù nel "
+"nulla\n"
 
 #: qcsrc/client/scoreboard.qc:264
 msgid "^3kckills^7                  Number of keys carrier kills\n"
-msgstr "^3kckills^7                  Numero di uccisioni dei portatori di chiavi\n"
+msgstr ""
+"^3kckills^7                  Numero di uccisioni dei portatori di chiavi\n"
 
 #: qcsrc/client/scoreboard.qc:265
 msgid "^3losses^7                   Number of times a key was lost\n"
-msgstr "^3perdute^7                  Numero di volte che una chiave s'è persa\n"
+msgstr ""
+"^3perdute^7                  Numero di volte che una chiave s'è persa\n"
 
 #: qcsrc/client/scoreboard.qc:266
 msgid "^3laps^7                     Number of laps finished (race/cts)\n"
@@ -1273,11 +1289,12 @@ msgstr "^3tempo^7                     Tempo totale (corsa/cts)\n"
 
 #: qcsrc/client/scoreboard.qc:268
 msgid "^3fastest^7                  Time of fastest lap (race/cts)\n"
-msgstr "^3giro più veloce^7                  Tempo del giro più veloce (corsa/cts)\n"
+msgstr ""
+"^3giro più veloce^7                  Tempo del giro più veloce (corsa/cts)\n"
 
 #: qcsrc/client/scoreboard.qc:269
 msgid "^3ticks^7                    Number of ticks (DOM)\n"
-msgstr "^3tick^7                    Numero di tick (DOM)\n"
+msgstr ""
 
 #: qcsrc/client/scoreboard.qc:270
 msgid "^3takes^7                    Number of domination points taken (DOM)\n"
@@ -1285,11 +1302,16 @@ msgstr "^3presi^7                    Numero di punti di dominio presi (DOM)\n"
 
 #: qcsrc/client/scoreboard.qc:271
 msgid "^3bckills^7                  Number of ball carrier kills\n"
-msgstr "^3bckills^7                  Numbero di uccisioni dei portatori di palle\n"
+msgstr ""
+"^3bckills^7                  Numbero di uccisioni dei portatori di palle\n"
 
 #: qcsrc/client/scoreboard.qc:272
-msgid "^3bctime^7                   Total amount of time holding the ball in Keepaway\n"
-msgstr "^3bctime^7                   Totale ammontare del tempo in possesso della palla nel Keepaway\n"
+msgid ""
+"^3bctime^7                   Total amount of time holding the ball in "
+"Keepaway\n"
+msgstr ""
+"^3bctime^7                   Totale ammontare del tempo in possesso della "
+"palla nel Keepaway\n"
 
 #: qcsrc/client/scoreboard.qc:273
 msgid ""
@@ -1314,13 +1336,15 @@ msgid ""
 "include/exclude ALL teams/noteams game modes.\n"
 "\n"
 msgstr ""
-"I nomi speciali per il tipo di gioco 'teams' e 'noteams' possono essere usati\n"
+"I nomi speciali per il tipo di gioco 'teams' e 'noteams' possono essere "
+"usati\n"
 "per includere/escludere TUTTE le modalità con team/senza team.\n"
 "\n"
 
 #: qcsrc/client/scoreboard.qc:283
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"
-msgstr "Esempio: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"
+msgstr ""
+"Esempio: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"
 
 #: qcsrc/client/scoreboard.qc:284
 msgid ""
@@ -1338,98 +1362,84 @@ msgstr ""
 "'field3' sarà mostrato solo in CTF, e 'field4' sarà mostrato in tutte\n"
 "le altre modalità di gioco eccetto DM.\n"
 
-#: qcsrc/client/scoreboard.qc:432
-#: qcsrc/client/scoreboard.qc:447
-#: qcsrc/client/scoreboard.qc:457
-#: qcsrc/client/scoreboard.qc:466
+#: qcsrc/client/scoreboard.qc:432 qcsrc/client/scoreboard.qc:447
+#: qcsrc/client/scoreboard.qc:457 qcsrc/client/scoreboard.qc:466
 #: qcsrc/client/scoreboard.qc:475
 #, c-format
 msgid "fixed missing field '%s'\n"
 msgstr "riparato campo mancante '%s'\n"
 
-#: qcsrc/client/scoreboard.qc:515
-#: qcsrc/client/scoreboard.qc:522
+#: qcsrc/client/scoreboard.qc:515 qcsrc/client/scoreboard.qc:522
 msgid "N/A"
 msgstr "N/D"
 
-#: qcsrc/client/scoreboard.qc:950
+#: qcsrc/client/scoreboard.qc:949
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Stato precisione (media %d%%)"
 
-#: qcsrc/client/scoreboard.qc:1015
+#: qcsrc/client/scoreboard.qc:1014
 #, c-format
 msgid "%d%%"
 msgstr "%d%%"
 
-#: qcsrc/client/scoreboard.qc:1075
+#: qcsrc/client/scoreboard.qc:1074
 msgid "Rankings"
 msgstr "Posizioni"
 
-#: qcsrc/client/scoreboard.qc:1170
-#: qcsrc/client/scoreboard.qc:1172
+#: qcsrc/client/scoreboard.qc:1165 qcsrc/client/scoreboard.qc:1167
 msgid "Scoreboard"
 msgstr "Tabella dei punteggi"
 
-#: qcsrc/client/scoreboard.qc:1218
+#: qcsrc/client/scoreboard.qc:1208
 #, c-format
 msgid "Speed award: %d ^7(%s^7)"
 msgstr "Velocità migliore: %d ^7(%s^7)"
 
-#: qcsrc/client/scoreboard.qc:1222
+#: qcsrc/client/scoreboard.qc:1212
 #, c-format
 msgid "All-time fastest: %d ^7(%s^7)"
 msgstr "Tempo più veloce in assoluto: %d ^7(%s^7)"
 
-#: qcsrc/client/scoreboard.qc:1249
-#: qcsrc/client/teamplay.qc:63
+#: qcsrc/client/scoreboard.qc:1239 qcsrc/client/teamplay.qc:63
 msgid "Spectators"
 msgstr "Spettatori"
 
-#: qcsrc/client/scoreboard.qc:1255
+#: qcsrc/client/scoreboard.qc:1246
 #, c-format
 msgid "playing on ^2%s^7"
 msgstr "giocando in ^2%s^7"
 
-#: qcsrc/client/scoreboard.qc:1262
-#: qcsrc/client/scoreboard.qc:1267
+#: qcsrc/client/scoreboard.qc:1253 qcsrc/client/scoreboard.qc:1258
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
 msgstr " fino a ^1%1.0f minuti^7"
 
-#: qcsrc/client/scoreboard.qc:1271
-#: qcsrc/client/scoreboard.qc:1290
+#: qcsrc/client/scoreboard.qc:1262 qcsrc/client/scoreboard.qc:1281
 msgid " or"
 msgstr " o"
 
-#: qcsrc/client/scoreboard.qc:1274
-#: qcsrc/client/scoreboard.qc:1281
+#: qcsrc/client/scoreboard.qc:1265 qcsrc/client/scoreboard.qc:1272
 #, c-format
 msgid " until ^3%s %s^7"
 msgstr " fino a ^3%s %s^7"
 
-#: qcsrc/client/scoreboard.qc:1275
-#: qcsrc/client/scoreboard.qc:1282
-#: qcsrc/client/scoreboard.qc:1294
-#: qcsrc/client/scoreboard.qc:1301
+#: qcsrc/client/scoreboard.qc:1266 qcsrc/client/scoreboard.qc:1273
+#: qcsrc/client/scoreboard.qc:1285 qcsrc/client/scoreboard.qc:1292
 msgid "SCO^points"
 msgstr "SCO^punti"
 
-#: qcsrc/client/scoreboard.qc:1276
-#: qcsrc/client/scoreboard.qc:1283
-#: qcsrc/client/scoreboard.qc:1295
-#: qcsrc/client/scoreboard.qc:1302
+#: qcsrc/client/scoreboard.qc:1267 qcsrc/client/scoreboard.qc:1274
+#: qcsrc/client/scoreboard.qc:1286 qcsrc/client/scoreboard.qc:1293
 msgid "SCO^is beaten"
 msgstr "SCO^è battuto"
 
-#: qcsrc/client/scoreboard.qc:1293
-#: qcsrc/client/scoreboard.qc:1300
+#: qcsrc/client/scoreboard.qc:1284 qcsrc/client/scoreboard.qc:1291
 #, c-format
 msgid " until a lead of ^3%s %s^7"
 msgstr " fino a ^3%s %s^7"
 
-#: qcsrc/client/target_music.qc:93
-#: qcsrc/client/target_music.qc:181
+#: qcsrc/client/target_music.qc:93 qcsrc/client/target_music.qc:181
 #, c-format
 msgid "Cannot initialize sound %s\n"
 msgstr "Impossibile inizializzare suono %s\n"
@@ -1452,154 +1462,141 @@ msgstr "Team Rosa"
 
 #: qcsrc/client/waypointsprites.qc:234
 msgid "Push"
-msgstr "Spingi"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:235
+#, fuzzy
 msgid "Destroy"
-msgstr "Distruggi"
+msgstr "SCO^distrutte"
 
 #: qcsrc/client/waypointsprites.qc:236
+#, fuzzy
 msgid "Defend"
-msgstr "Difendi"
+msgstr " 2) Difendi"
 
 #: qcsrc/client/waypointsprites.qc:237
+#, fuzzy
 msgid "Blue base"
-msgstr "Base Blu"
+msgstr "Team Blu"
 
 #: qcsrc/client/waypointsprites.qc:238
 msgid "DANGER"
-msgstr "PERICOLO"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:239
 msgid "Flag carrier"
-msgstr "Portatore bandiera"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:240
 msgid "Dropped flag"
-msgstr "Bandiera rilasciata"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:241
 msgid "Help me!"
-msgstr "Aiuto!"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:242
 msgid "Here"
-msgstr "Qui"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:243
 msgid "Dropped key"
-msgstr "Chiave rilasciata"
+msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:244
-#: qcsrc/client/waypointsprites.qc:246
-#: qcsrc/client/waypointsprites.qc:247
-#: qcsrc/client/waypointsprites.qc:248
+#: qcsrc/client/waypointsprites.qc:244 qcsrc/client/waypointsprites.qc:246
+#: qcsrc/client/waypointsprites.qc:247 qcsrc/client/waypointsprites.qc:248
 #: qcsrc/client/waypointsprites.qc:249
 msgid "Key carrier"
-msgstr "Portatore chiave"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:245
 msgid "Run here"
-msgstr "Corri qui"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:250
+#, fuzzy
 msgid "Red base"
-msgstr "Base Rossa"
+msgstr "Team Rosso"
 
 #: qcsrc/client/waypointsprites.qc:251
 msgid "Waypoint"
-msgstr "Waypoint"
+msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:252
-#: qcsrc/client/waypointsprites.qc:253
+#: qcsrc/client/waypointsprites.qc:252 qcsrc/client/waypointsprites.qc:253
 #: qcsrc/client/waypointsprites.qc:254
 msgid "Generator"
-msgstr "Generatore"
+msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:255
-#: qcsrc/client/waypointsprites.qc:256
-#: qcsrc/client/waypointsprites.qc:257
-#: qcsrc/client/waypointsprites.qc:258
-#: qcsrc/client/waypointsprites.qc:259
-#: qcsrc/client/waypointsprites.qc:260
-#: qcsrc/client/waypointsprites.qc:261
-#: qcsrc/client/waypointsprites.qc:262
-#: qcsrc/client/waypointsprites.qc:285
-#: qcsrc/client/waypointsprites.qc:286
-#: qcsrc/client/waypointsprites.qc:287
-#: qcsrc/client/waypointsprites.qc:288
+#: qcsrc/client/waypointsprites.qc:255 qcsrc/client/waypointsprites.qc:256
+#: qcsrc/client/waypointsprites.qc:257 qcsrc/client/waypointsprites.qc:258
+#: qcsrc/client/waypointsprites.qc:259 qcsrc/client/waypointsprites.qc:260
+#: qcsrc/client/waypointsprites.qc:261 qcsrc/client/waypointsprites.qc:262
+#: qcsrc/client/waypointsprites.qc:285 qcsrc/client/waypointsprites.qc:286
+#: qcsrc/client/waypointsprites.qc:287 qcsrc/client/waypointsprites.qc:288
 #: qcsrc/client/waypointsprites.qc:289
 msgid "Control point"
-msgstr "Punto di controllo"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:263
+#, fuzzy
 msgid "Checkpoint"
-msgstr "Checkpoint"
+msgstr "SCO^punti"
 
 #: qcsrc/client/waypointsprites.qc:264
+#, fuzzy
 msgid "Finish"
-msgstr "Arrivo"
+msgstr "Linea d'arrivo"
 
 #: qcsrc/client/waypointsprites.qc:265
+#, fuzzy
 msgid "Start"
-msgstr "Partenza"
+msgstr "Linea di partenza"
 
-#: qcsrc/client/waypointsprites.qc:266
-#: qcsrc/client/waypointsprites.qc:267
+#: qcsrc/client/waypointsprites.qc:266 qcsrc/client/waypointsprites.qc:267
 msgid "Ball"
-msgstr "Palla"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:268
 msgid "Ball carrier"
-msgstr "Portatore palla"
+msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:269
-#: qcsrc/server/w_laser.qc:2
+#: qcsrc/client/waypointsprites.qc:269 qcsrc/server/w_laser.qc:2
 msgid "Laser"
 msgstr "Laser"
 
-#: qcsrc/client/waypointsprites.qc:270
-#: qcsrc/server/w_shotgun.qc:2
+#: qcsrc/client/waypointsprites.qc:270 qcsrc/server/w_shotgun.qc:2
 msgid "Shotgun"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:271
-#: qcsrc/server/w_uzi.qc:2
+#: qcsrc/client/waypointsprites.qc:271 qcsrc/server/w_uzi.qc:2
 msgid "Machine Gun"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:272
-#: qcsrc/server/w_grenadelauncher.qc:2
+#: qcsrc/client/waypointsprites.qc:272 qcsrc/server/w_grenadelauncher.qc:2
 msgid "Mortar"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:273
-#: qcsrc/server/w_electro.qc:2
+#: qcsrc/client/waypointsprites.qc:273 qcsrc/server/w_electro.qc:2
 msgid "Electro"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:274
-#: qcsrc/server/w_crylink.qc:2
+#: qcsrc/client/waypointsprites.qc:274 qcsrc/server/w_crylink.qc:2
 msgid "Crylink"
 msgstr "Crylink"
 
-#: qcsrc/client/waypointsprites.qc:275
-#: qcsrc/server/w_nex.qc:2
+#: qcsrc/client/waypointsprites.qc:275 qcsrc/server/w_nex.qc:2
 msgid "Nex"
 msgstr "Nex"
 
-#: qcsrc/client/waypointsprites.qc:276
-#: qcsrc/server/w_hagar.qc:2
+#: qcsrc/client/waypointsprites.qc:276 qcsrc/server/w_hagar.qc:2
 msgid "Hagar"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:277
-#: qcsrc/server/w_rocketlauncher.qc:2
+#: qcsrc/client/waypointsprites.qc:277 qcsrc/server/w_rocketlauncher.qc:2
 msgid "Rocket Launcher"
 msgstr "Rocket Launcher"
 
-#: qcsrc/client/waypointsprites.qc:278
-#: qcsrc/server/w_porto.qc:2
+#: qcsrc/client/waypointsprites.qc:278 qcsrc/server/w_porto.qc:2
 msgid "Port-O-Launch"
 msgstr ""
 
@@ -1611,8 +1608,7 @@ msgstr ""
 msgid "Hook"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:281
-#: qcsrc/server/w_fireball.qc:2
+#: qcsrc/client/waypointsprites.qc:281 qcsrc/server/w_fireball.qc:2
 msgid "Fireball"
 msgstr ""
 
@@ -1620,60 +1616,58 @@ msgstr ""
 msgid "HLAC"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:283
-#: qcsrc/server/w_rifle.qc:2
+#: qcsrc/client/waypointsprites.qc:283 qcsrc/server/w_rifle.qc:2
 msgid "Rifle"
-msgstr "Fucile"
+msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:284
-#: qcsrc/server/w_minelayer.qc:2
+#: qcsrc/client/waypointsprites.qc:284 qcsrc/server/w_minelayer.qc:2
 msgid "Mine Layer"
 msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:290
 msgid "Invisibility"
-msgstr "Invisibilità"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:291
 msgid "Extra life"
-msgstr "Vita extra"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:292
 msgid "Speed"
-msgstr "Velocità"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:293
 msgid "Strength"
-msgstr "Forza"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:294
 msgid "Shield"
-msgstr "Scudo"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:295
 msgid "Fuel regen"
-msgstr "Rigeneratore di carburante"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:296
 msgid "Jet Pack"
-msgstr "Jet Pack"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:297
 msgid "Frozen!"
-msgstr "Congelato!"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:298
 msgid "Tagged"
-msgstr "Contrassegnato"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:299
 msgid "Vehicle"
-msgstr "Veicolo"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:560
 #, c-format
 msgid "%s needing help!"
-msgstr "%s sta chiedendo aiuto!"
+msgstr ""
 
 #: qcsrc/server/w_crylink.qc:664
 #, c-format
@@ -1695,37 +1689,37 @@ msgstr "%s era troppo vicino al Crylink di %s"
 msgid "%s took a close look at %s's Crylink"
 msgstr "%s ha visto da vicino il Crylink di %s"
 
-#: qcsrc/server/w_electro.qc:574
+#: qcsrc/server/w_electro.qc:577
 #, c-format
 msgid "%s could not remember where they put plasma"
 msgstr "%s non s'è ricordato dove loro avevano posto del plasma"
 
-#: qcsrc/server/w_electro.qc:576
+#: qcsrc/server/w_electro.qc:579
 #, c-format
 msgid "%s played with plasma"
 msgstr "%s ha giocato col plasma"
 
-#: qcsrc/server/w_electro.qc:583
+#: qcsrc/server/w_electro.qc:586
 #, c-format
 msgid "%s just noticed %s's blue ball"
 msgstr "%s aveva appena notato la palla blu di %s"
 
-#: qcsrc/server/w_electro.qc:585
+#: qcsrc/server/w_electro.qc:588
 #, c-format
 msgid "%s got in touch with %s's blue ball"
 msgstr "%s è entrato in contatto con la palla blu di %s"
 
-#: qcsrc/server/w_electro.qc:590
+#: qcsrc/server/w_electro.qc:593
 #, c-format
 msgid "%s felt the electrifying air of %s's combo"
 msgstr "%s ha sentito l'aria elettrificata della combo di %s"
 
-#: qcsrc/server/w_electro.qc:592
+#: qcsrc/server/w_electro.qc:595
 #, c-format
 msgid "%s got too close to %s's blue beam"
 msgstr "%s s'è avvicinato troppo al raggio blu di %s"
 
-#: qcsrc/server/w_electro.qc:594
+#: qcsrc/server/w_electro.qc:597
 #, c-format
 msgid "%s was blasted by %s's blue beam"
 msgstr "%s è stato fatto saltare in aria dal raggio blu di %s"
@@ -1735,8 +1729,7 @@ msgstr "%s è stato fatto saltare in aria dal raggio blu di %s"
 msgid "%s forgot about some firemine"
 msgstr "%s s'è dimenticato di alcune mine infuocate"
 
-#: qcsrc/server/w_fireball.qc:419
-#: qcsrc/server/w_hlac.qc:240
+#: qcsrc/server/w_fireball.qc:419 qcsrc/server/w_hlac.qc:240
 #, c-format
 msgid "%s should have used a smaller gun"
 msgstr "%s avrebbe dovuto usare un'arma più piccola"
@@ -1796,8 +1789,7 @@ msgstr "%s ha quasi schivato la granata di %s"
 msgid "%s ate %s's grenade"
 msgstr "%s ha mangiato la granata di %s"
 
-#: qcsrc/server/w_hagar.qc:382
-#: qcsrc/server/w_seeker.qc:655
+#: qcsrc/server/w_hagar.qc:382 qcsrc/server/w_seeker.qc:655
 #, c-format
 msgid "%s played with tiny rockets"
 msgstr "%s ha giocato con piccoli razzi"
@@ -1807,8 +1799,7 @@ msgstr "%s ha giocato con piccoli razzi"
 msgid "%s hoped %s's missiles wouldn't bounce"
 msgstr "%s ha sperato che il missile di %s non rimbalzasse"
 
-#: qcsrc/server/w_hagar.qc:388
-#: qcsrc/server/w_seeker.qc:661
+#: qcsrc/server/w_hagar.qc:388 qcsrc/server/w_seeker.qc:661
 #, c-format
 msgid "%s was pummeled by %s"
 msgstr "%s è stato riempito di sberle da %s"
@@ -1826,8 +1817,7 @@ msgstr "%s è stato abbattuto da %s"
 msgid "Grappling Hook"
 msgstr ""
 
-#: qcsrc/server/w_hook.qc:266
-#: qcsrc/server/w_porto.qc:296
+#: qcsrc/server/w_hook.qc:266 qcsrc/server/w_porto.qc:296
 #, c-format
 msgid "%s did the impossible"
 msgstr "%s ha fatto l'impossibile"
@@ -1852,8 +1842,7 @@ msgstr "%s è stato tagliato a metà dal guanto di %s"
 msgid "%s was lasered to death by %s"
 msgstr "%s è stato \"laserato\" alla morte da %s"
 
-#: qcsrc/server/w_minelayer.qc:523
-#: qcsrc/server/w_rocketlauncher.qc:501
+#: qcsrc/server/w_minelayer.qc:523 qcsrc/server/w_rocketlauncher.qc:501
 #, c-format
 msgid "%s exploded"
 msgstr "%s è esploso"
@@ -1877,16 +1866,13 @@ msgstr "%s è passato sopra la mina di %s"
 msgid "MinstaNex"
 msgstr ""
 
-#: qcsrc/server/w_minstanex.qc:290
-#: qcsrc/server/w_nex.qc:253
-#: qcsrc/server/w_shotgun.qc:209
-#: qcsrc/server/w_uzi.qc:317
+#: qcsrc/server/w_minstanex.qc:290 qcsrc/server/w_nex.qc:253
+#: qcsrc/server/w_shotgun.qc:209 qcsrc/server/w_uzi.qc:317
 #, c-format
 msgid "%s is now thinking with portals"
-msgstr "%s sta ora pensando con i portali"
+msgstr ""
 
-#: qcsrc/server/w_minstanex.qc:292
-#: qcsrc/server/w_nex.qc:255
+#: qcsrc/server/w_minstanex.qc:292 qcsrc/server/w_nex.qc:255
 #, c-format
 msgid "%s has been vaporized by %s"
 msgstr "%s è stato vaporizzato da %s"
@@ -1926,8 +1912,7 @@ msgstr "%s non è riuscito a nascondersi dal fucile di %s"
 msgid "%s got hit in the head by %s"
 msgstr "%s ha preso un colpo in testa da %s"
 
-#: qcsrc/server/w_rifle.qc:258
-#: qcsrc/server/w_uzi.qc:321
+#: qcsrc/server/w_rifle.qc:258 qcsrc/server/w_uzi.qc:321
 #, c-format
 msgid "%s was sniped by %s"
 msgstr "%s è stato fucilato da %s"
@@ -1971,12 +1956,12 @@ msgstr "%s è stato sparato da %s"
 msgid "@!#%'n Tuba"
 msgstr "@!#%'n Tuba"
 
-#: qcsrc/server/w_tuba.qc:253
+#: qcsrc/server/w_tuba.qc:263
 #, c-format
 msgid "%s hurt his own ears with the @!#%%'n Tuba"
 msgstr "%s s'è fatto male alle orecchie con la @!#%%'n Tuba"
 
-#: qcsrc/server/w_tuba.qc:257
+#: qcsrc/server/w_tuba.qc:267
 #, c-format
 msgid "%s died of %s's great playing on the @!#%%'n Tuba"
 msgstr "%s è morto nella gran esibizione di %s con la @!#%%'n Tuba"
@@ -1985,4 +1970,3 @@ msgstr "%s è morto nella gran esibizione di %s con la @!#%%'n Tuba"
 #, c-format
 msgid "%s was riddled full of holes by %s"
 msgstr "%s è stato riempito di buchi da %s"
-

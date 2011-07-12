@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xontoic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-25 13:06+0200\n"
+"POT-Creation-Date: 2011-06-27 18:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Ricardo 'Hellgardia' Silva <ricardo.mccs@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: Portuguese\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: Portuguese\n"
 
 #: qcsrc/menu/gamecommand.qc:47
 #, c-format
@@ -51,8 +51,8 @@ msgstr "Browser não inicializado!"
 #, c-format
 msgid "NOTE: label text %s too wide for label, condensed by factor %f\n"
 msgstr ""
-"NOTA: marca texto %s demasiado larga para etiqueta, condensada por factor %"
-"f\n"
+"NOTA: marca texto %s demasiado larga para etiqueta, condensada por factor "
+"%f\n"
 
 #: qcsrc/menu/item/listbox.c:300
 #, c-format
@@ -374,7 +374,7 @@ msgstr "nós"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:64
 #, fuzzy
 msgid "Show"
-msgstr "Sombras"
+msgstr "Mostrar Munições"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:67
 #, fuzzy
@@ -487,14 +487,12 @@ msgid "Score Panel"
 msgstr "Painel de Pontos"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:22
-#, fuzzy
 msgid "Score:"
-msgstr "Escala:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:25
-#, fuzzy
 msgid "Rankings:"
-msgstr "Skins de Menu:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:26
 #, fuzzy
@@ -506,9 +504,8 @@ msgid "And me"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:28
-#, fuzzy
 msgid "Pure"
-msgstr "Pausar"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:4
 msgid "Timer Panel"
@@ -1446,9 +1443,8 @@ msgid "Draw 1st person weapon model"
 msgstr "Desenhar modelo da arma na 1a pessoa"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:50
-#, fuzzy
 msgid "Center"
-msgstr "Criar"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:55
 msgid "Flip view horizontally"
@@ -2538,37 +2534,37 @@ msgstr "%s pode ver de perto a Crylink do %s"
 msgid "Electro"
 msgstr "Electro"
 
-#: qcsrc/server/w_electro.qc:571
+#: qcsrc/server/w_electro.qc:577
 #, c-format
 msgid "%s could not remember where they put plasma"
 msgstr "%s não se conseguiu lembrar onde pôs a plasma"
 
-#: qcsrc/server/w_electro.qc:573
+#: qcsrc/server/w_electro.qc:579
 #, c-format
 msgid "%s played with plasma"
 msgstr "%s brincou com plasma"
 
-#: qcsrc/server/w_electro.qc:580
+#: qcsrc/server/w_electro.qc:586
 #, c-format
 msgid "%s just noticed %s's blue ball"
 msgstr "%s acabou de reparar na bola azul de %s"
 
-#: qcsrc/server/w_electro.qc:582
+#: qcsrc/server/w_electro.qc:588
 #, c-format
 msgid "%s got in touch with %s's blue ball"
 msgstr "%s esteve em contacto com a bola azul de %s"
 
-#: qcsrc/server/w_electro.qc:587
+#: qcsrc/server/w_electro.qc:593
 #, c-format
 msgid "%s felt the electrifying air of %s's combo"
 msgstr "%s sentiu o ar electrizante do combo de %s"
 
-#: qcsrc/server/w_electro.qc:589
+#: qcsrc/server/w_electro.qc:595
 #, c-format
 msgid "%s got too close to %s's blue beam"
 msgstr "%s estava perto demais do raio azul de %s"
 
-#: qcsrc/server/w_electro.qc:591
+#: qcsrc/server/w_electro.qc:597
 #, c-format
 msgid "%s was blasted by %s's blue beam"
 msgstr "%s foi atingido pelo raio azul de %s"
@@ -2678,9 +2674,7 @@ msgstr "%s foi totalmente cortado por %s"
 msgid "Grappling Hook"
 msgstr "Grappling Hook"
 
-#: qcsrc/server/w_hook.qc:266 qcsrc/server/w_minstanex.qc:290
-#: qcsrc/server/w_nex.qc:253 qcsrc/server/w_porto.qc:296
-#: qcsrc/server/w_shotgun.qc:203 qcsrc/server/w_uzi.qc:317
+#: qcsrc/server/w_hook.qc:266 qcsrc/server/w_porto.qc:296
 #, c-format
 msgid "%s did the impossible"
 msgstr "%s fez o impossível"
@@ -2694,17 +2688,17 @@ msgstr "%s correu contra uma bomba gravitacional %s"
 msgid "Laser"
 msgstr "Laser"
 
-#: qcsrc/server/w_laser.qc:305
+#: qcsrc/server/w_laser.qc:311
 #, c-format
 msgid "%s lasered themself to hell"
 msgstr "%s laserou-se até à morte"
 
-#: qcsrc/server/w_laser.qc:309
+#: qcsrc/server/w_laser.qc:315
 #, c-format
 msgid "%s was cut in half by %s's gauntlet"
 msgstr "%s foi cortado ao meio pela gauntlet de %s"
 
-#: qcsrc/server/w_laser.qc:311
+#: qcsrc/server/w_laser.qc:317
 #, c-format
 msgid "%s was lasered to death by %s"
 msgstr "%s foi lasereado até à morte por %s"
@@ -2713,22 +2707,22 @@ msgstr "%s foi lasereado até à morte por %s"
 msgid "Mine Layer"
 msgstr "Mine Layer"
 
-#: qcsrc/server/w_minelayer.qc:522 qcsrc/server/w_rocketlauncher.qc:501
+#: qcsrc/server/w_minelayer.qc:523 qcsrc/server/w_rocketlauncher.qc:501
 #, c-format
 msgid "%s exploded"
 msgstr "%s explodiu"
 
-#: qcsrc/server/w_minelayer.qc:526
+#: qcsrc/server/w_minelayer.qc:527
 #, c-format
 msgid "%s got too close to %s's mine"
 msgstr "%s estava perto demais da mina de %s"
 
-#: qcsrc/server/w_minelayer.qc:528
+#: qcsrc/server/w_minelayer.qc:529
 #, c-format
 msgid "%s almost dodged %s's mine"
 msgstr "%s quase se desviou da mina de %s"
 
-#: qcsrc/server/w_minelayer.qc:530
+#: qcsrc/server/w_minelayer.qc:531
 #, c-format
 msgid "%s stepped on %s's mine"
 msgstr "%s pisou a mina de %s"
@@ -2736,6 +2730,12 @@ msgstr "%s pisou a mina de %s"
 #: qcsrc/server/w_minstanex.qc:2
 msgid "MinstaNex"
 msgstr "MinstaNex"
+
+#: qcsrc/server/w_minstanex.qc:290 qcsrc/server/w_nex.qc:253
+#: qcsrc/server/w_shotgun.qc:209 qcsrc/server/w_uzi.qc:317
+#, c-format
+msgid "%s is now thinking with portals"
+msgstr ""
 
 #: qcsrc/server/w_minstanex.qc:292 qcsrc/server/w_nex.qc:255
 #, c-format
@@ -2826,12 +2826,12 @@ msgstr "%s foi marcado por %s"
 msgid "Shotgun"
 msgstr "Shotgun"
 
-#: qcsrc/server/w_shotgun.qc:207
+#: qcsrc/server/w_shotgun.qc:213
 #, c-format
 msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
 msgstr "%2$s ^7maltratou %1$s ^7com uma grande ^2caçadeira"
 
-#: qcsrc/server/w_shotgun.qc:209
+#: qcsrc/server/w_shotgun.qc:215
 #, c-format
 msgid "%s was gunned by %s"
 msgstr "%s foi atingido por %s"
@@ -2860,23 +2860,23 @@ msgstr "Machine Gun"
 msgid "%s was riddled full of holes by %s"
 msgstr "%s foi enchido de buracos por %s"
 
-#~ msgid "Waypoint settings:"
-#~ msgstr "Definições dos caminhos:"
-
-#~ msgid "%d/%d"
-#~ msgstr "%d/%d"
-
-#~ msgid "Sniper Rifle"
-#~ msgstr "Sniper Rifle"
-
-#~ msgid "Accelerometer scale:"
-#~ msgstr "Escala do accelerómetro:"
-
-#~ msgid "Show accelerometer"
-#~ msgstr "Mostrar accelerómetro"
+#~ msgid "Speedometer"
+#~ msgstr "Medidor de Velocidade"
 
 #~ msgid "qu/s (hidden)"
 #~ msgstr "qu/s (escondido)"
 
-#~ msgid "Speedometer"
-#~ msgstr "Medidor de Velocidade"
+#~ msgid "Show accelerometer"
+#~ msgstr "Mostrar accelerómetro"
+
+#~ msgid "Accelerometer scale:"
+#~ msgstr "Escala do accelerómetro:"
+
+#~ msgid "Sniper Rifle"
+#~ msgstr "Sniper Rifle"
+
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"
+
+#~ msgid "Waypoint settings:"
+#~ msgstr "Definições dos caminhos:"

@@ -112,7 +112,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 			+ (autocvar_sv_dodging_up_speed * v_up);
 
 		if (autocvar_sv_dodging_sound == 1)
-			PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
 		setanim(self, self.anim_jump, TRUE, FALSE, TRUE);
 

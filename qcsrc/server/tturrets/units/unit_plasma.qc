@@ -29,7 +29,7 @@ void turret_plasma_attack()
 {
     entity proj;
 
-    sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CH_WEAPON_A, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
     proj                    = spawn ();
@@ -59,7 +59,7 @@ void turret_plasma_dual_attack()
 {
     entity proj;
 
-    sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CH_WEAPON_A, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
     proj                    = spawn ();
     setorigin(proj, self.tur_shotorg);
     setsize(proj, '0 0 0', '0 0 0');

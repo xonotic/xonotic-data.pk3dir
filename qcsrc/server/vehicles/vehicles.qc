@@ -310,7 +310,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
         proj.flags           = FL_PROJECTILE | FL_NOTARGET;
 
     if(_mzlsound)
-        sound (self, CHAN_WEAPON, _mzlsound, VOL_BASE, ATTN_NORM);
+        sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTN_NORM);
 
     if(_mzlfx)
         pointparticles(particleeffectnum(_mzlfx), proj.origin, proj.velocity, 1);
@@ -626,7 +626,7 @@ void vehicles_exit(float eject)
         setorigin(self.owner.flagcarried, FLAG_CARRY_POS);
     }
     
-    sound (self, CHAN_TRIGGER, "misc/null.wav", 1, ATTN_NORM);
+    sound (self, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
     self.vehicle_exit(eject);
     self.owner = world;
     
@@ -703,7 +703,6 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
             self.vehicle_shieldent.think       = shieldhit_think;
         }
 
-
         self.vehicle_shieldent.colormod    = '1 1 1';
         self.vehicle_shieldent.alpha       = 0.45;
         self.vehicle_shieldent.angles      = vectoangles(normalize(hitloc - (self.origin + self.vehicle_shieldent.origin))) - self.angles;
@@ -713,14 +712,26 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 
         if(self.vehicle_shield < 0)
         {
+            self.vehicle_health            -= fabs(self.vehicle_shield);
             self.vehicle_shieldent.colormod = '2 0 0';
             self.vehicle_shield             = 0;
             self.vehicle_shieldent.alpha    = 0.75;
-            self.vehicle_health            -= fabs(self.vehicle_shield);
+            
+        	if(sound_allowed(MSG_BROADCAST, attacker))
+                spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);   // FIXME: PLACEHOLDER
         }
+        else
+        	if(sound_allowed(MSG_BROADCAST, attacker))
+                spamsound (self, CH_PAIN, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+
     }
     else
+    {
         self.vehicle_health -= damage;
+
+        if(sound_allowed(MSG_BROADCAST, attacker))
+            spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+    }
 
     self.velocity += force; // * (vlen(force) / self.mass);
 

@@ -299,13 +299,9 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 	string	s, a, msg;
 	float w, type;
 
-	if (targ.classname == "player" || targ.classname == "corpse")
+	if (targ.classname == "player")
 	{
-		if (targ.classname == "corpse")
-			s = "A corpse";
-		else
-			s = targ.netname;
-
+		s = targ.netname;
 		a = attacker.netname;
 
 		if (targ == attacker) // suicides
@@ -333,7 +329,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			Send_KillNotification(s, msg, ftos(w), deathtype, MSG_SUICIDE);
 		}
-		else if (attacker.classname == "player" || attacker.classname == "gib")
+		else if (attacker.classname == "player")
 		{
 			if(teamplay && attacker.team == targ.team)
 			{
@@ -788,7 +784,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			else
 				victim = targ;
 
-			if(victim.classname == "player")
+			if(victim.classname == "player" || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 			{
 				if(IsDifferentTeam(victim, attacker))
 				{

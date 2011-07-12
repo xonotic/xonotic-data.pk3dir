@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-25 13:06+0200\n"
+"POT-Creation-Date: 2011-06-27 18:24+0200\n"
 "PO-Revision-Date: 2011-01-11 22:51+ZONE\n"
 "Last-Translator: marcus256 <marcus256@users.sourceforge.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: se\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: se\n"
 
 #: qcsrc/menu/gamecommand.qc:47
 #, c-format
@@ -1438,9 +1438,8 @@ msgid "Draw 1st person weapon model"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:50
-#, fuzzy
 msgid "Center"
-msgstr "Skapa"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:55
 msgid "Flip view horizontally"
@@ -2538,37 +2537,37 @@ msgstr ""
 msgid "Electro"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:571
+#: qcsrc/server/w_electro.qc:577
 #, c-format
 msgid "%s could not remember where they put plasma"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:573
+#: qcsrc/server/w_electro.qc:579
 #, c-format
 msgid "%s played with plasma"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:580
+#: qcsrc/server/w_electro.qc:586
 #, c-format
 msgid "%s just noticed %s's blue ball"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:582
+#: qcsrc/server/w_electro.qc:588
 #, c-format
 msgid "%s got in touch with %s's blue ball"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:587
+#: qcsrc/server/w_electro.qc:593
 #, c-format
 msgid "%s felt the electrifying air of %s's combo"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:589
+#: qcsrc/server/w_electro.qc:595
 #, c-format
 msgid "%s got too close to %s's blue beam"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:591
+#: qcsrc/server/w_electro.qc:597
 #, c-format
 msgid "%s was blasted by %s's blue beam"
 msgstr ""
@@ -2679,9 +2678,7 @@ msgstr ""
 msgid "Grappling Hook"
 msgstr ""
 
-#: qcsrc/server/w_hook.qc:266 qcsrc/server/w_minstanex.qc:290
-#: qcsrc/server/w_nex.qc:253 qcsrc/server/w_porto.qc:296
-#: qcsrc/server/w_shotgun.qc:203 qcsrc/server/w_uzi.qc:317
+#: qcsrc/server/w_hook.qc:266 qcsrc/server/w_porto.qc:296
 #, c-format
 msgid "%s did the impossible"
 msgstr ""
@@ -2696,17 +2693,17 @@ msgstr ""
 msgid "Laser"
 msgstr "Master:"
 
-#: qcsrc/server/w_laser.qc:305
+#: qcsrc/server/w_laser.qc:311
 #, c-format
 msgid "%s lasered themself to hell"
 msgstr ""
 
-#: qcsrc/server/w_laser.qc:309
+#: qcsrc/server/w_laser.qc:315
 #, c-format
 msgid "%s was cut in half by %s's gauntlet"
 msgstr ""
 
-#: qcsrc/server/w_laser.qc:311
+#: qcsrc/server/w_laser.qc:317
 #, c-format
 msgid "%s was lasered to death by %s"
 msgstr ""
@@ -2716,28 +2713,34 @@ msgstr ""
 msgid "Mine Layer"
 msgstr "En Spelare"
 
-#: qcsrc/server/w_minelayer.qc:522 qcsrc/server/w_rocketlauncher.qc:501
+#: qcsrc/server/w_minelayer.qc:523 qcsrc/server/w_rocketlauncher.qc:501
 #, c-format
 msgid "%s exploded"
 msgstr ""
 
-#: qcsrc/server/w_minelayer.qc:526
+#: qcsrc/server/w_minelayer.qc:527
 #, c-format
 msgid "%s got too close to %s's mine"
 msgstr ""
 
-#: qcsrc/server/w_minelayer.qc:528
+#: qcsrc/server/w_minelayer.qc:529
 #, c-format
 msgid "%s almost dodged %s's mine"
 msgstr ""
 
-#: qcsrc/server/w_minelayer.qc:530
+#: qcsrc/server/w_minelayer.qc:531
 #, c-format
 msgid "%s stepped on %s's mine"
 msgstr ""
 
 #: qcsrc/server/w_minstanex.qc:2
 msgid "MinstaNex"
+msgstr ""
+
+#: qcsrc/server/w_minstanex.qc:290 qcsrc/server/w_nex.qc:253
+#: qcsrc/server/w_shotgun.qc:209 qcsrc/server/w_uzi.qc:317
+#, c-format
+msgid "%s is now thinking with portals"
 msgstr ""
 
 #: qcsrc/server/w_minstanex.qc:292 qcsrc/server/w_nex.qc:255
@@ -2831,12 +2834,12 @@ msgstr ""
 msgid "Shotgun"
 msgstr "Kort"
 
-#: qcsrc/server/w_shotgun.qc:207
+#: qcsrc/server/w_shotgun.qc:213
 #, c-format
 msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
 msgstr ""
 
-#: qcsrc/server/w_shotgun.qc:209
+#: qcsrc/server/w_shotgun.qc:215
 #, c-format
 msgid "%s was gunned by %s"
 msgstr ""

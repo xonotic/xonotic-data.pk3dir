@@ -70,10 +70,7 @@ void reset_map(float dorespawn)
 			self.team = self.team_saved;
 
 		if(self.flags & FL_PROJECTILE) // remove any projectiles left
-		{
-			stopsound(self, CHAN_PAIN);
 			remove(self);
-		}
 	}
 
 	// Waypoints and assault start come LAST

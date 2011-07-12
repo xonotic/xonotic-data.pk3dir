@@ -8,13 +8,825 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-25 13:07+0200\n"
+"POT-Creation-Date: 2011-06-27 18:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: qcsrc/client/scoreboard.qc:19
+msgid "SCO^bckills"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:20
+msgid "SCO^bctime"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:21
+msgid "SCO^caps"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:22
+msgid "SCO^deaths"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:23
+msgid "SCO^destroyed"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:24
+msgid "SCO^drops"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:25
+msgid "SCO^faults"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:26
+msgid "SCO^fckills"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:27
+msgid "SCO^goals"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:28
+msgid "SCO^kckills"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:29
+msgid "SCO^kdratio"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:30
+msgid "SCO^k/d"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:31
+msgid "SCO^kd"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:32
+msgid "SCO^kdr"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:33
+msgid "SCO^kills"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:34
+msgid "SCO^laps"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:35
+msgid "SCO^lives"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:36
+msgid "SCO^losses"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:37
+msgid "SCO^name"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:38
+msgid "SCO^nick"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:39
+msgid "SCO^objectives"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:40
+msgid "SCO^pickups"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:41
+msgid "SCO^ping"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:42
+msgid "SCO^pl"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:43
+msgid "SCO^pushes"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:44
+msgid "SCO^rank"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:45
+msgid "SCO^returns"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:46
+msgid "SCO^revivals"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:47
+msgid "SCO^score"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:48
+msgid "SCO^suicides"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:49
+msgid "SCO^takes"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:50
+msgid "SCO^ticks"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:239
+msgid ""
+"You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:240
+msgid "^3|---------------------------------------------------------------|\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:241 qcsrc/client/Main.qc:369
+msgid "Usage:\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:242
+msgid "^2scoreboard_columns_set default\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:243
+msgid "^2scoreboard_columns_set ^7filed1 field2 ...\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:244
+msgid "The following field names are recognized (case insensitive):\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:245
+msgid ""
+"You can use a ^3|^7 to start the right-aligned fields.\n"
+"\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:247
+msgid "^3name^7 or ^3nick^7         Name of a player\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:248
+msgid "^3ping^7                     Ping time\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:249
+msgid "^3pl^7                       Packet loss\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:250
+msgid "^3kills^7                    Number of kills\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:251
+msgid "^3deaths^7                   Number of deaths\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:252
+msgid "^3suicides^7                 Number of suicides\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:253
+msgid "^3frags^7                    kills - suicides\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:254
+msgid "^3kd^7                       The kill-death ratio\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:255
+msgid ""
+"^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was "
+"captured\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:256
+msgid ""
+"^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a "
+"ball (Keepaway) was picked up\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:257
+msgid "^3fckills^7                  Number of flag carrier kills\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:258
+msgid "^3returns^7                  Number of flag returns\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:259
+msgid "^3drops^7                    Number of flag drops\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:260
+msgid "^3lives^7                    Number of lives (LMS)\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:261
+msgid "^3rank^7                     Player rank\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:262
+msgid "^3pushes^7                   Number of players pushed into void\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:263
+msgid ""
+"^3destroyed^7                Number of keys destroyed by pushing them into "
+"void\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:264
+msgid "^3kckills^7                  Number of keys carrier kills\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:265
+msgid "^3losses^7                   Number of times a key was lost\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:266
+msgid "^3laps^7                     Number of laps finished (race/cts)\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:267
+msgid "^3time^7                     Total time raced (race/cts)\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:268
+msgid "^3fastest^7                  Time of fastest lap (race/cts)\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:269
+msgid "^3ticks^7                    Number of ticks (DOM)\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:270
+msgid "^3takes^7                    Number of domination points taken (DOM)\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:271
+msgid "^3bckills^7                  Number of ball carrier kills\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:272
+msgid ""
+"^3bctime^7                   Total amount of time holding the ball in "
+"Keepaway\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:273
+msgid ""
+"^3score^7                    Total score\n"
+"\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:275
+msgid ""
+"Before a field you can put a + or - sign, then a comma separated list\n"
+"of game types, then a slash, to make the field show up only in these\n"
+"or in all but these game types. You can also specify 'all' as a\n"
+"field to show all fields available for the current game mode.\n"
+"\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:280
+msgid ""
+"The special game type names 'teams' and 'noteams' can be used to\n"
+"include/exclude ALL teams/noteams game modes.\n"
+"\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:283
+msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:284
+msgid ""
+"will display name, ping and pl aligned to the left, and the fields\n"
+"right of the vertical bar aligned to the right.\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:286
+msgid ""
+"'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
+"other gamemodes except DM.\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:432 qcsrc/client/scoreboard.qc:447
+#: qcsrc/client/scoreboard.qc:457 qcsrc/client/scoreboard.qc:466
+#: qcsrc/client/scoreboard.qc:475
+#, c-format
+msgid "fixed missing field '%s'\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:515 qcsrc/client/scoreboard.qc:522
+msgid "N/A"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:949
+#, c-format
+msgid "Accuracy stats (average %d%%)"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1014
+#, c-format
+msgid "%d%%"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1074
+msgid "Rankings"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1165 qcsrc/client/scoreboard.qc:1167
+msgid "Scoreboard"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1208
+#, c-format
+msgid "Speed award: %d ^7(%s^7)"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1212
+#, c-format
+msgid "All-time fastest: %d ^7(%s^7)"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1239 qcsrc/client/teamplay.qc:63
+msgid "Spectators"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1246
+#, c-format
+msgid "playing on ^2%s^7"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1253 qcsrc/client/scoreboard.qc:1258
+#, c-format
+msgid " for up to ^1%1.0f minutes^7"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1262 qcsrc/client/scoreboard.qc:1281
+msgid " or"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1265 qcsrc/client/scoreboard.qc:1272
+#, c-format
+msgid " until ^3%s %s^7"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1266 qcsrc/client/scoreboard.qc:1273
+#: qcsrc/client/scoreboard.qc:1285 qcsrc/client/scoreboard.qc:1292
+msgid "SCO^points"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1267 qcsrc/client/scoreboard.qc:1274
+#: qcsrc/client/scoreboard.qc:1286 qcsrc/client/scoreboard.qc:1293
+msgid "SCO^is beaten"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1284 qcsrc/client/scoreboard.qc:1291
+#, c-format
+msgid " until a lead of ^3%s %s^7"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:234
+msgid "Push"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:235
+msgid "Destroy"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:236
+msgid "Defend"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:237
+msgid "Blue base"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:238
+msgid "DANGER"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:239
+msgid "Flag carrier"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:240
+msgid "Dropped flag"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:241
+msgid "Help me!"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:242
+msgid "Here"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:243
+msgid "Dropped key"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:244 qcsrc/client/waypointsprites.qc:246
+#: qcsrc/client/waypointsprites.qc:247 qcsrc/client/waypointsprites.qc:248
+#: qcsrc/client/waypointsprites.qc:249
+msgid "Key carrier"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:245
+msgid "Run here"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:250
+msgid "Red base"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:251
+msgid "Waypoint"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:252 qcsrc/client/waypointsprites.qc:253
+#: qcsrc/client/waypointsprites.qc:254
+msgid "Generator"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:255 qcsrc/client/waypointsprites.qc:256
+#: qcsrc/client/waypointsprites.qc:257 qcsrc/client/waypointsprites.qc:258
+#: qcsrc/client/waypointsprites.qc:259 qcsrc/client/waypointsprites.qc:260
+#: qcsrc/client/waypointsprites.qc:261 qcsrc/client/waypointsprites.qc:262
+#: qcsrc/client/waypointsprites.qc:285 qcsrc/client/waypointsprites.qc:286
+#: qcsrc/client/waypointsprites.qc:287 qcsrc/client/waypointsprites.qc:288
+#: qcsrc/client/waypointsprites.qc:289
+msgid "Control point"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:263
+msgid "Checkpoint"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:264
+msgid "Finish"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:265
+msgid "Start"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:266 qcsrc/client/waypointsprites.qc:267
+msgid "Ball"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:268
+msgid "Ball carrier"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:269 qcsrc/server/w_laser.qc:2
+msgid "Laser"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:270 qcsrc/server/w_shotgun.qc:2
+msgid "Shotgun"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:271 qcsrc/server/w_uzi.qc:2
+msgid "Machine Gun"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:272 qcsrc/server/w_grenadelauncher.qc:2
+msgid "Mortar"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:273 qcsrc/server/w_electro.qc:2
+msgid "Electro"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:274 qcsrc/server/w_crylink.qc:2
+msgid "Crylink"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:275 qcsrc/server/w_nex.qc:2
+msgid "Nex"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:276 qcsrc/server/w_hagar.qc:2
+msgid "Hagar"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:277 qcsrc/server/w_rocketlauncher.qc:2
+msgid "Rocket Launcher"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:278 qcsrc/server/w_porto.qc:2
+msgid "Port-O-Launch"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:279
+msgid "Minstanex"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:280
+msgid "Hook"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:281 qcsrc/server/w_fireball.qc:2
+msgid "Fireball"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:282
+msgid "HLAC"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:283 qcsrc/server/w_rifle.qc:2
+msgid "Rifle"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:284 qcsrc/server/w_minelayer.qc:2
+msgid "Mine Layer"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:290
+msgid "Invisibility"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:291
+msgid "Extra life"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:292
+msgid "Speed"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:293
+msgid "Strength"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:294
+msgid "Shield"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:295
+msgid "Fuel regen"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:296
+msgid "Jet Pack"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:297
+msgid "Frozen!"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:298
+msgid "Tagged"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:299
+msgid "Vehicle"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:560
+#, c-format
+msgid "%s needing help!"
+msgstr ""
+
+#: qcsrc/client/hud_config.qc:132
+#, c-format
+msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
+msgstr ""
+
+#: qcsrc/client/hud_config.qc:136
+#, c-format
+msgid "^1Couldn't write to %s\n"
+msgstr ""
+
+#: qcsrc/client/ctf.qc:35
+msgid "----- Order Menu -----"
+msgstr ""
+
+#: qcsrc/client/ctf.qc:36
+#, c-format
+msgid "Order: %s"
+msgstr ""
+
+#: qcsrc/client/ctf.qc:37
+msgid "1) ^3previous page"
+msgstr ""
+
+#: qcsrc/client/ctf.qc:38
+msgid "2) ^3next page"
+msgstr ""
+
+#: qcsrc/client/ctf.qc:55 qcsrc/client/ctf.qc:161
+msgid "ESC) Exit Menu"
+msgstr ""
+
+#: qcsrc/client/ctf.qc:126
+#, c-format
+msgid "Couldn't find player %d\n"
+msgstr ""
+
+#: qcsrc/client/ctf.qc:154
+msgid "----- Command Menu -----"
+msgstr ""
+
+#: qcsrc/client/ctf.qc:155
+msgid "Issue orders:"
+msgstr ""
+
+#: qcsrc/client/ctf.qc:156
+msgid " 1) Attack"
+msgstr ""
+
+#: qcsrc/client/ctf.qc:158
+msgid " 2) Defend"
+msgstr ""
+
+#: qcsrc/client/ctf.qc:160
+msgid "3) Resign from command."
+msgstr ""
+
+#: qcsrc/client/ctf.qc:212
+msgid "You're commander!"
+msgstr ""
+
+#: qcsrc/client/ctf.qc:215
+msgid "Awaiting orders..."
+msgstr ""
+
+#: qcsrc/client/Main.qc:30
+msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
+msgstr ""
+
+#: qcsrc/client/Main.qc:56
+msgid ""
+"^3Your engine build is outdated\n"
+"^3This Server uses a newer QC VM. Please update!\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:66
+#, c-format
+msgid "^4CSQC Build information: ^1%s\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:237 qcsrc/client/Main.qc:253
+#, c-format
+msgid "trying to switch to unsupported team %d\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:370
+msgid "hud_save configname   (saves to hud_skinname_configname.cfg)\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:494
+msgid "Usage: cl_cmd COMMAND..., where possible commands are:\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:495
+msgid "  settemp cvar value\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:496
+msgid "  scoreboard_columns_set ...\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:497
+msgid "  scoreboard_columns_help\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:726
+#, c-format
+msgid "A CSQC entity changed its owner! (edict: %d, classname: %s)\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:953
+#, c-format
+msgid "A CSQC entity changed its type! (edict: %d, classname: %s)\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:994
+#, c-format
+msgid ""
+"Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: "
+"%s)\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:1463
+#, c-format
+msgid "%s (not bound)"
+msgstr ""
+
+#: qcsrc/client/Main.qc:1468 qcsrc/client/hud.qc:407
+#, c-format
+msgid "%s (%s)"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:28
+msgid " (1 vote)"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:30
+#, c-format
+msgid " (%d votes)"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:113
+msgid "Don't care"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:194
+msgid "Vote for a map"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:199
+#, c-format
+msgid "%d seconds left"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:263
+msgid ""
+"mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:273
+msgid "^1Error:^7 Couldn't find pak index.\n"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:282
+msgid "Requesting preview...\n"
+msgstr ""
+
+#: qcsrc/client/movetypes.qc:159
+#, c-format
+msgid "Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n"
+msgstr ""
+
+#: qcsrc/client/movetypes.qc:162
+#, c-format
+msgid "Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n"
+msgstr ""
+
+#: qcsrc/client/miscfunctions.qc:23
+msgid "^1Begin!"
+msgstr ""
+
+#: qcsrc/client/miscfunctions.qc:34
+#, c-format
+msgid "^1Game starts in %d seconds"
+msgstr ""
+
+#: qcsrc/client/miscfunctions.qc:113
+msgid "^1RED^7 flag"
+msgstr ""
+
+#: qcsrc/client/miscfunctions.qc:118
+msgid "^4BLUE^7 flag"
+msgstr ""
+
+#: qcsrc/client/miscfunctions.qc:126
+#, c-format
+msgid "You picked up the %s!"
+msgstr ""
+
+#: qcsrc/client/miscfunctions.qc:130
+#, c-format
+msgid "You got the %s!"
+msgstr ""
+
+#: qcsrc/client/miscfunctions.qc:283
+msgid "Trying to remove a team which is not in the teamlist!"
+msgstr ""
+
+#: qcsrc/client/teamplay.qc:64
+msgid "Red Team"
+msgstr ""
+
+#: qcsrc/client/teamplay.qc:65
+msgid "Blue Team"
+msgstr ""
+
+#: qcsrc/client/teamplay.qc:66
+msgid "Yellow Team"
+msgstr ""
+
+#: qcsrc/client/teamplay.qc:67
+msgid "Pink Team"
+msgstr ""
 
 #: qcsrc/client/hud.qc:337
 msgid "1st"
@@ -54,11 +866,6 @@ msgstr ""
 #: qcsrc/client/hud.qc:400
 #, c-format
 msgid "Intermediate %d"
-msgstr ""
-
-#: qcsrc/client/hud.qc:407 qcsrc/client/Main.qc:1468
-#, c-format
-msgid "%s (%s)"
 msgstr ""
 
 #: qcsrc/client/hud.qc:409
@@ -813,867 +1620,9 @@ msgstr ""
 msgid "Automatically fixed wrong/missing panel numbers in _hud_panelorder\n"
 msgstr ""
 
-#: qcsrc/client/hud_config.qc:132
-#, c-format
-msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
-msgstr ""
-
-#: qcsrc/client/hud_config.qc:136
-#, c-format
-msgid "^1Couldn't write to %s\n"
-msgstr ""
-
-#: qcsrc/client/mapvoting.qc:28
-msgid " (1 vote)"
-msgstr ""
-
-#: qcsrc/client/mapvoting.qc:30
-#, c-format
-msgid " (%d votes)"
-msgstr ""
-
-#: qcsrc/client/mapvoting.qc:113
-msgid "Don't care"
-msgstr ""
-
-#: qcsrc/client/mapvoting.qc:194
-msgid "Vote for a map"
-msgstr ""
-
-#: qcsrc/client/mapvoting.qc:199
-#, c-format
-msgid "%d seconds left"
-msgstr ""
-
-#: qcsrc/client/mapvoting.qc:263
-msgid ""
-"mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
-msgstr ""
-
-#: qcsrc/client/mapvoting.qc:273
-msgid "^1Error:^7 Couldn't find pak index.\n"
-msgstr ""
-
-#: qcsrc/client/mapvoting.qc:282
-msgid "Requesting preview...\n"
-msgstr ""
-
-#: qcsrc/client/miscfunctions.qc:23
-msgid "^1Begin!"
-msgstr ""
-
-#: qcsrc/client/miscfunctions.qc:34
-#, c-format
-msgid "^1Game starts in %d seconds"
-msgstr ""
-
-#: qcsrc/client/miscfunctions.qc:113
-msgid "^1RED^7 flag"
-msgstr ""
-
-#: qcsrc/client/miscfunctions.qc:118
-msgid "^4BLUE^7 flag"
-msgstr ""
-
-#: qcsrc/client/miscfunctions.qc:126
-#, c-format
-msgid "You picked up the %s!"
-msgstr ""
-
-#: qcsrc/client/miscfunctions.qc:130
-#, c-format
-msgid "You got the %s!"
-msgstr ""
-
-#: qcsrc/client/miscfunctions.qc:283
-msgid "Trying to remove a team which is not in the teamlist!"
-msgstr ""
-
-#: qcsrc/client/teamplay.qc:63 qcsrc/client/scoreboard.qc:1239
-msgid "Spectators"
-msgstr ""
-
-#: qcsrc/client/teamplay.qc:64
-msgid "Red Team"
-msgstr ""
-
-#: qcsrc/client/teamplay.qc:65
-msgid "Blue Team"
-msgstr ""
-
-#: qcsrc/client/teamplay.qc:66
-msgid "Yellow Team"
-msgstr ""
-
-#: qcsrc/client/teamplay.qc:67
-msgid "Pink Team"
-msgstr ""
-
 #: qcsrc/client/target_music.qc:93 qcsrc/client/target_music.qc:181
 #, c-format
 msgid "Cannot initialize sound %s\n"
-msgstr ""
-
-#: qcsrc/client/movetypes.qc:159
-#, c-format
-msgid "Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n"
-msgstr ""
-
-#: qcsrc/client/movetypes.qc:162
-#, c-format
-msgid "Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n"
-msgstr ""
-
-#: qcsrc/client/ctf.qc:35
-msgid "----- Order Menu -----"
-msgstr ""
-
-#: qcsrc/client/ctf.qc:36
-#, c-format
-msgid "Order: %s"
-msgstr ""
-
-#: qcsrc/client/ctf.qc:37
-msgid "1) ^3previous page"
-msgstr ""
-
-#: qcsrc/client/ctf.qc:38
-msgid "2) ^3next page"
-msgstr ""
-
-#: qcsrc/client/ctf.qc:55 qcsrc/client/ctf.qc:161
-msgid "ESC) Exit Menu"
-msgstr ""
-
-#: qcsrc/client/ctf.qc:126
-#, c-format
-msgid "Couldn't find player %d\n"
-msgstr ""
-
-#: qcsrc/client/ctf.qc:154
-msgid "----- Command Menu -----"
-msgstr ""
-
-#: qcsrc/client/ctf.qc:155
-msgid "Issue orders:"
-msgstr ""
-
-#: qcsrc/client/ctf.qc:156
-msgid " 1) Attack"
-msgstr ""
-
-#: qcsrc/client/ctf.qc:158
-msgid " 2) Defend"
-msgstr ""
-
-#: qcsrc/client/ctf.qc:160
-msgid "3) Resign from command."
-msgstr ""
-
-#: qcsrc/client/ctf.qc:212
-msgid "You're commander!"
-msgstr ""
-
-#: qcsrc/client/ctf.qc:215
-msgid "Awaiting orders..."
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:234
-msgid "Push"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:235
-msgid "Destroy"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:236
-msgid "Defend"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:237
-msgid "Blue base"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:238
-msgid "DANGER"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:239
-msgid "Flag carrier"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:240
-msgid "Dropped flag"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:241
-msgid "Help me!"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:242
-msgid "Here"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:243
-msgid "Dropped key"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:244 qcsrc/client/waypointsprites.qc:246
-#: qcsrc/client/waypointsprites.qc:247 qcsrc/client/waypointsprites.qc:248
-#: qcsrc/client/waypointsprites.qc:249
-msgid "Key carrier"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:245
-msgid "Run here"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:250
-msgid "Red base"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:251
-msgid "Waypoint"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:252 qcsrc/client/waypointsprites.qc:253
-#: qcsrc/client/waypointsprites.qc:254
-msgid "Generator"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:255 qcsrc/client/waypointsprites.qc:256
-#: qcsrc/client/waypointsprites.qc:257 qcsrc/client/waypointsprites.qc:258
-#: qcsrc/client/waypointsprites.qc:259 qcsrc/client/waypointsprites.qc:260
-#: qcsrc/client/waypointsprites.qc:261 qcsrc/client/waypointsprites.qc:262
-#: qcsrc/client/waypointsprites.qc:285 qcsrc/client/waypointsprites.qc:286
-#: qcsrc/client/waypointsprites.qc:287 qcsrc/client/waypointsprites.qc:288
-#: qcsrc/client/waypointsprites.qc:289
-msgid "Control point"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:263
-msgid "Checkpoint"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:264
-msgid "Finish"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:265
-msgid "Start"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:266 qcsrc/client/waypointsprites.qc:267
-msgid "Ball"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:268
-msgid "Ball carrier"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:269 qcsrc/server/w_laser.qc:2
-msgid "Laser"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:270 qcsrc/server/w_shotgun.qc:2
-msgid "Shotgun"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:271 qcsrc/server/w_uzi.qc:2
-msgid "Machine Gun"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:272 qcsrc/server/w_grenadelauncher.qc:2
-msgid "Mortar"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:273 qcsrc/server/w_electro.qc:2
-msgid "Electro"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:274 qcsrc/server/w_crylink.qc:2
-msgid "Crylink"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:275 qcsrc/server/w_nex.qc:2
-msgid "Nex"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:276 qcsrc/server/w_hagar.qc:2
-msgid "Hagar"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:277 qcsrc/server/w_rocketlauncher.qc:2
-msgid "Rocket Launcher"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:278 qcsrc/server/w_porto.qc:2
-msgid "Port-O-Launch"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:279
-msgid "Minstanex"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:280
-msgid "Hook"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:281 qcsrc/server/w_fireball.qc:2
-msgid "Fireball"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:282
-msgid "HLAC"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:283 qcsrc/server/w_rifle.qc:2
-msgid "Rifle"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:284 qcsrc/server/w_minelayer.qc:2
-msgid "Mine Layer"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:290
-msgid "Invisibility"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:291
-msgid "Extra life"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:292
-msgid "Speed"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:293
-msgid "Strength"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:294
-msgid "Shield"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:295
-msgid "Fuel regen"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:296
-msgid "Jet Pack"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:297
-msgid "Frozen!"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:298
-msgid "Tagged"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:299
-msgid "Vehicle"
-msgstr ""
-
-#: qcsrc/client/waypointsprites.qc:560
-#, c-format
-msgid "%s needing help!"
-msgstr ""
-
-#: qcsrc/client/Main.qc:30
-msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
-msgstr ""
-
-#: qcsrc/client/Main.qc:56
-msgid ""
-"^3Your engine build is outdated\n"
-"^3This Server uses a newer QC VM. Please update!\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:66
-#, c-format
-msgid "^4CSQC Build information: ^1%s\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:237 qcsrc/client/Main.qc:253
-#, c-format
-msgid "trying to switch to unsupported team %d\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:369 qcsrc/client/scoreboard.qc:241
-msgid "Usage:\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:370
-msgid "hud_save configname   (saves to hud_skinname_configname.cfg)\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:494
-msgid "Usage: cl_cmd COMMAND..., where possible commands are:\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:495
-msgid "  settemp cvar value\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:496
-msgid "  scoreboard_columns_set ...\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:497
-msgid "  scoreboard_columns_help\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:726
-#, c-format
-msgid "A CSQC entity changed its owner! (edict: %d, classname: %s)\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:953
-#, c-format
-msgid "A CSQC entity changed its type! (edict: %d, classname: %s)\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:994
-#, c-format
-msgid ""
-"Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %"
-"s)\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:1463
-#, c-format
-msgid "%s (not bound)"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:19
-msgid "SCO^bckills"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:20
-msgid "SCO^bctime"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:21
-msgid "SCO^caps"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:22
-msgid "SCO^deaths"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:23
-msgid "SCO^destroyed"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:24
-msgid "SCO^drops"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:25
-msgid "SCO^faults"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:26
-msgid "SCO^fckills"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:27
-msgid "SCO^goals"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:28
-msgid "SCO^kckills"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:29
-msgid "SCO^kdratio"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:30
-msgid "SCO^k/d"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:31
-msgid "SCO^kd"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:32
-msgid "SCO^kdr"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:33
-msgid "SCO^kills"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:34
-msgid "SCO^laps"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:35
-msgid "SCO^lives"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:36
-msgid "SCO^losses"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:37
-msgid "SCO^name"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:38
-msgid "SCO^nick"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:39
-msgid "SCO^objectives"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:40
-msgid "SCO^pickups"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:41
-msgid "SCO^ping"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:42
-msgid "SCO^pl"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:43
-msgid "SCO^pushes"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:44
-msgid "SCO^rank"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:45
-msgid "SCO^returns"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:46
-msgid "SCO^revivals"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:47
-msgid "SCO^score"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:48
-msgid "SCO^suicides"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:49
-msgid "SCO^takes"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:50
-msgid "SCO^ticks"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:239
-msgid ""
-"You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:240
-msgid "^3|---------------------------------------------------------------|\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:242
-msgid "^2scoreboard_columns_set default\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:243
-msgid "^2scoreboard_columns_set ^7filed1 field2 ...\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:244
-msgid "The following field names are recognized (case insensitive):\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:245
-msgid ""
-"You can use a ^3|^7 to start the right-aligned fields.\n"
-"\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:247
-msgid "^3name^7 or ^3nick^7         Name of a player\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:248
-msgid "^3ping^7                     Ping time\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:249
-msgid "^3pl^7                       Packet loss\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:250
-msgid "^3kills^7                    Number of kills\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:251
-msgid "^3deaths^7                   Number of deaths\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:252
-msgid "^3suicides^7                 Number of suicides\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:253
-msgid "^3frags^7                    kills - suicides\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:254
-msgid "^3kd^7                       The kill-death ratio\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:255
-msgid ""
-"^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was "
-"captured\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:256
-msgid ""
-"^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a "
-"ball (Keepaway) was picked up\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:257
-msgid "^3fckills^7                  Number of flag carrier kills\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:258
-msgid "^3returns^7                  Number of flag returns\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:259
-msgid "^3drops^7                    Number of flag drops\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:260
-msgid "^3lives^7                    Number of lives (LMS)\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:261
-msgid "^3rank^7                     Player rank\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:262
-msgid "^3pushes^7                   Number of players pushed into void\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:263
-msgid ""
-"^3destroyed^7                Number of keys destroyed by pushing them into "
-"void\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:264
-msgid "^3kckills^7                  Number of keys carrier kills\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:265
-msgid "^3losses^7                   Number of times a key was lost\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:266
-msgid "^3laps^7                     Number of laps finished (race/cts)\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:267
-msgid "^3time^7                     Total time raced (race/cts)\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:268
-msgid "^3fastest^7                  Time of fastest lap (race/cts)\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:269
-msgid "^3ticks^7                    Number of ticks (DOM)\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:270
-msgid "^3takes^7                    Number of domination points taken (DOM)\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:271
-msgid "^3bckills^7                  Number of ball carrier kills\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:272
-msgid ""
-"^3bctime^7                   Total amount of time holding the ball in "
-"Keepaway\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:273
-msgid ""
-"^3score^7                    Total score\n"
-"\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:275
-msgid ""
-"Before a field you can put a + or - sign, then a comma separated list\n"
-"of game types, then a slash, to make the field show up only in these\n"
-"or in all but these game types. You can also specify 'all' as a\n"
-"field to show all fields available for the current game mode.\n"
-"\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:280
-msgid ""
-"The special game type names 'teams' and 'noteams' can be used to\n"
-"include/exclude ALL teams/noteams game modes.\n"
-"\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:283
-msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:284
-msgid ""
-"will display name, ping and pl aligned to the left, and the fields\n"
-"right of the vertical bar aligned to the right.\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:286
-msgid ""
-"'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
-"other gamemodes except DM.\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:432 qcsrc/client/scoreboard.qc:447
-#: qcsrc/client/scoreboard.qc:457 qcsrc/client/scoreboard.qc:466
-#: qcsrc/client/scoreboard.qc:475
-#, c-format
-msgid "fixed missing field '%s'\n"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:515 qcsrc/client/scoreboard.qc:522
-msgid "N/A"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:949
-#, c-format
-msgid "Accuracy stats (average %d%%)"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:1014
-#, c-format
-msgid "%d%%"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:1074
-msgid "Rankings"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:1165 qcsrc/client/scoreboard.qc:1167
-msgid "Scoreboard"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:1208
-#, c-format
-msgid "Speed award: %d ^7(%s^7)"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:1212
-#, c-format
-msgid "All-time fastest: %d ^7(%s^7)"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:1246
-#, c-format
-msgid "playing on ^2%s^7"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:1253 qcsrc/client/scoreboard.qc:1258
-#, c-format
-msgid " for up to ^1%1.0f minutes^7"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:1262 qcsrc/client/scoreboard.qc:1281
-msgid " or"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:1265 qcsrc/client/scoreboard.qc:1272
-#, c-format
-msgid " until ^3%s %s^7"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:1266 qcsrc/client/scoreboard.qc:1273
-#: qcsrc/client/scoreboard.qc:1285 qcsrc/client/scoreboard.qc:1292
-msgid "SCO^points"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:1267 qcsrc/client/scoreboard.qc:1274
-#: qcsrc/client/scoreboard.qc:1286 qcsrc/client/scoreboard.qc:1293
-msgid "SCO^is beaten"
-msgstr ""
-
-#: qcsrc/client/scoreboard.qc:1284 qcsrc/client/scoreboard.qc:1291
-#, c-format
-msgid " until a lead of ^3%s %s^7"
-msgstr ""
-
-#: qcsrc/server/w_crylink.qc:664
-#, c-format
-msgid "%s succeeded at self-destructing themself with the Crylink"
-msgstr ""
-
-#: qcsrc/server/w_crylink.qc:669
-#, c-format
-msgid "%s could not hide from %s's Crylink"
-msgstr ""
-
-#: qcsrc/server/w_crylink.qc:671
-#, c-format
-msgid "%s was too close to %s's Crylink"
-msgstr ""
-
-#: qcsrc/server/w_crylink.qc:673
-#, c-format
-msgid "%s took a close look at %s's Crylink"
-msgstr ""
-
-#: qcsrc/server/w_tuba.qc:2
-#, c-format
-msgid "@!#%'n Tuba"
-msgstr ""
-
-#: qcsrc/server/w_tuba.qc:263
-#, c-format
-msgid "%s hurt his own ears with the @!#%%'n Tuba"
-msgstr ""
-
-#: qcsrc/server/w_tuba.qc:267
-#, c-format
-msgid "%s died of %s's great playing on the @!#%%'n Tuba"
-msgstr ""
-
-#: qcsrc/server/w_shotgun.qc:203 qcsrc/server/w_hook.qc:266
-#: qcsrc/server/w_porto.qc:296 qcsrc/server/w_uzi.qc:317
-#: qcsrc/server/w_minstanex.qc:290 qcsrc/server/w_nex.qc:253
-#, c-format
-msgid "%s did the impossible"
-msgstr ""
-
-#: qcsrc/server/w_shotgun.qc:207
-#, c-format
-msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
-msgstr ""
-
-#: qcsrc/server/w_shotgun.qc:209
-#, c-format
-msgid "%s was gunned by %s"
 msgstr ""
 
 #: qcsrc/server/w_rifle.qc:233
@@ -1711,6 +1660,47 @@ msgstr ""
 msgid "%s was sniped by %s"
 msgstr ""
 
+#: qcsrc/server/w_uzi.qc:317 qcsrc/server/w_shotgun.qc:209
+#: qcsrc/server/w_minstanex.qc:290 qcsrc/server/w_nex.qc:253
+#, c-format
+msgid "%s is now thinking with portals"
+msgstr ""
+
+#: qcsrc/server/w_uzi.qc:323
+#, c-format
+msgid "%s was riddled full of holes by %s"
+msgstr ""
+
+#: qcsrc/server/w_rocketlauncher.qc:501 qcsrc/server/w_minelayer.qc:523
+#, c-format
+msgid "%s exploded"
+msgstr ""
+
+#: qcsrc/server/w_rocketlauncher.qc:505
+#, c-format
+msgid "%s got too close to %s's rocket"
+msgstr ""
+
+#: qcsrc/server/w_rocketlauncher.qc:507
+#, c-format
+msgid "%s almost dodged %s's rocket"
+msgstr ""
+
+#: qcsrc/server/w_rocketlauncher.qc:509
+#, c-format
+msgid "%s ate %s's rocket"
+msgstr ""
+
+#: qcsrc/server/w_porto.qc:296 qcsrc/server/w_hook.qc:266
+#, c-format
+msgid "%s did the impossible"
+msgstr ""
+
+#: qcsrc/server/w_porto.qc:298
+#, c-format
+msgid "%s felt %s doing the impossible to him"
+msgstr ""
+
 #: qcsrc/server/w_hook.qc:2
 msgid "Grappling Hook"
 msgstr ""
@@ -1720,14 +1710,176 @@ msgstr ""
 msgid "%s has run into %s's gravity bomb"
 msgstr ""
 
+#: qcsrc/server/w_electro.qc:577
+#, c-format
+msgid "%s could not remember where they put plasma"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:579
+#, c-format
+msgid "%s played with plasma"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:586
+#, c-format
+msgid "%s just noticed %s's blue ball"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:588
+#, c-format
+msgid "%s got in touch with %s's blue ball"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:593
+#, c-format
+msgid "%s felt the electrifying air of %s's combo"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:595
+#, c-format
+msgid "%s got too close to %s's blue beam"
+msgstr ""
+
+#: qcsrc/server/w_electro.qc:597
+#, c-format
+msgid "%s was blasted by %s's blue beam"
+msgstr ""
+
+#: qcsrc/server/w_laser.qc:311
+#, c-format
+msgid "%s lasered themself to hell"
+msgstr ""
+
+#: qcsrc/server/w_laser.qc:315
+#, c-format
+msgid "%s was cut in half by %s's gauntlet"
+msgstr ""
+
+#: qcsrc/server/w_laser.qc:317
+#, c-format
+msgid "%s was lasered to death by %s"
+msgstr ""
+
+#: qcsrc/server/w_shotgun.qc:213
+#, c-format
+msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
+msgstr ""
+
+#: qcsrc/server/w_shotgun.qc:215
+#, c-format
+msgid "%s was gunned by %s"
+msgstr ""
+
+#: qcsrc/server/w_tuba.qc:2
+#, c-format
+msgid "@!#%'n Tuba"
+msgstr ""
+
+#: qcsrc/server/w_tuba.qc:263
+#, c-format
+msgid "%s hurt his own ears with the @!#%%'n Tuba"
+msgstr ""
+
+#: qcsrc/server/w_tuba.qc:267
+#, c-format
+msgid "%s died of %s's great playing on the @!#%%'n Tuba"
+msgstr ""
+
+#: qcsrc/server/w_minstanex.qc:2
+msgid "MinstaNex"
+msgstr ""
+
+#: qcsrc/server/w_minstanex.qc:292 qcsrc/server/w_nex.qc:255
+#, c-format
+msgid "%s has been vaporized by %s"
+msgstr ""
+
+#: qcsrc/server/w_crylink.qc:664
+#, c-format
+msgid "%s succeeded at self-destructing themself with the Crylink"
+msgstr ""
+
+#: qcsrc/server/w_crylink.qc:669
+#, c-format
+msgid "%s could not hide from %s's Crylink"
+msgstr ""
+
+#: qcsrc/server/w_crylink.qc:671
+#, c-format
+msgid "%s was too close to %s's Crylink"
+msgstr ""
+
+#: qcsrc/server/w_crylink.qc:673
+#, c-format
+msgid "%s took a close look at %s's Crylink"
+msgstr ""
+
+#: qcsrc/server/w_hlac.qc:2
+msgid "Heavy Laser Assault Cannon"
+msgstr ""
+
+#: qcsrc/server/w_hlac.qc:240 qcsrc/server/w_fireball.qc:419
+#, c-format
+msgid "%s should have used a smaller gun"
+msgstr ""
+
+#: qcsrc/server/w_hlac.qc:242
+#, c-format
+msgid "%s was cut down by %s"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:379
+#, c-format
+msgid "%s tried out his own grenade"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:381
+#, c-format
+msgid "%s detonated"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:387
+#, c-format
+msgid "%s didn't see %s's grenade"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:389
+#, c-format
+msgid "%s almost dodged %s's grenade"
+msgstr ""
+
+#: qcsrc/server/w_grenadelauncher.qc:391
+#, c-format
+msgid "%s ate %s's grenade"
+msgstr ""
+
+#: qcsrc/server/w_hagar.qc:382 qcsrc/server/w_seeker.qc:655
+#, c-format
+msgid "%s played with tiny rockets"
+msgstr ""
+
+#: qcsrc/server/w_hagar.qc:386
+#, c-format
+msgid "%s hoped %s's missiles wouldn't bounce"
+msgstr ""
+
+#: qcsrc/server/w_hagar.qc:388 qcsrc/server/w_seeker.qc:661
+#, c-format
+msgid "%s was pummeled by %s"
+msgstr ""
+
+#: qcsrc/server/w_seeker.qc:2
+msgid "T.A.G. Seeker"
+msgstr ""
+
+#: qcsrc/server/w_seeker.qc:659
+#, c-format
+msgid "%s was tagged by %s"
+msgstr ""
+
 #: qcsrc/server/w_fireball.qc:417
 #, c-format
 msgid "%s forgot about some firemine"
-msgstr ""
-
-#: qcsrc/server/w_fireball.qc:419 qcsrc/server/w_hlac.qc:240
-#, c-format
-msgid "%s should have used a smaller gun"
 msgstr ""
 
 #: qcsrc/server/w_fireball.qc:426
@@ -1760,164 +1912,17 @@ msgstr ""
 msgid "%s tasted %s's fireball"
 msgstr ""
 
-#: qcsrc/server/w_porto.qc:298
-#, c-format
-msgid "%s felt %s doing the impossible to him"
-msgstr ""
-
-#: qcsrc/server/w_grenadelauncher.qc:379
-#, c-format
-msgid "%s tried out his own grenade"
-msgstr ""
-
-#: qcsrc/server/w_grenadelauncher.qc:381
-#, c-format
-msgid "%s detonated"
-msgstr ""
-
-#: qcsrc/server/w_grenadelauncher.qc:387
-#, c-format
-msgid "%s didn't see %s's grenade"
-msgstr ""
-
-#: qcsrc/server/w_grenadelauncher.qc:389
-#, c-format
-msgid "%s almost dodged %s's grenade"
-msgstr ""
-
-#: qcsrc/server/w_grenadelauncher.qc:391
-#, c-format
-msgid "%s ate %s's grenade"
-msgstr ""
-
-#: qcsrc/server/w_laser.qc:305
-#, c-format
-msgid "%s lasered themself to hell"
-msgstr ""
-
-#: qcsrc/server/w_laser.qc:309
-#, c-format
-msgid "%s was cut in half by %s's gauntlet"
-msgstr ""
-
-#: qcsrc/server/w_laser.qc:311
-#, c-format
-msgid "%s was lasered to death by %s"
-msgstr ""
-
-#: qcsrc/server/w_uzi.qc:323
-#, c-format
-msgid "%s was riddled full of holes by %s"
-msgstr ""
-
-#: qcsrc/server/w_minstanex.qc:2
-msgid "MinstaNex"
-msgstr ""
-
-#: qcsrc/server/w_minstanex.qc:292 qcsrc/server/w_nex.qc:255
-#, c-format
-msgid "%s has been vaporized by %s"
-msgstr ""
-
-#: qcsrc/server/w_electro.qc:571
-#, c-format
-msgid "%s could not remember where they put plasma"
-msgstr ""
-
-#: qcsrc/server/w_electro.qc:573
-#, c-format
-msgid "%s played with plasma"
-msgstr ""
-
-#: qcsrc/server/w_electro.qc:580
-#, c-format
-msgid "%s just noticed %s's blue ball"
-msgstr ""
-
-#: qcsrc/server/w_electro.qc:582
-#, c-format
-msgid "%s got in touch with %s's blue ball"
-msgstr ""
-
-#: qcsrc/server/w_electro.qc:587
-#, c-format
-msgid "%s felt the electrifying air of %s's combo"
-msgstr ""
-
-#: qcsrc/server/w_electro.qc:589
-#, c-format
-msgid "%s got too close to %s's blue beam"
-msgstr ""
-
-#: qcsrc/server/w_electro.qc:591
-#, c-format
-msgid "%s was blasted by %s's blue beam"
-msgstr ""
-
-#: qcsrc/server/w_rocketlauncher.qc:501 qcsrc/server/w_minelayer.qc:522
-#, c-format
-msgid "%s exploded"
-msgstr ""
-
-#: qcsrc/server/w_rocketlauncher.qc:505
-#, c-format
-msgid "%s got too close to %s's rocket"
-msgstr ""
-
-#: qcsrc/server/w_rocketlauncher.qc:507
-#, c-format
-msgid "%s almost dodged %s's rocket"
-msgstr ""
-
-#: qcsrc/server/w_rocketlauncher.qc:509
-#, c-format
-msgid "%s ate %s's rocket"
-msgstr ""
-
-#: qcsrc/server/w_hlac.qc:2
-msgid "Heavy Laser Assault Cannon"
-msgstr ""
-
-#: qcsrc/server/w_hlac.qc:242
-#, c-format
-msgid "%s was cut down by %s"
-msgstr ""
-
-#: qcsrc/server/w_hagar.qc:382 qcsrc/server/w_seeker.qc:655
-#, c-format
-msgid "%s played with tiny rockets"
-msgstr ""
-
-#: qcsrc/server/w_hagar.qc:386
-#, c-format
-msgid "%s hoped %s's missiles wouldn't bounce"
-msgstr ""
-
-#: qcsrc/server/w_hagar.qc:388 qcsrc/server/w_seeker.qc:661
-#, c-format
-msgid "%s was pummeled by %s"
-msgstr ""
-
-#: qcsrc/server/w_seeker.qc:2
-msgid "T.A.G. Seeker"
-msgstr ""
-
-#: qcsrc/server/w_seeker.qc:659
-#, c-format
-msgid "%s was tagged by %s"
-msgstr ""
-
-#: qcsrc/server/w_minelayer.qc:526
+#: qcsrc/server/w_minelayer.qc:527
 #, c-format
 msgid "%s got too close to %s's mine"
 msgstr ""
 
-#: qcsrc/server/w_minelayer.qc:528
+#: qcsrc/server/w_minelayer.qc:529
 #, c-format
 msgid "%s almost dodged %s's mine"
 msgstr ""
 
-#: qcsrc/server/w_minelayer.qc:530
+#: qcsrc/server/w_minelayer.qc:531
 #, c-format
 msgid "%s stepped on %s's mine"
 msgstr ""

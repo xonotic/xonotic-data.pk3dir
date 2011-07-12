@@ -355,7 +355,7 @@ void turret_gibboom()
 {
     float i;
     
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 
     for (i = 1; i < 5; i = i + 1)
@@ -399,7 +399,7 @@ void turret_die()
     
     setmodel(self, "");
     setmodel(self.tur_head, "");
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
     turret_tid2info(self.turret_type);
     dprint("Turret ", tid2info_name, " dies.\n");
@@ -498,8 +498,9 @@ void ent_turret()
             self.team = _team;
             turret_changeteam();        
         }
+        
+        if(self.health == 0)
+            turret_die();
     } 
     
-    if(self.health == 0)
-        turret_die();
 }

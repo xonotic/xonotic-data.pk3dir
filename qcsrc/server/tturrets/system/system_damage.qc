@@ -84,7 +84,7 @@ void turret_stdproc_respawn()
 void turret_stdproc_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
 {
     // Enougth allready!
-    if (self.health <= 0)
+    if(self.deadflag == DEAD_DEAD)
         return;
 
     // Inactive turrets take no damage. (hm..)
