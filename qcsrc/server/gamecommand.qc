@@ -866,7 +866,7 @@ void GameCommand_bot_cmd(float request, string command)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  blah - foobar");
+			print("  bot_cmd - Control and send commands to bots");
 			break;
 			
 		case GC_REQUEST_COMMAND:
