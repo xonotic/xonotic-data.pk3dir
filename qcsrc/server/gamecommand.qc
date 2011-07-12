@@ -945,6 +945,9 @@ void GameCommand_bot_cmd(float request, string command) // what a mess... old ol
 
 void GameCommand_cointoss(float request) // todo: Perhaps add the ability to give your own arguments to pick between? (Like player names)
 {
+	entity client;
+	float choice = (random() > 0.5);
+	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
@@ -952,11 +955,9 @@ void GameCommand_cointoss(float request) // todo: Perhaps add the ability to giv
 			return;
 			
 		case GC_REQUEST_COMMAND:
-			bprint("^3Throwing coin... Result: ");
-			if (random() > 0.5)
-				bprint("^1HEADS^3!\n");
-			else
-				bprint("^4TAILS^3!\n");
+			FOR_EACH_CLIENT(client)
+				centerprint(client, strcat("^3Throwing coin... Result: ", (choice ? "^1HEADS^3!\n" : "^4TAILS^3!\n")));
+			bprint(strcat("^3Throwing coin... Result: ", (choice ? "^1HEADS^3!\n" : "^4TAILS^3!\n")));
 			return;
 			
 		default:
@@ -1003,6 +1004,50 @@ void GameCommand_cvar_purechanges(float request)
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd cvar_purechanges\n");
 			print("  No arguments required.\n");
+			return;
+	}
+}
+
+void GameCommand_database(float request, string command)
+{
+	float argc = tokenize_console(command);
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  database - Extra controls of the serverprogs database\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			if(argc == 3)
+			{
+				if(argv(1) == "save")
+				{
+					db_save(ServerProgsDB, argv(2));
+					print(strcat("Copied serverprogs database to '", argv(2), "' in the data directory.\n"));
+					return;
+				}
+				else if(argv(1) == "dump")
+				{
+					db_dump(ServerProgsDB, argv(2));
+					print("DB dumped.\n"); // wtf does this do?
+					return;
+				}
+				else if(argv(1) == "load")
+				{
+					db_close(ServerProgsDB);
+					ServerProgsDB = db_load(argv(2));
+					print(strcat("Loaded '", argv(2), "' as new serverprogs database.\n"));
+					return;
+				}
+			}
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd database action filename\n");
+			print("  Where action is the command to complete,\n");
+			print("  and filename is what it acts upon.\n");
+			print("  Full list of commands here: \"save, dump, load.\"\n");
 			return;
 	}
 }
@@ -1077,7 +1122,7 @@ void GameCommand_defer_clear_all(float request)
 	}
 }
 
-void GameCommand_delrec(float request, string command)
+void GameCommand_delrec(float request, string command) // UNTESTED
 {
 	float argc = tokenize_console(command);
 
@@ -1138,6 +1183,7 @@ void GameCommand(string command)
 			GameCommand_cointoss(GC_REQUEST_HELP);
 			GameCommand_cvar_changes(GC_REQUEST_HELP);
 			GameCommand_cvar_purechanges(GC_REQUEST_HELP);
+			GameCommand_database(GC_REQUEST_HELP, command);
 			GameCommand_defer_clear(GC_REQUEST_HELP, command);
 			GameCommand_defer_clear_all(GC_REQUEST_HELP);
 			GameCommand_delrec(GC_REQUEST_HELP, command);
@@ -1145,9 +1191,6 @@ void GameCommand(string command)
 			print("  printstats\n");
 			print("  make_mapinfo\n");
 			print("  gametype dm|ctf|...\n");
-			print("  savedb filename\n");
-			print("  dumpdb filename\n");
-			print("  loaddb filename\n");
 			print("  effectindexdump\n");
 			print("  radarmap [--force] [--quit | --loop] [sharpness]\n");
 			print("  find classname\n");
@@ -1188,6 +1231,7 @@ void GameCommand(string command)
 		case "cointoss": GameCommand_cointoss(search_request_type); break; 
 		case "cvar_changes": GameCommand_cvar_changes(search_request_type); break; 
 		case "cvar_purechanges": GameCommand_cvar_purechanges(search_request_type); break; 
+		case "database": GameCommand_database(search_request_type, command); break;
 		case "defer_clear": GameCommand_defer_clear(search_request_type, command); break;
 		case "defer_clear_all": GameCommand_defer_clear_all(search_request_type); break;
 		case "delrec": GameCommand_delrec(search_request_type, command); break;
