@@ -761,7 +761,7 @@ void GameCommand_anticheat(float request, string command) // FIXME: player entit
 		default:
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd anticheat clientnumber\n");
-			print("  Where clientnumber is the entity number\n");
+			print("  where clientnumber is player entity number.\n");
 			return;
 	}
 }
@@ -771,7 +771,7 @@ void GameCommand_bbox(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  bbox - Print large amounts of information about bboxes\n");
+			print("  bbox - Print detailed information about world size\n");
 			break;
 			
 		case GC_REQUEST_COMMAND:
@@ -1007,6 +1007,48 @@ void GameCommand_cvar_purechanges(float request)
 	}
 }
 
+void GameCommand_defer_clear(float request, string command)
+{
+	entity client;
+	float argc = tokenize_console(command);
+	float entno = stof(argv(1));
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  defer_clear - Clear all queued defer commands for client\n");
+			break;
+			
+		case GC_REQUEST_COMMAND:
+			if(argc == 2)
+			{
+				// player_id is out of range
+				if((entno < 1) | (entno > maxclients)) {
+					print("Player ", argv(1), " doesn't exist\n");
+					return;
+				}
+				client = edict_num(entno);
+				if not(client.flags & FL_CLIENT) {
+					print("Player ", argv(1), " doesn't exist\n");
+					return;
+				}
+				if(clienttype(client) == CLIENTTYPE_BOT) {
+					print("Player ", argv(1), " (", client.netname, ") is a bot\n");
+					return;
+				}
+				stuffcmd(client, "defer clear\n");
+				print("defer clear stuffed to ", argv(1), " (", client.netname, ")\n");
+				return;
+			}
+		
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd defer_clear clientnumber\n");
+			print("  where clientnumber is player entity number.\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -1025,6 +1067,9 @@ void GameCommand(string command)
 	{
 		if(argc == 1) 
 		{
+			// should these not recieve "command" argument? They have no use for it. 
+			// but, what to provide instead? null string?
+			
 			print("\nUsage: sv_cmd COMMAND..., where possible commands are:\n");
 			GameCommand_adminmsg(GC_REQUEST_HELP, command);
 			GameCommand_allready(GC_REQUEST_HELP);
@@ -1035,6 +1080,7 @@ void GameCommand(string command)
 			GameCommand_cointoss(GC_REQUEST_HELP);
 			GameCommand_cvar_changes(GC_REQUEST_HELP);
 			GameCommand_cvar_purechanges(GC_REQUEST_HELP);
+			GameCommand_defer_clear(GC_REQUEST_HELP, command);
 			print("  teamstatus\n");
 			print("  printstats\n");
 			print("  make_mapinfo\n");
@@ -1042,12 +1088,8 @@ void GameCommand(string command)
 			print("  savedb filename\n");
 			print("  dumpdb filename\n");
 			print("  loaddb filename\n");
-			print("  allready\n");
 			print("  effectindexdump\n");
 			print("  radarmap [--force] [--quit | --loop] [sharpness]\n");
-			print("  bbox\n");
-			print("  cvar_changes\n");
-			print("  cvar_purechanges\n");
 			print("  find classname\n");
 			print("  extendmatchtime\n");
 			print("  reducematchtime\n");
@@ -1086,6 +1128,7 @@ void GameCommand(string command)
 		case "cointoss": GameCommand_cointoss(search_request_type); break; 
 		case "cvar_changes": GameCommand_cvar_changes(search_request_type); break; 
 		case "cvar_purechanges": GameCommand_cvar_purechanges(search_request_type); break; 
+		case "defer_clear": GameCommand_defer_clear(search_request_type, command); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
