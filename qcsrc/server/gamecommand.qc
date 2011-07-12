@@ -1250,6 +1250,30 @@ void GameCommand_extendmatchtime(float request) // todo: Perhaps allows the user
 	}
 }
 
+void GameCommand_find(float request, string command)
+{
+	entity client;
+	float argc = tokenize_console(command);
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  find - Search through entities for matching classname\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			for(client = world; (client = find(client, classname, argv(1))); )
+				print(etos(client), "\n");
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd find classname\n");
+			print("  Where classname is the classname to search for.\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -1287,6 +1311,7 @@ void GameCommand(string command)
 			GameCommand_delrec(GC_REQUEST_HELP, command);
 			GameCommand_effectindexdump(GC_REQUEST_HELP);
 			GameCommand_extendmatchtime(GC_REQUEST_HELP);
+			GameCommand_find(GC_REQUEST_HELP, command);
 			print("  teamstatus\n");
 			print("  printstats\n");
 			print("  make_mapinfo\n");
@@ -1335,6 +1360,7 @@ void GameCommand(string command)
 		case "delrec": GameCommand_delrec(search_request_type, command); break;
 		case "effectindexdump": GameCommand_effectindexdump(search_request_type); break;
 		case "extendmatchtime": GameCommand_extendmatchtime(search_request_type); break;
+		case "find": GameCommand_find(search_request_type, command); break; 
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
