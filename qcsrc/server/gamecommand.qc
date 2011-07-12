@@ -1230,6 +1230,26 @@ void GameCommand_effectindexdump(float request)
 	}
 }
 
+void GameCommand_extendmatchtime(float request) // todo: Perhaps allows the user to send a specific time to extend it.
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  extendmatchtime - Increase the timelimit value incrementally\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			changematchtime(autocvar_timelimit_increment* 60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd extendmatchtime\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -1266,14 +1286,13 @@ void GameCommand(string command)
 			GameCommand_defer_clear_all(GC_REQUEST_HELP);
 			GameCommand_delrec(GC_REQUEST_HELP, command);
 			GameCommand_effectindexdump(GC_REQUEST_HELP);
+			GameCommand_extendmatchtime(GC_REQUEST_HELP);
 			print("  teamstatus\n");
 			print("  printstats\n");
 			print("  make_mapinfo\n");
 			print("  gametype dm|ctf|...\n");
-			print("  effectindexdump\n");
 			print("  radarmap [--force] [--quit | --loop] [sharpness]\n");
 			print("  find classname\n");
-			print("  extendmatchtime\n");
 			print("  reducematchtime\n");
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
@@ -1315,6 +1334,7 @@ void GameCommand(string command)
 		case "defer_clear_all": GameCommand_defer_clear_all(search_request_type); break;
 		case "delrec": GameCommand_delrec(search_request_type, command); break;
 		case "effectindexdump": GameCommand_effectindexdump(search_request_type); break;
+		case "extendmatchtime": GameCommand_extendmatchtime(search_request_type); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
