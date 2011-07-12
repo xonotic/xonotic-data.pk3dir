@@ -16,7 +16,6 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "physics";
-	float i;
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_physics"));

@@ -1434,7 +1434,7 @@ void stopsoundto(float dest, entity e, float chan)
 
     entno = num_for_edict(e);
 
-    if (entno >= 8192 || chan > 7)
+    if (entno >= 8192 || chan < 0 || chan > 7)
     {
         float idx, sflags;
         idx = precache_sound_index("misc/null.wav");
