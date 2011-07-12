@@ -1049,6 +1049,34 @@ void GameCommand_defer_clear(float request, string command)
 	}
 }
 
+void GameCommand_defer_clear_all(float request)
+{
+	entity client;
+	float i;
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  defer_clear_all - Clear all queued defer commands for all clients\n");
+			break;
+			
+		case GC_REQUEST_COMMAND:
+			FOR_EACH_CLIENT(client)
+			{
+				GameCommand_defer_clear(GC_REQUEST_COMMAND, strcat("defer_clear ", ftos(num_for_edict(client))));	
+				++i;
+			}
+			if(i) { bprint(strcat("Successfully stuffed defer clear to all clients (", ftos(i), ")\n")); } // should a message be added if no players were found? 
+			return;
+		
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd defer_clear_all\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -1081,6 +1109,7 @@ void GameCommand(string command)
 			GameCommand_cvar_changes(GC_REQUEST_HELP);
 			GameCommand_cvar_purechanges(GC_REQUEST_HELP);
 			GameCommand_defer_clear(GC_REQUEST_HELP, command);
+			GameCommand_defer_clear_all(GC_REQUEST_HELP);
 			print("  teamstatus\n");
 			print("  printstats\n");
 			print("  make_mapinfo\n");
@@ -1129,6 +1158,7 @@ void GameCommand(string command)
 		case "cvar_changes": GameCommand_cvar_changes(search_request_type); break; 
 		case "cvar_purechanges": GameCommand_cvar_purechanges(search_request_type); break; 
 		case "defer_clear": GameCommand_defer_clear(search_request_type, command); break;
+		case "defer_clear_all": GameCommand_defer_clear_all(search_request_type); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
