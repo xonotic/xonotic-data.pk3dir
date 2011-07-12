@@ -705,7 +705,7 @@ void GameCommand_allready(float request)
 	}
 }
 
-void GameCommand_allspec(float request)
+void GameCommand_allspec(float request) // todo: Add ability to provide a reason string
 {
 	entity client;
 	float i;
@@ -732,7 +732,7 @@ void GameCommand_allspec(float request)
 	}
 }
 
-void GameCommand_anticheat(float request, string command)
+void GameCommand_anticheat(float request, string command) // FIXME: player entity is never found
 {
 	entity client;
 	float argc = tokenize_console(command);
@@ -858,7 +858,7 @@ void GameCommand_bbox(float request)
 	}
 }
 
-void GameCommand_bot_cmd(float request, string command)
+void GameCommand_bot_cmd(float request, string command) // what a mess... old old code.
 {
 	entity bot;
 	float argc = tokenize_console(command);
@@ -943,6 +943,30 @@ void GameCommand_bot_cmd(float request, string command)
 	}
 }
 
+void GameCommand_cointoss(float request) // todo: Perhaps add the ability to give your own arguments to pick between? (Like player names)
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  cointoss - Flip a virtual coin and give random result");
+			break;
+			
+		case GC_REQUEST_COMMAND:
+			bprint("^3Throwing coin... Result: ");
+			if (random() > 0.5)
+				bprint("^1HEADS^3!\n");
+			else
+				bprint("^4TAILS^3!\n");
+			break;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd cointoss\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -968,6 +992,7 @@ void GameCommand(string command)
 			GameCommand_anticheat(GC_REQUEST_HELP, command);
 			GameCommand_bbox(GC_REQUEST_HELP);
 			GameCommand_bot_cmd(GC_REQUEST_HELP, command);
+			GameCommand_cointoss(GC_REQUEST_HELP);
 			print("  teamstatus\n");
 			print("  printstats\n");
 			print("  make_mapinfo\n");
@@ -1016,6 +1041,7 @@ void GameCommand(string command)
 		case "anticheat": GameCommand_anticheat(search_request_type, command); break;
 		case "bbox": GameCommand_bbox(search_request_type); break;
 		case "bot_cmd": GameCommand_bot_cmd(search_request_type, command); break;
+		case "cointoss": GameCommand_cointoss(search_request_type); break; 
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
