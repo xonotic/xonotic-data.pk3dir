@@ -753,11 +753,58 @@ void GameCommand_adminmsg(float request, string command)
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("Usage: sv_cmd adminmsg clientnumber \"message\" [infobartime]\n");
+			print("\nUsage: sv_cmd adminmsg clientnumber \"message\" [infobartime]\n");
 			print("  If infobartime is provided, the message will be sent to infobar.\n");
 			print("  Otherwise, it will just be sent as a centerprint message.\n");
-			print("Examples: adminmsg <id> \"this message will last for ten seconds\" 10\n");
-			print("          adminmsg <id> \"this message will be a centerprint\"\n");
+			print("Examples: adminmsg 4 \"this message will last for ten seconds\" 10\n");
+			print("          adminmsg 2 \"this message will be a centerprint\"\n");
+			return;
+	}
+}
+
+void GameCommand_allready(float request)
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  allready - Restart the server and reset the players\n");
+			break;
+			
+		case GC_REQUEST_COMMAND:
+			ReadyRestart();
+			break;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: allready\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
+void GameCommand_allspec(float request)
+{
+	entity client;
+	float i;
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  allspec - Force all players to spectate\n");
+			break;
+			
+		case GC_REQUEST_COMMAND:
+			FOR_EACH_PLAYER(client)
+			{
+				PutObserverInServer();
+				++i;
+			}
+			if(i) { bprint(strcat("Successfully forced all players to spectate (", ftos(i), ")\n")); } // should a message be added if no players were found? 
+			break;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: allspec\n");
+			print("  No arguments required.\n");
 			return;
 	}
 }
@@ -765,44 +812,49 @@ void GameCommand_adminmsg(float request, string command)
 void GameCommand(string command)
 {
 	// ===== TODO list =====
-	// Update the help/command list to actually show all the commands
-	
-	// Re-order all the commands in alphabetical order -- or in some other easily recognizable order ;3 (if possible)
-	
-	// Add extra help to each command when used improperly 
+	// Finish adding the rest of the commands
 	
 	// Add ifdef to stuffto so that is can only be used when the game code is compiled for it 
 	//(this way it's more obscure and harder to abuse on normal servers)
 
 	entity client, tmp_entity;
 	vector v;
-	float entno;
+	float search_request_type;
 	string s;
 	float argc = tokenize_console(command);
 
-	if(argv(0) == "help" || argc == 0) {
-		print("Usage: sv_cmd COMMAND..., where possible commands are:\n");
-		GameCommand_adminmsg(GC_REQUEST_HELP, command);
-		print("  teamstatus\n");
-		print("  printstats\n");
-		print("  make_mapinfo\n");
-		print("  gametype dm|ctf|...\n");
-		print("  savedb filename\n");
-		print("  dumpdb filename\n");
-		print("  loaddb filename\n");
-		print("  allready\n");
-		print("  effectindexdump\n");
-		print("  radarmap [--force] [--quit | --loop] [sharpness]\n");
-		print("  bbox\n");
-		print("  cvar_changes\n");
-		print("  cvar_purechanges\n");
-		print("  find classname\n");
-		print("  extendmatchtime\n");
-		print("  reducematchtime\n");
-		GameCommand_Vote("help", world);
-		GameCommand_Ban("help");
-		GameCommand_Generic("help");
-		return;
+	if(argv(0) == "help") 
+	{
+		if(argc == 1) 
+		{
+			print("\nUsage: sv_cmd COMMAND..., where possible commands are:\n");
+			GameCommand_adminmsg(GC_REQUEST_HELP, command);
+			GameCommand_allready(GC_REQUEST_HELP);
+			GameCommand_allspec(GC_REQUEST_HELP);
+			print("  teamstatus\n");
+			print("  printstats\n");
+			print("  make_mapinfo\n");
+			print("  gametype dm|ctf|...\n");
+			print("  savedb filename\n");
+			print("  dumpdb filename\n");
+			print("  loaddb filename\n");
+			print("  allready\n");
+			print("  effectindexdump\n");
+			print("  radarmap [--force] [--quit | --loop] [sharpness]\n");
+			print("  bbox\n");
+			print("  cvar_changes\n");
+			print("  cvar_purechanges\n");
+			print("  find classname\n");
+			print("  extendmatchtime\n");
+			print("  reducematchtime\n");
+			GameCommand_Vote("help", world);
+			GameCommand_Ban("help");
+			GameCommand_Generic("help");
+			print("For help about specific commands, type sv_cmd help COMMAND\n");
+			return;
+		} 
+		else
+			search_request_type = GC_REQUEST_USAGE;
 	} 
 	else if(GameCommand_Vote(command, world)) 
 	{
@@ -816,23 +868,15 @@ void GameCommand(string command)
 	{
 		return; // handled by common/gamecommand.qc
 	}
-	
-	switch(argv(0))
-	{
-		case "adminmsg":
-			GameCommand_adminmsg(GC_REQUEST_COMMAND, command);
-			break;
+	else
+		search_request_type = GC_REQUEST_COMMAND;
 		
-		case "allready":
-			ReadyRestart();
-			break;
-			
-		case "allspec":
-			FOR_EACH_PLAYER(self)
-				PutObserverInServer();
-			break;
-			/*
-		case "anticheat":
+	switch( ((argv(0) == "help") ? argv(1) : argv(0)) ) // if first argument is help, then search for the second argument. Else, search for first. 
+	{
+		case "adminmsg": GameCommand_adminmsg(search_request_type, command); break;
+		case "allready": GameCommand_allready(search_request_type); break;
+		case "allspec": GameCommand_allspec(search_request_type); break;
+		/*case "anticheat":
 			entno = stof(argv(1));
 			if((entno < 1) | (entno > maxclients)) {
 				print("Player ", argv(1), " doesn't exist\n");
