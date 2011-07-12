@@ -465,7 +465,7 @@ void bot_list_commands()
 		bot_commands_init();
 
 	print("List of all available commands:\n");
-	print(" Command\t\t\t\tParameter Type\n");
+	print("  Command - Parameter Type\n");
 
 	for(i=1;i<BOT_CMD_COUNTER;++i)
 	{
@@ -484,7 +484,7 @@ void bot_list_commands()
 				ptype = "none";
 				break;
 		}
-		print(strcat(" ",bot_cmd_string[i],"\t\t\t\t<",ptype,"> \n"));
+		print(strcat("  ",bot_cmd_string[i]," - <",ptype,"> \n"));
 	}
 }
 

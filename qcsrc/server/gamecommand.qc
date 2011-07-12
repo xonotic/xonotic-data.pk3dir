@@ -858,6 +858,91 @@ void GameCommand_bbox(float request)
 	}
 }
 
+void GameCommand_bot_cmd(float request, string command)
+{
+	entity bot;
+	float argc = tokenize_console(command);
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  blah - foobar");
+			break;
+			
+		case GC_REQUEST_COMMAND:
+			if(argv(1) == "reset")
+			{
+				bot_resetqueues();
+				return;
+			}
+			else if(argv(1) == "load" && argc == 3)
+			{
+				float fh, i;
+				string s;
+				fh = fopen(argv(2), FILE_READ);
+				if(fh < 0)
+				{
+					print("cannot open the file\n");
+					return;
+				}
+
+				i = 0;
+				while((s = fgets(fh)))
+				{
+					argc = tokenize_console(s);
+
+					if(argc >= 3 && argv(0) == "sv_cmd" && argv(1) == "bot_cmd")
+					{
+						// let's start at token 2 so we can skip sv_cmd bot_cmd
+						bot = find_bot_by_number(stof(argv(2)));
+						if(bot == world)
+							bot = find_bot_by_name(argv(2));
+						if(bot)
+							bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
+					}
+					else
+						localcmd(strcat(s, "\n"));
+
+					++i;
+				}
+				print(ftos(i), " commands read\n");
+				fclose(fh);
+				return;
+			}
+			else if(argv(1) == "help")
+			{
+				if(argv(2))
+					bot_cmdhelp(argv(2));
+				else
+					bot_list_commands();
+				return;
+			}
+			else if(argc >= 3) // this comes last
+			{
+				bot = find_bot_by_number(stof(argv(1)));
+				if(bot == world)
+					bot = find_bot_by_name(argv(1));
+				if(bot)
+				{
+					print(strcat("Command '", (argv(2), " ", argv(3)), "' sent to bot ", bot.netname, "\n"));
+					bot_queuecommand(bot, strcat(argv(2), " ", argv(3)));
+					return;
+				}
+				else
+					print(strcat("Error: Can't find bot with the name or id '", argv(1),"' - Did you mistype the command?\n")); // don't return so that usage is shown
+			}
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd bot_cmd client command [argument]\n");
+			print("  'client' can be either the name or entity id of the bot\n");
+			print("  For full list of commands, see bot_cmd help [command].\n");
+			print("Examples: bot_cmd <id> cc \"say something\"\n");
+			print("          bot_cmd <id> presskey jump\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -882,6 +967,7 @@ void GameCommand(string command)
 			GameCommand_allspec(GC_REQUEST_HELP);
 			GameCommand_anticheat(GC_REQUEST_HELP, command);
 			GameCommand_bbox(GC_REQUEST_HELP);
+			GameCommand_bot_cmd(GC_REQUEST_HELP, command);
 			print("  teamstatus\n");
 			print("  printstats\n");
 			print("  make_mapinfo\n");
@@ -929,6 +1015,7 @@ void GameCommand(string command)
 		case "allspec": GameCommand_allspec(search_request_type); break;
 		case "anticheat": GameCommand_anticheat(search_request_type, command); break;
 		case "bbox": GameCommand_bbox(search_request_type); break;
+		case "bot_cmd": GameCommand_bot_cmd(search_request_type, command); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
