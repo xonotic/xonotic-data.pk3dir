@@ -776,7 +776,7 @@ void GameCommand_allready(float request)
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: allready\n");
+			print("\nUsage: sv_cmd allready\n");
 			print("  No arguments required.\n");
 			return;
 	}
@@ -803,8 +803,42 @@ void GameCommand_allspec(float request)
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: allspec\n");
+			print("\nUsage: sv_cmd allspec\n");
 			print("  No arguments required.\n");
+			return;
+	}
+}
+
+void GameCommand_anticheat(float request, string command)
+{
+	entity client;
+	float argc = tokenize_console(command);
+	float entno = stof(argv(1)); 
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  anticheat - Create an anticheat report for a client\n");
+			break;
+			
+		case GC_REQUEST_COMMAND:
+			if((entno < 1) | (entno > maxclients)) {
+				print("Player ", argv(1), " doesn't exist\n");
+				return;
+			}
+			client = edict_num(entno);
+			if(clienttype(client) != CLIENTTYPE_REAL && clienttype(client) != CLIENTTYPE_BOT) {
+				print("Player ", client.netname, " is not active\n");
+				return;
+			}
+			self = client;
+			anticheat_report();
+			break;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd anticheat clientnumber\n");
+			print("  Where clientnumber is the entity number\n");
 			return;
 	}
 }
@@ -831,6 +865,7 @@ void GameCommand(string command)
 			GameCommand_adminmsg(GC_REQUEST_HELP, command);
 			GameCommand_allready(GC_REQUEST_HELP);
 			GameCommand_allspec(GC_REQUEST_HELP);
+			GameCommand_anticheat(GC_REQUEST_HELP, command);
 			print("  teamstatus\n");
 			print("  printstats\n");
 			print("  make_mapinfo\n");
@@ -854,7 +889,7 @@ void GameCommand(string command)
 			return;
 		} 
 		else
-			search_request_type = GC_REQUEST_USAGE;
+			search_request_type = GC_REQUEST_USAGE; // Instead of trying to call a command, we're going to see detailed information about it
 	} 
 	else if(GameCommand_Vote(command, world)) 
 	{
@@ -869,27 +904,14 @@ void GameCommand(string command)
 		return; // handled by common/gamecommand.qc
 	}
 	else
-		search_request_type = GC_REQUEST_COMMAND;
+		search_request_type = GC_REQUEST_COMMAND; // continue as usual and scan for normal commands
 		
 	switch( ((argv(0) == "help") ? argv(1) : argv(0)) ) // if first argument is help, then search for the second argument. Else, search for first. 
 	{
 		case "adminmsg": GameCommand_adminmsg(search_request_type, command); break;
 		case "allready": GameCommand_allready(search_request_type); break;
 		case "allspec": GameCommand_allspec(search_request_type); break;
-		/*case "anticheat":
-			entno = stof(argv(1));
-			if((entno < 1) | (entno > maxclients)) {
-				print("Player ", argv(1), " doesn't exist\n");
-				return;
-			}
-			client = edict_num(entno);
-			if(clienttype(client) != CLIENTTYPE_REAL && clienttype(client) != CLIENTTYPE_BOT) {
-				print("Player ", client.netname, " is not active\n");
-				return;
-			}
-			self = client;
-			anticheat_report();
-			break;*/
+		case "anticheat": GameCommand_anticheat(search_request_type, command); break;
 
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
