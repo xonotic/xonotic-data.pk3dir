@@ -26,7 +26,7 @@ void() m_init =
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print(sprintf(_("^4MQC Build information: %s\n"), WATERMARK()));
+	print(sprintf(_("^4MQC Build information: ^1%s\n"), WATERMARK()));
 #endif
 
 	// list all game dirs (TEST)
@@ -350,12 +350,12 @@ float m_allocatetooltipbox(vector pos)
 	vector avoidplus, avoidminus;
 	vector v;
 
-	avoidplus_x = (SKINAVOID_TOOLTIP_x + SKINSIZE_CURSOR_x - SKINOFFSET_CURSOR_x) / conwidth;
-	avoidplus_y = (SKINAVOID_TOOLTIP_y + SKINSIZE_CURSOR_y - SKINOFFSET_CURSOR_y) / conheight;
+	avoidplus_x = (SKINAVOID_TOOLTIP_x + SKINSIZE_CURSOR_x - SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth;
+	avoidplus_y = (SKINAVOID_TOOLTIP_y + SKINSIZE_CURSOR_y - SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight;
 	avoidplus_z = 0;
 
-	avoidminus_x = (SKINAVOID_TOOLTIP_x + SKINOFFSET_CURSOR_x) / conwidth + menuTooltipSize_x;
-	avoidminus_y = (SKINAVOID_TOOLTIP_y + SKINOFFSET_CURSOR_y) / conheight + menuTooltipSize_y;
+	avoidminus_x = (SKINAVOID_TOOLTIP_x + SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth + menuTooltipSize_x;
+	avoidminus_y = (SKINAVOID_TOOLTIP_y + SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight + menuTooltipSize_y;
 	avoidminus_z = 0;
 
 	// bottom right

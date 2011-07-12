@@ -63,6 +63,7 @@ void ServerList_ShowFull_Click(entity box, entity me);
 void ServerList_Filter_Change(entity box, entity me);
 void ServerList_Favorite_Click(entity btn, entity me);
 void ServerList_Info_Click(entity btn, entity me);
+void ServerList_Update_favoriteButton(entity btn, entity me);
 #endif
 
 #ifdef IMPLEMENTATION
@@ -176,6 +177,14 @@ void ToggleFavorite(string srv)
 	}
 
 	resorthostcache();
+}
+
+void ServerList_Update_favoriteButton(entity btn, entity me)
+{
+	if(IsFavorite(me.ipAddressBox.text))
+		me.favoriteButton.setText(me.favoriteButton, _("Remove"));
+	else
+		me.favoriteButton.setText(me.favoriteButton, _("Bookmark"));
 }
 
 entity makeXonoticServerList()
@@ -356,12 +365,7 @@ void XonoticServerList_draw(entity me)
 	if(me.ipAddressBoxFocused != me.ipAddressBox.focused)
 	{
 		if(me.ipAddressBox.focused || me.ipAddressBoxFocused < 0)
-		{
-			if(IsFavorite(me.ipAddressBox.text))
-				me.favoriteButton.setText(me.favoriteButton, _("Remove"));
-			else
-				me.favoriteButton.setText(me.favoriteButton, _("Bookmark"));
-		}
+			ServerList_Update_favoriteButton(NULL, me);
 		me.ipAddressBoxFocused = me.ipAddressBox.focused;
 	}
 

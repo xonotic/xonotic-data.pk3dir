@@ -1,3 +1,6 @@
+.entity accuracy;
+.float accuracy_frags[WEP_MAXCOUNT];
+
 float weaponstats_buffer;
 
 void WeaponStats_Init()
@@ -188,6 +191,7 @@ void player_setupanimsformodel()
 	self.anim_forwardleft = '20 1 1';
 	self.anim_backright = '21 1 1';
 	self.anim_backleft  = '22 1 1';
+	self.anim_melee = '23 1 1';
 	animparseerror = FALSE;
 	animfilename = strcat(self.model, ".animinfo");
 	animfile = fopen(animfilename, FILE_READ);
@@ -214,6 +218,7 @@ void player_setupanimsformodel()
 		self.anim_forwardleft  = animparseline(animfile);
 		self.anim_backright    = animparseline(animfile);
 		self.anim_backleft     = animparseline(animfile);
+		self.anim_melee	       = animparseline(animfile);
 		fclose(animfile);
 
 		// derived anims
@@ -335,11 +340,11 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CHAN_PROJECTILE, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
 		else if (take > 30)
-			sound (self, CHAN_PROJECTILE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
 		else if (take > 10)
-			sound (self, CHAN_PROJECTILE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
 	}
 
 	if (take > 50)
@@ -358,7 +363,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	if (self.health <= -150 && self.modelindex != 0)
+	if (self.health <= -autocvar_sv_gibhealth && self.modelindex != 0)
 	{
 		// don't use any animations as a gib
 		self.frame = 0;
@@ -452,11 +457,11 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CHAN_PROJECTILE, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
 		else if (take > 30)
-			sound (self, CHAN_PROJECTILE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
 		else if (take > 10)
-			sound (self, CHAN_PROJECTILE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM); // FIXME possibly remove them?
+			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM); // FIXME possibly remove them?
 	}
 
 	if (take > 50)
@@ -492,15 +497,15 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{
 						if(deathtype == DEATH_FALL)
-							PlayerSound(playersound_fall, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(playersound_fall, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(self.health > 75) // TODO make a "gentle" version?
-							PlayerSound(playersound_pain100, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(playersound_pain100, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(self.health > 50)
-							PlayerSound(playersound_pain75, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(playersound_pain75, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(self.health > 25)
-							PlayerSound(playersound_pain50, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(playersound_pain50, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else
-							PlayerSound(playersound_pain25, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(playersound_pain25, CH_PAIN, VOICETYPE_PLAYERSOUND);
 					}
 				}
 
@@ -524,7 +529,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// escape a lava pit or similar
 		//self.pushltime = 0;
 	}
-	else if(attacker.classname == "player" || attacker.classname == "gib")
+	else if(attacker.classname == "player")
 	{
 		self.pusher = attacker;
 		self.pushltime = time + autocvar_g_maxpushtime;
@@ -553,7 +558,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
 	}
-	
+
 	if(valid_damage_for_weaponstats)
 	{
 		dh = dh - max(self.health, 0);
@@ -579,9 +584,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(sound_allowed(MSG_BROADCAST, attacker))
 		{
 			if(deathtype == DEATH_DROWN)
-				PlayerSound(playersound_drown, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+				PlayerSound(playersound_drown, CH_PAIN, VOICETYPE_PLAYERSOUND);
 			else
-				PlayerSound(playersound_death, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+				PlayerSound(playersound_death, CH_PAIN, VOICETYPE_PLAYERSOUND);
 		}
 
 		// get rid of kill indicator
@@ -604,8 +609,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		{
 			// become fully visible
 			self.alpha = 1;
-			// clear selected player display
-			ClearSelectedPlayer();
 			// throw a weapon
 			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
 		}
@@ -614,6 +617,14 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
 		DropAllRunes(self);
+
+        // increment frag counter for used weapon type
+        float w;
+        w = DEATH_WEAPONOF(deathtype);
+        if(WEP_VALID(w))
+        if(self.classname == "player")
+        if(self != attacker)
+        attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
 		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
 		{
@@ -627,10 +638,11 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		frag_inflictor = inflictor;
 		frag_target = self;
 		MUTATOR_CALLHOOK(PlayerDies);
+		weapon_action(self.weapon, WR_PLAYERDEATH);
 
 		if(self.flagcarried)
 		{
-			if(attacker.classname != "player" && attacker.classname != "gib")
+			if(attacker.classname != "player")
 				DropFlag(self.flagcarried, self, attacker); // penalty for flag loss by suicide
 			else if(attacker.team == self.team)
 				DropFlag(self.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill
@@ -722,7 +734,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(sv_gentle > 0 || autocvar_ekg) {
 			// remove corpse
-			PlayerCorpseDamage (inflictor, attacker, 100.0, deathtype, hitloc, force);
+			PlayerCorpseDamage (inflictor, attacker, autocvar_sv_gibhealth+1.0, deathtype, hitloc, force);
 		}
 
 		// reset fields the weapons may use just in case
@@ -732,154 +744,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			ATTACK_FINISHED_FOR(self, j) = 0;
 		}
 	}
-}
-
-float UpdateSelectedPlayer_countvalue(float v)
-{
-	return max(0, (v - 1.0) / 0.5);
-}
-
-// returns: -2 if no hit, otherwise cos of the angle
-// uses the global v_angle
-float UpdateSelectedPlayer_canSee(entity p, float mincosangle, float maxdist)
-{
-	vector so, d;
-	float c;
-
-	if(p == self)
-		return -2;
-
-	if(p.deadflag)
-		return -2;
-
-	so = self.origin + self.view_ofs;
-	d = p.origin - so;
-
-	// misaimed?
-	if(dist_point_line(d, '0 0 0', v_forward) > maxdist)
-		return -2;
-
-	// now find the cos of the angle...
-	c = normalize(d) * v_forward;
-
-	if(c <= mincosangle)
-		return -2;
-
-	// not visible in any way? forget it
-	if(!checkpvs(so, p))
-		return -2;
-
-	traceline(so, p.origin, MOVE_NOMONSTERS, self);
-	if(trace_fraction < 1)
-		return -2;
-
-	return c;
-}
-
-void ClearSelectedPlayer()
-{
-	if(self.selected_player)
-	{
-		centerprint_expire(self, CENTERPRIO_POINT);
-		self.selected_player = world;
-		self.selected_player_display_needs_update = FALSE;
-	}
-}
-
-void UpdateSelectedPlayer()
-{
-	entity selected;
-	float selected_score;
-	selected = world;
-	selected_score = 0.95; // 18 degrees
-
-	if(!autocvar_sv_allow_shownames)
-		return;
-
-	if(clienttype(self) != CLIENTTYPE_REAL)
-		return;
-
-	if(self.cvar_cl_shownames == 0)
-		return;
-
-	if(self.cvar_cl_shownames == 1 && !teams_matter)
-		return;
-
-	makevectors(self.v_angle); // sets v_forward
-
-	// 1. cursor trace is always right
-	WarpZone_crosshair_trace(self);
-	if(trace_ent && trace_ent.classname == "player" && !trace_ent.deadflag)
-	{
-		selected = trace_ent;
-	}
-	else
-	{
-		// 2. if we don't have a cursor trace, find the player which is least
-		//    mis-aimed at
-		entity p;
-		FOR_EACH_PLAYER(p)
-		{
-			float c;
-			c = UpdateSelectedPlayer_canSee(p, selected_score, 100); // 100 = 2.5 meters
-			if(c >= -1)
-			{
-				selected = p;
-				selected_score = c;
-			}
-		}
-	}
-
-	if(selected)
-	{
-		self.selected_player_display_timeout = time + self.cvar_scr_centertime;
-	}
-	else
-	{
-		if(time < self.selected_player_display_timeout)
-			if(UpdateSelectedPlayer_canSee(self.selected_player, 0.7, 200) >= -1) // 5 meters, 45 degrees
-				selected = self.selected_player;
-	}
-
-	if(selected)
-	{
-		if(selected == self.selected_player)
-		{
-			float save;
-			save = UpdateSelectedPlayer_countvalue(self.selected_player_count);
-			self.selected_player_count = self.selected_player_count + frametime;
-			if(save != UpdateSelectedPlayer_countvalue(self.selected_player_count))
-			{
-				string namestr, healthstr;
-				namestr = playername(selected);
-				if(teams_matter)
-				{
-					healthstr = ftos(floor(selected.health));
-					if(self.team == selected.team)
-					{
-						namestr = strcat(namestr, " (", healthstr, "%)");
-						self.selected_player_display_needs_update = TRUE;
-					}
-				}
-				centerprint_atprio(self, CENTERPRIO_POINT, namestr);
-			}
-		}
-		else
-		{
-			ClearSelectedPlayer();
-			self.selected_player = selected;
-			self.selected_player_time = time;
-			self.selected_player_count = 0;
-			self.selected_player_display_needs_update = FALSE;
-		}
-	}
-	else
-	{
-		ClearSelectedPlayer();
-	}
-
-	if(self.selected_player)
-		self.last_selected_player = self.selected_player;
 }
 
 .float muted; // to be used by prvm_edictset server playernumber muted 1
@@ -907,7 +771,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	if(source.classname != "player")
 		colorstr = "^0"; // black for spectators
-	else if(teams_matter)
+	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
 	else
 		teamsay = FALSE;
@@ -1269,8 +1133,9 @@ void UpdatePlayerSounds()
 	self.skinindex_for_playersound = self.skinindex;
 	ClearPlayerSounds();
 	LoadPlayerSounds("sound/player/default.sounds", 1);
-	if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skinindex, "sounds"), 0))
-		LoadPlayerSounds(get_model_datafilename(self.model, 0, "sounds"), 0);
+	if(!autocvar_g_debug_defaultsounds)
+		if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skinindex, "sounds"), 0))
+			LoadPlayerSounds(get_model_datafilename(self.model, 0, "sounds"), 0);
 }
 
 void FakeGlobalSound(string sample, float chan, float voicetype)
@@ -1396,7 +1261,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 			break;
 		case VOICETYPE_TEAMRADIO:
 			FOR_EACH_REALCLIENT(msg_entity)
-				if(!teams_matter || msg_entity.team == self.team)
+				if(!teamplay || msg_entity.team == self.team)
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
 						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
@@ -1470,9 +1335,9 @@ void VoiceMessage(string type, string msg)
 	flood = Say(self, ownteam, world, msg, 1);
 
 	if (flood > 0)
-		GlobalSound(self.sample, CHAN_VOICE, voicetype);
+		GlobalSound(self.sample, CH_VOICE, voicetype);
 	else if (flood < 0)
-		FakeGlobalSound(self.sample, CHAN_VOICE, voicetype);
+		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
 }
 
 void MoveToTeam(entity client, float team_colour, float type, float show_message)

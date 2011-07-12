@@ -14,10 +14,11 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	local float ignorehazards;
 	local float swimming;
 
-	#ifdef DEBUG_TRACEWALK
+	if(autocvar_bot_debug_tracewalk)
+	{
 		debugresetnodes();
 		debugnode(start);
-	#endif
+	}
 
 	move = end - start;
 	move_z = 0;
@@ -44,9 +45,9 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	if (trace_startsolid)
 	{
 		// Bad start
-		#ifdef DEBUG_TRACEWALK
+		if(autocvar_bot_debug_tracewalk)
 			debugnodestatus(start, DEBUG_NODE_FAIL);
-		#endif
+
 		//print("tracewalk: ", vtos(start), " is a bad start\n");
 		return FALSE;
 	}
@@ -59,15 +60,14 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 		if (boxesoverlap(end, end, org + m1 + '-1 -1 -1', org + m2 + '1 1 1'))
 		{
 			// Succeeded
-			#ifdef DEBUG_TRACEWALK
+			if(autocvar_bot_debug_tracewalk)
 				debugnodestatus(org, DEBUG_NODE_SUCCESS);
-			#endif
+
 			//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
 			return TRUE;
 		}
-		#ifdef DEBUG_TRACEWALK
+		if(autocvar_bot_debug_tracewalk)
 			debugnode(org);
-		#endif
 
 		if (dist <= 0)
 			break;
@@ -80,9 +80,9 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 			{
 				// hazards blocking path
-				#ifdef DEBUG_TRACEWALK
+				if(autocvar_bot_debug_tracewalk)
 					debugnodestatus(org, DEBUG_NODE_FAIL);
-				#endif
+
 				//print("tracewalk: ", vtos(start), " hits a hazard when trying to reach ", vtos(end), "\n");
 				return FALSE;
 			}
@@ -92,9 +92,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			move = normalize(end - org);
 			tracebox(org, m1, m2, org + move * stepdist, movemode, e);
 
-			#ifdef DEBUG_TRACEWALK
+			if(autocvar_bot_debug_tracewalk)
 				debugnode(trace_endpos);
-			#endif
 
 			if (trace_fraction < 1)
 			{
@@ -102,18 +101,18 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
 				for(; org_z < end_z + self.maxs_z; org_z += stepdist)
 				{
-						#ifdef DEBUG_TRACEWALK
+						if(autocvar_bot_debug_tracewalk)
 							debugnode(org);
-						#endif
+
 				        if(pointcontents(org) == CONTENT_EMPTY)
 							break;
 				}
 
 				if not (pointcontents(org + '0 0 1') == CONTENT_EMPTY)
 				{
-					#ifdef DEBUG_TRACEWALK
+					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(org, DEBUG_NODE_FAIL);
-					#endif
+
 					return FALSE;
 					//print("tracewalk: ", vtos(start), " failed under water\n");
 				}
@@ -128,9 +127,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			move = dir * stepdist + org;
 			tracebox(org, m1, m2, move, movemode, e);
 
-			#ifdef DEBUG_TRACEWALK
+			if(autocvar_bot_debug_tracewalk)
 				debugnode(trace_endpos);
-			#endif
 
 			// hit something
 			if (trace_fraction < 1)
@@ -139,9 +137,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 				tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
 				if (trace_fraction < 1 || trace_startsolid)
 				{
-					#ifdef DEBUG_TRACEWALK
+					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
-					#endif
 
 					// check for doors
 					traceline( org, move, movemode, e);
@@ -158,9 +155,9 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 					}
 					else
 					{
-						#ifdef DEBUG_TRACEWALK
+						if(autocvar_bot_debug_tracewalk)
 							debugnodestatus(trace_endpos, DEBUG_NODE_FAIL);
-						#endif
+
 						//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
 						//te_explosion(trace_endpos);
 						//print(ftos(e.dphitcontentsmask), "\n");
@@ -197,9 +194,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	//print("tracewalk: ", vtos(start), " did not arrive at ", vtos(end), " but at ", vtos(org), "\n");
 
 	// moved but didn't arrive at the intended destination
-	#ifdef DEBUG_TRACEWALK
+	if(autocvar_bot_debug_tracewalk)
 		debugnodestatus(org, DEBUG_NODE_FAIL);
-	#endif
 
 	return FALSE;
 };
@@ -894,6 +890,9 @@ void navigation_poptouchedgoals()
 // begin a goal selection session (queries spawnfunc_waypoint network)
 void navigation_goalrating_start()
 {
+	if(self.aistatus & AI_STATUS_STUCK)
+		return;
+
 	self.navigation_jetpack_goal = world;
 	navigation_bestrating = -1;
 	self.navigation_hasgoals = FALSE;
@@ -905,29 +904,21 @@ void navigation_goalrating_start()
 // ends a goal selection session (updates goal stack to the best goal)
 void navigation_goalrating_end()
 {
+	if(self.aistatus & AI_STATUS_STUCK)
+		return;
+
 	navigation_routetogoal(navigation_bestgoal, self.origin);
 //	dprint("best goal ", self.goalcurrent.classname , "\n");
 
-	// Hack: if it can't walk to any goal just move blindly to the first visible waypoint
+	// If the bot got stuck then try to reach the farthest waypoint
 	if not (self.navigation_hasgoals)
+	if (autocvar_bot_wander_enable)
 	{
-		dprint(self.netname, " can't walk to any goal, going to a near waypoint\n");
-
-		entity head;
-
-		RandomSelection_Init();
-		head = findradius(self.origin,1000);
-		while(head)
+		if not(self.aistatus & AI_STATUS_STUCK)
 		{
-			if(head.classname=="waypoint")
-			if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
-			if(vlen(self.origin-head.origin)>100)
-			if(checkpvs(self.view_ofs,head))
-				RandomSelection_Add(head, 0, string_null, 1 + (vlen(self.origin-head.origin)<500), 0);
-			head = head.chain;
+			dprint(self.netname, " cannot walk to any goal\n");
+			self.aistatus |= AI_STATUS_STUCK;
 		}
-		if(RandomSelection_chosen_ent)
-			navigation_routetogoal(RandomSelection_chosen_ent, self.origin);
 
 		self.navigation_hasgoals = FALSE; // Reset this value
 	}
@@ -970,7 +961,97 @@ void botframe_updatedangerousobjects(float maxupdate)
 	}
 };
 
-#ifdef DEBUG_TRACEWALK
+void navigation_unstuck()
+{
+	float search_radius = 1000;
+
+	if not(autocvar_bot_wander_enable)
+		return;
+
+	if not(bot_waypoint_queue_owner)
+	{
+	//	dprint(self.netname, " sutck, taking over the waypoints queue\n");
+		bot_waypoint_queue_owner = self;
+		bot_waypoint_queue_bestgoal = world;
+		bot_waypoint_queue_bestgoalrating = 0;
+	}
+
+	if(bot_waypoint_queue_owner!=self)
+		return;
+
+	if (bot_waypoint_queue_goal)
+	{
+		// evaluate the next goal on the queue
+		float d = vlen(self.origin - bot_waypoint_queue_goal.origin);
+		// dprint(self.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d), "\n");
+		if(tracewalk(bot_waypoint_queue_goal, self.origin, PL_MIN, PL_MAX, bot_waypoint_queue_goal.origin, bot_navigation_movemode))
+		{
+			if( d > bot_waypoint_queue_bestgoalrating)
+			{
+				bot_waypoint_queue_bestgoalrating = d;
+				bot_waypoint_queue_bestgoal = bot_waypoint_queue_goal;
+			}
+		}
+		bot_waypoint_queue_goal = bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal;
+
+		if not(bot_waypoint_queue_goal)
+		{
+			if (bot_waypoint_queue_bestgoal)
+			{
+				dprint(self.netname, " stuck, reachable waypoint found, heading to it\n");
+				navigation_routetogoal(bot_waypoint_queue_bestgoal, self.origin);
+				self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+				self.aistatus &~= AI_STATUS_STUCK;
+			}
+			else
+			{
+				dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
+			}
+
+			bot_waypoint_queue_owner = world;
+		}
+	}
+	else
+	{
+		if(bot_strategytoken!=self)
+			return;
+
+		// build a new queue
+		dprint(self.netname, " stuck, scanning reachable waypoints within ", ftos(search_radius)," qu\n");
+
+		entity head, first;
+
+		first = world;
+		head = findradius(self.origin, search_radius);
+
+		while(head)
+		{
+			if(head.classname=="waypoint")
+			if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
+			{
+				if(bot_waypoint_queue_goal)
+					bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = head;
+				else
+					first = head;
+
+				bot_waypoint_queue_goal = head;
+				bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = world;
+			}
+
+			head = head.chain;
+		}
+
+		if (first)
+			bot_waypoint_queue_goal = first;
+		else
+		{
+			dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
+			bot_waypoint_queue_owner = world;
+		}
+	}
+}
+
+// Support for debugging tracewalk visually
 
 void debugresetnodes()
 {
@@ -994,29 +1075,27 @@ void debugnode(vector node)
 
 void debugnodestatus(vector position, float status)
 {
-	vector color;
+	vector c;
 
 	switch (status)
 	{
 		case DEBUG_NODE_SUCCESS:
-			color = '0 15 0';
+			c = '0 15 0';
 			break;
 		case DEBUG_NODE_WARNING:
-			color = '15 15 0';
+			c = '15 15 0';
 			break;
 		case DEBUG_NODE_FAIL:
-			color = '15 0 0';
+			c = '15 0 0';
 			break;
 		default:
-			color = '15 15 15';
+			c = '15 15 15';
 	}
 
-	te_customflash(position, 40,  2, color);
+	te_customflash(position, 40,  2, c);
 }
 
-#endif
-
-#ifdef DEBUG_BOT_GOALSTACK
+// Support for debugging the goal stack visually
 
 .float goalcounter;
 .vector lastposition;
@@ -1024,43 +1103,43 @@ void debugnodestatus(vector position, float status)
 // Debug the goal stack visually
 void debuggoalstack()
 {
-	local entity target;
+	local entity goal;
 	local vector org;
 
-	if(self.goalcounter==0)target=self.goalcurrent;
-	else if(self.goalcounter==1)target=self.goalstack01;
-	else if(self.goalcounter==2)target=self.goalstack02;
-	else if(self.goalcounter==3)target=self.goalstack03;
-	else if(self.goalcounter==4)target=self.goalstack04;
-	else if(self.goalcounter==5)target=self.goalstack05;
-	else if(self.goalcounter==6)target=self.goalstack06;
-	else if(self.goalcounter==7)target=self.goalstack07;
-	else if(self.goalcounter==8)target=self.goalstack08;
-	else if(self.goalcounter==9)target=self.goalstack09;
-	else if(self.goalcounter==10)target=self.goalstack10;
-	else if(self.goalcounter==11)target=self.goalstack11;
-	else if(self.goalcounter==12)target=self.goalstack12;
-	else if(self.goalcounter==13)target=self.goalstack13;
-	else if(self.goalcounter==14)target=self.goalstack14;
-	else if(self.goalcounter==15)target=self.goalstack15;
-	else if(self.goalcounter==16)target=self.goalstack16;
-	else if(self.goalcounter==17)target=self.goalstack17;
-	else if(self.goalcounter==18)target=self.goalstack18;
-	else if(self.goalcounter==19)target=self.goalstack19;
-	else if(self.goalcounter==20)target=self.goalstack20;
-	else if(self.goalcounter==21)target=self.goalstack21;
-	else if(self.goalcounter==22)target=self.goalstack22;
-	else if(self.goalcounter==23)target=self.goalstack23;
-	else if(self.goalcounter==24)target=self.goalstack24;
-	else if(self.goalcounter==25)target=self.goalstack25;
-	else if(self.goalcounter==26)target=self.goalstack26;
-	else if(self.goalcounter==27)target=self.goalstack27;
-	else if(self.goalcounter==28)target=self.goalstack28;
-	else if(self.goalcounter==29)target=self.goalstack29;
-	else if(self.goalcounter==30)target=self.goalstack30;
-	else if(self.goalcounter==31)target=self.goalstack31;
+	if(self.goalcounter==0)goal=self.goalcurrent;
+	else if(self.goalcounter==1)goal=self.goalstack01;
+	else if(self.goalcounter==2)goal=self.goalstack02;
+	else if(self.goalcounter==3)goal=self.goalstack03;
+	else if(self.goalcounter==4)goal=self.goalstack04;
+	else if(self.goalcounter==5)goal=self.goalstack05;
+	else if(self.goalcounter==6)goal=self.goalstack06;
+	else if(self.goalcounter==7)goal=self.goalstack07;
+	else if(self.goalcounter==8)goal=self.goalstack08;
+	else if(self.goalcounter==9)goal=self.goalstack09;
+	else if(self.goalcounter==10)goal=self.goalstack10;
+	else if(self.goalcounter==11)goal=self.goalstack11;
+	else if(self.goalcounter==12)goal=self.goalstack12;
+	else if(self.goalcounter==13)goal=self.goalstack13;
+	else if(self.goalcounter==14)goal=self.goalstack14;
+	else if(self.goalcounter==15)goal=self.goalstack15;
+	else if(self.goalcounter==16)goal=self.goalstack16;
+	else if(self.goalcounter==17)goal=self.goalstack17;
+	else if(self.goalcounter==18)goal=self.goalstack18;
+	else if(self.goalcounter==19)goal=self.goalstack19;
+	else if(self.goalcounter==20)goal=self.goalstack20;
+	else if(self.goalcounter==21)goal=self.goalstack21;
+	else if(self.goalcounter==22)goal=self.goalstack22;
+	else if(self.goalcounter==23)goal=self.goalstack23;
+	else if(self.goalcounter==24)goal=self.goalstack24;
+	else if(self.goalcounter==25)goal=self.goalstack25;
+	else if(self.goalcounter==26)goal=self.goalstack26;
+	else if(self.goalcounter==27)goal=self.goalstack27;
+	else if(self.goalcounter==28)goal=self.goalstack28;
+	else if(self.goalcounter==29)goal=self.goalstack29;
+	else if(self.goalcounter==30)goal=self.goalstack30;
+	else if(self.goalcounter==31)goal=self.goalstack31;
 
-	if(target==world)
+	if(goal==world)
 	{
 		self.goalcounter = 0;
 		self.lastposition='0 0 0';
@@ -1073,10 +1152,8 @@ void debuggoalstack()
 		org = self.lastposition;
 
 
-	te_lightning2(world, org, target.origin);
-	self.lastposition = target.origin;
+	te_lightning2(world, org, goal.origin);
+	self.lastposition = goal.origin;
 
 	self.goalcounter++;
 }
-
-#endif

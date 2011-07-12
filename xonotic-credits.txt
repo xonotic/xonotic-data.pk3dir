@@ -5,13 +5,12 @@ Tyler "-z-" Mulligan
 Merlijn Hofstra
 morphed
 mand1nga
-tZork
-
+Jakob "tZork" Markström Gröhn
 
 **Coordinators
 
 *Art
-Diabolik a.k.a Dib
+Sahil "DiaboliK" Singhal
 
 *2D Art / Web
 Tyler "-z-" Mulligan (web / game)
@@ -24,14 +23,20 @@ morphed
 LJFHutch
 Pearce "theShadow" Michal
 
+*Animation
+Sahil "DiaboliK" Singhal
+nifrek
+
 *Level Design
 FruitieX
 MirceaKitsune
+Jakob "tZork" Markström Gröhn
 
 *Music / Sound FX
 mand1nga
 Merlijn Hofstra
 remaxim
+Stephan
 
 *Engine Code Additions & QA
 Rudolf "divVerent" Polzer
@@ -39,7 +44,7 @@ Rudolf "divVerent" Polzer
 *Game Code
 Rudolf "divVerent" Polzer
 FruitieX
-tZork
+Jakob "tZork" Markström Gröhn
 
 *Marketing / PR
 Tyler "-z-" Mulligan
@@ -59,10 +64,14 @@ by Forest "LordHavoc" Hale
 Rudolf "divVerent" Polzer
 
 *Finnish
-Exitium
+Henry "Exitium" Sanmark
 
 *French
 Calinou
+
+*Italian
+Antonio "terencehill" Piu
+Felice "MaidenBeast" Sallustio
 
 *Portuguese
 Ricardo "Hellgardia" Silva
@@ -75,6 +84,7 @@ Lord Canistra
 Nikoli
 
 **Active Contributors
+Ant "Antibody" Zucaro
 Antonio "terencehill" Piu
 Ben "MooKow" Banker
 Calinou
@@ -89,6 +99,7 @@ Samual Lenks
 Severin "sev" Meyer
 Stephan "esteel" Stahl
 Wolfgang "Blub\0" Bumiller
+SoulKeeper_p
 
 **Past Contributors
 Alexander "motorsep" Zubov

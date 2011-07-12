@@ -70,10 +70,7 @@ void reset_map(float dorespawn)
 			self.team = self.team_saved;
 
 		if(self.flags & FL_PROJECTILE) // remove any projectiles left
-		{
-			stopsound(self, CHAN_PAIN);
 			remove(self);
-		}
 	}
 
 	// Waypoints and assault start come LAST
@@ -257,7 +254,6 @@ void Arena_Warmup()
 			self.velocity = '0 0 0';
 			self.avelocity = '0 0 0';
 			self.movement = '0 0 0';
-			//self.fixangle = TRUE;
 		}
 	}
 
@@ -328,7 +324,7 @@ void count_alive_players()
 				totalalive += 1;
 			}
 		}
-		FOR_EACH_PLAYER(self) {
+		FOR_EACH_REALCLIENT(self) {
 			self.redalive_stat = redalive;
 			self.bluealive_stat = bluealive;
 		}
@@ -358,7 +354,7 @@ void count_alive_players()
 				totalalive += 1;
 			}
 		}
-		FOR_EACH_PLAYER(self) {
+		FOR_EACH_REALCLIENT(self) {
 			self.redalive_stat = redalive;
 			self.bluealive_stat = bluealive;
 			self.yellowalive_stat = yellowalive;

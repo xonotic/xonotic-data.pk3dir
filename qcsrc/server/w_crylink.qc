@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "crylink", "crylink", _("Crylink"));
+REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "crylink", "crylink", _("Crylink"));
 #else
 #ifdef SVQC
 .float gravity;
@@ -17,7 +17,7 @@ void W_Crylink_CheckLinks(entity e)
 	if(e == world)
 		error("W_Crylink_CheckLinks: entity is world");
 	if(e.classname != "spike")
-		error("W_Crylink_CheckLinks: entity is not a spike");
+		error(sprintf("W_Crylink_CheckLinks: entity is not a spike but a %s (freed: %d)", e.classname, wasfreed(e)));
 
 	p = e;
 	for(i = 0; i < 1000; ++i)
@@ -329,15 +329,14 @@ void W_Crylink_Attack (void)
 	vector forward, right, up;
 	float maxdmg;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - autocvar_g_balance_crylink_primary_ammo;
+	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_reload_ammo);
 
 	maxdmg = autocvar_g_balance_crylink_primary_damage*autocvar_g_balance_crylink_primary_shots;
 	maxdmg *= 1 + autocvar_g_balance_crylink_primary_bouncedamagefactor * autocvar_g_balance_crylink_primary_bounces;
 	if(autocvar_g_balance_crylink_primary_joinexplode)
 		maxdmg += autocvar_g_balance_crylink_primary_joinexplode_damage;
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", CHAN_WEAPON, maxdmg);
+	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -433,15 +432,14 @@ void W_Crylink_Attack2 (void)
 	local entity proj, prevproj, firstproj;
 	float maxdmg;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - autocvar_g_balance_crylink_secondary_ammo;
+	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_crylink_secondary_ammo, autocvar_g_balance_crylink_reload_ammo);
 
 	maxdmg = autocvar_g_balance_crylink_secondary_damage*autocvar_g_balance_crylink_secondary_shots;
 	maxdmg *= 1 + autocvar_g_balance_crylink_secondary_bouncedamagefactor * autocvar_g_balance_crylink_secondary_bounces;
 	if(autocvar_g_balance_crylink_secondary_joinexplode)
 		maxdmg += autocvar_g_balance_crylink_secondary_joinexplode_damage;
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", CHAN_WEAPON, maxdmg);
+	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", CH_WEAPON_A, maxdmg);
 
 	shots = autocvar_g_balance_crylink_secondary_shots;
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
@@ -522,6 +520,7 @@ void spawnfunc_weapon_crylink (void)
 
 float w_crylink(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 	{
 		if (random() < 0.10)
@@ -531,7 +530,9 @@ float w_crylink(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo)) // forced reload
+			weapon_action(self.weapon, WR_RELOAD);
+		else if (self.BUTTON_ATCK)
 		{
 			if (!self.crylink_waitrelease)
 			if (weapon_prepareattack(0, autocvar_g_balance_crylink_primary_refire))
@@ -582,6 +583,7 @@ float w_crylink(float req)
 				}
 				self.crylink_waitrelease = 0;
 				if(!w_crylink(WR_CHECKAMMO1) && !w_crylink(WR_CHECKAMMO2))
+				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 				{
 					// ran out of ammo!
 					self.cnt = WEP_CRYLINK;
@@ -598,22 +600,36 @@ float w_crylink(float req)
 		precache_sound ("weapons/crylink_fire.wav");
 		precache_sound ("weapons/crylink_fire2.wav");
 		precache_sound ("weapons/crylink_linkjoin.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_CRYLINK);
+		self.current_ammo = ammo_cells;
+	}
 	else if (req == WR_CHECKAMMO1)
 	{
 		// don't "run out of ammo" and switch weapons while waiting for release
 		if(self.crylink_lastgroup && self.crylink_waitrelease)
 			return TRUE;
-		return self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
+
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
+		ammo_amount += self.weapon_load[WEP_CRYLINK] >= autocvar_g_balance_crylink_primary_ammo;
+		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		// don't "run out of ammo" and switch weapons while waiting for release
 		if(self.crylink_lastgroup && self.crylink_waitrelease)
 			return TRUE;
-		return self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
+
+		ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
+		ammo_amount += self.weapon_load[WEP_CRYLINK] >= autocvar_g_balance_crylink_secondary_ammo;
+		return ammo_amount;
+	}
+	else if (req == WR_RELOAD)
+	{
+		W_Reload(min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo), autocvar_g_balance_crylink_reload_ammo, autocvar_g_balance_crylink_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };
@@ -629,13 +645,13 @@ float w_crylink(float req)
 		{
 			pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CHAN_PROJECTILE, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
 		}
 		else
 		{
 			pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CHAN_PROJECTILE, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)

@@ -59,10 +59,14 @@ by Forest "LordHavoc" Hale
 Rudolf "divVerent" Polzer
 
 *Finnish (TODO TRANSLATE THIS)
-Exitium
+Henry "Exitium" Sanmark
 
 *Français
 Calinou
+
+*Italien
+Antonio "terencehill" Piu
+Felice "MaidenBeast" Sallustio
 
 *Portugais
 Ricardo "Hellgardia" Silva

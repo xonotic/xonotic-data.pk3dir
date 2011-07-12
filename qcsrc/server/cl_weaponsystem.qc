@@ -34,6 +34,10 @@ float W_WeaponRateFactor()
 
 void W_SwitchWeapon_Force(entity e, float w)
 {
+	// don't switch to another weapon if we're not allowed to
+	if(e.weapon_forbidchange)
+		return;
+
 	e.cnt = e.switchweapon;
 	e.switchweapon = w;
 	e.selectweapon = w;
@@ -138,7 +142,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	local float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
-	if(ent.weapon == WEP_SNIPERRIFLE)
+	if(ent.weapon == WEP_RIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -251,7 +255,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		(time > ent.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)
 	) // prevent insane sound spam
 	{
-		sound(ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+		sound(ent, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
 		ent.prevstrengthsound = time;
 	}
 	ent.prevstrengthsoundattempt = time;
@@ -824,33 +828,36 @@ void CL_ExteriorWeaponentity_Think()
 	else
 		self.alpha = 1;
 
-	ang_x = bound(sv_pitch_min, self.owner.v_angle_x, sv_pitch_max);
-	ang_y = 0;
-	ang_z = 0;
+	if (!intermission_running)
+	{
+		ang_x = bound(sv_pitch_min, self.owner.v_angle_x, sv_pitch_max);
+		ang_y = 0;
+		ang_z = 0;
 
-	if(sv_pitch_fixyaw) // workaround for stupid player models that don't aim forward
-	{
-		ang_y = self.owner.v_angle_y;
-		makevectors(ang);
-		var vector v = v_forward;
-		var float t = self.tag_entity.frame1time;
-		var float f = self.tag_entity.frame;
-		self.tag_entity.frame1time = time;
-		self.tag_entity.frame = self.tag_entity.anim_idle_x;
-		gettaginfo(self.tag_entity, self.tag_index);
-		self.tag_entity.frame1time = t;
-		self.tag_entity.frame = f;
-		// untransform v according to this coordinate space
-		vector w;
-		w_x = v_forward * v;
-		w_y = -v_right * v;
-		w_z = v_up * v;
-		self.angles = vectoangles(w);
-	}
-	else
-	{
-		ang_x = -/* don't ask */ang_x;
-		self.angles = ang;
+		if(sv_pitch_fixyaw) // workaround for stupid player models that don't aim forward
+		{
+			ang_y = self.owner.v_angle_y;
+			makevectors(ang);
+			var vector v = v_forward;
+			var float t = self.tag_entity.frame1time;
+			var float f = self.tag_entity.frame;
+			self.tag_entity.frame1time = time;
+			self.tag_entity.frame = self.tag_entity.anim_idle_x;
+			gettaginfo(self.tag_entity, self.tag_index);
+			self.tag_entity.frame1time = t;
+			self.tag_entity.frame = f;
+			// untransform v according to this coordinate space
+			vector w;
+			w_x = v_forward * v;
+			w_y = -v_right * v;
+			w_z = v_up * v;
+			self.angles = vectoangles(w);
+		}
+		else
+		{
+			ang_x = -/* don't ask */ang_x;
+			self.angles = ang;
+		}
 	}
 
 	self.glowmod = self.owner.weaponentity_glowmod;
@@ -979,7 +986,8 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 						world, e.origin,
 						self, 0,
 						world, enemy,
-						0
+						0,
+						RADARICON_NONE, '0 0 0'
 					);
 				}
 			}
@@ -1055,7 +1063,7 @@ float weapon_prepareattack_checkammo(float secondary)
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
-			sound (self, CHAN_AUTO, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
 			self.prevdryfire = time;
 		}
 
@@ -1253,14 +1261,19 @@ void weapon_thinkf(float fr, float t, void() func)
 	self.weapon_think = func;
 	//dprint("next ", ftos(self.weapon_nextthink), "\n");
 
+	// The shoot animation looks TERRIBLE without animation blending! Yay for moonwalking while shooting!
+	//anim = self.anim_shoot;
 	if (restartanim)
 	if (t)
 	if (!self.crouch) // shoot anim stands up, this looks bad
 	{
-		local vector anim;
-		anim = self.anim_shoot;
-		anim_z = anim_y / (t + sys_frametime);
-		setanim(self, anim, FALSE, TRUE, TRUE);
+		vector anim;
+		if(self.weapon == WEP_SHOTGUN && self.BUTTON_ATCK2)
+		{
+			anim = self.anim_melee;
+			anim_z = anim_y / (t + sys_frametime);
+			setanim(self, anim, FALSE, TRUE, TRUE);
+		}
 	}
 };
 
@@ -1611,3 +1624,127 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 
 #define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
 #define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
+
+void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
+{
+	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !ammo_reload)
+		return;
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if(ammo_reload)
+	{
+		self.clip_load -= ammo_use;
+		self.weapon_load[self.weapon] = self.clip_load;
+	}
+	else
+		self.(self.current_ammo) -= ammo_use;
+}
+
+// weapon reloading code
+
+.float reload_ammo_amount, reload_ammo_min, reload_time;
+.float reload_complain;
+.string reload_sound;
+
+void W_ReloadedAndReady()
+{
+	// finish the reloading process, and do the ammo transfer
+
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+
+	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
+	if(!self.reload_ammo_min || self.items & IT_UNLIMITED_WEAPON_AMMO)
+		self.clip_load = self.reload_ammo_amount;
+	else
+	{
+		while(self.clip_load < self.reload_ammo_amount && self.(self.current_ammo)) // make sure we don't add more ammo than we have
+		{
+			self.clip_load += 1;
+			self.(self.current_ammo) -= 1;
+		}
+	}
+	self.weapon_load[self.weapon] = self.clip_load;
+
+	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
+	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
+	// so your weapon is disabled for a few seconds without reason
+
+	//ATTACK_FINISHED(self) -= self.reload_time - 1;
+
+	w_ready();
+}
+
+void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
+{
+	// set global values to work with
+
+	self.reload_ammo_min = sent_ammo_min;
+	self.reload_ammo_amount = sent_ammo_amount;
+	self.reload_time = sent_time;
+	self.reload_sound = sent_sound;
+
+	// check if we meet the necessary conditions to reload
+
+	entity e;
+	e = get_weaponinfo(self.weapon);
+
+	// don't reload weapons that don't have the RELOADABLE flag
+	if not(e.spawnflags & WEP_FLAG_RELOADABLE)
+	{
+		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
+		return;
+	}
+
+	// return if reloading is disabled for this weapon
+	if(!self.reload_ammo_amount)
+		return;
+
+	// our weapon is fully loaded, no need to reload
+	if (self.clip_load >= self.reload_ammo_amount)
+		return;
+
+	// no ammo, so nothing to load
+	if(!self.(self.current_ammo) && self.reload_ammo_min)
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(clienttype(self) == CLIENTTYPE_REAL && self.reload_complain < time)
+		{
+			play2(self, "weapons/unavailable.wav");
+			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));
+			self.reload_complain = time + 1;
+		}
+		// switch away if the amount of ammo is not enough to keep using this weapon
+		if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
+		{
+			self.clip_load = -1; // reload later
+			W_SwitchToOtherWeapon(self);
+		}
+		return;
+	}
+
+	if (self.weaponentity)
+	{
+		if (self.weaponentity.wframe == WFRAME_RELOAD)
+			return;
+
+		// allow switching away while reloading, but this will cause a new reload!
+		self.weaponentity.state = WS_READY;
+	}
+
+	// now begin the reloading process
+
+	sound (self, CH_WEAPON_B, self.reload_sound, VOL_BASE, ATTN_NORM);
+
+	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
+	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
+	// so your weapon is disabled for a few seconds without reason
+
+	//ATTACK_FINISHED(self) = max(time, ATTACK_FINISHED(self)) + self.reload_time + 1;
+
+	weapon_thinkf(WFRAME_RELOAD, self.reload_time, W_ReloadedAndReady);
+
+	if(self.clip_load < 0)
+		self.clip_load = 0;
+	self.old_clip_load = self.clip_load;
+	self.clip_load = self.weapon_load[self.weapon] = -1;
+}

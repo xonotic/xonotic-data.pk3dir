@@ -1,6 +1,6 @@
 void trigger_teleport_use()
 {
-	if(teams_matter)
+	if(teamplay)
 		self.team = activator.team;
 }
 
@@ -33,7 +33,7 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 	{
 		TDEATHLOOP(org)
 		{
-			if not(teams_matter && autocvar_g_telefrags_teamplay && head.team == player.team)
+			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
 				if(head.classname == "player")
 					if(head.health >= 1)
 						return 1;
@@ -48,7 +48,7 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 	{
 		if (player.classname == "player" && player.health >= 1)
 		{
-			if not(teams_matter && autocvar_g_telefrags_teamplay && head.team == player.team)
+			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
 			{
 				if(head.classname == "player")
 					if(head.health >= 1)
@@ -77,7 +77,6 @@ void spawn_tdeath(vector v0, entity e, vector v)
 #define TELEPORT_FLAGS_TELEPORTER (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH)
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
-	entity oldself;
 	entity telefragger;
 	vector from;
 
@@ -91,7 +90,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 	{
 		if(tflags & TELEPORT_FLAG_SOUND)
-			sound (player, CHAN_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
+			sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
 		if(tflags & TELEPORT_FLAG_PARTICLES)
 		{
 			pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
@@ -136,14 +135,6 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		}
 
 		player.lastteleporttime = time;
-
-		// stop player name display
-		{
-			oldself = self;
-			self = player;
-			ClearSelectedPlayer();
-			self = oldself;
-		}
 	}
 }
 
@@ -157,9 +148,14 @@ void Teleport_Touch (void)
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 	
-	if (other.health < 1)
+	if not(other.iscreature)
 		return;
-	if not(other.flags & FL_CLIENT)	// FIXME: Make missiles firable through the teleport too
+
+	// for gameplay: vehicles can't teleport
+	if (other.vehicle_flags & VHF_ISVEHICLE)
+		return;
+
+	if (other.deadflag != DEAD_NO)
 		return;
 
 	if(self.team)
@@ -313,6 +309,9 @@ void spawnfunc_trigger_teleport (void)
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {
 	UpdateCSQCProjectileAfterTeleport(pl);
+	// "disown" projectiles after teleport
+	if(pl.owner == pl.realowner)
+		pl.owner = world;
 	if(pl.classname == "player")
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
