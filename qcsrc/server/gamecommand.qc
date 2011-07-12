@@ -638,7 +638,7 @@ void GameCommand_adminmsg(float request, string command)
 	{
 		case GC_REQUEST_HELP:
 			print("  adminmsg - Send an admin message to a client directly\n");
-			break;
+			return;
 			
 		case GC_REQUEST_COMMAND:
 			if(argc >= 3 && argc <= 4) {
@@ -671,7 +671,7 @@ void GameCommand_adminmsg(float request, string command)
 					}
 				}
 				if(!n) { print("Client not found\n"); } 
-				break;
+				return;
 			} 
 			
 		default:
@@ -691,11 +691,11 @@ void GameCommand_allready(float request)
 	{
 		case GC_REQUEST_HELP:
 			print("  allready - Restart the server and reset the players\n");
-			break;
+			return;
 			
 		case GC_REQUEST_COMMAND:
 			ReadyRestart();
-			break;
+			return;
 			
 		default:
 		case GC_REQUEST_USAGE:
@@ -713,7 +713,7 @@ void GameCommand_allspec(float request) // todo: Add ability to provide a reason
 	{
 		case GC_REQUEST_HELP:
 			print("  allspec - Force all players to spectate\n");
-			break;
+			return;
 			
 		case GC_REQUEST_COMMAND:
 			FOR_EACH_PLAYER(client)
@@ -722,7 +722,7 @@ void GameCommand_allspec(float request) // todo: Add ability to provide a reason
 				++i;
 			}
 			if(i) { bprint(strcat("Successfully forced all players to spectate (", ftos(i), ")\n")); } // should a message be added if no players were found? 
-			break;
+			return;
 			
 		default:
 		case GC_REQUEST_USAGE:
@@ -742,7 +742,7 @@ void GameCommand_anticheat(float request, string command) // FIXME: player entit
 	{
 		case GC_REQUEST_HELP:
 			print("  anticheat - Create an anticheat report for a client\n");
-			break;
+			return;
 			
 		case GC_REQUEST_COMMAND:
 			if((entno < 1) | (entno > maxclients)) {
@@ -756,7 +756,7 @@ void GameCommand_anticheat(float request, string command) // FIXME: player entit
 			}
 			self = client;
 			anticheat_report();
-			break;
+			return;
 			
 		default:
 		case GC_REQUEST_USAGE:
@@ -772,7 +772,7 @@ void GameCommand_bbox(float request)
 	{
 		case GC_REQUEST_HELP:
 			print("  bbox - Print detailed information about world size\n");
-			break;
+			return;
 			
 		case GC_REQUEST_COMMAND:
 			print("Original size: ", ftos(world.absmin_x), " ", ftos(world.absmin_y), " ", ftos(world.absmin_z));
@@ -848,7 +848,7 @@ void GameCommand_bbox(float request)
 				print(" ", ftos(trace_endpos_z));
 				
 			print("\n");
-			break;
+			return;
 			
 		default:
 		case GC_REQUEST_USAGE:
@@ -867,7 +867,7 @@ void GameCommand_bot_cmd(float request, string command) // what a mess... old ol
 	{
 		case GC_REQUEST_HELP:
 			print("  bot_cmd - Control and send commands to bots\n");
-			break;
+			return;
 			
 		case GC_REQUEST_COMMAND:
 			if(argv(1) == "reset")
@@ -949,7 +949,7 @@ void GameCommand_cointoss(float request) // todo: Perhaps add the ability to giv
 	{
 		case GC_REQUEST_HELP:
 			print("  cointoss - Flip a virtual coin and give random result\n");
-			break;
+			return;
 			
 		case GC_REQUEST_COMMAND:
 			bprint("^3Throwing coin... Result: ");
@@ -957,7 +957,7 @@ void GameCommand_cointoss(float request) // todo: Perhaps add the ability to giv
 				bprint("^1HEADS^3!\n");
 			else
 				bprint("^4TAILS^3!\n");
-			break;
+			return;
 			
 		default:
 		case GC_REQUEST_USAGE:
@@ -973,11 +973,11 @@ void GameCommand_cvar_changes(float request)
 	{
 		case GC_REQUEST_HELP:
 			print("  cvar_changes - Prints a list of all changed server cvars\n");
-			break;
+			return;
 			
 		case GC_REQUEST_COMMAND:
 			print(cvar_changes);
-			break;
+			return;
 			
 		default:
 		case GC_REQUEST_USAGE:
@@ -993,11 +993,11 @@ void GameCommand_cvar_purechanges(float request)
 	{
 		case GC_REQUEST_HELP:
 			print("  cvar_purechanges - Prints a list of all changed gameplay cvars\n");
-			break;
+			return;
 			
 		case GC_REQUEST_COMMAND:
 			print(cvar_purechanges);
-			break;
+			return;
 			
 		default:
 		case GC_REQUEST_USAGE:
@@ -1017,7 +1017,7 @@ void GameCommand_defer_clear(float request, string command)
 	{
 		case GC_REQUEST_HELP:
 			print("  defer_clear - Clear all queued defer commands for client\n");
-			break;
+			return;
 			
 		case GC_REQUEST_COMMAND:
 			if(argc == 2)
@@ -1058,7 +1058,7 @@ void GameCommand_defer_clear_all(float request)
 	{
 		case GC_REQUEST_HELP:
 			print("  defer_clear_all - Clear all queued defer commands for all clients\n");
-			break;
+			return;
 			
 		case GC_REQUEST_COMMAND:
 			FOR_EACH_CLIENT(client)
@@ -1085,14 +1085,17 @@ void GameCommand_delrec(float request, string command)
 	{
 		case GC_REQUEST_HELP:
 			print("  delrec - Delete race time record for a map\n");
-			break;
+			return;
 			
 		case GC_REQUEST_COMMAND:
-			if(argv(2))
-				race_deleteTime(argv(2), stof(argv(1)));
-			else
-				race_deleteTime(GetMapname(), stof(argv(1)));
-			break;
+			if(argv(1))
+			{
+				if(argv(2))
+					race_deleteTime(argv(2), stof(argv(1)));
+				else
+					race_deleteTime(GetMapname(), stof(argv(1)));
+				return;
+			}
 			
 		default:
 		case GC_REQUEST_USAGE:
