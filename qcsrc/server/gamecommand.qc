@@ -470,83 +470,6 @@ void RadarMap(float argc)
 	print("Radarmap entity spawned.\n");
 }
 
-void BBox()
-{
-	print("Original size: ", ftos(world.absmin_x), " ", ftos(world.absmin_y), " ", ftos(world.absmin_z));
-	print(" ", ftos(world.absmax_x), " ", ftos(world.absmax_y), " ", ftos(world.absmax_z), "\n");
-	print("Currently set size: ", ftos(world.mins_x), " ", ftos(world.mins_y), " ", ftos(world.mins_z));
-	print(" ", ftos(world.maxs_x), " ", ftos(world.maxs_y), " ", ftos(world.maxs_z), "\n");
-	print("Solid bounding box size:");
-
-	tracebox('1 0 0' * world.absmin_x,
-	         '0 1 0' * world.absmin_y + '0 0 1' * world.absmin_z,
-	         '0 1 0' * world.absmax_y + '0 0 1' * world.absmax_z,
-	         '1 0 0' * world.absmax_x,
-			 MOVE_WORLDONLY,
-			 world);
-	if(trace_startsolid)
-		print(" ", ftos(world.absmin_x));
-	else
-		print(" ", ftos(trace_endpos_x));
-
-	tracebox('0 1 0' * world.absmin_y,
-	         '1 0 0' * world.absmin_x + '0 0 1' * world.absmin_z,
-	         '1 0 0' * world.absmax_x + '0 0 1' * world.absmax_z,
-	         '0 1 0' * world.absmax_y,
-			 MOVE_WORLDONLY,
-			 world);
-	if(trace_startsolid)
-		print(" ", ftos(world.absmin_y));
-	else
-		print(" ", ftos(trace_endpos_y));
-
-	tracebox('0 0 1' * world.absmin_z,
-	         '1 0 0' * world.absmin_x + '0 1 0' * world.absmin_y,
-	         '1 0 0' * world.absmax_x + '0 1 0' * world.absmax_y,
-	         '0 0 1' * world.absmax_z,
-			 MOVE_WORLDONLY,
-			 world);
-	if(trace_startsolid)
-		print(" ", ftos(world.absmin_z));
-	else
-		print(" ", ftos(trace_endpos_z));
-
-	tracebox('1 0 0' * world.absmax_x,
-	         '0 1 0' * world.absmin_y + '0 0 1' * world.absmin_z,
-	         '0 1 0' * world.absmax_y + '0 0 1' * world.absmax_z,
-	         '1 0 0' * world.absmin_x,
-			 MOVE_WORLDONLY,
-			 world);
-	if(trace_startsolid)
-		print(" ", ftos(world.absmax_x));
-	else
-		print(" ", ftos(trace_endpos_x));
-
-	tracebox('0 1 0' * world.absmax_y,
-	         '1 0 0' * world.absmin_x + '0 0 1' * world.absmin_z,
-	         '1 0 0' * world.absmax_x + '0 0 1' * world.absmax_z,
-	         '0 1 0' * world.absmin_y,
-			 MOVE_WORLDONLY,
-			 world);
-	if(trace_startsolid)
-		print(" ", ftos(world.absmax_y));
-	else
-		print(" ", ftos(trace_endpos_y));
-
-	tracebox('0 0 1' * world.absmax_z,
-	         '1 0 0' * world.absmin_x + '0 1 0' * world.absmin_y,
-	         '1 0 0' * world.absmax_x + '0 1 0' * world.absmax_y,
-	         '0 0 1' * world.absmin_z,
-			 MOVE_WORLDONLY,
-			 world);
-	if(trace_startsolid)
-		print(" ", ftos(world.absmax_z));
-	else
-		print(" ", ftos(trace_endpos_z));
-
-	print("\n");
-}
-
 void EffectIndexDump()
 {
 	float d;
@@ -843,6 +766,98 @@ void GameCommand_anticheat(float request, string command)
 	}
 }
 
+void GameCommand_bbox(float request)
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  bbox - Print large amounts of information about bboxes\n");
+			break;
+			
+		case GC_REQUEST_COMMAND:
+			print("Original size: ", ftos(world.absmin_x), " ", ftos(world.absmin_y), " ", ftos(world.absmin_z));
+			print(" ", ftos(world.absmax_x), " ", ftos(world.absmax_y), " ", ftos(world.absmax_z), "\n");
+			print("Currently set size: ", ftos(world.mins_x), " ", ftos(world.mins_y), " ", ftos(world.mins_z));
+			print(" ", ftos(world.maxs_x), " ", ftos(world.maxs_y), " ", ftos(world.maxs_z), "\n");
+			print("Solid bounding box size:");
+
+			tracebox('1 0 0' * world.absmin_x,
+							'0 1 0' * world.absmin_y + '0 0 1' * world.absmin_z,
+							'0 1 0' * world.absmax_y + '0 0 1' * world.absmax_z,
+							'1 0 0' * world.absmax_x,
+					MOVE_WORLDONLY,
+					world);
+			if(trace_startsolid)
+				print(" ", ftos(world.absmin_x));
+			else
+				print(" ", ftos(trace_endpos_x));
+
+			tracebox('0 1 0' * world.absmin_y,
+							'1 0 0' * world.absmin_x + '0 0 1' * world.absmin_z,
+							'1 0 0' * world.absmax_x + '0 0 1' * world.absmax_z,
+							'0 1 0' * world.absmax_y,
+					MOVE_WORLDONLY,
+					world);
+			if(trace_startsolid)
+				print(" ", ftos(world.absmin_y));
+			else
+				print(" ", ftos(trace_endpos_y));
+
+			tracebox('0 0 1' * world.absmin_z,
+							'1 0 0' * world.absmin_x + '0 1 0' * world.absmin_y,
+							'1 0 0' * world.absmax_x + '0 1 0' * world.absmax_y,
+							'0 0 1' * world.absmax_z,
+					MOVE_WORLDONLY,
+					world);
+			if(trace_startsolid)
+				print(" ", ftos(world.absmin_z));
+			else
+				print(" ", ftos(trace_endpos_z));
+
+			tracebox('1 0 0' * world.absmax_x,
+							'0 1 0' * world.absmin_y + '0 0 1' * world.absmin_z,
+							'0 1 0' * world.absmax_y + '0 0 1' * world.absmax_z,
+							'1 0 0' * world.absmin_x,
+					MOVE_WORLDONLY,
+					world);
+			if(trace_startsolid)
+				print(" ", ftos(world.absmax_x));
+			else
+				print(" ", ftos(trace_endpos_x));
+
+			tracebox('0 1 0' * world.absmax_y,
+							'1 0 0' * world.absmin_x + '0 0 1' * world.absmin_z,
+							'1 0 0' * world.absmax_x + '0 0 1' * world.absmax_z,
+							'0 1 0' * world.absmin_y,
+					MOVE_WORLDONLY,
+					world);
+			if(trace_startsolid)
+				print(" ", ftos(world.absmax_y));
+			else
+				print(" ", ftos(trace_endpos_y));
+
+			tracebox('0 0 1' * world.absmax_z,
+							'1 0 0' * world.absmin_x + '0 1 0' * world.absmin_y,
+							'1 0 0' * world.absmax_x + '0 1 0' * world.absmax_y,
+							'0 0 1' * world.absmin_z,
+					MOVE_WORLDONLY,
+					world);
+			if(trace_startsolid)
+				print(" ", ftos(world.absmax_z));
+			else
+				print(" ", ftos(trace_endpos_z));
+				
+			print("\n");
+			break;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd bbox\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -866,6 +881,7 @@ void GameCommand(string command)
 			GameCommand_allready(GC_REQUEST_HELP);
 			GameCommand_allspec(GC_REQUEST_HELP);
 			GameCommand_anticheat(GC_REQUEST_HELP, command);
+			GameCommand_bbox(GC_REQUEST_HELP);
 			print("  teamstatus\n");
 			print("  printstats\n");
 			print("  make_mapinfo\n");
@@ -912,7 +928,8 @@ void GameCommand(string command)
 		case "allready": GameCommand_allready(search_request_type); break;
 		case "allspec": GameCommand_allspec(search_request_type); break;
 		case "anticheat": GameCommand_anticheat(search_request_type, command); break;
-
+		case "bbox": GameCommand_bbox(search_request_type); break;
+		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 	}
