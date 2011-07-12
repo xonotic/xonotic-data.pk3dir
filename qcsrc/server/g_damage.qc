@@ -61,7 +61,7 @@ float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after u
 
 float IsDifferentTeam(entity a, entity b)
 {
-	if(teams_matter)
+	if(teamplay)
 	{
 		if(a.team == b.team)
 			return 0;
@@ -120,14 +120,12 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		{
 			// teamkill
 			PlayerScore_Add(attacker, SP_KILLS, -1); // or maybe add a teamkills field?
-			PlayerStats_Event(attacker, PLAYERSTATS_KILLS, -1);
 		}
 	}
 	else
 	{
 		// regular frag
 		PlayerScore_Add(attacker, SP_KILLS, 1);
-		PlayerStats_Event(attacker, PLAYERSTATS_KILLS, 1);
 	}
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
@@ -203,6 +201,8 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 			{
 				if(!lms_next_place)
 					lms_next_place = player_count;
+				else
+					lms_next_place = min(lms_next_place, player_count);
 				PlayerScore_Add(targ, SP_LMS_RANK, lms_next_place); // won't ever spawn again
 				--lms_next_place;
 			}
@@ -299,13 +299,9 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 	string	s, a, msg;
 	float w, type;
 
-	if (targ.classname == "player" || targ.classname == "corpse")
+	if (targ.classname == "player")
 	{
-		if (targ.classname == "corpse")
-			s = "A corpse";
-		else
-			s = targ.netname;
-
+		s = targ.netname;
 		a = attacker.netname;
 
 		if (targ == attacker) // suicides
@@ -323,7 +319,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			if (targ.killcount > 2)
 				msg = ftos(targ.killcount);
-			if(teams_matter && deathtype == DEATH_MIRRORDAMAGE)
+			if(teamplay && deathtype == DEATH_MIRRORDAMAGE)
 			{
 				if(attacker.team == COLOR_TEAM1)
 					deathtype = KILL_TEAM_RED;
@@ -333,9 +329,9 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			Send_KillNotification(s, msg, ftos(w), deathtype, MSG_SUICIDE);
 		}
-		else if (attacker.classname == "player" || attacker.classname == "gib")
+		else if (attacker.classname == "player")
 		{
-			if(teams_matter && attacker.team == targ.team)
+			if(teamplay && attacker.team == targ.team)
 			{
 				if(attacker.team == COLOR_TEAM1)
 					type = KILL_TEAM_RED;
@@ -369,6 +365,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					// TODO: make these print a newline if they dont
 					Send_CSQC_Centerprint(attacker, "", "", KILL_FIRST_BLOOD, MSG_KILL);
 					Send_CSQC_Centerprint(targ, "", "", KILL_FIRST_VICTIM, MSG_KILL);
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
+					PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 				}
 
 				if((autocvar_sv_fragmessage_information_typefrag) && (targ.BUTTON_CHAT)) {
@@ -414,36 +412,43 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_3, MSG_SPREE);
 					AnnounceTo(attacker, "03kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3, 1);
 				}
 				else if (attacker.killcount == 5)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_5, MSG_SPREE);
 					AnnounceTo(attacker, "05kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5, 1);
 				}
 				else if (attacker.killcount == 10)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_10, MSG_SPREE);
 					AnnounceTo(attacker, "10kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10, 1);
 				}
 				else if (attacker.killcount == 15)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_15, MSG_SPREE);
 					AnnounceTo(attacker, "15kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15, 1);
 				}
 				else if (attacker.killcount == 20)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_20, MSG_SPREE);
 					AnnounceTo(attacker, "20kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20, 1);
 				}
 				else if (attacker.killcount == 25)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_25, MSG_SPREE);
 					AnnounceTo(attacker, "25kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_25, 1);
 				}
 				else if (attacker.killcount == 30)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_30, MSG_SPREE);
 					AnnounceTo(attacker, "30kills");
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30, 1);
 				}
 				LogDeath("frag", deathtype, attacker, targ);
 			}
@@ -461,6 +466,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			GiveFrags(targ, targ, -1, deathtype);
 			if(PlayerScore_Add(targ, SP_SCORE, 0) == -5) {
 				AnnounceTo(targ, "botlike");
+				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 			}
 			Send_KillNotification(s, msg, "", deathtype, MSG_KILL_ACTION);
 
@@ -484,7 +490,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 entity damage_targ;
 entity damage_inflictor;
 entity damage_attacker;
-.float prevhitsound;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -555,7 +560,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(teams_matter && attacker.team == targ.team)
+			else if(teamplay && attacker.team == targ.team)
 			{
 				if(autocvar_teamplay_mode == 1)
 					damage = 0;
@@ -773,21 +778,24 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			if(deathtype & HITTYPE_HEADSHOT)
 				damage *= 1 + damage_headshotbonus;
 
-			if(targ.classname == "player")
+			entity victim;
+			if((targ.vehicle_flags & VHF_ISVEHICLE) && targ.owner)
+				victim = targ.owner;
+			else
+				victim = targ;
+
+			if(victim.classname == "player" || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 			{
-				if(IsDifferentTeam(targ, attacker))
+				if(IsDifferentTeam(victim, attacker))
 				{
 					if(damage > 0)
 					{
-						if(attacker.weapon != WEP_LASER
-						&& (attacker.weapon != WEP_ELECTRO || !autocvar_g_balance_electro_lightning)
-						&& attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time)
+						if(deathtype != DEATH_FIRE)
 						{
-							if(targ.BUTTON_CHAT)
+							if(victim.BUTTON_CHAT)
 								attacker.typehitsound += 1;
 							else
 								attacker.hitsound += 1;
-							attacker.prevhitsound = time;
 						}
 
 						damage_goodhits += 1;
@@ -795,12 +803,13 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 						if not(DEATH_ISSPECIAL(deathtype))
 						{
+							if(targ.classname == "player") // don't do this for vehicles
 							if(!g_minstagib)
-							if(IsFlying(targ))
+							if(IsFlying(victim))
 								yoda = 1;
 
 							if(g_minstagib)
-							if(targ.items & IT_STRENGTH)
+							if(victim.items & IT_STRENGTH)
 								yoda = 1;
 
 							if(deathtype & HITTYPE_HEADSHOT)
@@ -812,11 +821,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				}
 				else
 				{
-					if(deathtype != DEATH_FIRE
-					&& attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time)
+					if(deathtype != DEATH_FIRE)
 					{
 						attacker.typehitsound += 1;
-						attacker.prevhitsound = time;
 					}
 					if(mirrordamage > 0)
 						if(time > attacker.teamkill_complain)
@@ -835,7 +842,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if (vlen(force))
 	if (self.classname != "player" || time >= self.spawnshieldtime || g_midair)
 	{
-		self.velocity = self.velocity + self.damageforcescale * force;
+		self.velocity = self.velocity + damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		self.flags &~= FL_ONGROUND;
 		UpdateCSQCProjectile(self);
 	}

@@ -27,7 +27,7 @@ void cvar_clientsettemp_restore()
 
 void() menu_show_error =
 {
-	drawstring('0 200 0', "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!", '8 8 0', '1 0 0', 1, 0);
+	drawstring('0 200 0', _("ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"), '8 8 0', '1 0 0', 1, 0);
 };
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
@@ -46,22 +46,24 @@ string cl_announcer_prev;
 void WaypointSprite_Load();
 void CSQC_Init(void)
 {
+	prvm_language = cvar_string("prvm_language");
+
 #ifdef USE_FTE
 #pragma target ID
 	__engine_check = checkextension("DP_SV_WRITEPICTURE");
 	if(!__engine_check)
 	{
-		print("^3Your engine build is outdated\n^3This Server uses a newer QC VM. Please update!\n");
+		print(_("^3Your engine build is outdated\n^3This Server uses a newer QC VM. Please update!\n"));
 		localcmd("\ndisconnect\n");
 		return;
 	}
 #pragma target FTE
 #endif
-	
+
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print("^4CSQC Build information: ", WATERMARK(), "\n");
+	print(sprintf(_("^4CSQC Build information: ^1%s\n"), WATERMARK()));
 #endif
 
 	float i;
@@ -89,10 +91,6 @@ void CSQC_Init(void)
 	registercmd("hud_save");
 	//registercmd("menu_action");
 
-	registercmd("+button3");
-	registercmd("-button3");
-	registercmd("+button4");
-	registercmd("-button4");
 	registercmd("+showscores");registercmd("-showscores");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
 
@@ -134,11 +132,16 @@ void CSQC_Init(void)
 	WaypointSprite_Load();
 
 	// precaches
+	precache_sound("misc/hit.wav");
+	precache_sound("misc/typehit.wav");
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
 	DamageInfo_Precache();
+	Vehicles_Precache();
+	turrets_precache();
+
 	if(autocvar_cl_announcer != cl_announcer_prev) {
 		Announcer_Precache();
 		if(cl_announcer_prev)
@@ -146,6 +149,9 @@ void CSQC_Init(void)
 		cl_announcer_prev = strzone(autocvar_cl_announcer);
 	}
 	Tuba_Precache();
+
+	if(autocvar_cl_reticle_item_normal) precache_pic("gfx/reticle_normal");
+	if(autocvar_cl_reticle_item_nex) precache_pic("gfx/reticle_nex");
 
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
 	minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
@@ -166,7 +172,9 @@ void CSQC_Init(void)
 	minimapname = strzone(minimapname);
 
 	WarpZone_Init();
+
 	hud_configure_prev = -1;
+	tab_panel = -1;
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -196,6 +204,10 @@ void CSQC_Shutdown(void)
 	if(camera_active)
 		cvar_set("chase_active",ftos(chase_active_backup));
 
+	// unset the event chasecam's chase_active
+	if(autocvar_chase_active < 0)
+		cvar_set("chase_active", "0");
+
 	if not(isdemo())
 	{
 		if not(calledhooks & HOOK_START)
@@ -222,7 +234,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == NULL)
 				{
-					print("trying to switch to unsupported team ", ftos(Team), "\n");
+					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
 					Team = COLOR_SPECTATOR;
 				}
 				break;
@@ -238,7 +250,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == NULL)
 				{
-					print("trying to switch to unsupported team ", ftos(Team), "\n");
+					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
 					Team = COLOR_SPECTATOR;
 				}
 				break;
@@ -248,7 +260,6 @@ float SetTeam(entity o, float Team)
 	{
 		if(o.has_team)
 		{
-			//print("(DISCONNECT) leave team ", ftos(o.team), "\n");
 			tm = GetTeam(o.team, false);
 			tm.team_size -= 1;
 			o.has_team = 0;
@@ -259,7 +270,6 @@ float SetTeam(entity o, float Team)
 	{
 		if not(o.has_team)
 		{
-			//print("(CONNECT) enter team ", ftos(o.team), "\n");
 			o.team = Team;
 			tm = GetTeam(Team, true);
 			tm.team_size += 1;
@@ -268,11 +278,9 @@ float SetTeam(entity o, float Team)
 		}
 		else if(Team != o.team)
 		{
-			//print("(CHANGE) leave team ", ftos(o.team), "\n");
 			tm = GetTeam(o.team, false);
 			tm.team_size -= 1;
 			o.team = Team;
-			//print("(CHANGE) enter team ", ftos(o.team), "\n");
 			tm = GetTeam(Team, true);
 			tm.team_size += 1;
 			return TRUE;
@@ -292,7 +300,6 @@ void Playerchecker_Think()
 		{
 			if(e.sort_prev)
 			{
-				//print("playerchecker: KILL KILL KILL\n");
 				// player disconnected
 				SetTeam(e, -1);
 				RemovePlayer(e);
@@ -304,7 +311,6 @@ void Playerchecker_Think()
 		{
 			if not(e.sort_prev)
 			{
-				//print("playerchecker: SPAWN SPAWN SPAWN\n");
 				// player connected
 				if not(e)
 					playerslots[i] = e = spawn();
@@ -326,7 +332,6 @@ void Porto_Init();
 void TrueAim_Init();
 void PostInit(void)
 {
-	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
 	localcmd(strcat("\nscoreboard_columns_set ", autocvar_scoreboard_columns, ";\n"));
 
 	entity playerchecker;
@@ -361,35 +366,12 @@ float CSQC_ConsoleCommand(string strMessage)
 		return true;
 	} else if(strCmd == "hud_save") { // save hud config
 		if(argv(1) == "" || argv(2)) {
-			print("Usage:\n");
-			print("hud_save configname   (saves to hud_skinname_configname.cfg)\n");
+			print(_("Usage:\n"));
+			print(_("hud_save configname   (saves to hud_skinname_configname.cfg)\n"));
 		}
 		else
 			HUD_Panel_ExportCfg(argv(1));
 		return true;
-	} else if(strCmd == "+button4") { // zoom
-		// return false, because the message shall be sent to the server anyway (for demos/speccing)
-		if(ignore_plus_zoom)
-		{
-			--ignore_plus_zoom;
-			return false;
-		}
-		button_zoom = 1;
-		return true;
-	} else if(strCmd == "-button4") { // zoom
-		if(ignore_minus_zoom)
-		{
-			--ignore_minus_zoom;
-			return false;
-		}
-		button_zoom = 0;
-		return true;
-	} else if(strCmd == "+button3") { // secondary
-		button_attack2 = 1;
-		return false;
-	} else if(strCmd == "-button3") { // secondary
-		button_attack2 = 0;
-		return false;
 	} else if(strCmd == "+showscores") {
 		scoreboard_showscores = true;
 		return true;
@@ -509,10 +491,10 @@ void GameCommand(string msg)
 
 	if(argv(0) == "help" || argc == 0)
 	{
-		print("Usage: cl_cmd COMMAND..., where possible commands are:\n");
-		print("  settemp cvar value\n");
-		print("  scoreboard_columns_set ...\n");
-		print("  scoreboard_columns_help\n");
+		print(_("Usage: cl_cmd COMMAND..., where possible commands are:\n"));
+		print(_("  settemp cvar value\n"));
+		print(_("  scoreboard_columns_set ...\n"));
+		print(_("  scoreboard_columns_help\n"));
 		GameCommand_Generic("help");
 		return;
 	}
@@ -615,6 +597,7 @@ void GameCommand(string msg)
             vote_prev = 0;
             cvar_set("cl_allow_uid2name", "1");
             vote_change = -9999;
+			uid2name_dialog = 0;
         }
         else
         {
@@ -629,6 +612,7 @@ void GameCommand(string msg)
             vote_prev = 0;
             cvar_set("cl_allow_uid2name", "0");
             vote_change = -9999;
+			uid2name_dialog = 0;
         }
         else
         {
@@ -673,17 +657,38 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
+void Ent_RemoveEntCS()
+{
+	entcs_receiver[self.sv_entnum] = world;
+}
 void Ent_ReadEntCS()
 {
+	float sf;
 	InterpolateOrigin_Undo();
 
 	self.classname = "entcs_receiver";
-	self.sv_entnum = ReadByte() - 1;
-	self.origin_x = ReadShort();
-	self.origin_y = ReadShort();
-	self.origin_z = ReadShort();
-	self.angles_y = ReadByte() * 360.0 / 256;
-	self.origin_z = self.angles_x = self.angles_z = 0;
+	sf = ReadByte();
+
+	if(sf & 1)
+		self.sv_entnum = ReadByte();
+	if(sf & 2)
+	{
+		self.origin_x = ReadShort();
+		self.origin_y = ReadShort();
+		self.origin_z = ReadShort();
+	}
+	if(sf & 4)
+	{
+		self.angles_y = ReadByte() * 360.0 / 256;
+		self.angles_x = self.angles_z = 0;
+	}
+	if(sf & 8)
+		self.healthvalue = ReadByte() * 10;
+	if(sf & 16)
+		self.armorvalue = ReadByte() * 10;
+
+	entcs_receiver[self.sv_entnum] = self;
+	self.entremove = Ent_RemoveEntCS;
 
 	InterpolateOrigin_Note();
 }
@@ -717,7 +722,8 @@ void Ent_ReadPlayerScore()
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 	if(!isNew && n != self.sv_entnum)
 	{
-		print("A CSQC entity changed its owner!\n");
+		//print(_("A CSQC entity changed its owner!\n"));
+		print(sprintf(_("A CSQC entity changed its owner! (edict: %d, classname: %s)\n"), num_for_edict(self), self.classname));
 		isNew = true;
 		Ent_Remove();
 		self.enttype = ENT_CLIENT_SCORES;
@@ -789,10 +795,6 @@ void Ent_ReadTeamScore()
 	HUD_UpdateTeamPos(o);
 }
 
-void Net_Reset()
-{
-}
-
 void Ent_ClientData()
 {
 	float f;
@@ -825,11 +827,18 @@ void Ent_ClientData()
 
 	if(newspectatee_status != spectatee_status)
 	{
-		float i;
-
 		// clear race stuff
 		race_laptime = 0;
 		race_checkpointtime = 0;
+	}
+	if (autocvar_hud_panel_healtharmor_progressbar_gfx)
+	{
+		if ( (spectatee_status == -1 && newspectatee_status > 0) //before observing, now spectating
+		  || (spectatee_status > 0 && newspectatee_status > 0 && spectatee_status != newspectatee_status) //changed spectated player
+		)
+			prev_p_health = -1;
+		else if(spectatee_status && !newspectatee_status) //before observing/spectating, now playing
+			prev_health = -1;
 	}
 	spectatee_status = newspectatee_status;
 }
@@ -839,6 +848,13 @@ void Ent_Nagger()
 	float nags, i, j, b, f;
 
 	nags = ReadByte();
+
+	if(!(nags & 4))
+	{
+		if(vote_called_vote)
+			strunzone(vote_called_vote);
+		vote_called_vote = string_null;
+	}
 
 	if(nags & 128)
 	{
@@ -887,7 +903,7 @@ void Ent_ReadAccuracy(void)
 			weapon_accuracy[w] = -1;
 		return;
 	}
-	
+
 	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w, f *= 2)
 	{
 		if(sf & f)
@@ -931,7 +947,8 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 	if(self.enttype)
 		if(t != self.enttype)
 		{
-			print("A CSQC entity changed its type!\n");
+			//print(_("A CSQC entity changed its type!\n"));
+			print(sprintf(_("A CSQC entity changed its type! (edict: %d, classname: %s)\n"), num_for_edict(self), self.classname));
 			Ent_Remove();
 			bIsNewEntity = 1;
 		}
@@ -962,13 +979,17 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_TUBANOTE: Ent_TubaNote(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE: WarpZone_Read(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE_CAMERA: WarpZone_Camera_Read(bIsNewEntity); break;
+		case ENT_CLIENT_WARPZONE_TELEPORTED: WarpZone_Teleported_Read(bIsNewEntity); break;
 		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
 		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
+		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
+		case ENT_CLIENT_TURRET: ent_turret(); break; 
 		default:
-			error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
+			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
+			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
 			break;
 	}
 
@@ -998,15 +1019,6 @@ void CSQC_Ent_Remove()
 
 void Gamemode_Init()
 {
-	if(gametype == GAME_ONSLAUGHT) {
-		print(strcat("Using ", minimapname, " as minimap.\n"));
-		precache_pic("gfx/ons-cp-neutral.tga");
-		precache_pic("gfx/ons-cp-red.tga");
-		precache_pic("gfx/ons-cp-blue.tga");
-		precache_pic("gfx/ons-frame.tga");
-		precache_pic("gfx/ons-frame-team.tga");
-	}
-
 	if not(isdemo())
 	{
 		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), "\n");
@@ -1093,11 +1105,13 @@ void Ent_Init()
 	g_balance_electro_secondary_bouncestop = ReadCoord();
 
 	nex_scope = !ReadByte();
-	sniperrifle_scope = !ReadByte();
+	rifle_scope = !ReadByte();
 
 	serverflags = ReadByte();
 
-	cr_maxbullets = ReadByte();
+	minelayer_maxmines = ReadByte();
+
+	hagar_maxrockets = ReadByte();
 
 	g_trueaim_minrange = ReadCoord();
 
@@ -1399,6 +1413,10 @@ float CSQC_Parse_TempEntity()
 			Net_WeaponComplain();
 			bHandled = true;
 			break;
+        case TE_CSQC_VEHICLESETUP:
+            Net_VehicleSetup();
+            bHandled = true;
+            break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;
@@ -1413,7 +1431,7 @@ string getcommandkey(string text, string command)
 	string keys;
 	float n, j, k, l;
 
-	if (!hud_showbinds)
+	if (!autocvar_hud_showbinds)
 		return text;
 
 	keys = db_get(binddb, command);
@@ -1431,7 +1449,7 @@ string getcommandkey(string text, string command)
 					keys = strcat(keys, ", ", keynumtostring(k));
 
 				++l;
-				if (hud_showbinds_limit > 0 && hud_showbinds_limit >= l) break;
+				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit >= l) break;
 			}
 
 		}
@@ -1439,13 +1457,13 @@ string getcommandkey(string text, string command)
 	}
 
 	if ("" == keys) {
-		if (hud_showbinds > 1)
-			return strcat(text, " (not bound)");
+		if (autocvar_hud_showbinds > 1)
+			return sprintf(_("%s (not bound)"), text);
 		else
 			return text;
 	}
-	else if (hud_showbinds > 1)
-		return strcat(text, " (", keys, ")");
+	else if (autocvar_hud_showbinds > 1)
+		return sprintf(_("%s (%s)"), text, keys);
 	else
 		return keys;
 }

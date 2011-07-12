@@ -96,7 +96,7 @@ void Item_Show (entity e, float mode)
 	}
 	else if((e.flags & FL_WEAPON) && (g_weapon_stay == 3))
 	{
-		// make the item translucent green and not touchable
+		// make the item translucent and not touchable
 		e.model = e.mdl;
 		e.solid = SOLID_TRIGGER; // can STILL be picked up!
 		e.colormod = '0 0 0';
@@ -108,7 +108,7 @@ void Item_Show (entity e, float mode)
 	}
 	else if(g_ghost_items)
 	{
-		// make the item translucent green and not touchable
+		// make the item translucent and not touchable
 		e.model = e.mdl;
 		e.solid = SOLID_NOT;
 		e.colormod = stov(autocvar_g_ghost_items_color);
@@ -123,7 +123,7 @@ void Item_Show (entity e, float mode)
 		// hide the item completely
 		e.model = string_null;
 		e.solid = SOLID_NOT;
-		e.colormod = stov(autocvar_g_ghost_items_color);
+		e.colormod = '0 0 0';
 		e.glowmod = e.colormod;
 		e.alpha = 0;
 		e.customizeentityforclient = func_null;
@@ -146,11 +146,11 @@ void Item_Respawn (void)
 {
 	Item_Show(self, 1);
 	if(!g_minstagib && self.items == IT_STRENGTH)
-		sound (self, CHAN_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	else if(!g_minstagib && self.items == IT_INVINCIBLE)
-		sound (self, CHAN_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	else
-		sound (self, CHAN_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
 	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
@@ -198,16 +198,12 @@ void Item_RespawnCountdown (void)
 			}
 			if(name)
 			{
-				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
+				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
 				if(self.waypointsprite_attached)
-				{
-					WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, rgb);
-					//WaypointSprite_UpdateMaxHealth(self.waypointsprite_attached, ITEM_RESPAWN_TICKS + 1);
 					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
-				}
 			}
 		}
-		sound (self, CHAN_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 		if(self.waypointsprite_attached)
 		{
 			WaypointSprite_Ping(self.waypointsprite_attached);
@@ -395,7 +391,7 @@ float Item_GiveTo(entity item, entity player)
 		}
 
 		if (item.flags & FL_WEAPON)
-		if ((it = item.weapons - (item.weapons & player.weapons)) || g_pickup_weapons_anyway)
+		if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway && !(g_weapon_stay == 3 && !e.spawnshieldtime)))
 		{
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -451,7 +447,7 @@ float Item_GiveTo(entity item, entity player)
 	if (!pickedup)
 		return 0;
 
-	sound (player, CHAN_AUTO, item.item_pickupsound, VOL_BASE, ATTN_NORM);
+	sound (player, CH_TRIGGER, item.item_pickupsound, VOL_BASE, ATTN_NORM);
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
 			W_SwitchWeapon_Force(player, w_getbestweapon(player));
@@ -733,36 +729,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			// note droptofloor returns FALSE if stuck/or would fall too far
 			droptofloor();
 			waypoint_spawnforitem(self);
-		}
-
-		if(teams_matter)
-		{
-			if(self.notteam)
-			{
-				print("removed non-teamplay ", self.classname, "\n");
-				startitem_failed = TRUE;
-				remove (self);
-				return;
-			}
-		}
-		else
-		{
-			if(self.notfree)
-			{
-				print("removed non-FFA ", self.classname, "\n");
-				startitem_failed = TRUE;
-				remove (self);
-				return;
-			}
-		}
-
-		if(self.notq3a)
-		{
-			// We aren't TA or something like that, so we keep the Q3A entities
-			print("removed non-Q3A ", self.classname, "\n");
-			startitem_failed = TRUE;
-			remove (self);
-			return;
 		}
 
 		/*
@@ -1566,12 +1532,12 @@ void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string sn
 	if(v1 <= v0 - t)
 	{
 		if(snd_decr != "")
-			sound (e, CHAN_AUTO, snd_decr, VOL_BASE, ATTN_NORM);
+			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
 		if(snd_incr != "")
-			sound (e, CHAN_AUTO, snd_incr, VOL_BASE, ATTN_NORM);
+			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTN_NORM);
 	}
 }
 

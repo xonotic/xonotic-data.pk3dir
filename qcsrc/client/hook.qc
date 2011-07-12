@@ -18,13 +18,6 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 	// direction is perpendicular to the view normal, and perpendicular to the axis
 	thickdir = normalize(cross(axis, vieworg - from));
 
-/*
-	print("from ", vtos(from), "\n");
-	print("to ", vtos(to), "\n");
-	print("org ", vtos(view_origin), "\n");
-	print("dir ", vtos(thickdir), "\n");
-*/
-
 	A = from - thickdir * (thickness / 2);
 	B = from + thickdir * (thickness / 2);
 	C = to + thickdir * (thickness / 2);
@@ -66,7 +59,7 @@ void Draw_GrapplingHook()
 	if(self.teleport_time)
 	if(time > self.teleport_time)
 	{
-		sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM); // safeguard
+		sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM); // safeguard
 		self.teleport_time = 0;
 	}
 
@@ -222,7 +215,7 @@ void Draw_GrapplingHook()
 
 void Remove_GrapplingHook()
 {
-	sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 }
 
 void Ent_ReadHook(float bIsNew, float type)
@@ -282,10 +275,10 @@ void Ent_ReadHook(float bIsNew, float type)
 				self.drawmask = MASK_NORMAL;
 				break;
 			case ENT_CLIENT_LGBEAM:
-				sound (self, CHAN_PROJECTILE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
 				break;
 			case ENT_CLIENT_GAUNTLET:
-				sound (self, CHAN_PROJECTILE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_SHOTS_SINGLE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTN_NORM);
 				break;
 		}
 	}

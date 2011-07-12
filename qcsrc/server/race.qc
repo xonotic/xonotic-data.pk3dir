@@ -805,9 +805,9 @@ void spawnfunc_trigger_race_checkpoint()
 	if(!self.race_penalty)
 	{
 		if(self.race_checkpoint)
-			WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite);
+			WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite, RADARICON_NONE, '1 0.5 0');
 		else
-			WaypointSprite_SpawnFixed("race-finish", o, self, sprite);
+			WaypointSprite_SpawnFixed("race-finish", o, self, sprite, RADARICON_NONE, '1 0.5 0');
 	}
 
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
@@ -851,9 +851,9 @@ void spawnfunc_target_checkpoint() // defrag entity
 	race_timed_checkpoint = 1;
 
 	if(self.race_checkpoint == 0)
-		WaypointSprite_SpawnFixed("race-start", o, self, sprite);
+		WaypointSprite_SpawnFixed("race-start", o, self, sprite, RADARICON_NONE, '1 0.5 0');
 	else
-		WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite);
+		WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite, RADARICON_NONE, '1 0.5 0');
 
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 

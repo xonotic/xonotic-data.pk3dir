@@ -88,6 +88,9 @@ void SUB_UseTargets()
 	stemp = self;
 	otemp = other;
 
+	if(stemp.target_random)
+		RandomSelection_Init();
+
 	for(i = 0; i < 4; ++i)
 	{
 		switch(i)
@@ -103,13 +106,27 @@ void SUB_UseTargets()
 			for(t = world; (t = find(t, targetname, s)); )
 			if(t.use)
 			{
-				//print(stemp.classname, " ", stemp.targetname, " -> ", t.classname, " ", t.targetname, "\n");
-				self = t;
-				other = stemp;
-				activator = act;
-				self.use();
+				if(stemp.target_random)
+				{
+					RandomSelection_Add(t, 0, string_null, 1, 0);
+				}
+				else
+				{
+					self = t;
+					other = stemp;
+					activator = act;
+					self.use();
+				}
 			}
 		}
+	}
+
+	if(stemp.target_random && RandomSelection_chosen_ent)
+	{
+		self = RandomSelection_chosen_ent;
+		other = stemp;
+		activator = act;
+		self.use();
 	}
 
 	activator = act;
@@ -154,7 +171,7 @@ void multi_trigger()
 	}
 
 	if (self.noise)
-		sound (self.enemy, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 
 // don't trigger again until reset
 	self.takedamage = DAMAGE_NO;
@@ -411,6 +428,14 @@ void spawnfunc_trigger_counter()
 	self.reset = counter_reset;
 };
 
+void trigger_hurt_use()
+{
+	if(activator.classname == "player")
+		self.enemy = activator;
+	else
+		self.enemy = world; // let's just destroy it, if taking over is too much work
+}
+
 .float triggerhurttime;
 void trigger_hurt_touch()
 {
@@ -429,7 +454,16 @@ void trigger_hurt_touch()
 		{
 			EXACTTRIGGER_TOUCH;
 			other.triggerhurttime = time + 1;
-			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+
+			entity own;
+			own = self.enemy;
+			if(own.classname != "player")
+			{
+				own = self;
+				self.enemy = world; // I still hate you all
+			}
+
+			Damage (other, self, own, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 		}
 	}
 	else
@@ -465,6 +499,8 @@ void spawnfunc_trigger_hurt()
 	EXACTTRIGGER_INIT;
 	self.active = ACTIVE_ACTIVE;
 	self.touch = trigger_hurt_touch;
+	self.use = trigger_hurt_use;
+	self.enemy = world; // I hate you all
 	if (!self.dmg)
 		self.dmg = 1000;
 	if (!self.message)
@@ -518,7 +554,7 @@ void trigger_heal_touch()
 			{
 				other.health = min(other.health + self.health, self.max_health);
 				other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-				sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+				sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 			}
 		}
 	}
@@ -629,7 +665,7 @@ void trigger_gravity_touch()
 	{
 		other.gravity = g;
 		if(self.noise != "")
-			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 		UpdateCSQCProjectile(self.owner);
 	}
 };
@@ -685,7 +721,7 @@ void target_speaker_use_activator()
 	else
 		snd = self.noise;
 	msg_entity = activator;
-	soundto(MSG_ONE, self, CHAN_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
+	soundto(MSG_ONE, self, CH_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
 }
 void target_speaker_use_on()
 {
@@ -711,13 +747,13 @@ void target_speaker_use_on()
 	}
 	else
 		snd = self.noise;
-	sound(self, CHAN_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
+	sound(self, CH_TRIGGER_SINGLE, snd, VOL_BASE * self.volume, self.atten);
 	if(self.spawnflags & 3)
 		self.use = target_speaker_use_off;
 }
 void target_speaker_use_off()
 {
-	sound(self, CHAN_TRIGGER, "misc/null.wav", VOL_BASE * self.volume, self.atten);
+	sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASE * self.volume, self.atten);
 	self.use = target_speaker_use_on;
 }
 void target_speaker_reset()
@@ -1341,24 +1377,7 @@ void trigger_impulse_touch1()
 	if (self.active != ACTIVE_ACTIVE) 
 		return;
 
-	// FIXME: Better checking for what to push and not.
-	if not(other.iscreature)
-	if (other.classname != "corpse")
-	if (other.classname != "body")
-	if (other.classname != "gib")
-	if (other.classname != "missile")
-	if (other.classname != "rocket")
-	if (other.classname != "casing")
-	if (other.classname != "grenade")
-	if (other.classname != "plasma")
-	if (other.classname != "plasma_prim")
-	if (other.classname != "plasma_chain")
-	if (other.classname != "droppedweapon")
-	if (other.classname != "nexball_basketball")
-	if (other.classname != "nexball_football")
-		return;
-
-	if (other.deadflag && other.iscreature)
+	if (!isPushable(other))
 		return;
 
 	EXACTTRIGGER_TOUCH;
@@ -1396,24 +1415,7 @@ void trigger_impulse_touch2()
 	if (self.active != ACTIVE_ACTIVE) 
 		return;
 
-	// FIXME: Better checking for what to push and not.
-	if not(other.iscreature)
-	if (other.classname != "corpse")
-	if (other.classname != "body")
-	if (other.classname != "gib")
-	if (other.classname != "missile")
-	if (other.classname != "rocket")
-	if (other.classname != "casing")
-	if (other.classname != "grenade")
-	if (other.classname != "plasma")
-	if (other.classname != "plasma_prim")
-	if (other.classname != "plasma_chain")
-	if (other.classname != "droppedweapon")
-	if (other.classname != "nexball_basketball")
-	if (other.classname != "nexball_football")
-		return;
-
-	if (other.deadflag && other.iscreature)
+	if (!isPushable(other))
 		return;
 
 	EXACTTRIGGER_TOUCH;
@@ -1437,24 +1439,7 @@ void trigger_impulse_touch3()
 	if (self.active != ACTIVE_ACTIVE) 
 		return;
 
-	// FIXME: Better checking for what to push and not.
-	if not(other.iscreature)
-	if (other.classname != "corpse")
-	if (other.classname != "body")
-	if (other.classname != "gib")
-	if (other.classname != "missile")
-	if (other.classname != "rocket")
-	if (other.classname != "casing")
-	if (other.classname != "grenade")
-	if (other.classname != "plasma")
-	if (other.classname != "plasma_prim")
-	if (other.classname != "plasma_chain")
-	if (other.classname != "droppedweapon")
-	if (other.classname != "nexball_basketball")
-	if (other.classname != "nexball_football")
-		return;
-
-	if (other.deadflag && other.iscreature)
+	if (!isPushable(other))
 		return;
 
 	EXACTTRIGGER_TOUCH;
@@ -1703,6 +1688,7 @@ void follow_init()
 			attach_sameorigin(dst, src, self.message);
 		}
 
+		dst.solid = SOLID_NOT; // solid doesn't work with attachment
 		remove(self);
 	}
 	else

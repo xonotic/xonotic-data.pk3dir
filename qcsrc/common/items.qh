@@ -2,13 +2,14 @@ float BOT_PICKUP_RATING_LOW	= 2500;
 float BOT_PICKUP_RATING_MID	= 5000;
 float BOT_PICKUP_RATING_HIGH	= 10000;
 
-float WEP_TYPE_OTHER	= 0x00;	// e.g: Hook, Port-o-launch, etc
-float WEP_TYPE_SPLASH	= 0x01;
-float WEP_TYPE_HITSCAN	= 0x02;
-float WEP_TYPEMASK      = 0x0F;
-float WEP_FLAG_CANCLIMB = 0x10;
-float WEP_FLAG_NORMAL   = 0x20;
-float WEP_FLAG_HIDDEN   = 0x40;
+float WEP_TYPE_OTHER	    = 0x00;	// e.g: Hook, Port-o-launch, etc
+float WEP_TYPE_SPLASH	    = 0x01;
+float WEP_TYPE_HITSCAN	    = 0x02;
+float WEP_TYPEMASK          = 0x0F;
+float WEP_FLAG_CANCLIMB     = 0x10;
+float WEP_FLAG_NORMAL       = 0x20;
+float WEP_FLAG_HIDDEN       = 0x40;
+float WEP_FLAG_RELOADABLE   = 0x80;
 
 float	IT_UNLIMITED_WEAPON_AMMO  = 1;
 // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
@@ -60,6 +61,14 @@ string W_FixWeaponOrder(string order, float complete);
 string W_NameWeaponOrder(string order);
 string W_NumberWeaponOrder(string order);
 
+// ammo types
+.float ammo_shells;
+.float ammo_nails;
+.float ammo_rockets;
+.float ammo_cells;
+.float ammo_fuel;
+.float ammo_batteries; // dummy
+
 // entity properties of weaponinfo:
 .float weapon; // WEP_...
 .float weapons; // WEPBIT_...
@@ -73,8 +82,7 @@ string W_NumberWeaponOrder(string order);
 .float impulse; // weapon impulse
 .float bot_pickupbasevalue; // bot weapon priority
 .string model2; // wpn- sprite name
-
-
+..float ammo_field; // main ammo field
 
 // dynamic weapon adding
 float w_null(float dummy);

@@ -1,6 +1,3 @@
-float teamplay;
-float myteam;
-
 float TeamByColor(float color)
 {
 	switch(color)
@@ -10,6 +7,17 @@ float TeamByColor(float color)
 	case COLOR_TEAM3: return 2;
 	case COLOR_TEAM4: return 3;
 	default: return 0;
+	}
+}
+float ColorByTeam(float i)
+{
+	switch(i)
+	{
+	case 0: return COLOR_TEAM1;
+	case 1: return COLOR_TEAM2;
+	case 2: return COLOR_TEAM3;
+	case 3: return COLOR_TEAM4;
+	default: return COLOR_TEAM1;
 	}
 }
 
@@ -52,10 +60,10 @@ string GetTeamName(float color)
 {
 	switch(color)
 	{
-	default: return "Spectators";
-	case COLOR_TEAM1: return "Red Team";
-	case COLOR_TEAM2: return "Blue Team";
-	case COLOR_TEAM3: return "Yellow Team";
-	case COLOR_TEAM4: return "Pink Team";
+	default: return _("Spectators");
+	case COLOR_TEAM1: return _("Red Team");
+	case COLOR_TEAM2: return _("Blue Team");
+	case COLOR_TEAM3: return _("Yellow Team");
+	case COLOR_TEAM4: return _("Pink Team");
 	}
 }

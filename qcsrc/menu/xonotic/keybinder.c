@@ -47,7 +47,7 @@ void Xonotic_KeyBinds_Read()
 	string s;
 
 	Xonotic_KeyBinds_Count = 0;
-	fh = fopen("keybinds.txt", FILE_READ);
+	fh = fopen(language_filename("keybinds.txt"), FILE_READ);
 	if(fh < 0)
 		return;
 	while((s = fgets(fh)))

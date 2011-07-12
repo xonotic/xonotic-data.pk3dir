@@ -9,7 +9,7 @@ float prandom()
 	prandom_seed = c;
 
 #ifdef USE_PRANDOM_DEBUG
-	print("RANDOM -> ", ftos(c), "\n");
+	dprint("RANDOM -> ", ftos(c), "\n");
 #endif
 
 	return c / 65536; // in [0..1[
@@ -34,14 +34,14 @@ void psrandom(float seed)
 {
 	prandom_seed = seed;
 #ifdef USE_PRANDOM_DEBUG
-	print("SRANDOM ", ftos(seed), "\n");
+	dprint("SRANDOM ", ftos(seed), "\n");
 #endif
 }
 
 #ifdef USE_PRANDOM_DEBUG
 void prandom_debug()
 {
-	print("Current random seed = ", ftos(prandom_seed), "\n");
+	dprint("Current random seed = ", ftos(prandom_seed), "\n");
 }
 #endif
 #endif

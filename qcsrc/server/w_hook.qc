@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HOOK, w_hook, IT_CELLS|IT_FUEL, 0, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "hookgun", "hook", "Grappling Hook");
+REGISTER_WEAPON(HOOK, w_hook, IT_CELLS|IT_FUEL, 0, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "hookgun", "hook", _("Grappling Hook"))
 #else
 #ifdef SVQC
 .float dmg;
@@ -23,7 +23,7 @@ void W_Hook_ExplodeThink (void)
 	f = self.dmg_last - dmg_remaining_next;
 	self.dmg_last = dmg_remaining_next;
 
-	RadiusDamage (self, self.owner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.owner, self.dmg_force * f, self.projectiledeathtype, world);
+	RadiusDamage (self, self.realowner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.realowner, self.dmg_force * f, self.projectiledeathtype, world);
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 	//RadiusDamage (self, world, self.dmg * f, self.dmg_edge * f, self.dmg_radius, world, self.dmg_force * f, self.projectiledeathtype, world);
 
@@ -62,12 +62,11 @@ void W_Hook_Attack2()
 {
 	local entity gren;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - autocvar_g_balance_hook_secondary_ammo;
-	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CHAN_WEAPON, autocvar_g_balance_hook_secondary_damage);
+	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hook_secondary_ammo, FALSE);
+	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, autocvar_g_balance_hook_secondary_damage);
 
 	gren = spawn ();
-	gren.owner = self;
+	gren.owner = gren.realowner = self;
 	gren.classname = "hookbomb";
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = autocvar_g_balance_hook_secondary_damage;
@@ -126,8 +125,7 @@ float w_hook(float req)
 			if (time > self.hook_refire)
 			if (weapon_prepareattack(0, -1))
 			{
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-					self.ammo_fuel = self.ammo_fuel - autocvar_g_balance_hook_primary_fuel;
+				W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_hook_primary_fuel, FALSE);
 				self.hook_state |= HOOK_FIRING;
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hook_primary_animtime, w_ready);				
 			}
@@ -170,7 +168,7 @@ float w_hook(float req)
 					{
 						if ( self.ammo_fuel >= (time - self.hook_time_fueldecrease) * hooked_fuel )
 						{
-							self.ammo_fuel -= (time - self.hook_time_fueldecrease) * hooked_fuel;
+							W_DecreaseAmmo(ammo_fuel, (time - self.hook_time_fueldecrease) * hooked_fuel, FALSE);
 							self.hook_time_fueldecrease = time;
 							// decrease next frame again
 						}
@@ -228,6 +226,7 @@ float w_hook(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_HOOK);
+		self.current_ammo = ammo_fuel;
 		self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
 	}
 	else if (req == WR_CHECKAMMO1)
@@ -257,16 +256,16 @@ float w_hook(float req)
 		org2 = w_org + w_backoff * 2;
 		pointparticles(particleeffectnum("hookbomb_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CHAN_PROJECTILE, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/hookbomb_impact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "%s did the impossible";
+		w_deathtypestring = _("%s did the impossible");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "%s has run into %s's gravity bomb";
+		w_deathtypestring = _("%s has run into %s's gravity bomb");
 	return TRUE;
 }
 #endif

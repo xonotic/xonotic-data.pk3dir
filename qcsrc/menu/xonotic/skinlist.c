@@ -102,10 +102,10 @@ void XonoticSkinList_getSkins(entity me)
 	{
 		s = search_getfilename(glob, i);
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_NAME, substring(s, 9, strlen(s) - 24)); // the * part
-		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, "<TITLE>");
-		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, "<AUTHOR>");
+		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, _("<TITLE>"));
+		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, _("<AUTHOR>"));
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview"));
-		fh = fopen(s, FILE_READ);
+		fh = fopen(language_filename(s), FILE_READ);
 		if(fh < 0)
 		{
 			print("Warning: can't open skinvalues.txt file\n");
@@ -160,7 +160,7 @@ void XonoticSkinList_drawListBoxItem(entity me, float i, vector absSize, float i
 	draw_Picture(me.columnPreviewOrigin * eX, s, me.columnPreviewSize * eX + eY, '1 1 1', 1);
 	
 	s = me.skinParameter(me, i, SKINPARM_NAME);
-	s = strcat(s, ": ", me.skinParameter(me, i, SKINPARM_TITLE));
+	s = sprintf(_("%s: %s"), s, me.skinParameter(me, i, SKINPARM_TITLE));
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_SKINLIST_TITLE, SKINALPHA_TEXT, 0);
 

@@ -18,7 +18,9 @@ int isinf(float x)
 }
 int isnan(float x)
 {
-	return !(x + x == x + x);
+	float y;
+	y = x;
+	return (x != y);
 }
 int isnormal(float x)
 {

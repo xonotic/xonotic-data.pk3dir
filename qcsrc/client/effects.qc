@@ -57,19 +57,16 @@ void cl_effetcs_lightningarc(vector from, vector to,float seglength,float drifts
             dirnew = normalize(direction * (1 - drift) + randomvec() * drift);
             pos = pos_l +  dirnew * steplength;
             te_lightning1(world,pos_l,pos);
-            //b_make(pos_l, pos,"particles/lightning2",0.25,64);
             if(random() < branchfactor)
                 cl_effetcs_lightningarc(pos, pos + (dirnew * length * 0.25),seglength,drifts,drifte,min(branchfactor + branchfactor_add,1),branchfactor_add);
 
             pos_l = pos;
         }
         te_lightning1(world,pos_l,to);
-        //b_make(pos_l, to,"particles/lightning2",0.25,64);
 
     }
     else
         te_lightning1(world,from,to);
-        //b_make(from, to,"particles/lightning2",0.25,64);
 
 }
 

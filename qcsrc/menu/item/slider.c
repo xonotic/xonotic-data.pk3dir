@@ -10,6 +10,7 @@ CLASS(Slider) EXTENDS(Label)
 	METHOD(Slider, mousePress, float(entity, vector))
 	METHOD(Slider, mouseDrag, float(entity, vector))
 	METHOD(Slider, mouseRelease, float(entity, vector))
+	METHOD(Slider, focusEnter, void(entity))
 	METHOD(Slider, valueToText, string(entity, float))
 	METHOD(Slider, toString, string(entity))
 	METHOD(Slider, setValue, void(entity, float))
@@ -47,7 +48,6 @@ ENDCLASS(Slider)
 void Slider_setValue(entity me, float val)
 {
 	if (me.animated) {
-		anim.stopObjAnim(anim, me);
 		anim.removeObjAnim(anim, me);
 		makeHostedEasing(me, Slider_setSliderValue, easingQuadInOut, 1, me.sliderValue, val);
 	} else {
@@ -61,7 +61,7 @@ void Slider_setSliderValue(entity me, float val)
 }
 string Slider_toString(entity me)
 {
-	return strcat(ftos(me.value), " (", me.valueToText(me, me.value), ")");
+	return sprintf(_("%d (%s)"), me.value, me.valueToText(me, me.value));
 }
 void Slider_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
@@ -156,7 +156,7 @@ float Slider_mouseDrag(entity me, vector pos)
 	if(me.disabled)
 		return 0;
 
-	anim.finishObjAnim(anim, me);
+	anim.removeObjAnim(anim, me);
 	animed = me.animated;
 	me.animated = false;
 
@@ -235,8 +235,6 @@ float Slider_mousePress(entity me, vector pos)
 			//me.mouseDrag(me, pos);
 		}
 	}
-	if(cvar("menu_sounds"))
-		localsound("sound/misc/menu2.wav");
 	return 1;
 }
 float Slider_mouseRelease(entity me, vector pos)
@@ -244,11 +242,19 @@ float Slider_mouseRelease(entity me, vector pos)
 	me.pressed = 0;
 	if(me.disabled)
 		return 0;
+	if(cvar("menu_sounds"))
+		localsound("sound/misc/menu2.wav");
 	return 1;
 }
 void Slider_showNotify(entity me)
 {
 	me.focusable = !me.disabled;
+}
+void Slider_focusEnter(entity me)
+{
+	if(cvar("menu_sounds") > 1)
+		localsound("sound/misc/menu1.wav");
+	SUPER(Slider).focusEnter(me);
 }
 void Slider_draw(entity me)
 {

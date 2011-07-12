@@ -236,6 +236,16 @@ string fstrunzone(string s)
 	return sc;
 }
 
+float fexists(string f)
+{
+    float fh;
+    fh = fopen(f, FILE_READ);
+    if (fh < 0)
+        return FALSE;
+    fclose(fh);
+    return TRUE;
+}
+
 // Databases (hash tables)
 #define DB_BUCKETS 8192
 void db_save(float db, string pFilename)
@@ -360,7 +370,10 @@ float buf_load(string pFilename)
 		return -1;
 	fh = fopen(pFilename, FILE_READ);
 	if(fh < 0)
-		return buf;
+	{
+		buf_del(buf);
+		return -1;
+	}
 	i = 0;
 	while((l = fgets(fh)))
 	{
@@ -1364,18 +1377,22 @@ string textShortenToLength(string theText, float maxWidth, textLengthUpToLength_
 		return strcat(substring(theText, 0, textLengthUpToLength(theText, maxWidth - tw("..."), tw)), "...");
 }
 
-float isGametypeInFilter(float gt, float tp, string pattern)
+float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 {
-	string subpattern, subpattern2, subpattern3;
+	string subpattern, subpattern2, subpattern3, subpattern4;
 	subpattern = strcat(",", GametypeNameFromType(gt), ",");
 	if(tp)
 		subpattern2 = ",teams,";
 	else
 		subpattern2 = ",noteams,";
-	if(gt == GAME_RACE || gt == GAME_CTS)
-		subpattern3 = ",race,";
+	if(ts)
+		subpattern3 = ",teamspawns,";
 	else
-		subpattern3 = string_null;
+		subpattern3 = ",noteamspawns,";
+	if(gt == GAME_RACE || gt == GAME_CTS)
+		subpattern4 = ",race,";
+	else
+		subpattern4 = string_null;
 
 	if(substring(pattern, 0, 1) == "-")
 	{
@@ -1384,7 +1401,9 @@ float isGametypeInFilter(float gt, float tp, string pattern)
 			return 0;
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) >= 0)
 			return 0;
-		if(subpattern3 && strstrofs(strcat(",", pattern, ","), subpattern3, 0) >= 0)
+		if(strstrofs(strcat(",", pattern, ","), subpattern3, 0) >= 0)
+			return 0;
+		if(subpattern4 && strstrofs(strcat(",", pattern, ","), subpattern4, 0) >= 0)
 			return 0;
 	}
 	else
@@ -1393,7 +1412,8 @@ float isGametypeInFilter(float gt, float tp, string pattern)
 			pattern = substring(pattern, 1, strlen(pattern) - 1);
 		if(strstrofs(strcat(",", pattern, ","), subpattern, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) < 0)
-		if((!subpattern3) || strstrofs(strcat(",", pattern, ","), subpattern3, 0) < 0)
+		if(strstrofs(strcat(",", pattern, ","), subpattern3, 0) < 0)
+		if((!subpattern4) || strstrofs(strcat(",", pattern, ","), subpattern4, 0) < 0)
 			return 0;
 	}
 	return 1;
@@ -1513,12 +1533,6 @@ vector solve_quadratic(float a, float b, float c) // ax^2 + bx + c = 0
 	}
 	return v;
 }
-
-
-float _unacceptable_compiler_bug_1_a(float b, float c) { return b == c; }
-float _unacceptable_compiler_bug_1_b() { return 1; }
-float _unacceptable_compiler_bug_1_c(float d) { return 2 * d; }
-float _unacceptable_compiler_bug_1_d() { return 1; }
 
 void check_unacceptable_compiler_bugs()
 {
@@ -1978,4 +1992,62 @@ float u8_strsize(string s)
 			++l;
 	}
 	return l;
+}
+
+// translation helpers
+string language_filename(string s)
+{
+	string fn;
+	float fh;
+	fn = prvm_language;
+	if(fn == "" || fn == "dump")
+		return s;
+	fn = strcat(s, ".", fn);
+	if((fh = fopen(fn, FILE_READ)) >= 0)
+	{
+		fclose(fh);
+		return fn;
+	}
+	return s;
+}
+string CTX(string s)
+{
+	float p = strstrofs(s, "^", 0);
+	if(p < 0)
+		return s;
+	return substring(s, p+1, -1);
+}
+
+// x-encoding (encoding as zero length invisible string)
+const string XENCODE_2  = "xX";
+const string XENCODE_22 = "0123456789abcdefABCDEF";
+string xencode(float f)
+{
+	float a, b, c, d;
+	d = mod(f, 22); f = floor(f / 22);
+	c = mod(f, 22); f = floor(f / 22);
+	b = mod(f, 22); f = floor(f / 22);
+	a = mod(f,  2); // f = floor(f /  2);
+	return strcat(
+		"^",
+		substring(XENCODE_2,  a, 1),
+		substring(XENCODE_22, b, 1),
+		substring(XENCODE_22, c, 1),
+		substring(XENCODE_22, d, 1)
+	);
+}
+float xdecode(string s)
+{
+	float a, b, c, d;
+	if(substring(s, 0, 1) != "^")
+		return -1;
+	if(strlen(s) < 5)
+		return -1;
+	a = strstrofs(XENCODE_2,  substring(s, 1, 1), 0);
+	b = strstrofs(XENCODE_22, substring(s, 2, 1), 0);
+	c = strstrofs(XENCODE_22, substring(s, 3, 1), 0);
+	d = strstrofs(XENCODE_22, substring(s, 4, 1), 0);
+	if(a < 0 || b < 0 || c < 0 || d < 0)
+		return -1;
+	return ((a * 22 + b) * 22 + c) * 22 + d;
 }

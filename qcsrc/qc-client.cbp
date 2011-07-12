@@ -6,28 +6,42 @@
 		<Option makefile="client" />
 		<Option makefile_is_custom="1" />
 		<Option pch_mode="2" />
-		<Option compiler="qaukec" />
+		<Option compiler="fteqcc" />
+		<MakeCommands>
+			<Build command="$make -src $makefile" />
+			<CompileFile command="$make -src $makefile" />
+			<Clean command="$make -src $makefile" />
+<<<<<<< HEAD
+			<DistClean command="$make -f $makefile distclean$target" />
+=======
+			<DistClean command="" />
+>>>>>>> origin/master
+			<AskRebuildNeeded command="" />
+			<SilentBuild command="$make -src $makefile" />
+		</MakeCommands>
 		<Build>
 			<Target title="Debug">
 				<Option output="bin\Debug\qc-server" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
 				<Option type="1" />
-				<Option compiler="qaukec" />
+				<Option compiler="fteqcc" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
 				<MakeCommands>
 					<Build command="$make -src $makefile" />
-					<CompileFile command="" />
-					<Clean command="" />
+					<CompileFile command="$make -src $makefile" />
+					<Clean command="$make -src $makefile" />
 					<DistClean command="" />
+					<AskRebuildNeeded command="" />
+					<SilentBuild command="$make -src $makefile" />
 				</MakeCommands>
 			</Target>
 			<Target title="Release">
 				<Option output="bin\Release\qc-server" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Release\" />
 				<Option type="1" />
-				<Option compiler="qaukec" />
+				<Option compiler="fteqcc" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -35,15 +49,26 @@
 					<Add option="-s" />
 				</Linker>
 				<MakeCommands>
+<<<<<<< HEAD
 					<Build command="$make -src $makefile" />
-					<CompileFile command="" />
-					<Clean command="" />
+					<CompileFile command="$make -src $makefile" />
+					<Clean command="$make -src $makefile" />
 					<DistClean command="" />
+					<AskRebuildNeeded command="" />
+					<SilentBuild command="$make -src $makefile" />
+=======
+					<Build command="$make -DRELEASE -src $makefile" />
+					<CompileFile command="$make -DRELEASE -src $makefile" />
+					<Clean command="$make -DRELEASE -src $makefile" />
+					<DistClean command="" />
+					<AskRebuildNeeded command="" />
+					<SilentBuild command="$make -DRELEASE -src $makefile" />
+>>>>>>> origin/master
 				</MakeCommands>
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-Wall" />
+			<Add option="-g" />
 		</Compiler>
 		<Unit filename="client\Defs.qc" />
 		<Unit filename="client\Main.qc" />
@@ -59,6 +84,9 @@
 		<Unit filename="client\effects.qc" />
 		<Unit filename="client\gibs.qc" />
 		<Unit filename="client\hook.qc" />
+		<Unit filename="client\hud.qc" />
+		<Unit filename="client\hud.qh" />
+		<Unit filename="client\hud_config.qc" />
 		<Unit filename="client\interpolate.qc" />
 		<Unit filename="client\interpolate.qh" />
 		<Unit filename="client\laser.qc" />
@@ -68,19 +96,36 @@
 		<Unit filename="client\modeleffects.qc" />
 		<Unit filename="client\movetypes.qc" />
 		<Unit filename="client\movetypes.qh" />
+		<Unit filename="client\noise.qc" />
+		<Unit filename="client\noise.qh" />
 		<Unit filename="client\particles.qc" />
 		<Unit filename="client\prandom.qc" />
 		<Unit filename="client\prandom.qh" />
 		<Unit filename="client\pre.qh" />
 		<Unit filename="client\progs.src" />
+		<Unit filename="client\progs.src.BASE.src" />
+		<Unit filename="client\progs.src.LOCAL.src" />
+		<Unit filename="client\progs.src.REMOTE.src" />
 		<Unit filename="client\projectile.qc" />
 		<Unit filename="client\rubble.qc" />
-		<Unit filename="client\sbar.qc" />
+<<<<<<< HEAD
+		<Unit filename="client\scoreboard.qc" />
+		<Unit filename="client\scoreboard.qh" />
+		<Unit filename="client\shownames.qc" />
+		<Unit filename="client\shownames.qh" />
+=======
+>>>>>>> origin/master
 		<Unit filename="client\sortlist.qc" />
+		<Unit filename="client\target_music.qc" />
 		<Unit filename="client\teamplay.qc" />
+		<Unit filename="client\teamplay.qh" />
 		<Unit filename="client\teamradar.qc" />
 		<Unit filename="client\teamradar.qh" />
+		<Unit filename="client\tturrets.qc" />
+		<Unit filename="client\tturrets.qh" />
 		<Unit filename="client\tuba.qc" />
+		<Unit filename="client\vehicles\vehicles.qc" />
+		<Unit filename="client\vehicles\vehicles.qh" />
 		<Unit filename="client\wall.qc" />
 		<Unit filename="client\waypointsprites.qc" />
 		<Unit filename="client\waypointsprites.qh" />

@@ -221,34 +221,6 @@ void turrets_precache_debug_models()
 
 void turrets_precash()
 {
-    precache_model ("models/turrets/base-gib1.md3");
-    precache_model ("models/turrets/base-gib2.md3");
-    precache_model ("models/turrets/base-gib3.md3");
-    precache_model ("models/turrets/base-gib4.md3");
-
-    precache_model ("models/turrets/head-gib1.md3");
-    precache_model ("models/turrets/head-gib2.md3");
-    precache_model ("models/turrets/head-gib3.md3");
-    precache_model ("models/turrets/head-gib4.md3");
-    precache_model ("models/turrets/terrainbase.md3");
-
-    //precache_model ("models/turrets/base.md3");
-    //precache_model ("models/turrets/flac.md3");
-    //precache_model ("models/turrets/pd_proj.md3");
-    //precache_model ("models/turrets/reactor.md3");
-    //precache_model ("models/turrets/mlrs_rocket.md3");
-    //precache_model ("models/turrets/hellion.md3");
-    //precache_model ("models/turrets/hunter2.md3");
-    //precache_model ("models/turrets/hk.md3");
-    //precache_model ("models/turrets/machinegun.md3");
-    //precache_model ("models/turrets/rocket.md3");
-    //precache_model ("models/turrets/mlrs.md3");
-    //precache_model ("models/turrets/phaser.md3");
-    //precache_model ("models/turrets/phaser_beam.md3");
-    //precache_model ("models/turrets/plasmad.md3");
-    //precache_model ("models/turrets/plasma.md3");
-    //precache_model ("models/turrets/tesla_head.md3");
-    //precache_model ("models/turrets/tesla_base.md3");
     #ifdef TURRET_DEBUG
 	turrets_precache_debug_models();
 	#endif

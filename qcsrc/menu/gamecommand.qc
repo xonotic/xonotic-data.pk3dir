@@ -44,7 +44,7 @@ void Curl_URI_Get_Callback(float id, float status, string data)
 	do_cvar = curl_uri_get_cvar[i];
 	if(status != 0)
 	{
-		print("error: status is ", ftos(status), "\n");
+		print(sprintf(_("error: status is %d\n"), status));
 		return;
 	}
 	if(do_exec)
@@ -62,9 +62,9 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "help" || argc == 0)
 	{
-		print("Usage: menu_cmd theCommand..., where possible theCommands are:\n");
-		print("  sync - reloads all cvars on the current menu page\n");
-		print("  directmenu ITEM - select a menu item as main item\n");
+		print(_("Usage: menu_cmd command..., where possible commands are:\n"));
+		print(_("  sync - reloads all cvars on the current menu page\n"));
+		print(_("  directmenu ITEM - select a menu item as main item\n"));
 		GameCommand_Generic("help");
 		return;
 	}
@@ -97,6 +97,12 @@ void GameCommand(string theCommand)
 	if(argv(0) == "skinselect")
 	{
 		m_goto_skin_selector();
+		return;
+	}
+
+	if(argv(0) == "languageselect")
+	{
+		m_goto_language_selector();
 		return;
 	}
 
@@ -184,7 +190,7 @@ void GameCommand(string theCommand)
 			curl_uri_get_pos = mod(curl_uri_get_pos + 1, URI_GET_CURL_END - URI_GET_CURL + 1);
 		}
 		else
-			print("error creating curl handle\n");
+			print(_("error creating curl handle\n"));
 
 		buf_del(buf);
 
@@ -230,5 +236,5 @@ void GameCommand(string theCommand)
 	}
 #endif
 
-	print("Invalid theCommand. For a list of supported theCommands, try menu_cmd help.\n");
+	print(_("Invalid command. For a list of supported commands, try menu_cmd help.\n"));
 }

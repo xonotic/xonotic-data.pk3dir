@@ -57,8 +57,6 @@ void BorderImage_configureBorderImage(entity me, string theTitle, float sz, vect
 }
 void BorderImage_draw(entity me)
 {
-	//print(vtos(me.borderVec), "\n");
-
 	if(me.src)
 		draw_BorderPicture('0 0 0', me.src, '1 1 0', me.color, 1, me.borderVec);
 	if(me.fontSize > 0)

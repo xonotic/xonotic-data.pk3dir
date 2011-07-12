@@ -2,7 +2,7 @@
 CLASS(XonoticUserbindEditDialog) EXTENDS(XonoticDialog)
 	METHOD(XonoticUserbindEditDialog, loadUserBind, void(entity, string, string, string))
 	METHOD(XonoticUserbindEditDialog, fill, void(entity))
-	ATTRIB(XonoticUserbindEditDialog, title, string, "User defined key bind")
+	ATTRIB(XonoticUserbindEditDialog, title, string, _("User defined key bind"))
 	ATTRIB(XonoticUserbindEditDialog, color, vector, SKINCOLOR_DIALOG_USERBIND)
 	ATTRIB(XonoticUserbindEditDialog, intendedWidth, float, 0.7)
 	ATTRIB(XonoticUserbindEditDialog, rows, float, 4)
@@ -36,19 +36,19 @@ void XonoticUserbindEditDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Name:"));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Name:")));
 		me.TD(me, 1, me.columns - 1, me.nameBox = makeXonoticInputBox(0, string_null));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Command when pressed:"));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Command when pressed:")));
 		me.TD(me, 1, me.columns - 1, me.commandPressBox = makeXonoticInputBox(0, string_null));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Command when released:"));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Command when released:")));
 		me.TD(me, 1, me.columns - 1, me.commandReleaseBox = makeXonoticInputBox(0, string_null));
 	me.TR(me);
-		me.TD(me, 1, me.columns / 2, e = makeXonoticButton("Save", '0 0 0'));
+		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(_("Save"), '0 0 0'));
 			e.onClick = XonoticUserbindEditDialog_Save;
 			e.onClickEntity = me;
-		me.TD(me, 1, me.columns / 2, e = makeXonoticButton("Cancel", '0 0 0'));
+		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(_("Cancel"), '0 0 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }

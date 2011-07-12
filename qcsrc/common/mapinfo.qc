@@ -409,7 +409,10 @@ string _MapInfo_GetDefault(float t)
 		case MAPINFO_TYPE_NEXBALL:         return "5 20 0";
 		case MAPINFO_TYPE_CTS:             return "20 0 0";
 		case MAPINFO_TYPE_FREEZETAG:       return "10 20 0";
-		case MAPINFO_TYPE_KEEPAWAY:	   return "30 20 0";
+		// NOTE: DO NOT ADD ANY MORE GAME TYPES HERE
+		// THIS IS JUST LEGACY SUPPORT FOR NEXUIZ MAPS
+		// ONLY ADD NEW STUFF TO _MapInfo_GetDefaultEx
+		// THIS FUNCTION WILL EVENTUALLY BE REMOVED
 		default:                           return "";
 	}
 }
@@ -466,6 +469,7 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 		s = cdr(s);
 	}
 
+	/* keepaway wuz here
 	if(pWantedType == MAPINFO_TYPE_KEEPAWAY)
 	{
 		sa = car(s);
@@ -473,7 +477,8 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 			cvar_set("fraglimit", sa);
 		s = cdr(s);
 	}
-
+	*/
+	
 	// rc = timelimit timelimit_qualification laps laps_teamplay
 	if(pWantedType == MAPINFO_TYPE_RACE)
 	{
@@ -797,7 +802,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 {
 	string fn;
 	string s, t;
-	float fh, fh2;
+	float fh;
 	float r, f, n, i, p;
 	string acl;
 
@@ -870,12 +875,8 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 				if(MapInfo_Map_supportedGametypes & i)
 					fputs(fh, sprintf("gametype %s // defaults: %s\n", MapInfo_Type_ToString(i), _MapInfo_GetDefaultEx(i)));
 
-			fh2 = fopen(strcat("scripts/", pFilename, ".arena"), FILE_READ);
-			if(fh2 >= 0)
-			{
-				fclose(fh2);
+			if(fexists(strcat("scripts/", pFilename, ".arena")))
 				fputs(fh, "settemp_for_type all sv_q3acompat_machineshotgunswap 1\n");
-			}
 
 			fputs(fh, "// optional: fog density red green blue alpha mindist maxdist\n");
 			fputs(fh, "// optional: settemp_for_type (all|gametypename) cvarname value\n");
@@ -945,6 +946,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		{
 			t = car(s); s = cdr(s);
 			f = MapInfo_Type_FromString(t);
+			print("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.\n");
 			if(f)
 				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, TRUE);
 			else
