@@ -696,6 +696,72 @@ void modelbug()
 	e.nextthink = time + 1;
 }
 
+// ===================
+//  Command Functions
+// ===================
+#define GC_REQUEST_HELP 1
+#define GC_REQUEST_COMMAND 2
+#define GC_REQUEST_USAGE 3
+
+void GameCommand_adminmsg(float request, string command)
+{
+	entity client;
+	float argc = tokenize_console(command);
+	float entno = stof(argv(1)); 
+	float n, i;
+	string s;
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  adminmsg - Send an admin message to a client directly\n");
+			break;
+			
+		case GC_REQUEST_COMMAND:
+			if(argc >= 3 && argc <= 4) {
+				if((entno < 0) | (entno > maxclients)) {
+					print("Player ", argv(1), " doesn't exist\n");
+					return;
+				}
+				n = 0;
+				for(i = (entno ? entno : 1); i <= (entno ? entno : maxclients); ++i)
+				{
+					client = edict_num(i);
+					if(client.flags & FL_CLIENT)
+					{
+						if(argc == 4)
+						{
+							s = argv(2);
+							s = strreplace("\n", "", s);
+							s = strreplace("\\", "\\\\", s);
+							s = strreplace("$", "$$", s);
+							s = strreplace("\"", "\\\"", s);
+							stuffcmd(client, sprintf("\ninfobar %f \"%s\"\n", stof(argv(3)), s));
+						}
+						else
+						{
+							centerprint_atprio(client, CENTERPRIO_ADMIN, strcat("^3", admin_name(), ":\n\n^7", argv(2)));
+							sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", argv(2), "\n"));
+						}
+						dprint("Message sent to ", client.netname, "\n");
+						++n;
+					}
+				}
+				if(!n) { print("Client not found\n"); } 
+				break;
+			} 
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("Usage: sv_cmd adminmsg clientnumber \"message\" [infobartime]\n");
+			print("  If infobartime is provided, the message will be sent to infobar.\n");
+			print("  Otherwise, it will just be sent as a centerprint message.\n");
+			print("Examples: adminmsg <id> \"this message will last for ten seconds\" 10\n");
+			print("          adminmsg <id> \"this message will be a centerprint\"\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -708,17 +774,15 @@ void GameCommand(string command)
 	// Add ifdef to stuffto so that is can only be used when the game code is compiled for it 
 	//(this way it's more obscure and harder to abuse on normal servers)
 
-	float argc;
-	entity client, e;
+	entity client, tmp_entity;
 	vector v;
-	float entno, i, n;
+	float entno;
 	string s;
-	argc = tokenize_console(command);
+	float argc = tokenize_console(command);
 
-	if(argv(0) == "help" || argc == 0)
-	{
+	if(argv(0) == "help" || argc == 0) {
 		print("Usage: sv_cmd COMMAND..., where possible commands are:\n");
-		print("  adminmsg clientnumber \"message\" [infobartime]\n");
+		GameCommand_adminmsg(GC_REQUEST_HELP, command);
 		print("  teamstatus\n");
 		print("  printstats\n");
 		print("  make_mapinfo\n");
@@ -739,780 +803,52 @@ void GameCommand(string command)
 		GameCommand_Ban("help");
 		GameCommand_Generic("help");
 		return;
-	}
-
-	if(GameCommand_Vote(command, world))
-		return;
-
-	if(GameCommand_Ban(command))
-		return;
-
-	if(GameCommand_Generic(command))
-		return;
-
-	if(argv(0) == "stuffto") if(argc == 3)
+	} 
+	else if(GameCommand_Vote(command, world)) 
 	{
-		entity rbi_client;
-		float rbi_entno;
-		rbi_entno = stof(argv(1));
-		rbi_client = world;
-		if(rbi_entno <= maxclients)
-			rbi_client = edict_num(rbi_entno);
-		if(rbi_client.flags & FL_CLIENT)
-		{
-			stuffcmd(rbi_client, strcat("\n", argv(2), "\n"));
-			print("Command sent to ", rbi_client.netname, "\n");
-		}
-		else
-			print("Client not found\n");
-		return;
+		return; // handled by server/vote.qc 
 	}
-
-	if(argv(0) == "printstats")
+	else if(GameCommand_Ban(command)) 
 	{
-		DumpStats(FALSE);
-		return;
+		return; // handled by server/ipban.qc
 	}
-
-	if(argv(0) == "make_mapinfo")
+	else if(GameCommand_Generic(command)) 
 	{
-		e = spawn();
-		e.classname = "make_mapinfo";
-		e.think = make_mapinfo_Think;
-		e.nextthink = time;
-		MapInfo_Enumerate();
-		return;
+		return; // handled by common/gamecommand.qc
 	}
-
-	if(argv(0) == "gotomap") if(argc == 2)
+	
+	switch(argv(0))
 	{
-		print(GotoMap(argv(1)), "\n");
-		return;
-	}
-
-	if(argv(0) == "gametype") if(argc == 2)
-	{
-		float t, tsave;
-		s = argv(1);
-		t = MapInfo_Type_FromString(s);
-		tsave = MapInfo_CurrentGametype();
-		if(t)
-		{
-			MapInfo_SwitchGameType(t);
-			MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-			if(MapInfo_count > 0)
-			{
-				bprint("Game type successfully switched to ", s, "\n");
-			}
-			else
-			{
-				bprint("Cannot use this game type: no map for it found\n");
-				MapInfo_SwitchGameType(tsave);
-				MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-			}
-		}
-		else
-			bprint("Game type switch to ", s, " failed: this type does not exist!\n");
-		return;
-	}
-
-	if(argv(0) == "adminmsg")
-	if(argc >= 3 && argc <= 4)
-	{
-		entno = stof(argv(1));
-
-		if((entno < 0) | (entno > maxclients)) {
-			print("Player ", argv(1), " doesn't exist\n");
-			return;
-		}
-
-		n = 0;
-		for(i = (entno ? entno : 1); i <= (entno ? entno : maxclients); ++i)
-		{
-			client = edict_num(i);
-			if(client.flags & FL_CLIENT)
-			{
-				if(argc == 4)
-				{
-					s = argv(2);
-					s = strreplace("\n", "", s);
-					s = strreplace("\\", "\\\\", s);
-					s = strreplace("$", "$$", s);
-					s = strreplace("\"", "\\\"", s);
-					stuffcmd(client, sprintf("\ninfobar %f \"%s\"\n", stof(argv(3)), s));
-				}
-				else
-				{
-					centerprint_atprio(client, CENTERPRIO_ADMIN, strcat("^3", admin_name(), ":\n\n^7", argv(2)));
-					sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", argv(2), "\n"));
-				}
-				print("Message sent to ", client.netname, "\n");
-				++n;
-			}
-		}
-		if(!n)
-			print("Client not found\n");
-
-		return;
-	}
-
-	if(argv(0) == "savedb") if(argc == 2)
-	{
-		db_save(ServerProgsDB, argv(1));
-		print("DB saved.\n");
-		return;
-	}
-
-	if(argv(0) == "dumpdb") if(argc == 2)
-	{
-		db_dump(ServerProgsDB, argv(1));
-		print("DB dumped.\n");
-		return;
-	}
-
-	if(argv(0) == "loaddb") if(argc == 2)
-	{
-		db_close(ServerProgsDB);
-		ServerProgsDB = db_load(argv(1));
-		print("DB loaded.\n");
-		return;
-	}
-
-	if (argv(0) == "nospectators")
-	{
-		blockSpectators = 1;
-		local entity plr;
-		FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
-		{
-			if(plr.classname == "spectator" || plr.classname == "observer")
-			{
-				plr.spectatortime = time;
-				sprint(plr, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
-			}
-		}
-		bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
-		return;
-	}
-
-	if (argv(0) == "lockteams")
-	{
-		if(teamplay)
-		{
-			lockteams = 1;
-			bprint("^1The teams are now locked.\n");
-		}
-		else
-			bprint("That command can only be used in a team-based gamemode.\n");
-		return;
-	}
-
-	if (argv(0) == "unlockteams")
-	{
-		if(teamplay)
-		{
-			lockteams = 0;
-			bprint("^1The teams are now unlocked.\n");
-		}
-		else
-			bprint("That command can only be used in a team-based gamemode.\n");
-		return;
-	}
-	if(argv(0) == "movetoteam") if(argc == 3 || argc == 4) {
-		// 	sv_cmd movetoteam  player_id  team_colour
-		// 	sv_cmd movetoteam  player_id  team_colour  type_of_move
-
-		// 	type of move
-		// 	0 (00) automove centerprint, admin message
-		// 	1 (01) automove centerprint, no admin message
-		// 	2 (10) no centerprint, admin message
-		// 	3 (11) no centerprint, no admin message
-
-		if(!teamplay) {  // death match
-			print("Currently not playing a team game\n");
-			return;
-		}
-
-		entno = stof(argv(1));
-
-		// player_id is out of range
-		if((entno < 1) | (entno > maxclients)) {
-			print("Player ", argv(1), " doesn't exist\n");
-			return;
-		}
-
-		client = edict_num(entno);
-
-		// player entity is not a client
-		if not(client.flags & FL_CLIENT) {
-			print("Player ", argv(1), " doesn't exist\n");
-			return;
-		}
-
-		// find the team to move the player to
-		float team_colour;
-		float save;
-
-		save = client.team_forced;
-		client.team_forced = 0;
-
-		team_colour = ColourToNumber(argv(2));
-
-		if(team_colour == client.team) {  // player already on the team
-			print("Player ", argv(1), " (", client.netname, ") is already on the ", ColoredTeamName(client.team), "\n");
-			// keep the forcing undone
-			return;
-		} else if(team_colour == 0)  // auto team
-			team_colour = NumberToTeamNumber(FindSmallestTeam(client, FALSE));
-		else
-			CheckAllowedTeams(client);
-
-		client.team_forced = save;
-
-		switch(team_colour) {
-			case COLOR_TEAM1:
-				if(c1 == -1) {
-					print("Sorry, there isn't a red team\n");
-					return;
-				}
-				break;
-
-			case COLOR_TEAM2:
-				if(c2 == -1) {
-					print("Sorry, there isn't a blue team\n");
-					return;
-				}
-				break;
-
-			case COLOR_TEAM3:
-				if(c3 == -1) {
-					print("Sorry, there isn't a yellow team\n");
-					return;
-				}
-				break;
-
-			case COLOR_TEAM4:
-				if(c4 == -1) {
-					print("Sorry, there isn't a pink team\n");
-					return;
-				}
-				break;
-
-			default:
-				print("Sorry, team ", argv(2), " doesn't exist\n");
-				return;
-		}
-		print("Player ", argv(1), " (", client.netname, ") has been moved to the ", ColoredTeamName(team_colour), "\n");
-
-		client.team_forced = 0;
-		MoveToTeam(client, team_colour, 6, stof(argv(3)));
-
-		return;
-	}
-	if (argv(0) == "teamstatus")
-	{
-		Score_NicePrint(world);
-		return;
-	}
-	if (argv(0) == "allready")
-	{
-		ReadyRestart();
-		return;
-	}
-	if (argv(0) == "effectindexdump")
-	{
-		EffectIndexDump();
-		return;
-	}
-	if (argv(0) == "radarmap")
-	{
-		RadarMap(argc);
-		return;
-	}
-	if (argv(0) == "bbox")
-	{
-		BBox();
-		return;
-	}
-	if (argv(0) == "cvar_changes")
-	{
-		print(cvar_changes);
-		return;
-	}
-	if (argv(0) == "cvar_purechanges")
-	{
-		print(cvar_purechanges);
-		return;
-	}
-	if (argv(0) == "find") if(argc == 2)
-	{
-		for(client = world; (client = find(client, classname, argv(1))); )
-			print(etos(client), "\n");
-		return;
-	}
-	if (argv(0) == "records")
-	{
-		for (i = 0; i < 10; ++i)
-			print(records_reply[i]);
-		return;
-	}
-	if (argv(0) == "ladder")
-	{
-		print(ladder_reply);
-		return;
-	}
-	if (argv(0) == "rankings")
-	{
-		strunzone(rankings_reply);
-		rankings_reply = strzone(getrankings());
-		print(rankings_reply);
-		return;
-	}
-
-	if(argv(0) == "cointoss")
-	{
-		bprint("^3Throwing coin... Result: ");
-		if (random() > 0.5)
-			bprint("^1heads ^3!\n");
-		else
-			bprint("^1tails ^3!\n");
-		return;
-	}
-
-	if(argv(0) == "__FORCE_READY_RESTART")
-	{
-		reset_map(FALSE);
-		return;
-	}
-
-	if(argv(0) == "debug_shotorg")
-	{
-		debug_shotorg = stov(argv(1));
-		debug_shotorg_y = -debug_shotorg_y;
-		return;
-	}
-
-	if(argv(0) == "gettaginfo") if(argc >= 4)
-	{
-		e = spawn();
-		if(argv(1) == "w")
-			setmodel(e, (nextent(world)).weaponentity.model);
-		else
-		{
-			precache_model(argv(1));
-			setmodel(e, argv(1));
-		}
-		e.frame = stof(argv(2));
-		if(substring(argv(3), 0, 1) == "#")
-			i = stof(substring(argv(3), 1, -1));
-		else
-			i = gettagindex(e, argv(3));
-		if(i)
-		{
-			v = gettaginfo(e, i);
-			print("model ", e.model, " frame ", ftos(e.frame), " tag ", gettaginfo_name);
-			print(" index ", ftos(i), " parent ", ftos(gettaginfo_parent), "\n");
-			print(" vector = ", ftos(v_x), " ", ftos(v_y), " ", ftos(v_z), "\n");
-			print(" offset = ", ftos(gettaginfo_offset_x), " ", ftos(gettaginfo_offset_y), " ", ftos(gettaginfo_offset_z), "\n");
-			print(" forward = ", ftos(gettaginfo_forward_x), " ", ftos(gettaginfo_forward_y), " ", ftos(gettaginfo_forward_z), "\n");
-			print(" right = ", ftos(gettaginfo_right_x), " ", ftos(gettaginfo_right_y), " ", ftos(gettaginfo_right_z), "\n");
-			print(" up = ", ftos(gettaginfo_up_x), " ", ftos(gettaginfo_up_y), " ", ftos(gettaginfo_up_z), "\n");
-			if(argc >= 6)
-			{
-				v_y = -v_y;
-				localcmd(strcat(argv(4), vtos(v), argv(5), "\n"));
-			}
-		}
-		else
-			print("bone not found\n");
-		remove(e);
-		return;
-	}
-
-	if(argv(0) == "time")
-	{
-		print("time = ", ftos(time), "\n");
-		print("frame start = ", ftos(gettime(GETTIME_FRAMESTART)), "\n");
-		print("realtime = ", ftos(gettime(GETTIME_REALTIME)), "\n");
-		print("hires = ", ftos(gettime(GETTIME_HIRES)), "\n");
-		print("uptime = ", ftos(gettime(GETTIME_UPTIME)), "\n");
-		print("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n");
-		print("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y"), "\n");
-		return;
-	}
-
-	if(argv(0) == "tracebug")
-	{
-		print("TEST CASE. If this returns the runaway loop counter error, possibly everything is oaky.\n");
-		for(;;)
-		{
-			vector org, delta, start, end, p, q, q0, pos;
-			float safe, unsafe, dq, dqf;
-
-			org = world.mins;
-			delta = world.maxs - world.mins;
-
-			start_x = org_x + random() * delta_x;
-			start_y = org_y + random() * delta_y;
-			start_z = org_z + random() * delta_z;
-
-			end_x = org_x + random() * delta_x;
-			end_y = org_y + random() * delta_y;
-			end_z = org_z + random() * delta_z;
-
-			start = stov(vtos(start));
-			end = stov(vtos(end));
-
-			tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
-			if(!trace_startsolid)
-			{
-				p = trace_endpos;
-				tracebox(p, PL_MIN, PL_MAX, p, MOVE_NOMONSTERS, world);
-				if(trace_startsolid || trace_fraction == 1)
-				{
-					rint(42); // do an engine breakpoint on VM_rint so you can get the trace that errnoeously returns startsolid
-					tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
-					tracebox(p, PL_MIN, PL_MAX, q, MOVE_NOMONSTERS, world);
-
-					if(trace_startsolid)
-					{
-						// how much do we need to back off?
-						safe = 1;
-						unsafe = 0;
-						for(;;)
-						{
-							pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
-							tracebox(pos, PL_MIN, PL_MAX, pos, MOVE_NOMONSTERS, world);
-							if(trace_startsolid)
-							{
-								if((safe + unsafe) * 0.5 == unsafe)
-									break;
-								unsafe = (safe + unsafe) * 0.5;
-							}
-							else
-							{
-								if((safe + unsafe) * 0.5 == safe)
-									break;
-								safe = (safe + unsafe) * 0.5;
-							}
-						}
-
-						print("safe distance to back off: ", ftos(safe * vlen(p - start)), "qu\n");
-						print("unsafe distance to back off: ", ftos(unsafe * vlen(p - start)), "qu\n");
-
-						tracebox(p, PL_MIN + '0.1 0.1 0.1', PL_MAX - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, world);
-						if(trace_startsolid)
-							print("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
-						else
-							print("trace_endpos just in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
-						break;
-					}
-
-					q0 = p;
-					dq = 0;
-					dqf = 1;
-					for(;;)
-					{
-						q = p + normalize(end - p) * (dq + dqf);
-						if(q == q0)
-							break;
-						tracebox(p, PL_MIN, PL_MAX, q, MOVE_NOMONSTERS, world);
-						if(trace_startsolid)
-							error("THIS ONE cannot happen");
-						if(trace_fraction > 0)
-							dq += dqf * trace_fraction;
-						dqf *= 0.5;
-						q0 = q;
-					}
-					if(dq > 0)
-					{
-						print("trace_endpos still before solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
-						print("could go ", ftos(dq), " units further to ", vtos(q), "\n");
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	if(argv(0) == "tracebug2")
-	{
-		e = nextent(world);
-		float f;
-		vector vv, dv;
-		tracebox(e.origin + '0 0 32', e.mins, e.maxs, e.origin + '0 0 -1024', MOVE_NORMAL, e);
-		vv = trace_endpos;
-		if(trace_fraction == 1)
-		{
-			print("not above ground, aborting\n");
-			return;
-		}
-		f = 0;
-		for(i = 0; i < 100000; ++i)
-		{
-			dv = randomvec();
-			if(dv_z > 0)
-				dv = -1 * dv;
-			tracebox(vv, e.mins, e.maxs, vv + dv, MOVE_NORMAL, e);
-			if(trace_startsolid)
-				print("bug 1\n");
-			if(trace_fraction == 1)
-			if(dv_z < f)
-			{
-				print("bug 2: ", ftos(dv_x), " ", ftos(dv_y), " ", ftos(dv_z));
-				print(" (", ftos(asin(dv_z / vlen(dv)) * 180 / M_PI), " degrees)\n");
-				f = dv_z;
-			}
-		}
-		print("highest possible dist: ", ftos(f), "\n");
-		return;
-	}
-
-	if(argv(0) == "tracewalk")
-	{
-		e = nextent(world);
-		if(tracewalk(e, stov(argv(1)), e.mins, e.maxs, stov(argv(2)), MOVE_NORMAL))
-			print("can walk\n");
-		else
-			print("cannot walk\n");
-		return;
-	}
-
-	if(argv(0) == "onslaught_updatelinks")
-	{
-		onslaught_updatelinks();
-		print("ONS links updated\n");
-		return;
-	}
-
-	if(argv(0) == "bot_cmd")
-	{
-		local entity bot;
-
-		if(argv(1) == "help")
-		{
-			if(argc==2)
-			{
-				bot_list_commands();
-				print("\nsv_cmd bot_cmd reset          #Clear the cmd queues of all bots\n");
-				print("sv_cmd bot_cmd load <file>    #Load script file\n");
-				print("\nUse sv_cmd bot_cmd help <command> for more\n\n");
-				return;
-			}
-
-			bot_cmdhelp(argv(2));
-			return;
-		}
-
-		// Clear all bot queues
-		if(argv(1) == "reset")
-		{
-			bot_resetqueues();
-			return;
-		}
-
-		// Load cmds from file
-		if(argv(1) == "load" && argc == 3)
-		{
-			float fh;
-			fh = fopen(argv(2), FILE_READ);
-			if(fh < 0)
-			{
-				print("cannot open the file\n");
-				return;
-			}
-
-			i = 0;
-			while((s = fgets(fh)))
-			{
-				argc = tokenize_console(s);
-
-				if(argc >= 3 && argv(0) == "sv_cmd" && argv(1) == "bot_cmd")
-				{
-					// let's start at token 2 so we can skip sv_cmd bot_cmd
-					bot = find_bot_by_number(stof(argv(2)));
-					if(bot == world)
-						bot = find_bot_by_name(argv(2));
-					if(bot)
-						bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
-				}
-				else
-					localcmd(strcat(s, "\n"));
-
-				++i;
-			}
-
-			print(ftos(i), " commands read\n");
-
-			fclose(fh);
-
-			return;
-		}
-
-		if(argc < 3)
-		{
-			print("Usage: sv_cmd bot_cmd <bot name or number> <command> [argument]\n");
-			print("Examples: bot_cmd <id> cc \"say something\"\n");
-			print("          bot_cmd <id> presskey jump\n");
-			print("          .. or sv_cmd bot_cmd help <command> for more\n");
-			return;
-		}
-
-		bot = find_bot_by_number(stof(argv(1)));
-		if(bot == world)
-			bot = find_bot_by_name(argv(1));
-
-		if(bot)
-			bot_queuecommand(bot, strcat(argv(2), " ", argv(3)));
-		else
-			print(strcat("Error: Unable to find a bot with the name or number '",argv(1),"'\n"));
-
-		return;
-	}
-
-	if(argv(0) == "playerdemo")
-	{
-		if(argv(1) == "read")
-		{
-			entno = stof(argv(2));
+		case "adminmsg":
+			GameCommand_adminmsg(GC_REQUEST_COMMAND, command);
+			break;
+		
+		case "allready":
+			ReadyRestart();
+			break;
+			
+		case "allspec":
+			FOR_EACH_PLAYER(self)
+				PutObserverInServer();
+			break;
+			/*
+		case "anticheat":
+			entno = stof(argv(1));
 			if((entno < 1) | (entno > maxclients)) {
-				print("Player ", argv(2), " doesn't exist\n");
+				print("Player ", argv(1), " doesn't exist\n");
 				return;
 			}
 			client = edict_num(entno);
-			if(clienttype(client) != CLIENTTYPE_BOT) {
-				print("Player ", client.netname, " is not a bot\n");
+			if(clienttype(client) != CLIENTTYPE_REAL && clienttype(client) != CLIENTTYPE_BOT) {
+				print("Player ", client.netname, " is not active\n");
 				return;
 			}
 			self = client;
-			playerdemo_open_read(argv(3));
-			return;
-		}
-		else if(argv(1) == "write")
-		{
-			entno = stof(argv(2));
-			if((entno < 1) | (entno > maxclients)) {
-				print("Player ", argv(2), " doesn't exist\n");
-				return;
-			}
-			client = edict_num(entno);
-			self = client;
-			playerdemo_open_write(argv(3));
-			return;
-		}
-		else if(argv(1) == "auto_read_and_write")
-		{
-			s = argv(2);
-			n = stof(argv(3));
-			cvar_set("bot_number", ftos(n));
-			localcmd("wait; wait; wait\n");
-			for(i = 0; i < n; ++i)
-				localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", s, ftos(i+1), "\n");
-			localcmd("sv_cmd playerdemo write 1 ", ftos(n+1), "\n");
-			return;
-		}
-		else if(argv(1) == "auto_read")
-		{
-			s = argv(2);
-			n = stof(argv(3));
-			cvar_set("bot_number", ftos(n));
-			localcmd("wait; wait; wait\n");
-			for(i = 0; i < n; ++i)
-				localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", s, ftos(i+1), "\n");
-			return;
-		}
+			anticheat_report();
+			break;*/
+
+		default:
+			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 	}
-
-	if(argv(0) == "anticheat")
-	{
-		entno = stof(argv(1));
-		if((entno < 1) | (entno > maxclients)) {
-			print("Player ", argv(1), " doesn't exist\n");
-			return;
-		}
-		client = edict_num(entno);
-		if(clienttype(client) != CLIENTTYPE_REAL && clienttype(client) != CLIENTTYPE_BOT) {
-			print("Player ", client.netname, " is not active\n");
-			return;
-		}
-		self = client;
-		anticheat_report();
-		return;
-	}
-
-	if(argv(0) == "defer_clear")
-	if(argc == 2)
-	{
-		entno = stof(argv(1));
-
-		// player_id is out of range
-		if((entno < 1) | (entno > maxclients)) {
-			print("Player ", argv(1), " doesn't exist\n");
-			return;
-		}
-
-		client = edict_num(entno);
-
-		if not(client.flags & FL_CLIENT) {
-			print("Player ", argv(1), " doesn't exist\n");
-			return;
-		}
-
-		if(clienttype(client) == CLIENTTYPE_BOT) {
-			print("Player ", argv(1), " (", client.netname, ") is a bot\n");
-			return;
-		}
-
-		stuffcmd(client, "defer clear\n");
-		print("defer clear stuffed to ", argv(1), " (", client.netname, ")\n");
-		return;
-	}
-
-	if(argv(0) == "defer_clear_all")
-	{
-		FOR_EACH_CLIENTSLOT(client)
-			GameCommand(strcat("defer_clear ", ftos(num_for_edict(client))));	
-
-		return;
-	}
-	if(argv(0) == "delrec")
-	{
-		if(argv(2) != "")
-			race_deleteTime(argv(2), stof(argv(1)));
-		else
-			race_deleteTime(GetMapname(), stof(argv(1)));
-
-		return;
-	}
-
-	if(argv(0) == "showtraceline")
-	{
-		vector src, dst;
-		src = stov(argv(1));
-		dst = stov(argv(2));
-		traceline(src, dst, MOVE_NORMAL, world);
-		trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), src, trace_endpos);
-		trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dst);
-		return;
-	}
-
-	if(argv(0) == "extendmatchtime")
-	{
-		changematchtime(autocvar_timelimit_increment* 60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
-		return;
-	}
-
-	if(argv(0) == "reducematchtime")
-	{
-		changematchtime(autocvar_timelimit_decrement*-60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
-		return;
-	}
-
-	if(argv(0) == "modelbug")
-	{
-		modelbug();
-		return;
-	}
-
-	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 }
 
