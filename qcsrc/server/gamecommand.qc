@@ -1077,6 +1077,33 @@ void GameCommand_defer_clear_all(float request)
 	}
 }
 
+void GameCommand_delrec(float request, string command)
+{
+	float argc = tokenize_console(command);
+
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  delrec - Delete race time record for a map\n");
+			break;
+			
+		case GC_REQUEST_COMMAND:
+			if(argv(2))
+				race_deleteTime(argv(2), stof(argv(1)));
+			else
+				race_deleteTime(GetMapname(), stof(argv(1)));
+			break;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd delrec ranking [map]\n");
+			print("  ranking is which ranking level to clear up to, \n");
+			print("  it will clear all records up to nth place.\n");
+			print("  if map is not provided it will use current map.\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -1110,6 +1137,7 @@ void GameCommand(string command)
 			GameCommand_cvar_purechanges(GC_REQUEST_HELP);
 			GameCommand_defer_clear(GC_REQUEST_HELP, command);
 			GameCommand_defer_clear_all(GC_REQUEST_HELP);
+			GameCommand_delrec(GC_REQUEST_HELP, command);
 			print("  teamstatus\n");
 			print("  printstats\n");
 			print("  make_mapinfo\n");
@@ -1159,6 +1187,7 @@ void GameCommand(string command)
 		case "cvar_purechanges": GameCommand_cvar_purechanges(search_request_type); break; 
 		case "defer_clear": GameCommand_defer_clear(search_request_type, command); break;
 		case "defer_clear_all": GameCommand_defer_clear_all(search_request_type); break;
+		case "delrec": GameCommand_delrec(search_request_type, command); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
