@@ -1274,6 +1274,44 @@ void GameCommand_find(float request, string command)
 	}
 }
 
+void GameCommand_gametype(float request, string command)
+{
+	float argc = tokenize_console(command);
+	string s = argv(1);
+	float t = MapInfo_Type_FromString(s), tsave = MapInfo_CurrentGametype();
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  gametype - Simple command to change the active gametype\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			if(t)
+			{
+				MapInfo_SwitchGameType(t);
+				MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+				if(MapInfo_count > 0)
+					bprint("Game type successfully switched to ", s, "\n");
+				else
+				{
+					bprint("Cannot use this game type: no map for it found\n");
+					MapInfo_SwitchGameType(tsave);
+					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+				}
+			}
+			else
+				bprint("Game type switch to ", s, " failed: this type does not exist!\n");
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd gametype mode\n");
+			print("  Where mode is the gametype mode to switch to.\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -1312,6 +1350,7 @@ void GameCommand(string command)
 			GameCommand_effectindexdump(GC_REQUEST_HELP);
 			GameCommand_extendmatchtime(GC_REQUEST_HELP);
 			GameCommand_find(GC_REQUEST_HELP, command);
+			GameCommand_gametype(GC_REQUEST_HELP, command);
 			print("  teamstatus\n");
 			print("  printstats\n");
 			print("  make_mapinfo\n");
@@ -1361,6 +1400,7 @@ void GameCommand(string command)
 		case "effectindexdump": GameCommand_effectindexdump(search_request_type); break;
 		case "extendmatchtime": GameCommand_extendmatchtime(search_request_type); break;
 		case "find": GameCommand_find(search_request_type, command); break; 
+		case "gametype": GameCommand_gametype(search_request_type, command); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
