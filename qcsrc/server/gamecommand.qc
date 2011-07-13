@@ -572,7 +572,7 @@ void GameCommand_adminmsg(float request, string command)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  adminmsg - Send an admin message to a client directly\n");
+			print("  ^2adminmsg^7: Send an admin message to a client directly\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -626,7 +626,7 @@ void GameCommand_allready(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  allready - Restart the server and reset the players\n");
+			print("  ^2allready^7: Restart the server and reset the players\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -648,7 +648,7 @@ void GameCommand_allspec(float request) // todo: Add ability to provide a reason
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  allspec - Force all players to spectate\n");
+			print("  ^2allspec^7: Force all players to spectate\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -677,7 +677,7 @@ void GameCommand_anticheat(float request, string command) // FIXME: player entit
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  anticheat - Create an anticheat report for a client\n");
+			print("  ^2anticheat^7: Create an anticheat report for a client\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -708,7 +708,7 @@ void GameCommand_bbox(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  bbox - Print detailed information about world size\n");
+			print("  ^2bbox^7: Print detailed information about world size\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -803,7 +803,7 @@ void GameCommand_bot_cmd(float request, string command) // what a mess... old ol
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  bot_cmd - Control and send commands to bots\n");
+			print("  ^2bot_cmd^7: Control and send commands to bots\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -889,7 +889,7 @@ void GameCommand_cointoss(float request) // todo: Perhaps add the ability to giv
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  cointoss - Flip a virtual coin and give random result\n");
+			print("  ^2cointoss^7: Flip a virtual coin and give random result\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -911,7 +911,7 @@ void GameCommand_cvar_changes(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  cvar_changes - Prints a list of all changed server cvars\n");
+			print("  ^2cvar_changes^7: Prints a list of all changed server cvars\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -931,7 +931,7 @@ void GameCommand_cvar_purechanges(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  cvar_purechanges - Prints a list of all changed gameplay cvars\n");
+			print("  ^2cvar_purechanges^7: Prints a list of all changed gameplay cvars\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -953,7 +953,7 @@ void GameCommand_database(float request, string command)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  database - Extra controls of the serverprogs database\n");
+			print("  ^2database^7: Extra controls of the serverprogs database\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -1000,7 +1000,7 @@ void GameCommand_defer_clear(float request, string command)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  defer_clear - Clear all queued defer commands for client\n");
+			print("  ^2defer_clear^7: Clear all queued defer commands for client\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -1042,7 +1042,7 @@ void GameCommand_defer_clear_all(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  defer_clear_all - Clear all queued defer commands for all clients\n");
+			print("  ^2defer_clear_all^7: Clear all queued defer commands for all clients\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -1069,7 +1069,7 @@ void GameCommand_delrec(float request, string command) // UNTESTED
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  delrec - Delete race time record for a map\n");
+			print("  ^2delrec^7: Delete race time record for a map\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -1101,7 +1101,7 @@ void GameCommand_effectindexdump(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  effectindexdump - Dump list of effects from code and effectinfo.txt\n");
+			print("  ^2effectindexdump^7: Dump list of effects from code and effectinfo.txt\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -1176,7 +1176,7 @@ void GameCommand_extendmatchtime(float request) // todo: Perhaps allows the user
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  extendmatchtime - Increase the timelimit value incrementally\n");
+			print("  ^2extendmatchtime^7: Increase the timelimit value incrementally\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -1199,7 +1199,7 @@ void GameCommand_find(float request, string command)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  find - Search through entities for matching classname\n");
+			print("  ^2find^7: Search through entities for matching classname\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -1225,7 +1225,7 @@ void GameCommand_gametype(float request, string command)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  gametype - Simple command to change the active gametype\n");
+			print("  ^2gametype^7: Simple command to change the active gametype\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -1263,7 +1263,7 @@ void GameCommand_gettaginfo(float request, string command) // UNTESTED // todo: 
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  gettaginfo - Get specific information about a weapon model\n");
+			print("  ^2gettaginfo^7: Get specific information about a weapon model\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -1321,7 +1321,7 @@ void GameCommand_gotomap(float request, string command)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  gotomap - Simple command to switch to another map\n");
+			print("  ^2gotomap^7: Simple command to switch to another map\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -1344,7 +1344,7 @@ void GameCommand_ladder(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  ladder - Get information about top players if supported\n");
+			print("  ^2ladder^7: Get information about top players if supported\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
@@ -1364,7 +1364,7 @@ void GameCommand_lockteams(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
-			print("  lockteams - Disable the ability for players to switch or enter teams\n");
+			print("  ^2lockteams^7: Disable the ability for players to switch or enter teams\n");
 			return;
 			
 		case GC_REQUEST_COMMAND:
