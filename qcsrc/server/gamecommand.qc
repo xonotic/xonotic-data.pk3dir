@@ -664,6 +664,7 @@ void GameCommand_allspec(float request) // todo: Add ability to provide a reason
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd allspec\n");
 			print("  No arguments required.\n");
+			print("  See also: ^2^7\n"); // FIXME: movetoteam when done will go here
 			return;
 	}
 }
@@ -791,6 +792,7 @@ void GameCommand_bbox(float request)
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd bbox\n");
 			print("  No arguments required.\n");
+			print("  See also: ^2gettaginfo^7\n");
 			return;
 	}
 }
@@ -922,6 +924,7 @@ void GameCommand_cvar_changes(float request)
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd \n");
 			print("  No arguments required.\n");
+			print("  See also: ^2cvar_purechanges^7\n");
 			return;
 	}
 }
@@ -942,6 +945,7 @@ void GameCommand_cvar_purechanges(float request)
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd cvar_purechanges\n");
 			print("  No arguments required.\n");
+			print("  See also: ^2cvar_changes^7\n");
 			return;
 	}
 }
@@ -1030,6 +1034,7 @@ void GameCommand_defer_clear(float request, string command)
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd defer_clear clientnumber\n");
 			print("  where clientnumber is player entity number.\n");
+			print("  See also: ^2defer_clear_all^7\n");
 			return;
 	}
 }
@@ -1058,6 +1063,7 @@ void GameCommand_defer_clear_all(float request)
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd defer_clear_all\n");
 			print("  No arguments required.\n");
+			print("  See also: ^2defer_clear^7\n");
 			return;
 	}
 }
@@ -1187,6 +1193,7 @@ void GameCommand_extendmatchtime(float request) // todo: Perhaps allows the user
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd extendmatchtime\n");
 			print("  No arguments required.\n");
+			print("  See also: ^2reducematchtime^7\n");
 			return;
 	}
 }
@@ -1251,6 +1258,7 @@ void GameCommand_gametype(float request, string command)
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd gametype mode\n");
 			print("  Where mode is the gametype mode to switch to.\n");
+			print("  See also: ^2gotomap^7\n");
 			return;
 	}
 }
@@ -1310,6 +1318,7 @@ void GameCommand_gettaginfo(float request, string command) // UNTESTED // todo: 
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd gettaginfo\n");
 			print("  FIXME: Arguments currently unknown\n");
+			print("  See also: ^2bbox^7\n");
 			return;
 	}
 }
@@ -1335,6 +1344,7 @@ void GameCommand_gotomap(float request, string command)
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd gotomap map\n");
 			print("  Where map is the *.bsp file to change to.\n");
+			print("  See also: ^2gametype^7\n");
 			return;
 	}
 }
