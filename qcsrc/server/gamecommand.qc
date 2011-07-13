@@ -641,7 +641,7 @@ void GameCommand_allready(float request)
 	}
 }
 
-void GameCommand_allspec(float request) // todo: Add ability to provide a reason string
+void GameCommand_allspec(float request) // todo: Add ability to provide a reason string?
 {
 	entity client;
 	float i;
@@ -1424,6 +1424,26 @@ void GameCommand_make_mapinfo(float request) // UNTESTED
 	}
 }
 
+void GameCommand_modelbug(float request) // UNTESTED // is this even needed anymore? 
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2modelbug^7: foobar\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			modelbug();
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd modelbug\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
 void GameCommand_moveplayer(float request, string command)
 {
 	entity client;
@@ -1578,6 +1598,131 @@ void GameCommand_moveplayer(float request, string command)
 	}
 }
 
+void GameCommand_nospectators(float request)
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2nospectators^7: Automatically remove spectators from a match\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			blockSpectators = 1;
+			entity plr;
+			FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
+			{
+				if(plr.classname == "spectator" || plr.classname == "observer")
+				{
+					plr.spectatortime = time;
+					sprint(plr, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+				}
+			}
+			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd nospectators\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
+void GameCommand_onslaught_updatelinks(float request) // UNTESTED // should this be here? Perhaps some mutatorhook call instead....
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2onslaught_updatelinks^7: Refresh link status for onslaught\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			onslaught_updatelinks();
+			print("ONS links updated\n");
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd onslaught_updatelinks\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
+void GameCommand_playerdemo(float request, string command) // UNTESTED
+{
+	entity client;
+	float argc = tokenize_console(command), i, n, entno;
+	string s;
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2playerdemo^7: Control the ability to save demos of players\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			if(argv(1) == "read")
+			{
+				// TODO: Create a general command for looking this up, save a lot of space everywhere in this file
+				entno = stof(argv(2));
+				if((entno < 1) | (entno > maxclients)) {
+					print("Player ", argv(2), " doesn't exist\n");
+					return;
+				}
+				client = edict_num(entno);
+				if(clienttype(client) != CLIENTTYPE_BOT) {
+					print("Player ", client.netname, " is not a bot\n");
+					return;
+				}
+				self = client;
+				playerdemo_open_read(argv(3));
+				return;
+			}
+			else if(argv(1) == "write")
+			{
+				entno = stof(argv(2));
+				if((entno < 1) | (entno > maxclients)) {
+					print("Player ", argv(2), " doesn't exist\n");
+					return;
+				}
+				client = edict_num(entno);
+				self = client;
+				playerdemo_open_write(argv(3));
+				return;
+			}
+			else if(argv(1) == "auto_read_and_write")
+			{
+				s = argv(2);
+				n = stof(argv(3));
+				cvar_set("bot_number", ftos(n));
+				localcmd("wait; wait; wait\n");
+				for(i = 0; i < n; ++i)
+					localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", s, ftos(i+1), "\n");
+				localcmd("sv_cmd playerdemo write 1 ", ftos(n+1), "\n");
+				return;
+			}
+			else if(argv(1) == "auto_read")
+			{
+				s = argv(2);
+				n = stof(argv(3));
+				cvar_set("bot_number", ftos(n));
+				localcmd("wait; wait; wait\n");
+				for(i = 0; i < n; ++i)
+					localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", s, ftos(i+1), "\n");
+				return;
+			}
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd \n");
+			print("  No arguments required.\n");
+			print("  FIXME: Arguments currently unknown\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -1617,7 +1762,11 @@ void GameCommand(string command)
 			GameCommand_ladder(GC_REQUEST_HELP);
 			GameCommand_lockteams(GC_REQUEST_HELP);
 			GameCommand_make_mapinfo(GC_REQUEST_HELP);
+			GameCommand_modelbug(GC_REQUEST_HELP);
 			GameCommand_moveplayer(GC_REQUEST_HELP, "");
+			GameCommand_nospectators(GC_REQUEST_HELP);
+			GameCommand_onslaught_updatelinks(GC_REQUEST_HELP);
+			GameCommand_playerdemo(GC_REQUEST_HELP, "");
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
@@ -1666,7 +1815,11 @@ void GameCommand(string command)
 		case "ladder": GameCommand_ladder(search_request_type); break;
 		case "lockteams": GameCommand_lockteams(search_request_type); break;
 		case "make_mapinfo": GameCommand_make_mapinfo(search_request_type); break;
+		case "modelbug": GameCommand_modelbug(search_request_type); break;
 		case "moveplayer": GameCommand_moveplayer(search_request_type, command); break;
+		case "nospectators": GameCommand_nospectators(search_request_type); break;
+		case "onslaught_updatelinks": GameCommand_onslaught_updatelinks(search_request_type); break;
+		case "playerdemo": GameCommand_playerdemo(search_request_type, command); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
