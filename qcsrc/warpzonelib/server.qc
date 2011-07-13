@@ -298,7 +298,7 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 
 float WarpZone_CheckProjectileImpact(entity player)
 {
-	vector o0, a0, v0;
+	vector o0, v0;
 
 	o0 = player.origin + player.view_ofs;
 	v0 = player.velocity;

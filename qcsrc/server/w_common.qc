@@ -117,7 +117,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 			if(!pseudoprojectile)
 				pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
-			soundtoat(MSG_ONE, pseudoprojectile, beampos, CHAN_PROJECTILE, snd, VOL_BASE * f, ATTN_NONE);
+			soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, snd, VOL_BASE * f, ATTN_NONE);
 		}
 
 		if(pseudoprojectile)

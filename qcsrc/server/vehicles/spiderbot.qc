@@ -238,13 +238,13 @@ float spiderbot_frame()
     {
         if(spider.frame == 4 && self.tur_head.wait != 0)
         {
-            sound (self, CHAN_TRIGGER, "vehicles/spiderbot_land.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+            sound (self, CH_TRIGGER_SINGLE, "vehicles/spiderbot_land.wav", VOL_VEHICLEENGINE, ATTN_NORM);
             spider.frame = 5;            
         }
         
         if(player.BUTTON_JUMP && self.tur_head.wait < time)
         {        
-            sound (self, CHAN_TRIGGER, "vehicles/spiderbot_jump.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+            sound (self, CH_TRIGGER_SINGLE, "vehicles/spiderbot_jump.wav", VOL_VEHICLEENGINE, ATTN_NORM);
             //dprint("spiderbot_jump:", ftos(soundlength("vehicles/spiderbot_jump.wav")), "\n");
             self.delay = 0;
 
@@ -262,7 +262,7 @@ float spiderbot_frame()
                     self.delay = 3;
                     self.sound_nexttime = time + 6.486500; //soundlength("vehicles/spiderbot_idle.wav");
                     //dprint("spiderbot_idle:", ftos(soundlength("vehicles/spiderbot_idle.wav")), "\n");
-                    sound (self, CHAN_TRIGGER, "vehicles/spiderbot_idle.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+                    sound (self, CH_TRIGGER_SINGLE, "vehicles/spiderbot_idle.wav", VOL_VEHICLEENGINE, ATTN_NORM);
                 }                
                 movelib_beak_simple(autocvar_g_vehicle_spiderbot_speed_stop);
                 spider.frame = 5;
@@ -291,7 +291,7 @@ float spiderbot_frame()
                     {                        
                         self.delay = 1;
                         self.sound_nexttime = time + 6.486500; //soundlength("vehicles/spiderbot_walk.wav");
-                        sound (self, CHAN_TRIGGER, "vehicles/spiderbot_walk.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+                        sound (self, CH_TRIGGER_SINGLE, "vehicles/spiderbot_walk.wav", VOL_VEHICLEENGINE, ATTN_NORM);
                         //dprint("spiderbot_walk:", ftos(soundlength("vehicles/spiderbot_walk.wav")), "\n");
                     }
                 }
@@ -312,7 +312,7 @@ float spiderbot_frame()
                     {                        
                         self.delay = 2;
                         self.sound_nexttime = time + 6.486500; //soundlength("vehicles/spiderbot_strafe.wav");
-                        sound (self, CHAN_TRIGGER, "vehicles/spiderbot_strafe.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+                        sound (self, CH_TRIGGER_SINGLE, "vehicles/spiderbot_strafe.wav", VOL_VEHICLEENGINE, ATTN_NORM);
                         //dprint("spiderbot_strafe:", ftos(soundlength("vehicles/spiderbot_strafe.wav")), "\n");
                     }
                 }
@@ -342,7 +342,7 @@ float spiderbot_frame()
             fireBullet (v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_damage,
                 autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_SBMINIGUN, 0);
 
-            sound (gun, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
+            sound (gun, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
             trailparticles(self, particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
             pointparticles(particleeffectnum("spiderbot_minigun_muzzleflash"), v, v_forward * 2500, 1);
 
@@ -508,7 +508,7 @@ void spiderbot_headfade()
     {
         if(self.alpha > 0.1)
         {
-            sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+            sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
             pointparticles(particleeffectnum("explosion_big"), self.origin + '0 0 100', '0 0 0', 1);
         }
         remove(self);
@@ -521,7 +521,7 @@ void spiderbot_blowup()
     {
         if(random() < 0.1)
         {
-            sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+            sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
             pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
         }
         self.nextthink = time + 0.1;

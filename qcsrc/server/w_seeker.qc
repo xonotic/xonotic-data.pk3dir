@@ -166,7 +166,7 @@ void Seeker_Fire_Missile(vector f_diff, entity m_target)
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_reload_ammo);
 
 	makevectors(self.v_angle);
-	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/seeker_fire.wav", CHAN_WEAPON, 0);
+	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/seeker_fire.wav", CH_WEAPON_A, 0);
 	w_shotorg += f_diff;
 	pointparticles(particleeffectnum("seeker_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -254,7 +254,7 @@ void Seeker_Fire_Flac()
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/flac_fire.wav", CHAN_WEAPON, autocvar_g_balance_seeker_flac_damage);
+	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/flac_fire.wav", CH_WEAPON_A, autocvar_g_balance_seeker_flac_damage);
 	w_shotorg += f_diff;
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -469,7 +469,7 @@ void Seeker_Fire_Tag()
 	local entity missile;
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_tag_ammo, autocvar_g_balance_seeker_reload_ammo);
 
-	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/tag_fire.wav", CHAN_WEAPON, autocvar_g_balance_seeker_missile_damage * autocvar_g_balance_seeker_missile_count);
+	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/tag_fire.wav", CH_WEAPON_A, autocvar_g_balance_seeker_missile_damage * autocvar_g_balance_seeker_missile_count);
 
 	missile                 = spawn();
 	missile.owner           = missile.realowner = self;
@@ -615,17 +615,17 @@ float w_seeker(float req)
 			if(!w_issilent)
 			{
 				if (w_random<0.15)
-					sound(self, CHAN_PROJECTILE, "weapons/tagexp1.wav", 1, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTN_NORM);
 				else if (w_random<0.7)
-					sound(self, CHAN_PROJECTILE, "weapons/tagexp2.wav", 1, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/tagexp2.wav", 1, ATTN_NORM);
 				else
-					sound(self, CHAN_PROJECTILE, "weapons/tagexp3.wav", 1, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/tagexp3.wav", 1, ATTN_NORM);
 			}
 		}
 		else if(w_deathtype & HITTYPE_HEADSHOT)
 		{
 			if(!w_issilent)
-				sound(self, CHAN_PROJECTILE, "weapons/tag_impact.wav", 1, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/tag_impact.wav", 1, ATTN_NORM);
 		}
 		else
 		{
@@ -633,11 +633,11 @@ float w_seeker(float req)
 			if(!w_issilent)
 			{
 				if (w_random<0.15)
-					sound(self, CHAN_PROJECTILE, "weapons/seekerexp1.wav", 1, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/seekerexp1.wav", 1, ATTN_NORM);
 				else if (w_random<0.7)
-					sound(self, CHAN_PROJECTILE, "weapons/seekerexp2.wav", 1, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/seekerexp2.wav", 1, ATTN_NORM);
 				else
-					sound(self, CHAN_PROJECTILE, "weapons/seekerexp3.wav", 1, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/seekerexp3.wav", 1, ATTN_NORM);
 			}
 		}
 	}

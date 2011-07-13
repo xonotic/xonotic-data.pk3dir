@@ -85,7 +85,7 @@ void turret_hk_attack()
     local entity missile;
     //local entity flash2;
 
-    sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CH_WEAPON_A, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 
     missile                    = spawn ();
     missile.solid            = SOLID_BBOX;
@@ -283,7 +283,6 @@ void turret_hk_missile_think()
         self.cnt = time + 0.25;
         self.nextthink = 0;
         self.movetype         = MOVETYPE_BOUNCE;
-        sound    (self, CHAN_VOICE, "", 0.4 * VOL_BASE, ATTN_NORM);
         return;
     }
 

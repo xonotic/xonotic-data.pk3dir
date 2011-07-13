@@ -265,3 +265,7 @@ const float XENCODE_MAX = 21295; // 2*22*22*22-1
 const float XENCODE_LEN = 5;
 string xencode(float f);
 float xdecode(string s);
+
+#ifndef COMPAT_XON010_CHANNELS
+#define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
+#endif

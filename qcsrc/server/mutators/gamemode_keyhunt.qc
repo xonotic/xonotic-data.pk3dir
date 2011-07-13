@@ -413,7 +413,7 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, float deatht
 
 void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped key
 {
-	sound(player, CHAN_AUTO, kh_sound_collect, VOL_BASE, ATTN_NORM);
+	sound(player, CH_TRIGGER, kh_sound_collect, VOL_BASE, ATTN_NORM);
 
 	if(key.kh_dropperteam != player.team)
 	{
@@ -664,7 +664,7 @@ void kh_Key_Think()  // runs all the time
 	{
 		if(self.siren_time < time)
 		{
-			sound(self.owner, CHAN_AUTO, kh_sound_alarm, VOL_BASE, ATTN_NORM);  // play a simple alarm
+			sound(self.owner, CH_TRIGGER, kh_sound_alarm, VOL_BASE, ATTN_NORM);  // play a simple alarm
 			self.siren_time = time + 2.5;  // repeat every 2.5 seconds
 		}
 
@@ -799,7 +799,7 @@ void kh_Key_DropOne(entity key)
 	key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
 	key.kh_dropperteam = key.team;
 
-	sound(player, CHAN_AUTO, kh_sound_drop, VOL_BASE, ATTN_NORM);
+	sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTN_NORM);
 }
 
 void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
@@ -825,7 +825,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 			if(suicide)
 				key.kh_dropperteam = player.team;
 		}
-		sound(player, CHAN_AUTO, kh_sound_drop, VOL_BASE, ATTN_NORM);
+		sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTN_NORM);
 	}
 }
 

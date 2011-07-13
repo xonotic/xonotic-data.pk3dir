@@ -171,7 +171,7 @@ void multi_trigger()
 	}
 
 	if (self.noise)
-		sound (self.enemy, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 
 // don't trigger again until reset
 	self.takedamage = DAMAGE_NO;
@@ -554,7 +554,7 @@ void trigger_heal_touch()
 			{
 				other.health = min(other.health + self.health, self.max_health);
 				other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-				sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+				sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 			}
 		}
 	}
@@ -665,7 +665,7 @@ void trigger_gravity_touch()
 	{
 		other.gravity = g;
 		if(self.noise != "")
-			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 		UpdateCSQCProjectile(self.owner);
 	}
 };
@@ -721,7 +721,7 @@ void target_speaker_use_activator()
 	else
 		snd = self.noise;
 	msg_entity = activator;
-	soundto(MSG_ONE, self, CHAN_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
+	soundto(MSG_ONE, self, CH_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
 }
 void target_speaker_use_on()
 {
@@ -747,13 +747,13 @@ void target_speaker_use_on()
 	}
 	else
 		snd = self.noise;
-	sound(self, CHAN_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
+	sound(self, CH_TRIGGER_SINGLE, snd, VOL_BASE * self.volume, self.atten);
 	if(self.spawnflags & 3)
 		self.use = target_speaker_use_off;
 }
 void target_speaker_use_off()
 {
-	sound(self, CHAN_TRIGGER, "misc/null.wav", VOL_BASE * self.volume, self.atten);
+	sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASE * self.volume, self.atten);
 	self.use = target_speaker_use_on;
 }
 void target_speaker_reset()

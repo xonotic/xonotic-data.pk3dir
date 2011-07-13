@@ -95,19 +95,19 @@ void W_Porto_Touch (void)
 
 	if(self.realowner.playerid != self.playerid)
 	{
-		sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 		remove(self);
 	}
 	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
 	{
-		spamsound(self, CHAN_PROJECTILE, "porto/bounce.wav", VOL_BASE, ATTN_NORM);
+		spamsound(self, CH_SHOTS, "porto/bounce.wav", VOL_BASE, ATTN_NORM);
 		// just reflect
 		self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * trace_plane_normal);
 		self.angles = vectoangles(self.velocity - 2 * trace_plane_normal * (self.velocity * trace_plane_normal));
 	}
 	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
-		sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 		W_Porto_Fail(0);
 	}
 	else if(self.effects & EF_RED)
@@ -115,7 +115,7 @@ void W_Porto_Touch (void)
 		self.effects += EF_BLUE - EF_RED;
 		if(Portal_SpawnInPortalAtTrace(self.realowner, self.right_vector, self.portal_id))
 		{
-			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
 			centerprint(self.realowner, "^1In^7-portal created.");
 			self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * norm);
@@ -124,7 +124,7 @@ void W_Porto_Touch (void)
 		}
 		else
 		{
-			sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
 			W_Porto_Fail(0);
 		}
@@ -135,20 +135,20 @@ void W_Porto_Touch (void)
 		{
 			if(Portal_SpawnOutPortalAtTrace(self.realowner, self.right_vector, self.portal_id))
 			{
-				sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTN_NORM);
 				trace_plane_normal = norm;
 				centerprint(self.realowner, "^4Out^7-portal created.");
 				W_Porto_Success();
 			}
 			else
 			{
-				sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 				W_Porto_Fail(0);
 			}
 		}
 		else
 		{
-			sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 			W_Porto_Fail(0);
 		}
 	}
@@ -160,7 +160,7 @@ void W_Porto_Attack (void)
 
 	if not(self.items & IT_UNLIMITED_SUPERWEAPONS)
 		self.weapons = self.weapons - (self.weapons & WEPBIT_PORTO);
-	W_SetupShot (self, FALSE, 4, "porto/fire.wav", CHAN_WEAPON, 0);
+	W_SetupShot (self, FALSE, 4, "porto/fire.wav", CH_WEAPON_A, 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
