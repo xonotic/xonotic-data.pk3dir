@@ -1723,6 +1723,27 @@ void GameCommand_playerdemo(float request, string command) // UNTESTED
 	}
 }
 
+void GameCommand_printstats(float request)
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2printstats^7: foobar\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			DumpStats(FALSE);
+			print("stats dumped.\n"); 
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd printstats\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -1767,6 +1788,7 @@ void GameCommand(string command)
 			GameCommand_nospectators(GC_REQUEST_HELP);
 			GameCommand_onslaught_updatelinks(GC_REQUEST_HELP);
 			GameCommand_playerdemo(GC_REQUEST_HELP, "");
+			GameCommand_printstats(GC_REQUEST_HELP);
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
@@ -1820,6 +1842,7 @@ void GameCommand(string command)
 		case "nospectators": GameCommand_nospectators(search_request_type); break;
 		case "onslaught_updatelinks": GameCommand_onslaught_updatelinks(search_request_type); break;
 		case "playerdemo": GameCommand_playerdemo(search_request_type, command); break;
+		case "printstats": GameCommand_printstats(search_request_type); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
