@@ -349,12 +349,12 @@ void dom_controlpoint_setup()
 		self.wait = 5;
 
 	float points, waittime;
-	if (autocvar_g_domination_point_rate)
-		points = autocvar_g_domination_point_rate;
+	if (autocvar_g_domination_point_amt)
+		points = autocvar_g_domination_point_amt;
 	else
 		points = self.frags;
-	if (autocvar_g_domination_point_amt)
-		waittime = autocvar_g_domination_point_amt;
+	if (autocvar_g_domination_point_rate)
+		waittime = autocvar_g_domination_point_rate;
 	else
 		waittime = self.wait;
 
