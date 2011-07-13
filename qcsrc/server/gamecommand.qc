@@ -654,6 +654,7 @@ void GameCommand_allspec(float request) // todo: Add ability to provide a reason
 		case GC_REQUEST_COMMAND:
 			FOR_EACH_PLAYER(client)
 			{
+				self = client;
 				PutObserverInServer();
 				++i;
 			}
@@ -664,7 +665,7 @@ void GameCommand_allspec(float request) // todo: Add ability to provide a reason
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd allspec\n");
 			print("  No arguments required.\n");
-			print("  See also: ^2^7\n"); // FIXME: movetoteam when done will go here
+			print("  See also: ^2moveplayer^7\n");
 			return;
 	}
 }
@@ -988,8 +989,8 @@ void GameCommand_database(float request, string command)
 			print("Incorrect parameters for \"database\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd database action filename\n");
-			print("  Where action is the command to complete,\n");
-			print("  and filename is what it acts upon.\n");
+			print("  Where 'action' is the command to complete,\n");
+			print("  and 'filename' is what it acts upon.\n");
 			print("  Full list of commands here: \"save, dump, load.\"\n");
 			return;
 	}
@@ -1033,7 +1034,7 @@ void GameCommand_defer_clear(float request, string command)
 			print("Incorrect parameters for \"defer_clear\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd defer_clear clientnumber\n");
-			print("  where clientnumber is player entity number.\n");
+			print("  where 'clientnumber' is player entity number.\n");
 			print("  See also: ^2defer_clear_all^7\n");
 			return;
 	}
@@ -1092,9 +1093,9 @@ void GameCommand_delrec(float request, string command) // UNTESTED
 			print("Incorrect parameters for \"delrec\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd delrec ranking [map]\n");
-			print("  ranking is which ranking level to clear up to, \n");
+			print("  'ranking' is which ranking level to clear up to, \n");
 			print("  it will clear all records up to nth place.\n");
-			print("  if map is not provided it will use current map.\n");
+			print("  if 'map' is not provided it will use current map.\n");
 			return;
 	}
 }
@@ -1218,7 +1219,7 @@ void GameCommand_find(float request, string command)
 			print("Incorrect parameters for \"find\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd find classname\n");
-			print("  Where classname is the classname to search for.\n");
+			print("  Where 'classname' is the classname to search for.\n");
 			return;
 	}
 }
@@ -1257,7 +1258,7 @@ void GameCommand_gametype(float request, string command)
 			print("Incorrect parameters for \"gametype\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd gametype mode\n");
-			print("  Where mode is the gametype mode to switch to.\n");
+			print("  Where 'mode' is the gametype mode to switch to.\n");
 			print("  See also: ^2gotomap^7\n");
 			return;
 	}
@@ -1341,9 +1342,10 @@ void GameCommand_gotomap(float request, string command)
 			}
 			
 		default:
+			print("Incorrect parameters for \"gotomap\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd gotomap map\n");
-			print("  Where map is the *.bsp file to change to.\n");
+			print("  Where 'map' is the *.bsp file to change to.\n");
 			print("  See also: ^2gametype^7\n");
 			return;
 	}
@@ -1391,6 +1393,187 @@ void GameCommand_lockteams(float request)
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd lockteams\n");
 			print("  No arguments required.\n");
+			print("  See also: ^2unlockteams^7\n");
+			return;
+	}
+}
+
+void GameCommand_make_mapinfo(float request) // UNTESTED
+{
+	entity tmp_entity;
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2make_mapinfo^7: Automatically rebuild mapinfo files\n");
+			return;
+			
+		case GC_REQUEST_COMMAND: 
+			tmp_entity = spawn();
+			tmp_entity.classname = "make_mapinfo";
+			tmp_entity.think = make_mapinfo_Think;
+			tmp_entity.nextthink = time; // this sucks... todo: re-write this -- Use initializeentity later
+			MapInfo_Enumerate();
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd make_mapinfo\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
+void GameCommand_moveplayer(float request, string command)
+{
+	entity client;
+	float argc, i;
+	argc = tokenize_console(command); // we can only have one argc, so we store the information from it to other strings
+	string targets = argv(1);
+	string destination = argv(2);
+	string notify = argv(3);
+	argc = tokenizebyseparator(targets, ","); // and re-use it later for the target selection.
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2moveplayer^7: Change the team/status of a player\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			// lets see if the target(s) even actually exist.
+			if((targets) && (destination))
+			{ 
+				for(i = 0; i < argc; ++i)
+				{
+					// Check to see if the player is a valid target
+					if((stof(argv(i)) < 1) | (stof(argv(i)) > maxclients)) // player_id is out of range
+					{
+						print(strcat("Player ", argv(i), " doesn't exist", (((i + 1) < argc) ? ", skipping to next player.\n" : ".\n")));
+						continue; 
+					}
+					client = edict_num(stof(argv(i)));
+					if not(client.flags & FL_CLIENT) // player entity is not a client
+					{
+						print(strcat("Player ", argv(i), " doesn't exist", (((i + 1) < argc) ? ", skipping to next player.\n" : ".\n")));
+						continue;
+					}
+					
+					// Where are we putting this player?
+					if(destination == "spec" || destination == "spectator") 
+					{
+						if(client.classname != "spectator" && client.classname != "observer")
+						{
+							self = client;
+							PutObserverInServer();
+						}
+						else
+						{
+							print("Player ", argv(i), " (", client.netname, ") is already spectating.\n");
+						}
+						return;
+					}
+					else
+					{
+						if(client.classname != "spectator" && client.classname != "observer")
+						{
+							if(teamplay)
+							{
+								// set up
+								float team_color;
+								float save = client.team_forced;
+								client.team_forced = 0;
+
+								// find the team to move the player to
+								team_color = ColourToNumber(destination);
+								if(team_color == client.team) // already on the destination team
+								{
+									// keep the forcing undone
+									print("Player ", argv(i), " (", client.netname, ") is already on the ", ColoredTeamName(client.team), ".\n");
+									return;
+								} 
+								else if(team_color == 0)  // auto team
+								{
+									team_color = NumberToTeamNumber(FindSmallestTeam(client, FALSE));
+								}
+								else
+								{
+									CheckAllowedTeams(client);
+								}
+								client.team_forced = save;
+								
+								// Check to see if the destination team is even available
+								switch(team_color) 
+								{
+									case COLOR_TEAM1:
+										if(c1 == -1) {
+											print("Sorry, can't move player to red team if it doesn't exist.\n");
+											return;
+										}
+										break;
+
+									case COLOR_TEAM2:
+										if(c2 == -1) {
+											print("Sorry, can't move player to blue team if it doesn't exist.\n");
+											return;
+										}
+										break;
+
+									case COLOR_TEAM3:
+										if(c3 == -1) {
+											print("Sorry, can't move player to yellow team if it doesn't exist.\n");
+											return;
+										}
+										break;
+
+									case COLOR_TEAM4:
+										if(c4 == -1) {
+											print("Sorry, can't move player to pink team if it doesn't exist.\n");
+											return;
+										}
+										break;
+
+									default:
+										print("Sorry, can't move player here if team ", destination, " doesn't exist.\n");
+										return;
+								}
+								
+								// If so, lets continue and finally move the player
+								client.team_forced = 0;
+								MoveToTeam(client, team_color, 6, stof(notify));
+								print("Player ", argv(i), " (", client.netname, ") has been moved to the ", ColoredTeamName(team_color), ".\n");
+								return;
+							}
+							else
+							{
+								print("Can't change teams when currently not playing a team game.\n");
+								return;
+							}
+						}
+						else
+						{
+							print("Can't change teams if the player isn't in the game.\n"); // well technically we could, but should we allow that? :P 
+							return;
+						}
+					}
+				}
+				print("No acceptable players given, aborting.\n");
+				return; // still correct parameters so return to avoid usage print
+			}
+			
+		default:
+			print("Incorrect parameters for \"moveplayer\"\n");
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd moveplayer clientnumbers destination [notify]\n");
+			print("  'clientnumbers' is a list (separated by commas) of player entity ID's\n");
+			print("  'destination' is what to send the player to, be it team or spectating\n");
+			print("  Full list of destinations here: \"spec, spectator, red, blue, yellow, pink, auto.\"\n");
+			print("  'notify' is whether or not to send messages notifying of the move. Detail below.\n");
+			print("    0 (00) automove centerprint, admin message; 1 (01) automove centerprint, no admin message\n");
+			print("    2 (10) no centerprint, admin message; 3 (11) no centerprint, no admin message\n");
+			print("Examples: moveplayer 1,3,5 red 3\n");
+			print("          moveplayer 2 spec \n");
+			print("  See also: ^2allspec^7\n");
 			return;
 	}
 }
@@ -1433,11 +1616,8 @@ void GameCommand(string command)
 			GameCommand_gotomap(GC_REQUEST_HELP, "");
 			GameCommand_ladder(GC_REQUEST_HELP);
 			GameCommand_lockteams(GC_REQUEST_HELP);
-			print("  teamstatus\n");
-			print("  printstats\n");
-			print("  make_mapinfo\n");
-			print("  radarmap [--force] [--quit | --loop] [sharpness]\n");
-			print("  reducematchtime\n");
+			GameCommand_make_mapinfo(GC_REQUEST_HELP);
+			GameCommand_moveplayer(GC_REQUEST_HELP, "");
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
@@ -1485,6 +1665,8 @@ void GameCommand(string command)
 		case "gotomap": GameCommand_gotomap(search_request_type, command); break;
 		case "ladder": GameCommand_ladder(search_request_type); break;
 		case "lockteams": GameCommand_lockteams(search_request_type); break;
+		case "make_mapinfo": GameCommand_make_mapinfo(search_request_type); break;
+		case "moveplayer": GameCommand_moveplayer(search_request_type, command); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
