@@ -1309,7 +1309,7 @@ void GameCommand_gettaginfo(float request, string command) // UNTESTED // todo: 
 			print("Incorrect parameters for \"gettaginfo\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd gettaginfo\n");
-			print("  No arguments required.\n");
+			print("  FIXME: Arguments currently unknown\n");
 			return;
 	}
 }
@@ -1335,6 +1335,52 @@ void GameCommand_gotomap(float request, string command)
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd gotomap map\n");
 			print("  Where map is the *.bsp file to change to.\n");
+			return;
+	}
+}
+
+void GameCommand_ladder(float request)
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ladder - Get information about top players if supported\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			print(ladder_reply);
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd ladder\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
+void GameCommand_lockteams(float request)
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  lockteams - Disable the ability for players to switch or enter teams\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			if(teamplay)
+			{
+				lockteams = 1;
+				bprint("^1The teams are now locked.\n");
+			}
+			else
+				bprint("That command can only be used in a team-based gamemode.\n");
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd lockteams\n");
+			print("  No arguments required.\n");
 			return;
 	}
 }
@@ -1375,6 +1421,8 @@ void GameCommand(string command)
 			GameCommand_gametype(GC_REQUEST_HELP, "");
 			GameCommand_gettaginfo(GC_REQUEST_HELP, "");
 			GameCommand_gotomap(GC_REQUEST_HELP, "");
+			GameCommand_ladder(GC_REQUEST_HELP);
+			GameCommand_lockteams(GC_REQUEST_HELP);
 			print("  teamstatus\n");
 			print("  printstats\n");
 			print("  make_mapinfo\n");
@@ -1425,6 +1473,8 @@ void GameCommand(string command)
 		case "gametype": GameCommand_gametype(search_request_type, command); break;
 		case "gettaginfo": GameCommand_gettaginfo(search_request_type, command); break;
 		case "gotomap": GameCommand_gotomap(search_request_type, command); break;
+		case "ladder": GameCommand_ladder(search_request_type); break;
+		case "lockteams": GameCommand_lockteams(search_request_type); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
