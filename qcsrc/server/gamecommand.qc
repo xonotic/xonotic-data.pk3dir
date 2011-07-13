@@ -612,7 +612,7 @@ void GameCommand_adminmsg(float request, string command)
 		default:
 			print("Incorrect parameters for \"adminmsg\"\n");
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd adminmsg clientnumber \"message\" [infobartime]\n");
+			print("\nUsage:^3 sv_cmd adminmsg clientnumber \"message\" [infobartime]\n");
 			print("  If infobartime is provided, the message will be sent to infobar.\n");
 			print("  Otherwise, it will just be sent as a centerprint message.\n");
 			print("Examples: adminmsg 4 \"this message will last for ten seconds\" 10\n");
@@ -635,7 +635,7 @@ void GameCommand_allready(float request)
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd allready\n");
+			print("\nUsage:^3 sv_cmd allready\n");
 			print("  No arguments required.\n");
 			return;
 	}
@@ -662,7 +662,7 @@ void GameCommand_allspec(float request) // todo: Add ability to provide a reason
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd allspec\n");
+			print("\nUsage:^3 sv_cmd allspec\n");
 			print("  No arguments required.\n");
 			print("  See also: ^2^7\n"); // FIXME: movetoteam when done will go here
 			return;
@@ -698,7 +698,7 @@ void GameCommand_anticheat(float request, string command) // FIXME: player entit
 		default:
 			print("Incorrect parameters for \"anticheat\"\n");
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd anticheat clientnumber\n");
+			print("\nUsage:^3 sv_cmd anticheat clientnumber\n");
 			print("  where clientnumber is player entity number.\n");
 			return;
 	}
@@ -790,7 +790,7 @@ void GameCommand_bbox(float request)
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd bbox\n");
+			print("\nUsage:^3 sv_cmd bbox\n");
 			print("  No arguments required.\n");
 			print("  See also: ^2gettaginfo^7\n");
 			return;
@@ -874,7 +874,7 @@ void GameCommand_bot_cmd(float request, string command) // what a mess... old ol
 		default:
 			print("Incorrect parameters for \"bot_cmd\"\n");
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd bot_cmd client command [argument]\n");
+			print("\nUsage:^3 sv_cmd bot_cmd client command [argument]\n");
 			print("  'client' can be either the name or entity id of the bot\n");
 			print("  For full list of commands, see bot_cmd help [command].\n");
 			print("Examples: bot_cmd <id> cc \"say something\"\n");
@@ -902,7 +902,7 @@ void GameCommand_cointoss(float request) // todo: Perhaps add the ability to giv
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd cointoss\n");
+			print("\nUsage:^3 sv_cmd cointoss\n");
 			print("  No arguments required.\n");
 			return;
 	}
@@ -922,7 +922,7 @@ void GameCommand_cvar_changes(float request)
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd \n");
+			print("\nUsage:^3 sv_cmd \n");
 			print("  No arguments required.\n");
 			print("  See also: ^2cvar_purechanges^7\n");
 			return;
@@ -943,7 +943,7 @@ void GameCommand_cvar_purechanges(float request)
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd cvar_purechanges\n");
+			print("\nUsage:^3 sv_cmd cvar_purechanges\n");
 			print("  No arguments required.\n");
 			print("  See also: ^2cvar_changes^7\n");
 			return;
@@ -987,7 +987,7 @@ void GameCommand_database(float request, string command)
 		default:
 			print("Incorrect parameters for \"database\"\n");
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd database action filename\n");
+			print("\nUsage:^3 sv_cmd database action filename\n");
 			print("  Where action is the command to complete,\n");
 			print("  and filename is what it acts upon.\n");
 			print("  Full list of commands here: \"save, dump, load.\"\n");
@@ -1032,7 +1032,7 @@ void GameCommand_defer_clear(float request, string command)
 		default:
 			print("Incorrect parameters for \"defer_clear\"\n");
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd defer_clear clientnumber\n");
+			print("\nUsage:^3 sv_cmd defer_clear clientnumber\n");
 			print("  where clientnumber is player entity number.\n");
 			print("  See also: ^2defer_clear_all^7\n");
 			return;
@@ -1061,7 +1061,7 @@ void GameCommand_defer_clear_all(float request)
 		
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd defer_clear_all\n");
+			print("\nUsage:^3 sv_cmd defer_clear_all\n");
 			print("  No arguments required.\n");
 			print("  See also: ^2defer_clear^7\n");
 			return;
@@ -1091,7 +1091,7 @@ void GameCommand_delrec(float request, string command) // UNTESTED
 		default:
 			print("Incorrect parameters for \"delrec\"\n");
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd delrec ranking [map]\n");
+			print("\nUsage:^3 sv_cmd delrec ranking [map]\n");
 			print("  ranking is which ranking level to clear up to, \n");
 			print("  it will clear all records up to nth place.\n");
 			print("  if map is not provided it will use current map.\n");
@@ -1171,7 +1171,7 @@ void GameCommand_effectindexdump(float request)
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd effectindexdump\n");
+			print("\nUsage:^3 sv_cmd effectindexdump\n");
 			print("  No arguments required.\n");
 			return;
 	}
@@ -1191,7 +1191,7 @@ void GameCommand_extendmatchtime(float request) // todo: Perhaps allows the user
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd extendmatchtime\n");
+			print("\nUsage:^3 sv_cmd extendmatchtime\n");
 			print("  No arguments required.\n");
 			print("  See also: ^2reducematchtime^7\n");
 			return;
@@ -1217,7 +1217,7 @@ void GameCommand_find(float request, string command)
 		default:
 			print("Incorrect parameters for \"find\"\n");
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd find classname\n");
+			print("\nUsage:^3 sv_cmd find classname\n");
 			print("  Where classname is the classname to search for.\n");
 			return;
 	}
@@ -1256,7 +1256,7 @@ void GameCommand_gametype(float request, string command)
 		default:
 			print("Incorrect parameters for \"gametype\"\n");
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd gametype mode\n");
+			print("\nUsage:^3 sv_cmd gametype mode\n");
 			print("  Where mode is the gametype mode to switch to.\n");
 			print("  See also: ^2gotomap^7\n");
 			return;
@@ -1316,7 +1316,7 @@ void GameCommand_gettaginfo(float request, string command) // UNTESTED // todo: 
 		default:
 			print("Incorrect parameters for \"gettaginfo\"\n");
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd gettaginfo\n");
+			print("\nUsage:^3 sv_cmd gettaginfo\n");
 			print("  FIXME: Arguments currently unknown\n");
 			print("  See also: ^2bbox^7\n");
 			return;
@@ -1342,7 +1342,7 @@ void GameCommand_gotomap(float request, string command)
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd gotomap map\n");
+			print("\nUsage:^3 sv_cmd gotomap map\n");
 			print("  Where map is the *.bsp file to change to.\n");
 			print("  See also: ^2gametype^7\n");
 			return;
@@ -1363,7 +1363,7 @@ void GameCommand_ladder(float request)
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd ladder\n");
+			print("\nUsage:^3 sv_cmd ladder\n");
 			print("  No arguments required.\n");
 			return;
 	}
@@ -1389,7 +1389,7 @@ void GameCommand_lockteams(float request)
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage: sv_cmd lockteams\n");
+			print("\nUsage:^3 sv_cmd lockteams\n");
 			print("  No arguments required.\n");
 			return;
 	}
@@ -1411,7 +1411,7 @@ void GameCommand(string command)
 	{
 		if(argc == 1) 
 		{
-			print("\nUsage: sv_cmd COMMAND..., where possible commands are:\n");
+			print("\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are:\n");
 			GameCommand_adminmsg(GC_REQUEST_HELP, "");
 			GameCommand_allready(GC_REQUEST_HELP);
 			GameCommand_allspec(GC_REQUEST_HELP);
