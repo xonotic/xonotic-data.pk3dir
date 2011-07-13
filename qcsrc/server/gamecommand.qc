@@ -565,10 +565,9 @@ void modelbug()
 #define GC_REQUEST_COMMAND 2
 #define GC_REQUEST_USAGE 3
 
-void GameCommand_adminmsg(float request, string command)
+void GameCommand_adminmsg(float request, float argc)
 {
 	entity client;
-	float argc = tokenize_console(command);
 	float entno = stof(argv(1)); 
 	float n, i;
 	string s;
@@ -649,6 +648,7 @@ void GameCommand_allspec(float request) // todo: Add ability to provide a reason
 {
 	entity client;
 	float i;
+	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
@@ -674,10 +674,9 @@ void GameCommand_allspec(float request) // todo: Add ability to provide a reason
 	}
 }
 
-void GameCommand_anticheat(float request, string command) // FIXME: player entity is never found
+void GameCommand_anticheat(float request, float argc) // FIXME: player entity is never found
 {
 	entity client;
-	float argc = tokenize_console(command);
 	float entno = stof(argv(1)); 
 	
 	switch(request)
@@ -802,10 +801,9 @@ void GameCommand_bbox(float request)
 	}
 }
 
-void GameCommand_bot_cmd(float request, string command) // what a mess... old old code.
+void GameCommand_bot_cmd(float request, float argc) // what a mess... old old code.
 {
 	entity bot;
-	float argc = tokenize_console(command);
 	
 	switch(request)
 	{
@@ -955,10 +953,8 @@ void GameCommand_cvar_purechanges(float request)
 	}
 }
 
-void GameCommand_database(float request, string command)
+void GameCommand_database(float request, float argc)
 {
-	float argc = tokenize_console(command);
-	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
@@ -1000,10 +996,9 @@ void GameCommand_database(float request, string command)
 	}
 }
 
-void GameCommand_defer_clear(float request, string command)
+void GameCommand_defer_clear(float request, float argc)
 {
 	entity client;
-	float argc = tokenize_console(command);
 	float entno = stof(argv(1));
 	
 	switch(request)
@@ -1048,6 +1043,7 @@ void GameCommand_defer_clear_all(float request)
 {
 	entity client;
 	float i;
+	float argc;
 	
 	switch(request)
 	{
@@ -1058,7 +1054,8 @@ void GameCommand_defer_clear_all(float request)
 		case GC_REQUEST_COMMAND:
 			FOR_EACH_CLIENT(client)
 			{
-				GameCommand_defer_clear(GC_REQUEST_COMMAND, strcat("defer_clear ", ftos(num_for_edict(client))));	
+				argc = tokenize_console(strcat("defer_clear ", ftos(num_for_edict(client))));
+				GameCommand_defer_clear(GC_REQUEST_COMMAND, argc);	
 				++i;
 			}
 			if(i) { bprint(strcat("Successfully stuffed defer clear to all clients (", ftos(i), ")\n")); } // should a message be added if no players were found? 
@@ -1073,10 +1070,8 @@ void GameCommand_defer_clear_all(float request)
 	}
 }
 
-void GameCommand_delrec(float request, string command) // UNTESTED
+void GameCommand_delrec(float request, float argc) // UNTESTED
 {
-	float argc = tokenize_console(command);
-
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
@@ -1203,10 +1198,9 @@ void GameCommand_extendmatchtime(float request) // todo: Perhaps allows the user
 	}
 }
 
-void GameCommand_find(float request, string command)
+void GameCommand_find(float request, float argc)
 {
 	entity client;
-	float argc = tokenize_console(command);
 	
 	switch(request)
 	{
@@ -1228,9 +1222,8 @@ void GameCommand_find(float request, string command)
 	}
 }
 
-void GameCommand_gametype(float request, string command)
+void GameCommand_gametype(float request, float argc)
 {
-	float argc = tokenize_console(command);
 	string s = argv(1);
 	float t = MapInfo_Type_FromString(s), tsave = MapInfo_CurrentGametype();
 	
@@ -1268,11 +1261,12 @@ void GameCommand_gametype(float request, string command)
 	}
 }
 
-void GameCommand_gettaginfo(float request, string command) // UNTESTED // todo: finish usage description for it (but, must first learn this shit)
+void GameCommand_gettaginfo(float request, float argc) // UNTESTED // todo: finish usage description for it (but, must first learn this shit)
 {
 	entity tmp_entity;
-	float argc = tokenize_console(command), i;
+	float i;
 	vector v;
+	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
@@ -1328,10 +1322,8 @@ void GameCommand_gettaginfo(float request, string command) // UNTESTED // todo: 
 	}
 }
 
-void GameCommand_gotomap(float request, string command)
+void GameCommand_gotomap(float request, float argc)
 {
-	float argc = tokenize_console(command);
-	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
@@ -1448,15 +1440,14 @@ void GameCommand_modelbug(float request) // UNTESTED // is this even needed anym
 	}
 }
 
-void GameCommand_moveplayer(float request, string command)
+void GameCommand_moveplayer(float request, float argc)
 {
 	entity client;
-	float argc, i;
-	argc = tokenize_console(command); // we can only have one argc, so we store the information from it to other strings
 	string targets = argv(1);
 	string destination = argv(2);
 	string notify = argv(3);
-	argc = tokenizebyseparator(targets, ","); // and re-use it later for the target selection.
+	float i;
+	argc = tokenizebyseparator(targets, ","); // re-use argc for the targets
 	
 	switch(request)
 	{
@@ -1653,10 +1644,10 @@ void GameCommand_onslaught_updatelinks(float request) // UNTESTED // should this
 	}
 }
 
-void GameCommand_playerdemo(float request, string command) // UNTESTED
+void GameCommand_playerdemo(float request, float argc) // UNTESTED
 {
 	entity client;
-	float argc = tokenize_console(command), i, n, entno;
+	float i, n, entno;
 	string s;
 	
 	switch(request)
@@ -1765,33 +1756,33 @@ void GameCommand(string command)
 		if(argc == 1) 
 		{
 			print("\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are:\n");
-			GameCommand_adminmsg(GC_REQUEST_HELP, "");
+			GameCommand_adminmsg(GC_REQUEST_HELP, 0);
 			GameCommand_allready(GC_REQUEST_HELP);
 			GameCommand_allspec(GC_REQUEST_HELP);
-			GameCommand_anticheat(GC_REQUEST_HELP, "");
+			GameCommand_anticheat(GC_REQUEST_HELP, 0);
 			GameCommand_bbox(GC_REQUEST_HELP);
-			GameCommand_bot_cmd(GC_REQUEST_HELP, "");
+			GameCommand_bot_cmd(GC_REQUEST_HELP, 0);
 			GameCommand_cointoss(GC_REQUEST_HELP);
 			GameCommand_cvar_changes(GC_REQUEST_HELP);
 			GameCommand_cvar_purechanges(GC_REQUEST_HELP);
-			GameCommand_database(GC_REQUEST_HELP, "");
-			GameCommand_defer_clear(GC_REQUEST_HELP, "");
+			GameCommand_database(GC_REQUEST_HELP, 0);
+			GameCommand_defer_clear(GC_REQUEST_HELP, 0);
 			GameCommand_defer_clear_all(GC_REQUEST_HELP);
-			GameCommand_delrec(GC_REQUEST_HELP, "");
+			GameCommand_delrec(GC_REQUEST_HELP, 0);
 			GameCommand_effectindexdump(GC_REQUEST_HELP);
 			GameCommand_extendmatchtime(GC_REQUEST_HELP);
-			GameCommand_find(GC_REQUEST_HELP, "");
-			GameCommand_gametype(GC_REQUEST_HELP, "");
-			GameCommand_gettaginfo(GC_REQUEST_HELP, "");
-			GameCommand_gotomap(GC_REQUEST_HELP, "");
+			GameCommand_find(GC_REQUEST_HELP, 0);
+			GameCommand_gametype(GC_REQUEST_HELP, 0);
+			GameCommand_gettaginfo(GC_REQUEST_HELP, 0);
+			GameCommand_gotomap(GC_REQUEST_HELP, 0);
 			GameCommand_ladder(GC_REQUEST_HELP);
 			GameCommand_lockteams(GC_REQUEST_HELP);
 			GameCommand_make_mapinfo(GC_REQUEST_HELP);
 			GameCommand_modelbug(GC_REQUEST_HELP);
-			GameCommand_moveplayer(GC_REQUEST_HELP, "");
+			GameCommand_moveplayer(GC_REQUEST_HELP, 0);
 			GameCommand_nospectators(GC_REQUEST_HELP);
 			GameCommand_onslaught_updatelinks(GC_REQUEST_HELP);
-			GameCommand_playerdemo(GC_REQUEST_HELP, "");
+			GameCommand_playerdemo(GC_REQUEST_HELP, 0);
 			GameCommand_printstats(GC_REQUEST_HELP);
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
@@ -1819,33 +1810,33 @@ void GameCommand(string command)
 		
 	switch( ((argv(0) == "help") ? argv(1) : argv(0)) ) // if first argument is help, then search for the second argument. Else, search for first. 
 	{
-		case "adminmsg": GameCommand_adminmsg(search_request_type, command); break;
+		case "adminmsg": GameCommand_adminmsg(search_request_type, argc); break;
 		case "allready": GameCommand_allready(search_request_type); break;
 		case "allspec": GameCommand_allspec(search_request_type); break;
-		case "anticheat": GameCommand_anticheat(search_request_type, command); break;
+		case "anticheat": GameCommand_anticheat(search_request_type, argc); break;
 		case "bbox": GameCommand_bbox(search_request_type); break;
-		case "bot_cmd": GameCommand_bot_cmd(search_request_type, command); break;
+		case "bot_cmd": GameCommand_bot_cmd(search_request_type, argc); break;
 		case "cointoss": GameCommand_cointoss(search_request_type); break; 
 		case "cvar_changes": GameCommand_cvar_changes(search_request_type); break; 
 		case "cvar_purechanges": GameCommand_cvar_purechanges(search_request_type); break; 
-		case "database": GameCommand_database(search_request_type, command); break;
-		case "defer_clear": GameCommand_defer_clear(search_request_type, command); break;
+		case "database": GameCommand_database(search_request_type, argc); break;
+		case "defer_clear": GameCommand_defer_clear(search_request_type, argc); break;
 		case "defer_clear_all": GameCommand_defer_clear_all(search_request_type); break;
-		case "delrec": GameCommand_delrec(search_request_type, command); break;
+		case "delrec": GameCommand_delrec(search_request_type, argc); break;
 		case "effectindexdump": GameCommand_effectindexdump(search_request_type); break;
 		case "extendmatchtime": GameCommand_extendmatchtime(search_request_type); break;
-		case "find": GameCommand_find(search_request_type, command); break; 
-		case "gametype": GameCommand_gametype(search_request_type, command); break;
-		case "gettaginfo": GameCommand_gettaginfo(search_request_type, command); break;
-		case "gotomap": GameCommand_gotomap(search_request_type, command); break;
+		case "find": GameCommand_find(search_request_type, argc); break; 
+		case "gametype": GameCommand_gametype(search_request_type, argc); break;
+		case "gettaginfo": GameCommand_gettaginfo(search_request_type, argc); break;
+		case "gotomap": GameCommand_gotomap(search_request_type, argc); break;
 		case "ladder": GameCommand_ladder(search_request_type); break;
 		case "lockteams": GameCommand_lockteams(search_request_type); break;
 		case "make_mapinfo": GameCommand_make_mapinfo(search_request_type); break;
 		case "modelbug": GameCommand_modelbug(search_request_type); break;
-		case "moveplayer": GameCommand_moveplayer(search_request_type, command); break;
+		case "moveplayer": GameCommand_moveplayer(search_request_type, argc); break;
 		case "nospectators": GameCommand_nospectators(search_request_type); break;
 		case "onslaught_updatelinks": GameCommand_onslaught_updatelinks(search_request_type); break;
-		case "playerdemo": GameCommand_playerdemo(search_request_type, command); break;
+		case "playerdemo": GameCommand_playerdemo(search_request_type, argc); break;
 		case "printstats": GameCommand_printstats(search_request_type); break;
 		//case "radarmap": GameCommand_radarmap(search_request_type); break; // TODO: handled in server/radarmap.qc
 		
