@@ -470,6 +470,10 @@ void RadarMap(float argc)
 	print("Radarmap entity spawned.\n");
 }
 
+// ======================
+//  Supporting Functions
+// ======================
+
 void make_mapinfo_Think()
 {
 	if(MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
@@ -1843,6 +1847,7 @@ void GameCommand(string command)
 		case "onslaught_updatelinks": GameCommand_onslaught_updatelinks(search_request_type); break;
 		case "playerdemo": GameCommand_playerdemo(search_request_type, command); break;
 		case "printstats": GameCommand_printstats(search_request_type); break;
+		//case "radarmap": GameCommand_radarmap(search_request_type); break; // TODO: handled in server/radarmap.qc
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
