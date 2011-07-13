@@ -610,6 +610,7 @@ void GameCommand_adminmsg(float request, string command)
 			} 
 			
 		default:
+			print("Incorrect parameters for \"adminmsg\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd adminmsg clientnumber \"message\" [infobartime]\n");
 			print("  If infobartime is provided, the message will be sent to infobar.\n");
@@ -694,6 +695,7 @@ void GameCommand_anticheat(float request, string command) // FIXME: player entit
 			return;
 			
 		default:
+			print("Incorrect parameters for \"anticheat\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd anticheat clientnumber\n");
 			print("  where clientnumber is player entity number.\n");
@@ -868,6 +870,7 @@ void GameCommand_bot_cmd(float request, string command) // what a mess... old ol
 			}
 			
 		default:
+			print("Incorrect parameters for \"bot_cmd\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd bot_cmd client command [argument]\n");
 			print("  'client' can be either the name or entity id of the bot\n");
@@ -978,6 +981,7 @@ void GameCommand_database(float request, string command)
 			}
 			
 		default:
+			print("Incorrect parameters for \"database\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd database action filename\n");
 			print("  Where action is the command to complete,\n");
@@ -1022,6 +1026,7 @@ void GameCommand_defer_clear(float request, string command)
 			}
 		
 		default:
+			print("Incorrect parameters for \"defer_clear\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd defer_clear clientnumber\n");
 			print("  where clientnumber is player entity number.\n");
@@ -1078,6 +1083,7 @@ void GameCommand_delrec(float request, string command) // UNTESTED
 			}
 			
 		default:
+			print("Incorrect parameters for \"delrec\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd delrec ranking [map]\n");
 			print("  ranking is which ranking level to clear up to, \n");
@@ -1202,6 +1208,7 @@ void GameCommand_find(float request, string command)
 			return;
 			
 		default:
+			print("Incorrect parameters for \"find\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd find classname\n");
 			print("  Where classname is the classname to search for.\n");
@@ -1240,9 +1247,69 @@ void GameCommand_gametype(float request, string command)
 			return;
 			
 		default:
+			print("Incorrect parameters for \"gametype\"\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage: sv_cmd gametype mode\n");
 			print("  Where mode is the gametype mode to switch to.\n");
+			return;
+	}
+}
+
+void GameCommand_gettaginfo(float request, string command) // UNTESTED // todo: finish usage description for it (but, must first learn this shit)
+{
+	entity tmp_entity;
+	float argc = tokenize_console(command), i;
+	vector v;
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  gettaginfo - Get specific information about a weapon model\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			if(argc >= 4)
+			{
+				tmp_entity = spawn();
+				if(argv(1) == "w")
+					setmodel(tmp_entity, (nextent(world)).weaponentity.model);
+				else
+				{
+					precache_model(argv(1));
+					setmodel(tmp_entity, argv(1));
+				}
+				tmp_entity.frame = stof(argv(2));
+				if(substring(argv(3), 0, 1) == "#")
+					i = stof(substring(argv(3), 1, -1));
+				else
+					i = gettagindex(tmp_entity, argv(3));
+				if(i)
+				{
+					v = gettaginfo(tmp_entity, i);
+					print("model ", tmp_entity.model, " frame ", ftos(tmp_entity.frame), " tag ", gettaginfo_name);
+					print(" index ", ftos(i), " parent ", ftos(gettaginfo_parent), "\n");
+					print(" vector = ", ftos(v_x), " ", ftos(v_y), " ", ftos(v_z), "\n");
+					print(" offset = ", ftos(gettaginfo_offset_x), " ", ftos(gettaginfo_offset_y), " ", ftos(gettaginfo_offset_z), "\n");
+					print(" forward = ", ftos(gettaginfo_forward_x), " ", ftos(gettaginfo_forward_y), " ", ftos(gettaginfo_forward_z), "\n");
+					print(" right = ", ftos(gettaginfo_right_x), " ", ftos(gettaginfo_right_y), " ", ftos(gettaginfo_right_z), "\n");
+					print(" up = ", ftos(gettaginfo_up_x), " ", ftos(gettaginfo_up_y), " ", ftos(gettaginfo_up_z), "\n");
+					if(argc >= 6)
+					{
+						v_y = -v_y;
+						localcmd(strcat(argv(4), vtos(v), argv(5), "\n"));
+					}
+				}
+				else
+					print("bone not found\n");
+					
+				remove(tmp_entity);
+				return;
+			}
+			
+		default:
+			print("Incorrect parameters for \"gettaginfo\"\n");
+		case GC_REQUEST_USAGE:
+			print("\nUsage: sv_cmd gettaginfo\n");
+			print("  No arguments required.\n");
 			return;
 	}
 }
@@ -1275,6 +1342,7 @@ void GameCommand_gotomap(float request, string command)
 void GameCommand(string command)
 {
 	// ===== TODO list =====
+	
 	// Finish adding the rest of the commands
 	
 	// Add ifdef to stuffto so that is can only be used when the game code is compiled for it 
@@ -1287,9 +1355,6 @@ void GameCommand(string command)
 	{
 		if(argc == 1) 
 		{
-			// should these not recieve "command" argument? They have no use for it. 
-			// but, what to provide instead? null string?
-			
 			print("\nUsage: sv_cmd COMMAND..., where possible commands are:\n");
 			GameCommand_adminmsg(GC_REQUEST_HELP, "");
 			GameCommand_allready(GC_REQUEST_HELP);
@@ -1308,6 +1373,7 @@ void GameCommand(string command)
 			GameCommand_extendmatchtime(GC_REQUEST_HELP);
 			GameCommand_find(GC_REQUEST_HELP, "");
 			GameCommand_gametype(GC_REQUEST_HELP, "");
+			GameCommand_gettaginfo(GC_REQUEST_HELP, "");
 			GameCommand_gotomap(GC_REQUEST_HELP, "");
 			print("  teamstatus\n");
 			print("  printstats\n");
@@ -1357,6 +1423,7 @@ void GameCommand(string command)
 		case "extendmatchtime": GameCommand_extendmatchtime(search_request_type); break;
 		case "find": GameCommand_find(search_request_type, command); break; 
 		case "gametype": GameCommand_gametype(search_request_type, command); break;
+		case "gettaginfo": GameCommand_gettaginfo(search_request_type, command); break;
 		case "gotomap": GameCommand_gotomap(search_request_type, command); break;
 		
 		default:
