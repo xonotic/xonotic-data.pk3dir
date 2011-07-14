@@ -1867,6 +1867,32 @@ void GameCommand_teamstatus(float request)
 	}
 }
 
+void GameCommand_time(float request)
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2time^7: Print different formats/readouts of time\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			print("time = ", ftos(time), "\n");
+			print("frame start = ", ftos(gettime(GETTIME_FRAMESTART)), "\n");
+			print("realtime = ", ftos(gettime(GETTIME_REALTIME)), "\n");
+			print("hires = ", ftos(gettime(GETTIME_HIRES)), "\n");
+			print("uptime = ", ftos(gettime(GETTIME_UPTIME)), "\n");
+			print("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"); // FIXME: Why is strftime broken? is engine problem, I think.
+			print("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y"), "\n");
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd time\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
 void GameCommand_trace(float request, float argc)
 {
 	entity e;
@@ -2036,6 +2062,33 @@ void GameCommand_trace(float request, float argc)
 	}
 }
 
+void GameCommand_unlockteams(float request)
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2unlockteams^7: Enable the ability for players to switch or enter teams\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			if(teamplay)
+			{
+				lockteams = 0;
+				bprint("^1The teams are now unlocked.\n");
+			}
+			else
+				bprint("That command can only be used in a team-based gamemode.\n");
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd unlockteams\n");
+			print("  No arguments required.\n");
+			print("See also: ^2lockteams^7\n");
+			return;
+	}
+}
+
 
 // =========================================
 //  Main Function Called By Engine (sv_cmd)
@@ -2090,7 +2143,9 @@ void GameCommand(string command)
 			GameCommand_reducematchtime(GC_REQUEST_HELP);
 			GameCommand_stuffto(GC_REQUEST_HELP, 0);
 			GameCommand_teamstatus(GC_REQUEST_HELP);
+			GameCommand_time(GC_REQUEST_HELP);
 			GameCommand_trace(GC_REQUEST_HELP, 0);
+			GameCommand_unlockteams(GC_REQUEST_HELP);
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
@@ -2154,7 +2209,9 @@ void GameCommand(string command)
 		case "reducematchtime": GameCommand_reducematchtime(search_request_type); break;
 		case "stuffto": GameCommand_stuffto(search_request_type, argc); break;
 		case "teamstatus": GameCommand_teamstatus(search_request_type); break;
+		case "time": GameCommand_time(search_request_type); break;
 		case "trace": GameCommand_trace(search_request_type, argc); break;
+		case "unlockteams": GameCommand_unlockteams(search_request_type); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
