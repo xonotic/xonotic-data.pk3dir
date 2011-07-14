@@ -536,12 +536,12 @@ void GameCommand_adminmsg(float request, float argc)
 						++n;
 					}
 				}
-				if(!n) { print("Client not found\n"); } 
+				if(!n) { print(strcat("Client (", argv(1) ,") not found.\n")); } 
 				return;
 			} 
 			
 		default:
-			print("Incorrect parameters for \"adminmsg\"\n");
+			print("Incorrect parameters for ^2adminmsg^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd adminmsg clientnumber \"message\" [infobartime]\n");
 			print("  If infobartime is provided, the message will be sent to infobar.\n");
@@ -628,7 +628,7 @@ void GameCommand_anticheat(float request, float argc) // FIXME: player entity is
 			return;
 			
 		default:
-			print("Incorrect parameters for \"anticheat\"\n");
+			print("Incorrect parameters for ^2anticheat^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd anticheat clientnumber\n");
 			print("  where clientnumber is player entity number.\n");
@@ -803,7 +803,7 @@ void GameCommand_bot_cmd(float request, float argc) // what a mess... old old co
 			}
 			
 		default:
-			print("Incorrect parameters for \"bot_cmd\"\n");
+			print("Incorrect parameters for ^2bot_cmd^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd bot_cmd client command [argument]\n");
 			print("  'client' can be either the name or entity id of the bot\n");
@@ -914,7 +914,7 @@ void GameCommand_database(float request, float argc)
 			}
 			
 		default:
-			print("Incorrect parameters for \"database\"\n");
+			print("Incorrect parameters for ^2database^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd database action filename\n");
 			print("  Where 'action' is the command to complete,\n");
@@ -958,7 +958,7 @@ void GameCommand_defer_clear(float request, float argc)
 			}
 		
 		default:
-			print("Incorrect parameters for \"defer_clear\"\n");
+			print("Incorrect parameters for ^2defer_clear^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd defer_clear clientnumber\n");
 			print("  where 'clientnumber' is player entity number.\n");
@@ -998,7 +998,7 @@ void GameCommand_defer_clear_all(float request)
 	}
 }
 
-void GameCommand_delrec(float request, float argc) // UNTESTED
+void GameCommand_delrec(float request, float argc) // UNTESTED // perhaps merge later with records and printstats and such?
 {
 	switch(request)
 	{
@@ -1017,7 +1017,7 @@ void GameCommand_delrec(float request, float argc) // UNTESTED
 			}
 			
 		default:
-			print("Incorrect parameters for \"delrec\"\n");
+			print("Incorrect parameters for ^2delrec^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd delrec ranking [map]\n");
 			print("  'ranking' is which ranking level to clear up to, \n");
@@ -1142,7 +1142,7 @@ void GameCommand_find(float request, float argc)
 			return;
 			
 		default:
-			print("Incorrect parameters for \"find\"\n");
+			print("Incorrect parameters for ^2find^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd find classname\n");
 			print("  Where 'classname' is the classname to search for.\n");
@@ -1180,7 +1180,7 @@ void GameCommand_gametype(float request, float argc)
 			return;
 			
 		default:
-			print("Incorrect parameters for \"gametype\"\n");
+			print("Incorrect parameters for ^2gametype^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd gametype mode\n");
 			print("  Where 'mode' is the gametype mode to switch to.\n");
@@ -1241,7 +1241,7 @@ void GameCommand_gettaginfo(float request, float argc) // UNTESTED // todo: fini
 			}
 			
 		default:
-			print("Incorrect parameters for \"gettaginfo\"\n");
+			print("Incorrect parameters for ^2gettaginfo^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd gettaginfo\n");
 			print("  FIXME: Arguments currently unknown\n");
@@ -1266,7 +1266,7 @@ void GameCommand_gotomap(float request, float argc)
 			}
 			
 		default:
-			print("Incorrect parameters for \"gotomap\"\n");
+			print("Incorrect parameters for ^2gotomap^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd gotomap map\n");
 			print("  Where 'map' is the *.bsp file to change to.\n");
@@ -1505,7 +1505,7 @@ void GameCommand_moveplayer(float request, float argc)
 			}
 			
 		default:
-			print("Incorrect parameters for \"moveplayer\"\n");
+			print("Incorrect parameters for ^2moveplayer^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd moveplayer clientnumbers destination [notify]\n");
 			print("  'clientnumbers' is a list (separated by commas) of player entity ID's\n");
@@ -1572,7 +1572,7 @@ void GameCommand_onslaught_updatelinks(float request) // UNTESTED // should this
 	}
 }
 
-void GameCommand_playerdemo(float request, float argc) // UNTESTED
+void GameCommand_playerdemo(float request, float argc) // UNTESTED // TODO: change the if statements for sub arguments to switches
 {
 	entity client;
 	float i, n, entno;
@@ -1638,9 +1638,9 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED
 			return;
 			
 		default:
+			print("Incorrect parameters for ^2radarmap^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd \n");
-			print("  No arguments required.\n");
 			print("  FIXME: Arguments currently unknown\n");
 			return;
 	}
@@ -1701,9 +1701,9 @@ void GameCommand_radarmap(float request, float argc)
 						case "--lineblock": { radarmapper.count |= 24; break; }
 						case "--flags": { ++i; radarmapper.count = stof(argv(i)); break; } // for the recursive call
 						case "--sharpen": { ++i; radarmapper.ltime = stof(argv(i)); break; } // for the recursive call
-						case "--res": // allow minor alias
+						case "--res": // minor alias
 						case "--resolution": { ++i; radarmapper.size_x = stof(argv(i)); ++i; radarmapper.size_y = stof(argv(i)); break; }
-						case "--qual": // allow minor alias
+						case "--qual": // minor alias
 						case "--quality": { ++i; radarmapper.size_z = stof(argv(i)); break; }
 						
 						default: 
@@ -1722,7 +1722,7 @@ void GameCommand_radarmap(float request, float argc)
 			}
 			
 		default:
-			print("Incorrect parameters for \"radarmap\"\n");
+			print("Incorrect parameters for ^2radarmap^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd radarmap [--force] [--loop] [--quit] [--block | --trace | --sample | --lineblock] [--sharpen N] [--res W H] [--qual Q]\n");
 			print("  The quality factor Q is roughly proportional to the time taken.\n");
@@ -1799,8 +1799,8 @@ void GameCommand_reducematchtime(float request) // todo: Perhaps allows the user
 
 void GameCommand_stuffto(float request, float argc)
 {
-	// This, stuffto, is a fairly dangerous and powerful command... - It allows any arguments to be sent to a client via rcon
-	// because of this, it is disabled by default and must be enabled by the server owner when doing compilation. That way,
+	// This... is a fairly dangerous and powerful command... - It allows any arguments to be sent to a client via rcon.
+	// Because of this, it is disabled by default and must be enabled by the server owner when doing compilation. That way,
 	// we can be certain they understand the risks of it... So to enable, compile server with -DSTUFFTO_ENABLED argument.
 	
 	entity client;
@@ -1826,16 +1826,16 @@ void GameCommand_stuffto(float request, float argc)
 					print(strcat("Command: \"", argv(2), "\" sent to ", client.netname, " (", argv(1) ,").\n"));
 				}
 				else
-					print(strcat("Client: ", client.netname, " (", argv(1) ,") not found.\n"));
+					print(strcat("Client (", argv(1) ,") not found.\n"));
 				
 				return;
 			}
 			
 		default:
-			print("Incorrect parameters for \"stuffto\"\n");
+			print("Incorrect parameters for ^2stuffto^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd stuffto clientnumber command\n");
-			print("  No arguments required.\n");
+			print("  FIXME: Arguments currently unknown\n");
 			return;
 	}
 	#else // give the response for missing command to fake them out ;3
@@ -1847,6 +1847,195 @@ void GameCommand_stuffto(float request, float argc)
 	#endif
 }
 
+void GameCommand_teamstatus(float request)
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2teamstatus^7: Show information about player and team scores\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			Score_NicePrint(world);
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd teamstatus\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
+void GameCommand_trace(float request, float argc)
+{
+	entity e;
+	vector org, delta, start, end, p, q, q0, pos, vv, dv;
+	float i, f, safe, unsafe, dq, dqf;
+	
+	// TODO: Clean up all of these variables and merge the code below to use only a few
+						
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2trace^7: Various debugging tools with tracing\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			switch(argv(1))
+			{
+				case "debug":
+					print("TEST CASE. If this returns the runaway loop counter error, possibly everything is oaky.\n");
+					for(;;)
+					{
+						org = world.mins;
+						delta = world.maxs - world.mins;
+
+						start_x = org_x + random() * delta_x;
+						start_y = org_y + random() * delta_y;
+						start_z = org_z + random() * delta_z;
+
+						end_x = org_x + random() * delta_x;
+						end_y = org_y + random() * delta_y;
+						end_z = org_z + random() * delta_z;
+
+						start = stov(vtos(start));
+						end = stov(vtos(end));
+
+						tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
+						if(!trace_startsolid)
+						{
+							p = trace_endpos;
+							tracebox(p, PL_MIN, PL_MAX, p, MOVE_NOMONSTERS, world);
+							if(trace_startsolid || trace_fraction == 1)
+							{
+								rint(42); // do an engine breakpoint on VM_rint so you can get the trace that errnoeously returns startsolid
+								tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
+								tracebox(p, PL_MIN, PL_MAX, q, MOVE_NOMONSTERS, world);
+
+								if(trace_startsolid)
+								{
+									// how much do we need to back off?
+									safe = 1;
+									unsafe = 0;
+									for(;;)
+									{
+										pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
+										tracebox(pos, PL_MIN, PL_MAX, pos, MOVE_NOMONSTERS, world);
+										if(trace_startsolid)
+										{
+											if((safe + unsafe) * 0.5 == unsafe)
+												break;
+											unsafe = (safe + unsafe) * 0.5;
+										}
+										else
+										{
+											if((safe + unsafe) * 0.5 == safe)
+												break;
+											safe = (safe + unsafe) * 0.5;
+										}
+									}
+
+									print("safe distance to back off: ", ftos(safe * vlen(p - start)), "qu\n");
+									print("unsafe distance to back off: ", ftos(unsafe * vlen(p - start)), "qu\n");
+
+									tracebox(p, PL_MIN + '0.1 0.1 0.1', PL_MAX - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, world);
+									if(trace_startsolid)
+										print("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
+									else
+										print("trace_endpos just in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
+									break;
+								}
+
+								q0 = p;
+								dq = 0;
+								dqf = 1;
+								for(;;)
+								{
+									q = p + normalize(end - p) * (dq + dqf);
+									if(q == q0)
+										break;
+									tracebox(p, PL_MIN, PL_MAX, q, MOVE_NOMONSTERS, world);
+									if(trace_startsolid)
+										error("THIS ONE cannot happen");
+									if(trace_fraction > 0)
+										dq += dqf * trace_fraction;
+									dqf *= 0.5;
+									q0 = q;
+								}
+								if(dq > 0)
+								{
+									print("trace_endpos still before solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
+									print("could go ", ftos(dq), " units further to ", vtos(q), "\n");
+									break;
+								}
+							}
+						}
+					}
+					return;
+					
+				case "debug2":
+					e = nextent(world);
+					tracebox(e.origin + '0 0 32', e.mins, e.maxs, e.origin + '0 0 -1024', MOVE_NORMAL, e);
+					vv = trace_endpos;
+					if(trace_fraction == 1)
+					{
+						print("not above ground, aborting\n");
+						return;
+					}
+					f = 0;
+					for(i = 0; i < 100000; ++i)
+					{
+						dv = randomvec();
+						if(dv_z > 0)
+							dv = -1 * dv;
+						tracebox(vv, e.mins, e.maxs, vv + dv, MOVE_NORMAL, e);
+						if(trace_startsolid)
+							print("bug 1\n");
+						if(trace_fraction == 1)
+						if(dv_z < f)
+						{
+							print("bug 2: ", ftos(dv_x), " ", ftos(dv_y), " ", ftos(dv_z));
+							print(" (", ftos(asin(dv_z / vlen(dv)) * 180 / M_PI), " degrees)\n");
+							f = dv_z;
+						}
+					}
+					print("highest possible dist: ", ftos(f), "\n");
+					return;
+				
+				case "walk":
+					if(argc == 3)
+					{
+						e = nextent(world);
+						if(tracewalk(e, stov(argv(1)), e.mins, e.maxs, stov(argv(2)), MOVE_NORMAL))
+							print("can walk\n");
+						else
+							print("cannot walk\n");
+						return;
+					}
+						
+				case "showline":
+					if(argc == 3)
+					{
+						vv = stov(argv(1));
+						dv = stov(argv(2));
+						traceline(vv, dv, MOVE_NORMAL, world);
+						trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), vv, trace_endpos);
+						trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dv);
+						return;
+					}
+					
+				// no default case, just go straight to "invalid arguments"
+			}
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd trace command [arguments]\n");
+			print("  FIXME: Arguments currently unknown\n");
+			return;
+	}
+}
+
 
 // =========================================
 //  Main Function Called By Engine (sv_cmd)
@@ -1855,12 +2044,9 @@ void GameCommand_stuffto(float request, float argc)
 void GameCommand(string command)
 {
 	// ===== TODO list =====
-	// test some of the older commands and if they're still wanted, fix them if they're broken.
-	
 	// Finish adding the rest of the commands
 	
-	// Add ifdef to stuffto so that is can only be used when the game code is compiled for it 
-	//(this way it's more obscure and harder to abuse on normal servers)
+	// find all FIXME's and TODO'S and UNTESTED'S and finish them :P
 
 	float search_request_type;
 	float argc = tokenize_console(command);
@@ -1903,6 +2089,8 @@ void GameCommand(string command)
 			GameCommand_records(GC_REQUEST_HELP);
 			GameCommand_reducematchtime(GC_REQUEST_HELP);
 			GameCommand_stuffto(GC_REQUEST_HELP, 0);
+			GameCommand_teamstatus(GC_REQUEST_HELP);
+			GameCommand_trace(GC_REQUEST_HELP, 0);
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
@@ -1929,8 +2117,8 @@ void GameCommand(string command)
 		
 	switch( ((argv(0) == "help") ? argv(1) : argv(0)) ) // if first argument is help, then search for the second argument. Else, search for first. 
 	{
-		// keep in alphabetical order, please ;)
-		// also: Do not hard code aliases for these, instead create them in defaultXonotic.cfg
+		// Do not hard code aliases for these, instead create them in defaultXonotic.cfg
+		// also: keep in alphabetical order, please ;)
 		
 		case "adminmsg": GameCommand_adminmsg(search_request_type, argc); break;
 		case "allready": GameCommand_allready(search_request_type); break;
@@ -1965,6 +2153,8 @@ void GameCommand(string command)
 		case "records": GameCommand_records(search_request_type); break;
 		case "reducematchtime": GameCommand_reducematchtime(search_request_type); break;
 		case "stuffto": GameCommand_stuffto(search_request_type, argc); break;
+		case "teamstatus": GameCommand_teamstatus(search_request_type); break;
+		case "trace": GameCommand_trace(search_request_type, argc); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
