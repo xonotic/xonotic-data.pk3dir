@@ -1797,6 +1797,56 @@ void GameCommand_reducematchtime(float request) // todo: Perhaps allows the user
 	}
 }
 
+void GameCommand_stuffto(float request, float argc)
+{
+	// This, stuffto, is a fairly dangerous and powerful command... - It allows any arguments to be sent to a client via rcon
+	// because of this, it is disabled by default and must be enabled by the server owner when doing compilation. That way,
+	// we can be certain they understand the risks of it... So to enable, compile server with -DSTUFFTO_ENABLED argument.
+	
+	entity client;
+	float entno;
+	
+	#ifdef STUFFTO_ENABLED
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2stuffto^7: Send a command to be executed on a client\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			if(argc == 3)
+			{
+				entno = stof(argv(1));
+				client = world;
+				if(entno <= maxclients)
+					client = edict_num(entno);
+				if(client.flags & FL_CLIENT)
+				{
+					stuffcmd(client, strcat("\n", argv(2), "\n"));
+					print(strcat("Command: \"", argv(2), "\" sent to ", client.netname, " (", argv(1) ,").\n"));
+				}
+				else
+					print(strcat("Client: ", client.netname, " (", argv(1) ,") not found.\n"));
+				
+				return;
+			}
+			
+		default:
+			print("Incorrect parameters for \"stuffto\"\n");
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd stuffto clientnumber command\n");
+			print("  No arguments required.\n");
+			return;
+	}
+	#else // give the response for missing command to fake them out ;3
+	if(request == GC_REQUEST_COMMAND)
+	{
+		print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
+		return;
+	}
+	#endif
+}
+
 
 // =========================================
 //  Main Function Called By Engine (sv_cmd)
@@ -1852,6 +1902,7 @@ void GameCommand(string command)
 			GameCommand_rankings(GC_REQUEST_HELP);
 			GameCommand_records(GC_REQUEST_HELP);
 			GameCommand_reducematchtime(GC_REQUEST_HELP);
+			GameCommand_stuffto(GC_REQUEST_HELP, 0);
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
@@ -1878,6 +1929,9 @@ void GameCommand(string command)
 		
 	switch( ((argv(0) == "help") ? argv(1) : argv(0)) ) // if first argument is help, then search for the second argument. Else, search for first. 
 	{
+		// keep in alphabetical order, please ;)
+		// also: Do not hard code aliases for these, instead create them in defaultXonotic.cfg
+		
 		case "adminmsg": GameCommand_adminmsg(search_request_type, argc); break;
 		case "allready": GameCommand_allready(search_request_type); break;
 		case "allspec": GameCommand_allspec(search_request_type); break;
@@ -1910,6 +1964,7 @@ void GameCommand(string command)
 		case "rankings": GameCommand_rankings(search_request_type); break;
 		case "records": GameCommand_records(search_request_type); break;
 		case "reducematchtime": GameCommand_reducematchtime(search_request_type); break;
+		case "stuffto": GameCommand_stuffto(search_request_type, argc); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
