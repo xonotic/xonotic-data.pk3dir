@@ -1776,9 +1776,31 @@ void GameCommand_records(float request)
 	}
 }
 
+void GameCommand_reducematchtime(float request) // todo: Perhaps allows the user to send a specific time to reduce it.
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2reducematchtime^7: Decrease the timelimit value incrementally\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			changematchtime(autocvar_timelimit_decrement*-60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd reducematchtime\n");
+			print("  No arguments required.\n");
+			print("See also: ^2extendmatchtime^7\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
+	// test some of the older commands and if they're still wanted, fix them if they're broken.
 	
 	// Finish adding the rest of the commands
 	
@@ -1824,6 +1846,7 @@ void GameCommand(string command)
 			GameCommand_radarmap(GC_REQUEST_HELP, 0);
 			GameCommand_rankings(GC_REQUEST_HELP);
 			GameCommand_records(GC_REQUEST_HELP);
+			GameCommand_reducematchtime(GC_REQUEST_HELP);
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
@@ -1881,6 +1904,7 @@ void GameCommand(string command)
 		case "radarmap": GameCommand_radarmap(search_request_type, argc); break;
 		case "rankings": GameCommand_rankings(search_request_type); break;
 		case "records": GameCommand_records(search_request_type); break;
+		case "reducematchtime": GameCommand_reducematchtime(search_request_type); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
