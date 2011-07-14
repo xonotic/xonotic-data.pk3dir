@@ -1,3 +1,8 @@
+// =====================================================
+//  Server side game commands code, reworked by Samual
+//  Last updated: July 13th, 2011
+// =====================================================
+
 #define GC_REQUEST_HELP 1
 #define GC_REQUEST_COMMAND 2
 #define GC_REQUEST_USAGE 3
@@ -15,9 +20,12 @@ string doublehex = "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D
 
 void race_deleteTime(string map, float pos);
 
-// ======================
-//  Supporting Functions
-// ======================
+
+// ============================
+//  Misc. Supporting Functions
+// ============================
+
+// used by GameCommand_radarmap()
 float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 {
 	vector c;
@@ -55,7 +63,6 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 
 	return white / (black + white);
 }
-
 float RadarMapAtPoint_Trace(float x, float y, float w, float h, float zmin, float zsize, float q)
 {
 	vector a, b, mi, ma;
@@ -169,12 +176,10 @@ float RadarMapAtPoint_Sample(float x, float y, float w, float h, float zmin, flo
 
 	return c / q;
 }
-
 void sharpen_set(float x, float v)
 {
 	sharpen_buffer[x + 2 * RADAR_WIDTH_MAX] = v;
 }
-
 float sharpen_getpixel(float x, float y)
 {
 	if(x < 0)
@@ -187,7 +192,6 @@ float sharpen_getpixel(float x, float y)
 		return 0;
 	return sharpen_buffer[x + y * RADAR_WIDTH_MAX];
 }
-
 float sharpen_get(float x, float a)
 {
 	float sum;
@@ -205,7 +209,6 @@ float sharpen_get(float x, float a)
 	sum -= sharpen_getpixel(x, 2);
 	return bound(0, sum * a, 1);
 }
-
 void sharpen_shift(float w)
 {
 	float i;
@@ -216,7 +219,6 @@ void sharpen_shift(float w)
 		sharpen_buffer[i + 2 * RADAR_WIDTH_MAX] = 0;
 	}
 }
-
 void sharpen_init(float w)
 {
 	float i;
@@ -227,7 +229,6 @@ void sharpen_init(float w)
 		sharpen_buffer[i + 2 * RADAR_WIDTH_MAX] = 0;
 	}
 }
-
 void RadarMap_Next()
 {
 	if(radarmapper.count & 4)
@@ -242,14 +243,14 @@ void RadarMap_Next()
 	remove(radarmapper);
 	radarmapper = world;
 }
-
-// rough map entity
-//   cnt: current line
-//   size: pixel width/height
-//   maxs: cell width/height
-//   frame: counter
 void RadarMap_Think()
 {
+	// rough map entity
+	//   cnt: current line
+	//   size: pixel width/height
+	//   maxs: cell width/height
+	//   frame: counter
+	
 	float i, x, l;
 	string si;
 
@@ -475,7 +476,6 @@ void modelbug_make_svqc()
 	self.nextthink = time + 1;
 	setorigin(self, self.origin + '0 0 8');
 }
-
 void modelbug()
 {
 	entity e;
@@ -488,9 +488,9 @@ void modelbug()
 }
 
 
-// =====================
-//  Command Controllers
-// =====================
+// =======================
+//  Command Sub-Functions
+// =======================
 
 void GameCommand_adminmsg(float request, float argc)
 {
@@ -1797,6 +1797,11 @@ void GameCommand_reducematchtime(float request) // todo: Perhaps allows the user
 	}
 }
 
+
+// =========================================
+//  Main Function Called By Engine (sv_cmd)
+// =========================================
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -1910,4 +1915,3 @@ void GameCommand(string command)
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 	}
 }
-
