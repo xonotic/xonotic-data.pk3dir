@@ -681,6 +681,9 @@ void HUD_Weapons(void)
 	float weapon_count;
 	if (autocvar_hud_panel_weapons_onlyowned)
 	{
+		if(autocvar__hud_configure && menu_enabled != 2)
+			HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
+
 		vector old_panel_size;
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 		{
@@ -801,7 +804,7 @@ void HUD_Weapons(void)
 	vector color;
 	vector wpnpos;
 	vector wpnsize;
-	
+
 	vector ammo_color;
 	float ammo_alpha;
 	wpnsize = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
