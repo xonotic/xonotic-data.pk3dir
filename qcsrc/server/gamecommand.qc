@@ -1,6 +1,23 @@
+#define GC_REQUEST_HELP 1
+#define GC_REQUEST_COMMAND 2
+#define GC_REQUEST_USAGE 3
+
+entity radarmapper;
+
+float RADAR_WIDTH_MAX = 512;
+float RADAR_HEIGHT_MAX = 512;
+float sharpen_buffer[RADAR_WIDTH_MAX * 3];
+
 string GotoMap(string m);
+string doublehex = "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F404142434445464748494A4B4C4D4E4F505152535455565758595A5B5C5D5E5F606162636465666768696A6B6C6D6E6F707172737475767778797A7B7C7D7E7F808182838485868788898A8B8C8D8E8F909192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAABACADAEAFB0B1B2B3B4B5B6B7B8B9BABBBCBDBEBFC0C1C2C3C4C5C6C7C8C9CACBCCCDCECFD0D1D2D3D4D5D6D7D8D9DADBDCDDDEDFE0E1E2E3E4E5E6E7E8E9EAEBECEDEEEFF0F1F2F3F4F5F6F7F8F9FAFBFCFDFEFFFF";
+// FF is contained twice, to map 256 to FF too
+// removes the need to bound()
+
 void race_deleteTime(string map, float pos);
 
+// ======================
+//  Supporting Functions
+// ======================
 float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 {
 	vector c;
@@ -153,14 +170,6 @@ float RadarMapAtPoint_Sample(float x, float y, float w, float h, float zmin, flo
 	return c / q;
 }
 
-// FF is contained twice, to map 256 to FF too
-// removes the need to bound()
-string doublehex = "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F404142434445464748494A4B4C4D4E4F505152535455565758595A5B5C5D5E5F606162636465666768696A6B6C6D6E6F707172737475767778797A7B7C7D7E7F808182838485868788898A8B8C8D8E8F909192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAABACADAEAFB0B1B2B3B4B5B6B7B8B9BABBBCBDBEBFC0C1C2C3C4C5C6C7C8C9CACBCCCDCECFD0D1D2D3D4D5D6D7D8D9DADBDCDDDEDFE0E1E2E3E4E5E6E7E8E9EAEBECEDEEEFF0F1F2F3F4F5F6F7F8F9FAFBFCFDFEFFFF";
-
-float RADAR_WIDTH_MAX = 512;
-float RADAR_HEIGHT_MAX = 512;
-float sharpen_buffer[RADAR_WIDTH_MAX * 3];
-
 void sharpen_set(float x, float v)
 {
 	sharpen_buffer[x + 2 * RADAR_WIDTH_MAX] = v;
@@ -219,7 +228,6 @@ void sharpen_init(float w)
 	}
 }
 
-entity radarmapper;
 void RadarMap_Next()
 {
 	if(radarmapper.count & 4)
@@ -392,88 +400,7 @@ void RadarMap_Think()
 	}
 }
 
-void RadarMap(float argc)
-{
-	if(radarmapper)
-		return;
-	float i;
-	radarmapper = spawn();
-	radarmapper.classname = "radarmapper";
-	radarmapper.think = RadarMap_Think;
-	radarmapper.nextthink = time;
-	radarmapper.count = 8; // default to the --trace method, as it is faster now
-	radarmapper.ltime = 1;
-	radarmapper.size_x = 512;
-	radarmapper.size_y = 512;
-	radarmapper.size_z = 1;
-
-	for(i = 1; i < argc; ++i)
-	{
-		if(argv(i) == "--force")
-			radarmapper.count |= 1;
-		else if(argv(i) == "--loop")
-			radarmapper.count |= 2;
-		else if(argv(i) == "--quit")
-			radarmapper.count |= 4;
-		else if(argv(i) == "--block")
-		{
-			radarmapper.count &~= 24;
-		}
-		else if(argv(i) == "--trace")
-		{
-			radarmapper.count &~= 24;
-			radarmapper.count |= 8;
-		}
-		else if(argv(i) == "--sample")
-		{
-			radarmapper.count &~= 24;
-			radarmapper.count |= 16;
-		}
-		else if(argv(i) == "--lineblock")
-		{
-			radarmapper.count |= 24;
-		}
-		else if(argv(i) == "--flags") // for the recursive call
-		{
-			++i;
-			radarmapper.count = stof(argv(i));
-		}
-		else if(argv(i) == "--sharpen") // for the recursive call
-		{
-			++i;
-			radarmapper.ltime = stof(argv(i));
-		}
-		else if(argv(i) == "--res") // resolution
-		{
-			++i;
-			radarmapper.size_x = stof(argv(i));
-			++i;
-			radarmapper.size_y = stof(argv(i));
-		}
-		else if(argv(i) == "--qual") // quality multiplier
-		{
-			++i;
-			radarmapper.size_z = stof(argv(i));
-		}
-		else
-		{
-			remove(radarmapper);
-			radarmapper = world;
-			print("Usage: sv_cmd radarmap [--force] [--loop] [--quit] [--block | --trace | --sample | --lineblock] [--sharpen N] [--res W H] [--qual Q]\n");
-			print("The quality factor Q is roughly proportional to the time taken.\n");
-			print("--trace supports no quality factor; its result should look like --block with infinite quality factor.\n");
-			print("--block \n");
-			return;
-		}
-	}
-
-	print("Radarmap entity spawned.\n");
-}
-
-// ======================
-//  Supporting Functions
-// ======================
-
+//  used by GameCommand_make_mapinfo()
 void make_mapinfo_Think()
 {
 	if(MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
@@ -489,6 +416,7 @@ void make_mapinfo_Think()
 	}
 }
 
+//  used by GameCommand_extendmatchtime() and GameCommand_reducematchtime()
 void changematchtime(float delta, float mi, float ma)
 {
 	float cur;
@@ -530,6 +458,7 @@ void changematchtime(float delta, float mi, float ma)
 	cvar_set("timelimit", ftos(new / 60));
 }
 
+//  used by GameCommand_modelbug() // TODO: is this even needed?
 float g_clientmodel_genericsendentity (entity to, float sf);
 void modelbug_make_svqc();
 void modelbug_make_csqc()
@@ -558,12 +487,10 @@ void modelbug()
 	e.nextthink = time + 1;
 }
 
-// ===================
-//  Command Functions
-// ===================
-#define GC_REQUEST_HELP 1
-#define GC_REQUEST_COMMAND 2
-#define GC_REQUEST_USAGE 3
+
+// =====================
+//  Command Controllers
+// =====================
 
 void GameCommand_adminmsg(float request, float argc)
 {
@@ -592,6 +519,7 @@ void GameCommand_adminmsg(float request, float argc)
 					{
 						if(argc == 4)
 						{
+							// make the string console safe
 							s = argv(2);
 							s = strreplace("\n", "", s);
 							s = strreplace("\\", "\\\\", s);
@@ -1728,13 +1656,77 @@ void GameCommand_printstats(float request)
 			
 		case GC_REQUEST_COMMAND:
 			DumpStats(FALSE);
-			print("stats dumped.\n"); 
+			print("stats dumped.\n");
 			return;
 			
 		default:
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd printstats\n");
 			print("  No arguments required.\n");
+			return;
+	}
+}
+
+void GameCommand_radarmap(float request, float argc)
+{
+	float i;
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2radarmap^7: Generate a radar image of the map\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			if(!radarmapper)
+			{
+				radarmapper = spawn();
+				radarmapper.classname = "radarmapper";
+				radarmapper.think = RadarMap_Think;
+				radarmapper.nextthink = time;
+				radarmapper.count = 8; // default to the --trace method, as it is faster now
+				radarmapper.ltime = 1;
+				radarmapper.size = '512 512 1';
+
+				for(i = 1; i < argc; ++i)
+				{
+					switch(argv(i))
+					{
+						case "--force": { radarmapper.count |= 1; break;	}
+						case "--loop": { radarmapper.count |= 2; break; }
+						case "--quit": { radarmapper.count |= 4; break; }
+						case "--block": { radarmapper.count &~= 24; break; }
+						case "--trace": { radarmapper.count &~= 24; radarmapper.count |= 8; break; }
+						case "--sample": { radarmapper.count &~= 24; radarmapper.count |= 16; break; }
+						case "--lineblock": { radarmapper.count |= 24; break; }
+						case "--flags": { ++i; radarmapper.count = stof(argv(i)); break; } // for the recursive call
+						case "--sharpen": { ++i; radarmapper.ltime = stof(argv(i)); break; } // for the recursive call
+						case "--res": // allow minor alias
+						case "--resolution": { ++i; radarmapper.size_x = stof(argv(i)); ++i; radarmapper.size_y = stof(argv(i)); break; }
+						case "--qual": // allow minor alias
+						case "--quality": { ++i; radarmapper.size_z = stof(argv(i)); break; }
+						
+						default: 
+							i = argc; 
+							remove(radarmapper);
+							radarmapper = world;
+							break;
+					}
+				}
+				
+				if(radarmapper) // after doing the arguments, see if we successfully went forward. 
+				{
+					print("Radarmap entity spawned.\n");
+					return; // if so, don't print usage.
+				}
+			}
+			
+		default:
+			print("Incorrect parameters for \"radarmap\"\n");
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd radarmap [--force] [--loop] [--quit] [--block | --trace | --sample | --lineblock] [--sharpen N] [--res W H] [--qual Q]\n");
+			print("  The quality factor Q is roughly proportional to the time taken.\n");
+			print("  trace supports no quality factor; its result should look like --block with infinite quality factor.\n");
 			return;
 	}
 }
@@ -1784,6 +1776,7 @@ void GameCommand(string command)
 			GameCommand_onslaught_updatelinks(GC_REQUEST_HELP);
 			GameCommand_playerdemo(GC_REQUEST_HELP, 0);
 			GameCommand_printstats(GC_REQUEST_HELP);
+			GameCommand_radarmap(GC_REQUEST_HELP, 0);
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
@@ -1838,7 +1831,7 @@ void GameCommand(string command)
 		case "onslaught_updatelinks": GameCommand_onslaught_updatelinks(search_request_type); break;
 		case "playerdemo": GameCommand_playerdemo(search_request_type, argc); break;
 		case "printstats": GameCommand_printstats(search_request_type); break;
-		//case "radarmap": GameCommand_radarmap(search_request_type); break; // TODO: handled in server/radarmap.qc
+		case "radarmap": GameCommand_radarmap(search_request_type, argc); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
