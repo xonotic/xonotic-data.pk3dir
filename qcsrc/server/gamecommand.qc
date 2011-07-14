@@ -2097,8 +2097,6 @@ void GameCommand_unlockteams(float request)
 void GameCommand(string command)
 {
 	// ===== TODO list =====
-	// Finish adding the rest of the commands
-	
 	// find all FIXME's and TODO'S and UNTESTED'S and finish them :P
 
 	float search_request_type;
