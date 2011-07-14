@@ -1753,6 +1753,29 @@ void GameCommand_rankings(float request) // this is OLD.... jeez.
 	}
 }
 
+void GameCommand_records(float request)
+{
+	float i;
+	
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2records^7: List top 10 records for the current map\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			for (i = 0; i < 10; ++i)
+				print(records_reply[i]);
+			return;
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd records\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
 void GameCommand(string command)
 {
 	// ===== TODO list =====
@@ -1800,6 +1823,7 @@ void GameCommand(string command)
 			GameCommand_printstats(GC_REQUEST_HELP);
 			GameCommand_radarmap(GC_REQUEST_HELP, 0);
 			GameCommand_rankings(GC_REQUEST_HELP);
+			GameCommand_records(GC_REQUEST_HELP);
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
@@ -1856,6 +1880,7 @@ void GameCommand(string command)
 		case "printstats": GameCommand_printstats(search_request_type); break;
 		case "radarmap": GameCommand_radarmap(search_request_type, argc); break;
 		case "rankings": GameCommand_rankings(search_request_type); break;
+		case "records": GameCommand_records(search_request_type); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
