@@ -563,7 +563,7 @@ void raptor_diethink()
 {
     if(random() < 0.1)
     {
-        sound (self, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+        sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
         pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
     }
     self.nextthink = time + 0.1;

@@ -20,10 +20,7 @@ draw.qh
 skin.qh
 xonotic/util.qh
 
-oo/classdefs.h
-	classes.c
-
-oo/constructors.h
+oo/interface.h
 	classes.c
 oo/implementation.h
 	classes.c

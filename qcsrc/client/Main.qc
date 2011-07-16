@@ -827,8 +827,6 @@ void Ent_ClientData()
 
 	if(newspectatee_status != spectatee_status)
 	{
-		float i;
-
 		// clear race stuff
 		race_laptime = 0;
 		race_checkpointtime = 0;

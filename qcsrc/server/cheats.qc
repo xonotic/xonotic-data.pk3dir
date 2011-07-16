@@ -249,7 +249,7 @@ float CheatImpulse(float i)
 				e2 = spawn();
 				setorigin(e2, org);
 				pointparticles(particleeffectnum("rocket_explode"), org, '0 0 0', 1);
-				sound(e2, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(e2, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 				RadiusDamage(e2, e, 1000, 0, 128, e, 500, DEATH_CHEAT, world);
 				remove(e2);
 			}
