@@ -2361,6 +2361,10 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 	for(j = 0; j < mapvote_count; ++j)
 		if(mapvote_maps[j] == nextMap)
 			return;
+	// suggestions might be no longer valid/allowed after gametype switch!
+	if(isSuggestion)
+		if(!MapInfo_CheckMap(nextMap))
+			return;
 	if(strlen(nextMap) > mapvote_maxlen)
 		mapvote_maxlen = strlen(nextMap);
 	mapvote_maps[mapvote_count] = strzone(nextMap);
