@@ -2299,7 +2299,6 @@ string mapvote_maps_pakfile[MAPVOTE_COUNT];
 float mapvote_maps_suggested[MAPVOTE_COUNT];
 string mapvote_suggestions[MAPVOTE_COUNT];
 float mapvote_suggestion_ptr;
-float mapvote_maxlen;
 float mapvote_voters;
 float mapvote_votes[MAPVOTE_COUNT];
 float mapvote_run;
@@ -2365,8 +2364,6 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 	if(isSuggestion)
 		if(!MapInfo_CheckMap(nextMap))
 			return;
-	if(strlen(nextMap) > mapvote_maxlen)
-		mapvote_maxlen = strlen(nextMap);
 	mapvote_maps[mapvote_count] = strzone(nextMap);
 	mapvote_maps_suggested[mapvote_count] = isSuggestion;
 
