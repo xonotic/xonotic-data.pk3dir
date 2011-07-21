@@ -1108,7 +1108,7 @@ void GameCommand_effectindexdump(float request)
 	}
 }
 
-void GameCommand_extendmatchtime(float request) // todo: Perhaps allows the user to send a specific time to extend it.
+void GameCommand_extendmatchtime(float request)
 {
 	switch(request)
 	{
@@ -1779,7 +1779,7 @@ void GameCommand_records(float request)
 	}
 }
 
-void GameCommand_reducematchtime(float request) // todo: Perhaps allows the user to send a specific time to reduce it.
+void GameCommand_reducematchtime(float request)
 {
 	switch(request)
 	{
