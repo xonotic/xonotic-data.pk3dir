@@ -546,7 +546,7 @@ void GameCommand_adminmsg(float request, float argc)
 			print("\nUsage:^3 sv_cmd adminmsg clientnumber \"message\" [infobartime]\n");
 			print("  If infobartime is provided, the message will be sent to infobar.\n");
 			print("  Otherwise, it will just be sent as a centerprint message.\n");
-			print("Examples: adminmsg 4 \"this message will last for ten seconds\" 10\n");
+			print("Examples: adminmsg 4 \"this infomessage will last for ten seconds\" 10\n");
 			print("          adminmsg 2 \"this message will be a centerprint\"\n");
 			return;
 	}
@@ -572,7 +572,7 @@ void GameCommand_allready(float request)
 	}
 }
 
-void GameCommand_allspec(float request) // todo: Add ability to provide a reason string?
+void GameCommand_allspec(float request, float argc)
 {
 	entity client;
 	float i;
@@ -590,13 +590,14 @@ void GameCommand_allspec(float request) // todo: Add ability to provide a reason
 				PutObserverInServer();
 				++i;
 			}
-			if(i) { bprint(strcat("Successfully forced all players to spectate (", ftos(i), ")\n")); } // should a message be added if no players were found? 
+			if(i) { bprint(strcat("Successfully forced all (", ftos(i), ") players to spectate", (argv(1) ? strcat(" for reason: '", argv(1), "'") : ""), ".\n")); }
+			else { print("No players found to spectate.\n"); }
 			return;
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage:^3 sv_cmd allspec\n");
-			print("  No arguments required.\n");
+			print("\nUsage:^3 sv_cmd allspec [reason]\n");
+			print("  Where 'reason' is an optional argument for explanation of allspec command.\n");
 			print("See also: ^2moveplayer^7\n");
 			return;
 	}
@@ -814,10 +815,12 @@ void GameCommand_bot_cmd(float request, float argc) // what a mess... old old co
 	}
 }
 
-void GameCommand_cointoss(float request) // todo: Perhaps add the ability to give your own arguments to pick between? (Like player names)
+void GameCommand_cointoss(float request, float argc)
 {
 	entity client;
-	float choice = (random() > 0.5);
+	string result1 = (argv(2) ? strcat("^7", argv(1), "^3!\n") : "^1HEADS^3!\n");
+	string result2 = (argv(2) ? strcat("^7", argv(2), "^3!\n") : "^4TAILS^3!\n");
+	string choice = ((random() > 0.5) ? result1 : result2);
 	
 	switch(request)
 	{
@@ -827,14 +830,14 @@ void GameCommand_cointoss(float request) // todo: Perhaps add the ability to giv
 			
 		case GC_REQUEST_COMMAND:
 			FOR_EACH_CLIENT(client)
-				centerprint(client, strcat("^3Throwing coin... Result: ", (choice ? "^1HEADS^3!\n" : "^4TAILS^3!\n")));
-			bprint(strcat("^3Throwing coin... Result: ", (choice ? "^1HEADS^3!\n" : "^4TAILS^3!\n")));
+				centerprint(client, strcat("^3Throwing coin... Result: ", choice));
+			bprint(strcat("^3Throwing coin... Result: ", choice));
 			return;
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage:^3 sv_cmd cointoss\n");
-			print("  No arguments required.\n");
+			print("\nUsage:^3 sv_cmd cointoss [result1 result2]\n");
+			print("  Where 'result1' and 'result2' are user created options.\n");
 			return;
 	}
 }
@@ -2109,11 +2112,11 @@ void GameCommand(string command)
 			print("\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are:\n");
 			GameCommand_adminmsg(GC_REQUEST_HELP, 0);
 			GameCommand_allready(GC_REQUEST_HELP);
-			GameCommand_allspec(GC_REQUEST_HELP);
+			GameCommand_allspec(GC_REQUEST_HELP, 0);
 			GameCommand_anticheat(GC_REQUEST_HELP, 0);
 			GameCommand_bbox(GC_REQUEST_HELP);
 			GameCommand_bot_cmd(GC_REQUEST_HELP, 0);
-			GameCommand_cointoss(GC_REQUEST_HELP);
+			GameCommand_cointoss(GC_REQUEST_HELP, 0);
 			GameCommand_cvar_changes(GC_REQUEST_HELP);
 			GameCommand_cvar_purechanges(GC_REQUEST_HELP);
 			GameCommand_database(GC_REQUEST_HELP, 0);
@@ -2175,11 +2178,11 @@ void GameCommand(string command)
 		
 		case "adminmsg": GameCommand_adminmsg(search_request_type, argc); break;
 		case "allready": GameCommand_allready(search_request_type); break;
-		case "allspec": GameCommand_allspec(search_request_type); break;
+		case "allspec": GameCommand_allspec(search_request_type, argc); break;
 		case "anticheat": GameCommand_anticheat(search_request_type, argc); break;
 		case "bbox": GameCommand_bbox(search_request_type); break;
 		case "bot_cmd": GameCommand_bot_cmd(search_request_type, argc); break;
-		case "cointoss": GameCommand_cointoss(search_request_type); break; 
+		case "cointoss": GameCommand_cointoss(search_request_type, argc); break; 
 		case "cvar_changes": GameCommand_cvar_changes(search_request_type); break; 
 		case "cvar_purechanges": GameCommand_cvar_purechanges(search_request_type); break; 
 		case "database": GameCommand_database(search_request_type, argc); break;
