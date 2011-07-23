@@ -1,5 +1,22 @@
+// =======================================================
+//  Server side client commands code, reworked by Samual
+//  Last updated: July 22nd, 2011
+// =======================================================
+
+#define CC_REQUEST_HELP 1
+#define CC_REQUEST_COMMAND 2
+#define CC_REQUEST_USAGE 3
+
+float readyrestart_happened;
 entity nagger;
 float readycount;
+void ReadyCount();
+string MapVote_Suggest(string m);
+
+// ============================
+//  Misc. Supporting Functions
+// ============================
+
 float Nagger_SendEntity(entity to, float sendflags)
 {
 	float nags, i, f, b;
@@ -66,349 +83,6 @@ void Nagger_ReadyCounted()
 {
 	if(nagger)
 		nagger.SendFlags |= 1;
-}
-
-void ReadyCount();
-string MapVote_Suggest(string m);
-
-entity GetPlayer(string name)
-{
-	float num;
-	entity e;
-	string ns;
-
-	if(substring(name, 0, 1) == "#") {
-		num = stof(substring(name, 1, 999));
-		if(num >= 1 && num <= maxclients) {
-			for((e = world); num > 0; --num, (e = nextent(e)))
-				;
-			//if(clienttype(e) == CLIENTTYPE_REAL)
-			if(e.classname == "player")
-				return e;
-		}
-	} else {
-		ns = strdecolorize(name);
-		FOR_EACH_REALPLAYER(e) {
-			if(!strcasecmp(strdecolorize(e.netname), ns)) {
-				return e;
-			}
-		}
-	}
-	return world;
-}
-
-//float ctf_clientcommand();
-float readyrestart_happened;
-.float lms_spectate_warning;
-void spawnfunc_func_breakable();
-
-.float cmd_floodtime;
-.float cmd_floodcount;
-float cmd_floodcheck()
-{
-	if (timeoutStatus != 2)
-	{
-		if(time == self.cmd_floodtime)
-		{
-			self.cmd_floodcount += 1;
-			if(self.cmd_floodcount > 8)
-				return TRUE;
-		}
-		else
-		{
-			self.cmd_floodtime = time;
-			self.cmd_floodcount = 1;
-		}
-	}
-	return FALSE;
-}
-
-.float checkfail;
-void SV_ParseClientCommand(string s) {
-	string cmd;
-	float tokens;
-	float i;
-	entity e;
-
-	tokens = tokenize_console(s);
-
-	cmd = strtolower(argv(0));
-	if(cmd != "reportcvar")
-	if(cmd != "sentcvar")
-	if(cmd != "pause")
-	if(cmd != "prespawn")
-	if(cmd != "spawn")
-	if(cmd != "begin")
-	{
-		if(cmd_floodcheck())
-			return;
-	}
-
-	if(GameCommand_Vote(s, self)) {
-		return;
-	} else if(GameCommand_MapVote(argv(0))) {
-		return;
-	} else if(cmd == "checkfail") {
-		print(sprintf("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1))));
-		self.checkfail = 1;
-	} else if(cmd == "autoswitch") {
-		// be backwards compatible with older clients (enabled)
-		self.autoswitch = ("0" != argv(1));
-		local string autoswitchmsg;
-		if (self.autoswitch) {
-			autoswitchmsg = "on";
-		} else {
-			autoswitchmsg = "off";
-		}
-		sprint(self, strcat("^1autoswitch turned ", autoswitchmsg, "\n"));
-	} else if(cmd == "clientversion") {
-		if not(self.flags & FL_CLIENT)
-			return;
-		if (argv(1) == "$gameversion") {
-			//versionmsg = "^1client is too old to get versioninfo.\nUPDATE!!! (http://www.xonotic.com)^8";
-			// either that or someone wants to be funny
-			self.version = 1;
-		} else {
-			self.version = stof(argv(1));
-		}
-		if(self.version < autocvar_gameversion_min || self.version > autocvar_gameversion_max)
-		{
-			self.version_mismatch = 1;
-			ClientKill_TeamChange(-2); // observe
-		} else if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force) {
-			//JoinBestTeam(self, FALSE, TRUE);
-		} else if(teamplay && !autocvar_sv_spectate && !(self.team_forced > 0)) {
-			self.classname = "observer";
-			stuffcmd(self,"menu_showteamselect\n");
-		}
-	} else if(cmd == "reportcvar") { // old system
-		if(substring(argv(2), 0, 1) == "$") // undefined cvar: use the default value on the server then
-		{
-			s = strcat(substring(s, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
-			tokens = tokenize_console(s);
-		}
-		GetCvars(1);
-	} else if(cmd == "sentcvar") { // new system
-		if(tokens == 2) // undefined cvar: use the default value on the server then
-		{
-			s = strcat(substring(s, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
-			tokens = tokenize_console(s);
-		}
-		GetCvars(1);
-	} else if(cmd == "spectate") {
-		if(cmd_floodcheck())
-			return;
-		if not(self.flags & FL_CLIENT)
-			return;
-		if(g_arena)
-			return;
-		if(g_lms)
-		{
-			if(self.lms_spectate_warning)
-			{
-				// mark player as spectator
-				PlayerScore_Add(self, SP_LMS_RANK, 666 - PlayerScore_Add(self, SP_LMS_RANK, 0));
-			}
-			else
-			{
-				self.lms_spectate_warning = 1;
-				sprint(self, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
-				return;
-			}
-		}
-		if(self.classname == "player" && autocvar_sv_spectate == 1) {
-			ClientKill_TeamChange(-2); // observe
-		}
-	} else if(cmd == "join") {
-		if not(self.flags & FL_CLIENT)
-			return;
-		if(!g_arena)
-		if (self.classname != "player" && !lockteams)
-		{
-			if(nJoinAllowed(1)) {
-				self.classname = "player";
-				if(g_ca)
-					self.caplayer = 1;
-				PlayerScore_Clear(self);
-				bprint ("^4", self.netname, "^4 is playing now\n");
-				PutClientInServer();
-				if(autocvar_g_campaign)
-					campaign_bots_may_start = 1;
-			}
-			else {
-				//player may not join because of g_maxplayers is set
-				centerprint_atprio(self, CENTERPRIO_MAPVOTE, PREVENT_JOIN_TEXT);
-			}
-		}
-	} else if( cmd == "selectteam" ) {
-		if not(self.flags & FL_CLIENT)
-			return;
-		if( !teamplay ) {
-			sprint( self, "selectteam can only be used in teamgames\n");
-		} else if(autocvar_g_campaign) {
-			//JoinBestTeam(self, 0);
-		} else if(self.team_forced > 0) {
-			sprint( self, "selectteam can not be used as your team is forced\n");
-		} else if(lockteams) {
-			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
-		} else if( argv(1) == "red" ) {
-			ClientKill_TeamChange(COLOR_TEAM1);
-		} else if( argv(1) == "blue" ) {
-			ClientKill_TeamChange(COLOR_TEAM2);
-		} else if( argv(1) == "yellow" ) {
-			ClientKill_TeamChange(COLOR_TEAM3);
-		} else if( argv(1) == "pink" ) {
-			ClientKill_TeamChange(COLOR_TEAM4);
-		} else if( argv(1) == "auto" ) {
-			ClientKill_TeamChange(-1);
-		} else {
-			sprint( self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
-		}
-	} else if(cmd == "ready") {
-		if not(self.flags & FL_CLIENT)
-			return;
-
-		if((inWarmupStage)
-		   || autocvar_sv_ready_restart || g_race_qualifying == 2)
-		{
-			if(!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
-			{
-				if (self.ready) // toggle
-				{
-					self.ready = FALSE;
-					bprint(self.netname, "^2 is ^1NOT^2 ready\n");
-				}
-				else
-				{
-					self.ready = TRUE;
-					bprint(self.netname, "^2 is ready\n");
-				}
-
-				// cannot reset the game while a timeout is active!
-				if(!timeoutStatus)
-					ReadyCount();
-			} else {
-				sprint(self, "^1Game has already been restarted\n");
-			}
-		}
-	} else if(cmd == "maplist") {
-		sprint(self, maplist_reply);
-	} else if(cmd == "lsmaps") {
-		sprint(self, lsmaps_reply);
-	} else if(cmd == "lsnewmaps") {
-		sprint(self, lsnewmaps_reply);
-	} else if(cmd == "records") {
-		for(i = 0; i < 10; ++i)
-			sprint(self, records_reply[i]);
-	} else if(cmd == "ladder") {
-		sprint(self, ladder_reply);
-	} else if(cmd == "rankings") {
-		sprint(self, rankings_reply);
-	} else if(cmd == "voice") {
-		if(tokens >= 3)
-			VoiceMessage(argv(1), substring(s, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
-		else
-			VoiceMessage(argv(1), "");
-	} else if(cmd == "say") {
-		if(tokens >= 2)
-			Say(self, FALSE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
-		//clientcommand(self, formatmessage(s));
-	} else if(cmd == "say_team") {
-		if(tokens >= 2)
-			Say(self, TRUE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
-		//clientcommand(self, formatmessage(s));
-	} else if(cmd == "tell") {
-		e = GetCommandPlayerSlotTargetFromTokenizedCommand(tokens, 1);
-		if(e && tokens > ParseCommandPlayerSlotTarget_firsttoken)
-		{
-			Say(self, FALSE, e, substring(s, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)), TRUE);
-		}
-		else
-		{
-			if(tokens > ParseCommandPlayerSlotTarget_firsttoken)
-				trigger_magicear_processmessage_forallears(self, -1, world, substring(s, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)));
-			sprint(self, "ERROR: usage: tell # playerid text...\n");
-		}
-		//clientcommand(self, formatmessage(s));
-	} else if(cmd == "info") {
-		cmd = cvar_string_builtin(strcat("sv_info_", argv(1))); // This needed fixed for the cvar check
-		if(cmd == "")
-			sprint(self, "ERROR: unsupported info command\n");
-		else
-			wordwrap_sprint(cmd, 1111);
-	} else if(cmd == "suggestmap") {
-		sprint(self, strcat(MapVote_Suggest(argv(1)), "\n"));
-	} else if(cmd == "timeout") {
-		if not(self.flags & FL_CLIENT)
-			return;
-		if(autocvar_sv_timeout) {
-			if(self.classname == "player") {
-				if(votecalled)
-					sprint(self, "^7Error: you can not call a timeout while a vote is active!\n");
-				else
-					evaluateTimeout();
-			}
-			else
-				sprint(self, "^7Error: only players can call a timeout!\n");
-		}
-	} else if(cmd == "timein") {
-		if not(self.flags & FL_CLIENT)
-			return;
-		if(autocvar_sv_timeout) {
-			evaluateTimein();
-		}
-	} else if(cmd == "teamstatus") {
-		Score_NicePrint(self);
-	} else if(cmd == "cvar_changes") {
-		sprint(self, cvar_changes);
-	} else if(cmd == "cvar_purechanges") {
-		sprint(self, cvar_purechanges);
-	} else if(CheatCommand(tokens)) {
-	} else {
-#if 0
-		//if(ctf_clientcommand())
-		//	return;
-		// grep for Cmd_AddCommand_WithClientCommand to find them all
-		if(cmd != "status")
-		//if(cmd != "say") // handled above
-		//if(cmd != "say_team") // handled above
-		if(cmd != "kill")
-		if(cmd != "pause")
-		if(cmd != "ping")
-		if(cmd != "name")
-		if(cmd != "color")
-		if(cmd != "rate")
-		if(cmd != "pmodel")
-		if(cmd != "playermodel")
-		if(cmd != "playerskin")
-		if(cmd != "prespawn")
-		if(cmd != "spawn")
-		if(cmd != "begin")
-		if(cmd != "pings")
-		if(cmd != "sv_startdownload")
-		if(cmd != "download")
-		{
-			print("WARNING: Invalid clientcommand by ", self.netname, ": ", s, "\n");
-			return;
-		}
-#endif
-
-		if(self.jointime > 0 && time > self.jointime + 10 && time > self.nickspamtime) // allow any changes in the first 10 seconds since joining
-		if(cmd == "name" || cmd == "playermodel") // TODO also playerskin and color?
-		{
-			if(self.nickspamtime == 0 || time > self.nickspamtime + autocvar_g_nick_flood_timeout)
-				// good, no serious flood
-				self.nickspamcount = 1;
-			else
-				self.nickspamcount += 1;
-			self.nickspamtime = time + autocvar_g_nick_flood_penalty;
-
-			if (timeoutStatus == 2) //when game is paused, no flood protection
-				self.nickspamcount = self.nickspamtime = 0;
-		}
-
-		clientcommand(self,s);
-	}
 }
 
 void ReadyRestartForce()
@@ -612,5 +286,118 @@ void evaluateTimein() {
 		else
 			sprint(self, "^7Error: Your resumegame call was discarded!\n");
 
+	}
+}
+
+
+// =======================
+//  Command Sub-Functions
+// =======================
+
+void ClientCommand_autoswitch(float request, entity client, float argc)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			print("  ^2autoswitch^7: Whether or not to switch automatically when getting a better weapon\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			client.autoswitch = ("0" != argv(1));
+			sprint(client, strcat("^1autoswitch has been turned ", (client.autoswitch ? "on" : "off"), ".\n"));
+			return;
+			
+		default:
+		case CC_REQUEST_USAGE:
+			print("\nUsage:^3 cl_cmd autoswitch\n");
+			print("  No arguments required.\n");
+			return;
+	}
+}
+
+
+// =========================================
+//  Main Function Called By Engine (cl_cmd)
+// =========================================
+// If this function exists, game code handles clientcommand instead of the engine code.
+
+void SV_ParseClientCommand(string command)
+{
+	float search_request_type;
+	float argc = tokenize_console(command);
+
+	if(argv(0) == "help") 
+	{
+		if(argc == 1) 
+		{
+			print("\nUsage:^3 cl_cmd COMMAND...^7, where possible commands are:\n");
+			ClientCommand_autoswitch(CC_REQUEST_HELP, world, 0);
+			print("For help about specific commands, type cl_cmd help COMMAND\n");
+			return;
+		} 
+		else
+			search_request_type = CC_REQUEST_USAGE; // Instead of trying to call a command, we're going to see detailed information about it
+	} 
+	/*else if(GameCommand_Vote(command, world)) 
+	{
+		return; // handled by server/vote.qc 
+	}
+	else if(GameCommand_Ban(command)) 
+	{
+		return; // handled by server/ipban.qc
+	}
+	else if(GameCommand_Generic(command)) 
+	{
+		return; // handled by common/gamecommand.qc
+	}*/
+	else
+		search_request_type = CC_REQUEST_COMMAND; // continue as usual and scan for normal commands
+		
+	switch( ((argv(0) == "help") ? argv(1) : argv(0)) ) // if first argument is help, then search for the second argument. Else, search for first. 
+	{
+		// Do not hard code aliases for these, instead create them in defaultXonotic.cfg
+		// also: keep in alphabetical order, please ;)
+		
+		case "autoswitch": ClientCommand_autoswitch(search_request_type, self, argc); break;
+		/* case "adminmsg": GameCommand_adminmsg(search_request_type, argc); break;
+		case "allready": GameCommand_allready(search_request_type); break;
+		case "allspec": GameCommand_allspec(search_request_type, argc); break;
+		case "anticheat": GameCommand_anticheat(search_request_type, argc); break;
+		case "bbox": GameCommand_bbox(search_request_type); break;
+		case "bot_cmd": GameCommand_bot_cmd(search_request_type, argc); break;
+		case "cointoss": GameCommand_cointoss(search_request_type, argc); break; 
+		case "cvar_changes": GameCommand_cvar_changes(search_request_type); break; 
+		case "cvar_purechanges": GameCommand_cvar_purechanges(search_request_type); break; 
+		case "database": GameCommand_database(search_request_type, argc); break;
+		case "defer_clear": GameCommand_defer_clear(search_request_type, argc); break;
+		case "defer_clear_all": GameCommand_defer_clear_all(search_request_type); break;
+		case "delrec": GameCommand_delrec(search_request_type, argc); break;
+		case "effectindexdump": GameCommand_effectindexdump(search_request_type); break;
+		case "extendmatchtime": GameCommand_extendmatchtime(search_request_type); break;
+		case "find": GameCommand_find(search_request_type, argc); break; 
+		case "gametype": GameCommand_gametype(search_request_type, argc); break;
+		case "gettaginfo": GameCommand_gettaginfo(search_request_type, argc); break;
+		case "gotomap": GameCommand_gotomap(search_request_type, argc); break;
+		case "ladder": GameCommand_ladder(search_request_type); break;
+		case "lockteams": GameCommand_lockteams(search_request_type); break;
+		case "make_mapinfo": GameCommand_make_mapinfo(search_request_type); break;
+		case "modelbug": GameCommand_modelbug(search_request_type); break;
+		case "moveplayer": GameCommand_moveplayer(search_request_type, argc); break;
+		case "nospectators": GameCommand_nospectators(search_request_type); break;
+		case "onslaught_updatelinks": GameCommand_onslaught_updatelinks(search_request_type); break;
+		case "playerdemo": GameCommand_playerdemo(search_request_type, argc); break;
+		case "printstats": GameCommand_printstats(search_request_type); break;
+		case "radarmap": GameCommand_radarmap(search_request_type, argc); break;
+		case "rankings": GameCommand_rankings(search_request_type); break;
+		case "records": GameCommand_records(search_request_type); break;
+		case "reducematchtime": GameCommand_reducematchtime(search_request_type); break;
+		case "stuffto": GameCommand_stuffto(search_request_type, argc); break;
+		case "teamstatus": GameCommand_teamstatus(search_request_type); break;
+		case "time": GameCommand_time(search_request_type); break;
+		case "trace": GameCommand_trace(search_request_type, argc); break;
+		case "unlockteams": GameCommand_unlockteams(search_request_type); break; */
+		
+		default:
+			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 	}
 }

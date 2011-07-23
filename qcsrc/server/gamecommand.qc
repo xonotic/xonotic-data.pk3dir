@@ -1,6 +1,6 @@
 // =====================================================
 //  Server side game commands code, reworked by Samual
-//  Last updated: July 13th, 2011
+//  Last updated: July 22nd, 2011
 // =====================================================
 
 #define GC_REQUEST_HELP 1
@@ -632,7 +632,7 @@ void GameCommand_anticheat(float request, float argc) // FIXME: player entity is
 			print("Incorrect parameters for ^2anticheat^7\n");
 		case GC_REQUEST_USAGE:
 			print("\nUsage:^3 sv_cmd anticheat clientnumber\n");
-			print("  where clientnumber is player entity number.\n");
+			print("  where 'clientnumber' is player entity number.\n");
 			return;
 	}
 }
@@ -856,7 +856,7 @@ void GameCommand_cvar_changes(float request)
 			
 		default:
 		case GC_REQUEST_USAGE:
-			print("\nUsage:^3 sv_cmd \n");
+			print("\nUsage:^3 sv_cmd cvar_changes\n");
 			print("  No arguments required.\n");
 			print("See also: ^2cvar_purechanges^7\n");
 			return;
@@ -2096,6 +2096,7 @@ void GameCommand_unlockteams(float request)
 // =========================================
 //  Main Function Called By Engine (sv_cmd)
 // =========================================
+// If this function exists, game code handles gamecommand instead of the engine code.
 
 void GameCommand(string command)
 {
