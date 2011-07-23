@@ -1,6 +1,6 @@
 // =======================================================
 //  Server side client commands code, reworked by Samual
-//  Last updated: July 22nd, 2011
+//  Last updated: July 23rd, 2011
 // =======================================================
 
 #define CC_REQUEST_HELP 1
@@ -316,17 +316,19 @@ void ClientCommand_autoswitch(float request, entity client, float argc)
 }
 
 
-// =========================================
-//  Main Function Called By Engine (cl_cmd)
-// =========================================
-// If this function exists, game code handles clientcommand instead of the engine code.
+// ======================================
+//  Main Function Called By Engine (cmd)
+// ======================================
+// If this function exists, server game code parses clientcommand before the engine code gets it.
 
 void SV_ParseClientCommand(string command)
 {
 	float search_request_type;
 	float argc = tokenize_console(command);
+	
+	search_request_type = CC_REQUEST_COMMAND; // for now, we're not going to be sending 
 
-	if(argv(0) == "help") 
+	/*if(argv(0) == "help") 
 	{
 		if(argc == 1) 
 		{
@@ -349,53 +351,18 @@ void SV_ParseClientCommand(string command)
 	else if(GameCommand_Generic(command)) 
 	{
 		return; // handled by common/gamecommand.qc
-	}*/
+	}
 	else
 		search_request_type = CC_REQUEST_COMMAND; // continue as usual and scan for normal commands
-		
-	switch( ((argv(0) == "help") ? argv(1) : argv(0)) ) // if first argument is help, then search for the second argument. Else, search for first. 
+	*/
+	
+	//  ((argv(0) == "help") ? argv(1) : argv(0)) 
+	switch(argv(0)) // if first argument is help, then search for the second argument. Else, search for first. 
 	{
 		// Do not hard code aliases for these, instead create them in defaultXonotic.cfg
 		// also: keep in alphabetical order, please ;)
 		
 		case "autoswitch": ClientCommand_autoswitch(search_request_type, self, argc); break;
-		/* case "adminmsg": GameCommand_adminmsg(search_request_type, argc); break;
-		case "allready": GameCommand_allready(search_request_type); break;
-		case "allspec": GameCommand_allspec(search_request_type, argc); break;
-		case "anticheat": GameCommand_anticheat(search_request_type, argc); break;
-		case "bbox": GameCommand_bbox(search_request_type); break;
-		case "bot_cmd": GameCommand_bot_cmd(search_request_type, argc); break;
-		case "cointoss": GameCommand_cointoss(search_request_type, argc); break; 
-		case "cvar_changes": GameCommand_cvar_changes(search_request_type); break; 
-		case "cvar_purechanges": GameCommand_cvar_purechanges(search_request_type); break; 
-		case "database": GameCommand_database(search_request_type, argc); break;
-		case "defer_clear": GameCommand_defer_clear(search_request_type, argc); break;
-		case "defer_clear_all": GameCommand_defer_clear_all(search_request_type); break;
-		case "delrec": GameCommand_delrec(search_request_type, argc); break;
-		case "effectindexdump": GameCommand_effectindexdump(search_request_type); break;
-		case "extendmatchtime": GameCommand_extendmatchtime(search_request_type); break;
-		case "find": GameCommand_find(search_request_type, argc); break; 
-		case "gametype": GameCommand_gametype(search_request_type, argc); break;
-		case "gettaginfo": GameCommand_gettaginfo(search_request_type, argc); break;
-		case "gotomap": GameCommand_gotomap(search_request_type, argc); break;
-		case "ladder": GameCommand_ladder(search_request_type); break;
-		case "lockteams": GameCommand_lockteams(search_request_type); break;
-		case "make_mapinfo": GameCommand_make_mapinfo(search_request_type); break;
-		case "modelbug": GameCommand_modelbug(search_request_type); break;
-		case "moveplayer": GameCommand_moveplayer(search_request_type, argc); break;
-		case "nospectators": GameCommand_nospectators(search_request_type); break;
-		case "onslaught_updatelinks": GameCommand_onslaught_updatelinks(search_request_type); break;
-		case "playerdemo": GameCommand_playerdemo(search_request_type, argc); break;
-		case "printstats": GameCommand_printstats(search_request_type); break;
-		case "radarmap": GameCommand_radarmap(search_request_type, argc); break;
-		case "rankings": GameCommand_rankings(search_request_type); break;
-		case "records": GameCommand_records(search_request_type); break;
-		case "reducematchtime": GameCommand_reducematchtime(search_request_type); break;
-		case "stuffto": GameCommand_stuffto(search_request_type, argc); break;
-		case "teamstatus": GameCommand_teamstatus(search_request_type); break;
-		case "time": GameCommand_time(search_request_type); break;
-		case "trace": GameCommand_trace(search_request_type, argc); break;
-		case "unlockteams": GameCommand_unlockteams(search_request_type); break; */
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
