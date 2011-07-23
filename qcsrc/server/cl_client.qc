@@ -1276,10 +1276,10 @@ void ClientKill_Now()
             Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');	        
 	    }
 	}
-	
+
 	if(self.killindicator && !wasfreed(self.killindicator))
-        remove(self.killindicator);
-	
+		remove(self.killindicator);
+
 	self.killindicator = world;
 
 	if(self.killindicator_teamchange)
@@ -1292,6 +1292,16 @@ void ClientKill_Now()
 }
 void KillIndicator_Think()
 {
+	if (gameover)
+	{
+		if (self.owner.killindicator)
+		{
+			remove(self.owner.killindicator);
+			self.owner.killindicator = world;
+		}
+		return;
+	}
+
 	if (!self.owner.modelindex)
 	{
 		self.owner.killindicator = world;
@@ -1339,6 +1349,17 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 {
 	float killtime;
 	entity e;
+
+	if (gameover)
+	{
+		if (self.killindicator)
+		{
+			remove(self.killindicator);
+			self.killindicator = world;
+		}
+		return;
+	}
+
 	killtime = autocvar_g_balance_kill_delay;
 
 	if(g_race_qualifying || g_cts)
@@ -1411,6 +1432,9 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
 void ClientKill (void)
 {
+	if (gameover)
+		return;
+
 	if((g_arena || g_ca) && ((champion && champion.classname == "player" && player_count > 1) || player_count == 1)) // don't allow a kill in this case either
 	{
 		// do nothing
@@ -1437,12 +1461,24 @@ void CTS_ClientKill (entity e) // silent version of ClientKill, used when player
 void DoTeamChange(float destteam)
 {
 	float t, c0;
+
+	if (gameover)
+	{
+		if (self.killindicator)
+		{
+			remove(self.killindicator);
+			self.killindicator = world;
+		}
+		return;
+	}
+
 	if(!teamplay)
 	{
 		if(destteam >= 0)
 			SetPlayerColors(self, destteam);
 		return;
 	}
+
 	if(self.classname == "player")
 	if(destteam == -1)
 	{
