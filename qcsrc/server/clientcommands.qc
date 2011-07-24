@@ -315,7 +315,7 @@ void ClientCommand_autoswitch(float request, entity client, float argc)
 			
 		default:
 		case CC_REQUEST_USAGE:
-			print("\nUsage:^3 cl_cmd autoswitch\n");
+			print("\nUsage:^3 cmd autoswitch\n");
 			print("  No arguments required.\n");
 			return;
 	}
@@ -366,38 +366,36 @@ void SV_ParseClientCommand(string command)
 				return; // "FALSE": not allowed to continue, halt
 	}
 	
-	search_request_type = CC_REQUEST_COMMAND; // for now, we're not going to be sending 
-
-	/*if(argv(0) == "help") 
+	// only do help/usage information if the server has developer enabled, this way it can't be abused 
+	// other note: should I use cvar("developer") instead of autocvar_developer?
+	if((argv(0) == "help") && autocvar_developer)
 	{
 		if(argc == 1) 
 		{
-			print("\nUsage:^3 cl_cmd COMMAND...^7, where possible commands are:\n");
-			ClientCommand_autoswitch(CC_REQUEST_HELP, world, 0);
-			print("For help about specific commands, type cl_cmd help COMMAND\n");
+			sprint(self, "\nUsage:^3 cmd COMMAND...^7, where possible commands are:\n");
+			ClientCommand_autoswitch(CC_REQUEST_HELP, self, 0);
+			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
 			return;
 		} 
 		else
 			search_request_type = CC_REQUEST_USAGE; // Instead of trying to call a command, we're going to see detailed information about it
 	} 
-	/*else if(GameCommand_Vote(command, world)) 
+	else if(GameCommand_Vote(command, self)) 
 	{
 		return; // handled by server/vote.qc 
 	}
-	else if(GameCommand_Ban(command)) 
+	else if(GameCommand_MapVote(argv(0))) 
 	{
-		return; // handled by server/ipban.qc
+		return; // handled by server/g_world.qc
 	}
-	else if(GameCommand_Generic(command)) 
+	else if(CheatCommand(argc)) 
 	{
-		return; // handled by common/gamecommand.qc
+		return; // handled by server/cheats.qc
 	}
 	else
 		search_request_type = CC_REQUEST_COMMAND; // continue as usual and scan for normal commands
-	*/
 	
-	//  ((argv(0) == "help") ? argv(1) : argv(0)) 
-	switch(strtolower(argv(0))) // if first argument is help, then search for the second argument. Else, search for first. 
+	switch(strtolower((search_request_type == CC_REQUEST_USAGE) ? argv(1) : argv(0)))  // if first argument is help (and developer is enabled), then search for the second argument. Else, search for first. 
 	{
 		// Do not hard code aliases for these, instead create them in defaultXonotic.cfg
 		// also: keep in alphabetical order, please ;)
@@ -405,6 +403,6 @@ void SV_ParseClientCommand(string command)
 		case "autoswitch": ClientCommand_autoswitch(search_request_type, self, argc); break;
 		
 		default:
-			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
+			clientcommand(self, command); //print("Invalid command. For a list of supported commands, try cmd help.\n");
 	}
 }
