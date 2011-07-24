@@ -2106,7 +2106,7 @@ void GameCommand(string command)
 	float search_request_type;
 	float argc = tokenize_console(command);
 
-	if(argv(0) == "help") 
+	if(strtolower(argv(0)) == "help") 
 	{
 		if(argc == 1) 
 		{
@@ -2172,7 +2172,7 @@ void GameCommand(string command)
 	else
 		search_request_type = GC_REQUEST_COMMAND; // continue as usual and scan for normal commands
 		
-	switch( ((argv(0) == "help") ? argv(1) : argv(0)) ) // if first argument is help, then search for the second argument. Else, search for first. 
+	switch(strtolower( ((strtolower(argv(0)) == "help") ? argv(1) : argv(0)) )) // if first argument is help, then search for the second argument. Else, search for first. 
 	{
 		// Do not hard code aliases for these, instead create them in defaultXonotic.cfg
 		// also: keep in alphabetical order, please ;)

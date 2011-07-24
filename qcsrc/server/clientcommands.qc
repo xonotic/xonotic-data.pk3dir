@@ -7,11 +7,17 @@
 #define CC_REQUEST_COMMAND 2
 #define CC_REQUEST_USAGE 3
 
-float readyrestart_happened;
 entity nagger;
+
+.float cmd_floodtime;
+.float cmd_floodcount;
+float readyrestart_happened;
 float readycount;
-void ReadyCount();
+
 string MapVote_Suggest(string m);
+
+void ReadyCount();
+
 
 // ============================
 //  Misc. Supporting Functions
@@ -321,10 +327,44 @@ void ClientCommand_autoswitch(float request, entity client, float argc)
 // ======================================
 // If this function exists, server game code parses clientcommand before the engine code gets it.
 
+float SV_ParseClientCommand_floodcheck()
+{
+	if (timeoutStatus != 2)
+	{
+		if(time == self.cmd_floodtime)
+		{
+			self.cmd_floodcount += 1;
+			if(self.cmd_floodcount > 8)
+				return FALSE; // too much spam, halt
+		}
+		else
+		{
+			self.cmd_floodtime = time;
+			self.cmd_floodcount = 1;
+		}
+	}
+	return TRUE; // continue, as we're not flooding yet
+}
 void SV_ParseClientCommand(string command)
 {
 	float search_request_type;
 	float argc = tokenize_console(command);
+	
+	// for floodcheck
+	switch(strtolower(argv(0)))
+	{
+		case "begin": break; // handled by engine in host_cmd.c
+		case "pause": break; // handled by engine in host_cmd.c
+		case "prespawn": break; // handled by engine in host_cmd.c
+		case "reportcvar": break; // handled by server in this file
+		case "sentcvar": break; // handled by server in this file
+		case "spawn": break; // handled by engine in host_cmd.c
+		default: 
+			if(SV_ParseClientCommand_floodcheck())
+				break; // "TRUE": continue, as we're not flooding yet
+			else
+				return; // "FALSE": not allowed to continue, halt
+	}
 	
 	search_request_type = CC_REQUEST_COMMAND; // for now, we're not going to be sending 
 
@@ -357,7 +397,7 @@ void SV_ParseClientCommand(string command)
 	*/
 	
 	//  ((argv(0) == "help") ? argv(1) : argv(0)) 
-	switch(argv(0)) // if first argument is help, then search for the second argument. Else, search for first. 
+	switch(strtolower(argv(0))) // if first argument is help, then search for the second argument. Else, search for first. 
 	{
 		// Do not hard code aliases for these, instead create them in defaultXonotic.cfg
 		// also: keep in alphabetical order, please ;)
