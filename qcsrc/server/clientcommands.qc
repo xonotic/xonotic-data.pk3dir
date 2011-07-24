@@ -27,7 +27,7 @@ void ReadyCount();
 
 float SV_ParseClientCommand_floodcheck()
 {
-	if (timeoutStatus != 2) // why?
+	if (timeoutStatus != 2) // if the game is not paused... but wait, doesn't that mean it could be dos'd by pausing it? eh? (old code)
 	{
 		if(time == self.cmd_floodtime) // todo: add buffer time as well, ONLY one second is a short amount of time for someone to be spamming. 
 		{
@@ -411,7 +411,7 @@ void ClientCommand_cvar_changes(float request, entity client)
 			
 		case CC_REQUEST_COMMAND:
 			sprint(client, cvar_changes);
-			return;
+			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
@@ -432,13 +432,39 @@ void ClientCommand_cvar_purechanges(float request, entity client)
 			
 		case CC_REQUEST_COMMAND:
 			sprint(client, cvar_purechanges);
-			return;
+			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
 			sprint(client, "\nUsage:^3 sv_cmd cvar_purechanges\n");
 			sprint(client, "  No arguments required.\n");
 			//sprint(client, "See also: ^2cvar_changes^7\n");
+			return;
+	}
+}
+
+void ClientCommand_info(float request, entity client, float argc)
+{
+	string command;
+	
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2info^7: Request for unique server information set up by admin\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			command = cvar_string_builtin(strcat("sv_info_", argv(1))); 
+			if(command)
+				wordwrap_sprint(command, 1111); // why 1111?
+			else
+				sprint(client, "ERROR: unsupported info command\n");
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd info request\n");
+			sprint(client, "  Where 'request' is the suffixed string appended onto the request for cvar.\n");
 			return;
 	}
 }
@@ -483,6 +509,7 @@ void SV_ParseClientCommand(string command)
 			clientCommand_clientversion(CC_REQUEST_HELP, self, 0);
 			ClientCommand_cvar_changes(CC_REQUEST_HELP, self);
 			ClientCommand_cvar_purechanges(CC_REQUEST_HELP, self);
+			ClientCommand_info(CC_REQUEST_HELP, self, 0);
 			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
 			return;
 		} 
@@ -514,6 +541,7 @@ void SV_ParseClientCommand(string command)
 		case "clientversion": ClientCommand_clientversion(search_request_type, self, argc); break;
 		case "cvar_changes": ClientCommand_cvar_changes(search_request_type, self); break;
 		case "cvar_purechanges": ClientCommand_cvar_purechanges(search_request_type, self); break;
+		case "info": ClientCommand_info(search_request_type, self, argc); break;
 		
 		default:
 			clientcommand(self, command); //print("Invalid command. For a list of supported commands, try cmd help.\n");
