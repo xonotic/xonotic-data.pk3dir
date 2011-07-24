@@ -11,6 +11,8 @@ entity nagger;
 
 .float cmd_floodtime;
 .float cmd_floodcount;
+.float checkfail;
+
 float readyrestart_happened;
 float readycount;
 
@@ -22,6 +24,25 @@ void ReadyCount();
 // ============================
 //  Misc. Supporting Functions
 // ============================
+
+float SV_ParseClientCommand_floodcheck()
+{
+	if (timeoutStatus != 2) // why?
+	{
+		if(time == self.cmd_floodtime) // todo: add buffer time as well, ONLY one second is a short amount of time for someone to be spamming. 
+		{
+			self.cmd_floodcount += 1;
+			if(self.cmd_floodcount > 8) // todo: replace constant 8 with a cvar for the server to control
+				return FALSE; // too much spam, halt
+		}
+		else
+		{
+			self.cmd_floodtime = time;
+			self.cmd_floodcount = 1;
+		}
+	}
+	return TRUE; // continue, as we're not flooding yet
+}
 
 float Nagger_SendEntity(entity to, float sendflags)
 {
@@ -305,7 +326,7 @@ void ClientCommand_autoswitch(float request, entity client, float argc)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			print("  ^2autoswitch^7: Whether or not to switch automatically when getting a better weapon\n");
+			sprint(client, "  ^2autoswitch^7: Whether or not to switch automatically when getting a better weapon\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
@@ -315,8 +336,29 @@ void ClientCommand_autoswitch(float request, entity client, float argc)
 			
 		default:
 		case CC_REQUEST_USAGE:
-			print("\nUsage:^3 cmd autoswitch\n");
-			print("  No arguments required.\n");
+			sprint(client, "\nUsage:^3 cmd autoswitch \n"); // TODO
+			sprint(client, "  No arguments required.\n"); 
+			return;
+	}
+}
+
+void ClientCommand_checkfail(float request, entity client, string command) // wtf does this command even do?
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2checkfail^7: TODO\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			print(sprintf("CHECKFAIL: %s (%s) epically failed check %s\n", client.netname, client.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1))));
+			client.checkfail = 1;
+			return;
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd checkfail \n"); // TODO
+			sprint(client, "  No arguments required.\n");
 			return;
 	}
 }
@@ -327,24 +369,6 @@ void ClientCommand_autoswitch(float request, entity client, float argc)
 // ======================================
 // If this function exists, server game code parses clientcommand before the engine code gets it.
 
-float SV_ParseClientCommand_floodcheck()
-{
-	if (timeoutStatus != 2)
-	{
-		if(time == self.cmd_floodtime)
-		{
-			self.cmd_floodcount += 1;
-			if(self.cmd_floodcount > 8)
-				return FALSE; // too much spam, halt
-		}
-		else
-		{
-			self.cmd_floodtime = time;
-			self.cmd_floodcount = 1;
-		}
-	}
-	return TRUE; // continue, as we're not flooding yet
-}
 void SV_ParseClientCommand(string command)
 {
 	float search_request_type;
@@ -353,12 +377,14 @@ void SV_ParseClientCommand(string command)
 	// for floodcheck
 	switch(strtolower(argv(0)))
 	{
+		// exempt commands which are not subject to floodcheck
 		case "begin": break; // handled by engine in host_cmd.c
 		case "pause": break; // handled by engine in host_cmd.c
 		case "prespawn": break; // handled by engine in host_cmd.c
 		case "reportcvar": break; // handled by server in this file
 		case "sentcvar": break; // handled by server in this file
 		case "spawn": break; // handled by engine in host_cmd.c
+		
 		default: 
 			if(SV_ParseClientCommand_floodcheck())
 				break; // "TRUE": continue, as we're not flooding yet
@@ -367,11 +393,12 @@ void SV_ParseClientCommand(string command)
 	}
 	
 	// only do help/usage information if the server has developer enabled, this way it can't be abused 
-	// other note: should I use cvar("developer") instead of autocvar_developer?
-	if((argv(0) == "help") && autocvar_developer)
+	if((argv(0) == "help") && autocvar_developer) // other note: should I use cvar("developer") instead of autocvar_developer?
 	{
 		if(argc == 1) 
 		{
+			// I get the feeling that I should only send a single sprint message instead of many separate sprint commands... TODO.
+			
 			sprint(self, "\nUsage:^3 cmd COMMAND...^7, where possible commands are:\n");
 			ClientCommand_autoswitch(CC_REQUEST_HELP, self, 0);
 			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
@@ -401,6 +428,7 @@ void SV_ParseClientCommand(string command)
 		// also: keep in alphabetical order, please ;)
 		
 		case "autoswitch": ClientCommand_autoswitch(search_request_type, self, argc); break;
+		case "checkfail": ClientCommand_checkfail(search_request_type, self, command); break;
 		
 		default:
 			clientcommand(self, command); //print("Invalid command. For a list of supported commands, try cmd help.\n");
