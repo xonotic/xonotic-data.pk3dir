@@ -331,34 +331,114 @@ void ClientCommand_autoswitch(float request, entity client, float argc)
 			
 		case CC_REQUEST_COMMAND:
 			client.autoswitch = ("0" != argv(1));
-			sprint(client, strcat("^1autoswitch has been turned ", (client.autoswitch ? "on" : "off"), ".\n"));
-			return;
+			sprint(client, strcat("^1autoswitch is currently turned ", (client.autoswitch ? "on" : "off"), ".\n"));
+			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd autoswitch \n"); // TODO
-			sprint(client, "  No arguments required.\n"); 
+			sprint(client, "\nUsage:^3 cmd autoswitch selection\n");
+			sprint(client, "  Where 'selection' is 1 or 0 for on or off.\n"); 
 			return;
 	}
 }
 
-void ClientCommand_checkfail(float request, entity client, string command) // wtf does this command even do?
+void ClientCommand_checkfail(float request, entity client, string command) // used only by client side code
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2checkfail^7: TODO\n");
+			sprint(client, "  ^2checkfail^7: Report if a client-side check failed\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
 			print(sprintf("CHECKFAIL: %s (%s) epically failed check %s\n", client.netname, client.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1))));
 			client.checkfail = 1;
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd checkfail message\n");
+			sprint(client, "  Where 'message' is the message reported by client about the fail.\n");
+			return;
+	}
+}
+
+void ClientCommand_clientversion(float request, entity client, float argc) // used only by client side code
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2clientversion^7: Release version of the game\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			if (client.flags & FL_CLIENT)
+			{
+				client.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
+				
+				if(client.version < autocvar_gameversion_min || client.version > autocvar_gameversion_max)
+				{
+					client.version_mismatch = 1;
+					ClientKill_TeamChange(-2); // observe
+				} 
+				else if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force) 
+				{
+					//JoinBestTeam(self, FALSE, TRUE);
+				} 
+				else if(teamplay && !autocvar_sv_spectate && !(client.team_forced > 0)) 
+				{
+					client.classname = "observer"; // really?
+					stuffcmd(client, "menu_showteamselect\n");
+				}
+			}
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd clientversion version\n");
+			sprint(client, "  Where 'version' is the game version reported by client.\n");
+			return;
+	}
+}
+
+void ClientCommand_cvar_changes(float request, entity client)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2cvar_changes^7: Prints a list of all changed server cvars\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			sprint(client, cvar_changes);
 			return;
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd checkfail \n"); // TODO
+			sprint(client, "\nUsage:^3 sv_cmd cvar_changes\n");
 			sprint(client, "  No arguments required.\n");
+			//sprint(client, "See also: ^2cvar_purechanges^7\n");
+			return;
+	}
+}
+
+void ClientCommand_cvar_purechanges(float request, entity client)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2cvar_purechanges^7: Prints a list of all changed gameplay cvars\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			sprint(client, cvar_purechanges);
+			return;
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 sv_cmd cvar_purechanges\n");
+			sprint(client, "  No arguments required.\n");
+			//sprint(client, "See also: ^2cvar_changes^7\n");
 			return;
 	}
 }
@@ -392,22 +472,24 @@ void SV_ParseClientCommand(string command)
 				return; // "FALSE": not allowed to continue, halt
 	}
 	
-	// only do help/usage information if the server has developer enabled, this way it can't be abused 
-	if((argv(0) == "help") && autocvar_developer) // other note: should I use cvar("developer") instead of autocvar_developer?
+	/* NOTE: totally disabled for now, however the functionality and descriptions are there if we ever want it.
+	if(argv(0) == "help") 
 	{
 		if(argc == 1) 
 		{
-			// I get the feeling that I should only send a single sprint message instead of many separate sprint commands... TODO.
-			
 			sprint(self, "\nUsage:^3 cmd COMMAND...^7, where possible commands are:\n");
 			ClientCommand_autoswitch(CC_REQUEST_HELP, self, 0);
+			ClientCommand_checkfail(CC_REQUEST_HELP, self, "");
+			clientCommand_clientversion(CC_REQUEST_HELP, self, 0);
+			ClientCommand_cvar_changes(CC_REQUEST_HELP, self);
+			ClientCommand_cvar_purechanges(CC_REQUEST_HELP, self);
 			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
 			return;
 		} 
 		else
 			search_request_type = CC_REQUEST_USAGE; // Instead of trying to call a command, we're going to see detailed information about it
 	} 
-	else if(GameCommand_Vote(command, self)) 
+	else*/ if(GameCommand_Vote(command, self)) 
 	{
 		return; // handled by server/vote.qc 
 	}
@@ -422,13 +504,16 @@ void SV_ParseClientCommand(string command)
 	else
 		search_request_type = CC_REQUEST_COMMAND; // continue as usual and scan for normal commands
 	
-	switch(strtolower((search_request_type == CC_REQUEST_USAGE) ? argv(1) : argv(0)))  // if first argument is help (and developer is enabled), then search for the second argument. Else, search for first. 
+	switch(strtolower((search_request_type == CC_REQUEST_USAGE) ? argv(1) : argv(0)))
 	{
 		// Do not hard code aliases for these, instead create them in defaultXonotic.cfg
 		// also: keep in alphabetical order, please ;)
 		
 		case "autoswitch": ClientCommand_autoswitch(search_request_type, self, argc); break;
 		case "checkfail": ClientCommand_checkfail(search_request_type, self, command); break;
+		case "clientversion": ClientCommand_clientversion(search_request_type, self, argc); break;
+		case "cvar_changes": ClientCommand_cvar_changes(search_request_type, self); break;
+		case "cvar_purechanges": ClientCommand_cvar_purechanges(search_request_type, self); break;
 		
 		default:
 			clientcommand(self, command); //print("Invalid command. For a list of supported commands, try cmd help.\n");
