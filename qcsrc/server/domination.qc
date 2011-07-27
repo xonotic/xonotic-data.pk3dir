@@ -129,6 +129,21 @@ void dompoint_captured ()
 	self.delay = old_delay;
 	self.team = old_team;
 
+	switch(self.goalentity.team)
+	{
+		case COLOR_TEAM1:
+			WaypointSprite_UpdateSprites(self.sprite, "dom-red", "", "");
+			break;
+		case COLOR_TEAM2:
+			WaypointSprite_UpdateSprites(self.sprite, "dom-blue", "", "");
+			break;
+		case COLOR_TEAM3:
+			WaypointSprite_UpdateSprites(self.sprite, "dom-yellow", "", "");
+			break;
+		case COLOR_TEAM4:
+			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
+	}
+
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	for(head = world; (head = find(head, classname, "dom_controlpoint")) != world; )
 	{
