@@ -242,7 +242,7 @@ vector spritelookupcolor(string s, vector def)
 		case "wpn-hookgun":       return '0 0.5 0';
 		case "wpn-fireball":      return '1 0.5 0';
 		case "wpn-hlac":          return '0 1 0';
-		case "wpn-rifle":         return '0.5 1 0';
+		case "wpn-campingrifle":  return '0.5 1 0';
 		case "wpn-minelayer":     return '0.75 1 0';
 		default:                  return def;
 	}
