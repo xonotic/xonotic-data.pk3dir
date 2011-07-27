@@ -3,22 +3,22 @@
 
 
 \XonoticMultiplayerDialog\Juega online, contra tus amigos en LAN, ver demos o cambia la configuración del jugador
-\XonoticMultiplayerDialog/Servers\Encuentra servidores para jugar
+\XonoticMultiplayerDialog/Servidores\Encuentra servidores para jugar
 \menu_slist_showempty\Mostrar servidores vacíos
 \menu_slist_showfull\Mostrar los servidores que no tienen espacio disponible
 \net_slist_pause\Pausa la actualización de la lista de servidores para evitar que salteen
 \XonoticMultiplayerDialog/Info\Mostrar mas información sobre el actual servidor resaltado
-\XonoticMultiplayerDialog/Bookmark\Marcar el actual servidor resaltado para que sea mas facil encontrarlo en un futuro
+\XonoticMultiplayerDialog/Marcador\Marcar el actual servidor resaltado para que sea mas facil encontrarlo en un futuro
 \XonoticMultiplayerDialog/Havoc\Cambiar a Havoc modo, el cual tiene algunas modificaciones en el juego
-\XonoticMultiplayerDialog/Create\Crear tu propio juego
+\XonoticMultiplayerDialog/Crear\Crear tu propio juego
 \XonoticMultiplayerDialog/Demos\Navegar y ver demos
 \XonoticMultiplayerDialog/Player Setup\Configuración de jugador
 
 \XonoticTeamSelectDialog/Unirse al'mejor' equipo (seleccion automática)\Auto seleccionar equipo (recomendado)
-\XonoticTeamSelectDialog/red\Unirse al equipo rojo
-\XonoticTeamSelectDialog/blue\Unirse al equipo azul
-\XonoticTeamSelectDialog/yellow\Unirse al equipo amarillo
-\XonoticTeamSelectDialog/pink\Unirse al equipo rosa
+\XonoticTeamSelectDialog/rojo\Unirse al equipo rojo
+\XonoticTeamSelectDialog/azul\Unirse al equipo azul
+\XonoticTeamSelectDialog/amarillo\Unirse al equipo amarillo
+\XonoticTeamSelectDialog/rosa\Unirse al equipo rosa
 
 \timelimit_override\Límite de tiempo en minutos que cuando pase, terminara el combate
 \fraglimit_override\Cantidad de puntos necesarios antes de que termine el combate
@@ -49,7 +49,7 @@
 \XonoticMultiplayerDialog/None\Deseleccionar todos los mapas
 
 
-\XonoticMultiplayerDialog/Timedemo\Prueba cuan rápido tu computadora puede correr la demo seleccionada
+\XonoticMultiplayerDialog/Demo temporizado\Prueba cuan rápido tu computadora puede correr la demo seleccionada
 
 \fov\Campo de visión en grados de 60 a 130, 90 es el default
 \cl_bobcycle\Frecuencia de balanceo de la vista
@@ -87,10 +87,10 @@
 \XonoticCvarsDialog\-
 
 \XonoticQuitDialog\Salir del juego
-\XonoticQuitDialog/Yes\Volver al trabajo...
+\XonoticQuitDialog/Si\Volver al trabajo...
 \XonoticQuitDialog/No\Tengo algunos puntos más por hacer!
 
-\XonoticSettingsDialog/Input\configuración de entrada
+\XonoticSettingsDialog/Entrada\configuración de entrada
 \sensitivity\Multiplicador de velocidad del ratón
 \menu_mouse_speed\Multiplicador de velocidad del raton en el menu, esto no afecta al apuntar en el juego
 \m_filter\Suaviza el movimiento del raton, pero hace menos sensible al apuntar al objetivo
@@ -121,7 +121,7 @@
 \vid_samples\activar antialiasing, el cual suaviza los bordes en geometrias en 3D. Note que esto puede disminuir bastante el rendimiento (por defecto: desactivado)
 \v_flipped\Invertir la imagen horizontalmente (por defecto: desactivado)
 
-\XonoticSettingsDialog/Effects\configuración de efectos.
+\XonoticSettingsDialog/Efectos\configuración de efectos.
 \r_subdivisions_tolerance\Cambiar la suavidad de las curvas en el mapa (por defecto: normal)
 \gl_picmip\Cambiar la dureza de las texturas. Bajándolo efectivamente reducira el uso de la memoria de la textura, pero hará que las texturas aparezcan muy borrosas. (por defecto: bueno)
 \r_picmipworld\Si se activa, solo reduce la calidad de texturas de los modelos (activado por defecto)
@@ -155,7 +155,7 @@
 \r_motionblur\Nivel de desenfoque de movimiento - 0.5 recomendado
 \r_damageblur\Cantidad de desenfoque de movimiento en presencia de daños - 0.4 recomendado
 
-\XonoticSettingsDialog/Audio\configuración de audio
+\XonoticSettingsDialog/Sonido\configuración de audio
 \bgmvolume\-
 \volume\-
 \snd_staticvolume\-
@@ -177,7 +177,7 @@
 \cl_hitsound\Reproduce un sonido indicador de anotacion cuando disparas a un enemigo
 \menu_sounds\Reproduce sonidos cuando se clickea o se posiciona sobre un item del menú
 
-\XonoticSettingsDialog/Network\configuración de la red
+\XonoticSettingsDialog/Red\configuración de la red
 \cl_movement\Activar predicción de movimiento del lado del cliente
 \cl_nolerp\Activar actualización suave en la red
 \shownetgraph\Activar un gráfico de tamaño de paquetes y otra información
