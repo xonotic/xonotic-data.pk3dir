@@ -228,6 +228,22 @@ vector spritelookupcolor(string s, vector def)
 	switch(s)
 	{
 		case "keycarrier-friend": return '0 1 0';
+		case "wpn-laser":         return '1 0.5 0.5';
+		case "wpn-shotgun":       return '0.5 0.25 0';
+		case "wpn-uzi":           return '1 1 0';
+		case "wpn-gl":            return '1 0 0';
+		case "wpn-electro":       return '0 0.5 1';
+		case "wpn-crylink":       return '1 0.5 1';
+		case "wpn-nex":           return '0.5 1 1';
+		case "wpn-hagar":         return '1 1 0.5';
+		case "wpn-rl":            return '1 1 0';
+		case "wpn-porto":         return '0.5 0.5 0.5';
+		case "wpn-minstanex":     return '0.5 1 1';
+		case "wpn-hookgun":       return '0 0.5 0';
+		case "wpn-fireball":      return '1 0.5 0';
+		case "wpn-hlac":          return '0 1 0';
+		case "wpn-rifle":         return '0.5 1 0';
+		case "wpn-minelayer":     return '0.75 1 0';
 		default:                  return def;
 	}
 }
