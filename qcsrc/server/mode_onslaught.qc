@@ -372,6 +372,7 @@ float onslaught_controlpoint_attackable(entity cp, float t)
 	return 0;
 }
 
+float overtime_msg_time;
 void onslaught_generator_think()
 {
 	local float d;
@@ -379,9 +380,14 @@ void onslaught_generator_think()
 	self.nextthink = ceil(time + 1);
 	if (!gameover)
 	{
-		if (autocvar_timelimit)
-		if (time > game_starttime + autocvar_timelimit * 60)
+		if (autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60)
 		{
+			if (!overtime_msg_time)
+			{
+				FOR_EACH_PLAYER(e)
+					centerprint(e, "^3Now playing ^1OVERTIME^3!\n^3Generators start now to self-damaging.\n^3The more control points your team holds,\n^3the more damage the enemy generator gets.");
+				overtime_msg_time = time;
+			}
 			// self.max_health / 300 gives 5 minutes of overtime.
 			// control points reduce the overtime duration.
 			sound(self, CH_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTN_NORM);
@@ -397,6 +403,8 @@ void onslaught_generator_think()
 			d = d * self.max_health / 300;
 			Damage(self, self, self, d, DEATH_HURTTRIGGER, self.origin, '0 0 0');
 		}
+		else if (overtime_msg_time)
+			overtime_msg_time = 0;
 	}
 };
 
