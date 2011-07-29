@@ -239,7 +239,7 @@ void SV_ParseClientCommand(string s) {
 		if(self.classname == "player" && autocvar_sv_spectate == 1) {
 			ClientKill_TeamChange(-2); // observe
 		}
-		if(g_ca && self.classname == "spectator" && self.caplayer) {
+		if(g_ca && self.caplayer && (self.classname == "spectator" || self.classname == "observer")) {
 			// in CA, allow a dead player to move to spectatators (without that, caplayer!=0 will be moved back to the player list)
 			sprint(self, "WARNING: you will spectate in the next round.\n");
 			self.caplayer = 0;
