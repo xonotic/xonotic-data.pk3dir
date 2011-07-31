@@ -10,6 +10,10 @@ float waypointsprite_fontsize;
 float waypointsprite_edgefadealpha;
 float waypointsprite_edgefadescale;
 float waypointsprite_edgefadedistance;
+float waypointsprite_edgeoffset_bottom;
+float waypointsprite_edgeoffset_left;
+float waypointsprite_edgeoffset_right;
+float waypointsprite_edgeoffset_top;
 float waypointsprite_crosshairfadealpha;
 float waypointsprite_crosshairfadescale;
 float waypointsprite_crosshairfadedistance;
@@ -224,6 +228,22 @@ vector spritelookupcolor(string s, vector def)
 	switch(s)
 	{
 		case "keycarrier-friend": return '0 1 0';
+		case "wpn-laser":         return '1 0.5 0.5';
+		case "wpn-shotgun":       return '0.5 0.25 0';
+		case "wpn-uzi":           return '1 1 0';
+		case "wpn-gl":            return '1 0 0';
+		case "wpn-electro":       return '0 0.5 1';
+		case "wpn-crylink":       return '1 0.5 1';
+		case "wpn-nex":           return '0.5 1 1';
+		case "wpn-hagar":         return '1 1 0.5';
+		case "wpn-rl":            return '1 1 0';
+		case "wpn-porto":         return '0.5 0.5 0.5';
+		case "wpn-minstanex":     return '0.5 1 1';
+		case "wpn-hookgun":       return '0 0.5 0';
+		case "wpn-fireball":      return '1 0.5 0';
+		case "wpn-hlac":          return '0 1 0';
+		case "wpn-campingrifle":  return '0.5 1 0';
+		case "wpn-minelayer":     return '0.75 1 0';
 		default:                  return def;
 	}
 }
@@ -458,7 +478,11 @@ void Draw_WaypointSprite()
 	float ang;
 
 	o = project_3d_to_2d(self.origin);
-	if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > vid_conwidth || o_y > vid_conheight)
+	if(o_z < 0 
+	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left) 
+	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top) 
+	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))  
+	|| o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
 	{
 		// scale it to be just in view
 		vector d;
@@ -477,12 +501,12 @@ void Draw_WaypointSprite()
 			if(d_z * f1 > 0)
 			{
 				// RIGHT edge
-				d = d * (0.5 / f1);
+				d = d * ((0.5 - waypointsprite_edgeoffset_right) / f1);
 			}
 			else
 			{
 				// LEFT edge
-				d = d * (-0.5 / f1);
+				d = d * (-(0.5 - waypointsprite_edgeoffset_left) / f1);
 			}
 		}
 		else
@@ -490,12 +514,12 @@ void Draw_WaypointSprite()
 			if(d_z * f2 > 0)
 			{
 				// BOTTOM edge
-				d = d * (0.5 / f2);
+				d = d * ((0.5 - waypointsprite_edgeoffset_bottom) / f2);
 			}
 			else
 			{
 				// TOP edge
-				d = d * (-0.5 / f2);
+				d = d * (-(0.5 - waypointsprite_edgeoffset_top) / f2);
 			}
 		}
 
@@ -514,7 +538,10 @@ void Draw_WaypointSprite()
 	o_z = 0;
 
 	float edgedistance_min, crosshairdistance;
-	edgedistance_min = min4(o_y, o_x,vid_conwidth - o_x, vid_conheight - o_y);
+		edgedistance_min = min4((o_y - (vid_conheight * waypointsprite_edgeoffset_top)), 
+	(o_x - (vid_conwidth * waypointsprite_edgeoffset_left)),
+	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x, 
+	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
 
 	float vidscale;
 	vidscale = max(vid_conwidth / vid_width, vid_conheight / vid_height);
@@ -746,6 +773,10 @@ void WaypointSprite_Load()
 	waypointsprite_edgefadealpha = autocvar_g_waypointsprite_edgefadealpha;
 	waypointsprite_edgefadescale = autocvar_g_waypointsprite_edgefadescale;
 	waypointsprite_edgefadedistance = autocvar_g_waypointsprite_edgefadedistance;
+	waypointsprite_edgeoffset_bottom = autocvar_g_waypointsprite_edgeoffset_bottom;
+	waypointsprite_edgeoffset_left = autocvar_g_waypointsprite_edgeoffset_left;
+	waypointsprite_edgeoffset_right = autocvar_g_waypointsprite_edgeoffset_right;
+	waypointsprite_edgeoffset_top = autocvar_g_waypointsprite_edgeoffset_top;
 	waypointsprite_crosshairfadealpha = autocvar_g_waypointsprite_crosshairfadealpha;
 	waypointsprite_crosshairfadescale = autocvar_g_waypointsprite_crosshairfadescale;
 	waypointsprite_crosshairfadedistance = autocvar_g_waypointsprite_crosshairfadedistance;

@@ -319,9 +319,6 @@ vector HUD_GetFontsize(string cvarname)
 
 float PreviewExists(string name)
 {
-	float f;
-	string file;
-
 	if(autocvar_cl_readpicture_force)
 		return false;
 

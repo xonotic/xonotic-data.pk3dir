@@ -721,7 +721,7 @@ void target_speaker_use_activator()
 	else
 		snd = self.noise;
 	msg_entity = activator;
-	soundto(MSG_ONE, self, CH_TRIGGER_SINGLE, snd, VOL_BASE * self.volume, self.atten);
+	soundto(MSG_ONE, self, CH_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
 }
 void target_speaker_use_on()
 {

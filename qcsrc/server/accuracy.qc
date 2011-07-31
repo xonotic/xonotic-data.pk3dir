@@ -2,10 +2,6 @@
 .float accuracy_fired[WEP_MAXCOUNT];
 .float accuracy_cnt_hit[WEP_MAXCOUNT];
 .float accuracy_cnt_fired[WEP_MAXCOUNT];
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_hit);
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_fired);
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_cnt_hit);
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_cnt_fired);
 
 float accuracy_byte(float n, float d)
 {
