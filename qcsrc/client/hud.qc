@@ -3117,7 +3117,7 @@ void HUD_VoteWindow(void)
 	pos = panel_pos;
 	mySize = panel_size;
 
-	a = vote_alpha * bound(autocvar_hud_panel_vote_alreadyvoted_alpha, 1 - vote_highlighted, 1);
+	a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
 	HUD_Panel_DrawBg(a);
 	a = panel_fg_alpha * a;
 
@@ -3168,7 +3168,7 @@ void HUD_VoteWindow(void)
 		drawsetcliparea(pos_x, pos_y, mySize_x * 0.5, mySize_y);
 		drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_voted", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
 	}
-	else if(vote_highlighted == 2) {
+	else if(vote_highlighted == -1) {
 		drawsetcliparea(pos_x + 0.5 * mySize_x, pos_y, mySize_x * 0.5, mySize_y);
 		drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_voted", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
 	}
@@ -3187,10 +3187,6 @@ void HUD_VoteWindow(void)
 	}
 
 	drawresetcliparea();
-
-	if(!vote_active) {
-		vote_highlighted = 0;
-	}
 }
 
 // Mod icons panel (#10)

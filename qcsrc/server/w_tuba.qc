@@ -3,7 +3,6 @@ REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKU
 #else
 #ifdef SVQC
 //#define TUBA_NOTE(n) strcat("weapons/tuba_note", ftos(n), ".wav")
-.float tuba_notecount;
 .entity tuba_note;
 .float tuba_smoketime;
 
@@ -130,18 +129,8 @@ void W_Tuba_NoteThink()
 void W_Tuba_Attack(float hittype)
 {
 	vector o;
-	float c, n;
+	float n;
 	W_SetupShot(self, FALSE, 2, "", 0, autocvar_g_balance_tuba_damage);
-	if(self.tuba_notecount)
-	{
-		self.tuba_notecount = FALSE;
-		c = CHAN_WEAPON;
-	}
-	else
-	{
-		self.tuba_notecount = TRUE;
-		c = CHAN_WEAPON2;
-	}
 
 	n = Tuba_GetNote(self, hittype);
 

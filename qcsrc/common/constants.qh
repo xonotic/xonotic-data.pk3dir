@@ -55,8 +55,6 @@ const float TE_CSQC_NEXGUNBEAMPARTICLE = 104;
 const float TE_CSQC_LIGHTNINGARC = 105;
 const float TE_CSQC_TEAMNAGGER = 106;
 const float TE_CSQC_PINGPLREPORT = 107;
-const float TE_CSQC_VOTE = 108;
-const float TE_CSQC_VOTERESET = 109;
 const float TE_CSQC_ANNOUNCE = 110;
 const float TE_CSQC_TARGET_MUSIC = 111;
 const float TE_CSQC_NOTIFY = 112;
@@ -429,47 +427,37 @@ const float STAT_DOM_PPS_YELLOW = 104;
 #define SP_SCORE 3
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 
-// this assignment must match menu/xonotic/dialog_settings_misc.c!
-float	CHAN_AUTO				= 0;
-	// on world: announcers, ...                     INFO
-	// on players: item pickup                       ITEMS
-	// on entities: UNUSED
-	// on csqc: announcers                           INFO
-float	CHAN_WEAPON				= 1; // Weapon fire
-	// on world: UNUSED
-	// on players: weapon firing                     WEAPONS
-	// on entities: turret firing                    WEAPONS
-	// on csqc: UNUSED
-float	CHAN_VOICE				= 2; // Voice/Radio
-	// on world: UNUSED
-	// on players: voice                             VOICE
-	// on entities: ambient                          AMBIENT
-	// on csqc: background music                     BGM
-float	CHAN_TRIGGER			= 3; // Triggers/Items
-	// on world: UNUSED
-	// on players: item pickup                       ITEMS
-	// on entities: platforms moving etc.            ITEMS
-	// on csqc: platforms moving etc.                ITEMS
-float	CHAN_PROJECTILE			= 4; // Projectiles
-	// on world: UNUSED
-	// on players: projectiles hitting player        SHOTS
-	// on entities: projectiles                      SHOTS
-	// on csqc: projectile sounds                    SHOTS
-float	CHAN_WEAPON2			= 5; // Nex fire (separated as it is a very long sound)
-	// on world: UNUSED
-	// on players: weapon firing                     WEAPONS
-	// on entities: turret firing                    WEAPONS
-	// on csqc: UNUSED
-float	CHAN_PAIN				= 6; // Pain
-	// on world: UNUSED
-	// on players: pain                              PAIN
-	// on entities: projectiles flying               SHOTS
-	// on csqc: player pain                          PAIN
-float	CHAN_PLAYER				= 7; // Player body
-	// on world: UNUSED
-	// on players: player sounds                     PLAYER
-	// on entities: player sounds                    PLAYER
-	// on csqc: UNUSED
+#ifdef COMPAT_XON010_CHANNELS
+float CH_INFO = 0; // only on world and csqc
+float CH_TRIGGER = 0; // only on players; compat: FALSELY CONTROLLED BY "Info"
+float CH_WEAPON_A = 1; // only on players and entities
+float CH_WEAPON_SINGLE = 5; // only on players and entities
+float CH_VOICE = 2; // only on players
+float CH_BGM_SINGLE = 2; // only on csqc; compat: FALSELY CONTROLLED BY "Voice"
+float CH_AMBIENT = 2; // only on csqc; compat: FALSELY CONTROLLED BY "Voice"
+float CH_TRIGGER_SINGLE = 3; // only on players, entities, csqc
+float CH_SHOTS = 4; // only on players, entities, csqc
+float CH_SHOTS_SINGLE = 4; // only on players, entities, csqc
+float CH_WEAPON_B = 5; // only on players and entities
+float CH_PAIN = 6; // only on players and csqc
+float CH_PAIN_SINGLE = 6; // only on players and csqc
+float CH_PLAYER = 7; // only on players and entities
+#else
+float CH_INFO = 0;
+float CH_TRIGGER = -3;
+float CH_WEAPON_A = -1;
+float CH_WEAPON_SINGLE = 1;
+float CH_VOICE = -2;
+float CH_BGM_SINGLE = 8;
+float CH_AMBIENT = -9;
+float CH_TRIGGER_SINGLE = 3;
+float CH_SHOTS = -4;
+float CH_SHOTS_SINGLE = 4;
+float CH_WEAPON_B = -1;
+float CH_PAIN = -6;
+float CH_PAIN_SINGLE = 6;
+float CH_PLAYER = -7;
+#endif
 
 float	ATTN_NONE				= 0;
 float	ATTN_MIN				= 0.015625;

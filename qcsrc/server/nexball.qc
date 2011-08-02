@@ -222,7 +222,7 @@ void InitBall (void)
 	self.teamtime = 0;
 	self.pusher = world;
 	self.team = FALSE;
-	sound (self, CHAN_PROJECTILE, self.noise1, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
 	LogNB("init", world);
 }
@@ -262,7 +262,7 @@ void football_touch (void)
 	if (other.solid == SOLID_BSP) {
 		if (time > self.lastground + 0.1)
 		{
-			sound (self, CHAN_PROJECTILE, self.noise, VOL_BASE, ATTN_NORM);
+			sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 			self.lastground = time;
 		}
 		if (vlen(self.velocity) && !self.cnt)
@@ -308,7 +308,7 @@ void basketball_touch (void)
 		LogNB("caught", other);
 		GiveBall(other, self);
 	} else if (other.solid == SOLID_BSP) {
-		sound (self, CHAN_PROJECTILE, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 		if (vlen(self.velocity) && !self.cnt)
 			self.nextthink = min(time + g_nexball_delay_idle, self.teamtime);
 	}
@@ -366,7 +366,7 @@ void GoalTouch (void)
 		pscore = 1;
 	}
 
-	sound (ball, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
+	sound (ball, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NONE);
 
 	if(ball.team && pscore)
 	{
@@ -604,7 +604,7 @@ void W_Nexball_Touch (void)
 		if(!attacker.ballcarried)
 		{
 			LogNB("stole", attacker);
-			sound (other, CHAN_AUTO, ball.noise2, VOL_BASE, ATTN_NORM);
+			sound (other, CH_TRIGGER, ball.noise2, VOL_BASE, ATTN_NORM);
 
 			if(attacker.team == other.team && time > attacker.teamkill_complain)
 			{
@@ -626,7 +626,7 @@ void W_Nexball_Attack (float t)
 	if (!(ball = self.ballcarried))
 		return;
 
-	W_SetupShot (self, FALSE, 4, "nexball/shoot1.wav", CHAN_WEAPON, 0);
+	W_SetupShot (self, FALSE, 4, "nexball/shoot1.wav", CH_WEAPON_A, 0);
 	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, world);
 	if(trace_startsolid)
 	{
@@ -657,7 +657,7 @@ void W_Nexball_Attack2 (void)
 	local entity missile;
 	if (!(balls & BALL_BASKET))
 		return;
-	W_SetupShot (self, FALSE, 2, "nexball/shoot2.wav", CHAN_WEAPON, 0);
+	W_SetupShot (self, FALSE, 2, "nexball/shoot2.wav", CH_WEAPON_A, 0);
 //	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 	missile = spawn ();
 

@@ -155,7 +155,7 @@ void trigger_push_touch()
 		{
 			// flash when activated
 			pointparticles(particleeffectnum("jumppad_activate"), other.origin, other.velocity, 1);
-			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 			self.pushltime = time + 0.2;
 		}
 		local float ct;

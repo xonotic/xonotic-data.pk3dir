@@ -44,11 +44,11 @@ void W_Laser_Attack (float issecondary)
 	s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
 
 	if(nodamage)
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CHAN_WEAPON2, 0);
+		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, 0);
 	else if(issecondary == 1)
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CHAN_WEAPON2, autocvar_g_balance_laser_secondary_damage);
+		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_secondary_damage);
 	else
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CHAN_WEAPON2, autocvar_g_balance_laser_primary_damage);
+		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_primary_damage);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
@@ -177,7 +177,7 @@ void W_Laser_Attack2 ()
 	// only play fire sound if 0.5 sec has passed since player let go the fire button
 	if(time - self.prevgauntletfire > 0.5)
 	{
-		sound (self, CHAN_WEAPON, "weapons/gauntlet_fire.wav", VOL_BASE, ATTN_NORM);
+		sound (self, CH_WEAPON_A, "weapons/gauntlet_fire.wav", VOL_BASE, ATTN_NORM);
 	}
 
 	entity beam, oldself;
@@ -301,7 +301,7 @@ float w_laser(float req)
 		org2 = w_org + w_backoff * 6;
 		pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
 		if(!w_issilent)
-			sound(self, CHAN_PROJECTILE, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

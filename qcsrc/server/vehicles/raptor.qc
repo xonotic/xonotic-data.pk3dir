@@ -261,7 +261,7 @@ float raptor_takeoff()
     if(self.sound_nexttime < time)
     {        
         self.sound_nexttime = time + 7.955812; //soundlength("vehicles/raptor_fly.wav");
-        sound (self, CHAN_TRIGGER, "vehicles/raptor_speed.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+        sound (self, CH_TRIGGER_SINGLE, "vehicles/raptor_speed.wav", VOL_VEHICLEENGINE, ATTN_NORM);
     }   
 
     // Takeoff sequense
@@ -325,15 +325,15 @@ float raptor_frame()
     if(self.sound_nexttime < time)
     {        
         self.sound_nexttime = time + 7.955812; 
-        //sound (self.tur_head, CHAN_TRIGGER, "vehicles/raptor_fly.wav", 1 - ftmp,   ATTN_NORM );
-        sound (self, CHAN_TRIGGER, "vehicles/raptor_speed.wav", 1, ATTN_NORM);        
+        //sound (self.tur_head, CH_TRIGGER_SINGLE, "vehicles/raptor_fly.wav", 1 - ftmp,   ATTN_NORM );
+        sound (self, CH_TRIGGER_SINGLE, "vehicles/raptor_speed.wav", 1, ATTN_NORM);        
         self.wait = ftmp;
     }        
     /*
     else if(fabs(ftmp - self.wait) > 0.2)
     {
-        sound (self.tur_head, CHAN_TRIGGER, "", 1 - ftmp,   ATTN_NORM );
-        sound (self, CHAN_TRIGGER, "", ftmp, ATTN_NORM);        
+        sound (self.tur_head, CH_TRIGGER_SINGLE, "", 1 - ftmp,   ATTN_NORM );
+        sound (self, CH_TRIGGER_SINGLE, "", ftmp, ATTN_NORM);        
         self.wait = ftmp;
     }
     */
@@ -563,7 +563,7 @@ void raptor_diethink()
 {
     if(random() < 0.1)
     {
-        sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+        sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
         pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
     }
     self.nextthink = time + 0.1;

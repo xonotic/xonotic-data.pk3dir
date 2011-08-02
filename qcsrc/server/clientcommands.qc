@@ -1,10 +1,21 @@
 entity nagger;
 float readycount;
+
 float Nagger_SendEntity(entity to, float sendflags)
 {
 	float nags, i, f, b;
 	entity e;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_NAGGER);
+
+	// bits:
+	//   1 = ready
+	//   2 = player needs to ready up
+	//   4 = vote
+	//   8 = player needs to vote
+	//  16 = warmup
+	// sendflags:
+	//  64 = vote counts
+	// 128 = vote string
 
 	nags = 0;
 	if(readycount)
@@ -22,18 +33,27 @@ float Nagger_SendEntity(entity to, float sendflags)
 	if(inWarmupStage)
 		nags |= 16;
 
+	if(sendflags & 64)
+		nags |= 64;
+
 	if(sendflags & 128)
 		nags |= 128;
 
 	if(!(nags & 4)) // no vote called? send no string
-		nags &~= 128;
+		nags &~= (64 | 128);
 
 	WriteByte(MSG_ENTITY, nags);
 
-	if(nags & 128)
+	if(nags & 64)
 	{
-		WriteString(MSG_ENTITY, votecalledvote_display);
+		WriteByte(MSG_ENTITY, vote_yescount);
+		WriteByte(MSG_ENTITY, vote_nocount);
+		WriteByte(MSG_ENTITY, vote_needed_absolute);
+		WriteChar(MSG_ENTITY, to.vote_vote);
 	}
+
+	if(nags & 128)
+		WriteString(MSG_ENTITY, votecalledvote_display);
 
 	if(nags & 1)
 	{
@@ -60,7 +80,7 @@ void Nagger_VoteChanged()
 void Nagger_VoteCountChanged()
 {
 	if(nagger)
-		nagger.SendFlags |= 1;
+		nagger.SendFlags |= 64;
 }
 void Nagger_ReadyCounted()
 {
@@ -218,6 +238,11 @@ void SV_ParseClientCommand(string s) {
 		}
 		if(self.classname == "player" && autocvar_sv_spectate == 1) {
 			ClientKill_TeamChange(-2); // observe
+		}
+		if(g_ca && self.caplayer && (self.classname == "spectator" || self.classname == "observer")) {
+			// in CA, allow a dead player to move to spectatators (without that, caplayer!=0 will be moved back to the player list)
+			sprint(self, "WARNING: you will spectate in the next round.\n");
+			self.caplayer = 0;
 		}
 	} else if(cmd == "join") {
 		if not(self.flags & FL_CLIENT)

@@ -3,22 +3,22 @@
 
 
 \XonoticMultiplayerDialog\Играть по сети, просмотреть демо или изменить настройки игрока
-\XonoticMultiplayerDialog/Servers\Поиск игровых серверов
+\XonoticMultiplayerDialog/Серверы\Поиск игровых серверов
 \menu_slist_showempty\Показывать пустые сервера
 \menu_slist_showfull\Показывать полные сервера, не имеющие свободных мест
 \net_slist_pause\Приостановить обновление списка серверов для предотвращения их скакания
 \XonoticMultiplayerDialog/Info\Показать больше сведений о выбранном сервере
-\XonoticMultiplayerDialog/Bookmark\Добавить выбранный сервер в закладки, так найти его будет быстрее
+\XonoticMultiplayerDialog/В закладки\Добавить выбранный сервер в закладки, так найти его будет быстрее
 \XonoticMultiplayerDialog/Havoc\Change to Havoc mode which has some modifications to the gameplay
-\XonoticMultiplayerDialog/Create\Запустить собственную игру
-\XonoticMultiplayerDialog/Demos\Список демо для просмотра
+\XonoticMultiplayerDialog/Создать\Запустить собственную игру
+\XonoticMultiplayerDialog/Демо\Список демо для просмотра
 \XonoticMultiplayerDialog/Player Setup\Изменить настройки игрока
 
 \XonoticTeamSelectDialog/join 'best' team (auto-select)\Автовыбор команды (советуется)
-\XonoticTeamSelectDialog/red\Присоединиться к красной команде
-\XonoticTeamSelectDialog/blue\Присоединиться к синей команде
-\XonoticTeamSelectDialog/yellow\Присоединиться к жёлтой команде
-\XonoticTeamSelectDialog/pink\Присоединиться к розовой команде
+\XonoticTeamSelectDialog/красная\Присоединиться к красной команде
+\XonoticTeamSelectDialog/синяя\Присоединиться к синей команде
+\XonoticTeamSelectDialog/жёлтая\Присоединиться к жёлтой команде
+\XonoticTeamSelectDialog/розовая\Присоединиться к розовой команде
 
 \timelimit_override\Ограничение времени в минутах, состязание закончится при его достижении
 \fraglimit_override\Количество очков, необходимых для завершения состязания
@@ -48,7 +48,7 @@
 \XonoticMultiplayerDialog/None\Снять выделение со всех карт
 
 
-\XonoticMultiplayerDialog/Timedemo\Замерить, насколько быстро компьютер способен играть выбранное демо
+\XonoticMultiplayerDialog/Проверка производительности\Замерить, насколько быстро компьютер способен играть выбранное демо
 
 \fov\Угол обзора в градусах, допустимы значения от 60 то 130, по умолчанию 90
 \cl_bobcycle\Частота качания вида
@@ -86,10 +86,10 @@
 \XonoticCvarsDialog\-
 
 \XonoticQuitDialog\Выйти из игры
-\XonoticQuitDialog/Yes\Пора саночки возить...
-\XonoticQuitDialog/No\Остались здесь ещё дела!
+\XonoticQuitDialog/Да\Пора саночки возить...
+\XonoticQuitDialog/Нет\Остались здесь ещё дела!
 
-\XonoticSettingsDialog/Input\Настройки устройств ввода
+\XonoticSettingsDialog/Ввод\Настройки устройств ввода
 \sensitivity\Множитель скорости мыши
 \menu_mouse_speed\Множитель скорости мыши в меню, не влияет на прицеливание в игре
 \m_filter\Сглаживает движения мыши, но значительно ухудшает отзывчивость прицеливания
@@ -99,7 +99,7 @@
 \sbar_showbinds\Отображать действия / привязанные клавиши в строках, показываемых во время игры
 \cl_showpressedkeys\Показывать, какие кнопки движений нажимает игрок
 
-\XonoticSettingsDialog/Video\Настройки изображения
+\XonoticSettingsDialog/Изображение\Настройки изображения
 \vid_width\Разрешение экрана
 \vid_bitsperpixel\Сколько бит на точку использовать для вывода, советуется 32
 \vid_fullscreen\Включить полноэкранный режим (по умолчанию: включено)
@@ -120,7 +120,7 @@
 \vid_samples\Enable antialiasing, which smooths the edges of 3D geometry. Note that it might decrease performance by quite a lot (default: disabled)
 \v_flipped\Poor man's left handed mode (default: off)
 
-\XonoticSettingsDialog/Effects\Настройки эффектов
+\XonoticSettingsDialog/Эффекты\Настройки эффектов
 \r_subdivisions_tolerance\Change the smoothness of the curves on the map (default: normal)
 \gl_picmip\Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry. (default: good)
 \r_picmipworld\If set, only reduce the texture quality of models (default: enabled)
@@ -154,7 +154,7 @@
 \r_motionblur\Motion blur strength - 0.5 recommended
 \r_damageblur\Amount of motion blur when hurt - 0.4 recommended
 
-\XonoticSettingsDialog/Audio\Настройки звука
+\XonoticSettingsDialog/Звук\Настройки звука
 \bgmvolume\-
 \volume\-
 \snd_staticvolume\-
@@ -176,7 +176,7 @@
 \cl_hitsound\Играть звук оповещения, когда выстрел достигает противника
 \menu_sounds\Играть звуки при взаимодействии с меню
 
-\XonoticSettingsDialog/Network\Настройки сети
+\XonoticSettingsDialog/Сеть\Настройки сети
 \cl_movement\Включить предсказание движения на стороне клиента
 \cl_nolerp\Enable network update smoothing
 \shownetgraph\Показывать график размеров пакетов и других сведений
@@ -186,7 +186,7 @@
 \cl_curl_maxspeed\Предел скорости скачивания
 \cl_port\Force client to use chosen port unless it is set to 0
 
-\XonoticSettingsDialog/Misc\Разные настройки
+\XonoticSettingsDialog/Разное\Разные настройки
 \showtime\Показывать текущее время, полезно на снимках экранов
 \showdate\Показывать текущую дату, полезно на снимках экранов
 \showfps\Show your rendered frames per second

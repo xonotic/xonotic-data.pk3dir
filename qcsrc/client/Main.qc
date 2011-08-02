@@ -827,8 +827,6 @@ void Ent_ClientData()
 
 	if(newspectatee_status != spectatee_status)
 	{
-		float i;
-
 		// clear race stuff
 		race_laptime = 0;
 		race_checkpointtime = 0;
@@ -849,13 +847,26 @@ void Ent_Nagger()
 {
 	float nags, i, j, b, f;
 
-	nags = ReadByte();
+	nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
 
 	if(!(nags & 4))
 	{
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
 		vote_called_vote = string_null;
+		vote_active = 0;
+	}
+	else
+	{
+		vote_active = 1;
+	}
+
+	if(nags & 64)
+	{
+		vote_yescount = ReadByte();
+		vote_nocount = ReadByte();
+		vote_needed = ReadByte();
+		vote_highlighted = ReadChar();
 	}
 
 	if(nags & 128)
@@ -1302,22 +1313,6 @@ void Net_ReadPingPLReport()
 	playerslots[e].ping_movementloss = ml / 255.0;
 }
 
-void Net_VoteDialog(float highlight) {
-	if(highlight) {
-		vote_highlighted = ReadByte();
-		return;
-	}
-
-	vote_yescount = ReadByte();
-	vote_nocount = ReadByte();
-	vote_needed = ReadByte();
-	vote_active = 1;
-}
-
-void Net_VoteDialogReset() {
-	vote_active = 0;
-}
-
 void Net_Notify() {
 	float type;
 	type = ReadByte();
@@ -1385,14 +1380,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_TEAMNAGGER:
 			Net_TeamNagger();
-			bHandled = true;
-			break;
-		case TE_CSQC_VOTE:
-			Net_VoteDialog(ReadByte());
-			bHandled = true;
-			break;
-		case TE_CSQC_VOTERESET:
-			Net_VoteDialogReset();
 			bHandled = true;
 			break;
 		case TE_CSQC_LIGHTNINGARC:

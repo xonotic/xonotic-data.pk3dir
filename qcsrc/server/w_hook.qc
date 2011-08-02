@@ -63,7 +63,7 @@ void W_Hook_Attack2()
 	local entity gren;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hook_secondary_ammo, FALSE);
-	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CHAN_WEAPON, autocvar_g_balance_hook_secondary_damage);
+	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, autocvar_g_balance_hook_secondary_damage);
 
 	gren = spawn ();
 	gren.owner = gren.realowner = self;
@@ -256,7 +256,7 @@ float w_hook(float req)
 		org2 = w_org + w_backoff * 2;
 		pointparticles(particleeffectnum("hookbomb_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CHAN_PROJECTILE, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

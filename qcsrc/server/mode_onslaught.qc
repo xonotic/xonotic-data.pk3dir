@@ -384,7 +384,7 @@ void onslaught_generator_think()
 		{
 			// self.max_health / 300 gives 5 minutes of overtime.
 			// control points reduce the overtime duration.
-			sound(self, CHAN_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTN_NORM);
 			d = 1;
 			e = findchain(classname, "onslaught_controlpoint");
 			while (e)
@@ -455,7 +455,7 @@ void onslaught_generator_damage_think()
 		if(random() < 0.01)
 		{
 			pointparticles(particleeffectnum("electro_ballexplode"), self.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
-			sound(self, CHAN_TRIGGER, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);
 		}
 		else
 			pointparticles(particleeffectnum("torch_small"), self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
@@ -484,7 +484,7 @@ void onslaught_generator_deaththink()
 	if(self.count==40||self.count==20)
 	{
 		onslaught_generator_ring_spawn(self.origin);
-		sound(self, CHAN_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTN_NORM);
 	}
 
 	// Throw some gibs
@@ -510,7 +510,7 @@ void onslaught_generator_deaththink()
 	if(random() < 0.25)
 	{
 		te_explosion(self.origin);
-		sound(self, CHAN_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
 	}
 
 	// Particles
@@ -530,7 +530,7 @@ void onslaught_generator_deaththink()
 		te_explosion(org);
 		onslaught_generator_shockwave_spawn(org);
 		pointparticles(particleeffectnum("onslaught_generator_finalexplosion"), org, '0 0 0', 1);
-		sound(self, CHAN_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	}
 	else
 		self.nextthink = time + 0.05;
@@ -631,7 +631,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	// Throw some flaming gibs on damage, more damage = more chance for gib
 	if(random() < damage/220)
 	{
-		sound(self, CHAN_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 		i = random();
 		if(i < 0.3)
 			ons_throwgib(hitloc + '0 0 20', force * -1, "models/onslaught/gen_gib1.md3", 5, TRUE);
@@ -647,9 +647,9 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 
 		//sound on every hit
 		if (random() < 0.5)
-			sound(self, CHAN_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE, ATTN_NORM);
 		else
-			sound(self, CHAN_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);
 	}
 
 	//throw some gibs on damage
@@ -977,13 +977,13 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 	pointparticles(particleeffectnum("sparks"), hitloc, force*-1, 1);
 	//sound on every hit
 	if (random() < 0.5)
-		sound(self, CHAN_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE+0.3, ATTN_NORM);
+		sound(self, CH_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE+0.3, ATTN_NORM);
 	else
-		sound(self, CHAN_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE+0.3, ATTN_NORM);
+		sound(self, CH_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE+0.3, ATTN_NORM);
 
 	if (self.health < 0)
 	{
-		sound(self, CHAN_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
 		pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 		{
 			string t;
@@ -1104,9 +1104,9 @@ void onslaught_controlpoint_icon_think()
 		pointparticles(particleeffectnum("electricity_sparks"), self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
 		if(random() > 0.8)
-			sound(self, CHAN_PAIN, "onslaught/ons_spark1.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_PAIN, "onslaught/ons_spark1.wav", VOL_BASE, ATTN_NORM);
 		else if (random() > 0.5)
-			sound(self, CHAN_PAIN, "onslaught/ons_spark2.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_PAIN, "onslaught/ons_spark2.wav", VOL_BASE, ATTN_NORM);
 	}
 };
 
@@ -1129,7 +1129,7 @@ void onslaught_controlpoint_icon_buildthink()
 		self.health = self.max_health;
 		self.count = autocvar_g_onslaught_cp_regen * sys_frametime; // slow repair rate from now on
 		self.think = onslaught_controlpoint_icon_think;
-		sound(self, CHAN_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTN_NORM);
 		bprint(ColoredTeamName(self.team), " captured ", self.owner.message, " control point\n");
 		self.owner.iscaptured = TRUE;
 
@@ -1192,7 +1192,7 @@ void onslaught_controlpoint_touch()
 	e.think = onslaught_controlpoint_icon_buildthink;
 	e.nextthink = time + sys_frametime;
 	e.count = (e.max_health - e.health) * sys_frametime / autocvar_g_onslaught_cp_buildtime; // how long it takes to build
-	sound(e, CHAN_TRIGGER, "onslaught/controlpoint_build.wav", VOL_BASE, ATTN_NORM);
+	sound(e, CH_TRIGGER, "onslaught/controlpoint_build.wav", VOL_BASE, ATTN_NORM);
 	self.team = e.team;
 	self.colormap = e.colormap;
 	WaypointSprite_UpdateBuildFinished(self.sprite, time + (e.max_health - e.health) / (e.count / sys_frametime));

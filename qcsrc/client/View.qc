@@ -1,7 +1,5 @@
 entity porto;
 vector polyline[16];
-float trace_dphitcontents;
-float trace_networkentity;
 float Q3SURFACEFLAG_SLICK = 2; // low friction surface
 float DPCONTENTS_SOLID = 1; // blocks player movement
 float DPCONTENTS_BODY = 32; // blocks player movement
@@ -93,7 +91,7 @@ void CheckForGamestartChange() {
 	if (previous_game_starttime != startTime) {
 		if ((time + 5.0) < startTime) {
 			//if connecting to server while restart was active don't always play prepareforbattle
-			sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
+			sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
 		}
 		if (time < startTime) {
 			restartAnnouncer = spawn();
@@ -177,11 +175,15 @@ vector GetCurrentFov(float fov)
 	else
 		setsensitivityscale(1);
 
-	velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoomtime), 1);
-	avgspeed = avgspeed * (1 - velocityzoom) + (vlen(pmove_vel) / 1000) * velocityzoom;
-	velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom / 1) * 1);
-
-	//print(ftos(avgspeed), " avgspeed, ", ftos(autocvar_cl_velocityzoom), " cvar, ", ftos(velocityzoom), " return\n"); // for debugging
+	if (autocvar_cl_velocityzoom)
+	{
+		velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoomtime), 1);
+		avgspeed = avgspeed * (1 - velocityzoom) + (vlen(pmove_vel) / 1000) * velocityzoom;
+		velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom / 1) * 1);
+		//print(ftos(avgspeed), " avgspeed, ", ftos(autocvar_cl_velocityzoom), " cvar, ", ftos(velocityzoom), " return\n"); // for debugging
+	}
+	else
+		velocityzoom = 1;
 
 	float frustumx, frustumy, fovx, fovy;
 	frustumy = tan(fov * M_PI / 360.0) * 0.75 * current_viewzoom * velocityzoom;
@@ -945,13 +947,13 @@ void CSQC_UpdateView(float w, float h)
 	hit_time = getstatf(STAT_HIT_TIME);
 	if(hit_time > nextsound_hit_time && autocvar_cl_hitsound)
 	{
-		sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+		sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
 		nextsound_hit_time = time + autocvar_cl_hitsound_antispam_time;
 	}
 	typehit_time = getstatf(STAT_TYPEHIT_TIME);
 	if(typehit_time > nextsound_typehit_time)
 	{
-		sound(world, CHAN_AUTO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
+		sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
 		nextsound_typehit_time = time + autocvar_cl_hitsound_antispam_time;
 	}
 

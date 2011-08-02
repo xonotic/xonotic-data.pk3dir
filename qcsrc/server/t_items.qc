@@ -146,11 +146,11 @@ void Item_Respawn (void)
 {
 	Item_Show(self, 1);
 	if(!g_minstagib && self.items == IT_STRENGTH)
-		sound (self, CHAN_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	else if(!g_minstagib && self.items == IT_INVINCIBLE)
-		sound (self, CHAN_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	else
-		sound (self, CHAN_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
 	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
@@ -203,7 +203,7 @@ void Item_RespawnCountdown (void)
 					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
 			}
 		}
-		sound (self, CHAN_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 		if(self.waypointsprite_attached)
 		{
 			WaypointSprite_Ping(self.waypointsprite_attached);
@@ -447,7 +447,7 @@ float Item_GiveTo(entity item, entity player)
 	if (!pickedup)
 		return 0;
 
-	sound (player, CHAN_AUTO, item.item_pickupsound, VOL_BASE, ATTN_NORM);
+	sound (player, CH_TRIGGER, item.item_pickupsound, VOL_BASE, ATTN_NORM);
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
 			W_SwitchWeapon_Force(player, w_getbestweapon(player));
@@ -1532,12 +1532,12 @@ void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string sn
 	if(v1 <= v0 - t)
 	{
 		if(snd_decr != "")
-			sound (e, CHAN_AUTO, snd_decr, VOL_BASE, ATTN_NORM);
+			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
 		if(snd_incr != "")
-			sound (e, CHAN_AUTO, snd_incr, VOL_BASE, ATTN_NORM);
+			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTN_NORM);
 	}
 }
 

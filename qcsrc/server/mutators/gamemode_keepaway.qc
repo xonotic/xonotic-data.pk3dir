@@ -78,7 +78,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 		WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
 		WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);	
 
-		sound(self, CHAN_AUTO, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
+		sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
 	}
 	else
 	{
@@ -99,7 +99,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	if(other.classname != "player") 
 	{  // The ball just touched an object, most likely the world
 		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
-		sound(self, CHAN_AUTO, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
 		return; 
 	}
 	else if(self.wait > time) { return; }
@@ -128,7 +128,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	Send_KillNotification(other.netname, "", "", KA_PICKUPBALL, MSG_KA);
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
 	WriteString(MSG_BROADCAST, strcat("\n\n", other.netname, "^7 has picked up the ball!\n"));
-	sound(self.owner, CHAN_AUTO, "keepaway/pickedup.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
+	sound(self.owner, CH_TRIGGER, "keepaway/pickedup.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
 	PlayerScore_Add(other, SP_KEEPAWAY_PICKUPS, 1);
@@ -170,7 +170,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	Send_KillNotification(plyr.netname, "", "", KA_DROPBALL, MSG_KA);
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
 	WriteString(MSG_BROADCAST, strcat("\n\n", plyr.netname, "^7 has dropped the ball!\n"));
-	sound(other, CHAN_AUTO, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
+	sound(plyr, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
 	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.

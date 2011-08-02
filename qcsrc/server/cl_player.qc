@@ -1,6 +1,5 @@
 .entity accuracy;
 .float accuracy_frags[WEP_MAXCOUNT];
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_frags);
 
 float weaponstats_buffer;
 
@@ -341,11 +340,11 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CHAN_PROJECTILE, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
 		else if (take > 30)
-			sound (self, CHAN_PROJECTILE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
 		else if (take > 10)
-			sound (self, CHAN_PROJECTILE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
 	}
 
 	if (take > 50)
@@ -458,11 +457,11 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CHAN_PROJECTILE, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
 		else if (take > 30)
-			sound (self, CHAN_PROJECTILE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
 		else if (take > 10)
-			sound (self, CHAN_PROJECTILE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM); // FIXME possibly remove them?
+			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM); // FIXME possibly remove them?
 	}
 
 	if (take > 50)
@@ -498,15 +497,15 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{
 						if(deathtype == DEATH_FALL)
-							PlayerSound(playersound_fall, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(playersound_fall, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(self.health > 75) // TODO make a "gentle" version?
-							PlayerSound(playersound_pain100, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(playersound_pain100, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(self.health > 50)
-							PlayerSound(playersound_pain75, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(playersound_pain75, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(self.health > 25)
-							PlayerSound(playersound_pain50, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(playersound_pain50, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else
-							PlayerSound(playersound_pain25, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(playersound_pain25, CH_PAIN, VOICETYPE_PLAYERSOUND);
 					}
 				}
 
@@ -585,9 +584,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(sound_allowed(MSG_BROADCAST, attacker))
 		{
 			if(deathtype == DEATH_DROWN)
-				PlayerSound(playersound_drown, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+				PlayerSound(playersound_drown, CH_PAIN, VOICETYPE_PLAYERSOUND);
 			else
-				PlayerSound(playersound_death, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+				PlayerSound(playersound_death, CH_PAIN, VOICETYPE_PLAYERSOUND);
 		}
 
 		// get rid of kill indicator
@@ -1336,9 +1335,9 @@ void VoiceMessage(string type, string msg)
 	flood = Say(self, ownteam, world, msg, 1);
 
 	if (flood > 0)
-		GlobalSound(self.sample, CHAN_VOICE, voicetype);
+		GlobalSound(self.sample, CH_VOICE, voicetype);
 	else if (flood < 0)
-		FakeGlobalSound(self.sample, CHAN_VOICE, voicetype);
+		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
 }
 
 void MoveToTeam(entity client, float team_colour, float type, float show_message)

@@ -1,4 +1,7 @@
 #pragma flag enable subscope
 #pragma flag enable lo
 
-#define WORKAROUND_XON010
+#ifndef NOCOMPAT
+# define WORKAROUND_XON010
+# define COMPAT_XON010_CHANNELS
+#endif
