@@ -2,7 +2,7 @@
 CLASS(XonoticScreenshotBrowserTab) EXTENDS(XonoticTab)
 	METHOD(XonoticScreenshotBrowserTab, fill, void(entity))
 	ATTRIB(XonoticScreenshotBrowserTab, title, string, "Screenshot")
-	ATTRIB(XonoticScreenshotBrowserTab, intendedWidth, float, 0.9)
+	ATTRIB(XonoticScreenshotBrowserTab, intendedWidth, float, 1)
 	ATTRIB(XonoticScreenshotBrowserTab, rows, float, 22)
 	ATTRIB(XonoticScreenshotBrowserTab, columns, float, 6.5)
 	ATTRIB(XonoticScreenshotBrowserTab, name, string, "ScreenshotBrowser")
