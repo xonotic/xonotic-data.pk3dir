@@ -62,6 +62,11 @@ void XonoticScreenshotImage_draw(entity me)
 			theAlpha = (4 - (time - me.screenshotTime));
 			draw_CenterText('0.5 0 0', me.screenshotTitle, me.realFontSize, '1 1 1', theAlpha, FALSE);
 		}
+		if (time < me.zoomTime + 2) // 1 seconds at full alpha, 1 second fading out
+		{
+			theAlpha = (2 - (time - me.zoomTime));
+			draw_Text('0.05 0.95 0', strcat(ftos(me.zoomFactor * 100), "%"), me.realFontSize, '1 1 1', theAlpha, FALSE);
+		}
 	}
 }
 

@@ -13,6 +13,7 @@ CLASS(Image) EXTENDS(Item)
 	ATTRIB(Image, forcedAspect, float, 0)
 	ATTRIB(Image, zoomFactor, float, 1)
 	ATTRIB(Image, zoomOffset, vector, '0.5 0.5 0')
+	ATTRIB(Image, zoomTime, float, 0)
 	ATTRIB(Image, start_zoomOffset, vector, '0 0 0')
 	ATTRIB(Image, start_coords, vector, '0 0 0')
 	ATTRIB(Image, imgOrigin, vector, '0 0 0')
@@ -115,6 +116,8 @@ void Image_setZoom(entity me, float z, float atMousePosition)
 		me.zoomOffset = '0.5 0.5 0';
 	else if (atMousePosition && prev_zoomFactor != me.zoomFactor)
 		me.zoomOffset = me.start_zoomOffset + (me.start_coords - '0.5 0.5 0') * (1/prev_zoomFactor);
+	if (prev_zoomFactor != me.zoomFactor)
+		me.zoomTime = time;
 	me.updateAspect(me);
 }
 void Image_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
