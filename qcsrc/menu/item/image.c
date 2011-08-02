@@ -96,7 +96,8 @@ float Image_drag(entity me, vector coords)
 {
 	if (me.zoomFactor > 1)
 	{
-		me.zoomOffset = me.start_zoomOffset + (me.start_coords - coords)*(1/me.zoomFactor);
+		me.zoomOffset_x = me.start_zoomOffset_x + (me.start_coords_x - coords_x) / me.imgSize_x;
+		me.zoomOffset_y = me.start_zoomOffset_y + (me.start_coords_y - coords_y) / me.imgSize_y;
 		me.updateAspect(me);
 	}
 	return 1;
