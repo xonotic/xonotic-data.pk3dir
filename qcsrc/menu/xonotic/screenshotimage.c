@@ -10,7 +10,7 @@ CLASS(XonoticScreenshotImage) EXTENDS(Image)
 	ATTRIB(XonoticScreenshotImage, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticScreenshotImage, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticScreenshotImage, showTitle, float, 1)
-	ATTRIB(XonoticScreenshotImage, showTitleTime, float, 0)
+	ATTRIB(XonoticScreenshotImage, screenshotTime, float, 0)
 	ATTRIB(XonoticScreenshotImage, screenshotTitle, string, string_null)
 ENDCLASS(XonoticScreenshotImage)
 entity makeXonoticScreenshotImage();
@@ -29,7 +29,7 @@ void XonoticScreenshotImage_configureXonoticScreenshotImage(entity me, string th
 {
 	me.configureImage(me, theImage);
 	me.forcedAspect = -1;
-	me.showTitleTime = time + 3; // show title for 3 seconds
+	me.screenshotTime = time;
 	me.updateAspect(me);
 	if (me.screenshotTitle)
 		strunzone(me.screenshotTitle);
@@ -55,10 +55,11 @@ void XonoticScreenshotImage_draw(entity me)
 {
 	if (me.src != "")
 	{
+		float theAlpha;
 		SUPER(XonoticScreenshotImage).draw(me);
-		if (me.showTitle && time < me.showTitleTime + 1) // fade title out in 1 second
+		if (me.showTitle && time < me.screenshotTime + 4) // 3 seconds at full alpha, 1 second fading out
 		{
-			float theAlpha = (1 - (time - me.showTitleTime));
+			theAlpha = (4 - (time - me.screenshotTime));
 			draw_CenterText('0.5 0 0', me.screenshotTitle, me.realFontSize, '1 1 1', theAlpha, FALSE);
 		}
 	}
