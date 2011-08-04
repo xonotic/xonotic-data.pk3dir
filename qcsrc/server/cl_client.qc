@@ -1015,6 +1015,7 @@ void PutClientInServer (void)
 		self.oldorigin = self.origin;
 		self.prevorigin = self.origin;
 		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
+		self.lastteleporttime = time; // prevent insane speeds due to changing origin
 
 		if(g_arena)
 		{

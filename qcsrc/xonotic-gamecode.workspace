@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<CodeBlocks_workspace_file>
-	<Workspace title="Xonotic Gamecode">
-		<Project filename="qc-server.cbp" active="1" />
-		<Project filename="qc-client.cbp" />
-		<Project filename="qc-common.cbp" />
-	</Workspace>
-</CodeBlocks_workspace_file>

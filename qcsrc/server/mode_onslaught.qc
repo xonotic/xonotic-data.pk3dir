@@ -1067,33 +1067,55 @@ void onslaught_controlpoint_icon_think()
 
 		self.owner.waslinked = self.owner.islinked;
 	}
-	if (self.punchangle_x > 2)
-		self.punchangle_x = self.punchangle_x - 2;
-	else if (self.punchangle_x < -2)
-		self.punchangle_x = self.punchangle_x + 2;
-	else
-		self.punchangle_x = 0;
-	if (self.punchangle_y > 2)
-		self.punchangle_y = self.punchangle_y - 2;
-	else if (self.punchangle_y < -2)
-		self.punchangle_y = self.punchangle_y + 2;
-	else
-		self.punchangle_y = 0;
-	if (self.punchangle_z > 2)
-		self.punchangle_z = self.punchangle_z - 2;
-	else if (self.punchangle_z < -2)
-		self.punchangle_z = self.punchangle_z + 2;
-	else
-		self.punchangle_z = 0;
+
+	if (self.punchangle_x > 0)
+	{
+		self.punchangle_x = self.punchangle_x - 60 * sys_frametime;
+		if (self.punchangle_x < 0)
+			self.punchangle_x = 0;
+	}
+	else if (self.punchangle_x < 0)
+	{
+		self.punchangle_x = self.punchangle_x + 60 * sys_frametime;
+		if (self.punchangle_x > 0)
+			self.punchangle_x = 0;
+	}
+
+	if (self.punchangle_y > 0)
+	{
+		self.punchangle_y = self.punchangle_y - 60 * sys_frametime;
+		if (self.punchangle_y < 0)
+			self.punchangle_y = 0;
+	}
+	else if (self.punchangle_y < 0)
+	{
+		self.punchangle_y = self.punchangle_y + 60 * sys_frametime;
+		if (self.punchangle_y > 0)
+			self.punchangle_y = 0;
+	}
+
+	if (self.punchangle_z > 0)
+	{
+		self.punchangle_z = self.punchangle_z - 60 * sys_frametime;
+		if (self.punchangle_z < 0)
+			self.punchangle_z = 0;
+	}
+	else if (self.punchangle_z < 0)
+	{
+		self.punchangle_z = self.punchangle_z + 60 * sys_frametime;
+		if (self.punchangle_z > 0)
+			self.punchangle_z = 0;
+	}
+
 	self.angles_x = self.punchangle_x;
 	self.angles_y = self.punchangle_y + self.mangle_y;
 	self.angles_z = self.punchangle_z;
-	self.mangle_y = self.mangle_y + 1.5;
+	self.mangle_y = self.mangle_y + 45 * sys_frametime;
 
-	self.cp_bob_origin_z = 4 * PI * (1 - cos(self.cp_bob_spd / 8));
-	self.cp_bob_spd = self.cp_bob_spd + 0.5;
+	self.cp_bob_origin_z = 4 * PI * (1 - cos(self.cp_bob_spd));
+	self.cp_bob_spd = self.cp_bob_spd + 1.875 * sys_frametime;
 	if(self.cp_bob_dmg_z > 0)
-		self.cp_bob_dmg_z = self.cp_bob_dmg_z - 0.1;
+		self.cp_bob_dmg_z = self.cp_bob_dmg_z - 3 * sys_frametime;
 	else
 		self.cp_bob_dmg_z = 0;
 	setorigin(self,self.cp_origin + self.cp_bob_origin + self.cp_bob_dmg);
