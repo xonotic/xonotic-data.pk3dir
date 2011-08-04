@@ -380,6 +380,7 @@ vector fixrgbexcess(vector rgb)
 	return rgb;
 }
 
+float waypointsprite_count, waypointsprite_newcount;
 void Draw_WaypointSprite()
 {
 	string spriteimage;
@@ -435,6 +436,8 @@ void Draw_WaypointSprite()
 
 	if(spriteimage == "")
 		return;
+
+	++waypointsprite_newcount;
 	
 	float dist;
 	dist = vlen(self.origin - view_origin);
@@ -583,7 +586,10 @@ void Draw_WaypointSprite()
 	o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
 	
 	string txt;
-	txt = spritelookuptext(spriteimage);
+	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
+		txt = _("SPAM");
+	else
+		txt = spritelookuptext(spriteimage);
 	if(self.helpme && time < self.helpme)
 		txt = sprintf(_("%s needing help!"), txt);
 	if(autocvar_g_waypointsprite_uppercase)
@@ -792,4 +798,7 @@ void WaypointSprite_Load()
 		WaypointSprite_Load_Frames(".jpg");
 		waypointsprite_initialized = true;
 	}
+
+	waypointsprite_count = waypointsprite_newcount;
+	waypointsprite_newcount = 0;
 }
