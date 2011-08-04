@@ -700,7 +700,7 @@ void ClientCommand_records(float request, entity client)
 	}
 }
 
-void ClientCommand_reportcvar(float request, entity client, string command)
+void ClientCommand_reportcvar(float request, entity client, float argc, string command)
 {
 	float tokens;
 	string s;
@@ -722,32 +722,35 @@ void ClientCommand_reportcvar(float request, entity client, string command)
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd reportcvar\n");
-			sprint(client, "  No arguments required.\n");
-			return;
-	}
-}
-/*
-void ClientCommand_(float request, entity client)
-{
-	switch(request)
-	{
-		case CC_REQUEST_HELP:
-			sprint(client, "  ^2blah^7: foobar\n");
-			return;
-			
-		case CC_REQUEST_COMMAND:
-			
-			return;
-			
-		default:
-		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd \n");
-			sprint(client, "  No arguments required.\n");
+			sprint(client, "\nUsage:^3 cmd reportcvar <cvar>\n");
+			sprint(client, "  Where 'cvar' is the cvar plus arguments to send to the server.\n");
 			return;
 	}
 }
 
+void ClientCommand_say(float request, entity client, float argc, string command)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2say^7: Print a message to chat to all players\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			if(argc >= 2)
+				Say(self, FALSE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			return;
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd say <message>\n");
+			sprint(client, "  Where 'message' is the string of text to say.\n");
+			return;
+	}
+}
+
+
+/*
 void ClientCommand_(float request, entity client)
 {
 	switch(request)
@@ -818,6 +821,8 @@ void SV_ParseClientCommand(string command)
 			ClientCommand_rankings(CC_REQUEST_HELP, self);
 			ClientCommand_ready(CC_REQUEST_HELP, self);
 			ClientCommand_records(CC_REQUEST_HELP, self);
+			ClientCommand_reportcvar(CC_REQUEST_HELP, self, 0, "");
+			ClientCommand_say(CC_REQUEST_HELP, self, 0, "");
 			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
 			return;
 		} 
@@ -858,6 +863,8 @@ void SV_ParseClientCommand(string command)
 		case "rankings": ClientCommand_rankings(search_request_type, self); break;
 		case "ready": ClientCommand_ready(search_request_type, self); break;
 		case "records": ClientCommand_records(search_request_type, self); break;
+		case "reportcvar": ClientCommand_reportcvar(search_request_type, self, argc, command); break;
+		case "say": ClientCommand_say(search_request_type, self, argc, command); break;
 		
 		default:
 			clientcommand(self, command); //print("Invalid command. For a list of supported commands, try cmd help.\n");
