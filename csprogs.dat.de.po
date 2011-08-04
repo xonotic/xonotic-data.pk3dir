@@ -863,7 +863,7 @@ msgstr "^1Du hast keine Leben mehr übrig"
 #: qcsrc/client/hud.qc:4191 qcsrc/client/hud.qc:4194
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1Drücke ^3%s^1 zum Eintreten"
+msgstr "^1Drücke ^3%s^1 zum Mitspielen"
 
 #: qcsrc/client/hud.qc:4202
 #, c-format
