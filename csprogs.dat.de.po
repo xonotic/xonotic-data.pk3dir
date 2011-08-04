@@ -1662,8 +1662,8 @@ msgid "Vehicle"
 msgstr "Fahrzeug"
 
 #: qcsrc/client/waypointsprites.qc:590
-msgid "SPAM"
-msgstr "FRÜHSTÜCKSFLEISCH"
+msgid "Spam"
+msgstr "Frühstücksfleisch"
 
 #: qcsrc/client/waypointsprites.qc:594
 #, c-format

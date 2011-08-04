@@ -587,7 +587,7 @@ void Draw_WaypointSprite()
 	
 	string txt;
 	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
-		txt = _("SPAM");
+		txt = _("Spam");
 	else
 		txt = spritelookuptext(spriteimage);
 	if(self.helpme && time < self.helpme)
