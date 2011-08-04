@@ -1695,7 +1695,7 @@ void GameCommand_radarmap(float request, float argc)
 				{
 					switch(argv(i))
 					{
-						case "--force": { radarmapper.count |= 1; break;	}
+						case "--force": { radarmapper.count |= 1; break; }
 						case "--loop": { radarmapper.count |= 2; break; }
 						case "--quit": { radarmapper.count |= 4; break; }
 						case "--block": { radarmapper.count &~= 24; break; }

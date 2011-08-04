@@ -1,6 +1,6 @@
 // =======================================================
 //  Server side client commands code, reworked by Samual
-//  Last updated: July 23rd, 2011
+//  Last updated: July 24th, 2011
 // =======================================================
 
 #define CC_REQUEST_HELP 1
@@ -372,7 +372,7 @@ void ClientCommand_clientversion(float request, entity client, float argc) // us
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			if (client.flags & FL_CLIENT)
+			if(client.flags & FL_CLIENT)
 			{
 				client.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
 				
@@ -469,6 +469,284 @@ void ClientCommand_info(float request, entity client, float argc)
 	}
 }
 
+void ClientCommand_join(float request, entity client)
+{
+	entity oldself;
+
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2join^7: Become a player in the game\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			if(client.flags & FL_CLIENT)
+			{
+				if(client.classname != "player" && !lockteams && !g_arena)
+				{
+					if(nJoinAllowed(1)) 
+					{
+						oldself = self;
+						self = client;
+						if(g_ca) { client.caplayer = 1; }
+						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
+						
+						client.classname = "player";
+						PlayerScore_Clear(client);
+						bprint ("^4", client.netname, "^4 is playing now\n");
+						PutClientInServer();
+						self = oldself;
+					}
+					else 
+					{
+						//player may not join because of g_maxplayers is set
+						centerprint_atprio(client, CENTERPRIO_MAPVOTE, PREVENT_JOIN_TEXT);
+					}
+				}
+			}
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd join\n");
+			sprint(client, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_ladder(float request, entity client)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2ladder^7: Get information about top players if supported\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			sprint(client, ladder_reply);
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd ladder\n");
+			sprint(client, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_lsmaps(float request, entity client)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2lsmaps^7: List maps which can be used with the current game mode\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			sprint(client, lsmaps_reply);
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd lsmaps\n");
+			sprint(client, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_lsnewmaps(float request, entity client)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2lsnewmaps^7: List maps which TODO\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			sprint(client, lsnewmaps_reply);
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd lsnewmaps\n");
+			sprint(client, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_maplist(float request, entity client)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2maplist^7: Full server maplist reply\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			sprint(client, maplist_reply);
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd maplist\n");
+			sprint(client, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_rankings(float request, entity client)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2rankings^7: Print information about rankings\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			sprint(client, rankings_reply);
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd rankings\n");
+			sprint(client, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_ready(float request, entity client) // TODO: reimplement how this works
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2ready^7: Qualify as ready to end warmup stage (or restart server if allowed)\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			if(client.flags & FL_CLIENT)
+			{
+				if(inWarmupStage || autocvar_sv_ready_restart || g_race_qualifying == 2)
+				{
+					if(!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
+					{
+						if (client.ready) // toggle
+						{
+							client.ready = FALSE;
+							bprint(client.netname, "^2 is ^1NOT^2 ready\n");
+						}
+						else
+						{
+							client.ready = TRUE;
+							bprint(client.netname, "^2 is ready\n");
+						}
+
+						// cannot reset the game while a timeout is active!
+						if(!timeoutStatus)
+							ReadyCount();
+					} else {
+						sprint(client, "^1Game has already been restarted\n");
+					}
+				}
+			}
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd ready\n");
+			sprint(client, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_records(float request, entity client)
+{
+	float i;
+	
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2records^7: List top 10 records for the current map\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			for(i = 0; i < 10; ++i)
+				sprint(client, records_reply[i]);
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd records\n");
+			sprint(client, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_reportcvar(float request, entity client, string command)
+{
+	float tokens;
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2reportcvar^7: Old system for sending a client cvar to the server\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			if(substring(argv(2), 0, 1) == "$") // undefined cvar: use the default value on the server then
+			{
+				s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
+				tokens = tokenize_console(s);
+			}
+			GetCvars(1);
+			return;
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd reportcvar\n");
+			sprint(client, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_(float request, entity client)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2blah^7: foobar\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			
+			return;
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd \n");
+			sprint(client, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_(float request, entity client)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(client, "  ^2blah^7: foobar\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			
+			return;
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(client, "\nUsage:^3 cmd \n");
+			sprint(client, "  No arguments required.\n");
+			return;
+	}
+}
+
 
 // ======================================
 //  Main Function Called By Engine (cmd)
@@ -506,10 +784,18 @@ void SV_ParseClientCommand(string command)
 			sprint(self, "\nUsage:^3 cmd COMMAND...^7, where possible commands are:\n");
 			ClientCommand_autoswitch(CC_REQUEST_HELP, self, 0);
 			ClientCommand_checkfail(CC_REQUEST_HELP, self, "");
-			clientCommand_clientversion(CC_REQUEST_HELP, self, 0);
+			ClientCommand_clientversion(CC_REQUEST_HELP, self, 0);
 			ClientCommand_cvar_changes(CC_REQUEST_HELP, self);
 			ClientCommand_cvar_purechanges(CC_REQUEST_HELP, self);
 			ClientCommand_info(CC_REQUEST_HELP, self, 0);
+			ClientCommand_join(CC_REQUEST_HELP, self); 
+			ClientCommand_ladder(CC_REQUEST_HELP, self);
+			ClientCommand_lsmaps(CC_REQUEST_HELP, self);
+			ClientCommand_lsnewmaps(CC_REQUEST_HELP, self);
+			ClientCommand_maplist(CC_REQUEST_HELP, self);
+			ClientCommand_rankings(CC_REQUEST_HELP, self);
+			ClientCommand_ready(CC_REQUEST_HELP, self);
+			ClientCommand_records(CC_REQUEST_HELP, self);
 			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
 			return;
 		} 
@@ -542,6 +828,14 @@ void SV_ParseClientCommand(string command)
 		case "cvar_changes": ClientCommand_cvar_changes(search_request_type, self); break;
 		case "cvar_purechanges": ClientCommand_cvar_purechanges(search_request_type, self); break;
 		case "info": ClientCommand_info(search_request_type, self, argc); break;
+		case "join": ClientCommand_join(search_request_type, self); break;
+		case "ladder": ClientCommand_ladder(search_request_type, self); break;
+		case "lsmaps": ClientCommand_lsmaps(search_request_type, self); break;
+		case "lsnewmaps": ClientCommand_lsnewmaps(search_request_type, self); break;
+		case "maplist": ClientCommand_maplist(search_request_type, self); break;
+		case "rankings": ClientCommand_rankings(search_request_type, self); break;
+		case "ready": ClientCommand_ready(search_request_type, self); break;
+		case "records": ClientCommand_records(search_Request_type, self); break;
 		
 		default:
 			clientcommand(self, command); //print("Invalid command. For a list of supported commands, try cmd help.\n");
