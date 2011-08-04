@@ -684,6 +684,8 @@ void ClientCommand_records(float request, entity client)
 void ClientCommand_reportcvar(float request, entity client, string command)
 {
 	float tokens;
+	string s;
+	
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
@@ -706,7 +708,7 @@ void ClientCommand_reportcvar(float request, entity client, string command)
 			return;
 	}
 }
-
+/*
 void ClientCommand_(float request, entity client)
 {
 	switch(request)
@@ -746,6 +748,7 @@ void ClientCommand_(float request, entity client)
 			return;
 	}
 }
+*/
 
 
 // ======================================
@@ -835,7 +838,7 @@ void SV_ParseClientCommand(string command)
 		case "maplist": ClientCommand_maplist(search_request_type, self); break;
 		case "rankings": ClientCommand_rankings(search_request_type, self); break;
 		case "ready": ClientCommand_ready(search_request_type, self); break;
-		case "records": ClientCommand_records(search_Request_type, self); break;
+		case "records": ClientCommand_records(search_request_type, self); break;
 		
 		default:
 			clientcommand(self, command); //print("Invalid command. For a list of supported commands, try cmd help.\n");
