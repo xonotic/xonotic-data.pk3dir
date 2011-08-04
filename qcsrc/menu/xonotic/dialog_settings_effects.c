@@ -114,7 +114,9 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1.9, e = makeXonoticSlider(500, 2000, 100, "r_drawparticles_drawdistance"));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_decals", _("Decals")));
+		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_decals", _("Decals")));
+		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_decals_models", _("Decals on models")));
+			setDependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Distance:")));
