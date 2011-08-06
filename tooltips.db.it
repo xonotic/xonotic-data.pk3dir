@@ -3,22 +3,22 @@
 
 
 \XonoticMultiplayerDialog\Gioca online, contro i tuoi amici in LAN, guarda demo o cambia le impostazioni del giocatore
-\XonoticMultiplayerDialog/Servers\Cerca dei server dove giocare
+\XonoticMultiplayerDialog/Server\Cerca dei server dove giocare
 \menu_slist_showempty\Mostra server vuoti
 \menu_slist_showfull\Mostra server pieni che non hanno slot disponibili
 \net_slist_pause\Ferma l'aggiornamento della serverlist per prevenire il "jumping around" dei server
 \XonoticMultiplayerDialog/Info\Mostra maggiori informazioni riguardo l'ultimo server selezionato
-\XonoticMultiplayerDialog/Bookmark\Aggiungi nel segnalibri il server attualmente selezionato in modo che sia più veloce da trovare in futuro
+\XonoticMultiplayerDialog/Aggiungi tra i preferiti\Aggiungi nel segnalibri il server attualmente selezionato in modo che sia più veloce da trovare in futuro
 \XonoticMultiplayerDialog/Havoc\Cambia in modalità "Havoc" in cui sono presenti alcune modifiche al gameplay
-\XonoticMultiplayerDialog/Create\Ospita la tua partita
-\XonoticMultiplayerDialog/Demos\Naviga e vedi le demo
-\XonoticMultiplayerDialog/Player Setup\Modifica le impostazioni del tuo giocatore
+\XonoticMultiplayerDialog/Crea\Ospita la tua partita
+\XonoticMultiplayerDialog/Demo\Naviga e vedi le demo
+\XonoticMultiplayerDialog/Setup giocatore\Modifica le impostazioni del tuo giocatore
 
 \XonoticTeamSelectDialog/join 'best' team (auto-select)\Autoseleziona team (raccomandato)
-\XonoticTeamSelectDialog/red\Entra nel team rosso
-\XonoticTeamSelectDialog/blue\Entra nel team blu
-\XonoticTeamSelectDialog/yellow\Entra nel team giallo
-\XonoticTeamSelectDialog/pink\Entra nel team rosa
+\XonoticTeamSelectDialog/rosso\Entra nel team rosso
+\XonoticTeamSelectDialog/blu\Entra nel team blu
+\XonoticTeamSelectDialog/giallo\Entra nel team giallo
+\XonoticTeamSelectDialog/rosa\Entra nel team rosa
 
 \timelimit_override\Tempo limite in minuti in cui, appena si colpisce, terminerà la partita
 \fraglimit_override\Il numero di frag necessari affinchè la partita finisca
@@ -27,8 +27,8 @@
 \skill\Specifica quanto i bot dovranno essere esperti
 \g_maplist_votable\Numero di mappe che sono mostrate nel voto delle mappe alla fine di una partita
 \sv_vote_simple_majority_factor\La semplice maggioranza vince il voto
-\XonoticMultiplayerDialog/Advanced settings...\Impostazioni del server avanzate
-\XonoticMultiplayerDialog/Mutators...\Arene dedicate per mutatori e armi
+\XonoticMultiplayerDialog/Impostazioni avanzate...\Impostazioni del server avanzate
+\XonoticMultiplayerDialog/Mutatori...\Arene dedicate per mutatori e armi
 \g_dodging\Abilita dodging
 \g_cloaked\Tutti i giocatori sono quasi invisibili
 \g_footsteps\Abilita suoni dei passi
@@ -56,7 +56,7 @@
 \cl_zoomfactor\Quanto grande è il fattore zoom quando il tasto per lo zoom viene premuto
 \cl_zoomsensitivity\Come lo zoom fa variare la sensibilità del mouse, da 0 (sensibilità più bassa) a 1 (nessun cambio di sensibilità)
 \cl_zoomspeed\Quando velocemente la vista viene zoomata, disabilitalo per lo zoom istantaneo
-\XonoticMultiplayerDialog/Weapon settings...\Imposta le tue armi preferite, i cambi automatici e le impostazioni dei modelli delle armi
+\XonoticMultiplayerDialog/Impostazioni arma...\Imposta le tue armi preferite, i cambi automatici e le impostazioni dei modelli delle armi
 
 \cl_weaponpriority_useforcycling\Usa la lista qui sotto per definire le armi usando la rotellina del mouse
 \cl_autoswitch\Automaticamente passa all'arma appena raccolta se è migliore di quella che stavi già usando
@@ -85,10 +85,10 @@
 \XonoticCvarsDialog\-
 
 \XonoticQuitDialog\Chiudi il gioco
-\XonoticQuitDialog/Yes\Devo tornare a lavorare...
+\XonoticQuitDialog/Sì\Devo tornare a lavorare...
 \XonoticQuitDialog/No\Ho ancora un pò di frag da compiere!
 
-\XonoticSettingsDialog/Input\Impostazioni input
+\XonoticSettingsDialog/Comandi\Impostazioni input
 \sensitivity\Velocità mouse
 \menu_mouse_speed\Velocità mouse nel menu, non fa effetto nel gioco
 \m_filter\Rendi più morbido il movimento del mouse, però rende la sua risposta più lenta
@@ -117,7 +117,7 @@
 \vid_samples\Abilita l'antialiasing, che smussa i bordi dei modelli in 3D. Nota che le performance potrebbero decrementare di un bel pò (predefinito: disabilitato)
 \v_flipped\Modalità mancino (Predefinito: off)
 
-\XonoticSettingsDialog/Effects\Impostazioni effetti
+\XonoticSettingsDialog/Effetti\Impostazioni effetti
 \r_subdivisions_tolerance\Cambia lo smussamento delle curve della mappa (predefinito: normali)
 \gl_picmip\Cambia la nitidezza delle textures. Valori più bassi riducono l'uso della memoria per le texture, però faranno apparire quest'ultime molto sfuocate. (predefinito: buona)
 \r_picmipworld\Se impostato, riduce solo la qualità delle texture dei modelli (predefinito: abilitato)
@@ -173,7 +173,7 @@
 \cl_hitsound\Riproduci un suono quando il tuo sparo colpisce un nemico
 \menu_sounds\Riproduci suoni quando clicchi o navighi su oggetti del menu
 
-\XonoticSettingsDialog/Network\Impostazioni di rete
+\XonoticSettingsDialog/Rete\Impostazioni di rete
 \cl_movement\Abilita predizione del movimento lato client
 \cl_nolerp\Abilita aggiornamento da rete spianato
 \shownetgraph\Mostra un grafico delle dimensioni dei pacchetti e di altre informazioni
@@ -183,12 +183,12 @@
 \cl_curl_maxspeed\Velocità massima di download
 \cl_port\Forza il client a usare la porta selezionata se non è impostata a 0
 
-\XonoticSettingsDialog/Misc\Impostazioni varie
+\XonoticSettingsDialog/Altro\Impostazioni varie
 \showtime\Mostra l'orario corrente, utile negli screenshot
 \showdate\Mostra la data corrente, utile negli screenshot
 \showfps\Mostra i fotogrammi al secondo
 
-\XonoticSettingsDialog/Advanced settings...\Impostazioni avanzate dove puoi mettere mano ad ogni singola variabile del gioco
+\XonoticSettingsDialog/Impostazioni avanzate...\Impostazioni avanzate dove puoi mettere mano ad ogni singola variabile del gioco
 \g_friendlyfire\Percentuale di danno inflitto ai compagni di squadra
 \g_mirrordamage\Percentuale di danno inflitto ai compagni di squadra che viene riversato su di te
 \g_tdm_teams_override\Sovrapponi il numero predefinito di squadre nei giochi di squadra
