@@ -260,7 +260,7 @@ void ImpulseCommands (void)
 					for(e = findchain(classname, "waypoint"); e; e = e.chain)
 					{
 						e.colormod_x = 1;
-						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
+						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE | EF_BRIGHTLIGHT;
 					}
 					e2 = navigation_findnearestwaypoint(self, FALSE);
 					navigation_markroutes(e2);
@@ -272,7 +272,7 @@ void ImpulseCommands (void)
 						{
 							print("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
 							e.colormod_x = 0.1;
-							e.effects |= EF_NODEPTHTEST | EF_BLUE;
+							e.effects |= EF_NODEPTHTEST | EF_BLUE | EF_BRIGHTLIGHT;
 							++i;
 							++m;
 						}
@@ -289,7 +289,7 @@ void ImpulseCommands (void)
 							e.colormod_x = 0.1;
 							if not(e.effects & EF_NODEPTHTEST) // not already reported before
 								++m;
-							e.effects |= EF_NODEPTHTEST | EF_RED;
+							e.effects |= EF_NODEPTHTEST | EF_RED | EF_BRIGHTLIGHT;
 							++i;
 						}
 					}
@@ -306,14 +306,14 @@ void ImpulseCommands (void)
 						if(navigation_findnearestwaypoint(e, FALSE))
 						{
 							setorigin(e, org);
-							e.effects &~= EF_NODEPTHTEST;
+							e.effects &~= EF_NODEPTHTEST | EF_BRIGHTLIGHT;
 							e.model = "";
 						}
 						else
 						{
 							setorigin(e, org);
 							print("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-							e.effects |= EF_NODEPTHTEST;
+							e.effects |= EF_NODEPTHTEST | EF_BRIGHTLIGHT;
 							setmodel(e, self.model);
 							e.frame = self.frame;
 							e.skin = self.skin;
@@ -323,6 +323,43 @@ void ImpulseCommands (void)
 					}
 					if(i)
 						print(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n");
+					i = 0;
+					entity start;
+					start = findchainflags(flags, FL_ITEM);
+					for(e = start; e; e = e.chain)
+					{
+						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE | EF_BRIGHTLIGHT;
+					}
+					for(e = start; e; e = e.chain)
+					{
+						if(navigation_findnearestwaypoint(e, FALSE))
+						{
+						}
+						else
+						{
+							print("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+							e.effects |= EF_NODEPTHTEST | EF_RED | EF_BRIGHTLIGHT;
+							++i;
+						}
+					}
+					if(i)
+						print(ftos(i), " items have no nearest waypoint and cannot be walked away from (marked with red light)\n");
+					i = 0;
+					for(e = start; e; e = e.chain)
+					{
+						org = e.origin;
+						if(navigation_findnearestwaypoint(e, TRUE))
+						{
+						}
+						else
+						{
+							print("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+							e.effects |= EF_NODEPTHTEST | EF_BLUE | EF_BRIGHTLIGHT;
+							++i;
+						}
+					}
+					if(i)
+						print(ftos(i), " items have no nearest waypoint and cannot be walked to (marked with blue light)\n");
 					break;
 			}
 		}

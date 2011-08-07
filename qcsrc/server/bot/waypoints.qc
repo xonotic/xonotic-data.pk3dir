@@ -776,7 +776,10 @@ void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
 {
 	local entity w;
 	local entity dw;
-	w = waypoint_spawn(e.absmin, e.absmax, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
+	vector org;
+	org = (e.absmin + e.absmax) * 0.5;
+	org = waypoint_fixorigin(org);
+	w = waypoint_spawn(org, org, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
 	dw = waypoint_spawn(destination, destination, WAYPOINTFLAG_GENERATED);
 	// one way link to the destination
 	w.wp00 = dw;
