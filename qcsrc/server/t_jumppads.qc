@@ -261,12 +261,14 @@ void trigger_push_findtarget()
 		for(e = world; (e = find(e, targetname, self.target)); )
 		{
 			++n;
-
-			trigger_push_calculatevelocity(org, self.enemy, self.height);
-			flighttime = trigger_push_calculatevelocity_flighttime;
-
+			e = spawn();
+			setorigin(e, org);
+			setsize(e, PL_MIN, PL_MAX);
+			e.velocity = trigger_push_calculatevelocity(org, self.enemy, self.height);
+			tracetoss(e, e);
 			if(e.movetype == MOVETYPE_NONE)
-				waypoint_spawnforteleporter(self, e.origin, flighttime);
+				waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
+			remove(e);
 		}
 
 		if(n == 0)
@@ -293,9 +295,8 @@ void trigger_push_findtarget()
 		setsize(e, PL_MIN, PL_MAX);
 		e.velocity = self.movedir;
 		tracetoss(e, e);
-		self.dest = trace_endpos;
+		waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
 		remove(e);
-		waypoint_spawnforteleporter(self, self.dest, vlen(self.dest - org) / vlen(self.movedir));
 	}
 };
 
