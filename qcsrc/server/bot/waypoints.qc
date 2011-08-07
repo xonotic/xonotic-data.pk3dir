@@ -772,13 +772,12 @@ void waypoint_spawnforitem(entity e)
 	waypoint_spawnforitem_force(e, e.origin);
 };
 
-void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
+void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken)
 {
 	local entity w;
 	local entity dw;
-	vector org;
-	org = (e.absmin + e.absmax) * 0.5;
 	org = waypoint_fixorigin(org);
+	destination = waypoint_fixorigin(destination);
 	w = waypoint_spawn(org, org, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
 	dw = waypoint_spawn(destination, destination, WAYPOINTFLAG_GENERATED);
 	// one way link to the destination
@@ -788,6 +787,11 @@ void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
 	// (teleporters are not goals, so this is probably useless)
 	e.nearestwaypoint = w;
 	e.nearestwaypointtimeout = time + 1000000000;
+};
+
+void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
+{
+	waypoint_spawnforteleporter_v(e, (e.absmin + e.absmax) * 0.5, destination, timetaken);
 };
 
 entity waypoint_spawnpersonal(vector position)

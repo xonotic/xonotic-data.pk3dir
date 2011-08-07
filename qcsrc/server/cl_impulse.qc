@@ -259,8 +259,8 @@ void ImpulseCommands (void)
 				case 107:
 					for(e = findchain(classname, "waypoint"); e; e = e.chain)
 					{
-						e.colormod_x = 1;
-						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE | EF_BRIGHTLIGHT;
+						e.colormod = '0.5 0.5 0.5';
+						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
 					}
 					e2 = navigation_findnearestwaypoint(self, FALSE);
 					navigation_markroutes(e2);
@@ -271,8 +271,8 @@ void ImpulseCommands (void)
 						if(e.wpcost >= 10000000)
 						{
 							print("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
-							e.colormod_x = 0.1;
-							e.effects |= EF_NODEPTHTEST | EF_BLUE | EF_BRIGHTLIGHT;
+							e.colormod_z = 8;
+							e.effects |= EF_NODEPTHTEST | EF_BLUE;
 							++i;
 							++m;
 						}
@@ -286,10 +286,10 @@ void ImpulseCommands (void)
 						if(e.wpcost >= 10000000)
 						{
 							print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
-							e.colormod_x = 0.1;
+							e.colormod_x = 8;
 							if not(e.effects & EF_NODEPTHTEST) // not already reported before
 								++m;
-							e.effects |= EF_NODEPTHTEST | EF_RED | EF_BRIGHTLIGHT;
+							e.effects |= EF_NODEPTHTEST | EF_RED;
 							++i;
 						}
 					}
@@ -306,17 +306,18 @@ void ImpulseCommands (void)
 						if(navigation_findnearestwaypoint(e, FALSE))
 						{
 							setorigin(e, org);
-							e.effects &~= EF_NODEPTHTEST | EF_BRIGHTLIGHT;
+							e.effects &~= EF_NODEPTHTEST;
 							e.model = "";
 						}
 						else
 						{
 							setorigin(e, org);
 							print("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-							e.effects |= EF_NODEPTHTEST | EF_BRIGHTLIGHT;
+							e.effects |= EF_NODEPTHTEST;
 							setmodel(e, self.model);
 							e.frame = self.frame;
 							e.skin = self.skin;
+							e.colormod = '8 0.5 8';
 							setsize(e, '0 0 0', '0 0 0');
 							++i;
 						}
@@ -328,7 +329,8 @@ void ImpulseCommands (void)
 					start = findchainflags(flags, FL_ITEM);
 					for(e = start; e; e = e.chain)
 					{
-						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE | EF_BRIGHTLIGHT;
+						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
+						e.colormod = '0.5 0.5 0.5';
 					}
 					for(e = start; e; e = e.chain)
 					{
@@ -338,7 +340,8 @@ void ImpulseCommands (void)
 						else
 						{
 							print("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-							e.effects |= EF_NODEPTHTEST | EF_RED | EF_BRIGHTLIGHT;
+							e.effects |= EF_NODEPTHTEST | EF_RED;
+							e.colormod_x = 8;
 							++i;
 						}
 					}
@@ -354,7 +357,8 @@ void ImpulseCommands (void)
 						else
 						{
 							print("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-							e.effects |= EF_NODEPTHTEST | EF_BLUE | EF_BRIGHTLIGHT;
+							e.effects |= EF_NODEPTHTEST | EF_BLUE;
+							e.colormod_z = 8;
 							++i;
 						}
 					}
