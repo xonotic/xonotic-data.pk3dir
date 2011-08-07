@@ -819,6 +819,7 @@ void onslaught_generator_reset()
 	self.think = onslaught_generator_delayed;
 	self.nextthink = time + 0.2;
 	setmodel(self, "models/onslaught/generator.md3");
+	setsize(self, '-52 -52 -14', '52 52 75');
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
