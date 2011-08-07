@@ -23,7 +23,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	setsize(w, m1 - w.origin, m2 - w.origin);
 	if (vlen(w.size) > 0)
 		w.wpisbox = TRUE;
-	
+
 	if(!w.wpisbox)
 	{
 		setsize(w, PL_MIN - '1 1 0', PL_MAX + '1 1 0');
@@ -496,11 +496,11 @@ void waypoint_load_links_hardwired()
 		// Search "from" waypoint
 		if(wp_from.origin!=wp_from_pos)
 		{
-			wp_from = findradius(wp_from_pos, 1);
+			wp_from = findradius(wp_from_pos, 5);
 			found = FALSE;
 			while(wp_from)
 			{
-				if(vlen(wp_from.origin-wp_from_pos)<1)
+				if(vlen(wp_from.origin-wp_from_pos)<5)
 				if(wp_from.classname == "waypoint")
 				{
 					found = TRUE;
@@ -517,11 +517,11 @@ void waypoint_load_links_hardwired()
 		}
 
 		// Search "to" waypoint
-		wp_to = findradius(wp_to_pos, 1);
+		wp_to = findradius(wp_to_pos, 5);
 		found = FALSE;
 		while(wp_to)
 		{
-			if(vlen(wp_to.origin-wp_to_pos)<1)
+			if(vlen(wp_to.origin-wp_to_pos)<5)
 			if(wp_to.classname == "waypoint")
 			{
 				found = TRUE;
