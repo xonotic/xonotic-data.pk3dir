@@ -389,3 +389,20 @@ void SV_OnEntityPreSpawnFunction()
 		return;
 	}
 }
+
+void WarpZone_PostInitialize_Callback(void)
+{
+	// create waypoint links for warpzones
+	entity e;
+	for(e = world; (e = find(e, classname, "trigger_warpzone")); )
+	{
+		vector src, dst;
+		src = (e.absmin + e.absmax) * 0.5;
+		makevectors(e.warpzone_angles);
+		src = src + ((e.warpzone_origin - src) * v_forward) * v_forward + 16 * v_right;
+		dst = (e.enemy.absmin + e.enemy.absmax) * 0.5;
+		makevectors(e.enemy.warpzone_angles);
+		dst = dst + ((e.enemy.warpzone_origin - dst) * v_forward) * v_forward - 16 * v_right;
+		waypoint_spawnforteleporter_v(e, src, dst, 0);
+	}
+}
