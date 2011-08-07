@@ -246,7 +246,7 @@ void trigger_push_touch()
 .vector dest;
 void trigger_push_findtarget()
 {
-	local entity e;
+	local entity e, t;
 	local vector org;
 	local float flighttime;
 
@@ -258,13 +258,13 @@ void trigger_push_findtarget()
 	{
 		float n;
 		n = 0;
-		for(e = world; (e = find(e, targetname, self.target)); )
+		for(t = world; (t = find(t, targetname, self.target)); )
 		{
 			++n;
 			e = spawn();
 			setorigin(e, org);
 			setsize(e, PL_MIN, PL_MAX);
-			e.velocity = trigger_push_calculatevelocity(org, self.enemy, self.height);
+			e.velocity = trigger_push_calculatevelocity(org, t, self.height);
 			tracetoss(e, e);
 			if(e.movetype == MOVETYPE_NONE)
 				waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
