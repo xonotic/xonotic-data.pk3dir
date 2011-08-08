@@ -310,6 +310,8 @@ void havocbot_chooserole()
 		havocbot_chooserole_ka();
 	else if (g_freezetag)
 		havocbot_chooserole_ft();
+	else if (g_assault)
+		havocbot_chooserole_ast();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
 };
