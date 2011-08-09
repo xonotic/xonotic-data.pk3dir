@@ -31,6 +31,9 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 		if (ad.target == "")
 			continue;
 
+		if(ad.state!=0)
+			continue;
+
 		found = FALSE;
 		for(tod = world; (tod = find(tod, targetname, ad.target)); )
 		{
@@ -38,7 +41,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 			{
 				if(tod.enemy.health > 0 && tod.enemy.health < ASSAULT_VALUE_INACTIVE)
 				{
-					dprint(etos(tod.enemy),"\n");
+				//	dprint(etos(ad),"\n");
 					found = TRUE;
 					break;
 				}
