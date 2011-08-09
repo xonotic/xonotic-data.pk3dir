@@ -10,12 +10,14 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 	local entity head;
 	local entity player;
 	local float rating, d, discard, distance, friend_distance, enemy_distance;
+	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
 	head = findchainfloat(bot_pickup, TRUE);
 
 	while (head)
 	{
-		distance = vlen(head.origin - org);
+		o = (head.absmin + head.absmax) * 0.5;
+		distance = vlen(o - org);
 		friend_distance = 10000; enemy_distance = 10000;
 		rating = 0;
 
@@ -28,7 +30,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 		// Check if the item can be picked up safely
 		if(head.classname == "droppedweapon")
 		{
-			traceline(head.origin, head.origin + '0 0 -1500', TRUE, world);
+			traceline(o, o + '0 0 -1500', TRUE, world);
 
 			d = pointcontents(trace_endpos + '0 0 1');
 			if(d & CONTENT_WATER || d & CONTENT_SLIME || d & CONTENT_LAVA)
@@ -63,7 +65,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 				if ( self == player || player.deadflag )
 					continue;
 
-				d = vlen(player.origin - head.origin); // distance between player and item
+				d = vlen(player.origin - o); // distance between player and item
 
 				if ( player.team == self.team )
 				{
@@ -131,7 +133,7 @@ void havocbot_goalrating_controlpoints(float ratingscale, vector org, float srad
 	head = findchain(classname, "dom_controlpoint");
 	while (head)
 	{
-		if (vlen(head.origin - org) < sradius)
+		if (vlen(( ( head.absmin + head.absmax ) * 0.5 ) - org) < sradius)
 		{
 			if(head.cnt > -1) // this is just being fought for
 				navigation_routerating(head, ratingscale, 5000);

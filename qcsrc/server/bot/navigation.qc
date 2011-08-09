@@ -641,16 +641,18 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 void navigation_routerating(entity e, float f, float rangebias)
 {
 	entity nwp;
+	vector o;
 	if (!e)
 		return;
 
+	o = (e.absmin + e.absmax) * 0.5;
 	//print("routerating ", etos(e), " = ", ftos(f), " - ", ftos(rangebias), "\n");
 
 	// Evaluate path using jetpack
 	if(g_jetpack)
 	if(self.items & IT_JETPACK)
 	if(autocvar_bot_ai_navigation_jetpack)
-	if(vlen(self.origin - e.origin) > autocvar_bot_ai_navigation_jetpack_mindistance)
+	if(vlen(self.origin - o) > autocvar_bot_ai_navigation_jetpack_mindistance)
 	{
 		vector pointa, pointb;
 
@@ -661,7 +663,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 		pointa = trace_endpos - '0 0 1';
 
 		// Point B
-		traceline(e.origin, e.origin + '0 0 65535', MOVE_NORMAL, e);
+		traceline(o, o + '0 0 65535', MOVE_NORMAL, e);
 		pointb = trace_endpos - '0 0 1';
 
 		// Can I see these two points from the sky?
@@ -768,7 +770,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 	{
 		//te_wizspike(nwp.wpnearestpoint);
 	//	dprint(e.classname, " ", ftos(f), "/(1+", ftos((nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint))), "/", ftos(rangebias), ") = ");
-		f = f * rangebias / (rangebias + (nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint)));
+		f = f * rangebias / (rangebias + (nwp.wpcost + vlen(o - nwp.wpnearestpoint)));
 		//dprint("considering ", e.classname, " (with rating ", ftos(f), ")\n");
 		//dprint(ftos(f));
 		if (navigation_bestrating < f)
@@ -801,7 +803,7 @@ float navigation_routetogoal(entity e, vector startposition)
 		return TRUE;
 
 	// if it can reach the goal there is nothing more to do
-	if (tracewalk(self, startposition, PL_MIN, PL_MAX, e.origin, bot_navigation_movemode))
+	if (tracewalk(self, startposition, PL_MIN, PL_MAX, (e.absmin + e.absmax) * 0.5, bot_navigation_movemode))
 		return TRUE;
 
 	// see if there are waypoints describing a path to the item
@@ -927,7 +929,7 @@ void navigation_goalrating_end()
 void botframe_updatedangerousobjects(float maxupdate)
 {
 	local entity head, bot_dodgelist;
-	local vector m1, m2, v;
+	local vector m1, m2, v, o;
 	local float c, d, danger;
 	c = 0;
 	bot_dodgelist = findchainfloat(bot_dodge, TRUE);
@@ -944,10 +946,11 @@ void botframe_updatedangerousobjects(float maxupdate)
 			v_x = bound(m1_x, v_x, m2_x);
 			v_y = bound(m1_y, v_y, m2_y);
 			v_z = bound(m1_z, v_z, m2_z);
-			d = head.bot_dodgerating - vlen(head.origin - v);
+			o = (head.absmin + head.absmax) * 0.5;
+			d = head.bot_dodgerating - vlen(o - v);
 			if (d > 0)
 			{
-				traceline(head.origin, v, TRUE, world);
+				traceline(o, v, TRUE, world);
 				if (trace_fraction == 1)
 					danger = danger + d;
 			}
@@ -1027,7 +1030,7 @@ void navigation_unstuck()
 		while(head)
 		{
 			if(head.classname=="waypoint")
-			if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
+		//	if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
 			{
 				if(bot_waypoint_queue_goal)
 					bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = head;
@@ -1104,7 +1107,7 @@ void debugnodestatus(vector position, float status)
 void debuggoalstack()
 {
 	local entity goal;
-	local vector org;
+	local vector org, go;
 
 	if(self.goalcounter==0)goal=self.goalcurrent;
 	else if(self.goalcounter==1)goal=self.goalstack01;
@@ -1152,8 +1155,9 @@ void debuggoalstack()
 		org = self.lastposition;
 
 
-	te_lightning2(world, org, goal.origin);
-	self.lastposition = goal.origin;
+	go = ( goal.absmin + goal.absmax ) * 0.5;
+	te_lightning2(world, org, go);
+	self.lastposition = go;
 
 	self.goalcounter++;
 }

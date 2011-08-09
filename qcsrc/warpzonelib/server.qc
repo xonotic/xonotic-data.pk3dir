@@ -770,6 +770,7 @@ void WarpZone_StartFrame()
 			WarpZone_InitStep_UpdateTransform();
 		self = e;
 		WarpZones_Reconnect();
+		WarpZone_PostInitialize_Callback();
 	}
 
 	if(warpzone_warpzones_exist)
