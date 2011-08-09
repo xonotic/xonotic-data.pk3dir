@@ -36,8 +36,9 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 		{
 			if(tod.classname == "target_objective_decrease")
 			{
-				if(tod.enemy.health < ASSAULT_VALUE_INACTIVE)
+				if(tod.enemy.health > 0 && tod.enemy.health < ASSAULT_VALUE_INACTIVE)
 				{
+					dprint(etos(tod.enemy),"\n");
 					found = TRUE;
 					break;
 				}
@@ -87,7 +88,10 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 
 			if(checkpvs(self.view_ofs,ad))
 			if(checkpvs(self.view_ofs,best))
+			{
+			//	dprint("increasing attack time for this target\n");
 				self.havocbot_attack_time = time + 2;
+			}
 		}
 	}
 }
