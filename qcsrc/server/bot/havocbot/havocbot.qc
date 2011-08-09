@@ -1095,10 +1095,10 @@ void havocbot_aim()
 		enemyvel = self.enemy.velocity;
 		if (!self.enemy.waterlevel)
 			enemyvel_z = 0;
-		lag_additem(time + self.ping, 0, 0, self.enemy, self.origin, selfvel, self.enemy.origin, enemyvel);
+		lag_additem(time + self.ping, 0, 0, self.enemy, self.origin, selfvel, (self.enemy.absmin + self.enemy.absmax) * 0.5, enemyvel);
 	}
 	else
-		lag_additem(time + self.ping, 0, 0, world, self.origin, selfvel, ( ( self.goalcurrent.absmin + self.goalcurrent.absmax ) * 0.5 ), '0 0 0');
+		lag_additem(time + self.ping, 0, 0, world, self.origin, selfvel, ( self.goalcurrent.absmin + self.goalcurrent.absmax ) * 0.5, '0 0 0');
 };
 
 float havocbot_moveto_refresh_route()
