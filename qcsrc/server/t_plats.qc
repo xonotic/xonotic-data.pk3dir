@@ -62,7 +62,7 @@ void plat_spawn_inside_trigger()
 
 void plat_hit_top()
 {
-	sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = 1;
 	self.think = plat_go_down;
 	self.nextthink = self.ltime + 3;
@@ -70,20 +70,20 @@ void plat_hit_top()
 
 void plat_hit_bottom()
 {
-	sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = 2;
 };
 
 void plat_go_down()
 {
-	sound (self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NORM);
 	self.state = 3;
 	SUB_CalcMove (self.pos2, self.speed, plat_hit_bottom);
 };
 
 void plat_go_up()
 {
-	sound (self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NORM);
 	self.state = 4;
 	SUB_CalcMove (self.pos1, self.speed, plat_hit_top);
 };
@@ -246,7 +246,7 @@ void() train_next;
 void train_wait()
 {
 	if(self.noise != "")
-		stopsoundto(MSG_BROADCAST, self, CHAN_TRIGGER); // send this as unreliable only, as the train will resume operation shortly anyway
+		stopsoundto(MSG_BROADCAST, self, CH_TRIGGER_SINGLE); // send this as unreliable only, as the train will resume operation shortly anyway
 
 	if(self.wait < 0)
 	{
@@ -284,7 +284,7 @@ void train_next()
 		SUB_CalcMove(targ.origin - self.mins, self.speed, train_wait);
 
 	if(self.noise != "")
-		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+		sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
 };
 
 void func_train_find()
@@ -444,7 +444,7 @@ void spawnfunc_func_bobbing()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
 	}
 	if (!self.speed)
 		self.speed = 4;
@@ -521,7 +521,7 @@ void spawnfunc_func_pendulum()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
 	}
 
 	self.active = ACTIVE_ACTIVE;
@@ -614,7 +614,7 @@ void button_fire()
 		return;
 
 	if (self.noise != "")
-		sound (self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 
 	self.state = STATE_UP;
 	SUB_CalcMove (self.pos2, self.speed, button_wait);
@@ -825,7 +825,7 @@ void door_blocked()
 void door_hit_top()
 {
 	if (self.noise1 != "")
-		sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
 		return;		// don't come down automatically
@@ -842,14 +842,14 @@ void door_hit_top()
 void door_hit_bottom()
 {
 	if (self.noise1 != "")
-		sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = STATE_BOTTOM;
 };
 
 void door_go_down()
 {
 	if (self.noise2 != "")
-		sound (self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	if (self.max_health)
 	{
 		self.takedamage = DAMAGE_YES;
@@ -872,7 +872,7 @@ void door_go_up()
 	}
 
 	if (self.noise2 != "")
-		sound (self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	self.state = STATE_UP;
 	SUB_CalcMove (self.pos2, self.speed, door_hit_top);
 
@@ -1071,7 +1071,7 @@ void door_generic_plat_blocked()
 void door_rotating_hit_top()
 {
 	if (self.noise1 != "")
-		sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
 		return;		// don't come down automatically
@@ -1082,7 +1082,7 @@ void door_rotating_hit_top()
 void door_rotating_hit_bottom()
 {
 	if (self.noise1 != "")
-		sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	if (self.lip==666) // self.lip is used to remember reverse opening direction for door_rotating
 	{
 		self.pos2 = '0 0 0' - self.pos2;
@@ -1094,7 +1094,7 @@ void door_rotating_hit_bottom()
 void door_rotating_go_down()
 {
 	if (self.noise2 != "")
-		sound (self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	if (self.max_health)
 	{
 		self.takedamage = DAMAGE_YES;
@@ -1116,7 +1116,7 @@ void door_rotating_go_up()
 		return;
 	}
 	if (self.noise2 != "")
-		sound (self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	self.state = STATE_UP;
 	SUB_CalcAngleMove (self.pos2, self.speed, door_rotating_hit_top);
 
@@ -1545,7 +1545,7 @@ void fd_secret_use()
 	// Make a sound, wait a little...
 
 	if (self.noise1 != "")
-		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.nextthink = self.ltime + 0.1;
 
 	temp = 1 - (self.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
@@ -1570,7 +1570,7 @@ void fd_secret_use()
 	self.dest2 = self.dest1 + v_forward * self.t_length;
 	SUB_CalcMove(self.dest1, self.speed, fd_secret_move1);
 	if (self.noise2 != "")
-		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 };
 
 // Wait after first movement...
@@ -1579,14 +1579,14 @@ void fd_secret_move1()
 	self.nextthink = self.ltime + 1.0;
 	self.think = fd_secret_move2;
 	if (self.noise3 != "")
-		sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
 };
 
 // Start moving sideways w/sound...
 void fd_secret_move2()
 {
 	if (self.noise2 != "")
-		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	SUB_CalcMove(self.dest2, self.speed, fd_secret_move3);
 };
 
@@ -1594,7 +1594,7 @@ void fd_secret_move2()
 void fd_secret_move3()
 {
 	if (self.noise3 != "")
-		sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
 	if (!(self.spawnflags & SECRET_OPEN_ONCE))
 	{
 		self.nextthink = self.ltime + self.wait;
@@ -1606,7 +1606,7 @@ void fd_secret_move3()
 void fd_secret_move4()
 {
 	if (self.noise2 != "")
-		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	SUB_CalcMove(self.dest1, self.speed, fd_secret_move5);
 };
 
@@ -1616,13 +1616,13 @@ void fd_secret_move5()
 	self.nextthink = self.ltime + 1.0;
 	self.think = fd_secret_move6;
 	if (self.noise3 != "")
-		sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
 };
 
 void fd_secret_move6()
 {
 	if (self.noise2 != "")
-		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	SUB_CalcMove(self.oldorigin, self.speed, fd_secret_done);
 };
 
@@ -1635,7 +1635,7 @@ void fd_secret_done()
 		//self.th_pain = fd_secret_use;
 	}
 	if (self.noise3 != "")
-		sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
 };
 
 void secret_blocked()
@@ -1784,7 +1784,7 @@ void spawnfunc_func_fourier()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
 	}
 
 	if (!self.speed)
@@ -1930,7 +1930,7 @@ void spawnfunc_func_vectormamamam()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
 	}
 
 	if(!self.targetfactor)

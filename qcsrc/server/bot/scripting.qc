@@ -63,8 +63,8 @@ float bot_havecommand(entity bot, float idx)
 
 #define MAX_BOT_PLACES 4
 .float bot_places_count;
-.entity bot_places[MAX_BOT_PLACES]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(bot_places);
-.string bot_placenames[MAX_BOT_PLACES]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(bot_placenames);
+.entity bot_places[MAX_BOT_PLACES];
+.string bot_placenames[MAX_BOT_PLACES];
 entity bot_getplace(string placename)
 {
 	entity e;
@@ -1061,7 +1061,7 @@ float bot_cmd_sound()
 	f = bot_cmd.bot_cmd_parm_string;
 
 	precache_sound(f);
-	sound(self, CHAN_WEAPON2, f, VOL_BASE, ATTN_MIN);
+	sound(self, CH_WEAPON_B, f, VOL_BASE, ATTN_MIN);
 
 	return CMD_STATUS_FINISHED;
 }

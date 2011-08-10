@@ -469,8 +469,8 @@ float updateCompression()
 	float have_dds, have_jpg, have_tga;
 	float can_dds;
 	have_dds = (fexists("dds/particles/particlefont.dds"));
-	have_dds = (fexists("particles/particlefont.jpg"));
-	have_dds = (fexists("particles/particlefont.tga"));
+	have_jpg = (fexists("particles/particlefont.jpg"));
+	have_tga = (fexists("particles/particlefont.tga"));
 	can_dds = GL_Have_TextureCompression();
 	if(have_dds && (have_jpg || have_tga))
 	{
@@ -478,8 +478,12 @@ float updateCompression()
 		// but ONLY if we actually support it!
 		if(can_dds)
 		{
+			// these builds are meant to have GOOD quality, so let's not compress non-skinframes
 			cvar_set("gl_texturecompression", "0");
 			return 1;
+
+			//cvar_set("gl_texturecompression", cvar_string("r_texture_dds_load"));
+			//return 2;
 		}
 		else
 		{

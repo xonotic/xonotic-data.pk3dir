@@ -109,9 +109,9 @@ void dompoint_captured ()
 
 	if (head.noise != "")
 		if(self.enemy)
-			sound(self.enemy, CHAN_AUTO, head.noise, VOL_BASE, ATTN_NORM);
+			sound(self.enemy, CH_TRIGGER, head.noise, VOL_BASE, ATTN_NORM);
 		else
-			sound(self, CHAN_TRIGGER, head.noise, VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, head.noise, VOL_BASE, ATTN_NORM);
 	if (head.noise1 != "")
 		play2all(head.noise1);
 
@@ -392,8 +392,7 @@ void dom_controlpoint_setup()
 	droptofloor();
 
 	waypoint_spawnforitem(self);
-	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite);
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
+	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT, '0 1 1');
 };
 
 

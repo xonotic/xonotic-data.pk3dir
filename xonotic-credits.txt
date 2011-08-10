@@ -69,6 +69,10 @@ Henry "Exitium" Sanmark
 *French
 Calinou
 
+*Italian
+Antonio "terencehill" Piu
+Felice "MaidenBeast" Sallustio
+
 *Portuguese
 Ricardo "Hellgardia" Silva
 
@@ -80,6 +84,7 @@ Lord Canistra
 Nikoli
 
 **Active Contributors
+Ant "Antibody" Zucaro
 Antonio "terencehill" Piu
 Ben "MooKow" Banker
 Calinou

@@ -255,7 +255,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		(time > ent.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)
 	) // prevent insane sound spam
 	{
-		sound(ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+		sound(ent, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
 		ent.prevstrengthsound = time;
 	}
 	ent.prevstrengthsoundattempt = time;
@@ -828,33 +828,36 @@ void CL_ExteriorWeaponentity_Think()
 	else
 		self.alpha = 1;
 
-	ang_x = bound(sv_pitch_min, self.owner.v_angle_x, sv_pitch_max);
-	ang_y = 0;
-	ang_z = 0;
+	if (!intermission_running)
+	{
+		ang_x = bound(sv_pitch_min, self.owner.v_angle_x, sv_pitch_max);
+		ang_y = 0;
+		ang_z = 0;
 
-	if(sv_pitch_fixyaw) // workaround for stupid player models that don't aim forward
-	{
-		ang_y = self.owner.v_angle_y;
-		makevectors(ang);
-		var vector v = v_forward;
-		var float t = self.tag_entity.frame1time;
-		var float f = self.tag_entity.frame;
-		self.tag_entity.frame1time = time;
-		self.tag_entity.frame = self.tag_entity.anim_idle_x;
-		gettaginfo(self.tag_entity, self.tag_index);
-		self.tag_entity.frame1time = t;
-		self.tag_entity.frame = f;
-		// untransform v according to this coordinate space
-		vector w;
-		w_x = v_forward * v;
-		w_y = -v_right * v;
-		w_z = v_up * v;
-		self.angles = vectoangles(w);
-	}
-	else
-	{
-		ang_x = -/* don't ask */ang_x;
-		self.angles = ang;
+		if(sv_pitch_fixyaw) // workaround for stupid player models that don't aim forward
+		{
+			ang_y = self.owner.v_angle_y;
+			makevectors(ang);
+			var vector v = v_forward;
+			var float t = self.tag_entity.frame1time;
+			var float f = self.tag_entity.frame;
+			self.tag_entity.frame1time = time;
+			self.tag_entity.frame = self.tag_entity.anim_idle_x;
+			gettaginfo(self.tag_entity, self.tag_index);
+			self.tag_entity.frame1time = t;
+			self.tag_entity.frame = f;
+			// untransform v according to this coordinate space
+			vector w;
+			w_x = v_forward * v;
+			w_y = -v_right * v;
+			w_z = v_up * v;
+			self.angles = vectoangles(w);
+		}
+		else
+		{
+			ang_x = -/* don't ask */ang_x;
+			self.angles = ang;
+		}
 	}
 
 	self.glowmod = self.owner.weaponentity_glowmod;
@@ -983,7 +986,8 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 						world, e.origin,
 						self, 0,
 						world, enemy,
-						0
+						0,
+						RADARICON_NONE, '0 0 0'
 					);
 				}
 			}
@@ -1059,7 +1063,7 @@ float weapon_prepareattack_checkammo(float secondary)
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
-			sound (self, CHAN_AUTO, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
 			self.prevdryfire = time;
 		}
 
@@ -1257,18 +1261,19 @@ void weapon_thinkf(float fr, float t, void() func)
 	self.weapon_think = func;
 	//dprint("next ", ftos(self.weapon_nextthink), "\n");
 
-    // The shoot animation looks TERRIBLE without animation blending! Yay for moonwalking while shooting!
+	// The shoot animation looks TERRIBLE without animation blending! Yay for moonwalking while shooting!
+	//anim = self.anim_shoot;
 	if (restartanim)
 	if (t)
 	if (!self.crouch) // shoot anim stands up, this looks bad
 	{
-		local vector anim;
+		vector anim;
 		if(self.weapon == WEP_SHOTGUN && self.BUTTON_ATCK2)
+		{
 			anim = self.anim_melee;
-		/*else
-			anim = self.anim_shoot;*/
-		anim_z = anim_y / (t + sys_frametime);
-		setanim(self, anim, FALSE, TRUE, TRUE);
+			anim_z = anim_y / (t + sys_frametime);
+			setanim(self, anim, FALSE, TRUE, TRUE);
+		}
 	}
 };
 
@@ -1728,7 +1733,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 
 	// now begin the reloading process
 
-	sound (self, CHAN_WEAPON2, self.reload_sound, VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_B, self.reload_sound, VOL_BASE, ATTN_NORM);
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,

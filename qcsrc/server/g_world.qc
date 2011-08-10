@@ -1194,7 +1194,7 @@ void Maplist_Init()
 	if(Map_Count == 0)
 	{
 		bprint( "Maplist is empty!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 		if(autocvar_g_maplist_shuffle)
 			ShuffleMaplist();
 		localcmd("\nmenu_cmd sync\n");
@@ -1314,7 +1314,7 @@ void GotoNextMap()
 			if(allowReset)
 			{
 				bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
-				cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+				cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 				if(autocvar_g_maplist_shuffle)
 					ShuffleMaplist();
 				localcmd("\nmenu_cmd sync\n");
@@ -1490,7 +1490,7 @@ void DumpStats(float final)
 		}
 	}
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		s = strcat(":labels:teamscores:", GetTeamScoreString(0, 0));
 		if(to_console)
@@ -1529,8 +1529,6 @@ void FixIntermissionClient(entity e)
 	string s;
 	if(!e.autoscreenshot) // initial call
 	{
-		e.angles = e.v_angle;
-		e.angles_x = -e.angles_x;
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
 		e.health = -2342;
 		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
@@ -1553,11 +1551,6 @@ void FixIntermissionClient(entity e)
 			WriteByte(MSG_ONE, SVC_INTERMISSION);
 		}
 	}
-
-	//e.velocity = '0 0 0';
-	//e.fixangle = TRUE;
-
-	// TODO halt weapon animation
 }
 
 
@@ -1936,7 +1929,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper();
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		team1_score = TeamScore_GetCompareValue(COLOR_TEAM1);
 		team2_score = TeamScore_GetCompareValue(COLOR_TEAM2);
@@ -2306,7 +2299,6 @@ string mapvote_maps_pakfile[MAPVOTE_COUNT];
 float mapvote_maps_suggested[MAPVOTE_COUNT];
 string mapvote_suggestions[MAPVOTE_COUNT];
 float mapvote_suggestion_ptr;
-float mapvote_maxlen;
 float mapvote_voters;
 float mapvote_votes[MAPVOTE_COUNT];
 float mapvote_run;
@@ -2368,8 +2360,10 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 	for(j = 0; j < mapvote_count; ++j)
 		if(mapvote_maps[j] == nextMap)
 			return;
-	if(strlen(nextMap) > mapvote_maxlen)
-		mapvote_maxlen = strlen(nextMap);
+	// suggestions might be no longer valid/allowed after gametype switch!
+	if(isSuggestion)
+		if(!MapInfo_CheckMap(nextMap))
+			return;
 	mapvote_maps[mapvote_count] = strzone(nextMap);
 	mapvote_maps_suggested[mapvote_count] = isSuggestion;
 
@@ -2431,7 +2425,7 @@ void MapVote_Init()
 	if(mapvote_count == 0)
 	{
 		bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 		if(autocvar_g_maplist_shuffle)
 			ShuffleMaplist();
 		localcmd("\nmenu_cmd sync\n");

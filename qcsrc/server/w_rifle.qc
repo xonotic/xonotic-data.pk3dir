@@ -11,7 +11,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage
 
 	W_DecreaseAmmo(ammo_nails, pAmmo, autocvar_g_balance_rifle_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, pSound, CHAN_WEAPON, (pDamage + pHeadshotAddedDamage) * pShots);
+	W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, pSound, CH_WEAPON_A, (pDamage + pHeadshotAddedDamage) * pShots);
 
 	pointparticles(particleeffectnum("rifle_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
 
@@ -214,11 +214,11 @@ float w_rifle(float req)
 		if(!w_issilent)
 		{
 			if(w_random < 0.2)
-				sound(self, CHAN_PROJECTILE, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
 			else if(w_random < 0.4)
-				sound(self, CHAN_PROJECTILE, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
 			else if(w_random < 0.5)
-				sound(self, CHAN_PROJECTILE, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)

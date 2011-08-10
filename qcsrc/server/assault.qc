@@ -30,9 +30,6 @@ void assault_objective_reset() {
 }
 
 void assault_objective_use() {
-	if(other.classname == "info_player_deathmatch") // a spawn, a spawn
-		return;
-
 	// activate objective
 	self.health = 100;
 	//print("^2Activated objective ", self.targetname, "=", etos(self), "\n");
@@ -158,7 +155,7 @@ void target_objective_decrease_activate()
 				ent.sprite = world;
 		}
 
-		spr = WaypointSprite_SpawnFixed("<placeholder>", 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite);
+		spr = WaypointSprite_SpawnFixed("<placeholder>", 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite, RADARICON_OBJECTIVE, '1 0.5 0');
 		spr.assault_decreaser = self;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
 		spr.classname = "sprite_waypoint";
@@ -172,7 +169,6 @@ void target_objective_decrease_activate()
 		}
 		else
 			WaypointSprite_UpdateSprites(spr, "as-defend", "as-push", "as-push");
-		WaypointSprite_UpdateTeamRadar(spr, RADARICON_OBJECTIVE, '1 0.5 0');
 	}
 }
 
@@ -317,8 +313,30 @@ void spawnfunc_target_assault_roundstart() {
 
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
-void assault_new_round() {
+void vehicles_clearrturn();
+void vehicles_spawn();
+void assault_new_round() 
+{
+    entity oldself;
 	//bprint("ASSAULT: new round\n");
+
+	oldself = self;
+	// Eject players from vehicles
+    FOR_EACH_PLAYER(self)
+    {
+        if(self.vehicle)
+            vehicles_exit(VHEF_RELESE);        
+    }
+    
+    self = findchainflags(vehicle_flags, VHF_ISVEHICLE);
+    while(self)
+    {
+        vehicles_clearrturn();
+        vehicles_spawn();
+        self = self.chain;
+    }
+
+    self = oldself;
 
 	// up round counter
 	self.winning = self.winning + 1;
@@ -342,7 +360,7 @@ void assault_new_round() {
 				ent.team_saved = COLOR_TEAM1;
 		}
 	}
-
+	
 	// reset the level with a countdown
 	cvar_set("timelimit", ftos(ceil(time - game_starttime) / 60));
 	ReadyRestartForce(); // sets game_starttime

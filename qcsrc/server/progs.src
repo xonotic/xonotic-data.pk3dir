@@ -30,6 +30,7 @@ mutators/mutator_dodging.qh
 
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
+vehicles/vehicles_def.qh
 
 campaign.qh
 ../common/campaign_common.qh

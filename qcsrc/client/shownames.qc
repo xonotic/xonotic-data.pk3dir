@@ -13,27 +13,29 @@ void Draw_ShowNames(entity ent)
 	if(ent.sv_entnum == player_localentnum && !autocvar_chase_active)
 		return;
 
+	makevectors(view_angles);
+
 	if(ent.sameteam || (!ent.sameteam && autocvar_hud_shownames_enemies))
 	{
 		ent.origin_z += autocvar_hud_shownames_offset;
 
-		if(!ent.sameteam)
+		float hit;
+		if(ent.sameteam)
 		{
-			/* WIP, why does trace_ent != ent not work as intended here?
-			   if(autocvar_hud_shownames_enemies != 2) // player has to point at enemy if so
-			   {
-			   traceline(view_origin, view_origin + view_forward * MAX_SHOT_DISTANCE, MOVETYPE_FLY, world);
-			   print("trace_endpos: ", vtos(trace_endpos), " view_origin: ", vtos(view_origin), "\n");
-			   if(trace_ent != ent)
-			   return;
-			   }*/
-
-			traceline(ent.origin, view_origin, 1, ent);
+			hit = 1;
+		}
+		else
+		{
+			traceline(view_origin, ent.origin, MOVE_NORMAL, ent);
+			if(trace_fraction < 1 && trace_networkentity != ent.sv_entnum)
+				hit = 0;
+			else
+				hit = 1;
 		}
 
 		vector o, eo;
 		o = project_3d_to_2d(ent.origin);
-		float overlap;
+		float overlap, onscreen;
 
 		if(autocvar_hud_shownames_antioverlap)
 		{
@@ -56,7 +58,9 @@ void Draw_ShowNames(entity ent)
 			}
 		}
 
-		if(!ent.sameteam && trace_endpos != view_origin) // out of view, fade out
+		onscreen = (o_z >= 0 && o_x >= 0 && o_y >= 0 && o_x <= vid_conwidth && o_y <= vid_conheight);
+
+		if(!ent.sameteam && (!onscreen || !hit)) // out of view, fade out
 			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * frametime);
 		else if(ent.healthvalue < 1) // dead player, fade out slowly
 			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
@@ -90,7 +94,7 @@ void Draw_ShowNames(entity ent)
 			resize = 0.5 + 0.5 * ((autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance) - max(0, dist - autocvar_hud_shownames_mindistance)) / (autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance);
 
 		// draw the sprite image
-		if not(o_z < 0 || o_x < 0 || o_y < 0 || o_x > vid_conwidth || o_y > vid_conheight)
+		if(o_z >= 0)
 		{
 			o_z = 0;
 
@@ -150,7 +154,6 @@ void Draw_ShowNames_All()
 	float i;
 	for(i = 0; i < maxclients; ++i)
 	{
-		vector o;
 		float t;
 		t = GetPlayerColor(i);
 		if(t == COLOR_SPECTATOR)

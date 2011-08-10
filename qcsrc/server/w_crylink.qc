@@ -17,7 +17,7 @@ void W_Crylink_CheckLinks(entity e)
 	if(e == world)
 		error("W_Crylink_CheckLinks: entity is world");
 	if(e.classname != "spike")
-		error("W_Crylink_CheckLinks: entity is not a spike");
+		error(sprintf("W_Crylink_CheckLinks: entity is not a spike but a %s (freed: %d)", e.classname, wasfreed(e)));
 
 	p = e;
 	for(i = 0; i < 1000; ++i)
@@ -336,7 +336,7 @@ void W_Crylink_Attack (void)
 	if(autocvar_g_balance_crylink_primary_joinexplode)
 		maxdmg += autocvar_g_balance_crylink_primary_joinexplode_damage;
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", CHAN_WEAPON, maxdmg);
+	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -439,7 +439,7 @@ void W_Crylink_Attack2 (void)
 	if(autocvar_g_balance_crylink_secondary_joinexplode)
 		maxdmg += autocvar_g_balance_crylink_secondary_joinexplode_damage;
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", CHAN_WEAPON, maxdmg);
+	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", CH_WEAPON_A, maxdmg);
 
 	shots = autocvar_g_balance_crylink_secondary_shots;
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
@@ -645,13 +645,13 @@ float w_crylink(float req)
 		{
 			pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CHAN_PROJECTILE, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
 		}
 		else
 		{
 			pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CHAN_PROJECTILE, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)

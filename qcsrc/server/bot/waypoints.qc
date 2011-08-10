@@ -23,7 +23,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	setsize(w, m1 - w.origin, m2 - w.origin);
 	if (vlen(w.size) > 0)
 		w.wpisbox = TRUE;
-	
+
 	if(!w.wpisbox)
 	{
 		setsize(w, PL_MIN - '1 1 0', PL_MAX + '1 1 0');
@@ -496,11 +496,11 @@ void waypoint_load_links_hardwired()
 		// Search "from" waypoint
 		if(wp_from.origin!=wp_from_pos)
 		{
-			wp_from = findradius(wp_from_pos, 1);
+			wp_from = findradius(wp_from_pos, 5);
 			found = FALSE;
 			while(wp_from)
 			{
-				if(vlen(wp_from.origin-wp_from_pos)<1)
+				if(vlen(wp_from.origin-wp_from_pos)<5)
 				if(wp_from.classname == "waypoint")
 				{
 					found = TRUE;
@@ -517,11 +517,11 @@ void waypoint_load_links_hardwired()
 		}
 
 		// Search "to" waypoint
-		wp_to = findradius(wp_to_pos, 1);
+		wp_to = findradius(wp_to_pos, 5);
 		found = FALSE;
 		while(wp_to)
 		{
-			if(vlen(wp_to.origin-wp_to_pos)<1)
+			if(vlen(wp_to.origin-wp_to_pos)<5)
 			if(wp_to.classname == "waypoint")
 			{
 				found = TRUE;
@@ -772,12 +772,12 @@ void waypoint_spawnforitem(entity e)
 	waypoint_spawnforitem_force(e, e.origin);
 };
 
-void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
+void waypoint_spawnforteleporter_boxes(entity e, vector org1, vector org2, vector destination1, vector destination2, float timetaken)
 {
 	local entity w;
 	local entity dw;
-	w = waypoint_spawn(e.absmin, e.absmax, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
-	dw = waypoint_spawn(destination, destination, WAYPOINTFLAG_GENERATED);
+	w = waypoint_spawn(org1, org2, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
+	dw = waypoint_spawn(destination1, destination2, WAYPOINTFLAG_GENERATED);
 	// one way link to the destination
 	w.wp00 = dw;
 	w.wp00mincost = timetaken; // this is just for jump pads
@@ -785,6 +785,19 @@ void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
 	// (teleporters are not goals, so this is probably useless)
 	e.nearestwaypoint = w;
 	e.nearestwaypointtimeout = time + 1000000000;
+};
+
+void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken)
+{
+	org = waypoint_fixorigin(org);
+	destination = waypoint_fixorigin(destination);
+	waypoint_spawnforteleporter_boxes(e, org, org, destination, destination, timetaken);
+};
+
+void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
+{
+	destination = waypoint_fixorigin(destination);
+	waypoint_spawnforteleporter_boxes(e, e.absmin, e.absmax, destination, destination, timetaken);
 };
 
 entity waypoint_spawnpersonal(vector position)

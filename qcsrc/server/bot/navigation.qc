@@ -1027,7 +1027,7 @@ void navigation_unstuck()
 		while(head)
 		{
 			if(head.classname=="waypoint")
-			if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
+		//	if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
 			{
 				if(bot_waypoint_queue_goal)
 					bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = head;

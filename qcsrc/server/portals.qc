@@ -355,7 +355,7 @@ void Portal_Disconnect(entity teleporter, entity destination)
 
 void Portal_Connect(entity teleporter, entity destination)
 {
-	teleporter.portal_transform = AnglesTransform_Divide(AnglesTransform_TurnDirectionFR(destination.mangle), teleporter.mangle);
+	teleporter.portal_transform = AnglesTransform_RightDivide(AnglesTransform_TurnDirectionFR(destination.mangle), teleporter.mangle);
 
 	teleporter.enemy = destination;
 	destination.enemy = teleporter;
@@ -394,14 +394,14 @@ void Portal_Remove(entity portal, float killed)
 	if(killed)
 	{
 		fixedmakevectors(portal.mangle);
-		sound(portal, CHAN_PROJECTILE, "porto/explode.wav", VOL_BASE, ATTN_NORM);
+		sound(portal, CH_SHOTS, "porto/explode.wav", VOL_BASE, ATTN_NORM);
 		pointparticles(particleeffectnum("rocket_explode"), portal.origin + v_forward * 16, v_forward * 1024, 4);
 		remove(portal);
 	}
 	else
 	{
 		Portal_MakeBrokenPortal(portal);
-		sound(portal, CHAN_PROJECTILE, "porto/expire.wav", VOL_BASE, ATTN_NORM);
+		sound(portal, CH_SHOTS, "porto/expire.wav", VOL_BASE, ATTN_NORM);
 		SUB_SetFade(portal, time, 0.5);
 	}
 }
