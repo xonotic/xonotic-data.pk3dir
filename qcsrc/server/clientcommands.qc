@@ -12,6 +12,7 @@ entity nagger;
 .float cmd_floodtime;
 .float cmd_floodcount;
 .float checkfail;
+.float lms_spectate_warning;
 
 float readyrestart_happened;
 float readycount;
@@ -628,7 +629,7 @@ void ClientCommand_rankings(float request)
 	}
 }
 
-void ClientCommand_ready(float request) // TODO: reimplement how this works
+void ClientCommand_ready(float request) 
 {
 	switch(request)
 	{
@@ -672,7 +673,7 @@ void ClientCommand_ready(float request) // TODO: reimplement how this works
 	}
 }
 
-void ClientCommand_records(float request)
+void ClientCommand_records(float request) // TODO: Isn't this flooding with the sprint messages? Old code, but perhaps bad?
 {
 	float i;
 	
@@ -695,7 +696,7 @@ void ClientCommand_records(float request)
 	}
 }
 
-void ClientCommand_reportcvar(float request, float argc, string command)
+void ClientCommand_reportcvar(float request, float argc, string command) // TODO: confirm this works
 {
 	float tokens;
 	string s;
@@ -765,7 +766,7 @@ void ClientCommand_say_team(float request, float argc, string command)
 	}
 }
 
-void ClientCommand_selectteam(float request, float argc)
+void ClientCommand_selectteam(float request, float argc) // TODO: Update the messages for this command
 {
 	switch(request)
 	{
@@ -800,9 +801,10 @@ void ClientCommand_selectteam(float request, float argc)
 
 		default:
 		case CC_REQUEST_USAGE:
-			sprint( self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
+			//sprint(self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
 			sprint(self, "\nUsage:^3 cmd selectteam team\n");
-			sprint(self, "  No arguments required.\n");
+			sprint(self, "  Where 'team' is the prefered team to try and join.\n");
+			sprint(self, "  Full list of options here: \"red, blue, yellow, pink, auto\"\n");
 			return;
 	}
 }
@@ -835,24 +837,71 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 	}
 }
 
-
-/*
-void ClientCommand_(float request, entity client)
+void ClientCommand_spectate(float request)
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2blah^7: foobar\n");
+			sprint(self, "  ^2spectate^7: Become an observer\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			if(self.flags & FL_CLIENT)
+			{
+				if(g_arena) { return; } 
+				if(g_lms)
+				{
+					if(self.lms_spectate_warning)
+					{
+						// mark player as spectator
+						PlayerScore_Add(self, SP_LMS_RANK, 666 - PlayerScore_Add(self, SP_LMS_RANK, 0));
+					}
+					else
+					{
+						self.lms_spectate_warning = 1;
+						sprint(self, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
+						return;
+					}
+				}
+				
+				if(self.classname == "player" && autocvar_sv_spectate == 1) 
+					ClientKill_TeamChange(-2); // observe
+				
+				// in CA, allow a dead player to move to spectatators (without that, caplayer!=0 will be moved back to the player list)
+				// note: if arena game mode is ever done properly, this needs to be removed.
+				if(g_ca && self.caplayer && (self.classname == "spectator" || self.classname == "observer"))
+				{
+					sprint(self, "WARNING: you will spectate in the next round.\n");
+					self.caplayer = 0;
+				}
+			}
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(self, "\nUsage:^3 cmd spectate\n");
+			sprint(self, "  No arguments required.\n");
+			return;
+	}
+}
+
+/*
+void ClientCommand_(float request)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(self, "  ^2blah^7: foobar\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
 			
-			return;
+			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd \n");
-			sprint(client, "  No arguments required.\n");
+			sprint(self, "\nUsage:^3 cmd \n");
+			sprint(self, "  No arguments required.\n");
 			return;
 	}
 }
@@ -912,6 +961,7 @@ void SV_ParseClientCommand(string command)
 			ClientCommand_say_team(CC_REQUEST_HELP, 0, "");
 			ClientCommand_selectteam(CC_REQUEST_HELP, 0);
 			ClientCommand_sentcvar(CC_REQUEST_HELP, 0, "");
+			ClientCommand_spectate(CC_REQUEST_HELP);
 			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
 			return;
 		} 
@@ -957,6 +1007,7 @@ void SV_ParseClientCommand(string command)
 		case "say_team": ClientCommand_say_team(search_request_type, argc, command); break;
 		case "selectteam": ClientCommand_selectteam(search_request_type, argc); break;
 		case "sentcvar": ClientCommand_sentcvar(search_request_type, argc, command); break;
+		case "spectate": ClientCommand_spectate(search_request_type); break;
 		
 		default:
 			clientcommand(self, command); //print("Invalid command. For a list of supported commands, try cmd help.\n");
