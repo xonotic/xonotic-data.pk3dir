@@ -255,87 +255,6 @@ void restartTimer_Think() {
 	return;
 }
 
-/**
- * Checks whether the player who calls the timeout is allowed to do so.
- * If so, it initializes the timeout countdown. It also checks whether another
- * timeout was already running at this time and reacts correspondingly.
- *
- * affected globals/fields: .allowedTimeouts, remainingTimeoutTime, remainingLeadTime,
- *                          timeoutInitiator, timeoutStatus, timeoutHandler
- *
- * This function is called when a player issues the calltimeout command.
- */
-void evaluateTimeout() {
-	if (inWarmupStage && !g_warmup_allow_timeout)
-		return sprint(self, "^7Error: You can not call a timeout in warmup-stage!\n");
-	if (time < game_starttime )
-		return sprint(self, "^7Error: You can not call a timeout while the map is being restarted!\n");
-	if (timeoutStatus != 2) {
-		//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
-		if (autocvar_timelimit) {
-			//a timelimit was used
-			local float myTl;
-			myTl = autocvar_timelimit;
-
-			local float lastPossibleTimeout;
-			lastPossibleTimeout = (myTl*60) - autocvar_sv_timeout_leadtime - 1;
-
-			if (lastPossibleTimeout < time - game_starttime)
-				return sprint(self, "^7Error: It is too late to call a timeout now!\n");
-		}
-	}
-	//player may not call a timeout if he has no calls left
-	if (self.allowedTimeouts < 1)
-		return sprint(self, "^7Error: You already used all your timeout calls for this map!\n");
-	//now all required checks are passed
-	self.allowedTimeouts -= 1;
-	bprint(self.netname, " ^7called a timeout (", ftos(self.allowedTimeouts), " timeouts left)!\n"); //write a bprint who started the timeout (and how many he has left)
-	remainingTimeoutTime = autocvar_sv_timeout_length;
-	remainingLeadTime = autocvar_sv_timeout_leadtime;
-	timeoutInitiator = self;
-	if (timeoutStatus == 0) { //if another timeout was already active, don't change its status (which was 1 or 2) to 1, only change it to 1 if no timeout was active yet
-		timeoutStatus = 1;
-		//create the timeout indicator which centerprints the information to all players and takes care of pausing/unpausing
-		timeoutHandler = spawn();
-		timeoutHandler.think = timeoutHandler_Think;
-	}
-	timeoutHandler.nextthink = time; //always let the entity think asap
-
-	//inform all connected clients about the timeout call
-	Announce("timeoutcalled");
-}
-
-/**
- * Checks whether a player is allowed to resume the game. If he is allowed to do it,
- * and the lead time for the timeout is still active, this countdown just will be aborted (the
- * game will never be paused). Otherwise the remainingTimeoutTime will be set to the corresponding
- * value of the cvar sv_timeout_resumetime.
- *
- * This function is called when a player issues the resumegame command.
- */
-void evaluateTimein() {
-	if (!timeoutStatus)
-		return sprint(self, "^7Error: There is no active timeout which could be aborted!\n");
-	if (self != timeoutInitiator)
-		return sprint(self, "^7Error: You may not abort the active timeout. Only the player who called it can do that!\n");
-	if (timeoutStatus == 1) {
-		remainingTimeoutTime = timeoutStatus = 0;
-		timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
-		bprint(strcat("^7The timeout was aborted by ", self.netname, " !\n"));
-	}
-	else if (timeoutStatus == 2) {
-		//only shorten the remainingTimeoutTime if it makes sense
-		if( remainingTimeoutTime > (autocvar_sv_timeout_resumetime + 1) ) {
-			bprint(strcat("^1Attention: ^7", self.netname, " resumed the game! Prepare for battle!\n"));
-			remainingTimeoutTime = autocvar_sv_timeout_resumetime;
-			timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
-		}
-		else
-			sprint(self, "^7Error: Your resumegame call was discarded!\n");
-
-	}
-}
-
 
 // =======================
 //  Command Sub-Functions
@@ -905,6 +824,204 @@ void ClientCommand_suggestmap(float request, float argc)
 	}
 }
 
+void ClientCommand_teamstatus(float request)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(self, "  ^2teamstatus^7: Print detailed score information for all players\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			Score_NicePrint(self);
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(self, "\nUsage:^3 cmd teamstatus\n");
+			sprint(self, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_tell(float request, float argc, string command)
+{
+	entity e;
+	
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(self, "  ^2tell^7: Send a message directly to a player\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			e = GetCommandPlayerSlotTargetFromTokenizedCommand(argc, 1);
+			if(e && argc > ParseCommandPlayerSlotTarget_firsttoken)
+			{
+				Say(self, FALSE, e, substring(command, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)), TRUE);
+			}
+			else
+			{
+				if(argc > ParseCommandPlayerSlotTarget_firsttoken)
+					trigger_magicear_processmessage_forallears(self, -1, world, substring(command, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)));
+			}
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(self, "\nUsage:^3 cmd tell playerid <message>\n");
+			sprint(self, "  Where 'playerid' is the entity number of the player to send the 'message' to.\n");
+			return;
+	}
+}
+
+void ClientCommand_timein(float request)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(self, "  ^2timein^7: Resume the game from being paused with a timeout\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			if(self.flags & FL_CLIENT)
+			{
+				if(autocvar_sv_timeout)
+				{
+					if (!timeoutStatus)
+						return sprint(self, "^7Error: There is no active timeout which could be aborted!\n");
+					if (self != timeoutInitiator)
+						return sprint(self, "^7Error: You may not abort the active timeout. Only the player who called it can do that!\n");
+						
+					if (timeoutStatus == 1) 
+					{
+						remainingTimeoutTime = timeoutStatus = 0;
+						timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
+						bprint(strcat("^7The timeout was aborted by ", self.netname, " !\n"));
+					}
+					else if (timeoutStatus == 2) 
+					{
+						//only shorten the remainingTimeoutTime if it makes sense
+						if( remainingTimeoutTime > (autocvar_sv_timeout_resumetime + 1) ) 
+						{
+							bprint(strcat("^1Attention: ^7", self.netname, " resumed the game! Prepare for battle!\n"));
+							remainingTimeoutTime = autocvar_sv_timeout_resumetime;
+							timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
+						}
+						else
+							sprint(self, "^7Error: Your resumegame call was discarded!\n");
+					}
+				}
+			}
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(self, "\nUsage:^3 cmd timein\n");
+			sprint(self, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(self, "  ^2timeout^7: Call a timeout which pauses the game for certain amount of time unless unpaused\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			if(self.flags & FL_CLIENT)
+			{
+				if(autocvar_sv_timeout) 
+				{
+					if(self.classname == "player") 
+					{
+						if(votecalled)
+							sprint(self, "^7Error: you can not call a timeout while a vote is active!\n");
+						else
+						{
+							if (inWarmupStage && !g_warmup_allow_timeout)
+								return sprint(self, "^7Error: You can not call a timeout in warmup-stage!\n");
+							if (time < game_starttime )
+								return sprint(self, "^7Error: You can not call a timeout while the map is being restarted!\n");
+								
+							if (timeoutStatus != 2) {
+								//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
+								if (autocvar_timelimit) {
+									//a timelimit was used
+									float myTl;
+									myTl = autocvar_timelimit;
+
+									float lastPossibleTimeout;
+									lastPossibleTimeout = (myTl*60) - autocvar_sv_timeout_leadtime - 1;
+
+									if (lastPossibleTimeout < time - game_starttime)
+										return sprint(self, "^7Error: It is too late to call a timeout now!\n");
+								}
+							}
+							
+							//player may not call a timeout if he has no calls left
+							if (self.allowedTimeouts < 1)
+								return sprint(self, "^7Error: You already used all your timeout calls for this map!\n");
+								
+								
+							//now all required checks are passed
+							self.allowedTimeouts -= 1;
+							bprint(self.netname, " ^7called a timeout (", ftos(self.allowedTimeouts), " timeouts left)!\n"); //write a bprint who started the timeout (and how many he has left)
+							remainingTimeoutTime = autocvar_sv_timeout_length;
+							remainingLeadTime = autocvar_sv_timeout_leadtime;
+							timeoutInitiator = self;
+							if (timeoutStatus == 0) { //if another timeout was already active, don't change its status (which was 1 or 2) to 1, only change it to 1 if no timeout was active yet
+								timeoutStatus = 1;
+								//create the timeout indicator which centerprints the information to all players and takes care of pausing/unpausing
+								timeoutHandler = spawn();
+								timeoutHandler.think = timeoutHandler_Think;
+							}
+							timeoutHandler.nextthink = time; //always let the entity think asap
+
+							//inform all connected clients about the timeout call
+							Announce("timeoutcalled");
+						}
+					}
+					else
+						sprint(self, "^7Error: only players can call a timeout!\n");
+				}
+			}
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(self, "\nUsage:^3 cmd timeout\n");
+			sprint(self, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_voice(float request, float argc, string command)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(self, "  ^2voice^7: Send voice message via sound\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			if(argc >= 3)
+				VoiceMessage(argv(1), substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
+			else
+				VoiceMessage(argv(1), "");
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(self, "\nUsage:^3 cmd voice\n");
+			sprint(self, "  FIXME ARGUMENTS UNKNOWN.\n");
+			return;
+	}
+}
+
 /*
 void ClientCommand_(float request)
 {
@@ -983,6 +1100,11 @@ void SV_ParseClientCommand(string command)
 			ClientCommand_sentcvar(CC_REQUEST_HELP, 0, "");
 			ClientCommand_spectate(CC_REQUEST_HELP);
 			ClientCommand_suggestmap(CC_REQUEST_HELP, 0);
+			ClientCommand_teamstatus(CC_REQUEST_HELP);
+			ClientCommand_tell(CC_REQUEST_HELP, 0, "");
+			ClientCommand_timein(CC_REQUEST_HELP);
+			ClientCommand_timeout(CC_REQUEST_HELP);
+			ClientCommand_voice(CC_REQUEST_HELP, 0, "");
 			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
 			return;
 		} 
@@ -1030,6 +1152,11 @@ void SV_ParseClientCommand(string command)
 		case "sentcvar": ClientCommand_sentcvar(search_request_type, argc, command); break;
 		case "spectate": ClientCommand_spectate(search_request_type); break;
 		case "suggestmap": ClientCommand_suggestmap(search_request_type, argc); break;
+		case "teamstatus": ClientCommand_teamstatus(search_request_type); break;
+		case "tell": ClientCommand_tell(search_request_type, argc, command); break;
+		case "timein": ClientCommand_timein(search_request_type); break;
+		case "timeout": ClientCommand_timeout(search_request_type); break;
+		case "voice": ClientCommand_voice(search_request_type, argc, command); break;
 		
 		default:
 			clientcommand(self, command); //print("Invalid command. For a list of supported commands, try cmd help.\n");
