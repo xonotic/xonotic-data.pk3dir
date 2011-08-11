@@ -885,6 +885,26 @@ void ClientCommand_spectate(float request)
 	}
 }
 
+void ClientCommand_suggestmap(float request, float argc)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(self, "  ^2suggestmap^7: Suggest a map to the mapvote at match end\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			sprint(self, strcat(MapVote_Suggest(argv(1)), "\n"));
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(self, "\nUsage:^3 cmd suggestmap map\n");
+			sprint(self, "  Where 'map' is the name of the map to suggest.\n");
+			return;
+	}
+}
+
 /*
 void ClientCommand_(float request)
 {
@@ -962,6 +982,7 @@ void SV_ParseClientCommand(string command)
 			ClientCommand_selectteam(CC_REQUEST_HELP, 0);
 			ClientCommand_sentcvar(CC_REQUEST_HELP, 0, "");
 			ClientCommand_spectate(CC_REQUEST_HELP);
+			ClientCommand_suggestmap(CC_REQUEST_HELP, 0);
 			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
 			return;
 		} 
@@ -1008,6 +1029,7 @@ void SV_ParseClientCommand(string command)
 		case "selectteam": ClientCommand_selectteam(search_request_type, argc); break;
 		case "sentcvar": ClientCommand_sentcvar(search_request_type, argc, command); break;
 		case "spectate": ClientCommand_spectate(search_request_type); break;
+		case "suggestmap": ClientCommand_suggestmap(search_request_type, argc); break;
 		
 		default:
 			clientcommand(self, command); //print("Invalid command. For a list of supported commands, try cmd help.\n");
