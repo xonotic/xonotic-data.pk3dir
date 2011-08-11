@@ -1,6 +1,6 @@
 // =======================================================
 //  Server side client commands code, reworked by Samual
-//  Last updated: July 24th, 2011
+//  Last updated: August 4th, 2011
 // =======================================================
 
 #define CC_REQUEST_HELP 1
@@ -340,136 +340,136 @@ void evaluateTimein() {
 //  Command Sub-Functions
 // =======================
 
-void ClientCommand_autoswitch(float request, entity client, float argc)
+void ClientCommand_autoswitch(float request, float argc)
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2autoswitch^7: Whether or not to switch automatically when getting a better weapon\n");
+			sprint(self, "  ^2autoswitch^7: Whether or not to switch automatically when getting a better weapon\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			client.autoswitch = ("0" != argv(1));
-			sprint(client, strcat("^1autoswitch is currently turned ", (client.autoswitch ? "on" : "off"), ".\n"));
+			self.autoswitch = ("0" != argv(1));
+			sprint(self, strcat("^1autoswitch is currently turned ", (self.autoswitch ? "on" : "off"), ".\n"));
 			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd autoswitch selection\n");
-			sprint(client, "  Where 'selection' is 1 or 0 for on or off.\n"); 
+			sprint(self, "\nUsage:^3 cmd autoswitch selection\n");
+			sprint(self, "  Where 'selection' is 1 or 0 for on or off.\n"); 
 			return;
 	}
 }
 
-void ClientCommand_checkfail(float request, entity client, string command) // used only by client side code
+void ClientCommand_checkfail(float request, string command) // used only by client side code
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2checkfail^7: Report if a client-side check failed\n");
+			sprint(self, "  ^2checkfail^7: Report if a client-side check failed\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			print(sprintf("CHECKFAIL: %s (%s) epically failed check %s\n", client.netname, client.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1))));
-			client.checkfail = 1;
+			print(sprintf("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1))));
+			self.checkfail = 1;
 			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd checkfail message\n");
-			sprint(client, "  Where 'message' is the message reported by client about the fail.\n");
+			sprint(self, "\nUsage:^3 cmd checkfail message\n");
+			sprint(self, "  Where 'message' is the message reported by client about the fail.\n");
 			return;
 	}
 }
 
-void ClientCommand_clientversion(float request, entity client, float argc) // used only by client side code
+void ClientCommand_clientversion(float request, float argc) // used only by client side code
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2clientversion^7: Release version of the game\n");
+			sprint(self, "  ^2clientversion^7: Release version of the game\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			if(client.flags & FL_CLIENT)
+			if(self.flags & FL_CLIENT)
 			{
-				client.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
+				self.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
 				
-				if(client.version < autocvar_gameversion_min || client.version > autocvar_gameversion_max)
+				if(self.version < autocvar_gameversion_min || self.version > autocvar_gameversion_max)
 				{
-					client.version_mismatch = 1;
+					self.version_mismatch = 1;
 					ClientKill_TeamChange(-2); // observe
 				} 
 				else if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force) 
 				{
 					//JoinBestTeam(self, FALSE, TRUE);
 				} 
-				else if(teamplay && !autocvar_sv_spectate && !(client.team_forced > 0)) 
+				else if(teamplay && !autocvar_sv_spectate && !(self.team_forced > 0)) 
 				{
-					client.classname = "observer"; // really?
-					stuffcmd(client, "menu_showteamselect\n");
+					self.classname = "observer"; // really?
+					stuffcmd(self, "menu_showteamselect\n");
 				}
 			}
 			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd clientversion version\n");
-			sprint(client, "  Where 'version' is the game version reported by client.\n");
+			sprint(self, "\nUsage:^3 cmd clientversion version\n");
+			sprint(self, "  Where 'version' is the game version reported by self.\n");
 			return;
 	}
 }
 
-void ClientCommand_cvar_changes(float request, entity client)
+void ClientCommand_cvar_changes(float request)
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2cvar_changes^7: Prints a list of all changed server cvars\n");
+			sprint(self, "  ^2cvar_changes^7: Prints a list of all changed server cvars\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			sprint(client, cvar_changes);
+			sprint(self, cvar_changes);
 			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 sv_cmd cvar_changes\n");
-			sprint(client, "  No arguments required.\n");
-			//sprint(client, "See also: ^2cvar_purechanges^7\n");
+			sprint(self, "\nUsage:^3 sv_cmd cvar_changes\n");
+			sprint(self, "  No arguments required.\n");
+			//sprint(self, "See also: ^2cvar_purechanges^7\n");
 			return;
 	}
 }
 
-void ClientCommand_cvar_purechanges(float request, entity client)
+void ClientCommand_cvar_purechanges(float request)
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2cvar_purechanges^7: Prints a list of all changed gameplay cvars\n");
+			sprint(self, "  ^2cvar_purechanges^7: Prints a list of all changed gameplay cvars\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			sprint(client, cvar_purechanges);
+			sprint(self, cvar_purechanges);
 			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 sv_cmd cvar_purechanges\n");
-			sprint(client, "  No arguments required.\n");
-			//sprint(client, "See also: ^2cvar_changes^7\n");
+			sprint(self, "\nUsage:^3 sv_cmd cvar_purechanges\n");
+			sprint(self, "  No arguments required.\n");
+			//sprint(self, "See also: ^2cvar_changes^7\n");
 			return;
 	}
 }
 
-void ClientCommand_info(float request, entity client, float argc)
+void ClientCommand_info(float request, float argc)
 {
 	string command;
 	
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2info^7: Request for unique server information set up by admin\n");
+			sprint(self, "  ^2info^7: Request for unique server information set up by admin\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
@@ -477,49 +477,44 @@ void ClientCommand_info(float request, entity client, float argc)
 			if(command)
 				wordwrap_sprint(command, 1111); // why 1111?
 			else
-				sprint(client, "ERROR: unsupported info command\n");
+				sprint(self, "ERROR: unsupported info command\n");
 			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd info request\n");
-			sprint(client, "  Where 'request' is the suffixed string appended onto the request for cvar.\n");
+			sprint(self, "\nUsage:^3 cmd info request\n");
+			sprint(self, "  Where 'request' is the suffixed string appended onto the request for cvar.\n");
 			return;
 	}
 }
 
-void ClientCommand_join(float request, entity client)
+void ClientCommand_join(float request)
 {
-	entity oldself;
-
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2join^7: Become a player in the game\n");
+			sprint(self, "  ^2join^7: Become a player in the game\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			if(client.flags & FL_CLIENT)
+			if(self.flags & FL_CLIENT)
 			{
-				if(client.classname != "player" && !lockteams && !g_arena)
+				if(self.classname != "player" && !lockteams && !g_arena)
 				{
 					if(nJoinAllowed(1)) 
 					{
-						oldself = self;
-						self = client;
-						if(g_ca) { client.caplayer = 1; }
+						if(g_ca) { self.caplayer = 1; }
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
 						
-						client.classname = "player";
-						PlayerScore_Clear(client);
-						bprint ("^4", client.netname, "^4 is playing now\n");
+						self.classname = "player";
+						PlayerScore_Clear(self);
+						bprint ("^4", self.netname, "^4 is playing now\n");
 						PutClientInServer();
-						self = oldself;
 					}
 					else 
 					{
 						//player may not join because of g_maxplayers is set
-						centerprint_atprio(client, CENTERPRIO_MAPVOTE, PREVENT_JOIN_TEXT);
+						centerprint_atprio(self, CENTERPRIO_MAPVOTE, PREVENT_JOIN_TEXT);
 					}
 				}
 			}
@@ -527,143 +522,143 @@ void ClientCommand_join(float request, entity client)
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd join\n");
-			sprint(client, "  No arguments required.\n");
+			sprint(self, "\nUsage:^3 cmd join\n");
+			sprint(self, "  No arguments required.\n");
 			return;
 	}
 }
 
-void ClientCommand_ladder(float request, entity client)
+void ClientCommand_ladder(float request)
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2ladder^7: Get information about top players if supported\n");
+			sprint(self, "  ^2ladder^7: Get information about top players if supported\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			sprint(client, ladder_reply);
+			sprint(self, ladder_reply);
 			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd ladder\n");
-			sprint(client, "  No arguments required.\n");
+			sprint(self, "\nUsage:^3 cmd ladder\n");
+			sprint(self, "  No arguments required.\n");
 			return;
 	}
 }
 
-void ClientCommand_lsmaps(float request, entity client)
+void ClientCommand_lsmaps(float request)
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2lsmaps^7: List maps which can be used with the current game mode\n");
+			sprint(self, "  ^2lsmaps^7: List maps which can be used with the current game mode\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			sprint(client, lsmaps_reply);
+			sprint(self, lsmaps_reply);
 			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd lsmaps\n");
-			sprint(client, "  No arguments required.\n");
+			sprint(self, "\nUsage:^3 cmd lsmaps\n");
+			sprint(self, "  No arguments required.\n");
 			return;
 	}
 }
 
-void ClientCommand_lsnewmaps(float request, entity client)
+void ClientCommand_lsnewmaps(float request)
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2lsnewmaps^7: List maps which TODO\n");
+			sprint(self, "  ^2lsnewmaps^7: List maps which TODO\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			sprint(client, lsnewmaps_reply);
+			sprint(self, lsnewmaps_reply);
 			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd lsnewmaps\n");
-			sprint(client, "  No arguments required.\n");
+			sprint(self, "\nUsage:^3 cmd lsnewmaps\n");
+			sprint(self, "  No arguments required.\n");
 			return;
 	}
 }
 
-void ClientCommand_maplist(float request, entity client)
+void ClientCommand_maplist(float request)
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2maplist^7: Full server maplist reply\n");
+			sprint(self, "  ^2maplist^7: Full server maplist reply\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			sprint(client, maplist_reply);
+			sprint(self, maplist_reply);
 			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd maplist\n");
-			sprint(client, "  No arguments required.\n");
+			sprint(self, "\nUsage:^3 cmd maplist\n");
+			sprint(self, "  No arguments required.\n");
 			return;
 	}
 }
 
-void ClientCommand_rankings(float request, entity client)
+void ClientCommand_rankings(float request)
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2rankings^7: Print information about rankings\n");
+			sprint(self, "  ^2rankings^7: Print information about rankings\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			sprint(client, rankings_reply);
+			sprint(self, rankings_reply);
 			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd rankings\n");
-			sprint(client, "  No arguments required.\n");
+			sprint(self, "\nUsage:^3 cmd rankings\n");
+			sprint(self, "  No arguments required.\n");
 			return;
 	}
 }
 
-void ClientCommand_ready(float request, entity client) // TODO: reimplement how this works
+void ClientCommand_ready(float request) // TODO: reimplement how this works
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2ready^7: Qualify as ready to end warmup stage (or restart server if allowed)\n");
+			sprint(self, "  ^2ready^7: Qualify as ready to end warmup stage (or restart server if allowed)\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
-			if(client.flags & FL_CLIENT)
+			if(self.flags & FL_CLIENT)
 			{
 				if(inWarmupStage || autocvar_sv_ready_restart || g_race_qualifying == 2)
 				{
 					if(!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
 					{
-						if (client.ready) // toggle
+						if (self.ready) // toggle
 						{
-							client.ready = FALSE;
-							bprint(client.netname, "^2 is ^1NOT^2 ready\n");
+							self.ready = FALSE;
+							bprint(self.netname, "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
-							client.ready = TRUE;
-							bprint(client.netname, "^2 is ready\n");
+							self.ready = TRUE;
+							bprint(self.netname, "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!
 						if(!timeoutStatus)
 							ReadyCount();
 					} else {
-						sprint(client, "^1Game has already been restarted\n");
+						sprint(self, "^1Game has already been restarted\n");
 					}
 				}
 			}
@@ -671,36 +666,36 @@ void ClientCommand_ready(float request, entity client) // TODO: reimplement how 
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd ready\n");
-			sprint(client, "  No arguments required.\n");
+			sprint(self, "\nUsage:^3 cmd ready\n");
+			sprint(self, "  No arguments required.\n");
 			return;
 	}
 }
 
-void ClientCommand_records(float request, entity client)
+void ClientCommand_records(float request)
 {
 	float i;
 	
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2records^7: List top 10 records for the current map\n");
+			sprint(self, "  ^2records^7: List top 10 records for the current map\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
 			for(i = 0; i < 10; ++i)
-				sprint(client, records_reply[i]);
+				sprint(self, records_reply[i]);
 			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd records\n");
-			sprint(client, "  No arguments required.\n");
+			sprint(self, "\nUsage:^3 cmd records\n");
+			sprint(self, "  No arguments required.\n");
 			return;
 	}
 }
 
-void ClientCommand_reportcvar(float request, entity client, float argc, string command)
+void ClientCommand_reportcvar(float request, float argc, string command)
 {
 	float tokens;
 	string s;
@@ -708,7 +703,7 @@ void ClientCommand_reportcvar(float request, entity client, float argc, string c
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2reportcvar^7: Old system for sending a client cvar to the server\n");
+			sprint(self, "  ^2reportcvar^7: Old system for sending a client cvar to the server\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
@@ -718,33 +713,124 @@ void ClientCommand_reportcvar(float request, entity client, float argc, string c
 				tokens = tokenize_console(s);
 			}
 			GetCvars(1);
-			return;
+			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd reportcvar <cvar>\n");
-			sprint(client, "  Where 'cvar' is the cvar plus arguments to send to the server.\n");
+			sprint(self, "\nUsage:^3 cmd reportcvar <cvar>\n");
+			sprint(self, "  Where 'cvar' is the cvar plus arguments to send to the server.\n");
 			return;
 	}
 }
 
-void ClientCommand_say(float request, entity client, float argc, string command)
+void ClientCommand_say(float request, float argc, string command)
 {
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
-			sprint(client, "  ^2say^7: Print a message to chat to all players\n");
+			sprint(self, "  ^2say^7: Print a message to chat to all players\n");
 			return;
 			
 		case CC_REQUEST_COMMAND:
 			if(argc >= 2)
 				Say(self, FALSE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
-			return;
+			return; // never fall through to usage
 			
 		default:
 		case CC_REQUEST_USAGE:
-			sprint(client, "\nUsage:^3 cmd say <message>\n");
-			sprint(client, "  Where 'message' is the string of text to say.\n");
+			sprint(self, "\nUsage:^3 cmd say <message>\n");
+			sprint(self, "  Where 'message' is the string of text to say.\n");
+			return;
+	}
+}
+
+void ClientCommand_say_team(float request, float argc, string command)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(self, "  ^2say_team^7: Print a message to chat to all team mates\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			if(argc >= 2)
+				Say(self, TRUE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(self, "\nUsage:^3 cmd say_team <message>\n");
+			sprint(self, "  Where 'message' is the string of text to say.\n");
+			return;
+	}
+}
+
+void ClientCommand_selectteam(float request, float argc)
+{
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(self, "  ^2selectteam^7: Attempt to choose a team to join into\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			if (self.flags & FL_CLIENT)
+			{
+				if(teamplay)
+					if not(self.team_forced > 0) 
+						if not(lockteams) 
+							switch(argv(1))
+							{
+								case "red": ClientKill_TeamChange(COLOR_TEAM1); break;
+								case "blue": ClientKill_TeamChange(COLOR_TEAM2); break;
+								case "yellow": ClientKill_TeamChange(COLOR_TEAM3); break;
+								case "pink": ClientKill_TeamChange(COLOR_TEAM4); break;
+								case "auto": ClientKill_TeamChange(-1); break;
+								
+								default: break;
+							}
+						else
+							sprint(self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
+					else
+						sprint(self, "selectteam can not be used as your team is forced\n");
+				else
+					sprint(self, "selectteam can only be used in teamgames\n");
+			}
+			return; // never fall through to usage
+
+		default:
+		case CC_REQUEST_USAGE:
+			sprint( self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
+			sprint(self, "\nUsage:^3 cmd selectteam team\n");
+			sprint(self, "  No arguments required.\n");
+			return;
+	}
+}
+
+void ClientCommand_sentcvar(float request, float argc, string command)
+{
+	float tokens;
+	string s;
+	
+	switch(request)
+	{
+		case CC_REQUEST_HELP:
+			sprint(self, "  ^2sentcvar^7: New system for sending a client cvar to the server\n");
+			return;
+			
+		case CC_REQUEST_COMMAND:
+			if(argc == 2) // undefined cvar: use the default value on the server then
+			{
+				s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
+				tokens = tokenize_console(s);
+			}
+			GetCvars(1);
+			return; // never fall through to usage
+			
+		default:
+		case CC_REQUEST_USAGE:
+			sprint(self, "\nUsage:^3 cmd sentcvar <cvar>\n");
+			sprint(self, "  Where 'cvar' is the cvar plus arguments to send to the server.\n");
 			return;
 	}
 }
@@ -807,22 +893,25 @@ void SV_ParseClientCommand(string command)
 		if(argc == 1) 
 		{
 			sprint(self, "\nUsage:^3 cmd COMMAND...^7, where possible commands are:\n");
-			ClientCommand_autoswitch(CC_REQUEST_HELP, self, 0);
-			ClientCommand_checkfail(CC_REQUEST_HELP, self, "");
-			ClientCommand_clientversion(CC_REQUEST_HELP, self, 0);
-			ClientCommand_cvar_changes(CC_REQUEST_HELP, self);
-			ClientCommand_cvar_purechanges(CC_REQUEST_HELP, self);
-			ClientCommand_info(CC_REQUEST_HELP, self, 0);
-			ClientCommand_join(CC_REQUEST_HELP, self); 
-			ClientCommand_ladder(CC_REQUEST_HELP, self);
-			ClientCommand_lsmaps(CC_REQUEST_HELP, self);
-			ClientCommand_lsnewmaps(CC_REQUEST_HELP, self);
-			ClientCommand_maplist(CC_REQUEST_HELP, self);
-			ClientCommand_rankings(CC_REQUEST_HELP, self);
-			ClientCommand_ready(CC_REQUEST_HELP, self);
-			ClientCommand_records(CC_REQUEST_HELP, self);
-			ClientCommand_reportcvar(CC_REQUEST_HELP, self, 0, "");
-			ClientCommand_say(CC_REQUEST_HELP, self, 0, "");
+			ClientCommand_autoswitch(CC_REQUEST_HELP, 0);
+			ClientCommand_checkfail(CC_REQUEST_HELP, "");
+			ClientCommand_clientversion(CC_REQUEST_HELP, 0);
+			ClientCommand_cvar_changes(CC_REQUEST_HELP);
+			ClientCommand_cvar_purechanges(CC_REQUEST_HELP);
+			ClientCommand_info(CC_REQUEST_HELP, 0);
+			ClientCommand_join(CC_REQUEST_HELP); 
+			ClientCommand_ladder(CC_REQUEST_HELP);
+			ClientCommand_lsmaps(CC_REQUEST_HELP);
+			ClientCommand_lsnewmaps(CC_REQUEST_HELP);
+			ClientCommand_maplist(CC_REQUEST_HELP);
+			ClientCommand_rankings(CC_REQUEST_HELP);
+			ClientCommand_ready(CC_REQUEST_HELP);
+			ClientCommand_records(CC_REQUEST_HELP);
+			ClientCommand_reportcvar(CC_REQUEST_HELP, 0, "");
+			ClientCommand_say(CC_REQUEST_HELP, 0, "");
+			ClientCommand_say_team(CC_REQUEST_HELP, 0, "");
+			ClientCommand_selectteam(CC_REQUEST_HELP, 0);
+			ClientCommand_sentcvar(CC_REQUEST_HELP, 0, "");
 			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
 			return;
 		} 
@@ -849,22 +938,25 @@ void SV_ParseClientCommand(string command)
 		// Do not hard code aliases for these, instead create them in defaultXonotic.cfg
 		// also: keep in alphabetical order, please ;)
 		
-		case "autoswitch": ClientCommand_autoswitch(search_request_type, self, argc); break;
-		case "checkfail": ClientCommand_checkfail(search_request_type, self, command); break;
-		case "clientversion": ClientCommand_clientversion(search_request_type, self, argc); break;
-		case "cvar_changes": ClientCommand_cvar_changes(search_request_type, self); break;
-		case "cvar_purechanges": ClientCommand_cvar_purechanges(search_request_type, self); break;
-		case "info": ClientCommand_info(search_request_type, self, argc); break;
-		case "join": ClientCommand_join(search_request_type, self); break;
-		case "ladder": ClientCommand_ladder(search_request_type, self); break;
-		case "lsmaps": ClientCommand_lsmaps(search_request_type, self); break;
-		case "lsnewmaps": ClientCommand_lsnewmaps(search_request_type, self); break;
-		case "maplist": ClientCommand_maplist(search_request_type, self); break;
-		case "rankings": ClientCommand_rankings(search_request_type, self); break;
-		case "ready": ClientCommand_ready(search_request_type, self); break;
-		case "records": ClientCommand_records(search_request_type, self); break;
-		case "reportcvar": ClientCommand_reportcvar(search_request_type, self, argc, command); break;
-		case "say": ClientCommand_say(search_request_type, self, argc, command); break;
+		case "autoswitch": ClientCommand_autoswitch(search_request_type, argc); break;
+		case "checkfail": ClientCommand_checkfail(search_request_type, command); break;
+		case "clientversion": ClientCommand_clientversion(search_request_type, argc); break;
+		case "cvar_changes": ClientCommand_cvar_changes(search_request_type); break;
+		case "cvar_purechanges": ClientCommand_cvar_purechanges(search_request_type); break;
+		case "info": ClientCommand_info(search_request_type, argc); break;
+		case "join": ClientCommand_join(search_request_type); break;
+		case "ladder": ClientCommand_ladder(search_request_type); break;
+		case "lsmaps": ClientCommand_lsmaps(search_request_type); break;
+		case "lsnewmaps": ClientCommand_lsnewmaps(search_request_type); break;
+		case "maplist": ClientCommand_maplist(search_request_type); break;
+		case "rankings": ClientCommand_rankings(search_request_type); break;
+		case "ready": ClientCommand_ready(search_request_type); break;
+		case "records": ClientCommand_records(search_request_type); break;
+		case "reportcvar": ClientCommand_reportcvar(search_request_type, argc, command); break;
+		case "say": ClientCommand_say(search_request_type, argc, command); break;
+		case "say_team": ClientCommand_say_team(search_request_type, argc, command); break;
+		case "selectteam": ClientCommand_selectteam(search_request_type, argc); break;
+		case "sentcvar": ClientCommand_sentcvar(search_request_type, argc, command); break;
 		
 		default:
 			clientcommand(self, command); //print("Invalid command. For a list of supported commands, try cmd help.\n");
