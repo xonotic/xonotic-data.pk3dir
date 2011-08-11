@@ -807,7 +807,7 @@ void spawnfunc_trigger_race_checkpoint()
 		if(self.race_checkpoint)
 			WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite, RADARICON_NONE, '1 0.5 0');
 		else
-			WaypointSprite_SpawnFixed("race-finish", o, self, sprite, RADARICON_NONE, '1 0.5 0');
+			WaypointSprite_SpawnFixed("race-start-finish", o, self, sprite, RADARICON_NONE, '1 0.5 0');
 	}
 
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
