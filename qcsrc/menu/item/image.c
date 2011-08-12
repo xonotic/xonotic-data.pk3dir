@@ -10,8 +10,8 @@ CLASS(Image) EXTENDS(Item)
 	METHOD(Image, drag, float(entity, vector))
 	ATTRIB(Image, src, string, string_null)
 	ATTRIB(Image, color, vector, '1 1 1')
-	ATTRIB(Image, realSize, float, 0) // if set, forcedAspect is ignored
-	ATTRIB(Image, forcedAspect, float, 0)
+	ATTRIB(Image, forcedAspect, float, 0) // special values: -1 keep image aspect ratio, -2 keep image size but bound to the containing box, -3 always keep image size
+	ATTRIB(Image, initialForcedZoom, float, 0) // used by forcedAspect -2 when the image is larger than the containing box
 	ATTRIB(Image, zoomFactor, float, 1)
 	ATTRIB(Image, zoomOffset, vector, '0.5 0.5 0')
 	ATTRIB(Image, zoomTime, float, 0)
@@ -32,6 +32,8 @@ void Image_configureImage(entity me, string path)
 	me.src = path;
 	me.zoomOffset = '0.5 0.5 0';
 	me.zoomFactor = 1;
+	if (me.forcedAspect == -2)
+		me.initialForcedZoom = -1; // calculate initialForcedZoom at the first updateAspect call
 }
 void Image_draw(entity me)
 {
@@ -46,30 +48,38 @@ void Image_updateAspect(entity me)
 	float asp;
 	if(me.size_x <= 0 || me.size_y <= 0)
 		return;
-	if(me.realSize == 0 && me.forcedAspect == 0)
+	if(me.forcedAspect == 0)
 	{
 		me.imgOrigin = '0 0 0';
 		me.imgSize = '1 1 0';
 	}
 	else
 	{
-		if(me.realSize)
+		if(me.forcedAspect < 0)
 		{
 			vector sz;
 			sz = draw_PictureSize(me.src);
-			me.imgSize_x = sz_x / me.size_x;
-			me.imgSize_y = sz_y / me.size_y;
+			asp = sz_x / sz_y;
+			if(me.forcedAspect <= -2)
+			{
+				me.imgSize_x = sz_x / me.size_x;
+				me.imgSize_y = sz_y / me.size_y;
+			}
 		}
 		else
+			asp = me.forcedAspect;
+
+		if(me.initialForcedZoom < 0 && (me.imgSize_x > 1 || me.imgSize_y > 1))
 		{
-			if(me.forcedAspect < 0)
-			{
-				vector sz;
-				sz = draw_PictureSize(me.src);
-				asp = sz_x / sz_y;
-			}
+			// image larger than the containing box, zoom it out to fit into the box
+			if(me.size_x > asp * me.size_y)
+				me.initialForcedZoom = (me.size_y * asp / me.size_x) / me.imgSize_x;
 			else
-				asp = me.forcedAspect;
+				me.initialForcedZoom = (me.size_x / (asp * me.size_y)) / me.imgSize_y;
+			me.zoomFactor = me.initialForcedZoom;
+		}
+		else if (me.forcedAspect > -2)
+		{
 			if(me.size_x > asp * me.size_y)
 			{
 				// x too large, so center x-wise
@@ -81,6 +91,7 @@ void Image_updateAspect(entity me)
 				me.imgSize = eX + eY * (me.size_x / (asp * me.size_y));
 			}
 		}
+
 		if (me.zoomFactor)
 		{
 			if (me.zoomFactor > 1)
@@ -118,9 +129,31 @@ void Image_setZoom(entity me, float z, float atMousePosition)
 	float prev_zoomFactor;
 	prev_zoomFactor = me.zoomFactor;
 	if (z < 0) // multiply by the current zoomFactor
+	{
 		me.zoomFactor *= -z;
+		float one_in_the_middle, initialZoom_in_the_middle;
+		one_in_the_middle = ((prev_zoomFactor - 1) * (me.zoomFactor - 1) < 0);
+		initialZoom_in_the_middle = (me.initialForcedZoom > 0 && (prev_zoomFactor - me.initialForcedZoom) * (me.zoomFactor - me.initialForcedZoom) < 0);
+		if (one_in_the_middle && initialZoom_in_the_middle)
+		{
+			// snap to real dimensions or to box
+			if (prev_zoomFactor < me.zoomFactor)
+				me.zoomFactor = min(1, me.initialForcedZoom);
+			else
+				me.zoomFactor = max(1, me.initialForcedZoom);
+		}
+		else if (one_in_the_middle)
+			me.zoomFactor = 1; // snap to real dimensions
+		else if (initialZoom_in_the_middle)
+			me.zoomFactor = me.initialForcedZoom; // snap to box
+	}
 	else if (z == 0) // reset (no zoom)
-		me.zoomFactor = 1;
+	{
+		if (me.initialForcedZoom > 0)
+			me.zoomFactor = me.initialForcedZoom;
+		else
+			me.zoomFactor = 1;
+	}
 	else // directly set
 		me.zoomFactor = z;
 	me.zoomFactor = bound(1/16, me.zoomFactor, 16);

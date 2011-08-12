@@ -28,7 +28,7 @@ entity makeXonoticScreenshotImage()
 void XonoticScreenshotImage_configureXonoticScreenshotImage(entity me, string theImage)
 {
 	me.configureImage(me, theImage);
-	me.realSize = 1;
+	me.forcedAspect = -2;
 	me.screenshotTime = time;
 	me.updateAspect(me);
 	if (me.screenshotTitle)
