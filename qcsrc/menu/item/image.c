@@ -10,6 +10,7 @@ CLASS(Image) EXTENDS(Item)
 	METHOD(Image, drag, float(entity, vector))
 	ATTRIB(Image, src, string, string_null)
 	ATTRIB(Image, color, vector, '1 1 1')
+	ATTRIB(Image, realSize, float, 0) // if set, forcedAspect is ignored
 	ATTRIB(Image, forcedAspect, float, 0)
 	ATTRIB(Image, zoomFactor, float, 1)
 	ATTRIB(Image, zoomOffset, vector, '0.5 0.5 0')
@@ -34,10 +35,10 @@ void Image_configureImage(entity me, string path)
 }
 void Image_draw(entity me)
 {
-	if (me.zoomFactor > 1)
+	if(me.imgSize_x > 1 || me.imgSize_y > 1)
 		draw_SetClip();
 	draw_Picture(me.imgOrigin, me.src, me.imgSize, me.color, 1);
-	if (me.zoomFactor > 1)
+	if(me.imgSize_x > 1 || me.imgSize_y > 1)
 		draw_ClearClip();
 }
 void Image_updateAspect(entity me)
@@ -45,30 +46,40 @@ void Image_updateAspect(entity me)
 	float asp;
 	if(me.size_x <= 0 || me.size_y <= 0)
 		return;
-	if(me.forcedAspect == 0)
+	if(me.realSize == 0 && me.forcedAspect == 0)
 	{
 		me.imgOrigin = '0 0 0';
 		me.imgSize = '1 1 0';
 	}
 	else
 	{
-		if(me.forcedAspect < 0)
+		if(me.realSize)
 		{
 			vector sz;
 			sz = draw_PictureSize(me.src);
-			asp = sz_x / sz_y;
-		}
-		else
-			asp = me.forcedAspect;
-		if(me.size_x > asp * me.size_y)
-		{
-			// x too large, so center x-wise
-			me.imgSize = eY + eX * (me.size_y * asp / me.size_x);
+			me.imgSize_x = sz_x / me.size_x;
+			me.imgSize_y = sz_y / me.size_y;
 		}
 		else
 		{
-			// y too large, so center y-wise
-			me.imgSize = eX + eY * (me.size_x / (asp * me.size_y));
+			if(me.forcedAspect < 0)
+			{
+				vector sz;
+				sz = draw_PictureSize(me.src);
+				asp = sz_x / sz_y;
+			}
+			else
+				asp = me.forcedAspect;
+			if(me.size_x > asp * me.size_y)
+			{
+				// x too large, so center x-wise
+				me.imgSize = eY + eX * (me.size_y * asp / me.size_x);
+			}
+			else
+			{
+				// y too large, so center y-wise
+				me.imgSize = eX + eY * (me.size_x / (asp * me.size_y));
+			}
 		}
 		if (me.zoomFactor)
 		{
@@ -94,7 +105,7 @@ float Image_drag_setStartPos(entity me, vector coords)
 }
 float Image_drag(entity me, vector coords)
 {
-	if (me.zoomFactor > 1)
+	if(me.imgSize_x > 1 || me.imgSize_y > 1)
 	{
 		me.zoomOffset_x = me.start_zoomOffset_x + (me.start_coords_x - coords_x) / me.imgSize_x;
 		me.zoomOffset_y = me.start_zoomOffset_y + (me.start_coords_y - coords_y) / me.imgSize_y;
