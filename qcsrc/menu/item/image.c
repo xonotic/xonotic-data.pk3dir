@@ -93,21 +93,21 @@ void Image_updateAspect(entity me)
 		}
 
 		if (me.zoomFactor)
-		{
-			if (me.zoomFactor > 1)
-			{
-				me.zoomOffset_x = bound(0, me.zoomOffset_x, 1);
-				me.zoomOffset_y = bound(0, me.zoomOffset_y, 1);
-			}
 			me.imgSize = me.imgSize * me.zoomFactor;
+
+		if(me.imgSize_x > 1 || me.imgSize_y > 1)
+		{
+			me.zoomOffset_x = bound(0, me.zoomOffset_x, 1);
+			me.zoomOffset_y = bound(0, me.zoomOffset_y, 1);
 		}
+
 		me.imgOrigin_x = 0.5 - me.zoomOffset_x * me.imgSize_x;
 		me.imgOrigin_y = 0.5 - me.zoomOffset_y * me.imgSize_y;
 	}
 }
 float Image_drag_setStartPos(entity me, vector coords)
 {
-	//if (me.zoomFactor > 1) //mousewheel zoom may start from a non-zoomed-in image
+	//if(me.imgSize_x > 1 || me.imgSize_y > 1) // check disabled: mousewheel zoom may start from a non-zoomed-in image
 	{
 		me.start_zoomOffset = me.zoomOffset;
 		me.start_coords = coords;
