@@ -1295,11 +1295,8 @@ void KillIndicator_Think()
 {
 	if (gameover)
 	{
-		if (self.owner.killindicator)
-		{
-			remove(self.owner.killindicator);
-			self.owner.killindicator = world;
-		}
+		self.owner.killindicator = world;
+		remove(self);
 		return;
 	}
 
@@ -1352,14 +1349,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 	entity e;
 
 	if (gameover)
-	{
-		if (self.killindicator)
-		{
-			remove(self.killindicator);
-			self.killindicator = world;
-		}
 		return;
-	}
 
 	killtime = autocvar_g_balance_kill_delay;
 
@@ -1457,67 +1447,6 @@ void CTS_ClientKill (entity e) // silent version of ClientKill, used when player
     e.killindicator.cnt = ceil(autocvar_g_cts_finish_kill_delay);
     e.killindicator.health = 1; // this is used to indicate that it should be silent
     e.lip = 0;
-}
-
-void DoTeamChange(float destteam)
-{
-	float t, c0;
-
-	if (gameover)
-	{
-		if (self.killindicator)
-		{
-			remove(self.killindicator);
-			self.killindicator = world;
-		}
-		return;
-	}
-
-	if(!teamplay)
-	{
-		if(destteam >= 0)
-			SetPlayerColors(self, destteam);
-		return;
-	}
-
-	if(self.classname == "player")
-	if(destteam == -1)
-	{
-		CheckAllowedTeams(self);
-		t = FindSmallestTeam(self, TRUE);
-		switch(self.team)
-		{
-			case COLOR_TEAM1: c0 = c1; break;
-			case COLOR_TEAM2: c0 = c2; break;
-			case COLOR_TEAM3: c0 = c3; break;
-			case COLOR_TEAM4: c0 = c4; break;
-			default:          c0 = 999;
-		}
-		switch(t)
-		{
-			case 1:
-				if(c0 > c1)
-					destteam = COLOR_TEAM1;
-				break;
-			case 2:
-				if(c0 > c2)
-					destteam = COLOR_TEAM2;
-				break;
-			case 3:
-				if(c0 > c3)
-					destteam = COLOR_TEAM3;
-				break;
-			case 4:
-				if(c0 > c4)
-					destteam = COLOR_TEAM4;
-				break;
-		}
-		if(destteam == -1)
-			return;
-	}
-	if(destteam == self.team && destteam >= 0 && !self.killindicator)
-		return;
-	ClientKill_TeamChange(destteam);
 }
 
 void FixClientCvars(entity e)
