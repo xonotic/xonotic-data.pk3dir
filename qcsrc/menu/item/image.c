@@ -60,25 +60,25 @@ void Image_updateAspect(entity me)
 			vector sz;
 			sz = draw_PictureSize(me.src);
 			asp = sz_x / sz_y;
-			if(me.forcedAspect <= -2)
-			{
-				me.imgSize_x = sz_x / me.size_x;
-				me.imgSize_y = sz_y / me.size_y;
-			}
 		}
 		else
 			asp = me.forcedAspect;
 
-		if(me.initialForcedZoom < 0 && (me.imgSize_x > 1 || me.imgSize_y > 1))
+		if(me.forcedAspect <= -2)
 		{
-			// image larger than the containing box, zoom it out to fit into the box
-			if(me.size_x > asp * me.size_y)
-				me.initialForcedZoom = (me.size_y * asp / me.size_x) / me.imgSize_x;
-			else
-				me.initialForcedZoom = (me.size_x / (asp * me.size_y)) / me.imgSize_y;
-			me.zoomFactor = me.initialForcedZoom;
+			me.imgSize_x = sz_x / me.size_x;
+			me.imgSize_y = sz_y / me.size_y;
+			if(me.initialForcedZoom < 0 && (me.imgSize_x > 1 || me.imgSize_y > 1))
+			{
+				// image larger than the containing box, zoom it out to fit into the box
+				if(me.size_x > asp * me.size_y)
+					me.initialForcedZoom = (me.size_y * asp / me.size_x) / me.imgSize_x;
+				else
+					me.initialForcedZoom = (me.size_x / (asp * me.size_y)) / me.imgSize_y;
+				me.zoomFactor = me.initialForcedZoom;
+			}
 		}
-		else if (me.forcedAspect > -2)
+		else
 		{
 			if(me.size_x > asp * me.size_y)
 			{
