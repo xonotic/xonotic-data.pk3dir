@@ -29,6 +29,7 @@ void XonoticScreenshotImage_configureXonoticScreenshotImage(entity me, string th
 {
 	me.configureImage(me, theImage);
 	me.forcedAspect = -2;
+	//me.zoomLimitedByTheBox = 1;
 	me.screenshotTime = time;
 	me.updateAspect(me);
 	if (me.screenshotTitle)

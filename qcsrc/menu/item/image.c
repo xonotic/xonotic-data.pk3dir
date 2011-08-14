@@ -15,6 +15,8 @@ CLASS(Image) EXTENDS(Item)
 	ATTRIB(Image, zoomFactor, float, 1)
 	ATTRIB(Image, zoomOffset, vector, '0.5 0.5 0')
 	ATTRIB(Image, zoomTime, float, 0)
+	ATTRIB(Image, zoomLimitedByTheBox, float, 0) // forbids zoom if image would be larger than the containing box
+	ATTRIB(Image, zoomMax, float, 0)
 	ATTRIB(Image, start_zoomOffset, vector, '0 0 0')
 	ATTRIB(Image, start_coords, vector, '0 0 0')
 	ATTRIB(Image, imgOrigin, vector, '0 0 0')
@@ -34,6 +36,8 @@ void Image_configureImage(entity me, string path)
 	me.zoomFactor = 1;
 	if (me.forcedAspect == -2)
 		me.initialForcedZoom = -1; // calculate initialForcedZoom at the first updateAspect call
+	if (me.zoomLimitedByTheBox)
+		me.zoomMax = -1; // calculate zoomMax at the first updateAspect call
 }
 void Image_draw(entity me)
 {
@@ -93,6 +97,21 @@ void Image_updateAspect(entity me)
 		}
 	}
 
+	if (me.zoomMax < 0)
+	{
+		if(me.initialForcedZoom > 0)
+			me.zoomMax = me.initialForcedZoom;
+		else
+		{
+			if(me.size_x > asp * me.size_y)
+				me.zoomMax = (me.size_y * asp / me.size_x) / me.imgSize_x;
+			else
+				me.zoomMax = (me.size_x / (asp * me.size_y)) / me.imgSize_y;
+		}
+	}
+
+	if (me.zoomMax > 0 && me.zoomFactor > me.zoomMax)
+		me.zoomFactor = me.zoomMax;
 	if (me.zoomFactor)
 		me.imgSize = me.imgSize * me.zoomFactor;
 
@@ -159,6 +178,8 @@ void Image_setZoom(entity me, float z, float atMousePosition)
 	else // directly set
 		me.zoomFactor = z;
 	me.zoomFactor = bound(1/16, me.zoomFactor, 16);
+	if (me.zoomFactor > me.zoomMax)
+		me.zoomFactor = me.zoomMax;
 	if (prev_zoomFactor != me.zoomFactor)
 	{
 		me.zoomTime = time;
