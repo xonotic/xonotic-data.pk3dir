@@ -533,7 +533,7 @@ void bot_calculate_stepheightvec(void)
 {
 	stepheightvec = autocvar_sv_stepheight * '0 0 1';
 	jumpstepheightvec = stepheightvec +
-		((autocvar_sv_jumpvelocity * autocvar_sv_jumpvelocity) / (2 * autocvar_sv_gravity)) * '0 0 0.75';
+		((autocvar_sv_jumpvelocity * autocvar_sv_jumpvelocity) / (2 * autocvar_sv_gravity)) * '0 0 0.85';
 		// 0.75 factor is for safety to make the jumps easy
 }
 
