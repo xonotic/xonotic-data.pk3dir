@@ -8,7 +8,7 @@ void serverAnnouncer()
 	// check for pending announcement, play it and remove it
 	if(announce_snd != "")
 	{
-		sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/", announce_snd, ".wav"), VOL_BASEVOICE, ATTN_NONE);
+		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announce_snd, ".wav"), VOL_BASEVOICE, ATTN_NONE);
 		strunzone(announce_snd);
 		announce_snd = "";
 	}
@@ -22,7 +22,7 @@ void restartAnnouncer_Think() {
 		if (!spectatee_status) //do cprint only for players
 			centerprint(_("^1Begin!"));
 
-		sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
+		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
 		//reset maptime announcers now as well
 		announcer_5min = announcer_1min = FALSE;
 
@@ -34,7 +34,7 @@ void restartAnnouncer_Think() {
 			centerprint(sprintf(_("^1Game starts in %d seconds"), countdown_rounded));
 
 		if(countdown_rounded <= 3 && countdown_rounded >= 1) {
-			sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);
+			sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);
 		}
 
 		self.nextthink = getstatf(STAT_GAMESTARTTIME) - (countdown - 1);
@@ -71,7 +71,7 @@ void maptimeAnnouncer() {
 			//if we're in warmup mode, check whether there's a warmup timelimit
 			if not (warmuplimit == -1 && warmup_stage) {
 				announcer_5min = TRUE;
-				sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"), VOL_BASEVOICE, ATTN_NONE);
+				sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"), VOL_BASEVOICE, ATTN_NONE);
 			}
 	}
 
@@ -86,7 +86,7 @@ void maptimeAnnouncer() {
 			//if we're in warmup mode, check whether there's a warmup timelimit
 			if not (warmuplimit == -1 && warmup_stage) {
 				announcer_1min = TRUE;
-				sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"), VOL_BASEVOICE, ATTN_NONE);
+				sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"), VOL_BASEVOICE, ATTN_NONE);
 			}
 	}
 }
@@ -319,9 +319,6 @@ vector HUD_GetFontsize(string cvarname)
 
 float PreviewExists(string name)
 {
-	float f;
-	string file;
-
 	if(autocvar_cl_readpicture_force)
 		return false;
 

@@ -12,7 +12,7 @@ float IsTeamBalanceForced()
 {
 	if(intermission_running)
 		return 0; // no rebalancing whatsoever please
-	if(!teams_matter)
+	if(!teamplay)
 		return 0;
 	if(autocvar_g_campaign)
 		return 0;
@@ -149,7 +149,7 @@ void ReadGameCvars()
 		g_tdm = 1;
 	}
 
-	teams_matter = 0;
+	teamplay = 0;
 	serverflags &~= SERVERFLAG_TEAMPLAY;
 }
 
@@ -162,7 +162,7 @@ void default_delayedinit()
 void ActivateTeamplay()
 {
 	serverflags |= SERVERFLAG_TEAMPLAY;
-	teams_matter = 1;
+	teamplay = 1;
 }
 
 void InitGameplayMode()
@@ -382,7 +382,7 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_keepaway);
 	}
 
-	if(teams_matter)
+	if(teamplay)
 		entcs_init();
 
 	// save it (for the next startup)
@@ -586,7 +586,7 @@ void SetPlayerColors(entity pl, float _color)
 	shirt = _color & 0xF0;
 
 
-	if(teams_matter) {
+	if(teamplay) {
 		setcolor(pl, 16*pants + pants);
 	} else {
 		setcolor(pl, shirt + pants);
@@ -903,7 +903,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 	float smallest, selectedteam;
 
 	// don't join a team if we're not playing a team game
-	if(!teams_matter)
+	if(!teamplay)
 		return 0;
 
 	// find out what teams are available
@@ -980,7 +980,7 @@ void SV_ChangeTeam(float _color)
 	float scolor, dcolor, steam, dteam, dbotcount, scount, dcount;
 
 	// in normal deathmatch we can just apply the color and we're done
-	if(!teams_matter) {
+	if(!teamplay) {
 		SetPlayerColors(self, _color);
 		return;
 	}

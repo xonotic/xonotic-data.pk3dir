@@ -234,7 +234,7 @@ void PlayerStats_Shutdown()
             nn = db_get(playerstats_db, sprintf("%s:_netname", p));
             if(nn != "")
                 bufstr_set(b, i++, sprintf("n %s", nn));
-            if(teams_matter)
+            if(teamplay)
             {
                 tt = db_get(playerstats_db, sprintf("%s:_team", p));
                 bufstr_set(b, i++, sprintf("t %s", tt));
@@ -288,7 +288,7 @@ void PlayerStats_AddGlobalInfo(entity p)
 	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
 
-    if(teams_matter)
+    if(teamplay)
 		db_put(playerstats_db, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
 
 	if(p.alivetime > 0)

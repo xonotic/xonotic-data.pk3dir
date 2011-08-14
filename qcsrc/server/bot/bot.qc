@@ -453,7 +453,7 @@ void bot_removenewest()
 	local float besttime;
 	local entity best, head;
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		bot_removefromlargestteam();
 		return;
@@ -529,6 +529,14 @@ void autoskill(float factor)
 		head.totalfrags_lastcheck = head.totalfrags;
 }
 
+void bot_calculate_stepheightvec(void)
+{
+	stepheightvec = autocvar_sv_stepheight * '0 0 1';
+	jumpstepheightvec = stepheightvec +
+		((autocvar_sv_jumpvelocity * autocvar_sv_jumpvelocity) / (2 * autocvar_sv_gravity)) * '0 0 0.85';
+		// 0.75 factor is for safety to make the jumps easy
+}
+
 void bot_serverframe()
 {
 	float realplayers, bots, activerealplayers;
@@ -540,7 +548,7 @@ void bot_serverframe()
 	if (time < 2)
 		return;
 
-	stepheightvec = autocvar_sv_stepheight * '0 0 1';
+	bot_calculate_stepheightvec();
 	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
 
 	if(time > autoskill_nextthink)
@@ -567,7 +575,7 @@ void bot_serverframe()
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = FALSE;
-	if (teams_matter && autocvar_bot_vs_human && (c3==-1 && c4==-1))
+	if (teamplay && autocvar_bot_vs_human && (c3==-1 && c4==-1))
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{

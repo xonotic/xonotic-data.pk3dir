@@ -1,4 +1,5 @@
 
+entity ka_ball;
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,
 // returns TRUE only if it hit targ (don't target non-solid entities)
@@ -6,7 +7,7 @@
 float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, float shotspeed, float shotspeedupward, float maxtime, float shotdelay, entity ignore)
 {
 	local float c, savesolid, shottime;
-	local vector dir, end, v;
+	local vector dir, end, v, o;
 	if (shotspeed < 1)
 		return FALSE; // could cause division by zero if calculated
 	if (targ.solid < SOLID_BBOX) // SOLID_NOT and SOLID_TRIGGER
@@ -17,9 +18,10 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	setsize(tracetossent, m1, m2);
 	savesolid = targ.solid;
 	targ.solid = SOLID_NOT;
-	shottime = ((vlen(targ.origin - org) / shotspeed) + shotdelay);
-	v = targ.velocity * shottime + targ.origin;
-	tracebox(targ.origin, targ.mins, targ.maxs, v, FALSE, targ);
+	o = (targ.absmin + targ.absmax) * 0.5;
+	shottime = ((vlen(o - org) / shotspeed) + shotdelay);
+	v = targ.velocity * shottime + o;
+	tracebox(o, targ.mins, targ.maxs, v, FALSE, targ);
 	v = trace_endpos;
 	end = v + (targ.mins + targ.maxs) * 0.5;
 	if ((vlen(end - org) / shotspeed + 0.2) > maxtime)
@@ -104,7 +106,7 @@ float bot_shouldattack(entity e)
 	{
 		if (e == self)
 			return FALSE;
-		if (teams_matter)
+		if (teamplay)
 		if (e.team != 0)
 			return FALSE;
 	}
@@ -113,7 +115,13 @@ float bot_shouldattack(entity e)
 		if(e.freezetag_frozen)
 			return FALSE;
 
-	if(teams_matter)
+	// If neither player has ball then don't attack unless the ball is on the
+	// ground.
+	if (g_keepaway)
+		if (!e.ballcarried && !self.ballcarried && ka_ball.owner)
+			return FALSE;
+
+	if(teamplay)
 	{
 		if(e.team==0)
 			return FALSE;

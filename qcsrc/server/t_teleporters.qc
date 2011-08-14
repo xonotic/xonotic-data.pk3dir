@@ -1,6 +1,6 @@
 void trigger_teleport_use()
 {
-	if(teams_matter)
+	if(teamplay)
 		self.team = activator.team;
 }
 
@@ -33,7 +33,7 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 	{
 		TDEATHLOOP(org)
 		{
-			if not(teams_matter && autocvar_g_telefrags_teamplay && head.team == player.team)
+			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
 				if(head.classname == "player")
 					if(head.health >= 1)
 						return 1;
@@ -48,7 +48,7 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 	{
 		if (player.classname == "player" && player.health >= 1)
 		{
-			if not(teams_matter && autocvar_g_telefrags_teamplay && head.team == player.team)
+			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
 			{
 				if(head.classname == "player")
 					if(head.health >= 1)
@@ -92,7 +92,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		{
 			if(tflags & TELEPORT_FLAG_SOUND)
-				sound (player, CHAN_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
+				sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
 			if(tflags & TELEPORT_FLAG_PARTICLES)
 			{
 				pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
@@ -189,9 +189,15 @@ void Teleport_Touch (void)
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 	
+	if not(other.iscreature)
 	if (other.deadflag != DEAD_NO)
 		return;
-	if not(other.flags & FL_CLIENT)	// FIXME: Make missiles firable through the teleport too
+
+	// for gameplay: vehicles can't teleport
+	if (other.vehicle_flags & VHF_ISVEHICLE)
+		return;
+
+	if (other.deadflag != DEAD_NO)
 		return;
 
 	if(self.team)
@@ -248,18 +254,15 @@ void teleport_findtarget (void)
 	entity e;
 	float n;
 
-	RandomSelection_Init();
 	n = 0;
 	for(e = world; (e = find(e, targetname, self.target)); )
 	{
 		++n;
 		if(e.movetype == MOVETYPE_NONE)
-			RandomSelection_Add(e, 0, string_null, 1, 1);
+			waypoint_spawnforteleporter(self, e.origin, 0);
 		if(e.classname != "info_teleport_destination")
 			print("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.\n");
 	}
-	if(RandomSelection_chosen_ent)
-		waypoint_spawnforteleporter(self, RandomSelection_chosen_ent.origin, 0);
 
 	if(n == 0)
 	{
@@ -271,7 +274,6 @@ void teleport_findtarget (void)
 	{
 		// exactly one dest - bots love that
 		self.enemy = find(e, targetname, self.target);
-		self.dest = self.enemy.origin;
 	}
 	else
 	{
@@ -320,6 +322,9 @@ void spawnfunc_trigger_teleport (void)
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {
 	UpdateCSQCProjectileAfterTeleport(pl);
+	// "disown" projectiles after teleport
+	if(pl.owner == pl.realowner)
+		pl.owner = world;
 	if(pl.classname == "player")
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)

@@ -9,7 +9,7 @@ void W_MinstaNex_Attack (void)
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	W_SetupShot (self, TRUE, 0, "weapons/minstanexfire.wav", CHAN_WEAPON, 10000);
+	W_SetupShot (self, TRUE, 0, "weapons/minstanexfire.wav", CH_WEAPON_A, 10000);
 
 	yoda = 0;
 	damage_goodhits = 0;
@@ -43,7 +43,7 @@ void W_MinstaNex_Attack (void)
 	// teamcolor / hit beam effect
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	if(teams_matter)
+	if(teamplay)
 	{
 	    switch(self.team)
 	    {
@@ -280,14 +280,14 @@ float w_minstanex(float req)
 		org2 = w_org + w_backoff * 6;
 		pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CHAN_PROJECTILE, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/neximpact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s did the impossible");
+		w_deathtypestring = _("%s is now thinking with portals");
 	else if (req == WR_KILLMESSAGE)
 		w_deathtypestring = _("%s has been vaporized by %s");
 	return TRUE;
