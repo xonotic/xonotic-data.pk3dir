@@ -529,6 +529,11 @@ void autoskill(float factor)
 		head.totalfrags_lastcheck = head.totalfrags;
 }
 
+void bot_calculate_stepheightvec(void)
+{
+	stepheightvec = autocvar_sv_stepheight * '0 0 1';
+}
+
 void bot_serverframe()
 {
 	float realplayers, bots, activerealplayers;
@@ -540,7 +545,7 @@ void bot_serverframe()
 	if (time < 2)
 		return;
 
-	stepheightvec = autocvar_sv_stepheight * '0 0 1';
+	bot_calculate_stepheightvec();
 	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
 
 	if(time > autoskill_nextthink)
