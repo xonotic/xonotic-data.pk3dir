@@ -95,6 +95,7 @@ Kristian "morfar" Johansson
 kojn
 Maik "SavageX" Merten
 MrBougo
+Przemysław "atheros" Grzywacz
 Ruszkai "C.Brutail" Ákos
 Samual Lenks
 Severin "sev" Meyer
