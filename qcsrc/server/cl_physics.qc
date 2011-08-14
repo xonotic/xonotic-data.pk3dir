@@ -963,7 +963,7 @@ void SV_PlayerPhysics()
 	{
 		RaceCarPhysics();
 	}
-	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY)
+	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_SPECTATOR)
 	{
 		// noclipping or flying
 		self.flags &~= FL_ONGROUND;
