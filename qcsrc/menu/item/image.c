@@ -159,13 +159,18 @@ void Image_setZoom(entity me, float z, float atMousePosition)
 	else // directly set
 		me.zoomFactor = z;
 	me.zoomFactor = bound(1/16, me.zoomFactor, 16);
-	if (atMousePosition && prev_zoomFactor != me.zoomFactor)
-	{
-		me.zoomOffset_x = me.start_zoomOffset_x + (me.start_coords_x - 0.5) / me.imgSize_x;
-		me.zoomOffset_y = me.start_zoomOffset_y + (me.start_coords_y - 0.5) / me.imgSize_y;
-	}
 	if (prev_zoomFactor != me.zoomFactor)
+	{
 		me.zoomTime = time;
+		if (atMousePosition)
+		{
+			me.zoomOffset_x = me.start_zoomOffset_x + (me.start_coords_x - 0.5) / me.imgSize_x;
+			me.zoomOffset_y = me.start_zoomOffset_y + (me.start_coords_y - 0.5) / me.imgSize_y;
+			// updateAspect will reset however zoomOffset to '0.5 0.5 0' if with
+			// this zoomFactor the image will not be zoomed (updateAspect will check
+			// the new values of imgSize).
+		}
+	}
 	me.updateAspect(me);
 }
 void Image_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
