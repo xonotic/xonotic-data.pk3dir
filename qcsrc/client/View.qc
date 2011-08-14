@@ -132,10 +132,13 @@ vector GetCurrentFov(float fov)
 	if(spectatee_status > 0 || isdemo())
 	{
 		if(spectatorbutton_zoom)
-			zoomdir = 0 + !zoomdir;
-		// do not even THINK about removing this 0
-		// _I_ know what I am doing
-		// fteqcc does not
+		{
+			if(zoomdir)
+				zoomdir = 0;
+			else
+				zoomdir = 1;
+		}
+		// fteqcc failed twice here already, don't optimize this
 	}
 
 	if(zoomdir)
