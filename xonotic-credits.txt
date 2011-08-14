@@ -83,10 +83,11 @@ MirceaKitsune
 Lord Canistra
 Nikoli
 
-**Active Contributors
+**Other Active Contributors
 Ant "Antibody" Zucaro
 Antonio "terencehill" Piu
 Ben "MooKow" Banker
+blkrbt
 Calinou
 chooksta
 Cuinn "Cuinnton" Herrick
@@ -107,7 +108,6 @@ Amos "torus" Dudley
 Andreas "Black" Kirsch
 Attila "WW3" Houtkooper
 BigMac
-blkrbt
 Braden "meoblast001" Walters
 Brain Younds
 Chris "amethyst7" Matz
@@ -167,7 +167,6 @@ Spirit
 Steve Vermeulen
 Supajoe
 Tei
-terencehill
 Tomaz
 Ulrich Galbraith
 Vortex
