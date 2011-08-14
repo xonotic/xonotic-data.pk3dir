@@ -70,18 +70,6 @@ void W_Grenade_Think1 (void)
 		W_Grenade_Explode();
 }
 
-void W_Grenade_Think2 (void)
-{
-	self.nextthink = time;
-	if (time > self.cnt)
-	{
-		other = world;
-		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Grenade_Explode2 ();
-		return;
-	}
-}
-
 void W_Grenade_Touch1 (void)
 {
 	PROJECTILE_TOUCH;
@@ -153,7 +141,9 @@ void W_Grenade_Touch2 (void)
 		self.gl_bouncecnt += 1;
 		
 		if (autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce && self.gl_bouncecnt == 1)
-			self.cnt = time + autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce;
+			self.nextthink = time + autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce;
+			
+		UpdateCSQCProjectile(self);
 			
 	}
 	else if(autocvar_g_balance_grenadelauncher_secondary_type == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
@@ -245,9 +235,8 @@ void W_Grenade_Attack2 (void)
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
-	gren.cnt = time + autocvar_g_balance_grenadelauncher_secondary_lifetime;
-	gren.nextthink = time;
-	gren.think = W_Grenade_Think2;
+	gren.nextthink = time + autocvar_g_balance_grenadelauncher_secondary_lifetime;
+	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Grenade_Explode2;
 	gren.touch = W_Grenade_Touch2;
 
