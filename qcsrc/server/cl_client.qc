@@ -2540,7 +2540,7 @@ void ObserverThink()
 				self.classname = "spectator";
 			}
 		} else {
-			prefered_movetype = (self.cvar_cl_clippedspectating ? MOVETYPE_SPECTATOR : MOVETYPE_NOCLIP);
+			prefered_movetype = ((self.cvar_cl_clippedspectating && !self.BUTTON_USE) ? MOVETYPE_SPECTATOR : MOVETYPE_NOCLIP);
 			if (self.movetype != prefered_movetype)
 				self.movetype = prefered_movetype;
 		}
