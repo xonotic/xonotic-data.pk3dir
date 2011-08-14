@@ -160,7 +160,10 @@ void Image_setZoom(entity me, float z, float atMousePosition)
 		me.zoomFactor = z;
 	me.zoomFactor = bound(1/16, me.zoomFactor, 16);
 	if (atMousePosition && prev_zoomFactor != me.zoomFactor)
-		me.zoomOffset = me.start_zoomOffset + (me.start_coords - '0.5 0.5 0') * (1/prev_zoomFactor);
+	{
+		me.zoomOffset_x = me.start_zoomOffset_x + (me.start_coords_x - 0.5) / me.imgSize_x;
+		me.zoomOffset_y = me.start_zoomOffset_y + (me.start_coords_y - 0.5) / me.imgSize_y;
+	}
 	if (prev_zoomFactor != me.zoomFactor)
 		me.zoomTime = time;
 	me.updateAspect(me);
