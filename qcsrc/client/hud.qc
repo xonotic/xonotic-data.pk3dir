@@ -4513,7 +4513,7 @@ void HUD_CenterPrint (void)
 	// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
 	// height = panel_size_y/entries;
 	// fontsize = '1 1 0' * height;
-	height = vid_conheight/40 * autocvar_hud_panel_centerprint_fontscale;
+	height = vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale;
 	fontsize = '1 1 0' * height;
 	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
 
