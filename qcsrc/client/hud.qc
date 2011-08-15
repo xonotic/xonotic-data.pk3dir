@@ -4544,8 +4544,6 @@ void HUD_CenterPrint (void)
 			else
 				continue;
 		}
-
-		//print("testing: ", ftos(time - (centerprint_expire_time[j] - centerprint_time[j])), ". \n");
 		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - centerprint_fadetime > time)
 		{
 			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / centerprint_fadetime, 1);
