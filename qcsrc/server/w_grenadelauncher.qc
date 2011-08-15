@@ -143,8 +143,6 @@ void W_Grenade_Touch2 (void)
 		if (autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce && self.gl_bouncecnt == 1)
 			self.nextthink = time + autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce;
 			
-		UpdateCSQCProjectile(self);
-			
 	}
 	else if(autocvar_g_balance_grenadelauncher_secondary_type == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{

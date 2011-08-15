@@ -103,25 +103,3 @@ void UpdateCSQCProjectileAfterTeleport(entity e)
 		e.SendFlags |= 0x08;
 	}
 }
-
-.void(void) csqcprojectile_oldthink;
-.float csqcprojectile_oldnextthink;
-
-void CSQCProjectile_Update_Think()
-{
-	UpdateCSQCProjectile(self);
-	self.think = self.csqcprojectile_oldthink;
-	self.nextthink = max(time, self.csqcprojectile_oldnextthink);
-}
-
-void UpdateCSQCProjectileNextFrame(entity e)
-{
-	if(e.SendEntity == CSQCProjectile_SendEntity)
-	if(e.think != CSQCProjectile_Update_Think)
-	{
-		e.csqcprojectile_oldthink = e.think;
-		e.csqcprojectile_oldnextthink = e.nextthink;
-		e.think = CSQCProjectile_Update_Think;
-		e.nextthink = time;
-	}
-}
