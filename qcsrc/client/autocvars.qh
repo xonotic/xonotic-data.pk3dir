@@ -220,12 +220,21 @@ float autocvar_hud_panel_healtharmor_progressbar_gfx_damage;
 float autocvar_hud_panel_healtharmor_progressbar_gfx_lowhealth;
 float autocvar_hud_panel_healtharmor_progressbar_gfx_smooth;
 
-float autocvar_hud_panel_centerprint;
-float autocvar_hud_panel_centerprint_align;
-float autocvar_hud_panel_centerprint_fadetime;
-float autocvar_hud_panel_centerprint_flip;
-float autocvar_hud_panel_centerprint_fontscale;
-float autocvar_hud_panel_centerprint_time;
+// TEMPORARY hard coded default for compatibility - remove after 0.2 release
+var float autocvar_hud_panel_centerprint = 1;
+var string autocvar_hud_panel_centerprint_pos = "0.180000 0.260000";
+var string autocvar_hud_panel_centerprint_size = "0.650000 0.210000";
+/*var string autocvar_hud_panel_centerprint_bg = "";
+var string autocvar_hud_panel_centerprint_bg_color = "";
+var string autocvar_hud_panel_centerprint_bg_color_team = "";
+var string autocvar_hud_panel_centerprint_bg_alpha = "";
+var string autocvar_hud_panel_centerprint_bg_border = "";
+var string autocvar_hud_panel_centerprint_bg_padding = "";*/
+var float autocvar_hud_panel_centerprint_align = 0.5;
+var float autocvar_hud_panel_centerprint_fadetime = 0.25;
+var float autocvar_hud_panel_centerprint_flip = 1;
+var float autocvar_hud_panel_centerprint_fontscale = 1;
+var float autocvar_hud_panel_centerprint_time = 3;
 float autocvar_hud_panel_healtharmor_text;
 float autocvar_hud_panel_infomessages;
 float autocvar_hud_panel_infomessages_flip;
