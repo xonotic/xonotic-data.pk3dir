@@ -361,7 +361,7 @@ void FlagThink()
 		{
 			bprint("The ", self.netname, " became impatient after ", ftos_decimals(flagcaptimerecord, 2), " seconds and returned itself\n");
 
-			sound (self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NONE);
+			sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
 			self.owner.impulse = 141; // returning!
 
 			e = self;
@@ -388,7 +388,7 @@ void FlagThink()
 		if (time > self.pain_finished)
 		{
 			bprint("The ", self.netname, " has returned to base\n");
-			sound (self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NONE);
+			sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
 			LogCTF("returned", self.team, world);
 			ReturnFlag(self);
 		}
@@ -768,6 +768,7 @@ Keys:
  (default ctf/respawn.wav)
 */
 
+void spawnfunc_item_flag_team2();
 void spawnfunc_item_flag_team1()
 {
 	if (!g_ctf)
@@ -776,21 +777,22 @@ void spawnfunc_item_flag_team1()
 		return;
 	}
 
+	if (g_ctf_reverse)
+	{
+		float old_g_ctf_reverse = g_ctf_reverse;
+		g_ctf_reverse = 0; // avoid an endless loop
+		spawnfunc_item_flag_team2();
+		g_ctf_reverse = old_g_ctf_reverse;
+		return;
+	}
+
 	// link flag into ctf_worldflaglist
 	self.ctf_worldflagnext = ctf_worldflaglist;
 	ctf_worldflaglist = self;
 
 	self.classname = "item_flag_team";
-	if(g_ctf_reverse)
-	{
-		self.team = COLOR_TEAM2; // color 13 team (blue)
-		self.items = IT_KEY1; // silver key (bluish enough)
-	}
-	else
-	{
-		self.team = COLOR_TEAM1; // color 4 team (red)
-		self.items = IT_KEY2; // gold key (redish enough)
-	}
+	self.team = COLOR_TEAM1; // color 4 team (red)
+	self.items = IT_KEY2; // gold key (redish enough)
 	self.netname = "^1RED^7 flag";
 	self.target = "###item###";
 	self.skin = autocvar_g_ctf_flag_red_skin;
@@ -874,21 +876,22 @@ void spawnfunc_item_flag_team2()
 		return;
 	}
 
+	if (g_ctf_reverse)
+	{
+		float old_g_ctf_reverse = g_ctf_reverse;
+		g_ctf_reverse = 0; // avoid an endless loop
+		spawnfunc_item_flag_team1();
+		g_ctf_reverse = old_g_ctf_reverse;
+		return;
+	}
+
 	// link flag into ctf_worldflaglist
 	self.ctf_worldflagnext = ctf_worldflaglist;
 	ctf_worldflaglist = self;
 
 	self.classname = "item_flag_team";
-	if(g_ctf_reverse)
-	{
-		self.team = COLOR_TEAM1; // color 4 team (red)
-		self.items = IT_KEY2; // gold key (redish enough)
-	}
-	else
-	{
-		self.team = COLOR_TEAM2; // color 13 team (blue)
-		self.items = IT_KEY1; // silver key (bluish enough)
-	}
+	self.team = COLOR_TEAM2; // color 13 team (blue)
+	self.items = IT_KEY1; // silver key (bluish enough)
 	self.netname = "^4BLUE^7 flag";
 	self.target = "###item###";
 	self.skin = autocvar_g_ctf_flag_blue_skin;

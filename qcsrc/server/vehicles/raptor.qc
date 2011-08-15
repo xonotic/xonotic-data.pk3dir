@@ -563,7 +563,7 @@ void raptor_diethink()
 {
     if(random() < 0.1)
     {
-        sound (self, CH_SHOTS_SINGLE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+        sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
         pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
     }
     self.nextthink = time + 0.1;
@@ -734,6 +734,10 @@ void spawnfunc_vehicle_raptor()
     precache_sound ("vehicles/raptor_speed.wav");
     
     self.think = raptor_dinit;
-    self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_raptor_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
+    
+    if(g_assault)
+        self.nextthink = time + 0.5;
+    else
+        self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_raptor_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
 }
 #endif // SVQC

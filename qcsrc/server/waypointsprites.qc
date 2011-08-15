@@ -214,6 +214,23 @@ float WaypointSprite_Customize()
 	if(e.classname == "spectator")
 		e = e.enemy;
 
+	// as a GENERAL rule:
+	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
+	// but only apply this to real players, not to spectators
+	if(g_minstagib && (self.owner.items & IT_STRENGTH) && (e == other))
+	{
+		if(teamplay)
+		{
+			if(self.owner.team != e.team)
+				return FALSE;
+		}
+		else
+		{
+			if(self.owner != e)
+				return FALSE;
+		}
+	}
+
 	return self.waypointsprite_visible_for_player(e);
 }
 

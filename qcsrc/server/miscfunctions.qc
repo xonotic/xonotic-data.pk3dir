@@ -2022,7 +2022,7 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 		return TRUE;
 	}
 	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
-		UpdateCSQCProjectileNextFrame(self);
+		UpdateCSQCProjectile(self);
 	return FALSE;
 }
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return

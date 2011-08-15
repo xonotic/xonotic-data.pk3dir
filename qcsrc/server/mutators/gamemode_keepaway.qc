@@ -78,7 +78,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 		WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
 		WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);	
 
-		sound(self, CH_TRIGGER_SINGLE, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
+		sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
 	}
 	else
 	{
@@ -99,7 +99,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	if(other.classname != "player") 
 	{  // The ball just touched an object, most likely the world
 		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
-		sound(self, CH_TRIGGER_SINGLE, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
 		return; 
 	}
 	else if(self.wait > time) { return; }

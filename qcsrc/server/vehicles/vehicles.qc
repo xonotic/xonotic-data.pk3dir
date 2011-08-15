@@ -618,7 +618,9 @@ void vehicles_exit(float eject)
 
     if(!teamplay)
         self.team = 0;
-
+    else
+        self.team = self.tur_head.team;
+    
     if(self.owner.flagcarried)
     {
         self.owner.flagcarried.scale = 0.6;
@@ -629,6 +631,7 @@ void vehicles_exit(float eject)
     sound (self, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
     self.vehicle_exit(eject);
     self.owner = world;
+    vehicles_reset_colors();
     
     if(oldself)
         self = oldself;
@@ -845,7 +848,7 @@ void vehicles_setreturn()
     ret.classname   = "vehicle_return";
     ret.enemy       = self;    
     ret.team        = self.team;
-    ret.think       = vehicles_showwp;        
+    ret.think       = vehicles_showwp;
     
     if(self.deadflag != DEAD_NO)
     {
@@ -856,8 +859,6 @@ void vehicles_setreturn()
     {
         ret.nextthink   = min(time + self.vehicle_respawntime, time + self.vehicle_respawntime - 1);        
     }
-        
-    
     
     setmodel(ret, "null");
     setorigin(ret, self.pos1 + '0 0 96');
@@ -959,7 +960,7 @@ float vehicle_initialize(string  net_name,
 
     if(self.team && !teamplay)
         self.team = 0;
-
+        
     self.vehicle_flags |= VHF_ISVEHICLE;
     
     setmodel(self, bodymodel);
@@ -1018,7 +1019,8 @@ float vehicle_initialize(string  net_name,
 
     self.pos1 = self.origin;
     self.pos2 = self.angles;
-
+    self.tur_head.team = self.team;
+    
     return TRUE;
 }
 

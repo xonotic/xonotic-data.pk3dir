@@ -8,7 +8,7 @@
 \menu_slist_showfull\Aktiviere die Anzeige von vollen Servern, die keinen freien Platz mehr haben
 \net_slist_pause\Unterbreche die automatische Aktualisierung der Serverliste um ein "Herumspringen" zu verhindern
 \XonoticMultiplayerDialog/Info\Lass dir mehr Informationen über den markierten Server anzeigen
-\XonoticMultiplayerDialog/Bookmark\Setze ein Lesezeichen für den markierten Server um ihn beim nächsten mal schneller wiederzufinden
+\XonoticMultiplayerDialog/Speichern\Setze ein Lesezeichen für den markierten Server um ihn beim nächsten mal schneller wiederzufinden
 \XonoticMultiplayerDialog/Havoc\Wechsel in den Havoc Modus, welcher zu Änderungen des Spielverhaltens führt
 \XonoticMultiplayerDialog/Starten\Hoste dein eigenes Spiel
 \XonoticMultiplayerDialog/Demos\Gucke dir Demos an
@@ -160,7 +160,7 @@
 \r_motionblur\Wert für die Bewegungsunschärfe - 0.5 empfohlen
 \r_damageblur\Wert für die Unschärfe bei einer Verletzung - 0.4 empfohlen
 
-\XonoticSettingsDialog/Audio\Audio-Einstellungen
+\XonoticSettingsDialog/Ton\Audio-Einstellungen
 \bgmvolume\-
 \volume\-
 \snd_staticvolume\-
