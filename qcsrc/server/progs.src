@@ -31,6 +31,7 @@ mutators/mutator_dodging.qh
 
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
+vehicles/vehicles_def.qh
 
 campaign.qh
 ../common/campaign_common.qh
@@ -97,7 +98,6 @@ t_jumppads.qc
 t_teleporters.qc
 
 sv_main.qc
-sv_stats.qc
 
 g_triggers.qc
 g_models.qc

@@ -29,8 +29,12 @@ movetypes.qh
 prandom.qh
 bgmscript.qh
 noise.qh
-
+teamplay.qh
+tturrets.qh
+../server/tturrets/include/turrets_early.qh
+../server/movelib.qc
 main.qh
+vehicles/vehicles.qh
 
 sortlist.qc
 miscfunctions.qc
@@ -39,6 +43,7 @@ teamplay.qc
 ctf.qc
 
 teamradar.qc
+hud_config.qc
 hud.qc
 scoreboard.qc
 mapvoting.qc
@@ -57,7 +62,10 @@ modeleffects.qc
 tuba.qc
 target_music.qc
 
-//vehicles/spiderbot.qc
+vehicles/vehicles.qc
+shownames.qh
+shownames.qc
+
 Main.qc
 View.qc
 interpolate.qc
@@ -78,5 +86,6 @@ noise.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/common.qc
 ../warpzonelib/client.qc
+tturrets.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

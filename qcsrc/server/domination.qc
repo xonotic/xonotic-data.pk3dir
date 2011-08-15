@@ -21,6 +21,28 @@ Note: The only teams who can use dom control points are identified by spawnfunc_
 .entity sprite;
 .float captime;
 
+// pps: points per second
+.float dom_total_pps;
+.float dom_pps_red;
+.float dom_pps_blue;
+.float dom_pps_yellow;
+.float dom_pps_pink;
+float total_pps;
+float pps_red;
+float pps_blue;
+float pps_yellow;
+float pps_pink;
+void set_dom_state(entity e)
+{
+	e.dom_total_pps = total_pps;
+	e.dom_pps_red = pps_red;
+	e.dom_pps_blue = pps_blue;
+	if(c3 >= 0)
+		e.dom_pps_yellow = pps_yellow;
+	if(c4 >= 0)
+		e.dom_pps_pink = pps_pink;
+}
+
 void() dom_controlpoint_setup;
 
 void LogDom(string mode, float team_before, entity actor)
@@ -86,9 +108,9 @@ void dompoint_captured ()
 
 	if (head.noise != "")
 		if(self.enemy)
-			sound(self.enemy, CHAN_AUTO, head.noise, VOL_BASE, ATTN_NORM);
+			sound(self.enemy, CH_TRIGGER, head.noise, VOL_BASE, ATTN_NORM);
 		else
-			sound(self, CHAN_TRIGGER, head.noise, VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, head.noise, VOL_BASE, ATTN_NORM);
 	if (head.noise1 != "")
 		play2all(head.noise1);
 
@@ -120,12 +142,43 @@ void dompoint_captured ()
 			break;
 		case COLOR_TEAM4:
 			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
-			break;
 	}
+
+	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
+	for(head = world; (head = find(head, classname, "dom_controlpoint")) != world; )
+	{
+		if (autocvar_g_domination_point_amt)
+			points = autocvar_g_domination_point_amt;
+		else
+			points = head.frags;
+		if (autocvar_g_domination_point_rate)
+			wait_time = autocvar_g_domination_point_rate;
+		else
+			wait_time = head.wait;
+		switch(head.goalentity.team)
+		{
+			case COLOR_TEAM1:
+				pps_red += points/wait_time;
+				break;
+			case COLOR_TEAM2:
+				pps_blue += points/wait_time;
+				break;
+			case COLOR_TEAM3:
+				pps_yellow += points/wait_time;
+				break;
+			case COLOR_TEAM4:
+				pps_pink += points/wait_time;
+		}
+		total_pps += points/wait_time;
+	}
+
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
 
 	self.captime = time;
+
+	FOR_EACH_REALCLIENT(head)
+		set_dom_state(head);
 };
 
 void AnimateDomPoint()
@@ -305,10 +358,22 @@ void dom_controlpoint_setup()
 	if(!self.message)
 		self.message = " has captured a control point";
 
-	if(!self.DOMPOINTFRAGS)
+	if(self.DOMPOINTFRAGS <= 0)
 		self.DOMPOINTFRAGS = 1;
-	if(!self.wait)
+	if(self.wait <= 0)
 		self.wait = 5;
+
+	float points, waittime;
+	if (autocvar_g_domination_point_amt)
+		points = autocvar_g_domination_point_amt;
+	else
+		points = self.frags;
+	if (autocvar_g_domination_point_rate)
+		waittime = autocvar_g_domination_point_rate;
+	else
+		waittime = self.wait;
+
+	total_pps += points/waittime;
 
 	if(!self.t_width)
 		self.t_width = 0.02; // frame animation rate
@@ -325,8 +390,7 @@ void dom_controlpoint_setup()
 	droptofloor();
 
 	waypoint_spawnforitem(self);
-	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite);
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
+	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT, '0 1 1');
 };
 
 
@@ -641,5 +705,11 @@ void dom_init()
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
+
+	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);
+	addstat(STAT_DOM_PPS_RED, AS_FLOAT, dom_pps_red);
+	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
+	if(c3 >= 0) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
+	if(c4 >= 0) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
 };
 

@@ -112,7 +112,7 @@ void spawnfunc_info_player_deathmatch (void)
 
 void spawnpoint_use()
 {
-	if(teams_matter)
+	if(teamplay)
 	if(have_team_spawns > 0)
 	{
 		self.team = activator.team;
@@ -333,7 +333,7 @@ entity SelectSpawnPoint (float anypoint)
 		{
 			// we request a spawn for a team, and we have team
 			// spawns, but that team has no spawns?
-			if(have_team_spawns[0])
+			if(have_team_spawns_forteam[0])
 				// try noteam spawns
 				teamcheck = 0;
 			else
@@ -343,7 +343,7 @@ entity SelectSpawnPoint (float anypoint)
 		else
 			teamcheck = self.team; // MUST be team
 	}
-	else if(have_team_spawns == 0 && have_team_spawns[0])
+	else if(have_team_spawns == 0 && have_team_spawns_forteam[0])
 		teamcheck = 0; // MUST be noteam
 	else
 		teamcheck = -1;
@@ -596,7 +596,7 @@ void FixPlayermodel();
 void PutObserverInServer (void)
 {
 	entity	spot;
-
+    self.hud = HUD_NORMAL;
 	race_PreSpawnObserver();
 
 	spot = SelectSpawnPoint (TRUE);
@@ -621,6 +621,9 @@ void PutObserverInServer (void)
 		PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
+
+	if(self.vehicle)
+	    vehicles_exit(VHEF_RELESE);
 
 	if(self.flagcarried)
 		ctf_Handle_Drop(self); // FIXCTF
@@ -748,7 +751,7 @@ void FixPlayermodel()
 	if(autocvar_sv_defaultcharacter == 1) {
 		defaultskin = 0;
 
-		if(teams_matter)
+		if(teamplay)
 		{
 			string s;
 			s = Team_ColorNameLowerCase(self.team);
@@ -804,7 +807,7 @@ void FixPlayermodel()
 	if(chmdl || oldskin != self.skinindex)
 		self.species = player_getspecies(); // model or skin has changed
 
-	if(!teams_matter)
+	if(!teamplay)
 		if(strlen(autocvar_sv_defaultplayercolors))
 			if(self.clientcolors != stof(autocvar_sv_defaultplayercolors))
 				setcolor(self, stof(autocvar_sv_defaultplayercolors));
@@ -1012,6 +1015,7 @@ void PutClientInServer (void)
 		self.oldorigin = self.origin;
 		self.prevorigin = self.origin;
 		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
+		self.lastteleporttime = time; // prevent insane speeds due to changing origin
 
 		if(g_arena)
 		{
@@ -1057,7 +1061,7 @@ void PutClientInServer (void)
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
 
 		if (autocvar_g_spawnsound)
-			sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 
 		if(g_assault) {
 			if(self.team == assault_attacker_team)
@@ -1079,11 +1083,16 @@ void PutClientInServer (void)
 			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
 				self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 		}
+		self.weapon_forbidchange = FALSE;
 
 		oldself = self;
 		self = spot;
 			activator = oldself;
+				string s;
+				s = self.target;
+				self.target = string_null;
 				SUB_UseTargets();
+				self.target = s;
 			activator = world;
 		self = oldself;
 
@@ -1133,9 +1142,10 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_grenadelauncher_bouncefactor
 	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_grenadelauncher_bouncestop
 	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
-	WriteByte(MSG_ENTITY, autocvar_g_balance_sniperrifle_secondary); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, autocvar_g_balance_rifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
+	WriteByte(MSG_ENTITY, autocvar_g_balance_hagar_secondary_load_max); // hagar max loadable rockets
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
 	return TRUE;
 }
@@ -1258,7 +1268,19 @@ void ClientKill_Now_TeamChange()
 
 void ClientKill_Now()
 {
-	remove(self.killindicator);
+	if(self.vehicle)
+	{
+	    vehicles_exit(VHEF_RELESE);
+	    if(!self.killindicator_teamchange)
+	    {
+            self.vehicle_health = -1;
+            Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');	        
+	    }
+	}
+
+	if(self.killindicator && !wasfreed(self.killindicator))
+		remove(self.killindicator);
+
 	self.killindicator = world;
 
 	if(self.killindicator_teamchange)
@@ -1271,6 +1293,13 @@ void ClientKill_Now()
 }
 void KillIndicator_Think()
 {
+	if (gameover)
+	{
+		self.owner.killindicator = world;
+		remove(self);
+		return;
+	}
+
 	if (!self.owner.modelindex)
 	{
 		self.owner.killindicator = world;
@@ -1318,6 +1347,10 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 {
 	float killtime;
 	entity e;
+
+	if (gameover)
+		return;
+
 	killtime = autocvar_g_balance_kill_delay;
 
 	if(g_race_qualifying || g_cts)
@@ -1390,6 +1423,9 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
 void ClientKill (void)
 {
+	if (gameover)
+		return;
+
 	if((g_arena || g_ca) && ((champion && champion.classname == "player" && player_count > 1) || player_count == 1)) // don't allow a kill in this case either
 	{
 		// do nothing
@@ -1411,55 +1447,6 @@ void CTS_ClientKill (entity e) // silent version of ClientKill, used when player
     e.killindicator.cnt = ceil(autocvar_g_cts_finish_kill_delay);
     e.killindicator.health = 1; // this is used to indicate that it should be silent
     e.lip = 0;
-}
-
-void DoTeamChange(float destteam)
-{
-	float t, c0;
-	if(!teams_matter)
-	{
-		if(destteam >= 0)
-			SetPlayerColors(self, destteam);
-		return;
-	}
-	if(self.classname == "player")
-	if(destteam == -1)
-	{
-		CheckAllowedTeams(self);
-		t = FindSmallestTeam(self, TRUE);
-		switch(self.team)
-		{
-			case COLOR_TEAM1: c0 = c1; break;
-			case COLOR_TEAM2: c0 = c2; break;
-			case COLOR_TEAM3: c0 = c3; break;
-			case COLOR_TEAM4: c0 = c4; break;
-			default:          c0 = 999;
-		}
-		switch(t)
-		{
-			case 1:
-				if(c0 > c1)
-					destteam = COLOR_TEAM1;
-				break;
-			case 2:
-				if(c0 > c2)
-					destteam = COLOR_TEAM2;
-				break;
-			case 3:
-				if(c0 > c3)
-					destteam = COLOR_TEAM3;
-				break;
-			case 4:
-				if(c0 > c4)
-					destteam = COLOR_TEAM4;
-				break;
-		}
-		if(destteam == -1)
-			return;
-	}
-	if(destteam == self.team && destteam >= 0 && !self.killindicator)
-		return;
-	ClientKill_TeamChange(destteam);
 }
 
 void FixClientCvars(entity e)
@@ -1523,6 +1510,7 @@ Called when a client connects to the server
 string ColoredTeamName(float t);
 void DecodeLevelParms (void);
 //void dom_player_join_team(entity pl);
+void set_dom_state(entity e);
 void ClientConnect (void)
 {
 	float t;
@@ -1539,7 +1527,7 @@ void ClientConnect (void)
 	DecodeLevelParms();
 
 #ifdef WATERMARK
-	sprint(self, strcat("^4SVQC Build information: ", WATERMARK(), "\n"));
+	sprint(self, strcat("^4SVQC Build information: ^1", WATERMARK(), "\n"));
 #endif
 
 	self.classname = "player_joining";
@@ -1562,7 +1550,7 @@ void ClientConnect (void)
 	playerdemo_init();
 
 	anticheat_init();
-	
+
 	race_PreSpawnObserver();
 
 	//if(g_domination)
@@ -1606,7 +1594,7 @@ void ClientConnect (void)
 	else
 		self.team_forced = 0;
 
-	if(!teams_matter)
+	if(!teamplay)
 		if(self.team_forced > 0)
 			self.team_forced = 0;
 
@@ -1615,7 +1603,7 @@ void ClientConnect (void)
 	if((autocvar_sv_spectate == 1 && !g_lms) || autocvar_g_campaign || self.team_forced < 0) {
 		self.classname = "observer";
 	} else {
-		if(teams_matter)
+		if(teamplay)
 		{
 			if(autocvar_g_balance_teams || autocvar_g_balance_teams_force)
 			{
@@ -1635,6 +1623,9 @@ void ClientConnect (void)
 	}
 
 	self.playerid = (playerid_last = playerid_last + 1);
+
+    if(clienttype(self) == CLIENTTYPE_BOT)
+        PlayerStats_AddPlayer(self);
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((clienttype(self) == CLIENTTYPE_REAL) ? self.netaddress : "bot"), ":", self.netname));
@@ -1676,7 +1667,7 @@ void ClientConnect (void)
 	GetCvars(0);
 
 	// notify about available teams
-	if(teams_matter)
+	if(teamplay)
 	{
 		CheckAllowedTeams(self);
 		t = 0; if(c1 >= 0) t |= 1; if(c2 >= 0) t |= 2; if(c3 >= 0) t |= 4; if(c4 >= 0) t |= 8;
@@ -1698,8 +1689,7 @@ void ClientConnect (void)
 		ctf_clientconnect();
 	}*/
 
-	if(teams_matter || radar_showennemies)
-		attach_entcs();
+	attach_entcs();
 
 	bot_relinkplayerlist();
 
@@ -1764,9 +1754,10 @@ void ClientConnect (void)
 	else if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
 
-	CheatInitClient();
+	if (g_domination)
+		set_dom_state(self);
 
-	PlayerStats_AddPlayer(self);
+	CheatInitClient();
 }
 
 /*
@@ -1777,10 +1768,12 @@ Called when a client disconnects from the server
 =============
 */
 .entity chatbubbleentity;
-.entity teambubbleentity;
 void ReadyCount();
 void ClientDisconnect (void)
 {
+	if(self.vehicle)
+	    vehicles_exit(VHEF_RELESE);
+
 	if not(self.flags & FL_CLIENT)
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
@@ -1830,9 +1823,6 @@ void ClientDisconnect (void)
 
 	if (self.chatbubbleentity)
 		remove (self.chatbubbleentity);
-
-	if (self.teambubbleentity)
-		remove (self.teambubbleentity);
 
 	if (self.killindicator)
 		remove (self.killindicator);
@@ -1914,52 +1904,6 @@ void UpdateChatBubble()
 }
 
 
-void TeamBubbleThink()
-{
-	self.nextthink = time;
-	if (!self.owner.modelindex || self.owner.teambubbleentity != self)
-	{
-		if(self.owner) // but why can that ever be world?
-			self.owner.teambubbleentity = world;
-		remove(self);
-		return;
-	}
-//	setorigin(self, self.owner.origin + '0 0 15' + self.owner.maxs_z * '0 0 1');  // bandwidth hog. setattachment does this now
-	if (self.owner.BUTTON_CHAT || self.owner.deadflag || self.owner.killindicator)
-		self.model = "";
-	else
-		self.model = self.mdl;
-
-};
-
-float TeamBubble_customizeentityforclient()
-{
-	return (self.owner != other && self.owner.team == other.team && other.killcount > -666);
-}
-
-void UpdateTeamBubble()
-{
-	if (!self.modelindex || !teams_matter)
-		return;
-	// spawn a teambubble entity if needed
-	if (!self.teambubbleentity && teams_matter)
-	{
-		self.teambubbleentity = spawn();
-		self.teambubbleentity.owner = self;
-		self.teambubbleentity.exteriormodeltoclient = self;
-		self.teambubbleentity.think = TeamBubbleThink;
-		self.teambubbleentity.nextthink = time;
-		setmodel(self.teambubbleentity, "models/misc/teambubble.spr"); // precision set below
-//		setorigin(self.teambubbleentity, self.origin + '0 0 15' + self.maxs_z * '0 0 1');
-		setorigin(self.teambubbleentity, '0 0 15' + self.maxs_z * '0 0 1');
-		setattachment(self.teambubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth
-		self.teambubbleentity.mdl = self.teambubbleentity.model;
-		self.teambubbleentity.model = self.teambubbleentity.mdl;
-		self.teambubbleentity.customizeentityforclient = TeamBubble_customizeentityforclient;
-		self.teambubbleentity.effects = EF_LOWPRECISION;
-	}
-}
-
 // LordHavoc: this hack will be removed when proper _pants/_shirt layers are
 // added to the model skins
 /*void UpdateColorModHack()
@@ -1967,7 +1911,7 @@ void UpdateTeamBubble()
 	local float c;
 	c = self.clientcolors & 15;
 	// LordHavoc: only bothering to support white, green, red, yellow, blue
-	     if (!teams_matter) self.colormod = '0 0 0';
+	     if (!teamplay) self.colormod = '0 0 0';
 	else if (c ==  0) self.colormod = '1.00 1.00 1.00';
 	else if (c ==  3) self.colormod = '0.10 1.73 0.10';
 	else if (c ==  4) self.colormod = '1.73 0.10 0.10';
@@ -2009,7 +1953,7 @@ void play_countdown(float finished, string samp)
 	if(clienttype(self) == CLIENTTYPE_REAL)
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
-				sound (self, CHAN_AUTO, samp, VOL_BASE, ATTN_NORM);
+				sound (self, CH_INFO, samp, VOL_BASE, ATTN_NORM);
 }
 
 /**
@@ -2057,15 +2001,15 @@ void player_powerups (void)
 {
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	olditems = self.items;
-	
+
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
 	{
-		SoundEntity_StartSound(self, CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+		SoundEntity_StartSound(self, CH_TRIGGER_SINGLE, "misc/jetpack_fly.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
 		self.modelflags |= MF_ROCKET;
 	}
 	else
 	{
-		SoundEntity_StopSound(self, CHAN_PLAYER);
+		SoundEntity_StopSound(self, CH_TRIGGER_SINGLE);
 		self.modelflags &~= MF_ROCKET;
 	}
 
@@ -2073,7 +2017,7 @@ void player_powerups (void)
 
 	if(!self.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
-	
+
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
@@ -2179,7 +2123,7 @@ void player_powerups (void)
 		if (time < self.spawnshieldtime)
 			self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 	}
-	
+
 	MUTATOR_CALLHOOK(PlayerPowerups);
 }
 
@@ -2384,6 +2328,7 @@ void SpectateCopy(entity spectatee) {
 	self.weapon = spectatee.weapon;
 	self.nex_charge = spectatee.nex_charge;
 	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
+	self.hagar_load = spectatee.hagar_load;
 	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;
@@ -2399,11 +2344,34 @@ void SpectateCopy(entity spectatee) {
 	SetZoomState(spectatee.zoomstate);
 
 	anticheat_spectatecopy(spectatee);
+
+	//self.vehicle = spectatee.vehicle;
+
+	self.hud = spectatee.hud;
+	if(spectatee.vehicle)
+    {
+        setorigin(self, spectatee.origin);
+        self.velocity = spectatee.vehicle.velocity;
+        self.v_angle += spectatee.vehicle.angles;
+        //self.v_angle_x *= -1;
+        self.vehicle_health = spectatee.vehicle_health;
+        self.vehicle_shield = spectatee.vehicle_shield;
+        self.vehicle_energy = spectatee.vehicle_energy;
+        self.vehicle_ammo1 = spectatee.vehicle_ammo1;
+        self.vehicle_ammo2 = spectatee.vehicle_ammo2;
+        self.vehicle_reload1 = spectatee.vehicle_reload1;
+        self.vehicle_reload2 = spectatee.vehicle_reload2;
+        
+        msg_entity = self;
+        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
+        WriteEntity(MSG_ONE, spectatee);
+        //self.tur_head = spectatee.vehicle.vehicle_viewport;
+    }
 }
 
 float SpectateUpdate() {
 	if(!self.enemy)
-		return 0;
+	    return 0;		
 
 	if (self == self.enemy)
 		return 0;
@@ -2426,17 +2394,28 @@ float SpectateNext() {
 		self.enemy = other;
 
 	if(self.enemy.classname == "player") {
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self.enemy);
-	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
-		self.movetype = MOVETYPE_NONE;
-		accuracy_resend(self);
+	    if(self.enemy.vehicle)
+	    {	   
+            msg_entity = self;
+            WriteByte(MSG_ONE, SVC_SETVIEWPORT);
+            WriteEntity(MSG_ONE, self.enemy);
+            //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            self.movetype = MOVETYPE_NONE;
+            accuracy_resend(self);
+	    }
+	    else 
+	    {	        
+            msg_entity = self;
+            WriteByte(MSG_ONE, SVC_SETVIEW);
+            WriteEntity(MSG_ONE, self.enemy);
+            //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            self.movetype = MOVETYPE_NONE;
+            accuracy_resend(self);
 
-		if(!SpectateUpdate())
-			PutObserverInServer();
-
-		return 1;
+            if(!SpectateUpdate())
+                PutObserverInServer();
+        }
+        return 1;
 	} else {
 		return 0;
 	}
@@ -2471,7 +2450,7 @@ void ShowRespawnCountdown()
 void LeaveSpectatorMode()
 {
 	if(nJoinAllowed(1)) {
-		if(!teams_matter || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
+		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force)
@@ -2609,10 +2588,27 @@ void SpectatorThink()
 				return;
 			}
 		}
+		if(!SpectateUpdate())
+			PutObserverInServer();
 	}
 
 	PrintWelcomeMessage(self);
 	self.flags |= FL_CLIENT | FL_NOTARGET;
+}
+
+void PlayerUseKey()
+{
+	if(self.classname != "player")
+		return;
+
+	if(self.vehicle)
+	{
+        vehicles_exit(VHEF_NORMAL);
+        return;
+	}
+	
+	// a use key was pressed; call handlers
+	MUTATOR_CALLHOOK(PlayerUseKey);
 }
 
 .float touchexplode_time;
@@ -2624,11 +2620,14 @@ PlayerPreThink
 Called every frame for each client before the physics are run
 =============
 */
+.float usekeypressed;
 //void() ctf_setstatus;
 void() nexball_setstatus;
 .float items_added;
 void PlayerPreThink (void)
 {
+	WarpZone_PlayerPhysics_FixVAngle();
+
 	self.stat_game_starttime = game_starttime;
 	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
@@ -2699,6 +2698,10 @@ void PlayerPreThink (void)
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
 
+	if(self.BUTTON_USE && !self.usekeypressed)
+		PlayerUseKey();
+	self.usekeypressed = self.BUTTON_USE;
+
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
 //			bprint(self.classname, "\n");
@@ -2713,11 +2716,9 @@ void PlayerPreThink (void)
 			return;					// the think tics
 		}
 
-		if(frametime > 0) // don't do this in cl_movement frames, just in server ticks
-			UpdateSelectedPlayer();
-
 		//don't allow the player to turn around while game is paused!
 		if(timeoutStatus == 2) {
+			// FIXME turn this into CSQC stuff
 			self.v_angle = self.lastV_angle;
 			self.angles = self.lastV_angle;
 			self.fixangle = TRUE;
@@ -2741,7 +2742,26 @@ void PlayerPreThink (void)
 					self.glowmod_z = -1;
 			}
 			else
+			{
+				// set weapon and player glowmod
 				self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+
+				if(self.weapon == WEP_NEX && autocvar_g_balance_nex_charge)
+				{
+					self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+					self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+					self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+
+					if(self.nex_charge > autocvar_g_balance_nex_charge_animlimit)
+					{
+						self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+						self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+						self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+					}
+				}
+				else
+					self.weaponentity_glowmod = self.glowmod;
+			}
 			player_powerups();
 		}
 
@@ -2926,7 +2946,7 @@ void PlayerPreThink (void)
 	}
 
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_SNIPERRIFLE && autocvar_g_balance_sniperrifle_secondary == 0));
+		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE && autocvar_g_balance_rifle_secondary == 0));
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;
@@ -2953,7 +2973,7 @@ void PlayerPreThink (void)
 		oldself = self; self = self.teamkill_soundsource;
 		oldpusher = self.pusher; self.pusher = oldself;
 
-		PlayerSound(playersound_teamshoot, CHAN_VOICE, VOICETYPE_LASTATTACKER_ONLY);
+		PlayerSound(playersound_teamshoot, CH_VOICE, VOICETYPE_LASTATTACKER_ONLY);
 
 		self.pusher = oldpusher;
 		self = oldself;
@@ -2963,7 +2983,7 @@ void PlayerPreThink (void)
 	if(time > self.taunt_soundtime)
 	{
 		self.taunt_soundtime = 0;
-		PlayerSound(playersound_taunt, CHAN_VOICE, VOICETYPE_AUTOTAUNT);
+		PlayerSound(playersound_taunt, CH_VOICE, VOICETYPE_AUTOTAUNT);
 	}
 
 	target_voicescript_next(self);
@@ -3067,7 +3087,6 @@ void PlayerPostThink (void)
 	if(self.classname == "player") {
 		CheckRules_Player();
 		UpdateChatBubble();
-		UpdateTeamBubble();
 		if (self.impulse)
 			ImpulseCommands();
 		if (intermission_running)
@@ -3078,7 +3097,7 @@ void PlayerPostThink (void)
 	} else if (self.classname == "spectator") {
 		//do nothing
 	}
-
+	
 	/*
 	float i;
 	for(i = 0; i < 1000; ++i)
@@ -3101,7 +3120,7 @@ void PlayerPostThink (void)
 
 	if(self.waypointsprite_attachedforcarrier)
 		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
-	
+
 	if(self.classname == "player" && self.deadflag == DEAD_NO && autocvar_r_showbboxes)
 	{
 		if(!self.showheadshotbbox)
@@ -3119,7 +3138,8 @@ void PlayerPostThink (void)
 	else
 	{
 		if(self.showheadshotbbox)
-			remove(self.showheadshotbbox);
+			if(self.showheadshotbbox && !wasfreed(self.showheadshotbbox))
+                remove(self.showheadshotbbox);
 	}
 
 	playerdemo_write();

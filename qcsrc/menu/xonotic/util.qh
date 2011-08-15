@@ -22,8 +22,6 @@ string getZonedTooltipForIdentifier(string s);
 
 string resolvemod(string m);
 
-string HUD_Panel_GetSettingName(float setting);
-
 float URI_GET_DISCARD = 0;
 
 float URI_GET_UPDATENOTIFICATION = 1;

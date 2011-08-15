@@ -210,10 +210,8 @@ float GameCommand_Generic(string command)
 	{
 		if(argv(1) == "add" && argc == 3)
 		{
-			f = fopen(strcat("maps/", argv(2), ".bsp"), FILE_READ);
-			if(f != -1)
-				fclose(f);
-			else {
+			if (!fexists(strcat("maps/", argv(2), ".bsp")))
+			{
 				print("maplist: ERROR: ", argv(2), " does not exist!\n");
 				return TRUE;
 			}
@@ -771,10 +769,8 @@ float GameCommand_Generic(string command)
 					s = rpn_pop();
 					if(!rpn_error)
 					{
-						f = fopen(s, FILE_READ);
-						if(f != -1)
-							fclose(f);
-						else {
+						if (!fexists(s))
+						{
 							print("rpn: ERROR: ", s, " does not exist!\n");
 							rpn_error = TRUE;
 						}
@@ -783,13 +779,10 @@ float GameCommand_Generic(string command)
 					s = rpn_get();
 					if(!rpn_error)
 					{
-						f = fopen(s, FILE_READ);
-						if(f != -1) {
-							fclose(f);
+						if (fexists(s))
 							rpn_setf(1);
-						} else {
+						else
 							rpn_setf(0);
-						}
 					}
 				} else if(rpncmd == "localtime") {
 					rpn_set(strftime(TRUE, rpn_get()));

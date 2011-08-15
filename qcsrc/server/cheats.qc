@@ -249,7 +249,7 @@ float CheatImpulse(float i)
 				e2 = spawn();
 				setorigin(e2, org);
 				pointparticles(particleeffectnum("rocket_explode"), org, '0 0 0', 1);
-				sound(e2, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(e2, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 				RadiusDamage(e2, e, 1000, 0, 128, e, 500, DEATH_CHEAT, world);
 				remove(e2);
 			}
@@ -303,7 +303,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   effectname
 				effectnum = particleeffectnum(argv(1));
-				W_SetupShot(self, FALSE, FALSE, "", CHAN_WEAPON, 0);
+				W_SetupShot(self, FALSE, FALSE, "", CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 				trailparticles(self, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
@@ -318,7 +318,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   modelname mode
 				f = stof(argv(2));
-				W_SetupShot(self, FALSE, FALSE, "", CHAN_WEAPON, 0);
+				W_SetupShot(self, FALSE, FALSE, "", CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, self);
 				if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || trace_fraction == 1)
 				{

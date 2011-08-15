@@ -25,7 +25,7 @@ void W_Shotgun_Attack (void)
 
 	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/shotgun_fire.wav", CHAN_WEAPON, d * bullets);
+	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, d * bullets);
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, 1, bulletconstant);
 	endFireBallisticBullet();
@@ -46,13 +46,14 @@ void W_Shotgun_Attack (void)
 	W_AttachToShotorg(flash, '5 0 0');
 }
 
+entity lgbeam_owner_ent;
 void shotgun_meleethink (void)
 {
 	// store time when we started swinging down inside self.cnt
 	if(!self.cnt)
 		self.cnt = time;
 
-	makevectors(self.owner.v_angle);
+	makevectors(self.realowner.v_angle);
 	vector angle;
 	angle = v_forward;
 
@@ -63,21 +64,26 @@ void shotgun_meleethink (void)
 	float f;
 	f = (self.cnt + meleetime - time) / meleetime * 2 - 1;
 	vector targpos;
-	targpos = self.owner.origin + self.owner.view_ofs + angle * autocvar_g_balance_shotgun_secondary_melee_range + v_right * f * autocvar_g_balance_shotgun_secondary_melee_swing + v_up * f * autocvar_g_balance_shotgun_secondary_melee_swing;
+	targpos = self.realowner.origin + self.realowner.view_ofs + angle * autocvar_g_balance_shotgun_secondary_melee_range + v_right * f * autocvar_g_balance_shotgun_secondary_melee_swing + v_up * f * autocvar_g_balance_shotgun_secondary_melee_swing;
 
-	WarpZone_traceline_antilag(self.owner, self.owner.origin + self.owner.view_ofs, targpos, FALSE, self.owner, ANTILAG_LATENCY(self.owner));
+	if(!lgbeam_owner_ent)
+	{
+		lgbeam_owner_ent = spawn();
+		lgbeam_owner_ent.classname = "lgbeam_owner_ent";
+	}
+	WarpZone_traceline_antilag(lgbeam_owner_ent, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, lgbeam_owner_ent, ANTILAG_LATENCY(self.realowner));
 
 	// apply the damage, also remove self
 	if(trace_fraction < 1 && trace_ent.takedamage == DAMAGE_AIM && (trace_ent.classname == "player" || trace_ent.classname == "body"))
 	{
 		vector force;
 		force = angle * autocvar_g_balance_shotgun_secondary_force;
-		if(accuracy_isgooddamage(self.owner, trace_ent))
-			accuracy_add(self.owner, WEP_SHOTGUN, 0, autocvar_g_balance_shotgun_secondary_damage * min(1, f + 1));
-		Damage (trace_ent, self.owner, self.owner, autocvar_g_balance_shotgun_secondary_damage * min(1, f + 1), WEP_SHOTGUN | HITTYPE_SECONDARY , self.owner.origin + self.owner.view_ofs, force);
+		if(accuracy_isgooddamage(self.realowner, trace_ent))
+			accuracy_add(self.realowner, WEP_SHOTGUN, 0, autocvar_g_balance_shotgun_secondary_damage * min(1, f + 1));
+		Damage (trace_ent, self.realowner, self.realowner, autocvar_g_balance_shotgun_secondary_damage * min(1, f + 1), WEP_SHOTGUN | HITTYPE_SECONDARY , self.realowner.origin + self.realowner.view_ofs, force);
 		remove(self);
 	}
-	else if(time >= self.cnt + meleetime) // missed, remove ent
+	else if(time >= self.cnt + meleetime || (self.realowner.deadflag != DEAD_NO && autocvar_g_balance_shotgun_secondary_melee_no_doubleslap)) // missed or owner died, remove ent
 		remove(self);
 	else // continue swinging the weapon in hope of hitting someone :)
 		self.nextthink = time;
@@ -85,12 +91,12 @@ void shotgun_meleethink (void)
 
 void W_Shotgun_Attack2 (void)
 {
-	sound (self, CHAN_PROJECTILE, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_SHOTS, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_shotgun_secondary_animtime, w_ready);
 
 	entity meleetemp;
 	meleetemp = spawn();
-	meleetemp.owner = self;
+	meleetemp.owner = meleetemp.realowner = self;
 	meleetemp.think = shotgun_meleethink;
 	meleetemp.nextthink = time + autocvar_g_balance_shotgun_secondary_melee_delay;
 	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_shotgun_secondary_damage, autocvar_g_balance_shotgun_secondary_melee_range);
@@ -185,11 +191,11 @@ float w_shotgun(float req)
 		if(!w_issilent && time - self.prevric > 0.25)
 		{
 			if(w_random < 0.0165)
-				sound(self, CHAN_PROJECTILE, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
 			else if(w_random < 0.033)
-				sound(self, CHAN_PROJECTILE, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
 			else if(w_random < 0.05)
-				sound(self, CHAN_PROJECTILE, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
 			self.prevric = time;
 		}
 	}
@@ -200,7 +206,7 @@ float w_shotgun(float req)
 		precache_sound("weapons/ric3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s did the impossible");
+		w_deathtypestring = _("%s is now thinking with portals");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)

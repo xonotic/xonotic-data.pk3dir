@@ -6,6 +6,7 @@ float navigation_bestrating;
 float bot_navigation_movemode;
 float navigation_testtracewalk;
 
+vector jumpstepheightvec;
 vector stepheightvec;
 
 entity botframe_dangerwaypoint;

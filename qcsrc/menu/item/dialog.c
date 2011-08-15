@@ -152,7 +152,7 @@ void Dialog_configureDialog(entity me)
 
 	me.fill(me);
 
-	if(me.closable)
+	if(me.closable && me.borderLines > 0)
 	{
 		closebutton = me.closeButton = spawnButton();
 		closebutton.configureButton(closebutton, "", 0, me.closeButtonImage);

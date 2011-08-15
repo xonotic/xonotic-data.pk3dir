@@ -364,7 +364,7 @@ void postMenuDraw()
 	if(autocvar_menu_watermark != "")
 	{
 		vector fs = '48 48 0';
-		draw_CenterText('0.5 0.1 0', autocvar_menu_watermark, globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
+		draw_CenterText('0.5 0.1 0', sprintf(_("^1%s TEST BUILD"), autocvar_menu_watermark), globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
 	}
 }
 void preMenuDraw()
@@ -464,25 +464,13 @@ string resolvemod(string m)
 		return m;
 }
 
-string HUD_Panel_GetSettingName(float theSetting)
-{
-	switch(theSetting) {
-		case HUD_MENU_ENABLE: return ""; break;
-		default: return "";
-	}
-}
-
 float updateCompression()
 {
-	float fh;
 	float have_dds, have_jpg, have_tga;
 	float can_dds;
-	if((have_dds = ((fh = fopen("dds/particles/particlefont.dds", FILE_READ)) >= 0)))
-		fclose(fh);
-	if((have_jpg = ((fh = fopen("particles/particlefont.jpg", FILE_READ)) >= 0)))
-		fclose(fh);
-	if((have_tga = ((fh = fopen("particles/particlefont.tga", FILE_READ)) >= 0)))
-		fclose(fh);
+	have_dds = (fexists("dds/particles/particlefont.dds"));
+	have_jpg = (fexists("particles/particlefont.jpg"));
+	have_tga = (fexists("particles/particlefont.tga"));
 	can_dds = GL_Have_TextureCompression();
 	if(have_dds && (have_jpg || have_tga))
 	{
@@ -490,8 +478,12 @@ float updateCompression()
 		// but ONLY if we actually support it!
 		if(can_dds)
 		{
+			// these builds are meant to have GOOD quality, so let's not compress non-skinframes
 			cvar_set("gl_texturecompression", "0");
 			return 1;
+
+			//cvar_set("gl_texturecompression", cvar_string("r_texture_dds_load"));
+			//return 2;
 		}
 		else
 		{

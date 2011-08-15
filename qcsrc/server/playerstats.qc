@@ -1,4 +1,5 @@
 float playerstats_db;
+string teamstats_last;
 string playerstats_last;
 string events_last;
 .float playerstats_addedglobalinfo;
@@ -22,6 +23,23 @@ void PlayerStats_Init()
 	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
 	PlayerStats_AddEvent(PLAYERSTATS_JOINS);
 	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
+	PlayerStats_AddEvent(PLAYERSTATS_RANK);
+
+    // accuracy stats
+    entity w;
+    float i;
+    for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+    {
+        w = get_weaponinfo(i);
+
+        PlayerStats_AddEvent(strcat("acc-", w.netname, "-hit"));
+        PlayerStats_AddEvent(strcat("acc-", w.netname, "-fired"));
+
+        PlayerStats_AddEvent(strcat("acc-", w.netname, "-cnt-hit"));
+        PlayerStats_AddEvent(strcat("acc-", w.netname, "-cnt-fired"));
+
+        PlayerStats_AddEvent(strcat("acc-", w.netname, "-frags"));
+    }
 
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
@@ -39,6 +57,8 @@ void PlayerStats_AddPlayer(entity e)
 {
 	if(playerstats_db < 0)
 		return;
+	if(e.playerstats_id)
+		return;
 
 	if(e.crypto_idfp != "" && e.cvar_cl_allow_uidtracking == 1)
 		e.playerstats_id = strzone(e.crypto_idfp);
@@ -46,7 +66,7 @@ void PlayerStats_AddPlayer(entity e)
 		e.playerstats_id = strzone(sprintf("bot#%d", e.playerid));
 	else
 		e.playerstats_id = strzone(sprintf("player#%d", e.playerid));
-	
+
 	string key;
 	key = sprintf("%s:*", e.playerstats_id);
 	
@@ -65,26 +85,26 @@ void PlayerStats_AddPlayer(entity e)
 	}
 }
 
-void PlayerStats_AddTeam(float t)
+void PlayerStats_AddTeam(float t) // TODO: doesn't this remain unused?
 {
 	if(playerstats_db < 0)
 		return;
 
 	string key;
-	key = sprintf("team#%d:*", t);
+	key = sprintf("%d", t);
 	
 	string p;
 	p = db_get(playerstats_db, key);
 	if(p == "")
 	{
-		if(playerstats_last)
+		if(teamstats_last)
 		{
-			db_put(playerstats_db, key, playerstats_last);
-			strunzone(playerstats_last);
+			db_put(playerstats_db, key, teamstats_last);
+			strunzone(teamstats_last);
 		}
 		else
 			db_put(playerstats_db, key, "#");
-		playerstats_last = strzone(sprintf("team%d", t));
+		teamstats_last = strzone(key);
 	}
 }
 
@@ -124,7 +144,7 @@ void PlayerStats_Event(entity e, string event_id, float value)
 	db_put(playerstats_db, key, ftos(val));
 }
 
-void PlayerStats_TeamScore(float t, string event_id, float value)
+void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn't this remain unused?
 {
 	string key;
 	float val;
@@ -156,8 +176,10 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 	M: map name
 	S: "hostname" of the server
 	C: number of "unpure" cvar changes
-	P: player ID of an existing player; this also sets the owner for all following "n" and "e" lines (lower case!)
+    W: winning team ID
+	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
 	n: nickname of the player (optional)
+    t: team ID
 	e: followed by an event name, a space, and the event count/score
 		event names can be:
 			alivetime: total playing time of the player
@@ -168,6 +190,12 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
 			total-<scoreboardname>: total score of that scoreboard item
 			scoreboard-<scoreboardname>: end-of-game score of that scoreboard item (can differ in non-team games)
 			achievement-<achievementname>: achievement counters
+            rank <number>: rank of player
+            acc-<weapon netname>-hit: total damage dealt
+            acc-<weapon netname>-fired: total damage that all fired projectiles *could* have dealt
+            acc-<weapon netname>-cnt-hit: amount of shots that actually hit
+            acc-<weapon netname>-cnt-fired: amount of fired shots
+            acc-<weapon netname>-frags: amount of frags dealt by weapon
 */
 
 //#NO AUTOCVARS START
@@ -175,7 +203,7 @@ void PlayerStats_Shutdown()
 {
 	string p, pn;
 	string e, en;
-	string nn;
+	string nn, tt;
 	float b;
 	float i;
 	string uri;
@@ -200,21 +228,26 @@ void PlayerStats_Shutdown()
 		bufstr_set(b, i++, sprintf("M %s", GetMapname()));
 		bufstr_set(b, i++, sprintf("S %s", cvar_string("hostname")));
 		bufstr_set(b, i++, sprintf("C %d", cvar_purechanges_count));
-		for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
-		{
-			bufstr_set(b, i++, sprintf("P %s", p));
-			nn = db_get(playerstats_db, sprintf("%s:_netname", p));
-			if(nn != "")
-				bufstr_set(b, i++, sprintf("n %s", nn));
-			for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
-			{
-				float v;
-				v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
-				if(v != 0)
-					bufstr_set(b, i++, sprintf("e %s %g", e, v));
-			}
-		}
-		bufstr_set(b, i++, "");
+        for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
+        {
+            bufstr_set(b, i++, sprintf("P %s", p));
+            nn = db_get(playerstats_db, sprintf("%s:_netname", p));
+            if(nn != "")
+                bufstr_set(b, i++, sprintf("n %s", nn));
+            if(teamplay)
+            {
+                tt = db_get(playerstats_db, sprintf("%s:_team", p));
+                bufstr_set(b, i++, sprintf("t %s", tt));
+            }
+            for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
+            {
+                float v;
+                v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
+                if(v != 0)
+                    bufstr_set(b, i++, sprintf("e %s %g", e, v));
+            }
+        }
+        bufstr_set(b, i++, "");
 
 		if(autocvar_g_playerstats_debug)
 		{
@@ -255,6 +288,9 @@ void PlayerStats_AddGlobalInfo(entity p)
 	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
 
+    if(teamplay)
+		db_put(playerstats_db, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
+
 	if(p.alivetime > 0)
 		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
@@ -262,17 +298,40 @@ void PlayerStats_AddGlobalInfo(entity p)
 	p.playerstats_id = string_null;
 }
 
+void PlayerStats_Accuracy(entity p)
+{
+    entity a, w;
+    a = p.accuracy;
+    float i;
+
+    for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+    {
+        w = get_weaponinfo(i);
+
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-hit"), a.accuracy_hit[i-1]);
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-fired"), a.accuracy_fired[i-1]);
+
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-cnt-hit"), a.accuracy_cnt_hit[i-1]);
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-cnt-fired"), a.accuracy_cnt_fired[i-1]);
+
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-frags"), a.accuracy_frags[i-1]);
+    }
+}
+
 void PlayerStats_EndMatch(float finished)
 {
-	entity p;
+	entity p, winner;
+    winner = PlayerScore_Sort(score_dummyfield);
 	FOR_EACH_PLAYER(p)
 	{
 		PlayerScore_PlayerStats(p);
+		PlayerStats_Accuracy(p);
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
 		if(finished)
 		{
 			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
 			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
+			PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
 		}
 	}
 }

@@ -188,7 +188,7 @@ void ctf_Handle_Drop(entity player)
 
 	// messages and sounds
 	Send_KillNotification(player.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
-	sound(flag, CHAN_TRIGGER, flag.noise4, VOL_BASE, ATTN_NONE);
+	sound(flag, CH_TRIGGER, flag.noise4, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("dropped", player.team, player);
 	
 	// scoring
@@ -196,7 +196,7 @@ void ctf_Handle_Drop(entity player)
 	PlayerScore_Add(player, SP_CTF_DROPS, 1);
 
 	// waypoints
-	WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, player.team, flag, wps_flagdropped, FALSE); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
+	WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, player.team, flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 1 1'); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
 	WaypointSprite_Ping(player.wps_flagcarrier);
 	WaypointSprite_Kill(player.wps_flagcarrier);
 
@@ -239,7 +239,7 @@ void ctf_Handle_Capture(entity flag, entity player)
 	
 	// messages and sounds
 	Send_KillNotification(player.netname, player.flagcarried.netname, cap_message, INFO_CAPTUREFLAG, MSG_INFO);
-	sound(player, CHAN_AUTO, flag.noise2, VOL_BASE, ATTN_NONE); // "ctf/*_capture.wav"
+	sound(player, CH_TRIGGER, flag.noise2, VOL_BASE, ATTN_NONE); // "ctf/*_capture.wav"
 	ctf_EventLog("capture", player.flagcarried.team, player);
 	
 	// scoring
@@ -266,7 +266,7 @@ void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
-	sound(player, CHAN_AUTO, flag.noise1, VOL_BASE, ATTN_NONE);
+	sound(player, CH_TRIGGER, flag.noise1, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
 
 	// scoring
@@ -309,7 +309,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 	
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_GOTFLAG, MSG_INFO);
-	sound(player, CHAN_AUTO, flag.noise, VOL_BASE, ATTN_NONE);
+	sound(player, CH_TRIGGER, flag.noise, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("steal", flag.team, player);
 	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat("(", player.netname, ")") : ""); // replace TRUE with an autocvar for it.
 	FOR_EACH_PLAYER(tmp_player)
@@ -334,7 +334,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 	}
 	
 	// waypoints 
-	WaypointSprite_Spawn("flagcarrier", 0, 0, player, '0 0 64', world, player.team, player, wps_flagcarrier, FALSE); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
+	WaypointSprite_Spawn("flagcarrier", 0, 0, player, '0 0 64', world, player.team, player, wps_flagcarrier, FALSE, RADARICON_FLAG, '1 1 0'); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
 	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
 	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent));
 	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
@@ -365,7 +365,7 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this wor
 
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_PICKUPFLAG, MSG_INFO);
-	sound (player, CHAN_AUTO, flag.noise, VOL_BASE, ATTN_NONE);
+	sound (player, CH_TRIGGER, flag.noise, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("pickup", flag.team, player);
 	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat("(", player.netname, ")") : "");
 	FOR_EACH_PLAYER(tmp_player)
@@ -388,7 +388,7 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this wor
 
 	// waypoints
 	WaypointSprite_Kill(flag.wps_flagdropped);
-	WaypointSprite_Spawn("flagcarrier", 0, 0, player, '0 0 64', world, player.team, player, wps_flagcarrier, FALSE); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
+	WaypointSprite_Spawn("flagcarrier", 0, 0, player, '0 0 64', world, player.team, player, wps_flagcarrier, FALSE, RADARICON_FLAG, '1 1 0'); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
 	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
 	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent));
 	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
@@ -441,7 +441,7 @@ void ctf_FlagThink()
 			if(time > self.pain_finished)
 			{
 				bprint("The ", self.netname, " has returned to base\n");
-				sound (self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
+				sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
 				ctf_EventLog("returned", self.team, world);
 				ctf_RespawnFlag(self);
 			}
@@ -451,7 +451,7 @@ void ctf_FlagThink()
 			if((self.owner) && (self.speedrunning) && (ctf_captimerecord) && (time >= self.ctf_pickuptime + ctf_captimerecord)) 
 			{
 				bprint("The ", self.netname, " became impatient after ", ftos_decimals(ctf_captimerecord, 2), " seconds and returned itself\n");
-				sound (self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
+				sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
 
 				self.owner.impulse = 141; // returning!
 
@@ -482,7 +482,7 @@ void ctf_FlagTouch()
 	if(other.classname != "player") 
 	{  // The flag just touched an object, most likely the world
 		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
-		sound(self, CHAN_AUTO, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
 		return; 
 	}
 	else if(self.wait > time) { return; }
@@ -630,7 +630,7 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	flag.bot_basewaypoint = flag.nearestwaypoint;
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), flag.origin + '0 0 64', flag, wps_flagbase);
+	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), flag.origin + '0 0 64', flag, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
 	WaypointSprite_UpdateTeamRadar(flag.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
 
 	// captureshield setup
@@ -674,9 +674,6 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 			self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_LOST : IT_BLUE_FLAG_LOST); // lost: the flag is dropped somewhere on the map
 	}
 	
-	if((autocvar_g_ctf_allow_drop) && (self.BUTTON_USE))
-		ctf_Handle_Drop(self);
-	
 	return 0;
 }
 
@@ -704,6 +701,13 @@ MUTATOR_HOOKFUNCTION(ctf_GiveFragsForKill)
 	return (g_ctf_ignore_frags); // you deceptive little bugger ;3 This needs to be true in order for this function to even count. 
 }
 
+MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
+{
+	if(autocvar_g_ctf_allow_drop)
+		ctf_Handle_Drop(self);
+		
+	return 0;
+}
 
 // ==========
 // Spawnfuncs
@@ -856,6 +860,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(GiveFragsForKill, ctf_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, ctf_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ctf_PlayerDamage, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerUseKey, ctf_PlayerUseKey, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(PlayerPowerups, ctf_PlayerPowerups, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
