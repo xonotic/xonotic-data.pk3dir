@@ -313,7 +313,6 @@ float default_weapon_alpha;
 .float cvar_cl_handicap;
 .float cvar_cl_playerdetailreduction;
 .float cvar_scr_centertime;
-.float cvar_cl_shownames;
 .float cvar_cl_clippedspectating;
 
 .string cvar_g_xonoticversion;
