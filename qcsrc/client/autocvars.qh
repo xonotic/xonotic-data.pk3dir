@@ -222,8 +222,8 @@ float autocvar_hud_panel_healtharmor_progressbar_gfx_smooth;
 
 // TEMPORARY hard coded default for compatibility - remove after 0.2 release
 var float autocvar_hud_panel_centerprint = 1;
-var string autocvar_hud_panel_centerprint_pos = "0.180000 0.260000";
-var string autocvar_hud_panel_centerprint_size = "0.650000 0.210000";
+noref var string autocvar_hud_panel_centerprint_pos = "0.180000 0.260000";
+noref var string autocvar_hud_panel_centerprint_size = "0.650000 0.210000";
 /*var string autocvar_hud_panel_centerprint_bg = "";
 var string autocvar_hud_panel_centerprint_bg_color = "";
 var string autocvar_hud_panel_centerprint_bg_color_team = "";
