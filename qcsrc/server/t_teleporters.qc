@@ -251,18 +251,15 @@ void teleport_findtarget (void)
 	entity e;
 	float n;
 
-	RandomSelection_Init();
 	n = 0;
 	for(e = world; (e = find(e, targetname, self.target)); )
 	{
 		++n;
 		if(e.movetype == MOVETYPE_NONE)
-			RandomSelection_Add(e, 0, string_null, 1, 1);
+			waypoint_spawnforteleporter(self, e.origin, 0);
 		if(e.classname != "info_teleport_destination")
 			print("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.\n");
 	}
-	if(RandomSelection_chosen_ent)
-		waypoint_spawnforteleporter(self, RandomSelection_chosen_ent.origin, 0);
 
 	if(n == 0)
 	{
@@ -274,7 +271,6 @@ void teleport_findtarget (void)
 	{
 		// exactly one dest - bots love that
 		self.enemy = find(e, targetname, self.target);
-		self.dest = self.enemy.origin;
 	}
 	else
 	{

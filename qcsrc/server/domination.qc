@@ -34,7 +34,6 @@ float pps_yellow;
 float pps_pink;
 void set_dom_state(entity e)
 {
-	// BIG ugly hack to make stat sending work
 	e.dom_total_pps = total_pps;
 	e.dom_pps_red = pps_red;
 	e.dom_pps_blue = pps_blue;
@@ -130,48 +129,47 @@ void dompoint_captured ()
 	self.delay = old_delay;
 	self.team = old_team;
 
-	switch(self.team)
-	{
-		// "fix" pps when slightly under 0 because of approximation errors
-		case COLOR_TEAM1:
-			pps_red -= (points/wait_time);
-			if (pps_red < 0) pps_red = 0;
-			break;
-		case COLOR_TEAM2:
-			pps_blue -= (points/wait_time);
-			if (pps_blue < 0) pps_blue = 0;
-			break;
-		case COLOR_TEAM3:
-			pps_yellow -= (points/wait_time);
-			if (pps_yellow < 0) pps_yellow = 0;
-			break;
-		case COLOR_TEAM4:
-			pps_pink -= (points/wait_time);
-			if (pps_pink < 0) pps_pink = 0;
-	}
-
 	switch(self.goalentity.team)
 	{
-		// "fix" pps when slightly over total_pps because of approximation errors
 		case COLOR_TEAM1:
-			pps_red += (points/wait_time);
-			if (pps_red > total_pps) pps_red = total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-red", "", "");
 			break;
 		case COLOR_TEAM2:
-			pps_blue += (points/wait_time);
-			if (pps_blue > total_pps) pps_blue = total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-blue", "", "");
 			break;
 		case COLOR_TEAM3:
-			pps_yellow += (points/wait_time);
-			if (pps_yellow > total_pps) pps_yellow = total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-yellow", "", "");
 			break;
 		case COLOR_TEAM4:
-			pps_pink += (points/wait_time);
-			if (pps_pink > total_pps) pps_pink = total_pps;
 			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
+	}
+
+	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
+	for(head = world; (head = find(head, classname, "dom_controlpoint")) != world; )
+	{
+		if (autocvar_g_domination_point_amt)
+			points = autocvar_g_domination_point_amt;
+		else
+			points = head.frags;
+		if (autocvar_g_domination_point_rate)
+			wait_time = autocvar_g_domination_point_rate;
+		else
+			wait_time = head.wait;
+		switch(head.goalentity.team)
+		{
+			case COLOR_TEAM1:
+				pps_red += points/wait_time;
+				break;
+			case COLOR_TEAM2:
+				pps_blue += points/wait_time;
+				break;
+			case COLOR_TEAM3:
+				pps_yellow += points/wait_time;
+				break;
+			case COLOR_TEAM4:
+				pps_pink += points/wait_time;
+		}
+		total_pps += points/wait_time;
 	}
 
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
@@ -366,12 +364,12 @@ void dom_controlpoint_setup()
 		self.wait = 5;
 
 	float points, waittime;
-	if (autocvar_g_domination_point_rate)
-		points = autocvar_g_domination_point_rate;
+	if (autocvar_g_domination_point_amt)
+		points = autocvar_g_domination_point_amt;
 	else
 		points = self.frags;
-	if (autocvar_g_domination_point_amt)
-		waittime = autocvar_g_domination_point_amt;
+	if (autocvar_g_domination_point_rate)
+		waittime = autocvar_g_domination_point_rate;
 	else
 		waittime = self.wait;
 

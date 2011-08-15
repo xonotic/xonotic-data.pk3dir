@@ -283,6 +283,7 @@ string spritelookuptext(string s)
 		case "race-checkpoint": return _("Checkpoint");
 		case "race-finish": return _("Finish");
 		case "race-start": return _("Start");
+		case "race-start-finish": return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
 		case "nb-ball": return _("Ball");
 		case "ka-ball": return _("Ball");
 		case "ka-ballcarrier": return _("Ball carrier");
@@ -379,6 +380,7 @@ vector fixrgbexcess(vector rgb)
 	return rgb;
 }
 
+float waypointsprite_count, waypointsprite_newcount;
 void Draw_WaypointSprite()
 {
 	string spriteimage;
@@ -434,6 +436,8 @@ void Draw_WaypointSprite()
 
 	if(spriteimage == "")
 		return;
+
+	++waypointsprite_newcount;
 	
 	float dist;
 	dist = vlen(self.origin - view_origin);
@@ -582,7 +586,10 @@ void Draw_WaypointSprite()
 	o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
 	
 	string txt;
-	txt = spritelookuptext(spriteimage);
+	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
+		txt = _("Spam");
+	else
+		txt = spritelookuptext(spriteimage);
 	if(self.helpme && time < self.helpme)
 		txt = sprintf(_("%s needing help!"), txt);
 	if(autocvar_g_waypointsprite_uppercase)
@@ -791,4 +798,7 @@ void WaypointSprite_Load()
 		WaypointSprite_Load_Frames(".jpg");
 		waypointsprite_initialized = true;
 	}
+
+	waypointsprite_count = waypointsprite_newcount;
+	waypointsprite_newcount = 0;
 }
