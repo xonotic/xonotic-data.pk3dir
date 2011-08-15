@@ -72,6 +72,7 @@ entity makeXonoticKeyBinder()
 }
 void replace_bind(string from, string to)
 {
+	float n, j, k;
 	n = tokenize(findkeysforcommand(from)); // uses '...' strings
 	for(j = 0; j < n; ++j)
 	{
