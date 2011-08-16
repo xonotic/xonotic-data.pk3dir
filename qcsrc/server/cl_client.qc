@@ -2514,7 +2514,7 @@ void ObserverThink()
 				self.classname = "spectator";
 			}
 		} else {
-			prefered_movetype = ((self.cvar_cl_clippedspectating && !self.BUTTON_USE) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			prefered_movetype = ((!self.BUTTON_USE ? self.cvar_cl_clippedspectating : !self.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			if (self.movetype != prefered_movetype)
 				self.movetype = prefered_movetype;
 		}
