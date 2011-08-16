@@ -226,6 +226,7 @@ void PlayerStats_Shutdown()
 		bufstr_set(b, i++, sprintf("T %s.%06d", strftime(FALSE, "%s"), floor(random() * 1000000)));
 		bufstr_set(b, i++, sprintf("G %s", GetGametype()));
 		bufstr_set(b, i++, sprintf("M %s", GetMapname()));
+		bufstr_set(b, i++, sprintf("I %s", matchid));
 		bufstr_set(b, i++, sprintf("S %s", cvar_string("hostname")));
 		bufstr_set(b, i++, sprintf("C %d", cvar_purechanges_count));
         for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
