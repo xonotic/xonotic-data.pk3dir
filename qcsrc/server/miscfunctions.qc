@@ -81,19 +81,20 @@ float logfile;
 
 string GetAdvancedDeathReports(entity enPlayer) // Extra fragmessage information
 {
-	local float nPlayerHealth = rint(enPlayer.health);
-	local float nPlayerArmor = rint(enPlayer.armorvalue);
-	local float nPlayerHandicap = enPlayer.cvar_cl_handicap;
-	local float nPlayerPing = rint(enPlayer.ping);
-	local string strPlayerPingColor;
-	local string strMessage;
+	float nPlayerHealth = rint(enPlayer.health);
+	float nPlayerArmor = rint(enPlayer.armorvalue);
+	float nPlayerHandicap = enPlayer.cvar_cl_handicap;
+	float nPlayerPing = rint(enPlayer.ping);
+	string strPlayerPingColor;
+	string strMessage;
+	
 	if(nPlayerPing >= 150)
 		strPlayerPingColor = "^1";
 	else
 		strPlayerPingColor = "^2";
 
 	if((autocvar_sv_fragmessage_information_stats) && (enPlayer.health >= 1))
-		strMessage = strcat(strMessage, "\n^7(Health ^1", ftos(nPlayerHealth), "^7 / Armor ^2", ftos(nPlayerArmor), "^7)");
+		strMessage = strcat(strMessage, "^7(Health ^1", ftos(nPlayerHealth), "^7 / Armor ^2", ftos(nPlayerArmor), "^7)");
 
 	if(autocvar_sv_fragmessage_information_ping) {
 		if(clienttype(enPlayer) == CLIENTTYPE_BOT) // Bots have no ping
@@ -113,12 +114,16 @@ string GetAdvancedDeathReports(entity enPlayer) // Extra fragmessage information
 	} else if(autocvar_sv_fragmessage_information_handicap) {
 		if(autocvar_sv_fragmessage_information_handicap == 2)
 			if(nPlayerHandicap <= 1)
-				strMessage = strcat(strMessage, "\n^7(Handicap ^2Off^7)");
+				strMessage = strcat(strMessage, "^7(Handicap ^2Off^7)");
 			else
-				strMessage = strcat(strMessage, "\n^7(Handicap ^2", ftos(nPlayerHandicap), "^7)");
+				strMessage = strcat(strMessage, "^7(Handicap ^2", ftos(nPlayerHandicap), "^7)");
 		else if(nPlayerHandicap > 1)
-			strMessage = strcat(strMessage, "\n^7(Handicap ^2", ftos(nPlayerHandicap), "^7)");
+			strMessage = strcat(strMessage, "^7(Handicap ^2", ftos(nPlayerHandicap), "^7)");
 	}
+	
+	if(strMessage) // add new line to the beginning if there is a message
+		strMessage = strcat("\n", strMessage);
+		
 	return strMessage;
 }
 void bcenterprint(string s)
@@ -579,7 +584,6 @@ void GetCvars(float f)
 	MUTATOR_CALLHOOK(GetCvars);
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
-	GetCvars_handleFloat(s, f, cvar_scr_centertime, "scr_centertime");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
 	GetCvars_handleFloat(s, f, cvar_cl_clippedspectating, "cl_clippedspectating");
@@ -717,46 +721,6 @@ float NumberToTeamNumber(float number)
 		return COLOR_TEAM4;
 
 	return -1;
-}
-
-#define CENTERPRIO_POINT 1
-#define CENTERPRIO_SPAM 2
-#define CENTERPRIO_VOTE 4
-#define CENTERPRIO_NORMAL 5
-#define CENTERPRIO_SHIELDING 7
-#define CENTERPRIO_MAPVOTE 9
-#define CENTERPRIO_IDLEKICK 50
-#define CENTERPRIO_ADMIN 99
-.float centerprint_priority;
-.float centerprint_expires;
-void centerprint_atprio(entity e, float prio, string s)
-{
-    if (intermission_running)
-        if (prio < CENTERPRIO_MAPVOTE)
-            return;
-    if (time > e.centerprint_expires)
-        e.centerprint_priority = 0;
-    if (prio >= e.centerprint_priority)
-    {
-        e.centerprint_priority = prio;
-        if (timeoutStatus == 2)
-            e.centerprint_expires = time + (e.cvar_scr_centertime * TIMEOUT_SLOWMO_VALUE);
-        else
-            e.centerprint_expires = time + e.cvar_scr_centertime;
-        centerprint_builtin(e, s);
-    }
-}
-void centerprint_expire(entity e, float prio)
-{
-    if (prio == e.centerprint_priority)
-    {
-        e.centerprint_priority = 0;
-        centerprint_builtin(e, "");
-    }
-}
-void centerprint(entity e, string s)
-{
-    centerprint_atprio(e, CENTERPRIO_NORMAL, s);
 }
 
 // decolorizes and team colors the player name when needed
@@ -1701,6 +1665,30 @@ void precache()
 #define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 
+
+void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
+{
+	if (clienttype(e) == CLIENTTYPE_REAL)
+	{
+		msg_entity = e;
+		WRITESPECTATABLE_MSG_ONE({
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
+			WriteByte(MSG_ONE, CSQC_CENTERPRINT_GENERIC);
+			WriteByte(MSG_ONE, id);
+			WriteString(MSG_ONE, s);
+			if (id != 0 && s != "")
+			{
+				WriteByte(MSG_ONE, duration);
+				WriteByte(MSG_ONE, countdown_num);
+			}
+		});
+	}
+}
+void Send_CSQC_Centerprint_Generic_Expire(entity e, float id)
+{
+	Send_CSQC_Centerprint_Generic(e, id, "", 1, 0);
+}
 // WARNING: this kills the trace globals
 #define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init()
@@ -2040,7 +2028,7 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 		return TRUE;
 	}
 	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
-		UpdateCSQCProjectileNextFrame(self);
+		UpdateCSQCProjectile(self);
 	return FALSE;
 }
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return

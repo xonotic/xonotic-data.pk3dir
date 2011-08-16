@@ -1325,6 +1325,17 @@ void Net_Notify() {
 	{
 		HUD_Centerprint(ReadString(), ReadString(), ReadShort(), ReadByte());
 	}
+	else if(type == CSQC_CENTERPRINT_GENERIC)
+	{
+		float id;
+		string s;
+		id = ReadByte();
+		s = ReadString();
+		if (id != 0 && s != "")
+			centerprint_generic(id, s, ReadByte(), ReadByte());
+		else
+			centerprint_generic(id, s, 0, 0);
+	}
 }
 
 void Net_WeaponComplain() {

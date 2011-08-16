@@ -226,11 +226,15 @@ void PlayerStats_Shutdown()
 		bufstr_set(b, i++, sprintf("T %s.%06d", strftime(FALSE, "%s"), floor(random() * 1000000)));
 		bufstr_set(b, i++, sprintf("G %s", GetGametype()));
 		bufstr_set(b, i++, sprintf("M %s", GetMapname()));
+		bufstr_set(b, i++, sprintf("I %s", matchid));
 		bufstr_set(b, i++, sprintf("S %s", cvar_string("hostname")));
 		bufstr_set(b, i++, sprintf("C %d", cvar_purechanges_count));
         for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
         {
             bufstr_set(b, i++, sprintf("P %s", p));
+            nn = db_get(playerstats_db, sprintf("%s:_playerid", p));
+            if(nn != "")
+                bufstr_set(b, i++, sprintf("i %s", nn));
             nn = db_get(playerstats_db, sprintf("%s:_netname", p));
             if(nn != "")
                 bufstr_set(b, i++, sprintf("n %s", nn));
@@ -284,6 +288,8 @@ void PlayerStats_AddGlobalInfo(entity p)
 
 	if(p.alivetime)
 		PlayerStats_Event(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
+
+	db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), ftos(p.playerid));
 	
 	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);

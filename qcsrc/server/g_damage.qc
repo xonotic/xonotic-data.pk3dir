@@ -41,8 +41,6 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	Net_LinkEntity(e, FALSE, 0.2, Damage_DamageInfo_SendEntity);
 }
 
-#define DAMAGE_CENTERPRINT_SPACER NEWLINES
-
 float checkrules_firstblood;
 
 float yoda;
@@ -126,6 +124,8 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 	{
 		// regular frag
 		PlayerScore_Add(attacker, SP_KILLS, 1);
+		if(targ.playerid)
+			PlayerStats_Event(attacker, sprintf("kills-%d", targ.playerid), 1);
 	}
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
@@ -643,7 +643,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			if (targ.armorvalue && (deathtype == WEP_MINSTANEX) && damage)
 			{
 				targ.armorvalue -= 1;
-				centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(targ.armorvalue)));
+				centerprint(targ, strcat("^3Remaining extra lives: ",ftos(targ.armorvalue)));
 				damage = 0;
 				targ.hitsound += 1;
 				attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
@@ -655,7 +655,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				if (targ != attacker)
 				{
 					if ((targ.health >= 1) && (targ.classname == "player"))
-						centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
+						centerprint(attacker, "Secondary fire inflicts no damage!");
 					force = '0 0 0';
 					// keep mirrorforce
 					attacker = targ;
@@ -899,7 +899,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			if(attacker.armorvalue > 0)
 			{
 				attacker.armorvalue = attacker.armorvalue - 1;
-				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(attacker.armorvalue)));
+				centerprint(attacker, strcat("^3Remaining extra lives: ",ftos(attacker.armorvalue)));
 				attacker.hitsound += 1;
 			}
 			mirrordamage = 0;

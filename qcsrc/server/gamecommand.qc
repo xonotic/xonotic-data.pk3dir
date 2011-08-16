@@ -815,7 +815,7 @@ void GameCommand(string command)
 				}
 				else
 				{
-					centerprint_atprio(client, CENTERPRIO_ADMIN, strcat("^3", admin_name(), ":\n\n^7", argv(2)));
+					centerprint(client, strcat("^3", admin_name(), ":\n\n^7", argv(2)));
 					sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", argv(2), "\n"));
 				}
 				print("Message sent to ", client.netname, "\n");

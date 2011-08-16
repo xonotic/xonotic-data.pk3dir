@@ -28,6 +28,8 @@ entity navigation_bestgoal;
 .float navigation_hasgoals;
 .float lastteleporttime;
 
+.float blacklisted;
+
 .entity navigation_jetpack_goal;
 .vector navigation_jetpack_point;
 
