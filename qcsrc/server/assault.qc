@@ -208,8 +208,6 @@ void spawnfunc_func_assault_destructible() {
 	}
 	self.spawnflags = 3;
 	self.classname = "func_assault_destructible";
-	self.takedamage = TRUE;
-	self.bot_attack = TRUE;
 	if(assault_attacker_team == COLOR_TEAM1) {
 		self.team = COLOR_TEAM2;
 	} else {
