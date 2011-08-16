@@ -1637,6 +1637,8 @@ void ClientConnect (void)
 
 	self.playerid = (playerid_last = playerid_last + 1);
 
+	PlayerStats_AddEvent(sprintf("kills-%d", self.playerid));
+
     if(clienttype(self) == CLIENTTYPE_BOT)
         PlayerStats_AddPlayer(self);
 

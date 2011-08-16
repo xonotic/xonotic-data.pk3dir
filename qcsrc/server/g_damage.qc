@@ -124,6 +124,8 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 	{
 		// regular frag
 		PlayerScore_Add(attacker, SP_KILLS, 1);
+		if(targ.playerid)
+			PlayerStats_Event(attacker, sprintf("kills-%d", targ.playerid), 1);
 	}
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);

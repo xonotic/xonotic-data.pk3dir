@@ -232,6 +232,9 @@ void PlayerStats_Shutdown()
         for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
         {
             bufstr_set(b, i++, sprintf("P %s", p));
+            nn = db_get(playerstats_db, sprintf("%s:_playerid", p));
+            if(nn != "")
+                bufstr_set(b, i++, sprintf("i %s", nn));
             nn = db_get(playerstats_db, sprintf("%s:_netname", p));
             if(nn != "")
                 bufstr_set(b, i++, sprintf("n %s", nn));
@@ -285,6 +288,8 @@ void PlayerStats_AddGlobalInfo(entity p)
 
 	if(p.alivetime)
 		PlayerStats_Event(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
+
+	db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), ftos(p.playerid));
 	
 	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
