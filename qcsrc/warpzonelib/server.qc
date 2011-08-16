@@ -784,7 +784,7 @@ void WarpZone_StartFrame()
 		if(f == CLIENTTYPE_REAL)
 		{
 			if(e.solid == SOLID_NOT) // not spectating?
-			if(e.movetype == MOVETYPE_NOCLIP || e.movetype == MOVETYPE_FLY || e.movetype == MOVETYPE_SPECTATOR) // not spectating? (this is to catch observers)
+			if(e.movetype == MOVETYPE_NOCLIP || e.movetype == MOVETYPE_FLY || e.movetype == MOVETYPE_FLY_WORLDONLY) // not spectating? (this is to catch observers)
 			{
 				other = e; // player
 			

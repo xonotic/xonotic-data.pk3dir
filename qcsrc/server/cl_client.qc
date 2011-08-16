@@ -665,7 +665,7 @@ void PutObserverInServer (void)
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_NOT;
-	self.movetype = MOVETYPE_SPECTATOR; //(self.cvar_cl_clippedspectating ? MOVETYPE_NOCLIP : MOVETYPE_FLY); // it's too early for this anyway, lets just set it in playerprethink
+	self.movetype = MOVETYPE_FLY_WORLDONLY; //(self.cvar_cl_clippedspectating ? MOVETYPE_NOCLIP : MOVETYPE_FLY); // it's too early for this anyway, lets just set it in playerprethink
 	self.flags = FL_CLIENT | FL_NOTARGET;
 	self.armorvalue = 666;
 	self.effects = 0;
@@ -2514,7 +2514,7 @@ void ObserverThink()
 				self.classname = "spectator";
 			}
 		} else {
-			prefered_movetype = ((self.cvar_cl_clippedspectating && !self.BUTTON_USE) ? MOVETYPE_SPECTATOR : MOVETYPE_NOCLIP);
+			prefered_movetype = ((self.cvar_cl_clippedspectating && !self.BUTTON_USE) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			if (self.movetype != prefered_movetype)
 				self.movetype = prefered_movetype;
 		}
