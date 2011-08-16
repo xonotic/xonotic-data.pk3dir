@@ -101,15 +101,13 @@ void fteqcc_testbugs()
  * players. Also plays reminder sounds.
  */
 void timeoutHandler_Think() {
-	local string timeStr;
 	local entity plr;
 	if (timeoutStatus == 1) {
 		if (remainingLeadTime > 0) {
 			//centerprint the information to every player
-			timeStr = getTimeoutText(0);
 			FOR_EACH_REALCLIENT(plr) {
 				if(plr.classname == "player") {
-					centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
+					Send_CSQC_Centerprint_Generic(plr, CPID_TIMEOUT_COUNTDOWN, "Timeout begins in %d seconds!", 1, remainingLeadTime);
 				}
 			}
 			remainingLeadTime -= 1;
@@ -133,10 +131,9 @@ void timeoutHandler_Think() {
 	}
 	else if (timeoutStatus == 2) {
 		if (remainingTimeoutTime > 0) {
-			timeStr = getTimeoutText(0);
 			FOR_EACH_REALCLIENT(plr) {
 				if(plr.classname == "player") {
-					centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
+					Send_CSQC_Centerprint_Generic(plr, CPID_TIMEOUT_COUNTDOWN, "Timeout ends in %d seconds!", 1, remainingTimeoutTime);
 				}
 			}
 			if(remainingTimeoutTime == autocvar_sv_timeout_resumetime) { //play a warning sound when only <sv_timeout_resumetime> seconds are left
@@ -156,7 +153,7 @@ void timeoutHandler_Think() {
 			//get rid of the countdown message
 			FOR_EACH_REALCLIENT(plr) {
 				if(plr.classname == "player") {
-					centerprint_atprio(plr, CENTERPRIO_SPAM, "");
+					Send_CSQC_Centerprint_Generic_Expire(plr, CPID_TIMEOUT_COUNTDOWN);
 				}
 			}
 			remove(self);
@@ -167,7 +164,7 @@ void timeoutHandler_Think() {
 	else if (timeoutStatus == 0) { //if a player called the resumegame command (which set timeoutStatus to 0 already)
 		FOR_EACH_REALCLIENT(plr) {
 			if(plr.classname == "player") {
-				centerprint_atprio(plr, CENTERPRIO_SPAM, "");
+				Send_CSQC_Centerprint_Generic_Expire(plr, CPID_TIMEOUT_COUNTDOWN);
 			}
 		}
 		remove(self);

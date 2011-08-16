@@ -450,56 +450,10 @@ string GetClientVersionMessage() {
 	return versionmsg;
 }
 
-
-void PrintWelcomeMessage(entity pl)
+string getwelcomemessage(void)
 {
 	string s, modifications, motd;
 
-	if(self.cvar_scr_centertime == 0) return;
-
-	if(autocvar_g_campaign)
-	{
-		if(self.classname == "player" && !self.BUTTON_INFO)
-			return;
-	}
-	else
-	{
-		if((time - self.jointime) > autocvar_welcome_message_time && !self.BUTTON_INFO)
-			return;
-	}
-
-	if( !(timeoutStatus >= 1) ) { //really print the WelcomeMessage to the player every frame when timeout-seconds are shown or the game is restarted, to make sure that the shown number is accurate
-		if(self.welcomemessage_time > time) return;
-		self.welcomemessage_time = time + max(0.5, self.cvar_scr_centertime * 0.6);
-	}
-
-	if(autocvar_g_campaign)
-	{
-		centerprint(pl, campaign_message);
-		return;
-	}
-
-//TODO GreEn`mArine: make the timeout-messages clientside as well (just like the ready restart countdown)!
-	if(!self.BUTTON_INFO)
-	{
-		// TODO get rid of this too
-		local string specString;
-		specString = NEWLINES;
-		//if(time < game_starttime) //also show the countdown when being a spectator
-		//	specString = strcat(specString, "\n\n^1Game starts in ", ftos(ceil(game_starttime - time)), " seconds^7");
-		//else
-		if (timeoutStatus != 0)
-			specString = strcat(specString, "\n\n", getTimeoutText(1));
-		else
-		{
-			if(self.classname == "player")
-				return;
-			goto normal;
-		}
-		return centerprint_atprio(self, CENTERPRIO_SPAM, specString);
-	}
-
-:normal
 	ret_string = "";
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString);
 	modifications = ret_string;
@@ -536,14 +490,11 @@ void PrintWelcomeMessage(entity pl)
 	local string versionmessage;
 	versionmessage = GetClientVersionMessage();
 
-	s = strcat(s, NEWLINES, "This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
+	s = strcat("This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
 	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
-
-	if(timeoutStatus != 0)
-		s = strcat(s, "\n\n", getTimeoutText(1));
 
 	if (g_grappling_hook)
 		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
@@ -566,11 +517,8 @@ void PrintWelcomeMessage(entity pl)
 	if (motd != "") {
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
-	s = strcat(s, "\n");
-
-	centerprint(pl, s);
+	return s;
 }
-
 
 void SetPlayerColors(entity pl, float _color)
 {

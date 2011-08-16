@@ -45,9 +45,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write_Cvar_q("hud_configure_grid_ysize");
 		HUD_Write("\n");
 
-		HUD_Write_Cvar_q("scr_centerpos");
-		HUD_Write("\n");
-
 		// common cvars for all panels
 		float i;
 		for (i = 0; i < HUD_PANEL_NUM; ++i)
@@ -123,6 +120,13 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_baralign");
 					HUD_Write_PanelCvar_q("_progressbar");
 					HUD_Write_PanelCvar_q("_acceleration_mode");
+					break;
+				case HUD_PANEL_CENTERPRINT:
+					HUD_Write_PanelCvar_q("_align");
+					HUD_Write_PanelCvar_q("_flip");
+					HUD_Write_PanelCvar_q("_fontscale");
+					HUD_Write_PanelCvar_q("_time");
+					HUD_Write_PanelCvar_q("_fadetime");
 					break;
 			}
 			HUD_Write("\n");

@@ -8,7 +8,6 @@ float arena_roundbased;
 entity spawnqueue_first;
 entity spawnqueue_last;
 entity champion;
-string champion_name;
 float warmup;
 float ca_players;
 float required_ca_players;
@@ -134,7 +133,7 @@ void reset_map(float dorespawn)
 	}
 
 	if(g_keyhunt)
-		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round+(game_starttime - time), "", kh_StartRound);
+		kh_Controller_SetThink_NoMsg(autocvar_g_balance_keyhunt_delay_round+(game_starttime - time), kh_StartRound);
 
 	if(g_arena)
 	if(champion && champion.classname == "player" && player_count > 1)
@@ -204,15 +203,12 @@ float roundStartTime_prev; // prevent networkspam
 void Arena_Warmup()
 {
 	float f;
-	string msg;
     entity e;
 
 	if((!g_arena && !g_ca && !g_freezetag) || (g_arena && !arena_roundbased) || (time < game_starttime))
 		return;
 
 	f = ceil(warmup - time);
-	if(f > 0)
-		champion = world; // this is done because a if(champion) will not execute if champion = world
 
 	allowed_to_spawn = 0;
 
@@ -221,18 +217,17 @@ void Arena_Warmup()
 	if(ca_players < required_ca_players)
 		allowed_to_spawn = 1;
 
-	msg = NEWLINES;
 	if(time < warmup && !inWarmupStage)
 	{
 		if (g_ca)
 			allowed_to_spawn = 1;
 		if(champion && g_arena)
-			msg = strcat("The Champion is ", champion_name, "^7\n");
-			//centerprint(self, strcat(msg, "The Champion is ", champion.netname, "^7\n"));
+		{
+			FOR_EACH_PLAYER(e)
+				centerprint(e, strcat("The Champion is ", champion.netname));
+		}
 
 		if(f != roundStartTime_prev) {
-			msg = strcat(msg, "Round will start in ", ftos(f),"\n");
-			//centerprint(self, strcat("Round will start in ", ftos(f),"\n"));
 			roundStartTime_prev = f;
 			if(f == 5)
 				Announce("prepareforbattle");
@@ -243,8 +238,8 @@ void Arena_Warmup()
 			else if(f == 1)
 				Announce("1");
 
-            FOR_EACH_PLAYER(e)
-                centerprint(e, msg);
+			FOR_EACH_PLAYER(e)
+				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
 		}
 
 		if (g_arena) {
@@ -256,12 +251,12 @@ void Arena_Warmup()
 			self.movement = '0 0 0';
 		}
 	}
-
 	else if(f > -1 && f != roundStartTime_prev)
 	{
 		roundStartTime_prev = f;
 		Announce("begin");
-		centerprint(self, "^1Begin!\n");
+		FOR_EACH_PLAYER(e)
+			Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
 
 		if(g_ca) {
 			ca_players = 0;
@@ -272,7 +267,12 @@ void Arena_Warmup()
 
         if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
             self.movetype = MOVETYPE_WALK;
+
 	}
+
+	// clear champion to avoid centerprinting again the champion msg
+	if (champion)
+		champion = world;
 }
 
 void count_spawned_players()
@@ -371,6 +371,7 @@ void count_alive_players()
  *
  * Gets called in StartFrame()
  */
+float warntime;
 void Spawnqueue_Check()
 {
 	count_spawned_players();
@@ -388,20 +389,20 @@ void Spawnqueue_Check()
 			reset_map(TRUE);
 		}
 		else if(ca_players < required_ca_players) {
-			FOR_EACH_PLAYER(self)
-				centerprint(self, strcat("^1Need at least 1 player in each team to play CA", "^7\n"));
+			if (time > warntime)
+			{
+				FOR_EACH_PLAYER(self)
+					Send_CSQC_Centerprint_Generic(self, CPID_ROUND_STARTING, "^1Need at least 1 player in each team to play CA", 2, 0);
+				warntime = time + 1;
+			}
 			return;
 		}
 		else if(!next_round) {
 			if((redspawned && !bluespawned) || (bluespawned && !redspawned)) {
 				next_round = time + 5;
-				champion = find(world, classname, "player");
-				if(champion_name)
-					strunzone(champion_name);
-				champion_name = strzone(champion.netname);
 			}
 			else if((!redspawned && !bluespawned) || time - warmup > autocvar_g_ca_round_timelimit) {
-				FOR_EACH_CLIENT(self) centerprint(self, strcat("^7Round tied.", "^7\n"));
+				FOR_EACH_CLIENT(self) centerprint(self, "^7Round tied");
 				next_round = time + 5;
 			}
 
@@ -411,14 +412,14 @@ void Spawnqueue_Check()
 			if(redalive && !bluealive)
 			{
 				play2all("ctf/red_capture.wav");
-				FOR_EACH_CLIENT(self) centerprint(self, "^1 RED ^7team wins the round.\n");
+				FOR_EACH_CLIENT(self) centerprint(self, "^1RED ^7team wins the round");
 				TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, +1);
 				stopalivecheck = TRUE;
 			}
 			else if(bluealive && !redalive)
 			{
 				play2all("ctf/blue_capture.wav");
-				FOR_EACH_CLIENT(self) centerprint(self, "^4 BLUE ^7team wins the round.\n");
+				FOR_EACH_CLIENT(self) centerprint(self, "^4BLUE ^7team wins the round");
 				TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, +1);
 				stopalivecheck = TRUE;
 			}

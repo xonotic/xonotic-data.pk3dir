@@ -66,12 +66,12 @@ void ctf_captureshield_update(entity p, float dir)
 		{
 			if(should)
 			{
-				centerprint_atprio(p, CENTERPRIO_SHIELDING, "^3You are now ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Make some defensive scores before trying again.");
+				Send_CSQC_Centerprint_Generic(other, CPID_CTF_CAPTURESHIELD, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.", 5, 0);
 				// TODO csqc notifier for this
 			}
 			else
 			{
-				centerprint_atprio(p, CENTERPRIO_SHIELDING, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.");
+				Send_CSQC_Centerprint_Generic(p, CPID_CTF_CAPTURESHIELD, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.", 5, 0);
 				// TODO csqc notifier for this
 			}
 			p.ctf_captureshielded = should;
@@ -88,6 +88,7 @@ float ctf_captureshield_customize()
 	return TRUE;
 }
 
+.float ctf_captureshield_touch_msgtime;
 void ctf_captureshield_touch()
 {
 	if not(other.ctf_captureshielded)
@@ -99,7 +100,9 @@ void ctf_captureshield_touch()
 	mymid = (self.absmin + self.absmax) * 0.5;
 	othermid = (other.absmin + other.absmax) * 0.5;
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * captureshield_force);
-	centerprint_atprio(other, CENTERPRIO_SHIELDING, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.");
+	if (time - other.ctf_captureshield_touch_msgtime > 2)
+		Send_CSQC_Centerprint_Generic(other, CPID_CTF_CAPTURESHIELD, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.", 5, 0);
+	other.ctf_captureshield_touch_msgtime = time;
 }
 
 void ctf_flag_spawnstuff()

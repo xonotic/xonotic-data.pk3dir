@@ -308,9 +308,6 @@ void CSQC_SPIDER_HUD()
     else
         drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 1 1', 1, DRAWFLAG_NORMAL);
 
-
-    HUD_DrawCenterPrint();
-
 	if (scoreboard_showscores)
 		HUD_DrawScoreboard();
     else
@@ -495,8 +492,6 @@ void CSQC_RAPTOR_HUD()
         }
     }
 
-    HUD_DrawCenterPrint();
-
 	if (scoreboard_showscores)
 		HUD_DrawScoreboard();
     else
@@ -637,9 +632,6 @@ void CSQC_WAKIZASHI_HUD()
         drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     else
         drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-
-    HUD_DrawCenterPrint();
 
 	if (scoreboard_showscores)
 		HUD_DrawScoreboard();
