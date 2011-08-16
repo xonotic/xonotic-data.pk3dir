@@ -520,29 +520,29 @@ float updateCompression()
 
 // note: include only those that should be in the menu!
 #define GAMETYPES \
-	GAMETYPE(MAPINFO_TYPE_ARENA, _("Arena")) \
-	GAMETYPE(MAPINFO_TYPE_ASSAULT, _("Assault")) \
-	GAMETYPE(MAPINFO_TYPE_CTF, _("Capture The Flag")) \
-	GAMETYPE(MAPINFO_TYPE_CA, _("Clan Arena")) \
-	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, _("Deathmatch")) \
-	GAMETYPE(MAPINFO_TYPE_DOMINATION, _("Domination")) \
-	GAMETYPE(MAPINFO_TYPE_FREEZETAG, _("Freeze Tag")) \
-	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, _("Keepaway")) \
-	GAMETYPE(MAPINFO_TYPE_KEYHUNT, _("Key Hunt")) \
-	GAMETYPE(MAPINFO_TYPE_LMS, _("Last Man Standing")) \
-	GAMETYPE(MAPINFO_TYPE_NEXBALL, _("Nexball")) \
-	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, _("Onslaught")) \
-	GAMETYPE(MAPINFO_TYPE_RACE, _("Race")) \
-	GAMETYPE(MAPINFO_TYPE_CTS, _("Race CTS")) \
-	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, _("Runematch")) \
-	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, _("Team Deathmatch")) \
+	GAMETYPE(MAPINFO_TYPE_ARENA, _("Arena"), "ar", _("free for all")) \
+	GAMETYPE(MAPINFO_TYPE_ASSAULT, _("Assault"), "as", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_CTF, _("Capture The Flag"), "ctf", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_CA, _("Clan Arena"), "ca", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, _("Deathmatch"), "dm", _("free for all")) \
+	GAMETYPE(MAPINFO_TYPE_DOMINATION, _("Domination"), "dom", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_FREEZETAG, _("Freeze Tag"), "ft", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, _("Keepaway"), "ka", _("free for all")) \
+	GAMETYPE(MAPINFO_TYPE_KEYHUNT, _("Key Hunt"), "kh", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_LMS, _("Last Man Standing"), "lms", _("free for all")) \
+	GAMETYPE(MAPINFO_TYPE_NEXBALL, _("Nexball"), "nb", _("free/teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, _("Onslaught"), "ons", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_RACE, _("Race"), "race", _("free/teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_CTS, _("Race CTS"), "cts", _("free for all")) \
+	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, _("Runematch"), "rune", _("free for all")) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, _("Team Deathmatch"), "tdm", _("teamplay")) \
 	/* nothing */
 
 float GameType_GetID(float cnt)
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name) if(i++ == cnt) return id;
+#define GAMETYPE(id,name,icon,teams) if(i++ == cnt) return id;
 	GAMETYPES
 #undef GAMETYPE
 	return 0;
@@ -551,16 +551,34 @@ string GameType_GetName(float cnt)
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name) if(i++ == cnt) return name;
+#define GAMETYPE(id,name,icon,teams) if(i++ == cnt) return name;
 	GAMETYPES
 #undef GAMETYPE
 	return _("@!#%'n Tuba Throwing");
+}
+string GameType_GetIcon(float cnt)
+{
+	float i;
+	i = 0;
+#define GAMETYPE(id,name,icon,teams) if(i++ == cnt) return icon;
+	GAMETYPES
+#undef GAMETYPE
+	return "";
+}
+string GameType_GetTeams(float cnt)
+{
+	float i;
+	i = 0;
+#define GAMETYPE(id,name,icon,teams) if(i++ == cnt) return teams;
+	GAMETYPES
+#undef GAMETYPE
+	return _("tuba for all");
 }
 float GameType_GetCount()
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name) ++i;
+#define GAMETYPE(id,name,icon) ++i;
 	GAMETYPES
 #undef GAMETYPE
 	return i;
