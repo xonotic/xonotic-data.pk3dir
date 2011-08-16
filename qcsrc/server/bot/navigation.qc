@@ -133,8 +133,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			// hit something
 			if (trace_fraction < 1)
 			{
-				// check if we can walk over this obstacle
-				tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
+				// check if we can walk over this obstacle, possibly by jumpstepping
+				tracebox(org + jumpstepheightvec, m1, m2, move + jumpstepheightvec, movemode, e);
 				if (trace_fraction < 1 || trace_startsolid)
 				{
 					if(autocvar_bot_debug_tracewalk)
@@ -645,7 +645,11 @@ void navigation_routerating(entity e, float f, float rangebias)
 	if (!e)
 		return;
 
+	if(e.blacklisted)
+		return;
+
 	o = (e.absmin + e.absmax) * 0.5;
+
 	//print("routerating ", etos(e), " = ", ftos(f), " - ", ftos(rangebias), "\n");
 
 	// Evaluate path using jetpack
@@ -747,13 +751,47 @@ void navigation_routerating(entity e, float f, float rangebias)
 	}
 	else
 	{
+		float search;
+
+		search = TRUE;
+
+		if(e.flags & FL_ITEM)
+		{
+			if not(e.flags & FL_WEAPON)
+			if(e.nearestwaypoint)
+				search = FALSE;
+		}
+		else if (e.flags & FL_WEAPON)
+		{
+			if(e.classname != "droppedweapon")
+			if(e.nearestwaypoint)
+				search = FALSE;
+		}
+
+		if(search)
 		if (time > e.nearestwaypointtimeout)
 		{
 			nwp = navigation_findnearestwaypoint(e, TRUE);
 			if(nwp)
 				e.nearestwaypoint = nwp;
 			else
+			{
 				dprint("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e), "\n");
+
+				if(e.flags & FL_ITEM)
+					e.blacklisted = TRUE;
+				else if (e.flags & FL_WEAPON)
+				{
+					if(e.classname != "droppedweapon")
+						e.blacklisted = TRUE;
+				}
+
+				if(e.blacklisted)
+				{
+					dprint("The entity '", e.classname, "' is going to be excluded from path finding during this match\n");
+					return;
+				}
+			}
 
 			// TODO: Cleaner solution, probably handling this timeout from ctf.qc
 			if(e.classname=="item_flag_team")

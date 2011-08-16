@@ -715,12 +715,12 @@ void havocbot_movetogoal()
 			if (trace_plane_normal_z < 0.7)
 			{
 				s = trace_fraction;
-				tracebox(self.origin + '0 0 16', self.mins, self.maxs, self.origin + self.velocity * 0.2 + '0 0 16', FALSE, self);
+				tracebox(self.origin + stepheightvec, self.mins, self.maxs, self.origin + self.velocity * 0.2 + stepheightvec, FALSE, self);
 				if (trace_fraction < s + 0.01)
 				if (trace_plane_normal_z < 0.7)
 				{
 					s = trace_fraction;
-					tracebox(self.origin + '0 0 48', self.mins, self.maxs, self.origin + self.velocity * 0.2 + '0 0 48', FALSE, self);
+					tracebox(self.origin + jumpstepheightvec, self.mins, self.maxs, self.origin + self.velocity * 0.2 + jumpstepheightvec, FALSE, self);
 					if (trace_fraction > s)
 						self.BUTTON_JUMP = 1;
 				}

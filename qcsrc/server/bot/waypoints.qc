@@ -154,7 +154,8 @@ void waypoint_think()
 	local entity e;
 	local vector sv, sm1, sm2, ev, em1, em2, dv;
 
-	stepheightvec = autocvar_sv_stepheight * '0 0 1';
+	bot_calculate_stepheightvec();
+
 	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
 
 	//dprint("waypoint_think wpisbox = ", ftos(self.wpisbox), "\n");
