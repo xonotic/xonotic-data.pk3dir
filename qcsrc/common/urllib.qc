@@ -11,8 +11,6 @@
 .url_ready_func url_ready;
 .entity url_ready_pass;
 
-#define MIN_URL_ID 128
-#define NUM_URL_ID 64
 entity url_fromid[NUM_URL_ID];
 float autocvar__urllib_nextslot;
 

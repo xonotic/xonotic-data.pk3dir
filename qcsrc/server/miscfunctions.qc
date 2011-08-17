@@ -2045,7 +2045,11 @@ void URI_Get_Callback(float id, float status, string data)
     dprint(data);
     dprint("\nEnd of data.\n");
 
-    if (id == URI_GET_DISCARD)
+    if(url_URI_Get_Callback(id, status, data))
+    {
+        // handled
+    }
+    else if (id == URI_GET_DISCARD)
     {
         // discard
     }
