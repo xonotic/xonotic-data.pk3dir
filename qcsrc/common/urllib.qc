@@ -14,6 +14,7 @@
 #define MIN_URL_ID 128
 #define NUM_URL_ID 64
 entity url_fromid[NUM_URL_ID];
+float autocvar__urllib_nextslot;
 
 float url_URI_Get_Callback(float id, float status, string data)
 {
@@ -96,13 +97,19 @@ void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 
 			case FILE_READ:
 				// read data only
-				for(i = 0; i < NUM_URL_ID; ++i)
+				for(i = autocvar__urllib_nextslot; i < NUM_URL_ID; ++i)
 					if(url_fromid[i] == world)
 						break;
 				if(i >= NUM_URL_ID)
 				{
-					rdy(world, pass, URL_READY_ERROR);
-					return;
+					for(i = 0; i < autocvar__urllib_nextslot; ++i)
+						if(url_fromid[i] == world)
+							break;
+					if(i >= autocvar__urllib_nextslot)
+					{
+						rdy(world, pass, URL_READY_ERROR);
+						return;
+					}
 				}
 
 				e = spawn();
@@ -122,6 +129,7 @@ void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 				e.url_ready_pass = pass;
 				e.url_id = i;
 				url_fromid[i] = e;
+				cvar_set("_urllib_nextslot", ftos(mod(i + 1, NUM_URL_ID)));
 				break;
 		}
 	}
@@ -155,16 +163,22 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 	{
 		if(e.url_wbuf >= 0)
 		{
-			for(i = 0; i < NUM_URL_ID; ++i)
+			for(i = autocvar__urllib_nextslot; i < NUM_URL_ID; ++i)
 				if(url_fromid[i] == world)
 					break;
 			if(i >= NUM_URL_ID)
 			{
-				buf_del(e.url_wbuf);
-				rdy(e, pass, URL_READY_ERROR);
-				strunzone(e.url_url);
-				remove(e);
-				return;
+				for(i = 0; i < autocvar__urllib_nextslot; ++i)
+					if(url_fromid[i] == world)
+						break;
+				if(i >= autocvar__urllib_nextslot)
+				{
+					buf_del(e.url_wbuf);
+					rdy(e, pass, URL_READY_ERROR);
+					strunzone(e.url_url);
+					remove(e);
+					return;
+				}
 			}
 
 			if(!uri_postbuf(e.url_url, e.url_id + MIN_URL_ID, "text/plain", "\n", e.url_wbuf))
@@ -182,6 +196,7 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 			e.url_ready_pass = pass;
 			e.url_id = i;
 			url_fromid[i] = e;
+			cvar_set("_urllib_nextslot", ftos(mod(i + 1, NUM_URL_ID)));
 		}
 		else
 		{
