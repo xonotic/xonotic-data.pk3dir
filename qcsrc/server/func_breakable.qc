@@ -162,7 +162,7 @@ void func_breakable_destroy() {
 	func_breakable_destroyed();
 
 	if(self.noise)
-		sound (self, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 
 	if(self.dmg)
 		RadiusDamage(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, self.dmg_force, DEATH_HURTTRIGGER, world);

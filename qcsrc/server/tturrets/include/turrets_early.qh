@@ -2,8 +2,8 @@
 #define TTURRETS_ENABLED
 
 #ifdef TTURRETS_ENABLED
-
-#message "with tZork turrets"
+#ifdef SVQC
+//#message "with tZork turrets"
 
 float turret_count;
 
@@ -37,6 +37,8 @@ vector real_origin(entity ent);
 #define TSF_NO_PATHBREAK  8
 /// Dont respawn
 #define TSL_NO_RESPAWN    16
+/// Let this turret roam when idle.
+#define TSL_ROAM          32
 
 /// target selection flags
 .float target_select_flags;
@@ -340,9 +342,10 @@ vector real_origin(entity ent);
 .float target_select_playerbias;
 /// Field of view
 //.float target_select_fov;
-/// Last thimestamp this surret aquierd a valid target
+/// Last timestamp this turret aquierd a valid target
 .float target_select_time;
-
+/// Throttle re-validation of current target
+.float target_validate_time;
 /*
 * Aim refers to real aiming, not gun pos (thats done by track)
 */
@@ -400,32 +403,19 @@ void turret_fire();
 .void() turret_respawnhook;
 
 /*
-#define TEH_THINK 2
-#define TEH_DAMAGE 4
-#define TEH_DIE 8
-#define TEH_RESPAWN 16
-#define TEH_TRACK 32
-#define TEH_AIM 64
-#define TEH_SELECT 128
-.float(float event_id) turret_eventhook;
-*/
-
-
-/*
 * Target selection, preferably but not nessesarely
 * return a normalized result.
 */
 /// Function to use for target evaluation. usualy turret_stdproc_targetscore_generic
-.float(entity e_turret, entity e_target) turret_score_target;
-
+.float(entity _turret, entity _target) turret_score_target;
 
 /*
 * Target selection
 */
 /// Generic, fairly smart, bias-aware target selection.
-float   turret_stdproc_targetscore_generic(entity e_turret, entity e_target);
+float   turret_stdproc_targetscore_generic(entity _turret, entity _target);
 /// Experimental supportunits targetselector
-float   turret_stdproc_targetscore_support(entity e_turret,entity e_target);
+float   turret_stdproc_targetscore_support(entity _turret,entity _target);
 
 /*
 * Aim functions
@@ -464,8 +454,35 @@ void turret_do_updates(entity e_turret);
 .vector tur_shotdir_updated;
 
 void turrets_precash();
+#endif // SVQC
 
+// common
+.float turret_type;
+float TID_COMMON        = 1;
+float TID_EWHEEL        = 2;
+float TID_FLAC          = 3;
+float TID_FUSION        = 4;
+float TID_HELLION       = 5;
+float TID_HK            = 6;
+float TID_MACHINEGUN    = 7;
+float TID_MLRS          = 8;
+float TID_PHASER        = 9;
+float TID_PLASMA        = 10;
+float TID_PLASMA_DUAL   = 11;
+float TID_TESLA         = 12;
+float TID_WALKER        = 13;
+float TID_LAST          = 13;
 
+float TNSF_UPDATE       = 2;
+float TNSF_STATUS       = 4;
+float TNSF_SETUP        = 8;
+float TNSF_ANG          = 16;
+float TNSF_AVEL         = 32;
+float TNSF_MOVE         = 64;
+.float anim_start_time;
+float TNSF_ANIM         = 128;
+
+float TNSF_FULL_UPDATE  = 16777215;
 
 #endif // TTURRETS_ENABLED
 

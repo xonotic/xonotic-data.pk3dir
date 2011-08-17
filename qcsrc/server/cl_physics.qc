@@ -167,7 +167,7 @@ void PlayerJump (void)
 		setanim(self, self.anim_jump, FALSE, TRUE, TRUE);
 
 	if(g_jump_grunt)
-		PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
 	self.restart_jump = -1; // restart jump anim next time
 	// value -1 is used to not use the teleport bit (workaround for tiny hitch when re-jumping)
@@ -780,7 +780,7 @@ void SV_PlayerPhysics()
 			self.angles_x = random() * 360;
 			self.angles_y = random() * 360;
 			// at least I'm not forcing retardedview by also assigning to angles_z
-			self.fixangle = 1;
+			self.fixangle = TRUE;
 		}
 	}
 
@@ -918,9 +918,9 @@ void SV_PlayerPhysics()
 			if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
 			{
 				if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-					GlobalSound(globalsound_metalfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+					GlobalSound(globalsound_metalfall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 				else
-					GlobalSound(globalsound_fall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+					GlobalSound(globalsound_fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 			}
 		}
 	}

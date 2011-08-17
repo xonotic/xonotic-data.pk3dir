@@ -101,15 +101,13 @@ void fteqcc_testbugs()
  * players. Also plays reminder sounds.
  */
 void timeoutHandler_Think() {
-	local string timeStr;
 	local entity plr;
 	if (timeoutStatus == 1) {
 		if (remainingLeadTime > 0) {
 			//centerprint the information to every player
-			timeStr = getTimeoutText(0);
 			FOR_EACH_REALCLIENT(plr) {
 				if(plr.classname == "player") {
-					centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
+					Send_CSQC_Centerprint_Generic(plr, CPID_TIMEOUT_COUNTDOWN, "Timeout begins in %d seconds!", 1, remainingLeadTime);
 				}
 			}
 			remainingLeadTime -= 1;
@@ -133,10 +131,9 @@ void timeoutHandler_Think() {
 	}
 	else if (timeoutStatus == 2) {
 		if (remainingTimeoutTime > 0) {
-			timeStr = getTimeoutText(0);
 			FOR_EACH_REALCLIENT(plr) {
 				if(plr.classname == "player") {
-					centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
+					Send_CSQC_Centerprint_Generic(plr, CPID_TIMEOUT_COUNTDOWN, "Timeout ends in %d seconds!", 1, remainingTimeoutTime);
 				}
 			}
 			if(remainingTimeoutTime == autocvar_sv_timeout_resumetime) { //play a warning sound when only <sv_timeout_resumetime> seconds are left
@@ -156,7 +153,7 @@ void timeoutHandler_Think() {
 			//get rid of the countdown message
 			FOR_EACH_REALCLIENT(plr) {
 				if(plr.classname == "player") {
-					centerprint_atprio(plr, CENTERPRIO_SPAM, "");
+					Send_CSQC_Centerprint_Generic_Expire(plr, CPID_TIMEOUT_COUNTDOWN);
 				}
 			}
 			remove(self);
@@ -167,7 +164,7 @@ void timeoutHandler_Think() {
 	else if (timeoutStatus == 0) { //if a player called the resumegame command (which set timeoutStatus to 0 already)
 		FOR_EACH_REALCLIENT(plr) {
 			if(plr.classname == "player") {
-				centerprint_atprio(plr, CENTERPRIO_SPAM, "");
+				Send_CSQC_Centerprint_Generic_Expire(plr, CPID_TIMEOUT_COUNTDOWN);
 			}
 		}
 		remove(self);
@@ -293,6 +290,7 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sys_colortranslation");
 		BADCVAR("sys_specialcharactertranslation");
+		BADCVAR("timeformat");
 		BADCVAR("timestamps");
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
@@ -715,8 +713,7 @@ void spawnfunc_worldspawn (void)
 	GameLogInit(); // prepare everything
 	if(autocvar_sv_eventlog)
 	{
-		s = strcat(ftos(autocvar_sv_eventlog_files_counter), ".");
-		s = strcat(s, ftos(random()));
+		s = sprintf("%d.%s.%06d", ftos(autocvar_sv_eventlog_files_counter), strftime(FALSE, "%s"), floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
@@ -1194,7 +1191,7 @@ void Maplist_Init()
 	if(Map_Count == 0)
 	{
 		bprint( "Maplist is empty!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 		if(autocvar_g_maplist_shuffle)
 			ShuffleMaplist();
 		localcmd("\nmenu_cmd sync\n");
@@ -1314,7 +1311,7 @@ void GotoNextMap()
 			if(allowReset)
 			{
 				bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
-				cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+				cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 				if(autocvar_g_maplist_shuffle)
 					ShuffleMaplist();
 				localcmd("\nmenu_cmd sync\n");
@@ -1490,7 +1487,7 @@ void DumpStats(float final)
 		}
 	}
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		s = strcat(":labels:teamscores:", GetTeamScoreString(0, 0));
 		if(to_console)
@@ -1529,8 +1526,6 @@ void FixIntermissionClient(entity e)
 	string s;
 	if(!e.autoscreenshot) // initial call
 	{
-		e.angles = e.v_angle;
-		e.angles_x = -e.angles_x;
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
 		e.health = -2342;
 		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
@@ -1553,11 +1548,6 @@ void FixIntermissionClient(entity e)
 			WriteByte(MSG_ONE, SVC_INTERMISSION);
 		}
 	}
-
-	//e.velocity = '0 0 0';
-	//e.fixangle = TRUE;
-
-	// TODO halt weapon animation
 }
 
 
@@ -1936,7 +1926,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper();
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		team1_score = TeamScore_GetCompareValue(COLOR_TEAM1);
 		team2_score = TeamScore_GetCompareValue(COLOR_TEAM2);
@@ -2306,7 +2296,6 @@ string mapvote_maps_pakfile[MAPVOTE_COUNT];
 float mapvote_maps_suggested[MAPVOTE_COUNT];
 string mapvote_suggestions[MAPVOTE_COUNT];
 float mapvote_suggestion_ptr;
-float mapvote_maxlen;
 float mapvote_voters;
 float mapvote_votes[MAPVOTE_COUNT];
 float mapvote_run;
@@ -2368,8 +2357,10 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 	for(j = 0; j < mapvote_count; ++j)
 		if(mapvote_maps[j] == nextMap)
 			return;
-	if(strlen(nextMap) > mapvote_maxlen)
-		mapvote_maxlen = strlen(nextMap);
+	// suggestions might be no longer valid/allowed after gametype switch!
+	if(isSuggestion)
+		if(!MapInfo_CheckMap(nextMap))
+			return;
 	mapvote_maps[mapvote_count] = strzone(nextMap);
 	mapvote_maps_suggested[mapvote_count] = isSuggestion;
 
@@ -2431,7 +2422,7 @@ void MapVote_Init()
 	if(mapvote_count == 0)
 	{
 		bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 		if(autocvar_g_maplist_shuffle)
 			ShuffleMaplist();
 		localcmd("\nmenu_cmd sync\n");
