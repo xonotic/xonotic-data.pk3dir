@@ -116,7 +116,7 @@ void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 				e.url_fh = -1;
 				e.url_rbuf = -1;
 				e.url_wbuf = -1;
-				if(!uri_get(url, i + MIN_URL_ID))
+				if(!crypto_uri_postbuf(url, i + MIN_URL_ID, string_null, string_null, -1, 0))
 				{
 					rdy(e, pass, URL_READY_ERROR);
 					strunzone(e.url_url);
@@ -180,7 +180,7 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 			}
 			print(ftos(i), "\n");
 
-			if(!uri_postbuf(e.url_url, i + MIN_URL_ID, "text/plain", "", e.url_wbuf))
+			if(!crypto_uri_postbuf(e.url_url, i + MIN_URL_ID, "text/plain", "", e.url_wbuf, 0))
 			{
 				buf_del(e.url_wbuf);
 				rdy(e, pass, URL_READY_ERROR);
