@@ -1586,6 +1586,7 @@ void NextLevel()
 	FOR_EACH_CLIENT(e)
 		PlayerStats_AddGlobalInfo(e);
 	PlayerStats_Shutdown();
+	WeaponStats_Shutdown();
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
