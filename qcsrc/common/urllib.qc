@@ -64,7 +64,7 @@ float url_URI_Get_Callback(float id, float status, string data)
 	}
 }
 
-void url_fopen(string url, float mode, entity pass, url_ready_func rdy)
+void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 {
 	entity e;
 	float i;
@@ -147,7 +147,7 @@ void url_fopen(string url, float mode, entity pass, url_ready_func rdy)
 	}
 }
 
-void url_fclose(entity e, entity pass, url_ready_func rdy)
+void url_fclose(entity e, url_ready_func rdy, entity pass)
 {
 	float i;
 
