@@ -49,10 +49,10 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 
 		if(!found)
 		{
-			dprint("target not found\n");
+		///	dprint("target not found\n");
 			continue;
 		}
-		dprint("target #", etos(ad), " found\n");
+		/// dprint("target #", etos(ad), " found\n");
 
 
 		p = 0.5 * (ad.absmin + ad.absmax);
@@ -84,11 +84,11 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 
 		if(best)
 		{
-			dprint("waypoints around target were found\n");
+		///	dprint("waypoints around target were found\n");
 		//	te_lightning2(world, '0 0 0', best.origin);
 		//	te_knightspike(best.origin);
 
-			navigation_routerating(best, ratingscale, 10000);
+			navigation_routerating(best, ratingscale, 4000);
 			best.cnt += 1;
 
 			self.havocbot_attack_time = 0;
@@ -128,14 +128,9 @@ void havocbot_role_ast_offense()
 	if (self.bot_strategytime < time)
 	{
 		navigation_goalrating_start();
-	///	havocbot_goalrating_enemyplayers(20000, self.origin, 650);
-
-	//	if(!havocbot_goalrating_ast_generator_attack(20000))
-	//		havocbot_goalrating_ast_controlpoints_attack(20000);
-	//	havocbot_goalrating_ast_offenseitems(10000, self.origin, 10000);
-
+		havocbot_goalrating_enemyplayers(20000, self.origin, 650);
 		havocbot_goalrating_ast_targets(20000);
-	///	havocbot_goalrating_items(10000, self.origin, 10000);
+		havocbot_goalrating_items(15000, self.origin, 10000);
 		navigation_goalrating_end();
 
 		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
@@ -167,11 +162,9 @@ void havocbot_role_ast_defense()
 	if (self.bot_strategytime < time)
 	{
 		navigation_goalrating_start();
-		havocbot_goalrating_enemyplayers(20000, self.origin, 650);
-	//	if(!havocbot_goalrating_ast_generator_attack(20000))
-	//		havocbot_goalrating_ast_controlpoints_attack(20000);
-	//	havocbot_goalrating_ast_offenseitems(10000, self.origin, 10000);
-		havocbot_goalrating_items(10000, self.origin, 10000);
+		havocbot_goalrating_enemyplayers(20000, self.origin, 3000);
+		havocbot_goalrating_ast_targets(20000);
+		havocbot_goalrating_items(15000, self.origin, 10000);
 		navigation_goalrating_end();
 
 		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
