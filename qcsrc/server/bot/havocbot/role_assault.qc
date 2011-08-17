@@ -12,117 +12,10 @@ void() havocbot_role_ast_defense;
 void() havocbot_role_ast_offense;
 .entity havocbot_ast_target;
 
-entity havocbot_ast_core;
-float havocbot_ast_core_unreachable;
-
 void(entity bot) havocbot_ast_reset_role;
 
 void(float ratingscale, vector org, float sradius) havocbot_goalrating_items;
 void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
-
-void havocbot_ast_find_core()
-{
-	entity are, to1, to2, to3;
-
-	if(havocbot_ast_core_unreachable)
-		return;
-
-	are = findchain(classname, "target_assault_roundend");
-
-	for (; are; are = are.chain)
-	{
-		for(to1 = world; (to1 = find(to1, target, are.targetname)); )
-		{
-			if(to1.classname == "func_assault_destructible")
-			{
-				havocbot_ast_core = to1;
-				return;
-			}
-
-			for(to2 = world; (to2 = find(to2, target, to1.targetname)); )
-			{
-				if(to2.classname == "func_assault_destructible")
-				{
-					havocbot_ast_core = to2;
-					return;
-				}
-
-				for(to3 = world; (to3 = find(to3, target, to2.targetname)); )
-				{
-					if(to3.classname == "func_assault_destructible")
-					{
-						havocbot_ast_core = to3;
-						return;
-					}
-				}
-			}
-		}
-	}
-
-	dprint("ERROR: Power core unreachable\n");
-	havocbot_ast_core_unreachable = TRUE;
-}
-
-void havocbot_goalrating_ast_core(float ratingscale)
-{
-	entity best, wp;
-	float radius, found, bestvalue, c;
-	vector p;
-
-	havocbot_ast_find_core();
-
-	if not(havocbot_ast_core)
-		return;
-
-	if not(havocbot_ast_core.takedamage)
-		havocbot_ast_core.takedamage = TRUE;
-
-	p = 0.5 * (havocbot_ast_core.absmin + havocbot_ast_core.absmax);
-//	dprint(vtos(ad.origin), " ", vtos(ad.absmin), " ", vtos(ad.absmax),"\n");
-	te_knightspike(p);
-	te_lightning2(world, '0 0 0', p);
-
-	// Find and rate waypoints around it
-	found = FALSE;
-	best = world;
-	bestvalue = 99999999999;
-	for(radius=0; radius<1000 && !found; radius+=500)
-	{
-		for(wp=findradius(p, radius); wp; wp=wp.chain)
-		{
-			if(!(wp.wpflags & WAYPOINTFLAG_GENERATED))
-			if(wp.classname=="waypoint")
-			if(checkpvs(wp.origin, havocbot_ast_core))
-			{
-				found = TRUE;
-				if(wp.cnt<bestvalue)
-				{
-					best = wp;
-					bestvalue = wp.cnt;
-				}
-			}
-		}
-	}
-
-	if(best)
-	{
-		dprint("waypoints around target were found\n");
-	//	te_lightning2(world, '0 0 0', best.origin);
-	//	te_knightspike(best.origin);
-
-		navigation_routerating(best, ratingscale, 10000);
-		best.cnt += 1;
-
-		self.havocbot_attack_time = 0;
-
-		if(checkpvs(self.view_ofs, havocbot_ast_core))
-		if(checkpvs(self.view_ofs, best))
-		{
-		//	dprint("increasing attack time for this target\n");
-			self.havocbot_attack_time = time + 2;
-		}
-	}
-}
 
 void havocbot_goalrating_ast_targets(float ratingscale)
 {
@@ -309,8 +202,6 @@ void havocbot_ast_reset_role(entity bot)
 
 	if(self.deadflag != DEAD_NO)
 		return;
-
-	bot.havocbot_ast_target = world;
 
 	if(bot.team==assault_attacker_team)
 		havocbot_role_ast_setrole(bot, HAVOCBOT_AST_ROLE_OFFENSE);
