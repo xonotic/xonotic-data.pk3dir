@@ -81,6 +81,7 @@ const float RANKINGS_CNT = 15;
 
 const float CSQC_KILLNOTIFY = 0;
 const float CSQC_CENTERPRINT = 1;
+const float CSQC_CENTERPRINT_GENERIC = 2;
 
 const float ENT_CLIENT = 0;
 const float ENT_CLIENT_DEAD = 1;
@@ -591,9 +592,6 @@ float HITTYPE_RESERVED = 0x1000; // unused yet
 #define FRAGS_PLAYER_NONSOLID -616
 // we can use this frags value for both
 
-//misc. stuff
-#define NEWLINES "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-
 // water levels
 float WATERLEVEL_NONE = 0;
 float WATERLEVEL_WETFEET = 1;
@@ -601,6 +599,18 @@ float WATERLEVEL_SWIMMING = 2;
 float WATERLEVEL_SUBMERGED = 3;
 
 float MAX_SHOT_DISTANCE = 32768;
+
+//centerprint ID list
+float CPID_TEAMCHANGE = 1;
+float CPID_CTF_CAPTURESHIELD = 2;
+float CPID_MINSTA_FINDAMMO = 3;
+float CPID_NIX_WPNCHANGE = 4;
+float CPID_DISCONNECT_IDLING = 5;
+float CPID_ROUND_STARTING = 6;
+float CPID_GAME_STARTING = 7;
+float CPID_TIMEOUT_COUNTDOWN = 8;
+float CPID_MOTD = 9;
+float CPID_KH_MSG = 10;
 
 // CSQC centerprint/notify message types
 float MSG_SUICIDE = 0;
@@ -676,7 +686,8 @@ float HUD_PANEL_CHAT		= 12;
 float HUD_PANEL_ENGINEINFO	= 13;
 float HUD_PANEL_INFOMESSAGES	= 14;
 float HUD_PANEL_PHYSICS	= 15;
-float HUD_PANEL_NUM		= 16; // always last panel id + 1, please increment when adding a new panel
+float HUD_PANEL_CENTERPRINT	= 16;
+float HUD_PANEL_NUM		= 17; // always last panel id + 1, please increment when adding a new panel
 
 string HUD_PANELNAME_WEAPONS 		= "weapons";
 string HUD_PANELNAME_AMMO	 	= "ammo";
@@ -694,6 +705,7 @@ string HUD_PANELNAME_CHAT	 	= "chat";
 string HUD_PANELNAME_ENGINEINFO	 	= "engineinfo";
 string HUD_PANELNAME_INFOMESSAGES	= "infomessages";
 string HUD_PANELNAME_PHYSICS	= "physics";
+string HUD_PANELNAME_CENTERPRINT	= "centerprint";
 
 float HUD_MENU_ENABLE		= 0;
 

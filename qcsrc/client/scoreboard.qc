@@ -1168,9 +1168,6 @@ void HUD_DrawScoreboard()
 	vector sb_heading_fontsize;
 	sb_heading_fontsize = hud_fontsize * 2;
 	drawstring(pos, _("Scoreboard"), sb_heading_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	
-	centerprint_start_x = vid_conwidth - 0.5 * (pos_x + stringwidth(_("Scoreboard"), FALSE, sb_heading_fontsize));
-	centerprint_start_y = pos_y;
 
 	pos_y += sb_heading_fontsize_y + hud_fontsize_y * 0.25;
 

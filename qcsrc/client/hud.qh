@@ -1,7 +1,5 @@
 float log(float f);
 
-vector centerprint_start;
-
 float panel_order[HUD_PANEL_NUM];
 string hud_panelorder_prev;
 
@@ -156,6 +154,14 @@ if(panel_bg_color_team_str == "") {\
 	panel_bg_color_team = stof(panel_bg_color_team_str);\
 }
 
+// the check doesn't allow to fade this panel when showing the panel-specific menu dialog
+#define HUD_Panel_ApplyFadeAlpha()\
+if(!(menu_enabled == 2 && highlightedPanel == hud_configure_active_panel))\
+{\
+	panel_bg_alpha *= hud_fade_alpha;\
+	panel_fg_alpha *= hud_fade_alpha;\
+} ENDS_WITH_CURLY_BRACE
+
 // Get value for panel_bg_alpha: if "" fetch default, else use panel_bg_alpha. Also do various menu dialog fadeout/in checks, and minalpha checks
 // comment on line 3 of macro: // do not set a minalpha cap when showing the config dialog for this panel
 #define HUD_Panel_GetBgAlpha()\
@@ -170,19 +176,14 @@ if(autocvar__hud_configure) {\
 		panel_bg_alpha = (1 - autocvar__menu_alpha) * max(cvar("hud_configure_bg_minalpha"), panel_bg_alpha) + autocvar__menu_alpha * panel_bg_alpha;\
 	else\
 		panel_bg_alpha = max(cvar("hud_configure_bg_minalpha"), panel_bg_alpha);\
-} if(!(menu_enabled == 2 && highlightedPanel == hud_configure_active_panel)) {\
-	panel_bg_alpha *= hud_fade_alpha;\
 }
 
 // Get value for panel_fg_alpha. Also do various minalpha checks
 // comment on line 2 of macro: // ALWAYS show disabled panels at 0.25 alpha when in config mode
-// comment on line 4 of macro: // don't fade this panel when showing the panel-specific menu dialog
 #define HUD_Panel_GetFgAlpha()\
 panel_fg_alpha = autocvar_hud_panel_fg_alpha;\
 if(autocvar__hud_configure && !panel_enabled)\
 	panel_fg_alpha = 0.25;\
-if(!(menu_enabled == 2 && highlightedPanel == hud_configure_active_panel))\
-	panel_fg_alpha *= hud_fade_alpha;
 
 // Get border. See comments above, it's similar.
 #define HUD_Panel_GetBorder()\
@@ -283,6 +284,7 @@ if(menu_enabled == 2 && hud_configure_active_panel == highlightedPanel) {\
 switch(id) { \
 	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdateCvars(infomessages) break; \
 	case HUD_PANEL_PHYSICS: HUD_Panel_UpdateCvars(physics); break;\
+	case HUD_PANEL_CENTERPRINT: HUD_Panel_UpdateCvars(centerprint); break;\
 }
 
 #define HUD_Panel_UpdateCvarsForId(id) \
@@ -320,6 +322,7 @@ HUD_Panel_GetBorder()
 switch(id) { \
 	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdatePosSize(infomessages) break;\
 	case HUD_PANEL_PHYSICS: HUD_Panel_UpdatePosSize(physics); break;\
+	case HUD_PANEL_CENTERPRINT: HUD_Panel_UpdatePosSize(centerprint); break;\
 }
 
 #define HUD_Panel_UpdatePosSizeForId(id) \

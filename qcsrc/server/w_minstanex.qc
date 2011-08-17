@@ -88,77 +88,80 @@ void W_MinstaNex_Attack (void)
 
 
 .float minstagib_nextthink;
-void minstagib_ammocheck (void)
+.float minstagib_needammo;
+void minstagib_stop_countdown(void)
 {
-	if (time < self.minstagib_nextthink || self.deadflag || gameover)
+	if (self.minstagib_needammo)
+	{
+		self.health = 100;
+		Send_CSQC_Centerprint_Generic_Expire(self, CPID_MINSTA_FINDAMMO);
+	}
+	self.minstagib_needammo = FALSE;
+}
+void minstagib_ammocheck(void)
+{
+	if (time < self.minstagib_nextthink)
 		return;
 
-	if (self.ammo_cells <= 0)
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (self.deadflag || gameover || self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
+		minstagib_stop_countdown();
+	else
 	{
+		self.minstagib_needammo = TRUE;
 		if (self.health == 5)
 		{
-			centerprint(self, "you're dead now...\n");
 			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "terminated");
 		}
 		else if (self.health == 10)
 		{
-			centerprint(self, "^11^7 second left to find some ammo\n");
 			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "1");
 		}
 		else if (self.health == 20)
 		{
-			centerprint(self, "^12^7 seconds left to find some ammo\n");
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "2");
 		}
 		else if (self.health == 30)
 		{
-			centerprint(self, "^13^7 seconds left to find some ammo\n");
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "3");
 		}
 		else if (self.health == 40)
 		{
-			centerprint(self, "^14^7 seconds left to find some ammo\n");
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "4");
 		}
 		else if (self.health == 50)
 		{
-			centerprint(self, "^15^7 seconds left to find some ammo\n");
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "5");
 		}
 		else if (self.health == 60)
 		{
-			centerprint(self, "^36^7 seconds left to find some ammo\n");
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "6");
 		}
 		else if (self.health == 70)
 		{
-			centerprint(self, "^37^7 seconds left to find some ammo\n");
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "7");
 		}
 		else if (self.health == 80)
 		{
-			centerprint(self, "^38^7 seconds left to find some ammo\n");
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "8");
 		}
 		else if (self.health == 90)
 		{
-			centerprint(self, "^39^7 seconds left to find some ammo\n");
+			Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "^1%d^7 seconds left to find some ammo", 1, 9);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "9");
 		}
 		else if (self.health == 100)
 		{
-			centerprint(self, "get some ammo or\nyou'll be dead in ^310^7 seconds...");
+			Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "get some ammo or\nyou'll be dead in ^3%d^7 seconds...", 1, 10);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			if not(self.flags & FL_GODMODE)
 				AnnounceTo(self, "10");

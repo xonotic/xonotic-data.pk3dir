@@ -222,6 +222,7 @@ switch(id) {\
 	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; break; \
 	case HUD_PANEL_INFOMESSAGES: panel_name = HUD_PANELNAME_INFOMESSAGES; break; \
 	case HUD_PANEL_PHYSICS: panel_name = HUD_PANELNAME_PHYSICS; break; \
+	case HUD_PANEL_CENTERPRINT: panel_name = HUD_PANELNAME_CENTERPRINT; break; \
 } ENDS_WITH_CURLY_BRACE
 
 // Get name of specified panel id
