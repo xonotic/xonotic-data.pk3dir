@@ -328,7 +328,7 @@ void PlayerStats_EndMatch(float finished)
 {
 	entity p, winner;
     winner = PlayerScore_Sort(score_dummyfield);
-	FOR_EACH_PLAYER(p)
+	FOR_EACH_PLAYER(p) // spectators intentionally not included
 	{
 		PlayerScore_PlayerStats(p);
 		PlayerStats_Accuracy(p);
