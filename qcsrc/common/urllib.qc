@@ -84,9 +84,9 @@ void url_fopen(string url, float mode, entity pass, url_ready_func rdy)
 				if(e.url_wbuf < 0)
 				{
 					print("buf_create: out of memory\n");
+					rdy(e, pass, URL_READY_ERROR);
 					strunzone(e.url_url);
 					remove(e);
-					rdy(world, pass, URL_READY_ERROR);
 					return;
 				}
 				e.url_wbufpos = 0;
@@ -113,10 +113,9 @@ void url_fopen(string url, float mode, entity pass, url_ready_func rdy)
 				e.url_wbuf = -1;
 				if(!uri_get(url, i + MIN_URL_ID))
 				{
-					print("uri_get: failed\n");
+					rdy(e, pass, URL_READY_ERROR);
 					strunzone(e.url_url);
 					remove(e);
-					rdy(world, pass, URL_READY_ERROR);
 					return;
 				}
 				e.url_ready = rdy;
@@ -161,8 +160,8 @@ void url_fclose(entity e, entity pass, url_ready_func rdy)
 					break;
 			if(i >= NUM_URL_ID)
 			{
-				rdy(e, pass, URL_READY_ERROR);
 				buf_del(e.url_wbuf);
+				rdy(e, pass, URL_READY_ERROR);
 				strunzone(e.url_url);
 				remove(e);
 				return;
@@ -170,8 +169,8 @@ void url_fclose(entity e, entity pass, url_ready_func rdy)
 
 			if(!uri_postbuf(e.url_url, e.url_id + MIN_URL_ID, "text/plain", "\n", e.url_wbuf))
 			{
-				rdy(e, pass, URL_READY_ERROR);
 				buf_del(e.url_wbuf);
+				rdy(e, pass, URL_READY_ERROR);
 				strunzone(e.url_url);
 				remove(e);
 				return;
