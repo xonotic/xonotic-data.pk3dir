@@ -67,7 +67,7 @@ void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 {
 	entity e;
 	float i;
-	if(strstrofs(url, "://", -1))
+	if(strstrofs(url, "://", 0) >= 0)
 	{
 		switch(mode)
 		{
@@ -178,8 +178,9 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 					return;
 				}
 			}
+			print(ftos(i), "\n");
 
-			if(!uri_postbuf(e.url_url, e.url_id + MIN_URL_ID, "text/plain", "\n", e.url_wbuf))
+			if(!uri_postbuf(e.url_url, i + MIN_URL_ID, "text/plain", "\n", e.url_wbuf))
 			{
 				buf_del(e.url_wbuf);
 				rdy(e, pass, URL_READY_ERROR);
