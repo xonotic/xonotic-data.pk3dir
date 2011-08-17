@@ -284,10 +284,10 @@ void PlayerStats_AddGlobalInfo(entity p)
 
 	// add global info!
 	if(p.alivetime)
+	{
 		PlayerStats_Event(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
-
-	if(p.alivetime)
-		PlayerStats_Event(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
+		p.alivetime = 0;
+	}
 
 	db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), ftos(p.playerid));
 	
@@ -297,7 +297,7 @@ void PlayerStats_AddGlobalInfo(entity p)
     if(teamplay)
 		db_put(playerstats_db, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
 
-	if(p.alivetime > 0)
+	if(stof(db_get(playerstats_db, sprintf("%d:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
 		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
 	strunzone(p.playerstats_id);
