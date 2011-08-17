@@ -1,11 +1,12 @@
-float URL_READY_CLOSED   0
-float URL_READY_CANWRITE 1
-float URL_READY_CANREAD  2
+float URL_READY_ERROR    = -1;
+float URL_READY_CLOSED   =  0;
+float URL_READY_CANWRITE =  1;
+float URL_READY_CANREAD  =  2;
 // errors: -1, or negative HTTP status code
 typedef void(entity handle, entity pass, float status) url_ready_func;
 
-void url_fopen(string url, float mode, entity pass, url_fopen_ready_func ready);
-void url_fclose(entity e, entity pass, url_fclose_ready_func ready)
+void url_fopen(string url, float mode, entity pass, url_ready_func rdy);
+void url_fclose(entity e, entity pass, url_ready_func rdy);
 string url_fgets(entity e);
 void url_fputs(entity e, string s);
 

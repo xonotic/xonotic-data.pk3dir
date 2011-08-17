@@ -15,7 +15,7 @@
 #define NUM_URL_ID 64
 entity url_fromid[NUM_URL_ID];
 
-void url_URI_Get_Callback(float id, float status, string data)
+float url_URI_Get_Callback(float id, float status, string data)
 {
 	if(id < MIN_URL_ID)
 		return 0;
@@ -23,14 +23,17 @@ void url_URI_Get_Callback(float id, float status, string data)
 	if(id >= NUM_URL_ID)
 		return 0;
 	entity e;
-	e = url_fromid(id);
+	e = url_fromid[id];
 	if(!e)
 		return 0;
-	if(e.url_rbuf >= 0)
+	if(e.url_rbuf >= 0 || e.url_wbuf >= 0)
 	{
 		print(sprintf("WARNING: handle %d (%s) has already received data?!?\n", id + NUM_URL_ID, e.url_url));
 		return 0;
 	}
+
+	// whatever happens, we will remove the URL from the list of IDs
+	url_fromid[id] = world;
 
 	if(status == 0)
 	{
@@ -41,7 +44,7 @@ void url_URI_Get_Callback(float id, float status, string data)
 		e.url_rbufpos = 0;
 		if(e.url_rbuf < 0)
 		{
-			backtrace("buf_create: out of memory");
+			print("buf_create: out of memory\n");
 			e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 			strunzone(e.url_url);
 			remove(e);
@@ -61,7 +64,7 @@ void url_URI_Get_Callback(float id, float status, string data)
 	}
 }
 
-void url_fopen(string url, float mode, entity pass, url_ready_func ready)
+void url_fopen(string url, float mode, entity pass, url_ready_func rdy)
 {
 	entity e;
 	float i;
@@ -80,15 +83,15 @@ void url_fopen(string url, float mode, entity pass, url_ready_func ready)
 				e.url_wbuf = buf_create();
 				if(e.url_wbuf < 0)
 				{
-					backtrace("buf_create: out of memory");
+					print("buf_create: out of memory\n");
 					strunzone(e.url_url);
 					remove(e);
-					ready(world, pass, URL_READY_ERROR);
+					rdy(world, pass, URL_READY_ERROR);
 					return;
 				}
 				e.url_wbufpos = 0;
 				e.url_rbuf = -1;
-				ready(e, pass, URL_READY_CANWRITE);
+				rdy(e, pass, URL_READY_CANWRITE);
 				break;
 
 			case FILE_READ:
@@ -97,7 +100,10 @@ void url_fopen(string url, float mode, entity pass, url_ready_func ready)
 					if(url_fromid[i] == world)
 						break;
 				if(i >= NUM_URL_ID)
-					return -1;
+				{
+					rdy(world, pass, URL_READY_ERROR);
+					return;
+				}
 
 				e = spawn();
 				e.classname = "url_fopen_file";
@@ -105,17 +111,18 @@ void url_fopen(string url, float mode, entity pass, url_ready_func ready)
 				e.url_fh = -1;
 				e.url_rbuf = -1;
 				e.url_wbuf = -1;
-				e.url_id = i;
-				if(!uri_get(uri, e.url_id + MIN_URL_ID))
+				if(!uri_get(url, i + MIN_URL_ID))
 				{
-					backtrace("uri_get: failed");
+					print("uri_get: failed\n");
 					strunzone(e.url_url);
 					remove(e);
-					ready(world, pass, URL_READY_ERROR);
+					rdy(world, pass, URL_READY_ERROR);
 					return;
 				}
-				e.url_ready = ready;
+				e.url_ready = rdy;
 				e.url_ready_pass = pass;
+				e.url_id = i;
+				url_fromid[i] = e;
 				break;
 		}
 	}
@@ -124,21 +131,24 @@ void url_fopen(string url, float mode, entity pass, url_ready_func ready)
 		float fh;
 		fh = fopen(url, mode);
 		if(fh < 0)
-			return -1;
+		{
+			rdy(world, pass, URL_READY_ERROR);
+			return;
+		}
 		else
 		{
 			e = spawn();
 			e.classname = "url_fopen_file";
 			e.url_fh = fh;
 			if(mode == FILE_READ)
-				ready(e, pass, URL_READY_CANREAD);
+				rdy(e, pass, URL_READY_CANREAD);
 			else
-				ready(e, pass, URL_READY_CANWRITE);
+				rdy(e, pass, URL_READY_CANWRITE);
 		}
 	}
 }
 
-void url_fclose(entity e, entity pass, url_ready_func ready)
+void url_fclose(entity e, entity pass, url_ready_func rdy)
 {
 	float i;
 
@@ -151,16 +161,16 @@ void url_fclose(entity e, entity pass, url_ready_func ready)
 					break;
 			if(i >= NUM_URL_ID)
 			{
-				ready(e, pass, URL_READY_ERROR);
+				rdy(e, pass, URL_READY_ERROR);
 				buf_del(e.url_wbuf);
 				strunzone(e.url_url);
 				remove(e);
 				return;
 			}
 
-			if(!uri_postbuf(uri, e.url_id + MIN_URL_ID, "text/plain", "\n", e.url_wbuf))
+			if(!uri_postbuf(e.url_url, e.url_id + MIN_URL_ID, "text/plain", "\n", e.url_wbuf))
 			{
-				ready(e, pass, URL_READY_ERROR);
+				rdy(e, pass, URL_READY_ERROR);
 				buf_del(e.url_wbuf);
 				strunzone(e.url_url);
 				remove(e);
@@ -169,13 +179,15 @@ void url_fclose(entity e, entity pass, url_ready_func ready)
 
 			buf_del(e.url_wbuf);
 			e.url_wbuf = -1;
-			e.url_ready = ready;
+			e.url_ready = rdy;
 			e.url_ready_pass = pass;
+			e.url_id = i;
+			url_fromid[i] = e;
 		}
 		else
 		{
 			// we have READ all data
-			ready(e, pass, URL_READY_CLOSED);
+			rdy(e, pass, URL_READY_CLOSED);
 			buf_del(e.url_rbuf);
 			strunzone(e.url_url);
 			remove(e);
@@ -185,7 +197,7 @@ void url_fclose(entity e, entity pass, url_ready_func ready)
 	{
 		// file
 		fclose(e.url_fh);
-		ready(e, pass, URL_READY_CLOSED); // closing creates no reading handle
+		rdy(e, pass, URL_READY_CLOSED); // closing creates no reading handle
 		remove(e);
 	}
 }
@@ -198,7 +210,7 @@ string url_fgets(entity e)
 		// curl
 		string s;
 		s = bufstr_get(e.url_rbuf, e.url_rbufpos);
-		++e.url_rbufpos;
+		e.url_rbufpos += 1;
 		return s;
 	}
 	else
@@ -215,11 +227,11 @@ void url_fputs(entity e, string s)
 	{
 		// curl
 		bufstr_set(e.url_wbuf, e.url_wbufpos, s);
-		++e.url_wbufpos;
+		e.url_wbufpos += 1;
 	}
 	else
 	{
 		// file
-		fputs(e, s);
+		fputs(e.url_fh, s);
 	}
 }
