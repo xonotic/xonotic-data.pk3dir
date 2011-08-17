@@ -20,7 +20,7 @@ void restartAnnouncer_Think() {
 	countdown_rounded = floor(0.5 + countdown);
 	if(countdown <= 0) {
 		if (!spectatee_status) //do cprint only for players
-			centerprint(_("^1Begin!"));
+			centerprint_generic(CPID_GAME_STARTING, _("^1Begin!"), 1, 0);
 
 		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
 		//reset maptime announcers now as well
@@ -31,7 +31,7 @@ void restartAnnouncer_Think() {
 	}
 	else {
 		if (!spectatee_status) //do cprint only for players
-			centerprint(sprintf(_("^1Game starts in %d seconds"), countdown_rounded));
+			centerprint_generic(CPID_GAME_STARTING, _("^1Game starts in %d seconds"), 1, countdown_rounded);
 
 		if(countdown_rounded <= 3 && countdown_rounded >= 1) {
 			sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);

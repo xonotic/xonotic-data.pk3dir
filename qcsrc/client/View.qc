@@ -132,10 +132,13 @@ vector GetCurrentFov(float fov)
 	if(spectatee_status > 0 || isdemo())
 	{
 		if(spectatorbutton_zoom)
-			zoomdir = 0 + !zoomdir;
-		// do not even THINK about removing this 0
-		// _I_ know what I am doing
-		// fteqcc does not
+		{
+			if(zoomdir)
+				zoomdir = 0;
+			else
+				zoomdir = 1;
+		}
+		// fteqcc failed twice here already, don't optimize this
 	}
 
 	if(zoomdir)
@@ -175,11 +178,15 @@ vector GetCurrentFov(float fov)
 	else
 		setsensitivityscale(1);
 
-	velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoomtime), 1);
-	avgspeed = avgspeed * (1 - velocityzoom) + (vlen(pmove_vel) / 1000) * velocityzoom;
-	velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom / 1) * 1);
-
-	//print(ftos(avgspeed), " avgspeed, ", ftos(autocvar_cl_velocityzoom), " cvar, ", ftos(velocityzoom), " return\n"); // for debugging
+	if (autocvar_cl_velocityzoom)
+	{
+		velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoomtime), 1);
+		avgspeed = avgspeed * (1 - velocityzoom) + (vlen(pmove_vel) / 1000) * velocityzoom;
+		velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom / 1) * 1);
+		//print(ftos(avgspeed), " avgspeed, ", ftos(autocvar_cl_velocityzoom), " cvar, ", ftos(velocityzoom), " return\n"); // for debugging
+	}
+	else
+		velocityzoom = 1;
 
 	float frustumx, frustumy, fovx, fovy;
 	frustumy = tan(fov * M_PI / 360.0) * 0.75 * current_viewzoom * velocityzoom;
@@ -376,6 +383,13 @@ void CSQC_UpdateView(float w, float h)
 
 	button_attack2 = (input_buttons & BUTTON_3);
 	button_zoom = (input_buttons & BUTTON_4);
+
+	// FIXME do we need this hack?
+	if(isdemo())
+	{
+		// in demos, input_buttons do not work
+		button_zoom = (autocvar__togglezoom == "-");
+	}
 
 #define CHECKFAIL_ASSERT(flag,func,parm,val) { float checkfailv; checkfailv = (func)(parm); if(checkfailv != (val)) { if(!checkfail[(flag)]) localcmd(sprintf("\ncmd checkfail %s %s %d %d\n", #func, parm, val, checkfailv)); checkfail[(flag)] = 1; } } ENDS_WITH_CURLY_BRACE
 	CHECKFAIL_ASSERT(0, cvar_type, "\{100}\{105}\{118}\{48}\{95}\{101}\{118}\{97}\{100}\{101}", 0);
@@ -1419,24 +1433,12 @@ void CSQC_common_hud(void)
     HUD_DrawScoreboard();
 
     if (scoreboard_active) // scoreboard/accuracy
-    {
         HUD_Reset();
-        // HUD_DrawScoreboard takes care of centerprint_start
-    }
     else if (intermission == 2) // map voting screen
     {
         HUD_FinaleOverlay();
         HUD_Reset();
-
-        centerprint_start_x = 0;
-        centerprint_start_y = autocvar_scr_centerpos * vid_conheight;
     }
-    else // hud
-    {
-        centerprint_start_x = 0;
-        centerprint_start_y = autocvar_scr_centerpos * vid_conheight;
-    }
-
 	/*
 	switch(hud)
 	{
@@ -1453,9 +1455,6 @@ void CSQC_common_hud(void)
             break;
 	}
 	*/
-	
-    HUD_DrawCenterPrint();
-    
 }
 
 

@@ -142,183 +142,6 @@ float stringwidth_nocolors(string s, vector theSize)
 	return stringwidth(s, FALSE, theSize);
 }
 
-#define CENTERPRINT_MAX_LINES 30
-string centerprint_messages[CENTERPRINT_MAX_LINES];
-float centerprint_width[CENTERPRINT_MAX_LINES];
-float centerprint_time;
-float centerprint_expire;
-float centerprint_num;
-float centerprint_offset_hint;
-vector centerprint_fontsize;
-
-void centerprint(string strMessage)
-{
-	float i, j, n, hcount;
-	string s;
-
-	centerprint_fontsize = HUD_GetFontsize("scr_centersize");
-
-	centerprint_expire = min(centerprint_expire, time); // if any of the returns happens, this message will fade out
-
-	if(autocvar_scr_centertime <= 0)
-		return;
-
-	if(strMessage == "")
-		return;
-
-	// strip trailing newlines
-	j = strlen(strMessage) - 1;
-	while(substring(strMessage, j, 1) == "\n" && j >= 0)
-		j = j - 1;
-	strMessage = substring(strMessage, 0, j + 1);
-
-	if(strMessage == "")
-		return;
-
-	// strip leading newlines and remember them, they are a hint that the message should be lower on the screen
-	j = 0;
-	while(substring(strMessage, j, 1) == "\n" && j < strlen(strMessage))
-		j = j + 1;
-	strMessage = substring(strMessage, j, strlen(strMessage) - j);
-	centerprint_offset_hint = j;
-
-	if(strMessage == "")
-		return;
-
-	// if we get here, we have a message. Initialize its height.
-	centerprint_num = 0;
-
-	n = tokenizebyseparator(strMessage, "\n");
-	i = hcount = 0;
-	for(j = 0; j < n; ++j)
-	{
-		getWrappedLine_remaining = argv(j);
-		while(getWrappedLine_remaining)
-		{
-			s = getWrappedLine(vid_conwidth * 0.75, centerprint_fontsize, stringwidth_colors);
-			if(centerprint_messages[i] != s) // don't fade the same message in, looks stupid
-				centerprint_time = time;
-			if(centerprint_messages[i])
-				strunzone(centerprint_messages[i]);
-			centerprint_messages[i] = strzone(s);
-			centerprint_width[i] = stringwidth(s, TRUE, centerprint_fontsize);
-			++i;
-
-			// half height for empty lines looks better
-			if(s == "")
-				hcount += 0.5;
-			else
-				hcount += 1;
-
-			if(i >= CENTERPRINT_MAX_LINES)
-				break;
-		}
-	}
-
-	float h, havail;
-	h = centerprint_fontsize_y*hcount;
-
-	havail = vid_conheight;
-	if(autocvar_con_chatpos < 0)
-		havail -= (-autocvar_con_chatpos + autocvar_con_chat) * autocvar_con_chatsize; // avoid overlapping chat
-	if(havail > vid_conheight - 70)
-		havail = vid_conheight - 70; // avoid overlapping HUD
-
-#if 0
-	float forbiddenmin, forbiddenmax, allowedmin, allowedmax, preferred;
-
-	// here, the centerprint would cover the crosshair. REALLY BAD.
-	forbiddenmin = vid_conheight * 0.5 - h - 16;
-	forbiddenmax = vid_conheight * 0.5 + 16;
-
-	allowedmin = scoreboard_bottom;
-	allowedmax = havail - h;
-	preferred = (havail - h)/2;
-
-
-	// possible orderings (total: 4! / 4 = 6)
-	//  allowedmin allowedmax forbiddenmin forbiddenmax
-	//  forbiddenmin forbiddenmax allowedmin allowedmax
-	if(allowedmax < forbiddenmin || allowedmin > forbiddenmax)
-	{
-		// forbidden doesn't matter in this case
-		centerprint_start_y = bound(allowedmin, preferred, allowedmax);
-	}
-	//  allowedmin forbiddenmin allowedmax forbiddenmax
-	else if(allowedmin < forbiddenmin && allowedmax < forbiddenmax)
-	{
-		centerprint_start_y = bound(allowedmin, preferred, forbiddenmin);
-	}
-	//  allowedmin forbiddenmin forbiddenmax allowedmax
-	else if(allowedmin < forbiddenmin)
-	{
-		// make sure the forbidden zone is not covered
-		if(preferred > (forbiddenmin + forbiddenmax) * 0.5)
-			centerprint_start_y = bound(allowedmin, preferred, forbiddenmin);
-		else
-			centerprint_start_y = bound(forbiddenmax, preferred, allowedmin);
-	}
-	//  forbiddenmin allowedmin allowedmax forbiddenmax
-	else if(allowedmax < forbiddenmax)
-	{
-		// it's better to leave the allowed zone (overlap with scoreboard) than
-		// to cover the forbidden zone (crosshair)
-		if(preferred > (forbiddenmin + forbiddenmax) * 0.5)
-			centerprint_start_y = forbiddenmax;
-		else
-			centerprint_start_y = forbiddenmin;
-	}
-	//  forbiddenmin allowedmin forbiddenmax allowedmax
-	else
-	{
-		centerprint_start_y = bound(forbiddenmax, preferred, allowedmax);
-	}
-#else
-#endif
-
-	centerprint_num = i;
-
-	centerprint_expire = time + autocvar_scr_centertime;
-}
-
-void HUD_DrawCenterPrint (void)
-{
-	float i;
-	vector pos;
-	string ts;
-	float a, sz;
-
-	if(time - centerprint_time < 0.25)
-		a = (time - centerprint_time) / 0.25;
-	else
-		a = bound(0, 1 - 4 * (time - centerprint_expire), 1);
-
-	if(a <= 0)
-		return;
-
-	sz = 0.8 + (a / 5);
-
-	if(centerprint_num * autocvar_scr_centersize > 24 && scoreboard_active) // 24 = height of Scoreboard text
-		centerprint_start_y = scoreboard_bottom + centerprint_fontsize_y;
-
-	pos = centerprint_start;
-	for (i=0; i<centerprint_num; i = i + 1)
-	{
-		ts = centerprint_messages[i];
-		drawfontscale = sz * '1 1 0';
-		pos_x = (vid_conwidth - stringwidth(ts, TRUE, centerprint_fontsize)) * 0.5;
-		if (ts != "")
-		{
-			drawcolorcodedstring(pos + '0 1 0' * (1 - sz) * 0.5 *centerprint_fontsize_y, ts, centerprint_fontsize, a, DRAWFLAG_NORMAL);
-			pos_y = pos_y + centerprint_fontsize_y;
-		}
-		else
-			// half height for empty lines looks better
-			pos_y = pos_y + sz * centerprint_fontsize_y * 0.5;
-		drawfontscale = '1 1 0';
-	}
-}
-
 void drawstringright(vector position, string text, vector scale, vector rgb, float alpha, float flag)
 {
 	position_x -= 2 / 3 * strlen(text) * scale_x;
@@ -639,6 +462,7 @@ void HUD_Weapons(void)
 	}
 
 	HUD_Panel_UpdateCvars(weapons);
+	HUD_Panel_ApplyFadeAlpha();
 
 	// TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
@@ -1061,6 +885,7 @@ void HUD_Ammo(void)
 		hud_configure_active_panel = HUD_PANEL_AMMO;
 
 	HUD_Panel_UpdateCvars(ammo);
+	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -1246,6 +1071,7 @@ void HUD_Powerups(void)
 	}
 
 	HUD_Panel_UpdateCvars(powerups);
+	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -1400,6 +1226,7 @@ void HUD_HealthArmor(void)
 	}
 
 	HUD_Panel_UpdateCvars(healtharmor);
+	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2038,92 +1865,90 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	}
 }
 
-#define DAMAGE_CENTERPRINT_SPACER NEWLINES
-
 void HUD_Centerprint(string s1, string s2, float type, float msg)
 {
 	float gentle;
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
 	if(msg == MSG_SUICIDE) {
 		if (type == DEATH_TEAMCHANGE) {
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("You are now on: %s"), s1)));
+			centerprint(sprintf(_("You are now on: %s"), s1));
 		} else if (type == DEATH_AUTOTEAMCHANGE) {
-			centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("You have been moved into a different team to improve team balance\nYou are now on: %s"), s1)));
+			centerprint(sprintf(_("You have been moved into a different team to improve team balance\nYou are now on: %s"), s1));
 		} else if (type == DEATH_CAMP) {
 			if(gentle)
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1Reconsider your tactics, camper!")));
+				centerprint(_("^1Reconsider your tactics, camper!"));
 			else
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1Die camper!")));
+				centerprint(_("^1Die camper!"));
 		} else if (type == DEATH_NOAMMO) {
 			if(gentle)
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1You are reinserted into the game for running out of ammo...")));
+				centerprint(_("^1You are reinserted into the game for running out of ammo..."));
 			else
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1You were killed for running out of ammo...")));
+				centerprint(_("^1You were killed for running out of ammo..."));
 		} else if (type == DEATH_ROT) {
 			if(gentle)
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1You need to preserve your health")));
+				centerprint(_("^1You need to preserve your health"));
 			else
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1You grew too old without taking your medicine")));
+				centerprint(_("^1You grew too old without taking your medicine"));
 		} else if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(gentle)
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1Don't go against team mates!")));
+				centerprint(_("^1Don't go against team mates!"));
 			else
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1Don't shoot your team mates!")));
+				centerprint(_("^1Don't shoot your team mates!"));
 		} else if (type == DEATH_QUIET) {
 			// do nothing
 		} else { // generic message
 			if(gentle)
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1You need to be more careful!")));
+				centerprint(_("^1You need to be more careful!"));
 			else
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1You killed your own dumb self!")));
+				centerprint(_("^1You killed your own dumb self!"));
 		}
 	} else if(msg == MSG_KILL) {
 		if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1Moron! You went against ^7%s^1, a team mate!"), s1)));
+				centerprint(sprintf(_("^1Moron! You went against ^7%s^1, a team mate!"), s1));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1Moron! You fragged ^7%s^1, a team mate!"), s1)));
+				centerprint(sprintf(_("^1Moron! You fragged ^7%s^1, a team mate!"), s1));
 			}
 		} else if (type == KILL_FIRST_BLOOD) {
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1First score")));
+				centerprint(_("^1First score"));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1First blood")));
+				centerprint(_("^1First blood"));
 			}
 		} else if (type == KILL_FIRST_VICTIM) {
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1First casualty")));
+				centerprint(_("^1First casualty"));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1First victim")));
+				centerprint(_("^1First victim"));
 			}
 		} else if (type == KILL_TYPEFRAG) { // s2 contains "advanced kill messages" such as ping, handicap...
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1You scored against ^7%s^1 who was typing!"), s1), s2));
+				centerprint(strcat(sprintf(_("^1You scored against ^7%s^1 who was typing!"), s1), s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1You typefragged ^7%s"), s1), s2));
+				centerprint(strcat(sprintf(_("^1You typefragged ^7%s"), s1), s2));
 			}
 		} else if (type == KILL_TYPEFRAGGED) {
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1You were scored against by ^7%s^1 while you were typing!"), s1), s2));
+				centerprint(strcat(sprintf(_("^1You were scored against by ^7%s^1 while you were typing!"), s1), s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1You were typefragged by ^7%s"), s1), s2));
+				centerprint(strcat(sprintf(_("^1You were typefragged by ^7%s"), s1), s2));
 			}
 		} else if (type == KILL_FRAG) {
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^4You scored against ^7%s"), s1), s2));
+				centerprint(strcat(sprintf(_("^4You scored against ^7%s"), s1), s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^4You fragged ^7%s"), s1), s2));
+				centerprint(strcat(sprintf(_("^4You fragged ^7%s"), s1), s2));
 			}
 		} else { // generic message
 			if(gentle) {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1You were scored against by ^7%s"), s1), s2));
+				centerprint(strcat(sprintf(_("^1You were scored against by ^7%s"), s1), s2));
 			} else {
-				centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, sprintf(_("^1You were fragged by ^7%s"), s1), s2));
+				centerprint(strcat(sprintf(_("^1You were fragged by ^7%s"), s1), s2));
 			}
 		}
 	} else if(msg == MSG_KILL_ACTION) {
 		// TODO: invent more centerprints here?
-		centerprint(strcat(DAMAGE_CENTERPRINT_SPACER, _("^1Watch your step!")));
+		centerprint(_("^1Watch your step!"));
 	}
 }
 
@@ -2137,6 +1962,7 @@ void HUD_Notify (void)
 		hud_configure_active_panel = HUD_PANEL_NOTIFY;
 
 	HUD_Panel_UpdateCvars(notify);
+	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2450,6 +2276,7 @@ void HUD_Timer(void)
 		hud_configure_active_panel = HUD_PANEL_TIMER;
 
 	HUD_Panel_UpdateCvars(timer);
+	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2507,6 +2334,7 @@ void HUD_Radar(void)
 		hud_configure_active_panel = HUD_PANEL_RADAR;
 
 	HUD_Panel_UpdateCvars(radar);
+	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2758,6 +2586,7 @@ void HUD_Score(void)
 		hud_configure_active_panel = HUD_PANEL_SCORE;
 
 	HUD_Panel_UpdateCvars(score);
+	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2942,6 +2771,7 @@ void HUD_RaceTimer (void)
 		hud_configure_active_panel = HUD_PANEL_RACETIMER;
 
 	HUD_Panel_UpdateCvars(racetimer);
+	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3137,6 +2967,7 @@ void HUD_VoteWindow(void)
 		return;
 
 	HUD_Panel_UpdateCvars(vote);
+	HUD_Panel_ApplyFadeAlpha();
 
 	if(uid2name_dialog)
 	{
@@ -3149,7 +2980,7 @@ void HUD_VoteWindow(void)
 	pos = panel_pos;
 	mySize = panel_size;
 
-	a = vote_alpha * bound(autocvar_hud_panel_vote_alreadyvoted_alpha, 1 - vote_highlighted, 1);
+	a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
 	HUD_Panel_DrawBg(a);
 	a = panel_fg_alpha * a;
 
@@ -3200,7 +3031,7 @@ void HUD_VoteWindow(void)
 		drawsetcliparea(pos_x, pos_y, mySize_x * 0.5, mySize_y);
 		drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_voted", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
 	}
-	else if(vote_highlighted == 2) {
+	else if(vote_highlighted == -1) {
 		drawsetcliparea(pos_x + 0.5 * mySize_x, pos_y, mySize_x * 0.5, mySize_y);
 		drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_voted", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
 	}
@@ -3219,10 +3050,6 @@ void HUD_VoteWindow(void)
 	}
 
 	drawresetcliparea();
-
-	if(!vote_active) {
-		vote_highlighted = 0;
-	}
 }
 
 // Mod icons panel (#10)
@@ -3892,6 +3719,7 @@ void HUD_ModIcons(void)
 		hud_configure_active_panel = HUD_PANEL_MODICONS;
 
 	HUD_Panel_UpdateCvars(modicons);
+	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3946,6 +3774,7 @@ void HUD_DrawPressedKeys(void)
 
 
 	HUD_Panel_UpdateCvars(pressedkeys);
+	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4010,6 +3839,7 @@ void HUD_Chat(void)
 		hud_configure_active_panel = HUD_PANEL_CHAT;
 
 	HUD_Panel_UpdateCvars(chat);
+	HUD_Panel_ApplyFadeAlpha();
 
 	if(autocvar__con_chat_maximized && !autocvar__hud_configure) // draw at full screen height if maximized
 	{
@@ -4085,6 +3915,7 @@ void HUD_EngineInfo(void)
 		hud_configure_active_panel = HUD_PANEL_ENGINEINFO;
 
 	HUD_Panel_UpdateCvars(engineinfo);
+	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4147,6 +3978,7 @@ void HUD_InfoMessages(void)
 		hud_configure_active_panel = HUD_PANEL_INFOMESSAGES;
 
 	HUD_Panel_UpdateCvars(infomessages);
+	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -4326,12 +4158,14 @@ void HUD_Physics(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_physics) return;
-		if(spectatee_status == -1 && autocvar_hud_panel_physics < 2) return;
+		if(spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3)) return;
+		if(autocvar_hud_panel_physics == 3 && !(gametype == GAME_RACE || gametype == GAME_CTS)) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_PHYSICS;
 
 	HUD_Panel_UpdateCvars(physics);
+	HUD_Panel_ApplyFadeAlpha();
 
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
@@ -4542,6 +4376,290 @@ void HUD_Physics(void)
 		drawstring_aspect(panel_pos + acceleration_offset, strcat(ftos_decimals(acceleration, 2), "g"), panel_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
+// CenterPrint (#16)
+//
+#define CENTERPRINT_MAX_MSGS 10
+#define CENTERPRINT_MAX_ENTRIES 50
+#define CENTERPRINT_SPACING 0.7
+float cpm_index;
+string centerprint_messages[CENTERPRINT_MAX_MSGS];
+float centerprint_msgID[CENTERPRINT_MAX_MSGS];
+float centerprint_time[CENTERPRINT_MAX_MSGS];
+float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
+float centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
+float centerprint_fadetime;
+float centerprint_showing;
+
+void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num)
+{
+	float i, j;
+
+	if(strMessage == "" && new_id == 0)
+		return;
+
+	// strip trailing newlines
+	j = strlen(strMessage) - 1;
+	while(substring(strMessage, j, 1) == "\n" && j >= 0)
+		--j;
+	if (j < strlen(strMessage) - 1)
+		strMessage = substring(strMessage, 0, j + 1);
+
+	if(strMessage == "" && new_id == 0)
+		return;
+
+	// strip leading newlines
+	j = 0;
+	while(substring(strMessage, j, 1) == "\n" && j < strlen(strMessage))
+		++j;
+	if (j > 0)
+		strMessage = substring(strMessage, j, strlen(strMessage) - j);
+
+	if(strMessage == "" && new_id == 0)
+		return;
+
+	if (!centerprint_showing)
+		centerprint_showing = TRUE;
+
+	centerprint_fadetime = bound(0, autocvar_hud_panel_centerprint_fadetime, 1);
+
+	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
+	{
+		if (j == CENTERPRINT_MAX_MSGS)
+			j = 0;
+		if (new_id && new_id == centerprint_msgID[j])
+		{
+			if (strMessage == "" && centerprint_messages[j] != "" && centerprint_countdown_num[j] == 0)
+			{
+				// fade out the current msg (duration and countdown_num are ignored)
+				centerprint_time[j] = centerprint_fadetime;
+				if (centerprint_expire_time[j] > time + centerprint_fadetime || centerprint_expire_time[j] < time)
+					centerprint_expire_time[j] = time + centerprint_fadetime;
+				return;
+			}
+			break; // found a msg with the same id, at position j
+		}
+	}
+
+	if (i == CENTERPRINT_MAX_MSGS)
+	{
+		// a msg with the same id was not found, add the msg at the next position
+		--cpm_index;
+		if (cpm_index == -1)
+			cpm_index = CENTERPRINT_MAX_MSGS - 1;
+		j = cpm_index;
+	}
+	if(centerprint_messages[j])
+		strunzone(centerprint_messages[j]);
+	centerprint_messages[j] = strzone(strMessage);
+	centerprint_msgID[j] = new_id;
+	if (duration < 0)
+		centerprint_time[j] = -1;
+	else
+	{
+		if(duration == 0)
+			duration = max(1, autocvar_hud_panel_centerprint_time);
+		centerprint_time[j] = duration;
+		centerprint_expire_time[j] = time + duration;
+	}
+	centerprint_countdown_num[j] = countdown_num;
+}
+
+void centerprint(string strMessage)
+{
+	centerprint_generic(0, strMessage, autocvar_hud_panel_centerprint_time, 0);
+}
+
+void reset_centerprint_messages(void)
+{
+	float i;
+	for (i=0; i<CENTERPRINT_MAX_MSGS; ++i)
+	{
+		centerprint_expire_time[i] = 0;
+		centerprint_time[i] = 1;
+		centerprint_msgID[i] = 0;
+		if(centerprint_messages[i])
+			strunzone(centerprint_messages[i]);
+		centerprint_messages[i] = string_null;
+	}
+}
+float hud_configure_cp_generation_time;
+void HUD_CenterPrint (void)
+{
+	if(!autocvar__hud_configure)
+	{
+		if(!autocvar_hud_panel_centerprint) return;
+
+		if (hud_configure_prev && hud_configure_prev != -1)
+			reset_centerprint_messages();
+	}
+	else
+	{
+		hud_configure_active_panel = HUD_PANEL_CENTERPRINT;
+
+		if (!hud_configure_prev)
+			reset_centerprint_messages();
+		if (time > hud_configure_cp_generation_time)
+		{
+			float r;
+			r = random();
+			if (r > 0.9)
+				centerprint_generic(floor(r*1000), strcat(sprintf("^3Countdown message at time %s", seconds_tostring(time)), ", seconds left: %d"), 1, 10);
+			else if (r > 0.8)
+				centerprint_generic(0, sprintf("^1Multiline message at time %s that\n^1lasts longer than normal", seconds_tostring(time)), 20, 0);
+			else
+				centerprint(sprintf("Message at time %s", seconds_tostring(time)));
+			hud_configure_cp_generation_time = time + 1 + random()*4;
+		}
+	}
+
+	HUD_Panel_UpdateCvars(centerprint);
+
+	// this panel doesn't fade when showing the scoreboard
+	if(autocvar__menu_alpha)
+		HUD_Panel_ApplyFadeAlpha();
+
+	if(scoreboard_fade_alpha)
+	{
+		// move the panel below the scoreboard
+		if (scoreboard_bottom >= 0.96 * vid_conheight)
+			return;
+		vector target_pos;
+		target_pos = eY * scoreboard_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
+		panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
+		panel_size_y = min(panel_size_y, vid_conheight - scoreboard_bottom);
+	}
+
+	HUD_Panel_DrawBg(1);
+
+	if (!centerprint_showing)
+		return;
+
+	if(panel_bg_padding)
+	{
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
+	}
+
+	float entries, height;
+	vector fontsize;
+	// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
+	// height = panel_size_y/entries;
+	// fontsize = '1 1 0' * height;
+	height = vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale;
+	fontsize = '1 1 0' * height;
+	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
+
+	float i, j, k, n;
+	float a, sz, align, current_msg_pos_y, msg_size;
+	vector pos;
+	string ts;
+
+	n = -1; // if no msg will be displayed, n stays -1
+
+	pos = panel_pos;
+	if (autocvar_hud_panel_centerprint_flip)
+		pos_y += panel_size_y;
+	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
+	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
+	{
+		if (j == CENTERPRINT_MAX_MSGS)
+			j = 0;
+		if (centerprint_expire_time[j] < time)
+		{
+			if (centerprint_countdown_num[j] && centerprint_time[j] > 0)
+			{
+				centerprint_countdown_num[j] = centerprint_countdown_num[j] - 1;
+				if (centerprint_countdown_num[j] == 0)
+					continue;
+				centerprint_expire_time[j] = centerprint_expire_time[j] + centerprint_time[j];
+			}
+			else
+				continue;
+		}
+		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - centerprint_fadetime > time)
+		{
+			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / centerprint_fadetime, 1);
+			sz = 0.8 + a * (1 - 0.8);
+		}
+		else if (centerprint_expire_time[j] > time)
+		{
+			a = (centerprint_expire_time[j] - time) / centerprint_fadetime;
+			sz = 0.8 + a * (1 - 0.8);
+		}
+
+		drawfontscale = sz * '1 1 0';
+		if (centerprint_countdown_num[j])
+			n = tokenizebyseparator(sprintf(centerprint_messages[j], centerprint_countdown_num[j]), "\n");
+		else
+			n = tokenizebyseparator(centerprint_messages[j], "\n");
+		if (autocvar_hud_panel_centerprint_flip)
+		{
+			// check if the message can be entirely shown
+			for(k = 0; k < n; ++k)
+			{
+				getWrappedLine_remaining = argv(k);
+				while(getWrappedLine_remaining)
+				{
+					ts = getWrappedLine(panel_size_x * sz, fontsize, stringwidth_colors);
+					if (ts != "")
+						pos_y -= fontsize_y;
+					else
+						pos_y -= fontsize_y * CENTERPRINT_SPACING/2;
+					if (pos_y < panel_pos_y) // check if the next line can be shown
+					{
+						drawfontscale = '1 1 0';
+						return;
+					}
+				}
+			}
+			current_msg_pos_y = pos_y; // save starting pos (first line) of the current message
+		}
+
+		msg_size = pos_y;
+		for(k = 0; k < n; ++k)
+		{
+			getWrappedLine_remaining = argv(k);
+			while(getWrappedLine_remaining)
+			{
+				ts = getWrappedLine(panel_size_x * sz, fontsize, stringwidth_colors);
+				if (ts != "")
+				{
+					if (align)
+						pos_x = panel_pos_x + (panel_size_x - stringwidth(ts, TRUE, fontsize)) * align;
+					drawcolorcodedstring(pos + eY * 0.5 * (1 - sz) * fontsize_y, ts, fontsize, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+					pos_y += fontsize_y;
+				}
+				else
+					pos_y += fontsize_y * CENTERPRINT_SPACING/2;
+				if (!autocvar_hud_panel_centerprint_flip && pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
+				{
+					drawfontscale = '1 1 0';
+					return;
+				}
+			}
+		}
+		msg_size = pos_y - msg_size;
+		if (autocvar_hud_panel_centerprint_flip)
+		{
+			pos_y = current_msg_pos_y - CENTERPRINT_SPACING * fontsize_y;
+			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
+				pos_y += (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(a));
+		}
+		else
+		{
+			pos_y += CENTERPRINT_SPACING * fontsize_y;
+			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
+				pos_y -= (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(a));
+		}
+	}
+	drawfontscale = '1 1 0';
+	if (n == -1)
+	{
+		centerprint_showing = FALSE;
+		reset_centerprint_messages();
+	}
+}
+
 /*
 ==================
 Main HUD system
@@ -4591,6 +4709,8 @@ switch (id) {\
 		 HUD_InfoMessages(); break;\
 	case (HUD_PANEL_PHYSICS):\
 		 HUD_Physics(); break;\
+	case (HUD_PANEL_CENTERPRINT):\
+		 HUD_CenterPrint(); break;\
 } ENDS_WITH_CURLY_BRACE
 
 void HUD_Main (void)
@@ -4620,6 +4740,14 @@ void HUD_Main (void)
 	}
 	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
 		hud_fade_alpha = 1;
+
+	// panels that we want to be active together with the scoreboard
+	// they must call HUD_Panel_ApplyFadeAlpha(); only when showing the menu
+	if(scoreboard_fade_alpha == 1)
+	{
+		HUD_CenterPrint();
+		return;
+	}
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)
 		return;
@@ -4738,9 +4866,6 @@ void HUD_Main (void)
 	// draw chat panel on top if it is maximized
 	if(autocvar__con_chat_maximized)
 		HUD_Chat(); // HUD_DrawPanel(HUD_PANEL_CHAT);
-
-	if (autocvar__hud_configure && spectatee_status && hud_configure_prev == -1) // try to join if we are in hud_configure mode, but still spectating, and in the first frame (in order to get rid of motd when launching a server via the menu "HUD Setup" button)
-		localcmd("cmd selectteam auto; cmd join\n");
 
 	if(autocvar__hud_configure)
 	{

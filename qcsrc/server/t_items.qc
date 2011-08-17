@@ -279,7 +279,6 @@ float Item_GiveTo(entity item, entity player)
 			{
 				pickedup = TRUE;
 				// play some cool sounds ;)
-				centerprint(player, "\n");
 				if (clienttype(player) == CLIENTTYPE_REAL)
 				{
 					if(player.health <= 5)

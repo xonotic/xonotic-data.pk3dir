@@ -31,8 +31,6 @@ void XonoticCreditsList_configureXonoticCreditsList(entity me)
 	me.configureXonoticListBox(me);
 	// load the file
 	me.bufferIndex = buf_load(language_filename("xonotic-credits.txt"));
-	if(me.bufferIndex < 0)
-		me.bufferIndex = buf_load("xonotic-credits.txt");
 	me.nItems = buf_getsize(me.bufferIndex);
 }
 void XonoticCreditsList_destroy(entity me)

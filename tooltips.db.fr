@@ -3,22 +3,22 @@
 
 
 \XonoticMultiplayerDialog\Jouer en ligne avec des amis en réseau local ou sur Internet
-\XonoticMultiplayerDialog/Servers\Trouver des serveurs pour y jouer dessus
+\XonoticMultiplayerDialog/Serveurs\Trouver des serveurs pour y jouer dessus
 \menu_slist_showempty\Montrer les serveurs vides
 \menu_slist_showfull\Montrer les serveurs où toutes les places sont prises
 \net_slist_pause\Ne met pas à jour la liste de serveurs pour éviter de "glisser" sur un autre serveur
 \XonoticMultiplayerDialog/Info\Montrer plus d'information sur le serveur séléctionné
-\XonoticMultiplayerDialog/Bookmark\Mettre le serveur en haut de la liste pour pouvoir le repérer plus facilement plus tard
+\XonoticMultiplayerDialog/Marque-page\Mettre le serveur en haut de la liste pour pouvoir le repérer plus facilement plus tard
 \XonoticMultiplayerDialog/Havoc\Changer au mode Havoc qui comporte des modifications sur le jeu
-\XonoticMultiplayerDialog/Create\Héberger votre propre partie
-\XonoticMultiplayerDialog/Demos\Regarder des Vidéos pré-enregistrées
+\XonoticMultiplayerDialog/Créer\Héberger votre propre partie
+\XonoticMultiplayerDialog/Vidéos\Regarder des Vidéos pré-enregistrées
 \XonoticMultiplayerDialog/Player Setup\Personaliser vos paramètres
 
 \XonoticTeamSelectDialog/join 'best' team (auto-select)\Auto-séléction de l'équipe qui a le plus besoin de vous (recommandé)
-\XonoticTeamSelectDialog/red\Joindre l'équipe rouge
-\XonoticTeamSelectDialog/blue\Joindre l'équipe bleue
-\XonoticTeamSelectDialog/yellow\Joindre l'équipe jaune
-\XonoticTeamSelectDialog/pink\Joindre l'équipe rose
+\XonoticTeamSelectDialog/rouge\Joindre l'équipe rouge
+\XonoticTeamSelectDialog/bleu\Joindre l'équipe bleue
+\XonoticTeamSelectDialog/jaune\Joindre l'équipe jaune
+\XonoticTeamSelectDialog/rose\Joindre l'équipe rose
 
 \timelimit_override\Limite de temps au match, le match se finit quand elle est atteinte
 \fraglimit_override\Limite de tués pour le match, le match se finit quand elle est atteinte
@@ -48,7 +48,7 @@
 \XonoticMultiplayerDialog/None\Déséléctionner toutes les cartes
 
 
-\XonoticMultiplayerDialog/Timedemo\Faire un test de performance en utilisant la vidéo choisie
+\XonoticMultiplayerDialog/Test Performance\Faire un test de performance en utilisant la vidéo choisie
 
 \fov\Champ de vision en degrés, par défaut 90, certains joueurs préfèrent entre 110 et 130
 \cl_bobcycle\Effet de "tremblement" de la caméra en courant
@@ -86,10 +86,10 @@
 \XonoticCvarsDialog\-
 
 \XonoticQuitDialog\Quitter Xonotic
-\XonoticQuitDialog/Yes\Retour au boulot...
-\XonoticQuitDialog/No\'Faut que je fragge plus de monde!
+\XonoticQuitDialog/Oui\Retour au boulot...
+\XonoticQuitDialog/Non\'Faut que je fragge plus de monde!
 
-\XonoticSettingsDialog/Input\Paramètres contrôle souris/clavier
+\XonoticSettingsDialog/Contrôles\Paramètres contrôle souris/clavier
 \sensitivity\Sensitivité de la souris
 \menu_mouse_speed\Sensitivité de la souris dans les menus, n'affecte pas le jeu
 \m_filter\Adoucit le mouvement de souris, mais crée une légère latence de souris
@@ -99,7 +99,7 @@
 \sbar_showbinds\Afficher les actions possibles avec des touches/commandes
 \cl_showpressedkeys\Afficher les touches qu'un joueur est en train d'appuyer
 
-\XonoticSettingsDialog/Video\Video settings
+\XonoticSettingsDialog/Vidéo\Video settings
 \vid_width\Résolution de l'écran
 \vid_bitsperpixel\Profondeur des couleurs: 16 bits est plus rapide, mais 32 bits est de meilleure qualité (recommandé)
 \vid_fullscreen\Activer le mode plein écran (par défaut: activé)
@@ -120,7 +120,7 @@
 \vid_samples\Activer l'anticrénelage, réduit l'effet d'escalier sur les modèles 3D, mais augmente fortement l'utilisation des ressources
 \v_flipped\Mode mirroir (par défaut: désactivé)
 
-\XonoticSettingsDialog/Effects\Paramètres des effets graphiques
+\XonoticSettingsDialog/Graphiques\Paramètres des effets graphiques
 \r_subdivisions_tolerance\Ajuster la qualité des modèles 3D de carte (courbes, tuyaux) (par défaut: normal)
 \gl_picmip\Ajuster la qualité des textures. La baisser diminue l'utilisation des ressources, mais rend les textures floues. (par défaut: normal)
 \r_picmipworld\If set, only reduce the texture quality of models (default: enabled)
@@ -176,7 +176,7 @@
 \cl_hitsound\Jouer un son quand vous touchez un enemi
 \menu_sounds\Jouer des sons en cliquant ou en passant la souris sur des options
 
-\XonoticSettingsDialog/Network\Paramètres du jeu en réseau
+\XonoticSettingsDialog/Réseau\Paramètres du jeu en réseau
 \cl_movement\Activer la prédiction des mouvements du joueur pour éviter les saccades lors de parties en réseau
 \cl_nolerp\Algorithme pour éviter les saccades lors de parties en réseau
 \shownetgraph\Show a 
@@ -186,7 +186,7 @@
 \cl_curl_maxspeed\Vitesse maximum de téléchargement
 \cl_port\Forcer le client à passer par le port défini (UDP) s'il n'est pas 0
 
-\XonoticSettingsDialog/Misc\Autres paramètres
+\XonoticSettingsDialog/Autres\Autres paramètres
 \showtime\Montrer l'heure, utile pour les captures d'écran
 \showdate\Montrer la date, utile pour les captures d'écran
 \showfps\Montrer le nombre d'Images Par Seconde rendues (Frames Per Second = FPS)
