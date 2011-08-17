@@ -43,6 +43,10 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 			buf_del(weaponstats_buffer);
 			weaponstats_buffer = -1;
 			break;
+		case URL_READY_CANREAD:
+			print("Got response from weapon stats server\n");
+			url_fclose(fh, WeaponStats_ready, world);
+			break;
 		case URL_READY_CLOSED:
 			print("Weapon stats written\n");
 			break;
