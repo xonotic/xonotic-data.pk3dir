@@ -64,7 +64,7 @@ void	makestatic (entity e)								= #69;
 void	changelevel (string s)								= #70;
 
 void	cvar_set (string var, string val)						= #72;
-//void(entity client, string s) centerprint = #73;
+void(entity client, string s) centerprint = #73;
 void	ambientsound (vector pos, string samp, float vol, float atten)			= #74;
 string	precache_model2 (string s)							= #75;
 string	precache_sound2 (string s)							= #76;

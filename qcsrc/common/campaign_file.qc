@@ -18,7 +18,7 @@ float CampaignFile_Load(float offset, float n)
 	campaign_entries = 0;
 	campaign_title = string_null;
 
-	fn = strcat("maps/campaign", campaign_name, ".txt");
+	fn = language_filename(strcat("maps/campaign", campaign_name, ".txt"));
 	fh = fopen(fn, FILE_READ);
 	if(fh >= 0)
 	{

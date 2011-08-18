@@ -3,7 +3,6 @@ REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKU
 #else
 #ifdef SVQC
 //#define TUBA_NOTE(n) strcat("weapons/tuba_note", ftos(n), ".wav")
-.float tuba_notecount;
 .entity tuba_note;
 .float tuba_smoketime;
 
@@ -48,7 +47,7 @@ float Tuba_GetNote(entity pl, float hittype)
 	// kind of tuba currently is player slot number, or team number if in
 	// teamplay
 	// that way, holes in the range of notes are "plugged"
-	if(teams_matter)
+	if(teamplay)
 	{
 		if(pl.team == COLOR_TEAM2 || pl.team == COLOR_TEAM4)
 			note += 3;
@@ -83,7 +82,7 @@ float W_Tuba_NoteSendEntity(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.origin_x);
 		WriteCoord(MSG_ENTITY, self.origin_y);
 		WriteCoord(MSG_ENTITY, self.origin_z);
-		WriteByte(MSG_ENTITY, self.owner != to);
+		WriteByte(MSG_ENTITY, self.realowner != to);
 	}
 	return TRUE;
 }
@@ -97,30 +96,30 @@ void W_Tuba_NoteThink()
 	entity e;
 	if(time > self.teleport_time)
 	{
-		self.owner.tuba_note = world;
+		self.realowner.tuba_note = world;
 		remove(self);
 		return;
 	}
 	self.nextthink = time;
 	dist_mult = autocvar_g_balance_tuba_attenuation / autocvar_snd_soundradius;
 	FOR_EACH_REALCLIENT(e)
-	if(e != self.owner)
+	if(e != self.realowner)
 	{
 		v = self.origin - (e.origin + e.view_ofs);
 		vol0 = max(0, 1 - vlen(v) * dist_mult);
 		dir0 = normalize(v);
-		v = self.owner.origin - (e.origin + e.view_ofs);
+		v = self.realowner.origin - (e.origin + e.view_ofs);
 		vol1 = max(0, 1 - vlen(v) * dist_mult);
 		dir1 = normalize(v);
 		if(fabs(vol0 - vol1) > 0.005) // 0.5 percent change in volume
 		{
-			setorigin(self, self.owner.origin);
+			setorigin(self, self.realowner.origin);
 			self.SendFlags |= 1;
 			break;
 		}
 		if(dir0 * dir1 < 0.9994) // 2 degrees change in angle
 		{
-			setorigin(self, self.owner.origin);
+			setorigin(self, self.realowner.origin);
 			self.SendFlags |= 1;
 			break;
 		}
@@ -130,18 +129,8 @@ void W_Tuba_NoteThink()
 void W_Tuba_Attack(float hittype)
 {
 	vector o;
-	float c, n;
+	float n;
 	W_SetupShot(self, FALSE, 2, "", 0, autocvar_g_balance_tuba_damage);
-	if(self.tuba_notecount)
-	{
-		self.tuba_notecount = FALSE;
-		c = CHAN_WEAPON;
-	}
-	else
-	{
-		self.tuba_notecount = TRUE;
-		c = CHAN_WEAPON2;
-	}
 
 	n = Tuba_GetNote(self, hittype);
 
@@ -161,7 +150,7 @@ void W_Tuba_Attack(float hittype)
 	if not(self.tuba_note)
 	{
 		self.tuba_note = spawn();
-		self.tuba_note.owner = self;
+		self.tuba_note.owner = self.tuba_note.realowner = self;
 		self.tuba_note.cnt = n;
 		self.tuba_note.think = W_Tuba_NoteThink;
 		self.tuba_note.nextthink = time;
