@@ -15,7 +15,7 @@ void WeaponStats_Init()
 
 void WeaponStats_Shutdown()
 {
-	float i, j, ibot, jbot, idx;
+	float i, j, n, ibot, jbot, idx;
 	float fh;
 	vector v;
 	string prefix;
@@ -29,7 +29,11 @@ void WeaponStats_Shutdown()
 		{
 			fputs(fh, "#begin statsfile\n");
 			fputs(fh, strcat("#date ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
-			fputs(fh, strcat("#config ", ftos(crc16(FALSE, cvar_changes)), "\n"));
+			fputs(fh, strcat("#config ", ftos(crc16(FALSE, cvar_purechanges)), "\n"));
+			fputs(fh, strcat("#cvar_purechanges ", ftos(cvar_purechanges_count), "\n"));
+			n = tokenizebyseparator(cvar_purechanges, "\n");
+			for(i = 0; i < n; ++i)
+				fputs(fh, strcat("#cvar_purechange ", argv(i), "\n"));
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i) for(ibot = 0; ibot <= 1; ++ibot)
 				for(j = WEP_FIRST; j <= WEP_LAST; ++j) for(jbot = 0; jbot <= 1; ++jbot)
 				{
