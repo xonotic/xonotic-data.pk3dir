@@ -146,7 +146,8 @@ void havocbot_goalrating_ctf_ourstolenflag(float ratingscale)
 	if(mf.cnt == FLAG_BASE)
 		return;
 
-	navigation_routerating(mf, ratingscale, 10000);
+	if(mf.tag_entity)
+		navigation_routerating(mf.tag_entity, ratingscale, 10000);
 };
 
 void havocbot_goalrating_ctf_droppedflags(float ratingscale, vector org, float radius)
