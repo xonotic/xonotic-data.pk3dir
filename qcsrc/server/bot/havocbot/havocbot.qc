@@ -489,7 +489,7 @@ void havocbot_movetogoal()
 	// Handling of jump pads
 	if(self.jumppadcount)
 	{
-		// If got stuck on the jump pad try to reach the farthest visible item
+		// If got stuck on the jump pad try to reach the farthest visible waypoint
 		if(self.aistatus & AI_STATUS_OUT_JUMPPAD)
 		{
 			if(fabs(self.velocity_z)<50)
@@ -497,10 +497,8 @@ void havocbot_movetogoal()
 				local entity head, newgoal;
 				local float distance, bestdistance;
 
-				for (head = findchainfloat(bot_pickup, TRUE); head; head = head.chain)
+				for (head = findchain(classname, "waypoint"); head; head = head.chain)
 				{
-					if(head.classname=="worldspawn")
-						continue;
 
 					distance = vlen(head.origin - self.origin);
 					if(distance>1000)
@@ -534,11 +532,13 @@ void havocbot_movetogoal()
 		{
 			if(self.velocity_z>0)
 			{
-				local float threshold;
+				float threshold, sxy;
+				vector velxy = self.velocity; velxy_z = 0;
+				sxy = vlen(velxy);
 				threshold = maxspeed * 0.2;
-				if(fabs(self.velocity_x) < threshold  &&  fabs(self.velocity_y) < threshold)
+				if(sxy < threshold)
 				{
-					dprint("Warning: ", self.netname, " got stuck on a jumppad, trying to get out of it now\n");
+					dprint("Warning: ", self.netname, " got stuck on a jumppad (velocity in xy is ", ftos(sxy), "), trying to get out of it now\n");
 					self.aistatus |= AI_STATUS_OUT_JUMPPAD;
 				}
 				return;
