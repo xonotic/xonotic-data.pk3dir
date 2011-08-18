@@ -260,15 +260,12 @@ void havocbot_bunnyhop(vector dir)
 	if(autocvar_g_midair)
 		return;
 
-	// Don't jump when using some weapons
-	/*
+	// Don't jump when attacking
 	if(self.aistatus & AI_STATUS_ATTACKING)
-	if(self.weapon == WEP_RIFLE)
 		return;
 
 	if(self.goalcurrent.classname == "player")
 		return;
-	*/
 
 	maxspeed = autocvar_sv_maxspeed;
 
@@ -789,12 +786,11 @@ void havocbot_movetogoal()
 						if(tracebox_hits_trigger_hurt(dst_ahead, self.mins, self.maxs, trace_endpos))
 						{
 							// Remove dangerous dynamic goals from stack
-							if (self.goalcurrent.classname == "player" || self.goalcurrent.classname == "droppedweapon")
-							{
-								navigation_poproute();
-								if(self.goalcurrent)
-									gco = (self.goalcurrent.absmin + self.goalcurrent.absmax) * 0.5;
-							}
+							dprint("bot ", self.netname, " removed the goal ", self.goalcurrent.classname, " ", etos(self.goalcurrent), " because it leads to a dangerous path\n");
+							navigation_poproute();
+							if(self.goalcurrent)
+								gco = (self.goalcurrent.absmin + self.goalcurrent.absmax) * 0.5;
+
 							// try to stop
 							flatdir = '0 0 0';
 							evadeobstacle = normalize(self.velocity) * -1;
