@@ -863,7 +863,7 @@ void havocbot_movetogoal()
 void havocbot_chooseenemy()
 {
 	local entity head, best, head2;
-	local float rating, bestrating, i, f;
+	local float rating, bestrating, i, hf;
 	local vector eye, v;
 	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 	{
@@ -908,7 +908,13 @@ void havocbot_chooseenemy()
 	bestrating = 100000000;
 	head = head2 = findchainfloat(bot_attack, TRUE);
 
+	// Backup hit flags
+	hf = self.dphitcontentsmask;
+
 	// Search for enemies, if no enemy can be seen directly try to look through transparent objects
+
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+
 	for(;;)
 	{
 		while (head)
@@ -937,16 +943,14 @@ void havocbot_chooseenemy()
 			break;
 
 		// Set flags to see through transparent objects
-		f = self.dphitcontentsmask;
-		self.dphitcontentsmask = DPCONTENTS_OPAQUE;
+		self.dphitcontentsmask |= DPCONTENTS_OPAQUE;
 
 		head = head2;
 		++i;
 	}
 
-	// Restore hit flags if needed
-	if(i)
-		self.dphitcontentsmask = f;
+	// Restore hit flags
+	self.dphitcontentsmask = hf;
 
 	self.enemy = best;
 	self.havocbot_stickenemy = TRUE;
