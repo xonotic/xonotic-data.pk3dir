@@ -907,6 +907,10 @@ void navigation_poptouchedgoals()
 		// personality property
 	}
 
+	// HACK: remove players/bots as goals, they can lead a bot to unexpected places (cliffs, lava, etc)
+	// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
+	if(self.goalcurrent.classname=="player")
+		navigation_poproute();
 
 	// Loose goal touching check when running
 	if(self.aistatus & AI_STATUS_RUNNING)

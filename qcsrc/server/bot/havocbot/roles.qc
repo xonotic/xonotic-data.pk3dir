@@ -199,6 +199,10 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 					continue;
 			}
 
+			// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
+			//		 adding a player as a goal seems to be quite dangerous, especially on space maps
+			//		 remove hack in navigation_poptouchedgoals() after performing this change
+
 			t = (self.health + self.armorvalue ) / (head.health + head.armorvalue );
 			navigation_routerating(head, t * ratingscale, 2000);
 		}
