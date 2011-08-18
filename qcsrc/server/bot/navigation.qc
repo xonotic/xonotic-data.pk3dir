@@ -891,6 +891,16 @@ void navigation_poptouchedgoals()
 		}
 	}
 
+	// If for some reason the bot is closer to the next goal, pop the current one
+	if(self.goalstack01)
+	if(vlen(self.goalcurrent.origin - self.origin) > vlen(self.goalstack01.origin - self.origin))
+	if(checkpvs(self.origin + self.view_ofs, self.goalstack01))
+	if(tracewalk(self, self.origin, self.mins, self.maxs, (self.goalstack01.absmin + self.goalstack01.absmax) * 0.5, bot_navigation_movemode))
+	{
+	///	dprint("path optimized, removed a goal from the queue\n");
+		navigation_poproute();
+	}
+
 	// Loose goal touching check when running
 	if(self.aistatus & AI_STATUS_RUNNING)
 	if(self.goalcurrent.classname=="waypoint")
