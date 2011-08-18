@@ -320,7 +320,7 @@ vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, flo
 
 float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float applygravity)
 {
-	local float f, r;
+	local float f, r, hf, distanceratio;
 	local vector v;
 	/*
 	eprint(self);
@@ -330,6 +330,10 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	dprint(", ", ftos(applygravity));
 	dprint(");\n");
 	*/
+
+	hf = self.dphitcontentsmask;
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+
 	shotspeed *= g_weaponspeedfactor;
 	shotspeedupward *= g_weaponspeedfactor;
 	if (!shotspeed)
@@ -346,15 +350,18 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	shotorg = self.origin + self.view_ofs;
 	shotdir = v_forward;
 	v = bot_shotlead(self.bot_aimtargorigin, self.bot_aimtargvelocity, shotspeed, self.bot_aimlatency);
-	local float distanceratio;
-	distanceratio =sqrt(bound(0,skill,10000))*0.3*(vlen(v-shotorg)-100)/autocvar_bot_ai_aimskill_firetolerance_distdegrees;
+	distanceratio = sqrt(bound(0,skill,10000))*0.3*(vlen(v-shotorg)-100)/autocvar_bot_ai_aimskill_firetolerance_distdegrees;
 	distanceratio = bound(0,distanceratio,1);
 	r =  (autocvar_bot_ai_aimskill_firetolerance_maxdegrees-autocvar_bot_ai_aimskill_firetolerance_mindegrees)
 		* (1-distanceratio) + autocvar_bot_ai_aimskill_firetolerance_mindegrees;
 	if (applygravity && self.bot_aimtarg)
 	{
 		if (!findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', self.bot_aimtarg, shotspeed, shotspeedupward, maxshottime, 0, self))
+		{
+			self.dphitcontentsmask = hf;
 			return FALSE;
+		}
+
 		f = bot_aimdir(findtrajectory_velocity - shotspeedupward * '0 0 1', r);
 	}
 	else
@@ -370,10 +377,14 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 		if (trace_fraction < 1)
 		if (trace_ent != self.enemy)
 		if (!bot_shouldattack(trace_ent))
+		{
+			self.dphitcontentsmask = hf;
 			return FALSE;
+		}
 	}
 
 	//if (r > maxshottime * shotspeed)
 	//	return FALSE;
+	self.dphitcontentsmask = hf;
 	return TRUE;
 };
