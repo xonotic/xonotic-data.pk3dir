@@ -18,7 +18,7 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 {
 	float i, j, n, ibot, jbot, idx;
 	vector v;
-	string prefix;
+	string prefix, s;
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
@@ -48,7 +48,10 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 			weaponstats_buffer = -1;
 			break;
 		case URL_READY_CANREAD:
-			print("Got response from weapon stats server\n");
+			print("Got response from weapon stats server:\n");
+			while((s = url_fgets(fh)))
+				print("  ", s, "\n");
+			print("End of response.\n");
 			url_fclose(fh, WeaponStats_ready, world);
 			break;
 		case URL_READY_CLOSED:
