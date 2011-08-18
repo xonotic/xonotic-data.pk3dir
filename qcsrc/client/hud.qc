@@ -501,8 +501,14 @@ void HUD_Weapons(void)
 	float weapon_count;
 	if (autocvar_hud_panel_weapons_onlyowned)
 	{
-		if(autocvar__hud_configure && menu_enabled != 2)
-			HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
+		if(autocvar__hud_configure)
+		{
+			if (weapons_st == 0)
+				for(i = 0; i <= WEP_LAST-WEP_FIRST; i += floor((WEP_LAST-WEP_FIRST)/5))
+					weapons_st |= power2of(i);
+			if(menu_enabled != 2)
+				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
+		}
 
 		vector old_panel_size;
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
@@ -666,7 +672,6 @@ void HUD_Weapons(void)
 			continue;
 		if (autocvar_hud_panel_weapons_onlyowned)
 		if (!((weapons_st & self.weapons) || (self.weapon == complain_weapon && time - complain_weapon_time < when + fadetime && autocvar_hud_panel_weapons_complainbubble)))
-		//if (!autocvar__hud_configure)
 			continue;
 		wpnpos = panel_pos + eX * column * wpnsize_x + eY * row * wpnsize_y;
 
