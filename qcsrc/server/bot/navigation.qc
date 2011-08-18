@@ -899,7 +899,14 @@ void navigation_poptouchedgoals()
 	{
 	///	dprint("path optimized, removed a goal from the queue\n");
 		navigation_poproute();
+		// TODO this may also be a nice idea to do "early" (e.g. by
+		// manipulating the vlen() comparisons) to shorten paths in
+		// general - this would make bots walk more "on rails" than
+		// "zigzagging" which they currently do with sufficiently
+		// random-like waypoints, and thus can make a nice bot
+		// personality property
 	}
+
 
 	// Loose goal touching check when running
 	if(self.aistatus & AI_STATUS_RUNNING)
