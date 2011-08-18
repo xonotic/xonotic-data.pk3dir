@@ -16,7 +16,7 @@ void WeaponStats_Init()
 string WeaponStats_prefix;
 void WeaponStats_ready(entity fh, entity pass, float status)
 {
-	float i, j, ibot, jbot, idx;
+	float i, j, n, ibot, jbot, idx;
 	vector v;
 	string prefix;
 	switch(status)
@@ -25,7 +25,11 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 			prefix = strcat(autocvar_hostname, "\t", GetGametype(), "_", GetMapname(), "\t");
 			url_fputs(fh, "#begin statsfile\n");
 			url_fputs(fh, strcat("#date ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
-			url_fputs(fh, strcat("#config ", ftos(crc16(FALSE, cvar_changes)), "\n"));
+			url_fputs(fh, strcat("#config ", ftos(crc16(FALSE, cvar_purechanges)), "\n"));
+			url_fputs(fh, strcat("#cvar_purechanges ", ftos(cvar_purechanges_count), "\n"));
+			n = tokenizebyseparator(cvar_purechanges, "\n");
+			for(i = 0; i < n; ++i)
+				url_fputs(fh, strcat("#cvar_purechange ", argv(i), "\n"));
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i) for(ibot = 0; ibot <= 1; ++ibot)
 				for(j = WEP_FIRST; j <= WEP_LAST; ++j) for(jbot = 0; jbot <= 1; ++jbot)
 				{
