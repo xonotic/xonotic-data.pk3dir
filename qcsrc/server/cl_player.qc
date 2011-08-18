@@ -13,7 +13,6 @@ void WeaponStats_Init()
 
 #define WEAPONSTATS_GETINDEX(awep,abot,vwep,vbot) (((vwep) + (awep) * (WEP_LAST - WEP_FIRST + 1) - (WEP_FIRST + WEP_FIRST * (WEP_LAST - WEP_FIRST + 1))) * 4 + (abot) * 2 + (vbot))
 
-string WeaponStats_prefix;
 void WeaponStats_ready(entity fh, entity pass, float status)
 {
 	float i, j, n, ibot, jbot, idx;
