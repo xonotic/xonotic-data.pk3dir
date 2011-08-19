@@ -113,7 +113,13 @@ float w_shotgun(float req)
 		if(vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_shotgun_secondary_melee_range)
 			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
 		else
-			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+		{
+			if(autocvar_g_antilag_bullets)
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+			else
+				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_shotgun_primary_speed, 0, 0.001, FALSE);
+		}
+
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_shotgun_reload_ammo && self.clip_load < autocvar_g_balance_shotgun_primary_ammo) // forced reload
