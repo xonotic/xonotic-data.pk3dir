@@ -887,7 +887,7 @@ void havocbot_chooseenemy()
 			if (self.health > 30)
 			{
 				// remain tracking him for a shot while (case he went after a small corner or pilar
-				self.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
+				self.havocbot_chooseenemy_finished = time + 0.5;
 				return;
 			}
 			// enemy isn't visible, or is far away, or we're injured severely

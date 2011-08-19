@@ -897,7 +897,7 @@ void navigation_poptouchedgoals()
 	if(checkpvs(self.origin + self.view_ofs, self.goalstack01))
 	if(tracewalk(self, self.origin, self.mins, self.maxs, (self.goalstack01.absmin + self.goalstack01.absmax) * 0.5, bot_navigation_movemode))
 	{
-	///	dprint("path optimized, removed a goal from the queue\n");
+	///	dprint("path optimized for ", self.netname, ", removed a goal from the queue\n");
 		navigation_poproute();
 		// TODO this may also be a nice idea to do "early" (e.g. by
 		// manipulating the vlen() comparisons) to shorten paths in
