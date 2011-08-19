@@ -914,6 +914,7 @@ void navigation_poptouchedgoals()
 
 	// Loose goal touching check when running
 	if(self.aistatus & AI_STATUS_RUNNING)
+	if(self.speed >= autocvar_sv_maxspeed) // if -really- running
 	if(self.goalcurrent.classname=="waypoint")
 	{
 		if(vlen(self.origin - self.goalcurrent.origin)<150)
