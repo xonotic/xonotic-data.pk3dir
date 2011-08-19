@@ -572,6 +572,10 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	string s;
 
+	// we only care for keyboard events
+	if(bInputType != 0 && bInputType != 1)
+		return false;
+
 	if(!autocvar__hud_configure)
 		return false;
 

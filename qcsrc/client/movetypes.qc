@@ -1,3 +1,7 @@
+float STAT_MOVEFLAGS = 225;
+float MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = 4;
+#define GRAVITY_UNAFFECTED_BY_TICRATE (getstati(STAT_MOVEFLAGS) & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
+
 .entity move_groundentity;
 .float move_suspendedinair;
 .float move_didgravity;
@@ -232,11 +236,21 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 
 	if(self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS)
 	{
-		self.move_didgravity = TRUE;
-		if(self.gravity)
-			self.move_velocity_z -= dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+		self.move_didgravity = 1;
+		if(GRAVITY_UNAFFECTED_BY_TICRATE)
+		{
+			if(self.gravity)
+				self.move_velocity_z -= 0.5 * dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+			else
+				self.move_velocity_z -= 0.5 * dt * getstatf(STAT_MOVEVARS_GRAVITY);
+		}
 		else
-			self.move_velocity_z -= dt * getstatf(STAT_MOVEVARS_GRAVITY);
+		{
+			if(self.gravity)
+				self.move_velocity_z -= dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+			else
+				self.move_velocity_z -= dt * getstatf(STAT_MOVEVARS_GRAVITY);
+		}
 	}
 
 	self.move_angles = self.move_angles + self.move_avelocity * dt;
@@ -318,12 +332,22 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 			break;
 	}
 
+	if(GRAVITY_UNAFFECTED_BY_TICRATE)
+	if(self.move_didgravity > 0)
+	if(!(self.move_flags & FL_ONGROUND))
+	{
+		if(self.gravity)
+			self.move_velocity_z -= 0.5 * dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+		else
+			self.move_velocity_z -= 0.5 * dt * getstatf(STAT_MOVEVARS_GRAVITY);
+	}
+
 	_Movetype_CheckWaterTransition();
 }
 
 void _Movetype_Physics_Frame(float movedt)
 {
-	self.move_didgravity = FALSE;
+	self.move_didgravity = -1;
 	switch(self.move_movetype)
 	{
 		case MOVETYPE_PUSH:
@@ -364,9 +388,6 @@ void Movetype_Physics_NoMatchServer() // optimized
 	movedt = time - self.move_time;
 	self.move_time = time;
 
-	//self.move_didgravity = ((self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS) && !(self.move_flags & FL_ONGROUND));
-	// we use the field as set by the last run of this
-
 	_Movetype_Physics_Frame(movedt);
 	if(wasfreed(self))
 		return;
@@ -399,8 +420,8 @@ void Movetype_Physics_MatchTicrate(float tr, float sloppy) // SV_Physics_Entity
 	dt -= n * tr;
 	self.move_time += n * tr;
 
-	//self.move_didgravity = ((self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS) && !(self.move_flags & FL_ONGROUND));
-	// we use the field as set by the last run of this
+	if(!self.move_didgravity)
+		self.move_didgravity = ((self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS) && !(self.move_flags & FL_ONGROUND));
 
 	for(i = 0; i < n; ++i)
 	{
@@ -415,12 +436,23 @@ void Movetype_Physics_MatchTicrate(float tr, float sloppy) // SV_Physics_Entity
 	{
 		// now continue the move from move_time to time
 		self.velocity = self.move_velocity;
-		if(self.move_didgravity)
+
+		if(self.move_didgravity > 0)
 		{
-			if(self.gravity)
-				self.velocity_z -= dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+			if(GRAVITY_UNAFFECTED_BY_TICRATE)
+			{
+				if(self.gravity)
+					self.velocity_z -= 0.5 * dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+				else
+					self.velocity_z -= 0.5 * dt * getstatf(STAT_MOVEVARS_GRAVITY);
+			}
 			else
-				self.velocity_z -= dt * getstatf(STAT_MOVEVARS_GRAVITY);
+			{
+				if(self.gravity)
+					self.velocity_z -= dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+				else
+					self.velocity_z -= dt * getstatf(STAT_MOVEVARS_GRAVITY);
+			}
 		}
 
 		self.angles = self.move_angles + dt * self.avelocity;
@@ -434,6 +466,17 @@ void Movetype_Physics_MatchTicrate(float tr, float sloppy) // SV_Physics_Entity
 			_Movetype_PushEntityTrace(dt * self.velocity);
 			if(!trace_startsolid)
 				setorigin(self, trace_endpos);
+		}
+
+		if(self.move_didgravity > 0)
+		{
+			if(GRAVITY_UNAFFECTED_BY_TICRATE)
+			{
+				if(self.gravity)
+					self.velocity_z -= 0.5 * dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+				else
+					self.velocity_z -= 0.5 * dt * getstatf(STAT_MOVEVARS_GRAVITY);
+			}
 		}
 	}
 	else

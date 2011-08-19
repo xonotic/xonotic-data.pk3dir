@@ -2948,7 +2948,7 @@ void HUD_VoteWindow(void)
 	pos = panel_pos;
 	mySize = panel_size;
 
-	a = vote_alpha * bound(autocvar_hud_panel_vote_alreadyvoted_alpha, 1 - vote_highlighted, 1);
+	a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
 	HUD_Panel_DrawBg(a);
 	a = panel_fg_alpha * a;
 
@@ -2999,7 +2999,7 @@ void HUD_VoteWindow(void)
 		drawsetcliparea(pos_x, pos_y, mySize_x * 0.5, mySize_y);
 		drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_voted", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
 	}
-	else if(vote_highlighted == 2) {
+	else if(vote_highlighted == -1) {
 		drawsetcliparea(pos_x + 0.5 * mySize_x, pos_y, mySize_x * 0.5, mySize_y);
 		drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_voted", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
 	}
@@ -3018,10 +3018,6 @@ void HUD_VoteWindow(void)
 	}
 
 	drawresetcliparea();
-
-	if(!vote_active) {
-		vote_highlighted = 0;
-	}
 }
 
 // Mod icons panel (#10)
@@ -4130,7 +4126,8 @@ void HUD_Physics(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_physics) return;
-		if(spectatee_status == -1 && autocvar_hud_panel_physics < 2) return;
+		if(spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3)) return;
+		if(autocvar_hud_panel_physics == 3 && !(gametype == GAME_RACE || gametype == GAME_CTS)) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_PHYSICS;
@@ -4516,7 +4513,7 @@ void HUD_CenterPrint (void)
 	// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
 	// height = panel_size_y/entries;
 	// fontsize = '1 1 0' * height;
-	height = vid_conheight/40 * autocvar_hud_panel_centerprint_fontscale;
+	height = vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale;
 	fontsize = '1 1 0' * height;
 	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
 
@@ -4549,8 +4546,8 @@ void HUD_CenterPrint (void)
 		}
 		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - centerprint_fadetime > time)
 		{
-			a = 1;
-			sz = 1;
+			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / centerprint_fadetime, 1);
+			sz = 0.8 + a * (1 - 0.8);
 		}
 		else if (centerprint_expire_time[j] > time)
 		{

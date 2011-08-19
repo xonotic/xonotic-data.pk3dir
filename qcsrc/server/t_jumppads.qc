@@ -127,6 +127,8 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 void trigger_push_touch()
 {
+	vector move;
+
 	if (self.active == ACTIVE_NOT)
 		return;
 
@@ -139,12 +141,29 @@ void trigger_push_touch()
 
 	EXACTTRIGGER_TOUCH;
 
-	if(self.target)
-		self.movedir = trigger_push_calculatevelocity(other.origin, self.enemy, self.height);
+	if(self.enemy)
+	{
+		other.velocity = trigger_push_calculatevelocity(other.origin, self.enemy, self.height);
+	}
+	else if(self.target)
+	{
+		entity e;
+		RandomSelection_Init();
+		for(e = world; (e = find(e, targetname, self.target)); )
+		{
+			if(e.cnt)
+				RandomSelection_Add(e, 0, string_null, e.cnt, 1);
+			else
+				RandomSelection_Add(e, 0, string_null, 1, 1);
+		}
+		other.velocity = trigger_push_calculatevelocity(other.origin, RandomSelection_chosen_ent, self.height);
+	}
+	else
+	{
+		other.velocity = self.movedir;
+	}
 
 	other.flags &~= FL_ONGROUND;
-
-	other.velocity = self.movedir;
 
 	if (other.classname == "player")
 	{
@@ -227,7 +246,7 @@ void trigger_push_touch()
 .vector dest;
 void trigger_push_findtarget()
 {
-	local entity e;
+	local entity e, t;
 	local vector org;
 	local float flighttime;
 
@@ -237,31 +256,48 @@ void trigger_push_findtarget()
 
 	if (self.target)
 	{
-		// find the target
-		self.enemy = find(world, targetname, self.target);
-		if (!self.enemy)
+		float n;
+		n = 0;
+		for(t = world; (t = find(t, targetname, self.target)); )
 		{
-			objerror("trigger_push: target not found\n");
-			remove(self);
-			return;
+			++n;
+			e = spawn();
+			setorigin(e, org);
+			setsize(e, PL_MIN, PL_MAX);
+			e.velocity = trigger_push_calculatevelocity(org, t, self.height);
+			tracetoss(e, e);
+			if(e.movetype == MOVETYPE_NONE)
+				waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
+			remove(e);
 		}
 
-		self.movedir = trigger_push_calculatevelocity(org, self.enemy, self.height);
-		flighttime = trigger_push_calculatevelocity_flighttime;
+		if(n == 0)
+		{
+			// no dest!
+			objerror ("Jumppad with nonexistant target");
+			return;
+		}
+		else if(n == 1)
+		{
+			// exactly one dest - bots love that
+			self.enemy = find(e, targetname, self.target);
+		}
+		else
+		{
+			// have to use random selection every single time
+			self.enemy = world;
+		}
 	}
 	else
-		flighttime = 0;
-
-	// calculate the destination and spawn a teleporter spawnfunc_waypoint
-	e = spawn();
-	setorigin(e, org);
-	setsize(e, PL_MIN, PL_MAX);
-	e.velocity = self.movedir;
-	tracetoss(e, e);
-	self.dest = trace_endpos;
-	remove(e);
-
-	waypoint_spawnforteleporter(self, self.dest, flighttime);
+	{
+		e = spawn();
+		setorigin(e, org);
+		setsize(e, PL_MIN, PL_MAX);
+		e.velocity = self.movedir;
+		tracetoss(e, e);
+		waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
+		remove(e);
+	}
 };
 
 /*

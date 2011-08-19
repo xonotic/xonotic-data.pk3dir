@@ -673,7 +673,11 @@ void spawnfunc_vehicle_spiderbot()
     if(autocvar_g_vehicle_spiderbot_health_regen)
         self.vehicle_flags |= VHF_HEALTHREGEN;
     
-    self.think = vewhicle_spiderbot_dinit;    
-    self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_spiderbot_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
+    self.think = vewhicle_spiderbot_dinit;
+    
+    if(g_assault)
+        self.nextthink = time + 0.5;
+    else
+        self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_spiderbot_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
 }
 #endif // SVQC
