@@ -21,6 +21,7 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
+			// url_fopen returned, we can write
 			prefix = strcat(autocvar_hostname, "\t", GetGametype(), "_", GetMapname(), "\t");
 			url_fputs(fh, "#begin statsfile\n");
 			url_fputs(fh, strcat("#date ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
@@ -47,6 +48,8 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 			weaponstats_buffer = -1;
 			break;
 		case URL_READY_CANREAD:
+			// url_fclose is processing, we got a response for writing the data
+			// this must come from HTTP
 			print("Got response from weapon stats server:\n");
 			while((s = url_fgets(fh)))
 				print("  ", s, "\n");
@@ -54,6 +57,7 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 			url_fclose(fh, WeaponStats_ready, world);
 			break;
 		case URL_READY_CLOSED:
+			// url_fclose has finished
 			print("Weapon stats written\n");
 			break;
 		case URL_READY_ERROR:
