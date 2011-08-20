@@ -348,6 +348,7 @@ void CSQC_RAPTOR_HUD();
 vector freeze_org, freeze_ang;
 entity nightvision_noise, nightvision_noise2;
 
+#define HITINDICATION_MAXTIMEDIFF 10 
 float pickup_crosshair_time, pickup_crosshair_size;
 float hit_time, typehit_time;
 float nextsound_hit_time, nextsound_typehit_time;
@@ -957,13 +958,17 @@ void CSQC_UpdateView(float w, float h)
 	hit_time = getstatf(STAT_HIT_TIME);
 	if(hit_time > nextsound_hit_time && autocvar_cl_hitsound)
 	{
-		sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+		if(time - hit_time < HITINDICATION_MAXTIMEDIFF) // don't play the sound if it's too old.
+			sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+			
 		nextsound_hit_time = time + autocvar_cl_hitsound_antispam_time;
 	}
 	typehit_time = getstatf(STAT_TYPEHIT_TIME);
-	if(typehit_time > nextsound_typehit_time)
+	if(typehit_time > nextsound_typehit_time) 
 	{
-		sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
+		if(time - typehit_time < HITINDICATION_MAXTIMEDIFF) // don't play the sound if it's too old.
+			sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
+			
 		nextsound_typehit_time = time + autocvar_cl_hitsound_antispam_time;
 	}
 
@@ -1130,7 +1135,9 @@ void CSQC_UpdateView(float w, float h)
 				hitindication_color = stov(autocvar_crosshair_hitindication_color);
 				if(hitindication_crosshair_time < hit_time)
 				{
-					hitindication_crosshair_size = 1;
+					if(time - hit_time < HITINDICATION_MAXTIMEDIFF) // don't trigger the animation if it's too old
+						hitindication_crosshair_size = 1;
+						
 					hitindication_crosshair_time = hit_time;
 				}
 
