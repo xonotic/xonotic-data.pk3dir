@@ -313,8 +313,30 @@ void spawnfunc_target_assault_roundstart() {
 
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
-void assault_new_round() {
+void vehicles_clearrturn();
+void vehicles_spawn();
+void assault_new_round() 
+{
+    entity oldself;
 	//bprint("ASSAULT: new round\n");
+
+	oldself = self;
+	// Eject players from vehicles
+    FOR_EACH_PLAYER(self)
+    {
+        if(self.vehicle)
+            vehicles_exit(VHEF_RELESE);        
+    }
+    
+    self = findchainflags(vehicle_flags, VHF_ISVEHICLE);
+    while(self)
+    {
+        vehicles_clearrturn();
+        vehicles_spawn();
+        self = self.chain;
+    }
+
+    self = oldself;
 
 	// up round counter
 	self.winning = self.winning + 1;
@@ -338,7 +360,7 @@ void assault_new_round() {
 				ent.team_saved = COLOR_TEAM1;
 		}
 	}
-
+	
 	// reset the level with a countdown
 	cvar_set("timelimit", ftos(ceil(time - game_starttime) / 60));
 	ReadyRestartForce(); // sets game_starttime

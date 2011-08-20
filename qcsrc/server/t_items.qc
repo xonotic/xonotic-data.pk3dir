@@ -146,11 +146,11 @@ void Item_Respawn (void)
 {
 	Item_Show(self, 1);
 	if(!g_minstagib && self.items == IT_STRENGTH)
-		sound (self, CH_TRIGGER_SINGLE, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	else if(!g_minstagib && self.items == IT_INVINCIBLE)
-		sound (self, CH_TRIGGER_SINGLE, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	else
-		sound (self, CH_TRIGGER_SINGLE, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
 	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
@@ -203,7 +203,7 @@ void Item_RespawnCountdown (void)
 					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
 			}
 		}
-		sound (self, CH_TRIGGER_SINGLE, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 		if(self.waypointsprite_attached)
 		{
 			WaypointSprite_Ping(self.waypointsprite_attached);
@@ -279,7 +279,6 @@ float Item_GiveTo(entity item, entity player)
 			{
 				pickedup = TRUE;
 				// play some cool sounds ;)
-				centerprint(player, "\n");
 				if (clienttype(player) == CLIENTTYPE_REAL)
 				{
 					if(player.health <= 5)

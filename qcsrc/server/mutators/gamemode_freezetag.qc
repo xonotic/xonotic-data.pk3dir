@@ -69,6 +69,7 @@ void freezetag_Freeze(entity attacker)
 		return;
 	self.freezetag_frozen = 1;
 	self.freezetag_revive_progress = 0;
+	self.health = 1;
 
 	entity ice;
 	ice = spawn();
@@ -113,6 +114,7 @@ void freezetag_Unfreeze(entity attacker)
 {
 	self.freezetag_frozen = 0;
 	self.freezetag_revive_progress = 0;
+	self.health = autocvar_g_balance_health_start;
 
 	// remove the ice block
 	entity ice;
@@ -183,7 +185,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		bprint("^7", frag_target.netname, "^1 was frozen by ^7", frag_attacker.netname, ".\n");
 	}
 
-	frag_target.health = autocvar_g_balance_health_start; // "respawn" the player :P
+	frag_target.health = 1; // "respawn" the player :P
 
 	freezetag_CheckWinner();
 
@@ -244,6 +246,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	if(n && self.freezetag_frozen) // OK, there is at least one teammate reviving us
 	{
 		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress + frametime * autocvar_g_freezetag_revive_speed, 1);
+		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
 
 		if(self.freezetag_revive_progress >= 1)
 		{
@@ -292,6 +295,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	else if(!n && self.freezetag_frozen) // only if no teammate is nearby will we reset
 	{
 		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
+		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
 	}
 	else if(!n)
 	{

@@ -82,23 +82,23 @@ void W_Grenade_Touch1 (void)
 		float r;
 		r = random() * 6;
 		if(r < 1)
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
 		else if(r < 2)
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
 		else if(r < 3)
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
 		else if(r < 4)
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
 		else if(r < 5)
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
 		else
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
 	}
 	else if(autocvar_g_balance_grenadelauncher_primary_type == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{
-		spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
+		spamsound (self, CH_SHOTS, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
 		self.oldvelocity = self.velocity;
@@ -110,7 +110,7 @@ void W_Grenade_Touch1 (void)
 		// do not respond to any more touches
 		self.solid = SOLID_NOT;
 
-		self.nextthink = min(self.nextthink, time + autocvar_g_balance_grenadelauncher_primary_lifetime2);
+		self.nextthink = min(self.nextthink, time + autocvar_g_balance_grenadelauncher_primary_lifetime_stick);
 	}
 }
 
@@ -126,23 +126,27 @@ void W_Grenade_Touch2 (void)
 		float r;
 		r = random() * 6;
 		if(r < 1)
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
 		else if(r < 2)
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
 		else if(r < 3)
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
 		else if(r < 4)
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
 		else if(r < 5)
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
 		else
-			spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
+		
+		if (autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce && self.gl_bouncecnt == 1)
+			self.nextthink = time + autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce;
+			
 	}
 	else if(autocvar_g_balance_grenadelauncher_secondary_type == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{
-		spamsound (self, CH_SHOTS_SINGLE, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
+		spamsound (self, CH_SHOTS, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
 		self.oldvelocity = self.velocity;
@@ -154,7 +158,7 @@ void W_Grenade_Touch2 (void)
 		// do not respond to any more touches
 		self.solid = SOLID_NOT;
 
-		self.nextthink = min(self.nextthink, time + autocvar_g_balance_grenadelauncher_secondary_lifetime2);
+		self.nextthink = min(self.nextthink, time + autocvar_g_balance_grenadelauncher_secondary_lifetime_stick);
 	}
 }
 
@@ -367,7 +371,7 @@ float w_glauncher(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("grenade_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS_SINGLE, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

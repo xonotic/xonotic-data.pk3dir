@@ -108,7 +108,7 @@ void CampaignPreInit()
 
 	title = campaign_shortdesc[0];
 	title = strzone(strcat("Level ", ftos(campaign_level + 1), ": ", title));
-	campaign_message = strzone(strcat("\n\n\n\n\n\n\n\n\n\n^1\n", title, "\n^3\n", campaign_longdesc[0], "\n\n^1press jump to enter the game"));
+	campaign_message = strzone(strcat(title, "\n^3\n", campaign_longdesc[0], "\n\n^1press jump to enter the game"));
 	strunzone(title);
 }
 

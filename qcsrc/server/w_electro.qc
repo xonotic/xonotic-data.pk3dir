@@ -68,7 +68,7 @@ void W_Plasma_Touch (void)
 		W_Plasma_Explode ();
 	} else {
 		//UpdateCSQCProjectile(self);
-		spamsound (self, CH_SHOTS_SINGLE, "weapons/electro_bounce.wav", VOL_BASE, ATTN_NORM);
+		spamsound (self, CH_SHOTS, "weapons/electro_bounce.wav", VOL_BASE, ATTN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }
@@ -544,7 +544,7 @@ float w_electro(float req)
 		{
 			pointparticles(particleeffectnum("electro_ballexplode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS_SINGLE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
 		}
 		else
 		{
@@ -553,13 +553,13 @@ float w_electro(float req)
 				// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
 				pointparticles(particleeffectnum("electro_combo"), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS_SINGLE, "weapons/electro_impact_combo.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/electro_impact_combo.wav", VOL_BASE, ATTN_NORM);
 			}
 			else
 			{
 				pointparticles(particleeffectnum("electro_impact"), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS_SINGLE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
 			}
 		}
 	}

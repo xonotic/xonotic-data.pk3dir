@@ -18,6 +18,7 @@ post-builtins.qh
 ../common/util.qh
 ../common/items.qh
 ../common/explosion_equation.qh
+../common/urllib.qh
 
 autocvars.qh
 constants.qh
@@ -132,6 +133,7 @@ vote.qc
 campaign.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
+../common/urllib.qc
 
 ../common/gamecommand.qc
 gamecommand.qc

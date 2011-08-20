@@ -66,12 +66,12 @@ void ctf_captureshield_update(entity p, float dir)
 		{
 			if(should)
 			{
-				centerprint_atprio(p, CENTERPRIO_SHIELDING, "^3You are now ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Make some defensive scores before trying again.");
+				Send_CSQC_Centerprint_Generic(other, CPID_CTF_CAPTURESHIELD, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.", 5, 0);
 				// TODO csqc notifier for this
 			}
 			else
 			{
-				centerprint_atprio(p, CENTERPRIO_SHIELDING, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.");
+				Send_CSQC_Centerprint_Generic(p, CPID_CTF_CAPTURESHIELD, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.", 5, 0);
 				// TODO csqc notifier for this
 			}
 			p.ctf_captureshielded = should;
@@ -88,6 +88,7 @@ float ctf_captureshield_customize()
 	return TRUE;
 }
 
+.float ctf_captureshield_touch_msgtime;
 void ctf_captureshield_touch()
 {
 	if not(other.ctf_captureshielded)
@@ -99,7 +100,9 @@ void ctf_captureshield_touch()
 	mymid = (self.absmin + self.absmax) * 0.5;
 	othermid = (other.absmin + other.absmax) * 0.5;
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * captureshield_force);
-	centerprint_atprio(other, CENTERPRIO_SHIELDING, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.");
+	if (time - other.ctf_captureshield_touch_msgtime > 2)
+		Send_CSQC_Centerprint_Generic(other, CPID_CTF_CAPTURESHIELD, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.", 5, 0);
+	other.ctf_captureshield_touch_msgtime = time;
 }
 
 void ctf_flag_spawnstuff()
@@ -358,7 +361,7 @@ void FlagThink()
 		{
 			bprint("The ", self.netname, " became impatient after ", ftos_decimals(flagcaptimerecord, 2), " seconds and returned itself\n");
 
-			sound (self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NONE);
+			sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
 			self.owner.impulse = 141; // returning!
 
 			e = self;
@@ -385,7 +388,7 @@ void FlagThink()
 		if (time > self.pain_finished)
 		{
 			bprint("The ", self.netname, " has returned to base\n");
-			sound (self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NONE);
+			sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
 			LogCTF("returned", self.team, world);
 			ReturnFlag(self);
 		}
@@ -765,6 +768,7 @@ Keys:
  (default ctf/respawn.wav)
 */
 
+void spawnfunc_item_flag_team2();
 void spawnfunc_item_flag_team1()
 {
 	if (!g_ctf)
@@ -773,21 +777,22 @@ void spawnfunc_item_flag_team1()
 		return;
 	}
 
+	if (g_ctf_reverse)
+	{
+		float old_g_ctf_reverse = g_ctf_reverse;
+		g_ctf_reverse = 0; // avoid an endless loop
+		spawnfunc_item_flag_team2();
+		g_ctf_reverse = old_g_ctf_reverse;
+		return;
+	}
+
 	// link flag into ctf_worldflaglist
 	self.ctf_worldflagnext = ctf_worldflaglist;
 	ctf_worldflaglist = self;
 
 	self.classname = "item_flag_team";
-	if(g_ctf_reverse)
-	{
-		self.team = COLOR_TEAM2; // color 13 team (blue)
-		self.items = IT_KEY1; // silver key (bluish enough)
-	}
-	else
-	{
-		self.team = COLOR_TEAM1; // color 4 team (red)
-		self.items = IT_KEY2; // gold key (redish enough)
-	}
+	self.team = COLOR_TEAM1; // color 4 team (red)
+	self.items = IT_KEY2; // gold key (redish enough)
 	self.netname = "^1RED^7 flag";
 	self.target = "###item###";
 	self.skin = autocvar_g_ctf_flag_red_skin;
@@ -871,21 +876,22 @@ void spawnfunc_item_flag_team2()
 		return;
 	}
 
+	if (g_ctf_reverse)
+	{
+		float old_g_ctf_reverse = g_ctf_reverse;
+		g_ctf_reverse = 0; // avoid an endless loop
+		spawnfunc_item_flag_team1();
+		g_ctf_reverse = old_g_ctf_reverse;
+		return;
+	}
+
 	// link flag into ctf_worldflaglist
 	self.ctf_worldflagnext = ctf_worldflaglist;
 	ctf_worldflaglist = self;
 
 	self.classname = "item_flag_team";
-	if(g_ctf_reverse)
-	{
-		self.team = COLOR_TEAM1; // color 4 team (red)
-		self.items = IT_KEY2; // gold key (redish enough)
-	}
-	else
-	{
-		self.team = COLOR_TEAM2; // color 13 team (blue)
-		self.items = IT_KEY1; // silver key (bluish enough)
-	}
+	self.team = COLOR_TEAM2; // color 13 team (blue)
+	self.items = IT_KEY1; // silver key (bluish enough)
 	self.netname = "^4BLUE^7 flag";
 	self.target = "###item###";
 	self.skin = autocvar_g_ctf_flag_blue_skin;
