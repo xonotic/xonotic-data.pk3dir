@@ -267,8 +267,7 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 void Send_KillNotification (string s1, string s2, string s3, float msg, float type)
 {
 	WriteByte(MSG_ALL, SVC_TEMPENTITY);
-	WriteByte(MSG_ALL, TE_CSQC_NOTIFY);
-	WriteByte(MSG_ALL, CSQC_KILLNOTIFY);
+	WriteByte(MSG_ALL, TE_CSQC_KILLNOTIFY);
 	WriteString(MSG_ALL, s1);
 	WriteString(MSG_ALL, s2);
 	WriteString(MSG_ALL, s3);
@@ -284,8 +283,7 @@ void Send_CSQC_KillCenterprint(entity e, string s1, string s2, float msg, float 
 		msg_entity = e;
 		WRITESPECTATABLE_MSG_ONE({
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
-			WriteByte(MSG_ONE, CSQC_KILLCENTERPRINT);
+			WriteByte(MSG_ONE, TE_CSQC_KILLCENTERPRINT);
 			WriteString(MSG_ONE, s1);
 			WriteString(MSG_ONE, s2);
 			WriteShort(MSG_ONE, msg);

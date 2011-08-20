@@ -1672,8 +1672,7 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 		msg_entity = e;
 		WRITESPECTATABLE_MSG_ONE({
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
-			WriteByte(MSG_ONE, CSQC_CENTERPRINT_GENERIC);
+			WriteByte(MSG_ONE, TE_CSQC_CENTERPRINT_GENERIC);
 			WriteByte(MSG_ONE, id);
 			WriteString(MSG_ONE, s);
 			if (id != 0 && s != "")

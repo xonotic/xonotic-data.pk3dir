@@ -57,8 +57,10 @@ const float TE_CSQC_TEAMNAGGER = 106;
 const float TE_CSQC_PINGPLREPORT = 107;
 const float TE_CSQC_ANNOUNCE = 110;
 const float TE_CSQC_TARGET_MUSIC = 111;
-const float TE_CSQC_NOTIFY = 112;
-const float TE_CSQC_WEAPONCOMPLAIN = 113;
+const float TE_CSQC_KILLNOTIFY = 112;
+const float TE_CSQC_KILLCENTERPRINT = 113;
+const float TE_CSQC_CENTERPRINT_GENERIC = 114;
+const float TE_CSQC_WEAPONCOMPLAIN = 115;
 const float TE_CSQC_NEX_SCOPE = 116;
 const float TE_CSQC_MINELAYER_MAXMINES = 117;
 const float TE_CSQC_HAGAR_MAXROCKETS = 118;
@@ -78,10 +80,6 @@ const float RACE_NET_SPEED_AWARD_BEST = 10; // all time best speed award, sent t
 const float RACE_NET_SERVER_RANKINGS = 11;
 const float RACE_NET_SERVER_STATUS = 12;
 const float RANKINGS_CNT = 15;
-
-const float CSQC_KILLNOTIFY = 0;
-const float CSQC_KILLCENTERPRINT = 1;
-const float CSQC_CENTERPRINT_GENERIC = 2;
 
 const float ENT_CLIENT = 0;
 const float ENT_CLIENT_DEAD = 1;
