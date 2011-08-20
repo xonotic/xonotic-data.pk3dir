@@ -348,7 +348,7 @@ void CSQC_RAPTOR_HUD();
 vector freeze_org, freeze_ang;
 entity nightvision_noise, nightvision_noise2;
 
-#define HITINDICATION_MAXTIMEDIFF 10 
+#define HITINDICATION_MAXTIMEDIFF 5
 float pickup_crosshair_time, pickup_crosshair_size;
 float hit_time, typehit_time;
 float nextsound_hit_time, nextsound_typehit_time;
