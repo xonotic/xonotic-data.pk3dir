@@ -1119,7 +1119,7 @@ void CSQC_UpdateView(float w, float h)
 				
 				if(pickup_crosshair_time < stat_pickup_time)
 				{
-					if(time - stat_pickup_time < MAX_TIME_DIFF)
+					if(time - stat_pickup_time < MAX_TIME_DIFF) // don't trigger the animation if it's too old
 						pickup_crosshair_size = 1;
 						
 					pickup_crosshair_time = stat_pickup_time;
