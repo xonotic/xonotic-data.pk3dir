@@ -80,7 +80,7 @@ const float RACE_NET_SERVER_STATUS = 12;
 const float RANKINGS_CNT = 15;
 
 const float CSQC_KILLNOTIFY = 0;
-const float CSQC_CENTERPRINT = 1;
+const float CSQC_KILLCENTERPRINT = 1;
 const float CSQC_CENTERPRINT_GENERIC = 2;
 
 const float ENT_CLIENT = 0;

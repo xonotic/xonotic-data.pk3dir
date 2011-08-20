@@ -1321,9 +1321,9 @@ void Net_Notify() {
 	{
 		HUD_KillNotify(ReadString(), ReadString(), ReadString(), ReadShort(), ReadByte());
 	}
-	else if(type == CSQC_CENTERPRINT)
+	else if(type == CSQC_KILLCENTERPRINT)
 	{
-		HUD_Centerprint(ReadString(), ReadString(), ReadShort(), ReadByte());
+		HUD_KillCenterprint(ReadString(), ReadString(), ReadShort(), ReadByte());
 	}
 	else if(type == CSQC_CENTERPRINT_GENERIC)
 	{
