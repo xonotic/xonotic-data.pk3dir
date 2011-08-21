@@ -140,8 +140,9 @@ void plat_crush()
             plat_go_down ();
         else if (self.state == 3)
             plat_go_up ();
-        else
-            objerror ("plat_crush: bad self.state\n");
+	// when in other states, then the plat_crush event came delayed after
+	// plat state already had changed
+	// this isn't a bug per se!
     }
 };
 

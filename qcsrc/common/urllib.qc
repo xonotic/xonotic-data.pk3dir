@@ -40,13 +40,22 @@ float url_URI_Get_Callback(float id, float status, string data)
 		float n, i;
 		n = tokenizebyseparator(data, "\n");
 		e.url_rbuf = buf_create();
-		e.url_rbufpos = 0;
 		if(e.url_rbuf < 0)
 		{
-			print("buf_create: out of memory\n");
+			print("url_URI_Get_Callback: out of memory in buf_create\n");
 			e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 			strunzone(e.url_url);
 			remove(e);
+			return 1;
+		}
+		e.url_rbufpos = 0;
+		if(e.url_rbuf < 0)
+		{
+			print("url_URI_Get_Callback: out of memory in buf_create\n");
+			e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
+			strunzone(e.url_url);
+			remove(e);
+			return 1;
 		}
 		for(i = 0; i < n; ++i)
 			bufstr_set(e.url_rbuf, i, argv(i));
@@ -75,6 +84,8 @@ void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 			case FILE_APPEND:
 				// collect data to a stringbuffer for a POST request
 				// attempts to close will result in a reading handle
+
+				// create a writing end that does nothing yet
 				e = spawn();
 				e.classname = "url_fopen_file";
 				e.url_url = strzone(url);
@@ -82,7 +93,7 @@ void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 				e.url_wbuf = buf_create();
 				if(e.url_wbuf < 0)
 				{
-					print("buf_create: out of memory\n");
+					print("url_fopen: out of memory in buf_create\n");
 					rdy(e, pass, URL_READY_ERROR);
 					strunzone(e.url_url);
 					remove(e);
@@ -95,6 +106,8 @@ void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 
 			case FILE_READ:
 				// read data only
+
+				// get slot for HTTP request
 				for(i = autocvar__urllib_nextslot; i < NUM_URL_ID; ++i)
 					if(url_fromid[i] == world)
 						break;
@@ -105,28 +118,35 @@ void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 							break;
 					if(i >= autocvar__urllib_nextslot)
 					{
+						print("url_fopen: too many concurrent requests\n");
 						rdy(world, pass, URL_READY_ERROR);
 						return;
 					}
 				}
 
+				// GET the data
+				if(!crypto_uri_postbuf(url, i + MIN_URL_ID, string_null, string_null, -1, 0))
+				{
+					print("url_fopen: failure in crypto_uri_postbuf\n");
+					rdy(world, pass, URL_READY_ERROR);
+					return;
+				}
+
+				// Make a dummy handle object (no buffers at
+				// all). Wait for data to come from the
+				// server, then call the callback
 				e = spawn();
 				e.classname = "url_fopen_file";
 				e.url_url = strzone(url);
 				e.url_fh = -1;
 				e.url_rbuf = -1;
 				e.url_wbuf = -1;
-				if(!crypto_uri_postbuf(url, i + MIN_URL_ID, string_null, string_null, -1, 0))
-				{
-					rdy(e, pass, URL_READY_ERROR);
-					strunzone(e.url_url);
-					remove(e);
-					return;
-				}
 				e.url_ready = rdy;
 				e.url_ready_pass = pass;
 				e.url_id = i;
 				url_fromid[i] = e;
+
+				// make sure this slot won't be reused quickly even on map change
 				cvar_set("_urllib_nextslot", ftos(mod(i + 1, NUM_URL_ID)));
 				break;
 		}
@@ -153,14 +173,19 @@ void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 	}
 }
 
+// close a file
 void url_fclose(entity e, url_ready_func rdy, entity pass)
 {
 	float i;
 
 	if(e.url_fh < 0)
 	{
+		// closing an URL!
 		if(e.url_wbuf >= 0)
 		{
+			// we are closing the write end (HTTP POST request)
+
+			// get slot for HTTP request
 			for(i = autocvar__urllib_nextslot; i < NUM_URL_ID; ++i)
 				if(url_fromid[i] == world)
 					break;
@@ -171,35 +196,42 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 						break;
 				if(i >= autocvar__urllib_nextslot)
 				{
-					buf_del(e.url_wbuf);
+					print("url_fclose: too many concurrent requests\n");
 					rdy(e, pass, URL_READY_ERROR);
+					buf_del(e.url_wbuf);
 					strunzone(e.url_url);
 					remove(e);
 					return;
 				}
 			}
-			print(ftos(i), "\n");
 
+			// POST the data
 			if(!crypto_uri_postbuf(e.url_url, i + MIN_URL_ID, "text/plain", "", e.url_wbuf, 0))
 			{
-				buf_del(e.url_wbuf);
+				print("url_fclose: failure in crypto_uri_postbuf\n");
 				rdy(e, pass, URL_READY_ERROR);
+				buf_del(e.url_wbuf);
 				strunzone(e.url_url);
 				remove(e);
 				return;
 			}
 
+			// delete write end. File handle is now in unusable
+			// state. Wait for data to come from the server, then
+			// call the callback
 			buf_del(e.url_wbuf);
 			e.url_wbuf = -1;
 			e.url_ready = rdy;
 			e.url_ready_pass = pass;
 			e.url_id = i;
 			url_fromid[i] = e;
+
+			// make sure this slot won't be reused quickly even on map change
 			cvar_set("_urllib_nextslot", ftos(mod(i + 1, NUM_URL_ID)));
 		}
 		else
 		{
-			// we have READ all data
+			// we have READ all data, just close
 			rdy(e, pass, URL_READY_CLOSED);
 			buf_del(e.url_rbuf);
 			strunzone(e.url_url);
@@ -215,7 +247,7 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 	}
 }
 
-// with \n
+// with \n (blame FRIK_FILE)
 string url_fgets(entity e)
 {
 	if(e.url_fh < 0)
@@ -233,7 +265,7 @@ string url_fgets(entity e)
 	}
 }
 
-// without \n
+// without \n (blame FRIK_FILE)
 void url_fputs(entity e, string s)
 {
 	if(e.url_fh < 0)
