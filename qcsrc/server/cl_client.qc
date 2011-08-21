@@ -659,13 +659,13 @@ void PutObserverInServer (void)
 	accuracy_resend(self);
 
 	self.spectatortime = time;
-
+	
 	self.classname = "observer";
 	self.iscreature = FALSE;
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_NOT;
-	self.movetype = MOVETYPE_NOCLIP;
+	self.movetype = MOVETYPE_FLY_WORLDONLY; //(self.cvar_cl_clippedspectating ? MOVETYPE_NOCLIP : MOVETYPE_FLY); // it's too early for this anyway, lets just set it in playerprethink
 	self.flags = FL_CLIENT | FL_NOTARGET;
 	self.armorvalue = 666;
 	self.effects = 0;
@@ -694,9 +694,9 @@ void PutObserverInServer (void)
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 
-	self.view_ofs = PL_VIEW_OFS;
+	self.view_ofs = '0 0 0'; // so that you can't go inside walls with MOVETYPE_FLY, previously "PL_VIEW_OFS" - for some reason this is diff from normal players
 	setorigin (self, spot.origin);
-	setsize (self, '0 0 0', '0 0 0');
+	setsize (self, '-16 -16 -24', '16 16 24'); // so that you can't go inside walls with MOVETYPE_FLY
 	self.prevorigin = self.origin;
 	self.items = 0;
 	self.weapons = 0;
@@ -2503,6 +2503,7 @@ void checkSpectatorBlock() {
 
 void ObserverThink()
 {
+	float prefered_movetype;
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
 			self.flags &~= FL_JUMPRELEASED;
@@ -2512,6 +2513,10 @@ void ObserverThink()
 			if(SpectateNext() == 1) {
 				self.classname = "spectator";
 			}
+		} else {
+			prefered_movetype = ((!self.BUTTON_USE ? self.cvar_cl_clippedspectating : !self.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			if (self.movetype != prefered_movetype)
+				self.movetype = prefered_movetype;
 		}
 	} else {
 		if (!(self.BUTTON_ATCK || self.BUTTON_JUMP)) {

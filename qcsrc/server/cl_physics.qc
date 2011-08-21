@@ -904,6 +904,7 @@ void SV_PlayerPhysics()
 	}
 
 	if(self.flags & FL_ONGROUND)
+	if(self.classname == "player") // no fall sounds for observers thank you very much
 	if(self.wasFlying)
 	{
 		self.wasFlying = 0;
@@ -962,7 +963,7 @@ void SV_PlayerPhysics()
 	{
 		RaceCarPhysics();
 	}
-	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY)
+	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY)
 	{
 		// noclipping or flying
 		self.flags &~= FL_ONGROUND;
