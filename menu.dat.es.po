@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revisión-Date: 2011-03-24 19:40+0100\n"
+"PO-Revisión-Date: 2011-08-21 19:40+0100\n"
 
 #: qcsrc/menu/gamecommand.qc:47
 #, c-format
@@ -39,12 +39,12 @@ msgstr "error creando el manejador curl\n"
 #: qcsrc/menu/gamecommand.qc:239
 msgid "Invalid command. For a list of supported commands, try menu_cmd help.\n"
 msgstr ""
-"Comando no valido. Para una lista de comandos soportados, teclea menu_cmd "
+"Comando no válido. Para una lista de comandos soportados, escriba menu_cmd "
 "help\n"
 
 #: qcsrc/menu/item/gecko.c:49
 msgid "Browser not initialized!"
-msgstr "navegador no inicializado!"
+msgstr "Navegador no inicializado!"
 
 #: qcsrc/menu/item/label.c:63
 #, c-format
@@ -125,7 +125,7 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
-"Bienvenido a Xonotic, por favor seleccióne su Lenguaje preferido y luego "
+"Bienvenido a Xonotic, por favor seleccióne su lenguaje preferido y luego "
 "ingrese su nombre de jugador. Estas opciones pueden ser modificadas luego "
 "utilizando el menú de configuración"
 
@@ -146,7 +146,7 @@ msgstr "Guardar configuración"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:4
 msgid "Ammo Panel"
-msgstr "panel de munición"
+msgstr "Panel de munición"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:22
 msgid "Ammunition display:"
@@ -577,7 +577,7 @@ msgstr "Mostra ID de arma como:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:46
 #, fuzzy
 msgid "SHOWAS^None"
-msgstr "Nenhum"
+msgstr "Ninguno"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:47
 msgid "Number"
@@ -1984,12 +1984,12 @@ msgstr "High Dynamic Range (HDR)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:182
 msgid "Motion blur:"
-msgstr "Distorsión p/ movimiento:"
+msgstr "Difuminado p/ movimiento:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:187
 #, fuzzy
 msgid "Damage & water blur"
-msgstr "Distorsión por daño:"
+msgstr "Difuminado por daño/agua:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:188
 #, fuzzy
