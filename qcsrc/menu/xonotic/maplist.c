@@ -242,7 +242,7 @@ void MapList_All(entity btn, entity me)
 {
 	float i;
 	string s;
-	MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MAPINFO_FLAG_FORBIDDEN, 0); // all
+	MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MAPINFO_FLAG_FORBIDDEN | MAPINFO_FLAG_HIDDEN, 0); // all
 	s = "";
 	for(i = 0; i < MapInfo_count; ++i)
 		s = strcat(s, " ", MapInfo_BSPName_ByID(i));
