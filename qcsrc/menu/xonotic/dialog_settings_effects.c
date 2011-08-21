@@ -186,8 +186,9 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.savedValue = 0.5; // default
 		me.TD(me, 1, 2, s);
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Damage & water blur")));
-		me.TD(me, 1, 1, e = makeXonoticCheckBoxEx(0.5, 0, "hud_powerup", _("Powerup sharpen")));
+		e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Blur and sharpen postprocessing"));
+		makeMulti(e, "hud_powerup");
+		me.TD(me, 1, 2, e);
 	
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY));
