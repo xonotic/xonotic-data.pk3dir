@@ -694,9 +694,9 @@ void PutObserverInServer (void)
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 
-	self.view_ofs = '0 0 0'; // so that you can't go inside walls with MOVETYPE_FLY, previously "PL_VIEW_OFS" - for some reason this is diff from normal players
+	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
 	setorigin (self, spot.origin);
-	setsize (self, '-16 -16 -24', '16 16 24'); // so that you can't go inside walls with MOVETYPE_FLY
+	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
 	self.prevorigin = self.origin;
 	self.items = 0;
 	self.weapons = 0;
