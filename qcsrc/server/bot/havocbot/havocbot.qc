@@ -786,14 +786,9 @@ void havocbot_movetogoal()
 						if(tracebox_hits_trigger_hurt(dst_ahead, self.mins, self.maxs, trace_endpos))
 						{
 							// Remove dangerous dynamic goals from stack
-							dprint("bot ", self.netname, " removed the goal ", self.goalcurrent.classname, " ", etos(self.goalcurrent), " because it leads to a dangerous path\n");
-							navigation_poproute();
-							if(self.goalcurrent)
-								gco = (self.goalcurrent.absmin + self.goalcurrent.absmax) * 0.5;
-
-							// try to stop
-							flatdir = '0 0 0';
-							evadeobstacle = normalize(self.velocity) * -1;
+							dprint("bot ", self.netname, " avoided the goal ", self.goalcurrent.classname, " ", etos(self.goalcurrent), " because it led to a dangerous path; goal stack cleared\n");
+							navigation_clearroute();
+							return;
 						}
 					}
 				}
