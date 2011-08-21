@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-04 22:19+0200\n"
+"POT-Creation-Date: 2011-08-21 14:00+0200\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
@@ -163,6 +163,7 @@ msgid "Align icon:"
 msgstr "Icon ausrichten:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:36
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:40
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:28
@@ -171,12 +172,42 @@ msgid "Left"
 msgstr "Links"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:38
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:30
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:41
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:30
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:41
 msgid "Right"
 msgstr "Rechts"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:4
+msgid "Centerprint"
+msgstr "Nachrichten"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:23
+msgid "Message duration:"
+msgstr "Anzeigedauer:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:27
+msgid "Fade time:"
+msgstr "Ausblenden nach:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:31
+msgid "Flip messages order"
+msgstr "Reihenfolge vertauschen"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:33
+msgid "Text alignment:"
+msgstr "Textausrichtung:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:37
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:50
+msgid "Center"
+msgstr "Mittig"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:41
+msgid "Font scale:"
+msgstr "Schriftgröße:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:4
 msgid "Chat Panel"
@@ -298,86 +329,88 @@ msgid "Panel disabled"
 msgstr "Panel nicht anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:23
-msgid "Panel enabled if not observing"
-msgstr "Panel beim Spielen anzeigen"
+msgid "Panel enabled"
+msgstr "Panel anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:24
-#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:23
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:23
-msgid "Panel always enabled"
-msgstr "Panel immer anzeigen"
+msgid "Panel enabled even observing"
+msgstr "Panel auch beim Zuschauen anzeigen"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:25
+msgid "Panel enabled only in Race/CTS"
+msgstr "Panel nur in Race und CTS anzeigen"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:31
 msgid "Status bar"
 msgstr "Statusleiste"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:33
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:48
 msgid "Left align"
 msgstr "Links"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:34
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:52
 msgid "Right align"
 msgstr "Rechts"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:35
 msgid "Inward align"
 msgstr "Innen"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:36
 msgid "Outward align"
 msgstr "Außen"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:39
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:40
 msgid "Flip speed/acceleration positions"
 msgstr "Geschwindigkeit/Beschleunigung tauschen"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:43
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:44
 msgid "Speed:"
 msgstr "Geschwindigkeit:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:44
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:45
 msgid "Include vertical speed"
 msgstr "Mit vertikaler Geschwindigkeit"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:55
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:56
 msgid "Speed unit:"
 msgstr "Geschwindigkeitseinheit:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:57
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:58
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:58
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:59
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:59
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:60
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:60
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:61
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:61
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:62
 msgid "knots"
 msgstr "Knoten"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:63
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:64
 msgid "Show"
 msgstr "Anzeigen"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:66
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:67
 msgid "Top speed"
 msgstr "Geschwindigkeitsrekord:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:72
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:73
 msgid "Acceleration:"
 msgstr "Beschleunigung:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:73
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:74
 msgid "Include vertical acceleration"
 msgstr "Mit vertikaler Beschleunigung"
 
@@ -396,6 +429,11 @@ msgstr "Gedrückte-Tasten-Panel"
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:22
 msgid "Panel enabled when spectating"
 msgstr "Panel beim Zuschauen anzeigen"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:23
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:23
+msgid "Panel always enabled"
+msgstr "Panel immer anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:30
 msgid "Forced aspect:"
@@ -943,14 +981,13 @@ msgstr "Features:"
 msgid "Game types:"
 msgstr "Spieltyp:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:119
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:118
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:314
 msgid "Close"
 msgstr "Schließen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:122
-#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:46
-msgid "Play"
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:121
+msgid "MAP^Play"
 msgstr "Start"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:7
@@ -1099,6 +1136,10 @@ msgstr "Löschen"
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:43
 msgid "Timedemo"
 msgstr "Timedemo"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:46
+msgid "DEMO^Play"
+msgstr "Abspielen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:4
 msgid "Join"
@@ -1368,7 +1409,7 @@ msgstr "Schadenseffekt:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:195
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:173
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:193
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:194
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:30
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:41
 #: qcsrc/menu/xonotic/dialog_settings_video.c:109
@@ -1430,10 +1471,6 @@ msgstr "Automatisch auf beste Waffe wechseln"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:45
 msgid "Draw 1st person weapon model"
 msgstr "Waffe in 3D anzeigen"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:50
-msgid "Center"
-msgstr "Mittig"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:55
 msgid "Flip view horizontally"
@@ -1931,12 +1968,8 @@ msgid "Motion blur:"
 msgstr "Bewegungsunschärfe:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:189
-msgid "Damage & water blur"
-msgstr "Schadens-Unschärfe"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:190
-msgid "Powerup sharpen"
-msgstr "Bonus-Schärfe"
+msgid "Blur and sharpen postprocessing"
+msgstr "Schärfeeffekte"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
@@ -2720,13 +2753,13 @@ msgstr "%s ist auf %ss Mine gelatscht"
 msgid "MinstaNex"
 msgstr "MinstaNex"
 
-#: qcsrc/server/w_minstanex.qc:290 qcsrc/server/w_nex.qc:253
-#: qcsrc/server/w_shotgun.qc:209 qcsrc/server/w_uzi.qc:317
+#: qcsrc/server/w_minstanex.qc:293 qcsrc/server/w_nex.qc:253
+#: qcsrc/server/w_shotgun.qc:215 qcsrc/server/w_uzi.qc:317
 #, c-format
 msgid "%s is now thinking with portals"
 msgstr "%s kann jetzt mit Portalen denken"
 
-#: qcsrc/server/w_minstanex.qc:292 qcsrc/server/w_nex.qc:255
+#: qcsrc/server/w_minstanex.qc:295 qcsrc/server/w_nex.qc:255
 #, c-format
 msgid "%s has been vaporized by %s"
 msgstr "^1%s^1 wurde von %s^1 vernichtet"
@@ -2815,12 +2848,12 @@ msgstr "^1%s^1 wurde von %s^1 getagged"
 msgid "Shotgun"
 msgstr "Shotgun"
 
-#: qcsrc/server/w_shotgun.qc:213
+#: qcsrc/server/w_shotgun.qc:219
 #, c-format
 msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
 msgstr "%2$1s ^7hat %1$s ^7ein wenig mit einer großen Schrotflinte geschlagen"
 
-#: qcsrc/server/w_shotgun.qc:215
+#: qcsrc/server/w_shotgun.qc:221
 #, c-format
 msgid "%s was gunned by %s"
 msgstr "^1%s^1 wurde von %s^1 erschossen"
@@ -2851,3 +2884,9 @@ msgstr "Machine Gun"
 #, c-format
 msgid "%s was riddled full of holes by %s"
 msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
+
+#~ msgid "Powerup sharpen"
+#~ msgstr "Bonus-Schärfe"
+
+#~ msgid "Damage & water blur"
+#~ msgstr "Schadens-Unschärfe"
