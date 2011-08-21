@@ -1,5 +1,17 @@
 #!/bin/sh
 
+case `hostname` in
+	srv01|hagger|grawp)
+		;;
+	*)
+		echo "Sorry, you are not supposed to use this script."
+		echo "This script is solely for use by the Xonotic Core Team."
+		echo "Unauthorized use of it can cause HIGHLY annoying merge"
+		echo "conflicts."
+		exit 1
+		;;
+esac
+
 for VM in menu csprogs; do
 	case "$VM" in
 		csprogs)
