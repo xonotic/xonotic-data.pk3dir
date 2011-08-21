@@ -60,7 +60,7 @@
 \cl_weaponpriority_useforcycling\Haz uso de la lista de abajo when cambia de arma con la rueda del raton
 \cl_autoswitch\Cambia automáticamente al arma recogida si es mejor que la que esta llevando
 \r_drawviewmodel\Muestra el modelo de arma
-\cl_gunalign\Posición del modelo de arma; requiere conección
+\cl_gunalign\Posición del modelo de arma; requiere conexión
 
 \crosshair_per_weapon\Configura diferentes miras para cada arma, esto ayuda si estas jugando sin un modelo de arma
 \crosshair_color_override\Tambien configura el color del punto de mira dependiendo del arma que uses actualmente
@@ -151,8 +151,8 @@
 \r_coronas_occlusionquery\Coronas apagadas acorde a la visibilidad (activado por defecto)
 \r_bloom\Activar efecto bloom, que ilumina los píxeles vecinos de píxeles muy brillantes.Tiene un gran impacto en el rendimiento. (desactivado por defecto)
 \r_hdr\Versión de gran calidad de bloom, que tiene un gran impacto en el rendimiento. (desactivado por defecto)
-\r_motionblur\Nivel de desenfoque de movimiento - 0.5 recomendado
-\r_damageblur\Cantidad de desenfoque de movimiento en presencia de daños - 0.4 recomendado
+\r_motionblur\Nivel de difuminado de movimiento - 0.5 recomendado
+\r_damageblur\Cantidad de difuminado de movimiento en presencia de daños - 0.4 recomendado
 
 \XonoticSettingsDialog/Sonido\configuración de audio
 \mastervolume\-
