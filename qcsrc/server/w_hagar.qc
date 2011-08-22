@@ -242,17 +242,20 @@ void W_Hagar_Attack2_Load (void)
 
 	if(self.hagar_load)
 	{
+		self.weaponentity.state = WS_INUSE; // prevents weapon switching
 		if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
 			W_Hagar_Attack2_Load_Release();
 	}
 	else
 	{
+		self.weaponentity.state = WS_READY; // allows weapon switching
 		self.hagar_loadbeep = FALSE;
 	}
 
 	// we aren't checking ammo during an attack, so we must do it here
 	if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
 	{
+		// note: this doesn't force the switch
 		W_SwitchToOtherWeapon(self);
 		return;
 	}
