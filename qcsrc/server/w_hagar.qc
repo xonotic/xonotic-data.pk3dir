@@ -242,13 +242,11 @@ void W_Hagar_Attack2_Load (void)
 
 	if(self.hagar_load)
 	{
-		self.weapon_forbidchange = TRUE;
 		if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
 			W_Hagar_Attack2_Load_Release();
 	}
 	else
 	{
-		self.weapon_forbidchange = FALSE;
 		self.hagar_loadbeep = FALSE;
 	}
 
