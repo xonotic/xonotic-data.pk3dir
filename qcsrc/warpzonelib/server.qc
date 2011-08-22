@@ -166,8 +166,20 @@ void WarpZone_Touch (void)
 		return;
 
 	float f;
+	// number of frames we need to go back:
+	//   dist = 16*sqrt(2) qu
+	//   dist ~ 24 qu
+	//   24 qu = v*t
+	//   24 qu = v*frametime*n
+	//       n = 24 qu/(v*frametime)
+	// for clients go only one frame though, may be too irritating otherwise
+	// but max 0.25 sec = 0.25/frametime frames
+	//       24/(0.25/frametime)
+	//       96*frametime
+	float d;
+	d = 24 + max(vlen(other.mins), vlen(other.maxs));
 	if(clienttype(other) == CLIENTTYPE_NOTACLIENT)
-		f = min(-1, -64 / vlen(other.velocity));
+		f = -d / bound(frametime * d * 1, frametime * vlen(other.velocity), d);
 	else
 		f = -1;
 	if(WarpZone_Teleport(self, other, f, 0))
