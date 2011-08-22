@@ -69,7 +69,7 @@
 \crosshair_color_green\Зелёная составляющая цвета перекрестья
 \crosshair_color_blue\Синяя составляющая цвета перекрестья
 \sbar_hudselector\Use the old HUD layout
-\XonoticMultiplayerDialog/Waypoints setup...\Настроить радар, HUD и отметки
+\XonoticMultiplayerDialog/Waypoints setup...\-
 \_cl_name\Имя, под которым вы появитесь в игре
 
 \XonoticSettingsDialog\Изменить настройки игры
