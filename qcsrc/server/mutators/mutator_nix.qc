@@ -102,6 +102,13 @@ void NIX_GiveCurrentWeapon()
 			self.nix_lastinfotime = -42;
 		else
 			Send_CSQC_Centerprint_Generic(self, CPID_NIX_WPNCHANGE, strcat("^2Active weapon: ^3", W_Name(nix_weapon)), 0, 0);
+
+		weapon_action(nix_weapon, WR_RESETPLAYER);
+		// all weapons must be fully loaded when we spawn
+		entity e;
+		e = get_weaponinfo(nix_weapon);
+		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
+			self.weapon_load[nix_weapon] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 	}
 	if(self.nix_lastinfotime != dt)
 	{
