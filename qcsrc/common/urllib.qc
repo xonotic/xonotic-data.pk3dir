@@ -65,7 +65,7 @@ float url_URI_Get_Callback(float id, float status, string data)
 	else
 	{
 		// an ERROR
-		e.url_ready(e, e.url_ready_pass, -status);
+		e.url_ready(e, e.url_ready_pass, -fabs(status));
 		strunzone(e.url_url);
 		remove(e);
 		return 1;
