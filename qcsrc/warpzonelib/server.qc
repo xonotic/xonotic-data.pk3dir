@@ -166,8 +166,8 @@ void WarpZone_Touch (void)
 		return;
 
 	float f;
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
-		f = min(-1, -64 / vlen(self.velocity));
+	if(clienttype(other) == CLIENTTYPE_NOTACLIENT)
+		f = min(-1, -64 / vlen(other.velocity));
 	else
 		f = -1;
 	if(WarpZone_Teleport(self, other, f, 0))
