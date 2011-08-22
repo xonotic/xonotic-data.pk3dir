@@ -1137,6 +1137,7 @@ msgid "Timedemo"
 msgstr "Demo temporizado"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:46
+#, fuzzy
 msgid "DEMO^Play"
 msgstr "Jogar"
 
