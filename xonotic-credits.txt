@@ -84,6 +84,7 @@ Lord Canistra
 Nikoli
 
 **Other Active Contributors
+Akari
 Ant "Antibody" Zucaro
 Antonio "terencehill" Piu
 Ben "MooKow" Banker
@@ -102,11 +103,11 @@ Ruszkai "C.Brutail" Ákos
 Samual Lenks
 Severin "sev" Meyer
 Stephan "esteel" Stahl
+The player with the unnecessarily long name
 Wolfgang "Blub\0" Bumiller
 SoulKeeper_p
 
 ** TODO to be verified and sorted into the categories
-Akari - freezetag fixes, crosshair color health indicator
 atheros - CA fixes
 cortez - map changes
 Florian Paul Schmidt - g_dodging
@@ -114,7 +115,6 @@ parasti - various fixes
 magorian - a menu text overlap issue fix
 Paul Scott - keepaway bot AI
 PlasmaSheep - worked on player voices
-ThePWTULN - campaign timer
 Sc0rp - some of our music
 Rodrigo Mouton Laudin <ratogenesis> - Spanish translation
 Maxime Paradis <taximus.micro> - French translation (additionally to calinou)
