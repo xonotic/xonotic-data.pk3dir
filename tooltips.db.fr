@@ -7,9 +7,8 @@
 \menu_slist_showempty\Montrer les serveurs vides
 \menu_slist_showfull\Montrer les serveurs où toutes les places sont prises
 \net_slist_pause\Ne met pas à jour la liste de serveurs pour éviter de "glisser" sur un autre serveur
-\XonoticMultiplayerDialog/Info\Montrer plus d'information sur le serveur séléctionné
+\XonoticMultiplayerDialog/Info...\Montrer plus d'information sur le serveur séléctionné
 \XonoticMultiplayerDialog/Marque-page\Mettre le serveur en haut de la liste pour pouvoir le repérer plus facilement plus tard
-\XonoticMultiplayerDialog/Havoc\Changer au mode Havoc qui comporte des modifications sur le jeu
 \XonoticMultiplayerDialog/Créer\Héberger votre propre partie
 \XonoticMultiplayerDialog/Vidéos\Regarder des Vidéos pré-enregistrées
 \XonoticMultiplayerDialog/Player Setup\Personaliser vos paramètres
@@ -44,8 +43,8 @@
 \g_minstagib\Tous les joueurs reçoivent un MinstaNex, qui est un sniper hyperpuissant qui tue d'un coup. Si vous n'avez plus de munitions, vous mourez progressivement.
 \g_nix\No Items Xonotic; tous les joueurs ont la même arme en même temps, et on change d'arme régulièrement
 \g_nix_with_laser\Porter le laser avec l'arme du No Items Xonotic
-\XonoticMultiplayerDialog/All\Séléctionner toutes les cartes
-\XonoticMultiplayerDialog/None\Déséléctionner toutes les cartes
+\XonoticMultiplayerDialog/Select all\Séléctionner toutes les cartes
+\XonoticMultiplayerDialog/Select none\Déséléctionner toutes les cartes
 
 
 \XonoticMultiplayerDialog/Test Performance\Faire un test de performance en utilisant la vidéo choisie
@@ -70,7 +69,7 @@
 \crosshair_color_green\Couleur: intensité du vert dans le viseur
 \crosshair_color_blue\Couleur: intensité du bleu dans le viseur
 \sbar_hudselector\Utiliser l'ancienne interface HUD
-\XonoticMultiplayerDialog/Radar, HUD & Waypoints...\Ajuster les paramètres de l'interface, de la mini-carte et des Waypoints
+\XonoticMultiplayerDialog/Waypoints setup...\Ajuster les paramètres de l'interface, de la mini-carte et des Waypoints
 \_cl_name\Pseudonyme utilisé pour vous reconnaître dans le jeu
 
 \XonoticSettingsDialog\Changer les paramètres du jeu
@@ -155,16 +154,16 @@
 \r_damageblur\Intensité du flou en recevant des dégâts - 0.4 est recommandé
 
 \XonoticSettingsDialog/Audio\Audio settings
+\mastervolume\-
 \bgmvolume\-
-\volume\-
 \snd_staticvolume\-
-\snd_worldchannel0volume\-
-\snd_entchannel3volume\-
-\snd_playerchannel6volume\-
-\snd_playerchannel7volume\-
-\snd_entchannel4volume\-
-\snd_playerchannel2volume\-
-\snd_playerchannel1volume\-
+\snd_channel0volume\-
+\snd_channel3volume\-
+\snd_channel6volume\-
+\snd_channel7volume\-
+\snd_channel4volume\-
+\snd_channel2volume\-
+\snd_channel1volume\-
 \snd_speed\Fréquence de la sortie audio
 \snd_channels\Nombre de canaux pour la sortie audio
 \snd_swapstereo\Échanger les canneaux stéréo gauche/droite

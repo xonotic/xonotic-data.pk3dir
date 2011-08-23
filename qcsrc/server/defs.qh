@@ -309,6 +309,8 @@ float default_weapon_alpha;
 .float() customizeentityforclient;
 .float cvar_cl_handicap;
 .float cvar_cl_playerdetailreduction;
+.float cvar_cl_clippedspectating;
+
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];

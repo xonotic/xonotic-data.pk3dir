@@ -7,9 +7,8 @@
 \menu_slist_showempty\Aktiviere die Anzeige von leeren Servern
 \menu_slist_showfull\Aktiviere die Anzeige von vollen Servern, die keinen freien Platz mehr haben
 \net_slist_pause\Unterbreche die automatische Aktualisierung der Serverliste um ein "Herumspringen" zu verhindern
-\XonoticMultiplayerDialog/Info\Lass dir mehr Informationen über den markierten Server anzeigen
+\XonoticMultiplayerDialog/Info...\Lass dir mehr Informationen über den markierten Server anzeigen
 \XonoticMultiplayerDialog/Speichern\Setze ein Lesezeichen für den markierten Server um ihn beim nächsten mal schneller wiederzufinden
-\XonoticMultiplayerDialog/Havoc\Wechsel in den Havoc Modus, welcher zu Änderungen des Spielverhaltens führt
 \XonoticMultiplayerDialog/Starten\Hoste dein eigenes Spiel
 \XonoticMultiplayerDialog/Demos\Gucke dir Demos an
 \XonoticMultiplayerDialog/Spieler-Einstellungen\Ändere deine Spieler-Einstellungen
@@ -46,8 +45,8 @@
 \g_minstagib\Alle Spieler starten mit der Minstanex, eine elektromagnetische Schienenkanone mit unendlich viel Schaden. Wenn ein Spieler keine Munition mehr hat, bleiben ihm 10 Sekunden um neue zu finden, ansonsten stirbt er. Der 2. Feuermodus ist Laser, welcher keinen Schaden hinzufügen kann. Dieser eignet sich gut für Tricksprünge.
 \g_nix\Es gibt keine aufzusammelnden Gegenstände in Xonotic - Anstelle der Möglichkeit Waffen aufzusammeln, spielen alle mit der gleichen Waffe. Nach einiger Zeit startet ein Countdown, danach wechseln alle Spieler zu einer neuen gleichen Waffe.
 \g_nix_with_laser\In Nix ist als zweite Waffe der Laser vorhanden.
-\XonoticMultiplayerDialog/All\Wähle alle Maps.
-\XonoticMultiplayerDialog/None\Wähle alle Maps ab.
+\XonoticMultiplayerDialog/Select all\Wähle alle Maps.
+\XonoticMultiplayerDialog/Select none\Wähle alle Maps ab.
 
 
 \XonoticMultiplayerDialog/Timedemo\Mache einen Benchmark-Test der markierten Demo. Die Demo wird in Zeitraffer, -lupe abgespielt. Das Ergebnis wird in "gamedir/data/benchmark.log" gespeichert.
@@ -73,7 +72,7 @@
 \crosshair_color_green\Grüner Farbanteil des Fadenkreuzes.
 \crosshair_color_blue\Blauer Farbanteil des Fadenkreuzes.
 \sbar_hudselector\Verwende das alte HUD Layout.
-\XonoticMultiplayerDialog/Radar, HUD & Waypoints...\Stelle Radar, HUD & Wegpunkte ein.
+\XonoticMultiplayerDialog/Waypoints setup...\Stelle Radar, HUD & Wegpunkte ein.
 \_cl_name\Lege deinen Namen im Spiel fest.
 
 \XonoticSettingsDialog\Ändere die Spiel-Einstellungen
@@ -161,16 +160,16 @@
 \r_damageblur\Wert für die Unschärfe bei einer Verletzung - 0.4 empfohlen
 
 \XonoticSettingsDialog/Ton\Audio-Einstellungen
+\mastervolume\-
 \bgmvolume\-
-\volume\-
 \snd_staticvolume\-
-\snd_worldchannel0volume\-
-\snd_entchannel3volume\-
-\snd_playerchannel6volume\-
-\snd_playerchannel7volume\-
-\snd_entchannel4volume\-
-\snd_playerchannel2volume\-
-\snd_playerchannel1volume\-
+\snd_channel0volume\-
+\snd_channel3volume\-
+\snd_channel6volume\-
+\snd_channel7volume\-
+\snd_channel4volume\-
+\snd_channel2volume\-
+\snd_channel1volume\-
 \snd_speed\Ausgangsfrequenz des Tons
 \snd_channels\Anzahl der Kanäle für die Audiowiedergabe
 \snd_swapstereo\Linken und rechten Kanal der Stereowiedergabe tauschen

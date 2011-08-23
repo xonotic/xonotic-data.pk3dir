@@ -34,6 +34,10 @@ float url_URI_Get_Callback(float id, float status, string data)
 	// whatever happens, we will remove the URL from the list of IDs
 	url_fromid[id] = world;
 
+	// if we get here, we MUST have both buffers cleared
+	if(e.url_rbuf != -1 || e.url_wbuf != -1 || e.url_fh != -1)
+		error("url_URI_Get_Callback: not a request waiting for data");
+
 	if(status == 0)
 	{
 		// WE GOT DATA!
@@ -65,7 +69,7 @@ float url_URI_Get_Callback(float id, float status, string data)
 	else
 	{
 		// an ERROR
-		e.url_ready(e, e.url_ready_pass, -status);
+		e.url_ready(e, e.url_ready_pass, -fabs(status));
 		strunzone(e.url_url);
 		remove(e);
 		return 1;
@@ -180,6 +184,10 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 
 	if(e.url_fh < 0)
 	{
+		if(e.url_rbuf == -1 || e.url_wbuf != -1) // not(post GET/POST request)
+		if(e.url_rbuf != -1 || e.url_wbuf == -1) // not(pre POST request)
+			error("url_fclose: not closable in current state");
+
 		// closing an URL!
 		if(e.url_wbuf >= 0)
 		{
@@ -252,6 +260,8 @@ string url_fgets(entity e)
 {
 	if(e.url_fh < 0)
 	{
+		if(e.url_rbuf == -1)
+			error("url_fgets: not readable in current state");
 		// curl
 		string s;
 		s = bufstr_get(e.url_rbuf, e.url_rbufpos);
@@ -270,6 +280,8 @@ void url_fputs(entity e, string s)
 {
 	if(e.url_fh < 0)
 	{
+		if(e.url_wbuf == -1)
+			error("url_fputs: not writable in current state");
 		// curl
 		bufstr_set(e.url_wbuf, e.url_wbufpos, s);
 		e.url_wbufpos += 1;

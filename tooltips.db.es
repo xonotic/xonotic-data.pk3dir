@@ -7,9 +7,8 @@
 \menu_slist_showempty\Mostrar servidores vacíos
 \menu_slist_showfull\Mostrar los servidores que no tienen espacio disponible
 \net_slist_pause\Pausa la actualización de la lista de servidores para evitar que salteen
-\XonoticMultiplayerDialog/Info\Mostrar mas información sobre el actual servidor resaltado
+\XonoticMultiplayerDialog/Info...\Mostrar mas información sobre el actual servidor resaltado
 \XonoticMultiplayerDialog/Marcador\Marcar el actual servidor resaltado para que sea mas facil encontrarlo en un futuro
-\XonoticMultiplayerDialog/Havoc\Cambiar a Havoc modo, el cual tiene algunas modificaciones en el juego
 \XonoticMultiplayerDialog/Crear\Crear tu propio juego
 \XonoticMultiplayerDialog/Demos\Navegar y ver demos
 \XonoticMultiplayerDialog/Player Setup\Configuración de jugador
@@ -45,8 +44,8 @@
 \g_minstagib\Los jugadores tendran Minstanex, el cual es un railgun con daño infinito. Si el jugador queda sin munición, tendra 10 segundos para buscar mas o morira. El modo de disparo secundario es un laser que no inflige daño y es bueno para hacer bromas.
 \g_nix\Xonotic sin items - en vez de recoger items, todos juegan con la misma arma. Despues de algún tiempo, comienza una cuenta regresiva, despues del cual todos juegan con otra arma.
 \g_nix_with_laser\Siempre lleva el láser como arma adicional en Nix
-\XonoticMultiplayerDialog/All\Seleccionar todos los mapas
-\XonoticMultiplayerDialog/None\Deseleccionar todos los mapas
+\XonoticMultiplayerDialog/Select all\Seleccionar todos los mapas
+\XonoticMultiplayerDialog/Select none\Deseleccionar todos los mapas
 
 
 \XonoticMultiplayerDialog/Demo temporizado\Prueba cuan rápido tu computadora puede correr la demo seleccionada
@@ -61,7 +60,7 @@
 \cl_weaponpriority_useforcycling\Haz uso de la lista de abajo when cambia de arma con la rueda del raton
 \cl_autoswitch\Cambia automáticamente al arma recogida si es mejor que la que esta llevando
 \r_drawviewmodel\Muestra el modelo de arma
-\cl_gunalign\Posición del modelo de arma; requiere conección
+\cl_gunalign\Posición del modelo de arma; requiere conexión
 
 \crosshair_per_weapon\Configura diferentes miras para cada arma, esto ayuda si estas jugando sin un modelo de arma
 \crosshair_color_override\Tambien configura el color del punto de mira dependiendo del arma que uses actualmente
@@ -71,7 +70,7 @@
 \crosshair_color_green\Componente verde del color del punto de mira
 \crosshair_color_blue\Componente azul del color del punto de mira
 \sbar_hudselector\Usar el viejo diseño de HUD
-\XonoticMultiplayerDialog/Radar, HUD & puntos de referencia...\Ajustar el radar, el HUD y los puntos de referencia
+\XonoticMultiplayerDialog/Waypoints setup...\Ajustar el radar, el HUD y los puntos de referencia
 \_cl_name\Nombre con el cual aparecerás en el juego
 
 \XonoticSettingsDialog\Cambiar la configuración del juego
@@ -152,20 +151,20 @@
 \r_coronas_occlusionquery\Coronas apagadas acorde a la visibilidad (activado por defecto)
 \r_bloom\Activar efecto bloom, que ilumina los píxeles vecinos de píxeles muy brillantes.Tiene un gran impacto en el rendimiento. (desactivado por defecto)
 \r_hdr\Versión de gran calidad de bloom, que tiene un gran impacto en el rendimiento. (desactivado por defecto)
-\r_motionblur\Nivel de desenfoque de movimiento - 0.5 recomendado
-\r_damageblur\Cantidad de desenfoque de movimiento en presencia de daños - 0.4 recomendado
+\r_motionblur\Nivel de difuminado de movimiento - 0.5 recomendado
+\r_damageblur\Cantidad de difuminado de movimiento en presencia de daños - 0.4 recomendado
 
 \XonoticSettingsDialog/Sonido\configuración de audio
+\mastervolume\-
 \bgmvolume\-
-\volume\-
 \snd_staticvolume\-
-\snd_worldchannel0volume\-
-\snd_entchannel3volume\-
-\snd_playerchannel6volume\-
-\snd_playerchannel7volume\-
-\snd_entchannel4volume\-
-\snd_playerchannel2volume\-
-\snd_playerchannel1volume\-
+\snd_channel0volume\-
+\snd_channel3volume\-
+\snd_channel6volume\-
+\snd_channel7volume\-
+\snd_channel4volume\-
+\snd_channel2volume\-
+\snd_channel1volume\-
 \snd_speed\Frecuencia de salida del sonido
 \snd_channels\Número de canales para la salida del sonido
 \snd_swapstereo\Invertir canales izquierda o derecha
