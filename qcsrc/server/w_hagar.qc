@@ -201,6 +201,7 @@ void W_Hagar_Attack2_Load (void)
 			if(self.hagar_load)
 			{
 				// if we pressed primary fire while loading, unload all rockets and abort
+				self.weaponentity.state = WS_READY;
 				W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo
 				self.hagar_load = 0;
 				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
@@ -220,6 +221,7 @@ void W_Hagar_Attack2_Load (void)
 				if(!self.hagar_loadblock && self.hagar_loadstep < time)
 				{
 					W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
+					self.weaponentity.state = WS_INUSE;
 					self.hagar_load += 1;
 					sound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
@@ -242,13 +244,14 @@ void W_Hagar_Attack2_Load (void)
 
 	if(self.hagar_load)
 	{
-		self.weaponentity.state = WS_INUSE; // prevents weapon switching
 		if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
+		{
+			self.weaponentity.state = WS_READY;
 			W_Hagar_Attack2_Load_Release();
+		}
 	}
 	else
 	{
-		self.weaponentity.state = WS_READY; // allows weapon switching
 		self.hagar_loadbeep = FALSE;
 	}
 
@@ -301,6 +304,15 @@ float w_hagar(float req)
 				W_Hagar_Attack2();
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
 			}
+		}
+	}
+	else if (req == WR_GONETHINK)
+	{
+		// we lost the weapon and want to prepare switching away
+		if(self.hagar_load)
+		{
+			self.weaponentity.state = WS_READY;
+			W_Hagar_Attack2_Load_Release();
 		}
 	}
 	else if (req == WR_PRECACHE)
