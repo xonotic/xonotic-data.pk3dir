@@ -912,6 +912,10 @@ void navigation_poptouchedgoals()
 	if(self.goalcurrent.classname=="player")
 		navigation_poproute();
 
+	// aid for detecting jump pads better (distance based check fails sometimes)
+	if(self.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT && self.jumppadcount > 0 )
+		navigation_poproute();
+
 	// Loose goal touching check when running
 	if(self.aistatus & AI_STATUS_RUNNING)
 	if(self.speed >= autocvar_sv_maxspeed) // if -really- running
