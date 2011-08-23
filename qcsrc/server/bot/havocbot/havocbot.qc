@@ -763,7 +763,7 @@ void havocbot_movetogoal()
 			// (only when the bot is on the ground or jumping intentionally)
 			self.aistatus &~= AI_STATUS_DANGER_AHEAD;
 
-			if(trace_fraction == 1 && self.jumppadcount == 0)
+			if(trace_fraction == 1 && self.jumppadcount == 0 && !self.goalcurrent.wphardwired )
 			if(self.flags & FL_ONGROUND || self.aistatus & AI_STATUS_RUNNING || self.BUTTON_JUMP == TRUE)
 			{
 				// Look downwards
