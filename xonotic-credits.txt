@@ -95,6 +95,7 @@ Florian Paul "lda17h" Schmidt
 Kristian "morfar" Johansson
 kojn
 Maik "SavageX" Merten
+Mick Rippon
 MrBougo
 Przemysław "atheros" Grzywacz
 Ruszkai "C.Brutail" Ákos
@@ -114,7 +115,6 @@ magorian - a menu text overlap issue fix
 Paul Scott - keepaway bot AI
 PlasmaSheep - worked on player voices
 ThePWTULN - campaign timer
-MickRip - some of our music
 Sc0rp - some of our music
 Rodrigo Mouton Laudin <ratogenesis> - Spanish translation
 Maxime Paradis <taximus.micro> - French translation (additionally to calinou)
