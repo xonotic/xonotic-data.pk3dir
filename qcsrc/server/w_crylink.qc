@@ -16,7 +16,7 @@ void W_Crylink_CheckLinks(entity e)
 
 	if(e == world)
 		error("W_Crylink_CheckLinks: entity is world");
-	if(e.classname != "spike")
+	if(e.classname != "spike" || wasfreed(e))
 		error(sprintf("W_Crylink_CheckLinks: entity is not a spike but a %s (freed: %d)", e.classname, wasfreed(e)));
 
 	p = e;
@@ -39,6 +39,7 @@ void W_Crylink_Dequeue_Raw(entity own, entity prev, entity me, entity next)
 		own.crylink_lastgroup = ((me == next) ? world : next);
 	prev.queuenext = next;
 	next.queueprev = prev;
+	me.classname = "spike_oktoremove";
 	if(me != next)
 		W_Crylink_CheckLinks(next);
 }
@@ -65,6 +66,7 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 	if(e.queuenext != e2)
 		W_Crylink_LinkExplode(e.queuenext, e2);
 
+	e.classname = "spike_oktoremove";
 	remove (e);
 }
 

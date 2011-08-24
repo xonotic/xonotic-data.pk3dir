@@ -1754,6 +1754,8 @@ void remove_except_protected(entity e)
 
 void remove_unsafely(entity e)
 {
+    if(e.classname == "spike")
+        error("Removing spikes is forbidden (crylink bug), please report");
     remove_builtin(e);
 }
 
