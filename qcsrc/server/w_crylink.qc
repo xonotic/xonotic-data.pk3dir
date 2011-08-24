@@ -237,6 +237,7 @@ void W_Crylink_Touch (void)
 		if(self == self.realowner.crylink_lastgroup)
 			self.realowner.crylink_lastgroup = world;
 		W_Crylink_LinkExplode(self.queuenext, self);
+		self.classname = "spike_oktoremove";
 		remove (self);
 		return;
 	}
@@ -277,6 +278,7 @@ void W_Crylink_Touch2 (void)
 		if(self == self.realowner.crylink_lastgroup)
 			self.realowner.crylink_lastgroup = world;
 		W_Crylink_LinkExplode(self.queuenext, self);
+		self.classname = "spike_oktoremove";
 		remove (self);
 		return;
 	}
