@@ -53,6 +53,10 @@ void W_Crylink_Dequeue(entity e)
 void W_Crylink_LinkExplode (entity e, entity e2)
 {
 	float a;
+
+	if(e == e2)
+		return;
+
 	a = bound(0, 1 - (time - e.fade_time) * e.fade_rate, 1);
 
 	if(e == e.realowner.crylink_lastgroup)
@@ -63,8 +67,7 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 	else
 		RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_damage * a, autocvar_g_balance_crylink_primary_edgedamage * a, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * a, e.projectiledeathtype, other);
 
-	if(e.queuenext != e2)
-		W_Crylink_LinkExplode(e.queuenext, e2);
+	W_Crylink_LinkExplode(e.queuenext, e2);
 
 	e.classname = "spike_oktoremove";
 	remove (e);
