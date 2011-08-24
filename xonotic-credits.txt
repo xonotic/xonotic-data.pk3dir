@@ -68,6 +68,7 @@ Henry "Exitium" Sanmark
 
 *French
 Calinou
+Taximus
 
 *Italian
 Antonio "terencehill" Piu
@@ -117,7 +118,6 @@ Paul Scott - keepaway bot AI
 PlasmaSheep - worked on player voices
 Sc0rp - some of our music
 Rodrigo Mouton Laudin <ratogenesis> - Spanish translation
-Maxime Paradis <taximus.micro> - French translation (additionally to calinou)
 xaN1C4n3 - Hungarian translation
 PinkRobot and freefang - Dutch translation
 marcus256 - Swedish translation
