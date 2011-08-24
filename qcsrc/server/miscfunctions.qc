@@ -2534,7 +2534,13 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 		if(checkpvs(mstart, sp))
 			break;
 	if(!sp)
-		continue;
+	{
+		for(sp = world; (sp = findflags(sp, flags, FL_ITEM)); )
+			if(checkpvs(mstart, sp))
+				break;
+		if(!sp)
+			continue;
+	}
 
         // find a random vector to "look at"
         end_x = org_x + random() * delta_x;
