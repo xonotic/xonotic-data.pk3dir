@@ -532,7 +532,8 @@ float w_crylink(float req)
 	{
 		if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo)) // forced reload
 			weapon_action(self.weapon, WR_RELOAD);
-		else if (self.BUTTON_ATCK)
+
+		if (self.BUTTON_ATCK)
 		{
 			if (self.crylink_waitrelease != 1)
 			if (weapon_prepareattack(0, autocvar_g_balance_crylink_primary_refire))
@@ -543,7 +544,8 @@ float w_crylink(float req)
 					self.crylink_waitrelease = 1;
 			}
 		}
-		else if(self.BUTTON_ATCK2 && autocvar_g_balance_crylink_secondary)
+
+		if(self.BUTTON_ATCK2 && autocvar_g_balance_crylink_secondary)
 		{
 			if (self.crylink_waitrelease != 2)
 			if (weapon_prepareattack(1, autocvar_g_balance_crylink_secondary_refire))
