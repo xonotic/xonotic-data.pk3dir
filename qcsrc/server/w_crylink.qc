@@ -534,7 +534,7 @@ float w_crylink(float req)
 			weapon_action(self.weapon, WR_RELOAD);
 		else if (self.BUTTON_ATCK)
 		{
-			if (!self.crylink_waitrelease)
+			if (self.crylink_waitrelease != 1)
 			if (weapon_prepareattack(0, autocvar_g_balance_crylink_primary_refire))
 			{
 				W_Crylink_Attack();
@@ -545,7 +545,7 @@ float w_crylink(float req)
 		}
 		else if(self.BUTTON_ATCK2 && autocvar_g_balance_crylink_secondary)
 		{
-			if (!self.crylink_waitrelease)
+			if (self.crylink_waitrelease != 2)
 			if (weapon_prepareattack(1, autocvar_g_balance_crylink_secondary_refire))
 			{
 				W_Crylink_Attack2();
@@ -554,9 +554,10 @@ float w_crylink(float req)
 					self.crylink_waitrelease = 2;
 			}
 		}
-		else
+
+		if ((self.crylink_waitrelease == 1 && !self.BUTTON_ATCK) || (self.crylink_waitrelease == 2 && !self.BUTTON_ATCK2))
 		{
-			if (self.crylink_waitrelease && (!self.crylink_lastgroup || time > self.crylink_lastgroup.teleport_time))
+			if (!self.crylink_lastgroup || time > self.crylink_lastgroup.teleport_time)
 			{
 				// fired and released now!
 				if(self.crylink_lastgroup)
