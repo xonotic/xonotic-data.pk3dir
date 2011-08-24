@@ -422,8 +422,12 @@ void W_Crylink_Attack (void)
 
 		counter = counter + 1;
 	}
-	self.crylink_lastgroup = proj;
-	W_Crylink_CheckLinks(proj);
+	if(autocvar_g_balance_crylink_primary_joinspread != 0 || autocvar_g_balance_crylink_primary_jointime != 0)
+	{
+		self.crylink_lastgroup = proj;
+		W_Crylink_CheckLinks(proj);
+		self.crylink_waitrelease = 1;
+	}
 }
 
 void W_Crylink_Attack2 (void)
@@ -510,7 +514,12 @@ void W_Crylink_Attack2 (void)
 
 		counter = counter + 1;
 	}
-	self.crylink_lastgroup = proj;
+	if(autocvar_g_balance_crylink_secondary_joinspread != 0 || autocvar_g_balance_crylink_secondary_jointime != 0)
+	{
+		self.crylink_lastgroup = proj;
+		W_Crylink_CheckLinks(proj);
+		self.crylink_waitrelease = 2;
+	}
 }
 
 void spawnfunc_weapon_crylink (void)
@@ -540,8 +549,6 @@ float w_crylink(float req)
 			{
 				W_Crylink_Attack();
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_crylink_primary_animtime, w_ready);
-				if(autocvar_g_balance_crylink_primary_joinspread != 0 || autocvar_g_balance_crylink_primary_jointime != 0)
-					self.crylink_waitrelease = 1;
 			}
 		}
 
@@ -552,8 +559,6 @@ float w_crylink(float req)
 			{
 				W_Crylink_Attack2();
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_crylink_secondary_animtime, w_ready);
-				if(autocvar_g_balance_crylink_secondary_joinspread != 0 || autocvar_g_balance_crylink_secondary_jointime != 0)
-					self.crylink_waitrelease = 2;
 			}
 		}
 
