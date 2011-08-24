@@ -34,10 +34,6 @@ float W_WeaponRateFactor()
 
 void W_SwitchWeapon_Force(entity e, float w)
 {
-	// don't switch to another weapon if we're not allowed to
-	if(e.weapon_forbidchange)
-		return;
-
 	e.cnt = e.switchweapon;
 	e.switchweapon = w;
 	e.selectweapon = w;

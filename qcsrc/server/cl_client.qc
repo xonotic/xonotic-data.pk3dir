@@ -1086,7 +1086,6 @@ void PutClientInServer (void)
 			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
 				self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 		}
-		self.weapon_forbidchange = FALSE;
 
 		oldself = self;
 		self = spot;

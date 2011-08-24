@@ -669,6 +669,7 @@ float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
 float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
 float WR_SWITCHABLE	= 12; // (CSQC) impact effect
 float WR_PLAYERDEATH    = 13; // (SVQC) does not need to do anything
+float WR_GONETHINK	= 14; // (SVQC) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
 
 float HUD_PANEL_WEAPONS		= 0;
 float HUD_PANEL_AMMO		= 1;

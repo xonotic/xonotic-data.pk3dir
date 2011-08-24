@@ -84,6 +84,7 @@ Lord Canistra
 Nikoli
 
 **Other Active Contributors
+Akari
 Ant "Antibody" Zucaro
 Antonio "terencehill" Piu
 Ben "MooKow" Banker
@@ -95,14 +96,31 @@ Florian Paul "lda17h" Schmidt
 Kristian "morfar" Johansson
 kojn
 Maik "SavageX" Merten
+Mick Rippon
 MrBougo
 Przemysław "atheros" Grzywacz
 Ruszkai "C.Brutail" Ákos
 Samual Lenks
 Severin "sev" Meyer
 Stephan "esteel" Stahl
+The player with the unnecessarily long name
 Wolfgang "Blub\0" Bumiller
 SoulKeeper_p
+
+** TODO to be verified and sorted into the categories
+atheros - CA fixes
+cortez - map changes
+Florian Paul Schmidt - g_dodging
+parasti - various fixes
+magorian - a menu text overlap issue fix
+Paul Scott - keepaway bot AI
+PlasmaSheep - worked on player voices
+Sc0rp - some of our music
+Rodrigo Mouton Laudin <ratogenesis> - Spanish translation
+Maxime Paradis <taximus.micro> - French translation (additionally to calinou)
+xaN1C4n3 - Hungarian translation
+PinkRobot and freefang - Dutch translation
+marcus256 - Swedish translation
 
 **Past Contributors
 Alexander "motorsep" Zubov
