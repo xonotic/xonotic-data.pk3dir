@@ -2017,6 +2017,7 @@ float SUB_NoImpactCheck()
 #define SUB_OwnerCheck() (other && (other == self.owner))
 
 void RemoveGrapplingHook(entity pl);
+void W_Crylink_Dequeue(entity e);
 float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 {
 	if(SUB_OwnerCheck())
@@ -2025,6 +2026,11 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 	{
 		if(self.classname == "grapplinghook")
 			RemoveGrapplingHook(self.realowner);
+		else if(self.classname == "spike")
+		{
+			W_Crylink_Dequeue(self);
+			remove(self);
+		}
 		else
 			remove(self);
 		return TRUE;

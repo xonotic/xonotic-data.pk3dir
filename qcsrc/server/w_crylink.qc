@@ -215,23 +215,12 @@ void W_Crylink_LinkJoinEffect_Think()
 	remove(self);
 }
 
-
 // NO bounce protection, as bounces are limited!
 void W_Crylink_Touch (void)
 {
 	float finalhit;
 	float f;
-	//PROJECTILE_TOUCH;
-	local entity savenext, saveprev, saveown;
-	saveown = self.realowner;
-	savenext = self.queuenext;
-	saveprev = self.queueprev;
-	if(WarpZone_Projectile_Touch())
-	{
-		if(wasfreed(self))
-			W_Crylink_Dequeue_Raw(saveown, saveprev, self, savenext);
-		return;
-	}
+	PROJECTILE_TOUCH;
 
 	float a;
 	a = bound(0, 1 - (time - self.fade_time) * self.fade_rate, 1);
@@ -271,17 +260,7 @@ void W_Crylink_Touch2 (void)
 {
 	float finalhit;
 	float f;
-	//PROJECTILE_TOUCH;
-	local entity savenext, saveprev, saveown;
-	savenext = self.queuenext;
-	saveprev = self.queueprev;
-	saveown = self.realowner;
-	if(WarpZone_Projectile_Touch())
-	{
-		if(wasfreed(self))
-			W_Crylink_Dequeue_Raw(saveown, saveprev, self, savenext);
-		return;
-	}
+	PROJECTILE_TOUCH;
 
 	float a;
 	a = bound(0, 1 - (time - self.fade_time) * self.fade_rate, 1);
