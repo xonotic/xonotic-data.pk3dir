@@ -2476,6 +2476,7 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 {
     float m, i;
     vector start, org, delta, end, enddown, mstart;
+    entity sp;
 
     m = e.dphitcontentsmask;
     e.dphitcontentsmask = goodcontents | badcontents;
@@ -2527,6 +2528,13 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
         traceline(mstart, mstart + '0 0 1' * delta_z, MOVE_NORMAL, e);
         if (trace_fraction >= 1)
             continue;
+
+	// rule 4: we must "see" some spawnpoint
+	for(sp = world; (sp = find(sp, classname, "info_player_deathmatch")); )
+		if(checkpvs(mstart, sp))
+			break;
+	if(!sp)
+		continue;
 
         // find a random vector to "look at"
         end_x = org_x + random() * delta_x;
