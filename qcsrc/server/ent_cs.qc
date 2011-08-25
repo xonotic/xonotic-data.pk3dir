@@ -24,8 +24,8 @@ float entcs_customize()
 {
 	entity o;
 	o = self.owner;
-	if(o.deadflag != DEAD_NO)
-		return FALSE;
+	//if(o.deadflag != DEAD_NO) // allow sending entcs for dead players, for damage effects to work. To be decided!
+	//	return FALSE;
 	if(o.classname != "player")
 		return FALSE;
 	//if(other == o) // allow sending entcs for self, for damage effects to work. To be decided!
