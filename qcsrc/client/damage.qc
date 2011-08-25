@@ -246,7 +246,7 @@ void Ent_DamageEffect_Think()
 	self.nextthink = time;
 
 	float foundgib;
-	entity entcs;
+	vector org;
 
 	if(time >= self.lifetime)
 	{
@@ -256,8 +256,8 @@ void Ent_DamageEffect_Think()
 	}
 	if(self.dmgtime > time)
 		return;
-	entcs = entcs_receiver[self.team];
-	if(!entcs)
+	org = getplayerorigin(self.team);
+	if(org == GETPLAYERORIGIN_ERROR)
 		return;
 
 	// Scan the owner of all gibs in the world. If a gib owner is the same as the player we're applying
@@ -283,7 +283,7 @@ void Ent_DamageEffect_Think()
 		return; // if we aren't in third person mode, hide own damage effect
 
 	// Now apply the effect to actual players
-	pointparticles(self.dmgpartnum, entcs.origin, '0 0 0', 1);
+	pointparticles(self.dmgpartnum, org, '0 0 0', 1);
 	self.dmgtime = time + autocvar_cl_damageeffect_player;
 }
 
