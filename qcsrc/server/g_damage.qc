@@ -41,8 +41,6 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	Net_LinkEntity(e, FALSE, 0.2, Damage_DamageInfo_SendEntity);
 }
 
-#define DAMAGE_CENTERPRINT_SPACER NEWLINES
-
 float checkrules_firstblood;
 
 float yoda;
@@ -61,7 +59,7 @@ float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after u
 
 float IsDifferentTeam(entity a, entity b)
 {
-	if(teams_matter)
+	if(teamplay)
 	{
 		if(a.team == b.team)
 			return 0;
@@ -126,6 +124,8 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 	{
 		// regular frag
 		PlayerScore_Add(attacker, SP_KILLS, 1);
+		if(targ.playerid)
+			PlayerStats_Event(attacker, sprintf("kills-%d", targ.playerid), 1);
 	}
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
@@ -299,13 +299,9 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 	string	s, a, msg;
 	float w, type;
 
-	if (targ.classname == "player" || targ.classname == "corpse")
+	if (targ.classname == "player")
 	{
-		if (targ.classname == "corpse")
-			s = "A corpse";
-		else
-			s = targ.netname;
-
+		s = targ.netname;
 		a = attacker.netname;
 
 		if (targ == attacker) // suicides
@@ -323,7 +319,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			if (targ.killcount > 2)
 				msg = ftos(targ.killcount);
-			if(teams_matter && deathtype == DEATH_MIRRORDAMAGE)
+			if(teamplay && deathtype == DEATH_MIRRORDAMAGE)
 			{
 				if(attacker.team == COLOR_TEAM1)
 					deathtype = KILL_TEAM_RED;
@@ -333,9 +329,9 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			Send_KillNotification(s, msg, ftos(w), deathtype, MSG_SUICIDE);
 		}
-		else if (attacker.classname == "player" || attacker.classname == "gib")
+		else if (attacker.classname == "player")
 		{
-			if(teams_matter && attacker.team == targ.team)
+			if(teamplay && attacker.team == targ.team)
 			{
 				if(attacker.team == COLOR_TEAM1)
 					type = KILL_TEAM_RED;
@@ -568,7 +564,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(teams_matter && attacker.team == targ.team)
+			else if(teamplay && attacker.team == targ.team)
 			{
 				if(autocvar_teamplay_mode == 1)
 					damage = 0;
@@ -651,7 +647,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			if (targ.armorvalue && (deathtype == WEP_MINSTANEX) && damage)
 			{
 				targ.armorvalue -= 1;
-				centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(targ.armorvalue)));
+				centerprint(targ, strcat("^3Remaining extra lives: ",ftos(targ.armorvalue)));
 				damage = 0;
 				targ.hitsound += 1;
 				attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
@@ -663,7 +659,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				if (targ != attacker)
 				{
 					if ((targ.health >= 1) && (targ.classname == "player"))
-						centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
+						centerprint(attacker, "Secondary fire inflicts no damage!");
 					force = '0 0 0';
 					// keep mirrorforce
 					attacker = targ;
@@ -786,15 +782,21 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			if(deathtype & HITTYPE_HEADSHOT)
 				damage *= 1 + damage_headshotbonus;
 
-			if(targ.classname == "player")
+			entity victim;
+			if((targ.vehicle_flags & VHF_ISVEHICLE) && targ.owner)
+				victim = targ.owner;
+			else
+				victim = targ;
+
+			if(victim.classname == "player" || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 			{
-				if(IsDifferentTeam(targ, attacker))
+				if(IsDifferentTeam(victim, attacker))
 				{
 					if(damage > 0)
 					{
 						if(deathtype != DEATH_FIRE)
 						{
-							if(targ.BUTTON_CHAT)
+							if(victim.BUTTON_CHAT)
 								attacker.typehitsound += 1;
 							else
 								attacker.hitsound += 1;
@@ -805,12 +807,13 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 						if not(DEATH_ISSPECIAL(deathtype))
 						{
+							if(targ.classname == "player") // don't do this for vehicles
 							if(!g_minstagib)
-							if(IsFlying(targ))
+							if(IsFlying(victim))
 								yoda = 1;
 
 							if(g_minstagib)
-							if(targ.items & IT_STRENGTH)
+							if(victim.items & IT_STRENGTH)
 								yoda = 1;
 
 							if(deathtype & HITTYPE_HEADSHOT)
@@ -900,7 +903,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			if(attacker.armorvalue > 0)
 			{
 				attacker.armorvalue = attacker.armorvalue - 1;
-				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(attacker.armorvalue)));
+				centerprint(attacker, strcat("^3Remaining extra lives: ",ftos(attacker.armorvalue)));
 				attacker.hitsound += 1;
 			}
 			mirrordamage = 0;

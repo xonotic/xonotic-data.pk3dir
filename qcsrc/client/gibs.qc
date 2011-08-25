@@ -73,7 +73,7 @@ void Gib_Touch()
 	}
 
 	if(!self.silent)
-		sound(self, CHAN_PAIN, strcat("misc/gib_splat0", ftos(floor(prandom() * 4 + 1)), ".wav"), VOL_BASE, ATTN_NORM);
+		sound(self, CH_PAIN, strcat("misc/gib_splat0", ftos(floor(prandom() * 4 + 1)), ".wav"), VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum(strcat(species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
 
 	Gib_Delete();
@@ -103,7 +103,7 @@ void Gib_Draw()
 	}
 }
 
-void TossGib (string mdlname, vector org, vector vconst, vector vrand, float specnum, float destroyontouch, float issilent, float gibownernum)
+void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector vrand, float specnum, float destroyontouch, float issilent, float gibownernum)
 {
 	entity gib;
 
@@ -125,6 +125,13 @@ void TossGib (string mdlname, vector org, vector vconst, vector vrand, float spe
 		gib.move_touch = Gib_Touch;
 	else
 		gib.move_touch = SUB_RemoveOnNoImpact;
+
+	// don't spawn gibs inside solid - just don't
+	if(org != safeorg)
+	{
+		tracebox(safeorg, gib.mins, gib.maxs, org, MOVE_NOMONSTERS, gib);
+		org = trace_endpos;
+	}
 
 	gib.move_origin = gib.origin = org;
 	gib.move_velocity = vconst * autocvar_cl_gibs_velocity_scale + vrand * autocvar_cl_gibs_velocity_random + '0 0 1' * autocvar_cl_gibs_velocity_up;
@@ -195,40 +202,40 @@ void Ent_GibSplash(float isNew)
 	{
 		case 0x01:
 			if(!issilent)
-				sound (self, CHAN_PAIN, "misc/gib.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_PAIN, "misc/gib.wav", VOL_BASE, ATTN_NORM);
 
 			if(prandom() < amount)
-				TossGib ("models/gibs/eye.md3", org, vel, prandomvec() * 150, specnum, 0, issilent, entnumber);
+				TossGib ("models/gibs/eye.md3", org, org, vel, prandomvec() * 150, specnum, 0, issilent, entnumber);
 			new_te_bloodshower(particleeffectnum(strcat(specstr, "bloodshower")), org, 1200, amount);
 			if(prandom() < amount)
-				TossGib ("models/gibs/bloodyskull.md3", org + 16 * prandomvec(), vel, prandomvec() * 100, specnum, 0, issilent, entnumber);
+				TossGib ("models/gibs/bloodyskull.md3", org, org + 16 * prandomvec(), vel, prandomvec() * 100, specnum, 0, issilent, entnumber);
 
 			for(c = 0; c < amount; ++c)
 			{
 				randomvalue = amount - c;
 
 				if(prandom() < randomvalue)
-					TossGib ("models/gibs/arm.md3", org + 16 * prandomvec() + '0 0 8', vel, prandomvec() * (prandom() * 120 + 90), specnum,0, issilent, entnumber);
+					TossGib ("models/gibs/arm.md3", org, org + 16 * prandomvec() + '0 0 8', vel, prandomvec() * (prandom() * 120 + 90), specnum,0, issilent, entnumber);
 				if(prandom() < randomvalue)
-					TossGib ("models/gibs/arm.md3", org + 16 * prandomvec() + '0 0 8', vel, prandomvec() * (prandom() * 120 + 90), specnum,0, issilent, entnumber);
+					TossGib ("models/gibs/arm.md3", org, org + 16 * prandomvec() + '0 0 8', vel, prandomvec() * (prandom() * 120 + 90), specnum,0, issilent, entnumber);
 				if(prandom() < randomvalue)
-					TossGib ("models/gibs/chest.md3", org + 16 * prandomvec(), vel, prandomvec() * (prandom() * 120 + 80), specnum,0, issilent, entnumber);
+					TossGib ("models/gibs/chest.md3", org, org + 16 * prandomvec(), vel, prandomvec() * (prandom() * 120 + 80), specnum,0, issilent, entnumber);
 				if(prandom() < randomvalue)
-					TossGib ("models/gibs/smallchest.md3", org + 16 * prandomvec(), vel, prandomvec() * (prandom() * 120 + 80), specnum,0, issilent, entnumber);
+					TossGib ("models/gibs/smallchest.md3", org, org + 16 * prandomvec(), vel, prandomvec() * (prandom() * 120 + 80), specnum,0, issilent, entnumber);
 				if(prandom() < randomvalue)
-					TossGib ("models/gibs/leg1.md3", org + 16 * prandomvec() + '0 0 -5', vel, prandomvec() * (prandom() * 120 + 85), specnum,0, issilent, entnumber);
+					TossGib ("models/gibs/leg1.md3", org, org + 16 * prandomvec() + '0 0 -5', vel, prandomvec() * (prandom() * 120 + 85), specnum,0, issilent, entnumber);
 				if(prandom() < randomvalue)
-					TossGib ("models/gibs/leg2.md3", org + 16 * prandomvec() + '0 0 -5', vel, prandomvec() * (prandom() * 120 + 85), specnum,0, issilent, entnumber);
+					TossGib ("models/gibs/leg2.md3", org, org + 16 * prandomvec() + '0 0 -5', vel, prandomvec() * (prandom() * 120 + 85), specnum,0, issilent, entnumber);
 
 				// these splat on impact
 				if(prandom() < randomvalue)
-					TossGib ("models/gibs/chunk.mdl", org + 16 * prandomvec(), vel, prandomvec() * 450, specnum,1, issilent, entnumber);
+					TossGib ("models/gibs/chunk.mdl", org, org + 16 * prandomvec(), vel, prandomvec() * 450, specnum,1, issilent, entnumber);
 				if(prandom() < randomvalue)
-					TossGib ("models/gibs/chunk.mdl", org + 16 * prandomvec(), vel, prandomvec() * 450, specnum,1, issilent, entnumber);
+					TossGib ("models/gibs/chunk.mdl", org, org + 16 * prandomvec(), vel, prandomvec() * 450, specnum,1, issilent, entnumber);
 				if(prandom() < randomvalue)
-					TossGib ("models/gibs/chunk.mdl", org + 16 * prandomvec(), vel, prandomvec() * 450, specnum,1, issilent, entnumber);
+					TossGib ("models/gibs/chunk.mdl", org, org + 16 * prandomvec(), vel, prandomvec() * 450, specnum,1, issilent, entnumber);
 				if(prandom() < randomvalue)
-					TossGib ("models/gibs/chunk.mdl", org + 16 * prandomvec(), vel, prandomvec() * 450, specnum,1, issilent, entnumber);
+					TossGib ("models/gibs/chunk.mdl", org, org + 16 * prandomvec(), vel, prandomvec() * 450, specnum,1, issilent, entnumber);
 			}
 			break;
 		case 0x02:
@@ -236,7 +243,7 @@ void Ent_GibSplash(float isNew)
 			break;
 		case 0x03:
 			if(prandom() < amount)
-				TossGib ("models/gibs/chunk.mdl", org, vel, prandomvec() * (prandom() * 30 + 20), specnum, 1, issilent, entnumber); // TODO maybe adjust to more randomization?
+				TossGib ("models/gibs/chunk.mdl", org, org, vel, prandomvec() * (prandom() * 30 + 20), specnum, 1, issilent, entnumber); // TODO maybe adjust to more randomization?
 			break;
 		case 0x81:
 			pointparticles(particleeffectnum(strcat(gentle_prefix, "damage_dissolve")), org, vel, amount);
@@ -306,7 +313,7 @@ void Ent_DamageEffect()
 	effectnum = strcat("weapondamage_", e.netname);
 	// If the weapon is a bullet weapon, its damage effect is blood.
 	// Since blood is species dependent, we make this effect per-species.
-	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_SNIPERRIFLE)
+	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_RIFLE)
 	if(specstr != "")
 	{
 		effectnum = strcat(effectnum, "_", specstr);

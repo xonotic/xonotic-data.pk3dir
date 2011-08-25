@@ -29,7 +29,6 @@ entity makeXonoticServerCreateTab()
 void XonoticServerCreateTab_fill(entity me)
 {
 	entity e, e0;
-	float n;
 
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Game type:")));

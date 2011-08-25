@@ -284,8 +284,6 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	w = self.weapon;
 	if (w == 0)
 		return; // just in case
-	if(self.weapon_forbidchange)
-		return;
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon))
 		return;
 	if(!autocvar_g_weapon_throwable)
@@ -374,8 +372,7 @@ void W_WeaponFrame()
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{
 #endif
-			// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
-			sound (self, CHAN_WEAPON2, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
 			weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_weaponswitchdelay, w_clear);
@@ -406,13 +403,16 @@ void W_WeaponFrame()
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
 			wb = 0;
 		}
+
+		v_forward = fo;
+		v_right = ri;
+		v_up = up;
+
 		if(wb)
-		{
-			v_forward = fo;
-			v_right = ri;
-			v_up = up;
 			weapon_action(self.weapon, WR_THINK);
-		}
+		else
+			weapon_action(self.weapon, WR_GONETHINK);
+
 		if (time + self.weapon_frametime * 0.5 >= self.weapon_nextthink)
 		{
 			if(self.weapon_think)
