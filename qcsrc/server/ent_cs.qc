@@ -28,11 +28,12 @@ float entcs_customize()
 		return FALSE;
 	if(o.classname != "player")
 		return FALSE;
-	if(other == o)
-		return FALSE;
+	//if(other == o) // allow sending entcs for self, for damage effects to work. To be decided!
+	//	return FALSE;
 	if(other.classname == "player")
 		if(!teamplay || o.team != other.team)
-			if not (radar_showennemies)
+			//if not (radar_showennemies)
+			if not (checkpvs(other.origin + other.view_ofs, o))  // allow sending entcs for enemies in view, for damage effects to work. To be decided!
 				return FALSE;
 	return TRUE;
 }
