@@ -180,8 +180,6 @@ void CopyBody(float keepvelocity)
 
 	Drag_MoveDrag(oldself, self);
 
-	Violence_DamageEffect_Copy(oldself, self);
-
 	self.owner = oldself;
 	self = oldself;
 }

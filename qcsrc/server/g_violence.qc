@@ -48,36 +48,28 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 
 // damage effect
 
-.float damageeffect_lifetime;
-.entity damageeffect_repeater;
-
 float Violence_DamageEffect_SendEntity(entity to, float sf)
 {
-	// if the client doesn't have the effect enabled, don't send to him and waste bandwidth
 	if not(to.cvar_cl_damageeffect)
-		return FALSE;
-	// if the client cannot see the damaged player, avoid sending and further save bandwidth
-	if not(checkpvs(to.origin + to.view_ofs, self))
-		return FALSE;
+		return FALSE; // if the client doesn't have the effect enabled, don't send to him and waste bandwidth
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEEFFECT);
-	WriteByte(MSG_ENTITY, self.cnt); // damage weapon
+	WriteByte(MSG_ENTITY, self.cnt); // damage amount
+	WriteByte(MSG_ENTITY, self.weapon); // damage weapon
 	WriteByte(MSG_ENTITY, self.state); // player species
 	WriteByte(MSG_ENTITY, self.team); // player entnum
-	WriteByte(MSG_ENTITY, self.deadflag); // is dead body / gibbed
-	WriteCoord(MSG_ENTITY, floor(self.origin_x));
-	WriteCoord(MSG_ENTITY, floor(self.origin_y));
-	WriteCoord(MSG_ENTITY, floor(self.origin_z));
 	return TRUE;
 }
 
-void Violence_DamageEffect(entity pl, float type)
+void Violence_DamageEffect(entity pl, float damage, float type)
 {
-	entity e;
+	if(sv_gentle || !type)
+		return; // return if gentle mode is enabled or the damage was not caused by a weapon
 
+	entity e;
 	e = spawn();
-	e.classname = "damageeffect";
-	e.cnt = type;
+	e.cnt = damage;
+	e.weapon = type;
 	e.state |= 8 * pl.species; // gib type, ranges from 0 to 15
 
 	// if this is a copied dead body, send the num of its player instead
@@ -86,77 +78,5 @@ void Violence_DamageEffect(entity pl, float type)
 	else
 		e.team = num_for_edict(pl);
 
-	// is this a whole dead body, or a gibbed body / player?
-	if(!pl.modelindex) // gibbed
-		e.deadflag = 2;
-	else if(pl.classname == "body")
-		e.deadflag = 1;
-
-	// if the player is dead, show the effect lower, else it appears floating above the body
-	if(pl.health <= 0)
-		setorigin(e, pl.origin - '0 0 25');
-	else
-		setorigin(e, pl.origin);
-
 	Net_LinkEntity(e, FALSE, 0.2, Violence_DamageEffect_SendEntity);
-}
-
-void Violence_DamageEffect_Remove(entity pl);
-void Violence_DamageEffect_DoRepeat()
-{
-	if(time > self.damageeffect_lifetime || (self.owner.classname != "player" && self.owner.classname != "body"))
-	{
-		Violence_DamageEffect_Remove(self.owner);
-		return;
-	}
-
-	Violence_DamageEffect(self.owner, self.cnt);
-	self.nextthink = time + autocvar_sv_damageeffect_tick;
-}
-
-void Violence_DamageEffect_SetRepeat(entity pl, float damage, float type)
-{
-	if not(autocvar_sv_damageeffect_tick && autocvar_sv_damageeffect_lifetime)
-		return;
-	if(sv_gentle || !type)
-		return; // return if gentle mode is enabled or the damage was not caused by a weapon
-
-	// if a repeater doesn't exist, spawn one, else update the existing one
-	if(pl.damageeffect_repeater == world)
-	{
-		pl.damageeffect_repeater = spawn();
-		pl.damageeffect_repeater.classname = "damageeffect_repeater";
-		pl.damageeffect_repeater.owner = pl;
-		pl.damageeffect_repeater.think = Violence_DamageEffect_DoRepeat;
-
-		pl.damageeffect_repeater.damageeffect_lifetime = time + (autocvar_sv_damageeffect_lifetime * damage);
-	}
-	else
-	{
-		// if the repeater is being updated, increase its lifetime instead of re-setting it entirely
-		// this fixes the shotgun among other things, where only the damage of one bullet would be taken into account
-		pl.damageeffect_repeater.damageeffect_lifetime += (autocvar_sv_damageeffect_lifetime * damage);
-	}
-
-	if(autocvar_sv_damageeffect_lifetime_max)
-		pl.damageeffect_repeater.damageeffect_lifetime = bound(0, pl.damageeffect_repeater.damageeffect_lifetime, time + autocvar_sv_damageeffect_lifetime_max);
-
-	pl.damageeffect_repeater.cnt = type;
-	pl.damageeffect_repeater.nextthink = time;
-}
-
-void Violence_DamageEffect_Remove(entity pl)
-{
-	pl.damageeffect_repeater.nextthink = 0;
-	remove(pl.damageeffect_repeater);
-	pl.damageeffect_repeater = world;
-}
-
-void Violence_DamageEffect_Copy(entity old_pl, entity pl)
-{
-	if(pl.damageeffect_repeater != world)
-		Violence_DamageEffect_Remove(pl);
-
-	Violence_DamageEffect_SetRepeat(pl, 0, old_pl.damageeffect_repeater.cnt); // spawn a new repeater
-	pl.damageeffect_repeater.damageeffect_lifetime = old_pl.damageeffect_repeater.damageeffect_lifetime; // copy the lifetime
 }

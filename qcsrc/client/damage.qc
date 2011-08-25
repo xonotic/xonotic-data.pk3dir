@@ -234,3 +234,89 @@ void DamageInfo_Precache()
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		(get_weaponinfo(i)).weapon_func(WR_PRECACHE);
 }
+
+.entity dmgeffect;
+.string dmgparticles;
+
+void Ent_DamageEffect_Think()
+{
+	self.nextthink = time;
+
+	entity entcs;
+	entcs = entcs_receiver[self.team];
+	if(!entcs)
+		return;
+
+	// Scan the owner of all gibs in the world. If a gib owner is the same as the player we're applying the
+	// effect to, it means our player is gibbed. Therefore, apply the particles to the gibs as well.
+	if(autocvar_cl_damageeffect_gibs)
+	{
+		entity head;
+		for(head = world; (head = find(head, classname, "gib")); )
+		{
+			if(head.team == self.team)
+			if(random() < autocvar_cl_damageeffect_gibs)
+				pointparticles(particleeffectnum(self.dmgparticles), head.origin, '0 0 0', 1);
+		}
+	}
+
+	// if we aren't in third person mode, hide our own damage effect
+	if(self.team == player_localentnum)
+	if(!autocvar_chase_active)
+		return;
+
+	// Now apply the effect to the actual player.
+	if(random() < autocvar_cl_damageeffect)
+		pointparticles(particleeffectnum(self.dmgparticles), entcs.origin, '0 0 0', 1);
+}
+
+void Ent_DamageEffect()
+{
+	float dmg, type, specnum1, specnum2, entnumber;
+	vector org;
+	string specstr, effectnum;
+	entity e;
+
+	dmg = ReadByte(); // damage amount
+	type = ReadByte(); // damage weapon
+	specnum1 = ReadByte(); // player species
+	entnumber = ReadByte(); // player entnum
+
+	if not(autocvar_cl_damageeffect)
+		return;
+	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
+		return;
+
+	specnum2 = (specnum1 & 0x78) / 8; // blood type: using four bits (0..7, bit indexes 3,4,5)
+	specstr = species_prefix(specnum2);
+
+	e = get_weaponinfo(type);
+	effectnum = strcat("weapondamage_", e.netname);
+	// If the weapon is a bullet weapon, its damage effect is blood.
+	// Since blood is species dependent, we make this effect per-species.
+	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_RIFLE)
+	if(specstr != "")
+	{
+		effectnum = strcat(effectnum, "_", specstr);
+		effectnum = substring(effectnum, 0, strlen(effectnum) - 1); // remove the _ symbol at the end of the species name
+	}
+
+	// if the player already has a damage effect, replace it with the new one
+	entity head;
+	for(head = world; (head = find(head, classname, "dmgeffect")); )
+	{
+		if(head.team == entnumber)
+		{
+			remove(head);
+			head = world;
+		}
+	}
+
+	entity e;
+	e = spawn();
+	e.classname = "dmgeffect";
+	e.team = entnumber;
+	e.dmgparticles = effectnum;
+	e.think = Ent_DamageEffect_Think;
+	e.nextthink = time;
+}

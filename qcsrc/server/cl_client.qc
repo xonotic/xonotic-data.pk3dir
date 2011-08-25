@@ -887,8 +887,6 @@ void PutClientInServer (void)
 
 		RemoveGrapplingHook(self); // Wazat's Grappling Hook
 
-		Violence_DamageEffect_Remove(self);
-
 		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
@@ -1953,7 +1951,6 @@ void respawn(void)
 		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
-		Violence_DamageEffect_Remove(self);
 	}
 
 	CopyBody(1);

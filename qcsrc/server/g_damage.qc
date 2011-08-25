@@ -495,7 +495,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 {
 	// if the target is a player or dead body, activate damage effects
 	if(targ.classname == "player" || targ.classname == "body")
-		Violence_DamageEffect_SetRepeat(targ, damage, DEATH_WEAPONOF(deathtype));
+		Violence_DamageEffect(targ, damage, DEATH_WEAPONOF(deathtype));
 
 	float mirrordamage;
 	float mirrorforce;
