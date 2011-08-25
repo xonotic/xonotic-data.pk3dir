@@ -235,8 +235,10 @@ void DamageInfo_Precache()
 		(get_weaponinfo(i)).weapon_func(WR_PRECACHE);
 }
 
-.entity dmgeffect;
-.float partnum;
+// damage effect
+
+.entity dmgent;
+.float dmgpartnum, dmgtime;
 
 void Ent_DamageEffect_Think()
 {
@@ -245,6 +247,8 @@ void Ent_DamageEffect_Think()
 	float foundgib;
 	entity entcs;
 
+	if(self.dmgtime > time)
+		return;
 	entcs = entcs_receiver[self.team];
 	if(!entcs)
 		return;
@@ -257,7 +261,11 @@ void Ent_DamageEffect_Think()
 		if(head.team == self.team)
 		{
 			if(autocvar_cl_damageeffect_gibs)
-				pointparticles(self.partnum, head.origin, '0 0 0', 1);
+			{
+				if(autocvar_cl_damageeffect_gibs_randomize < random())
+					pointparticles(self.dmgpartnum, head.origin, '0 0 0', 1);
+				self.dmgtime = time + autocvar_cl_damageeffect_gibs;
+			}
 			foundgib = TRUE;
 		}
 	}
@@ -268,7 +276,8 @@ void Ent_DamageEffect_Think()
 		return; // if we aren't in third person mode, hide own damage effect
 
 	// Now apply the effect to actual players
-	pointparticles(self.partnum, entcs.origin, '0 0 0', 1);
+	pointparticles(self.dmgpartnum, entcs.origin, '0 0 0', 1);
+	self.dmgtime = time + autocvar_cl_damageeffect_player;
 }
 
 void Ent_DamageEffect()
@@ -304,7 +313,7 @@ void Ent_DamageEffect()
 
 	// if the player already has a damage effect, replace it with the new one
 	entity head;
-	for(head = world; (head = find(head, classname, "dmgeffect")); )
+	for(head = world; (head = find(head, classname, "dmgent")); )
 	{
 		if(head.team == entnumber - 1)
 		{
@@ -315,9 +324,9 @@ void Ent_DamageEffect()
 
 	entity e;
 	e = spawn();
-	e.classname = "dmgeffect";
+	e.classname = "dmgent";
 	e.team = entnumber - 1;
-	e.partnum = particleeffectnum(effectnum);
+	e.dmgpartnum = particleeffectnum(effectnum);
 	e.think = Ent_DamageEffect_Think;
 	e.nextthink = time;
 }

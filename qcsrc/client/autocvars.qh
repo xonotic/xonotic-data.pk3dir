@@ -364,3 +364,4 @@ float autocvar_cl_lerpexcess;
 string autocvar__togglezoom;
 float autocvar_cl_damageeffect_player;
 float autocvar_cl_damageeffect_gibs;
+float autocvar_cl_damageeffect_gibs_randomize;
