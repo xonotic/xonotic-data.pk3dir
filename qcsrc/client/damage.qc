@@ -289,7 +289,7 @@ void Ent_DamageEffect_Think()
 
 void Ent_DamageEffect()
 {
-	float dmg, type, specnum1, specnum2, entnumber;
+	float dmg, type, specnum1, specnum2, entnumber, life;
 	vector org;
 	string specstr, effectnum;
 	entity e;
@@ -306,6 +306,7 @@ void Ent_DamageEffect()
 
 	specnum2 = (specnum1 & 0x78) / 8; // blood type: using four bits (0..7, bit indexes 3,4,5)
 	specstr = species_prefix(specnum2);
+	life = bound(0, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
 
 	e = get_weaponinfo(type);
 	effectnum = strcat("weapondamage_", e.netname);
@@ -318,14 +319,15 @@ void Ent_DamageEffect()
 		effectnum = substring(effectnum, 0, strlen(effectnum) - 1); // remove the _ symbol at the end of the species name
 	}
 
-	// if the player already has a damage effect, replace it with the new one
+	// if the player already has a damage effect, update it instead of spawning a new one
 	entity head;
 	for(head = world; (head = find(head, classname, "damageeffect")); )
 	{
 		if(head.team == entnumber - 1)
 		{
-			remove(head);
-			head = world;
+			head.dmgpartnum = particleeffectnum(effectnum);
+			head.lifetime += life;
+			return;
 		}
 	}
 
@@ -334,7 +336,7 @@ void Ent_DamageEffect()
 	e.classname = "damageeffect";
 	e.team = entnumber - 1;
 	e.dmgpartnum = particleeffectnum(effectnum);
-	e.lifetime = time + bound(0, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
+	e.lifetime = time + life;
 	e.think = Ent_DamageEffect_Think;
 	e.nextthink = time;
 }
