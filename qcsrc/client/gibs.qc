@@ -115,7 +115,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 	gib.solid = SOLID_CORPSE;
 	gib.cnt = specnum;
 	gib.silent = issilent;
-	gib.team = gibownernum;
+	gib.team = gibownernum - 1;
 	Gib_setmodel(gib, mdlname, specnum);
 
 	setsize (gib, '-8 -8 -8', '8 8 8');

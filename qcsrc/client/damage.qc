@@ -255,17 +255,16 @@ void Ent_DamageEffect_Think()
 		for(head = world; (head = find(head, classname, "gib")); )
 		{
 			if(head.team == self.team)
-			if(random() < autocvar_cl_damageeffect_gibs)
 				pointparticles(self.partnum, head.origin, '0 0 0', 1);
 		}
 	}
 
 	// if we aren't in third person mode, hide our own damage effect
-	if(self.team == player_localentnum && !autocvar_chase_active)
+	if(self.team == player_localentnum - 1 && !autocvar_chase_active)
 		return;
 
 	// Now apply the effect to the actual player.
-		pointparticles(self.partnum, entcs.origin, '0 0 0', 1);
+	pointparticles(self.partnum, entcs.origin, '0 0 0', 1);
 }
 
 void Ent_DamageEffect()
