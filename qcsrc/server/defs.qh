@@ -492,8 +492,6 @@ float GetPlayerSoundSampleField_notFound;
 .float cvar_cl_voice_directional;
 .float cvar_cl_voice_directional_taunt_attenuation;
 
-.float cvar_cl_damageeffect;
-
 .float version_mismatch;
 
 float independent_players;

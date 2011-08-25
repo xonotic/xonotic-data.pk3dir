@@ -313,7 +313,7 @@ void Ent_DamageEffect()
 
 	// if the player already has a damage effect, replace it with the new one
 	entity head;
-	for(head = world; (head = find(head, classname, "dmgent")); )
+	for(head = world; (head = find(head, classname, "damageeffect")); )
 	{
 		if(head.team == entnumber - 1)
 		{
@@ -324,7 +324,7 @@ void Ent_DamageEffect()
 
 	entity e;
 	e = spawn();
-	e.classname = "dmgent";
+	e.classname = "damageeffect";
 	e.team = entnumber - 1;
 	e.dmgpartnum = particleeffectnum(effectnum);
 	e.think = Ent_DamageEffect_Think;

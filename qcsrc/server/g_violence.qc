@@ -50,9 +50,6 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 
 float Violence_DamageEffect_SendEntity(entity to, float sf)
 {
-	if not(to.cvar_cl_damageeffect)
-		return FALSE; // if the client doesn't have the effect enabled, don't send to him and waste bandwidth
-
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEEFFECT);
 	WriteByte(MSG_ENTITY, self.cnt); // damage amount
 	WriteByte(MSG_ENTITY, self.weapon); // damage weapon
