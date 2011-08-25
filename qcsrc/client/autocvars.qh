@@ -365,3 +365,5 @@ string autocvar__togglezoom;
 float autocvar_cl_damageeffect_player;
 float autocvar_cl_damageeffect_gibs;
 float autocvar_cl_damageeffect_gibs_randomize;
+float autocvar_cl_damageeffect_lifetime;
+float autocvar_cl_damageeffect_lifetime_max;

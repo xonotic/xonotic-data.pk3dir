@@ -239,6 +239,7 @@ void DamageInfo_Precache()
 
 .entity dmgent;
 .float dmgpartnum, dmgtime;
+.float lifetime;
 
 void Ent_DamageEffect_Think()
 {
@@ -247,6 +248,12 @@ void Ent_DamageEffect_Think()
 	float foundgib;
 	entity entcs;
 
+	if(time >= self.lifetime)
+	{
+		remove(self);
+		self = world;
+		return;
+	}
 	if(self.dmgtime > time)
 		return;
 	entcs = entcs_receiver[self.team];
@@ -262,7 +269,7 @@ void Ent_DamageEffect_Think()
 		{
 			if(autocvar_cl_damageeffect_gibs)
 			{
-				if(autocvar_cl_damageeffect_gibs_randomize < random())
+				if(autocvar_cl_damageeffect_gibs_randomize >= random())
 					pointparticles(self.dmgpartnum, head.origin, '0 0 0', 1);
 				self.dmgtime = time + autocvar_cl_damageeffect_gibs;
 			}
@@ -327,6 +334,7 @@ void Ent_DamageEffect()
 	e.classname = "damageeffect";
 	e.team = entnumber - 1;
 	e.dmgpartnum = particleeffectnum(effectnum);
+	e.lifetime = time + bound(0, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
 	e.think = Ent_DamageEffect_Think;
 	e.nextthink = time;
 }
