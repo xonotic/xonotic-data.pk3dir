@@ -247,23 +247,27 @@ void Ent_DamageEffect_Think()
 	if(!entcs)
 		return;
 
-	// Scan the owner of all gibs in the world. If a gib owner is the same as the player we're applying the
-	// effect to, it means our player is gibbed. Therefore, apply the particles to the gibs as well.
-	if(autocvar_cl_damageeffect_gibs)
+	// Scan the owner of all gibs in the world. If a gib owner is the same as the player we're applying
+	// the effect to, it means our player is gibbed. Therefore, apply particles to the gibs instead.
+	float foundgib;
+	entity head;
+	for(head = world; (head = find(head, classname, "gib")); )
 	{
-		entity head;
-		for(head = world; (head = find(head, classname, "gib")); )
+		if(head.team == self.team)
 		{
-			if(head.team == self.team)
+			if(autocvar_cl_damageeffect_gibs)
 				pointparticles(self.partnum, head.origin, '0 0 0', 1);
+			foundgib = TRUE;
 		}
 	}
+	if(foundgib) // don't show effects on the invisible dead body if gibs exist
+		return;
 
 	// if we aren't in third person mode, hide our own damage effect
 	if(self.team == player_localentnum - 1 && !autocvar_chase_active)
 		return;
 
-	// Now apply the effect to the actual player.
+	// Now apply the effect to actual players
 	pointparticles(self.partnum, entcs.origin, '0 0 0', 1);
 }
 
