@@ -49,6 +49,12 @@ void W_Crylink_Dequeue(entity e)
 	W_Crylink_Dequeue_Raw(e.realowner, e.queueprev, e, e.queuenext);
 }
 
+void W_Crylink_Reset(void)
+{
+	W_Crylink_Dequeue(self);
+	remove(self);
+}
+
 // force projectile to explode
 void W_Crylink_LinkExplode (entity e, entity e2)
 {
@@ -333,6 +339,7 @@ void W_Crylink_Attack (void)
 	while (counter < shots)
 	{
 		proj = spawn ();
+		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = self;
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
@@ -437,6 +444,7 @@ void W_Crylink_Attack2 (void)
 	while (counter < shots)
 	{
 		proj = spawn ();
+		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = self;
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
