@@ -236,7 +236,7 @@ void DamageInfo_Precache()
 }
 
 .entity dmgeffect;
-.string dmgparticles;
+.float partnum;
 
 void Ent_DamageEffect_Think()
 {
@@ -256,18 +256,16 @@ void Ent_DamageEffect_Think()
 		{
 			if(head.team == self.team)
 			if(random() < autocvar_cl_damageeffect_gibs)
-				pointparticles(particleeffectnum(self.dmgparticles), head.origin, '0 0 0', 1);
+				pointparticles(self.partnum, head.origin, '0 0 0', 1);
 		}
 	}
 
 	// if we aren't in third person mode, hide our own damage effect
-	if(self.team == player_localentnum)
-	if(!autocvar_chase_active)
+	if(self.team == player_localentnum && !autocvar_chase_active)
 		return;
 
 	// Now apply the effect to the actual player.
-	if(random() < autocvar_cl_damageeffect)
-		pointparticles(particleeffectnum(self.dmgparticles), entcs.origin, '0 0 0', 1);
+		pointparticles(self.partnum, entcs.origin, '0 0 0', 1);
 }
 
 void Ent_DamageEffect()
@@ -305,7 +303,7 @@ void Ent_DamageEffect()
 	entity head;
 	for(head = world; (head = find(head, classname, "dmgeffect")); )
 	{
-		if(head.team == entnumber)
+		if(head.team == entnumber - 1)
 		{
 			remove(head);
 			head = world;
@@ -315,8 +313,8 @@ void Ent_DamageEffect()
 	entity e;
 	e = spawn();
 	e.classname = "dmgeffect";
-	e.team = entnumber;
-	e.dmgparticles = effectnum;
+	e.team = entnumber - 1;
+	e.partnum = particleeffectnum(effectnum);
 	e.think = Ent_DamageEffect_Think;
 	e.nextthink = time;
 }
