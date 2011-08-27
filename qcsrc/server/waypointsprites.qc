@@ -308,7 +308,7 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 		WriteByte(MSG_ENTITY, self.colormod_z * 255.0);
 
 		dt = (self.waypointsprite_helpmetime - time) / 0.1;
-		if(dt < 0)
+		if(dt < 0 || (teamplay && self.owner && self.owner.team != to.team)) // don't tell enemies about "HELP ME" (FIXME clean this up to handle spectating/observing well too)
 			dt = 0;
 		if(dt > 255)
 			dt = 255;
