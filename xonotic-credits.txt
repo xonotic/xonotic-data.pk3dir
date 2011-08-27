@@ -112,6 +112,7 @@ Florian Paul "lda17h" Schmidt
 Florian Paul Schmidt
 kojn
 Kristian "morfar" Johansson
+kuniuthefrogg
 magorian
 Maik "SavageX" Merten
 Mick Rippon
