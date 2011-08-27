@@ -1083,7 +1083,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		}
 	}
 
-	if(MapInfo_Map_titlestring == "<TITLE>")
+	if(MapInfo_Map_title == "<TITLE>")
 		MapInfo_Map_titlestring = MapInfo_Map_bspname;
 	else if(MapInfo_isRedundant(MapInfo_Map_bspname, MapInfo_Map_title))
 		MapInfo_Map_titlestring = MapInfo_Map_title;
