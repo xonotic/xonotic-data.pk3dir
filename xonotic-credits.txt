@@ -60,6 +60,10 @@ by Forest "LordHavoc" Hale
 
 **Translators
 
+*Dutch
+freefang
+PinkRobot
+
 *German
 Rudolf "divVerent" Polzer
 
@@ -69,6 +73,9 @@ Henry "Exitium" Sanmark
 *French
 Calinou
 Maxime "Taximus" Paradis
+
+*Hungarian
+xaN1C4n3
 
 *Italian
 Antonio "terencehill" Piu
@@ -84,43 +91,43 @@ MirceaKitsune
 Lord Canistra
 Nikoli
 
+*Spanish
+Rodrigo Mouton Laudin
+
+*Swedish
+marcus256
+
 **Other Active Contributors
 Akari
 Ant "Antibody" Zucaro
 Antonio "terencehill" Piu
+atheros
 Ben "MooKow" Banker
 blkrbt
 Calinou
 chooksta
+cortez
 Cuinn "Cuinnton" Herrick
 Florian Paul "lda17h" Schmidt
-Kristian "morfar" Johansson
+Florian Paul Schmidt
 kojn
+Kristian "morfar" Johansson
+magorian
 Maik "SavageX" Merten
 Mick Rippon
 MrBougo
+parasti
+Paul Scott
+PlasmaSheep
 Przemysław "atheros" Grzywacz
 Ruszkai "C.Brutail" Ákos
 Samual Lenks
+Sc0rp
 Severin "sev" Meyer
+SoulKeeper_p
 Stephan "esteel" Stahl
 The player with the unnecessarily long name
 Wolfgang "Blub\0" Bumiller
-SoulKeeper_p
-
-** TODO to be verified and sorted into the categories
-atheros - CA fixes
-cortez - map changes
-Florian Paul Schmidt - g_dodging
-parasti - various fixes
-magorian - a menu text overlap issue fix
-Paul Scott - keepaway bot AI
-PlasmaSheep - worked on player voices
-Sc0rp - some of our music
-Rodrigo Mouton Laudin <ratogenesis> - Spanish translation
-xaN1C4n3 - Hungarian translation
-PinkRobot and freefang - Dutch translation
-marcus256 - Swedish translation
 
 **Past Contributors
 Alexander "motorsep" Zubov
