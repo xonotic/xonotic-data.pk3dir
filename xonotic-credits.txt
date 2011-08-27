@@ -108,7 +108,6 @@ Calinou
 chooksta
 cortez
 Cuinn "Cuinnton" Herrick
-eihrul
 Florian Paul "lda17h" Schmidt
 Florian Paul Schmidt
 kojn
@@ -128,7 +127,6 @@ Severin "sev" Meyer
 SoulKeeper_p
 Stephan "esteel" Stahl
 The player with the unnecessarily long name
-Vortex
 Wolfgang "Blub\0" Bumiller
 
 **Past Contributors
@@ -198,6 +196,7 @@ Supajoe
 Tei
 Tomaz
 Ulrich Galbraith
+Vortex
 William Libert
 William "Willis" Weilep
 Yves "EviLair" Allaire
