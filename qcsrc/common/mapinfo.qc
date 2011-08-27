@@ -810,6 +810,7 @@ float MapInfo_isRedundant(string fn, string t)
 	t = strreplace(":", "-", t);
 	t = strreplace(" ", "-", t);
 	t = strreplace("_", "-", t);
+	t = strreplace("'", "-", t);
 
 	if(!strcasecmp(fn, t))
 		return TRUE;
