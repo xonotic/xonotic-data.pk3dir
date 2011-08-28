@@ -894,6 +894,7 @@ float botframe_autowaypoints_createwp(vector v, entity p, .entity fld)
 	{
 		// if a matching spawnfunc_waypoint already exists, don't add a duplicate
 		if (boxesoverlap(v - '32 32 32', v + '32 32 32', w.absmin, w.absmax))
+		//if (boxesoverlap(v - '4 4 4', v + '4 4 4', w.absmin, w.absmax))
 			return 0;
 		w = find(w, classname, "waypoint");
 	}
@@ -926,7 +927,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 	{
 		// if nearest WP from here is linked to wp, everything is fine
 		w = navigation_findnearestwaypoint(p, walkfromwp);
-		if(w != wp)
+		if(w && w != wp)
 		{
 			if(navigation_waypoint_will_link(w.origin, wp.origin, p, walkfromwp, 1050))
 			{
@@ -935,7 +936,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 				return 0;
 			}
 		}
-		if(navigation_waypoint_will_link(p.origin, wp.origin, p, walkfromwp, 1050))
+		if(navigation_waypoint_will_link(wp.origin, porg, p, walkfromwp, 1050))
 		{
 			p.fld = wp;
 			return 0;
@@ -943,7 +944,10 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 	}
 	else
 	{
+		save = p.origin;
+		setorigin(p, porg);
 		w = navigation_findnearestwaypoint(p, walkfromwp);
+		setorigin(p, save);
 		if(w)
 		{
 			p.fld = w;
@@ -1032,7 +1036,9 @@ void botframe_autowaypoints()
 	{
 		if(p.deadflag)
 			continue;
-		botframe_autowaypoints_fix(p, FALSE, botframe_autowaypoints_lastwp0);
+		// going back is broken, so only fix waypoints to walk TO the player
+		//botframe_autowaypoints_fix(p, FALSE, botframe_autowaypoints_lastwp0);
 		botframe_autowaypoints_fix(p, TRUE, botframe_autowaypoints_lastwp1);
+		//te_explosion(p.botframe_autowaypoints_lastwp0.origin);
 	}
 }
