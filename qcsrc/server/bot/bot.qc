@@ -674,6 +674,9 @@ void bot_serverframe()
 	if (autocvar_g_waypointeditor)
 		botframe_showwaypointlinks();
 
+	if (autocvar_g_waypointeditor_auto)
+		botframe_autowaypoints();
+
 	if(time > bot_cvar_nextthink)
 	{
 		if(currentbots>0)

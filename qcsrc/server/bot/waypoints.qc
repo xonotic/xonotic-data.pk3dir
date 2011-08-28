@@ -876,3 +876,71 @@ void botframe_showwaypointlinks()
 		player = find(player, classname, "player");
 	}
 };
+
+// automatically create missing waypoints
+.float lastwaypointtime0;
+.float lastwaypointtime1;
+void botframe_autowaypoints_fix(entity p, float walkfromwp, .float last)
+{
+	float t;
+	entity wp;
+	vector o;
+	float tmin, tmax;
+	vector save;
+	
+	wp = navigation_findnearestwaypoint(p, walkfromwp);
+	if(wp)
+		return;
+
+	tmin = 0;
+	tmax = 1;
+	for(;;)
+	{
+		t = (tmin + tmax) * 0.5;
+		o = antilag_takebackorigin(p, time - t);
+		save = p.origin;
+		setorigin(p, o);
+		wp = navigation_findnearestwaypoint(p, walkfromwp);
+		setorigin(p, save);
+		if(wp)
+		{
+			if(walkfromwp)
+			{
+				if(tracewalk(p, o, PL_MIN, PL_MAX, p.origin, bot_navigation_movemode))
+					break;
+			}
+			else
+			{
+				if(tracewalk(p, p.origin, PL_MIN, PL_MAX, o, bot_navigation_movemode))
+					break;
+			}
+			// if we get here: o has a nearest waypoint, but can't reach us
+			// i.e. move towards current location
+			tmax = t;
+		}
+		else
+		{
+			// if we get here: o has no nearest waypoint
+			// i.e. move closer to to the past
+			tmin = t;
+		}
+		if(tmax - tmin < 0.01)
+		{
+			print("Cannot link waypoints - didn't find a good new WP position\n");
+			return;
+		}
+	}
+
+	waypoint_schedulerelink(waypoint_spawn(o, o, 0));
+	p.last = max(1, time - t);
+}
+void botframe_autowaypoints()
+{
+	entity p;
+	entity wp0, wp1;
+	FOR_EACH_REALPLAYER(p)
+	{
+		botframe_autowaypoints_fix(p, FALSE, lastwaypointtime0);
+		botframe_autowaypoints_fix(p, TRUE, lastwaypointtime1);
+	}
+}
