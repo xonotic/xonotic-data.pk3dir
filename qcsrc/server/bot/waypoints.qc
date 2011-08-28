@@ -885,6 +885,23 @@ float botframe_autowaypoints_fixdown(vector v)
 	return 1;
 }
 
+float botframe_autowaypoints_createwp(vector v, entity p, .entity fld)
+{
+	entity w;
+
+	w = find(world, classname, "waypoint");
+	while (w)
+	{
+		// if a matching spawnfunc_waypoint already exists, don't add a duplicate
+		if (boxesoverlap(v - '32 32 32', v + '32 32 32', w.absmin, w.absmax))
+			return 0;
+		w = find(w, classname, "waypoint");
+	}
+
+	waypoint_schedulerelink(p.fld = waypoint_spawn(v, v, 0));
+	return 1;
+}
+
 // return value:
 //    1 = WP created
 //    0 = no action needed
@@ -986,8 +1003,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 	}
 
 	print("spawning a waypoint for connecting to ", etos(wp), "\n");
-	waypoint_schedulerelink(p.fld = waypoint_spawn(o, o, 0));
-	print("new waypoint is ", etos(p.fld), "\n");
+	botframe_autowaypoints_createwp(o, p, fld);
 	return 1;
 }
 
@@ -1006,7 +1022,7 @@ void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
 	print("emergency: got no good nearby WP to build a link from, starting a new chain\n");
 	if(!botframe_autowaypoints_fixdown(p.origin))
 		return; // shouldn't happen, caught above
-	waypoint_schedulerelink(p.fld = waypoint_spawn(trace_endpos, trace_endpos, 0));
+	botframe_autowaypoints_createwp(trace_endpos, p, fld);
 }
 void botframe_autowaypoints()
 {
@@ -1015,8 +1031,6 @@ void botframe_autowaypoints()
 	FOR_EACH_REALPLAYER(p)
 	{
 		if(p.deadflag)
-			continue;
-		if(!(p.flags & FL_ONGROUND))
 			continue;
 		botframe_autowaypoints_fix(p, FALSE, botframe_autowaypoints_lastwp0);
 		botframe_autowaypoints_fix(p, TRUE, botframe_autowaypoints_lastwp1);

@@ -354,7 +354,6 @@ float navigation_waypoint_will_link(vector v, vector org, entity ent, float walk
 entity navigation_findnearestwaypoint_withdist(entity ent, float walkfromwp, float bestdist)
 {
 	local entity waylist, w, best;
-	local float dist;
 	local vector v, org, pm1, pm2;
 	pm1 = ent.origin + ent.mins;
 	pm2 = ent.origin + ent.maxs;
@@ -401,7 +400,7 @@ entity navigation_findnearestwaypoint_withdist(entity ent, float walkfromwp, flo
 				v = w.origin;
 			if(navigation_waypoint_will_link(v, org, ent, walkfromwp, bestdist))
 			{
-				bestdist = dist;
+				bestdist = vlen(v - org);
 				best = w;
 			}
 		}
