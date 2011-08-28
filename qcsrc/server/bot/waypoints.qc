@@ -925,24 +925,56 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 
 	if(wp)
 	{
-		// if nearest WP from here is linked to wp, everything is fine
-		// FIXME consider ALl waypoints for this, not just the nearest!
-		// i.e. all waypoints w for which wp -> w -> p works
-		w = navigation_findnearestwaypoint(p, walkfromwp);
-		if(w && w != wp)
-		{
-			if(navigation_waypoint_will_link(w.origin, wp.origin, p, walkfromwp, 1050))
-			{
-				print("update chain from ", etos(p.fld), " to new nearest WP ", etos(w), "\n");
-				p.fld = w;
-				return 0;
-			}
-		}
+		// if any WP w fulfills wp -> w -> porg, then switch from wp to w
+
+		// if wp -> porg, then OK
+		float maxdist;
 		if(navigation_waypoint_will_link(wp.origin, porg, p, walkfromwp, 1050))
 		{
+			// we may find a better one
+			maxdist = vlen(wp.origin - porg);
+		}
+		else
+		{
+			// accept any "good"
+			maxdist = 2100;
+		}
+
+		float bestdist;
+		bestdist = maxdist;
+		w = find(world, classname, "waypoint");
+		while (w)
+		{
+			if(w != wp)
+			{
+				float d;
+				d = vlen(wp.origin - w.origin) + vlen(w.origin + porg);
+				if(d < bestdist)
+					if(navigation_waypoint_will_link(wp.origin, w.origin, p, walkfromwp, 1050))
+						if(navigation_waypoint_will_link(w.origin, porg, p, walkfromwp, 1050))
+						{
+							bestdist = d;
+							p.fld = w;
+						}
+			}
+			w = find(w, classname, "waypoint");
+		}
+		if(bestdist < maxdist)
+		{
+			print("update chain from ", etos(p.fld), " to new nearest WP ", etos(p.fld), "\n");
+			return 0;
+		}
+
+		if(bestdist < 2100)
+		{
+			// we know maxdist < 2100
+			// so wp -> porg is still valid
+			// all is good
 			p.fld = wp;
 			return 0;
 		}
+
+		// otherwise, no existing WP can fix our issues
 	}
 	else
 	{
