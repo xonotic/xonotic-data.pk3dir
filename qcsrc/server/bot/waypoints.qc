@@ -945,10 +945,10 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		w = find(world, classname, "waypoint");
 		while (w)
 		{
-			if(w != wp)
+			if(w != wp && !(w.wpflags & WAYPOINTFLAG_NORELINK))
 			{
 				float d;
-				d = vlen(wp.origin - w.origin) + vlen(w.origin + porg);
+				d = vlen(wp.origin - w.origin) + vlen(w.origin - porg);
 				if(d < bestdist)
 					if(navigation_waypoint_will_link(wp.origin, w.origin, p, walkfromwp, 1050))
 						if(navigation_waypoint_will_link(w.origin, porg, p, walkfromwp, 1050))
@@ -961,7 +961,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		}
 		if(bestdist < maxdist)
 		{
-			print("update chain from ", etos(p.fld), " to new nearest WP ", etos(p.fld), "\n");
+			print("update chain to new nearest WP ", etos(p.fld), "\n");
 			return 0;
 		}
 
