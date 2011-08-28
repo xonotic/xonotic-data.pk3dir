@@ -49,6 +49,7 @@ void MapInfo_Cache_Store()
 	// now store all the stuff
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData,   i, MapInfo_Map_bspname);
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, MapInfo_Map_title);
+	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, MapInfo_Map_titlestring);
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, MapInfo_Map_description);
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, MapInfo_Map_author);
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, ftos(MapInfo_Map_supportedGametypes));
@@ -71,6 +72,7 @@ float MapInfo_Cache_Retrieve(string map)
 	// now retrieve all the stuff
 	MapInfo_Map_bspname = bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, i);
 	MapInfo_Map_title = bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i);
+	MapInfo_Map_titlestring = bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i);
 	MapInfo_Map_description = bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i);
 	MapInfo_Map_author = bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i);
 	MapInfo_Map_supportedGametypes = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
@@ -379,6 +381,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 void _MapInfo_Map_Reset()
 {
 	MapInfo_Map_title = "<TITLE>";
+	MapInfo_Map_titlestring = "<TITLE>";
 	MapInfo_Map_description = "<DESCRIPTION>";
 	MapInfo_Map_author = "<AUTHOR>";
 	MapInfo_Map_supportedGametypes = 0;
@@ -797,6 +800,31 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 	}
 }
 
+float MapInfo_isRedundant(string fn, string t)
+{
+	// normalize file name
+	fn = strreplace("_", "-", fn);
+
+	// normalize visible title
+	t = strreplace(": ", "-", t);
+	t = strreplace(":", "-", t);
+	t = strreplace(" ", "-", t);
+	t = strreplace("_", "-", t);
+	t = strreplace("'", "-", t);
+
+	if(!strcasecmp(fn, t))
+		return TRUE;
+
+	// we allow the visible title to have punctuation the file name does
+	// not, but not vice versa
+	t = strreplace("-", "", t);
+
+	if(!strcasecmp(fn, t))
+		return TRUE;
+
+	return FALSE;
+}
+
 // load info about a map by name into the MapInfo_Map_* globals
 float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametypeToSet)
 {
@@ -1056,6 +1084,13 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		}
 	}
 
+	if(MapInfo_Map_title == "<TITLE>")
+		MapInfo_Map_titlestring = MapInfo_Map_bspname;
+	else if(MapInfo_isRedundant(MapInfo_Map_bspname, MapInfo_Map_title))
+		MapInfo_Map_titlestring = MapInfo_Map_title;
+	else
+		MapInfo_Map_titlestring = sprintf(_("%s: %s"), MapInfo_Map_bspname, MapInfo_Map_title);
+
 	MapInfo_Cache_Store();
 	if(MapInfo_Map_supportedGametypes != 0)
 		return r;
@@ -1313,6 +1348,7 @@ void MapInfo_ClearTemps()
 {
 	MapInfo_Map_bspname = string_null;
 	MapInfo_Map_title = string_null;
+	MapInfo_Map_titlestring = string_null;
 	MapInfo_Map_description = string_null;
 	MapInfo_Map_author = string_null;
 	MapInfo_Map_clientstuff = string_null;

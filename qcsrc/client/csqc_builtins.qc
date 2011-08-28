@@ -334,3 +334,5 @@ void (entity e, float chan, string samp, float vol, float atten, float pitchshif
 
 float trace_dphitcontents;
 float trace_networkentity;
+
+string(string search, string replace, string subject) strreplace = #484;

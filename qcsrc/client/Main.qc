@@ -1313,31 +1313,6 @@ void Net_ReadPingPLReport()
 	playerslots[e].ping_movementloss = ml / 255.0;
 }
 
-void Net_Notify() {
-	float type;
-	type = ReadByte();
-
-	if(type == CSQC_KILLNOTIFY)
-	{
-		HUD_KillNotify(ReadString(), ReadString(), ReadString(), ReadShort(), ReadByte());
-	}
-	else if(type == CSQC_CENTERPRINT)
-	{
-		HUD_Centerprint(ReadString(), ReadString(), ReadShort(), ReadByte());
-	}
-	else if(type == CSQC_CENTERPRINT_GENERIC)
-	{
-		float id;
-		string s;
-		id = ReadByte();
-		s = ReadString();
-		if (id != 0 && s != "")
-			centerprint_generic(id, s, ReadByte(), ReadByte());
-		else
-			centerprint_generic(id, s, 0, 0);
-	}
-}
-
 void Net_WeaponComplain() {
 	complain_weapon = ReadByte();
 
@@ -1405,8 +1380,23 @@ float CSQC_Parse_TempEntity()
 			announce_snd = strzone(ReadString());
 			bHandled = true;
 			break;
-		case TE_CSQC_NOTIFY:
-			Net_Notify();
+		case TE_CSQC_KILLNOTIFY:
+			HUD_KillNotify(ReadString(), ReadString(), ReadString(), ReadShort(), ReadByte());
+			bHandled = true;
+			break;
+		case TE_CSQC_KILLCENTERPRINT:
+			HUD_KillCenterprint(ReadString(), ReadString(), ReadShort(), ReadByte());
+			bHandled = true;
+			break;
+		case TE_CSQC_CENTERPRINT_GENERIC:
+			float id;
+			string s;
+			id = ReadByte();
+			s = ReadString();
+			if (id != 0 && s != "")
+				centerprint_generic(id, s, ReadByte(), ReadByte());
+			else
+				centerprint_generic(id, s, 0, 0);
 			bHandled = true;
 			break;
 		case TE_CSQC_WEAPONCOMPLAIN:

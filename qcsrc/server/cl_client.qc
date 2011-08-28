@@ -1086,7 +1086,6 @@ void PutClientInServer (void)
 			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
 				self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 		}
-		self.weapon_forbidchange = FALSE;
 
 		oldself = self;
 		self = spot;
@@ -2313,7 +2312,8 @@ void SpectateCopy(entity spectatee) {
 	self.dmg_save = spectatee.dmg_save;
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.angles = spectatee.v_angle;
-	self.fixangle = TRUE;
+	if(!self.BUTTON_USE)
+		self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);

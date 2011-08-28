@@ -189,18 +189,44 @@ float WaypointSprite_visible_for_player(entity e)
 {
 	// personal waypoints
 	if(self.enemy)
-		if(self.enemy != other)
+		if(self.enemy != e)
 			return FALSE;
 
 	// team waypoints
 	if(self.team && self.rule == SPRITERULE_DEFAULT)
 	{
-		if(self.team != other.team)
+		if(self.team != e.team)
 			return FALSE;
-		if(other.classname != "player")
+		if(e.classname != "player")
 			return FALSE;
 	}
 
+	return TRUE;
+}
+
+entity WaypointSprite_getviewentity(entity e)
+{
+	if(e.classname == "spectator")
+		e = e.enemy;
+	/* TODO idea (check this breaks nothing)
+	else if(e.classname == "observer")
+		e = world;
+	*/
+	return e;
+}
+
+float WaypointSprite_isteammate(entity e, entity e2)
+{
+	if(teamplay)
+	{
+		if(e2.team != e.team)
+			return FALSE;
+	}
+	else
+	{
+		if(e2 != e)
+			return FALSE;
+	}
 	return TRUE;
 }
 
@@ -210,25 +236,15 @@ float WaypointSprite_Customize()
 
 	// make spectators see what the player would see
 	entity e;
-	e = other;
-	if(e.classname == "spectator")
-		e = e.enemy;
+	e = WaypointSprite_getviewentity(other);
 
 	// as a GENERAL rule:
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
 	// but only apply this to real players, not to spectators
 	if(g_minstagib && (self.owner.items & IT_STRENGTH) && (e == other))
 	{
-		if(teamplay)
-		{
-			if(self.owner.team != e.team)
-				return FALSE;
-		}
-		else
-		{
-			if(self.owner != e)
-				return FALSE;
-		}
+		if(!WaypointSprite_isteammate(self.owner, e))
+			return FALSE;
 	}
 
 	return self.waypointsprite_visible_for_player(e);
@@ -307,12 +323,17 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 		WriteByte(MSG_ENTITY, self.colormod_y * 255.0);
 		WriteByte(MSG_ENTITY, self.colormod_z * 255.0);
 
-		dt = (self.waypointsprite_helpmetime - time) / 0.1;
-		if(dt < 0)
-			dt = 0;
-		if(dt > 255)
-			dt = 255;
-		WriteByte(MSG_ENTITY, dt);
+		if(WaypointSprite_isteammate(self.owner, WaypointSprite_getviewentity(to)))
+		{
+			dt = (self.waypointsprite_helpmetime - time) / 0.1;
+			if(dt < 0)
+				dt = 0;
+			if(dt > 255)
+				dt = 255;
+			WriteByte(MSG_ENTITY, dt);
+		}
+		else
+			WriteByte(MSG_ENTITY, 0);
 	}
 
 	return TRUE;

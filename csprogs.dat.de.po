@@ -1147,7 +1147,7 @@ msgstr "Returns"
 
 #: qcsrc/client/scoreboard.qc:46
 msgid "SCO^revivals"
-msgstr "wiederbelebt"
+msgstr "Wiederbelebt"
 
 #: qcsrc/client/scoreboard.qc:47
 msgid "SCO^score"

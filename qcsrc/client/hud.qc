@@ -1840,7 +1840,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	}
 }
 
-void HUD_Centerprint(string s1, string s2, float type, float msg)
+void HUD_KillCenterprint(string s1, string s2, float type, float msg)
 {
 	float gentle;
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
