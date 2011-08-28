@@ -622,7 +622,7 @@ void bot_serverframe()
 			localcmd("quit\n");
 	}
 
-	if (currentbots > 0 || autocvar_g_waypointeditor)
+	if (currentbots > 0 || autocvar_g_waypointeditor || autocvar_g_waypointeditor_auto)
 	if (botframe_spawnedwaypoints)
 	{
 		if(botframe_cachedwaypointlinks)

@@ -1017,6 +1017,7 @@ float autocvar_g_turrets_unit_walker_turn_strafe;
 float autocvar_g_turrets_unit_walker_turn_swim;
 float autocvar_g_use_ammunition;
 float autocvar_g_waypointeditor;
+float autocvar_g_waypointeditor_auto;
 float autocvar_g_waypoints_for_items;
 float autocvar_g_waypointsprite_deadlifetime;
 float autocvar_g_waypointsprite_deployed_lifetime;
