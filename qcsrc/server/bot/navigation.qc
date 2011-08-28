@@ -897,7 +897,7 @@ void navigation_poptouchedgoals()
 	if(checkpvs(self.origin + self.view_ofs, self.goalstack01))
 	if(tracewalk(self, self.origin, self.mins, self.maxs, (self.goalstack01.absmin + self.goalstack01.absmax) * 0.5, bot_navigation_movemode))
 	{
-	///	dprint("path optimized, removed a goal from the queue\n");
+	///	dprint("path optimized for ", self.netname, ", removed a goal from the queue\n");
 		navigation_poproute();
 		// TODO this may also be a nice idea to do "early" (e.g. by
 		// manipulating the vlen() comparisons) to shorten paths in
@@ -907,9 +907,18 @@ void navigation_poptouchedgoals()
 		// personality property
 	}
 
+	// HACK: remove players/bots as goals, they can lead a bot to unexpected places (cliffs, lava, etc)
+	// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
+	if(self.goalcurrent.classname=="player")
+		navigation_poproute();
+
+	// aid for detecting jump pads better (distance based check fails sometimes)
+	if(self.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT && self.jumppadcount > 0 )
+		navigation_poproute();
 
 	// Loose goal touching check when running
 	if(self.aistatus & AI_STATUS_RUNNING)
+	if(self.speed >= autocvar_sv_maxspeed) // if -really- running
 	if(self.goalcurrent.classname=="waypoint")
 	{
 		if(vlen(self.origin - self.goalcurrent.origin)<150)

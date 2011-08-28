@@ -539,6 +539,8 @@ void waypoint_load_links_hardwired()
 
 		++c;
 		waypoint_addlink(wp_from, wp_to);
+		wp_from.wphardwired = TRUE;
+		wp_to.wphardwired = TRUE;
 	}
 
 	fclose(file);
