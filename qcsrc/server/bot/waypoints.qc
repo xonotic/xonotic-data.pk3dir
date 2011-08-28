@@ -877,62 +877,136 @@ void botframe_showwaypointlinks()
 	}
 };
 
-// automatically create missing waypoints
-.float lastwaypointtime0;
-.float lastwaypointtime1;
-void botframe_autowaypoints_fix(entity p, float walkfromwp, .float last)
+float botframe_autowaypoints_fixdown(vector v)
 {
-	float t;
-	entity wp;
+	tracebox(v, PL_MIN, PL_MAX, v + '0 0 -64', MOVE_NOMONSTERS, world);
+	if(trace_fraction >= 1)
+		return 0;
+	return 1;
+}
+
+// return value:
+//    1 = WP created
+//    0 = no action needed
+//   -1 = temp fail, try from world too
+//   -2 = permanent fail, do not retry
+float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .entity fld)
+{
+	// make it possible to go from p to wp, if we can
+	// if wp is world, nearest is chosen
+
+	entity w;
+	vector porg;
+	float t, tmin, tmax;
 	vector o;
-	float tmin, tmax;
 	vector save;
-	
-	wp = navigation_findnearestwaypoint(p, walkfromwp);
+
+	if(!botframe_autowaypoints_fixdown(p.origin))
+		return -2;
+	porg = trace_endpos;
+
 	if(wp)
-		return;
+	{
+		// if nearest WP from here is linked to wp, everything is fine
+		w = navigation_findnearestwaypoint(p, walkfromwp);
+		if(w != wp)
+		{
+			if(navigation_waypoint_will_link(w.origin, wp.origin, p, walkfromwp, 1050))
+			{
+				print("update chain from ", etos(p.fld), " to new nearest WP ", etos(w), "\n");
+				p.fld = w;
+				return 0;
+			}
+		}
+		if(navigation_waypoint_will_link(p.origin, wp.origin, p, walkfromwp, 1050))
+		{
+			p.fld = wp;
+			return 0;
+		}
+	}
+	else
+	{
+		w = navigation_findnearestwaypoint(p, walkfromwp);
+		if(w)
+		{
+			p.fld = w;
+			return 0;
+		}
+	}
 
 	tmin = 0;
 	tmax = 1;
 	for(;;)
 	{
+		if(tmax - tmin < 0.001)
+		{
+			// did not get a good candidate
+			return -1;
+		}
+
 		t = (tmin + tmax) * 0.5;
 		o = antilag_takebackorigin(p, time - t);
-		save = p.origin;
-		setorigin(p, o);
-		wp = navigation_findnearestwaypoint(p, walkfromwp);
-		setorigin(p, save);
+		if(!botframe_autowaypoints_fixdown(o))
+			return -1;
+		o = trace_endpos;
+
 		if(wp)
 		{
-			if(walkfromwp)
+			if(!navigation_waypoint_will_link(wp.origin, o, p, walkfromwp, 1050))
 			{
-				if(tracewalk(p, o, PL_MIN, PL_MAX, p.origin, bot_navigation_movemode))
-					break;
+				// we cannot walk from wp.origin to o
+				// get closer to tmax
+				tmin = t;
+				continue;
 			}
-			else
-			{
-				if(tracewalk(p, p.origin, PL_MIN, PL_MAX, o, bot_navigation_movemode))
-					break;
-			}
-			// if we get here: o has a nearest waypoint, but can't reach us
-			// i.e. move towards current location
-			tmax = t;
 		}
 		else
 		{
-			// if we get here: o has no nearest waypoint
-			// i.e. move closer to to the past
-			tmin = t;
+			save = p.origin;
+			setorigin(p, o);
+			w = navigation_findnearestwaypoint(p, walkfromwp);
+			setorigin(p, save);
+			if(!w)
+			{
+				// we cannot walk from any WP to o
+				// get closer to tmax
+				tmin = t;
+				continue;
+			}
 		}
-		if(tmax - tmin < 0.01)
-		{
-			print("Cannot link waypoints - didn't find a good new WP position\n");
-			return;
-		}
+
+		// if we get here, o is valid regarding waypoints
+		// check if o is connected right to the player
+		// we break if it succeeds, as that means o is a good waypoint location
+		if(navigation_waypoint_will_link(o, porg, p, walkfromwp, 1050))
+			break;
+
+		// o is no good, we need to get closer to the player
+		tmax = t;
 	}
 
-	waypoint_schedulerelink(waypoint_spawn(o, o, 0));
-	p.last = max(1, time - t);
+	print("spawning a waypoint for connecting to ", etos(wp), "\n");
+	waypoint_schedulerelink(p.fld = waypoint_spawn(o, o, 0));
+	print("new waypoint is ", etos(p.fld), "\n");
+	return 1;
+}
+
+// automatically create missing waypoints
+.entity botframe_autowaypoints_lastwp0, botframe_autowaypoints_lastwp1;
+void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
+{
+	float r;
+	r = botframe_autowaypoints_fix_from(p, walkfromwp, p.fld, fld);
+	if(r != -1)
+		return;
+	r = botframe_autowaypoints_fix_from(p, walkfromwp, world, fld);
+	if(r != -1)
+		return;
+
+	print("emergency: got no good nearby WP to build a link from, starting a new chain\n");
+	if(!botframe_autowaypoints_fixdown(p.origin))
+		return; // shouldn't happen, caught above
+	waypoint_schedulerelink(p.fld = waypoint_spawn(trace_endpos, trace_endpos, 0));
 }
 void botframe_autowaypoints()
 {
@@ -940,7 +1014,11 @@ void botframe_autowaypoints()
 	entity wp0, wp1;
 	FOR_EACH_REALPLAYER(p)
 	{
-		botframe_autowaypoints_fix(p, FALSE, lastwaypointtime0);
-		botframe_autowaypoints_fix(p, TRUE, lastwaypointtime1);
+		if(p.deadflag)
+			continue;
+		if(!(p.flags & FL_ONGROUND))
+			continue;
+		botframe_autowaypoints_fix(p, FALSE, botframe_autowaypoints_lastwp0);
+		botframe_autowaypoints_fix(p, TRUE, botframe_autowaypoints_lastwp1);
 	}
 }

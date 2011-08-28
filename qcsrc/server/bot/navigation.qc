@@ -326,11 +326,35 @@ void navigation_poproute()
 	self.goalstack31 = world;
 };
 
+float navigation_waypoint_will_link(vector v, vector org, entity ent, float walkfromwp, float bestdist)
+{
+	float dist;
+	dist = vlen(v - org);
+	if (bestdist > dist)
+	{
+		traceline(v, org, TRUE, ent);
+		if (trace_fraction == 1)
+		{
+			if (walkfromwp)
+			{
+				if (tracewalk(ent, v, PL_MIN, PL_MAX, org, bot_navigation_movemode))
+					return TRUE;
+			}
+			else
+			{
+				if (tracewalk(ent, org, PL_MIN, PL_MAX, v, bot_navigation_movemode))
+					return TRUE;
+			}
+		}
+	}
+	return FALSE;
+}
+
 // find the spawnfunc_waypoint near a dynamic goal such as a dropped weapon
-entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
+entity navigation_findnearestwaypoint_withdist(entity ent, float walkfromwp, float bestdist)
 {
 	local entity waylist, w, best;
-	local float dist, bestdist;
+	local float dist;
 	local vector v, org, pm1, pm2;
 	pm1 = ent.origin + ent.mins;
 	pm2 = ent.origin + ent.maxs;
@@ -356,7 +380,6 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 		te_plasmaburn(org);
 
 	best = world;
-	bestdist = 1050;
 
 	// box check failed, try walk
 	w = waylist;
@@ -376,35 +399,19 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 			}
 			else
 				v = w.origin;
-			dist = vlen(v - org);
-			if (bestdist > dist)
+			if(navigation_waypoint_will_link(v, org, ent, walkfromwp, bestdist))
 			{
-				traceline(v, org, TRUE, ent);
-				if (trace_fraction == 1)
-				{
-					if (walkfromwp)
-					{
-						//print("^1can I reach ", vtos(org), " from ", vtos(v), "?\n");
-						if (tracewalk(ent, v, PL_MIN, PL_MAX, org, bot_navigation_movemode))
-						{
-							bestdist = dist;
-							best = w;
-						}
-					}
-					else
-					{
-						if (tracewalk(ent, org, PL_MIN, PL_MAX, v, bot_navigation_movemode))
-						{
-							bestdist = dist;
-							best = w;
-						}
-					}
-				}
+				bestdist = dist;
+				best = w;
 			}
 		}
 		w = w.chain;
 	}
 	return best;
+}
+entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
+{
+	return navigation_findnearestwaypoint_withdist(ent, walkfromwp, 1050);
 }
 
 // finds the waypoints near the bot initiating a navigation query
