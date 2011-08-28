@@ -926,6 +926,8 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 	if(wp)
 	{
 		// if nearest WP from here is linked to wp, everything is fine
+		// FIXME consider ALl waypoints for this, not just the nearest!
+		// i.e. all waypoints w for which wp -> w -> p works
 		w = navigation_findnearestwaypoint(p, walkfromwp);
 		if(w && w != wp)
 		{
