@@ -134,7 +134,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			if (trace_fraction < 1)
 			{
 				// check if we can walk over this obstacle, possibly by jumpstepping
-				tracebox(org + stepheightvec, m1, m2, move + jumpstepheightvec, movemode, e);
+				tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
 				if (trace_fraction < 1 || trace_startsolid)
 				{
 					tracebox(org + jumpstepheightvec, m1, m2, move + jumpstepheightvec, movemode, e);
