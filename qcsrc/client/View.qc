@@ -913,7 +913,9 @@ void CSQC_UpdateView(float w, float h)
 		float sharpen_intensity, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
 		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
 		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
+		
 		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
+		
 		if(autocvar_hud_powerup && sharpen_intensity > 0 && autocvar_chase_active >= 0) // not while the event chase camera is active
 		{
 			if(sharpen_intensity != old_sharpen_intensity) // reduce cvar_set spam as much as possible
