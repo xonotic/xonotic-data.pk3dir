@@ -803,7 +803,6 @@ void CSQC_UpdateView(float w, float h)
 	}
 	
 	if(autocvar_hud_damage && !autocvar_chase_active)
-
 	{
 		splash_size_x = max(vid_conwidth, vid_conheight);
 		splash_size_y = max(vid_conwidth, vid_conheight);
@@ -914,19 +913,19 @@ void CSQC_UpdateView(float w, float h)
 			old_bluralpha = 0;
 		}
 
-		float sharpen_intensity;
-		if (getstatf(STAT_STRENGTH_FINISHED) - time > 0)
-			sharpen_intensity += (getstatf(STAT_STRENGTH_FINISHED) - time);
-		if (getstatf(STAT_INVINCIBLE_FINISHED) - time > 0)
-			sharpen_intensity += (getstatf(STAT_INVINCIBLE_FINISHED) - time);
+		float sharpen_intensity, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
+		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
+		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
+		
+		// Check the health stat to see whether the player is still alive, then remove the effect if they are dead so it isn't there when they respawn...
+		// then bound the given value since powerup warning time is 5 seconds, so fade the effect from 5 seconds down.
+		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5);
 
 		if(autocvar_hud_powerup && sharpen_intensity > 0 && autocvar_chase_active >= 0) // not while the event chase camera is active
 		{
-			sharpen_intensity = bound(0, sharpen_intensity, 5); // powerup warning time is 5 seconds, so fade the effect from there
-
 			if(sharpen_intensity != old_sharpen_intensity) // reduce cvar_set spam as much as possible
 			{
-				cvar_set("r_glsl_postprocess_uservec2", strcat("0 ", ftos(-sharpen_intensity * cvar("hud_powerup")), " 0 0"));
+				cvar_set("r_glsl_postprocess_uservec2", strcat(ftos((sharpen_intensity / 5) * cvar("hud_powerup")), " ", ftos(-sharpen_intensity * cvar("hud_powerup")), " 0 0"));
 				old_sharpen_intensity = sharpen_intensity;
 			}
 		}
