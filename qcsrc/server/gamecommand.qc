@@ -690,7 +690,7 @@ void modelbug()
 	entity e;
 	e = spawn();
 	setorigin(e, nextent(world).origin);
-	precache_model("models_portal.md3");
+	precache_model("models/portal.md3");
 	setmodel(e, "models/portal.md3");
 	e.think = modelbug_make_svqc;
 	e.nextthink = time + 1;

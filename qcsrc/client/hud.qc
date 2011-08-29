@@ -824,7 +824,7 @@ string GetAmmoPicture(float i)
 	}
 }
 
-void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_selected)
+void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_selected, float infinite_ammo)
 {
 	float a;
 	if(autocvar__hud_configure)
@@ -836,7 +836,9 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 		a = getstati(GetAmmoStat(itemcode)); // how much ammo do we have of type itemcode?
 
 	vector color;
-	if(a < 10)
+	if(infinite_ammo)
+		color = '0 0.5 0.75';
+	else if(a < 10)
 		color = '0.7 0 0';
 	else
 		color = '1 1 1';
@@ -867,12 +869,12 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 
     if(autocvar_hud_panel_ammo_text)
     {
-        if(a > 0)
+        if(a > 0 || infinite_ammo)
             drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
         else // "ghost" ammo count
             drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * alpha * 0.5, DRAWFLAG_NORMAL);
     }
-	if(a > 0)
+	if(a > 0 || infinite_ammo)
 		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 	else // "ghost" ammo icon
 		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * alpha * 0.5, DRAWFLAG_NORMAL);
@@ -934,20 +936,23 @@ void HUD_Ammo(void)
 		ammo_size_y = newSize;
 	}
 
-	float i, stat_items, currently_selected;
+	float i, stat_items, currently_selected, infinite_ammo;
+	infinite_ammo = FALSE;
 	if (autocvar_hud_panel_ammo_onlycurrent)
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, ammo_size, 2, true); //show rockets
+			DrawAmmoItem(pos, ammo_size, 2, true, FALSE); //show rockets
 			return;
 		}
 		stat_items = getstati(STAT_ITEMS);
+		if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
+			infinite_ammo = TRUE;
 		for (i = 0; i < AMMO_COUNT; ++i) {
 			currently_selected = stat_items & GetAmmoItemCode(i);
 			if (currently_selected)
 			{
-				DrawAmmoItem(pos, ammo_size, i, true);
+				DrawAmmoItem(pos, ammo_size, i, true, infinite_ammo);
 				return;
 			}
 		}
@@ -955,9 +960,11 @@ void HUD_Ammo(void)
 	}
 
 	stat_items = getstati(STAT_ITEMS);
+	if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
+		infinite_ammo = TRUE;
 	for (i = 0; i < AMMO_COUNT; ++i) {
 		currently_selected = stat_items & GetAmmoItemCode(i);
-		DrawAmmoItem(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, i, currently_selected);
+		DrawAmmoItem(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, i, currently_selected, infinite_ammo);
 		++row;
 		if(row >= rows)
 		{
@@ -1870,7 +1877,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	}
 }
 
-void HUD_Centerprint(string s1, string s2, float type, float msg)
+void HUD_KillCenterprint(string s1, string s2, float type, float msg)
 {
 	float gentle;
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
@@ -4610,11 +4617,12 @@ void HUD_CenterPrint (void)
 						pos_y -= fontsize_y;
 					else
 						pos_y -= fontsize_y * CENTERPRINT_SPACING/2;
-					if (pos_y < panel_pos_y) // check if the next line can be shown
-					{
-						drawfontscale = '1 1 0';
-						return;
-					}
+					// NOTE: uncommented so as to not reject messages whenever they are "too large" -- This just continues drawing it anyway.
+					//if (pos_y < panel_pos_y) // check if the next line can be shown
+					//{
+					//	drawfontscale = '1 1 0';
+					//	return;
+					//}
 				}
 			}
 			current_msg_pos_y = pos_y; // save starting pos (first line) of the current message
@@ -4636,11 +4644,12 @@ void HUD_CenterPrint (void)
 				}
 				else
 					pos_y += fontsize_y * CENTERPRINT_SPACING/2;
-				if (!autocvar_hud_panel_centerprint_flip && pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
-				{
-					drawfontscale = '1 1 0';
-					return;
-				}
+				// NOTE: uncommented so as to not reject messages whenever they are "too large" -- This just continues drawing it anyway.
+				//if (!autocvar_hud_panel_centerprint_flip && pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
+				//{
+				//	drawfontscale = '1 1 0';
+				//	return;
+				//}
 			}
 		}
 		msg_size = pos_y - msg_size;

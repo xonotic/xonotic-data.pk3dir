@@ -457,6 +457,8 @@ void VoteReset() {
 	votefinished = 0;
 	votecalledvote = string_null;
 	votecalledvote_display = string_null;
+
+	Nagger_VoteChanged();
 }
 
 void VoteAccept() {

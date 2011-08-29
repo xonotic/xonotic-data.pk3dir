@@ -257,6 +257,10 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 
 		m = SLIST_MASK_AND - 1;
 		resethostcachemasks();
+
+		// ping: reject negative ping (no idea why this happens in the first place, engine bug)
+		sethostcachemasknumber(++m, SLIST_FIELD_PING, 0, SLIST_TEST_GREATEREQUAL);
+
 		if(!me.filterShowFull)
 		{
 			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // legacy

@@ -210,7 +210,6 @@ void w_clear();
 void w_ready();
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
 .float weapon_nextthink;
-.float weapon_forbidchange;
 .void() weapon_think;
 
 //float	PLAYER_WEAPONSELECTION_DELAY = );
@@ -309,6 +308,8 @@ float default_weapon_alpha;
 .float() customizeentityforclient;
 .float cvar_cl_handicap;
 .float cvar_cl_playerdetailreduction;
+.float cvar_cl_clippedspectating;
+
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];

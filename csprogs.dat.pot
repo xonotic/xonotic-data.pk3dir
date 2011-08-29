@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-27 18:26+0200\n"
+"POT-Creation-Date: 2011-08-21 14:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -337,280 +337,284 @@ msgstr ""
 msgid "N/A"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:949
+#: qcsrc/client/scoreboard.qc:950
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1014
+#: qcsrc/client/scoreboard.qc:1015
 #, c-format
 msgid "%d%%"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1074
+#: qcsrc/client/scoreboard.qc:1075
 msgid "Rankings"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1165 qcsrc/client/scoreboard.qc:1167
+#: qcsrc/client/scoreboard.qc:1170
 msgid "Scoreboard"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1208
+#: qcsrc/client/scoreboard.qc:1215
 #, c-format
 msgid "Speed award: %d ^7(%s^7)"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1212
+#: qcsrc/client/scoreboard.qc:1219
 #, c-format
 msgid "All-time fastest: %d ^7(%s^7)"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1239 qcsrc/client/teamplay.qc:63
+#: qcsrc/client/scoreboard.qc:1246 qcsrc/client/teamplay.qc:63
 msgid "Spectators"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1246
+#: qcsrc/client/scoreboard.qc:1252
 #, c-format
 msgid "playing on ^2%s^7"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1253 qcsrc/client/scoreboard.qc:1258
+#: qcsrc/client/scoreboard.qc:1259 qcsrc/client/scoreboard.qc:1264
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1262 qcsrc/client/scoreboard.qc:1281
+#: qcsrc/client/scoreboard.qc:1268 qcsrc/client/scoreboard.qc:1287
 msgid " or"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1265 qcsrc/client/scoreboard.qc:1272
+#: qcsrc/client/scoreboard.qc:1271 qcsrc/client/scoreboard.qc:1278
 #, c-format
 msgid " until ^3%s %s^7"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1266 qcsrc/client/scoreboard.qc:1273
-#: qcsrc/client/scoreboard.qc:1285 qcsrc/client/scoreboard.qc:1292
+#: qcsrc/client/scoreboard.qc:1272 qcsrc/client/scoreboard.qc:1279
+#: qcsrc/client/scoreboard.qc:1291 qcsrc/client/scoreboard.qc:1298
 msgid "SCO^points"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1267 qcsrc/client/scoreboard.qc:1274
-#: qcsrc/client/scoreboard.qc:1286 qcsrc/client/scoreboard.qc:1293
+#: qcsrc/client/scoreboard.qc:1273 qcsrc/client/scoreboard.qc:1280
+#: qcsrc/client/scoreboard.qc:1292 qcsrc/client/scoreboard.qc:1299
 msgid "SCO^is beaten"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1284 qcsrc/client/scoreboard.qc:1291
+#: qcsrc/client/scoreboard.qc:1290 qcsrc/client/scoreboard.qc:1297
 #, c-format
 msgid " until a lead of ^3%s %s^7"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:234
+#: qcsrc/client/waypointsprites.qc:254
 msgid "Push"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:235
+#: qcsrc/client/waypointsprites.qc:255
 msgid "Destroy"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:236
+#: qcsrc/client/waypointsprites.qc:256
 msgid "Defend"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:237
+#: qcsrc/client/waypointsprites.qc:257
 msgid "Blue base"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:238
+#: qcsrc/client/waypointsprites.qc:258
 msgid "DANGER"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:239
+#: qcsrc/client/waypointsprites.qc:259
 msgid "Flag carrier"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:240
+#: qcsrc/client/waypointsprites.qc:260
 msgid "Dropped flag"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:241
+#: qcsrc/client/waypointsprites.qc:261
 msgid "Help me!"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:242
+#: qcsrc/client/waypointsprites.qc:262
 msgid "Here"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:243
+#: qcsrc/client/waypointsprites.qc:263
 msgid "Dropped key"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:244 qcsrc/client/waypointsprites.qc:246
-#: qcsrc/client/waypointsprites.qc:247 qcsrc/client/waypointsprites.qc:248
-#: qcsrc/client/waypointsprites.qc:249
+#: qcsrc/client/waypointsprites.qc:264 qcsrc/client/waypointsprites.qc:266
+#: qcsrc/client/waypointsprites.qc:267 qcsrc/client/waypointsprites.qc:268
+#: qcsrc/client/waypointsprites.qc:269
 msgid "Key carrier"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:245
+#: qcsrc/client/waypointsprites.qc:265
 msgid "Run here"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:250
+#: qcsrc/client/waypointsprites.qc:270
 msgid "Red base"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:251
+#: qcsrc/client/waypointsprites.qc:271
 msgid "Waypoint"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:252 qcsrc/client/waypointsprites.qc:253
-#: qcsrc/client/waypointsprites.qc:254
+#: qcsrc/client/waypointsprites.qc:272 qcsrc/client/waypointsprites.qc:273
+#: qcsrc/client/waypointsprites.qc:274
 msgid "Generator"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:255 qcsrc/client/waypointsprites.qc:256
-#: qcsrc/client/waypointsprites.qc:257 qcsrc/client/waypointsprites.qc:258
-#: qcsrc/client/waypointsprites.qc:259 qcsrc/client/waypointsprites.qc:260
-#: qcsrc/client/waypointsprites.qc:261 qcsrc/client/waypointsprites.qc:262
-#: qcsrc/client/waypointsprites.qc:285 qcsrc/client/waypointsprites.qc:286
-#: qcsrc/client/waypointsprites.qc:287 qcsrc/client/waypointsprites.qc:288
-#: qcsrc/client/waypointsprites.qc:289
+#: qcsrc/client/waypointsprites.qc:275 qcsrc/client/waypointsprites.qc:276
+#: qcsrc/client/waypointsprites.qc:277 qcsrc/client/waypointsprites.qc:278
+#: qcsrc/client/waypointsprites.qc:279 qcsrc/client/waypointsprites.qc:280
+#: qcsrc/client/waypointsprites.qc:281 qcsrc/client/waypointsprites.qc:282
+#: qcsrc/client/waypointsprites.qc:306 qcsrc/client/waypointsprites.qc:307
+#: qcsrc/client/waypointsprites.qc:308 qcsrc/client/waypointsprites.qc:309
+#: qcsrc/client/waypointsprites.qc:310
 msgid "Control point"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:263
+#: qcsrc/client/waypointsprites.qc:283
 msgid "Checkpoint"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:264
+#: qcsrc/client/waypointsprites.qc:284 qcsrc/client/waypointsprites.qc:286
 msgid "Finish"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:265
+#: qcsrc/client/waypointsprites.qc:285 qcsrc/client/waypointsprites.qc:286
 msgid "Start"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:266 qcsrc/client/waypointsprites.qc:267
+#: qcsrc/client/waypointsprites.qc:287 qcsrc/client/waypointsprites.qc:288
 msgid "Ball"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:268
+#: qcsrc/client/waypointsprites.qc:289
 msgid "Ball carrier"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:269 qcsrc/server/w_laser.qc:2
+#: qcsrc/client/waypointsprites.qc:290 qcsrc/server/w_laser.qc:2
 msgid "Laser"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:270 qcsrc/server/w_shotgun.qc:2
+#: qcsrc/client/waypointsprites.qc:291 qcsrc/server/w_shotgun.qc:2
 msgid "Shotgun"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:271 qcsrc/server/w_uzi.qc:2
+#: qcsrc/client/waypointsprites.qc:292 qcsrc/server/w_uzi.qc:2
 msgid "Machine Gun"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:272 qcsrc/server/w_grenadelauncher.qc:2
+#: qcsrc/client/waypointsprites.qc:293 qcsrc/server/w_grenadelauncher.qc:2
 msgid "Mortar"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:273 qcsrc/server/w_electro.qc:2
+#: qcsrc/client/waypointsprites.qc:294 qcsrc/server/w_electro.qc:2
 msgid "Electro"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:274 qcsrc/server/w_crylink.qc:2
+#: qcsrc/client/waypointsprites.qc:295 qcsrc/server/w_crylink.qc:2
 msgid "Crylink"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:275 qcsrc/server/w_nex.qc:2
+#: qcsrc/client/waypointsprites.qc:296 qcsrc/server/w_nex.qc:2
 msgid "Nex"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:276 qcsrc/server/w_hagar.qc:2
+#: qcsrc/client/waypointsprites.qc:297 qcsrc/server/w_hagar.qc:2
 msgid "Hagar"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:277 qcsrc/server/w_rocketlauncher.qc:2
+#: qcsrc/client/waypointsprites.qc:298 qcsrc/server/w_rocketlauncher.qc:2
 msgid "Rocket Launcher"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:278 qcsrc/server/w_porto.qc:2
+#: qcsrc/client/waypointsprites.qc:299 qcsrc/server/w_porto.qc:2
 msgid "Port-O-Launch"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:279
+#: qcsrc/client/waypointsprites.qc:300
 msgid "Minstanex"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:280
+#: qcsrc/client/waypointsprites.qc:301
 msgid "Hook"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:281 qcsrc/server/w_fireball.qc:2
+#: qcsrc/client/waypointsprites.qc:302 qcsrc/server/w_fireball.qc:2
 msgid "Fireball"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:282
+#: qcsrc/client/waypointsprites.qc:303
 msgid "HLAC"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:283 qcsrc/server/w_rifle.qc:2
+#: qcsrc/client/waypointsprites.qc:304 qcsrc/server/w_rifle.qc:2
 msgid "Rifle"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:284 qcsrc/server/w_minelayer.qc:2
+#: qcsrc/client/waypointsprites.qc:305 qcsrc/server/w_minelayer.qc:2
 msgid "Mine Layer"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:290
+#: qcsrc/client/waypointsprites.qc:311
 msgid "Invisibility"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:291
+#: qcsrc/client/waypointsprites.qc:312
 msgid "Extra life"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:292
+#: qcsrc/client/waypointsprites.qc:313
 msgid "Speed"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:293
+#: qcsrc/client/waypointsprites.qc:314
 msgid "Strength"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:294
+#: qcsrc/client/waypointsprites.qc:315
 msgid "Shield"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:295
+#: qcsrc/client/waypointsprites.qc:316
 msgid "Fuel regen"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:296
+#: qcsrc/client/waypointsprites.qc:317
 msgid "Jet Pack"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:297
+#: qcsrc/client/waypointsprites.qc:318
 msgid "Frozen!"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:298
+#: qcsrc/client/waypointsprites.qc:319
 msgid "Tagged"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:299
+#: qcsrc/client/waypointsprites.qc:320
 msgid "Vehicle"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:560
+#: qcsrc/client/waypointsprites.qc:590
+msgid "Spam"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:594
 #, c-format
 msgid "%s needing help!"
 msgstr ""
 
-#: qcsrc/client/hud_config.qc:132
+#: qcsrc/client/hud_config.qc:136
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
 msgstr ""
 
-#: qcsrc/client/hud_config.qc:136
+#: qcsrc/client/hud_config.qc:140
 #, c-format
 msgid "^1Couldn't write to %s\n"
 msgstr ""
@@ -714,24 +718,24 @@ msgstr ""
 msgid "A CSQC entity changed its owner! (edict: %d, classname: %s)\n"
 msgstr ""
 
-#: qcsrc/client/Main.qc:953
+#: qcsrc/client/Main.qc:964
 #, c-format
 msgid "A CSQC entity changed its type! (edict: %d, classname: %s)\n"
 msgstr ""
 
-#: qcsrc/client/Main.qc:994
+#: qcsrc/client/Main.qc:1005
 #, c-format
 msgid ""
 "Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: "
 "%s)\n"
 msgstr ""
 
-#: qcsrc/client/Main.qc:1463
+#: qcsrc/client/Main.qc:1461
 #, c-format
 msgid "%s (not bound)"
 msgstr ""
 
-#: qcsrc/client/Main.qc:1468 qcsrc/client/hud.qc:407
+#: qcsrc/client/Main.qc:1466 qcsrc/client/hud.qc:230
 #, c-format
 msgid "%s (%s)"
 msgstr ""
@@ -753,7 +757,7 @@ msgstr ""
 msgid "Vote for a map"
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:199
+#: qcsrc/client/mapvoting.qc:200
 #, c-format
 msgid "%d seconds left"
 msgstr ""
@@ -771,12 +775,12 @@ msgstr ""
 msgid "Requesting preview...\n"
 msgstr ""
 
-#: qcsrc/client/movetypes.qc:159
+#: qcsrc/client/movetypes.qc:163
 #, c-format
 msgid "Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n"
 msgstr ""
 
-#: qcsrc/client/movetypes.qc:162
+#: qcsrc/client/movetypes.qc:166
 #, c-format
 msgid "Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n"
 msgstr ""
@@ -828,795 +832,795 @@ msgstr ""
 msgid "Pink Team"
 msgstr ""
 
-#: qcsrc/client/hud.qc:337
+#: qcsrc/client/hud.qc:160
 msgid "1st"
 msgstr ""
 
-#: qcsrc/client/hud.qc:339
+#: qcsrc/client/hud.qc:162
 msgid "2nd"
 msgstr ""
 
-#: qcsrc/client/hud.qc:341
+#: qcsrc/client/hud.qc:164
 msgid "3rd"
 msgstr ""
 
-#: qcsrc/client/hud.qc:343
+#: qcsrc/client/hud.qc:166
 #, c-format
 msgid "%dth"
 msgstr ""
 
-#: qcsrc/client/hud.qc:375
+#: qcsrc/client/hud.qc:198
 #, c-format
 msgid " (-%dL)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:380
+#: qcsrc/client/hud.qc:203
 #, c-format
 msgid " (+%dL)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:396
+#: qcsrc/client/hud.qc:219
 msgid "Start line"
 msgstr ""
 
-#: qcsrc/client/hud.qc:398 qcsrc/client/hud.qc:402
+#: qcsrc/client/hud.qc:221 qcsrc/client/hud.qc:225
 msgid "Finish line"
 msgstr ""
 
-#: qcsrc/client/hud.qc:400
+#: qcsrc/client/hud.qc:223
 #, c-format
 msgid "Intermediate %d"
 msgstr ""
 
-#: qcsrc/client/hud.qc:409
+#: qcsrc/client/hud.qc:232
 #, c-format
 msgid "%s (%s %s)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:911
+#: qcsrc/client/hud.qc:735
 msgid "Out of ammo"
 msgstr ""
 
-#: qcsrc/client/hud.qc:915
+#: qcsrc/client/hud.qc:739
 msgid "Don't have"
 msgstr ""
 
-#: qcsrc/client/hud.qc:919
+#: qcsrc/client/hud.qc:743
 msgid "Unavailable"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1649
+#: qcsrc/client/hud.qc:1476
 #, c-format
 msgid "^1%s^1 couldn't take it anymore\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1653 qcsrc/client/hud.qc:1957
+#: qcsrc/client/hud.qc:1480 qcsrc/client/hud.qc:1784
 #, c-format
 msgid "^1%s^1 died\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1657
+#: qcsrc/client/hud.qc:1484
 #, c-format
 msgid "^7%s^7 committed suicide. What's the point of living without ammo?\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1661
+#: qcsrc/client/hud.qc:1488
 #, c-format
 msgid "^1%s^1 thought they found a nice camping ground\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1665
+#: qcsrc/client/hud.qc:1492
 #, c-format
 msgid "^1%s^1 didn't become friends with the Lord of Teamplay\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1669
+#: qcsrc/client/hud.qc:1496
 #, c-format
 msgid "^1%s^1 unfairly eliminated themself\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1673
+#: qcsrc/client/hud.qc:1500
 #, c-format
 msgid "^1%s^1 burned to death\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1677
+#: qcsrc/client/hud.qc:1504
 #, c-format
 msgid "^1%s^1 couldn't resist the urge to self-destruct\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1681
+#: qcsrc/client/hud.qc:1508
 #, c-format
 msgid "^1%s^1 ended it all after a %d kill spree\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1698
+#: qcsrc/client/hud.qc:1525
 #, c-format
 msgid "^1%s^1 took action against a team mate\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1700
+#: qcsrc/client/hud.qc:1527
 #, c-format
 msgid "^1%s^1 mows down a team mate\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1705
+#: qcsrc/client/hud.qc:1532
 #, c-format
 msgid "^1%s^1 ended a %d scoring spree by going against a team mate\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1707
+#: qcsrc/client/hud.qc:1534
 #, c-format
 msgid "^1%s^1 ended a %d kill spree by killing a team mate\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1711
+#: qcsrc/client/hud.qc:1538
 #, c-format
 msgid "^1%s^1's %s scoring spree was ended by a team mate!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1713
+#: qcsrc/client/hud.qc:1540
 #, c-format
 msgid "^1%s^1's %s kill spree was ended by a team mate!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1717
+#: qcsrc/client/hud.qc:1544
 #, c-format
 msgid "^1%s^1 drew first blood\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1721
+#: qcsrc/client/hud.qc:1548
 #, c-format
 msgid "^1%s^1 tried to occupy %s^1's teleport destination space\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1723
+#: qcsrc/client/hud.qc:1550
 #, c-format
 msgid "^1%s^1 was telefragged by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1728
+#: qcsrc/client/hud.qc:1555
 #, c-format
 msgid "^1%s^1 was drowned by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1733
+#: qcsrc/client/hud.qc:1560
 #, c-format
 msgid "^1%s^1 was slimed by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1738
+#: qcsrc/client/hud.qc:1565
 #, c-format
 msgid "^1%s^1 was cooked by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1743
+#: qcsrc/client/hud.qc:1570
 #, c-format
 msgid "^1%s^1 was grounded by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1748
+#: qcsrc/client/hud.qc:1575
 #, c-format
 msgid "^1%s^1 was shot into space by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1753
+#: qcsrc/client/hud.qc:1580
 #, c-format
 msgid "^1%s^1 was conserved by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1759
+#: qcsrc/client/hud.qc:1586
 #, c-format
 msgid "^1%s^1 was thrown into a world of hurt by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1763
+#: qcsrc/client/hud.qc:1590
 #, c-format
 msgid "^1%s^1 was crushed by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1767
+#: qcsrc/client/hud.qc:1594
 #, c-format
 msgid "^1%s^1 got shredded by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1771
+#: qcsrc/client/hud.qc:1598
 #, c-format
 msgid "^1%s^1 was blasted to bits by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1775
+#: qcsrc/client/hud.qc:1602
 #, c-format
 msgid "^1%s^1 got caught in the destruction of %s^1's vehicle\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1779
+#: qcsrc/client/hud.qc:1606
 #, c-format
 msgid "^1%s^1 was bolted down by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1783
+#: qcsrc/client/hud.qc:1610
 #, c-format
 msgid "^1%s^1 could find no shelter from %s^1's rockets\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1787
+#: qcsrc/client/hud.qc:1614
 #, c-format
 msgid "^1%s^1 dies when %s^1's wakizashi dies.\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1791
+#: qcsrc/client/hud.qc:1618
 #, c-format
 msgid "^1%s^1 nailed to hell by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1795
+#: qcsrc/client/hud.qc:1622
 #, c-format
 msgid "^1%s^1 cluster crushed by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1799
+#: qcsrc/client/hud.qc:1626
 #, c-format
 msgid "^1%s^1 dies when %s^1's raptor dies.\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1803
+#: qcsrc/client/hud.qc:1630
 #, c-format
 msgid "^1%s^1 was pushed into the line of fire by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1807
+#: qcsrc/client/hud.qc:1634
 #, c-format
 msgid "^1%s^1 was pushed into an accident by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1811
+#: qcsrc/client/hud.qc:1638
 #, c-format
 msgid "^1%s^1 was unfairly eliminated by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1815
+#: qcsrc/client/hud.qc:1642
 #, c-format
 msgid "^1%s^1 was burnt to death by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1827
+#: qcsrc/client/hud.qc:1654
 #, c-format
 msgid "^1%s^1 was fragged by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1832
+#: qcsrc/client/hud.qc:1659
 #, c-format
 msgid "^1%s^1's %s scoring spree was ended by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1834
+#: qcsrc/client/hud.qc:1661
 #, c-format
 msgid "^1%s^1's %s kill spree was ended by %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1837
+#: qcsrc/client/hud.qc:1664
 #, c-format
 msgid "^1%s^1 made %s scores in a row\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1839
+#: qcsrc/client/hud.qc:1666
 #, c-format
 msgid "^1%s^1 has %s frags in a row\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1842
+#: qcsrc/client/hud.qc:1669
 #, c-format
 msgid "%s^7 made a ^1TRIPLE SCORE\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1844
+#: qcsrc/client/hud.qc:1671
 #, c-format
 msgid "%s^7 made a ^1TRIPLE FRAG\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1847
+#: qcsrc/client/hud.qc:1674
 #, c-format
 msgid "%s^7 unleashes ^1SCORING RAGE\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1849
+#: qcsrc/client/hud.qc:1676
 #, c-format
 msgid "%s^7 unleashes ^1RAGE\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1852
+#: qcsrc/client/hud.qc:1679
 #, c-format
 msgid "%s^7 made ^1TEN SCORES IN A ROW!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1854
+#: qcsrc/client/hud.qc:1681
 #, c-format
 msgid "%s^7 starts the ^1MASSACRE!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1857
+#: qcsrc/client/hud.qc:1684
 #, c-format
 msgid "%s^7 made ^1FIFTEEN SCORES IN A ROW!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1859
+#: qcsrc/client/hud.qc:1686
 #, c-format
 msgid "%s^7 executes ^1MAYHEM!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1862
+#: qcsrc/client/hud.qc:1689
 #, c-format
 msgid "%s^7 made ^1TWENTY SCORES IN A ROW!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1864
+#: qcsrc/client/hud.qc:1691
 #, c-format
 msgid "%s^7 is a ^1BERSERKER!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1867
+#: qcsrc/client/hud.qc:1694
 #, c-format
 msgid "%s^7 made ^1TWENTY FIVE SCORES IN A ROW!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1869
+#: qcsrc/client/hud.qc:1696
 #, c-format
 msgid "%s^7 inflicts ^1CARNAGE!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1872
+#: qcsrc/client/hud.qc:1699
 #, c-format
 msgid "%s^7 made ^1THIRTY SCORES IN A ROW!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1874
+#: qcsrc/client/hud.qc:1701
 #, c-format
 msgid "%s^7 unleashes ^1ARMAGEDDON!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1882
+#: qcsrc/client/hud.qc:1709
 #, c-format
 msgid "^1%s^1 was in the water for too long\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1884
+#: qcsrc/client/hud.qc:1711
 #, c-format
 msgid "^1%s^1 drowned\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1889
+#: qcsrc/client/hud.qc:1716
 #, c-format
 msgid "^1%s^1 was slimed\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1895
+#: qcsrc/client/hud.qc:1722
 #, c-format
 msgid "^1%s^1 found a hot place\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1897
+#: qcsrc/client/hud.qc:1724
 #, c-format
 msgid "^1%s^1 turned into hot slag\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1904
+#: qcsrc/client/hud.qc:1731
 #, c-format
 msgid "^1%s^1 tested gravity (and it worked)\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1906
+#: qcsrc/client/hud.qc:1733
 #, c-format
 msgid "^1%s^1 hit the ground with a crunch\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1911
+#: qcsrc/client/hud.qc:1738
 #, c-format
 msgid "^1%s^1 became a shooting star\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1917
+#: qcsrc/client/hud.qc:1744
 #, c-format
 msgid "^1%s^1 discovered a swamp\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1919
+#: qcsrc/client/hud.qc:1746
 #, c-format
 msgid "^1%s^1 is now conserved for centuries to come\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1924
+#: qcsrc/client/hud.qc:1751
 #, c-format
 msgid "^1%s^1 was mowed down by a turret \n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1936
+#: qcsrc/client/hud.qc:1763
 #, c-format
 msgid "^1%s^1 died in an accident\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1940
+#: qcsrc/client/hud.qc:1767
 #, c-format
 msgid "^1%s^1 was unfairly eliminated\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1946
+#: qcsrc/client/hud.qc:1773
 #, c-format
 msgid "^1%s^1 felt a little hot\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1948
+#: qcsrc/client/hud.qc:1775
 #, c-format
 msgid "^1%s^1 burnt to death\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1955
+#: qcsrc/client/hud.qc:1782
 #, c-format
 msgid "^1%s^1 needs a restart\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1962
+#: qcsrc/client/hud.qc:1789
 #, c-format
 msgid "^1%s^1 needs a restart after a %d scoring spree\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1964
+#: qcsrc/client/hud.qc:1791
 #, c-format
 msgid "^1%s^1 died with a %d kill spree\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1968
+#: qcsrc/client/hud.qc:1795
 #, c-format
 msgid "%s^7 got the %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1971
+#: qcsrc/client/hud.qc:1798
 #, c-format
 msgid "%s^7 lost the %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1974
+#: qcsrc/client/hud.qc:1801
 #, c-format
 msgid "%s^7 picked up the %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1977
+#: qcsrc/client/hud.qc:1804
 #, c-format
 msgid "%s^7 returned the %s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1980
+#: qcsrc/client/hud.qc:1807
 #, c-format
 msgid "%s^7 captured the %s%s\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1999
+#: qcsrc/client/hud.qc:1826
 #, c-format
 msgid "%s^7 has picked up the ball!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2004
+#: qcsrc/client/hud.qc:1831
 #, c-format
 msgid "%s^7 has dropped the ball!\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2017
+#: qcsrc/client/hud.qc:1842
 #, c-format
 msgid "You are now on: %s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2019
+#: qcsrc/client/hud.qc:1844
 #, c-format
 msgid ""
 "You have been moved into a different team to improve team balance\n"
 "You are now on: %s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2022
+#: qcsrc/client/hud.qc:1847
 msgid "^1Reconsider your tactics, camper!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2024
+#: qcsrc/client/hud.qc:1849
 msgid "^1Die camper!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2027
+#: qcsrc/client/hud.qc:1852
 msgid "^1You are reinserted into the game for running out of ammo..."
 msgstr ""
 
-#: qcsrc/client/hud.qc:2029
+#: qcsrc/client/hud.qc:1854
 msgid "^1You were killed for running out of ammo..."
 msgstr ""
 
-#: qcsrc/client/hud.qc:2032
+#: qcsrc/client/hud.qc:1857
 msgid "^1You need to preserve your health"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2034
+#: qcsrc/client/hud.qc:1859
 msgid "^1You grew too old without taking your medicine"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2037
+#: qcsrc/client/hud.qc:1862
 msgid "^1Don't go against team mates!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2039
+#: qcsrc/client/hud.qc:1864
 msgid "^1Don't shoot your team mates!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2044
+#: qcsrc/client/hud.qc:1869
 msgid "^1You need to be more careful!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2046
+#: qcsrc/client/hud.qc:1871
 msgid "^1You killed your own dumb self!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2051
+#: qcsrc/client/hud.qc:1876
 #, c-format
 msgid "^1Moron! You went against ^7%s^1, a team mate!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2053
+#: qcsrc/client/hud.qc:1878
 #, c-format
 msgid "^1Moron! You fragged ^7%s^1, a team mate!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2057
+#: qcsrc/client/hud.qc:1882
 msgid "^1First score"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2059
+#: qcsrc/client/hud.qc:1884
 msgid "^1First blood"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2063
+#: qcsrc/client/hud.qc:1888
 msgid "^1First casualty"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2065
+#: qcsrc/client/hud.qc:1890
 msgid "^1First victim"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2069
+#: qcsrc/client/hud.qc:1894
 #, c-format
 msgid "^1You scored against ^7%s^1 who was typing!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2071
+#: qcsrc/client/hud.qc:1896
 #, c-format
 msgid "^1You typefragged ^7%s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2075
+#: qcsrc/client/hud.qc:1900
 #, c-format
 msgid "^1You were scored against by ^7%s^1 while you were typing!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2077
+#: qcsrc/client/hud.qc:1902
 #, c-format
 msgid "^1You were typefragged by ^7%s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2081
+#: qcsrc/client/hud.qc:1906
 #, c-format
 msgid "^4You scored against ^7%s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2083
+#: qcsrc/client/hud.qc:1908
 #, c-format
 msgid "^4You fragged ^7%s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2087
+#: qcsrc/client/hud.qc:1912
 #, c-format
 msgid "^1You were scored against by ^7%s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2089
+#: qcsrc/client/hud.qc:1914
 #, c-format
 msgid "^1You were fragged by ^7%s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2094
+#: qcsrc/client/hud.qc:1919
 msgid "^1Watch your step!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2162 qcsrc/client/hud.qc:2163 qcsrc/client/hud.qc:2646
+#: qcsrc/client/hud.qc:1988 qcsrc/client/hud.qc:1989 qcsrc/client/hud.qc:2474
 #, c-format
 msgid "Player %d"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2949
+#: qcsrc/client/hud.qc:2779
 msgid "^1Intermediate 1 (+15.42)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2951 qcsrc/client/hud.qc:2993 qcsrc/client/hud.qc:3034
+#: qcsrc/client/hud.qc:2781 qcsrc/client/hud.qc:2823 qcsrc/client/hud.qc:2864
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3036
+#: qcsrc/client/hud.qc:2866
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3064
+#: qcsrc/client/hud.qc:2894
 msgid "^1You must answer before entering hud configure mode\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3067
+#: qcsrc/client/hud.qc:2897
 msgid "^2Name ^7instead of \"^1Unregistered player^7\" in stats"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3148
+#: qcsrc/client/hud.qc:2979
 msgid "A vote has been called for:"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3150
+#: qcsrc/client/hud.qc:2981
 msgid "Allow servers to store and display your name?"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3154
+#: qcsrc/client/hud.qc:2985
 msgid "^1Configure the HUD"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3158
+#: qcsrc/client/hud.qc:2989
 #, c-format
 msgid "Yes (%s): %d"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3160
+#: qcsrc/client/hud.qc:2991
 #, c-format
 msgid "No (%s): %d"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3667 qcsrc/client/hud.qc:3670 qcsrc/client/hud.qc:3672
+#: qcsrc/client/hud.qc:3494 qcsrc/client/hud.qc:3497 qcsrc/client/hud.qc:3499
 msgid "Personal best"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3685 qcsrc/client/hud.qc:3688 qcsrc/client/hud.qc:3690
+#: qcsrc/client/hud.qc:3512 qcsrc/client/hud.qc:3515 qcsrc/client/hud.qc:3517
 msgid "Server best"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4031
+#: qcsrc/client/hud.qc:3861
 msgid "^3Player^7: This is the chat area."
 msgstr ""
 
-#: qcsrc/client/hud.qc:4098
+#: qcsrc/client/hud.qc:3929
 #, c-format
 msgid "FPS: %.*f"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4164
+#: qcsrc/client/hud.qc:3996
 msgid "^1Observing"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4166
+#: qcsrc/client/hud.qc:3998
 #, c-format
 msgid "^1Spectating: ^7%s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4170
+#: qcsrc/client/hud.qc:4002
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4172
+#: qcsrc/client/hud.qc:4004
 #, c-format
 msgid "^1Press ^3%s^1 for another player"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4176
+#: qcsrc/client/hud.qc:4008
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4178
+#: qcsrc/client/hud.qc:4010
 #, c-format
 msgid "^1Press ^3%s^1 to observe"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4181
+#: qcsrc/client/hud.qc:4013
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4185
+#: qcsrc/client/hud.qc:4017
 msgid "^1Wait for your turn to join"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4191
+#: qcsrc/client/hud.qc:4023
 msgid "^1Match has already begun"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4193
+#: qcsrc/client/hud.qc:4025
 msgid "^1You have no more lives left"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4195 qcsrc/client/hud.qc:4198
+#: qcsrc/client/hud.qc:4027 qcsrc/client/hud.qc:4030
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4206
+#: qcsrc/client/hud.qc:4038
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4213
+#: qcsrc/client/hud.qc:4045
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4228
+#: qcsrc/client/hud.qc:4060
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4230
+#: qcsrc/client/hud.qc:4062
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4235
+#: qcsrc/client/hud.qc:4067
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr ""
 
-#: qcsrc/client/hud.qc:4237
+#: qcsrc/client/hud.qc:4069
 msgid "^2Waiting for others to ready up..."
 msgstr ""
 
-#: qcsrc/client/hud.qc:4243
+#: qcsrc/client/hud.qc:4075
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4264
+#: qcsrc/client/hud.qc:4096
 msgid "Teamnumbers are unbalanced!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4269
+#: qcsrc/client/hud.qc:4101
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4277
+#: qcsrc/client/hud.qc:4109
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr ""
 
-#: qcsrc/client/hud.qc:4279
+#: qcsrc/client/hud.qc:4111
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr ""
 
-#: qcsrc/client/hud.qc:4281
+#: qcsrc/client/hud.qc:4113
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4283
+#: qcsrc/client/hud.qc:4115
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr ""
 
-#: qcsrc/client/hud.qc:4319
+#: qcsrc/client/hud.qc:4153
 msgid " qu/s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4323
+#: qcsrc/client/hud.qc:4157
 msgid " m/s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4327
+#: qcsrc/client/hud.qc:4161
 msgid " km/h"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4331
+#: qcsrc/client/hud.qc:4165
 msgid " mph"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4335
+#: qcsrc/client/hud.qc:4169
 msgid " knots"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4686
+#: qcsrc/client/hud.qc:4814
 msgid "Automatically fixed wrong/missing panel numbers in _hud_panelorder\n"
 msgstr ""
 
@@ -1660,8 +1664,8 @@ msgstr ""
 msgid "%s was sniped by %s"
 msgstr ""
 
-#: qcsrc/server/w_uzi.qc:317 qcsrc/server/w_shotgun.qc:209
-#: qcsrc/server/w_minstanex.qc:290 qcsrc/server/w_nex.qc:253
+#: qcsrc/server/w_uzi.qc:317 qcsrc/server/w_shotgun.qc:215
+#: qcsrc/server/w_minstanex.qc:293 qcsrc/server/w_nex.qc:253
 #, c-format
 msgid "%s is now thinking with portals"
 msgstr ""
@@ -1710,37 +1714,37 @@ msgstr ""
 msgid "%s has run into %s's gravity bomb"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:577
+#: qcsrc/server/w_electro.qc:574
 #, c-format
 msgid "%s could not remember where they put plasma"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:579
+#: qcsrc/server/w_electro.qc:576
 #, c-format
 msgid "%s played with plasma"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:586
+#: qcsrc/server/w_electro.qc:583
 #, c-format
 msgid "%s just noticed %s's blue ball"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:588
+#: qcsrc/server/w_electro.qc:585
 #, c-format
 msgid "%s got in touch with %s's blue ball"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:593
+#: qcsrc/server/w_electro.qc:590
 #, c-format
 msgid "%s felt the electrifying air of %s's combo"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:595
+#: qcsrc/server/w_electro.qc:592
 #, c-format
 msgid "%s got too close to %s's blue beam"
 msgstr ""
 
-#: qcsrc/server/w_electro.qc:597
+#: qcsrc/server/w_electro.qc:594
 #, c-format
 msgid "%s was blasted by %s's blue beam"
 msgstr ""
@@ -1760,12 +1764,12 @@ msgstr ""
 msgid "%s was lasered to death by %s"
 msgstr ""
 
-#: qcsrc/server/w_shotgun.qc:213
+#: qcsrc/server/w_shotgun.qc:219
 #, c-format
 msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
 msgstr ""
 
-#: qcsrc/server/w_shotgun.qc:215
+#: qcsrc/server/w_shotgun.qc:221
 #, c-format
 msgid "%s was gunned by %s"
 msgstr ""
@@ -1775,12 +1779,12 @@ msgstr ""
 msgid "@!#%'n Tuba"
 msgstr ""
 
-#: qcsrc/server/w_tuba.qc:263
+#: qcsrc/server/w_tuba.qc:252
 #, c-format
 msgid "%s hurt his own ears with the @!#%%'n Tuba"
 msgstr ""
 
-#: qcsrc/server/w_tuba.qc:267
+#: qcsrc/server/w_tuba.qc:256
 #, c-format
 msgid "%s died of %s's great playing on the @!#%%'n Tuba"
 msgstr ""
@@ -1789,7 +1793,7 @@ msgstr ""
 msgid "MinstaNex"
 msgstr ""
 
-#: qcsrc/server/w_minstanex.qc:292 qcsrc/server/w_nex.qc:255
+#: qcsrc/server/w_minstanex.qc:295 qcsrc/server/w_nex.qc:255
 #, c-format
 msgid "%s has been vaporized by %s"
 msgstr ""
@@ -1828,27 +1832,27 @@ msgstr ""
 msgid "%s was cut down by %s"
 msgstr ""
 
-#: qcsrc/server/w_grenadelauncher.qc:379
+#: qcsrc/server/w_grenadelauncher.qc:383
 #, c-format
 msgid "%s tried out his own grenade"
 msgstr ""
 
-#: qcsrc/server/w_grenadelauncher.qc:381
+#: qcsrc/server/w_grenadelauncher.qc:385
 #, c-format
 msgid "%s detonated"
 msgstr ""
 
-#: qcsrc/server/w_grenadelauncher.qc:387
+#: qcsrc/server/w_grenadelauncher.qc:391
 #, c-format
 msgid "%s didn't see %s's grenade"
 msgstr ""
 
-#: qcsrc/server/w_grenadelauncher.qc:389
+#: qcsrc/server/w_grenadelauncher.qc:393
 #, c-format
 msgid "%s almost dodged %s's grenade"
 msgstr ""
 
-#: qcsrc/server/w_grenadelauncher.qc:391
+#: qcsrc/server/w_grenadelauncher.qc:395
 #, c-format
 msgid "%s ate %s's grenade"
 msgstr ""

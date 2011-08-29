@@ -7,9 +7,8 @@
 \menu_slist_showempty\Show empty servers
 \menu_slist_showfull\Show full servers that have no slots available
 \net_slist_pause\Pause updating the server list to prevent servers from "jumping around"
-\XonoticMultiplayerDialog/Info\Show more information about the currently highlighted server
+\XonoticMultiplayerDialog/Info...\Show more information about the currently highlighted server
 \XonoticMultiplayerDialog/Bookmark\Bookmark the currently highlighted server so that it's faster to find in the future
-\XonoticMultiplayerDialog/Havoc\Change to Havoc mode which has some modifications to the gameplay
 \XonoticMultiplayerDialog/Create\Host your own game
 \XonoticMultiplayerDialog/Demos\Browse and view demos
 \XonoticMultiplayerDialog/Player Setup\Customize your player settings
@@ -45,8 +44,8 @@
 \g_minstagib\Players will be given the Minstanex, which is a railgun with infinite damage. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode is a laser which does not inflict any damage and is good for doing trickjumps.
 \g_nix\No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon.
 \g_nix_with_laser\Always carry the laser as an additional weapon in Nix
-\XonoticMultiplayerDialog/All\Select all maps
-\XonoticMultiplayerDialog/None\Unselect all maps
+\XonoticMultiplayerDialog/Select all\Select all maps
+\XonoticMultiplayerDialog/Select none\Unselect all maps
 
 
 \XonoticMultiplayerDialog/Timedemo\Benchmark how fast your computer can run the highlighted demo
@@ -69,7 +68,7 @@
 \crosshair_alpha\Adjust the opacity of the crosshair
 \crosshair_color\Adjust the crosshair color
 \sbar_hudselector\Use the old HUD layout
-\XonoticMultiplayerDialog/Radar, HUD & Waypoints...\Adjust the radar, HUD and waypoints
+\XonoticMultiplayerDialog/Waypoints setup...\-
 \_cl_name\Name under which you will appear in the game
 
 \XonoticSettingsDialog\Change the game settings
@@ -152,16 +151,16 @@
 \r_damageblur\Amount of motion blur when hurt - 0.4 recommended
 
 \XonoticSettingsDialog/Audio\Audio settings
+\mastervolume\-
 \bgmvolume\-
-\volume\-
 \snd_staticvolume\-
-\snd_worldchannel0volume\-
-\snd_entchannel3volume\-
-\snd_playerchannel6volume\-
-\snd_playerchannel7volume\-
-\snd_entchannel4volume\-
-\snd_playerchannel2volume\-
-\snd_playerchannel1volume\-
+\snd_channel0volume\-
+\snd_channel3volume\-
+\snd_channel6volume\-
+\snd_channel7volume\-
+\snd_channel4volume\-
+\snd_channel2volume\-
+\snd_channel1volume\-
 \snd_speed\Sound output frequency
 \snd_channels\Number of channels for the sound output
 \snd_swapstereo\Swap left/right channels

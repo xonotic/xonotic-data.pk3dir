@@ -295,6 +295,7 @@ void cvar_changes_init()
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_chat_flood_");
+		BADPREFIX("g_playerstats_");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("rcon_");
 		BADPREFIX("settemp_");
@@ -307,10 +308,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_weaponstats_");
 
 		// these can contain player IDs, so better hide
-		BADCVAR("g_forced_team_red");
-		BADCVAR("g_forced_team_blue");
-		BADCVAR("g_forced_team_yellow");
-		BADCVAR("g_forced_team_pink");
+		BADPREFIX("g_forced_team_");
 
 		// mapinfo
 		BADCVAR("fraglimit");
@@ -418,6 +416,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_ctf_win_mode");
 		BADCVAR("g_domination_point_limit");
+		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
 		BADCVAR("g_fullbrightplayers");
 		BADCVAR("g_keyhunt_point_limit");
@@ -431,15 +430,17 @@ void cvar_changes_init()
 		BADCVAR("g_maplist_votable_abstain");
 		BADCVAR("g_maplist_votable_nodetail");
 		BADCVAR("g_maplist_votable_suggestions");
+		BADCVAR("g_maxplayers");
 		BADCVAR("g_minstagib");
+		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_runematch_point_limit");
 		BADCVAR("g_start_delay");
+		BADCVAR("g_warmup");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
 		BADCVAR("hostname");
 		BADCVAR("log_file");
 		BADCVAR("maxplayers");
-		BADCVAR("g_maxplayers");
 		BADCVAR("minplayers");
 		BADCVAR("net_address");
 		BADCVAR("port");
@@ -467,10 +468,10 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_commands");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
-		BADCVAR("timelimit_override");
-		BADCVAR("g_warmup");
-		BADPREFIX("g_warmup_");
+		BADCVAR("sys_ticrate");
 		BADCVAR("teamplay_mode");
+		BADCVAR("timelimit_override");
+		BADPREFIX("g_warmup_");
 
 		if(autocvar_g_minstagib)
 		{
@@ -1586,6 +1587,7 @@ void NextLevel()
 	FOR_EACH_CLIENT(e)
 		PlayerStats_AddGlobalInfo(e);
 	PlayerStats_Shutdown();
+	WeaponStats_Shutdown();
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");

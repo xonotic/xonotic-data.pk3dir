@@ -53,7 +53,7 @@ void W_Porto_Fail (float failhard)
 
 void W_Porto_Remove (entity p)
 {
-	if(p.porto_current)
+	if(p.porto_current.realowner == p && p.porto_current.classname == "porto")
 	{
 		entity oldself;
 		oldself = self;

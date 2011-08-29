@@ -4,6 +4,7 @@
 #include "role_keyhunt.qc"
 #include "role_freezetag.qc"
 #include "role_keepaway.qc"
+#include "role_assault.qc"
 #include "roles.qc"
 
 void havocbot_ai()
@@ -259,15 +260,12 @@ void havocbot_bunnyhop(vector dir)
 	if(autocvar_g_midair)
 		return;
 
-	// Don't jump when using some weapons
-	/*
+	// Don't jump when attacking
 	if(self.aistatus & AI_STATUS_ATTACKING)
-	if(self.weapon == WEP_RIFLE)
 		return;
 
 	if(self.goalcurrent.classname == "player")
 		return;
-	*/
 
 	maxspeed = autocvar_sv_maxspeed;
 
@@ -488,7 +486,7 @@ void havocbot_movetogoal()
 	// Handling of jump pads
 	if(self.jumppadcount)
 	{
-		// If got stuck on the jump pad try to reach the farthest visible item
+		// If got stuck on the jump pad try to reach the farthest visible waypoint
 		if(self.aistatus & AI_STATUS_OUT_JUMPPAD)
 		{
 			if(fabs(self.velocity_z)<50)
@@ -496,10 +494,8 @@ void havocbot_movetogoal()
 				local entity head, newgoal;
 				local float distance, bestdistance;
 
-				for (head = findchainfloat(bot_pickup, TRUE); head; head = head.chain)
+				for (head = findchain(classname, "waypoint"); head; head = head.chain)
 				{
-					if(head.classname=="worldspawn")
-						continue;
 
 					distance = vlen(head.origin - self.origin);
 					if(distance>1000)
@@ -533,11 +529,13 @@ void havocbot_movetogoal()
 		{
 			if(self.velocity_z>0)
 			{
-				local float threshold;
+				float threshold, sxy;
+				vector velxy = self.velocity; velxy_z = 0;
+				sxy = vlen(velxy);
 				threshold = maxspeed * 0.2;
-				if(fabs(self.velocity_x) < threshold  &&  fabs(self.velocity_y) < threshold)
+				if(sxy < threshold)
 				{
-					dprint("Warning: ", self.netname, " got stuck on a jumppad, trying to get out of it now\n");
+					dprint("Warning: ", self.netname, " got stuck on a jumppad (velocity in xy is ", ftos(sxy), "), trying to get out of it now\n");
 					self.aistatus |= AI_STATUS_OUT_JUMPPAD;
 				}
 				return;
@@ -765,7 +763,7 @@ void havocbot_movetogoal()
 			// (only when the bot is on the ground or jumping intentionally)
 			self.aistatus &~= AI_STATUS_DANGER_AHEAD;
 
-			if(trace_fraction == 1 && self.jumppadcount == 0)
+			if(trace_fraction == 1 && self.jumppadcount == 0 && !self.goalcurrent.wphardwired )
 			if(self.flags & FL_ONGROUND || self.aistatus & AI_STATUS_RUNNING || self.BUTTON_JUMP == TRUE)
 			{
 				// Look downwards
@@ -788,15 +786,9 @@ void havocbot_movetogoal()
 						if(tracebox_hits_trigger_hurt(dst_ahead, self.mins, self.maxs, trace_endpos))
 						{
 							// Remove dangerous dynamic goals from stack
-							if (self.goalcurrent.classname == "player" || self.goalcurrent.classname == "droppedweapon")
-							{
-								navigation_poproute();
-								if(self.goalcurrent)
-									gco = (self.goalcurrent.absmin + self.goalcurrent.absmax) * 0.5;
-							}
-							// try to stop
-							flatdir = '0 0 0';
-							evadeobstacle = normalize(self.velocity) * -1;
+							dprint("bot ", self.netname, " avoided the goal ", self.goalcurrent.classname, " ", etos(self.goalcurrent), " because it led to a dangerous path; goal stack cleared\n");
+							navigation_clearroute();
+							return;
 						}
 					}
 				}
@@ -862,7 +854,7 @@ void havocbot_movetogoal()
 void havocbot_chooseenemy()
 {
 	local entity head, best, head2;
-	local float rating, bestrating, i, f;
+	local float rating, bestrating, i, hf;
 	local vector eye, v;
 	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 	{
@@ -890,7 +882,7 @@ void havocbot_chooseenemy()
 			if (self.health > 30)
 			{
 				// remain tracking him for a shot while (case he went after a small corner or pilar
-				self.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
+				self.havocbot_chooseenemy_finished = time + 0.5;
 				return;
 			}
 			// enemy isn't visible, or is far away, or we're injured severely
@@ -907,7 +899,13 @@ void havocbot_chooseenemy()
 	bestrating = 100000000;
 	head = head2 = findchainfloat(bot_attack, TRUE);
 
+	// Backup hit flags
+	hf = self.dphitcontentsmask;
+
 	// Search for enemies, if no enemy can be seen directly try to look through transparent objects
+
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+
 	for(;;)
 	{
 		while (head)
@@ -936,16 +934,14 @@ void havocbot_chooseenemy()
 			break;
 
 		// Set flags to see through transparent objects
-		f = self.dphitcontentsmask;
-		self.dphitcontentsmask = DPCONTENTS_OPAQUE;
+		self.dphitcontentsmask |= DPCONTENTS_OPAQUE;
 
 		head = head2;
 		++i;
 	}
 
-	// Restore hit flags if needed
-	if(i)
-		self.dphitcontentsmask = f;
+	// Restore hit flags
+	self.dphitcontentsmask = hf;
 
 	self.enemy = best;
 	self.havocbot_stickenemy = TRUE;
