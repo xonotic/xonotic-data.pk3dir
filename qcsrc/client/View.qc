@@ -884,17 +884,13 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	if(autocvar_hud_postprocessing)
+	if(autocvar_hud_postprocessing) // TODO: Remove this code and re-do the postprocess handling in the engine, where it properly belongs.
 	{
-		// all of this should be done in the engine eventually
-
 		// enable or disable rendering types if they are used or not
-		if(cvar("r_glsl_postprocess_uservec1_enable") != (cvar("hud_postprocessing_maxbluralpha") != 0))
-			cvar_set("r_glsl_postprocess_uservec1_enable", ftos(cvar("hud_postprocessing_maxbluralpha") != 0));
-		if(cvar("r_glsl_postprocess_uservec2_enable") != (cvar("hud_powerup") != 0))
-			cvar_set("r_glsl_postprocess_uservec2_enable", ftos(cvar("hud_powerup") != 0));
-
-		// lets apply the postprocess effects from the previous two functions if needed
+		if(cvar("r_glsl_postprocess_uservec1_enable") != (autocvar_hud_postprocessing_maxbluralpha != 0)) { cvar_set("r_glsl_postprocess_uservec1_enable", ftos(autocvar_hud_postprocessing_maxbluralpha != 0)); }
+		if(cvar("r_glsl_postprocess_uservec2_enable") != (autocvar_hud_powerup != 0)) { cvar_set("r_glsl_postprocess_uservec2_enable", ftos(autocvar_hud_powerup != 0)); }
+		
+		// blur postprocess handling done first (used by hud_damage and hud_contents)
 		if((damage_blurpostprocess_x || content_blurpostprocess_x) && autocvar_chase_active >= 0) // not while the event chase camera is active
 		{
 			float blurradius = bound(0, damage_blurpostprocess_y + content_blurpostprocess_y, autocvar_hud_postprocessing_maxblurradius);
@@ -913,19 +909,16 @@ void CSQC_UpdateView(float w, float h)
 			old_bluralpha = 0;
 		}
 
+		// edge detection postprocess handling done second (used by hud_powerup) 
 		float sharpen_intensity, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
 		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
 		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
-		
-		// Check the health stat to see whether the player is still alive, then remove the effect if they are dead so it isn't there when they respawn...
-		// then bound the given value since powerup warning time is 5 seconds, so fade the effect from 5 seconds down.
-		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5);
-
+		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
 		if(autocvar_hud_powerup && sharpen_intensity > 0 && autocvar_chase_active >= 0) // not while the event chase camera is active
 		{
 			if(sharpen_intensity != old_sharpen_intensity) // reduce cvar_set spam as much as possible
 			{
-				cvar_set("r_glsl_postprocess_uservec2", strcat(ftos((sharpen_intensity / 5) * cvar("hud_powerup")), " ", ftos(-sharpen_intensity * cvar("hud_powerup")), " 0 0"));
+				cvar_set("r_glsl_postprocess_uservec2", strcat(ftos((sharpen_intensity / 5) * autocvar_hud_powerup), " ", ftos(-sharpen_intensity * autocvar_hud_powerup), " 0 0"));
 				old_sharpen_intensity = sharpen_intensity;
 			}
 		}
