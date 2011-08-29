@@ -411,10 +411,10 @@ float waypoint_load_links()
 
 			if(!found)
 			{
-				// can't find that waypoint
-				fclose(file);
-				return FALSE;
+				dprint("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from.origin),"\n");
+				continue;
 			}
+
 		}
 
 		// Search "to" waypoint
@@ -433,9 +433,8 @@ float waypoint_load_links()
 
 		if(!found)
 		{
-			// can't find that waypoint
-			fclose(file);
-			return FALSE;
+			dprint("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to.origin),"\n");
+			continue;
 		}
 
 		++c;
