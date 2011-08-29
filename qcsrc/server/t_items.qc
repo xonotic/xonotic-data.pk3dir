@@ -389,8 +389,9 @@ float Item_GiveTo(entity item, entity player)
 			}
 		}
 
+		print("^xf80 ------------------------\n");
 		if (item.flags & FL_WEAPON)
-		if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway && !(g_weapon_stay == 3 && !e.spawnshieldtime)))
+			if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway && g_weapon_stay == 0))
 		{
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
