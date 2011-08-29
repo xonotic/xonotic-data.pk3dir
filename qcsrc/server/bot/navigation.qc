@@ -134,35 +134,41 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			if (trace_fraction < 1)
 			{
 				// check if we can walk over this obstacle, possibly by jumpstepping
-				tracebox(org + jumpstepheightvec, m1, m2, move + jumpstepheightvec, movemode, e);
+				tracebox(org + stepheightvec, m1, m2, move + jumpstepheightvec, movemode, e);
 				if (trace_fraction < 1 || trace_startsolid)
 				{
-					if(autocvar_bot_debug_tracewalk)
-						debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
-
-					// check for doors
-					traceline( org, move, movemode, e);
-					if ( trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
+					tracebox(org + jumpstepheightvec, m1, m2, move + jumpstepheightvec, movemode, e);
+					if (trace_fraction < 1 || trace_startsolid)
 					{
-						local vector nextmove;
-						move = trace_endpos;
-						while(trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
+						if(autocvar_bot_debug_tracewalk)
+							debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
+
+						// check for doors
+						traceline( org, move, movemode, e);
+						if ( trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
 						{
-							nextmove = move + (dir * stepdist);
-							traceline( move, nextmove, movemode, e);
-							move = nextmove;
+							local vector nextmove;
+							move = trace_endpos;
+							while(trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
+							{
+								nextmove = move + (dir * stepdist);
+								traceline( move, nextmove, movemode, e);
+								move = nextmove;
+							}
+						}
+						else
+						{
+							if(autocvar_bot_debug_tracewalk)
+								debugnodestatus(trace_endpos, DEBUG_NODE_FAIL);
+
+							//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
+							//te_explosion(trace_endpos);
+							//print(ftos(e.dphitcontentsmask), "\n");
+							return FALSE; // failed
 						}
 					}
 					else
-					{
-						if(autocvar_bot_debug_tracewalk)
-							debugnodestatus(trace_endpos, DEBUG_NODE_FAIL);
-
-						//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
-						//te_explosion(trace_endpos);
-						//print(ftos(e.dphitcontentsmask), "\n");
-						return FALSE; // failed
-					}
+						move = trace_endpos;
 				}
 				else
 					move = trace_endpos;
