@@ -1,4 +1,5 @@
 .float healthvalue;
 .float armorvalue;
 .float sameteam;
+.float fadedelay;
 
