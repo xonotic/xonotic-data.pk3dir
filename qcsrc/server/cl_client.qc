@@ -2396,29 +2396,30 @@ float SpectateNext() {
 	
 	if (other)
 		self.enemy = other;
-	
+
 	if(self.enemy.classname == "player") {
-		if(self.enemy.vehicle)
-		{	   
-			msg_entity = self;
-			WriteByte(MSG_ONE, SVC_SETVIEWPORT);
-			WriteEntity(MSG_ONE, self.enemy);
-			//stuffcmd(self, "set viewsize $tmpviewsize \n");
-			self.movetype = MOVETYPE_NONE;
-			accuracy_resend(self);
-		}
-		else
-		{
-			msg_entity = self;
-			WriteByte(MSG_ONE, SVC_SETVIEW);
-			WriteEntity(MSG_ONE, self.enemy);
-			//stuffcmd(self, "set viewsize $tmpviewsize \n");
-			self.movetype = MOVETYPE_NONE;
-			accuracy_resend(self);
-			if(!SpectateUpdate())
-				PutObserverInServer();
-		}
-		return 1;
+	    if(self.enemy.vehicle)
+	    {	   
+            msg_entity = self;
+            WriteByte(MSG_ONE, SVC_SETVIEWPORT);
+            WriteEntity(MSG_ONE, self.enemy);
+            //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            self.movetype = MOVETYPE_NONE;
+            accuracy_resend(self);
+	    }
+	    else 
+	    {	        
+            msg_entity = self;
+            WriteByte(MSG_ONE, SVC_SETVIEW);
+            WriteEntity(MSG_ONE, self.enemy);
+            //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            self.movetype = MOVETYPE_NONE;
+            accuracy_resend(self);
+
+            if(!SpectateUpdate())
+                PutObserverInServer();
+        }
+        return 1;
 	} else {
 		return 0;
 	}
