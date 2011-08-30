@@ -1413,7 +1413,7 @@ msgstr "Daño colateral:"
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:41
 #: qcsrc/menu/xonotic/dialog_settings_video.c:109
 msgid "Apply immediately"
-msgstr "Aplicar imediatamente"
+msgstr "Aplicar inmediatamente"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:5
 msgid "Waypoints"
