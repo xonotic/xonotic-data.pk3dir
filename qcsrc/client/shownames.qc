@@ -10,7 +10,7 @@ void Draw_ShowNames(entity ent)
 	if(!autocvar_hud_shownames)
 		return;
 
-	if(ent.sv_entnum == player_localentnum && !autocvar_chase_active)
+	if((ent.sv_entnum == player_localentnum) && !(autocvar_hud_shownames_self && autocvar_chase_active))
 		return;
 
 	makevectors(view_angles);
