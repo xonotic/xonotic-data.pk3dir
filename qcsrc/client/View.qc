@@ -417,22 +417,14 @@ void CSQC_UpdateView(float w, float h)
 
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 
-	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0) || intermission > 1)
-	{
-		R_SetView(VF_ORIGIN, freeze_org);
-		R_SetView(VF_ANGLES, freeze_ang);
-	}
-	else
-	{
-		freeze_org = R_SetView3fv(VF_ORIGIN);
-		freeze_ang = R_SetView3fv(VF_ANGLES);
-	}
-
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
 		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || intermission)
 		{
+			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
+			vector current_view_origin = R_SetView3fv(VF_ORIGIN);
+			
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
 			// Ideally, there should be another way to enable third person cameras, such as through R_SetView()
 			if(!autocvar_chase_active)
@@ -447,13 +439,12 @@ void CSQC_UpdateView(float w, float h)
 			vector eventchase_target_origin;
 			makevectors(view_angles);
 			// pass 1, used to check where the camera would go and obtain the trace_fraction
-			eventchase_target_origin = freeze_org - v_forward * eventchase_current_distance;
-
-			WarpZone_TraceLine(freeze_org, eventchase_target_origin, MOVE_WORLDONLY, self);
+			eventchase_target_origin = current_view_origin - v_forward * eventchase_current_distance;
+			WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
 			// pass 2, also multiplying view_forward with trace_fraction, to prevent the camera from going through walls
 			// The 0.1 subtraction is to not limit the camera precisely at the wall surface, as that allows the view to poke through
-			eventchase_target_origin = freeze_org - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
-			WarpZone_TraceLine(freeze_org, eventchase_target_origin, MOVE_WORLDONLY, self);
+			eventchase_target_origin = current_view_origin - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
+			WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
 
 			R_SetView(VF_ORIGIN, trace_endpos);
 			R_SetView(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
@@ -463,6 +454,18 @@ void CSQC_UpdateView(float w, float h)
 			cvar_set("chase_active", "0");
 			eventchase_current_distance = 0; // start from 0 next time
 		}
+	}
+	
+	// do lockview after event chase camera so that it still applies whenever necessary.
+	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0) || intermission > 1)
+	{
+		R_SetView(VF_ORIGIN, freeze_org);
+		R_SetView(VF_ANGLES, freeze_ang);
+	}
+	else
+	{
+		freeze_org = R_SetView3fv(VF_ORIGIN);
+		freeze_ang = R_SetView3fv(VF_ANGLES);
 	}
 
 	WarpZone_FixView();
@@ -803,7 +806,6 @@ void CSQC_UpdateView(float w, float h)
 	}
 	
 	if(autocvar_hud_damage && !autocvar_chase_active)
-
 	{
 		splash_size_x = max(vid_conwidth, vid_conheight);
 		splash_size_y = max(vid_conwidth, vid_conheight);
@@ -885,17 +887,13 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	if(autocvar_hud_postprocessing)
+	if(autocvar_hud_postprocessing) // TODO: Remove this code and re-do the postprocess handling in the engine, where it properly belongs.
 	{
-		// all of this should be done in the engine eventually
-
 		// enable or disable rendering types if they are used or not
-		if(cvar("r_glsl_postprocess_uservec1_enable") != (cvar("hud_postprocessing_maxbluralpha") != 0))
-			cvar_set("r_glsl_postprocess_uservec1_enable", ftos(cvar("hud_postprocessing_maxbluralpha") != 0));
-		if(cvar("r_glsl_postprocess_uservec2_enable") != (cvar("hud_powerup") != 0))
-			cvar_set("r_glsl_postprocess_uservec2_enable", ftos(cvar("hud_powerup") != 0));
-
-		// lets apply the postprocess effects from the previous two functions if needed
+		if(cvar("r_glsl_postprocess_uservec1_enable") != (autocvar_hud_postprocessing_maxbluralpha != 0)) { cvar_set("r_glsl_postprocess_uservec1_enable", ftos(autocvar_hud_postprocessing_maxbluralpha != 0)); }
+		if(cvar("r_glsl_postprocess_uservec2_enable") != (autocvar_hud_powerup != 0)) { cvar_set("r_glsl_postprocess_uservec2_enable", ftos(autocvar_hud_powerup != 0)); }
+		
+		// blur postprocess handling done first (used by hud_damage and hud_contents)
 		if((damage_blurpostprocess_x || content_blurpostprocess_x) && autocvar_chase_active >= 0) // not while the event chase camera is active
 		{
 			float blurradius = bound(0, damage_blurpostprocess_y + content_blurpostprocess_y, autocvar_hud_postprocessing_maxblurradius);
@@ -914,19 +912,18 @@ void CSQC_UpdateView(float w, float h)
 			old_bluralpha = 0;
 		}
 
-		float sharpen_intensity;
-		if (getstatf(STAT_STRENGTH_FINISHED) - time > 0)
-			sharpen_intensity += (getstatf(STAT_STRENGTH_FINISHED) - time);
-		if (getstatf(STAT_INVINCIBLE_FINISHED) - time > 0)
-			sharpen_intensity += (getstatf(STAT_INVINCIBLE_FINISHED) - time);
-
+		// edge detection postprocess handling done second (used by hud_powerup) 
+		float sharpen_intensity, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
+		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
+		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
+		
+		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
+		
 		if(autocvar_hud_powerup && sharpen_intensity > 0 && autocvar_chase_active >= 0) // not while the event chase camera is active
 		{
-			sharpen_intensity = bound(0, sharpen_intensity, 5); // powerup warning time is 5 seconds, so fade the effect from there
-
 			if(sharpen_intensity != old_sharpen_intensity) // reduce cvar_set spam as much as possible
 			{
-				cvar_set("r_glsl_postprocess_uservec2", strcat("0 ", ftos(-sharpen_intensity * cvar("hud_powerup")), " 0 0"));
+				cvar_set("r_glsl_postprocess_uservec2", strcat(ftos((sharpen_intensity / 5) * autocvar_hud_powerup), " ", ftos(-sharpen_intensity * autocvar_hud_powerup), " 0 0"));
 				old_sharpen_intensity = sharpen_intensity;
 			}
 		}

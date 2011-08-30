@@ -260,15 +260,12 @@ void havocbot_bunnyhop(vector dir)
 	if(autocvar_g_midair)
 		return;
 
-	// Don't jump when using some weapons
-	/*
+	// Don't jump when attacking
 	if(self.aistatus & AI_STATUS_ATTACKING)
-	if(self.weapon == WEP_RIFLE)
 		return;
 
 	if(self.goalcurrent.classname == "player")
 		return;
-	*/
 
 	maxspeed = autocvar_sv_maxspeed;
 
@@ -766,7 +763,7 @@ void havocbot_movetogoal()
 			// (only when the bot is on the ground or jumping intentionally)
 			self.aistatus &~= AI_STATUS_DANGER_AHEAD;
 
-			if(trace_fraction == 1 && self.jumppadcount == 0)
+			if(trace_fraction == 1 && self.jumppadcount == 0 && !self.goalcurrent.wphardwired )
 			if(self.flags & FL_ONGROUND || self.aistatus & AI_STATUS_RUNNING || self.BUTTON_JUMP == TRUE)
 			{
 				// Look downwards
@@ -789,15 +786,9 @@ void havocbot_movetogoal()
 						if(tracebox_hits_trigger_hurt(dst_ahead, self.mins, self.maxs, trace_endpos))
 						{
 							// Remove dangerous dynamic goals from stack
-							if (self.goalcurrent.classname == "player" || self.goalcurrent.classname == "droppedweapon")
-							{
-								navigation_poproute();
-								if(self.goalcurrent)
-									gco = (self.goalcurrent.absmin + self.goalcurrent.absmax) * 0.5;
-							}
-							// try to stop
-							flatdir = '0 0 0';
-							evadeobstacle = normalize(self.velocity) * -1;
+							dprint("bot ", self.netname, " avoided the goal ", self.goalcurrent.classname, " ", etos(self.goalcurrent), " because it led to a dangerous path; goal stack cleared\n");
+							navigation_clearroute();
+							return;
 						}
 					}
 				}
@@ -891,7 +882,7 @@ void havocbot_chooseenemy()
 			if (self.health > 30)
 			{
 				// remain tracking him for a shot while (case he went after a small corner or pilar
-				self.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
+				self.havocbot_chooseenemy_finished = time + 0.5;
 				return;
 			}
 			// enemy isn't visible, or is far away, or we're injured severely
