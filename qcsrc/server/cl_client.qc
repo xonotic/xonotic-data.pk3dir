@@ -2359,38 +2359,66 @@ float SpectateUpdate() {
 	return 1;
 }
 
+
+// Returns next available player to spectate if g_ca_spectate_enemies == 0
+entity CA_SpectateNext(entity start) {
+	if (start.team == self.team) {
+		return start;
+	}
+	
+	other = start;
+	// continue from current player
+	while(other && other.team != self.team) {
+		other = find(other, classname, "player");
+	}
+	
+	if (!other) {
+		// restart from begining
+		other = find(other, classname, "player");
+		while(other && other.team != self.team) {
+			other = find(other, classname, "player");
+		}
+	}
+	
+	return other;
+}
+
 float SpectateNext() {
 	other = find(self.enemy, classname, "player");
-
-	if (!other)
-		other = find(other, classname, "player");
-
+	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer) {
+		// CA and ca players when spectating enemies is forbidden
+		other = CA_SpectateNext(other);
+	} else {
+		// other modes and ca spectators or spectating enemies is allowed
+		if (!other)
+			other = find(other, classname, "player");
+	}
+	
 	if (other)
 		self.enemy = other;
-
+	
 	if(self.enemy.classname == "player") {
-	    if(self.enemy.vehicle)
-	    {	   
-            msg_entity = self;
-            WriteByte(MSG_ONE, SVC_SETVIEWPORT);
-            WriteEntity(MSG_ONE, self.enemy);
-            //stuffcmd(self, "set viewsize $tmpviewsize \n");
-            self.movetype = MOVETYPE_NONE;
-            accuracy_resend(self);
-	    }
-	    else 
-	    {	        
-            msg_entity = self;
-            WriteByte(MSG_ONE, SVC_SETVIEW);
-            WriteEntity(MSG_ONE, self.enemy);
-            //stuffcmd(self, "set viewsize $tmpviewsize \n");
-            self.movetype = MOVETYPE_NONE;
-            accuracy_resend(self);
-
-            if(!SpectateUpdate())
-                PutObserverInServer();
-        }
-        return 1;
+		if(self.enemy.vehicle)
+		{	   
+			msg_entity = self;
+			WriteByte(MSG_ONE, SVC_SETVIEWPORT);
+			WriteEntity(MSG_ONE, self.enemy);
+			//stuffcmd(self, "set viewsize $tmpviewsize \n");
+			self.movetype = MOVETYPE_NONE;
+			accuracy_resend(self);
+		}
+		else
+		{
+			msg_entity = self;
+			WriteByte(MSG_ONE, SVC_SETVIEW);
+			WriteEntity(MSG_ONE, self.enemy);
+			//stuffcmd(self, "set viewsize $tmpviewsize \n");
+			self.movetype = MOVETYPE_NONE;
+			accuracy_resend(self);
+			if(!SpectateUpdate())
+				PutObserverInServer();
+		}
+		return 1;
 	} else {
 		return 0;
 	}
