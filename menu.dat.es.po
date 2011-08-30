@@ -44,7 +44,7 @@ msgstr ""
 
 #: qcsrc/menu/item/gecko.c:49
 msgid "Browser not initialized!"
-msgstr "Navegador no inicializado!"
+msgstr "¡Navegador no inicializado!"
 
 #: qcsrc/menu/item/label.c:63
 #, c-format
@@ -841,7 +841,7 @@ msgstr "Seleccionar ninguno"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:119
 msgid "Start Multiplayer!"
-msgstr "Comenzar Multijugador!"
+msgstr "¡Comenzar Multijugador!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:154
 msgid "Capture limit:"
@@ -873,11 +873,11 @@ msgstr "Configuración del juego:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:28
 msgid "Allow spectating"
-msgstr "Permitir espectador"
+msgstr "Permitir espectadores"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:31
 msgid "Spawn shield:"
-msgstr "Proteccion del colocado:"
+msgstr "Tiempo de protección al resucitar:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:36
 msgid "Game speed:"
@@ -1023,7 +1023,7 @@ msgstr "NIX"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:74
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:205
 msgid "Rocket Flying"
-msgstr "Vuelo de cohete"
+msgstr "Volar con Cohetes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:78
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:264
@@ -1047,7 +1047,7 @@ msgstr "Gancho"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:86
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:173
 msgid "Midair"
-msgstr "aire"
+msgstr "No saltes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:176
@@ -1167,7 +1167,7 @@ msgstr "Información..."
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:72
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:317
 msgid "Join!"
-msgstr "Ingresar!"
+msgstr "¡Ingresar!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:5
 msgid "Server Information"
@@ -1287,7 +1287,7 @@ msgstr "Campo de visión:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:92
 msgid "View bobbing:"
-msgstr "Ver flotando:"
+msgstr "Vista flotante:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:96
 msgid "Zoom factor:"
@@ -1312,11 +1312,11 @@ msgstr "Por arma"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:130
 msgid "Crosshair size:"
-msgstr "Tamaño da mira:"
+msgstr "Tamaño de mira:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
-msgstr "Transparencia da mira:"
+msgstr "Transparencia de mira:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
 msgid "Crosshair color:"
@@ -1413,7 +1413,7 @@ msgstr "Daño colateral:"
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:41
 #: qcsrc/menu/xonotic/dialog_settings_video.c:109
 msgid "Apply immediately"
-msgstr "Aplicar imediatamente"
+msgstr "Aplicar inmediatamente"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:5
 msgid "Waypoints"
@@ -2266,11 +2266,11 @@ msgstr "Jugador"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:59
 msgid "Instant action! (random map with bots)"
-msgstr "Accion instantanea! (Mapa aleatorio con bots)"
+msgstr "¡Accion instantanea! (Mapa aleatorio con bots)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:80
 msgid "Start Singleplayer!"
-msgstr "Comenzar!"
+msgstr "¡Comenzar!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.c:4
 msgid "Winner"
@@ -2306,7 +2306,7 @@ msgstr "espectador"
 
 #: qcsrc/menu/xonotic/mainwindow.c:35 qcsrc/menu/xonotic/mainwindow.c:38
 msgid "Do not press this button again!"
-msgstr "No vuelva a presionar este boton!"
+msgstr "¡No vuelva a presionar este boton!"
 
 #: qcsrc/menu/xonotic/maplist.c:278
 msgid ""
@@ -2433,7 +2433,7 @@ msgstr "^1%s TEST BUILD"
 #: qcsrc/menu/xonotic/util.qc:432
 #, c-format
 msgid "Update to %s now!"
-msgstr "Actualizar para %s ahora!"
+msgstr "¡Actualizar para %s ahora!"
 
 #: qcsrc/menu/xonotic/util.qc:501
 msgid ""
