@@ -310,6 +310,7 @@ float autocvar_hud_showbinds;
 float autocvar_hud_showbinds_limit;
 float autocvar_hud_shownames;
 float autocvar_hud_shownames_enemies;
+float autocvar_hud_shownames_self;
 float autocvar_hud_shownames_status;
 float autocvar_hud_shownames_statusbar_height;
 float autocvar_hud_shownames_aspect;
