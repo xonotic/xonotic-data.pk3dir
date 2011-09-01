@@ -1256,9 +1256,6 @@ void readlevelcvars(void)
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
 
-	if (!g_weapon_stay && (cvar("deathmatch") == 2))
-		g_weapon_stay = 1;
-
 	g_ghost_items = cvar("g_ghost_items");
 
 	if(g_ghost_items >= 1)
