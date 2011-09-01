@@ -702,10 +702,6 @@ void spawnfunc_worldspawn (void)
 		if(self.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
 			bot_waypoints_for_items = 0;
 
-	// for setting by mapinfo
-	q3acompat_machineshotgunswap = autocvar_sv_q3acompat_machineshotgunswap;
-	cvar_set("sv_q3acompat_machineshotgunswap", "0");
-
 	precache();
 
 	WaypointSprite_Init();

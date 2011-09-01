@@ -384,9 +384,6 @@ float assault_attacker_team;
 // speedrun: when 1, player auto teleports back when capture timeout happens
 .float speedrunning;
 
-// Q3 support
-float q3acompat_machineshotgunswap;
-
 // database
 float ServerProgsDB;
 float TemporaryDB;
