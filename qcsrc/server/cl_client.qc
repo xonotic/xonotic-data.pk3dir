@@ -2537,6 +2537,42 @@ void checkSpectatorBlock() {
 	}
 }
 
+.float motd_actived_time; // used for both motd and campaign_message
+void PrintWelcomeMessage()
+{
+	if (self.motd_actived_time == 0) { // is there already a message showing?
+		if (autocvar_g_campaign) {
+			if ((self.classname == "player" && self.BUTTON_INFO) || (self.classname != "player")) {
+				self.motd_actived_time = time;
+				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, campaign_message, -1, 0);
+			}
+		} else {
+			if ((time - self.jointime > autocvar_welcome_message_time) && self.BUTTON_INFO) {
+				self.motd_actived_time = time;
+				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), -1, 0);
+			}
+		}
+	} else { // showing MOTD or campaign message
+		if (autocvar_g_campaign) {
+			if (self.BUTTON_INFO)
+				self.motd_actived_time = time;
+			else if ((time - self.motd_actived_time > 2) && self.classname == "player") { // hide it some seconds after BUTTON_INFO has been released
+				self.motd_actived_time = 0;
+				Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
+			}
+		} else {
+			if ((time - self.jointime) > autocvar_welcome_message_time) {
+				if (self.BUTTON_INFO)
+					self.motd_actived_time = time;
+				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
+					self.motd_actived_time = 0;
+					Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
+				}
+			}
+		}
+	}
+}
+
 void ObserverThink()
 {
 	float prefered_movetype;
@@ -2565,6 +2601,8 @@ void ObserverThink()
 			}
 		}
 	}
+	
+	PrintWelcomeMessage();
 }
 
 void SpectatorThink()
@@ -2603,6 +2641,7 @@ void SpectatorThink()
 			PutObserverInServer();
 	}
 
+	PrintWelcomeMessage();
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
@@ -2638,7 +2677,6 @@ Called every frame for each client before the physics are run
 void() ctf_setstatus;
 void() nexball_setstatus;
 .float items_added;
-.float motd_actived_time; // used for both motd and campaign_message
 void PlayerPreThink (void)
 {
 	WarpZone_PlayerPhysics_FixVAngle();
@@ -2717,40 +2755,8 @@ void PlayerPreThink (void)
 		PlayerUseKey();
 	self.usekeypressed = self.BUTTON_USE;
 
-	if (self.motd_actived_time == 0) {
-		if (autocvar_g_campaign) {
-			if (self.classname == "player" && self.BUTTON_INFO) {
-				self.motd_actived_time = time;
-				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, campaign_message, -1, 0);
-			}
-		} else {
-			if ((self.classname == "player" || time - self.jointime > autocvar_welcome_message_time) && self.BUTTON_INFO) {
-				self.motd_actived_time = time;
-				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), -1, 0);
-			}
-		}
-	} else { // showing MOTD or campaign message
-		if (autocvar_g_campaign) {
-			if (self.classname == "player") {
-				if (self.BUTTON_INFO)
-					self.motd_actived_time = time;
-				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
-					self.motd_actived_time = 0;
-					Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
-				}
-			}
-		} else {
-			if (self.classname == "player" || (time - self.jointime) > autocvar_welcome_message_time) {
-				if (self.BUTTON_INFO)
-					self.motd_actived_time = time;
-				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
-					self.motd_actived_time = 0;
-					Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
-				}
-			}
-		}
-	}
-
+	PrintWelcomeMessage();
+	
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
 //			bprint(self.classname, "\n");
