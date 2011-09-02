@@ -25,6 +25,9 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 			prefix = strcat(autocvar_hostname, "\t", GetGametype(), "_", GetMapname(), "\t");
 			url_fputs(fh, "#begin statsfile\n");
 			url_fputs(fh, strcat("#date ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
+#ifdef WATERMARK
+			url_fputs(fh, strcat("#version ", WATERMARK(), "\n"));
+#endif
 			url_fputs(fh, strcat("#config ", ftos(crc16(FALSE, cvar_purechanges)), "\n"));
 			url_fputs(fh, strcat("#cvar_purechanges ", ftos(cvar_purechanges_count), "\n"));
 			n = tokenizebyseparator(cvar_purechanges, "\n");
