@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-21 14:00+0200\n"
+"POT-Creation-Date: 2011-09-02 07:51+0200\n"
 "PO-Revision-Date: 2011-08-23 18:51-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,6 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 1.2\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: qcsrc/common/mapinfo.qc:1092 qcsrc/menu/xonotic/skinlist.c:163
+#, c-format
+msgid "%s: %s"
+msgstr "%s: %s"
 
 #: qcsrc/menu/gamecommand.qc:47
 #, c-format
@@ -78,7 +83,7 @@ msgid "^4MQC Build information: ^1%s\n"
 msgstr "^4MQC Information de version : %s (français)\n"
 
 #: qcsrc/menu/xonotic/campaign.c:284
-#: qcsrc/menu/xonotic/dialog_singleplayer.c:66
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:134
 msgid "???"
 msgstr "???"
 
@@ -2269,11 +2274,11 @@ msgstr "Intensité:"
 msgid "Singleplayer"
 msgstr "Monojoueur"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.c:59
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:127
 msgid "Instant action! (random map with bots)"
 msgstr "Instant action! (map aléatoire avec bots)"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.c:80
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:148
 msgid "Start Singleplayer!"
 msgstr "Démarrer !"
 
@@ -2344,23 +2349,23 @@ msgstr "Supprimer"
 msgid "Bookmark"
 msgstr "Marque-page"
 
-#: qcsrc/menu/xonotic/serverlist.c:523
+#: qcsrc/menu/xonotic/serverlist.c:527
 msgid "Ping"
 msgstr "Latence"
 
-#: qcsrc/menu/xonotic/serverlist.c:524
+#: qcsrc/menu/xonotic/serverlist.c:528
 msgid "Host name"
 msgstr "Nom d'Hôte"
 
-#: qcsrc/menu/xonotic/serverlist.c:525
+#: qcsrc/menu/xonotic/serverlist.c:529
 msgid "Map"
 msgstr "Carte"
 
-#: qcsrc/menu/xonotic/serverlist.c:526
+#: qcsrc/menu/xonotic/serverlist.c:530
 msgid "Type"
 msgstr "Mode"
 
-#: qcsrc/menu/xonotic/serverlist.c:527
+#: qcsrc/menu/xonotic/serverlist.c:531
 msgid "Players"
 msgstr "Joueurs"
 
@@ -2371,11 +2376,6 @@ msgstr "<TITRE>"
 #: qcsrc/menu/xonotic/skinlist.c:106
 msgid "<AUTHOR>"
 msgstr "<AUTEUR>"
-
-#: qcsrc/menu/xonotic/skinlist.c:163
-#, c-format
-msgid "%s: %s"
-msgstr "%s: %s"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:50
 msgid "VOL^OFF"
@@ -2539,22 +2539,22 @@ msgstr "Activer ce panneau"
 msgid "Crylink"
 msgstr "Crylink"
 
-#: qcsrc/server/w_crylink.qc:664
+#: qcsrc/server/w_crylink.qc:666
 #, c-format
 msgid "%s succeeded at self-destructing themself with the Crylink"
 msgstr "%s a réussi à se suicider avec le Crylink"
 
-#: qcsrc/server/w_crylink.qc:669
+#: qcsrc/server/w_crylink.qc:671
 #, c-format
 msgid "%s could not hide from %s's Crylink"
 msgstr "%s n'a pas pu se cacher du Crylink de %s"
 
-#: qcsrc/server/w_crylink.qc:671
+#: qcsrc/server/w_crylink.qc:673
 #, c-format
 msgid "%s was too close to %s's Crylink"
 msgstr "%s a été trop près du Crylink de %s"
 
-#: qcsrc/server/w_crylink.qc:673
+#: qcsrc/server/w_crylink.qc:675
 #, c-format
 msgid "%s took a close look at %s's Crylink"
 msgstr "%s a voulu voir se qui se trouvait dans le Crylink de %s"
@@ -2675,17 +2675,17 @@ msgstr "%s a mangé la grenade de %s"
 msgid "Hagar"
 msgstr "Hagar"
 
-#: qcsrc/server/w_hagar.qc:382 qcsrc/server/w_seeker.qc:655
+#: qcsrc/server/w_hagar.qc:395 qcsrc/server/w_seeker.qc:655
 #, c-format
 msgid "%s played with tiny rockets"
 msgstr "%s a joué avec des petits missiles"
 
-#: qcsrc/server/w_hagar.qc:386
+#: qcsrc/server/w_hagar.qc:399
 #, c-format
 msgid "%s hoped %s's missiles wouldn't bounce"
 msgstr "%s a pensé que les petits missiles de %s ne rebondissaient pas"
 
-#: qcsrc/server/w_hagar.qc:388 qcsrc/server/w_seeker.qc:661
+#: qcsrc/server/w_hagar.qc:401 qcsrc/server/w_seeker.qc:661
 #, c-format
 msgid "%s was pummeled by %s"
 msgstr "%s a trop mangé de mini-missiles de la part de %s"
