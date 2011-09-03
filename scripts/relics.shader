@@ -10,7 +10,7 @@ models/relics/relic_ring
 {
  	{
 		map models/relics/relic_ring.tga
-		blendfunc add
+		blendfunc GL_SRC_ALPHA GL_ONE
 		rgbgen lightingDiffuse
 	}
 }
