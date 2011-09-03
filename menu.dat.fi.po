@@ -163,7 +163,7 @@ msgstr "Näytä vain nykyinen ammustyyppi"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:28
 msgid "Align icon:"
-msgstr "Suorista ikoni:"
+msgstr "Kuvakkeen kohdistus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:36
@@ -898,7 +898,7 @@ msgstr "Joukkuevahingon skaala:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:47
 msgid "Virtual friendly fire (effect only)"
-msgstr "Virtuaalinen joukkuevahinko (vain effekti)"
+msgstr "Virtuaalinen joukkuevahinko (vain efekti)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:50
 msgid "Friendly fire penalty:"
@@ -906,7 +906,7 @@ msgstr "Joukkuevahinkorangaistus:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:54
 msgid "Virtual penalty (effect only)"
-msgstr "Virtuaalinen rangaistus (vain effekti)"
+msgstr "Virtuaalinen rangaistus (vain efekti)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:57
 msgid "Teams:"
@@ -1193,7 +1193,7 @@ msgstr "%d/%d, %d vapaata pelaajapaikkaa"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
 #, c-format
 msgid "%d modified settings"
-msgstr "%d muokatut asetukset"
+msgstr "%d muokattua asetusta"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
 msgid "Official settings"
@@ -1271,11 +1271,11 @@ msgstr "Viive:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:295
 msgid "CA:"
-msgstr "Lipunryöstö (CTF)"
+msgstr "CA:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:301
 msgid "Key:"
-msgstr "Avain (Key)"
+msgstr "Avain:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:307
 msgid "Encryption:"
@@ -1283,7 +1283,7 @@ msgstr "Salaus:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:63
 msgid "Model:"
-msgstr "Malli:"
+msgstr "Hahmo:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:88
 msgid "Field of view:"
@@ -1336,7 +1336,7 @@ msgstr "Omavalintainen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:148
 msgid "Enable center dot"
-msgstr "Ota keskipiste käyttöön"
+msgstr "Ota tähtäin käyttöön"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:151
 msgid "Size:"
@@ -1364,7 +1364,7 @@ msgstr "Välimatkojen asetukset..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:169
 msgid "Enter HUD editor"
-msgstr "Mene näkymän muokkaimeen"
+msgstr "Muokkaa näkymää"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:174
 msgid "Force models:"
@@ -1408,7 +1408,7 @@ msgstr "GIBS^Runsaasti"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:191
 msgid "Damage splash:"
-msgstr "Vahinkoroiskeet"
+msgstr "Veriroiskeet"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:195
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:173
@@ -1421,19 +1421,19 @@ msgstr "Ota heti käyttöön"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:5
 msgid "Waypoints"
-msgstr "Välimatkat"
+msgstr "Välietapit"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:23
 msgid "Show base waypoints"
-msgstr "Näytä päämäärien välimatkat"
+msgstr "Näytä tukikohtien välimatkat"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:25
 msgid "Waypoint scale:"
-msgstr "Välimatkan skaala:"
+msgstr "Välietappien skaala:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:29
 msgid "Waypoint alpha:"
-msgstr "Välimatkojen alpha:"
+msgstr "Välietappien alpha:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:34
 msgid "Show names:"
@@ -1871,7 +1871,7 @@ msgstr "Siirtokuvat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:118
 msgid "Decals on models"
-msgstr "Kuvia hahmoissa"
+msgstr "Hahmojen siirtokuvat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:122
 msgid "Distance:"
@@ -1879,7 +1879,7 @@ msgstr "Etäisyys:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:128
 msgid "Time:"
-msgstr "Aika:"
+msgstr "Kesto:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:134
 msgid "Use lightmaps"
@@ -2182,7 +2182,7 @@ msgstr "Kokoruutu"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:46
 msgid "Vertical Synchronization"
-msgstr "VSYNC"
+msgstr "Pystytahdistus (VSYNC)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:49
 msgid "Use OpenGL 2.0 shaders (GLSL)"
@@ -2214,7 +2214,7 @@ msgstr "Verteksit ja kolmiot"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:67
 msgid "Depth first:"
-msgstr "Syvyys ensin (Depth First):"
+msgstr "Syvyyssuuntainen renderöinti:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:69
 msgid "DF^Disabled"
@@ -2442,7 +2442,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:523
 msgid "Arena"
-msgstr "Areena"
+msgstr "Areena (Arena)"
 
 #: qcsrc/menu/xonotic/util.qc:524
 msgid "Assault"
@@ -2474,7 +2474,7 @@ msgstr "Pakomatka (Keepaway)"
 
 #: qcsrc/menu/xonotic/util.qc:531
 msgid "Key Hunt"
-msgstr "Avaimenmetsästys (Key Hunt)"
+msgstr "Avaimenetsintä (Key Hunt)"
 
 #: qcsrc/menu/xonotic/util.qc:532
 msgid "Last Man Standing"
@@ -2494,7 +2494,7 @@ msgstr "Kilpailu (RACE)"
 
 #: qcsrc/menu/xonotic/util.qc:536
 msgid "Race CTS"
-msgstr "Kilpailu CTS"
+msgstr "Kilpailu CTS (RACE CTS)"
 
 #: qcsrc/menu/xonotic/util.qc:537
 msgid "Runematch"
