@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-02 07:51+0200\n"
-"PO-Revision-Date: 2011-08-19 17:20+0100\n"
+"PO-Revision-Date: 2011-09-04 01:40+0100\n"
 "Last-Translator: Antonio 'terencehill' Piu <piuntn@gmail.com>\n"
 "Language-Team: Antonio 'terencehill' Piu <piuntn@gmail.com>\n"
 "Language: it\n"
@@ -856,7 +856,7 @@ msgstr "^1Premi ^3%s^1 per osservare"
 #: qcsrc/client/hud.qc:4020
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1Premi ^3%s^1 per le informazioni sulla modalità di gioco"
+msgstr "^1Premi ^3%s^1 per informazioni sulla modalità di gioco"
 
 #: qcsrc/client/hud.qc:4024
 msgid "^1Wait for your turn to join"
@@ -909,7 +909,7 @@ msgstr "^2Premi ^3%s^2 per terminare il warmup"
 
 #: qcsrc/client/hud.qc:4103
 msgid "Teamnumbers are unbalanced!"
-msgstr "Il numero di giocatori per squadra è sbilanciato!"
+msgstr "Numero di giocatori per squadra sbilanciato!"
 
 #: qcsrc/client/hud.qc:4108
 #, c-format
@@ -918,11 +918,11 @@ msgstr " Premi ^3%s%s per aggiustare"
 
 #: qcsrc/client/hud.qc:4116
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7Premi ^3ESC ^7per mostrare le opzioni dell'HUD"
+msgstr "^7Premi ^3ESC ^7per mostrare le opzioni dell'HUD."
 
 #: qcsrc/client/hud.qc:4118
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr "^7Fai ^3doppio-click ^7su un pannello per le sue specifiche opzioni "
+msgstr "^3Doppio-click ^7su un pannello per le sue specifiche opzioni."
 
 #: qcsrc/client/hud.qc:4120
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -1691,7 +1691,7 @@ msgstr "%s sta chiedendo aiuto!"
 #: qcsrc/common/mapinfo.qc:1092
 #, c-format
 msgid "%s: %s"
-msgstr ""
+msgstr "%s: %s"
 
 #: qcsrc/server/w_crylink.qc:666
 #, c-format

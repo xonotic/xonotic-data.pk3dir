@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-02 07:51+0200\n"
-"PO-Revision-Date: 2011-08-19 17:20+0100\n"
+"PO-Revision-Date: 2011-09-04 01:40+0100\n"
 "Last-Translator: Antonio 'terencehill' Piu <piuntn@gmail.com>\n"
 "Language-Team: Antonio 'terencehill' Piu <piuntn@gmail.com>\n"
 "Language: it\n"
@@ -141,7 +141,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_firstrun.c:38
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:35
 msgid "Text language:"
-msgstr "Lingua testo:"
+msgstr "Lingua di testo:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:47
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:40
@@ -642,7 +642,7 @@ msgstr "Setup del Panel HUD"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:21
 msgid "Panel background defaults:"
-msgstr "Predefiniti dello sfondo del pannello :"
+msgstr "Predefiniti dello sfondo del pannello:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:23 qcsrc/menu/xonotic/util.qc:575
 msgid "Background:"
@@ -1032,7 +1032,7 @@ msgstr "NIX"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:74
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:205
 msgid "Rocket Flying"
-msgstr "Razzo volante"
+msgstr "Volando coi razzi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:78
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:264
@@ -1976,7 +1976,7 @@ msgstr "Sfocatura movimento:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:189
 msgid "Blur and sharpen postprocessing"
-msgstr ""
+msgstr "Postprocessa per sfocatura e nitidezza"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
