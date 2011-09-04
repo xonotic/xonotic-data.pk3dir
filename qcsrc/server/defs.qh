@@ -202,7 +202,11 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .entity weaponentity;
 .entity exteriorweaponentity;
 .vector weaponentity_glowmod;
-.float switchweapon;
+
+//.float weapon; // current weapon
+.float switchweapon; // weapon requested to switch to
+.float switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
+
 .float autoswitch;
 float weapon_action(float wpn, float wrequest);
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);

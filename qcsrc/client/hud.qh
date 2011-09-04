@@ -28,7 +28,8 @@ float complain_weapon_time;
 float ps_primary, ps_secondary;
 float ts_primary, ts_secondary;
 
-float last_weapon;
+float last_switchweapon;
+float last_activeweapon;
 float weapontime;
 float weaponprevtime;
 

@@ -330,6 +330,7 @@ void W_WeaponFrame()
 	if(!self.switchweapon)
 	{
 		self.weapon = 0;
+		self.switchingweapon = 0;
 		self.weaponentity.state = WS_CLEAR;
 		self.weaponname = "";
 		self.items &~= IT_AMMO;
@@ -346,6 +347,9 @@ void W_WeaponFrame()
 	{
 		if (self.weaponentity.state == WS_CLEAR)
 		{
+			// end switching!
+			self.switchingweapon = self.switchweapon;
+
 			//setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.switchweapon, WR_SETUP);
@@ -366,8 +370,16 @@ void W_WeaponFrame()
 			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_weaponswitchdelay, w_ready);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
 		}
+		else if (self.weaponentity.state == WS_DROP)
+		{
+			// in dropping phase we can switch at any time
+			self.switchingweapon = self.switchweapon;
+		}
 		else if (self.weaponentity.state == WS_READY)
 		{
+			// start switching!
+			self.switchingweapon = self.switchweapon;
+
 #ifndef INDEPENDENT_ATTACK_FINISHED
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{

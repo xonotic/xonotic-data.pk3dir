@@ -544,8 +544,16 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
+
+	// next WANTED weapon (for HUD)
 	switchweapon = getstati(STAT_SWITCHWEAPON);
+
+	// currently switching-to weapon (for crosshair)
+	switchingweapon = getstati(STAT_SWITCHINGWEAPON);
+
+	// actually active weapon (for zoom)
 	activeweapon = getstati(STAT_ACTIVEWEAPON);
+
 	f = (serverflags & SERVERFLAG_TEAMPLAY);
 	if(f != teamplay)
 	{
@@ -553,9 +561,12 @@ void CSQC_UpdateView(float w, float h)
 		HUD_InitScores();
 	}
 
-	if(last_weapon != activeweapon) {
+	if(last_switchweapon != switchweapon) {
 		weapontime = time;
-		last_weapon = activeweapon;
+		last_switchweapon = switchweapon;
+	}
+	if(last_activeweapon != activeweapon) {
+		last_activeweapon = activeweapon;
 
 		e = get_weaponinfo(activeweapon);
 		if(e.netname != "")
@@ -1031,7 +1042,7 @@ void CSQC_UpdateView(float w, float h)
 			float wcross_scale, wcross_blur;
 
 			if (autocvar_crosshair_per_weapon || autocvar_crosshair_color_per_weapon) {
-				e = get_weaponinfo(activeweapon);
+				e = get_weaponinfo(switchingweapon);
 				if (e && e.netname != "")
 				{
 					wcross_wep = e.netname;
@@ -1160,7 +1171,7 @@ void CSQC_UpdateView(float w, float h)
 
 			f = autocvar_crosshair_effect_speed;
 			if(f < 0)
-				f *= -1 * g_weaponswitchdelay; // anim starts when weapon has been lowered and new weapon comes up
+				f *= -2 * g_weaponswitchdelay; // anim starts when weapon has been lowered and new weapon comes up
 			if(wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
 			{
 				wcross_changedonetime = time + f;
@@ -1281,6 +1292,14 @@ void CSQC_UpdateView(float w, float h)
 							ring_image = "gfx/crosshair_ring_rifle.tga";
 						else
 							ring_image = "gfx/crosshair_ring.tga";
+					}
+
+					// if in weapon switch animation, fade ring out/in
+					if(g_weaponswitchdelay > 0)
+					{
+						f = (time - wcross_name_changestarttime) / g_weaponswitchdelay;
+						if(f > 0 && f < 2)
+							ring_alpha *= fabs(1 - f);
 					}
 
 					if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring

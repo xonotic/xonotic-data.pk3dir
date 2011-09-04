@@ -705,6 +705,7 @@ void PutObserverInServer (void)
 	self.model = "";
 	self.modelindex = 0;
 	self.weapon = 0;
+	self.switchingweapon = 0;
 	self.weaponmodel = "";
 	self.weaponentity = world;
 	self.exteriorweaponentity = world;
@@ -1110,6 +1111,7 @@ void PutClientInServer (void)
 		self.switchweapon = w_getbestweapon(self);
 		self.cnt = self.switchweapon;
 		self.weapon = 0;
+		self.switchingweapon = 0;
 
 		if(!self.alivetime)
 			self.alivetime = time;
@@ -2306,6 +2308,7 @@ void SpectateCopy(entity spectatee) {
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;
 	self.switchweapon = spectatee.switchweapon;
+	self.switchingweapon = spectatee.switchingweapon;
 	self.weapon = spectatee.weapon;
 	self.nex_charge = spectatee.nex_charge;
 	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
