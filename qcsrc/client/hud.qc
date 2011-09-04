@@ -641,7 +641,7 @@ void HUD_Weapons(void)
 		weapid = self.impulse;
 
 		// draw background behind currently selected weapon
-		if(self.weapon == activeswitchweapon)
+		if(self.weapon == switchweapon)
 			drawpic_aspect_skin(wpnpos, "weapon_current_bg", wpnsize, '1 1 1', wpnalpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy

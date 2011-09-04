@@ -978,7 +978,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(rows == 2)
 		pos_x += weapon_width / 2;
 
-	if(getstati(STAT_SWITCHWEAPON) == WEP_MINSTANEX)
+	if(switchweapon == WEP_MINSTANEX)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
 	float weapon_stats;

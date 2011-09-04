@@ -127,7 +127,7 @@ vector GetCurrentFov(float fov)
 
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
-	if((getstati(STAT_ACTIVEWEAPON) == WEP_NEX && nex_scope) || (getstati(STAT_ACTIVEWEAPON) == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
+	if((activeweapon == WEP_NEX && nex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -544,8 +544,8 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
-	activeswitchweapon = getstati(STAT_SWITCHWEAPON);
-	activeweapon = getstati(STAT_WEAPON);
+	switchweapon = getstati(STAT_SWITCHWEAPON);
+	activeweapon = getstati(STAT_ACTIVEWEAPON);
 	f = (serverflags & SERVERFLAG_TEAMPLAY);
 	if(f != teamplay)
 	{
@@ -1160,7 +1160,7 @@ void CSQC_UpdateView(float w, float h)
 
 			f = autocvar_crosshair_effect_speed;
 			if(f < 0)
-				f *= -2 * g_weaponswitchdelay;
+				f *= -1 * g_weaponswitchdelay; // anim starts when weapon has been lowered and new weapon comes up
 			if(wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
 			{
 				wcross_changedonetime = time + f;
