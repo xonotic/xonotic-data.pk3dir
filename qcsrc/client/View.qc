@@ -544,7 +544,8 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
-	activeweapon = getstati(STAT_SWITCHWEAPON);
+	activeswitchweapon = getstati(STAT_SWITCHWEAPON);
+	activeweapon = getstati(STAT_WEAPON);
 	f = (serverflags & SERVERFLAG_TEAMPLAY);
 	if(f != teamplay)
 	{
