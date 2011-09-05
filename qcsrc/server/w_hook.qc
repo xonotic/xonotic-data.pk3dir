@@ -143,7 +143,7 @@ float w_hook(float req)
 		if(self.hook)
 		{
 			// if hooked, no bombs, and increase the timer
-			self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_hook_primary_refire);
+			self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_hook_primary_refire * W_WeaponRateFactor());
 
 			// hook also inhibits health regeneration, but only for 1 second
 			if not(self.items & IT_UNLIMITED_WEAPON_AMMO)

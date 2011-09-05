@@ -177,7 +177,7 @@ void W_Hagar_Attack2_Load_Release (void)
 	}
 
 	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
-	self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_refire;
+	self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_refire * W_WeaponRateFactor();
 	self.hagar_load = 0;
 }
 
@@ -207,7 +207,7 @@ void W_Hagar_Attack2_Load (void)
 				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
 
 				// pause until we can load rockets again, once we re-press the alt fire button
-				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
+				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed * W_WeaponRateFactor();
 
 				// require letting go of the alt fire button before we can load again
 				self.hagar_loadblock = TRUE;
@@ -225,7 +225,7 @@ void W_Hagar_Attack2_Load (void)
 					self.hagar_load += 1;
 					sound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
-					self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
+					self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed * W_WeaponRateFactor();
 				}
 			}
 			else if(!self.hagar_loadbeep && self.hagar_load) // prevents the beep from playing each frame
