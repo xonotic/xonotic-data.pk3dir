@@ -70,11 +70,11 @@ rl
 		rgbgen lightingDiffuse
 	}
 }
-laser
+models/weapons/laser
 {
 	dpreflectcube cubemaps/default/sky
  	{
-		map textures/laser.tga
+		map models/weapons/laser.tga
 		rgbgen lightingDiffuse
 	}
 }
