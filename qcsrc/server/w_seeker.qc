@@ -334,7 +334,7 @@ void Seeker_Vollycontroller_Think() // TODO: Merge this with Seeker_Attack
 		return;
 	}
 
-	self.nextthink = time + autocvar_g_balance_seeker_missile_delay;
+	self.nextthink = time + autocvar_g_balance_seeker_missile_delay * W_WeaponRateFactor();
 	
 	oldself = self;
 	self = self.realowner;
