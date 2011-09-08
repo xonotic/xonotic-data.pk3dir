@@ -2714,10 +2714,12 @@ void PlayerPreThink (void)
 		if(self.cvar_g_xonoticversion)
 			if(time > self.version_nagtime)
 			{
-				if(strstr(self.cvar_g_xonoticversion, "git", 0) < 0)
+				// don't notify git users
+				if(strstr(self.cvar_g_xonoticversion, "git", 0) < 0 && strstr(self.cvar_g_xonoticversion, "autobuild", 0) < 0)
 				{
-					if(strstr(autocvar_g_xonoticversion, "git", 0) >= 0)
+					if(strstr(autocvar_g_xonoticversion, "git", 0) >= 0 || strstr(autocvar_g_xonoticversion, "autobuild", 0) >= 0)
 					{
+						// notify release users if connecting to git
 						dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
 						sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Xonotic ", autocvar_g_xonoticversion, " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n"));
 					}
@@ -2727,12 +2729,14 @@ void PlayerPreThink (void)
 						r = vercmp(self.cvar_g_xonoticversion, autocvar_g_xonoticversion);
 						if(r < 0)
 						{
+							// give users new version
 							dprint("^1NOTE^7 to ", self.netname, "^7 - ^3Xonotic ", autocvar_g_xonoticversion, "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.org/^1!\n");
 							sprint(self, strcat("\{1}^1NOTE: ^3Xonotic ", autocvar_g_xonoticversion, "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.org/^1!\n"));
 						}
 						else if(r > 0)
 						{
-							dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
+							// notify users about old server version
+							print("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
 							sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Xonotic ", autocvar_g_xonoticversion, "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n"));
 						}
 					}
