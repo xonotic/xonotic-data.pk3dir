@@ -104,7 +104,7 @@ void PlayerJump (void)
 		if (!(self.flags & FL_ONGROUND))
 			return;
 
-	if(!sv_pogostick)
+	if(!sv_pogostick || self.cvar_cl_nopogostick)
 		if (!(self.flags & FL_JUMPRELEASED))
 			return;
 

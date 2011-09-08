@@ -616,6 +616,7 @@ void GetCvars(float f)
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
+	GetCvars_handleFloat(s, f, cvar_cl_nopogostick, "cl_nopogostick");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
