@@ -2461,6 +2461,7 @@ void ShowRespawnCountdown()
 	}
 }
 
+.float prevent_join_msgtime;
 void LeaveSpectatorMode()
 {
 	if(nJoinAllowed(1)) {
@@ -2482,6 +2483,12 @@ void LeaveSpectatorMode()
 			if (time < self.jointime + autocvar_welcome_message_time)
 				Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD); // clear MOTD
 
+			if (self.prevent_join_msgtime)
+			{
+				Send_CSQC_Centerprint_Generic_Expire(self, CPID_PREVENT_JOIN);
+				self.prevent_join_msgtime = 0;
+			}
+
 			return;
 		} else {
 			if (g_ca && self.caplayer) {
@@ -2493,7 +2500,9 @@ void LeaveSpectatorMode()
 	}
 	else {
 		//player may not join because of g_maxplayers is set
-		centerprint(self, PREVENT_JOIN_TEXT);
+		if (time - self.prevent_join_msgtime > 2)
+			Send_CSQC_Centerprint_Generic(self, CPID_PREVENT_JOIN, PREVENT_JOIN_TEXT, 0, 0);
+		self.prevent_join_msgtime = time;
 	}
 }
 
@@ -2604,7 +2613,7 @@ void ObserverThink()
 			}
 		}
 	}
-	
+
 	PrintWelcomeMessage();
 }
 
@@ -2763,7 +2772,7 @@ void PlayerPreThink (void)
 	self.usekeypressed = self.BUTTON_USE;
 
 	PrintWelcomeMessage();
-	
+
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
 //			bprint(self.classname, "\n");
