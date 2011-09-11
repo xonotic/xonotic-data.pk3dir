@@ -2302,7 +2302,7 @@ void HUD_Radar(void)
 {
 	if (!autocvar__hud_configure)
 	{
-		if (autocvar_hud_panel_radar == 0) return;
+		if (autocvar_hud_panel_radar == 0 && autocvar_hud_panel_radar_maximized == 0) return;
 		if (autocvar_hud_panel_radar != 2 && !teamplay) return;
 	}
 	else
