@@ -34,7 +34,15 @@ void PlayerJump (void)
 	{
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
 		if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
+		{
 			doublejump = TRUE;
+
+			// we MUST clip velocity here!
+			float f;
+			f = self.velocity * trace_plane_normal;
+			if(f < 0)
+				self.velocity -= f * trace_plane_normal;
+		}
 	}
 
 	mjumpheight = autocvar_sv_jumpvelocity;
