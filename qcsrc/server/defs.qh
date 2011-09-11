@@ -313,7 +313,7 @@ float default_weapon_alpha;
 .float cvar_cl_handicap;
 .float cvar_cl_playerdetailreduction;
 .float cvar_cl_clippedspectating;
-.float cvar_cl_nopogostick;
+.float cvar_cl_movement_track_canjump;
 
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
