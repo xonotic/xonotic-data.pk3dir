@@ -180,7 +180,6 @@ void PlayerJump (void)
 	self.restart_jump = -1; // restart jump anim next time
 	// value -1 is used to not use the teleport bit (workaround for tiny hitch when re-jumping)
 }
-
 void CheckWaterJump()
 {
 	local vector start, end;
@@ -209,6 +208,25 @@ void CheckWaterJump()
 		}
 	}
 };
+void CheckPlayerJump()
+{
+	if(self.flags & FL_ONGROUND)
+	{
+		if (autocvar_g_multijump > 0)
+			self.multijump_count = 0;
+		else
+			self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
+	}
+
+	if (self.BUTTON_JUMP)
+		PlayerJump ();
+	else
+		self.flags |= FL_JUMPRELEASED;
+
+	if (self.waterlevel == WATERLEVEL_SWIMMING)
+		CheckWaterJump ();
+	self.prevjumpbutton = self.BUTTON_JUMP;
+}
 
 float racecar_angle(float forward, float down)
 {
@@ -938,24 +956,7 @@ void SV_PlayerPhysics()
 		self.wasFlying = 1;
 
 	if(self.classname == "player")
-	{
-		if(self.flags & FL_ONGROUND)
-		{
-			if (autocvar_g_multijump > 0)
-				self.multijump_count = 0;
-			else
-				self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
-		}
-
-		if (self.BUTTON_JUMP)
-			PlayerJump ();
-		else
-			self.flags |= FL_JUMPRELEASED;
-
-		if (self.waterlevel == WATERLEVEL_SWIMMING)
-			CheckWaterJump ();
-		self.prevjumpbutton = self.BUTTON_JUMP;
-	}
+		CheckPlayerJump();
 
 	if (self.flags & FL_WATERJUMP )
 	{
