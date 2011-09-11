@@ -2310,6 +2310,25 @@ void HUD_Radar(void)
 
 	HUD_Panel_UpdateCvars(radar);
 	HUD_Panel_ApplyFadeAlpha();
+
+	if (autocvar_hud_panel_radar_maximized && !autocvar__hud_configure)
+	{
+		panel_size = autocvar_hud_panel_radar_maximized_size;
+		panel_size_x = bound(0.2, panel_size_x, 1) * vid_conwidth;
+		panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
+		panel_pos_x = (vid_conwidth - panel_size_x) / 2;
+		panel_pos_y = (vid_conheight - panel_size_y) / 2;
+		if(panel_bg == "0") // force a border when maximized
+		{
+			if(precache_pic(panel_bg) == "") {
+				panel_bg = strcat(hud_skin_path, "/border_default");
+				if(precache_pic(panel_bg) == "") {
+					panel_bg = "gfx/hud/default/border_default";
+				}
+			}
+		}
+	}
+
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
