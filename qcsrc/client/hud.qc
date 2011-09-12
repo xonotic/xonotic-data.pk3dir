@@ -4539,7 +4539,7 @@ void HUD_CenterPrint (void)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
-		if (centerprint_expire_time[j] < time)
+		if (centerprint_expire_time[j] <= time)
 		{
 			if (centerprint_countdown_num[j] && centerprint_time[j] > 0)
 			{
