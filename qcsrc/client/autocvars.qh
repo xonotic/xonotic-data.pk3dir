@@ -303,6 +303,7 @@ float autocvar_hud_panel_weapons_complainbubble_padding;
 float autocvar_hud_panel_weapons_complainbubble_time;
 var float autocvar_hud_panel_weapons_fade = 1;
 float autocvar_hud_panel_weapons_label;
+float autocvar_hud_panel_weapons_onlyowned;
 float autocvar_hud_panel_weapons_timeout;
 float autocvar_hud_panel_weapons_timeout_effect;
 float autocvar_hud_progressbar_alpha;
