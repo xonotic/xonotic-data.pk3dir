@@ -240,7 +240,7 @@ void Cmd_HUD_Help(float argc)
 	print(_("^3|---------------------------------------------------------------|\n"));
 	print(_("Usage:\n"));
 	print(_("^2scoreboard_columns_set default\n"));
-	print(_("^2scoreboard_columns_set ^7filed1 field2 ...\n"));
+	print(_("^2scoreboard_columns_set ^7field1 field2 ...\n"));
 	print(_("The following field names are recognized (case insensitive):\n"));
 	print(_("You can use a ^3|^7 to start the right-aligned fields.\n\n"));
 
