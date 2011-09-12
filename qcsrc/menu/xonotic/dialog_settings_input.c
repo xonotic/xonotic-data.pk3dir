@@ -67,5 +67,10 @@ void XonoticInputSettingsTab_fill(entity me)
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "apple_mouse_noaccel", _("Turn off OS mouse acceleration")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", _("\"enter console\" also closes")));
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_movement_track_canjump", _("Holding jump key keeps jumping")));
+	me.gotoRC(me, me.rows - 1, 0);
+		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "sendcvar cl_movement_track_canjump", COMMANDBUTTON_APPLY));
 }
 #endif

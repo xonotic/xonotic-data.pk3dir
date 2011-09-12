@@ -1003,7 +1003,10 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 void w_clear()
 {
 	if (self.weapon != -1)
+	{
 		self.weapon = 0;
+		self.switchingweapon = 0;
+	}
 	if (self.weaponentity)
 	{
 		self.weaponentity.state = WS_CLEAR;
@@ -1029,6 +1032,7 @@ void weapon_setup(float windex)
 
 	// the two weapon entities will notice this has changed and update their models
 	self.weapon = windex;
+	self.switchingweapon = windex; // to make sure
 	self.weaponname = e.mdl;
 	self.bulletcounter = 0;
 };

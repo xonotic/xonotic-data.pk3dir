@@ -34,7 +34,15 @@ void PlayerJump (void)
 	{
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
 		if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
+		{
 			doublejump = TRUE;
+
+			// we MUST clip velocity here!
+			float f;
+			f = self.velocity * trace_plane_normal;
+			if(f < 0)
+				self.velocity -= f * trace_plane_normal;
+		}
 	}
 
 	mjumpheight = autocvar_sv_jumpvelocity;
@@ -104,7 +112,7 @@ void PlayerJump (void)
 		if (!(self.flags & FL_ONGROUND))
 			return;
 
-	if(!sv_pogostick)
+	if(!sv_pogostick || self.cvar_cl_movement_track_canjump)
 		if (!(self.flags & FL_JUMPRELEASED))
 			return;
 
@@ -172,7 +180,6 @@ void PlayerJump (void)
 	self.restart_jump = -1; // restart jump anim next time
 	// value -1 is used to not use the teleport bit (workaround for tiny hitch when re-jumping)
 }
-
 void CheckWaterJump()
 {
 	local vector start, end;
@@ -201,6 +208,25 @@ void CheckWaterJump()
 		}
 	}
 };
+void CheckPlayerJump()
+{
+	if(self.flags & FL_ONGROUND)
+	{
+		if (autocvar_g_multijump > 0)
+			self.multijump_count = 0;
+		else
+			self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
+	}
+
+	if (self.BUTTON_JUMP)
+		PlayerJump ();
+	else
+		self.flags |= FL_JUMPRELEASED;
+
+	if (self.waterlevel == WATERLEVEL_SWIMMING)
+		CheckWaterJump ();
+	self.prevjumpbutton = self.BUTTON_JUMP;
+}
 
 float racecar_angle(float forward, float down)
 {
@@ -930,24 +956,7 @@ void SV_PlayerPhysics()
 		self.wasFlying = 1;
 
 	if(self.classname == "player")
-	{
-		if(self.flags & FL_ONGROUND)
-		{
-			if (autocvar_g_multijump > 0)
-				self.multijump_count = 0;
-			else
-				self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
-		}
-
-		if (self.BUTTON_JUMP)
-			PlayerJump ();
-		else
-			self.flags |= FL_JUMPRELEASED;
-
-		if (self.waterlevel == WATERLEVEL_SWIMMING)
-			CheckWaterJump ();
-		self.prevjumpbutton = self.BUTTON_JUMP;
-	}
+		CheckPlayerJump();
 
 	if (self.flags & FL_WATERJUMP )
 	{

@@ -202,7 +202,11 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .entity weaponentity;
 .entity exteriorweaponentity;
 .vector weaponentity_glowmod;
-.float switchweapon;
+
+//.float weapon; // current weapon
+.float switchweapon; // weapon requested to switch to
+.float switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
+
 .float autoswitch;
 float weapon_action(float wpn, float wrequest);
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
@@ -309,6 +313,7 @@ float default_weapon_alpha;
 .float cvar_cl_handicap;
 .float cvar_cl_playerdetailreduction;
 .float cvar_cl_clippedspectating;
+.float cvar_cl_movement_track_canjump;
 
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
@@ -383,9 +388,6 @@ float assault_attacker_team;
 
 // speedrun: when 1, player auto teleports back when capture timeout happens
 .float speedrunning;
-
-// Q3 support
-float q3acompat_machineshotgunswap;
 
 // database
 float ServerProgsDB;

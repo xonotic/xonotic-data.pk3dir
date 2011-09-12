@@ -712,9 +712,10 @@ float autocvar_g_ca_damage2score_multiplier;
 float autocvar_g_ca_point_leadlimit;
 float autocvar_g_ca_point_limit;
 float autocvar_g_ca_round_timelimit;
+float autocvar_g_ca_spectate_enemies;
 float autocvar_g_ca_warmup;
 float autocvar_g_campaign;
-float autocvar_g_campaign_forceteam;
+#define autocvar_g_campaign_forceteam cvar("g_campaign_forceteam")
 float autocvar_g_campaign_skill;
 float autocvar_g_casings;
 float autocvar_g_changeteam_banned;

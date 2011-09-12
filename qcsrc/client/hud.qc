@@ -678,7 +678,7 @@ void HUD_Weapons(void)
 		weapid = self.impulse;
 
 		// draw background behind currently selected weapon
-		if(self.weapon == activeweapon)
+		if(self.weapon == switchweapon)
 			drawpic_aspect_skin(wpnpos, "weapon_current_bg", wpnsize, '1 1 1', wpnalpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy
@@ -4576,7 +4576,7 @@ void HUD_CenterPrint (void)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
-		if (centerprint_expire_time[j] < time)
+		if (centerprint_expire_time[j] <= time)
 		{
 			if (centerprint_countdown_num[j] && centerprint_time[j] > 0)
 			{
