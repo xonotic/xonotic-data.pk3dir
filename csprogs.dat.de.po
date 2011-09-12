@@ -1603,7 +1603,7 @@ msgstr "MinstaNex"
 
 #: qcsrc/client/waypointsprites.qc:301
 msgid "Hook"
-msgstr "Hook"
+msgstr "Enterhaken"
 
 #: qcsrc/client/waypointsprites.qc:302 qcsrc/server/w_fireball.qc:2
 msgid "Fireball"
@@ -1821,7 +1821,7 @@ msgstr "^1%s^1 wurde von %s^1 niedergehauen"
 
 #: qcsrc/server/w_hook.qc:2
 msgid "Grappling Hook"
-msgstr "Grappling Hook"
+msgstr "Enterhaken"
 
 #: qcsrc/server/w_hook.qc:266 qcsrc/server/w_porto.qc:296
 #, c-format

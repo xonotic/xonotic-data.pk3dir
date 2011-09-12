@@ -2703,7 +2703,7 @@ msgstr "^1%s^1 wurde von %s^1 niedergehauen"
 
 #: qcsrc/server/w_hook.qc:2
 msgid "Grappling Hook"
-msgstr "Grappling Hook"
+msgstr "Enterhaken"
 
 #: qcsrc/server/w_hook.qc:266 qcsrc/server/w_porto.qc:296
 #, c-format
