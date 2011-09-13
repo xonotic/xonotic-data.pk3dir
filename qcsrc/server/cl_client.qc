@@ -2500,8 +2500,10 @@ void LeaveSpectatorMode()
 	else {
 		//player may not join because of g_maxplayers is set
 		if (time - self.prevent_join_msgtime > 2)
+		{
 			Send_CSQC_Centerprint_Generic(self, CPID_PREVENT_JOIN, PREVENT_JOIN_TEXT, 0, 0);
-		self.prevent_join_msgtime = time;
+			self.prevent_join_msgtime = time;
+		}
 	}
 }
 
