@@ -3152,7 +3152,7 @@ void PlayerPostThink (void)
 
 	CheatFrame();
 
-	CheckPlayerJump();
+	//CheckPlayerJump();
 
 	if(self.classname == "player") {
 		CheckRules_Player();
