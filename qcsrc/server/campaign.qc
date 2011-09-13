@@ -256,6 +256,8 @@ void CampaignPostIntermission()
 
 void CampaignLevelWarp(float n)
 {
+	if(n < 0)
+		n = campaign_level + 1;
 	CampaignFile_Unload();
 	CampaignFile_Load(n, 1);
 	if(campaign_entries)

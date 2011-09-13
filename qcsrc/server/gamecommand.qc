@@ -725,6 +725,7 @@ void GameCommand(string command)
 		print("  find classname\n");
 		print("  extendmatchtime\n");
 		print("  reducematchtime\n");
+		print("  warp [level]\n");
 		GameCommand_Vote("help", world);
 		GameCommand_Ban("help");
 		GameCommand_Generic("help");
@@ -1483,6 +1484,19 @@ void GameCommand(string command)
 	{
 		modelbug();
 		return;
+	}
+
+	if(argv(0) == "warp")
+	{
+		if(autocvar_g_campaign)
+		{
+			if(argc >= 2)
+				CampaignLevelWarp(stof(argv(1)));
+			else
+				CampaignLevelWarp(-1);
+		}
+		else
+			print("Not in campaign, can't level warp\n");
 	}
 
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
