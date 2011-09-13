@@ -421,7 +421,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	float valid_damage_for_weaponstats;
 	float excess;
 
-	if((g_arena && numspawned < 2) || (g_ca && ca_players < required_ca_players) && !inWarmupStage)
+	if((g_arena && numspawned < 2) || (g_ca && !ca_teams_ok) && !inWarmupStage)
 		return;
 
 	dh = max(self.health, 0);

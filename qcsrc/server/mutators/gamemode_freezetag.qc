@@ -144,7 +144,7 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 		--totalalive;
 	}
 
-	if(totalspawned > 2) // only check for winners if we had more than two players (one of them left, don't let the other player win just because of that)
+	if(total_players > 2) // only check for winners if we had more than two players (one of them left, don't let the other player win just because of that)
 		freezetag_CheckWinner();
 
 	freezetag_Unfreeze(world);
@@ -196,7 +196,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
     freezetag_Unfreeze(world); // start by making sure that all ice blocks are removed
 
-	if(totalspawned == 1 && time > game_starttime) // only one player active on server, start a new match immediately
+	if(total_players == 1 && time > game_starttime) // only one player active on server, start a new match immediately
 	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
 	{
 		next_round = time;
