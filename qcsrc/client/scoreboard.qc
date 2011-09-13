@@ -240,11 +240,11 @@ void Cmd_HUD_Help(float argc)
 	print(_("^3|---------------------------------------------------------------|\n"));
 	print(_("Usage:\n"));
 	print(_("^2scoreboard_columns_set default\n"));
-	print(_("^2scoreboard_columns_set ^7filed1 field2 ...\n"));
+	print(_("^2scoreboard_columns_set ^7field1 field2 ...\n"));
 	print(_("The following field names are recognized (case insensitive):\n"));
 	print(_("You can use a ^3|^7 to start the right-aligned fields.\n\n"));
 
-	print(_("^3name^7 or ^3nick^7         Name of a player\n"));
+	print(_("^3name^7 or ^3nick^7             Name of a player\n"));
 	print(_("^3ping^7                     Ping time\n"));
 	print(_("^3pl^7                       Packet loss\n"));
 	print(_("^3kills^7                    Number of kills\n"));

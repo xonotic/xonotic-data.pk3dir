@@ -250,11 +250,7 @@ HUD panels
 // draw the background/borders
 #define HUD_Panel_DrawBg(alpha)\
 if(panel_bg != "0")\
-	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
-if(highlightedPanel == hud_configure_active_panel && autocvar__hud_configure)\
-{\
-	HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha) * alpha);\
-} ENDS_WITH_CURLY_BRACE
+	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER))
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, float vertical, float baralign, vector theColor, float theAlpha, float drawflag)
@@ -435,7 +431,7 @@ float GetAmmoTypeForWep(float i)
 
 void HUD_Weapons(void)
 {
-	float f, screen_ar;
+	float i, f, screen_ar;
 	float center_x, center_y;
     if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
@@ -467,6 +463,79 @@ void HUD_Weapons(void)
 
 	HUD_Panel_UpdateCvars(weapons);
 	HUD_Panel_ApplyFadeAlpha();
+
+	// TODO make this configurable
+	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
+	{
+		float weapon_cnt;
+		if(weaponorder_bypriority)
+			strunzone(weaponorder_bypriority);
+		if(weaponorder_byimpulse)
+			strunzone(weaponorder_byimpulse);
+
+		weaponorder_bypriority = strzone(autocvar_cl_weaponpriority);
+		weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority))));
+		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
+
+		weapon_cnt = 0;
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		{
+			self = get_weaponinfo(i);
+			if(self.impulse >= 0)
+			{
+				weaponorder[weapon_cnt] = self;
+				++weapon_cnt;
+			}
+		}
+		for(i = weapon_cnt; i < WEP_MAXCOUNT; ++i)
+			weaponorder[i] = NULL;
+		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
+
+		weaponorder_cmp_str = string_null;
+	}
+
+	float when, fadetime;
+	when = autocvar_hud_panel_weapons_complainbubble_time;
+	fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
+	float weapons_st = getstati(STAT_WEAPONS);
+	float weapon_count;
+	if (autocvar_hud_panel_weapons_onlyowned)
+	{
+		if(autocvar__hud_configure)
+		{
+			if (weapons_st == 0)
+				for(i = 0; i <= WEP_LAST-WEP_FIRST; i += floor((WEP_LAST-WEP_FIRST)/5))
+					weapons_st |= power2of(i);
+			if(menu_enabled != 2)
+				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
+		}
+
+		vector old_panel_size;
+		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
+		{
+			if(weapons_st & weaponorder[i].weapons)
+				++weapon_count;
+		}
+		if(!autocvar__hud_configure && (autocvar_hud_panel_weapons_complainbubble && time - complain_weapon_time < when + fadetime))// && complain_weapon >= 0
+			++weapon_count;
+		if (weapon_count == 0)
+			return;
+		// reduce size of the panel
+		if (panel_size_y > panel_size_x)
+		{
+			old_panel_size_y = panel_size_y;
+			panel_size_y *= weapon_count / WEP_COUNT;
+			panel_pos_y += (old_panel_size_y - panel_size_y) / 2;
+		}
+		else
+		{
+			old_panel_size_x = panel_size_x;
+			panel_size_x *= weapon_count / WEP_COUNT;
+			panel_pos_x += (old_panel_size_x - panel_size_x) / 2;
+		}
+	}
+	else
+		weapon_count = WEP_COUNT;
 
 	if (timeout && time >= weapontime + timeout && !autocvar__hud_configure)
 	{
@@ -531,43 +600,14 @@ void HUD_Weapons(void)
 		}
 	}
 
-	float i, weapid, wpnalpha, weapon_cnt;
-
-	// TODO make this configurable
-	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
-	{
-		if(weaponorder_bypriority)
-			strunzone(weaponorder_bypriority);
-		if(weaponorder_byimpulse)
-			strunzone(weaponorder_byimpulse);
-
-		weaponorder_bypriority = strzone(autocvar_cl_weaponpriority);
-		weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority))));
-		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
-
-		weapon_cnt = 0;
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
-			self = get_weaponinfo(i);
-			if(self.impulse >= 0)
-			{
-				weaponorder[weapon_cnt] = self;
-				++weapon_cnt;
-			}
-		}
-		for(i = weapon_cnt; i < WEP_MAXCOUNT; ++i)
-			weaponorder[i] = NULL;
-		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
-
-		weaponorder_cmp_str = string_null;
-	}
-
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
+
+	float weapid, wpnalpha;
 
 	if(autocvar_hud_panel_weapons_fade)
 	{
@@ -580,21 +620,17 @@ void HUD_Weapons(void)
 	float rows, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 	rows = panel_size_y/panel_size_x;
-	rows = bound(1, floor((sqrt(4 * aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
+	rows = bound(1, floor((sqrt(4 * aspect * rows * weapon_count + rows * rows) + rows + 0.5) / 2), weapon_count);
 
-	columns = ceil(WEP_COUNT/rows);
+	columns = ceil(weapon_count/rows);
 	float row, column;
 
 	float a, type, fullammo;
-	float when;
-	when = autocvar_hud_panel_weapons_complainbubble_time;
-	float fadetime;
-	fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
 
 	vector color;
 	vector wpnpos;
 	vector wpnsize;
-	
+
 	vector ammo_color;
 	float ammo_alpha;
 	wpnsize = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
@@ -629,12 +665,13 @@ void HUD_Weapons(void)
 				acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 	}
 
-	float weapons_st = getstati(STAT_WEAPONS);
-
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
 		self = weaponorder[i];
 		if (!self || self.impulse < 0)
+			continue;
+		if (autocvar_hud_panel_weapons_onlyowned)
+		if (!((weapons_st & self.weapons) || (self.weapon == complain_weapon && time - complain_weapon_time < when + fadetime && autocvar_hud_panel_weapons_complainbubble)))
 			continue;
 		wpnpos = panel_pos + eX * column * wpnsize_x + eY * row * wpnsize_y;
 
@@ -4539,7 +4576,7 @@ void HUD_CenterPrint (void)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
-		if (centerprint_expire_time[j] < time)
+		if (centerprint_expire_time[j] <= time)
 		{
 			if (centerprint_countdown_num[j] && centerprint_time[j] > 0)
 			{
@@ -4844,10 +4881,18 @@ void HUD_Main (void)
 	if(autocvar__con_chat_maximized)
 		HUD_Chat(); // HUD_DrawPanel(HUD_PANEL_CHAT);
 
-	if(autocvar__hud_configure && tab_panel != -1)
+	if(autocvar__hud_configure)
 	{
-		HUD_Panel_UpdatePosSizeForId(tab_panel)
-		drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .2, DRAWFLAG_NORMAL);
+		if(tab_panel != -1)
+		{
+			HUD_Panel_UpdatePosSizeForId(tab_panel)
+			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .2, DRAWFLAG_NORMAL);
+		}
+		if(highlightedPanel != -1)
+		{
+			HUD_Panel_UpdatePosSizeForId(highlightedPanel);
+			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
+		}
 	}
 
 	hud_configure_prev = autocvar__hud_configure;

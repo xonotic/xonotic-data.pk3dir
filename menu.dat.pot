@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-02 07:51+0200\n"
+"POT-Creation-Date: 2011-09-12 12:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -212,6 +212,7 @@ msgid "Intensity:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:109
+#: qcsrc/menu/xonotic/dialog_settings_input.c:74
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:30
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:41
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:195
@@ -228,24 +229,24 @@ msgstr ""
 msgid "Panel background defaults:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:23 qcsrc/menu/xonotic/util.qc:575
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:23 qcsrc/menu/xonotic/util.qc:587
 msgid "Background:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:37
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:52
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:578
-#: qcsrc/menu/xonotic/util.qc:594 qcsrc/menu/xonotic/util.qc:611
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:590
+#: qcsrc/menu/xonotic/util.qc:606 qcsrc/menu/xonotic/util.qc:623
 msgid "Disable"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:30
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:583
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:595
 msgid "Color:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:591
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:603
 msgid "Border size:"
 msgstr ""
 
@@ -253,7 +254,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:82
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:32
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:154
-#: qcsrc/menu/xonotic/util.qc:600
+#: qcsrc/menu/xonotic/util.qc:612
 msgid "Alpha:"
 msgstr ""
 
@@ -262,11 +263,11 @@ msgstr ""
 msgid "Team color:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:617
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:629
 msgid "Test team color in configure mode"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:620
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:632
 msgid "Padding:"
 msgstr ""
 
@@ -529,7 +530,7 @@ msgid "Save settings"
 msgstr ""
 
 #: qcsrc/menu/xonotic/campaign.c:284
-#: qcsrc/menu/xonotic/dialog_singleplayer.c:134
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:123
 msgid "???"
 msgstr ""
 
@@ -580,6 +581,10 @@ msgstr ""
 msgid "\"enter console\" also closes"
 msgstr ""
 
+#: qcsrc/menu/xonotic/dialog_settings_input.c:72
+msgid "Holding jump key keeps jumping"
+msgstr ""
+
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:4
 msgid "Weapons Panel"
 msgstr ""
@@ -618,34 +623,38 @@ msgid "Weapon icons:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:45
-msgid "Show weapon ID as:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:46
-msgid "SHOWAS^None"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:47
-msgid "Number"
+msgid "Show only owned weapons"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:48
-msgid "Bind"
+msgid "Show weapon ID as:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:49
+msgid "SHOWAS^None"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:50
+msgid "Number"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:51
+msgid "Bind"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:54
 msgid "Show Accuracy"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:52
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:55
 msgid "Show Ammo"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:55
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:58
 msgid "Ammo bar color:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:61
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:64
 msgid "Ammo bar alpha:"
 msgstr ""
 
@@ -862,11 +871,11 @@ msgstr ""
 msgid "Singleplayer"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.c:127
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:116
 msgid "Instant action! (random map with bots)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.c:148
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:137
 msgid "Start Singleplayer!"
 msgstr ""
 
@@ -1728,131 +1737,131 @@ msgstr ""
 msgid "Simple majority wins vcall"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:270
+#: qcsrc/menu/xonotic/util.qc:271
 #, c-format
 msgid "Received HTTP request data for an invalid id %d.\n"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:285
+#: qcsrc/menu/xonotic/util.qc:286
 #, c-format
 msgid "error receiving update notification: status is %d\n"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:290
+#: qcsrc/menu/xonotic/util.qc:291
 msgid "error: received HTML instead of an update notification\n"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:295
+#: qcsrc/menu/xonotic/util.qc:296
 msgid "error: received carriage returns from update notification server\n"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:316
+#: qcsrc/menu/xonotic/util.qc:317
 #, c-format
 msgid ""
 "Update can be downloaded at:\n"
 "%s\n"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:337
+#: qcsrc/menu/xonotic/util.qc:340
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:367
+#: qcsrc/menu/xonotic/util.qc:370
 #, c-format
 msgid "^1%s TEST BUILD"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:432
+#: qcsrc/menu/xonotic/util.qc:428
 #, c-format
 msgid "Update to %s now!"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:501
+#: qcsrc/menu/xonotic/util.qc:513
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems.\n"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:523
+#: qcsrc/menu/xonotic/util.qc:535
 msgid "Arena"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:524
+#: qcsrc/menu/xonotic/util.qc:536
 msgid "Assault"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:525
+#: qcsrc/menu/xonotic/util.qc:537
 msgid "Capture The Flag"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:526
+#: qcsrc/menu/xonotic/util.qc:538
 msgid "Clan Arena"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:527
+#: qcsrc/menu/xonotic/util.qc:539
 msgid "Deathmatch"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:528
+#: qcsrc/menu/xonotic/util.qc:540
 msgid "Domination"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:529
+#: qcsrc/menu/xonotic/util.qc:541
 msgid "Freeze Tag"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:530
+#: qcsrc/menu/xonotic/util.qc:542
 msgid "Keepaway"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:531
+#: qcsrc/menu/xonotic/util.qc:543
 msgid "Key Hunt"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:532
+#: qcsrc/menu/xonotic/util.qc:544
 msgid "Last Man Standing"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:533
+#: qcsrc/menu/xonotic/util.qc:545
 msgid "Nexball"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:534
+#: qcsrc/menu/xonotic/util.qc:546
 msgid "Onslaught"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:535
+#: qcsrc/menu/xonotic/util.qc:547
 msgid "Race"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:536
+#: qcsrc/menu/xonotic/util.qc:548
 msgid "Race CTS"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:537
+#: qcsrc/menu/xonotic/util.qc:549
 msgid "Runematch"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:538
+#: qcsrc/menu/xonotic/util.qc:550
 msgid "Team Deathmatch"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:557
+#: qcsrc/menu/xonotic/util.qc:569
 #, c-format
 msgid "@!#%'n Tuba Throwing"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:577 qcsrc/menu/xonotic/util.qc:593
-#: qcsrc/menu/xonotic/util.qc:602 qcsrc/menu/xonotic/util.qc:610
-#: qcsrc/menu/xonotic/util.qc:622
+#: qcsrc/menu/xonotic/util.qc:589 qcsrc/menu/xonotic/util.qc:605
+#: qcsrc/menu/xonotic/util.qc:614 qcsrc/menu/xonotic/util.qc:622
+#: qcsrc/menu/xonotic/util.qc:634
 msgid "Default"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:588
+#: qcsrc/menu/xonotic/util.qc:600
 msgid "Use default"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:608
+#: qcsrc/menu/xonotic/util.qc:620
 msgid "Team Color:"
 msgstr ""
 
