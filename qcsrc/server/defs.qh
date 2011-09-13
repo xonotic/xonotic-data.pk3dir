@@ -411,7 +411,6 @@ float lockteams;
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
 
-float sv_pogostick;
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
 
 float next_pingtime;

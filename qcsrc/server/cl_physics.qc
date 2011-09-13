@@ -112,7 +112,7 @@ void PlayerJump (void)
 		if (!(self.flags & FL_ONGROUND))
 			return;
 
-	if(!sv_pogostick || self.cvar_cl_movement_track_canjump)
+	if(self.cvar_cl_movement_track_canjump)
 		if (!(self.flags & FL_JUMPRELEASED))
 			return;
 
