@@ -2302,7 +2302,11 @@ void HUD_Radar(void)
 {
 	if (!autocvar__hud_configure)
 	{
-		if (!autocvar_hud_panel_radar_maximized)
+		if (autocvar_hud_panel_radar_maximized)
+		{
+			if (!hud_draw_maximized) return;
+		}
+		else
 		{
 			if (autocvar_hud_panel_radar == 0) return;
 			if (autocvar_hud_panel_radar != 2 && !teamplay) return;
@@ -3831,6 +3835,8 @@ void HUD_Chat(void)
 				cvar_set("con_chatrect", "0");
 			return;
 		}
+		if(autocvar__con_chat_maximized)
+			if(!hud_draw_maximized) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_CHAT;
@@ -4856,15 +4862,17 @@ void HUD_Main (void)
 		}
 	}
 
+	hud_draw_maximized = 0;
 	// draw panels in order specified by panel_order array
-	for(i = HUD_PANEL_NUM - 1; i >= 0; --i) {
-		if(i != HUD_PANEL_CHAT || !autocvar__con_chat_maximized) // don't draw maximized chat panel twice!
-			HUD_DrawPanel(panel_order[i]);
-	}
+	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
+		HUD_DrawPanel(panel_order[i]);
 
-	// draw chat panel on top if it is maximized
+	hud_draw_maximized = 1; // panels that may be maximized must check this var
+	// draw maximized panels on top
+	if(autocvar_hud_panel_radar_maximized)
+		HUD_Radar();
 	if(autocvar__con_chat_maximized)
-		HUD_Chat(); // HUD_DrawPanel(HUD_PANEL_CHAT);
+		HUD_Chat();
 
 	if(autocvar__hud_configure && tab_panel != -1)
 	{
