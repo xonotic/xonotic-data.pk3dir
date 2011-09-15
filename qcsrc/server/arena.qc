@@ -55,6 +55,12 @@ void reset_map(float dorespawn)
 
 	race_ReadyRestart();
 
+	FOR_EACH_CLIENT(self) {
+		// just to make sure, as the FL_PROJECTILE handling is bad for
+		// these
+		RemoveGrapplingHook();
+	}
+
 	for(self = world; (self = nextent(self)); )
 	if(clienttype(self) == CLIENTTYPE_NOTACLIENT && self.items != IT_STRENGTH && self.items != IT_INVINCIBLE) // don't respawn strength or shield, that will only lead to them spawning very early each match
 	{
