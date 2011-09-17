@@ -375,7 +375,6 @@ void WinningConditionHelper()
 	entity winnerscorekeeper;
 	entity secondscorekeeper;
 	entity sk;
-	float slots;
 
 	// format:
 	// gametype:P<pure>:S<slots>::plabel,plabel:tlabel,tlabel:teamid:tscore,tscore:teamid:tscore,tscore

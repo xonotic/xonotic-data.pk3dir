@@ -26,7 +26,7 @@ string MapVote_FormatMapItem(float id, string map, float count, float maxwidth, 
 	{
 		if(count == 1)
 			post = _(" (1 vote)");
-		else
+		else if(count >= 0)
 			post = sprintf(_(" (%d votes)"), count);
 	}
 	else
@@ -170,7 +170,7 @@ void MapVote_Draw()
 
 	if(!mv_active)
 		return;
-	
+
 	mv_mousepos = mv_mousepos + getmousepos();
 
 	mv_mousepos_x = bound(0, mv_mousepos_x, vid_conwidth);
@@ -190,14 +190,14 @@ void MapVote_Draw()
 
 	pos_y = ymin;
 	pos_z = 0;
-	//pos_x = center - stringwidth("Vote for a map", false) * 0.5 * 24;
-	pos_x = center - stringwidth(_("Vote for a map"), false, '12 0 0');
-	drawstring(pos, "Vote for a map", '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+
+	map = _("Vote for a map");
+	pos_x = center - stringwidth(map, false, '12 0 0');
+	drawstring(pos, map, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 	pos_y += 26;
 
 	i = ceil(max(0, mv_timeout - time));
 	map = sprintf(_("%d seconds left"), i);
-	//pos_x = center - stringwidth(map, false) * 0.5 * 16;
 	pos_x = center - stringwidth(map, false, '8 0 0');
 	drawstring(pos, map, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
 	pos_y += 22;
@@ -207,7 +207,7 @@ void MapVote_Draw()
 	ymin = pos_y;
 	if(mv_abstain)
 		mv_num_maps -= 1;
-	
+
 	if(mv_num_maps > 3)
 	{
 		columns = 3;
@@ -242,7 +242,7 @@ void MapVote_Draw()
 
 	if(mv_abstain)
 		++mv_num_maps;
-	
+
 	if(mv_abstain && i < mv_num_maps) {
 		tmp = mv_votes[i];
 		pos_y = ymax + isize - hud_fontsize_y;
@@ -411,6 +411,19 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
 		return true;
 	}
+	switch(nPrimary)
+	{
+		case K_KP_1: localcmd("\nimpulse 1\n"); return true;
+		case K_KP_2: localcmd("\nimpulse 2\n"); return true;
+		case K_KP_3: localcmd("\nimpulse 3\n"); return true;
+		case K_KP_4: localcmd("\nimpulse 4\n"); return true;
+		case K_KP_5: localcmd("\nimpulse 5\n"); return true;
+		case K_KP_6: localcmd("\nimpulse 6\n"); return true;
+		case K_KP_7: localcmd("\nimpulse 7\n"); return true;
+		case K_KP_8: localcmd("\nimpulse 8\n"); return true;
+		case K_KP_9: localcmd("\nimpulse 9\n"); return true;
+		case K_KP_0: localcmd("\nimpulse 10\n"); return true;
+	}
 
 	if (nPrimary == K_MOUSE1)
 		if (mv_selection >= 0)
@@ -436,7 +449,7 @@ void MapVote_UpdateMask()
 
 	if(oldmask & mv_maps_mask != oldmask)
 		if(oldmask & mv_maps_mask == mv_maps_mask)
-			 sound(world, CHAN_AUTO, "misc_invshot.wav", VOL_BASE, ATTN_NONE);
+			 sound(world, CH_INFO, "misc_invshot.wav", VOL_BASE, ATTN_NONE);
 
 	// remove votes that no longer apply
 	for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)

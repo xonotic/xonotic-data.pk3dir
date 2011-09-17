@@ -26,7 +26,7 @@ void() m_init =
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print(sprintf(_("^4MQC Build information: %s\n"), WATERMARK()));
+	print(sprintf(_("^4MQC Build information: ^1%s\n"), WATERMARK()));
 #endif
 
 	// list all game dirs (TEST)
@@ -121,13 +121,18 @@ void() m_init_delayed =
 	if(fh < 0)
 	if(cvar_defstring("menu_skin") != "")
 	{
-		draw_currentSkin = strcat("gfx/menu/", cvar_defstring("menu_skin"));
+		cvar_set("menu_skin", cvar_defstring("menu_skin"));
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
 		fh = fopen(language_filename(strcat(draw_currentSkin, "/skinvalues.txt")), FILE_READ);
 	}
 	if(fh < 0)
 	{
 		draw_currentSkin = "gfx/menu/default";
 		fh = fopen(language_filename(strcat(draw_currentSkin, "/skinvalues.txt")), FILE_READ);
+	}
+	if(fh < 0)
+	{
+		error("cannot load any menu skin\n");
 	}
 	draw_currentSkin = strzone(draw_currentSkin);
 	while((s = fgets(fh)))

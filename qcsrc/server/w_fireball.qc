@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", _("Fireball"));
+REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", _("Fireball"));
 #else
 #ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is
@@ -18,7 +18,7 @@ void W_Fireball_Explode (void)
 	self.takedamage = DAMAGE_NO;
 
 	// 1. dist damage
-	d = (self.owner.health + self.owner.armorvalue);
+	d = (self.realowner.health + self.realowner.armorvalue);
 	RadiusDamage (self, self.realowner, autocvar_g_balance_fireball_primary_damage, autocvar_g_balance_fireball_primary_edgedamage, autocvar_g_balance_fireball_primary_radius, world, autocvar_g_balance_fireball_primary_force, self.projectiledeathtype, other);
 	if(self.realowner.health + self.realowner.armorvalue >= d)
 	if(!self.cnt)
@@ -28,7 +28,7 @@ void W_Fireball_Explode (void)
 		// 2. bfg effect
 		// NOTE: this cannot be made warpzone aware by design. So, better intentionally ignore warpzones here.
 		for(e = findradius(self.origin, autocvar_g_balance_fireball_primary_bfgradius); e; e = e.chain)
-		if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || IsDifferentTeam(e, self))
+		if(e != self.realowner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.realowner || IsDifferentTeam(e, self))
 		{
 			// can we see fireball?
 			traceline(e.origin + e.view_ofs, self.origin, MOVE_NORMAL, e);
@@ -73,7 +73,7 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 
 	RandomSelection_Init();
 	for(e = WarpZone_FindRadius(self.origin, dist, TRUE); e; e = e.chain)
-	if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || IsDifferentTeam(e, self))
+	if(e != self.realowner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.realowner || IsDifferentTeam(e, self))
 	{
 		p = e.origin;
 		p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
@@ -127,7 +127,7 @@ void W_Fireball_Attack1()
 {
 	local entity proj;
 
-	W_SetupShot_ProjectileSize (self, '-16 -16 -16', '16 16 16', FALSE, 2, "weapons/fireball_fire2.wav", CHAN_WEAPON, autocvar_g_balance_fireball_primary_damage + autocvar_g_balance_fireball_primary_bfgdamage);
+	W_SetupShot_ProjectileSize (self, '-16 -16 -16', '16 16 16', FALSE, 2, "weapons/fireball_fire2.wav", CH_WEAPON_A, autocvar_g_balance_fireball_primary_damage + autocvar_g_balance_fireball_primary_bfgdamage);
 
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -194,11 +194,10 @@ void W_Fireball_Attack1_Frame1()
 
 void W_Fireball_Attack1_Frame0()
 {
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel = self.ammo_fuel - autocvar_g_balance_fireball_primary_ammo;
+	W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_reload_ammo);
 
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
-	sound (self, CHAN_WEAPON, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_SINGLE, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_fireball_primary_animtime, W_Fireball_Attack1_Frame1);
 }
 
@@ -246,8 +245,7 @@ void W_Fireball_Attack2()
 	vector f_diff;
 	float c;
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel = self.ammo_fuel - autocvar_g_balance_fireball_secondary_ammo;
+	W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_fireball_secondary_ammo, autocvar_g_balance_fireball_reload_ammo);
 
 	c = mod(self.bulletcounter, 4);
 	switch(c)
@@ -266,7 +264,7 @@ void W_Fireball_Attack2()
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, "weapons/fireball_fire.wav", CHAN_WEAPON, autocvar_g_balance_fireball_secondary_damage);
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, "weapons/fireball_fire.wav", CH_WEAPON_A, autocvar_g_balance_fireball_secondary_damage);
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
@@ -304,6 +302,7 @@ void spawnfunc_weapon_fireball (void)
 
 float w_fireball(float req)
 {
+	float ammo_amount;
 	if (req == WR_AIM)
 	{
 		self.BUTTON_ATCK = FALSE;
@@ -327,18 +326,24 @@ float w_fireball(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
-		if (time >= self.fireball_primarytime)
-		if (weapon_prepareattack(0, autocvar_g_balance_fireball_primary_refire))
+		if(autocvar_g_balance_fireball_reload_ammo && self.clip_load < min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo)) // forced reload
+			weapon_action(self.weapon, WR_RELOAD);
+		else if (self.BUTTON_ATCK)
 		{
-			W_Fireball_Attack1_Frame0();
-			self.fireball_primarytime = time + autocvar_g_balance_fireball_primary_refire2;
+			if (time >= self.fireball_primarytime)
+			if (weapon_prepareattack(0, autocvar_g_balance_fireball_primary_refire))
+			{
+				W_Fireball_Attack1_Frame0();
+				self.fireball_primarytime = time + autocvar_g_balance_fireball_primary_refire2 * W_WeaponRateFactor();
+			}
 		}
-		if (self.BUTTON_ATCK2)
-		if (weapon_prepareattack(1, autocvar_g_balance_fireball_secondary_refire))
+		else if (self.BUTTON_ATCK2)
 		{
-			W_Fireball_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_fireball_secondary_animtime, w_ready);
+			if (weapon_prepareattack(1, autocvar_g_balance_fireball_secondary_refire))
+			{
+				W_Fireball_Attack2();
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_fireball_secondary_animtime, w_ready);
+			}
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -350,16 +355,36 @@ float w_fireball(float req)
 		precache_sound ("weapons/fireball_fire.wav");
 		precache_sound ("weapons/fireball_fire2.wav");
 		precache_sound ("weapons/fireball_prefire2.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
+	{
 		weapon_setup(WEP_FIREBALL);
+		self.current_ammo = ammo_fuel;
+	}
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
+	{
+		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
+		ammo_amount += self.weapon_load[WEP_FIREBALL] >= autocvar_g_balance_fireball_primary_ammo;
+		return ammo_amount;
+	}
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
+	{
+		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
+		ammo_amount += self.weapon_load[WEP_FIREBALL] >= autocvar_g_balance_fireball_secondary_ammo;
+		return ammo_amount;
+	}
 	else if (req == WR_RESETPLAYER)
 	{
 		self.fireball_primarytime = time;
+	}
+	else if (req == WR_RELOAD)
+	{
+		// fuel can be a non-whole number, which brakes stuff here when between 0 and 1
+		if(self.ammo_fuel < 1)
+			self.ammo_fuel = 0;
+
+		W_Reload(min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo), autocvar_g_balance_fireball_reload_ammo, autocvar_g_balance_fireball_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 };
@@ -379,7 +404,7 @@ float w_fireball(float req)
 			org2 = w_org + w_backoff * 16;
 			pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CHAN_PROJECTILE, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
+				sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
 		}
 	}
 	else if(req == WR_PRECACHE)

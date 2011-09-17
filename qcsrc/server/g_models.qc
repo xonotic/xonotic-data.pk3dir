@@ -2,7 +2,7 @@
 
 void g_model_setcolormaptoactivator (void)
 {
-	if(teams_matter)
+	if(teamplay)
 	{
 		if(activator.team)
 			self.colormap = (activator.team - 1) * 0x11;

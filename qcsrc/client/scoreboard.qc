@@ -240,11 +240,11 @@ void Cmd_HUD_Help(float argc)
 	print(_("^3|---------------------------------------------------------------|\n"));
 	print(_("Usage:\n"));
 	print(_("^2scoreboard_columns_set default\n"));
-	print(_("^2scoreboard_columns_set ^7filed1 field2 ...\n"));
+	print(_("^2scoreboard_columns_set ^7field1 field2 ...\n"));
 	print(_("The following field names are recognized (case insensitive):\n"));
 	print(_("You can use a ^3|^7 to start the right-aligned fields.\n\n"));
 
-	print(_("^3name^7 or ^3nick^7         Name of a player\n"));
+	print(_("^3name^7 or ^3nick^7             Name of a player\n"));
 	print(_("^3ping^7                     Ping time\n"));
 	print(_("^3pl^7                       Packet loss\n"));
 	print(_("^3kills^7                    Number of kills\n"));
@@ -365,7 +365,7 @@ void Cmd_HUD_SetFields(float argc)
 
 		strunzone(hud_title[hud_num_fields]);
 		hud_title[hud_num_fields] = strzone(TranslateScoresLabel(str));
-		hud_size[hud_num_fields] = stringwidth(str, FALSE, hud_fontsize);
+		hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 		str = strtolower(str);
 
 		if(str == "ping") {
@@ -792,6 +792,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	body_table_height = 1.25 * hud_fontsize_y * max(1, tm.team_size); // no player? show 1 empty line
 
+	pos_y += autocvar_scoreboard_border_thickness;
 	pos -= '1 1 0';
 
 	tmp_x = sbwidth + 2;
@@ -923,9 +924,7 @@ float HUD_WouldDrawScoreboard() {
 		return 1;
 	else if (intermission == 2)
 		return 0;
-	else if (getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != GAME_CTS)
-		return 1;
-	else if (spectatee_status == -1)
+	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != GAME_CTS)
 		return 1;
 	else if (scoreboard_showscores_force)
 		return 1;
@@ -949,7 +948,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float weapon_width = sbwidth / weapon_cnt;
 
 	drawstring(pos, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	pos_y += 1.25 * hud_fontsize_y;
+	pos_y += 1.25 * hud_fontsize_y + autocvar_scoreboard_border_thickness;
 	vector tmp;
 	tmp_x = sbwidth;
 	tmp_y = height * rows;
@@ -979,10 +978,10 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(rows == 2)
 		pos_x += weapon_width / 2;
 
-	if(getstati(STAT_SWITCHWEAPON) == WEP_MINSTANEX)
+	if(switchweapon == WEP_MINSTANEX)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
-	float weapon_stats, weapon_number;
+	float weapon_stats;
 
 	if (!acc_levels)
 		rgb = '1 1 1';
@@ -1074,7 +1073,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 
 	pos_y += hud_fontsize_y;
 	drawstring(pos, _("Rankings"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	pos_y += hud_fontsize_y;
+	pos_y += hud_fontsize_y + autocvar_scoreboard_border_thickness;
 	vector tmp;
 	tmp_x = sbwidth;
 	tmp_y = 1.25 * hud_fontsize_y * RANKINGS_RECEIVED_CNT;
@@ -1104,6 +1103,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		drawcolorcodedstring(pos + '8 0 0' * hud_fontsize_y, n, '1 1 0' * hud_fontsize_y, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		pos_y += 1.25 * hud_fontsize_y;
 	}
+	pos_y += autocvar_scoreboard_border_thickness;
 
 	return pos;
 }
@@ -1149,6 +1149,7 @@ void HUD_DrawScoreboard()
 
 	vector rgb, pos, tmp;
 	entity pl, tm;
+	string str;
 
 	xmin = autocvar_scoreboard_offset_left * vid_conwidth;
 	ymin = autocvar_con_notify * autocvar_con_notifysize;
@@ -1164,29 +1165,33 @@ void HUD_DrawScoreboard()
 	pos_z = 0;
 
 	// Heading
-	drawstring(pos, _("Scoreboard"), '24 24 0', '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	
-	centerprint_start_x = vid_conwidth - 0.5 * (pos_x + stringwidth(_("Scoreboard"), FALSE, '24 24 0'));
-	centerprint_start_y = pos_y;
+	vector sb_heading_fontsize;
+	sb_heading_fontsize = hud_fontsize * 2;
+	drawstring(pos, _("Scoreboard"), sb_heading_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
-	pos_y += 24;
+	pos_y += sb_heading_fontsize_y + hud_fontsize_y * 0.25;
 
 	// Draw the scoreboard
 	vector bg_size = drawgetimagesize("gfx/scoreboard/scoreboard_bg") * autocvar_scoreboard_bg_scale;
 
 	if(teamplay)
 	{
+		vector team_score_baseoffset;
+		team_score_baseoffset = eY * (2 * autocvar_scoreboard_border_thickness + hud_fontsize_y) - eX * (autocvar_scoreboard_border_thickness + hud_fontsize_x * 0.25);
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == COLOR_SPECTATOR)
 				continue;
 
 			rgb = GetTeamRGB(tm.team);
-			drawstring(pos - '2 0 0' * hud_fontsize_x + '0 1 0' * hud_fontsize_y, ftos(tm.(teamscores[ts_primary])), '1 1 0' * hud_fontsize_y * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			str = ftos(tm.(teamscores[ts_primary]));
+			drawstring(pos + team_score_baseoffset - eX * stringwidth(str, FALSE, hud_fontsize * 1.5), str, hud_fontsize * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(ts_primary != ts_secondary)
-				drawstring(pos - '2 0 0' * hud_fontsize_x + '0 2.5 0' * hud_fontsize_y, ftos(tm.(teamscores[ts_secondary])), '1 1 0' * hud_fontsize_y * 1, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
+			{
+				str = ftos(tm.(teamscores[ts_secondary]));
+				drawstring(pos + team_score_baseoffset - eX * stringwidth(str, FALSE, hud_fontsize) + eY * hud_fontsize_y * 1.5, str, hud_fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			}
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
 		}
 	}
@@ -1243,7 +1248,6 @@ void HUD_DrawScoreboard()
 	}
 
 	// Print info string
-	string str;
 	float tl, fl, ll;
 	str = sprintf(_("playing on ^2%s^7"), shortmapname);
 	tl = getstatf(STAT_TIMELIMIT);
@@ -1252,12 +1256,12 @@ void HUD_DrawScoreboard()
 	if(gametype == GAME_LMS)
 	{
 		if(tl > 0)
-			str = strcat(str, sprintf(_(" for up to ^1%.1f minutes^7"), tl));
+			str = strcat(str, sprintf(_(" for up to ^1%1.0f minutes^7"), tl));
 	}
 	else
 	{
 		if(tl > 0)
-			str = strcat(str, sprintf(_(" for up to ^1%.1f minutes^7"), tl));
+			str = strcat(str, sprintf(_(" for up to ^1%1.0f minutes^7"), tl));
 		if(fl > 0)
 		{
 			if(tl > 0)

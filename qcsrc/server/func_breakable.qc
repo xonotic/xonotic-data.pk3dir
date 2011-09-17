@@ -114,6 +114,7 @@ void func_breakable_behave_destroyed()
 {
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;
+	self.bot_attack = FALSE;
 	self.event_damage = SUB_Null;
 	self.state = 1;
 	func_breakable_colormod();
@@ -128,8 +129,10 @@ void func_breakable_behave_restore()
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}
 	self.takedamage = DAMAGE_AIM;
+	self.bot_attack = TRUE;
 	self.event_damage = func_breakable_damage;
 	self.state = 0;
+	self.nextthink = 0; // cancel auto respawn
 	func_breakable_colormod();
 }
 
@@ -161,13 +164,19 @@ void func_breakable_destroy() {
 	func_breakable_destroyed();
 
 	if(self.noise)
-		sound (self, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 
 	if(self.dmg)
 		RadiusDamage(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, self.dmg_force, DEATH_HURTTRIGGER, world);
 
 	if(self.cnt)
 		pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);
+
+	if(self.respawntime)
+	{
+		self.think = func_breakable_restore;
+		self.nextthink = time + self.respawntime + crandom() * self.respawntimejitter;
+	}
 
 	oldmsg = self.message;
 	self.message = "";
@@ -259,4 +268,9 @@ void spawnfunc_func_breakable() {
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
+}
+
+// for use in maps with a "model" key set
+void spawnfunc_misc_breakablemodel() {
+	spawnfunc_func_breakable();
 }

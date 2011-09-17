@@ -135,7 +135,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.1, "crosshair_alpha"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair color:"));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair color:")));
 		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(4, "crosshair_color_per_weapon", string_null, _("Per weapon")));
 		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(4, "crosshair_color_by_health", string_null, _("By health")));
 	me.TR(me);

@@ -7,9 +7,8 @@
 \menu_slist_showempty\Show empty servers
 \menu_slist_showfull\Show full servers that have no slots available
 \net_slist_pause\Pause updating the server list to prevent servers from "jumping around"
-\XonoticMultiplayerDialog/Info\Show more information about the currently highlighted server
+\XonoticMultiplayerDialog/Info...\Show more information about the currently highlighted server
 \XonoticMultiplayerDialog/Bookmark\Bookmark the currently highlighted server so that it's faster to find in the future
-\XonoticMultiplayerDialog/Havoc\Change to Havoc mode which has some modifications to the gameplay
 \XonoticMultiplayerDialog/Create\Host your own game
 \XonoticMultiplayerDialog/Demos\Browse and view demos
 \XonoticMultiplayerDialog/Player Setup\Customize your player settings
@@ -43,10 +42,10 @@
 \g_weaponarena\Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.
 \menu_weaponarena_with_laser\Also enable the laser in the weapon arena
 \g_minstagib\Players will be given the Minstanex, which is a railgun with infinite damage. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode is a laser which does not inflict any damage and is good for doing trickjumps.
-\g_nixnex\No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon.
-\g_nixnex_with_laser\Always carry the laser as an additional weapon in NixNex
-\XonoticMultiplayerDialog/All\Select all maps
-\XonoticMultiplayerDialog/None\Unselect all maps
+\g_nix\No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon.
+\g_nix_with_laser\Always carry the laser as an additional weapon in Nix
+\XonoticMultiplayerDialog/Select all\Select all maps
+\XonoticMultiplayerDialog/Select none\Unselect all maps
 
 
 \XonoticMultiplayerDialog/Timedemo\Benchmark how fast your computer can run the highlighted demo
@@ -64,14 +63,12 @@
 \cl_gunalign\Position of the weapon model; requires reconnect
 
 \crosshair_per_weapon\Set a different crosshair for each weapon, good if you play without weapon models
-\crosshair_color_override\Also set the color of the crosshair depending on the weapon you are currently holding
+\crosshair_color_per_weapon\Set the color of the crosshair depending on the weapon you are currently holding
 \crosshair_size\Adjust the size of the crosshair
-\crosshair_color_alpha\Adjust the opacity of the crosshair
-\crosshair_color_red\Red color component of the crosshair color
-\crosshair_color_green\Green color component of the crosshair color
-\crosshair_color_blue\Blue color component of the crosshair color
+\crosshair_alpha\Adjust the opacity of the crosshair
+\crosshair_color\Adjust the crosshair color
 \sbar_hudselector\Use the old HUD layout
-\XonoticMultiplayerDialog/Radar, HUD & Waypoints...\Adjust the radar, HUD and waypoints
+\XonoticMultiplayerDialog/Waypoints setup...\-
 \_cl_name\Name under which you will appear in the game
 
 \XonoticSettingsDialog\Change the game settings
@@ -97,8 +94,6 @@
 \m_pitch\Invert mouse movement on the Y-axis
 \vid_dgamouse\Make use of DGA mouse input
 \con_closeontoggleconsole\Allow the console toggling bind to also close the console
-\sbar_showbinds\Display actions / bound keys in the strings shown during the game
-\cl_showpressedkeys\Show which movement keys the player is pressing
 
 \XonoticSettingsDialog/Video\Video settings
 \vid_width\Screen resolution
@@ -156,16 +151,16 @@
 \r_damageblur\Amount of motion blur when hurt - 0.4 recommended
 
 \XonoticSettingsDialog/Audio\Audio settings
+\mastervolume\-
 \bgmvolume\-
-\volume\-
 \snd_staticvolume\-
-\snd_worldchannel0volume\-
-\snd_entchannel3volume\-
-\snd_playerchannel6volume\-
-\snd_playerchannel7volume\-
-\snd_entchannel4volume\-
-\snd_playerchannel2volume\-
-\snd_playerchannel1volume\-
+\snd_channel0volume\-
+\snd_channel3volume\-
+\snd_channel6volume\-
+\snd_channel7volume\-
+\snd_channel4volume\-
+\snd_channel2volume\-
+\snd_channel1volume\-
 \snd_speed\Sound output frequency
 \snd_channels\Number of channels for the sound output
 \snd_swapstereo\Swap left/right channels
@@ -192,29 +187,13 @@
 \showtime\Show current time of day, useful on screenshots
 \showdate\Show current date, useful on screenshots
 \showfps\Show your rendered frames per second
-\cl_showspeed\Show the speed of the player
-\cl_showspeed_unit\Select the unit used by the speedometer. qu/s = in/s
-\cl_showacceleration\Show the acceleration of the player
-\cl_showacceleration_scale\Excaggerate the accelerometer by this scale multiplier
 
 \XonoticSettingsDialog/Advanced settings...\Advanced settings where you can tweak every single variable of the game
 \g_friendlyfire\Percentage of damage dealt to teammates
 \g_mirrordamage\Percentage of teamdamage that will be mirrored to you
 \g_tdm_teams_override\Override the default amount of teams in teamgames
 
-\cl_teamradar_position\-
-\cl_teamradar_size\-
-\cl_teamradar_zoommode\-
-\cl_teamradar_rotation\-
-\cl_teamradar_scale\-
-\cl_teamradar_foreground_alpha\-
-\cl_teamradar_background_alpha\Opacity value of the radar background
 \viewsize\Enable/disable the HUD background
-\sbar_alpha_bg\Opacity value of the HUD background
-\sbar_color_bg_r\Red color component of the HUD background
-\sbar_color_bg_g\Green color component of the HUD background
-\sbar_color_bg_b\Blue color component of the HUD background
-\sbar_color_bg_team\Team color saturation of the HUD background
 \cl_hidewaypoints\Show various gametype specific waypoints
 \g_waypointsprite_scale\Scale multiplier of the waypoints
 \g_waypointsprite_alpha\Control transparency of the waypoints

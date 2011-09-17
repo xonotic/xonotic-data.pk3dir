@@ -17,6 +17,8 @@ post-builtins.qh
 ../common/constants.qh
 ../common/util.qh
 ../common/items.qh
+../common/explosion_equation.qh
+../common/urllib.qh
 
 autocvars.qh
 constants.qh
@@ -29,6 +31,7 @@ mutators/mutator_dodging.qh
 
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
+vehicles/vehicles_def.qh
 
 campaign.qh
 ../common/campaign_common.qh
@@ -95,7 +98,6 @@ t_jumppads.qc
 t_teleporters.qc
 
 sv_main.qc
-sv_stats.qc
 
 g_triggers.qc
 g_models.qc
@@ -131,6 +133,7 @@ vote.qc
 campaign.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
+../common/urllib.qc
 
 ../common/gamecommand.qc
 gamecommand.qc
@@ -179,6 +182,8 @@ anticheat.qc
 cheats.qc
 playerstats.qc
 
+../common/explosion_equation.qc
+
 mutators/base.qc
 mutators/gamemode_keyhunt.qc
 mutators/gamemode_freezetag.qc
@@ -193,3 +198,5 @@ mutators/mutator_vampire.qc
 ../warpzonelib/common.qc
 ../warpzonelib/util_server.qc
 ../warpzonelib/server.qc
+
+../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

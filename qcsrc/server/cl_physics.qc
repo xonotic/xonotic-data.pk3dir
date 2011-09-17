@@ -34,7 +34,15 @@ void PlayerJump (void)
 	{
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
 		if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
+		{
 			doublejump = TRUE;
+
+			// we MUST clip velocity here!
+			float f;
+			f = self.velocity * trace_plane_normal;
+			if(f < 0)
+				self.velocity -= f * trace_plane_normal;
+		}
 	}
 
 	mjumpheight = autocvar_sv_jumpvelocity;
@@ -61,7 +69,7 @@ void PlayerJump (void)
 	if(!doublejump && self.multijump_ready && self.multijump_count < autocvar_g_multijump && self.velocity_z > autocvar_g_multijump_speed)
 	{
 		// doublejump = FALSE; // checked above in the if
-		if (autocvar_g_multijump > 0)
+		if (autocvar_g_multijump)
 		{
 			if (autocvar_g_multijump_add == 0) // in this case we make the z velocity == jumpvelocity
 			{
@@ -93,7 +101,8 @@ void PlayerJump (void)
 					self.velocity_y = wishdir_y * curspeed;
 					// keep velocity_z unchanged!
 				}
-				self.multijump_count += 1;
+				if (autocvar_g_multijump > 0)
+					self.multijump_count += 1;
 			}
 		}
 		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
@@ -103,7 +112,7 @@ void PlayerJump (void)
 		if (!(self.flags & FL_ONGROUND))
 			return;
 
-	if(!sv_pogostick)
+	if(self.cvar_cl_movement_track_canjump)
 		if (!(self.flags & FL_JUMPRELEASED))
 			return;
 
@@ -166,12 +175,11 @@ void PlayerJump (void)
 		setanim(self, self.anim_jump, FALSE, TRUE, TRUE);
 
 	if(g_jump_grunt)
-		PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
 	self.restart_jump = -1; // restart jump anim next time
 	// value -1 is used to not use the teleport bit (workaround for tiny hitch when re-jumping)
 }
-
 void CheckWaterJump()
 {
 	local vector start, end;
@@ -200,6 +208,25 @@ void CheckWaterJump()
 		}
 	}
 };
+void CheckPlayerJump()
+{
+	if(self.flags & FL_ONGROUND)
+	{
+		if (autocvar_g_multijump > 0)
+			self.multijump_count = 0;
+		else
+			self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
+	}
+
+	if (self.BUTTON_JUMP)
+		PlayerJump ();
+	else
+		self.flags |= FL_JUMPRELEASED;
+
+	if (self.waterlevel == WATERLEVEL_SWIMMING)
+		CheckWaterJump ();
+	self.prevjumpbutton = self.BUTTON_JUMP;
+}
 
 float racecar_angle(float forward, float down)
 {
@@ -503,7 +530,7 @@ float AdjustAirAccelQW(float accelqw, float factor)
 //   sv_airaccel_sideways_friction 0
 //   prvm_globalset server speedclamp_mode 1
 //     (or 2)
-void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float sidefric, float speedlimit)
+void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit)
 {
 	float vel_straight;
 	float vel_z;
@@ -515,8 +542,14 @@ void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float acce
 	float vel_xy_backward, vel_xy_forward;
 	float speedclamp;
 
-	speedclamp = (accelqw < 0);
-	if(speedclamp)
+	if(stretchfactor > 0)
+		speedclamp = stretchfactor;
+	else if(accelqw < 0)
+		speedclamp = 1; // full clamping, no stretch
+	else
+		speedclamp = -1; // no clamping
+
+	if(accelqw < 0)
 		accelqw = -accelqw;
 
 	if(autocvar_sv_gameplayfix_q2airaccelerate)
@@ -559,12 +592,16 @@ void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float acce
 	
 	vel_xy = vel_straight * wishdir + vel_perpend;
 	
-	if(speedclamp)
+	if(speedclamp >= 0)
 	{
-		// ensure we don't get too fast or decelerate faster than we should
-		vel_xy_current = min(vlen(vel_xy), vel_xy_forward);
-		if(vel_xy_current > 0) // prevent division by zero
-			vel_xy = normalize(vel_xy) * vel_xy_current;
+		float vel_xy_preclamp;
+		vel_xy_preclamp = vlen(vel_xy);
+		if(vel_xy_preclamp > 0) // prevent division by zero
+		{
+			vel_xy_current += (vel_xy_forward - vel_xy_current) * speedclamp;
+			if(vel_xy_current < vel_xy_preclamp)
+				vel_xy = vel_xy * (vel_xy_current / vel_xy_preclamp);
+		}
 	}
 
 	self.velocity = vel_xy + vel_z * '0 0 1';
@@ -666,6 +703,8 @@ void SV_PlayerPhysics()
 	float buttons_prev;
 	float not_allowed_to_move;
 	string c;
+
+	WarpZone_PlayerPhysics_FixVAngle();
 	
 	maxspd_mod = 1;
 	if(g_minstagib && (self.items & IT_INVINCIBLE))
@@ -767,7 +806,7 @@ void SV_PlayerPhysics()
 			self.angles_x = random() * 360;
 			self.angles_y = random() * 360;
 			// at least I'm not forcing retardedview by also assigning to angles_z
-			self.fixangle = 1;
+			self.fixangle = TRUE;
 		}
 	}
 
@@ -891,6 +930,7 @@ void SV_PlayerPhysics()
 	}
 
 	if(self.flags & FL_ONGROUND)
+	if(self.classname == "player") // no fall sounds for observers thank you very much
 	if(self.wasFlying)
 	{
 		self.wasFlying = 0;
@@ -905,9 +945,9 @@ void SV_PlayerPhysics()
 			if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
 			{
 				if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-					GlobalSound(globalsound_metalfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+					GlobalSound(globalsound_metalfall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 				else
-					GlobalSound(globalsound_fall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+					GlobalSound(globalsound_fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 			}
 		}
 	}
@@ -916,24 +956,7 @@ void SV_PlayerPhysics()
 		self.wasFlying = 1;
 
 	if(self.classname == "player")
-	{
-		if(self.flags & FL_ONGROUND)
-		{
-			if (autocvar_g_multijump > 0)
-				self.multijump_count = 0;
-			else
-				self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
-		}
-
-		if (self.BUTTON_JUMP)
-			PlayerJump ();
-		else
-			self.flags |= FL_JUMPRELEASED;
-
-		if (self.waterlevel == WATERLEVEL_SWIMMING)
-			CheckWaterJump ();
-		self.prevjumpbutton = self.BUTTON_JUMP;
-	}
+		CheckPlayerJump();
 
 	if (self.flags & FL_WATERJUMP )
 	{
@@ -949,7 +972,7 @@ void SV_PlayerPhysics()
 	{
 		RaceCarPhysics();
 	}
-	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY)
+	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY)
 	{
 		// noclipping or flying
 		self.flags &~= FL_ONGROUND;
@@ -964,7 +987,7 @@ void SV_PlayerPhysics()
 		if (wishspeed > self.stat_sv_maxspeed*maxspd_mod)
 			wishspeed = self.stat_sv_maxspeed*maxspd_mod;
 		if (time >= self.teleport_time)
-			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0);
+			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
 	}
 	else if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
@@ -987,7 +1010,7 @@ void SV_PlayerPhysics()
 		self.velocity = self.velocity * (1 - frametime * autocvar_sv_friction);
 
 		// water acceleration
-		PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0);
+		PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
 	}
 	else if (time < self.ladder_time)
 	{
@@ -1037,7 +1060,7 @@ void SV_PlayerPhysics()
 		if (time >= self.teleport_time)
 		{
 			// water acceleration
-			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0);
+			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
 		}
 	}
 	else if ((self.items & IT_JETPACK) && self.BUTTON_HOOK && (!autocvar_g_jetpack_fuel || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -1197,7 +1220,7 @@ void SV_PlayerPhysics()
 		if (self.crouch)
 			wishspeed = wishspeed * 0.5;
 		if (time >= self.teleport_time)
-			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0);
+			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
 	}
 	else
 	{
@@ -1268,7 +1291,7 @@ void SV_PlayerPhysics()
 			if(autocvar_sv_warsowbunny_turnaccel && accelerating && self.movement_y == 0 && self.movement_x != 0)
 				PM_AirAccelerate(wishdir, wishspeed);
 			else
-				PM_Accelerate(wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, autocvar_sv_airaccel_sideways_friction / maxairspd, self.stat_sv_airspeedlimit_nonqw);
+				PM_Accelerate(wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, autocvar_sv_airaccel_qw_stretchfactor, autocvar_sv_airaccel_sideways_friction / maxairspd, self.stat_sv_airspeedlimit_nonqw);
 
 			if(autocvar_sv_aircontrol)
 				CPM_PM_Aircontrol(wishdir, wishspeed2);

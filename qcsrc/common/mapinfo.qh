@@ -27,6 +27,7 @@ float MapInfo_count;
 // info about a map that MapInfo loads
 string MapInfo_Map_bspname;
 string MapInfo_Map_title;
+string MapInfo_Map_titlestring; // either bspname: title or just title, depending on whether bspname is redundant
 string MapInfo_Map_description;
 string MapInfo_Map_author;
 string MapInfo_Map_clientstuff; // not in cache, only for map load
@@ -68,6 +69,8 @@ void MapInfo_LoadMap(string s);
 
 // list all maps for the current game type
 string MapInfo_ListAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
+// list all allowed maps (for any game type)
+string MapInfo_ListAllAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 
 // gets a gametype from a string
 float MapInfo_Type_FromString(string t);

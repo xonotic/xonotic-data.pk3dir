@@ -1,6 +1,6 @@
-void W_Reload()
+void W_TriggerReload()
 {
-    self.wish_reload = 1;
+    weapon_action(self.weapon, WR_RELOAD);
 }
 
 // switch between weapons
@@ -15,7 +15,7 @@ void W_SwitchWeapon(float imp)
 	}
 	else
 	{
-		W_Reload();
+		W_TriggerReload();
 	}
 };
 
@@ -197,6 +197,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		self = oldself;
 		if(startitem_failed)
 			return string_null;
+		wep.glowmod = own.weaponentity_glowmod;
 		wep.think = thrown_wep_think;
 		wep.nextthink = time + 0.5;
 		return "";
@@ -221,10 +222,18 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 					wep.ammofield = thisammo;
 					own.ammofield -= thisammo;
 					s = strcat(s, " and ", ftos(thisammo), " ", Item_CounterFieldName(j));
+
+					// if our weapon is loaded, give its load back to the player
+					if(self.weapon_load[self.weapon] > 0)
+					{
+						own.ammofield += self.weapon_load[self.weapon];
+						self.weapon_load[self.weapon] = -1; // schedule the weapon for reloading
+					}
 				}
 			}
 			s = substring(s, 5, -1);
 		}
+		wep.glowmod = own.weaponentity_glowmod;
 		wep.think = thrown_wep_think;
 		wep.nextthink = time + 0.5;
 		return s;
@@ -312,7 +321,7 @@ void W_WeaponFrame()
 	if(((arena_roundbased || g_ca || g_freezetag) && time < warmup) || ((time < game_starttime) && !autocvar_sv_ready_restart_after_countdown))
 		return;
 
-	if(g_freezetag && self.freezetag_frozen == 1)
+	if(self.freezetag_frozen == 1)
 		return;
 
 	if (!self.weaponentity || self.health < 1)
@@ -321,6 +330,7 @@ void W_WeaponFrame()
 	if(!self.switchweapon)
 	{
 		self.weapon = 0;
+		self.switchingweapon = 0;
 		self.weaponentity.state = WS_CLEAR;
 		self.weaponname = "";
 		self.items &~= IT_AMMO;
@@ -337,22 +347,44 @@ void W_WeaponFrame()
 	{
 		if (self.weaponentity.state == WS_CLEAR)
 		{
-			setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
+			// end switching!
+			self.switchingweapon = self.switchweapon;
+
+			//setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.switchweapon, WR_SETUP);
+
+			// set our clip load to the load of the weapon we switched to, if it's reloadable
+			entity e;
+			e = get_weaponinfo(self.switchweapon);
+			if(e.spawnflags & WEP_FLAG_RELOADABLE && cvar(strcat("g_balance_", e.netname, "_reload_ammo"))) // prevent accessing undefined cvars
+			{
+				self.clip_load = self.weapon_load[self.switchweapon];
+				self.clip_size = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+			}
+			else
+				self.clip_load = self.clip_size = 0;
+
 			// VorteX: add player model weapon select frame here
 			// setcustomframe(PlayerWeaponRaise);
 			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_weaponswitchdelay, w_ready);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
 		}
+		else if (self.weaponentity.state == WS_DROP)
+		{
+			// in dropping phase we can switch at any time
+			self.switchingweapon = self.switchweapon;
+		}
 		else if (self.weaponentity.state == WS_READY)
 		{
+			// start switching!
+			self.switchingweapon = self.switchweapon;
+
 #ifndef INDEPENDENT_ATTACK_FINISHED
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{
 #endif
-			// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
-			sound (self, CHAN_WEAPON2, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
 			weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_weaponswitchdelay, w_clear);
@@ -383,14 +415,16 @@ void W_WeaponFrame()
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
 			wb = 0;
 		}
+
+		v_forward = fo;
+		v_right = ri;
+		v_up = up;
+
 		if(wb)
-		{
-			v_forward = fo;
-			v_right = ri;
-			v_up = up;
-			self.weaponentity_glowmod = '0 0 0'; // reset glowmod, weapon think function only *might* set it
 			weapon_action(self.weapon, WR_THINK);
-		}
+		else
+			weapon_action(self.weapon, WR_GONETHINK);
+
 		if (time + self.weapon_frametime * 0.5 >= self.weapon_nextthink)
 		{
 			if(self.weapon_think)
