@@ -559,7 +559,16 @@ void m_tooltip(vector pos)
 			break;
 	}
 
-	if(menuTooltipItem)
+	if(menuTooltipItem == world)
+	{
+		if (menuTooltipText)
+		{
+			strunzone(menuTooltipText);
+			menuTooltipText = string_null;
+		}
+		return;
+	}
+	else
 	{
 		if(menu_tooltips != menu_tooltips_old)
 		{
