@@ -906,7 +906,7 @@ void PutClientInServer (void)
 		if(clienttype(self) == CLIENTTYPE_BOT && autocvar_g_botclip_collisions)
 			self.dphitcontentsmask |= DPCONTENTS_BOTCLIP;
 		self.frags = FRAGS_PLAYER;
-		if(independent_players)
+		if(INDEPENDENT_PLAYERS)
 			MAKE_INDEPENDENT_PLAYER(self);
 		self.flags = FL_CLIENT;
 		self.takedamage = DAMAGE_AIM;
@@ -1343,9 +1343,11 @@ void KillIndicator_Think()
 	}
 }
 
+float clientkilltime;
 void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2 = spec
 {
 	float killtime;
+	float starttime;
 	entity e;
 
 	if (gameover)
@@ -1381,13 +1383,16 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 		}
 		else
 		{
+			starttime = max(time, clientkilltime);
+
 			self.killindicator = spawn();
 			self.killindicator.owner = self;
 			self.killindicator.scale = 0.5;
 			setattachment(self.killindicator, self, "");
 			setorigin(self.killindicator, '0 0 52');
 			self.killindicator.think = KillIndicator_Think;
-			self.killindicator.nextthink = time + (self.lip) * 0.05;
+			self.killindicator.nextthink = starttime + (self.lip) * 0.05;
+			clientkilltime = max(clientkilltime, self.killindicator.nextthink + 0.05);
 			self.killindicator.cnt = ceil(killtime);
 			self.killindicator.count = bound(0, ceil(killtime), 10);
 			//sprint(self, strcat("^1You'll be dead in ", ftos(self.killindicator.cnt), " seconds\n"));
@@ -1402,7 +1407,8 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 				setattachment(e.killindicator, e, "");
 				setorigin(e.killindicator, '0 0 52');
 				e.killindicator.think = KillIndicator_Think;
-				e.killindicator.nextthink = time + (e.lip) * 0.05;
+				e.killindicator.nextthink = starttime + (e.lip) * 0.05;
+				clientkilltime = max(clientkilltime, e.killindicator.nextthink + 0.05);
 				e.killindicator.cnt = ceil(killtime);
 			}
 			self.lip = 0;

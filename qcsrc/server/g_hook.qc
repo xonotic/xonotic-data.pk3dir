@@ -62,6 +62,14 @@ void RemoveGrapplingHook(entity pl)
 	//pl.disableclientprediction = FALSE;
 }
 
+void GrapplingHookReset(void)
+{
+	if(self.realowner.hook == self)
+		RemoveGrapplingHook(self.owner);
+	else // in any case:
+		remove(self);
+}
+
 void GrapplingHookThink();
 void GrapplingHook_Stop()
 {
@@ -311,6 +319,7 @@ void FireGrapplingHook (void)
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = missile.realowner = self;
 	self.hook = missile;
+	missile.reset = GrapplingHookReset;
 	missile.classname = "grapplinghook";
 
 	missile.movetype = MOVETYPE_FLY;
