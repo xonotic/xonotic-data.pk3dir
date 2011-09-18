@@ -412,7 +412,8 @@ void W_WeaponFrame()
 		c = c + 1;
 		if(wb && ((self.weapons & wb) == 0))
 		{
-			W_SwitchWeapon_Force(self, w_getbestweapon(self));
+			if(self.weapon == self.switchweapon)
+				W_SwitchWeapon_Force(self, w_getbestweapon(self));
 			wb = 0;
 		}
 
