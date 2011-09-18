@@ -1109,7 +1109,7 @@ void PutClientInServer (void)
 		MUTATOR_CALLHOOK(PlayerSpawn);
 
 		self.switchweapon = w_getbestweapon(self);
-		self.cnt = self.switchweapon;
+		self.cnt = -1; // W_LastWeapon will not complain
 		self.weapon = 0;
 		self.switchingweapon = 0;
 
