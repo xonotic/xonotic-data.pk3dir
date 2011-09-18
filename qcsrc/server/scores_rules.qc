@@ -17,12 +17,12 @@ void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabl
 	if(score_enabled)
 		ScoreInfo_SetLabel_TeamScore  (ST_SCORE,        "score",     stprio);
 
-	if not(independent_players)
+	if not(INDEPENDENT_PLAYERS)
 		ScoreInfo_SetLabel_PlayerScore(SP_KILLS,        "kills",     0);
 
 	ScoreInfo_SetLabel_PlayerScore(SP_DEATHS,       "deaths",    SFL_LOWER_IS_BETTER);
 
-	if not(independent_players)
+	if not(INDEPENDENT_PLAYERS)
 		ScoreInfo_SetLabel_PlayerScore(SP_SUICIDES,     "suicides",  SFL_LOWER_IS_BETTER);
 
 	if(score_enabled)

@@ -1,3 +1,4 @@
+float autocvar__independent_players;
 float autocvar__campaign_index;
 string autocvar__campaign_name;
 float autocvar__sv_init;
