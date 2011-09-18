@@ -27,20 +27,20 @@ void bot_queuecommand(entity bot, string cmdstring)
 	{
 		float sp;
 		string parm;
-		string cmdstring;
+		string cmdstr;
 
-		sp = strstrofs(cmdstring, " ", 0);
+		sp = strstrofs(cmdstr, " ", 0);
 		if(sp < 0)
 		{
 			parm = "";
 		}
 		else
 		{
-			parm = substring(cmdstring, sp + 1, -1);
-			cmdstring = substring(cmdstring, 0, sp);
+			parm = substring(cmdstr, sp + 1, -1);
+			cmdstr = substring(cmdstr, 0, sp);
 		}
-		if(cmdstring == "sound")
-			precache_sound(cmdstring);
+		if(cmdstr == "sound")
+			precache_sound(cmdstr);
 	}
 
 	bot.bot_cmdqueuebuf_end += 1;
