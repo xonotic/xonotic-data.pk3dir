@@ -21,6 +21,28 @@ void bot_queuecommand(entity bot, string cmdstring)
 	}
 
 	bufstr_set(bot.bot_cmdqueuebuf, bot.bot_cmdqueuebuf_end, cmdstring);
+
+	// if the command was a "sound" command, precache the sound NOW
+	// this prevents lagging!
+	{
+		float sp;
+		string parm;
+		string cmdstring;
+
+		sp = strstrofs(cmdstring, " ", 0);
+		if(sp < 0)
+		{
+			parm = "";
+		}
+		else
+		{
+			parm = substring(cmdstring, sp + 1, -1);
+			cmdstring = substring(cmdstring, 0, sp);
+		}
+		if(cmdstring == "sound")
+			precache_sound(cmdstring);
+	}
+
 	bot.bot_cmdqueuebuf_end += 1;
 }
 
