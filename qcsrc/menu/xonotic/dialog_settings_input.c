@@ -25,8 +25,8 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Key bindings:")));
 	me.TR(me);
-		me.TD(me, me.rows - 2, 3.3, kb = makeXonoticKeyBinder());
-	me.gotoRC(me, me.rows - 1, 0);
+		me.TD(me, me.rows - 4, 3.3, kb = makeXonoticKeyBinder());
+	me.gotoRC(me, me.rows - 3, 0);
 	me.TR(me);
 		me.TD(me, 1, 1.1, e = makeXonoticButton(_("Change key..."), '0 0 0'));
 			e.onClick = KeyBinder_Bind_Change;
