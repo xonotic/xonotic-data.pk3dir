@@ -1166,9 +1166,6 @@ float bot_execute_commands_once()
 {
 	local float status, ispressingkey;
 
-	if(self.deadflag!=DEAD_NO)
-		return 0;
-
 	// Find command
 	bot_setcurrentcommand();
 
