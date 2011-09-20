@@ -1169,6 +1169,13 @@ float bot_execute_commands_once()
 	// Find command
 	bot_setcurrentcommand();
 
+	// if we have no bot command, better return
+	// old logic kept pressing previously pressed keys, but that has problems
+	// (namely, it means you cannot make a bot "normal" ever again)
+	// to keep a bot walking for a while, use the "wait" bot command
+	if(bot_cmd == world)
+		return FALSE;
+
 	// Ignore all commands except continue when the bot is paused
 	if(self.bot_exec_status & BOT_EXEC_STATUS_PAUSED)
 	if(bot_cmd.bot_cmd_type!=BOT_CMD_CONTINUE)
@@ -1183,9 +1190,6 @@ float bot_execute_commands_once()
 
 	// Keep pressing keys raised by the "presskey" command
 	ispressingkey = !!bot_presskeys();
-
-	if(bot_cmd==world)
-		return ispressingkey;
 
 	// Handle conditions
 	if not(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE)
