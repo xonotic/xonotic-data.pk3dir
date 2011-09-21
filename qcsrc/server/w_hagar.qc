@@ -118,7 +118,7 @@ void W_Hagar_Attack2_Load_Release (void)
 	// time to release the rockets we've loaded
 
 	local entity missile;
-	local float counter, shots;
+	local float counter, shots, spread_pershot;
 	local vector s;
 	vector forward, right, up;
 
@@ -153,7 +153,10 @@ void W_Hagar_Attack2_Load_Release (void)
 		setorigin (missile, w_shotorg);
 		setsize(missile, '0 0 0', '0 0 0');
 		missile.movetype = MOVETYPE_FLY;
-
+		
+		// handle the calculation for the shot pattern and its spread
+		spread_pershot = (autocvar_g_balance_hagar_secondary_spread * ((counter + 1) / shots));
+		
 		s = '0 0 0';
 		if (counter == 0)
 			s = '0 0 0';
@@ -163,8 +166,9 @@ void W_Hagar_Attack2_Load_Release (void)
 			s_y = v_forward_x;
 			s_z = v_forward_y;
 		}
-		s = s * cvar("g_balance_hagar_secondary_spread") * g_weaponspreadfactor;
-		W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_hagar_secondary_speed"), 0, 0, 0, FALSE);
+		s = s * autocvar_g_balance_hagar_secondary_load_spread * g_weaponspreadfactor;
+		
+		W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, autocvar_g_balance_hagar_secondary_speed, 0, 0, spread_pershot, FALSE);
 
 		missile.angles = vectoangles (missile.velocity);
 		missile.flags = FL_PROJECTILE;
