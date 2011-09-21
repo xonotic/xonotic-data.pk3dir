@@ -154,9 +154,12 @@ void W_Hagar_Attack2_Load_Release (void)
 		setsize(missile, '0 0 0', '0 0 0');
 		missile.movetype = MOVETYPE_FLY;
 		
-		// handle the calculation for the shot pattern and its spread
-		spread_pershot = (autocvar_g_balance_hagar_secondary_spread * ((counter + 1) / shots));
+		// per-shot spread calculation: the more shots there are, the less spread is applied (based on the bias cvar)
+		spread_pershot = ((shots - 1) / (autocvar_g_balance_hagar_secondary_load_max - 1)); 
+		spread_pershot = (1 - (spread_pershot * autocvar_g_balance_hagar_secondary_load_spread_bias));
+		spread_pershot = (autocvar_g_balance_hagar_secondary_spread * spread_pershot);
 		
+		// pattern spread calculation
 		s = '0 0 0';
 		if (counter == 0)
 			s = '0 0 0';
