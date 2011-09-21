@@ -157,7 +157,7 @@ void W_Hagar_Attack2_Load_Release (void)
 		// per-shot spread calculation: the more shots there are, the less spread is applied (based on the bias cvar)
 		spread_pershot = ((shots - 1) / (autocvar_g_balance_hagar_secondary_load_max - 1)); 
 		spread_pershot = (1 - (spread_pershot * autocvar_g_balance_hagar_secondary_load_spread_bias));
-		spread_pershot = (autocvar_g_balance_hagar_secondary_spread * spread_pershot);
+		spread_pershot = (autocvar_g_balance_hagar_secondary_spread * spread_pershot * g_weaponspreadfactor);
 		
 		// pattern spread calculation
 		s = '0 0 0';
