@@ -153,11 +153,12 @@ entity bot_getplace(string placename)
 #define BOT_CMD_BARRIER         20
 #define BOT_CMD_CONSOLE			21
 #define BOT_CMD_SOUND			22
-#define BOT_CMD_WHILE			23	// TODO: Not implemented yet
-#define BOT_CMD_WEND			24	// TODO: Not implemented yet
-#define BOT_CMD_CHASE			25	// TODO: Not implemented yet
+#define BOT_CMD_DEBUG_ASSERT_CANFIRE 23
+#define BOT_CMD_WHILE			24	// TODO: Not implemented yet
+#define BOT_CMD_WEND			25	// TODO: Not implemented yet
+#define BOT_CMD_CHASE			26	// TODO: Not implemented yet
 
-#define BOT_CMD_COUNTER			23	// Update this value if you add/remove a command
+#define BOT_CMD_COUNTER			24	// Update this value if you add/remove a command
 
 // NOTE: Following commands should be implemented on the bot ai
 //		 If a new command should be handled by the target ai(s) please declare it here
@@ -262,6 +263,9 @@ void bot_commands_init()
 
 	bot_cmd_string[BOT_CMD_SOUND] = "sound";
 	bot_cmd_parm_type[BOT_CMD_SOUND] = BOT_CMD_PARAMETER_STRING;
+
+	bot_cmd_string[BOT_CMD_DEBUG_ASSERT_CANFIRE] = "debug_assert_canfire";
+	bot_cmd_parm_type[BOT_CMD_DEBUG_ASSERT_CANFIRE] = BOT_CMD_PARAMETER_FLOAT;
 
 	bot_cmds_initialized = TRUE;
 }
@@ -469,6 +473,9 @@ void bot_cmdhelp(string scmd)
 				break;
 			case BOT_CMD_SOUND:
 				print("play sound file at bot location");
+				break;
+			case BOT_CMD_DEBUG_ASSERT_CANFIRE:
+				print("verify the state of the weapon entity");
 				break;
 			default:
 				print("This command has no description yet.");
@@ -1088,6 +1095,23 @@ float bot_cmd_sound()
 	return CMD_STATUS_FINISHED;
 }
 
+float bot_cmd_debug_assert_canfire()
+{
+	float f;
+	f = bot_cmd.bot_cmd_parm_float;
+
+	float canfire;
+	canfire = (self.weaponentity.state == WS_READY) && (ATTACK_FINISHED(self) <= time);
+
+	if(canfire != f)
+	{
+		self.glowmod = '8 0 8';
+		print(sprintf("Bot canfire state expected to be %d, really is %d\n", f, self.weaponentity.state));
+	}
+
+	return CMD_STATUS_FINISHED;
+}
+
 //
 
 void bot_command_executed(float rm)
@@ -1276,6 +1300,9 @@ float bot_execute_commands_once()
 			break;
 		case BOT_CMD_SOUND:
 			status = bot_cmd_sound();
+			break;
+		case BOT_CMD_DEBUG_ASSERT_CANFIRE:
+			status = bot_cmd_debug_assert_canfire();
 			break;
 		default:
 			print(strcat("ERROR: Invalid command on queue with id '",ftos(bot_cmd.bot_cmd_type),"'\n"));
