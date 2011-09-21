@@ -1100,13 +1100,29 @@ float bot_cmd_debug_assert_canfire()
 	float f;
 	f = bot_cmd.bot_cmd_parm_float;
 
-	float canfire;
-	canfire = (self.weaponentity.state == WS_READY) && (ATTACK_FINISHED(self) <= time);
-
-	if(canfire != f)
+	if(self.weaponentity.state != WS_READY)
 	{
-		self.glowmod = '8 0 8';
-		print(sprintf("Bot canfire state expected to be %d, really is %d\n", f, self.weaponentity.state));
+		if(f)
+		{
+			self.colormod = '0 8 8';
+			print("Bot wants to fire, inhibited by weaponentity state\n");
+		}
+	}
+	else if(ATTACK_FINISHED(self) > time)
+	{
+		if(f)
+		{
+			self.colormod = '8 0 8';
+			print("Bot wants to fire, inhibited by ATTACK_FINISHED\n");
+		}
+	}
+	else
+	{
+		if(!f)
+		{
+			self.colormod = '8 8 0';
+			print("Bot thinks it has fired, but apparently did not\n");
+		}
 	}
 
 	return CMD_STATUS_FINISHED;
