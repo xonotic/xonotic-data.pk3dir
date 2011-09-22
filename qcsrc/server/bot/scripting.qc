@@ -1095,6 +1095,7 @@ float bot_cmd_sound()
 	return CMD_STATUS_FINISHED;
 }
 
+.entity tuba_note;
 float bot_cmd_debug_assert_canfire()
 {
 	float f;
@@ -1114,6 +1115,14 @@ float bot_cmd_debug_assert_canfire()
 		{
 			self.colormod = '8 0 8';
 			print("Bot wants to fire, inhibited by ATTACK_FINISHED\n");
+		}
+	}
+	else if(self.tuba_note)
+	{
+		if(f)
+		{
+			self.colormod = '8 0 0';
+			print("Bot wants to fire, bot still has an active tuba note\n");
 		}
 	}
 	else
