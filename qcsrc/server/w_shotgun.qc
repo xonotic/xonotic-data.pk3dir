@@ -47,46 +47,69 @@ void W_Shotgun_Attack (void)
 }
 
 entity lgbeam_owner_ent;
+.float swing_prev;
 void shotgun_meleethink (void)
 {
-	// store time when we started swinging down inside self.cnt
-	if(!self.cnt)
-		self.cnt = time;
+	// declarations
+	float i, f, swing, swing_factor, meleetime;
+	vector targpos;
+	
+	if(!self.cnt) { self.cnt = time; }
 
 	makevectors(self.realowner.v_angle);
-	vector angle;
-	angle = v_forward;
 
-	float meleetime;
 	meleetime = autocvar_g_balance_shotgun_secondary_melee_time * W_WeaponRateFactor();
 
-	// perform trace
-	float f;
-	f = (self.cnt + meleetime - time) / meleetime * 2 - 1;
-	vector targpos;
-	targpos = self.realowner.origin + self.realowner.view_ofs + angle * autocvar_g_balance_shotgun_secondary_melee_range + v_right * f * autocvar_g_balance_shotgun_secondary_melee_swing + v_up * f * autocvar_g_balance_shotgun_secondary_melee_swing;
-
-	if(!lgbeam_owner_ent)
+	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 1);
+	f = ((1 - swing) * autocvar_g_balance_shotgun_secondary_melee_traces);
+	
+	for(i=self.swing_prev; i < f; ++i)
 	{
-		lgbeam_owner_ent = spawn();
-		lgbeam_owner_ent.classname = "lgbeam_owner_ent";
-	}
-	WarpZone_traceline_antilag(lgbeam_owner_ent, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, lgbeam_owner_ent, ANTILAG_LATENCY(self.realowner));
+		swing_factor = ((1 - (i / autocvar_g_balance_shotgun_secondary_melee_traces)) * 2 - 1);
+		
+		targpos = (self.realowner.origin + self.realowner.view_ofs 
+			+ (v_forward * autocvar_g_balance_shotgun_secondary_melee_range)
+			+ (v_up * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_up)
+			+ (v_right * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_side));
+			
+		if(!lgbeam_owner_ent) // WTF IS THIS DOING HERE?
+		{
+			lgbeam_owner_ent = spawn();
+			lgbeam_owner_ent.classname = "lgbeam_owner_ent";
+		}
+		WarpZone_traceline_antilag(lgbeam_owner_ent, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, lgbeam_owner_ent, ANTILAG_LATENCY(self.realowner));
 
-	// apply the damage, also remove self
-	if(trace_fraction < 1 && trace_ent.takedamage == DAMAGE_AIM && (trace_ent.classname == "player" || trace_ent.classname == "body"))
-	{
-		vector force;
-		force = angle * autocvar_g_balance_shotgun_secondary_force;
-		if(accuracy_isgooddamage(self.realowner, trace_ent))
-			accuracy_add(self.realowner, WEP_SHOTGUN, 0, autocvar_g_balance_shotgun_secondary_damage * min(1, f + 1));
-		Damage (trace_ent, self.realowner, self.realowner, autocvar_g_balance_shotgun_secondary_damage * min(1, f + 1), WEP_SHOTGUN | HITTYPE_SECONDARY , self.realowner.origin + self.realowner.view_ofs, force);
-		remove(self);
+		// te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
+		// te_customflash(targpos, 40,  2, '1 1 1');
+
+		// apply the damage, also remove self
+		if((trace_fraction < 1) && (trace_ent.takedamage == DAMAGE_AIM) && (trace_ent.classname == "player" || trace_ent.classname == "body"))
+		{	
+			Damage(trace_ent, self.realowner, self.realowner, 
+				autocvar_g_balance_shotgun_secondary_damage * min(1, swing_factor + 1), WEP_SHOTGUN | HITTYPE_SECONDARY, 
+				self.realowner.origin + self.realowner.view_ofs, 
+				v_forward * autocvar_g_balance_shotgun_secondary_force);
+				
+			if(accuracy_isgooddamage(self.realowner, trace_ent))
+				accuracy_add(self.realowner, WEP_SHOTGUN, 0, autocvar_g_balance_shotgun_secondary_damage * min(1, swing_factor + 1));
+				
+			// debug: te_customflash(targpos, 200, 2, '15 0 0');
+			
+			remove(self);
+			return;
+		}
 	}
-	else if(time >= self.cnt + meleetime || (self.realowner.deadflag != DEAD_NO && autocvar_g_balance_shotgun_secondary_melee_no_doubleslap)) // missed or owner died, remove ent
+	
+	if(time >= self.cnt + meleetime || (self.realowner.deadflag != DEAD_NO && autocvar_g_balance_shotgun_secondary_melee_no_doubleslap)) // missed or owner died, remove ent
+	{
 		remove(self);
-	else // continue swinging the weapon in hope of hitting someone :)
+		return;
+	}
+	else
+	{
+		self.swing_prev = i;
 		self.nextthink = time;
+	}
 }
 
 void W_Shotgun_Attack2 (void)
