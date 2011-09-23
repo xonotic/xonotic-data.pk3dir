@@ -428,6 +428,8 @@ void vehicles_enter()
     if(self.team)
     if(self.team != other.team)
         return;
+        
+    RemoveGrapplingHook(other);
 
     self.vehicle_ammo1   = 0;
     self.vehicle_ammo2   = 0;
