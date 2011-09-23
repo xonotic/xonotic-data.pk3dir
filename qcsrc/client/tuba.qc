@@ -13,11 +13,11 @@ void Ent_TubaNote_Think()
 	self.nextthink = time;
 	if(self.cnt <= 0)
 	{
-		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", 0, 0);
+		sound(self, CH_TUBA, "misc/null.wav", 0, 0);
 		remove(self);
 	}
 	else
-		sound(self, CH_SHOTS_SINGLE, "", self.cnt, self.attenuate * autocvar_g_balance_tuba_attenuation);
+		sound(self, CH_TUBA, "", self.cnt, self.attenuate * autocvar_g_balance_tuba_attenuation);
 }
 
 void Ent_TubaNote_UpdateSound()
@@ -25,9 +25,9 @@ void Ent_TubaNote_UpdateSound()
 	self.enemy.cnt = bound(0, VOL_BASE * autocvar_g_balance_tuba_volume, 1);
 	self.enemy.count = self.enemy.cnt;
 #ifdef PITCHSHIFT
-	sound7(self.enemy, CH_SHOTS_SINGLE, TUBA_STARTNOTE(0), self.enemy.cnt, self.enemy.attenuate * autocvar_g_balance_tuba_attenuation, 100 * pow(2.0, self.cnt / 12.0), 0);
+	sound7(self.enemy, CH_TUBA, TUBA_STARTNOTE(0), self.enemy.cnt, self.enemy.attenuate * autocvar_g_balance_tuba_attenuation, 100 * pow(2.0, self.cnt / 12.0), 0);
 #else
-	sound(self.enemy, CH_SHOTS_SINGLE, TUBA_STARTNOTE(self.cnt), self.enemy.cnt, self.enemy.attenuate * autocvar_g_balance_tuba_attenuation);
+	sound(self.enemy, CH_TUBA, TUBA_STARTNOTE(self.cnt), self.enemy.cnt, self.enemy.attenuate * autocvar_g_balance_tuba_attenuation);
 #endif
 }
 
