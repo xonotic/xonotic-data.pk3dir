@@ -1,4 +1,4 @@
-#define TUBA_STARTNOTE(n) strcat((checkextension("DP_SND_SETPARAMS") ? "weapons/tuba_loopnote" : "weapons/tuba_note"), ftos(n), ".wav")
+#define TUBA_STARTNOTE(n) strcat("weapons/tuba_loopnote", ftos(n), ".wav")
 .float cnt; // note
 .float attenuate; // if set, attenuate it
 
