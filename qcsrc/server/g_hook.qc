@@ -296,8 +296,11 @@ void FireGrapplingHook (void)
 	if((arena_roundbased && time < warmup) || (time < game_starttime))
 		return;
 
-    if(self.freezetag_frozen)
-        return;
+  if(self.freezetag_frozen)
+		return;
+	
+	if(self.vehicle)
+		return;
 
 	makevectors(self.v_angle);
 
