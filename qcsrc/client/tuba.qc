@@ -1,6 +1,8 @@
 #define TUBA_STARTNOTE(n) strcat("weapons/tuba_loopnote", ftos(n), ".wav")
-.float cnt; // note
+.float note; // note
 .float attenuate; // if set, attenuate it
+.float cnt; // current volume
+.float count; // initial volume
 
 void Ent_TubaNote_Think()
 {
@@ -17,17 +19,24 @@ void Ent_TubaNote_Think()
 		remove(self);
 	}
 	else
+	{
+#ifdef PITCHSHIFT
+		sound7(self, CH_TUBA, "", self.cnt, self.attenuate * autocvar_g_balance_tuba_attenuation, 100 * pow(2.0, self.note / 12.0), 0);
+#else
 		sound(self, CH_TUBA, "", self.cnt, self.attenuate * autocvar_g_balance_tuba_attenuation);
+#endif
+	}
 }
 
 void Ent_TubaNote_UpdateSound()
 {
 	self.enemy.cnt = bound(0, VOL_BASE * autocvar_g_balance_tuba_volume, 1);
 	self.enemy.count = self.enemy.cnt;
+	self.enemy.note = self.note;
 #ifdef PITCHSHIFT
-	sound7(self.enemy, CH_TUBA, TUBA_STARTNOTE(0), self.enemy.cnt, self.enemy.attenuate * autocvar_g_balance_tuba_attenuation, 100 * pow(2.0, self.cnt / 12.0), 0);
+	sound7(self.enemy, CH_TUBA, TUBA_STARTNOTE(0), self.enemy.cnt, self.enemy.attenuate * autocvar_g_balance_tuba_attenuation, 100 * pow(2.0, self.note / 12.0), 0);
 #else
-	sound(self.enemy, CH_TUBA, TUBA_STARTNOTE(self.cnt), self.enemy.cnt, self.enemy.attenuate * autocvar_g_balance_tuba_attenuation);
+	sound(self.enemy, CH_TUBA, TUBA_STARTNOTE(self.note), self.enemy.cnt, self.enemy.attenuate * autocvar_g_balance_tuba_attenuation);
 #endif
 }
 
@@ -42,7 +51,7 @@ void Ent_TubaNote(float bIsNew)
 	float f, n;
 	f = ReadByte();
 	n = floor(f / 2) - 42;
-	if(n != self.cnt || bIsNew)
+	if(n != self.note || bIsNew)
 		if(self.enemy)
 			Ent_TubaNote_StopSound();
 	if(!self.enemy)
@@ -65,7 +74,7 @@ void Ent_TubaNote(float bIsNew)
 	self.enemy.nextthink = time + 10;
 	if(bIsNew)
 	{
-		self.cnt = n;
+		self.note = n;
 		Ent_TubaNote_UpdateSound();
 	}
 }
