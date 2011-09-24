@@ -64,6 +64,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_WEAPONS:
 					HUD_Write_PanelCvar_q("_complainbubble");
 					HUD_Write_PanelCvar_q("_complainbubble_padding");
+					HUD_Write_PanelCvar_q("_complainbubble_time");
+					HUD_Write_PanelCvar_q("_complainbubble_fadetime");
 					HUD_Write_PanelCvar_q("_complainbubble_color_outofammo");
 					HUD_Write_PanelCvar_q("_complainbubble_color_donthave");
 					HUD_Write_PanelCvar_q("_complainbubble_color_unavailable");
