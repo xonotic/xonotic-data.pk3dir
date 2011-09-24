@@ -380,9 +380,9 @@ float w_glauncher(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s tried out his own grenade");
+			w_deathtypestring = _("%s didn't see their own grenade");
 		else
-			w_deathtypestring = _("%s detonated");
+			w_deathtypestring = _("%s blew themself up with their grenadelauncher");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{

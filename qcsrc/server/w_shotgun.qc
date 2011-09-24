@@ -216,9 +216,9 @@ float w_shotgun(float req)
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun");
+			w_deathtypestring = _("%2$s slapped %1$s around a bit with a large shotgun");
 		else
-			w_deathtypestring = _("%s was gunned by %s");
+			w_deathtypestring = _("%s was gunned down with a shotgun by %s");
 	}
 	return TRUE;
 }

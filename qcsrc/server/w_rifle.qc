@@ -229,19 +229,16 @@ float w_rifle(float req)
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s shot themself automatically");
-		else
-			w_deathtypestring = _("%s sniped themself somehow");
+		w_deathtypestring = _("%s is now thinking with portals");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
-				w_deathtypestring = _("%s failed to hide from %s's bullet hail");
+				w_deathtypestring = _("%s failed to hide from %s's rifle bullet hail");
 			else
-				w_deathtypestring = _("%s died in %s's bullet hail");
+				w_deathtypestring = _("%s died in %s's rifle bullet hail");
 		}
 		else
 		{
@@ -253,9 +250,9 @@ float w_rifle(float req)
 			else
 			{
 				if(w_deathtype & HITTYPE_HEADSHOT)
-					w_deathtypestring = _("%s got hit in the head by %s");
+					w_deathtypestring = _("%s got shot in the head with a rifle by %s");
 				else
-					w_deathtypestring = _("%s was sniped by %s");
+					w_deathtypestring = _("%s was sniped with a rifle by %s");
 			}
 		}
 	}

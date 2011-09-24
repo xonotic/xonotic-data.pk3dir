@@ -239,7 +239,7 @@ float w_hlac(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = _("%s should have used a smaller gun");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s was cut down by %s");
+		w_deathtypestring = _("%s was cut down with a HLAC by %s");
 	return TRUE;
 }
 #endif

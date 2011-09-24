@@ -654,13 +654,13 @@ float w_seeker(float req)
 		precache_sound("weapons/tag_impact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s played with tiny rockets");
+		w_deathtypestring = _("%s played with tiny seeker rockets");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s was tagged by %s");
+			w_deathtypestring = _("%s was tagged with a seeker by %s");
 		else
-			w_deathtypestring = _("%s was pummeled by %s");
+			w_deathtypestring = _("%s was pummeled with seeker rockets by %s");
 	}
 	return TRUE;
 }

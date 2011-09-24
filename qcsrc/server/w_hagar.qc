@@ -399,13 +399,13 @@ float w_hagar(float req)
 		precache_sound("weapons/hagexp3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s played with tiny rockets");
+		w_deathtypestring = _("%s played with tiny hagar rockets");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH
-			w_deathtypestring = _("%s hoped %s's missiles wouldn't bounce");
+			w_deathtypestring = _("%s was pummeled with a burst of hagar rockets by %s");
 		else // unchecked: SPLASH, SECONDARY
-			w_deathtypestring = _("%s was pummeled by %s");
+			w_deathtypestring = _("%s was pummeled with hagar rockets by %s");
 	}
 	return TRUE;
 }

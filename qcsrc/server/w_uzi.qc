@@ -319,9 +319,9 @@ float w_uzi(float req)
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s was sniped by %s");
+			w_deathtypestring = _("%s was sniped by %s's machine gun");
 		else
-			w_deathtypestring = _("%s was riddled full of holes by %s");
+			w_deathtypestring = _("%s was riddled full of holes by %s's machine gun");
 	}
 	return TRUE;
 }

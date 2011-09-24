@@ -498,7 +498,7 @@ float w_rlauncher(float req)
 		precache_sound("weapons/rocket_impact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s exploded");
+		w_deathtypestring = _("%s blew themself up with their rocketlauncher");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
