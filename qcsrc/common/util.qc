@@ -1291,7 +1291,7 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 
 string find_last_color_code(string s)
 {
-	float start, len, i, carrets;
+	float start, len, i, carets;
 	start = strstrofs(s, "^", 0);
 	if (start == -1) // no carret found
 		return "";
@@ -1301,12 +1301,12 @@ string find_last_color_code(string s)
 		if(substring(s, i, 1) != "^")
 			continue;
 
-		carrets = 1;
-		while (i-carrets >= start && substring(s, i-carrets, 1) == "^")
-			++carrets;
+		carets = 1;
+		while (i-carets >= start && substring(s, i-carets, 1) == "^")
+			++carets;
 
-		// check if carrets aren't all escaped
-		if (!(carrets > 1 && mod(carrets, 2) == 0)) // first check is just an optimization
+		// check if carets aren't all escaped
+		if (carets == 1 || mod(carets, 2) == 1) // first check is just an optimization
 		{
 			if(i+1 <= len)
 			if(strstrofs("0123456789", substring(s, i+1, 1), 0) >= 0)
@@ -1319,7 +1319,7 @@ string find_last_color_code(string s)
 			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+4, 1), 0) >= 0)
 				return substring(s, i, 5);
 		}
-		i -= carrets; // this also skips one char before the carrets
+		i -= carets; // this also skips one char before the carets
 	}
 
 	return "";
