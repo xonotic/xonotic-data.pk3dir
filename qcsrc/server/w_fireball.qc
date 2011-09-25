@@ -334,7 +334,7 @@ float w_fireball(float req)
 			if (weapon_prepareattack(0, autocvar_g_balance_fireball_primary_refire))
 			{
 				W_Fireball_Attack1_Frame0();
-				self.fireball_primarytime = time + autocvar_g_balance_fireball_primary_refire2;
+				self.fireball_primarytime = time + autocvar_g_balance_fireball_primary_refire2 * W_WeaponRateFactor();
 			}
 		}
 		else if (self.BUTTON_ATCK2)

@@ -41,7 +41,7 @@ vehicles/tracertrail
 	deformVertexes autosprite2
 	{
 		map models/vehicles/tracertrail.tga
-		blendfunc add
+		blendfunc GL_SRC_ALPHA GL_ONE
 		rgbGen lightingDiffuse
 	}
 }

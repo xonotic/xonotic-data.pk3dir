@@ -118,7 +118,7 @@ void W_Hagar_Attack2_Load_Release (void)
 	// time to release the rockets we've loaded
 
 	local entity missile;
-	local float counter, shots;
+	local float counter, shots, spread_pershot;
 	local vector s;
 	vector forward, right, up;
 
@@ -153,7 +153,13 @@ void W_Hagar_Attack2_Load_Release (void)
 		setorigin (missile, w_shotorg);
 		setsize(missile, '0 0 0', '0 0 0');
 		missile.movetype = MOVETYPE_FLY;
-
+		
+		// per-shot spread calculation: the more shots there are, the less spread is applied (based on the bias cvar)
+		spread_pershot = ((shots - 1) / (autocvar_g_balance_hagar_secondary_load_max - 1)); 
+		spread_pershot = (1 - (spread_pershot * autocvar_g_balance_hagar_secondary_load_spread_bias));
+		spread_pershot = (autocvar_g_balance_hagar_secondary_spread * spread_pershot * g_weaponspreadfactor);
+		
+		// pattern spread calculation
 		s = '0 0 0';
 		if (counter == 0)
 			s = '0 0 0';
@@ -163,8 +169,9 @@ void W_Hagar_Attack2_Load_Release (void)
 			s_y = v_forward_x;
 			s_z = v_forward_y;
 		}
-		s = s * cvar("g_balance_hagar_secondary_spread") * g_weaponspreadfactor;
-		W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_hagar_secondary_speed"), 0, 0, 0, FALSE);
+		s = s * autocvar_g_balance_hagar_secondary_load_spread * g_weaponspreadfactor;
+		
+		W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, autocvar_g_balance_hagar_secondary_speed, 0, 0, spread_pershot, FALSE);
 
 		missile.angles = vectoangles (missile.velocity);
 		missile.flags = FL_PROJECTILE;
@@ -177,7 +184,7 @@ void W_Hagar_Attack2_Load_Release (void)
 	}
 
 	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
-	self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_refire;
+	self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_refire * W_WeaponRateFactor();
 	self.hagar_load = 0;
 }
 
@@ -201,12 +208,13 @@ void W_Hagar_Attack2_Load (void)
 			if(self.hagar_load)
 			{
 				// if we pressed primary fire while loading, unload all rockets and abort
+				self.weaponentity.state = WS_READY;
 				W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo
 				self.hagar_load = 0;
 				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
 
 				// pause until we can load rockets again, once we re-press the alt fire button
-				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
+				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed * W_WeaponRateFactor();
 
 				// require letting go of the alt fire button before we can load again
 				self.hagar_loadblock = TRUE;
@@ -220,10 +228,11 @@ void W_Hagar_Attack2_Load (void)
 				if(!self.hagar_loadblock && self.hagar_loadstep < time)
 				{
 					W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
+					self.weaponentity.state = WS_INUSE;
 					self.hagar_load += 1;
 					sound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE, ATTN_NORM);
 
-					self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed;
+					self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed * W_WeaponRateFactor();
 				}
 			}
 			else if(!self.hagar_loadbeep && self.hagar_load) // prevents the beep from playing each frame
@@ -242,19 +251,21 @@ void W_Hagar_Attack2_Load (void)
 
 	if(self.hagar_load)
 	{
-		self.weapon_forbidchange = TRUE;
 		if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && !autocvar_g_balance_hagar_secondary_load_hold))
+		{
+			self.weaponentity.state = WS_READY;
 			W_Hagar_Attack2_Load_Release();
+		}
 	}
 	else
 	{
-		self.weapon_forbidchange = FALSE;
 		self.hagar_loadbeep = FALSE;
 	}
 
 	// we aren't checking ammo during an attack, so we must do it here
 	if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
 	{
+		// note: this doesn't force the switch
 		W_SwitchToOtherWeapon(self);
 		return;
 	}
@@ -300,6 +311,15 @@ float w_hagar(float req)
 				W_Hagar_Attack2();
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
 			}
+		}
+	}
+	else if (req == WR_GONETHINK)
+	{
+		// we lost the weapon and want to prepare switching away
+		if(self.hagar_load)
+		{
+			self.weaponentity.state = WS_READY;
+			W_Hagar_Attack2_Load_Release();
 		}
 	}
 	else if (req == WR_PRECACHE)

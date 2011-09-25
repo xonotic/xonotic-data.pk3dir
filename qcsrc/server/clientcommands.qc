@@ -434,7 +434,7 @@ void ClientCommand_join(float request)
 					else 
 					{
 						//player may not join because of g_maxplayers is set
-						centerprint_atprio(self, CENTERPRIO_MAPVOTE, PREVENT_JOIN_TEXT);
+						centerprint(self, PREVENT_JOIN_TEXT);
 					}
 				}
 			}
@@ -687,6 +687,8 @@ void ClientCommand_say_team(float request, float argc, string command)
 
 void ClientCommand_selectteam(float request, float argc) // TODO: Update the messages for this command
 {
+	float selection;
+	
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
@@ -699,22 +701,32 @@ void ClientCommand_selectteam(float request, float argc) // TODO: Update the mes
 				if(teamplay)
 					if not(self.team_forced > 0) 
 						if not(lockteams) 
+						{
 							switch(argv(1))
 							{
-								case "red": ClientKill_TeamChange(COLOR_TEAM1); break;
-								case "blue": ClientKill_TeamChange(COLOR_TEAM2); break;
-								case "yellow": ClientKill_TeamChange(COLOR_TEAM3); break;
-								case "pink": ClientKill_TeamChange(COLOR_TEAM4); break;
-								case "auto": ClientKill_TeamChange(-1); break;
+								case "red": selection = COLOR_TEAM1; break;
+								case "blue": selection = COLOR_TEAM2; break;
+								case "yellow": selection = COLOR_TEAM3; break;
+								case "pink": selection = COLOR_TEAM4; break;
+								case "auto": selection = (-1); break;
 								
 								default: break;
 							}
+							
+							if(selection)
+							{
+								if(self.team != selection || self.deadflag != DEAD_NO)
+									ClientKill_TeamChange(selection);
+								else
+									sprint(self, "^7You already are on that team.\n");
+							}
+						}
 						else
 							sprint(self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 					else
-						sprint(self, "selectteam can not be used as your team is forced\n");
+						sprint(self, "^7selectteam can not be used as your team is forced\n");
 				else
-					sprint(self, "selectteam can only be used in teamgames\n");
+					sprint(self, "^7selectteam can only be used in teamgames\n");
 			}
 			return; // never fall through to usage
 

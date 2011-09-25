@@ -529,7 +529,7 @@ void GameCommand_adminmsg(float request, float argc)
 						}
 						else
 						{
-							centerprint_atprio(client, CENTERPRIO_ADMIN, strcat("^3", admin_name(), ":\n\n^7", argv(2)));
+							centerprint(client, strcat("^3", admin_name(), ":\n\n^7", argv(2)));
 							sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", argv(2), "\n"));
 						}
 						dprint("Message sent to ", client.netname, "\n");
@@ -2092,6 +2092,41 @@ void GameCommand_unlockteams(float request)
 	}
 }
 
+void GameCommand_warp(float request, float argc)
+{
+	switch (request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2warp^7: Choose different level in campaign\n");
+			return;
+		
+		case GC_REQUEST_COMMAND:
+			if(autocvar_g_campaign)
+			{
+				
+				if(argc >= 2)
+				{
+					CampaignLevelWarp(stof(argv(1)));
+					print("Successfully warped to campaign level ", stof(argv(1)), ".\n");
+				}	
+				else
+				{
+					CampaignLevelWarp(-1);
+					print("Successfully warped to next campaign level.\n");
+				}
+			}
+			else
+				print("Not in campaign, can't level warp\n");
+			return;
+		
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd level\n");
+			print("  'level' is the level to change campaign mode to.\n");
+			return;
+	}
+}
+
 
 // =========================================
 //  Main Function Called By Engine (sv_cmd)
@@ -2148,6 +2183,7 @@ void GameCommand(string command)
 			GameCommand_time(GC_REQUEST_HELP);
 			GameCommand_trace(GC_REQUEST_HELP, 0);
 			GameCommand_unlockteams(GC_REQUEST_HELP);
+			GameCommand_warp(GC_REQUEST_HELP, 0);
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
@@ -2214,6 +2250,7 @@ void GameCommand(string command)
 		case "time": GameCommand_time(search_request_type); break;
 		case "trace": GameCommand_trace(search_request_type, argc); break;
 		case "unlockteams": GameCommand_unlockteams(search_request_type); break;
+		case "warp": GameCommand_warp(search_request_type, argc); break;
 		
 		default:
 			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");

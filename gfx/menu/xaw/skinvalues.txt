@@ -112,8 +112,8 @@ COLOR_CVARLIST_UNCHANGED        '1 1 1'
 //   uses "closebutton" images
 MARGIN_TOP                      8
 MARGIN_BOTTOM                   8
-MARGIN_LEFT                     8
-MARGIN_RIGHT                    8
+MARGIN_LEFT                     16
+MARGIN_RIGHT                    16
 MARGIN_COLUMNS                  4
 MARGIN_ROWS                     4
 HEIGHT_DIALOGBORDER             1

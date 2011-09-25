@@ -114,6 +114,7 @@ void func_breakable_behave_destroyed()
 {
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;
+	self.bot_attack = FALSE;
 	self.event_damage = SUB_Null;
 	self.state = 1;
 	func_breakable_colormod();
@@ -128,6 +129,7 @@ void func_breakable_behave_restore()
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}
 	self.takedamage = DAMAGE_AIM;
+	self.bot_attack = TRUE;
 	self.event_damage = func_breakable_damage;
 	self.state = 0;
 	self.nextthink = 0; // cancel auto respawn

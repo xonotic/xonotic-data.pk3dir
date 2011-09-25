@@ -98,7 +98,7 @@ void W_Shotgun_Attack2 (void)
 	meleetemp = spawn();
 	meleetemp.owner = meleetemp.realowner = self;
 	meleetemp.think = shotgun_meleethink;
-	meleetemp.nextthink = time + autocvar_g_balance_shotgun_secondary_melee_delay;
+	meleetemp.nextthink = time + autocvar_g_balance_shotgun_secondary_melee_delay * W_WeaponRateFactor();
 	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_shotgun_secondary_damage, autocvar_g_balance_shotgun_secondary_melee_range);
 }
 
@@ -113,7 +113,13 @@ float w_shotgun(float req)
 		if(vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_shotgun_secondary_melee_range)
 			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
 		else
-			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+		{
+			if(autocvar_g_antilag_bullets)
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+			else
+				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_shotgun_primary_speed, 0, 0.001, FALSE);
+		}
+
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_shotgun_reload_ammo && self.clip_load < autocvar_g_balance_shotgun_primary_ammo) // forced reload
@@ -131,7 +137,7 @@ float w_shotgun(float req)
 					if(weapon_prepareattack(0, autocvar_g_balance_shotgun_primary_animtime))
 					{
 						W_Shotgun_Attack();
-						self.shotgun_primarytime = time + autocvar_g_balance_shotgun_primary_refire;
+						self.shotgun_primarytime = time + autocvar_g_balance_shotgun_primary_refire * W_WeaponRateFactor();
 						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_primary_animtime, w_ready);
 					}
 				}

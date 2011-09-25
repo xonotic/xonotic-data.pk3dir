@@ -157,7 +157,7 @@ void W_Tuba_Attack(float hittype)
 		Net_LinkEntity(self.tuba_note, FALSE, 0, W_Tuba_NoteSendEntity);
 	}
 
-	self.tuba_note.teleport_time = time + autocvar_g_balance_tuba_refire * 2; // so it can get prolonged safely
+	self.tuba_note.teleport_time = time + autocvar_g_balance_tuba_refire * 2 * W_WeaponRateFactor(); // so it can get prolonged safely
 
 	//sound(self, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
 	RadiusDamage(self, self, autocvar_g_balance_tuba_damage, autocvar_g_balance_tuba_edgedamage, autocvar_g_balance_tuba_radius, world, autocvar_g_balance_tuba_force, hittype | WEP_TUBA, world);
@@ -228,6 +228,10 @@ float w_tuba(float req)
 	{
 		weapon_setup(WEP_TUBA);
 		self.current_ammo = ammo_none;
+	}
+	else if (req == WR_RELOAD)
+	{
+		// TODO switch to alternate instruments :)
 	}
 	else if (req == WR_CHECKAMMO1)
 		return TRUE; // TODO use fuel?

@@ -103,7 +103,7 @@ void assault_objective_decrease_use() {
 						centerprint(player, s);
 					}
 				}
-					
+
 				oldactivator = activator;
 				activator = oldself;
 					SUB_UseTargets();
@@ -207,6 +207,7 @@ void spawnfunc_func_assault_destructible() {
 		return;
 	}
 	self.spawnflags = 3;
+	self.classname = "func_assault_destructible";
 	if(assault_attacker_team == COLOR_TEAM1) {
 		self.team = COLOR_TEAM2;
 	} else {
@@ -271,7 +272,7 @@ void assault_roundstart_use() {
 	activator = self;
 	SUB_UseTargets();
 
-	
+
 #ifdef TTURRETS_ENABLED
 	entity ent, oldself;
 
@@ -315,7 +316,7 @@ void spawnfunc_target_assault_roundstart() {
 // reset objectives, toggle spawnpoints, reset triggers, ...
 void vehicles_clearrturn();
 void vehicles_spawn();
-void assault_new_round() 
+void assault_new_round()
 {
     entity oldself;
 	//bprint("ASSAULT: new round\n");
@@ -325,9 +326,9 @@ void assault_new_round()
     FOR_EACH_PLAYER(self)
     {
         if(self.vehicle)
-            vehicles_exit(VHEF_RELESE);        
+            vehicles_exit(VHEF_RELESE);
     }
-    
+
     self = findchainflags(vehicle_flags, VHF_ISVEHICLE);
     while(self)
     {
@@ -360,7 +361,7 @@ void assault_new_round()
 				ent.team_saved = COLOR_TEAM1;
 		}
 	}
-	
+
 	// reset the level with a countdown
 	cvar_set("timelimit", ftos(ceil(time - game_starttime) / 60));
 	ReadyRestartForce(); // sets game_starttime

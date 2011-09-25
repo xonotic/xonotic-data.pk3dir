@@ -198,14 +198,83 @@ void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
             acc-<weapon netname>-frags: amount of frags dealt by weapon
 */
 
-//#NO AUTOCVARS START
-void PlayerStats_Shutdown()
+void PlayerStats_ready(entity fh, entity pass, float status)
 {
 	string p, pn;
 	string e, en;
 	string nn, tt;
-	float b;
-	float i;
+	string s;
+
+	switch(status)
+	{
+		case URL_READY_CANWRITE:
+			url_fputs(fh, "V 1\n");
+#ifdef WATERMARK
+			url_fputs(fh, sprintf("R %s\n", WATERMARK()));
+#endif
+			url_fputs(fh, sprintf("T %s.%06d\n", strftime(FALSE, "%s"), floor(random() * 1000000)));
+			url_fputs(fh, sprintf("G %s\n", GetGametype()));
+			url_fputs(fh, sprintf("M %s\n", GetMapname()));
+			url_fputs(fh, sprintf("I %s\n", matchid));
+			url_fputs(fh, sprintf("S %s\n", cvar_string("hostname")));
+			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
+			for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
+			{
+				url_fputs(fh, sprintf("P %s\n", p));
+				nn = db_get(playerstats_db, sprintf("%s:_playerid", p));
+				if(nn != "")
+					url_fputs(fh, sprintf("i %s\n", nn));
+				nn = db_get(playerstats_db, sprintf("%s:_netname", p));
+				if(nn != "")
+					url_fputs(fh, sprintf("n %s\n", nn));
+				if(teamplay)
+				{
+					tt = db_get(playerstats_db, sprintf("%s:_team", p));
+					url_fputs(fh, sprintf("t %s\n", tt));
+				}
+				for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
+				{
+					float v;
+					v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
+					if(v != 0)
+						url_fputs(fh, sprintf("e %s %g\n", e, v));
+				}
+			}
+			url_fputs(fh, "\n");
+			db_close(playerstats_db);
+			playerstats_db = -1;
+			url_fclose(fh, PlayerStats_ready, world);
+			break;
+		case URL_READY_CANREAD:
+			// url_fclose is processing, we got a response for writing the data
+			// this must come from HTTP
+			print("Got response from player stats server:\n");
+			while((s = url_fgets(fh)))
+				print("  ", s, "\n");
+			print("End of response.\n");
+			url_fclose(fh, PlayerStats_ready, world);
+			break;
+		case URL_READY_CLOSED:
+			// url_fclose has finished
+			print("Player stats written\n");
+			playerstats_waitforme = TRUE;
+			break;
+		case URL_READY_ERROR:
+		default:
+			print("Player stats writing failed: ", ftos(status), "\n");
+			playerstats_waitforme = TRUE;
+			if(playerstats_db >= 0)
+			{
+				db_close(playerstats_db);
+				playerstats_db = -1;
+			}
+			break;
+	}
+}
+
+//#NO AUTOCVARS START
+void PlayerStats_Shutdown()
+{
 	string uri;
 
 	if(playerstats_db < 0)
@@ -214,59 +283,15 @@ void PlayerStats_Shutdown()
 	uri = autocvar_g_playerstats_uri;
 	if(uri != "")
 	{
-		b = buf_create();
-		i = 0;
-
-		db_dump(playerstats_db, "foo.db");
-
-		bufstr_set(b, i++, "V 1");
-#ifdef WATERMARK
-		bufstr_set(b, i++, sprintf("R %s", WATERMARK()));
-#endif
-		bufstr_set(b, i++, sprintf("T %s.%06d", strftime(FALSE, "%s"), floor(random() * 1000000)));
-		bufstr_set(b, i++, sprintf("G %s", GetGametype()));
-		bufstr_set(b, i++, sprintf("M %s", GetMapname()));
-		bufstr_set(b, i++, sprintf("S %s", cvar_string("hostname")));
-		bufstr_set(b, i++, sprintf("C %d", cvar_purechanges_count));
-        for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
-        {
-            bufstr_set(b, i++, sprintf("P %s", p));
-            nn = db_get(playerstats_db, sprintf("%s:_netname", p));
-            if(nn != "")
-                bufstr_set(b, i++, sprintf("n %s", nn));
-            if(teamplay)
-            {
-                tt = db_get(playerstats_db, sprintf("%s:_team", p));
-                bufstr_set(b, i++, sprintf("t %s", tt));
-            }
-            for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
-            {
-                float v;
-                v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
-                if(v != 0)
-                    bufstr_set(b, i++, sprintf("e %s %g", e, v));
-            }
-        }
-        bufstr_set(b, i++, "");
-
-		if(autocvar_g_playerstats_debug)
-		{
-			for(i = 0; i < buf_getsize(b); ++i)
-				print(bufstr_get(b, i), "\n");
-		}
-
-		if(crypto_uri_postbuf(uri, URI_GET_PLAYERSTATS_SENT, "text/plain", "\n", b, 0))
-			playerstats_requested = TRUE;
-		else
-			playerstats_waitforme = TRUE; // if posting fails, we must continue anyway
-
-		buf_del(b);
+		url_fopen(uri, FILE_APPEND, PlayerStats_ready, world);
+		playerstats_waitforme = FALSE;
 	}
 	else
+	{
 		playerstats_waitforme = TRUE;
-
-	db_close(playerstats_db);
-	playerstats_db = -1;
+		db_close(playerstats_db);
+		playerstats_db = -1;
+	}
 }
 //#NO AUTOCVARS END
 
@@ -280,10 +305,12 @@ void PlayerStats_AddGlobalInfo(entity p)
 
 	// add global info!
 	if(p.alivetime)
+	{
 		PlayerStats_Event(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
+		p.alivetime = 0;
+	}
 
-	if(p.alivetime)
-		PlayerStats_Event(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
+	db_put(playerstats_db, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 	
 	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
@@ -291,7 +318,7 @@ void PlayerStats_AddGlobalInfo(entity p)
     if(teamplay)
 		db_put(playerstats_db, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
 
-	if(p.alivetime > 0)
+	if(stof(db_get(playerstats_db, sprintf("%d:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
 		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
 	strunzone(p.playerstats_id);
@@ -322,7 +349,7 @@ void PlayerStats_EndMatch(float finished)
 {
 	entity p, winner;
     winner = PlayerScore_Sort(score_dummyfield);
-	FOR_EACH_PLAYER(p)
+	FOR_EACH_PLAYER(p) // spectators intentionally not included
 	{
 		PlayerScore_PlayerStats(p);
 		PlayerStats_Accuracy(p);

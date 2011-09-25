@@ -117,6 +117,8 @@ float spectatorbutton_zoom;
 float button_attack2;
 
 float activeweapon;
+float switchingweapon;
+float switchweapon;
 float current_viewzoom;
 float zoomin_effect;
 float warmup_stage;
@@ -144,6 +146,7 @@ float camera_roll;
 vector camera_direction;
 
 void centerprint(string strMessage);
+void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
 
 #define ALPHA_MIN_VISIBLE 0.003
 

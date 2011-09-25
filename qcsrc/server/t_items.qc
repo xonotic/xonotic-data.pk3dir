@@ -279,7 +279,6 @@ float Item_GiveTo(entity item, entity player)
 			{
 				pickedup = TRUE;
 				// play some cool sounds ;)
-				centerprint(player, "\n");
 				if (clienttype(player) == CLIENTTYPE_REAL)
 				{
 					if(player.health <= 5)
@@ -391,7 +390,7 @@ float Item_GiveTo(entity item, entity player)
 		}
 
 		if (item.flags & FL_WEAPON)
-		if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway && !(g_weapon_stay == 3 && !e.spawnshieldtime)))
+			if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway && g_weapon_stay == 0))
 		{
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -1042,7 +1041,7 @@ void weapon_defaultspawnfunc(float wpn)
 
 void spawnfunc_weapon_shotgun (void);
 void spawnfunc_weapon_uzi (void) {
-	if(q3acompat_machineshotgunswap)
+	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weapon_defaultspawnfunc(WEP_SHOTGUN);
@@ -1052,7 +1051,7 @@ void spawnfunc_weapon_uzi (void) {
 }
 
 void spawnfunc_weapon_shotgun (void) {
-	if(q3acompat_machineshotgunswap)
+	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weapon_defaultspawnfunc(WEP_UZI);
@@ -1108,7 +1107,7 @@ void spawnfunc_item_rockets (void) {
 void spawnfunc_item_shells (void);
 void spawnfunc_item_bullets (void) {
 	if(!weaponswapping)
-	if(q3acompat_machineshotgunswap)
+	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weaponswapping = TRUE;
@@ -1134,7 +1133,7 @@ void spawnfunc_item_cells (void) {
 
 void spawnfunc_item_shells (void) {
 	if(!weaponswapping)
-	if(q3acompat_machineshotgunswap)
+	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weaponswapping = TRUE;

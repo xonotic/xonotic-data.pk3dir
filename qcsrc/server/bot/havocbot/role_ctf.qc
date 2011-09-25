@@ -146,7 +146,8 @@ void havocbot_goalrating_ctf_ourstolenflag(float ratingscale)
 	if(mf.cnt == FLAG_BASE)
 		return;
 
-	navigation_routerating(mf, ratingscale, 10000);
+	if(mf.tag_entity)
+		navigation_routerating(mf.tag_entity, ratingscale, 10000);
 };
 
 void havocbot_goalrating_ctf_droppedflags(float ratingscale, vector org, float radius)
@@ -203,6 +204,7 @@ void havocbot_role_ctf_setrole(entity bot, float role)
 			bot.havocbot_role = havocbot_role_ctf_carrier;
 			bot.havocbot_role_timeout = 0;
 			bot.havocbot_cantfindflag = time + 10;
+			bot.bot_strategytime = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_DEFENSE:
 			dprint("defense");
@@ -224,12 +226,14 @@ void havocbot_role_ctf_setrole(entity bot, float role)
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = havocbot_role_ctf_retriever;
 			bot.havocbot_role_timeout = time + 10;
+			bot.bot_strategytime = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_ESCORT:
 			dprint("escort");
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = havocbot_role_ctf_escort;
 			bot.havocbot_role_timeout = time + 30;
+			bot.bot_strategytime = 0;
 			break;
 	}
 	dprint("\n");

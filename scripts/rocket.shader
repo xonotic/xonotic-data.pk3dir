@@ -4,7 +4,7 @@ rocketThrust
 	cull disable
 	{
 		clampmap textures/thrustc1.tga
-		blendfunc add
+		blendfunc GL_SRC_ALPHA GL_ONE
 		tcMod rotate 720
 	}
 }

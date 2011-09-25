@@ -411,6 +411,19 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
 		return true;
 	}
+	switch(nPrimary)
+	{
+		case K_KP_1: localcmd("\nimpulse 1\n"); return true;
+		case K_KP_2: localcmd("\nimpulse 2\n"); return true;
+		case K_KP_3: localcmd("\nimpulse 3\n"); return true;
+		case K_KP_4: localcmd("\nimpulse 4\n"); return true;
+		case K_KP_5: localcmd("\nimpulse 5\n"); return true;
+		case K_KP_6: localcmd("\nimpulse 6\n"); return true;
+		case K_KP_7: localcmd("\nimpulse 7\n"); return true;
+		case K_KP_8: localcmd("\nimpulse 8\n"); return true;
+		case K_KP_9: localcmd("\nimpulse 9\n"); return true;
+		case K_KP_0: localcmd("\nimpulse 10\n"); return true;
+	}
 
 	if (nPrimary == K_MOUSE1)
 		if (mv_selection >= 0)

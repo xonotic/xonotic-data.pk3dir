@@ -284,8 +284,6 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	w = self.weapon;
 	if (w == 0)
 		return; // just in case
-	if(self.weapon_forbidchange)
-		return;
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon))
 		return;
 	if(!autocvar_g_weapon_throwable)
@@ -332,6 +330,7 @@ void W_WeaponFrame()
 	if(!self.switchweapon)
 	{
 		self.weapon = 0;
+		self.switchingweapon = 0;
 		self.weaponentity.state = WS_CLEAR;
 		self.weaponname = "";
 		self.items &~= IT_AMMO;
@@ -348,6 +347,9 @@ void W_WeaponFrame()
 	{
 		if (self.weaponentity.state == WS_CLEAR)
 		{
+			// end switching!
+			self.switchingweapon = self.switchweapon;
+
 			//setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.switchweapon, WR_SETUP);
@@ -368,8 +370,16 @@ void W_WeaponFrame()
 			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_weaponswitchdelay, w_ready);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
 		}
+		else if (self.weaponentity.state == WS_DROP)
+		{
+			// in dropping phase we can switch at any time
+			self.switchingweapon = self.switchweapon;
+		}
 		else if (self.weaponentity.state == WS_READY)
 		{
+			// start switching!
+			self.switchingweapon = self.switchweapon;
+
 #ifndef INDEPENDENT_ATTACK_FINISHED
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{
@@ -402,16 +412,20 @@ void W_WeaponFrame()
 		c = c + 1;
 		if(wb && ((self.weapons & wb) == 0))
 		{
-			W_SwitchWeapon_Force(self, w_getbestweapon(self));
+			if(self.weapon == self.switchweapon)
+				W_SwitchWeapon_Force(self, w_getbestweapon(self));
 			wb = 0;
 		}
+
+		v_forward = fo;
+		v_right = ri;
+		v_up = up;
+
 		if(wb)
-		{
-			v_forward = fo;
-			v_right = ri;
-			v_up = up;
 			weapon_action(self.weapon, WR_THINK);
-		}
+		else
+			weapon_action(self.weapon, WR_GONETHINK);
+
 		if (time + self.weapon_frametime * 0.5 >= self.weapon_nextthink)
 		{
 			if(self.weapon_think)

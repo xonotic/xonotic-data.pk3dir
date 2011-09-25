@@ -604,14 +604,6 @@ float CheatCommand(float argc)
 				remove(e);
 			DID_CHEAT();
 			break;
-		case "warp":
-			IS_CHEAT(0, argc, 0);
-			if(argc == 2) if(autocvar_g_campaign)
-			{
-				CampaignLevelWarp(stof(argv(1)));
-				DID_CHEAT();
-			}
-			break;
 		case "god":
 			IS_CHEAT(0, argc, 0);
 			BITXOR_ASSIGN(self.flags, FL_GODMODE);
