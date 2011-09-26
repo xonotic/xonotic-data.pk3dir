@@ -4603,13 +4603,14 @@ void HUD_CenterPrint (void)
 		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - centerprint_fadetime > time)
 		{
 			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / centerprint_fadetime, 1);
-			sz = 0.8 + a * (1 - 0.8);
 		}
 		else if (centerprint_expire_time[j] > time)
 		{
 			a = (centerprint_expire_time[j] - time) / centerprint_fadetime;
-			sz = 0.8 + a * (1 - 0.8);
 		}
+		
+		a = a * (bound(0.5, (1 - (i / 2)), 1) * bound(0.5, (1 - (i / 10)), 1));
+		sz = 0.8 + a * (1 - 0.8);
 
 		drawfontscale = sz * '1 1 0';
 		if (centerprint_countdown_num[j])
