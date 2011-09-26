@@ -270,6 +270,7 @@ void W_Rocket_Attack (void)
 	missile.damageforcescale = autocvar_g_balance_rocketlauncher_damageforcescale;
 	missile.health = autocvar_g_balance_rocketlauncher_health;
 	missile.event_damage = W_Rocket_Damage;
+	missile.damagedbycontents = TRUE;
 
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);

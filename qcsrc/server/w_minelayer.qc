@@ -38,6 +38,7 @@ void W_Mine_Stick (entity to)
 	newmine.health = self.health;
 	newmine.event_damage = self.event_damage;
 	newmine.spawnshieldtime = self.spawnshieldtime;
+	newmine.damagedbycontents = TRUE;
 
 	newmine.movetype = MOVETYPE_NONE; // lock the mine in place
 	newmine.projectiledeathtype = self.projectiledeathtype;

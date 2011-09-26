@@ -20,6 +20,16 @@ void W_Hagar_Explode2 (void)
 	remove (self);
 }
 
+void W_Hagar_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if (self.health <= 0)
+		return;
+	self.health = self.health - damage;
+	self.angles = vectoangles(self.velocity);
+	if (self.health <= 0)
+		W_PrepareExplosionByDamage(attacker, self.think);
+}
+
 void W_Hagar_Touch (void)
 {
 	PROJECTILE_TOUCH;
@@ -56,6 +66,13 @@ void W_Hagar_Attack (void)
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
 	missile.bot_dodgerating = autocvar_g_balance_hagar_primary_damage;
+	
+	missile.takedamage = DAMAGE_YES;
+	missile.health = autocvar_g_balance_hagar_primary_health;
+	missile.damageforcescale = autocvar_g_balance_hagar_primary_damageforcescale;
+	missile.event_damage = W_Hagar_Damage;
+	missile.damagedbycontents = TRUE;
+	
 	missile.touch = W_Hagar_Touch;
 	missile.use = W_Hagar_Explode;
 	missile.think = adaptor_think2use_hittype_splash;
@@ -91,6 +108,13 @@ void W_Hagar_Attack2 (void)
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
 	missile.bot_dodgerating = autocvar_g_balance_hagar_secondary_damage;
+	
+	missile.takedamage = DAMAGE_YES;
+	missile.health = autocvar_g_balance_hagar_secondary_health;
+	missile.damageforcescale = autocvar_g_balance_hagar_secondary_damageforcescale;
+	missile.event_damage = W_Hagar_Damage;
+	missile.damagedbycontents = TRUE;
+
 	missile.touch = W_Hagar_Touch2;
 	missile.cnt = 0;
 	missile.use = W_Hagar_Explode2;
@@ -143,6 +167,12 @@ void W_Hagar_Attack2_Load_Release (void)
 		missile.classname = "missile";
 		missile.bot_dodge = TRUE;
 		missile.bot_dodgerating = autocvar_g_balance_hagar_secondary_damage;
+		
+		missile.takedamage = DAMAGE_YES;
+		missile.health = autocvar_g_balance_hagar_secondary_health;
+		missile.damageforcescale = autocvar_g_balance_hagar_secondary_damageforcescale;
+		missile.event_damage = W_Hagar_Damage;
+		missile.damagedbycontents = TRUE;
 
 		missile.touch = W_Hagar_Touch; // not bouncy
 		missile.use = W_Hagar_Explode2;

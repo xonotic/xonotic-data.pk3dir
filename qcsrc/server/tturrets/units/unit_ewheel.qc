@@ -287,6 +287,7 @@ void turret_ewheel_dinit()
     self.damage_flags          |= TFL_DMG_DEATH_NOGIBS;
 
     self.iscreature = TRUE;
+    self.damagedbycontents = TRUE;
     self.movetype   = MOVETYPE_WALK;
     self.solid      = SOLID_SLIDEBOX;
     self.takedamage = DAMAGE_AIM;

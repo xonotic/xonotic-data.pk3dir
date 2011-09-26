@@ -196,6 +196,7 @@ void W_Grenade_Attack (void)
 	gren.health = autocvar_g_balance_grenadelauncher_primary_health;
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_primary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
+	gren.damagedbycontents = TRUE;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
 
 	gren.angles = vectoangles (gren.velocity);

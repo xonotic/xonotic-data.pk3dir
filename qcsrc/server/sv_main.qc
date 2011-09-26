@@ -4,11 +4,13 @@ void CreatureFrame (void)
 	local entity oldself;
 	local float dm;
 	oldself = self;
-	for(self = world; (self = findfloat(self, iscreature, TRUE)); )
+	for(self = world; (self = findfloat(self, damagedbycontents, TRUE)); )
 	{
-		if (self.movetype == MOVETYPE_NOCLIP)
-			continue;
+		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
+		
 		float vehic = (self.vehicle_flags & VHF_ISVEHICLE);
+		float projectile = (self.projectiledeathtype);
+		
 		if (self.waterlevel)
 		{
 			if (!(self.flags & FL_INWATER))
@@ -16,7 +18,8 @@ void CreatureFrame (void)
 				self.flags |= FL_INWATER;
 				self.dmgtime = 0;
 			}
-			if(!vehic) // vehicles don't drown
+			
+			if(!vehic && !projectile) // vehicles and projectiles don't drown
 			{
 				if (self.waterlevel != WATERLEVEL_SUBMERGED)
 				{
@@ -30,31 +33,40 @@ void CreatureFrame (void)
 					if (!self.deadflag)
 					if (self.pain_finished < time)
 					{
-						Damage (self, world, world, 5, DEATH_DROWN, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_drowning, DEATH_DROWN, self.origin, '0 0 0');
 						self.pain_finished = time + 0.5;
 					}
 				}
 			}
+			
 			if (self.dmgtime < time)
 			{
-				self.dmgtime = time + 0.2;
-				if (self.watertype == CONTENT_LAVA)
+				self.dmgtime = time + (1 / min(1, autocvar_g_balance_contents_damagerate)); 
+				
+				if (!projectile)
 				{
-					if (self.watersound_finished < time)
+					if (self.watertype == CONTENT_LAVA)
 					{
-						self.watersound_finished = time + 0.5;
-						sound (self, CH_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
+						if (self.watersound_finished < time)
+						{
+							self.watersound_finished = time + 0.5;
+							sound (self, CH_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
+						}
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
 					}
-					Damage (self, world, world, 6 * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+					else if (self.watertype == CONTENT_SLIME)
+					{
+						if (self.watersound_finished < time)
+						{
+							self.watersound_finished = time + 0.5;
+							sound (self, CH_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
+						}
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+					}
 				}
-				else if (self.watertype == CONTENT_SLIME)
+				else if ((self.watertype == CONTENT_LAVA) || (self.watertype == CONTENT_SLIME))
 				{
-					if (self.watersound_finished < time)
-					{
-						self.watersound_finished = time + 0.5;
-						sound (self, CH_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
-					}
-					Damage (self, world, world, 2 * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+					Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 				}
 			}
 		}
@@ -70,7 +82,7 @@ void CreatureFrame (void)
 			self.dmg = 2;
 		}
 
-		if(!vehic) // vehicles don't get falling damage
+		if(!vehic && !projectile) // vehicles don't get falling damage
 		{
 			// check for falling damage
 			float velocity_len = vlen(self.velocity);
